@@ -1,60 +1,72 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 0/9] soc: brcmstb: biuctrl updates for 64-bit chips
-Date: Tue, 19 Dec 2017 11:22:38 -0800
-Message-ID: <20171219192247.29799-1-f.fainelli@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
-Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:BROADCOM BCM7XXX
-        ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: [PATCH v2 2/9] dt-bindings: arm: brcmstb: Correct BIUCTRL node documentation
+Date: Tue, 19 Dec 2017 11:22:40 -0800
+Message-ID: <20171219192247.29799-3-f.fainelli@gmail.com>
+References: <20171219192247.29799-1-f.fainelli@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171219192247.29799-1-f.fainelli@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: bcm-kernel-feedback-list@broadcom.com
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Brian Norris <computersforpeace@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:BROADCOM BCM7XXX
+        ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
+Correct the Device Tree bindings for the HIF_CPUBIUCTRL node whose
+compatible string is actually brcm,bcm<chip-id>-cpu-biu-ctrl. Also
+document in the binding the fallback property
+("brcm,brcmstb-cpu-biu-ctrl") and update the example accordingly.
 
-This patch series updates the Broadcom STB Bus Interface Unit controller to
-support newer chips such as 7260, 7268, 7271 and 7278. These chips require
-additional tuning in order to provide the expected bus throughput.
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+ .../devicetree/bindings/arm/bcm/brcm,brcmstb.txt   | 22 ++++++++++++----------
+ 1 file changed, 12 insertions(+), 10 deletions(-)
 
-In the process, we need to re-organize the common.c file a little bit in order
-to extract the family and product identifiers a little earlier.
-
-Finally, by moving the biuctrl initialization an early_initcall level, we can
-remove some code from the ARM-32bit machine descriptor file.
-
-Provided that we are happy with these changes, I would route them through my
-drivers/next branch and a subsequent Broadcom ARM SoC pull request.
-
-Thank you
-
-Changes in v2:
-
-- collect Rob's acked-by on the first patch
-- fixed the binding as suggested by Rob
-
-Florian Fainelli (9):
-  dt-bindings: arm: Add entry for Broadcom Brahma-B53
-  dt-bindings: arm: brcmstb: Correct BIUCTRL node documentation
-  soc: brcmstb: Make CPU credit offset more parameterized
-  soc: brcmstb: Correct CPU_CREDIT_REG offset for Brahma-B53 CPUs
-  soc: brcmstb: biuctrl: Prepare for saving/restoring other registers
-  soc: brcmstb: biuctrl: Wire-up new registers
-  soc: brcmstb: biuctrl: Fine tune B53 MCP interface settings
-  soc: brcmstb: Split initialization
-  soc: brcmstb: biuctrl: Move to early_initcall
-
- .../devicetree/bindings/arm/bcm/brcm,brcmstb.txt   |  22 +--
- Documentation/devicetree/bindings/arm/cpus.txt     |   1 +
- arch/arm/mach-bcm/brcmstb.c                        |   2 -
- drivers/soc/bcm/brcmstb/biuctrl.c                  | 176 +++++++++++++++++++--
- drivers/soc/bcm/brcmstb/common.c                   |  27 ++--
- include/linux/soc/brcmstb/brcmstb.h                |   6 -
- 6 files changed, 186 insertions(+), 48 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/arm/bcm/brcm,brcmstb.txt b/Documentation/devicetree/bindings/arm/bcm/brcm,brcmstb.txt
+index 790e6b0b8306..ed4bf3f388a3 100644
+--- a/Documentation/devicetree/bindings/arm/bcm/brcm,brcmstb.txt
++++ b/Documentation/devicetree/bindings/arm/bcm/brcm,brcmstb.txt
+@@ -17,21 +17,23 @@ Further, syscon nodes that map platform-specific registers used for general
+ system control is required:
+ 
+     - compatible: "brcm,bcm<chip_id>-sun-top-ctrl", "syscon"
+-    - compatible: "brcm,bcm<chip_id>-hif-cpubiuctrl", "syscon"
++    - compatible: "brcm,bcm<chip_id>-cpu-biu-ctrl",
++		  "brcm,brcmstb-cpu-biu-ctrl",
++		  "syscon"
+     - compatible: "brcm,bcm<chip_id>-hif-continuation", "syscon"
+ 
+-hif-cpubiuctrl node
++cpu-biu-ctrl node
+ -------------------
+-SoCs with Broadcom Brahma15 ARM-based CPUs have a specific Bus Interface Unit
+-(BIU) block which controls and interfaces the CPU complex to the different
+-Memory Controller Ports (MCP), one per memory controller (MEMC). This BIU block
+-offers a feature called Write Pairing which consists in collapsing two adjacent
+-cache lines into a single (bursted) write transaction towards the memory
+-controller (MEMC) to maximize write bandwidth.
++SoCs with Broadcom Brahma15 ARM-based and Brahma53 ARM64-based CPUs have a
++specific Bus Interface Unit (BIU) block which controls and interfaces the CPU
++complex to the different Memory Controller Ports (MCP), one per memory
++controller (MEMC). This BIU block offers a feature called Write Pairing which
++consists in collapsing two adjacent cache lines into a single (bursted) write
++transaction towards the memory controller (MEMC) to maximize write bandwidth.
+ 
+ Required properties:
+ 
+-    - compatible: must be "brcm,bcm7445-hif-cpubiuctrl", "syscon"
++    - compatible: must be "brcm,bcm7445-cpu-biu-ctrl", ""brcm,brcmstb-cpu-biu-ctrl", "syscon"
+ 
+ Optional properties:
+ 
+@@ -52,7 +54,7 @@ example:
+         };
+ 
+         hif_cpubiuctrl: syscon@3e2400 {
+-            compatible = "brcm,bcm7445-hif-cpubiuctrl", "syscon";
++            compatible = "brcm,bcm7445-cpu-biu-ctrl", "brcm,brcmstb-cpu-biu-ctrl", "syscon";
+             reg = <0x3e2400 0x5b4>;
+             brcm,write-pairing;
+         };
 -- 
 2.9.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
