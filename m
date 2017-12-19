@@ -1,37 +1,39 @@
-From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH] dt-bindings: gpio: rcar: Correct SoC family name for R8A7778
-Date: Tue, 19 Dec 2017 17:03:42 +0100
-Message-ID: <1513699422-27671-1-git-send-email-geert+renesas@glider.be>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v9 2/2] media: i2c: Add the ov7740 image sensor driver
+Date: Tue, 19 Dec 2017 18:04:17 +0200
+Message-ID: <20171219160417.jagp3zni5cpyiyay@valkosipuli.retiisi.org.uk>
+References: <20171211013146.2497-1-wenyou.yang@microchip.com>
+ <20171211013146.2497-3-wenyou.yang@microchip.com>
+ <20171219092246.3usg5mdyi27ivqlq@valkosipuli.retiisi.org.uk>
+ <CAOMZO5BHSJv01SwZ2YNtGZTjMtOuOktET43qriK2fQ+jhE2TDA@mail.gmail.com>
+ <20171219130537.2viv4wjcp4i3mdkj@valkosipuli.retiisi.org.uk>
+ <CAOMZO5C5NJMffBEv2cdqKqUnTMQEYkqzN1JnJMS21PWtKuabnA@mail.gmail.com>
+ <20171219134308.4plzpknvksbzhio7@valkosipuli.retiisi.org.uk>
+ <CAOMZO5DYWA8O5N=CRm2uR3_7qZ4U1M8u8F-oBU8bJfnKXD4DSA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAOMZO5DYWA8O5N=CRm2uR3_7qZ4U1M8u8F-oBU8bJfnKXD4DSA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Fabio Estevam <festevam@gmail.com>
+Cc: Philippe Ombredanne <pombredanne@nexb.com>, Wenyou Yang <wenyou.yang@microchip.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-kernel <linux-kernel@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@s-opensource.com>, Rob Herring <robh+dt@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Songjun Wu <songjun.wu@microchip.com>, linux-arm-kernel@lists.infradead.org, Linux Media Mailing List <linux-media@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-R8A7778 is R-Car (not R-Mobile) M1.
+On Tue, Dec 19, 2017 at 12:31:46PM -0200, Fabio Estevam wrote:
+> On Tue, Dec 19, 2017 at 11:43 AM, Sakari Ailus <sakari.ailus@iki.fi> wrote:
+> 
+> > Both seem to exist. See e.g. c3a3d1d6b8b363a02234e5564692db3647f183e6 .
+> 
+> This patch fixes .h files to use /* SPDX style comment, which is the
+> recommendation.
+> 
+> .c files should use // SPDX style.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
----
- Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Agreed. I reverted the changes.
 
-diff --git a/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt b/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
-index a7ac460ad6572526..9474138d776ed58d 100644
---- a/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
-+++ b/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
-@@ -5,7 +5,7 @@ Required Properties:
-   - compatible: should contain one or more of the following:
-     - "renesas,gpio-r8a7743": for R8A7743 (RZ/G1M) compatible GPIO controller.
-     - "renesas,gpio-r8a7745": for R8A7745 (RZ/G1E) compatible GPIO controller.
--    - "renesas,gpio-r8a7778": for R8A7778 (R-Mobile M1) compatible GPIO controller.
-+    - "renesas,gpio-r8a7778": for R8A7778 (R-Car M1) compatible GPIO controller.
-     - "renesas,gpio-r8a7779": for R8A7779 (R-Car H1) compatible GPIO controller.
-     - "renesas,gpio-r8a7790": for R8A7790 (R-Car H2) compatible GPIO controller.
-     - "renesas,gpio-r8a7791": for R8A7791 (R-Car M2-W) compatible GPIO controller.
+Thanks.
+
 -- 
-2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi
