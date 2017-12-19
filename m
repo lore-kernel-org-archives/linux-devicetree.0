@@ -1,104 +1,46 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH v2 2/7] i3c: Add core I3C infrastructure
-Date: Tue, 19 Dec 2017 10:09:00 +0100
-Message-ID: <20171219100900.35c0f66e@bbrezillon>
-References: <20171214151610.19153-1-boris.brezillon@free-electrons.com>
-        <20171214151610.19153-3-boris.brezillon@free-electrons.com>
-        <20171219085250.GC15010@kroah.com>
+From: Andi Shyti <andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] touchscreen: mms114: add support for mms152
+Date: Tue, 19 Dec 2017 18:10:09 +0900
+Message-ID: <20171219091009.GD25647@gangnam.samsung>
+References: <CGME20171218124955epcas3p3d776375b0dadbc3e0291da6ffb0eb6b6@epcas3p3.samsung.com>
+        <20171218124933.1803-1-simon@lineageos.org>
+        <20171219062252.GC25647@gangnam.samsung>
+        <20171219080409.GA27703@lineageos.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <20171219085250.GC15010@kroah.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.orglinux-
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-disposition: inline
+In-reply-to: <20171219080409.GA27703-WP75azK+jQYgsBAKwltoeQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Shields <simon-WP75azK+jQYgsBAKwltoeQ@public.gmane.org>
+Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 19 Dec 2017 09:52:50 +0100
-Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
+Hi Simon,
 
-> On Thu, Dec 14, 2017 at 04:16:05PM +0100, Boris Brezillon wrote:
-> > +/**
-> > + * i3c_device_match_id() - Find the I3C device ID entry matching an I3C dev
-> > + * @i3cdev: the I3C device we're searching a match for
-> > + * @id_table: the I3C device ID table
-> > + *
-> > + * Return: a pointer to the first entry matching @i3cdev, or NULL if there's
-> > + *	   no match.
-> > + */
-> > +const struct i3c_device_id *
-> > +i3c_device_match_id(struct i3c_device *i3cdev,
-> > +		    const struct i3c_device_id *id_table)
-> > +{
-> > +	const struct i3c_device_id *id;
-> > +
-> > +	/*
-> > +	 * The lower 32bits of the provisional ID is just filled with a random
-> > +	 * value, try to match using DCR info.
-> > +	 */
-> > +	if (!I3C_PID_RND_LOWER_32BITS(i3cdev->info.pid)) {
-> > +		u16 manuf = I3C_PID_MANUF_ID(i3cdev->info.pid);
-> > +		u16 part = I3C_PID_PART_ID(i3cdev->info.pid);
-> > +		u16 ext_info = I3C_PID_EXTRA_INFO(i3cdev->info.pid);
-> > +
-> > +		/* First try to match by manufacturer/part ID. */
-> > +		for (id = id_table; id->match_flags != 0; id++) {
-> > +			if ((id->match_flags & I3C_MATCH_MANUF_AND_PART) !=
-> > +			    I3C_MATCH_MANUF_AND_PART)
-> > +				continue;
-> > +
-> > +			if (manuf != id->manuf_id || part != id->part_id)
-> > +				continue;
-> > +
-> > +			if ((id->match_flags & I3C_MATCH_EXTRA_INFO) &&
-> > +			    ext_info != id->extra_info)
-> > +				continue;
-> > +
-> > +			return id;
-> > +		}
-> > +	}
-> > +
-> > +	/* Fallback to DCR match. */
-> > +	for (id = id_table; id->match_flags != 0; id++) {
-> > +		if ((id->match_flags & I3C_MATCH_DCR) &&
-> > +		    id->dcr == i3cdev->info.dcr)
-> > +			return id;
-> > +	}
-> > +
-> > +	return NULL;
-> > +}
-> > +EXPORT_SYMBOL_GPL(i3c_device_match_id);  
+> > >  #ifdef CONFIG_OF
+> > >  static const struct of_device_id mms114_dt_match[] = {
+> > > -	{ .compatible = "melfas,mms114" },
+> > > +	{
+> > > +		.compatible = "melfas,mms114",
+> > > +		.data = (void *)TYPE_MMS114,
+> > > +	}, {
+> > > +		.compatible = "melfas,mms152",
+> > > +		.data = (void *)TYPE_MMS152,
+> > 
+> > You are not documenting the new "melfas,mms152" compatible in
+> > Documentation/devicetree/bindings/input/touchscreen/mms114.txt
 > 
-> I just picked one random export here, but it feels like you are
-> exporting a bunch of symbols you don't need to.  Why would something
-> outside of the i3c "core" need to call this function?
+> Yes I am - "melfas,mms152" is added to the documentation
+> as part of this patch. Is there something wrong with what I've done
+> there?
 
-Because I'm not passing the i3c_device_id to the ->probe() method, and
-if the driver is supporting different variants of the device, it may
-want to know which one is being probed.
+Oh yes, sorry! I missed it while snipping the code :)
 
-I considered retrieving this information in the core just before probing
-the driver and passing it to the ->probe() function, but it means
-having an extra i3c_device_match_id() call for everyone even those who
-don't care about the device_id information, so I thought exporting this
-function was a good alternative (device drivers can use it when they
-actually need to retrieve the device_id).
+Please ignore this comment, then.
 
-Anyway, that's something I can change if you think passing the
-i3c_device_id to the ->probe() method is preferable.
-
-> Have you looked
-> to see if you really have callers for everything you are exporting?
-
-Yes, I tried to only export functions that I think will be needed by
-I3C device drivers and I3C master drivers. Note that I didn't post the
-dummy device driver I developed to test the framework (partly because
-this is 
-
-> 
-> Other than that, the driver core interaction looks good now, nice job.
-
-Thanks.
-
-Boris
+Andi
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
