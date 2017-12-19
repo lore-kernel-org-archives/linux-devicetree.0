@@ -1,7 +1,7 @@
 From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH v2 5/9] soc: brcmstb: biuctrl: Prepare for saving/restoring other registers
-Date: Tue, 19 Dec 2017 11:22:43 -0800
-Message-ID: <20171219192247.29799-6-f.fainelli@gmail.com>
+Subject: [PATCH v2 8/9] soc: brcmstb: Split initialization
+Date: Tue, 19 Dec 2017 11:22:46 -0800
+Message-ID: <20171219192247.29799-9-f.fainelli@gmail.com>
 References: <20171219192247.29799-1-f.fainelli@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171219192247.29799-1-f.fainelli@gmail.com>
@@ -12,138 +12,74 @@ Cc: Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, M
         ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-In preparation for saving/restoring additional registers required on
-some newer platforms (7268, 7271, 7278), migrate the code to use enums
-and helper functions to access registers.
+We may need access to family_id and product_id fairly early on boot for
+other parts of the code (e.g: biuctrl.c), so split the initialization
+between an early_init() and an arch_initcall() which allows us to do
+that.
 
 Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- drivers/soc/bcm/brcmstb/biuctrl.c | 75 ++++++++++++++++++++++++++++++---------
- 1 file changed, 58 insertions(+), 17 deletions(-)
+ drivers/soc/bcm/brcmstb/common.c | 27 +++++++++++++--------------
+ 1 file changed, 13 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/soc/bcm/brcmstb/biuctrl.c b/drivers/soc/bcm/brcmstb/biuctrl.c
-index e8322e663831..16cbfc2e953a 100644
---- a/drivers/soc/bcm/brcmstb/biuctrl.c
-+++ b/drivers/soc/bcm/brcmstb/biuctrl.c
-@@ -21,13 +21,45 @@
- #include <linux/syscore_ops.h>
- #include <linux/soc/brcmstb/brcmstb.h>
+diff --git a/drivers/soc/bcm/brcmstb/common.c b/drivers/soc/bcm/brcmstb/common.c
+index a71730da6385..781ada62d0a3 100644
+--- a/drivers/soc/bcm/brcmstb/common.c
++++ b/drivers/soc/bcm/brcmstb/common.c
+@@ -66,13 +66,10 @@ static const struct of_device_id sun_top_ctrl_match[] = {
+ 	{ }
+ };
  
--#define B15_CPU_CREDIT_REG_OFFSET		0x184
--#define B53_CPU_CREDIT_REG_OFFSET		0x0b0
- #define  CPU_CREDIT_REG_MCPx_WR_PAIRING_EN_MASK	0x70000000
- 
- static void __iomem *cpubiuctrl_base;
- static bool mcp_wr_pairing_en;
--static unsigned int cpu_credit_reg_offset;
-+static const int *cpubiuctrl_regs;
-+
-+static inline u32 cbc_readl(int reg)
-+{
-+	int offset = cpubiuctrl_regs[reg];
-+
-+	if (offset == -1)
-+		return (u32)-1;
-+
-+	return readl_relaxed(cpubiuctrl_base + offset);
-+}
-+
-+static inline void cbc_writel(u32 val, int reg)
-+{
-+	int offset = cpubiuctrl_regs[reg];
-+
-+	if (offset == -1)
-+		return;
-+
-+	writel_relaxed(val,  cpubiuctrl_base + offset);
-+}
-+
-+enum cpubiuctrl_regs {
-+	CPU_CREDIT_REG = 0,
-+};
-+
-+static const int b15_cpubiuctrl_regs[] = {
-+	[CPU_CREDIT_REG] = 0x184,
-+};
-+
-+static const int b53_cpubiuctrl_regs[] = {
-+	[CPU_CREDIT_REG] = 0x0b0,
-+};
-+
-+#define NUM_CPU_BIUCTRL_REGS	1
- 
- static int __init mcp_write_pairing_set(void)
+-static int __init brcmstb_soc_device_init(void)
++static int __init brcmstb_soc_device_early_init(void)
  {
-@@ -36,15 +68,15 @@ static int __init mcp_write_pairing_set(void)
- 	if (!cpubiuctrl_base)
- 		return -1;
+-	struct soc_device_attribute *soc_dev_attr;
+-	struct soc_device *soc_dev;
+ 	struct device_node *sun_top_ctrl;
+ 	void __iomem *sun_top_ctrl_base;
+-	int ret = 0;
  
--	creds = readl_relaxed(cpubiuctrl_base + cpu_credit_reg_offset);
-+	creds = cbc_readl(CPU_CREDIT_REG);
- 	if (mcp_wr_pairing_en) {
- 		pr_info("MCP: Enabling write pairing\n");
--		writel_relaxed(creds | CPU_CREDIT_REG_MCPx_WR_PAIRING_EN_MASK,
--			     cpubiuctrl_base + cpu_credit_reg_offset);
-+		cbc_writel(creds | CPU_CREDIT_REG_MCPx_WR_PAIRING_EN_MASK,
-+			   CPU_CREDIT_REG);
- 	} else if (creds & CPU_CREDIT_REG_MCPx_WR_PAIRING_EN_MASK) {
- 		pr_info("MCP: Disabling write pairing\n");
--		writel_relaxed(creds & ~CPU_CREDIT_REG_MCPx_WR_PAIRING_EN_MASK,
--				cpubiuctrl_base + cpu_credit_reg_offset);
-+		cbc_writel(creds & ~CPU_CREDIT_REG_MCPx_WR_PAIRING_EN_MASK,
-+			   CPU_CREDIT_REG);
- 	} else {
- 		pr_info("MCP: Write pairing already disabled\n");
- 	}
-@@ -80,9 +112,9 @@ static int __init setup_hifcpubiuctrl_regs(void)
+ 	sun_top_ctrl = of_find_matching_node(NULL, sun_top_ctrl_match);
+ 	if (!sun_top_ctrl)
+@@ -84,12 +81,19 @@ static int __init brcmstb_soc_device_init(void)
+ 
+ 	family_id = readl(sun_top_ctrl_base);
+ 	product_id = readl(sun_top_ctrl_base + 0x4);
++	iounmap(sun_top_ctrl_base);
++	return 0;
++}
++early_initcall(brcmstb_soc_device_early_init);
++
++static int __init brcmstb_soc_device_init(void)
++{
++	struct soc_device_attribute *soc_dev_attr;
++	struct soc_device *soc_dev;
+ 
+ 	soc_dev_attr = kzalloc(sizeof(*soc_dev_attr), GFP_KERNEL);
+-	if (!soc_dev_attr) {
+-		ret = -ENOMEM;
+-		goto out;
+-	}
++	if (!soc_dev_attr)
++		return -ENOMEM;
+ 
+ 	soc_dev_attr->family = kasprintf(GFP_KERNEL, "%x",
+ 					 family_id >> 28 ?
+@@ -107,14 +111,9 @@ static int __init brcmstb_soc_device_init(void)
+ 		kfree(soc_dev_attr->soc_id);
+ 		kfree(soc_dev_attr->revision);
+ 		kfree(soc_dev_attr);
+-		ret = -ENODEV;
+-		goto out;
++		return -ENOMEM;
  	}
  
- 	if (of_device_is_compatible(cpu_dn, "brcm,brahma-b15"))
--		cpu_credit_reg_offset = B15_CPU_CREDIT_REG_OFFSET;
-+		cpubiuctrl_regs = b15_cpubiuctrl_regs;
- 	else if (of_device_is_compatible(cpu_dn, "brcm,brahma-b53"))
--		cpu_credit_reg_offset = B53_CPU_CREDIT_REG_OFFSET;
-+		cpubiuctrl_regs = b53_cpubiuctrl_regs;
- 	else {
- 		pr_err("unsupported CPU\n");
- 		ret = -EINVAL;
-@@ -94,21 +126,30 @@ static int __init setup_hifcpubiuctrl_regs(void)
- }
- 
- #ifdef CONFIG_PM_SLEEP
--static u32 cpu_credit_reg_dump;  /* for save/restore */
-+static u32 cpubiuctrl_reg_save[NUM_CPU_BIUCTRL_REGS];
- 
- static int brcmstb_cpu_credit_reg_suspend(void)
- {
--	if (cpubiuctrl_base)
--		cpu_credit_reg_dump =
--			readl_relaxed(cpubiuctrl_base + cpu_credit_reg_offset);
-+	unsigned int i;
-+
-+	if (!cpubiuctrl_base)
-+		return 0;
-+
-+	for (i = 0; i < NUM_CPU_BIUCTRL_REGS; i++)
-+		cpubiuctrl_reg_save[i] = cbc_readl(i);
-+
  	return 0;
+-
+-out:
+-	iounmap(sun_top_ctrl_base);
+-	return ret;
  }
- 
- static void brcmstb_cpu_credit_reg_resume(void)
- {
--	if (cpubiuctrl_base)
--		writel_relaxed(cpu_credit_reg_dump,
--				cpubiuctrl_base + cpu_credit_reg_offset);
-+	unsigned int i;
-+
-+	if (!cpubiuctrl_base)
-+		return;
-+
-+	for (i = 0; i < NUM_CPU_BIUCTRL_REGS; i++)
-+		cbc_writel(cpubiuctrl_reg_save[i], i);
- }
- 
- static struct syscore_ops brcmstb_cpu_credit_syscore_ops = {
+ arch_initcall(brcmstb_soc_device_init);
 -- 
 2.9.3
