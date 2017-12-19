@@ -1,62 +1,76 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6] mfd: syscon: Add hardware spinlock support
-Date: Tue, 19 Dec 2017 09:21:49 +0000
-Message-ID: <20171219092149.GB8563@sirena.org.uk>
-References: <87ec50c846bbc7afc09ba0855aba1cdea6473308.1512048582.git.baolin.wang@linaro.org>
- <20171215104204.p7i27sen77ohbmzi@dell>
- <CAK8P3a0Eu4zaVrSEMps06ZZmFs=6026WZ7ze5V2k=nu0zL0bxQ@mail.gmail.com>
- <CAMz4ku+KfQRoLTO-T3ciS-1Z9oD=y0LJ25n-YDUMr+aYetbt9A@mail.gmail.com>
- <CAK8P3a3JTV0z0ua_xbbf8eJFGsgOEai4RC9Ny5-JL80MPuKFSA@mail.gmail.com>
- <CAMz4kuK2JRSZt6BiYu+YRy_+kXNen+NTgayqpXy1n3qL-T9OzQ@mail.gmail.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v14 0/5] ZII RAVE platform driver
+Date: Tue, 19 Dec 2017 09:22:02 +0000
+Message-ID: <20171219092202.jmuj5am3japbqv5r@dell>
+References: <20171207162735.25873-1-andrew.smirnov@gmail.com>
+ <b64f8d3e-fb7d-328b-dfd5-ddd0e9dfe932@roeck-us.net>
+ <20171219085603.nk6x25b7kkc2rukz@dell>
+ <20171219090624.GB8917@localhost>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="WhfpMioaduB5tiZL"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAMz4kuK2JRSZt6BiYu+YRy_+kXNen+NTgayqpXy1n3qL-T9OzQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20171219090624.GB8917@localhost>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, cphealy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Nikita Yushchenko <nikita.yoush-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, 19 Dec 2017, Johan Hovold wrote:
 
---WhfpMioaduB5tiZL
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> On Tue, Dec 19, 2017 at 08:56:03AM +0000, Lee Jones wrote:
+> > On Sat, 16 Dec 2017, Guenter Roeck wrote:
+> > > On 12/07/2017 08:27 AM, Andrey Smirnov wrote:
+> > > > Lee:
+> > > > 
+> > > > This patch set has been marinating out there for a while now and
+> > > > yours, I belive, is that last signature I need to start pushing it for
+> > > > inclusion. I'd really appreciate if you could spare some of your time
+> > > > to give it a look. Thanks!
+> > > > 
+> > > > Everyone:
+> > > > 
+> > > > This patch series is v14 of the driver for supervisory processor found
+> > > > on RAVE series of devices from ZII. Supervisory processor is a PIC
+> > > > microcontroller connected to various electrical subsystems on RAVE
+> > > > devices whose firmware implements protocol to command/qery them.
+> > > > 
+> > > > NOTE:
+> > > > 
+> > > >   * This driver dependends on crc_ccitt_false(), added by
+> > > >     2da9378d531f8cc6670c7497f20d936b706ab80b in 'linux-next', the patch
+> > > >     was pulled in by Andrew Morton and is currently avaiting users, so
+> > > >     this series might have to go in through Andrew's tree
+> > > > 
+> > > 
+> > > Strictly speaking, the solution would be for Andrew to provide an immutable
+> > > branch with the above, for Rob to provide an immutable branch based on Andrew's
+> > > branch, adding the serdev drivers, for Lee to provide yet another immutable
+> > > branch with all those plus the mfd driver, and for Wim to pick it all up
+> > > into the watchdog tree.
+> > 
+> > I think that's the craziest thing I've ever heard. ;)  Only 1
+> > immutable branch is required, which can be pulled in by everyone.
+> > 
+> > Bear with me.  Pull-request to follow.
+> 
+> Did the compatible-strings issue get sorted out? That is, that the cell
+> drivers were matching on the parent compatible string to determine
+> their type instead of encoding that in their own compatible strings. Is
+> that desired (and recommended)?
 
-On Tue, Dec 19, 2017 at 02:55:47PM +0800, Baolin Wang wrote:
+Looks like they are still doing that.
 
-> Um, why regmap doesn't accept a zero lock-id, that because regmap will
-> reguest hwlock depending on the 'regmap_config->hwlock_id' is not
-> zero, if regmap regard a zero lock-id as valid which will affect other
-> 'struct regmap_config' definition. So users should not assign the zero
-> lock-id to regmap.
+I'd suggest that it was sub-optimal.  It would be better to pass
+platform information through pdata or ddata IMHO.  Or yes, use the
+child compatible strings (if they differ from platform to platform).
 
-> Now of_hwspin_lock_get_id() can return 0 as valid, which depend on
-> what is the base id registered by hwspinlock driver. So you think we
-> should not regard 0 as valid from of_hwspin_lock_get_id(), I can try
-> to send another patch to fix.
-
-If 0 is a valid hwspinlock ID you need to add a flag to the regmap
-config to say if a hwspinlock should be used.  That way we're not
-rejecting valid values.
-
---WhfpMioaduB5tiZL
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlo42iwACgkQJNaLcl1U
-h9BpAAf/dFv/Ci6l/rscWDGO6yC6976ewMYs2oN5NifvuaGRFXiPh8aza2CLsVr6
-PF+Vus2gtsNCg7r7JfyXYN+pTX0qLReUanxQ5FVSw9S2Q/is4vObsilmPzEs6Quq
-XApB6xiYn5IJHQdBWalpUeKhCJTGlqouAPXto/a2mKSbnFiSBUvTevpE502CVOTP
-yvWb5ZpXyx7lIw+n5P/AZDsGguxj5ECgtAQD86HDCUGn93XIJu9EEk+ZjbGV429Z
-/r0m18QgyJBldAiAEwap1ax2IEvkXwsqjYR4+JwcDo/SPLWrM0Pf3HsEa+99fqcN
-bWr08MCDnPcCotdNE3r+XR0TsJG5dQ==
-=kBko
------END PGP SIGNATURE-----
-
---WhfpMioaduB5tiZL--
+-- 
+Lee Jones
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
