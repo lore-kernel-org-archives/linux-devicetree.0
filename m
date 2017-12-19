@@ -1,138 +1,67 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH 2/2] phy: ti-pipe3: configure usb3 phy to be used as pcie phy
-Date: Tue, 19 Dec 2017 15:15:40 +0530
-Message-ID: <20171219094540.18432-3-kishon@ti.com>
-References: <20171219094540.18432-1-kishon@ti.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v4 25/36] nds32: Miscellaneous header files
+Date: Tue, 19 Dec 2017 10:54:59 +0100
+Message-ID: <CAK8P3a3Ofczq1DrQEcEcP1fZrgyeOLpFDwgd7uMZ4H0NpHs+wg@mail.gmail.com>
+References: <cover.1513577007.git.green.hu@gmail.com> <a5dc2090640500d88aa3af2f6fe9e4c73f0634f2.1513577007.git.green.hu@gmail.com>
+ <CAK8P3a1EOD3WB=c4JybBD5bazhVJ5reuegyA1Hyoj-nPHpsW6g@mail.gmail.com> <CAEbi=3fWvrvdqUYOWdmbAHDmMpLiUaTaL_-jUjqg=p4aZiMLrA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20171219094540.18432-1-kishon@ti.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, kishon@ti.com
-Cc: devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, nsekhar@ti.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAEbi=3fWvrvdqUYOWdmbAHDmMpLiUaTaL_-jUjqg=p4aZiMLrA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greentime Hu <green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Greentime <greentime-MUIXKm3Oiri1Z/+hSey0Gg@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arch <linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Networking <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Vincent Chen <deanbo422-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Al Viro <viro-RmSDqhL/yNMiFSDQTTA3OLVCufUGDwFn@public.gmane.org>, David Howells <dhowells-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert.uytterhoeven-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Greg KH <greg-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>, Guo Ren <ren_guo-Y+KPrCd2zL4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-DRA72 uses USB3 PHY for the 2nd lane of PCIE. The configuration
-required to make USB3 PHY used for the 2nd lane of PCIe is done
-here.
+On Tue, Dec 19, 2017 at 6:34 AM, Greentime Hu <green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Hi, Arnd:
+>
+> 2017-12-18 19:13 GMT+08:00 Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>:
+>> On Mon, Dec 18, 2017 at 7:46 AM, Greentime Hu <green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>> From: Greentime Hu <greentime-MUIXKm3Oiri1Z/+hSey0Gg@public.gmane.org>
+>>>
+>>> This patch introduces some miscellaneous header files.
+>>
+>>> +static inline void __delay(unsigned long loops)
+>>> +{
+>>> +       __asm__ __volatile__(".align 2\n"
+>>> +                            "1:\n"
+>>> +                            "\taddi\t%0, %0, -1\n"
+>>> +                            "\tbgtz\t%0, 1b\n"
+>>> +                            :"=r"(loops)
+>>> +                            :"0"(loops));
+>>> +}
+>>> +
+>>> +static inline void __udelay(unsigned long usecs, unsigned long lpj)
+>>> +{
+>>> +       usecs *= (unsigned long)(((0x8000000000000000ULL / (500000 / HZ)) +
+>>> +                                 0x80000000ULL) >> 32);
+>>> +       usecs = (unsigned long)(((unsigned long long)usecs * lpj) >> 32);
+>>> +       __delay(usecs);
+>>> +}
+>>
+>> Do you have a reliable clocksource that you can read here instead of doing the
+>> loop? It's generally preferred to have an accurate delay if at all possible, the
+>> delay loop calibration is only for those architectures that don't have any
+>> way to observe how much time has passed accurately.
+>>
+>
+> We currently only have atcpit100 as clocksource but it is an IP of  SoC.
+> These delay API will be unavailable if we changed to another SoC
+> unless all these timer driver provided the same APIs.
+> It may suffer our customers if they forget to port these APIs in their
+> timer drivers when they try to use nds32 in the first beginning.
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- drivers/phy/ti/phy-ti-pipe3.c | 47 +++++++++++++++++++++++++++++++++++++------
- 1 file changed, 41 insertions(+), 6 deletions(-)
+Ok, thanks for the clarification.
 
-diff --git a/drivers/phy/ti/phy-ti-pipe3.c b/drivers/phy/ti/phy-ti-pipe3.c
-index 68ce4a082b9b..d5a7cc435fb7 100644
---- a/drivers/phy/ti/phy-ti-pipe3.c
-+++ b/drivers/phy/ti/phy-ti-pipe3.c
-@@ -56,6 +56,12 @@
- 
- #define SATA_PLL_SOFT_RESET	BIT(18)
- 
-+#define PHY_RX_ANA_PRGRAMMABILITY_REG	0xC
-+#define MEM_EN_PLLBYP			BIT(7)
-+
-+#define PHY_TX_TEST_CONFIG		0x2C
-+#define MEM_ENTESTCLK			BIT(31)
-+
- #define PIPE3_PHY_PWRCTL_CLK_CMD_MASK	0x003FC000
- #define PIPE3_PHY_PWRCTL_CLK_CMD_SHIFT	14
- 
-@@ -110,6 +116,10 @@
- #define PLL_IDLE_TIME	100	/* in milliseconds */
- #define PLL_LOCK_TIME	100	/* in milliseconds */
- 
-+#define PIPE3_PHY_DISABLE_SYNC_POWER	BIT(4)
-+
-+#define CONFIGURE_AS_PCIE		BIT(0)
-+
- struct pipe3_dpll_params {
- 	u16	m;
- 	u8	n;
-@@ -141,6 +151,7 @@ struct ti_pipe3 {
- 	unsigned int		power_reg; /* power reg. index within syscon */
- 	unsigned int		pcie_pcs_reg; /* pcs reg. index in syscon */
- 	bool			sata_refclk_enabled;
-+	u32			flags;
- };
- 
- static struct pipe3_dpll_map dpll_map_usb[] = {
-@@ -233,11 +244,22 @@ static int ti_pipe3_power_on(struct phy *x)
- 	rate = rate / 1000000;
- 	mask = OMAP_CTRL_PIPE3_PHY_PWRCTL_CLK_CMD_MASK |
- 		  OMAP_CTRL_PIPE3_PHY_PWRCTL_CLK_FREQ_MASK;
--	val = PIPE3_PHY_TX_RX_POWERON << PIPE3_PHY_PWRCTL_CLK_CMD_SHIFT;
-+	val = PIPE3_PHY_TX_RX_POWERON;
-+	if (phy->flags & CONFIGURE_AS_PCIE)
-+		val |= PIPE3_PHY_DISABLE_SYNC_POWER;
-+	val <<= PIPE3_PHY_PWRCTL_CLK_CMD_SHIFT;
- 	val |= rate << OMAP_CTRL_PIPE3_PHY_PWRCTL_CLK_FREQ_SHIFT;
- 
- 	ret = regmap_update_bits(phy->phy_power_syscon, phy->power_reg,
- 				 mask, val);
-+
-+	if (phy->flags & CONFIGURE_AS_PCIE) {
-+		ret = regmap_update_bits(phy->phy_power_syscon, phy->power_reg,
-+					 mask, val);
-+		if (ret < 0)
-+			return ret;
-+	}
-+
- 	return ret;
- }
- 
-@@ -335,6 +357,19 @@ static int ti_pipe3_init(struct phy *x)
- 	int ret = 0;
- 
- 	ti_pipe3_enable_clocks(phy);
-+
-+	if (phy->flags & CONFIGURE_AS_PCIE) {
-+		val = ti_pipe3_readl(phy->phy_rx,
-+				     PHY_RX_ANA_PRGRAMMABILITY_REG);
-+		val |= MEM_EN_PLLBYP;
-+		ti_pipe3_writel(phy->phy_rx, PHY_RX_ANA_PRGRAMMABILITY_REG,
-+				val);
-+		val = ti_pipe3_readl(phy->phy_tx, PHY_TX_TEST_CONFIG);
-+		val |= MEM_ENTESTCLK;
-+		ti_pipe3_writel(phy->phy_tx, PHY_TX_TEST_CONFIG, val);
-+		return 0;
-+	}
-+
- 	/*
- 	 * Set pcie_pcs register to 0x96 for proper functioning of phy
- 	 * as recommended in AM572x TRM SPRUHZ6, section 18.5.2.2, table
-@@ -395,7 +430,8 @@ static int ti_pipe3_exit(struct phy *x)
- 		return 0;
- 
- 	/* PCIe doesn't have internal DPLL */
--	if (!of_device_is_compatible(phy->dev->of_node, "ti,phy-pipe3-pcie")) {
-+	if (!of_device_is_compatible(phy->dev->of_node, "ti,phy-pipe3-pcie") &&
-+	    !(phy->flags & CONFIGURE_AS_PCIE)) {
- 		/* Put DPLL in IDLE mode */
- 		val = ti_pipe3_readl(phy->pll_ctrl_base, PLL_CONFIGURATION2);
- 		val |= PLL_IDLE;
-@@ -589,12 +625,8 @@ static int ti_pipe3_get_tx_rx_base(struct ti_pipe3 *phy)
- {
- 	struct resource *res;
- 	struct device *dev = phy->dev;
--	struct device_node *node = dev->of_node;
- 	struct platform_device *pdev = to_platform_device(dev);
- 
--	if (!of_device_is_compatible(node, "ti,phy-pipe3-pcie"))
--		return 0;
--
- 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
- 					   "phy_rx");
- 	phy->phy_rx = devm_ioremap_resource(dev, res);
-@@ -666,6 +698,9 @@ static int ti_pipe3_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
- 
-+	if (of_property_read_bool(node, "ti,configure-as-pcie"))
-+		phy->flags |= CONFIGURE_AS_PCIE;
-+
- 	platform_set_drvdata(pdev, phy);
- 	pm_runtime_enable(dev);
- 
--- 
-2.11.0
+> Or maybe I can use a CONFIG_USE_ACCURATE_DELAY to keep these 2
+> implementions for these purposes?
+
+I'd just add a one-line comment in delay.h to explain that there is no
+cycle counter in the CPU.
+
+       Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
