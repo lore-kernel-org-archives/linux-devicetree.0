@@ -1,78 +1,58 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH v2 4/9] soc: brcmstb: Correct CPU_CREDIT_REG offset for Brahma-B53 CPUs
-Date: Tue, 19 Dec 2017 11:22:42 -0800
-Message-ID: <20171219192247.29799-5-f.fainelli@gmail.com>
-References: <20171219192247.29799-1-f.fainelli@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171219192247.29799-1-f.fainelli@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: bcm-kernel-feedback-list@broadcom.com
-Cc: Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Brian Norris <computersforpeace@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:BROADCOM BCM7XXX
-        ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
+From: kevans91-OYTqUY/oFF8@public.gmane.org
+Subject: [PATCH] ARM: dts: sunxi: Add sid for a83t
+Date: Tue, 19 Dec 2017 14:11:59 -0600
+Message-ID: <20171219201159.9903-1-kevans91@ksu.edu>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: manu-h+KGxgPPiopAfugRpC6u6w@public.gmane.org, Kyle Evans <kevans91-OYTqUY/oFF8@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Broadcom Brahma-B53 CPUs, the CPU_CREDIT_REG offset got moved to
-0x0b0 instead of 0x184, correct this such that we correcty
-enable/disable write-pairing for these chips.
+From: Kyle Evans <kevans91-OYTqUY/oFF8@public.gmane.org>
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Allwinner a83t has a 1 KB sid block with efuse for security rootkey and
+thermal calibration data, add node to describe it.
+
+a83t-sid is not currently supported by nvmem/sunxi-sid, but it is
+supported in an external driver for FreeBSD.
+
+Signed-off-by: Kyle Evans <kevans91-OYTqUY/oFF8@public.gmane.org>
 ---
- drivers/soc/bcm/brcmstb/biuctrl.c | 24 +++++++++++++++++++++---
- 1 file changed, 21 insertions(+), 3 deletions(-)
+ Documentation/devicetree/bindings/nvmem/allwinner,sunxi-sid.txt | 1 +
+ arch/arm/boot/dts/sun8i-a83t.dtsi                               | 5 +++++
+ 2 files changed, 6 insertions(+)
 
-diff --git a/drivers/soc/bcm/brcmstb/biuctrl.c b/drivers/soc/bcm/brcmstb/biuctrl.c
-index c3c548fcaa8c..e8322e663831 100644
---- a/drivers/soc/bcm/brcmstb/biuctrl.c
-+++ b/drivers/soc/bcm/brcmstb/biuctrl.c
-@@ -21,12 +21,13 @@
- #include <linux/syscore_ops.h>
- #include <linux/soc/brcmstb/brcmstb.h>
+diff --git a/Documentation/devicetree/bindings/nvmem/allwinner,sunxi-sid.txt b/Documentation/devicetree/bindings/nvmem/allwinner,sunxi-sid.txt
+index d69543701..e319fe5e2 100644
+--- a/Documentation/devicetree/bindings/nvmem/allwinner,sunxi-sid.txt
++++ b/Documentation/devicetree/bindings/nvmem/allwinner,sunxi-sid.txt
+@@ -4,6 +4,7 @@ Required properties:
+ - compatible: Should be one of the following:
+   "allwinner,sun4i-a10-sid"
+   "allwinner,sun7i-a20-sid"
++  "allwinner,sun8i-a83t-sid"
+   "allwinner,sun8i-h3-sid"
+   "allwinner,sun50i-a64-sid"
  
--#define CPU_CREDIT_REG_OFFSET			0x184
-+#define B15_CPU_CREDIT_REG_OFFSET		0x184
-+#define B53_CPU_CREDIT_REG_OFFSET		0x0b0
- #define  CPU_CREDIT_REG_MCPx_WR_PAIRING_EN_MASK	0x70000000
+diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
+index de5119a2a..cced6e5fb 100644
+--- a/arch/arm/boot/dts/sun8i-a83t.dtsi
++++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
+@@ -238,6 +238,11 @@
+ 			#size-cells = <0>;
+ 		};
  
- static void __iomem *cpubiuctrl_base;
- static bool mcp_wr_pairing_en;
--static unsigned int cpu_credit_reg_offset = CPU_CREDIT_REG_OFFSET;
-+static unsigned int cpu_credit_reg_offset;
- 
- static int __init mcp_write_pairing_set(void)
- {
-@@ -53,7 +54,7 @@ static int __init mcp_write_pairing_set(void)
- 
- static int __init setup_hifcpubiuctrl_regs(void)
- {
--	struct device_node *np;
-+	struct device_node *np, *cpu_dn;
- 	int ret = 0;
- 
- 	np = of_find_compatible_node(NULL, NULL, "brcm,brcmstb-cpu-biu-ctrl");
-@@ -70,6 +71,23 @@ static int __init setup_hifcpubiuctrl_regs(void)
- 	}
- 
- 	mcp_wr_pairing_en = of_property_read_bool(np, "brcm,write-pairing");
++		sid: eeprom@1c14000 {
++			compatible = "allwinner,sun8i-a83t-sid";
++			reg = <0x1c14000 0x400>;
++		};
 +
-+	cpu_dn = of_get_cpu_node(0, NULL);
-+	if (!cpu_dn) {
-+		pr_err("failed to obtain CPU device node\n");
-+		ret = -ENODEV;
-+		goto out;
-+	}
-+
-+	if (of_device_is_compatible(cpu_dn, "brcm,brahma-b15"))
-+		cpu_credit_reg_offset = B15_CPU_CREDIT_REG_OFFSET;
-+	else if (of_device_is_compatible(cpu_dn, "brcm,brahma-b53"))
-+		cpu_credit_reg_offset = B53_CPU_CREDIT_REG_OFFSET;
-+	else {
-+		pr_err("unsupported CPU\n");
-+		ret = -EINVAL;
-+	}
-+	of_node_put(cpu_dn);
- out:
- 	of_node_put(np);
- 	return ret;
+ 		usb_otg: usb@1c19000 {
+ 			compatible = "allwinner,sun8i-a83t-musb",
+ 				     "allwinner,sun8i-a33-musb";
 -- 
-2.9.3
+2.15.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
