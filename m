@@ -1,69 +1,57 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: RE: [PATCH v2 6/6] phy: renesas: rcar-gen3-usb2: add gpio handling
-Date: Tue, 19 Dec 2017 11:43:15 +0000
-Message-ID: <TY1PR06MB0992FB35978EA8F17322BB19D80F0@TY1PR06MB0992.apcprd06.prod.outlook.com>
-References: <1513316726-14387-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1513316726-14387-7-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <20171216180510.qh5uiu5kwz5mx7zi@rob-hp-laptop>
- <SG2PR06MB0981CC4061F538B7ADFE48FDD80E0@SG2PR06MB0981.apcprd06.prod.outlook.com>
- <CAL_Jsq+JE0tR9ezR+MUOh1wKi8r0kUzxPQRfrG6qd+1YOBiqpw@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 2/2] ARM: dts: r8a7743: Add thermal device to DT
+Date: Tue, 19 Dec 2017 12:44:57 +0100
+Message-ID: <CAMuHMdUiabbd-Ry8AhZsfMiwVBBqYKaZEM_ROxCF-xJDkBgp1Q@mail.gmail.com>
+References: <1513162673-31531-1-git-send-email-biju.das@bp.renesas.com> <1513162673-31531-3-git-send-email-biju.das@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+JE0tR9ezR+MUOh1wKi8r0kUzxPQRfrG6qd+1YOBiqpw@mail.gmail.com>
-Content-Language: ja-JP
+In-Reply-To: <1513162673-31531-3-git-send-email-biju.das@bp.renesas.com>
 Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "kishon@ti.com" <kishon@ti.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Chris Paterson <chris.paterson2@renesas.com>, devicetree@vger.kernel.org, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLA0KDQo+IEZyb206IFJvYiBIZXJyaW5nLCBTZW50OiBUdWVzZGF5LCBEZWNlbWJlciAx
-OSwgMjAxNyA5OjEwIEFNDQo+IA0KPiBPbiBTdW4sIERlYyAxNywgMjAxNyBhdCAxMToxNiBQTSwg
-WW9zaGloaXJvIFNoaW1vZGENCj4gPHlvc2hpaGlyby5zaGltb2RhLnVoQHJlbmVzYXMuY29tPiB3
-cm90ZToNCj4gPiBIaSBSb2IsDQo+ID4NCj4gPiBUaGFuayB5b3UgZm9yIHlvdXIgY29tbWVudHMh
-DQo+ID4NCj4gPj4gRnJvbTogUm9iIEhlcnJpbmcsIFNlbnQ6IFN1bmRheSwgRGVjZW1iZXIgMTcs
-IDIwMTcgMzowNSBBTQ0KPiA+Pg0KPiA+PiBPbiBGcmksIERlYyAxNSwgMjAxNyBhdCAwMjo0NToy
-NlBNICswOTAwLCBZb3NoaWhpcm8gU2hpbW9kYSB3cm90ZToNCj4gPj4gPiBTb21lIFItQ2FyIFNv
-Q3MgKGUuZy4gUi1DYXIgRDMpIGRvZXNuJ3QgaGF2ZSBkZWRpY2F0ZWQgcGlucyBvZiBWQlVTDQo+
-ID4+ID4gYW5kIElELiBTbywgdGhleSBtYXkgYmUgY29ubmVjdGVkIHRvIGdwaW8gcGlucy4gVG8g
-aGFuZGxlIHRoZSBncGlvDQo+ID4+ID4gcGlucywgdGhpcyBwYXRjaCBhZGRzIHRoZSBoYW5kbGlu
-ZyBvZiBWQlVTIGFuZCBJRCBwaW5zIGluc3RlYWQgb2YNCj4gPj4gPiBkZWRpY2F0ZWQgcGlucy4N
-Cj4gPj4gPg0KPiA+PiA+IFNpZ25lZC1vZmYtYnk6IFlvc2hpaGlybyBTaGltb2RhIDx5b3NoaWhp
-cm8uc2hpbW9kYS51aEByZW5lc2FzLmNvbT4NCj4gPj4gPiAtLS0NCj4gPj4gPiAgLi4uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvcGh5L3JjYXItZ2VuMy1waHktdXNiMi50eHQgfCAgMiArDQo+ID4+ID4g
-IGRyaXZlcnMvcGh5L3JlbmVzYXMvcGh5LXJjYXItZ2VuMy11c2IyLmMgICAgICAgICAgIHwgNzcg
-KysrKysrKysrKysrKysrKysrKystLQ0KPiA+PiA+ICAyIGZpbGVzIGNoYW5nZWQsIDcyIGluc2Vy
-dGlvbnMoKyksIDcgZGVsZXRpb25zKC0pDQo+ID4+ID4NCj4gPj4gPiBkaWZmIC0tZ2l0IGEvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BoeS9yY2FyLWdlbjMtcGh5LXVzYjIudHh0
-DQo+ID4+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BoeS9yY2FyLWdlbjMt
-cGh5LXVzYjIudHh0DQo+ID4+ID4gaW5kZXggOTliNjUxYi4uOTk5YTZlZiAxMDA2NDQNCj4gPj4g
-PiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGh5L3JjYXItZ2VuMy1w
-aHktdXNiMi50eHQNCj4gPj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvcGh5L3JjYXItZ2VuMy1waHktdXNiMi50eHQNCj4gPj4gPiBAQCAtMjcsNiArMjcsOCBAQCBj
-aGFubmVsIGFzIFVTQiBPVEc6DQo+ID4+ID4gIC0gaW50ZXJydXB0czogaW50ZXJydXB0IHNwZWNp
-ZmllciBmb3IgdGhlIFBIWS4NCj4gPj4gPiAgLSB2YnVzLXN1cHBseTogUGhhbmRsZSB0byBhIHJl
-Z3VsYXRvciB0aGF0IHByb3ZpZGVzIHBvd2VyIHRvIHRoZSBWQlVTLiBUaGlzDQo+ID4+ID4gICAg
-ICAgICAgICByZWd1bGF0b3Igd2lsbCBiZSBtYW5hZ2VkIGR1cmluZyB0aGUgUEhZIHBvd2VyIG9u
-L29mZiBzZXF1ZW5jZS4NCj4gPj4gPiArLSB2YnVzLWdwaW9zOiB1c2UgZ3BpbyB0byBjb250cm9s
-IHZidXMgaW5zdGVhZCBvZiBkZWRpY2F0ZWQgcGluLg0KPiA+Pg0KPiA+PiBIb3cgZG9lcyB0aGlz
-IHJlbGF0ZSB0byB2YnVzLXN1cHBseT8gQSBncGlvLXJlZ3VsYXRvciBkb2Vzbid0IHdvcmsgaGVy
-ZT8NCj4gPg0KPiA+IFRoYW5rIHlvdSBmb3IgdGhlIHBvaW50ZWQgb3V0LiBZb3UncmUgY29ycmVj
-dC4gQSBncGlvLXJlZ3VsYXRvciBjYW4gd29yayBpbnRlYWQgb2YgInZidXMtZ3Bpb3MiLg0KPiA+
-IFNvLCBJIHdpbGwgZHJvcCB0aGlzLg0KPiA+DQo+ID4+ID4gKy0gaWQtZ3Bpb3M6IHVzZSBncGlv
-IHRvIGRldGVjdCBpZCBpbnN0ZWFkIG9mIGRlZGljYXRlZCBwaW4uDQo+ID4+DQo+ID4+IFRoZXNl
-IGFyZW4ndCBwYXJ0IG9mIHRoZSBwaHksIGJ1dCByZWFsbHkgYmVsb25nIGluIGEgY29ubmVjdG9y
-IG5vZGUuDQo+ID4NCj4gPiBJJ20gYWZyYWlkIGJ1dCBJIGRvbid0IHVuZGVyc3RhbmQgImEgY29u
-bmVjdG9yIG5vZGUiIG1lYW4uDQo+ID4gSXMgaXQgYW4gZXh0Y29uIGRldmljZSBmb3IgaW5zdGFu
-Y2U/DQo+ID4gSWYgc28sIEknbGwgdHJ5IHRvIHVzZSBleHRjb24tdXNiLWdwaW8uYyBpbnN0ZWFk
-IG9mIG93biBncGlvIGhhbmRsaW5nIG9uIHRoZSBkcml2ZXIuDQo+IA0KPiBObywgZXh0Y29uIGJp
-bmRpbmcgaGFzIGEgbG90IG9mIExpbnV4aXNtcyBpbiBpdC4gSSBtZWFuIHNvbWV0aGluZyBsaWtl
-DQo+IGhkbWktY29ubmVjdG9yIGJpbmRpbmcuDQoNClRoYW5rIHlvdSBmb3IgdGhlIHJlcGx5ISBJ
-IHVuZGVyc3Rvb2QgaXQuIFRoZSBoZG1pLWNvbm5lY3RvciBiaW5kaW5nIGhhcyAiaGRwLWdwaW9z
-Ii4NCkFuZCwgdGhpcyBpcyBzaW1pbGFyIHdpdGggImlkLWdwaW9zIiBvZiB1c2IuDQoNCj4gVGhl
-cmUncyBiZWVuIHNvbWUgYXR0ZW1wdHNbMV0gZm9yIFVTQiBjb25uZWN0b3JzLCBidXQgbm90aGlu
-ZyBmaW5hbGl6ZWQuDQo+IA0KPiBSb2INCj4gDQo+IFsxXSBodHRwczovL3d3dy5zcGluaWNzLm5l
-dC9saXN0cy9saW51eC11c2IvbXNnMTYxMTA0Lmh0bWwNCg0KVGhpcyBtZWFucyBJIHNob3VsZCBm
-aW5hbGl6ZSB0aGUgVVNCIGNvbm5lY3RvcnMgYmluZGluZyBhdCBmaXJzdD8NCkkgY2hlY2tlZCB0
-aGUgZW1haWwgYXJjaGl2ZSwgYnV0IGl0IHNlZW1zIGhhcmQgdG8gZmluYWxpemUgdGhvdWdoLi4u
-DQoNCkJlc3QgcmVnYXJkcywNCllvc2hpaGlybyBTaGltb2RhDQoNCg==
+On Wed, Dec 13, 2017 at 11:57 AM, Biju Das <biju.das@bp.renesas.com> wrote:
+> This patch instantiates the thermal sensor module with thermal-zone
+> support.
+>
+> This patch is based on the commit cac68a56e34b
+> ("ARM: dts: r8a7791: enable to use thermal-zone") by Kuninori Morimoto.
+>
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Minor nit below...
+
+> --- a/arch/arm/boot/dts/r8a7743.dtsi
+> +++ b/arch/arm/boot/dts/r8a7743.dtsi
+> @@ -250,6 +250,38 @@
+>                         resets = <&cpg 407>;
+>                 };
+>
+> +               thermal: thermal@e61f0000 {
+> +                       compatible = "renesas,thermal-r8a7743",
+> +                                    "renesas,rcar-gen2-thermal",
+> +                                    "renesas,rcar-thermal";
+> +                       reg = <0 0xe61f0000 0 0x14>, <0 0xe61f0100 0 0x38>;
+
+<0 0xe61f0000 0 0x10>?
+
+The register at offset 0x10 seems to exist on R-Mobile APE6 only, but
+all R-Car Gen2 .dtsis include it in the range...
+
+Not that it matters much, mapping granularity is PAGE_SIZE anyway...
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
