@@ -1,75 +1,46 @@
-From: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v14 0/5] ZII RAVE platform driver
-Date: Tue, 19 Dec 2017 05:42:42 -0800
-Message-ID: <CAHQ1cqFPDap1D_C2kHHssRQX-q11KKWK+ccUnppv_rLReaidBA@mail.gmail.com>
-References: <20171207162735.25873-1-andrew.smirnov@gmail.com>
- <b64f8d3e-fb7d-328b-dfd5-ddd0e9dfe932@roeck-us.net> <20171219085603.nk6x25b7kkc2rukz@dell>
- <20171219090624.GB8917@localhost> <20171219092202.jmuj5am3japbqv5r@dell>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v9 2/2] media: i2c: Add the ov7740 image sensor driver
+Date: Tue, 19 Dec 2017 15:43:09 +0200
+Message-ID: <20171219134308.4plzpknvksbzhio7@valkosipuli.retiisi.org.uk>
+References: <20171211013146.2497-1-wenyou.yang@microchip.com>
+ <20171211013146.2497-3-wenyou.yang@microchip.com>
+ <20171219092246.3usg5mdyi27ivqlq@valkosipuli.retiisi.org.uk>
+ <CAOMZO5BHSJv01SwZ2YNtGZTjMtOuOktET43qriK2fQ+jhE2TDA@mail.gmail.com>
+ <20171219130537.2viv4wjcp4i3mdkj@valkosipuli.retiisi.org.uk>
+ <CAOMZO5C5NJMffBEv2cdqKqUnTMQEYkqzN1JnJMS21PWtKuabnA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171219092202.jmuj5am3japbqv5r@dell>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Chris Healy <cphealy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Nikita Yushchenko <nikita.yoush-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <CAOMZO5C5NJMffBEv2cdqKqUnTMQEYkqzN1JnJMS21PWtKuabnA@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Fabio Estevam <festevam@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Wenyou Yang <wenyou.yang@microchip.com>, Jonathan Corbet <corbet@lwn.net>, linux-kernel <linux-kernel@vger.kernel.org>, Songjun Wu <songjun.wu@microchip.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>, Rob Herring <robh+dt@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Philippe Ombredanne <pombredanne@nexb.com>, linux-arm-kernel@lists.infradead.org, Linux Media Mailing List <linux-media@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 19, 2017 at 1:22 AM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Tue, 19 Dec 2017, Johan Hovold wrote:
->
->> On Tue, Dec 19, 2017 at 08:56:03AM +0000, Lee Jones wrote:
->> > On Sat, 16 Dec 2017, Guenter Roeck wrote:
->> > > On 12/07/2017 08:27 AM, Andrey Smirnov wrote:
->> > > > Lee:
->> > > >
->> > > > This patch set has been marinating out there for a while now and
->> > > > yours, I belive, is that last signature I need to start pushing it for
->> > > > inclusion. I'd really appreciate if you could spare some of your time
->> > > > to give it a look. Thanks!
->> > > >
->> > > > Everyone:
->> > > >
->> > > > This patch series is v14 of the driver for supervisory processor found
->> > > > on RAVE series of devices from ZII. Supervisory processor is a PIC
->> > > > microcontroller connected to various electrical subsystems on RAVE
->> > > > devices whose firmware implements protocol to command/qery them.
->> > > >
->> > > > NOTE:
->> > > >
->> > > >   * This driver dependends on crc_ccitt_false(), added by
->> > > >     2da9378d531f8cc6670c7497f20d936b706ab80b in 'linux-next', the patch
->> > > >     was pulled in by Andrew Morton and is currently avaiting users, so
->> > > >     this series might have to go in through Andrew's tree
->> > > >
->> > >
->> > > Strictly speaking, the solution would be for Andrew to provide an immutable
->> > > branch with the above, for Rob to provide an immutable branch based on Andrew's
->> > > branch, adding the serdev drivers, for Lee to provide yet another immutable
->> > > branch with all those plus the mfd driver, and for Wim to pick it all up
->> > > into the watchdog tree.
->> >
->> > I think that's the craziest thing I've ever heard. ;)  Only 1
->> > immutable branch is required, which can be pulled in by everyone.
->> >
->> > Bear with me.  Pull-request to follow.
->>
->> Did the compatible-strings issue get sorted out? That is, that the cell
->> drivers were matching on the parent compatible string to determine
->> their type instead of encoding that in their own compatible strings. Is
->> that desired (and recommended)?
->
-> Looks like they are still doing that.
->
-> I'd suggest that it was sub-optimal.  It would be better to pass
-> platform information through pdata or ddata IMHO.  Or yes, use the
-> child compatible strings (if they differ from platform to platform).
->
+On Tue, Dec 19, 2017 at 11:19:06AM -0200, Fabio Estevam wrote:
+> Hi Sakari,
+> 
+> On Tue, Dec 19, 2017 at 11:05 AM, Sakari Ailus <sakari.ailus@iki.fi> wrote:
+> 
+> > I guess it depends on who do you ask and when. Looking at what has been
+> > recently merged to media tree master, the latter is preferred.
+> 
+> Just did 'git grep SPDX drivers/media'
+> 
+> and it consistently shows // SPDX style for C files.
 
-I'll change that in v15.
+Both seem to exist. See e.g. c3a3d1d6b8b363a02234e5564692db3647f183e6 .
 
-Thanks,
-Andrey Smirnov
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi
