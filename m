@@ -1,127 +1,58 @@
-From: Miquel RAYNAL <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v4 01/12] dt-bindings: thermal: Describe Armada AP806
- and CP110
-Date: Tue, 19 Dec 2017 01:43:20 +0100
-Message-ID: <20171219014320.182d2522@xps13>
-References: <20171218143643.7714-1-miquel.raynal@free-electrons.com>
-        <20171218143643.7714-2-miquel.raynal@free-electrons.com>
-        <20171218203324.ftyqrgjawkujvhmn@tarshish>
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH 1/3] dt-bindings: ARM: Mediatek: Fix ethsys documentation
+Date: Mon, 18 Dec 2017 17:32:22 -0800
+Message-ID: <20171219013222.GZ7997@codeaurora.org>
+References: <20171201120708.30129-1-matthias.bgg@gmail.com>
+ <b92fd3bd-c61a-ae58-49ef-8727af065ec1@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171218203324.ftyqrgjawkujvhmn@tarshish>
+Content-Disposition: inline
+In-Reply-To: <b92fd3bd-c61a-ae58-49ef-8727af065ec1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-Cc: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, David Sniatkiwicz <davidsn-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, chen.zhong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Baruch,
-
-On Mon, 18 Dec 2017 22:33:24 +0200
-Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org> wrote:
-
-> Hi Miquèl,
+On 12/14, Matthias Brugger wrote:
+> Hi Stephen, Michael,
 > 
-> On Mon, Dec 18, 2017 at 03:36:32PM +0100, Miquel Raynal wrote:
-> > From: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+> On 12/01/2017 01:07 PM, Matthias Brugger wrote:
+> > The ethsys registers a reset controller, so we need to specify a
+> > reset cell. This patch fixes the documentation.
 > > 
-> > Add compatible strings for AP806 and CP110 that are part of the
-> > Armada 8k/7k line of SoCs.
-> > 
-> > Add a note on the differences in the size of the control area in
-> > different bindings. This is an existing difference between the
-> > Armada 375 binding and the other boards already supported. The new
-> > AP806 and CP110 bindings are similar to the existing Armada 375 in
-> > this regard.
-> > 
-> > Signed-off-by: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-> > [<miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>: reword, additional details]
-> > Signed-off-by: Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> > Signed-off-by: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > > ---
-> >  .../devicetree/bindings/thermal/armada-thermal.txt | 24
-> > +++++++++++++++++----- 1 file changed, 19 insertions(+), 5
-> > deletions(-)
+> >  Documentation/devicetree/bindings/arm/mediatek/mediatek,ethsys.txt | 1 +
+> >  1 file changed, 1 insertion(+)
 > > 
-> > diff --git
-> > a/Documentation/devicetree/bindings/thermal/armada-thermal.txt
-> > b/Documentation/devicetree/bindings/thermal/armada-thermal.txt
-> > index 24aacf8948c5..9b7b2c03cc6f 100644 ---
-> > a/Documentation/devicetree/bindings/thermal/armada-thermal.txt +++
-> > b/Documentation/devicetree/bindings/thermal/armada-thermal.txt @@
-> > -7,17 +7,31 @@ Required properties: marvell,armada375-thermal
-> > marvell,armada380-thermal marvell,armadaxp-thermal
-> > +		marvell,armada-ap806-thermal
-> > +		marvell,armada-cp110-thermal
-> >  
-> >  - reg:		Device's register space.
-> >  		Two entries are expected, see the examples below.
-> > -		The first one is required for the sensor register;
-> > -		the second one is required for the control register
-> > -		to be used for sensor initialization (a.k.a.
-> > calibration).
-> > +		The first one points to the status register (4B).
-> > +		The second one points to the control registers
-> > (8B).
-> > +		Note: with legacy bindings, the second entry
-> > pointed
-> > +		only to the so called "control MSB" ("control 1"),
-> > was
-> > +		4B wide and did not let the possibility to reach
-> > the
-> > +		"control LSB" ("control 0") register. This is only
-> > +		allowed for compatibility reasons in Armada
-> > +		370/375/38x/XP DT nodes.  
+> > diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,ethsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,ethsys.txt
+> > index 7aa3fa167668..6cc7840ff37a 100644
+> > --- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,ethsys.txt
+> > +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,ethsys.txt
+> > @@ -20,4 +20,5 @@ ethsys: clock-controller@1b000000 {
+> >  	compatible = "mediatek,mt2701-ethsys", "syscon";
+> >  	reg = <0 0x1b000000 0 0x1000>;
+> >  	#clock-cells = <1>;
+> > +	#reset-cells = <1>;
+> >  };
+> > 
 > 
-> "allowed" is not the right term, IMO. Legacy compatibles MUST point
-> to the MSB control register to preserve compatibility with existing
-> DTs.
-> 
-> The original patch had a list of legacy and non-legacy compatibles. I
-> think we need to keep them.
-
-Maybe I should reword this paragraph because we both agree on the
-meaning:
-
-"
-Note: Legacy bindings are only supported with Armada 370/375/38x/XP
-compatibles. The second memory resource entry only points to
-"control MSB/control 1", is 4 bytes wide and is preventing any access
-to "control LSB/control 0".
-"
-
-Does this sounds better to you?
-
-Thank you,
-Miquèl
-
-> 
-> baruch
-> 
-> > -Example:
-> > +Examples:
-> >  
-> > +	/* Legacy bindings */
-> >  	thermal@d0018300 {
-> >  		compatible = "marvell,armada370-thermal";
-> > -                reg = <0xd0018300 0x4
-> > +		reg = <0xd0018300 0x4
-> >  		       0xd0018304 0x4>;
-> >  	};
-> > +
-> > +	ap_thermal: thermal@6f8084 {
-> > +		compatible = "marvell,armada-ap806-thermal";
-> > +		reg = <0x6f808C 0x4>,
-> > +		      <0x6f8084 0x8>;
-> > +	};  
+> Will you take this patch through the clk tree, or shall I take it through my SoC
+> tree?
 > 
 
+It's resets, we are clk maintainers. I'm clkfused.
 
+You can take it, along with my
+
+Acked-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+
+if you like/expect conflicts.
 
 -- 
-Miquel Raynal, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
