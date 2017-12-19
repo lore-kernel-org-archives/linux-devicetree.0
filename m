@@ -1,55 +1,112 @@
 From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH v3 4/9] ARM: dts: imx7-colibri: use NAND_CE1 as GPIO
-Date: Tue, 19 Dec 2017 19:10:33 +0100
-Message-ID: <20171219181038.1369-4-stefan@agner.ch>
+Subject: [PATCH v3 8/9] ARM: dts: imx7-colibri: add MCP2515 CAN controller
+Date: Tue, 19 Dec 2017 19:10:37 +0100
+Message-ID: <20171219181038.1369-8-stefan@agner.ch>
 References: <20171219181038.1369-1-stefan@agner.ch>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171219181038.1369-1-stefan@agner.ch>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: shawnguo@kernel.org, kernel@pengutronix.de
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>, robh+dt@kernel.org, fabio.estevam@nxp.com, linux-arm-kernel@lists.infradead.org
+Cc: fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
 List-Id: devicetree@vger.kernel.org
 
-All Colibri iMX7 SKUs use either single-die NAND or eMMC, hence
-NAND_CE1 is not used on the module and can be used as a GPIO by
-carrier boards.
+The Colibri Evaluation Carrier Board provides a MCP2515 CAN
+controller connected via SPI. Note that the i.MX 7 provides
+an internal CAN controller which is much better suited for CAN
+operations. Using the MCP2515 with a Colibri iMX7 module is
+mainly useful to test the SPI interface.
 
 Signed-off-by: Stefan Agner <stefan@agner.ch>
 Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
 ---
- arch/arm/boot/dts/imx7-colibri.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Changes since v1:
+- Changed label and node name for MCP2515
+- Drop num-cs from ecspi3
 
+ arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi | 25 +++++++++++++++++++++++++
+ arch/arm/boot/dts/imx7-colibri.dtsi         | 13 ++++++++++++-
+ 2 files changed, 37 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi b/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
+index 87c23b769a08..e2b99bb48250 100644
+--- a/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
++++ b/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
+@@ -45,6 +45,13 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
++	/* fixed crystal dedicated to mpc258x */
++	clk16m: clk16m {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <16000000>;
++	};
++
+ 	panel: panel {
+ 		compatible = "edt,et057090dhu";
+ 		backlight = <&bl>;
+@@ -99,6 +106,24 @@
+ 	status = "okay";
+ };
+ 
++&ecspi3 {
++	status = "okay";
++
++	mcp2515: can@0 {
++		compatible = "microchip,mcp2515";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_can_int>;
++		reg = <0>;
++		clocks = <&clk16m>;
++		interrupt-parent = <&gpio5>;
++		interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
++		spi-max-frequency = <10000000>;
++		vdd-supply = <&reg_3v3>;
++		xceiver-supply = <&reg_5v0>;
++		status = "okay";
++	};
++};
++
+ &fec1 {
+ 	status = "okay";
+ };
 diff --git a/arch/arm/boot/dts/imx7-colibri.dtsi b/arch/arm/boot/dts/imx7-colibri.dtsi
-index e4e32aa786f4..f61041af026a 100644
+index 689ff6822634..c28a483b786d 100644
 --- a/arch/arm/boot/dts/imx7-colibri.dtsi
 +++ b/arch/arm/boot/dts/imx7-colibri.dtsi
-@@ -329,6 +329,7 @@
- 			MX7D_PAD_EPDC_SDCE2__GPIO2_IO22		0x14 /* SODIMM 127 */
- 			MX7D_PAD_UART3_RTS_B__GPIO4_IO6		0x14 /* SODIMM 131 */
- 			MX7D_PAD_EPDC_GDRL__GPIO2_IO26		0x14 /* SODIMM 133 */
-+			MX7D_PAD_SAI1_RX_DATA__GPIO6_IO12	0x14 /* SODIMM 169 */
- 			MX7D_PAD_SAI1_RX_BCLK__GPIO6_IO17	0x14 /* SODIMM 24 */
- 			MX7D_PAD_SD2_DATA2__GPIO5_IO16		0x14 /* SODIMM 100 */
- 			MX7D_PAD_SD2_DATA3__GPIO5_IO17		0x14 /* SODIMM 102 */
-@@ -439,7 +440,6 @@
- 			MX7D_PAD_SD3_CLK__NAND_CLE		0x71
- 			MX7D_PAD_SD3_CMD__NAND_ALE		0x71
- 			MX7D_PAD_SAI1_TX_BCLK__NAND_CE0_B	0x71
--			MX7D_PAD_SAI1_RX_DATA__NAND_CE1_B	0x71
- 			MX7D_PAD_SAI1_TX_DATA__NAND_READY_B	0x74
- 			MX7D_PAD_SD3_STROBE__NAND_RE_B		0x71
- 			MX7D_PAD_SD3_RESET_B__NAND_WE_B		0x71
+@@ -92,6 +92,12 @@
+ 	cpu-supply = <&reg_DCDC2>;
+ };
+ 
++&ecspi3 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_ecspi3 &pinctrl_ecspi3_cs>;
++	cs-gpios = <&gpio4 11 GPIO_ACTIVE_HIGH>;
++};
++
+ &fec1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_enet1>;
+@@ -313,7 +319,6 @@
+ 		fsl,pins = <
+ 			MX7D_PAD_ENET1_RGMII_RD3__GPIO7_IO3	0x74 /* SODIMM 55 */
+ 			MX7D_PAD_ENET1_RGMII_RD2__GPIO7_IO2	0x74 /* SODIMM 63 */
+-			MX7D_PAD_SD1_RESET_B__GPIO5_IO2		0X14 /* SODIMM 73 */
+ 			MX7D_PAD_SAI1_RX_SYNC__GPIO6_IO16	0x14 /* SODIMM 77 */
+ 			MX7D_PAD_EPDC_DATA09__GPIO2_IO9		0x14 /* SODIMM 89 */
+ 			MX7D_PAD_EPDC_DATA08__GPIO2_IO8		0x74 /* SODIMM 91 */
+@@ -400,6 +405,12 @@
+ 		>;
+ 	};
+ 
++	pinctrl_can_int: can-int-grp {
++		fsl,pins = <
++			MX7D_PAD_SD1_RESET_B__GPIO5_IO2		0X14 /* SODIMM 73 */
++		>;
++	};
++
+ 	pinctrl_enet1: enet1grp {
+ 		fsl,pins = <
+ 			MX7D_PAD_ENET1_CRS__GPIO7_IO14			0x14
 -- 
 2.15.1
