@@ -1,71 +1,45 @@
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: RE: [PATCH 2/2] ARM: dts: r8a7743: Add thermal device to DT
-Date: Tue, 19 Dec 2017 12:11:25 +0000
-Message-ID: <KL1PR06MB17028B45996F222F98D4248EB80F0@KL1PR06MB1702.apcprd06.prod.outlook.com>
-References: <1513162673-31531-1-git-send-email-biju.das@bp.renesas.com>
- <1513162673-31531-3-git-send-email-biju.das@bp.renesas.com>
- <CAMuHMdUiabbd-Ry8AhZsfMiwVBBqYKaZEM_ROxCF-xJDkBgp1Q@mail.gmail.com>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v9 2/2] media: i2c: Add the ov7740 image sensor driver
+Date: Tue, 19 Dec 2017 10:50:44 -0200
+Message-ID: <CAOMZO5BHSJv01SwZ2YNtGZTjMtOuOktET43qriK2fQ+jhE2TDA@mail.gmail.com>
+References: <20171211013146.2497-1-wenyou.yang@microchip.com>
+ <20171211013146.2497-3-wenyou.yang@microchip.com> <20171219092246.3usg5mdyi27ivqlq@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdUiabbd-Ry8AhZsfMiwVBBqYKaZEM_ROxCF-xJDkBgp1Q@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Chris Paterson <Chris.Paterson2@renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171219092246.3usg5mdyi27ivqlq-S+BSfZ9RZZmRSg0ZkenSGLdO1Tsj/99ntUK59QYPAWc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Philippe Ombredanne <pombredanne-od1rfyK75/E@public.gmane.org>
+Cc: Wenyou Yang <wenyou.yang-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Songjun Wu <songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgR2VlcnQsDQoNClRoYW5rcywgSSB3aWxsIHNlbmQgdjIuDQoNClJlZ2FyZHMsDQpCaWp1DQoN
-Cj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogZ2VlcnQudXl0dGVyaG9ldmVu
-QGdtYWlsLmNvbSBbbWFpbHRvOmdlZXJ0LnV5dHRlcmhvZXZlbkBnbWFpbC5jb21dDQo+IE9uIEJl
-aGFsZiBPZiBHZWVydCBVeXR0ZXJob2V2ZW4NCj4gU2VudDogMTkgRGVjZW1iZXIgMjAxNyAxMTo0
-NQ0KPiBUbzogQmlqdSBEYXMgPGJpanUuZGFzQGJwLnJlbmVzYXMuY29tPg0KPiBDYzogUm9iIEhl
-cnJpbmcgPHJvYmgrZHRAa2VybmVsLm9yZz47IE1hcmsgUnV0bGFuZA0KPiA8bWFyay5ydXRsYW5k
-QGFybS5jb20+OyBaaGFuZyBSdWkgPHJ1aS56aGFuZ0BpbnRlbC5jb20+OyBFZHVhcmRvDQo+IFZh
-bGVudGluIDxlZHViZXp2YWxAZ21haWwuY29tPjsgU2ltb24gSG9ybWFuIDxob3Jtc0B2ZXJnZS5u
-ZXQuYXU+Ow0KPiBNYWdudXMgRGFtbSA8bWFnbnVzLmRhbW1AZ21haWwuY29tPjsgQ2hyaXMgUGF0
-ZXJzb24NCj4gPENocmlzLlBhdGVyc29uMkByZW5lc2FzLmNvbT47IGRldmljZXRyZWVAdmdlci5r
-ZXJuZWwub3JnOyBMaW51eC1SZW5lc2FzDQo+IDxsaW51eC1yZW5lc2FzLXNvY0B2Z2VyLmtlcm5l
-bC5vcmc+OyBMaW51eCBQTSBsaXN0IDxsaW51eC0NCj4gcG1Admdlci5rZXJuZWwub3JnPg0KPiBT
-dWJqZWN0OiBSZTogW1BBVENIIDIvMl0gQVJNOiBkdHM6IHI4YTc3NDM6IEFkZCB0aGVybWFsIGRl
-dmljZSB0byBEVA0KPg0KPiBPbiBXZWQsIERlYyAxMywgMjAxNyBhdCAxMTo1NyBBTSwgQmlqdSBE
-YXMgPGJpanUuZGFzQGJwLnJlbmVzYXMuY29tPg0KPiB3cm90ZToNCj4gPiBUaGlzIHBhdGNoIGlu
-c3RhbnRpYXRlcyB0aGUgdGhlcm1hbCBzZW5zb3IgbW9kdWxlIHdpdGggdGhlcm1hbC16b25lDQo+
-ID4gc3VwcG9ydC4NCj4gPg0KPiA+IFRoaXMgcGF0Y2ggaXMgYmFzZWQgb24gdGhlIGNvbW1pdCBj
-YWM2OGE1NmUzNGINCj4gPiAoIkFSTTogZHRzOiByOGE3NzkxOiBlbmFibGUgdG8gdXNlIHRoZXJt
-YWwtem9uZSIpIGJ5IEt1bmlub3JpIE1vcmltb3RvLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTog
-QmlqdSBEYXMgPGJpanUuZGFzQGJwLnJlbmVzYXMuY29tPg0KPiA+IFJldmlld2VkLWJ5OiBGYWJy
-aXppbyBDYXN0cm8gPGZhYnJpemlvLmNhc3Ryb0BicC5yZW5lc2FzLmNvbT4NCj4NCj4gUmV2aWV3
-ZWQtYnk6IEdlZXJ0IFV5dHRlcmhvZXZlbiA8Z2VlcnQrcmVuZXNhc0BnbGlkZXIuYmU+DQo+DQo+
-IE1pbm9yIG5pdCBiZWxvdy4uLg0KPg0KPiA+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL3I4YTc3
-NDMuZHRzaQ0KPiA+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3I4YTc3NDMuZHRzaQ0KPiA+IEBA
-IC0yNTAsNiArMjUwLDM4IEBADQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgcmVzZXRzID0g
-PCZjcGcgNDA3PjsNCj4gPiAgICAgICAgICAgICAgICAgfTsNCj4gPg0KPiA+ICsgICAgICAgICAg
-ICAgICB0aGVybWFsOiB0aGVybWFsQGU2MWYwMDAwIHsNCj4gPiArICAgICAgICAgICAgICAgICAg
-ICAgICBjb21wYXRpYmxlID0gInJlbmVzYXMsdGhlcm1hbC1yOGE3NzQzIiwNCj4gPiArICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgInJlbmVzYXMscmNhci1nZW4yLXRoZXJtYWwi
-LA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAicmVuZXNhcyxyY2Fy
-LXRoZXJtYWwiOw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDwwIDB4ZTYxZjAw
-MDAgMCAweDE0PiwgPDAgMHhlNjFmMDEwMCAwDQo+ID4gKyAweDM4PjsNCj4NCj4gPDAgMHhlNjFm
-MDAwMCAwIDB4MTA+Pw0KPg0KPiBUaGUgcmVnaXN0ZXIgYXQgb2Zmc2V0IDB4MTAgc2VlbXMgdG8g
-ZXhpc3Qgb24gUi1Nb2JpbGUgQVBFNiBvbmx5LCBidXQgYWxsIFItQ2FyDQo+IEdlbjIgLmR0c2lz
-IGluY2x1ZGUgaXQgaW4gdGhlIHJhbmdlLi4uDQo+DQo+IE5vdCB0aGF0IGl0IG1hdHRlcnMgbXVj
-aCwgbWFwcGluZyBncmFudWxhcml0eSBpcyBQQUdFX1NJWkUgYW55d2F5Li4uDQo+DQo+IEdye29l
-dGplLGVldGluZ31zLA0KPg0KPiAgICAgICAgICAgICAgICAgICAgICAgICBHZWVydA0KPg0KPiAt
-LQ0KPiBHZWVydCBVeXR0ZXJob2V2ZW4gLS0gVGhlcmUncyBsb3RzIG9mIExpbnV4IGJleW9uZCBp
-YTMyIC0tIGdlZXJ0QGxpbnV4LQ0KPiBtNjhrLm9yZw0KPg0KPiBJbiBwZXJzb25hbCBjb252ZXJz
-YXRpb25zIHdpdGggdGVjaG5pY2FsIHBlb3BsZSwgSSBjYWxsIG15c2VsZiBhIGhhY2tlci4gQnV0
-IHdoZW4NCj4gSSdtIHRhbGtpbmcgdG8gam91cm5hbGlzdHMgSSBqdXN0IHNheSAicHJvZ3JhbW1l
-ciIgb3Igc29tZXRoaW5nIGxpa2UgdGhhdC4NCj4gICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAtLSBMaW51cyBUb3J2YWxkcw0KDQoNCltodHRwczovL3d3dzIucmVuZXNhcy5ldS9tZWRp
-YS9lbWFpbC91bmljZWZfMjAxNy5qcGddDQoNClRoaXMgQ2hyaXN0bWFzLCBpbnN0ZWFkIG9mIHNl
-bmRpbmcgb3V0IGNhcmRzLCBSZW5lc2FzIEVsZWN0cm9uaWNzIEV1cm9wZSBoYXZlIGRlY2lkZWQg
-dG8gc3VwcG9ydCBVbmljZWYgd2l0aCBhIGRvbmF0aW9uLiBGb3IgZnVydGhlciBkZXRhaWxzIGNs
-aWNrIGhlcmU8aHR0cHM6Ly93d3cudW5pY2VmLm9yZy8+IHRvIGZpbmQgb3V0IGFib3V0IHRoZSB2
-YWx1YWJsZSB3b3JrIHRoZXkgZG8sIGhlbHBpbmcgY2hpbGRyZW4gYWxsIG92ZXIgdGhlIHdvcmxk
-Lg0KV2Ugd291bGQgbGlrZSB0byB0YWtlIHRoaXMgb3Bwb3J0dW5pdHkgdG8gd2lzaCB5b3UgYSBN
-ZXJyeSBDaHJpc3RtYXMgYW5kIGEgcHJvc3Blcm91cyBOZXcgWWVhci4NCg0KDQoNClJlbmVzYXMg
-RWxlY3Ryb25pY3MgRXVyb3BlIEx0ZCwgRHVrZXMgTWVhZG93LCBNaWxsYm9hcmQgUm9hZCwgQm91
-cm5lIEVuZCwgQnVja2luZ2hhbXNoaXJlLCBTTDggNUZILCBVSy4gUmVnaXN0ZXJlZCBpbiBFbmds
-YW5kICYgV2FsZXMgdW5kZXIgUmVnaXN0ZXJlZCBOby4gMDQ1ODY3MDkuDQo=
+Hi Sakari,
+
+On Tue, Dec 19, 2017 at 7:22 AM, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org> wrote:
+> On Mon, Dec 11, 2017 at 09:31:46AM +0800, Wenyou Yang wrote:
+>> The ov7740 (color) image sensor is a high performance VGA CMOS
+>> image snesor, which supports for output formats: RAW RGB and YUV
+>> and image sizes: VGA, and QVGA, CIF and any size smaller.
+>>
+>> Signed-off-by: Songjun Wu <songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+>> Signed-off-by: Wenyou Yang <wenyou.yang-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+>
+> Applied with this diff:
+>
+> diff --git a/drivers/media/i2c/ov7740.c b/drivers/media/i2c/ov7740.c
+> index 0308ba437bbb..041a77039d70 100644
+> --- a/drivers/media/i2c/ov7740.c
+> +++ b/drivers/media/i2c/ov7740.c
+> @@ -1,5 +1,7 @@
+> -// SPDX-License-Identifier: GPL-2.0
+> -// Copyright (c) 2017 Microchip Corporation.
+> +/*
+> + * SPDX-License-Identifier: GPL-2.0
+> + * Copyright (c) 2017 Microchip Corporation.
+> + */
+
+The original version is the recommended format for the SPDX identifier.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
