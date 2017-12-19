@@ -1,93 +1,92 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH V2 3/9] ARM: stm32: prepare stm32 family to welcome armv7 architecture
-Date: Tue, 19 Dec 2017 16:26:49 +0100
-Message-ID: <CAK8P3a3X1icDWmVng8w0Yd58nAcViJQ9oZc4xm-dEycVPe+5pg@mail.gmail.com>
-References: <1513610272-7824-1-git-send-email-ludovic.Barre@st.com>
- <1513610272-7824-4-git-send-email-ludovic.Barre@st.com> <CAK8P3a1WzkVQ3591XjVQPLCqP0_zZ4ksqJqWvm7de_OnkE3oaQ@mail.gmail.com>
- <45e2f530-1e72-6933-4367-95aadd709873@st.com>
+From: Stefan Riedmueller <s.riedmueller@phytec.de>
+Subject: [PATCH 0/6] ARM: dts: Add PHYTEC phyCORE-i.MX 6 and phyBOARD-Mira
+ carrier board support
+Date: Tue, 19 Dec 2017 16:49:42 +0100
+Message-ID: <1513698588-13325-1-git-send-email-s.riedmueller@phytec.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <45e2f530-1e72-6933-4367-95aadd709873-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ludovic BARRE <ludovic.barre-qxv4g6HH51o@public.gmane.org>
-Cc: Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Gerald Baeza <gerald.baeza-qxv4g6HH51o@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, robh+dt@kernel.org, Stefan Riedmueller <s.riedmueller@phytec.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 19, 2017 at 3:43 PM, Ludovic BARRE <ludovic.barre-qxv4g6HH51o@public.gmane.org> wrote:
->
->
-> On 12/18/2017 09:24 PM, Arnd Bergmann wrote:
->>
->> On Mon, Dec 18, 2017 at 4:17 PM, Ludovic Barre <ludovic.Barre-qxv4g6HH51o@public.gmane.org>
->> wrote:
->>>
->>> From: Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
->>>
->>> This patch prepares the STM32 machine for the integration of Cortex-A
->>> based microprocessor (MPU), on top of the existing Cortex-M
->>> microcontroller family (MCU). Since both MCUs and MPUs are sharing
->>> common hardware blocks we can keep using ARCH_STM32 flag for most of
->>> them. If a hardware block is specific to one family we can use either
->>> ARM_SINGLE_ARMV7M or ARCH_MULTI_V7 flag.
->>>
->>> Signed-off-by: Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
->>
->>
->> Looks good overall. Two more small comments:
->>
->>
->>>
->>> +if ARCH_STM32
->>> +
->>>   config MACH_STM32F429
->>> -       bool "STMicrolectronics STM32F429"
->>> -       depends on ARCH_STM32
->>> +       bool "STMicroelectronics STM32F429"
->>> +       depends on ARM_SINGLE_ARMV7M
->>>          default y
->>
->>
->> Instead of the explicit dependency for each board, I'd leave the
->> surrounding
->> 'if ARM_SINGLE_ARMV7M'. I think you had in v1.
->
->
-> As you suggest, I follow mach-at91 example.
-> The point is on "depends on ARM_SINGLE_ARMV7M" ?
-> You prefer this way:
-> config MACH_STM32F429
->         bool "STMicroelectronics STM32F429" if ARM_SINGLE_ARMV7M
->         default y
->
+This patchset adds support for the PHYTEC phyCORE-i.MX 6 and phyBOARD-Mira.
 
-No, that would be wrong, that way you would always enable
-MACH_STM32F429 when ARM_SINGLE_ARMV7M is turned
-off, which is exactly the wrong way round. What I meant is
+Following boards are included:
+phyBOARD-Mira with phyCORE-i.MX 6 Quad/Dual with:
+- i.MX 6Quad/Dual SOC
+- NAND or eMMC
+- HDMI interface
+- LVDS display interface
+- Gigabit Ethernet
+- USB Host
+- CAN
+- RS232
+- PCIe
+This board also contains an LVDS camera interface and parallel display
+interface which are not yet supported.
 
-if ARCH_STM32
+phyBAORD-Mira with phyCORE-i.MX 6 DualLight/Solo with:
+- i.MX 6DualLight/Solo
+- NAND
+- HDMI interface
+- 100 MBit/s Ethernet
+- USB Host
+- RS232
 
-if ARM_SINGLE_ARMV7M
+phyBOARD-Mira with phyCORE-i.MX 6 QuadPlus with:
+- i.MX 6QuadPlus SOC
+- NAND
+- HDMI interface
+- LVDS display interface
+- Gigabit Ethernet
+- USB Host
+- CAN
+- RS232
+- PCIe
+This board also contains an LVDS camera interface and parallel display
+interface which are not yet supported.
 
-config MACH_STM32F429
-         bool "STMicrolectronics STM32F429"
+The entire series is based on v4.15-rc4.
 
-config MACH_STM32...
-          ...
+Christian Hemp (2):
+  ARM: dts: imx6: Add support for phyBOARD-Mira i.MX 6Quad/Dual RDK
+  ARM: dts: imx6: Add support for phxBOARD-Mira i.MX 6 DualLight/Solo
+    RDK
 
-endif # ARMv7-M
+Enrico Scholz (1):
+  ARM: dts: imx6: Add support for phyBOARD-Mira with i.MX 6QuadPlus
 
-if ARCH_MULTI_V7
+Stefan Riedmueller (3):
+  ARM: dts: imx6: Add initial support for phyCORE-i.MX 6 SOM
+  ARM: dts: imx6: Add initial support for phyBOARD-Mira
+  ARM: imx_v6_v7_defconfig: Enable Dialog Semicondocter DA9062 driver
 
-config MACH_STM32...
-          ...
+ arch/arm/boot/dts/Makefile                        |   4 +
+ arch/arm/boot/dts/imx6dl-phytec-mira-rdk-nand.dts |  64 ++++
+ arch/arm/boot/dts/imx6q-phytec-mira-rdk-emmc.dts  |  76 +++++
+ arch/arm/boot/dts/imx6q-phytec-mira-rdk-nand.dts  |  76 +++++
+ arch/arm/boot/dts/imx6qdl-phytec-mira.dtsi        | 390 ++++++++++++++++++++++
+ arch/arm/boot/dts/imx6qdl-phytec-phycore-som.dtsi | 282 ++++++++++++++++
+ arch/arm/boot/dts/imx6qp-phytec-mira-rdk-nand.dts |  76 +++++
+ arch/arm/configs/imx_v6_v7_defconfig              |   4 +
+ 8 files changed, 972 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx6dl-phytec-mira-rdk-nand.dts
+ create mode 100644 arch/arm/boot/dts/imx6q-phytec-mira-rdk-emmc.dts
+ create mode 100644 arch/arm/boot/dts/imx6q-phytec-mira-rdk-nand.dts
+ create mode 100644 arch/arm/boot/dts/imx6qdl-phytec-mira.dtsi
+ create mode 100644 arch/arm/boot/dts/imx6qdl-phytec-phycore-som.dtsi
+ create mode 100644 arch/arm/boot/dts/imx6qp-phytec-mira-rdk-nand.dts
 
-endif # ARMv7-A
-
-endif # STM32
-
-       Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+2.7.4
