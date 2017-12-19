@@ -1,31 +1,38 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 1/3] dt-bindings: mailbox: Introduce Hi3660 controller
- binding
-Date: Tue, 19 Dec 2017 17:30:38 -0600
-Message-ID: <20171219233038.mjkqakshn7ud7ise@rob-hp-laptop>
-References: <1513682145-19892-1-git-send-email-zhongkaihua@huawei.com>
- <1513682145-19892-2-git-send-email-zhongkaihua@huawei.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1513682145-19892-2-git-send-email-zhongkaihua@huawei.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kaihua Zhong <zhongkaihua@huawei.com>
-Cc: mark.rutland@arm.com, xuwei5@hisilicon.com, catalin.marinas@arm.com, will.deacon@arm.com, jassisinghbrar@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, guodong.xu@linaro.org, haojian.zhuang@linaro.org, suzhuangluan@hisilicon.com, xuezhiliang@hisilicon.com, kevin.wangtao@hisilicon.com
+From: Niklas Cassel <niklas.cassel@axis.com>
+Subject: [PATCH v6 17/18] bindings: PCI: artpec: Add support for the ARTPEC-7 SoC
+Date: Wed, 20 Dec 2017 00:29:38 +0100
+Message-ID: <20171219232940.659-18-niklas.cassel@axis.com>
+References: <20171219232940.659-1-niklas.cassel@axis.com>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20171219232940.659-1-niklas.cassel@axis.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Niklas Cassel <niklass@axis.com>, Jesper Nilsson <jespern@axis.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: lorenzo.pieralisi@arm.com, linux-arm-kernel@axis.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 19, 2017 at 07:15:43PM +0800, Kaihua Zhong wrote:
-> From: Leo Yan <leo.yan@linaro.org>
-> 
-> Introduce a binding for the Hi3660 mailbox controller, the mailbox is
-> used within application processor (AP), communication processor (CP),
-> HIFI and MCU, etc.
-> 
-> Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> ---
->  .../bindings/mailbox/hisilicon,hi3660-mailbox.txt  | 51 ++++++++++++++++++++++
->  1 file changed, 51 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mailbox/hisilicon,hi3660-mailbox.txt
+Add support for the ARTPEC-7 SoC in the artpec6 driver.
+The ARTPEC-6 SoC and the ARTPEC-7 SoC are very similar.
+Unfortunately, some fields in the PCIECFG and PCIESTAT
+register have changed.
 
-Please add acks when posting new versions.
+Signed-off-by: Niklas Cassel <niklas.cassel@axis.com>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+ Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt b/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
+index 33eef7ae5a23..979dc7b6cfe8 100644
+--- a/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
++++ b/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
+@@ -6,6 +6,8 @@ and thus inherits all the common properties defined in designware-pcie.txt.
+ Required properties:
+ - compatible: "axis,artpec6-pcie", "snps,dw-pcie" for ARTPEC-6 in RC mode;
+ 	      "axis,artpec6-pcie-ep", "snps,dw-pcie" for ARTPEC-6 in EP mode;
++	      "axis,artpec7-pcie", "snps,dw-pcie" for ARTPEC-7 in RC mode;
++	      "axis,artpec7-pcie-ep", "snps,dw-pcie" for ARTPEC-7 in EP mode;
+ - reg: base addresses and lengths of the PCIe controller (DBI),
+ 	the PHY controller, and configuration address space.
+ - reg-names: Must include the following entries:
+-- 
+2.14.2
