@@ -1,46 +1,75 @@
-From: Philippe Ombredanne <pombredanne@nexb.com>
-Subject: Re: [PATCH v5 4/6] media: i2c: Add TDA1997x HDMI receiver driver
-Date: Tue, 19 Dec 2017 12:49:06 +0100
-Message-ID: <CAOFm3uGB13QHDHOyS7MNfhBa+=HPWyVDtboHhw2R3K0PTLHaJQ@mail.gmail.com>
-References: <1513447230-30948-1-git-send-email-tharvey@gateworks.com>
- <1513447230-30948-5-git-send-email-tharvey@gateworks.com> <3ae0ee4d-e754-1e97-33ed-d1fedf442dfb@xs4all.nl>
+From: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v5 0/6] Add support for Hexagon q6v5-wcss integrated core
+Date: Tue, 19 Dec 2017 17:21:20 +0530
+Message-ID: <a4f0213d-62c2-b749-9fd2-e7c4a304b5e5@codeaurora.org>
+References: <1510656794-3815-1-git-send-email-sricharan@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3ae0ee4d-e754-1e97-33ed-d1fedf442dfb@xs4all.nl>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tim Harvey <tharvey@gateworks.com>
-Cc: Linux Media Mailing List <linux-media@vger.kernel.org>, ALSA <alsa-devel@alsa-project.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Shawn Guo <shawnguo@kernel.org>, Steve Longerbeam <slongerbeam@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, Hans Verkuil <hansverk@cisco.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>, Hans Verkuil <hverkuil@xs4all.nl>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1510656794-3815-1-git-send-email-sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Tim,
+Hi Bjorn,
 
-On Tue, Dec 19, 2017 at 12:12 PM, Hans Verkuil <hverkuil@xs4all.nl> wrote:
-> On 16/12/17 19:00, Tim Harvey wrote:
->> Add support for the TDA1997x HDMI receivers.
->>
->> Cc: Hans Verkuil <hverkuil@xs4all.nl>
->> Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+On 11/14/2017 4:23 PM, Sricharan R wrote:
+> IPQ8074 has an integrated Hexagon dsp core Q6v5 and a wireless lan
+> (Lithium) IP. This series adds the remoteproc driver to reset, load
+> and boot Q6 firmware.
+> 
+> The first patch is to make the mdt_loader authenticate
+> the firmware only if required, so that the code can be reused for
+> self-authenticating firmware like the Q6v5 core in IPQ8074. The second
+> patch exports the elf header's get_boot_addr helper to reuse it.
+> The next couple of patches arranges the code in the original q6v5-mpss
+> rproc to add q6v5-wcss later. The last couple of patches add the relevant
+> bits for the q6v5-wcss core.
+> 
+> This is done on top of Avaneesh's msm8996 rproc support [1]
+> 
+> [1] https://lkml.org/lkml/2017/10/24/771
+> 
+> v5:
+>     No change. Just updated tags in PATCH #5
+> 
+> V4:
+>     Fixed Bjorn's comment in PATCH#1 and added his acked-by
+>     Rebased on top of Avinash's latest rproc for msm8996 q6 support.
+> 
+> V3:
+>     Rebased on top of latest remoteproc next
+> 
+> V2:
+>     Last time introduced this a new rproc driver, but there is lot
+>     of code that can be shared if it is added to the q6v5-mpss pil
+>     driver.
+> 
+> Sricharan R (6):
+>   remoteproc: qcom: mdt_loader: Make the firmware authentication
+>     optional
+>   remoteproc: Export rproc_elf_get_boot_addr
+>   remoteproc: qcom: Push reset ops, fw ops, rproc ops in to of_match
+>     data
+>   remoteproc: qcom: Split the head and tail of the q6v5-pil rproc start
+>     function
+>   remoteproc: qcom: Add support for q6v5-wcss pil
+>   remoteproc: qcom: Add q6v5-wcss rproc ops
+> 
 
-<snip>
+Hi Bjorn,
+ Just thought of pinging you to figure out if the
+ patches are ok and any feedback ?
 
->> --- /dev/null
->> +++ b/drivers/media/i2c/tda1997x.c
->> @@ -0,0 +1,3520 @@
->> +/*
->> + * Copyright (C) 2017 Gateworks Corporation
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License as published by
->> + * the Free Software Foundation; either version 2 of the License, or
->> + * (at your option) any later version.
->> + */
+Regards,
+ Sricharan
 
-Would you mind using the new SPDX tags documented in Thomas patch set
-[1] rather than this fine but longer legalese?  Thank you!
 
-[1] https://lkml.org/lkml/2017/12/4/934
-
+-- 
+"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
 --
-Cordially
-Philippe Ombredanne
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
