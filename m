@@ -1,56 +1,59 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 0/3] irqchip: irq-bcm2836: add support for DT interrupt
- polarity
-Date: Tue, 19 Dec 2017 18:50:46 +0000
-Message-ID: <97a68b71-2e62-13ba-72ac-575c3b68617a@arm.com>
-References: <1513024752-11246-1-git-send-email-stefan.wahren@i2se.com>
- <d0c81267-8379-d4a1-ec56-fec3492c1df6@i2se.com>
- <a7939fae-31d1-c743-5957-d88be98a0c63@arm.com> <8737461ry0.fsf@anholt.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 0/9] soc: brcmstb: biuctrl updates for 64-bit chips
+Date: Tue, 19 Dec 2017 11:22:38 -0800
+Message-ID: <20171219192247.29799-1-f.fainelli@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <8737461ry0.fsf-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Content-Language: en-GB
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:BROADCOM BCM7XXX
+        ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 19/12/17 18:41, Eric Anholt wrote:
-> Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org> writes:
-> 
->> On 19/12/17 07:02, Stefan Wahren wrote:
->>> Hi Marc,
->>>
->>> Am 11.12.2017 um 21:39 schrieb Stefan Wahren:
->>>> This patch series implements DT polarity support for the 1st level interrupt
->>>> controller.
->>>>
->>>> Stefan Wahren (3):
->>>>    dt-bindings: bcm2836-l1-intc: add interrupt polarity support
->>>>    irqchip: irq-bcm2836: add support for DT interrupt polarity
->>>>    ARM: dts: bcm283x: Define polarity of per-cpu interrupts
->>>>
->>>>   .../interrupt-controller/brcm,bcm2836-l1-intc.txt  |  4 +-
->>>>   arch/arm/boot/dts/bcm2836.dtsi                     | 14 +++----
->>>>   arch/arm/boot/dts/bcm2837.dtsi                     | 12 +++---
->>>>   arch/arm/boot/dts/bcm283x.dtsi                     |  1 +
->>>>   drivers/irqchip/irq-bcm2836.c                      | 46 +++++++++++++---------
->>>>   5 files changed, 44 insertions(+), 33 deletions(-)
->>>>
->>>
->>> is this series okay?
->>
->> Yes, it does look good. I'll queue that for 4.16.
-> 
-> Are you grabbing all 3, or should I be grabbing the DT one?
+Hi all,
 
-All 3, if that's OK with you.
+This patch series updates the Broadcom STB Bus Interface Unit controller to
+support newer chips such as 7260, 7268, 7271 and 7278. These chips require
+additional tuning in order to provide the expected bus throughput.
 
-	M.
+In the process, we need to re-organize the common.c file a little bit in order
+to extract the family and product identifiers a little earlier.
+
+Finally, by moving the biuctrl initialization an early_initcall level, we can
+remove some code from the ARM-32bit machine descriptor file.
+
+Provided that we are happy with these changes, I would route them through my
+drivers/next branch and a subsequent Broadcom ARM SoC pull request.
+
+Thank you
+
+Changes in v2:
+
+- collect Rob's acked-by on the first patch
+- fixed the binding as suggested by Rob
+
+Florian Fainelli (9):
+  dt-bindings: arm: Add entry for Broadcom Brahma-B53
+  dt-bindings: arm: brcmstb: Correct BIUCTRL node documentation
+  soc: brcmstb: Make CPU credit offset more parameterized
+  soc: brcmstb: Correct CPU_CREDIT_REG offset for Brahma-B53 CPUs
+  soc: brcmstb: biuctrl: Prepare for saving/restoring other registers
+  soc: brcmstb: biuctrl: Wire-up new registers
+  soc: brcmstb: biuctrl: Fine tune B53 MCP interface settings
+  soc: brcmstb: Split initialization
+  soc: brcmstb: biuctrl: Move to early_initcall
+
+ .../devicetree/bindings/arm/bcm/brcm,brcmstb.txt   |  22 +--
+ Documentation/devicetree/bindings/arm/cpus.txt     |   1 +
+ arch/arm/mach-bcm/brcmstb.c                        |   2 -
+ drivers/soc/bcm/brcmstb/biuctrl.c                  | 176 +++++++++++++++++++--
+ drivers/soc/bcm/brcmstb/common.c                   |  27 ++--
+ include/linux/soc/brcmstb/brcmstb.h                |   6 -
+ 6 files changed, 186 insertions(+), 48 deletions(-)
+
 -- 
-Jazz is not dead. It just smells funny...
+2.9.3
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
