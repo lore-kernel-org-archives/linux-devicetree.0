@@ -1,72 +1,73 @@
 From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: RE: [PATCH 1/8] dt-bindings: can: rcar_can: document r8a774[35] can
- support
-Date: Tue, 19 Dec 2017 10:17:53 +0000
-Message-ID: <TY1PR06MB08953B33F245840430CD3DABC00F0@TY1PR06MB0895.apcprd06.prod.outlook.com>
-References: <1510067449-17017-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1510067449-17017-2-git-send-email-fabrizio.castro@bp.renesas.com>
+Subject: RE: [PATCH v2 2/4] dt-bindings: media: rcar_vin: add device tree
+ support for r8a774[35]
+Date: Tue, 19 Dec 2017 10:20:22 +0000
+Message-ID: <TY1PR06MB0895A119ADABE34B06885F39C00F0@TY1PR06MB0895.apcprd06.prod.outlook.com>
+References: <1510856571-30281-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1510856571-30281-3-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <1510067449-17017-2-git-send-email-fabrizio.castro@bp.renesas.com>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1510856571-30281-3-git-send-email-fabrizio.castro@bp.renesas.com>
 Content-Language: en-US
-Sender: linux-can-owner@vger.kernel.org
-To: Marc Kleine-Budde <mkl@pengutronix.de>
-Cc: Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Wolfgang Grandegger <wg@grandegger.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: =?iso-8859-1?Q?Niklas_S=F6derlund?= <niklas.soderlund@ragnatech.se>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Simon Horman <horms+renesas@verge.net.au>, Geert Uytterhoeven <geert@linux-m68k.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Marc,
+Hello Mauro,
 
 does this patch look ok to you?
 
 Thanks,
 Fab
 
-> Subject: [PATCH 1/8] dt-bindings: can: rcar_can: document r8a774[35] can =
-support
+> Subject: [PATCH v2 2/4] dt-bindings: media: rcar_vin: add device tree sup=
+port for r8a774[35]
 >
-> Document "renesas,can-r8a7743" and "renesas,can-r8a7745" compatible
-> strings. Since the fallback compatible string ("renesas,rcar-gen2-can")
-> activates the right code in the driver, no driver change is needed.
+> Add compatible strings for r8a7743 and r8a7745. No driver change
+> is needed as "renesas,rcar-gen2-vin" will activate the right code.
+> However, it is good practice to document compatible strings for the
+> specific SoC as this allows SoC specific changes to the driver if
+> needed, in addition to document SoC support and therefore allow
+> checkpatch.pl to validate compatible string values.
 >
 > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 > Reviewed-by: Biju Das <biju.das@bp.renesas.com>
 > ---
->  Documentation/devicetree/bindings/net/can/rcar_can.txt | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
+> v1->v2:
+> * Fixed double "change" in changelog
 >
-> diff --git a/Documentation/devicetree/bindings/net/can/rcar_can.txt b/Doc=
-umentation/devicetree/bindings/net/can/rcar_can.txt
-> index 06bb7cc..94a7f33 100644
-> --- a/Documentation/devicetree/bindings/net/can/rcar_can.txt
-> +++ b/Documentation/devicetree/bindings/net/can/rcar_can.txt
-> @@ -2,7 +2,9 @@ Renesas R-Car CAN controller Device Tree Bindings
->  -------------------------------------------------
+>  Documentation/devicetree/bindings/media/rcar_vin.txt | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
 >
->  Required properties:
-> -- compatible: "renesas,can-r8a7778" if CAN controller is a part of R8A77=
-78 SoC.
-> +- compatible: "renesas,can-r8a7743" if CAN controller is a part of R8A77=
-43 SoC.
-> +      "renesas,can-r8a7745" if CAN controller is a part of R8A7745 SoC.
-> +      "renesas,can-r8a7778" if CAN controller is a part of R8A7778 SoC.
->        "renesas,can-r8a7779" if CAN controller is a part of R8A7779 SoC.
->        "renesas,can-r8a7790" if CAN controller is a part of R8A7790 SoC.
->        "renesas,can-r8a7791" if CAN controller is a part of R8A7791 SoC.
-> @@ -12,7 +14,8 @@ Required properties:
->        "renesas,can-r8a7795" if CAN controller is a part of R8A7795 SoC.
->        "renesas,can-r8a7796" if CAN controller is a part of R8A7796 SoC.
->        "renesas,rcar-gen1-can" for a generic R-Car Gen1 compatible device=
-.
-> -      "renesas,rcar-gen2-can" for a generic R-Car Gen2 compatible device=
-.
-> +      "renesas,rcar-gen2-can" for a generic R-Car Gen2 or RZ/G1
-> +      compatible device.
->        "renesas,rcar-gen3-can" for a generic R-Car Gen3 compatible device=
-.
->        When compatible with the generic version, nodes must list the
->        SoC-specific version corresponding to the platform first
+> diff --git a/Documentation/devicetree/bindings/media/rcar_vin.txt b/Docum=
+entation/devicetree/bindings/media/rcar_vin.txt
+> index 98931f5..ff9697e 100644
+> --- a/Documentation/devicetree/bindings/media/rcar_vin.txt
+> +++ b/Documentation/devicetree/bindings/media/rcar_vin.txt
+> @@ -6,6 +6,8 @@ family of devices. The current blocks are always slaves a=
+nd suppot one input
+>  channel which can be either RGB, YUYV or BT656.
+>
+>   - compatible: Must be one or more of the following
+> +   - "renesas,vin-r8a7743" for the R8A7743 device
+> +   - "renesas,vin-r8a7745" for the R8A7745 device
+>     - "renesas,vin-r8a7778" for the R8A7778 device
+>     - "renesas,vin-r8a7779" for the R8A7779 device
+>     - "renesas,vin-r8a7790" for the R8A7790 device
+> @@ -14,7 +16,8 @@ channel which can be either RGB, YUYV or BT656.
+>     - "renesas,vin-r8a7793" for the R8A7793 device
+>     - "renesas,vin-r8a7794" for the R8A7794 device
+>     - "renesas,vin-r8a7795" for the R8A7795 device
+> -   - "renesas,rcar-gen2-vin" for a generic R-Car Gen2 compatible device.
+> +   - "renesas,rcar-gen2-vin" for a generic R-Car Gen2 or RZ/G1 compatibl=
+e
+> +     device.
+>     - "renesas,rcar-gen3-vin" for a generic R-Car Gen3 compatible device.
+>
+>     When compatible with the generic version nodes must list the
 > --
 > 2.7.4
 
