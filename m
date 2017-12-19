@@ -1,46 +1,69 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH v9 2/2] media: i2c: Add the ov7740 image sensor driver
-Date: Tue, 19 Dec 2017 15:43:09 +0200
-Message-ID: <20171219134308.4plzpknvksbzhio7@valkosipuli.retiisi.org.uk>
-References: <20171211013146.2497-1-wenyou.yang@microchip.com>
- <20171211013146.2497-3-wenyou.yang@microchip.com>
- <20171219092246.3usg5mdyi27ivqlq@valkosipuli.retiisi.org.uk>
- <CAOMZO5BHSJv01SwZ2YNtGZTjMtOuOktET43qriK2fQ+jhE2TDA@mail.gmail.com>
- <20171219130537.2viv4wjcp4i3mdkj@valkosipuli.retiisi.org.uk>
- <CAOMZO5C5NJMffBEv2cdqKqUnTMQEYkqzN1JnJMS21PWtKuabnA@mail.gmail.com>
+From: Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v5 00/11] Armada thermal: improvements and A7K/A8K SoCs support
+Date: Tue, 19 Dec 2017 14:57:08 +0100
+Message-ID: <20171219135719.9531-1-miquel.raynal@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <CAOMZO5C5NJMffBEv2cdqKqUnTMQEYkqzN1JnJMS21PWtKuabnA@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Wenyou Yang <wenyou.yang@microchip.com>, Jonathan Corbet <corbet@lwn.net>, linux-kernel <linux-kernel@vger.kernel.org>, Songjun Wu <songjun.wu@microchip.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>, Rob Herring <robh+dt@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Philippe Ombredanne <pombredanne@nexb.com>, linux-arm-kernel@lists.infradead.org, Linux Media Mailing List <linux-media@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>, David Sniatkiwicz <davidsn-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 19, 2017 at 11:19:06AM -0200, Fabio Estevam wrote:
-> Hi Sakari,
-> 
-> On Tue, Dec 19, 2017 at 11:05 AM, Sakari Ailus <sakari.ailus@iki.fi> wrote:
-> 
-> > I guess it depends on who do you ask and when. Looking at what has been
-> > recently merged to media tree master, the latter is preferred.
-> 
-> Just did 'git grep SPDX drivers/media'
-> 
-> and it consistently shows // SPDX style for C files.
+Hi,
 
-Both seem to exist. See e.g. c3a3d1d6b8b363a02234e5564692db3647f183e6 .
+This series takes over Baruch's series by integrating his patches about
+supporting thermal on Armada 7K and 8K SoCs within a larger series with
+several improvements on the armada_thermal.c driver.
+
+For now, Armada 380 and CP110 compatibles share the same initialization
+routine but this will probably change in the near future when adding
+support for overheat interrupts.
+
+DT bindings documentation is updated to match existing code.
+
+Armada AP806 and CP110 DT are also updated with thermal nodes and have
+already been accepted (thus absent in this series).
+
+Thank you,
+Miquèl
+
+
+Changes since v4:
+  - Added Gregory's Reviewed-by tags
+  - Rephrased the paragraph in the documentation explaining what
+    compatible supports.
+  - Enumerated the compatibles supporting only the new bindings.
+  - Required the Armada 375 SoC compatible string to be used with
+    new bindings.
+
+
+Baruch Siach (4):
+  dt-bindings: thermal: Describe Armada AP806 and CP110
+  thermal: armada: Use msleep for long delays
+  thermal: armada: Add support for Armada AP806
+  thermal: armada: Add support for Armada CP110
+
+Miquel Raynal (7):
+  thermal: armada: Simplify the check of the validity bit
+  thermal: armada: Clarify control registers accesses
+  thermal: armada: Use real status register name
+  thermal: armada: Update Kconfig and module description
+  thermal: armada: Change sensors trim default value
+  thermal: armada: Wait sensors validity before exiting the init
+    callback
+  thermal: armada: Give meaningful names to the thermal zones
+
+ .../devicetree/bindings/thermal/armada-thermal.txt |  37 ++-
+ drivers/thermal/Kconfig                            |   4 +-
+ drivers/thermal/armada_thermal.c                   | 253 +++++++++++++++------
+ 3 files changed, 215 insertions(+), 79 deletions(-)
 
 -- 
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi
+2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
