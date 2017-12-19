@@ -1,56 +1,68 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 4/6] rpmsg: glink: Expose rpmsg name attr for glink
-Date: Mon, 18 Dec 2017 14:48:28 -0800
-Message-ID: <1d29f603-b113-9931-d7b6-980c959b8b6b@codeaurora.org>
-References: <1513634534-22861-1-git-send-email-clew@codeaurora.org>
- <1513634534-22861-5-git-send-email-clew@codeaurora.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 6/6] phy: renesas: rcar-gen3-usb2: add gpio handling
+Date: Mon, 18 Dec 2017 18:09:31 -0600
+Message-ID: <CAL_Jsq+JE0tR9ezR+MUOh1wKi8r0kUzxPQRfrG6qd+1YOBiqpw@mail.gmail.com>
+References: <1513316726-14387-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1513316726-14387-7-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <20171216180510.qh5uiu5kwz5mx7zi@rob-hp-laptop> <SG2PR06MB0981CC4061F538B7ADFE48FDD80E0@SG2PR06MB0981.apcprd06.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1513634534-22861-5-git-send-email-clew-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chris Lew <clew-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: aneela-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <SG2PR06MB0981CC4061F538B7ADFE48FDD80E0@SG2PR06MB0981.apcprd06.prod.outlook.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: "kishon@ti.com" <kishon@ti.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/18/2017 02:02 PM, Chris Lew wrote:
-> Expose the name field as an attr so clients listening to uevents for
-> rpmsg can identify the edge the events correspond to.
+On Sun, Dec 17, 2017 at 11:16 PM, Yoshihiro Shimoda
+<yoshihiro.shimoda.uh@renesas.com> wrote:
+> Hi Rob,
 >
-> Signed-off-by: Chris Lew <clew-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> ---
->  drivers/rpmsg/qcom_glink_native.c | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
+> Thank you for your comments!
 >
-> diff --git a/drivers/rpmsg/qcom_glink_native.c b/drivers/rpmsg/qcom_glink_native.c
-> index 786f2eca01f1..a897ccea3098 100644
-> --- a/drivers/rpmsg/qcom_glink_native.c
-> +++ b/drivers/rpmsg/qcom_glink_native.c
-> @@ -1558,6 +1558,22 @@ static void qcom_glink_work(struct work_struct *work)
->  	}
->  }
->  
-> +static ssize_t rpmsg_name_show(struct device *dev,
-> +			       struct device_attribute *attr, char *buf)
-> +{
-> +	struct rpmsg_device *rpdev = to_rpmsg_device(dev);
-> +	struct qcom_glink_device *gdev = to_glink_device(rpdev);
-> +
-> +	return snprintf(buf, RPMSG_NAME_SIZE, "%s\n", gdev->glink->name);
-> +}
-> +static DEVICE_ATTR_RO(rpmsg_name);
-> +
-> +static struct attribute *qcom_glink_attrs[] = {
+>> -----Original Message-----
+>> From: Rob Herring, Sent: Sunday, December 17, 2017 3:05 AM
+>>
+>> On Fri, Dec 15, 2017 at 02:45:26PM +0900, Yoshihiro Shimoda wrote:
+>> > Some R-Car SoCs (e.g. R-Car D3) doesn't have dedicated pins of VBUS
+>> > and ID. So, they may be connected to gpio pins. To handle the gpio
+>> > pins, this patch adds the handling of VBUS and ID pins instead of
+>> > dedicated pins.
+>> >
+>> > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+>> > ---
+>> >  .../devicetree/bindings/phy/rcar-gen3-phy-usb2.txt |  2 +
+>> >  drivers/phy/renesas/phy-rcar-gen3-usb2.c           | 77 ++++++++++++++++++++--
+>> >  2 files changed, 72 insertions(+), 7 deletions(-)
+>> >
+>> > diff --git a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
+>> b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
+>> > index 99b651b..999a6ef 100644
+>> > --- a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
+>> > +++ b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
+>> > @@ -27,6 +27,8 @@ channel as USB OTG:
+>> >  - interrupts: interrupt specifier for the PHY.
+>> >  - vbus-supply: Phandle to a regulator that provides power to the VBUS. This
+>> >            regulator will be managed during the PHY power on/off sequence.
+>> > +- vbus-gpios: use gpio to control vbus instead of dedicated pin.
+>>
+>> How does this relate to vbus-supply? A gpio-regulator doesn't work here?
+>
+> Thank you for the pointed out. You're correct. A gpio-regulator can work intead of "vbus-gpios".
+> So, I will drop this.
+>
+>> > +- id-gpios: use gpio to detect id instead of dedicated pin.
+>>
+>> These aren't part of the phy, but really belong in a connector node.
+>
+> I'm afraid but I don't understand "a connector node" mean.
+> Is it an extcon device for instance?
+> If so, I'll try to use extcon-usb-gpio.c instead of own gpio handling on the driver.
 
-const?
+No, extcon binding has a lot of Linuxisms in it. I mean something like
+hdmi-connector binding. There's been some attempts[1] for USB
+connectors, but nothing finalized.
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Rob
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[1] https://www.spinics.net/lists/linux-usb/msg161104.html
