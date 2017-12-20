@@ -1,64 +1,60 @@
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH 2/9] ARM: dts: r8a7745: Add audio DMAC support
-Date: Wed, 20 Dec 2017 20:01:58 +0000
-Message-ID: <1513800125-53213-3-git-send-email-biju.das@bp.renesas.com>
+From: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Subject: [PATCH 1/9] ARM: dts: r8a7745: Add audio clocks
+Date: Wed, 20 Dec 2017 20:01:57 +0000
+Message-ID: <1513800125-53213-2-git-send-email-biju.das@bp.renesas.com>
 References: <1513800125-53213-1-git-send-email-biju.das@bp.renesas.com>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1513800125-53213-1-git-send-email-biju.das@bp.renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Chris Paterson <chris.paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Biju Das <biju.das@bp.renesas.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1513800125-53213-1-git-send-email-biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Instantiate the audio DMA controller on the r8a7745 device tree.
+Describe the external audio clocks required by the sound driver.
+Boards that provide audio clocks need to override the clock frequencies.
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Signed-off-by: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Reviewed-by: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
 ---
- arch/arm/boot/dts/r8a7745.dtsi | 31 +++++++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
+ arch/arm/boot/dts/r8a7745.dtsi | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
 diff --git a/arch/arm/boot/dts/r8a7745.dtsi b/arch/arm/boot/dts/r8a7745.dtsi
-index 6d085f0..d9488a1 100644
+index 2be7485..6d085f0 100644
 --- a/arch/arm/boot/dts/r8a7745.dtsi
 +++ b/arch/arm/boot/dts/r8a7745.dtsi
-@@ -397,6 +397,37 @@
- 			dma-channels = <15>;
- 		};
+@@ -35,6 +35,27 @@
+ 		vin1 = &vin1;
+ 	};
  
-+		audma0: dma-controller@ec700000 {
-+			compatible = "renesas,dmac-r8a7745",
-+				     "renesas,rcar-dmac";
-+			reg = <0 0xec700000 0 0x10000>;
-+			interrupts = <GIC_SPI 346 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 320 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 321 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 322 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 323 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 324 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 325 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 326 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 327 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 328 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 329 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 330 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 331 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 332 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "error",
-+					  "ch0", "ch1", "ch2", "ch3",
-+					  "ch4", "ch5", "ch6", "ch7",
-+					  "ch8", "ch9", "ch10", "ch11",
-+					  "ch12";
-+			clocks = <&cpg CPG_MOD 502>;
-+			clock-names = "fck";
-+			power-domains = <&sysc R8A7745_PD_ALWAYS_ON>;
-+			resets = <&cpg 502>;
-+			#dma-cells = <1>;
-+			dma-channels = <13>;
-+		};
++	/*
++	 * The external audio clocks are configured  as 0 Hz fixed
++	 * frequency clocks by default.  Boards that provide audio
++	 * clocks should override them.
++	 */
++	audio_clka: audio_clka {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <0>;
++	};
++	audio_clkb: audio_clkb {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <0>;
++	};
++	audio_clkc: audio_clkc {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <0>;
++	};
 +
- 		usb_dmac0: dma-controller@e65a0000 {
- 			compatible = "renesas,r8a7745-usb-dmac",
- 				     "renesas,usb-dmac";
+ 	/* External CAN clock */
+ 	can_clk: can {
+ 		compatible = "fixed-clock";
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
