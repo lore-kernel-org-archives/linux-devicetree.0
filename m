@@ -1,81 +1,136 @@
-From: Joel Stanley <joel@jms.id.au>
-Subject: [PATCH v3 02/20] dt-bindings: gpio: Add ASPEED constants
-Date: Wed, 20 Dec 2017 13:53:10 +1030
-Message-ID: <20171220032328.30584-3-joel@jms.id.au>
+From: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Subject: [PATCH v3 03/20] ARM: dts: aspeed: Add LPC and child devices
+Date: Wed, 20 Dec 2017 13:53:11 +1030
+Message-ID: <20171220032328.30584-4-joel@jms.id.au>
 References: <20171220032328.30584-1-joel@jms.id.au>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171220032328.30584-1-joel@jms.id.au>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Andrew Jeffery <andrew@aj.id.au>, Patrick Venture <venture@google.com>, Xo Wang <xow@google.com>, Lei YU <mine260309@gmail.com>
-Cc: =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Jeremy Kerr <jk@ozlabs.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171220032328.30584-1-joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>, Patrick Venture <venture-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Xo Wang <xow-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Lei YU <mine260309-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg-Bxea+6Xhats@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-aspeed-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-These are used to by the device tree to map pin numbers to constants
-required by the GPIO bindings.
+From: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
 
-Signed-off-by: Joel Stanley <joel@jms.id.au>
---
-v3:
- - Remove dtsi includes from this patch, they will come later
+Ensure the ordering is correct and add all of the children in the SoC
+device trees for the ast2400 and ast2500.
+
+Signed-off-by: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+Reviewed-by: Cédric Le Goater <clg-Bxea+6Xhats@public.gmane.org>
+Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
 ---
- include/dt-bindings/gpio/aspeed-gpio.h | 49 ++++++++++++++++++++++++++++++++++
- 1 file changed, 49 insertions(+)
- create mode 100644 include/dt-bindings/gpio/aspeed-gpio.h
+v3:
+ - Fix ast2400 compatible string
+---
+ arch/arm/boot/dts/aspeed-g4.dtsi | 35 +++++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/aspeed-g5.dtsi | 27 +++++++++++++++++----------
+ 2 files changed, 52 insertions(+), 10 deletions(-)
 
-diff --git a/include/dt-bindings/gpio/aspeed-gpio.h b/include/dt-bindings/gpio/aspeed-gpio.h
-new file mode 100644
-index 000000000000..56fc4889b2c4
---- /dev/null
-+++ b/include/dt-bindings/gpio/aspeed-gpio.h
-@@ -0,0 +1,49 @@
-+/* SPDX-License-Identifier: GPL-2.0+ */
-+/*
-+ * This header provides constants for binding aspeed,*-gpio.
-+ *
-+ * The first cell in Aspeed's GPIO specifier is the GPIO ID. The macros below
-+ * provide names for this.
-+ *
-+ * The second cell contains standard flag values specified in gpio.h.
-+ */
+diff --git a/arch/arm/boot/dts/aspeed-g4.dtsi b/arch/arm/boot/dts/aspeed-g4.dtsi
+index 45d815a86d42..9422f9cb1e11 100644
+--- a/arch/arm/boot/dts/aspeed-g4.dtsi
++++ b/arch/arm/boot/dts/aspeed-g4.dtsi
+@@ -225,6 +225,41 @@
+ 				status = "disabled";
+ 			};
+ 
++			lpc: lpc@1e789000 {
++				compatible = "aspeed,ast2400-lpc", "simple-mfd";
++				reg = <0x1e789000 0x1000>;
 +
-+#ifndef _DT_BINDINGS_GPIO_ASPEED_GPIO_H
-+#define _DT_BINDINGS_GPIO_ASPEED_GPIO_H
++				#address-cells = <1>;
++				#size-cells = <1>;
++				ranges = <0x0 0x1e789000 0x1000>;
 +
-+#include <dt-bindings/gpio/gpio.h>
++				lpc_bmc: lpc-bmc@0 {
++					compatible = "aspeed,ast2400-lpc-bmc";
++					reg = <0x0 0x80>;
++				};
 +
-+#define ASPEED_GPIO_PORT_A 0
-+#define ASPEED_GPIO_PORT_B 1
-+#define ASPEED_GPIO_PORT_C 2
-+#define ASPEED_GPIO_PORT_D 3
-+#define ASPEED_GPIO_PORT_E 4
-+#define ASPEED_GPIO_PORT_F 5
-+#define ASPEED_GPIO_PORT_G 6
-+#define ASPEED_GPIO_PORT_H 7
-+#define ASPEED_GPIO_PORT_I 8
-+#define ASPEED_GPIO_PORT_J 9
-+#define ASPEED_GPIO_PORT_K 10
-+#define ASPEED_GPIO_PORT_L 11
-+#define ASPEED_GPIO_PORT_M 12
-+#define ASPEED_GPIO_PORT_N 13
-+#define ASPEED_GPIO_PORT_O 14
-+#define ASPEED_GPIO_PORT_P 15
-+#define ASPEED_GPIO_PORT_Q 16
-+#define ASPEED_GPIO_PORT_R 17
-+#define ASPEED_GPIO_PORT_S 18
-+#define ASPEED_GPIO_PORT_T 19
-+#define ASPEED_GPIO_PORT_U 20
-+#define ASPEED_GPIO_PORT_V 21
-+#define ASPEED_GPIO_PORT_W 22
-+#define ASPEED_GPIO_PORT_X 23
-+#define ASPEED_GPIO_PORT_Y 24
-+#define ASPEED_GPIO_PORT_Z 25
-+#define ASPEED_GPIO_PORT_AA 26
-+#define ASPEED_GPIO_PORT_AB 27
-+#define ASPEED_GPIO_PORT_AC 28
++				lpc_host: lpc-host@80 {
++					compatible = "aspeed,ast2400-lpc-host", "simple-mfd", "syscon";
++					reg = <0x80 0x1e0>;
++					reg-io-width = <4>;
 +
-+#define ASPEED_GPIO(port, offset) \
-+	((ASPEED_GPIO_PORT_##port * 8) + offset)
++					#address-cells = <1>;
++					#size-cells = <1>;
++					ranges = <0x0 0x80 0x1e0>;
 +
-+#endif
++					lpc_ctrl: lpc-ctrl@0 {
++						compatible = "aspeed,ast2400-lpc-ctrl";
++						reg = <0x0 0x80>;
++						status = "disabled";
++					};
++
++					lhc: lhc@20 {
++						compatible = "aspeed,ast2400-lhc";
++						reg = <0x20 0x24 0x48 0x8>;
++					};
++				};
++			};
++
+ 			uart2: serial@1e78d000 {
+ 				compatible = "ns16550a";
+ 				reg = <0x1e78d000 0x20>;
+diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
+index 5c4ecdba3a6b..069f13df19d1 100644
+--- a/arch/arm/boot/dts/aspeed-g5.dtsi
++++ b/arch/arm/boot/dts/aspeed-g5.dtsi
+@@ -265,6 +265,16 @@
+ 				status = "disabled";
+ 			};
+ 
++			vuart: serial@1e787000 {
++				compatible = "aspeed,ast2500-vuart";
++				reg = <0x1e787000 0x40>;
++				reg-shift = <2>;
++				interrupts = <10>;
++				clocks = <&clk_uart>;
++				no-loopback-test;
++				status = "disabled";
++			};
++
+ 			lpc: lpc@1e789000 {
+ 				compatible = "aspeed,ast2500-lpc", "simple-mfd";
+ 				reg = <0x1e789000 0x1000>;
+@@ -288,6 +298,13 @@
+ 
+ 					reg-io-width = <4>;
+ 
++					lpc_ctrl: lpc-ctrl@0 {
++						compatible = "aspeed,ast2500-lpc-ctrl";
++						reg = <0x0 0x80>;
++						status = "disabled";
++					};
++
++
+ 					lhc: lhc@20 {
+ 						compatible = "aspeed,ast2500-lhc";
+ 						reg = <0x20 0x24 0x48 0x8>;
+@@ -295,16 +312,6 @@
+ 				};
+ 			};
+ 
+-			vuart: serial@1e787000 {
+-				compatible = "aspeed,ast2500-vuart";
+-				reg = <0x1e787000 0x40>;
+-				reg-shift = <2>;
+-				interrupts = <10>;
+-				clocks = <&clk_uart>;
+-				no-loopback-test;
+-				status = "disabled";
+-			};
+-
+ 			uart2: serial@1e78d000 {
+ 				compatible = "ns16550a";
+ 				reg = <0x1e78d000 0x20>;
 -- 
 2.15.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
