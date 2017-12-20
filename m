@@ -1,28 +1,28 @@
-From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] ARM: dts: r8a7743: Add thermal device to DT
-Date: Wed, 20 Dec 2017 13:09:12 +0100
-Message-ID: <20171220120912.bhorlhi7h34vawg7@verge.net.au>
-References: <1513689449-2700-1-git-send-email-biju.das@bp.renesas.com>
- <1513689449-2700-3-git-send-email-biju.das@bp.renesas.com>
- <20171220085036.gdcnbhonyqlewyi4@verge.net.au>
- <KL1PR06MB17029FA8C7AD57F067777E11B80C0@KL1PR06MB1702.apcprd06.prod.outlook.com>
- <20171220114844.w35ain6w6tvecfgo@verge.net.au>
- <KL1PR06MB1702004602DF211F92CFAC9BB80C0@KL1PR06MB1702.apcprd06.prod.outlook.com>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH 2/2] arm64: dts: rockchip: Add efuse device node for RK3328 SoC
+Date: Wed, 20 Dec 2017 13:13:07 +0100
+Message-ID: <2396742.bPnmP3xQc2@phil>
+References: <1501817618-65504-1-git-send-email-finley.xiao@rock-chips.com> <1501817618-65504-3-git-send-email-finley.xiao@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <KL1PR06MB1702004602DF211F92CFAC9BB80C0-k6wCOA2IOKSx7cDWSRonpW0DtJ1/0DrXvxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
+In-Reply-To: <1501817618-65504-3-git-send-email-finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Cc: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Finley Xiao <finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, tony.xie-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cl-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 20, 2017 at 11:53:44AM +0000, Biju Das wrote:
-> Thanks, I will check and provide feedback if any.
+Am Freitag, 4. August 2017, 11:33:38 CET schrieb Finley Xiao:
+> This patch adds an efuse node in the device tree for rk3228 SoC.
+> 
+> Signed-off-by: Finley Xiao <finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
-Thanks, you should be able to check renesas-devel-20171220-v4.15-rc4,
-which I pushed a few minutes ago.
+applied for 4.16, after the driver change landed now.
+
+
+Thanks
+Heiko
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
