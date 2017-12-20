@@ -1,54 +1,69 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Devicetree Specification 0.2
-Date: Wed, 20 Dec 2017 16:05:20 +0000
-Message-ID: <CACxGe6vqo3ZF9Ms_2zZTpHUx3qW6VZqDL1BstkX8uKBQWCMq-A@mail.gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2] dt-bindings: Add an enable method to RISC-V
+Date: Wed, 20 Dec 2017 10:13:57 -0600
+Message-ID: <20171220161357.g4bix2xeovxm7izs@rob-hp-laptop>
+References: <20171207230523.29798-1-palmer@sifive.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20171207230523.29798-1-palmer-SpMDHPYPyPbQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Palmer Dabbelt <palmer-SpMDHPYPyPbQT0dZR+AlfA@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-q3qR2WxjNRFS9aJRtSZj7A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
+On Thu, Dec 07, 2017 at 03:05:23PM -0800, Palmer Dabbelt wrote:
+> RISC-V doesn't currently specify a mechanism for enabling or disabling
+> CPUs.  Instead, we assume that all CPUs are enabled on boot, and if
+> someone wants to save power we instead put a CPU to sleep via a WFI
+> loop.  Future systems may have an explicit mechanism for putting a CPU
+> to sleep, so we're standardizing the device tree entry for when that
+> happens.
+> 
+> We're not defining a spin-table based interface to the firmware, as the
+> plan is to handle this entirely within the kernel instead.
+> 
+> CC: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Signed-off-by: Palmer Dabbelt <palmer-SpMDHPYPyPbQT0dZR+AlfA@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/riscv/cpus.txt | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/riscv/cpus.txt b/Documentation/devicetree/bindings/riscv/cpus.txt
+> index adf7b7af5dc3..68f88eacc594 100644
+> --- a/Documentation/devicetree/bindings/riscv/cpus.txt
+> +++ b/Documentation/devicetree/bindings/riscv/cpus.txt
+> @@ -82,6 +82,15 @@ described below.
+>                  Value type: <string>
+>                  Definition: Contains the RISC-V ISA string of this hart.  These
+>                              ISA strings are defined by the RISC-V ISA manual.
+> +        - cpu-enable-method:
+> +                Usage: optional
+> +                Value type: <stringlist>
+> +                Definition: When absent, default is either "always-disabled"
+> +                            "always-enabled", depending on the current state
+> +                            of the CPU.
 
-I've just released v0.2 of the devicetree specification. You can find
-the prebuilt PDF on the release page here:
+How does one determine the state of other cpus?
 
-https://github.com/devicetree-org/devicetree-specification/releases/tag/v0.2
+> +                            Must be one of:
+> +                                * "always-disabled": This CPU cannot be enabled.
 
-The document text is also published on readthedocs (unofficially; the
-pdf is considered authoritative):
+status = "disabled" already serves this purpose.
 
-http://devicetree-specification.readthedocs.io/en/latest/
+> +                                * "always-enabled": This CPU cannot be disabled.
 
-Please go take a look. Comments can be made here, or posted as issues
-on the GitHub page. Or better yet, submit patches!
+I don't see how this can work unless the kernel is loaded prior to 
+bringing all cpus out of reset. You have to halt cpus in some way until 
+the kernel is loaded.
 
-https://github.com/devicetree-org/devicetree-specification/issues
-
-Cheers,
-g.
-
----
-
-Mostly editorial changes from v0.1. Primary purpose for this release is to work
-through the mechanics of cutting a release. Right now it is more labour
-intensive than I would like for two reasons:
-
-- The GitHub OAuth key must be manually changed to the person cutting the
-  release. I would like it to be automatically selected based on who signed
-  the release tag
-- The pre-release flag needs to be manually changed between -pre/-rc and full
-  releases. This also should be automatically determined based on tag pattern
-  matching
-
-Content changes include:
-* Added more recommended generic node names
-* Added interrupts-extended
-* Additional phy times
-* Filled out detail in source language chapter
-* Editorial changes
-* Added changebar version to release documents
+>  
+>  Example: SiFive Freedom U540G Development Kit
+>  ---------------------------------------------
+> -- 
+> 2.13.6
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
