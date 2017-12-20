@@ -1,76 +1,123 @@
-From: Yinbo Zhu <yinbo.zhu-3arQi8VN3Tc@public.gmane.org>
-Subject: RE: [PATCH v2] arm64: dts: ls1088a: Add USB support
-Date: Wed, 20 Dec 2017 04:42:59 +0000
-Message-ID: <HE1PR0401MB19451C3CFAA694F965B30F0FE90C0@HE1PR0401MB1945.eurprd04.prod.outlook.com>
-References: <20170913091009.21448-1-yinbo.zhu@nxp.com>
- <20170922065454.GF26358@dragon>
- <VI1PR04MB1262D160BA8625330E32CAF9E9470@VI1PR04MB1262.eurprd04.prod.outlook.com>
- <AM3PR04MB12515DB71B8ACF7422A20244E9280@AM3PR04MB1251.eurprd04.prod.outlook.com>
- <VI1PR04MB1262DD3C6A18257DEE2E907DE9200@VI1PR04MB1262.eurprd04.prod.outlook.com>
- <VI1PR04MB1262C44016CE4ECB8902E7E7E9330@VI1PR04MB1262.eurprd04.prod.outlook.com>
- <20171220025239.GB3766@dragon>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+From: Zong Li <zongbox-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] RISC-V: Support built-in dtb
+Date: Wed, 20 Dec 2017 12:20:16 +0800
+Message-ID: <1513743616-1545-1-git-send-email-zongbox@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171220025239.GB3766@dragon>
-Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "Catalin Marinas )" <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "Will Deacon )" <will.deacon-5wv7dgnIgG8@public.gmane.org>, Harninder Rai <harninder.rai-3arQi8VN3Tc@public.gmane.org>, Raghav Dogra <raghav.dogra-3arQi8VN3Tc@public.gmane.org>, Ashish Kumar <ashish.kumar-3arQi8VN3Tc@public.gmane.org>, Andy Tang <andy.tang-3arQi8VN3Tc@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ran Wang <ran.wang_1-3arQi8VN3Tc@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: palmer-SpMDHPYPyPbQT0dZR+AlfA@public.gmane.org, albert-SpMDHPYPyPbQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wesley-SpMDHPYPyPbQT0dZR+AlfA@public.gmane.org, patches-q3qR2WxjNRFS9aJRtSZj7A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, greentime-MUIXKm3Oiri1Z/+hSey0Gg@public.gmane.org, zong-MUIXKm3Oiri1Z/+hSey0Gg@public.gmane.org
+Cc: Zong Li <zongbox-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Build the dtb into the kernel image.
+If the DTB is given via bootloader, the external DTB is adopted first.
 
+Signed-off-by: Zong Li <zongbox-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ arch/riscv/Kconfig           |  4 ++++
+ arch/riscv/Makefile          |  9 +++++++++
+ arch/riscv/boot/Makefile     | 17 +++++++++++++++++
+ arch/riscv/boot/dts/Makefile | 11 +++++++++++
+ arch/riscv/kernel/setup.c    |  2 +-
+ 5 files changed, 42 insertions(+), 1 deletion(-)
+ create mode 100644 arch/riscv/boot/Makefile
+ create mode 100644 arch/riscv/boot/dts/Makefile
 
------Original Message-----
-From: Shawn Guo [mailto:shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org]=20
-Sent: Wednesday, December 20, 2017 10:53 AM
-To: Yinbo Zhu <yinbo.zhu-3arQi8VN3Tc@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>; Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>; =
-Catalin Marinas ) <catalin.marinas-5wv7dgnIgG8@public.gmane.org>; Will Deacon ) <will.deacon@arm=
-.com>; Harninder Rai <harninder.rai-3arQi8VN3Tc@public.gmane.org>; Raghav Dogra <raghav.dogra@nx=
-p.com>; Ashish Kumar <ashish.kumar-3arQi8VN3Tc@public.gmane.org>; Andy Tang <andy.tang-3arQi8VN3Tc@public.gmane.org>;=
- open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS <devicetree@vge=
-r.kernel.org>; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; open list <linux-kerne=
-l@vger.kernel.org>
-Subject: Re: [PATCH v2] arm64: dts: ls1088a: Add USB support
-
-On Thu, Dec 07, 2017 at 07:33:28AM +0000, Yinbo Zhu wrote:
-> Hi shawn guo,
->=20
-> If my patch has no other issue,
-> Can you help me push it to upstream.
-
->Are you talking about v4 patch?  First of all, I cannot find v4 in my mail=
-box.  That said, it seems you did not send=20
-
->the patch to me.
->Secondly, by checking the patch on patchwork, the usb nodes in fsl-ls1088a=
--rdb.dts do not sorted alphabetically=20
-
->in label name.
-
->Shawn
-
-Hi shawn,=20
- I will change the code as follows, right?
-
-&esdhc {
- 	status =3D "okay";
- };
-...
-+&usb0 {
-+	status =3D "okay";
-+};
+diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+index 2e15e85..831cbb9 100644
+--- a/arch/riscv/Kconfig
++++ b/arch/riscv/Kconfig
+@@ -189,6 +189,10 @@ config RISCV_ISA_C
+ config RISCV_ISA_A
+ 	def_bool y
+ 
++config RISCV_BUILTIN_DTB
++        string "Builtin DTB"
++        default ""
 +
-+&usb1 {
-+	status =3D "okay";
-+};
+ endmenu
+ 
+ menu "Kernel type"
+diff --git a/arch/riscv/Makefile b/arch/riscv/Makefile
+index 6719dd3..baed60a 100644
+--- a/arch/riscv/Makefile
++++ b/arch/riscv/Makefile
+@@ -57,6 +57,12 @@ ifeq ($(CONFIG_CMODEL_MEDANY),y)
+ 	KBUILD_CFLAGS += -mcmodel=medany
+ endif
+ 
++ifneq '$(CONFIG_NDS32_BUILTIN_DTB)' '""'
++BUILTIN_DTB := y
++else
++BUILTIN_DTB := n
++endif
 +
-https://patchwork.kernel.org/patch/10059097/
+ # GCC versions that support the "-mstrict-align" option default to allowing
+ # unaligned accesses.  While unaligned accesses are explicitly allowed in the
+ # RISC-V ISA, they're emulated by machine mode traps on all extant
+@@ -69,4 +75,7 @@ core-y += arch/riscv/kernel/ arch/riscv/mm/
+ 
+ libs-y += arch/riscv/lib/
+ 
++boot := arch/riscv/boot
++core-$(BUILTIN_DTB) += $(boot)/dts/
++
+ all: vmlinux
+diff --git a/arch/riscv/boot/Makefile b/arch/riscv/boot/Makefile
+new file mode 100644
+index 0000000..003d697
+--- /dev/null
++++ b/arch/riscv/boot/Makefile
+@@ -0,0 +1,17 @@
++# SPDX-License-Identifier: GPL-2.0
++
++targets := Image Image.gz
++
++$(obj)/Image: vmlinux FORCE
++	$(call if_changed,objcopy)
++
++$(obj)/Image.gz: $(obj)/Image FORCE
++	$(call if_changed,gzip)
++
++install: $(obj)/Image
++	$(CONFIG_SHELL) $(srctree)/$(src)/install.sh $(KERNELRELEASE) \
++	$(obj)/Image System.map "$(INSTALL_PATH)"
++
++zinstall: $(obj)/Image.gz
++	$(CONFIG_SHELL) $(srctree)/$(src)/install.sh $(KERNELRELEASE) \
++	$(obj)/Image.gz System.map "$(INSTALL_PATH)"
+diff --git a/arch/riscv/boot/dts/Makefile b/arch/riscv/boot/dts/Makefile
+new file mode 100644
+index 0000000..b65d070
+--- /dev/null
++++ b/arch/riscv/boot/dts/Makefile
+@@ -0,0 +1,11 @@
++# SPDX-License-Identifier: GPL-2.0
++
++ifneq '$(CONFIG_RISCV_BUILTIN_DTB)' '""'
++BUILTIN_DTB := $(patsubst "%",%,$(CONFIG_RISCV_BUILTIN_DTB)).dtb.o
++else
++BUILTIN_DTB :=
++endif
++
++obj-$(CONFIG_OF) += $(BUILTIN_DTB)
++
++clean-files := *.dtb *.dtb.S
+diff --git a/arch/riscv/kernel/setup.c b/arch/riscv/kernel/setup.c
+index e59a28c..3c89f3d 100644
+--- a/arch/riscv/kernel/setup.c
++++ b/arch/riscv/kernel/setup.c
+@@ -149,7 +149,7 @@ asmlinkage void __init setup_vm(void)
+ 
+ void __init sbi_save(unsigned int hartid, void *dtb)
+ {
+-	early_init_dt_scan(__va(dtb));
++	early_init_dt_scan(dtb ? __va(dtb) : __dtb_start);
+ }
+ 
+ /*
+-- 
+2.7.4
 
-Thanks
-Yinbo.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
