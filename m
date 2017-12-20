@@ -1,106 +1,31 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/4] dma: fsl-qdma: add devicetree documentation for qDMA
- driver.
-Date: Wed, 20 Dec 2017 12:43:04 -0600
-Message-ID: <20171220184304.ywr3nopucgubgxwz@rob-hp-laptop>
-References: <20171219064157.29586-1-wen.he_1@nxp.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/3] dt-bindings: i2c: Add MediaTek MT2712 i2c binding
+Date: Wed, 20 Dec 2017 12:43:47 -0600
+Message-ID: <20171220184347.o2f5ez3n4vmbrq7w@rob-hp-laptop>
+References: <1513666263-6443-1-git-send-email-jun.gao@mediatek.com>
+ <1513666263-6443-2-git-send-email-jun.gao@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-i2c-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20171219064157.29586-1-wen.he_1-3arQi8VN3Tc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wen He <wen.he_1-3arQi8VN3Tc@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1513666263-6443-2-git-send-email-jun.gao@mediatek.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Jun Gao <jun.gao@mediatek.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Matthias Brugger <matthias.bgg@gmail.com>, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 19, 2017 at 02:41:57PM +0800, Wen He wrote:
-
-Need a commit message.
-
-> Signed-off-by: Wen He <wen.he_1-3arQi8VN3Tc@public.gmane.org>
+On Tue, Dec 19, 2017 at 02:51:01PM +0800, Jun Gao wrote:
+> From: Jun Gao <jun.gao@mediatek.com>
+> 
+> Add MT2712 i2c binding to binding file. Compare to MT8173 i2c
+> controller, MT2712 has timing adjust registers which can adjust
+> the internal divider of i2c source clock, SCL duty cycle, SCL
+> compare point, start(repeated start) and stop time, SDA change
+> time.
+> 
+> Signed-off-by: Jun Gao <jun.gao@mediatek.com>
 > ---
->  Documentation/devicetree/bindings/dma/fsl-qdma.txt | 42 ++++++++++++++++++++++
->  1 file changed, 42 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/fsl-qdma.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/fsl-qdma.txt b/Documentation/devicetree/bindings/dma/fsl-qdma.txt
-> new file mode 100644
-> index 000000000000..b076177b4863
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/fsl-qdma.txt
-> @@ -0,0 +1,42 @@
-> +* Freescale queue Direct Memory Access Controller(qDMA) Controller
-> +
-> +  The qDMA controller transfers blocks of data between one source and one or more
+>  Documentation/devicetree/bindings/i2c/i2c-mtk.txt | 1 +
+>  1 file changed, 1 insertion(+)
 
-Why the indentation?
-
-> +destinations. The blocks of data transferred can be represented in memory as contiguous
-> +or non-contiguous using scatter/gather table(s). Channel virtualization is supported
-> +through enqueuing of DMA jobs to, or dequeuing DMA jobs from, different work
-> +queues.
-> +
-> +* qDMA Controller
-> +Required properties:
-> +- compatible :
-
-Add "Should be one of:"
-
-> +	- "fsl,ls1021a-qdma",
-> +	Or "fsl,ls1043a-qdma" followed by "fsl,ls1021a-qdma",
-
-Then remove the "Or" and replace " followed by" with a comma (like dts 
-source).
-
-> +- reg : Specifies base physical address(s) and size of the qDMA registers.
-> +	The region is qDMA control register's address and size.
-> +- interrupts : A list of interrupt-specifiers, one for each entry in
-> +	interrupt-names.
-> +- interrupt-names : Should contain:
-> +	"qdma-error" - the error interrupt
-> +	"qdma-queue" - the queue interrupt
-> +- channels : Number of channels supported by the controller
-
-dma-channels is the standard name.
-
-> +- queues : Number of queues supported by driver
-
-Needs a vendor prefix.
-
-> +
-> +Optional properties:
-> +- big-endian: If present registers and hardware scatter/gather descriptors
-> +	of the qDMA are implemented in big endian mode, otherwise in little
-> +	mode.
-> +
-> +
-> +Examples:
-> +
-> +	qdma: qdma@8390000 {
-
-Use standard node names:
-
-dma-controller@...
-
-> +		compatible = "fsl,ls1021a-qdma";
-> +		reg = <0x0 0x8398000 0x0 0x2000 /* Controller registers */
-> +		       0x0 0x839a000 0x0 0x2000>; /* Block registers */
-> +		interrupts = <GIC_SPI 185 IRQ_TYPE_LEVEL_HIGH>,
-> +				<GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>;
-> +		interrupt-names = "qdma-error", "qdma-queue";
-> +		channels = <8>;
-> +		queues = <2>;
-> +		big-endian;
-> +	};
-> -- 
-> 2.14.1
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Reviewed-by: Rob Herring <robh@kernel.org>
