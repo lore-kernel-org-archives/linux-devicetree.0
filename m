@@ -1,47 +1,41 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/6] dt-bindings: soc: qcom: Add label for GLINK bindings
-Date: Wed, 20 Dec 2017 12:30:00 -0600
-Message-ID: <20171220183000.rhxgyikfqzxmqkjo@rob-hp-laptop>
-References: <1513634534-22861-1-git-send-email-clew@codeaurora.org>
- <1513634534-22861-2-git-send-email-clew@codeaurora.org>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v2] Input: mms114 - add support for mms152
+Date: Wed, 20 Dec 2017 10:34:01 -0800
+Message-ID: <20171220183401.65ykqabkrjx66ch3@dtor-ws>
+References: <20171218124933.1803-1-simon@lineageos.org>
+ <20171220153810.1961-1-simon@lineageos.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Return-path: <linux-input-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1513634534-22861-2-git-send-email-clew@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Chris Lew <clew@codeaurora.org>
-Cc: bjorn.andersson@linaro.org, andy.gross@linaro.org, david.brown@linaro.org, aneela@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20171220153810.1961-1-simon@lineageos.org>
+Sender: linux-input-owner@vger.kernel.org
+To: Simon Shields <simon@lineageos.org>
+Cc: "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, devicetree@vger.kernel.org, Andi Shyti <andi.shyti@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 18, 2017 at 02:02:09PM -0800, Chris Lew wrote:
-> Add a label property to identify the edge this node represents.
+[resending as plain text]
 
-Why does a user need to know this?
+Hi Simon,
 
-> 
-> Signed-off-by: Chris Lew <clew@codeaurora.org>
-> ---
->  Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
-> index 9663cab52246..0b8cc533ca83 100644
-> --- a/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
-> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
-> @@ -10,6 +10,11 @@ edge.
->  	Value type: <stringlist>
->  	Definition: must be "qcom,glink-rpm"
->  
-> +- label:
-> +	Usage: optional
-> +	Value type: <string>
-> +	Definition: should specify the subsystem name this edge corresponds to.
-> +
->  - interrupts:
->  	Usage: required
->  	Value type: <prop-encoded-array>
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
-> 
+On Wed, Dec 20, 2017 at 9:38 AM, Simon Shields <simon@lineageos.org> wrote:
+> MMS152 has no configuration registers, but the packet format used in
+> interrupts is identical to mms114.
+
+Since there seems to be renewed interest in mms114 driver, I would like for
+it to get a facelift and switch to using the standard touchscreen
+properties rather than the custom ones (we still need to keep compatibility
+though). Also, we do not seem to have any in-tree users of the
+mms114_platform_data structure. Can you please see if you  can:
+
+- switch the driver to use the generic device properties
+(device_property_*() API)
+- use touchscreen_parse_properties() to parse the standard touchscreen
+properties
+- use touchscreen_report_pos() to report coordinates
+- drop mms114_platform_data
+
+Thanks!
+
+-- 
+Dmitry
