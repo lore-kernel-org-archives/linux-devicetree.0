@@ -1,18 +1,18 @@
-From: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
-Subject: [PATCH 1/2] arm64: dts: renesas: salvator-x: Remove renesas,no-ether-link property
-Date: Wed, 20 Dec 2017 15:22:11 +0200
-Message-ID: <1513776132-22700-2-git-send-email-vladimir_zapolskiy@mentor.com>
+From: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 2/2] arm64: dts: renesas: ulcb: Remove renesas,no-ether-link property
+Date: Wed, 20 Dec 2017 15:22:12 +0200
+Message-ID: <1513776132-22700-3-git-send-email-vladimir_zapolskiy@mentor.com>
 References: <1513776132-22700-1-git-send-email-vladimir_zapolskiy@mentor.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1513776132-22700-1-git-send-email-vladimir_zapolskiy@mentor.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Bogdan Mirea <Bogdan-Stefan_Mirea@mentor.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1513776132-22700-1-git-send-email-vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: Bogdan Mirea <Bogdan-Stefan_Mirea-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Bogdan Mirea <Bogdan-Stefan_Mirea@mentor.com>
+From: Bogdan Mirea <Bogdan-Stefan_Mirea-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 
 The present change is a bug fix for AVB link iteratively up/down.
 
@@ -43,17 +43,17 @@ it removes the "renesas,no-ether-link" option leading to a proper way
 of detecting the link state based on HW interrogation and not on
 software heuristic.
 
-Signed-off-by: Bogdan Mirea <Bogdan-Stefan_Mirea@mentor.com>
-Signed-off-by: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+Signed-off-by: Bogdan Mirea <Bogdan-Stefan_Mirea-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 ---
- arch/arm64/boot/dts/renesas/salvator-common.dtsi | 1 -
+ arch/arm64/boot/dts/renesas/ulcb.dtsi | 1 -
  1 file changed, 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/renesas/salvator-common.dtsi b/arch/arm64/boot/dts/renesas/salvator-common.dtsi
-index 4e800e933944..c3095bd575d7 100644
---- a/arch/arm64/boot/dts/renesas/salvator-common.dtsi
-+++ b/arch/arm64/boot/dts/renesas/salvator-common.dtsi
-@@ -255,7 +255,6 @@
+diff --git a/arch/arm64/boot/dts/renesas/ulcb.dtsi b/arch/arm64/boot/dts/renesas/ulcb.dtsi
+index be91016e0b48..3e7a6b94e9f8 100644
+--- a/arch/arm64/boot/dts/renesas/ulcb.dtsi
++++ b/arch/arm64/boot/dts/renesas/ulcb.dtsi
+@@ -145,7 +145,6 @@
  &avb {
  	pinctrl-0 = <&avb_pins>;
  	pinctrl-names = "default";
@@ -63,3 +63,8 @@ index 4e800e933944..c3095bd575d7 100644
  
 -- 
 2.8.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
