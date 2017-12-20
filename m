@@ -1,68 +1,54 @@
-From: Joel Stanley <joel@jms.id.au>
-Subject: [PATCH v3 13/20] ARM: dts: Add OpenBMC flash layout
-Date: Wed, 20 Dec 2017 13:53:21 +1030
-Message-ID: <20171220032328.30584-14-joel@jms.id.au>
-References: <20171220032328.30584-1-joel@jms.id.au>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH v5 15/15] devicetree: bindings: Document qcom,pvs
+Date: Wed, 20 Dec 2017 08:56:14 +0530
+Message-ID: <20171220032614.GQ19815@vireshk-i7>
+References: <1513698900-10638-1-git-send-email-sricharan@codeaurora.org>
+ <1513698900-10638-16-git-send-email-sricharan@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171220032328.30584-1-joel@jms.id.au>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Andrew Jeffery <andrew@aj.id.au>, Patrick Venture <venture@google.com>, Xo Wang <xow@google.com>, Lei YU <mine260309@gmail.com>
-Cc: =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Jeremy Kerr <jk@ozlabs.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1513698900-10638-16-git-send-email-sricharan@codeaurora.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Sricharan R <sricharan@codeaurora.org>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@codeaurora.org, linux@armlinux.org.uk, andy.gross@linaro.org, david.brown@linaro.org, rjw@rjwysocki.net, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This is a layout used by OpenBMC systems. It describes the fixed flash
-layout of a 32MB mtd device.
+On 19-12-17, 21:25, Sricharan R wrote:
+> +	cpu@0 {
+> +		compatible = "qcom,krait";
+> +		enable-method = "qcom,kpss-acc-v1";
+> +		device_type = "cpu";
+> +		reg = <0>;
+> +		qcom,acc = <&acc0>;
+> +		qcom,saw = <&saw0>;
+> +		clocks = <&kraitcc 0>;
+> +		clock-names = "cpu";
+> +		cpu-supply = <&smb208_s2a>;
+> +		operating-points-v2 = <&cpu_opp_table>;
+> +	};
+> +
+> +	qcom,pvs {
+> +		qcom,pvs-format-a;
+> +	};
 
-Reviewed-by: Cédric Le Goater <clg@kaod.org>
-Signed-off-by: Joel Stanley <joel@jms.id.au>
----
-v3:
-  - Remove leading zeros to fix warning
----
- arch/arm/boot/dts/openbmc-flash-layout.dtsi | 32 +++++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
- create mode 100644 arch/arm/boot/dts/openbmc-flash-layout.dtsi
+Not sure what Rob is going to say on that :)
 
-diff --git a/arch/arm/boot/dts/openbmc-flash-layout.dtsi b/arch/arm/boot/dts/openbmc-flash-layout.dtsi
-new file mode 100644
-index 000000000000..6c26524e93e1
---- /dev/null
-+++ b/arch/arm/boot/dts/openbmc-flash-layout.dtsi
-@@ -0,0 +1,32 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+
-+partitions {
-+	compatible = "fixed-partitions";
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+
-+	u-boot@0 {
-+		reg = <0x0 0x60000>;
-+		label = "u-boot";
-+	};
-+
-+	u-boot-env@60000 {
-+		reg = <0x60000 0x20000>;
-+		label = "u-boot-env";
-+	};
-+
-+	kernel@80000 {
-+		reg = <0x80000 0x440000>;
-+		label = "kernel";
-+	};
-+
-+	rofs@c0000 {
-+		reg = <0x4c0000 0x1740000>;
-+		label = "rofs";
-+	};
-+
-+	rwfs@1c00000 {
-+		reg = <0x1c00000 0x400000>;
-+		label = "rwfs";
-+	};
-+};
+> +
+> +
+> +	cpu_opp_table: opp_table {
+> +		compatible = "operating-points-v2";
+> +
+> +		/*
+> +		 * Missing opp-shared property means CPUs switch DVFS states
+> +		 * independently.
+> +		 */
+> +
+> +		opp-1400000000 {
+> +			opp-hz = /bits/ 64 <1400000000>;
+> +			opp-microvolt-speed0-pvs0-v0 = <1250000>;
+
+Why speed0 and v0 in all the names ?
+
 -- 
-2.15.1
+viresh
