@@ -1,132 +1,56 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH V8 2/3] OPP: Introduce "required-opp" property
-Date: Wed, 20 Dec 2017 09:23:35 +0100
-Message-ID: <CAPDyKFoWo0bUMNbGFSgjdN-ZwS+o6_GUXt-sQK0Qpcndw5B8eA@mail.gmail.com>
-References: <cover.1513591822.git.viresh.kumar@linaro.org> <6615035f294a64a4c17e5b44ac6690d1c2ac127c.1513591822.git.viresh.kumar@linaro.org>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v3 00/19] ARM: dts: aspeed: updates and new machines
+Date: Wed, 20 Dec 2017 09:24:03 +0100
+Message-ID: <CAK8P3a2WQ3MDq_49t=uifC8dPVJ2Zgus35QoTBDOCaa3L0DamQ@mail.gmail.com>
+References: <20171220032328.30584-1-joel@jms.id.au> <CACPK8Xdf3__yuMEvD0NiZXihU-8F1R15aEwwJueHLZ6Jfs82oQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <6615035f294a64a4c17e5b44ac6690d1c2ac127c.1513591822.git.viresh.kumar@linaro.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@codeaurora.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Vincent Guittot <vincent.guittot@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, Sudeep Holla <sudeep.holla@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACPK8Xdf3__yuMEvD0NiZXihU-8F1R15aEwwJueHLZ6Jfs82oQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg-Bxea+6Xhats@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-aspeed-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Patrick Venture <venture-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Xo Wang <xow-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Lei YU <mine260309-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 18 December 2017 at 11:21, Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> Devices have inter-dependencies some times. For example a device that
-> needs to run at 800 MHz, needs another device (e.g. Its power domain) to
-> be configured at a particular operating performance point.
+On Wed, Dec 20, 2017 at 4:37 AM, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org> wrote:
+> On Wed, Dec 20, 2017 at 1:53 PM, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org> wrote:
+>> This series of device tree patches for the ASPEED BMC machines
+>> moves all systems to use the soon to be merged clk driver, and
+>> updates machines to use all of the drivers we have upstream.
+>>
+>>  v3: Address review from Rob and Cedric
+>>   - Move aspeed-gpio.h usage out into the patches where use of the GPIO
+>>     is added
+>>   - Clarify that the aspeed-clock.h patch will be merged as part of
+>>     the device tree tree. This is to ensure we don't depend on the clk
+>>     tree for building.
 >
-> This patch introduces a new property "required-opp" which can be present
-> directly in a device's node (if it doesn't need to change its OPPs), or
-> in device's OPP nodes. More details on the property can be seen in the
-> binding itself.
+> Arnd, Michael, Stephen; how do we resolve this? We need the
+> dt-bindings header to be present for both the clk driver and the
+> device tree to build.
 >
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> ---
->  Documentation/devicetree/bindings/opp/opp.txt      |  8 +++
->  .../devicetree/bindings/power/power_domain.txt     | 59 ++++++++++++++++++++++
->  2 files changed, 67 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
-> index a3953a1bb1a1..4e4f30288c8b 100644
-> --- a/Documentation/devicetree/bindings/opp/opp.txt
-> +++ b/Documentation/devicetree/bindings/opp/opp.txt
-> @@ -159,6 +159,14 @@ properties.
->
->  - status: Marks the node enabled/disabled.
->
-> +- required-opp: This contains phandle to an OPP node in another device's OPP
-> +  table. It may contain an array of phandles, where each phandle points to an
-> +  OPP of a different device. It should not contain multiple phandles to the OPP
-> +  nodes in the same OPP table. This specifies the minimum required OPP of the
-> +  device(s), whose OPP's phandle is present in this property, for the
-> +  functioning of the current device at the current OPP (where this property is
-> +  present).
-> +
->  Example 1: Single cluster Dual-core ARM cortex A9, switch DVFS states together.
->
->  / {
-> diff --git a/Documentation/devicetree/bindings/power/power_domain.txt b/Documentation/devicetree/bindings/power/power_domain.txt
-> index 61549840ab3b..f824763b202e 100644
-> --- a/Documentation/devicetree/bindings/power/power_domain.txt
-> +++ b/Documentation/devicetree/bindings/power/power_domain.txt
-> @@ -126,4 +126,63 @@ The node above defines a typical PM domain consumer device, which is located
->  inside a PM domain with index 0 of a power controller represented by a node
->  with the label "power".
->
-> +Optional properties:
-> +- required-opp: This contains phandle to an OPP node in another device's OPP
-> +  table. It may contain an array of phandles, where each phandle points to an
-> +  OPP of a different device. It should not contain multiple phandles to the OPP
-> +  nodes in the same OPP table. This specifies the minimum required OPP of the
-> +  device(s), whose OPP's phandle is present in this property, for the
-> +  functioning of the current device at the current OPP (where this property is
-> +  present).
-> +
-> +Example:
-> +- OPP table for domain provider that provides two domains.
-> +
-> +       domain0_opp_table: opp_table0 {
-> +               compatible = "operating-points-v2";
-> +
-> +               domain0_opp_0: opp-1000000000 {
-> +                       opp-hz = /bits/ 64 <1000000000>;
-> +                       opp-microvolt = <975000 970000 985000>;
-> +               };
-> +               domain0_opp_1: opp-1100000000 {
-> +                       opp-hz = /bits/ 64 <1100000000>;
-> +                       opp-microvolt = <1000000 980000 1010000>;
-> +               };
-> +       };
-> +
-> +       domain1_opp_table: opp_table1 {
-> +               compatible = "operating-points-v2";
-> +
-> +               domain1_opp_0: opp-1200000000 {
-> +                       opp-hz = /bits/ 64 <1200000000>;
-> +                       opp-microvolt = <975000 970000 985000>;
-> +               };
-> +               domain1_opp_1: opp-1300000000 {
-> +                       opp-hz = /bits/ 64 <1300000000>;
-> +                       opp-microvolt = <1000000 980000 1010000>;
-> +               };
-> +       };
-> +
-> +       parent: power-controller@12340000 {
+> The clk driver is not (yet - soon I hope?) merged by Michael and
+> Stephen. I am about to commit the device tree changes that will go
+> through the ARM SoC tree.
 
-Nitpick: Could you please change "parent" to "power", to be consistent
-with earlier examples.
+There are several options:
 
-> +               compatible = "foo,power-controller";
-> +               reg = <0x12340000 0x1000>;
-> +               #power-domain-cells = <1>;
-> +               operating-points-v2 = <&domain0_opp_table>, <&domain1_opp_table>;
-> +       };
-> +
-> +       leaky-device0@12350000 {
-> +               compatible = "foo,i-leak-current";
-> +               reg = <0x12350000 0x1000>;
-> +               power-domains = <&parent 0>;
-> +               required-opp = <&domain0_opp_0>;
-> +       };
-> +
-> +       leaky-device1@12350000 {
-> +               compatible = "foo,i-leak-current";
-> +               reg = <0x12350000 0x1000>;
-> +               power-domains = <&parent 1>;
-> +               required-opp = <&domain1_opp_1>;
-> +       };
-> +
->  [1]. Documentation/devicetree/bindings/power/domain-idle-state.txt
-> --
-> 2.15.0.194.g9af6a3dea062
->
+- avoid the use of the header and redefine the binding to have a
+  clear mapping between hardware clock lines and the numeric
+  representation. This works better for some SoCs than others,
+  YMMV.
+- Don't use the constants in the dts files for now, but use the
+  numbers directly, and update the dts files for the next merge window
+- merge only one side for 4.16, either the driver or the dts files,
+  and follow up with the other one in 4.17
+- make one shared git branch that contains only the headers
+  and base both the driver and the dts files on that branch so you
+  get a single shared commit ID.
 
+I'm fine with any of the above, please pick whatever suits you best.
 
-Besides the nitpick, feel free to add:
-
-Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
-
-Kind regards
-Uffe
+       Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
