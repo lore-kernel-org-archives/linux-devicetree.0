@@ -1,74 +1,57 @@
-From: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Subject: [PATCH 4/4] ARM: dts: vf610-zii-dev-rev-b: add interrupts for 88e1545
- PHY
-Date: Wed, 20 Dec 2017 23:12:01 +0000
-Message-ID: <E1eRnWr-0006VS-1m@rmk-PC.armlinux.org.uk>
-References: <20171220231108.GJ10595@n2100.armlinux.org.uk>
+From: Niklas Cassel <niklas.cassel@axis.com>
+Subject: Re: [PATCH v6 00/18] dwc MSI fixes, ARTPEC-6 EP mode support,
+ ARTPEC-7 SoC support
+Date: Thu, 21 Dec 2017 00:22:51 +0100
+Message-ID: <20171220232251.GA27011@axis.com>
+References: <20171219232940.659-1-niklas.cassel@axis.com>
+ <20171220173416.GD1709@red-moon>
+ <32f6e02c-4230-9222-0ee1-54a045e78bd5@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171220231108.GJ10595-l+eeeJia6m9URfEZ8mYm6t73F7V6hmMc@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <32f6e02c-4230-9222-0ee1-54a045e78bd5@synopsys.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Joao Pinto <Joao.Pinto@synopsys.com>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Jingoo Han <jingoohan1@gmail.com>, linux-arm-kernel@axis.com, linux-pci@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, gustavo.pimentel@synopsys.com, kishon@ti.com
 List-Id: devicetree@vger.kernel.org
 
-The 88e1545 PHY has its interrupts wired to the VF610, so we might as
-well use them.
+On Wed, Dec 20, 2017 at 07:47:41PM +0000, Joao Pinto wrote:
+> 
+> Hello to all,
+> 
+> Às 5:34 PM de 12/20/2017, Lorenzo Pieralisi escreveu:
+> > On Wed, Dec 20, 2017 at 12:29:21AM +0100, Niklas Cassel wrote:
+> >> This is a series that adds:
+> >> - PCI endpoint mode support in the ARTPEC-6 driver.
+> >> - ARTPEC-7 SoC support in the ARTPEC-6 driver (the SoCs are very similar).
+> >> - Small fixes for MSI in designware-ep and designware-host,
+> >>   needed to get endpoint mode support working for ARTPEC-6.
+> >> - Cleanups in pci-dra7xx to better prepare for endpoint mode in other
+> >>   DWC based PCIe drivers.
+> > 
+> > Joao, Jingoo,
+> > 
+> > Gustavo tested the series and Kishon ACK'ed the relevant patches,
+> > I need your ACKs on designware patches to queue this series for
+> > v4.16.
+> > 
+> > I am away from tomorrow (noon) till beginning of January which means
+> > that either I queue this series tomorrow or at -rc6, please do
+> > chime in if you can.
+> 
+> Sorry, I have been a bit tied up! Already checked each patch related to DWC.
+> Could anyone from artpec finish the revision, since there are some patches
+> related to that SoC?
 
-Signed-off-by: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
----
-This is certainly not correct, as all PHYs on this device share the
-same interrupt line, but we can't specify the pinmux settings
-individually on each PHY.  How should this be handled?
----
- arch/arm/boot/dts/vf610-zii-dev-rev-b.dts | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+Thanks for looking at the patches.
 
-diff --git a/arch/arm/boot/dts/vf610-zii-dev-rev-b.dts b/arch/arm/boot/dts/vf610-zii-dev-rev-b.dts
-index 782b69a3acdf..d6786c5d0109 100644
---- a/arch/arm/boot/dts/vf610-zii-dev-rev-b.dts
-+++ b/arch/arm/boot/dts/vf610-zii-dev-rev-b.dts
-@@ -312,12 +312,20 @@
- 					#size-cells = <0>;
- 
- 					switch2phy0: phy@0 {
-+						interrupt-parent = <&gpio0>;
-+						interrupts = <22 IRQ_TYPE_LEVEL_LOW>;
- 						reg = <0>;
-+						pinctrl-names = "default";
-+						pinctrl-0 = <&pinctrl_mv88e1545>;
- 					};
- 					switch2phy1: phy@1 {
-+						interrupt-parent = <&gpio0>;
-+						interrupts = <22 IRQ_TYPE_LEVEL_LOW>;
- 						reg = <1>;
- 					};
- 					switch2phy2: phy@2 {
-+						interrupt-parent = <&gpio0>;
-+						interrupts = <22 IRQ_TYPE_LEVEL_LOW>;
- 						reg = <2>;
- 					};
- 				};
-@@ -488,6 +496,12 @@
- 		>;
- 	};
- 
-+	pinctrl_mv88e1545: pinctrl-mv88e1545 {
-+		fsl,pins = <
-+			VF610_PAD_PTB0__GPIO_22		0x219d
-+		>;
-+	};
-+
- 	pinctrl_pca9554_22: pinctrl-pca95540-22 {
- 		fsl,pins = <
- 			VF610_PAD_PTB28__GPIO_98	0x219d
--- 
-2.7.4
+Thanks to everyone that has helped in any way.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Since I am the maintainer for pcie-artpec6.c
+(at least according to MAINTAINERS ;)),
+I'm supposing that my sign-off will suffice.
+
+Regards,
+Niklas
