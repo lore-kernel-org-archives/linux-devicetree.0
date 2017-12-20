@@ -1,50 +1,48 @@
-From: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Subject: [PATCH 7/9] ARM: dts: iwg22d-sodimm: Sound DMA support via BUSIF on DTS
-Date: Wed, 20 Dec 2017 20:02:03 +0000
-Message-ID: <1513800125-53213-8-git-send-email-biju.das@bp.renesas.com>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH 8/9] ARM: dts: iwg22d-sodimm: Sound DMA support via SRC on DTS
+Date: Wed, 20 Dec 2017 20:02:04 +0000
+Message-ID: <1513800125-53213-9-git-send-email-biju.das@bp.renesas.com>
 References: <1513800125-53213-1-git-send-email-biju.das@bp.renesas.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1513800125-53213-1-git-send-email-biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1513800125-53213-1-git-send-email-biju.das@bp.renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Chris Paterson <chris.paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Biju Das <biju.das@bp.renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-DMA transfer to/from SSIU
+DMA transfer to/from SRC
 
-     DMA
-[MEM] -> [SSIU] -> [SSI]
+     DMA      DMApp
+[MEM] -> [SRC] -> [SSIU] -> [SSI]
 
-     DMA
-[MEM] <- [SSIU] <- [SSI]
+     DMA      DMApp
+[MEM] <- [SRC] <- [SSIU] <- [SSI]
 
-Signed-off-by: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Reviewed-by: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Current sound driver is supporting SSI/SRC random connection.
+So, this patch is trying
+SSI3 -> SRC3
+SSI4 <- SRC4
+
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 ---
- arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts | 5 -----
- 1 file changed, 5 deletions(-)
+ arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts b/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts
-index a9ba46d..0f880c1 100644
+index 0f880c1..2cac57c 100644
 --- a/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts
 +++ b/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts
-@@ -206,12 +206,7 @@
- 	status = "okay";
- };
+@@ -183,8 +183,8 @@
  
--&ssi3 {
--	no-busif;
--};
--
- &ssi4 {
--	no-busif;
- 	shared-pin;
+ 	rcar_sound,dai {
+ 		dai0 {
+-			playback = <&ssi3>;
+-			capture = <&ssi4>;
++			playback = <&ssi3 &src3>;
++			capture = <&ssi4 &src4>;
+ 		};
+ 	};
  };
- 
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
