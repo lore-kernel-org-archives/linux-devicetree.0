@@ -1,7 +1,8 @@
 From: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Subject: [PATCH 1/4] ARM: dts: vf610-zii-dev: enable edma1
-Date: Wed, 20 Dec 2017 23:11:45 +0000
-Message-ID: <E1eRnWb-0006V7-9T@rmk-PC.armlinux.org.uk>
+Subject: [PATCH 2/4] ARM: dts: vf610-zii-dev-rev-b: fix interrupt for GPIO
+ expander
+Date: Wed, 20 Dec 2017 23:11:50 +0000
+Message-ID: <E1eRnWg-0006VE-GI@rmk-PC.armlinux.org.uk>
 References: <20171220231108.GJ10595@n2100.armlinux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -14,30 +15,33 @@ To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-EDMA1 is required for the SPI controller used on the ZII boards to be
-functional.  Enable EDMA1.
+The interrupt specification for the GPIO expander is wrong - the
+expander is wired to PTB28, which is GPIO98.  GPIO98 is on gpio chip
+3, not 2.
 
-Fixes: 14c416336820 ("ARM: dts: vfxxx: Enable DMA for DSPI on Vybrid")
+In addition, the device is missing a required property.  Interrupt
+controllers must have the "interrupt-controller" property specified.
+Add this.
+
 Signed-off-by: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
 ---
- arch/arm/boot/dts/vf610-zii-dev.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm/boot/dts/vf610-zii-dev-rev-b.dts | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/vf610-zii-dev.dtsi b/arch/arm/boot/dts/vf610-zii-dev.dtsi
-index 6b58d3a97992..aadd36db0092 100644
---- a/arch/arm/boot/dts/vf610-zii-dev.dtsi
-+++ b/arch/arm/boot/dts/vf610-zii-dev.dtsi
-@@ -96,6 +96,10 @@
- 	status = "okay";
+diff --git a/arch/arm/boot/dts/vf610-zii-dev-rev-b.dts b/arch/arm/boot/dts/vf610-zii-dev-rev-b.dts
+index acdf12ad0622..ede8649ba515 100644
+--- a/arch/arm/boot/dts/vf610-zii-dev-rev-b.dts
++++ b/arch/arm/boot/dts/vf610-zii-dev-rev-b.dts
+@@ -371,7 +371,8 @@
+ 		reg = <0x22>;
+ 		gpio-controller;
+ 		#gpio-cells = <2>;
+-		interrupt-parent = <&gpio2>;
++		interrupt-controller;
++		interrupt-parent = <&gpio3>;
+ 		interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
+ 	};
  };
- 
-+&edma1 {
-+	status = "okay";
-+};
-+
- &esdhc1 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_esdhc1>;
 -- 
 2.7.4
 
