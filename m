@@ -1,56 +1,33 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] touchscreen: mms114: add support for mms152
-Date: Wed, 20 Dec 2017 12:21:50 -0600
-Message-ID: <20171220182150.nwbxzv5cziqdywah@rob-hp-laptop>
-References: <20171218124933.1803-1-simon@lineageos.org>
+Subject: Re: [PATCH V2 4/9] devicetree: bindings: stm32: add support of
+ STM32MP157
+Date: Wed, 20 Dec 2017 12:24:53 -0600
+Message-ID: <20171220182453.43zvzxapxmwzvpq4@rob-hp-laptop>
+References: <1513610272-7824-1-git-send-email-ludovic.Barre@st.com>
+ <1513610272-7824-5-git-send-email-ludovic.Barre@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20171218124933.1803-1-simon-WP75azK+jQYgsBAKwltoeQ@public.gmane.org>
+In-Reply-To: <1513610272-7824-5-git-send-email-ludovic.Barre-qxv4g6HH51o@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Shields <simon-WP75azK+jQYgsBAKwltoeQ@public.gmane.org>
-Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ludovic Barre <ludovic.Barre-qxv4g6HH51o@public.gmane.org>
+Cc: Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Gerald Baeza <gerald.baeza-qxv4g6HH51o@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 18, 2017 at 11:49:33PM +1100, Simon Shields wrote:
-> MMS152 has no configuration registers, but the packet format used in
-> interrupts is identical to mms114.
+On Mon, Dec 18, 2017 at 04:17:47PM +0100, Ludovic Barre wrote:
+> From: Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
 > 
-> Signed-off-by: Simon Shields <simon-WP75azK+jQYgsBAKwltoeQ@public.gmane.org>
+> This patch adds STM32MP157 SoC bindings.
+> 
+> Signed-off-by: Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
 > ---
->  .../bindings/input/touchscreen/mms114.txt          |  8 ++--
->  drivers/input/touchscreen/mms114.c                 | 55 +++++++++++++++++++---
->  include/linux/platform_data/mms114.h               |  6 +++
->  3 files changed, 58 insertions(+), 11 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/input/touchscreen/mms114.txt b/Documentation/devicetree/bindings/input/touchscreen/mms114.txt
-> index 89d4c56c5671..733411020ced 100644
-> --- a/Documentation/devicetree/bindings/input/touchscreen/mms114.txt
-> +++ b/Documentation/devicetree/bindings/input/touchscreen/mms114.txt
-> @@ -1,15 +1,15 @@
-> -* MELFAS MMS114 touchscreen controller
-> +* MELFAS MMS114/MMS152 touchscreen controller
->  
->  Required properties:
-> -- compatible: must be "melfas,mms114"
-> +- compatible: "melfas,mms114" for MMS114, or "melfas,mms152" for MMS152
+>  Documentation/devicetree/bindings/arm/stm32.txt | 1 +
+>  1 file changed, 1 insertion(+)
 
-Please reformat to 1 per line.
+"dt-bindings: ..." is the preferred subject prefix. Otherwise,
 
->  - reg: I2C address of the chip
->  - interrupts: interrupt to which the chip is connected
->  - x-size: horizontal resolution of touchscreen
->  - y-size: vertical resolution of touchscreen
->  
->  Optional properties:
-> -- contact-threshold:
-> -- moving-threshold:
-> +- contact-threshold: only with "melfas,mms114"
-> +- moving-threshold: only with "melfas,mms114"
->  - x-invert: invert X axis
->  - y-invert: invert Y axis
->  
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
