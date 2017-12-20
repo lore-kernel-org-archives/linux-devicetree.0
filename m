@@ -1,89 +1,46 @@
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
-Subject: [PATCH v16 5/5] dt-bindings: watchdog: Add bindings for RAVE SP watchdog driver
-Date: Wed, 20 Dec 2017 12:45:17 -0800
-Message-ID: <20171220204517.28313-6-andrew.smirnov@gmail.com>
-References: <20171220204517.28313-1-andrew.smirnov@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171220204517.28313-1-andrew.smirnov@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Andrey Smirnov <andrew.smirnov@gmail.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, cphealy@gmail.com, Lucas Stach <l.stach@pengutronix.de>, Nikita Yushchenko <nikita.yoush@cogentembedded.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Pavel Machek <pavel@ucw.cz>, Andy Shevchenko <andy.shevchenko@gmail.com>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh@kernel.org>, Johan Hovold <johan@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sebastian Reichel <sebastian.reichel@collabora.co.uk>, Philippe Ombredanne <pombredanne@nexb.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: phy: ti-pipe3: Add dt binding to use
+ USB3 PHY for PCIe
+Date: Wed, 20 Dec 2017 14:55:11 -0600
+Message-ID: <20171220205511.lqi2ijggfqeel6tu@rob-hp-laptop>
+References: <20171219094540.18432-1-kishon@ti.com>
+ <20171219094540.18432-2-kishon@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20171219094540.18432-2-kishon@ti.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, nsekhar@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Add Device Tree bindings for RAVE SP watchdog drvier - an MFD cell of
-parent RAVE SP driver (documented in
-Documentation/devicetree/bindings/mfd/zii,rave-sp.txt).
+On Tue, Dec 19, 2017 at 03:15:39PM +0530, Kishon Vijay Abraham I wrote:
+> DRA72 uses USB3 PHY for the 2nd lane of PCIE. Add dt bindings property
+> to indicate if the USB3 PHY should be used for 2nd lane of PCIe.
+> 
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+>  Documentation/devicetree/bindings/phy/ti-phy.txt | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/ti-phy.txt b/Documentation/devicetree/bindings/phy/ti-phy.txt
+> index cd13e6157088..907a046e794b 100644
+> --- a/Documentation/devicetree/bindings/phy/ti-phy.txt
+> +++ b/Documentation/devicetree/bindings/phy/ti-phy.txt
+> @@ -93,6 +93,8 @@ Optional properties:
+>     register that contains the SATA_PLL_SOFT_RESET bit. Only valid for sata_phy.
+>   - syscon-pcs : phandle/offset pair. Phandle to the system control module and the
+>     register offset to write the PCS delay value.
+> + - "ti,configure-as-pcie" : property to indicate if the PHY should be
+> +   configured as PCIE PHY.
 
-Cc: linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Cc: linux-watchdog@vger.kernel.org
-Cc: cphealy@gmail.com
-Cc: Lucas Stach <l.stach@pengutronix.de>
-Cc: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
-Cc: Lee Jones <lee.jones@linaro.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Pavel Machek <pavel@ucw.cz>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Guenter Roeck <linux@roeck-us.net>
-Cc: Rob Herring <robh@kernel.org>
-Cc: Johan Hovold <johan@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Cc: Philippe Ombredanne <pombredanne@nexb.com>
-Acked-by: Pavel Machek <pavel@ucw.cz>
-Acked-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
----
- .../bindings/watchdog/zii,rave-sp-wdt.txt          | 39 ++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/watchdog/zii,rave-sp-wdt.txt
+This is not that uncommon as PCIe, 10Gb eth, USB3, SATA are all very 
+electrically similar and the same phy can drive all of them AIUI. The DT 
+already contains the necessary information too because you have a phys 
+property creating a link to PCI host. The problem is either the client 
+side would need to set the mode or you'd have to search all "phys" 
+properties to find the link. There's already a DT function to iterate 
+thru all named properties.
 
-diff --git a/Documentation/devicetree/bindings/watchdog/zii,rave-sp-wdt.txt b/Documentation/devicetree/bindings/watchdog/zii,rave-sp-wdt.txt
-new file mode 100644
-index 000000000000..3de96186e92e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/watchdog/zii,rave-sp-wdt.txt
-@@ -0,0 +1,39 @@
-+Zodiac Inflight Innovations RAVE Supervisory Processor Watchdog Bindings
-+
-+RAVE SP watchdog device is a "MFD cell" device corresponding to
-+watchdog functionality of RAVE Supervisory Processor. It is expected
-+that its Device Tree node is specified as a child of the node
-+corresponding to the parent RAVE SP device (as documented in
-+Documentation/devicetree/bindings/mfd/zii,rave-sp.txt)
-+
-+Required properties:
-+
-+- compatible: Depending on wire protocol implemented by RAVE SP
-+  firmware, should be one of:
-+	- "zii,rave-sp-watchdog"
-+	- "zii,rave-sp-watchdog-legacy"
-+
-+Optional properties:
-+
-+- wdt-timeout:	Two byte nvmem cell specified as per
-+		Documentation/devicetree/bindings/nvmem/nvmem.txt
-+
-+Example:
-+
-+	rave-sp {
-+		compatible = "zii,rave-sp-rdu1";
-+		current-speed = <38400>;
-+
-+		eeprom {
-+			wdt_timeout: wdt-timeout@8E {
-+				reg = <0x8E 2>;
-+			};
-+		};
-+
-+		watchdog {
-+			compatible = "zii,rave-sp-watchdog";
-+			nvmem-cells = <&wdt_timeout>;
-+			nvmem-cell-names = "wdt-timeout";
-+		};
-+	}
-+
--- 
-2.14.3
+Rob
