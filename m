@@ -1,56 +1,90 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v5 4/4] ARM: dts: tegra20: Add video decoder node
-Date: Wed, 20 Dec 2017 20:19:52 +0100
-Message-ID: <20171220191952.GF9687@ulmo>
-References: <cover.1513038011.git.digetx@gmail.com>
- <e80456489c7802e768883ded842e7818158168c4.1513038011.git.digetx@gmail.com>
+From: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 1/3] dt-bindings: ARM: Mediatek: Fix ethsys documentation
+Date: Wed, 20 Dec 2017 11:26:55 -0800
+Message-ID: <151379801537.37313.10157953819670256557@resonance>
+References: <20171201120708.30129-1-matthias.bgg@gmail.com>
+ <b92fd3bd-c61a-ae58-49ef-8727af065ec1@gmail.com>
+ <20171219013222.GZ7997@codeaurora.org>
+ <06b927e4-ed1b-9e1a-becf-e2818e7efe6d@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="JSkcQAAxhB1h8DcT"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <e80456489c7802e768883ded842e7818158168c4.1513038011.git.digetx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dmitry Osipenko <digetx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Jonathan Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <06b927e4-ed1b-9e1a-becf-e2818e7efe6d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, chen.zhong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Quoting Matthias Brugger (2017-12-20 09:13:12)
+> =
 
---JSkcQAAxhB1h8DcT
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> =
 
-On Tue, Dec 12, 2017 at 03:26:10AM +0300, Dmitry Osipenko wrote:
-> Add Video Decoder Engine device node.
->=20
-> Signed-off-by: Dmitry Osipenko <digetx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  arch/arm/boot/dts/tegra20.dtsi | 27 +++++++++++++++++++++++++++
->  1 file changed, 27 insertions(+)
+> On 12/19/2017 02:32 AM, Stephen Boyd wrote:
+> > On 12/14, Matthias Brugger wrote:
+> >> Hi Stephen, Michael,
+> >>
+> >> On 12/01/2017 01:07 PM, Matthias Brugger wrote:
+> >>> The ethsys registers a reset controller, so we need to specify a
+> >>> reset cell. This patch fixes the documentation.
+> >>>
+> >>> Signed-off-by: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> >>> ---
+> >>>  Documentation/devicetree/bindings/arm/mediatek/mediatek,ethsys.txt |=
+ 1 +
+> >>>  1 file changed, 1 insertion(+)
+> >>>
+> >>> diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,=
+ethsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,ethsys=
+.txt
+> >>> index 7aa3fa167668..6cc7840ff37a 100644
+> >>> --- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,ethsys.=
+txt
+> >>> +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,ethsys.=
+txt
+> >>> @@ -20,4 +20,5 @@ ethsys: clock-controller@1b000000 {
+> >>>     compatible =3D "mediatek,mt2701-ethsys", "syscon";
+> >>>     reg =3D <0 0x1b000000 0 0x1000>;
+> >>>     #clock-cells =3D <1>;
+> >>> +   #reset-cells =3D <1>;
+> >>>  };
+> >>>
+> >>
+> >> Will you take this patch through the clk tree, or shall I take it thro=
+ugh my SoC
+> >> tree?
+> >>
+> > =
 
-Applied, thanks.
+> > It's resets, we are clk maintainers. I'm clkfused.
+> > =
 
-Thierry
+> > You can take it, along with my
+> > =
 
---JSkcQAAxhB1h8DcT
-Content-Type: application/pgp-signature; name="signature.asc"
+> > Acked-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> > =
 
------BEGIN PGP SIGNATURE-----
+> > if you like/expect conflicts.
+> > =
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlo6t9gACgkQ3SOs138+
-s6Fikw//bayuei6g2qaDxsqjxi6njVkiepFSyfx8j6ekWXfY1Y6IOl5bs+fu+Iiq
-p30b20gQLf0mvQRSWQsANwShcIBNXpga74M85/Rr3CCcasxiPiariDTtHIcXy/+N
-qCXfDGcYsA2ejfJY1taYHc7RPcCi5w6NQryEGTMcCDopPYzmXNM8/Mi9JDL9xYXr
-OpV8aHvdO3kIJKIYMPpDeU1xn9I3Gi1dchQp31Fj4Ydo48VyaAE0PSaCVeLqaPQn
-pDTH7W6Fa1yEgwxfp1i5ZEb+3U6qqCQ/wqLFJiyAHr0f+NSh9LYKX347d8sOkTvG
-G8s7UyfFCnVtMrs9Jeto7gpNJwsvT5E81b2dMRIctv95GZWgfIlV4uuUavVM7FxH
-966c3qOexIAn2WxDNxn78v6xrFqck5H4S/IOqyHsssO8fZqwK2FF3AX+i3OeedXb
-HGgAFems1FfRKy0rIK7LjDeYz+iSOez6YUKJ12TR0eYV10yPTENy2VzSnDVI8ubD
-tsUvvKRwAr9EwaXuhtMetOzx+NOINoweVy2AyFNzgLdzvO3CFxN7Uq3d4AFarcso
-/hdFOK0aj/DVh3k4qAii8ANIyoKZE/ho4YcvbkI0gCsreLaWkR4r+U2AvEoMqeBU
-aNxd819jltErpGfBuGwTe7lX559hfcI7EacLkv1XaSBcggDtZJQ=
-=0WAN
------END PGP SIGNATURE-----
+> =
 
---JSkcQAAxhB1h8DcT--
+> These are resets in the clock IP-block. I'll take it through my branch, I=
+ don't
+> expect any conflicts.
+
+Sounds good to me.
+
+Best regards,
+Mike
+
+> =
+
+> Regards,
+> Matthias
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
