@@ -1,80 +1,141 @@
-From: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Subject: RE: [PATCH v2 2/2] ARM: dts: r8a7743: Add thermal device to DT
-Date: Wed, 20 Dec 2017 11:36:51 +0000
-Message-ID: <KL1PR06MB17029FA8C7AD57F067777E11B80C0@KL1PR06MB1702.apcprd06.prod.outlook.com>
-References: <1513689449-2700-1-git-send-email-biju.das@bp.renesas.com>
- <1513689449-2700-3-git-send-email-biju.das@bp.renesas.com>
- <20171220085036.gdcnbhonyqlewyi4@verge.net.au>
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH 1/4] arm64: dts: renesas: r8a7795: add usb3_phy node
+Date: Wed, 20 Dec 2017 12:42:53 +0100
+Message-ID: <20171220114245.mwgw7t5cz6jasi42@verge.net.au>
+References: <1512640542-10380-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1512640542-10380-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171220085036.gdcnbhonyqlewyi4-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1512640542-10380-2-git-send-email-yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Cc: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon,
-
-Just noticed that
-
-# make dtbs W=3D1 is giving below warning message.
-
-arch/arm/boot/dts/r8a7743-iwg20d-q7-dbcm-ca.dtb: Warning (simple_bus_reg): =
-Node /soc/thermal-zones missing or empty reg/ranges property
-
-Do you prefer a fix patch or a v2 ?
-
-Regards,
-Biju
-
-
-> -----Original Message-----
-> From: Simon Horman [mailto:horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org]
-> Sent: 20 December 2017 08:51
-> To: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-> Cc: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>; Eduardo Valentin
-> <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>; Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>; Mark Rutland
-> <mark.rutland-5wv7dgnIgG8@public.gmane.org>; Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>;
-> Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>; Fabrizio Castro
-> <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-renes=
-as-
-> soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Subject: Re: [PATCH v2 2/2] ARM: dts: r8a7743: Add thermal device to DT
->
-> On Tue, Dec 19, 2017 at 01:17:29PM +0000, Biju Das wrote:
-> > This patch instantiates the thermal sensor module with thermal-zone
-> > support.
-> >
-> > This patch is based on the commit cac68a56e34b
-> > ("ARM: dts: r8a7791: enable to use thermal-zone") by Kuninori Morimoto.
-> >
-> > Signed-off-by: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-> > Reviewed-by: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-> > Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-> > ---
-> > v1->v2
-> >  * Fixed the size.
->
-> Thanks, applied.
-
-
-[https://www2.renesas.eu/media/email/unicef_2017.jpg]
-
-This Christmas, instead of sending out cards, Renesas Electronics Europe ha=
-ve decided to support Unicef with a donation. For further details click her=
-e<https://www.unicef.org/> to find out about the valuable work they do, hel=
-ping children all over the world.
-We would like to take this opportunity to wish you a Merry Christmas and a =
-prosperous New Year.
-
+On Thu, Dec 07, 2017 at 06:55:39PM +0900, Yoshihiro Shimoda wrote:
+> This patch adds USB3.0 PHY node for r8a7795.
+> 
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  arch/arm64/boot/dts/renesas/r8a7795.dtsi | 26 ++++++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+> index 6db4f10..9710814 100644
+> --- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+> +++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+> @@ -184,6 +184,19 @@
+>  		clock-frequency = <0>;
+>  	};
+>  
+> +	/* External USB clocks - can be overridden by the board */
+> +	usb3s0_clk: usb3s0 {
+> +		compatible = "fixed-clock";
+> +		#clock-cells = <0>;
+> +		clock-frequency = <0>;
+> +	};
+> +
+> +	usb_extal_clk: usb_extal {
+> +		compatible = "fixed-clock";
+> +		#clock-cells = <0>;
+> +		clock-frequency = <0>;
+> +	};
+> +
+>  	soc: soc {
+>  		compatible = "simple-bus";
+>  		interrupt-parent = <&gic>;
+> @@ -1643,6 +1656,19 @@
+>  			iommus = <&ipmmu_hc 2>;
+>  		};
+>  
+> +		usb3_phy0: usb-phy@e65ee000 {
+> +			compatible = "renesas,r8a7795-usb3-phy",
+> +				     "renesas,rcar-gen3-usb3-phy";
+> +			reg = <0 0xe65ee000 0 0x90>;
+> +			clocks = <&cpg CPG_MOD 328>, <&usb3s0_clk>,
+> +				 <&usb_extal_clk>;
+> +			clock-names = "usb3-if", "usb3s_clk", "usb_extal";
+> +			power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
+> +			resets = <&cpg 328>;
+> +			#phy-cells = <0>;
+> +			status = "disabled";
+> +		};
+> +
+>  		xhci0: usb@ee000000 {
+>  			compatible = "renesas,xhci-r8a7795", "renesas,rcar-gen3-xhci";
+>  			reg = <0 0xee000000 0 0xc00>;
 
 
-Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, B=
-uckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered=
- No. 04586709.
+Hi Shimoda-san,
+
+I have applied this patch with some minor updates.
+
+1. There was some fuzz when applying the patch which I resolved.
+2. I shifted the _clk nodes to the bottom of the file to
+   preserve alphabetical order of the sub-nodes of the root node.
+   This ordering is new and probably was not the case when you submitted
+   the patch (it probably also explains the fuzz).
+
+What I have applied is as follows:
+
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH] arm64: dts: renesas: r8a7795: add usb3_phy node
+
+This patch adds USB3.0 PHY node for r8a7795.
+
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+---
+ arch/arm64/boot/dts/renesas/r8a7795.dtsi | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+index 62dfc7781cc1..d12df6f2ff09 100644
+--- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+@@ -1631,6 +1631,19 @@
+ 			iommus = <&ipmmu_hc 2>;
+ 		};
+ 
++		usb3_phy0: usb-phy@e65ee000 {
++			compatible = "renesas,r8a7795-usb3-phy",
++				     "renesas,rcar-gen3-usb3-phy";
++			reg = <0 0xe65ee000 0 0x90>;
++			clocks = <&cpg CPG_MOD 328>, <&usb3s0_clk>,
++				 <&usb_extal_clk>;
++			clock-names = "usb3-if", "usb3s_clk", "usb_extal";
++			power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
++			resets = <&cpg 328>;
++			#phy-cells = <0>;
++			status = "disabled";
++		};
++
+ 		xhci0: usb@ee000000 {
+ 			compatible = "renesas,xhci-r8a7795", "renesas,rcar-gen3-xhci";
+ 			reg = <0 0xee000000 0 0xc00>;
+@@ -2380,4 +2393,17 @@
+ 			};
+ 		};
+ 	};
++
++	/* External USB clocks - can be overridden by the board */
++	usb3s0_clk: usb3s0 {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <0>;
++	};
++
++	usb_extal_clk: usb_extal {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <0>;
++	};
+ };
+-- 
+2.11.0
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
