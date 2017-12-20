@@ -1,64 +1,47 @@
-From: Greentime Hu <green.hu@gmail.com>
-Subject: Re: [PATCH v4 04/36] nds32: Kernel booting and initialization
-Date: Wed, 20 Dec 2017 10:35:30 +0800
-Message-ID: <CAEbi=3cyccwHNurEmXFC1nfVzEc9FZMp5bxNi8un4c3w4xA7Sg@mail.gmail.com>
-References: <cover.1513577007.git.green.hu@gmail.com> <935ff034982f077b2e6f5eeccd6fe2110614fc9c.1513577007.git.green.hu@gmail.com>
- <78afd442-4482-f104-746e-5984214658ee@infradead.org>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [v7, 3/3] ARM: dts: imx6qdl.dtsi/imx6ul.dtsi: add "fsl,
+ imx6q-snvs-lpgpr" node
+Date: Wed, 20 Dec 2017 10:46:00 +0800
+Message-ID: <20171220024555.GA3766@dragon>
+References: <20170620070932.10353-4-o.rempel@pengutronix.de>
+ <cfd53377-437a-98d3-1a0e-1123495a35ee@maciej.szmigiero.name>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <78afd442-4482-f104-746e-5984214658ee@infradead.org>
-Sender: netdev-owner@vger.kernel.org
-To: Randy Dunlap <rdunlap@infradead.org>
-Cc: Greentime <greentime@andestech.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, linux-arch <linux-arch@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, netdev <netdev@vger.kernel.org>, Vincent Chen <deanbo422@gmail.com>, DTML <devicetree@vger.kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, David Howells <dhowells@redhat.com>, Will Deacon <will.deacon@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-serial@vger.kernel.org, Geert Uytterhoeven <geert.uytterhoeven@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Greg KH <greg@kroah.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <cfd53377-437a-98d3-1a0e-1123495a35ee-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Maciej S. Szmigiero" <mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org>
+Cc: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Guy Shapiro <guy.shapiro-2HKgp+mgmS5l57MIdRCFDg@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2017-12-20 6:01 GMT+08:00 Randy Dunlap <rdunlap@infradead.org>:
-> On 12/17/2017 10:46 PM, Greentime Hu wrote:
->> From: Greentime Hu <greentime@andestech.com>
->>
->> This patch includes the kernel startup code. It can get dtb pointer
->> passed from bootloader. It will create a temp mapping by tlb
->> instructions at beginning and goto start_kernel.
->>
->> Signed-off-by: Vincent Chen <vincentc@andestech.com>
->> Signed-off-by: Greentime Hu <greentime@andestech.com>
->> ---
->>  arch/nds32/kernel/head.S  |  189 ++++++++++++++++++++++
->>  arch/nds32/kernel/setup.c |  383 +++++++++++++++++++++++++++++++++++++++++++++
->>  2 files changed, 572 insertions(+)
->>  create mode 100644 arch/nds32/kernel/head.S
->>  create mode 100644 arch/nds32/kernel/setup.c
->>
->
->> diff --git a/arch/nds32/kernel/setup.c b/arch/nds32/kernel/setup.c
->> new file mode 100644
->> index 0000000..7718c58
->> --- /dev/null
->> +++ b/arch/nds32/kernel/setup.c
->> @@ -0,0 +1,383 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +// Copyright (C) 2005-2017 Andes Technology Corporation
->> +
->
-> [snip]
->
->> +struct cache_info L1_cache_info[2];
->> +static void __init dump_cpu_info(int cpu)
->> +{
->> +     int i, p = 0;
->> +     char str[sizeof(hwcap_str) + 16];
->> +
->> +     for (i = 0; hwcap_str[i]; i++) {
->> +             if (elf_hwcap & (1 << i)) {
->> +                     sprintf(str + p, "%s ", hwcap_str[i]);
->> +                     p += strlen(hwcap_str[i]) + 1;
->> +             }
->> +     }
->> +
->> +     pr_info("CPU%d Featuretures: %s\n", cpu, str);
->
->                        Features:
->
+On Mon, Dec 11, 2017 at 11:31:52PM +0100, Maciej S. Szmigiero wrote:
+> On 20.06.2017 09:09, Oleksij Rempel wrote:
+> > This node is for Low Power General Purpose Register which can
+> > be used as Non-Volatile Storage.
+> > 
+> > Signed-off-by: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> > ---
+> >  arch/arm/boot/dts/imx6qdl.dtsi | 4 ++++
+> >  arch/arm/boot/dts/imx6ul.dtsi  | 4 ++++
+> >  2 files changed, 8 insertions(+)
+> > 
+> > diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
+> > index e426faa9c243..94e992558238 100644
+> (..)
+> 
+> FYI: It looks to me that while the driver itself from this series was
+> picked up and eventually reached Linus' tree this DT change was 
+> forgotten, since I can't find in any tree (or am I not looking at the
+> right place?).
 
-Thanks Randy. I will fix this typo.
+Thanks for reminding.  I just updated the subject as below and applied
+the patch.
+
+ ARM: dts: imx6: add snvs-lpgpr node
+
+Shawn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
