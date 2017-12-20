@@ -1,90 +1,87 @@
-From: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 1/3] dt-bindings: ARM: Mediatek: Fix ethsys documentation
-Date: Wed, 20 Dec 2017 11:26:55 -0800
-Message-ID: <151379801537.37313.10157953819670256557@resonance>
-References: <20171201120708.30129-1-matthias.bgg@gmail.com>
- <b92fd3bd-c61a-ae58-49ef-8727af065ec1@gmail.com>
- <20171219013222.GZ7997@codeaurora.org>
- <06b927e4-ed1b-9e1a-becf-e2818e7efe6d@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <06b927e4-ed1b-9e1a-becf-e2818e7efe6d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, chen.zhong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH 1/2] arm64: dts: exynos: Use lower case hex addresses in node unit addresses
+Date: Wed, 20 Dec 2017 20:27:01 +0100
+Message-ID: <20171220192702.32515-1-krzk@kernel.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Matthias Brugger (2017-12-20 09:13:12)
-> =
+Convert all hex addresses in node unit addresses to lower case to
+fix warnings like:
+    arch/arm64/boot/dts/exynos/exynos5433-tm2e.dtb: Warning (simple_bus_reg):
+      Node /soc/video-scaler@13C00000 simple-bus unit address format error, expected "13c00000"
 
-> =
+Conversion was done using sed:
+    $ sed -e 's/@\([a-zA-Z0-9_-]*\) {/@\L\1 {/' -i arch/arm64/boot/dts/exynos/*.dts*
 
-> On 12/19/2017 02:32 AM, Stephen Boyd wrote:
-> > On 12/14, Matthias Brugger wrote:
-> >> Hi Stephen, Michael,
-> >>
-> >> On 12/01/2017 01:07 PM, Matthias Brugger wrote:
-> >>> The ethsys registers a reset controller, so we need to specify a
-> >>> reset cell. This patch fixes the documentation.
-> >>>
-> >>> Signed-off-by: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> >>> ---
-> >>>  Documentation/devicetree/bindings/arm/mediatek/mediatek,ethsys.txt |=
- 1 +
-> >>>  1 file changed, 1 insertion(+)
-> >>>
-> >>> diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,=
-ethsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,ethsys=
-.txt
-> >>> index 7aa3fa167668..6cc7840ff37a 100644
-> >>> --- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,ethsys.=
-txt
-> >>> +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,ethsys.=
-txt
-> >>> @@ -20,4 +20,5 @@ ethsys: clock-controller@1b000000 {
-> >>>     compatible =3D "mediatek,mt2701-ethsys", "syscon";
-> >>>     reg =3D <0 0x1b000000 0 0x1000>;
-> >>>     #clock-cells =3D <1>;
-> >>> +   #reset-cells =3D <1>;
-> >>>  };
-> >>>
-> >>
-> >> Will you take this patch through the clk tree, or shall I take it thro=
-ugh my SoC
-> >> tree?
-> >>
-> > =
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ arch/arm64/boot/dts/exynos/exynos5433.dtsi | 8 ++++----
+ arch/arm64/boot/dts/exynos/exynos7.dtsi    | 4 ++--
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
-> > It's resets, we are clk maintainers. I'm clkfused.
-> > =
-
-> > You can take it, along with my
-> > =
-
-> > Acked-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> > =
-
-> > if you like/expect conflicts.
-> > =
-
-> =
-
-> These are resets in the clock IP-block. I'll take it through my branch, I=
- don't
-> expect any conflicts.
-
-Sounds good to me.
-
-Best regards,
-Mike
-
-> =
-
-> Regards,
-> Matthias
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm64/boot/dts/exynos/exynos5433.dtsi b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
+index 1962b8074349..0ba5df825eff 100644
+--- a/arch/arm64/boot/dts/exynos/exynos5433.dtsi
++++ b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
+@@ -994,7 +994,7 @@
+ 			reg = <0x145f0000 0x1038>;
+ 		};
+ 
+-		gsc_0: video-scaler@13C00000 {
++		gsc_0: video-scaler@13c00000 {
+ 			compatible = "samsung,exynos5433-gsc";
+ 			reg = <0x13c00000 0x1000>;
+ 			interrupts = <GIC_SPI 297 IRQ_TYPE_LEVEL_HIGH>;
+@@ -1008,7 +1008,7 @@
+ 			power-domains = <&pd_gscl>;
+ 		};
+ 
+-		gsc_1: video-scaler@13C10000 {
++		gsc_1: video-scaler@13c10000 {
+ 			compatible = "samsung,exynos5433-gsc";
+ 			reg = <0x13c10000 0x1000>;
+ 			interrupts = <GIC_SPI 298 IRQ_TYPE_LEVEL_HIGH>;
+@@ -1022,7 +1022,7 @@
+ 			power-domains = <&pd_gscl>;
+ 		};
+ 
+-		gsc_2: video-scaler@13C20000 {
++		gsc_2: video-scaler@13c20000 {
+ 			compatible = "samsung,exynos5433-gsc";
+ 			reg = <0x13c20000 0x1000>;
+ 			interrupts = <GIC_SPI 299 IRQ_TYPE_LEVEL_HIGH>;
+@@ -1049,7 +1049,7 @@
+ 			power-domains = <&pd_mscl>;
+ 		};
+ 
+-		mfc: codec@152E0000 {
++		mfc: codec@152e0000 {
+ 			compatible = "samsung,exynos5433-mfc";
+ 			reg = <0x152E0000 0x10000>;
+ 			interrupts = <GIC_SPI 358 IRQ_TYPE_LEVEL_HIGH>;
+diff --git a/arch/arm64/boot/dts/exynos/exynos7.dtsi b/arch/arm64/boot/dts/exynos/exynos7.dtsi
+index 9a3fbed1765a..3504837b1d43 100644
+--- a/arch/arm64/boot/dts/exynos/exynos7.dtsi
++++ b/arch/arm64/boot/dts/exynos/exynos7.dtsi
+@@ -103,7 +103,7 @@
+ 			#size-cells = <1>;
+ 			ranges;
+ 
+-			pdma0: pdma@10E10000 {
++			pdma0: pdma@10e10000 {
+ 				compatible = "arm,pl330", "arm,primecell";
+ 				reg = <0x10E10000 0x1000>;
+ 				interrupts = <GIC_SPI 225 IRQ_TYPE_LEVEL_HIGH>;
+@@ -114,7 +114,7 @@
+ 				#dma-requests = <32>;
+ 			};
+ 
+-			pdma1: pdma@10EB0000 {
++			pdma1: pdma@10eb0000 {
+ 				compatible = "arm,pl330", "arm,primecell";
+ 				reg = <0x10EB0000 0x1000>;
+ 				interrupts = <GIC_SPI 226 IRQ_TYPE_LEVEL_HIGH>;
+-- 
+2.11.0
