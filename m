@@ -1,113 +1,55 @@
-From: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 3/4] ARM: dts: add Samsung's exynos4412-based midas boards
-Date: Wed, 20 Dec 2017 16:39:34 +0100
-Message-ID: <CAJKOXPeL1JhwbZsLNEcVMh2iNCgh1f20EmRxFi57Hqs=njivwA@mail.gmail.com>
-References: <20171218123805.26345-1-simon@lineageos.org> <20171218123805.26345-4-simon@lineageos.org>
- <CAJKOXPf4H6kSXJCSaVBPr9G1yNw9FjCUT+fox2V++Nyrco5bQA@mail.gmail.com> <20171220153315.GB23127@lineageos.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171220153315.GB23127-WP75azK+jQYgsBAKwltoeQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Shields <simon-WP75azK+jQYgsBAKwltoeQ@public.gmane.org>
-Cc: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+From: Crt Mori <cmo-fc6wVz46lShBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v11 2/3] dt-bindings: iio: temperature: add MLX90632 device bindings
+Date: Wed, 20 Dec 2017 16:48:57 +0100
+Message-ID: <20171220154857.24150-1-cmo@melexis.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Crt Mori <cmo-fc6wVz46lShBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 20, 2017 at 4:33 PM, Simon Shields <simon-WP75azK+jQYgsBAKwltoeQ@public.gmane.org> wrote:
-> Hi Krzysztof,
->
-> On Wed, Dec 20, 2017 at 03:08:27PM +0100, Krzysztof Kozlowski wrote:
->> On Mon, Dec 18, 2017 at 1:38 PM, Simon Shields <simon-WP75azK+jQYgsBAKwltoeQ@public.gmane.org> wrote:
->> > "midas" is the codename for a family of smartphones released by Samsung
->> > Mobile. It includes the Galaxy S3 (GT-I9300/I9305) and the Galaxy
->> > Note 2 (GT-N7100/N7105). The boards largely have the same peripherals:
->> > the main differences are touchscreen, display panel and cellular modem.
->> >
->> > Signed-off-by: Simon Shields <simon-WP75azK+jQYgsBAKwltoeQ@public.gmane.org>
->> > ---
->> >  arch/arm/boot/dts/Makefile          |  3 +++
->> >  arch/arm/boot/dts/exynos4412-m0.dts | 27 +++++++++++++++++++++++++
->> >  arch/arm/boot/dts/exynos4412-m3.dts | 14 +++++++++++++
->> >  arch/arm/boot/dts/exynos4412-t0.dts | 40 +++++++++++++++++++++++++++++++++++++
->> >  4 files changed, 84 insertions(+)
->> >  create mode 100644 arch/arm/boot/dts/exynos4412-m0.dts
->> >  create mode 100644 arch/arm/boot/dts/exynos4412-m3.dts
->> >  create mode 100644 arch/arm/boot/dts/exynos4412-t0.dts
->> >
->> > diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
->> > index 66e28af289da..035abd66b472 100644
->> > --- a/arch/arm/boot/dts/Makefile
->> > +++ b/arch/arm/boot/dts/Makefile
->> > @@ -164,11 +164,14 @@ dtb-$(CONFIG_ARCH_EXYNOS4) += \
->> >         exynos4210-trats.dtb \
->> >         exynos4210-universal_c210.dtb \
->> >         exynos4412-itop-elite.dtb \
->> > +       exynos4412-m0.dtb \
->> > +       exynos4412-m3.dtb \
->> >         exynos4412-odroidu3.dtb \
->> >         exynos4412-odroidx.dtb \
->> >         exynos4412-odroidx2.dtb \
->> >         exynos4412-origen.dtb \
->> >         exynos4412-smdk4412.dtb \
->> > +       exynos4412-t0.dtb \
->> >         exynos4412-tiny4412.dtb \
->> >         exynos4412-trats2.dtb
->> >  dtb-$(CONFIG_ARCH_EXYNOS5) += \
->> > diff --git a/arch/arm/boot/dts/exynos4412-m0.dts b/arch/arm/boot/dts/exynos4412-m0.dts
->> > new file mode 100644
->> > index 000000000000..56c1ea6b5695
->> > --- /dev/null
->> > +++ b/arch/arm/boot/dts/exynos4412-m0.dts
->> > @@ -0,0 +1,27 @@
->> > +/*
->> > + * Samsung's Exynos4412 based M0 (GT-I9300) board device tree source
->> > + *
->> > + * Copyright (c) 2013 Samsung Electronics Co., Ltd.
->> > + *             http://www.samsung.com
->> > + *
->> > + * Device tree source file for Samsung's M0 board which is based on
->> > + * Samsung's Exynos4412 SoC.
->> > + *
->> > + * This program is free software; you can redistribute it and/or modify
->> > + * it under the terms of the GNU General Public License version 2 as
->> > + * published by the Free Software Foundation.
->> > + */
->> > +
->> > +/dts-v1/;
->> > +#include "exynos4412-galaxy-s3.dtsi"
->> > +
->> > +/ {
->> > +       model = "Samsung M0 (GT-I9300) based on Exynos4412";
->> > +       compatible = "samsung,m0", "samsung,midas", "samsung,exynos4412", "samsung,exynos4";
->> > +
->> > +       memory@40000000 {
->> > +               device_type = "memory";
->> > +               reg =  <0x40000000 0x40000000>;
->>
->> I think each board has the same memory so maybe this can be made part
->> of midas.dtsi?
->
-> T0 and M3 have 2GB of RAM, trats2/M0 have 1GB.
+Add device tree bindings for MLX90632 IR temperature sensor.
 
-Ah, ok.
+Signed-off-by: Crt Mori <cmo-fc6wVz46lShBDgjK7y7TUQ@public.gmane.org>
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+ .../bindings/iio/temperature/mlx90632.txt          | 28 ++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/temperature/mlx90632.txt
 
->
->>
->> > +       };
->>
->> What about bootargs?
->
-> Handled by the bootloader - to work around the proprietary bootloader not
-> supporting device tree and requiring hacks to successfully boot a
-> mainline kernel, i'm using kexec from a suitably patched kernel to load
-> and boot the "real" kernel. (This also means one image can be used
-> across all boards).
-
-Could you document it in DTS why bootargs are missing?
-
-Best regards,
-Krzysztof
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/iio/temperature/mlx90632.txt b/Documentation/devicetree/bindings/iio/temperature/mlx90632.txt
+new file mode 100644
+index 000000000000..0b05812001f8
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/temperature/mlx90632.txt
+@@ -0,0 +1,28 @@
++* Melexis MLX90632 contactless Infra Red temperature sensor
++
++Link to datasheet: https://www.melexis.com/en/documents/documentation/datasheets/datasheet-mlx90632
++
++There are various applications for the Infra Red contactless temperature sensor
++and MLX90632 is most suitable for consumer applications where measured object
++temperature is in range between -20 to 200 degrees Celsius with relative error
++of measurement below 1 degree Celsius in object temperature range for
++industrial applications. Since it can operate and measure ambient temperature
++in range of -20 to 85 degrees Celsius it is suitable also for outdoor use.
++
++Be aware that electronics surrounding the sensor can increase ambient
++temperature. MLX90632 can be calibrated to reduce the housing effect via
++already existing EEPROM parameters.
++
++Since measured object emissivity effects Infra Red energy emitted, emissivity
++should be set before requesting the object temperature.
++
++Required properties:
++  - compatible: should be "melexis,mlx90632"
++  - reg: the I2C address of the sensor (default 0x3a)
++
++Example:
++
++mlx90632@3a {
++	compatible = "melexis,mlx90632";
++	reg = <0x3a>;
++};
+-- 
+2.15.0
