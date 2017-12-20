@@ -1,81 +1,57 @@
-From: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH] PCI: Mediatek: clear irq status after irq dispathed to
- avoid reentry
-Date: Wed, 20 Dec 2017 11:08:15 +0800
-Message-ID: <1513739295.18782.1.camel@mtkswgap22>
-References: <1513738334-26213-1-git-send-email-honghui.zhang@mediatek.com>
+From: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Subject: Re: [PATCH v2 10/19] ARM: dts: aspeed: Add LPC Snoop device
+Date: Wed, 20 Dec 2017 13:51:34 +1030
+Message-ID: <CACPK8Xd2e=wDD7udyH9-mMuxXsRjCj8LDsosp=5b3e0iTJwA5A@mail.gmail.com>
+References: <20171215062443.23059-1-joel@jms.id.au> <20171215062443.23059-11-joel@jms.id.au>
+ <c5ef27de-34c1-f5e9-e4ae-e2709b004677@kaod.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1513738334-26213-1-git-send-email-honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <c5ef27de-34c1-f5e9-e4ae-e2709b004677-Bxea+6Xhats@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
-Cc: bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, hongkun.cao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, xinping.qian-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+To: =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg-Bxea+6Xhats@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>, Patrick Venture <venture-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Xo Wang <xow-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Lei YU <mine260309-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-aspeed-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2017-12-20 at 10:52 +0800, honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
-> From: Honghui Zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> 
-> There maybe a same irq reentry scenario after irq received in current
-> irq handle flow:
-> 	EP device		PCIe host driver	EP driver
-> 1. issue an irq
-> 			2. received irq
-> 			3. clear irq status
-> 			4. dispatch irq
-> 						5. clear irq source
-> The irq status was not successfully cleared at step 2 since the irq
-> source was not cleared yet. So the PCIe host driver may receive the
-> same irq after step 5. Then there's an irq reentry occurred.
-> Even worse, if the reentry irq was not an irq that EP driver expected,
-> it may not handle the irq. Then we may run into the dead loop from
-> step 2 to step 4.
-> Clear the irq status after irq have been dispatched to avoid the irq
-> reentry.
-> 
-> Signed-off-by: Honghui Zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> ---
->  drivers/pci/host/pcie-mediatek.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/pci/host/pcie-mediatek.c b/drivers/pci/host/pcie-mediatek.c
-> index db93efd..3248771 100644
-> --- a/drivers/pci/host/pcie-mediatek.c
-> +++ b/drivers/pci/host/pcie-mediatek.c
-> @@ -605,11 +605,11 @@ static irqreturn_t mtk_pcie_intr_handler(int irq, void *data)
->  
->  	while ((status = readl(port->base + PCIE_INT_STATUS)) & INTX_MASK) {
->  		for_each_set_bit_from(bit, &status, PCI_NUM_INTX + INTX_SHIFT) {
-> -			/* Clear the INTx */
-> -			writel(1 << bit, port->base + PCIE_INT_STATUS);
->  			virq = irq_find_mapping(port->irq_domain,
->  						bit - INTX_SHIFT);
->  			generic_handle_irq(virq);
-> +			/* Clear the INTx */
-> +			writel(1 << bit, port->base + PCIE_INT_STATUS);
->  		}
->  	}
->  
-> @@ -619,10 +619,10 @@ static irqreturn_t mtk_pcie_intr_handler(int irq, void *data)
->  
->  			while ((imsi_status = readl(port->base + PCIE_IMSI_STATUS))) {
->  				for_each_set_bit(bit, &imsi_status, MTK_MSI_IRQS_NUM) {
-> -					/* Clear the MSI */
-> -					writel(1 << bit, port->base + PCIE_IMSI_STATUS);
->  					virq = irq_find_mapping(port->msi_domain, bit);
->  					generic_handle_irq(virq);
-> +					/* Clear the MSI */
-> +					writel(1 << bit, port->base + PCIE_IMSI_STATUS);
->  				}
->  			}
->  			/* Clear MSI interrupt status */
+On Mon, Dec 18, 2017 at 7:46 PM, C=C3=A9dric Le Goater <clg-Bxea+6Xhats@public.gmane.org> wrote=
+:
+> On 12/15/2017 07:24 AM, Joel Stanley wrote:
+>> LPC snoop hardware on the ASPEED BMC, used for monitoring
+>> host I/O port activity.
+>>
+>> Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/aspeed-g4.dtsi | 7 +++++++
+>>  arch/arm/boot/dts/aspeed-g5.dtsi | 6 ++++++
+>>  2 files changed, 13 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/aspeed-g4.dtsi b/arch/arm/boot/dts/aspeed=
+-g4.dtsi
+>> index f6fee40c04c0..b3580f37f507 100644
+>> --- a/arch/arm/boot/dts/aspeed-g4.dtsi
+>> +++ b/arch/arm/boot/dts/aspeed-g4.dtsi
+>> @@ -236,6 +236,13 @@
+>>                                               status =3D "disabled";
+>>                                       };
+>>
+>> +                                     lpc_snoop: lpc-snoop@0 {
+>> +                                             compatible =3D "aspeed,ast=
+2500-lpc-snoop";
+>
+> it should be :
+>
+>         aspeed,ast2400-lpc-snoop
+>
+> a part from that :
+>
+> Reviewed-by: C=C3=A9dric Le Goater <clg-Bxea+6Xhats@public.gmane.org>
 
-Acked-by: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Fixed in v3.
 
-Thanks.
+Cheers,
 
-
+Joel
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
