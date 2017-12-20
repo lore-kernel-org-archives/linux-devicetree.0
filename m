@@ -1,88 +1,44 @@
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
-Subject: [PATCH v15 5/5] dt-bindings: watchdog: Add bindings for RAVE SP watchdog driver
-Date: Tue, 19 Dec 2017 20:00:17 -0800
-Message-ID: <20171220040017.7605-6-andrew.smirnov@gmail.com>
-References: <20171220040017.7605-1-andrew.smirnov@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171220040017.7605-1-andrew.smirnov@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Andrey Smirnov <andrew.smirnov@gmail.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, cphealy@gmail.com, Lucas Stach <l.stach@pengutronix.de>, Nikita Yushchenko <nikita.yoush@cogentembedded.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Pavel Machek <pavel@ucw.cz>, Andy Shevchenko <andy.shevchenko@gmail.com>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh@kernel.org>, Johan Hovold <johan@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+From: Vignesh R <vigneshr@ti.com>
+Subject: Re: [PATCH 1/4] pci: dwc: pci-dra7xx: Enable errata i870 for both EP
+ and RC mode
+Date: Wed, 20 Dec 2017 09:45:45 +0530
+Message-ID: <fa536894-fac6-feea-e973-268ff5a6389d@ti.com>
+References: <20171201061311.16691-1-vigneshr@ti.com>
+ <20171201061311.16691-2-vigneshr@ti.com> <20171219162421.GD21501@red-moon>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20171219162421.GD21501@red-moon>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, KISHON VIJAY ABRAHAM <kishon@ti.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Chris Welch <Chris.Welch@viavisolutions.com>, Bjorn Helgaas <bhelgaas@google.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Add Device Tree bindings for RAVE SP watchdog drvier - an MFD cell of
-parent RAVE SP driver (documented in
-Documentation/devicetree/bindings/mfd/zii,rave-sp.txt).
-
-Cc: linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Cc: linux-watchdog@vger.kernel.org
-Cc: cphealy@gmail.com
-Cc: Lucas Stach <l.stach@pengutronix.de>
-Cc: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
-Cc: Lee Jones <lee.jones@linaro.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Pavel Machek <pavel@ucw.cz>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Guenter Roeck <linux@roeck-us.net>
-Cc: Rob Herring <robh@kernel.org>
-Cc: Johan Hovold <johan@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Acked-by: Pavel Machek <pavel@ucw.cz>
-Acked-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
----
- .../bindings/watchdog/zii,rave-sp-wdt.txt          | 39 ++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/watchdog/zii,rave-sp-wdt.txt
-
-diff --git a/Documentation/devicetree/bindings/watchdog/zii,rave-sp-wdt.txt b/Documentation/devicetree/bindings/watchdog/zii,rave-sp-wdt.txt
-new file mode 100644
-index 000000000000..3de96186e92e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/watchdog/zii,rave-sp-wdt.txt
-@@ -0,0 +1,39 @@
-+Zodiac Inflight Innovations RAVE Supervisory Processor Watchdog Bindings
-+
-+RAVE SP watchdog device is a "MFD cell" device corresponding to
-+watchdog functionality of RAVE Supervisory Processor. It is expected
-+that its Device Tree node is specified as a child of the node
-+corresponding to the parent RAVE SP device (as documented in
-+Documentation/devicetree/bindings/mfd/zii,rave-sp.txt)
-+
-+Required properties:
-+
-+- compatible: Depending on wire protocol implemented by RAVE SP
-+  firmware, should be one of:
-+	- "zii,rave-sp-watchdog"
-+	- "zii,rave-sp-watchdog-legacy"
-+
-+Optional properties:
-+
-+- wdt-timeout:	Two byte nvmem cell specified as per
-+		Documentation/devicetree/bindings/nvmem/nvmem.txt
-+
-+Example:
-+
-+	rave-sp {
-+		compatible = "zii,rave-sp-rdu1";
-+		current-speed = <38400>;
-+
-+		eeprom {
-+			wdt_timeout: wdt-timeout@8E {
-+				reg = <0x8E 2>;
-+			};
-+		};
-+
-+		watchdog {
-+			compatible = "zii,rave-sp-watchdog";
-+			nvmem-cells = <&wdt_timeout>;
-+			nvmem-cell-names = "wdt-timeout";
-+		};
-+	}
-+
--- 
-2.14.3
+CgpPbiBUdWVzZGF5IDE5IERlY2VtYmVyIDIwMTcgMDk6NTQgUE0sIExvcmVuem8gUGllcmFsaXNp
+IHdyb3RlOgo+IE9uIEZyaSwgRGVjIDAxLCAyMDE3IGF0IDExOjQzOjA4QU0gKzA1MzAsIFZpZ25l
+c2ggUiB3cm90ZToKPj4gRXJyYXRhIGk4NzAgaXMgYXBwbGljYWJsZSBpbiBib3RoIEVQIGFuZCBS
+QyBtb2RlLiBUaGVyZWZvcmUgcmVuYW1lCj4+IGZ1bmN0aW9uIGRyYTd4eF9wY2llX2VwX3VuYWxp
+Z25lZF9tZW1hY2Nlc3MoKSwgdGhhdCBpbXBsZW1lbnRzIGVycmF0YQo+PiB3b3JrYXJvdW5kLCB0
+byBkcmE3eHhfcGNpZV91bmFsaWduZWRfbWVtYWNjZXNzKCkgYW5kIGNhbGwgaXQgZnJvbSBhCj4+
+IGNvbW1vbiBwbGFjZS4gU28sIHRoYXQgZXJyYXRhIHdvcmthcm91bmQgaXMgYXBwbGllZCBmb3Ig
+Ym90aCBtb2RlcyBvZgo+PiBvcGVyYXRpb24uCj4+IAo+PiBSZXBvcnRlZC1ieTogQ2hyaXMgV2Vs
+Y2ggPENocmlzLldlbGNoQHZpYXZpc29sdXRpb25zLmNvbT4KPj4gU2lnbmVkLW9mZi1ieTogVmln
+bmVzaCBSIDx2aWduZXNockB0aS5jb20+Cj4+IC0tLQo+PsKgIGRyaXZlcnMvcGNpL2R3Yy9wY2kt
+ZHJhN3h4LmMgfCAxMiArKysrKystLS0tLS0KPj7CoCAxIGZpbGUgY2hhbmdlZCwgNiBpbnNlcnRp
+b25zKCspLCA2IGRlbGV0aW9ucygtKQo+IAo+IEkgbmVlZCBLaXNob24ncyBBQ0sgdG8gYXBwbHkg
+aXQsIHRoYW5rcy4KClRoZXJlIGFyZSBzb21lIGVuaGFuY2VtZW50cyB0byB0aGlzIHBhdGNoLiBX
+aWxsIHN1Ym1pdCBhIHYyIHNob3J0bHkuClBsZWFzZSBpZ25vcmUgdGhpcyB2ZXJzaW9uIGZvciBu
+b3cuIFRoYW5rcyEKCgotLSAKUmVnYXJkcwpWaWduZXNoCgpfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdAps
+aW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVh
+ZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
