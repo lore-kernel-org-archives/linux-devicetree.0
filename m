@@ -1,112 +1,45 @@
-From: Joel Stanley <joel@jms.id.au>
-Subject: [PATCH v3 18/20] ARM: dts: aspeed-romulus: Update Romulus system
-Date: Wed, 20 Dec 2017 13:53:26 +1030
-Message-ID: <20171220032328.30584-19-joel@jms.id.au>
+From: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Subject: [PATCH v3 19/20] ARM: dts: aspeed-plametto: Add flash layout and fix memory node
+Date: Wed, 20 Dec 2017 13:53:27 +1030
+Message-ID: <20171220032328.30584-20-joel@jms.id.au>
 References: <20171220032328.30584-1-joel@jms.id.au>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171220032328.30584-1-joel@jms.id.au>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Andrew Jeffery <andrew@aj.id.au>, Patrick Venture <venture@google.com>, Xo Wang <xow@google.com>, Lei YU <mine260309@gmail.com>
-Cc: =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Jeremy Kerr <jk@ozlabs.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171220032328.30584-1-joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>, Patrick Venture <venture-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Xo Wang <xow-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Lei YU <mine260309-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg-Bxea+6Xhats@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-aspeed-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
- - Fix incorrect RAM size
- - Remove alias; these are now specified in the dtsi
- - Add newly upstreamed devices
- - Include OpenBMC flash layout
+The OpenBMC flash layout is used by Palmetto systems.
 
-Signed-off-by: Joel Stanley <joel@jms.id.au>
----
- v3:
-  - Add GPIO include
-  - Fix duplicate fmc and spi nodes
-  - Add unit name for memory node to fix warning
----
- arch/arm/boot/dts/aspeed-bmc-opp-romulus.dts | 133 +++++++++++++++++++++++++--
- 1 file changed, 126 insertions(+), 7 deletions(-)
+Add the unit name to the memory node to fix a warning with W=1.
 
-diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-romulus.dts b/arch/arm/boot/dts/aspeed-bmc-opp-romulus.dts
-index a7a9386f964d..623b6ab42021 100644
---- a/arch/arm/boot/dts/aspeed-bmc-opp-romulus.dts
-+++ b/arch/arm/boot/dts/aspeed-bmc-opp-romulus.dts
-@@ -1,23 +1,19 @@
- // SPDX-License-Identifier: GPL-2.0+
- /dts-v1/;
--
- #include "aspeed-g5.dtsi"
-+#include <dt-bindings/gpio/aspeed-gpio.h>
- 
- / {
- 	model = "Romulus BMC";
- 	compatible = "ibm,romulus-bmc", "aspeed,ast2500";
- 
--	aliases {
--		serial4 = &uart5;
--	};
--
- 	chosen {
- 		stdout-path = &uart5;
+Reviewed-by: Cédric Le Goater <clg-Bxea+6Xhats@public.gmane.org>
+Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+---
+v3:
+ - Added memory node unit name
+---
+ arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts b/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts
+index a8f0c046e83e..4379d09a261f 100644
+--- a/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts
++++ b/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts
+@@ -12,7 +12,7 @@
  		bootargs = "console=ttyS4,115200 earlyprintk";
  	};
  
 -	memory {
--		reg = <0x80000000 0x40000000>;
-+	memory@80000000 {
-+		reg = <0x80000000 0x20000000>;
++	memory@40000000 {
+ 		reg = <0x40000000 0x20000000>;
  	};
  
- 	reserved-memory {
-@@ -29,6 +25,49 @@
- 			no-map;
- 			reg = <0xbf000000 0x01000000>; /* 16M */
- 		};
-+
-+		flash_memory: region@98000000 {
-+			no-map;
-+			reg = <0x98000000 0x04000000>; /* 64M */
-+		};
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		fault {
-+			gpios = <&gpio ASPEED_GPIO(N, 2) GPIO_ACTIVE_LOW>;
-+		};
-+
-+		identify {
-+			gpios = <&gpio ASPEED_GPIO(N, 4) GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		power {
-+			gpios = <&gpio ASPEED_GPIO(R, 5) GPIO_ACTIVE_LOW>;
-+		};
-+	};
-+
-+	fsi: gpio-fsi {
-+		compatible = "fsi-master-gpio", "fsi-master";
-+		#address-cells = <2>;
-+		#size-cells = <0>;
-+
-+		clock-gpios = <&gpio ASPEED_GPIO(AA, 0) GPIO_ACTIVE_HIGH>;
-+		data-gpios = <&gpio ASPEED_GPIO(AA, 2) GPIO_ACTIVE_HIGH>;
-+		mux-gpios = <&gpio ASPEED_GPIO(A, 6) GPIO_ACTIVE_HIGH>;
-+		enable-gpios = <&gpio ASPEED_GPIO(D, 0) GPIO_ACTIVE_HIGH>;
-+		trans-gpios = <&gpio ASPEED_GPIO(R, 2) GPIO_ACTIVE_HIGH>;
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+
-+		checkstop {
-+			label = "checkstop";
-+			gpios = <&gpio ASPEED_GPIO(J, 2) GPIO_ACTIVE_LOW>;
-+			linux,code = <ASPEED_GPIO(J, 2)>;
-+		};
- 	};
- };
- 
-@@ -38,6 +77,7 @@
+@@ -34,6 +34,7 @@
  		status = "okay";
  		m25p,fast-read;
  		label = "bmc";
@@ -114,107 +47,10 @@ index a7a9386f964d..623b6ab42021 100644
  	};
  };
  
-@@ -53,6 +93,12 @@
- 	};
- };
- 
-+&lpc_ctrl {
-+	status = "okay";
-+	memory-region = <&flash_memory>;
-+	flash = <&spi1>;
-+};
-+
- &uart1 {
- 	/* Rear RS-232 connector */
- 	status = "okay";
-@@ -81,6 +127,10 @@
- 	pinctrl-0 = <&pinctrl_rmii1_default>;
- };
- 
-+&i2c1 {
-+	status = "okay";
-+};
-+
- &i2c2 {
- 	status = "okay";
- };
-@@ -133,8 +183,77 @@
- 
- &i2c12 {
- 	status = "okay";
-+
-+	max31785@52 {
-+		compatible = "maxim,max31785";
-+		reg = <0x52>;
-+	};
-+};
-+
-+&gpio {
-+	nic_func_mode0 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(D, 3) GPIO_ACTIVE_HIGH>;
-+		output-low;
-+		line-name = "nic_func_mode0";
-+	};
-+	nic_func_mode1 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(D, 4) GPIO_ACTIVE_HIGH>;
-+		output-low;
-+		line-name = "nic_func_mode1";
-+	};
- };
- 
- &vuart {
- 	status = "okay";
- };
-+
-+&gfx {
-+	status = "okay";
-+};
-+
-+&pinctrl {
-+	aspeed,external-nodes = <&gfx &lhc>;
-+};
-+
-+&pwm_tacho {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pwm0_default &pinctrl_pwm1_default>;
-+
-+	fan@0 {
-+		reg = <0x00>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x08>;
-+	};
-+
-+	fan@1 {
-+		reg = <0x00>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x09>;
-+	};
-+
-+	fan@2 {
-+		reg = <0x01>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x0a>;
-+	};
-+
-+	fan@3 {
-+		reg = <0x01>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x0b>;
-+	};
-+
-+	fan@4 {
-+		reg = <0x00>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x0c>;
-+	};
-+
-+	fan@5 {
-+		reg = <0x00>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x0d>;
-+	};
-+
-+	fan@6 {
-+		reg = <0x01>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x0e>;
-+	};
-+};
 -- 
 2.15.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
