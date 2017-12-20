@@ -1,84 +1,42 @@
-From: "Takiguchi, Yasunari" <Yasunari.Takiguchi@sony.com>
-Subject: RE: [PATCH v4 05/12] [media] cxd2880: Add tuner part of the driver
-Date: Wed, 20 Dec 2017 01:01:59 +0000
-Message-ID: <02699364973B424C83A42A84B04FDA85440BB1@JPYOKXMS113.jp.sony.com>
+From: "Takiguchi, Yasunari" <Yasunari.Takiguchi-7U/KSKJipcs@public.gmane.org>
+Subject: RE: [PATCH v4 06/12] [media] cxd2880: Add integration layer for the
+ driver
+Date: Wed, 20 Dec 2017 01:06:25 +0000
+Message-ID: <02699364973B424C83A42A84B04FDA85440BCF@JPYOKXMS113.jp.sony.com>
 References: <20171013054635.20946-1-Yasunari.Takiguchi@sony.com>
-        <20171013060725.21439-1-Yasunari.Takiguchi@sony.com>
- <20171213164039.7eb5ad79@vento.lan>
+        <20171013060834.21526-1-Yasunari.Takiguchi@sony.com>
+ <20171213171319.675b39a6@vento.lan>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20171213164039.7eb5ad79@vento.lan>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171213171319.675b39a6-ch4gOOMV7nf/PtFMR13I2A@public.gmane.org>
 Content-Language: ja-JP
-Sender: linux-media-owner@vger.kernel.org
-To: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "tbird20d@gmail.com" <tbird20d@gmail.com>, "frowand.list@gmail.com" <frowand.list@gmail.com>, "Yamamoto, Masayuki" <Masayuki.Yamamoto@sony.com>, "Nozawa, Hideki (STWN)" <Hideki.Nozawa@sony.com>, "Yonezawa, Kota" <Kota.Yonezawa@sony.com>, "Matsumoto, Toshihiko" <Toshihiko.Matsumoto@sony.com>, "Watanabe, Satoshi (SSS)" <Satoshi.C.Watanabe@sony.com>, "Takiguchi, Yasunari" <Yasunari.Takiguchi@sony.com>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "tbird20d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <tbird20d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Yamamoto, Masayuki" <Masayuki.Yamamoto-7U/KSKJipcs@public.gmane.org>, "Nozawa, Hideki (STWN)" <Hideki.Nozawa-7U/KSKJipcs@public.gmane.org>, "Yonezawa, Kota" <Kota.Yonezawa-7U/KSKJipcs@public.gmane.org>, "Matsumoto, Toshihiko" <Toshihiko.Matsumoto-7U/KSKJipcs@public.gmane.org>, "Watanabe, Satoshi (SSS)" <Satoshi.C.Watanabe-7U/KSKJipcs@public.gmane.org>, "Takiguchi, Yasunari" <Yasunari.Takiguchi-7U/KSKJipcs@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Mauro
+Hi, Mauro.
 
+> >
+> > These functions monitor the driver and watch for task completion.
+> > This is part of the Sony CXD2880 DVB-T2/T tuner + demodulator driver.
+> 
+> If I understand well, the goal here is to have thread that would be waking
+> up from time to time, right? Just use the infrastructure that the Kernel
+> has for it, like a kthread, or timer_setup() & friends.
+> 
+> Take a look at include/linux/timer.h, and just use what's already defined.
 
-> > +	ret = tnr_dmd->io->read_regs(tnr_dmd->io,
-> > +				     CXD2880_IO_TGT_SYS,
-> > +				     0x10, data, 1);
-> > +	if (ret)
-> > +		return ret;
-> > +	if ((data[0] & 0x01) == 0x00)
-> > +		return -EBUSY;
-> 
-> I don't know anything about this hardware, but it sounds weird to return
-> -EBUSY here, except if the hardware reached a permanent busy condition,
-> and would require some sort of reset to work again.
-> 
-> As this is in the middle of lots of things, I *suspect* that this is
-> not the case.
-> 
-> If I'm right, and this is just a transitory solution that could happen
-> for a limited amount of time, e. g. if what's there at data[0] is a flag
-> saying that the device didn't finish the last operation yet, maybe the
-> best would be to do something like:
-> 
-> 	for (i = 0; i < 10; i++) {
-> 		ret = tnr_dmd->io->read_regs(tnr_dmd->io,
-> 					     CXD2880_IO_TGT_SYS,
-> 					     0x10, data, 1);
-> 		if (ret)
-> 			return ret;
-> 		if (data[0] & 0x01)
-> 			break;
-> 		msleep(10);
-> 	}
-> 	if (!(data[0] & 0x01))
-> 		return -EBUSY;
-> 
-> > +
-> > +	ret = cxd2880_io_write_multi_regs(tnr_dmd->io,
-> > +					  CXD2880_IO_TGT_SYS,
-> > +					  rf_init1_seq5,
-> > +					  ARRAY_SIZE(rf_init1_seq5));
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	usleep_range(1000, 2000);
-> > +
-> > +	ret = tnr_dmd->io->write_reg(tnr_dmd->io,
-> > +				     CXD2880_IO_TGT_SYS,
-> > +				     0x00, 0x0a);
-> > +	if (ret)
-> > +		return ret;
-> > +	ret = tnr_dmd->io->read_regs(tnr_dmd->io,
-> > +				     CXD2880_IO_TGT_SYS,
-> > +				     0x11, data, 1);
-> > +	if (ret)
-> > +		return ret;
-> > +	if ((data[0] & 0x01) == 0x00)
-> > +		return -EBUSY;
-> 
-> Same here and on similar places.
-
-As the hardware specification, It is abnormal if certain register doesn't become 1 even if sleep time passes.
-Perhaps it should not be return EBUSY.
-We will reconsider error code.
+This code is initialize process.
+Therefore, it is executed only once and it will not execute other processing at the same time.
+We think that the current implementation is enough.
+What do you think?
+furthermore, we will modify this code by using ktime_foo().
 
 Thanks,
 Takiguchi
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
