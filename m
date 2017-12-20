@@ -1,119 +1,63 @@
-From: Zong Li <zongbox@gmail.com>
-Subject: [PATCH] RISC-V: Support built-in dtb
-Date: Wed, 20 Dec 2017 17:14:31 +0800
-Message-ID: <1513761271-2386-1-git-send-email-zongbox@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: palmer@sifive.com, albert@sifive.com, robh+dt@kernel.org, mark.rutland@arm.com, wesley@sifive.com, patches@groups.riscv.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, zong@andestech.com
-Cc: Zong Li <zongbox@gmail.com>
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH v2 1/5] ARM: dts: iwg20d-q7-common: Sound PIO support
+Date: Wed, 20 Dec 2017 10:41:28 +0100
+Message-ID: <20171220094128.cffetpgij42m57kq@verge.net.au>
+References: <1513621361-10944-1-git-send-email-biju.das@bp.renesas.com>
+ <1513621361-10944-2-git-send-email-biju.das@bp.renesas.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1513621361-10944-2-git-send-email-biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Build the dtb into the kernel image.
-If the DTB is given via bootloader, the external DTB is adopted first.
+On Mon, Dec 18, 2017 at 06:22:37PM +0000, Biju Das wrote:
+> Enable sound PIO support on carrier board.
+> 
+> Signed-off-by: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+> Reviewed-by: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+> Acked-by: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+> ---
+> v1-->v2
+>  * Reworked sorting
+> 
+>  arch/arm/boot/dts/iwg20d-q7-common.dtsi | 46 +++++++++++++++++++++++++++++++++
+>  1 file changed, 46 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/iwg20d-q7-common.dtsi b/arch/arm/boot/dts/iwg20d-q7-common.dtsi
+> index 2070b14..ed67201 100644
+> --- a/arch/arm/boot/dts/iwg20d-q7-common.dtsi
+> +++ b/arch/arm/boot/dts/iwg20d-q7-common.dtsi
+> @@ -34,6 +34,22 @@
+>  		regulator-always-on;
+>  	};
+>  
+> +	rsnd_sgtl5000: sound {
+> +		compatible = "simple-audio-card";
+> +
+> +		simple-audio-card,format = "i2s";
+> +		simple-audio-card,bitclock-master = <&sndcodec>;
+> +		simple-audio-card,frame-master = <&sndcodec>;
+> +
+> +		sndcpu: simple-audio-card,cpu {
+> +			sound-dai = <&rcar_sound>;
+> +		};
+> +
+> +		sndcodec: simple-audio-card,codec {
+> +			sound-dai = <&sgtl5000>;
 
-Signed-off-by: Zong Li <zongbox@gmail.com>
----
- arch/riscv/Kconfig           |  4 ++++
- arch/riscv/Makefile          |  9 +++++++++
- arch/riscv/boot/Makefile     | 17 +++++++++++++++++
- arch/riscv/boot/dts/Makefile | 11 +++++++++++
- arch/riscv/kernel/setup.c    |  2 +-
- 5 files changed, 42 insertions(+), 1 deletion(-)
- create mode 100644 arch/riscv/boot/Makefile
- create mode 100644 arch/riscv/boot/dts/Makefile
+I'm sorry for not noticing this earlier but with this patch applied
+(and none of the others in this series) I see the following error:
 
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index 2e15e85..831cbb9 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -189,6 +189,10 @@ config RISCV_ISA_C
- config RISCV_ISA_A
- 	def_bool y
- 
-+config RISCV_BUILTIN_DTB
-+        string "Builtin DTB"
-+        default ""
-+
- endmenu
- 
- menu "Kernel type"
-diff --git a/arch/riscv/Makefile b/arch/riscv/Makefile
-index 6719dd3..4c5c9f8 100644
---- a/arch/riscv/Makefile
-+++ b/arch/riscv/Makefile
-@@ -57,6 +57,12 @@ ifeq ($(CONFIG_CMODEL_MEDANY),y)
- 	KBUILD_CFLAGS += -mcmodel=medany
- endif
- 
-+ifneq '$(CONFIG_RISCV_BUILTIN_DTB)' '""'
-+BUILTIN_DTB := y
-+else
-+BUILTIN_DTB := n
-+endif
-+
- # GCC versions that support the "-mstrict-align" option default to allowing
- # unaligned accesses.  While unaligned accesses are explicitly allowed in the
- # RISC-V ISA, they're emulated by machine mode traps on all extant
-@@ -69,4 +75,7 @@ core-y += arch/riscv/kernel/ arch/riscv/mm/
- 
- libs-y += arch/riscv/lib/
- 
-+boot := arch/riscv/boot
-+core-$(BUILTIN_DTB) += $(boot)/dts/
-+
- all: vmlinux
-diff --git a/arch/riscv/boot/Makefile b/arch/riscv/boot/Makefile
-new file mode 100644
-index 0000000..003d697
---- /dev/null
-+++ b/arch/riscv/boot/Makefile
-@@ -0,0 +1,17 @@
-+# SPDX-License-Identifier: GPL-2.0
-+
-+targets := Image Image.gz
-+
-+$(obj)/Image: vmlinux FORCE
-+	$(call if_changed,objcopy)
-+
-+$(obj)/Image.gz: $(obj)/Image FORCE
-+	$(call if_changed,gzip)
-+
-+install: $(obj)/Image
-+	$(CONFIG_SHELL) $(srctree)/$(src)/install.sh $(KERNELRELEASE) \
-+	$(obj)/Image System.map "$(INSTALL_PATH)"
-+
-+zinstall: $(obj)/Image.gz
-+	$(CONFIG_SHELL) $(srctree)/$(src)/install.sh $(KERNELRELEASE) \
-+	$(obj)/Image.gz System.map "$(INSTALL_PATH)"
-diff --git a/arch/riscv/boot/dts/Makefile b/arch/riscv/boot/dts/Makefile
-new file mode 100644
-index 0000000..b65d070
---- /dev/null
-+++ b/arch/riscv/boot/dts/Makefile
-@@ -0,0 +1,11 @@
-+# SPDX-License-Identifier: GPL-2.0
-+
-+ifneq '$(CONFIG_RISCV_BUILTIN_DTB)' '""'
-+BUILTIN_DTB := $(patsubst "%",%,$(CONFIG_RISCV_BUILTIN_DTB)).dtb.o
-+else
-+BUILTIN_DTB :=
-+endif
-+
-+obj-$(CONFIG_OF) += $(BUILTIN_DTB)
-+
-+clean-files := *.dtb *.dtb.S
-diff --git a/arch/riscv/kernel/setup.c b/arch/riscv/kernel/setup.c
-index e59a28c..3c89f3d 100644
---- a/arch/riscv/kernel/setup.c
-+++ b/arch/riscv/kernel/setup.c
-@@ -149,7 +149,7 @@ asmlinkage void __init setup_vm(void)
- 
- void __init sbi_save(unsigned int hartid, void *dtb)
- {
--	early_init_dt_scan(__va(dtb));
-+	early_init_dt_scan(dtb ? __va(dtb) : __dtb_start);
- }
- 
- /*
--- 
-2.7.4
+arch/arm/boot/dts/r8a7743-iwg20d-q7.dtb: ERROR (phandle_references):
+Reference to non-existent node or label "sgtl5000"
+
+At the very least this will break bisection.
+Please find a way to avoid this.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
