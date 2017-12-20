@@ -1,88 +1,101 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V4 3/7] PCI: tegra: Remove PCI_REASSIGN_ALL_BUS flag for
- Tegra PCIe
-Date: Wed, 20 Dec 2017 20:30:11 +0100
-Message-ID: <20171220193011.GA31757@ulmo>
-References: <1512723493-865-1-git-send-email-mmaddireddy@nvidia.com>
- <1512723493-865-4-git-send-email-mmaddireddy@nvidia.com>
- <20171215173643.GA1050@red-moon>
+From: Joao Pinto <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v6 00/18] dwc MSI fixes, ARTPEC-6 EP mode support,
+ ARTPEC-7 SoC support
+Date: Wed, 20 Dec 2017 19:47:41 +0000
+Message-ID: <32f6e02c-4230-9222-0ee1-54a045e78bd5@synopsys.com>
+References: <20171219232940.659-1-niklas.cassel@axis.com>
+ <20171220173416.GD1709@red-moon>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="G4iJoqBmSsgzjUCe"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20171215173643.GA1050@red-moon>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Cc: Manikanta Maddireddy <mmaddireddy-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, cyndis-/1wQRMveznE@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, vidyas-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, kthota-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171220173416.GD1709@red-moon>
+Content-Language: pt-PT
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Niklas Cassel <niklas.cassel-VrBV9hrLPhE@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Joao Pinto <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Cc: linux-arm-kernel-VrBV9hrLPhE@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Niklas Cassel <niklass-VrBV9hrLPhE@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---G4iJoqBmSsgzjUCe
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hello to all,
 
-On Fri, Dec 15, 2017 at 05:36:43PM +0000, Lorenzo Pieralisi wrote:
-> On Fri, Dec 08, 2017 at 02:28:09PM +0530, Manikanta Maddireddy wrote:
-> > Primary, secondary and subordinate default bus numbers are 0 in Tegra a=
-nd
-> > it is expecting SW to program these numbers in configration space.
-> >=20
-> > pci_scan_bridge_extend() function programs these numbers in configurati=
-on
-> > space if secondary & subordinate bus numbers are 0 or PCI_REASSIGN_ALL_=
-BUS
-> > flag is set. Since secondary & subordinate default bus numbers are 0,
-> > PCI_REASSIGN_ALL_BUS flag can be removed for Tegra PCIe.
-> >=20
-> > Signed-off-by: Manikanta Maddireddy <mmaddireddy-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> > ---
-> > V3:
-> > * new patch in V3
-> > V4:
-> > * no change in this patch
-> >=20
-> >  drivers/pci/host/pci-tegra.c | 1 -
-> >  1 file changed, 1 deletion(-)
-> >=20
-> > diff --git a/drivers/pci/host/pci-tegra.c b/drivers/pci/host/pci-tegra.c
-> > index a549c5899e26..0d91f1a3a6b4 100644
-> > --- a/drivers/pci/host/pci-tegra.c
-> > +++ b/drivers/pci/host/pci-tegra.c
-> > @@ -2604,7 +2604,6 @@ static int tegra_pcie_probe(struct platform_devic=
-e *pdev)
-> > =20
-> >  	tegra_pcie_enable_ports(pcie);
-> > =20
-> > -	pci_add_flags(PCI_REASSIGN_ALL_BUS);
->=20
-> This looks obviously OK to me but I need Thierry's ACK to queue it.
+Às 5:34 PM de 12/20/2017, Lorenzo Pieralisi escreveu:
+> On Wed, Dec 20, 2017 at 12:29:21AM +0100, Niklas Cassel wrote:
+>> This is a series that adds:
+>> - PCI endpoint mode support in the ARTPEC-6 driver.
+>> - ARTPEC-7 SoC support in the ARTPEC-6 driver (the SoCs are very similar).
+>> - Small fixes for MSI in designware-ep and designware-host,
+>>   needed to get endpoint mode support working for ARTPEC-6.
+>> - Cleanups in pci-dra7xx to better prepare for endpoint mode in other
+>>   DWC based PCIe drivers.
+> 
+> Joao, Jingoo,
+> 
+> Gustavo tested the series and Kishon ACK'ed the relevant patches,
+> I need your ACKs on designware patches to queue this series for
+> v4.16.
+> 
+> I am away from tomorrow (noon) till beginning of January which means
+> that either I queue this series tomorrow or at -rc6, please do
+> chime in if you can.
 
-Just as an additional note: I think the real reason why this is okay to
-do is because we reset the PCI host controller in the kernel driver, so
-any bus assignments done by the firmware are reset as well.
+Sorry, I have been a bit tied up! Already checked each patch related to DWC.
+Could anyone from artpec finish the revision, since there are some patches
+related to that SoC?
 
-Acked-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Thanks,
+Joao
 
---G4iJoqBmSsgzjUCe
-Content-Type: application/pgp-signature; name="signature.asc"
+> 
+> Thanks,
+> Lorenzo
+> 
+>> Changes since V5:
+>> -Dropped GFP_DMA32 from "PCI: dwc: Use the DMA-API to get the MSI address"
+>>  so that we use the exact same GFP flags as before.
+>> -Rewrote commit message for "PCI: dwc: Make cpu_addr_fixup take struct
+>> dw_pcie as argument" to be more detailed.
+>>
+>> Niklas Cassel (18):
+>>   PCI: dwc: Use the DMA-API to get the MSI address
+>>   PCI: designware-ep: dw_pcie_ep_set_msi() should only set MMC bits
+>>   PCI: designware-ep: Read-only registers need DBI_RO_WR_EN to be
+>>     writable
+>>   PCI: designware-ep: Pre-allocate memory for MSI in dw_pcie_ep_init
+>>   PCI: designware-ep: Remove static keyword from dw_pcie_ep_reset_bar()
+>>   PCI: designware-ep: Add generic function for raising MSI irq
+>>   PCI: dwc: dra7xx: Refactor Kconfig and Makefile handling for host/ep
+>>     mode
+>>   PCI: dwc: dra7xx: Assign pp->ops in dra7xx_add_pcie_port() rather than
+>>     in probe
+>>   PCI: dwc: dra7xx: Help compiler to remove unused code
+>>   PCI: dwc: artpec6: Remove unused defines
+>>   PCI: dwc: artpec6: Use BIT and GENMASK macros
+>>   PCI: dwc: artpec6: Split artpec6_pcie_establish_link() into smaller
+>>     functions
+>>   bindings: PCI: artpec: Add support for endpoint mode
+>>   PCI: dwc: artpec6: Add support for endpoint mode
+>>   PCI: dwc: Make cpu_addr_fixup take struct dw_pcie as argument
+>>   PCI: dwc: artpec6: Deassert the core before waiting for PHY
+>>   bindings: PCI: artpec: Add support for the ARTPEC-7 SoC
+>>   PCI: dwc: artpec6: Add support for the ARTPEC-7 SoC
+>>
+>>  .../devicetree/bindings/pci/axis,artpec6-pcie.txt  |   5 +-
+>>  drivers/pci/dwc/Kconfig                            |  68 +--
+>>  drivers/pci/dwc/Makefile                           |   4 +-
+>>  drivers/pci/dwc/pci-dra7xx.c                       |  27 +-
+>>  drivers/pci/dwc/pcie-artpec6.c                     | 470 ++++++++++++++++++---
+>>  drivers/pci/dwc/pcie-designware-ep.c               |  59 ++-
+>>  drivers/pci/dwc/pcie-designware-host.c             |  15 +-
+>>  drivers/pci/dwc/pcie-designware.c                  |   2 +-
+>>  drivers/pci/dwc/pcie-designware.h                  |  22 +-
+>>  9 files changed, 554 insertions(+), 118 deletions(-)
+>>
+>> -- 
+>> 2.14.2
+>>
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlo6ukAACgkQ3SOs138+
-s6Ew+g/+PHBkSe3TxzC9Pdrm/EKZiam0Z1GYXX4vjAymJ8BgLhwOl8EwsCsuuWRa
-Xvj+SKHvuZcUcUmb7/laPNzKP9rQ2yRwBwTuojfgUVmA5+mMa/ymL/k+qnDfKcm8
-vKRf5gg1ZGxBw71EbrqbOh0nsjRX7LkZ/IeN/wL3pXNPv4gmfEQLxh5TP6D0MyOi
-jPD80JAxNsHmOVfVj6zLcQmSR3F7c3TGR59k0jMlIa94+nzcPw1cWV4f3dYd38C0
-D/GC8HUxdEx2GTD/DSFLjoIy4b86VSTwJEBaMQfIzXPt9TVGKcEqJqvfTZr5qQKl
-0byniN9Uyoz6JIO21YxWmV0S70c36vWImR2A0TwvmBnCjAAhDfJ0NnOE3HLWaw48
-2h6CdYM8AXPKAd5vNmdX6fEodU7WIzKUPBPiTRqnqv/ZkHY8hchSYdV2QrCWtT2e
-hX+o2K0bxpJWXkoS1ScPr7QKfesrG9CoVeZUj3sNPaF5sEdIAjb/7/xeGbf5gkJO
-H49O/BeIdIGu1IBe6fLe9PzadUsVPvNMTE0jPIjLwDU1pOZTo7ED1vAJ4tAf+ajI
-VRiTv/QhQgyJr1jp+s2FPRQWxhzu6vTHvoOh3/eo+XY58Fydb1RxxrM83mYRH5+7
-3tZheKD6MYxVqNYs8PzyRICphlb3vqrToZiEo/+NKms/Q2lXjNM=
-=f6iP
------END PGP SIGNATURE-----
-
---G4iJoqBmSsgzjUCe--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
