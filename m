@@ -1,264 +1,83 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v5 06/11] thermal: armada: Add support for Armada AP806
-Date: Wed, 20 Dec 2017 11:27:18 +0100
-Message-ID: <87zi6dg0e1.fsf@free-electrons.com>
-References: <20171219135719.9531-1-miquel.raynal@free-electrons.com>
-        <20171219135719.9531-7-miquel.raynal@free-electrons.com>
+From: Greentime Hu <green.hu@gmail.com>
+Subject: Re: [PATCH v4 33/36] net: faraday add nds32 support.
+Date: Wed, 20 Dec 2017 18:34:29 +0800
+Message-ID: <CAEbi=3erUo+QV75khdTHmUmZpkK7mHjFfF3A1_zaF9OmJkbCQQ@mail.gmail.com>
+References: <95be78502aa406f106ecbe87e751a45333883b1f.1513577007.git.green.hu@gmail.com>
+ <201712201744.gsBDa4yK%fengguang.wu@intel.com> <CAMuHMdXp5b-Y79kaKgmDRshnpN2=VEd-f3v-6QW+6mUqv6YW-A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171219135719.9531-7-miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> (Miquel
-        Raynal's message of "Tue, 19 Dec 2017 14:57:14 +0100")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>, David Sniatkiwicz <davidsn-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdXp5b-Y79kaKgmDRshnpN2=VEd-f3v-6QW+6mUqv6YW-A@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: kbuild test robot <lkp@intel.com>, kbuild-all@01.org, Greentime <greentime@andestech.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Linux-Arch <linux-arch@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, netdev <netdev@vger.kernel.org>, Vincent Chen <deanbo422@gmail.com>, DTML <devicetree@vger.kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, David Howells <dhowells@redhat.com>, Will Deacon <will.deacon@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-serial@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Greg KH <greg@kroah.c>
 List-Id: devicetree@vger.kernel.org
 
-Hi Miquel,
- 
- On mar., déc. 19 2017, Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-
-> From: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+2017-12-20 17:58 GMT+08:00 Geert Uytterhoeven <geert@linux-m68k.org>:
+> On Wed, Dec 20, 2017 at 10:54 AM, kbuild test robot <lkp@intel.com> wrote:
+>> I love your patch! Perhaps something to improve:
+>>
+>> [auto build test WARNING on tip/timers/core]
+>> [cannot apply to linus/master v4.15-rc4 next-20171220]
+>> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+>>
+>> url:    https://github.com/0day-ci/linux/commits/Greentime-Hu/Andes-nds32-Linux-Kernel/20171220-155937
+>> config: sparc64-allyesconfig (attached as .config)
+>> compiler: sparc64-linux-gnu-gcc (Debian 7.2.0-11) 7.2.0
+>> reproduce:
+>>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>>         chmod +x ~/bin/make.cross
+>>         # save the attached .config to linux build tree
+>>         make.cross ARCH=sparc64
+>>
+>> All warnings (new ones prefixed by >>):
+>>
+>>    drivers/net/ethernet/faraday/ftmac100.c: In function 'ftmac100_rxdes_set_page':
+>>>> drivers/net/ethernet/faraday/ftmac100.c:288:18: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
+>>      rxdes->rxdes3 = (unsigned int)page;
+>>                      ^
 >
-> The AP806 component is integrated in the Armada 8K and 7K lines of
-> processors.
+> The proper way to casts pointer to integers is to cast to "uintptr_t".
 >
-> The thermal sensor sample field on the status register is a signed
-> value. Extend armada_get_temp() and the driver structure to handle
-> signed values.
+> However, the address is stored in a 32-bit descriptor, which means it can
+> not work on 64-bit platforms.
 >
-> Signed-off-by: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-> [<miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>: Changes when applying over the
-> previous patches, including the register names changes, also switched
-> the coefficients values to s64 instead of unsigned long to deal with
-> negative values and used do_div instead of the traditionnal '/']
-> Signed-off-by: Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> Reviewed-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
->  drivers/thermal/armada_thermal.c | 74 ++++++++++++++++++++++++++++++++--------
->  1 file changed, 59 insertions(+), 15 deletions(-)
+> Please make the driver depend on "!64BIT || BROKEN"
 >
-> diff --git a/drivers/thermal/armada_thermal.c b/drivers/thermal/armada_thermal.c
-> index ceebabf45c53..c7dcac39cbf9 100644
-> --- a/drivers/thermal/armada_thermal.c
-> +++ b/drivers/thermal/armada_thermal.c
-> @@ -47,6 +47,11 @@
->  #define CONTROL0_OFFSET			0x0
->  #define CONTROL1_OFFSET			0x4
->  
-> +/* TSEN refers to the temperature sensors within the AP */
-> +#define CONTROL0_TSEN_START		BIT(0)
-> +#define CONTROL0_TSEN_RESET		BIT(1)
-> +#define CONTROL0_TSEN_ENABLE		BIT(2)
-> +
->  struct armada_thermal_data;
->  
->  /* Marvell EBU Thermal Sensor Dev Structure */
-> @@ -66,10 +71,11 @@ struct armada_thermal_data {
->  	bool (*is_valid)(struct armada_thermal_priv *);
->  
->  	/* Formula coeficients: temp = (b - m * reg) / div */
-> -	unsigned long coef_b;
-> -	unsigned long coef_m;
-> -	unsigned long coef_div;
-> +	s64 coef_b;
-> +	s64 coef_m;
-> +	u32 coef_div;
->  	bool inverted;
-> +	bool signed_sample;
->  
->  	/* Register shift and mask to access the sensor temperature */
->  	unsigned int temp_shift;
-> @@ -155,6 +161,18 @@ static void armada380_init_sensor(struct platform_device *pdev,
->  	}
->  }
->  
-> +static void armada_ap806_init_sensor(struct platform_device *pdev,
-> +				     struct armada_thermal_priv *priv)
-> +{
-> +	u32 reg;
-> +
-> +	reg = readl_relaxed(priv->control0);
-> +	reg &= ~CONTROL0_TSEN_RESET;
-> +	reg |= CONTROL0_TSEN_START | CONTROL0_TSEN_ENABLE;
-> +	writel(reg, priv->control0);
-> +	msleep(10);
-> +}
-> +
->  static bool armada_is_valid(struct armada_thermal_priv *priv)
->  {
->  	u32 reg = readl_relaxed(priv->status);
-> @@ -166,8 +184,8 @@ static int armada_get_temp(struct thermal_zone_device *thermal,
->  			  int *temp)
->  {
->  	struct armada_thermal_priv *priv = thermal->devdata;
-> -	unsigned long reg;
-> -	unsigned long m, b, div;
-> +	u32 reg, div;
-> +	s64 sample, b, m;
->  
->  	/* Valid check */
->  	if (priv->data->is_valid && !priv->data->is_valid(priv)) {
-> @@ -178,6 +196,11 @@ static int armada_get_temp(struct thermal_zone_device *thermal,
->  
->  	reg = readl_relaxed(priv->status);
->  	reg = (reg >> priv->data->temp_shift) & priv->data->temp_mask;
-> +	if (priv->data->signed_sample)
-> +		/* The most significant bit is the sign bit */
-> +		sample = sign_extend32(reg, fls(priv->data->temp_mask) - 1);
-> +	else
-> +		sample = reg;
->  
->  	/* Get formula coeficients */
->  	b = priv->data->coef_b;
-> @@ -185,9 +208,12 @@ static int armada_get_temp(struct thermal_zone_device *thermal,
->  	div = priv->data->coef_div;
->  
->  	if (priv->data->inverted)
-> -		*temp = ((m * reg) - b) / div;
-> +		*temp = (m * sample) - b;
->  	else
-> -		*temp = (b - (m * reg)) / div;
-> +		*temp = b - (m * sample);
-> +
-> +	do_div(*temp, div);
-
-I wanted to test in on ARMv7 and this line failed to compile:
-In file included from arch/arm/include/asm/div64.h:127:0,
-                 from include/linux/kernel.h:173,
-                 from include/linux/list.h:9,
-                 from include/linux/kobject.h:20,
-                 from include/linux/device.h:17,
-                 from drivers/thermal/armada_thermal.c:16:
-drivers/thermal/armada_thermal.c: In function ‘armada_get_temp’:
-include/asm-generic/div64.h:208:28: warning: comparison of distinct pointer types lacks a cast
-  (void)(((typeof((n)) *)0) == ((uint64_t *)0)); \
-                            ^
-drivers/thermal/armada_thermal.c:247:2: note: in expansion of macro ‘do_div’
-  do_div(*temp, div);
-  ^~~~~~
-In file included from include/linux/ioport.h:13:0,
-                 from include/linux/device.h:16,
-                 from drivers/thermal/armada_thermal.c:16:
-include/asm-generic/div64.h:221:25: warning: right shift count >= width of type [-Wshift-count-overflow]
-  } else if (likely(((n) >> 32) == 0)) {  \
-                         ^
-include/linux/compiler.h:175:40: note: in definition of macro ‘likely’
- # define likely(x) __builtin_expect(!!(x), 1)
-                                        ^
-drivers/thermal/armada_thermal.c:247:2: note: in expansion of macro ‘do_div’
-  do_div(*temp, div);
-  ^~~~~~
-In file included from arch/arm/include/asm/div64.h:127:0,
-                 from include/linux/kernel.h:173,
-                 from include/linux/list.h:9,
-                 from include/linux/kobject.h:20,
-                 from include/linux/device.h:17,
-                 from drivers/thermal/armada_thermal.c:16:
-include/asm-generic/div64.h:225:22: error: passing argument 1 of ‘__div64_32’ from incompatible pointer type [-Werror=incompatible-pointer-types]
-   __rem = __div64_32(&(n), __base); \
-                      ^
-drivers/thermal/armada_thermal.c:247:2: note: in expansion of macro ‘do_div’
-  do_div(*temp, div);
-  ^~~~~~
-In file included from include/linux/kernel.h:173:0,
-                 from include/linux/list.h:9,
-                 from include/linux/kobject.h:20,
-                 from include/linux/device.h:17,
-                 from drivers/thermal/armada_thermal.c:16:
-arch/arm/include/asm/div64.h:33:24: note: expected ‘uint64_t * {aka long long unsigned int *}’ but argument is of type ‘int *’
- static inline uint32_t __div64_32(uint64_t *n, uint32_t base)
-
-Gregory
-
-> +
->  	return 0;
->  }
->  
-> @@ -199,8 +225,8 @@ static const struct armada_thermal_data armadaxp_data = {
->  	.init_sensor = armadaxp_init_sensor,
->  	.temp_shift = 10,
->  	.temp_mask = 0x1ff,
-> -	.coef_b = 3153000000UL,
-> -	.coef_m = 10000000UL,
-> +	.coef_b = 3153000000ULL,
-> +	.coef_m = 10000000ULL,
->  	.coef_div = 13825,
->  };
->  
-> @@ -210,8 +236,8 @@ static const struct armada_thermal_data armada370_data = {
->  	.is_valid_bit = BIT(9),
->  	.temp_shift = 10,
->  	.temp_mask = 0x1ff,
-> -	.coef_b = 3153000000UL,
-> -	.coef_m = 10000000UL,
-> +	.coef_b = 3153000000ULL,
-> +	.coef_m = 10000000ULL,
->  	.coef_div = 13825,
->  };
->  
-> @@ -221,8 +247,8 @@ static const struct armada_thermal_data armada375_data = {
->  	.is_valid_bit = BIT(10),
->  	.temp_shift = 0,
->  	.temp_mask = 0x1ff,
-> -	.coef_b = 3171900000UL,
-> -	.coef_m = 10000000UL,
-> +	.coef_b = 3171900000ULL,
-> +	.coef_m = 10000000ULL,
->  	.coef_div = 13616,
->  	.needs_control0 = true,
->  };
-> @@ -233,12 +259,26 @@ static const struct armada_thermal_data armada380_data = {
->  	.is_valid_bit = BIT(10),
->  	.temp_shift = 0,
->  	.temp_mask = 0x3ff,
-> -	.coef_b = 1172499100UL,
-> -	.coef_m = 2000096UL,
-> +	.coef_b = 1172499100ULL,
-> +	.coef_m = 2000096ULL,
->  	.coef_div = 4201,
->  	.inverted = true,
->  };
->  
-> +static const struct armada_thermal_data armada_ap806_data = {
-> +	.is_valid = armada_is_valid,
-> +	.init_sensor = armada_ap806_init_sensor,
-> +	.is_valid_bit = BIT(16),
-> +	.temp_shift = 0,
-> +	.temp_mask = 0x3ff,
-> +	.coef_b = -150000LL,
-> +	.coef_m = 423ULL,
-> +	.coef_div = 1,
-> +	.inverted = true,
-> +	.signed_sample = true,
-> +	.needs_control0 = true,
-> +};
-> +
->  static const struct of_device_id armada_thermal_id_table[] = {
->  	{
->  		.compatible = "marvell,armadaxp-thermal",
-> @@ -257,6 +297,10 @@ static const struct of_device_id armada_thermal_id_table[] = {
->  		.data       = &armada380_data,
->  	},
->  	{
-> +		.compatible = "marvell,armada-ap806-thermal",
-> +		.data       = &armada_ap806_data,
-> +	},
-> +	{
->  		/* sentinel */
->  	},
->  };
-> -- 
-> 2.11.0
+> Cfr. commit 15bfe05c8d6386f1 ("net: ethernet: xilinx: Mark XILINX_LL_TEMAC
+> broken on 64-bit")
 >
+Thanks Geert.
 
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I will apply it like this.
+
++++ b/drivers/net/ethernet/faraday/Kconfig
+@@ -5,7 +5,7 @@
+ config NET_VENDOR_FARADAY
+        bool "Faraday devices"
+        default y
+-       depends on ARM
++       depends on ARM || NDS32 || COMPILE_TEST
+        ---help---
+          If you have a network (Ethernet) card belonging to this class, say Y.
+
+@@ -18,7 +18,8 @@ if NET_VENDOR_FARADAY
+
+ config FTMAC100
+        tristate "Faraday FTMAC100 10/100 Ethernet support"
+-       depends on ARM
++       depends on ARM || NDS32 || COMPILE_TEST
++       depends on !64BIT || BROKEN
+        select MII
+        ---help---
+          This driver supports the FTMAC100 10/100 Ethernet controller
+@@ -27,7 +28,8 @@ config FTMAC100
+
+ config FTGMAC100
+        tristate "Faraday FTGMAC100 Gigabit Ethernet support"
+-       depends on ARM
++       depends on ARM || NDS32 || COMPILE_TEST
++       depends on !64BIT || BROKEN
+        select PHYLIB
+        ---help---
+          This driver supports the FTGMAC100 Gigabit Ethernet controller
