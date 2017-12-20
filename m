@@ -1,94 +1,51 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 00/12] Marvell NAND controller rework with ->exec_op()
-Date: Wed, 20 Dec 2017 22:41:21 +0100
-Message-ID: <20171220224121.2cb6f690@bbrezillon>
-References: <20171207201814.30411-1-miquel.raynal@free-electrons.com>
-        <20171214070930.0b885f6d@bbrezillon>
-        <877etkecig.fsf@belgarion.home>
-        <20171218092535.2ca1fe13@xps13>
-        <87y3lxccr7.fsf@belgarion.home>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+From: thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Subject: [PATCH] arm64: dts: stratix10: fix SPI settings
+Date: Wed, 20 Dec 2017 15:44:11 -0600
+Message-ID: <1513806251-20273-1-git-send-email-thor.thayer@linux.intel.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87y3lxccr7.fsf-4ty26DBLk+jEm7gnYqmdkQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-Cc: Miquel RAYNAL <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Ezequiel Garcia <ezequi>
+To: dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thor Thayer <thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 20 Dec 2017 22:26:04 +0100
-Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org> wrote:
+From: Thor Thayer <thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 
-> Miquel RAYNAL <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> writes:
-> 
-> > Hello Robert,
-> >
-> > On Mon, 18 Dec 2017 08:11:35 +0100
-> > Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org> wrote:
-> >  
-> >> Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> writes:
-> >>   
-> >> >> Robert, it would be great if you could also do more testing on PXA
-> >> >> and validate this driver. If needed, a branch ready to be tested is
-> >> >> available at [3]. It is based on nand/next and has all the changes
-> >> >> brought by the previously mentionned series as well as this one.    
-> >> >
-> >> > Robert, do you think you'll have some time to test Miquel's branch
-> >> > on your PXA boards? Miquel already tested on one of these boards
-> >> > (CM-X300), but we'd like to have other testers. Also feel free to
-> >> > review the driver if have the time.
-> >> >
-> >> > Thanks,
-> >> >
-> >> > Boris    
-> >> 
-> >> Hi Boris and Miquel,
-> >> 
-> >> I have applied the whole serie to linux-next yesterday.
-> >> 
-> >> A boot attempt on my zylonite with my old defconfig (with the new
-> >> Marvell NAND config activated) yields to :
-> >>  - this message
-> >> [    3.136818] marvell-nfc pxa3xx-nand: could not identify the nand
-> >> chip [    3.143874] marvell-nfc: probe of pxa3xx-nand failed with
-> >> error -22
-> >>  - then my board hangs
-> >> 
-> >> Is there something to be done to improve the trace level so that you
-> >> can guess what's happening ?  
-> >
-> > Thank you very much for testing this.
-> >
-> > Could you please try this branch [1] instead of linux-next + the
-> > patches?
-> >
-> > Also, can you please add #define DEBUG in marvell_nand.c + nand_base.c,
-> > it should help us figuring out what is wrong.  
-> 
-> Done, same result, the dmesg is in [1].
+Correct the SPI Master node settings.
 
-Looks like there is a mismatch on the nand bus width detected by the
-core and the one declared by the driver. Can you try with the following
-diff applied?
+Signed-off-by: Thor Thayer <thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+---
+ arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-Thanks,
+diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+index 7c9bdc7ab50b..367bc00be802 100644
+--- a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
++++ b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+@@ -248,7 +248,9 @@
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			reg = <0xffda4000 0x1000>;
+-			interrupts = <0 101 4>;
++			interrupts = <0 99 4>;
++			resets = <&rst SPIM0_RESET>;
++			reg-io-width = <4>;
+ 			num-chipselect = <4>;
+ 			bus-num = <0>;
+ 			status = "disabled";
+@@ -259,7 +261,9 @@
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			reg = <0xffda5000 0x1000>;
+-			interrupts = <0 102 4>;
++			interrupts = <0 100 4>;
++			resets = <&rst SPIM1_RESET>;
++			reg-io-width = <4>;
+ 			num-chipselect = <4>;
+ 			bus-num = <0>;
+ 			status = "disabled";
+-- 
+2.7.4
 
-Boris
-
---->8---
-diff --git a/drivers/mtd/nand/marvell_nand.c b/drivers/mtd/nand/marvell_nand.c
-index c618ccb22a61..ddd6a07888e2 100644
---- a/drivers/mtd/nand/marvell_nand.c
-+++ b/drivers/mtd/nand/marvell_nand.c
-@@ -2481,6 +2481,7 @@ static int marvell_nand_chip_init(struct device *dev, struct marvell_nfc *nfc,
-         */
-        chip->ecc.mode = NAND_ECC_HW;
- 
-+       chip->options |= NAND_BUSWIDTH_AUTO;
-        ret = nand_scan_ident(mtd, marvell_nand->nsels, NULL);
-        if (ret) {
-                dev_err(dev, "could not identify the nand chip\n");
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
