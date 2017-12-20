@@ -1,11 +1,8 @@
 From: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Subject: [PATCH v3 19/20] ARM: dts: aspeed-plametto: Add flash layout and fix memory node
-Date: Wed, 20 Dec 2017 13:53:27 +1030
-Message-ID: <20171220032328.30584-20-joel@jms.id.au>
+Subject: [PATCH v3 20/20] ARM: dts: aspeed-evb: Add unit name to memory node
+Date: Wed, 20 Dec 2017 13:53:28 +1030
+Message-ID: <20171220032328.30584-21-joel@jms.id.au>
 References: <20171220032328.30584-1-joel@jms.id.au>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20171220032328.30584-1-joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
@@ -13,40 +10,28 @@ To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland 
 Cc: =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg-Bxea+6Xhats@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-aspeed-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The OpenBMC flash layout is used by Palmetto systems.
+Fixes a warning when building with W=1.
 
-Add the unit name to the memory node to fix a warning with W=1.
+All of the ASPEED device trees build without warnings now.
 
-Reviewed-by: Cédric Le Goater <clg-Bxea+6Xhats@public.gmane.org>
 Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
 ---
-v3:
- - Added memory node unit name
----
- arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/aspeed-ast2500-evb.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts b/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts
-index a8f0c046e83e..4379d09a261f 100644
---- a/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts
-+++ b/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts
-@@ -12,7 +12,7 @@
+diff --git a/arch/arm/boot/dts/aspeed-ast2500-evb.dts b/arch/arm/boot/dts/aspeed-ast2500-evb.dts
+index 3e6f38e5d5d0..91a36c1f029b 100644
+--- a/arch/arm/boot/dts/aspeed-ast2500-evb.dts
++++ b/arch/arm/boot/dts/aspeed-ast2500-evb.dts
+@@ -16,7 +16,7 @@
  		bootargs = "console=ttyS4,115200 earlyprintk";
  	};
  
 -	memory {
-+	memory@40000000 {
- 		reg = <0x40000000 0x20000000>;
- 	};
- 
-@@ -34,6 +34,7 @@
- 		status = "okay";
- 		m25p,fast-read;
- 		label = "bmc";
-+#include "openbmc-flash-layout.dtsi"
++	memory@80000000 {
+ 		reg = <0x80000000 0x20000000>;
  	};
  };
- 
 -- 
 2.15.1
 
