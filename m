@@ -1,66 +1,89 @@
-From: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Subject: Re: [PATCH v2 18/19] ARM: dts: aspeed-romulus: Update Romulus system
-Date: Wed, 20 Dec 2017 13:52:36 +1030
-Message-ID: <CACPK8Xdb59ofAnpGt6Uoe9AubTirzvU1=R-4k2y0mfjz09YAjQ@mail.gmail.com>
-References: <20171215062443.23059-1-joel@jms.id.au> <20171215062443.23059-19-joel@jms.id.au>
- <b8e80861-88c4-da87-a201-ca2eefaa5a94@kaod.org>
+From: Joel Stanley <joel@jms.id.au>
+Subject: [PATCH v3 00/19] ARM: dts: aspeed: updates and new machines
+Date: Wed, 20 Dec 2017 13:53:08 +1030
+Message-ID: <20171220032328.30584-1-joel@jms.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <b8e80861-88c4-da87-a201-ca2eefaa5a94-Bxea+6Xhats@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg-Bxea+6Xhats@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>, Patrick Venture <venture-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Xo Wang <xow-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Lei YU <mine260309-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-aspeed-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Andrew Jeffery <andrew@aj.id.au>, Patrick Venture <venture@google.com>, Xo Wang <xow@google.com>, Lei YU <mine260309@gmail.com>
+Cc: =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Jeremy Kerr <jk@ozlabs.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 18, 2017 at 8:02 PM, C=C3=A9dric Le Goater <clg-Bxea+6Xhats@public.gmane.org> wrote=
-:
->> +};
->> +
->> +&fmc {
->> +     status =3D "okay";
->> +
->> +     flash@0 {
->> +             status =3D "okay";
->> +             label =3D "pnor";
->> +             m25p,fast-read;
->> +#include "openbmc-flash-layout.dtsi"
->> +     };
->> +};
->> +
->> +&spi1 {
->> +     status =3D "okay";
->> +
->> +     pinctrl-names =3D "default";
->> +     pinctrl-0 =3D <&pinctrl_spi1_default>;
->> +
->> +     flash@0 {
->> +             status =3D "okay";
->> +             label =3D "pnor";
->> +             m25p,fast-read;
->>       };
->>  };
->
->
-> hmm, the fmc and spi1 bindings were already added in commit 1142aea9ff9d.
->
->
->> @@ -38,6 +101,7 @@
->>               status =3D "okay";
->>               m25p,fast-read;
->>               label =3D "bmc";
->> +#include "openbmc-flash-layout.dtsi"
->
->
-> This looks like an extra "fmc" node ?
+This series of device tree patches for the ASPEED BMC machines
+moves all systems to use the soon to be merged clk driver, and
+updates machines to use all of the drivers we have upstream.
 
-You're right. It still built and booted too. Good catch.
+ v3: Address review from Rob and Cedric
+  - Move aspeed-gpio.h usage out into the patches where use of the GPIO
+    is added
+  - Clarify that the aspeed-clock.h patch will be merged as part of
+    the device tree tree. This is to ensure we don't depend on the clk
+    tree for building.
+  - Fix duplicate flash controller nodes in Romulus
+ v2: Address review from Arnd
+  - Remove NUM_CLKS from dt header
+  - Send VUART patch as a fix, drop it from this series
+  - Add reasoning for breaking old kernel in the 'proper clock
+    references' patch
 
-Cheers,
+In addition it adds three new OpenBMC systems that have been developed
+in the OpenBMC kernel tree over the past year: two Power9 OpenPower
+systems, and a port by Google to a Quanta x86 server.
 
-Joel
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I have boot tested these on Romulus and Palmetto, as well as boot tested
+all device trees in Qemu.
+
+Please review the boards you are familiar with. I will merge these in to
+the ASPEED ARM SoC tree for inclusion in 4.16.
+
+Andrew Jeffery (1):
+  ARM: dts: aspeed: Add LPC and child devices
+
+Joel Stanley (16):
+  dt-bindings: clock: Add ASPEED constants
+  dt-bindings: gpio: Add ASPEED constants
+  ARM: dts: aspeed: Add proper clock references
+  ARM: dts: aspeed: Add MAC clocks
+  ARM: dts: aspeed: Add watchdog clocks
+  ARM: dts: aspeed: Add flash controller clocks
+  ARM: dts: aspeed: Add clock phandle to GPIO
+  ARM: dts: aspeed: Add PWM and tachometer node
+  ARM: dts: aspeed: Add LPC Snoop device
+  ARM: dts: aspeed: Remove skeleton.dtsi
+  ARM: dts: aspeed: Update license headers
+  ARM: dts: Add OpenBMC flash layout
+  ARM: dts: aspeed: Sort ASPEED entries in makefile
+  ARM: dts: aspeed: Add Witherspoon BMC machine
+  ARM: dts: aspeed-romulus: Update Romulus system
+  ARM: dts: aspeed-plametto: Add flash layout
+
+Rick Altherr (1):
+  ARM: dts: aspeed: Add Qanta Q71L BMC machine
+
+Xo Wang (1):
+  ARM: dts: aspeed: Add Ingrasys Zaius BMC machine
+
+ arch/arm/boot/dts/Makefile                       |   8 +-
+ arch/arm/boot/dts/aspeed-ast2500-evb.dts         |   2 +-
+ arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts    |   3 +-
+ arch/arm/boot/dts/aspeed-bmc-opp-romulus.dts     | 157 ++++++-
+ arch/arm/boot/dts/aspeed-bmc-opp-witherspoon.dts | 548 +++++++++++++++++++++++
+ arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts       | 426 ++++++++++++++++++
+ arch/arm/boot/dts/aspeed-bmc-quanta-q71l.dts     | 458 +++++++++++++++++++
+ arch/arm/boot/dts/aspeed-g4.dtsi                 | 163 ++++---
+ arch/arm/boot/dts/aspeed-g5.dtsi                 | 154 ++++---
+ arch/arm/boot/dts/openbmc-flash-layout.dtsi      |  32 ++
+ include/dt-bindings/clock/aspeed-clock.h         |  52 +++
+ include/dt-bindings/gpio/aspeed-gpio.h           |  49 ++
+ 12 files changed, 1905 insertions(+), 147 deletions(-)
+ create mode 100644 arch/arm/boot/dts/aspeed-bmc-opp-witherspoon.dts
+ create mode 100644 arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts
+ create mode 100644 arch/arm/boot/dts/aspeed-bmc-quanta-q71l.dts
+ create mode 100644 arch/arm/boot/dts/openbmc-flash-layout.dtsi
+ create mode 100644 include/dt-bindings/clock/aspeed-clock.h
+ create mode 100644 include/dt-bindings/gpio/aspeed-gpio.h
+
+-- 
+2.15.1
