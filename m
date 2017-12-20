@@ -1,44 +1,77 @@
-From: Vignesh R <vigneshr@ti.com>
-Subject: Re: [PATCH 1/4] pci: dwc: pci-dra7xx: Enable errata i870 for both EP
- and RC mode
-Date: Wed, 20 Dec 2017 09:45:45 +0530
-Message-ID: <fa536894-fac6-feea-e973-268ff5a6389d@ti.com>
-References: <20171201061311.16691-1-vigneshr@ti.com>
- <20171201061311.16691-2-vigneshr@ti.com> <20171219162421.GD21501@red-moon>
+From: Yinbo Zhu <yinbo.zhu-3arQi8VN3Tc@public.gmane.org>
+Subject: RE: [PATCH v2] arm64: dts: ls1088a: Add USB support
+Date: Wed, 20 Dec 2017 04:42:59 +0000
+Message-ID: <HE1PR0401MB19451C3CFAA694F965B30F0FE90C0@HE1PR0401MB1945.eurprd04.prod.outlook.com>
+References: <20170913091009.21448-1-yinbo.zhu@nxp.com>
+ <20170922065454.GF26358@dragon>
+ <VI1PR04MB1262D160BA8625330E32CAF9E9470@VI1PR04MB1262.eurprd04.prod.outlook.com>
+ <AM3PR04MB12515DB71B8ACF7422A20244E9280@AM3PR04MB1251.eurprd04.prod.outlook.com>
+ <VI1PR04MB1262DD3C6A18257DEE2E907DE9200@VI1PR04MB1262.eurprd04.prod.outlook.com>
+ <VI1PR04MB1262C44016CE4ECB8902E7E7E9330@VI1PR04MB1262.eurprd04.prod.outlook.com>
+ <20171220025239.GB3766@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20171219162421.GD21501@red-moon>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171220025239.GB3766@dragon>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, KISHON VIJAY ABRAHAM <kishon@ti.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Chris Welch <Chris.Welch@viavisolutions.com>, Bjorn Helgaas <bhelgaas@google.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "Catalin Marinas )" <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "Will Deacon )" <will.deacon-5wv7dgnIgG8@public.gmane.org>, Harninder Rai <harninder.rai-3arQi8VN3Tc@public.gmane.org>, Raghav Dogra <raghav.dogra-3arQi8VN3Tc@public.gmane.org>, Ashish Kumar <ashish.kumar-3arQi8VN3Tc@public.gmane.org>, Andy Tang <andy.tang-3arQi8VN3Tc@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ran Wang <ran.wang_1-3arQi8VN3Tc@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-CgpPbiBUdWVzZGF5IDE5IERlY2VtYmVyIDIwMTcgMDk6NTQgUE0sIExvcmVuem8gUGllcmFsaXNp
-IHdyb3RlOgo+IE9uIEZyaSwgRGVjIDAxLCAyMDE3IGF0IDExOjQzOjA4QU0gKzA1MzAsIFZpZ25l
-c2ggUiB3cm90ZToKPj4gRXJyYXRhIGk4NzAgaXMgYXBwbGljYWJsZSBpbiBib3RoIEVQIGFuZCBS
-QyBtb2RlLiBUaGVyZWZvcmUgcmVuYW1lCj4+IGZ1bmN0aW9uIGRyYTd4eF9wY2llX2VwX3VuYWxp
-Z25lZF9tZW1hY2Nlc3MoKSwgdGhhdCBpbXBsZW1lbnRzIGVycmF0YQo+PiB3b3JrYXJvdW5kLCB0
-byBkcmE3eHhfcGNpZV91bmFsaWduZWRfbWVtYWNjZXNzKCkgYW5kIGNhbGwgaXQgZnJvbSBhCj4+
-IGNvbW1vbiBwbGFjZS4gU28sIHRoYXQgZXJyYXRhIHdvcmthcm91bmQgaXMgYXBwbGllZCBmb3Ig
-Ym90aCBtb2RlcyBvZgo+PiBvcGVyYXRpb24uCj4+IAo+PiBSZXBvcnRlZC1ieTogQ2hyaXMgV2Vs
-Y2ggPENocmlzLldlbGNoQHZpYXZpc29sdXRpb25zLmNvbT4KPj4gU2lnbmVkLW9mZi1ieTogVmln
-bmVzaCBSIDx2aWduZXNockB0aS5jb20+Cj4+IC0tLQo+PsKgIGRyaXZlcnMvcGNpL2R3Yy9wY2kt
-ZHJhN3h4LmMgfCAxMiArKysrKystLS0tLS0KPj7CoCAxIGZpbGUgY2hhbmdlZCwgNiBpbnNlcnRp
-b25zKCspLCA2IGRlbGV0aW9ucygtKQo+IAo+IEkgbmVlZCBLaXNob24ncyBBQ0sgdG8gYXBwbHkg
-aXQsIHRoYW5rcy4KClRoZXJlIGFyZSBzb21lIGVuaGFuY2VtZW50cyB0byB0aGlzIHBhdGNoLiBX
-aWxsIHN1Ym1pdCBhIHYyIHNob3J0bHkuClBsZWFzZSBpZ25vcmUgdGhpcyB2ZXJzaW9uIGZvciBu
-b3cuIFRoYW5rcyEKCgotLSAKUmVnYXJkcwpWaWduZXNoCgpfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdAps
-aW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVh
-ZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+
+
+-----Original Message-----
+From: Shawn Guo [mailto:shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org]=20
+Sent: Wednesday, December 20, 2017 10:53 AM
+To: Yinbo Zhu <yinbo.zhu-3arQi8VN3Tc@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>; Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>; =
+Catalin Marinas ) <catalin.marinas-5wv7dgnIgG8@public.gmane.org>; Will Deacon ) <will.deacon@arm=
+.com>; Harninder Rai <harninder.rai-3arQi8VN3Tc@public.gmane.org>; Raghav Dogra <raghav.dogra@nx=
+p.com>; Ashish Kumar <ashish.kumar-3arQi8VN3Tc@public.gmane.org>; Andy Tang <andy.tang-3arQi8VN3Tc@public.gmane.org>;=
+ open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS <devicetree@vge=
+r.kernel.org>; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; open list <linux-kerne=
+l@vger.kernel.org>
+Subject: Re: [PATCH v2] arm64: dts: ls1088a: Add USB support
+
+On Thu, Dec 07, 2017 at 07:33:28AM +0000, Yinbo Zhu wrote:
+> Hi shawn guo,
+>=20
+> If my patch has no other issue,
+> Can you help me push it to upstream.
+
+>Are you talking about v4 patch?  First of all, I cannot find v4 in my mail=
+box.  That said, it seems you did not send=20
+
+>the patch to me.
+>Secondly, by checking the patch on patchwork, the usb nodes in fsl-ls1088a=
+-rdb.dts do not sorted alphabetically=20
+
+>in label name.
+
+>Shawn
+
+Hi shawn,=20
+ I will change the code as follows, right?
+
+&esdhc {
+ 	status =3D "okay";
+ };
+...
++&usb0 {
++	status =3D "okay";
++};
++
++&usb1 {
++	status =3D "okay";
++};
++
+https://patchwork.kernel.org/patch/10059097/
+
+Thanks
+Yinbo.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
