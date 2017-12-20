@@ -1,41 +1,106 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v2] Input: mms114 - add support for mms152
-Date: Wed, 20 Dec 2017 10:34:01 -0800
-Message-ID: <20171220183401.65ykqabkrjx66ch3@dtor-ws>
-References: <20171218124933.1803-1-simon@lineageos.org>
- <20171220153810.1961-1-simon@lineageos.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/4] dma: fsl-qdma: add devicetree documentation for qDMA
+ driver.
+Date: Wed, 20 Dec 2017 12:43:04 -0600
+Message-ID: <20171220184304.ywr3nopucgubgxwz@rob-hp-laptop>
+References: <20171219064157.29586-1-wen.he_1@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20171220153810.1961-1-simon@lineageos.org>
-Sender: linux-input-owner@vger.kernel.org
-To: Simon Shields <simon@lineageos.org>
-Cc: "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, devicetree@vger.kernel.org, Andi Shyti <andi.shyti@samsung.com>
+In-Reply-To: <20171219064157.29586-1-wen.he_1-3arQi8VN3Tc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wen He <wen.he_1-3arQi8VN3Tc@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-[resending as plain text]
+On Tue, Dec 19, 2017 at 02:41:57PM +0800, Wen He wrote:
 
-Hi Simon,
+Need a commit message.
 
-On Wed, Dec 20, 2017 at 9:38 AM, Simon Shields <simon@lineageos.org> wrote:
-> MMS152 has no configuration registers, but the packet format used in
-> interrupts is identical to mms114.
+> Signed-off-by: Wen He <wen.he_1-3arQi8VN3Tc@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/dma/fsl-qdma.txt | 42 ++++++++++++++++++++++
+>  1 file changed, 42 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dma/fsl-qdma.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/fsl-qdma.txt b/Documentation/devicetree/bindings/dma/fsl-qdma.txt
+> new file mode 100644
+> index 000000000000..b076177b4863
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dma/fsl-qdma.txt
+> @@ -0,0 +1,42 @@
+> +* Freescale queue Direct Memory Access Controller(qDMA) Controller
+> +
+> +  The qDMA controller transfers blocks of data between one source and one or more
 
-Since there seems to be renewed interest in mms114 driver, I would like for
-it to get a facelift and switch to using the standard touchscreen
-properties rather than the custom ones (we still need to keep compatibility
-though). Also, we do not seem to have any in-tree users of the
-mms114_platform_data structure. Can you please see if you  can:
+Why the indentation?
 
-- switch the driver to use the generic device properties
-(device_property_*() API)
-- use touchscreen_parse_properties() to parse the standard touchscreen
-properties
-- use touchscreen_report_pos() to report coordinates
-- drop mms114_platform_data
+> +destinations. The blocks of data transferred can be represented in memory as contiguous
+> +or non-contiguous using scatter/gather table(s). Channel virtualization is supported
+> +through enqueuing of DMA jobs to, or dequeuing DMA jobs from, different work
+> +queues.
+> +
+> +* qDMA Controller
+> +Required properties:
+> +- compatible :
 
-Thanks!
+Add "Should be one of:"
 
--- 
-Dmitry
+> +	- "fsl,ls1021a-qdma",
+> +	Or "fsl,ls1043a-qdma" followed by "fsl,ls1021a-qdma",
+
+Then remove the "Or" and replace " followed by" with a comma (like dts 
+source).
+
+> +- reg : Specifies base physical address(s) and size of the qDMA registers.
+> +	The region is qDMA control register's address and size.
+> +- interrupts : A list of interrupt-specifiers, one for each entry in
+> +	interrupt-names.
+> +- interrupt-names : Should contain:
+> +	"qdma-error" - the error interrupt
+> +	"qdma-queue" - the queue interrupt
+> +- channels : Number of channels supported by the controller
+
+dma-channels is the standard name.
+
+> +- queues : Number of queues supported by driver
+
+Needs a vendor prefix.
+
+> +
+> +Optional properties:
+> +- big-endian: If present registers and hardware scatter/gather descriptors
+> +	of the qDMA are implemented in big endian mode, otherwise in little
+> +	mode.
+> +
+> +
+> +Examples:
+> +
+> +	qdma: qdma@8390000 {
+
+Use standard node names:
+
+dma-controller@...
+
+> +		compatible = "fsl,ls1021a-qdma";
+> +		reg = <0x0 0x8398000 0x0 0x2000 /* Controller registers */
+> +		       0x0 0x839a000 0x0 0x2000>; /* Block registers */
+> +		interrupts = <GIC_SPI 185 IRQ_TYPE_LEVEL_HIGH>,
+> +				<GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>;
+> +		interrupt-names = "qdma-error", "qdma-queue";
+> +		channels = <8>;
+> +		queues = <2>;
+> +		big-endian;
+> +	};
+> -- 
+> 2.14.1
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
