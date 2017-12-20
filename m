@@ -1,69 +1,24 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] dt-bindings: Add an enable method to RISC-V
-Date: Wed, 20 Dec 2017 10:13:57 -0600
-Message-ID: <20171220161357.g4bix2xeovxm7izs@rob-hp-laptop>
-References: <20171207230523.29798-1-palmer@sifive.com>
+From: Sven Van Asbroeck <thesven73-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 1/1] eeprom: at24: convert magic numbers to structs.
+Date: Wed, 20 Dec 2017 11:32:18 -0500
+Message-ID: <CAGngYiVJRVuMtLThnvsXbXMuL-_4ZN=2RkuCkRBzq3cf+W4sPg@mail.gmail.com>
+References: <1513621702-6565-1-git-send-email-svenv@arcx.com>
+ <1513621702-6565-2-git-send-email-svenv@arcx.com> <CAMRc=Md0VwJ=OeE_-2uWi2sr4gJ8v9CnmexYgdDGR0pbyXYo_g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20171207230523.29798-1-palmer-SpMDHPYPyPbQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <CAMRc=Md0VwJ=OeE_-2uWi2sr4gJ8v9CnmexYgdDGR0pbyXYo_g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Palmer Dabbelt <palmer-SpMDHPYPyPbQT0dZR+AlfA@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-q3qR2WxjNRFS9aJRtSZj7A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bartosz Golaszewski <brgl-ARrdPY/1zhM@public.gmane.org>
+Cc: Sven Van Asbroeck <svenv-fuHqz3Nb1YI@public.gmane.org>, Sven Van Asbroeck <svendev-fuHqz3Nb1YI@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, nsekhar-l0cyMroinI0@public.gmane.org, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Divagar Mohandass <divagar.mohandass-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-i2c <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 07, 2017 at 03:05:23PM -0800, Palmer Dabbelt wrote:
-> RISC-V doesn't currently specify a mechanism for enabling or disabling
-> CPUs.  Instead, we assume that all CPUs are enabled on boot, and if
-> someone wants to save power we instead put a CPU to sleep via a WFI
-> loop.  Future systems may have an explicit mechanism for putting a CPU
-> to sleep, so we're standardizing the device tree entry for when that
-> happens.
-> 
-> We're not defining a spin-table based interface to the firmware, as the
-> plan is to handle this entirely within the kernel instead.
-> 
-> CC: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Signed-off-by: Palmer Dabbelt <palmer-SpMDHPYPyPbQT0dZR+AlfA@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/riscv/cpus.txt | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/riscv/cpus.txt b/Documentation/devicetree/bindings/riscv/cpus.txt
-> index adf7b7af5dc3..68f88eacc594 100644
-> --- a/Documentation/devicetree/bindings/riscv/cpus.txt
-> +++ b/Documentation/devicetree/bindings/riscv/cpus.txt
-> @@ -82,6 +82,15 @@ described below.
->                  Value type: <string>
->                  Definition: Contains the RISC-V ISA string of this hart.  These
->                              ISA strings are defined by the RISC-V ISA manual.
-> +        - cpu-enable-method:
-> +                Usage: optional
-> +                Value type: <stringlist>
-> +                Definition: When absent, default is either "always-disabled"
-> +                            "always-enabled", depending on the current state
-> +                            of the CPU.
+>> +       { .compatible = "atmel,24c00", .data = &at24_data_24c00 },
+>
+> Add tabs here as well, seems like there's enough space in the line.
 
-How does one determine the state of other cpus?
-
-> +                            Must be one of:
-> +                                * "always-disabled": This CPU cannot be enabled.
-
-status = "disabled" already serves this purpose.
-
-> +                                * "always-enabled": This CPU cannot be disabled.
-
-I don't see how this can work unless the kernel is loaded prior to 
-bringing all cpus out of reset. You have to halt cpus in some way until 
-the kernel is loaded.
-
->  
->  Example: SiFive Freedom U540G Development Kit
->  ---------------------------------------------
-> -- 
-> 2.13.6
-> 
+There's not enough space in the line to line up the 24c1024 entry with
+the others. I'll revert to the formatting style that was there before.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
