@@ -1,55 +1,64 @@
-From: Crt Mori <cmo-fc6wVz46lShBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v10 2/3] dt-bindings: iio: temperature: add MLX90632 device bindings
-Date: Wed, 20 Dec 2017 15:20:19 +0100
-Message-ID: <20171220142019.18227-1-cmo@melexis.com>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Crt Mori <cmo-fc6wVz46lShBDgjK7y7TUQ@public.gmane.org>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v1 4/4] arm64: dts: mediatek: add mt2712 cpufreq related
+ device nodes
+Date: Wed, 20 Dec 2017 15:47:10 +0100
+Message-ID: <59684978-43cc-3672-75af-602b2800a7f5@gmail.com>
+References: <1512713278-17807-1-git-send-email-andrew-sh.cheng@mediatek.com>
+ <20171212072625.GL25177@vireshk-i7>
+ <a68c5382-2a9c-6c3c-ea67-99db46bdff1a@gmail.com>
+ <7730089.t6jDuHQEn5@aspire.rjw.lan>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <7730089.t6jDuHQEn5-yvgW3jdyMHm1GS7QM15AGw@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
+Cc: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew-sh Cheng <andrew-sh.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add device tree bindings for MLX90632 IR temperature sensor.
 
-Signed-off-by: Crt Mori <cmo-fc6wVz46lShBDgjK7y7TUQ@public.gmane.org>
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
- .../bindings/iio/temperature/mlx90632.txt          | 28 ++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/temperature/mlx90632.txt
 
-diff --git a/Documentation/devicetree/bindings/iio/temperature/mlx90632.txt b/Documentation/devicetree/bindings/iio/temperature/mlx90632.txt
-new file mode 100644
-index 000000000000..0b05812001f8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/temperature/mlx90632.txt
-@@ -0,0 +1,28 @@
-+* Melexis MLX90632 contactless Infra Red temperature sensor
-+
-+Link to datasheet: https://www.melexis.com/en/documents/documentation/datasheets/datasheet-mlx90632
-+
-+There are various applications for the Infra Red contactless temperature sensor
-+and MLX90632 is most suitable for consumer applications where measured object
-+temperature is in range between -20 to 200 degrees Celsius with relative error
-+of measurement below 1 degree Celsius in object temperature range for
-+industrial applications. Since it can operate and measure ambient temperature
-+in range of -20 to 85 degrees Celsius it is suitable also for outdoor use.
-+
-+Be aware that electronics surrounding the sensor can increase ambient
-+temperature. MLX90632 can be calibrated to reduce the housing effect via
-+already existing EEPROM parameters.
-+
-+Since measured object emissivity effects Infra Red energy emitted, emissivity
-+should be set before requesting the object temperature.
-+
-+Required properties:
-+  - compatible: should be "melexis,mlx90632"
-+  - reg: the I2C address of the sensor (default 0x3a)
-+
-+Example:
-+
-+mlx90632@3a {
-+	compatible = "melexis,mlx90632";
-+	reg = <0x3a>;
-+};
--- 
-2.15.0
+On 12/17/2017 07:05 PM, Rafael J. Wysocki wrote:
+> On Tuesday, December 12, 2017 10:34:42 AM CET Matthias Brugger wrote:
+>> Hi,
+>>
+>> On 12/12/2017 08:26 AM, Viresh Kumar wrote:
+>>> On 12-12-17, 02:17, Rafael J. Wysocki wrote:
+>>>> On Monday, December 11, 2017 8:57:19 AM CET Viresh Kumar wrote:
+>>>>> On 08-12-17, 14:07, Andrew-sh Cheng wrote:
+>>>>>> Add opp v2 information,
+>>>>>> and also add clocks, regulators and opp information into cpu nodes
+>>>>>>
+>>>>>> Signed-off-by: Andrew-sh Cheng <andrew-sh.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+>>>>>> ---
+>>>>>>  arch/arm64/boot/dts/mediatek/mt2712-evb.dts | 27 ++++++++++++++
+>>>>>>  arch/arm64/boot/dts/mediatek/mt2712e.dtsi   | 57 +++++++++++++++++++++++++++++
+>>>>>>  2 files changed, 84 insertions(+)
+>>>>>
+>>>>> Acked-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>>>
+>>>> Of course, DT bindings require ACKs from DT maintainers to be applied.
+>>>
+>>> I didn't knew that we need Acks from DT maintainers for dts files as well? Yeah,
+>>> its very much required while defining new bindings for sure.
+>>>
+>>
+>> I will take the dts parts through the Mediatek SoC tree, so you don't have to
+>> worry about them.
+>>
+>> Please let me know when you take patch 1 and 2.
+> 
+> Applied now, thanks!
+> 
+> Do you need the branch containing them to be exposed?
+> 
+
+No, that's not necessary.
+
+I pushed the two patches to v4.15-next/dts64 now.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
