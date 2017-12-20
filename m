@@ -1,106 +1,49 @@
-From: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>
-Subject: Re: [PATCH v3 18/20] ARM: dts: aspeed-romulus: Update Romulus system
-Date: Wed, 20 Dec 2017 07:44:12 +0100
-Message-ID: <7b5e578b-3f83-1bad-df27-68071105edf0@kaod.org>
-References: <20171220032328.30584-1-joel@jms.id.au>
- <20171220032328.30584-19-joel@jms.id.au>
+From: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: Remove leading 0x and 0s from bindings
+ notation
+Date: Wed, 20 Dec 2017 00:49:57 -0600
+Message-ID: <20171220064957.GA17982@hector.attlocal.net>
+References: <20171214165352.27902-1-malat@debian.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20171220032328.30584-19-joel@jms.id.au>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Joel Stanley <joel@jms.id.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Andrew Jeffery <andrew@aj.id.au>, Patrick Venture <venture@google.com>, Xo Wang <xow@google.com>, Lei YU <mine260309@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linux-kernel@vger.kernel.org, Jeremy Kerr <jk@ozlabs.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20171214165352.27902-1-malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Anton Vorontsov <anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Tony Luck <tony.luck-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMTIvMjAvMjAxNyAwNDoyMyBBTSwgSm9lbCBTdGFubGV5IHdyb3RlOgo+ICAtIEZpeCBpbmNv
-cnJlY3QgUkFNIHNpemUKPiAgLSBSZW1vdmUgYWxpYXM7IHRoZXNlIGFyZSBub3cgc3BlY2lmaWVk
-IGluIHRoZSBkdHNpCj4gIC0gQWRkIG5ld2x5IHVwc3RyZWFtZWQgZGV2aWNlcwo+ICAtIEluY2x1
-ZGUgT3BlbkJNQyBmbGFzaCBsYXlvdXQKPiAKPiBTaWduZWQtb2ZmLWJ5OiBKb2VsIFN0YW5sZXkg
-PGpvZWxAam1zLmlkLmF1PgoKUmV2aWV3ZWQtYnk6IEPDqWRyaWMgTGUgR29hdGVyIDxjbGdAa2Fv
-ZC5vcmc+Cgo+IC0tLQo+ICB2MzoKPiAgIC0gQWRkIEdQSU8gaW5jbHVkZQo+ICAgLSBGaXggZHVw
-bGljYXRlIGZtYyBhbmQgc3BpIG5vZGVzCj4gICAtIEFkZCB1bml0IG5hbWUgZm9yIG1lbW9yeSBu
-b2RlIHRvIGZpeCB3YXJuaW5nCj4gLS0tCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC1ibWMt
-b3BwLXJvbXVsdXMuZHRzIHwgMTMzICsrKysrKysrKysrKysrKysrKysrKysrKystLQo+ICAxIGZp
-bGUgY2hhbmdlZCwgMTI2IGluc2VydGlvbnMoKyksIDcgZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAt
-LWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC1ibWMtb3BwLXJvbXVsdXMuZHRzIGIvYXJj
-aC9hcm0vYm9vdC9kdHMvYXNwZWVkLWJtYy1vcHAtcm9tdWx1cy5kdHMKPiBpbmRleCBhN2E5Mzg2
-Zjk2NGQuLjYyM2I2YWI0MjAyMSAxMDA2NDQKPiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9hc3Bl
-ZWQtYm1jLW9wcC1yb211bHVzLmR0cwo+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC1i
-bWMtb3BwLXJvbXVsdXMuZHRzCj4gQEAgLTEsMjMgKzEsMTkgQEAKPiAgLy8gU1BEWC1MaWNlbnNl
-LUlkZW50aWZpZXI6IEdQTC0yLjArCj4gIC9kdHMtdjEvOwo+IC0KPiAgI2luY2x1ZGUgImFzcGVl
-ZC1nNS5kdHNpIgo+ICsjaW5jbHVkZSA8ZHQtYmluZGluZ3MvZ3Bpby9hc3BlZWQtZ3Bpby5oPgo+
-ICAKPiAgLyB7Cj4gIAltb2RlbCA9ICJSb211bHVzIEJNQyI7Cj4gIAljb21wYXRpYmxlID0gImli
-bSxyb211bHVzLWJtYyIsICJhc3BlZWQsYXN0MjUwMCI7Cj4gIAo+IC0JYWxpYXNlcyB7Cj4gLQkJ
-c2VyaWFsNCA9ICZ1YXJ0NTsKPiAtCX07Cj4gLQo+ICAJY2hvc2VuIHsKPiAgCQlzdGRvdXQtcGF0
-aCA9ICZ1YXJ0NTsKPiAgCQlib290YXJncyA9ICJjb25zb2xlPXR0eVM0LDExNTIwMCBlYXJseXBy
-aW50ayI7Cj4gIAl9Owo+ICAKPiAtCW1lbW9yeSB7Cj4gLQkJcmVnID0gPDB4ODAwMDAwMDAgMHg0
-MDAwMDAwMD47Cj4gKwltZW1vcnlAODAwMDAwMDAgewo+ICsJCXJlZyA9IDwweDgwMDAwMDAwIDB4
-MjAwMDAwMDA+Owo+ICAJfTsKPiAgCj4gIAlyZXNlcnZlZC1tZW1vcnkgewo+IEBAIC0yOSw2ICsy
-NSw0OSBAQAo+ICAJCQluby1tYXA7Cj4gIAkJCXJlZyA9IDwweGJmMDAwMDAwIDB4MDEwMDAwMDA+
-OyAvKiAxNk0gKi8KPiAgCQl9Owo+ICsKPiArCQlmbGFzaF9tZW1vcnk6IHJlZ2lvbkA5ODAwMDAw
-MCB7Cj4gKwkJCW5vLW1hcDsKPiArCQkJcmVnID0gPDB4OTgwMDAwMDAgMHgwNDAwMDAwMD47IC8q
-IDY0TSAqLwo+ICsJCX07Cj4gKwl9Owo+ICsKPiArCWxlZHMgewo+ICsJCWNvbXBhdGlibGUgPSAi
-Z3Bpby1sZWRzIjsKPiArCj4gKwkJZmF1bHQgewo+ICsJCQlncGlvcyA9IDwmZ3BpbyBBU1BFRURf
-R1BJTyhOLCAyKSBHUElPX0FDVElWRV9MT1c+Owo+ICsJCX07Cj4gKwo+ICsJCWlkZW50aWZ5IHsK
-PiArCQkJZ3Bpb3MgPSA8JmdwaW8gQVNQRUVEX0dQSU8oTiwgNCkgR1BJT19BQ1RJVkVfSElHSD47
-Cj4gKwkJfTsKPiArCj4gKwkJcG93ZXIgewo+ICsJCQlncGlvcyA9IDwmZ3BpbyBBU1BFRURfR1BJ
-TyhSLCA1KSBHUElPX0FDVElWRV9MT1c+Owo+ICsJCX07Cj4gKwl9Owo+ICsKPiArCWZzaTogZ3Bp
-by1mc2kgewo+ICsJCWNvbXBhdGlibGUgPSAiZnNpLW1hc3Rlci1ncGlvIiwgImZzaS1tYXN0ZXIi
-Owo+ICsJCSNhZGRyZXNzLWNlbGxzID0gPDI+Owo+ICsJCSNzaXplLWNlbGxzID0gPDA+Owo+ICsK
-PiArCQljbG9jay1ncGlvcyA9IDwmZ3BpbyBBU1BFRURfR1BJTyhBQSwgMCkgR1BJT19BQ1RJVkVf
-SElHSD47Cj4gKwkJZGF0YS1ncGlvcyA9IDwmZ3BpbyBBU1BFRURfR1BJTyhBQSwgMikgR1BJT19B
-Q1RJVkVfSElHSD47Cj4gKwkJbXV4LWdwaW9zID0gPCZncGlvIEFTUEVFRF9HUElPKEEsIDYpIEdQ
-SU9fQUNUSVZFX0hJR0g+Owo+ICsJCWVuYWJsZS1ncGlvcyA9IDwmZ3BpbyBBU1BFRURfR1BJTyhE
-LCAwKSBHUElPX0FDVElWRV9ISUdIPjsKPiArCQl0cmFucy1ncGlvcyA9IDwmZ3BpbyBBU1BFRURf
-R1BJTyhSLCAyKSBHUElPX0FDVElWRV9ISUdIPjsKPiArCX07Cj4gKwo+ICsJZ3Bpby1rZXlzIHsK
-PiArCQljb21wYXRpYmxlID0gImdwaW8ta2V5cyI7Cj4gKwo+ICsJCWNoZWNrc3RvcCB7Cj4gKwkJ
-CWxhYmVsID0gImNoZWNrc3RvcCI7Cj4gKwkJCWdwaW9zID0gPCZncGlvIEFTUEVFRF9HUElPKEos
-IDIpIEdQSU9fQUNUSVZFX0xPVz47Cj4gKwkJCWxpbnV4LGNvZGUgPSA8QVNQRUVEX0dQSU8oSiwg
-Mik+Owo+ICsJCX07Cj4gIAl9Owo+ICB9Owo+ICAKPiBAQCAtMzgsNiArNzcsNyBAQAo+ICAJCXN0
-YXR1cyA9ICJva2F5IjsKPiAgCQltMjVwLGZhc3QtcmVhZDsKPiAgCQlsYWJlbCA9ICJibWMiOwo+
-ICsjaW5jbHVkZSAib3BlbmJtYy1mbGFzaC1sYXlvdXQuZHRzaSIKPiAgCX07Cj4gIH07Cj4gIAo+
-IEBAIC01Myw2ICs5MywxMiBAQAo+ICAJfTsKPiAgfTsKPiAgCj4gKyZscGNfY3RybCB7Cj4gKwlz
-dGF0dXMgPSAib2theSI7Cj4gKwltZW1vcnktcmVnaW9uID0gPCZmbGFzaF9tZW1vcnk+Owo+ICsJ
-Zmxhc2ggPSA8JnNwaTE+Owo+ICt9Owo+ICsKPiAgJnVhcnQxIHsKPiAgCS8qIFJlYXIgUlMtMjMy
-IGNvbm5lY3RvciAqLwo+ICAJc3RhdHVzID0gIm9rYXkiOwo+IEBAIC04MSw2ICsxMjcsMTAgQEAK
-PiAgCXBpbmN0cmwtMCA9IDwmcGluY3RybF9ybWlpMV9kZWZhdWx0PjsKPiAgfTsKPiAgCj4gKyZp
-MmMxIHsKPiArCXN0YXR1cyA9ICJva2F5IjsKPiArfTsKPiArCj4gICZpMmMyIHsKPiAgCXN0YXR1
-cyA9ICJva2F5IjsKPiAgfTsKPiBAQCAtMTMzLDggKzE4Myw3NyBAQAo+ICAKPiAgJmkyYzEyIHsK
-PiAgCXN0YXR1cyA9ICJva2F5IjsKPiArCj4gKwltYXgzMTc4NUA1MiB7Cj4gKwkJY29tcGF0aWJs
-ZSA9ICJtYXhpbSxtYXgzMTc4NSI7Cj4gKwkJcmVnID0gPDB4NTI+Owo+ICsJfTsKPiArfTsKPiAr
-Cj4gKyZncGlvIHsKPiArCW5pY19mdW5jX21vZGUwIHsKPiArCQlncGlvLWhvZzsKPiArCQlncGlv
-cyA9IDxBU1BFRURfR1BJTyhELCAzKSBHUElPX0FDVElWRV9ISUdIPjsKPiArCQlvdXRwdXQtbG93
-Owo+ICsJCWxpbmUtbmFtZSA9ICJuaWNfZnVuY19tb2RlMCI7Cj4gKwl9Owo+ICsJbmljX2Z1bmNf
-bW9kZTEgewo+ICsJCWdwaW8taG9nOwo+ICsJCWdwaW9zID0gPEFTUEVFRF9HUElPKEQsIDQpIEdQ
-SU9fQUNUSVZFX0hJR0g+Owo+ICsJCW91dHB1dC1sb3c7Cj4gKwkJbGluZS1uYW1lID0gIm5pY19m
-dW5jX21vZGUxIjsKPiArCX07Cj4gIH07Cj4gIAo+ICAmdnVhcnQgewo+ICAJc3RhdHVzID0gIm9r
-YXkiOwo+ICB9Owo+ICsKPiArJmdmeCB7Cj4gKwlzdGF0dXMgPSAib2theSI7Cj4gK307Cj4gKwo+
-ICsmcGluY3RybCB7Cj4gKwlhc3BlZWQsZXh0ZXJuYWwtbm9kZXMgPSA8JmdmeCAmbGhjPjsKPiAr
-fTsKPiArCj4gKyZwd21fdGFjaG8gewo+ICsJc3RhdHVzID0gIm9rYXkiOwo+ICsJcGluY3RybC1u
-YW1lcyA9ICJkZWZhdWx0IjsKPiArCXBpbmN0cmwtMCA9IDwmcGluY3RybF9wd20wX2RlZmF1bHQg
-JnBpbmN0cmxfcHdtMV9kZWZhdWx0PjsKPiArCj4gKwlmYW5AMCB7Cj4gKwkJcmVnID0gPDB4MDA+
-Owo+ICsJCWFzcGVlZCxmYW4tdGFjaC1jaCA9IC9iaXRzLyA4IDwweDA4PjsKPiArCX07Cj4gKwo+
-ICsJZmFuQDEgewo+ICsJCXJlZyA9IDwweDAwPjsKPiArCQlhc3BlZWQsZmFuLXRhY2gtY2ggPSAv
-Yml0cy8gOCA8MHgwOT47Cj4gKwl9Owo+ICsKPiArCWZhbkAyIHsKPiArCQlyZWcgPSA8MHgwMT47
-Cj4gKwkJYXNwZWVkLGZhbi10YWNoLWNoID0gL2JpdHMvIDggPDB4MGE+Owo+ICsJfTsKPiArCj4g
-KwlmYW5AMyB7Cj4gKwkJcmVnID0gPDB4MDE+Owo+ICsJCWFzcGVlZCxmYW4tdGFjaC1jaCA9IC9i
-aXRzLyA4IDwweDBiPjsKPiArCX07Cj4gKwo+ICsJZmFuQDQgewo+ICsJCXJlZyA9IDwweDAwPjsK
-PiArCQlhc3BlZWQsZmFuLXRhY2gtY2ggPSAvYml0cy8gOCA8MHgwYz47Cj4gKwl9Owo+ICsKPiAr
-CWZhbkA1IHsKPiArCQlyZWcgPSA8MHgwMD47Cj4gKwkJYXNwZWVkLGZhbi10YWNoLWNoID0gL2Jp
-dHMvIDggPDB4MGQ+Owo+ICsJfTsKPiArCj4gKwlmYW5ANiB7Cj4gKwkJcmVnID0gPDB4MDE+Owo+
-ICsJCWFzcGVlZCxmYW4tdGFjaC1jaCA9IC9iaXRzLyA4IDwweDBlPjsKPiArCX07Cj4gK307Cj4g
-CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgt
-YXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQu
-b3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJt
-LWtlcm5lbAo=
+On Thu, Dec 14, 2017 at 05:53:52PM +0100, Mathieu Malaterre wrote:
+> Improve the DTS files by removing all the leading "0x" and zeros to fix the
+> following dtc warnings:
+> 
+> Warning (unit_address_format): Node /XXX unit name should not have leading "0x"
+> 
+> and
+> 
+> Warning (unit_address_format): Node /XXX unit name should not have leading 0s
+> 
+> Converted using the following command:
+> 
+> find . -type f \( -iname *.dts -o -iname *.dtsi \) -exec sed -E -i -e "s/@0x([0-9a-fA-F\.]+)\s?\{/@\L\1 \{/g" -e "s/@0+([0-9a-fA-F\.]+)\s?\{/@\L\1 \{/g" {} +
+> 
+> For simplicity, two sed expressions were used to solve each warnings separately.
+> 
+> To make the regex expression more robust a few other issues were resolved,
+> namely setting unit-address to lower case, and adding a whitespace before the
+> the opening curly brace:
+> 
+> https://elinux.org/Device_Tree_Linux#Linux_conventions
+> 
+> This is a follow up to commit 4c9847b7375a ("dt-bindings: Remove leading 0x from bindings notation")
+> 
+> Reported-by: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+> Suggested-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+
+Acked-by: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
