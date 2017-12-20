@@ -1,34 +1,47 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 4/6] dt: bindings: lp8860: Add trigger binding to the
- lp8860
-Date: Wed, 20 Dec 2017 12:29:11 -0600
-Message-ID: <20171220182911.ivsr6uzf5vq6clkh@rob-hp-laptop>
-References: <20171218202307.4913-1-dmurphy@ti.com>
- <20171218202307.4913-4-dmurphy@ti.com>
+Subject: Re: [PATCH 1/6] dt-bindings: soc: qcom: Add label for GLINK bindings
+Date: Wed, 20 Dec 2017 12:30:00 -0600
+Message-ID: <20171220183000.rhxgyikfqzxmqkjo@rob-hp-laptop>
+References: <1513634534-22861-1-git-send-email-clew@codeaurora.org>
+ <1513634534-22861-2-git-send-email-clew@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20171218202307.4913-4-dmurphy@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dan Murphy <dmurphy@ti.com>
-Cc: mark.rutland@arm.com, rpurdie@rpsys.net, jacek.anaszewski@gmail.com, pavel@ucw.cz, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+In-Reply-To: <1513634534-22861-2-git-send-email-clew@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Chris Lew <clew@codeaurora.org>
+Cc: bjorn.andersson@linaro.org, andy.gross@linaro.org, david.brown@linaro.org, aneela@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 18, 2017 at 02:23:05PM -0600, Dan Murphy wrote:
-> Add a default trigger optional node to the child node.
-> This will allow the driver to set the trigger for a backlight.
-> 
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
-> 
-> v5 - No changes
-> 
-> v4 - No changes
-> v3 - Removed optional and rebased - https://patchwork.kernel.org/patch/10093755/
-> v2 - Moved binding changes to first patch in the series.
-> 
->  Documentation/devicetree/bindings/leds/leds-lp8860.txt | 3 +++
->  1 file changed, 3 insertions(+)
+On Mon, Dec 18, 2017 at 02:02:09PM -0800, Chris Lew wrote:
+> Add a label property to identify the edge this node represents.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Why does a user need to know this?
+
+> 
+> Signed-off-by: Chris Lew <clew@codeaurora.org>
+> ---
+>  Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
+> index 9663cab52246..0b8cc533ca83 100644
+> --- a/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
+> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
+> @@ -10,6 +10,11 @@ edge.
+>  	Value type: <stringlist>
+>  	Definition: must be "qcom,glink-rpm"
+>  
+> +- label:
+> +	Usage: optional
+> +	Value type: <string>
+> +	Definition: should specify the subsystem name this edge corresponds to.
+> +
+>  - interrupts:
+>  	Usage: required
+>  	Value type: <prop-encoded-array>
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+> 
