@@ -1,128 +1,72 @@
-From: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Subject: RE: [PATCH 5/5] ARM: dts: iwg20d-q7-common: Enable SGTL5000 audio
- codec
-Date: Wed, 20 Dec 2017 10:02:54 +0000
-Message-ID: <KL1PR06MB1702453058AFB66AA8110825B80C0@KL1PR06MB1702.apcprd06.prod.outlook.com>
-References: <1513103111-45830-1-git-send-email-biju.das@bp.renesas.com>
- <1513103111-45830-6-git-send-email-biju.das@bp.renesas.com>
- <20171220095806.jqtkmximxybsq6tr@verge.net.au>
+From: =?UTF-8?q?Myl=C3=A8ne=20Josserand?=
+        <mylene.josserand-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v5 0/2] Input: Add Cypress Gen5 Touchscreen driver
+Date: Wed, 20 Dec 2017 11:08:41 +0100
+Message-ID: <20171220100843.2759-1-mylene.josserand@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171220095806.jqtkmximxybsq6tr-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: mylene.josserand-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Thanks Simon for this information.
+Hello,
 
-Next time I will make sure that  compiler won't give any warning message wi=
-th make dtbs W=3D1
+Here is a V5 series to add the driver of the touchscreen Cypress,
+TrueTouch Generation 5.
+Based on last master branch of "input" kernel's tree.
 
-Regards,
-Biju
+This patch series has already been posted in several iterations:
+    - v1: Sent on 2017/05/29
+    - v2: Sent on 2017/08/18
+    - v3: Sent on 2017/09/27
+    - v4: Sent on 2017/12/01
 
-> -----Original Message-----
-> From: Simon Horman [mailto:horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org]
-> Sent: 20 December 2017 09:58
-> To: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>; Mark Rutland
-> <mark.rutland-5wv7dgnIgG8@public.gmane.org>; Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>; Magnus
-> Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>; Chris Paterson
-> <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-renesas-
-> soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> Subject: Re: [PATCH 5/5] ARM: dts: iwg20d-q7-common: Enable SGTL5000
-> audio codec
->
-> On Tue, Dec 12, 2017 at 06:25:11PM +0000, Biju Das wrote:
-> > This patch enables SGTL5000 audio codec on the carrier board.
-> >
-> > Signed-off-by: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-> > Reviewed-by: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
->
-> Somehow I missed applying this one.
-> I have now done so with the minor update noted below.
->
-> > ---
-> >  arch/arm/boot/dts/iwg20d-q7-common.dtsi | 24
-> ++++++++++++++++++++++++
-> >  1 file changed, 24 insertions(+)
-> >
-> > diff --git a/arch/arm/boot/dts/iwg20d-q7-common.dtsi
-> b/arch/arm/boot/dts/iwg20d-q7-common.dtsi
-> > index 54470c6..2070b14 100644
-> > --- a/arch/arm/boot/dts/iwg20d-q7-common.dtsi
-> > +++ b/arch/arm/boot/dts/iwg20d-q7-common.dtsi
-> > @@ -20,6 +20,20 @@
-> >  stdout-path =3D "serial0:115200n8";
-> >  };
-> >
-> > +audio_clock: audio_clock {
-> > +compatible =3D "fixed-clock";
-> > +#clock-cells =3D <0>;
-> > +clock-frequency =3D <26000000>;
-> > +};
-> > +
-> > +reg_1p5v: 1p5v {
-> > +compatible =3D "regulator-fixed";
-> > +regulator-name =3D "1P5V";
-> > +regulator-min-microvolt =3D <1500000>;
-> > +regulator-max-microvolt =3D <1500000>;
-> > +regulator-always-on;
-> > +};
-> > +
-> >  vcc_sdhi1: regulator-vcc-sdhi1 {
-> >  compatible =3D "regulator-fixed";
-> >
-> > @@ -83,6 +97,16 @@
-> >  compatible =3D "ti,bq32000";
-> >  reg =3D <0x68>;
-> >  };
-> > +
-> > +sgtl5000: codec@0a {
->
-> s/@0a/@a/
->
-> Base addresses should not have a leading 0.
->
-> # make dtbs W=3D1
-> DTC     arch/arm/boot/dts/r8a7743-iwg20d-q7-dbcm-ca.dtb
-> arch/arm/boot/dts/r8a7743-iwg20d-q7.dtb: Warning (unit_address_format):
-> Node /soc/i2c@e6530000/codec@0a unit name should not have leading 0s
->
-> > +compatible =3D "fsl,sgtl5000";
-> > +#sound-dai-cells =3D <0>;
-> > +reg =3D <0x0a>;
-> > +clocks =3D <&audio_clock>;
-> > +VDDA-supply =3D <&reg_3p3v>;
-> > +VDDIO-supply =3D <&reg_3p3v>;
-> > +VDDD-supply =3D <&reg_1p5v>;
-> > +};
-> >  };
-> >
-> >  &pci0 {
-> > --
-> > 1.9.1
-> >
+As I did not have any comments on the last 3 versions, it would be
+great to have some feedback in case there is something wrong with this
+series?
 
+Changes since v4:
+   - Fixed kbuild errors about enum hid_cmd_state and .owner
+Changes since v3:
+   - Rebased on last input's branch
+   - Changed the CRC table to use crc_itu_t_table instead of
+   crc_ccitt_false_table which is not merged.
+   - Added selection of CRC_ITU_T on KConfig
+Changes since v2:
+   - Removed pinctrl in dt-binding example which is uncessecary.
+   - Added Acked-by and Reviewed-by received.
+Changes since v1:
+   - Updated the driver according to reviews. Most important modifications:
+   removed unnecessary mutex, updated dev_err output, handled return cases
+   in a better way, created a HID_ENUM, removed magic value, used an
+   existing CRC table and used "linux-keycodes" instead of sub-nodes.
+   - Updated the dt-bindings to use linux-keycodes and removed properties'
+   description that comes from touchscreen's binding.
 
-[https://www2.renesas.eu/media/email/unicef_2017.jpg]
+Patch 01: Add the basis of the driver for Cypress Gen5 Touchscreen.
+Patch 02: Add the binding documentation for this driver.
 
-This Christmas, instead of sending out cards, Renesas Electronics Europe ha=
-ve decided to support Unicef with a donation. For further details click her=
-e<https://www.unicef.org/> to find out about the valuable work they do, hel=
-ping children all over the world.
-We would like to take this opportunity to wish you a Merry Christmas and a =
-prosperous New Year.
+Thank you in advance,
+Mylène
 
+Mylène Josserand (2):
+  Input: Add driver for Cypress Generation 5 touchscreen
+  dt-bindings: input: Add documentation for cyttsp5
 
+ .../bindings/input/touchscreen/cypress,cyttsp5.txt |   39 +
+ drivers/input/touchscreen/Kconfig                  |   16 +
+ drivers/input/touchscreen/Makefile                 |    1 +
+ drivers/input/touchscreen/cyttsp5.c                | 1112 ++++++++++++++++++++
+ 4 files changed, 1168 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/touchscreen/cypress,cyttsp5.txt
+ create mode 100644 drivers/input/touchscreen/cyttsp5.c
 
-Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, B=
-uckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered=
- No. 04586709.
+-- 
+2.11.0
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
