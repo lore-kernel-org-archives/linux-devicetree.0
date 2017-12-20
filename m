@@ -1,180 +1,113 @@
-From: Simon Shields <simon@lineageos.org>
-Subject: [PATCH v2] Input: mms114 - add support for mms152
-Date: Thu, 21 Dec 2017 02:38:10 +1100
-Message-ID: <20171220153810.1961-1-simon@lineageos.org>
-References: <20171218124933.1803-1-simon@lineageos.org>
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20171218124933.1803-1-simon@lineageos.org>
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, Andi Shyti <andi.shyti@samsung.com>, Simon Shields <simon@lineageos.org>
+From: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 3/4] ARM: dts: add Samsung's exynos4412-based midas boards
+Date: Wed, 20 Dec 2017 16:39:34 +0100
+Message-ID: <CAJKOXPeL1JhwbZsLNEcVMh2iNCgh1f20EmRxFi57Hqs=njivwA@mail.gmail.com>
+References: <20171218123805.26345-1-simon@lineageos.org> <20171218123805.26345-4-simon@lineageos.org>
+ <CAJKOXPf4H6kSXJCSaVBPr9G1yNw9FjCUT+fox2V++Nyrco5bQA@mail.gmail.com> <20171220153315.GB23127@lineageos.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171220153315.GB23127-WP75azK+jQYgsBAKwltoeQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Shields <simon-WP75azK+jQYgsBAKwltoeQ@public.gmane.org>
+Cc: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-MMS152 has no configuration registers, but the packet format used in
-interrupts is identical to mms114.
+On Wed, Dec 20, 2017 at 4:33 PM, Simon Shields <simon-WP75azK+jQYgsBAKwltoeQ@public.gmane.org> wrote:
+> Hi Krzysztof,
+>
+> On Wed, Dec 20, 2017 at 03:08:27PM +0100, Krzysztof Kozlowski wrote:
+>> On Mon, Dec 18, 2017 at 1:38 PM, Simon Shields <simon-WP75azK+jQYgsBAKwltoeQ@public.gmane.org> wrote:
+>> > "midas" is the codename for a family of smartphones released by Samsung
+>> > Mobile. It includes the Galaxy S3 (GT-I9300/I9305) and the Galaxy
+>> > Note 2 (GT-N7100/N7105). The boards largely have the same peripherals:
+>> > the main differences are touchscreen, display panel and cellular modem.
+>> >
+>> > Signed-off-by: Simon Shields <simon-WP75azK+jQYgsBAKwltoeQ@public.gmane.org>
+>> > ---
+>> >  arch/arm/boot/dts/Makefile          |  3 +++
+>> >  arch/arm/boot/dts/exynos4412-m0.dts | 27 +++++++++++++++++++++++++
+>> >  arch/arm/boot/dts/exynos4412-m3.dts | 14 +++++++++++++
+>> >  arch/arm/boot/dts/exynos4412-t0.dts | 40 +++++++++++++++++++++++++++++++++++++
+>> >  4 files changed, 84 insertions(+)
+>> >  create mode 100644 arch/arm/boot/dts/exynos4412-m0.dts
+>> >  create mode 100644 arch/arm/boot/dts/exynos4412-m3.dts
+>> >  create mode 100644 arch/arm/boot/dts/exynos4412-t0.dts
+>> >
+>> > diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+>> > index 66e28af289da..035abd66b472 100644
+>> > --- a/arch/arm/boot/dts/Makefile
+>> > +++ b/arch/arm/boot/dts/Makefile
+>> > @@ -164,11 +164,14 @@ dtb-$(CONFIG_ARCH_EXYNOS4) += \
+>> >         exynos4210-trats.dtb \
+>> >         exynos4210-universal_c210.dtb \
+>> >         exynos4412-itop-elite.dtb \
+>> > +       exynos4412-m0.dtb \
+>> > +       exynos4412-m3.dtb \
+>> >         exynos4412-odroidu3.dtb \
+>> >         exynos4412-odroidx.dtb \
+>> >         exynos4412-odroidx2.dtb \
+>> >         exynos4412-origen.dtb \
+>> >         exynos4412-smdk4412.dtb \
+>> > +       exynos4412-t0.dtb \
+>> >         exynos4412-tiny4412.dtb \
+>> >         exynos4412-trats2.dtb
+>> >  dtb-$(CONFIG_ARCH_EXYNOS5) += \
+>> > diff --git a/arch/arm/boot/dts/exynos4412-m0.dts b/arch/arm/boot/dts/exynos4412-m0.dts
+>> > new file mode 100644
+>> > index 000000000000..56c1ea6b5695
+>> > --- /dev/null
+>> > +++ b/arch/arm/boot/dts/exynos4412-m0.dts
+>> > @@ -0,0 +1,27 @@
+>> > +/*
+>> > + * Samsung's Exynos4412 based M0 (GT-I9300) board device tree source
+>> > + *
+>> > + * Copyright (c) 2013 Samsung Electronics Co., Ltd.
+>> > + *             http://www.samsung.com
+>> > + *
+>> > + * Device tree source file for Samsung's M0 board which is based on
+>> > + * Samsung's Exynos4412 SoC.
+>> > + *
+>> > + * This program is free software; you can redistribute it and/or modify
+>> > + * it under the terms of the GNU General Public License version 2 as
+>> > + * published by the Free Software Foundation.
+>> > + */
+>> > +
+>> > +/dts-v1/;
+>> > +#include "exynos4412-galaxy-s3.dtsi"
+>> > +
+>> > +/ {
+>> > +       model = "Samsung M0 (GT-I9300) based on Exynos4412";
+>> > +       compatible = "samsung,m0", "samsung,midas", "samsung,exynos4412", "samsung,exynos4";
+>> > +
+>> > +       memory@40000000 {
+>> > +               device_type = "memory";
+>> > +               reg =  <0x40000000 0x40000000>;
+>>
+>> I think each board has the same memory so maybe this can be made part
+>> of midas.dtsi?
+>
+> T0 and M3 have 2GB of RAM, trats2/M0 have 1GB.
 
-Signed-off-by: Simon Shields <simon@lineageos.org>
----
- .../bindings/input/touchscreen/mms114.txt          |  8 ++--
- drivers/input/touchscreen/mms114.c                 | 53 +++++++++++++++++++---
- include/linux/platform_data/mms114.h               |  6 +++
- 3 files changed, 56 insertions(+), 11 deletions(-)
+Ah, ok.
 
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/mms114.txt b/Documentation/devicetree/bindings/input/touchscreen/mms114.txt
-index 89d4c56c5671..733411020ced 100644
---- a/Documentation/devicetree/bindings/input/touchscreen/mms114.txt
-+++ b/Documentation/devicetree/bindings/input/touchscreen/mms114.txt
-@@ -1,15 +1,15 @@
--* MELFAS MMS114 touchscreen controller
-+* MELFAS MMS114/MMS152 touchscreen controller
- 
- Required properties:
--- compatible: must be "melfas,mms114"
-+- compatible: "melfas,mms114" for MMS114, or "melfas,mms152" for MMS152
- - reg: I2C address of the chip
- - interrupts: interrupt to which the chip is connected
- - x-size: horizontal resolution of touchscreen
- - y-size: vertical resolution of touchscreen
- 
- Optional properties:
--- contact-threshold:
--- moving-threshold:
-+- contact-threshold: only with "melfas,mms114"
-+- moving-threshold: only with "melfas,mms114"
- - x-invert: invert X axis
- - y-invert: invert Y axis
- 
-diff --git a/drivers/input/touchscreen/mms114.c b/drivers/input/touchscreen/mms114.c
-index e5eeb6311f7d..9ecda193802b 100644
---- a/drivers/input/touchscreen/mms114.c
-+++ b/drivers/input/touchscreen/mms114.c
-@@ -10,6 +10,7 @@
- #include <linux/module.h>
- #include <linux/delay.h>
- #include <linux/of.h>
-+#include <linux/of_device.h>
- #include <linux/i2c.h>
- #include <linux/input/mt.h>
- #include <linux/interrupt.h>
-@@ -33,6 +34,9 @@
- #define MMS114_INFOMATION		0x10
- #define MMS114_TSP_REV			0xF0
- 
-+#define MMS152_FW_REV			0xE1
-+#define MMS152_COMPAT_GROUP		0xF2
-+
- /* Minimum delay time is 50us between stop and start signal of i2c */
- #define MMS114_I2C_DELAY		50
- 
-@@ -251,12 +255,27 @@ static int mms114_get_version(struct mms114_data *data)
- 	u8 buf[6];
- 	int error;
- 
--	error = __mms114_read_reg(data, MMS114_TSP_REV, 6, buf);
--	if (error < 0)
--		return error;
-+	switch (data->pdata->type) {
-+	case TYPE_MMS152:
-+		error = __mms114_read_reg(data, MMS152_FW_REV, 3, buf);
-+		if (error < 0)
-+			return error;
-+		buf[3] = i2c_smbus_read_byte_data(data->client,
-+			MMS152_COMPAT_GROUP);
-+		if (buf[3] < 0)
-+			return buf[3];
-+		dev_info(dev, "TSP FW Rev: bootloader 0x%x / core 0x%x / config 0x%x, Compat group: %c\n",
-+				buf[0], buf[1], buf[2], buf[3]);
-+		break;
-+	case TYPE_MMS114:
-+		error = __mms114_read_reg(data, MMS114_TSP_REV, 6, buf);
-+		if (error < 0)
-+			return error;
- 
--	dev_info(dev, "TSP Rev: 0x%x, HW Rev: 0x%x, Firmware Ver: 0x%x\n",
--		 buf[0], buf[1], buf[3]);
-+		dev_info(dev, "TSP Rev: 0x%x, HW Rev: 0x%x, Firmware Ver: 0x%x\n",
-+			 buf[0], buf[1], buf[3]);
-+		break;
-+	}
- 
- 	return 0;
- }
-@@ -271,6 +290,10 @@ static int mms114_setup_regs(struct mms114_data *data)
- 	if (error < 0)
- 		return error;
- 
-+	/* MMS152 has no configuration or power on registers */
-+	if (data->pdata->type == TYPE_MMS152)
-+		return 0;
-+
- 	error = mms114_set_active(data, true);
- 	if (error < 0)
- 		return error;
-@@ -391,6 +414,8 @@ static struct mms114_platform_data *mms114_parse_dt(struct device *dev)
- 		return NULL;
- 	}
- 
-+	pdata->type = (enum mms_type)of_device_get_match_data(dev);
-+
- 	if (of_property_read_u32(np, "x-size", &pdata->x_size)) {
- 		dev_err(dev, "failed to get x-size property\n");
- 		return NULL;
-@@ -456,7 +481,15 @@ static int mms114_probe(struct i2c_client *client,
- 	data->input_dev = input_dev;
- 	data->pdata = pdata;
- 
--	input_dev->name = "MELFAS MMS114 Touchscreen";
-+	switch (pdata->type) {
-+	case TYPE_MMS114:
-+		input_dev->name = "MELFAS MMS114 Touchscreen";
-+		break;
-+	case TYPE_MMS152:
-+		input_dev->name = "MELFAS MMS152 Touchscreen";
-+		break;
-+	}
-+
- 	input_dev->id.bustype = BUS_I2C;
- 	input_dev->dev.parent = &client->dev;
- 	input_dev->open = mms114_input_open;
-@@ -569,7 +602,13 @@ MODULE_DEVICE_TABLE(i2c, mms114_id);
- 
- #ifdef CONFIG_OF
- static const struct of_device_id mms114_dt_match[] = {
--	{ .compatible = "melfas,mms114" },
-+	{
-+		.compatible = "melfas,mms114",
-+		.data = (void *)TYPE_MMS114,
-+	}, {
-+		.compatible = "melfas,mms152",
-+		.data = (void *)TYPE_MMS152,
-+	},
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, mms114_dt_match);
-diff --git a/include/linux/platform_data/mms114.h b/include/linux/platform_data/mms114.h
-index 5722ebfb2738..58e4c463bf0c 100644
---- a/include/linux/platform_data/mms114.h
-+++ b/include/linux/platform_data/mms114.h
-@@ -10,6 +10,11 @@
- #ifndef __LINUX_MMS114_H
- #define __LINUX_MMS114_H
- 
-+enum mms_type {
-+	TYPE_MMS114,
-+	TYPE_MMS152,
-+};
-+
- struct mms114_platform_data {
- 	unsigned int x_size;
- 	unsigned int y_size;
-@@ -17,6 +22,7 @@ struct mms114_platform_data {
- 	unsigned int moving_threshold;
- 	bool x_invert;
- 	bool y_invert;
-+	enum mms_type type;
- 
- 	void (*cfg_pin)(bool);
- };
--- 
-2.15.1
+>
+>>
+>> > +       };
+>>
+>> What about bootargs?
+>
+> Handled by the bootloader - to work around the proprietary bootloader not
+> supporting device tree and requiring hacks to successfully boot a
+> mainline kernel, i'm using kexec from a suitably patched kernel to load
+> and boot the "real" kernel. (This also means one image can be used
+> across all boards).
 
+Could you document it in DTS why bootargs are missing?
+
+Best regards,
+Krzysztof
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
