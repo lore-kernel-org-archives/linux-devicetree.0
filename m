@@ -1,253 +1,180 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v3 2/4] ARM: dts: split trats2 DTS in preparation for
- midas boards
-Date: Wed, 20 Dec 2017 16:38:25 +0100
-Message-ID: <CAJKOXPcdKmhKZ71hmpyiJszhA5DtVpet5irfAuqc5-QNW2i62g@mail.gmail.com>
-References: <20171218123805.26345-1-simon@lineageos.org> <20171218123805.26345-3-simon@lineageos.org>
- <CAJKOXPdzAvsaAOo6P+UA8VWYd7YjmtSqtkyKtNaz7jNdUXUH4A@mail.gmail.com> <20171220152713.GA23127@lineageos.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20171220152713.GA23127@lineageos.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Simon Shields <simon@lineageos.org>
-Cc: linux-samsung-soc@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>, =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= <b.zolnierkie@samsung.com>
+From: Simon Shields <simon@lineageos.org>
+Subject: [PATCH v2] Input: mms114 - add support for mms152
+Date: Thu, 21 Dec 2017 02:38:10 +1100
+Message-ID: <20171220153810.1961-1-simon@lineageos.org>
+References: <20171218124933.1803-1-simon@lineageos.org>
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20171218124933.1803-1-simon@lineageos.org>
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, Andi Shyti <andi.shyti@samsung.com>, Simon Shields <simon@lineageos.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 20, 2017 at 4:27 PM, Simon Shields <simon@lineageos.org> wrote:
+MMS152 has no configuration registers, but the packet format used in
+interrupts is identical to mms114.
 
-(...)
+Signed-off-by: Simon Shields <simon@lineageos.org>
+---
+ .../bindings/input/touchscreen/mms114.txt          |  8 ++--
+ drivers/input/touchscreen/mms114.c                 | 53 +++++++++++++++++++---
+ include/linux/platform_data/mms114.h               |  6 +++
+ 3 files changed, 56 insertions(+), 11 deletions(-)
 
->> > @@ -68,17 +60,8 @@
->> >                         regulator-name = "CAM_SENSOR_A";
->> >                         regulator-min-microvolt = <2800000>;
->> >                         regulator-max-microvolt = <2800000>;
->> > -                       gpio = <&gpm0 2 GPIO_ACTIVE_HIGH>;
->> > -                       enable-active-high;
->> > -               };
->> > -
->> > -               lcd_vdd3_reg: voltage-regulator-2 {
->> > -                       compatible = "regulator-fixed";
->> > -                       regulator-name = "LCD_VDD_2.2V";
->> > -                       regulator-min-microvolt = <2200000>;
->> > -                       regulator-max-microvolt = <2200000>;
->> > -                       gpio = <&gpc0 1 GPIO_ACTIVE_HIGH>;
->> >                         enable-active-high;
->> > +                       status = "disabled";
->>
->> Why disabled?
->
-> The GPIO which controls CAM_SENSOR_A differs between boards (gpm0-2 on
-> s3, gpm0-7 on t0).
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/mms114.txt b/Documentation/devicetree/bindings/input/touchscreen/mms114.txt
+index 89d4c56c5671..733411020ced 100644
+--- a/Documentation/devicetree/bindings/input/touchscreen/mms114.txt
++++ b/Documentation/devicetree/bindings/input/touchscreen/mms114.txt
+@@ -1,15 +1,15 @@
+-* MELFAS MMS114 touchscreen controller
++* MELFAS MMS114/MMS152 touchscreen controller
+ 
+ Required properties:
+-- compatible: must be "melfas,mms114"
++- compatible: "melfas,mms114" for MMS114, or "melfas,mms152" for MMS152
+ - reg: I2C address of the chip
+ - interrupts: interrupt to which the chip is connected
+ - x-size: horizontal resolution of touchscreen
+ - y-size: vertical resolution of touchscreen
+ 
+ Optional properties:
+-- contact-threshold:
+-- moving-threshold:
++- contact-threshold: only with "melfas,mms114"
++- moving-threshold: only with "melfas,mms114"
+ - x-invert: invert X axis
+ - y-invert: invert Y axis
+ 
+diff --git a/drivers/input/touchscreen/mms114.c b/drivers/input/touchscreen/mms114.c
+index e5eeb6311f7d..9ecda193802b 100644
+--- a/drivers/input/touchscreen/mms114.c
++++ b/drivers/input/touchscreen/mms114.c
+@@ -10,6 +10,7 @@
+ #include <linux/module.h>
+ #include <linux/delay.h>
+ #include <linux/of.h>
++#include <linux/of_device.h>
+ #include <linux/i2c.h>
+ #include <linux/input/mt.h>
+ #include <linux/interrupt.h>
+@@ -33,6 +34,9 @@
+ #define MMS114_INFOMATION		0x10
+ #define MMS114_TSP_REV			0xF0
+ 
++#define MMS152_FW_REV			0xE1
++#define MMS152_COMPAT_GROUP		0xF2
++
+ /* Minimum delay time is 50us between stop and start signal of i2c */
+ #define MMS114_I2C_DELAY		50
+ 
+@@ -251,12 +255,27 @@ static int mms114_get_version(struct mms114_data *data)
+ 	u8 buf[6];
+ 	int error;
+ 
+-	error = __mms114_read_reg(data, MMS114_TSP_REV, 6, buf);
+-	if (error < 0)
+-		return error;
++	switch (data->pdata->type) {
++	case TYPE_MMS152:
++		error = __mms114_read_reg(data, MMS152_FW_REV, 3, buf);
++		if (error < 0)
++			return error;
++		buf[3] = i2c_smbus_read_byte_data(data->client,
++			MMS152_COMPAT_GROUP);
++		if (buf[3] < 0)
++			return buf[3];
++		dev_info(dev, "TSP FW Rev: bootloader 0x%x / core 0x%x / config 0x%x, Compat group: %c\n",
++				buf[0], buf[1], buf[2], buf[3]);
++		break;
++	case TYPE_MMS114:
++		error = __mms114_read_reg(data, MMS114_TSP_REV, 6, buf);
++		if (error < 0)
++			return error;
+ 
+-	dev_info(dev, "TSP Rev: 0x%x, HW Rev: 0x%x, Firmware Ver: 0x%x\n",
+-		 buf[0], buf[1], buf[3]);
++		dev_info(dev, "TSP Rev: 0x%x, HW Rev: 0x%x, Firmware Ver: 0x%x\n",
++			 buf[0], buf[1], buf[3]);
++		break;
++	}
+ 
+ 	return 0;
+ }
+@@ -271,6 +290,10 @@ static int mms114_setup_regs(struct mms114_data *data)
+ 	if (error < 0)
+ 		return error;
+ 
++	/* MMS152 has no configuration or power on registers */
++	if (data->pdata->type == TYPE_MMS152)
++		return 0;
++
+ 	error = mms114_set_active(data, true);
+ 	if (error < 0)
+ 		return error;
+@@ -391,6 +414,8 @@ static struct mms114_platform_data *mms114_parse_dt(struct device *dev)
+ 		return NULL;
+ 	}
+ 
++	pdata->type = (enum mms_type)of_device_get_match_data(dev);
++
+ 	if (of_property_read_u32(np, "x-size", &pdata->x_size)) {
+ 		dev_err(dev, "failed to get x-size property\n");
+ 		return NULL;
+@@ -456,7 +481,15 @@ static int mms114_probe(struct i2c_client *client,
+ 	data->input_dev = input_dev;
+ 	data->pdata = pdata;
+ 
+-	input_dev->name = "MELFAS MMS114 Touchscreen";
++	switch (pdata->type) {
++	case TYPE_MMS114:
++		input_dev->name = "MELFAS MMS114 Touchscreen";
++		break;
++	case TYPE_MMS152:
++		input_dev->name = "MELFAS MMS152 Touchscreen";
++		break;
++	}
++
+ 	input_dev->id.bustype = BUS_I2C;
+ 	input_dev->dev.parent = &client->dev;
+ 	input_dev->open = mms114_input_open;
+@@ -569,7 +602,13 @@ MODULE_DEVICE_TABLE(i2c, mms114_id);
+ 
+ #ifdef CONFIG_OF
+ static const struct of_device_id mms114_dt_match[] = {
+-	{ .compatible = "melfas,mms114" },
++	{
++		.compatible = "melfas,mms114",
++		.data = (void *)TYPE_MMS114,
++	}, {
++		.compatible = "melfas,mms152",
++		.data = (void *)TYPE_MMS152,
++	},
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, mms114_dt_match);
+diff --git a/include/linux/platform_data/mms114.h b/include/linux/platform_data/mms114.h
+index 5722ebfb2738..58e4c463bf0c 100644
+--- a/include/linux/platform_data/mms114.h
++++ b/include/linux/platform_data/mms114.h
+@@ -10,6 +10,11 @@
+ #ifndef __LINUX_MMS114_H
+ #define __LINUX_MMS114_H
+ 
++enum mms_type {
++	TYPE_MMS114,
++	TYPE_MMS152,
++};
++
+ struct mms114_platform_data {
+ 	unsigned int x_size;
+ 	unsigned int y_size;
+@@ -17,6 +22,7 @@ struct mms114_platform_data {
+ 	unsigned int moving_threshold;
+ 	bool x_invert;
+ 	bool y_invert;
++	enum mms_type type;
+ 
+ 	void (*cfg_pin)(bool);
+ };
+-- 
+2.15.1
 
-Hmm, okay, makes sense then.
-
->
->>
->> >                 };
->> >
->> >                 cam_af_reg: voltage-regulator-3 {
->> > @@ -86,17 +69,8 @@
->> >                         regulator-name = "CAM_AF";
->> >                         regulator-min-microvolt = <2800000>;
->> >                         regulator-max-microvolt = <2800000>;
->> > -                       gpio = <&gpm0 4 GPIO_ACTIVE_HIGH>;
->> > -                       enable-active-high;
->> > -               };
->> > -
->> > -               ps_als_reg: voltage-regulator-5 {
->> > -                       compatible = "regulator-fixed";
->> > -                       regulator-name = "LED_A_3.0V";
->> > -                       regulator-min-microvolt = <3000000>;
->> > -                       regulator-max-microvolt = <3000000>;
->> > -                       gpio = <&gpj0 5 GPIO_ACTIVE_HIGH>;
->> >                         enable-active-high;
->> > +                       status = "disabled";
->>
->> Why disabled?
->
-> Same as above. gpm0-4 on s3, gpm1-1 on t0.
->>
->> >                 };
->> >
->> >                 vsil12: voltage-regulator-6 {
->> > @@ -227,37 +201,6 @@
->> >                 };
->> >         };
->> >
->> > -       i2c_ak8975: i2c-gpio-0 {
->> > -               compatible = "i2c-gpio";
->> > -               gpios = <&gpy2 4 GPIO_ACTIVE_HIGH>, <&gpy2 5 GPIO_ACTIVE_HIGH>;
->> > -               i2c-gpio,delay-us = <2>;
->> > -               #address-cells = <1>;
->> > -               #size-cells = <0>;
->> > -               status = "okay";
->> > -
->> > -               ak8975@c {
->> > -                       compatible = "asahi-kasei,ak8975";
->> > -                       reg = <0x0c>;
->> > -                       gpios = <&gpj0 7 GPIO_ACTIVE_HIGH>;
->> > -               };
->> > -       };
->> > -
->> > -       i2c_cm36651: i2c-gpio-2 {
->> > -               compatible = "i2c-gpio";
->> > -               gpios = <&gpf0 0 GPIO_ACTIVE_LOW>, <&gpf0 1 GPIO_ACTIVE_LOW>;
->> > -               i2c-gpio,delay-us = <2>;
->> > -               #address-cells = <1>;
->> > -               #size-cells = <0>;
->> > -
->> > -               cm36651@18 {
->> > -                       compatible = "capella,cm36651";
->> > -                       reg = <0x18>;
->> > -                       interrupt-parent = <&gpx0>;
->> > -                       interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
->> > -                       vled-supply = <&ps_als_reg>;
->> > -               };
->> > -       };
->> > -
->> >         i2c-mhl {
->> >                 compatible = "i2c-gpio";
->> >                 gpios = <&gpf0 4 GPIO_ACTIVE_HIGH>, <&gpf0 6 GPIO_ACTIVE_HIGH>;
->> > @@ -296,8 +239,6 @@
->> >                                   <&clock CLK_MOUT_CAM1>;
->> >                 assigned-clock-parents = <&clock CLK_XUSBXTI>,
->> >                                          <&clock CLK_XUSBXTI>;
->> > -
->> > -
->> >         };
->> >
->> >         wlan_pwrseq: sdhci3-pwrseq {
->> > @@ -454,36 +395,7 @@
->> >         samsung,burst-clock-frequency = <500000000>;
->> >         samsung,esc-clock-frequency = <20000000>;
->> >         samsung,pll-clock-frequency = <24000000>;
->> > -       status = "okay";
->> > -
->> > -       panel@0 {
->> > -               compatible = "samsung,s6e8aa0";
->> > -               reg = <0>;
->> > -               vdd3-supply = <&lcd_vdd3_reg>;
->> > -               vci-supply = <&ldo25_reg>;
->> > -               reset-gpios = <&gpf2 1 GPIO_ACTIVE_HIGH>;
->> > -               power-on-delay= <50>;
->> > -               reset-delay = <100>;
->> > -               init-delay = <100>;
->> > -               flip-horizontal;
->> > -               flip-vertical;
->> > -               panel-width-mm = <58>;
->> > -               panel-height-mm = <103>;
->> > -
->> > -               display-timings {
->> > -                       timing-0 {
->> > -                               clock-frequency = <57153600>;
->> > -                               hactive = <720>;
->> > -                               vactive = <1280>;
->> > -                               hfront-porch = <5>;
->> > -                               hback-porch = <5>;
->> > -                               hsync-len = <5>;
->> > -                               vfront-porch = <13>;
->> > -                               vback-porch = <1>;
->> > -                               vsync-len = <2>;
->> > -                       };
->> > -               };
->> > -       };
->> > +       status = "disabled";
->>
->> It is already disabled by exynos4.dtsi, no need to duplicate properties.
->>
->> >  };
->> >
->> >  &exynos_usbphy {
->> > @@ -603,7 +515,7 @@
->> >         samsung,i2c-max-bus-freq = <400000>;
->> >         pinctrl-0 = <&i2c0_bus>;
->> >         pinctrl-names = "default";
->> > -       status = "okay";
->> > +       status = "disabled";
->>
->> I do not get this node. It sits in midas.dtsi and s3.dtsi just enables
->> it. Why not enabling it here?
-> Initially, I thought that T0 had some extra regulator that needed to be enabled,
-> but in reality it's just a different vdda supply - so vdda should be
-> moved down to galaxy-s3
-
-Yes, please and then only for s5c73m3@3c. The i2c node should stay
-enabled, I think.
-
->
->>
->> >         s5c73m3@3c {
->> >                 compatible = "samsung,s5c73m3";
->> > @@ -635,18 +547,7 @@
->> >         samsung,i2c-max-bus-freq = <400000>;
->> >         pinctrl-0 = <&i2c3_bus>;
->> >         pinctrl-names = "default";
->> > -       status = "okay";
->> > -
->> > -       mms114-touchscreen@48 {
->> > -               compatible = "melfas,mms114";
->> > -               reg = <0x48>;
->> > -               interrupt-parent = <&gpm2>;
->> > -               interrupts = <3 IRQ_TYPE_EDGE_FALLING>;
->> > -               x-size = <720>;
->> > -               y-size = <1280>;
->> > -               avdd-supply = <&ldo23_reg>;
->> > -               vdd-supply = <&ldo24_reg>;
->> > -       };
->> > +       status = "disabled";
->> >  };
->> >
->> >  &i2c_4 {
->> > @@ -827,6 +728,7 @@
->> >                                 regulator-name = "CAM_SENSOR_CORE_1.2V";
->> >                                 regulator-min-microvolt = <1200000>;
->> >                                 regulator-max-microvolt = <1200000>;
->> > +                               status = "okay";
->>
->> Regulator should not be disabled or enabled. It is not a device. I do
->> not get the logic behind...
->>
->> The ''status = disabled" usually is added in DTSI files to nodes which
->> are not fully configured at this point, e.g. they require external
->> resources (clocks, regulators). These external resources will be
->> provided when extending in DTS (or further DTSI) while enabling it.
->> However regulator has always all necessary resources.
->>
->
-> Ack. This one shouldn't be here.
->
->> >                         };
->> >
->> >                         ldo18_reg: LDO18 {
->> > @@ -874,9 +776,7 @@
->> >                         };
->> >
->> >                         ldo25_reg: LDO25 {
->> > -                               regulator-name = "LCD_VCC_3.3V";
->> > -                               regulator-min-microvolt = <2800000>;
->> > -                               regulator-max-microvolt = <2800000>;
->> > +                               status = "disabled";
->>
->> Ditto.
->
-> In this case, s3 and t0 have different regulator voltages/names
-> (3.0V vs 2.8V), but it doesn't really seem to make sense to me
-> to leave ldo25 out of the common dts altogether, since it's there on all
-> boards. If you would prefer, I can remove ldo25 and leave it completely
-> in the t0/s3 config files
-
-So leave empty ldo25, like:
-ldo25_reg: LDO25 {
-    regulator-name = "LDO25";
-};
-
-Something like buck8_reg in
-arch/arm/boot/dts/exynos4412-odroid-common.dtsi. The point is to
-provide entire description of max77686 regulators in basic DTSI. The
-driver anyway knows the constraints (min/max voltages) so in case of
-missing entries in DTS, default will be applied. Then in child-DTS you
-can customize the voltage and/or name to necessary value.
-
-Best regards,
-Krzysztof
