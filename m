@@ -1,33 +1,84 @@
-From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [PATCH v2 0/5] Add sound support
-Date: Wed, 20 Dec 2017 10:55:45 +0100
-Message-ID: <20171220095545.gboeqj24tjrdhrvi@verge.net.au>
-References: <1513621361-10944-1-git-send-email-biju.das@bp.renesas.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 5/5] ARM: dts: iwg20d-q7-common: Enable SGTL5000 audio
+ codec
+Date: Wed, 20 Dec 2017 10:58:06 +0100
+Message-ID: <20171220095806.jqtkmximxybsq6tr@verge.net.au>
+References: <1513103111-45830-1-git-send-email-biju.das@bp.renesas.com>
+ <1513103111-45830-6-git-send-email-biju.das@bp.renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1513621361-10944-1-git-send-email-biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1513103111-45830-6-git-send-email-biju.das@bp.renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Magnus Damm <magnus.damm@gmail.com>, Chris Paterson <chris.paterson2@renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 18, 2017 at 06:22:36PM +0000, Biju Das wrote:
-> This series aims to add sound support for iWave RZ/G1M board.
+On Tue, Dec 12, 2017 at 06:25:11PM +0000, Biju Das wrote:
+> This patch enables SGTL5000 audio codec on the carrier board.
 > 
-> This patch series has below dependency
-> 1)https://patchwork.kernel.org/patch/10108041/
-> 
-> Biju Das (5):
->   ARM: dts: iwg20d-q7-common: Sound PIO support
->   ARM: dts: iwg20d-q7-common: Sound DMA support on DTS
->   ARM: dts: iwg20d-q7-common: Sound DMA support via BUSIF on DTS
->   ARM: dts: iwg20d-q7-common: Sound DMA support via SRC on DTS
->   ARM: dts: iwg20d-q7-common: Sound DMA support via DVC on DTS
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 
-Thanks, series applied.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Somehow I missed applying this one.
+I have now done so with the minor update noted below.
+
+> ---
+>  arch/arm/boot/dts/iwg20d-q7-common.dtsi | 24 ++++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/iwg20d-q7-common.dtsi b/arch/arm/boot/dts/iwg20d-q7-common.dtsi
+> index 54470c6..2070b14 100644
+> --- a/arch/arm/boot/dts/iwg20d-q7-common.dtsi
+> +++ b/arch/arm/boot/dts/iwg20d-q7-common.dtsi
+> @@ -20,6 +20,20 @@
+>  		stdout-path = "serial0:115200n8";
+>  	};
+>  
+> +	audio_clock: audio_clock {
+> +		compatible = "fixed-clock";
+> +		#clock-cells = <0>;
+> +		clock-frequency = <26000000>;
+> +	};
+> +
+> +	reg_1p5v: 1p5v {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "1P5V";
+> +		regulator-min-microvolt = <1500000>;
+> +		regulator-max-microvolt = <1500000>;
+> +		regulator-always-on;
+> +	};
+> +
+>  	vcc_sdhi1: regulator-vcc-sdhi1 {
+>  		compatible = "regulator-fixed";
+>  
+> @@ -83,6 +97,16 @@
+>  		compatible = "ti,bq32000";
+>  		reg = <0x68>;
+>  	};
+> +
+> +	sgtl5000: codec@0a {
+
+s/@0a/@a/
+
+Base addresses should not have a leading 0.
+
+# make dtbs W=1
+DTC     arch/arm/boot/dts/r8a7743-iwg20d-q7-dbcm-ca.dtb
+arch/arm/boot/dts/r8a7743-iwg20d-q7.dtb: Warning (unit_address_format): Node /soc/i2c@e6530000/codec@0a unit name should not have leading 0s
+
+> +		compatible = "fsl,sgtl5000";
+> +		#sound-dai-cells = <0>;
+> +		reg = <0x0a>;
+> +		clocks = <&audio_clock>;
+> +		VDDA-supply = <&reg_3p3v>;
+> +		VDDIO-supply = <&reg_3p3v>;
+> +		VDDD-supply = <&reg_1p5v>;
+> +	};
+>  };
+>  
+>  &pci0 {
+> -- 
+> 1.9.1
+> 
