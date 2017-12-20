@@ -1,75 +1,81 @@
-From: Dhaval Rajeshbhai Shah <DSHAH-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCH v5 1/2] dt-bindings: misc: Add DT bindings to xlnx_vcu
- driver
-Date: Wed, 20 Dec 2017 03:00:10 +0000
-Message-ID: <BY2PR0201MB1879A92CB5FE024F0984EF82C10C0@BY2PR0201MB1879.namprd02.prod.outlook.com>
-References: <6758f505-2940-feb9-a14a-9d5e3962f7f2@infradead.org>
- <1513577732-10651-1-git-send-email-dshah@xilinx.com>
- <1513577732-10651-2-git-send-email-dshah@xilinx.com>
- <20171219230953.bj5pbo535bzszant@rob-hp-laptop>
+From: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH] PCI: Mediatek: clear irq status after irq dispathed to
+ avoid reentry
+Date: Wed, 20 Dec 2017 11:08:15 +0800
+Message-ID: <1513739295.18782.1.camel@mtkswgap22>
+References: <1513738334-26213-1-git-send-email-honghui.zhang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171219230953.bj5pbo535bzszant@rob-hp-laptop>
-Content-Language: en-US
+In-Reply-To: <1513738334-26213-1-git-send-email-honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Hyun Kwon <hyunk-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+To: honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Cc: bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, hongkun.cao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, xinping.qian-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On Wed, 2017-12-20 at 10:52 +0800, honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
+> From: Honghui Zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> 
+> There maybe a same irq reentry scenario after irq received in current
+> irq handle flow:
+> 	EP device		PCIe host driver	EP driver
+> 1. issue an irq
+> 			2. received irq
+> 			3. clear irq status
+> 			4. dispatch irq
+> 						5. clear irq source
+> The irq status was not successfully cleared at step 2 since the irq
+> source was not cleared yet. So the PCIe host driver may receive the
+> same irq after step 5. Then there's an irq reentry occurred.
+> Even worse, if the reentry irq was not an irq that EP driver expected,
+> it may not handle the irq. Then we may run into the dead loop from
+> step 2 to step 4.
+> Clear the irq status after irq have been dispatched to avoid the irq
+> reentry.
+> 
+> Signed-off-by: Honghui Zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> ---
+>  drivers/pci/host/pcie-mediatek.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/pci/host/pcie-mediatek.c b/drivers/pci/host/pcie-mediatek.c
+> index db93efd..3248771 100644
+> --- a/drivers/pci/host/pcie-mediatek.c
+> +++ b/drivers/pci/host/pcie-mediatek.c
+> @@ -605,11 +605,11 @@ static irqreturn_t mtk_pcie_intr_handler(int irq, void *data)
+>  
+>  	while ((status = readl(port->base + PCIE_INT_STATUS)) & INTX_MASK) {
+>  		for_each_set_bit_from(bit, &status, PCI_NUM_INTX + INTX_SHIFT) {
+> -			/* Clear the INTx */
+> -			writel(1 << bit, port->base + PCIE_INT_STATUS);
+>  			virq = irq_find_mapping(port->irq_domain,
+>  						bit - INTX_SHIFT);
+>  			generic_handle_irq(virq);
+> +			/* Clear the INTx */
+> +			writel(1 << bit, port->base + PCIE_INT_STATUS);
+>  		}
+>  	}
+>  
+> @@ -619,10 +619,10 @@ static irqreturn_t mtk_pcie_intr_handler(int irq, void *data)
+>  
+>  			while ((imsi_status = readl(port->base + PCIE_IMSI_STATUS))) {
+>  				for_each_set_bit(bit, &imsi_status, MTK_MSI_IRQS_NUM) {
+> -					/* Clear the MSI */
+> -					writel(1 << bit, port->base + PCIE_IMSI_STATUS);
+>  					virq = irq_find_mapping(port->msi_domain, bit);
+>  					generic_handle_irq(virq);
+> +					/* Clear the MSI */
+> +					writel(1 << bit, port->base + PCIE_IMSI_STATUS);
+>  				}
+>  			}
+>  			/* Clear MSI interrupt status */
 
-> -----Original Message-----
-> From: Rob Herring [mailto:robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org]
-> Sent: Tuesday, December 19, 2017 3:10 PM
-> To: Dhaval Rajeshbhai Shah <DSHAH-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> Cc: arnd-r2nGTMty4D4@public.gmane.org; gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org; rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org;
-> mark.rutland-5wv7dgnIgG8@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-
-> kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org; Hyun Kwon
-> <hyunk-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>; Dhaval Rajeshbhai Shah <DSHAH-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> Subject: Re: [PATCH v5 1/2] dt-bindings: misc: Add DT bindings to xlnx_vc=
-u
-> driver
->=20
-> On Sun, Dec 17, 2017 at 10:15:31PM -0800, Dhaval Shah wrote:
-> > Add Device Tree binding document for logicoreIP. This logicoreIP
-> > provides the isolation between the processing system and programmable
-> > logic. Also provides the clock related information.
-> >
-> > Signed-off-by: Dhaval Shah <dshah-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> > ---
-> > Chnages since v5:
-> >  No Changes.
-> > Chnages since v4:
-> >  No Changes.
-> > Chnages since v3:
-> >  * Use "dt-bindings: misc: ..." for the subject.
-> > Changes since v2:
-> >  * Describe the h/w
-> >  * compatible string is updated to make it more specific
-> >    based on the logicoreIP version.
-> >  * Removed that encoder and decoder child nodes and relatd properties a=
-s
-> that
-> >    will be a separate driver and dts nodes. other team is working on th=
-at.
-> >  * Updated to use as a single driver.
-> >
-> >  .../devicetree/bindings/misc/xlnx,vcu.txt          | 31 ++++++++++++++=
-++++++++
-> >  1 file changed, 31 insertions(+)
-> >  create mode 100644
-> > Documentation/devicetree/bindings/misc/xlnx,vcu.txt
->=20
-> Please add Reviewed-by tags when posting new versions.
->=20
-> Rob
+Acked-by: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-Sure. I will add this tag in the next version of patch.
+Thanks.
 
-Thanks & Regards,
-Dhaval
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
