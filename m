@@ -1,34 +1,50 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V2 4/9] devicetree: bindings: stm32: add support of
- STM32MP157
-Date: Wed, 20 Dec 2017 12:24:53 -0600
-Message-ID: <20171220182453.43zvzxapxmwzvpq4@rob-hp-laptop>
-References: <1513610272-7824-1-git-send-email-ludovic.Barre@st.com>
- <1513610272-7824-5-git-send-email-ludovic.Barre@st.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v6] i2c: Add support for NXP PCA984x family.
+Date: Wed, 20 Dec 2017 12:27:45 -0600
+Message-ID: <20171220182745.lo6i27ucfhjekmjp@rob-hp-laptop>
+References: <07bf7aae-59ab-cb2b-dcb0-95ec2de66633@axentia.se>
+ <20171218174506.20543-1-adrian.fiergolski@cern.ch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-i2c-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1513610272-7824-5-git-send-email-ludovic.Barre-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ludovic Barre <ludovic.Barre-qxv4g6HH51o@public.gmane.org>
-Cc: Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Gerald Baeza <gerald.baeza-qxv4g6HH51o@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20171218174506.20543-1-adrian.fiergolski@cern.ch>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Adrian Fiergolski <adrian.fiergolski@cern.ch>
+Cc: linux-i2c@vger.kernel.org, peda@axentia.se, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 18, 2017 at 04:17:47PM +0100, Ludovic Barre wrote:
-> From: Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
+On Mon, Dec 18, 2017 at 06:45:06PM +0100, Adrian Fiergolski wrote:
+> This patch extends the current i2c-mux-pca954x driver and adds support for
+> a newer PCA984x family of the I2C switches and multiplexers from NXP.
 > 
-> This patch adds STM32MP157 SoC bindings.
-> 
-> Signed-off-by: Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
+> Signed-off-by: Adrian Fiergolski <adrian.fiergolski@cern.ch>
 > ---
->  Documentation/devicetree/bindings/arm/stm32.txt | 1 +
->  1 file changed, 1 insertion(+)
+>  .../devicetree/bindings/i2c/i2c-mux-pca954x.txt    |  5 ++-
+>  drivers/i2c/muxes/Kconfig                          |  6 ++--
+>  drivers/i2c/muxes/i2c-mux-pca954x.c                | 38 +++++++++++++++++++---
+>  3 files changed, 41 insertions(+), 8 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt b/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
+> index aa097045a10e..b428bc0d81b1 100644
+> --- a/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
+> +++ b/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
+> @@ -1,10 +1,13 @@
+>  * NXP PCA954x I2C bus switch
+>  
+> +The driver supports NXP PCA954x and PCA984x I2C mux/switch devices.
+> +
+>  Required Properties:
+>  
+>    - compatible: Must contain one of the following.
+>      "nxp,pca9540", "nxp,pca9542", "nxp,pca9543", "nxp,pca9544",
+> -    "nxp,pca9545", "nxp,pca9546", "nxp,pca9547", "nxp,pca9548"
+> +    "nxp,pca9545", "nxp,pca9546", "nxp,pca9547", "nxp,pca9548",
+> +    "nxp,pca9846", "nxp,pca9847", "nxp,pca9848", "nxp,pca9849"
 
-"dt-bindings: ..." is the preferred subject prefix. Otherwise,
+The format here should be 1 valid combination of compatibles per line. 
+So it should be clear what are valid fallbacks as Peter suggested.
 
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  
+>    - reg: The I2C address of the device.
+>  
