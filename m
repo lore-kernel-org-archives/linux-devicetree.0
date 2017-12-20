@@ -1,61 +1,128 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH v4 33/36] net: faraday add nds32 support.
-Date: Wed, 20 Dec 2017 10:58:19 +0100
-Message-ID: <CAMuHMdXp5b-Y79kaKgmDRshnpN2=VEd-f3v-6QW+6mUqv6YW-A@mail.gmail.com>
-References: <95be78502aa406f106ecbe87e751a45333883b1f.1513577007.git.green.hu@gmail.com>
- <201712201744.gsBDa4yK%fengguang.wu@intel.com>
+From: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Subject: RE: [PATCH 5/5] ARM: dts: iwg20d-q7-common: Enable SGTL5000 audio
+ codec
+Date: Wed, 20 Dec 2017 10:02:54 +0000
+Message-ID: <KL1PR06MB1702453058AFB66AA8110825B80C0@KL1PR06MB1702.apcprd06.prod.outlook.com>
+References: <1513103111-45830-1-git-send-email-biju.das@bp.renesas.com>
+ <1513103111-45830-6-git-send-email-biju.das@bp.renesas.com>
+ <20171220095806.jqtkmximxybsq6tr@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201712201744.gsBDa4yK%fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20171220095806.jqtkmximxybsq6tr-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Greentime Hu <green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, kbuild-all-JC7UmRfGjtg@public.gmane.org, Greentime <greentime-MUIXKm3Oiri1Z/+hSey0Gg@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Linux-Arch <linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vincent Chen <deanbo422-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Al Viro <viro-RmSDqhL/yNMiFSDQTTA3OLVCufUGDwFn@public.gmane.org>, David Howells <dhowells-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Greg KH <greg-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>, ren_guo-Y+KPrCd2zL4AvxtiuMwx3w@public.gmane.org
+To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 20, 2017 at 10:54 AM, kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> wrote:
-> I love your patch! Perhaps something to improve:
+Thanks Simon for this information.
+
+Next time I will make sure that  compiler won't give any warning message wi=
+th make dtbs W=3D1
+
+Regards,
+Biju
+
+> -----Original Message-----
+> From: Simon Horman [mailto:horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org]
+> Sent: 20 December 2017 09:58
+> To: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>; Mark Rutland
+> <mark.rutland-5wv7dgnIgG8@public.gmane.org>; Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>; Magnus
+> Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>; Chris Paterson
+> <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-renesas-
+> soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> Subject: Re: [PATCH 5/5] ARM: dts: iwg20d-q7-common: Enable SGTL5000
+> audio codec
 >
-> [auto build test WARNING on tip/timers/core]
-> [cannot apply to linus/master v4.15-rc4 next-20171220]
-> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+> On Tue, Dec 12, 2017 at 06:25:11PM +0000, Biju Das wrote:
+> > This patch enables SGTL5000 audio codec on the carrier board.
+> >
+> > Signed-off-by: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+> > Reviewed-by: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
 >
-> url:    https://github.com/0day-ci/linux/commits/Greentime-Hu/Andes-nds32-Linux-Kernel/20171220-155937
-> config: sparc64-allyesconfig (attached as .config)
-> compiler: sparc64-linux-gnu-gcc (Debian 7.2.0-11) 7.2.0
-> reproduce:
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # save the attached .config to linux build tree
->         make.cross ARCH=sparc64
+> Somehow I missed applying this one.
+> I have now done so with the minor update noted below.
 >
-> All warnings (new ones prefixed by >>):
+> > ---
+> >  arch/arm/boot/dts/iwg20d-q7-common.dtsi | 24
+> ++++++++++++++++++++++++
+> >  1 file changed, 24 insertions(+)
+> >
+> > diff --git a/arch/arm/boot/dts/iwg20d-q7-common.dtsi
+> b/arch/arm/boot/dts/iwg20d-q7-common.dtsi
+> > index 54470c6..2070b14 100644
+> > --- a/arch/arm/boot/dts/iwg20d-q7-common.dtsi
+> > +++ b/arch/arm/boot/dts/iwg20d-q7-common.dtsi
+> > @@ -20,6 +20,20 @@
+> >  stdout-path =3D "serial0:115200n8";
+> >  };
+> >
+> > +audio_clock: audio_clock {
+> > +compatible =3D "fixed-clock";
+> > +#clock-cells =3D <0>;
+> > +clock-frequency =3D <26000000>;
+> > +};
+> > +
+> > +reg_1p5v: 1p5v {
+> > +compatible =3D "regulator-fixed";
+> > +regulator-name =3D "1P5V";
+> > +regulator-min-microvolt =3D <1500000>;
+> > +regulator-max-microvolt =3D <1500000>;
+> > +regulator-always-on;
+> > +};
+> > +
+> >  vcc_sdhi1: regulator-vcc-sdhi1 {
+> >  compatible =3D "regulator-fixed";
+> >
+> > @@ -83,6 +97,16 @@
+> >  compatible =3D "ti,bq32000";
+> >  reg =3D <0x68>;
+> >  };
+> > +
+> > +sgtl5000: codec@0a {
 >
->    drivers/net/ethernet/faraday/ftmac100.c: In function 'ftmac100_rxdes_set_page':
->>> drivers/net/ethernet/faraday/ftmac100.c:288:18: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
->      rxdes->rxdes3 = (unsigned int)page;
->                      ^
+> s/@0a/@a/
+>
+> Base addresses should not have a leading 0.
+>
+> # make dtbs W=3D1
+> DTC     arch/arm/boot/dts/r8a7743-iwg20d-q7-dbcm-ca.dtb
+> arch/arm/boot/dts/r8a7743-iwg20d-q7.dtb: Warning (unit_address_format):
+> Node /soc/i2c@e6530000/codec@0a unit name should not have leading 0s
+>
+> > +compatible =3D "fsl,sgtl5000";
+> > +#sound-dai-cells =3D <0>;
+> > +reg =3D <0x0a>;
+> > +clocks =3D <&audio_clock>;
+> > +VDDA-supply =3D <&reg_3p3v>;
+> > +VDDIO-supply =3D <&reg_3p3v>;
+> > +VDDD-supply =3D <&reg_1p5v>;
+> > +};
+> >  };
+> >
+> >  &pci0 {
+> > --
+> > 1.9.1
+> >
 
-The proper way to casts pointer to integers is to cast to "uintptr_t".
 
-However, the address is stored in a 32-bit descriptor, which means it can
-not work on 64-bit platforms.
+[https://www2.renesas.eu/media/email/unicef_2017.jpg]
 
-Please make the driver depend on "!64BIT || BROKEN"
+This Christmas, instead of sending out cards, Renesas Electronics Europe ha=
+ve decided to support Unicef with a donation. For further details click her=
+e<https://www.unicef.org/> to find out about the valuable work they do, hel=
+ping children all over the world.
+We would like to take this opportunity to wish you a Merry Christmas and a =
+prosperous New Year.
 
-Cfr. commit 15bfe05c8d6386f1 ("net: ethernet: xilinx: Mark XILINX_LL_TEMAC
-broken on 64-bit")
 
-Gr{oetje,eeting}s,
 
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, B=
+uckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered=
+ No. 04586709.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
