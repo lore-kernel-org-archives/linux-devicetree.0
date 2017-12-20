@@ -1,34 +1,88 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 2/2] arm64: dts: exynos: Fix typo in MSCL clock controller unit address
-Date: Wed, 20 Dec 2017 20:27:02 +0100
-Message-ID: <20171220192702.32515-2-krzk@kernel.org>
-References: <20171220192702.32515-1-krzk@kernel.org>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20171220192702.32515-1-krzk@kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V4 3/7] PCI: tegra: Remove PCI_REASSIGN_ALL_BUS flag for
+ Tegra PCIe
+Date: Wed, 20 Dec 2017 20:30:11 +0100
+Message-ID: <20171220193011.GA31757@ulmo>
+References: <1512723493-865-1-git-send-email-mmaddireddy@nvidia.com>
+ <1512723493-865-4-git-send-email-mmaddireddy@nvidia.com>
+ <20171215173643.GA1050@red-moon>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="G4iJoqBmSsgzjUCe"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20171215173643.GA1050@red-moon>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Cc: Manikanta Maddireddy <mmaddireddy-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, cyndis-/1wQRMveznE@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, vidyas-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, kthota-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Fix typo in unit address of MSCL clock controller (the reg entry is
-correct).
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- arch/arm64/boot/dts/exynos/exynos5433.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+--G4iJoqBmSsgzjUCe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm64/boot/dts/exynos/exynos5433.dtsi b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
-index 0ba5df825eff..3e8311c60d1b 100644
---- a/arch/arm64/boot/dts/exynos/exynos5433.dtsi
-+++ b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
-@@ -468,7 +468,7 @@
- 			clocks = <&xxti>, <&cmu_mif CLK_SCLK_BUS_PLL_ATLAS>;
- 		};
- 
--		cmu_mscl: clock-controller@105d0000 {
-+		cmu_mscl: clock-controller@150d0000 {
- 			compatible = "samsung,exynos5433-cmu-mscl";
- 			reg = <0x150d0000 0x1000>;
- 			#clock-cells = <1>;
--- 
-2.11.0
+On Fri, Dec 15, 2017 at 05:36:43PM +0000, Lorenzo Pieralisi wrote:
+> On Fri, Dec 08, 2017 at 02:28:09PM +0530, Manikanta Maddireddy wrote:
+> > Primary, secondary and subordinate default bus numbers are 0 in Tegra a=
+nd
+> > it is expecting SW to program these numbers in configration space.
+> >=20
+> > pci_scan_bridge_extend() function programs these numbers in configurati=
+on
+> > space if secondary & subordinate bus numbers are 0 or PCI_REASSIGN_ALL_=
+BUS
+> > flag is set. Since secondary & subordinate default bus numbers are 0,
+> > PCI_REASSIGN_ALL_BUS flag can be removed for Tegra PCIe.
+> >=20
+> > Signed-off-by: Manikanta Maddireddy <mmaddireddy-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> > ---
+> > V3:
+> > * new patch in V3
+> > V4:
+> > * no change in this patch
+> >=20
+> >  drivers/pci/host/pci-tegra.c | 1 -
+> >  1 file changed, 1 deletion(-)
+> >=20
+> > diff --git a/drivers/pci/host/pci-tegra.c b/drivers/pci/host/pci-tegra.c
+> > index a549c5899e26..0d91f1a3a6b4 100644
+> > --- a/drivers/pci/host/pci-tegra.c
+> > +++ b/drivers/pci/host/pci-tegra.c
+> > @@ -2604,7 +2604,6 @@ static int tegra_pcie_probe(struct platform_devic=
+e *pdev)
+> > =20
+> >  	tegra_pcie_enable_ports(pcie);
+> > =20
+> > -	pci_add_flags(PCI_REASSIGN_ALL_BUS);
+>=20
+> This looks obviously OK to me but I need Thierry's ACK to queue it.
+
+Just as an additional note: I think the real reason why this is okay to
+do is because we reset the PCI host controller in the kernel driver, so
+any bus assignments done by the firmware are reset as well.
+
+Acked-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+
+--G4iJoqBmSsgzjUCe
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlo6ukAACgkQ3SOs138+
+s6Ew+g/+PHBkSe3TxzC9Pdrm/EKZiam0Z1GYXX4vjAymJ8BgLhwOl8EwsCsuuWRa
+Xvj+SKHvuZcUcUmb7/laPNzKP9rQ2yRwBwTuojfgUVmA5+mMa/ymL/k+qnDfKcm8
+vKRf5gg1ZGxBw71EbrqbOh0nsjRX7LkZ/IeN/wL3pXNPv4gmfEQLxh5TP6D0MyOi
+jPD80JAxNsHmOVfVj6zLcQmSR3F7c3TGR59k0jMlIa94+nzcPw1cWV4f3dYd38C0
+D/GC8HUxdEx2GTD/DSFLjoIy4b86VSTwJEBaMQfIzXPt9TVGKcEqJqvfTZr5qQKl
+0byniN9Uyoz6JIO21YxWmV0S70c36vWImR2A0TwvmBnCjAAhDfJ0NnOE3HLWaw48
+2h6CdYM8AXPKAd5vNmdX6fEodU7WIzKUPBPiTRqnqv/ZkHY8hchSYdV2QrCWtT2e
+hX+o2K0bxpJWXkoS1ScPr7QKfesrG9CoVeZUj3sNPaF5sEdIAjb/7/xeGbf5gkJO
+H49O/BeIdIGu1IBe6fLe9PzadUsVPvNMTE0jPIjLwDU1pOZTo7ED1vAJ4tAf+ajI
+VRiTv/QhQgyJr1jp+s2FPRQWxhzu6vTHvoOh3/eo+XY58Fydb1RxxrM83mYRH5+7
+3tZheKD6MYxVqNYs8PzyRICphlb3vqrToZiEo/+NKms/Q2lXjNM=
+=f6iP
+-----END PGP SIGNATURE-----
+
+--G4iJoqBmSsgzjUCe--
