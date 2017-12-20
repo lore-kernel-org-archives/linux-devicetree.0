@@ -1,34 +1,31 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: dts: sunxi: Add sid for a83t
-Date: Wed, 20 Dec 2017 15:45:04 -0600
-Message-ID: <20171220214504.5n6w5yijwu3iek5l@rob-hp-laptop>
-References: <20171219210523.10428-1-kevans91@ksu.edu>
+Subject: Re: [PATCH v3 02/20] dt-bindings: gpio: Add ASPEED constants
+Date: Wed, 20 Dec 2017 15:46:46 -0600
+Message-ID: <20171220214646.sschcq35fnonxiix@rob-hp-laptop>
+References: <20171220032328.30584-1-joel@jms.id.au>
+ <20171220032328.30584-3-joel@jms.id.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20171219210523.10428-1-kevans91-OYTqUY/oFF8@public.gmane.org>
+In-Reply-To: <20171220032328.30584-3-joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: kevans91-OYTqUY/oFF8@public.gmane.org
-Cc: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+To: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>, Patrick Venture <venture-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Xo Wang <xow-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Lei YU <mine260309-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?iso-8859-1?Q?C=E9dric?= Le Goater <clg-Bxea+6Xhats@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-aspeed-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 19, 2017 at 03:05:23PM -0600, kevans91-OYTqUY/oFF8@public.gmane.org wrote:
-> Allwinner a83t has a 1 KB sid block with efuse for security rootkey and
-> thermal calibration data, add node to describe it.
+On Wed, Dec 20, 2017 at 01:53:10PM +1030, Joel Stanley wrote:
+> These are used to by the device tree to map pin numbers to constants
+> required by the GPIO bindings.
 > 
-> a83t-sid is not currently supported by nvmem/sunxi-sid, but it is
-> supported in an external driver for FreeBSD.
-> 
-> Signed-off-by: Kyle Evans <kevans91-OYTqUY/oFF8@public.gmane.org>
+> Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+> --
+> v3:
+>  - Remove dtsi includes from this patch, they will come later
 > ---
-> 
-> Changes in v2:
->  - remove bogus "From:" line in commit text; no functional change
-> 
->  Documentation/devicetree/bindings/nvmem/allwinner,sunxi-sid.txt | 1 +
->  arch/arm/boot/dts/sun8i-a83t.dtsi                               | 5 +++++
->  2 files changed, 6 insertions(+)
+>  include/dt-bindings/gpio/aspeed-gpio.h | 49 ++++++++++++++++++++++++++++++++++
+>  1 file changed, 49 insertions(+)
+>  create mode 100644 include/dt-bindings/gpio/aspeed-gpio.h
 
 Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
