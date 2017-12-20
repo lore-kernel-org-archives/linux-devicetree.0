@@ -1,121 +1,77 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH] devicetree: Add video bus switch
-Date: Wed, 20 Dec 2017 19:54:12 +0200
-Message-ID: <75694885.3PuLWzx4qN@avalon>
-References: <20161023200355.GA5391@amd> <20170203213454.GD12291@valkosipuli.retiisi.org.uk> <20170204215610.GA9243@amd>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v7 0/6] Mediatek MT2712 clock and scpsys support
+Date: Wed, 20 Dec 2017 19:02:27 +0100
+Message-ID: <a6689fc4-4415-8878-7e98-d182a755c3dd@gmail.com>
+References: <1511854102-23195-1-git-send-email-weiyi.lu@mediatek.com>
+ <1511854102-23195-2-git-send-email-weiyi.lu@mediatek.com>
+ <1513317052.30745.1.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170204215610.GA9243@amd>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Cc: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1513317052.30745.1.camel@mtksdaap41>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Weiyi Lu <weiyi.lu@mediatek.com>
+Cc: Stephen Boyd <sboyd@codeaurora.org>, Mike Turquette <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>, James Liao <jamesjj.liao@mediatek.com>, Fan Chen <fan.chen@mediatek.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, srv_heupstream@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Pavel,
 
-On Saturday, 4 February 2017 23:56:10 EET Pavel Machek wrote:
-> Hi!
-> 
-> >>>> +Required properties
-> >>>> +===================
-> >>>> +
-> >>>> +compatible	: must contain "video-bus-switch"
-> >>> 
-> >>> How generic is this? Should we have e.g. nokia,video-bus-switch? And
-> >>> if so, change the file name accordingly.
-> >> 
-> >> Generic for "single GPIO controls the switch", AFAICT. But that should
-> >> be common enough...
-> > 
-> > Um, yes. Then... how about: video-bus-switch-gpio? No Nokia prefix.
-> 
-> Ok, done. I also fixed the english a bit.
-> 
-> >>>> +reg		: The interface:
-> >>>> +		  0 - port for image signal processor
-> >>>> +		  1 - port for first camera sensor
-> >>>> +		  2 - port for second camera sensor
-> >>> 
-> >>> I'd say this must be pretty much specific to the one in N900. You
-> >>> could have more ports. Or you could say that ports beyond 0 are
-> >>> camera sensors. I guess this is good enough for now though, it can be
-> >>> changed later on with the source if a need arises.
-> >> 
-> >> Well, I'd say that selecting between two sensors is going to be the
-> >> common case. If someone needs more than two, it will no longer be
-> >> simple GPIO, so we'll have some fixing to do.
-> > 
-> > It could be two GPIOs --- that's how the GPIO I2C mux works.
-> > 
-> > But I'd be surprised if someone ever uses something like that
-> > again. ;-)
-> 
-> I'd say.. lets handle that when we see hardware like that.
-> 
-> >>> Btw. was it still considered a problem that the endpoint properties
-> >>> for the sensors can be different? With the g_routing() pad op which is
-> >>> to be added, the ISP driver (should actually go to a framework
-> >>> somewhere) could parse the graph and find the proper endpoint there.
-> >> 
-> >> I don't know about g_routing. I added g_endpoint_config method that
-> >> passes the configuration, and that seems to work for me.
-> >> 
-> >> I don't see g_routing in next-20170201 . Is there place to look?
-> > 
-> > I think there was a patch by Laurent to LMML quite some time ago. I
-> > suppose that set will be repicked soonish.
-> > 
-> > I don't really object using g_endpoint_config() as a temporary solution;
-> > I'd like to have Laurent's opinion on that though. Another option is to
-> > wait, but we've already waited a looong time (as in total).
-> 
-> Laurent, do you have some input here? We have simple "2 cameras
-> connected to one signal processor" situation here. We need some way of
-> passing endpoint configuration from the sensors through the switch. I
-> did this:
 
-Could you give me a bit more information about the platform you're targeting: 
-how the switch is connected, what kind of switch it is, and what endpoint 
-configuration data you need ?
-
-> >> @@ -415,6 +416,8 @@ struct v4l2_subdev_video_ops {
-> >>                          const struct v4l2_mbus_config *cfg);
-> >>     int (*s_rx_buffer)(struct v4l2_subdev *sd, void *buf,
-> >>                        unsigned int *size);
-> >> +   int (*g_endpoint_config)(struct v4l2_subdev *sd,
-> >> +                       struct v4l2_of_endpoint *cfg);
+On 12/15/2017 06:50 AM, Weiyi Lu wrote:
+> On Tue, 2017-11-28 at 15:28 +0800, Weiyi Lu wrote:
 > 
-> Google of g_routing tells me:
+> Hi Matthias,
+> Just gentle ping. Many thanks.
 > 
-> 9) Highly reconfigurable hardware - Julien Beraud
+
+Now pushed to v4.15-next thanks
+
+
+>> This series is based on v4.15-rc1 and composed of
+>> scpsys control (PATCH 1-4) and device tree (PATCH 5-6)
+>>
+>> changes since v6:
+>> - Rebase to v4.15-rc1.
+>>
+>> changes since v5:
+>> - Refine bus protection with proper variable name
+>>   and better implementation for the if statement.
+>>
+>> changes since v4:
+>> - Refine scpsys and infracfg for bus protection by passing
+>>   a boolean flag to determine the register update method
+>>
+>> changes since v3:
+>> - Rebase to v4.14-rc1.
+>>
+>> changes since v2:
+>> - ensure the clocks used by clocksource driver are registered
+>>   before clocksource init() by using CLK_OF_DECLARE()
+>> - correct the frequency of clk32k/clkrtc_ext/clkrtc_int
+>>
+>> changes since v1:
+>> - Rebase to v4.13-next-soc.
+>> - Refine scpsys and infracfg for bus protection.
+>>
+>> *** BLURB HERE ***
+>>
+>> Weiyi Lu (6):
+>>   dt-bindings: soc: add MT2712 power dt-bindings
+>>   soc: mediatek: extend bus protection API
+>>   soc: mediatek: add dependent clock jpgdec/audio for scpsys
+>>   soc: mediatek: add MT2712 scpsys support
+>>   arm: dts: mt2712: Add clock controller device nodes
+>>   arm: dts: Add power controller device node of MT2712
+>>
+>>  .../devicetree/bindings/soc/mediatek/scpsys.txt    |   3 +
+>>  arch/arm64/boot/dts/mediatek/mt2712e.dtsi          | 131 +++++++++++++++++++
+>>  drivers/soc/mediatek/mtk-infracfg.c                |  26 +++-
+>>  drivers/soc/mediatek/mtk-scpsys.c                  | 140 ++++++++++++++++++---
+>>  include/dt-bindings/power/mt2712-power.h           |  26 ++++
+>>  include/linux/soc/mediatek/infracfg.h              |   7 +-
+>>  6 files changed, 311 insertions(+), 22 deletions(-)
+>>  create mode 100644 include/dt-bindings/power/mt2712-power.h
+>>
 > 
-> - 44 sub-devices connected with an interconnect.
-> - As long as formats match, any sub-device could be connected to any
-> - other sub-device through a link.
-> - The result is 44 * 44 links at worst.
-> - A switch sub-device proposed as the solution to model the
-> - interconnect. The sub-devices are connected to the switch
-> - sub-devices through the hardware links that connect to the
-> - interconnect.
-> - The switch would be controlled through new IOCTLs S_ROUTING and
-> - G_ROUTING.
-> - Patches available:
->  http://git.linuxtv.org/cgit.cgi/pinchartl/media.git/log/?h=xilinx-wip
 > 
-> but the patches are from 2005. So I guess I'll need some guidance here...
-
-You made me feel very old for a moment. The patches are from 2015 :-)
-
-> > I'll reply to the other patch containing the code.
-
--- 
-Regards,
-
-Laurent Pinchart
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
