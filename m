@@ -1,71 +1,29 @@
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: RE: [PATCH v2 2/2] ARM: dts: r8a7743: Add thermal device to DT
-Date: Wed, 20 Dec 2017 11:53:44 +0000
-Message-ID: <KL1PR06MB1702004602DF211F92CFAC9BB80C0@KL1PR06MB1702.apcprd06.prod.outlook.com>
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] ARM: dts: r8a7743: Add thermal device to DT
+Date: Wed, 20 Dec 2017 13:09:12 +0100
+Message-ID: <20171220120912.bhorlhi7h34vawg7@verge.net.au>
 References: <1513689449-2700-1-git-send-email-biju.das@bp.renesas.com>
  <1513689449-2700-3-git-send-email-biju.das@bp.renesas.com>
  <20171220085036.gdcnbhonyqlewyi4@verge.net.au>
  <KL1PR06MB17029FA8C7AD57F067777E11B80C0@KL1PR06MB1702.apcprd06.prod.outlook.com>
  <20171220114844.w35ain6w6tvecfgo@verge.net.au>
+ <KL1PR06MB1702004602DF211F92CFAC9BB80C0@KL1PR06MB1702.apcprd06.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20171220114844.w35ain6w6tvecfgo@verge.net.au>
-Content-Language: en-US
-Sender: linux-pm-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <KL1PR06MB1702004602DF211F92CFAC9BB80C0-k6wCOA2IOKSx7cDWSRonpW0DtJ1/0DrXvxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Cc: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Thanks, I will check and provide feedback if any.
+On Wed, Dec 20, 2017 at 11:53:44AM +0000, Biju Das wrote:
+> Thanks, I will check and provide feedback if any.
 
-Regards,
-Biju
-
-> -----Original Message-----
-> From: Simon Horman [mailto:horms@verge.net.au]
-> Sent: 20 December 2017 11:49
-> To: Biju Das <biju.das@bp.renesas.com>
-> Cc: Zhang Rui <rui.zhang@intel.com>; Eduardo Valentin
-> <edubezval@gmail.com>; Rob Herring <robh+dt@kernel.org>; Mark Rutland
-> <mark.rutland@arm.com>; Magnus Damm <magnus.damm@gmail.com>;
-> Chris Paterson <Chris.Paterson2@renesas.com>; Fabrizio Castro
-> <fabrizio.castro@bp.renesas.com>; devicetree@vger.kernel.org; linux-renes=
-as-
-> soc@vger.kernel.org; linux-pm@vger.kernel.org
-> Subject: Re: [PATCH v2 2/2] ARM: dts: r8a7743: Add thermal device to DT
->
-> On Wed, Dec 20, 2017 at 11:36:51AM +0000, Biju Das wrote:
-> > Hi Simon,
-> >
-> > Just noticed that
-> >
-> > # make dtbs W=3D1 is giving below warning message.
-> >
-> > arch/arm/boot/dts/r8a7743-iwg20d-q7-dbcm-ca.dtb: Warning
-> (simple_bus_reg): Node /soc/thermal-zones missing or empty reg/ranges
-> property
-> >
-> > Do you prefer a fix patch or a v2 ?
->
-> I believe I have fixed that by applying
-> "ARM: dts: r8a7743: move timer and thermal-zones nodes out of bus"
->
-> Could you check the devel branch when I push it a little later today?
-
-
-[https://www2.renesas.eu/media/email/unicef_2017.jpg]
-
-This Christmas, instead of sending out cards, Renesas Electronics Europe ha=
-ve decided to support Unicef with a donation. For further details click her=
-e<https://www.unicef.org/> to find out about the valuable work they do, hel=
-ping children all over the world.
-We would like to take this opportunity to wish you a Merry Christmas and a =
-prosperous New Year.
-
-
-
-Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, B=
-uckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered=
- No. 04586709.
+Thanks, you should be able to check renesas-devel-20171220-v4.15-rc4,
+which I pushed a few minutes ago.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
