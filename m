@@ -1,8 +1,7 @@
 From: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Subject: [PATCH 2/4] ARM: dts: vf610-zii-dev-rev-b: fix interrupt for GPIO
- expander
-Date: Wed, 20 Dec 2017 23:11:50 +0000
-Message-ID: <E1eRnWg-0006VE-GI@rmk-PC.armlinux.org.uk>
+Subject: [PATCH 3/4] ARM: dts: vf610-zii-dev-rev-b: add PHYs for switch2
+Date: Wed, 20 Dec 2017 23:11:55 +0000
+Message-ID: <E1eRnWl-0006VL-TL@rmk-PC.armlinux.org.uk>
 References: <20171220231108.GJ10595@n2100.armlinux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -15,33 +14,62 @@ To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The interrupt specification for the GPIO expander is wrong - the
-expander is wired to PTB28, which is GPIO98.  GPIO98 is on gpio chip
-3, not 2.
-
-In addition, the device is missing a required property.  Interrupt
-controllers must have the "interrupt-controller" property specified.
-Add this.
+Switch 2 has an 88e1545 PHY behind it, which is a quad PHY.  Only the
+first three PHYs are used, the remaining PHY is unused.  When we wire
+up the SFF sockets in a later commit, the omission of this causes the
+fourth PHY to be used for port 3.  Specifying the PHYs in DT avoids
+the auto-probing of the bus, and discovery of this PHY.
 
 Signed-off-by: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
 ---
- arch/arm/boot/dts/vf610-zii-dev-rev-b.dts | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/vf610-zii-dev-rev-b.dts | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
 diff --git a/arch/arm/boot/dts/vf610-zii-dev-rev-b.dts b/arch/arm/boot/dts/vf610-zii-dev-rev-b.dts
-index acdf12ad0622..ede8649ba515 100644
+index ede8649ba515..782b69a3acdf 100644
 --- a/arch/arm/boot/dts/vf610-zii-dev-rev-b.dts
 +++ b/arch/arm/boot/dts/vf610-zii-dev-rev-b.dts
-@@ -371,7 +371,8 @@
- 		reg = <0x22>;
- 		gpio-controller;
- 		#gpio-cells = <2>;
--		interrupt-parent = <&gpio2>;
-+		interrupt-controller;
-+		interrupt-parent = <&gpio3>;
- 		interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
- 	};
- };
+@@ -255,16 +255,19 @@
+ 					port@0 {
+ 						reg = <0>;
+ 						label = "lan6";
++						phy-handle = <&switch2phy0>;
+ 					};
+ 
+ 					port@1 {
+ 						reg = <1>;
+ 						label = "lan7";
++						phy-handle = <&switch2phy1>;
+ 					};
+ 
+ 					port@2 {
+ 						reg = <2>;
+ 						label = "lan8";
++						phy-handle = <&switch2phy2>;
+ 					};
+ 
+ 					port@3 {
+@@ -304,6 +307,20 @@
+ 						};
+ 					};
+ 				};
++				mdio {
++					#address-cells = <1>;
++					#size-cells = <0>;
++
++					switch2phy0: phy@0 {
++						reg = <0>;
++					};
++					switch2phy1: phy@1 {
++						reg = <1>;
++					};
++					switch2phy2: phy@2 {
++						reg = <2>;
++					};
++				};
+ 			};
+ 		};
+ 
 -- 
 2.7.4
 
