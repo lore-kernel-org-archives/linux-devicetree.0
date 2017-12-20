@@ -1,121 +1,82 @@
-From: Stefan Riedmueller <s.riedmueller-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH v2 4/6] ARM: dts: imx6: Add support for phxBOARD-Mira i.MX 6 DualLight/Solo RDK
-Date: Wed, 20 Dec 2017 14:29:25 +0100
-Message-ID: <1513776567-30182-5-git-send-email-s.riedmueller@phytec.de>
-References: <1513776567-30182-1-git-send-email-s.riedmueller@phytec.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1513776567-30182-1-git-send-email-s.riedmueller-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Christian Hemp <c.hemp-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>, Stefan Christ <s.christ-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>, Stefan Riedmueller <s.riedmueller-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
+From: <jan.tuerk@emtrion.com>
+Subject: [PATCH v2 0/5] Add basic support for emtrion emCON-MX6 modules
+Date: Wed, 20 Dec 2017 14:47:00 +0100
+Message-ID: <20171220134710.64479-1-jan.tuerk@emtrion.com>
+References: <20171123125600.41562-1-jan.tuerk@emtrion.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171123125600.41562-1-jan.tuerk@emtrion.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Russell King <linux@armlinux.org.uk>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Kevin Hilman <khilman@baylibre.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, SZ Lin <sz.lin@moxa.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Christian Hemp <c.hemp-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
+From: Jan Tuerk <jan.tuerk@emtrion.com>
 
-Add support for the PHYTEC phyBOARD-Mira Low-Cost Rapid Development Kit
-with i.MX 6DualLight/Solo with NAND.
+The following patch-series adds support for emtrion's emCON-MX6 modules 
+with all their dependencies. 
+The focus is based on the emtrion standard developer-kit configuration. 
+It includes a new vendor-prefix, an new simple-panel type, 
+a small modification of the imx6dl.dtsi, 
+as well as modifications of the common imx_v6_v7_defconfig.
+And finally the board devicetrees themselves.
 
-Following interfaces are supported:
-- 100 MBit Ethernet
-- USB Host
-- RS232
-- HDMI
+For V2 there are some changes and small fixes following below. 
+The smtp issue which was converting tabs into spaces should be fixed now, 
+so checkpatch should only warn about the new Documentation files and the
+new devicetree bindings which are documented in the corresponding patch.
 
-Signed-off-by: Christian Hemp <c.hemp-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
-Signed-off-by: Stefan Christ <s.christ-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
-Signed-off-by: Stefan Riedmueller <s.riedmueller-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
----
- arch/arm/boot/dts/Makefile                        |  1 +
- arch/arm/boot/dts/imx6dl-phytec-mira-rdk-nand.dts | 64 +++++++++++++++++++++++
- 2 files changed, 65 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6dl-phytec-mira-rdk-nand.dts
+The documentation for the EDT display is kept as an extra file currently,
+as it is done by the most displays in the documentation. Also a new 
+new Vartiant of the EDT already arrived. So merging their documentations
+should be discussed separately.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index b793617..07d99a1 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -388,6 +388,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
- 	imx6dl-icore-rqs.dtb \
- 	imx6dl-nit6xlite.dtb \
- 	imx6dl-nitrogen6x.dtb \
-+	imx6dl-phytec-mira-rdk-nand.dtb \
- 	imx6dl-phytec-pbab01.dtb \
- 	imx6dl-rex-basic.dtb \
- 	imx6dl-riotboard.dtb \
-diff --git a/arch/arm/boot/dts/imx6dl-phytec-mira-rdk-nand.dts b/arch/arm/boot/dts/imx6dl-phytec-mira-rdk-nand.dts
-new file mode 100644
-index 0000000..f56c20f
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6dl-phytec-mira-rdk-nand.dts
-@@ -0,0 +1,64 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (C) 2017 PHYTEC Messtechnik GmbH
-+ * Author: Christian Hemp <c.hemp-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
-+ */
-+
-+/dts-v1/;
-+#include "imx6dl.dtsi"
-+#include "imx6qdl-phytec-phycore-som.dtsi"
-+#include "imx6qdl-phytec-mira.dtsi"
-+
-+/ {
-+	model = "PHYTEC phyBOARD-Mira DualLite/Solo Carrier-Board with NAND";
-+	compatible = "phytec,imx6dl-pbac06-nand", "phytec,imx6dl-pbac06",
-+		     "phytec,imx6qdl-pcm058", "fsl,imx6dl";
-+
-+	chosen {
-+		linux,stdout-path = &uart2;
-+	};
-+};
-+
-+&ethphy {
-+	max-speed = <100>;
-+};
-+
-+&fec {
-+	status = "okay";
-+};
-+
-+&gpmi {
-+	status = "okay";
-+};
-+
-+&hdmi {
-+	status = "okay";
-+};
-+
-+&i2c1 {
-+	status = "okay";
-+};
-+
-+&i2c2 {
-+	status = "okay";
-+};
-+
-+&i2c_rtc {
-+	status = "okay";
-+};
-+
-+&uart3 {
-+	status = "okay";
-+};
-+
-+&usbh1 {
-+	status = "okay";
-+};
-+
-+&usbotg {
-+	status = "okay";
-+};
-+
-+&usdhc1 {
-+	status = "okay";
-+};
+  [PATCH v2 1/5] drm/panel: Add support for the EDT ETM0700G0BDH6
+	No changes, resend.
+
+  [PATCH v2 2/5] dt-bindings: Add vendor prefix for emtrion GmbH
+	v2:
+	 - Reviewed-by: Andreas Färber <afaerber@suse.de>
+	 - Acked-by: Rob Herring <robh@kernel.org>
+
+  [PATCH v2 3/5] ARM: dts: imx: Add an cpu0 label for imx6dl devices.
+	v2:
+	 - Reviewed-by: Andreas Färber <afaerber@suse.de>
+
+  [PATCH v2 4/5] ARM: dts: Add support for emtrion emCON-MX6 series
+	Changes in v2:
+	 - Fixed typo (reg_prallel.. --> reg_parallel)
+	 - Removed trailing new-line
+	 - Fix uppercase addresses as Rob H. noted
+	 - Fix warning about lcd@di0 -> rename to disp0
+	 - Renamed some nodes regarding Rob H.
+
+  [PATCH v2 5/5] ARM: imx_v6_v7_defconfig: Enable DA0963 PMIC support.
+	No changes, resend.
+
+
+ Documentation/devicetree/bindings/arm/emtrion.txt  |  13 +
+ .../bindings/display/panel/edt,etm0700g0bdh6.txt   |   9 +
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ arch/arm/boot/dts/Makefile                         |   2 +
+ arch/arm/boot/dts/imx6dl-emcon-avari.dts           | 233 ++++++
+ arch/arm/boot/dts/imx6dl-emcon.dtsi                |  37 +
+ arch/arm/boot/dts/imx6dl.dtsi                      |   2 +-
+ arch/arm/boot/dts/imx6q-emcon-avari.dts            | 233 ++++++
+ arch/arm/boot/dts/imx6q-emcon.dtsi                 |  37 +
+ arch/arm/boot/dts/imx6qdl-emcon.dtsi               | 848 ++++++++++++++++
+ arch/arm/configs/imx_v6_v7_defconfig               |   4 +
+ drivers/gpu/drm/panel/panel-simple.c               |  15 +
+ 12 files changed, 1433 insertions(+), 1 deletion(-)
+
 -- 
-2.7.4
+emtrion GmbH
+Alter Schlachthof 45
+76131 Karlsruhe
+GERMANY
+https://www.emtrion.de
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Amtsgericht Mannheim
+HRB 110 300
+Geschäftsführer: Dieter Baur, Ramona Maurer
