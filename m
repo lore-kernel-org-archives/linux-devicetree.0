@@ -1,50 +1,37 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v6] i2c: Add support for NXP PCA984x family.
-Date: Wed, 20 Dec 2017 12:27:45 -0600
-Message-ID: <20171220182745.lo6i27ucfhjekmjp@rob-hp-laptop>
-References: <07bf7aae-59ab-cb2b-dcb0-95ec2de66633@axentia.se>
- <20171218174506.20543-1-adrian.fiergolski@cern.ch>
+Subject: Re: [PATCH v5 2/6] dt: bindings: lp8860: Update DT label binding
+Date: Wed, 20 Dec 2017 12:28:48 -0600
+Message-ID: <20171220182848.xxqbhfdn6uu377pm@rob-hp-laptop>
+References: <20171218202307.4913-1-dmurphy@ti.com>
+ <20171218202307.4913-2-dmurphy@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-i2c-owner@vger.kernel.org>
+Return-path: <linux-leds-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20171218174506.20543-1-adrian.fiergolski@cern.ch>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Adrian Fiergolski <adrian.fiergolski@cern.ch>
-Cc: linux-i2c@vger.kernel.org, peda@axentia.se, devicetree@vger.kernel.org
+In-Reply-To: <20171218202307.4913-2-dmurphy@ti.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Dan Murphy <dmurphy@ti.com>
+Cc: mark.rutland@arm.com, rpurdie@rpsys.net, jacek.anaszewski@gmail.com, pavel@ucw.cz, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 18, 2017 at 06:45:06PM +0100, Adrian Fiergolski wrote:
-> This patch extends the current i2c-mux-pca954x driver and adds support for
-> a newer PCA984x family of the I2C switches and multiplexers from NXP.
+On Mon, Dec 18, 2017 at 02:23:03PM -0600, Dan Murphy wrote:
+> Update the lp8860 label binding to the LED
+> standard as documented in
 > 
-> Signed-off-by: Adrian Fiergolski <adrian.fiergolski@cern.ch>
+> Documentation/devicetree/bindings/leds/common.txt
+> 
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
 > ---
->  .../devicetree/bindings/i2c/i2c-mux-pca954x.txt    |  5 ++-
->  drivers/i2c/muxes/Kconfig                          |  6 ++--
->  drivers/i2c/muxes/i2c-mux-pca954x.c                | 38 +++++++++++++++++++---
->  3 files changed, 41 insertions(+), 8 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt b/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
-> index aa097045a10e..b428bc0d81b1 100644
-> --- a/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
-> +++ b/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
-> @@ -1,10 +1,13 @@
->  * NXP PCA954x I2C bus switch
->  
-> +The driver supports NXP PCA954x and PCA984x I2C mux/switch devices.
-> +
->  Required Properties:
->  
->    - compatible: Must contain one of the following.
->      "nxp,pca9540", "nxp,pca9542", "nxp,pca9543", "nxp,pca9544",
-> -    "nxp,pca9545", "nxp,pca9546", "nxp,pca9547", "nxp,pca9548"
-> +    "nxp,pca9545", "nxp,pca9546", "nxp,pca9547", "nxp,pca9548",
-> +    "nxp,pca9846", "nxp,pca9847", "nxp,pca9848", "nxp,pca9849"
+> v5 - Renamed label to just white:backlight - https://patchwork.kernel.org/patch/10108361
+> Comment was made on patch 4 https://patchwork.kernel.org/patch/10108351/
+> 
+> v4 - No changes
+> v3 - Added address and size cells, updated label with color and inserted spaces
+> around the reg node - https://patchwork.kernel.org/patch/10093749/
+> v2 - Added reg to child node and made it required
+> 
+>  Documentation/devicetree/bindings/leds/leds-lp8860.txt | 17 +++++++++++++++--
+>  1 file changed, 15 insertions(+), 2 deletions(-)
 
-The format here should be 1 valid combination of compatibles per line. 
-So it should be clear what are valid fallbacks as Peter suggested.
-
->  
->    - reg: The I2C address of the device.
->  
+Reviewed-by: Rob Herring <robh@kernel.org>
