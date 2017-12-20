@@ -1,54 +1,41 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v5 15/15] devicetree: bindings: Document qcom,pvs
-Date: Wed, 20 Dec 2017 08:56:14 +0530
-Message-ID: <20171220032614.GQ19815@vireshk-i7>
-References: <1513698900-10638-1-git-send-email-sricharan@codeaurora.org>
- <1513698900-10638-16-git-send-email-sricharan@codeaurora.org>
+From: Joel Stanley <joel@jms.id.au>
+Subject: [PATCH v3 14/20] ARM: dts: aspeed: Sort ASPEED entries in makefile
+Date: Wed, 20 Dec 2017 13:53:22 +1030
+Message-ID: <20171220032328.30584-15-joel@jms.id.au>
+References: <20171220032328.30584-1-joel@jms.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1513698900-10638-16-git-send-email-sricharan@codeaurora.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Sricharan R <sricharan@codeaurora.org>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@codeaurora.org, linux@armlinux.org.uk, andy.gross@linaro.org, david.brown@linaro.org, rjw@rjwysocki.net, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171220032328.30584-1-joel@jms.id.au>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Andrew Jeffery <andrew@aj.id.au>, Patrick Venture <venture@google.com>, Xo Wang <xow@google.com>, Lei YU <mine260309@gmail.com>
+Cc: =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Jeremy Kerr <jk@ozlabs.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 19-12-17, 21:25, Sricharan R wrote:
-> +	cpu@0 {
-> +		compatible = "qcom,krait";
-> +		enable-method = "qcom,kpss-acc-v1";
-> +		device_type = "cpu";
-> +		reg = <0>;
-> +		qcom,acc = <&acc0>;
-> +		qcom,saw = <&saw0>;
-> +		clocks = <&kraitcc 0>;
-> +		clock-names = "cpu";
-> +		cpu-supply = <&smb208_s2a>;
-> +		operating-points-v2 = <&cpu_opp_table>;
-> +	};
-> +
-> +	qcom,pvs {
-> +		qcom,pvs-format-a;
-> +	};
+In preperation for adding more boards.
 
-Not sure what Rob is going to say on that :)
+Reviewed-by: Cédric Le Goater <clg@kaod.org>
+Signed-off-by: Joel Stanley <joel@jms.id.au>
+---
+ arch/arm/boot/dts/Makefile | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-> +
-> +
-> +	cpu_opp_table: opp_table {
-> +		compatible = "operating-points-v2";
-> +
-> +		/*
-> +		 * Missing opp-shared property means CPUs switch DVFS states
-> +		 * independently.
-> +		 */
-> +
-> +		opp-1400000000 {
-> +			opp-hz = /bits/ 64 <1400000000>;
-> +			opp-microvolt-speed0-pvs0-v0 = <1250000>;
-
-Why speed0 and v0 in all the names ?
-
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index d0381e9caf21..5d1e9d37bf3a 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -1101,7 +1101,8 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += \
+ 	mt8127-moose.dtb \
+ 	mt8135-evbp1.dtb
+ dtb-$(CONFIG_ARCH_ZX) += zx296702-ad1.dtb
+-dtb-$(CONFIG_ARCH_ASPEED) += aspeed-bmc-opp-palmetto.dtb \
+-	aspeed-bmc-opp-romulus.dtb \
+-	aspeed-ast2500-evb.dtb
++dtb-$(CONFIG_ARCH_ASPEED) += \
++	aspeed-ast2500-evb.dtb \
++	aspeed-bmc-opp-palmetto.dtb \
++	aspeed-bmc-opp-romulus.dtb
+ endif
 -- 
-viresh
+2.15.1
