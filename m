@@ -1,31 +1,35 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/3] dt-bindings: i2c: Add MediaTek MT2712 i2c binding
-Date: Wed, 20 Dec 2017 12:43:47 -0600
-Message-ID: <20171220184347.o2f5ez3n4vmbrq7w@rob-hp-laptop>
-References: <1513666263-6443-1-git-send-email-jun.gao@mediatek.com>
- <1513666263-6443-2-git-send-email-jun.gao@mediatek.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 2/6] media: dt: bindings: Update binding
+ documentation for sunxi IR controller
+Date: Wed, 20 Dec 2017 12:44:26 -0600
+Message-ID: <20171220184426.ongfriuioq6weljh@rob-hp-laptop>
+References: <20171219080747.4507-1-embed3d@gmail.com>
+ <20171219080747.4507-3-embed3d@gmail.com>
+Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-i2c-owner@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDJIP47K7MERBDO75LIQKGQE6FB3AVQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <1513666263-6443-2-git-send-email-jun.gao@mediatek.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Jun Gao <jun.gao@mediatek.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Matthias Brugger <matthias.bgg@gmail.com>, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
+In-Reply-To: <20171219080747.4507-3-embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, sean-hENCXIMQXOg@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 19, 2017 at 02:51:01PM +0800, Jun Gao wrote:
-> From: Jun Gao <jun.gao@mediatek.com>
+On Tue, Dec 19, 2017 at 09:07:43AM +0100, Philipp Rossak wrote:
+> This patch updates documentation for Device-Tree bindings for sunxi IR
+> controller and adds the new optional property for the base clock
+> frequency.
 > 
-> Add MT2712 i2c binding to binding file. Compare to MT8173 i2c
-> controller, MT2712 has timing adjust registers which can adjust
-> the internal divider of i2c source clock, SCL duty cycle, SCL
-> compare point, start(repeated start) and stop time, SDA change
-> time.
-> 
-> Signed-off-by: Jun Gao <jun.gao@mediatek.com>
+> Signed-off-by: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/i2c/i2c-mtk.txt | 1 +
->  1 file changed, 1 insertion(+)
+>  Documentation/devicetree/bindings/media/sunxi-ir.txt | 3 +++
+>  1 file changed, 3 insertions(+)
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
