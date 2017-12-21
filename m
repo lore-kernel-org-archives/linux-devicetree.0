@@ -1,70 +1,107 @@
-From: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v16 0/5] ZII RAVE platform driver
-Date: Wed, 20 Dec 2017 16:20:18 -0800
-Message-ID: <CAHQ1cqHwz2V=tGvE=TLh71vGZeo7SvtTkH0+oOefoqRVxUAfRQ@mail.gmail.com>
-References: <20171220204517.28313-1-andrew.smirnov@gmail.com> <CAOFm3uHLT5R6SLYpRApFOOh4_=qrhc234EKfk1n-_3AGzgN9RA@mail.gmail.com>
+From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 1/2] arm64: dts: exynos: Use lower case hex addresses in
+ node unit addresses
+Date: Thu, 21 Dec 2017 09:51:21 +0900
+Message-ID: <5A3B0589.8010106@samsung.com>
+References: <CGME20171220192737epcas4p17c4e71c11e5864fd59f06396c0867a3a@epcas4p1.samsung.com>
+        <20171220192702.32515-1-krzk@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOFm3uHLT5R6SLYpRApFOOh4_=qrhc234EKfk1n-_3AGzgN9RA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-reply-to: <20171220192702.32515-1-krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philippe Ombredanne <pombredanne-od1rfyK75/E@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Chris Healy <cphealy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Nikita Yushchenko <nikita.yoush-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+To: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Alim Akhtar <alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 20, 2017 at 1:51 PM, Philippe Ombredanne
-<pombredanne-od1rfyK75/E@public.gmane.org> wrote:
-> Andrey,
->
-> On Wed, Dec 20, 2017 at 9:45 PM, Andrey Smirnov
-> <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> Everyone:
->>
->> This patch series is v16 of the driver for supervisory processor found
->> on RAVE series of devices from ZII. Supervisory processor is a PIC
->> microcontroller connected to various electrical subsystems on RAVE
->> devices whose firmware implements protocol to command/qery them.
->>
->> NOTE:
->>
->>  * This driver dependends on crc_ccitt_false(), added by
->>    2da9378d531f8cc6670c7497f20d936b706ab80b in 'linux-next', the patch
->>    was pulled in by Andrew Morton and is currently avaiting users, so
->>    this series might have to go in through Andrew's tree
->>
->> Changes since [v15]:
->>
->>     - Adopted SPDX tags for licensing information per Philippe's
->>       request
->
-> Thank you for using the SPDX tags: you have my cheerful ack for the
-> SPDX tags for the whole patch set
->
-> There is one minor problem though: your comment style for the SPDX tag
-> lines. Check Thomas doc patches and Linus comments on this topic: you
-> should use // C++ style commnent in .c files and /* */ C-style
-> comments in .h files.
->
-> e.g. do not use this for a .c file:
->
->> +++ b/drivers/watchdog/rave-sp-wdt.c
->> @@ -0,0 +1,337 @@
->> +/* SPDX-License-Identifier: GPL-2.0+ */
->
-> But this instead:
->
->> +++ b/drivers/watchdog/rave-sp-wdt.c
->> @@ -0,0 +1,337 @@
->> +// SPDX-License-Identifier: GPL-2.0+
->
->
-> Acked-by: Philippe Ombredanne <pombredanne-kIH2VFuay/A@public.gmane.org>
->
+Dear Krzysztof,
 
-OK, good to know, will fix in v17 soon.
+On 2017년 12월 21일 04:27, Krzysztof Kozlowski wrote:
+> Convert all hex addresses in node unit addresses to lower case to
+> fix warnings like:
+>     arch/arm64/boot/dts/exynos/exynos5433-tm2e.dtb: Warning (simple_bus_reg):
+>       Node /soc/video-scaler@13C00000 simple-bus unit address format error, expected "13c00000"
+> 
+> Conversion was done using sed:
+>     $ sed -e 's/@\([a-zA-Z0-9_-]*\) {/@\L\1 {/' -i arch/arm64/boot/dts/exynos/*.dts*
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> ---
+>  arch/arm64/boot/dts/exynos/exynos5433.dtsi | 8 ++++----
+>  arch/arm64/boot/dts/exynos/exynos7.dtsi    | 4 ++--
+>  2 files changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/exynos/exynos5433.dtsi b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
+> index 1962b8074349..0ba5df825eff 100644
+> --- a/arch/arm64/boot/dts/exynos/exynos5433.dtsi
+> +++ b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
+> @@ -994,7 +994,7 @@
+>  			reg = <0x145f0000 0x1038>;
+>  		};
+>  
+> -		gsc_0: video-scaler@13C00000 {
+> +		gsc_0: video-scaler@13c00000 {
+>  			compatible = "samsung,exynos5433-gsc";
+>  			reg = <0x13c00000 0x1000>;
+>  			interrupts = <GIC_SPI 297 IRQ_TYPE_LEVEL_HIGH>;
+> @@ -1008,7 +1008,7 @@
+>  			power-domains = <&pd_gscl>;
+>  		};
+>  
+> -		gsc_1: video-scaler@13C10000 {
+> +		gsc_1: video-scaler@13c10000 {
+>  			compatible = "samsung,exynos5433-gsc";
+>  			reg = <0x13c10000 0x1000>;
+>  			interrupts = <GIC_SPI 298 IRQ_TYPE_LEVEL_HIGH>;
+> @@ -1022,7 +1022,7 @@
+>  			power-domains = <&pd_gscl>;
+>  		};
+>  
+> -		gsc_2: video-scaler@13C20000 {
+> +		gsc_2: video-scaler@13c20000 {
+>  			compatible = "samsung,exynos5433-gsc";
+>  			reg = <0x13c20000 0x1000>;
+>  			interrupts = <GIC_SPI 299 IRQ_TYPE_LEVEL_HIGH>;
+> @@ -1049,7 +1049,7 @@
+>  			power-domains = <&pd_mscl>;
+>  		};
+>  
+> -		mfc: codec@152E0000 {
+> +		mfc: codec@152e0000 {
+>  			compatible = "samsung,exynos5433-mfc";
+>  			reg = <0x152E0000 0x10000>;
+>  			interrupts = <GIC_SPI 358 IRQ_TYPE_LEVEL_HIGH>;
+> diff --git a/arch/arm64/boot/dts/exynos/exynos7.dtsi b/arch/arm64/boot/dts/exynos/exynos7.dtsi
+> index 9a3fbed1765a..3504837b1d43 100644
+> --- a/arch/arm64/boot/dts/exynos/exynos7.dtsi
+> +++ b/arch/arm64/boot/dts/exynos/exynos7.dtsi
+> @@ -103,7 +103,7 @@
+>  			#size-cells = <1>;
+>  			ranges;
+>  
+> -			pdma0: pdma@10E10000 {
+> +			pdma0: pdma@10e10000 {
+>  				compatible = "arm,pl330", "arm,primecell";
+>  				reg = <0x10E10000 0x1000>;
+>  				interrupts = <GIC_SPI 225 IRQ_TYPE_LEVEL_HIGH>;
+> @@ -114,7 +114,7 @@
+>  				#dma-requests = <32>;
+>  			};
+>  
+> -			pdma1: pdma@10EB0000 {
+> +			pdma1: pdma@10eb0000 {
+>  				compatible = "arm,pl330", "arm,primecell";
+>  				reg = <0x10EB0000 0x1000>;
+>  				interrupts = <GIC_SPI 226 IRQ_TYPE_LEVEL_HIGH>;
+> 
 
-Thanks,
-Andrey Smirnov
+Looks good to me.
+Reviewed-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
