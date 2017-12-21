@@ -1,102 +1,109 @@
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: RE: [PATCH 8/9] ARM: dts: iwg22d-sodimm: Sound DMA support via SRC on
- DTS
-Date: Thu, 21 Dec 2017 11:01:28 +0000
-Message-ID: <KL1PR06MB17023E4E4DE156A8ADB88411B80D0@KL1PR06MB1702.apcprd06.prod.outlook.com>
-References: <1513800125-53213-1-git-send-email-biju.das@bp.renesas.com>
- <1513800125-53213-9-git-send-email-biju.das@bp.renesas.com>
- <20171221104443.rk6prrib4gdi7qyz@verge.net.au>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20171221104443.rk6prrib4gdi7qyz@verge.net.au>
-Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v5 00/12] drm/sun4i: Add A83t LVDS support
+Date: Thu, 21 Dec 2017 12:02:26 +0100
+Message-ID: <cover.e5a47cc96ec5274dd932daa2bde47df073087da9.1513854122.git-series.maxime.ripard@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org, icenowy-h8G6r0blFSE@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, jernej.skrabec-gGgVlfcn5nU@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon,
+Hi,
 
-> -----Original Message-----
-> From: Simon Horman [mailto:horms@verge.net.au]
-> Sent: 21 December 2017 10:45
-> To: Biju Das <biju.das@bp.renesas.com>
-> Cc: Rob Herring <robh+dt@kernel.org>; Mark Rutland
-> <mark.rutland@arm.com>; Magnus Damm <magnus.damm@gmail.com>;
-> Chris Paterson <Chris.Paterson2@renesas.com>; Fabrizio Castro
-> <fabrizio.castro@bp.renesas.com>; devicetree@vger.kernel.org; linux-renes=
-as-
-> soc@vger.kernel.org
-> Subject: Re: [PATCH 8/9] ARM: dts: iwg22d-sodimm: Sound DMA support via
-> SRC on DTS
->
-> On Wed, Dec 20, 2017 at 08:02:04PM +0000, Biju Das wrote:
-> > DMA transfer to/from SRC
-> >
-> >      DMA      DMApp
-> > [MEM] -> [SRC] -> [SSIU] -> [SSI]
-> >
-> >      DMA      DMApp
-> > [MEM] <- [SRC] <- [SSIU] <- [SSI]
-> >
-> > Current sound driver is supporting SSI/SRC random connection.
-> > So, this patch is trying
-> > SSI3 -> SRC3
-> > SSI4 <- SRC4
->
-> I am curious to know why the selection here differs from that present in
-> iwg20d-q7-common. Is it an arbitrary decision?
->
-> Likewise for other uses of ssi*, src* and dvc* in this patchset.
+Here is an attempt at supporting the LVDS output in our DRM driver. This
+has been tested on the A83T (with DE2), but since everything is basically
+in the TCON, it should also be usable on the older SoCs with minor
+modifications.
 
-For ssi*,  on this board, SSI3/4 interface is connected to Audio In/Out.
+This was the occasion to refactor a bunch of things. The most notable ones
+would be the documentation, and split of the UI layers in the mixer code,
+and the switch to kfifo for our endpoint parsing code in the driver that
+fixes an issue introduced by the switch to BFS.
 
-For src*,  the original bsp from iwave is using src3/src4, also it is arbit=
-rary as per the data sheet.
+Let me know what you think,
+Maxime
 
-For dvc*,  Again it is arbitrary as per the data sheet.
+Changes from v4:
+  - Changed the order of the clk_prepare_enable and clk_set_rate for the
+    mixer module clock
+  - Squash the two DT PWM patches
+  - Removed the output pins muxing
+  - Changed the flag to tell if you have an LVDS alternate clock to
+    has_lvds_alt
+  - Used SPDX headers
 
-> >
-> > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-> > Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> > ---
-> >  arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts
-> > b/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts
-> > index 0f880c1..2cac57c 100644
-> > --- a/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts
-> > +++ b/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts
-> > @@ -183,8 +183,8 @@
-> >
-> >  rcar_sound,dai {
-> >  dai0 {
-> > -playback =3D <&ssi3>;
-> > -capture =3D <&ssi4>;
-> > +playback =3D <&ssi3 &src3>;
-> > +capture =3D <&ssi4 &src4>;
-> >  };
-> >  };
-> >  };
-> > --
-> > 1.9.1
-> >
+Changes from v3:
+  - Collect the tags
+  - Use SPDX headers when possible
+  - Added the new mixer configuration options
+  - Changed the LVDS clock for lvds-alt instead of lvds-pll
+  - Removed the MIPI PLL from the A31s
+  - Changed the LVDS_ANA0 macros name to reflect the generation they were
+    introduced in, and added a comment to mention the changes needed to
+    support the older SoCs
 
+Changes from v2:
+  - Move the module clock rate to the mixer structure
+  - Adjusted the simple-panel documentation for power-supply
+  - Changed the compatible for the first A83t mixer to mixer 0
+  - Rebased on top of current drm-misc
+  - Split out the A83t bindings in its separate patch
 
-[https://www2.renesas.eu/media/email/unicef_2017.jpg]
+Changes from v1:
+  - Added a fix for the error path handling in the TCON
+  - Enable the TCON by default
+  - Removed the patch that changes the channels offset but kept most of the
+    modifications as a cleanup
+  - Deal with the LVDS clock being able to have another PLL parent on some
+    SoCs
+  - Renamed the TCON compatible to TCON-TV, following the convention used
+    on newer SoCs
+  - Removed the hardcoded timings
+  - Moved LVDS enable quirks to a separate function
+  - Used clock indices define in the DT
+  - Removed the hardcoded clock rate in the DT and moved it to the driver
+  - Changed sun8i_mixer_planes to sun8i_mixer_ui_planes to be consistent
+  - Added the various tags collected
+  - Rebased on top of 4.15
 
-This Christmas, instead of sending out cards, Renesas Electronics Europe ha=
-ve decided to support Unicef with a donation. For further details click her=
-e<https://www.unicef.org/> to find out about the valuable work they do, hel=
-ping children all over the world.
-We would like to take this opportunity to wish you a Merry Christmas and a =
-prosperous New Year.
+Maxime Ripard (12):
+  dt-bindings: panel: lvds: Document power-supply property
+  drm/panel: lvds: Add support for the power-supply property
+  dt-bindings: display: sun4i-drm: Add LVDS properties
+  dt-bindings: display: sun4i-drm: Add A83T pipeline
+  drm/sun4i: Force the mixer rate at 150MHz
+  drm/sun4i: Create minimal multipliers and dividers
+  drm/sun4i: Add LVDS support
+  drm/sun4i: Add A83T support
+  ARM: dts: sun8i: a83t: Add display pipeline
+  ARM: dts: sun8i: a83t: Enable the PWM
+  ARM: dts: sun8i: a83t: Add LVDS pins group
+  ARM: dts: sun8i: a711: Enable the LCD
 
+ Documentation/devicetree/bindings/display/panel/panel-common.txt |   6 ++-
+ Documentation/devicetree/bindings/display/panel/panel-lvds.txt   |   1 +-
+ Documentation/devicetree/bindings/display/panel/simple-panel.txt |   2 +-
+ Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt    |  12 ++++-
+ arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts                        |  61 ++++++++++++++++++-
+ arch/arm/boot/dts/sun8i-a83t.dtsi                                |  99 +++++++++++++++++++++++++++++-
+ drivers/gpu/drm/panel/panel-lvds.c                               |  23 +++++++-
+ drivers/gpu/drm/sun4i/Makefile                                   |   1 +-
+ drivers/gpu/drm/sun4i/sun4i_dotclock.c                           |  10 ++-
+ drivers/gpu/drm/sun4i/sun4i_drv.c                                |   1 +-
+ drivers/gpu/drm/sun4i/sun4i_lvds.c                               | 177 ++++++++++++++++++++++++++++++++++++++++++++++++++++-
+ drivers/gpu/drm/sun4i/sun4i_lvds.h                               |  12 ++++-
+ drivers/gpu/drm/sun4i/sun4i_tcon.c                               | 244 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+ drivers/gpu/drm/sun4i/sun4i_tcon.h                               |  31 +++++++++-
+ drivers/gpu/drm/sun4i/sun8i_mixer.c                              |  21 ++++++-
+ drivers/gpu/drm/sun4i/sun8i_mixer.h                              |   3 +-
+ 16 files changed, 699 insertions(+), 5 deletions(-)
+ create mode 100644 drivers/gpu/drm/sun4i/sun4i_lvds.c
+ create mode 100644 drivers/gpu/drm/sun4i/sun4i_lvds.h
 
-
-Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, B=
-uckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered=
- No. 04586709.
+base-commit: 99239c7ba0214ec99011378a6ca1bcd589c3dc98
+-- 
+git-series 0.9.1
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
