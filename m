@@ -1,89 +1,70 @@
-From: Wen He <wen.he_1-3arQi8VN3Tc@public.gmane.org>
-Subject: RE: [PATCH 2/4] dma: fsl-qdma: add devicetree documentation for qDMA
- driver.
-Date: Thu, 21 Dec 2017 07:09:36 +0000
-Message-ID: <DBXPR04MB47875F9351B430136E1995CE20D0@DBXPR04MB478.eurprd04.prod.outlook.com>
-References: <20171219064157.29586-1-wen.he_1@nxp.com>
- <20171220184304.ywr3nopucgubgxwz@rob-hp-laptop>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2][v2] ARM: dts: Add big-endian for IFC on LS1021A
+Date: Thu, 21 Dec 2017 15:10:59 +0800
+Message-ID: <20171221071056.GF3766@dragon>
+References: <1512013344-4042-1-git-send-email-prabhakar.kushwaha@nxp.com>
+ <1512013344-4042-2-git-send-email-prabhakar.kushwaha@nxp.com>
+ <HE1PR04MB1241E7538E97597B76606FF4970D0@HE1PR04MB1241.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171220184304.ywr3nopucgubgxwz@rob-hp-laptop>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <HE1PR04MB1241E7538E97597B76606FF4970D0-6LN7OEpIatU9TB6uw0n1oM9NdZoXdze2vxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jiafei Pan <jiafei.pan-3arQi8VN3Tc@public.gmane.org>, Jiaheng Fan <jiaheng.fan-3arQi8VN3Tc@public.gmane.org>
+To: Prabhakar Kushwaha <prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alison Wang <alison.wang-3arQi8VN3Tc@public.gmane.org>, Jagdish Gediya <jagdish.gediya-3arQi8VN3Tc@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFJvYiBIZXJy
-aW5nIFttYWlsdG86cm9iaEBrZXJuZWwub3JnXQ0KPiBTZW50OiAyMDE3xOoxMtTCMjHI1SAyOjQz
-DQo+IFRvOiBXZW4gSGUgPHdlbi5oZV8xQG54cC5jb20+DQo+IENjOiBkZXZpY2V0cmVlQHZnZXIu
-a2VybmVsLm9yZw0KPiBTdWJqZWN0OiBSZTogW1BBVENIIDIvNF0gZG1hOiBmc2wtcWRtYTogYWRk
-IGRldmljZXRyZWUgZG9jdW1lbnRhdGlvbiBmb3INCj4gcURNQSBkcml2ZXIuDQo+IA0KPiBPbiBU
-dWUsIERlYyAxOSwgMjAxNyBhdCAwMjo0MTo1N1BNICswODAwLCBXZW4gSGUgd3JvdGU6DQo+IA0K
-PiBOZWVkIGEgY29tbWl0IG1lc3NhZ2UuDQo+IA0KDQpHb3QgaXQsIFRoYW5rcy4NCg0KPiA+IFNp
-Z25lZC1vZmYtYnk6IFdlbiBIZSA8d2VuLmhlXzFAbnhwLmNvbT4NCj4gPiAtLS0NCj4gPiAgRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RtYS9mc2wtcWRtYS50eHQgfCA0Mg0KPiA+
-ICsrKysrKysrKysrKysrKysrKysrKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDQyIGluc2VydGlv
-bnMoKykNCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0DQo+IERvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9kbWEvZnNsLXFkbWEudHh0DQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RtYS9mc2wtcWRtYS50eHQNCj4gPiBiL0RvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kbWEvZnNsLXFkbWEudHh0DQo+ID4gbmV3IGZp
-bGUgbW9kZSAxMDA2NDQNCj4gPiBpbmRleCAwMDAwMDAwMDAwMDAuLmIwNzYxNzdiNDg2Mw0KPiA+
-IC0tLSAvZGV2L251bGwNCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvZG1hL2ZzbC1xZG1hLnR4dA0KPiA+IEBAIC0wLDAgKzEsNDIgQEANCj4gPiArKiBGcmVlc2Nh
-bGUgcXVldWUgRGlyZWN0IE1lbW9yeSBBY2Nlc3MgQ29udHJvbGxlcihxRE1BKSBDb250cm9sbGVy
-DQo+ID4gKw0KPiA+ICsgIFRoZSBxRE1BIGNvbnRyb2xsZXIgdHJhbnNmZXJzIGJsb2NrcyBvZiBk
-YXRhIGJldHdlZW4gb25lIHNvdXJjZSBhbmQNCj4gPiArIG9uZSBvciBtb3JlDQo+IA0KPiBXaHkg
-dGhlIGluZGVudGF0aW9uPw0KPiANCg0KSSBkaWQgaXQgYnkgcmVmZXJyaW5nIHRvIERvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kbWEvZnNsLWVkbWEudHh0LCBpcyBpdCBvaz8NCg0K
-PiA+ICtkZXN0aW5hdGlvbnMuIFRoZSBibG9ja3Mgb2YgZGF0YSB0cmFuc2ZlcnJlZCBjYW4gYmUg
-cmVwcmVzZW50ZWQgaW4NCj4gPiArbWVtb3J5IGFzIGNvbnRpZ3VvdXMgb3Igbm9uLWNvbnRpZ3Vv
-dXMgdXNpbmcgc2NhdHRlci9nYXRoZXIgdGFibGUocykuDQo+ID4gK0NoYW5uZWwgdmlydHVhbGl6
-YXRpb24gaXMgc3VwcG9ydGVkIHRocm91Z2ggZW5xdWV1aW5nIG9mIERNQSBqb2JzIHRvLA0KPiA+
-ICtvciBkZXF1ZXVpbmcgRE1BIGpvYnMgZnJvbSwgZGlmZmVyZW50IHdvcmsgcXVldWVzLg0KPiA+
-ICsNCj4gPiArKiBxRE1BIENvbnRyb2xsZXINCj4gPiArUmVxdWlyZWQgcHJvcGVydGllczoNCj4g
-PiArLSBjb21wYXRpYmxlIDoNCj4gDQo+IEFkZCAiU2hvdWxkIGJlIG9uZSBvZjoiDQo+IA0KPiA+
-ICsJLSAiZnNsLGxzMTAyMWEtcWRtYSIsDQo+ID4gKwlPciAiZnNsLGxzMTA0M2EtcWRtYSIgZm9s
-bG93ZWQgYnkgImZzbCxsczEwMjFhLXFkbWEiLA0KPiANCj4gVGhlbiByZW1vdmUgdGhlICJPciIg
-YW5kIHJlcGxhY2UgIiBmb2xsb3dlZCBieSIgd2l0aCBhIGNvbW1hIChsaWtlIGR0cw0KPiBzb3Vy
-Y2UpLg0KPiANCg0KLSBjb21wYXRpYmxlIDogU2hvdWxkIGJlICJmc2wsbHMxMDIxYS1xZG1hIiBv
-ciAiZnNsLGxzMTA0M2EtcWRtYSIsICJmc2wsbHMxMDIxYS1xZG1hIg0KSXMgdGhhdCBvaz8NCg0K
-PiA+ICstIHJlZyA6IFNwZWNpZmllcyBiYXNlIHBoeXNpY2FsIGFkZHJlc3MocykgYW5kIHNpemUg
-b2YgdGhlIHFETUEgcmVnaXN0ZXJzLg0KPiA+ICsJVGhlIHJlZ2lvbiBpcyBxRE1BIGNvbnRyb2wg
-cmVnaXN0ZXIncyBhZGRyZXNzIGFuZCBzaXplLg0KPiA+ICstIGludGVycnVwdHMgOiBBIGxpc3Qg
-b2YgaW50ZXJydXB0LXNwZWNpZmllcnMsIG9uZSBmb3IgZWFjaCBlbnRyeSBpbg0KPiA+ICsJaW50
-ZXJydXB0LW5hbWVzLg0KPiA+ICstIGludGVycnVwdC1uYW1lcyA6IFNob3VsZCBjb250YWluOg0K
-PiA+ICsJInFkbWEtZXJyb3IiIC0gdGhlIGVycm9yIGludGVycnVwdA0KPiA+ICsJInFkbWEtcXVl
-dWUiIC0gdGhlIHF1ZXVlIGludGVycnVwdA0KPiA+ICstIGNoYW5uZWxzIDogTnVtYmVyIG9mIGNo
-YW5uZWxzIHN1cHBvcnRlZCBieSB0aGUgY29udHJvbGxlcg0KPiANCj4gZG1hLWNoYW5uZWxzIGlz
-IHRoZSBzdGFuZGFyZCBuYW1lLg0KPiANCg0KT2theSwgZ290IGl0Lg0KDQo+ID4gKy0gcXVldWVz
-IDogTnVtYmVyIG9mIHF1ZXVlcyBzdXBwb3J0ZWQgYnkgZHJpdmVyDQo+IA0KPiBOZWVkcyBhIHZl
-bmRvciBwcmVmaXguDQo+IA0KDQpXaGVyZSBkbyBJIHB1dCB0aGUgdmVuZG9yIHByZWZpeD8NCg0K
-PiA+ICsNCj4gPiArT3B0aW9uYWwgcHJvcGVydGllczoNCj4gPiArLSBiaWctZW5kaWFuOiBJZiBw
-cmVzZW50IHJlZ2lzdGVycyBhbmQgaGFyZHdhcmUgc2NhdHRlci9nYXRoZXIgZGVzY3JpcHRvcnMN
-Cj4gPiArCW9mIHRoZSBxRE1BIGFyZSBpbXBsZW1lbnRlZCBpbiBiaWcgZW5kaWFuIG1vZGUsIG90
-aGVyd2lzZSBpbiBsaXR0bGUNCj4gPiArCW1vZGUuDQo+ID4gKw0KPiA+ICsNCj4gPiArRXhhbXBs
-ZXM6DQo+ID4gKw0KPiA+ICsJcWRtYTogcWRtYUA4MzkwMDAwIHsNCj4gDQo+IFVzZSBzdGFuZGFy
-ZCBub2RlIG5hbWVzOg0KPiANCj4gZG1hLWNvbnRyb2xsZXJALi4uDQo+DQoNCk9rYXksZ290IGl0
-LCB0aGFua3MuDQoNCiANCj4gPiArCQljb21wYXRpYmxlID0gImZzbCxsczEwMjFhLXFkbWEiOw0K
-PiA+ICsJCXJlZyA9IDwweDAgMHg4Mzk4MDAwIDB4MCAweDIwMDAgLyogQ29udHJvbGxlciByZWdp
-c3RlcnMgKi8NCj4gPiArCQkgICAgICAgMHgwIDB4ODM5YTAwMCAweDAgMHgyMDAwPjsgLyogQmxv
-Y2sgcmVnaXN0ZXJzICovDQo+ID4gKwkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDE4NSBJUlFfVFlQ
-RV9MRVZFTF9ISUdIPiwNCj4gPiArCQkJCTxHSUNfU1BJIDc2IElSUV9UWVBFX0xFVkVMX0hJR0g+
-Ow0KPiA+ICsJCWludGVycnVwdC1uYW1lcyA9ICJxZG1hLWVycm9yIiwgInFkbWEtcXVldWUiOw0K
-PiA+ICsJCWNoYW5uZWxzID0gPDg+Ow0KPiA+ICsJCXF1ZXVlcyA9IDwyPjsNCj4gPiArCQliaWct
-ZW5kaWFuOw0KPiA+ICsJfTsNCj4gPiAtLQ0KPiA+IDIuMTQuMQ0KPiA+DQo+ID4gLS0NCj4gPiBU
-byB1bnN1YnNjcmliZSBmcm9tIHRoaXMgbGlzdDogc2VuZCB0aGUgbGluZSAidW5zdWJzY3JpYmUg
-ZGV2aWNldHJlZSINCj4gPiBpbiB0aGUgYm9keSBvZiBhIG1lc3NhZ2UgdG8gbWFqb3Jkb21vQHZn
-ZXIua2VybmVsLm9yZyBNb3JlIG1ham9yZG9tbw0KPiA+IGluZm8gYXQNCj4gPg0KPiBodHRwczov
-L2VtZWEwMS5zYWZlbGlua3MucHJvdGVjdGlvbi5vdXRsb29rLmNvbS8/dXJsPWh0dHAlM0ElMkYl
-MkZ2Z2VyDQo+ID4gLmtlcm5lbC5vcmclMkZtYWpvcmRvbW8taW5mby5odG1sJmRhdGE9MDIlN0Mw
-MSU3Q3dlbi5oZV8xJTQwbnhwDQo+IC5jb20lN0MNCj4gPg0KPiBhZGQ0ZjM2NmFiNGQ0ZTBkMDQ0
-MTA4ZDU0N2Q5ODQxMyU3QzY4NmVhMWQzYmMyYjRjNmZhOTJjZDk5YzVjMzANCj4gMTYzNSU3Qw0K
-PiA+DQo+IDAlN0MwJTdDNjM2NDkzOTIxOTA3NTUzMDg0JnNkYXRhPWNLaWRZJTJGTlZ1UGZGeXRL
-aUlMR0FYMXNRbTY5DQo+IHhJJTJGZER2DQo+ID4gQmVHeFlmN3NiZyUzRCZyZXNlcnZlZD0wDQo=
+On Thu, Dec 21, 2017 at 05:14:36AM +0000, Prabhakar Kushwaha wrote:
+> Hi Shawn,
+> 
+> > -----Original Message-----
+> > From: Prabhakar Kushwaha [mailto:prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org]
+> > Sent: Thursday, November 30, 2017 9:12 AM
+> > To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; mark.rutland-5wv7dgnIgG8@public.gmane.org;
+> > shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+> > Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; Jagdish Gediya
+> > <jagdish.gediya-3arQi8VN3Tc@public.gmane.org>; Alison Wang <alison.wang-3arQi8VN3Tc@public.gmane.org>; Prabhakar
+> > Kushwaha <prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org>
+> > Subject: [PATCH 1/2][v2] ARM: dts: Add big-endian for IFC on LS1021A
+> > 
+> > From: Jagdish Gediya <jagdish.gediya-3arQi8VN3Tc@public.gmane.org>
+> > 
+> > For the patch to update struct map_info's swap field based on device
+> > characteristics defined in device tree, big-endian parameter is added
+> > for LS1021A.
+> > 
+> > Signed-off-by: Alison Wang <alison.wang-3arQi8VN3Tc@public.gmane.org>
+> > Signed-off-by: Jagdish Gediya <jagdish.gediya-3arQi8VN3Tc@public.gmane.org>
+> > Signed-off-by: Prabhakar Kushwaha <prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org>
+> > ---
+> > Changes for v2: updated subject
+> > 
+> >  arch/arm/boot/dts/ls1021a.dtsi | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
+> > index 9319e1f..babb086 100644
+> > --- a/arch/arm/boot/dts/ls1021a.dtsi
+> > +++ b/arch/arm/boot/dts/ls1021a.dtsi
+> > @@ -145,6 +145,7 @@
+> >  		ifc: ifc@1530000 {
+> >  			compatible = "fsl,ifc", "simple-bus";
+> >  			reg = <0x0 0x1530000 0x0 0x10000>;
+> > +			big-endian;
+> >  			interrupts = <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>;
+> >  		};
+> > 
+> > --
+> > 1.9.1
+> 
+> There are no review comments on this patch.
+> 
+> Can you please accept this patch
+
+It seems that the bindings hasn't been ACK-ed by DT maintainer.
+
+Shawn
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
