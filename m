@@ -1,67 +1,63 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH V2 9/9] ARM: dts: stm32: add initial support of
- stm32mp157c eval board
-Date: Thu, 21 Dec 2017 11:44:55 +0100
-Message-ID: <33a7afc4-9282-5359-1f80-ef9f3da93c38@st.com>
-References: <1513610272-7824-1-git-send-email-ludovic.Barre@st.com>
- <1513610272-7824-10-git-send-email-ludovic.Barre@st.com>
- <CACRpkdZaEjdGB2k6HdPt1_E0jRXEimEUxT9NmMwMw7OiyeqGLA@mail.gmail.com>
- <27a339f7-33a7-eb73-27fe-9927838729d6@st.com>
- <CACRpkdYE+u1o_KDDihX7=7RLNDkkFDOCFsQtBKBZW0i6123ZoQ@mail.gmail.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH V4 3/7] PCI: tegra: Remove PCI_REASSIGN_ALL_BUS flag for
+ Tegra PCIe
+Date: Thu, 21 Dec 2017 10:46:30 +0000
+Message-ID: <20171221104630.GB24280@red-moon>
+References: <1512723493-865-1-git-send-email-mmaddireddy@nvidia.com>
+ <1512723493-865-4-git-send-email-mmaddireddy@nvidia.com>
+ <20171215173643.GA1050@red-moon>
+ <20171220193011.GA31757@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CACRpkdYE+u1o_KDDihX7=7RLNDkkFDOCFsQtBKBZW0i6123ZoQ@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Gerald Baeza <gerald.baeza@st.com>, Ludovic Barre <ludovic.Barre@st.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20171220193011.GA31757@ulmo>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Manikanta Maddireddy <mmaddireddy-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, cyndis-/1wQRMveznE@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, vidyas-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, kthota-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 12/21/2017 10:18 AM, Linus Walleij wrote:
-> On Wed, Dec 20, 2017 at 10:19 AM, Alexandre Torgue
-> <alexandre.torgue@st.com> wrote:
->> On 12/20/2017 08:44 AM, Linus Walleij wrote:
+On Wed, Dec 20, 2017 at 08:30:11PM +0100, Thierry Reding wrote:
+> On Fri, Dec 15, 2017 at 05:36:43PM +0000, Lorenzo Pieralisi wrote:
+> > On Fri, Dec 08, 2017 at 02:28:09PM +0530, Manikanta Maddireddy wrote:
+> > > Primary, secondary and subordinate default bus numbers are 0 in Tegra and
+> > > it is expecting SW to program these numbers in configration space.
+> > > 
+> > > pci_scan_bridge_extend() function programs these numbers in configuration
+> > > space if secondary & subordinate bus numbers are 0 or PCI_REASSIGN_ALL_BUS
+> > > flag is set. Since secondary & subordinate default bus numbers are 0,
+> > > PCI_REASSIGN_ALL_BUS flag can be removed for Tegra PCIe.
+> > > 
+> > > Signed-off-by: Manikanta Maddireddy <mmaddireddy-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> > > ---
+> > > V3:
+> > > * new patch in V3
+> > > V4:
+> > > * no change in this patch
+> > > 
+> > >  drivers/pci/host/pci-tegra.c | 1 -
+> > >  1 file changed, 1 deletion(-)
+> > > 
+> > > diff --git a/drivers/pci/host/pci-tegra.c b/drivers/pci/host/pci-tegra.c
+> > > index a549c5899e26..0d91f1a3a6b4 100644
+> > > --- a/drivers/pci/host/pci-tegra.c
+> > > +++ b/drivers/pci/host/pci-tegra.c
+> > > @@ -2604,7 +2604,6 @@ static int tegra_pcie_probe(struct platform_device *pdev)
+> > >  
+> > >  	tegra_pcie_enable_ports(pcie);
+> > >  
+> > > -	pci_add_flags(PCI_REASSIGN_ALL_BUS);
+> > 
+> > This looks obviously OK to me but I need Thierry's ACK to queue it.
 > 
->>> gpio-line-names = "foo", "bar" ...;
->>>
->>> See for example
->>> arch/arm/boot/dts/bcm2835-rpi-a.dts
->>> arch/arm/boot/dts/ste-snowball.dts
-> (...)
->>
->> It looks like useful for pins used as gpio line. Are you saying that we also
->> have to describe pins used as Alternate Function ?
+> Just as an additional note: I think the real reason why this is okay to
+> do is because we reset the PCI host controller in the kernel driver, so
+> any bus assignments done by the firmware are reset as well.
 > 
-> No. The use of the names is up to the platform maintainer (you),
-> leaving a blank string for non-GPIO lines is just fine.
-> 
-> Some platforms add the name of the actual function used by the
-> line on the design, if it is not GPIO, sometimes something in
-> brachets like "[i2c0-SDA]" that says what it is used for and explains
-> why you can't use it for GPIO on this setup.
-> 
-> But just leaving it blank is just as good.
+> Acked-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-Ok thanks Linus. I will take it into account. It could be useful to add 
-it for MCU and future MPU boards.
+Thank you. This series needs rebasing, we should try to untangle
+the dependencies between series so that I can actually apply some
+of these patches that make sense on their own.
 
-Regards
-Alex
-
-
-> 
-> Yours,
-> Linus Walleij
-> 
+Lorenzo
