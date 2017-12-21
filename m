@@ -1,71 +1,83 @@
 From: Prabhakar Kushwaha <prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org>
-Subject: RE: [PATCH 2/2][v2] ARM: dts: ls1021aqds: Add nand node for ifc
- controller
-Date: Thu, 21 Dec 2017 05:14:51 +0000
-Message-ID: <HE1PR04MB124129FE73928FFDA66AFFAB970D0@HE1PR04MB1241.eurprd04.prod.outlook.com>
-References: <1512013344-4042-1-git-send-email-prabhakar.kushwaha@nxp.com>
- <1512013344-4042-3-git-send-email-prabhakar.kushwaha@nxp.com>
+Subject: RE: [PATCH] Documentation: binding: Update endianness usage
+Date: Thu, 21 Dec 2017 05:20:17 +0000
+Message-ID: <HE1PR04MB124148862807D5BD05E4E5AF970D0@HE1PR04MB1241.eurprd04.prod.outlook.com>
+References: <1511954855-8593-1-git-send-email-prabhakar.kushwaha@nxp.com>
+         <1512105209.10062.1.camel@buserror.net>
+         <HE1PR04MB12414AFA5F8081730B89378497390@HE1PR04MB1241.eurprd04.prod.outlook.com>
+         <1512165311.10062.3.camel@buserror.net>
+         <HE1PR04MB1241226CD3B7ABD6D5FA2D91973C0@HE1PR04MB1241.eurprd04.prod.outlook.com>
+         <1512441957.10062.6.camel@buserror.net>
+         <HE1PR04MB1241ADD02E472BA492AE1C8F973D0@HE1PR04MB1241.eurprd04.prod.outlook.com>
+ <1512504459.10062.9.camel@buserror.net>
+ <HE1PR04MB1241F1A70CDBA5A94D4D2CE597320@HE1PR04MB1241.eurprd04.prod.outlook.com>
+ <HE1PR04MB124174461F845000614CDAA197320@HE1PR04MB1241.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1512013344-4042-3-git-send-email-prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org>
+In-Reply-To: <HE1PR04MB124174461F845000614CDAA197320-6LN7OEpIatU9TB6uw0n1oM9NdZoXdze2vxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
 Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Prabhakar Kushwaha <prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jagdish Gediya <jagdish.gediya-3arQi8VN3Tc@public.gmane.org>
+To: Prabhakar Kushwaha <prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org>, Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: "dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Shawn,
-
-> -----Original Message-----
-> From: Prabhakar Kushwaha [mailto:prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org]
-> Sent: Thursday, November 30, 2017 9:12 AM
-> To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; mark.rutland-5wv7dgnIgG8@public.gmane.org;
-> shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; Prabhakar Kushwaha
-> <prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org>; Jagdish Gediya <jagdish.gediya-3arQi8VN3Tc@public.gmane.org>
-> Subject: [PATCH 2/2][v2] ARM: dts: ls1021aqds: Add nand node for ifc cont=
-roller
->=20
-> LS1021AQDS support NAND flash on IFC chip-select 2.
->=20
-> So add NAND node in device tree for IFC controller.
->=20
-> Signed-off-by: Jagdish Gediya <jagdish.gediya-3arQi8VN3Tc@public.gmane.org>
-> Signed-off-by: Prabhakar Kushwaha <prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org>
-> ---
-> Changes for v2: updated subject
->=20
->  arch/arm/boot/dts/ls1021a-qds.dts | 5 +++++
->  1 file changed, 5 insertions(+)
->=20
-> diff --git a/arch/arm/boot/dts/ls1021a-qds.dts b/arch/arm/boot/dts/ls1021=
-a-
-> qds.dts
-> index 9408753..2b37d04 100644
-> --- a/arch/arm/boot/dts/ls1021a-qds.dts
-> +++ b/arch/arm/boot/dts/ls1021a-qds.dts
-> @@ -239,6 +239,11 @@
->  		device-width =3D <1>;
->  	};
->=20
-> +	nand@2,0 {
-> +		compatible =3D "fsl,ifc-nand";
-> +		reg =3D <0x2 0x0 0x10000>;
-> +	};
-> +
->  	fpga: board-control@3,0 {
->  		#address-cells =3D <1>;
->  		#size-cells =3D <1>;
-> --
-
-
-There are no review comments on this patch.
-
-Can you please accept this patch
-
---pk
+SGkgU2NvdHQsDQoNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBkZXZp
+Y2V0cmVlLW93bmVyQHZnZXIua2VybmVsLm9yZyBbbWFpbHRvOmRldmljZXRyZWUtDQo+IG93bmVy
+QHZnZXIua2VybmVsLm9yZ10gT24gQmVoYWxmIE9mIFByYWJoYWthciBLdXNod2FoYQ0KPiBTZW50
+OiBXZWRuZXNkYXksIERlY2VtYmVyIDA2LCAyMDE3IDQ6MjkgUE0NCj4gVG86IFNjb3R0IFdvb2Qg
+PG9zc0BidXNlcnJvci5uZXQ+OyBsaW51eC1tdGRAbGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4gZGV2
+aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcNCj4gQ2M6IGRlZGVraW5kMUBnbWFpbC5jb207IGNvbXB1
+dGVyc2ZvcnBlYWNlQGdtYWlsLmNvbQ0KPiBTdWJqZWN0OiBSRTogW1BBVENIXSBEb2N1bWVudGF0
+aW9uOiBiaW5kaW5nOiBVcGRhdGUgZW5kaWFubmVzcyB1c2FnZQ0KPiANCj4gDQo+IA0KPiA+IC0t
+LS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gRnJvbTogUHJhYmhha2FyIEt1c2h3YWhhDQo+
+ID4gU2VudDogV2VkbmVzZGF5LCBEZWNlbWJlciAwNiwgMjAxNyA0OjA1IFBNDQo+ID4gVG86ICdT
+Y290dCBXb29kJyA8b3NzQGJ1c2Vycm9yLm5ldD47IGxpbnV4LW10ZEBsaXN0cy5pbmZyYWRlYWQu
+b3JnOw0KPiA+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnDQo+ID4gQ2M6IGRlZGVraW5kMUBn
+bWFpbC5jb207IGNvbXB1dGVyc2ZvcnBlYWNlQGdtYWlsLmNvbQ0KPiA+IFN1YmplY3Q6IFJFOiBb
+UEFUQ0hdIERvY3VtZW50YXRpb246IGJpbmRpbmc6IFVwZGF0ZSBlbmRpYW5uZXNzIHVzYWdlDQo+
+ID4NCj4gPg0KPiA+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+IEZyb206IFNj
+b3R0IFdvb2QgW21haWx0bzpvc3NAYnVzZXJyb3IubmV0XQ0KPiA+ID4gU2VudDogV2VkbmVzZGF5
+LCBEZWNlbWJlciAwNiwgMjAxNyAxOjM4IEFNDQo+ID4gPiBUbzogUHJhYmhha2FyIEt1c2h3YWhh
+IDxwcmFiaGFrYXIua3VzaHdhaGFAbnhwLmNvbT47IGxpbnV4LQ0KPiA+ID4gbXRkQGxpc3RzLmlu
+ZnJhZGVhZC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnDQo+ID4gPiBDYzogZGVkZWtp
+bmQxQGdtYWlsLmNvbTsgY29tcHV0ZXJzZm9ycGVhY2VAZ21haWwuY29tDQo+ID4gPiBTdWJqZWN0
+OiBSZTogW1BBVENIXSBEb2N1bWVudGF0aW9uOiBiaW5kaW5nOiBVcGRhdGUgZW5kaWFubmVzcyB1
+c2FnZQ0KPiA+ID4NCj4gPiA+IE9uIFR1ZSwgMjAxNy0xMi0wNSBhdCAwOTo0NSArMDAwMCwgUHJh
+Ymhha2FyIEt1c2h3YWhhIHdyb3RlOg0KPiA+ID4gPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0t
+LS0tDQo+ID4gPiA+ID4gRnJvbTogU2NvdHQgV29vZCBbbWFpbHRvOm9zc0BidXNlcnJvci5uZXRd
+DQo+ID4gPiA+ID4gU2VudDogVHVlc2RheSwgRGVjZW1iZXIgMDUsIDIwMTcgODoxNiBBTQ0KPiA+
+ID4gPiA+IFRvOiBQcmFiaGFrYXIgS3VzaHdhaGEgPHByYWJoYWthci5rdXNod2FoYUBueHAuY29t
+PjsgbGludXgtDQo+ID4gPiA+ID4gbXRkQGxpc3RzLmluZnJhZGVhZC5vcmc7IGRldmljZXRyZWVA
+dmdlci5rZXJuZWwub3JnDQo+ID4gPiA+ID4gQ2M6IGRlZGVraW5kMUBnbWFpbC5jb207IGNvbXB1
+dGVyc2ZvcnBlYWNlQGdtYWlsLmNvbQ0KPiA+ID4gPiA+IFN1YmplY3Q6IFJlOiBbUEFUQ0hdIERv
+Y3VtZW50YXRpb246IGJpbmRpbmc6IFVwZGF0ZSBlbmRpYW5uZXNzIHVzYWdlDQo+ID4gPiA+ID4N
+Cj4gPiA+ID4gPiBJIG5vdyBzZWUgeW91ciBwYXRjaCB0byBvZl9mbGFzaF9wcm9iZS4uLiB3aGVy
+ZSBpcyB0aGUgbm9uLUlGQy1zcGVjaWZpYw0KPiA+ID4gPiA+IGJpbmRpbmcgdGhhdCBzYXlzIHRo
+ZSAqcGFyZW50KiBvZiBhIENGSSBub2RlIHNob3VsZCBiZSBsb29rZWQgYXQgZm9yIHRoaXM/DQo+
+ID4gPiA+ID4gV2hlcmXCoGluIGdlbmVyYWwgYXJlIGVuZGlhbiBwcm9wZXJ0aWVzIGtlcHQgaW4g
+dGhlIHBhcmVudCBvZiB0aGUgbm9kZQ0KPiB3aXRoDQo+ID4gPiA+ID4gInJlZyI/wqDCoFRoZSBy
+aWdodCBhbnN3ZXIgaXMgdG8gYWRkIGVuZGlhbm5lc3MgdG8gbXRkLXBoeXNtYXAudHh0Lg0KPiA+
+ID4gPiA+DQo+ID4gPiA+DQo+ID4gPiA+IEZsYXNoZXMgYXJlIGFsd2F5cyBsaXR0bGVyIGVuZGlh
+bi4NCj4gPiA+DQo+ID4gPiBXZSB3b3VsZG4ndCBiZSBoYXZpbmcgdGhpcyBkaXNjdXNzaW9uIGlm
+IHRoYXQgd2VyZSB0cnVlLi4uICBUaGlzIGlzIGFib3V0IGhvdw0KPiA+ID4gaXQgcHJlc2VudHMg
+dG8gdGhlIENQVSwgbm90IGFib3V0IGhvdyB0aGUgYWN0dWFsIHBpbnMgb24gdGhlIGNoaXAgYXJl
+DQo+ID4gPiBudW1iZXJlZC4NCj4gPiA+DQo+ID4NCj4gPiBHb3QgeW91ciBwb2ludCA6KQ0KPiA+
+DQo+ID4gPiA+IEl0IGlzIGJlY2F1c2Ugb2YgSUZDIGNvbnRyb2xsZXIgYmVoYXZpb3IsIGVuZGlh
+bm5lc3MgaXMgcmVxdWlyZWQuDQo+ID4gPiA+IFNvIGFzIHBlciBteSB1bmRlcnN0YW5kaW5nLCB0
+aGlzIGluZm8gc2hvdWxkIGdvIGluIElGQyBiaW5kaW5nLg0KPiA+ID4NCj4gPiA+IElmIHRoZSBp
+bmZvIHNob3VsZCBnbyBpbiB0aGUgSUZDIGJpbmRpbmcgd2h5IGlzIHRoZSBjb2RlIGluIGEgbm9u
+LUlGQy1zcGVjaWZpYw0KPiA+ID4gcGxhY2U/DQo+ID4gPg0KPiA+DQo+ID4gTm93IEkgdW5kZXJz
+dGFuZCB5b3VyIHBvaW50Lg0KPiA+IFNvIEkgc2hvdWxkIGJlIG1vdmluZyBlbmRpYW5uZXNzIHBy
+b3BlcnR5IGRldGFpbCBpbiBtdGQtcGh5c21hcC50eHQuDQo+ID4NCj4gPiBJcyBteSB1bmRlcnN0
+YW5kaW5nIGNvcnJlY3Q/DQo+ID4NCj4gDQo+IEEgc2Vjb25kIHRob3VnaHQsDQo+IElGQyBiaW5k
+aW5nIHdhcyB1cGRhdGVkIGJlY2F1c2UgdGhlcmUgaXMgbm8gSUZDLU5PUiBkcml2ZXIuIEl0IHVz
+ZXMgZ2VuZXJpYyBGbGFzaA0KPiBmcmFtZXdvcmsuDQo+IA0KPiBJIGFtIGp1c3QgdHJ5aW5nIHRv
+IGdldCBtb3JlIHVuZGVyc3RhbmRpbmcuDQo+IA0KDQpEbyB5b3UgaGF2ZSBhbnkgY29tbWVudC9j
+b25jZXJuIG9uIHRoaXMgcGF0Y2guDQpNYXkgSSBnbyBhaGVhZCBhbmQgcmVxdWVzdCBmb3IgdGhl
+IG1lcmdlciBvZiB1cGRhdGVkIHBhdGNoIGkuZS4gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9y
+Zy9wYXRjaC8xMDA4NDMzMS8NCg0KLS1wcmFiaGFrYXIgDQoNCg0KDQoNCg==
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
