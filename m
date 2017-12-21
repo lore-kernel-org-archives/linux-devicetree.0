@@ -1,75 +1,63 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: dts: sunxi: Add sid for a83t
-Date: Thu, 21 Dec 2017 16:26:30 +0100
-Message-ID: <20171221152630.2vf57x5o2yi5sv3n@flea.lan>
-References: <20171219210523.10428-1-kevans91@ksu.edu>
- <20171221145512.llxvzkcrjpquhczi@flea.lan>
- <CACNAnaE9GiVTXD-TV1xXyBJKtTGKpdA6n0REk6a=qm218EgHbg@mail.gmail.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 1/9] dt-bindings: ti-sysc: Update binding for timers and
+ capabilities
+Date: Thu, 21 Dec 2017 07:29:42 -0800
+Message-ID: <20171221152942.GT3875@atomide.com>
+References: <20171215180900.3243-1-tony@atomide.com>
+ <20171215180900.3243-2-tony@atomide.com>
+ <20171216183059.ipsftfnvsyamv6fd@rob-hp-laptop>
+ <20171216192222.GH3875@atomide.com>
+ <20171220181051.eoftsww6463hyak3@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="5fxvazjmbj5axlhg"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBMNF57IQKGQEGRRQW7Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CACNAnaE9GiVTXD-TV1xXyBJKtTGKpdA6n0REk6a=qm218EgHbg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Kyle Evans <kevans91-OYTqUY/oFF8@public.gmane.org>
-Cc: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20171220181051.eoftsww6463hyak3@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Matthijs van Duin <matthijsvanduin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
---5fxvazjmbj5axlhg
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-
-Hi,
-
-On Thu, Dec 21, 2017 at 09:19:24AM -0600, Kyle Evans wrote:
-> On Thu, Dec 21, 2017 at 8:55 AM, Maxime Ripard
-> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> > Hi Kyle,
-> >
-> > On Tue, Dec 19, 2017 at 03:05:23PM -0600, kevans91-OYTqUY/oFF8@public.gmane.org wrote:
-> >> Allwinner a83t has a 1 KB sid block with efuse for security rootkey and
-> >> thermal calibration data, add node to describe it.
-> >>
-> >> a83t-sid is not currently supported by nvmem/sunxi-sid, but it is
-> >> supported in an external driver for FreeBSD.
-> >>
-> >> Signed-off-by: Kyle Evans <kevans91-OYTqUY/oFF8@public.gmane.org>
-> >
-> > The patch looks fine in itself, but we've had a number of issues with
-> > the register layout (and access patterns) in the past, so I'd rather
-> > have something that works in Linux too if possible.
+* Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> [171220 18:13]:
+> On Sat, Dec 16, 2017 at 11:22:22AM -0800, Tony Lindgren wrote:
+> > I was planning to have "ti,sysc-delay-us" only in the driver, but
+> > the same IP needs it set on dm814x while not on omap4 for OTG
+> > for example. I could add SoC specific quirks to the driver
+> > for that one if you prefer that instead?
 > 
-> I have a patch that I think should make it work fine on Linux [1], but
-> I'm afraid I have little to no capability to test it myself and so I
-> did not add it as well.
+> No, I don't have a preference.
+
+OK
+
+> > > Are the bits you've defined all of them or there's more?
+> > 
+> > That's it, with this binding I've allocated the data from dts
+> > for the tests I've done. So that should allow us to replace the
+> > static data to start with as seen with the following command:
+> > 
+> > $ git grep -A10 "struct omap_hwmod_class_sysconfig" \
+> > 	arch/arm/*hwmod*data*.c
+> > ...
+> > 
+> > So that's to configure a big pile of different module
+> > configurations we currently have as can be seen with:
+> > 
+> > $ git grep "struct omap_hwmod_class_sysconfig" \
+> > 	arch/arm/*hwmod*data*.c | wc -l
+> > 194
+> > 
+> > I'm sure there's still few duplicates there though..
 > 
-> I do know that the rootkey is offset 0x200 into the given space [2],
-> as is the case with the H3, and that the readout quirk is not needed.
-> I wasn't 100% sure that the a83t has 2Kbit worth of efuse space as the
-> H3, but I do know that thermal data can be found at 0x34 and 0x38 in
-> this space.
+> Okay, then I guess I'm okay with this.
+> 
+> Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-Then maybe we should leave it aside until someone takes some time on
-the A83t. The good news is that the binding itself looks fine, so as
-far as FreeBSD goes, there shouldn't be anything preventing you from
-using it I guess.
+OK thanks for the review.
 
-Chen-Yu, what do you think?
+Regards,
 
-Thanks!
-Maxime
-
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---5fxvazjmbj5axlhg--
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
