@@ -1,34 +1,66 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V8 1/3] OPP: Allow OPP table to be used for power-domains
-Date: Thu, 21 Dec 2017 16:06:39 -0600
-Message-ID: <20171221220639.6yzsityvobpvyxge@rob-hp-laptop>
-References: <cover.1513591822.git.viresh.kumar@linaro.org>
- <9cd1e90c782a8569d098adb63bee7dd1387528c4.1513591822.git.viresh.kumar@linaro.org>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ARM: realview: remove eb-mp clcd IRQ
+Date: Thu, 21 Dec 2017 23:08:50 +0100
+Message-ID: <CACRpkdbCWZB1ZkrdGe0s0GfNVWEYY+NThy4ce-+SBtU-s=WNbQ@mail.gmail.com>
+References: <20171221213146.3146805-1-arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <9cd1e90c782a8569d098adb63bee7dd1387528c4.1513591822.git.viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <20171221213146.3146805-1-arnd-r2nGTMty4D4@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Viresh Kumar <vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 18, 2017 at 03:51:28PM +0530, Viresh Kumar wrote:
-> Power-domains can also have their active states and this patch enhances
-> the OPP binding to define those. The power domains can use the OPP
-> bindings as is, with one additional change to Allow
-> "operating-points-v2" property to contain multiple phandles for power
-> domain providers providing multiple domains.
-> 
-> Reviewed-by: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/opp/opp.txt            | 5 +++++
->  Documentation/devicetree/bindings/power/power_domain.txt | 6 ++++++
->  2 files changed, 11 insertions(+)
+On Thu, Dec 21, 2017 at 10:31 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
 
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> We get a dtc warning about the CLCD interrupt being invalid:
+>
+> arch/arm/boot/dts/arm-realview-eb-11mp-ctrevb.dtb: Warning (interrupts_property): interrupts size is (8), expected multiple of 12 in /fpga/charlcd@10008000
+>
+> According to the datasheet I found and the old board file, this
+> line is not connected, so I'm removing the respective properties here.
+>
+> Link: http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.dui0411d/index.html
+> Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+
+There is some confusion here. There is CLCD "Color LCD"
+which is just a code name for PrimeCell PL111 and there is the actual
+character LCD which is a hardware thin to talk to a character LCD with
+some characters on.
+
+> diff --git a/arch/arm/boot/dts/arm-realview-eb-mp.dtsi b/arch/arm/boot/dts/arm-realview-eb-mp.dtsi
+
+So this DTS is for the ARM 11 MP core tile which is described in
+DUI0318F. It doesn't even list an IRQ for the character LCD.
+
+>  &charlcd {
+> -       interrupt-parent = <&intc>;
+> -       interrupts = <0  IRQ_TYPE_LEVEL_HIGH>;
+
+This was probably me thinking to go back and fill in the right
+IRQ and forgetting to actually do it. Sorry :(
+
+> +       /* CLCD is not connected here */
+
+Call it character LCD instead to avoid confusion please.
+
+> +       /delete-property/interrupt-parent;
+> +       /delete-property/interrupts;
+
+I don't understand this delete-property business (first time
+I see it, but the top level
+DTSI (arm-realview-eb.dtsi) does not define any interrupt
+so can't you just delete this whole &charlcd?
+
+I do think the reference design has a character LCD, and I
+do think it has an interrupt, it's just undocumented so
+someone with this board would have to test it manually
+to figure out which line it is. Whoever uses this design
+will get to it if ever.
+
+Yours,
+Linus Walleij
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
