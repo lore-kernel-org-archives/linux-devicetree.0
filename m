@@ -1,57 +1,38 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH resend] arm: dts: ls1021a: Specify interrupt-affinity for
- pmu node
-Date: Thu, 21 Dec 2017 16:06:51 +0800
-Message-ID: <20171221080650.GJ23230@dragon>
-References: <1510672189-13306-1-git-send-email-rasmus.villemoes@prevas.dk>
- <1512462145-12664-1-git-send-email-rasmus.villemoes@prevas.dk>
+From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW@KARO-electronics.de>
+Subject: Re: [PATCH] ARM: dts: imx: Add memory node unit name
+Date: Thu, 21 Dec 2017 09:07:36 +0100
+Message-ID: <20171221090736.3ac9d5db@karo-electronics.de>
+References: <1512575989-15627-1-git-send-email-marcofrk@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1512462145-12664-1-git-send-email-rasmus.villemoes-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rasmus Villemoes <rasmus.villemoes-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Esben Haabendal <eha-/iRVSOupHO4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1512575989-15627-1-git-send-email-marcofrk@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marco Franchi <marcofrk@gmail.com>
+Cc: shawnguo@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, festevam@gmail.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 05, 2017 at 09:22:25AM +0100, Rasmus Villemoes wrote:
-> From: Esben Haabendal <eha-/iRVSOupHO4@public.gmane.org>
-> 
-> From: Esben Haabendal <eha-/iRVSOupHO4@public.gmane.org>
+Hi,
 
-Dropped the extra From line, fixed prefix and applied patch.
+On Wed,  6 Dec 2017 13:59:49 -0200 Marco Franchi wrote:
+> Fix the following warnings from dtc by adding the unit name to memory 
+> nodes:
+> 
+> Warning (unit_address_vs_reg): Node /memory has a reg or ranges property, but no unit name
+> 
+> Converted using the following command:
+> 
+> perl -p0777i -e 's/memory \{\n\t\treg = \<0x+([0-9a-f])/memory\@$1$\0000000 \{\n\t\treg = <0x$1/m' `find ./arch/arm/boot/dts -name "imx*"`
+> 
+> The files below were manually fixed:
+> -imx1-ads.dts
+> -imx1-apf9328.dts
+> 
+The imx*.dtsi files all have this:
+|	memory { device_type = "memory"; reg = <0 0>; };
+Thus you will end up with a 'memory' node with a reg = <0 0> entry and
+an additional 'memory@...' node with the correct 'reg' values.
 
-Shawn
 
-> 
-> This avoids the warning
-> 
->   hw perfevents: no interrupt-affinity property for /pmu, guessing.
-> 
-> Signed-off-by: Esben Haabendal <eha-/iRVSOupHO4@public.gmane.org>
-> [RV: adapt commit log to the warning emitted in current mainline]
-> Signed-off-by: Rasmus Villemoes <rasmus.villemoes-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
-> ---
->  arch/arm/boot/dts/ls1021a.dtsi | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
-> index 02a266faec9b..96dc1a29fc64 100644
-> --- a/arch/arm/boot/dts/ls1021a.dtsi
-> +++ b/arch/arm/boot/dts/ls1021a.dtsi
-> @@ -106,6 +106,7 @@
->  		compatible = "arm,cortex-a7-pmu";
->  		interrupts = <GIC_SPI 138 IRQ_TYPE_LEVEL_HIGH>,
->  			     <GIC_SPI 139 IRQ_TYPE_LEVEL_HIGH>;
-> +		interrupt-affinity = <&cpu0>, <&cpu1>;
->  	};
->  
->  	reboot {
-> -- 
-> 2.7.4
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Lothar Waßmann
