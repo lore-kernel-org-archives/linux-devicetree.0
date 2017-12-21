@@ -1,69 +1,113 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: [PATCH v5 12/12] ARM: dts: sun8i: a711: Enable the LCD
-Date: Thu, 21 Dec 2017 12:02:38 +0100
-Message-ID: <a5c17761fd7a1a42ad69a83731c6732330712b31.1513854122.git-series.maxime.ripard@free-electrons.com>
-References: <cover.e5a47cc96ec5274dd932daa2bde47df073087da9.1513854122.git-series.maxime.ripard@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <cover.e5a47cc96ec5274dd932daa2bde47df073087da9.1513854122.git-series.maxime.ripard@free-electrons.com>
-In-Reply-To: <cover.e5a47cc96ec5274dd932daa2bde47df073087da9.1513854122.git-series.maxime.ripard@free-electrons.com>
-References: <cover.e5a47cc96ec5274dd932daa2bde47df073087da9.1513854122.git-series.maxime.ripard@free-electrons.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Daniel Vetter <daniel.vetter@intel.com>, David Airlie <airlied@linux.ie>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, jernej.skrabec@siol.net, plaes@plaes.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, thierry.reding@gmail.com, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-arm-kernel@lists.infradead.org, icenowy@aosc.io
+From: Kunihiko Hayashi <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Subject: [PATCH net-next v7 0/2] add UniPhier AVE ethernet support
+Date: Thu, 21 Dec 2017 20:12:54 +0900
+Message-ID: <1513854776-4149-1-git-send-email-hayashi.kunihiko@socionext.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Masami Hiramatsu <masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kunihiko Hayashi <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-VGhlIEE3MTEgaGFzIDEwMjR4NjAwIExWRFMgcGFuZWwsIHdpdGggYSBQV00tYmFzZWQgYmFja2xp
-Z2h0LiBBZGQgaXQgdG8gb3VyCkRULgoKUmV2aWV3ZWQtYnk6IENoZW4tWXUgVHNhaSA8d2Vuc0Bj
-c2llLm9yZz4KU2lnbmVkLW9mZi1ieTogTWF4aW1lIFJpcGFyZCA8bWF4aW1lLnJpcGFyZEBmcmVl
-LWVsZWN0cm9ucy5jb20+Ci0tLQogYXJjaC9hcm0vYm9vdC9kdHMvc3VuOGktYTgzdC10YnMtYTcx
-MS5kdHMgfCA2MSArKysrKysrKysrKysrKysrKysrKysrKystCiAxIGZpbGUgY2hhbmdlZCwgNjEg
-aW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL3N1bjhpLWE4M3Qt
-dGJzLWE3MTEuZHRzIGIvYXJjaC9hcm0vYm9vdC9kdHMvc3VuOGktYTgzdC10YnMtYTcxMS5kdHMK
-aW5kZXggYTAyMWVlNmRhMzk2Li41MTFmY2E0OTFmZTggMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtL2Jv
-b3QvZHRzL3N1bjhpLWE4M3QtdGJzLWE3MTEuZHRzCisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3N1
-bjhpLWE4M3QtdGJzLWE3MTEuZHRzCkBAIC00NSw2ICs0NSw3IEBACiAjaW5jbHVkZSAic3VuOGkt
-YTgzdC5kdHNpIgogCiAjaW5jbHVkZSA8ZHQtYmluZGluZ3MvZ3Bpby9ncGlvLmg+CisjaW5jbHVk
-ZSA8ZHQtYmluZGluZ3MvcHdtL3B3bS5oPgogCiAvIHsKIAltb2RlbCA9ICJUQlMgQTcxMSBUYWJs
-ZXQiOwpAQCAtNTksNiArNjAsNDQgQEAKIAkJc3Rkb3V0LXBhdGggPSAic2VyaWFsMDoxMTUyMDBu
-OCI7CiAJfTsKIAorCWJhY2tsaWdodDogYmFja2xpZ2h0IHsKKwkJY29tcGF0aWJsZSA9ICJwd20t
-YmFja2xpZ2h0IjsKKwkJcHdtcyA9IDwmcHdtIDAgNTAwMDAgUFdNX1BPTEFSSVRZX0lOVkVSVEVE
-PjsKKwkJZW5hYmxlLWdwaW9zID0gPCZwaW8gMyAyOSBHUElPX0FDVElWRV9ISUdIPjsKKworCQli
-cmlnaHRuZXNzLWxldmVscyA9IDwwIDEgMiA0IDggMTYgMzIgNjQgMTI4IDI1NT47CisJCWRlZmF1
-bHQtYnJpZ2h0bmVzcy1sZXZlbCA9IDw5PjsKKwl9OworCisJcGFuZWwgeworCQljb21wYXRpYmxl
-ID0gInRicyxhNzExLXBhbmVsIiwgInBhbmVsLWx2ZHMiOworCQliYWNrbGlnaHQgPSA8JmJhY2ts
-aWdodD47CisJCXBvd2VyLXN1cHBseSA9IDwmcmVnX3N3PjsKKworCQl3aWR0aC1tbSA9IDwxNTM+
-OworCQloZWlnaHQtbW0gPSA8OTA+OworCQlkYXRhLW1hcHBpbmcgPSAidmVzYS0yNCI7CisKKwkJ
-cGFuZWwtdGltaW5nIHsKKwkJCS8qIDEwMjR4NjAwIEA2MEh6ICovCisJCQljbG9jay1mcmVxdWVu
-Y3kgPSA8NTIwMDAwMDA+OworCQkJaGFjdGl2ZSA9IDwxMDI0PjsKKwkJCXZhY3RpdmUgPSA8NjAw
-PjsKKwkJCWhzeW5jLWxlbiA9IDwyMD47CisJCQloZnJvbnQtcG9yY2ggPSA8MTgwPjsKKwkJCWhi
-YWNrLXBvcmNoID0gPDE2MD47CisJCQl2ZnJvbnQtcG9yY2ggPSA8MTI+OworCQkJdmJhY2stcG9y
-Y2ggPSA8MjM+OworCQkJdnN5bmMtbGVuID0gPDU+OworCQl9OworCisJCXBvcnQgeworCQkJcGFu
-ZWxfaW5wdXQ6IGVuZHBvaW50IHsKKwkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JnRjb24wX291dF9s
-Y2Q+OworCQkJfTsKKwkJfTsKKwl9OworCiAJcmVnX3ZiYXQ6IHJlZy12YmF0IHsKIAkJY29tcGF0
-aWJsZSA9ICJyZWd1bGF0b3ItZml4ZWQiOwogCQlyZWd1bGF0b3ItbmFtZSA9ICJ2YmF0IjsKQEAg
-LTg5LDYgKzEyOCwxMCBAQAogCX07CiB9OwogCismZGUgeworCXN0YXR1cyA9ICJva2F5IjsKK307
-CisKIC8qCiAgKiBBbiBVU0ItMiBodWIgaXMgY29ubmVjdGVkIGhlcmUsIHdoaWNoIGFsc28gbWVh
-bnMgd2UgZG9uJ3QgbmVlZCB0bwogICogZW5hYmxlIHRoZSBPSENJIGNvbnRyb2xsZXIuCkBAIC0x
-NDIsNiArMTg1LDEyIEBACiAJc3RhdHVzID0gIm9rYXkiOwogfTsKIAorJnB3bSB7CisJcGluY3Ry
-bC1uYW1lcyA9ICJkZWZhdWx0IjsKKwlwaW5jdHJsLTAgPSA8JnB3bV9waW4+OworCXN0YXR1cyA9
-ICJva2F5IjsKK307CisKICZyX3JzYiB7CiAJc3RhdHVzID0gIm9rYXkiOwogCkBAIC0zMjMsNiAr
-MzcyLDE4IEBACiAJcmVndWxhdG9yLW5hbWUgPSAidmNjLWxjZCI7CiB9OwogCismdGNvbjAgewor
-CXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7CisJcGluY3RybC0wID0gPCZsY2RfbHZkc19waW5z
-PjsKK307CisKKyZ0Y29uMF9vdXQgeworCXRjb24wX291dF9sY2Q6IGVuZHBvaW50QDAgeworCQly
-ZWcgPSA8MD47CisJCXJlbW90ZS1lbmRwb2ludCA9IDwmcGFuZWxfaW5wdXQ+OworCX07Cit9Owor
-CiAmdWFydDAgewogCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7CiAJcGluY3RybC0wID0gPCZ1
-YXJ0MF9wYl9waW5zPjsKLS0gCmdpdC1zZXJpZXMgMC45LjEKX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2
-ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21h
-aWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+This series adds support for Socionext AVE ethernet controller implemented
+on UniPhier SoCs. This driver supports RGMII/RMII modes.
+
+v6: https://www.spinics.net/lists/netdev/msg472133.html
+
+The PHY patch included in v1 has already separated in:
+http://www.spinics.net/lists/netdev/msg454595.html
+
+Changes since v6:
+- sort the order of local variables from longest to shortest line
+- fix ave_probe() which calls register_netdev() at the end of initialization
+- dt-bindings: remove phy node descriptions in mdio node
+
+Changes since v5:
+- replace license boilerplate with SPDX Identifier
+- remove inline directives and an unused function
+
+Changes since v4:
+- fix larger integer warning on AVE_PFMBYTE_MASK0
+
+Changes since v3:
+- remove checking dma address and use dma_set_mask() to restirct address
+- replace ave_mdio_busywait() with read_poll_timeout()
+- replace functions to access to registers with readl/writel() directly
+- replace a function to access to macaddr with ave_hw_write_macaddr()
+- change return value of ave_dma_map() to error value
+- move mdiobus_unregister() from ave_remove() to ave_uninit()
+- eliminate else block at the end of ave_dma_map()
+- add mask definitions for packet filter
+- sort bitmap definitions in descending order
+- add error check to some functions
+- rename and sort functions to clear sub-categories
+- fix error value consistency
+- remove unneeded initializers
+- change type of constant arrays
+
+Changes since v2:
+- replace clk_get() with devm_clk_get()
+- replace reset_control_get() with devm_reset_control_get_optional_shared()
+- add error return when the error occurs on the above *_get functions
+- sort soc data and compatible strings
+- remove clearly obvious comments
+- modify dt-bindings document consistent with these modifications
+
+Changes since v1:
+- add/remove devicetree properties and sub-node
+  - remove "internal-phy-interrupt" and "desc-bits" property
+  - add SoC data structures based on compatible strings
+  - add node operation to apply "mdio" sub-node
+- add support for features
+  - add support for {get,set}_pauseparam and pause frame operations
+  - add support for ndo_get_stats64 instead of ndo_get_stats
+- replace with desiable functions
+  - replace check for valid phy_mode with phy_interface{_mode}_is_rgmii()
+  - replace phy attach message with phy_attached_info()
+  - replace 32bit operation with {upper,lower}_32_bits() on ave_wdesc_addr()
+  - replace nway_reset and get_link with generic functions
+- move operations to proper functions
+  - move phy_start_aneg() to ndo_open,
+    and remove unnecessary PHY interrupt operations
+    See http://www.spinics.net/lists/netdev/msg454590.html
+  - move irq initialization and descriptor memory allocation to ndo_open
+  - move initialization of reset and clock and mdiobus to ndo_init
+- fix skbuffer operations
+  - fix skb alignment operations and add Rx buffer adjustment for descriptor
+    See http://www.spinics.net/lists/netdev/msg456014.html
+  - add error returns when dma_map_single() failed 
+- clean up code structures
+  - clean up wait-loop and wake-queue conditions
+  - add ave_wdesc_addr() and offset definitions
+  - add ave_macaddr_init() to clean up mac-address operation
+  - fix checking whether Tx entry is not enough
+  - fix supported features of phydev
+  - add necessary free/disable operations
+  - add phydev check on ave_{get,set}_wol()
+  - remove netif_carrier functions, phydev initializer, and Tx budget check
+- change obsolate codes
+  - replace ndev->{base_addr,irq} with the members of ave_private
+- rename goto labels and mask definitions, and remove unused codes
+
+Kunihiko Hayashi (2):
+  dt-bindings: net: add DT bindings for Socionext UniPhier AVE
+  net: ethernet: socionext: add AVE ethernet driver
+
+ .../bindings/net/socionext,uniphier-ave4.txt       |   45 +
+ drivers/net/ethernet/Kconfig                       |    1 +
+ drivers/net/ethernet/Makefile                      |    1 +
+ drivers/net/ethernet/socionext/Kconfig             |   22 +
+ drivers/net/ethernet/socionext/Makefile            |    5 +
+ drivers/net/ethernet/socionext/sni_ave.c           | 1736 ++++++++++++++++++++
+ 6 files changed, 1810 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/socionext,uniphier-ave4.txt
+ create mode 100644 drivers/net/ethernet/socionext/Kconfig
+ create mode 100644 drivers/net/ethernet/socionext/Makefile
+ create mode 100644 drivers/net/ethernet/socionext/sni_ave.c
+
+-- 
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
