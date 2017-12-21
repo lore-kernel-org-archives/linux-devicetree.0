@@ -1,144 +1,59 @@
-From: Chunyan Zhang <zhang.chunyan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 4/5] drivers: regulator: empty the old suspend functions
-Date: Thu, 21 Dec 2017 14:25:05 +0800
-Message-ID: <1513837506-26543-5-git-send-email-zhang.chunyan@linaro.org>
-References: <1513837506-26543-1-git-send-email-zhang.chunyan@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1513837506-26543-1-git-send-email-zhang.chunyan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chunyan Zhang <zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Yong Wu <yong.wu@mediatek.com>
+Subject: Re: [PATCH v2 2/2] PCI: mediatek: Fixup class type for MT7622
+Date: Thu, 21 Dec 2017 14:41:16 +0800
+Message-ID: <1513838476.23174.3.camel@mhfsdcap03>
+References: <1513822277-18329-1-git-send-email-honghui.zhang@mediatek.com>
+ <1513822277-18329-3-git-send-email-honghui.zhang@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1513822277-18329-3-git-send-email-honghui.zhang@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: honghui.zhang@mediatek.com
+Cc: youlin.pei@mediatek.com, devicetree@vger.kernel.org, hongkun.cao@mediatek.com, ryder.lee@mediatek.com, yu.yu@mediatek.com, linux-pci@vger.kernel.org, sean.wang@mediatek.com, linux-kernel@vger.kernel.org, yt.shen@mediatek.com, matthias.bgg@gmail.com, lorenzo.pieralisi@arm.com, linux-mediatek@lists.infradead.org, xinping.qian@mediatek.com, bhelgaas@google.com, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Regualtor suspend/resume functions should only be called by PM suspend
-core via registering dev_pm_ops, and regulator devices should implement
-the callback functions.  Thus, any regulator consumer shouldn't call
-the regulator suspend/resume functions directly.
+On Thu, 2017-12-21 at 10:11 +0800, honghui.zhang@mediatek.com wrote:
+> From: Honghui Zhang <honghui.zhang@mediatek.com>
+> 
+> The host bridge of MT7622 has hardware code the class code to an
+> arbitrary, meaningless value, fix that.
+> 
+> Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
+> ---
+>  drivers/pci/host/pcie-mediatek.c | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+> 
+> diff --git a/drivers/pci/host/pcie-mediatek.c b/drivers/pci/host/pcie-mediatek.c
+> index 3248771..ae8d367 100644
+> --- a/drivers/pci/host/pcie-mediatek.c
+> +++ b/drivers/pci/host/pcie-mediatek.c
+> @@ -1174,3 +1174,15 @@ static struct platform_driver mtk_pcie_driver = {
+>  	},
+>  };
+>  builtin_platform_driver(mtk_pcie_driver);
+> +
+> +/* The host bridge of MT7622 advertises the wrong device class. */
+> +static void mtk_fixup_class(struct pci_dev *dev)
+> +{
+> +	dev->class = PCI_CLASS_BRIDGE_PCI << 8;
+> +}
+> +
+> +/*
+> + * The HW default value of vendor id and device id for mt7622 are 0x0e8d,
+> + * 0x3258, which are arbitrary, meaningless values.
+> + */
 
-In order to avoid compile errors, two empty functions with the same name
-still be left for the time being.
+What's the right vendor id and device id? is it possible to fix them
+too?
 
-Signed-off-by: Chunyan Zhang <zhang.chunyan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- drivers/regulator/core.c          | 74 ---------------------------------------
- include/linux/regulator/machine.h |  5 ++-
- 2 files changed, 2 insertions(+), 77 deletions(-)
-
-diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
-index 5ea80e9..080c233 100644
---- a/drivers/regulator/core.c
-+++ b/drivers/regulator/core.c
-@@ -4179,80 +4179,6 @@ void regulator_unregister(struct regulator_dev *rdev)
- }
- EXPORT_SYMBOL_GPL(regulator_unregister);
- 
--static int _regulator_suspend_prepare(struct device *dev, void *data)
--{
--	struct regulator_dev *rdev = dev_to_rdev(dev);
--	const suspend_state_t *state = data;
--	int ret;
--
--	mutex_lock(&rdev->mutex);
--	ret = suspend_prepare(rdev, *state);
--	mutex_unlock(&rdev->mutex);
--
--	return ret;
--}
--
--/**
-- * regulator_suspend_prepare - prepare regulators for system wide suspend
-- * @state: system suspend state
-- *
-- * Configure each regulator with it's suspend operating parameters for state.
-- * This will usually be called by machine suspend code prior to supending.
-- */
--int regulator_suspend_prepare(suspend_state_t state)
--{
--	/* ON is handled by regulator active state */
--	if (state == PM_SUSPEND_ON)
--		return -EINVAL;
--
--	return class_for_each_device(&regulator_class, NULL, &state,
--				     _regulator_suspend_prepare);
--}
--EXPORT_SYMBOL_GPL(regulator_suspend_prepare);
--
--static int _regulator_suspend_finish(struct device *dev, void *data)
--{
--	struct regulator_dev *rdev = dev_to_rdev(dev);
--	int ret;
--
--	mutex_lock(&rdev->mutex);
--	if (rdev->use_count > 0  || rdev->constraints->always_on) {
--		if (!_regulator_is_enabled(rdev)) {
--			ret = _regulator_do_enable(rdev);
--			if (ret)
--				dev_err(dev,
--					"Failed to resume regulator %d\n",
--					ret);
--		}
--	} else {
--		if (!have_full_constraints())
--			goto unlock;
--		if (!_regulator_is_enabled(rdev))
--			goto unlock;
--
--		ret = _regulator_do_disable(rdev);
--		if (ret)
--			dev_err(dev, "Failed to suspend regulator %d\n", ret);
--	}
--unlock:
--	mutex_unlock(&rdev->mutex);
--
--	/* Keep processing regulators in spite of any errors */
--	return 0;
--}
--
--/**
-- * regulator_suspend_finish - resume regulators from system wide suspend
-- *
-- * Turn on regulators that might be turned off by regulator_suspend_prepare
-- * and that should be turned on according to the regulators properties.
-- */
--int regulator_suspend_finish(void)
--{
--	return class_for_each_device(&regulator_class, NULL, NULL,
--				     _regulator_suspend_finish);
--}
--EXPORT_SYMBOL_GPL(regulator_suspend_finish);
- 
- /**
-  * regulator_has_full_constraints - the system has fully specified constraints
-diff --git a/include/linux/regulator/machine.h b/include/linux/regulator/machine.h
-index e50519f..b4ddb56 100644
---- a/include/linux/regulator/machine.h
-+++ b/include/linux/regulator/machine.h
-@@ -231,12 +231,12 @@ struct regulator_init_data {
- 
- #ifdef CONFIG_REGULATOR
- void regulator_has_full_constraints(void);
--int regulator_suspend_prepare(suspend_state_t state);
--int regulator_suspend_finish(void);
- #else
- static inline void regulator_has_full_constraints(void)
- {
- }
-+#endif
-+
- static inline int regulator_suspend_prepare(suspend_state_t state)
- {
- 	return 0;
-@@ -245,6 +245,5 @@ static inline int regulator_suspend_finish(void)
- {
- 	return 0;
- }
--#endif
- 
- #endif
--- 
-2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +DECLARE_PCI_FIXUP_EARLY(0x0e8d, 0x3258, mtk_fixup_class);
