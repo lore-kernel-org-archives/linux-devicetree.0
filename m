@@ -1,125 +1,155 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH v2 1/5] dt-bindings: at24: consistently document the
- compatible property
-Date: Fri, 22 Dec 2017 00:07:55 +0100
-Message-ID: <a0cbee79-29dd-686c-5069-d95e1710bfc1@axentia.se>
-References: <20171221134842.31287-1-brgl@bgdev.pl>
- <20171221134842.31287-2-brgl@bgdev.pl>
- <0c2455ae-2f68-5342-14c6-14706d6f0e66@axentia.se>
- <CABxcv=kZk+Yrt9uj9uV7UVC+Tca7NCECfyZXmKkqHdopm5EZTg@mail.gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 4/5] ARM: dts: Add support for emtrion emCON-MX6 series
+Date: Thu, 21 Dec 2017 17:19:05 -0600
+Message-ID: <20171221231905.e3fmhhbkzzrha5jg@rob-hp-laptop>
+References: <20171123125600.41562-1-jan.tuerk@emtrion.com>
+ <20171220134710.64479-1-jan.tuerk@emtrion.com>
+ <20171220134710.64479-5-jan.tuerk@emtrion.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <CABxcv=kZk+Yrt9uj9uV7UVC+Tca7NCECfyZXmKkqHdopm5EZTg@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-i2c-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@dowhile0.org>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy.shevchenko@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, David Lechner <david@lechnology.com>, Divagar Mohandass <divagar.mohandass@intel.com>, Linux I2C <linux-i2c@vger.kernel.org>, devicetree@vger.kernel.org, Linux Kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20171220134710.64479-5-jan.tuerk-BU0Y/NROKIhBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jan.tuerk-BU0Y/NROKIhBDgjK7y7TUQ@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, SZ Lin <sz.lin-D4fb9hXD9d4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2017-12-21 21:27, Javier Martinez Canillas wrote:
-> Hello Peter,
+On Wed, Dec 20, 2017 at 02:47:04PM +0100, jan.tuerk-BU0Y/NROKIhBDgjK7y7TUQ@public.gmane.org wrote:
+> From: Jan Tuerk <jan.tuerk-BU0Y/NROKIhBDgjK7y7TUQ@public.gmane.org>
 > 
-> On Thu, Dec 21, 2017 at 5:20 PM, Peter Rosin <peda@axentia.se> wrote:
->> On 2017-12-21 14:48, Bartosz Golaszewski wrote:
->>> Current description of the compatible property for at24 is quite vague.
->>>
->>> Specify an exact list of accepted compatibles and document the - now
->>> deprecated - strings which were previously used in device tree files.
->>
->> Why is it suddenly deprecated to correctly specify what hardware you
->> have, e.g. "nxp,24c32". In this case the manufacturer is nxp, damnit.
+> This patch adds support for the emtrion GmbH emCON-MX6 modules.
+> They are available with imx.6 Solo, Dual-Lite, Dual and Quad
+> equipped with Memory from 512MB to 2GB (configured by U-Boot).
 > 
-> Sorry but I disagree.
+> Our default developer-Kit ships with the Avari baseboard and the
+> EDT ETM0700G0BDH6 Display (imx6[q|dl]-emcon-avari).
 > 
-> When you specify a compatible string, you are not specifying a
-> particular hardware but a device programming model.
-
-That's not what it says in https://elinux.org/Device_Tree_Usage
-in the "Understanding the compatible Property" section. I quote:
-
-	compatible is a list of strings. The first string in the
-	list specifies the exact device that the node represents
-	in the form "<manufacturer>,<model>". The following strings
-	represent other devices that the device is compatible with.
-
-Pretty clearly talks about devices and not programming models. But
-maybe I shouldn't trust that reference? What should I be reading
-instead?
-
-> It's very common to use a compatible string that doesn't match exactly
-> the specific hardware used. That's why it's called _compatible_ BTW.
-
-That's not how I read the above.
-
-> For example when a DTS define a UART node with an ns16550 compatible,
-> they don't really mean that have a UART IC manufactured by National
-> Semiconductor.
-
-That just tells me that most people are a little bit lazy and ready
-to cut a corner or two when they can get away with it. Or that there
-is some form of misunderstanding at work...
-
->> Sure, it happens to be compatible with "atmel,24c32", but that is
->> supposed to be written with a fallback as
->>
->>         "nxp,24c32", "atmel,24c32"
+> The devicetree is split into the common part providing all module
+> components and the basic support for all SoC versions
+> (imx6qdl-emcon.dtsi) and parts which are i.mx6 S|DL and D|Q relevant.
+> Finally the support for the avari baseboard in the developer-kit
+> configuration is provided by the emcon-avari dts files.
 > 
-> This isn't a requirement really, systems integrators are free to use
-> more than one <manufacturer,model> tuple in the compatible string if
-> they want the DTB to be future proof, just in case there's a need for
-> a more specific driver or if the programming model happened to not be
-> the same at the end. This is usually done for the boards compatible
-> string as an example, even when there isn't a struct machine_desc for
-> the specific board compatible and only for the SoC family.
+> Signed-off-by: Jan Tuerk <jan.tuerk-BU0Y/NROKIhBDgjK7y7TUQ@public.gmane.org>
+> ---
+> Changes in v2:
+>  - Fixed typo (reg_prallel.. --> reg_parallel)
+>  - Removed trailing new-line
+>  - Fix uppercase addresses as Rob H. noted
+>  - Fix warning about lcd@di0 -> rename to disp0
+>  - Renamed some nodes regarding Rob H.
 > 
-> So it's OK if you want to define the compatible as "nxp,24c32",
-> "atmel,24c32", but that's a general OF concept and not something
-> related to the at24 eeprom driver so I'm not sure if it should be
-> mentioned in the at24 DT binding doc.
+>  Documentation/devicetree/bindings/arm/emtrion.txt |  13 +
+>  arch/arm/boot/dts/Makefile                        |   2 +
+>  arch/arm/boot/dts/imx6dl-emcon-avari.dts          | 233 ++++++
+>  arch/arm/boot/dts/imx6dl-emcon.dtsi               |  37 +
+>  arch/arm/boot/dts/imx6q-emcon-avari.dts           | 233 ++++++
+>  arch/arm/boot/dts/imx6q-emcon.dtsi                |  37 +
+>  arch/arm/boot/dts/imx6qdl-emcon.dtsi              | 848 ++++++++++++++++++++++
+>  7 files changed, 1403 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/emtrion.txt
+>  create mode 100644 arch/arm/boot/dts/imx6dl-emcon-avari.dts
+>  create mode 100644 arch/arm/boot/dts/imx6dl-emcon.dtsi
+>  create mode 100644 arch/arm/boot/dts/imx6q-emcon-avari.dts
+>  create mode 100644 arch/arm/boot/dts/imx6q-emcon.dtsi
+>  create mode 100644 arch/arm/boot/dts/imx6qdl-emcon.dtsi
 
-One problem is that if "nxp,24c32" (or "nxp,24c02" as in the example
-below) is not a valid compatible, the tooling will be correct to
-complain about it. Currently, it is just a checkpatch deficiency that
-it complains like this:
+[...]
 
-$ scripts/checkpatch.pl -f arch/arm/boot/dts/at91-tse850-3.dts
-WARNING: DT compatible string "nxp,24c02" appears un-documented -- check ./Documentation/devicetree/bindings/
-#249: FILE: arch/arm/boot/dts/at91-tse850-3.dts:249:
-+               compatible = "nxp,24c02", "atmel,24c02";
+> +	captouch: touchscreen@38 {
+> +		reg = <0x38>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_irq_touch2 &pinctrl_emcon_gpio4>;
+> +		interrupt-parent = <&gpio6>;
+> +		interrupts = <31 IRQ_TYPE_EDGE_FALLING>;
+> +		compatible = "edt,edt-ft5406";
 
->> if I understand correctly. So, why is that deprecated in this case?
->>
->> What if (a few years down the line) it is discovered that some weird
->> quirk is needed that is only appropriate for nxp chips?
->>
->> nxp is of course just an example, pick any manufacturer of eeproms
->> (supposedly) compatible with the atmel interface.
->>
-> 
-> That's indeed a possibility and the reason why most DT nodes have a
-> more specific <manufacturer,model> before the generic one matched by
-> drivers. I really doubt that in the future it will be found that a
-> more specific compatible string is needed for one manufacturer in this
-> case, specially since the driver didn't even care about the
-> manufacturers until recently.
+Put compatible as the first property.
 
-I'm not talking about the driver. But if what you say is true, that
-change would have broken a number of existing DTBs. Is that really the
-case?
+> +		wake-gpios = <&gpio2 3 GPIO_ACTIVE_HIGH>;
+> +		wakeup-source;
+> +	};
+> +};
 
-> So I think that makes no sense for a driver to support all possible
-> manufacturers as possible compatible strings if all the devices have
-> the same exact programming model.
+[...]
 
-That's what the fallback is for. With that in place the driver can
-start to care when there is a need but until then it can work just
-as it always has. Without knowing the specific device, the driver has
-less chance to adapt when the unexpected is discovered. But again,
-I'm not really discussing driver details, I'm complaining about the
-proposed changes to the bindings. I simply don't see how they make
-sense.
+> +&rgb_panel {
+> +	compatible = "edt,etm0700g0bdh6";
+> +	status = "okay";
 
-Cheers,
-Peter
+Having compatible here is a bit strange and fragile. It's assuming 2 
+different panels have the same common properties.
+
+
+> diff --git a/arch/arm/boot/dts/imx6q-emcon.dtsi b/arch/arm/boot/dts/imx6q-emcon.dtsi
+> new file mode 100644
+> index 000000000000..64fc0cd74c05
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/imx6q-emcon.dtsi
+> @@ -0,0 +1,37 @@
+> +/*
+> + * Copyright (C) 2017 emtrion GmbH
+> + * Author: Jan Tuerk  <jan.tuerk-BU0Y/NROKIhBDgjK7y7TUQ@public.gmane.org>
+> + *
+> + * The code contained herein is licensed under the GNU General Public
+> + * License. You may obtain a copy of the GNU General Public License
+> + * Version 2 or later at the following locations:
+> + *
+> + * http://www.opensource.org/licenses/gpl-license.html
+> + * http://www.gnu.org/copyleft/gpl.html
+
+You don't need this if...
+
+> + *
+> + * SPDX-License-Identifier: GPL-2.0
+
+You have this.
+
+Also, the rules around this are getting a bit stricter saying the SPDX 
+tag should be the first line of the file using a C++ style comment.
+
+> + *
+> + */
+> +
+> +/ {
+> +	model = "emtrion SoM emCON-MX6 Dual/Quad";
+> +	compatible = "emtrion,emcon-mx6","fsl,imx6q";
+
+Need a space                             ^
+
+> diff --git a/arch/arm/boot/dts/imx6qdl-emcon.dtsi b/arch/arm/boot/dts/imx6qdl-emcon.dtsi
+> new file mode 100644
+> index 000000000000..f87d8ed6a1b1
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/imx6qdl-emcon.dtsi
+> @@ -0,0 +1,848 @@
+> +/*
+> + * Copyright (C) 2017 emtrion GmbH
+> + * Author: Jan Tuerk  <jan.tuerk-BU0Y/NROKIhBDgjK7y7TUQ@public.gmane.org>
+> + *
+> + * The code contained herein is licensed under the GNU General Public
+> + * License. You may obtain a copy of the GNU General Public License
+> + * Version 2 or later at the following locations:
+> + *
+> + * http://www.opensource.org/licenses/gpl-license.html
+> + * http://www.gnu.org/copyleft/gpl.html
+> + *
+> + * SPDX-License-Identifier: GPL-2.0
+> + *
+> + */
+> +
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/pwm/pwm.h>
+> +#include <dt-bindings/input/input.h>
+> +
+> +/ {
+> +
+> +	model = "emtrion SoM emCON-MX6";
+> +	compatible = "emtrion,emcon-mx6","fsl,imx6q", "fsl,imx6dl";
+
+Need a space                             ^
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
