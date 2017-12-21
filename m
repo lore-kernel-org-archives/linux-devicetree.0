@@ -1,30 +1,32 @@
 From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 1/3] ARM: dts: imx6sx-sdb: Convert from fbdev to drm
- bindings
-Date: Thu, 21 Dec 2017 16:22:57 +0800
-Message-ID: <20171221082256.GN23230@dragon>
-References: <1512573319-6624-1-git-send-email-marcofrk@gmail.com>
+Subject: Re: [PATCH v3 1/9] ARM: dts: imx7-colibri: move and rename USB Host
+ power regulator
+Date: Thu, 21 Dec 2017 16:29:44 +0800
+Message-ID: <20171221082943.GO23230@dragon>
+References: <20171219181038.1369-1-stefan@agner.ch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1512573319-6624-1-git-send-email-marcofrk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20171219181038.1369-1-stefan-XLVq0VzYD2Y@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marco Franchi <marcofrk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 06, 2017 at 01:15:17PM -0200, Marco Franchi wrote:
-> It is preferred to use the panel compatible string rather than passing
-> the LCD timing in the device tree.
+On Tue, Dec 19, 2017 at 07:10:30PM +0100, Stefan Agner wrote:
+> The Colibri default which enables USB Host power is not necessarily
+> tied to the OTG2 controller, some carrier board use the pin to
+> control USB power for both controllers. Hence name the pinctrl
+> group more generic.
 > 
-> So pass the "sii,43wvf1g" compatible string, which describes the parallel
-> LCD.
+> Also move the regulator to the generic eval-v3 device tree since
+> the regulator is always on the carrier board. In the Colibri iMX7S
+> case the regulator is just not used.  This allows to reuse the
+> regulator in a upcoming SKU Colibri iMX7D 1GB with eMMC.
 > 
-> Also pass the 'backlight' property as described in
-> Documentation/devicetree/bindings/display/panel/simple-panel.txt
-> 
-> Signed-off-by: Marco Franchi <marcofrk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+> Reviewed-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
 
 Applied all, thanks.
 --
