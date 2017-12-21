@@ -1,46 +1,52 @@
-From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 2/5] dt-bindings: at24: add a missing compatible
-Date: Thu, 21 Dec 2017 16:25:21 +0200
-Message-ID: <CAHp75Veg5h7v611PiLCOP6n4Ofhm-0+YY651tT_NZoJ-1aSMwA@mail.gmail.com>
-References: <20171221134842.31287-1-brgl@bgdev.pl> <20171221134842.31287-3-brgl@bgdev.pl>
- <CAHp75VeeLuoPUi=Q9=kSNQh9Dts3FC=SE464gFdcSizwSNdLPg@mail.gmail.com> <CAMRc=MdkF9tioOqDwWFKWCRU832BZPMD1GjK+BonDbhEH0CCnA@mail.gmail.com>
+From: Marco Franchi <marcofrk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: imx: Add memory node unit name
+Date: Thu, 21 Dec 2017 12:26:38 -0200
+Message-ID: <CAM4PwSVzVn3=wWpFohw2q23Oiwp1FimCkdHPq=BfG-QzuuPtfQ@mail.gmail.com>
+References: <1512575989-15627-1-git-send-email-marcofrk@gmail.com> <20171221090736.3ac9d5db@karo-electronics.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMRc=MdkF9tioOqDwWFKWCRU832BZPMD1GjK+BonDbhEH0CCnA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20171221090736.3ac9d5db-AvR2QvxeiV7DiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bartosz Golaszewski <brgl-ARrdPY/1zhM@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, Divagar Mohandass <divagar.mohandass-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-i2c <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: =?UTF-8?Q?Lothar_Wa=C3=9Fmann?= <LW-AvR2QvxeiV7DiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 21, 2017 at 4:18 PM, Bartosz Golaszewski <brgl-ARrdPY/1zhM@public.gmane.org> wrote:
-> 2017-12-21 15:08 GMT+01:00 Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
->> On Thu, Dec 21, 2017 at 3:48 PM, Bartosz Golaszewski <brgl-ARrdPY/1zhM@public.gmane.org> wrote:
->>> "atmel,spd" is reported by checkpatch as undocumented in the device
->>> tree bindings. Add it to the list of supported compatible strings.
+Hi Lothar,
+
+2017-12-21 6:07 GMT-02:00 Lothar Wa=C3=9Fmann <LW-AvR2QvxeiV7DiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>:
+> Hi,
+>
+> On Wed,  6 Dec 2017 13:59:49 -0200 Marco Franchi wrote:
+>> Fix the following warnings from dtc by adding the unit name to memory
+>> nodes:
 >>
->>>          "atmel,24c00",
->>>          "atmel,24c01",
->>>          "atmel,24c02",
->>> +        "atmel,spd",
->>>          "atmel,24c04",
->>>          "atmel,24c08",
->>>          "atmel,24c16",
+>> Warning (unit_address_vs_reg): Node /memory has a reg or ranges property=
+, but no unit name
 >>
->> Sounds alogical to me to make a split by this new record.
->> Can you find better line to inject?
+>> Converted using the following command:
+>>
+>> perl -p0777i -e 's/memory \{\n\t\treg =3D \<0x+([0-9a-f])/memory\@$1$\00=
+00000 \{\n\t\treg =3D <0x$1/m' `find ./arch/arm/boot/dts -name "imx*"`
+>>
+>> The files below were manually fixed:
+>> -imx1-ads.dts
+>> -imx1-apf9328.dts
+>>
+> The imx*.dtsi files all have this:
+> |       memory { device_type =3D "memory"; reg =3D <0 0>; };
+> Thus you will end up with a 'memory' node with a reg =3D <0 0> entry and
+> an additional 'memory@...' node with the correct 'reg' values.
 
-> They are actually ordered by memory size. I want to keep it like this
-> in the driver and I prefer that the DT reflect it.
+You are right. The .dtb files were composed by two different memory nodes.
+Do you have some recommendation to take off this specific warning?
 
-So, I just disagree on the above. Rationale I described at one of the comment.
+>
+>
+> Lothar Wa=C3=9Fmann
 
-At the end it's your call, but from my p.o.v. it makes life harder to
-read and catch the chips which are (un)supported.
-
--- 
-With Best Regards,
-Andy Shevchenko
+Marco Franchi
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
