@@ -1,98 +1,32 @@
-From: Prabhakar Kushwaha <prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org>
-Subject: RE: [PATCH][v3] dt-bindings: ifc: Update endianness usage
-Date: Thu, 21 Dec 2017 08:09:41 +0000
-Message-ID: <HE1PR04MB1241224F0F7DC884338F2D26970D0@HE1PR04MB1241.eurprd04.prod.outlook.com>
-References: <1512029196-7158-1-git-send-email-prabhakar.kushwaha@nxp.com>
- <20171204204727.fnt4vsw2lg2q2w5x@rob-hp-laptop>
- <HE1PR04MB12413F48FF7E083FD8E0FD36973D0@HE1PR04MB1241.eurprd04.prod.outlook.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH RESEND v6 0/6] provide power off support for iMX6 with
+ external PMIC
+Date: Thu, 21 Dec 2017 16:12:01 +0800
+Message-ID: <20171221081200.GK23230@dragon>
+References: <20171206072402.11694-1-o.rempel@pengutronix.de>
+ <20171206184844.uqbu6rmj4bponpuw@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <HE1PR04MB12413F48FF7E083FD8E0FD36973D0-6LN7OEpIatU9TB6uw0n1oM9NdZoXdze2vxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Prabhakar Kushwaha <prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20171206184844.uqbu6rmj4bponpuw@sirena.org.uk>
+Sender: linux-clk-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Oleksij Rempel <o.rempel@pengutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Fabio Estevam <fabio.estevam@nxp.com>, Russell King <linux@armlinux.org.uk>, kernel@pengutronix.de, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Liam Girdwood <lgirdwood@gmail.com>, Leonard Crestez <leonard.crestez@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On Wed, Dec 06, 2017 at 06:48:44PM +0000, Mark Brown wrote:
+> On Wed, Dec 06, 2017 at 08:23:56AM +0100, Oleksij Rempel wrote:
+> > 2017.12.06:
+> > Adding Linus. Probably there is no maintainer for this patch set.
+> > No changes are made, tested on v4.15-rc1.
+> 
+> Have any of the i.MX maintainers said anything about this?  I was about
+> to reply to this asking if they were ever going to review it as it keeps
+> on getting resent but I'm not seeing any interest from any of them but
+> the main immediate audience is i.MX systems.
 
-> -----Original Message-----
-> From: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org [mailto:devicetree-
-> owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org] On Behalf Of Prabhakar Kushwaha
-> Sent: Tuesday, December 05, 2017 2:45 PM
-> To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; mark.rutland-5wv7dgnIgG8@public.gmane.org;
-> shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> Subject: RE: [PATCH][v3] dt-bindings: ifc: Update endianness usage
->=20
->=20
-> > -----Original Message-----
-> > From: Rob Herring [mailto:robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org]
-> > Sent: Tuesday, December 05, 2017 2:17 AM
-> > To: Prabhakar Kushwaha <prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org>
-> > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; mark.rutland-5wv7dgnIgG8@public.gmane.org;
-> > shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> > Subject: Re: [PATCH][v3] dt-bindings: ifc: Update endianness usage
-> >
-> > On Thu, Nov 30, 2017 at 01:36:36PM +0530, Prabhakar Kushwaha wrote:
-> > > IFC controller version < 2.0 support IFC register access as
-> > > big endian. These controller version also require IFC NOR signals to
-> > > be connected in reverse order with NOR flash.
-> > >
-> > > IFC >=3D 2.0 is other way around.
-> > >
-> > > So updating IFC binding to take care of both using endianness field.
-> > >
-> > > Signed-off-by: Prabhakar Kushwaha <prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org>
-> > > ---
-> > > Changes for v2: updated subject
-> > > Changes for v3: fixed typo for "big-endian"
-> > >
-> > >  Documentation/devicetree/bindings/memory-controllers/fsl/ifc.txt | 6
-> ++++--
-> > >  1 file changed, 4 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/memory-
-> controllers/fsl/ifc.txt
-> > b/Documentation/devicetree/bindings/memory-controllers/fsl/ifc.txt
-> > > index 89427b0..824a2ca 100644
-> > > --- a/Documentation/devicetree/bindings/memory-controllers/fsl/ifc.tx=
-t
-> > > +++ b/Documentation/devicetree/bindings/memory-controllers/fsl/ifc.tx=
-t
-> > > @@ -18,8 +18,10 @@ Properties:
-> > >                interrupt (NAND_EVTER_STAT).  If there is only one,
-> > >                that interrupt reports both types of event.
-> > >
-> > > -- little-endian : If this property is absent, the big-endian mode wi=
-ll
-> > > -                  be in use as default for registers.
-> > > +- little-endian or big-endian : It represents how IFC registers to b=
-e accessed.
-> > > +			It also represents connection between controller and
-> > > +			NOR flash. If this property is absent, the big-endian
-> > > +			mode will be in use as default.
-> >
-> > My question on the prior version remains. I think if you need to handle
-> > more than just register endianness, that should be done with the
-> > compatible string.
-> >
->=20
-> I may not able to use compatible string as this information will also be =
-used it
-> drivers/mtd/maps/physmap_of_core.c other than drivers/memory/fsl_ifc.c.
-> I am trying to avoid controller specific details in generic file.
->=20
-> This is the reason endianness property is being used.
->=20
+I will be happy to take the dts changes, after kernel/reboot and
+regulator get accepted (ideally landed on mainline).
 
-Please let me know if I am not able to address your review comment
-
---prabhakar
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Shawn
