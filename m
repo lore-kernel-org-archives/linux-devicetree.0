@@ -1,32 +1,37 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 1/3] ARM: dts: r8a7740: Correct TPU register block size
-Date: Thu, 21 Dec 2017 10:32:02 +0100
-Message-ID: <20171221093201.53kvbftn5qwxcpgf@verge.net.au>
-References: <1513699327-27357-1-git-send-email-geert+renesas@glider.be>
- <1513699327-27357-2-git-send-email-geert+renesas@glider.be>
- <20171220082306.zdtntqbajyy666zv@verge.net.au>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH 1/9] ARM: dts: r8a7745: Add audio clocks
+Date: Thu, 21 Dec 2017 10:37:17 +0100
+Message-ID: <CAMuHMdV0C9RP2DUrYV-bmH8_mTzd_44ccMEDCvCZMEiodVhRLw@mail.gmail.com>
+References: <1513800125-53213-1-git-send-email-biju.das@bp.renesas.com> <1513800125-53213-2-git-send-email-biju.das@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pwm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171220082306.zdtntqbajyy666zv@verge.net.au>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1513800125-53213-2-git-send-email-biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 20, 2017 at 09:23:07AM +0100, Simon Horman wrote:
-> On Tue, Dec 19, 2017 at 05:02:05PM +0100, Geert Uytterhoeven wrote:
-> > The Timer Pulse Unit has registers that lie outside the declared
-> > register block.  Enlarge the register block size to fix this.
-> > 
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > ---
-> > This was probably based on the old platform code, which also assumed a
-> > register block size of 0x100.
-> 
-> Reviewed-by: Simon Horman <simon.horman@netronome.com>
-> 
-> With reference to "User's Manual: Hardware" v2.00.
+On Wed, Dec 20, 2017 at 9:01 PM, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org> wrote:
+> Describe the external audio clocks required by the sound driver.
+> Boards that provide audio clocks need to override the clock frequencies.
+>
+> Signed-off-by: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+> Reviewed-by: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
 
-... and applied for v4.16.
+Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
