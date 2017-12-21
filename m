@@ -1,47 +1,35 @@
-From: jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: [PATCHv3 3/3] MAINTAINERS: Add entry for Socionext ethernet driver
-Date: Thu, 21 Dec 2017 17:41:30 +0530
-Message-ID: <1513858290-14297-1-git-send-email-jassisinghbrar@gmail.com>
-References: <1513858196-14137-1-git-send-email-jassisinghbrar@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1513858196-14137-1-git-send-email-jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, arnd.bergmann-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Jaehoon Chung <jh80.chung@samsung.com>
+Subject: [RFC 1/2] pci: dwc: pci-exynos: modify the Kconfig dependency
+Date: Thu, 21 Dec 2017 21:14:06 +0900
+Message-ID: <20171221121408.22636-1-jh80.chung@samsung.com>
+References: <CGME20171221121409epcas1p2af291857b9df115d2dec9a3d3300e0aa@epcas1p2.samsung.com>
+Return-path: <linux-pci-owner@vger.kernel.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: linux-pci@vger.kernel.org
+Cc: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, krzk@kernel.org, jingoohan1@gmail.com, kgene@kernel.org, lorenzo.pieralisi@arm.com, Jaehoon Chung <jh80.chung@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+PCI_EXYNOS has the dependency with SOC_EXYNOS5440.
+It's modified to ARCH_EXYNOS from SOC_EXYNOS5440, because other
+SoCs needs to use this driver.
 
-Add entry for the Socionext Netsec controller driver and DT bindings.
-
-Acked-by: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Signed-off-by: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
 ---
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/pci/dwc/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 9e0045e..0e1f0d4 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12630,6 +12630,13 @@ F:	drivers/md/raid*
- F:	include/linux/raid/
- F:	include/uapi/linux/raid/
- 
-+SOCIONEXT (SNI) NETSEC NETWORK DRIVER
-+M:	Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-+L:	netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-+S:	Maintained
-+F:	drivers/net/ethernet/socionext/netsec.c
-+F:	Documentation/devicetree/bindings/net/socionext-netsec.txt
-+
- SONIC NETWORK DRIVER
- M:	Thomas Bogendoerfer <tsbogend-I1c7kopa9pxLokYuJOExCg@public.gmane.org>
- L:	netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+diff --git a/drivers/pci/dwc/Kconfig b/drivers/pci/dwc/Kconfig
+index 113e09440f85..0ff9795df8e8 100644
+--- a/drivers/pci/dwc/Kconfig
++++ b/drivers/pci/dwc/Kconfig
+@@ -65,7 +65,7 @@ config PCIE_DW_PLAT
+ config PCI_EXYNOS
+ 	bool "Samsung Exynos PCIe controller"
+ 	depends on PCI
+-	depends on SOC_EXYNOS5440
++	depends on ARCH_EXYNOS
+ 	depends on PCI_MSI_IRQ_DOMAIN
+ 	select PCIEPORTBUS
+ 	select PCIE_DW_HOST
 -- 
-2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.15.1
