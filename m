@@ -1,46 +1,45 @@
-From: Aleksandar Markovic <aleksandar.markovic-FblTVreYubkAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 1/2] dt-bindings: Document mti,mips-cpc binding
-Date: Thu, 21 Dec 2017 16:20:23 +0100
-Message-ID: <1513869627-15391-2-git-send-email-aleksandar.markovic@rt-rk.com>
-References: <1513869627-15391-1-git-send-email-aleksandar.markovic@rt-rk.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1513869627-15391-1-git-send-email-aleksandar.markovic-FblTVreYubkAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
-Cc: Paul Burton <paul.burton-8NJIiSa5LzA@public.gmane.org>, Aleksandar Markovic <aleksandar.markovic-8NJIiSa5LzA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Douglas Leung <douglas.leung-8NJIiSa5LzA@public.gmane.org>, Goran Ferenc <goran.ferenc-8NJIiSa5LzA@public.gmane.org>, James Hogan <james.hogan-8NJIiSa5LzA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Miodrag Dinic <miodrag.dinic-8NJIiSa5LzA@public.gmane.org>, Petar Jovanovic <petar.jovanovic-8NJIiSa5LzA@public.gmane.org>, Raghu Gandham <raghu.gandham-8NJIiSa5LzA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 0/2] Add EHCI/OHCI nodes for V3s and Lichee
+ Pi Zero
+Date: Thu, 21 Dec 2017 16:21:46 +0100
+Message-ID: <20171221152146.sotxcq54widpzdde@flea.lan>
+References: <20171221150537.20304-1-icenowy@aosc.io>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="jjchsdmjbowpf6tx"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBDFD57IQKGQE3FQ55OA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20171221150537.20304-1-icenowy-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Paul Burton <paul.burton-8NJIiSa5LzA@public.gmane.org>
 
-Document a binding for the MIPS Cluster Power Controller (CPC) which
-simply allows the device tree to specify where the CPC registers are
-located.
+--jjchsdmjbowpf6tx
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-Signed-off-by: Paul Burton <paul.burton-8NJIiSa5LzA@public.gmane.org>
-Signed-off-by: Aleksandar Markovic <aleksandar.markovic-8NJIiSa5LzA@public.gmane.org>
----
- Documentation/devicetree/bindings/misc/mti,mips-cpc.txt | 8 ++++++++
- 1 file changed, 8 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/misc/mti,mips-cpc.txt
+On Thu, Dec 21, 2017 at 11:05:35PM +0800, Icenowy Zheng wrote:
+> As the PHY dual-route property is added to 4.15-rc, the EHCI/OHCI nodes
+> are now necessary.
+> 
+> Please apply these patches to 4.15, Thanks!
 
-diff --git a/Documentation/devicetree/bindings/misc/mti,mips-cpc.txt b/Documentation/devicetree/bindings/misc/mti,mips-cpc.txt
-new file mode 100644
-index 0000000..c6b8251
---- /dev/null
-+++ b/Documentation/devicetree/bindings/misc/mti,mips-cpc.txt
-@@ -0,0 +1,8 @@
-+Binding for MIPS Cluster Power Controller (CPC).
-+
-+This binding allows a system to specify where the CPC registers are
-+located.
-+
-+Required properties:
-+compatible : Should be "mti,mips-cpc".
-+regs: Should describe the address & size of the CPC register region.
+There's no reason to have it merged in 4.15. It's not a regression,
+so 4.15 should work just as 4.14 worked, right?
+
+Maxime
+
 -- 
-2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--jjchsdmjbowpf6tx--
