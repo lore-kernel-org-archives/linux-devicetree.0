@@ -1,80 +1,75 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: sun8i: v3s: add EHCI/OHCI0 device nodes
-Date: Thu, 21 Dec 2017 16:22:41 +0100
-Message-ID: <20171221152241.igwjbnj2tu3zpa7x@flea.lan>
-References: <20171221150537.20304-1-icenowy@aosc.io>
- <20171221150537.20304-2-icenowy@aosc.io>
+Subject: Re: [PATCH v2] ARM: dts: sunxi: Add sid for a83t
+Date: Thu, 21 Dec 2017 16:26:30 +0100
+Message-ID: <20171221152630.2vf57x5o2yi5sv3n@flea.lan>
+References: <20171219210523.10428-1-kevans91@ksu.edu>
+ <20171221145512.llxvzkcrjpquhczi@flea.lan>
+ <CACNAnaE9GiVTXD-TV1xXyBJKtTGKpdA6n0REk6a=qm218EgHbg@mail.gmail.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="y3ew3rq7gz5kpiaa"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="5fxvazjmbj5axlhg"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBMNF57IQKGQEGRRQW7Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20171221150537.20304-2-icenowy-h8G6r0blFSE@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <CACNAnaE9GiVTXD-TV1xXyBJKtTGKpdA6n0REk6a=qm218EgHbg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Kyle Evans <kevans91-OYTqUY/oFF8@public.gmane.org>
+Cc: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---y3ew3rq7gz5kpiaa
-Content-Type: text/plain; charset=us-ascii
+--5fxvazjmbj5axlhg
+Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Dec 21, 2017 at 11:05:36PM +0800, Icenowy Zheng wrote:
-> The USB PHY 0 on V3s SoC can also be routed to a pair of EHCI/OHCI
-> controllers.
->=20
-> Add the device nodes for the controllers.
->=20
-> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-> ---
->  arch/arm/boot/dts/sun8i-v3s.dtsi | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
->=20
-> diff --git a/arch/arm/boot/dts/sun8i-v3s.dtsi b/arch/arm/boot/dts/sun8i-v=
-3s.dtsi
-> index 443b083c6adc..cc315dc742d2 100644
-> --- a/arch/arm/boot/dts/sun8i-v3s.dtsi
-> +++ b/arch/arm/boot/dts/sun8i-v3s.dtsi
-> @@ -264,6 +264,25 @@
->  			#phy-cells =3D <1>;
->  		};
-> =20
-> +		ehci0: usb@01c1a000 {
+Hi,
 
-And you should also drop the leading zero on your two nodes
-unit-address.
+On Thu, Dec 21, 2017 at 09:19:24AM -0600, Kyle Evans wrote:
+> On Thu, Dec 21, 2017 at 8:55 AM, Maxime Ripard
+> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> > Hi Kyle,
+> >
+> > On Tue, Dec 19, 2017 at 03:05:23PM -0600, kevans91-OYTqUY/oFF8@public.gmane.org wrote:
+> >> Allwinner a83t has a 1 KB sid block with efuse for security rootkey and
+> >> thermal calibration data, add node to describe it.
+> >>
+> >> a83t-sid is not currently supported by nvmem/sunxi-sid, but it is
+> >> supported in an external driver for FreeBSD.
+> >>
+> >> Signed-off-by: Kyle Evans <kevans91-OYTqUY/oFF8@public.gmane.org>
+> >
+> > The patch looks fine in itself, but we've had a number of issues with
+> > the register layout (and access patterns) in the past, so I'd rather
+> > have something that works in Linux too if possible.
+> 
+> I have a patch that I think should make it work fine on Linux [1], but
+> I'm afraid I have little to no capability to test it myself and so I
+> did not add it as well.
+> 
+> I do know that the rootkey is offset 0x200 into the given space [2],
+> as is the case with the H3, and that the readout quirk is not needed.
+> I wasn't 100% sure that the a83t has 2Kbit worth of efuse space as the
+> H3, but I do know that thermal data can be found at 0x34 and 0x38 in
+> this space.
 
+Then maybe we should leave it aside until someone takes some time on
+the A83t. The good news is that the binding itself looks fine, so as
+far as FreeBSD goes, there shouldn't be anything preventing you from
+using it I guess.
+
+Chen-Yu, what do you think?
+
+Thanks!
 Maxime
 
---=20
+-- 
 Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
-
---y3ew3rq7gz5kpiaa
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlo70cAACgkQ0rTAlCFN
-r3TFDw/+ISQbmslZu8HztBSH4G/cw1FiT1YolkzkppYzYuTJXrsoyiMk1YA8YjGG
-XaX+3rcfbQVHGBB6ZMgOQOiTtOi4P+elRm7dwMvzP7yCZ8enOTgFKEXTNBAWiTT0
-MA4w1E64dO1DE6c10qvR12s1SlQzDNWAL2AXmXdNXeymRtqVNgsjrHg1VwPJBPMO
-7H7vQq7mBApreQZlFPZjH717HhnsQgsUmp4SovN37+k9ePO0HVxb8FzR05wTTl2U
-duRpzLX0Ex/7jFbrrM29n76K8QSo/9UJV/BNtW9UD4ZZM3NhasPsL6xnH13LDU2w
-vFgs6tS1ITBvxaHxaatPyPRQNi/9rna7xrQI9ZibI+CYbfuA0i3ifMtC1BUbTTar
-MXrB/gC5UqSmMa4Efiq0vK1KzGOvLR/mRyUHTAIWpE4kqug28rJUiFLLxXnaCsQ6
-eqvNDBFeTQiLe6vysn0uds6ZUDGT568bo9qKpRoNz3nzw8zNMWWsv69xtenXdE4y
-P1mF53AH9EJnLFUoDJ7TOoMaQBtpeCsDsIUFzNj6SG9W5spAdxFM4h3XxHbt9cvO
-6RX44+Z2Xc4ervAiDBH1Cn3RMc00OQ1VNfnw9+3kn5b9Jth6NHzGNYRvXji0yy21
-HJI1pUc86djZi37UPjxC0uyx/oVA++wzjkSpbdBDAiHwP5awAbk=
-=s2ep
------END PGP SIGNATURE-----
-
---y3ew3rq7gz5kpiaa--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--5fxvazjmbj5axlhg--
