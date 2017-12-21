@@ -1,36 +1,35 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH v17 0/5] ZII RAVE platform driver
-Date: Thu, 21 Dec 2017 05:49:59 -0800
-Message-ID: <19543ffb-3c64-1bba-1bcc-360a2b4bd15e@roeck-us.net>
-References: <20171221065118.29726-1-andrew.smirnov@gmail.com>
- <20171221093024.GA8938@amd>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Bartosz Golaszewski <brgl-ARrdPY/1zhM@public.gmane.org>
+Subject: [PATCH v2 0/5] eeprom: at24: device tree support fixes
+Date: Thu, 21 Dec 2017 14:48:37 +0100
+Message-ID: <20171221134842.31287-1-brgl@bgdev.pl>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171221093024.GA8938@amd>
-Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, cphealy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Nikita Yushchenko <nikita.yoush-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Philippe Ombredanne <pombredanne-od1rfyK75/E@public.gmane.org>
+To: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, Divagar Mohandass <divagar.mohandass-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bartosz Golaszewski <brgl-ARrdPY/1zhM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/21/2017 01:30 AM, Pavel Machek wrote:
->> Everyone:
->>
->> This patch series is v17 of the driver for supervisory processor found
->> on RAVE series of devices from ZII. Supervisory processor is a PIC
->> microcontroller connected to various electrical subsystems on RAVE
->> devices whose firmware implements protocol to command/qery them.
-> 
-> query.
-> 
-> Can we please get this patch merged? We really don't want to see v34
-> of this patch...
+The first three patches fix certain issues with the DT binding
+document.
 
-Maybe if we can all agree that There Shall Be No More Bikeshedding.
+The last two extend the device tree support in the driver with more
+at24 EEPROM variants.
 
-Guenter
+v1 -> v2:
+- remove any implementation details from patch 1/5
+
+Bartosz Golaszewski (5):
+  dt-bindings: at24: consistently document the compatible property
+  dt-bindings: at24: add a missing compatible
+  dt-bindings: at24: fix formatting and style
+  dt-bindings: at24: extend the list of supported chips
+  eeprom: at24: extend the list of chips supported in DT
+
+ Documentation/devicetree/bindings/eeprom/at24.txt | 82 +++++++++++++----------
+ drivers/misc/eeprom/at24.c                        |  9 +++
+ 2 files changed, 57 insertions(+), 34 deletions(-)
+
+-- 
+2.15.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
