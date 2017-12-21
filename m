@@ -1,24 +1,22 @@
 From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH V7 01/12] drivers: move clock common macros out from
- vendor directories
-Date: Thu, 21 Dec 2017 15:02:32 -0800
-Message-ID: <20171221230232.GO7997@codeaurora.org>
+Subject: Re: [PATCH V7 02/12] clk: sprd: Add common infrastructure
+Date: Thu, 21 Dec 2017 15:02:36 -0800
+Message-ID: <20171221230236.GP7997@codeaurora.org>
 References: <20171207125715.16160-1-chunyan.zhang@spreadtrum.com>
- <20171207125715.16160-2-chunyan.zhang@spreadtrum.com>
+ <20171207125715.16160-3-chunyan.zhang@spreadtrum.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20171207125715.16160-2-chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+In-Reply-To: <20171207125715.16160-3-chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Chunyan Zhang <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
 Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Xiaolong Zhang <xiaolong.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, Ben Li <ben.li-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, Orson Zhai <orson.zhai-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, Chunyan Zhang <zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 On 12/07, Chunyan Zhang wrote:
-> These macros are used by more than one SoC vendor platforms, avoid to
-> have many copies of these code, this patch moves them to the common
-> header file which every clock drivers can access to.
+> Added Spreadtrum's clock driver framework together with common
+> structures and interface functions.
 > 
 > Signed-off-by: Chunyan Zhang <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
 > ---
