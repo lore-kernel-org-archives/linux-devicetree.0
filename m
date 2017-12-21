@@ -1,90 +1,64 @@
 From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: [PATCH v5 08/12] drm/sun4i: Add A83T support
-Date: Thu, 21 Dec 2017 12:02:34 +0100
-Message-ID: <614b430adf3a67320362a75c01b01bd53013da8a.1513854122.git-series.maxime.ripard@free-electrons.com>
+Subject: [PATCH v5 05/12] drm/sun4i: Force the mixer rate at 150MHz
+Date: Thu, 21 Dec 2017 12:02:31 +0100
+Message-ID: <f5f05307972ed05250e8094b302d68b9e7e167f6.1513854122.git-series.maxime.ripard@free-electrons.com>
 References: <cover.e5a47cc96ec5274dd932daa2bde47df073087da9.1513854122.git-series.maxime.ripard@free-electrons.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 In-Reply-To: <cover.e5a47cc96ec5274dd932daa2bde47df073087da9.1513854122.git-series.maxime.ripard@free-electrons.com>
 In-Reply-To: <cover.e5a47cc96ec5274dd932daa2bde47df073087da9.1513854122.git-series.maxime.ripard@free-electrons.com>
 References: <cover.e5a47cc96ec5274dd932daa2bde47df073087da9.1513854122.git-series.maxime.ripard@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: Daniel Vetter <daniel.vetter@intel.com>, David Airlie <airlied@linux.ie>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, plaes@plaes.org, icenowy@aosc.io, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, jernej.skrabec@siol.net, devicetree@vger.kernel.org, thierry.reding@gmail.com, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, jernej.skrabec@siol.net, plaes@plaes.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, thierry.reding@gmail.com, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-arm-kernel@lists.infradead.org, icenowy@aosc.io
 List-Id: devicetree@vger.kernel.org
 
-Add support for the A83T display pipeline.
-
-Reviewed-by: Chen-Yu Tsai <wens@csie.org>
-Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
----
- drivers/gpu/drm/sun4i/sun4i_drv.c   |  1 +
- drivers/gpu/drm/sun4i/sun4i_tcon.c  |  5 +++++
- drivers/gpu/drm/sun4i/sun8i_mixer.c | 11 +++++++++++
- 3 files changed, 17 insertions(+)
-
-diff --git a/drivers/gpu/drm/sun4i/sun4i_drv.c b/drivers/gpu/drm/sun4i/sun4i_drv.c
-index 49215d91c853..6f5e721b545e 100644
---- a/drivers/gpu/drm/sun4i/sun4i_drv.c
-+++ b/drivers/gpu/drm/sun4i/sun4i_drv.c
-@@ -347,6 +347,7 @@ static const struct of_device_id sun4i_drv_of_table[] = {
- 	{ .compatible = "allwinner,sun6i-a31s-display-engine" },
- 	{ .compatible = "allwinner,sun7i-a20-display-engine" },
- 	{ .compatible = "allwinner,sun8i-a33-display-engine" },
-+	{ .compatible = "allwinner,sun8i-a83t-display-engine" },
- 	{ .compatible = "allwinner,sun8i-v3s-display-engine" },
- 	{ }
- };
-diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-index 33b1a493fc0a..b78fed809992 100644
---- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
-+++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-@@ -1133,6 +1133,10 @@ static const struct sun4i_tcon_quirks sun8i_a33_quirks = {
- 	.has_lvds_alt		= true,
- };
- 
-+static const struct sun4i_tcon_quirks sun8i_a83t_lcd_quirks = {
-+	/* nothing is supported */
-+};
-+
- static const struct sun4i_tcon_quirks sun8i_v3s_quirks = {
- 	/* nothing is supported */
- };
-@@ -1145,6 +1149,7 @@ const struct of_device_id sun4i_tcon_of_table[] = {
- 	{ .compatible = "allwinner,sun6i-a31s-tcon", .data = &sun6i_a31s_quirks },
- 	{ .compatible = "allwinner,sun7i-a20-tcon", .data = &sun7i_a20_quirks },
- 	{ .compatible = "allwinner,sun8i-a33-tcon", .data = &sun8i_a33_quirks },
-+	{ .compatible = "allwinner,sun8i-a83t-tcon-lcd", .data = &sun8i_a83t_lcd_quirks },
- 	{ .compatible = "allwinner,sun8i-v3s-tcon", .data = &sun8i_v3s_quirks },
- 	{ }
- };
-diff --git a/drivers/gpu/drm/sun4i/sun8i_mixer.c b/drivers/gpu/drm/sun4i/sun8i_mixer.c
-index 3a610a87cbd2..2cbb2de6d39c 100644
---- a/drivers/gpu/drm/sun4i/sun8i_mixer.c
-+++ b/drivers/gpu/drm/sun4i/sun8i_mixer.c
-@@ -478,6 +478,13 @@ static int sun8i_mixer_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static const struct sun8i_mixer_cfg sun8i_a83t_mixer0_cfg = {
-+	.ccsc		= 0,
-+	.scaler_mask	= 0xf,
-+	.ui_num		= 3,
-+	.vi_num		= 1,
-+};
-+
- static const struct sun8i_mixer_cfg sun8i_v3s_mixer_cfg = {
- 	.vi_num = 2,
- 	.ui_num = 1,
-@@ -488,6 +495,10 @@ static const struct sun8i_mixer_cfg sun8i_v3s_mixer_cfg = {
- 
- static const struct of_device_id sun8i_mixer_of_table[] = {
- 	{
-+		.compatible = "allwinner,sun8i-a83t-de2-mixer-0",
-+		.data = &sun8i_a83t_mixer0_cfg,
-+	},
-+	{
- 		.compatible = "allwinner,sun8i-v3s-de2-mixer",
- 		.data = &sun8i_v3s_mixer_cfg,
- 	},
--- 
-git-series 0.9.1
+SXQgc2VlbXMgbGlrZSB0aGUgbWl4ZXIgY2FuIG9ubHkgcnVuIHByb3Blcmx5IHdoZW4gY2xvY2tl
+ZCBhdCAxNTBNSHouIEluCm9yZGVyIHRvIGhhdmUgc29tZXRoaW5nIG1vcmUgcm9idXN0IHRoYW4g
+c2ltcGx5IGEgZmlyZS1hbmQtZm9yZ2V0CmFzc2lnbmVkLWNsb2Nrcy1yYXRlLCBsZXQncyBwdXQg
+dGhhdCBpbiB0aGUgY29kZS4KClJldmlld2VkLWJ5OiBDaGVuLVl1IFRzYWkgPHdlbnNAY3NpZS5v
+cmc+ClNpZ25lZC1vZmYtYnk6IE1heGltZSBSaXBhcmQgPG1heGltZS5yaXBhcmRAZnJlZS1lbGVj
+dHJvbnMuY29tPgotLS0KIGRyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW44aV9taXhlci5jIHwgMTAg
+KysrKysrKysrKwogZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjhpX21peGVyLmggfCAgMyArKysK
+IDIgZmlsZXMgY2hhbmdlZCwgMTMgaW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMv
+Z3B1L2RybS9zdW40aS9zdW44aV9taXhlci5jIGIvZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjhp
+X21peGVyLmMKaW5kZXggMjljZWViMDE2ZDcyLi4zYTYxMGE4N2NiZDIgMTAwNjQ0Ci0tLSBhL2Ry
+aXZlcnMvZ3B1L2RybS9zdW40aS9zdW44aV9taXhlci5jCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9z
+dW40aS9zdW44aV9taXhlci5jCkBAIC0zOTgsNiArMzk4LDE1IEBAIHN0YXRpYyBpbnQgc3VuOGlf
+bWl4ZXJfYmluZChzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBkZXZpY2UgKm1hc3RlciwKIAkJ
+cmV0ID0gUFRSX0VSUihtaXhlci0+bW9kX2Nsayk7CiAJCWdvdG8gZXJyX2Rpc2FibGVfYnVzX2Ns
+azsKIAl9CisKKwkvKgorCSAqIEl0IHNlZW1zIHRoYXQgd2UgbmVlZCB0byBlbmZvcmNlIHRoYXQg
+cmF0ZSBmb3Igd2hhdGV2ZXIKKwkgKiByZWFzb24gZm9yIHRoZSBtaXhlciB0byBiZSBmdW5jdGlv
+bmFsLiBNYWtlIHN1cmUgaXQncyB0aGUKKwkgKiBjYXNlLgorCSAqLworCWlmIChtaXhlci0+Y2Zn
+LT5tb2RfcmF0ZSkKKwkJY2xrX3NldF9yYXRlKG1peGVyLT5tb2RfY2xrLCBtaXhlci0+Y2ZnLT5t
+b2RfcmF0ZSk7CisKIAljbGtfcHJlcGFyZV9lbmFibGUobWl4ZXItPm1vZF9jbGspOwogCiAJbGlz
+dF9hZGRfdGFpbCgmbWl4ZXItPmVuZ2luZS5saXN0LCAmZHJ2LT5lbmdpbmVfbGlzdCk7CkBAIC00
+NzQsNiArNDgzLDcgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBzdW44aV9taXhlcl9jZmcgc3VuOGlf
+djNzX21peGVyX2NmZyA9IHsKIAkudWlfbnVtID0gMSwKIAkuc2NhbGVyX21hc2sgPSAweDMsCiAJ
+LmNjc2MgPSAwLAorCS5tb2RfcmF0ZSA9IDE1MDAwMDAwMCwKIH07CiAKIHN0YXRpYyBjb25zdCBz
+dHJ1Y3Qgb2ZfZGV2aWNlX2lkIHN1bjhpX21peGVyX29mX3RhYmxlW10gPSB7CmRpZmYgLS1naXQg
+YS9kcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuOGlfbWl4ZXIuaCBiL2RyaXZlcnMvZ3B1L2RybS9z
+dW40aS9zdW44aV9taXhlci5oCmluZGV4IGJjNTgwNDBhODhmOS4uZjM0ZTcwYzQyYWRmIDEwMDY0
+NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuOGlfbWl4ZXIuaAorKysgYi9kcml2ZXJz
+L2dwdS9kcm0vc3VuNGkvc3VuOGlfbWl4ZXIuaApAQCAtMTIxLDEyICsxMjEsMTUgQEAgc3RydWN0
+IGRlMl9mbXRfaW5mbyB7CiAgKglTZXQgdmFsdWUgdG8gMCBpZiB0aGlzIGlzIGZpcnN0IG1peGVy
+IG9yIHNlY29uZCBtaXhlciB3aXRoIFZFUCBzdXBwb3J0LgogICoJU2V0IHZhbHVlIHRvIDEgaWYg
+dGhpcyBpcyBzZWNvbmQgbWl4ZXIgd2l0aG91dCBWRVAgc3VwcG9ydC4gT3RoZXIgdmFsdWVzCiAg
+KglhcmUgaW52YWxpZC4KKyAqIEBtb2RfcmF0ZTogbW9kdWxlIGNsb2NrIHJhdGUgdGhhdCBuZWVk
+cyB0byBiZSBzZXQgaW4gb3JkZXIgdG8gaGF2ZQorICoJYSBmdW5jdGlvbmFsIGJsb2NrLgogICov
+CiBzdHJ1Y3Qgc3VuOGlfbWl4ZXJfY2ZnIHsKIAlpbnQJCXZpX251bTsKIAlpbnQJCXVpX251bTsK
+IAlpbnQJCXNjYWxlcl9tYXNrOwogCWludAkJY2NzYzsKKwl1bnNpZ25lZCBsb25nCW1vZF9yYXRl
+OwogfTsKIAogc3RydWN0IHN1bjhpX21peGVyIHsKLS0gCmdpdC1zZXJpZXMgMC45LjEKX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxp
+bmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJl
+ZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
