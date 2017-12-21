@@ -1,22 +1,23 @@
 From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH V7 03/12] clk: sprd: add gate clock support
-Date: Thu, 21 Dec 2017 15:02:39 -0800
-Message-ID: <20171221230239.GQ7997@codeaurora.org>
+Subject: Re: [PATCH V7 04/12] clk: sprd: add mux clock support
+Date: Thu, 21 Dec 2017 15:02:41 -0800
+Message-ID: <20171221230241.GR7997@codeaurora.org>
 References: <20171207125715.16160-1-chunyan.zhang@spreadtrum.com>
- <20171207125715.16160-4-chunyan.zhang@spreadtrum.com>
+ <20171207125715.16160-5-chunyan.zhang@spreadtrum.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20171207125715.16160-4-chunyan.zhang@spreadtrum.com>
-Sender: linux-kernel-owner@vger.kernel.org
+In-Reply-To: <20171207125715.16160-5-chunyan.zhang@spreadtrum.com>
+Sender: linux-clk-owner@vger.kernel.org
 To: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
 Cc: Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Xiaolong Zhang <xiaolong.zhang@spreadtrum.com>, Ben Li <ben.li@spreadtrum.com>, Orson Zhai <orson.zhai@spreadtrum.com>, Chunyan Zhang <zhang.lyra@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
 On 12/07, Chunyan Zhang wrote:
-> Some clocks on the Spreadtrum's SoCs are just simple gates. Add
-> support for those clocks.
+> This patch adds clock multiplexor support for Spreadtrum platforms,
+> the mux clocks also can be found in sprd composite clocks, so
+> provides two helpers that can be reused later on.
 > 
 > Signed-off-by: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
 > ---
