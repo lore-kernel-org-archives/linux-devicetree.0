@@ -1,59 +1,64 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC] irqchip: add support for LS1021A external interrupt lines
-Date: Thu, 21 Dec 2017 16:45:45 -0600
-Message-ID: <20171221224545.vd3qcwmvw23ng6w2@rob-hp-laptop>
-References: <48d2d08c-c57a-ce49-5958-0fd5ad4a2dc7@arm.com>
- <1512743580-15358-1-git-send-email-rasmus.villemoes@prevas.dk>
- <20171212232839.yy3jtn6amktqjo4g@rob-hp-laptop>
- <62c4af0c-ffe5-23c9-9ef6-2e4b8ab90050@prevas.dk>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 4/4] ARM: dts: vf610-zii-dev-rev-b: add interrupts for
+ 88e1545 PHY
+Date: Thu, 21 Dec 2017 23:53:47 +0100
+Message-ID: <CACRpkdarS+tPv5CG4bmFcPvc+=SJJcC1pbO7WSbsS5+yCuxh_Q@mail.gmail.com>
+References: <20171220231108.GJ10595@n2100.armlinux.org.uk> <E1eRnWr-0006VS-1m@rmk-PC.armlinux.org.uk>
+ <CACRpkdas5JJ4KHE4g=sPXag=3vQt4TS5EcZBsy=LRfw8tqcgOw@mail.gmail.com>
+ <20171221134058.GA15416@lunn.ch> <20171221173235.GK10595@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <62c4af0c-ffe5-23c9-9ef6-2e4b8ab90050-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
+In-Reply-To: <20171221173235.GK10595-l+eeeJia6m9URfEZ8mYm6t73F7V6hmMc@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rasmus Villemoes <rasmus.villemoes-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
-Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 15, 2017 at 11:55:34PM +0100, Rasmus Villemoes wrote:
-> On 2017-12-13 00:28, Rob Herring wrote:
-> > On Fri, Dec 08, 2017 at 03:33:00PM +0100, Rasmus Villemoes wrote:
-> >>
-> >>  .../interrupt-controller/fsl,ls1021a-extirq.txt    |  19 +++
-> > 
-> > Please split to separate patch.
-> 
-> Will do.
-> 
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/interrupt-controller/fsl,ls1021a-extirq.txt
-> >> @@ -0,0 +1,19 @@
-> >> +* Freescale LS1021A external IRQs
-> >> +
-> >> +The LS1021A supports inverting the polarity of six external interrupt lines.
-> >> +
-> >> +Required properties:
-> >> +- compatible: should be "fsl,ls1021a-extirq"
-> >> +- interrupt-controller: Identifies the node as an interrupt controller
-> >> +- #interrupt-cells: Use the same format as specified by GIC in arm,gic.txt.
-> >> +- interrupt-parent: phandle of GIC.
-> >> +- syscon: phandle of Supplemental Configuration Unit (scfg).
-> > 
-> > Can this be a child of that node instead?
-> 
-> I suppose it could, but I don't think it would make much sense. In any
-> case, I did it this way because that seemed to be the way the syscon
-> driver is used in lots of other cases, cf. all the occurrences of
-> syscon_regmap_lookup_by_phandle() and the corresponding bindings - I
-> don't think I've seen any of those cases represent the syscon-using node
-> as a child of the syscon node.
+On Thu, Dec 21, 2017 at 6:32 PM, Russell King - ARM Linux
+<linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org> wrote:
 
-I'm sure there are examples because this is a frequent review comment. 
-In any case, define the binding by what the h/w looks like, not what the 
-kernel *currently* wants.
+> What we have here is _really_ a shared interrupt between four
+> separate devices, and we need a way to sanely describe resources
+> shared between several device instances to pinmux.  Unfortunately,
+> it seems pinmux is designed around one device having exclusive use
+> of a resource, which makes it hard to describe shared interrupts in
+> DT.
+>
+> Given that DT should be a description of the hardware, and should be
+> independent of the OS implementation, I'd say this is a pinmux bug,
+> because pinmux gets in the way of describing the hardware correctly.
+> ;)
 
-Rob
+Hm that would be annoying. But when I look at it I think it would
+actually work. Did you try just assigning the same pin control
+state to all the PHY's and see what happens?
+
+Just set
+pinctrl-names = "default";
+pinctrl-0 = <&pinctrl_mv88e1545>;
+
+on all of them?
+
+I don't think DTC would complain at least.
+
+When I look at the driver subsystem, I don't see anything really
+stopping you from doing that and even have three devices selecting
+the same "default" pin control state. It seems it will just wind up
+three times in pinctrl_select_state() and the first time it calls the pin
+control driver to actually set it and the three other times it finds the
+state is already correct and returns success.
+
+So the way I read it actually several devices can reference the
+same pin control state.
+
+That is, unless there is something I missed. Which I often do...
+
+If it happens to work we should probably put a blurb in the
+DT binding that this is expected behaviour though.
+
+Yours,
+Linus Walleij
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
