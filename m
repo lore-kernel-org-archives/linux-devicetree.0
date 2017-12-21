@@ -1,72 +1,29 @@
-From: Kunihiko Hayashi <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Subject: Re: [PATCH net-next v7 1/2] dt-bindings: net: add DT bindings for Socionext UniPhier AVE
-Date: Thu, 21 Dec 2017 21:45:54 +0900
-Message-ID: <20171221214553.D308.4A936039@socionext.com>
-References: <1513854776-4149-2-git-send-email-hayashi.kunihiko@socionext.com> <20171221113254.GB9930@lunn.ch>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171221113254.GB9930-g2DYL2Zd6BY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Masami Hiramatsu <masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH 0/5] eeprom: at24: device tree support fixes
+Date: Thu, 21 Dec 2017 14:08:25 +0100
+Message-ID: <20171221130830.16813-1-brgl@bgdev.pl>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Javier Martinez Canillas <javier@dowhile0.org>, David Lechner <david@lechnology.com>, Divagar Mohandass <divagar.mohandass@intel.com>
+Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>
 List-Id: devicetree@vger.kernel.org
 
-Hello Andrew,
+The first three patches fix certain issues with the DT binding
+document.
 
-On Thu, 21 Dec 2017 12:32:54 +0100 Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org> wrote:
+The last two extend the device tree support in the driver with more
+at24 EEPROM variants.
 
-> > +Optional properties:
-> > + - resets: A phandle to the reset control for the MAC
-> > + - local-mac-address: See ethernet.txt in the same directory.
-> > +
-> > +Required subnode:
-> > + - mdio: Device tree subnode with the following required properties:
-> > +
-> > +Example:
-> 
-> It sounds like there should be some properties before the Example.
+Bartosz Golaszewski (5):
+  dt-bindings: at24: consistently document the compatible property
+  dt-bindings: at24: add a missing compatible
+  dt-bindings: at24: fix formatting and style
+  dt-bindings: at24: extend the list of supported chips
+  eeprom: at24: extend the list of chips supported in DT
 
-Indeed, this is my carelessness.
+ Documentation/devicetree/bindings/eeprom/at24.txt | 84 ++++++++++++++---------
+ drivers/misc/eeprom/at24.c                        |  9 +++
+ 2 files changed, 59 insertions(+), 34 deletions(-)
 
-> 
->    Andrew
-> 
-> > +
-> > +	ether: ethernet@65000000 {
-> > +		compatible = "socionext,uniphier-ld20-ave4";
-> > +		reg = <0x65000000 0x8500>;
-> > +		interrupts = <0 66 4>;
-> > +		phy-mode = "rgmii";
-> > +		phy-handle = <&ethphy>;
-> > +		clocks = <&sys_clk 6>;
-> > +		resets = <&sys_rst 6>;
-> > +		local-mac-address = [00 00 00 00 00 00];
-> 
-> Typically you would put a blank line here, before the mdio node.
-
-Okay, I'll put it.
-
-> > +		mdio {
-> > +			#address-cells = <1>;
-> > +			#size-cells = <0>;
-> > +			ethphy: ethphy@1 {
-> > +				reg = <1>;
-> > +			};
-> > +		};
-> > +	};
-> 
->   Andrew
-
-Thank you,
-
----
-Best Regards,
-Kunihiko Hayashi
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+2.15.1
