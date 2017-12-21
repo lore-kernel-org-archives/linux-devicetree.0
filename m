@@ -1,52 +1,67 @@
-From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 2/2] arm64: dts: exynos: Fix typo in MSCL clock
- controller unit address
-Date: Thu, 21 Dec 2017 09:54:09 +0900
-Message-ID: <5A3B0631.6090305@samsung.com>
-References: <20171220192702.32515-1-krzk@kernel.org>
-        <CGME20171220192745epcas3p48bae7a4f6711433752beb01c5811e1af@epcas3p4.samsung.com>
-        <20171220192702.32515-2-krzk@kernel.org>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH 1/6] dt-bindings: soc: qcom: Add label for GLINK bindings
+Date: Wed, 20 Dec 2017 17:35:57 -0800
+Message-ID: <20171221013557.GE12655@minitux>
+References: <1513634534-22861-1-git-send-email-clew@codeaurora.org>
+ <1513634534-22861-2-git-send-email-clew@codeaurora.org>
+ <20171220183000.rhxgyikfqzxmqkjo@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <20171220192702.32515-2-krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Alim Akhtar <alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20171220183000.rhxgyikfqzxmqkjo@rob-hp-laptop>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Chris Lew <clew@codeaurora.org>, andy.gross@linaro.org, david.brown@linaro.org, aneela@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2017년 12월 21일 04:27, Krzysztof Kozlowski wrote:
-> Fix typo in unit address of MSCL clock controller (the reg entry is
-> correct).
+On Wed 20 Dec 10:30 PST 2017, Rob Herring wrote:
+
+> On Mon, Dec 18, 2017 at 02:02:09PM -0800, Chris Lew wrote:
+> > Add a label property to identify the edge this node represents.
 > 
-> Signed-off-by: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/exynos/exynos5433.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/boot/dts/exynos/exynos5433.dtsi b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
-> index 0ba5df825eff..3e8311c60d1b 100644
-> --- a/arch/arm64/boot/dts/exynos/exynos5433.dtsi
-> +++ b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
-> @@ -468,7 +468,7 @@
->  			clocks = <&xxti>, <&cmu_mif CLK_SCLK_BUS_PLL_ATLAS>;
->  		};
->  
-> -		cmu_mscl: clock-controller@105d0000 {
-> +		cmu_mscl: clock-controller@150d0000 {
->  			compatible = "samsung,exynos5433-cmu-mscl";
->  			reg = <0x150d0000 0x1000>;
->  			#clock-cells = <1>;
+> Why does a user need to know this?
 > 
 
-Looks good to me.
-Reviewed-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+We have multiple remoteproc instances, each one having one or more
+associated SMD or GLINK links (this node), exposing logical
+communication channels. Some of these logical channels are exposed to
+user space and we need a way to distinguish them there.
 
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+In the current implementation of SMD this value goes straight into an
+sysfs attribute that we can use when writing udev rules and for the DIAG
+implementation to pair up channels related to the same remoteproc. This
+adds the equivalent information for glink-backed channels.
+
+
+I'm therefor in favor of picking this patch.
+
+Regards,
+Bjorn
+
+> > 
+> > Signed-off-by: Chris Lew <clew@codeaurora.org>
+> > ---
+> >  Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
+> > index 9663cab52246..0b8cc533ca83 100644
+> > --- a/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
+> > +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
+> > @@ -10,6 +10,11 @@ edge.
+> >  	Value type: <stringlist>
+> >  	Definition: must be "qcom,glink-rpm"
+> >  
+> > +- label:
+> > +	Usage: optional
+> > +	Value type: <string>
+> > +	Definition: should specify the subsystem name this edge corresponds to.
+> > +
+> >  - interrupts:
+> >  	Usage: required
+> >  	Value type: <prop-encoded-array>
+> > -- 
+> > The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> > a Linux Foundation Collaborative Project
+> > 
