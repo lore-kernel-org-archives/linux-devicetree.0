@@ -1,73 +1,43 @@
-From: Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH 11/12] mmc: sdhci-omap: Add support for MMC/SD controller
- in k2g SoC
-Date: Thu, 21 Dec 2017 11:15:03 +0200
-Message-ID: <4d04e881-2756-184b-1909-49f9d4a68efd@intel.com>
-References: <20171214130941.26666-1-kishon@ti.com>
- <20171214130941.26666-12-kishon@ti.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH V2 9/9] ARM: dts: stm32: add initial support of
+ stm32mp157c eval board
+Date: Thu, 21 Dec 2017 10:18:28 +0100
+Message-ID: <CACRpkdYE+u1o_KDDihX7=7RLNDkkFDOCFsQtBKBZW0i6123ZoQ@mail.gmail.com>
+References: <1513610272-7824-1-git-send-email-ludovic.Barre@st.com>
+ <1513610272-7824-10-git-send-email-ludovic.Barre@st.com> <CACRpkdZaEjdGB2k6HdPt1_E0jRXEimEUxT9NmMwMw7OiyeqGLA@mail.gmail.com>
+ <27a339f7-33a7-eb73-27fe-9927838729d6@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <20171214130941.26666-12-kishon@ti.com>
-Content-Language: en-US
-Sender: linux-mmc-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, nsekhar@ti.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <27a339f7-33a7-eb73-27fe-9927838729d6@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexandre Torgue <alexandre.torgue@st.com>
+Cc: Ludovic Barre <ludovic.Barre@st.com>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Gerald Baeza <gerald.baeza@st.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 14/12/17 15:09, Kishon Vijay Abraham I wrote:
-> Add support for the new compatible added specifically to support
-> k2g's MMC/SD controller.
-> 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+On Wed, Dec 20, 2017 at 10:19 AM, Alexandre Torgue
+<alexandre.torgue@st.com> wrote:
+> On 12/20/2017 08:44 AM, Linus Walleij wrote:
 
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+>> gpio-line-names = "foo", "bar" ...;
+>>
+>> See for example
+>> arch/arm/boot/dts/bcm2835-rpi-a.dts
+>> arch/arm/boot/dts/ste-snowball.dts
+(...)
+>
+> It looks like useful for pins used as gpio line. Are you saying that we also
+> have to describe pins used as Alternate Function ?
 
-> ---
->  drivers/mmc/host/sdhci-omap.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/drivers/mmc/host/sdhci-omap.c b/drivers/mmc/host/sdhci-omap.c
-> index cddc3ad1331f..5e81e29383d9 100644
-> --- a/drivers/mmc/host/sdhci-omap.c
-> +++ b/drivers/mmc/host/sdhci-omap.c
-> @@ -767,6 +767,10 @@ static const struct sdhci_pltfm_data sdhci_omap_pdata = {
->  	.ops = &sdhci_omap_ops,
->  };
->  
-> +static const struct sdhci_omap_data k2g_data = {
-> +	.offset = 0x200,
-> +};
-> +
->  static const struct sdhci_omap_data dra7_data = {
->  	.offset = 0x200,
->  	.flags	= SDHCI_OMAP_REQUIRE_IODELAY,
-> @@ -774,6 +778,7 @@ static const struct sdhci_omap_data dra7_data = {
->  
->  static const struct of_device_id omap_sdhci_match[] = {
->  	{ .compatible = "ti,dra7-sdhci", .data = &dra7_data },
-> +	{ .compatible = "ti,k2g-sdhci", .data = &k2g_data },
->  	{},
->  };
->  MODULE_DEVICE_TABLE(of, omap_sdhci_match);
-> @@ -882,6 +887,7 @@ static int sdhci_omap_probe(struct platform_device *pdev)
->  	int ret;
->  	u32 offset;
->  	struct device *dev = &pdev->dev;
-> +	struct device_node *node = dev->of_node;
->  	struct sdhci_host *host;
->  	struct sdhci_pltfm_host *pltfm_host;
->  	struct sdhci_omap_host *omap_host;
-> @@ -908,6 +914,9 @@ static int sdhci_omap_probe(struct platform_device *pdev)
->  		return PTR_ERR(host);
->  	}
->  
-> +	if (of_device_is_compatible(node, "ti,k2g-sdhci"))
-> +		host->quirks2 |= SDHCI_QUIRK2_NO_1_8_V;
-> +
->  	pltfm_host = sdhci_priv(host);
->  	omap_host = sdhci_pltfm_priv(pltfm_host);
->  	omap_host->host = host;
-> 
+No. The use of the names is up to the platform maintainer (you),
+leaving a blank string for non-GPIO lines is just fine.
 
+Some platforms add the name of the actual function used by the
+line on the design, if it is not GPIO, sometimes something in
+brachets like "[i2c0-SDA]" that says what it is used for and explains
+why you can't use it for GPIO on this setup.
+
+But just leaving it blank is just as good.
+
+Yours,
+Linus Walleij
