@@ -1,50 +1,83 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 1/6] dt-bindings: soc: qcom: Add label for GLINK bindings
-Date: Thu, 21 Dec 2017 11:36:09 -0800
-Message-ID: <d6ad476e-b68c-a1ed-9256-5997312a6024@codeaurora.org>
-References: <1513634534-22861-1-git-send-email-clew@codeaurora.org>
- <1513634534-22861-2-git-send-email-clew@codeaurora.org>
- <20171220183000.rhxgyikfqzxmqkjo@rob-hp-laptop>
- <20171221013557.GE12655@minitux>
+From: Javier Martinez Canillas <javier@dowhile0.org>
+Subject: Re: [PATCH v2 1/5] dt-bindings: at24: consistently document the
+ compatible property
+Date: Thu, 21 Dec 2017 21:27:20 +0100
+Message-ID: <CABxcv=kZk+Yrt9uj9uV7UVC+Tca7NCECfyZXmKkqHdopm5EZTg@mail.gmail.com>
+References: <20171221134842.31287-1-brgl@bgdev.pl> <20171221134842.31287-2-brgl@bgdev.pl>
+ <0c2455ae-2f68-5342-14c6-14706d6f0e66@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171221013557.GE12655@minitux>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Chris Lew <clew-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, aneela-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <0c2455ae-2f68-5342-14c6-14706d6f0e66@axentia.se>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy.shevchenko@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, David Lechner <david@lechnology.com>, Divagar Mohandass <divagar.mohandass@intel.com>, Linux I2C <linux-i2c@vger.kernel.org>, devicetree@vger.kernel.org, Linux Kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/20/2017 05:35 PM, Bjorn Andersson wrote:
-> On Wed 20 Dec 10:30 PST 2017, Rob Herring wrote:
->
->> On Mon, Dec 18, 2017 at 02:02:09PM -0800, Chris Lew wrote:
->>> Add a label property to identify the edge this node represents.
->> Why does a user need to know this?
+Hello Peter,
+
+On Thu, Dec 21, 2017 at 5:20 PM, Peter Rosin <peda@axentia.se> wrote:
+> On 2017-12-21 14:48, Bartosz Golaszewski wrote:
+>> Current description of the compatible property for at24 is quite vague.
 >>
-> We have multiple remoteproc instances, each one having one or more
-> associated SMD or GLINK links (this node), exposing logical
-> communication channels. Some of these logical channels are exposed to
-> user space and we need a way to distinguish them there.
+>> Specify an exact list of accepted compatibles and document the - now
+>> deprecated - strings which were previously used in device tree files.
 >
-> In the current implementation of SMD this value goes straight into an
-> sysfs attribute that we can use when writing udev rules and for the DIAG
-> implementation to pair up channels related to the same remoteproc. This
-> adds the equivalent information for glink-backed channels.
+> Why is it suddenly deprecated to correctly specify what hardware you
+> have, e.g. "nxp,24c32". In this case the manufacturer is nxp, damnit.
+
+Sorry but I disagree.
+
+When you specify a compatible string, you are not specifying a
+particular hardware but a device programming model.
+
+It's very common to use a compatible string that doesn't match exactly
+the specific hardware used. That's why it's called _compatible_ BTW.
+
+For example when a DTS define a UART node with an ns16550 compatible,
+they don't really mean that have a UART IC manufactured by National
+Semiconductor.
+
+> Sure, it happens to be compatible with "atmel,24c32", but that is
+> supposed to be written with a fallback as
 >
+>         "nxp,24c32", "atmel,24c32"
+
+This isn't a requirement really, systems integrators are free to use
+more than one <manufacturer,model> tuple in the compatible string if
+they want the DTB to be future proof, just in case there's a need for
+a more specific driver or if the programming model happened to not be
+the same at the end. This is usually done for the boards compatible
+string as an example, even when there isn't a struct machine_desc for
+the specific board compatible and only for the SoC family.
+
+So it's OK if you want to define the compatible as "nxp,24c32",
+"atmel,24c32", but that's a general OF concept and not something
+related to the at24 eeprom driver so I'm not sure if it should be
+mentioned in the at24 DT binding doc.
+
+> if I understand correctly. So, why is that deprecated in this case?
 >
-> I'm therefor in favor of picking this patch.
+> What if (a few years down the line) it is discovered that some weird
+> quirk is needed that is only appropriate for nxp chips?
+>
+> nxp is of course just an example, pick any manufacturer of eeproms
+> (supposedly) compatible with the atmel interface.
+>
 
-Please add these details to the commit log. Just writing what the patch
-is doing isn't very helpful.
+That's indeed a possibility and the reason why most DT nodes have a
+more specific <manufacturer,model> before the generic one matched by
+drivers. I really doubt that in the future it will be found that a
+more specific compatible string is needed for one manufacturer in this
+case, specially since the driver didn't even care about the
+manufacturers until recently.
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+So I think that makes no sense for a driver to support all possible
+manufacturers as possible compatible strings if all the devices have
+the same exact programming model.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Cheers,
+> Peter
+
+Best regards,
+Javier
