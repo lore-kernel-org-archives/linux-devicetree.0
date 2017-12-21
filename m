@@ -1,105 +1,48 @@
-From: Ludovic BARRE <ludovic.barre-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH V2 3/9] ARM: stm32: prepare stm32 family to welcome armv7
- architecture
-Date: Thu, 21 Dec 2017 17:39:39 +0100
-Message-ID: <4093a02c-3216-d668-a6d8-1ce76046b554@st.com>
-References: <1513610272-7824-1-git-send-email-ludovic.Barre@st.com>
- <1513610272-7824-4-git-send-email-ludovic.Barre@st.com>
- <CAK8P3a1WzkVQ3591XjVQPLCqP0_zZ4ksqJqWvm7de_OnkE3oaQ@mail.gmail.com>
- <8092d8f9-c097-136f-4f6f-0b7ffea17c91@st.com>
+From: David Lechner <david@lechnology.com>
+Subject: Re: [PATCH v2 1/5] dt-bindings: at24: consistently document the
+ compatible property
+Date: Thu, 21 Dec 2017 11:24:22 -0600
+Message-ID: <f5d14ee3-1f80-6709-c5e5-36f65c1a9b84@lechnology.com>
+References: <20171221134842.31287-1-brgl@bgdev.pl>
+ <20171221134842.31287-2-brgl@bgdev.pl>
+ <0c2455ae-2f68-5342-14c6-14706d6f0e66@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <8092d8f9-c097-136f-4f6f-0b7ffea17c91-qxv4g6HH51o@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <0c2455ae-2f68-5342-14c6-14706d6f0e66@axentia.se>
 Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gerald Baeza <gerald.baeza-qxv4g6HH51o@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Peter Rosin <peda@axentia.se>, Andy Shevchenko <andy.shevchenko@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Javier Martinez Canillas <javier@dowhile0.org>, Divagar Mohandass <divagar.mohandass@intel.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-hi Arnd
+On 12/21/2017 10:20 AM, Peter Rosin wrote:
+> On 2017-12-21 14:48, Bartosz Golaszewski wrote:
+>> Current description of the compatible property for at24 is quite vague.
+>>
+>> Specify an exact list of accepted compatibles and document the - now
+>> deprecated - strings which were previously used in device tree files.
+> 
+> Why is it suddenly deprecated to correctly specify what hardware you
+> have, e.g. "nxp,24c32". In this case the manufacturer is nxp, damnit.
+> Sure, it happens to be compatible with "atmel,24c32", but that is
+> supposed to be written with a fallback as
+> 
+> 	"nxp,24c32", "atmel,24c32"
+> 
+> if I understand correctly. So, why is that deprecated in this case?
+> 
+> What if (a few years down the line) it is discovered that some weird
+> quirk is needed that is only appropriate for nxp chips?
+> 
+> nxp is of course just an example, pick any manufacturer of eeproms
+> (supposedly) compatible with the atmel interface.
+> 
 
-just a ping, on Alex's proposal (below) about armv7m_restart
-(Currently "restart" is not functional on stm32 MCU).
+So now I am supposed to change my device tree from "microchip,24c128" to 
+"atmel,24c128"?
 
-BR
-Ludo
-On 12/19/2017 03:38 PM, Alexandre Torgue wrote:
-> 
-> 
-> On 12/18/2017 09:24 PM, Arnd Bergmann wrote:
->> On Mon, Dec 18, 2017 at 4:17 PM, Ludovic Barre <ludovic.Barre-qxv4g6HH51o@public.gmane.org> 
->> wrote:
->>> From: Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
->>>
->>> This patch prepares the STM32 machine for the integration of Cortex-A
->>> based microprocessor (MPU), on top of the existing Cortex-M
->>> microcontroller family (MCU). Since both MCUs and MPUs are sharing
->>> common hardware blocks we can keep using ARCH_STM32 flag for most of
->>> them. If a hardware block is specific to one family we can use either
->>> ARM_SINGLE_ARMV7M or ARCH_MULTI_V7 flag.
->>>
->>> Signed-off-by: Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
->>
->> Looks good overall. Two more small comments:
->>
->>
->>>
->>> +if ARCH_STM32
->>> +
->>>   config MACH_STM32F429
->>> -       bool "STMicrolectronics STM32F429"
->>> -       depends on ARCH_STM32
->>> +       bool "STMicroelectronics STM32F429"
->>> +       depends on ARM_SINGLE_ARMV7M
->>>          default y
->>
->> Instead of the explicit dependency for each board, I'd leave the 
->> surrounding
->> 'if ARM_SINGLE_ARMV7M'. I think you had in v1.
->>
->>> diff --git a/arch/arm/mach-stm32/Makefile b/arch/arm/mach-stm32/Makefile
->>> index bd0b7b5..5940af1 100644
->>> --- a/arch/arm/mach-stm32/Makefile
->>> +++ b/arch/arm/mach-stm32/Makefile
->>> @@ -1 +1 @@
->>> -obj-y += board-dt.o
->>> +obj-$(CONFIG_ARM_SINGLE_ARMV7M) += board-mcu-dt.o
->>> diff --git a/arch/arm/mach-stm32/board-dt.c 
->>> b/arch/arm/mach-stm32/board-mcu-dt.c
->>> similarity index 100%
->>> rename from arch/arm/mach-stm32/board-dt.c
->>> rename to arch/arm/mach-stm32/board-mcu-dt.c
->>
->> Why the rename? I don't expect the new machines to have any notable
->> contents in a board file, if any at all, so just use one file for both.
->> I see the board-dt.c file refers to armv7m_restart, we can either put
->> that in an #ifdef, or find a way to make it the default for all armv7-m
->> platforms that don't provide any other restart method.
->>
-> Currently "restart" is not functional on stm32 MCU (at least for 
-> stm32f746, I will check on others MCU). My fear is if Ludovic made some 
-> patches to make "armv7m_restart" the default ".restart" function for all 
-> armv7-m platform, he will not be able to test it on stm32 MCU (as it is 
-> not currently working). I propose to do it in 2 steps:
-> 
-> 1-Keep as you suggest only one board-dt.c file for both (MCU and MPU) 
-> and remove ".restart" function.
-> 
-> 2-Investigate and send patches around ".restart" for both in an other 
-> series.
-
-I resend
-
-> 
-> regards
-> Alex
-> 
-> 
->>       Arnd
->>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Also, at,24c08 is listed in 
+Documentation/devicetree/bindings/trivial-devices.txt. It should 
+probably be removed.
