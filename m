@@ -1,129 +1,104 @@
-From: Ivaylo Dimitrov <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] devicetree: Add video bus switch
-Date: Thu, 21 Dec 2017 18:36:28 +0200
-Message-ID: <14341891-5fa3-bc8d-f6b2-3dde322f8fac@gmail.com>
-References: <20161023200355.GA5391@amd>
- <20170203213454.GD12291@valkosipuli.retiisi.org.uk>
- <20170204215610.GA9243@amd> <75694885.3PuLWzx4qN@avalon>
+From: Ludovic BARRE <ludovic.barre-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH V2 3/9] ARM: stm32: prepare stm32 family to welcome armv7
+ architecture
+Date: Thu, 21 Dec 2017 17:39:39 +0100
+Message-ID: <4093a02c-3216-d668-a6d8-1ce76046b554@st.com>
+References: <1513610272-7824-1-git-send-email-ludovic.Barre@st.com>
+ <1513610272-7824-4-git-send-email-ludovic.Barre@st.com>
+ <CAK8P3a1WzkVQ3591XjVQPLCqP0_zZ4ksqJqWvm7de_OnkE3oaQ@mail.gmail.com>
+ <8092d8f9-c097-136f-4f6f-0b7ffea17c91@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <75694885.3PuLWzx4qN@avalon>
-Content-Language: en-GB
+In-Reply-To: <8092d8f9-c097-136f-4f6f-0b7ffea17c91-qxv4g6HH51o@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Cc: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gerald Baeza <gerald.baeza-qxv4g6HH51o@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+hi Arnd
 
-On 20.12.2017 19:54, Laurent Pinchart wrote:
-> Hi Pavel,
-> 
-> On Saturday, 4 February 2017 23:56:10 EET Pavel Machek wrote:
->> Hi!
->>
->>>>>> +Required properties
->>>>>> +===================
->>>>>> +
->>>>>> +compatible	: must contain "video-bus-switch"
->>>>>
->>>>> How generic is this? Should we have e.g. nokia,video-bus-switch? And
->>>>> if so, change the file name accordingly.
->>>>
->>>> Generic for "single GPIO controls the switch", AFAICT. But that should
->>>> be common enough...
->>>
->>> Um, yes. Then... how about: video-bus-switch-gpio? No Nokia prefix.
->>
->> Ok, done. I also fixed the english a bit.
->>
->>>>>> +reg		: The interface:
->>>>>> +		  0 - port for image signal processor
->>>>>> +		  1 - port for first camera sensor
->>>>>> +		  2 - port for second camera sensor
->>>>>
->>>>> I'd say this must be pretty much specific to the one in N900. You
->>>>> could have more ports. Or you could say that ports beyond 0 are
->>>>> camera sensors. I guess this is good enough for now though, it can be
->>>>> changed later on with the source if a need arises.
->>>>
->>>> Well, I'd say that selecting between two sensors is going to be the
->>>> common case. If someone needs more than two, it will no longer be
->>>> simple GPIO, so we'll have some fixing to do.
->>>
->>> It could be two GPIOs --- that's how the GPIO I2C mux works.
->>>
->>> But I'd be surprised if someone ever uses something like that
->>> again. ;-)
->>
->> I'd say.. lets handle that when we see hardware like that.
->>
->>>>> Btw. was it still considered a problem that the endpoint properties
->>>>> for the sensors can be different? With the g_routing() pad op which is
->>>>> to be added, the ISP driver (should actually go to a framework
->>>>> somewhere) could parse the graph and find the proper endpoint there.
->>>>
->>>> I don't know about g_routing. I added g_endpoint_config method that
->>>> passes the configuration, and that seems to work for me.
->>>>
->>>> I don't see g_routing in next-20170201 . Is there place to look?
->>>
->>> I think there was a patch by Laurent to LMML quite some time ago. I
->>> suppose that set will be repicked soonish.
->>>
->>> I don't really object using g_endpoint_config() as a temporary solution;
->>> I'd like to have Laurent's opinion on that though. Another option is to
->>> wait, but we've already waited a looong time (as in total).
->>
->> Laurent, do you have some input here? We have simple "2 cameras
->> connected to one signal processor" situation here. We need some way of
->> passing endpoint configuration from the sensors through the switch. I
->> did this:
-> 
-> Could you give me a bit more information about the platform you're targeting:
-> how the switch is connected, what kind of switch it is, and what endpoint
+just a ping, on Alex's proposal (below) about armv7m_restart
+(Currently "restart" is not functional on stm32 MCU).
 
+BR
+Ludo
+On 12/19/2017 03:38 PM, Alexandre Torgue wrote:
+> 
+> 
+> On 12/18/2017 09:24 PM, Arnd Bergmann wrote:
+>> On Mon, Dec 18, 2017 at 4:17 PM, Ludovic Barre <ludovic.Barre-qxv4g6HH51o@public.gmane.org> 
+>> wrote:
+>>> From: Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
+>>>
+>>> This patch prepares the STM32 machine for the integration of Cortex-A
+>>> based microprocessor (MPU), on top of the existing Cortex-M
+>>> microcontroller family (MCU). Since both MCUs and MPUs are sharing
+>>> common hardware blocks we can keep using ARCH_STM32 flag for most of
+>>> them. If a hardware block is specific to one family we can use either
+>>> ARM_SINGLE_ARMV7M or ARCH_MULTI_V7 flag.
+>>>
+>>> Signed-off-by: Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
+>>
+>> Looks good overall. Two more small comments:
+>>
+>>
+>>>
+>>> +if ARCH_STM32
+>>> +
+>>>   config MACH_STM32F429
+>>> -       bool "STMicrolectronics STM32F429"
+>>> -       depends on ARCH_STM32
+>>> +       bool "STMicroelectronics STM32F429"
+>>> +       depends on ARM_SINGLE_ARMV7M
+>>>          default y
+>>
+>> Instead of the explicit dependency for each board, I'd leave the 
+>> surrounding
+>> 'if ARM_SINGLE_ARMV7M'. I think you had in v1.
+>>
+>>> diff --git a/arch/arm/mach-stm32/Makefile b/arch/arm/mach-stm32/Makefile
+>>> index bd0b7b5..5940af1 100644
+>>> --- a/arch/arm/mach-stm32/Makefile
+>>> +++ b/arch/arm/mach-stm32/Makefile
+>>> @@ -1 +1 @@
+>>> -obj-y += board-dt.o
+>>> +obj-$(CONFIG_ARM_SINGLE_ARMV7M) += board-mcu-dt.o
+>>> diff --git a/arch/arm/mach-stm32/board-dt.c 
+>>> b/arch/arm/mach-stm32/board-mcu-dt.c
+>>> similarity index 100%
+>>> rename from arch/arm/mach-stm32/board-dt.c
+>>> rename to arch/arm/mach-stm32/board-mcu-dt.c
+>>
+>> Why the rename? I don't expect the new machines to have any notable
+>> contents in a board file, if any at all, so just use one file for both.
+>> I see the board-dt.c file refers to armv7m_restart, we can either put
+>> that in an #ifdef, or find a way to make it the default for all armv7-m
+>> platforms that don't provide any other restart method.
+>>
+> Currently "restart" is not functional on stm32 MCU (at least for 
+> stm32f746, I will check on others MCU). My fear is if Ludovic made some 
+> patches to make "armv7m_restart" the default ".restart" function for all 
+> armv7-m platform, he will not be able to test it on stm32 MCU (as it is 
+> not currently working). I propose to do it in 2 steps:
+> 
+> 1-Keep as you suggest only one board-dt.c file for both (MCU and MPU) 
+> and remove ".restart" function.
+> 
+> 2-Investigate and send patches around ".restart" for both in an other 
+> series.
 
-http://plan9.stanleylieber.com/hardware/n900/n900.schematics.pdf, on 
-page 2, see N5801 and N5802.
+I resend
 
-> configuration data you need ?
 > 
->>>> @@ -415,6 +416,8 @@ struct v4l2_subdev_video_ops {
->>>>                           const struct v4l2_mbus_config *cfg);
->>>>      int (*s_rx_buffer)(struct v4l2_subdev *sd, void *buf,
->>>>                         unsigned int *size);
->>>> +   int (*g_endpoint_config)(struct v4l2_subdev *sd,
->>>> +                       struct v4l2_of_endpoint *cfg);
->>
->> Google of g_routing tells me:
->>
->> 9) Highly reconfigurable hardware - Julien Beraud
->>
->> - 44 sub-devices connected with an interconnect.
->> - As long as formats match, any sub-device could be connected to any
->> - other sub-device through a link.
->> - The result is 44 * 44 links at worst.
->> - A switch sub-device proposed as the solution to model the
->> - interconnect. The sub-devices are connected to the switch
->> - sub-devices through the hardware links that connect to the
->> - interconnect.
->> - The switch would be controlled through new IOCTLs S_ROUTING and
->> - G_ROUTING.
->> - Patches available:
->>   http://git.linuxtv.org/cgit.cgi/pinchartl/media.git/log/?h=xilinx-wip
->>
->> but the patches are from 2005. So I guess I'll need some guidance here...
+> regards
+> Alex
 > 
-> You made me feel very old for a moment. The patches are from 2015 :-)
 > 
->>> I'll reply to the other patch containing the code.
-> 
-
-Regards,
-Ivo
+>>       Arnd
+>>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
