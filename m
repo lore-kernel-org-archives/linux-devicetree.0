@@ -1,46 +1,87 @@
-From: <honghui.zhang@mediatek.com>
-Subject: [PATCH v3 2/2] PCI: mediatek: Fixup class type for MT7622
-Date: Thu, 21 Dec 2017 19:38:45 +0800
-Message-ID: <1513856325-28813-3-git-send-email-honghui.zhang@mediatek.com>
-References: <1513856325-28813-1-git-send-email-honghui.zhang@mediatek.com>
+From: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v5 15/15] devicetree: bindings: Document qcom,pvs
+Date: Thu, 21 Dec 2017 17:23:01 +0530
+Message-ID: <864b6cfd-d3eb-d876-82e2-ebc79c5a6956@codeaurora.org>
+References: <1513698900-10638-1-git-send-email-sricharan@codeaurora.org>
+ <1513698900-10638-16-git-send-email-sricharan@codeaurora.org>
+ <20171220032614.GQ19815@vireshk-i7>
+ <b0d8147a-46e1-0787-ae37-9c1ef957d190@codeaurora.org>
+ <20171220211817.mpkkj747blr4qkqm@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1513856325-28813-1-git-send-email-honghui.zhang@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: bhelgaas@google.com, matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, ryder.lee@mediatek.com, lorenzo.pieralisi@arm.com
-Cc: honghui.zhang@mediatek.com, hongkun.cao@mediatek.com, youlin.pei@mediatek.com, yong.wu@mediatek.com, yt.shen@mediatek.com, sean.wang@mediatek.com, xinping.qian@mediatek.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171220211817.mpkkj747blr4qkqm@rob-hp-laptop>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Honghui Zhang <honghui.zhang@mediatek.com>
+Hi Rob,
 
-The host bridge of MT7622 has hardware code the class code to an
-arbitrary, meaningless value, fix that.
+On 12/21/2017 2:48 AM, Rob Herring wrote:
+> On Wed, Dec 20, 2017 at 11:55:33AM +0530, Sricharan R wrote:
+>> Hi Viresh,
+>>
+>> On 12/20/2017 8:56 AM, Viresh Kumar wrote:
+>>> On 19-12-17, 21:25, Sricharan R wrote:
+>>>> +	cpu@0 {
+>>>> +		compatible = "qcom,krait";
+>>>> +		enable-method = "qcom,kpss-acc-v1";
+>>>> +		device_type = "cpu";
+>>>> +		reg = <0>;
+>>>> +		qcom,acc = <&acc0>;
+>>>> +		qcom,saw = <&saw0>;
+>>>> +		clocks = <&kraitcc 0>;
+>>>> +		clock-names = "cpu";
+>>>> +		cpu-supply = <&smb208_s2a>;
+>>>> +		operating-points-v2 = <&cpu_opp_table>;
+>>>> +	};
+>>>> +
+>>>> +	qcom,pvs {
+>>>> +		qcom,pvs-format-a;
+>>>> +	};
+>>>
+>>> Not sure what Rob is going to say on that :)
+>>>
+>>
+>>  Yes. Would be good to know the best way.
+> 
+> Seems like this should be a property of an efuse node either implied by 
+> the compatible or a separate property. What determines format A vs. B?
+> 
 
-Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
----
- drivers/pci/host/pcie-mediatek.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ Yes, this efuse registers are part of the eeprom (qfprom) tied to the soc.
+ So this property (details like bitfields and register offsets that it represents)
+ can be put soc specific and nvmem apis can be used to read
+ the registers. Does something like below look ok ?
 
-diff --git a/drivers/pci/host/pcie-mediatek.c b/drivers/pci/host/pcie-mediatek.c
-index fc29a9a..dcafeac 100644
---- a/drivers/pci/host/pcie-mediatek.c
-+++ b/drivers/pci/host/pcie-mediatek.c
-@@ -1175,3 +1175,15 @@ static struct platform_driver mtk_pcie_driver = {
- 	},
+ qcom,pvs {
+	compatible = "qcom,pvs-ipq8064";
+	nvmem-cells = <&pvs_efuse>;
+ }
+
+ qfprom: qfprom@700000 {
+ 	compatible      = "qcom,qfprom";
+ 	reg             = <0x00700000 0x1000>;
+ 	#address-cells  = <1>;
+ 	#size-cells     = <1>;
+ 	ranges;
+ 	pvs_efuse: pvs {
+ 	reg = <0xc0 0x8>;
+ 	};
  };
- builtin_platform_driver(mtk_pcie_driver);
-+
-+/* The host bridge of MT7622 advertises the wrong device class. */
-+static void mtk_fixup_class(struct pci_dev *dev)
-+{
-+	dev->class = PCI_CLASS_BRIDGE_PCI << 8;
-+}
-+
-+/*
-+ * The HW default value of vendor id and device id for mt7622 are 0x0e8d,
-+ * 0x3258, which are arbitrary, meaningless values.
-+ */
-+DECLARE_PCI_FIXUP_EARLY(0x0e8d, 0x3258, mtk_fixup_class);
+
+
+Regards,
+ Sricharan
+ 
+ 
+
 -- 
-2.6.4
+"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
