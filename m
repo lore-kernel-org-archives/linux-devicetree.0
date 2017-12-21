@@ -1,69 +1,59 @@
-From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Subject: Re: [PATCH v17 0/5] ZII RAVE platform driver
-Date: Thu, 21 Dec 2017 15:40:09 +0100
-Message-ID: <20171221144009.GA17050@amd>
-References: <20171221065118.29726-1-andrew.smirnov@gmail.com>
- <20171221093024.GA8938@amd>
- <19543ffb-3c64-1bba-1bcc-360a2b4bd15e@roeck-us.net>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v5 4/5] DTS: gta04: add uart2 child node for w2sg00x4
+Date: Thu, 21 Dec 2017 06:53:22 -0800
+Message-ID: <20171221145322.GN3875@atomide.com>
+References: <cover.1512114576.git.hns@goldelico.com>
+ <1b1c7a8319eaf61a46eebd7a366ea745b7a54634.1512114577.git.hns@goldelico.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="IJpNTDwzlM2Ie8A6"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <19543ffb-3c64-1bba-1bcc-360a2b4bd15e-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+In-Reply-To: <1b1c7a8319eaf61a46eebd7a366ea745b7a54634.1512114577.git.hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, cphealy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Nikita Yushchenko <nikita.yoush-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Philippe Ombredanne <pombredanne-od1rfyK75/E@public.gmane.org>
+To: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, letux-kernel-S0jZdbWzriLCfDggNXIi3w@public.gmane.org, kernel-Jl6IXVxNIMRxAtABVqVhTwC/G2K4zDHf@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+* H. Nikolaus Schaller <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org> [171130 23:52]:
+> GTA04 has a W2SG0004/84 connected to UART2 of the OMAP3
+> processor. A GPIO can pulse the on/off toggle switch.
+> 
+> The VSIM regulator is used to power on/off the LNA of an external
+> active GPS antenna so that a driver can turn the LNA off if GPS is
+> not needed to save battery energy.
+> 
+> Signed-off-by: H. Nikolaus Schaller <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
 
---IJpNTDwzlM2Ie8A6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Sounds like Greg's going to take the whole series, so for this
+patch:
 
-On Thu 2017-12-21 05:49:59, Guenter Roeck wrote:
-> On 12/21/2017 01:30 AM, Pavel Machek wrote:
-> >>Everyone:
-> >>
-> >>This patch series is v17 of the driver for supervisory processor found
-> >>on RAVE series of devices from ZII. Supervisory processor is a PIC
-> >>microcontroller connected to various electrical subsystems on RAVE
-> >>devices whose firmware implements protocol to command/qery them.
-> >
-> >query.
-> >
-> >Can we please get this patch merged? We really don't want to see v34
-> >of this patch...
->=20
-> Maybe if we can all agree that There Shall Be No More Bikeshedding.
+Acked-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 
-I'll bite next person who tries to complain comment style. Grrr.
-
-And actually, you could help, too. Normally it makes sense to wait few
-days between resubmitting the patch...
-
-Thanks,
-
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---IJpNTDwzlM2Ie8A6
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlo7x8kACgkQMOfwapXb+vJIsQCfQbLKoD8AjWml44PyUneogVfq
-ecMAn0Ucdki8CIciqOtJtjByWi4dmMAE
-=eDQ1
------END PGP SIGNATURE-----
-
---IJpNTDwzlM2Ie8A6--
+> ---
+>  arch/arm/boot/dts/omap3-gta04.dtsi | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi b/arch/arm/boot/dts/omap3-gta04.dtsi
+> index 4504908c23fe..1ad744a25c36 100644
+> --- a/arch/arm/boot/dts/omap3-gta04.dtsi
+> +++ b/arch/arm/boot/dts/omap3-gta04.dtsi
+> @@ -477,6 +477,13 @@
+>  &uart2 {
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&uart2_pins>;
+> +
+> +	gps: gps {
+> +		compatible = "wi2wi,w2sg0004";
+> +		lna-supply = <&vsim>;   /* LNA regulator */
+> +		/* GPIO_145: trigger for on/off-impulse for w2sg0004 */
+> +		enable-gpios = <&gpio5 17 GPIO_ACTIVE_HIGH>;
+> +	};
+>  };
+>  
+>  &uart3 {
+> -- 
+> 2.12.2
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
