@@ -1,56 +1,41 @@
-From: David Lechner <david@lechnology.com>
-Subject: [PATCH 2/3] dt-bindings: update compatible string for ILI9225
-Date: Thu, 21 Dec 2017 12:33:06 -0600
-Message-ID: <1513881187-3197-3-git-send-email-david@lechnology.com>
-References: <1513881187-3197-1-git-send-email-david@lechnology.com>
+From: Dhaval Shah <dhaval.shah@xilinx.com>
+Subject: [PATCH v6 0/2] Documentation and driver of logicoreIP
+Date: Thu, 21 Dec 2017 10:33:04 -0800
+Message-ID: <1513881186-26020-1-git-send-email-dshah@xilinx.com>
+References: <CAK8P3a0z6HF8Rg08HUj7_T+7ZxxnHoReiu68bNzF6CnEooQSdA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1513881187-3197-1-git-send-email-david@lechnology.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, limor@ladyada.net, David Lechner <david@lechnology.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAK8P3a0z6HF8Rg08HUj7_T+7ZxxnHoReiu68bNzF6CnEooQSdA@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: arnd@arndb.de, rdunlap@infradead.org, gregkh@linuxfoundation.org, pombredanne@nexb.com, robh+dt@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com
+Cc: devicetree@vger.kernel.org, hyunk@xilinx.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Dhaval Shah <dshah@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyB1cGRhdGVzIHRoZSBjb21wYXRpYmxlIHN0cmluZyBmb3IgYSBuby1uYW1lIExDRCBwYW5l
-bCB0bwoidm90LHYyMjBoZjAxYS10IiwgImlsaXRlayxpbGk5MjI1Ii4KClRoZSBvcmlnaW5hbCBi
-aW5kaW5ncyBbMV0gd2VyZSB0aGUgZ2VuZXJpYyAiaWxpdGVrLGlsaTkyMjUtMi4yaW4tMTc2eDIy
-MCIKYmVjYXVzZSBJIGNvdWxkIG5vdCBmaW5kIGEgZGF0YXNoZWV0LiBIb3dldmVyLCBhZnRlciBz
-b21lIG1vcmUgcmVzZWFyY2gsCkkgZmluYWxseSBmb3VuZCBvbmUsIHNvIHRoZSBhY3R1YWwgdmVu
-ZG9yIGFuZCBtb2RlbCBuYW1lIGFyZSBub3cga25vd24uCgpUaGlzIHByZXZpb3VzIGJpbmRpbmdz
-IGhhdmUgbm90IG1hZGUgaXQgdG8gdGhlIG1haW5saW5lIGtlcm5lbCB5ZXQsIHNvCnRoaXMgaXMg
-bm90IGJyZWFraW5nIGJhY2t3YXJkcyBjb21wYXRpYmlsaXR5LgoKVGhpcyBpcyBhbHNvIGZvbGxv
-d2luZyB0aGUgcHJlY2VkZW5jZSBvZiB0aGUgSUxJOTMyMiBiaW5kaW5ncyBbMl0gYnkgdXNpbmcK
-dGhlIHBhdHRlcm4gInZlbmRvcixzcGVjaWZpYy1zeXN0ZW0tY29uZmlnIiwgInZlbmRvcixpcC1w
-YXJ0IjsKClsxXTogaHR0cHM6Ly9wYXRjaHdvcmsub3psYWJzLm9yZy9wYXRjaC84MzkzNTIvClsy
-XTogaHR0cHM6Ly9wYXRjaHdvcmsub3psYWJzLm9yZy9wYXRjaC84NDM1NzYvCgpTaWduZWQtb2Zm
-LWJ5OiBEYXZpZCBMZWNobmVyIDxkYXZpZEBsZWNobm9sb2d5LmNvbT4KLS0tCiBEb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9pbGl0ZWssaWxpOTIyNS50eHQgfCA0ICsr
-LS0KIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pCgpkaWZm
-IC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvaWxpdGVr
-LGlsaTkyMjUudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
-aWxpdGVrLGlsaTkyMjUudHh0CmluZGV4IDIxNjA3YTUuLmE1OWZlYjUgMTAwNjQ0Ci0tLSBhL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2lsaXRlayxpbGk5MjI1LnR4
-dAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9pbGl0ZWss
-aWxpOTIyNS50eHQKQEAgLTQsNyArNCw3IEBAIFRoaXMgYmluZGluZyBpcyBmb3IgZGlzcGxheSBw
-YW5lbHMgdXNpbmcgYW4gSWxpdGVrIElMSTkyMjUgY29udHJvbGxlciBpbiBTUEkKIG1vZGUuCiAK
-IFJlcXVpcmVkIHByb3BlcnRpZXM6Ci0tIGNvbXBhdGlibGU6CSJpbGl0ZWssaWxpOTIyNS0yLjJp
-bi0xNzZ4MjIwIgorLSBjb21wYXRpYmxlOgkidm90LHYyMjBoZjAxYS10IiwgImlsaXRlayxpbGk5
-MjI1IgogLSBycy1ncGlvczoJUmVnaXN0ZXIgc2VsZWN0IHNpZ25hbAogLSByZXNldC1ncGlvczoJ
-UmVzZXQgcGluCiAKQEAgLTE2LDcgKzE2LDcgQEAgT3B0aW9uYWwgcHJvcGVydGllczoKIAogRXhh
-bXBsZToKIAlkaXNwbGF5QDB7Ci0JCWNvbXBhdGlibGUgPSAiaWxpdGVrLGlsaTkyMjUtMi4yaW4t
-MTc2eDIyMCI7CisJCWNvbXBhdGlibGUgPSAidm90LHYyMjBoZjAxYS10IiwgImlsaXRlayxpbGk5
-MjI1IjsKIAkJcmVnID0gPDA+OwogCQlzcGktbWF4LWZyZXF1ZW5jeSA9IDwxMjAwMDAwMD47CiAJ
-CXJzLWdwaW9zID0gPCZncGlvMCA5IEdQSU9fQUNUSVZFX0hJR0g+OwotLSAKMi43LjQKCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWls
-aW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZy
-ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+1st patch provide Device Tree binding document for logicoreIP
+2nd patch provide the xlnx_vcu logicoreIP driver, Kconfig changes
+and Makefile changes for the driver.
+
+Dhaval Shah (2):
+  dt-bindings: misc: Add DT bindings to xlnx_vcu driver
+  misc: xlnx_vcu: Add Xilinx ZYNQMP VCU logicoreIP init driver
+
+ .../devicetree/bindings/soc/xilinx/xlnx,vcu.txt    |  31 +
+ drivers/soc/xilinx/Kconfig                         |  15 +
+ drivers/soc/xilinx/Makefile                        |   1 +
+ drivers/soc/xilinx/xlnx_vcu.c                      | 630 +++++++++++++++++++++
+ 4 files changed, 677 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/xilinx/xlnx,vcu.txt
+ create mode 100644 drivers/soc/xilinx/xlnx_vcu.c
+
+-- 
+2.7.4
