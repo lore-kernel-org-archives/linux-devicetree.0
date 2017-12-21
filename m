@@ -1,29 +1,33 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 0/3] ARM: am57xx: Add support for am574x-idk
-Date: Thu, 21 Dec 2017 07:07:29 -0800
-Message-ID: <20171221150729.GP3875@atomide.com>
-References: <20171218062003.9024-1-lokeshvutla@ti.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [RESEND PATCH 3/4] ARM: dts: lpc18xx: Add generic compatible
+ string for I2C EEPROM
+Date: Thu, 21 Dec 2017 16:08:11 +0100
+Message-ID: <CAK8P3a1=_Of+2Gbu+qWHsLC304jvN757nixPoWidh8z=+1XG8A@mail.gmail.com>
+References: <20171124162750.18756-1-javierm@redhat.com> <20171124162750.18756-3-javierm@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20171218062003.9024-1-lokeshvutla-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
-Cc: Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Device Tree Mailing List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171124162750.18756-3-javierm@redhat.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Javier Martinez Canillas <javierm@redhat.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Olof Johansson <olof@lixom.net>, arm-soc <arm@kernel.org>, DTML <devicetree@vger.kernel.org>, Joachim Eastwood <manabian@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-* Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org> [171217 22:23]:
-> am574x-idk board is similar to am572x-idk with am574x SoC.
-> This series adds support for this board.
+On Fri, Nov 24, 2017 at 5:27 PM, Javier Martinez Canillas
+<javierm@redhat.com> wrote:
+> The at24 driver allows to register I2C EEPROM chips using different vendor
+> and devices, but the I2C subsystem does not take the vendor into account
+> when matching using the I2C table since it only has device entries.
+>
+> But when matching using an OF table, both the vendor and device has to be
+> taken into account so the driver defines only a set of compatible strings
+> using the "atmel" vendor as a generic fallback for compatible I2C devices.
+>
+> So add this generic fallback to the device node compatible string to make
+> the device to match the driver using the OF device ID table.
+>
+> Signed-off-by: Javier Martinez Canillas <javierm@redhat.com>
 
-Applying these into omap-for-v4.16/soc and omap-for-v4.16/dt
-branches.
+Applied, thanks
 
-Thanks,
-
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+      Arnd
