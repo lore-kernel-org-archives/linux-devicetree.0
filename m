@@ -1,63 +1,137 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH V4 3/7] PCI: tegra: Remove PCI_REASSIGN_ALL_BUS flag for
- Tegra PCIe
-Date: Thu, 21 Dec 2017 10:46:30 +0000
-Message-ID: <20171221104630.GB24280@red-moon>
-References: <1512723493-865-1-git-send-email-mmaddireddy@nvidia.com>
- <1512723493-865-4-git-send-email-mmaddireddy@nvidia.com>
- <20171215173643.GA1050@red-moon>
- <20171220193011.GA31757@ulmo>
+From: Tobias Klauser <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>
+Subject: Re: [PATCH] nios2: dts: Remove leading 0x and 0s from bindings
+ notation
+Date: Thu, 21 Dec 2017 11:48:26 +0100
+Message-ID: <20171221104826.GB1068@distanz.ch>
+References: <20171214165359.28112-1-malat@debian.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20171220193011.GA31757@ulmo>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Manikanta Maddireddy <mmaddireddy-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, cyndis-/1wQRMveznE@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, vidyas-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, kthota-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20171214165359.28112-1-malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ley Foon Tan <lftan-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nios2-dev-g9ZBwUv/Ih/yUk5EbOjzuce+I+R0W71w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Walter Goossens <walter.goossens-laxl2+jGqjQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 20, 2017 at 08:30:11PM +0100, Thierry Reding wrote:
-> On Fri, Dec 15, 2017 at 05:36:43PM +0000, Lorenzo Pieralisi wrote:
-> > On Fri, Dec 08, 2017 at 02:28:09PM +0530, Manikanta Maddireddy wrote:
-> > > Primary, secondary and subordinate default bus numbers are 0 in Tegra and
-> > > it is expecting SW to program these numbers in configration space.
-> > > 
-> > > pci_scan_bridge_extend() function programs these numbers in configuration
-> > > space if secondary & subordinate bus numbers are 0 or PCI_REASSIGN_ALL_BUS
-> > > flag is set. Since secondary & subordinate default bus numbers are 0,
-> > > PCI_REASSIGN_ALL_BUS flag can be removed for Tegra PCIe.
-> > > 
-> > > Signed-off-by: Manikanta Maddireddy <mmaddireddy-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> > > ---
-> > > V3:
-> > > * new patch in V3
-> > > V4:
-> > > * no change in this patch
-> > > 
-> > >  drivers/pci/host/pci-tegra.c | 1 -
-> > >  1 file changed, 1 deletion(-)
-> > > 
-> > > diff --git a/drivers/pci/host/pci-tegra.c b/drivers/pci/host/pci-tegra.c
-> > > index a549c5899e26..0d91f1a3a6b4 100644
-> > > --- a/drivers/pci/host/pci-tegra.c
-> > > +++ b/drivers/pci/host/pci-tegra.c
-> > > @@ -2604,7 +2604,6 @@ static int tegra_pcie_probe(struct platform_device *pdev)
-> > >  
-> > >  	tegra_pcie_enable_ports(pcie);
-> > >  
-> > > -	pci_add_flags(PCI_REASSIGN_ALL_BUS);
-> > 
-> > This looks obviously OK to me but I need Thierry's ACK to queue it.
+On 2017-12-14 at 17:53:59 +0100, Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org> wrote:
+> Improve the DTS files by removing all the leading "0x" and zeros to fix the
+> following dtc warnings:
 > 
-> Just as an additional note: I think the real reason why this is okay to
-> do is because we reset the PCI host controller in the kernel driver, so
-> any bus assignments done by the firmware are reset as well.
+> Warning (unit_address_format): Node /XXX unit name should not have leading "0x"
 > 
-> Acked-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> and
+> 
+> Warning (unit_address_format): Node /XXX unit name should not have leading 0s
+> 
+> Converted using the following command:
+> 
+> find . -type f \( -iname *.dts -o -iname *.dtsi \) -exec sed -E -i -e "s/@0x([0-9a-fA-F\.]+)\s?\{/@\L\1 \{/g" -e "s/@0+([0-9a-fA-F\.]+)\s?\{/@\L\1 \{/g" {} +
+> 
+> For simplicity, two sed expressions were used to solve each warnings separately.
+> 
+> To make the regex expression more robust a few other issues were resolved,
+> namely setting unit-address to lower case, and adding a whitespace before the
+> the opening curly brace:
+> 
+> https://elinux.org/Device_Tree_Linux#Linux_conventions
+> 
+> This is a follow up to commit 4c9847b7375a ("dt-bindings: Remove leading 0x from bindings notation")
+> 
+> Reported-by: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+> Suggested-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
 
-Thank you. This series needs rebasing, we should try to untangle
-the dependencies between series so that I can actually apply some
-of these patches that make sense on their own.
+Reviewed-by: Tobias Klauser <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>
 
-Lorenzo
+This file was originally generated by sopc2dts [1], so it'll probably
+need updating as well (Cc'ing Walter).
+
+[1] https://github.com/wgoossens/sopc2dts
+
+> ---
+>  arch/nios2/boot/dts/3c120_devboard.dts | 16 ++++++++--------
+>  1 file changed, 8 insertions(+), 8 deletions(-)
+> 
+> diff --git a/arch/nios2/boot/dts/3c120_devboard.dts b/arch/nios2/boot/dts/3c120_devboard.dts
+> index 36ccdf05837d..56f4b5df6d65 100644
+> --- a/arch/nios2/boot/dts/3c120_devboard.dts
+> +++ b/arch/nios2/boot/dts/3c120_devboard.dts
+> @@ -29,7 +29,7 @@
+>  		#address-cells = <1>;
+>  		#size-cells = <0>;
+>  
+> -		cpu: cpu@0x0 {
+> +		cpu: cpu@0 {
+>  			device_type = "cpu";
+>  			compatible = "altr,nios2-1.0";
+>  			reg = <0x00000000>;
+> @@ -69,7 +69,7 @@
+>  		compatible = "altr,avalon", "simple-bus";
+>  		bus-frequency = <125000000>;
+>  
+> -		pb_cpu_to_io: bridge@0x8000000 {
+> +		pb_cpu_to_io: bridge@8000000 {
+>  			compatible = "simple-bus";
+>  			reg = <0x08000000 0x00800000>;
+>  			#address-cells = <1>;
+> @@ -83,7 +83,7 @@
+>  				<0x00008000 0x08008000 0x00000020>,
+>  				<0x00400000 0x08400000 0x00000020>;
+>  
+> -			timer_1ms: timer@0x400000 {
+> +			timer_1ms: timer@400000 {
+>  				compatible = "altr,timer-1.0";
+>  				reg = <0x00400000 0x00000020>;
+>  				interrupt-parent = <&cpu>;
+> @@ -91,7 +91,7 @@
+>  				clock-frequency = <125000000>;
+>  			};
+>  
+> -			timer_0: timer@0x8000 {
+> +			timer_0: timer@8000 {
+>  				compatible = "altr,timer-1.0";
+>  				reg = < 0x00008000 0x00000020 >;
+>  				interrupt-parent = < &cpu >;
+> @@ -99,14 +99,14 @@
+>  				clock-frequency = < 125000000 >;
+>  			};
+>  
+> -			jtag_uart: serial@0x4d50 {
+> +			jtag_uart: serial@4d50 {
+>  				compatible = "altr,juart-1.0";
+>  				reg = <0x00004d50 0x00000008>;
+>  				interrupt-parent = <&cpu>;
+>  				interrupts = <1>;
+>  			};
+>  
+> -			tse_mac: ethernet@0x4000 {
+> +			tse_mac: ethernet@4000 {
+>  				compatible = "altr,tse-1.0";
+>  				reg = <0x00004000 0x00000400>,
+>  					<0x00004400 0x00000040>,
+> @@ -133,7 +133,7 @@
+>  				};
+>  			};
+>  
+> -			uart: serial@0x4c80 {
+> +			uart: serial@4c80 {
+>  				compatible = "altr,uart-1.0";
+>  				reg = <0x00004c80 0x00000020>;
+>  				interrupt-parent = <&cpu>;
+> @@ -143,7 +143,7 @@
+>  			};
+>  		};
+>  
+> -		cfi_flash_64m: flash@0x0 {
+> +		cfi_flash_64m: flash@0 {
+>  			compatible = "cfi-flash";
+>  			reg = <0x00000000 0x04000000>;
+>  			bank-width = <2>;
+> -- 
+> 2.11.0
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
