@@ -1,98 +1,32 @@
-From: Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH 03/12] mmc: sdhci-omap: Add custom set_uhs_signaling
- sdhci_host ops
-Date: Thu, 21 Dec 2017 11:01:06 +0200
-Message-ID: <7120e913-56c5-f04f-b61e-0e35b474ce84@intel.com>
-References: <20171214130941.26666-1-kishon@ti.com>
- <20171214130941.26666-4-kishon@ti.com>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH 3/4] ARM: dts: vf610-zii-dev-rev-b: add PHYs for switch2
+Date: Thu, 21 Dec 2017 10:01:47 +0100
+Message-ID: <20171221090147.GB6683@lunn.ch>
+References: <20171220231108.GJ10595@n2100.armlinux.org.uk>
+ <E1eRnWl-0006VL-TL@rmk-PC.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <20171214130941.26666-4-kishon@ti.com>
-Content-Language: en-US
-Sender: linux-mmc-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, nsekhar@ti.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <E1eRnWl-0006VL-TL-eh5Bv4kxaXIk46pC+1QYvQNdhmdF6hFW@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 14/12/17 15:09, Kishon Vijay Abraham I wrote:
-> UHS-1 DDR50 and MMC DDR52 mode require DDR bit to be
-> set in the configuration register (MMCHS_CON). Add
-> sdhci-omap specific set_uhs_signaling ops to set
-> this bit. Also while setting the UHSMS bit, clock should be
-> disabled.
+On Wed, Dec 20, 2017 at 11:11:55PM +0000, Russell King wrote:
+> Switch 2 has an 88e1545 PHY behind it, which is a quad PHY.  Only the
+> first three PHYs are used, the remaining PHY is unused.  When we wire
+> up the SFF sockets in a later commit, the omission of this causes the
+> fourth PHY to be used for port 3.  Specifying the PHYs in DT avoids
+> the auto-probing of the bus, and discovery of this PHY.
 > 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> Signed-off-by: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
 
-Apart from 1 minor comment below:
+Reviewed-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
 
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-
-> ---
->  drivers/mmc/host/sdhci-omap.c | 26 +++++++++++++++++++++++++-
->  1 file changed, 25 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/mmc/host/sdhci-omap.c b/drivers/mmc/host/sdhci-omap.c
-> index defe4eac020d..8f7239e2edc2 100644
-> --- a/drivers/mmc/host/sdhci-omap.c
-> +++ b/drivers/mmc/host/sdhci-omap.c
-> @@ -31,6 +31,7 @@
->  #define SDHCI_OMAP_CON		0x12c
->  #define CON_DW8			BIT(5)
->  #define CON_DMA_MASTER		BIT(20)
-> +#define CON_DDR			BIT(19)
->  #define CON_CLKEXTFREE		BIT(16)
->  #define CON_PADEN		BIT(15)
->  #define CON_INIT		BIT(1)
-> @@ -93,6 +94,9 @@ struct sdhci_omap_host {
->  	u8			power_mode;
->  };
->  
-> +static void sdhci_omap_start_clock(struct sdhci_omap_host *omap_host);
-> +static void sdhci_omap_stop_clock(struct sdhci_omap_host *omap_host);
-
-These forward declarations aren't needed are they.
-
-> +
->  static inline u32 sdhci_omap_readl(struct sdhci_omap_host *host,
->  				   unsigned int offset)
->  {
-> @@ -471,6 +475,26 @@ static void sdhci_omap_init_74_clocks(struct sdhci_host *host, u8 power_mode)
->  	enable_irq(host->irq);
->  }
->  
-> +static void sdhci_omap_set_uhs_signaling(struct sdhci_host *host,
-> +					 unsigned int timing)
-> +{
-> +	u32 reg;
-> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-> +	struct sdhci_omap_host *omap_host = sdhci_pltfm_priv(pltfm_host);
-> +
-> +	sdhci_omap_stop_clock(omap_host);
-> +
-> +	reg = sdhci_omap_readl(omap_host, SDHCI_OMAP_CON);
-> +	if (timing == MMC_TIMING_UHS_DDR50 || timing == MMC_TIMING_MMC_DDR52)
-> +		reg |= CON_DDR;
-> +	else
-> +		reg &= ~CON_DDR;
-> +	sdhci_omap_writel(omap_host, SDHCI_OMAP_CON, reg);
-> +
-> +	sdhci_set_uhs_signaling(host, timing);
-> +	sdhci_omap_start_clock(omap_host);
-> +}
-> +
->  static struct sdhci_ops sdhci_omap_ops = {
->  	.set_clock = sdhci_omap_set_clock,
->  	.set_power = sdhci_omap_set_power,
-> @@ -480,7 +504,7 @@ static struct sdhci_ops sdhci_omap_ops = {
->  	.set_bus_width = sdhci_omap_set_bus_width,
->  	.platform_send_init_74_clocks = sdhci_omap_init_74_clocks,
->  	.reset = sdhci_reset,
-> -	.set_uhs_signaling = sdhci_set_uhs_signaling,
-> +	.set_uhs_signaling = sdhci_omap_set_uhs_signaling,
->  };
->  
->  static int sdhci_omap_set_capabilities(struct sdhci_omap_host *omap_host)
-> 
-
+    Andrew
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
