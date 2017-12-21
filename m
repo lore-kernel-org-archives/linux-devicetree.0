@@ -1,67 +1,57 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH 1/6] dt-bindings: soc: qcom: Add label for GLINK bindings
-Date: Wed, 20 Dec 2017 17:35:57 -0800
-Message-ID: <20171221013557.GE12655@minitux>
-References: <1513634534-22861-1-git-send-email-clew@codeaurora.org>
- <1513634534-22861-2-git-send-email-clew@codeaurora.org>
- <20171220183000.rhxgyikfqzxmqkjo@rob-hp-laptop>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 0/9] soc: brcmstb: biuctrl updates for 64-bit chips
+Date: Wed, 20 Dec 2017 17:38:43 -0800
+Message-ID: <409b31a8-03ba-e371-b8a8-7975ef896fc8@gmail.com>
+References: <20171219192247.29799-1-f.fainelli@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171220183000.rhxgyikfqzxmqkjo@rob-hp-laptop>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Chris Lew <clew@codeaurora.org>, andy.gross@linaro.org, david.brown@linaro.org, aneela@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171219192247.29799-1-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed 20 Dec 10:30 PST 2017, Rob Herring wrote:
-
-> On Mon, Dec 18, 2017 at 02:02:09PM -0800, Chris Lew wrote:
-> > Add a label property to identify the edge this node represents.
+Le 12/19/17 à 11:22, Florian Fainelli a écrit :
+> Hi all,
 > 
-> Why does a user need to know this?
+> This patch series updates the Broadcom STB Bus Interface Unit controller to
+> support newer chips such as 7260, 7268, 7271 and 7278. These chips require
+> additional tuning in order to provide the expected bus throughput.
 > 
+> In the process, we need to re-organize the common.c file a little bit in order
+> to extract the family and product identifiers a little earlier.
+> 
+> Finally, by moving the biuctrl initialization an early_initcall level, we can
+> remove some code from the ARM-32bit machine descriptor file.
+> 
+> Provided that we are happy with these changes, I would route them through my
+> drivers/next branch and a subsequent Broadcom ARM SoC pull request.
+> 
+> Thank you
+> 
+> Changes in v2:
+> 
+> - collect Rob's acked-by on the first patch
+> - fixed the binding as suggested by Rob
+> 
+> Florian Fainelli (9):
+>   dt-bindings: arm: Add entry for Broadcom Brahma-B53
+>   dt-bindings: arm: brcmstb: Correct BIUCTRL node documentation
+>   soc: brcmstb: Make CPU credit offset more parameterized
+>   soc: brcmstb: Correct CPU_CREDIT_REG offset for Brahma-B53 CPUs
+>   soc: brcmstb: biuctrl: Prepare for saving/restoring other registers
+>   soc: brcmstb: biuctrl: Wire-up new registers
+>   soc: brcmstb: biuctrl: Fine tune B53 MCP interface settings
+>   soc: brcmstb: Split initialization
+>   soc: brcmstb: biuctrl: Move to early_initcall
 
-We have multiple remoteproc instances, each one having one or more
-associated SMD or GLINK links (this node), exposing logical
-communication channels. Some of these logical channels are exposed to
-user space and we need a way to distinguish them there.
-
-In the current implementation of SMD this value goes straight into an
-sysfs attribute that we can use when writing udev rules and for the DIAG
-implementation to pair up channels related to the same remoteproc. This
-adds the equivalent information for glink-backed channels.
-
-
-I'm therefor in favor of picking this patch.
-
-Regards,
-Bjorn
-
-> > 
-> > Signed-off-by: Chris Lew <clew@codeaurora.org>
-> > ---
-> >  Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt | 5 +++++
-> >  1 file changed, 5 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
-> > index 9663cab52246..0b8cc533ca83 100644
-> > --- a/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
-> > +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
-> > @@ -10,6 +10,11 @@ edge.
-> >  	Value type: <stringlist>
-> >  	Definition: must be "qcom,glink-rpm"
-> >  
-> > +- label:
-> > +	Usage: optional
-> > +	Value type: <string>
-> > +	Definition: should specify the subsystem name this edge corresponds to.
-> > +
-> >  - interrupts:
-> >  	Usage: required
-> >  	Value type: <prop-encoded-array>
-> > -- 
-> > The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> > a Linux Foundation Collaborative Project
-> > 
+Series applied to drivers/next.
+-- 
+Florian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
