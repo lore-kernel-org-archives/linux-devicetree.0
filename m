@@ -1,71 +1,90 @@
-From: Honghui Zhang <honghui.zhang@mediatek.com>
-Subject: Re: [PATCH v2 2/2] PCI: mediatek: Fixup class type for MT7622
-Date: Thu, 21 Dec 2017 15:01:12 +0800
-Message-ID: <1513839672.25872.13.camel@mhfsdcap03>
-References: <1513822277-18329-1-git-send-email-honghui.zhang@mediatek.com>
-         <1513822277-18329-3-git-send-email-honghui.zhang@mediatek.com>
-         <1513838476.23174.3.camel@mhfsdcap03>
+From: Wen He <wen.he_1-3arQi8VN3Tc@public.gmane.org>
+Subject: RE: [PATCH 2/4] dma: fsl-qdma: add devicetree documentation for qDMA
+ driver.
+Date: Thu, 21 Dec 2017 07:09:36 +0000
+Message-ID: <DBXPR04MB47875F9351B430136E1995CE20D0@DBXPR04MB478.eurprd04.prod.outlook.com>
+References: <20171219064157.29586-1-wen.he_1@nxp.com>
+ <20171220184304.ywr3nopucgubgxwz@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1513838476.23174.3.camel@mhfsdcap03>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yong Wu <yong.wu@mediatek.com>
-Cc: bhelgaas@google.com, matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, ryder.lee@mediatek.com, lorenzo.pieralisi@arm.com, hongkun.cao@mediatek.com, youlin.pei@mediatek.com, yt.shen@mediatek.com, sean.wang@mediatek.com, xinping.qian@mediatek.com, yu.yu@mediatek.com
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171220184304.ywr3nopucgubgxwz@rob-hp-laptop>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jiafei Pan <jiafei.pan-3arQi8VN3Tc@public.gmane.org>, Jiaheng Fan <jiaheng.fan-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2017-12-21 at 14:41 +0800, Yong Wu wrote:
-> On Thu, 2017-12-21 at 10:11 +0800, honghui.zhang@mediatek.com wrote:
-> > From: Honghui Zhang <honghui.zhang@mediatek.com>
-> > 
-> > The host bridge of MT7622 has hardware code the class code to an
-> > arbitrary, meaningless value, fix that.
-> > 
-> > Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
-> > ---
-> >  drivers/pci/host/pcie-mediatek.c | 12 ++++++++++++
-> >  1 file changed, 12 insertions(+)
-> > 
-> > diff --git a/drivers/pci/host/pcie-mediatek.c b/drivers/pci/host/pcie-mediatek.c
-> > index 3248771..ae8d367 100644
-> > --- a/drivers/pci/host/pcie-mediatek.c
-> > +++ b/drivers/pci/host/pcie-mediatek.c
-> > @@ -1174,3 +1174,15 @@ static struct platform_driver mtk_pcie_driver = {
-> >  	},
-> >  };
-> >  builtin_platform_driver(mtk_pcie_driver);
-> > +
-> > +/* The host bridge of MT7622 advertises the wrong device class. */
-> > +static void mtk_fixup_class(struct pci_dev *dev)
-> > +{
-> > +	dev->class = PCI_CLASS_BRIDGE_PCI << 8;
-> > +}
-> > +
-> > +/*
-> > + * The HW default value of vendor id and device id for mt7622 are 0x0e8d,
-> > + * 0x3258, which are arbitrary, meaningless values.
-> > + */
-> 
-> What's the right vendor id and device id? is it possible to fix them
-> too?
-
-Vendor ID is managed by PCI-SIG, you may get the assigned vendor ID
-from:
-https://pci-ids.ucw.cz/read/PC?restrict=
-
-The vendor ID for Mediatek Corp. should be 14c3.
-Device ID is something like vendor-defined.
-Those values are in the configuration space and are read-only defined by
-spec, it's been stored at the pci_dev, we may change the vendor and
-device values in pci_dev, but I don't think it's necessary to change
-that.
-BTW, Does anyone really cares about the vendor ID and device ID except
-the device's driver?
-
-thanks.
-
-> 
-> > +DECLARE_PCI_FIXUP_EARLY(0x0e8d, 0x3258, mtk_fixup_class);
-> 
-> 
+SGkgUm9iLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFJvYiBIZXJy
+aW5nIFttYWlsdG86cm9iaEBrZXJuZWwub3JnXQ0KPiBTZW50OiAyMDE3xOoxMtTCMjHI1SAyOjQz
+DQo+IFRvOiBXZW4gSGUgPHdlbi5oZV8xQG54cC5jb20+DQo+IENjOiBkZXZpY2V0cmVlQHZnZXIu
+a2VybmVsLm9yZw0KPiBTdWJqZWN0OiBSZTogW1BBVENIIDIvNF0gZG1hOiBmc2wtcWRtYTogYWRk
+IGRldmljZXRyZWUgZG9jdW1lbnRhdGlvbiBmb3INCj4gcURNQSBkcml2ZXIuDQo+IA0KPiBPbiBU
+dWUsIERlYyAxOSwgMjAxNyBhdCAwMjo0MTo1N1BNICswODAwLCBXZW4gSGUgd3JvdGU6DQo+IA0K
+PiBOZWVkIGEgY29tbWl0IG1lc3NhZ2UuDQo+IA0KDQpHb3QgaXQsIFRoYW5rcy4NCg0KPiA+IFNp
+Z25lZC1vZmYtYnk6IFdlbiBIZSA8d2VuLmhlXzFAbnhwLmNvbT4NCj4gPiAtLS0NCj4gPiAgRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RtYS9mc2wtcWRtYS50eHQgfCA0Mg0KPiA+
+ICsrKysrKysrKysrKysrKysrKysrKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDQyIGluc2VydGlv
+bnMoKykNCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0DQo+IERvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9kbWEvZnNsLXFkbWEudHh0DQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RtYS9mc2wtcWRtYS50eHQNCj4gPiBiL0RvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kbWEvZnNsLXFkbWEudHh0DQo+ID4gbmV3IGZp
+bGUgbW9kZSAxMDA2NDQNCj4gPiBpbmRleCAwMDAwMDAwMDAwMDAuLmIwNzYxNzdiNDg2Mw0KPiA+
+IC0tLSAvZGV2L251bGwNCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvZG1hL2ZzbC1xZG1hLnR4dA0KPiA+IEBAIC0wLDAgKzEsNDIgQEANCj4gPiArKiBGcmVlc2Nh
+bGUgcXVldWUgRGlyZWN0IE1lbW9yeSBBY2Nlc3MgQ29udHJvbGxlcihxRE1BKSBDb250cm9sbGVy
+DQo+ID4gKw0KPiA+ICsgIFRoZSBxRE1BIGNvbnRyb2xsZXIgdHJhbnNmZXJzIGJsb2NrcyBvZiBk
+YXRhIGJldHdlZW4gb25lIHNvdXJjZSBhbmQNCj4gPiArIG9uZSBvciBtb3JlDQo+IA0KPiBXaHkg
+dGhlIGluZGVudGF0aW9uPw0KPiANCg0KSSBkaWQgaXQgYnkgcmVmZXJyaW5nIHRvIERvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kbWEvZnNsLWVkbWEudHh0LCBpcyBpdCBvaz8NCg0K
+PiA+ICtkZXN0aW5hdGlvbnMuIFRoZSBibG9ja3Mgb2YgZGF0YSB0cmFuc2ZlcnJlZCBjYW4gYmUg
+cmVwcmVzZW50ZWQgaW4NCj4gPiArbWVtb3J5IGFzIGNvbnRpZ3VvdXMgb3Igbm9uLWNvbnRpZ3Vv
+dXMgdXNpbmcgc2NhdHRlci9nYXRoZXIgdGFibGUocykuDQo+ID4gK0NoYW5uZWwgdmlydHVhbGl6
+YXRpb24gaXMgc3VwcG9ydGVkIHRocm91Z2ggZW5xdWV1aW5nIG9mIERNQSBqb2JzIHRvLA0KPiA+
+ICtvciBkZXF1ZXVpbmcgRE1BIGpvYnMgZnJvbSwgZGlmZmVyZW50IHdvcmsgcXVldWVzLg0KPiA+
+ICsNCj4gPiArKiBxRE1BIENvbnRyb2xsZXINCj4gPiArUmVxdWlyZWQgcHJvcGVydGllczoNCj4g
+PiArLSBjb21wYXRpYmxlIDoNCj4gDQo+IEFkZCAiU2hvdWxkIGJlIG9uZSBvZjoiDQo+IA0KPiA+
+ICsJLSAiZnNsLGxzMTAyMWEtcWRtYSIsDQo+ID4gKwlPciAiZnNsLGxzMTA0M2EtcWRtYSIgZm9s
+bG93ZWQgYnkgImZzbCxsczEwMjFhLXFkbWEiLA0KPiANCj4gVGhlbiByZW1vdmUgdGhlICJPciIg
+YW5kIHJlcGxhY2UgIiBmb2xsb3dlZCBieSIgd2l0aCBhIGNvbW1hIChsaWtlIGR0cw0KPiBzb3Vy
+Y2UpLg0KPiANCg0KLSBjb21wYXRpYmxlIDogU2hvdWxkIGJlICJmc2wsbHMxMDIxYS1xZG1hIiBv
+ciAiZnNsLGxzMTA0M2EtcWRtYSIsICJmc2wsbHMxMDIxYS1xZG1hIg0KSXMgdGhhdCBvaz8NCg0K
+PiA+ICstIHJlZyA6IFNwZWNpZmllcyBiYXNlIHBoeXNpY2FsIGFkZHJlc3MocykgYW5kIHNpemUg
+b2YgdGhlIHFETUEgcmVnaXN0ZXJzLg0KPiA+ICsJVGhlIHJlZ2lvbiBpcyBxRE1BIGNvbnRyb2wg
+cmVnaXN0ZXIncyBhZGRyZXNzIGFuZCBzaXplLg0KPiA+ICstIGludGVycnVwdHMgOiBBIGxpc3Qg
+b2YgaW50ZXJydXB0LXNwZWNpZmllcnMsIG9uZSBmb3IgZWFjaCBlbnRyeSBpbg0KPiA+ICsJaW50
+ZXJydXB0LW5hbWVzLg0KPiA+ICstIGludGVycnVwdC1uYW1lcyA6IFNob3VsZCBjb250YWluOg0K
+PiA+ICsJInFkbWEtZXJyb3IiIC0gdGhlIGVycm9yIGludGVycnVwdA0KPiA+ICsJInFkbWEtcXVl
+dWUiIC0gdGhlIHF1ZXVlIGludGVycnVwdA0KPiA+ICstIGNoYW5uZWxzIDogTnVtYmVyIG9mIGNo
+YW5uZWxzIHN1cHBvcnRlZCBieSB0aGUgY29udHJvbGxlcg0KPiANCj4gZG1hLWNoYW5uZWxzIGlz
+IHRoZSBzdGFuZGFyZCBuYW1lLg0KPiANCg0KT2theSwgZ290IGl0Lg0KDQo+ID4gKy0gcXVldWVz
+IDogTnVtYmVyIG9mIHF1ZXVlcyBzdXBwb3J0ZWQgYnkgZHJpdmVyDQo+IA0KPiBOZWVkcyBhIHZl
+bmRvciBwcmVmaXguDQo+IA0KDQpXaGVyZSBkbyBJIHB1dCB0aGUgdmVuZG9yIHByZWZpeD8NCg0K
+PiA+ICsNCj4gPiArT3B0aW9uYWwgcHJvcGVydGllczoNCj4gPiArLSBiaWctZW5kaWFuOiBJZiBw
+cmVzZW50IHJlZ2lzdGVycyBhbmQgaGFyZHdhcmUgc2NhdHRlci9nYXRoZXIgZGVzY3JpcHRvcnMN
+Cj4gPiArCW9mIHRoZSBxRE1BIGFyZSBpbXBsZW1lbnRlZCBpbiBiaWcgZW5kaWFuIG1vZGUsIG90
+aGVyd2lzZSBpbiBsaXR0bGUNCj4gPiArCW1vZGUuDQo+ID4gKw0KPiA+ICsNCj4gPiArRXhhbXBs
+ZXM6DQo+ID4gKw0KPiA+ICsJcWRtYTogcWRtYUA4MzkwMDAwIHsNCj4gDQo+IFVzZSBzdGFuZGFy
+ZCBub2RlIG5hbWVzOg0KPiANCj4gZG1hLWNvbnRyb2xsZXJALi4uDQo+DQoNCk9rYXksZ290IGl0
+LCB0aGFua3MuDQoNCiANCj4gPiArCQljb21wYXRpYmxlID0gImZzbCxsczEwMjFhLXFkbWEiOw0K
+PiA+ICsJCXJlZyA9IDwweDAgMHg4Mzk4MDAwIDB4MCAweDIwMDAgLyogQ29udHJvbGxlciByZWdp
+c3RlcnMgKi8NCj4gPiArCQkgICAgICAgMHgwIDB4ODM5YTAwMCAweDAgMHgyMDAwPjsgLyogQmxv
+Y2sgcmVnaXN0ZXJzICovDQo+ID4gKwkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDE4NSBJUlFfVFlQ
+RV9MRVZFTF9ISUdIPiwNCj4gPiArCQkJCTxHSUNfU1BJIDc2IElSUV9UWVBFX0xFVkVMX0hJR0g+
+Ow0KPiA+ICsJCWludGVycnVwdC1uYW1lcyA9ICJxZG1hLWVycm9yIiwgInFkbWEtcXVldWUiOw0K
+PiA+ICsJCWNoYW5uZWxzID0gPDg+Ow0KPiA+ICsJCXF1ZXVlcyA9IDwyPjsNCj4gPiArCQliaWct
+ZW5kaWFuOw0KPiA+ICsJfTsNCj4gPiAtLQ0KPiA+IDIuMTQuMQ0KPiA+DQo+ID4gLS0NCj4gPiBU
+byB1bnN1YnNjcmliZSBmcm9tIHRoaXMgbGlzdDogc2VuZCB0aGUgbGluZSAidW5zdWJzY3JpYmUg
+ZGV2aWNldHJlZSINCj4gPiBpbiB0aGUgYm9keSBvZiBhIG1lc3NhZ2UgdG8gbWFqb3Jkb21vQHZn
+ZXIua2VybmVsLm9yZyBNb3JlIG1ham9yZG9tbw0KPiA+IGluZm8gYXQNCj4gPg0KPiBodHRwczov
+L2VtZWEwMS5zYWZlbGlua3MucHJvdGVjdGlvbi5vdXRsb29rLmNvbS8/dXJsPWh0dHAlM0ElMkYl
+MkZ2Z2VyDQo+ID4gLmtlcm5lbC5vcmclMkZtYWpvcmRvbW8taW5mby5odG1sJmRhdGE9MDIlN0Mw
+MSU3Q3dlbi5oZV8xJTQwbnhwDQo+IC5jb20lN0MNCj4gPg0KPiBhZGQ0ZjM2NmFiNGQ0ZTBkMDQ0
+MTA4ZDU0N2Q5ODQxMyU3QzY4NmVhMWQzYmMyYjRjNmZhOTJjZDk5YzVjMzANCj4gMTYzNSU3Qw0K
+PiA+DQo+IDAlN0MwJTdDNjM2NDkzOTIxOTA3NTUzMDg0JnNkYXRhPWNLaWRZJTJGTlZ1UGZGeXRL
+aUlMR0FYMXNRbTY5DQo+IHhJJTJGZER2DQo+ID4gQmVHeFlmN3NiZyUzRCZyZXNlcnZlZD0wDQo=
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
