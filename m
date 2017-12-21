@@ -1,147 +1,35 @@
-From: Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH 02/12] mmc: sdhci-omap: Add card_busy host ops
-Date: Thu, 21 Dec 2017 10:59:56 +0200
-Message-ID: <c5c61373-aa0e-f4d1-4463-88e31474b80a@intel.com>
-References: <20171214130941.26666-1-kishon@ti.com>
- <20171214130941.26666-3-kishon@ti.com>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH 2/4] ARM: dts: vf610-zii-dev-rev-b: fix interrupt for
+ GPIO expander
+Date: Thu, 21 Dec 2017 10:00:30 +0100
+Message-ID: <20171221090030.GA6683@lunn.ch>
+References: <20171220231108.GJ10595@n2100.armlinux.org.uk>
+ <E1eRnWg-0006VE-GI@rmk-PC.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <20171214130941.26666-3-kishon@ti.com>
-Content-Language: en-US
-Sender: linux-mmc-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, nsekhar@ti.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <E1eRnWg-0006VE-GI-eh5Bv4kxaXIk46pC+1QYvQNdhmdF6hFW@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 14/12/17 15:09, Kishon Vijay Abraham I wrote:
-> card_busy ops is used by mmc core in
->   1) mmc_set_uhs_voltage to verify voltage switch
->   2) __mmc_start_request/mmc_poll_for_busy to check the card busy status
-> 
-> While only DAT0 can be used to check the card busy status (in '2' above),
-> CMD and DAT[0..3] is used to verify voltage switch (in '1' above).
-> 
-> The voltage switching sequence for AM572x platform is mentioned
-> in Figure 25-48. eMMC/SD/SDIO Power Switching Procedure of
-> AM572x Sitara Processors Silicon Revision 2.0, 1.1 TRM
-> (SPRUHZ6I - October 2014–Revised April 2017 [1]).
-> 
-> Add card_busy host ops in sdhci_omap that checks for both CMD and
-> DAT[0..3]. card_busy here returns true if one of CMD and DAT[0..3] is
-> low though during voltage switch sequence all of CMD and DAT[0..3] has
-> to be low (however haven't observed a case where some DAT lines are low
-> and some are high).
+On Wed, Dec 20, 2017 at 11:11:50PM +0000, Russell King wrote:
+> The interrupt specification for the GPIO expander is wrong - the
+> expander is wired to PTB28, which is GPIO98.  GPIO98 is on gpio chip
+> 3, not 2.
 
-Isn't it better to check DAT0 only since that is all that is defined for 'busy'.
+Hi Russell
 
-> 
-> In the voltage switching sequence, CLKEXTFREE bit in MMCHS_CON
-> should also be set after switching to 1.8v which is also taken
-> care in the card_busy ops.
-> 
-> [1] -> http://www.ti.com/lit/ug/spruhz6i/spruhz6i.pdf
-> 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->  drivers/mmc/host/sdhci-omap.c | 62 +++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 62 insertions(+)
-> 
-> diff --git a/drivers/mmc/host/sdhci-omap.c b/drivers/mmc/host/sdhci-omap.c
-> index 96985786cadf..defe4eac020d 100644
-> --- a/drivers/mmc/host/sdhci-omap.c
-> +++ b/drivers/mmc/host/sdhci-omap.c
-> @@ -31,11 +31,20 @@
->  #define SDHCI_OMAP_CON		0x12c
->  #define CON_DW8			BIT(5)
->  #define CON_DMA_MASTER		BIT(20)
-> +#define CON_CLKEXTFREE		BIT(16)
-> +#define CON_PADEN		BIT(15)
->  #define CON_INIT		BIT(1)
->  #define CON_OD			BIT(0)
->  
->  #define SDHCI_OMAP_CMD		0x20c
->  
-> +#define SDHCI_OMAP_PSTATE	0x0224
-> +#define PSTATE_CLEV             BIT(24)
-> +#define PSTATE_DLEV_SHIFT	20
-> +#define PSTATE_DLEV_DAT(x)	(1 << (PSTATE_DLEV_SHIFT + (x)))
-> +#define PSTATE_DLEV		(PSTATE_DLEV_DAT(0) | PSTATE_DLEV_DAT(1) | \
-> +					PSTATE_DLEV_DAT(2) | PSTATE_DLEV_DAT(3))
-> +
->  #define SDHCI_OMAP_HCTL		0x228
->  #define HCTL_SDBP		BIT(8)
->  #define HCTL_SDVS_SHIFT		9
-> @@ -191,6 +200,58 @@ static void sdhci_omap_conf_bus_power(struct sdhci_omap_host *omap_host,
->  	}
->  }
->  
-> +static int sdhci_omap_card_busy(struct mmc_host *mmc)
-> +{
-> +	int i;
-> +	u32 reg, ac12;
-> +	int ret = true;
-> +	struct sdhci_host *host = mmc_priv(mmc);
-> +	struct sdhci_pltfm_host *pltfm_host;
-> +	struct sdhci_omap_host *omap_host;
-> +	u32 ier = host->ier;
-> +
-> +	pltfm_host = sdhci_priv(host);
-> +	omap_host = sdhci_pltfm_priv(pltfm_host);
-> +
-> +	reg = sdhci_omap_readl(omap_host, SDHCI_OMAP_CON);
-> +	ac12 = sdhci_omap_readl(omap_host, SDHCI_OMAP_AC12);
-> +	reg &= ~CON_CLKEXTFREE;
-> +	if (ac12 & AC12_V1V8_SIGEN)
-> +		reg |= CON_CLKEXTFREE;
-> +	reg |= CON_PADEN;
-> +	sdhci_omap_writel(omap_host, SDHCI_OMAP_CON, reg);
-> +
-> +	disable_irq(host->irq);
-> +	ier |= SDHCI_INT_CARD_INT;
-> +	sdhci_writel(host, ier, SDHCI_INT_ENABLE);
-> +	sdhci_writel(host, ier, SDHCI_SIGNAL_ENABLE);
-> +
-> +	for (i = 0; i < 5; i++) {
-> +		/*
-> +		 * Delay is required for PSTATE to correctly reflect
-> +		 * DLEV/CLEV values after PADEM is set.
-> +		 */
-> +		usleep_range(100, 200);
-> +		reg = sdhci_omap_readl(omap_host, SDHCI_OMAP_PSTATE);
-> +		if ((reg & PSTATE_CLEV) &&
-> +		    ((reg & PSTATE_DLEV) == PSTATE_DLEV)) {
-> +			ret = false;
-> +			goto ret;
+I'd also seen this interrupt storm. The whole interrupt architecture
+for this expander does not look so good, so i just assumed it was a
+design issue. Instead, it was me who probably made a typ0 :-(
 
-'break' is better than 'goto'
+Reviewed-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
 
-> +		}
-> +	}
-> +
-> +ret:
-> +	reg = sdhci_omap_readl(omap_host, SDHCI_OMAP_CON);
-> +	reg &= ~(CON_CLKEXTFREE | CON_PADEN);
-> +	sdhci_omap_writel(omap_host, SDHCI_OMAP_CON, reg);
-> +
-> +	sdhci_writel(host, host->ier, SDHCI_INT_ENABLE);
-> +	sdhci_writel(host, host->ier, SDHCI_SIGNAL_ENABLE);
-> +	enable_irq(host->irq);
-> +
-> +	return ret;
-> +}
-> +
->  static int sdhci_omap_start_signal_voltage_switch(struct mmc_host *mmc,
->  						  struct mmc_ios *ios)
->  {
-> @@ -562,6 +623,7 @@ static int sdhci_omap_probe(struct platform_device *pdev)
->  	host->mmc_host_ops.start_signal_voltage_switch =
->  					sdhci_omap_start_signal_voltage_switch;
->  	host->mmc_host_ops.set_ios = sdhci_omap_set_ios;
-> +	host->mmc_host_ops.card_busy = sdhci_omap_card_busy;
->  
->  	sdhci_read_caps(host);
->  	host->caps |= SDHCI_CAN_DO_ADMA2;
-> 
-
+    Andrew
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
