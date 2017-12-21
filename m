@@ -1,61 +1,67 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 8/9] ARM: dts: iwg22d-sodimm: Sound DMA support via SRC
- on DTS
-Date: Thu, 21 Dec 2017 11:44:44 +0100
-Message-ID: <20171221104443.rk6prrib4gdi7qyz@verge.net.au>
-References: <1513800125-53213-1-git-send-email-biju.das@bp.renesas.com>
- <1513800125-53213-9-git-send-email-biju.das@bp.renesas.com>
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH V2 9/9] ARM: dts: stm32: add initial support of
+ stm32mp157c eval board
+Date: Thu, 21 Dec 2017 11:44:55 +0100
+Message-ID: <33a7afc4-9282-5359-1f80-ef9f3da93c38@st.com>
+References: <1513610272-7824-1-git-send-email-ludovic.Barre@st.com>
+ <1513610272-7824-10-git-send-email-ludovic.Barre@st.com>
+ <CACRpkdZaEjdGB2k6HdPt1_E0jRXEimEUxT9NmMwMw7OiyeqGLA@mail.gmail.com>
+ <27a339f7-33a7-eb73-27fe-9927838729d6@st.com>
+ <CACRpkdYE+u1o_KDDihX7=7RLNDkkFDOCFsQtBKBZW0i6123ZoQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1513800125-53213-9-git-send-email-biju.das@bp.renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Biju Das <biju.das@bp.renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Chris Paterson <chris.paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CACRpkdYE+u1o_KDDihX7=7RLNDkkFDOCFsQtBKBZW0i6123ZoQ@mail.gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Gerald Baeza <gerald.baeza@st.com>, Ludovic Barre <ludovic.Barre@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 20, 2017 at 08:02:04PM +0000, Biju Das wrote:
-> DMA transfer to/from SRC
-> 
->      DMA      DMApp
-> [MEM] -> [SRC] -> [SSIU] -> [SSI]
-> 
->      DMA      DMApp
-> [MEM] <- [SRC] <- [SSIU] <- [SSI]
-> 
-> Current sound driver is supporting SSI/SRC random connection.
-> So, this patch is trying
-> SSI3 -> SRC3
-> SSI4 <- SRC4
 
-I am curious to know why the selection here differs from that
-present in iwg20d-q7-common. Is it an arbitrary decision?
 
-Likewise for other uses of ssi*, src* and dvc* in this patchset.
+On 12/21/2017 10:18 AM, Linus Walleij wrote:
+> On Wed, Dec 20, 2017 at 10:19 AM, Alexandre Torgue
+> <alexandre.torgue@st.com> wrote:
+>> On 12/20/2017 08:44 AM, Linus Walleij wrote:
+> 
+>>> gpio-line-names = "foo", "bar" ...;
+>>>
+>>> See for example
+>>> arch/arm/boot/dts/bcm2835-rpi-a.dts
+>>> arch/arm/boot/dts/ste-snowball.dts
+> (...)
+>>
+>> It looks like useful for pins used as gpio line. Are you saying that we also
+>> have to describe pins used as Alternate Function ?
+> 
+> No. The use of the names is up to the platform maintainer (you),
+> leaving a blank string for non-GPIO lines is just fine.
+> 
+> Some platforms add the name of the actual function used by the
+> line on the design, if it is not GPIO, sometimes something in
+> brachets like "[i2c0-SDA]" that says what it is used for and explains
+> why you can't use it for GPIO on this setup.
+> 
+> But just leaving it blank is just as good.
+
+Ok thanks Linus. I will take it into account. It could be useful to add 
+it for MCU and future MPU boards.
+
+Regards
+Alex
+
 
 > 
-> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-> Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> ---
->  arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts b/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts
-> index 0f880c1..2cac57c 100644
-> --- a/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts
-> +++ b/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts
-> @@ -183,8 +183,8 @@
->  
->  	rcar_sound,dai {
->  		dai0 {
-> -			playback = <&ssi3>;
-> -			capture = <&ssi4>;
-> +			playback = <&ssi3 &src3>;
-> +			capture = <&ssi4 &src4>;
->  		};
->  	};
->  };
-> -- 
-> 1.9.1
+> Yours,
+> Linus Walleij
 > 
