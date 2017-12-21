@@ -1,38 +1,98 @@
-From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW@KARO-electronics.de>
-Subject: Re: [PATCH] ARM: dts: imx: Add memory node unit name
-Date: Thu, 21 Dec 2017 09:07:36 +0100
-Message-ID: <20171221090736.3ac9d5db@karo-electronics.de>
-References: <1512575989-15627-1-git-send-email-marcofrk@gmail.com>
+From: Prabhakar Kushwaha <prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org>
+Subject: RE: [PATCH][v3] dt-bindings: ifc: Update endianness usage
+Date: Thu, 21 Dec 2017 08:09:41 +0000
+Message-ID: <HE1PR04MB1241224F0F7DC884338F2D26970D0@HE1PR04MB1241.eurprd04.prod.outlook.com>
+References: <1512029196-7158-1-git-send-email-prabhakar.kushwaha@nxp.com>
+ <20171204204727.fnt4vsw2lg2q2w5x@rob-hp-laptop>
+ <HE1PR04MB12413F48FF7E083FD8E0FD36973D0@HE1PR04MB1241.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1512575989-15627-1-git-send-email-marcofrk@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marco Franchi <marcofrk@gmail.com>
-Cc: shawnguo@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, festevam@gmail.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <HE1PR04MB12413F48FF7E083FD8E0FD36973D0-6LN7OEpIatU9TB6uw0n1oM9NdZoXdze2vxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Prabhakar Kushwaha <prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Rob,
 
-On Wed,  6 Dec 2017 13:59:49 -0200 Marco Franchi wrote:
-> Fix the following warnings from dtc by adding the unit name to memory 
-> nodes:
-> 
-> Warning (unit_address_vs_reg): Node /memory has a reg or ranges property, but no unit name
-> 
-> Converted using the following command:
-> 
-> perl -p0777i -e 's/memory \{\n\t\treg = \<0x+([0-9a-f])/memory\@$1$\0000000 \{\n\t\treg = <0x$1/m' `find ./arch/arm/boot/dts -name "imx*"`
-> 
-> The files below were manually fixed:
-> -imx1-ads.dts
-> -imx1-apf9328.dts
-> 
-The imx*.dtsi files all have this:
-|	memory { device_type = "memory"; reg = <0 0>; };
-Thus you will end up with a 'memory' node with a reg = <0 0> entry and
-an additional 'memory@...' node with the correct 'reg' values.
+> -----Original Message-----
+> From: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org [mailto:devicetree-
+> owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org] On Behalf Of Prabhakar Kushwaha
+> Sent: Tuesday, December 05, 2017 2:45 PM
+> To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; mark.rutland-5wv7dgnIgG8@public.gmane.org;
+> shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> Subject: RE: [PATCH][v3] dt-bindings: ifc: Update endianness usage
+>=20
+>=20
+> > -----Original Message-----
+> > From: Rob Herring [mailto:robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org]
+> > Sent: Tuesday, December 05, 2017 2:17 AM
+> > To: Prabhakar Kushwaha <prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org>
+> > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; mark.rutland-5wv7dgnIgG8@public.gmane.org;
+> > shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> > Subject: Re: [PATCH][v3] dt-bindings: ifc: Update endianness usage
+> >
+> > On Thu, Nov 30, 2017 at 01:36:36PM +0530, Prabhakar Kushwaha wrote:
+> > > IFC controller version < 2.0 support IFC register access as
+> > > big endian. These controller version also require IFC NOR signals to
+> > > be connected in reverse order with NOR flash.
+> > >
+> > > IFC >=3D 2.0 is other way around.
+> > >
+> > > So updating IFC binding to take care of both using endianness field.
+> > >
+> > > Signed-off-by: Prabhakar Kushwaha <prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org>
+> > > ---
+> > > Changes for v2: updated subject
+> > > Changes for v3: fixed typo for "big-endian"
+> > >
+> > >  Documentation/devicetree/bindings/memory-controllers/fsl/ifc.txt | 6
+> ++++--
+> > >  1 file changed, 4 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/memory-
+> controllers/fsl/ifc.txt
+> > b/Documentation/devicetree/bindings/memory-controllers/fsl/ifc.txt
+> > > index 89427b0..824a2ca 100644
+> > > --- a/Documentation/devicetree/bindings/memory-controllers/fsl/ifc.tx=
+t
+> > > +++ b/Documentation/devicetree/bindings/memory-controllers/fsl/ifc.tx=
+t
+> > > @@ -18,8 +18,10 @@ Properties:
+> > >                interrupt (NAND_EVTER_STAT).  If there is only one,
+> > >                that interrupt reports both types of event.
+> > >
+> > > -- little-endian : If this property is absent, the big-endian mode wi=
+ll
+> > > -                  be in use as default for registers.
+> > > +- little-endian or big-endian : It represents how IFC registers to b=
+e accessed.
+> > > +			It also represents connection between controller and
+> > > +			NOR flash. If this property is absent, the big-endian
+> > > +			mode will be in use as default.
+> >
+> > My question on the prior version remains. I think if you need to handle
+> > more than just register endianness, that should be done with the
+> > compatible string.
+> >
+>=20
+> I may not able to use compatible string as this information will also be =
+used it
+> drivers/mtd/maps/physmap_of_core.c other than drivers/memory/fsl_ifc.c.
+> I am trying to avoid controller specific details in generic file.
+>=20
+> This is the reason endianness property is being used.
+>=20
 
+Please let me know if I am not able to address your review comment
 
-Lothar Waßmann
+--prabhakar
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
