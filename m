@@ -1,32 +1,29 @@
-From: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
-Subject: Re: [PATCH 0/2] arm64: dts: renesas: Remove renesas,no-ether-link
- property
-Date: Thu, 21 Dec 2017 16:57:58 +0200
-Message-ID: <39b80de4-84bd-916e-2ff9-580f7db720f2@mentor.com>
-References: <1513776132-22700-1-git-send-email-vladimir_zapolskiy@mentor.com>
- <20171221112830.4ehdp237zsddfvrv@verge.net.au>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 0/2] ARM: dts: Some am43x fixes
+Date: Thu, 21 Dec 2017 06:58:17 -0800
+Message-ID: <20171221145817.GO3875@atomide.com>
+References: <20171215171643.8345-1-d-gerlach@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20171221112830.4ehdp237zsddfvrv@verge.net.au>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Bogdan Mirea <Bogdan-Stefan_Mirea@mentor.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20171215171643.8345-1-d-gerlach-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon,
+* Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org> [171215 09:19]:
+> Hi,
+> This series has two fixes for am43x based platforms. First patch disables OPP50
+> on am437x-idk-evm which the board supply does not support. Second patch is for
+> am43x-epos-evm and adds dcdc2 regulator as the missing cpu0-supply which
+> enables CPUFreq on this platform.
 
-On 12/21/2017 01:28 PM, Simon Horman wrote:
-> On Wed, Dec 20, 2017 at 03:22:10PM +0200, Vladimir Zapolskiy wrote:
->> The present change is a bug fix for AVB link iteratively up/down.
-> 
-> If this is a bug please consider including Fixes tags in the patches.
-> 
+Applying both into omap-for-v4.16/dt thanks.
 
-would you prefer to get v2 with the Fixes tags added or short replies
-to v1 with the requested information?
-
+Tony
 --
-With best wishes,
-Vladimir
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
