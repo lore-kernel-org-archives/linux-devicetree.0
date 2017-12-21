@@ -1,32 +1,30 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH] ARM: dts: r8a7745: Add missing clock for secondary CA7
- CPU core
-Date: Thu, 21 Dec 2017 16:00:23 +0100
-Message-ID: <CAMuHMdWKzH7NLxg=BukNSOVv-BQqWDgi3aSMBErzeZ6NR+20JA@mail.gmail.com>
-References: <1513867945-43157-1-git-send-email-biju.das@bp.renesas.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1513867945-43157-1-git-send-email-biju.das@bp.renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Biju Das <biju.das@bp.renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Chris Paterson <chris.paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, devicetree@vger.kernel.org, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: [PATCH 0/2] Add EHCI/OHCI nodes for V3s and Lichee Pi Zero
+Date: Thu, 21 Dec 2017 23:05:35 +0800
+Message-ID: <20171221150537.20304-1-icenowy@aosc.io>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 21, 2017 at 3:52 PM, Biju Das <biju.das@bp.renesas.com> wrote:
-> Add the missing clock to CA7 CPU1 node.
->
-> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+As the PHY dual-route property is added to 4.15-rc, the EHCI/OHCI nodes
+are now necessary.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Please apply these patches to 4.15, Thanks!
 
-Gr{oetje,eeting}s,
+Icenowy Zheng (2):
+  ARM: sun8i: v3s: add EHCI/OHCI0 device nodes
+  ARM: sun8i: v3s: enable EHCI/OHCI for Lichee Pi Zero
 
-                        Geert
+ arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts |  8 ++++++++
+ arch/arm/boot/dts/sun8i-v3s.dtsi              | 19 +++++++++++++++++++
+ 2 files changed, 27 insertions(+)
+
+-- 
+2.14.2
 
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
