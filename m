@@ -1,56 +1,40 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH net-next v7 1/2] dt-bindings: net: add DT bindings for
- Socionext UniPhier AVE
-Date: Thu, 21 Dec 2017 12:32:54 +0100
-Message-ID: <20171221113254.GB9930@lunn.ch>
-References: <1513854776-4149-1-git-send-email-hayashi.kunihiko@socionext.com>
- <1513854776-4149-2-git-send-email-hayashi.kunihiko@socionext.com>
+From: <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v3 0/2] PCI: mediatek: Fixups for the IRQ handle routine and MT7622's class code
+Date: Thu, 21 Dec 2017 19:38:43 +0800
+Message-ID: <1513856325-28813-1-git-send-email-honghui.zhang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1513854776-4149-2-git-send-email-hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kunihiko Hayashi <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Cc: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Masami Hiramatsu <masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org
+Cc: honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, hongkun.cao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, xinping.qian-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-> +Optional properties:
-> + - resets: A phandle to the reset control for the MAC
-> + - local-mac-address: See ethernet.txt in the same directory.
-> +
-> +Required subnode:
-> + - mdio: Device tree subnode with the following required properties:
-> +
-> +Example:
+From: Honghui Zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-It sounds like there should be some properties before the Example.
+Two fixups for mediatek's host bridge:
+The first patch fixup the IRQ handle routine to avoid IRQ reentry which
+may exist for both MT2712 and MT7622.
+The second patch fixup class type for MT7622.
 
-   Andrew
+Change since v2:
+ - Move the initialize of the iterate before the loop to fix an
+   INTx IRQ issue in the first patch
 
-> +
-> +	ether: ethernet@65000000 {
-> +		compatible = "socionext,uniphier-ld20-ave4";
-> +		reg = <0x65000000 0x8500>;
-> +		interrupts = <0 66 4>;
-> +		phy-mode = "rgmii";
-> +		phy-handle = <&ethphy>;
-> +		clocks = <&sys_clk 6>;
-> +		resets = <&sys_rst 6>;
-> +		local-mac-address = [00 00 00 00 00 00];
+Change since v1:
+ - Add the second patch.
+ - Make the first patch's commit message more standard.
 
-Typically you would put a blank line here, before the mdio node.
+Honghui Zhang (2):
+  PCI: mediatek: Clear IRQ status after IRQ dispatched to avoid reentry
+  PCI: mediatek: Fixup class type for MT7622
 
-> +		mdio {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			ethphy: ethphy@1 {
-> +				reg = <1>;
-> +			};
-> +		};
-> +	};
+ drivers/pci/host/pcie-mediatek.c | 23 ++++++++++++++++++-----
+ 1 file changed, 18 insertions(+), 5 deletions(-)
 
-  Andrew
+-- 
+2.6.4
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
