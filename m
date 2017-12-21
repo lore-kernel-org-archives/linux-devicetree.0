@@ -1,52 +1,69 @@
-From: Marco Franchi <marcofrk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: imx: Add memory node unit name
-Date: Thu, 21 Dec 2017 12:26:38 -0200
-Message-ID: <CAM4PwSVzVn3=wWpFohw2q23Oiwp1FimCkdHPq=BfG-QzuuPtfQ@mail.gmail.com>
-References: <1512575989-15627-1-git-send-email-marcofrk@gmail.com> <20171221090736.3ac9d5db@karo-electronics.de>
+From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Subject: Re: [PATCH v17 0/5] ZII RAVE platform driver
+Date: Thu, 21 Dec 2017 15:40:09 +0100
+Message-ID: <20171221144009.GA17050@amd>
+References: <20171221065118.29726-1-andrew.smirnov@gmail.com>
+ <20171221093024.GA8938@amd>
+ <19543ffb-3c64-1bba-1bcc-360a2b4bd15e@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="IJpNTDwzlM2Ie8A6"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171221090736.3ac9d5db-AvR2QvxeiV7DiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <19543ffb-3c64-1bba-1bcc-360a2b4bd15e-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Lothar_Wa=C3=9Fmann?= <LW-AvR2QvxeiV7DiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, cphealy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Nikita Yushchenko <nikita.yoush-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Philippe Ombredanne <pombredanne-od1rfyK75/E@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lothar,
 
-2017-12-21 6:07 GMT-02:00 Lothar Wa=C3=9Fmann <LW-AvR2QvxeiV7DiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>:
-> Hi,
->
-> On Wed,  6 Dec 2017 13:59:49 -0200 Marco Franchi wrote:
->> Fix the following warnings from dtc by adding the unit name to memory
->> nodes:
->>
->> Warning (unit_address_vs_reg): Node /memory has a reg or ranges property=
-, but no unit name
->>
->> Converted using the following command:
->>
->> perl -p0777i -e 's/memory \{\n\t\treg =3D \<0x+([0-9a-f])/memory\@$1$\00=
-00000 \{\n\t\treg =3D <0x$1/m' `find ./arch/arm/boot/dts -name "imx*"`
->>
->> The files below were manually fixed:
->> -imx1-ads.dts
->> -imx1-apf9328.dts
->>
-> The imx*.dtsi files all have this:
-> |       memory { device_type =3D "memory"; reg =3D <0 0>; };
-> Thus you will end up with a 'memory' node with a reg =3D <0 0> entry and
-> an additional 'memory@...' node with the correct 'reg' values.
+--IJpNTDwzlM2Ie8A6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-You are right. The .dtb files were composed by two different memory nodes.
-Do you have some recommendation to take off this specific warning?
+On Thu 2017-12-21 05:49:59, Guenter Roeck wrote:
+> On 12/21/2017 01:30 AM, Pavel Machek wrote:
+> >>Everyone:
+> >>
+> >>This patch series is v17 of the driver for supervisory processor found
+> >>on RAVE series of devices from ZII. Supervisory processor is a PIC
+> >>microcontroller connected to various electrical subsystems on RAVE
+> >>devices whose firmware implements protocol to command/qery them.
+> >
+> >query.
+> >
+> >Can we please get this patch merged? We really don't want to see v34
+> >of this patch...
+>=20
+> Maybe if we can all agree that There Shall Be No More Bikeshedding.
 
->
->
-> Lothar Wa=C3=9Fmann
+I'll bite next person who tries to complain comment style. Grrr.
 
-Marco Franchi
+And actually, you could help, too. Normally it makes sense to wait few
+days between resubmitting the patch...
+
+Thanks,
+
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--IJpNTDwzlM2Ie8A6
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlo7x8kACgkQMOfwapXb+vJIsQCfQbLKoD8AjWml44PyUneogVfq
+ecMAn0Ucdki8CIciqOtJtjByWi4dmMAE
+=eDQ1
+-----END PGP SIGNATURE-----
+
+--IJpNTDwzlM2Ie8A6--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
