@@ -1,64 +1,195 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/5] bindings: regulator: added support for suspend states
-Date: Thu, 21 Dec 2017 17:26:14 -0600
-Message-ID: <20171221232614.rhrgrpyl2w2lc6bw@rob-hp-laptop>
-References: <1513837506-26543-1-git-send-email-zhang.chunyan@linaro.org>
- <1513837506-26543-2-git-send-email-zhang.chunyan@linaro.org>
+From: Javier Martinez Canillas <javier@dowhile0.org>
+Subject: Re: [PATCH v2 1/5] dt-bindings: at24: consistently document the
+ compatible property
+Date: Fri, 22 Dec 2017 00:38:18 +0100
+Message-ID: <CABxcv=kkp_Ck_JdDGomAGmSsTiCg82X67j5hEsvRnnY3RDMMfg@mail.gmail.com>
+References: <20171221134842.31287-1-brgl@bgdev.pl> <20171221134842.31287-2-brgl@bgdev.pl>
+ <0c2455ae-2f68-5342-14c6-14706d6f0e66@axentia.se> <CABxcv=kZk+Yrt9uj9uV7UVC+Tca7NCECfyZXmKkqHdopm5EZTg@mail.gmail.com>
+ <a0cbee79-29dd-686c-5069-d95e1710bfc1@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1513837506-26543-2-git-send-email-zhang.chunyan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chunyan Zhang <zhang.chunyan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chunyan Zhang <zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <a0cbee79-29dd-686c-5069-d95e1710bfc1@axentia.se>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy.shevchenko@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, David Lechner <david@lechnology.com>, Divagar Mohandass <divagar.mohandass@intel.com>, Linux I2C <linux-i2c@vger.kernel.org>, devicetree@vger.kernel.org, Linux Kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 21, 2017 at 02:25:02PM +0800, Chunyan Zhang wrote:
-> Documented a few new added properties which are used for supporting
-> regulator suspend states.
+Hello Peter,
 
-Your commit message should answer why you need this. What problem do you 
-have that this solves?
+On Fri, Dec 22, 2017 at 12:07 AM, Peter Rosin <peda@axentia.se> wrote:
+> On 2017-12-21 21:27, Javier Martinez Canillas wrote:
+>> Hello Peter,
+>>
+>> On Thu, Dec 21, 2017 at 5:20 PM, Peter Rosin <peda@axentia.se> wrote:
+>>> On 2017-12-21 14:48, Bartosz Golaszewski wrote:
+>>>> Current description of the compatible property for at24 is quite vague.
+>>>>
+>>>> Specify an exact list of accepted compatibles and document the - now
+>>>> deprecated - strings which were previously used in device tree files.
+>>>
+>>> Why is it suddenly deprecated to correctly specify what hardware you
+>>> have, e.g. "nxp,24c32". In this case the manufacturer is nxp, damnit.
+>>
+>> Sorry but I disagree.
+>>
+>> When you specify a compatible string, you are not specifying a
+>> particular hardware but a device programming model.
+>
+> That's not what it says in https://elinux.org/Device_Tree_Usage
 
-> 
-> Signed-off-by: Chunyan Zhang <zhang.chunyan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/regulator/regulator.txt | 11 +++++++++--
->  1 file changed, 9 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/regulator/regulator.txt b/Documentation/devicetree/bindings/regulator/regulator.txt
-> index 378f6dc..618a322 100644
-> --- a/Documentation/devicetree/bindings/regulator/regulator.txt
-> +++ b/Documentation/devicetree/bindings/regulator/regulator.txt
-> @@ -42,8 +42,15 @@ Optional properties:
->  - regulator-state-[mem/disk] node has following common properties:
->  	- regulator-on-in-suspend: regulator should be on in suspend state.
->  	- regulator-off-in-suspend: regulator should be off in suspend state.
-> -	- regulator-suspend-microvolt: regulator should be set to this voltage
-> -	  in suspend.
-> +	- regulator-suspend-min-microvolt: minimum voltage may be set in
-> +	  suspend state.
-> +	- regulator-suspend-max-microvolt: maximum voltage may be set in
-> +	  suspend state.
-> +	- regulator-suspend-microvolt: the default voltage which regulator
-> +	  should be set in suspend, this can be adjusted among
-> +	  <regulator-suspend-min-microvolt, regulator-suspend-max-microvolt>
+I think the most up-to-date DT reference is at:
 
-Perhaps this should stay a single property with: <target> <min> <max>
+https://www.devicetree.org/
 
-Though why would you ever not try to set to the minimum voltage within 
-the range of <min> to <max>?
+> in the "Understanding the compatible Property" section. I quote:
+>
+>         compatible is a list of strings. The first string in the
+>         list specifies the exact device that the node represents
+>         in the form "<manufacturer>,<model>". The following strings
+>         represent other devices that the device is compatible with.
+>
+> Pretty clearly talks about devices and not programming models. But
+> maybe I shouldn't trust that reference? What should I be reading
+> instead?
+>
 
-> +	- regulator-changeable-in-suspend: whether the default voltage and
-> +	  the regulator on/off in suspend can be changed in runtime.
->  	- regulator-mode: operating mode in the given suspend state.
->  	  The set of possible operating modes depends on the capabilities of
->  	  every hardware so the valid modes are documented on each regulator
-> -- 
-> 2.7.4
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+For example the latest spec draft
+(https://github.com/devicetree-org/devicetree-specification/releases/download/v0.2-rc1/devicetree-specification-v0.2-rc1.pdf)
+says:
+
+"The compatible property value consists of one or more strings that
+define the specific programming model for the device. This list of
+strings should be used by a client program for device driver
+selection. The property value consists of a concatenated list of null
+terminated strings, from most specific to most general. They allow a
+device to express its compatibility with a family of similar devices,
+potentially allowing a single device driver to match against several
+devices."
+
+The recommended format is "manufacturer,model", where manufacturer is
+a string describing the name of the manufacturer (such as a stock
+ticker symbol), and model specifies the model number."
+
+Example:
+
+compatible = "fsl,mpc8641", "ns16550";
+
+In this example, an operating system would first try to locate a
+device driver that supported fsl,mpc8641. If a driver was not found,
+it would then try to locate a driver that supported the more general
+ns16550 device type."
+
+>> It's very common to use a compatible string that doesn't match exactly
+>> the specific hardware used. That's why it's called _compatible_ BTW.
+>
+> That's not how I read the above.
+>
+
+That's not how I read it nor my experience with DT, but of course I
+may be wrong on this.
+
+>> For example when a DTS define a UART node with an ns16550 compatible,
+>> they don't really mean that have a UART IC manufactured by National
+>> Semiconductor.
+>
+> That just tells me that most people are a little bit lazy and ready
+> to cut a corner or two when they can get away with it. Or that there
+> is some form of misunderstanding at work...
+>
+
+For example, I usually see that different SoC families from the same
+vendor use the same compatible string for integrated peripherals just
+because are the same from a programming model point of view.
+
+TI am33xx SoCs use a lot of omap3 compatible strings on their nodes
+and its similar on Exynos SoCs which are the two ARM SoCs I'm most
+familiar with. Following your logic that's wrong and instead a new
+compatible string should be added for the GPIO or pinctrl drivers even
+when are the same because refer to different devices.
+
+>>> Sure, it happens to be compatible with "atmel,24c32", but that is
+>>> supposed to be written with a fallback as
+>>>
+>>>         "nxp,24c32", "atmel,24c32"
+>>
+>> This isn't a requirement really, systems integrators are free to use
+>> more than one <manufacturer,model> tuple in the compatible string if
+>> they want the DTB to be future proof, just in case there's a need for
+>> a more specific driver or if the programming model happened to not be
+>> the same at the end. This is usually done for the boards compatible
+>> string as an example, even when there isn't a struct machine_desc for
+>> the specific board compatible and only for the SoC family.
+>>
+>> So it's OK if you want to define the compatible as "nxp,24c32",
+>> "atmel,24c32", but that's a general OF concept and not something
+>> related to the at24 eeprom driver so I'm not sure if it should be
+>> mentioned in the at24 DT binding doc.
+>
+> One problem is that if "nxp,24c32" (or "nxp,24c02" as in the example
+> below) is not a valid compatible, the tooling will be correct to
+> complain about it. Currently, it is just a checkpatch deficiency that
+> it complains like this:
+>
+> $ scripts/checkpatch.pl -f arch/arm/boot/dts/at91-tse850-3.dts
+> WARNING: DT compatible string "nxp,24c02" appears un-documented -- check ./Documentation/devicetree/bindings/
+> #249: FILE: arch/arm/boot/dts/at91-tse850-3.dts:249:
+> +               compatible = "nxp,24c02", "atmel,24c02";
+>
+
+But isn't that a bug in checkpatch? as long as there's a valid
+<manufacturer,model> tuple in the compatible string, it shouldn't
+complain.
+
+>>> if I understand correctly. So, why is that deprecated in this case?
+>>>
+>>> What if (a few years down the line) it is discovered that some weird
+>>> quirk is needed that is only appropriate for nxp chips?
+>>>
+>>> nxp is of course just an example, pick any manufacturer of eeproms
+>>> (supposedly) compatible with the atmel interface.
+>>>
+>>
+>> That's indeed a possibility and the reason why most DT nodes have a
+>> more specific <manufacturer,model> before the generic one matched by
+>> drivers. I really doubt that in the future it will be found that a
+>> more specific compatible string is needed for one manufacturer in this
+>> case, specially since the driver didn't even care about the
+>> manufacturers until recently.
+>
+> I'm not talking about the driver. But if what you say is true, that
+> change would have broken a number of existing DTBs. Is that really the
+> case?
+>
+
+Sorry, I didn't get which change you meant.
+
+>> So I think that makes no sense for a driver to support all possible
+>> manufacturers as possible compatible strings if all the devices have
+>> the same exact programming model.
+>
+> That's what the fallback is for. With that in place the driver can
+> start to care when there is a need but until then it can work just
+> as it always has. Without knowing the specific device, the driver has
+> less chance to adapt when the unexpected is discovered. But again,
+> I'm not really discussing driver details, I'm complaining about the
+> proposed changes to the bindings. I simply don't see how they make
+> sense.
+>
+
+My point is that saying in a DT binding that you could have a more
+specific <manufacturer,model> followed by a generic one is redundant.
+That's already something one can do to make the DT future proof and
+latter if is found that the more specific pair is needed, then
+compatible can be added to the OF device ID table making the driver to
+match that an the <manufacturer,model> added to the DT binding making
+it formal.
+
+That's my understanding at least, but I could be completely wrong too
+since I'm not a DT expert.
+
+> Cheers,
+> Peter
+
+Best regards,
+Javier
