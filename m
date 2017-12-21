@@ -1,195 +1,201 @@
-From: Javier Martinez Canillas <javier@dowhile0.org>
-Subject: Re: [PATCH v2 1/5] dt-bindings: at24: consistently document the
- compatible property
-Date: Fri, 22 Dec 2017 00:38:18 +0100
-Message-ID: <CABxcv=kkp_Ck_JdDGomAGmSsTiCg82X67j5hEsvRnnY3RDMMfg@mail.gmail.com>
-References: <20171221134842.31287-1-brgl@bgdev.pl> <20171221134842.31287-2-brgl@bgdev.pl>
- <0c2455ae-2f68-5342-14c6-14706d6f0e66@axentia.se> <CABxcv=kZk+Yrt9uj9uV7UVC+Tca7NCECfyZXmKkqHdopm5EZTg@mail.gmail.com>
- <a0cbee79-29dd-686c-5069-d95e1710bfc1@axentia.se>
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v2 3/3] clk: actions: Add clock driver for Actions S900
+ SoC
+Date: Thu, 21 Dec 2017 15:56:14 -0800
+Message-ID: <20171221235614.GG7997@codeaurora.org>
+References: <1509997552-29718-1-git-send-email-manivannan.sadhasivam@linaro.org>
+ <1509997552-29718-4-git-send-email-manivannan.sadhasivam@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <a0cbee79-29dd-686c-5069-d95e1710bfc1@axentia.se>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy.shevchenko@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, David Lechner <david@lechnology.com>, Divagar Mohandass <divagar.mohandass@intel.com>, Linux I2C <linux-i2c@vger.kernel.org>, devicetree@vger.kernel.org, Linux Kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1509997552-29718-4-git-send-email-manivannan.sadhasivam-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Manivannan Sadhasivam <manivannan.sadhasivam-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, afaerber-l3A5Bk7waGM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, liuwei-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org, mp-cs-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org, 96boards-Ty1hIZOCd2XuufBYgWm87A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, manivannanece23-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Peter,
+On 11/07, Manivannan Sadhasivam wrote:
+> diff --git a/drivers/clk/actions/Kconfig b/drivers/clk/actions/Kconfig
+> new file mode 100644
+> index 0000000..0de7a03
+> --- /dev/null
+> +++ b/drivers/clk/actions/Kconfig
+> @@ -0,0 +1,6 @@
+> +config CLK_OWL_S900
+> +	bool "Clock Driver for Actions S900 SoC"
 
-On Fri, Dec 22, 2017 at 12:07 AM, Peter Rosin <peda@axentia.se> wrote:
-> On 2017-12-21 21:27, Javier Martinez Canillas wrote:
->> Hello Peter,
->>
->> On Thu, Dec 21, 2017 at 5:20 PM, Peter Rosin <peda@axentia.se> wrote:
->>> On 2017-12-21 14:48, Bartosz Golaszewski wrote:
->>>> Current description of the compatible property for at24 is quite vague.
->>>>
->>>> Specify an exact list of accepted compatibles and document the - now
->>>> deprecated - strings which were previously used in device tree files.
->>>
->>> Why is it suddenly deprecated to correctly specify what hardware you
->>> have, e.g. "nxp,24c32". In this case the manufacturer is nxp, damnit.
->>
->> Sorry but I disagree.
->>
->> When you specify a compatible string, you are not specifying a
->> particular hardware but a device programming model.
->
-> That's not what it says in https://elinux.org/Device_Tree_Usage
+Can it be a module too? Otherwise drop module.h and anything that
+does to the driver.
 
-I think the most up-to-date DT reference is at:
+> +	depends on ARCH_ACTIONS || COMPILE_TEST
 
-https://www.devicetree.org/
+Can you try compiling this with COMPILE_TEST=y and
+ARCH_ACTIONS=n? It may be that drivers/clk/Makefile needs to be
+obj-y and then the owl-clk, owl-pll, owl-factor files need to be
+compiled only when CONFIG_CLK_OWL_S900 is y. If there becomes
+more than one actions driver, then the clk, pll, factor files
+will need to be compiled with some new CLK_ACTIONS kconfig symbol
+or something.
 
-> in the "Understanding the compatible Property" section. I quote:
->
->         compatible is a list of strings. The first string in the
->         list specifies the exact device that the node represents
->         in the form "<manufacturer>,<model>". The following strings
->         represent other devices that the device is compatible with.
->
-> Pretty clearly talks about devices and not programming models. But
-> maybe I shouldn't trust that reference? What should I be reading
-> instead?
->
 
-For example the latest spec draft
-(https://github.com/devicetree-org/devicetree-specification/releases/download/v0.2-rc1/devicetree-specification-v0.2-rc1.pdf)
-says:
+> +	default ARCH_ACTIONS
+> +	help
+> +	  Build the clock driver for Actions S900 SoC.
+> diff --git a/drivers/clk/actions/Makefile b/drivers/clk/actions/Makefile
+> new file mode 100644
+> index 0000000..83bef30
+> --- /dev/null
+> +++ b/drivers/clk/actions/Makefile
+> @@ -0,0 +1,2 @@
+> +obj-y				+= owl-clk.o owl-pll.o owl-factor.o
+> +obj-$(CONFIG_CLK_OWL_S900)	+= owl-s900.o
+> diff --git a/drivers/clk/actions/owl-s900.c b/drivers/clk/actions/owl-s900.c
+> new file mode 100644
+> index 0000000..51e297f
+> --- /dev/null
+> +++ b/drivers/clk/actions/owl-s900.c
+> @@ -0,0 +1,585 @@
+> +/*
+> + * Copyright (c) 2014 Actions Semi Inc.
+> + * Author: David Liu <liuwei-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>
+> + *
+> + * Copyright (c) 2017 Linaro Ltd.
+> + * Author: Manivannan Sadhasivam <manivannan.sadhasivam-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+> + * GNU General Public License for more details.
+> + */
 
-"The compatible property value consists of one or more strings that
-define the specific programming model for the device. This list of
-strings should be used by a client program for device driver
-selection. The property value consists of a concatenated list of null
-terminated strings, from most specific to most general. They allow a
-device to express its compatibility with a family of similar devices,
-potentially allowing a single device driver to match against several
-devices."
+Can you move to the SPDX tags please?
 
-The recommended format is "manufacturer,model", where manufacturer is
-a string describing the name of the manufacturer (such as a stock
-ticker symbol), and model specifies the model number."
+> +	COMP_DIV_CLK(CLK_UART3, "uart3", 0,
+> +			C_MUX(uart_clk_mux_p, CMU_UART3CLK, 16, 1, 0),
+> +			C_GATE(CMU_DEVCLKEN1, 19, 0),
+> +			C_DIVIDER(CMU_UART3CLK, 0, 8, NULL, CLK_DIVIDER_ROUND_CLOSEST)),
+> +
+> +	COMP_DIV_CLK(CLK_UART4, "uart4", 0,
+> +			C_MUX(uart_clk_mux_p, CMU_UART4CLK, 16, 1, 0),
+> +			C_GATE(CMU_DEVCLKEN1, 20, 0),
+> +			C_DIVIDER(CMU_UART4CLK, 0, 8, NULL, CLK_DIVIDER_ROUND_CLOSEST)),
+> +
+> +	COMP_DIV_CLK(CLK_UART5, "uart5", 0,
+> +			C_MUX(uart_clk_mux_p, CMU_UART5CLK, 16, 1, 0),
+> +			C_GATE(CMU_DEVCLKEN1, 21, 0),
+> +			C_DIVIDER(CMU_UART5CLK, 0, 8, NULL, CLK_DIVIDER_ROUND_CLOSEST)),
+> +
+> +	COMP_DIV_CLK(CLK_UART6, "uart6", 0,
+> +			C_MUX(uart_clk_mux_p, CMU_UART6CLK, 16, 1, 0),
+> +			C_GATE(CMU_DEVCLKEN1, 18, 0),
+> +			C_DIVIDER(CMU_UART6CLK, 0, 8, NULL, CLK_DIVIDER_ROUND_CLOSEST)),
+> +
+> +	COMP_FACTOR_CLK(CLK_VCE, "vce", 0,
+> +			C_MUX(vce_clk_mux_p, CMU_VCECLK, 4, 2, 0),
+> +			C_GATE(CMU_DEVCLKEN0, 26, 0),
+> +			C_FACTOR(CMU_VCECLK, 0, 3, bisp_factor_table, 0)),
+> +
+> +	COMP_FACTOR_CLK(CLK_VDE, "vde", 0,
+> +			C_MUX(hde_clk_mux_p, CMU_VDECLK, 4, 2, 0),
+> +			C_GATE(CMU_DEVCLKEN0, 25, 0),
+> +			C_FACTOR(CMU_VDECLK, 0, 3, bisp_factor_table, 0)),
+> +};
+> +
+> +static int s900_clk_probe(struct platform_device *pdev)
+> +{
+> +	struct owl_clk_provider *ctx;
+> +	struct device_node *np = pdev->dev.of_node;
+> +	struct resource *res;
+> +	void __iomem *base;
+> +	int i;
+> +
+> +	ctx = kzalloc(sizeof(struct owl_clk_provider) +
+> +			sizeof(*ctx->clk_data.hws) * CLK_NR_CLKS, GFP_KERNEL);
 
-Example:
+It would be nice to avoid this. If the structs can all be
+configured properly, it should be possible to have an array of
+clk_hw pointers that are registered directly with
+clk_hw_register(), and then index directly into that array to
+return clk_hw pointers for the clk_hw provider function.
 
-compatible = "fsl,mpc8641", "ns16550";
+> +	if (!ctx)
+> +		return -ENOMEM;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	base = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(base))
+> +		return PTR_ERR(base);
+> +
+> +	for (i = 0; i < CLK_NR_CLKS; ++i)
+> +		ctx->clk_data.hws[i] = ERR_PTR(-ENOENT);
+> +
+> +	ctx->reg_base = base;
+> +	ctx->clk_data.num = CLK_NR_CLKS;
 
-In this example, an operating system would first try to locate a
-device driver that supported fsl,mpc8641. If a driver was not found,
-it would then try to locate a driver that supported the more general
-ns16550 device type."
+Hopefully CLK_NR_CLKS isn't coming from the DT header file.
 
->> It's very common to use a compatible string that doesn't match exactly
->> the specific hardware used. That's why it's called _compatible_ BTW.
->
-> That's not how I read the above.
->
+> +	spin_lock_init(&ctx->lock);
+> +
+> +	/* register pll clocks */
+> +	owl_clk_register_pll(ctx, s900_pll_clks,
+> +			ARRAY_SIZE(s900_pll_clks));
+> +
+> +	/* register divider clocks */
+> +	owl_clk_register_divider(ctx, s900_div_clks,
+> +			ARRAY_SIZE(s900_div_clks));
+> +
+> +	/* register factor divider clocks */
+> +	owl_clk_register_factor(ctx, s900_factor_clks,
+> +			ARRAY_SIZE(s900_factor_clks));
+> +
+> +	/* register mux clocks */
+> +	owl_clk_register_mux(ctx, s900_mux_clks,
+> +			ARRAY_SIZE(s900_mux_clks));
+> +
+> +	/* register gate clocks */
+> +	owl_clk_register_gate(ctx, s900_gate_clks,
+> +			ARRAY_SIZE(s900_gate_clks));
+> +
+> +	/* register composite clocks */
+> +	owl_clk_register_composite(ctx, s900_composite_clks,
+> +			ARRAY_SIZE(s900_composite_clks));
+> +
+> +	return of_clk_add_hw_provider(np, of_clk_hw_onecell_get,
+> +				&ctx->clk_data);
+> +
+> +}
+> +
+> +static const struct of_device_id s900_clk_of_match[] = {
+> +	{ .compatible = "actions,s900-cmu", },
+> +	{ /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, s900_clk_of_match);
 
-That's not how I read it nor my experience with DT, but of course I
-may be wrong on this.
+This isn't necessary? It's not a module?
 
->> For example when a DTS define a UART node with an ns16550 compatible,
->> they don't really mean that have a UART IC manufactured by National
->> Semiconductor.
->
-> That just tells me that most people are a little bit lazy and ready
-> to cut a corner or two when they can get away with it. Or that there
-> is some form of misunderstanding at work...
->
+> +
+> +static struct platform_driver s900_clk_driver = {
+> +	.probe = s900_clk_probe,
+> +	.driver = {
+> +		.name = "s900-cmu",
+> +		.of_match_table = s900_clk_of_match,
 
-For example, I usually see that different SoC families from the same
-vendor use the same compatible string for integrated peripherals just
-because are the same from a programming model point of view.
+You need to supress_bind_attrs here or implement the remove
+function for this driver that would unregister all the clks and
+provider.
 
-TI am33xx SoCs use a lot of omap3 compatible strings on their nodes
-and its similar on Exynos SoCs which are the two ARM SoCs I'm most
-familiar with. Following your logic that's wrong and instead a new
-compatible string should be added for the GPIO or pinctrl drivers even
-when are the same because refer to different devices.
+> +	},
 
->>> Sure, it happens to be compatible with "atmel,24c32", but that is
->>> supposed to be written with a fallback as
->>>
->>>         "nxp,24c32", "atmel,24c32"
->>
->> This isn't a requirement really, systems integrators are free to use
->> more than one <manufacturer,model> tuple in the compatible string if
->> they want the DTB to be future proof, just in case there's a need for
->> a more specific driver or if the programming model happened to not be
->> the same at the end. This is usually done for the boards compatible
->> string as an example, even when there isn't a struct machine_desc for
->> the specific board compatible and only for the SoC family.
->>
->> So it's OK if you want to define the compatible as "nxp,24c32",
->> "atmel,24c32", but that's a general OF concept and not something
->> related to the at24 eeprom driver so I'm not sure if it should be
->> mentioned in the at24 DT binding doc.
->
-> One problem is that if "nxp,24c32" (or "nxp,24c02" as in the example
-> below) is not a valid compatible, the tooling will be correct to
-> complain about it. Currently, it is just a checkpatch deficiency that
-> it complains like this:
->
-> $ scripts/checkpatch.pl -f arch/arm/boot/dts/at91-tse850-3.dts
-> WARNING: DT compatible string "nxp,24c02" appears un-documented -- check ./Documentation/devicetree/bindings/
-> #249: FILE: arch/arm/boot/dts/at91-tse850-3.dts:249:
-> +               compatible = "nxp,24c02", "atmel,24c02";
->
-
-But isn't that a bug in checkpatch? as long as there's a valid
-<manufacturer,model> tuple in the compatible string, it shouldn't
-complain.
-
->>> if I understand correctly. So, why is that deprecated in this case?
->>>
->>> What if (a few years down the line) it is discovered that some weird
->>> quirk is needed that is only appropriate for nxp chips?
->>>
->>> nxp is of course just an example, pick any manufacturer of eeproms
->>> (supposedly) compatible with the atmel interface.
->>>
->>
->> That's indeed a possibility and the reason why most DT nodes have a
->> more specific <manufacturer,model> before the generic one matched by
->> drivers. I really doubt that in the future it will be found that a
->> more specific compatible string is needed for one manufacturer in this
->> case, specially since the driver didn't even care about the
->> manufacturers until recently.
->
-> I'm not talking about the driver. But if what you say is true, that
-> change would have broken a number of existing DTBs. Is that really the
-> case?
->
-
-Sorry, I didn't get which change you meant.
-
->> So I think that makes no sense for a driver to support all possible
->> manufacturers as possible compatible strings if all the devices have
->> the same exact programming model.
->
-> That's what the fallback is for. With that in place the driver can
-> start to care when there is a need but until then it can work just
-> as it always has. Without knowing the specific device, the driver has
-> less chance to adapt when the unexpected is discovered. But again,
-> I'm not really discussing driver details, I'm complaining about the
-> proposed changes to the bindings. I simply don't see how they make
-> sense.
->
-
-My point is that saying in a DT binding that you could have a more
-specific <manufacturer,model> followed by a generic one is redundant.
-That's already something one can do to make the DT future proof and
-latter if is found that the more specific pair is needed, then
-compatible can be added to the OF device ID table making the driver to
-match that an the <manufacturer,model> added to the DT binding making
-it formal.
-
-That's my understanding at least, but I could be completely wrong too
-since I'm not a DT expert.
-
-> Cheers,
-> Peter
-
-Best regards,
-Javier
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
