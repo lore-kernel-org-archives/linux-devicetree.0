@@ -1,48 +1,45 @@
-From: Kyle Evans <kevans91-OYTqUY/oFF8@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: dts: sunxi: Add sid for a83t
-Date: Thu, 21 Dec 2017 09:19:24 -0600
-Message-ID: <CACNAnaE9GiVTXD-TV1xXyBJKtTGKpdA6n0REk6a=qm218EgHbg@mail.gmail.com>
-References: <20171219210523.10428-1-kevans91@ksu.edu> <20171221145512.llxvzkcrjpquhczi@flea.lan>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Aleksandar Markovic <aleksandar.markovic-FblTVreYubkAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 1/2] dt-bindings: Document mti,mips-cpc binding
+Date: Thu, 21 Dec 2017 16:20:23 +0100
+Message-ID: <1513869627-15391-2-git-send-email-aleksandar.markovic@rt-rk.com>
+References: <1513869627-15391-1-git-send-email-aleksandar.markovic@rt-rk.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171221145512.llxvzkcrjpquhczi-ZC1Zs529Oq4@public.gmane.org>
+In-Reply-To: <1513869627-15391-1-git-send-email-aleksandar.markovic-FblTVreYubkAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+To: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+Cc: Paul Burton <paul.burton-8NJIiSa5LzA@public.gmane.org>, Aleksandar Markovic <aleksandar.markovic-8NJIiSa5LzA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Douglas Leung <douglas.leung-8NJIiSa5LzA@public.gmane.org>, Goran Ferenc <goran.ferenc-8NJIiSa5LzA@public.gmane.org>, James Hogan <james.hogan-8NJIiSa5LzA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Miodrag Dinic <miodrag.dinic-8NJIiSa5LzA@public.gmane.org>, Petar Jovanovic <petar.jovanovic-8NJIiSa5LzA@public.gmane.org>, Raghu Gandham <raghu.gandham-8NJIiSa5LzA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 21, 2017 at 8:55 AM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> Hi Kyle,
->
-> On Tue, Dec 19, 2017 at 03:05:23PM -0600, kevans91-OYTqUY/oFF8@public.gmane.org wrote:
->> Allwinner a83t has a 1 KB sid block with efuse for security rootkey and
->> thermal calibration data, add node to describe it.
->>
->> a83t-sid is not currently supported by nvmem/sunxi-sid, but it is
->> supported in an external driver for FreeBSD.
->>
->> Signed-off-by: Kyle Evans <kevans91-OYTqUY/oFF8@public.gmane.org>
->
-> The patch looks fine in itself, but we've had a number of issues with
-> the register layout (and access patterns) in the past, so I'd rather
-> have something that works in Linux too if possible.
+From: Paul Burton <paul.burton-8NJIiSa5LzA@public.gmane.org>
 
-Hello!
+Document a binding for the MIPS Cluster Power Controller (CPC) which
+simply allows the device tree to specify where the CPC registers are
+located.
 
-I have a patch that I think should make it work fine on Linux [1], but
-I'm afraid I have little to no capability to test it myself and so I
-did not add it as well.
+Signed-off-by: Paul Burton <paul.burton-8NJIiSa5LzA@public.gmane.org>
+Signed-off-by: Aleksandar Markovic <aleksandar.markovic-8NJIiSa5LzA@public.gmane.org>
+---
+ Documentation/devicetree/bindings/misc/mti,mips-cpc.txt | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/misc/mti,mips-cpc.txt
 
-I do know that the rootkey is offset 0x200 into the given space [2],
-as is the case with the H3, and that the readout quirk is not needed.
-I wasn't 100% sure that the a83t has 2Kbit worth of efuse space as the
-H3, but I do know that thermal data can be found at 0x34 and 0x38 in
-this space.
+diff --git a/Documentation/devicetree/bindings/misc/mti,mips-cpc.txt b/Documentation/devicetree/bindings/misc/mti,mips-cpc.txt
+new file mode 100644
+index 0000000..c6b8251
+--- /dev/null
++++ b/Documentation/devicetree/bindings/misc/mti,mips-cpc.txt
+@@ -0,0 +1,8 @@
++Binding for MIPS Cluster Power Controller (CPC).
++
++This binding allows a system to specify where the CPC registers are
++located.
++
++Required properties:
++compatible : Should be "mti,mips-cpc".
++regs: Should describe the address & size of the CPC register region.
+-- 
+2.7.4
 
-[1] https://people.freebsd.org/~kevans/sunxi-sid.diff
-[2] https://svnweb.freebsd.org/base/head/sys/arm/allwinner/aw_sid.c?view=markup#l56
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
