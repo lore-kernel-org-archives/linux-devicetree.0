@@ -1,76 +1,60 @@
-From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: [PATCH net-next v7 1/2] dt-bindings: net: add DT bindings for Socionext UniPhier AVE
-Date: Thu, 21 Dec 2017 20:12:55 +0900
-Message-ID: <1513854776-4149-2-git-send-email-hayashi.kunihiko@socionext.com>
-References: <1513854776-4149-1-git-send-email-hayashi.kunihiko@socionext.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1513854776-4149-1-git-send-email-hayashi.kunihiko@socionext.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Miller <davem@davemloft.net>, netdev@vger.kernel.org
-Cc: Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 8/9] ARM: dts: iwg22d-sodimm: Sound DMA support via SRC
+ on DTS
+Date: Thu, 21 Dec 2017 12:20:17 +0100
+Message-ID: <20171221112013.fll76q5zdpqoonoc@verge.net.au>
+References: <1513800125-53213-1-git-send-email-biju.das@bp.renesas.com>
+ <1513800125-53213-9-git-send-email-biju.das@bp.renesas.com>
+ <20171221104443.rk6prrib4gdi7qyz@verge.net.au>
+ <KL1PR06MB17023E4E4DE156A8ADB88411B80D0@KL1PR06MB1702.apcprd06.prod.outlook.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <KL1PR06MB17023E4E4DE156A8ADB88411B80D0@KL1PR06MB1702.apcprd06.prod.outlook.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-DT bindings for the AVE ethernet controller found on Socionext's
-UniPhier platforms.
+On Thu, Dec 21, 2017 at 11:01:28AM +0000, Biju Das wrote:
+> Hi Simon,
+> 
+> > -----Original Message-----
+> > From: Simon Horman [mailto:horms@verge.net.au]
+> > Sent: 21 December 2017 10:45
+> > To: Biju Das <biju.das@bp.renesas.com>
+> > Cc: Rob Herring <robh+dt@kernel.org>; Mark Rutland
+> > <mark.rutland@arm.com>; Magnus Damm <magnus.damm@gmail.com>;
+> > Chris Paterson <Chris.Paterson2@renesas.com>; Fabrizio Castro
+> > <fabrizio.castro@bp.renesas.com>; devicetree@vger.kernel.org; linux-renesas-
+> > soc@vger.kernel.org
+> > Subject: Re: [PATCH 8/9] ARM: dts: iwg22d-sodimm: Sound DMA support via
+> > SRC on DTS
+> >
+> > On Wed, Dec 20, 2017 at 08:02:04PM +0000, Biju Das wrote:
+> > > DMA transfer to/from SRC
+> > >
+> > >      DMA      DMApp
+> > > [MEM] -> [SRC] -> [SSIU] -> [SSI]
+> > >
+> > >      DMA      DMApp
+> > > [MEM] <- [SRC] <- [SSIU] <- [SSI]
+> > >
+> > > Current sound driver is supporting SSI/SRC random connection.
+> > > So, this patch is trying
+> > > SSI3 -> SRC3
+> > > SSI4 <- SRC4
+> >
+> > I am curious to know why the selection here differs from that present in
+> > iwg20d-q7-common. Is it an arbitrary decision?
+> >
+> > Likewise for other uses of ssi*, src* and dvc* in this patchset.
+> 
+> For ssi*,  on this board, SSI3/4 interface is connected to Audio In/Out.
+> 
+> For src*,  the original bsp from iwave is using src3/src4, also it is arbitrary as per the data sheet.
+> 
+> For dvc*,  Again it is arbitrary as per the data sheet.
 
-Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
-Acked-by: Rob Herring <robh@kernel.org>
----
- .../bindings/net/socionext,uniphier-ave4.txt       | 45 ++++++++++++++++++++++
- 1 file changed, 45 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/socionext,uniphier-ave4.txt
-
-diff --git a/Documentation/devicetree/bindings/net/socionext,uniphier-ave4.txt b/Documentation/devicetree/bindings/net/socionext,uniphier-ave4.txt
-new file mode 100644
-index 0000000..c73a6f2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/socionext,uniphier-ave4.txt
-@@ -0,0 +1,45 @@
-+* Socionext AVE ethernet controller
-+
-+This describes the devicetree bindings for AVE ethernet controller
-+implemented on Socionext UniPhier SoCs.
-+
-+Required properties:
-+ - compatible: Should be
-+	- "socionext,uniphier-pro4-ave4" : for Pro4 SoC
-+	- "socionext,uniphier-pxs2-ave4" : for PXs2 SoC
-+	- "socionext,uniphier-ld11-ave4" : for LD11 SoC
-+	- "socionext,uniphier-ld20-ave4" : for LD20 SoC
-+ - reg: Address where registers are mapped and size of region.
-+ - interrupts: Should contain the MAC interrupt.
-+ - phy-mode: See ethernet.txt in the same directory. Allow to choose
-+	"rgmii", "rmii", or "mii" according to the PHY.
-+ - phy-handle: Should point to the external phy device.
-+	See ethernet.txt file in the same directory.
-+ - clocks: A phandle to the clock for the MAC.
-+
-+Optional properties:
-+ - resets: A phandle to the reset control for the MAC
-+ - local-mac-address: See ethernet.txt in the same directory.
-+
-+Required subnode:
-+ - mdio: Device tree subnode with the following required properties:
-+
-+Example:
-+
-+	ether: ethernet@65000000 {
-+		compatible = "socionext,uniphier-ld20-ave4";
-+		reg = <0x65000000 0x8500>;
-+		interrupts = <0 66 4>;
-+		phy-mode = "rgmii";
-+		phy-handle = <&ethphy>;
-+		clocks = <&sys_clk 6>;
-+		resets = <&sys_rst 6>;
-+		local-mac-address = [00 00 00 00 00 00];
-+		mdio {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			ethphy: ethphy@1 {
-+				reg = <1>;
-+			};
-+		};
-+	};
--- 
-2.7.4
+Thanks, understood.
