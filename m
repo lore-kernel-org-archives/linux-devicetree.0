@@ -1,14 +1,18 @@
-From: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
-Subject: [PATCH v2 0/2] arm64: dts: renesas: Remove renesas,no-ether-link property
-Date: Thu, 21 Dec 2017 17:18:57 +0200
-Message-ID: <1513869539-18803-1-git-send-email-vladimir_zapolskiy@mentor.com>
+From: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v2 2/2] arm64: dts: renesas: ulcb: Remove renesas,no-ether-link property
+Date: Thu, 21 Dec 2017 17:18:59 +0200
+Message-ID: <1513869539-18803-3-git-send-email-vladimir_zapolskiy@mentor.com>
+References: <1513869539-18803-1-git-send-email-vladimir_zapolskiy@mentor.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Bogdan Mirea <Bogdan-Stefan_Mirea@mentor.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1513869539-18803-1-git-send-email-vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: Bogdan Mirea <Bogdan-Stefan_Mirea-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
+
+From: Bogdan Mirea <Bogdan-Stefan_Mirea-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 
 The present change is a bug fix for AVB link iteratively up/down.
 
@@ -34,29 +38,34 @@ have impact on the code flow in the following ways:
   register which specifies AVB_LINK signal value (0 - at low level;
   1 - at high level).
 
-In conclusion, the change is also a safety improvement because it
-removes the "renesas,no-ether-link" option leading to a proper way
+In conclusion, the present change is also a safety improvement because
+it removes the "renesas,no-ether-link" option leading to a proper way
 of detecting the link state based on HW interrogation and not on
 software heuristic.
 
-Note that DTS files for V3M Starter Kit, Draak and Eagle boards
-contain the same property, the files are untouched due to unavailable
-schematics to verify if the fix applies to these boards as well.
+Fixes: 253ed045a34d ("arm64: dts: renesas: Extract common ULCB board support")
+Signed-off-by: Bogdan Mirea <Bogdan-Stefan_Mirea-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+---
+ arch/arm64/boot/dts/renesas/ulcb.dtsi | 1 -
+ 1 file changed, 1 deletion(-)
 
-Changes from v1 to v2:
-* per a request from Simon added Fixes tags to both changes,
-  the specified commits generalize Salvator-X and ULCB dtsi files
-  and the fixes should be applicable without a conflict, however
-  similar but virtually different fixes can be spread into Salvator-X
-  and ULCB board DTS files of older kernel revisions as well.
-
-Bogdan Mirea (2):
-  arm64: dts: renesas: salvator-x: Remove renesas,no-ether-link property
-  arm64: dts: renesas: ulcb: Remove renesas,no-ether-link property
-
- arch/arm64/boot/dts/renesas/salvator-common.dtsi | 1 -
- arch/arm64/boot/dts/renesas/ulcb.dtsi            | 1 -
- 2 files changed, 2 deletions(-)
-
+diff --git a/arch/arm64/boot/dts/renesas/ulcb.dtsi b/arch/arm64/boot/dts/renesas/ulcb.dtsi
+index be91016e0b48..3e7a6b94e9f8 100644
+--- a/arch/arm64/boot/dts/renesas/ulcb.dtsi
++++ b/arch/arm64/boot/dts/renesas/ulcb.dtsi
+@@ -145,7 +145,6 @@
+ &avb {
+ 	pinctrl-0 = <&avb_pins>;
+ 	pinctrl-names = "default";
+-	renesas,no-ether-link;
+ 	phy-handle = <&phy0>;
+ 	status = "okay";
+ 
 -- 
 2.8.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
