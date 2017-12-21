@@ -1,7 +1,7 @@
 From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Subject: Re: [PATCH] ARM: dts: colibri/apalis: use correct compatible for RTC
-Date: Thu, 21 Dec 2017 16:13:56 +0800
-Message-ID: <20171221081356.GL23230@dragon>
+Date: Thu, 21 Dec 2017 16:14:33 +0800
+Message-ID: <20171221081432.GM23230@dragon>
 References: <20171206102929.4755-1-stefan@agner.ch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
