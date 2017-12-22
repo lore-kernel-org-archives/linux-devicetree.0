@@ -1,41 +1,24 @@
-From: Philippe Ombredanne <pombredanne@nexb.com>
-Subject: Re: [PATCH v5] hwrng: exynos - add Samsung Exynos True RNG driver
-Date: Fri, 22 Dec 2017 19:31:52 +0100
-Message-ID: <CAOFm3uHA39C28B3GG1H94eJ_BRCvDY6V4LZEoTREMzhZcWJDrQ@mail.gmail.com>
-References: <CGME20171222164840eucas1p17e3d17666ba3d0c5fced2d1c9259bf0b@eucas1p1.samsung.com>
- <20171222132338.30054-1-l.stelmach@samsung.com> <20171222164835.1051-1-l.stelmach@samsung.com>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH v4 2/4] ARM: dts: imx53: add srtc node
+Date: Fri, 22 Dec 2017 16:36:21 -0200
+Message-ID: <CAOMZO5BUeeRVeOq8k=ykNC1KqoFGLZp-Rf=6_npSGgYd_KwxyA@mail.gmail.com>
+References: <20171218115133.16371-1-linux-kernel-dev@beckhoff.com> <20171218115133.16371-3-linux-kernel-dev@beckhoff.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20171222164835.1051-1-l.stelmach@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: =?UTF-8?Q?=C5=81ukasz_Stelmach?= <l.stelmach@samsung.com>
-Cc: "Andrew F . Davis" <afd@ti.com>, PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>, Rob Herring <robh+dt@kernel.org>, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-crypto@vger.kernel.org, linux-samsung-soc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171218115133.16371-3-linux-kernel-dev@beckhoff.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel-dev <linux-kernel-dev@beckhoff.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, Patrick Bruenn <p.bruenn@beckhoff.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, Noel Vellemans <Noel.Vellemans@visionbms.com>, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Sascha Hauer <kernel@pengutronix.de>, Philippe Ombredanne <pombredanne@nexb.com>, Fabio Estevam <fabio.estevam@nxp.com>, =?UTF-8?Q?Lothar_Wa=C3=9Fmann?= <LW@karo-electronics.de>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, open list:REAL TIME
 List-Id: devicetree@vger.kernel.org
 
-=C5=81ukasz,
-
-On Fri, Dec 22, 2017 at 5:48 PM, =C5=81ukasz Stelmach <l.stelmach@samsung.c=
-om> wrote:
-> Add support for True Random Number Generator found in Samsung Exynos
-> 5250+ SoCs.
+On Mon, Dec 18, 2017 at 9:51 AM,  <linux-kernel-dev@beckhoff.com> wrote:
+> From: Patrick Bruenn <p.bruenn@beckhoff.com>
 >
-> Signed-off-by: =C5=81ukasz Stelmach <l.stelmach@samsung.com>
-> Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
-> Changes since v4:
+> rtc-mxc_v2 driver will add support for the i.MX53 SRTC
 >
-> - SPDX license header instead of the traditional blurb.
+> Note: we keep the 'srtc' label to avoid duplicate with imx53-m53.dtsi
 >
-> - MODULE_LICENSE("GPL v2") instead of "GPL"
->
-> Thank you, Philippe Ombredanne.
+> Signed-off-by: Patrick Bruenn <p.bruenn@beckhoff.com>
 
-You have my cheerful ack for these changes:
-
-Acked-by: Philippe Ombredanne <pombredanne@nexb.com>
-
---=20
-Cordially
-Philippe Ombredanne
+Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
