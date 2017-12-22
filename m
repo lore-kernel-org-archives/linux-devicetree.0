@@ -1,50 +1,116 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: Re: [PATCH v2 4/5] ARM: dts: Add support for emtrion emCON-MX6 series
-Date: Fri, 22 Dec 2017 11:56:42 +0100
-Message-ID: <20171222105642.GD18255@piout.net>
-References: <95F51F4B902CAC40AF459205F6322F01B7FDFECC3C@BMK019S01.emtrion.local>
- <20171222104028.GC18255@piout.net>
- <b41bc779-28e8-5a87-6f66-f5874dba8d1e@suse.de>
+From: Yong <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v4 1/2] dt-bindings: media: Add Allwinner
+ V3s Camera Sensor Interface (CSI)
+Date: Fri, 22 Dec 2017 18:58:41 +0800
+Message-ID: <20171222185841.527ce87e9a7aa3d6b5e442d3@magewell.com>
+References: <1513935689-35415-1-git-send-email-yong.deng@magewell.com>
+	<20171222100008.nmmzwhtmputizn7d@plaes.org>
+Reply-To: yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <b41bc779-28e8-5a87-6f66-f5874dba8d1e@suse.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>, Philippe Ombredanne <pombredanne@nexb.com>
-Cc: =?iso-8859-1?B?VPxyayw=?= Jan <Jan.Tuerk@emtrion.de>, 'Rob Herring' <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Russell King <linux@armlinux.org.uk>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Kevin Hilman <khilman@baylibre.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, SZ Lin <sz.lin@moxa.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, LinuxArmKernelMailingListe <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBD2JNYHK4MEBB3GK6PIQKGQET4XORRA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20171222100008.nmmzwhtmputizn7d-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rick Chang <rick.chang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TaqPxH82wqD4g@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-+ Philippe
+On Fri, 22 Dec 2017 10:00:08 +0000
+Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org> wrote:
 
-On 22/12/2017 at 11:43:33 +0100, Andreas Färber wrote:
-> >> I'll change it for v3 of this patch however it will end up like this:
-> >> //SPDX-License...
+> On Fri, Dec 22, 2017 at 05:41:29PM +0800, Yong Deng wrote:
+> > Add binding documentation for Allwinner V3s CSI.
 > > 
-> > That should be /* SPDX-License */, // is for c files.
+> > Signed-off-by: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
+> > ---
+> >  .../devicetree/bindings/media/sun6i-csi.txt        | 51 ++++++++++++++++++++++
+> >  1 file changed, 51 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/media/sun6i-csi.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/media/sun6i-csi.txt b/Documentation/devicetree/bindings/media/sun6i-csi.txt
+> > new file mode 100644
+> > index 0000000..b5bfe3f
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/media/sun6i-csi.txt
+> > @@ -0,0 +1,51 @@
+> > +Allwinner V3s Camera Sensor Interface
+> > +------------------------------
 > 
-> Got any reference for that? Since we're using the C preprocessor before
-> feeding them to dtc, we can use the same // style for both, builds fine.
+> Not sure whether syntax for these files is proper reStructuredText/Markdown,
+> but the underline-ish style expects the title and underline having same length.
+
+OK.
+
 > 
-> Only for my private DT overlay files that I use directly with dtc I
-> couldn't adopt that style.
+> > +
+> > +Required properties:
+> > +  - compatible: value must be "allwinner,sun8i-v3s-csi"
+> > +  - reg: base address and size of the memory-mapped region.
+> > +  - interrupts: interrupt associated to this IP
+> > +  - clocks: phandles to the clocks feeding the CSI
+> > +    * bus: the CSI interface clock
+> > +    * mod: the CSI module clock
+> > +    * ram: the CSI DRAM clock
+> > +  - clock-names: the clock names mentioned above
+> > +  - resets: phandles to the reset line driving the CSI
+> > +
+> > +- ports: A ports node with endpoint definitions as defined in
+> > +  Documentation/devicetree/bindings/media/video-interfaces.txt.
+> > +  Currently, the driver only support the parallel interface. So, a single port
+> ^^ supports
+> > +  node with one endpoint and parallel bus is supported.
+> > +
+> > +Example:
+> > +
+> > +	csi1: csi@1cb4000 {
+> > +		compatible = "allwinner,sun8i-v3s-csi";
+> > +		reg = <0x01cb4000 0x1000>;
+> > +		interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
+> > +		clocks = <&ccu CLK_BUS_CSI>,
+> > +			 <&ccu CLK_CSI1_SCLK>,
+> > +			 <&ccu CLK_DRAM_CSI>;
+> > +		clock-names = "bus", "mod", "ram";
+> > +		resets = <&ccu RST_BUS_CSI>;
+> > +
+> > +		port {
+> > +			#address-cells = <1>;
+> > +			#size-cells = <0>;
+> > +
+> > +			/* Parallel bus endpoint */
+> > +			csi1_ep: endpoint {
+> > +				remote-endpoint = <&adv7611_ep>;
+> > +				bus-width = <16>;
+> > +				data-shift = <0>;
+> > +
+> > +				/* If hsync-active/vsync-active are missing,
+> > +				   embedded BT.656 sync is used */
+> > +				hsync-active = <0>; /* Active low */
+> > +				vsync-active = <0>; /* Active low */
+> > +				data-active = <1>;  /* Active high */
+> > +				pclk-sample = <1>;  /* Rising */
+> > +			};
+> > +		};
+> > +	};
+> > +
+> > -- 
+> > 1.8.3.1
+> > 
+> > -- 
+> > You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+> > To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+> > For more options, visit https://groups.google.com/d/optout.
 > 
-The doc states:
+> -- 
+> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+> For more options, visit https://groups.google.com/d/optout.
 
-If a specific tool cannot handle the standard comment style, then the
-appropriate comment mechanism which the tool accepts shall be used. This
-is the reason for having the "/\* \*/" style comment in C header
-files.
 
-I interpreted that as dtc doesn't handle // comments, use /**/
-
-But I agree it also states:
-.dts{i}:	  // SPDX-License-Identifier: <SPDX License Expression>
-
-So I think we will end up with a mix of both.
-
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+Thanks,
+Yong
