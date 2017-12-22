@@ -1,116 +1,100 @@
-From: Yong <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v4 1/2] dt-bindings: media: Add Allwinner
- V3s Camera Sensor Interface (CSI)
-Date: Fri, 22 Dec 2017 18:58:41 +0800
-Message-ID: <20171222185841.527ce87e9a7aa3d6b5e442d3@magewell.com>
-References: <1513935689-35415-1-git-send-email-yong.deng@magewell.com>
-	<20171222100008.nmmzwhtmputizn7d@plaes.org>
-Reply-To: yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD2JNYHK4MEBB3GK6PIQKGQET4XORRA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20171222100008.nmmzwhtmputizn7d-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rick Chang <rick.chang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TaqPxH82wqD4g@public.gmane.org
+From: Stefan Riedmueller <s.riedmueller-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH v3 0/6] ARM: dts: Add PHYTEC phyCORE-i.MX 6 and phyBOARD-Mira carrier board support
+Date: Fri, 22 Dec 2017 11:59:07 +0100
+Message-ID: <1513940353-6145-1-git-send-email-s.riedmueller@phytec.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Stefan Riedmueller <s.riedmueller-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 22 Dec 2017 10:00:08 +0000
-Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org> wrote:
+This patchset adds support for the PHYTEC phyCORE-i.MX 6 and phyBOARD-Mira.
 
-> On Fri, Dec 22, 2017 at 05:41:29PM +0800, Yong Deng wrote:
-> > Add binding documentation for Allwinner V3s CSI.
-> > 
-> > Signed-off-by: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
-> > ---
-> >  .../devicetree/bindings/media/sun6i-csi.txt        | 51 ++++++++++++++++++++++
-> >  1 file changed, 51 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/media/sun6i-csi.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/media/sun6i-csi.txt b/Documentation/devicetree/bindings/media/sun6i-csi.txt
-> > new file mode 100644
-> > index 0000000..b5bfe3f
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/media/sun6i-csi.txt
-> > @@ -0,0 +1,51 @@
-> > +Allwinner V3s Camera Sensor Interface
-> > +------------------------------
-> 
-> Not sure whether syntax for these files is proper reStructuredText/Markdown,
-> but the underline-ish style expects the title and underline having same length.
+Following boards are included:
+phyBOARD-Mira with phyCORE-i.MX 6 Quad/Dual with:
+- i.MX 6Quad/Dual SOC
+- NAND or eMMC
+- HDMI interface
+- LVDS display interface
+- Gigabit Ethernet
+- USB Host
+- CAN
+- RS232
+- PCIe
+This board also contains an LVDS camera interface and parallel display
+interface which are not yet supported.
 
-OK.
+phyBAORD-Mira with phyCORE-i.MX 6 DualLight/Solo with:
+- i.MX 6DualLight/Solo
+- NAND
+- HDMI interface
+- 100 MBit/s Ethernet
+- USB Host
+- RS232
 
-> 
-> > +
-> > +Required properties:
-> > +  - compatible: value must be "allwinner,sun8i-v3s-csi"
-> > +  - reg: base address and size of the memory-mapped region.
-> > +  - interrupts: interrupt associated to this IP
-> > +  - clocks: phandles to the clocks feeding the CSI
-> > +    * bus: the CSI interface clock
-> > +    * mod: the CSI module clock
-> > +    * ram: the CSI DRAM clock
-> > +  - clock-names: the clock names mentioned above
-> > +  - resets: phandles to the reset line driving the CSI
-> > +
-> > +- ports: A ports node with endpoint definitions as defined in
-> > +  Documentation/devicetree/bindings/media/video-interfaces.txt.
-> > +  Currently, the driver only support the parallel interface. So, a single port
-> ^^ supports
-> > +  node with one endpoint and parallel bus is supported.
-> > +
-> > +Example:
-> > +
-> > +	csi1: csi@1cb4000 {
-> > +		compatible = "allwinner,sun8i-v3s-csi";
-> > +		reg = <0x01cb4000 0x1000>;
-> > +		interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
-> > +		clocks = <&ccu CLK_BUS_CSI>,
-> > +			 <&ccu CLK_CSI1_SCLK>,
-> > +			 <&ccu CLK_DRAM_CSI>;
-> > +		clock-names = "bus", "mod", "ram";
-> > +		resets = <&ccu RST_BUS_CSI>;
-> > +
-> > +		port {
-> > +			#address-cells = <1>;
-> > +			#size-cells = <0>;
-> > +
-> > +			/* Parallel bus endpoint */
-> > +			csi1_ep: endpoint {
-> > +				remote-endpoint = <&adv7611_ep>;
-> > +				bus-width = <16>;
-> > +				data-shift = <0>;
-> > +
-> > +				/* If hsync-active/vsync-active are missing,
-> > +				   embedded BT.656 sync is used */
-> > +				hsync-active = <0>; /* Active low */
-> > +				vsync-active = <0>; /* Active low */
-> > +				data-active = <1>;  /* Active high */
-> > +				pclk-sample = <1>;  /* Rising */
-> > +			};
-> > +		};
-> > +	};
-> > +
-> > -- 
-> > 1.8.3.1
-> > 
-> > -- 
-> > You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-> > To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-> > For more options, visit https://groups.google.com/d/optout.
-> 
-> -- 
-> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-> For more options, visit https://groups.google.com/d/optout.
+phyBOARD-Mira with phyCORE-i.MX 6 QuadPlus with:
+- i.MX 6QuadPlus SOC
+- NAND
+- HDMI interface
+- LVDS display interface
+- Gigabit Ethernet
+- USB Host
+- CAN
+- RS232
+- PCIe
+This board also contains an LVDS camera interface and parallel display
+interface which are not yet supported.
 
+The entire series is based on v4.15-rc4.
 
-Thanks,
-Yong
+Changes since v1:
+- Removed unnecessary ipu aliases
+- Added unit-address to memory node name
+- Fixed eeprom compatible to correct vendor name (atmel instead of cat)
+- Fixed rtc compatible to correct vendor name (microcrystal instead of mc)
+- Changed pcie regulator to be used with vpcie-supply in &pcie node and
+  removed regulator-always-on
+- Changed pcie reset-gpio polarity to GPIO_ACTIVE_LOW
+- Replaced fsl,uart-has-rtscts by uart-has-rtscts
+- Fixed typos in defconfig patch
+
+Changes since v2:
+- Fixed typo in patch subject PATCH 4/6
+- Added reviewed by tags on PATCH 4/6 and PATCH 6/6
+
+Christian Hemp (2):
+  ARM: dts: imx6: Add support for phyBOARD-Mira i.MX 6Quad/Dual RDK
+  ARM: dts: imx6: Add support for phyBOARD-Mira i.MX 6 DualLight/Solo
+    RDK
+
+Enrico Scholz (1):
+  ARM: dts: imx6: Add support for phyBOARD-Mira with i.MX 6QuadPlus
+
+Stefan Riedmueller (3):
+  ARM: dts: imx6: Add initial support for phyCORE-i.MX 6 SOM
+  ARM: dts: imx6: Add initial support for phyBOARD-Mira
+  ARM: imx_v6_v7_defconfig: Enable Dialog Semiconductor DA9062 driver
+
+ arch/arm/boot/dts/Makefile                        |   4 +
+ arch/arm/boot/dts/imx6dl-phytec-mira-rdk-nand.dts |  64 ++++
+ arch/arm/boot/dts/imx6q-phytec-mira-rdk-emmc.dts  |  72 ++++
+ arch/arm/boot/dts/imx6q-phytec-mira-rdk-nand.dts  |  72 ++++
+ arch/arm/boot/dts/imx6qdl-phytec-mira.dtsi        | 390 ++++++++++++++++++++++
+ arch/arm/boot/dts/imx6qdl-phytec-phycore-som.dtsi | 282 ++++++++++++++++
+ arch/arm/boot/dts/imx6qp-phytec-mira-rdk-nand.dts |  72 ++++
+ arch/arm/configs/imx_v6_v7_defconfig              |   4 +
+ 8 files changed, 960 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx6dl-phytec-mira-rdk-nand.dts
+ create mode 100644 arch/arm/boot/dts/imx6q-phytec-mira-rdk-emmc.dts
+ create mode 100644 arch/arm/boot/dts/imx6q-phytec-mira-rdk-nand.dts
+ create mode 100644 arch/arm/boot/dts/imx6qdl-phytec-mira.dtsi
+ create mode 100644 arch/arm/boot/dts/imx6qdl-phytec-phycore-som.dtsi
+ create mode 100644 arch/arm/boot/dts/imx6qp-phytec-mira-rdk-nand.dts
+
+-- 
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
