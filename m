@@ -1,101 +1,441 @@
-From: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
-Subject: Re: [PATCH v4 1/2] dt-bindings: media: Add Allwinner
- V3s Camera Sensor Interface (CSI)
-Date: Fri, 22 Dec 2017 10:00:08 +0000
-Message-ID: <20171222100008.nmmzwhtmputizn7d@plaes.org>
-References: <1513935689-35415-1-git-send-email-yong.deng@magewell.com>
-Reply-To: plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org
+From: Subrahmanya Lingappa <l.subrahmanya-DTHOJn6Rh8lhmhkoCovsdw@public.gmane.org>
+Subject: Re: [PATCH v5 3/3] PCI: mobiveil: Add MSI support for Mobiveil PCIe Host
+Date: Fri, 22 Dec 2017 14:27:54 +0530
+Message-ID: <CAFZiPx3G=khQJqAPs=qnx=bya_MQLfOSPaK3ckNsUq=U2EQGYw@mail.gmail.com>
+References: <1513181336-19955-1-git-send-email-l.subrahmanya@mobiveil.co.in> <23b886bf-b21e-8e8c-460c-42316469f989@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDB4J47M7YERBKVP6PIQKGQEYULPN7A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <1513935689-35415-1-git-send-email-yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rick Chang <rick.chang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <23b886bf-b21e-8e8c-460c-42316469f989-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mingkai Hu <mingkai.hu-3arQi8VN3Tc@public.gmane.org>, Peter W Newton <peter.newton-3arQi8VN3Tc@public.gmane.org>, "M.h. Lian" <minghuan.lian-3arQi8VN3Tc@public.gmane.org>, Raj Raina <rajesh.raina-3arQi8VN3Tc@public.gmane.org>, Rajan Kapoor <rajan.kapoor-3arQi8VN3Tc@public.gmane.org>, Prabhjot Singh <prabhjot.singh-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 22, 2017 at 05:41:29PM +0800, Yong Deng wrote:
-> Add binding documentation for Allwinner V3s CSI.
-> 
-> Signed-off-by: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
-> ---
->  .../devicetree/bindings/media/sun6i-csi.txt        | 51 ++++++++++++++++++++++
->  1 file changed, 51 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/sun6i-csi.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/media/sun6i-csi.txt b/Documentation/devicetree/bindings/media/sun6i-csi.txt
-> new file mode 100644
-> index 0000000..b5bfe3f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/sun6i-csi.txt
-> @@ -0,0 +1,51 @@
-> +Allwinner V3s Camera Sensor Interface
-> +------------------------------
+Re-sending the mail in Plain text mode.
 
-Not sure whether syntax for these files is proper reStructuredText/Markdown,
-but the underline-ish style expects the title and underline having same length.
+Marc,
 
-> +
-> +Required properties:
-> +  - compatible: value must be "allwinner,sun8i-v3s-csi"
-> +  - reg: base address and size of the memory-mapped region.
-> +  - interrupts: interrupt associated to this IP
-> +  - clocks: phandles to the clocks feeding the CSI
-> +    * bus: the CSI interface clock
-> +    * mod: the CSI module clock
-> +    * ram: the CSI DRAM clock
-> +  - clock-names: the clock names mentioned above
-> +  - resets: phandles to the reset line driving the CSI
-> +
-> +- ports: A ports node with endpoint definitions as defined in
-> +  Documentation/devicetree/bindings/media/video-interfaces.txt.
-> +  Currently, the driver only support the parallel interface. So, a single port
-^^ supports
-> +  node with one endpoint and parallel bus is supported.
-> +
-> +Example:
-> +
-> +	csi1: csi@1cb4000 {
-> +		compatible = "allwinner,sun8i-v3s-csi";
-> +		reg = <0x01cb4000 0x1000>;
-> +		interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&ccu CLK_BUS_CSI>,
-> +			 <&ccu CLK_CSI1_SCLK>,
-> +			 <&ccu CLK_DRAM_CSI>;
-> +		clock-names = "bus", "mod", "ram";
-> +		resets = <&ccu RST_BUS_CSI>;
-> +
-> +		port {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			/* Parallel bus endpoint */
-> +			csi1_ep: endpoint {
-> +				remote-endpoint = <&adv7611_ep>;
-> +				bus-width = <16>;
-> +				data-shift = <0>;
-> +
-> +				/* If hsync-active/vsync-active are missing,
-> +				   embedded BT.656 sync is used */
-> +				hsync-active = <0>; /* Active low */
-> +				vsync-active = <0>; /* Active low */
-> +				data-active = <1>;  /* Active high */
-> +				pclk-sample = <1>;  /* Rising */
-> +			};
-> +		};
-> +	};
-> +
-> -- 
-> 1.8.3.1
-> 
-> -- 
-> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-> For more options, visit https://groups.google.com/d/optout.
+On Fri, Dec 15, 2017 at 9:43 PM, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org> wrote:
+>
+> On 13/12/17 16:08, Subrahmanya Lingappa wrote:
+> > Adds MSI support for Mobiveil PCIe Host Bridge IP driver
+> >
+> > Signed-off-by: Subrahmanya Lingappa <l.subrahmanya-DTHOJn6Rh8lhmhkoCovsdw@public.gmane.org>
+> > Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+> > Cc: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+> > Cc: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+> > Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> > ---
+> >  drivers/pci/host/pcie-mobiveil.c | 222 ++++++++++++++++++++++++++++++++++++++-
+> >  1 file changed, 220 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/pci/host/pcie-mobiveil.c b/drivers/pci/host/pcie-mobiveil.c
+> > index 8611aaa..39818d5 100644
+> > --- a/drivers/pci/host/pcie-mobiveil.c
+> > +++ b/drivers/pci/host/pcie-mobiveil.c
+> > @@ -14,6 +14,7 @@
+> >  #include <linux/irqdomain.h>
+> >  #include <linux/kernel.h>
+> >  #include <linux/module.h>
+> > +#include <linux/msi.h>
+> >  #include <linux/of_address.h>
+> >  #include <linux/of_irq.h>
+> >  #include <linux/of_platform.h>
+> > @@ -55,6 +56,7 @@
+> >  #define PAB_INTP_AMBA_MISC_ENB       0x0b0c
+> >  #define PAB_INTP_AMBA_MISC_STAT      0x0b1c
+> >  #define  PAB_INTP_INTX_MASK  0x1e0
+> > +#define  PAB_INTP_MSI_MASK   0x8
+> >
+> >  #define PAB_AXI_AMAP_CTRL(win)       PAB_REG_ADDR_16(0x0ba0, win)
+> >  #define  WIN_ENABLE_SHIFT    0
+> > @@ -85,8 +87,19 @@
+> >
+> >  /* supported number of interrupts */
+> >  #define PCI_NUM_INTX         4
+> > +#define PCI_NUM_MSI          16
+> >  #define PAB_INTA_POS         5
+> >
+> > +/* MSI registers */
+> > +#define MSI_BASE_LO_OFFSET   0x04
+> > +#define MSI_BASE_HI_OFFSET   0x08
+> > +#define MSI_SIZE_OFFSET              0x0c
+> > +#define MSI_ENABLE_OFFSET    0x14
+> > +#define MSI_STATUS_OFFSET    0x18
+> > +#define MSI_DATA_OFFSET              0x20
+> > +#define MSI_ADDR_L_OFFSET    0x24
+> > +#define MSI_ADDR_H_OFFSET    0x28
+> > +
+> >  /* outbound and inbound window definitions */
+> >  #define WIN_NUM_0            0
+> >  #define WIN_NUM_1            1
+> > @@ -105,11 +118,22 @@
+> >  #define UINT64_MAX           (u64)(~((u64)0))
+> >  #endif
+> >
+> > +struct mobiveil_msi {                        /* MSI information */
+> > +     struct mutex lock;              /* protect bitmap variable */
+> > +     struct irq_domain *msi_domain;
+> > +     struct irq_domain *dev_domain;
+> > +     phys_addr_t msi_pages_phys;
+> > +     int *msi_pages;
+> > +     int num_of_vectors;
+> > +     DECLARE_BITMAP(msi_irq_in_use, PCI_NUM_MSI);
+> > +};
+> > +
+> >  struct mobiveil_pcie {
+> >       struct platform_device *pdev;
+> >       struct list_head resources;
+> >       void __iomem *config_axi_slave_base;    /* endpoint config base */
+> >       void __iomem *csr_axi_slave_base;       /* root port config base */
+> > +     void __iomem *apb_csr_base;     /* MSI register base */
+> >       struct irq_domain *intx_domain;
+> >       int irq;
+> >       int apio_wins;
+> > @@ -118,6 +142,7 @@ struct mobiveil_pcie {
+> >       int ib_wins_configured; /*  configured inbound windows */
+> >       struct resource *ob_io_res;
+> >       char root_bus_nr;
+> > +     struct mobiveil_msi msi;
+> >  };
+> >
+> >  static inline void csr_writel(struct mobiveil_pcie *pcie, const u32 value,
+> > @@ -202,11 +227,18 @@ static void mobiveil_pcie_isr(struct irq_desc *desc)
+> >       struct irq_chip *chip = irq_desc_get_chip(desc);
+> >       struct mobiveil_pcie *pcie = irq_desc_get_handler_data(desc);
+> >       struct device *dev = &pcie->pdev->dev;
+> > -     u32 intr_status;
+> > +     struct mobiveil_msi *msi = &pcie->msi;
+> > +     u32 msi_data, msi_addr_lo, msi_addr_hi;
+> > +     u32 intr_status, msi_status;
+> >       unsigned long shifted_status;
+> >       u32 bit, virq;
+> >       u32 val, mask;
+> >
+> > +     /*
+> > +      * The core provides a single interrupt for both INTx/MSI messages.
+> > +      * So we'll read both INTx and MSI status
+> > +      */
+> > +
+> >       chained_irq_enter(chip, desc);
+> >
+> >       /* read INTx status */
+> > @@ -241,6 +273,41 @@ static void mobiveil_pcie_isr(struct irq_desc *desc)
+> >               } while ((shifted_status >>  PAB_INTA_POS) != 0);
+> >       }
+> >
+> > +     /* read extra MSI status register */
+> > +     msi_status = readl(pcie->apb_csr_base + MSI_STATUS_OFFSET);
+>
+> You are using the non-relaxed accessors here, while the rest of the
+> driver used the _relaxed version. Why is that so?
+>
+i
+t was a slip, I will correct it to use relaxed order.
+
+>
+> > +
+> > +     /* handle MSI interrupts */
+> > +     if ((intr_status & PAB_INTP_MSI_MASK) || (msi_status & 1)) {
+> > +             do {
+> > +                     msi_data = readl(pcie->apb_csr_base + MSI_DATA_OFFSET);
+> > +
+> > +                     /*
+> > +                      * MSI_STATUS_OFFSET gets updated to zero once we have
+> > +                      * popped not only the data but also address from MSI
+> > +                      * hardware FIFO.so keeping these following two dummy
+> > +                      * reads.
+> > +                      */
+> > +                     msi_addr_lo = readl(pcie->apb_csr_base +
+> > +                                     MSI_ADDR_L_OFFSET);
+> > +                     msi_addr_hi = readl(pcie->apb_csr_base +
+> > +                                     MSI_ADDR_H_OFFSET);
+>
+> Is that really valid? Don't you have to issue a 64bit access?
+>
+Seems like its valid, because its just a pair of DWORD
+
+accesses to config register space to read MSI data captured inside
+bridge hardware FIFO.
+is there any reason you think its invalid?
+
+>
+> > +                     dev_dbg(dev,
+> > +                             "MSI registers, data: %08x, addr: %08x:%08x\n",
+> > +                             msi_data, msi_addr_hi, msi_addr_lo);
+> > +
+> > +                     if (msi_data) {
+> > +                             virq = irq_find_mapping(msi->dev_domain,
+> > +                                     msi_data);
+> > +                             if (virq)
+> > +                                     generic_handle_irq(virq);
+> > +                     } else
+> > +                             dev_err_ratelimited(dev, "MSI data null\n");
+>
+> Braces on both sides of the else statement.
+>
+> Also, why is msi_data==0 not valid? You can definitely allocate it from
+> your bitmap, and I'm expecting that there is a strong correlation
+> between what you read from MSI_DATA_OFFSET and the payload that the
+> endpoint writes.
+>
+Agreed msi_data==0 should also be valid. will be fixed.
+
+>
+> > +
+> > +                     msi_status = readl(pcie->apb_csr_base +
+> > +                                     MSI_STATUS_OFFSET);
+> > +             } while (msi_status & 1);
+> > +     }
+> > +
+> >       csr_writel(pcie, intr_status, PAB_INTP_AMBA_MISC_STAT);
+> >       chained_irq_exit(chip, desc);
+> >  }
+> > @@ -274,6 +341,12 @@ static int mobiveil_pcie_parse_dt(struct mobiveil_pcie *pcie)
+> >       if (IS_ERR(pcie->csr_axi_slave_base))
+> >               return PTR_ERR(pcie->csr_axi_slave_base);
+> >
+> > +     /* map MSI config resource */
+> > +     res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "apb_csr");
+> > +     pcie->apb_csr_base = devm_pci_remap_cfg_resource(dev, res);
+> > +     if (IS_ERR(pcie->apb_csr_base))
+> > +             return PTR_ERR(pcie->apb_csr_base);
+> > +
+> >       /* read the number of windows requested */
+> >       if (!pcie->apio_wins &&
+> >               of_property_read_u32(node, "apio-wins", &pcie->apio_wins)) {
+> > @@ -430,6 +503,27 @@ static int mobiveil_bringup_link(struct mobiveil_pcie *pcie)
+> >       return -ETIMEDOUT;
+> >  }
+> >
+> > +static void mobiveil_pcie_enable_msi(struct mobiveil_pcie *pcie)
+> > +{
+> > +     phys_addr_t msg_addr;
+> > +     struct mobiveil_msi *msi = &pcie->msi;
+> > +
+> > +
+> > +     pcie->msi.num_of_vectors = PCI_NUM_MSI;
+> > +
+> > +     msi->msi_pages = (void *)__get_free_pages(GFP_DMA, 0);
+>
+> That old trick again... Do you really need to carve out a RAM page for
+> this? Can't you use just some dummy physical address instead? The base
+> address of your PCIe RC, for example.
+>
+Due to the current hardware bug
+
+we do need a real RAM location to write this MSI data into, as we cant
+use any dummy address for now.
+
+>
+> > +     msg_addr = virt_to_phys((void *)msi->msi_pages);
+> > +     msi->msi_pages_phys = (phys_addr_t)msg_addr;
+> > +
+> > +     writel_relaxed(lower_32_bits(msg_addr),
+> > +             pcie->apb_csr_base + MSI_BASE_LO_OFFSET);
+> > +     writel_relaxed(upper_32_bits(msg_addr),
+> > +             pcie->apb_csr_base + MSI_BASE_HI_OFFSET);
+> > +     writel_relaxed(4096, pcie->apb_csr_base + MSI_SIZE_OFFSET);
+> > +     writel_relaxed(1,
+> > +             pcie->apb_csr_base + MSI_ENABLE_OFFSET);
+>
+> nit: No need to break all these writes, each of them can fit on a single
+> line.
+>
+> > +}
+> > +
+> >  static int mobiveil_host_init(struct mobiveil_pcie *pcie)
+> >  {
+> >       u32 value;
+> > @@ -465,7 +559,8 @@ static int mobiveil_host_init(struct mobiveil_pcie *pcie)
+> >               (1 << PEX_PIO_ENABLE_SHIFT),
+> >               PAB_CTRL);
+> >
+> > -     csr_writel(pcie, PAB_INTP_INTX_MASK, PAB_INTP_AMBA_MISC_ENB);
+> > +     csr_writel(pcie, (PAB_INTP_INTX_MASK | PAB_INTP_MSI_MASK),
+> > +             PAB_INTP_AMBA_MISC_ENB);
+> >
+> >       /* program PIO Enable Bit to 1 and Config Window Enable Bit to 1 in
+> >        * PAB_AXI_PIO_CTRL Register
+> > @@ -503,6 +598,10 @@ static int mobiveil_host_init(struct mobiveil_pcie *pcie)
+> >               }
+> >       }
+> >
+> > +     /* setup MSI hardware registers */
+> > +     if (IS_ENABLED(CONFIG_PCI_MSI))
+>
+> Your driver already depends on PCI_MSI_IRQ_DOMAIN, which depends on
+> PCI_MSI. So this IS_ENABLED() is pointless.
+>
+as Lorenzo pointed out on the other thread, I will take out
+PCI_MSI_IRQ_DOMAIN dependency.
+So looks like better to follow other tested drivers and continue to keep it no ?
+
+>
+> > +             mobiveil_pcie_enable_msi(pcie);
+> > +
+> >       return err;
+> >  }
+> >
+> > @@ -520,6 +619,118 @@ static int mobiveil_pcie_intx_map(struct irq_domain *domain, unsigned int irq,
+> >       .map = mobiveil_pcie_intx_map,
+> >  };
+> >
+> > +static struct irq_chip mobiveil_msi_irq_chip = {
+> > +     .name = "Mobiveil PCIe MSI",
+> > +     .irq_mask = pci_msi_mask_irq,
+> > +     .irq_unmask = pci_msi_unmask_irq,
+> > +};
+> > +
+> > +static struct msi_domain_info mobiveil_msi_domain_info = {
+> > +     .flags  = (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
+> > +                  MSI_FLAG_PCI_MSIX),
+> > +     .chip   = &mobiveil_msi_irq_chip,
+> > +};
+> > +
+> > +static void mobiveil_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+> > +{
+> > +     struct mobiveil_pcie *pcie = irq_data_get_irq_chip_data(data);
+> > +     phys_addr_t addr = virt_to_phys((void *)pcie->msi.msi_pages +
+> > +                             (data->hwirq * sizeof(int)));
+> > +
+> > +     msg->address_lo = lower_32_bits(addr);
+> > +     msg->address_hi = upper_32_bits(addr);
+> > +     msg->data = data->hwirq;
+> > +
+> > +     dev_dbg(&pcie->pdev->dev, "msi#%d address_hi %#x address_lo %#x\n",
+> > +             (int)data->hwirq, msg->address_hi, msg->address_lo);
+> > +}
+> > +
+> > +static int mobiveil_msi_set_affinity(struct irq_data *irq_data,
+> > +             const struct cpumask *mask, bool force)
+> > +{
+> > +     return -EINVAL;
+> > +}
+> > +
+> > +static struct irq_chip mobiveil_msi_bottom_irq_chip = {
+> > +     .name                   = "Mobiveil MSI",
+> > +     .irq_compose_msi_msg    = mobiveil_compose_msi_msg,
+> > +     .irq_set_affinity       = mobiveil_msi_set_affinity,
+> > +};
+> > +
+> > +static int mobiveil_irq_msi_domain_alloc(struct irq_domain *domain,
+> > +             unsigned int virq, unsigned int nr_irqs, void *args)
+> > +{
+> > +     struct mobiveil_pcie *pcie = domain->host_data;
+> > +     struct mobiveil_msi *msi = &pcie->msi;
+> > +     unsigned long bit;
+> > +
+> > +     WARN_ON(nr_irqs != 1);
+> > +     mutex_lock(&msi->lock);
+> > +
+> > +     bit = find_first_zero_bit(msi->msi_irq_in_use, msi->num_of_vectors);
+> > +     if (bit >= msi->num_of_vectors) {
+> > +             mutex_unlock(&msi->lock);
+> > +             return -ENOSPC;
+> > +     }
+> > +
+> > +     set_bit(bit, msi->msi_irq_in_use);
+> > +
+> > +     mutex_unlock(&msi->lock);
+> > +
+> > +     irq_domain_set_info(domain, virq, bit, &mobiveil_msi_bottom_irq_chip,
+> > +                         domain->host_data, handle_simple_irq,
+> > +                         NULL, NULL);
+> > +     return 0;
+> > +}
+> > +
+> > +static void mobiveil_irq_msi_domain_free(struct irq_domain *domain,
+> > +             unsigned int virq, unsigned int nr_irqs)
+> > +{
+> > +     struct irq_data *d = irq_domain_get_irq_data(domain, virq);
+> > +     struct mobiveil_pcie *pcie = irq_data_get_irq_chip_data(d);
+> > +     struct mobiveil_msi *msi = &pcie->msi;
+> > +
+> > +     mutex_lock(&msi->lock);
+> > +
+> > +     if (!test_bit(d->hwirq, msi->msi_irq_in_use)) {
+> > +             dev_err(&pcie->pdev->dev, "trying to free unused MSI#%lu\n",
+> > +                     d->hwirq);
+> > +     } else {
+> > +             __clear_bit(d->hwirq, msi->msi_irq_in_use);
+> > +     }
+> > +
+> > +     mutex_unlock(&msi->lock);
+> > +}
+> > +
+> > +static const struct irq_domain_ops msi_domain_ops = {
+> > +     .alloc  = mobiveil_irq_msi_domain_alloc,
+> > +     .free   = mobiveil_irq_msi_domain_free,
+> > +};
+> > +
+> > +static int mobiveil_allocate_msi_domains(struct mobiveil_pcie *pcie)
+> > +{
+> > +     struct device *dev = &pcie->pdev->dev;
+> > +     struct fwnode_handle *fwnode = of_node_to_fwnode(dev->of_node);
+> > +     struct mobiveil_msi *msi = &pcie->msi;
+> > +
+> > +     mutex_init(&pcie->msi.lock);
+> > +     msi->dev_domain = irq_domain_add_linear(NULL, msi->num_of_vectors,
+> > +                                          &msi_domain_ops, pcie);
+> > +     if (!msi->dev_domain) {
+> > +             dev_err(dev, "failed to create IRQ domain\n");
+> > +             return -ENOMEM;
+> > +     }
+> > +
+> > +     msi->msi_domain = pci_msi_create_irq_domain(fwnode,
+> > +                             &mobiveil_msi_domain_info, msi->dev_domain);
+> > +     if (!msi->msi_domain) {
+> > +             dev_err(dev, "failed to create MSI domain\n");
+> > +             irq_domain_remove(msi->dev_domain);
+> > +             return -ENOMEM;
+> > +     }
+> > +     return 0;
+> > +}
+> > +
+> >  static int mobiveil_pcie_init_irq_domain(struct mobiveil_pcie *pcie)
+> >  {
+> >       struct device *dev = &pcie->pdev->dev;
+> > @@ -535,6 +746,13 @@ static int mobiveil_pcie_init_irq_domain(struct mobiveil_pcie *pcie)
+> >               return -ENODEV;
+> >       }
+> >
+> > +#ifdef CONFIG_PCI_MSI
+>
+> Useless #ifdef
+>
+> > +     /* setup MSI */
+> > +     ret = mobiveil_allocate_msi_domains(pcie);
+> > +     if (ret)
+> > +             return ret;
+> > +#endif
+> > +
+> >       return 0;
+> >  }
+> >
+> >
+>
+> Now, there is something that I find a bit annoying: This code looks very
+> similar to drivers/pci/host/pcie-altera-msi.c, to the extent that I
+> suspect this is the same IP.
+>
+Its a different IP.
+
+>
+> I suggest you investigate whether you can reuse the existing code
+> instead of adding yet another MSI driver to the kernel.
+>
+> Thanks,
+>
+>         M.
+> --
+> Jazz is not dead. It just smells funny...
+
+
+Thanks,
+Subrahmanya
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
