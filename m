@@ -1,91 +1,102 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: dts: sunxi: Add sid for a83t
-Date: Fri, 22 Dec 2017 18:11:52 +0800
-Message-ID: <CAGb2v64mf-ihyOs-WJZuVa4Yib3Szp90RZu_a1EeQ1LJXnoXEQ@mail.gmail.com>
-References: <20171219210523.10428-1-kevans91@ksu.edu> <20171221145512.llxvzkcrjpquhczi@flea.lan>
- <CACNAnaE9GiVTXD-TV1xXyBJKtTGKpdA6n0REk6a=qm218EgHbg@mail.gmail.com>
- <20171221152630.2vf57x5o2yi5sv3n@flea.lan> <20171221190903.56ebae536acf51401c63802c@bidouilliste.com>
- <20171222083508.dfcp6egfvxykmogg@flea.lan> <20171222110727.520df7394234f6a5dc0b9ec0@bidouilliste.com>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+Subject: Re: [PATCH v6 06/11] thermal: armada: Add support for Armada AP806
+Date: Fri, 22 Dec 2017 12:14:26 +0200
+Message-ID: <20171222101426.yujvg2xbca3ghpyc@tarshish>
+References: <20171222093226.23456-1-miquel.raynal@free-electrons.com>
+ <20171222093226.23456-7-miquel.raynal@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBA5V6PIQKGQEEVFMBCI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20171222110727.520df7394234f6a5dc0b9ec0-xXdDKFdH5B3kFDPD4ZthVA@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Emmanuel Vadot <manu-xXdDKFdH5B3kFDPD4ZthVA@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kyle Evans <kevans91-OYTqUY/oFF8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20171222093226.23456-7-miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, David Sniatkiwicz <davidsn-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 22, 2017 at 6:07 PM, Emmanuel Vadot <manu-xXdDKFdH5B3kFDPD4ZthVA@public.gmane.org> wrote:
-> On Fri, 22 Dec 2017 09:35:08 +0100
-> Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->
->> On Thu, Dec 21, 2017 at 07:09:03PM +0100, Emmanuel Vadot wrote:
->> >
->> >  Hi Maxime,
->> >
->> > On Thu, 21 Dec 2017 16:26:30 +0100
->> > Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->> >
->> > > Hi,
->> > >
->> > > On Thu, Dec 21, 2017 at 09:19:24AM -0600, Kyle Evans wrote:
->> > > > On Thu, Dec 21, 2017 at 8:55 AM, Maxime Ripard
->> > > > <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->> > > > > Hi Kyle,
->> > > > >
->> > > > > On Tue, Dec 19, 2017 at 03:05:23PM -0600, kevans91-OYTqUY/oFF8@public.gmane.org wrote:
->> > > > >> Allwinner a83t has a 1 KB sid block with efuse for security rootkey and
->> > > > >> thermal calibration data, add node to describe it.
->> > > > >>
->> > > > >> a83t-sid is not currently supported by nvmem/sunxi-sid, but it is
->> > > > >> supported in an external driver for FreeBSD.
->> > > > >>
->> > > > >> Signed-off-by: Kyle Evans <kevans91-OYTqUY/oFF8@public.gmane.org>
->> > > > >
->> > > > > The patch looks fine in itself, but we've had a number of issues with
->> > > > > the register layout (and access patterns) in the past, so I'd rather
->> > > > > have something that works in Linux too if possible.
->> > > >
->> > > > I have a patch that I think should make it work fine on Linux [1], but
->> > > > I'm afraid I have little to no capability to test it myself and so I
->> > > > did not add it as well.
->> > > >
->> > > > I do know that the rootkey is offset 0x200 into the given space [2],
->> > > > as is the case with the H3, and that the readout quirk is not needed.
->> > > > I wasn't 100% sure that the a83t has 2Kbit worth of efuse space as the
->> > > > H3, but I do know that thermal data can be found at 0x34 and 0x38 in
->> > > > this space.
->> > >
->> > > Then maybe we should leave it aside until someone takes some time on
->> > > the A83t.
->> >
->> >  Take some time on the Linux driver and do not apply this patch for
->> > now you mean ?
->>
->> Yep.
->>
->> Maxime
->
->  Since linux doesn't have the compatible in it's driver what would
-> be the harm to add the node in the DTS ? If a quirks is needed because
-> some region is weird this would go in the driver right ? I don't see a
-> technical problem for adding this node right now.
->  If Kyle confirm the lenght of the region and that no quirk is needed
-> will it be enough ?
+Hi Miquèl,
 
-I guess I wasn't very clear. I'm OK with the patch going in. The device
-node currently says nothing about how much efuse space there is. The
-memory region covers that and the control section, and the size matches
-what the memory map says.
+On Fri, Dec 22, 2017 at 10:32:21AM +0100, Miquel Raynal wrote:
+> From: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+> 
+> The AP806 component is integrated in the Armada 8K and 7K lines of
+> processors.
+> 
+> The thermal sensor sample field on the status register is a signed
+> value. Extend armada_get_temp() and the driver structure to handle
+> signed values.
+> 
+> Signed-off-by: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+> [<miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>: Changes when applying over the
+> previous patches, including the register names changes, also switched
+> the coefficients values to s64 instead of unsigned long to deal with
+> negative values and used do_div instead of the traditionnal '/']
+> Signed-off-by: Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Reviewed-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Tested-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
 
-The size and offset of the efuse space would be dealt with in the driver.
+[..]
 
+>  static int armada_get_temp(struct thermal_zone_device *thermal,
+> -			  int *temp)
+> +			   int *temperature)
+>  {
+>  	struct armada_thermal_priv *priv = thermal->devdata;
+> -	unsigned long reg;
+> -	unsigned long m, b, div;
+> +	u32 reg, div;
+> +	s64 sample, b, m;
+> +	u64 tmp;
+>  
+>  	/* Valid check */
+>  	if (priv->data->is_valid && !priv->data->is_valid(priv)) {
+> @@ -178,6 +197,11 @@ static int armada_get_temp(struct thermal_zone_device *thermal,
+>  
+>  	reg = readl_relaxed(priv->status);
+>  	reg = (reg >> priv->data->temp_shift) & priv->data->temp_mask;
+> +	if (priv->data->signed_sample)
+> +		/* The most significant bit is the sign bit */
+> +		sample = sign_extend32(reg, fls(priv->data->temp_mask) - 1);
+> +	else
+> +		sample = reg;
+>  
+>  	/* Get formula coeficients */
+>  	b = priv->data->coef_b;
+> @@ -185,9 +209,13 @@ static int armada_get_temp(struct thermal_zone_device *thermal,
+>  	div = priv->data->coef_div;
+>  
+>  	if (priv->data->inverted)
+> -		*temp = ((m * reg) - b) / div;
+> +		tmp = (m * sample) - b;
+>  	else
+> -		*temp = (b - (m * reg)) / div;
+> +		tmp = b - (m * sample);
+> +
+> +	do_div(tmp, div);
+> +	*temperature = (int)tmp;
 
-ChenYu
+Nitpick: why not (untested)
+
+#include <linux/math64.h>
+
+  if (priv->data->inverted)
+    *temp = div_s64((m * sample) - b, div);
+  else
+    *temp = div_s64(b - (m * sample), div);
+
+baruch
+
+> +
+>  	return 0;
+>  }
+
+-- 
+     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
+=}------------------------------------------------ooO--U--Ooo------------{=
+   - baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org - tel: +972.52.368.4656, http://www.tkos.co.il -
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
