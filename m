@@ -1,69 +1,41 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH] ASoC: rcar: tidyup simple-card example for
-	CPU node
-Date: Fri, 22 Dec 2017 09:02:19 +0100
-Message-ID: <CAMuHMdUsRLfj4tdoJrSRtNGv-B8LQ+AxHca4qizry29xZ9ou=w@mail.gmail.com>
-References: <873743nxuj.wl%kuninori.morimoto.gx@renesas.com>
+From: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
+Subject: Re: [PATCH v3 2/3] hwrng: exynos - add Samsung Exynos True RNG driver
+Date: Fri, 22 Dec 2017 19:24:12 +1100
+Message-ID: <20171222082412.GB29663@gondor.apana.org.au>
+References: <20171204125351.26805-1-l.stelmach@samsung.com>
+ <CGME20171204125415eucas1p1f94e6996f08938f686c08c00247c62ce@eucas1p1.samsung.com>
+ <20171204125351.26805-3-l.stelmach@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <873743nxuj.wl%kuninori.morimoto.gx@renesas.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Linux-ALSA <alsa-devel@alsa-project.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Simon <horms@verge.net.au>, Yokoyama <hiroyuki.yokoyama.vx@renesas.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20171204125351.26805-3-l.stelmach-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?utf-8?Q?=C5=81ukasz?= Stelmach <l.stelmach-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: "Andrew F . Davis" <afd-l0cyMroinI0@public.gmane.org>, PrasannaKumar Muralidharan <prasannatsmkumar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matt Mackall <mpm-VDJrAJ4Gl5ZBDgjK7y7TUQ@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-CC DT
+On Mon, Dec 04, 2017 at 01:53:50PM +0100, Łukasz Stelmach wrote:
+> Add support for True Random Number Generator found in Samsung Exynos
+> 5250+ SoCs.
+> 
+> Signed-off-by: Łukasz Stelmach <l.stelmach-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 
-On Fri, Dec 22, 2017 at 6:29 AM, Kuninori Morimoto
-<kuninori.morimoto.gx@renesas.com> wrote:
->
-> From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
->
-> commit a5702e1cb3c ("ASoC: rsnd: Drop unit-addresses without reg
-> properties") modifies simple-card multi CPU nodes.
-> But, naming of "cpu-x" breaks probing.
-> Let's add reg = <x>; instead of renaming node.
->
-> Reported-by: Hiroyuki Yokoyama <hiroyuki.yokoyama.vx@renesas.com>
-> CC: Geert Uytterhoeven <geert+renesas@glider.be>
-> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-> ---
->  Documentation/devicetree/bindings/sound/renesas,rsnd.txt | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/sound/renesas,rsnd.txt b/Documentation/devicetree/bindings/sound/renesas,rsnd.txt
-> index 085bec3..51b7324 100644
-> --- a/Documentation/devicetree/bindings/sound/renesas,rsnd.txt
-> +++ b/Documentation/devicetree/bindings/sound/renesas,rsnd.txt
-> @@ -197,12 +197,17 @@ Ex)
->         [MEM] -> [SRC2] -> [CTU03] -+
->
->         sound {
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +
->                 compatible = "simple-scu-audio-card";
->                 ...
-> -               simple-audio-card,cpu-0 {
-> +               simple-audio-card,cpu@0 {
-> +                       reg = <0>;
->                         sound-dai = <&rcar_sound 0>;
->                 };
-> -               simple-audio-card,cpu-1 {
-> +               simple-audio-card,cpu@1 {
-> +                       reg = <1>;
->                         sound-dai = <&rcar_sound 1>;
->                 };
->                 simple-audio-card,codec {
-> --
-> 1.9.1
+This doesn't build for me:
+
+  CC [M]  drivers/char/hw_random/exynos-trng.o
+../drivers/char/hw_random/exynos-trng.c:230:1: error: \u2018exynos_rng_dt_match\u2019 undeclared here (not in a function)
+../drivers/char/hw_random/exynos-trng.c:230:1: error: \u2018__mod_of__exynos_rng_dt_match_device_table\u2019 aliased to undefined symbol \u2018exynos_rng_dt_match\u2019
+make[2]: *** [drivers/char/hw_random/exynos-trng.o] Error 1
+make[1]: *** [_module_drivers/char/hw_random] Error 2
+
+Cheers,
+-- 
+Email: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
