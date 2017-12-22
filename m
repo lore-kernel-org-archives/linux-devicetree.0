@@ -1,41 +1,117 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH v2 4/5] ARM: dts: Add support for emtrion emCON-MX6 series
-Date: Fri, 22 Dec 2017 11:47:42 +0100
-Message-ID: <18403050-7b4c-ecae-75bd-b67d72d63eeb@suse.de>
-References: <95F51F4B902CAC40AF459205F6322F01B7FDFECC3C@BMK019S01.emtrion.local>
+From: Miquel RAYNAL <miquel.raynal@free-electrons.com>
+Subject: Re: [PATCH v6 06/11] thermal: armada: Add support for Armada AP806
+Date: Fri, 22 Dec 2017 11:49:48 +0100
+Message-ID: <20171222114948.32c36369@xps13>
+References: <20171222093226.23456-1-miquel.raynal@free-electrons.com>
+        <20171222093226.23456-7-miquel.raynal@free-electrons.com>
+        <20171222101426.yujvg2xbca3ghpyc@tarshish>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <95F51F4B902CAC40AF459205F6322F01B7FDFECC3C@BMK019S01.emtrion.local>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?T=c3=bcrk=2c_Jan?= <Jan.Tuerk@emtrion.de>
-Cc: 'Rob Herring' <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Russell King <linux@armlinux.org.uk>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Kevin Hilman <khilman@baylibre.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, SZ Lin <sz.lin@moxa.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, LinuxArmKernelMailingListe <linux-arm-kernel@lists.infradead.or>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20171222101426.yujvg2xbca3ghpyc@tarshish>
+Sender: linux-pm-owner@vger.kernel.org
+To: Baruch Siach <baruch@tkos.co.il>
+Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Gregory Clement <gregory.clement@free-electrons.com>, Antoine Tenart <antoine.tenart@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, David Sniatkiwicz <davidsn@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-Am 22.12.2017 um 11:34 schrieb Türk, Jan:
->> On Wed, Dec 20, 2017 at 02:47:04PM +0100, jan.tuerk@emtrion.com wrote:
->>> + * SPDX-License-Identifier: GPL-2.0
->>
->> You have this.
->>
->> Also, the rules around this are getting a bit stricter saying the SPDX
->> tag should be the first line of the file using a C++ style comment.
->>
-> I'll change it for v3 of this patch however it will end up like this:
-> //SPDX-License...
+Hi Baruch,
 
-I would've expected:
+On Fri, 22 Dec 2017 12:14:26 +0200
+Baruch Siach <baruch@tkos.co.il> wrote:
 
-// SPDX-License...
-> /*
->  *  Copyright 
+> Hi Miquèl,
+> 
+> On Fri, Dec 22, 2017 at 10:32:21AM +0100, Miquel Raynal wrote:
+> > From: Baruch Siach <baruch@tkos.co.il>
+> > 
+> > The AP806 component is integrated in the Armada 8K and 7K lines of
+> > processors.
+> > 
+> > The thermal sensor sample field on the status register is a signed
+> > value. Extend armada_get_temp() and the driver structure to handle
+> > signed values.
+> > 
+> > Signed-off-by: Baruch Siach <baruch@tkos.co.il>
+> > [<miquel.raynal@free-electrons.com>: Changes when applying over the
+> > previous patches, including the register names changes, also
+> > switched the coefficients values to s64 instead of unsigned long to
+> > deal with negative values and used do_div instead of the
+> > traditionnal '/'] Signed-off-by: Miquel Raynal
+> > <miquel.raynal@free-electrons.com> Reviewed-by: Gregory CLEMENT
+> > <gregory.clement@free-electrons.com> Tested-by: Gregory CLEMENT
+> > <gregory.clement@free-electrons.com> ---  
+> 
+> [..]
+> 
+> >  static int armada_get_temp(struct thermal_zone_device *thermal,
+> > -			  int *temp)
+> > +			   int *temperature)
+> >  {
+> >  	struct armada_thermal_priv *priv = thermal->devdata;
+> > -	unsigned long reg;
+> > -	unsigned long m, b, div;
+> > +	u32 reg, div;
+> > +	s64 sample, b, m;
+> > +	u64 tmp;
+> >  
+> >  	/* Valid check */
+> >  	if (priv->data->is_valid && !priv->data->is_valid(priv)) {
+> > @@ -178,6 +197,11 @@ static int armada_get_temp(struct
+> > thermal_zone_device *thermal, 
+> >  	reg = readl_relaxed(priv->status);
+> >  	reg = (reg >> priv->data->temp_shift) &
+> > priv->data->temp_mask;
+> > +	if (priv->data->signed_sample)
+> > +		/* The most significant bit is the sign bit */
+> > +		sample = sign_extend32(reg,
+> > fls(priv->data->temp_mask) - 1);
+> > +	else
+> > +		sample = reg;
+> >  
+> >  	/* Get formula coeficients */
+> >  	b = priv->data->coef_b;
+> > @@ -185,9 +209,13 @@ static int armada_get_temp(struct
+> > thermal_zone_device *thermal, div = priv->data->coef_div;
+> >  
+> >  	if (priv->data->inverted)
+> > -		*temp = ((m * reg) - b) / div;
+> > +		tmp = (m * sample) - b;
+> >  	else
+> > -		*temp = (b - (m * reg)) / div;
+> > +		tmp = b - (m * sample);
+> > +
+> > +	do_div(tmp, div);
+> > +	*temperature = (int)tmp;  
+> 
+> Nitpick: why not (untested)
+> 
+> #include <linux/math64.h>
+> 
+>   if (priv->data->inverted)
+>     *temp = div_s64((m * sample) - b, div);
+>   else
+>     *temp = div_s64(b - (m * sample), div);
+
+Indeed I could also use div_s64, but the result must be unsigned anyway.
+
+But this does all the operations on the same line, maybe this is more
+readable, I will update it and send (hopefully) the last version :)
 
 Cheers,
-Andreas
+Miquèl
+
+> 
+> baruch
+> 
+> > +
+> >  	return 0;
+> >  }  
+> 
+
+
 
 -- 
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer, Jane Smithard, Graham Norton
-HRB 21284 (AG Nürnberg)
+Miquel Raynal, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
