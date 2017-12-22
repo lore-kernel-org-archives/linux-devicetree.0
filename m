@@ -1,45 +1,46 @@
-From: Icenowy Zheng <icenowy@aosc.io>
-Subject: [PATCH v3 03/11] clk: sunxi-ng: fix the A64/H5 clock description of DE2 CCU
-Date: Fri, 22 Dec 2017 20:22:35 +0800
-Message-ID: <20171222122243.25735-4-icenowy@aosc.io>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: [PATCH v3 04/11] dt-bindings: simplefb-sunxi: add pipelines for DE2
+Date: Fri, 22 Dec 2017 20:22:36 +0800
+Message-ID: <20171222122243.25735-5-icenowy@aosc.io>
 References: <20171222122243.25735-1-icenowy@aosc.io>
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20171222122243.25735-1-icenowy@aosc.io>
-Sender: linux-clk-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Icenowy Zheng <icenowy@aosc.io>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171222122243.25735-1-icenowy-h8G6r0blFSE@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The clocks of A64/H5 SoCs in the DE2 CCU is the same as the clocks in H3
-DE2 CCU rather than the A83T DE2 CCU (the parent of them is the DE
-module clock).
+As we're going to add simplefb support for Allwinner SoCs with DE2, add
+suitable pipeline strings in the device tree binding.
 
-Fix this by change the clock descriptions to use the clocks of H3.
-
-Fixes: 763c5bd045b1 ("clk: sunxi-ng: add support for DE2 CCU")
-Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 ---
- drivers/clk/sunxi-ng/ccu-sun8i-de2.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Changes in v2:
+- Adds Rob's ACK.
 
-diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-de2.c b/drivers/clk/sunxi-ng/ccu-sun8i-de2.c
-index 2db5d4e00ea7..468d1abaf0ee 100644
---- a/drivers/clk/sunxi-ng/ccu-sun8i-de2.c
-+++ b/drivers/clk/sunxi-ng/ccu-sun8i-de2.c
-@@ -177,10 +177,10 @@ static const struct sunxi_ccu_desc sun8i_h3_de2_clk_desc = {
- };
+ .../devicetree/bindings/display/simple-framebuffer-sunxi.txt          | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/display/simple-framebuffer-sunxi.txt b/Documentation/devicetree/bindings/display/simple-framebuffer-sunxi.txt
+index a9168ae6946c..d693b8dc9a62 100644
+--- a/Documentation/devicetree/bindings/display/simple-framebuffer-sunxi.txt
++++ b/Documentation/devicetree/bindings/display/simple-framebuffer-sunxi.txt
+@@ -15,6 +15,10 @@ Required properties:
+   "de_be1-lcd1"
+   "de_be0-lcd0-hdmi"
+   "de_be1-lcd1-hdmi"
++  "mixer0-lcd0"
++  "mixer0-lcd0-hdmi"
++  "mixer1-lcd1-hdmi"
++  "mixer1-lcd1-tve"
  
- static const struct sunxi_ccu_desc sun50i_a64_de2_clk_desc = {
--	.ccu_clks	= sun8i_a83t_de2_clks,
--	.num_ccu_clks	= ARRAY_SIZE(sun8i_a83t_de2_clks),
-+	.ccu_clks	= sun8i_h3_de2_clks,
-+	.num_ccu_clks	= ARRAY_SIZE(sun8i_h3_de2_clks),
+ Example:
  
--	.hw_clks	= &sun8i_a83t_de2_hw_clks,
-+	.hw_clks	= &sun8i_h3_de2_hw_clks,
- 
- 	.resets		= sun50i_a64_de2_resets,
- 	.num_resets	= ARRAY_SIZE(sun50i_a64_de2_resets),
 -- 
 2.14.2
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
