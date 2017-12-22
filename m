@@ -1,84 +1,48 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: dts: sunxi: Add sid for a83t
-Date: Fri, 22 Dec 2017 09:35:08 +0100
-Message-ID: <20171222083508.dfcp6egfvxykmogg@flea.lan>
-References: <20171219210523.10428-1-kevans91@ksu.edu>
- <20171221145512.llxvzkcrjpquhczi@flea.lan>
- <CACNAnaE9GiVTXD-TV1xXyBJKtTGKpdA6n0REk6a=qm218EgHbg@mail.gmail.com>
- <20171221152630.2vf57x5o2yi5sv3n@flea.lan>
- <20171221190903.56ebae536acf51401c63802c@bidouilliste.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Herbert Xu <herbert@gondor.apana.org.au>
+Subject: Re: [PATCH v3 2/3] hwrng: exynos - add Samsung Exynos True RNG driver
+Date: Fri, 22 Dec 2017 19:35:51 +1100
+Message-ID: <20171222083551.GF29663@gondor.apana.org.au>
+References: <20171204125351.26805-1-l.stelmach@samsung.com>
+ <CGME20171204125415eucas1p1f94e6996f08938f686c08c00247c62ce@eucas1p1.samsung.com>
+ <20171204125351.26805-3-l.stelmach@samsung.com>
+ <20171222082412.GB29663@gondor.apana.org.au>
+ <916163bb-594b-779d-700c-de9fa15239dd@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="lqioqqfwapxkw3qv"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBPMH6PIQKGQEM6DDA7Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-crypto-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20171221190903.56ebae536acf51401c63802c-xXdDKFdH5B3kFDPD4ZthVA@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Emmanuel Vadot <manu-xXdDKFdH5B3kFDPD4ZthVA@public.gmane.org>
-Cc: Kyle Evans <kevans91-OYTqUY/oFF8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <916163bb-594b-779d-700c-de9fa15239dd@samsung.com>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: =?utf-8?Q?=C5=81ukasz?= Stelmach <l.stelmach@samsung.com>, "Andrew F . Davis" <afd@ti.com>, PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>, Rob Herring <robh+dt@kernel.org>, Matt Mackall <mpm@selenic.com>, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-crypto@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-
---lqioqqfwapxkw3qv
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-
-On Thu, Dec 21, 2017 at 07:09:03PM +0100, Emmanuel Vadot wrote:
+On Fri, Dec 22, 2017 at 09:29:38AM +0100, Marek Szyprowski wrote:
+> Hi,
 > 
->  Hi Maxime,
+> On 2017-12-22 09:24, Herbert Xu wrote:
+> >On Mon, Dec 04, 2017 at 01:53:50PM +0100, Łukasz Stelmach wrote:
+> >>Add support for True Random Number Generator found in Samsung Exynos
+> >>5250+ SoCs.
+> >>
+> >>Signed-off-by: Łukasz Stelmach <l.stelmach@samsung.com>
+> >This doesn't build for me:
+> >
+> >   CC [M]  drivers/char/hw_random/exynos-trng.o
+> >../drivers/char/hw_random/exynos-trng.c:230:1: error: \u2018exynos_rng_dt_match\u2019 undeclared here (not in a function)
+> >../drivers/char/hw_random/exynos-trng.c:230:1: error: \u2018__mod_of__exynos_rng_dt_match_device_table\u2019 aliased to undefined symbol \u2018exynos_rng_dt_match\u2019
+> >make[2]: *** [drivers/char/hw_random/exynos-trng.o] Error 1
+> >make[1]: *** [_module_drivers/char/hw_random] Error 2
 > 
-> On Thu, 21 Dec 2017 16:26:30 +0100
-> Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> 
-> > Hi,
-> > 
-> > On Thu, Dec 21, 2017 at 09:19:24AM -0600, Kyle Evans wrote:
-> > > On Thu, Dec 21, 2017 at 8:55 AM, Maxime Ripard
-> > > <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> > > > Hi Kyle,
-> > > >
-> > > > On Tue, Dec 19, 2017 at 03:05:23PM -0600, kevans91-OYTqUY/oFF8@public.gmane.org wrote:
-> > > >> Allwinner a83t has a 1 KB sid block with efuse for security rootkey and
-> > > >> thermal calibration data, add node to describe it.
-> > > >>
-> > > >> a83t-sid is not currently supported by nvmem/sunxi-sid, but it is
-> > > >> supported in an external driver for FreeBSD.
-> > > >>
-> > > >> Signed-off-by: Kyle Evans <kevans91-OYTqUY/oFF8@public.gmane.org>
-> > > >
-> > > > The patch looks fine in itself, but we've had a number of issues with
-> > > > the register layout (and access patterns) in the past, so I'd rather
-> > > > have something that works in Linux too if possible.
-> > > 
-> > > I have a patch that I think should make it work fine on Linux [1], but
-> > > I'm afraid I have little to no capability to test it myself and so I
-> > > did not add it as well.
-> > > 
-> > > I do know that the rootkey is offset 0x200 into the given space [2],
-> > > as is the case with the H3, and that the readout quirk is not needed.
-> > > I wasn't 100% sure that the a83t has 2Kbit worth of efuse space as the
-> > > H3, but I do know that thermal data can be found at 0x34 and 0x38 in
-> > > this space.
-> > 
-> > Then maybe we should leave it aside until someone takes some time on
-> > the A83t. 
-> 
->  Take some time on the Linux driver and do not apply this patch for
-> now you mean ?
+> This looks like a missing dependency on "OF" when "COMPILE_TEST" is
+> selected.
 
-Yep.
+Actually it looks like a typo.  The variable is actually called
+exynos_trng_dt_match as opposed to exynos_rng_dt_match.
 
-Maxime
-
+Cheers,
 -- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---lqioqqfwapxkw3qv--
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
