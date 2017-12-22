@@ -1,93 +1,67 @@
-From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Subject: Re: [PATCH] devicetree: Add video bus switch
-Date: Fri, 22 Dec 2017 10:24:52 +0100
-Message-ID: <20171222092452.GA16581@amd>
-References: <20161023200355.GA5391@amd>
- <20170203213454.GD12291@valkosipuli.retiisi.org.uk>
- <20170204215610.GA9243@amd>
- <75694885.3PuLWzx4qN@avalon>
+From: Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v6 00/11] Armada thermal: improvements and A7K/A8K SoCs support
+Date: Fri, 22 Dec 2017 10:32:15 +0100
+Message-ID: <20171222093226.23456-1-miquel.raynal@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="dDRMvlgZJXvWKvBx"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <75694885.3PuLWzx4qN@avalon>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>, David Sniatkiwicz <davidsn-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---dDRMvlgZJXvWKvBx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This series takes over Baruch's series by integrating his patches about
+supporting thermal on Armada 7K and 8K SoCs within a larger series with
+several improvements on the armada_thermal.c driver.
 
-Hi!
+For now, Armada 380 and CP110 compatibles share the same initialization
+routine but this will probably change in the near future when adding
+support for overheat interrupts.
 
-> > > I don't really object using g_endpoint_config() as a temporary soluti=
-on;
-> > > I'd like to have Laurent's opinion on that though. Another option is =
-to
-> > > wait, but we've already waited a looong time (as in total).
-> >=20
-> > Laurent, do you have some input here? We have simple "2 cameras
-> > connected to one signal processor" situation here. We need some way of
-> > passing endpoint configuration from the sensors through the switch. I
-> > did this:
->=20
-> Could you give me a bit more information about the platform you're target=
-ing:=20
-> how the switch is connected, what kind of switch it is, and what endpoint=
-=20
-> configuration data you need ?
+DT bindings documentation is updated to match existing code.
 
-Platform is Nokia N900, Ivaylo already gave pointer to schematics.
+Armada AP806 and CP110 DT are also updated with thermal nodes and have
+already been accepted (thus absent in this series).
 
-Switch is controlled using GPIO, and basically there's CSI
-configuration that would normally be in the device tree, but now we
-have two CSI configurations to select from...
+Thank you,
+Miquèl
 
-> > 9) Highly reconfigurable hardware - Julien Beraud
-> >=20
-> > - 44 sub-devices connected with an interconnect.
-> > - As long as formats match, any sub-device could be connected to any
-> > - other sub-device through a link.
-> > - The result is 44 * 44 links at worst.
-> > - A switch sub-device proposed as the solution to model the
-> > - interconnect. The sub-devices are connected to the switch
-> > - sub-devices through the hardware links that connect to the
-> > - interconnect.
-> > - The switch would be controlled through new IOCTLs S_ROUTING and
-> > - G_ROUTING.
-> > - Patches available:
-> >  http://git.linuxtv.org/cgit.cgi/pinchartl/media.git/log/?h=3Dxilinx-wip
-> >=20
-> > but the patches are from 2005. So I guess I'll need some guidance here.=
-=2E.
->=20
-> You made me feel very old for a moment. The patches are from 2015 :-)
 
-Sorry about that :-).
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+Changes since v5:
+  - Added Grogory's Tested-by tags for 64-bit platforms in patches:
+        "thermal: armada: Add support for Armada AP806"
+	"thermal: armada: Add support for Armada CP110"
+  - Fixed a compilation issue with 32-bit toolchains introduced in patch:
+        "thermal: armada: Add support for Armada AP806"
 
---dDRMvlgZJXvWKvBx
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Baruch Siach (4):
+  dt-bindings: thermal: Describe Armada AP806 and CP110
+  thermal: armada: Use msleep for long delays
+  thermal: armada: Add support for Armada AP806
+  thermal: armada: Add support for Armada CP110
 
-iEYEARECAAYFAlo8z2QACgkQMOfwapXb+vJsZgCbBTP/TSZqeMt9ztNZwy8vgxeo
-Dv0AoJlt7/yNRop9DRe4vJWCTXucHDJy
-=Ec4d
------END PGP SIGNATURE-----
+Miquel Raynal (7):
+  thermal: armada: Simplify the check of the validity bit
+  thermal: armada: Clarify control registers accesses
+  thermal: armada: Use real status register name
+  thermal: armada: Update Kconfig and module description
+  thermal: armada: Change sensors trim default value
+  thermal: armada: Wait sensors validity before exiting the init
+    callback
+  thermal: armada: Give meaningful names to the thermal zones
 
---dDRMvlgZJXvWKvBx--
+ .../devicetree/bindings/thermal/armada-thermal.txt |  37 ++-
+ drivers/thermal/Kconfig                            |   4 +-
+ drivers/thermal/armada_thermal.c                   | 257 +++++++++++++++------
+ 3 files changed, 218 insertions(+), 80 deletions(-)
+
+-- 
+2.11.0
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
