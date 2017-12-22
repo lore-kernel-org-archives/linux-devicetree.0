@@ -1,164 +1,232 @@
-Return-Path: <SRS0=ZUDA=DW=rock-chips.com=leo.wen@kernel.org>
-Date: Tue, 26 Dec 2017 10:20:39 +0800
-From: =?utf-8?Q?=E6=B8=A9=E6=9A=96?= <leo.wen@rock-chips.com>
-Message-ID: <82C8763F-3800-4B67-AF47-633B666633A4@rock-chips.com>
-In-Reply-To: <CAOFm3uGWgYs06NRrrjJSrvDG5ebR_K0y2e_qQeOALMSsNnpXsQ@mail.gmail.com>
-References: <1513060095-29588-1-git-send-email-leo.wen@rock-chips.com>
- <1513060095-29588-2-git-send-email-leo.wen@rock-chips.com>
- <CAFLEztTxXRQu-VJ2FzYbA_vkYZtkDur1nQ6goftdZdnbn63aQQ@mail.gmail.com>
- <CAOFm3uGWgYs06NRrrjJSrvDG5ebR_K0y2e_qQeOALMSsNnpXsQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] [media] Add Rockchip RK1608 driver
+Return-Path: <SRS0=dopm=DS=gmail.com=zongbox@kernel.org>
+Date: Fri, 22 Dec 2017 05:07:47 -0800 (PST)
+From: zongbox@gmail.com
+Message-Id: <bfc6ad4a-a028-4121-bc8e-3d24d845a97a@groups.riscv.org>
+In-Reply-To: <mhng-40be3873-485c-4cb6-9990-1137745f5425@palmer-si-x1c4>
+References: <CAK8P3a2TVbrnjN00iZe2R_FNzLB+82BkiekPOwqtt6WDgFw30w@mail.gmail.com>
+ <mhng-40be3873-485c-4cb6-9990-1137745f5425@palmer-si-x1c4>
+Subject: Re: [patches] [PATCH] RISC-V: Support built-in dtb
 MIME-Version: 1.0
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: base64
-To: Philippe Ombredanne <pombredanne@nexb.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "=?utf-8?Q?rdunlap=40infradead.org?=" <rdunlap@infradead.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, =?utf-8?Q?open_list=3AOPEN_FIRMWARE_AND_FLATTENED_DEVICE_TREE_BINDINGS?= <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, "=?utf-8?Q?open_list=3AARM/Rockchip_SoC...?=" <linux-rockchip@lists.infradead.org>, Eddie Cai <eddie.cai@rock-chips.com>, Jacob Chen <jacobchen110@gmail.com>
+Content-Type: multipart/mixed;
+	boundary="----=_Part_8301_1113229977.1513948067766"
+To: RISC-V Patches <patches@groups.riscv.org>
+Cc: arnd@arndb.de, zongbox@gmail.com, olof@lixom.net, albert@sifive.com, robh+dt@kernel.org, mark.rutland@arm.com, wesley@sifive.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, zong@andestech.com, palmer@sifive.com
 List-ID: <devicetree@vger.kernel.org>
 
-PGh0bWw+DQo8aGVhZD4NCiAgICA8bWV0YSBodHRwLWVxdWl2PSdDb250ZW50LVR5cGUnIGNvbnRl
-bnQ9J3RleHQvaHRtbDsgY2hhcnNldD1VVEYtOCc+DQo8L2hlYWQ+DQo8Ym9keT4NCjxzdHlsZT4N
-CiAgICAqew0KICAgICAgICBtYXJnaW46IDA7DQogICAgICAgIHBhZGRpbmc6IDA7DQogICAgfQ0K
-ICAgIGZvbnR7DQogICAgICAgIGxpbmUtaGVpZ2h0OiAxLjY7DQogICAgfQ0KICAgIHVsLG9sew0K
-ICAgICAgICBwYWRkaW5nLWxlZnQ6IDIwcHg7DQogICAgICAgIGxpc3Qtc3R5bGUtcG9zaXRpb246
-IGluc2lkZTsNCiAgICB9DQo8L3N0eWxlPg0KPGRpdiBzdHlsZSA9ICdmb250LWZhbWlseToi5b6u
-6L2v6ZuF6buRIjsgbGluZS1oZWlnaHQ6MS42Oyc+DQogICAgPGRpdj4KPGRpdj48cCBzdHlsZT0i
-Zm9udC1mYW1pbHk6IFZlcmRhbmEsIOW+rui9r+mbhem7kSwg5a6L5L2TLCBzYW5zLXNlcmlmOyBs
-aW5lLWhlaWdodDogMjIuNHB4OyI+SGkgUGhpbGlwcGUsPC9wPjxwIHN0eWxlPSJmb250LWZhbWls
-eTogVmVyZGFuYSwg5b6u6L2v6ZuF6buRLCDlrovkvZMsIHNhbnMtc2VyaWY7IGxpbmUtaGVpZ2h0
-OiAyMi40cHg7Ij5UaGFuayB5b3UgZm9yIHlvdXIgYWR2aWNlLjwvcD48cCBzdHlsZT0iZm9udC1m
-YW1pbHk6IFZlcmRhbmEsIOW+rui9r+mbhem7kSwg5a6L5L2TLCBzYW5zLXNlcmlmOyBsaW5lLWhl
-aWdodDogMjIuNHB4OyI+bWVycnkgWG1hcyE8L3A+PC9kaXY+CjxkaXY+PHNwYW4+PGJyPjwvc3Bh
-bj48L2Rpdj4KPGRpdiBpZD0ibnRlcy1wY21haWwtc2lnbmF0dXJlIiBzdHlsZT0iZm9udC1mYW1p
-bHk6J+W+rui9r+mbhem7kSciPgogICAgPHN0eWxlIHR5cGU9InRleHQvY3NzIj4KICAgICAgICBh
-I250ZXMtcGNtYWlsLXNpZ25hdHVyZS1kZWZhdWx0OmhvdmVyIHsKICAgICAgICAgICAgdGV4dC1k
-ZWNvcmF0aW9uOiB1bmRlcmxpbmU7CiAgICAgICAgICAgIGNvbG9yOiAjMTk5Y2ZmOwogICAgICAg
-ICAgICBjdXJzb3I6IHBvaW50ZXI7CiAgICAgICAgfQogICAgICAgIGEjbnRlcy1wY21haWwtc2ln
-bmF0dXJlLWRlZmF1bHQ6YWN0aXZlIHsKICAgICAgICAgICAgdGV4dC1kZWNvcmF0aW9uOiB1bmRl
-cmxpbmU7CiAgICAgICAgICAgIGNvbG9yOiAjMjQ2ZmNlOwogICAgICAgICAgICBjdXJzb3I6IHBv
-aW50ZXI7CiAgICAgICAgfQogICAgPC9zdHlsZT4KCgo8L2Rpdj48L2Rpdj48ZGl2IGNsYXNzPSJK
-LXJlcGx5IiBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZjJmMmYyO2NvbG9yOmJsYWNrO3BhZGRp
-bmctdG9wOjZweDtwYWRkaW5nLWJvdHRvbTo2cHg7Ym9yZGVyLXJhZGl1czozcHg7LW1vei1ib3Jk
-ZXItcmFkaXVzOjNweDstd2Via2l0LWJvcmRlci1yYWRpdXM6M3B4O21hcmdpbi10b3A6NDVweDtt
-YXJnaW4tYm90dG9tOjIwcHg7Zm9udC1mYW1pbHk6J+W+rui9r+mbhem7kSc7Ij4KICAgIDxkaXYg
-c3R5bGU9ImZvbnQtc2l6ZToxNHB4O2xpbmUtaGVpZ2h0OjEuNTt3b3JkLWJyZWFrOmJyZWFrLWFs
-bDttYXJnaW4tbGVmdDoxMHB4O21hcmdpbi1yaWdodDoxMHB4Ij5PbiA8c3BhbiBjbGFzcz0ibWFp
-bC1kYXRlIj4xMi8yMi8yMDE3IDE2OjQ1PC9zcGFuPu+8jDxhIGNsYXNzPSJtYWlsLXRvIiBzdHls
-ZT0idGV4dC1kZWNvcmF0aW9uOm5vbmU7Y29sb3I6IzJhODNmMjsiIGhyZWY9Im1haWx0bzpwb21i
-cmVkYW5uZUBuZXhiLmNvbSI+UGhpbGlwcGUgT21icmVkYW5uZSZsdDtwb21icmVkYW5uZUBuZXhi
-LmNvbSZndDs8L2E+IHdyb3Rl77yaIDwvZGl2Pgo8L2Rpdj4KPGJsb2NrcXVvdGUgaWQ9Im50ZXMt
-cGNtYWlsLXF1b3RlIiBzdHlsZT0ibWFyZ2luOiAwOyBwYWRkaW5nOiAwOyBmb250LXNpemU6IDE0
-cHg7IGZvbnQtZmFtaWx5OiAn5b6u6L2v6ZuF6buRJzsiPgpEZWFyJm5ic3A7TGVvLAo8YnI+Cjxi
-cj5PbiZuYnNwO0ZyaSwmbmJzcDtEZWMmbmJzcDsyMiwmbmJzcDsyMDE3Jm5ic3A7YXQmbmJzcDs1
-OjMzJm5ic3A7QU0sJm5ic3A7SmFjb2ImbmJzcDtDaGVuJm5ic3A7Jmx0O2phY29iY2hlbjExMEBn
-bWFpbC5jb20mZ3Q7Jm5ic3A7d3JvdGU6Cjxicj4mZ3Q7Jm5ic3A7SGkmbmJzcDtsZW8sCjxicj4m
-Z3Q7Cjxicj4mZ3Q7Cjxicj4mZ3Q7Jm5ic3A7MjAxNy0xMi0xMiZuYnNwOzE0OjI4Jm5ic3A7R01U
-KzA4OjAwJm5ic3A7TGVvJm5ic3A7V2VuJm5ic3A7Jmx0O2xlby53ZW5Acm9jay1jaGlwcy5jb20m
-Z3Q7Ogo8YnI+Jmd0OyZndDsmbmJzcDtSazE2MDgmbmJzcDtpcyZuYnNwO3VzZWQmbmJzcDthcyZu
-YnNwO2EmbmJzcDtQcmVJU1AmbmJzcDt0byZuYnNwO2xpbmsmbmJzcDtvbiZuYnNwO1NvYywmbmJz
-cDt3aGljaCZuYnNwO21haW5seSZuYnNwO2hhcyZuYnNwO3R3byZuYnNwO2Z1bmN0aW9ucy4KPGJy
-PiZndDsmZ3Q7Jm5ic3A7T25lJm5ic3A7aXMmbmJzcDt0byZuYnNwO2Rvd25sb2FkJm5ic3A7dGhl
-Jm5ic3A7ZmlybXdhcmUmbmJzcDtvZiZuYnNwO1JLMTYwOCwmbmJzcDthbmQmbmJzcDt0aGUmbmJz
-cDtvdGhlciZuYnNwO2lzJm5ic3A7dG8mbmJzcDttYXRjaCZuYnNwO3RoZQo8YnI+Jmd0OyZndDsm
-bmJzcDtleHRyYSZuYnNwO3NlbnNvciZuYnNwO3N1Y2gmbmJzcDthcyZuYnNwO2NhbWVyYSZuYnNw
-O2FuZCZuYnNwO2VuYWJsZSZuYnNwO3NlbnNvciZuYnNwO2J5Jm5ic3A7Y2FsbGluZyZuYnNwO3Nl
-bnNvcidzJm5ic3A7c19wb3dlci4KPGJyPiZndDsmZ3Q7Cjxicj4mZ3Q7Jmd0OyZuYnNwO3VzZSZu
-YnNwO2JlbG93Jm5ic3A7djRsMi1jdGwmbmJzcDtjb21tYW5kJm5ic3A7dG8mbmJzcDtjYXB0dXJl
-Jm5ic3A7ZnJhbWVzLgo8YnI+Jmd0OyZndDsKPGJyPiZndDsmZ3Q7Jm5ic3A7Jm5ic3A7Jm5ic3A7
-Jm5ic3A7Jm5ic3A7djRsMi1jdGwmbmJzcDstLXZlcmJvc2UmbmJzcDstZCZuYnNwOy9kZXYvdmlk
-ZW8xJm5ic3A7LS1zdHJlYW0tbW1hcD0yCjxicj4mZ3Q7Jmd0OyZuYnNwOyZuYnNwOyZuYnNwOyZu
-YnNwOyZuYnNwOy0tc3RyZWFtLXRvPS90bXAvc3RyZWFtLm91dCZuYnNwOy0tc3RyZWFtLWNvdW50
-PTYwJm5ic3A7LS1zdHJlYW0tcG9sbAo8YnI+Jmd0OyZndDsKPGJyPiZndDsmZ3Q7Jm5ic3A7dXNl
-Jm5ic3A7YmVsb3cmbmJzcDtjb21tYW5kJm5ic3A7dG8mbmJzcDtwbGF5YmFjayZuYnNwO3RoZSZu
-YnNwO3ZpZGVvJm5ic3A7b24mbmJzcDt5b3VyJm5ic3A7UEMuCjxicj4mZ3Q7Jmd0Owo8YnI+Jmd0
-OyZndDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDttcGxheWVyJm5ic3A7Li9zdHJlYW0u
-b3V0Jm5ic3A7LWxvb3AmbmJzcDswJm5ic3A7LWRlbXV4ZXImbmJzcDtyYXd2aWRlbyZuYnNwOy1y
-YXd2aWRlbwo8YnI+Jmd0OyZndDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDt3PTY0MDpo
-PTQ4MDpzaXplPSQoKDY0MCo0ODAqMy8yKSk6Zm9ybWF0PU5WMTIKPGJyPiZndDsmZ3Q7Cjxicj4m
-Z3Q7Jmd0OyZuYnNwO1NpZ25lZC1vZmYtYnk6Jm5ic3A7TGVvJm5ic3A7V2VuJm5ic3A7Jmx0O2xl
-by53ZW5Acm9jay1jaGlwcy5jb20mZ3Q7Cjxicj4KPGJyPiZsdDtzbmlwJmd0Owo8YnI+Cjxicj4m
-Z3Q7Jmd0OyZuYnNwOy0tLSZuYnNwOy9kZXYvbnVsbAo8YnI+Jmd0OyZndDsmbmJzcDsrKysmbmJz
-cDtiL2RyaXZlcnMvbWVkaWEvc3BpL3JrMTYwOC5jCjxicj4mZ3Q7Jmd0OyZuYnNwO0BAJm5ic3A7
-LTAsMCZuYnNwOysxLDExNjUmbmJzcDtAQAo8YnI+Jmd0OyZndDsmbmJzcDsrLyoqCjxicj4mZ3Q7
-Jmd0OyZuYnNwOysmbmJzcDsqJm5ic3A7Um9ja2NoaXAmbmJzcDtyazE2MDgmbmJzcDtkcml2ZXIK
-PGJyPiZndDsmZ3Q7Jm5ic3A7KyZuYnNwOyoKPGJyPiZndDsmZ3Q7Jm5ic3A7KyZuYnNwOyombmJz
-cDtDb3B5cmlnaHQmbmJzcDsoQykmbmJzcDsyMDE3Jm5ic3A7Um9ja2NoaXAmbmJzcDtFbGVjdHJv
-bmljcyZuYnNwO0NvLiwmbmJzcDtMdGQuCjxicj4mZ3Q7Jmd0OyZuYnNwOysmbmJzcDsqCjxicj4m
-Z3Q7Jmd0OyZuYnNwOysmbmJzcDsqJm5ic3A7VGhpcyZuYnNwO3NvZnR3YXJlJm5ic3A7aXMmbmJz
-cDthdmFpbGFibGUmbmJzcDt0byZuYnNwO3lvdSZuYnNwO3VuZGVyJm5ic3A7YSZuYnNwO2Nob2lj
-ZSZuYnNwO29mJm5ic3A7b25lJm5ic3A7b2YmbmJzcDt0d28KPGJyPiZndDsmZ3Q7Jm5ic3A7KyZu
-YnNwOyombmJzcDtsaWNlbnNlcy4mbmJzcDsmbmJzcDtZb3UmbmJzcDttYXkmbmJzcDtjaG9vc2Um
-bmJzcDt0byZuYnNwO2JlJm5ic3A7bGljZW5zZWQmbmJzcDt1bmRlciZuYnNwO3RoZSZuYnNwO3Rl
-cm1zJm5ic3A7b2YmbmJzcDt0aGUmbmJzcDtHTlUKPGJyPiZndDsmZ3Q7Jm5ic3A7KyZuYnNwOyom
-bmJzcDtHZW5lcmFsJm5ic3A7UHVibGljJm5ic3A7TGljZW5zZSZuYnNwOyhHUEwpJm5ic3A7VmVy
-c2lvbiZuYnNwOzIsJm5ic3A7YXZhaWxhYmxlJm5ic3A7ZnJvbSZuYnNwO3RoZSZuYnNwO2ZpbGUK
-PGJyPiZndDsmZ3Q7Jm5ic3A7KyZuYnNwOyombmJzcDtDT1BZSU5HJm5ic3A7aW4mbmJzcDt0aGUm
-bmJzcDttYWluJm5ic3A7ZGlyZWN0b3J5Jm5ic3A7b2YmbmJzcDt0aGlzJm5ic3A7c291cmNlJm5i
-c3A7dHJlZSwmbmJzcDtvciZuYnNwO3RoZQo8YnI+Jmd0OyZndDsmbmJzcDsrJm5ic3A7KiZuYnNw
-O09wZW5JQi5vcmcmbmJzcDtCU0QmbmJzcDtsaWNlbnNlJm5ic3A7YmVsb3c6Cjxicj4mZ3Q7Jmd0
-OyZuYnNwOysmbmJzcDsqCjxicj4mZ3Q7Jmd0OyZuYnNwOysmbmJzcDsqJm5ic3A7Jm5ic3A7Jm5i
-c3A7Jm5ic3A7Jm5ic3A7UmVkaXN0cmlidXRpb24mbmJzcDthbmQmbmJzcDt1c2UmbmJzcDtpbiZu
-YnNwO3NvdXJjZSZuYnNwO2FuZCZuYnNwO2JpbmFyeSZuYnNwO2Zvcm1zLCZuYnNwO3dpdGgmbmJz
-cDtvcgo8YnI+Jmd0OyZndDsmbmJzcDsrJm5ic3A7KiZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZu
-YnNwO3dpdGhvdXQmbmJzcDttb2RpZmljYXRpb24sJm5ic3A7YXJlJm5ic3A7cGVybWl0dGVkJm5i
-c3A7cHJvdmlkZWQmbmJzcDt0aGF0Jm5ic3A7dGhlJm5ic3A7Zm9sbG93aW5nCjxicj4mZ3Q7Jmd0
-OyZuYnNwOysmbmJzcDsqJm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Y29uZGl0aW9ucyZu
-YnNwO2FyZSZuYnNwO21ldDoKPGJyPiZndDsmZ3Q7Jm5ic3A7KyZuYnNwOyoKPGJyPiZndDsmZ3Q7
-Jm5ic3A7KyZuYnNwOyombmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDstJm5ic3A7
-UmVkaXN0cmlidXRpb25zJm5ic3A7b2YmbmJzcDtzb3VyY2UmbmJzcDtjb2RlJm5ic3A7bXVzdCZu
-YnNwO3JldGFpbiZuYnNwO3RoZSZuYnNwO2Fib3ZlCjxicj4mZ3Q7Jmd0OyZuYnNwOysmbmJzcDsq
-Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Y29weXJpZ2h0
-Jm5ic3A7bm90aWNlLCZuYnNwO3RoaXMmbmJzcDtsaXN0Jm5ic3A7b2YmbmJzcDtjb25kaXRpb25z
-Jm5ic3A7YW5kJm5ic3A7dGhlJm5ic3A7Zm9sbG93aW5nCjxicj4mZ3Q7Jmd0OyZuYnNwOysmbmJz
-cDsqJm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7ZGlzY2xh
-aW1lci4KPGJyPiZndDsmZ3Q7Jm5ic3A7KyZuYnNwOyoKPGJyPiZndDsmZ3Q7Jm5ic3A7KyZuYnNw
-OyombmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDstJm5ic3A7UmVkaXN0cmlidXRp
-b25zJm5ic3A7aW4mbmJzcDtiaW5hcnkmbmJzcDtmb3JtJm5ic3A7bXVzdCZuYnNwO3JlcHJvZHVj
-ZSZuYnNwO3RoZSZuYnNwO2Fib3ZlCjxicj4mZ3Q7Jmd0OyZuYnNwOysmbmJzcDsqJm5ic3A7Jm5i
-c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Y29weXJpZ2h0Jm5ic3A7bm90
-aWNlLCZuYnNwO3RoaXMmbmJzcDtsaXN0Jm5ic3A7b2YmbmJzcDtjb25kaXRpb25zJm5ic3A7YW5k
-Jm5ic3A7dGhlJm5ic3A7Zm9sbG93aW5nCjxicj4mZ3Q7Jmd0OyZuYnNwOysmbmJzcDsqJm5ic3A7
-Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7ZGlzY2xhaW1lciZuYnNw
-O2luJm5ic3A7dGhlJm5ic3A7ZG9jdW1lbnRhdGlvbiZuYnNwO2FuZC9vciZuYnNwO290aGVyJm5i
-c3A7bWF0ZXJpYWxzCjxicj4mZ3Q7Jmd0OyZuYnNwOysmbmJzcDsqJm5ic3A7Jm5ic3A7Jm5ic3A7
-Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7cHJvdmlkZWQmbmJzcDt3aXRoJm5ic3A7dGhl
-Jm5ic3A7ZGlzdHJpYnV0aW9uLgo8YnI+Jmd0OyZndDsmbmJzcDsrJm5ic3A7Kgo8YnI+Jmd0OyZn
-dDsmbmJzcDsrJm5ic3A7KiZuYnNwO1RIRSZuYnNwO1NPRlRXQVJFJm5ic3A7SVMmbmJzcDtQUk9W
-SURFRCZuYnNwOyJBUyZuYnNwO0lTIiwmbmJzcDtXSVRIT1VUJm5ic3A7V0FSUkFOVFkmbmJzcDtP
-RiZuYnNwO0FOWSZuYnNwO0tJTkQsCjxicj4mZ3Q7Jmd0OyZuYnNwOysmbmJzcDsqJm5ic3A7RVhQ
-UkVTUyZuYnNwO09SJm5ic3A7SU1QTElFRCwmbmJzcDtJTkNMVURJTkcmbmJzcDtCVVQmbmJzcDtO
-T1QmbmJzcDtMSU1JVEVEJm5ic3A7VE8mbmJzcDtUSEUmbmJzcDtXQVJSQU5USUVTJm5ic3A7T0YK
-PGJyPiZndDsmZ3Q7Jm5ic3A7KyZuYnNwOyombmJzcDtNRVJDSEFOVEFCSUxJVFksJm5ic3A7RklU
-TkVTUyZuYnNwO0ZPUiZuYnNwO0EmbmJzcDtQQVJUSUNVTEFSJm5ic3A7UFVSUE9TRSZuYnNwO0FO
-RAo8YnI+Jmd0OyZndDsmbmJzcDsrJm5ic3A7KiZuYnNwO05PTklORlJJTkdFTUVOVC4mbmJzcDtJ
-TiZuYnNwO05PJm5ic3A7RVZFTlQmbmJzcDtTSEFMTCZuYnNwO1RIRSZuYnNwO0FVVEhPUlMmbmJz
-cDtPUiZuYnNwO0NPUFlSSUdIVCZuYnNwO0hPTERFUlMKPGJyPiZndDsmZ3Q7Jm5ic3A7KyZuYnNw
-OyombmJzcDtCRSZuYnNwO0xJQUJMRSZuYnNwO0ZPUiZuYnNwO0FOWSZuYnNwO0NMQUlNLCZuYnNw
-O0RBTUFHRVMmbmJzcDtPUiZuYnNwO09USEVSJm5ic3A7TElBQklMSVRZLCZuYnNwO1dIRVRIRVIm
-bmJzcDtJTiZuYnNwO0FOCjxicj4mZ3Q7Jmd0OyZuYnNwOysmbmJzcDsqJm5ic3A7QUNUSU9OJm5i
-c3A7T0YmbmJzcDtDT05UUkFDVCwmbmJzcDtUT1JUJm5ic3A7T1ImbmJzcDtPVEhFUldJU0UsJm5i
-c3A7QVJJU0lORyZuYnNwO0ZST00sJm5ic3A7T1VUJm5ic3A7T0YmbmJzcDtPUiZuYnNwO0lOCjxi
-cj4mZ3Q7Jmd0OyZuYnNwOysmbmJzcDsqJm5ic3A7Q09OTkVDVElPTiZuYnNwO1dJVEgmbmJzcDtU
-SEUmbmJzcDtTT0ZUV0FSRSZuYnNwO09SJm5ic3A7VEhFJm5ic3A7VVNFJm5ic3A7T1ImbmJzcDtP
-VEhFUiZuYnNwO0RFQUxJTkdTJm5ic3A7SU4mbmJzcDtUSEUKPGJyPiZndDsmZ3Q7Jm5ic3A7KyZu
-YnNwOyombmJzcDtTT0ZUV0FSRS4KPGJyPiZndDsmZ3Q7Jm5ic3A7KyZuYnNwOyovCjxicj4KPGJy
-PkhhdmUmbmJzcDt5b3UmbmJzcDtjb25zaWRlcmVkJm5ic3A7dXNpbmcmbmJzcDt0aGUmbmJzcDtu
-ZXcmbmJzcDtTUERYJm5ic3A7dGFncyZuYnNwO2luc3RlYWQmbmJzcDtvZiZuYnNwO3RoaXMmbmJz
-cDtmaW5lJm5ic3A7YnV0Cjxicj5sb25nJm5ic3A7bGVnYWxlc2U/Cjxicj5JJm5ic3A7a25vdyZu
-YnNwO3doYXQmbmJzcDt5b3UmbmJzcDthcmUmbmJzcDthYm91dCZuYnNwO3RvJm5ic3A7c2F5OiZu
-YnNwO2V2ZXJ5b25lJm5ic3A7bG92ZXMmbmJzcDtsZWdhbGVzZSZuYnNwO3NvJm5ic3A7bXVjaCZu
-YnNwO3RoYXQKPGJyPml0Jm5ic3A7aXMmbmJzcDtoYXJkJm5ic3A7dG8mbmJzcDtsZXQmbmJzcDtn
-byZuYnNwO29mJm5ic3A7c28mbmJzcDttdWNoJm5ic3A7b2YmbmJzcDtpdCZuYnNwO2FuZCZuYnNw
-O3JlcGxhY2UmbmJzcDthbGwmbmJzcDt0aGlzJm5ic3A7b25seSZuYnNwO3dpdGgmbmJzcDthCjxi
-cj5zaW5nbGUmbmJzcDtTUERYJm5ic3A7dGFnJm5ic3A7bGluZSZuYnNwOzspCjxicj5CdXQmbmJz
-cDt0aGVuJm5ic3A7ZXZlcnlvbmUmbmJzcDtsb3ZlcyZuYnNwO2NvZGUmbmJzcDttdWNoJm5ic3A7
-bW9yZSZuYnNwO3RoYW4mbmJzcDtsZWdhbGVzZSZuYnNwO3RvbyEmbmJzcDtzbyZuYnNwO3lvdSZu
-YnNwO3dvdWxkCjxicj5iZSZuYnNwO21ha2luZyZuYnNwO3RoZSZuYnNwO3dvcmxkJm5ic3A7YSZu
-YnNwO3NlcnZpY2UmbmJzcDthbnl3YXkuCjxicj4KPGJyPkFuZCZuYnNwO2lmJm5ic3A7b3RoZXIm
-bmJzcDtjb250cmlidXRvcnMmbmJzcDtpbiZuYnNwO3lvdXImbmJzcDt0ZWFtJm5ic3A7Y291bGQm
-bmJzcDtmb2xsb3cmbmJzcDtzdWl0Jm5ic3A7YW5kJm5ic3A7eW91Jm5ic3A7Y291bGQKPGJyPnNw
-cmVhZCZuYnNwO3RoZSZuYnNwO3dvcmQmbmJzcDt0aGF0Jm5ic3A7d291bGQmbmJzcDtiZSZuYnNw
-O2V2ZW4mbmJzcDtiZXR0ZXIhCjxicj4KPGJyPlNlZSZuYnNwO1Rob21hcyZuYnNwO2RvYyZuYnNw
-O3BhdGNoZXMmbmJzcDtbMV0mbmJzcDtmb3ImbmJzcDtkZXRhaWxzLgo8YnI+Cjxicj5bMV0mbmJz
-cDtodHRwczovL2xrbWwub3JnL2xrbWwvMjAxNy8xMi80LzkzNAo8YnI+Cjxicj4tLSZuYnNwOwo8
-YnI+Q29yZGlhbGx5Cjxicj5QaGlsaXBwZSZuYnNwO09tYnJlZGFubmUKPGJyPgo8YnI+PC9ibG9j
-a3F1b3RlPjwhLS3wn5iALS0+DQo8L2Rpdj4NCjwvYm9keT4NCjwvaHRtbD4=
+------=_Part_8301_1113229977.1513948067766
+Content-Type: multipart/alternative;
+	boundary="----=_Part_8302_538841906.1513948067767"
+
+------=_Part_8302_538841906.1513948067767
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+
+
+Palmer Dabbelt=E6=96=BC 2017=E5=B9=B412=E6=9C=8822=E6=97=A5=E6=98=9F=E6=9C=
+=9F=E4=BA=94 UTC+8=E4=B8=8A=E5=8D=884=E6=99=8248=E5=88=8606=E7=A7=92=E5=AF=
+=AB=E9=81=93=EF=BC=9A
+>
+> On Thu, 21 Dec 2017 12:43:20 PST (-0800), Arnd Bergmann wrote:=20
+> > On Thu, Dec 21, 2017 at 9:32 PM, Palmer Dabbelt <pal...@sifive.com=20
+> <javascript:>> wrote:=20
+> >> On Wed, 20 Dec 2017 01:14:31 PST (-0800), zon...@gmail.com=20
+> <javascript:> wrote:=20
+> >=20
+> >> I've added Arnd and Olof, in case they have a bit more perspective=20
+> here.  If=20
+> >> I'm reading this correctly, there isn't an arm or arm64 option to do=
+=20
+> this.=20
+> >> There is an option to built in many DTBs, which makes a lot more sense=
+=20
+> to me=20
+> >> as it doesn't tie the kernel to any one particular implementation.=20
+>  We'd=20
+> >> need a mechanism for picking the DTB that Linux should use.  We've=20
+> kicked=20
+> >> around the idea of:=20
+> >>=20
+> >> * Having the bootloader always provide a DTB.=20
+> >> * Taking a hash of that DTB when booting Linux.=20
+> >> * Using that hash to look up DTBs that are built in to Linux.=20
+> >>=20
+> >> This would allow us to support replacing broken DTBs if they escape=20
+> into the=20
+> >> wild, but would still allow us to have a portable kernel.=20
+> >=20
+> > Having an embedded DTB is only necessary for platforms with a legacy=20
+> bootloader=20
+> > that doesn't understand DT at all, you should never need that here.=20
+> >=20
+> > I would suggest to require each bootloader to provide a way to replace=
+=20
+> the DTB=20
+> > with one that gets installed alongside the kernel.=20
+>
+> Sounds good to me.=20
+>
+
+Palmer Dabbelt=E6=96=BC 2017=E5=B9=B412=E6=9C=8822=E6=97=A5=E6=98=9F=E6=9C=
+=9F=E4=BA=94 UTC+8=E4=B8=8A=E5=8D=884=E6=99=8248=E5=88=8606=E7=A7=92=E5=AF=
+=AB=E9=81=93=EF=BC=9A
+>
+> On Thu, 21 Dec 2017 12:43:20 PST (-0800), Arnd Bergmann wrote:=20
+> > On Thu, Dec 21, 2017 at 9:32 PM, Palmer Dabbelt <pal...@sifive.com=20
+> <javascript:>> wrote:=20
+> >> On Wed, 20 Dec 2017 01:14:31 PST (-0800), zon...@gmail.com=20
+> <javascript:> wrote:=20
+> >=20
+> >> I've added Arnd and Olof, in case they have a bit more perspective=20
+> here.  If=20
+> >> I'm reading this correctly, there isn't an arm or arm64 option to do=
+=20
+> this.=20
+> >> There is an option to built in many DTBs, which makes a lot more sense=
+=20
+> to me=20
+> >> as it doesn't tie the kernel to any one particular implementation.=20
+>  We'd=20
+> >> need a mechanism for picking the DTB that Linux should use.  We've=20
+> kicked=20
+> >> around the idea of:=20
+> >>=20
+> >> * Having the bootloader always provide a DTB.=20
+> >> * Taking a hash of that DTB when booting Linux.=20
+> >> * Using that hash to look up DTBs that are built in to Linux.=20
+> >>=20
+> >> This would allow us to support replacing broken DTBs if they escape=20
+> into the=20
+> >> wild, but would still allow us to have a portable kernel.=20
+> >=20
+> > Having an embedded DTB is only necessary for platforms with a legacy=20
+> bootloader=20
+> > that doesn't understand DT at all, you should never need that here.=20
+> >=20
+> > I would suggest to require each bootloader to provide a way to replace=
+=20
+> the DTB=20
+> > with one that gets installed alongside the kernel.=20
+>
+> Sounds good to me.=20
+>
+
+It's exactly. The portability is the thing that first priority to consider=
+=20
+in the furture.
+The built in DTB function can be found on many architectures, but it seem=
+=20
+out of date.
+I think this is the reason that I can't find any dts file in the kernel=20
+source.
+I usually use the built in DTB for quick and conveniet development on=20
+specific platform.
+Thanks a lot.
+
+------=_Part_8302_538841906.1513948067767
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><br><br>Palmer Dabbelt=E6=96=BC 2017=E5=B9=B412=E6=9C=8822=
+=E6=97=A5=E6=98=9F=E6=9C=9F=E4=BA=94 UTC+8=E4=B8=8A=E5=8D=884=E6=99=8248=E5=
+=88=8606=E7=A7=92=E5=AF=AB=E9=81=93=EF=BC=9A<blockquote class=3D"gmail_quot=
+e" style=3D"margin: 0;margin-left: 0.8ex;border-left: 1px #ccc solid;paddin=
+g-left: 1ex;">On Thu, 21 Dec 2017 12:43:20 PST (-0800), Arnd Bergmann wrote=
+:
+<br>&gt; On Thu, Dec 21, 2017 at 9:32 PM, Palmer Dabbelt &lt;<a href=3D"jav=
+ascript:" target=3D"_blank" gdf-obfuscated-mailto=3D"YR5ZPO4bDQAJ" rel=3D"n=
+ofollow" onmousedown=3D"this.href=3D&#39;javascript:&#39;;return true;" onc=
+lick=3D"this.href=3D&#39;javascript:&#39;;return true;">pal...@sifive.com</=
+a>&gt; wrote:
+<br>&gt;&gt; On Wed, 20 Dec 2017 01:14:31 PST (-0800), <a href=3D"javascrip=
+t:" target=3D"_blank" gdf-obfuscated-mailto=3D"YR5ZPO4bDQAJ" rel=3D"nofollo=
+w" onmousedown=3D"this.href=3D&#39;javascript:&#39;;return true;" onclick=
+=3D"this.href=3D&#39;javascript:&#39;;return true;">zon...@gmail.com</a> wr=
+ote:
+<br>&gt;
+<br>&gt;&gt; I&#39;ve added Arnd and Olof, in case they have a bit more per=
+spective here. =C2=A0If
+<br>&gt;&gt; I&#39;m reading this correctly, there isn&#39;t an arm or arm6=
+4 option to do this.
+<br>&gt;&gt; There is an option to built in many DTBs, which makes a lot mo=
+re sense to me
+<br>&gt;&gt; as it doesn&#39;t tie the kernel to any one particular impleme=
+ntation. =C2=A0We&#39;d
+<br>&gt;&gt; need a mechanism for picking the DTB that Linux should use. =
+=C2=A0We&#39;ve kicked
+<br>&gt;&gt; around the idea of:
+<br>&gt;&gt;
+<br>&gt;&gt; * Having the bootloader always provide a DTB.
+<br>&gt;&gt; * Taking a hash of that DTB when booting Linux.
+<br>&gt;&gt; * Using that hash to look up DTBs that are built in to Linux.
+<br>&gt;&gt;
+<br>&gt;&gt; This would allow us to support replacing broken DTBs if they e=
+scape into the
+<br>&gt;&gt; wild, but would still allow us to have a portable kernel.
+<br>&gt;
+<br>&gt; Having an embedded DTB is only necessary for platforms with a lega=
+cy bootloader
+<br>&gt; that doesn&#39;t understand DT at all, you should never need that =
+here.
+<br>&gt;
+<br>&gt; I would suggest to require each bootloader to provide a way to rep=
+lace the DTB
+<br>&gt; with one that gets installed alongside the kernel.
+<br>
+<br>Sounds good to me.
+<br></blockquote><br>Palmer Dabbelt=E6=96=BC 2017=E5=B9=B412=E6=9C=8822=E6=
+=97=A5=E6=98=9F=E6=9C=9F=E4=BA=94 UTC+8=E4=B8=8A=E5=8D=884=E6=99=8248=E5=88=
+=8606=E7=A7=92=E5=AF=AB=E9=81=93=EF=BC=9A<blockquote class=3D"gmail_quote" =
+style=3D"margin: 0;margin-left: 0.8ex;border-left: 1px #ccc solid;padding-l=
+eft: 1ex;">On Thu, 21 Dec 2017 12:43:20 PST (-0800), Arnd Bergmann wrote:
+<br>&gt; On Thu, Dec 21, 2017 at 9:32 PM, Palmer Dabbelt &lt;<a href=3D"jav=
+ascript:" target=3D"_blank" gdf-obfuscated-mailto=3D"YR5ZPO4bDQAJ" rel=3D"n=
+ofollow" onmousedown=3D"this.href=3D&#39;javascript:&#39;;return true;" onc=
+lick=3D"this.href=3D&#39;javascript:&#39;;return true;">pal...@sifive.com</=
+a>&gt; wrote:
+<br>&gt;&gt; On Wed, 20 Dec 2017 01:14:31 PST (-0800), <a href=3D"javascrip=
+t:" target=3D"_blank" gdf-obfuscated-mailto=3D"YR5ZPO4bDQAJ" rel=3D"nofollo=
+w" onmousedown=3D"this.href=3D&#39;javascript:&#39;;return true;" onclick=
+=3D"this.href=3D&#39;javascript:&#39;;return true;">zon...@gmail.com</a> wr=
+ote:
+<br>&gt;
+<br>&gt;&gt; I&#39;ve added Arnd and Olof, in case they have a bit more per=
+spective here. =C2=A0If
+<br>&gt;&gt; I&#39;m reading this correctly, there isn&#39;t an arm or arm6=
+4 option to do this.
+<br>&gt;&gt; There is an option to built in many DTBs, which makes a lot mo=
+re sense to me
+<br>&gt;&gt; as it doesn&#39;t tie the kernel to any one particular impleme=
+ntation. =C2=A0We&#39;d
+<br>&gt;&gt; need a mechanism for picking the DTB that Linux should use. =
+=C2=A0We&#39;ve kicked
+<br>&gt;&gt; around the idea of:
+<br>&gt;&gt;
+<br>&gt;&gt; * Having the bootloader always provide a DTB.
+<br>&gt;&gt; * Taking a hash of that DTB when booting Linux.
+<br>&gt;&gt; * Using that hash to look up DTBs that are built in to Linux.
+<br>&gt;&gt;
+<br>&gt;&gt; This would allow us to support replacing broken DTBs if they e=
+scape into the
+<br>&gt;&gt; wild, but would still allow us to have a portable kernel.
+<br>&gt;
+<br>&gt; Having an embedded DTB is only necessary for platforms with a lega=
+cy bootloader
+<br>&gt; that doesn&#39;t understand DT at all, you should never need that =
+here.
+<br>&gt;
+<br>&gt; I would suggest to require each bootloader to provide a way to rep=
+lace the DTB
+<br>&gt; with one that gets installed alongside the kernel.
+<br>
+<br>Sounds good to me.
+<br></blockquote><div><br></div><div>It&#39;s exactly. The portability is t=
+he thing that first priority to consider in the furture.</div><div>The buil=
+t in DTB function can be found on many architectures, but it seem out of da=
+te.</div><div>I think this is the reason that I can&#39;t find any dts file=
+ in the kernel source.</div><div>I usually use the built in DTB for quick a=
+nd conveniet development on specific platform.</div><div>Thanks a lot.</div=
+></div>
+------=_Part_8302_538841906.1513948067767--
+
+------=_Part_8301_1113229977.1513948067766--
