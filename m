@@ -1,24 +1,24 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2 1/2] arm64: dts: renesas: salvator-x: Remove
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] arm64: dts: renesas: ulcb: Remove
  renesas,no-ether-link property
-Date: Fri, 22 Dec 2017 09:40:49 +0100
-Message-ID: <20171222084048.ssyi53yj34hzejct@verge.net.au>
+Date: Fri, 22 Dec 2017 09:40:59 +0100
+Message-ID: <20171222084059.hpwxz5b7rivkbpwp@verge.net.au>
 References: <1513869539-18803-1-git-send-email-vladimir_zapolskiy@mentor.com>
- <1513869539-18803-2-git-send-email-vladimir_zapolskiy@mentor.com>
- <20171222083203.h5a65uitv7yok5fz@verge.net.au>
+ <1513869539-18803-3-git-send-email-vladimir_zapolskiy@mentor.com>
+ <20171222083256.2jgts6mdmssr7y76@verge.net.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20171222083203.h5a65uitv7yok5fz@verge.net.au>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
-Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Bogdan Mirea <Bogdan-Stefan_Mirea@mentor.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20171222083256.2jgts6mdmssr7y76-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Cc: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Bogdan Mirea <Bogdan-Stefan_Mirea-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 22, 2017 at 09:32:03AM +0100, Simon Horman wrote:
-> On Thu, Dec 21, 2017 at 05:18:58PM +0200, Vladimir Zapolskiy wrote:
-> > From: Bogdan Mirea <Bogdan-Stefan_Mirea@mentor.com>
+On Fri, Dec 22, 2017 at 09:32:56AM +0100, Simon Horman wrote:
+> On Thu, Dec 21, 2017 at 05:18:59PM +0200, Vladimir Zapolskiy wrote:
+> > From: Bogdan Mirea <Bogdan-Stefan_Mirea-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 > > 
 > > The present change is a bug fix for AVB link iteratively up/down.
 > > 
@@ -49,15 +49,19 @@ On Fri, Dec 22, 2017 at 09:32:03AM +0100, Simon Horman wrote:
 > > of detecting the link state based on HW interrogation and not on
 > > software heuristic.
 > > 
-> > Fixes: d25e8ff0d5aa ("arm64: dts: renesas: Extract common Salvator-X board support")
+> > Fixes: 253ed045a34d ("arm64: dts: renesas: Extract common ULCB board support")
 > 
 > The above shuffles the code around but does not introduce the problem
 > as far as I can see. Instead I think we should use:
 > 
-> Fixes: dc36965a8905 ("arm64: dts: r8a7796: salvator-x: Enable EthernetAVB")
-> Fixes: 6fa501c549aa ("arm64: dts: r8a7795: enable EthernetAVB on Salvator-X")
+> Fixes: 144bf6ccb13f ("arm64: dts: h3ulcb: enable EthernetAVB")
+> Fixes: 883fae315a6a ("arm64: dts: m3ulcb: enable EthernetAVB")
 > 
-> > Signed-off-by: Bogdan Mirea <Bogdan-Stefan_Mirea@mentor.com>
-> > Signed-off-by: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+> > Signed-off-by: Bogdan Mirea <Bogdan-Stefan_Mirea-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+> > Signed-off-by: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 
-I have applied this a fix for v4.15 with the updated Fixes tags above.
+I have applied this a fix for v4.15 with the updated Fixes tags above. 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
