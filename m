@@ -1,87 +1,102 @@
 From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v5 01/12] dt-bindings: panel: lvds: Document power-supply
- property
-Date: Fri, 22 Dec 2017 14:08:20 +0200
-Message-ID: <2493504.1OPucrC18r@avalon>
-References: <cover.e5a47cc96ec5274dd932daa2bde47df073087da9.1513854122.git-series.maxime.ripard@free-electrons.com>
- <0a6a3abcf1a6b7f0e66a81af8a44c5c0566ce06c.1513854122.git-series.maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH v5 02/12] drm/panel: lvds: Add support for the power-supply property
+Date: Fri, 22 Dec 2017 14:09:32 +0200
+Message-ID: <2325464.U6vNVgOjSP@avalon>
+References: <cover.e5a47cc96ec5274dd932daa2bde47df073087da9.1513854122.git-series.maxime.ripard@free-electrons.com> <0c0819bdf88fa948188df95e57a10820a8a4548d.1513854122.git-series.maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <0a6a3abcf1a6b7f0e66a81af8a44c5c0566ce06c.1513854122.git-series.maxime.ripard@free-electrons.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <0c0819bdf88fa948188df95e57a10820a8a4548d.1513854122.git-series.maxime.ripard@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, jernej.skrabec@siol.net, plaes@plaes.org, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, thierry.reding@gmail.com, Daniel Vetter <daniel.vetter@intel.com>, linux-arm-kernel@lists.infradead.org, icenowy@aosc.io
+Cc: Daniel Vetter <daniel.vetter@intel.com>, David Airlie <airlied@linux.ie>, Chen-Yu Tsai <wens@csie.org>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, plaes@plaes.org, icenowy@aosc.io, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, jernej.skrabec@siol.net, devicetree@vger.kernel.org, thierry.reding@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWF4aW1lLAoKVGhhbmsgeW91IGZvciB0aGUgcGF0Y2guCgpPbiBUaHVyc2RheSwgMjEgRGVj
-ZW1iZXIgMjAxNyAxMzowMjoyNyBFRVQgTWF4aW1lIFJpcGFyZCB3cm90ZToKPiBUaGUgcG93ZXIt
-c3VwcGx5IHByb3BlcnR5IGlzIHVzZWQgYnkgYSB2YXN0IG1ham9yaXR5IG9mIHBhbmVscywgaW5j
-bHVkaW5nCj4gcGFuZWwtc2ltcGxlLiBMZXQncyBkb2N1bWVudCBpdCBhcyBhIGNvbW1vbiBwcm9w
-ZXJ0eQo+IAo+IFJldmlld2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgo+IFNp
-Z25lZC1vZmYtYnk6IE1heGltZSBSaXBhcmQgPG1heGltZS5yaXBhcmRAZnJlZS1lbGVjdHJvbnMu
-Y29tPgo+IC0tLQo+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9w
-YW5lbC9wYW5lbC1jb21tb24udHh0IHwgNiArKysrKysKPiBEb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9wYW5lbC1sdmRzLnR4dCAgIHwgMSArCj4gRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvc2ltcGxlLXBhbmVsLnR4
-dCB8IDIgKy0gMwo+IGZpbGVzIGNoYW5nZWQsIDggaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigt
-KQo+IAo+IGRpZmYgLS1naXQKPiBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
-aXNwbGF5L3BhbmVsL3BhbmVsLWNvbW1vbi50eHQKPiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3BhbmVsLWNvbW1vbi50eHQgaW5kZXgKPiBlYzUyYzQ3
-MmM4NDUuLjEyNWVhNjgwNTJhZiAxMDA2NDQKPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9wYW5lbC1jb21tb24udHh0Cj4gKysrIGIvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvcGFuZWwtY29tbW9uLnR4
-dAo+IEBAIC03OCw2ICs3OCwxMiBAQCB1c2VkIGZvciBwYW5lbHMgdGhhdCBpbXBsZW1lbnQgY29t
-cGF0aWJsZSBjb250cm9sCj4gc2lnbmFscy4gd2hpbGUgYWN0aXZlLiBBY3RpdmUgaGlnaCByZXNl
-dCBzaWduYWxzIGNhbiBiZSBzdXBwb3J0ZWQgYnkKPiBpbnZlcnRpbmcgdGhlIEdQSU8gc3BlY2lm
-aWVyIHBvbGFyaXR5IGZsYWcuCj4gCj4gK1Bvd2VyCj4gKy0tLS0tCj4gKwo+ICstIHBvd2VyLXN1
-cHBseTogbWFueSBkaXNwbGF5IHBhbmVscyBuZWVkIGFuIGFkZGl0aW9uYWwgcG93ZXIgc3VwcGx5
-IGluCj4gKyAgb3JkZXIgdG8gYmUgZnVsbHkgcG93ZXJlZC11cC4gRm9yIHN1Y2ggcGFuZWxzLCBw
-b3dlci1zdXBwbHkgY29udGFpbnMKPiArICBhIHBoYW5kbGUgdG8gdGhlIHJlZ3VsYXRvciBwb3dl
-cmluZyB0aGUgcGFuZWwuCgpJIHRoaW5rIHdlIHNob3VsZCBnaXZlIG1vcmUgZGV0YWlscyBoZXJl
-IGFib3V0IHRoZSBsaW1pdGF0aW9ucyBvZiB0aGlzIApwcm9wZXJ0eS4gSG93IGFib3V0IHRoZSBm
-b2xsb3dpbmcgZXhwbGFuYXRpb24gPwoKLSBwb3dlci1zdXBwbHk6IGRpc3BsYXkgcGFuZWxzIHJl
-cXVpcmUgcG93ZXIgdG8gYmUgc3VwcGxpZWQuIFdoaWxlIHNldmVyYWwgCnBhbmVscyBuZWVkIG1v
-cmUgdGhhbiBvbmUgcG93ZXIgc3VwcGx5IHdpdGggcGFuZWwtc3BlY2lmaWMgY29uc3RyYWludHMg
-CmdvdmVybmluZyB0aGUgb3JkZXIgYW5kIHRpbWluZ3Mgb2YgdGhlIHBvd2VyIHN1cHBsaWVzLCBp
-biBtYW55IGNhc2VzIGEgc2luZ2xlIApwb3dlciBzdXBwbHkgaXMgc3VmZmljaWVudCwgZWl0aGVy
-IGJlY2F1c2UgdGhlIHBhbmVsIGhhcyBhIHNpbmdsZSBwb3dlciByYWlsLCAKb3IgYmVjYXVzZSBh
-bGwgaXRzIHBvd2VyIHJhaWxzIGNhbiBiZSBkcml2ZW4gYnkgdGhlIHNhbWUgc3VwcGx5LiBJbiB0
-aGF0IGNhc2UgCnRoZSBwb3dlci1zdXBwbHkgcHJvcGVydHkgc3BlY2lmaWVzIHRoZSBzdXBwbHkg
-cG93ZXJpbmcgdGhlIHBhbmVsIGFzIGEgcGhhbmRsZSAKdG8gYSByZWd1bGF0b3IuCgo+ICBCYWNr
-bGlnaHQKPiAgLS0tLS0tLS0tCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3BhbmVsLWx2ZHMudHh0Cj4gYi9Eb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9wYW5lbC1sdmRzLnR4dCBpbmRleAo+
-IGI5MzgyNjlmODQxZS4uMjUwODUwYTIxNTBiIDEwMDY0NAo+IC0tLSBhL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3BhbmVsLWx2ZHMudHh0Cj4gKysrIGIv
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvcGFuZWwtbHZk
-cy50eHQKPiBAQCAtMzIsNiArMzIsNyBAQCBPcHRpb25hbCBwcm9wZXJ0aWVzOgo+ICAtIGxhYmVs
-OiBTZWUgcGFuZWwtY29tbW9uLnR4dC4KPiAgLSBncGlvczogU2VlIHBhbmVsLWNvbW1vbi50eHQu
-Cj4gIC0gYmFja2xpZ2h0OiBTZWUgcGFuZWwtY29tbW9uLnR4dC4KPiArLSBwb3dlci1zdXBwbHk6
-IFNlZSBwYW5lbC1jb21tb24udHh0Lgo+ICAtIGRhdGEtbWlycm9yOiBJZiBzZXQsIHJldmVyc2Ug
-dGhlIGJpdCBvcmRlciBkZXNjcmliZWQgaW4gdGhlIGRhdGEgbWFwcGluZ3MKPiBiZWxvdyBvbiBh
-bGwgZGF0YSBsYW5lcywgdHJhbnNtaXR0aW5nIGJpdHMgZm9yIHNsb3RzIDYgdG8gMCBpbnN0ZWFk
-IG9mIDAgdG8KPiA2Lgo+IGRpZmYgLS1naXQKPiBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9kaXNwbGF5L3BhbmVsL3NpbXBsZS1wYW5lbC50eHQKPiBiL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3NpbXBsZS1wYW5lbC50eHQgaW5kZXgK
-PiAxMzQxYmJmNGFhM2QuLjE2ZDhmZjA4OGI3ZCAxMDA2NDQKPiAtLS0gYS9Eb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9zaW1wbGUtcGFuZWwudHh0Cj4gKysr
-IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvc2ltcGxl
-LXBhbmVsLnR4dAo+IEBAIC0xLDcgKzEsNyBAQAo+ICBTaW1wbGUgZGlzcGxheSBwYW5lbAo+IAo+
-ICBSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+IC0tIHBvd2VyLXN1cHBseTogcmVndWxhdG9yIHRvIHBy
-b3ZpZGUgdGhlIHN1cHBseSB2b2x0YWdlCj4gKy0gcG93ZXItc3VwcGx5OiBTZWUgcGFuZWwtY29t
-bW9uLnR4dAo+IAo+ICBPcHRpb25hbCBwcm9wZXJ0aWVzOgo+ICAtIGRkYy1pMmMtYnVzOiBwaGFu
-ZGxlIG9mIGFuIEkyQyBjb250cm9sbGVyIHVzZWQgZm9yIEREQyBFRElEIHByb2JpbmcKCi0tIApS
-ZWdhcmRzLAoKTGF1cmVudCBQaW5jaGFydAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlz
-dGluZm8vZHJpLWRldmVsCg==
+Hi Maxime,
+
+Thank you for the patch.
+
+On Thursday, 21 December 2017 13:02:28 EET Maxime Ripard wrote:
+> A significant number of panels need to power up a regulator in order to
+> operate properly. Add support for the power-supply property to enable and
+> disable such a regulator whenever needed.
+> 
+> Reviewed-by: Chen-Yu Tsai <wens@csie.org>
+> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+> ---
+>  drivers/gpu/drm/panel/panel-lvds.c | 23 +++++++++++++++++++++++
+>  1 file changed, 23 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/panel/panel-lvds.c
+> b/drivers/gpu/drm/panel/panel-lvds.c index e2d57c01200b..57e38a9e7ab4
+> 100644
+> --- a/drivers/gpu/drm/panel/panel-lvds.c
+> +++ b/drivers/gpu/drm/panel/panel-lvds.c
+> @@ -17,6 +17,7 @@
+>  #include <linux/module.h>
+>  #include <linux/of_platform.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/regulator/consumer.h>
+>  #include <linux/slab.h>
+> 
+>  #include <drm/drmP.h>
+> @@ -39,6 +40,7 @@ struct panel_lvds {
+>  	bool data_mirror;
+> 
+>  	struct backlight_device *backlight;
+> +	struct regulator *supply;
+> 
+>  	struct gpio_desc *enable_gpio;
+>  	struct gpio_desc *reset_gpio;
+> @@ -69,6 +71,9 @@ static int panel_lvds_unprepare(struct drm_panel *panel)
+>  	if (lvds->enable_gpio)
+>  		gpiod_set_value_cansleep(lvds->enable_gpio, 0);
+> 
+> +	if (lvds->supply)
+> +		regulator_disable(lvds->supply);
+> +
+>  	return 0;
+>  }
+> 
+> @@ -76,6 +81,17 @@ static int panel_lvds_prepare(struct drm_panel *panel)
+>  {
+>  	struct panel_lvds *lvds = to_panel_lvds(panel);
+> 
+> +	if (lvds->supply) {
+> +		int err;
+> +
+> +		err = regulator_enable(lvds->supply);
+> +		if (err < 0) {
+> +			dev_err(lvds->dev, "failed to enable supply: %d\n",
+> +				err);
+> +			return err;
+> +		}
+> +	}
+> +
+>  	if (lvds->enable_gpio)
+>  		gpiod_set_value_cansleep(lvds->enable_gpio, 1);
+> 
+> @@ -196,6 +212,13 @@ static int panel_lvds_probe(struct platform_device
+> *pdev) if (ret < 0)
+>  		return ret;
+> 
+> +	lvds->supply = devm_regulator_get_optional(lvds->dev, "power");
+> +	if (IS_ERR(lvds->supply)) {
+> +		ret = PTR_ERR(lvds->supply);
+> +		dev_err(lvds->dev, "failed to request regulator: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+>  	/* Get GPIOs and backlight controller. */
+>  	lvds->enable_gpio = devm_gpiod_get_optional(lvds->dev, "enable",
+>  						     GPIOD_OUT_LOW);
+
+
+-- 
+Regards,
+
+Laurent Pinchart
