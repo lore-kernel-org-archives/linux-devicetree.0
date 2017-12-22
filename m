@@ -1,78 +1,84 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2 2/2] arm64: dts: renesas: ulcb: Remove
- renesas,no-ether-link property
-Date: Fri, 22 Dec 2017 09:32:56 +0100
-Message-ID: <20171222083256.2jgts6mdmssr7y76@verge.net.au>
-References: <1513869539-18803-1-git-send-email-vladimir_zapolskiy@mentor.com>
- <1513869539-18803-3-git-send-email-vladimir_zapolskiy@mentor.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: dts: sunxi: Add sid for a83t
+Date: Fri, 22 Dec 2017 09:35:08 +0100
+Message-ID: <20171222083508.dfcp6egfvxykmogg@flea.lan>
+References: <20171219210523.10428-1-kevans91@ksu.edu>
+ <20171221145512.llxvzkcrjpquhczi@flea.lan>
+ <CACNAnaE9GiVTXD-TV1xXyBJKtTGKpdA6n0REk6a=qm218EgHbg@mail.gmail.com>
+ <20171221152630.2vf57x5o2yi5sv3n@flea.lan>
+ <20171221190903.56ebae536acf51401c63802c@bidouilliste.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="lqioqqfwapxkw3qv"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBPMH6PIQKGQEM6DDA7Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <1513869539-18803-3-git-send-email-vladimir_zapolskiy@mentor.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
-Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Bogdan Mirea <Bogdan-Stefan_Mirea@mentor.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20171221190903.56ebae536acf51401c63802c-xXdDKFdH5B3kFDPD4ZthVA@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Emmanuel Vadot <manu-xXdDKFdH5B3kFDPD4ZthVA@public.gmane.org>
+Cc: Kyle Evans <kevans91-OYTqUY/oFF8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 21, 2017 at 05:18:59PM +0200, Vladimir Zapolskiy wrote:
-> From: Bogdan Mirea <Bogdan-Stefan_Mirea@mentor.com>
-> 
-> The present change is a bug fix for AVB link iteratively up/down.
-> 
-> Steps to reproduce:
-> - start AVB TX stream (Using aplay via MSE),
-> - disconnect+reconnect the eth cable,
-> - after a reconnection the eth connection goes iteratively up/down
->   without user interaction,
-> - this may heal after some seconds or even stay for minutes.
-> 
-> As the documentation specifies, the "renesas,no-ether-link" option
-> should be used when a board does not provide a proper AVB_LINK signal.
-> There is no need for this option enabled on RCAR H3/M3 Salvator-X/XS
-> and ULCB starter kits since the AVB_LINK is correctly handled by HW.
-> 
-> Choosing to keep or remove the "renesas,no-ether-link" option will
-> have impact on the code flow in the following ways:
-> - keeping this option enabled may lead to unexpected behavior since
->   the RX & TX are enabled/disabled directly from adjust_link function
->   without any HW interrogation,
-> - removing this option, the RX & TX will only be enabled/disabled after
->   HW interrogation. The HW check is made through the LMON pin in PSR
->   register which specifies AVB_LINK signal value (0 - at low level;
->   1 - at high level).
-> 
-> In conclusion, the present change is also a safety improvement because
-> it removes the "renesas,no-ether-link" option leading to a proper way
-> of detecting the link state based on HW interrogation and not on
-> software heuristic.
-> 
-> Fixes: 253ed045a34d ("arm64: dts: renesas: Extract common ULCB board support")
 
-The above shuffles the code around but does not introduce the problem
-as far as I can see. Instead I think we should use:
+--lqioqqfwapxkw3qv
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-Fixes: 144bf6ccb13f ("arm64: dts: h3ulcb: enable EthernetAVB")
-Fixes: 883fae315a6a ("arm64: dts: m3ulcb: enable EthernetAVB")
+On Thu, Dec 21, 2017 at 07:09:03PM +0100, Emmanuel Vadot wrote:
+> 
+>  Hi Maxime,
+> 
+> On Thu, 21 Dec 2017 16:26:30 +0100
+> Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> 
+> > Hi,
+> > 
+> > On Thu, Dec 21, 2017 at 09:19:24AM -0600, Kyle Evans wrote:
+> > > On Thu, Dec 21, 2017 at 8:55 AM, Maxime Ripard
+> > > <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> > > > Hi Kyle,
+> > > >
+> > > > On Tue, Dec 19, 2017 at 03:05:23PM -0600, kevans91-OYTqUY/oFF8@public.gmane.org wrote:
+> > > >> Allwinner a83t has a 1 KB sid block with efuse for security rootkey and
+> > > >> thermal calibration data, add node to describe it.
+> > > >>
+> > > >> a83t-sid is not currently supported by nvmem/sunxi-sid, but it is
+> > > >> supported in an external driver for FreeBSD.
+> > > >>
+> > > >> Signed-off-by: Kyle Evans <kevans91-OYTqUY/oFF8@public.gmane.org>
+> > > >
+> > > > The patch looks fine in itself, but we've had a number of issues with
+> > > > the register layout (and access patterns) in the past, so I'd rather
+> > > > have something that works in Linux too if possible.
+> > > 
+> > > I have a patch that I think should make it work fine on Linux [1], but
+> > > I'm afraid I have little to no capability to test it myself and so I
+> > > did not add it as well.
+> > > 
+> > > I do know that the rootkey is offset 0x200 into the given space [2],
+> > > as is the case with the H3, and that the readout quirk is not needed.
+> > > I wasn't 100% sure that the a83t has 2Kbit worth of efuse space as the
+> > > H3, but I do know that thermal data can be found at 0x34 and 0x38 in
+> > > this space.
+> > 
+> > Then maybe we should leave it aside until someone takes some time on
+> > the A83t. 
+> 
+>  Take some time on the Linux driver and do not apply this patch for
+> now you mean ?
 
-> Signed-off-by: Bogdan Mirea <Bogdan-Stefan_Mirea@mentor.com>
-> Signed-off-by: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
-> ---
->  arch/arm64/boot/dts/renesas/ulcb.dtsi | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/arch/arm64/boot/dts/renesas/ulcb.dtsi b/arch/arm64/boot/dts/renesas/ulcb.dtsi
-> index be91016e0b48..3e7a6b94e9f8 100644
-> --- a/arch/arm64/boot/dts/renesas/ulcb.dtsi
-> +++ b/arch/arm64/boot/dts/renesas/ulcb.dtsi
-> @@ -145,7 +145,6 @@
->  &avb {
->  	pinctrl-0 = <&avb_pins>;
->  	pinctrl-names = "default";
-> -	renesas,no-ether-link;
->  	phy-handle = <&phy0>;
->  	status = "okay";
->  
-> -- 
-> 2.8.1
-> 
+Yep.
+
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--lqioqqfwapxkw3qv--
