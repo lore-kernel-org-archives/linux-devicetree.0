@@ -1,103 +1,83 @@
-From: Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v7 10/11] thermal: armada: Wait sensors validity before exiting the init callback
-Date: Fri, 22 Dec 2017 17:14:12 +0100
-Message-ID: <20171222161413.20816-11-miquel.raynal@free-electrons.com>
-References: <20171222161413.20816-1-miquel.raynal@free-electrons.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171222161413.20816-1-miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>, David Sniatkiwicz <davidsn-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+From: Tero Kristo <t-kristo@ti.com>
+Subject: [PATCHv3 RESEND 1/3] Documentation: dt: memory: ti-emif: add edac
+ support under emif
+Date: Fri, 22 Dec 2017 18:23:54 +0200
+Message-ID: <1513959834-27901-1-git-send-email-t-kristo@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: devicetree@vger.kernel.org
+Cc: Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The thermal core will check for sensors validity right after the
-initialization callback has returned. As the initialization routine make
-a reset, the sensors are not ready immediately and the core spawns an
-error in the dmesg. Avoid this annoying situation by polling on the
-validity bit before exiting from these routines. This also avoid the use
-of blind sleeps.
+Certain revisions of the TI EMIF IP contain ECC support in them. Reflect
+this in the DT binding.
 
-Suggested-by: David Sniatkiwicz <davidsn-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Signed-off-by: Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Reviewed-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Signed-off-by: Tero Kristo <t-kristo@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>
+Cc: Rob Herring <robh+dt@kernel.org>
 ---
- drivers/thermal/armada_thermal.c | 23 ++++++++++++++++++++---
- 1 file changed, 20 insertions(+), 3 deletions(-)
+Just resending this patch, missed adding devicetree list on this previously
+and it got lost.
 
-diff --git a/drivers/thermal/armada_thermal.c b/drivers/thermal/armada_thermal.c
-index e6025d215cb5..a4befd2d683d 100644
---- a/drivers/thermal/armada_thermal.c
-+++ b/drivers/thermal/armada_thermal.c
-@@ -23,6 +23,7 @@
- #include <linux/platform_device.h>
- #include <linux/of_device.h>
- #include <linux/thermal.h>
-+#include <linux/iopoll.h>
+ .../devicetree/bindings/memory-controllers/ti/emif.txt   | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/memory-controllers/ti/emif.txt b/Documentation/devicetree/bindings/memory-controllers/ti/emif.txt
+index 0db6047..f56a347 100644
+--- a/Documentation/devicetree/bindings/memory-controllers/ti/emif.txt
++++ b/Documentation/devicetree/bindings/memory-controllers/ti/emif.txt
+@@ -3,12 +3,16 @@
+ EMIF - External Memory Interface - is an SDRAM controller used in
+ TI SoCs. EMIF supports, based on the IP revision, one or more of
+ DDR2/DDR3/LPDDR2 protocols. This binding describes a given instance
+-of the EMIF IP and memory parts attached to it.
++of the EMIF IP and memory parts attached to it. Certain revisions
++of the EMIF IP controller also contain optional ECC support, which
++corrects one bit errors and detects two bit errors.
  
- /* Thermal Manager Control and Status Register */
- #define PMU_TDC0_SW_RST_MASK		(0x1 << 1)
-@@ -59,6 +60,9 @@
- #define CONTROL1_EXT_TSEN_SW_RESET	BIT(7)
- #define CONTROL1_EXT_TSEN_HW_RESETn	BIT(8)
+ Required properties:
+ - compatible	: Should be of the form "ti,emif-<ip-rev>" where <ip-rev>
+   is the IP revision of the specific EMIF instance.
+ 		  For am437x should be ti,emif-am4372.
++		  For dra7xx should be ti,emif-dra7xx.
++		  For k2x family, should be ti,emif-keystone.
  
-+#define STATUS_POLL_PERIOD_US		1000
-+#define STATUS_POLL_TIMEOUT_US		100000
+ - phy-type	: <u32> indicating the DDR phy type. Following are the
+   allowed values
+@@ -42,6 +46,10 @@ Optional properties:
+ - hw-caps-temp-alert	: Have this property if the controller
+   has capability for generating SDRAM temperature alerts
+ 
++- interrupts		: A list of interrupt specifiers for memory
++  controller interrupts, if available. Required for EMIF instances
++  that support ECC.
 +
- struct armada_thermal_data;
+ Example:
  
- /* Marvell EBU Thermal Sensor Dev Structure */
-@@ -155,6 +159,16 @@ static void armada375_init_sensor(struct platform_device *pdev,
- 	msleep(50);
- }
- 
-+static void armada_wait_sensor_validity(struct armada_thermal_priv *priv)
-+{
-+	u32 reg;
+ emif1: emif@0x4c000000 {
+@@ -54,3 +62,9 @@ emif1: emif@0x4c000000 {
+ 	hw-caps-ll-interface;
+ 	hw-caps-temp-alert;
+ };
 +
-+	readl_relaxed_poll_timeout(priv->status, reg,
-+				   reg & priv->data->is_valid_bit,
-+				   STATUS_POLL_PERIOD_US,
-+				   STATUS_POLL_TIMEOUT_US);
-+}
-+
- static void armada380_init_sensor(struct platform_device *pdev,
- 				  struct armada_thermal_priv *priv)
- {
-@@ -164,7 +178,6 @@ static void armada380_init_sensor(struct platform_device *pdev,
- 	reg |= CONTROL1_EXT_TSEN_HW_RESETn;
- 	reg &= ~CONTROL1_EXT_TSEN_SW_RESET;
- 	writel(reg, priv->control1);
--	msleep(10);
- 
- 	/* Set Tsen Tc Trim to correct default value (errata #132698) */
- 	if (priv->control0) {
-@@ -172,8 +185,10 @@ static void armada380_init_sensor(struct platform_device *pdev,
- 		reg &= ~CONTROL0_TSEN_TC_TRIM_MASK;
- 		reg |= CONTROL0_TSEN_TC_TRIM_VAL;
- 		writel(reg, priv->control0);
--		msleep(10);
- 	}
-+
-+	/* Wait the sensors to be valid or the core will warn the user */
-+	armada_wait_sensor_validity(priv);
- }
- 
- static void armada_ap806_init_sensor(struct platform_device *pdev,
-@@ -185,7 +200,9 @@ static void armada_ap806_init_sensor(struct platform_device *pdev,
- 	reg &= ~CONTROL0_TSEN_RESET;
- 	reg |= CONTROL0_TSEN_START | CONTROL0_TSEN_ENABLE;
- 	writel(reg, priv->control0);
--	msleep(10);
-+
-+	/* Wait the sensors to be valid or the core will warn the user */
-+	armada_wait_sensor_validity(priv);
- }
- 
- static bool armada_is_valid(struct armada_thermal_priv *priv)
++emif1: emif@4c000000 {
++	compatible = "ti,emif-dra7";
++	reg = <0x4c000000 0x200>;
++	interrupts = <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>;
++};
 -- 
-2.11.0
+1.9.1
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
