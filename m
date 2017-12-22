@@ -1,195 +1,48 @@
-From: Chunyan Zhang <zhang.lyra@gmail.com>
-Subject: Re: [PATCH V7 12/12] arm64: dts: add clocks for SC9860
-Date: Fri, 22 Dec 2017 13:31:43 +0800
-Message-ID: <CAAfSe-ubWLn9nhGiP1sk+HFbhcBM=Md7kVQBKuUNzmF3-xQjhw@mail.gmail.com>
-References: <20171207125715.16160-1-chunyan.zhang@spreadtrum.com> <20171207125715.16160-13-chunyan.zhang@spreadtrum.com>
+From: <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v4 0/2] PCI: mediatek: Fixups for the IRQ handle routine and MT7622's class code
+Date: Fri, 22 Dec 2017 13:39:36 +0800
+Message-ID: <1513921178-16148-1-git-send-email-honghui.zhang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20171207125715.16160-13-chunyan.zhang@spreadtrum.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Chunyan Zhang <chunyan.zhang@spreadtrum.com>, "arm@kernel.org" <arm@kernel.org>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-clk <linux-clk@vger.kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Xiaolong Zhang <xiaolong.zhang@spreadtrum.com>, Ben Li <ben.li@spreadtrum.com>, Orson Zhai <orson.zhai@spreadtrum.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org
+Cc: honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, hongkun.cao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, xinping.qian-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-+ arm@kernel.org
+From: Honghui Zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-On 7 December 2017 at 20:57, Chunyan Zhang <chunyan.zhang@spreadtrum.com> wrote:
-> Some clocks on SC9860 are in the same address area with syscon devices,
-> those are what have a property of 'sprd,syscon' which would refer to
-> syscon devices, others would have a reg property indicated their address
-> ranges.
->
-> Signed-off-by: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
-> ---
->  arch/arm64/boot/dts/sprd/sc9860.dtsi | 115 +++++++++++++++++++++++++++++++++++
->  arch/arm64/boot/dts/sprd/whale2.dtsi |  18 +++++-
->  2 files changed, 131 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/arm64/boot/dts/sprd/sc9860.dtsi b/arch/arm64/boot/dts/sprd/sc9860.dtsi
-> index 7b7d8ce..bf03da4 100644
-> --- a/arch/arm64/boot/dts/sprd/sc9860.dtsi
-> +++ b/arch/arm64/boot/dts/sprd/sc9860.dtsi
-> @@ -7,6 +7,7 @@
->   */
->
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include <dt-bindings/clock/sprd,sc9860-clk.h>
->  #include "whale2.dtsi"
->
->  / {
-> @@ -183,6 +184,120 @@
->         };
->
->         soc {
-> +               pmu_gate: pmu-gate {
-> +                       compatible = "sprd,sc9860-pmu-gate";
-> +                       sprd,syscon = <&pmu_regs>; /* 0x402b0000 */
-> +                       clocks = <&ext_26m>;
-> +                       #clock-cells = <1>;
-> +               };
-> +
-> +               pll: pll {
-> +                       compatible = "sprd,sc9860-pll";
-> +                       sprd,syscon = <&ana_regs>; /* 0x40400000 */
-> +                       clocks = <&pmu_gate 0>;
-> +                       #clock-cells = <1>;
-> +               };
-> +
-> +               ap_clk: clock-controller@20000000 {
-> +                       compatible = "sprd,sc9860-ap-clk";
-> +                       reg = <0 0x20000000 0 0x400>;
-> +                       clocks = <&ext_26m>, <&pll 0>,
-> +                                <&pmu_gate 0>;
-> +                       #clock-cells = <1>;
-> +               };
-> +
-> +               aon_prediv: aon-prediv {
-> +                       compatible = "sprd,sc9860-aon-prediv";
-> +                       reg = <0 0x402d0000 0 0x400>;
-> +                       clocks = <&ext_26m>, <&pll 0>,
-> +                                <&pmu_gate 0>;
-> +                       #clock-cells = <1>;
-> +               };
-> +
-> +               apahb_gate: apahb-gate {
-> +                       compatible = "sprd,sc9860-apahb-gate";
-> +                       sprd,syscon = <&ap_ahb_regs>; /* 0x20210000 */
-> +                       clocks = <&aon_prediv 0>;
-> +                       #clock-cells = <1>;
-> +               };
-> +
-> +               aon_gate: aon-gate {
-> +                       compatible = "sprd,sc9860-aon-gate";
-> +                       sprd,syscon = <&aon_regs>; /* 0x402e0000 */
-> +                       clocks = <&aon_prediv 0>;
-> +                       #clock-cells = <1>;
-> +               };
-> +
-> +               aonsecure_clk: clock-controller@40880000 {
-> +                       compatible = "sprd,sc9860-aonsecure-clk";
-> +                       reg = <0 0x40880000 0 0x400>;
-> +                       clocks = <&ext_26m>, <&pll 0>;
-> +                       #clock-cells = <1>;
-> +               };
-> +
-> +               agcp_gate: agcp-gate {
-> +                       compatible = "sprd,sc9860-agcp-gate";
-> +                       sprd,syscon = <&agcp_regs>; /* 0x415e0000 */
-> +                       clocks = <&aon_prediv 0>;
-> +                       #clock-cells = <1>;
-> +               };
-> +
-> +               gpu_clk: clock-controller@60200000 {
-> +                       compatible = "sprd,sc9860-gpu-clk";
-> +                       reg = <0 0x60200000 0 0x400>;
-> +                       clocks = <&pll 0>;
-> +                       #clock-cells = <1>;
-> +               };
-> +
-> +               vsp_clk: clock-controller@61000000 {
-> +                       compatible = "sprd,sc9860-vsp-clk";
-> +                       reg = <0 0x61000000 0 0x400>;
-> +                       clocks = <&ext_26m>, <&pll 0>;
-> +                       #clock-cells = <1>;
-> +               };
-> +
-> +               vsp_gate: vsp-gate {
-> +                       compatible = "sprd,sc9860-vsp-gate";
-> +                       sprd,syscon = <&vsp_regs>; /* 0x61100000 */
-> +                       clocks = <&vsp_clk 0>;
-> +                       #clock-cells = <1>;
-> +               };
-> +
-> +               cam_clk: clock-controller@62000000 {
-> +                       compatible = "sprd,sc9860-cam-clk";
-> +                       reg = <0 0x62000000 0 0x4000>;
-> +                       clocks = <&ext_26m>, <&pll 0>;
-> +                       #clock-cells = <1>;
-> +               };
-> +
-> +               cam_gate: cam-gate {
-> +                       compatible = "sprd,sc9860-cam-gate";
-> +                       sprd,syscon = <&cam_regs>; /* 0x62100000 */
-> +                       clocks = <&cam_clk 0>;
-> +                       #clock-cells = <1>;
-> +               };
-> +
-> +               disp_clk: clock-controller@63000000 {
-> +                       compatible = "sprd,sc9860-disp-clk";
-> +                       reg = <0 0x63000000 0 0x400>;
-> +                       clocks = <&ext_26m>, <&pll 0>;
-> +                       #clock-cells = <1>;
-> +               };
-> +
-> +               disp_gate: disp-gate {
-> +                       compatible = "sprd,sc9860-disp-gate";
-> +                       sprd,syscon = <&disp_regs>; /* 0x63100000 */
-> +                       clocks = <&disp_clk 0>;
-> +                       #clock-cells = <1>;
-> +               };
-> +
-> +               apapb_gate: apapb-gate {
-> +                       compatible = "sprd,sc9860-apapb-gate";
-> +                       sprd,syscon = <&ap_apb_regs>; /* 0x70b00000 */
-> +                       clocks = <&ap_clk 0>;
-> +                       #clock-cells = <1>;
-> +               };
-> +
->                 funnel@10001000 { /* SoC Funnel */
->                         compatible = "arm,coresight-funnel", "arm,primecell";
->                         reg = <0 0x10001000 0 0x1000>;
-> diff --git a/arch/arm64/boot/dts/sprd/whale2.dtsi b/arch/arm64/boot/dts/sprd/whale2.dtsi
-> index 6ea3a75..328009c 100644
-> --- a/arch/arm64/boot/dts/sprd/whale2.dtsi
-> +++ b/arch/arm64/boot/dts/sprd/whale2.dtsi
-> @@ -106,10 +106,24 @@
->                 };
->         };
->
-> -       ext_26m: ext-26m {
-> +       ext_32k: ext_32k {
-> +               compatible = "fixed-clock";
-> +               #clock-cells = <0>;
-> +               clock-frequency = <32768>;
-> +               clock-output-names = "ext-32k";
-> +       };
-> +
-> +       ext_26m: ext_26m {
->                 compatible = "fixed-clock";
->                 #clock-cells = <0>;
->                 clock-frequency = <26000000>;
-> -               clock-output-names = "ext_26m";
-> +               clock-output-names = "ext-26m";
-> +       };
-> +
-> +       ext_rco_100m: ext_rco_100m {
-> +               compatible = "fixed-clock";
-> +               #clock-cells = <0>;
-> +               clock-frequency = <100000000>;
-> +               clock-output-names = "ext-rco-100m";
->         };
->  };
-> --
-> 2.7.4
->
+Two fixups for mediatek's host bridge:
+The first patch fixup the IRQ handle routine to avoid IRQ reentry which
+may exist for both MT2712 and MT7622.
+The second patch fixup class type for MT7622.
+
+Change since v3:
+ - Setup the class type and vendor ID at the beginning of startup instead
+   of in a quirk.
+ - Add mediatek's vendor ID, it could be found in:
+   https://pcisig.com/membership/member-companies?combine=&page=4
+
+Change since v2:
+ - Move the initialize of the iterate before the loop to fix an
+   INTx IRQ issue in the first patch
+
+Change since v1:
+ - Add the second patch.
+ - Make the first patch's commit message more standard.
+
+Honghui Zhang (2):
+  PCI: mediatek: Clear IRQ status after IRQ dispatched to avoid reentry
+  PCI: mediatek: Set up class type and vendor ID for MT7622
+
+ drivers/pci/host/pcie-mediatek.c | 23 ++++++++++++++++++-----
+ include/linux/pci_ids.h          |  3 +++
+ 2 files changed, 21 insertions(+), 5 deletions(-)
+
+-- 
+2.6.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
