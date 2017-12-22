@@ -1,82 +1,84 @@
-From: Chunyan Zhang <zhang.chunyan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/5] bindings: regulator: added support for suspend states
-Date: Fri, 22 Dec 2017 14:05:21 +0800
-Message-ID: <CAG2=9p9ahGgnz1Gos-o-o5PB9UH--2t3Lv54PaK5_f2jpNQnDQ@mail.gmail.com>
-References: <1513837506-26543-1-git-send-email-zhang.chunyan@linaro.org>
- <1513837506-26543-2-git-send-email-zhang.chunyan@linaro.org> <20171221232614.rhrgrpyl2w2lc6bw@rob-hp-laptop>
+From: <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH] arm: dts: mt7623: enable all four available UARTs on bananapi-r2
+Date: Fri, 22 Dec 2017 14:06:33 +0800
+Message-ID: <b4e84a68da76c1ca538150a730777ff530c1db5a.1513922513.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171221232614.rhrgrpyl2w2lc6bw@rob-hp-laptop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chunyan Zhang <zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-On 22 December 2017 at 07:26, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Thu, Dec 21, 2017 at 02:25:02PM +0800, Chunyan Zhang wrote:
->> Documented a few new added properties which are used for supporting
->> regulator suspend states.
->
-> Your commit message should answer why you need this. What problem do you
-> have that this solves?
->
->>
->> Signed-off-by: Chunyan Zhang <zhang.chunyan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> ---
->>  Documentation/devicetree/bindings/regulator/regulator.txt | 11 +++++++++--
->>  1 file changed, 9 insertions(+), 2 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/regulator/regulator.txt b/Documentation/devicetree/bindings/regulator/regulator.txt
->> index 378f6dc..618a322 100644
->> --- a/Documentation/devicetree/bindings/regulator/regulator.txt
->> +++ b/Documentation/devicetree/bindings/regulator/regulator.txt
->> @@ -42,8 +42,15 @@ Optional properties:
->>  - regulator-state-[mem/disk] node has following common properties:
->>       - regulator-on-in-suspend: regulator should be on in suspend state.
->>       - regulator-off-in-suspend: regulator should be off in suspend state.
->> -     - regulator-suspend-microvolt: regulator should be set to this voltage
->> -       in suspend.
->> +     - regulator-suspend-min-microvolt: minimum voltage may be set in
->> +       suspend state.
->> +     - regulator-suspend-max-microvolt: maximum voltage may be set in
->> +       suspend state.
->> +     - regulator-suspend-microvolt: the default voltage which regulator
->> +       should be set in suspend, this can be adjusted among
->> +       <regulator-suspend-min-microvolt, regulator-suspend-max-microvolt>
->
-> Perhaps this should stay a single property with: <target> <min> <max>
+On bpi-r2 board, totally there're four uarts which we usually called
+uart[0-3] helpful to extend slow I/O devices. Among those ones, uart2 has
+dedicated pin slot which is used to conolse log. uart[0-1] appear at the
+40-pins connector and uart3 has no pinout, but just has test points (TP47
+for TX and TP48 for RX, respectively) nearby uart2. Also, some missing
+pinctrl is being complemented for those devices.
 
-Do you mean that change the property name from "regulator-suspend-microvolt" to
-"regulator-suspend-target-microvolt"?
+Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+---
+ arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts | 26 ++++++++++++++++++++++++--
+ 1 file changed, 24 insertions(+), 2 deletions(-)
 
-"regulator-suspend-microvolt" is the one that some SoC is using. My
-intention was just to keep that configuration still working.
+diff --git a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
+index 7bf5aa2..64bf5db 100644
+--- a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
++++ b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
+@@ -409,6 +409,20 @@
+ 				 <MT7623_PIN_82_UTXD1_FUNC_UTXD1>;
+ 		};
+ 	};
++
++	uart2_pins_a: uart@2 {
++		pins_dat {
++			pinmux = <MT7623_PIN_14_GPIO14_FUNC_URXD2>,
++				 <MT7623_PIN_15_GPIO15_FUNC_UTXD2>;
++		};
++	};
++
++	uart3_pins_a: uart@3 {
++		pins_dat {
++			pinmux = <MT7623_PIN_242_URTS2_FUNC_URTS2>,
++				 <MT7623_PIN_243_UCTS2_FUNC_UTXD3>;
++		};
++	};
+ };
+ 
+ &pwm {
+@@ -454,16 +468,24 @@
+ &uart0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart0_pins_a>;
+-	status = "disabled";
++	status = "okay";
+ };
+ 
+ &uart1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart1_pins_a>;
+-	status = "disabled";
++	status = "okay";
+ };
+ 
+ &uart2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart2_pins_a>;
++	status = "okay";
++};
++
++&uart3 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart3_pins_a>;
+ 	status = "okay";
+ };
+ 
+-- 
+2.7.4
 
-> Though why would you ever not try to set to the minimum voltage within
-> the range of <min> to <max>?
-
-IIUC, you mean just removing "regulator-suspend-microvolt", and use
-"regulator-suspend-min-microvolt" as the default value for suspend
-voltage?
-I think that can work, but would it be better to not remove that right
-now, since some one is using that?
-
-Thanks for your review!
-
-Chunyan
-
->
->> +     - regulator-changeable-in-suspend: whether the default voltage and
->> +       the regulator on/off in suspend can be changed in runtime.
->>       - regulator-mode: operating mode in the given suspend state.
->>         The set of possible operating modes depends on the capabilities of
->>         every hardware so the valid modes are documented on each regulator
->> --
->> 2.7.4
->>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
