@@ -1,163 +1,219 @@
-From: Dong Aisheng <aisheng.dong@nxp.com>
-Subject: [PATCH 1/1] power: reset: remove unused imx-snvs-poweroff driver
-Date: Fri, 22 Dec 2017 18:28:59 +0800
-Message-ID: <1513938539-20873-1-git-send-email-aisheng.dong@nxp.com>
+From: =?iso-8859-1?Q?T=FCrk=2C_Jan?= <Jan.Tuerk-BU0Y/NROKIiELgA04lAiVw@public.gmane.org>
+Subject: Re: [PATCH v2 4/5] ARM: dts: Add support for emtrion emCON-MX6
+ series
+Date: Fri, 22 Dec 2017 11:34:31 +0100
+Message-ID: <95F51F4B902CAC40AF459205F6322F01B7FDFECC3C@BMK019S01.emtrion.local>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-pm-owner@vger.kernel.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: linux-pm@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, shawnguo@kernel.org, sre@kernel.org, dongas86@gmail.com, aisheng.dong@nxp.com, yibin.gong@nxp.com, robh+dt@kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Language: de-DE
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: 'Rob Herring' <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, =?iso-8859-1?Q?Andreas_F=E4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, SZ Lin <sz.lin-D4fb9hXD9d4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, LinuxArmKernelMailingListe <linux-arm-kern>
 List-Id: devicetree@vger.kernel.org
 
-There's no user of it in kernel now and it basically functions the same
-as the generic syscon-poweroff.c to which we have already switched.
-So let's remove it.
+> -----Ursprüngliche Nachricht-----
+> Von: Rob Herring [mailto:robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org]
+> Gesendet: Freitag, 22. Dezember 2017 00:19
+> An: Türk, Jan
+> Betreff: Re: [PATCH v2 4/5] ARM: dts: Add support for emtrion emCON-MX6
+> series
+> 
+> On Wed, Dec 20, 2017 at 02:47:04PM +0100, jan.tuerk-BU0Y/NROKIhBDgjK7y7TUQ@public.gmane.org wrote:
+> > From: Jan Tuerk <jan.tuerk-BU0Y/NROKIhBDgjK7y7TUQ@public.gmane.org>
+> >
+> > This patch adds support for the emtrion GmbH emCON-MX6 modules.
+> > They are available with imx.6 Solo, Dual-Lite, Dual and Quad equipped
+> > with Memory from 512MB to 2GB (configured by U-Boot).
+> >
+> > Our default developer-Kit ships with the Avari baseboard and the EDT
+> > ETM0700G0BDH6 Display (imx6[q|dl]-emcon-avari).
+> >
+> > The devicetree is split into the common part providing all module
+> > components and the basic support for all SoC versions
+> > (imx6qdl-emcon.dtsi) and parts which are i.mx6 S|DL and D|Q relevant.
+> > Finally the support for the avari baseboard in the developer-kit
+> > configuration is provided by the emcon-avari dts files.
+> >
+> > Signed-off-by: Jan Tuerk <jan.tuerk-BU0Y/NROKIhBDgjK7y7TUQ@public.gmane.org>
+> > ---
+> > Changes in v2:
+> >  - Fixed typo (reg_prallel.. --> reg_parallel)
+> >  - Removed trailing new-line
+> >  - Fix uppercase addresses as Rob H. noted
+> >  - Fix warning about lcd@di0 -> rename to disp0
+> >  - Renamed some nodes regarding Rob H.
+> >
+> >  Documentation/devicetree/bindings/arm/emtrion.txt |  13 +
+> >  arch/arm/boot/dts/Makefile                        |   2 +
+> >  arch/arm/boot/dts/imx6dl-emcon-avari.dts          | 233 ++++++
+> >  arch/arm/boot/dts/imx6dl-emcon.dtsi               |  37 +
+> >  arch/arm/boot/dts/imx6q-emcon-avari.dts           | 233 ++++++
+> >  arch/arm/boot/dts/imx6q-emcon.dtsi                |  37 +
+> >  arch/arm/boot/dts/imx6qdl-emcon.dtsi              | 848
+> ++++++++++++++++++++++
+> >  7 files changed, 1403 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/arm/emtrion.txt
+> >  create mode 100644 arch/arm/boot/dts/imx6dl-emcon-avari.dts
+> >  create mode 100644 arch/arm/boot/dts/imx6dl-emcon.dtsi
+> >  create mode 100644 arch/arm/boot/dts/imx6q-emcon-avari.dts
+> >  create mode 100644 arch/arm/boot/dts/imx6q-emcon.dtsi
+> >  create mode 100644 arch/arm/boot/dts/imx6qdl-emcon.dtsi
+> 
+> [...]
+> 
+> > +	captouch: touchscreen@38 {
+> > +		reg = <0x38>;
+> > +		pinctrl-names = "default";
+> > +		pinctrl-0 = <&pinctrl_irq_touch2 &pinctrl_emcon_gpio4>;
+> > +		interrupt-parent = <&gpio6>;
+> > +		interrupts = <31 IRQ_TYPE_EDGE_FALLING>;
+> > +		compatible = "edt,edt-ft5406";
+> 
+> Put compatible as the first property.
+> 
+> > +		wake-gpios = <&gpio2 3 GPIO_ACTIVE_HIGH>;
+> > +		wakeup-source;
+> > +	};
+> > +};
+> 
+> [...]
+> 
+> > +&rgb_panel {
+> > +	compatible = "edt,etm0700g0bdh6";
+> > +	status = "okay";
+> 
+> Having compatible here is a bit strange and fragile. It's assuming 2 different
+> panels have the same common properties.
 
-Cc: Robin Gong <yibin.gong@nxp.com>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+The reason for doing it here is that the devicetree is splitted into 2 Layers (3 with imx6qdl.dtsi).
+The first Layer (imx6qdl-emcon.dtsi) describes the i.mx6 Module named "emCON-MX6", with all drivers
+(some are currently disabled) to provide all functionality as defined by its specification. 
+For the RGB port it means that it defaults to 24 bit. However, the "panel" connects the specified
+backlight pwm and the corresponding enable pin of the display. 
+In the file you're mentioning here the AVARI baseboard is configured and described, which has an 
+18bit EDT RGB connector. Also the display is an option and might be a different one on customer's 
+hardware. 
+So if custom designs based on our module/baseboard are made, they'll have just to specify the display type
+actually connected and we'll save the boilerplate of drm + pm connections.
+
+> 
+> 
+> > diff --git a/arch/arm/boot/dts/imx6q-emcon.dtsi b/arch/arm/boot/dts/imx6q-
+> emcon.dtsi
+> > new file mode 100644
+> > index 000000000000..64fc0cd74c05
+> > --- /dev/null
+> > +++ b/arch/arm/boot/dts/imx6q-emcon.dtsi
+> > @@ -0,0 +1,37 @@
+> > +/*
+> > + * Copyright (C) 2017 emtrion GmbH
+> > + * Author: Jan Tuerk  <jan.tuerk-BU0Y/NROKIhBDgjK7y7TUQ@public.gmane.org>
+> > + *
+> > + * The code contained herein is licensed under the GNU General Public
+> > + * License. You may obtain a copy of the GNU General Public License
+> > + * Version 2 or later at the following locations:
+> > + *
+> > + * http://www.opensource.org/licenses/gpl-license.html
+> > + * http://www.gnu.org/copyleft/gpl.html
+> 
+> You don't need this if...
+
+I've got a little different point of view on this since the OSS Europe 2017 - part of gpl2 following.
+
+GPLv2-Para1 (=>highlighted<=) :
+1. You may copy and distribute verbatim copies of the Program's source code as you receive it, in any medium,
+ provided that you conspicuously and appropriately publish on each copy an 
+=> appropriate copyright notice and disclaimer of warranty; <=
+keep intact all the notices that refer to this License and to the absence of any warranty;
+ and give any other recipients of the Program a copy of this License along with the Program.
+
+After reviewing this I think apparently I should include the Warranty disclaimer as well.
+Examples could be found  in:
+arch/arm/boot/dts/imx6q-tbs2910.dts
+and
+arch/arm/boot/dts/imx6q-zii-rdu2.dts
+
+> 
+> > + *
+> > + * SPDX-License-Identifier: GPL-2.0
+> 
+> You have this.
+> 
+> Also, the rules around this are getting a bit stricter saying the SPDX
+> tag should be the first line of the file using a C++ style comment.
+> 
+I'll change it for v3 of this patch however it will end up like this:
+//SPDX-License...
+/*
+ *  Copyright 
+do you have an reference for that? What I've found so far was telling the format I used.
+
+> > + *
+> > + */
+> > +
+> > +/ {
+> > +	model = "emtrion SoM emCON-MX6 Dual/Quad";
+> > +	compatible = "emtrion,emcon-mx6","fsl,imx6q";
+> 
+> Need a space                             ^
+Ok
+> 
+> > diff --git a/arch/arm/boot/dts/imx6qdl-emcon.dtsi
+> b/arch/arm/boot/dts/imx6qdl-emcon.dtsi
+> > new file mode 100644
+> > index 000000000000..f87d8ed6a1b1
+> > --- /dev/null
+> > +++ b/arch/arm/boot/dts/imx6qdl-emcon.dtsi
+> > @@ -0,0 +1,848 @@
+> > +/*
+> > + * Copyright (C) 2017 emtrion GmbH
+> > + * Author: Jan Tuerk  <jan.tuerk-BU0Y/NROKIhBDgjK7y7TUQ@public.gmane.org>
+> > + *
+> > + * The code contained herein is licensed under the GNU General Public
+> > + * License. You may obtain a copy of the GNU General Public License
+> > + * Version 2 or later at the following locations:
+> > + *
+> > + * http://www.opensource.org/licenses/gpl-license.html
+> > + * http://www.gnu.org/copyleft/gpl.html
+> > + *
+> > + * SPDX-License-Identifier: GPL-2.0
+> > + *
+> > + */
+> > +
+> > +#include <dt-bindings/gpio/gpio.h>
+> > +#include <dt-bindings/pwm/pwm.h>
+> > +#include <dt-bindings/input/input.h>
+> > +
+> > +/ {
+> > +
+> > +	model = "emtrion SoM emCON-MX6";
+> > +	compatible = "emtrion,emcon-mx6","fsl,imx6q", "fsl,imx6dl";
+> 
+> Need a space                             ^
+
+Ok
+
+
+Regards 
+
+Jan 
+
 ---
- .../bindings/power/reset/imx-snvs-poweroff.txt     | 23 --------
- drivers/power/reset/Kconfig                        |  9 ---
- drivers/power/reset/Makefile                       |  1 -
- drivers/power/reset/imx-snvs-poweroff.c            | 66 ----------------------
- 4 files changed, 99 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/power/reset/imx-snvs-poweroff.txt
- delete mode 100644 drivers/power/reset/imx-snvs-poweroff.c
+emtrion GmbH
+Alter Schlachthof 45
+76131 Karlsruhe
+GERMANY
+https://www.emtrion.de
 
-diff --git a/Documentation/devicetree/bindings/power/reset/imx-snvs-poweroff.txt b/Documentation/devicetree/bindings/power/reset/imx-snvs-poweroff.txt
-deleted file mode 100644
-index 1b81fcd..0000000
---- a/Documentation/devicetree/bindings/power/reset/imx-snvs-poweroff.txt
-+++ /dev/null
-@@ -1,23 +0,0 @@
--i.mx6 Poweroff Driver
--
--SNVS_LPCR in SNVS module can power off the whole system by pull
--PMIC_ON_REQ low if PMIC_ON_REQ is connected with external PMIC.
--If you don't want to use PMIC_ON_REQ as power on/off control,
--please set status='disabled' to disable this driver.
--
--Required Properties:
---compatible: "fsl,sec-v4.0-poweroff"
---reg: Specifies the physical address of the SNVS_LPCR register
--
--Example:
--	snvs@20cc000 {
--		compatible = "fsl,sec-v4.0-mon", "simple-bus";
--		#address-cells = <1>;
--		#size-cells = <1>;
--		ranges = <0 0x020cc000 0x4000>;
--		.....
--		snvs_poweroff: snvs-poweroff@38 {
--			compatible = "fsl,sec-v4.0-poweroff";
--			reg = <0x38 0x4>;
--		};
--	}
-diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
-index ca0de1a..a102e74 100644
---- a/drivers/power/reset/Kconfig
-+++ b/drivers/power/reset/Kconfig
-@@ -98,15 +98,6 @@ config POWER_RESET_HISI
- 	help
- 	  Reboot support for Hisilicon boards.
- 
--config POWER_RESET_IMX
--	bool "IMX6 power-off driver"
--	depends on POWER_RESET && SOC_IMX6
--	help
--	  This driver support power off external PMIC by PMIC_ON_REQ on i.mx6
--	  boards.If you want to use other pin to control external power,please
--	  say N here or disable in dts to make sure pm_power_off never be
--	  overwrote wrongly by this driver.
--
- config POWER_RESET_MSM
- 	bool "Qualcomm MSM power-off driver"
- 	depends on ARCH_QCOM
-diff --git a/drivers/power/reset/Makefile b/drivers/power/reset/Makefile
-index aeb65ed..dcc92f5 100644
---- a/drivers/power/reset/Makefile
-+++ b/drivers/power/reset/Makefile
-@@ -10,7 +10,6 @@ obj-$(CONFIG_POWER_RESET_GEMINI_POWEROFF) += gemini-poweroff.o
- obj-$(CONFIG_POWER_RESET_GPIO) += gpio-poweroff.o
- obj-$(CONFIG_POWER_RESET_GPIO_RESTART) += gpio-restart.o
- obj-$(CONFIG_POWER_RESET_HISI) += hisi-reboot.o
--obj-$(CONFIG_POWER_RESET_IMX) += imx-snvs-poweroff.o
- obj-$(CONFIG_POWER_RESET_MSM) += msm-poweroff.o
- obj-$(CONFIG_POWER_RESET_PIIX4_POWEROFF) += piix4-poweroff.o
- obj-$(CONFIG_POWER_RESET_LTC2952) += ltc2952-poweroff.o
-diff --git a/drivers/power/reset/imx-snvs-poweroff.c b/drivers/power/reset/imx-snvs-poweroff.c
-deleted file mode 100644
-index ad6ce50..0000000
---- a/drivers/power/reset/imx-snvs-poweroff.c
-+++ /dev/null
-@@ -1,66 +0,0 @@
--/* Power off driver for i.mx6
-- * Copyright (c) 2014, FREESCALE CORPORATION.  All rights reserved.
-- *
-- * based on msm-poweroff.c
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 and
-- * only version 2 as published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-- *
-- */
--
--#include <linux/err.h>
--#include <linux/init.h>
--#include <linux/io.h>
--#include <linux/kernel.h>
--#include <linux/module.h>
--#include <linux/of.h>
--#include <linux/of_address.h>
--#include <linux/platform_device.h>
--
--static void __iomem *snvs_base;
--
--static void do_imx_poweroff(void)
--{
--	u32 value = readl(snvs_base);
--
--	/* set TOP and DP_EN bit */
--	writel(value | 0x60, snvs_base);
--}
--
--static int imx_poweroff_probe(struct platform_device *pdev)
--{
--	snvs_base = of_iomap(pdev->dev.of_node, 0);
--	if (!snvs_base) {
--		dev_err(&pdev->dev, "failed to get memory\n");
--		return -ENODEV;
--	}
--
--	pm_power_off = do_imx_poweroff;
--	return 0;
--}
--
--static const struct of_device_id of_imx_poweroff_match[] = {
--	{ .compatible = "fsl,sec-v4.0-poweroff", },
--	{},
--};
--MODULE_DEVICE_TABLE(of, of_imx_poweroff_match);
--
--static struct platform_driver imx_poweroff_driver = {
--	.probe = imx_poweroff_probe,
--	.driver = {
--		.name = "imx-snvs-poweroff",
--		.of_match_table = of_match_ptr(of_imx_poweroff_match),
--	},
--};
--
--static int __init imx_poweroff_init(void)
--{
--	return platform_driver_register(&imx_poweroff_driver);
--}
--device_initcall(imx_poweroff_init);
--- 
-2.7.4
+Amtsgericht Mannheim
+HRB 110 300
+Geschäftsführer: Dieter Baur, Ramona Maurer
+
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
