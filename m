@@ -1,77 +1,87 @@
-From: =?iso-8859-1?Q?T=FCrk=2C_Jan?= <Jan.Tuerk-BU0Y/NROKIiELgA04lAiVw@public.gmane.org>
-Subject: AW: [PATCH v2 4/5] ARM: dts: Add support for emtrion emCON-MX6
- series
-Date: Fri, 22 Dec 2017 12:44:26 +0100
-Message-ID: <95F51F4B902CAC40AF459205F6322F01B7FDFECC3F@BMK019S01.emtrion.local>
-References: <95F51F4B902CAC40AF459205F6322F01B7FDFECC3C@BMK019S01.emtrion.local>
- <20171222104028.GC18255@piout.net>
- <b41bc779-28e8-5a87-6f66-f5874dba8d1e@suse.de>
- <20171222105642.GD18255@piout.net>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v5 01/12] dt-bindings: panel: lvds: Document power-supply
+ property
+Date: Fri, 22 Dec 2017 14:08:20 +0200
+Message-ID: <2493504.1OPucrC18r@avalon>
+References: <cover.e5a47cc96ec5274dd932daa2bde47df073087da9.1513854122.git-series.maxime.ripard@free-electrons.com>
+ <0a6a3abcf1a6b7f0e66a81af8a44c5c0566ce06c.1513854122.git-series.maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171222105642.GD18255-m++hUPXGwpdeoWH0uzbU5w@public.gmane.org>
-Content-Language: de-DE
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: 'Alexandre Belloni' <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, =?iso-8859-1?Q?Andreas_F=E4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Philippe Ombredanne <pombredanne-od1rfyK75/E@public.gmane.org>
-Cc: 'Rob Herring' <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, SZ Lin <sz.lin-D4fb9hXD9d4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, LinuxArmKernelMailingListe <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <0a6a3abcf1a6b7f0e66a81af8a44c5c0566ce06c.1513854122.git-series.maxime.ripard@free-electrons.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, jernej.skrabec@siol.net, plaes@plaes.org, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, thierry.reding@gmail.com, Daniel Vetter <daniel.vetter@intel.com>, linux-arm-kernel@lists.infradead.org, icenowy@aosc.io
 List-Id: devicetree@vger.kernel.org
 
- Hi,
-
-> On 22/12/2017 at 11:43:33 +0100, Andreas Färber wrote:
-> > >> I'll change it for v3 of this patch however it will end up like this:
-> > >> //SPDX-License...
-> > >
-> > > That should be /* SPDX-License */, // is for c files.
-> >
-> > Got any reference for that? Since we're using the C preprocessor
-> > before feeding them to dtc, we can use the same // style for both, builds fine.
-> >
-> > Only for my private DT overlay files that I use directly with dtc I
-> > couldn't adopt that style.
-> >
-> The doc states:
-> 
-> If a specific tool cannot handle the standard comment style, then the
-> appropriate comment mechanism which the tool accepts shall be used. This is
-> the reason for having the "/\* \*/" style comment in C header files.
-> 
-> I interpreted that as dtc doesn't handle // comments, use /**/
-> 
-> But I agree it also states:
-> .dts{i}:	  // SPDX-License-Identifier: <SPDX License Expression>
-> 
-> So I think we will end up with a mix of both.
-> 
-after some regexp on arch/arm/boot/dts, the current state is:
-216 SPDX identifiers total
-	184 by GregKH in b24413180f5600bcb3bb70fbed5cf186b60864bd starting with //
-	2 times /*  also by GregKH in the commit above (in .h files)
-	27 occurrences of  "* SPDX"
-
-However, the de-facto comment style in the arm devicetrees seems to be /* */
-So with the current information I would prepare v3 with:
-
-// SPDX-License-Identifier
-/* Copyright-text + Header
-*/
-[...]
-
-Jan
-
----
-emtrion GmbH
-Alter Schlachthof 45
-76131 Karlsruhe
-GERMANY
-https://www.emtrion.de
-
-Amtsgericht Mannheim
-HRB 110 300
-Geschäftsführer: Dieter Baur, Ramona Maurer
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgTWF4aW1lLAoKVGhhbmsgeW91IGZvciB0aGUgcGF0Y2guCgpPbiBUaHVyc2RheSwgMjEgRGVj
+ZW1iZXIgMjAxNyAxMzowMjoyNyBFRVQgTWF4aW1lIFJpcGFyZCB3cm90ZToKPiBUaGUgcG93ZXIt
+c3VwcGx5IHByb3BlcnR5IGlzIHVzZWQgYnkgYSB2YXN0IG1ham9yaXR5IG9mIHBhbmVscywgaW5j
+bHVkaW5nCj4gcGFuZWwtc2ltcGxlLiBMZXQncyBkb2N1bWVudCBpdCBhcyBhIGNvbW1vbiBwcm9w
+ZXJ0eQo+IAo+IFJldmlld2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgo+IFNp
+Z25lZC1vZmYtYnk6IE1heGltZSBSaXBhcmQgPG1heGltZS5yaXBhcmRAZnJlZS1lbGVjdHJvbnMu
+Y29tPgo+IC0tLQo+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9w
+YW5lbC9wYW5lbC1jb21tb24udHh0IHwgNiArKysrKysKPiBEb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9wYW5lbC1sdmRzLnR4dCAgIHwgMSArCj4gRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvc2ltcGxlLXBhbmVsLnR4
+dCB8IDIgKy0gMwo+IGZpbGVzIGNoYW5nZWQsIDggaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigt
+KQo+IAo+IGRpZmYgLS1naXQKPiBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
+aXNwbGF5L3BhbmVsL3BhbmVsLWNvbW1vbi50eHQKPiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3BhbmVsLWNvbW1vbi50eHQgaW5kZXgKPiBlYzUyYzQ3
+MmM4NDUuLjEyNWVhNjgwNTJhZiAxMDA2NDQKPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9wYW5lbC1jb21tb24udHh0Cj4gKysrIGIvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvcGFuZWwtY29tbW9uLnR4
+dAo+IEBAIC03OCw2ICs3OCwxMiBAQCB1c2VkIGZvciBwYW5lbHMgdGhhdCBpbXBsZW1lbnQgY29t
+cGF0aWJsZSBjb250cm9sCj4gc2lnbmFscy4gd2hpbGUgYWN0aXZlLiBBY3RpdmUgaGlnaCByZXNl
+dCBzaWduYWxzIGNhbiBiZSBzdXBwb3J0ZWQgYnkKPiBpbnZlcnRpbmcgdGhlIEdQSU8gc3BlY2lm
+aWVyIHBvbGFyaXR5IGZsYWcuCj4gCj4gK1Bvd2VyCj4gKy0tLS0tCj4gKwo+ICstIHBvd2VyLXN1
+cHBseTogbWFueSBkaXNwbGF5IHBhbmVscyBuZWVkIGFuIGFkZGl0aW9uYWwgcG93ZXIgc3VwcGx5
+IGluCj4gKyAgb3JkZXIgdG8gYmUgZnVsbHkgcG93ZXJlZC11cC4gRm9yIHN1Y2ggcGFuZWxzLCBw
+b3dlci1zdXBwbHkgY29udGFpbnMKPiArICBhIHBoYW5kbGUgdG8gdGhlIHJlZ3VsYXRvciBwb3dl
+cmluZyB0aGUgcGFuZWwuCgpJIHRoaW5rIHdlIHNob3VsZCBnaXZlIG1vcmUgZGV0YWlscyBoZXJl
+IGFib3V0IHRoZSBsaW1pdGF0aW9ucyBvZiB0aGlzIApwcm9wZXJ0eS4gSG93IGFib3V0IHRoZSBm
+b2xsb3dpbmcgZXhwbGFuYXRpb24gPwoKLSBwb3dlci1zdXBwbHk6IGRpc3BsYXkgcGFuZWxzIHJl
+cXVpcmUgcG93ZXIgdG8gYmUgc3VwcGxpZWQuIFdoaWxlIHNldmVyYWwgCnBhbmVscyBuZWVkIG1v
+cmUgdGhhbiBvbmUgcG93ZXIgc3VwcGx5IHdpdGggcGFuZWwtc3BlY2lmaWMgY29uc3RyYWludHMg
+CmdvdmVybmluZyB0aGUgb3JkZXIgYW5kIHRpbWluZ3Mgb2YgdGhlIHBvd2VyIHN1cHBsaWVzLCBp
+biBtYW55IGNhc2VzIGEgc2luZ2xlIApwb3dlciBzdXBwbHkgaXMgc3VmZmljaWVudCwgZWl0aGVy
+IGJlY2F1c2UgdGhlIHBhbmVsIGhhcyBhIHNpbmdsZSBwb3dlciByYWlsLCAKb3IgYmVjYXVzZSBh
+bGwgaXRzIHBvd2VyIHJhaWxzIGNhbiBiZSBkcml2ZW4gYnkgdGhlIHNhbWUgc3VwcGx5LiBJbiB0
+aGF0IGNhc2UgCnRoZSBwb3dlci1zdXBwbHkgcHJvcGVydHkgc3BlY2lmaWVzIHRoZSBzdXBwbHkg
+cG93ZXJpbmcgdGhlIHBhbmVsIGFzIGEgcGhhbmRsZSAKdG8gYSByZWd1bGF0b3IuCgo+ICBCYWNr
+bGlnaHQKPiAgLS0tLS0tLS0tCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3BhbmVsLWx2ZHMudHh0Cj4gYi9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9wYW5lbC1sdmRzLnR4dCBpbmRleAo+
+IGI5MzgyNjlmODQxZS4uMjUwODUwYTIxNTBiIDEwMDY0NAo+IC0tLSBhL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3BhbmVsLWx2ZHMudHh0Cj4gKysrIGIv
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvcGFuZWwtbHZk
+cy50eHQKPiBAQCAtMzIsNiArMzIsNyBAQCBPcHRpb25hbCBwcm9wZXJ0aWVzOgo+ICAtIGxhYmVs
+OiBTZWUgcGFuZWwtY29tbW9uLnR4dC4KPiAgLSBncGlvczogU2VlIHBhbmVsLWNvbW1vbi50eHQu
+Cj4gIC0gYmFja2xpZ2h0OiBTZWUgcGFuZWwtY29tbW9uLnR4dC4KPiArLSBwb3dlci1zdXBwbHk6
+IFNlZSBwYW5lbC1jb21tb24udHh0Lgo+ICAtIGRhdGEtbWlycm9yOiBJZiBzZXQsIHJldmVyc2Ug
+dGhlIGJpdCBvcmRlciBkZXNjcmliZWQgaW4gdGhlIGRhdGEgbWFwcGluZ3MKPiBiZWxvdyBvbiBh
+bGwgZGF0YSBsYW5lcywgdHJhbnNtaXR0aW5nIGJpdHMgZm9yIHNsb3RzIDYgdG8gMCBpbnN0ZWFk
+IG9mIDAgdG8KPiA2Lgo+IGRpZmYgLS1naXQKPiBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9kaXNwbGF5L3BhbmVsL3NpbXBsZS1wYW5lbC50eHQKPiBiL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3NpbXBsZS1wYW5lbC50eHQgaW5kZXgK
+PiAxMzQxYmJmNGFhM2QuLjE2ZDhmZjA4OGI3ZCAxMDA2NDQKPiAtLS0gYS9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9zaW1wbGUtcGFuZWwudHh0Cj4gKysr
+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvc2ltcGxl
+LXBhbmVsLnR4dAo+IEBAIC0xLDcgKzEsNyBAQAo+ICBTaW1wbGUgZGlzcGxheSBwYW5lbAo+IAo+
+ICBSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+IC0tIHBvd2VyLXN1cHBseTogcmVndWxhdG9yIHRvIHBy
+b3ZpZGUgdGhlIHN1cHBseSB2b2x0YWdlCj4gKy0gcG93ZXItc3VwcGx5OiBTZWUgcGFuZWwtY29t
+bW9uLnR4dAo+IAo+ICBPcHRpb25hbCBwcm9wZXJ0aWVzOgo+ICAtIGRkYy1pMmMtYnVzOiBwaGFu
+ZGxlIG9mIGFuIEkyQyBjb250cm9sbGVyIHVzZWQgZm9yIEREQyBFRElEIHByb2JpbmcKCi0tIApS
+ZWdhcmRzLAoKTGF1cmVudCBQaW5jaGFydAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMu
+ZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlz
+dGluZm8vZHJpLWRldmVsCg==
