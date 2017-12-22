@@ -1,57 +1,71 @@
-From: Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Subject: Re: [PATCH v2] arm64: dts: Hi3660: Fix up psci state id
-Date: Fri, 22 Dec 2017 09:37:00 +0000
-Message-ID: <5A3CD23C.3080307@hisilicon.com>
-References: <1513069954-22827-1-git-send-email-leo.yan@linaro.org>
+From: Wei Xu <xuwei5@hisilicon.com>
+Subject: Re: [PATCH] arm64: dts: hisilicon: Add hi3660 cpu capacity-dmips-mhz
+ information
+Date: Fri, 22 Dec 2017 09:38:14 +0000
+Message-ID: <5A3CD286.2010705@hisilicon.com>
+References: <1513174866-6678-1-git-send-email-valentin.schneider@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1513069954-22827-1-git-send-email-leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Soby Mathew <Soby.Mathew-5wv7dgnIgG8@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1513174866-6678-1-git-send-email-valentin.schneider@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Valentin Schneider <valentin.schneider@arm.com>, linux-kernel@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Dietmar Eggemann <dietmar.eggemann@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Leo,
+Hi Valentin,
 
-On 2017/12/12 9:12, Leo Yan wrote:
-> Thanks a lot for Vincent Guittot careful work to find bug for 'CPU_NAP'
-> idle state.  From ftrace log we can observe CA73 CPUs can be easily
-> waken up from 'CPU_NAP' state but the 'waken up' CPUs doesn't handle
-> anything and sleep again; so there have tons of trace events for CA73
-> CPUs entering and exiting idle state.
+On 2017/12/13 14:21, Valentin Schneider wrote:
+> The following dt entries are added:
+>  cpus [0-3] (Cortex A53):
+>    - capacity-dmips-mhz = <592>;
 > 
-> On Hi3660 CA73 has retention state 'CPU_NAP' for CPU idle, this state we
-> set its psci parameter as '0x0000001' and from this parameter it can
-> calculate state id is 1.  Unfortunately ARM trusted firmware (ARM-TF)
-> takes 1 as a invalid value for state id, so the CPU cannot enter idle
-> state and directly bail out to kernel.
+>  cpus [4-7] (Cortex A73):
+>    - capacity-dmips-mhz = <1024>;
 > 
-> We want to create good practice for psci parameters platform definition,
-> so review the psci specification. The spec "ARM Power State Coordination
-> Interface - Platform Design Document (ARM DEN 0022D)" recommends state
-> ID in chapter "6.5 Recommended StateID Encoding".  The recommended power
-> state IDs can be presented by below listed values; and it divides into
-> three fields, every field can use 4 bits to present power states
-> corresponding to core level, cluster level and system level:
->   0: Run
->   1: Standby
->   2: Retention
->   3: Powerdown
+> Those values were obtained by running dhrystone 2.1 on a
+> HiKey960 with the following procedure:
+> - Offline all CPUs but CPU0 (A53)
+> - Set CPU0 frequency to maximum
+> - Run Dhrystone 2.1 for 20 seconds
 > 
-> This commit changes psci parameter to compliance with the suggested
-> state ID in the doc.  Except we change 'CPU_NAP' state psci parameter
-> to '0x0000002', this commit also changes 'CPU_SLEEP' and 'CLUSTER_SLEEP'
-> state parameters to '0x0010003' and '0x1010033' respectively.
+> - Offline all CPUs but CPU4 (A73)
+> - set CPU4 frequency to maximum
+> - Run Dhrystone 2.1 for 20 seconds
 > 
-> Credits to Daniel, Sudeep and Soby for suggestion and consolidation.
+> The results are as follows:
+> A53: 129633887 loops
+> A73: 287034147 loops
 > 
-> Cc: Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-> Cc: Soby Mathew <Soby.Mathew-5wv7dgnIgG8@public.gmane.org>
-> Signed-off-by: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> By scaling those values so that the A73s use 1024, we end up with 462
+> for the A53s. However, they have different maximum frequencies:
+> 1.844GHz for A53s and 2.362GHz for A73s. Thus, we can scale the A53
+> value to truly represent dmips per MHz, and we end up with 592.
+> 
+> The impact of this change can be verified on HiKey960:
+> 
+> $ cat /sys/devices/system/cpu/cpu*/cpufreq/scaling_cur_freq
+> 1844000
+> 1844000
+> 1844000
+> 1844000
+> 2362000
+> 2362000
+> 2362000
+> 2362000
+> 
+> $ cat /sys/devices/system/cpu/cpu*/cpu_capacity
+> 462
+> 462
+> 462
+> 462
+> 1024
+> 1024
+> 1024
+> 1024
+> 
+> Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
 > ---
 
 Applied into hisilicon dt tree.
@@ -60,52 +74,80 @@ Thanks!
 Best Regards,
 Wei
 
->  arch/arm64/boot/dts/hisilicon/hi3660.dtsi | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+>  arch/arm64/boot/dts/hisilicon/hi3660.dtsi | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 > 
 > diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-> index ab0b95b..99d5a46 100644
+> index ab0b95b..04a8d28 100644
 > --- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
 > +++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-> @@ -147,7 +147,7 @@
+> @@ -61,6 +61,7 @@
+>  			enable-method = "psci";
+>  			next-level-cache = <&A53_L2>;
+>  			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP_0>;
+> +			capacity-dmips-mhz = <592>;
+>  		};
 >  
->  			CPU_NAP: cpu-nap {
->  				compatible = "arm,idle-state";
-> -				arm,psci-suspend-param = <0x0000001>;
-> +				arm,psci-suspend-param = <0x0000002>;
->  				entry-latency-us = <7>;
->  				exit-latency-us = <2>;
->  				min-residency-us = <15>;
-> @@ -156,7 +156,7 @@
->  			CPU_SLEEP: cpu-sleep {
->  				compatible = "arm,idle-state";
->  				local-timer-stop;
-> -				arm,psci-suspend-param = <0x0010000>;
-> +				arm,psci-suspend-param = <0x0010003>;
->  				entry-latency-us = <40>;
->  				exit-latency-us = <70>;
->  				min-residency-us = <3000>;
-> @@ -165,7 +165,7 @@
->  			CLUSTER_SLEEP_0: cluster-sleep-0 {
->  				compatible = "arm,idle-state";
->  				local-timer-stop;
-> -				arm,psci-suspend-param = <0x1010000>;
-> +				arm,psci-suspend-param = <0x1010033>;
->  				entry-latency-us = <500>;
->  				exit-latency-us = <5000>;
->  				min-residency-us = <20000>;
-> @@ -174,7 +174,7 @@
->  			CLUSTER_SLEEP_1: cluster-sleep-1 {
->  				compatible = "arm,idle-state";
->  				local-timer-stop;
-> -				arm,psci-suspend-param = <0x1010000>;
-> +				arm,psci-suspend-param = <0x1010033>;
->  				entry-latency-us = <1000>;
->  				exit-latency-us = <5000>;
->  				min-residency-us = <20000>;
+>  		cpu1: cpu@1 {
+> @@ -70,6 +71,7 @@
+>  			enable-method = "psci";
+>  			next-level-cache = <&A53_L2>;
+>  			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP_0>;
+> +			capacity-dmips-mhz = <592>;
+>  		};
+>  
+>  		cpu2: cpu@2 {
+> @@ -79,6 +81,7 @@
+>  			enable-method = "psci";
+>  			next-level-cache = <&A53_L2>;
+>  			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP_0>;
+> +			capacity-dmips-mhz = <592>;
+>  		};
+>  
+>  		cpu3: cpu@3 {
+> @@ -88,6 +91,7 @@
+>  			enable-method = "psci";
+>  			next-level-cache = <&A53_L2>;
+>  			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP_0>;
+> +			capacity-dmips-mhz = <592>;
+>  		};
+>  
+>  		cpu4: cpu@100 {
+> @@ -101,6 +105,7 @@
+>  					&CPU_SLEEP
+>  					&CLUSTER_SLEEP_1
+>  			>;
+> +			capacity-dmips-mhz = <1024>;
+>  		};
+>  
+>  		cpu5: cpu@101 {
+> @@ -114,6 +119,7 @@
+>  					&CPU_SLEEP
+>  					&CLUSTER_SLEEP_1
+>  			>;
+> +			capacity-dmips-mhz = <1024>;
+>  		};
+>  
+>  		cpu6: cpu@102 {
+> @@ -127,6 +133,7 @@
+>  					&CPU_SLEEP
+>  					&CLUSTER_SLEEP_1
+>  			>;
+> +			capacity-dmips-mhz = <1024>;
+>  		};
+>  
+>  		cpu7: cpu@103 {
+> @@ -140,6 +147,7 @@
+>  					&CPU_SLEEP
+>  					&CLUSTER_SLEEP_1
+>  			>;
+> +			capacity-dmips-mhz = <1024>;
+>  		};
+>  
+>  		idle-states {
+> --
+> 2.7.4
 > 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> .
+> 
