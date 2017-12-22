@@ -1,46 +1,91 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Subject: Re: [PATCH v2 5/8] arm64: dts: actions: Add S700 and CubieBoard7
-Date: Fri, 22 Dec 2017 11:10:21 +0100
-Message-ID: <e8319d48-44a7-104f-6266-862500d030e2@suse.de>
-References: <20171113233427.5386-1-afaerber@suse.de>
- <20171113233427.5386-6-afaerber@suse.de>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: dts: sunxi: Add sid for a83t
+Date: Fri, 22 Dec 2017 18:11:52 +0800
+Message-ID: <CAGb2v64mf-ihyOs-WJZuVa4Yib3Szp90RZu_a1EeQ1LJXnoXEQ@mail.gmail.com>
+References: <20171219210523.10428-1-kevans91@ksu.edu> <20171221145512.llxvzkcrjpquhczi@flea.lan>
+ <CACNAnaE9GiVTXD-TV1xXyBJKtTGKpdA6n0REk6a=qm218EgHbg@mail.gmail.com>
+ <20171221152630.2vf57x5o2yi5sv3n@flea.lan> <20171221190903.56ebae536acf51401c63802c@bidouilliste.com>
+ <20171222083508.dfcp6egfvxykmogg@flea.lan> <20171222110727.520df7394234f6a5dc0b9ec0@bidouilliste.com>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171113233427.5386-6-afaerber-l3A5Bk7waGM@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, support-om/0PrzuAKC1Z/+hSey0Gg@public.gmane.org, =?UTF-8?B?5byg5aSp55uK?= <tyzhang-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, =?UTF-8?B?5qKF5Yip?= <harrymei-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Liau <thomas.liau-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?B?5byg5Lic6aOO?= <zhangdf-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, =?UTF-8?B?5YiY54Kc?= <liuwei-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, Jeff Chen <jeff.chen-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBA5V6PIQKGQEEVFMBCI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20171222110727.520df7394234f6a5dc0b9ec0-xXdDKFdH5B3kFDPD4ZthVA@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Emmanuel Vadot <manu-xXdDKFdH5B3kFDPD4ZthVA@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kyle Evans <kevans91-OYTqUY/oFF8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am 14.11.2017 um 00:34 schrieb Andreas Färber:
-> Add Device Trees for S700 SoC and Cubietech CubieBoard7.
-> 
-> Signed-off-by: Andreas Färber <afaerber-l3A5Bk7waGM@public.gmane.org>
-> ---
->  v1 -> v2: Unchanged
->  
->  arch/arm64/boot/dts/actions/Makefile             |   2 +
->  arch/arm64/boot/dts/actions/s700-cubieboard7.dts |  47 +++++++
->  arch/arm64/boot/dts/actions/s700.dtsi            | 164 +++++++++++++++++++++++
->  3 files changed, 213 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/actions/s700-cubieboard7.dts
->  create mode 100644 arch/arm64/boot/dts/actions/s700.dtsi
+On Fri, Dec 22, 2017 at 6:07 PM, Emmanuel Vadot <manu-xXdDKFdH5B3kFDPD4ZthVA@public.gmane.org> wrote:
+> On Fri, 22 Dec 2017 09:35:08 +0100
+> Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+>
+>> On Thu, Dec 21, 2017 at 07:09:03PM +0100, Emmanuel Vadot wrote:
+>> >
+>> >  Hi Maxime,
+>> >
+>> > On Thu, 21 Dec 2017 16:26:30 +0100
+>> > Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+>> >
+>> > > Hi,
+>> > >
+>> > > On Thu, Dec 21, 2017 at 09:19:24AM -0600, Kyle Evans wrote:
+>> > > > On Thu, Dec 21, 2017 at 8:55 AM, Maxime Ripard
+>> > > > <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+>> > > > > Hi Kyle,
+>> > > > >
+>> > > > > On Tue, Dec 19, 2017 at 03:05:23PM -0600, kevans91-OYTqUY/oFF8@public.gmane.org wrote:
+>> > > > >> Allwinner a83t has a 1 KB sid block with efuse for security rootkey and
+>> > > > >> thermal calibration data, add node to describe it.
+>> > > > >>
+>> > > > >> a83t-sid is not currently supported by nvmem/sunxi-sid, but it is
+>> > > > >> supported in an external driver for FreeBSD.
+>> > > > >>
+>> > > > >> Signed-off-by: Kyle Evans <kevans91-OYTqUY/oFF8@public.gmane.org>
+>> > > > >
+>> > > > > The patch looks fine in itself, but we've had a number of issues with
+>> > > > > the register layout (and access patterns) in the past, so I'd rather
+>> > > > > have something that works in Linux too if possible.
+>> > > >
+>> > > > I have a patch that I think should make it work fine on Linux [1], but
+>> > > > I'm afraid I have little to no capability to test it myself and so I
+>> > > > did not add it as well.
+>> > > >
+>> > > > I do know that the rootkey is offset 0x200 into the given space [2],
+>> > > > as is the case with the H3, and that the readout quirk is not needed.
+>> > > > I wasn't 100% sure that the a83t has 2Kbit worth of efuse space as the
+>> > > > H3, but I do know that thermal data can be found at 0x34 and 0x38 in
+>> > > > this space.
+>> > >
+>> > > Then maybe we should leave it aside until someone takes some time on
+>> > > the A83t.
+>> >
+>> >  Take some time on the Linux driver and do not apply this patch for
+>> > now you mean ?
+>>
+>> Yep.
+>>
+>> Maxime
+>
+>  Since linux doesn't have the compatible in it's driver what would
+> be the harm to add the node in the DTS ? If a quirks is needed because
+> some region is weird this would go in the driver right ? I don't see a
+> technical problem for adding this node right now.
+>  If Kyle confirm the lenght of the region and that no quirk is needed
+> will it be enough ?
 
-Squashed patch updated with new SPDX header style and applied:
+I guess I wasn't very clear. I'm OK with the patch going in. The device
+node currently says nothing about how much efuse space there is. The
+memory region covers that and the control section, and the size matches
+what the memory map says.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/afaerber/linux-actions.git/log/?h=v4.16/dt64
+The size and offset of the efuse space would be dealt with in the driver.
 
-Regards,
-Andreas
 
--- 
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer, Jane Smithard, Graham Norton
-HRB 21284 (AG Nürnberg)
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ChenYu
