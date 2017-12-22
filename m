@@ -1,81 +1,56 @@
-From: <honghui.zhang@mediatek.com>
-Subject: [PATCH v4 2/2] PCI: mediatek: Set up class type and vendor ID for
- MT7622
-Date: Fri, 22 Dec 2017 13:39:38 +0800
-Message-ID: <1513921178-16148-3-git-send-email-honghui.zhang@mediatek.com>
-References: <1513921178-16148-1-git-send-email-honghui.zhang@mediatek.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v2 2/3] dt-bindings: PCI: dra7xx: Add properties to enable
+ x2 lane in dra7
+Date: Fri, 22 Dec 2017 11:33:01 +0530
+Message-ID: <94336bfb-221d-95f7-72b2-09219b08099b@ti.com>
+References: <20171219085823.8695-1-kishon@ti.com>
+ <20171219085823.8695-3-kishon@ti.com>
+ <20171220185715.j5h7dlricom6kuiz@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1513921178-16148-1-git-send-email-honghui.zhang@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: bhelgaas@google.com, matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, ryder.lee@mediatek.com, lorenzo.pieralisi@arm.com
-Cc: youlin.pei@mediatek.com, hongkun.cao@mediatek.com, sean.wang@mediatek.com, xinping.qian@mediatek.com, honghui.zhang@mediatek.com, yt.shen@mediatek.com, yong.wu@mediatek.com
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171220185715.j5h7dlricom6kuiz@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Mark Rutland <mark.rutland@arm.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, nsekhar@ti.com
 List-Id: devicetree@vger.kernel.org
 
-From: Honghui Zhang <honghui.zhang@mediatek.com>
+Hi Rob,
 
-The hardware default value of IDs and class type is not correct,
-fix that by setup the correct values before start up.
+On Thursday 21 December 2017 12:27 AM, Rob Herring wrote:
+> On Tue, Dec 19, 2017 at 02:28:22PM +0530, Kishon Vijay Abraham I wrote:
+>> Add syscon properties required for configuring PCIe in x2 lane mode.
+>>
+>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>> Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+>> ---
+>>  Documentation/devicetree/bindings/pci/ti-pci.txt | 6 ++++++
+>>  1 file changed, 6 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/pci/ti-pci.txt b/Documentation/devicetree/bindings/pci/ti-pci.txt
+>> index 82cb875e4cec..bfbc77ac7355 100644
+>> --- a/Documentation/devicetree/bindings/pci/ti-pci.txt
+>> +++ b/Documentation/devicetree/bindings/pci/ti-pci.txt
+>> @@ -13,6 +13,12 @@ PCIe DesignWare Controller
+>>   - ti,hwmods : Name of the hwmod associated to the pcie, "pcie<X>",
+>>  	       where <X> is the instance number of the pcie from the HW spec.
+>>   - num-lanes as specified in ../designware-pcie.txt
+>> + - ti,syscon-lane-conf : phandle/offset pair. Phandle to the system control
+>> +			 module and the register offset to specify 1 lane or
+>> +			 2 lane.
+>> + - ti,syscon-lane-sel : phandle/offset pair. Phandle to the system control
+>> +			module and the register offset to specify lane
+>> +			selection.
+> 
+> Adding a property for every syscon register doesn't really scale and 
+> doesn't work if the register layout changes.
 
-Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
----
- drivers/pci/host/pcie-mediatek.c | 12 ++++++++++++
- include/linux/pci_ids.h          |  3 +++
- 2 files changed, 15 insertions(+)
+The register layout doesn't really change between silicon revisions and for new
+SoCs, the phandle and the register offset for that SoC will have to be
+populated again.
 
-diff --git a/drivers/pci/host/pcie-mediatek.c b/drivers/pci/host/pcie-mediatek.c
-index fc29a9a..0ef33e4 100644
---- a/drivers/pci/host/pcie-mediatek.c
-+++ b/drivers/pci/host/pcie-mediatek.c
-@@ -74,6 +74,10 @@
- 
- /* PCIe V2 per-port registers */
- #define PCIE_MSI_VECTOR		0x0c0
-+
-+#define PCIE_CONF_ID		0x100
-+#define PCIE_CONF_CLASS		0x104
-+
- #define PCIE_INT_MASK		0x420
- #define INTX_MASK		GENMASK(19, 16)
- #define INTX_SHIFT		16
-@@ -393,6 +397,14 @@ static int mtk_pcie_startup_port_v2(struct mtk_pcie_port *port)
- 		val |= PCIE_CSR_LTSSM_EN(port->slot) |
- 		       PCIE_CSR_ASPM_L1_EN(port->slot);
- 		writel(val, pcie->base + PCIE_SYS_CFG_V2);
-+
-+		/* Set up vendor ID and device ID for MT7622*/
-+		val = PCI_VENDOR_ID_MEDIATEK | (PCI_DEVICE_ID_MT7622 << 16);
-+		writel(val, port->base + PCIE_CONF_ID);
-+
-+		/* Set up class code for MT7622 */
-+		val = PCI_CLASS_BRIDGE_PCI << 16;
-+		writel(val, port->base + PCIE_CONF_CLASS);
- 	}
- 
- 	/* Assert all reset signals */
-diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-index ab20dc5..000c5df 100644
---- a/include/linux/pci_ids.h
-+++ b/include/linux/pci_ids.h
-@@ -2113,6 +2113,9 @@
- 
- #define PCI_VENDOR_ID_MYRICOM		0x14c1
- 
-+#define PCI_VENDOR_ID_MEDIATEK		0x14c3
-+#define PCI_DEVICE_ID_MT7622		0x5396
-+
- #define PCI_VENDOR_ID_TITAN		0x14D2
- #define PCI_DEVICE_ID_TITAN_010L	0x8001
- #define PCI_DEVICE_ID_TITAN_100L	0x8010
--- 
-2.6.4
+Having said that, I'm not aware of any other alternative here.
+
+Thanks
+Kishon
