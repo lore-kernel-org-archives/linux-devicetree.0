@@ -1,75 +1,76 @@
-From: =?utf-8?Q?=C5=81ukasz_Stelmach?= <l.stelmach-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v3 2/3] hwrng: exynos - add Samsung Exynos True RNG
- driver
-Date: Fri, 22 Dec 2017 13:41:18 +0100
-Message-ID: <878tdvhr4h.fsf%l.stelmach@samsung.com>
-References: <20171222083551.GF29663@gondor.apana.org.au>
-        <CGME20171222124132eucas1p281d0ae6925ec5358baa3bbbc4e35b628@eucas1p2.samsung.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH] ARM: make ARCH_S3C24XX select USE_OF and clean-up boot/dts/Makefile
+Date: Fri, 22 Dec 2017 13:41:40 +0100
+Message-ID: <CAJKOXPf0kWKQCf7avT4LLpkanhh-WvFoNUzdvpNDk2Q-KkymJQ@mail.gmail.com>
+References: <1511749163-11057-1-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-="; micalg="pgp-sha256";
-        protocol="application/pgp-signature"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <20171222083551.GF29663-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
-Cc: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "Andrew F . Davis" <afd-l0cyMroinI0@public.gmane.org>, PrasannaKumar Muralidharan <prasannatsmkumar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matt Mackall <mpm-VDJrAJ4Gl5ZBDgjK7y7TUQ@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1511749163-11057-1-git-send-email-yamada.masahiro@socionext.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: arm@kernel.org, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+On Mon, Nov 27, 2017 at 3:19 AM, Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+> ARCH_S3C24XX is a very exceptional platform that some DT files in
+> arch/arm/boot/dts/, but does not select USE_OF.
 
-It was <2017-12-22 pi=C4=85 09:35>, when Herbert Xu wrote:
-> On Fri, Dec 22, 2017 at 09:29:38AM +0100, Marek Szyprowski wrote:
->> Hi,
->>=20
->> On 2017-12-22 09:24, Herbert Xu wrote:
->> >On Mon, Dec 04, 2017 at 01:53:50PM +0100, =C5=81ukasz Stelmach wrote:
->> >>Add support for True Random Number Generator found in Samsung Exynos
->> >>5250+ SoCs.
->> >>
->> >>Signed-off-by: =C5=81ukasz Stelmach <l.stelmach-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->> >This doesn't build for me:
->> >
->> >   CC [M]  drivers/char/hw_random/exynos-trng.o
->> >../drivers/char/hw_random/exynos-trng.c:230:1: error: \u2018exynos_rng_=
-dt_match\u2019 undeclared here (not in a function)
->> >../drivers/char/hw_random/exynos-trng.c:230:1: error: \u2018__mod_of__e=
-xynos_rng_dt_match_device_table\u2019 aliased to undefined symbol \u2018exy=
-nos_rng_dt_match\u2019
->> >make[2]: *** [drivers/char/hw_random/exynos-trng.o] Error 1
->> >make[1]: *** [_module_drivers/char/hw_random] Error 2
->>=20
->> This looks like a missing dependency on "OF" when "COMPILE_TEST" is
->> selected.
+Not entirely. The platform does select USE_OF - when MACH_S3C2416_DT
+is chosen. For other boards USE_OF is not necessary because they do
+not use DT. Why you need to select it for entire arch?
+
+Best regards,
+Krzysztof
+
 >
-> Actually it looks like a typo.  The variable is actually called
-> exynos_trng_dt_match as opposed to exynos_rng_dt_match.
-
-Indeed. Honestly, I haven't seen this problem, not even once. Right, I
-have never compiled it as a module. Thanks for spotting.
-
-=2D-=20
-=C5=81ukasz Stelmach
-Samsung R&D Institute Poland
-Samsung Electronics
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQEcBAEBCAAGBQJaPP1vAAoJELCuHpyYpYAQZ7YH/38P2/ByWqbh4RAvQ/L3diOt
-DaQhoivn62rb57snikdvkWaX4QspIUyGFBb1E+bPeFBbVr3Fthq3ZrCqea5fV7ev
-6mh+NdjnoGq/bpzZ+uH24uX61MSd2UIICd+l20y7DnoqgrLGW6+q2zrSrWyiijnQ
-UGSmezEKlhemftRit1wykKkMipr0iHnLYT2aL9PmcqIxTEmh7y85MMk3CgVstt1K
-79UXufCcPnmg0AOIrwY2NlrB0XyGPVZXQT54XKy2vzU5drd2BpmIyKZKixbrTZSj
-0SMnqhQJESGbARh2LNyop9o1UiWXpqzTjuQRN5HeH37aRYiQHBsQ376JwXYQB8A=
-=u3N/
------END PGP SIGNATURE-----
---=-=-=--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> All the other platforms with DT files correctly select USE_OF
+> directly or indirectly (Most of them are either ARCH_MULTIPLATFORM
+> or ARM_SINGLE_ARMV7M).
+>
+> With ARCH_S3C24XX fixed, "ifeq ($(CONFIG_OF),y)" in DT Makefile
+> can be deleted.
+>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
+>
+>  arch/arm/Kconfig           | 1 +
+>  arch/arm/boot/dts/Makefile | 3 ---
+>  2 files changed, 1 insertion(+), 3 deletions(-)
+>
+> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+> index 51c8df5..5604497 100644
+> --- a/arch/arm/Kconfig
+> +++ b/arch/arm/Kconfig
+> @@ -595,6 +595,7 @@ config ARCH_S3C24XX
+>         select MULTI_IRQ_HANDLER
+>         select NEED_MACH_IO_H
+>         select SAMSUNG_ATAGS
+> +       select USE_OF
+>         help
+>           Samsung S3C2410, S3C2412, S3C2413, S3C2416, S3C2440, S3C2442, S3C2443
+>           and S3C2450 SoCs based systems, such as the Simtec Electronics BAST
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index d0381e9..6f7f25d 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -1,6 +1,4 @@
+>  # SPDX-License-Identifier: GPL-2.0
+> -ifeq ($(CONFIG_OF),y)
+> -
+>  dtb-$(CONFIG_ARCH_ALPINE) += \
+>         alpine-db.dtb
+>  dtb-$(CONFIG_MACH_ARTPEC6) += \
+> @@ -1104,4 +1102,3 @@ dtb-$(CONFIG_ARCH_ZX) += zx296702-ad1.dtb
+>  dtb-$(CONFIG_ARCH_ASPEED) += aspeed-bmc-opp-palmetto.dtb \
+>         aspeed-bmc-opp-romulus.dtb \
+>         aspeed-ast2500-evb.dtb
+> -endif
+> --
+> 2.7.4
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
