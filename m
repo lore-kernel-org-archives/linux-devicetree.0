@@ -1,117 +1,64 @@
-From: Miquel RAYNAL <miquel.raynal@free-electrons.com>
-Subject: Re: [PATCH v6 06/11] thermal: armada: Add support for Armada AP806
-Date: Fri, 22 Dec 2017 11:49:48 +0100
-Message-ID: <20171222114948.32c36369@xps13>
-References: <20171222093226.23456-1-miquel.raynal@free-electrons.com>
-        <20171222093226.23456-7-miquel.raynal@free-electrons.com>
-        <20171222101426.yujvg2xbca3ghpyc@tarshish>
+From: Yong <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v4 2/2] media: V3s: Add support for
+ Allwinner CSI.
+Date: Fri, 22 Dec 2017 18:55:47 +0800
+Message-ID: <20171222185547.356dbc3ebe76d0ebec88d052@magewell.com>
+References: <1513936020-35569-1-git-send-email-yong.deng@magewell.com>
+	<20171222102156.cfemen6ouxxxbrem@plaes.org>
+Reply-To: yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20171222101426.yujvg2xbca3ghpyc@tarshish>
-Sender: linux-pm-owner@vger.kernel.org
-To: Baruch Siach <baruch@tkos.co.il>
-Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Gregory Clement <gregory.clement@free-electrons.com>, Antoine Tenart <antoine.tenart@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, David Sniatkiwicz <davidsn@marvell.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBD2JNYHK4MEBBPWJ6PIQKGQELGRTSQI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20171222102156.cfemen6ouxxxbrem-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rick Chang <rick.chang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TaqPxH82wqD4g@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Baruch,
+Hi,
 
-On Fri, 22 Dec 2017 12:14:26 +0200
-Baruch Siach <baruch@tkos.co.il> wrote:
+On Fri, 22 Dec 2017 10:21:56 +0000
+Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org> wrote:
 
-> Hi Miquèl,
-> 
-> On Fri, Dec 22, 2017 at 10:32:21AM +0100, Miquel Raynal wrote:
-> > From: Baruch Siach <baruch@tkos.co.il>
+> On Fri, Dec 22, 2017 at 05:47:00PM +0800, Yong Deng wrote:
+> > Allwinner V3s SoC have two CSI module. CSI0 is used for MIPI interface
+> > and CSI1 is used for parallel interface. This is not documented in
+> > datasheet but by testing and guess.
 > > 
-> > The AP806 component is integrated in the Armada 8K and 7K lines of
-> > processors.
-> > 
-> > The thermal sensor sample field on the status register is a signed
-> > value. Extend armada_get_temp() and the driver structure to handle
-> > signed values.
-> > 
-> > Signed-off-by: Baruch Siach <baruch@tkos.co.il>
-> > [<miquel.raynal@free-electrons.com>: Changes when applying over the
-> > previous patches, including the register names changes, also
-> > switched the coefficients values to s64 instead of unsigned long to
-> > deal with negative values and used do_div instead of the
-> > traditionnal '/'] Signed-off-by: Miquel Raynal
-> > <miquel.raynal@free-electrons.com> Reviewed-by: Gregory CLEMENT
-> > <gregory.clement@free-electrons.com> Tested-by: Gregory CLEMENT
-> > <gregory.clement@free-electrons.com> ---  
-> 
-> [..]
-> 
-> >  static int armada_get_temp(struct thermal_zone_device *thermal,
-> > -			  int *temp)
-> > +			   int *temperature)
-> >  {
-> >  	struct armada_thermal_priv *priv = thermal->devdata;
-> > -	unsigned long reg;
-> > -	unsigned long m, b, div;
-> > +	u32 reg, div;
-> > +	s64 sample, b, m;
-> > +	u64 tmp;
-> >  
-> >  	/* Valid check */
-> >  	if (priv->data->is_valid && !priv->data->is_valid(priv)) {
-> > @@ -178,6 +197,11 @@ static int armada_get_temp(struct
-> > thermal_zone_device *thermal, 
-> >  	reg = readl_relaxed(priv->status);
-> >  	reg = (reg >> priv->data->temp_shift) &
-> > priv->data->temp_mask;
-> > +	if (priv->data->signed_sample)
-> > +		/* The most significant bit is the sign bit */
-> > +		sample = sign_extend32(reg,
-> > fls(priv->data->temp_mask) - 1);
-> > +	else
-> > +		sample = reg;
-> >  
-> >  	/* Get formula coeficients */
-> >  	b = priv->data->coef_b;
-> > @@ -185,9 +209,13 @@ static int armada_get_temp(struct
-> > thermal_zone_device *thermal, div = priv->data->coef_div;
-> >  
-> >  	if (priv->data->inverted)
-> > -		*temp = ((m * reg) - b) / div;
-> > +		tmp = (m * sample) - b;
-> >  	else
-> > -		*temp = (b - (m * reg)) / div;
-> > +		tmp = b - (m * sample);
-> > +
-> > +	do_div(tmp, div);
-> > +	*temperature = (int)tmp;  
-> 
-> Nitpick: why not (untested)
-> 
-> #include <linux/math64.h>
-> 
->   if (priv->data->inverted)
->     *temp = div_s64((m * sample) - b, div);
->   else
->     *temp = div_s64(b - (m * sample), div);
+> > This patch implement a v4l2 framework driver for it.
 
-Indeed I could also use div_s64, but the result must be unsigned anyway.
+...
 
-But this does all the operations on the same line, maybe this is more
-readable, I will update it and send (hopefully) the last version :)
+> > +	if ((sdev->csi.v4l2_ep.bus_type == V4L2_MBUS_PARALLEL
+> > +	      || sdev->csi.v4l2_ep.bus_type == V4L2_MBUS_BT656)
+> > +	     && sdev->csi.v4l2_ep.bus.parallel.bus_width == 16) {
+> > +		switch (pixformat) {
+> > +		case V4L2_PIX_FMT_HM12:
+> > +		case V4L2_PIX_FMT_NV12:
+> > +		case V4L2_PIX_FMT_NV21:
+> > +		case V4L2_PIX_FMT_NV16:
+> > +		case V4L2_PIX_FMT_NV61:
+> > +		case V4L2_PIX_FMT_YUV420:
+> > +		case V4L2_PIX_FMT_YVU420:
+> > +		case V4L2_PIX_FMT_YUV422P:
+> > +			switch (mbus_code) {
+> > +			case MEDIA_BUS_FMT_UYVY8_1X16:
+> > +			case MEDIA_BUS_FMT_VYUY8_1X16:
+> > +			case MEDIA_BUS_FMT_YUYV8_1X16:
+> > +			case MEDIA_BUS_FMT_YVYU8_1X16:
+> > +				return true;
+> > +			}
+> > +			break;
+> > +		}
+> Should we add default cases and warning messages here for debug purposes?
 
-Cheers,
-Miquèl
+OK. I will add all the default cases and messages.
 
-> 
-> baruch
-> 
-> > +
-> >  	return 0;
-> >  }  
-> 
-
-
-
--- 
-Miquel Raynal, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+Thanks,
+Yong
