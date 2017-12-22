@@ -1,52 +1,86 @@
-From: Marc Gonzalez <marc_gonzalez-y1yR0Z3OICC7zZZRDBGcUA@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: tango4: remove bogus interrupt-controller
- property
-Date: Fri, 22 Dec 2017 09:41:51 +0100
-Message-ID: <0727e9e4-5941-9a3c-768f-72bd443652d2@sigmadesigns.com>
-References: <20171221214831.3859194-1-arnd@arndb.de>
+From: <yinbo.zhu@nxp.com>
+Subject: [PATCH v5] arm64: dts: ls1088a: Add USB support
+Date: Fri, 22 Dec 2017 16:38:07 +0800
+Message-ID: <20171222083807.5660-1-yinbo.zhu@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171221214831.3859194-1-arnd-r2nGTMty4D4@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Mans Rullgard <mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "Catalin Marinas )" <catalin.marinas@arm.com>, "Will Deacon )" <will.deacon@arm.com>, Shawn Guo <shawnguo@kernel.org>
+Cc: Harninder Rai <harninder.rai@nxp.com>, Zhang Ying-22455 <ying.zhang22455@nxp.com>, Yuantian Tang <andy.tang@nxp.com>, "open list:OPEN FIRMWARE AND
+ FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, Hou Zhiqiang <Zhiqiang.Hou@nxp.com>, Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>, Alison Wang <b18965@freescale.com>, xiaobo.xie@nxp.com, Ashish Kumar <ashish.kumar@nxp.com>, jerry.huang@nxp.com, Raghav Dogra <raghav.dogra@nxp.com>, Nipun Gupta <nipun.gupta@nxp.com>, Yangbo Lu <yangbo.lu@nxp.com>, Amrita Kumari <amrita.kumari@nxp.com>, "yinbo . zhu" <yinbo.zhu@nxp.com>, ran.wang_1@nxp.com, Bogdan Purcareata <bogdan.purcareata@nxp.com>, linux-arm-kernel@lists.infradead.org, Laurentiu Tudor <laurentiu.tudor@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On 21/12/2017 22:48, Arnd Bergmann wrote:
+From: yinbo.zhu <yinbo.zhu@nxp.com>
 
-> dtc points out that the parent node of the interrupt controllers is not
-> actually an interrupt controller itself, and lacks an #interrupt-cells
-> property:
-> 
-> arch/arm/boot/dts/tango4-vantage-1172.dtb: Warning (interrupts_property): Missing #interrupt-cells in interrupt-parent /soc/interrupt-controller@6e000
-> 
-> This removes the annotation.
-> 
-> Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-> ---
->  arch/arm/boot/dts/tango4-common.dtsi | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/tango4-common.dtsi b/arch/arm/boot/dts/tango4-common.dtsi
-> index 0ec1b0a317b4..ff72a8efb73d 100644
-> --- a/arch/arm/boot/dts/tango4-common.dtsi
-> +++ b/arch/arm/boot/dts/tango4-common.dtsi
-> @@ -156,7 +156,6 @@
->  			reg = <0x6e000 0x400>;
->  			ranges = <0 0x6e000 0x400>;
->  			interrupt-parent = <&gic>;
-> -			interrupt-controller;
->  			#address-cells = <1>;
->  			#size-cells = <1>;
->  
+Add USB support on ls1088ardb
 
-Acked-by: Marc Gonzalez <marc_gonzalez-y1yR0Z3OICC7zZZRDBGcUA@public.gmane.org>
+Signed-off-by: yinbo zhu <yinbo.zhu@nxp.com>
+Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
+---
+Change in v5:
+                The usb node was sorted alphabetically in label name.
+		Remove the point in "yinbo.zhu".	
 
-Thanks Arnd.
+ arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts |    8 ++++++++
+ arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi    |   20 ++++++++++++++++++++
+ 2 files changed, 28 insertions(+), 0 deletions(-)
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
+index 0f6fcda..4f17601 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
+@@ -125,3 +125,11 @@
+ &sata {
+ 	status = "okay";
+ };
++
++&usb0 {
++	status = "okay";
++};
++
++&usb1 {
++	status = "okay";
++};
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+index bd80e9a..caf2bdd 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+@@ -394,6 +394,26 @@
+ 			status = "disabled";
+ 		};
+ 
++		usb0: usb3@3100000 {
++			compatible = "snps,dwc3";
++			reg = <0x0 0x3100000 0x0 0x10000>;
++			interrupts = <0 80 IRQ_TYPE_LEVEL_HIGH>;
++			dr_mode = "host";
++			snps,quirk-frame-length-adjustment = <0x20>;
++			snps,dis_rxdet_inp3_quirk;
++			status = "disabled";
++		};
++
++		usb1: usb3@3110000 {
++			compatible = "snps,dwc3";
++			reg = <0x0 0x3110000 0x0 0x10000>;
++			interrupts = <0 81 IRQ_TYPE_LEVEL_HIGH>;
++			dr_mode = "host";
++			snps,quirk-frame-length-adjustment = <0x20>;
++			snps,dis_rxdet_inp3_quirk;
++			status = "disabled";
++		};
++
+ 		sata: sata@3200000 {
+ 			compatible = "fsl,ls1088a-ahci";
+ 			reg = <0x0 0x3200000 0x0 0x10000>,
+-- 
+1.7.1
