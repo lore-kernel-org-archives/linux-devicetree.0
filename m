@@ -1,74 +1,72 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH v6 11/11] thermal: armada: Give meaningful names to the thermal zones
-Date: Fri, 22 Dec 2017 16:36:04 +0100
-Message-ID: <873742epwb.fsf@free-electrons.com>
-References: <20171222093226.23456-1-miquel.raynal@free-electrons.com>
-        <20171222093226.23456-12-miquel.raynal@free-electrons.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/5] bindings: regulator: added support for suspend states
+Date: Fri, 22 Dec 2017 15:49:04 +0000
+Message-ID: <20171222154904.GK1827@finisterre>
+References: <1513837506-26543-1-git-send-email-zhang.chunyan@linaro.org>
+ <1513837506-26543-2-git-send-email-zhang.chunyan@linaro.org>
+ <20171221232614.rhrgrpyl2w2lc6bw@rob-hp-laptop>
+ <CAG2=9p9ahGgnz1Gos-o-o5PB9UH--2t3Lv54PaK5_f2jpNQnDQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20171222093226.23456-12-miquel.raynal@free-electrons.com>
-        (Miquel Raynal's message of "Fri, 22 Dec 2017 10:32:26 +0100")
-Sender: linux-pm-owner@vger.kernel.org
-To: Miquel Raynal <miquel.raynal@free-electrons.com>
-Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Antoine Tenart <antoine.tenart@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, Baruch Siach <baruch@tkos.co.il>, David Sniatkiwicz <davidsn@marvell.com>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="M0YLxmUXciMpOLPE"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAG2=9p9ahGgnz1Gos-o-o5PB9UH--2t3Lv54PaK5_f2jpNQnDQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chunyan Zhang <zhang.chunyan@linaro.org>
+Cc: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Chunyan Zhang <zhang.lyra@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Miquel,
- 
- On ven., déc. 22 2017, Miquel Raynal <miquel.raynal@free-electrons.com> wrote:
 
-> After registration to the thermal core, sysfs will make one entry
-> per instance of the driver in /sys/class/thermal_zoneX and
-> /sys/class/hwmon/hwmonX, X being the index of the instance, all of them
-> having the type/name "armada_thermal".
->
-> Until now there was only one thermal zone per SoC but SoCs like Armada
-> A7K and Armada A8K have respectively two and three thermal zones (one
-> per AP and one per CP) and this number is subject to grow in the future.
->
-> Use dev_name() instead of the "armada_thermal" string to get a
-> meaningful name and be able to identify the thermal zones from
-> userspace.
->
-> Signed-off-by: Miquel Raynal <miquel.raynal@free-electrons.com>
-> Reviewed-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+--M0YLxmUXciMpOLPE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-And here I also tested that when all the series was applied there was no
-regression on an Armada XP based board: PlatHome OpenBlocks AX3-4, and
-on an Armada 388 one: SolidRun Clearfog A1. hera again for both of them
-it was OK:
+On Fri, Dec 22, 2017 at 02:05:21PM +0800, Chunyan Zhang wrote:
+> On 22 December 2017 at 07:26, Rob Herring <robh@kernel.org> wrote:
+> > On Thu, Dec 21, 2017 at 02:25:02PM +0800, Chunyan Zhang wrote:
 
-Tested-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+> >> +     - regulator-suspend-microvolt: the default voltage which regulator
+> >> +       should be set in suspend, this can be adjusted among
+> >> +       <regulator-suspend-min-microvolt, regulator-suspend-max-microvolt>
 
-Gregory
+> > Perhaps this should stay a single property with: <target> <min> <max>
 
-> ---
->  drivers/thermal/armada_thermal.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/thermal/armada_thermal.c b/drivers/thermal/armada_thermal.c
-> index ea958e651312..454137f78eb3 100644
-> --- a/drivers/thermal/armada_thermal.c
-> +++ b/drivers/thermal/armada_thermal.c
-> @@ -406,8 +406,8 @@ static int armada_thermal_probe(struct platform_device *pdev)
->  
->  	priv->data->init_sensor(pdev, priv);
->  
-> -	thermal = thermal_zone_device_register("armada_thermal", 0, 0,
-> -					       priv, &ops, NULL, 0, 0);
-> +	thermal = thermal_zone_device_register(dev_name(&pdev->dev), 0, 0, priv,
-> +					       &ops, NULL, 0, 0);
->  	if (IS_ERR(thermal)) {
->  		dev_err(&pdev->dev,
->  			"Failed to register thermal zone device\n");
-> -- 
-> 2.11.0
->
+> Do you mean that change the property name from "regulator-suspend-microvolt" to
+> "regulator-suspend-target-microvolt"?
 
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+> "regulator-suspend-microvolt" is the one that some SoC is using. My
+> intention was just to keep that configuration still working.
+
+Yeah, the regulator-suspend-microvolt is an existing property.  Thinking
+about it we should probably say that it's equivalent to setting both
+-min and -max to the same value and possibly mark it as deprecated too.
+It is documented in regulator.txt already.
+
+> > Though why would you ever not try to set to the minimum voltage within
+> > the range of <min> to <max>?
+
+> IIUC, you mean just removing "regulator-suspend-microvolt", and use
+> "regulator-suspend-min-microvolt" as the default value for suspend
+> voltage?
+> I think that can work, but would it be better to not remove that right
+> now, since some one is using that?
+
+Indeed.  I think my suggestion above would cover things.
+
+--M0YLxmUXciMpOLPE
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlo9KW0ACgkQJNaLcl1U
+h9BsfAf/aLd29F5ggAUSccjNW7JhIgywZ4Q33ANltRQ8jn0fkGzIkFN3MUy0nKvn
+QQ/hS5RSq8YcATFIlzEjKFtK8XMJFrhvC7OaQx63QtIu1e8+5+MUUU6PmSp+D67u
+agvVRGjEIY1wqW9NkNKnQtYVP/cwktO3ym/4G5bhTfXlQUB+qgbcTrT/MyjXmQtg
+glA2Ly9U3rWYBuKiVfJ1oR4UD/qeNCLwg35rRv96wiPlbymIJqg7XWXsQeEWV+93
+EcBKLBhYn0WlAlC+tpUhv815WE8OtCHUZKZFNlKfc5/AVTQskD7trZXZH1MSoiSM
+Ju++UlwImVKeKzITWkX0f3gkNYJ+1g==
+=bpvE
+-----END PGP SIGNATURE-----
+
+--M0YLxmUXciMpOLPE--
