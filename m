@@ -1,48 +1,58 @@
-From: Herbert Xu <herbert@gondor.apana.org.au>
-Subject: Re: [PATCH v3 2/3] hwrng: exynos - add Samsung Exynos True RNG driver
-Date: Fri, 22 Dec 2017 19:35:51 +1100
-Message-ID: <20171222083551.GF29663@gondor.apana.org.au>
-References: <20171204125351.26805-1-l.stelmach@samsung.com>
- <CGME20171204125415eucas1p1f94e6996f08938f686c08c00247c62ce@eucas1p1.samsung.com>
- <20171204125351.26805-3-l.stelmach@samsung.com>
- <20171222082412.GB29663@gondor.apana.org.au>
- <916163bb-594b-779d-700c-de9fa15239dd@samsung.com>
+From: Philippe Ombredanne <pombredanne-od1rfyK75/E@public.gmane.org>
+Subject: Re: [PATCH] ASoC: max98373: Added Amplifier Driver
+Date: Fri, 22 Dec 2017 09:39:00 +0100
+Message-ID: <CAOFm3uH3+UsSZ7DgDk9AYRb8K7GjKUNwchGW3_hxD3DMOidjpg@mail.gmail.com>
+References: <1513907030-18441-1-git-send-email-ryans.lee@maximintegrated.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-crypto-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <916163bb-594b-779d-700c-de9fa15239dd@samsung.com>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: =?utf-8?Q?=C5=81ukasz?= Stelmach <l.stelmach@samsung.com>, "Andrew F . Davis" <afd@ti.com>, PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>, Rob Herring <robh+dt@kernel.org>, Matt Mackall <mpm@selenic.com>, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-crypto@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1513907030-18441-1-git-send-email-ryans.lee-zxKO94PEStzToO697jQleEEOCMrvLtNR@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ryan Lee <ryans.lee-zxKO94PEStzToO697jQleEEOCMrvLtNR@public.gmane.org>
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, afd-l0cyMroinI0@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, supercraig0719-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, dannenberg-l0cyMroinI0@public.gmane.org, Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, bryce.ferguson-lFk7bPDcGtkY5TsXZYaR1UEOCMrvLtNR@public.gmane.org, kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, m-stecklein-l0cyMroinI0@public.gmane.org, ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ryan.lee.maxim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 22, 2017 at 09:29:38AM +0100, Marek Szyprowski wrote:
-> Hi,
-> 
-> On 2017-12-22 09:24, Herbert Xu wrote:
-> >On Mon, Dec 04, 2017 at 01:53:50PM +0100, Łukasz Stelmach wrote:
-> >>Add support for True Random Number Generator found in Samsung Exynos
-> >>5250+ SoCs.
-> >>
-> >>Signed-off-by: Łukasz Stelmach <l.stelmach@samsung.com>
-> >This doesn't build for me:
-> >
-> >   CC [M]  drivers/char/hw_random/exynos-trng.o
-> >../drivers/char/hw_random/exynos-trng.c:230:1: error: \u2018exynos_rng_dt_match\u2019 undeclared here (not in a function)
-> >../drivers/char/hw_random/exynos-trng.c:230:1: error: \u2018__mod_of__exynos_rng_dt_match_device_table\u2019 aliased to undefined symbol \u2018exynos_rng_dt_match\u2019
-> >make[2]: *** [drivers/char/hw_random/exynos-trng.o] Error 1
-> >make[1]: *** [_module_drivers/char/hw_random] Error 2
-> 
-> This looks like a missing dependency on "OF" when "COMPILE_TEST" is
-> selected.
+Ryan,
 
-Actually it looks like a typo.  The variable is actually called
-exynos_trng_dt_match as opposed to exynos_rng_dt_match.
+On Fri, Dec 22, 2017 at 2:43 AM, Ryan Lee <ryans.lee-zxKO94PEStzToO697jQleEEOCMrvLtNR@public.gmane.org> wrote:
+> Signed-off-by: Ryan Lee <ryans.lee-zxKO94PEStzToO697jQleEEOCMrvLtNR@public.gmane.org>
+> ---
+>
+> Created max98373 amplifier driver.
+>
 
-Cheers,
+<snip>
+
+> --- /dev/null
+> +++ b/sound/soc/codecs/max98373.c
+> @@ -0,0 +1,996 @@
+> +/*
+> + * max98373.c  --  MAX98373 ALSA Soc Audio driver
+> + *
+> + * Copyright (C) 2017 Maxim Integrated Products
+> + * Author: Ryan Lee <ryans.lee-zxKO94PEStzToO697jQleEEOCMrvLtNR@public.gmane.org>
+> + *
+> + *  This program is free software; you can redistribute  it and/or modify it
+> + *  under  the terms of  the GNU General  Public License as published by the
+> + *  Free Software Foundation;  either version 2 of the  License, or (at your
+> + *  option) any later version.
+> + */
+
+Have you considered using the new SPDX tags instead of this fine but
+long legalese?
+
+And if other contributors in your team could follow suit and you could
+spread the word that would be even better!
+
+See Thomas doc patches [1] for details.
+Thanks!
+
+[1] https://lkml.org/lkml/2017/12/4/934
+
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Cordially
+Philippe Ombredanne
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
