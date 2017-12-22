@@ -1,153 +1,87 @@
-From: Wei Xu <xuwei5@hisilicon.com>
-Subject: Re: [PATCH] arm64: dts: hisilicon: Add hi3660 cpu capacity-dmips-mhz
- information
-Date: Fri, 22 Dec 2017 09:38:14 +0000
-Message-ID: <5A3CD286.2010705@hisilicon.com>
-References: <1513174866-6678-1-git-send-email-valentin.schneider@arm.com>
+From: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v4 1/2] dt-bindings: media: Add Allwinner V3s
+ Camera Sensor Interface (CSI)
+Date: Fri, 22 Dec 2017 17:41:29 +0800
+Message-ID: <1513935689-35415-1-git-send-email-yong.deng@magewell.com>
+Reply-To: yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1513174866-6678-1-git-send-email-valentin.schneider@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Valentin Schneider <valentin.schneider@arm.com>, linux-kernel@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Dietmar Eggemann <dietmar.eggemann@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBD2JNYHK4MEBBDNH6PIQKGQE42BJFSA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rick Chang <rick.chang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Yong
 List-Id: devicetree@vger.kernel.org
 
-Hi Valentin,
+Add binding documentation for Allwinner V3s CSI.
 
-On 2017/12/13 14:21, Valentin Schneider wrote:
-> The following dt entries are added:
->  cpus [0-3] (Cortex A53):
->    - capacity-dmips-mhz = <592>;
-> 
->  cpus [4-7] (Cortex A73):
->    - capacity-dmips-mhz = <1024>;
-> 
-> Those values were obtained by running dhrystone 2.1 on a
-> HiKey960 with the following procedure:
-> - Offline all CPUs but CPU0 (A53)
-> - Set CPU0 frequency to maximum
-> - Run Dhrystone 2.1 for 20 seconds
-> 
-> - Offline all CPUs but CPU4 (A73)
-> - set CPU4 frequency to maximum
-> - Run Dhrystone 2.1 for 20 seconds
-> 
-> The results are as follows:
-> A53: 129633887 loops
-> A73: 287034147 loops
-> 
-> By scaling those values so that the A73s use 1024, we end up with 462
-> for the A53s. However, they have different maximum frequencies:
-> 1.844GHz for A53s and 2.362GHz for A73s. Thus, we can scale the A53
-> value to truly represent dmips per MHz, and we end up with 592.
-> 
-> The impact of this change can be verified on HiKey960:
-> 
-> $ cat /sys/devices/system/cpu/cpu*/cpufreq/scaling_cur_freq
-> 1844000
-> 1844000
-> 1844000
-> 1844000
-> 2362000
-> 2362000
-> 2362000
-> 2362000
-> 
-> $ cat /sys/devices/system/cpu/cpu*/cpu_capacity
-> 462
-> 462
-> 462
-> 462
-> 1024
-> 1024
-> 1024
-> 1024
-> 
-> Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
-> ---
+Signed-off-by: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
+---
+ .../devicetree/bindings/media/sun6i-csi.txt        | 51 ++++++++++++++++++++++
+ 1 file changed, 51 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/sun6i-csi.txt
 
-Applied into hisilicon dt tree.
-Thanks!
-
-Best Regards,
-Wei
-
->  arch/arm64/boot/dts/hisilicon/hi3660.dtsi | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-> index ab0b95b..04a8d28 100644
-> --- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-> +++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-> @@ -61,6 +61,7 @@
->  			enable-method = "psci";
->  			next-level-cache = <&A53_L2>;
->  			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP_0>;
-> +			capacity-dmips-mhz = <592>;
->  		};
->  
->  		cpu1: cpu@1 {
-> @@ -70,6 +71,7 @@
->  			enable-method = "psci";
->  			next-level-cache = <&A53_L2>;
->  			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP_0>;
-> +			capacity-dmips-mhz = <592>;
->  		};
->  
->  		cpu2: cpu@2 {
-> @@ -79,6 +81,7 @@
->  			enable-method = "psci";
->  			next-level-cache = <&A53_L2>;
->  			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP_0>;
-> +			capacity-dmips-mhz = <592>;
->  		};
->  
->  		cpu3: cpu@3 {
-> @@ -88,6 +91,7 @@
->  			enable-method = "psci";
->  			next-level-cache = <&A53_L2>;
->  			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP_0>;
-> +			capacity-dmips-mhz = <592>;
->  		};
->  
->  		cpu4: cpu@100 {
-> @@ -101,6 +105,7 @@
->  					&CPU_SLEEP
->  					&CLUSTER_SLEEP_1
->  			>;
-> +			capacity-dmips-mhz = <1024>;
->  		};
->  
->  		cpu5: cpu@101 {
-> @@ -114,6 +119,7 @@
->  					&CPU_SLEEP
->  					&CLUSTER_SLEEP_1
->  			>;
-> +			capacity-dmips-mhz = <1024>;
->  		};
->  
->  		cpu6: cpu@102 {
-> @@ -127,6 +133,7 @@
->  					&CPU_SLEEP
->  					&CLUSTER_SLEEP_1
->  			>;
-> +			capacity-dmips-mhz = <1024>;
->  		};
->  
->  		cpu7: cpu@103 {
-> @@ -140,6 +147,7 @@
->  					&CPU_SLEEP
->  					&CLUSTER_SLEEP_1
->  			>;
-> +			capacity-dmips-mhz = <1024>;
->  		};
->  
->  		idle-states {
-> --
-> 2.7.4
-> 
-> 
-> .
-> 
+diff --git a/Documentation/devicetree/bindings/media/sun6i-csi.txt b/Documentation/devicetree/bindings/media/sun6i-csi.txt
+new file mode 100644
+index 0000000..b5bfe3f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/sun6i-csi.txt
+@@ -0,0 +1,51 @@
++Allwinner V3s Camera Sensor Interface
++------------------------------
++
++Required properties:
++  - compatible: value must be "allwinner,sun8i-v3s-csi"
++  - reg: base address and size of the memory-mapped region.
++  - interrupts: interrupt associated to this IP
++  - clocks: phandles to the clocks feeding the CSI
++    * bus: the CSI interface clock
++    * mod: the CSI module clock
++    * ram: the CSI DRAM clock
++  - clock-names: the clock names mentioned above
++  - resets: phandles to the reset line driving the CSI
++
++- ports: A ports node with endpoint definitions as defined in
++  Documentation/devicetree/bindings/media/video-interfaces.txt.
++  Currently, the driver only support the parallel interface. So, a single port
++  node with one endpoint and parallel bus is supported.
++
++Example:
++
++	csi1: csi@1cb4000 {
++		compatible = "allwinner,sun8i-v3s-csi";
++		reg = <0x01cb4000 0x1000>;
++		interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&ccu CLK_BUS_CSI>,
++			 <&ccu CLK_CSI1_SCLK>,
++			 <&ccu CLK_DRAM_CSI>;
++		clock-names = "bus", "mod", "ram";
++		resets = <&ccu RST_BUS_CSI>;
++
++		port {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			/* Parallel bus endpoint */
++			csi1_ep: endpoint {
++				remote-endpoint = <&adv7611_ep>;
++				bus-width = <16>;
++				data-shift = <0>;
++
++				/* If hsync-active/vsync-active are missing,
++				   embedded BT.656 sync is used */
++				hsync-active = <0>; /* Active low */
++				vsync-active = <0>; /* Active low */
++				data-active = <1>;  /* Active high */
++				pclk-sample = <1>;  /* Rising */
++			};
++		};
++	};
++
+-- 
+1.8.3.1
