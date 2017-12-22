@@ -1,75 +1,62 @@
 From: Philippe Ombredanne <pombredanne@nexb.com>
-Subject: Re: [PATCH v4] hwrng: exynos - add Samsung Exynos True RNG driver
-Date: Fri, 22 Dec 2017 14:34:35 +0100
-Message-ID: <CAOFm3uG2aBHWUgVyzPuU8XJaLbm78cWEuWvgLEvNfc-hiefAbw@mail.gmail.com>
-References: <CGME20171222132349eucas1p2270e45b81c9d77cb09addfd769877098@eucas1p2.samsung.com>
- <20171204125351.26805-3-l.stelmach@samsung.com> <20171222132338.30054-1-l.stelmach@samsung.com>
+Subject: Re: [linux-sunxi] [PATCH v4 2/2] media: V3s: Add support for
+ Allwinner CSI.
+Date: Fri, 22 Dec 2017 14:40:37 +0100
+Message-ID: <CAOFm3uEfD4G2cLWNBhtB0tfD0A0e47div0RNGFioNCm-b108bg@mail.gmail.com>
+References: <1513936020-35569-1-git-send-email-yong.deng@magewell.com> <20171222102156.cfemen6ouxxxbrem@plaes.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-crypto-owner@vger.kernel.org>
-In-Reply-To: <20171222132338.30054-1-l.stelmach@samsung.com>
-Sender: linux-crypto-owner@vger.kernel.org
-To: =?UTF-8?Q?=C5=81ukasz_Stelmach?= <l.stelmach@samsung.com>
-Cc: "Andrew F . Davis" <afd@ti.com>, PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>, Rob Herring <robh+dt@kernel.org>, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-crypto@vger.kernel.org, linux-samsung-soc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20171222102156.cfemen6ouxxxbrem@plaes.org>
+Sender: linux-media-owner@vger.kernel.org
+To: Yong Deng <yong.deng@magewell.com>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Randy Dunlap <rdunlap@infradead.org>, Hans Verkuil <hans.verkuil@cisco.com>, Stanimir Varbanov <stanimir.varbanov@linaro.org>, Hugues Fruchet <hugues.fruchet@st.com>, Yannick Fertre <yannick.fertre@st.com>, Philipp Zabel <p.zabel@pengutronix.de>, Arnd Bergmann <arnd@arndb.de>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Rick Chang <rick.chang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-=C5=81ukasz,
+Yong,
 
-On Fri, Dec 22, 2017 at 2:23 PM, =C5=81ukasz Stelmach <l.stelmach@samsung.c=
-om> wrote:
-> Add support for True Random Number Generator found in Samsung Exynos
-> 5250+ SoCs.
->
-> Signed-off-by: =C5=81ukasz Stelmach <l.stelmach@samsung.com>
-> Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+On Fri, Dec 22, 2017 at 11:21 AM, Priit Laes <plaes@plaes.org> wrote:
+> On Fri, Dec 22, 2017 at 05:47:00PM +0800, Yong Deng wrote:
+>> Allwinner V3s SoC have two CSI module. CSI0 is used for MIPI interface
+>> and CSI1 is used for parallel interface. This is not documented in
+>> datasheet but by testing and guess.
+>>
+>> This patch implement a v4l2 framework driver for it.
+>>
+>> Currently, the driver only support the parallel interface. MIPI-CSI2,
+>> ISP's support are not included in this patch.
+>>
+>> Signed-off-by: Yong Deng <yong.deng@magewell.com>
 
 <snip>
 
-> --- /dev/null
-> +++ b/drivers/char/hw_random/exynos-trng.c
-> @@ -0,0 +1,245 @@
-> +/*
-> + * RNG driver for Exynos TRNGs
-> + *
-> + * Author: =C5=81ukasz Stelmach <l.stelmach@samsung.com>
-> + *
-> + * Copyright 2017 (c) Samsung Electronics Software, Inc.
-> + *
-> + * Based on the Exynos PRNG driver drivers/crypto/exynos-rng by
-> + * Krzysztof Koz=C5=82owski <krzk@kernel.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation;
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
+>> --- /dev/null
+>> +++ b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
+>> @@ -0,0 +1,878 @@
+>> +/*
+>> + * Copyright (c) 2017 Magewell Electronics Co., Ltd. (Nanjing).
+>> + * All rights reserved.
+>> + * Author: Yong Deng <yong.deng@magewell.com>
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * published by the Free Software Foundation.
+>> + *
+>> + * This program is distributed in the hope that it will be useful,
+>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + * GNU General Public License for more details.
+>> + */
 
 
 Would you mind using the new SPDX tags documented in Thomas patch set
 [1] rather than this fine but longer legalese?
 
-And if you could spread the word to others in your team this would be very =
-nice.
-See also this fine article posted by Mauro on the Samsung Open Source
-Group Blog [2]
-Thank you!
+>> +MODULE_LICENSE("GPL v2");
 
-> +MODULE_LICENSE("GPL");
-
-Per module.h this means GPL2 or later. This is not matching your
-license above which does not state any version and therefore would
-mean GPL1 or later,
-Please make sure you use something and common rather than this and
-make sure your MODULE_LICENSE is consistent with the top level
-license.
-
-Was it this way in the code from Krzysztof?
+Per module.h this means GPL2 only. This is not matching your top
+license above which is GPL2 or later.
+Please  make sure your MODULE_LICENSE is consistent with the top level license.
 
 
 [1] https://lkml.org/lkml/2017/12/4/934
-[2] https://blogs.s-osg.org/linux-kernel-license-practices-revisited-spdx/
