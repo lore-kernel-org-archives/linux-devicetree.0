@@ -1,62 +1,75 @@
-From: Faiz Abbas <faiz_abbas@ti.com>
-Subject: [PATCH v6 6/6] dt-bindings: can: can-transceiver: Document new binding
-Date: Fri, 22 Dec 2017 19:01:28 +0530
-Message-ID: <1513949488-13026-7-git-send-email-faiz_abbas@ti.com>
-References: <1513949488-13026-1-git-send-email-faiz_abbas@ti.com>
+From: Philippe Ombredanne <pombredanne@nexb.com>
+Subject: Re: [PATCH v4] hwrng: exynos - add Samsung Exynos True RNG driver
+Date: Fri, 22 Dec 2017 14:34:35 +0100
+Message-ID: <CAOFm3uG2aBHWUgVyzPuU8XJaLbm78cWEuWvgLEvNfc-hiefAbw@mail.gmail.com>
+References: <CGME20171222132349eucas1p2270e45b81c9d77cb09addfd769877098@eucas1p2.samsung.com>
+ <20171204125351.26805-3-l.stelmach@samsung.com> <20171222132338.30054-1-l.stelmach@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <1513949488-13026-1-git-send-email-faiz_abbas@ti.com>
-Sender: linux-can-owner@vger.kernel.org
-To: wg@grandegger.com, mkl@pengutronix.de, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-can@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, faiz_abbas@ti.com, nsekhar@ti.com, fcooper@ti.com, robh@kernel.org, Wenyou.Yang@microchip.com, sergei.shtylyov@cogentembedded.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-crypto-owner@vger.kernel.org>
+In-Reply-To: <20171222132338.30054-1-l.stelmach@samsung.com>
+Sender: linux-crypto-owner@vger.kernel.org
+To: =?UTF-8?Q?=C5=81ukasz_Stelmach?= <l.stelmach@samsung.com>
+Cc: "Andrew F . Davis" <afd@ti.com>, PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>, Rob Herring <robh+dt@kernel.org>, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-crypto@vger.kernel.org, linux-samsung-soc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Franklin S Cooper Jr <fcooper@ti.com>
+=C5=81ukasz,
 
-Add documentation to describe usage of the new can-transceiver binding.
-This new binding is applicable for any CAN device therefore it exists as
-its own document.
+On Fri, Dec 22, 2017 at 2:23 PM, =C5=81ukasz Stelmach <l.stelmach@samsung.c=
+om> wrote:
+> Add support for True Random Number Generator found in Samsung Exynos
+> 5250+ SoCs.
+>
+> Signed-off-by: =C5=81ukasz Stelmach <l.stelmach@samsung.com>
+> Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
-Signed-off-by: Sekhar Nori <nsekhar@ti.com>
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
----
- .../bindings/net/can/can-transceiver.txt           | 24 ++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/can/can-transceiver.txt
+<snip>
 
-diff --git a/Documentation/devicetree/bindings/net/can/can-transceiver.txt b/Documentation/devicetree/bindings/net/can/can-transceiver.txt
-new file mode 100644
-index 0000000..0011f53
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/can/can-transceiver.txt
-@@ -0,0 +1,24 @@
-+Generic CAN transceiver Device Tree binding
-+------------------------------
-+
-+CAN transceiver typically limits the max speed in standard CAN and CAN FD
-+modes. Typically these limitations are static and the transceivers themselves
-+provide no way to detect this limitation at runtime. For this situation,
-+the "can-transceiver" node can be used.
-+
-+Required Properties:
-+ max-bitrate:	a positive non 0 value that determines the max
-+		speed that CAN/CAN-FD can run. Any other value
-+		will be ignored.
-+
-+Examples:
-+
-+Based on Texas Instrument's TCAN1042HGV CAN Transceiver
-+
-+m_can0 {
-+	....
-+	can-transceiver {
-+		max-bitrate = <5000000>;
-+	};
-+	...
-+};
--- 
-2.7.4
+> --- /dev/null
+> +++ b/drivers/char/hw_random/exynos-trng.c
+> @@ -0,0 +1,245 @@
+> +/*
+> + * RNG driver for Exynos TRNGs
+> + *
+> + * Author: =C5=81ukasz Stelmach <l.stelmach@samsung.com>
+> + *
+> + * Copyright 2017 (c) Samsung Electronics Software, Inc.
+> + *
+> + * Based on the Exynos PRNG driver drivers/crypto/exynos-rng by
+> + * Krzysztof Koz=C5=82owski <krzk@kernel.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation;
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
 
+
+Would you mind using the new SPDX tags documented in Thomas patch set
+[1] rather than this fine but longer legalese?
+
+And if you could spread the word to others in your team this would be very =
+nice.
+See also this fine article posted by Mauro on the Samsung Open Source
+Group Blog [2]
+Thank you!
+
+> +MODULE_LICENSE("GPL");
+
+Per module.h this means GPL2 or later. This is not matching your
+license above which does not state any version and therefore would
+mean GPL1 or later,
+Please make sure you use something and common rather than this and
+make sure your MODULE_LICENSE is consistent with the top level
+license.
+
+Was it this way in the code from Krzysztof?
+
+
+[1] https://lkml.org/lkml/2017/12/4/934
+[2] https://blogs.s-osg.org/linux-kernel-license-practices-revisited-spdx/
