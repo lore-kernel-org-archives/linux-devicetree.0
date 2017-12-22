@@ -1,85 +1,94 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH] ARM: dts: exynos: fix RTC interrupt for exynos5410
-Date: Fri, 22 Dec 2017 10:19:24 +0100
-Message-ID: <CAJKOXPfj0dFEzuu4wSqb2jV-S9QyDTStJiHQxR6r8HwrTxRoYg@mail.gmail.com>
-References: <20171221213020.3080361-1-arnd@arndb.de>
+From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Subject: Re: [PATCH] devicetree: Add video bus switch
+Date: Fri, 22 Dec 2017 10:24:52 +0100
+Message-ID: <20171222092452.GA16581@amd>
+References: <20161023200355.GA5391@amd>
+ <20170203213454.GD12291@valkosipuli.retiisi.org.uk>
+ <20170204215610.GA9243@amd>
+ <75694885.3PuLWzx4qN@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171221213020.3080361-1-arnd@arndb.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= <b.zolnierkie@samsung.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="dDRMvlgZJXvWKvBx"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <75694885.3PuLWzx4qN@avalon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 21, 2017 at 10:30 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> According to the comment added to exynos_dt_pmu_match[] in commit
-> 8b283c025443 ("ARM: exynos4/5: convert pmu wakeup to stacked domains"),
-> the RTC is not able to wake up the system through the PMU on Exynos5410,
-> unlike Exynos5420.
->
-> However, when the RTC DT node got added, it was a straight copy of
-> the Exynos5420 node, which now causes a warning from dtc.
->
-> This removes the incorrect interrupt-parent, which should get the
-> interrupt working and avoid the warning.
->
-> Fixes: e1e146b1b062 ("ARM: dts: exynos: Add RTC and I2C to Exynos5410")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  arch/arm/boot/dts/exynos5410.dtsi | 1 -
->  1 file changed, 1 deletion(-)
 
-In my pull request thread [1] you mentioned that PMU should not be
-interrupt controller for Exynos5410. Yes, I think you are right.
-Regardless whether Exynos5410 really supports Suspend to RAM or not,
-now it is not configured as IRQ controller so the RTC's should go
-straight to GIC. I think your fix is correct and I should drop my
-patch.
+--dDRMvlgZJXvWKvBx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I do not have Exynos5410 anymore (Odroid XU was left at Samsung
-Poland) so I cannot test it. Maybe guys in Poland can test it? Marek?
-Sylwester? Bartlomiej?
+Hi!
 
-BTW,
-It annoys me so much that it is so difficult to get Samsung boards. I
-was writing to Samsung many times - to HQ, Open Source Group, LSI,
-Artik and nothing. They do not have any boards... or they do not want
-to share. This is how Samsung's support for Open Source really looks
-like.
->From the three boards I have, two of them I bought myself by my own
-money, one was donated to me by Markus Reichl (Odroid U3, thanks!).
-When I was working in Samsung Poland they provided me with boards
-(thanks guys!) but only for the time of work there and I am not
-Samsung employee anymore.
+> > > I don't really object using g_endpoint_config() as a temporary soluti=
+on;
+> > > I'd like to have Laurent's opinion on that though. Another option is =
+to
+> > > wait, but we've already waited a looong time (as in total).
+> >=20
+> > Laurent, do you have some input here? We have simple "2 cameras
+> > connected to one signal processor" situation here. We need some way of
+> > passing endpoint configuration from the sensors through the switch. I
+> > did this:
+>=20
+> Could you give me a bit more information about the platform you're target=
+ing:=20
+> how the switch is connected, what kind of switch it is, and what endpoint=
+=20
+> configuration data you need ?
 
-So except this board from Markus, all infrastructure I have was built
-by my own money. Eh, it is not that expensive, one board costs like
-50-70 USD with shipment, but come on! Seriously, damn big company,
-with damn big marketing budget and plenty of people and they cannot
-provide their own boards to open-source... It really pisses me off
-sometimes...
+Platform is Nokia N900, Ivaylo already gave pointer to schematics.
 
-Back to the topic - thanks for the patch!
+Switch is controlled using GPIO, and basically there's CSI
+configuration that would normally be in the device tree, but now we
+have two CSI configurations to select from...
 
-Best regards,
-Krzysztof
+> > 9) Highly reconfigurable hardware - Julien Beraud
+> >=20
+> > - 44 sub-devices connected with an interconnect.
+> > - As long as formats match, any sub-device could be connected to any
+> > - other sub-device through a link.
+> > - The result is 44 * 44 links at worst.
+> > - A switch sub-device proposed as the solution to model the
+> > - interconnect. The sub-devices are connected to the switch
+> > - sub-devices through the hardware links that connect to the
+> > - interconnect.
+> > - The switch would be controlled through new IOCTLs S_ROUTING and
+> > - G_ROUTING.
+> > - Patches available:
+> >  http://git.linuxtv.org/cgit.cgi/pinchartl/media.git/log/?h=3Dxilinx-wip
+> >=20
+> > but the patches are from 2005. So I guess I'll need some guidance here.=
+=2E.
+>=20
+> You made me feel very old for a moment. The patches are from 2015 :-)
 
-[1] https://www.spinics.net/lists/arm-kernel/msg624966.html
+Sorry about that :-).
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
->
-> diff --git a/arch/arm/boot/dts/exynos5410.dtsi b/arch/arm/boot/dts/exynos5410.dtsi
-> index 06713ec86f0d..d2174727df9a 100644
-> --- a/arch/arm/boot/dts/exynos5410.dtsi
-> +++ b/arch/arm/boot/dts/exynos5410.dtsi
-> @@ -333,7 +333,6 @@
->  &rtc {
->         clocks = <&clock CLK_RTC>;
->         clock-names = "rtc";
-> -       interrupt-parent = <&pmu_system_controller>;
->         status = "disabled";
->  };
->
-> --
-> 2.9.0
->
+--dDRMvlgZJXvWKvBx
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlo8z2QACgkQMOfwapXb+vJsZgCbBTP/TSZqeMt9ztNZwy8vgxeo
+Dv0AoJlt7/yNRop9DRe4vJWCTXucHDJy
+=Ec4d
+-----END PGP SIGNATURE-----
+
+--dDRMvlgZJXvWKvBx--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
