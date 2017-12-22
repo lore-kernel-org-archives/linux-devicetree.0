@@ -1,57 +1,102 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: [PATCH v3 08/11] dt-bindings: add binding for A64 DE2 CCU SRAM
-Date: Fri, 22 Dec 2017 20:22:40 +0800
-Message-ID: <20171222122243.25735-9-icenowy@aosc.io>
+From: Icenowy Zheng <icenowy@aosc.io>
+Subject: [PATCH v3 09/11] clk: sunxi-ng: add support for Allwinner A64 DE2 CCU
+Date: Fri, 22 Dec 2017 20:22:41 +0800
+Message-ID: <20171222122243.25735-10-icenowy@aosc.io>
 References: <20171222122243.25735-1-icenowy@aosc.io>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171222122243.25735-1-icenowy-h8G6r0blFSE@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171222122243.25735-1-icenowy@aosc.io>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Icenowy Zheng <icenowy@aosc.io>
 List-Id: devicetree@vger.kernel.org
 
-A64's Display Engine 2.0 needs a section of SRAM (SRAM C) to be claimed,
-otherwise the whole DE2 memory zone cannot be accessed (kept to all 0).
+Allwinner A64's DE2 needs to claim a section of SRAM (SRAM C) to work.
 
-Add binding for this, in order to make the DE2 CCU able to claim the
-SRAM and enable access to the DE2 clock and reset registers.
+Add support for it.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
 ---
-Changes in v3:
-- Add Rob's ACK.
+ drivers/clk/sunxi-ng/ccu-sun8i-de2.c | 32 ++++++++++++++++++++++++--------
+ 1 file changed, 24 insertions(+), 8 deletions(-)
 
- Documentation/devicetree/bindings/clock/sun8i-de2.txt | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/clock/sun8i-de2.txt b/Documentation/devicetree/bindings/clock/sun8i-de2.txt
-index f2fa87c4765c..a7d558a2b9b2 100644
---- a/Documentation/devicetree/bindings/clock/sun8i-de2.txt
-+++ b/Documentation/devicetree/bindings/clock/sun8i-de2.txt
-@@ -6,6 +6,7 @@ Required properties :
- 		- "allwinner,sun8i-a83t-de2-clk"
- 		- "allwinner,sun8i-h3-de2-clk"
- 		- "allwinner,sun8i-v3s-de2-clk"
-+		- "allwinner,sun50i-a64-de2-clk"
- 		- "allwinner,sun50i-h5-de2-clk"
+diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-de2.c b/drivers/clk/sunxi-ng/ccu-sun8i-de2.c
+index 468d1abaf0ee..38b029b7bb5a 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun8i-de2.c
++++ b/drivers/clk/sunxi-ng/ccu-sun8i-de2.c
+@@ -17,6 +17,7 @@
+ #include <linux/of_platform.h>
+ #include <linux/platform_device.h>
+ #include <linux/reset.h>
++#include <linux/soc/sunxi/sunxi_sram.h>
  
- - reg: Must contain the registers base address and length
-@@ -18,6 +19,10 @@ Required properties :
- - #clock-cells : must contain 1
- - #reset-cells : must contain 1
+ #include "ccu_common.h"
+ #include "ccu_div.h"
+@@ -196,6 +197,11 @@ static const struct sunxi_ccu_desc sun8i_v3s_de2_clk_desc = {
+ 	.num_resets	= ARRAY_SIZE(sun8i_a83t_de2_resets),
+ };
  
-+Additional required properties for "allwinner,sun50i-a64-de2-clk" :
-+- allwinner,sram: See Documentation/devicetree/bindings/sram/sunxi-sram.txt,
-+		  should be the SRAM C section on A64 SoC.
++static bool sunxi_de2_clk_has_sram(const struct device_node *node)
++{
++	return of_device_is_compatible(node, "allwinner,sun50i-a64-de2-clk");
++}
 +
- Example:
- de2_clocks: clock@1000000 {
- 	compatible = "allwinner,sun8i-h3-de2-clk";
+ static int sunxi_de2_clk_probe(struct platform_device *pdev)
+ {
+ 	struct resource *res;
+@@ -239,11 +245,20 @@ static int sunxi_de2_clk_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
++	if (sunxi_de2_clk_has_sram(pdev->dev.of_node)) {
++		ret = sunxi_sram_claim(&pdev->dev);
++		if (ret) {
++			dev_err(&pdev->dev,
++				"Error couldn't map SRAM to device\n");
++			return ret;
++		}
++	}
++
+ 	/* The clocks need to be enabled for us to access the registers */
+ 	ret = clk_prepare_enable(bus_clk);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "Couldn't enable bus clk: %d\n", ret);
+-		return ret;
++		goto err_release_sram;
+ 	}
+ 
+ 	ret = clk_prepare_enable(mod_clk);
+@@ -272,6 +287,10 @@ static int sunxi_de2_clk_probe(struct platform_device *pdev)
+ 	clk_disable_unprepare(mod_clk);
+ err_disable_bus_clk:
+ 	clk_disable_unprepare(bus_clk);
++err_release_sram:
++	if (sunxi_de2_clk_has_sram(pdev->dev.of_node))
++		sunxi_sram_release(&pdev->dev);
++
+ 	return ret;
+ }
+ 
+@@ -288,17 +307,14 @@ static const struct of_device_id sunxi_de2_clk_ids[] = {
+ 		.compatible = "allwinner,sun8i-v3s-de2-clk",
+ 		.data = &sun8i_v3s_de2_clk_desc,
+ 	},
++	{
++		.compatible = "allwinner,sun50i-a64-de2-clk",
++		.data = &sun50i_a64_de2_clk_desc,
++	},
+ 	{
+ 		.compatible = "allwinner,sun50i-h5-de2-clk",
+ 		.data = &sun50i_a64_de2_clk_desc,
+ 	},
+-	/*
+-	 * The Allwinner A64 SoC needs some bit to be poke in syscon to make
+-	 * DE2 really working.
+-	 * So there's currently no A64 compatible here.
+-	 * H5 shares the same reset line with A64, so here H5 is using the
+-	 * clock description of A64.
+-	 */
+ 	{ }
+ };
+ 
 -- 
 2.14.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
