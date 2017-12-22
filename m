@@ -1,95 +1,52 @@
-From: Philippe Ombredanne <pombredanne@nexb.com>
-Subject: Re: [PATCH 1/2] [media] Add Rockchip RK1608 driver
-Date: Fri, 22 Dec 2017 09:45:42 +0100
-Message-ID: <CAOFm3uGWgYs06NRrrjJSrvDG5ebR_K0y2e_qQeOALMSsNnpXsQ@mail.gmail.com>
-References: <1513060095-29588-1-git-send-email-leo.wen@rock-chips.com>
- <1513060095-29588-2-git-send-email-leo.wen@rock-chips.com> <CAFLEztTxXRQu-VJ2FzYbA_vkYZtkDur1nQ6goftdZdnbn63aQQ@mail.gmail.com>
+From: Marc Gonzalez <marc_gonzalez-y1yR0Z3OICC7zZZRDBGcUA@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: tango4: remove bogus interrupt-controller
+ property
+Date: Fri, 22 Dec 2017 09:41:51 +0100
+Message-ID: <0727e9e4-5941-9a3c-768f-72bd443652d2@sigmadesigns.com>
+References: <20171221214831.3859194-1-arnd@arndb.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <CAFLEztTxXRQu-VJ2FzYbA_vkYZtkDur1nQ6goftdZdnbn63aQQ@mail.gmail.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Leo Wen <leo.wen@rock-chips.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, rdunlap@infradead.org, Linux Media Mailing List <linux-media@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Eddie Cai <eddie.cai@rock-chips.com>, Jacob Chen <jacobchen110@gmail.com>
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171221214831.3859194-1-arnd-r2nGTMty4D4@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Mans Rullgard <mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Dear Leo,
+On 21/12/2017 22:48, Arnd Bergmann wrote:
 
-On Fri, Dec 22, 2017 at 5:33 AM, Jacob Chen <jacobchen110@gmail.com> wrote:
-> Hi leo,
->
->
-> 2017-12-12 14:28 GMT+08:00 Leo Wen <leo.wen@rock-chips.com>:
->> Rk1608 is used as a PreISP to link on Soc, which mainly has two functions.
->> One is to download the firmware of RK1608, and the other is to match the
->> extra sensor such as camera and enable sensor by calling sensor's s_power.
->>
->> use below v4l2-ctl command to capture frames.
->>
->>     v4l2-ctl --verbose -d /dev/video1 --stream-mmap=2
->>     --stream-to=/tmp/stream.out --stream-count=60 --stream-poll
->>
->> use below command to playback the video on your PC.
->>
->>     mplayer ./stream.out -loop 0 -demuxer rawvideo -rawvideo
->>     w=640:h=480:size=$((640*480*3/2)):format=NV12
->>
->> Signed-off-by: Leo Wen <leo.wen@rock-chips.com>
+> dtc points out that the parent node of the interrupt controllers is not
+> actually an interrupt controller itself, and lacks an #interrupt-cells
+> property:
+> 
+> arch/arm/boot/dts/tango4-vantage-1172.dtb: Warning (interrupts_property): Missing #interrupt-cells in interrupt-parent /soc/interrupt-controller@6e000
+> 
+> This removes the annotation.
+> 
+> Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/tango4-common.dtsi | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/tango4-common.dtsi b/arch/arm/boot/dts/tango4-common.dtsi
+> index 0ec1b0a317b4..ff72a8efb73d 100644
+> --- a/arch/arm/boot/dts/tango4-common.dtsi
+> +++ b/arch/arm/boot/dts/tango4-common.dtsi
+> @@ -156,7 +156,6 @@
+>  			reg = <0x6e000 0x400>;
+>  			ranges = <0 0x6e000 0x400>;
+>  			interrupt-parent = <&gic>;
+> -			interrupt-controller;
+>  			#address-cells = <1>;
+>  			#size-cells = <1>;
+>  
 
-<snip>
+Acked-by: Marc Gonzalez <marc_gonzalez-y1yR0Z3OICC7zZZRDBGcUA@public.gmane.org>
 
->> --- /dev/null
->> +++ b/drivers/media/spi/rk1608.c
->> @@ -0,0 +1,1165 @@
->> +/**
->> + * Rockchip rk1608 driver
->> + *
->> + * Copyright (C) 2017 Rockchip Electronics Co., Ltd.
->> + *
->> + * This software is available to you under a choice of one of two
->> + * licenses.  You may choose to be licensed under the terms of the GNU
->> + * General Public License (GPL) Version 2, available from the file
->> + * COPYING in the main directory of this source tree, or the
->> + * OpenIB.org BSD license below:
->> + *
->> + *     Redistribution and use in source and binary forms, with or
->> + *     without modification, are permitted provided that the following
->> + *     conditions are met:
->> + *
->> + *      - Redistributions of source code must retain the above
->> + *        copyright notice, this list of conditions and the following
->> + *        disclaimer.
->> + *
->> + *      - Redistributions in binary form must reproduce the above
->> + *        copyright notice, this list of conditions and the following
->> + *        disclaimer in the documentation and/or other materials
->> + *        provided with the distribution.
->> + *
->> + * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
->> + * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
->> + * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
->> + * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
->> + * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
->> + * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
->> + * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
->> + * SOFTWARE.
->> + */
+Thanks Arnd.
 
-Have you considered using the new SPDX tags instead of this fine but
-long legalese?
-I know what you are about to say: everyone loves legalese so much that
-it is hard to let go of so much of it and replace all this only with a
-single SPDX tag line ;)
-But then everyone loves code much more than legalese too! so you would
-be making the world a service anyway.
-
-And if other contributors in your team could follow suit and you could
-spread the word that would be even better!
-
-See Thomas doc patches [1] for details.
-
-[1] https://lkml.org/lkml/2017/12/4/934
-
--- 
-Cordially
-Philippe Ombredanne
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
