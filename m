@@ -1,200 +1,69 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v2 3/3] clk: actions: Add clock driver for Actions S900
- SoC
-Date: Thu, 21 Dec 2017 15:56:14 -0800
-Message-ID: <20171221235614.GG7997@codeaurora.org>
-References: <1509997552-29718-1-git-send-email-manivannan.sadhasivam@linaro.org>
- <1509997552-29718-4-git-send-email-manivannan.sadhasivam@linaro.org>
+From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Subject: Re: [PATCH 4/4] ARM: dts: vf610-zii-dev-rev-b: add interrupts for
+ 88e1545 PHY
+Date: Fri, 22 Dec 2017 00:14:07 +0000
+Message-ID: <20171222001407.GL10595@n2100.armlinux.org.uk>
+References: <20171220231108.GJ10595@n2100.armlinux.org.uk>
+ <E1eRnWr-0006VS-1m@rmk-PC.armlinux.org.uk>
+ <CACRpkdas5JJ4KHE4g=sPXag=3vQt4TS5EcZBsy=LRfw8tqcgOw@mail.gmail.com>
+ <20171221134058.GA15416@lunn.ch>
+ <20171221173235.GK10595@n2100.armlinux.org.uk>
+ <CACRpkdarS+tPv5CG4bmFcPvc+=SJJcC1pbO7WSbsS5+yCuxh_Q@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1509997552-29718-4-git-send-email-manivannan.sadhasivam-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <CACRpkdarS+tPv5CG4bmFcPvc+=SJJcC1pbO7WSbsS5+yCuxh_Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, afaerber-l3A5Bk7waGM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, liuwei-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org, mp-cs-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org, 96boards-Ty1hIZOCd2XuufBYgWm87A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, manivannanece23-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/07, Manivannan Sadhasivam wrote:
-> diff --git a/drivers/clk/actions/Kconfig b/drivers/clk/actions/Kconfig
-> new file mode 100644
-> index 0000000..0de7a03
-> --- /dev/null
-> +++ b/drivers/clk/actions/Kconfig
-> @@ -0,0 +1,6 @@
-> +config CLK_OWL_S900
-> +	bool "Clock Driver for Actions S900 SoC"
+On Thu, Dec 21, 2017 at 11:53:47PM +0100, Linus Walleij wrote:
+> On Thu, Dec 21, 2017 at 6:32 PM, Russell King - ARM Linux
+> <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org> wrote:
+> 
+> > What we have here is _really_ a shared interrupt between four
+> > separate devices, and we need a way to sanely describe resources
+> > shared between several device instances to pinmux.  Unfortunately,
+> > it seems pinmux is designed around one device having exclusive use
+> > of a resource, which makes it hard to describe shared interrupts in
+> > DT.
+> >
+> > Given that DT should be a description of the hardware, and should be
+> > independent of the OS implementation, I'd say this is a pinmux bug,
+> > because pinmux gets in the way of describing the hardware correctly.
+> > ;)
+> 
+> Hm that would be annoying. But when I look at it I think it would
+> actually work. Did you try just assigning the same pin control
+> state to all the PHY's and see what happens?
+> 
+> Just set
+> pinctrl-names = "default";
+> pinctrl-0 = <&pinctrl_mv88e1545>;
+> 
+> on all of them?
 
-Can it be a module too? Otherwise drop module.h and anything that
-does to the driver.
+It was tried, DT was happy, but the kernel on boot complained because
+pinctrl objected, which caused the drivers to fail to bind:
 
-> +	depends on ARCH_ACTIONS || COMPILE_TEST
-
-Can you try compiling this with COMPILE_TEST=y and
-ARCH_ACTIONS=n? It may be that drivers/clk/Makefile needs to be
-obj-y and then the owl-clk, owl-pll, owl-factor files need to be
-compiled only when CONFIG_CLK_OWL_S900 is y. If there becomes
-more than one actions driver, then the clk, pll, factor files
-will need to be compiled with some new CLK_ACTIONS kconfig symbol
-or something.
-
-
-> +	default ARCH_ACTIONS
-> +	help
-> +	  Build the clock driver for Actions S900 SoC.
-> diff --git a/drivers/clk/actions/Makefile b/drivers/clk/actions/Makefile
-> new file mode 100644
-> index 0000000..83bef30
-> --- /dev/null
-> +++ b/drivers/clk/actions/Makefile
-> @@ -0,0 +1,2 @@
-> +obj-y				+= owl-clk.o owl-pll.o owl-factor.o
-> +obj-$(CONFIG_CLK_OWL_S900)	+= owl-s900.o
-> diff --git a/drivers/clk/actions/owl-s900.c b/drivers/clk/actions/owl-s900.c
-> new file mode 100644
-> index 0000000..51e297f
-> --- /dev/null
-> +++ b/drivers/clk/actions/owl-s900.c
-> @@ -0,0 +1,585 @@
-> +/*
-> + * Copyright (c) 2014 Actions Semi Inc.
-> + * Author: David Liu <liuwei-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>
-> + *
-> + * Copyright (c) 2017 Linaro Ltd.
-> + * Author: Manivannan Sadhasivam <manivannan.sadhasivam-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-> + * GNU General Public License for more details.
-> + */
-
-Can you move to the SPDX tags please?
-
-> +	COMP_DIV_CLK(CLK_UART3, "uart3", 0,
-> +			C_MUX(uart_clk_mux_p, CMU_UART3CLK, 16, 1, 0),
-> +			C_GATE(CMU_DEVCLKEN1, 19, 0),
-> +			C_DIVIDER(CMU_UART3CLK, 0, 8, NULL, CLK_DIVIDER_ROUND_CLOSEST)),
-> +
-> +	COMP_DIV_CLK(CLK_UART4, "uart4", 0,
-> +			C_MUX(uart_clk_mux_p, CMU_UART4CLK, 16, 1, 0),
-> +			C_GATE(CMU_DEVCLKEN1, 20, 0),
-> +			C_DIVIDER(CMU_UART4CLK, 0, 8, NULL, CLK_DIVIDER_ROUND_CLOSEST)),
-> +
-> +	COMP_DIV_CLK(CLK_UART5, "uart5", 0,
-> +			C_MUX(uart_clk_mux_p, CMU_UART5CLK, 16, 1, 0),
-> +			C_GATE(CMU_DEVCLKEN1, 21, 0),
-> +			C_DIVIDER(CMU_UART5CLK, 0, 8, NULL, CLK_DIVIDER_ROUND_CLOSEST)),
-> +
-> +	COMP_DIV_CLK(CLK_UART6, "uart6", 0,
-> +			C_MUX(uart_clk_mux_p, CMU_UART6CLK, 16, 1, 0),
-> +			C_GATE(CMU_DEVCLKEN1, 18, 0),
-> +			C_DIVIDER(CMU_UART6CLK, 0, 8, NULL, CLK_DIVIDER_ROUND_CLOSEST)),
-> +
-> +	COMP_FACTOR_CLK(CLK_VCE, "vce", 0,
-> +			C_MUX(vce_clk_mux_p, CMU_VCECLK, 4, 2, 0),
-> +			C_GATE(CMU_DEVCLKEN0, 26, 0),
-> +			C_FACTOR(CMU_VCECLK, 0, 3, bisp_factor_table, 0)),
-> +
-> +	COMP_FACTOR_CLK(CLK_VDE, "vde", 0,
-> +			C_MUX(hde_clk_mux_p, CMU_VDECLK, 4, 2, 0),
-> +			C_GATE(CMU_DEVCLKEN0, 25, 0),
-> +			C_FACTOR(CMU_VDECLK, 0, 3, bisp_factor_table, 0)),
-> +};
-> +
-> +static int s900_clk_probe(struct platform_device *pdev)
-> +{
-> +	struct owl_clk_provider *ctx;
-> +	struct device_node *np = pdev->dev.of_node;
-> +	struct resource *res;
-> +	void __iomem *base;
-> +	int i;
-> +
-> +	ctx = kzalloc(sizeof(struct owl_clk_provider) +
-> +			sizeof(*ctx->clk_data.hws) * CLK_NR_CLKS, GFP_KERNEL);
-
-It would be nice to avoid this. If the structs can all be
-configured properly, it should be possible to have an array of
-clk_hw pointers that are registered directly with
-clk_hw_register(), and then index directly into that array to
-return clk_hw pointers for the clk_hw provider function.
-
-> +	if (!ctx)
-> +		return -ENOMEM;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	base = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(base))
-> +		return PTR_ERR(base);
-> +
-> +	for (i = 0; i < CLK_NR_CLKS; ++i)
-> +		ctx->clk_data.hws[i] = ERR_PTR(-ENOENT);
-> +
-> +	ctx->reg_base = base;
-> +	ctx->clk_data.num = CLK_NR_CLKS;
-
-Hopefully CLK_NR_CLKS isn't coming from the DT header file.
-
-> +	spin_lock_init(&ctx->lock);
-> +
-> +	/* register pll clocks */
-> +	owl_clk_register_pll(ctx, s900_pll_clks,
-> +			ARRAY_SIZE(s900_pll_clks));
-> +
-> +	/* register divider clocks */
-> +	owl_clk_register_divider(ctx, s900_div_clks,
-> +			ARRAY_SIZE(s900_div_clks));
-> +
-> +	/* register factor divider clocks */
-> +	owl_clk_register_factor(ctx, s900_factor_clks,
-> +			ARRAY_SIZE(s900_factor_clks));
-> +
-> +	/* register mux clocks */
-> +	owl_clk_register_mux(ctx, s900_mux_clks,
-> +			ARRAY_SIZE(s900_mux_clks));
-> +
-> +	/* register gate clocks */
-> +	owl_clk_register_gate(ctx, s900_gate_clks,
-> +			ARRAY_SIZE(s900_gate_clks));
-> +
-> +	/* register composite clocks */
-> +	owl_clk_register_composite(ctx, s900_composite_clks,
-> +			ARRAY_SIZE(s900_composite_clks));
-> +
-> +	return of_clk_add_hw_provider(np, of_clk_hw_onecell_get,
-> +				&ctx->clk_data);
-> +
-> +}
-> +
-> +static const struct of_device_id s900_clk_of_match[] = {
-> +	{ .compatible = "actions,s900-cmu", },
-> +	{ /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(of, s900_clk_of_match);
-
-This isn't necessary? It's not a module?
-
-> +
-> +static struct platform_driver s900_clk_driver = {
-> +	.probe = s900_clk_probe,
-> +	.driver = {
-> +		.name = "s900-cmu",
-> +		.of_match_table = s900_clk_of_match,
-
-You need to supress_bind_attrs here or implement the remove
-function for this driver that would unregister all the clks and
-provider.
-
-> +	},
+libphy: mdio: probed
+vf610-pinctrl 40048000.iomuxc: pin VF610_PAD_PTB0 already requested by !mdio-mux!mdio@4!switch@0!mdio:00; cannot claim for !mdio-mux!mdio@4!switch@0!mdio:01
+vf610-pinctrl 40048000.iomuxc: pin-22 (!mdio-mux!mdio@4!switch@0!mdio:01) status -22
+vf610-pinctrl 40048000.iomuxc: could not request pin 22 (VF610_PAD_PTB0) from group pinctrl-mv88e1545  on device 40048000.iomuxc
+Marvell 88E1545 !mdio-mux!mdio@4!switch@0!mdio:01: Error applying setting, reverse things back
+Marvell 88E1545: probe of !mdio-mux!mdio@4!switch@0!mdio:01 failed with error -22
+vf610-pinctrl 40048000.iomuxc: pin VF610_PAD_PTB0 already requested by !mdio-mux!mdio@4!switch@0!mdio:00; cannot claim for !mdio-mux!mdio@4!switch@0!mdio:02
+vf610-pinctrl 40048000.iomuxc: pin-22 (!mdio-mux!mdio@4!switch@0!mdio:02) status -22
+vf610-pinctrl 40048000.iomuxc: could not request pin 22 (VF610_PAD_PTB0) from group pinctrl-mv88e1545  on device 40048000.iomuxc
+Marvell 88E1545 !mdio-mux!mdio@4!switch@0!mdio:02: Error applying setting, reverse things back
+Marvell 88E1545: probe of !mdio-mux!mdio@4!switch@0!mdio:02 failed with error -22
 
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 8.8Mbps down 630kbps up
+According to speedtest.net: 8.21Mbps down 510kbps up
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
