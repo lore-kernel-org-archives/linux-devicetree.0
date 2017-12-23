@@ -1,45 +1,26 @@
-From: Tuomas Tynkkynen <tuomas-yrGDUoBaLx3QT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH] mmc: Don't reference Linux-specific OF_GPIO_ACTIVE_LOW flag in DT binding
-Date: Sat, 23 Dec 2017 02:34:12 +0200
-Message-ID: <20171223003412.13688-1-tuomas@tuxera.com>
+From: Jassi Brar <jassisinghbrar@gmail.com>
+Subject: Re: [PATCH v11 2/6] mailbox: qcom: Create APCS child device for clock controller
+Date: Sat, 23 Dec 2017 10:27:28 +0530
+Message-ID: <CABb+yY146ho0gtbUzDv-Z_xESkU2y=UYfBA6i+522+m58LkABQ@mail.gmail.com>
+References: <20171205154701.27730-1-georgi.djakov@linaro.org> <20171205154701.27730-3-georgi.djakov@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tuomas Tynkkynen <tuomas-yrGDUoBaLx3QT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20171205154701.27730-3-georgi.djakov@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Georgi Djakov <georgi.djakov@linaro.org>
+Cc: Stephen Boyd <sboyd@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>, linux-clk@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org, Devicetree List <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-OF_GPIO_ACTIVE_LOW is a Linux implementation detail. The binding
-document should be referring to GPIO_ACTIVE_LOW found in
-include/dt-bindings/gpio/gpio.h.
+On Tue, Dec 5, 2017 at 9:16 PM, Georgi Djakov <georgi.djakov@linaro.org> wrote:
+> There is a clock controller functionality provided by the APCS hardware
+> block of msm8916 devices. The device-tree would represent an APCS node
+> with both mailbox and clock provider properties.
+>
+The spec might depict a 'clock' box and 'mailbox' box inside the
+bigger APCS box. However, from the code I see in this patchset, they
+are orthogonal and can & should be represented as independent DT
+nodes.
+Patch-1 is ok, though.
 
-Signed-off-by: Tuomas Tynkkynen <tuomas-yrGDUoBaLx3QT0dZR+AlfA@public.gmane.org>
----
- Documentation/devicetree/bindings/mmc/mmc.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Documentation/devicetree/bindings/mmc/mmc.txt
-index fb11ae8b3b72..467cd7b147ce 100644
---- a/Documentation/devicetree/bindings/mmc/mmc.txt
-+++ b/Documentation/devicetree/bindings/mmc/mmc.txt
-@@ -67,10 +67,10 @@ logic applies to the "wp-inverted" property.
- CD and WP lines can be implemented on the hardware in one of two ways: as GPIOs,
- specified in cd-gpios and wp-gpios properties, or as dedicated pins. Polarity of
- dedicated pins can be specified, using *-inverted properties. GPIO polarity can
--also be specified using the OF_GPIO_ACTIVE_LOW flag. This creates an ambiguity
-+also be specified using the GPIO_ACTIVE_LOW flag. This creates an ambiguity
- in the latter case. We choose to use the XOR logic for GPIO CD and WP lines.
- This means, the two properties are "superimposed," for example leaving the
--OF_GPIO_ACTIVE_LOW flag clear and specifying the respective *-inverted
-+GPIO_ACTIVE_LOW flag clear and specifying the respective *-inverted property
- property results in a double-inversion and actually means the "normal" line
- polarity is in effect.
- 
--- 
-2.15.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks
