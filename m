@@ -1,50 +1,36 @@
-From: Heiko Stuebner <heiko@sntech.de>
+From: Philippe Ombredanne <pombredanne-od1rfyK75/E@public.gmane.org>
 Subject: Re: [PATCH] clk: rockchip: Switch dt-binding headers for rk3328 to GPL/X11
-Date: Sat, 23 Dec 2017 17:15:06 +0100
-Message-ID: <58250763.La9K9Nn0rI@phil>
+Date: Sat, 23 Dec 2017 17:19:58 +0100
+Message-ID: <CAOFm3uGdESYGtXP24AkHOLcLAJuGXhz1uvig=GVGAt-OagXFEw@mail.gmail.com>
 References: <20171223152254.11617-1-manu@freebsd.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171223152254.11617-1-manu@freebsd.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Emmanuel Vadot <manu@freebsd.org>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, zhangqing@rock-chips.com, gregkh@linuxfoundation.org, tglx@linutronix.de, kstewart@linuxfoundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171223152254.11617-1-manu-h+KGxgPPiopAfugRpC6u6w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Emmanuel Vadot <manu-h+KGxgPPiopAfugRpC6u6w@public.gmane.org>, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Kate Stewart <kstewart-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Emmanuel,
+Dear Emmanuel,
 
-Am Samstag, 23. Dezember 2017, 16:22:54 CET schrieb Emmanuel Vadot:
+On Sat, Dec 23, 2017 at 4:22 PM, Emmanuel Vadot <manu-h+KGxgPPiopAfugRpC6u6w@public.gmane.org> wrote:
 > Since those files are also needed kernel side, switch their licences
 > to GPL/X11 so it can be used in BSD kernels.
-> 
-> Signed-off-by: Emmanuel Vadot <manu@freebsd.org>
-
-definitly no objection from me (especially as the file only contains
-constant definitions, so copyrightability might be debateable),
-but could you:
-
-(1) Adapt all rockchip clock headers in one patch, so we don't do this
-    for each header invididually
-(2) Do the same for the power/rk3* headers, but in a separate patch
-    as this goes through a different tree
-
-
-Thanks
-Heiko
-
+>
+> Signed-off-by: Emmanuel Vadot <manu-h+KGxgPPiopAfugRpC6u6w@public.gmane.org>
+> ---
 >  include/dt-bindings/clock/rk3328-cru.h   | 44 ++++++++++++++++++++++++++------
 >  include/dt-bindings/power/rk3328-power.h |  2 +-
 >  2 files changed, 37 insertions(+), 9 deletions(-)
-> 
+>
 > diff --git a/include/dt-bindings/clock/rk3328-cru.h b/include/dt-bindings/clock/rk3328-cru.h
 > index d2b26a4b43eb..bbcf03641f89 100644
 > --- a/include/dt-bindings/clock/rk3328-cru.h
 > +++ b/include/dt-bindings/clock/rk3328-cru.h
 > @@ -2,15 +2,43 @@
 >   * Copyright (c) 2016 Rockchip Electronics Co. Ltd.
->   * Author: Elaine <zhangqing@rock-chips.com>
+>   * Author: Elaine <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 >   *
 > - * This program is free software; you can redistribute it and/or modify
 > - * it under the terms of the GNU General Public License as published by
@@ -92,7 +78,21 @@ Heiko
 > + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 > + *     OTHER DEALINGS IN THE SOFTWARE.
 >   */
->  
+
+You just poked a big pointy stick in my left eye. It hurts! Why not
+use a proper SPDX tag here, like you did below?
+
+Each time such a long legalese is added to the kernel instead of an
+SPDX tag there is an endangered animal species that disappears from
+the face of the earth for good.  You do not want to bear this grave
+responsibility, do you?
+
+Also are you sure Elaine, other contributors and Rockchip Electronics
+Co. Ltd. agree to this change?
+It might be best if the patch were to come from them directly or at
+least you will need proper acks for sure.
+
+>
 >  #ifndef _DT_BINDINGS_CLK_ROCKCHIP_RK3328_H
 > diff --git a/include/dt-bindings/power/rk3328-power.h b/include/dt-bindings/power/rk3328-power.h
 > index 02e3d7fc1cce..301f30967b39 100644
@@ -103,5 +103,22 @@ Heiko
 > +/* SPDX-License-Identifier: GPL-2.0 or X11 */
 >  #ifndef __DT_BINDINGS_POWER_RK3328_POWER_H__
 >  #define __DT_BINDINGS_POWER_RK3328_POWER_H__
->  
-> 
+
+What you call X11 is called MIT in SPDX and in Thomas doc patches [1],
+e.g. this tag is supposed to match the eyes-poking long legalese
+above, this should be instead:
+
++/* SPDX-License-Identifier: (GPL-2.0+ or MIT) */
+
+Finally if the goal of this proposed license update is usage in
+FreeBSD and other BSD kernels, why use MIT as a second license? Would
+not a BSD be better and avoid license inflation on the BSD side?
+
+[1] https://lkml.org/lkml/2017/12/4/934
+-- 
+Cordially
+Philippe Ombredanne
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
