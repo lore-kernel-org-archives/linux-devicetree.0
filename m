@@ -1,65 +1,50 @@
-From: Emmanuel Vadot <manu-xXdDKFdH5B3kFDPD4ZthVA@public.gmane.org>
-Subject: Re: [PATCH] clk: rockchip: Switch dt-binding headers for rk3328 to
- GPL/X11
-Date: Sat, 23 Dec 2017 18:01:34 +0100
-Message-ID: <20171223180134.c310172d9a4012dbc52f11a2@bidouilliste.com>
-References: <20171223152254.11617-1-manu@freebsd.org>
-        <58250763.La9K9Nn0rI@phil>
-        <20171223175345.2a8845d2d019a9e5b625c2b0@bidouilliste.com>
-        <14437743.IJaZOmz2sC@phil>
+From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Subject: Re: [PATCH v2 3/5] mtd: nand: replace pxa3xx_nand driver by its rework called marvell_nand
+Date: Sat, 23 Dec 2017 22:13:48 +0100
+Message-ID: <87bmipb10z.fsf@belgarion.home>
+References: <20171219132942.27433-1-miquel.raynal@free-electrons.com>
+        <20171219132942.27433-4-miquel.raynal@free-electrons.com>
+        <87608ycwx5.fsf@belgarion.home> <20171222230444.2c952ea0@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <14437743.IJaZOmz2sC@phil>
+In-Reply-To: <20171222230444.2c952ea0@bbrezillon> (Boris Brezillon's message
+        of "Fri, 22 Dec 2017 23:04:44 +0100")
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: Emmanuel Vadot <manu-h+KGxgPPiopAfugRpC6u6w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, kstewart-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Ezequiel Garcia <ezequi>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 23 Dec 2017 17:58:46 +0100
-Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org> wrote:
+Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> writes:
 
-> Am Samstag, 23. Dezember 2017, 17:53:45 CET schrieb Emmanuel Vadot:
-> > On Sat, 23 Dec 2017 17:15:06 +0100
-> > Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org> wrote:
-> > 
-> > > Hi Emmanuel,
-> > > 
-> > > Am Samstag, 23. Dezember 2017, 16:22:54 CET schrieb Emmanuel Vadot:
-> > > > Since those files are also needed kernel side, switch their licences
-> > > > to GPL/X11 so it can be used in BSD kernels.
-> > > > 
-> > > > Signed-off-by: Emmanuel Vadot <manu-h+KGxgPPiopAfugRpC6u6w@public.gmane.org>
-> > > 
-> > > definitly no objection from me (especially as the file only contains
-> > > constant definitions, so copyrightability might be debateable),
-> > > but could you:
-> > > 
-> > > (1) Adapt all rockchip clock headers in one patch, so we don't do this
-> > >     for each header invididually
-> > > (2) Do the same for the power/rk3* headers, but in a separate patch
-> > >     as this goes through a different tree
-> > 
-> >  Sure I can do that, will it be better to wait to have some kind of ack
-> > from someone from rockchip ?
-> 
-> I don't know if China is somehow affected by the xmas season, but from what
-> I see, right now you only included Elaine (zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org)
-> but for example not the relevant list (linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org).
+>> What I would propose instead is :
+>>  - keep both the new marvell nand driver and the old pxa3xx_nand driver
+>>  - switch pxa_defconfig to compile them both
+>
+> Didn't notice you were suggesting to compile both, which doesn't work
+> because both drivers match the same devices, and only one of them
+> can actually claim the device (likely the first one to register to the
+> device model). So, to make it safe you need to have a
+>
+> 	depends on !MTD_NAND_PXA3xx
+>
+> in your MTD_NAND_MARVELL entry, which means only one driver can be
+> compiled.
+Mmm... that is I didn't explain to you what pxa_defconfig is designed for.
+This defconfig is not for any board actually, it rather is a build coverage
+tool.
 
- I've just git send using the output of get_maintainer.pl
+> So let's find a way to fix the remaining issues you have instead of delaying
+> the inevitable.
+It's up to you of course, as long as my boards don't break, and nothing breaking
+them is merged, I'm fine with it. It's just not the approach I usually choose,
+I'm rather a 2-step guy, ie. merge the new one, then merge the switch (which can
+be reverted easilly).
 
-> But we also have some other points to clarify in the other subthread
-> started by Philippe, so it might be best to get the points he made sorted
-> before as well.
-> 
-> 
-> Heiko
-
+Cheers.
 
 -- 
-Emmanuel Vadot <manu-xXdDKFdH5B3kFDPD4ZthVA@public.gmane.org> <manu-h+KGxgPPiopAfugRpC6u6w@public.gmane.org>
+Robert
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
