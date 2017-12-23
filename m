@@ -1,111 +1,133 @@
-From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH] arm: dts: mt7623: enable all four available UARTs on
- bananapi-r2
-Date: Sat, 23 Dec 2017 23:35:18 +0800
-Message-ID: <1514043318.30687.10.camel@mtkswgap22>
-References: <b4e84a68da76c1ca538150a730777ff530c1db5a.1513922513.git.sean.wang@mediatek.com>
-         <dc3c28c7-03c3-f1c6-39c1-b8df8be4fac3@gmail.com>
+From: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCHv4 2/3] net: socionext: Add Synquacer NetSec driver
+Date: Sat, 23 Dec 2017 15:40:28 +0000
+Message-ID: <CAKv+Gu8P_q0m4A_G40C8H5BxN+M+4qj8XnrKx0LWsc=3ftihmA@mail.gmail.com>
+References: <1514007876-16617-1-git-send-email-jassisinghbrar@gmail.com>
+ <1514007928-16726-1-git-send-email-jassisinghbrar@gmail.com>
+ <CAKv+Gu8xP5U-sD=CorZf4o_JuyNDhnRAmLs-wmAVWLsOO+Hhuw@mail.gmail.com> <CABb+yY3jMLYx3fTSuHfhfR9HDvDqzqDyYGz7T=5k4-HLfcJukg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <dc3c28c7-03c3-f1c6-39c1-b8df8be4fac3-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <CABb+yY3jMLYx3fTSuHfhfR9HDvDqzqDyYGz7T=5k4-HLfcJukg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "<netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Arnd Bergmann <arnd.bergmann-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Masami Hiramatsu <masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 2017-12-23 at 08:52 +0100, Matthias Brugger wrote:
-> 
-> On 12/22/2017 07:06 AM, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
-> > From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > 
-> > On bpi-r2 board, totally there're four uarts which we usually called
-> > uart[0-3] helpful to extend slow I/O devices. Among those ones, uart2 has
-> > dedicated pin slot which is used to conolse log. uart[0-1] appear at the
-> > 40-pins connector and uart3 has no pinout, but just has test points (TP47
-> > for TX and TP48 for RX, respectively) nearby uart2. Also, some missing
-> > pinctrl is being complemented for those devices.
-> > 
-> > Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > ---
-> >  arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts | 26 ++++++++++++++++++++++++--
-> >  1 file changed, 24 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-> > index 7bf5aa2..64bf5db 100644
-> > --- a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-> > +++ b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-> > @@ -409,6 +409,20 @@
-> >  				 <MT7623_PIN_82_UTXD1_FUNC_UTXD1>;
-> >  		};
-> >  	};
-> > +
-> > +	uart2_pins_a: uart@2 {
-> > +		pins_dat {
-> > +			pinmux = <MT7623_PIN_14_GPIO14_FUNC_URXD2>,
-> > +				 <MT7623_PIN_15_GPIO15_FUNC_UTXD2>;
-> > +		};
-> > +	};
-> > +
-> > +	uart3_pins_a: uart@3 {
-> > +		pins_dat {
-> > +			pinmux = <MT7623_PIN_242_URTS2_FUNC_URTS2>,
-> > +				 <MT7623_PIN_243_UCTS2_FUNC_UTXD3>;
-> > +		};
-> > +	};
-> >  };
-> >  
-> >  &pwm {
-> > @@ -454,16 +468,24 @@
-> >  &uart0 {
-> >  	pinctrl-names = "default";
-> >  	pinctrl-0 = <&uart0_pins_a>;
-> > -	status = "disabled";
-> > +	status = "okay";
-> >  };
-> >  
-> >  &uart1 {
-> >  	pinctrl-names = "default";
-> >  	pinctrl-0 = <&uart1_pins_a>;
-> > -	status = "disabled";
-> > +	status = "okay";
-> >  };
-> >  
-> >  &uart2 {
-> > +	pinctrl-names = "default";
-> > +	pinctrl-0 = <&uart2_pins_a>;
-> > +	status = "okay";
-> > +};
-> > +
-> > +&uart3 {
-> > +	pinctrl-names = "default";
-> > +	pinctrl-0 = <&uart3_pins_a>;
-> >  	status = "okay";
-> >  };
-> >  
-> 
-> Why do we want to enable uart3 when there are only test points?
-> It is not very useful, or do I oversee something?
-> 
+On 23 December 2017 at 15:01, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Sat, Dec 23, 2017 at 4:09 PM, Ard Biesheuvel
+> <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> On 23 December 2017 at 05:45,  <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>> From: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>>
+>>> This driver adds support for Socionext "netsec" IP Gigabit
+>>> Ethernet + PHY IP used in the Synquacer SC2A11 SoC.
+>>>
+>>> Signed-off-by: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>> Signed-off-by: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>> ---
+>>>  drivers/net/ethernet/Kconfig            |    1 +
+>>>  drivers/net/ethernet/Makefile           |    1 +
+>>>  drivers/net/ethernet/socionext/Kconfig  |   29 +
+>>>  drivers/net/ethernet/socionext/Makefile |    1 +
+>>>  drivers/net/ethernet/socionext/netsec.c | 1844 +++++++++++++++++++++++++++++++
+>>>  5 files changed, 1876 insertions(+)
+>>>  create mode 100644 drivers/net/ethernet/socionext/Kconfig
+>>>  create mode 100644 drivers/net/ethernet/socionext/Makefile
+>>>  create mode 100644 drivers/net/ethernet/socionext/netsec.c
+>>>
+>> ...
+>>> diff --git a/drivers/net/ethernet/socionext/netsec.c b/drivers/net/ethernet/socionext/netsec.c
+>>> new file mode 100644
+>>> index 0000000..6af047b
+>>> --- /dev/null
+>>> +++ b/drivers/net/ethernet/socionext/netsec.c
+>> ...
+>>> +static int netsec_netdev_load_ucode_region(struct netsec_priv *priv, u32 reg,
+>>> +                                          u32 addr_h, u32 addr_l, u32 size)
+>>> +{
+>>> +       u64 base = (u64)addr_h << 32 | addr_l;
+>>> +       void __iomem *ucode;
+>>> +       u32 i;
+>>> +
+>>> +       ucode = ioremap(base, size * sizeof(u32));
+>>> +       if (!ucode)
+>>> +               return -ENOMEM;
+>>> +
+>>> +       for (i = 0; i < size; i++)
+>>> +               netsec_write(priv, reg, readl(ucode + i));
+>>> +
+>>
+>> This is incorrect. The microcode is written one u32 word at a time,
+>> and indexing ucode like this results in byte indexing, not u32
+>> indexing.
+>>
+> Ouch! careless mistake. I was too eager to get done with netsec before
+> I leave for holidays.
+>
+>> I changed the ucode declaration locally to
+>>
+>> u32 __iomem *ucode;
+>>
+>> and now everything works fine again.
+>>
+> Or we keep the void pointer but do    readl(ucode + i * 4)  ?
+>
 
-I have been listening to the sound from potential users of bpi-r2 to
-understand what assistance I have to provide to them. Something could
-be seen through [1] in the forum to know they had been trying hard to
-explore all available UARTs from the SoC in the last weeks. The patch
-should be really useful for these people and for the extra soldering
-it shouldn't become a problem for these makers.
+Whichever you prefer.
 
-[1] http://forum.banana-pi.org/t/gpio-uart-not-the-debug-port/3748
+>
+>>
+>>> +       iounmap(ucode);
+>>> +       return 0;
+>>> +}
+>>> +
+>> ...
+>>> +static int netsec_register_mdio(struct netsec_priv *priv, u32 phy_addr)
+>>> +{
+>>> +       struct mii_bus *bus;
+>>> +       int ret;
+>>> +
+>>> +       bus = devm_mdiobus_alloc(priv->dev);
+>>> +       if (!bus)
+>>> +               return -ENOMEM;
+>>> +
+>>> +       snprintf(bus->id, MII_BUS_ID_SIZE, "%s", dev_name(priv->dev));
+>>> +       bus->priv = priv;
+>>> +       bus->name = "SNI NETSEC MDIO";
+>>> +       bus->read = netsec_phy_read;
+>>> +       bus->write = netsec_phy_write;
+>>> +       bus->parent = priv->dev;
+>>> +       priv->mii_bus = bus;
+>>> +
+>>> +       if (dev_of_node(priv->dev)) {
+>>> +               struct device_node *mdio_node, *parent = dev_of_node(priv->dev);
+>>> +
+>>> +               mdio_node = of_get_child_by_name(parent, "mdio");
+>>> +               if (mdio_node) {
+>>> +                       parent = mdio_node;
+>>> +               } else {
+>>> +                       /* older f/w doesn't populate the mdio subnode,
+>>> +                        * allow relaxed upgrade of f/w in due time.
+>>> +                        */
+>>> +                       dev_err(priv->dev, "Upgrade f/w for mdio subnode!\n");
+>>
+>> I wouldn't mind if you dropped this fallback altogether, and would
+>> simply stick with the new binding only. However, if you prefer to keep
+>> it, could you change this to dev_info()? It is not really an error
+>> condition, and dev_err/dev_warns have the annoying tendency to pierce
+>> through 'quiet' boot splashes.
+>>
+> Yes, it should have been dev_info. But I would like to keep it,
+> atleast for a couple months. For example, my board needs jtag to
+> upgrade f/w.
+>
 
-	Sean 
+Fair enough.
 
+> Thanks.
 
-> Regards,
-> Matthias
-> 
-
-
+Likewise! And happy holidays.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
