@@ -1,26 +1,54 @@
-From: Jassi Brar <jassisinghbrar@gmail.com>
-Subject: Re: [PATCH v11 2/6] mailbox: qcom: Create APCS child device for clock controller
-Date: Sat, 23 Dec 2017 10:27:28 +0530
-Message-ID: <CABb+yY146ho0gtbUzDv-Z_xESkU2y=UYfBA6i+522+m58LkABQ@mail.gmail.com>
-References: <20171205154701.27730-1-georgi.djakov@linaro.org> <20171205154701.27730-3-georgi.djakov@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20171205154701.27730-3-georgi.djakov@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Georgi Djakov <georgi.djakov@linaro.org>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>, linux-clk@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org, Devicetree List <devicetree@vger.kernel.org>
+From: jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Subject: [PATCHv4 0/3] Socionext Synquacer NETSEC driver
+Date: Sat, 23 Dec 2017 11:14:36 +0530
+Message-ID: <1514007876-16617-1-git-send-email-jassisinghbrar@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, arnd.bergmann-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 5, 2017 at 9:16 PM, Georgi Djakov <georgi.djakov@linaro.org> wrote:
-> There is a clock controller functionality provided by the APCS hardware
-> block of msm8916 devices. The device-tree would represent an APCS node
-> with both mailbox and clock provider properties.
->
-The spec might depict a 'clock' box and 'mailbox' box inside the
-bigger APCS box. However, from the code I see in this patchset, they
-are orthogonal and can & should be represented as independent DT
-nodes.
-Patch-1 is ok, though.
+From: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-Thanks
+Hi,
+
+Changes since v3
+	# Discard 'socionext,snq-mdio', and simply use 'mdio' subnode.
+	# Use ioremap on ucode region as well, instead of memremap.
+
+Changes since v2
+        # Use 'mdio' subnode in DT bindings.
+        # Use phy_interface_mode_is_rgmii(), instead of open coding the check.
+        # Use readl/b with eeprom_base pointer.
+        # Unregister mdio bus upon failure in probe.
+
+Changes since v1
+        # Switched from using memremap to ioremap
+        # Implemented ndo_do_ioctl callback
+        # Defined optional 'dma-coherent' DT property
+
+Jassi Brar (3):
+  dt-bindings: net: Add DT bindings for Socionext Netsec
+  net: socionext: Add Synquacer NetSec driver
+  MAINTAINERS: Add entry for Socionext ethernet driver
+
+ .../devicetree/bindings/net/socionext-netsec.txt   |   55 +
+ MAINTAINERS                                        |    7 +
+ drivers/net/ethernet/Kconfig                       |    1 +
+ drivers/net/ethernet/Makefile                      |    1 +
+ drivers/net/ethernet/socionext/Kconfig             |   29 +
+ drivers/net/ethernet/socionext/Makefile            |    1 +
+ drivers/net/ethernet/socionext/netsec.c            | 1844 ++++++++++++++++++++
+ 7 files changed, 1938 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/socionext-netsec.txt
+ create mode 100644 drivers/net/ethernet/socionext/Kconfig
+ create mode 100644 drivers/net/ethernet/socionext/Makefile
+ create mode 100644 drivers/net/ethernet/socionext/netsec.c
+
+-- 
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
