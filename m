@@ -1,77 +1,124 @@
-From: Joel Stanley <joel@jms.id.au>
-Subject: [PATCH v3 2/2] hwmon: (aspeed-pwm-tacho) Deassert reset in probe
-Date: Sat, 23 Dec 2017 23:35:28 +1030
-Message-ID: <20171223130528.5346-3-joel@jms.id.au>
-References: <20171223130528.5346-1-joel@jms.id.au>
-Return-path: <linux-hwmon-owner@vger.kernel.org>
-In-Reply-To: <20171223130528.5346-1-joel@jms.id.au>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>
-Cc: Philipp Zabel <philipp.zabel@gmail.com>, Mykola Kostenok <c_mykolak@mellanox.com>, Jaghathiswari Rankappagounder Natarajan <jaghu@google.com>, Patrick Venture <venture@google.com>, Andrew Jeffery <andrew@aj.id.au>, devicetree@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCHv4 2/3] net: socionext: Add Synquacer NetSec driver
+Date: Sat, 23 Dec 2017 20:31:27 +0530
+Message-ID: <CABb+yY3jMLYx3fTSuHfhfR9HDvDqzqDyYGz7T=5k4-HLfcJukg@mail.gmail.com>
+References: <1514007876-16617-1-git-send-email-jassisinghbrar@gmail.com>
+ <1514007928-16726-1-git-send-email-jassisinghbrar@gmail.com> <CAKv+Gu8xP5U-sD=CorZf4o_JuyNDhnRAmLs-wmAVWLsOO+Hhuw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAKv+Gu8xP5U-sD=CorZf4o_JuyNDhnRAmLs-wmAVWLsOO+Hhuw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "<netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Arnd Bergmann <arnd.bergmann-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Masami Hiramatsu <masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The ASPEED SoC must deassert a reset in order to use the PWM/tach
-peripheral.
+On Sat, Dec 23, 2017 at 4:09 PM, Ard Biesheuvel
+<ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On 23 December 2017 at 05:45,  <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> From: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>
+>> This driver adds support for Socionext "netsec" IP Gigabit
+>> Ethernet + PHY IP used in the Synquacer SC2A11 SoC.
+>>
+>> Signed-off-by: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> Signed-off-by: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> ---
+>>  drivers/net/ethernet/Kconfig            |    1 +
+>>  drivers/net/ethernet/Makefile           |    1 +
+>>  drivers/net/ethernet/socionext/Kconfig  |   29 +
+>>  drivers/net/ethernet/socionext/Makefile |    1 +
+>>  drivers/net/ethernet/socionext/netsec.c | 1844 +++++++++++++++++++++++++++++++
+>>  5 files changed, 1876 insertions(+)
+>>  create mode 100644 drivers/net/ethernet/socionext/Kconfig
+>>  create mode 100644 drivers/net/ethernet/socionext/Makefile
+>>  create mode 100644 drivers/net/ethernet/socionext/netsec.c
+>>
+> ...
+>> diff --git a/drivers/net/ethernet/socionext/netsec.c b/drivers/net/ethernet/socionext/netsec.c
+>> new file mode 100644
+>> index 0000000..6af047b
+>> --- /dev/null
+>> +++ b/drivers/net/ethernet/socionext/netsec.c
+> ...
+>> +static int netsec_netdev_load_ucode_region(struct netsec_priv *priv, u32 reg,
+>> +                                          u32 addr_h, u32 addr_l, u32 size)
+>> +{
+>> +       u64 base = (u64)addr_h << 32 | addr_l;
+>> +       void __iomem *ucode;
+>> +       u32 i;
+>> +
+>> +       ucode = ioremap(base, size * sizeof(u32));
+>> +       if (!ucode)
+>> +               return -ENOMEM;
+>> +
+>> +       for (i = 0; i < size; i++)
+>> +               netsec_write(priv, reg, readl(ucode + i));
+>> +
+>
+> This is incorrect. The microcode is written one u32 word at a time,
+> and indexing ucode like this results in byte indexing, not u32
+> indexing.
+>
+Ouch! careless mistake. I was too eager to get done with netsec before
+I leave for holidays.
 
-Signed-off-by: Joel Stanley <joel@jms.id.au>
----
- drivers/hwmon/aspeed-pwm-tacho.c | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+> I changed the ucode declaration locally to
+>
+> u32 __iomem *ucode;
+>
+> and now everything works fine again.
+>
+Or we keep the void pointer but do    readl(ucode + i * 4)  ?
 
-diff --git a/drivers/hwmon/aspeed-pwm-tacho.c b/drivers/hwmon/aspeed-pwm-tacho.c
-index 63a95e23ca81..693a3d53cab5 100644
---- a/drivers/hwmon/aspeed-pwm-tacho.c
-+++ b/drivers/hwmon/aspeed-pwm-tacho.c
-@@ -19,6 +19,7 @@
- #include <linux/of_platform.h>
- #include <linux/platform_device.h>
- #include <linux/regmap.h>
-+#include <linux/reset.h>
- #include <linux/sysfs.h>
- #include <linux/thermal.h>
- 
-@@ -181,6 +182,7 @@ struct aspeed_cooling_device {
- 
- struct aspeed_pwm_tacho_data {
- 	struct regmap *regmap;
-+	struct reset_control *rst;
- 	unsigned long clk_freq;
- 	bool pwm_present[8];
- 	bool fan_tach_present[16];
-@@ -905,6 +907,13 @@ static int aspeed_create_fan(struct device *dev,
- 	return 0;
- }
- 
-+static void aspeed_pwm_tacho_remove(void *data)
-+{
-+	struct aspeed_pwm_tacho_data *priv = data;
-+
-+	reset_control_assert(priv->rst);
-+}
-+
- static int aspeed_pwm_tacho_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-@@ -931,6 +940,19 @@ static int aspeed_pwm_tacho_probe(struct platform_device *pdev)
- 			&aspeed_pwm_tacho_regmap_config);
- 	if (IS_ERR(priv->regmap))
- 		return PTR_ERR(priv->regmap);
-+
-+	priv->rst = devm_reset_control_get_exclusive(dev, NULL);
-+	if (IS_ERR(priv->rst)) {
-+		dev_err(dev,
-+			"missing or invalid reset controller device tree entry");
-+		return PTR_ERR(priv->rst);
-+	}
-+	reset_control_deassert(priv->rst);
-+
-+	ret = devm_add_action_or_reset(dev, aspeed_pwm_tacho_remove, priv);
-+	if (ret)
-+		return ret;
-+
- 	regmap_write(priv->regmap, ASPEED_PTCR_TACH_SOURCE, 0);
- 	regmap_write(priv->regmap, ASPEED_PTCR_TACH_SOURCE_EXT, 0);
- 
--- 
-2.15.1
 
+>
+>> +       iounmap(ucode);
+>> +       return 0;
+>> +}
+>> +
+> ...
+>> +static int netsec_register_mdio(struct netsec_priv *priv, u32 phy_addr)
+>> +{
+>> +       struct mii_bus *bus;
+>> +       int ret;
+>> +
+>> +       bus = devm_mdiobus_alloc(priv->dev);
+>> +       if (!bus)
+>> +               return -ENOMEM;
+>> +
+>> +       snprintf(bus->id, MII_BUS_ID_SIZE, "%s", dev_name(priv->dev));
+>> +       bus->priv = priv;
+>> +       bus->name = "SNI NETSEC MDIO";
+>> +       bus->read = netsec_phy_read;
+>> +       bus->write = netsec_phy_write;
+>> +       bus->parent = priv->dev;
+>> +       priv->mii_bus = bus;
+>> +
+>> +       if (dev_of_node(priv->dev)) {
+>> +               struct device_node *mdio_node, *parent = dev_of_node(priv->dev);
+>> +
+>> +               mdio_node = of_get_child_by_name(parent, "mdio");
+>> +               if (mdio_node) {
+>> +                       parent = mdio_node;
+>> +               } else {
+>> +                       /* older f/w doesn't populate the mdio subnode,
+>> +                        * allow relaxed upgrade of f/w in due time.
+>> +                        */
+>> +                       dev_err(priv->dev, "Upgrade f/w for mdio subnode!\n");
+>
+> I wouldn't mind if you dropped this fallback altogether, and would
+> simply stick with the new binding only. However, if you prefer to keep
+> it, could you change this to dev_info()? It is not really an error
+> condition, and dev_err/dev_warns have the annoying tendency to pierce
+> through 'quiet' boot splashes.
+>
+Yes, it should have been dev_info. But I would like to keep it,
+atleast for a couple months. For example, my board needs jtag to
+upgrade f/w.
+
+Thanks.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
