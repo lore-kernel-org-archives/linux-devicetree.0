@@ -1,66 +1,65 @@
-From: Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>
-Subject: [PATCH 2/3] dt-bindings: mtd: atmel-quadspi: add an optional property
- 'dmacap, memcpy'
-Date: Sun, 24 Dec 2017 05:36:05 +0100
-Message-ID: <143542c61ca674d53da4985bbabc142e8e6ebefc.1514087323.git.cyrille.pitchen@wedev4u.fr>
-References: <cover.1514087323.git.cyrille.pitchen@wedev4u.fr>
+From: Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
+Subject: Re: [PATCH v2 3/5] mtd: nand: replace pxa3xx_nand driver by its
+ rework called marvell_nand
+Date: Sun, 24 Dec 2017 01:55:04 -0300
+Message-ID: <CAAEAJfCFCAAeWNzK3+TTn3qq3-p1aQYZnJ=e4nf8SZ=T1qouKg@mail.gmail.com>
+References: <20171219132942.27433-1-miquel.raynal@free-electrons.com>
+ <20171219132942.27433-4-miquel.raynal@free-electrons.com> <87608ycwx5.fsf@belgarion.home>
+ <20171222230444.2c952ea0@bbrezillon> <87bmipb10z.fsf@belgarion.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <cover.1514087323.git.cyrille.pitchen@wedev4u.fr>
-In-Reply-To: <cover.1514087323.git.cyrille.pitchen@wedev4u.fr>
-References: <cover.1514087323.git.cyrille.pitchen@wedev4u.fr>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: computersforpeace@gmail.com, dwmw2@infradead.org, richard@nod.at, boris.brezillon@free-electrons.com, marek.vasut@gmail.com, linux-mtd@lists.infradead.org, broonie@kernel.org, vigneshr@ti.com, linux@armlinux.org.uk
-Cc: robh@kernel.org, devicetree@vger.kernel.org, nicolas.ferre@microchip.com, linux-kernel@vger.kernel.org, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, radu.pirea@microchip.com, linux-spi@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <87bmipb10z.fsf-4ty26DBLk+jEm7gnYqmdkQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Cc: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The optional 'dmacap,memcpy' DT property tells the Atmel QSPI controller
-driver to reserve some DMA channel then to use it to perform DMA
-memcpy() during data transfers. This feature relies on the generic
-bounce buffer helper from spi-nor.c.
+On 23 December 2017 at 18:13, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org> wrote=
+:
+> Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> writes:
+>
+>>> What I would propose instead is :
+>>>  - keep both the new marvell nand driver and the old pxa3xx_nand driver
+>>>  - switch pxa_defconfig to compile them both
+>>
+>> Didn't notice you were suggesting to compile both, which doesn't work
+>> because both drivers match the same devices, and only one of them
+>> can actually claim the device (likely the first one to register to the
+>> device model). So, to make it safe you need to have a
+>>
+>>       depends on !MTD_NAND_PXA3xx
+>>
+>> in your MTD_NAND_MARVELL entry, which means only one driver can be
+>> compiled.
+> Mmm... that is I didn't explain to you what pxa_defconfig is designed for=
+.
+> This defconfig is not for any board actually, it rather is a build covera=
+ge
+> tool.
+>
+>> So let's find a way to fix the remaining issues you have instead of dela=
+ying
+>> the inevitable.
+> It's up to you of course, as long as my boards don't break, and nothing b=
+reaking
+> them is merged, I'm fine with it. It's just not the approach I usually ch=
+oose,
+> I'm rather a 2-step guy, ie. merge the new one, then merge the switch (wh=
+ich can
+> be reverted easilly).
+>
 
-Signed-off-by: Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>
----
- Documentation/devicetree/bindings/mtd/atmel-quadspi.txt | 5 +++++
- 1 file changed, 5 insertions(+)
+I agree with Boris on this. Let's get this new driver tested as much
+as possible; then, once everyone is fairly happy with it, merge it.
 
-diff --git a/Documentation/devicetree/bindings/mtd/atmel-quadspi.txt b/Documentation/devicetree/bindings/mtd/atmel-quadspi.txt
-index b93c1e2f25dd..002d3f0a445b 100644
---- a/Documentation/devicetree/bindings/mtd/atmel-quadspi.txt
-+++ b/Documentation/devicetree/bindings/mtd/atmel-quadspi.txt
-@@ -12,6 +12,10 @@ Required properties:
- - #address-cells: Should be <1>.
- - #size-cells:    Should be <0>.
- 
-+Optional properties:
-+- dmacap,memcpy:  Reserve a DMA channel to perform DMA memcpy() between the
-+                  system memory and the QSPI mapped memory.
-+
- Example:
- 
- spi@f0020000 {
-@@ -24,6 +28,7 @@ spi@f0020000 {
- 	#size-cells = <0>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_spi0_default>;
-+	dmacap,memcpy;
- 
- 	m25p80@0 {
- 		...
--- 
-2.11.0
-
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+It won't be completely stable on day-one, but that is why we
+have -rc cycles. Plus, distributions and appliances use -stable.
+--=20
+Ezequiel Garc=C3=ADa, VanguardiaSur
+www.vanguardiasur.com.ar
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
