@@ -1,51 +1,76 @@
-From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-Subject: Re: [PATCH v2 3/5] mtd: nand: replace pxa3xx_nand driver by its rework called marvell_nand
-Date: Sat, 23 Dec 2017 22:13:48 +0100
-Message-ID: <87bmipb10z.fsf@belgarion.home>
-References: <20171219132942.27433-1-miquel.raynal@free-electrons.com>
-        <20171219132942.27433-4-miquel.raynal@free-electrons.com>
-        <87608ycwx5.fsf@belgarion.home> <20171222230444.2c952ea0@bbrezillon>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171222230444.2c952ea0@bbrezillon> (Boris Brezillon's message
-        of "Fri, 22 Dec 2017 23:04:44 +0100")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Ezequiel Garcia <ezequi>
+From: Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>
+Subject: [PATCH 0/3] mtd: spi-nor: fix DMA-unsafe buffer issue between MTD and SPI
+Date: Sun, 24 Dec 2017 05:36:03 +0100
+Message-ID: <cover.1514087323.git.cyrille.pitchen@wedev4u.fr>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: computersforpeace@gmail.com, dwmw2@infradead.org, richard@nod.at, boris.brezillon@free-electrons.com, marek.vasut@gmail.com, linux-mtd@lists.infradead.org, broonie@kernel.org, vigneshr@ti.com, linux@armlinux.org.uk
+Cc: linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, robh@kernel.org, devicetree@vger.kernel.org, nicolas.ferre@microchip.com, radu.pirea@microchip.com, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>
 List-Id: devicetree@vger.kernel.org
 
-Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> writes:
+Hi all,
 
->> What I would propose instead is :
->>  - keep both the new marvell nand driver and the old pxa3xx_nand driver
->>  - switch pxa_defconfig to compile them both
->
-> Didn't notice you were suggesting to compile both, which doesn't work
-> because both drivers match the same devices, and only one of them
-> can actually claim the device (likely the first one to register to the
-> device model). So, to make it safe you need to have a
->
-> 	depends on !MTD_NAND_PXA3xx
->
-> in your MTD_NAND_MARVELL entry, which means only one driver can be
-> compiled.
-Mmm... that is I didn't explain to you what pxa_defconfig is designed for.
-This defconfig is not for any board actually, it rather is a build coverage
-tool.
+this series tries to solve a long time issue of compatibility between the
+MTD and SPI sub-systems about whether we should use DMA-safe memory.
 
-> So let's find a way to fix the remaining issues you have instead of delaying
-> the inevitable.
-It's up to you of course, as long as my boards don't break, and nothing breaking
-them is merged, I'm fine with it. It's just not the approach I usually choose,
-I'm rather a 2-step guy, ie. merge the new one, then merge the switch (which can
-be reverted easilly).
+This issue is visible espcecially when using a UBI file-system on a SPI
+NOR memory accessed through a SPI controller behind the m25p80 driver.
 
-Cheers.
+The SPI sub-system has already implemented a work-around on its side,
+based on the spi_map_buf() function. However this function has its own
+limitation too. Especially, even if it builds a 'struct scatterlist' from
+a vmalloc'ed buffer, calling dma_map_sg() is still not safe on all
+architectures. Especially, on ARM cores using either VIPT or VIVT data
+caches, dma_map_sg() doesn't take the cache aliases issue into account.
+Then numerous crashes were reported for such architectures.
+
+If think it's high time to provide a reliable solution. So let's try to
+work together!
+
+The proposed solution here is based on an former series from Vignesh R and
+relies on a bounce buffer.
+
+For this series, I will need some pieces of advice on how to implement
+a reliable [spi_nor_]is_dma_safe() function. The proposed implementation
+in patch 1 is based on the tests performed by spi_map_buf() but I was
+wondring whether it would be more cautious to consider:
+DMA-safe <=> allocated by kmalloc'ed.
+
+Actually, it's better using the bounce buffer when not needed than not
+using it when we should.
+
+Also the bounce buffer solution in spi-nor is designed so it could be
+used as an helper so spi flash controller drivers other than m25p80.c
+could now easily add support to DMA transfers for (Fast) Read and/or
+Page Program operations.
+
+I've implemented and tested it on a sama5d2 xplained board + Macronix
+mx25l25673g SPI NOR memory reading from and writing into some UBI
+file-system. I've also tested with mtd_debug to write then read back
+a raw data into the SPI NOR memory, later checking the data integrity with
+sha1sum.
+
+For the atmel-quadspi.c driver, DMA memcpy() transfers are enabled only if
+the "dmacap,mempcy" boolean property is set in the device-tree.
+I found this name in some other device-trees already using it for a
+boolean property.
+
+Best regards,
+
+Cyrille
+
+Cyrille Pitchen (3):
+  mtd: spi-nor: add optional DMA-safe bounce buffer for data transfer
+  dt-bindings: mtd: atmel-quadspi: add an optional property
+    'dmacap,memcpy'
+  mtd: atmel-quadspi: add support of DMA memcpy()
+
+ .../devicetree/bindings/mtd/atmel-quadspi.txt      |   5 +
+ drivers/mtd/devices/m25p80.c                       |   4 +-
+ drivers/mtd/spi-nor/atmel-quadspi.c                | 132 +++++++++++++++++++-
+ drivers/mtd/spi-nor/spi-nor.c                      | 136 +++++++++++++++++++--
+ include/linux/mtd/spi-nor.h                        |   8 ++
+ 5 files changed, 273 insertions(+), 12 deletions(-)
 
 -- 
-Robert
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.11.0
