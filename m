@@ -1,262 +1,136 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: Re: [PATCH v3] ARM: sun8i: h2+: add support for Banana
- Pi M2 Zero board
-Date: Sun, 24 Dec 2017 20:24:54 +0800
-Message-ID: <4598591.qIIcbk4Suq@ice-x220i>
-References: <20171224054029.12278-1-icenowy@aosc.io> <20171224080208.x27o2i6v6ml3im7q@plaes.org>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Subject: Re: [PATCH] ARM: make ARCH_S3C24XX select USE_OF and clean-up boot/dts/Makefile
+Date: Mon, 25 Dec 2017 02:19:59 +0900
+Message-ID: <CAK7LNASWV7F+rjEq-RN+QGwx1fbnaL1oeWmu178A_a-Q=5f95g@mail.gmail.com>
+References: <1511749163-11057-1-git-send-email-yamada.masahiro@socionext.com> <CAJKOXPf0kWKQCf7avT4LLpkanhh-WvFoNUzdvpNDk2Q-KkymJQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBJFZ73IQKGQEBOA2B7I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20171224080208.x27o2i6v6ml3im7q-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAJKOXPf0kWKQCf7avT4LLpkanhh-WvFoNUzdvpNDk2Q-KkymJQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: arm-soc <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-=E5=9C=A8 2017=E5=B9=B412=E6=9C=8824=E6=97=A5=E6=98=9F=E6=9C=9F=E6=97=A5 CS=
-T =E4=B8=8B=E5=8D=884:02:08=EF=BC=8CPriit Laes =E5=86=99=E9=81=93=EF=BC=9A
-> On Sun, Dec 24, 2017 at 01:40:29PM +0800, Icenowy Zheng wrote:
-> > Banana Pi M2 Zero board is a H2+-based board by Sinovoip, with a form
-> > factor and GPIO holes similar to Raspberry Pi Zero.
-> >=20
-> > It features:
-> > - Allwinner H2+ SoC
-> > - Single-chip (16-bit) 512MiB DDR3 DRAM
-> > - Ampak AP6212 Wi-Fi/Bluetooth module
-> > - MicroSD slot
-> > - Two MicroUSB Type-B ports (one can only be used to power the board an=
-d
-> >=20
-> >   the other features OTG functionality)
-> >=20
-> > - Two keys, a reset and a GPIO-connected key.
-> > - HDMI Type-C (miniHDMI) connector connected to the HDMI part of H2+.
-> > - CSI connector to connect the camera sensor provided by Sinovoip.
-> >=20
-> > Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-> > ---
-> > Changes in v3:
-> > - Add comments about Vbus problem in &usbphy node.
-> >=20
-> > Changes in v2:
-> > - Use high active SD card detect on the production batch.
-> >=20
-> >  arch/arm/boot/dts/Makefile                         |   1 +
-> >  .../boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts    | 162
-> >  +++++++++++++++++++++ 2 files changed, 163 insertions(+)
-> >  create mode 100644 arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dt=
-s
-> >=20
-> > diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> > index 0bb8db33704a..937a8768671f 100644
-> > --- a/arch/arm/boot/dts/Makefile
-> > +++ b/arch/arm/boot/dts/Makefile
-> > @@ -962,6 +962,7 @@ dtb-$(CONFIG_MACH_SUN8I) +=3D \
-> >=20
-> >  	sun8i-a83t-cubietruck-plus.dtb \
-> >  	sun8i-a83t-tbs-a711.dtb \
-> >  	sun8i-h2-plus-orangepi-r1.dtb \
-> >=20
-> > +	sun8i-h2-plus-bananapi-m2-zero.dtb \
-> >=20
-> >  	sun8i-h2-plus-orangepi-zero.dtb \
-> >  	sun8i-h3-bananapi-m2-plus.dtb \
-> >  	sun8i-h3-beelink-x2.dtb \
-> >=20
-> > diff --git a/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
-> > b/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts new file mode
-> > 100644
-> > index 000000000000..5bc182ddc5f7
-> > --- /dev/null
-> > +++ b/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
-> > @@ -0,0 +1,162 @@
-> > +/*
-> > + * Copyright (C) 2017 Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-> > + *
-> > + * Based on sun8i-h3-bananapi-m2-plus.dts, which is:
-> > + *   Copyright (C) 2016 Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> > + *
-> > + * This file is dual-licensed: you can use it either under the terms
-> > + * of the GPL or the X11 license, at your option. Note that this dual
-> > + * licensing only applies to this file, and not this project as a
-> > + * whole.
-> > + *
-> > + *  a) This file is free software; you can redistribute it and/or
-> > + *     modify it under the terms of the GNU General Public License as
-> > + *     published by the Free Software Foundation; either version 2 of =
-the
-> > + *     License, or (at your option) any later version.
-> > + *
-> > + *     This file is distributed in the hope that it will be useful,
-> > + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> > + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> > + *     GNU General Public License for more details.
-> > + *
-> > + * Or, alternatively,
-> > + *
-> > + *  b) Permission is hereby granted, free of charge, to any person
-> > + *     obtaining a copy of this software and associated documentation
-> > + *     files (the "Software"), to deal in the Software without
-> > + *     restriction, including without limitation the rights to use,
-> > + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> > + *     sell copies of the Software, and to permit persons to whom the
-> > + *     Software is furnished to do so, subject to the following
-> > + *     conditions:
-> > + *
-> > + *     The above copyright notice and this permission notice shall be
-> > + *     included in all copies or substantial portions of the Software.
-> > + *
-> > + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> > + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> > + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> > + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> > + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> > + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> > + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> > + *     OTHER DEALINGS IN THE SOFTWARE.
-> > + */
-> > +
-> > +/dts-v1/;
-> > +#include "sun8i-h3.dtsi"
-> > +#include "sunxi-common-regulators.dtsi"
-> > +
-> > +#include <dt-bindings/gpio/gpio.h>
-> > +#include <dt-bindings/input/input.h>
-> > +
-> > +/ {
-> > +	model =3D "Banana Pi BPI-M2-Zero";
-> > +	compatible =3D "sinovoip,bpi-m2-zero", "allwinner,sun8i-h2-plus";
-> > +
-> > +	aliases {
-> > +		serial0 =3D &uart0;
-> > +		serial1 =3D &uart1;
-> > +	};
-> > +
-> > +	chosen {
-> > +		stdout-path =3D "serial0:115200n8";
-> > +	};
-> > +
-> > +	leds {
-> > +		compatible =3D "gpio-leds";
-> > +		pinctrl-names =3D "default";
-> > +
-> > +		pwr_led {
-> > +			label =3D "bananapi-m2-zero:red:pwr";
-> > +			gpios =3D <&r_pio 0 10 GPIO_ACTIVE_HIGH>; /* PL10 */
-> > +			default-state =3D "on";
-> > +		};
-> > +	};
-> > +
-> > +	gpio_keys {
-> > +		compatible =3D "gpio-keys";
-> > +		pinctrl-names =3D "default";
-> > +
-> > +		sw4 {
-> > +			label =3D "power";
-> > +			linux,code =3D <BTN_0>;
-> > +			gpios =3D <&r_pio 0 3 GPIO_ACTIVE_LOW>;
-> > +		};
-> > +	};
-> > +
-> > +	wifi_pwrseq: wifi_pwrseq {
-> > +		compatible =3D "mmc-pwrseq-simple";
-> > +		pinctrl-names =3D "default";
-> > +		reset-gpios =3D <&r_pio 0 7 GPIO_ACTIVE_LOW>; /* PL7 */
-> > +	};
-> > +};
-> > +
-> > +&ehci0 {
-> > +	status =3D "okay";
-> > +};
-> > +
-> > +&mmc0 {
-> > +	pinctrl-names =3D "default";
-> > +	pinctrl-0 =3D <&mmc0_pins_a>;
-> > +	vmmc-supply =3D <&reg_vcc3v3>;
-> > +	bus-width =3D <4>;
-> > +	/*
-> > +	 * On the production batch of this board the card detect GPIO is
-> > +	 * high active (card inserted), although on the early samples it's
-> > +	 * low active.
-> > +	 */
->=20
-> Is there a way to differentiate between early samples and production
-> batches? Board markings, etc?
-
-in fact there's no significant markings to differentiate them.
-
-Howeverm the early samples are never sold; you will know it's an
-early sample if you manage to get it from Sinovoip.
-
->=20
-> > +	cd-gpios =3D <&pio 5 6 GPIO_ACTIVE_HIGH>; /* PF6 */
-> > +	status =3D "okay";
-> > +};
-> > +
-> > +&mmc1 {
-> > +	pinctrl-names =3D "default";
-> > +	pinctrl-0 =3D <&mmc1_pins_a>;
-> > +	vmmc-supply =3D <&reg_vcc3v3>;
-> > +	vqmmc-supply =3D <&reg_vcc3v3>;
-> > +	mmc-pwrseq =3D <&wifi_pwrseq>;
-> > +	bus-width =3D <4>;
-> > +	non-removable;
-> > +	status =3D "okay";
-> > +
-> > +	brcmf: wifi@1 {
-> > +		reg =3D <1>;
-> > +		compatible =3D "brcm,bcm4329-fmac";
-> > +		interrupt-parent =3D <&pio>;
-> > +		interrupts =3D <6 10 IRQ_TYPE_LEVEL_LOW>; /* PG10 / EINT10 */
-> > +		interrupt-names =3D "host-wake";
-> > +	};
-> > +};
-> > +
-> > +&ohci0 {
-> > +	status =3D "okay";
-> > +};
-> > +
-> > +&uart0 {
-> > +	pinctrl-names =3D "default";
-> > +	pinctrl-0 =3D <&uart0_pins_a>;
-> > +	status =3D "okay";
-> > +};
-> > +
-> > +&uart1 {
-> > +	pinctrl-names =3D "default";
-> > +	pinctrl-0 =3D <&uart1_pins>, <&uart1_rts_cts_pins>;
-> > +	status =3D "okay";
-> > +};
-> > +
-> > +&usb_otg {
-> > +	dr_mode =3D "otg";
-> > +	status =3D "okay";
-> > +};
-> > +
-> > +&usbphy {
-> > +	usb0_id_det-gpios =3D <&r_pio 0 6 GPIO_ACTIVE_HIGH>; /* PL6 */
-> > +	/*
-> > +	 * There're two micro-USB connectors, one is power-only and another i=
-s
-> > +	 * OTG. The Vbus of these two connectors are connected together, so
-> > +	 * the external USB device will be powered just by the power input
-> > +	 * from the power-only USB port.
-> > +	 */
-> > +	status =3D "okay";
-> > +};
+2017-12-22 21:41 GMT+09:00 Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
+> On Mon, Nov 27, 2017 at 3:19 AM, Masahiro Yamada
+> <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
+>> ARCH_S3C24XX is a very exceptional platform that some DT files in
+>> arch/arm/boot/dts/, but does not select USE_OF.
+>
+> Not entirely. The platform does select USE_OF - when MACH_S3C2416_DT
+> is chosen. For other boards USE_OF is not necessary because they do
+> not use DT. Why you need to select it for entire arch?
+>
+> Best regards,
+> Krzysztof
+>
 
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+The reason is simple - to avoid compile error.
+
+
+If I simply drop ifeq ($(CONFIG_OF),y)
+but do not select ARCH_S3C24XX,
+s3c2410_defconfig failed to build.
+
+
+$ make -s ARCH=arm mrproper
+$ make -s ARCH=arm s3c2410_defconfig
+$ make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-  dtbs
+    ...
+
+  DTC     arch/arm/boot/dts/s3c2416-smdk2416.dtb
+/bin/sh: 1: ./scripts/dtc/dtc: not found
+scripts/Makefile.lib:310: recipe for target
+'arch/arm/boot/dts/s3c2416-smdk2416.dtb' failed
+make[1]: *** [arch/arm/boot/dts/s3c2416-smdk2416.dtb] Error 127
+arch/arm/Makefile:349: recipe for target 'dtbs' failed
+make: *** [dtbs] Error 2
+
+
+Another solution would be to enable dtb by CONFIG_MACH_S3C2416_DT.
+
+
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index d0381e9..950b5dd 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -800,7 +798,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += \
+        rk3288-veyron-pinky.dtb \
+        rk3288-veyron-speedy.dtb \
+        rk3288-vyasa.dtb
+-dtb-$(CONFIG_ARCH_S3C24XX) += \
++dtb-$(CONFIG_MACH_S3C2416_DT) += \
+        s3c2416-smdk2416.dtb
+ dtb-$(CONFIG_ARCH_S3C64XX) += \
+        s3c6410-mini6410.dtb \
+
+
+
+If you migrate S3C24XX platform to DT,
+per-board CONFIG option will go away.
+
+So, I think dtb-$(CONFIG_ARCH_S3C24XX) is OK.
+
+
+
+>> All the other platforms with DT files correctly select USE_OF
+>> directly or indirectly (Most of them are either ARCH_MULTIPLATFORM
+>> or ARM_SINGLE_ARMV7M).
+>>
+>> With ARCH_S3C24XX fixed, "ifeq ($(CONFIG_OF),y)" in DT Makefile
+>> can be deleted.
+>>
+>> Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+>> ---
+>>
+>>  arch/arm/Kconfig           | 1 +
+>>  arch/arm/boot/dts/Makefile | 3 ---
+>>  2 files changed, 1 insertion(+), 3 deletions(-)
+>>
+>> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+>> index 51c8df5..5604497 100644
+>> --- a/arch/arm/Kconfig
+>> +++ b/arch/arm/Kconfig
+>> @@ -595,6 +595,7 @@ config ARCH_S3C24XX
+>>         select MULTI_IRQ_HANDLER
+>>         select NEED_MACH_IO_H
+>>         select SAMSUNG_ATAGS
+>> +       select USE_OF
+>>         help
+>>           Samsung S3C2410, S3C2412, S3C2413, S3C2416, S3C2440, S3C2442, S3C2443
+>>           and S3C2450 SoCs based systems, such as the Simtec Electronics BAST
+>> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+>> index d0381e9..6f7f25d 100644
+>> --- a/arch/arm/boot/dts/Makefile
+>> +++ b/arch/arm/boot/dts/Makefile
+>> @@ -1,6 +1,4 @@
+>>  # SPDX-License-Identifier: GPL-2.0
+>> -ifeq ($(CONFIG_OF),y)
+>> -
+>>  dtb-$(CONFIG_ARCH_ALPINE) += \
+>>         alpine-db.dtb
+>>  dtb-$(CONFIG_MACH_ARTPEC6) += \
+>> @@ -1104,4 +1102,3 @@ dtb-$(CONFIG_ARCH_ZX) += zx296702-ad1.dtb
+>>  dtb-$(CONFIG_ARCH_ASPEED) += aspeed-bmc-opp-palmetto.dtb \
+>>         aspeed-bmc-opp-romulus.dtb \
+>>         aspeed-ast2500-evb.dtb
+>> -endif
+>> --
+>> 2.7.4
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
