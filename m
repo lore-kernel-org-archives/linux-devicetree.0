@@ -1,76 +1,62 @@
-From: Ryder Lee <ryder.lee@mediatek.com>
-Subject: Re: [PATCH v4 2/2] PCI: mediatek: Set up class type and vendor ID
- for MT7622
-Date: Mon, 25 Dec 2017 18:27:41 +0800
-Message-ID: <1514197661.25015.9.camel@mtkswgap22>
-References: <1513921178-16148-1-git-send-email-honghui.zhang@mediatek.com>
-         <1513921178-16148-3-git-send-email-honghui.zhang@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1513921178-16148-3-git-send-email-honghui.zhang@mediatek.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: honghui.zhang@mediatek.com
-Cc: bhelgaas@google.com, matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, lorenzo.pieralisi@arm.com, hongkun.cao@mediatek.com, youlin.pei@mediatek.com, yong.wu@mediatek.com, yt.shen@mediatek.com, sean.wang@mediatek.com, xinping.qian@mediatek.com
+From: Jeffy Chen <jeffy.chen@rock-chips.com>
+Subject: [RFC PATCH v11 1/5] dt-bindings: PCI: Add definition of PCIe WAKE# irq and PCI irq
+Date: Mon, 25 Dec 2017 19:47:38 +0800
+Message-ID: <20171225114742.18920-2-jeffy.chen@rock-chips.com>
+References: <20171225114742.18920-1-jeffy.chen@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171225114742.18920-1-jeffy.chen@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, bhelgaas@google.com
+Cc: linux-pm@vger.kernel.org, tony@atomide.com, shawn.lin@rock-chips.com, briannorris@chromium.org, rjw@rjwysocki.net, dianders@chromium.org, Jeffy Chen <jeffy.chen@rock-chips.com>, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2017-12-22 at 13:39 +0800, honghui.zhang@mediatek.com wrote:
-> From: Honghui Zhang <honghui.zhang@mediatek.com>
-> 
-> The hardware default value of IDs and class type is not correct,
-> fix that by setup the correct values before start up.
-> 
-> Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
-> ---
->  drivers/pci/host/pcie-mediatek.c | 12 ++++++++++++
->  include/linux/pci_ids.h          |  3 +++
->  2 files changed, 15 insertions(+)
-> 
-> diff --git a/drivers/pci/host/pcie-mediatek.c b/drivers/pci/host/pcie-mediatek.c
-> index fc29a9a..0ef33e4 100644
-> --- a/drivers/pci/host/pcie-mediatek.c
-> +++ b/drivers/pci/host/pcie-mediatek.c
-> @@ -74,6 +74,10 @@
->  
->  /* PCIe V2 per-port registers */
->  #define PCIE_MSI_VECTOR		0x0c0
-> +
-> +#define PCIE_CONF_ID		0x100
-> +#define PCIE_CONF_CLASS		0x104
-> +
->  #define PCIE_INT_MASK		0x420
->  #define INTX_MASK		GENMASK(19, 16)
->  #define INTX_SHIFT		16
-> @@ -393,6 +397,14 @@ static int mtk_pcie_startup_port_v2(struct mtk_pcie_port *port)
->  		val |= PCIE_CSR_LTSSM_EN(port->slot) |
->  		       PCIE_CSR_ASPM_L1_EN(port->slot);
->  		writel(val, pcie->base + PCIE_SYS_CFG_V2);
-> +
-> +		/* Set up vendor ID and device ID for MT7622*/
-> +		val = PCI_VENDOR_ID_MEDIATEK | (PCI_DEVICE_ID_MT7622 << 16);
-> +		writel(val, port->base + PCIE_CONF_ID);
+We are going to handle PCIe WAKE# pin for PCI devices in the pci core,
+so add definitions of the optional PCIe WAKE# pin for PCI devices.
 
-IMHO, this is a general function so you can ignore "device ID for
-MT7622" here, but just make sure class code/vendor ID correct.
+Also add an definition of the optional PCI interrupt pin for PCI
+devices to distinguish it from the PCIe WAKE# pin.
 
-> +		/* Set up class code for MT7622 */
-> +		val = PCI_CLASS_BRIDGE_PCI << 16;
-> +		writel(val, port->base + PCIE_CONF_CLASS);
->  	}
->  
->  	/* Assert all reset signals */
-> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-> index ab20dc5..000c5df 100644
-> --- a/include/linux/pci_ids.h
-> +++ b/include/linux/pci_ids.h
-> @@ -2113,6 +2113,9 @@
->  
->  #define PCI_VENDOR_ID_MYRICOM		0x14c1
->  
-> +#define PCI_VENDOR_ID_MEDIATEK		0x14c3
-> +#define PCI_DEVICE_ID_MT7622		0x5396
-> +
->  #define PCI_VENDOR_ID_TITAN		0x14D2
->  #define PCI_DEVICE_ID_TITAN_010L	0x8001
->  #define PCI_DEVICE_ID_TITAN_100L	0x8010
+Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
+---
+
+Changes in v11:
+Only add irq definitions for PCI devices and rewrite the commit message.
+
+Changes in v10: None
+Changes in v9:
+Add section for PCI devices and rewrite the commit message.
+
+Changes in v8:
+Add optional "pci", and rewrite commit message.
+
+Changes in v7: None
+Changes in v6: None
+Changes in v5:
+Move to pci.txt
+
+Changes in v3: None
+Changes in v2: None
+
+ Documentation/devicetree/bindings/pci/pci.txt | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/pci/pci.txt b/Documentation/devicetree/bindings/pci/pci.txt
+index c77981c5dd18..3045ac452f27 100644
+--- a/Documentation/devicetree/bindings/pci/pci.txt
++++ b/Documentation/devicetree/bindings/pci/pci.txt
+@@ -24,3 +24,13 @@ driver implementation may support the following properties:
+    unsupported link speed, for instance, trying to do training for
+    unsupported link speed, etc.  Must be '4' for gen4, '3' for gen3, '2'
+    for gen2, and '1' for gen1. Any other values are invalid.
++
++PCI devices may support the following properties:
++
++- interrupts: Interrupt specifier for each name in interrupt-names.
++- interrupt-names:
++    May contain "wakeup" for PCIe WAKE# interrupt and "pci" for PCI interrupt.
++    The PCI devices may optionally include an 'interrupts' property that
++    represents the legacy PCI interrupt. And when we try to specify the PCIe
++    WAKE# pin, a corresponding 'interrupt-names' property is required to
++    distinguish them.
+-- 
+2.11.0
