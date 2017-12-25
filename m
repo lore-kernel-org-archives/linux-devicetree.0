@@ -1,106 +1,80 @@
-From: Baolin Wang <baolin.wang@linaro.org>
-Subject: [PATCH v7 2/2] mfd: syscon: Add hardware spinlock support
-Date: Mon, 25 Dec 2017 14:37:10 +0800
-Message-ID: <a878ad35d9f38c58d34dac0b331dca029b61a9b8.1514180039.git.baolin.wang@linaro.org>
-References: <29fa88f883dae4c1f8a3acb2656cbd7c5a539d40.1514180039.git.baolin.wang@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <29fa88f883dae4c1f8a3acb2656cbd7c5a539d40.1514180039.git.baolin.wang@linaro.org>
-In-Reply-To: <29fa88f883dae4c1f8a3acb2656cbd7c5a539d40.1514180039.git.baolin.wang@linaro.org>
-References: <29fa88f883dae4c1f8a3acb2656cbd7c5a539d40.1514180039.git.baolin.wang@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: lee.jones@linaro.org, arnd@arndb.de, robh+dt@kernel.org, mark.rutland@arm.com, broonie@kernel.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, baolin.wang@linaro.org
+From: Wen He <wen.he_1-3arQi8VN3Tc@public.gmane.org>
+Subject: [V2] dt-bindings: fsl-qdma: add device tree for qDMA driver
+Date: Mon, 25 Dec 2017 15:40:33 +0800
+Message-ID: <20171225074033.30837-1-wen.he_1@nxp.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, leoyang.li-3arQi8VN3Tc@public.gmane.org, jiafei.pan-3arQi8VN3Tc@public.gmane.org, jiaheng.fan-3arQi8VN3Tc@public.gmane.org, Wen He <wen.he_1-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Some system control registers need hardware spinlock to synchronize
-between the multiple subsystems, so we should add hardware spinlock
-support for syscon.
+add NXP Layerscape queue direct memory access controller(qDMA) support.
+This module can be found on NXP QorIQ Layerscape Socs.
 
-Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Wen He <wen.he_1-3arQi8VN3Tc@public.gmane.org>
 ---
-Changes since v6:
- - Treat hwlock id 0 as valid for regmap.
+change in v2:
+	- Remove indentation
+	- Add "Should be" before 'fsl,ls1021a-qdma'
+	- Replace 'channels' by 'dma-channels'
+	- Replace 'qdma@8390000' by 'dma-controller@8390000'
 
-Changes since v5:
- - Fix the case that hwspinlock is not enabled.
+ Documentation/devicetree/bindings/dma/fsl-qdma.txt |   40 ++++++++++++++++++++
+ 1 files changed, 40 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/dma/fsl-qdma.txt
 
-Changes since v4:
- - Add one exapmle to show how to add hwlock.
- - Fix the coding style issue.
-
-Changes since v3:
- - Add error handling for of_hwspin_lock_get_id()
-
-Changes since v2:
- - Add acked tag from Rob.
-
-Changes since v1:
- - Remove timeout configuration.
- - Modify the binding file to add hwlocks.
----
- Documentation/devicetree/bindings/mfd/syscon.txt |    8 ++++++++
- drivers/mfd/syscon.c                             |   19 +++++++++++++++++++
- 2 files changed, 27 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/mfd/syscon.txt b/Documentation/devicetree/bindings/mfd/syscon.txt
-index 8b92d45..25d9e9c 100644
---- a/Documentation/devicetree/bindings/mfd/syscon.txt
-+++ b/Documentation/devicetree/bindings/mfd/syscon.txt
-@@ -16,9 +16,17 @@ Required properties:
- Optional property:
- - reg-io-width: the size (in bytes) of the IO accesses that should be
-   performed on the device.
-+- hwlocks: reference to a phandle of a hardware spinlock provider node.
- 
- Examples:
- gpr: iomuxc-gpr@20e0000 {
- 	compatible = "fsl,imx6q-iomuxc-gpr", "syscon";
- 	reg = <0x020e0000 0x38>;
-+	hwlocks = <&hwlock1 1>;
-+};
+diff --git a/Documentation/devicetree/bindings/dma/fsl-qdma.txt b/Documentation/devicetree/bindings/dma/fsl-qdma.txt
+new file mode 100644
+index 0000000..000472b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/fsl-qdma.txt
+@@ -0,0 +1,40 @@
++* NXP Layerscape queue Direct Memory Access Controller(qDMA) Controller
 +
-+hwlock1: hwspinlock@40500000 {
-+	...
-+	reg = <0x40500000 0x1000>;
-+	#hwlock-cells = <1>;
- };
-diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
-index b93fe4c..7eaa40b 100644
---- a/drivers/mfd/syscon.c
-+++ b/drivers/mfd/syscon.c
-@@ -13,6 +13,7 @@
-  */
- 
- #include <linux/err.h>
-+#include <linux/hwspinlock.h>
- #include <linux/io.h>
- #include <linux/module.h>
- #include <linux/list.h>
-@@ -87,6 +88,24 @@ static struct syscon *of_syscon_register(struct device_node *np)
- 	if (ret)
- 		reg_io_width = 4;
- 
-+	ret = of_hwspin_lock_get_id(np, 0);
-+	if (ret > 0 || (IS_ENABLED(CONFIG_HWSPINLOCK) && ret == 0)) {
-+		syscon_config.use_hwlock = true;
-+		syscon_config.hwlock_id = ret;
-+		syscon_config.hwlock_mode = HWLOCK_IRQSTATE;
-+	} else if (ret < 0) {
-+		switch (ret) {
-+		case -ENOENT:
-+			/* Ignore missing hwlock, it's optional. */
-+			break;
-+		default:
-+			pr_err("Failed to retrieve valid hwlock: %d\n", ret);
-+			/* fall-through */
-+		case -EPROBE_DEFER:
-+			goto err_regmap;
-+		}
-+	}
++The qDMA controller transfers blocks of data between one source and one or more
++destinations. The blocks of data transferred can be represented in memory as contiguous
++or non-contiguous using scatter/gather table(s). Channel virtualization is supported
++through enqueuing of DMA jobs to, or dequeuing DMA jobs from, different work
++queues.
 +
- 	syscon_config.reg_stride = reg_io_width;
- 	syscon_config.val_bits = reg_io_width * 8;
- 	syscon_config.max_register = resource_size(&res) - reg_io_width;
++* qDMA Controller
++Required properties:
++- compatible : Should be "fsl,ls1021a-qdma" or "fsl,ls1043a-qdma", "fsl,ls1021a-qdma"
++- reg : Specifies base physical address(s) and size of the qDMA registers.
++	The region is qDMA control register's address and size.
++- interrupts : A list of interrupt-specifiers, one for each entry in
++	interrupt-names.
++- interrupt-names : Should contain:
++	"qdma-error" - the error interrupt
++	"qdma-queue" - the queue interrupt
++- dma-channels : Number of DMA channels supported by the controller
++- queues : Number of queues supported by driver
++
++Optional properties:
++- big-endian: If present registers and hardware scatter/gather descriptors
++	of the qDMA are implemented in big endian mode, otherwise in little
++	mode.
++
++
++Examples:
++
++	qdma: dma-controller@8390000 {
++		compatible = "fsl,ls1021a-qdma";
++		reg = <0x0 0x8398000 0x0 0x2000 /* Controller registers */
++		       0x0 0x839a000 0x0 0x2000>; /* Block registers */
++		interrupts = <GIC_SPI 185 IRQ_TYPE_LEVEL_HIGH>,
++				<GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-names = "qdma-error", "qdma-queue";
++		dma-channels = <8>;
++		queues = <2>;
++		big-endian;
++	};
 -- 
-1.7.9.5
+1.7.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
