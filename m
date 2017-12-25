@@ -1,58 +1,156 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3] ARM: dts: bcm283x: Fix pin function of JTAG pins
-Date: Mon, 25 Dec 2017 12:30:46 -0800
-Message-ID: <5a18e270-5905-d847-f061-14663f69aa43@gmail.com>
-References: <1514231010-19554-1-git-send-email-henryzhang62@gmail.com>
+From: Adrian Fiergolski <adrian.fiergolski-vJEk5272eHo@public.gmane.org>
+Subject: [PATCH v7] i2c: Add support for NXP PCA984x family.
+Date: Mon, 25 Dec 2017 22:26:46 +0100
+Message-ID: <20171225212646.8062-1-adrian.fiergolski@cern.ch>
+References: <20171220182745.lo6i27ucfhjekmjp@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1514231010-19554-1-git-send-email-henryzhang62-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <20171220182745.lo6i27ucfhjekmjp@rob-hp-laptop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: henryzhang62-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, stefan.wahren-eS4NqCHxEME@public.gmane.org
+To: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Adrian Fiergolski <adrian.fiergolski-vJEk5272eHo@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Le 12/25/17 à 11:43, henryzhang62-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org a écrit :
-> From: Henry Zhang <henryzhang62-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> 
-> BCM2835 ARM Peripherals doc shows gpio pins 4, 5, 6, 12 and 13
-> carry altenate function, ALT5 for ARM JTAG
-> 
-> Fixes: 21ff843931b2 ("ARM: dts: bcm283x: Define standard pinctrl
->                       groups in the gpio node.")
-> 
+This patch extends the current i2c-mux-pca954x driver and adds support for
+a newer PCA984x family of the I2C switches and multiplexers from NXP.
 
-Almost there, please don't break the Fixes: line onto multiple lines,
-this may, or may not require resending depending on what Eric says.
+Signed-off-by: Adrian Fiergolski <adrian.fiergolski-vJEk5272eHo@public.gmane.org>
+---
+Following Rob's and Peter's remarks, bindings contain now one valid
+combination of compatibles per line.
 
-Thank you!
+ .../devicetree/bindings/i2c/i2c-mux-pca954x.txt    | 13 ++++++--
+ drivers/i2c/muxes/Kconfig                          |  6 ++--
+ drivers/i2c/muxes/i2c-mux-pca954x.c                | 38 +++++++++++++++++++---
+ 3 files changed, 48 insertions(+), 9 deletions(-)
 
-> Signed-off-by: Henry Zhang <henryzhang62-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Acked-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-> ---
->  arch/arm/boot/dts/bcm283x.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
-> index dcde93c..64971e4 100644
-> --- a/arch/arm/boot/dts/bcm283x.dtsi
-> +++ b/arch/arm/boot/dts/bcm283x.dtsi
-> @@ -251,7 +251,7 @@
->  
->  			jtag_gpio4: jtag_gpio4 {
->  				brcm,pins = <4 5 6 12 13>;
-> -				brcm,function = <BCM2835_FSEL_ALT4>;
-> +				brcm,function = <BCM2835_FSEL_ALT5>;
->  			};
->  			jtag_gpio22: jtag_gpio22 {
->  				brcm,pins = <22 23 24 25 26 27>;
-> 
-
-
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt b/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
+index aa097045a10e..34d91501342e 100644
+--- a/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
++++ b/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
+@@ -1,10 +1,19 @@
+ * NXP PCA954x I2C bus switch
+ 
++The driver supports NXP PCA954x and PCA984x I2C mux/switch devices.
++
+ Required Properties:
+ 
+   - compatible: Must contain one of the following.
+-    "nxp,pca9540", "nxp,pca9542", "nxp,pca9543", "nxp,pca9544",
+-    "nxp,pca9545", "nxp,pca9546", "nxp,pca9547", "nxp,pca9548"
++    "nxp,pca9540",
++    "nxp,pca9542",
++    "nxp,pca9543",
++    "nxp,pca9544",
++    "nxp,pca9545",
++    "nxp,pca9546", "nxp,pca9846",
++    "nxp,pca9547", "nxp,pca9847",
++    "nxp,pca9548", "nxp,pca9848",
++    "nxp,pca9849"
+ 
+   - reg: The I2C address of the device.
+ 
+diff --git a/drivers/i2c/muxes/Kconfig b/drivers/i2c/muxes/Kconfig
+index 0f5c8fc36625..52a4a922e7e6 100644
+--- a/drivers/i2c/muxes/Kconfig
++++ b/drivers/i2c/muxes/Kconfig
+@@ -64,11 +64,11 @@ config I2C_MUX_PCA9541
+ 	  will be called i2c-mux-pca9541.
+ 
+ config I2C_MUX_PCA954x
+-	tristate "Philips PCA954x I2C Mux/switches"
++	tristate "NXP PCA954x and PCA984x I2C Mux/switches"
+ 	depends on GPIOLIB || COMPILE_TEST
+ 	help
+-	  If you say yes here you get support for the Philips PCA954x
+-	  I2C mux/switch devices.
++	  If you say yes here you get support for the NXP PCA954x
++	  and PCA984x I2C mux/switch devices.
+ 
+ 	  This driver can also be built as a module.  If so, the module
+ 	  will be called i2c-mux-pca954x.
+diff --git a/drivers/i2c/muxes/i2c-mux-pca954x.c b/drivers/i2c/muxes/i2c-mux-pca954x.c
+index 2ca068d8b92d..fbb84c7ef282 100644
+--- a/drivers/i2c/muxes/i2c-mux-pca954x.c
++++ b/drivers/i2c/muxes/i2c-mux-pca954x.c
+@@ -4,11 +4,11 @@
+  * Copyright (c) 2008-2009 Rodolfo Giometti <giometti-k2GhghHVRtY@public.gmane.org>
+  * Copyright (c) 2008-2009 Eurotech S.p.A. <info-ymFC7zkAqBI1GQ1Ptb7lUw@public.gmane.org>
+  *
+- * This module supports the PCA954x series of I2C multiplexer/switch chips
+- * made by Philips Semiconductors.
++ * This module supports the PCA954x and PCA954x series of I2C multiplexer/switch
++ * chips made by NXP Semiconductors.
+  * This includes the:
+- *	 PCA9540, PCA9542, PCA9543, PCA9544, PCA9545, PCA9546, PCA9547
+- *	 and PCA9548.
++ *	 PCA9540, PCA9542, PCA9543, PCA9544, PCA9545, PCA9546, PCA9547,
++ *	 PCA9548, PCA9846, PCA9847, PCA9848 and PCA9849.
+  *
+  * These chips are all controlled via the I2C bus itself, and all have a
+  * single 8-bit register. The upstream "parent" bus fans out to two,
+@@ -63,6 +63,10 @@ enum pca_type {
+ 	pca_9546,
+ 	pca_9547,
+ 	pca_9548,
++	pca_9846,
++	pca_9847,
++	pca_9848,
++	pca_9849,
+ };
+ 
+ struct chip_desc {
+@@ -129,6 +133,24 @@ static const struct chip_desc chips[] = {
+ 		.nchans = 8,
+ 		.muxtype = pca954x_isswi,
+ 	},
++	[pca_9846] = {
++		.nchans = 4,
++		.muxtype = pca954x_isswi,
++	},
++	[pca_9847] = {
++		.nchans = 8,
++		.enable = 0x8,
++		.muxtype = pca954x_ismux,
++	},
++	[pca_9848] = {
++		.nchans = 8,
++		.muxtype = pca954x_isswi,
++	},
++	[pca_9849] = {
++		.nchans = 4,
++		.enable = 0x4,
++		.muxtype = pca954x_ismux,
++	},
+ };
+ 
+ static const struct i2c_device_id pca954x_id[] = {
+@@ -140,6 +162,10 @@ static const struct i2c_device_id pca954x_id[] = {
+ 	{ "pca9546", pca_9546 },
+ 	{ "pca9547", pca_9547 },
+ 	{ "pca9548", pca_9548 },
++	{ "pca9846", pca_9846 },
++	{ "pca9847", pca_9847 },
++	{ "pca9848", pca_9848 },
++	{ "pca9849", pca_9849 },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(i2c, pca954x_id);
+@@ -154,6 +180,10 @@ static const struct of_device_id pca954x_of_match[] = {
+ 	{ .compatible = "nxp,pca9546", .data = &chips[pca_9546] },
+ 	{ .compatible = "nxp,pca9547", .data = &chips[pca_9547] },
+ 	{ .compatible = "nxp,pca9548", .data = &chips[pca_9548] },
++	{ .compatible = "nxp,pca9846", .data = &chips[pca_9846] },
++	{ .compatible = "nxp,pca9847", .data = &chips[pca_9847] },
++	{ .compatible = "nxp,pca9848", .data = &chips[pca_9848] },
++	{ .compatible = "nxp,pca9849", .data = &chips[pca_9849] },
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(of, pca954x_of_match);
 -- 
-Florian
+2.14.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
