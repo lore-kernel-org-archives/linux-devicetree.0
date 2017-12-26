@@ -1,36 +1,48 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 01/11] dt-bindings: fix the binding of Allwinner DE2
- CCU of A83T and H3
-Date: Tue, 26 Dec 2017 13:00:22 -0600
-Message-ID: <CAL_JsqLh4dgWOcsZ0aXCKvEUsANE=enPB0f-LthYOjRGZCkUfQ@mail.gmail.com>
-References: <20171222122243.25735-1-icenowy@aosc.io> <20171222122243.25735-2-icenowy@aosc.io>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 3/6] media: dt-bindings: Add bindings for TDA1997X
+Date: Tue, 26 Dec 2017 13:03:11 -0600
+Message-ID: <20171226190311.fkarrmgrytbirfgq@rob-hp-laptop>
+References: <1513447230-30948-1-git-send-email-tharvey@gateworks.com>
+ <1513447230-30948-4-git-send-email-tharvey@gateworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171222122243.25735-2-icenowy-h8G6r0blFSE@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1513447230-30948-4-git-send-email-tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Hans Verkuil <hansverk-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 22, 2017 at 6:22 AM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
-> The DE2 CCU is different on A83T and H3 -- the parent of the clocks on
-> A83T is PLL_DE but on H3 it's the DE module clock. This is not noticed
-> when I develop the DE2 CCU driver.
->
-> Fix the binding by using different compatibles for A83T and H3, adding
-> notes for the PLL_DE usage on A83T, and change the binding example's
-> compatible from A83T to H3 (as it specifies the DE module clock).
->
-> Fixes: ed74f8a8a679 ("dt-bindings: add binding for the Allwinner DE2 CCU")
-> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+On Sat, Dec 16, 2017 at 10:00:27AM -0800, Tim Harvey wrote:
+> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Acked-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+> Signed-off-by: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/clock/sun8i-de2.txt | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+> v5:
+>  - added Sakari's ack
+> 
+> v4:
+>  - move include/dt-bindings/media/tda1997x.h to bindings patch
+>  - clarify port node details
+> 
+> v3:
+>  - fix typo
+> 
+> v2:
+>  - add vendor prefix and remove _ from vidout-portcfg
+>  - remove _ from labels
+>  - remove max-pixel-rate property
+>  - describe and provide example for single output port
+>  - update to new audio port bindings
+> ---
+>  .../devicetree/bindings/media/i2c/tda1997x.txt     | 179 +++++++++++++++++++++
+>  include/dt-bindings/media/tda1997x.h               |  78 +++++++++
+>  2 files changed, 257 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/tda1997x.txt
+>  create mode 100644 include/dt-bindings/media/tda1997x.h
 
-Please add acks when posting new versions.
-
-Rob
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
