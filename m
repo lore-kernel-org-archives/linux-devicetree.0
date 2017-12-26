@@ -1,143 +1,40 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 5/7] dt-bindings: i3c: Document core bindings
-Date: Tue, 26 Dec 2017 12:29:34 -0600
-Message-ID: <CAL_JsqLBTtaM=7qdbbyODs61hbGdLughuVtPC-BsfrU8KV79aA@mail.gmail.com>
-References: <20171214151610.19153-1-boris.brezillon@free-electrons.com>
- <20171214151610.19153-6-boris.brezillon@free-electrons.com>
- <20171216172040.jcaezouqkeb7zrqy@rob-hp-laptop> <20171216193537.0aef2e97@bbrezillon>
- <20171220180645.pis34opfwawakmqc@rob-hp-laptop> <20171221114144.2610d49b@bbrezillon>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v3 2/3] dt-bindings: Add binding for Sitronix ST7735R
+ display panels
+Date: Tue, 26 Dec 2017 12:39:54 -0600
+Message-ID: <CAL_JsqLXOuY3jajGi-TfQVcZQVc3m92LWvgPyP+P4c0Gj8bhiw@mail.gmail.com>
+References: <1513884233-31540-1-git-send-email-david@lechnology.com>
+ <1513884233-31540-3-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20171221114144.2610d49b@bbrezillon>
-Sender: linux-doc-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Nishanth Menon <nm@ti.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, open list:OPEN FIR
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1513884233-31540-3-git-send-email-david@lechnology.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: David Lechner <david@lechnology.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, limor@ladyada.net, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 21, 2017 at 4:41 AM, Boris Brezillon
-<boris.brezillon@free-electrons.com> wrote:
-> On Wed, 20 Dec 2017 12:06:45 -0600
-> Rob Herring <robh@kernel.org> wrote:
->
->> On Sat, Dec 16, 2017 at 07:35:37PM +0100, Boris Brezillon wrote:
->> > On Sat, 16 Dec 2017 11:20:40 -0600
->> > Rob Herring <robh@kernel.org> wrote:
->> >
->> > > On Thu, Dec 14, 2017 at 04:16:08PM +0100, Boris Brezillon wrote:
->> > > > A new I3C subsystem has been added and a generic description has been
->> > > > created to represent the I3C bus and the devices connected on it.
->> > > >
->> > > > Document this generic representation.
->>
->> [...]
->>
->> > > So please define the node
->> > > name to be "i3c-controller". That's more inline with other node names
->> > > than i3c-master that you used below.
->> >
->> > Hm, not sure i3c-controller is appropriate though, because you can have
->> > slave controllers. Maybe i3c-host, but I'd prefer to keep the term
->> > master since it's employed everywhere in the spec. I can also be
->> > i3c-master-controller if you prefer.
->>
->> Okay, i3c-master is fine. Just make it explicit.
->
-> Okay.
->
->>
->> > > > +I3C devices
->> > > > +===========
->> > > > +
->> > > > +All I3C devices are supposed to support DAA (Dynamic Address Assignment), and
->> > > > +are thus discoverable. So, by default, I3C devices do not have to be described
->> > > > +in the device tree.
->> > > > +This being said, one might want to attach extra resources to these devices,
->> > > > +and those resources may have to be described in the device tree, which in turn
->> > > > +means we have to describe I3C devices.
->> > > > +
->> > > > +Another use case for describing an I3C device in the device tree is when this
->> > > > +I3C device has a static address and we want to assign it a specific dynamic
->> > > > +address before the DAA takes place (so that other devices on the bus can't
->> > > > +take this dynamic address).
->> > > > +
->> > > > +Required properties
->> > > > +-------------------
->> > > > +- i3c-pid: PID (Provisional ID). 64-bit property which is used to match a
->> > > > +          device discovered during DAA with its device tree definition. The
->> > > > +          PID is supposed to be unique on a given bus, which guarantees a 1:1
->> > > > +          match. This property becomes optional if a reg property is defined,
->> > > > +          meaning that the device has a static address.
->> > >
->> > > What determines this number?
->> >
->> > Part of it is fixed (manufacturer and part id) and the last few bits
->> > represent the device instance on the bus (so you can have several
->> > identical devices on the same bus). The manufacturer and part ids
->> > should be statically assigned during production, instance id is usually
->> > configurable through extra pins that you drive high or low at reset
->> > time.
->>
->> Sounds like an I2C address at least for the pin strapping part...
->
-> The address space of this instance-id is smaller (4bits) than the I2C
-> one (7bits), and more importantly, the instance-id is not required to
-> be unique, it's the aggregation of the vendor-id, part-id and
-> instance-id that has to be unique. So, if you were thinking about using
-> this id to uniquely identify the device on the bus it's not a good idea.
-
-No, no. I was just commenting how I2C devices typically do the same
-pin strapping to make addresses unique.
-
-
->> > > > +Optional properties
->> > > > +-------------------
->> > > > +- reg: static address. Only valid is the device has a static address.
->> > > > +- i3c-dynamic-address: dynamic address to be assigned to this device. This
->> > > > +                      property depends on the reg property.
->> > >
->> > > Perhaps "assigned-address" property would be appropriate. I'm not all
->> > > that familiar with it though.
->> >
->> > Again, the spec use the term "dynamic address" everywhere, and I'd like
->> > to stay as close as possible to the spec.
->>
->> I looked at assigned-addresses a bit more and that won't really fit
->> because it should be the same format as reg. So I think reg should
->> always be the PID as that is fixed and always present. Then the DAA
->> address is separate and can be the i3c-dynamic-address property.
->>
->> However, there's still part I don't understand...
->>
->> > > > +               /* I3C device with a static address. */
->> > > > +               thermal_sensor: sensor@68 {
->> > > > +                       reg = <0x68>;
->> > > > +                       i3c-dynamic-address = <0xa>;
->>
->> I'm confused as to how/why you have both reg and dynamic address?
->
-> Some I3C devices have an I2C address (also called static or legacy
-> address in a few places). The static/I2C/legacy address is used until
-> the I3C device is assigned a dynamic address by the master. The whole
-> point of specifying both an I2C address (through the reg property) and
-> a dynamic address (through the i3c-dynamic-address) is to tell the
-> controller that a specific dynamic address should be assigned to this
-> device using the SETSADA (Set Dynamic Address from Static Address)
-> command before a DAA (Dynamic Address Assignment) procedure is started.
-> This way, the device will not participate to the DAA (because it
-> already has a valid DA) and the dynamic address can't be assigned to
-> a different device (which is one of the problem with the automatic DAA
-> procedure).
-
-Okay, think I got it now.
-
-I think we should extend "reg" to have either I2C address, I3C PID, or
-both (in a defined order). I'm assuming you can always distinguish a
-static I2C address and an I3C PID just by upper bits all being 0s for
-I2C addresses. Maybe both is not needed? This means we'd have to allow
-64-bit I2C addresses (#address-cells=2), but that should be easily
-fixed if that causes problems in the kernel.
-
-So i3c-pid would go away and i3c-dynamic-address stays.
-
-Rob
+T24gVGh1LCBEZWMgMjEsIDIwMTcgYXQgMToyMyBQTSwgRGF2aWQgTGVjaG5lciA8ZGF2aWRAbGVj
+aG5vbG9neS5jb20+IHdyb3RlOgo+IFRoaXMgYWRkcyBhIG5ldyBkZXZpY2UgdHJlZSBiaW5kaW5n
+IGZvciBTaXRyb25peCBTVDc3MzVSIGRpc3BsYXkgcGFuZWxzLAo+IHN1Y2ggYXMgdGhlIEFkYWZy
+dWl0IDEuOCIgVEZULgo+Cj4gU2lnbmVkLW9mZi1ieTogRGF2aWQgTGVjaG5lciA8ZGF2aWRAbGVj
+aG5vbG9neS5jb20+Cj4gLS0tCj4KPiB2MyBjaGFuZ2VzOgo+ICogY29tcGF0aWJsZSBzdHJpbmcg
+aXMgY2hhbmdlZCBmcm9tICJzaXRyb25peCxzdDc3MzVyLWpkLXQxODAwMy10MDEiIHRvCj4gImpp
+YW5kYSxqZC10MTgwMDMtdDAxIiwgInNpdHJvbml4LHN0NzczNXIiCj4KPiB2MiBjaGFuZ2VzOgo+
+ICogbm9uZQo+Cj4gIC4uLi9iaW5kaW5ncy9kaXNwbGF5L3NpdHJvbml4LHN0NzczNXIudHh0ICAg
+ICAgICAgIHwgMzUgKysrKysrKysrKysrKysrKysrKysrKwo+ICAxIGZpbGUgY2hhbmdlZCwgMzUg
+aW5zZXJ0aW9ucygrKQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2Rpc3BsYXkvc2l0cm9uaXgsc3Q3NzM1ci50eHQKClJldmlld2VkLWJ5OiBS
+b2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0
+cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9s
+aXN0aW5mby9kcmktZGV2ZWwK
