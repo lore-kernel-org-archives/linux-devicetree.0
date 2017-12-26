@@ -1,308 +1,116 @@
-From: SZ Lin <sz.lin@moxa.com>
-Subject: [PATCH v3] ARM: dts: ls1021a: add support for Moxa UC-8410A open platform
-Date: Tue, 26 Dec 2017 12:54:31 +0800
-Message-ID: <20171226045432.14749-1-sz.lin@moxa.com>
+From: kbuild test robot <lkp@intel.com>
+Subject: Re: [PATCH 1/4] media: ov5695: add support for OV5695 sensor
+Date: Tue, 26 Dec 2017 13:34:40 +0800
+Message-ID: <201712261322.41FrM4CI%fengguang.wu@intel.com>
+References: <1514211086-13440-1-git-send-email-zhengsq@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: shawnguo@kernel.org, SZ Lin <sz.lin@moxa.com>, Jimmy Chen <jimmy.chen@moxa.com>, Harry YJ Jhou <harryyj.jhou@moxa.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1514211086-13440-1-git-send-email-zhengsq@rock-chips.com>
+Sender: linux-media-owner@vger.kernel.org
+Cc: kbuild-all@01.org, mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, ddl@rock-chips.com, tfiga@chromium.org, Shunqian Zheng <zhengsq@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-Add support for Moxa UC-8410A open platform
+Hi Shunqian,
 
-The UC-8410A computing platform is designed
-for embedded communication-centric industrial applications
+Thank you for the patch! Perhaps something to improve:
 
-The features of UC-8410A are:
-* QSPI flash
-* SD slot
-* 3x LAN
-* 8x RS-232/422/485 ports, software-selectable
-* Mini PCIe form factor with PCIe/USB signal
-* 2x USB host
-* TPM
-* Watchdog
-* RTC
-* User LEDs
-* Beeper
-* Push button
+[auto build test WARNING on linuxtv-media/master]
+[also build test WARNING on v4.15-rc5 next-20171222]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
 
-Signed-off-by: Jimmy Chen <jimmy.chen@moxa.com>
-Signed-off-by: Harry YJ Jhou <harryyj.jhou@moxa.com>
-Signed-off-by: SZ Lin <sz.lin@moxa.com>
+url:    https://github.com/0day-ci/linux/commits/Shunqian-Zheng/media-ov5695-add-support-for-OV5695-sensor/20171226-110821
+base:   git://linuxtv.org/media_tree.git master
+reproduce:
+        # apt-get install sparse
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF=-D__CHECK_ENDIAN__
+
+
+sparse warnings: (new ones prefixed by >>)
+
+
+vim +713 drivers/media/i2c/ov5695.c
+
+   697	
+   698	/* Write registers up to 4 at a time */
+   699	static int ov5695_write_reg(struct i2c_client *client, u16 reg,
+   700				    unsigned int len, u32 val)
+   701	{
+   702		int buf_i;
+   703		int val_i;
+   704		u8 buf[6];
+   705		u8 *val_p;
+   706	
+   707		if (len > 4)
+   708			return -EINVAL;
+   709	
+   710		buf[0] = reg >> 8;
+   711		buf[1] = reg & 0xff;
+   712	
+ > 713		val = cpu_to_be32(val);
+   714		val_p = (u8 *)&val;
+   715		buf_i = 2;
+   716		val_i = 4 - len;
+   717	
+   718		while (val_i < 4)
+   719			buf[buf_i++] = val_p[val_i++];
+   720	
+   721		if (i2c_master_send(client, buf, len + 2) != len + 2)
+   722			return -EIO;
+   723	
+   724		return 0;
+   725	}
+   726	
+   727	static int ov5695_write_array(struct i2c_client *client,
+   728				      const struct regval *regs)
+   729	{
+   730		int i, ret = 0;
+   731	
+   732		for (i = 0; ret == 0 && regs[i].addr != REG_NULL; i++)
+   733			ret = ov5695_write_reg(client, regs[i].addr,
+   734					       OV5695_REG_VALUE_08BIT, regs[i].val);
+   735	
+   736		return ret;
+   737	}
+   738	
+   739	/* Read registers up to 4 at a time */
+   740	static int ov5695_read_reg(struct i2c_client *client, u16 reg, unsigned int len,
+   741				   u32 *val)
+   742	{
+   743		struct i2c_msg msgs[2];
+   744		u8 *data_be_p;
+   745		u32 data_be = 0;
+ > 746		u16 reg_addr_be = cpu_to_be16(reg);
+   747		int ret;
+   748	
+   749		if (len > 4)
+   750			return -EINVAL;
+   751	
+   752		data_be_p = (u8 *)&data_be;
+   753		/* Write register address */
+   754		msgs[0].addr = client->addr;
+   755		msgs[0].flags = 0;
+   756		msgs[0].len = 2;
+   757		msgs[0].buf = (u8 *)&reg_addr_be;
+   758	
+   759		/* Read data from register */
+   760		msgs[1].addr = client->addr;
+   761		msgs[1].flags = I2C_M_RD;
+   762		msgs[1].len = len;
+   763		msgs[1].buf = &data_be_p[4 - len];
+   764	
+   765		ret = i2c_transfer(client->adapter, msgs, ARRAY_SIZE(msgs));
+   766		if (ret != ARRAY_SIZE(msgs))
+   767			return -EIO;
+   768	
+ > 769		*val = be32_to_cpu(data_be);
+   770	
+   771		return 0;
+   772	}
+   773	
 
 ---
-Changes from v2:
-- Replace underscore with hyphen in node name
-- Add unit address after nodes with 'reg' property
-- Sort nodes with unit-address in order of the address
-- Fix up unit-address in partitions node
-
- arch/arm/boot/dts/Makefile                  |   1 +
- arch/arm/boot/dts/ls1021a-moxa-uc-8410a.dts | 241 ++++++++++++++++++++++++++++
- 2 files changed, 242 insertions(+)
- create mode 100644 arch/arm/boot/dts/ls1021a-moxa-uc-8410a.dts
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index d0381e9caf21..62ce9b27ad30 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -520,6 +520,7 @@ dtb-$(CONFIG_SOC_IMX7D) += \
- 	imx7s-colibri-eval-v3.dtb \
- 	imx7s-warp.dtb
- dtb-$(CONFIG_SOC_LS1021A) += \
-+	ls1021a-moxa-uc-8410a.dtb \
- 	ls1021a-qds.dtb \
- 	ls1021a-twr.dtb
- dtb-$(CONFIG_SOC_VF610) += \
-diff --git a/arch/arm/boot/dts/ls1021a-moxa-uc-8410a.dts b/arch/arm/boot/dts/ls1021a-moxa-uc-8410a.dts
-new file mode 100644
-index 000000000000..d01f64b252b1
---- /dev/null
-+++ b/arch/arm/boot/dts/ls1021a-moxa-uc-8410a.dts
-@@ -0,0 +1,241 @@
-+/*
-+ * Copyright (C) 2017 Moxa Inc. - https://www.moxa.com/
-+ *
-+ * Author: Harry YJ Jhou (周亞諄) <harryyj.jhou@moxa.com>
-+ *         Jimmy Chen (陳永達)    <jimmy.chen@moxa.com>
-+ *         SZ Lin (林上智)        <sz.lin@moxa.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+/dts-v1/;
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+#include "ls1021a.dtsi"
-+
-+/ {
-+	model = "Moxa UC-8410A";
-+
-+	aliases {
-+		enet0_rgmii_phy = &rgmii_phy0;
-+		enet1_rgmii_phy = &rgmii_phy1;
-+		enet2_rgmii_phy = &rgmii_phy2;
-+	};
-+
-+	sys_mclk: clock-mclk {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <24576000>;
-+	};
-+
-+	reg_3p3v: regulator-3p3v {
-+		  compatible = "regulator-fixed";
-+		  regulator-name = "3P3V";
-+		  regulator-min-microvolt = <3300000>;
-+		  regulator-max-microvolt = <3300000>;
-+		  regulator-always-on;
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		cel-pwr {
-+			label = "UC8410A:CEL-PWR";
-+			gpios = <&gpio3 27 GPIO_ACTIVE_LOW>;
-+			default-state = "off";
-+		};
-+
-+		cel-reset {
-+			label = "UC8410A:CEL-RESET";
-+			gpios = <&gpio3 28 GPIO_ACTIVE_LOW>;
-+			default-state = "off";
-+		};
-+
-+		str-led {
-+			label = "UC8410A:RED:PROG";
-+			gpios = <&gpio0 16 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "mmc0";
-+		};
-+
-+		sw-ready {
-+			label = "UC8410A:GREEN:SWRDY";
-+			gpios = <&gpio0 18 GPIO_ACTIVE_HIGH>;
-+			default-state = "on";
-+		};
-+
-+		beeper {
-+			label = "UC8410A:BEEP";
-+			gpios = <&gpio0 20 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+
-+		prog-led0 {
-+			label = "UC8410A:GREEN:PROG2";
-+			gpios = <&gpio3 14 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+
-+		prog-led1 {
-+			label = "UC8410A:GREEN:PROG1";
-+			gpios = <&gpio3 15 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+
-+		prog-led2 {
-+			label = "UC8410A:GREEN:PROG0";
-+			gpios = <&gpio3 16 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+
-+		wifi-signal0 {
-+			label = "UC8410A:GREEN:CEL2";
-+			gpios = <&gpio3 17 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+
-+		wifi-signal1 {
-+			label = "UC8410A:GREEN:CEL1";
-+			gpios = <&gpio3 18 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+
-+		wifi-signal2 {
-+			label = "UC8410A:GREEN:CEL0";
-+			gpios = <&gpio3 19 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+
-+		cpu-diag-red {
-+			label = "UC8410A:RED:DIA";
-+			gpios = <&gpio3 20 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+
-+		cpu-diag-green {
-+			label = "UC8410A:GREEN:DIA";
-+			gpios = <&gpio3 21 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+
-+		cpu-diag-yellow {
-+			label = "UC8410A:YELLOW:DIA";
-+			gpios = <&gpio3 22 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+
-+		pushbtn-key {
-+			label = "push button key";
-+			gpios = <&gpio1 21 GPIO_ACTIVE_LOW>;
-+			linux,code = <BTN_MISC>;
-+			default-state = "on";
-+		};
-+	};
-+};
-+
-+&enet0 {
-+	phy-handle = <&rgmii_phy0>;
-+	phy-connection-type = "rgmii-id";
-+	status = "okay";
-+};
-+
-+&enet1 {
-+	phy-handle = <&rgmii_phy1>;
-+	phy-connection-type = "rgmii-id";
-+	status = "okay";
-+};
-+
-+&enet2 {
-+	phy-handle = <&rgmii_phy2>;
-+	phy-connection-type = "rgmii-id";
-+	status = "okay";
-+};
-+
-+&i2c0 {
-+	clock-frequency = <100000>;
-+	status = "okay";
-+
-+	tpm@20 {
-+		compatible = "infineon,slb9635tt";
-+		reg = <0x20>;
-+	};
-+
-+	rtc@68 {
-+		compatible = "dallas,ds1374";
-+		reg = <0x68>;
-+	};
-+};
-+
-+&lpuart0 {
-+	status = "okay";
-+};
-+
-+&mdio0 {
-+	rgmii_phy0: ethernet-phy@0 {
-+		compatible = "marvell,88e1118";
-+		reg = <0x0>;
-+		marvell,reg-init =
-+			<3 0x11 0 0x4415>, /* Reg 3,17 */
-+			<3 0x10 0 0x77>; /* Reg 3,16 */
-+	};
-+
-+	rgmii_phy1: ethernet-phy@1 {
-+		compatible = "marvell,88e1118";
-+		reg = <0x1>;
-+		marvell,reg-init =
-+			<3 0x11 0 0x4415>, /* Reg 3,17 */
-+			<3 0x10 0 0x77>; /* Reg 3,16 */
-+	};
-+
-+	rgmii_phy2: ethernet-phy@2 {
-+		compatible = "marvell,88e1118";
-+		reg = <0x2>;
-+		marvell,reg-init =
-+			<3 0x11 0 0x4415>, /* Reg 3,17 */
-+			<3 0x10 0 0x77>; /* Reg 3,16 */
-+	};
-+};
-+
-+&qspi {
-+	bus-num = <0>;
-+	fsl,spi-num-chipselects = <2>;
-+	fsl,spi-flash-chipselects = <0>;
-+	fsl,qspi-has-second-chip;
-+	status = "okay";
-+
-+	flash: flash@0 {
-+		compatible = "spansion,s25fl064l", "spansion,s25fl164k";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		spi-max-frequency = <20000000>;
-+		reg = <0>;
-+
-+		partitions@0 {
-+			label = "U-Boot";
-+			reg = <0x0 0x180000>;
-+		};
-+
-+		partitions@180000 {
-+			label = "U-Boot Env";
-+			reg = <0x180000 0x680000>;
-+		};
-+	};
-+};
-+
-+&sata {
-+	status = "okay";
-+};
-+
-+&uart0 {
-+	status = "okay";
-+};
-+
-+&uart1 {
-+	status = "okay";
-+};
--- 
-2.15.1
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
