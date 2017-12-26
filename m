@@ -1,94 +1,81 @@
-From: JeffyChen <jeffy.chen@rock-chips.com>
-Subject: Re: [RFC PATCH v11 4/5] PCI / PM: Add support for the PCIe WAKE#
- signal for OF
-Date: Tue, 26 Dec 2017 09:06:47 +0800
-Message-ID: <5A41A0A7.5070605@rock-chips.com>
-References: <20171225114742.18920-1-jeffy.chen@rock-chips.com> <20171225114742.18920-5-jeffy.chen@rock-chips.com> <9593014.U0c2JQdoEZ@aspire.rjw.lan>
+From: Honghui Zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v4 2/2] PCI: mediatek: Set up class type and vendor ID
+ for MT7622
+Date: Tue, 26 Dec 2017 09:41:12 +0800
+Message-ID: <1514252472.25872.29.camel@mhfsdcap03>
+References: <1513921178-16148-1-git-send-email-honghui.zhang@mediatek.com>
+         <1513921178-16148-3-git-send-email-honghui.zhang@mediatek.com>
+         <1514197661.25015.9.camel@mtkswgap22>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <9593014.U0c2JQdoEZ@aspire.rjw.lan>
-Sender: linux-pci-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: linux-kernel@vger.kernel.org, bhelgaas@google.com, linux-pm@vger.kernel.org, tony@atomide.com, shawn.lin@rock-chips.com, briannorris@chromium.org, dianders@chromium.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1514197661.25015.9.camel@mtkswgap22>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, hongkun.cao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, xinping.qian-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rafael,
+On Mon, 2017-12-25 at 18:27 +0800, Ryder Lee wrote:
+> On Fri, 2017-12-22 at 13:39 +0800, honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
+> > From: Honghui Zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > 
+> > The hardware default value of IDs and class type is not correct,
+> > fix that by setup the correct values before start up.
+> > 
+> > Signed-off-by: Honghui Zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > ---
+> >  drivers/pci/host/pcie-mediatek.c | 12 ++++++++++++
+> >  include/linux/pci_ids.h          |  3 +++
+> >  2 files changed, 15 insertions(+)
+> > 
+> > diff --git a/drivers/pci/host/pcie-mediatek.c b/drivers/pci/host/pcie-mediatek.c
+> > index fc29a9a..0ef33e4 100644
+> > --- a/drivers/pci/host/pcie-mediatek.c
+> > +++ b/drivers/pci/host/pcie-mediatek.c
+> > @@ -74,6 +74,10 @@
+> >  
+> >  /* PCIe V2 per-port registers */
+> >  #define PCIE_MSI_VECTOR		0x0c0
+> > +
+> > +#define PCIE_CONF_ID		0x100
+> > +#define PCIE_CONF_CLASS		0x104
+> > +
+> >  #define PCIE_INT_MASK		0x420
+> >  #define INTX_MASK		GENMASK(19, 16)
+> >  #define INTX_SHIFT		16
+> > @@ -393,6 +397,14 @@ static int mtk_pcie_startup_port_v2(struct mtk_pcie_port *port)
+> >  		val |= PCIE_CSR_LTSSM_EN(port->slot) |
+> >  		       PCIE_CSR_ASPM_L1_EN(port->slot);
+> >  		writel(val, pcie->base + PCIE_SYS_CFG_V2);
+> > +
+> > +		/* Set up vendor ID and device ID for MT7622*/
+> > +		val = PCI_VENDOR_ID_MEDIATEK | (PCI_DEVICE_ID_MT7622 << 16);
+> > +		writel(val, port->base + PCIE_CONF_ID);
+> 
+> IMHO, this is a general function so you can ignore "device ID for
+> MT7622" here, but just make sure class code/vendor ID correct.
 
-Thanks for your reply :)
+Hmm, this condition is only for MT7622 for now.
+Well, host driver and framework does not cares about the device ID for
+host bridge. I guess I can bypass the setting of device ID.
 
-On 12/26/2017 08:11 AM, Rafael J. Wysocki wrote:
->> >+
->> >+	dn = pci_device_to_OF_node(ppdev);
->> >+	if (!dn)
->> >+		return 0;
->> >+
->> >+	irq = of_irq_get_byname(dn, "wakeup");
-> Why is this a property of the bridge and not of the device itself?
-That is suggested by Brian, because in that way, the wakeup pin would 
-not "tied to what exact device is installed (or no device, if it's a slot)."
+thanks.
 
->
->> >+	if (irq == -EPROBE_DEFER)
-> Braces here, please.
-ok, will fix in the next version.
+> 
+> > +		/* Set up class code for MT7622 */
+> > +		val = PCI_CLASS_BRIDGE_PCI << 16;
+> > +		writel(val, port->base + PCIE_CONF_CLASS);
+> >  	}
+> >  
+> >  	/* Assert all reset signals */
+> > diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> > index ab20dc5..000c5df 100644
 
->
->> >+		return irq;
->> >+	/* Ignore other errors, since a missing wakeup is non-fatal. */
->> >+	else if (irq < 0) {
->> >+		dev_info(&pdev->dev, "cannot get wakeup interrupt: %d\n", irq);
->> >+		return 0;
->> >+	}
->> >+
->> >+	device_init_wakeup(&pdev->dev, true);
-> Why do you call this before dev_pm_set_dedicated_wake_irq()?
-hmmm, i thought so too, but it turns out the dedicated wake irq 
-framework requires device_init_wakeup(dev, true) before attach the wake irq:
-
-int device_wakeup_attach_irq(struct device *dev,
-                              struct wake_irq *wakeirq)
-{
-         struct wakeup_source *ws;
-
-         ws = dev->power.wakeup;
-         if (!ws) {
-                 dev_err(dev, "forgot to call device_init_wakeup?\n");
-                 return -EINVAL;
+> 
 
 
->
->> >+
->> >+	ret = dev_pm_set_dedicated_wake_irq(&pdev->dev, irq);
->> >+	if (ret < 0) {
->> >+		dev_err(&pdev->dev, "failed to set wake IRQ: %d\n", ret);
->> >+		device_init_wakeup(&pdev->dev, false);
->> >+		return ret;
->> >+	}
->> >+
-> It would be more straightforward to call device_init_wakeup() here.
->
->> >+	return 0;
->> >+}
->> >+EXPORT_SYMBOL_GPL(of_pci_setup_wake_irq);
->> >+
->> >+void of_pci_teardown_wake_irq(struct pci_dev *pdev)
->> >+{
->> >+	if (!pdev->dev.power.wakeirq)
->> >+		return;
->> >+
->> >+	dev_pm_clear_wake_irq(&pdev->dev);
->> >+	device_init_wakeup(&pdev->dev, false);
->> >+}
->> >+EXPORT_SYMBOL_GPL(of_pci_teardown_wake_irq);
->> >+
->> >  /**
->> >   * of_irq_parse_pci - Resolve the interrupt for a PCI device
->> >   * @pdev:       the device whose interrupt is to be resolved
-> Thanks,
-> Rafael
->
->
->
->
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
