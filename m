@@ -1,33 +1,48 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v7] i2c: Add support for NXP PCA984x family.
-Date: Tue, 26 Dec 2017 11:58:43 -0600
-Message-ID: <CAL_Jsq+GWGLFujL8kBub=f41NCC=uTWRQzVOr8obsm9bzUnLJQ@mail.gmail.com>
-References: <20171220182745.lo6i27ucfhjekmjp@rob-hp-laptop> <20171225212646.8062-1-adrian.fiergolski@cern.ch>
+Subject: Re: [PATCH v3 1/4] dt-bindings: samsung: document bindings for Midas
+ family boards
+Date: Tue, 26 Dec 2017 12:02:11 -0600
+Message-ID: <CAL_JsqJo0NZ6qhr-cfAEVKc95qMuBPWN0Y8X6ZTa_wk3y2OMwQ@mail.gmail.com>
+References: <20171218123805.26345-1-simon@lineageos.org> <20171218123805.26345-2-simon@lineageos.org>
+ <20171220181759.6r4waz4seerh6q4i@rob-hp-laptop> <20171221014246.GA23568@lineageos.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171225212646.8062-1-adrian.fiergolski-vJEk5272eHo@public.gmane.org>
+In-Reply-To: <20171221014246.GA23568-WP75azK+jQYgsBAKwltoeQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Adrian Fiergolski <adrian.fiergolski-vJEk5272eHo@public.gmane.org>
-Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Simon Shields <simon-WP75azK+jQYgsBAKwltoeQ@public.gmane.org>
+Cc: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 25, 2017 at 3:26 PM, Adrian Fiergolski
-<adrian.fiergolski-vJEk5272eHo@public.gmane.org> wrote:
-> This patch extends the current i2c-mux-pca954x driver and adds support for
-> a newer PCA984x family of the I2C switches and multiplexers from NXP.
+On Wed, Dec 20, 2017 at 7:42 PM, Simon Shields <simon-WP75azK+jQYgsBAKwltoeQ@public.gmane.org> wrote:
+> Hi Rob,
 >
-> Signed-off-by: Adrian Fiergolski <adrian.fiergolski-vJEk5272eHo@public.gmane.org>
-> ---
-> Following Rob's and Peter's remarks, bindings contain now one valid
-> combination of compatibles per line.
+> Thanks for the review.
 >
->  .../devicetree/bindings/i2c/i2c-mux-pca954x.txt    | 13 ++++++--
->  drivers/i2c/muxes/Kconfig                          |  6 ++--
->  drivers/i2c/muxes/i2c-mux-pca954x.c                | 38 +++++++++++++++++++---
->  3 files changed, 48 insertions(+), 9 deletions(-)
+> On Wed, Dec 20, 2017 at 12:17:59PM -0600, Rob Herring wrote:
+>> On Mon, Dec 18, 2017 at 11:38:02PM +1100, Simon Shields wrote:
+>> > Document GT-I9300, GT-I9305, GT-N7100, and GT-N7105 bindings, along
+>> > with the shared "midas" binding.
+>> >
+>> > Signed-off-by: Simon Shields <simon-WP75azK+jQYgsBAKwltoeQ@public.gmane.org>
+>> > ---
+>> >  Documentation/devicetree/bindings/arm/samsung/samsung-boards.txt | 4 ++++
+>> >  1 file changed, 4 insertions(+)
+>>
+>> My comment on v2 remains.
+>
+> Do you have any example of a better description? All the other ARM board
+> descriptions seem similarly terse.
+>
+> Alternatively, maybe changing the compatible strings is a better
+> solution? "samsung,n710x" for t0, "samsung,i9300" for m0, and
+> "samsung,i9305" for m3?
 
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Yes, it was the compatible string I was commenting on. I don't really
+care about the description because for most boards I have no idea what
+they are.
+
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
