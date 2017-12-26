@@ -1,26 +1,30 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv3 RESEND 1/3] Documentation: dt: memory: ti-emif: add edac
- support under emif
-Date: Tue, 26 Dec 2017 16:50:18 -0600
-Message-ID: <CAL_Jsq+9=Py6tGgTQSKnBb3xJstPm=3cTP=pqWcCLvMJ83ajyQ@mail.gmail.com>
-References: <1513959834-27901-1-git-send-email-t-kristo@ti.com> <20171226224819.6uekbnbd5tllaxb5@rob-hp-laptop>
+Subject: Re: [PATCH] mmc: Don't reference Linux-specific OF_GPIO_ACTIVE_LOW
+ flag in DT binding
+Date: Tue, 26 Dec 2017 16:53:05 -0600
+Message-ID: <20171226225305.qyd5yfmxomxgvf7x@rob-hp-laptop>
+References: <20171223003412.13688-1-tuomas@tuxera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171226224819.6uekbnbd5tllaxb5@rob-hp-laptop>
+Content-Disposition: inline
+In-Reply-To: <20171223003412.13688-1-tuomas-yrGDUoBaLx3QT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+To: Tuomas Tynkkynen <tuomas-yrGDUoBaLx3QT0dZR+AlfA@public.gmane.org>
+Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 26, 2017 at 4:48 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Fri, Dec 22, 2017 at 06:23:54PM +0200, Tero Kristo wrote:
->> Certain revisions of the TI EMIF IP contain ECC support in them. Reflect
->> this in the DT binding.
->
-> "dt-bindings: edac: ..." is the preferred subject prefix.
+On Sat, Dec 23, 2017 at 02:34:12AM +0200, Tuomas Tynkkynen wrote:
+> OF_GPIO_ACTIVE_LOW is a Linux implementation detail. The binding
+> document should be referring to GPIO_ACTIVE_LOW found in
+> include/dt-bindings/gpio/gpio.h.
+> 
+> Signed-off-by: Tuomas Tynkkynen <tuomas-yrGDUoBaLx3QT0dZR+AlfA@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/mmc/mmc.txt | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 
-Err, I mean "dt-bindings: memory-controllers: ..."
+Applied, thanks.
 
 Rob
 --
