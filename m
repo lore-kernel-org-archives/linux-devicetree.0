@@ -1,7 +1,7 @@
 From: Wen He <wen.he_1-3arQi8VN3Tc@public.gmane.org>
-Subject: [V2 5/6] arm64: dts: ls1046a: add qdma device tree nodes
-Date: Tue, 26 Dec 2017 13:47:53 +0800
-Message-ID: <20171226054754.14969-3-wen.he_1@nxp.com>
+Subject: [V2 6/6] arm: dts: ls1021a: add qdma device tree nodes
+Date: Tue, 26 Dec 2017 13:47:54 +0800
+Message-ID: <20171226054754.14969-4-wen.he_1@nxp.com>
 References: <20171226054754.14969-1-wen.he_1@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,33 +12,33 @@ To: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+y
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, leoyang.li-3arQi8VN3Tc@public.gmane.org, jiafei.pan-3arQi8VN3Tc@public.gmane.org, jiaheng.fan-3arQi8VN3Tc@public.gmane.org, Wen He <wen.he_1-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-add the qDMA device tree nodes for LS1046A devices.
+add the qDMA device tree nodes for LS1021A devices.
 
 Signed-off-by: Wen He <wen.he_1-3arQi8VN3Tc@public.gmane.org>
 ---
 change in v2:
 	- Add commits messages
 	- Replace 'channels' by 'dma-channels'
-	- Replace 'qdma@8380000' by 'dma-controller@8380000'
+	- Replace 'qdma@8390000' by 'dma-controller@8390000'
 
- arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi |   15 +++++++++++++++
+ arch/arm/boot/dts/ls1021a.dtsi |   15 +++++++++++++++
  1 files changed, 15 insertions(+), 0 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-index 06b5e12..b4a0800 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-@@ -595,6 +595,21 @@
+diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
+index 9319e1f..33f7b5c 100644
+--- a/arch/arm/boot/dts/ls1021a.dtsi
++++ b/arch/arm/boot/dts/ls1021a.dtsi
+@@ -549,6 +549,21 @@
  				 <&clockgen 4 1>;
  		};
  
-+		qdma: dma-controller@8380000 {
-+			compatible = "fsl,ls1021a-qdma", "fsl,ls1046a-qdma";
-+			reg = <0x0 0x8380000 0x0 0x1000>, /* Controller regs */
-+				<0x0 0x8390000 0x0 0x10000>, /* Status regs */
-+				<0x0 0x83a0000 0x0 0x40000>; /* Block regs */
-+			interrupts = <GIC_SPI 153 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>;
++		qdma: dma-controller@8390000 {
++			compatible = "fsl,ls1021a-qdma";
++			reg = <0x0 0x8398000 0x0 0x1000>, /* Controller regs */
++				<0x0 0x8399000 0x0 0x1000>, /* Status regs */
++				<0x0 0x839a000 0x0 0x2000>; /* Block regs */
++			interrupts = <GIC_SPI 185 IRQ_TYPE_LEVEL_HIGH>,
++					<GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>;
 +			interrupt-names = "qdma-error", "qdma-queue";
 +			dma-channels = <8>;
 +			queues = <2>;
@@ -47,9 +47,9 @@ index 06b5e12..b4a0800 100644
 +			big-endian;
 +		};
 +
- 		usb0: usb@2f00000 {
- 			compatible = "snps,dwc3";
- 			reg = <0x0 0x2f00000 0x0 0x10000>;
+ 		dcu: dcu@2ce0000 {
+ 			compatible = "fsl,ls1021a-dcu";
+ 			reg = <0x0 0x2ce0000 0x0 0x10000>;
 -- 
 1.7.1
 
