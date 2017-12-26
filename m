@@ -1,41 +1,33 @@
-From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Subject: Re: [PATCH net-next v7 2/2] net: ethernet: socionext: add AVE
- ethernet driver
-Date: Tue, 26 Dec 2017 12:58:15 -0500 (EST)
-Message-ID: <20171226.125815.447371237720916939.davem@davemloft.net>
-References: <1513854776-4149-1-git-send-email-hayashi.kunihiko@socionext.com>
-        <1513854776-4149-3-git-send-email-hayashi.kunihiko@socionext.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v7] i2c: Add support for NXP PCA984x family.
+Date: Tue, 26 Dec 2017 11:58:43 -0600
+Message-ID: <CAL_Jsq+GWGLFujL8kBub=f41NCC=uTWRQzVOr8obsm9bzUnLJQ@mail.gmail.com>
+References: <20171220182745.lo6i27ucfhjekmjp@rob-hp-laptop> <20171225212646.8062-1-adrian.fiergolski@cern.ch>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1513854776-4149-3-git-send-email-hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+In-Reply-To: <20171225212646.8062-1-adrian.fiergolski-vJEk5272eHo@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org, masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+To: Adrian Fiergolski <adrian.fiergolski-vJEk5272eHo@public.gmane.org>
+Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Kunihiko Hayashi <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Date: Thu, 21 Dec 2017 20:12:56 +0900
+On Mon, Dec 25, 2017 at 3:26 PM, Adrian Fiergolski
+<adrian.fiergolski-vJEk5272eHo@public.gmane.org> wrote:
+> This patch extends the current i2c-mux-pca954x driver and adds support for
+> a newer PCA984x family of the I2C switches and multiplexers from NXP.
+>
+> Signed-off-by: Adrian Fiergolski <adrian.fiergolski-vJEk5272eHo@public.gmane.org>
+> ---
+> Following Rob's and Peter's remarks, bindings contain now one valid
+> combination of compatibles per line.
+>
+>  .../devicetree/bindings/i2c/i2c-mux-pca954x.txt    | 13 ++++++--
+>  drivers/i2c/muxes/Kconfig                          |  6 ++--
+>  drivers/i2c/muxes/i2c-mux-pca954x.c                | 38 +++++++++++++++++++---
+>  3 files changed, 48 insertions(+), 9 deletions(-)
 
-> +	writel(AVE_TXDC_ADDR_START
-> +		| (((priv->tx.ndesc * priv->desc_size) << 16) & AVE_TXDC_SIZE),
-> +		priv->base + AVE_TXDC);
-...
-> +	writel(AVE_RXDC0_ADDR_START
-> +	       | (((priv->rx.ndesc * priv->desc_size) << 16) & AVE_RXDC0_SIZE),
-> +	       priv->base + AVE_RXDC0);
- ...
-> +	cmdsts = AVE_STS_OWN | AVE_STS_1ST | AVE_STS_LAST
-> +		| (skb->len & AVE_STS_PKTLEN_TX_MASK);
-
-Please do not begin lines with operators, instead put them at the end
-of the previous line, f.e.:
-
-	cmdsts = AVE_STS_OWN | AVE_STS_1ST | AVE_STS_LAST |
-		 (skb->len & AVE_STS_PKTLEN_TX_MASK);
-
-Thank you.
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
