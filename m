@@ -1,53 +1,29 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: Document mti,mips-cpc binding
-Date: Tue, 26 Dec 2017 15:48:10 -0600
-Message-ID: <20171226214810.su23px4ue7q5t3xg@rob-hp-laptop>
-References: <1513869627-15391-1-git-send-email-aleksandar.markovic@rt-rk.com>
- <1513869627-15391-2-git-send-email-aleksandar.markovic@rt-rk.com>
+Subject: Re: [PATCH 1/3] dt-bindings: Add "vot" vendor prefix
+Date: Tue, 26 Dec 2017 15:49:09 -0600
+Message-ID: <20171226214909.ihlczsrxtchx7a3q@rob-hp-laptop>
+References: <1513881187-3197-1-git-send-email-david@lechnology.com>
+ <1513881187-3197-2-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1513869627-15391-2-git-send-email-aleksandar.markovic-FblTVreYubkAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1513881187-3197-2-git-send-email-david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Aleksandar Markovic <aleksandar.markovic-FblTVreYubkAvxtiuMwx3w@public.gmane.org>
-Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Paul Burton <paul.burton-8NJIiSa5LzA@public.gmane.org>, Aleksandar Markovic <aleksandar.markovic-8NJIiSa5LzA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Douglas Leung <douglas.leung-8NJIiSa5LzA@public.gmane.org>, Goran Ferenc <goran.ferenc-8NJIiSa5LzA@public.gmane.org>, James Hogan <james.hogan-8NJIiSa5LzA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Miodrag Dinic <miodrag.dinic-8NJIiSa5LzA@public.gmane.org>, Petar Jovanovic <petar.jovanovic-8NJIiSa5LzA@public.gmane.org>, Raghu Gandham <raghu.gandham-8NJIiSa5LzA@public.gmane.org>
+To: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>, limor-6aDhHjTmHzzR7s880joybQ@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 21, 2017 at 04:20:23PM +0100, Aleksandar Markovic wrote:
-> From: Paul Burton <paul.burton-8NJIiSa5LzA@public.gmane.org>
+On Thu, Dec 21, 2017 at 12:33:05PM -0600, David Lechner wrote:
+> This adds a vendor prefix "vot" for Vision Optical Technology Co., Ltd.
+> They make LCD displays.
 > 
-> Document a binding for the MIPS Cluster Power Controller (CPC) which
-> simply allows the device tree to specify where the CPC registers are
-> located.
-> 
-> Signed-off-by: Paul Burton <paul.burton-8NJIiSa5LzA@public.gmane.org>
-> Signed-off-by: Aleksandar Markovic <aleksandar.markovic-8NJIiSa5LzA@public.gmane.org>
+> Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/misc/mti,mips-cpc.txt | 8 ++++++++
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
 
-power controllers are usually documented under bindings/power/
-
->  1 file changed, 8 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/misc/mti,mips-cpc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/misc/mti,mips-cpc.txt b/Documentation/devicetree/bindings/misc/mti,mips-cpc.txt
-> new file mode 100644
-> index 0000000..c6b8251
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/misc/mti,mips-cpc.txt
-> @@ -0,0 +1,8 @@
-> +Binding for MIPS Cluster Power Controller (CPC).
-> +
-> +This binding allows a system to specify where the CPC registers are
-> +located.
-> +
-> +Required properties:
-> +compatible : Should be "mti,mips-cpc".
-> +regs: Should describe the address & size of the CPC register region.
-> -- 
-> 2.7.4
-> 
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
