@@ -1,76 +1,55 @@
 From: Wen He <wen.he_1-3arQi8VN3Tc@public.gmane.org>
-Subject: [V2 3/6] dt-bindings: fsl-qdma: add device tree for qDMA driver
-Date: Tue, 26 Dec 2017 13:47:51 +0800
-Message-ID: <20171226054754.14969-1-wen.he_1@nxp.com>
+Subject: [V2 4/6] arm64: dts: ls1043a: add qdma device tree nodes
+Date: Tue, 26 Dec 2017 13:47:52 +0800
+Message-ID: <20171226054754.14969-2-wen.he_1@nxp.com>
+References: <20171226054754.14969-1-wen.he_1@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171226054754.14969-1-wen.he_1-3arQi8VN3Tc@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, leoyang.li-3arQi8VN3Tc@public.gmane.org, jiafei.pan-3arQi8VN3Tc@public.gmane.org, jiaheng.fan-3arQi8VN3Tc@public.gmane.org, Wen He <wen.he_1-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-add NXP Layerscape queue direct memory access controller(qDMA) support.
-This module can be found on NXP QorIQ Layerscape Socs.
+add the qDMA device tree nodes for LS1043A devices.
 
 Signed-off-by: Wen He <wen.he_1-3arQi8VN3Tc@public.gmane.org>
 ---
 change in v2:
-	- Remove indentation
-	- Add "Should be" before 'fsl,ls1021a-qdma'
+	- Add commits messages
 	- Replace 'channels' by 'dma-channels'
-	- Replace 'qdma@8390000' by 'dma-controller@8390000'
+	- Replace 'qdma@8380000' by 'dma-controller@8380000'
 
- Documentation/devicetree/bindings/dma/fsl-qdma.txt |   40 ++++++++++++++++++++
- 1 files changed, 40 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/dma/fsl-qdma.txt
+ arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi |   15 +++++++++++++++
+ 1 files changed, 15 insertions(+), 0 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/dma/fsl-qdma.txt b/Documentation/devicetree/bindings/dma/fsl-qdma.txt
-new file mode 100644
-index 0000000..000472b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/fsl-qdma.txt
-@@ -0,0 +1,40 @@
-+* NXP Layerscape queue Direct Memory Access Controller(qDMA) Controller
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+index 380e7c7..c4bbaa4 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+@@ -652,6 +652,21 @@
+ 			dma-coherent;
+ 		};
+ 
++		qdma: dma-controller@8380000 {
++			compatible = "fsl,ls1021a-qdma", "fsl,ls1043a-qdma";
++			reg = <0x0 0x8380000 0x0 0x1000>, /* Controller regs */
++				<0x0 0x8390000 0x0 0x10000>, /* Status regs */
++				<0x0 0x83a0000 0x0 0x40000>; /* Block regs */
++			interrupts = <GIC_SPI 152 IRQ_TYPE_LEVEL_HIGH>,
++					<GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "qdma-error", "qdma-queue";
++			dma-channels = <8>;
++			queues = <2>;
++			status-sizes = <64>;
++			queue-sizes = <64 64>;
++			big-endian;
++		};
 +
-+The qDMA controller transfers blocks of data between one source and one or more
-+destinations. The blocks of data transferred can be represented in memory as contiguous
-+or non-contiguous using scatter/gather table(s). Channel virtualization is supported
-+through enqueuing of DMA jobs to, or dequeuing DMA jobs from, different work
-+queues.
-+
-+* qDMA Controller
-+Required properties:
-+- compatible : Should be "fsl,ls1021a-qdma" or "fsl,ls1043a-qdma", "fsl,ls1021a-qdma"
-+- reg : Specifies base physical address(s) and size of the qDMA registers.
-+	The region is qDMA control register's address and size.
-+- interrupts : A list of interrupt-specifiers, one for each entry in
-+	interrupt-names.
-+- interrupt-names : Should contain:
-+	"qdma-error" - the error interrupt
-+	"qdma-queue" - the queue interrupt
-+- dma-channels : Number of DMA channels supported by the controller
-+- queues : Number of queues supported by driver
-+
-+Optional properties:
-+- big-endian: If present registers and hardware scatter/gather descriptors
-+	of the qDMA are implemented in big endian mode, otherwise in little
-+	mode.
-+
-+
-+Examples:
-+
-+	qdma: dma-controller@8390000 {
-+		compatible = "fsl,ls1021a-qdma";
-+		reg = <0x0 0x8398000 0x0 0x2000 /* Controller registers */
-+		       0x0 0x839a000 0x0 0x2000>; /* Block registers */
-+		interrupts = <GIC_SPI 185 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "qdma-error", "qdma-queue";
-+		dma-channels = <8>;
-+		queues = <2>;
-+		big-endian;
-+	};
+ 		msi1: msi-controller1@1571000 {
+ 			compatible = "fsl,ls1043a-msi";
+ 			reg = <0x0 0x1571000 0x0 0x8>;
 -- 
 1.7.1
 
