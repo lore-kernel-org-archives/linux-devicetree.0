@@ -1,40 +1,46 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v3 2/3] dt-bindings: Add binding for Sitronix ST7735R
- display panels
-Date: Tue, 26 Dec 2017 12:39:54 -0600
-Message-ID: <CAL_JsqLXOuY3jajGi-TfQVcZQVc3m92LWvgPyP+P4c0Gj8bhiw@mail.gmail.com>
-References: <1513884233-31540-1-git-send-email-david@lechnology.com>
- <1513884233-31540-3-git-send-email-david@lechnology.com>
+From: Trent Piepho <tpiepho@impinj.com>
+Subject: Re: [PATCH 0/3] mtd: spi-nor: fix DMA-unsafe buffer issue between MTD
+ and SPI
+Date: Tue, 26 Dec 2017 18:45:28 +0000
+Message-ID: <1514313927.26695.19.camel@impinj.com>
+References: <cover.1514087323.git.cyrille.pitchen@wedev4u.fr>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1513884233-31540-3-git-send-email-david@lechnology.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: David Lechner <david@lechnology.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, limor@ladyada.net, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1514087323.git.cyrille.pitchen@wedev4u.fr>
+Content-Language: en-US
+Content-ID: <9F4DA121DFBF5C468E6931A7F02B59B9@namprd06.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "broonie@kernel.org" <broonie@kernel.org>, "cyrille.pitchen@wedev4u.fr" <cyrille.pitchen@wedev4u.fr>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "boris.brezillon@free-electrons.com" <boris.brezillon@free-electrons.com>, "vigneshr@ti.com" <vigneshr@ti.com>, "richard@nod.at" <richard@nod.at>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>
+Cc: "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>, "robh@kernel.org" <robh@kernel.org>, "radu.pirea@microchip.com" <radu.pirea@microchip.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBEZWMgMjEsIDIwMTcgYXQgMToyMyBQTSwgRGF2aWQgTGVjaG5lciA8ZGF2aWRAbGVj
-aG5vbG9neS5jb20+IHdyb3RlOgo+IFRoaXMgYWRkcyBhIG5ldyBkZXZpY2UgdHJlZSBiaW5kaW5n
-IGZvciBTaXRyb25peCBTVDc3MzVSIGRpc3BsYXkgcGFuZWxzLAo+IHN1Y2ggYXMgdGhlIEFkYWZy
-dWl0IDEuOCIgVEZULgo+Cj4gU2lnbmVkLW9mZi1ieTogRGF2aWQgTGVjaG5lciA8ZGF2aWRAbGVj
-aG5vbG9neS5jb20+Cj4gLS0tCj4KPiB2MyBjaGFuZ2VzOgo+ICogY29tcGF0aWJsZSBzdHJpbmcg
-aXMgY2hhbmdlZCBmcm9tICJzaXRyb25peCxzdDc3MzVyLWpkLXQxODAwMy10MDEiIHRvCj4gImpp
-YW5kYSxqZC10MTgwMDMtdDAxIiwgInNpdHJvbml4LHN0NzczNXIiCj4KPiB2MiBjaGFuZ2VzOgo+
-ICogbm9uZQo+Cj4gIC4uLi9iaW5kaW5ncy9kaXNwbGF5L3NpdHJvbml4LHN0NzczNXIudHh0ICAg
-ICAgICAgIHwgMzUgKysrKysrKysrKysrKysrKysrKysrKwo+ICAxIGZpbGUgY2hhbmdlZCwgMzUg
-aW5zZXJ0aW9ucygrKQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL2Rpc3BsYXkvc2l0cm9uaXgsc3Q3NzM1ci50eHQKClJldmlld2VkLWJ5OiBS
-b2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0
-cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9s
-aXN0aW5mby9kcmktZGV2ZWwK
+T24gU3VuLCAyMDE3LTEyLTI0IGF0IDA1OjM2ICswMTAwLCBDeXJpbGxlIFBpdGNoZW4gd3JvdGU6
+DQo+IHRoaXMgc2VyaWVzIHRyaWVzIHRvIHNvbHZlIGEgbG9uZyB0aW1lIGlzc3VlIG9mIGNvbXBh
+dGliaWxpdHkgYmV0d2VlbiB0aGUNCj4gTVREIGFuZCBTUEkgc3ViLXN5c3RlbXMgYWJvdXQgd2hl
+dGhlciB3ZSBzaG91bGQgdXNlIERNQS1zYWZlIG1lbW9yeS4NCg0KQ2FuIHRoaXMgc2hvdWxkIHJl
+cGxhY2UgU29DIHNwZWNpZmljIGZpeGVzIGxpa2U6DQoNCmM2ODdjNDZlOWU0NQ0Kc3BpOiBzcGkt
+dGktcXNwaTogVXNlIGJvdW5jZSBidWZmZXIgaWYgcmVhZCBidWZmZXIgaXMgbm90IERNQSdibGUN
+Cg0KNzA5NDU3NmNjZGMzDQpzcGk6IGF0bWVsOiBmaXggY29ycnVwdGVkIGRhdGEgaXNzdWUgb24g
+U0FNOSBmYW1pbHkgU29Dcw0KDQpPciwgc2luY2UgdGhpcyBvbmx5IGZpeGVzIGluc3RhbmNlcyBv
+ZiBETUEtdW5zYWZlIGJ1ZmZlcnMgdXNlZCBpbg0KYWNjZXNzIHRvIFNQSSBOT1IgZmxhc2ggY2hp
+cHMsIGFuZCBzaW5jZSB0aGVyZSBhcmUgb3RoZXIgU1BJIG1hc3Rlcg0KaW50ZXJmYWNlIHVzZXJz
+LCB0aG9zZSBjaGlwIHNwZWNpZmljIGZpeGVzIGluIHNvbWUvYWxsIHNwaSBtYXN0ZXINCmRyaXZl
+cnMgYXJlIHN0aWxsIG5lZWRlZCB0byBmaXggdHJhbnNmZXJzIG5vdCBvcmlnaW5hdGVkIHZpYSBz
+cGktbm9yPyANCk9yIGFyZSBhbGwgdGhlIHByZXZpb3VzIGZpeGVzIG5lY2Vzc2FyeSBiZWNhdXNl
+IG9mIHNwaS1ub3IgZmxhc2ggKHZpYQ0KdWJpZnMgb3IgamZmczIpIGFuZCBvbmNlIHRoYXQncyBm
+aXhlZCB2aWEgdGhpcyBzZXJpZXMgdGhlcmUgYXJlIG5vIG1vcmUNCm9yaWdpbmF0b3JzIG9mIGRt
+YS11bnNhZmUgYnVmZmVycz8NCg0KPiBUaGUgU1BJIHN1Yi1zeXN0ZW0gaGFzIGFscmVhZHkgaW1w
+bGVtZW50ZWQgYSB3b3JrLWFyb3VuZCBvbiBpdHMgc2lkZSwNCj4gYmFzZWQgb24gdGhlIHNwaV9t
+YXBfYnVmKCkgZnVuY3Rpb24uIEhvd2V2ZXIgdGhpcyBmdW5jdGlvbiBoYXMgaXRzIG93bg0KPiBs
+aW1pdGF0aW9uIHRvby4gRXNwZWNpYWxseSwgZXZlbiBpZiBpdCBidWlsZHMgYSAnc3RydWN0IHNj
+YXR0ZXJsaXN0JyBmcm9tDQo+IGEgdm1hbGxvYydlZCBidWZmZXIsIGNhbGxpbmcgZG1hX21hcF9z
+ZygpIGlzIHN0aWxsIG5vdCBzYWZlIG9uIGFsbA0KPiBhcmNoaXRlY3R1cmVzLiBFc3BlY2lhbGx5
+LCBvbiBBUk0gY29yZXMgdXNpbmcgZWl0aGVyIFZJUFQgb3IgVklWVCBkYXRhDQo+IGNhY2hlcywg
+ZG1hX21hcF9zZygpIGRvZXNuJ3QgdGFrZSB0aGUgY2FjaGUgYWxpYXNlcyBpc3N1ZSBpbnRvIGFj
+Y291bnQuDQo+IFRoZW4gbnVtZXJvdXMgY3Jhc2hlcyB3ZXJlIHJlcG9ydGVkIGZvciBzdWNoIGFy
+Y2hpdGVjdHVyZXMuDQoNCkNvdWxkIHRoZSBhYm92ZSBpc3N1ZSBhbHNvIGJlIGZpeGVkIHZpYSBj
+YWxscyB0bw0KZmx1c2hfa2VybmVsX3ZtYXBfcmFuZ2UoKSBhbmQgaW52YWxpZGF0ZV9rZXJuZWxf
+dm1hcF9yYW5nZSgpIHRvIGtlZXANCnRoZSBkYXRhIGNhY2hlIHZhbGlkPyAgT3IgaXMgdGhlcmUg
+YSByZWFzb24gdGhhdCB3b24ndCB3b3JrPw==
