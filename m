@@ -1,100 +1,54 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [v2] ASoC: max98373: Added Amplifier Driver
-Date: Tue, 26 Dec 2017 17:33:07 -0600
-Message-ID: <20171226233307.hdjxi5ntt7c5i2v4@rob-hp-laptop>
-References: <1514214610-17630-1-git-send-email-ryans.lee@maximintegrated.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [RFC PATCH v12 1/5] dt-bindings: PCI: Add definition of PCIe
+ WAKE# irq and PCI irq
+Date: Tue, 26 Dec 2017 17:35:52 -0600
+Message-ID: <20171226233552.nacwqbpkozmy7n6c@rob-hp-laptop>
+References: <20171226023646.17722-1-jeffy.chen@rock-chips.com>
+ <20171226023646.17722-2-jeffy.chen@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1514214610-17630-1-git-send-email-ryans.lee-zxKO94PEStzToO697jQleEEOCMrvLtNR@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ryan Lee <ryans.lee-zxKO94PEStzToO697jQleEEOCMrvLtNR@public.gmane.org>
-Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, afd-l0cyMroinI0@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, supercraig0719-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, dannenberg-l0cyMroinI0@public.gmane.org, romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, bryce.ferguson-lFk7bPDcGtkY5TsXZYaR1UEOCMrvLtNR@public.gmane.org, kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, m-stecklein-l0cyMroinI0@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ryan.lee.maxim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+In-Reply-To: <20171226023646.17722-2-jeffy.chen@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jeffy Chen <jeffy.chen@rock-chips.com>
+Cc: linux-kernel@vger.kernel.org, bhelgaas@google.com, linux-pm@vger.kernel.org, tony@atomide.com, shawn.lin@rock-chips.com, briannorris@chromium.org, rjw@rjwysocki.net, dianders@chromium.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 25, 2017 at 07:10:10AM -0800, Ryan Lee wrote:
+On Tue, Dec 26, 2017 at 10:36:42AM +0800, Jeffy Chen wrote:
+> We are going to handle PCIe WAKE# pin for PCI devices in the pci core,
+> so add definitions of the optional PCIe WAKE# pin for PCI devices.
+> 
+> Also add an definition of the optional PCI interrupt pin for PCI
+> devices to distinguish it from the PCIe WAKE# pin.
 
-Needs a commit message.
+By v13 you should drop "RFC". RFC implies not ready for merging.
 
-> Signed-off-by: Ryan Lee <ryans.lee-zxKO94PEStzToO697jQleEEOCMrvLtNR@public.gmane.org>
+> 
+> Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
 > ---
 > 
-> Changes since v1:
-> 	* Removed 'codec' from 'max98373_priv' structure
-> 		: Now 'max98373_set_clock' function use 'dai->codec.dev' instead of using 'max98373->codec.dev'.
-> 	* Removed 'max98373_dai_set_sysclk' function
-> 		: This function is not necessary. Removed 'sysclk' from 'max98373_priv' as well.
-> 	* Removed 'iface' from 'max98373_priv' structure
-> 		: There is no function who refer max98373->iface variable.
-> 	* Added SPDX-License-Identifier
+> Changes in v13: None
+> Changes in v12:
+> Only add irq definitions for PCI devices and rewrite the commit message.
 > 
->  .../devicetree/bindings/sound/max98373.txt         |  43 +
-
-Please split bindings to separate patch.
-
->  sound/soc/codecs/Kconfig                           |   5 +
->  sound/soc/codecs/Makefile                          |   2 +
->  sound/soc/codecs/max98373.c                        | 974 +++++++++++++++++++++
->  sound/soc/codecs/max98373.h                        | 212 +++++
->  5 files changed, 1236 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/max98373.txt
->  create mode 100644 sound/soc/codecs/max98373.c
->  create mode 100644 sound/soc/codecs/max98373.h
+> Changes in v11: None
+> Changes in v10: None
+> Changes in v9:
+> Add section for PCI devices and rewrite the commit message.
 > 
-> diff --git a/Documentation/devicetree/bindings/sound/max98373.txt b/Documentation/devicetree/bindings/sound/max98373.txt
-> new file mode 100644
-> index 0000000..22cd259
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/max98373.txt
-> @@ -0,0 +1,43 @@
-> +Maxim Integrated MAX98373 Speaker Amplifier
-> +
-> +This device supports I2C.
-> +
-> +Required properties:
-> +
-> +  - compatible : should be one of the following
-> +    - "maxim,max98373"
-> +
-> +  - reg : the I2C address of the device.
-> +
-> +Optional properties:
-> +
-> +  - maxim,vmon-slot-no : slot number used to send voltage information
-> +                   or in inteleave mode this will be used as
-> +                   interleave slot.
-> +                   slot range : 0 ~ 15,  Default : 0
-> +
-> +  - maxim,imon-slot-no : slot number used to send current information
-> +                   slot range : 0 ~ 15,  Default : 0
-> +
-> +  - maxim,spkfb-slot-no : slot number used to send speaker feedback information
-> +                   slot range : 0 ~ 15,  Default : 0
-> +
-> +  - maxim,interleave-mode : When using two MAX98373 in a system it is
-> +                   possible to create ADC data that that will
-> +                   overflow the frame size. Digital Audio Interleave
-> +                   mode provides a means to output VMON and IMON data
-> +                   from two devices on a single DOUT line when running
-> +                   smaller frames sizes such as 32 BCLKS per LRCLK or
-> +                   48 BCLKS per LRCLK.
-> +                   Range : 0 (off), 1 (on),  Default : 0
+> Changes in v8:
+> Add optional "pci", and rewrite commit message.
+> 
+> Changes in v7: None
+> Changes in v6: None
+> Changes in v5:
+> Move to pci.txt
+> 
+> Changes in v3: None
+> Changes in v2: None
+> 
+>  Documentation/devicetree/bindings/pci/pci.txt | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
 
-This can be boolean instead.
-
-> +
-> +Example:
-> +
-> +codec: max98373@31 {
-> +   compatible = "maxim,max98373";
-> +   reg = <0x31>;
-> +   maxim,vmon-slot-no = <0>;
-> +   maxim,imon-slot-no = <1>;
-> +   maxim,spkfb-slot-no = <2>;
-> +   maxim,interleave-mode = <0>;
-> +};
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Reviewed-by: Rob Herring <robh@kernel.org>
