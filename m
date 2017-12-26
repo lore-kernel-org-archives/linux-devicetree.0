@@ -1,97 +1,35 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [RFC PATCH v12 2/5] of/irq: Adjust of_pci_irq parsing for
- multiple interrupts
-Date: Tue, 26 Dec 2017 09:48:11 -0600
-Message-ID: <CAL_JsqL8nztgA0RWw5f_H75T4iVEDt23poUXb_RsL+jWmQ-X6w@mail.gmail.com>
-References: <20171226023646.17722-1-jeffy.chen@rock-chips.com> <20171226023646.17722-3-jeffy.chen@rock-chips.com>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH net-next] phylib: rename reset-(post-)delay-us to reset-(de)assert-us
+Date: Tue, 26 Dec 2017 09:49:28 -0600
+Message-ID: <CAL_JsqJDbpjxEHqFoR=aHV-rhAAyPs4S2+BogyP5rCB=MbWjEg@mail.gmail.com>
+References: <20171222100809.18826-1-dev@g0hl1n.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171226023646.17722-3-jeffy.chen@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jeffy Chen <jeffy.chen@rock-chips.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, linux-pm@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Shawn Lin <shawn.lin@rock-chips.com>, Brian Norris <briannorris@chromium.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Doug Anderson <dianders@chromium.org>, Frank Rowand <frowand.list@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171222100809.18826-1-dev-M/VWbR8SM2SsTnJN9+BGXg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Richard Leitner <dev-M/VWbR8SM2SsTnJN9+BGXg@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Richard Leitner <richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Lukasz Majewski <lukma-ynQEQJNshbs@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 25, 2017 at 8:36 PM, Jeffy Chen <jeffy.chen@rock-chips.com> wrote:
-> Currently we are considering the first irq as the PCI interrupt pin,
-> but a PCI device may have multiple interrupts(e.g. PCIe WAKE# pin).
+On Fri, Dec 22, 2017 at 4:08 AM, Richard Leitner <dev-M/VWbR8SM2SsTnJN9+BGXg@public.gmane.org> wrote:
+> From: Richard Leitner <richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>
 >
-> Only parse the PCI interrupt pin when the irq is unnamed or named as
-> "pci".
+> As suggested by Rob Herring [1] rename the previously introduced
+> reset-{,post-}delay-us bindings to the clearer reset-{,de}assert-us
 >
-> Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
+> [1] https://patchwork.kernel.org/patch/10104905/
+>
+> Signed-off-by: Richard Leitner <richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>
 > ---
->
-> Changes in v13: None
-> Changes in v12: None
-> Changes in v11:
-> Address Brian's comments.
->
-> Changes in v10: None
-> Changes in v9: None
-> Changes in v8: None
-> Changes in v7: None
-> Changes in v6: None
-> Changes in v5: None
-> Changes in v3: None
-> Changes in v2: None
->
->  drivers/of/of_pci_irq.c | 22 +++++++++++++++++++---
->  1 file changed, 19 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/of/of_pci_irq.c b/drivers/of/of_pci_irq.c
-> index 3a05568f65df..d39565d5477b 100644
-> --- a/drivers/of/of_pci_irq.c
-> +++ b/drivers/of/of_pci_irq.c
-> @@ -27,9 +27,25 @@ int of_irq_parse_pci(const struct pci_dev *pdev, struct of_phandle_args *out_irq
->          */
->         dn = pci_device_to_OF_node(pdev);
->         if (dn) {
-> -               rc = of_irq_parse_one(dn, 0, out_irq);
-> -               if (!rc)
-> -                       return rc;
-> +               struct property *prop;
-> +               const char *name;
-> +               int index = 0;
-> +
-> +               of_property_for_each_string(dn, "interrupt-names", prop, name) {
-> +                       if (!strcmp(name, "pci"))
-> +                               break;
-> +                       index++;
-> +               }
-> +
-> +               /*
-> +                * Only parse from DT if we have no "interrupt-names",
-> +                * or if we found an interrupt named "pci".
-> +                */
-> +               if (index == 0 || name) {
-> +                       rc = of_irq_parse_one(dn, index, out_irq);
-> +                       if (!rc)
-> +                               return rc;
-> +               }
+>  Documentation/devicetree/bindings/net/phy.txt | 8 ++++----
+>  drivers/net/phy/mdio_device.c                 | 2 +-
+>  drivers/of/of_mdio.c                          | 7 ++++---
+>  include/linux/mdio.h                          | 4 ++--
+>  4 files changed, 11 insertions(+), 10 deletions(-)
 
-As mentioned before, use of_property_match_string. The following should work:
-
-index = of_property_match_string(dn, "interrupt-names", "pci");
-if (index == -EINVAL)  /* Property doesn't exist */
-  index = 0;
-
-if (index >= 0) {
-  rc = of_irq_parse_one(dn, index, out_irq);
-  if (!rc)
-    return rc;
-}
-
-
->         }
->
->         /* Ok, we don't, time to have fun. Let's start by building up an
-> --
-> 2.11.0
->
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
