@@ -1,84 +1,97 @@
-From: Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>
-Subject: Re: [PATCH 1/3] mtd: spi-nor: add optional DMA-safe bounce buffer for
- data transfer
-Date: Tue, 26 Dec 2017 14:59:00 +0100
-Message-ID: <ae977280-28b4-d746-da4b-0f807dad609d@wedev4u.fr>
-References: <cover.1514087323.git.cyrille.pitchen@wedev4u.fr>
- <fc2440c6f52877f28286d89691049e5cba10e6a7.1514087323.git.cyrille.pitchen@wedev4u.fr>
- <1126731d-cbf7-8fbf-34ab-8ccf1cc8241f@ti.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [RFC PATCH v12 2/5] of/irq: Adjust of_pci_irq parsing for
+ multiple interrupts
+Date: Tue, 26 Dec 2017 09:48:11 -0600
+Message-ID: <CAL_JsqL8nztgA0RWw5f_H75T4iVEDt23poUXb_RsL+jWmQ-X6w@mail.gmail.com>
+References: <20171226023646.17722-1-jeffy.chen@rock-chips.com> <20171226023646.17722-3-jeffy.chen@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1126731d-cbf7-8fbf-34ab-8ccf1cc8241f-l0cyMroinI0@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, radu.pirea-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171226023646.17722-3-jeffy.chen@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jeffy Chen <jeffy.chen@rock-chips.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, linux-pm@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Shawn Lin <shawn.lin@rock-chips.com>, Brian Norris <briannorris@chromium.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Doug Anderson <dianders@chromium.org>, Frank Rowand <frowand.list@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Vignesh
+On Mon, Dec 25, 2017 at 8:36 PM, Jeffy Chen <jeffy.chen@rock-chips.com> wrote:
+> Currently we are considering the first irq as the PCI interrupt pin,
+> but a PCI device may have multiple interrupts(e.g. PCIe WAKE# pin).
+>
+> Only parse the PCI interrupt pin when the irq is unnamed or named as
+> "pci".
+>
+> Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
+> ---
+>
+> Changes in v13: None
+> Changes in v12: None
+> Changes in v11:
+> Address Brian's comments.
+>
+> Changes in v10: None
+> Changes in v9: None
+> Changes in v8: None
+> Changes in v7: None
+> Changes in v6: None
+> Changes in v5: None
+> Changes in v3: None
+> Changes in v2: None
+>
+>  drivers/of/of_pci_irq.c | 22 +++++++++++++++++++---
+>  1 file changed, 19 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/of/of_pci_irq.c b/drivers/of/of_pci_irq.c
+> index 3a05568f65df..d39565d5477b 100644
+> --- a/drivers/of/of_pci_irq.c
+> +++ b/drivers/of/of_pci_irq.c
+> @@ -27,9 +27,25 @@ int of_irq_parse_pci(const struct pci_dev *pdev, struct of_phandle_args *out_irq
+>          */
+>         dn = pci_device_to_OF_node(pdev);
+>         if (dn) {
+> -               rc = of_irq_parse_one(dn, 0, out_irq);
+> -               if (!rc)
+> -                       return rc;
+> +               struct property *prop;
+> +               const char *name;
+> +               int index = 0;
+> +
+> +               of_property_for_each_string(dn, "interrupt-names", prop, name) {
+> +                       if (!strcmp(name, "pci"))
+> +                               break;
+> +                       index++;
+> +               }
+> +
+> +               /*
+> +                * Only parse from DT if we have no "interrupt-names",
+> +                * or if we found an interrupt named "pci".
+> +                */
+> +               if (index == 0 || name) {
+> +                       rc = of_irq_parse_one(dn, index, out_irq);
+> +                       if (!rc)
+> +                               return rc;
+> +               }
 
-Le 26/12/2017 à 14:42, Vignesh R a écrit :
-> Hi Cyrille,
-> 
-> Thanks for doing this series! One comment below.
-> 
-> On 24-Dec-17 10:06 AM, Cyrille Pitchen wrote:
-> [...]
->> diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
->> index 8bafd462f0ae..59f9fbd45234 100644
->> --- a/drivers/mtd/spi-nor/spi-nor.c
->> +++ b/drivers/mtd/spi-nor/spi-nor.c
->> @@ -14,8 +14,10 @@
->>  #include <linux/errno.h>
->>  #include <linux/module.h>
->>  #include <linux/device.h>
->> +#include <linux/highmem.h>
->>  #include <linux/mutex.h>
->>  #include <linux/math64.h>
->> +#include <linux/mm.h>
->>  #include <linux/sizes.h>
->>  #include <linux/slab.h>
->>  
->> @@ -1232,6 +1234,56 @@ static const struct flash_info spi_nor_ids[] = {
->>  	{ },
->>  };
->>  
->> +static bool spi_nor_is_dma_safe(const void *buf)
->> +{
->> +	if (is_vmalloc_addr(buf))
->> +		return false;
->> +
->> +#ifdef CONFIG_HIGHMEM
->> +	if ((unsigned long)buf >= PKMAP_BASE &&
->> +	    (unsigned long)buf < (PKMAP_BASE + (LAST_PKMAP * PAGE_SIZE)))
->> +		return false;
->> +#endif
->> +
->> +	return true;
->> +}
->> +
-> 
-> Better way would be to use virt_addr_valid():
-> static bool spi_nor_is_dma_safe(const void *buf)
-> {
-> 	return virt_addr_valid(buf);
-> }
-> 
-> Regards
-> Vignesh
-> 
+As mentioned before, use of_property_match_string. The following should work:
 
-Thanks for the advice :)
+index = of_property_match_string(dn, "interrupt-names", "pci");
+if (index == -EINVAL)  /* Property doesn't exist */
+  index = 0;
 
-https://patchwork.kernel.org/patch/9768341/
-Maybe I could check both virt_addr_valid() and object_is_on_stack() too ?
+if (index >= 0) {
+  rc = of_irq_parse_one(dn, index, out_irq);
+  if (!rc)
+    return rc;
+}
 
-Best regards,
 
-Cyrille
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>         }
+>
+>         /* Ok, we don't, time to have fun. Let's start by building up an
+> --
+> 2.11.0
+>
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
