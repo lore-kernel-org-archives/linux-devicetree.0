@@ -1,74 +1,33 @@
-From: Jeffy Chen <jeffy.chen@rock-chips.com>
-Subject: [RFC PATCH v12 5/5] arm64: dts: rockchip: Move PCIe WAKE# irq to pcie port for Gru
-Date: Tue, 26 Dec 2017 10:36:46 +0800
-Message-ID: <20171226023646.17722-6-jeffy.chen@rock-chips.com>
-References: <20171226023646.17722-1-jeffy.chen@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171226023646.17722-1-jeffy.chen@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, bhelgaas@google.com
-Cc: linux-pm@vger.kernel.org, tony@atomide.com, shawn.lin@rock-chips.com, briannorris@chromium.org, rjw@rjwysocki.net, dianders@chromium.org, Jeffy Chen <jeffy.chen@rock-chips.com>, Matthias Kaehlcke <mka@chromium.org>, Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org, Klaus Goger <klaus.goger@theobroma-systems.com>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH net-next v8 1/2] dt-bindings: net: add DT bindings for Socionext UniPhier AVE
+Date: Mon, 25 Dec 2017 19:03:48 -0800
+Message-ID: <065D88A4-B3E1-40AF-A485-EC34967AEEC4@gmail.com>
+References: <1514164238-28901-1-git-send-email-hayashi.kunihiko@socionext.com> <1514164238-28901-2-git-send-email-hayashi.kunihiko@socionext.com>
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1514164238-28901-2-git-send-email-hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kunihiko Hayashi <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Masami Hiramatsu <masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Currently we are handling PCIe WAKE# irq in mrvl wifi driver.
+On December 24, 2017 5:10:37 PM PST, Kunihiko Hayashi <hayashi=2Ekunihiko@s=
+ocionext=2Ecom> wrote:
+>DT bindings for the AVE ethernet controller found on Socionext's
+>UniPhier platforms=2E
+>
+>Signed-off-by: Kunihiko Hayashi <hayashi=2Ekunihiko@socionext=2Ecom>
+>Signed-off-by: Jassi Brar <jaswinder=2Esingh@linaro=2Eorg>
+>Acked-by: Rob Herring <robh@kernel=2Eorg>
 
-Move it to rockchip pcie port since we are going to handle it in the
-pci core.
+Reviewed-by: Florian Fainelli <f=2Efainelli@gmail=2Ecom>
 
-Also avoid this irq been considered as the PCI interrupt pin in the
-of_irq_parse_pci().
-
-Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
----
-
-Changes in v13: None
-Changes in v12: None
-Changes in v11:
-Move to pcie port as Brian suggested.
-
-Changes in v10: None
-Changes in v9:
-Rewrite the commit message.
-
-Changes in v8:
-Rewrite the commit message.
-
-Changes in v7: None
-Changes in v6: None
-Changes in v5:
-Use "wakeup" instead of "wake"
-
-Changes in v3: None
-Changes in v2: None
-
- arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
-index 03f195025390..be41d363efd8 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
-@@ -719,15 +719,16 @@ ap_i2c_audio: &i2c8 {
- 		#size-cells = <2>;
- 		ranges;
- 
-+		interrupts-extended = <&pcie0 1>, <&gpio0 8 IRQ_TYPE_LEVEL_LOW>;
-+		interrupt-names = "pci", "wakeup";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&wlan_host_wake_l>;
-+		wakeup-source;
-+
- 		mvl_wifi: wifi@0,0 {
- 			compatible = "pci1b4b,2b42";
- 			reg = <0x83010000 0x0 0x00000000 0x0 0x00100000
- 			       0x83010000 0x0 0x00100000 0x0 0x00100000>;
--			interrupt-parent = <&gpio0>;
--			interrupts = <8 IRQ_TYPE_LEVEL_LOW>;
--			pinctrl-names = "default";
--			pinctrl-0 = <&wlan_host_wake_l>;
--			wakeup-source;
- 		};
- 	};
- };
--- 
-2.11.0
+--=20
+Florian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
