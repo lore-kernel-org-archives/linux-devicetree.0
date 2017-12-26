@@ -1,88 +1,49 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [v3,2/2] hwmon: (aspeed-pwm-tacho) Deassert reset in probe
-Date: Tue, 26 Dec 2017 09:24:44 -0800
-Message-ID: <20171226172444.GA22827@roeck-us.net>
-References: <20171223130528.5346-3-joel@jms.id.au>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/5] drm/panel: Add support for the EDT ETM0700G0BDH6
+Date: Tue, 26 Dec 2017 11:25:08 -0600
+Message-ID: <CAL_JsqL8Yny=tm23jbJTMvM2OdXUE3d1A+h4d2kNARHnLgLMkA@mail.gmail.com>
+References: <95F51F4B902CAC40AF459205F6322F01B7FDFECC3D@BMK019S01.emtrion.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20171223130528.5346-3-joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joel <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mykola Kostenok <c_mykolak-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>, Jaghathiswari Rankappagounder Natarajan <jaghu-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Patrick Venture <venture-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <95F51F4B902CAC40AF459205F6322F01B7FDFECC3D@BMK019S01.emtrion.local>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: =?UTF-8?B?VMO8cmssIEphbg==?= <Jan.Tuerk@emtrion.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, SZ Lin <sz.lin@moxa.com>, David Airlie <airlied@linux.ie>, Kevin Hilman <khilman@baylibre.com>, Russell King <linux@armlinux.org.uk>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Sascha Hauer <kernel@pengutronix.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Fabio Estevam <fabio.estevam@nxp.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Shawn Guo <shawnguo@kernel.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, LinuxArmKernelMailingListe <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Dec 23, 2017 at 11:35:28PM +1030, Joel wrote:
-> The ASPEED SoC must deassert a reset in order to use the PWM/tach
-> peripheral.
-> 
-> Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-
-Applied to hwmon-next.
-
-Thanks,
-Guenter
-
-> ---
->  drivers/hwmon/aspeed-pwm-tacho.c | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
-> 
-> diff --git a/drivers/hwmon/aspeed-pwm-tacho.c b/drivers/hwmon/aspeed-pwm-tacho.c
-> index 63a95e23ca81..693a3d53cab5 100644
-> --- a/drivers/hwmon/aspeed-pwm-tacho.c
-> +++ b/drivers/hwmon/aspeed-pwm-tacho.c
-> @@ -19,6 +19,7 @@
->  #include <linux/of_platform.h>
->  #include <linux/platform_device.h>
->  #include <linux/regmap.h>
-> +#include <linux/reset.h>
->  #include <linux/sysfs.h>
->  #include <linux/thermal.h>
->  
-> @@ -181,6 +182,7 @@ struct aspeed_cooling_device {
->  
->  struct aspeed_pwm_tacho_data {
->  	struct regmap *regmap;
-> +	struct reset_control *rst;
->  	unsigned long clk_freq;
->  	bool pwm_present[8];
->  	bool fan_tach_present[16];
-> @@ -905,6 +907,13 @@ static int aspeed_create_fan(struct device *dev,
->  	return 0;
->  }
->  
-> +static void aspeed_pwm_tacho_remove(void *data)
-> +{
-> +	struct aspeed_pwm_tacho_data *priv = data;
-> +
-> +	reset_control_assert(priv->rst);
-> +}
-> +
->  static int aspeed_pwm_tacho_probe(struct platform_device *pdev)
->  {
->  	struct device *dev = &pdev->dev;
-> @@ -931,6 +940,19 @@ static int aspeed_pwm_tacho_probe(struct platform_device *pdev)
->  			&aspeed_pwm_tacho_regmap_config);
->  	if (IS_ERR(priv->regmap))
->  		return PTR_ERR(priv->regmap);
-> +
-> +	priv->rst = devm_reset_control_get_exclusive(dev, NULL);
-> +	if (IS_ERR(priv->rst)) {
-> +		dev_err(dev,
-> +			"missing or invalid reset controller device tree entry");
-> +		return PTR_ERR(priv->rst);
-> +	}
-> +	reset_control_deassert(priv->rst);
-> +
-> +	ret = devm_add_action_or_reset(dev, aspeed_pwm_tacho_remove, priv);
-> +	if (ret)
-> +		return ret;
-> +
->  	regmap_write(priv->regmap, ASPEED_PTCR_TACH_SOURCE, 0);
->  	regmap_write(priv->regmap, ASPEED_PTCR_TACH_SOURCE_EXT, 0);
->  
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gRnJpLCBEZWMgMjIsIDIwMTcgYXQgNDo0MyBBTSwgVMO8cmssIEphbiA8SmFuLlR1ZXJrQGVt
+dHJpb24uZGU+IHdyb3RlOgo+PiBWb246IFJvYiBIZXJyaW5nIFttYWlsdG86cm9iaEBrZXJuZWwu
+b3JnXQo+PiBHZXNlbmRldDogRnJlaXRhZywgMjIuIERlemVtYmVyIDIwMTcgMDA6MDAKPj4gQmV0
+cmVmZjogUmU6IFtQQVRDSCB2MiAxLzVdIGRybS9wYW5lbDogQWRkIHN1cHBvcnQgZm9yIHRoZSBF
+RFQKPj4gRVRNMDcwMEcwQkRINgo+Pgo+PiBPbiBXZWQsIERlYyAyMCwgMjAxNyBhdCAwMjo0Nzow
+MVBNICswMTAwLCBqYW4udHVlcmtAZW10cmlvbi5jb20gd3JvdGU6Cj4+ID4gRnJvbTogSmFuIFR1
+ZXJrIDxqYW4udHVlcmtAZW10cmlvbi5jb20+Cj4+ID4KPj4gPiBUaGUgRW1lcmdpbmcgRGlzcGxh
+eSBUZWNobm9sb2d5IEVUTTA3MDBHMEJESDYgaXMgZXhhY3RseSB0aGUgc2FtZQo+PiA+IGRpc3Bs
+YXkgYXMgdGhlIEVUTTA3MDBHMERINiwgZXhlcHQgdGhlIHBpeGVsY2xvY2sgcG9sYXJpdHkuIFRo
+ZXJlZm9yZQo+PiA+IHJlLXVzZSB0aGUgRVRNMDcwMEcwREg2IG1vZGVzLiBJdCBpcyB1c2VkIGJ5
+IGRlZmF1bHQgb24gZW10cmlvbiBBdmFyaQo+PiA+IGJhc2VkIGRldmVsb3BtZW50IGtpdHMuCj4+
+Cj4+IEFzIEkgYXNrZWQgb24gdjEsIHdoeSBub3QgZG9jdW1lbnQgdGhlIHBhbmVscyB0b2dldGhl
+ciBpbiBhIHNpbmdsZSBkb2M/Cj4KPiBBcyBkZW5vdGVkIGluIHRoZSBjb3ZlciBsZXR0ZXI6CgpJ
+IGdlbmVyYWxseSBkb24ndCByZWFkIGNvdmVyIGxldHRlcnMuLi4KCj4+VGhlIGRvY3VtZW50YXRp
+b24gZm9yIHRoZSBFRFQgZGlzcGxheSBpcyBrZXB0IGFzIGFuIGV4dHJhIGZpbGUgY3VycmVudGx5
+LAo+PmFzIGl0IGlzIGRvbmUgYnkgdGhlIG1vc3QgZGlzcGxheXMgaW4gdGhlIGRvY3VtZW50YXRp
+b24uIEFsc28gYSBuZXcKPj5uZXcgVmFyaWFudCBvZiB0aGUgRURUIGFscmVhZHkgYXJyaXZlZC4g
+U28gbWVyZ2luZyB0aGVpciBkb2N1bWVudGF0aW9ucwo+PnNob3VsZCBiZSBkaXNjdXNzZWQgc2Vw
+YXJhdGVseS4KCllvdSBtZWFuIGEgM3JkIHZhcmlhbnQ/Cgo+IEkgdGhpbmsgaXQgd2lsbCBiZSBl
+dmVuIGEgbGl0dGxlIHRyaWNreSB0byBmaW5kIGEgbWF0Y2hpbmcgZmlsZW5hbWUgZm9yIGJvdGgg
+dmVyc2lvbnMsCj4gYXMgdGhlIHJlY2VudCBvbmVzIGFkZGluZyBhbiBleHRyYSBjaGFyYWN0ZXIg
+aW4gdGhlIGRlc2NyaXB0aW9uLiBBcmUgeW91IGV4cGVjdGluZyBzdGguCj4gbGlrZSBlZHQsZXRt
+MDcwMHNlcmllcy50eHQ/CgpZZWFoLCBvciBlZHQsZXRtMDcwMGcwLnR4dC4KClJvYgpfX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGlu
+ZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVl
+ZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
