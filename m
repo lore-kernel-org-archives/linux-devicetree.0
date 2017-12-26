@@ -1,23 +1,41 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v4 0/4] rtc: add mxc driver for i.MX53 SRTC
-Date: Tue, 26 Dec 2017 16:24:23 +0800
-Message-ID: <20171226082422.GG23070@X250>
-References: <20171218115133.16371-1-linux-kernel-dev@beckhoff.com>
+From: Jiri Pirko <jiri-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+Subject: Re: [patch v15 1/4] drivers: jtag: Add JTAG core driver
+Date: Tue, 26 Dec 2017 09:47:13 +0100
+Message-ID: <20171226084713.GA2175@nanopsycho>
+References: <1514202808-29747-1-git-send-email-oleksandrs@mellanox.com>
+ <1514202808-29747-2-git-send-email-oleksandrs@mellanox.com>
+ <13433849-cb7d-e2c0-4ce9-d91a6012d7d7@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20171218115133.16371-1-linux-kernel-dev@beckhoff.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel-dev@beckhoff.com
-Cc: Patrick Bruenn <p.bruenn@beckhoff.com>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" <linux-rtc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Juergen Borleis <jbe@pengutronix.de>, Noel Vellemans <Noel.Vellemans@visionbms.com>, Sascha Hauer <kernel@pengutronix.de>, Russell King <linux@armlinux.org.uk>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Philippe Ombredanne <pombredanne@nexb.com>
+In-Reply-To: <13433849-cb7d-e2c0-4ce9-d91a6012d7d7-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Oleksandr Shamray <oleksandrs-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, jiri-rHqAuBHg3fBzbRFIqnYvSA@public.gmane.org, tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, vadimp-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org, system-sw-low-level-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, openocd-devel-owner-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 18, 2017 at 12:51:29PM +0100, linux-kernel-dev@beckhoff.com wrote:
-> Patrick Bruenn (4):
->   dt-bindings: rtc: add bindings for i.MX53 SRTC
->   ARM: dts: imx53: add srtc node
->   rtc: add mxc driver for i.MX53 SRTC
->   ARM: imx_v6_v7_defconfig: enable RTC_DRV_MXC_V2
+Tue, Dec 26, 2017 at 12:09:08AM CET, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+>Le 12/25/17 à 03:53, Oleksandr Shamray a écrit :
 
-Applied 2/4 and 4/4, thanks.
+[...]
+
+>[snip]
+>
+>> +
+>> +void *jtag_priv(struct jtag *jtag)
+>> +{
+>> +	return jtag->priv;
+>> +}
+>> +EXPORT_SYMBOL_GPL(jtag_priv);
+>
+>Can't you just create a static inline function in the public header for
+>that? This is usually what subsystems do, I can understand why you would
+>not want to expose struct jtag to other parts of the kernel, but still,
+>this looks ugly, so maybe consider splitting the header between provider
+>and consumer?
+
+Other subsystems expose the struct. Here, it is intentional to don't
+expose the struct, that's why we have this helper. What is ugly about
+that? :)
