@@ -1,75 +1,116 @@
-From: Trent Piepho <tpiepho-cgc2CodaaHDQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 1/3] mtd: spi-nor: add optional DMA-safe bounce buffer for
- data transfer
-Date: Tue, 26 Dec 2017 19:43:05 +0000
-Message-ID: <1514317385.26695.39.camel@impinj.com>
-References: <cover.1514087323.git.cyrille.pitchen@wedev4u.fr>
-         <fc2440c6f52877f28286d89691049e5cba10e6a7.1514087323.git.cyrille.pitchen@wedev4u.fr>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC V7 2/2] OPP: Allow "opp-hz" and "opp-microvolt" to contain
+ magic values
+Date: Tue, 26 Dec 2017 14:23:49 -0600
+Message-ID: <CAL_Jsq+ntPMiSacpsx7M7VwSXsx+fRbHpX-KFNVpDj+bYdNCiQ@mail.gmail.com>
+References: <23ba51eaa6b52117458165dccc00a95cf8e86e1d.1509453284.git.viresh.kumar@linaro.org>
+ <CAL_JsqKr7MsM6iZ_QYO=iCzXNwANEGQGDLFUEwe0Z-p2Z_aMYw@mail.gmail.com>
+ <CAKohpokvQD4Z6YY6MRG8c+hnsS=Z52X4XhyTgC5FTgf7VuaNmw@mail.gmail.com>
+ <CAL_JsqK-qtAaM_Ou5NtxcWR3F_q=8rMPJUm-VqGtKhbtWe5SAQ@mail.gmail.com>
+ <20171101214333.GG30645@codeaurora.org> <20171102045155.GX4240@vireshk-i7>
+ <20171102071533.GM30645@codeaurora.org> <20171102090033.GZ4240@vireshk-i7>
+ <CAPDyKFryn5=GMs+hiRcxGOC1U=-LL9RQdnY3cWniyE+4pwQDog@mail.gmail.com>
+ <20171130005029.GC19419@codeaurora.org> <20171130065907.GI11413@vireshk-i7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <fc2440c6f52877f28286d89691049e5cba10e6a7.1514087323.git.cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>
-Content-Language: en-US
-Content-ID: <C0658D1EAA0A334FAD541A566FCDE634-+1mpgTUVCH2cE4WynfumptQqCkab/8FMAL8bYrjMMd8@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org" <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org" <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "vigneshr-l0cyMroinI0@public.gmane.org" <vigneshr-l0cyMroinI0@public.gmane.org>, "richard-/L3Ra7n9ekc@public.gmane.org" <richard-/L3Ra7n9ekc@public.gmane.org>, "marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org" <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, "robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "radu.pirea-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org" <radu.pirea-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171130065907.GI11413@vireshk-i7>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Viresh Kumar <vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Rafael Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gU3VuLCAyMDE3LTEyLTI0IGF0IDA1OjM2ICswMTAwLCBDeXJpbGxlIFBpdGNoZW4gd3JvdGU6
-DQo+IA0KPiBUaGVuIHRoZSBwYXRjaCBhZGRzIHR3byBoYXJkd2FyZSBjYXBhYmlsaXRpZXMgZm9y
-IFNQSSBmbGFzaCBjb250cm9sbGVycywNCj4gU05PUl9IV0NBUFNfV1JfQk9VTkNFIGFuZCBTTk9S
-X0hXQ0FQU19SRF9CT1VOQ0UuDQoNCkFyZSB0aGVyZSBhbnkgZHJpdmVycyBmb3Igd2hpY2ggYSBi
-b3VuY2UgYnVmZmVyIGlzIE5PVCBuZWVkZWQgd2hlbiB0aGUNCnR4L3J4IGJ1ZmZlciBpcyBub3Qg
-aW4gRE1BIHNhZmUgbWVtb3J5PyAgTWF5YmUgaXQgd291bGQgbWFrZSBtb3JlIHNlbnNlDQp0byBp
-bnZlcnQgdGhlIHNlbnNlIG9mIHRoZXNlIGZsYWdzLCBzbyB0aGF0IHRoZXkgaW5kaWNhdGUgdGhl
-IGRyaXZlcg0KZG9lcyBub3QgbmVlZCBETUEgc2FmZSBidWZmZXJzLCBpZiB0aGF0IGlzIHRoZSB1
-bmNvbW1vbi9ub24tZXhpc3RlbnQNCmNhc2UsIHNvIHRoYXQgZmV3ZXIgZHJpdmVycyBuZWVkIHRv
-IGJlIG1vZGlmaWVkIHRvIHRvIGJlIGZpeGVkPw0KDQo+ICtzdGF0aWMgYm9vbCBzcGlfbm9yX2lz
-X2RtYV9zYWZlKGNvbnN0IHZvaWQgKmJ1ZikNCj4gK3sNCj4gKwlpZiAoaXNfdm1hbGxvY19hZGRy
-KGJ1ZikpDQo+ICsJCXJldHVybiBmYWxzZTsNCj4gKw0KPiArI2lmZGVmIENPTkZJR19ISUdITUVN
-DQo+ICsJaWYgKCh1bnNpZ25lZCBsb25nKWJ1ZiA+PSBQS01BUF9CQVNFICYmDQo+ICsJICAgICh1
-bnNpZ25lZCBsb25nKWJ1ZiA8IChQS01BUF9CQVNFICsgKExBU1RfUEtNQVAgKiBQQUdFX1NJWkUp
-KSkNCj4gKwkJcmV0dXJuIGZhbHNlOw0KPiArI2VuZGlmDQoNCkl0IGxvb2tzIGxpa2U6DQoNCih1
-bnNpZ25lZCBsb25nKWFkZHIgPj0gUEtNQVBfQUREUigwKSAmJg0KKHVuc2lnbmVkIGxvbmcpYWRk
-ciA8IFBLTUFQX0FERFIoTEFTVF9QS01BUCkNCg0KaXMgdGhlIGV4cHJlc3Npb24gdXNlZCBpbiB0
-aGUgaGlnaG1lbSBjb2RlLiAgQnV0IHJlYWxseSwgaXNuJ3QgdGhpcw0KYmVnZ2luZyBmb3IgaXNf
-aGlnaG1lbV9hZGRyKCkgaW4gaW5jbHVkZS9saW51eC9tbS5oIHRoYXQgY2FuIGFsd2F5cw0KcmV0
-dXJuIGZhbHNlIHdoZW4gaGlnaG1lbSBpcyBub3QgZW5hYmxlZD8NCg0KSW4gb3JkZXIgdG8gYmUg
-c2FmZSwgdGhpcyBtdXN0IGJlIGNhbGxlZCB3aGVuIG5vci0+bG9jayBpcyBoZWxkLCByaWdodD8N
-CiBPdGhlcndpc2UgaXQgY291bGQgcmFjZSBhZ2FpbnN0IHR3byBjYWxsZXJzIGFsbG9jYXRpbmcg
-dGhlIGJ1ZmZlciBhdA0KdGhlIHNhbWUgdGltZS4gIFRoYXQgc2hvdWxkIHByb2JhYmx5IGJlIG5v
-dGVkIGluIHRoZSBrZXJuZWxkb2MgY29tbWVudHMNCmZvciB0aGlzIGZ1bmN0aW9uLCB3aGljaCBz
-aG91bGQgYWxzbyBiZSB3cml0dGVuLg0KDQo+ICtzdGF0aWMgaW50IHNwaV9ub3JfZ2V0X2JvdW5j
-ZV9idWZmZXIoc3RydWN0IHNwaV9ub3IgKm5vciwNCj4gKwkJCQkgICAgIHVfY2hhciAqKmJ1ZmZl
-ciwNCj4gKwkJCQkgICAgIHNpemVfdCAqYnVmZmVyX3NpemUpDQo+ICt7DQoNCj4gKw0KPiArCSpi
-dWZmZXIgPSBub3ItPmJvdW5jZV9idWZmZXI7DQo+ICsJKmJ1ZmZlcl9zaXplID0gc2l6ZTsNCg0K
-U28gdGhlIGJ1ZmZlciBpcyByZXR1cm5lZCB2aWEgdGhlIHBhcmFtZXRlciwgYW5kIGFsc28gdmlh
-IGEgZmllbGQNCmluc2lkZSBub3IuICBTZWVtcyByZWR1bmRhbnQuICBDb25zaWRlciBhZGRyZXNz
-IGNvdWxkIGJlIHJldHVybmVkIHZpYQ0KdGhlIGZ1bmN0aW9uIHJldHVybiB2YWx1ZSBjb3VwbGVk
-IHdpdGggUFRSX0VSUigpIGZvciB0aGUgZXJyb3IgY2FzZXMuIA0KT3Igbm90IHJldHVybiBhZGRy
-ZXNzIGF0IGFsbCBzaW5jZSBpdCdzIGF2YWlsYWJsZSB2aWEgbm9yLQ0KPmJvdW5jZV9idWZmZXIu
-DQoNCj4gIHsNCj4gIAlzdHJ1Y3Qgc3BpX25vciAqbm9yID0gbXRkX3RvX3NwaV9ub3IobXRkKTsN
-Cj4gKwlib29sIHVzZV9ib3VuY2UgPSAobm9yLT5mbGFncyAmIFNOT1JfRl9VU0VfUkRfQk9VTkNF
-KSAmJg0KPiArCQkJICAhc3BpX25vcl9pc19kbWFfc2FmZShidWYpOw0KPiArCXVfY2hhciAqYnVm
-ZmVyID0gYnVmOw0KPiArCXNpemVfdCBidWZmZXJfc2l6ZSA9IDA7DQo+ICAJaW50IHJldDsNCj4g
-IA0KPiAgCWRldl9kYmcobm9yLT5kZXYsICJmcm9tIDB4JTA4eCwgbGVuICV6ZFxuIiwgKHUzMilm
-cm9tLCBsZW4pOw0KPiBAQCAtMTI2OCwxMyArMTMyNCwyMyBAQCBzdGF0aWMgaW50IHNwaV9ub3Jf
-cmVhZChzdHJ1Y3QgbXRkX2luZm8gKm10ZCwgbG9mZl90IGZyb20sIHNpemVfdCBsZW4sDQo+ICAJ
-aWYgKHJldCkNCj4gIAkJcmV0dXJuIHJldDsNCj4gIA0KPiArCWlmICh1c2VfYm91bmNlKSB7DQo+
-ICsJCXJldCA9IHNwaV9ub3JfZ2V0X2JvdW5jZV9idWZmZXIobm9yLCAmYnVmZmVyLCAmYnVmZmVy
-X3NpemUpOw0KPiArCQlpZiAocmV0IDwgMCkNCj4gKwkJCWdvdG8gcmVhZF9lcnI7DQo+ICsJfQ0K
-DQpUaGlzIHBhdHRlcm4sIGNoZWNrIGlmIGJvdW5jZSBpcyBlbmFibGVkLCBjaGVjayBpZiBhZGRy
-ZXNzIGlzIGRtYS0NCnVuc2FmZSwgZ2V0IGJvdW5jZSBidWZmZXIsIHNlZW1zIHRvIGJlIHZlcnkg
-Y29tbW9uLiAgQ291bGQgaXQgYmUNCnJlZmFjdG9yZWQgaW50byBvbmUgaGVscGVyPw0KDQp1X2No
-YXIgKmJ1ZmZlciA9IHNwaV9ub3JfY2hlY2tfYm91bmNlKG5vciwgYnVmLCBsZW4sICZidWZmZXJf
-c2l6ZSk7DQppZiAoSVNfRVJSKGJ1ZmZlcikpIA0KICAgIHJldHVybiBQVFJfRVJSKGJ1ZmZlcik7
-DQovLyBidWZmZXIgPSBub3ItPmJvdW5jZV9idWZmZXIgb3IgYnVmLCB3aGljaGV2ZXIgaXMgY29y
-cmVjdA0KLy8gYnVmZmVyX3NpemUgPSBsZW4gb3IgYm91bmNlIGJ1ZmZlciBzaXplLCB3aGljaGV2
-ZXIgaXMgY29ycmVjdA0KDQpDb3VsZCBzcGlfbm9yX3JlYWRfc2ZkcF9kbWFfdW5zYWZlKCkgYWxz
-byB1c2UgdGhpcyBidWZmZXI/DQo=
+On Thu, Nov 30, 2017 at 12:59 AM, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On 29-11-17, 16:50, Stephen Boyd wrote:
+>> Sorry it still makes zero sense to me. It seems that we're trying
+>> to make the OPP table parsing generic just for the sake of code
+>> brevity.
+>
+> Not just the code but bindings as well to make sure we don't add a new
+> property (similar to earlier ones) for every platform that wants to
+> use performance states.
+>
+>> Is this the goal? From a DT writer perspective it seems
+>> confusing to say that opp-microvolt is sometimes a microvolt and
+>> sometimes not a microvolt.
+>
+> Well it would still represent the voltage but not in microvolt units
+> as the platform guys decided to hide those values from kernel and
+> handle them directly in firmware.
+>
+>> Why can't the SoC specific genpd
+>> driver parse something like "qcom,corner" instead out of the
+>> node?
+>
+> Sure we can, but that means that a new property will be required for
+> the next platform.
+>
+> I did it this way as Kevin (and Rob) suggested NOT to add another
+> property but use the earlier ones as we aren't passing anything new
+> here, just that the units of the property are different. For another
+> SoC, we may want to hide both freq and voltage values from kernel and
+> pass firmware dependent values. Should we add two new properties for
+> that SoC then ?
+>
+>> BTW, I don't believe I have a use-case where I want to express
+>> power domain OPP tables.
+>
+> I do remember that you once said [1] that you may want to pass the
+> real voltage values as well via DT. And so I thought that you can pass
+> performance-state (corner) in opp-hz and real voltage values in
+> opp-microvolt.
+>
+>> I have many devices that all have
+>> different frequencies that are all tied into the same power
+>> domain. This binding makes it look like we can only have one
+>> frequency per domain which won't work.
+>
+> No, that isn't the case. Looks like we have some confusion here. Let
+> me try with a simple example:
+>
+>         foo: foo-power-domain@09000000 {
+>                 compatible = "foo,genpd";
+>                 #power-domain-cells = <0>;
+>                 operating-points-v2 = <&domain_opp_table>;
+>         };
+>
+>         cpu0: cpu@0 {
+>                 compatible = "arm,cortex-a53", "arm,armv8";
+>                 ...
+>                 operating-points-v2 = <&cpu_opp_table>;
+>                 power-domains = <&foo>;
+>         };
+>
+>
+>         domain_opp_table: domain_opp_table {
+>                 compatible = "operating-points-v2";
+>
+>                 domain_opp_1: opp00 {
+>                         opp-hz = /bits/ 64 <1>; /* These are corners AKA perf states */
+>                 };
+>                 domain_opp_2: opp01 {
+>                         opp-hz = /bits/ 64 <2>;
+>                 };
+>                 domain_opp_3: opp02 {
+>                         opp-hz = /bits/ 64 <3>;
+>                 };
+>         };
+>
+>         cpu_opp_table: cpu_opp_table {
+>                 compatible = "operating-points-v2";
+>                 opp-shared;
+>
+>                 opp00 {
+>                         opp-hz = /bits/ 64 <208000000>;
+>                         clock-latency-ns = <500000>;
+>                         power-domain-opp = <&domain_opp_1>;
+
+What is this? opp00 here is not a device. One OPP should not point to
+another. "power-domain-opp" is only supposed to appear in devices
+alongside power-domains properties.
+
+Rob
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
