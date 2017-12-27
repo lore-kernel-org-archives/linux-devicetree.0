@@ -1,102 +1,148 @@
-From: =?utf-8?Q?=C5=81ukasz_Stelmach?= <l.stelmach@samsung.com>
-Subject: Re: [PATCH v4] hwrng: exynos - add Samsung Exynos True RNG driver
-Date: Wed, 27 Dec 2017 11:12:20 +0100
-Message-ID: <87shbwh43f.fsf%l.stelmach@samsung.com>
-References: <CAOFm3uEj7MDa_7OtigHcUPwvxkR+8cRS=UQq3x_y9k+ypcJPrg@mail.gmail.com>
-        <CGME20171227101226eucas1p2baa0309227b8e6a1e77dd7ca88f6412b@eucas1p2.samsung.com>
+From: Sricharan R <sricharan@codeaurora.org>
+Subject: Re: [PATCH v5 15/15] devicetree: bindings: Document qcom,pvs
+Date: Wed, 27 Dec 2017 15:50:52 +0530
+Message-ID: <4fdb2ab5-1dca-c44c-b647-3388a8ecea81@codeaurora.org>
+References: <1513698900-10638-1-git-send-email-sricharan@codeaurora.org>
+ <1513698900-10638-16-git-send-email-sricharan@codeaurora.org>
+ <20171220032614.GQ19815@vireshk-i7>
+ <b0d8147a-46e1-0787-ae37-9c1ef957d190@codeaurora.org>
+ <20171220211817.mpkkj747blr4qkqm@rob-hp-laptop>
+ <864b6cfd-d3eb-d876-82e2-ebc79c5a6956@codeaurora.org>
+ <CAL_JsqJTBgr2ctyRXGyzkRLztoy=qtvEh3AC79RjENBS=6yQRg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-="; micalg="pgp-sha256";
-        protocol="application/pgp-signature"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CAOFm3uEj7MDa_7OtigHcUPwvxkR+8cRS=UQq3x_y9k+ypcJPrg@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Philippe Ombredanne <pombredanne@nexb.com>
-Cc: "Andrew F . Davis" <afd@ti.com>, PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>, Rob Herring <robh+dt@kernel.org>, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-crypto@vger.kernel.org, linux-samsung-soc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqJTBgr2ctyRXGyzkRLztoy=qtvEh3AC79RjENBS=6yQRg@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-pm-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, Michael Turquette <mturquette@baylibre.com>, linux-pm@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Russell King <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, David Brown <david.brown@linaro.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Andy Gross <andy.gross@linaro.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Hi Rob,
 
-It was <2017-12-22 pi=C4=85 19:30>, when Philippe Ombredanne wrote:
-> On Fri, Dec 22, 2017 at 5:38 PM, =C5=81ukasz Stelmach <l.stelmach@samsung=
-.com> wrote:
->> It was <2017-12-22 pi=C4=85 14:34>, when Philippe Ombredanne wrote:
->>> =C5=81ukasz,
->>>
->>> On Fri, Dec 22, 2017 at 2:23 PM, =C5=81ukasz Stelmach <l.stelmach@samsu=
-ng.com> wrote:
->>>> Add support for True Random Number Generator found in Samsung Exynos
->>>> 5250+ SoCs.
->>>>
->>>> Signed-off-by: =C5=81ukasz Stelmach <l.stelmach@samsung.com>
->>>> Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
->>>
->>> <snip>
->>>
->>>> --- /dev/null
->>>> +++ b/drivers/char/hw_random/exynos-trng.c
->>>> @@ -0,0 +1,245 @@
->>>> +/*
->>>> + * RNG driver for Exynos TRNGs
->>>> + *
->>>> + * Author: =C5=81ukasz Stelmach <l.stelmach@samsung.com>
->>>> + *
->>>> + * Copyright 2017 (c) Samsung Electronics Software, Inc.
->>>> + *
->>>> + * Based on the Exynos PRNG driver drivers/crypto/exynos-rng by
->>>> + * Krzysztof Koz=C5=82owski <krzk@kernel.org>
->>>> + *
->>>> + * This program is free software; you can redistribute it and/or modi=
-fy
->>>> + * it under the terms of the GNU General Public License as published =
-by
->>>> + * the Free Software Foundation;
->>>> + *
->>>> + * This program is distributed in the hope that it will be useful,
->>>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->>>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->>>> + * GNU General Public License for more details.
->>>> + */
->>>
->>>
->>> Would you mind using the new SPDX tags documented in Thomas patch set
->>> [1] rather than this fine but longer legalese?
->>>
->>> And if you could spread the word to others in your team this would be v=
-ery nice.
->>> See also this fine article posted by Mauro on the Samsung Open Source
->>> Group Blog [2]
->>> Thank you!
+On 12/26/2017 11:06 PM, Rob Herring wrote:
+> On Thu, Dec 21, 2017 at 5:53 AM, Sricharan R <sricharan@codeaurora.org> wrote:
+>> Hi Rob,
 >>
->> Cool! We've been using SPDX to tag RPM packages in Tizen for three years=
- or
->> more. ;-)
->
-> Very nice! any pubic pointers?
-                 ^^^^^
+>> On 12/21/2017 2:48 AM, Rob Herring wrote:
+>>> On Wed, Dec 20, 2017 at 11:55:33AM +0530, Sricharan R wrote:
+>>>> Hi Viresh,
+>>>>
+>>>> On 12/20/2017 8:56 AM, Viresh Kumar wrote:
+>>>>> On 19-12-17, 21:25, Sricharan R wrote:
+>>>>>> +  cpu@0 {
+>>>>>> +          compatible = "qcom,krait";
+>>>>>> +          enable-method = "qcom,kpss-acc-v1";
+>>>>>> +          device_type = "cpu";
+>>>>>> +          reg = <0>;
+>>>>>> +          qcom,acc = <&acc0>;
+>>>>>> +          qcom,saw = <&saw0>;
+>>>>>> +          clocks = <&kraitcc 0>;
+>>>>>> +          clock-names = "cpu";
+>>>>>> +          cpu-supply = <&smb208_s2a>;
+>>>>>> +          operating-points-v2 = <&cpu_opp_table>;
+>>>>>> +  };
+>>>>>> +
+>>>>>> +  qcom,pvs {
+>>>>>> +          qcom,pvs-format-a;
+>>>>>> +  };
+>>>>>
+>>>>> Not sure what Rob is going to say on that :)
+>>>>>
+>>>>
+>>>>  Yes. Would be good to know the best way.
+>>>
+>>> Seems like this should be a property of an efuse node either implied by
+>>> the compatible or a separate property. What determines format A vs. B?
+>>>
+>>
+>>  Yes, this efuse registers are part of the eeprom (qfprom) tied to the soc.
+>>  So this property (details like bitfields and register offsets that it represents)
+>>  can be put soc specific and nvmem apis can be used to read
+>>  the registers. Does something like below look ok ?
+>>
+>>  qcom,pvs {
+>>         compatible = "qcom,pvs-ipq8064";
+>>         nvmem-cells = <&pvs_efuse>;
+>>  }
+> 
+> Why do you need this node? It doesn't look like it corresponds to a
+> h/w block. It looks like you are just creating it to instantiate a
+> driver.
+> 
+>>  qfprom: qfprom@700000 {
+>>         compatible      = "qcom,qfprom";
+> 
+> Either this or...
+> 
+>>         reg             = <0x00700000 0x1000>;
+>>         #address-cells  = <1>;
+>>         #size-cells     = <1>;
+>>         ranges;
+>>         pvs_efuse: pvs {
+> 
+> a compatible here should be specific enough so the OS can know what
+> the bits are.
 
-I assume you request an URL of a publicly available web-page ;-)
+ Infact the above "qcom,pvs" node is required mainly to act as a consumer
+ for the nvmem data provider ("qcom,qfprom") (using nvmem-cells = <&pvs_efuse>)
+ Then "qfprom" can be made to contain a "format_a" or "format_b" specific cell.
 
-https://wiki.tizen.org/Packaging/Guidelines#License_Tag
+ So all that is needed is, nvmem-cells = <&pvs_efuse_phandle> needs to be available
+ somewhere. The requirement is similar what is now done by "operating-points-v2-ti-cpu"
+ and the ti-cpufreq.c. There "operating-points-v2-ti-cpu" node, contains the syscon
+ register to read the efuse values. Similarly does defining a new 
+ "operating-points-v2-krait-cpu" which would contain the nvmem-cells property look ok ? 
+ This would avoid defining a new qcom,pvs node.
+ 
+	cpu@0 {
+		compatible = "qcom,krait";
+		enable-method = "qcom,kpss-acc-v1";
+		device_type = "cpu";
+		reg = <0>;
+		qcom,acc = <&acc0>;
+		qcom,saw = <&saw0>;
+		clocks = <&kraitcc 0>;
+		clock-names = "cpu";
+		cpu-supply = <&smb208_s2a>;
+		operating-points-v2 = <&cpu_opp_table>;
+	};
 
-=2D-=20
-=C5=81ukasz Stelmach
-Samsung R&D Institute Poland
-Samsung Electronics
+	cpu_opp_table: opp_table {
+		compatible = "operating-points-v2-krait-cpu";
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+		nvmem-cells = <&pvs_efuse_format_a>;
+		/*
+		 * Missing opp-shared property means CPUs switch DVFS states
+		 * independently.
+		 */
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+		opp-1400000000 {
+			opp-hz = /bits/ 64 <1400000000>;
+			opp-microvolt-speed0-pvs0-v0 = <1250000>;
+			opp-microvolt-speed0-pvs1-v0 = <1175000>;
+			opp-microvolt-speed0-pvs2-v0 = <1125000>;
+			opp-microvolt-speed0-pvs3-v0 = <1050000>;
 
-iQEcBAEBCAAGBQJaQ3IEAAoJELCuHpyYpYAQ/50H/0VDdhRdsKiDo9iZSdhyLHcy
-xXvNzMyTjv5a60DuTRvcFX2+F/ICXv72+dixazYUAnO+9xteU4GZNO56KRPaYPN5
-k/MM/rdwfvM7aJhJIhNHAbhYjMek2pUNWYcDMNXeOmPn1doSpyHSQzKQSRrgN2du
-YaCpz+TQ0e7SYTl6DGm34Oh+XR02Pe1afNTSrcrrqCVL2YUHKX0U/g0m7L1IafvH
-+WPz4RtxfmZmVbQkAAdORr+AuO3S09tFlsLgRuANOW51jMdLxTLofvq67MIiqnqW
-PxFNjj1W0dDQjKDGUn26idqpQAePIcIW2ounCZq/g9uwpHJFfsJsGLtgn12cScI=
-=U2X0
------END PGP SIGNATURE-----
---=-=-=--
+		};
+		...
+	}
+ 
+	qfprom: qfprom@700000 {
+		compatible      = "qcom,qfprom";
+		reg             = <0x00700000 0x1000>;
+		#address-cells  = <1>;
+		#size-cells     = <1>;
+		ranges;
+		pvs_efuse_format_a: pvs {
+			reg = <0xc0 0x8>;
+		};
+	}
+
+Regards,
+ Sricharan
+
+-- 
+"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
