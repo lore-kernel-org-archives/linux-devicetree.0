@@ -1,28 +1,76 @@
-From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH 2/2] dts: Probe efuse for CI20
-Date: Wed, 27 Dec 2017 13:46:09 +0100
-Message-ID: <20171227124609.GA3373@kroah.com>
-References: <20171227122722.5219-1-malat@debian.org>
- <20171227122722.5219-3-malat@debian.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Bartosz Golaszewski <brgl-ARrdPY/1zhM@public.gmane.org>
+Subject: [PATCH v3 3/5] dt-bindings: at24: fix formatting and style
+Date: Wed, 27 Dec 2017 14:50:52 +0100
+Message-ID: <20171227135054.29690-4-brgl@bgdev.pl>
+References: <20171227135054.29690-1-brgl@bgdev.pl>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20171227122722.5219-3-malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <20171227135054.29690-1-brgl-ARrdPY/1zhM@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Cc: Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, PrasannaKumar Muralidharan <prasannatsmkumar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Philippe Ombredanne <pombredanne-od1rfyK75/E@public.gmane.org>, Kate Stewart <kstewart-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>, Harvey Hunt <harvey.hunt-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, James Hogan <jhogan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+To: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, Divagar Mohandass <divagar.mohandass-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bartosz Golaszewski <brgl-ARrdPY/1zhM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 27, 2017 at 01:27:02PM +0100, Mathieu Malaterre wrote:
-> Signed-off-by: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Make formatting and style consistent for the entire document.
 
-I know i can't take patches without any changelog text at all, and
-really, you shouldn't ever create such a thing :)
+This patch doesn't change the content of the binding.
 
-thanks,
+Signed-off-by: Bartosz Golaszewski <brgl-ARrdPY/1zhM@public.gmane.org>
+Reviewed-by: Javier Martinez Canillas <javierm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+---
+ Documentation/devicetree/bindings/eeprom/at24.txt | 24 +++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-greg k-h
+diff --git a/Documentation/devicetree/bindings/eeprom/at24.txt b/Documentation/devicetree/bindings/eeprom/at24.txt
+index 487e1005036c..7d4dc264b3cc 100644
+--- a/Documentation/devicetree/bindings/eeprom/at24.txt
++++ b/Documentation/devicetree/bindings/eeprom/at24.txt
+@@ -2,7 +2,7 @@ EEPROMs (I2C)
+ 
+ Required properties:
+ 
+-  - compatible: must be a "<manufacturer>,<model>" pair with one of the
++  - compatible: Must be a "<manufacturer>,<model>" pair with one of the
+                 following values as fallback:
+ 
+                 "atmel,24c00",
+@@ -19,23 +19,23 @@ Required properties:
+                 "atmel,24c512",
+                 "atmel,24c1024"
+ 
+-  - reg : the I2C address of the EEPROM
++  - reg: The I2C address of the EEPROM.
+ 
+ Optional properties:
+ 
+-  - pagesize : the length of the pagesize for writing. Please consult the
+-               manual of your device, that value varies a lot. A wrong value
+-	       may result in data loss! If not specified, a safety value of
+-	       '1' is used which will be very slow.
++  - pagesize: The length of the pagesize for writing. Please consult the
++              manual of your device, that value varies a lot. A wrong value
++              may result in data loss! If not specified, a safety value of
++              '1' is used which will be very slow.
+ 
+-  - read-only: this parameterless property disables writes to the eeprom
++  - read-only: This parameterless property disables writes to the eeprom.
+ 
+-  - size: total eeprom size in bytes
++  - size: Total eeprom size in bytes.
+ 
+-  - no-read-rollover:
+-			This parameterless property indicates that the multi-address
+-			eeprom does not automatically roll over reads to the next
+-			slave address. Please consult the manual of your device.
++  - no-read-rollover: This parameterless property indicates that the
++                      multi-address eeprom does not automatically roll over
++                      reads to the next slave address. Please consult the
++                      manual of your device.
+ 
+   - wp-gpios: GPIO to which the write-protect pin of the chip is connected.
+ 
+-- 
+2.15.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
