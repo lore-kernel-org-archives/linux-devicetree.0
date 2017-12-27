@@ -1,54 +1,76 @@
-From: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: dts: imx6: RDU2: correct RTC compatible
-Date: Wed, 27 Dec 2017 11:33:04 -0800
-Message-ID: <CAHQ1cqGsLxCTk_dA_rywvF+i1UuYiYdTLEqmsKAo1zO94gWSyA@mail.gmail.com>
-References: <20171227035656.4941-1-andrew.smirnov@gmail.com>
- <20171227035656.4941-2-andrew.smirnov@gmail.com> <CAOMZO5BO=kX6ZDLV75c44VPNOggLzf630SHcyzfAU_+4ME2vDQ@mail.gmail.com>
+From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Subject: Re: [PATCH] Device tree binding for Avago APDS990X light sensor
+Date: Wed, 27 Dec 2017 21:01:47 +0100
+Message-ID: <20171227200147.GB16799@amd>
+References: <20171227091828.GA3307@amd>
+ <20171227180000.6ejpbqmr736nqx5i@kekkonen.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="8P1HSweYDcXXzwPJ"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOMZO5BO=kX6ZDLV75c44VPNOggLzf630SHcyzfAU_+4ME2vDQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20171227180000.6ejpbqmr736nqx5i-sGAanXTfQ4777SC2UrCW1FMQynFLKtET@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chris Healy <cphealy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+To: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, aaro.koskinen-X3B1VOXEql0@public.gmane.org, ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, patrikbachan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, serge-A9i7LUbDfNHQT0dZR+AlfA@public.gmane.org, abcloriens-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, clayton-fehKsxFhGzZIf6P1QZMOBw@public.gmane.org, martijn-28JJ9oSIdodmR6Xm/wNWPw@public.gmane.org, Filip =?utf-8?Q?Matijevi=C4=87?= <filip.matijevic.pz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 27, 2017 at 3:11 AM, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Hi Andrey,
->
-> On Wed, Dec 27, 2017 at 1:56 AM, Andrey Smirnov
-> <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> The RTC is manufactured by Maxim. This is a cosmetic fix, as Linux
->> doesn't match the vendor string for i2c devices.
->>
->> Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->> Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
->> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
->> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
->> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> Cc: cphealy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
->> Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->> Signed-off-by: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->
-> This patch seems to be from Lucas:
-> https://patchwork.kernel.org/patch/10099397/
->
-> ,so his name should appear in the From field.
->
-> Anyway, this patch has been sent earlier and we suggested to keep the
-> existing binding, which is the documented form:
-> https://patchwork.kernel.org/patch/10099397/
 
+--8P1HSweYDcXXzwPJ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Yes, the patch is from Lucas and I was just being a messenger. And
-understood and thanks for the info.
+Hi!
 
-Sorry for the noise and disregard this patch.
+> > +Required properties:
+> > +- compatible: "avago,apds990x"
+> > +- reg: address on the I2C bus
+> > +- interrupts: external interrupt line number
+> > +- Vdd-supply: power supply for VDD
+> > +- Vled-supply: power supply for LEDA
+>=20
+> AFAIK the custom is to use lower case letters for regulator supplies.
+>=20
+> > +- ga: Glass attenuation
+> > +- cf1: Clear channel factor 1
+> > +- irf1: IR channel factor 1
+> > +- cf2: Clear channel factor 2
+> > +- irf2: IR channel factor 2
+> > +- df: Device factor
+> > +- pdrive: IR current, one of APDS_IRLED_CURR_XXXmA values
+> > +- ppcount: Proximity pulse count
+>=20
+> Are these device specific? If so, please add the vendor prefix to them.
+
+Well, whole binding is "vendor specific". Does it make sense to add
+prefix in such case?
+
+> I might not use short abbreviations such as "df" either. I wonder what
+> others think.
+
+I see.
 
 Thanks,
-Andrey Smirnov
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--8P1HSweYDcXXzwPJ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlpD/CsACgkQMOfwapXb+vIY1ACfZyuXhLG/Mq0Ce55yr7fxWBPU
+u+cAoK1n/0Qdvl4c6hGO5xVT5U971PxB
+=JpQS
+-----END PGP SIGNATURE-----
+
+--8P1HSweYDcXXzwPJ--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
