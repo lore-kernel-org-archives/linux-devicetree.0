@@ -1,41 +1,42 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: ls1021a: fix incorrect clock references
-Date: Wed, 27 Dec 2017 12:14:07 +0800
-Message-ID: <20171227041405.GA5286@X250>
-References: <20171221214432.3658852-1-arnd@arndb.de>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v3 00/11] Allwinner H3/H5/A64(DE2) SimpleFB support
+Date: Wed, 27 Dec 2017 12:23:53 +0800
+Message-ID: <CAGb2v658L_941_jaD0eu6fjmo1HGdjS3bU1UVw3y8RO3ZDmwyg@mail.gmail.com>
+References: <20171222122243.25735-1-icenowy@aosc.io> <CAGb2v653n_Q-spOSP9RTXBrL7CtrYiV7dAyRAVYCxg3KpzRvoQ@mail.gmail.com>
+ <4610834.pRdGNWpFpX@ice-x220i>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20171221214432.3658852-1-arnd-r2nGTMty4D4@public.gmane.org>
+In-Reply-To: <4610834.pRdGNWpFpX@ice-x220i>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Jingchang Lu <b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 21, 2017 at 10:44:20PM +0100, Arnd Bergmann wrote:
-> dtc warns about two 'clocks' properties that have an extraneous '1'
-> at the end:
-> 
-> arch/arm/boot/dts/ls1021a-qds.dtb: Warning (clocks_property): arch/arm/boot/dts/ls1021a-twr.dtb: Warning (clocks_property): Property 'clocks', cell 1 is not a phandle reference in /soc/i2c@2180000/mux@77/i2c@4/sgtl5000@2a
-> arch/arm/boot/dts/ls1021a-qds.dtb: Warning (clocks_property): Missing property '#clock-cells' in node /soc/interrupt-controller@1400000 or bad phandle (referred from /soc/i2c@2180000/mux@77/i2c@4/sgtl5000@2a:clocks[1])
-> Property 'clocks', cell 1 is not a phandle reference in /soc/i2c@2190000/sgtl5000@a
-> arch/arm/boot/dts/ls1021a-twr.dtb: Warning (clocks_property): Missing property '#clock-cells' in node /soc/interrupt-controller@1400000 or bad phandle (referred from /soc/i2c@2190000/sgtl5000@a:clocks[1])
-> 
-> The clocks that get referenced here are fixed-rate, so they do not
-> take any argument, and dtc interprets the next cell as a phandle, which
-> is invalid.
-> 
-> Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+On Wed, Dec 27, 2017 at 12:10 PM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
+> 在 2017年12月27日星期三 CST 下午12:09:41，Chen-Yu Tsai 写道：
+>> On Fri, Dec 22, 2017 at 8:22 PM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
+>> > This patchset adds support for the SimpleFB on Allwinner SoCs with
+>> > "Display Engine 2.0".
+>> >
+>> > PATCH 1 to PATCH 3 are DE2 CCU fixes for H3/H5 SoCs.
+>> >
+>> > PATCH 4 adds the pipeline strings for DE2 SimpleFB.
+>> >
+>> > PATCH 5 to 7 adds necessary device tree nodes (DE2 CCU and SimpleFB)
+>> > for H3/H5 SoCs.
+>> >
+>> > PATCH 8 to 11 are for Allwinner A64 SoC to enable SimpleFB.
+>>
+>> Changelog?
+>
+> They're in seperate patches.
 
-Hi Arnd,
+Please add them to all patches in such a case. List "none" if there
+were no changes.
 
-Thanks for the patch.  But I have queued up a couple of patches from
-Fabio [1] for that.
-
-Shawn
-
-[1] https://www.spinics.net/lists/arm-kernel/msg624303.html
+ChenYu
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
