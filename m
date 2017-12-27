@@ -1,135 +1,148 @@
-From: Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>
-Subject: Re: [PATCH 2/3] dt-bindings: mtd: atmel-quadspi: add an optional
- property 'dmacap,memcpy'
-Date: Wed, 27 Dec 2017 22:40:00 +0100
-Message-ID: <0149ba05-64b1-2739-e61f-78d5170775fb@wedev4u.fr>
-References: <cover.1514087323.git.cyrille.pitchen@wedev4u.fr>
- <143542c61ca674d53da4985bbabc142e8e6ebefc.1514087323.git.cyrille.pitchen@wedev4u.fr>
- <20171226232330.trljk2ofyvu4ly3n@rob-hp-laptop>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v2 2/3] dt-bindings: media: Add Allwinner V3s Camera
+ Sensor Interface (CSI)
+Date: Wed, 27 Dec 2017 23:47:23 +0200
+Message-ID: <20171227214723.rcssyay2lqqjf6ty@valkosipuli.retiisi.org.uk>
+References: <1501131697-1359-1-git-send-email-yong.deng@magewell.com>
+ <1501131697-1359-3-git-send-email-yong.deng@magewell.com>
+ <20171219115327.ofs5xwwimpn7x72n@valkosipuli.retiisi.org.uk>
+ <20171221104935.663812085b616935ca3046de@magewell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171226232330.trljk2ofyvu4ly3n@rob-hp-laptop>
-Content-Language: en-US
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ludovic Desroches <ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Cc: computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, vigneshr-l0cyMroinI0@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, radu.pirea-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20171221104935.663812085b616935ca3046de@magewell.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yong <yong.deng@magewell.com>
+Cc: maxime.ripard@free-electrons.com, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "David S. Miller" <davem@davemloft.net>, Hans Verkuil <hverkuil@xs4all.nl>, Arnd Bergmann <arnd@arndb.de>, Hugues Fruchet <hugues.fruchet@st.com>, Yannick Fertre <yannick.fertre@st.com>, Philipp Zabel <p.zabel@pengutronix.de>, Benoit Parrot <bparrot@ti.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Jean-Christophe Trotin <jean-christophe.trotin@st.com>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>, Minghsiu Tsai <minghsiu.tsai@mediatek.com>, Krzysztof Kozlowski <krzk@kernel.org>, Robert
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi Yong,
 
-+ Ludovic Desroches, maintainer of the DMA controller drivers for AT91 SoCs.
-
-Le 27/12/2017 à 00:23, Rob Herring a écrit :
-> On Sun, Dec 24, 2017 at 05:36:05AM +0100, Cyrille Pitchen wrote:
->> The optional 'dmacap,memcpy' DT property tells the Atmel QSPI controller
->> driver to reserve some DMA channel then to use it to perform DMA
->> memcpy() during data transfers. This feature relies on the generic
->> bounce buffer helper from spi-nor.c.
->>
->> Signed-off-by: Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>
->> ---
->>  Documentation/devicetree/bindings/mtd/atmel-quadspi.txt | 5 +++++
->>  1 file changed, 5 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/mtd/atmel-quadspi.txt b/Documentation/devicetree/bindings/mtd/atmel-quadspi.txt
->> index b93c1e2f25dd..002d3f0a445b 100644
->> --- a/Documentation/devicetree/bindings/mtd/atmel-quadspi.txt
->> +++ b/Documentation/devicetree/bindings/mtd/atmel-quadspi.txt
->> @@ -12,6 +12,10 @@ Required properties:
->>  - #address-cells: Should be <1>.
->>  - #size-cells:    Should be <0>.
->>  
->> +Optional properties:
->> +- dmacap,memcpy:  Reserve a DMA channel to perform DMA memcpy() between the
->> +                  system memory and the QSPI mapped memory.
+On Thu, Dec 21, 2017 at 10:49:35AM +0800, Yong wrote:
+> Hi,
 > 
-> How is this a h/w property? Why would I not want to always enable DMA if 
-> possible?
-
-The number of DMA channels is limited for a given SoC. This number may be
-lower than the number of enabled controllers (spi, i2c, qspi, aes, sha,
-des, sdmmc, usart, ...).
-
-So we use a DT property to explicitly tell the matching drivers to request
-and reserved the DMA channels they need. This policy is not driver or even
-SoC specific but board specific. It's very common to reserved DMA channels
-for the most used or most performance dependent controllers, setting the
-relevant properties in the device-tree then restricting remaining
-controllers to their PIO mode.
-
+> On Tue, 19 Dec 2017 13:53:28 +0200
+> Sakari Ailus <sakari.ailus@iki.fi> wrote:
 > 
-> Furthermore, you are reusing a property, but giving it a different 
-> meaning. The current definition is an indication whether a DMA 
-> controller supports memcpy operations or not. It is not a flag for 
-> clients to use memcpy channels.
->
+> > Hi Yong,
+> > 
+> > On Thu, Jul 27, 2017 at 01:01:36PM +0800, Yong Deng wrote:
+> > > Add binding documentation for Allwinner V3s CSI.
+> > > 
+> > > Signed-off-by: Yong Deng <yong.deng@magewell.com>
+> > 
+> > DT bindings should precede the driver.
+> 
+> OK.
+> 
+> > 
+> > > ---
+> > >  .../devicetree/bindings/media/sun6i-csi.txt        | 49 ++++++++++++++++++++++
+> > >  1 file changed, 49 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/media/sun6i-csi.txt
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/media/sun6i-csi.txt b/Documentation/devicetree/bindings/media/sun6i-csi.txt
+> > > new file mode 100644
+> > > index 0000000..f8d83f6
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/media/sun6i-csi.txt
+> > > @@ -0,0 +1,49 @@
+> > > +Allwinner V3s Camera Sensor Interface
+> > > +------------------------------
+> > > +
+> > > +Required properties:
+> > > +  - compatible: value must be "allwinner,sun8i-v3s-csi"
+> > 
+> > What are sun6i and sun8i? Is this device first present in sun6i SoCs,
+> > whereas you have only defined bindings for sun8i?
+> 
+> Yes, some sun6i SoCs has the almost same CSI module.
+> There is only V3s on my hand. So, I only tested it on V3s. But
+> some people work on the others.
 
-I don't mind changing the name. I thought it would be better to use some
-existing one than creating another. However I was not confident on whether
-"dmacap,memcpy" was actually a good candidate for what I do in the DMA
-patch for the atmel-quadspi.c driver.
-
-Actually, I was relying on your feedbacks :)
-
-> Why don't you use "dmas" property to point to the DMA controller.
-
-I didn't use the "dmas" property because I thought it would not have been
-consistent with how this property is used in all other nodes of the sama5*
-device-trees. The flags provided in the dma-cells are designed for "memory
-to peripheral" or "peripheral to memory" DMA transfers only.
-
-However, here I need to perform some "memory to memory" transfer: the SPI
-NOR flash memory is mapped into the AHB bus of SAMA5D2 SoCs. Besides,
-once in Serial Memory Mode, data can no longer be transfered through the
-TDR or RDR registers of the QSPI controller, only through its AHB mapped
-memory window.
-
-So I cannot configured the DMA channel for "peripheral to memory" or
-"memory to peripheral" like for other controllers embedded in the SoC but
-only for "memory to memory".
-
-Maybe we could extend the flags supported by the "dmas" property but I
-guess it may require some little rework in the at_xdmac_xlate() function
-of the at_xdmac.c driver.
-
-Or maybe no change at all is required at the at_xdmac.c driver side: we
-just don't care about the provided flags in the "dmas" property, especially
-the "peripheral id". They would be ignored anyway when the atmel-quadspi.c
-driver later calls dmaengine_prep_dma_memcpy(). So I could simply set the
-dma cells to 0 in the device-tree?
-
-Ludovic, what do you think about that ?
-
-
-Best regards,
-
-Cyrille
+Ack.
 
 > 
->> +
->>  Example:
->>  
->>  spi@f0020000 {
->> @@ -24,6 +28,7 @@ spi@f0020000 {
->>  	#size-cells = <0>;
->>  	pinctrl-names = "default";
->>  	pinctrl-0 = <&pinctrl_spi0_default>;
->> +	dmacap,memcpy;
->>  
->>  	m25p80@0 {
->>  		...
->> -- 
->> 2.11.0
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe devicetree" in
->> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > 
+> > > +  - reg: base address and size of the memory-mapped region.
+> > > +  - interrupts: interrupt associated to this IP
+> > > +  - clocks: phandles to the clocks feeding the CSI
+> > > +    * ahb: the CSI interface clock
+> > > +    * mod: the CSI module clock
+> > > +    * ram: the CSI DRAM clock
+> > > +  - clock-names: the clock names mentioned above
+> > > +  - resets: phandles to the reset line driving the CSI
+> > > +
+> > > +- ports: A ports node with endpoint definitions as defined in
+> > > +  Documentation/devicetree/bindings/media/video-interfaces.txt.
+> > 
+> > Please document mandatory and optional endpoint properties relevant for the
+> > hardware.
 > 
+> I have added below commit in my v3:
+> Currently, the driver only support the parallel interface. So, a single port
+> node with one endpoint and parallel bus is supported.
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Please specify the exact properties that are relevant for the hardware. No
+references should be made to the driver, the bindings are entirely
+separate.
+
+Are the non-parallel (CSI-2?) and parallel bus on the same interface? If
+yes, they should probably use different endpoints, if not, then different
+ports.
+
+You could document the other bus or omit it now altogether, in which case
+you'd only detail the parallel bus properties here.
+
+> 
+> > 
+> > > +
+> > > +Example:
+> > > +
+> > > +	csi1: csi@01cb4000 {
+> > > +		compatible = "allwinner,sun8i-v3s-csi";
+> > > +		reg = <0x01cb4000 0x1000>;
+> > > +		interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
+> > > +		clocks = <&ccu CLK_BUS_CSI>,
+> > > +			 <&ccu CLK_CSI1_SCLK>,
+> > > +			 <&ccu CLK_DRAM_CSI>;
+> > > +		clock-names = "ahb", "mod", "ram";
+> > > +		resets = <&ccu RST_BUS_CSI>;
+> > > +
+> > > +		port {
+> > > +			#address-cells = <1>;
+> > > +			#size-cells = <0>;
+> > > +
+> > > +			/* Parallel bus endpoint */
+> > > +			csi1_ep: endpoint {
+> > > +				remote-endpoint = <&adv7611_ep>;
+> > > +				bus-width = <16>;
+> > > +				data-shift = <0>;
+> > > +
+> > > +				/* If hsync-active/vsync-active are missing,
+> > > +				   embedded BT.656 sync is used */
+> > > +				hsync-active = <0>; /* Active low */
+> > > +				vsync-active = <0>; /* Active low */
+> > > +				data-active = <1>;  /* Active high */
+> > > +				pclk-sample = <1>;  /* Rising */
+> > > +			};
+> > > +		};
+> > > +	};
+> > > +
+> > 
+> > -- 
+> > Kind regards,
+> > 
+> > Sakari Ailus
+> > e-mail: sakari.ailus@iki.fi
+> 
+> 
+> Thanks,
+> Yong
+
+-- 
+Regards,
+
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi
