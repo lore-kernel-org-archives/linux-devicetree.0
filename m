@@ -1,88 +1,67 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH] dt: bindings: as3645a: Fix the example node
-Date: Wed, 27 Dec 2017 22:19:45 +0100
-Message-ID: <20171227211945.GA9205@amd>
-References: <20171205133637.30022-1-dmurphy@ti.com>
- <20171206215204.7qyjjd2oue7n7l37@rob-hp-laptop>
- <2c2b1fc0-6156-2897-b597-6911fee64556@ti.com>
- <CAL_JsqKG2TWLTREqNecy_3pOqLFJWa4SM4G4yzyKsZqW7opDvw@mail.gmail.com>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC V7 2/2] OPP: Allow "opp-hz" and "opp-microvolt" to contain
+ magic values
+Date: Wed, 27 Dec 2017 15:36:24 -0600
+Message-ID: <CAL_JsqJA-cCOLRwHC1ZegHEt9v7pMoxY6qXF7Taq3k19bU-k3w@mail.gmail.com>
+References: <CAKohpokvQD4Z6YY6MRG8c+hnsS=Z52X4XhyTgC5FTgf7VuaNmw@mail.gmail.com>
+ <CAL_JsqK-qtAaM_Ou5NtxcWR3F_q=8rMPJUm-VqGtKhbtWe5SAQ@mail.gmail.com>
+ <20171101214333.GG30645@codeaurora.org> <20171102045155.GX4240@vireshk-i7>
+ <20171102071533.GM30645@codeaurora.org> <20171102090033.GZ4240@vireshk-i7>
+ <CAPDyKFryn5=GMs+hiRcxGOC1U=-LL9RQdnY3cWniyE+4pwQDog@mail.gmail.com>
+ <20171130005029.GC19419@codeaurora.org> <20171130065907.GI11413@vireshk-i7>
+ <CAL_Jsq+ntPMiSacpsx7M7VwSXsx+fRbHpX-KFNVpDj+bYdNCiQ@mail.gmail.com> <20171227044526.GE8312@vireshk-i7>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="EVF5PPMfhYS0aIcm"
-Return-path: <linux-leds-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqKG2TWLTREqNecy_3pOqLFJWa4SM4G4yzyKsZqW7opDvw@mail.gmail.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Dan Murphy <dmurphy@ti.com>, Mark Rutland <mark.rutland@arm.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171227044526.GE8312@vireshk-i7>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Viresh Kumar <vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Rafael Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Dec 26, 2017 at 10:45 PM, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On 26-12-17, 14:23, Rob Herring wrote:
+>> >         cpu_opp_table: cpu_opp_table {
+>> >                 compatible = "operating-points-v2";
+>> >                 opp-shared;
+>> >
+>> >                 opp00 {
+>> >                         opp-hz = /bits/ 64 <208000000>;
+>> >                         clock-latency-ns = <500000>;
+>> >                         power-domain-opp = <&domain_opp_1>;
+>>
+>> What is this? opp00 here is not a device. One OPP should not point to
+>> another. "power-domain-opp" is only supposed to appear in devices
+>> alongside power-domains properties.
+>
+> There are two type of devices:
+>
+> A.) With fixed performance state requirements and they will have the
+> new "required-opp" property in the device node itself as you said.
+>
+> B.) Devices which can do DVFS (CPU, MMC, LCD, etc) and those may need
+> a different performance state of the domain for their individual OPPs
+> and so we can't have this property in the device all the time.
+>
+> Does this make sense ?
 
---EVF5PPMfhYS0aIcm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+No. From the definition for power-domain-opp
 
-On Thu 2017-12-07 09:42:29, Rob Herring wrote:
-> On Wed, Dec 6, 2017 at 4:32 PM, Dan Murphy <dmurphy@ti.com> wrote:
-> > Rob
-> >
-> > On 12/06/2017 03:52 PM, Rob Herring wrote:
-> >> On Tue, Dec 05, 2017 at 07:36:37AM -0600, Dan Murphy wrote:
-> >>> Fix the address-cells and size-cells example node
-> >>> to reflect to the correct representation.
-> >>>
-> >>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> >>> ---
-> >>>  Documentation/devicetree/bindings/leds/ams,as3645a.txt | 4 ++--
-> >>>  1 file changed, 2 insertions(+), 2 deletions(-)
-> >>>
-> >>> diff --git a/Documentation/devicetree/bindings/leds/ams,as3645a.txt b=
-/Documentation/devicetree/bindings/leds/ams,as3645a.txt
-> >>> index fdc40e354a64..8a49ccfec29b 100644
-> >>> --- a/Documentation/devicetree/bindings/leds/ams,as3645a.txt
-> >>> +++ b/Documentation/devicetree/bindings/leds/ams,as3645a.txt
-> >>> @@ -59,8 +59,8 @@ Example
-> >>>  =3D=3D=3D=3D=3D=3D=3D
-> >>>
-> >>>      as3645a@30 {
-> >>> -            #address-cells: 1
-> >>> -            #size-cells: 0
-> >>> +            #address-cells =3D <1>;
-> >>> +            #size-cells =3D <0>;
-> >>>              reg =3D <0x30>;
-> >>>              compatible =3D "ams,as3645a";
-> >>
-> >> Convention is also we put compatible first.
-> >>
-> >
-> > OK I will move that too for v2.
-> >
-> > Can that be in the same patch or do you want a separate patch?
->=20
-> Same patch is fine.
+"+- power-domain-opp: This contains phandle to one of the OPP nodes of
+the master
++  power domain. This specifies the minimum required OPP of the master
+domain for
++  the functioning of the device in this OPP (where this property is present).
++  This property can only be set for a device if the device node contains the
++  "power-domains" property. Also, either all or none of the OPP nodes in an OPP
++  table should have it set."
 
-For fixed patch:
+In the above example, you are violating the next to last sentence.
 
-Signed-off-by: Pavel Machek <pavel@ucw.cz>
+Though, I'm now confused by what the last sentence means.
 
-Thanks,
-								Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---EVF5PPMfhYS0aIcm
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlpEDnEACgkQMOfwapXb+vJF5gCcDzl4o3+4TGmuf0rIOnIGyjRS
-jIoAoL9LU/VEiBH1EcOB5aY/z8KTxZZp
-=atXk
------END PGP SIGNATURE-----
-
---EVF5PPMfhYS0aIcm--
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
