@@ -1,62 +1,97 @@
-From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V8 3/3] OPP: Allow "opp-hz" and "opp-microvolt" to
- contain magic values
-Date: Wed, 27 Dec 2017 14:26:45 +0530
-Message-ID: <20171227085645.GF8312@vireshk-i7>
-References: <cover.1513591822.git.viresh.kumar@linaro.org>
- <476d7ae69184d787ccc6d99f8df6069007fd0a91.1513591822.git.viresh.kumar@linaro.org>
- <20171226202955.32j7gzonrixtwdpt@rob-hp-laptop>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: [PATCH] Device tree binding for Avago APDS990X light sensor
+Date: Wed, 27 Dec 2017 10:18:28 +0100
+Message-ID: <20171227091828.GA3307@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="BOKacYhQ+x31HxR3"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20171226202955.32j7gzonrixtwdpt@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Viresh Kumar <vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rafael Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, pali.rohar@gmail.com, sre@kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-omap@vger.kernel.org, tony@atomide.com, khilman@kernel.org, aaro.koskinen@iki.fi, ivo.g.dimitrov.75@gmail.com, patrikbachan@gmail.com, serge@hallyn.com, abcloriens@gmail.com, clayton@craftyguy.net, martijn@brixit.nl, sakari.ailus@linux.intel.com, Filip =?utf-8?Q?Matijevi=C4=87?= <filip.matijevic.pz@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 26-12-17, 14:29, Rob Herring wrote:
-> On Mon, Dec 18, 2017 at 03:51:30PM +0530, Viresh Kumar wrote:
 
-> > +On some platforms the exact frequency or voltage may be hidden from the OS by
-> > +the firmware and the "opp-hz" or the "opp-microvolt" properties may contain
-> > +magic values that represent the frequency or voltage in a firmware dependent
-> > +way, for example an index of an array in the firmware.
-> 
-> I'm still not convinced this is a good idea.
+--BOKacYhQ+x31HxR3
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-You were kind-of a few days back :)
+=46rom: Filip Matijevi=C4=87 <filip.matijevic.pz@gmail.com>
 
-lkml.kernel.org/r/CAL_JsqK-qtAaM_Ou5NtxcWR3F_q=8rMPJUm-VqGtKhbtWe5SAQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org
+This prepares binding for light sensor used in Nokia N9.=20
 
-So here is the deal:
+Signed-off-by: Filip Matijevi=C4=87 <filip.matijevic.pz@gmail.com>
+Signed-off-by: Pavel machek <pavel@ucw.cz>
 
-- I proposed "domain-performance-state" property for this stuff
-  initially.
-- But Kevin didn't like that and proposed reusing "opp-hz" and
-  "opp-microvolt", which we all agreed to multiple times..
-- And we are back to the same discussion now and its painful and time
-  killing for all of us.
+---
 
-TBH, I don't have too strong preferences about any of the suggestions
-you guys have and I need you guys to tell me what binding changes to
-do here and I will do that.
+Patches to convert APDS990X driver to device tree and to switch to iio
+are available.
 
-> If you have firmware 
-> partially managing things, then I think we should have platform specific 
-> bindings or drivers. 
+diff --git a/Documentation/devicetree/bindings/misc/avago-apds990x.txt b/Do=
+cumentation/devicetree/bindings/misc/avago-apds990x.txt
+new file mode 100644
+index 0000000..e038146
+--- /dev/null
++++ b/Documentation/devicetree/bindings/misc/avago-apds990x.txt
+@@ -0,0 +1,39 @@
++Avago APDS990X driver
++
++Required properties:
++- compatible: "avago,apds990x"
++- reg: address on the I2C bus
++- interrupts: external interrupt line number
++- Vdd-supply: power supply for VDD
++- Vled-supply: power supply for LEDA
++- ga: Glass attenuation
++- cf1: Clear channel factor 1
++- irf1: IR channel factor 1
++- cf2: Clear channel factor 2
++- irf2: IR channel factor 2
++- df: Device factor
++- pdrive: IR current, one of APDS_IRLED_CURR_XXXmA values
++- ppcount: Proximity pulse count
++
++Example (Nokia N9):
++
++	als_ps@39 {
++		compatible =3D "avago,apds990x";
++		reg =3D <0x39>;
++
++		interrupt-parent =3D <&gpio3>;
++		interrupts =3D <19 10>; /* gpio_83, IRQF_TRIGGER_FALLING | IRQF_TRIGGER_=
+LOW */
++
++		Vdd-supply =3D <&vaux1>;
++		Vled-supply =3D <&vbat>;
++
++		ga	=3D <168834>;
++		cf1	=3D <4096>;
++		irf1	=3D <7824>;
++		cf2	=3D <877>;
++		irf2	=3D <1575>;
++		df	=3D <52>;
++
++		pdrive	=3D <0x2>; /* APDS_IRLED_CURR_25mA */
++		ppcount	=3D <5>;
++	};
 
-What about the initial idea then, like "performance-state" for the
-power domains ? All platforms will anyway replicate that binding only.
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
-> This is complex enough I'm not taking silence from Stephen as an okay.
+--BOKacYhQ+x31HxR3
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Sure, but I am not sure how to make him speak :)
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
--- 
-viresh
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+iEYEARECAAYFAlpDZWQACgkQMOfwapXb+vKUWACcD9TCR6gkdVH4SuJSNHcQC1WS
+ycsAoJdaxyg5E62HV8mMcNm/6FuM6ITb
+=a8eO
+-----END PGP SIGNATURE-----
+
+--BOKacYhQ+x31HxR3--
