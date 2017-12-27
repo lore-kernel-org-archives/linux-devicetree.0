@@ -1,86 +1,34 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH v3 1/5] dt-bindings: at24: consistently document the
- compatible property
-Date: Wed, 27 Dec 2017 23:02:58 +0100
-Message-ID: <6dcb51bb-c5a1-06e4-68a2-16aa0d8b000d@axentia.se>
-References: <20171227135054.29690-1-brgl@bgdev.pl>
- <20171227135054.29690-2-brgl@bgdev.pl>
+From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: qcom: msm8974: Add Sony Xperia Z1 Compact
+Date: Wed, 27 Dec 2017 15:22:08 -0800
+Message-ID: <20171227232208.GH478@tuxbook>
+References: <20171203040919.16243-1-ata2001@airmail.cc>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <20171227135054.29690-2-brgl@bgdev.pl>
-Content-Language: en-US
-Sender: linux-i2c-owner@vger.kernel.org
-To: Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy.shevchenko@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Javier Martinez Canillas <javier@dowhile0.org>, David Lechner <david@lechnology.com>, Divagar Mohandass <divagar.mohandass@intel.com>
-Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20171203040919.16243-1-ata2001-baQpNawxmjKjKv3TNrM5DQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Attila Sz?ll??si <ata2001-baQpNawxmjKjKv3TNrM5DQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2017-12-27 14:50, Bartosz Golaszewski wrote:
-> Current description of the compatible property for at24 is quite vague.
-> 
-> State explicitly that any "<manufacturer>,<model>" pair is accepted as
-> long as one of the listed strings is used as fallback.
-> 
-> Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
-> ---
->  Documentation/devicetree/bindings/eeprom/at24.txt | 37 +++++++++--------------
->  1 file changed, 15 insertions(+), 22 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/eeprom/at24.txt b/Documentation/devicetree/bindings/eeprom/at24.txt
-> index cbc80e194ac6..b5ce5a247554 100644
-> --- a/Documentation/devicetree/bindings/eeprom/at24.txt
-> +++ b/Documentation/devicetree/bindings/eeprom/at24.txt
-> @@ -2,28 +2,21 @@ EEPROMs (I2C)
->  
->  Required properties:
->  
-> -  - compatible : should be "<manufacturer>,<type>", like these:
-> -
-> -	"atmel,24c00", "atmel,24c01", "atmel,24c02", "atmel,24c04",
-> -	"atmel,24c08", "atmel,24c16", "atmel,24c32", "atmel,24c64",
-> -	"atmel,24c128", "atmel,24c256", "atmel,24c512", "atmel,24c1024"
-> -
-> -	"catalyst,24c32"
-> -
-> -	"microchip,24c128"
-> -
-> -	"ramtron,24c64"
-> -
-> -	"renesas,r1ex24002"
-> -
-> -	The following manufacturers values have been deprecated:
-> -	"at", "at24"
-> -
-> -	 If there is no specific driver for <manufacturer>, a generic
-> -	 device with <type> and manufacturer "atmel" should be used.
-> -	 Possible types are:
-> -	 "24c00", "24c01", "24c02", "24c04", "24c08", "24c16", "24c32", "24c64",
-> -	 "24c128", "24c256", "24c512", "24c1024", "spd"
-> +  - compatible: must be a "<manufacturer>,<model>" pair with one of the
-> +                following values as fallback:
-> +
-> +                "atmel,24c00",
-> +                "atmel,24c01",
+On Sat 02 Dec 20:09 PST 2017, Attila Sz?ll??si wrote:
 
-I read the above as if it is no longer allowed to have a plain old atmel
-chip, since the atmel compatibles are now valid as fallbacks /only/. I don't
-think that's what you intended?
-
-Cheers,
-Peter
-
-> +                "atmel,24c02",
-> +                "atmel,24c04",
-> +                "atmel,24c08",
-> +                "atmel,24c16",
-> +                "atmel,24c32",
-> +                "atmel,24c64",
-> +                "atmel,24c128",
-> +                "atmel,24c256",
-> +                "atmel,24c512",
-> +                "atmel,24c1024"
->  
->    - reg : the I2C address of the EEPROM
->  
+> This patch adds a DTS file for Sony Xperia Z1 Compact with support for
+> regulators, serial UART, eMMC/SD-card, USB, charger, backlight,
+> coincell and buttons.
 > 
+> Work based on arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts.
+> 
+> Signed-off-by: Attila Szöll??si <ata2001-baQpNawxmjKjKv3TNrM5DQ@public.gmane.org>
+
+Acked-by: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+
+Regards,
+Bjorn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
