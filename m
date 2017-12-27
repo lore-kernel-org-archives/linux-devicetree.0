@@ -1,97 +1,29 @@
-From: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH] Device tree binding for Avago APDS990X light sensor
-Date: Wed, 27 Dec 2017 20:00:01 +0200
-Message-ID: <20171227180000.6ejpbqmr736nqx5i@kekkonen.localdomain>
-References: <20171227091828.GA3307@amd>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v2 1/4] dt-bindings: usb: add DT binding for RK3328 dwc3 controller
+Date: Wed, 27 Dec 2017 19:22:19 +0100
+Message-ID: <1547931.Auro76k3dK@phil>
+References: <20171204094041.25439-1-heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20171227091828.GA3307@amd>
+In-Reply-To: <20171204094041.25439-1-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, aaro.koskinen-X3B1VOXEql0@public.gmane.org, ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, patrikbachan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, serge-A9i7LUbDfNHQT0dZR+AlfA@public.gmane.org, abcloriens-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, clayton-fehKsxFhGzZIf6P1QZMOBw@public.gmane.org, martijn-28JJ9oSIdodmR6Xm/wNWPw@public.gmane.org, Filip =?utf-8?Q?Matijevi=C4=87?= <filip.matijevic.pz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
+Cc: balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Pavel,
-
-Thanks for the patch. Please see my comments below.
-
-On Wed, Dec 27, 2017 at 10:18:28AM +0100, Pavel Machek wrote:
-> From: Filip Matijević <filip.matijevic.pz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Am Montag, 4. Dezember 2017, 10:40:38 CET schrieb Heiko Stuebner:
+> From: William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 > 
-> This prepares binding for light sensor used in Nokia N9. 
+> Adds the device tree bindings description for RK3328 and
+> compatible USB DWC3 controller.
 > 
-> Signed-off-by: Filip Matijević <filip.matijevic.pz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Signed-off-by: Pavel machek <pavel-+ZI9xUNit7I@public.gmane.org>
-> 
-> ---
-> 
-> Patches to convert APDS990X driver to device tree and to switch to iio
-> are available.
-> 
-> diff --git a/Documentation/devicetree/bindings/misc/avago-apds990x.txt b/Documentation/devicetree/bindings/misc/avago-apds990x.txt
-> new file mode 100644
-> index 0000000..e038146
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/misc/avago-apds990x.txt
-> @@ -0,0 +1,39 @@
-> +Avago APDS990X driver
-> +
-> +Required properties:
-> +- compatible: "avago,apds990x"
-> +- reg: address on the I2C bus
-> +- interrupts: external interrupt line number
-> +- Vdd-supply: power supply for VDD
-> +- Vled-supply: power supply for LEDA
+> Signed-off-by: William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 
-AFAIK the custom is to use lower case letters for regulator supplies.
-
-> +- ga: Glass attenuation
-> +- cf1: Clear channel factor 1
-> +- irf1: IR channel factor 1
-> +- cf2: Clear channel factor 2
-> +- irf2: IR channel factor 2
-> +- df: Device factor
-> +- pdrive: IR current, one of APDS_IRLED_CURR_XXXmA values
-> +- ppcount: Proximity pulse count
-
-Are these device specific? If so, please add the vendor prefix to them.
-
-I might not use short abbreviations such as "df" either. I wonder what
-others think.
-
-> +
-> +Example (Nokia N9):
-> +
-> +	als_ps@39 {
-> +		compatible = "avago,apds990x";
-> +		reg = <0x39>;
-> +
-> +		interrupt-parent = <&gpio3>;
-> +		interrupts = <19 10>; /* gpio_83, IRQF_TRIGGER_FALLING | IRQF_TRIGGER_LOW */
-> +
-> +		Vdd-supply = <&vaux1>;
-> +		Vled-supply = <&vbat>;
-> +
-> +		ga	= <168834>;
-> +		cf1	= <4096>;
-> +		irf1	= <7824>;
-> +		cf2	= <877>;
-> +		irf2	= <1575>;
-> +		df	= <52>;
-> +
-> +		pdrive	= <0x2>; /* APDS_IRLED_CURR_25mA */
-> +		ppcount	= <5>;
-> +	};
-> 
-
--- 
-Kind regards,
-
-Sakari Ailus
-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+applied all 4 with Felipe's Ack on patch1
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
