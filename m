@@ -1,59 +1,103 @@
-From: Trent Piepho <tpiepho@impinj.com>
-Subject: Re: [PATCH 0/3] mtd: spi-nor: fix DMA-unsafe buffer issue between MTD
- and SPI
-Date: Wed, 27 Dec 2017 20:15:11 +0000
-Message-ID: <1514405711.26695.67.camel@impinj.com>
-References: <cover.1514087323.git.cyrille.pitchen@wedev4u.fr>
-         <1514313927.26695.19.camel@impinj.com> <20171227103609.GQ1827@finisterre>
+From: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH] Device tree binding for Avago APDS990X light sensor
+Date: Wed, 27 Dec 2017 23:15:48 +0200
+Message-ID: <20171227211547.5gc7pg4lxqnjeht2@kekkonen.localdomain>
+References: <20171227091828.GA3307@amd>
+ <20171227180000.6ejpbqmr736nqx5i@kekkonen.localdomain>
+ <7a5d43a9-27f5-bdbd-780f-6c6bc47fb987@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171227103609.GQ1827@finisterre>
-Content-Language: en-US
-Content-ID: <FA2545AD1CB5704BB88FF465EC11F6C8@namprd06.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "broonie@kernel.org" <broonie@kernel.org>
-Cc: "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "radu.pirea@microchip.com" <radu.pirea@microchip.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "robh@kernel.org" <robh@kernel.org>, "cyrille.pitchen@wedev4u.fr" <cyrille.pitchen@wedev4u.fr>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "vigneshr@ti.com" <vigneshr@ti.com>, "boris.brezillon@free-electrons.com" <boris.brezillon@free-electrons.com>, "richard@nod.at" <richard@nod.at>, marek.vasut@gmai
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <7a5d43a9-27f5-bdbd-780f-6c6bc47fb987-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Filip =?utf-8?Q?Matijevi=C4=87?= <filip.matijevic.pz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, aaro.koskinen-X3B1VOXEql0@public.gmane.org, ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, patrikbachan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, serge-A9i7LUbDfNHQT0dZR+AlfA@public.gmane.org, abcloriens-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, clayton-fehKsxFhGzZIf6P1QZMOBw@public.gmane.org, martijn-28JJ9oSIdodmR6Xm/wNWPw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCAyMDE3LTEyLTI3IGF0IDEwOjM2ICswMDAwLCBNYXJrIEJyb3duIHdyb3RlOg0KPiBP
-biBUdWUsIERlYyAyNiwgMjAxNyBhdCAwNjo0NToyOFBNICswMDAwLCBUcmVudCBQaWVwaG8gd3Jv
-dGU6DQo+IA0KPiA+IE9yLCBzaW5jZSB0aGlzIG9ubHkgZml4ZXMgaW5zdGFuY2VzIG9mIERNQS11
-bnNhZmUgYnVmZmVycyB1c2VkIGluDQo+ID4gYWNjZXNzIHRvIFNQSSBOT1IgZmxhc2ggY2hpcHMs
-IGFuZCBzaW5jZSB0aGVyZSBhcmUgb3RoZXIgU1BJIG1hc3Rlcg0KPiA+IGludGVyZmFjZSB1c2Vy
-cywgdGhvc2UgY2hpcCBzcGVjaWZpYyBmaXhlcyBpbiBzb21lL2FsbCBzcGkgbWFzdGVyDQo+ID4g
-ZHJpdmVycyBhcmUgc3RpbGwgbmVlZGVkIHRvIGZpeCB0cmFuc2ZlcnMgbm90IG9yaWdpbmF0ZWQg
-dmlhIHNwaS1ub3I/IA0KPiANCj4gU1BJIGNsaWVudCBkcml2ZXJzIGFyZSAqc3VwcG9zZWQqIHRv
-IHVzZSBETUEgc2FmZSBtZW1vcnkgYWxyZWFkeS4gIEhvdw0KPiBvZnRlbiB0aGF0IGhhcHBlbnMg
-aW4gY2FzZXMgd2hlcmUgaXQgbWF0dGVycyBpcyBhIHNlcGFyYXRlIHF1ZXN0aW9uLCB3ZQ0KPiBk
-ZWZpbml0ZWx5IGhhdmUgdXNlcnMgd2l0aCBzbWFsbGVyIHRyYW5zZmVycyB0aGF0IGRvbid0IGRv
-IHRoZSByaWdodA0KPiB0aGluZyBidXQgdGhleSdyZSBub3JtYWxseSBkb25lIHVzaW5nIFBJTyBh
-bnl3YXkuDQoNCkkgd29uZGVyIHdoYXQgdGhlIGVuZCBnb2FsIGlzIGhlcmU/DQoNCkEgcmFuZG9t
-IGNvbGxlY3Rpb24gb2Ygc3BpIG1hc3RlciBkcml2ZXJzIHdpbGwgYWNjZXB0IERNQS11bnNhZmUN
-CmJ1ZmZlcnMgaW4gc29tZSB3YXkuICBJbiBzb21lIGNhc2VzIGEgZnJhbWV3b3JrIGxpa2Ugc3Bp
-LW5vciBwcm92aWRlcw0KdGhlIGZpeHVwIHRvIHNwaS1ub3IgbWFzdGVyIGRyaXZlcnMgKG5vbmUg
-c28gZmFyKSBhbmQgaW4gb3RoZXIgY2FzZXMNCihhdG1lbC1xdWFkc3BpKSwgdGhlIHNwaS1ub3Ig
-bWFzdGVyIGRyaXZlciBoYXMgaXRzIG93biBmaXhlcy4NCg0KR2VuZXJpYyBzcGkgbWFzdGVycyBs
-aWtlIHNwaS1hdG1lbCwgc3BpLXRpLXFzcGksIGFuZCBzcGktZGF2aW5jaSB3aWxsDQpoYXZlIHRo
-ZWlyIGZpeGVzIGZvciBjZXJ0YWluIGNhc2VzLg0KDQpQZXJoYXBzIHNwaSBmbGFzaCBkcml2ZXJz
-IGxpa2UgbTI1cDgwIHdpbGwgaGF2ZSBmaXhlcyB0b28/DQoNClNvbWUgc3BpIGNsaWVudHMsIGxp
-a2Ugc3BpZGV2LCB3aWxsIGhhdmUgaW50ZXJuYWwgYm91bmNlIGJ1ZmZlcnMsDQpyYXRoZXIgdGhh
-biB1c2Vyc3BhY2UgYWRkcmVzc2VzIG9yIGNvbW1hbmRzIGluIHN0YWNrIHZhcmlhYmxlcywgc28g
-dGhhdA0KdGhleSBmb2xsb3cgdGhlIHJ1bGVzIGFib3V0IERNQSBzYWZlIGJ1ZmZlcnMuDQoNCldo
-YXQgZXhhY3RseSBpcyBjYXVnaHQgYXMgRE1BIHVuc2FmZSBhbmQgd2hhdCBpcyBub3Qgd2lsbCBv
-ZiBjb3Vyc2UNCnZhcnkgZ3JlYXRseSBmcm9tIGRyaXZlciB0byBkcml2ZXIuICBTb21lIGRyaXZl
-cnMgd2lsbCBjYXRjaCBoaWdobWVtDQptZW1vcnkgd2hpbGUgb3RoZXIgZHJpdmVycyB3aWxsIG9u
-bHkgZGV0ZWN0IHZtYWxsb2MgbWVtb3J5LiAgU29tZSB3aWxsDQpvbmx5IGNhdGNoIGFuIHVuc2Fm
-ZSBidWZmZXIgaWYgYSBzcGVjaWZpYyBTb0Mga25vd24gdG8gdGhlIGRyaXZlciB0bw0KaGF2ZSBh
-biBhbGlhc2luZyBjYWNoZSBpcyBlbmFibGVkLiAgU29tZSB3aWxsIGNoZWNrIGJ1ZmZlcnMgdGhh
-dCBhcnJpdmUNCnZpYSB0aGUgc3BpX2ZsYXNoX3JlYWQgaW50ZXJmYWNlIGJ1dCBub3QgdmlhIGdl
-bmVyaWMgc3BpIHRyYW5zZmVycywNCndoaWxlIG90aGVycyB3aWxsIGNoZWNrIGFsbCBzcGkgdHJh
-bnNmZXIgYnVmZmVycy4NCg0KT2J2aW91c2x5LCBJIGRvbid0IHRoaW5rIHRoaXMgcGF0aCB3aWxs
-IGxlYWQgdG8gYSBkZXNpcmFibGUgZW5kLiAgTWF5YmUNCnRoZSBiYXNpYyBhc3N1bXB0aW9uLCB0
-aGF0IGNsaWVudHMgc2hvdWxkIHByb3ZpZGUgRE1BIHNhZmUgYnVmZmVycywNCnNob3VsZCBiZSBy
-ZXZpc2l0ZWQuICBFeHBlcmllbmNlIGhhcyBzaG93biB0aGF0IGl0J3MgdG9vIG11Y2ggdG8gYXNr
-DQpmb3IgYW5kIHNwaSBjbGllbnRzIHdpbGwgbmV2ZXIgZ2V0IGl0IHJpZ2h0LiAgSXQgd291bGQg
-YmUgYmV0dGVyIHRvIHRyeQ0KdG8gZml4IHRoaXMgYXQgc29tZSBjb21tb24gcG9pbnQgYmV0d2Vl
-biB0aGUgY2xpZW50cyBhbmQgbWFzdGVycyBzbyBpdA0KY2FuIGJlIGRvbmUgb25jZSBhbmQgZm9y
-IGFsbC4=
+On Wed, Dec 27, 2017 at 07:50:42PM +0100, Filip Matijević wrote:
+> Hi Sakari,
+> 
+> and thank you for your input - I've added a few comments below.
+> 
+> On 12/27/2017 07:00 PM, Sakari Ailus wrote:
+> > Hi Pavel,
+> > 
+> > Thanks for the patch. Please see my comments below.
+> > 
+> > On Wed, Dec 27, 2017 at 10:18:28AM +0100, Pavel Machek wrote:
+> >> From: Filip Matijević <filip.matijevic.pz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> >>
+> >> This prepares binding for light sensor used in Nokia N9. 
+> >>
+> >> Signed-off-by: Filip Matijević <filip.matijevic.pz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> >> Signed-off-by: Pavel machek <pavel-+ZI9xUNit7I@public.gmane.org>
+> >>
+> >> ---
+> >>
+> >> Patches to convert APDS990X driver to device tree and to switch to iio
+> >> are available.
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/misc/avago-apds990x.txt b/Documentation/devicetree/bindings/misc/avago-apds990x.txt
+> >> new file mode 100644
+> >> index 0000000..e038146
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/misc/avago-apds990x.txt
+> >> @@ -0,0 +1,39 @@
+> >> +Avago APDS990X driver
+> >> +
+> >> +Required properties:
+> >> +- compatible: "avago,apds990x"
+> >> +- reg: address on the I2C bus
+> >> +- interrupts: external interrupt line number
+> >> +- Vdd-supply: power supply for VDD
+> >> +- Vled-supply: power supply for LEDA
+> > 
+> > AFAIK the custom is to use lower case letters for regulator supplies.
+> 
+> I've just used the same notation as in current driver. Datasheet calls
+> those VDD (with DD being in subscript) and LEDA. I see no problem in
+> changing those to vdd-supply and vled-supply if no one else objects.
+> 
+> > 
+> >> +- ga: Glass attenuation
+> >> +- cf1: Clear channel factor 1
+> >> +- irf1: IR channel factor 1
+> >> +- cf2: Clear channel factor 2
+> >> +- irf2: IR channel factor 2
+> >> +- df: Device factor
+> >> +- pdrive: IR current, one of APDS_IRLED_CURR_XXXmA values
+> >> +- ppcount: Proximity pulse count
+> > 
+> > Are these device specific? If so, please add the vendor prefix to them.
+> 
+> AFAIK yes - same as before if no one else objects, these will be changed.
+> 
+> > 
+> > I might not use short abbreviations such as "df" either. I wonder what
+> > others think.
+> 
+> These are also come from current driver - some of these comes from the
+> datasheet itself, but not all. For example "ga" and "df" are in there
+> (so I I would leave those alone), but "irf1" is called "B", "cf2" is
+> called "C" and "irf2" is called "D" (I guess the missing "cf1" should be
+> "A", but there is no such thing in the datasheet).
+> IMHO using some other names might just add to the confusion.
+
+Ack, datasheet names are fine.
+
+You could also use a single property with all device specific coefficients
+in a pre-defined order.
+
+I don't have a strong opinion either way.
+
+-- 
+Regards,
+
+Sakari Ailus
+sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
