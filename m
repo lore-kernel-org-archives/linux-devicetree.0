@@ -1,23 +1,23 @@
 From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: dts: imx6: RDU2: disable internal watchdog
-Date: Wed, 27 Dec 2017 09:09:44 -0200
-Message-ID: <CAOMZO5AGrJ0f64mLQyjpbiZWusT+J6Q39Rc6+aN-hxX8Xe=R8A@mail.gmail.com>
-References: <20171227035656.4941-1-andrew.smirnov@gmail.com>
+Subject: Re: [PATCH 2/2] ARM: dts: imx6: RDU2: correct RTC compatible
+Date: Wed, 27 Dec 2017 09:11:51 -0200
+Message-ID: <CAOMZO5BO=kX6ZDLV75c44VPNOggLzf630SHcyzfAU_+4ME2vDQ@mail.gmail.com>
+References: <20171227035656.4941-1-andrew.smirnov@gmail.com> <20171227035656.4941-2-andrew.smirnov@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171227035656.4941-1-andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20171227035656.4941-2-andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chris Healy <cphealy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chris Healy <cphealy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 Hi Andrey,
 
 On Wed, Dec 27, 2017 at 1:56 AM, Andrey Smirnov
 <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> The system has an external watchdog in the environment processor
-> so the internal watchdog is of no use.
+> The RTC is manufactured by Maxim. This is a cosmetic fix, as Linux
+> doesn't match the vendor string for i2c devices.
 >
 > Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 > Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
@@ -30,11 +30,14 @@ On Wed, Dec 27, 2017 at 1:56 AM, Andrey Smirnov
 > Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 > Signed-off-by: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Patch looks good.
+This patch seems to be from Lucas:
+https://patchwork.kernel.org/patch/10099397/
 
-Just not clear if the authorship comes from you or Lucas.
+,so his name should appear in the From field.
 
-If Lucas is the original author then his name should appear in the From field.
+Anyway, this patch has been sent earlier and we suggested to keep the
+existing binding, which is the documented form:
+https://patchwork.kernel.org/patch/10099397/
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
