@@ -1,67 +1,135 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC V7 2/2] OPP: Allow "opp-hz" and "opp-microvolt" to contain
- magic values
-Date: Wed, 27 Dec 2017 15:36:24 -0600
-Message-ID: <CAL_JsqJA-cCOLRwHC1ZegHEt9v7pMoxY6qXF7Taq3k19bU-k3w@mail.gmail.com>
-References: <CAKohpokvQD4Z6YY6MRG8c+hnsS=Z52X4XhyTgC5FTgf7VuaNmw@mail.gmail.com>
- <CAL_JsqK-qtAaM_Ou5NtxcWR3F_q=8rMPJUm-VqGtKhbtWe5SAQ@mail.gmail.com>
- <20171101214333.GG30645@codeaurora.org> <20171102045155.GX4240@vireshk-i7>
- <20171102071533.GM30645@codeaurora.org> <20171102090033.GZ4240@vireshk-i7>
- <CAPDyKFryn5=GMs+hiRcxGOC1U=-LL9RQdnY3cWniyE+4pwQDog@mail.gmail.com>
- <20171130005029.GC19419@codeaurora.org> <20171130065907.GI11413@vireshk-i7>
- <CAL_Jsq+ntPMiSacpsx7M7VwSXsx+fRbHpX-KFNVpDj+bYdNCiQ@mail.gmail.com> <20171227044526.GE8312@vireshk-i7>
+From: Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>
+Subject: Re: [PATCH 2/3] dt-bindings: mtd: atmel-quadspi: add an optional
+ property 'dmacap,memcpy'
+Date: Wed, 27 Dec 2017 22:40:00 +0100
+Message-ID: <0149ba05-64b1-2739-e61f-78d5170775fb@wedev4u.fr>
+References: <cover.1514087323.git.cyrille.pitchen@wedev4u.fr>
+ <143542c61ca674d53da4985bbabc142e8e6ebefc.1514087323.git.cyrille.pitchen@wedev4u.fr>
+ <20171226232330.trljk2ofyvu4ly3n@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171227044526.GE8312@vireshk-i7>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Viresh Kumar <vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Rafael Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171226232330.trljk2ofyvu4ly3n@rob-hp-laptop>
+Content-Language: en-US
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ludovic Desroches <ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Cc: computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, vigneshr-l0cyMroinI0@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, radu.pirea-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 26, 2017 at 10:45 PM, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On 26-12-17, 14:23, Rob Herring wrote:
->> >         cpu_opp_table: cpu_opp_table {
->> >                 compatible = "operating-points-v2";
->> >                 opp-shared;
->> >
->> >                 opp00 {
->> >                         opp-hz = /bits/ 64 <208000000>;
->> >                         clock-latency-ns = <500000>;
->> >                         power-domain-opp = <&domain_opp_1>;
+Hi Rob,
+
++ Ludovic Desroches, maintainer of the DMA controller drivers for AT91 SoCs.
+
+Le 27/12/2017 à 00:23, Rob Herring a écrit :
+> On Sun, Dec 24, 2017 at 05:36:05AM +0100, Cyrille Pitchen wrote:
+>> The optional 'dmacap,memcpy' DT property tells the Atmel QSPI controller
+>> driver to reserve some DMA channel then to use it to perform DMA
+>> memcpy() during data transfers. This feature relies on the generic
+>> bounce buffer helper from spi-nor.c.
 >>
->> What is this? opp00 here is not a device. One OPP should not point to
->> another. "power-domain-opp" is only supposed to appear in devices
->> alongside power-domains properties.
+>> Signed-off-by: Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>
+>> ---
+>>  Documentation/devicetree/bindings/mtd/atmel-quadspi.txt | 5 +++++
+>>  1 file changed, 5 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/mtd/atmel-quadspi.txt b/Documentation/devicetree/bindings/mtd/atmel-quadspi.txt
+>> index b93c1e2f25dd..002d3f0a445b 100644
+>> --- a/Documentation/devicetree/bindings/mtd/atmel-quadspi.txt
+>> +++ b/Documentation/devicetree/bindings/mtd/atmel-quadspi.txt
+>> @@ -12,6 +12,10 @@ Required properties:
+>>  - #address-cells: Should be <1>.
+>>  - #size-cells:    Should be <0>.
+>>  
+>> +Optional properties:
+>> +- dmacap,memcpy:  Reserve a DMA channel to perform DMA memcpy() between the
+>> +                  system memory and the QSPI mapped memory.
+> 
+> How is this a h/w property? Why would I not want to always enable DMA if 
+> possible?
+
+The number of DMA channels is limited for a given SoC. This number may be
+lower than the number of enabled controllers (spi, i2c, qspi, aes, sha,
+des, sdmmc, usart, ...).
+
+So we use a DT property to explicitly tell the matching drivers to request
+and reserved the DMA channels they need. This policy is not driver or even
+SoC specific but board specific. It's very common to reserved DMA channels
+for the most used or most performance dependent controllers, setting the
+relevant properties in the device-tree then restricting remaining
+controllers to their PIO mode.
+
+> 
+> Furthermore, you are reusing a property, but giving it a different 
+> meaning. The current definition is an indication whether a DMA 
+> controller supports memcpy operations or not. It is not a flag for 
+> clients to use memcpy channels.
 >
-> There are two type of devices:
->
-> A.) With fixed performance state requirements and they will have the
-> new "required-opp" property in the device node itself as you said.
->
-> B.) Devices which can do DVFS (CPU, MMC, LCD, etc) and those may need
-> a different performance state of the domain for their individual OPPs
-> and so we can't have this property in the device all the time.
->
-> Does this make sense ?
 
-No. From the definition for power-domain-opp
+I don't mind changing the name. I thought it would be better to use some
+existing one than creating another. However I was not confident on whether
+"dmacap,memcpy" was actually a good candidate for what I do in the DMA
+patch for the atmel-quadspi.c driver.
 
-"+- power-domain-opp: This contains phandle to one of the OPP nodes of
-the master
-+  power domain. This specifies the minimum required OPP of the master
-domain for
-+  the functioning of the device in this OPP (where this property is present).
-+  This property can only be set for a device if the device node contains the
-+  "power-domains" property. Also, either all or none of the OPP nodes in an OPP
-+  table should have it set."
+Actually, I was relying on your feedbacks :)
 
-In the above example, you are violating the next to last sentence.
+> Why don't you use "dmas" property to point to the DMA controller.
 
-Though, I'm now confused by what the last sentence means.
+I didn't use the "dmas" property because I thought it would not have been
+consistent with how this property is used in all other nodes of the sama5*
+device-trees. The flags provided in the dma-cells are designed for "memory
+to peripheral" or "peripheral to memory" DMA transfers only.
 
-Rob
+However, here I need to perform some "memory to memory" transfer: the SPI
+NOR flash memory is mapped into the AHB bus of SAMA5D2 SoCs. Besides,
+once in Serial Memory Mode, data can no longer be transfered through the
+TDR or RDR registers of the QSPI controller, only through its AHB mapped
+memory window.
+
+So I cannot configured the DMA channel for "peripheral to memory" or
+"memory to peripheral" like for other controllers embedded in the SoC but
+only for "memory to memory".
+
+Maybe we could extend the flags supported by the "dmas" property but I
+guess it may require some little rework in the at_xdmac_xlate() function
+of the at_xdmac.c driver.
+
+Or maybe no change at all is required at the at_xdmac.c driver side: we
+just don't care about the provided flags in the "dmas" property, especially
+the "peripheral id". They would be ignored anyway when the atmel-quadspi.c
+driver later calls dmaengine_prep_dma_memcpy(). So I could simply set the
+dma cells to 0 in the device-tree?
+
+Ludovic, what do you think about that ?
+
+
+Best regards,
+
+Cyrille
+
+> 
+>> +
+>>  Example:
+>>  
+>>  spi@f0020000 {
+>> @@ -24,6 +28,7 @@ spi@f0020000 {
+>>  	#size-cells = <0>;
+>>  	pinctrl-names = "default";
+>>  	pinctrl-0 = <&pinctrl_spi0_default>;
+>> +	dmacap,memcpy;
+>>  
+>>  	m25p80@0 {
+>>  		...
+>> -- 
+>> 2.11.0
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
