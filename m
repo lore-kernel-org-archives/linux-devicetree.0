@@ -1,88 +1,34 @@
-From: Shunqian Zheng <zhengsq@rock-chips.com>
-Subject: Re: [PATCH 4/4] [media] dt/bindings: Add bindings for OV2685
-Date: Wed, 27 Dec 2017 08:40:44 +0800
-Message-ID: <22962a7f-5067-0b9c-0dd0-2de11d8b9ad8@rock-chips.com>
-References: <1514211086-13440-1-git-send-email-zhengsq@rock-chips.com>
- <1514211086-13440-4-git-send-email-zhengsq@rock-chips.com>
- <20171226232855.egppgy22ywketxi6@rob-hp-laptop>
-Reply-To: zhengsq@rock-chips.com
+From: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
+Subject: Re: [RFC PATCH v12 1/5] dt-bindings: PCI: Add definition of PCIe WAKE# irq and PCI irq
+Date: Wed, 27 Dec 2017 01:43:09 +0100
+Message-ID: <3268448.IvXk7OJtIY@aspire.rjw.lan>
+References: <20171226023646.17722-1-jeffy.chen@rock-chips.com> <20171226023646.17722-2-jeffy.chen@rock-chips.com> <20171226233552.nacwqbpkozmy7n6c@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20171226232855.egppgy22ywketxi6@rob-hp-laptop>
-Content-Language: en-US
-Sender: linux-media-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: mchehab@kernel.org, mark.rutland@arm.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, ddl@rock-chips.com, tfiga@chromium.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171226233552.nacwqbpkozmy7n6c@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Rob,
+On Wednesday, December 27, 2017 12:35:52 AM CET Rob Herring wrote:
+> On Tue, Dec 26, 2017 at 10:36:42AM +0800, Jeffy Chen wrote:
+> > We are going to handle PCIe WAKE# pin for PCI devices in the pci core,
+> > so add definitions of the optional PCIe WAKE# pin for PCI devices.
+> > 
+> > Also add an definition of the optional PCI interrupt pin for PCI
+> > devices to distinguish it from the PCIe WAKE# pin.
+> 
+> By v13 you should drop "RFC". RFC implies not ready for merging.
 
-On 2017年12月27日 07:28, Rob Herring wrote:
-> On Mon, Dec 25, 2017 at 10:11:26PM +0800, Shunqian Zheng wrote:
->> Add device tree binding documentation for the OV2685 sensor.
->>
->> Signed-off-by: Shunqian Zheng <zhengsq@rock-chips.com>
->> ---
->>   .../devicetree/bindings/media/i2c/ov2685.txt       | 35 ++++++++++++++++++++++
->>   1 file changed, 35 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/media/i2c/ov2685.txt
->>
->> diff --git a/Documentation/devicetree/bindings/media/i2c/ov2685.txt b/Documentation/devicetree/bindings/media/i2c/ov2685.txt
->> new file mode 100644
->> index 0000000..c62db9c
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/media/i2c/ov2685.txt
->> @@ -0,0 +1,35 @@
->> +* Omnivision OV2685 MIPI CSI-2 sensor
->> +
->> +Required Properties:
->> +- compatible: should be "ovti,ov2685"
->> +- clocks: reference to the 24M xvclk input clock.
->> +- clock-names: should be "xvclk".
->> +- avdd-supply: Analog voltage supply, 2.8 volts
->> +- dvdd-supply: Digital core voltage supply, 1.2 volts
->> +- reset-gpios: Low active reset gpio
->> +
->> +The device node must contain one 'port' child node for its digital output
->> +video port, in accordance with the video interface bindings defined in
->> +Documentation/devicetree/bindings/media/video-interfaces.txt.
->> +
->> +Example:
->> +	ucam: ov2680@3c {
-> camera-sensor@3c
->
->> +		compatible = "ovti,ov2685";
->> +		reg = <0x3c>;
->> +		pinctrl-names = "default";
->> +		pinctrl-0 = <&clk_24m_cam &ucam_rst>;
-> Not documented.
-The &clk_24m_cam is pin mux on my rk3399. While the &ucam_rst is board 
-special pin, I should remove it in Document.
+Which very much still is the case AFAICS.
 
 Thanks,
+Rafael
 
-Shunqian
-
->
->> +
->> +		clocks = <&cru SCLK_TESTCLKOUT1>;
->> +		clock-names = "xvclk";
->> +
->> +		avdd-supply = <&pp2800_cam>;
->> +		dovdd-supply = <&pp1800>;
->> +		reset-gpios = <&gpio2 3 GPIO_ACTIVE_LOW>;
->> +
->> +		port {
->> +			ucam_out: endpoint {
->> +				remote-endpoint = <&mipi_in_ucam>;
->> +				data-lanes = <1>;
->> +			};
->> +		};
->> +	};
->> -- 
->> 1.9.1
->>
->
->
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
