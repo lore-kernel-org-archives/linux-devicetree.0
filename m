@@ -1,33 +1,60 @@
-From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Subject: Re: [PATCH net-next] phylib: rename reset-(post-)delay-us to
- reset-(de)assert-us
-Date: Wed, 27 Dec 2017 11:07:12 -0500 (EST)
-Message-ID: <20171227.110712.906396433540000727.davem@davemloft.net>
-References: <20171222100809.18826-1-dev@g0hl1n.net>
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171222100809.18826-1-dev-M/VWbR8SM2SsTnJN9+BGXg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dev-M/VWbR8SM2SsTnJN9+BGXg@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, lukma-ynQEQJNshbs@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>
+Subject: [PATCH RFC 0/7] Introduce GENI SE Controller Driver
+Date: Wed, 27 Dec 2017 09:27:19 -0700
+Message-ID: <1514392046-30602-1-git-send-email-kramasub@codeaurora.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: linux-arm-msm@vger.kernel.org, linux-i2c@vger.kernel.org, linux-serial@vger.kernel.org
+Cc: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, corbet@lwn.net, wsa@the-dreams.de, gregkh@linuxfoundation.org, jslaby@suse.com
 List-Id: devicetree@vger.kernel.org
 
-From: Richard Leitner <dev-M/VWbR8SM2SsTnJN9+BGXg@public.gmane.org>
-Date: Fri, 22 Dec 2017 11:08:09 +0100
+Generic Interface (GENI) firmware based Qualcomm Universal Peripheral (QUP)
+Wrapper is a next generation programmable module for supporting a wide
+range of serial interfaces like UART, SPI, I2C, I3C, etc. A single QUP
+module can provide upto 8 Serial Interfaces using its internal Serial
+Engines (SE). The protocol supported by each interface is determined by
+the firmware loaded to the Serial Engine.
 
-> From: Richard Leitner <richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>
-> 
-> As suggested by Rob Herring [1] rename the previously introduced
-> reset-{,post-}delay-us bindings to the clearer reset-{,de}assert-us
-> 
-> [1] https://patchwork.kernel.org/patch/10104905/
-> 
-> Signed-off-by: Richard Leitner <richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>
+This patch series introduces GENI SE Driver to manage the GENI based QUP
+Wrapper and the common aspects of all SEs inside the QUP Wrapper. This
+patch series also introduces the UART and I2C Controller drivers to
+drive the SEs that are programmed with the respective protocols.
 
-Applied, thanks.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Karthikeyan Ramasubramanian (7):
+  qcom-geni-se: Add QCOM GENI SE Driver summary
+  soc: qcom: Add device tree binding for GENI SE
+  soc: qcom: Add GENI based QUP Wrapper driver
+  i2c: Add device tree bindings for GENI I2C Controller
+  i2c: i2c-qcom-geni: Add bus driver for the Qualcomm GENI I2C
+    controller
+  serial: Add device tree bindings for GENI based UART Controller
+  tty: serial: msm_geni_serial: Add serial driver support for GENI based
+    QUP
+
+ .../devicetree/bindings/i2c/i2c-qcom-geni.txt      |   39 +
+ .../devicetree/bindings/serial/qcom,geni-uart.txt  |   31 +
+ .../devicetree/bindings/soc/qcom/qcom,geni-se.txt  |   15 +
+ Documentation/qcom-geni-se.txt                     |   56 +
+ drivers/i2c/busses/Kconfig                         |   10 +
+ drivers/i2c/busses/Makefile                        |    1 +
+ drivers/i2c/busses/i2c-qcom-geni.c                 |  685 +++++++++
+ drivers/soc/qcom/Kconfig                           |    8 +
+ drivers/soc/qcom/Makefile                          |    1 +
+ drivers/soc/qcom/qcom-geni-se.c                    |  973 +++++++++++++
+ drivers/tty/serial/Kconfig                         |   10 +
+ drivers/tty/serial/Makefile                        |    1 +
+ drivers/tty/serial/qcom_geni_serial.c              | 1447 ++++++++++++++++++++
+ include/linux/qcom-geni-se.h                       |  811 +++++++++++
+ 14 files changed, 4088 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-qcom-geni.txt
+ create mode 100644 Documentation/devicetree/bindings/serial/qcom,geni-uart.txt
+ create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
+ create mode 100644 Documentation/qcom-geni-se.txt
+ create mode 100644 drivers/i2c/busses/i2c-qcom-geni.c
+ create mode 100644 drivers/soc/qcom/qcom-geni-se.c
+ create mode 100644 drivers/tty/serial/qcom_geni_serial.c
+ create mode 100644 include/linux/qcom-geni-se.h
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
