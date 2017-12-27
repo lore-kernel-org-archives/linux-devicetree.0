@@ -1,93 +1,120 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH net-next v8 1/2] dt-bindings: net: add DT bindings for
- Socionext UniPhier AVE
-Date: Wed, 27 Dec 2017 10:49:20 +0900
-Message-ID: <CAK7LNAQ2TpfZEYGvpe8eJjEnroTLvCpaX1NBdyVQ0YpOyB3qZA@mail.gmail.com>
-References: <1514164238-28901-1-git-send-email-hayashi.kunihiko@socionext.com> <1514164238-28901-2-git-send-email-hayashi.kunihiko@socionext.com>
+From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Subject: Re: [PATCH] ARM: make ARCH_S3C24XX select USE_OF and clean-up boot/dts/Makefile
+Date: Wed, 27 Dec 2017 11:00:18 +0900
+Message-ID: <CAK7LNAS_MYno9gwU5vy9dXYfj8mz8ost+BtN+c1CzW3jf2vmcA@mail.gmail.com>
+References: <1511749163-11057-1-git-send-email-yamada.masahiro@socionext.com>
+ <CAJKOXPf0kWKQCf7avT4LLpkanhh-WvFoNUzdvpNDk2Q-KkymJQ@mail.gmail.com>
+ <CAK7LNASWV7F+rjEq-RN+QGwx1fbnaL1oeWmu178A_a-Q=5f95g@mail.gmail.com> <CAJKOXPfd+R0z-RcNLWn=rS6U0uBhDsZS8d-f-b4+jUeQBruc5Q@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1514164238-28901-2-git-send-email-hayashi.kunihiko@socionext.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc: David Miller <davem@davemloft.net>, netdev@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAJKOXPfd+R0z-RcNLWn=rS6U0uBhDsZS8d-f-b4+jUeQBruc5Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: arm-soc <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2017-12-25 10:10 GMT+09:00 Kunihiko Hayashi <hayashi.kunihiko@socionext.com>:
-> DT bindings for the AVE ethernet controller found on Socionext's
-> UniPhier platforms.
+2017-12-26 2:39 GMT+09:00 Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
+> On Sun, Dec 24, 2017 at 6:19 PM, Masahiro Yamada
+> <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
+>> 2017-12-22 21:41 GMT+09:00 Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
+>>> On Mon, Nov 27, 2017 at 3:19 AM, Masahiro Yamada
+>>> <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
+>>>> ARCH_S3C24XX is a very exceptional platform that some DT files in
+>>>> arch/arm/boot/dts/, but does not select USE_OF.
+>>>
+>>> Not entirely. The platform does select USE_OF - when MACH_S3C2416_DT
+>>> is chosen. For other boards USE_OF is not necessary because they do
+>>> not use DT. Why you need to select it for entire arch?
+>>>
+>>> Best regards,
+>>> Krzysztof
+>>>
+>>
+>>
+>> The reason is simple - to avoid compile error.
+>>
+>>
+>> If I simply drop ifeq ($(CONFIG_OF),y)
+>> but do not select ARCH_S3C24XX,
+>> s3c2410_defconfig failed to build.
+>>
+>>
+>> $ make -s ARCH=arm mrproper
+>> $ make -s ARCH=arm s3c2410_defconfig
+>> $ make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-  dtbs
+>>     ...
+>>
+>>   DTC     arch/arm/boot/dts/s3c2416-smdk2416.dtb
+>> /bin/sh: 1: ./scripts/dtc/dtc: not found
+>> scripts/Makefile.lib:310: recipe for target
+>> 'arch/arm/boot/dts/s3c2416-smdk2416.dtb' failed
+>> make[1]: *** [arch/arm/boot/dts/s3c2416-smdk2416.dtb] Error 127
+>> arch/arm/Makefile:349: recipe for target 'dtbs' failed
+>> make: *** [dtbs] Error 2
+>>
+>>
+>> Another solution would be to enable dtb by CONFIG_MACH_S3C2416_DT.
+>>
+>>
+>> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+>> index d0381e9..950b5dd 100644
+>> --- a/arch/arm/boot/dts/Makefile
+>> +++ b/arch/arm/boot/dts/Makefile
+>> @@ -800,7 +798,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += \
+>>         rk3288-veyron-pinky.dtb \
+>>         rk3288-veyron-speedy.dtb \
+>>         rk3288-vyasa.dtb
+>> -dtb-$(CONFIG_ARCH_S3C24XX) += \
+>> +dtb-$(CONFIG_MACH_S3C2416_DT) += \
+>>         s3c2416-smdk2416.dtb
+>>  dtb-$(CONFIG_ARCH_S3C64XX) += \
+>>         s3c6410-mini6410.dtb \
+>>
+>>
+>>
+>> If you migrate S3C24XX platform to DT,
+>> per-board CONFIG option will go away.
+>>
+>> So, I think dtb-$(CONFIG_ARCH_S3C24XX) is OK.
 >
-> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
-> Acked-by: Rob Herring <robh@kernel.org>
-> ---
->  .../bindings/net/socionext,uniphier-ave4.txt       | 47 ++++++++++++++++++++++
->  1 file changed, 47 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/socionext,uniphier-ave4.txt
+> I think this second solution - using CONFIG_MACH_S3C2416_DT - makes
+> more sense because:
+> 1, S3C24xx will not be converted to DT. This is a legacy platform.
+> 2. DT version supports only part of boards and peripherals so most of
+> existing platforms will use non-DT boardfiles. Enabling OF on all of
+> them is not useful for them.
+
+I do not care this much.
+I leave this up to you (and ARM-SOC maintainers).
+
+
+> 3. The same error and solution probably applies to MACH_S3C64XX.
+
+Maybe no.
+
+Looking at arch/arm/mach-s3c64xx/Kconfig,
+ARCH_S3C64XX depends on ARCH_MULTI_V6.
+
+Multiplatform selects USE_OF.
+
+
+
+
 >
-> diff --git a/Documentation/devicetree/bindings/net/socionext,uniphier-ave4.txt b/Documentation/devicetree/bindings/net/socionext,uniphier-ave4.txt
-> new file mode 100644
-> index 0000000..8b03668
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/socionext,uniphier-ave4.txt
-> @@ -0,0 +1,47 @@
-> +* Socionext AVE ethernet controller
-> +
-> +This describes the devicetree bindings for AVE ethernet controller
-> +implemented on Socionext UniPhier SoCs.
-> +
-> +Required properties:
-> + - compatible: Should be
-> +       - "socionext,uniphier-pro4-ave4" : for Pro4 SoC
-> +       - "socionext,uniphier-pxs2-ave4" : for PXs2 SoC
-> +       - "socionext,uniphier-ld11-ave4" : for LD11 SoC
-> +       - "socionext,uniphier-ld20-ave4" : for LD20 SoC
-> + - reg: Address where registers are mapped and size of region.
-> + - interrupts: Should contain the MAC interrupt.
-> + - phy-mode: See ethernet.txt in the same directory. Allow to choose
-> +       "rgmii", "rmii", or "mii" according to the PHY.
-> + - phy-handle: Should point to the external phy device.
-> +       See ethernet.txt file in the same directory.
-> + - clocks: A phandle to the clock for the MAC.
-> +
-> +Optional properties:
-> + - resets: A phandle to the reset control for the MAC.
-> + - local-mac-address: See ethernet.txt in the same directory.
-> +
-> +Required subnode:
-> + - mdio: A container for child nodes representing phy nodes.
-> +         See phy.txt in the same directory.
-> +
-> +Example:
-> +
-> +       ether: ethernet@65000000 {
-> +               compatible = "socionext,uniphier-ld20-ave4";
-> +               reg = <0x65000000 0x8500>;
-> +               interrupts = <0 66 4>;
-> +               phy-mode = "rgmii";
-> +               phy-handle = <&ethphy>;
-> +               clocks = <&sys_clk 6>;
-> +               resets = <&sys_rst 6>;
-> +               local-mac-address = [00 00 00 00 00 00];
-> +
-> +               mdio {
-> +                       #address-cells = <1>;
-> +                       #size-cells = <0>;
-> +                       ethphy: ethphy@1 {
-> +                               reg = <1>;
-> +                       };
-> +               };
+> Best regards,
+> Krzysztof
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
-Andrew Lunn suggested to put a blank line before the "mdio" subnode in v7:
-https://patchwork.kernel.org/patch/10127461/
-
-Does it apply to the "ethphy" subnode, too?
-
-
-
-Looks like you have a chance for v9.  Please consider it.
 
 
 -- 
 Best Regards
 Masahiro Yamada
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
