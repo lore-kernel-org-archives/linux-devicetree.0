@@ -1,54 +1,88 @@
-From: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH] Device tree binding for Avago APDS990X light sensor
-Date: Wed, 27 Dec 2017 23:16:44 +0200
-Message-ID: <20171227211643.nnwtm4j6cyftlm66@kekkonen.localdomain>
-References: <20171227091828.GA3307@amd>
- <20171227180000.6ejpbqmr736nqx5i@kekkonen.localdomain>
- <20171227200147.GB16799@amd>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH] dt: bindings: as3645a: Fix the example node
+Date: Wed, 27 Dec 2017 22:19:45 +0100
+Message-ID: <20171227211945.GA9205@amd>
+References: <20171205133637.30022-1-dmurphy@ti.com>
+ <20171206215204.7qyjjd2oue7n7l37@rob-hp-laptop>
+ <2c2b1fc0-6156-2897-b597-6911fee64556@ti.com>
+ <CAL_JsqKG2TWLTREqNecy_3pOqLFJWa4SM4G4yzyKsZqW7opDvw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="EVF5PPMfhYS0aIcm"
+Return-path: <linux-leds-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20171227200147.GB16799@amd>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, aaro.koskinen-X3B1VOXEql0@public.gmane.org, ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, patrikbachan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, serge-A9i7LUbDfNHQT0dZR+AlfA@public.gmane.org, abcloriens-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, clayton-fehKsxFhGzZIf6P1QZMOBw@public.gmane.org, martijn-28JJ9oSIdodmR6Xm/wNWPw@public.gmane.org, Filip =?utf-8?Q?Matijevi=C4=87?= <filip.matijevic.pz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <CAL_JsqKG2TWLTREqNecy_3pOqLFJWa4SM4G4yzyKsZqW7opDvw@mail.gmail.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Dan Murphy <dmurphy@ti.com>, Mark Rutland <mark.rutland@arm.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 27, 2017 at 09:01:47PM +0100, Pavel Machek wrote:
-> Hi!
-> 
-> > > +Required properties:
-> > > +- compatible: "avago,apds990x"
-> > > +- reg: address on the I2C bus
-> > > +- interrupts: external interrupt line number
-> > > +- Vdd-supply: power supply for VDD
-> > > +- Vled-supply: power supply for LEDA
-> > 
-> > AFAIK the custom is to use lower case letters for regulator supplies.
-> > 
-> > > +- ga: Glass attenuation
-> > > +- cf1: Clear channel factor 1
-> > > +- irf1: IR channel factor 1
-> > > +- cf2: Clear channel factor 2
-> > > +- irf2: IR channel factor 2
-> > > +- df: Device factor
-> > > +- pdrive: IR current, one of APDS_IRLED_CURR_XXXmA values
-> > > +- ppcount: Proximity pulse count
-> > 
-> > Are these device specific? If so, please add the vendor prefix to them.
-> 
-> Well, whole binding is "vendor specific". Does it make sense to add
-> prefix in such case?
 
-Yes, it does. If you later find one or more of these are generic, you could
-remove the vendor prefix. I doubt that'll happen though, these seem very
-device specific parameters.
+--EVF5PPMfhYS0aIcm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--- 
-Sakari Ailus
-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Thu 2017-12-07 09:42:29, Rob Herring wrote:
+> On Wed, Dec 6, 2017 at 4:32 PM, Dan Murphy <dmurphy@ti.com> wrote:
+> > Rob
+> >
+> > On 12/06/2017 03:52 PM, Rob Herring wrote:
+> >> On Tue, Dec 05, 2017 at 07:36:37AM -0600, Dan Murphy wrote:
+> >>> Fix the address-cells and size-cells example node
+> >>> to reflect to the correct representation.
+> >>>
+> >>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> >>> ---
+> >>>  Documentation/devicetree/bindings/leds/ams,as3645a.txt | 4 ++--
+> >>>  1 file changed, 2 insertions(+), 2 deletions(-)
+> >>>
+> >>> diff --git a/Documentation/devicetree/bindings/leds/ams,as3645a.txt b=
+/Documentation/devicetree/bindings/leds/ams,as3645a.txt
+> >>> index fdc40e354a64..8a49ccfec29b 100644
+> >>> --- a/Documentation/devicetree/bindings/leds/ams,as3645a.txt
+> >>> +++ b/Documentation/devicetree/bindings/leds/ams,as3645a.txt
+> >>> @@ -59,8 +59,8 @@ Example
+> >>>  =3D=3D=3D=3D=3D=3D=3D
+> >>>
+> >>>      as3645a@30 {
+> >>> -            #address-cells: 1
+> >>> -            #size-cells: 0
+> >>> +            #address-cells =3D <1>;
+> >>> +            #size-cells =3D <0>;
+> >>>              reg =3D <0x30>;
+> >>>              compatible =3D "ams,as3645a";
+> >>
+> >> Convention is also we put compatible first.
+> >>
+> >
+> > OK I will move that too for v2.
+> >
+> > Can that be in the same patch or do you want a separate patch?
+>=20
+> Same patch is fine.
+
+For fixed patch:
+
+Signed-off-by: Pavel Machek <pavel@ucw.cz>
+
+Thanks,
+								Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--EVF5PPMfhYS0aIcm
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlpEDnEACgkQMOfwapXb+vJF5gCcDzl4o3+4TGmuf0rIOnIGyjRS
+jIoAoL9LU/VEiBH1EcOB5aY/z8KTxZZp
+=atXk
+-----END PGP SIGNATURE-----
+
+--EVF5PPMfhYS0aIcm--
