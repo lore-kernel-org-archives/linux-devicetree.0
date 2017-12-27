@@ -1,52 +1,95 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 0/3] mtd: spi-nor: fix DMA-unsafe buffer issue between
- MTD and SPI
-Date: Wed, 27 Dec 2017 10:36:09 +0000
-Message-ID: <20171227103609.GQ1827@finisterre>
-References: <cover.1514087323.git.cyrille.pitchen@wedev4u.fr>
- <1514313927.26695.19.camel@impinj.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="hIO1AjEoFJ7b3ahE"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1514313927.26695.19.camel@impinj.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Trent Piepho <tpiepho@impinj.com>
-Cc: "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "cyrille.pitchen@wedev4u.fr" <cyrille.pitchen@wedev4u.fr>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "boris.brezillon@free-electrons.com" <boris.brezillon@free-electrons.com>, "vigneshr@ti.com" <vigneshr@ti.com>, "richard@nod.at" <richard@nod.at>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>, "robh@kernel.org" <robh@kernel.org>, "radu.pirea@microchip.com" <radu.pirea@microchip.com>, devicetree@vger.kernel.org
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Applied "regmap: Add one flag to indicate if a hwlock should be used" to the regmap tree
+Date: Wed, 27 Dec 2017 10:39:54 +0000 (GMT)
+Message-ID: <20171227103954.25E3644006B@finisterre.ee.mobilebroadband>
+References: <29fa88f883dae4c1f8a3acb2656cbd7c5a539d40.1514180039.git.baolin.wang@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <29fa88f883dae4c1f8a3acb2656cbd7c5a539d40.1514180039.git.baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.orgbroonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.orglinux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+The patch
 
---hIO1AjEoFJ7b3ahE
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+   regmap: Add one flag to indicate if a hwlock should be used
 
-On Tue, Dec 26, 2017 at 06:45:28PM +0000, Trent Piepho wrote:
+has been applied to the regmap tree at
 
-> Or, since this only fixes instances of DMA-unsafe buffers used in
-> access to SPI NOR flash chips, and since there are other SPI master
-> interface users, those chip specific fixes in some/all spi master
-> drivers are still needed to fix transfers not originated via spi-nor?=20
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git 
 
-SPI client drivers are *supposed* to use DMA safe memory already.  How
-often that happens in cases where it matters is a separate question, we
-definitely have users with smaller transfers that don't do the right
-thing but they're normally done using PIO anyway.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
---hIO1AjEoFJ7b3ahE
-Content-Type: application/pgp-signature; name="signature.asc"
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
------BEGIN PGP SIGNATURE-----
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlpDd5gACgkQJNaLcl1U
-h9AEpgf/RtY0/PG8AYuqJuqcXHvaDEP59zvItyFKdgesM7P9Wu7LNe0mL1F+jPb8
-rD+jQ9AY0Ks7Q1wcjx8p8PJQdc25ybQoHrAfPqGtHbxlP7QsmCk1bbFJQ8zElHES
-cL969cO2GYxfb/uxpg0+Gl4OPqJs9CTkyzHphGgYZ8fIrbhCMbFmfjnuU4NcRuwF
-ODAsdhhWZRN4JxB+JAlpFy9KgSV59I/82alu4QhVuZcsuicDymafDb/Cx3EQ/inO
-nsdkp2g0nt4e9CNP6N5UUT6Chbah/oRNT3YMg5Zn3ez8IwmSq9t/82GoxEOYGIty
-OKq5AwLtmn2uVDAcJ+cfldZ4yCBGxA==
-=8I+R
------END PGP SIGNATURE-----
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
---hIO1AjEoFJ7b3ahE--
+Thanks,
+Mark
+
+>From a4887813c3a9481ab87c8a71ab1de50b975cc823 Mon Sep 17 00:00:00 2001
+From: Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Date: Mon, 25 Dec 2017 14:37:09 +0800
+Subject: [PATCH] regmap: Add one flag to indicate if a hwlock should be used
+
+Since the hwlock id 0 is valid for hardware spinlock core, but now id 0
+is treated as one invalid value for regmap. Thus we should add one extra
+flag for regmap config to indicate if a hardware spinlock should be used,
+then id 0 can be valid for regmap to request.
+
+Signed-off-by: Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+ drivers/base/regmap/regmap.c | 2 +-
+ include/linux/regmap.h       | 2 ++
+ 2 files changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/base/regmap/regmap.c b/drivers/base/regmap/regmap.c
+index f25ab18ca057..d23a5c99b639 100644
+--- a/drivers/base/regmap/regmap.c
++++ b/drivers/base/regmap/regmap.c
+@@ -671,7 +671,7 @@ struct regmap *__regmap_init(struct device *dev,
+ 		map->lock = config->lock;
+ 		map->unlock = config->unlock;
+ 		map->lock_arg = config->lock_arg;
+-	} else if (config->hwlock_id) {
++	} else if (config->use_hwlock) {
+ 		map->hwlock = hwspin_lock_request_specific(config->hwlock_id);
+ 		if (!map->hwlock) {
+ 			ret = -ENXIO;
+diff --git a/include/linux/regmap.h b/include/linux/regmap.h
+index 15eddc1353ba..c78e0057df66 100644
+--- a/include/linux/regmap.h
++++ b/include/linux/regmap.h
+@@ -317,6 +317,7 @@ typedef void (*regmap_unlock)(void *);
+  *
+  * @ranges: Array of configuration entries for virtual address ranges.
+  * @num_ranges: Number of range configuration entries.
++ * @use_hwlock: Indicate if a hardware spinlock should be used.
+  * @hwlock_id: Specify the hardware spinlock id.
+  * @hwlock_mode: The hardware spinlock mode, should be HWLOCK_IRQSTATE,
+  *		 HWLOCK_IRQ or 0.
+@@ -365,6 +366,7 @@ struct regmap_config {
+ 	const struct regmap_range_cfg *ranges;
+ 	unsigned int num_ranges;
+ 
++	bool use_hwlock;
+ 	unsigned int hwlock_id;
+ 	unsigned int hwlock_mode;
+ };
+-- 
+2.15.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
