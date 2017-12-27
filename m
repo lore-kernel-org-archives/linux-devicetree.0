@@ -1,41 +1,93 @@
-From: JeffyChen <jeffy.chen@rock-chips.com>
-Subject: Re: [RFC PATCH v12 1/5] dt-bindings: PCI: Add definition of PCIe
- WAKE# irq and PCI irq
-Date: Wed, 27 Dec 2017 09:36:37 +0800
-Message-ID: <5A42F925.5090806@rock-chips.com>
-References: <20171226023646.17722-1-jeffy.chen@rock-chips.com> <20171226023646.17722-2-jeffy.chen@rock-chips.com> <20171226233552.nacwqbpkozmy7n6c@rob-hp-laptop> <3268448.IvXk7OJtIY@aspire.rjw.lan>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH net-next v8 1/2] dt-bindings: net: add DT bindings for
+ Socionext UniPhier AVE
+Date: Wed, 27 Dec 2017 10:49:20 +0900
+Message-ID: <CAK7LNAQ2TpfZEYGvpe8eJjEnroTLvCpaX1NBdyVQ0YpOyB3qZA@mail.gmail.com>
+References: <1514164238-28901-1-git-send-email-hayashi.kunihiko@socionext.com> <1514164238-28901-2-git-send-email-hayashi.kunihiko@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <3268448.IvXk7OJtIY@aspire.rjw.lan>
-Sender: linux-pm-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Rob Herring <robh@kernel.org>
-Cc: linux-kernel@vger.kernel.org, bhelgaas@google.com, linux-pm@vger.kernel.org, tony@atomide.com, shawn.lin@rock-chips.com, briannorris@chromium.org, dianders@chromium.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1514164238-28901-2-git-send-email-hayashi.kunihiko@socionext.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc: David Miller <davem@davemloft.net>, netdev@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rafael and Rob,
+2017-12-25 10:10 GMT+09:00 Kunihiko Hayashi <hayashi.kunihiko@socionext.com>:
+> DT bindings for the AVE ethernet controller found on Socionext's
+> UniPhier platforms.
+>
+> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
+> Acked-by: Rob Herring <robh@kernel.org>
+> ---
+>  .../bindings/net/socionext,uniphier-ave4.txt       | 47 ++++++++++++++++++++++
+>  1 file changed, 47 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/socionext,uniphier-ave4.txt
+>
+> diff --git a/Documentation/devicetree/bindings/net/socionext,uniphier-ave4.txt b/Documentation/devicetree/bindings/net/socionext,uniphier-ave4.txt
+> new file mode 100644
+> index 0000000..8b03668
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/socionext,uniphier-ave4.txt
+> @@ -0,0 +1,47 @@
+> +* Socionext AVE ethernet controller
+> +
+> +This describes the devicetree bindings for AVE ethernet controller
+> +implemented on Socionext UniPhier SoCs.
+> +
+> +Required properties:
+> + - compatible: Should be
+> +       - "socionext,uniphier-pro4-ave4" : for Pro4 SoC
+> +       - "socionext,uniphier-pxs2-ave4" : for PXs2 SoC
+> +       - "socionext,uniphier-ld11-ave4" : for LD11 SoC
+> +       - "socionext,uniphier-ld20-ave4" : for LD20 SoC
+> + - reg: Address where registers are mapped and size of region.
+> + - interrupts: Should contain the MAC interrupt.
+> + - phy-mode: See ethernet.txt in the same directory. Allow to choose
+> +       "rgmii", "rmii", or "mii" according to the PHY.
+> + - phy-handle: Should point to the external phy device.
+> +       See ethernet.txt file in the same directory.
+> + - clocks: A phandle to the clock for the MAC.
+> +
+> +Optional properties:
+> + - resets: A phandle to the reset control for the MAC.
+> + - local-mac-address: See ethernet.txt in the same directory.
+> +
+> +Required subnode:
+> + - mdio: A container for child nodes representing phy nodes.
+> +         See phy.txt in the same directory.
+> +
+> +Example:
+> +
+> +       ether: ethernet@65000000 {
+> +               compatible = "socionext,uniphier-ld20-ave4";
+> +               reg = <0x65000000 0x8500>;
+> +               interrupts = <0 66 4>;
+> +               phy-mode = "rgmii";
+> +               phy-handle = <&ethphy>;
+> +               clocks = <&sys_clk 6>;
+> +               resets = <&sys_rst 6>;
+> +               local-mac-address = [00 00 00 00 00 00];
+> +
+> +               mdio {
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +                       ethphy: ethphy@1 {
+> +                               reg = <1>;
+> +                       };
+> +               };
 
-Thanks for your reply.
+Andrew Lunn suggested to put a blank line before the "mdio" subnode in v7:
+https://patchwork.kernel.org/patch/10127461/
 
-On 12/27/2017 08:43 AM, Rafael J. Wysocki wrote:
-> On Wednesday, December 27, 2017 12:35:52 AM CET Rob Herring wrote:
->> >On Tue, Dec 26, 2017 at 10:36:42AM +0800, Jeffy Chen wrote:
->>> > >We are going to handle PCIe WAKE# pin for PCI devices in the pci core,
->>> > >so add definitions of the optional PCIe WAKE# pin for PCI devices.
->>> > >
->>> > >Also add an definition of the optional PCI interrupt pin for PCI
->>> > >devices to distinguish it from the PCIe WAKE# pin.
->> >
->> >By v13 you should drop "RFC". RFC implies not ready for merging.
-> Which very much still is the case AFAICS.
->
-maybe i should split this series, and send dt-binding patch and the pci 
-irq parsing patch along without RFC ?
+Does it apply to the "ethphy" subnode, too?
 
-> Thanks,
-> Rafael
->
->
->
->
+
+
+Looks like you have a chance for v9.  Please consider it.
+
+
+-- 
+Best Regards
+Masahiro Yamada
