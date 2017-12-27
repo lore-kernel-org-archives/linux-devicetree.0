@@ -1,85 +1,47 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 2/3] dt-bindings: PCI: dra7xx: Add properties to enable
- x2 lane in dra7
-Date: Wed, 27 Dec 2017 12:10:32 +0530
-Message-ID: <a041cce3-48b3-f63c-c161-91579d3af76f@ti.com>
-References: <20171219085823.8695-1-kishon@ti.com>
- <20171219085823.8695-3-kishon@ti.com>
- <20171220185715.j5h7dlricom6kuiz@rob-hp-laptop>
- <94336bfb-221d-95f7-72b2-09219b08099b@ti.com>
- <20171222182448.GZ3875@atomide.com>
- <CAL_Jsq+f3u0yvftvESKDiDF76bUiwr9hZED3ZZ75=qMMr6RL1g@mail.gmail.com>
- <20171226181009.GE3875@atomide.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCHv3 1/3] dt-bindings: net: Add DT bindings for Socionext
+ Netsec
+Date: Wed, 27 Dec 2017 09:28:47 +0100
+Message-ID: <20171227082847.GB10517@lunn.ch>
+References: <1513858196-14137-1-git-send-email-jassisinghbrar@gmail.com>
+ <1513858254-14197-1-git-send-email-jassisinghbrar@gmail.com>
+ <20171221135541.GC15416@lunn.ch>
+ <f42d29cc-6b3f-20dc-3f42-bc9a9fc7ce4a@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171226181009.GE3875-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <f42d29cc-6b3f-20dc-3f42-bc9a9fc7ce4a@gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: jassisinghbrar@gmail.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, davem@davemloft.net, arnd.bergmann@linaro.org, ard.biesheuvel@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, masami.hiramatsu@linaro.org, Jassi Brar <jaswinder.singh@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Tuesday 26 December 2017 11:40 PM, Tony Lindgren wrote:
-> * Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> [171226 17:49]:
->> On Fri, Dec 22, 2017 at 12:24 PM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
->>> * Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> [171222 06:06]:
->>>> Hi Rob,
->>>>
->>>> On Thursday 21 December 2017 12:27 AM, Rob Herring wrote:
->>>>> On Tue, Dec 19, 2017 at 02:28:22PM +0530, Kishon Vijay Abraham I wrote:
->>>>>> Add syscon properties required for configuring PCIe in x2 lane mode.
->>>>>>
->>>>>> Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
->>>>>> Signed-off-by: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
->>>>>> ---
->>>>>>  Documentation/devicetree/bindings/pci/ti-pci.txt | 6 ++++++
->>>>>>  1 file changed, 6 insertions(+)
->>>>>>
->>>>>> diff --git a/Documentation/devicetree/bindings/pci/ti-pci.txt b/Documentation/devicetree/bindings/pci/ti-pci.txt
->>>>>> index 82cb875e4cec..bfbc77ac7355 100644
->>>>>> --- a/Documentation/devicetree/bindings/pci/ti-pci.txt
->>>>>> +++ b/Documentation/devicetree/bindings/pci/ti-pci.txt
->>>>>> @@ -13,6 +13,12 @@ PCIe DesignWare Controller
->>>>>>   - ti,hwmods : Name of the hwmod associated to the pcie, "pcie<X>",
->>>>>>           where <X> is the instance number of the pcie from the HW spec.
->>>>>>   - num-lanes as specified in ../designware-pcie.txt
->>>>>> + - ti,syscon-lane-conf : phandle/offset pair. Phandle to the system control
->>>>>> +                   module and the register offset to specify 1 lane or
->>>>>> +                   2 lane.
->>>>>> + - ti,syscon-lane-sel : phandle/offset pair. Phandle to the system control
->>>>>> +                  module and the register offset to specify lane
->>>>>> +                  selection.
->>>>>
->>>>> Adding a property for every syscon register doesn't really scale and
->>>>> doesn't work if the register layout changes.
->>>>
->>>> The register layout doesn't really change between silicon revisions and for new
->>>> SoCs, the phandle and the register offset for that SoC will have to be
->>>> populated again.
->>
->> And what about SoCs that don't exist yet?
->>
->>>> Having said that, I'm not aware of any other alternative here.
->>
->> What would you do if you had 20 different syscon registers to
->> configure? Add 20 properties? No, you would have per SoC functions in
->> the driver to handle the different cases.
+On Tue, Dec 26, 2017 at 11:34:26AM -0800, Florian Fainelli wrote:
+> On 12/21/2017 05:55 AM, Andrew Lunn wrote:
+> >> +- mdio device tree subnode: When the Netsec has a phy connected to its local
+> >> +		mdio, there must be device tree subnode with the following
+> >> +		required properties:
+> >> +
+> >> +	- compatible: Must be "socionext,snq-mdio".
+> > 
+> > Is there a need for a compatible string? Is there different versions
+> > of the MDIO bus hardware? If it was an independent MDIO bus driver,
+> > then yes, you need a compatible string. But since it is embedded in
+> > the MAC driver, there should not be a need.
 > 
-> Ideally these syscon registers would be managed by some Linux
-> generic framework such as clock/regulator/mux/phy.
-> 
-> But yeah, if that does not work, then setting a SoC specific
-> configuration function based on the compatible value makes sense
-> to me.
+> I don't see a problem with doing that though, it may be extra
+> information, but if we ever have a standalone MDIO bus controller that
+> happens to be supported by the same HW/driver, and the Ethernet driver
+> delegates the MDIO management to this MDIO bus driver, then having the
+> compatible string is kind of mandatory for proper matching/identification.
 
-All right. I'll add a function for syscon configuration in pci-dra7xx.
+Hi Florian
 
-Thanks
-Kishon
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I does not create a problem. It does however make it different to
+every other embedded MDIO bus.
+
+My preference is not to have the compatible string, but i can live
+with it.
+
+      Andrew
