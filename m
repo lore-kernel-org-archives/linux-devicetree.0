@@ -1,45 +1,60 @@
-From: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 2/2] ARM: dts: imx6: RDU2: correct RTC compatible
-Date: Tue, 26 Dec 2017 19:56:56 -0800
-Message-ID: <20171227035656.4941-2-andrew.smirnov@gmail.com>
-References: <20171227035656.4941-1-andrew.smirnov@gmail.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v3 00/11] Allwinner H3/H5/A64(DE2) SimpleFB support
+Date: Wed, 27 Dec 2017 12:09:41 +0800
+Message-ID: <CAGb2v653n_Q-spOSP9RTXBrL7CtrYiV7dAyRAVYCxg3KpzRvoQ@mail.gmail.com>
+References: <20171222122243.25735-1-icenowy@aosc.io>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171227035656.4941-1-andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20171222122243.25735-1-icenowy-h8G6r0blFSE@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cphealy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The RTC is manufactured by Maxim. This is a cosmetic fix, as Linux
-doesn't match the vendor string for i2c devices.
+On Fri, Dec 22, 2017 at 8:22 PM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
+> This patchset adds support for the SimpleFB on Allwinner SoCs with
+> "Display Engine 2.0".
+>
+> PATCH 1 to PATCH 3 are DE2 CCU fixes for H3/H5 SoCs.
+>
+> PATCH 4 adds the pipeline strings for DE2 SimpleFB.
+>
+> PATCH 5 to 7 adds necessary device tree nodes (DE2 CCU and SimpleFB)
+> for H3/H5 SoCs.
+>
+> PATCH 8 to 11 are for Allwinner A64 SoC to enable SimpleFB.
 
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: cphealy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Signed-off-by: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Changelog?
 
-diff --git a/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi b/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
-index eef737bd52d9..6bef9a98678e 100644
---- a/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
-@@ -581,7 +581,7 @@
- 	};
- 
- 	ds1341: rtc@68 {
--		compatible = "dallas,ds1341";
-+		compatible = "maxim,ds1341";
- 		reg = <0x68>;
- 	};
- };
+ChenYu
+
+>
+> Icenowy Zheng (11):
+>   dt-bindings: fix the binding of Allwinner DE2 CCU of A83T and H3
+>   clk: sunxi-ng: add support for Allwinner H3 DE2 CCU
+>   clk: sunxi-ng: fix the A64/H5 clock description of DE2 CCU
+>   dt-bindings: simplefb-sunxi: add pipelines for DE2
+>   ARM: sun8i: h3/h5: add DE2 CCU device node for H3
+>   arm64: allwinner: h5: add compatible string for DE2 CCU
+>   ARM: sunxi: h3/h5: add simplefb nodes
+>   dt-bindings: add binding for A64 DE2 CCU SRAM
+>   clk: sunxi-ng: add support for Allwinner A64 DE2 CCU
+>   arm64: allwinner: a64: add DE2 CCU for A64 SoC
+>   arm64: allwinner: a64: add simplefb for A64 SoC
+>
+>  .../devicetree/bindings/clock/sun8i-de2.txt        | 10 ++-
+>  .../bindings/display/simple-framebuffer-sunxi.txt  |  4 +
+>  arch/arm/boot/dts/sun8i-h3.dtsi                    |  4 +
+>  arch/arm/boot/dts/sunxi-h3-h5.dtsi                 | 43 +++++++++++
+>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi      | 65 +++++++++++++++++
+>  arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi       |  4 +
+>  drivers/clk/sunxi-ng/ccu-sun8i-de2.c               | 85 +++++++++++++++++++---
+>  7 files changed, 202 insertions(+), 13 deletions(-)
+>
+> --
+> 2.14.2
+>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
