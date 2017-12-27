@@ -1,71 +1,47 @@
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [RFC PATCH v11 4/5] PCI / PM: Add support for the PCIe WAKE# signal for OF
-Date: Wed, 27 Dec 2017 01:57:07 +0100
-Message-ID: <5491520.JsEYlZiECc@aspire.rjw.lan>
-References: <20171225114742.18920-1-jeffy.chen@rock-chips.com> <9593014.U0c2JQdoEZ@aspire.rjw.lan> <5A41A0A7.5070605@rock-chips.com>
+From: <honghui.zhang@mediatek.com>
+Subject: [PATCH v5 0/2] PCI: mediatek: Fixups for the IRQ handle routine and MT7622's class code
+Date: Wed, 27 Dec 2017 08:59:52 +0800
+Message-ID: <1514336394-17747-1-git-send-email-honghui.zhang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <5A41A0A7.5070605@rock-chips.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: JeffyChen <jeffy.chen@rock-chips.com>, tony@atomide.com
-Cc: linux-kernel@vger.kernel.org, bhelgaas@google.com, linux-pm@vger.kernel.org, shawn.lin@rock-chips.com, briannorris@chromium.org, dianders@chromium.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: bhelgaas@google.com, matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, ryder.lee@mediatek.com, lorenzo.pieralisi@arm.com
+Cc: honghui.zhang@mediatek.com, hongkun.cao@mediatek.com, youlin.pei@mediatek.com, yong.wu@mediatek.com, yt.shen@mediatek.com, sean.wang@mediatek.com, xinping.qian@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, December 26, 2017 2:06:47 AM CET JeffyChen wrote:
-> Hi Rafael,
-> 
-> Thanks for your reply :)
-> 
-> On 12/26/2017 08:11 AM, Rafael J. Wysocki wrote:
-> >> >+
-> >> >+	dn = pci_device_to_OF_node(ppdev);
-> >> >+	if (!dn)
-> >> >+		return 0;
-> >> >+
-> >> >+	irq = of_irq_get_byname(dn, "wakeup");
-> > Why is this a property of the bridge and not of the device itself?
->
-> That is suggested by Brian, because in that way, the wakeup pin would 
-> not "tied to what exact device is installed (or no device, if it's a slot)."
+From: Honghui Zhang <honghui.zhang@mediatek.com>
 
-But I don't think it works when there are two devices using different WAKE#
-interrupt lines under the same bridge.  Or how does it work then?
+Two fixups for mediatek's host bridge:
+The first patch fixup the IRQ handle routine to avoid IRQ reentry which
+may exist for both MT2712 and MT7622.
+The second patch fixup class type for MT7622.
 
-> >> >+	if (irq == -EPROBE_DEFER)
-> > Braces here, please.
-> ok, will fix in the next version.
-> 
-> >
-> >> >+		return irq;
-> >> >+	/* Ignore other errors, since a missing wakeup is non-fatal. */
-> >> >+	else if (irq < 0) {
-> >> >+		dev_info(&pdev->dev, "cannot get wakeup interrupt: %d\n", irq);
-> >> >+		return 0;
-> >> >+	}
-> >> >+
-> >> >+	device_init_wakeup(&pdev->dev, true);
-> > Why do you call this before dev_pm_set_dedicated_wake_irq()?
->
-> hmmm, i thought so too, but it turns out the dedicated wake irq 
-> framework requires device_init_wakeup(dev, true) before attach the wake irq:
-> 
-> int device_wakeup_attach_irq(struct device *dev,
->                               struct wake_irq *wakeirq)
-> {
->          struct wakeup_source *ws;
-> 
->          ws = dev->power.wakeup;
->          if (!ws) {
->                  dev_err(dev, "forgot to call device_init_wakeup?\n");
->                  return -EINVAL;
-> 
+Change since v4:
+ - Only setup vendor ID for MT7622, igorning the device ID since mediatek's
+   host bridge driver does not cares about the device ID.
 
-Well, that's a framework issue, fair enough.
+Change since v3:
+ - Setup the class type and vendor ID at the beginning of startup instead
+   of in a quirk.
+ - Add mediatek's vendor ID, it could be found in:
+   https://pcisig.com/membership/member-companies?combine=&page=4
 
-That said, what if user space removes the wakeup source from under you
-concurrently via sysfs?  Tony?
+Change since v2:
+ - Move the initialize of the iterate before the loop to fix an
+   INTx IRQ issue in the first patch
 
-Thanks,
-Rafael
+Change since v1:
+ - Add the second patch.
+ - Make the first patch's commit message more standard.
+
+Honghui Zhang (2):
+  PCI: mediatek: Clear IRQ status after IRQ dispatched to avoid reentry
+  PCI: mediatek: Set up class type and vendor ID for MT7622
+
+ drivers/pci/host/pcie-mediatek.c | 23 ++++++++++++++++++-----
+ include/linux/pci_ids.h          |  2 ++
+ 2 files changed, 20 insertions(+), 5 deletions(-)
+
+-- 
+2.6.4
