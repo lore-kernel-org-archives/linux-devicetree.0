@@ -1,148 +1,95 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH v2 2/3] dt-bindings: media: Add Allwinner V3s Camera
- Sensor Interface (CSI)
-Date: Wed, 27 Dec 2017 23:47:23 +0200
-Message-ID: <20171227214723.rcssyay2lqqjf6ty@valkosipuli.retiisi.org.uk>
-References: <1501131697-1359-1-git-send-email-yong.deng@magewell.com>
- <1501131697-1359-3-git-send-email-yong.deng@magewell.com>
- <20171219115327.ofs5xwwimpn7x72n@valkosipuli.retiisi.org.uk>
- <20171221104935.663812085b616935ca3046de@magewell.com>
+From: Philippe Ombredanne <pombredanne-od1rfyK75/E@public.gmane.org>
+Subject: Re: [PATCH v4] hwrng: exynos - add Samsung Exynos True RNG driver
+Date: Wed, 27 Dec 2017 22:51:02 +0100
+Message-ID: <CAOFm3uFbkFAbA5U_d8uDYZ-4+ezEWdjnuVyqkpXQ0tg8u3Ds9A@mail.gmail.com>
+References: <CGME20171227101226eucas1p2baa0309227b8e6a1e77dd7ca88f6412b@eucas1p2.samsung.com>
+ <CAOFm3uEj7MDa_7OtigHcUPwvxkR+8cRS=UQq3x_y9k+ypcJPrg@mail.gmail.com> <87shbwh43f.fsf%l.stelmach@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171221104935.663812085b616935ca3046de@magewell.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yong <yong.deng@magewell.com>
-Cc: maxime.ripard@free-electrons.com, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "David S. Miller" <davem@davemloft.net>, Hans Verkuil <hverkuil@xs4all.nl>, Arnd Bergmann <arnd@arndb.de>, Hugues Fruchet <hugues.fruchet@st.com>, Yannick Fertre <yannick.fertre@st.com>, Philipp Zabel <p.zabel@pengutronix.de>, Benoit Parrot <bparrot@ti.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Jean-Christophe Trotin <jean-christophe.trotin@st.com>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>, Minghsiu Tsai <minghsiu.tsai@mediatek.com>, Krzysztof Kozlowski <krzk@kernel.org>, Robert
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <87shbwh43f.fsf%l.stelmach-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?Q?=C5=81ukasz_Stelmach?= <l.stelmach-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: "Andrew F . Davis" <afd-l0cyMroinI0@public.gmane.org>, PrasannaKumar Muralidharan <prasannatsmkumar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matt Mackall <mpm-VDJrAJ4Gl5ZBDgjK7y7TUQ@public.gmane.org>, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Yong,
+=C5=81ukasz,
 
-On Thu, Dec 21, 2017 at 10:49:35AM +0800, Yong wrote:
-> Hi,
-> 
-> On Tue, 19 Dec 2017 13:53:28 +0200
-> Sakari Ailus <sakari.ailus@iki.fi> wrote:
-> 
-> > Hi Yong,
-> > 
-> > On Thu, Jul 27, 2017 at 01:01:36PM +0800, Yong Deng wrote:
-> > > Add binding documentation for Allwinner V3s CSI.
-> > > 
-> > > Signed-off-by: Yong Deng <yong.deng@magewell.com>
-> > 
-> > DT bindings should precede the driver.
-> 
-> OK.
-> 
-> > 
-> > > ---
-> > >  .../devicetree/bindings/media/sun6i-csi.txt        | 49 ++++++++++++++++++++++
-> > >  1 file changed, 49 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/media/sun6i-csi.txt
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/media/sun6i-csi.txt b/Documentation/devicetree/bindings/media/sun6i-csi.txt
-> > > new file mode 100644
-> > > index 0000000..f8d83f6
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/media/sun6i-csi.txt
-> > > @@ -0,0 +1,49 @@
-> > > +Allwinner V3s Camera Sensor Interface
-> > > +------------------------------
-> > > +
-> > > +Required properties:
-> > > +  - compatible: value must be "allwinner,sun8i-v3s-csi"
-> > 
-> > What are sun6i and sun8i? Is this device first present in sun6i SoCs,
-> > whereas you have only defined bindings for sun8i?
-> 
-> Yes, some sun6i SoCs has the almost same CSI module.
-> There is only V3s on my hand. So, I only tested it on V3s. But
-> some people work on the others.
+On Wed, Dec 27, 2017 at 11:12 AM, =C5=81ukasz Stelmach
+<l.stelmach-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+> It was <2017-12-22 pi=C4=85 19:30>, when Philippe Ombredanne wrote:
+>> On Fri, Dec 22, 2017 at 5:38 PM, =C5=81ukasz Stelmach <l.stelmach@samsun=
+g.com> wrote:
+>>> It was <2017-12-22 pi=C4=85 14:34>, when Philippe Ombredanne wrote:
+>>>> =C5=81ukasz,
+>>>>
+>>>> On Fri, Dec 22, 2017 at 2:23 PM, =C5=81ukasz Stelmach <l.stelmach@sams=
+ung.com> wrote:
+>>>>> Add support for True Random Number Generator found in Samsung Exynos
+>>>>> 5250+ SoCs.
+>>>>>
+>>>>> Signed-off-by: =C5=81ukasz Stelmach <l.stelmach-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>>>>> Reviewed-by: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>>>>
+>>>> <snip>
+>>>>
+>>>>> --- /dev/null
+>>>>> +++ b/drivers/char/hw_random/exynos-trng.c
+>>>>> @@ -0,0 +1,245 @@
+>>>>> +/*
+>>>>> + * RNG driver for Exynos TRNGs
+>>>>> + *
+>>>>> + * Author: =C5=81ukasz Stelmach <l.stelmach-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>>>>> + *
+>>>>> + * Copyright 2017 (c) Samsung Electronics Software, Inc.
+>>>>> + *
+>>>>> + * Based on the Exynos PRNG driver drivers/crypto/exynos-rng by
+>>>>> + * Krzysztof Koz=C5=82owski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>>>>> + *
+>>>>> + * This program is free software; you can redistribute it and/or mod=
+ify
+>>>>> + * it under the terms of the GNU General Public License as published=
+ by
+>>>>> + * the Free Software Foundation;
+>>>>> + *
+>>>>> + * This program is distributed in the hope that it will be useful,
+>>>>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>>>>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>>>>> + * GNU General Public License for more details.
+>>>>> + */
+>>>>
+>>>>
+>>>> Would you mind using the new SPDX tags documented in Thomas patch set
+>>>> [1] rather than this fine but longer legalese?
+>>>>
+>>>> And if you could spread the word to others in your team this would be =
+very nice.
+>>>> See also this fine article posted by Mauro on the Samsung Open Source
+>>>> Group Blog [2]
+>>>> Thank you!
+>>>
+>>> Cool! We've been using SPDX to tag RPM packages in Tizen for three year=
+s or
+>>> more. ;-)
+>>
+>> Very nice! any pubic pointers?
+>                  ^^^^^
+>
+> I assume you request an URL of a publicly available web-page ;-)
+>
+> https://wiki.tizen.org/Packaging/Guidelines#License_Tag
 
-Ack.
+Thank you!
+I reckon it took me a minute to figure why you were making a somewhat
+cryptic URL related comment.
+Then I realized that I had made a rather unfortunate typo, or may be
+it was a freudian slip of sorts :D
 
-> 
-> > 
-> > > +  - reg: base address and size of the memory-mapped region.
-> > > +  - interrupts: interrupt associated to this IP
-> > > +  - clocks: phandles to the clocks feeding the CSI
-> > > +    * ahb: the CSI interface clock
-> > > +    * mod: the CSI module clock
-> > > +    * ram: the CSI DRAM clock
-> > > +  - clock-names: the clock names mentioned above
-> > > +  - resets: phandles to the reset line driving the CSI
-> > > +
-> > > +- ports: A ports node with endpoint definitions as defined in
-> > > +  Documentation/devicetree/bindings/media/video-interfaces.txt.
-> > 
-> > Please document mandatory and optional endpoint properties relevant for the
-> > hardware.
-> 
-> I have added below commit in my v3:
-> Currently, the driver only support the parallel interface. So, a single port
-> node with one endpoint and parallel bus is supported.
-
-Please specify the exact properties that are relevant for the hardware. No
-references should be made to the driver, the bindings are entirely
-separate.
-
-Are the non-parallel (CSI-2?) and parallel bus on the same interface? If
-yes, they should probably use different endpoints, if not, then different
-ports.
-
-You could document the other bus or omit it now altogether, in which case
-you'd only detail the parallel bus properties here.
-
-> 
-> > 
-> > > +
-> > > +Example:
-> > > +
-> > > +	csi1: csi@01cb4000 {
-> > > +		compatible = "allwinner,sun8i-v3s-csi";
-> > > +		reg = <0x01cb4000 0x1000>;
-> > > +		interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
-> > > +		clocks = <&ccu CLK_BUS_CSI>,
-> > > +			 <&ccu CLK_CSI1_SCLK>,
-> > > +			 <&ccu CLK_DRAM_CSI>;
-> > > +		clock-names = "ahb", "mod", "ram";
-> > > +		resets = <&ccu RST_BUS_CSI>;
-> > > +
-> > > +		port {
-> > > +			#address-cells = <1>;
-> > > +			#size-cells = <0>;
-> > > +
-> > > +			/* Parallel bus endpoint */
-> > > +			csi1_ep: endpoint {
-> > > +				remote-endpoint = <&adv7611_ep>;
-> > > +				bus-width = <16>;
-> > > +				data-shift = <0>;
-> > > +
-> > > +				/* If hsync-active/vsync-active are missing,
-> > > +				   embedded BT.656 sync is used */
-> > > +				hsync-active = <0>; /* Active low */
-> > > +				vsync-active = <0>; /* Active low */
-> > > +				data-active = <1>;  /* Active high */
-> > > +				pclk-sample = <1>;  /* Rising */
-> > > +			};
-> > > +		};
-> > > +	};
-> > > +
-> > 
-> > -- 
-> > Kind regards,
-> > 
-> > Sakari Ailus
-> > e-mail: sakari.ailus@iki.fi
-> 
-> 
-> Thanks,
-> Yong
-
--- 
-Regards,
-
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi
+--=20
+Cordially
+Philippe Ombredanne
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
