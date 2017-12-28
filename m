@@ -1,92 +1,71 @@
 From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v4 13/15] MIPS: JZ4770: Workaround for corrupted DMA transfers
-Date: Thu, 28 Dec 2017 14:56:32 +0100
-Message-ID: <20171228135634.30000-14-paul@crapouillou.net>
+Subject: [PATCH v4 03/15] clk: ingenic: support PLLs with no bypass bit
+Date: Thu, 28 Dec 2017 14:56:22 +0100
+Message-ID: <20171228135634.30000-4-paul@crapouillou.net>
 References: <20170702163016.6714-2-paul@crapouillou.net>
  <20171228135634.30000-1-paul@crapouillou.net>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-mips-bounce@linux-mips.org>
 In-Reply-To: <20171228135634.30000-1-paul@crapouillou.net>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
 To: Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, Maarten ter Huurne <maarten@treewalker.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux-clk@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, Maarten ter Huurne <maarten@treewalker.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux-clk@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
-From: Maarten ter Huurne <maarten@treewalker.org>
+The second PLL of the JZ4770 does not have a bypass bit.
+This commit makes it possible to support it with the current common CGU
+code.
 
-We have seen MMC DMA transfers read corrupted data from SDRAM when
-a burst interval ends at physical address 0x10000000. To avoid this
-problem, we remove the final page of low memory from the memory map.
-
-Signed-off-by: Maarten ter Huurne <maarten@treewalker.org>
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- arch/mips/jz4740/setup.c | 24 ++++++++++++++++++++++++
- arch/mips/kernel/setup.c |  8 ++++++++
- 2 files changed, 32 insertions(+)
+ drivers/clk/ingenic/cgu.c | 3 ++-
+ drivers/clk/ingenic/cgu.h | 2 ++
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
  v2: No change
  v3: No change
  v4: No change
 
-diff --git a/arch/mips/jz4740/setup.c b/arch/mips/jz4740/setup.c
-index afd84ee966e8..6948b133a15d 100644
---- a/arch/mips/jz4740/setup.c
-+++ b/arch/mips/jz4740/setup.c
-@@ -23,6 +23,7 @@
+diff --git a/drivers/clk/ingenic/cgu.c b/drivers/clk/ingenic/cgu.c
+index a2e73a6d60fd..381c4a17a1fc 100644
+--- a/drivers/clk/ingenic/cgu.c
++++ b/drivers/clk/ingenic/cgu.c
+@@ -100,7 +100,8 @@ ingenic_pll_recalc_rate(struct clk_hw *hw, unsigned long parent_rate)
+ 	n += pll_info->n_offset;
+ 	od_enc = ctl >> pll_info->od_shift;
+ 	od_enc &= GENMASK(pll_info->od_bits - 1, 0);
+-	bypass = !!(ctl & BIT(pll_info->bypass_bit));
++	bypass = !pll_info->no_bypass_bit &&
++		 !!(ctl & BIT(pll_info->bypass_bit));
+ 	enable = !!(ctl & BIT(pll_info->enable_bit));
  
- #include <asm/bootinfo.h>
- #include <asm/mips_machine.h>
-+#include <asm/page.h>
- #include <asm/prom.h>
+ 	if (bypass)
+diff --git a/drivers/clk/ingenic/cgu.h b/drivers/clk/ingenic/cgu.h
+index f1527cf75b3f..9da34910bd80 100644
+--- a/drivers/clk/ingenic/cgu.h
++++ b/drivers/clk/ingenic/cgu.h
+@@ -48,6 +48,7 @@
+  * @bypass_bit: the index of the bypass bit in the PLL control register
+  * @enable_bit: the index of the enable bit in the PLL control register
+  * @stable_bit: the index of the stable bit in the PLL control register
++ * @no_bypass_bit: if set, the PLL has no bypass functionality
+  */
+ struct ingenic_cgu_pll_info {
+ 	unsigned reg;
+@@ -58,6 +59,7 @@ struct ingenic_cgu_pll_info {
+ 	u8 bypass_bit;
+ 	u8 enable_bit;
+ 	u8 stable_bit;
++	bool no_bypass_bit;
+ };
  
- #include <asm/mach-jz4740/base.h>
-@@ -102,6 +103,29 @@ void __init arch_init_irq(void)
- 	irqchip_init();
- }
- 
-+/*
-+ * We have seen MMC DMA transfers read corrupted data from SDRAM when a burst
-+ * interval ends at physical address 0x10000000. To avoid this problem, we
-+ * remove the final page of low memory from the memory map.
-+ */
-+void __init jz4770_reserve_unsafe_for_dma(void)
-+{
-+	int i;
-+
-+	for (i = 0; i < boot_mem_map.nr_map; i++) {
-+		struct boot_mem_map_entry *entry = boot_mem_map.map + i;
-+
-+		if (entry->type != BOOT_MEM_RAM)
-+			continue;
-+
-+		if (entry->addr + entry->size != 0x10000000)
-+			continue;
-+
-+		entry->size -= PAGE_SIZE;
-+		break;
-+	}
-+}
-+
- static int __init jz4740_machine_setup(void)
- {
- 	mips_machine_setup();
-diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
-index 85bc601e9a0d..5a2c20145aee 100644
---- a/arch/mips/kernel/setup.c
-+++ b/arch/mips/kernel/setup.c
-@@ -879,6 +879,14 @@ static void __init arch_mem_init(char **cmdline_p)
- 
- 	parse_early_param();
- 
-+#ifdef CONFIG_MACH_JZ4770
-+	if (current_cpu_type() == CPU_JZRISC &&
-+				mips_machtype == MACH_INGENIC_JZ4770) {
-+		extern void __init jz4770_reserve_unsafe_for_dma(void);
-+		jz4770_reserve_unsafe_for_dma();
-+	}
-+#endif
-+
- 	if (usermem) {
- 		pr_info("User-defined physical RAM map:\n");
- 		print_memory_map();
+ /**
 -- 
 2.11.0
