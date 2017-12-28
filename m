@@ -1,532 +1,97 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v4 06/15] clk: Add Ingenic jz4770 CGU driver
-Date: Thu, 28 Dec 2017 14:56:25 +0100
-Message-ID: <20171228135634.30000-7-paul@crapouillou.net>
-References: <20170702163016.6714-2-paul@crapouillou.net>
- <20171228135634.30000-1-paul@crapouillou.net>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171228135634.30000-1-paul@crapouillou.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, Maarten ter Huurne <maarten@treewalker.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux-clk@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+From: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Subject: [PATCH v2 0/9] Renesas Capture Engine Unit (CEU) V4L2 driver
+Date: Thu, 28 Dec 2017 15:01:12 +0100
+Message-ID: <1514469681-15602-1-git-send-email-jacopo+renesas@jmondi.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: laurent.pinchart@ideasonboard.com, magnus.damm@gmail.com, geert@glider.be, mchehab@kernel.org, hverkuil@xs4all.nl, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add support for the clocks provided by the CGU in the Ingenic JZ4770
-SoC.
+Hello,
+  second round for Renesas CEU driver.
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Signed-off-by: Maarten ter Huurne <maarten@treewalker.org>
----
- drivers/clk/ingenic/Makefile     |   1 +
- drivers/clk/ingenic/jz4770-cgu.c | 487 +++++++++++++++++++++++++++++++++++++++
- 2 files changed, 488 insertions(+)
- create mode 100644 drivers/clk/ingenic/jz4770-cgu.c
+I have closed review comments received on v1 and tested again on RZ and SH4
+platforms to capture images in all available output formats (NV16/61, NV12/21
+and YUYV).
 
- v2: Make structures static const
- v3: <dt-bindings/clock/jz4770-cgu.h> is now added in a separate patch
- v4: No change
+The patch is now based on v4.15-rc4, with a few patches on top to help testing
+on Migo-R and GR-Peach platforms. A base tag is available at:
+git://jmondi.org/linux tag:v4.15-rc4-ceu-v2-base for the interested ones.
 
-diff --git a/drivers/clk/ingenic/Makefile b/drivers/clk/ingenic/Makefile
-index cd47b0664c2b..1456e4cdb562 100644
---- a/drivers/clk/ingenic/Makefile
-+++ b/drivers/clk/ingenic/Makefile
-@@ -1,3 +1,4 @@
- obj-y				+= cgu.o
- obj-$(CONFIG_MACH_JZ4740)	+= jz4740-cgu.o
-+obj-$(CONFIG_MACH_JZ4770)	+= jz4770-cgu.o
- obj-$(CONFIG_MACH_JZ4780)	+= jz4780-cgu.o
-diff --git a/drivers/clk/ingenic/jz4770-cgu.c b/drivers/clk/ingenic/jz4770-cgu.c
-new file mode 100644
-index 000000000000..4b2411d8a491
---- /dev/null
-+++ b/drivers/clk/ingenic/jz4770-cgu.c
-@@ -0,0 +1,487 @@
-+/*
-+ * JZ4770 SoC CGU driver
-+ *
-+ * Copyright 2017, Paul Cercueil <paul@crapouillou.net>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 or later
-+ * as published by the Free Software Foundation.
-+ */
-+
-+#include <linux/bitops.h>
-+#include <linux/clk-provider.h>
-+#include <linux/delay.h>
-+#include <linux/of.h>
-+#include <linux/syscore_ops.h>
-+#include <dt-bindings/clock/jz4770-cgu.h>
-+#include "cgu.h"
-+
-+/*
-+ * CPM registers offset address definition
-+ */
-+#define CGU_REG_CPCCR		0x00
-+#define CGU_REG_LCR		0x04
-+#define CGU_REG_CPPCR0		0x10
-+#define CGU_REG_CLKGR0		0x20
-+#define CGU_REG_OPCR		0x24
-+#define CGU_REG_CLKGR1		0x28
-+#define CGU_REG_CPPCR1		0x30
-+#define CGU_REG_USBPCR1		0x48
-+#define CGU_REG_USBCDR		0x50
-+#define CGU_REG_I2SCDR		0x60
-+#define CGU_REG_LPCDR		0x64
-+#define CGU_REG_MSC0CDR		0x68
-+#define CGU_REG_UHCCDR		0x6c
-+#define CGU_REG_SSICDR		0x74
-+#define CGU_REG_CIMCDR		0x7c
-+#define CGU_REG_GPSCDR		0x80
-+#define CGU_REG_PCMCDR		0x84
-+#define CGU_REG_GPUCDR		0x88
-+#define CGU_REG_MSC1CDR		0xA4
-+#define CGU_REG_MSC2CDR		0xA8
-+#define CGU_REG_BCHCDR		0xAC
-+
-+/* bits within the LCR register */
-+#define LCR_LPM			BIT(0)		/* Low Power Mode */
-+
-+/* bits within the OPCR register */
-+#define OPCR_SPENDH		BIT(5)		/* UHC PHY suspend */
-+#define OPCR_SPENDN		BIT(7)		/* OTG PHY suspend */
-+
-+/* bits within the USBPCR1 register */
-+#define USBPCR1_UHC_POWER	BIT(5)		/* UHC PHY power down */
-+
-+static struct ingenic_cgu *cgu;
-+
-+static int jz4770_uhc_phy_enable(struct clk_hw *hw)
-+{
-+	void __iomem *reg_opcr		= cgu->base + CGU_REG_OPCR;
-+	void __iomem *reg_usbpcr1	= cgu->base + CGU_REG_USBPCR1;
-+
-+	writel(readl(reg_opcr) & ~OPCR_SPENDH, reg_opcr);
-+	writel(readl(reg_usbpcr1) | USBPCR1_UHC_POWER, reg_usbpcr1);
-+	return 0;
-+}
-+
-+static void jz4770_uhc_phy_disable(struct clk_hw *hw)
-+{
-+	void __iomem *reg_opcr		= cgu->base + CGU_REG_OPCR;
-+	void __iomem *reg_usbpcr1	= cgu->base + CGU_REG_USBPCR1;
-+
-+	writel(readl(reg_usbpcr1) & ~USBPCR1_UHC_POWER, reg_usbpcr1);
-+	writel(readl(reg_opcr) | OPCR_SPENDH, reg_opcr);
-+}
-+
-+static int jz4770_uhc_phy_is_enabled(struct clk_hw *hw)
-+{
-+	void __iomem *reg_opcr		= cgu->base + CGU_REG_OPCR;
-+	void __iomem *reg_usbpcr1	= cgu->base + CGU_REG_USBPCR1;
-+
-+	return !(readl(reg_opcr) & OPCR_SPENDH) &&
-+		(readl(reg_usbpcr1) & USBPCR1_UHC_POWER);
-+}
-+
-+static const struct clk_ops jz4770_uhc_phy_ops = {
-+	.enable = jz4770_uhc_phy_enable,
-+	.disable = jz4770_uhc_phy_disable,
-+	.is_enabled = jz4770_uhc_phy_is_enabled,
-+};
-+
-+static int jz4770_otg_phy_enable(struct clk_hw *hw)
-+{
-+	void __iomem *reg_opcr		= cgu->base + CGU_REG_OPCR;
-+
-+	writel(readl(reg_opcr) | OPCR_SPENDN, reg_opcr);
-+
-+	/* Wait for the clock to be stable */
-+	udelay(50);
-+	return 0;
-+}
-+
-+static void jz4770_otg_phy_disable(struct clk_hw *hw)
-+{
-+	void __iomem *reg_opcr		= cgu->base + CGU_REG_OPCR;
-+
-+	writel(readl(reg_opcr) & ~OPCR_SPENDN, reg_opcr);
-+}
-+
-+static int jz4770_otg_phy_is_enabled(struct clk_hw *hw)
-+{
-+	void __iomem *reg_opcr		= cgu->base + CGU_REG_OPCR;
-+
-+	return !!(readl(reg_opcr) & OPCR_SPENDN);
-+}
-+
-+static const struct clk_ops jz4770_otg_phy_ops = {
-+	.enable = jz4770_otg_phy_enable,
-+	.disable = jz4770_otg_phy_disable,
-+	.is_enabled = jz4770_otg_phy_is_enabled,
-+};
-+
-+static const s8 pll_od_encoding[8] = {
-+	0x0, 0x1, -1, 0x2, -1, -1, -1, 0x3,
-+};
-+
-+static const struct ingenic_cgu_clk_info jz4770_cgu_clocks[] = {
-+
-+	/* External clocks */
-+
-+	[JZ4770_CLK_EXT] = { "ext", CGU_CLK_EXT },
-+	[JZ4770_CLK_OSC32K] = { "osc32k", CGU_CLK_EXT },
-+
-+	/* PLLs */
-+
-+	[JZ4770_CLK_PLL0] = {
-+		"pll0", CGU_CLK_PLL,
-+		.parents = { JZ4770_CLK_EXT },
-+		.pll = {
-+			.reg = CGU_REG_CPPCR0,
-+			.m_shift = 24,
-+			.m_bits = 7,
-+			.m_offset = 1,
-+			.n_shift = 18,
-+			.n_bits = 5,
-+			.n_offset = 1,
-+			.od_shift = 16,
-+			.od_bits = 2,
-+			.od_max = 8,
-+			.od_encoding = pll_od_encoding,
-+			.bypass_bit = 9,
-+			.enable_bit = 8,
-+			.stable_bit = 10,
-+		},
-+	},
-+
-+	[JZ4770_CLK_PLL1] = {
-+		/* TODO: PLL1 can depend on PLL0 */
-+		"pll1", CGU_CLK_PLL,
-+		.parents = { JZ4770_CLK_EXT },
-+		.pll = {
-+			.reg = CGU_REG_CPPCR1,
-+			.m_shift = 24,
-+			.m_bits = 7,
-+			.m_offset = 1,
-+			.n_shift = 18,
-+			.n_bits = 5,
-+			.n_offset = 1,
-+			.od_shift = 16,
-+			.od_bits = 2,
-+			.od_max = 8,
-+			.od_encoding = pll_od_encoding,
-+			.enable_bit = 7,
-+			.stable_bit = 6,
-+			.no_bypass_bit = true,
-+		},
-+	},
-+
-+	/* Main clocks */
-+
-+	[JZ4770_CLK_CCLK] = {
-+		"cclk", CGU_CLK_DIV,
-+		.parents = { JZ4770_CLK_PLL0, },
-+		.div = { CGU_REG_CPCCR, 0, 1, 4, 22, -1, -1 },
-+	},
-+	[JZ4770_CLK_H0CLK] = {
-+		"h0clk", CGU_CLK_DIV,
-+		.parents = { JZ4770_CLK_PLL0, },
-+		.div = { CGU_REG_CPCCR, 4, 1, 4, 22, -1, -1 },
-+	},
-+	[JZ4770_CLK_H1CLK] = {
-+		"h1clk", CGU_CLK_DIV | CGU_CLK_GATE,
-+		.parents = { JZ4770_CLK_PLL0, },
-+		.div = { CGU_REG_CPCCR, 24, 1, 4, 22, -1, -1 },
-+		.gate = { CGU_REG_LCR, 30 },
-+	},
-+	[JZ4770_CLK_H2CLK] = {
-+		"h2clk", CGU_CLK_DIV,
-+		.parents = { JZ4770_CLK_PLL0, },
-+		.div = { CGU_REG_CPCCR, 16, 1, 4, 22, -1, -1 },
-+	},
-+	[JZ4770_CLK_C1CLK] = {
-+		"c1clk", CGU_CLK_DIV,
-+		.parents = { JZ4770_CLK_PLL0, },
-+		.div = { CGU_REG_CPCCR, 12, 1, 4, 22, -1, -1 },
-+	},
-+	[JZ4770_CLK_PCLK] = {
-+		"pclk", CGU_CLK_DIV,
-+		.parents = { JZ4770_CLK_PLL0, },
-+		.div = { CGU_REG_CPCCR, 8, 1, 4, 22, -1, -1 },
-+	},
-+
-+	/* Those divided clocks can connect to PLL0 or PLL1 */
-+
-+	[JZ4770_CLK_MMC0_MUX] = {
-+		"mmc0_mux", CGU_CLK_DIV | CGU_CLK_GATE | CGU_CLK_MUX,
-+		.parents = { JZ4770_CLK_PLL0, JZ4770_CLK_PLL1, },
-+		.mux = { CGU_REG_MSC0CDR, 30, 1 },
-+		.div = { CGU_REG_MSC0CDR, 0, 1, 7, -1, -1, 31 },
-+		.gate = { CGU_REG_MSC0CDR, 31 },
-+	},
-+	[JZ4770_CLK_MMC1_MUX] = {
-+		"mmc1_mux", CGU_CLK_DIV | CGU_CLK_GATE | CGU_CLK_MUX,
-+		.parents = { JZ4770_CLK_PLL0, JZ4770_CLK_PLL1, },
-+		.mux = { CGU_REG_MSC1CDR, 30, 1 },
-+		.div = { CGU_REG_MSC1CDR, 0, 1, 7, -1, -1, 31 },
-+		.gate = { CGU_REG_MSC1CDR, 31 },
-+	},
-+	[JZ4770_CLK_MMC2_MUX] = {
-+		"mmc2_mux", CGU_CLK_DIV | CGU_CLK_GATE | CGU_CLK_MUX,
-+		.parents = { JZ4770_CLK_PLL0, JZ4770_CLK_PLL1, },
-+		.mux = { CGU_REG_MSC2CDR, 30, 1 },
-+		.div = { CGU_REG_MSC2CDR, 0, 1, 7, -1, -1, 31 },
-+		.gate = { CGU_REG_MSC2CDR, 31 },
-+	},
-+	[JZ4770_CLK_CIM] = {
-+		"cim", CGU_CLK_DIV | CGU_CLK_GATE | CGU_CLK_MUX,
-+		.parents = { JZ4770_CLK_PLL0, JZ4770_CLK_PLL1, },
-+		.mux = { CGU_REG_CIMCDR, 31, 1 },
-+		.div = { CGU_REG_CIMCDR, 0, 1, 8, -1, -1, -1 },
-+		.gate = { CGU_REG_CLKGR0, 26 },
-+	},
-+	[JZ4770_CLK_UHC] = {
-+		"uhc", CGU_CLK_DIV | CGU_CLK_GATE | CGU_CLK_MUX,
-+		.parents = { JZ4770_CLK_PLL0, JZ4770_CLK_PLL1, },
-+		.mux = { CGU_REG_UHCCDR, 29, 1 },
-+		.div = { CGU_REG_UHCCDR, 0, 1, 4, -1, -1, -1 },
-+		.gate = { CGU_REG_CLKGR0, 24 },
-+	},
-+	[JZ4770_CLK_GPU] = {
-+		"gpu", CGU_CLK_DIV | CGU_CLK_GATE | CGU_CLK_MUX,
-+		.parents = { JZ4770_CLK_PLL0, JZ4770_CLK_PLL1, -1 },
-+		.mux = { CGU_REG_GPUCDR, 31, 1 },
-+		.div = { CGU_REG_GPUCDR, 0, 1, 3, -1, -1, -1 },
-+		.gate = { CGU_REG_CLKGR1, 9 },
-+	},
-+	[JZ4770_CLK_BCH] = {
-+		"bch", CGU_CLK_DIV | CGU_CLK_GATE | CGU_CLK_MUX,
-+		.parents = { JZ4770_CLK_PLL0, JZ4770_CLK_PLL1, },
-+		.mux = { CGU_REG_BCHCDR, 31, 1 },
-+		.div = { CGU_REG_BCHCDR, 0, 1, 3, -1, -1, -1 },
-+		.gate = { CGU_REG_CLKGR0, 1 },
-+	},
-+	[JZ4770_CLK_LPCLK_MUX] = {
-+		"lpclk", CGU_CLK_DIV | CGU_CLK_GATE | CGU_CLK_MUX,
-+		.parents = { JZ4770_CLK_PLL0, JZ4770_CLK_PLL1, },
-+		.mux = { CGU_REG_LPCDR, 29, 1 },
-+		.div = { CGU_REG_LPCDR, 0, 1, 11, -1, -1, -1 },
-+		.gate = { CGU_REG_CLKGR0, 28 },
-+	},
-+	[JZ4770_CLK_GPS] = {
-+		"gps", CGU_CLK_DIV | CGU_CLK_GATE | CGU_CLK_MUX,
-+		.parents = { JZ4770_CLK_PLL0, JZ4770_CLK_PLL1, },
-+		.mux = { CGU_REG_GPSCDR, 31, 1 },
-+		.div = { CGU_REG_GPSCDR, 0, 1, 4, -1, -1, -1 },
-+		.gate = { CGU_REG_CLKGR0, 22 },
-+	},
-+
-+	/* Those divided clocks can connect to EXT, PLL0 or PLL1 */
-+
-+	[JZ4770_CLK_SSI_MUX] = {
-+		"ssi_mux", CGU_CLK_DIV | CGU_CLK_MUX,
-+		.parents = { JZ4770_CLK_EXT, -1,
-+			JZ4770_CLK_PLL0, JZ4770_CLK_PLL1 },
-+		.mux = { CGU_REG_SSICDR, 30, 2 },
-+		.div = { CGU_REG_SSICDR, 0, 1, 6, -1, -1, -1 },
-+	},
-+	[JZ4770_CLK_PCM_MUX] = {
-+		"pcm_mux", CGU_CLK_DIV | CGU_CLK_MUX,
-+		.parents = { JZ4770_CLK_EXT, -1,
-+			JZ4770_CLK_PLL0, JZ4770_CLK_PLL1 },
-+		.mux = { CGU_REG_PCMCDR, 30, 2 },
-+		.div = { CGU_REG_PCMCDR, 0, 1, 9, -1, -1, -1 },
-+	},
-+	[JZ4770_CLK_I2S] = {
-+		"i2s", CGU_CLK_DIV | CGU_CLK_GATE | CGU_CLK_MUX,
-+		.parents = { JZ4770_CLK_EXT, -1,
-+			JZ4770_CLK_PLL0, JZ4770_CLK_PLL1 },
-+		.mux = { CGU_REG_I2SCDR, 30, 2 },
-+		.div = { CGU_REG_I2SCDR, 0, 1, 9, -1, -1, -1 },
-+		.gate = { CGU_REG_CLKGR1, 13 },
-+	},
-+	[JZ4770_CLK_OTG] = {
-+		"usb", CGU_CLK_DIV | CGU_CLK_GATE | CGU_CLK_MUX,
-+		.parents = { JZ4770_CLK_EXT, -1,
-+			JZ4770_CLK_PLL0, JZ4770_CLK_PLL1 },
-+		.mux = { CGU_REG_USBCDR, 30, 2 },
-+		.div = { CGU_REG_USBCDR, 0, 1, 8, -1, -1, -1 },
-+		.gate = { CGU_REG_CLKGR0, 2 },
-+	},
-+
-+	/* Gate-only clocks */
-+
-+	[JZ4770_CLK_SSI0] = {
-+		"ssi0", CGU_CLK_GATE,
-+		.parents = { JZ4770_CLK_SSI_MUX, },
-+		.gate = { CGU_REG_CLKGR0, 4 },
-+	},
-+	[JZ4770_CLK_SSI1] = {
-+		"ssi1", CGU_CLK_GATE,
-+		.parents = { JZ4770_CLK_SSI_MUX, },
-+		.gate = { CGU_REG_CLKGR0, 19 },
-+	},
-+	[JZ4770_CLK_SSI2] = {
-+		"ssi2", CGU_CLK_GATE,
-+		.parents = { JZ4770_CLK_SSI_MUX, },
-+		.gate = { CGU_REG_CLKGR0, 20 },
-+	},
-+	[JZ4770_CLK_PCM0] = {
-+		"pcm0", CGU_CLK_GATE,
-+		.parents = { JZ4770_CLK_PCM_MUX, },
-+		.gate = { CGU_REG_CLKGR1, 8 },
-+	},
-+	[JZ4770_CLK_PCM1] = {
-+		"pcm1", CGU_CLK_GATE,
-+		.parents = { JZ4770_CLK_PCM_MUX, },
-+		.gate = { CGU_REG_CLKGR1, 10 },
-+	},
-+	[JZ4770_CLK_DMA] = {
-+		"dma", CGU_CLK_GATE,
-+		.parents = { JZ4770_CLK_H2CLK, },
-+		.gate = { CGU_REG_CLKGR0, 21 },
-+	},
-+	[JZ4770_CLK_I2C0] = {
-+		"i2c0", CGU_CLK_GATE,
-+		.parents = { JZ4770_CLK_EXT, },
-+		.gate = { CGU_REG_CLKGR0, 5 },
-+	},
-+	[JZ4770_CLK_I2C1] = {
-+		"i2c1", CGU_CLK_GATE,
-+		.parents = { JZ4770_CLK_EXT, },
-+		.gate = { CGU_REG_CLKGR0, 6 },
-+	},
-+	[JZ4770_CLK_I2C2] = {
-+		"i2c2", CGU_CLK_GATE,
-+		.parents = { JZ4770_CLK_EXT, },
-+		.gate = { CGU_REG_CLKGR1, 15 },
-+	},
-+	[JZ4770_CLK_UART0] = {
-+		"uart0", CGU_CLK_GATE,
-+		.parents = { JZ4770_CLK_EXT, },
-+		.gate = { CGU_REG_CLKGR0, 15 },
-+	},
-+	[JZ4770_CLK_UART1] = {
-+		"uart1", CGU_CLK_GATE,
-+		.parents = { JZ4770_CLK_EXT, },
-+		.gate = { CGU_REG_CLKGR0, 16 },
-+	},
-+	[JZ4770_CLK_UART2] = {
-+		"uart2", CGU_CLK_GATE,
-+		.parents = { JZ4770_CLK_EXT, },
-+		.gate = { CGU_REG_CLKGR0, 17 },
-+	},
-+	[JZ4770_CLK_UART3] = {
-+		"uart3", CGU_CLK_GATE,
-+		.parents = { JZ4770_CLK_EXT, },
-+		.gate = { CGU_REG_CLKGR0, 18 },
-+	},
-+	[JZ4770_CLK_IPU] = {
-+		"ipu", CGU_CLK_GATE,
-+		.parents = { JZ4770_CLK_H0CLK, },
-+		.gate = { CGU_REG_CLKGR0, 29 },
-+	},
-+	[JZ4770_CLK_ADC] = {
-+		"adc", CGU_CLK_GATE,
-+		.parents = { JZ4770_CLK_EXT, },
-+		.gate = { CGU_REG_CLKGR0, 14 },
-+	},
-+	[JZ4770_CLK_AIC] = {
-+		"aic", CGU_CLK_GATE,
-+		.parents = { JZ4770_CLK_EXT, },
-+		.gate = { CGU_REG_CLKGR0, 8 },
-+	},
-+	[JZ4770_CLK_AUX] = {
-+		"aux", CGU_CLK_GATE,
-+		.parents = { JZ4770_CLK_C1CLK, },
-+		.gate = { CGU_REG_CLKGR1, 14 },
-+	},
-+	[JZ4770_CLK_VPU] = {
-+		"vpu", CGU_CLK_GATE,
-+		.parents = { JZ4770_CLK_H1CLK, },
-+		.gate = { CGU_REG_CLKGR1, 7 },
-+	},
-+	[JZ4770_CLK_MMC0] = {
-+		"mmc0", CGU_CLK_GATE,
-+		.parents = { JZ4770_CLK_MMC0_MUX, },
-+		.gate = { CGU_REG_CLKGR0, 3 },
-+	},
-+	[JZ4770_CLK_MMC1] = {
-+		"mmc1", CGU_CLK_GATE,
-+		.parents = { JZ4770_CLK_MMC1_MUX, },
-+		.gate = { CGU_REG_CLKGR0, 11 },
-+	},
-+	[JZ4770_CLK_MMC2] = {
-+		"mmc2", CGU_CLK_GATE,
-+		.parents = { JZ4770_CLK_MMC2_MUX, },
-+		.gate = { CGU_REG_CLKGR0, 12 },
-+	},
-+
-+	/* Custom clocks */
-+
-+	[JZ4770_CLK_UHC_PHY] = {
-+		"uhc_phy", CGU_CLK_CUSTOM,
-+		.parents = { JZ4770_CLK_UHC, -1, -1, -1 },
-+		.custom = { &jz4770_uhc_phy_ops },
-+	},
-+	[JZ4770_CLK_OTG_PHY] = {
-+		"usb_phy", CGU_CLK_CUSTOM,
-+		.parents = { JZ4770_CLK_OTG, -1, -1, -1 },
-+		.custom = { &jz4770_otg_phy_ops },
-+	},
-+
-+	[JZ4770_CLK_EXT512] = {
-+		"ext/512", CGU_CLK_FIXDIV,
-+		.parents = { JZ4770_CLK_EXT },
-+		.fixdiv = { 512 },
-+	},
-+
-+	[JZ4770_CLK_RTC] = {
-+		"rtc", CGU_CLK_MUX,
-+		.parents = { JZ4770_CLK_EXT512, JZ4770_CLK_OSC32K, },
-+		.mux = { CGU_REG_OPCR, 2, 1},
-+	},
-+};
-+
-+#if IS_ENABLED(CONFIG_PM_SLEEP)
-+static int jz4770_cgu_pm_suspend(void)
-+{
-+	u32 val;
-+
-+	val = readl(cgu->base + CGU_REG_LCR);
-+	writel(val | LCR_LPM, cgu->base + CGU_REG_LCR);
-+	return 0;
-+}
-+
-+static void jz4770_cgu_pm_resume(void)
-+{
-+	u32 val;
-+
-+	val = readl(cgu->base + CGU_REG_LCR);
-+	writel(val & ~LCR_LPM, cgu->base + CGU_REG_LCR);
-+}
-+
-+static struct syscore_ops jz4770_cgu_pm_ops = {
-+	.suspend = jz4770_cgu_pm_suspend,
-+	.resume = jz4770_cgu_pm_resume,
-+};
-+#endif /* CONFIG_PM_SLEEP */
-+
-+static void __init jz4770_cgu_init(struct device_node *np)
-+{
-+	int retval;
-+
-+	cgu = ingenic_cgu_new(jz4770_cgu_clocks,
-+			      ARRAY_SIZE(jz4770_cgu_clocks), np);
-+	if (!cgu)
-+		pr_err("%s: failed to initialise CGU\n", __func__);
-+
-+	retval = ingenic_cgu_register_clocks(cgu);
-+	if (retval)
-+		pr_err("%s: failed to register CGU Clocks\n", __func__);
-+
-+#if IS_ENABLED(CONFIG_PM_SLEEP)
-+	register_syscore_ops(&jz4770_cgu_pm_ops);
-+#endif
-+}
-+
-+/* We only probe via devicetree, no need for a platform driver */
-+CLK_OF_DECLARE(jz4770_cgu, "ingenic,jz4770-cgu", jz4770_cgu_init);
--- 
-2.11.0
+As per v1, this patch series aims to add a modern CEU driver to replace the
+soc_camera-based sh_mobile_ceu_camera one, and port a first test platform
+(Migo-R) to use the new driver. Other SH4 based boards are currently using the
+old ceu driver in mainline, once this patch gets in we can port those
+platforms to use the new driver and start removing soc_camera completely.
+
+As per v1, I have not removed any soc_camera-based code in this series and I
+won't until we haven't ported all platforms to use the new driver.
+
+Quite a long change log:
+
+v1->v2
+ - DT
+ -- Addressed Geert's comments and added clocks for CEU to mstp6 clock source
+ -- Specified supported generic video iterfaces properties in dt-bindings and
+    simplified example
+
+ - CEU driver
+ -- Re-worked interrupt handler, interrupt management, reset(*) and capture
+    start operation
+ -- Re-worked querycap/enum_input/enum_frameintervals to fix some
+    v4l2_compliance failures
+ -- Removed soc_camera legacy operations g/s_mbus_format
+ -- Update to new notifier implementation
+ -- Fixed several comments from Hans, Laurent and Sakari
+
+ - Migo-R
+ -- Register clocks and gpios for sensor drivers in Migo-R setup
+ -- Updated sensors (tw9910 and ov772x) drivers headers and drivers to close
+    remarks from Hans and Laurent:
+ --- Removed platform callbacks and handle clocks and gpios from sensor drivers
+ --- Remove g/s_mbus_config operations
+
+Thanks
+   j
+
+[*]: Laurent, I still haven't measured reset latencies during capture operations
+     so I'm still giving reset function a hundred cycles as upper limit, even if
+     I have made sure a single loop is enough during normal operations to
+     reset the interface properly.
+
+Jacopo Mondi (9):
+  dt-bindings: media: Add Renesas CEU bindings
+  include: media: Add Renesas CEU driver interface
+  v4l: platform: Add Renesas CEU driver
+  ARM: dts: r7s72100: Add Capture Engine Unit (CEU)
+  arch: sh: migor: Use new renesas-ceu camera driver
+  v4l: i2c: Copy ov772x soc_camera sensor driver
+  media: i2c: ov772x: Remove soc_camera dependencies
+  v4l: i2c: Copy tw9910 soc_camera sensor driver
+  media: i2c: tw9910: Remove soc_camera dependencies
+
+ .../devicetree/bindings/media/renesas,ceu.txt      |   85 +
+ arch/arm/boot/dts/r7s72100.dtsi                    |   15 +-
+ arch/sh/boards/mach-migor/setup.c                  |  213 ++-
+ arch/sh/kernel/cpu/sh4a/clock-sh7722.c             |    2 +-
+ drivers/media/i2c/Kconfig                          |   20 +
+ drivers/media/i2c/Makefile                         |    2 +
+ drivers/media/i2c/ov772x.c                         | 1179 ++++++++++++++
+ drivers/media/i2c/tw9910.c                         | 1035 ++++++++++++
+ drivers/media/platform/Kconfig                     |    9 +
+ drivers/media/platform/Makefile                    |    1 +
+ drivers/media/platform/renesas-ceu.c               | 1661 ++++++++++++++++++++
+ include/media/drv-intf/renesas-ceu.h               |   20 +
+ include/media/i2c/ov772x.h                         |    8 +-
+ include/media/i2c/tw9910.h                         |    9 +
+ 14 files changed, 4128 insertions(+), 131 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/renesas,ceu.txt
+ create mode 100644 drivers/media/i2c/ov772x.c
+ create mode 100644 drivers/media/i2c/tw9910.c
+ create mode 100644 drivers/media/platform/renesas-ceu.c
+ create mode 100644 include/media/drv-intf/renesas-ceu.h
+
+--
+2.7.4
+
