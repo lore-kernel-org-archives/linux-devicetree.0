@@ -1,208 +1,99 @@
-From: Tim Harvey <tharvey@gateworks.com>
-Subject: [PATCH v6 6/6] ARM: dts: imx: Add TDA19971 HDMI Receiver to GW551x
-Date: Thu, 28 Dec 2017 12:09:49 -0800
-Message-ID: <1514491789-8697-7-git-send-email-tharvey@gateworks.com>
-References: <1514491789-8697-1-git-send-email-tharvey@gateworks.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1514491789-8697-1-git-send-email-tharvey@gateworks.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-media@vger.kernel.org, alsa-devel@alsa-project.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, shawnguo@kernel.org, Steve Longerbeam <slongerbeam@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, Hans Verkuil <hansverk@cisco.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH 2/7] watchdog: jz4740: Use devm_* functions
+Date: Thu, 28 Dec 2017 12:19:23 -0800
+Message-ID: <994187b3-113c-88ef-8ebd-cd57d0c833a0@roeck-us.net>
+References: <20171228162939.3928-1-paul@crapouillou.net>
+ <20171228162939.3928-3-paul@crapouillou.net>
+ <9778afd4-5841-0d48-cde3-c02872623a5f@roeck-us.net>
+ <1514491167.6093.0@smtp.crapouillou.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1514491167.6093.0-nb6JAIIttxhEPksTRSfcJOTW4wlIGRCZ@public.gmane.org>
+Content-Language: en-US
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
+Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Cc: Shawn Guo <shawnguo@kernel.org>
-Signed-off-by: Tim Harvey <tharvey@gateworks.com>
----
-v6: no changes
-v5:
- - add missing audmux config
----
- arch/arm/boot/dts/imx6qdl-gw551x.dtsi | 138 ++++++++++++++++++++++++++++++++++
- 1 file changed, 138 insertions(+)
+On 12/28/2017 11:59 AM, Paul Cercueil wrote:
+> Hi Guenter,
+> 
+> Le jeu. 28 déc. 2017 à 18:48, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> a écrit :
+>> On 12/28/2017 08:29 AM, Paul Cercueil wrote:
+>>> - Use devm_clk_get instead of clk_get
+>>> - Use devm_watchdog_register_device instead of watchdog_register_device
+>>>
+>>> Signed-off-by: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
+>>> ---
+>>>   drivers/watchdog/jz4740_wdt.c | 27 ++++++++-------------------
+>>>   1 file changed, 8 insertions(+), 19 deletions(-)
+>>>
+>>> diff --git a/drivers/watchdog/jz4740_wdt.c b/drivers/watchdog/jz4740_wdt.c
+>>> index 6955deb100ef..92d6ca8ceb49 100644
+>>> --- a/drivers/watchdog/jz4740_wdt.c
+>>> +++ b/drivers/watchdog/jz4740_wdt.c
+>>> @@ -178,40 +178,29 @@ static int jz4740_wdt_probe(struct platform_device *pdev)
+>>>         res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>>>       drvdata->base = devm_ioremap_resource(&pdev->dev, res);
+>>> -    if (IS_ERR(drvdata->base)) {
+>>> -        ret = PTR_ERR(drvdata->base);
+>>> -        goto err_out;
+>>> -    }
+>>> +    if (IS_ERR(drvdata->base))
+>>> +        return PTR_ERR(drvdata->base);
+>>>   -    drvdata->rtc_clk = clk_get(&pdev->dev, "rtc");
+>>> +    drvdata->rtc_clk = devm_clk_get(&pdev->dev, "rtc");
+>>>       if (IS_ERR(drvdata->rtc_clk)) {
+>>>           dev_err(&pdev->dev, "cannot find RTC clock\n");
+>>> -        ret = PTR_ERR(drvdata->rtc_clk);
+>>> -        goto err_out;
+>>> +        return PTR_ERR(drvdata->rtc_clk);
+>>>       }
+>>>   -    ret = watchdog_register_device(&drvdata->wdt);
+>>> +    ret = devm_watchdog_register_device(&pdev->dev, &drvdata->wdt);
+>>>       if (ret < 0)
+>>> -        goto err_disable_clk;
+>>> +        return ret;
+>>>         platform_set_drvdata(pdev, drvdata);
+>>> -    return 0;
+>>>   -err_disable_clk:
+>>> -    clk_put(drvdata->rtc_clk);
+>>> -err_out:
+>>> -    return ret;
+>>> +    return 0;
+>>>   }
+>>>     static int jz4740_wdt_remove(struct platform_device *pdev)
+>>>   {
+>>>       struct jz4740_wdt_drvdata *drvdata = platform_get_drvdata(pdev);
+>>>   -    jz4740_wdt_stop(&drvdata->wdt);
+>>> -    watchdog_unregister_device(&drvdata->wdt);
+>>> -    clk_put(drvdata->rtc_clk);
+>>> -
+>>> -    return 0;
+>>> +    return jz4740_wdt_stop(&drvdata->wdt);
+>>
+>> If the watchdog is running, the module can not be unloaded. Even if that wasn't
+>> the case, this defeats both WDIOF_MAGICCLOSE and watchdog_set_nowayout().
+>> Are you sure this is what you want ? If so, please call
+>> watchdog_stop_on_unregister() before registration; this clarifies that this
+>> is what you want, and you can drop the remove function.
+>>
+>> Thanks,
+>> Guenter
+> 
+> This patch does not change the behaviour. We always used that driver built-in; what
+> should the behaviour be when unloading the module? Keep the watchdog hardware running
+> if configured for 'nowayout'?
+> 
 
-diff --git a/arch/arm/boot/dts/imx6qdl-gw551x.dtsi b/arch/arm/boot/dts/imx6qdl-gw551x.dtsi
-index 30d4662..749548a 100644
---- a/arch/arm/boot/dts/imx6qdl-gw551x.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-gw551x.dtsi
-@@ -46,6 +46,8 @@
-  */
- 
- #include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/media/tda1997x.h>
-+#include <dt-bindings/sound/fsl-imx-audmux.h>
- 
- / {
- 	/* these are used by bootloader for disabling nodes */
-@@ -98,6 +100,50 @@
- 		regulator-min-microvolt = <5000000>;
- 		regulator-max-microvolt = <5000000>;
- 	};
-+
-+	sound-digital {
-+		compatible = "simple-audio-card";
-+		simple-audio-card,name = "tda1997x-audio";
-+
-+		simple-audio-card,dai-link@0 {
-+			format = "i2s";
-+
-+			cpu {
-+				sound-dai = <&ssi2>;
-+			};
-+
-+			codec {
-+				bitclock-master;
-+				frame-master;
-+				sound-dai = <&tda1997x>;
-+			};
-+		};
-+	};
-+};
-+
-+&audmux {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_audmux>; /* AUD5<->tda1997x */
-+	status = "okay";
-+
-+	ssi1 {
-+		fsl,audmux-port = <0>;
-+		fsl,port-config = <
-+			(IMX_AUDMUX_V2_PTCR_TFSDIR |
-+			IMX_AUDMUX_V2_PTCR_TFSEL(4+8) | /* RXFS */
-+			IMX_AUDMUX_V2_PTCR_TCLKDIR |
-+			IMX_AUDMUX_V2_PTCR_TCSEL(4+8) | /* RXC */
-+			IMX_AUDMUX_V2_PTCR_SYN)
-+			IMX_AUDMUX_V2_PDCR_RXDSEL(4)
-+		>;
-+	};
-+
-+	aud5 {
-+		fsl,audmux-port = <4>;
-+		fsl,port-config = <
-+			IMX_AUDMUX_V2_PTCR_SYN
-+			IMX_AUDMUX_V2_PDCR_RXDSEL(0)>;
-+	};
- };
- 
- &can1 {
-@@ -263,6 +309,60 @@
- 		#gpio-cells = <2>;
- 	};
- 
-+	tda1997x: tda1997x@48 {
-+		compatible = "nxp,tda19971";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_tda1997x>;
-+		reg = <0x48>;
-+		interrupt-parent = <&gpio1>;
-+		interrupts = <7 IRQ_TYPE_LEVEL_LOW>;
-+		DOVDD-supply = <&reg_3p3>;
-+		AVDD-supply = <&reg_1p8b>;
-+		DVDD-supply = <&reg_1p8a>;
-+		#sound-dai-cells = <0>;
-+		nxp,audout-format = "i2s";
-+		nxp,audout-layout = <0>;
-+		nxp,audout-width = <16>;
-+		nxp,audout-mclk-fs = <128>;
-+		/*
-+		 * The 8bpp YUV422 semi-planar mode outputs CbCr[11:4]
-+		 * and Y[11:4] across 16bits in the same cycle
-+		 * which we map to VP[15:08]<->CSI_DATA[19:12]
-+		 */
-+		nxp,vidout-portcfg =
-+			/*G_Y_11_8<->VP[15:12]<->CSI_DATA[19:16]*/
-+			< TDA1997X_VP24_V15_12 TDA1997X_G_Y_11_8 >,
-+			/*G_Y_7_4<->VP[11:08]<->CSI_DATA[15:12]*/
-+			< TDA1997X_VP24_V11_08 TDA1997X_G_Y_7_4 >,
-+			/*R_CR_CBCR_11_8<->VP[07:04]<->CSI_DATA[11:08]*/
-+			< TDA1997X_VP24_V07_04 TDA1997X_R_CR_CBCR_11_8 >,
-+			/*R_CR_CBCR_7_4<->VP[03:00]<->CSI_DATA[07:04]*/
-+			< TDA1997X_VP24_V03_00 TDA1997X_R_CR_CBCR_7_4 >;
-+
-+		port {
-+			tda1997x_to_ipu1_csi0_mux: endpoint {
-+				remote-endpoint = <&ipu1_csi0_mux_from_parallel_sensor>;
-+				bus-width = <16>;
-+				hsync-active = <1>;
-+				vsync-active = <1>;
-+				data-active = <1>;
-+			};
-+		};
-+	};
-+};
-+
-+&ipu1_csi0_from_ipu1_csi0_mux {
-+	bus-width = <16>;
-+};
-+
-+&ipu1_csi0_mux_from_parallel_sensor {
-+	remote-endpoint = <&tda1997x_to_ipu1_csi0_mux>;
-+	bus-width = <16>;
-+};
-+
-+&ipu1_csi0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_ipu1_csi0>;
- };
- 
- &pcie {
-@@ -320,6 +420,14 @@
- };
- 
- &iomuxc {
-+	pinctrl_audmux: audmuxgrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_DISP0_DAT19__AUD5_RXD	0x130b0
-+			MX6QDL_PAD_DISP0_DAT14__AUD5_RXC	0x130b0
-+			MX6QDL_PAD_DISP0_DAT13__AUD5_RXFS	0x130b0
-+		>;
-+	};
-+
- 	pinctrl_flexcan1: flexcan1grp {
- 		fsl,pins = <
- 			MX6QDL_PAD_KEY_ROW2__FLEXCAN1_RX	0x1b0b1
-@@ -375,6 +483,30 @@
- 		>;
- 	};
- 
-+	pinctrl_ipu1_csi0: ipu1_csi0grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_CSI0_DAT4__IPU1_CSI0_DATA04		0x1b0b0
-+			MX6QDL_PAD_CSI0_DAT5__IPU1_CSI0_DATA05		0x1b0b0
-+			MX6QDL_PAD_CSI0_DAT6__IPU1_CSI0_DATA06		0x1b0b0
-+			MX6QDL_PAD_CSI0_DAT7__IPU1_CSI0_DATA07		0x1b0b0
-+			MX6QDL_PAD_CSI0_DAT8__IPU1_CSI0_DATA08		0x1b0b0
-+			MX6QDL_PAD_CSI0_DAT9__IPU1_CSI0_DATA09		0x1b0b0
-+			MX6QDL_PAD_CSI0_DAT10__IPU1_CSI0_DATA10		0x1b0b0
-+			MX6QDL_PAD_CSI0_DAT11__IPU1_CSI0_DATA11		0x1b0b0
-+			MX6QDL_PAD_CSI0_DAT12__IPU1_CSI0_DATA12		0x1b0b0
-+			MX6QDL_PAD_CSI0_DAT13__IPU1_CSI0_DATA13		0x1b0b0
-+			MX6QDL_PAD_CSI0_DAT14__IPU1_CSI0_DATA14		0x1b0b0
-+			MX6QDL_PAD_CSI0_DAT15__IPU1_CSI0_DATA15		0x1b0b0
-+			MX6QDL_PAD_CSI0_DAT16__IPU1_CSI0_DATA16		0x1b0b0
-+			MX6QDL_PAD_CSI0_DAT17__IPU1_CSI0_DATA17		0x1b0b0
-+			MX6QDL_PAD_CSI0_DAT18__IPU1_CSI0_DATA18		0x1b0b0
-+			MX6QDL_PAD_CSI0_DAT19__IPU1_CSI0_DATA19		0x1b0b0
-+			MX6QDL_PAD_CSI0_MCLK__IPU1_CSI0_HSYNC		0x1b0b0
-+			MX6QDL_PAD_CSI0_PIXCLK__IPU1_CSI0_PIXCLK	0x1b0b0
-+			MX6QDL_PAD_CSI0_VSYNC__IPU1_CSI0_VSYNC		0x1b0b0
-+		>;
-+	};
-+
- 	pinctrl_pcie: pciegrp {
- 		fsl,pins = <
- 			MX6QDL_PAD_GPIO_0__GPIO1_IO00		0x1b0b0 /* PCIE RST */
-@@ -399,6 +531,12 @@
- 		>;
- 	};
- 
-+	pinctrl_tda1997x: tda1997xgrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_GPIO_7__GPIO1_IO07		0x1b0b0
-+		>;
-+	};
-+
- 	pinctrl_uart2: uart2grp {
- 		fsl,pins = <
- 			MX6QDL_PAD_SD4_DAT7__UART2_TX_DATA	0x1b0b1
--- 
-2.7.4
+One can still unload the driver. If you are fine with bypassing/dfeating nowayout
+and WDIOF_MAGICCLOSE, may I ask why those are enabled in the first place ?
+
+Thanks,
+Guenter
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
