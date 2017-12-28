@@ -1,37 +1,36 @@
-From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Subject: Re: [PATCH v7] i2c: Add support for NXP PCA984x family.
-Date: Fri, 29 Dec 2017 00:31:05 +0100
-Message-ID: <fcc1fe6d-303c-eb52-65e3-28d728e2f764@axentia.se>
-References: <20171220182745.lo6i27ucfhjekmjp@rob-hp-laptop>
- <20171225212646.8062-1-adrian.fiergolski@cern.ch>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v11 0/6] Add support for Qualcomm A53 CPU clock
+Date: Thu, 28 Dec 2017 15:53:44 -0800
+Message-ID: <20171228235344.GY7997@codeaurora.org>
+References: <20171205154701.27730-1-georgi.djakov@linaro.org>
+ <20171222004904.GA7997@codeaurora.org>
+ <1ea1fa92-de78-c4df-469c-3f36f5f62497@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171225212646.8062-1-adrian.fiergolski-vJEk5272eHo@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Adrian Fiergolski <adrian.fiergolski-vJEk5272eHo@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1ea1fa92-de78-c4df-469c-3f36f5f62497@linaro.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Georgi Djakov <georgi.djakov@linaro.org>
+Cc: jassisinghbrar@gmail.com, bjorn.andersson@linaro.org, mturquette@baylibre.com, robh@kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2017-12-25 22:26, Adrian Fiergolski wrote:
-> This patch extends the current i2c-mux-pca954x driver and adds support for
-> a newer PCA984x family of the I2C switches and multiplexers from NXP.
+On 12/22, Georgi Djakov wrote:
+> On 22.12.17 г. 2:49, Stephen Boyd wrote:
+> > On 12/05, Georgi Djakov wrote:
+> >> This patchset adds support for the A53 CPU clock on MSM8916 platforms
+> >> and allows scaling of the CPU frequency on msm8916 based platforms.
+> > 
+> > Ok. I will apply just the clk ones? Patches 3,4, and 6?
+> > 
 > 
-> Signed-off-by: Adrian Fiergolski <adrian.fiergolski-vJEk5272eHo@public.gmane.org>
-> ---
-> Following Rob's and Peter's remarks, bindings contain now one valid
-> combination of compatibles per line.
+> Yes, i think this would be best. The rest should go through the mailbox tree.
+> 
 
-Patch applied, thanks!
+Ok. I made some changes. I'll comment one patch too. But I
+applied them to clk-next.
 
-Any idea if you are going to tackle that device-id functionality for the
-i2c core?
-
-Cheers,
-Peter
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
