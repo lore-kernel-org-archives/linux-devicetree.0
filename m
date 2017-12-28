@@ -1,142 +1,53 @@
-From: Marcin Nowakowski <marcin.nowakowski-8NJIiSa5LzA@public.gmane.org>
-Subject: Re: [PATCH 1/2] nvmem: add driver for JZ4780 efuse
-Date: Thu, 28 Dec 2017 09:05:31 +0100
-Message-ID: <0a3b0b12-80c0-9d6d-bfdb-8d2541947750@mips.com>
-References: <20171227122722.5219-1-malat@debian.org>
- <20171227122722.5219-2-malat@debian.org>
- <bbc64846-e12e-aea8-c516-5e03f6253fed@mips.com>
- <CA+7wUsxM4Cq-K6ONSO-WzmYYvq8PmT92Jfrf7M-MqY-ntObi-g@mail.gmail.com>
+From: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [RFC PATCH v12 4/5] PCI / PM: Add support for the PCIe WAKE#
+ signal for OF
+Date: Thu, 28 Dec 2017 10:47:24 +0200
+Message-ID: <1514450844.7000.305.camel@linux.intel.com>
+References: <20171226023646.17722-1-jeffy.chen@rock-chips.com>
+         <20171226023646.17722-5-jeffy.chen@rock-chips.com>
+         <20171226235607.4rgp4ebrrktt6d56@rob-hp-laptop>
+         <5A42F847.5060305@rock-chips.com>
+         <CAL_JsqJssPABjoRM-XAnuN_Xd2-sHoFifJNrRDdk_ruQ0DRw6A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CA+7wUsxM4Cq-K6ONSO-WzmYYvq8PmT92Jfrf7M-MqY-ntObi-g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <CAL_JsqJssPABjoRM-XAnuN_Xd2-sHoFifJNrRDdk_ruQ0DRw6A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Cc: Zubair.Kakakhel-8NJIiSa5LzA@public.gmane.org, PrasannaKumar Muralidharan <prasannatsmkumar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Harvey Hunt <harvey.hunt-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, James Hogan <jhogan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, JeffyChen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mathieu,
+On Wed, 2017-12-27 at 09:30 -0600, Rob Herring wrote:
+> On Tue, Dec 26, 2017 at 7:32 PM, JeffyChen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> wrote:
 
-On 28.12.2017 08:26, Mathieu Malaterre wrote:
-> Hi Marcin,
+> this new file does something similar to the pci-acpi.c and pci-mid.c..
+
+> pci-acpi.c has similar things to pci/of.c. The naming is just not
+> consistent.
+
+> > and i am agree the naming is not clear, maybe we can rename both of
+> > those
+> > files to something like pci-pm-***.c?
 > 
-> On Thu, Dec 28, 2017 at 8:13 AM, Marcin Nowakowski 
-> <marcin.nowakowski-8NJIiSa5LzA@public.gmane.org <mailto:marcin.nowakowski-8NJIiSa5LzA@public.gmane.org>> wrote:
->  > Hi Mathieu, PrasannaKumar,
->  >
->  > On 27.12.2017 13:27, Mathieu Malaterre wrote:
->  >>
->  >> From: PrasannaKumar Muralidharan <prasannatsmkumar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org 
-> <mailto:prasannatsmkumar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>>
->  >>
->  >> This patch brings support for the JZ4780 efuse. Currently it only expose
->  >> a read only access to the entire 8K bits efuse memory.
->  >>
->  >> Tested-by: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org 
-> <mailto:malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>>
->  >> Signed-off-by: PrasannaKumar Muralidharan 
-> <prasannatsmkumar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org <mailto:prasannatsmkumar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>>
->  >> ---
->  >
->  >
->  >> +
->  >> +/* main entry point */
->  >> +static int jz4780_efuse_read(void *context, unsigned int offset,
->  >> +                                       void *val, size_t bytes)
->  >> +{
->  >> +       static const int nsegments = sizeof(segments) / 
-> sizeof(*segments);
->  >> +       struct jz4780_efuse *efuse = context;
->  >> +       char buf[32];
->  >> +       char *cur = val;
->  >> +       int i;
->  >> +       /* PM recommends read/write each segment separately */
->  >> +       for (i = 0; i < nsegments; ++i) {
->  >> +               unsigned int *segment = segments[i];
->  >> +               unsigned int lpos = segment[0];
->  >> +               unsigned int buflen = segment[1] / 8;
->  >> +               unsigned int ncount = buflen / 32;
->  >> +               unsigned int remain = buflen % 32;
->  >> +               int j;
->  >
->  >
->  > This doesn't look right, as offset & bytes are completely ignored. This
->  > means it will return data from an offset other than requested and may 
-> also
->  > overrun the provided output buffer?
-> 
-> 
-> Thanks for the review ! That was the part of nvmem framework I was not 
-> totally clear. Let say I want to expose only a portion of efuse space, eg:
+> At least pci-acpi.c is more than just PM functions, so that doesn't
+> make sense. Given that all the ACPI related functions are in 1 file,
+> we should do the same for DT.
 
-Do you need to expose this to the userspace or to other drivers only?
-For the second case have a look at the description of nvmem cell interface.
+> > but i have no idea about pci-mid.c or would it possible to have more
+> > platform pm ops in the future...maybe we should add some dependency
+> > in the
+> > Kconfig?
 
+You may consider pci-mid.c as pci-sfi.c to some extend.
 
-> diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi 
-> b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-> index 2f26922718559..44d97c06a6d15 100644
-> --- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
-> +++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-> @@ -299,6 +299,15 @@
-> clocks = <&cgu JZ4780_CLK_AHB2>;
-> clock-names = "bus_clk";
-> +
-> +#address-cells = <1>;
-> +#size-cells = <1>;
-> +
-> +eth_mac: eth_mac@12 {
-> +/* six byte/48bit MAC address stored as 8-bit integers */
-> +reg = <0x12 0x6>;
-> +};
-> +
-> };
-> };
-> What should I do to expose that chunk only in the user space ?
+So, in that sense it more looks like pci-of.c would be the name for DT
+case.
 
-The nvmem interface's userspace interface (via /sys/.../nvmem) provides 
-access to the complete device raw memory so the only way to achieve that 
-would be to parse the devicetree description in your driver and only 
-register part of the memory with the nvmem driver - but that would be a 
-slight abuse of the interface.
-The nvmem devicetree binding document shows clearly how to define the 
-cell interface that can later be used by any consumer - that way you 
-could have the ethernet driver access the cell directly. However, as the 
-dm9000 driver isn't designed to do that and this is a SoC-specific 
-extention, I don't know how it fits with the general eth driver design ...
-
-Potentially a good and useful compromise would be to have all of the 
-cell regs exposed via /sys/.../nvmem-cellname file (or something 
-similar), but this is not currently supported and I don't know what the 
-view of nvmem maintainers on adding such extension would be.
-
-
->  >
->  >> +               /* EFUSE can read or write maximum 256bit in each 
-> time */
->  >> +               for (j = 0; j < ncount ; ++j) {
->  >> +                       jz4780_efuse_read_32bytes(efuse, buf, lpos);
->  >> +                       memcpy(cur, buf, sizeof(buf));
->  >> +                       cur += sizeof(buf);
->  >> +                       lpos += sizeof(buf);
->  >> +                       }
->  >> +               if (remain) {
->  >> +                       jz4780_efuse_read_32bytes(efuse, buf, lpos);
->  >> +                       memcpy(cur, buf, remain);
->  >> +                       cur += remain;
->  >> +                       }
->  >> +               }
->  >> +
->  >> +       return 0;
->  >> +}
-
-Regardless of the choices above, you still always have to make sure in 
-your reg_read method that you only read from the offset specified in 
-method arguments and never return more than 'bytes' of data requested.
-
-Marcin
+-- 
+Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Intel Finland Oy
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
