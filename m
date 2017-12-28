@@ -1,7 +1,7 @@
 From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH 2/7] watchdog: jz4740: Use devm_* functions
-Date: Thu, 28 Dec 2017 17:29:34 +0100
-Message-ID: <20171228162939.3928-3-paul@crapouillou.net>
+Subject: [PATCH 7/7] MIPS: jz4740: Drop old platform reset code
+Date: Thu, 28 Dec 2017 17:29:39 +0100
+Message-ID: <20171228162939.3928-8-paul@crapouillou.net>
 References: <20171228162939.3928-1-paul@crapouillou.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171228162939.3928-1-paul@crapouillou.net>
@@ -10,66 +10,65 @@ To: Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, Mark R
 Cc: devicetree@vger.kernel.org, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
-- Use devm_clk_get instead of clk_get
-- Use devm_watchdog_register_device instead of watchdog_register_device
+This work is now performed by the watchdog driver directly.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- drivers/watchdog/jz4740_wdt.c | 27 ++++++++-------------------
- 1 file changed, 8 insertions(+), 19 deletions(-)
+ arch/mips/jz4740/reset.c | 31 -------------------------------
+ 1 file changed, 31 deletions(-)
 
-diff --git a/drivers/watchdog/jz4740_wdt.c b/drivers/watchdog/jz4740_wdt.c
-index 6955deb100ef..92d6ca8ceb49 100644
---- a/drivers/watchdog/jz4740_wdt.c
-+++ b/drivers/watchdog/jz4740_wdt.c
-@@ -178,40 +178,29 @@ static int jz4740_wdt_probe(struct platform_device *pdev)
+diff --git a/arch/mips/jz4740/reset.c b/arch/mips/jz4740/reset.c
+index 67780c4b6573..5bf0cf44b55f 100644
+--- a/arch/mips/jz4740/reset.c
++++ b/arch/mips/jz4740/reset.c
+@@ -12,18 +12,9 @@
+  *
+  */
  
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	drvdata->base = devm_ioremap_resource(&pdev->dev, res);
--	if (IS_ERR(drvdata->base)) {
--		ret = PTR_ERR(drvdata->base);
--		goto err_out;
--	}
-+	if (IS_ERR(drvdata->base))
-+		return PTR_ERR(drvdata->base);
- 
--	drvdata->rtc_clk = clk_get(&pdev->dev, "rtc");
-+	drvdata->rtc_clk = devm_clk_get(&pdev->dev, "rtc");
- 	if (IS_ERR(drvdata->rtc_clk)) {
- 		dev_err(&pdev->dev, "cannot find RTC clock\n");
--		ret = PTR_ERR(drvdata->rtc_clk);
--		goto err_out;
-+		return PTR_ERR(drvdata->rtc_clk);
- 	}
- 
--	ret = watchdog_register_device(&drvdata->wdt);
-+	ret = devm_watchdog_register_device(&pdev->dev, &drvdata->wdt);
- 	if (ret < 0)
--		goto err_disable_clk;
-+		return ret;
- 
- 	platform_set_drvdata(pdev, drvdata);
--	return 0;
- 
--err_disable_clk:
--	clk_put(drvdata->rtc_clk);
--err_out:
--	return ret;
-+	return 0;
- }
- 
- static int jz4740_wdt_remove(struct platform_device *pdev)
- {
- 	struct jz4740_wdt_drvdata *drvdata = platform_get_drvdata(pdev);
- 
--	jz4740_wdt_stop(&drvdata->wdt);
--	watchdog_unregister_device(&drvdata->wdt);
--	clk_put(drvdata->rtc_clk);
+-#include <linux/clk.h>
+-#include <linux/io.h>
+-#include <linux/kernel.h>
+-#include <linux/pm.h>
 -
--	return 0;
-+	return jz4740_wdt_stop(&drvdata->wdt);
+ #include <asm/reboot.h>
+ 
+-#include <asm/mach-jz4740/base.h>
+-#include <asm/mach-jz4740/timer.h>
+-
+ #include "reset.h"
+-#include "clock.h"
+ 
+ static void jz4740_halt(void)
+ {
+@@ -36,29 +27,7 @@ static void jz4740_halt(void)
+ 	}
  }
  
- static struct platform_driver jz4740_wdt_driver = {
+-#define JZ_REG_WDT_DATA 0x00
+-#define JZ_REG_WDT_COUNTER_ENABLE 0x04
+-#define JZ_REG_WDT_COUNTER 0x08
+-#define JZ_REG_WDT_CTRL 0x0c
+-
+-static void jz4740_restart(char *command)
+-{
+-	void __iomem *wdt_base = ioremap(JZ4740_WDT_BASE_ADDR, 0x0f);
+-
+-	jz4740_timer_enable_watchdog();
+-
+-	writeb(0, wdt_base + JZ_REG_WDT_COUNTER_ENABLE);
+-
+-	writew(0, wdt_base + JZ_REG_WDT_COUNTER);
+-	writew(0, wdt_base + JZ_REG_WDT_DATA);
+-	writew(BIT(2), wdt_base + JZ_REG_WDT_CTRL);
+-
+-	writeb(1, wdt_base + JZ_REG_WDT_COUNTER_ENABLE);
+-	jz4740_halt();
+-}
+-
+ void jz4740_reset_init(void)
+ {
+-	_machine_restart = jz4740_restart;
+ 	_machine_halt = jz4740_halt;
+ }
 -- 
 2.11.0
