@@ -1,87 +1,120 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH V8 3/3] OPP: Allow "opp-hz" and "opp-microvolt" to
- contain magic values
-Date: Thu, 28 Dec 2017 10:07:25 +0530
-Message-ID: <20171228043725.GB8652@vireshk-i7>
-References: <cover.1513591822.git.viresh.kumar@linaro.org>
- <476d7ae69184d787ccc6d99f8df6069007fd0a91.1513591822.git.viresh.kumar@linaro.org>
- <20171226202955.32j7gzonrixtwdpt@rob-hp-laptop>
- <20171227085645.GF8312@vireshk-i7>
- <CAL_JsqJzMfNhHK=6Wt4dzBRS9BVGMZ-f7uk3OnUupudTfwuyUA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqJzMfNhHK=6Wt4dzBRS9BVGMZ-f7uk3OnUupudTfwuyUA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Kevin Hilman <khilman@kernel.org>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@codeaurora.org>, Rafael Wysocki <rjw@rjwysocki.net>, linux-pm@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, Sudeep Holla <sudeep.holla@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: Kunihiko Hayashi <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Subject: [PATCH net-next v9 0/2] add UniPhier AVE ethernet support
+Date: Thu, 28 Dec 2017 15:58:10 +0900
+Message-ID: <1514444292-20643-1-git-send-email-hayashi.kunihiko@socionext.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Masami Hiramatsu <masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kunihiko Hayashi <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 27-12-17, 15:54, Rob Herring wrote:
-> On Wed, Dec 27, 2017 at 2:56 AM, Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> > On 26-12-17, 14:29, Rob Herring wrote:
-> >> On Mon, Dec 18, 2017 at 03:51:30PM +0530, Viresh Kumar wrote:
-> >
-> >> > +On some platforms the exact frequency or voltage may be hidden from the OS by
-> >> > +the firmware and the "opp-hz" or the "opp-microvolt" properties may contain
-> >> > +magic values that represent the frequency or voltage in a firmware dependent
-> >> > +way, for example an index of an array in the firmware.
-> >>
-> >> I'm still not convinced this is a good idea.
-> >
-> > You were kind-of a few days back :)
-> >
-> > lkml.kernel.org/r/CAL_JsqK-qtAaM_Ou5NtxcWR3F_q=8rMPJUm-VqGtKhbtWe5SAQ@mail.gmail.com
-> 
-> Yeah, well that was before Stephen said anything.
-> 
-> > So here is the deal:
-> >
-> > - I proposed "domain-performance-state" property for this stuff
-> >   initially.
-> > - But Kevin didn't like that and proposed reusing "opp-hz" and
-> >   "opp-microvolt", which we all agreed to multiple times..
-> > - And we are back to the same discussion now and its painful and time
-> >   killing for all of us.
-> 
-> There's bigger issues than where we put magic values as I raised in
-> the other patch.
-> 
-> > TBH, I don't have too strong preferences about any of the suggestions
-> > you guys have and I need you guys to tell me what binding changes to
-> > do here and I will do that.
-> >
-> >> If you have firmware
-> >> partially managing things, then I think we should have platform specific
-> >> bindings or drivers.
-> >
-> > What about the initial idea then, like "performance-state" for the
-> > power domains ? All platforms will anyway replicate that binding only.
-> 
-> I don't really know. I don't really care either. I'll probably go
-> along with what everyone agrees to, but the only one I see any
-> agreement from is Ulf. Also, it is pretty vague as to what platforms
-> will use this. You claimed you can support QCom scenarios, but there's
-> really no evidence that that is true.
+This series adds support for Socionext AVE ethernet controller implemented
+on UniPhier SoCs. This driver supports RGMII/RMII modes.
 
-Well, I sent out the code few days back based on these bindings and everyone can
-see how these bindings will get used now.
+v8: https://www.spinics.net/lists/netdev/msg474374.html
 
-> What I don't want to see is this
-> merged and then we need something more yet again in a few months for
-> another platform.
+The PHY patch included in v1 has already separated in:
+http://www.spinics.net/lists/netdev/msg454595.html
 
-Sure, I get your concerns.
+Changes since v8:
+- move operators at the beginning of the line to the end of the previous line
+- dt-bindings: add blank lines before mdio and phy subnodes
 
-So what we need now is:
+Changes since v7:
+- dt-bindings: fix mdio subnode description
 
-- Stephen to start responding and clarify all the doubts he had as being silent
-  isn't helping.
+Changes since v6:
+- sort the order of local variables from longest to shortest line
+- fix ave_probe() which calls register_netdev() at the end of initialization
+- dt-bindings: remove phy node descriptions in mdio node
 
-- Or Rajendra to post patches which can prove that this is usable. The last time
-  I had a chat with him, he confirmed that he will post patches after 4.15-rc1
-  and he should have posted them by now, but he didn't :(
+Changes since v5:
+- replace license boilerplate with SPDX Identifier
+- remove inline directives and an unused function
+
+Changes since v4:
+- fix larger integer warning on AVE_PFMBYTE_MASK0
+
+Changes since v3:
+- remove checking dma address and use dma_set_mask() to restirct address
+- replace ave_mdio_busywait() with read_poll_timeout()
+- replace functions to access to registers with readl/writel() directly
+- replace a function to access to macaddr with ave_hw_write_macaddr()
+- change return value of ave_dma_map() to error value
+- move mdiobus_unregister() from ave_remove() to ave_uninit()
+- eliminate else block at the end of ave_dma_map()
+- add mask definitions for packet filter
+- sort bitmap definitions in descending order
+- add error check to some functions
+- rename and sort functions to clear sub-categories
+- fix error value consistency
+- remove unneeded initializers
+- change type of constant arrays
+
+Changes since v2:
+- replace clk_get() with devm_clk_get()
+- replace reset_control_get() with devm_reset_control_get_optional_shared()
+- add error return when the error occurs on the above *_get functions
+- sort soc data and compatible strings
+- remove clearly obvious comments
+- modify dt-bindings document consistent with these modifications
+
+Changes since v1:
+- add/remove devicetree properties and sub-node
+  - remove "internal-phy-interrupt" and "desc-bits" property
+  - add SoC data structures based on compatible strings
+  - add node operation to apply "mdio" sub-node
+- add support for features
+  - add support for {get,set}_pauseparam and pause frame operations
+  - add support for ndo_get_stats64 instead of ndo_get_stats
+- replace with desiable functions
+  - replace check for valid phy_mode with phy_interface{_mode}_is_rgmii()
+  - replace phy attach message with phy_attached_info()
+  - replace 32bit operation with {upper,lower}_32_bits() on ave_wdesc_addr()
+  - replace nway_reset and get_link with generic functions
+- move operations to proper functions
+  - move phy_start_aneg() to ndo_open,
+    and remove unnecessary PHY interrupt operations
+    See http://www.spinics.net/lists/netdev/msg454590.html
+  - move irq initialization and descriptor memory allocation to ndo_open
+  - move initialization of reset and clock and mdiobus to ndo_init
+- fix skbuffer operations
+  - fix skb alignment operations and add Rx buffer adjustment for descriptor
+    See http://www.spinics.net/lists/netdev/msg456014.html
+  - add error returns when dma_map_single() failed 
+- clean up code structures
+  - clean up wait-loop and wake-queue conditions
+  - add ave_wdesc_addr() and offset definitions
+  - add ave_macaddr_init() to clean up mac-address operation
+  - fix checking whether Tx entry is not enough
+  - fix supported features of phydev
+  - add necessary free/disable operations
+  - add phydev check on ave_{get,set}_wol()
+  - remove netif_carrier functions, phydev initializer, and Tx budget check
+- change obsolate codes
+  - replace ndev->{base_addr,irq} with the members of ave_private
+- rename goto labels and mask definitions, and remove unused codes
+
+Kunihiko Hayashi (2):
+  dt-bindings: net: add DT bindings for Socionext UniPhier AVE
+  net: ethernet: socionext: add AVE ethernet driver
+
+ .../bindings/net/socionext,uniphier-ave4.txt       |   48 +
+ drivers/net/ethernet/Kconfig                       |    1 +
+ drivers/net/ethernet/Makefile                      |    1 +
+ drivers/net/ethernet/socionext/Kconfig             |   22 +
+ drivers/net/ethernet/socionext/Makefile            |    5 +
+ drivers/net/ethernet/socionext/sni_ave.c           | 1736 ++++++++++++++++++++
+ 6 files changed, 1813 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/socionext,uniphier-ave4.txt
+ create mode 100644 drivers/net/ethernet/socionext/Kconfig
+ create mode 100644 drivers/net/ethernet/socionext/Makefile
+ create mode 100644 drivers/net/ethernet/socionext/sni_ave.c
 
 -- 
-viresh
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
