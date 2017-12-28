@@ -1,115 +1,123 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH 2/7] watchdog: jz4740: Use devm_* functions
-Date: Thu, 28 Dec 2017 13:03:35 -0800
-Message-ID: <de7b629e-35b6-a55c-d7ca-57c145fa30ae@roeck-us.net>
-References: <20171228162939.3928-1-paul@crapouillou.net>
- <20171228162939.3928-3-paul@crapouillou.net>
- <9778afd4-5841-0d48-cde3-c02872623a5f@roeck-us.net>
- <1514491167.6093.0@smtp.crapouillou.net>
- <994187b3-113c-88ef-8ebd-cd57d0c833a0@roeck-us.net>
- <1514492538.6093.1@smtp.crapouillou.net>
+From: Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Subject: Re: [PATCH v2] arm64: dts: Hi3660: Fix up psci state id
+Date: Thu, 28 Dec 2017 21:14:03 +0000
+Message-ID: <5A455E9B.9010703@hisilicon.com>
+References: <1513069954-22827-1-git-send-email-leo.yan@linaro.org>
+ <5A3CD23C.3080307@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1514492538.6093.1-nb6JAIIttxhEPksTRSfcJOTW4wlIGRCZ@public.gmane.org>
-Content-Language: en-US
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
-Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5A3CD23C.3080307-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Soby Mathew <Soby.Mathew-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/28/2017 12:22 PM, Paul Cercueil wrote:
+Hi Leo,
+
+On 2017/12/22 9:37, Wei Xu wrote:
+> Hi Leo,
 > 
-> 
-> Le jeu. 28 déc. 2017 à 21:19, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> a écrit :
->> On 12/28/2017 11:59 AM, Paul Cercueil wrote:
->>> Hi Guenter,
->>>
->>> Le jeu. 28 déc. 2017 à 18:48, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> a écrit :
->>>> On 12/28/2017 08:29 AM, Paul Cercueil wrote:
->>>>> - Use devm_clk_get instead of clk_get
->>>>> - Use devm_watchdog_register_device instead of watchdog_register_device
->>>>>
->>>>> Signed-off-by: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
->>>>> ---
->>>>>   drivers/watchdog/jz4740_wdt.c | 27 ++++++++-------------------
->>>>>   1 file changed, 8 insertions(+), 19 deletions(-)
->>>>>
->>>>> diff --git a/drivers/watchdog/jz4740_wdt.c b/drivers/watchdog/jz4740_wdt.c
->>>>> index 6955deb100ef..92d6ca8ceb49 100644
->>>>> --- a/drivers/watchdog/jz4740_wdt.c
->>>>> +++ b/drivers/watchdog/jz4740_wdt.c
->>>>> @@ -178,40 +178,29 @@ static int jz4740_wdt_probe(struct platform_device *pdev)
->>>>>         res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->>>>>       drvdata->base = devm_ioremap_resource(&pdev->dev, res);
->>>>> -    if (IS_ERR(drvdata->base)) {
->>>>> -        ret = PTR_ERR(drvdata->base);
->>>>> -        goto err_out;
->>>>> -    }
->>>>> +    if (IS_ERR(drvdata->base))
->>>>> +        return PTR_ERR(drvdata->base);
->>>>>   -    drvdata->rtc_clk = clk_get(&pdev->dev, "rtc");
->>>>> +    drvdata->rtc_clk = devm_clk_get(&pdev->dev, "rtc");
->>>>>       if (IS_ERR(drvdata->rtc_clk)) {
->>>>>           dev_err(&pdev->dev, "cannot find RTC clock\n");
->>>>> -        ret = PTR_ERR(drvdata->rtc_clk);
->>>>> -        goto err_out;
->>>>> +        return PTR_ERR(drvdata->rtc_clk);
->>>>>       }
->>>>>   -    ret = watchdog_register_device(&drvdata->wdt);
->>>>> +    ret = devm_watchdog_register_device(&pdev->dev, &drvdata->wdt);
->>>>>       if (ret < 0)
->>>>> -        goto err_disable_clk;
->>>>> +        return ret;
->>>>>         platform_set_drvdata(pdev, drvdata);
->>>>> -    return 0;
->>>>>   -err_disable_clk:
->>>>> -    clk_put(drvdata->rtc_clk);
->>>>> -err_out:
->>>>> -    return ret;
->>>>> +    return 0;
->>>>>   }
->>>>>     static int jz4740_wdt_remove(struct platform_device *pdev)
->>>>>   {
->>>>>       struct jz4740_wdt_drvdata *drvdata = platform_get_drvdata(pdev);
->>>>>   -    jz4740_wdt_stop(&drvdata->wdt);
->>>>> -    watchdog_unregister_device(&drvdata->wdt);
->>>>> -    clk_put(drvdata->rtc_clk);
->>>>> -
->>>>> -    return 0;
->>>>> +    return jz4740_wdt_stop(&drvdata->wdt);
->>>>
->>>> If the watchdog is running, the module can not be unloaded. Even if that wasn't
->>>> the case, this defeats both WDIOF_MAGICCLOSE and watchdog_set_nowayout().
->>>> Are you sure this is what you want ? If so, please call
->>>> watchdog_stop_on_unregister() before registration; this clarifies that this
->>>> is what you want, and you can drop the remove function.
->>>>
->>>> Thanks,
->>>> Guenter
->>>
->>> This patch does not change the behaviour. We always used that driver built-in; what
->>> should the behaviour be when unloading the module? Keep the watchdog hardware running
->>> if configured for 'nowayout'?
->>>
+> On 2017/12/12 9:12, Leo Yan wrote:
+>> Thanks a lot for Vincent Guittot careful work to find bug for 'CPU_NAP'
+>> idle state.  From ftrace log we can observe CA73 CPUs can be easily
+>> waken up from 'CPU_NAP' state but the 'waken up' CPUs doesn't handle
+>> anything and sleep again; so there have tons of trace events for CA73
+>> CPUs entering and exiting idle state.
 >>
->> One can still unload the driver. If you are fine with bypassing/dfeating nowayout
->> and WDIOF_MAGICCLOSE, may I ask why those are enabled in the first place ?
+>> On Hi3660 CA73 has retention state 'CPU_NAP' for CPU idle, this state we
+>> set its psci parameter as '0x0000001' and from this parameter it can
+>> calculate state id is 1.  Unfortunately ARM trusted firmware (ARM-TF)
+>> takes 1 as a invalid value for state id, so the CPU cannot enter idle
+>> state and directly bail out to kernel.
 >>
+>> We want to create good practice for psci parameters platform definition,
+>> so review the psci specification. The spec "ARM Power State Coordination
+>> Interface - Platform Design Document (ARM DEN 0022D)" recommends state
+>> ID in chapter "6.5 Recommended StateID Encoding".  The recommended power
+>> state IDs can be presented by below listed values; and it divides into
+>> three fields, every field can use 4 bits to present power states
+>> corresponding to core level, cluster level and system level:
+>>   0: Run
+>>   1: Standby
+>>   2: Retention
+>>   3: Powerdown
+>>
+>> This commit changes psci parameter to compliance with the suggested
+>> state ID in the doc.  Except we change 'CPU_NAP' state psci parameter
+>> to '0x0000002', this commit also changes 'CPU_SLEEP' and 'CLUSTER_SLEEP'
+>> state parameters to '0x0010003' and '0x1010033' respectively.
+>>
+>> Credits to Daniel, Sudeep and Soby for suggestion and consolidation.
+>>
+>> Cc: Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> Cc: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+>> Cc: Soby Mathew <Soby.Mathew-5wv7dgnIgG8@public.gmane.org>
+>> Signed-off-by: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> ---
 > 
-> Who knows? That code is very old :)
+> Applied into hisilicon dt tree.
+> Thanks!
 
-Probably copied from some other driver w/o thinking much about it.
+Sorry, since this patch is still under discussion,
+I will drop it firstly.
+Thanks!
 
-> I'm fine with removing the remove() function completely, if you think it makes more sense.
+Best Regards,
+Wei
+
 > 
+> Best Regards,
+> Wei
+> 
+>>  arch/arm64/boot/dts/hisilicon/hi3660.dtsi | 8 ++++----
+>>  1 file changed, 4 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+>> index ab0b95b..99d5a46 100644
+>> --- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+>> +++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+>> @@ -147,7 +147,7 @@
+>>  
+>>  			CPU_NAP: cpu-nap {
+>>  				compatible = "arm,idle-state";
+>> -				arm,psci-suspend-param = <0x0000001>;
+>> +				arm,psci-suspend-param = <0x0000002>;
+>>  				entry-latency-us = <7>;
+>>  				exit-latency-us = <2>;
+>>  				min-residency-us = <15>;
+>> @@ -156,7 +156,7 @@
+>>  			CPU_SLEEP: cpu-sleep {
+>>  				compatible = "arm,idle-state";
+>>  				local-timer-stop;
+>> -				arm,psci-suspend-param = <0x0010000>;
+>> +				arm,psci-suspend-param = <0x0010003>;
+>>  				entry-latency-us = <40>;
+>>  				exit-latency-us = <70>;
+>>  				min-residency-us = <3000>;
+>> @@ -165,7 +165,7 @@
+>>  			CLUSTER_SLEEP_0: cluster-sleep-0 {
+>>  				compatible = "arm,idle-state";
+>>  				local-timer-stop;
+>> -				arm,psci-suspend-param = <0x1010000>;
+>> +				arm,psci-suspend-param = <0x1010033>;
+>>  				entry-latency-us = <500>;
+>>  				exit-latency-us = <5000>;
+>>  				min-residency-us = <20000>;
+>> @@ -174,7 +174,7 @@
+>>  			CLUSTER_SLEEP_1: cluster-sleep-1 {
+>>  				compatible = "arm,idle-state";
+>>  				local-timer-stop;
+>> -				arm,psci-suspend-param = <0x1010000>;
+>> +				arm,psci-suspend-param = <0x1010033>;
+>>  				entry-latency-us = <1000>;
+>>  				exit-latency-us = <5000>;
+>>  				min-residency-us = <20000>;
+>>
 
-Yes, I do, but I won't insist on it either.
-
-Thanks,
-Guenter
 --
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
