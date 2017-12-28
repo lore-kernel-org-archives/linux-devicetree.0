@@ -1,59 +1,58 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sun8i: Fix power for USB Ethernet controller
-Date: Thu, 28 Dec 2017 21:01:26 +0800
-Message-ID: <137686441.91VTU2W72k@ice-x220i>
-References: <20171228125222.12942-1-hauke@hauke-m.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+From: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
+Subject: [PATCH 1/3] serial: core: Make uart_parse_options take const char* argument
+Date: Thu, 28 Dec 2017 14:07:07 +0100
+Message-ID: <20171228130709.12457-2-paul@crapouillou.net>
+References: <20171228130709.12457-1-paul@crapouillou.net>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171228125222.12942-1-hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+In-Reply-To: <20171228130709.12457-1-paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Cc: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-在 2017年12月28日星期四 CST 下午8:52:22，Hauke Mehrtens 写道：
-> The RTL8152B USB controller needs a 3.3 volt power supply which is
-> controlled by PAD20. Without this patch Linux will not see that there is
-> a device connected to the USB bus and the 2. USB port will not work.
-> 
-> I do not of a better solution to add a regulator to a USB device.
+The pointed string is never modified from within uart_parse_options, so
+it should be marked as const in the function prototype.
 
-I have one.
+Signed-off-by: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
+---
+ drivers/tty/serial/serial_core.c | 5 +++--
+ include/linux/serial_core.h      | 2 +-
+ 2 files changed, 4 insertions(+), 3 deletions(-)
 
-Please check the patch I will send you soon.
+ v1: Initial version
 
-> 
-> Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-> ---
->  arch/arm/boot/dts/sun8i-h2-plus-orangepi-r1.dts | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/sun8i-h2-plus-orangepi-r1.dts
-> b/arch/arm/boot/dts/sun8i-h2-plus-orangepi-r1.dts index
-> 32a6d312422e..1d5db0e0bd12 100644
-> --- a/arch/arm/boot/dts/sun8i-h2-plus-orangepi-r1.dts
-> +++ b/arch/arm/boot/dts/sun8i-h2-plus-orangepi-r1.dts
-> @@ -47,13 +47,15 @@
->  	model = "Xunlong Orange Pi R1";
->  	compatible = "xunlong,orangepi-r1", "allwinner,sun8i-h2-plus";
-> 
-> -	/delete-node/ reg_vcc_wifi;
-> -
->  	aliases {
->  		ethernet1 = &rtl8189etv;
->  	};
->  };
-> 
-> +&reg_vcc_wifi {
-> +	regulator-always-on;
-> +};
-> +
->  &ohci1 {
->  	/*
->  	 * RTL8152B USB-Ethernet adapter is connected to USB1,
-
+diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
+index 854995e1cae7..4e0c9209bfb7 100644
+--- a/drivers/tty/serial/serial_core.c
++++ b/drivers/tty/serial/serial_core.c
+@@ -1955,9 +1955,10 @@ EXPORT_SYMBOL_GPL(uart_parse_earlycon);
+  *	eg: 115200n8r
+  */
+ void
+-uart_parse_options(char *options, int *baud, int *parity, int *bits, int *flow)
++uart_parse_options(const char *options, int *baud, int *parity,
++		   int *bits, int *flow)
+ {
+-	char *s = options;
++	const char *s = options;
+ 
+ 	*baud = simple_strtoul(s, NULL, 10);
+ 	while (*s >= '0' && *s <= '9')
+diff --git a/include/linux/serial_core.h b/include/linux/serial_core.h
+index 37b044e78333..e23d9aa757fb 100644
+--- a/include/linux/serial_core.h
++++ b/include/linux/serial_core.h
+@@ -387,7 +387,7 @@ struct uart_port *uart_get_console(struct uart_port *ports, int nr,
+ 				   struct console *c);
+ int uart_parse_earlycon(char *p, unsigned char *iotype, resource_size_t *addr,
+ 			char **options);
+-void uart_parse_options(char *options, int *baud, int *parity, int *bits,
++void uart_parse_options(const char *options, int *baud, int *parity, int *bits,
+ 			int *flow);
+ int uart_set_options(struct uart_port *port, struct console *co, int baud,
+ 		     int parity, int bits, int flow);
+-- 
+2.15.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
