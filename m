@@ -1,36 +1,52 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH 1/7] watchdog: JZ4740: Disable clock after stopping counter
-Date: Thu, 28 Dec 2017 17:29:33 +0100
-Message-ID: <20171228162939.3928-2-paul@crapouillou.net>
-References: <20171228162939.3928-1-paul@crapouillou.net>
+From: =?UTF-8?q?Myl=C3=A8ne=20Josserand?=
+        <mylene.josserand@free-electrons.com>
+Subject: [PATCH v2 0/2] sun8i-a83t: Add touchscreen support on TBS A711
+Date: Thu, 28 Dec 2017 17:33:34 +0100
+Message-ID: <20171228163336.28131-1-mylene.josserand@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171228162939.3928-1-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>
-Cc: devicetree@vger.kernel.org, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+To: dmitry.torokhov@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, maxime.ripard@free-electrons.com, wens@csie.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mylene.josserand@free-electrons.com, thomas.petazzoni@free-electrons.com, quentin.schulz@free-electrons.com
 List-Id: devicetree@vger.kernel.org
 
-Previously, the clock was disabled first, which makes the watchdog
-component insensitive to register writes.
+Hello everyone,
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
----
- drivers/watchdog/jz4740_wdt.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This is a V2 of the patch series that adds touchscreen support
+(FocalTech EDT-FT5x06 Polytouch) for TBS A711 (Allwinner sun8i-a83t SoC).
+Based on last linux-next (next-20171222).
 
-diff --git a/drivers/watchdog/jz4740_wdt.c b/drivers/watchdog/jz4740_wdt.c
-index 20627f22baf6..6955deb100ef 100644
---- a/drivers/watchdog/jz4740_wdt.c
-+++ b/drivers/watchdog/jz4740_wdt.c
-@@ -124,8 +124,8 @@ static int jz4740_wdt_stop(struct watchdog_device *wdt_dev)
- {
- 	struct jz4740_wdt_drvdata *drvdata = watchdog_get_drvdata(wdt_dev);
- 
--	jz4740_timer_disable_watchdog();
- 	writeb(0x0, drvdata->base + JZ_REG_WDT_COUNTER_ENABLE);
-+	jz4740_timer_disable_watchdog();
- 
- 	return 0;
- }
+Changes since v1:
+   - Remove patches 01 and 02 as Chen-Yu Tsai sent a similar patch:
+   https://patchwork.kernel.org/patch/10111431/
+   and it is merged on last next-20171222.
+   (See commit f066f46ce5a5 "ARM: dts: sun8i: a83t: Add I2C device nodes and pinmux settings")
+   - Update regulator according to Dmitry Torokhov's review: remove "optional"
+   suffix while retrieving the regulator, rename it into "vcc" instead of
+   "power" and add bindings documentation.
+   - Update device tree according to Maxime Ripard's review: remove the
+   label and rename the node.
+   - Squash patch 03 with patch 05 to add I2C0 and touchscreen's node
+   in one patch (see patch 02).
+
+Patch 01: Add support for regulator in the FocalTech touchscreen driver
+because A711 tablet is using a regulator to power-up the touchscreen.
+Patch 02: Add i2c0 and touchscreen's node for A711 TBS tablet.
+
+Thank you in advance for any review.
+Best regards,
+Mylène
+
+Mylène Josserand (2):
+  Input: edt-ft5x06 - Add support for regulator
+  arm: dts: sun8i: a83t: a711: Add touchscreen node
+
+ .../bindings/input/touchscreen/edt-ft5x06.txt      |  1 +
+ arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts          | 16 +++++++++++
+ drivers/input/touchscreen/edt-ft5x06.c             | 33 ++++++++++++++++++++++
+ 3 files changed, 50 insertions(+)
+
 -- 
 2.11.0
