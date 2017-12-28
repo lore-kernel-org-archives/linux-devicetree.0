@@ -1,33 +1,36 @@
-From: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] arm64: dts: Hi3660: Fix up psci state id
-Date: Fri, 29 Dec 2017 07:13:56 +0800
-Message-ID: <20171228231356.GA18311@leoy-linaro>
-References: <1513069954-22827-1-git-send-email-leo.yan@linaro.org>
- <5A3CD23C.3080307@hisilicon.com>
- <5A455E9B.9010703@hisilicon.com>
+From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Subject: Re: [PATCH v7] i2c: Add support for NXP PCA984x family.
+Date: Fri, 29 Dec 2017 00:31:05 +0100
+Message-ID: <fcc1fe6d-303c-eb52-65e3-28d728e2f764@axentia.se>
+References: <20171220182745.lo6i27ucfhjekmjp@rob-hp-laptop>
+ <20171225212646.8062-1-adrian.fiergolski@cern.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5A455E9B.9010703-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+In-Reply-To: <20171225212646.8062-1-adrian.fiergolski-vJEk5272eHo@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Soby Mathew <Soby.Mathew-5wv7dgnIgG8@public.gmane.org>
+To: Adrian Fiergolski <adrian.fiergolski-vJEk5272eHo@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 28, 2017 at 09:14:03PM +0000, Wei Xu wrote:
-> Hi Leo,
+On 2017-12-25 22:26, Adrian Fiergolski wrote:
+> This patch extends the current i2c-mux-pca954x driver and adds support for
+> a newer PCA984x family of the I2C switches and multiplexers from NXP.
+> 
+> Signed-off-by: Adrian Fiergolski <adrian.fiergolski-vJEk5272eHo@public.gmane.org>
+> ---
+> Following Rob's and Peter's remarks, bindings contain now one valid
+> combination of compatibles per line.
 
-[...]
+Patch applied, thanks!
 
-> Sorry, since this patch is still under discussion,
-> I will drop it firstly.
-> Thanks!
+Any idea if you are going to tackle that device-id functionality for the
+i2c core?
 
-Thanks, Wei.
-
-> Best Regards,
-> Wei
+Cheers,
+Peter
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
