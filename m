@@ -1,90 +1,143 @@
-From: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 1/4] ASoC: mediatek: fix error handling in
- mt2701_afe_pcm_dev_probe()
-Date: Thu, 28 Dec 2017 20:27:08 +0800
-Message-ID: <1514464028.21578.2.camel@mtkswgap22>
-References: <18b7f0ec484300af795b1873efab96e51393459c.1514190169.git.ryder.lee@mediatek.com>
+From: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: sun8i: add support for Orange Pi R1
+Date: Thu, 28 Dec 2017 13:42:32 +0100
+Message-ID: <bb59aa6e-29ca-a606-ea08-14bcea9c15b8@hauke-m.de>
+References: <20171112124129.15844-1-icenowy@aosc.io>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <18b7f0ec484300af795b1873efab96e51393459c.1514190169.git.ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <20171112124129.15844-1-icenowy-h8G6r0blFSE@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Garlic Tseng <garlic.tseng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Sorry, please ignore this series. I will send new ones later.
+Hi,
 
-On Mon, 2017-12-25 at 16:28 +0800, Ryder Lee wrote:
-> Fix unbalanced error handling path which will get incorrect counts
-> if probe failed. The .remove() should be adjusted accordingly.
+I tried this device tree file with my Orange Pi R1 and then the Ethernet
+chip connected to the USB controller is not working. When I set PAD 20
+to high the device is found on the USB bus.
+
+
+
+On 11/12/2017 01:41 PM, Icenowy Zheng wrote:
+> Orange Pi R1 is a board design based on Orange Pi Zero, with XR819 Wi-Fi
+> chip replaced by RTL8189ETV Wi-Fi module and the USB Type-A jack
+> replaced by an onboard USB RTL8152B USB-Ethernet adapter.
 > 
-> Signed-off-by: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> Add support for it.
+> 
+> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 > ---
->  sound/soc/mediatek/mt2701/mt2701-afe-pcm.c | 23 ++++++++++-------------
->  1 file changed, 10 insertions(+), 13 deletions(-)
+>  arch/arm/boot/dts/Makefile                      |  1 +
+>  arch/arm/boot/dts/sun8i-h2-plus-orangepi-r1.dts | 73 +++++++++++++++++++++++++
+>  2 files changed, 74 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/sun8i-h2-plus-orangepi-r1.dts
 > 
-> diff --git a/sound/soc/mediatek/mt2701/mt2701-afe-pcm.c b/sound/soc/mediatek/mt2701/mt2701-afe-pcm.c
-> index 8fda182..b3f6f73 100644
-> --- a/sound/soc/mediatek/mt2701/mt2701-afe-pcm.c
-> +++ b/sound/soc/mediatek/mt2701/mt2701-afe-pcm.c
-> @@ -1591,8 +1591,12 @@ static int mt2701_afe_pcm_dev_probe(struct platform_device *pdev)
->  
->  	platform_set_drvdata(pdev, afe);
->  	pm_runtime_enable(&pdev->dev);
-> -	if (!pm_runtime_enabled(&pdev->dev))
-> -		goto err_pm_disable;
-> +	if (!pm_runtime_enabled(&pdev->dev)) {
-> +		ret = mt2701_afe_runtime_resume(&pdev->dev);
-> +		if (ret)
-> +			goto err_pm_disable;
-> +	}
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index d0381e9caf21..3c139c63098f 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -949,6 +949,7 @@ dtb-$(CONFIG_MACH_SUN8I) += \
+>  	sun8i-a83t-bananapi-m3.dtb \
+>  	sun8i-a83t-cubietruck-plus.dtb \
+>  	sun8i-a83t-tbs-a711.dtb \
+> +	sun8i-h2-plus-orangepi-r1.dtb \
+>  	sun8i-h2-plus-orangepi-zero.dtb \
+>  	sun8i-h3-bananapi-m2-plus.dtb \
+>  	sun8i-h3-beelink-x2.dtb \
+> diff --git a/arch/arm/boot/dts/sun8i-h2-plus-orangepi-r1.dts b/arch/arm/boot/dts/sun8i-h2-plus-orangepi-r1.dts
+> new file mode 100644
+> index 000000000000..32a6d312422e
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/sun8i-h2-plus-orangepi-r1.dts
+> @@ -0,0 +1,73 @@
+> +/*
+> + * Copyright (C) 2017 Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This file is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License as
+> + *     published by the Free Software Foundation; either version 2 of the
+> + *     License, or (at your option) any later version.
+> + *
+> + *     This file is distributed in the hope that it will be useful,
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + * Or, alternatively,
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use,
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
 > +
->  	pm_runtime_get_sync(&pdev->dev);
->  
->  	ret = snd_soc_register_platform(&pdev->dev, &mtk_afe_pcm_platform);
-> @@ -1610,16 +1614,12 @@ static int mt2701_afe_pcm_dev_probe(struct platform_device *pdev)
->  		goto err_dai_component;
->  	}
->  
-> -	mt2701_afe_runtime_resume(&pdev->dev);
-> -
->  	return 0;
->  
->  err_dai_component:
-> -	snd_soc_unregister_component(&pdev->dev);
-> -
-> -err_platform:
->  	snd_soc_unregister_platform(&pdev->dev);
-> -
-> +err_platform:
-> +	pm_runtime_put_sync(&pdev->dev);
->  err_pm_disable:
->  	pm_runtime_disable(&pdev->dev);
->  
-> @@ -1628,17 +1628,14 @@ static int mt2701_afe_pcm_dev_probe(struct platform_device *pdev)
->  
->  static int mt2701_afe_pcm_dev_remove(struct platform_device *pdev)
->  {
-> -	struct mtk_base_afe *afe = platform_get_drvdata(pdev);
-> -
-> +	pm_runtime_put_sync(&pdev->dev);
->  	pm_runtime_disable(&pdev->dev);
->  	if (!pm_runtime_status_suspended(&pdev->dev))
->  		mt2701_afe_runtime_suspend(&pdev->dev);
-> -	pm_runtime_put_sync(&pdev->dev);
->  
->  	snd_soc_unregister_component(&pdev->dev);
->  	snd_soc_unregister_platform(&pdev->dev);
-> -	/* disable afe clock */
-> -	mt2701_afe_disable_clock(afe);
+> +/* Orange Pi R1 is based on Orange Pi Zero design */
+> +#include "sun8i-h2-plus-orangepi-zero.dts"
 > +
->  	return 0;
->  }
->  
+> +/ {
+> +	model = "Xunlong Orange Pi R1";
+> +	compatible = "xunlong,orangepi-r1", "allwinner,sun8i-h2-plus";
+> +
+> +	/delete-node/ reg_vcc_wifi;
+I remove this line.
 
+> +
+> +	aliases {
+> +		ethernet1 = &rtl8189etv;
+> +	};
+> +};
+> +
 
+I add this:
+&reg_vcc_wifi {
+	regulator-always-on;
+};
+This regulator should be connected to the USB device, but this is not in
+device tree because it should be automatically probed.
+
+> +&ohci1 {
+> +	/*
+> +	 * RTL8152B USB-Ethernet adapter is connected to USB1,
+> +	 * and it's a USB 2.0 device. So the OHCI1 controller
+> +	 * can be left disabled.
+> +	 */
+> +	status = "disabled";
+> +};
+> +
+> +&mmc1 {
+> +	vmmc-supply = <&reg_vcc3v3>;
+> +	vqmmc-supply = <&reg_vcc3v3>;
+> +
+> +	rtl8189etv: sdio_wifi@1 {
+> +		reg = <1>;
+> +	};
+> +};
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
