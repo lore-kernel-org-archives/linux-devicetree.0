@@ -1,7 +1,7 @@
 From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH 7/7] MIPS: jz4740: Drop old platform reset code
-Date: Thu, 28 Dec 2017 17:29:39 +0100
-Message-ID: <20171228162939.3928-8-paul@crapouillou.net>
+Subject: [PATCH 6/7] MIPS: qi_lb60: Enable the jz4740-wdt driver
+Date: Thu, 28 Dec 2017 17:29:38 +0100
+Message-ID: <20171228162939.3928-7-paul@crapouillou.net>
 References: <20171228162939.3928-1-paul@crapouillou.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171228162939.3928-1-paul@crapouillou.net>
@@ -10,65 +10,28 @@ To: Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, Mark R
 Cc: devicetree@vger.kernel.org, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
-This work is now performed by the watchdog driver directly.
+The watchdog is an useful piece of hardware, so there's no reason not to
+enable it.
+
+This commit enables the Kconfig option in the qi_lb60 defconfig.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- arch/mips/jz4740/reset.c | 31 -------------------------------
- 1 file changed, 31 deletions(-)
+ arch/mips/configs/qi_lb60_defconfig | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/mips/jz4740/reset.c b/arch/mips/jz4740/reset.c
-index 67780c4b6573..5bf0cf44b55f 100644
---- a/arch/mips/jz4740/reset.c
-+++ b/arch/mips/jz4740/reset.c
-@@ -12,18 +12,9 @@
-  *
-  */
- 
--#include <linux/clk.h>
--#include <linux/io.h>
--#include <linux/kernel.h>
--#include <linux/pm.h>
--
- #include <asm/reboot.h>
- 
--#include <asm/mach-jz4740/base.h>
--#include <asm/mach-jz4740/timer.h>
--
- #include "reset.h"
--#include "clock.h"
- 
- static void jz4740_halt(void)
- {
-@@ -36,29 +27,7 @@ static void jz4740_halt(void)
- 	}
- }
- 
--#define JZ_REG_WDT_DATA 0x00
--#define JZ_REG_WDT_COUNTER_ENABLE 0x04
--#define JZ_REG_WDT_COUNTER 0x08
--#define JZ_REG_WDT_CTRL 0x0c
--
--static void jz4740_restart(char *command)
--{
--	void __iomem *wdt_base = ioremap(JZ4740_WDT_BASE_ADDR, 0x0f);
--
--	jz4740_timer_enable_watchdog();
--
--	writeb(0, wdt_base + JZ_REG_WDT_COUNTER_ENABLE);
--
--	writew(0, wdt_base + JZ_REG_WDT_COUNTER);
--	writew(0, wdt_base + JZ_REG_WDT_DATA);
--	writew(BIT(2), wdt_base + JZ_REG_WDT_CTRL);
--
--	writeb(1, wdt_base + JZ_REG_WDT_COUNTER_ENABLE);
--	jz4740_halt();
--}
--
- void jz4740_reset_init(void)
- {
--	_machine_restart = jz4740_restart;
- 	_machine_halt = jz4740_halt;
- }
+diff --git a/arch/mips/configs/qi_lb60_defconfig b/arch/mips/configs/qi_lb60_defconfig
+index 3f1333517405..ba8e1c56b626 100644
+--- a/arch/mips/configs/qi_lb60_defconfig
++++ b/arch/mips/configs/qi_lb60_defconfig
+@@ -73,6 +73,8 @@ CONFIG_POWER_SUPPLY=y
+ CONFIG_BATTERY_JZ4740=y
+ CONFIG_CHARGER_GPIO=y
+ # CONFIG_HWMON is not set
++CONFIG_WATCHDOG=y
++CONFIG_JZ4740_WDT=y
+ CONFIG_MFD_JZ4740_ADC=y
+ CONFIG_REGULATOR=y
+ CONFIG_REGULATOR_FIXED_VOLTAGE=y
 -- 
 2.11.0
