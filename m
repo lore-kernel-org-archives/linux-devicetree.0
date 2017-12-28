@@ -1,129 +1,109 @@
-From: Trent Piepho <tpiepho@impinj.com>
-Subject: Re: [PATCH 1/3] mtd: spi-nor: add optional DMA-safe bounce buffer for
- data transfer
-Date: Thu, 28 Dec 2017 18:54:39 +0000
-Message-ID: <1514487276.26695.94.camel@impinj.com>
-References: <cover.1514087323.git.cyrille.pitchen@wedev4u.fr>
-         <fc2440c6f52877f28286d89691049e5cba10e6a7.1514087323.git.cyrille.pitchen@wedev4u.fr>
-         <1514317385.26695.39.camel@impinj.com>
-         <1a7dc424-1ce0-6c64-fc52-bb88ec7db8fa@wedev4u.fr>
+From: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
+Subject: Re: [PATCH 2/7] watchdog: jz4740: Use devm_* functions
+Date: Thu, 28 Dec 2017 20:59:27 +0100
+Message-ID: <1514491167.6093.0@smtp.crapouillou.net>
+References: <20171228162939.3928-1-paul@crapouillou.net>
+        <20171228162939.3928-3-paul@crapouillou.net>
+        <9778afd4-5841-0d48-cde3-c02872623a5f@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1a7dc424-1ce0-6c64-fc52-bb88ec7db8fa@wedev4u.fr>
-Content-Language: en-US
-Content-ID: <19614AEFEB7D234F8E504F8164313343@namprd06.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "broonie@kernel.org" <broonie@kernel.org>, "cyrille.pitchen@wedev4u.fr" <cyrille.pitchen@wedev4u.fr>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "vigneshr@ti.com" <vigneshr@ti.com>, "boris.brezillon@free-electrons.com" <boris.brezillon@free-electrons.com>, "richard@nod.at" <richard@nod.at>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>
-Cc: "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>, "radu.pirea@microchip.com" <radu.pirea@microchip.com>, "robh@kernel.org" <robh@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <9778afd4-5841-0d48-cde3-c02872623a5f-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCAyMDE3LTEyLTI4IGF0IDExOjM5ICswMTAwLCBDeXJpbGxlIFBpdGNoZW4gd3JvdGU6
-DQo+IExlIDI2LzEyLzIwMTcgw6AgMjA6NDMsIFRyZW50IFBpZXBobyBhIMOpY3JpdCA6DQo+ID4g
-T24gU3VuLCAyMDE3LTEyLTI0IGF0IDA1OjM2ICswMTAwLCBDeXJpbGxlIFBpdGNoZW4gd3JvdGU6
-DQo+ID4gPiANCj4gPiA+IFRoZW4gdGhlIHBhdGNoIGFkZHMgdHdvIGhhcmR3YXJlIGNhcGFiaWxp
-dGllcyBmb3IgU1BJIGZsYXNoIGNvbnRyb2xsZXJzLA0KPiA+ID4gU05PUl9IV0NBUFNfV1JfQk9V
-TkNFIGFuZCBTTk9SX0hXQ0FQU19SRF9CT1VOQ0UuDQo+ID4gDQo+ID4gQXJlIHRoZXJlIGFueSBk
-cml2ZXJzIGZvciB3aGljaCBhIGJvdW5jZSBidWZmZXIgaXMgTk9UIG5lZWRlZCB3aGVuIHRoZQ0K
-PiA+IHR4L3J4IGJ1ZmZlciBpcyBub3QgaW4gRE1BIHNhZmUgbWVtb3J5PyAgTWF5YmUgaXQgd291
-bGQgbWFrZSBtb3JlIHNlbnNlDQo+ID4gdG8gaW52ZXJ0IHRoZSBzZW5zZSBvZiB0aGVzZSBmbGFn
-cywgc28gdGhhdCB0aGV5IGluZGljYXRlIHRoZSBkcml2ZXINCj4gPiBkb2VzIG5vdCBuZWVkIERN
-QSBzYWZlIGJ1ZmZlcnMsIGlmIHRoYXQgaXMgdGhlIHVuY29tbW9uL25vbi1leGlzdGVudA0KPiA+
-IGNhc2UsIHNvIHRoYXQgZmV3ZXIgZHJpdmVycyBuZWVkIHRvIGJlIG1vZGlmaWVkIHRvIHRvIGJl
-IGZpeGVkPw0KPiA+IA0KPiANCj4gSXQgZG9lc24ndCBzb3VuZCBzYWZlIGZvciBhIGZpcnN0IHN0
-ZXAuIEkgZG9uJ3Qga25vdyBpZiBzb21lIG9mIHRoZQ0KPiBzcGktZmxhc2ggY29udHJvbGxlcnMg
-YXJlIGVtYmVkZGVkIGluc2lkZSBzeXN0ZW1zIHdpdGggc21hbGwgbWVtb3J5IGFuZA0KPiBkb24n
-dCBjYXJlIGFib3V0IERNQSB0cmFuc2ZlcnMuIE1heWJlIHRoZXkgZG9uJ3QgcGxhbiB0byB1c2Ug
-YW55dGhpbmcgZWxzZQ0KPiBidXQgUElPIHRyYW5zZmVycy4gVGhlbiB3aHkgdGFraW5nIHRoZSBy
-aXNrIHRvIGV4aGF1c3QgdGhlIG1lbW9yeSBvbiBzeXN0ZW1zDQo+IHRoYXQgd291bGQgbm90IHVz
-ZSB0aGUgYm91bmNlIGJ1ZmZlciBhbnl3YXk/DQoNClRoaXMgd291bGQgY2VydGFpbmx5IGJlIHRo
-ZSBjYXNlIHdoZW4gdGhlIGRyaXZlciBkb2VzIG5vdCBldmVuIHN1cHBvcnQNCkRNQSBpbiB0aGUg
-Zmlyc3QgcGxhY2UuDQoNClRoaXMgYWxzbyBtYWtlcyBtZSB3b25kZXIsIGhvdyBpbmVmZmljaWVu
-dCBkb2VzIHRoaXMgYmVjb21lIHdoZW4gaXQNCnVzZXMgYSBib3VuY2UgYnVmZmVyIGZvciBzbWFs
-bCB0cmFuc2ZlciB0aGF0IHdvdWxkIG5vdCB1c2UgRE1BIGFueXdheT8gDQogSW4gdGhlIHNwaV9m
-bGFzaF9yZWFkKCkgaW50ZXJmYWNlIGZvciBzcGkgbWFzdGVycywgdGhlcmUgaXMgYSBtYXN0ZXIN
-Cm1ldGhvZCBzcGlfZmxhc2hfY2FuX2RtYSgpIGNhbGxiYWNrIHVzZWQgYnkgdGhlIHNwaSBjb3Jl
-IHRvIHRlbGwgaWYNCmVhY2ggdHJhbnNmZXIgY2FuIGJlIERNQWVkLg0KDQpTaG91bGQgc29tZXRo
-aW5nIGxpa2UgdGhhdCBiZSB1c2VkIGhlcmUsIHRvIGFzayB0aGUgbWFzdGVyIGlmIGl0IHdvdWxk
-DQp1c2UgZG1hIG9uIHRoZSBidWZmZXI/DQoNClRoaXMgbWlnaHQgYWxzbyBwcmV2ZW50IGFsbG9j
-YXRpb24gb2YgdGhlIGJvdW5jZSBidWZmZXIgaWYgdGhlIG9ubHkgRE1BDQp1bnNhZmUgdHJhbnNm
-ZXJzIGFyZSB0aW55IGNvbnRyb2wgb3BzIHdpdGggc3RhY2sgdmFyaWFibGVzIHRoYXQNCndvdWxk
-bid0IHVzZSBETUEsIGUuZy4gdGhlIHN0dWZmIHNwaV9ub3JfcmVhZF9zZmRwX2RtYV91bnNhZmUo
-KSBkb2VzLg0KDQoNCj4gQWJvdXQgdGhlIG1lbW9yeSBsb3NzIHdoZW4gZm9yY2luZyB0aGUgU05P
-Ul9IV0NBUFNfKl9CT1VOQ0UgaW4gbTI1cDgwLmMsIEkNCj4ganVzdGlmeSBpdCBiZWNhdXNlIHRo
-ZSBtMjVwODAgaGFzIHRvIGJlIGNvbXBsaWFudCB3aXRoIHRoZSBTUEkgc3ViLXN5c3RlbQ0KPiBy
-ZXF1aXJlbWVudHMgYnV0IGN1cnJlbnRseSBpcyBub3QuIEhvd2V2ZXIgSSd2ZSB0YWtlbiBjYXJl
-IG5vdCB0byBhbGxvY2F0ZQ0KPiB0aGUgYm91bmNlIGJ1ZmZlciBhcyBsb25nIGFzIHdlIHVzZSBv
-bmx5IERNQS1zYWZlIGJ1ZmZlcnMuDQoNCkFub3RoZXIgcG9zc2liaWxpdHkgdG8gcmVkdWNlIG1l
-bW9yeSB1c2FnZTogbWFrZSB0aGUgYnVmZmVyIHNtYWxsZXINCndoZW4gZmlyc3QgYWxsb2NhdGVk
-IGJ5IGJlaW5nIGp1c3QgZW5vdWdoIGZvciB0aGUgbmVlZGVkIHNwYWNlLiAgR3Jvdw0KaXQgKGJ5
-IHBvd2VycyBvZiB0d28/KSB1bnRpbCBpdCByZWFjaGVzIHRoZSBtYXggYWxsb3dlZCBzaXplLiAg
-Tm8NCnJlYXNvbiB0byB1c2UgYSAyNTYga0IgYnVmZmVyIGlmIERNQSB1bnNhZmUgb3BlcmF0aW9u
-cyBuZXZlciBnZXQgdGhhdA0KYmlnLg0KDQoNCj4gSGVyZSBhdCB0aGUgTVREIHNpZGUsIHRoZSBt
-YWluIChvbmx5ID8pIHNvdXJjZSBvZiBETUEtdW5zYWZlIGJ1ZmZlcnMgaXMNCj4gdGhlIFVCSUZT
-IChKRkZTMiB0b28gPykgbGF5ZXIuIFRoZW4gSSd2ZSBhc3N1bWVkIHRoYXQgc3lzdGVtcyB1c2lu
-ZyBzdWNoIGENCj4gZmlsZS1zeXN0ZW0gc2hvdWxkIGFscmVhZHkgaGF2ZSBlbm91Z2ggc3lzdGVt
-IG1lbW9yeS4NCg0KSSBzYXcgYSBub3RlIGluIG9uZSBvZiB0aGUgZXhpc3RpbmcgRE1BIGZpeGVz
-IHRoYXQgSkZGUzIgd2FzIHRoZSBzb3VyY2UNCm9mIHRoZSB1bnNhZmUgYnVmZmVycywgc28gcHJv
-YmFibHkgdGhlcmUgdG9vLg0KDQoNCj4gDQo+IFZpZ25lc2ggaGFzIHN1Z2dlc3RlZCB0byBjYWxs
-IHZpcnRfYWRkcl92YWxpZCgpIGluc3RlYWQuDQo+IEkgdGhpbmsgQm9yaXMgaGFzIGFsc28gdG9s
-ZCBtZSBhYm91dCB0aGlzIGZ1bmN0aW9uLg0KPiBTbyBpdCBtaWdodCBiZSB0aGUgcmlnaHQgc29s
-dXRpb24uIFdoYXQgZG8geW91IHRoaW5rIGFib3V0IHRoZWlyIHByb3Bvc2FsPw0KDQpOb3Qgc3Vy
-ZSB3aGF0IGV4YWN0bHkgdGhlIGRpZmZlcmVuY2VzIGFyZSBiZXR3ZWVuIHRoZXNlIG1ldGhvZHMu
-ICBUaGUNCmZhY3QgdGhhdCBlYWNoIG9mIHRoZSBtYW55IGV4aXN0aW5nIERNQSBmaXhlcyB1c2Vz
-IHNsaWdodGx5IGRpZmZlcmVudA0KY29kZSB0byBkZXRlY3Qgd2hhdCBpcyB1bnNhZmUgc3BlYWtz
-IHRvIHRoZSBkaWZmaWN1bHR5IG9mIHRoaXMgcHJvYmxlbSENCiB2aXJ0X2FkZHJfdmFsaWQoKSBp
-cyBhbHJlYWR5IHVzZWQgYnkgc3BpLXRpLXFzcGkuICBzcGkgY29yZSB1c2VzIGZvcg0KdGhlIGJ1
-ZmZlciBtYXAgaGVscGVyLCBidXQgdGhhdCBjb2RlIHBhdGggaXMgZm9yIGJ1ZmZlcnMgd2hpY2gg
-YXJlIE5PVA0Kdm1hbGxvYyBvciBoaWdobWVtLCBidXQgYXJlIHN0aWxsIG5vdCB2aXJ0X2FkZHJf
-dmFsaWQoKSBmb3Igc29tZSBvdGhlcg0KcmVhc29uLg0KDQo+ID4gPiArc3RhdGljIGludCBzcGlf
-bm9yX2dldF9ib3VuY2VfYnVmZmVyKHN0cnVjdCBzcGlfbm9yICpub3IsDQo+ID4gPiArCQkJCSAg
-ICAgdV9jaGFyICoqYnVmZmVyLA0KPiA+ID4gKwkJCQkgICAgIHNpemVfdCAqYnVmZmVyX3NpemUp
-DQo+ID4gPiArew0KPiA+ID4gKw0KPiA+ID4gKwkqYnVmZmVyID0gbm9yLT5ib3VuY2VfYnVmZmVy
-Ow0KPiA+ID4gKwkqYnVmZmVyX3NpemUgPSBzaXplOw0KPiA+IA0KPiA+IFNvIHRoZSBidWZmZXIg
-aXMgcmV0dXJuZWQgdmlhIHRoZSBwYXJhbWV0ZXIsIGFuZCBhbHNvIHZpYSBhIGZpZWxkDQo+ID4g
-aW5zaWRlIG5vci4gIFNlZW1zIHJlZHVuZGFudC4gIENvbnNpZGVyIGFkZHJlc3MgY291bGQgYmUg
-cmV0dXJuZWQgdmlhDQo+ID4gdGhlIGZ1bmN0aW9uIHJldHVybiB2YWx1ZSBjb3VwbGVkIHdpdGgg
-UFRSX0VSUigpIGZvciB0aGUgZXJyb3IgY2FzZXMuIA0KPiA+IE9yIG5vdCByZXR1cm4gYWRkcmVz
-cyBhdCBhbGwgc2luY2UgaXQncyBhdmFpbGFibGUgdmlhIG5vci0NCj4gPiA+IGJvdW5jZV9idWZm
-ZXIuDQo+IA0KPiBXaHkgbm90LiBJdCB3b3VsZCByZXF1aXJlIG1vcmUgbGluZXMgdGhvdWdoLiBJ
-IGd1ZXNzIGl0J3MgcHVyZWx5IGEgbWF0dGVyIG9mIHRhc3RlLg0KDQpXZWxsLCBhbHNvIGNvbnNp
-ZGVyIHRoYXQgeW91IGRvbid0IG5lZWQgdG8gZXZlbiByZXR1cm4gdGhlIGJ1ZmZlcg0KcG9pbnRl
-ciBhdCBhbGwsIHNpbmNlIGl0J3MgYXZhaWxhYmxlIGFzIG5vci0+Ym91bmNlX2J1ZmZlci4gIFdo
-aWNoIGl0DQppcyB1c2VkIGFzIGluIHNwaV9ub3Jfd3JpdGUoKSBhbmQgc3BpX25vcl9yZWFkKCku
-DQoNCj4gPiBUaGlzIHBhdHRlcm4sIGNoZWNrIGlmIGJvdW5jZSBpcyBlbmFibGVkLCBjaGVjayBp
-ZiBhZGRyZXNzIGlzIGRtYS0NCj4gPiB1bnNhZmUsIGdldCBib3VuY2UgYnVmZmVyLCBzZWVtcyB0
-byBiZSB2ZXJ5IGNvbW1vbi4gIENvdWxkIGl0IGJlDQo+ID4gcmVmYWN0b3JlZCBpbnRvIG9uZSBo
-ZWxwZXI/DQo+ID4gDQo+ID4gdV9jaGFyICpidWZmZXIgPSBzcGlfbm9yX2NoZWNrX2JvdW5jZShu
-b3IsIGJ1ZiwgbGVuLCAmYnVmZmVyX3NpemUpOw0KPiANCj4gVGhlIGNvbmRpdGlvbnMgdGhhdCBk
-ZWZpbmUgdGhlIHZhbHVlIG9mICd1c2VfYm91bmNlJyBhbHNvIGRlcGVuZCBvbiB0aGUgdHlwZQ0K
-PiBvZiBvcGVyYXRpb24sIHJlYWQgb3Igd3JpdGUsIGhlbmNlIG9uIHRoZSB0d28gZGlmZmVyZW50
-IGZsYWdzDQo+IFNOT1JfRl9VU0VfUkRfQk9VTkNFIGFuZCBTTk9SX0ZfVVNFX1dSX0JPVU5DRS4N
-Cg0KSnVzdCBwYXNzIG9uZSBvZiB0aG9zZSBmbGFncyBhcyBhbiBhcmd1bWVudCB0byB0ZWxsIHdo
-YXQgZGlyZWN0aW9uIGl0DQppcyBpbi4gIFRob3VnaCBJIHdvbmRlciBpZiB1c2luZyBhIGJvdW5j
-ZSBidWZmZXIgZm9yIG9ubHkgb25lIGRpcmVjdGlvbg0Kd2lsbCBldmVyIGJlIHVzZWQuDQoNCj4g
-DQo+IEJlc2lkZXMsICd1c2VfYm91bmNlJyBpcyBhbHNvIHRlc3RlZCBsYXRlciBpbiBzcGlfbm9y
-X3JlYWQoKSwgc3N0X3dyaXRlKCkNCj4gYW5kIHNzdF93cml0ZSgpLg0KPiANCj4gU28gSSBkb24n
-dCByZWFsbHkgc2VlIGhvdyB0aGUgc3BpX25vcl9jaGVja19ib3VuY2UoKSBmdW5jdGlvbiB5b3Ug
-cHJvcG9zZQ0KPiBjb3VsZCBiZSB0aGF0IGRpZmZlcmVudCBmcm9tIHNwaV9ub3JfZ2V0X2JvdW5j
-ZV9idWZmZXIoKS4NCg0KPiANCj4gPiBpZiAoSVNfRVJSKGJ1ZmZlcikpIA0KPiA+ICAgICByZXR1
-cm4gUFRSX0VSUihidWZmZXIpOw0KPiA+IC8vIGJ1ZmZlciA9IG5vci0+Ym91bmNlX2J1ZmZlciBv
-ciBidWYsIHdoaWNoZXZlciBpcyBjb3JyZWN0DQo+ID4gLy8gYnVmZmVyX3NpemUgPSBsZW4gb3Ig
-Ym91bmNlIGJ1ZmZlciBzaXplLCB3aGljaGV2ZXIgaXMgY29ycmVjdA0KPiA+IA0KPiA+IENvdWxk
-IHNwaV9ub3JfcmVhZF9zZmRwX2RtYV91bnNhZmUoKSBhbHNvIHVzZSB0aGlzIGJ1ZmZlcj8NCj4g
-PiANCj4gDQo+IEkgZGlkbid0IHVzZSB0aGUgYm91bmNlIGJ1ZmZlciBpbiBzcGlfbm9yX3JlYWRf
-c2ZkcF9kbWFfdW5zYWZlKCkgb24NCj4gcHVycG9zZTogdGhlIGJvdW5jZSBidWZmZXIsIHdoZW4g
-bmVlZGVkLCBpcyBhbGxvY2F0ZWQgb25jZSBmb3IgYWxsIHRvIGxpbWl0DQo+IHBlcmZvcm1hbmNl
-IGxvc3MuIEhvd2V2ZXIsIHRvIGF2b2lkIGluY3JlYXNpbmcgdGhlIG1lbW9yeSBmb290cHJpbnQs
-IGlmIG5vdA0KPiBhYnNvbHV0ZWx5IG5lZWRlZCB0aGUgYm91bmNlIGJ1ZmZlciBpcyBub3QgYWxs
-b2NhdGVkIGF0IGFsbC4NCg0Kc3BpLW5vciB0cmllcyB0byBwcm92aWRlIGEgY29tbW9uIGltcGxl
-bWVudGF0aW9uIG9mIERNQSBib3VuY2UgYnVmZmVycywNCiB5ZXQgc3BpLW5vciBpdHNlbGYgaGFz
-IHR3byBkaWZmZXJlbnQgRE1BIGJvdW5jZSBidWZmZXINCmltcGxlbWVudGF0aW9ucy4NCg0KSSB0
-aGluayB0aGUgcmVhbCBhbnN3ZXIgZm9yIHNwaV9ub3JfcmVhZF9zZmRwX2RtYV91bnNhZmUoKSBp
-cyB0aGF0IGl0DQpzaG91bGRuJ3QgYmUgd3JpdHRlbiB0aGF0IHdheSBhbmQgdGhlIGZ1bmN0aW9u
-IHNob3VsZCBnbyBhd2F5LiAgVGhlIHR3bw0KY2FsbCBzaXRlcyBzaG91bGQganVzdCBrbWFsbG9j
-IHRoZSBzdHJ1Y3QgdGhleSByZWFkIGludG8gaW5zdGVhZCBvZg0KcGxhY2luZyBpdCBvbiB0aGUg
-c3RhY2suICBUaGUgZG1hX3Vuc2FmZSB3cmFwcGVyIGttYWxsb2NzIGEgYnVmZmVyDQphbnl3YXks
-IHNvIGl0J3Mgbm90IGxpa2UgdGhlcmUgaXMgYW55IG1vcmUgYWxsb2NhdGlvbiBnb2luZyBvbi4N
-Cg==
+Hi Guenter,
+
+Le jeu. 28 d=E9c. 2017 =E0 18:48, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> a=20
+=E9crit :
+> On 12/28/2017 08:29 AM, Paul Cercueil wrote:
+>> - Use devm_clk_get instead of clk_get
+>> - Use devm_watchdog_register_device instead of=20
+>> watchdog_register_device
+>>=20
+>> Signed-off-by: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
+>> ---
+>>   drivers/watchdog/jz4740_wdt.c | 27 ++++++++-------------------
+>>   1 file changed, 8 insertions(+), 19 deletions(-)
+>>=20
+>> diff --git a/drivers/watchdog/jz4740_wdt.c=20
+>> b/drivers/watchdog/jz4740_wdt.c
+>> index 6955deb100ef..92d6ca8ceb49 100644
+>> --- a/drivers/watchdog/jz4740_wdt.c
+>> +++ b/drivers/watchdog/jz4740_wdt.c
+>> @@ -178,40 +178,29 @@ static int jz4740_wdt_probe(struct=20
+>> platform_device *pdev)
+>>   =7F  	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>>   	drvdata->base =3D devm_ioremap_resource(&pdev->dev, res);
+>> -	if (IS_ERR(drvdata->base)) {
+>> -		ret =3D PTR_ERR(drvdata->base);
+>> -		goto err_out;
+>> -	}
+>> +	if (IS_ERR(drvdata->base))
+>> +		return PTR_ERR(drvdata->base);
+>>   =7F-	drvdata->rtc_clk =3D clk_get(&pdev->dev, "rtc");
+>> +	drvdata->rtc_clk =3D devm_clk_get(&pdev->dev, "rtc");
+>>   	if (IS_ERR(drvdata->rtc_clk)) {
+>>   		dev_err(&pdev->dev, "cannot find RTC clock\n");
+>> -		ret =3D PTR_ERR(drvdata->rtc_clk);
+>> -		goto err_out;
+>> +		return PTR_ERR(drvdata->rtc_clk);
+>>   	}
+>>   =7F-	ret =3D watchdog_register_device(&drvdata->wdt);
+>> +	ret =3D devm_watchdog_register_device(&pdev->dev, &drvdata->wdt);
+>>   	if (ret < 0)
+>> -		goto err_disable_clk;
+>> +		return ret;
+>>   =7F  	platform_set_drvdata(pdev, drvdata);
+>> -	return 0;
+>>   =7F-err_disable_clk:
+>> -	clk_put(drvdata->rtc_clk);
+>> -err_out:
+>> -	return ret;
+>> +	return 0;
+>>   }
+>>   =7F  static int jz4740_wdt_remove(struct platform_device *pdev)
+>>   {
+>>   	struct jz4740_wdt_drvdata *drvdata =3D platform_get_drvdata(pdev);
+>>   =7F-	jz4740_wdt_stop(&drvdata->wdt);
+>> -	watchdog_unregister_device(&drvdata->wdt);
+>> -	clk_put(drvdata->rtc_clk);
+>> -
+>> -	return 0;
+>> +	return jz4740_wdt_stop(&drvdata->wdt);
+>=20
+> If the watchdog is running, the module can not be unloaded. Even if=20
+> that wasn't
+> the case, this defeats both WDIOF_MAGICCLOSE and=20
+> watchdog_set_nowayout().
+> Are you sure this is what you want ? If so, please call
+> watchdog_stop_on_unregister() before registration; this clarifies=20
+> that this
+> is what you want, and you can drop the remove function.
+>=20
+> Thanks,
+> Guenter
+
+This patch does not change the behaviour. We always used that driver=20
+built-in; what
+should the behaviour be when unloading the module? Keep the watchdog=20
+hardware running
+if configured for 'nowayout'?
+
+Thanks,
+-Paul
+
+>=20
+>>   }
+>>   =7F  static struct platform_driver jz4740_wdt_driver =3D {
+>>=20
+>=20
+=
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
