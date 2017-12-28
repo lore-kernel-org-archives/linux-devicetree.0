@@ -1,92 +1,71 @@
-From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: [PATCH net-next v9 1/2] dt-bindings: net: add DT bindings for
- Socionext UniPhier AVE
-Date: Thu, 28 Dec 2017 15:58:11 +0900
-Message-ID: <1514444292-20643-2-git-send-email-hayashi.kunihiko@socionext.com>
-References: <1514444292-20643-1-git-send-email-hayashi.kunihiko@socionext.com>
+From: Marcin Nowakowski <marcin.nowakowski@mips.com>
+Subject: Re: [PATCH 1/2] nvmem: add driver for JZ4780 efuse
+Date: Thu, 28 Dec 2017 08:13:33 +0100
+Message-ID: <bbc64846-e12e-aea8-c516-5e03f6253fed@mips.com>
+References: <20171227122722.5219-1-malat@debian.org>
+ <20171227122722.5219-2-malat@debian.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1514444292-20643-1-git-send-email-hayashi.kunihiko@socionext.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: David Miller <davem@davemloft.net>, netdev@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>, Jassi Brar <jaswinder.singh@linaro.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171227122722.5219-2-malat@debian.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mathieu Malaterre <malat@debian.org>, Zubair.Kakakhel@mips.com
+Cc: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Randy Dunlap <rdunlap@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Paul Cercueil <paul@crapouillou.net>, Linus Walleij <linus.walleij@linaro.org>, Harvey Hunt <harvey.hunt@imgtec.com>, James Hogan <jhogan@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
-DT bindings for the AVE ethernet controller found on Socionext's
-UniPhier platforms.
+Hi Mathieu, PrasannaKumar,
 
-Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
-Acked-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
----
- .../bindings/net/socionext,uniphier-ave4.txt       | 48 ++++++++++++++++++++++
- 1 file changed, 48 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/socionext,uniphier-ave4.txt
+On 27.12.2017 13:27, Mathieu Malaterre wrote:
+> From: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
+> 
+> This patch brings support for the JZ4780 efuse. Currently it only expose
+> a read only access to the entire 8K bits efuse memory.
+> 
+> Tested-by: Mathieu Malaterre <malat@debian.org>
+> Signed-off-by: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
+> ---
 
-diff --git a/Documentation/devicetree/bindings/net/socionext,uniphier-ave4.txt b/Documentation/devicetree/bindings/net/socionext,uniphier-ave4.txt
-new file mode 100644
-index 0000000..270ea4e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/socionext,uniphier-ave4.txt
-@@ -0,0 +1,48 @@
-+* Socionext AVE ethernet controller
-+
-+This describes the devicetree bindings for AVE ethernet controller
-+implemented on Socionext UniPhier SoCs.
-+
-+Required properties:
-+ - compatible: Should be
-+	- "socionext,uniphier-pro4-ave4" : for Pro4 SoC
-+	- "socionext,uniphier-pxs2-ave4" : for PXs2 SoC
-+	- "socionext,uniphier-ld11-ave4" : for LD11 SoC
-+	- "socionext,uniphier-ld20-ave4" : for LD20 SoC
-+ - reg: Address where registers are mapped and size of region.
-+ - interrupts: Should contain the MAC interrupt.
-+ - phy-mode: See ethernet.txt in the same directory. Allow to choose
-+	"rgmii", "rmii", or "mii" according to the PHY.
-+ - phy-handle: Should point to the external phy device.
-+	See ethernet.txt file in the same directory.
-+ - clocks: A phandle to the clock for the MAC.
-+
-+Optional properties:
-+ - resets: A phandle to the reset control for the MAC.
-+ - local-mac-address: See ethernet.txt in the same directory.
-+
-+Required subnode:
-+ - mdio: A container for child nodes representing phy nodes.
-+         See phy.txt in the same directory.
-+
-+Example:
-+
-+	ether: ethernet@65000000 {
-+		compatible = "socionext,uniphier-ld20-ave4";
-+		reg = <0x65000000 0x8500>;
-+		interrupts = <0 66 4>;
-+		phy-mode = "rgmii";
-+		phy-handle = <&ethphy>;
-+		clocks = <&sys_clk 6>;
-+		resets = <&sys_rst 6>;
-+		local-mac-address = [00 00 00 00 00 00];
-+
-+		mdio {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			ethphy: ethphy@1 {
-+				reg = <1>;
-+			};
-+		};
-+	};
--- 
-2.7.4
+> +
+> +/* main entry point */
+> +static int jz4780_efuse_read(void *context, unsigned int offset,
+> +					void *val, size_t bytes)
+> +{
+> +	static const int nsegments = sizeof(segments) / sizeof(*segments);
+> +	struct jz4780_efuse *efuse = context;
+> +	char buf[32];
+> +	char *cur = val;
+> +	int i;
+> +	/* PM recommends read/write each segment separately */
+> +	for (i = 0; i < nsegments; ++i) {
+> +		unsigned int *segment = segments[i];
+> +		unsigned int lpos = segment[0];
+> +		unsigned int buflen = segment[1] / 8;
+> +		unsigned int ncount = buflen / 32;
+> +		unsigned int remain = buflen % 32;
+> +		int j;
+
+This doesn't look right, as offset & bytes are completely ignored. This 
+means it will return data from an offset other than requested and may 
+also overrun the provided output buffer?
+
+> +		/* EFUSE can read or write maximum 256bit in each time */
+> +		for (j = 0; j < ncount ; ++j) {
+> +			jz4780_efuse_read_32bytes(efuse, buf, lpos);
+> +			memcpy(cur, buf, sizeof(buf));
+> +			cur += sizeof(buf);
+> +			lpos += sizeof(buf);
+> +			}
+> +		if (remain) {
+> +			jz4780_efuse_read_32bytes(efuse, buf, lpos);
+> +			memcpy(cur, buf, remain);
+> +			cur += remain;
+> +			}
+> +		}
+> +
+> +	return 0;
+> +}
+
+
+Marcin
