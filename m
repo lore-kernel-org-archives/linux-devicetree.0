@@ -1,7 +1,7 @@
 From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH 3/7] watchdog: JZ4740: Register a restart handler
-Date: Thu, 28 Dec 2017 17:29:35 +0100
-Message-ID: <20171228162939.3928-4-paul@crapouillou.net>
+Subject: [PATCH 1/7] watchdog: JZ4740: Disable clock after stopping counter
+Date: Thu, 28 Dec 2017 17:29:33 +0100
+Message-ID: <20171228162939.3928-2-paul@crapouillou.net>
 References: <20171228162939.3928-1-paul@crapouillou.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171228162939.3928-1-paul@crapouillou.net>
@@ -10,40 +10,27 @@ To: Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, Mark R
 Cc: devicetree@vger.kernel.org, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
-The watchdog driver can restart the system by simply configuring the
-hardware for a timeout of 0 seconds.
+Previously, the clock was disabled first, which makes the watchdog
+component insensitive to register writes.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- drivers/watchdog/jz4740_wdt.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/watchdog/jz4740_wdt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/watchdog/jz4740_wdt.c b/drivers/watchdog/jz4740_wdt.c
-index 92d6ca8ceb49..fa7f49a3212c 100644
+index 20627f22baf6..6955deb100ef 100644
 --- a/drivers/watchdog/jz4740_wdt.c
 +++ b/drivers/watchdog/jz4740_wdt.c
-@@ -130,6 +130,14 @@ static int jz4740_wdt_stop(struct watchdog_device *wdt_dev)
+@@ -124,8 +124,8 @@ static int jz4740_wdt_stop(struct watchdog_device *wdt_dev)
+ {
+ 	struct jz4740_wdt_drvdata *drvdata = watchdog_get_drvdata(wdt_dev);
+ 
+-	jz4740_timer_disable_watchdog();
+ 	writeb(0x0, drvdata->base + JZ_REG_WDT_COUNTER_ENABLE);
++	jz4740_timer_disable_watchdog();
+ 
  	return 0;
  }
- 
-+static int jz4740_wdt_restart(struct watchdog_device *wdt_dev,
-+			      unsigned long action, void *data)
-+{
-+	wdt_dev->timeout = 0;
-+	jz4740_wdt_start(wdt_dev);
-+	return 0;
-+}
-+
- static const struct watchdog_info jz4740_wdt_info = {
- 	.options = WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE,
- 	.identity = "jz4740 Watchdog",
-@@ -141,6 +149,7 @@ static const struct watchdog_ops jz4740_wdt_ops = {
- 	.stop = jz4740_wdt_stop,
- 	.ping = jz4740_wdt_ping,
- 	.set_timeout = jz4740_wdt_set_timeout,
-+	.restart = jz4740_wdt_restart,
- };
- 
- #ifdef CONFIG_OF
 -- 
 2.11.0
