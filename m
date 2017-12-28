@@ -1,77 +1,90 @@
-From: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
-Subject: [PATCH v4 08/15] MIPS: ingenic: Use common cmdline handling code
-Date: Thu, 28 Dec 2017 14:56:27 +0100
-Message-ID: <20171228135634.30000-9-paul@crapouillou.net>
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH v4 05/15] dt-bindings: clock: Add jz4770-cgu.h header
+Date: Thu, 28 Dec 2017 14:56:24 +0100
+Message-ID: <20171228135634.30000-6-paul@crapouillou.net>
 References: <20170702163016.6714-2-paul@crapouillou.net>
  <20171228135634.30000-1-paul@crapouillou.net>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171228135634.30000-1-paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maarten ter Huurne <maarten-Ph2Y2OKCxY1M656bX5wj8A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171228135634.30000-1-paul@crapouillou.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, Maarten ter Huurne <maarten@treewalker.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux-clk@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
-From: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+This will be used from the devicetree bindings to specify the clocks
+that should be obtained from the jz4770-cgu driver.
 
-jz4740_init_cmdline appends all arguments from argv (in fw_arg1) to
-arcs_cmdline, up to argc (in fw_arg0). The common code in
-fw_init_cmdline will do the exact same thing when run on a system where
-fw_arg0 isn't a pointer to kseg0 (it'll also set _fw_envp but we don't
-use it). Remove the custom implementation & use the generic code.
-
-Signed-off-by: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- arch/mips/jz4740/prom.c | 24 ++----------------------
- 1 file changed, 2 insertions(+), 22 deletions(-)
+ include/dt-bindings/clock/jz4770-cgu.h | 57 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 57 insertions(+)
+ create mode 100644 include/dt-bindings/clock/jz4770-cgu.h
 
- v2: No change
- v3: No change
+ v3: New patch in this series
  v4: No change
 
-diff --git a/arch/mips/jz4740/prom.c b/arch/mips/jz4740/prom.c
-index 47e857194ce6..a62dd8e6ecf9 100644
---- a/arch/mips/jz4740/prom.c
-+++ b/arch/mips/jz4740/prom.c
-@@ -20,33 +20,13 @@
- #include <linux/serial_reg.h>
- 
- #include <asm/bootinfo.h>
-+#include <asm/fw/fw.h>
- #include <asm/mach-jz4740/base.h>
- 
--static __init void jz4740_init_cmdline(int argc, char *argv[])
--{
--	unsigned int count = COMMAND_LINE_SIZE - 1;
--	int i;
--	char *dst = &(arcs_cmdline[0]);
--	char *src;
--
--	for (i = 1; i < argc && count; ++i) {
--		src = argv[i];
--		while (*src && count) {
--			*dst++ = *src++;
--			--count;
--		}
--		*dst++ = ' ';
--	}
--	if (i > 1)
--		--dst;
--
--	*dst = 0;
--}
--
- void __init prom_init(void)
- {
--	jz4740_init_cmdline((int)fw_arg0, (char **)fw_arg1);
- 	mips_machtype = MACH_INGENIC_JZ4740;
-+	fw_init_cmdline();
- }
- 
- void __init prom_free_prom_memory(void)
+diff --git a/include/dt-bindings/clock/jz4770-cgu.h b/include/dt-bindings/clock/jz4770-cgu.h
+new file mode 100644
+index 000000000000..54b8b2ae4a73
+--- /dev/null
++++ b/include/dt-bindings/clock/jz4770-cgu.h
+@@ -0,0 +1,57 @@
++/*
++ * This header provides clock numbers for the ingenic,jz4770-cgu DT binding.
++ */
++
++#ifndef __DT_BINDINGS_CLOCK_JZ4770_CGU_H__
++#define __DT_BINDINGS_CLOCK_JZ4770_CGU_H__
++
++#define JZ4770_CLK_EXT		0
++#define JZ4770_CLK_OSC32K	1
++#define JZ4770_CLK_PLL0		2
++#define JZ4770_CLK_PLL1		3
++#define JZ4770_CLK_CCLK		4
++#define JZ4770_CLK_H0CLK	5
++#define JZ4770_CLK_H1CLK	6
++#define JZ4770_CLK_H2CLK	7
++#define JZ4770_CLK_C1CLK	8
++#define JZ4770_CLK_PCLK		9
++#define JZ4770_CLK_MMC0_MUX	10
++#define JZ4770_CLK_MMC0		11
++#define JZ4770_CLK_MMC1_MUX	12
++#define JZ4770_CLK_MMC1		13
++#define JZ4770_CLK_MMC2_MUX	14
++#define JZ4770_CLK_MMC2		15
++#define JZ4770_CLK_CIM		16
++#define JZ4770_CLK_UHC		17
++#define JZ4770_CLK_GPU		18
++#define JZ4770_CLK_BCH		19
++#define JZ4770_CLK_LPCLK_MUX	20
++#define JZ4770_CLK_GPS		21
++#define JZ4770_CLK_SSI_MUX	22
++#define JZ4770_CLK_PCM_MUX	23
++#define JZ4770_CLK_I2S		24
++#define JZ4770_CLK_OTG		25
++#define JZ4770_CLK_SSI0		26
++#define JZ4770_CLK_SSI1		27
++#define JZ4770_CLK_SSI2		28
++#define JZ4770_CLK_PCM0		29
++#define JZ4770_CLK_PCM1		30
++#define JZ4770_CLK_DMA		31
++#define JZ4770_CLK_I2C0		32
++#define JZ4770_CLK_I2C1		33
++#define JZ4770_CLK_I2C2		34
++#define JZ4770_CLK_UART0	35
++#define JZ4770_CLK_UART1	36
++#define JZ4770_CLK_UART2	37
++#define JZ4770_CLK_UART3	38
++#define JZ4770_CLK_IPU		39
++#define JZ4770_CLK_ADC		40
++#define JZ4770_CLK_AIC		41
++#define JZ4770_CLK_AUX		42
++#define JZ4770_CLK_VPU		43
++#define JZ4770_CLK_UHC_PHY	44
++#define JZ4770_CLK_OTG_PHY	45
++#define JZ4770_CLK_EXT512	46
++#define JZ4770_CLK_RTC		47
++
++#endif /* __DT_BINDINGS_CLOCK_JZ4770_CGU_H__ */
 -- 
 2.11.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
