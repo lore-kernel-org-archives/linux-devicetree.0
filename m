@@ -1,7 +1,7 @@
 From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH 6/7] MIPS: qi_lb60: Enable the jz4740-wdt driver
-Date: Thu, 28 Dec 2017 17:29:38 +0100
-Message-ID: <20171228162939.3928-7-paul@crapouillou.net>
+Subject: [PATCH 5/7] MIPS: jz4780: dts: Fix watchdog node
+Date: Thu, 28 Dec 2017 17:29:37 +0100
+Message-ID: <20171228162939.3928-6-paul@crapouillou.net>
 References: <20171228162939.3928-1-paul@crapouillou.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171228162939.3928-1-paul@crapouillou.net>
@@ -10,28 +10,32 @@ To: Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, Mark R
 Cc: devicetree@vger.kernel.org, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
-The watchdog is an useful piece of hardware, so there's no reason not to
-enable it.
+- The previous node requested a memory area of 0x100 bytes, while the
+  driver only manipulates four registers present in the first 0x10 bytes.
 
-This commit enables the Kconfig option in the qi_lb60 defconfig.
+- The driver requests for the "rtc" clock, but the previous node did not
+  provide any.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- arch/mips/configs/qi_lb60_defconfig | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/mips/boot/dts/ingenic/jz4780.dtsi | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/arch/mips/configs/qi_lb60_defconfig b/arch/mips/configs/qi_lb60_defconfig
-index 3f1333517405..ba8e1c56b626 100644
---- a/arch/mips/configs/qi_lb60_defconfig
-+++ b/arch/mips/configs/qi_lb60_defconfig
-@@ -73,6 +73,8 @@ CONFIG_POWER_SUPPLY=y
- CONFIG_BATTERY_JZ4740=y
- CONFIG_CHARGER_GPIO=y
- # CONFIG_HWMON is not set
-+CONFIG_WATCHDOG=y
-+CONFIG_JZ4740_WDT=y
- CONFIG_MFD_JZ4740_ADC=y
- CONFIG_REGULATOR=y
- CONFIG_REGULATOR_FIXED_VOLTAGE=y
+diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+index 9b5794667aee..a52f59bf58c7 100644
+--- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
++++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+@@ -221,7 +221,10 @@
+ 
+ 	watchdog: watchdog@10002000 {
+ 		compatible = "ingenic,jz4780-watchdog";
+-		reg = <0x10002000 0x100>;
++		reg = <0x10002000 0x10>;
++
++		clocks = <&cgu JZ4780_CLK_RTCLK>;
++		clock-names = "rtc";
+ 	};
+ 
+ 	nemc: nemc@13410000 {
 -- 
 2.11.0
