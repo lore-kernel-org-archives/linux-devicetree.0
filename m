@@ -1,237 +1,682 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH V8 3/3] OPP: Allow "opp-hz" and "opp-microvolt" to
- contain magic values
-Date: Fri, 29 Dec 2017 10:28:54 +0530
-Message-ID: <20171229045854.GE8652@vireshk-i7>
-References: <cover.1513591822.git.viresh.kumar@linaro.org>
- <476d7ae69184d787ccc6d99f8df6069007fd0a91.1513591822.git.viresh.kumar@linaro.org>
- <20171226202955.32j7gzonrixtwdpt@rob-hp-laptop>
- <20171227085645.GF8312@vireshk-i7>
- <CAL_JsqJzMfNhHK=6Wt4dzBRS9BVGMZ-f7uk3OnUupudTfwuyUA@mail.gmail.com>
- <20171228043725.GB8652@vireshk-i7>
- <20171229003253.GD7997@codeaurora.org>
+From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 9/9] PCI: cadence: Add EndPoint Controller driver for
+ Cadence PCIe controller
+Date: Fri, 29 Dec 2017 11:38:38 +0530
+Message-ID: <92922c4c-d18f-0c6b-7173-c6bf01274ddc@ti.com>
+References: <cover.1513620412.git.cyrille.pitchen@free-electrons.com>
+ <29e81ceb112030032f42a467183106453a63123f.1513620412.git.cyrille.pitchen@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171229003253.GD7997@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Rob Herring <robh@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Kevin Hilman <khilman@kernel.org>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Rafael Wysocki <rjw@rjwysocki.net>, linux-pm@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, Sudeep Holla <sudeep.holla@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <29e81ceb112030032f42a467183106453a63123f.1513620412.git.cyrille.pitchen-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Cyrille Pitchen <cyrille.pitchen-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, stelford-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, dgary-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, kgopi-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, eandrews-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, sureshp-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 28-12-17, 16:32, Stephen Boyd wrote:
-> On 12/28, Viresh Kumar wrote:
+Hi,
 
-> > So what we need now is:
-> > 
-> > - Stephen to start responding and clarify all the doubts he had as being silent
-> >   isn't helping.
+On Monday 18 December 2017 11:46 PM, Cyrille Pitchen wrote:
+> This patch adds support to the Cadence PCIe controller in endpoint mode.
 > 
-> What can I reply to specifically?
-
-I explained in detail how this stuff is going to get used last time you replied.
-Did you get a chance to look at that ? What am I supposed to do when you don't
-reply back to the clarifications I provide ?
-
-https://marc.info/?l=linux-kernel&m=151202516128980&w=2
-
-> From what I can tell, the
-> patches have changed to this 'opp-required' thing in the past
-> week and the position of 'generic OPP layer interprets magic
-> values' doesn't look to have changed. Is that the summary? I can
-> look deeply at the patches tomorrow.
-
-Kind of yeah, because you didn't reply to my explanation on how the magic values
-are going to get used and so they never changed. Again, I don't have problems
-adding new property for performance-state thing or leave it for the platform,
-but I was sticking around the magic values because Kevin was strongly in favor
-of that earlier.
-
-> > - Or Rajendra to post patches which can prove that this is usable. The last time
-> >   I had a chat with him, he confirmed that he will post patches after 4.15-rc1
-> >   and he should have posted them by now, but he didn't :(
-> > 
+> drivers/pci/Makefile was previously patched so
+> drivers/pci/cadence/pcie-cadence-ep.o is linked after drivers/pci/endpoint
+> objects, otherwise the built-in pci-cadence-ep driver would be probed
+> before the PCI endpoint libraries would have been initialized, which would
+> result in a kernel crash: controllers_group would still be NULL when
+> devm_pci_epc_create() is called.
 > 
-> I'd prefer either that, or some tree here that we can look at.
-
-I am quite sure Rajendra can help here, he had been testing this stuff on *real*
-hardware for ages now with me. This is what he shared with me earlier, based on
-what we have merged in the kernel today..
-
-https://github.com/rrnayak/linux/commits/genpd-performance-state
-
-> I said this last time, I'm having a really hard time seeing how
-> everything is going to work. The little drip of code, then DT
-> binding, then maybe a small change in dts files, then maybe some
-> code that uses the new APIs, etc. is pretty annoying. From my
-> perspective you've chopped the problem up into pieces that don't
-> stand on their own and then started sending patches for some
-> parts without showing the overall result. It's like we're being
-> taken on a ride in your development workflow, and we don't get to
-> see what's coming around the corner, and the only assumption I
-> can make is that you don't know either.
+> Signed-off-by: Cyrille Pitchen <cyrille.pitchen-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+>  drivers/pci/cadence/Kconfig           |   9 +
+>  drivers/pci/cadence/Makefile          |   1 +
+>  drivers/pci/cadence/pcie-cadence-ep.c | 531 ++++++++++++++++++++++++++++++++++
+>  drivers/pci/cadence/pcie-cadence.c    |  27 ++
+>  drivers/pci/cadence/pcie-cadence.h    | 114 ++++++++
+>  5 files changed, 682 insertions(+)
+>  create mode 100644 drivers/pci/cadence/pcie-cadence-ep.c
 > 
-> I'm actually confused how any of the code is even tested or used.
-> It looks like things are getting merged without any users, for
-> what exactly I'm not sure. Please, please, get an end-to-end
-> solution going and actually use the code from day one on a real
-> device that can use it.
+> diff --git a/drivers/pci/cadence/Kconfig b/drivers/pci/cadence/Kconfig
+> index 0d15b40861e9..70aa03b86e0d 100644
+> --- a/drivers/pci/cadence/Kconfig
+> +++ b/drivers/pci/cadence/Kconfig
+> @@ -21,4 +21,13 @@ config PCIE_CADENCE_HOST
+>  	  mode. This PCIe controller may be embedded into many different vendors
+>  	  SoCs.
+>  
+> +config PCIE_CADENCE_EP
+> +	bool "Cadence PCIe endpoint controller"
+> +	depends on PCI_ENDPOINT
+> +	select PCIE_CADENCE
+> +	help
+> +	  Say Y here if you want to support the Cadence PCIe  controller in
+> +	  endpoint mode. This PCIe controller may be embedded into many
+> +	  different vendors SoCs.
+> +
+>  endif # PCI_CADENCE
+> diff --git a/drivers/pci/cadence/Makefile b/drivers/pci/cadence/Makefile
+> index 589601a8ff89..719392b97998 100644
+> --- a/drivers/pci/cadence/Makefile
+> +++ b/drivers/pci/cadence/Makefile
+> @@ -1,3 +1,4 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  obj-$(CONFIG_PCIE_CADENCE) += pcie-cadence.o
+>  obj-$(CONFIG_PCIE_CADENCE_HOST) += pcie-cadence-host.o
+> +obj-$(CONFIG_PCIE_CADENCE_EP) += pcie-cadence-ep.o
+> diff --git a/drivers/pci/cadence/pcie-cadence-ep.c b/drivers/pci/cadence/pcie-cadence-ep.c
+> new file mode 100644
+> index 000000000000..d940f5fb4ca0
+> --- /dev/null
+> +++ b/drivers/pci/cadence/pcie-cadence-ep.c
+> @@ -0,0 +1,531 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +// Copyright (c) 2017 Cadence
+> +// Cadence PCIe endpoint controller driver.
+> +// Author: Cyrille Pitchen <cyrille.pitchen-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> +
+> +#include <linux/delay.h>
+> +#include <linux/kernel.h>
+> +#include <linux/of.h>
+> +#include <linux/pci-epc.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pm_runtime.h>
+> +#include <linux/sizes.h>
+> +
+> +#include "pcie-cadence.h"
+> +
+> +#define CDNS_PCIE_EP_MIN_APERTURE		128	/* 128 bytes */
+> +#define CDNS_PCIE_EP_IRQ_PCI_ADDR_NONE		0x1
+> +#define CDNS_PCIE_EP_IRQ_PCI_ADDR_LEGACY	0x3
+> +
+> +/**
+> + * struct cdns_pcie_ep - private data for this PCIe endpoint controller driver
+> + * @pcie: Cadence PCIe controller
+> + * @max_regions: maximum number of regions supported by hardware
+> + * @ob_region_map: bitmask of mapped outbound regions
+> + * @ob_addr: base addresses in the AXI bus where the outbound regions start
+> + * @irq_phys_addr: base address on the AXI bus where the MSI/legacy IRQ
+> + *		   dedicated outbound regions is mapped.
+> + * @irq_cpu_addr: base address in the CPU space where a write access triggers
+> + *		  the sending of a memory write (MSI) / normal message (legacy
+> + *		  IRQ) TLP through the PCIe bus.
+> + * @irq_pci_addr: used to save the current mapping of the MSI/legacy IRQ
+> + *		  dedicated outbound region.
+> + * @irq_pending: bitmask of asserted legacy IRQs.
+> + */
+> +struct cdns_pcie_ep {
+> +	struct cdns_pcie		pcie;
+> +	u32				max_regions;
+> +	unsigned long			ob_region_map;
+> +	phys_addr_t			*ob_addr;
+> +	phys_addr_t			irq_phys_addr;
+> +	void __iomem			*irq_cpu_addr;
+> +	u64				irq_pci_addr;
+> +	u8				irq_pending;
+> +};
+> +
+> +static int cdns_pcie_ep_write_header(struct pci_epc *epc, u8 fn,
+> +				     struct pci_epf_header *hdr)
+> +{
+> +	struct cdns_pcie_ep *ep = epc_get_drvdata(epc);
+> +	struct cdns_pcie *pcie = &ep->pcie;
+> +
+> +	cdns_pcie_ep_fn_writew(pcie, fn, PCI_DEVICE_ID, hdr->deviceid);
+> +	cdns_pcie_ep_fn_writeb(pcie, fn, PCI_REVISION_ID, hdr->revid);
+> +	cdns_pcie_ep_fn_writeb(pcie, fn, PCI_CLASS_PROG, hdr->progif_code);
+> +	cdns_pcie_ep_fn_writew(pcie, fn, PCI_CLASS_DEVICE,
+> +			       hdr->subclass_code | hdr->baseclass_code << 8);
+> +	cdns_pcie_ep_fn_writeb(pcie, fn, PCI_CACHE_LINE_SIZE,
+> +			       hdr->cache_line_size);
+> +	cdns_pcie_ep_fn_writew(pcie, fn, PCI_SUBSYSTEM_ID, hdr->subsys_id);
+> +	cdns_pcie_ep_fn_writeb(pcie, fn, PCI_INTERRUPT_PIN, hdr->interrupt_pin);
+> +
+> +	/*
+> +	 * Vendor ID can only be modified from function 0, all other functions
+> +	 * use the same vendor ID as function 0.
+> +	 * Besides, function 0 'enabled' bit is hard-wired to 1, only other
+> +	 * functions can be enabled/disabled by software.
+> +	 */
+> +	if (fn == 0) {
+> +		/* Update the vendor IDs. */
+> +		u32 id = CDNS_PCIE_LM_ID_VENDOR(hdr->vendorid) |
+> +			 CDNS_PCIE_LM_ID_SUBSYS(hdr->subsys_vendor_id);
+> +
+> +		cdns_pcie_writel(pcie, CDNS_PCIE_LM_ID, id);
+> +	} else {
+> +		/* Enable this endpoint function. */
+> +		u32 cfg = cdns_pcie_readl(pcie, CDNS_PCIE_LM_EP_FUNC_CFG);
+> +
+> +		cfg |= BIT(fn);
+> +		cdns_pcie_writel(pcie, CDNS_PCIE_LM_EP_FUNC_CFG, cfg);
 
-There is just too much code, specially Qcom specific, and I can't fit all that
-in a single series really. Its going to be more annoying for people to see that.
-I used to keep some Qcom test code in the earlier series which got merged and
-was told by Rajendra that the Qcom stuff will get posted after 4.15-rc1, but
-that didn't happen. I can't post final code for that as it touches lots of
-things and its Qcom who needs to upstream it. Now how much test code can I keep
-supplying every time ?
+hmm.. this is not related to $function. This can be done in ->start().
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int cdns_pcie_ep_set_bar(struct pci_epc *epc, u8 fn, enum pci_barno bar,
+> +				dma_addr_t bar_phys, size_t size, int flags)
+> +{
+> +	struct cdns_pcie_ep *ep = epc_get_drvdata(epc);
+> +	struct cdns_pcie *pcie = &ep->pcie;
+> +	u32 addr0, addr1, reg, cfg, b, aperture, ctrl;
+> +	u64 sz;
+> +
+> +	/* BAR size is 2^(aperture + 7) */
+> +	sz = max_t(size_t, size, CDNS_PCIE_EP_MIN_APERTURE);
+> +	sz = 1ULL << fls64(sz - 1);
 
-I have already posted the code that will use these bindings few days back:
+I assume you didn't use __roundup_pow_of_two because it takes long as argument?
+> +	aperture = ilog2(sz) - 7; /* 128B -> 0, 256B -> 1, 512B -> 2, ... */
+> +
+> +	if ((flags & PCI_BASE_ADDRESS_SPACE) == PCI_BASE_ADDRESS_SPACE_IO) {
+> +		ctrl = CDNS_PCIE_LM_BAR_CFG_CTRL_IO_32BITS;
+> +	} else {
+> +		bool is_prefetch = !!(flags & PCI_BASE_ADDRESS_MEM_PREFETCH);
+> +		bool is_64bits = sz > SZ_2G;
 
-https://lkml.kernel.org/r/cover.1513926033.git.viresh.kumar@linaro.org
+Should this be set only based on size? it also depends on if it can be mapped
+anywhere in the 64-bit address space right?
+> +
+> +		if (is_64bits && (bar & 1))
+> +			return -EINVAL;
+> +
+> +		if (is_64bits && is_prefetch)
+> +			ctrl = CDNS_PCIE_LM_BAR_CFG_CTRL_PREFETCH_MEM_64BITS;
+> +		else if (is_prefetch)
+> +			ctrl = CDNS_PCIE_LM_BAR_CFG_CTRL_PREFETCH_MEM_32BITS;
+> +		else if (is_64bits)
+> +			ctrl = CDNS_PCIE_LM_BAR_CFG_CTRL_MEM_64BITS;
+> +		else
+> +			ctrl = CDNS_PCIE_LM_BAR_CFG_CTRL_MEM_32BITS;
+> +	}
+> +
+> +	addr0 = lower_32_bits(bar_phys);
+> +	addr1 = upper_32_bits(bar_phys);
+> +	cdns_pcie_writel(pcie, CDNS_PCIE_AT_IB_EP_FUNC_BAR_ADDR0(fn, bar),
+> +			 addr0);
+> +	cdns_pcie_writel(pcie, CDNS_PCIE_AT_IB_EP_FUNC_BAR_ADDR1(fn, bar),
+> +			 addr1);
+> +
+> +	if (bar < BAR_4) {
+> +		reg = CDNS_PCIE_LM_EP_FUNC_BAR_CFG0(fn);
+> +		b = bar;
+> +	} else {
+> +		reg = CDNS_PCIE_LM_EP_FUNC_BAR_CFG1(fn);
+> +		b = bar - BAR_4;
+> +	}
+> +
+> +	cfg = cdns_pcie_readl(pcie, reg);
+> +	cfg &= ~(CDNS_PCIE_LM_EP_FUNC_BAR_CFG_BAR_APERTURE_MASK(b) |
+> +		 CDNS_PCIE_LM_EP_FUNC_BAR_CFG_BAR_CTRL_MASK(b));
+> +	cfg |= (CDNS_PCIE_LM_EP_FUNC_BAR_CFG_BAR_APERTURE(b, aperture) |
+> +		CDNS_PCIE_LM_EP_FUNC_BAR_CFG_BAR_CTRL(b, ctrl));
+> +	cdns_pcie_writel(pcie, reg, cfg);
+> +
+> +	return 0;
+> +}
+> +
+> +static void cdns_pcie_ep_clear_bar(struct pci_epc *epc, u8 fn,
+> +				   enum pci_barno bar)
+> +{
+> +	struct cdns_pcie_ep *ep = epc_get_drvdata(epc);
+> +	struct cdns_pcie *pcie = &ep->pcie;
+> +	u32 reg, cfg, b, ctrl;
+> +
+> +	if (bar < BAR_4) {
+> +		reg = CDNS_PCIE_LM_EP_FUNC_BAR_CFG0(fn);
+> +		b = bar;
+> +	} else {
+> +		reg = CDNS_PCIE_LM_EP_FUNC_BAR_CFG1(fn);
+> +		b = bar - BAR_4;
+> +	}
+> +
+> +	ctrl = CDNS_PCIE_LM_BAR_CFG_CTRL_DISABLED;
+> +	cfg = cdns_pcie_readl(pcie, reg);
+> +	cfg &= ~(CDNS_PCIE_LM_EP_FUNC_BAR_CFG_BAR_APERTURE_MASK(b) |
+> +		 CDNS_PCIE_LM_EP_FUNC_BAR_CFG_BAR_CTRL_MASK(b));
+> +	cfg |= CDNS_PCIE_LM_EP_FUNC_BAR_CFG_BAR_CTRL_MASK(ctrl);
+> +	cdns_pcie_writel(pcie, reg, cfg);
+> +
+> +	cdns_pcie_writel(pcie, CDNS_PCIE_AT_IB_EP_FUNC_BAR_ADDR0(fn, bar), 0);
+> +	cdns_pcie_writel(pcie, CDNS_PCIE_AT_IB_EP_FUNC_BAR_ADDR1(fn, bar), 0);
+> +}
+> +
+> +static int cdns_pcie_ep_map_addr(struct pci_epc *epc, u8 fn, phys_addr_t addr,
+> +				 u64 pci_addr, size_t size)
+> +{
+> +	struct cdns_pcie_ep *ep = epc_get_drvdata(epc);
+> +	struct cdns_pcie *pcie = &ep->pcie;
+> +	u32 r;
+> +
+> +	r = find_first_zero_bit(&ep->ob_region_map,
+> +				sizeof(ep->ob_region_map) * BITS_PER_LONG);
+> +	if (r >= ep->max_regions - 1) {
+> +		dev_err(&epc->dev, "no free outbound region\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	cdns_pcie_set_outbound_region(pcie, r, false, addr, pci_addr, size);
+> +
+> +	set_bit(r, &ep->ob_region_map);
+> +	ep->ob_addr[r] = addr;
+> +
+> +	return 0;
+> +}
+> +
+> +static void cdns_pcie_ep_unmap_addr(struct pci_epc *epc, u8 fn,
+> +				    phys_addr_t addr)
+> +{
+> +	struct cdns_pcie_ep *ep = epc_get_drvdata(epc);
+> +	struct cdns_pcie *pcie = &ep->pcie;
+> +	u32 r;
+> +
+> +	for (r = 0; r < ep->max_regions - 1; r++)
+> +		if (ep->ob_addr[r] == addr)
+> +			break;
+> +
+> +	if (r == ep->max_regions - 1)
+> +		return;
+> +
+> +	cdns_pcie_reset_outbound_region(pcie, r);
+> +
+> +	ep->ob_addr[r] = 0;
+> +	clear_bit(r, &ep->ob_region_map);
+> +}
+> +
+> +static int cdns_pcie_ep_set_msi(struct pci_epc *epc, u8 fn, u8 mmc)
+> +{
+> +	struct cdns_pcie_ep *ep = epc_get_drvdata(epc);
+> +	struct cdns_pcie *pcie = &ep->pcie;
+> +	u32 cap = CDNS_PCIE_EP_FUNC_MSI_CAP_OFFSET;
+> +	u16 flags;
+> +
+> +	/* Validate the ID of the MSI Capability structure. */
+> +	if (cdns_pcie_ep_fn_readb(pcie, fn, cap) != PCI_CAP_ID_MSI)
+> +		return -EINVAL;
 
-The only missing part left now (after bindings and above series) is, again,
-platform specific Qcom code to use it. Below is some dummy code to complete the
-story for you:
+Not sure the usefulness of this since this is most likely going to be a RO value.
+> +
+> +	/*
+> +	 * Set the Multiple Message Capable bitfield into the Message Control
+> +	 * register.
+> +	 */
+> +	flags = cdns_pcie_ep_fn_readw(pcie, fn, cap + PCI_MSI_FLAGS);
+> +	flags = (flags & ~PCI_MSI_FLAGS_QMASK) | (mmc << 1);
+> +	flags |= PCI_MSI_FLAGS_64BIT;
+> +	flags &= ~PCI_MSI_FLAGS_MASKBIT;
+> +	cdns_pcie_ep_fn_writew(pcie, fn, cap + PCI_MSI_FLAGS, flags);
+> +
+> +	return 0;
+> +}
+> +
+> +static int cdns_pcie_ep_get_msi(struct pci_epc *epc, u8 fn)
+> +{
+> +	struct cdns_pcie_ep *ep = epc_get_drvdata(epc);
+> +	struct cdns_pcie *pcie = &ep->pcie;
+> +	u32 cap = CDNS_PCIE_EP_FUNC_MSI_CAP_OFFSET;
+> +	u16 flags, mmc, mme;
+> +
+> +	/* Validate the ID of the MSI Capability structure. */
+> +	if (cdns_pcie_ep_fn_readb(pcie, fn, cap) != PCI_CAP_ID_MSI)
+> +		return -EINVAL;
 
-DT changes that shows two devices, mmc and dsp, using the performances states of
-domain:
+here too..
+> +
+> +	/* Validate that the MSI feature is actually enabled. */
+> +	flags = cdns_pcie_ep_fn_readw(pcie, fn, cap + PCI_MSI_FLAGS);
+> +	if (!(flags & PCI_MSI_FLAGS_ENABLE))
+> +		return -EINVAL;
+> +
+> +	/*
+> +	 * Get the Multiple Message Enable bitfield from the Message Control
+> +	 * register.
+> +	 */
+> +	mmc = (flags & PCI_MSI_FLAGS_QMASK) >> 1;
+> +	mme = (flags & PCI_MSI_FLAGS_QSIZE) >> 4;
+> +
+> +	/*
+> +	 * The Multiple Message Enable value should always be equal to or less
+> +	 * than The Multiple Message Capable value.
+> +	 */
+> +	if (mme > mmc)
+> +		mme = mmc;
 
-		foo: foo-power-domain@09000000 {
-			compatible = "foo,genpd";
-			#power-domain-cells = <0>;
-			operating-points-v2 = <&domain_opp_table>;
-		};
+if the host is allocating more interrupts, why not use it ;-)
+> +
+> +	/*
+> +	 * There are up to 32 MSI: mme stores the number of enabled MSI as a
+> +	 * power of two. Hence mme can't be geater than 5 (2^5 == 32).
+> +	 */
+> +	if (mme > 5)
+> +		mme = 5;
 
-	        domain_opp_table: domain_opp_table {
-	        	compatible = "operating-points-v2";
+IMO the above 2 checks are trying to fix buggy hosts and is not necessary.
+> +
+> +	return mme;
+> +}
+> +
+> +static void cdns_pcie_ep_assert_intx(struct cdns_pcie_ep *ep, u8 fn,
+> +				     u8 intx, bool is_asserted)
+> +{
+> +	struct cdns_pcie *pcie = &ep->pcie;
+> +	u32 r = ep->max_regions - 1;
+> +	u32 offset;
+> +	u16 status;
+> +	u8 msg_code;
+> +
+> +	intx &= 3;
+> +
+> +	/* Set the outbound region if needed. */
+> +	if (unlikely(ep->irq_pci_addr != CDNS_PCIE_EP_IRQ_PCI_ADDR_LEGACY)) {
+> +		/* Last region was reserved for IRQ writes. */
+> +		cdns_pcie_set_outbound_region_for_normal_msg(pcie, r,
+> +							     ep->irq_phys_addr);
+> +		ep->irq_pci_addr = CDNS_PCIE_EP_IRQ_PCI_ADDR_LEGACY;
+> +	}
+> +
+> +	if (is_asserted) {
+> +		ep->irq_pending |= BIT(intx);
+> +		msg_code = MSG_CODE_ASSERT_INTA + intx;
+> +	} else {
+> +		ep->irq_pending &= ~BIT(intx);
+> +		msg_code = MSG_CODE_DEASSERT_INTA + intx;
+> +	}
+> +
+> +	status = cdns_pcie_ep_fn_readw(pcie, fn, PCI_STATUS);
+> +	if (((status & PCI_STATUS_INTERRUPT) != 0) ^ (ep->irq_pending != 0)) {
+> +		status ^= PCI_STATUS_INTERRUPT;
+> +		cdns_pcie_ep_fn_writew(pcie, fn, PCI_STATUS, status);
+> +	}
+> +
+> +	offset = CDNS_PCIE_NORMAL_MSG_ROUTING(MSG_ROUTING_LOCAL) |
+> +		 CDNS_PCIE_NORMAL_MSG_CODE(msg_code) |
+> +		 CDNS_PCIE_MSG_NO_DATA;
+> +	writel(0, ep->irq_cpu_addr + offset);
+> +}
+> +
+> +static int cdns_pcie_ep_send_legacy_irq(struct cdns_pcie_ep *ep, u8 fn, u8 intx)
+> +{
+> +	u16 cmd;
+> +
+> +	cmd = cdns_pcie_ep_fn_readw(&ep->pcie, fn, PCI_COMMAND);
+> +	if (cmd & PCI_COMMAND_INTX_DISABLE)
+> +		return -EINVAL;
+> +
+> +	cdns_pcie_ep_assert_intx(ep, fn, intx, true);
+> +	/*
+> +	 * The mdelay() value was taken from dra7xx_pcie_raise_legacy_irq()
+> +	 * from drivers/pci/dwc/pci-dra7xx.c
+> +	 */
 
-	        	domain_opp_1: opp00 {
-	        		opp-hz = /bits/ 64 <1>; //This is performances state
-	        	};
-	        	domain_opp_2: opp01 {
-	        		opp-hz = /bits/ 64 <2>;
-	        	};
-	        	domain_opp_3: opp02 {
-	        		opp-hz = /bits/ 64 <3>;
-	        	};
-	        };
+ha ha.. that's not a great reference.
 
-		mmc@f7112000 {
-			compatible = "***";
+Ideally it should be deasserted once the interrupt is handled by the RC. But I
+think we need a better way to handle it from EP core.
+> +	mdelay(1);
+> +	cdns_pcie_ep_assert_intx(ep, fn, intx, false);
+> +	return 0;
+> +}
+> +
+> +static int cdns_pcie_ep_raise_irq(struct pci_epc *epc, u8 fn,
+> +				  enum pci_epc_irq_type type, u8 interrupt_num)
+> +{
+> +	struct cdns_pcie_ep *ep = epc_get_drvdata(epc);
+> +	struct cdns_pcie *pcie = &ep->pcie;
+> +	u32 cap = CDNS_PCIE_EP_FUNC_MSI_CAP_OFFSET;
+> +	u16 flags, mmc, mme, data, data_mask;
+> +	u8 msi_count;
+> +	u64 pci_addr, pci_addr_mask = 0xff;
+> +
+> +	/* Handle legacy IRQ. */
+> +	if (type == PCI_EPC_IRQ_LEGACY)
+> +		return cdns_pcie_ep_send_legacy_irq(ep, fn, 0);
+> +
+> +	/* Otherwise MSI. */
+> +	if (type != PCI_EPC_IRQ_MSI)
+> +		return -EINVAL;
 
-                        ***
+Do you have plans for adding MSI-X support?
 
+how about something like below
 
-                        power-domains = <&foo>;
-			operating-points-v2 = <&mmc_opp_table>;
-		};
-
-
-        	mmc_opp_table: mmc-opp-table {
-        		compatible = "operating-points-v2";
-        		opp-shared;
-        
-        		opp00 {
-        			opp-hz = /bits/ 64 <208000000>;
-        			required-opp = <&domain_opp_1>;
-        		};
-        		opp01 {
-        			opp-hz = /bits/ 64 <432000000>;
-        			required-opp = <&domain_opp_2>;
-        		};
-        		opp02 {
-        			opp-hz = /bits/ 64 <729000000>;
-        			required-opp = <&domain_opp_2>;
-        		};
-        		opp03 {
-        			opp-hz = /bits/ 64 <960000000>;
-        			required-opp = <&domain_opp_3>;
-        		};
-        	};
-
-		dsp@f8152000 {
-			compatible = "***";
-
-                        ***
-
-
-                        power-domains = <&foo>;
-                        required-opp = <&domain_opp_2>;
-		};
-
-
-
-
-Platform specific power domain driver:
-
-static int foo_set_performance(struct generic_pm_domain *genpd,
-                               unsigned int state)
-{
-        /* Set the state here */
-
-	return 0;
-}
-
-static unsigned int foo_get_performance(struct generic_pm_domain *genpd,
-			                struct dev_pm_opp *opp)
-{
-        /*
-         * Simply return freq value as we passed the state in opp-hz.
-         *
-         * If we choose to use platform-specific bindings instead of opp-hz,
-         * then only this routine requires to change to read the DT and provide
-         * the value from platform specific binding.
-         */
-	return dev_pm_opp_get_freq(opp);
-}
-
-static const struct of_device_id pm_domain_of_match[] __initconst = {
-	{
-		.compatible = "foo,genpd",
-	},
-	{ },
-};
-
-static int __init genpd_foo_init(void)
-{
-	struct device_node *np;
-	struct generic_pm_domain *pd;
-
-	for_each_matching_node_and_match(np, pm_domain_of_match, NULL) {
-		pd = kzalloc(sizeof(*pd), GFP_KERNEL);
-		if (!pd)
-			return -ENOMEM;
-
-		pd->name = kstrdup_const(np->full_name, GFP_KERNEL);
-		if (!pd->name) {
-			of_node_put(np);
-			return -ENOMEM;
-		}
-
-                ...
-
-		pd->set_performance_state = foo_set_performance;
-		pd->get_performance_state = foo_get_performance;
-
-		pm_genpd_init(pd, NULL, false);
-		of_genpd_add_provider_simple(np, pd);
+	switch (type) {
+	case PCI_EPC_IRQ_LEGACY:
+		return cdns_pcie_ep_send_legacy_irq(ep, fn, 0);
+	case PCI_EPC_IRQ_MSI:
+		return cdns_pcie_ep_send_msi_irq(ep, fn, 0);
+		break;
+	default:
+		dev_err(pci->dev, "UNKNOWN IRQ type\n");
 	}
 
+rest of the code here should be added in cdns_pcie_ep_send_msi_irq.
+> +
+> +	/* Check whether the MSI feature has been enabled by the PCI host. */
+> +	flags = cdns_pcie_ep_fn_readw(pcie, fn, cap + PCI_MSI_FLAGS);
+> +	if (!(flags & PCI_MSI_FLAGS_ENABLE))
+> +		return -EINVAL;
+> +
+> +	/* Get the number of enabled MSIs */
+> +	mmc = (flags & PCI_MSI_FLAGS_QMASK) >> 1;
+> +	mme = (flags & PCI_MSI_FLAGS_QSIZE) >> 4;
+> +
+> +	/*
+> +	 * The Multiple Message Enable value should always be equal to or less
+> +	 * than The Multiple Message Capable value.
+> +	 */
+> +	if (mme > mmc)
+> +		mme = mmc;
+> +
+> +	/*
+> +	 * There are up to 32 MSI: mme stores the number of enabled MSI as a
+> +	 * power of two. Hence mme can't be geater than 5 (2^5 == 32).
+> +	 */
+> +	if (mme > 5)
+> +		mme = 5;
 
-	return dev_pm_domain_attach(dev, false);
-}
-device_initcall(genpd_foo_init);
+not sure if the above 2 checks are required.
+> +
+> +	msi_count = 1 << mme;
+> +	if (!interrupt_num || interrupt_num > msi_count)
+> +		return -EINVAL;
+> +
+> +	/* Compute the data value to be written. */
+> +	data_mask = msi_count - 1;
+> +	data = cdns_pcie_ep_fn_readw(pcie, fn, cap + PCI_MSI_DATA_64);
+> +	data = (data & ~data_mask) | ((interrupt_num - 1) & data_mask);
+> +
+> +	/* Get the PCI address where to write the data into. */
+> +	pci_addr = cdns_pcie_ep_fn_readl(pcie, fn, cap + PCI_MSI_ADDRESS_HI);
+> +	pci_addr <<= 32;
+> +	pci_addr |= cdns_pcie_ep_fn_readl(pcie, fn, cap + PCI_MSI_ADDRESS_LO);
+> +	pci_addr &= GENMASK_ULL(63, 2);
+> +
+> +	/* Set the outbound region if needed. */
+> +	if (unlikely(ep->irq_pci_addr != pci_addr)) {
+> +		/* Last region was reserved for IRQ writes. */
+> +		cdns_pcie_set_outbound_region(pcie, ep->max_regions - 1,
+> +					      false,
+> +					      ep->irq_phys_addr,
+> +					      pci_addr & ~pci_addr_mask,
+> +					      pci_addr_mask + 1);
+> +		ep->irq_pci_addr = pci_addr;
+> +	}
+> +	writew(data, ep->irq_cpu_addr + (pci_addr & pci_addr_mask));
+> +
+> +	return 0;
+> +}
+> +
+> +static int cdns_pcie_ep_start(struct pci_epc *epc)
+> +{
+> +	struct pci_epf *epf;
 
+start should be used to start the link. Btw where do you actually start the link?
+> +
+> +	/*
+> +	 * Already linked-up: don't call directly pci_epc_linkup() because we've
+> +	 * already locked the epc->lock.
+> +	 */
+> +	list_for_each_entry(epf, &epc->pci_epf, list)
+> +		pci_epf_linkup(epf);
 
-There is nothing left after this from my end for performance-state stuff. That's
-all.
+Er.. There are better ways to handle it. (See linkup_notifier in pci_epf_test.c)
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct pci_epc_ops cdns_pcie_epc_ops = {
+> +	.write_header	= cdns_pcie_ep_write_header,
+> +	.set_bar	= cdns_pcie_ep_set_bar,
+> +	.clear_bar	= cdns_pcie_ep_clear_bar,
+> +	.map_addr	= cdns_pcie_ep_map_addr,
+> +	.unmap_addr	= cdns_pcie_ep_unmap_addr,
+> +	.set_msi	= cdns_pcie_ep_set_msi,
+> +	.get_msi	= cdns_pcie_ep_get_msi,
+> +	.raise_irq	= cdns_pcie_ep_raise_irq,
+> +	.start		= cdns_pcie_ep_start,
+> +};
+> +
+> +static const struct of_device_id cdns_pcie_ep_of_match[] = {
+> +	{ .compatible = "cdns,cdns-pcie-ep" },
+> +
+> +	{ },
+> +};
+> +
+> +static int cdns_pcie_ep_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct device_node *np = dev->of_node;
+> +	struct cdns_pcie_ep *ep;
+> +	struct cdns_pcie *pcie;
+> +	struct pci_epc *epc;
+> +	struct resource *res;
+> +	int ret;
+> +
+> +	ep = devm_kzalloc(dev, sizeof(*ep), GFP_KERNEL);
+> +	if (!ep)
+> +		return -ENOMEM;
+> +
+> +	pcie = &ep->pcie;
+> +	pcie->is_rc = false;
+> +
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "reg");
+> +	pcie->reg_base = devm_ioremap_resource(dev, res);
+> +	if (IS_ERR(pcie->reg_base)) {
+> +		dev_err(dev, "missing \"reg\"\n");
+> +		return PTR_ERR(pcie->reg_base);
+> +	}
+> +
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "mem");
+> +	if (!res) {
+> +		dev_err(dev, "missing \"mem\"\n");
+> +		return -EINVAL;
+> +	}
+> +	pcie->mem_res = res;
+> +
+> +	ep->max_regions = 32;
 
-I don't mind rant from any of you or others (we are all good friends after all),
-but please please provide feedback. Its going to waste more time if you don't
-reply :)
+prefer using macros for 32 here?
 
-Hope you have a very happy new year !!
+I'd prefer making cdns,max-outbound-regions mandatory property and always get
+the outbound regions from dt instead of having default values.
+> +	of_property_read_u32(np, "cdns,max-outbound-regions", &ep->max_regions);
+> +	ep->ob_addr = devm_kzalloc(dev, ep->max_regions * sizeof(*ep->ob_addr),
+> +				   GFP_KERNEL);
+> +	if (!ep->ob_addr)
+> +		return -ENOMEM;
+> +
+> +	pm_runtime_enable(dev);
+> +	ret = pm_runtime_get_sync(dev);
+> +	if (ret < 0) {
+> +		dev_err(dev, "pm_runtime_get_sync() failed\n");
+> +		goto err_get_sync;
+> +	}
+> +
+> +	/* Disable all but function 0 (anyway BIT(0) is hardwired to 1). */
+> +	cdns_pcie_writel(pcie, CDNS_PCIE_LM_EP_FUNC_CFG, BIT(0));
+> +
+> +	epc = devm_pci_epc_create(dev, &cdns_pcie_epc_ops);
+> +	if (IS_ERR(epc)) {
+> +		dev_err(dev, "failed to create epc device\n");
+> +		ret = PTR_ERR(epc);
+> +		goto err_init;
+> +	}
+> +
+> +	epc_set_drvdata(epc, ep);
+> +
+> +	epc->max_functions = 1;
 
+Is it better to assign the default value after checking the return value of
+of_property_read_u8?
+> +	of_property_read_u8(np, "max-functions", &epc->max_functions);
+> +
+> +	ret = pci_epc_mem_init(epc, pcie->mem_res->start,
+> +			       resource_size(pcie->mem_res));
+> +	if (ret < 0) {
+> +		dev_err(dev, "failed to initialize the memory space\n");
+> +		goto err_init;
+> +	}
+> +
+> +	ep->irq_cpu_addr = pci_epc_mem_alloc_addr(epc, &ep->irq_phys_addr,
+> +						  SZ_128K);
+> +	if (!ep->irq_cpu_addr) {
+> +		dev_err(dev, "failed to reserve memory space for MSI\n");
+> +		ret = -ENOMEM;
+> +		goto free_epc_mem;
+> +	}
+> +	ep->irq_pci_addr = CDNS_PCIE_EP_IRQ_PCI_ADDR_NONE;
+> +
+> +	return 0;
+> +
+> + free_epc_mem:
+> +	pci_epc_mem_exit(epc);
+> +
+> + err_init:
+> +	pm_runtime_put_sync(dev);
+> +
+> + err_get_sync:
+> +	pm_runtime_disable(dev);
+> +
+> +	return ret;
+> +}
+> +
+> +static struct platform_driver cdns_pcie_ep_driver = {
+> +	.driver = {
+> +		.name = "cdns-pcie-ep",
+> +		.of_match_table = cdns_pcie_ep_of_match,
+> +	},
+> +	.probe = cdns_pcie_ep_probe,
+
+.shutdown?
+> +};
+> +builtin_platform_driver(cdns_pcie_ep_driver);
+
+builtin_platform_driver_probe?
+> diff --git a/drivers/pci/cadence/pcie-cadence.c b/drivers/pci/cadence/pcie-cadence.c
+> index 5c76e7f4c5f9..7b91147ce68e 100644
+> --- a/drivers/pci/cadence/pcie-cadence.c
+> +++ b/drivers/pci/cadence/pcie-cadence.c
+> @@ -55,6 +55,33 @@ void cdns_pcie_set_outbound_region(struct cdns_pcie *pcie, u32 r, bool is_io,
+>  	cdns_pcie_writel(pcie, CDNS_PCIE_AT_OB_REGION_CPU_ADDR1(r), addr1);
+>  }
+>  
+> +void cdns_pcie_set_outbound_region_for_normal_msg(struct cdns_pcie *pcie, u32 r,
+> +						  u64 cpu_addr)
+> +{
+> +	u32 addr0, addr1, desc0, desc1;
+> +
+> +	desc0 = CDNS_PCIE_AT_OB_REGION_DESC0_TYPE_NORMAL_MSG;
+> +	desc1 = 0;
+> +	if (pcie->is_rc) {
+
+why is this part of adding EP support?
+
+Thanks
+Kishon
 --
-viresh
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
