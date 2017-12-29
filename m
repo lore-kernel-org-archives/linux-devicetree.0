@@ -1,68 +1,126 @@
 From: =?UTF-8?q?Myl=C3=A8ne=20Josserand?=
-        <mylene.josserand-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v2 0/5] Sunxi: Add SMP support on A83T
-Date: Fri, 29 Dec 2017 11:55:01 +0100
-Message-ID: <20171229105506.24851-1-mylene.josserand@free-electrons.com>
+        <mylene.josserand@free-electrons.com>
+Subject: [PATCH v2 4/5] arm: dts: sun8i: a83t: Add CCI-400 node
+Date: Fri, 29 Dec 2017 11:55:05 +0100
+Message-ID: <20171229105506.24851-5-mylene.josserand@free-electrons.com>
+References: <20171229105506.24851-1-mylene.josserand@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, mylene.josserand-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171229105506.24851-1-mylene.josserand@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: maxime.ripard@free-electrons.com, wens@csie.org, linux@armlinux.org.uk, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, clabbe.montjoie@gmail.com, thomas.petazzoni@free-electrons.com, mylene.josserand@free-electrons.com, quentin.schulz@free-electrons.com
 List-Id: devicetree@vger.kernel.org
 
-Hello everyone,
+Add CCI-400 node and control-port on CPUs needed by MCPM (ie SMP).
 
-This is a V2 of my series that adds SMP support for Allwinner sun8i-a83t
-with MCPM (Multi-Cluster Power Management).
-Based on last linux-next (next-20171222).
+Signed-off-by: Mylène Josserand <mylene.josserand@free-electrons.com>
+---
+ arch/arm/boot/dts/sun8i-a83t.dtsi | 41 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
 
-Changes since v1:
-    - Add Chen Yu's patch in my series (see path 01)
-    - Add new compatibles for prcm and cpucfg registers for sun8i-a83t.
-    Create two functions to separate the DT parsing of sun9i-a80 and
-    sun8i-a83t.
-    - Thanks to Maxime's review: order device tree's nodes according
-    to physical addresses, remove unused label and fix registers' sizes.
-    Update the commit log and commit title of my last patch (see
-    patch 05).
-
-Patch 01: Patch from Chen Yu Tsai that adds SMP support on A80
-with MCPM
-Patch 02: Convert the MCPM driver to use it for A83T. This SoC has a
-bit flip that needs to be handled.
-Patch 03: Add registers nodes (prcm, cpucfg and r_cpucfg) needed
-for MCPM.
-Patch 04: Add CCI-400 node for a83t.
-Patch 05: Fix the use of virtual timers that hangs the kernel in
-case of SMP support.
-
-If you have any remarks/questions, let me know.
-Thank you in advance,
-Mylène
-
-Chen-Yu Tsai (1):
-  ARM: sun9i: Support SMP on A80 with Multi-Cluster Power Management
-    (MCPM)
-
-Mylène Josserand (4):
-  ARM: sunxi: mcpm: Add support for A83T
-  arm: dts: sun8i: a83t: Add registers needed for MCPM
-  arm: dts: sun8i: a83t: Add CCI-400 node
-  arm: dts: sun8i: a83t: Fix undefined offset with virtual timer
-
- arch/arm/boot/dts/sun8i-a83t.dtsi |  57 +++++
- arch/arm/mach-sunxi/Kconfig       |  11 +
- arch/arm/mach-sunxi/Makefile      |   1 +
- arch/arm/mach-sunxi/mcpm.c        | 513 ++++++++++++++++++++++++++++++++++++++
- 4 files changed, 582 insertions(+)
- create mode 100644 arch/arm/mach-sunxi/mcpm.c
-
+diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
+index a6c69b75fe6c..aa27ffb7db81 100644
+--- a/arch/arm/boot/dts/sun8i-a83t.dtsi
++++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
+@@ -62,48 +62,56 @@
+ 			compatible = "arm,cortex-a7";
+ 			device_type = "cpu";
+ 			reg = <0>;
++			cci-control-port = <&cci_control0>;
+ 		};
+ 
+ 		cpu@1 {
+ 			compatible = "arm,cortex-a7";
+ 			device_type = "cpu";
+ 			reg = <1>;
++			cci-control-port = <&cci_control0>;
+ 		};
+ 
+ 		cpu@2 {
+ 			compatible = "arm,cortex-a7";
+ 			device_type = "cpu";
+ 			reg = <2>;
++			cci-control-port = <&cci_control0>;
+ 		};
+ 
+ 		cpu@3 {
+ 			compatible = "arm,cortex-a7";
+ 			device_type = "cpu";
+ 			reg = <3>;
++			cci-control-port = <&cci_control0>;
+ 		};
+ 
+ 		cpu@100 {
+ 			compatible = "arm,cortex-a7";
+ 			device_type = "cpu";
+ 			reg = <0x100>;
++			cci-control-port = <&cci_control1>;
+ 		};
+ 
+ 		cpu@101 {
+ 			compatible = "arm,cortex-a7";
+ 			device_type = "cpu";
+ 			reg = <0x101>;
++			cci-control-port = <&cci_control1>;
+ 		};
+ 
+ 		cpu@102 {
+ 			compatible = "arm,cortex-a7";
+ 			device_type = "cpu";
+ 			reg = <0x102>;
++			cci-control-port = <&cci_control1>;
+ 		};
+ 
+ 		cpu@103 {
+ 			compatible = "arm,cortex-a7";
+ 			device_type = "cpu";
+ 			reg = <0x103>;
++			cci-control-port = <&cci_control1>;
+ 		};
+ 	};
+ 
+@@ -167,6 +175,39 @@
+ 			reg = <0x01700000 0x400>;
+ 		};
+ 
++		cci@1790000 {
++			compatible = "arm,cci-400";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			reg = <0x01790000 0x10000>;
++			ranges = <0x0 0x01790000 0x10000>;
++
++			cci_control0: slave-if@4000 {
++				compatible = "arm,cci-400-ctrl-if";
++				interface-type = "ace";
++				reg = <0x4000 0x1000>;
++			};
++
++			cci_control1: slave-if@5000 {
++				compatible = "arm,cci-400-ctrl-if";
++				interface-type = "ace";
++				reg = <0x5000 0x1000>;
++			};
++
++			pmu@9000 {
++				compatible = "arm,cci-400-pmu,r1";
++				reg = <0x9000 0x5000>;
++				interrupts = <GIC_SPI 132 IRQ_TYPE_LEVEL_HIGH>,
++				<GIC_SPI 133 IRQ_TYPE_LEVEL_HIGH>,
++				<GIC_SPI 134 IRQ_TYPE_LEVEL_HIGH>,
++				<GIC_SPI 135 IRQ_TYPE_LEVEL_HIGH>,
++				<GIC_SPI 151 IRQ_TYPE_LEVEL_HIGH>,
++				<GIC_SPI 152 IRQ_TYPE_LEVEL_HIGH>,
++				<GIC_SPI 153 IRQ_TYPE_LEVEL_HIGH>,
++				<GIC_SPI 154 IRQ_TYPE_LEVEL_HIGH>;
++			};
++		};
++
+ 		syscon: syscon@1c00000 {
+ 			compatible = "allwinner,sun8i-a83t-system-controller",
+ 				"syscon";
 -- 
 2.11.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
