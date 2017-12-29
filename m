@@ -1,164 +1,62 @@
 From: "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [RFC PATCH v11 4/5] PCI / PM: Add support for the PCIe WAKE#
- signal for OF
-Date: Sat, 30 Dec 2017 00:39:52 +0100
-Message-ID: <CAJZ5v0icePurJoGdVtX06j=XHPdZSqXgm+vhL47ngv7OZoL3fw@mail.gmail.com>
-References: <20171225114742.18920-1-jeffy.chen@rock-chips.com>
- <CAJZ5v0hpK0_vjX3HinCpsFuKffVUn3d5EnqXdz0P893aRZgnRw@mail.gmail.com>
- <20171228165134.GH3875@atomide.com> <6120485.xubBpvge6h@aspire.rjw.lan> <20171229171548.GI3875@atomide.com>
+Subject: Re: [RFC PATCH v12 1/5] dt-bindings: PCI: Add definition of PCIe
+ WAKE# irq and PCI irq
+Date: Sat, 30 Dec 2017 00:50:10 +0100
+Message-ID: <CAJZ5v0iRRAQWSji0ioJ5B5M5RjbYAyb1VmuWhTZw4qy0G7_a4g@mail.gmail.com>
+References: <20171226020806.32710-1-jeffy.chen@rock-chips.com>
+ <20171226020806.32710-2-jeffy.chen@rock-chips.com> <20171229175717.GL3875@atomide.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20171229171548.GI3875@atomide.com>
-Sender: linux-pci-owner@vger.kernel.org
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20171229175717.GL3875@atomide.com>
+Sender: linux-pm-owner@vger.kernel.org
 To: Tony Lindgren <tony@atomide.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, "Rafael J. Wysocki" <rafael@kernel.org>, JeffyChen <jeffy.chen@rock-chips.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Linux PM <linux-pm@vger.kernel.org>, Shawn Lin <shawn.lin@rock-chips.com>, Brian Norris <briannorris@chromium.org>, Doug Anderson <dianders@chromium.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux PCI <linux-pci@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+Cc: Jeffy Chen <jeffy.chen@rock-chips.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Linux PM <linux-pm@vger.kernel.org>, Shawn Lin <shawn.lin@rock-chips.com>, Brian Norris <briannorris@chromium.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Doug Anderson <dianders@chromium.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux PCI <linux-pci@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 29, 2017 at 6:15 PM, Tony Lindgren <tony@atomide.com> wrote:
-> * Rafael J. Wysocki <rjw@rjwysocki.net> [171228 17:33]:
->> On Thursday, December 28, 2017 5:51:34 PM CET Tony Lindgren wrote:
->> >
->> > Well Brian had a concern where we would have to implement PM runtime
->> > for all device drivers for PCI devices.
+On Fri, Dec 29, 2017 at 6:57 PM, Tony Lindgren <tony@atomide.com> wrote:
+> * Jeffy Chen <jeffy.chen@rock-chips.com> [171226 02:11]:
+>> We are going to handle PCIe WAKE# pin for PCI devices in the pci core,
+>> so add definitions of the optional PCIe WAKE# pin for PCI devices.
 >>
->> Why would we?
+>> Also add an definition of the optional PCI interrupt pin for PCI
+>> devices to distinguish it from the PCIe WAKE# pin.
 >
-> Seems at least I was a bit confused. In the PCIe case the WAKE# is
-> owned by the PCIe slot, not the child PCIe device.
+>> --- a/Documentation/devicetree/bindings/pci/pci.txt
+>> +++ b/Documentation/devicetree/bindings/pci/pci.txt
+>> @@ -24,3 +24,13 @@ driver implementation may support the following properties:
+>>     unsupported link speed, for instance, trying to do training for
+>>     unsupported link speed, etc.  Must be '4' for gen4, '3' for gen3, '2'
+>>     for gen2, and '1' for gen1. Any other values are invalid.
+>> +
+>> +PCI devices may support the following properties:
+>
+> This should say PCI ports instead of PCI devices.
 
-Well, it depends on what you mean by "slot" and "child device", but if
-my understanding of it is correct, WAKE# actually is "owned" by the
-latter.
+No, it is more accurate to say "PCI devices".
 
-First, let me clarify the terminology.  PCI slots are not really
-represented in the device hierarchy in Linux.  They are represented by
-kernel objects for hotplug purposes, but these objects are not based
-on struct device.
+Well, it actually gets somewhat confusing, because in the PCI
+terminology a "PCI device" means a physical piece of hardware that can
+be put into a single "slot" (think socket on a board) and may consist
+up to 8 functional units called "functions" which are each represented
+by a struct pci_dev.  So there may be up to 8 struct pci_dev objects
+per "PCI device" (as per the standard language) and, BTW, drivers bind
+to functions (via the struct pci_dev objects).
 
-Generally, there are two kinds of PCI entities represented by struct
-pci_dev, bridges and endpoints (functions).  Bridges may represent
-physical devices, like PCI-to-PCI bridges, or parts of physical
-devices, like PCIe ports.  In PCIe, every port is logically
-represented by a bridge (and a PCI config space region with a Type 1
-header).  However, ports do not take actions like generating
-interrupts; the pieces of hardware containing them (switches, Root
-Complex) do that.
+Now, WAKE# is shared by all functions within the same "PCI device"
+(I'm not sure if the standard specifies that directly, but at least it
+appears to be treated as an obvious physical limitation), so it may be
+useful to represent the "slot" or "device" level in the DT even though
+it has no struct device based representation in the kernel.
 
-Endpoints (functions) are children of bridges (e.g. PCIe ports) and
-bridges may be children of other bridges (like in a switch that is
-represented by a bus segment with one upstream bridge - the upstream
-port - and possibly multiple downstream bridges - downstream ports).
-So in PCI a parent always is a bridge (either a PCI bridge - a bridge
-between to PCI bus segments - or a host bridge) and if that is a PCIe
-port, it cannot "own" anything like WAKE#, because it is not affected
-by it in any way and doesn't take part in the handling of it.
-
-In the context of "Figure 5-4" in the spec, Case 1, what matters is
-that every "Slot" in the figure represents a bunch (up to 8) of
-endpoints (functions), but the "Slot" is not the parent of them.  The
-port of the switch the "Slot" is connected to is the parent.  WAKE#
-basically comes from one of the endpoints belonging to the "Slot" and
-you need to look into the config space regions for all of these
-endpoints to check which one has PME Status set and clear it (to
-acknowledge the PME and make the hardware stop asserting the WAKE#
-signal).  So, from the software perspective, the endpoint (child) is
-the source of WAKE# and that should be reflected by DT properties IMO.
-
-> So you're right, there should be no need for the child PCIe device drivers to
-> implement runtime PM.
-
-There should be no need for that regardless.  You only need an
-interrupt handler that will look for the endpoint with PME Status set,
-acknowledge it and possibly invoke runtime PM for the endpoint in
-question (if supported).  All of that is standard and can happen at
-the bus type level and the interrupt handler I'm talking about may be
-based on pci_pme_wakeup() or pci_acpi_wake_dev().
-
-> I was thinking the wakeirq case with WLAN on SDIO bus. Some WLAN
-> devices can have a hardwired OOB wakeirq wired to a GPIO controller.
-> In that case the wakeirq is owned by the child device driver
-> (WLAN controller) and not by the SDIO slot. I was earlier
-> thinking this is the same as the "Figure 5-4" case 1, but it's
-> not.
-
-Well, it is not in the sense that the endpoint driver is not expected
-to handle the wakeup interrupt by itself.  The PCI bus type is
-responsible for that, but technically WAKE# comes from the endpoint
-(child).
-
-> So in the PCIe WAKE# case for device tree, we must have the
-> wakeirq property for the PCIe slot for the struct device managing
-> that slot,
-
-Which doesn't exist.
-
-> and not for the child device driver. I think it's
-> already this way in the most recent set of patches, I need to
-> look again.
-
-No, you need a wakeirq properly for the child *device* and that
-property will be consumed by the PCI layer.
-
->> > So isn't my option 1 above similar to the PCIe spec "Figure 5-4"
->> > case 2?
+>> +- interrupts: Interrupt specifier for each name in interrupt-names.
+>> +- interrupt-names:
+>> +    May contain "wakeup" for PCIe WAKE# interrupt and "pci" for PCI interrupt.
+>> +    The PCI devices may optionally include an 'interrupts' property that
+>> +    represents the legacy PCI interrupt. And when we try to specify the PCIe
+>> +    WAKE# pin, a corresponding 'interrupt-names' property is required to
+>> +    distinguish them.
+>> --
+>> 2.11.0
 >>
->> No, it isn't, because in that case there is no practical difference
->> between WAKE# and an in-band PME message sent by the device (Beacon)
->> from the software perspective.
 >>
->> WAKE# causes the switch to send a PME message upstream and that is
->> handled by the Root Complex through the standard mechanism already
->> supported by our existing PME driver (drivers/pci/pcie/pme.c).
->
-> OK. So if "Figure 5-4" case 2 is already handled then and we need
-> to just deal with "Figure 5-4" case 1 :)
-
-Right.
-
->> > Yeah. FYI, for the dedicated wakeirq cases I have, we need to keep
->> > them masked during runtime to avoid tons of interrupts as they
->> > are often wired to the RX pins.
->>
->> OK
->>
->> BTW, enable_irq_wake() should take care of the sharing, shouldn't it?
->
-> That can be used to tell us which device has wakeirq enabled for
-> wake-up events, but only for resume not runtiem PM. We still have the
-> shared IRQ problem to deal with. And the PCIe subsystem still needs
-> to go through the child devices.
-
-Right.
-
-It actually has to walk the bus below each of them too in case it is a
-bridge, like pci_acpi_wake_dev().
-
->> But the WAKE# thing is not just for waking up the system from sleep states,
->> it is for runtime PM's wakeup signaling too.
->
-> Yes my test cases have it working for runtime PM and for waking
-> up system from suspend.
-
-OK
-
->> > > > Currently nothing happens with wakeirqs if there's no struct
->> > > > wakeup_source. On device_wakeup_enable() we call device_wakeup_attach()
->> > > > that just copies dev->power.wakeirq to ws->wakeirq. And when struct
->> > > > wake_source is freed the device should be active and wakeirq
->> > > > disabled. Or are you seeing other issues here?
->> > >
->> > > I'm suspicious about one thing, but I need to look deeper into the code. :-)
->>
->> So we are fine except for the race and we need the wakeirq field in wakeup
->> sources to automatically arm the wakeup IRQs during suspend.
->
-> OK.
->
->> If I'm not mistaken, we only need something like the patch below (untested).
->
-> Seems like it should fix the race, I'll do some testing next week.
-
-OK, thanks!
-
-Rafael
