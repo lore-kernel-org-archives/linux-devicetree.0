@@ -1,76 +1,58 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v3 07/11] ARM: sunxi: h3/h5: add simplefb nodes
-Date: Fri, 29 Dec 2017 16:45:18 +0800
-Message-ID: <CAGb2v66LGkzscbpCAwhPvA2VPL-8Qpc+e5vNFPq6vS2Hvh9DbA@mail.gmail.com>
-References: <20171222122243.25735-1-icenowy@aosc.io> <20171222122243.25735-8-icenowy@aosc.io>
+Subject: Re: [PATCH v3 00/11] Allwinner H3/H5/A64(DE2) SimpleFB support
+Date: Fri, 29 Dec 2017 16:52:06 +0800
+Message-ID: <CAGb2v66CnxSEgYhoeKT+Q8TX-M6SK=XLd=1yXC7WgCz8=ZrMCA@mail.gmail.com>
+References: <20171222122243.25735-1-icenowy@aosc.io>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171222122243.25735-8-icenowy-h8G6r0blFSE@public.gmane.org>
+In-Reply-To: <20171222122243.25735-1-icenowy-h8G6r0blFSE@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 On Fri, Dec 22, 2017 at 8:22 PM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
-> The H3/H5 SoCs have a HDMI output and a TV Composite output.
+> This patchset adds support for the SimpleFB on Allwinner SoCs with
+> "Display Engine 2.0".
 >
-> Add simplefb nodes for these outputs.
+> PATCH 1 to PATCH 3 are DE2 CCU fixes for H3/H5 SoCs.
 >
-> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-> ---
->  arch/arm/boot/dts/sunxi-h3-h5.dtsi | 29 +++++++++++++++++++++++++++++
->  1 file changed, 29 insertions(+)
+> PATCH 4 adds the pipeline strings for DE2 SimpleFB.
 >
-> diff --git a/arch/arm/boot/dts/sunxi-h3-h5.dtsi b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-> index fcb909658cf0..31478c03790d 100644
-> --- a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-> +++ b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-> @@ -53,6 +53,35 @@
->         #address-cells = <1>;
->         #size-cells = <1>;
+> PATCH 5 to 7 adds necessary device tree nodes (DE2 CCU and SimpleFB)
+> for H3/H5 SoCs.
 >
-> +       chosen {
-> +               #address-cells = <1>;
-> +               #size-cells = <1>;
-> +               ranges;
-> +
-> +               framebuffer-hdmi {
-> +                       compatible = "allwinner,simple-framebuffer",
-> +                                    "simple-framebuffer";
-> +                       allwinner,pipeline = "mixer0-lcd0-hdmi";
-> +                       clocks = <&display_clocks CLK_BUS_MIXER0>,
-> +                                <&ccu CLK_BUS_TCON0>, <&ccu CLK_BUS_HDMI>,
+> PATCH 8 to 11 are for Allwinner A64 SoC to enable SimpleFB.
+>
+> Icenowy Zheng (11):
+>   dt-bindings: fix the binding of Allwinner DE2 CCU of A83T and H3
+>   clk: sunxi-ng: add support for Allwinner H3 DE2 CCU
+>   clk: sunxi-ng: fix the A64/H5 clock description of DE2 CCU
+>   dt-bindings: simplefb-sunxi: add pipelines for DE2
+>   ARM: sun8i: h3/h5: add DE2 CCU device node for H3
+>   arm64: allwinner: h5: add compatible string for DE2 CCU
 
-Are the bus clocks necessary? It's not like simplefb is going to access
-any of the control registers.
-
-> +                                <&display_clocks CLK_MIXER0>,
-> +                                <&ccu CLK_TCON0>, <&ccu CLK_HDMI>,
-> +                                <&ccu CLK_HDMI_DDC>;
-
-Is the DDC clock necessary? There's no usage of DDC with simplefb.
+Applied the first six patches. There is no guarantee they will make
+it into 4.16.
 
 ChenYu
 
-> +                       status = "disabled";
-> +               };
-> +
-> +               framebuffer-tve {
-> +                       compatible = "allwinner,simple-framebuffer",
-> +                                    "simple-framebuffer";
-> +                       allwinner,pipeline = "mixer1-lcd1-tve";
-> +                       clocks = <&display_clocks CLK_BUS_MIXER1>,
-> +                                <&ccu CLK_BUS_TCON1>, <&ccu CLK_BUS_TVE>,
-> +                                <&display_clocks CLK_MIXER1>,
-> +                                <&ccu CLK_TVE>;
-> +                       status = "disabled";
-> +               };
-> +       };
-> +
->         clocks {
->                 #address-cells = <1>;
->                 #size-cells = <1>;
+>   ARM: sunxi: h3/h5: add simplefb nodes
+>   dt-bindings: add binding for A64 DE2 CCU SRAM
+>   clk: sunxi-ng: add support for Allwinner A64 DE2 CCU
+>   arm64: allwinner: a64: add DE2 CCU for A64 SoC
+>   arm64: allwinner: a64: add simplefb for A64 SoC
+>
+>  .../devicetree/bindings/clock/sun8i-de2.txt        | 10 ++-
+>  .../bindings/display/simple-framebuffer-sunxi.txt  |  4 +
+>  arch/arm/boot/dts/sun8i-h3.dtsi                    |  4 +
+>  arch/arm/boot/dts/sunxi-h3-h5.dtsi                 | 43 +++++++++++
+>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi      | 65 +++++++++++++++++
+>  arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi       |  4 +
+>  drivers/clk/sunxi-ng/ccu-sun8i-de2.c               | 85 +++++++++++++++++++---
+>  7 files changed, 202 insertions(+), 13 deletions(-)
+>
 > --
 > 2.14.2
 >
