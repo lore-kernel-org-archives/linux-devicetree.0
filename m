@@ -1,172 +1,164 @@
-From: Cyrille Pitchen <cyrille.pitchen-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 6/9] PCI: cadence: Add host driver for Cadence PCIe
- controller
-Date: Fri, 29 Dec 2017 23:08:38 +0100
-Message-ID: <c34c6480-7297-8756-6bc2-8c8e6a451f0d@free-electrons.com>
-References: <cover.1513620412.git.cyrille.pitchen@free-electrons.com>
- <4b2b67ad54e14ee5e1f83af65e9932ce408e82ec.1513620412.git.cyrille.pitchen@free-electrons.com>
- <20171228230111.GB19819@bhelgaas-glaptop.roam.corp.google.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [RFC PATCH v11 4/5] PCI / PM: Add support for the PCIe WAKE#
+ signal for OF
+Date: Sat, 30 Dec 2017 00:39:52 +0100
+Message-ID: <CAJZ5v0icePurJoGdVtX06j=XHPdZSqXgm+vhL47ngv7OZoL3fw@mail.gmail.com>
+References: <20171225114742.18920-1-jeffy.chen@rock-chips.com>
+ <CAJZ5v0hpK0_vjX3HinCpsFuKffVUn3d5EnqXdz0P893aRZgnRw@mail.gmail.com>
+ <20171228165134.GH3875@atomide.com> <6120485.xubBpvge6h@aspire.rjw.lan> <20171229171548.GI3875@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171228230111.GB19819-1RhO1Y9PlrlHTL0Zs8A6p5iNqAH0jzoTYJqu5kTmcBRl57MIdRCFDg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, stelford-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, dgary-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, kgopi-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, eandrews-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, sureshp-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20171229171548.GI3875@atomide.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, "Rafael J. Wysocki" <rafael@kernel.org>, JeffyChen <jeffy.chen@rock-chips.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Linux PM <linux-pm@vger.kernel.org>, Shawn Lin <shawn.lin@rock-chips.com>, Brian Norris <briannorris@chromium.org>, Doug Anderson <dianders@chromium.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux PCI <linux-pci@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Bjorn,
-
-Le 29/12/2017 à 00:01, Bjorn Helgaas a écrit :
-> On Mon, Dec 18, 2017 at 07:16:06PM +0100, Cyrille Pitchen wrote:
->> This patch adds support to the Cadence PCIe controller in host mode.
+On Fri, Dec 29, 2017 at 6:15 PM, Tony Lindgren <tony@atomide.com> wrote:
+> * Rafael J. Wysocki <rjw@rjwysocki.net> [171228 17:33]:
+>> On Thursday, December 28, 2017 5:51:34 PM CET Tony Lindgren wrote:
+>> >
+>> > Well Brian had a concern where we would have to implement PM runtime
+>> > for all device drivers for PCI devices.
 >>
->> The "cadence/" entry in drivers/pci/Makefile is placed after the
->> "endpoint/" entry so when the next patch introduces a EPC driver for the
->> Cadence PCIe controller, drivers/pci/cadence/pcie-cadence-ep.o will be
->> linked after drivers/pci/endpoint/*.o objects, otherwise the built-in
->> pci-cadence-ep driver would be probed before the PCI endpoint libraries
->> would have been initialized, which would result in a kernel crash.
->>
->> Signed-off-by: Cyrille Pitchen <cyrille.pitchen-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> 
->> diff --git a/drivers/pci/Makefile b/drivers/pci/Makefile
->> index 7284a7f6ad1e..a66ddb347798 100644
->> --- a/drivers/pci/Makefile
->> +++ b/drivers/pci/Makefile
->> @@ -54,5 +54,6 @@ obj-y += host/
->>  obj-y += switch/
->>  
->>  obj-$(CONFIG_PCI_ENDPOINT)	+= endpoint/
->> +obj-$(CONFIG_PCI_CADENCE)	+= cadence/
->>  # PCI dwc controller drivers
->>  obj-y				+= dwc/
-> 
-> I don't like the fact that the cadence/ rule looks different than the
-> dwc/ rule for no obvious reason.  With some work, the dwc/ rule could
-> maybe be made to look like:
-
-I've tried to understand why dwc uses obj-y instead of
-obj-$(CONFIG_PCIE_DW), here is what I've found:
-
-In drivers/pci/dwc/Makefile there is some obj-$(CONFIG_ARM64) rule to
-generate the pcie-hisi.o object like there are other obj-$(CONFIG_ARM64)
-rules in drivers/pci/host/Makefile produce objects like pci-thunder-ecam.o
-for instance.
-
-Then I compared both drivers/pci/dwc/pcie-hisi.c and
-drivers/pci/host/pci-thunder-ecam.c:
-
-Both files are structured like this:
-
-#if defined(CONFIG_PCI_<controller_name>) || (defined(CONFIG_ACPI) && defined(CONFIG_PCI_QUIRKS))
-
-[...]
-struct pci_ecam_ops <controller_name>_ops = {
-	.bus_shift	= 20,
-	.pci_ops	= {
-		[...]
-	}
-};
-
-#ifdef CONFIG_PCI_<controller_name>
-
-[...]
-
-static struct platform_driver <controller_name>_driver = {
-	.driver = {
-		[...]
-	},
-	.probe = <controller_name>_probe,
-};
-builtin_platform_driver(<controller_name>_driver);
-
-#endif
-#endif
-
-
-Then the 'struct pci_ecam_ops' <controller_name>_ops is declared in
-include/linux/pci-ecam.h:
-
-#if defined(CONFIG_ACPI) && defined(CONFIG_PCI_QUIRKS)
-extern struct pci_ecam_ops pci_32b_ops;		/* 32-bit accesses only */
-extern struct pci_ecam_ops hisi_pcie_ops;	/* HiSilicon */
-extern struct pci_ecam_ops thunder_pem_ecam_ops; /* Cavium ThunderX 1.x & 2.x */
-extern struct pci_ecam_ops pci_thunder_ecam_ops; /* Cavium ThunderX 1.x */
-extern struct pci_ecam_ops xgene_v1_pcie_ecam_ops; /* APM X-Gene PCIe v1 */
-extern struct pci_ecam_ops xgene_v2_pcie_ecam_ops; /* APM X-Gene PCIe v2.x */
-#endif
-
-And referenced by drivers/acpi/pci_mcfg.c.
-
-So I guess this is the reason why the 'dwc' folder uses obj-y like the
-'host' folder does in drivers/pci/Makefile: files like pcie-hisi.c must
-be compiled when all 3 CONFIG_ARM64, CONFIG_ACPI and CONFIG_PCI_QUIRKS are
-defined even if their associated CONFIG_PCI_<controller_name> is not defined.
-
-So is it okay for you to leave the dwc rule as is for now?
-
-> 
->   obj-$(CONFIG_PCIE_DW)                 += dwc/
-> 
-> I *think* that should actually be pretty easy.  Everything in
-> drivers/pci/dwc/Kconfig selects PCIE_DW if set, either via
-> PCIE_DW_HOST or PCIE_DW_EP.
-> 
->> diff --git a/drivers/pci/cadence/Kconfig b/drivers/pci/cadence/Kconfig
->> new file mode 100644
->> index 000000000000..0d15b40861e9
->> --- /dev/null
->> +++ b/drivers/pci/cadence/Kconfig
->> @@ -0,0 +1,24 @@
->> +menuconfig PCI_CADENCE
->> +	bool "Cadence PCI controllers support"
->> +	depends on PCI && HAS_IOMEM
->> +	help
->> +	  Say Y here if you want to support some Cadence PCI controller.
->> +
->> +	  When in doubt, say N.
->> +
->> +if PCI_CADENCE
->> +
->> +config PCIE_CADENCE
->> +	bool
->> +
->> +config PCIE_CADENCE_HOST
->> +	bool "Cadence PCIe host controller"
->> +	depends on OF
->> +	select IRQ_DOMAIN
->> +	select PCIE_CADENCE
->> +	help
->> +	  Say Y here if you want to support the Cadence PCIe controller in host
->> +	  mode. This PCIe controller may be embedded into many different vendors
->> +	  SoCs.
->> +
->> +endif # PCI_CADENCE
-> 
-> Can you just use the same strategy as pci/dwc/Kconfig does, i.e., omit
-> the top-level PCI_CADENCE symbol?  If we don't need it for dwc, with
-> its dozen drivers, we probably don't need it for the one or two
-> Cadence drivers.
+>> Why would we?
 >
+> Seems at least I was a bit confused. In the PCIe case the WAKE# is
+> owned by the PCIe slot, not the child PCIe device.
 
-done for the next version of the series.
+Well, it depends on what you mean by "slot" and "child device", but if
+my understanding of it is correct, WAKE# actually is "owned" by the
+latter.
 
-Best regards,
+First, let me clarify the terminology.  PCI slots are not really
+represented in the device hierarchy in Linux.  They are represented by
+kernel objects for hotplug purposes, but these objects are not based
+on struct device.
 
-Cyrille
- 
-> Bjorn
-> 
+Generally, there are two kinds of PCI entities represented by struct
+pci_dev, bridges and endpoints (functions).  Bridges may represent
+physical devices, like PCI-to-PCI bridges, or parts of physical
+devices, like PCIe ports.  In PCIe, every port is logically
+represented by a bridge (and a PCI config space region with a Type 1
+header).  However, ports do not take actions like generating
+interrupts; the pieces of hardware containing them (switches, Root
+Complex) do that.
 
+Endpoints (functions) are children of bridges (e.g. PCIe ports) and
+bridges may be children of other bridges (like in a switch that is
+represented by a bus segment with one upstream bridge - the upstream
+port - and possibly multiple downstream bridges - downstream ports).
+So in PCI a parent always is a bridge (either a PCI bridge - a bridge
+between to PCI bus segments - or a host bridge) and if that is a PCIe
+port, it cannot "own" anything like WAKE#, because it is not affected
+by it in any way and doesn't take part in the handling of it.
 
--- 
-Cyrille Pitchen, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+In the context of "Figure 5-4" in the spec, Case 1, what matters is
+that every "Slot" in the figure represents a bunch (up to 8) of
+endpoints (functions), but the "Slot" is not the parent of them.  The
+port of the switch the "Slot" is connected to is the parent.  WAKE#
+basically comes from one of the endpoints belonging to the "Slot" and
+you need to look into the config space regions for all of these
+endpoints to check which one has PME Status set and clear it (to
+acknowledge the PME and make the hardware stop asserting the WAKE#
+signal).  So, from the software perspective, the endpoint (child) is
+the source of WAKE# and that should be reflected by DT properties IMO.
+
+> So you're right, there should be no need for the child PCIe device drivers to
+> implement runtime PM.
+
+There should be no need for that regardless.  You only need an
+interrupt handler that will look for the endpoint with PME Status set,
+acknowledge it and possibly invoke runtime PM for the endpoint in
+question (if supported).  All of that is standard and can happen at
+the bus type level and the interrupt handler I'm talking about may be
+based on pci_pme_wakeup() or pci_acpi_wake_dev().
+
+> I was thinking the wakeirq case with WLAN on SDIO bus. Some WLAN
+> devices can have a hardwired OOB wakeirq wired to a GPIO controller.
+> In that case the wakeirq is owned by the child device driver
+> (WLAN controller) and not by the SDIO slot. I was earlier
+> thinking this is the same as the "Figure 5-4" case 1, but it's
+> not.
+
+Well, it is not in the sense that the endpoint driver is not expected
+to handle the wakeup interrupt by itself.  The PCI bus type is
+responsible for that, but technically WAKE# comes from the endpoint
+(child).
+
+> So in the PCIe WAKE# case for device tree, we must have the
+> wakeirq property for the PCIe slot for the struct device managing
+> that slot,
+
+Which doesn't exist.
+
+> and not for the child device driver. I think it's
+> already this way in the most recent set of patches, I need to
+> look again.
+
+No, you need a wakeirq properly for the child *device* and that
+property will be consumed by the PCI layer.
+
+>> > So isn't my option 1 above similar to the PCIe spec "Figure 5-4"
+>> > case 2?
+>>
+>> No, it isn't, because in that case there is no practical difference
+>> between WAKE# and an in-band PME message sent by the device (Beacon)
+>> from the software perspective.
+>>
+>> WAKE# causes the switch to send a PME message upstream and that is
+>> handled by the Root Complex through the standard mechanism already
+>> supported by our existing PME driver (drivers/pci/pcie/pme.c).
+>
+> OK. So if "Figure 5-4" case 2 is already handled then and we need
+> to just deal with "Figure 5-4" case 1 :)
+
+Right.
+
+>> > Yeah. FYI, for the dedicated wakeirq cases I have, we need to keep
+>> > them masked during runtime to avoid tons of interrupts as they
+>> > are often wired to the RX pins.
+>>
+>> OK
+>>
+>> BTW, enable_irq_wake() should take care of the sharing, shouldn't it?
+>
+> That can be used to tell us which device has wakeirq enabled for
+> wake-up events, but only for resume not runtiem PM. We still have the
+> shared IRQ problem to deal with. And the PCIe subsystem still needs
+> to go through the child devices.
+
+Right.
+
+It actually has to walk the bus below each of them too in case it is a
+bridge, like pci_acpi_wake_dev().
+
+>> But the WAKE# thing is not just for waking up the system from sleep states,
+>> it is for runtime PM's wakeup signaling too.
+>
+> Yes my test cases have it working for runtime PM and for waking
+> up system from suspend.
+
+OK
+
+>> > > > Currently nothing happens with wakeirqs if there's no struct
+>> > > > wakeup_source. On device_wakeup_enable() we call device_wakeup_attach()
+>> > > > that just copies dev->power.wakeirq to ws->wakeirq. And when struct
+>> > > > wake_source is freed the device should be active and wakeirq
+>> > > > disabled. Or are you seeing other issues here?
+>> > >
+>> > > I'm suspicious about one thing, but I need to look deeper into the code. :-)
+>>
+>> So we are fine except for the race and we need the wakeirq field in wakeup
+>> sources to automatically arm the wakeup IRQs during suspend.
+>
+> OK.
+>
+>> If I'm not mistaken, we only need something like the patch below (untested).
+>
+> Seems like it should fix the race, I'll do some testing next week.
+
+OK, thanks!
+
+Rafael
