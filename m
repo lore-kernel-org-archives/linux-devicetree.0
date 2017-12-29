@@ -1,50 +1,51 @@
-From: =?UTF-8?q?Myl=C3=A8ne=20Josserand?=
-        <mylene.josserand@free-electrons.com>
-Subject: [PATCH v2 5/5] arm: dts: sun8i: a83t: Fix undefined offset with virtual timer
-Date: Fri, 29 Dec 2017 11:55:06 +0100
-Message-ID: <20171229105506.24851-6-mylene.josserand@free-electrons.com>
+From: =?UTF-8?q?Myl=C3=A8ne=20Josserand?= <mylene.josserand@free-electrons.com>
+Subject: [PATCH v2 3/5] arm: dts: sun8i: a83t: Add registers needed for MCPM
+Date: Fri, 29 Dec 2017 11:55:04 +0100
+Message-ID: <20171229105506.24851-4-mylene.josserand@free-electrons.com>
 References: <20171229105506.24851-1-mylene.josserand@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20171229105506.24851-1-mylene.josserand@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: maxime.ripard@free-electrons.com, wens@csie.org, linux@armlinux.org.uk, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, clabbe.montjoie@gmail.com, thomas.petazzoni@free-electrons.com, mylene.josserand@free-electrons.com, quentin.schulz@free-electrons.com
+Cc: thomas.petazzoni@free-electrons.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, quentin.schulz@free-electrons.com, clabbe.montjoie@gmail.com, mylene.josserand@free-electrons.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The ARM architected timers use an offset between their physical and
-virtual counters. That offset should be configured by the bootloader
-in CNTVOFF.
-
-However, the A83t bootloader fails to do so, and we end up with an
-undefined offset (which in our case is random), meaning that each CPU
-will have a different time, which isn't working very well.
-
-Fix that by setting the arm,cpu-registers-not-fw-configured that will
-make Linux use the physical timers instead of the virtual ones. One
-possible side effect would be that the virtualization features would
-be disabled. However, due to the way the GIC has been integrated in
-the system, it is already unusable so we're effectively not losing any
-feature.
-
-Signed-off-by: Mylène Josserand <mylene.josserand@free-electrons.com>
----
- arch/arm/boot/dts/sun8i-a83t.dtsi | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
-index aa27ffb7db81..ddcd90ae3a73 100644
---- a/arch/arm/boot/dts/sun8i-a83t.dtsi
-+++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
-@@ -121,6 +121,7 @@
- 			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
- 			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
- 			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>;
-+		arm,cpu-registers-not-fw-configured;
- 	};
- 
- 	clocks {
--- 
-2.11.0
+QWRkIDMgcmVnaXN0ZXJzIG5lZWRlZCBmb3IgTUNQTSAoaWUgU01QKTogcHJjbSwgY3B1Y2ZnIGFu
+ZCByX2NwdWNmZy4KcHJjbSBhbmQgY3B1Y2ZnIGFyZSBpZGVudGljYWwgd2l0aCBzdW45aS1hODAu
+IFRoZSBvbmx5IGRpZmZlcmVuY2UKaXMgdGhlIHJfY3B1Y2ZnIHRoYXQgZG9lcyBub3QgZXhpc3Qg
+b24gc3VuOWkuCgpTaWduZWQtb2ZmLWJ5OiBNeWzDqG5lIEpvc3NlcmFuZCA8bXlsZW5lLmpvc3Nl
+cmFuZEBmcmVlLWVsZWN0cm9ucy5jb20+Ci0tLQogYXJjaC9hcm0vYm9vdC9kdHMvc3VuOGktYTgz
+dC5kdHNpIHwgMTUgKysrKysrKysrKysrKysrCiAxIGZpbGUgY2hhbmdlZCwgMTUgaW5zZXJ0aW9u
+cygrKQoKZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL3N1bjhpLWE4M3QuZHRzaSBiL2Fy
+Y2gvYXJtL2Jvb3QvZHRzL3N1bjhpLWE4M3QuZHRzaQppbmRleCBkZTUxMTlhMmE5MWMuLmE2YzY5
+Yjc1ZmU2YyAxMDA2NDQKLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvc3VuOGktYTgzdC5kdHNpCisr
+KyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3N1bjhpLWE4M3QuZHRzaQpAQCAtMTYyLDYgKzE2MiwxMSBA
+QAogCQkjc2l6ZS1jZWxscyA9IDwxPjsKIAkJcmFuZ2VzOwogCisJCWNwdWNmZ0AxNzAwMDAwIHsK
+KwkJCWNvbXBhdGlibGUgPSAiYWxsd2lubmVyLHN1bjhpLWE4M3QtY3B1Y2ZnIjsKKwkJCXJlZyA9
+IDwweDAxNzAwMDAwIDB4NDAwPjsKKwkJfTsKKwogCQlzeXNjb246IHN5c2NvbkAxYzAwMDAwIHsK
+IAkJCWNvbXBhdGlibGUgPSAiYWxsd2lubmVyLHN1bjhpLWE4M3Qtc3lzdGVtLWNvbnRyb2xsZXIi
+LAogCQkJCSJzeXNjb24iOwpAQCAtNTk1LDYgKzYwMCwxMSBAQAogCQkJaW50ZXJydXB0cyA9IDxH
+SUNfU1BJIDMyIElSUV9UWVBFX0xFVkVMX0hJR0g+OwogCQl9OwogCisJCXByY21AMWYwMTQwMCB7
+CisJCQljb21wYXRpYmxlID0gImFsbHdpbm5lcixzdW44aS1hODN0LXByY20iOworCQkJcmVnID0g
+PDB4MWYwMTQwMCAweDQwMD47CisJCX07CisKIAkJcl9jY3U6IGNsb2NrQDFmMDE0MDAgewogCQkJ
+Y29tcGF0aWJsZSA9ICJhbGx3aW5uZXIsc3VuOGktYTgzdC1yLWNjdSI7CiAJCQlyZWcgPSA8MHgw
+MWYwMTQwMCAweDQwMD47CkBAIC02MDUsNiArNjE1LDExIEBACiAJCQkjcmVzZXQtY2VsbHMgPSA8
+MT47CiAJCX07CiAKKwkJcl9jcHVjZmdAMWYwMWMwMCB7CisJCQljb21wYXRpYmxlID0gImFsbHdp
+bm5lcixzdW44aS1hODN0LXItY3B1Y2ZnIjsKKwkJCXJlZyA9IDwweDFmMDFjMDAgMHgxMDA+Owor
+CQl9OworCiAJCXJfcGlvOiBwaW5jdHJsQDFmMDJjMDAgewogCQkJY29tcGF0aWJsZSA9ICJhbGx3
+aW5uZXIsc3VuOGktYTgzdC1yLXBpbmN0cmwiOwogCQkJcmVnID0gPDB4MDFmMDJjMDAgMHg0MDA+
+OwotLSAKMi4xMS4wCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0
+cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGlu
+Zm8vbGludXgtYXJtLWtlcm5lbAo=
