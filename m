@@ -1,89 +1,80 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH v3 09/11] clk: sunxi-ng: add support for Allwinner A64 DE2
- CCU
-Date: Fri, 29 Dec 2017 16:35:06 +0800
-Message-ID: <CAGb2v65cCZFOU3uqtcpHuoaNL27tRj4ajj52YVfBePsTSTc0FQ@mail.gmail.com>
-References: <20171222122243.25735-1-icenowy@aosc.io>
- <20171222122243.25735-10-icenowy@aosc.io>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v3 07/11] ARM: sunxi: h3/h5: add simplefb nodes
+Date: Fri, 29 Dec 2017 16:45:18 +0800
+Message-ID: <CAGb2v66LGkzscbpCAwhPvA2VPL-8Qpc+e5vNFPq6vS2Hvh9DbA@mail.gmail.com>
+References: <20171222122243.25735-1-icenowy@aosc.io> <20171222122243.25735-8-icenowy@aosc.io>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20171222122243.25735-10-icenowy@aosc.io>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Icenowy Zheng <icenowy@aosc.io>
-Cc: devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-clk <linux-clk@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171222122243.25735-8-icenowy-h8G6r0blFSE@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBEZWMgMjIsIDIwMTcgYXQgODoyMiBQTSwgSWNlbm93eSBaaGVuZyA8aWNlbm93eUBh
-b3NjLmlvPiB3cm90ZToKPiBBbGx3aW5uZXIgQTY0J3MgREUyIG5lZWRzIHRvIGNsYWltIGEgc2Vj
-dGlvbiBvZiBTUkFNIChTUkFNIEMpIHRvIHdvcmsuCj4KPiBBZGQgc3VwcG9ydCBmb3IgaXQuCj4K
-PiBTaWduZWQtb2ZmLWJ5OiBJY2Vub3d5IFpoZW5nIDxpY2Vub3d5QGFvc2MuaW8+Cj4gLS0tCj4g
-IGRyaXZlcnMvY2xrL3N1bnhpLW5nL2NjdS1zdW44aS1kZTIuYyB8IDMyICsrKysrKysrKysrKysr
-KysrKysrKysrKy0tLS0tLS0tCj4gIDEgZmlsZSBjaGFuZ2VkLCAyNCBpbnNlcnRpb25zKCspLCA4
-IGRlbGV0aW9ucygtKQo+Cj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvY2xrL3N1bnhpLW5nL2NjdS1z
-dW44aS1kZTIuYyBiL2RyaXZlcnMvY2xrL3N1bnhpLW5nL2NjdS1zdW44aS1kZTIuYwo+IGluZGV4
-IDQ2OGQxYWJhZjBlZS4uMzhiMDI5YjdiYjVhIDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvY2xrL3N1
-bnhpLW5nL2NjdS1zdW44aS1kZTIuYwo+ICsrKyBiL2RyaXZlcnMvY2xrL3N1bnhpLW5nL2NjdS1z
-dW44aS1kZTIuYwo+IEBAIC0xNyw2ICsxNyw3IEBACj4gICNpbmNsdWRlIDxsaW51eC9vZl9wbGF0
-Zm9ybS5oPgo+ICAjaW5jbHVkZSA8bGludXgvcGxhdGZvcm1fZGV2aWNlLmg+Cj4gICNpbmNsdWRl
-IDxsaW51eC9yZXNldC5oPgo+ICsjaW5jbHVkZSA8bGludXgvc29jL3N1bnhpL3N1bnhpX3NyYW0u
-aD4KPgo+ICAjaW5jbHVkZSAiY2N1X2NvbW1vbi5oIgo+ICAjaW5jbHVkZSAiY2N1X2Rpdi5oIgo+
-IEBAIC0xOTYsNiArMTk3LDExIEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgc3VueGlfY2N1X2Rlc2Mg
-c3VuOGlfdjNzX2RlMl9jbGtfZGVzYyA9IHsKPiAgICAgICAgIC5udW1fcmVzZXRzICAgICA9IEFS
-UkFZX1NJWkUoc3VuOGlfYTgzdF9kZTJfcmVzZXRzKSwKPiAgfTsKPgo+ICtzdGF0aWMgYm9vbCBz
-dW54aV9kZTJfY2xrX2hhc19zcmFtKGNvbnN0IHN0cnVjdCBkZXZpY2Vfbm9kZSAqbm9kZSkKPiAr
-ewo+ICsgICAgICAgcmV0dXJuIG9mX2RldmljZV9pc19jb21wYXRpYmxlKG5vZGUsICJhbGx3aW5u
-ZXIsc3VuNTBpLWE2NC1kZTItY2xrIik7CgpIYXZpbmcgdG8gbWFpbnRhaW4gYSBzZXBhcmF0ZSBs
-aXN0IGlzIG5vdCBhIGdyZWF0IGlkZWEuIFBsZWFzZSBjb25zaWRlcgphZGRpbmcgYSBkZTIgY2N1
-IHNwZWNpZmljIHN0cnVjdHVyZSB0aGF0IGVtYmVkcyBhIHN0cnVjdCBzdW54aV9jY3VfZGVzYywK
-YW5kIGFsc28gaW5jbHVkZXMgd2hhdGV2ZXIgc3BlY2lhbCBxdWlya3MgZmxhZ3MgdGhpcyBuZWVk
-cy4KCkNoZW5ZdQoKPiArfQo+ICsKPiAgc3RhdGljIGludCBzdW54aV9kZTJfY2xrX3Byb2JlKHN0
-cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpCj4gIHsKPiAgICAgICAgIHN0cnVjdCByZXNvdXJj
-ZSAqcmVzOwo+IEBAIC0yMzksMTEgKzI0NSwyMCBAQCBzdGF0aWMgaW50IHN1bnhpX2RlMl9jbGtf
-cHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKPiAgICAgICAgICAgICAgICAgcmV0
-dXJuIHJldDsKPiAgICAgICAgIH0KPgo+ICsgICAgICAgaWYgKHN1bnhpX2RlMl9jbGtfaGFzX3Ny
-YW0ocGRldi0+ZGV2Lm9mX25vZGUpKSB7Cj4gKyAgICAgICAgICAgICAgIHJldCA9IHN1bnhpX3Ny
-YW1fY2xhaW0oJnBkZXYtPmRldik7Cj4gKyAgICAgICAgICAgICAgIGlmIChyZXQpIHsKPiArICAg
-ICAgICAgICAgICAgICAgICAgICBkZXZfZXJyKCZwZGV2LT5kZXYsCj4gKyAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAiRXJyb3IgY291bGRuJ3QgbWFwIFNSQU0gdG8gZGV2aWNlXG4iKTsK
-PiArICAgICAgICAgICAgICAgICAgICAgICByZXR1cm4gcmV0Owo+ICsgICAgICAgICAgICAgICB9
-Cj4gKyAgICAgICB9Cj4gKwo+ICAgICAgICAgLyogVGhlIGNsb2NrcyBuZWVkIHRvIGJlIGVuYWJs
-ZWQgZm9yIHVzIHRvIGFjY2VzcyB0aGUgcmVnaXN0ZXJzICovCj4gICAgICAgICByZXQgPSBjbGtf
-cHJlcGFyZV9lbmFibGUoYnVzX2Nsayk7Cj4gICAgICAgICBpZiAocmV0KSB7Cj4gICAgICAgICAg
-ICAgICAgIGRldl9lcnIoJnBkZXYtPmRldiwgIkNvdWxkbid0IGVuYWJsZSBidXMgY2xrOiAlZFxu
-IiwgcmV0KTsKPiAtICAgICAgICAgICAgICAgcmV0dXJuIHJldDsKPiArICAgICAgICAgICAgICAg
-Z290byBlcnJfcmVsZWFzZV9zcmFtOwo+ICAgICAgICAgfQo+Cj4gICAgICAgICByZXQgPSBjbGtf
-cHJlcGFyZV9lbmFibGUobW9kX2Nsayk7Cj4gQEAgLTI3Miw2ICsyODcsMTAgQEAgc3RhdGljIGlu
-dCBzdW54aV9kZTJfY2xrX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpCj4gICAg
-ICAgICBjbGtfZGlzYWJsZV91bnByZXBhcmUobW9kX2Nsayk7Cj4gIGVycl9kaXNhYmxlX2J1c19j
-bGs6Cj4gICAgICAgICBjbGtfZGlzYWJsZV91bnByZXBhcmUoYnVzX2Nsayk7Cj4gK2Vycl9yZWxl
-YXNlX3NyYW06Cj4gKyAgICAgICBpZiAoc3VueGlfZGUyX2Nsa19oYXNfc3JhbShwZGV2LT5kZXYu
-b2Zfbm9kZSkpCj4gKyAgICAgICAgICAgICAgIHN1bnhpX3NyYW1fcmVsZWFzZSgmcGRldi0+ZGV2
-KTsKPiArCj4gICAgICAgICByZXR1cm4gcmV0Owo+ICB9Cj4KPiBAQCAtMjg4LDE3ICszMDcsMTQg
-QEAgc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgc3VueGlfZGUyX2Nsa19pZHNbXSA9
-IHsKPiAgICAgICAgICAgICAgICAgLmNvbXBhdGlibGUgPSAiYWxsd2lubmVyLHN1bjhpLXYzcy1k
-ZTItY2xrIiwKPiAgICAgICAgICAgICAgICAgLmRhdGEgPSAmc3VuOGlfdjNzX2RlMl9jbGtfZGVz
-YywKPiAgICAgICAgIH0sCj4gKyAgICAgICB7Cj4gKyAgICAgICAgICAgICAgIC5jb21wYXRpYmxl
-ID0gImFsbHdpbm5lcixzdW41MGktYTY0LWRlMi1jbGsiLAo+ICsgICAgICAgICAgICAgICAuZGF0
-YSA9ICZzdW41MGlfYTY0X2RlMl9jbGtfZGVzYywKPiArICAgICAgIH0sCj4gICAgICAgICB7Cj4g
-ICAgICAgICAgICAgICAgIC5jb21wYXRpYmxlID0gImFsbHdpbm5lcixzdW41MGktaDUtZGUyLWNs
-ayIsCj4gICAgICAgICAgICAgICAgIC5kYXRhID0gJnN1bjUwaV9hNjRfZGUyX2Nsa19kZXNjLAo+
-ICAgICAgICAgfSwKPiAtICAgICAgIC8qCj4gLSAgICAgICAgKiBUaGUgQWxsd2lubmVyIEE2NCBT
-b0MgbmVlZHMgc29tZSBiaXQgdG8gYmUgcG9rZSBpbiBzeXNjb24gdG8gbWFrZQo+IC0gICAgICAg
-ICogREUyIHJlYWxseSB3b3JraW5nLgo+IC0gICAgICAgICogU28gdGhlcmUncyBjdXJyZW50bHkg
-bm8gQTY0IGNvbXBhdGlibGUgaGVyZS4KPiAtICAgICAgICAqIEg1IHNoYXJlcyB0aGUgc2FtZSBy
-ZXNldCBsaW5lIHdpdGggQTY0LCBzbyBoZXJlIEg1IGlzIHVzaW5nIHRoZQo+IC0gICAgICAgICog
-Y2xvY2sgZGVzY3JpcHRpb24gb2YgQTY0Lgo+IC0gICAgICAgICovCj4gICAgICAgICB7IH0KPiAg
-fTsKPgo+IC0tCj4gMi4xNC4yCj4KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRl
-c2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8v
-ZHJpLWRldmVsCg==
+On Fri, Dec 22, 2017 at 8:22 PM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
+> The H3/H5 SoCs have a HDMI output and a TV Composite output.
+>
+> Add simplefb nodes for these outputs.
+>
+> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/sunxi-h3-h5.dtsi | 29 +++++++++++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/sunxi-h3-h5.dtsi b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+> index fcb909658cf0..31478c03790d 100644
+> --- a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+> +++ b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+> @@ -53,6 +53,35 @@
+>         #address-cells = <1>;
+>         #size-cells = <1>;
+>
+> +       chosen {
+> +               #address-cells = <1>;
+> +               #size-cells = <1>;
+> +               ranges;
+> +
+> +               framebuffer-hdmi {
+> +                       compatible = "allwinner,simple-framebuffer",
+> +                                    "simple-framebuffer";
+> +                       allwinner,pipeline = "mixer0-lcd0-hdmi";
+> +                       clocks = <&display_clocks CLK_BUS_MIXER0>,
+> +                                <&ccu CLK_BUS_TCON0>, <&ccu CLK_BUS_HDMI>,
+
+Are the bus clocks necessary? It's not like simplefb is going to access
+any of the control registers.
+
+> +                                <&display_clocks CLK_MIXER0>,
+> +                                <&ccu CLK_TCON0>, <&ccu CLK_HDMI>,
+> +                                <&ccu CLK_HDMI_DDC>;
+
+Is the DDC clock necessary? There's no usage of DDC with simplefb.
+
+ChenYu
+
+> +                       status = "disabled";
+> +               };
+> +
+> +               framebuffer-tve {
+> +                       compatible = "allwinner,simple-framebuffer",
+> +                                    "simple-framebuffer";
+> +                       allwinner,pipeline = "mixer1-lcd1-tve";
+> +                       clocks = <&display_clocks CLK_BUS_MIXER1>,
+> +                                <&ccu CLK_BUS_TCON1>, <&ccu CLK_BUS_TVE>,
+> +                                <&display_clocks CLK_MIXER1>,
+> +                                <&ccu CLK_TVE>;
+> +                       status = "disabled";
+> +               };
+> +       };
+> +
+>         clocks {
+>                 #address-cells = <1>;
+>                 #size-cells = <1>;
+> --
+> 2.14.2
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
