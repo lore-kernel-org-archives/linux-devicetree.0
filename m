@@ -1,62 +1,86 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v4 06/15] clk: Add Ingenic jz4770 CGU driver
-Date: Fri, 29 Dec 2017 16:02:24 +0100
-Message-ID: <1514559744.2198.1@smtp.crapouillou.net>
-References: <20170702163016.6714-2-paul@crapouillou.net>
-        <20171228135634.30000-1-paul@crapouillou.net>
-        <20171228135634.30000-7-paul@crapouillou.net>
-        <CAOFm3uEbEx+HTsOANchqiReuDBa96O0Y-V-igLGWPF-OxQ2jtw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <CAOFm3uEbEx+HTsOANchqiReuDBa96O0Y-V-igLGWPF-OxQ2jtw@mail.gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Philippe Ombredanne <pombredanne@nexb.com>
-Cc: Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, Maarten ter Huurne <maarten@treewalker.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Linux MIPS <linux-mips@linux-mips.org>, linux-clk@vger.kernel.org
+From: Aleksandar Markovic <aleksandar.markovic-FblTVreYubkAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v12 1/3] Documentation: Add device tree binding for Goldfish PIC driver
+Date: Fri, 29 Dec 2017 16:41:45 +0100
+Message-ID: <1514562138-13774-2-git-send-email-aleksandar.markovic@rt-rk.com>
+References: <1514562138-13774-1-git-send-email-aleksandar.markovic@rt-rk.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1514562138-13774-1-git-send-email-aleksandar.markovic-FblTVreYubkAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+Cc: Miodrag Dinic <miodrag.dinic-8NJIiSa5LzA@public.gmane.org>, Goran Ferenc <goran.ferenc-8NJIiSa5LzA@public.gmane.org>, Aleksandar Markovic <aleksandar.markovic-8NJIiSa5LzA@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Douglas Leung <douglas.leung-8NJIiSa5LzA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, James Hogan <james.hogan-8NJIiSa5LzA@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Paul Burton <paul.burton-8NJIiSa5LzA@public.gmane.org>, Petar Jovanovic <petar.jovanovic-8NJIiSa5LzA@public.gmane.org>, Raghu Gandham <raghu.gandham-8NJIiSa5LzA@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+From: Miodrag Dinic <miodrag.dinic-8NJIiSa5LzA@public.gmane.org>
 
-Dear Mr. Ombredanne,
+Add documentation for DT binding of Goldfish PIC driver. The compatible
+string used by OS for binding the driver is "google,goldfish-pic".
 
-Le ven. 29 d=E9c. 2017 =E0 13:55, Philippe Ombredanne=20
-<pombredanne@nexb.com> a =E9crit :
-> Dear Mr Crapouillou-Cercueil-Sir,
->=20
-> On Thu, Dec 28, 2017 at 2:56 PM, Paul Cercueil <paul@crapouillou.net>=20
-> wrote:
->>  Add support for the clocks provided by the CGU in the Ingenic JZ4770
->>  SoC.
->=20
-> <snip>
->=20
->>  --- /dev/null
->>  +++ b/drivers/clk/ingenic/jz4770-cgu.c
->>  @@ -0,0 +1,487 @@
->>  +/*
->>  + * JZ4770 SoC CGU driver
->>  + *
->>  + * Copyright 2017, Paul Cercueil <paul@crapouillou.net>
->>  + *
->>  + * This program is free software; you can redistribute it and/or=20
->> modify
->>  + * it under the terms of the GNU General Public License version 2=20
->> or later
->>  + * as published by the Free Software Foundation.
->>  + */
->=20
-> Do you mind using a simpler one-line SPDX identifier instead of this
-> fine but clearly crapouillish legalese boilerplate? Unless you are
-> trying to turn the kernel in a legal compendium, of course ;)
->=20
-> This is documented in Thomas doc patches. This would apply to your
-> entire patch set.
-> Thank you for your kind consideration!
+Signed-off-by: Miodrag Dinic <miodrag.dinic-8NJIiSa5LzA@public.gmane.org>
+Signed-off-by: Goran Ferenc <goran.ferenc-8NJIiSa5LzA@public.gmane.org>
+Signed-off-by: Aleksandar Markovic <aleksandar.markovic-8NJIiSa5LzA@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+ .../interrupt-controller/google,goldfish-pic.txt   | 30 ++++++++++++++++++++++
+ MAINTAINERS                                        |  5 ++++
+ 2 files changed, 35 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/google,goldfish-pic.txt
 
-Sure, I wasn't aware about that new SPDX identifier thing. I'll do it=20
-in V5.
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/google,goldfish-pic.txt b/Documentation/devicetree/bindings/interrupt-controller/google,goldfish-pic.txt
+new file mode 100644
+index 0000000..35f7527
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/google,goldfish-pic.txt
+@@ -0,0 +1,30 @@
++Android Goldfish PIC
++
++Android Goldfish programmable interrupt device used by Android
++emulator.
++
++Required properties:
++
++- compatible : should contain "google,goldfish-pic"
++- reg        : <registers mapping>
++- interrupts : <interrupt mapping>
++
++Example for mips when used in cascade mode:
++
++        cpuintc {
++                #interrupt-cells = <0x1>;
++                #address-cells = <0>;
++                interrupt-controller;
++                compatible = "mti,cpu-interrupt-controller";
++        };
++
++        interrupt-controller@1f000000 {
++                compatible = "google,goldfish-pic";
++                reg = <0x1f000000 0x1000>;
++
++                interrupt-controller;
++                #interrupt-cells = <0x1>;
++
++                interrupt-parent = <&cpuintc>;
++                interrupts = <0x2>;
++        };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index a6e86e2..7152b90 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -867,6 +867,11 @@ S:	Supported
+ F:	drivers/android/
+ F:	drivers/staging/android/
+ 
++ANDROID GOLDFISH PIC DRIVER
++M:	Miodrag Dinic <miodrag.dinic-8NJIiSa5LzA@public.gmane.org>
++S:	Supported
++F:	Documentation/devicetree/bindings/interrupt-controller/google,goldfish-pic.txt
++
+ ANDROID GOLDFISH RTC DRIVER
+ M:	Miodrag Dinic <miodrag.dinic-8NJIiSa5LzA@public.gmane.org>
+ S:	Supported
+-- 
+2.7.4
 
-Regards,
--Paul
-=
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
