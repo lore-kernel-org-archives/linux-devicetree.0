@@ -1,51 +1,32 @@
-From: Philippe Ombredanne <pombredanne@nexb.com>
-Subject: Re: [PATCH v2 1/5] ARM: sun9i: Support SMP on A80 with Multi-Cluster
- Power Management (MCPM)
-Date: Fri, 29 Dec 2017 14:47:19 +0100
-Message-ID: <CAOFm3uHmvHfGyd++8y6XnOQWMOA_jm5ur5WvPNdUF8SCzLr8dA@mail.gmail.com>
-References: <20171229105506.24851-1-mylene.josserand@free-electrons.com> <20171229105506.24851-2-mylene.josserand@free-electrons.com>
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH 4/6] clk: ingenic: Add JZ47xx TCU clocks driver
+Date: Fri, 29 Dec 2017 15:02:50 +0100
+Message-ID: <1514556170.2198.0@smtp.crapouillou.net>
+References: <20171229125942.27305-1-paul@crapouillou.net>
+        <20171229125942.27305-5-paul@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171229105506.24851-2-mylene.josserand@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Myl=C3=A8ne_Josserand?= <mylene.josserand@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, clabbe.montjoie@gmail.com, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, quentin.schulz@free-electrons.com
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20171229125942.27305-5-paul@crapouillou.net>
+Sender: linux-clk-owner@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Lee Jones <lee.jones@linaro.org>
+Cc: linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Myl=C3=A8ne, Chen-Yu,
 
-On Fri, Dec 29, 2017 at 11:55 AM, Myl=C3=A8ne Josserand
-<mylene.josserand@free-electrons.com> wrote:
-> From: Chen-Yu Tsai <wens@csie.org>
->
-> The A80 is a big.LITTLE SoC with 1 cluster of 4 Cortex-A7s and
-> 1 cluster of 4 Cortex-A15s.
+[...]
 
-<snip>
+> +	tcu->clocks.clk_num = nb_clks;
+> +	tcu->clocks.clks = kcalloc(nb_clocks, sizeof(struct clk *), 
+> GFP_KERNEL);
+> +	if (!tcu->clocks.clks) {
+> +		pr_err("%s: cannot allocate memory\n", __func__);
+> +		goto err_free_tcu;
+> +	}
 
-> --- /dev/null
-> +++ b/arch/arm/mach-sunxi/mcpm.c
-> @@ -0,0 +1,391 @@
-> +/*
-> + * Copyright (c) 2015 Chen-Yu Tsai
-> + *
-> + * Chen-Yu Tsai <wens@csie.org>
-> + *
-> + * arch/arm/mach-sunxi/mcpm.c
-> + *
-> + * Based on arch/arm/mach-exynos/mcpm-exynos.c and Allwinner code
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
+Facepalm. A quick edit from kzalloc to kcalloc and I managed to break 
+it.
+It should be nb_clks not nb_clocks. I'll fix that in the V2.
 
-Would you mind using a concise SPDX tag instead, as documented by
-Thomas doc patches?
+-Paul
 
-Thank you for your kind consideration!
---=20
-Cordially
-Philippe Ombredanne
