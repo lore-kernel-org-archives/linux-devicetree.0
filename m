@@ -1,60 +1,87 @@
 From: Mylene JOSSERAND <mylene.josserand-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 0/4] Sunxi: Add SMP support on A83T
-Date: Fri, 29 Dec 2017 12:04:24 +0100
-Message-ID: <20171229120424.01adcc37@dell-desktop.home>
-References: <20171211075001.6100-1-mylene.josserand@free-electrons.com>
-        <20171211193534.GA3967@Red>
-        <20171212082425.iv37nrpotbb33vh6@flea.lan>
-        <20171215061046.GA9845@Red>
-        <20171227160729.4509bec5@dell-desktop.home>
-        <20171228203125.GB18393@Red>
+Subject: Re: [PATCH v2 0/5] Sunxi: Add SMP support on A83T
+Date: Fri, 29 Dec 2017 12:24:17 +0100
+Message-ID: <20171229122417.27c74c3f@dell-desktop.home>
+References: <20171229105506.24851-1-mylene.josserand@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171228203125.GB18393@Red>
+In-Reply-To: <20171229105506.24851-1-mylene.josserand-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Corentin,
+Hello,
 
-Le Thu, 28 Dec 2017 21:31:25 +0100,
-Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> a écrit :
+Le Fri, 29 Dec 2017 11:55:01 +0100,
+Mylène Josserand <mylene.josserand-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> a écrit :
 
-[...]
-
-> Hello
+> Hello everyone,
 > 
-> With the .config that you give me in private, everything seems to work.
-> But with mine, the stacktrace still happen.
-> After some research, this is due to the following code:
-> cpumask_set_cpu(get_cpu(), &cci_pmu->cpus);
-> which disable preemption (via get_cpu())
+> This is a V2 of my series that adds SMP support for Allwinner sun8i-a83t
+> with MCPM (Multi-Cluster Power Management).
+> Based on last linux-next (next-20171222).
 > 
-> So it is unrelated with your patch, I will send a bug report tomorow.
-
-Okay, great to know that it is not related to my patches.
-
+> Changes since v1:
+>     - Add Chen Yu's patch in my series (see path 01)
+>     - Add new compatibles for prcm and cpucfg registers for sun8i-a83t.
+>     Create two functions to separate the DT parsing of sun9i-a80 and
+>     sun8i-a83t.
+>     - Thanks to Maxime's review: order device tree's nodes according
+>     to physical addresses, remove unused label and fix registers' sizes.
+>     Update the commit log and commit title of my last patch (see
+>     patch 05).
 > 
-> Furthermore, you can add:
-> Tested-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Patch 01: Patch from Chen Yu Tsai that adds SMP support on A80
+> with MCPM
+> Patch 02: Convert the MCPM driver to use it for A83T. This SoC has a
+> bit flip that needs to be handled.
+> Patch 03: Add registers nodes (prcm, cpucfg and r_cpucfg) needed
+> for MCPM.
+> Patch 04: Add CCI-400 node for a83t.
+> Patch 05: Fix the use of virtual timers that hangs the kernel in
+> case of SMP support.
+> 
+> If you have any remarks/questions, let me know.
+> Thank you in advance,
+> Mylène
+> 
+> Chen-Yu Tsai (1):
+>   ARM: sun9i: Support SMP on A80 with Multi-Cluster Power Management
+>     (MCPM)
 
-Thanks, I have just sent a V2. I did not add your tested-by because
-I have done some modifications. Could you test this new series and give
-me your tested-by again? It would be great!
+Oops, I noticed that Chen Yu sent a new version of his patches on
+July 2017:
 
-Thank you in advance,
+https://patchwork.kernel.org/patch/9861179/
+https://patchwork.kernel.org/patch/9861175/
+https://patchwork.kernel.org/patch/9861173/
+https://patchwork.kernel.org/patch/9861177/
 
-Best regards,
+I will send a V3 using this series instead of the old RFC one:
+https://patchwork.kernel.org/patch/6402801/
+
+Sorry about the noise.
 
 Mylène
 
--- 
-Mylène Josserand, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+> 
+> Mylène Josserand (4):
+>   ARM: sunxi: mcpm: Add support for A83T
+>   arm: dts: sun8i: a83t: Add registers needed for MCPM
+>   arm: dts: sun8i: a83t: Add CCI-400 node
+>   arm: dts: sun8i: a83t: Fix undefined offset with virtual timer
+> 
+>  arch/arm/boot/dts/sun8i-a83t.dtsi |  57 +++++
+>  arch/arm/mach-sunxi/Kconfig       |  11 +
+>  arch/arm/mach-sunxi/Makefile      |   1 +
+>  arch/arm/mach-sunxi/mcpm.c        | 513 ++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 582 insertions(+)
+>  create mode 100644 arch/arm/mach-sunxi/mcpm.c
+> 
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
