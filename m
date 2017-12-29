@@ -1,33 +1,83 @@
-From: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
-Subject: [PATCH 0/6] Ingenic JZ47xx TCU drivers
-Date: Fri, 29 Dec 2017 13:59:36 +0100
-Message-ID: <20171229125942.27305-1-paul@crapouillou.net>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH 1/6] mfd: syscon: Add ingenic-tcu.h header
+Date: Fri, 29 Dec 2017 13:59:37 +0100
+Message-ID: <20171229125942.27305-2-paul@crapouillou.net>
+References: <20171229125942.27305-1-paul@crapouillou.net>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171229125942.27305-1-paul@crapouillou.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Lee Jones <lee.jones@linaro.org>
+Cc: linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+This header contains macros for the registers that are present in the
+regmap shared by all the drivers related to the TCU (Timer Counter Unit)
+of the Ingenic JZ47xx SoCs.
 
-This patch set introduces three new drivers, which together control the
-TCU (Timer/Counter Unit) of Ingenic JZ47xx SoCs.
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+---
+ include/linux/mfd/syscon/ingenic-tcu.h | 53 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 53 insertions(+)
+ create mode 100644 include/linux/mfd/syscon/ingenic-tcu.h
 
-The ingenic-tcu-intc driver will demultiplex the TCU IRQ interrupts; the 
-ingenic-tcu-clocks driver will handle the TCU clocks (enable/disable,
-reparenting, reclocking); and the ingenic-tcu driver provides a
-clocksource and timers to the system.
-
-The purpose of this patch series is to eventually completely remove the
-non-standard platform and board code that handles timers for the Ingenic
-SoCs. Before this can be achieved, the watchdog and PWM drivers (already
-upstream) will be modified to use the same regmap as the rest of the TCU
-drivers.
-
-Thanks,
--Paul
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/include/linux/mfd/syscon/ingenic-tcu.h b/include/linux/mfd/syscon/ingenic-tcu.h
+new file mode 100644
+index 000000000000..5952fdd60005
+--- /dev/null
++++ b/include/linux/mfd/syscon/ingenic-tcu.h
+@@ -0,0 +1,53 @@
++#ifndef __LINUX_CLK_INGENIC_TCU_H_
++#define __LINUX_CLK_INGENIC_TCU_H_
++
++#include <linux/bitops.h>
++#include <linux/regmap.h>
++
++enum ingenic_tcu_reg {
++	REG_WDT_TDR	= 0x00,
++	REG_WDT_TCER	= 0x04,
++	REG_WDT_TCNT	= 0x08,
++	REG_WDT_TCSR	= 0x0c,
++	REG_TER		= 0x10,
++	REG_TESR	= 0x14,
++	REG_TECR	= 0x18,
++	REG_TSR		= 0x1c,
++	REG_TFR		= 0x20,
++	REG_TFSR	= 0x24,
++	REG_TFCR	= 0x28,
++	REG_TSSR	= 0x2c,
++	REG_TMR		= 0x30,
++	REG_TMSR	= 0x34,
++	REG_TMCR	= 0x38,
++	REG_TSCR	= 0x3c,
++	REG_TDFR0	= 0x40,
++	REG_TDHR0	= 0x44,
++	REG_TCNT0	= 0x48,
++	REG_TCSR0	= 0x4c,
++	REG_OST_DR	= 0xe0,
++	REG_OST_CNTL	= 0xe4,
++	REG_OST_CNTH	= 0xe8,
++	REG_OST_TCSR	= 0xec,
++	REG_TSTR	= 0xf0,
++	REG_TSTSR	= 0xf4,
++	REG_TSTCR	= 0xf8,
++	REG_OST_CNTHBUF	= 0xfc,
++};
++
++#define TCSR_RESERVED_BITS		0x3f
++#define TCSR_PARENT_CLOCK_MASK		0x07
++#define TCSR_PRESCALE_LSB		3
++#define TCSR_PRESCALE_MASK		0x38
++
++#define TCSR_PWM_SD		BIT(9)  /* 0: Shutdown abruptly 1: gracefully */
++#define TCSR_PWM_INITL_HIGH	BIT(8)  /* Sets the initial output level */
++#define TCSR_PWM_EN		BIT(7)  /* PWM pin output enable */
++
++#define CHANNEL_STRIDE		0x10
++#define REG_TDFRc(c)		(REG_TDFR0 + ((c) * CHANNEL_STRIDE))
++#define REG_TDHRc(c)		(REG_TDHR0 + ((c) * CHANNEL_STRIDE))
++#define REG_TCNTc(c)		(REG_TCNT0 + ((c) * CHANNEL_STRIDE))
++#define REG_TCSRc(c)		(REG_TCSR0 + ((c) * CHANNEL_STRIDE))
++
++#endif /* __LINUX_CLK_INGENIC_TCU_H_ */
+-- 
+2.11.0
