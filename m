@@ -1,296 +1,122 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 7/9] PCI: endpoint: Add the function number as argument
- to EPC ops
-Date: Fri, 29 Dec 2017 14:53:37 +0530
-Message-ID: <ca8f5a74-3db5-87f4-3af5-ed5ee0d3b634@ti.com>
-References: <cover.1513620412.git.cyrille.pitchen@free-electrons.com>
- <425171aaba3a9e8ea68b9e94f37b1c97e8cf9861.1513620412.git.cyrille.pitchen@free-electrons.com>
+From: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 1/3] mtd: spi-nor: add optional DMA-safe bounce buffer for
+ data transfer
+Date: Fri, 29 Dec 2017 15:46:29 +0530
+Message-ID: <08be8b42-732a-bf28-40c4-f46bf9d71c80@ti.com>
+References: <cover.1514087323.git.cyrille.pitchen@wedev4u.fr>
+ <fc2440c6f52877f28286d89691049e5cba10e6a7.1514087323.git.cyrille.pitchen@wedev4u.fr>
+ <1514317385.26695.39.camel@impinj.com>
+ <1a7dc424-1ce0-6c64-fc52-bb88ec7db8fa@wedev4u.fr>
+ <1514487276.26695.94.camel@impinj.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <425171aaba3a9e8ea68b9e94f37b1c97e8cf9861.1513620412.git.cyrille.pitchen-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <1514487276.26695.94.camel-cgc2CodaaHDQT0dZR+AlfA@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Cyrille Pitchen <cyrille.pitchen-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, stelford-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, dgary-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, kgopi-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, eandrews-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, sureshp-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Trent Piepho <tpiepho-cgc2CodaaHDQT0dZR+AlfA@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org" <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org" <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "richard-/L3Ra7n9ekc@public.gmane.org" <richard-/L3Ra7n9ekc@public.gmane.org>, "marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org" <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, "radu.pirea-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org" <radu.pirea-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, "robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On Monday 18 December 2017 11:46 PM, Cyrille Pitchen wrote:
-> This patch updates the prototype of most handlers from 'struct
-> pci_epc_ops' so the EPC library can now support multi-function devices.
+
+On Friday 29 December 2017 12:24 AM, Trent Piepho wrote:
+> On Thu, 2017-12-28 at 11:39 +0100, Cyrille Pitchen wrote:
+>> Le 26/12/2017 à 20:43, Trent Piepho a écrit :
+>> > On Sun, 2017-12-24 at 05:36 +0100, Cyrille Pitchen wrote:
+>> > > 
+>> > > Then the patch adds two hardware capabilities for SPI flash controllers,
+>> > > SNOR_HWCAPS_WR_BOUNCE and SNOR_HWCAPS_RD_BOUNCE.
+>> > 
+>> > Are there any drivers for which a bounce buffer is NOT needed when the
+>> > tx/rx buffer is not in DMA safe memory?  Maybe it would make more sense
+>> > to invert the sense of these flags, so that they indicate the driver
+>> > does not need DMA safe buffers, if that is the uncommon/non-existent
+>> > case, so that fewer drivers need to be modified to to be fixed?
+>> > 
+>> 
+>> It doesn't sound safe for a first step. I don't know if some of the
+>> spi-flash controllers are embedded inside systems with small memory and
+>> don't care about DMA transfers. Maybe they don't plan to use anything else
+>> but PIO transfers. Then why taking the risk to exhaust the memory on systems
+>> that would not use the bounce buffer anyway?
 > 
-> Signed-off-by: Cyrille Pitchen <cyrille.pitchen-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
->  drivers/pci/dwc/pcie-designware-ep.c          | 20 +++++----
->  drivers/pci/endpoint/functions/pci-epf-test.c | 41 ++++++++++--------
->  drivers/pci/endpoint/pci-epc-core.c           | 62 ++++++++++++++++-----------
->  include/linux/pci-epc.h                       | 43 +++++++++++--------
->  4 files changed, 96 insertions(+), 70 deletions(-)
+> This would certainly be the case when the driver does not even support
+> DMA in the first place.
 > 
-> diff --git a/drivers/pci/dwc/pcie-designware-ep.c b/drivers/pci/dwc/pcie-designware-ep.c
-> index d53d5f168363..7a573d8bb62d 100644
-> --- a/drivers/pci/dwc/pcie-designware-ep.c
-> +++ b/drivers/pci/dwc/pcie-designware-ep.c
-> @@ -39,7 +39,7 @@ static void dw_pcie_ep_reset_bar(struct dw_pcie *pci, enum pci_barno bar)
->  	dw_pcie_writel_dbi(pci, reg, 0x0);
->  }
->  
-> -static int dw_pcie_ep_write_header(struct pci_epc *epc,
-> +static int dw_pcie_ep_write_header(struct pci_epc *epc, u8 func_no,
->  				   struct pci_epf_header *hdr)
->  {
->  	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
-> @@ -112,7 +112,8 @@ static int dw_pcie_ep_outbound_atu(struct dw_pcie_ep *ep, phys_addr_t phys_addr,
->  	return 0;
->  }
->  
-> -static void dw_pcie_ep_clear_bar(struct pci_epc *epc, enum pci_barno bar)
-> +static void dw_pcie_ep_clear_bar(struct pci_epc *epc, u8 func_no,
-> +				 enum pci_barno bar)
->  {
->  	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
->  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> @@ -124,7 +125,8 @@ static void dw_pcie_ep_clear_bar(struct pci_epc *epc, enum pci_barno bar)
->  	clear_bit(atu_index, &ep->ib_window_map);
->  }
->  
-> -static int dw_pcie_ep_set_bar(struct pci_epc *epc, enum pci_barno bar,
-> +static int dw_pcie_ep_set_bar(struct pci_epc *epc, u8 func_no,
-> +			      enum pci_barno bar,
->  			      dma_addr_t bar_phys, size_t size, int flags)
->  {
->  	int ret;
-> @@ -163,7 +165,8 @@ static int dw_pcie_find_index(struct dw_pcie_ep *ep, phys_addr_t addr,
->  	return -EINVAL;
->  }
->  
-> -static void dw_pcie_ep_unmap_addr(struct pci_epc *epc, phys_addr_t addr)
-> +static void dw_pcie_ep_unmap_addr(struct pci_epc *epc, u8 func_no,
-> +				  phys_addr_t addr)
->  {
->  	int ret;
->  	u32 atu_index;
-> @@ -178,7 +181,8 @@ static void dw_pcie_ep_unmap_addr(struct pci_epc *epc, phys_addr_t addr)
->  	clear_bit(atu_index, &ep->ob_window_map);
->  }
->  
-> -static int dw_pcie_ep_map_addr(struct pci_epc *epc, phys_addr_t addr,
-> +static int dw_pcie_ep_map_addr(struct pci_epc *epc, u8 func_no,
-> +			       phys_addr_t addr,
->  			       u64 pci_addr, size_t size)
->  {
->  	int ret;
-> @@ -194,7 +198,7 @@ static int dw_pcie_ep_map_addr(struct pci_epc *epc, phys_addr_t addr,
->  	return 0;
->  }
->  
-> -static int dw_pcie_ep_get_msi(struct pci_epc *epc)
-> +static int dw_pcie_ep_get_msi(struct pci_epc *epc, u8 func_no)
->  {
->  	int val;
->  	u32 lower_addr;
-> @@ -214,7 +218,7 @@ static int dw_pcie_ep_get_msi(struct pci_epc *epc)
->  	return val;
->  }
->  
-> -static int dw_pcie_ep_set_msi(struct pci_epc *epc, u8 encode_int)
-> +static int dw_pcie_ep_set_msi(struct pci_epc *epc, u8 func_no, u8 encode_int)
->  {
->  	int val;
->  	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
-> @@ -226,7 +230,7 @@ static int dw_pcie_ep_set_msi(struct pci_epc *epc, u8 encode_int)
->  	return 0;
->  }
->  
-> -static int dw_pcie_ep_raise_irq(struct pci_epc *epc,
-> +static int dw_pcie_ep_raise_irq(struct pci_epc *epc, u8 func_no,
->  				enum pci_epc_irq_type type, u8 interrupt_num)
->  {
->  	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
-> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-> index f9308c2f22e6..7bacca8daec6 100644
-> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
-> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-> @@ -104,7 +104,8 @@ static int pci_epf_test_copy(struct pci_epf_test *epf_test)
->  		goto err;
->  	}
->  
-> -	ret = pci_epc_map_addr(epc, src_phys_addr, reg->src_addr, reg->size);
-> +	ret = pci_epc_map_addr(epc, epf->func_no, src_phys_addr, reg->src_addr,
-> +			       reg->size);
->  	if (ret) {
->  		dev_err(dev, "failed to map source address\n");
->  		reg->status = STATUS_SRC_ADDR_INVALID;
-> @@ -119,7 +120,8 @@ static int pci_epf_test_copy(struct pci_epf_test *epf_test)
->  		goto err_src_map_addr;
->  	}
->  
-> -	ret = pci_epc_map_addr(epc, dst_phys_addr, reg->dst_addr, reg->size);
-> +	ret = pci_epc_map_addr(epc, epf->func_no, dst_phys_addr, reg->dst_addr,
-> +			       reg->size);
->  	if (ret) {
->  		dev_err(dev, "failed to map destination address\n");
->  		reg->status = STATUS_DST_ADDR_INVALID;
-> @@ -128,13 +130,13 @@ static int pci_epf_test_copy(struct pci_epf_test *epf_test)
->  
->  	memcpy(dst_addr, src_addr, reg->size);
->  
-> -	pci_epc_unmap_addr(epc, dst_phys_addr);
-> +	pci_epc_unmap_addr(epc, epf->func_no, dst_phys_addr);
->  
->  err_dst_addr:
->  	pci_epc_mem_free_addr(epc, dst_phys_addr, dst_addr, reg->size);
->  
->  err_src_map_addr:
-> -	pci_epc_unmap_addr(epc, src_phys_addr);
-> +	pci_epc_unmap_addr(epc, epf->func_no, src_phys_addr);
->  
->  err_src_addr:
->  	pci_epc_mem_free_addr(epc, src_phys_addr, src_addr, reg->size);
-> @@ -164,7 +166,8 @@ static int pci_epf_test_read(struct pci_epf_test *epf_test)
->  		goto err;
->  	}
->  
-> -	ret = pci_epc_map_addr(epc, phys_addr, reg->src_addr, reg->size);
-> +	ret = pci_epc_map_addr(epc, epf->func_no, phys_addr, reg->src_addr,
-> +			       reg->size);
->  	if (ret) {
->  		dev_err(dev, "failed to map address\n");
->  		reg->status = STATUS_SRC_ADDR_INVALID;
-> @@ -186,7 +189,7 @@ static int pci_epf_test_read(struct pci_epf_test *epf_test)
->  	kfree(buf);
->  
->  err_map_addr:
-> -	pci_epc_unmap_addr(epc, phys_addr);
-> +	pci_epc_unmap_addr(epc, epf->func_no, phys_addr);
->  
->  err_addr:
->  	pci_epc_mem_free_addr(epc, phys_addr, src_addr, reg->size);
-> @@ -215,7 +218,8 @@ static int pci_epf_test_write(struct pci_epf_test *epf_test)
->  		goto err;
->  	}
->  
-> -	ret = pci_epc_map_addr(epc, phys_addr, reg->dst_addr, reg->size);
-> +	ret = pci_epc_map_addr(epc, epf->func_no, phys_addr, reg->dst_addr,
-> +			       reg->size);
->  	if (ret) {
->  		dev_err(dev, "failed to map address\n");
->  		reg->status = STATUS_DST_ADDR_INVALID;
-> @@ -242,7 +246,7 @@ static int pci_epf_test_write(struct pci_epf_test *epf_test)
->  	kfree(buf);
->  
->  err_map_addr:
-> -	pci_epc_unmap_addr(epc, phys_addr);
-> +	pci_epc_unmap_addr(epc, epf->func_no, phys_addr);
->  
->  err_addr:
->  	pci_epc_mem_free_addr(epc, phys_addr, dst_addr, reg->size);
-> @@ -260,11 +264,11 @@ static void pci_epf_test_raise_irq(struct pci_epf_test *epf_test, u8 irq)
->  	struct pci_epf_test_reg *reg = epf_test->reg[test_reg_bar];
->  
->  	reg->status |= STATUS_IRQ_RAISED;
-> -	msi_count = pci_epc_get_msi(epc);
-> +	msi_count = pci_epc_get_msi(epc, epf->func_no);
->  	if (irq > msi_count || msi_count <= 0)
-> -		pci_epc_raise_irq(epc, PCI_EPC_IRQ_LEGACY, 0);
-> +		pci_epc_raise_irq(epc, epf->func_no, PCI_EPC_IRQ_LEGACY, 0);
->  	else
-> -		pci_epc_raise_irq(epc, PCI_EPC_IRQ_MSI, irq);
-> +		pci_epc_raise_irq(epc, epf->func_no, PCI_EPC_IRQ_MSI, irq);
->  }
->  
->  static void pci_epf_test_cmd_handler(struct work_struct *work)
-> @@ -291,7 +295,7 @@ static void pci_epf_test_cmd_handler(struct work_struct *work)
->  
->  	if (command & COMMAND_RAISE_LEGACY_IRQ) {
->  		reg->status = STATUS_IRQ_RAISED;
-> -		pci_epc_raise_irq(epc, PCI_EPC_IRQ_LEGACY, 0);
-> +		pci_epc_raise_irq(epc, epf->func_no, PCI_EPC_IRQ_LEGACY, 0);
->  		goto reset_handler;
->  	}
->  
-> @@ -326,11 +330,11 @@ static void pci_epf_test_cmd_handler(struct work_struct *work)
->  	}
->  
->  	if (command & COMMAND_RAISE_MSI_IRQ) {
-> -		msi_count = pci_epc_get_msi(epc);
-> +		msi_count = pci_epc_get_msi(epc, epf->func_no);
->  		if (irq > msi_count || msi_count <= 0)
->  			goto reset_handler;
->  		reg->status = STATUS_IRQ_RAISED;
-> -		pci_epc_raise_irq(epc, PCI_EPC_IRQ_MSI, irq);
-> +		pci_epc_raise_irq(epc, epf->func_no, PCI_EPC_IRQ_MSI, irq);
->  		goto reset_handler;
->  	}
->  
-> @@ -358,7 +362,7 @@ static void pci_epf_test_unbind(struct pci_epf *epf)
->  	for (bar = BAR_0; bar <= BAR_5; bar++) {
->  		if (epf_test->reg[bar]) {
->  			pci_epf_free_space(epf, epf_test->reg[bar], bar);
-> -			pci_epc_clear_bar(epc, bar);
-> +			pci_epc_clear_bar(epc, epf->func_no, bar);
->  		}
->  	}
->  }
-> @@ -380,7 +384,8 @@ static int pci_epf_test_set_bar(struct pci_epf *epf)
->  
->  	for (bar = BAR_0; bar <= BAR_5; bar++) {
->  		epf_bar = &epf->bar[bar];
-> -		ret = pci_epc_set_bar(epc, bar, epf_bar->phys_addr,
-> +		ret = pci_epc_set_bar(epc, epf->func_no, bar,
-> +				      epf_bar->phys_addr,
->  				      epf_bar->size, flags);
->  		if (ret) {
->  			pci_epf_free_space(epf, epf_test->reg[bar], bar);
-> @@ -433,7 +438,7 @@ static int pci_epf_test_bind(struct pci_epf *epf)
->  	if (WARN_ON_ONCE(!epc))
->  		return -EINVAL;
->  
-> -	ret = pci_epc_write_header(epc, header);
-> +	ret = pci_epc_write_header(epc, epf->func_no, header);
->  	if (ret) {
->  		dev_err(dev, "configuration header write failed\n");
->  		return ret;
-> @@ -447,7 +452,7 @@ static int pci_epf_test_bind(struct pci_epf *epf)
->  	if (ret)
->  		return ret;
->  
-> -	ret = pci_epc_set_msi(epc, epf->msi_interrupts);
-> +	ret = pci_epc_set_msi(epc, epf->func_no, epf->msi_interrupts);
->  	if (ret)
->  		return ret;
->  
-> diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
-> index cd7d4788b94d..77420364a728 100644
-> --- a/drivers/pci/endpoint/pci-epc-core.c
-> +++ b/drivers/pci/endpoint/pci-epc-core.c
-> @@ -141,25 +141,26 @@ EXPORT_SYMBOL_GPL(pci_epc_start);
->  /**
->   * pci_epc_raise_irq() - interrupt the host system
->   * @epc: the EPC device which has to interrupt the host
-> + * @func_no: the endpoint function number in the EPC device
->   * @type: specify the type of interrupt; legacy or MSI
->   * @interrupt_num: the MSI interrupt number
->   *
->   * Invoke to raise an MSI or legacy interrupt
->   */
-> -int pci_epc_raise_irq(struct pci_epc *epc, enum pci_epc_irq_type type,
-> -		      u8 interrupt_num)
-> +int pci_epc_raise_irq(struct pci_epc *epc, u8 func_no,
-> +		      enum pci_epc_irq_type type, u8 interrupt_num)
->  {
->  	int ret;
->  	unsigned long flags;
->  
-> -	if (IS_ERR(epc))
-> +	if (IS_ERR(epc) || func_no > BAR_5)
+> This also makes me wonder, how inefficient does this become when it
+> uses a bounce buffer for small transfer that would not use DMA anyway?
+>  In the spi_flash_read() interface for spi masters, there is a master
+> method spi_flash_can_dma() callback used by the spi core to tell if
+> each transfer can be DMAed.
+> 
+> Should something like that be used here, to ask the master if it would
+> use dma on the buffer?
+> 
+> This might also prevent allocation of the bounce buffer if the only DMA
+> unsafe transfers are tiny control ops with stack variables that
+> wouldn't use DMA, e.g. the stuff spi_nor_read_sfdp_dma_unsafe() does.
+> 
+> 
+>> About the memory loss when forcing the SNOR_HWCAPS_*_BOUNCE in m25p80.c, I
+>> justify it because the m25p80 has to be compliant with the SPI sub-system
+>> requirements but currently is not. However I've taken care not to allocate
+>> the bounce buffer as long as we use only DMA-safe buffers.
+> 
+> Another possibility to reduce memory usage: make the buffer smaller
+> when first allocated by being just enough for the needed space.  Grow
+> it (by powers of two?) until it reaches the max allowed size.  No
+> reason to use a 256 kB buffer if DMA unsafe operations never get that
+> big.
+> 
+> 
+>> Here at the MTD side, the main (only ?) source of DMA-unsafe buffers is
+>> the UBIFS (JFFS2 too ?) layer. Then I've assumed that systems using such a
+>> file-system should already have enough system memory.
+> 
+> I saw a note in one of the existing DMA fixes that JFFS2 was the source
+> of the unsafe buffers, so probably there too.
+> 
+> 
+>> 
+>> Vignesh has suggested to call virt_addr_valid() instead.
+>> I think Boris has also told me about this function.
+>> So it might be the right solution. What do you think about their proposal?
+> 
+> Not sure what exactly the differences are between these methods.  The
+> fact that each of the many existing DMA fixes uses slightly different
+> code to detect what is unsafe speaks to the difficulty of this problem!
 
-why is function number compared with BAR? here and everywhere below..
+My understanding based on Documentation/DMA-API-HOWTO.txt and
+Documentation/arm/memory.txt is that
+virt_addr_valid() will guarantee that address is in range of
+PAGE_OFFSET to high_memory-1 (Kernel direct-mapped RAM region) which is
+address range of buffers that are DMA'able.
 
-Thanks
-Kishon
+
+>  virt_addr_valid() is already used by spi-ti-qspi.  spi core uses for
+> the buffer map helper, but that code path is for buffers which are NOT
+> vmalloc or highmem, but are still not virt_addr_valid() for some other
+> reason.
+> 
+
+	if (vmalloced_buf || kmap_buf) {
+		/* Handle vmalloc'd or kmap'd buffers */
+		...
+        } else if (virt_addr_valid(buf)) {
+		/* Handle kmalloc'd and such buffers */
+                ...
+	} else {
+		/* Error if none of the above */
+		return -EINVAL;
+	}
+
+
+
+-- 
+Regards
+Vignesh
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
