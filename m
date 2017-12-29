@@ -1,74 +1,60 @@
-From: Philippe Ombredanne <pombredanne-od1rfyK75/E@public.gmane.org>
-Subject: Re: [PATCH v5 05/16] media: rkisp1: add Rockchip ISP1 subdev driver
-Date: Fri, 29 Dec 2017 13:45:47 +0100
-Message-ID: <CAOFm3uEEBvVKrR+HyCQ76gbVNz51Q343gm0JyfPgMxHFawR74w@mail.gmail.com>
-References: <1514533978-20408-1-git-send-email-zhengsq@rock-chips.com> <1514533978-20408-6-git-send-email-zhengsq@rock-chips.com>
+From: Philippe Ombredanne <pombredanne@nexb.com>
+Subject: Re: [PATCH v2 6/9] v4l: i2c: Copy ov772x soc_camera sensor driver
+Date: Fri, 29 Dec 2017 13:47:30 +0100
+Message-ID: <CAOFm3uEU1ZegJgjUYXVJCTLRROtJ_KJDgf1-KiHdoJSw-5zd3Q@mail.gmail.com>
+References: <1514469681-15602-1-git-send-email-jacopo+renesas@jmondi.org> <1514469681-15602-7-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1514533978-20408-6-git-send-email-zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, zyc-TNX95d0MmH7DzftRWevZcw@public.gmane.org, eddie.cai.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, allon.huang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Joao Pinto <Joa>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1514469681-15602-7-git-send-email-jacopo+renesas@jmondi.org>
+Sender: linux-media-owner@vger.kernel.org
+To: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Magnus Damm <magnus.damm@gmail.com>, geert@glider.be, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-renesas-soc@vger.kernel.org, Linux Media Mailing List <linux-media@vger.kernel.org>, linux-sh@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Shunqian,
+Jacopo,
 
-On Fri, Dec 29, 2017 at 8:52 AM, Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
-> From: Jacob Chen <jacob2.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+On Thu, Dec 28, 2017 at 3:01 PM, Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
+> Copy the soc_camera based driver in v4l2 sensor driver directory.
+> This commit just copies the original file without modifying it.
+> No modification to KConfig and Makefile as soc_camera framework
+> dependencies need to be removed first in next commit.
 >
-> Add the subdev driver for rockchip isp1.
-
-<snip>
-
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> ---
+>  drivers/media/i2c/ov772x.c | 1124 ++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 1124 insertions(+)
+>  create mode 100644 drivers/media/i2c/ov772x.c
+>
+> diff --git a/drivers/media/i2c/ov772x.c b/drivers/media/i2c/ov772x.c
+> new file mode 100644
+> index 0000000..8063835
 > --- /dev/null
-> +++ b/drivers/media/platform/rockchip/isp1/rkisp1.c
-> @@ -0,0 +1,1205 @@
+> +++ b/drivers/media/i2c/ov772x.c
+> @@ -0,0 +1,1124 @@
 > +/*
-> + * Rockchip isp1 driver
+> + * ov772x Camera Driver
 > + *
-> + * Copyright (C) 2017 Rockchip Electronics Co., Ltd.
+> + * Copyright (C) 2008 Renesas Solutions Corp.
+> + * Kuninori Morimoto <morimoto.kuninori@renesas.com>
 > + *
-> + * This software is available to you under a choice of one of two
-> + * licenses.  You may choose to be licensed under the terms of the GNU
-> + * General Public License (GPL) Version 2, available from the file
-> + * COPYING in the main directory of this source tree, or the
-> + * OpenIB.org BSD license below:
+> + * Based on ov7670 and soc_camera_platform driver,
 > + *
-> + *     Redistribution and use in source and binary forms, with or
-> + *     without modification, are permitted provided that the following
-> + *     conditions are met:
+> + * Copyright 2006-7 Jonathan Corbet <corbet@lwn.net>
+> + * Copyright (C) 2008 Magnus Damm
+> + * Copyright (C) 2008, Guennadi Liakhovetski <kernel@pengutronix.de>
 > + *
-> + *      - Redistributions of source code must retain the above
-> + *        copyright notice, this list of conditions and the following
-> + *        disclaimer.
-> + *
-> + *      - Redistributions in binary form must reproduce the above
-> + *        copyright notice, this list of conditions and the following
-> + *        disclaimer in the documentation and/or other materials
-> + *        provided with the distribution.
-> + *
-> + * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> + * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-> + * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-> + * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-> + * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-> + * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-> + * SOFTWARE.
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
 > + */
-
 
 Do you mind using a simpler SPDX identifier instead of this long
 legalese boilerplate?
 This is documented in Thomas doc patches. This applies to your entire
 patch set of course.
 Thanks!
-
 -- 
 Cordially
 Philippe Ombredanne
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
