@@ -1,60 +1,50 @@
-From: Philippe Ombredanne <pombredanne@nexb.com>
-Subject: Re: [PATCH v2 6/9] v4l: i2c: Copy ov772x soc_camera sensor driver
-Date: Fri, 29 Dec 2017 13:47:30 +0100
-Message-ID: <CAOFm3uEU1ZegJgjUYXVJCTLRROtJ_KJDgf1-KiHdoJSw-5zd3Q@mail.gmail.com>
-References: <1514469681-15602-1-git-send-email-jacopo+renesas@jmondi.org> <1514469681-15602-7-git-send-email-jacopo+renesas@jmondi.org>
+From: Philippe Ombredanne <pombredanne-od1rfyK75/E@public.gmane.org>
+Subject: Re: [PATCH v4 06/15] clk: Add Ingenic jz4770 CGU driver
+Date: Fri, 29 Dec 2017 13:55:12 +0100
+Message-ID: <CAOFm3uEbEx+HTsOANchqiReuDBa96O0Y-V-igLGWPF-OxQ2jtw@mail.gmail.com>
+References: <20170702163016.6714-2-paul@crapouillou.net> <20171228135634.30000-1-paul@crapouillou.net>
+ <20171228135634.30000-7-paul@crapouillou.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1514469681-15602-7-git-send-email-jacopo+renesas@jmondi.org>
-Sender: linux-media-owner@vger.kernel.org
-To: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Magnus Damm <magnus.damm@gmail.com>, geert@glider.be, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-renesas-soc@vger.kernel.org, Linux Media Mailing List <linux-media@vger.kernel.org>, linux-sh@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171228135634.30000-7-paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
+Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maarten ter Huurne <maarten-Ph2Y2OKCxY1M656bX5wj8A@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux MIPS <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Jacopo,
+Dear Mr Crapouillou-Cercueil-Sir,
 
-On Thu, Dec 28, 2017 at 3:01 PM, Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
-> Copy the soc_camera based driver in v4l2 sensor driver directory.
-> This commit just copies the original file without modifying it.
-> No modification to KConfig and Makefile as soc_camera framework
-> dependencies need to be removed first in next commit.
->
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> ---
->  drivers/media/i2c/ov772x.c | 1124 ++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 1124 insertions(+)
->  create mode 100644 drivers/media/i2c/ov772x.c
->
-> diff --git a/drivers/media/i2c/ov772x.c b/drivers/media/i2c/ov772x.c
-> new file mode 100644
-> index 0000000..8063835
+On Thu, Dec 28, 2017 at 2:56 PM, Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org> wrote:
+> Add support for the clocks provided by the CGU in the Ingenic JZ4770
+> SoC.
+
+<snip>
+
 > --- /dev/null
-> +++ b/drivers/media/i2c/ov772x.c
-> @@ -0,0 +1,1124 @@
+> +++ b/drivers/clk/ingenic/jz4770-cgu.c
+> @@ -0,0 +1,487 @@
 > +/*
-> + * ov772x Camera Driver
+> + * JZ4770 SoC CGU driver
 > + *
-> + * Copyright (C) 2008 Renesas Solutions Corp.
-> + * Kuninori Morimoto <morimoto.kuninori@renesas.com>
-> + *
-> + * Based on ov7670 and soc_camera_platform driver,
-> + *
-> + * Copyright 2006-7 Jonathan Corbet <corbet@lwn.net>
-> + * Copyright (C) 2008 Magnus Damm
-> + * Copyright (C) 2008, Guennadi Liakhovetski <kernel@pengutronix.de>
+> + * Copyright 2017, Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
 > + *
 > + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
+> + * it under the terms of the GNU General Public License version 2 or later
+> + * as published by the Free Software Foundation.
 > + */
 
-Do you mind using a simpler SPDX identifier instead of this long
-legalese boilerplate?
-This is documented in Thomas doc patches. This applies to your entire
-patch set of course.
-Thanks!
+Do you mind using a simpler one-line SPDX identifier instead of this
+fine but clearly crapouillish legalese boilerplate? Unless you are
+trying to turn the kernel in a legal compendium, of course ;)
+
+This is documented in Thomas doc patches. This would apply to your
+entire patch set.
+Thank you for your kind consideration!
 -- 
 Cordially
 Philippe Ombredanne
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
