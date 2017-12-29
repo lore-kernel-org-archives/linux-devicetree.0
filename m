@@ -1,86 +1,110 @@
-From: Aleksandar Markovic <aleksandar.markovic-FblTVreYubkAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v12 1/3] Documentation: Add device tree binding for Goldfish PIC driver
-Date: Fri, 29 Dec 2017 16:41:45 +0100
-Message-ID: <1514562138-13774-2-git-send-email-aleksandar.markovic@rt-rk.com>
-References: <1514562138-13774-1-git-send-email-aleksandar.markovic@rt-rk.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1514562138-13774-1-git-send-email-aleksandar.markovic-FblTVreYubkAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
-Cc: Miodrag Dinic <miodrag.dinic-8NJIiSa5LzA@public.gmane.org>, Goran Ferenc <goran.ferenc-8NJIiSa5LzA@public.gmane.org>, Aleksandar Markovic <aleksandar.markovic-8NJIiSa5LzA@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Douglas Leung <douglas.leung-8NJIiSa5LzA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, James Hogan <james.hogan-8NJIiSa5LzA@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Paul Burton <paul.burton-8NJIiSa5LzA@public.gmane.org>, Petar Jovanovic <petar.jovanovic-8NJIiSa5LzA@public.gmane.org>, Raghu Gandham <raghu.gandham-8NJIiSa5LzA@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 02/14] iio: Add channel for Position
+Date: Fri, 29 Dec 2017 16:09:58 +0000
+Message-ID: <20171229160958.2531299b@archlinux>
+References: <1513955241-10985-1-git-send-email-eugen.hristev@microchip.com>
+        <1513955241-10985-3-git-send-email-eugen.hristev@microchip.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1513955241-10985-3-git-send-email-eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eugen Hristev <eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Cc: nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Miodrag Dinic <miodrag.dinic-8NJIiSa5LzA@public.gmane.org>
+On Fri, 22 Dec 2017 17:07:09 +0200
+Eugen Hristev <eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org> wrote:
 
-Add documentation for DT binding of Goldfish PIC driver. The compatible
-string used by OS for binding the driver is "google,goldfish-pic".
+> Add new channel type for position on a pad.
+> 
+> These type of analog sensor represents the position of a pen
+> on a touchpad, and is represented as a voltage, which can be
+> converted to a position on X and Y axis on the pad.
+> 
+> The channel can then be consumed by a touchscreen driver or
+> read as-is for a raw indication of the touchpen on a touchpad.
+> 
+> Signed-off-by: Eugen Hristev <eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+> ---
+>  Documentation/ABI/testing/sysfs-bus-iio | 11 +++++++++++
+>  drivers/iio/industrialio-core.c         |  1 +
+>  include/uapi/linux/iio/types.h          |  1 +
+>  tools/iio/iio_event_monitor.c           |  2 ++
+>  4 files changed, 15 insertions(+)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
+> index a478740..d2b9e2f 100644
+> --- a/Documentation/ABI/testing/sysfs-bus-iio
+> +++ b/Documentation/ABI/testing/sysfs-bus-iio
+> @@ -190,6 +190,17 @@ Description:
+>  		but should match other such assignments on device).
+>  		Units after application of scale and offset are m/s^2.
+>  
+> +What:		/sys/bus/iio/devices/iio:deviceX/in_position_x_raw
+> +What:		/sys/bus/iio/devices/iio:deviceX/in_position_y_raw
+> +KernelVersion:	4.16
+> +Contact:	linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> +Description:
+> +		Position in direction x or y on a pad (may be arbitrarily
+> +		assigned but should match other such assignments on device).
+> +		Units after application of scale and offset are millipercents
+> +		from the pad's size in both directions. Should be calibrated by
+> +		the consumer.
 
-Signed-off-by: Miodrag Dinic <miodrag.dinic-8NJIiSa5LzA@public.gmane.org>
-Signed-off-by: Goran Ferenc <goran.ferenc-8NJIiSa5LzA@public.gmane.org>
-Signed-off-by: Aleksandar Markovic <aleksandar.markovic-8NJIiSa5LzA@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
- .../interrupt-controller/google,goldfish-pic.txt   | 30 ++++++++++++++++++++++
- MAINTAINERS                                        |  5 ++++
- 2 files changed, 35 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/google,goldfish-pic.txt
+Hmm. The units are an issues as to be consistent with the existing ABI position
+should be in meters.  Perhaps the trick is to do similar to we have done for
+relative humidity and call this in_positionrelative_x_raw etc.
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/google,goldfish-pic.txt b/Documentation/devicetree/bindings/interrupt-controller/google,goldfish-pic.txt
-new file mode 100644
-index 0000000..35f7527
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/google,goldfish-pic.txt
-@@ -0,0 +1,30 @@
-+Android Goldfish PIC
-+
-+Android Goldfish programmable interrupt device used by Android
-+emulator.
-+
-+Required properties:
-+
-+- compatible : should contain "google,goldfish-pic"
-+- reg        : <registers mapping>
-+- interrupts : <interrupt mapping>
-+
-+Example for mips when used in cascade mode:
-+
-+        cpuintc {
-+                #interrupt-cells = <0x1>;
-+                #address-cells = <0>;
-+                interrupt-controller;
-+                compatible = "mti,cpu-interrupt-controller";
-+        };
-+
-+        interrupt-controller@1f000000 {
-+                compatible = "google,goldfish-pic";
-+                reg = <0x1f000000 0x1000>;
-+
-+                interrupt-controller;
-+                #interrupt-cells = <0x1>;
-+
-+                interrupt-parent = <&cpuintc>;
-+                interrupts = <0x2>;
-+        };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a6e86e2..7152b90 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -867,6 +867,11 @@ S:	Supported
- F:	drivers/android/
- F:	drivers/staging/android/
- 
-+ANDROID GOLDFISH PIC DRIVER
-+M:	Miodrag Dinic <miodrag.dinic-8NJIiSa5LzA@public.gmane.org>
-+S:	Supported
-+F:	Documentation/devicetree/bindings/interrupt-controller/google,goldfish-pic.txt
-+
- ANDROID GOLDFISH RTC DRIVER
- M:	Miodrag Dinic <miodrag.dinic-8NJIiSa5LzA@public.gmane.org>
- S:	Supported
--- 
-2.7.4
+That leaves position open for absolute position devices (who knows what)
+in the future.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +
+>  What:		/sys/bus/iio/devices/iio:deviceX/in_anglvel_x_raw
+>  What:		/sys/bus/iio/devices/iio:deviceX/in_anglvel_y_raw
+>  What:		/sys/bus/iio/devices/iio:deviceX/in_anglvel_z_raw
+> diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
+> index 2e8e36f..a4fa49b 100644
+> --- a/drivers/iio/industrialio-core.c
+> +++ b/drivers/iio/industrialio-core.c
+> @@ -85,6 +85,7 @@ static const char * const iio_chan_type_name_spec[] = {
+>  	[IIO_COUNT] = "count",
+>  	[IIO_INDEX] = "index",
+>  	[IIO_GRAVITY]  = "gravity",
+> +	[IIO_POSITION]  = "position",
+>  };
+>  
+>  static const char * const iio_modifier_names[] = {
+> diff --git a/include/uapi/linux/iio/types.h b/include/uapi/linux/iio/types.h
+> index 4213cdf..35e17da 100644
+> --- a/include/uapi/linux/iio/types.h
+> +++ b/include/uapi/linux/iio/types.h
+> @@ -44,6 +44,7 @@ enum iio_chan_type {
+>  	IIO_COUNT,
+>  	IIO_INDEX,
+>  	IIO_GRAVITY,
+> +	IIO_POSITION,
+>  };
+>  
+>  enum iio_modifier {
+> diff --git a/tools/iio/iio_event_monitor.c b/tools/iio/iio_event_monitor.c
+> index b61245e..0c2b317 100644
+> --- a/tools/iio/iio_event_monitor.c
+> +++ b/tools/iio/iio_event_monitor.c
+> @@ -58,6 +58,7 @@ static const char * const iio_chan_type_name_spec[] = {
+>  	[IIO_PH] = "ph",
+>  	[IIO_UVINDEX] = "uvindex",
+>  	[IIO_GRAVITY] = "gravity",
+> +	[IIO_POSITION] = "position",
+>  };
+>  
+>  static const char * const iio_ev_type_text[] = {
+> @@ -151,6 +152,7 @@ static bool event_is_known(struct iio_event_data *event)
+>  	case IIO_PH:
+>  	case IIO_UVINDEX:
+>  	case IIO_GRAVITY:
+> +	case IIO_POSITION:
+>  		break;
+>  	default:
+>  		return false;
