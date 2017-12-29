@@ -1,16 +1,14 @@
 From: Cyrille Pitchen <cyrille.pitchen-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 7/9] PCI: endpoint: Add the function number as argument
- to EPC ops
-Date: Fri, 29 Dec 2017 21:30:00 +0100
-Message-ID: <22c6a835-86e1-4145-e20b-aa74444dfd94@free-electrons.com>
+Subject: Re: [PATCH v2 0/9] PCI: Add support to the Cadence PCIe controller
+Date: Fri, 29 Dec 2017 21:53:15 +0100
+Message-ID: <27684b50-ff08-5238-4cb0-8bc4431211bf@free-electrons.com>
 References: <cover.1513620412.git.cyrille.pitchen@free-electrons.com>
- <425171aaba3a9e8ea68b9e94f37b1c97e8cf9861.1513620412.git.cyrille.pitchen@free-electrons.com>
- <ca8f5a74-3db5-87f4-3af5-ed5ee0d3b634@ti.com>
+ <d30e0abe-8b08-b2bf-8410-e0fc2b18cacc@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <ca8f5a74-3db5-87f4-3af5-ed5ee0d3b634-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <d30e0abe-8b08-b2bf-8410-e0fc2b18cacc-l0cyMroinI0@public.gmane.org>
 Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
@@ -19,60 +17,52 @@ List-Id: devicetree@vger.kernel.org
 
 Hi Kishon,
 
-Le 29/12/2017 à 10:23, Kishon Vijay Abraham I a écrit :
-> Hi,
+Le 28/12/2017 à 14:00, Kishon Vijay Abraham I a écrit :
+> Hi Cyrille,
 > 
 > On Monday 18 December 2017 11:46 PM, Cyrille Pitchen wrote:
->> This patch updates the prototype of most handlers from 'struct
->> pci_epc_ops' so the EPC library can now support multi-function devices.
+>> Hi all,
 >>
->> Signed-off-by: Cyrille Pitchen <cyrille.pitchen-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->> ---
->>  drivers/pci/dwc/pcie-designware-ep.c          | 20 +++++----
->>  drivers/pci/endpoint/functions/pci-epf-test.c | 41 ++++++++++--------
->>  drivers/pci/endpoint/pci-epc-core.c           | 62 ++++++++++++++++-----------
->>  include/linux/pci-epc.h                       | 43 +++++++++++--------
->>  4 files changed, 96 insertions(+), 70 deletions(-)
+>> this series of patches adds support to the Cadence PCIe controller.
+>> It was tested on a ARM64 platform emulated by a Palladium running the
+>> pci-next kernel.
 >>
-[...]
->> diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
->> index cd7d4788b94d..77420364a728 100644
->> --- a/drivers/pci/endpoint/pci-epc-core.c
->> +++ b/drivers/pci/endpoint/pci-epc-core.c
->> @@ -141,25 +141,26 @@ EXPORT_SYMBOL_GPL(pci_epc_start);
->>  /**
->>   * pci_epc_raise_irq() - interrupt the host system
->>   * @epc: the EPC device which has to interrupt the host
->> + * @func_no: the endpoint function number in the EPC device
->>   * @type: specify the type of interrupt; legacy or MSI
->>   * @interrupt_num: the MSI interrupt number
->>   *
->>   * Invoke to raise an MSI or legacy interrupt
->>   */
->> -int pci_epc_raise_irq(struct pci_epc *epc, enum pci_epc_irq_type type,
->> -		      u8 interrupt_num)
->> +int pci_epc_raise_irq(struct pci_epc *epc, u8 func_no,
->> +		      enum pci_epc_irq_type type, u8 interrupt_num)
->>  {
->>  	int ret;
->>  	unsigned long flags;
->>  
->> -	if (IS_ERR(epc))
->> +	if (IS_ERR(epc) || func_no > BAR_5)
+>> The host mode was tested with some PCIe devices connected to the Palladium
+>> through a speed-bridge. Some of those devices were a USB host controller
+>> and a SATA controller. The PCIe host controller was also tested with a
+>> second controller configured in endpoint mode and connected back to back
+>> to the first controller.
+>>
+>> The EndPoint Controller (EPC) driver of this series was tested with the
+>> pci-epf-test.c EndPoint Function (EPF) driver and the pcitest userspace
+>> program.
 > 
-> why is function number compared with BAR? here and everywhere below..
+> Did you get to test multi function EP?
 >
 
-Oops! sorry for that. Actually it's a silly mistake, thanks for
-catching it!
+No I didn't: I tested only with a single function to check for regression
+but currently I'm not able to test with multiple functions.
 
-I plan to fix it replacing with something like this:
+With devmem, I've tried to read then write the Physical Function Configuration
+Register (offset 0x2c0 in the Local Management registers) to enable
+functions other than function 0.
 
-s/func_no > BAR_5/func_no >= epc->max_functions/
+This is the CDNS_PCIE_LM_EP_FUNC_CFG register that the pcie-cadence_ep.c
+driver updates in cdns_pcie_ep_write_header() since v2 of the series.
 
-Then I guess if we already test with IS_ERR(), I should now replace
-IS_ERR() by IS_ERR_OR_NULL() before dereferencing epc when reading
-max_functions.
+As written in the datasheet, BIT(0) is actually hard-wired to 1, hence
+function 0 can't be disabled: that makes sense. However other function
+enable bits were read as 0 whereas the datasheet claims they should be set
+at power up. Besides, I can't set any of them with devmem.
+
+Actually, I have 2 slightly different datasheets, in the first one I should
+have 4 functions but only 2 based on the second datasheet.
+
+Then I guess it's a design parameter used when synthesizing the controller.
+
+So I've asked Cadence whether I've missed or misunderstood something in the
+datasheets or whether the IP they provided me with has a single function
+for now. I'm waiting for their answers.
 
 Best regards,
 
@@ -80,6 +70,82 @@ Cyrille
  
 > Thanks
 > Kishon
+>>
+>> For pci-next, I applied this series on top of Kishon's patch
+>> ("PCI: endpoint: Use EPC's device in dma_alloc_coherent/dma_free_coherent")
+>> otherwise dma_alloc_coherent() fails when called by pci_epf_alloc_space().
+>>
+>> Best regards,
+>>
+>> Cyrille
+>>
+>> ChangeLog:
+>>
+>> v1 -> v2:
+>> - add new properties in the device-tree bindings: 'cdns,max-outbound-regions'
+>>   and 'cdns,no-bar-match-nbits'.
+>> - add a new patch to regroup all makefile rules in drivers/pci/Makefile, hence
+>>   cleaning drivers/Makefile up.
+>> - change the license text to use the recommanded format:
+>>   // SPDX-License-Identifier: GPL-2.0
+>> - add a new patch updating the API of the EPC library to add support to
+>>   multi-function devices.
+>> - add a 2 new patches to share more common code between host controller drivers
+>> - remove some useless tests
+>> - add more comments in both drivers.
+>> - fix DT bindings examples
+>> - remove useless init of the primary, secondary and sub-ordinate bus numbers in
+>>   the PCI configuration space of the root port.
+>> - remove cdns_pcie_ep_stop() function and rework cdns_pcie_ep_start() function
+>>
+>> Cyrille Pitchen (8):
+>>   PCI: Regroup all PCI related entries into drivers/pci/Makefile
+>>   PCI: OF: Add generic function to parse and allocate PCI resources
+>>   PCI: Add generic function to probe PCI host controllers
+>>   PCI: Add vendor ID for Cadence
+>>   PCI: cadence: Add host driver for Cadence PCIe controller
+>>   PCI: endpoint: Add the function number as argument to EPC ops
+>>   dt-bindings: PCI: cadence: Add DT bindings for Cadence PCIe endpoint
+>>     controller
+>>   PCI: cadence: Add EndPoint Controller driver for Cadence PCIe
+>>     controller
+>>
+>> Scott Telford (1):
+>>   dt-bindings: PCI: cadence: Add DT bindings for Cadence PCIe host
+>>     controller
+>>
+>>  .../devicetree/bindings/pci/cdns,cdns-pcie-ep.txt  |  23 +
+>>  .../bindings/pci/cdns,cdns-pcie-host.txt           |  60 +++
+>>  MAINTAINERS                                        |   7 +
+>>  drivers/Makefile                                   |   5 +-
+>>  drivers/pci/Kconfig                                |   2 +
+>>  drivers/pci/Makefile                               |  12 +-
+>>  drivers/pci/cadence/Kconfig                        |  33 ++
+>>  drivers/pci/cadence/Makefile                       |   4 +
+>>  drivers/pci/cadence/pcie-cadence-ep.c              | 531 +++++++++++++++++++++
+>>  drivers/pci/cadence/pcie-cadence-host.c            | 330 +++++++++++++
+>>  drivers/pci/cadence/pcie-cadence.c                 |  95 ++++
+>>  drivers/pci/cadence/pcie-cadence.h                 | 310 ++++++++++++
+>>  drivers/pci/dwc/pcie-designware-ep.c               |  20 +-
+>>  drivers/pci/endpoint/functions/pci-epf-test.c      |  41 +-
+>>  drivers/pci/endpoint/pci-epc-core.c                |  62 ++-
+>>  drivers/pci/host/Makefile                          |   2 +
+>>  drivers/pci/host/pci-host-common.c                 |  87 +---
+>>  drivers/pci/of.c                                   |  51 ++
+>>  drivers/pci/probe.c                                |  50 ++
+>>  include/linux/pci-epc.h                            |  43 +-
+>>  include/linux/pci.h                                |  12 +
+>>  include/linux/pci_ids.h                            |   2 +
+>>  22 files changed, 1624 insertions(+), 158 deletions(-)
+>>  create mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt
+>>  create mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
+>>  create mode 100644 drivers/pci/cadence/Kconfig
+>>  create mode 100644 drivers/pci/cadence/Makefile
+>>  create mode 100644 drivers/pci/cadence/pcie-cadence-ep.c
+>>  create mode 100644 drivers/pci/cadence/pcie-cadence-host.c
+>>  create mode 100644 drivers/pci/cadence/pcie-cadence.c
+>>  create mode 100644 drivers/pci/cadence/pcie-cadence.h
+>>
 > 
 
 
