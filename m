@@ -1,13 +1,12 @@
 From: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Subject: [PATCH 03/11] drm/bridge/synopsys: dw-hdmi: Enable
- workaround for v1.32a
-Date: Sat, 30 Dec 2017 22:01:55 +0100
-Message-ID: <20171230210203.24115-4-jernej.skrabec@siol.net>
+Subject: [PATCH 05/11] drm/bridge/synopsys: dw-hdmi: Add deinit callback
+Date: Sat, 30 Dec 2017 22:01:57 +0100
+Message-ID: <20171230210203.24115-6-jernej.skrabec@siol.net>
 References: <20171230210203.24115-1-jernej.skrabec@siol.net>
 Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDQNBWPU7YERBYH5T7JAKGQE2JKHRDQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDQNBWPU7YERBZP5T7JAKGQEWTW6M3A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20171230210203.24115-1-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,41 +19,43 @@ To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, airlied-cv5
 Cc: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, jernej.skrabec-gGgVlfcn5nU@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Allwinner SoCs have dw hdmi controller v1.32a which exhibits same
-magenta line issue as i.MX6Q and i.MX6DL. Enable workaround for it.
-
-Tests show that one iteration is enough.
+Some SoCs, like Allwinner A83T, have to do additional cleanup when
+HDMI driver unloads. When using DW HDMI through DRM bridge API, there is
+no place to store driver's private data so it can be accessed in unbind
+function. Because of that, add deinit function which is called at the
+very end, so drivers can do a proper cleanup.
 
 Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 ---
- drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 3 +++
+ include/drm/bridge/dw_hdmi.h              | 1 +
+ 2 files changed, 4 insertions(+)
 
 diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-index a38db40ce990..7ca14d7325b5 100644
+index 67467d0b683a..a6fe7a323c83 100644
 --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
 +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-@@ -1634,9 +1634,10 @@ static void dw_hdmi_clear_overflow(struct dw_hdmi *hdmi)
- 	 * then write one of the FC registers several times.
- 	 *
- 	 * The number of iterations matters and depends on the HDMI TX revision
--	 * (and possibly on the platform). So far only i.MX6Q (v1.30a) and
--	 * i.MX6DL (v1.31a) have been identified as needing the workaround, with
--	 * 4 and 1 iterations respectively.
-+	 * (and possibly on the platform). So far i.MX6Q (v1.30a), i.MX6DL
-+	 * (v1.31a) and multiple Allwinner SoCs (v1.32a) have been identified
-+	 * as needing the workaround, with 4 iterations for v1.30a and 1
-+	 * iteration for others.
- 	 */
+@@ -2592,6 +2592,9 @@ static void __dw_hdmi_remove(struct dw_hdmi *hdmi)
+ 		i2c_del_adapter(&hdmi->i2c->adap);
+ 	else
+ 		i2c_put_adapter(hdmi->ddc);
++
++	if (hdmi->plat_data->deinit)
++		hdmi->plat_data->deinit(hdmi->plat_data);
+ }
  
- 	switch (hdmi->version) {
-@@ -1644,6 +1645,7 @@ static void dw_hdmi_clear_overflow(struct dw_hdmi *hdmi)
- 		count = 4;
- 		break;
- 	case 0x131a:
-+	case 0x132a:
- 		count = 1;
- 		break;
- 	default:
+ /* -----------------------------------------------------------------------------
+diff --git a/include/drm/bridge/dw_hdmi.h b/include/drm/bridge/dw_hdmi.h
+index f5cca4362154..a3218d3da61b 100644
+--- a/include/drm/bridge/dw_hdmi.h
++++ b/include/drm/bridge/dw_hdmi.h
+@@ -124,6 +124,7 @@ struct dw_hdmi_phy_ops {
+ 
+ struct dw_hdmi_plat_data {
+ 	struct regmap *regm;
++	void (*deinit)(const struct dw_hdmi_plat_data *pdata);
+ 	enum drm_mode_status (*mode_valid)(struct drm_connector *connector,
+ 					   const struct drm_display_mode *mode);
+ 	unsigned long input_bus_format;
 -- 
 2.15.1
