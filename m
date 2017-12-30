@@ -1,40 +1,47 @@
 From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v2 7/8] MIPS: qi_lb60: Enable the jz4740-wdt driver
-Date: Sat, 30 Dec 2017 14:51:07 +0100
-Message-ID: <20171230135108.6834-7-paul@crapouillou.net>
+Subject: [PATCH v2 1/8] watchdog: JZ4740: Disable clock after stopping counter
+Date: Sat, 30 Dec 2017 14:51:01 +0100
+Message-ID: <20171230135108.6834-1-paul@crapouillou.net>
 References: <20171228162939.3928-2-paul@crapouillou.net>
- <20171230135108.6834-1-paul@crapouillou.net>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171230135108.6834-1-paul@crapouillou.net>
-Sender: linux-kernel-owner@vger.kernel.org
+Return-path: <linux-mips-bounce@linux-mips.org>
+In-Reply-To: <20171228162939.3928-2-paul@crapouillou.net>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
 To: Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>
 Cc: devicetree@vger.kernel.org, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
-The watchdog is an useful piece of hardware, so there's no reason not to
-enable it.
-
-This commit enables the Kconfig option in the qi_lb60 defconfig.
+Previously, the clock was disabled first, which makes the watchdog
+component insensitive to register writes.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 ---
- arch/mips/configs/qi_lb60_defconfig | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/watchdog/jz4740_wdt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
  v2: No change
 
-diff --git a/arch/mips/configs/qi_lb60_defconfig b/arch/mips/configs/qi_lb60_defconfig
-index 3f1333517405..ba8e1c56b626 100644
---- a/arch/mips/configs/qi_lb60_defconfig
-+++ b/arch/mips/configs/qi_lb60_defconfig
-@@ -73,6 +73,8 @@ CONFIG_POWER_SUPPLY=y
- CONFIG_BATTERY_JZ4740=y
- CONFIG_CHARGER_GPIO=y
- # CONFIG_HWMON is not set
-+CONFIG_WATCHDOG=y
-+CONFIG_JZ4740_WDT=y
- CONFIG_MFD_JZ4740_ADC=y
- CONFIG_REGULATOR=y
- CONFIG_REGULATOR_FIXED_VOLTAGE=y
+diff --git a/drivers/watchdog/jz4740_wdt.c b/drivers/watchdog/jz4740_wdt.c
+index 20627f22baf6..6955deb100ef 100644
+--- a/drivers/watchdog/jz4740_wdt.c
++++ b/drivers/watchdog/jz4740_wdt.c
+@@ -124,8 +124,8 @@ static int jz4740_wdt_stop(struct watchdog_device *wdt_dev)
+ {
+ 	struct jz4740_wdt_drvdata *drvdata = watchdog_get_drvdata(wdt_dev);
+ 
+-	jz4740_timer_disable_watchdog();
+ 	writeb(0x0, drvdata->base + JZ_REG_WDT_COUNTER_ENABLE);
++	jz4740_timer_disable_watchdog();
+ 
+ 	return 0;
+ }
 -- 
 2.11.0
