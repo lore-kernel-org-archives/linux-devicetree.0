@@ -1,47 +1,45 @@
 From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v2 1/8] watchdog: JZ4740: Disable clock after stopping counter
-Date: Sat, 30 Dec 2017 14:51:01 +0100
-Message-ID: <20171230135108.6834-1-paul@crapouillou.net>
+Subject: [PATCH v2 6/8] MIPS: jz4780: dts: Fix watchdog node
+Date: Sat, 30 Dec 2017 14:51:06 +0100
+Message-ID: <20171230135108.6834-6-paul@crapouillou.net>
 References: <20171228162939.3928-2-paul@crapouillou.net>
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <20171228162939.3928-2-paul@crapouillou.net>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+ <20171230135108.6834-1-paul@crapouillou.net>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171230135108.6834-1-paul@crapouillou.net>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>
 Cc: devicetree@vger.kernel.org, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
-Previously, the clock was disabled first, which makes the watchdog
-component insensitive to register writes.
+- The previous node requested a memory area of 0x100 bytes, while the
+  driver only manipulates four registers present in the first 0x10 bytes.
+
+- The driver requests for the "rtc" clock, but the previous node did not
+  provide any.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Reviewed-by: Mathieu Malaterre <malat@debian.org>
 ---
- drivers/watchdog/jz4740_wdt.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/mips/boot/dts/ingenic/jz4780.dtsi | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
  v2: No change
 
-diff --git a/drivers/watchdog/jz4740_wdt.c b/drivers/watchdog/jz4740_wdt.c
-index 20627f22baf6..6955deb100ef 100644
---- a/drivers/watchdog/jz4740_wdt.c
-+++ b/drivers/watchdog/jz4740_wdt.c
-@@ -124,8 +124,8 @@ static int jz4740_wdt_stop(struct watchdog_device *wdt_dev)
- {
- 	struct jz4740_wdt_drvdata *drvdata = watchdog_get_drvdata(wdt_dev);
+diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+index 9b5794667aee..a52f59bf58c7 100644
+--- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
++++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+@@ -221,7 +221,10 @@
  
--	jz4740_timer_disable_watchdog();
- 	writeb(0x0, drvdata->base + JZ_REG_WDT_COUNTER_ENABLE);
-+	jz4740_timer_disable_watchdog();
+ 	watchdog: watchdog@10002000 {
+ 		compatible = "ingenic,jz4780-watchdog";
+-		reg = <0x10002000 0x100>;
++		reg = <0x10002000 0x10>;
++
++		clocks = <&cgu JZ4780_CLK_RTCLK>;
++		clock-names = "rtc";
+ 	};
  
- 	return 0;
- }
+ 	nemc: nemc@13410000 {
 -- 
 2.11.0
