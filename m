@@ -1,124 +1,66 @@
-From: Icenowy Zheng <icenowy@aosc.io>
-Subject: [PATCH v4 6/6] arm64: allwinner: a64: add HDMI regulator to all DTs' simplefb_hdmi
-Date: Sat, 30 Dec 2017 19:30:43 +0800
-Message-ID: <20171230113043.30237-7-icenowy@aosc.io>
-References: <20171230113043.30237-1-icenowy@aosc.io>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171230113043.30237-1-icenowy@aosc.io>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, Icenowy Zheng <icenowy@aosc.io>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: Re: [PATCH 1/6] phy: sun4i-usb: add support for R40 USB PHY
+Date: Sat, 30 Dec 2017 19:38:12 +0800
+Message-ID: <4846846.1ddJIksgpP@ice-x220i>
+References: <20171008042906.46779-1-icenowy@aosc.io> <20171018114219.lykghmhzve5yvhaa@flea.lan> <020a2b04-dbcc-032a-89d1-75479dd436e7@ti.com>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBLXVTXJAKGQEMCCNBWQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <020a2b04-dbcc-032a-89d1-75479dd436e7-l0cyMroinI0@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On usual A64 board design the power of HDMI controller is connected to
-DLDO1 of the AXP803 PMIC. If this regulator is shut down, the HDMI
-output will be blank. Therefore the simplefb driver should keep this
-regulator on.
+=E5=9C=A8 2017=E5=B9=B410=E6=9C=8818=E6=97=A5=E6=98=9F=E6=9C=9F=E4=B8=89 CS=
+T =E4=B8=8B=E5=8D=887:46:08=EF=BC=8CKishon Vijay Abraham I =E5=86=99=E9=81=
+=93=EF=BC=9A
+> On Wednesday 18 October 2017 05:12 PM, Maxime Ripard wrote:
+> > On Wed, Oct 18, 2017 at 05:09:00PM +0530, Kishon Vijay Abraham I wrote:
+> >> Hi,
+> >>=20
+> >> On Tuesday 10 October 2017 02:28 AM, Maxime Ripard wrote:
+> >>> On Sun, Oct 08, 2017 at 04:29:01AM +0000, Icenowy Zheng wrote:
+> >>>> Allwinner R40 features a USB PHY like the one in A64, but with 3 PHY=
+s.
+> >>>>=20
+> >>>> Add support for it.
+> >>>>=20
+> >>>> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> >>>=20
+> >>> Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> >>=20
+> >> Is this patch good to be merged? I see you have pending comments on th=
+e
+> >> other patch in the series.
+> >=20
+> > Yeah, but I guess you can merge this one, it's pretty harmless, and it
+> > will reduce the amount of patches to review / merge later on.
+>=20
+> Thank you for the quick reply.
+>=20
+> merged with Maxime's and Rob's Ack.
 
-Add the regulator to all currently available A64 boards' simplefb_hdmi
-device node.
+Sorry, but I didn't see the patch appears in linux-next for such long time.
 
-Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
----
-New patch introduced in v4.
+Is it lost?
 
- arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts     | 4 ++++
- arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts       | 4 ++++
- arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts        | 4 ++++
- arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts     | 4 ++++
- arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts           | 4 ++++
- arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts | 4 ++++
- 6 files changed, 24 insertions(+)
+>=20
+> Thanks
+> Kishon
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-index a6975670cd1c..f98c496e1f30 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-@@ -283,6 +283,10 @@
- 	regulator-name = "vcc-rtc";
- };
- 
-+&simplefb_hdmi {
-+	vcc-hdmi-supply = <&reg_dldo1>;
-+};
-+
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_pins_a>;
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts
-index 2beef9e6cb88..7cbbbf238f4f 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts
-@@ -196,6 +196,10 @@
- 	regulator-name = "vcc-rtc";
- };
- 
-+&simplefb_hdmi {
-+	vcc-hdmi-supply = <&reg_dldo1>;
-+};
-+
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_pins_a>;
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-index 8807664f363a..568de83427d0 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-@@ -215,6 +215,10 @@
- 	regulator-name = "vcc-rtc";
- };
- 
-+&simplefb_hdmi {
-+	vcc-hdmi-supply = <&reg_dldo1>;
-+};
-+
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_pins_a>;
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
-index 240d35731d10..ce38080db324 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
-@@ -192,6 +192,10 @@
- 	regulator-name = "vcc-rtc";
- };
- 
-+&simplefb_hdmi {
-+	vcc-hdmi-supply = <&reg_dldo1>;
-+};
-+
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_pins_a>;
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-index 604cdaedac38..40d9802959c4 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-@@ -230,6 +230,10 @@
- 	regulator-name = "vcc-rtc";
- };
- 
-+&simplefb_hdmi {
-+	vcc-hdmi-supply = <&reg_dldo1>;
-+};
-+
- /* On Exp and Euler connectors */
- &uart0 {
- 	pinctrl-names = "default";
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-index abe179de35d7..c21f2331add6 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-@@ -134,6 +134,10 @@
- 	regulator-name = "vcc-wifi";
- };
- 
-+&simplefb_hdmi {
-+	vcc-hdmi-supply = <&reg_dldo1>;
-+};
-+
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_pins_a>;
--- 
-2.14.2
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
