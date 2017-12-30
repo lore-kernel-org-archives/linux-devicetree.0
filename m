@@ -1,44 +1,86 @@
-From: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
-Subject: [PATCH 3/3] ARM: dts: sun7i: lamobo-r1: Add backup
- battery charging property
-Date: Sat, 30 Dec 2017 16:23:30 +0100
-Message-ID: <20171230152330.28946-4-contact@paulk.fr>
-References: <20171230152330.28946-1-contact@paulk.fr>
-Reply-To: contact-W9ppeneeCTY@public.gmane.org
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v2 2/8] watchdog: jz4740: Use devm_* functions
+Date: Sat, 30 Dec 2017 08:08:04 -0800
+Message-ID: <b0d75a0e-a698-a06e-22ff-446a186357d0@roeck-us.net>
+References: <20171228162939.3928-2-paul@crapouillou.net>
+ <20171230135108.6834-1-paul@crapouillou.net>
+ <20171230135108.6834-2-paul@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBC75HK6WUAEBBRO7T3JAKGQELIRXXLQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20171230152330.28946-1-contact-W9ppeneeCTY@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171230135108.6834-2-paul@crapouillou.net>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Paul Cercueil <paul@crapouillou.net>, Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wim Van Sebroeck <wim@iguana.be>
+Cc: devicetree@vger.kernel.org, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This adds the axp20x backup property to the lamobo-r1 device-tree,
-that allows charging the backup battery attached to its AXP209.
+On 12/30/2017 05:51 AM, Paul Cercueil wrote:
+> - Use devm_clk_get instead of clk_get
+> - Use devm_watchdog_register_device instead of watchdog_register_device
+> 
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 
-It is especially useful since the battery is used for the RTC module.
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
-Signed-off-by: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
-
-diff --git a/arch/arm/boot/dts/sun7i-a20-lamobo-r1.dts b/arch/arm/boot/dts/sun7i-a20-lamobo-r1.dts
-index 442f3c755f36..e218fd8ea94f 100644
---- a/arch/arm/boot/dts/sun7i-a20-lamobo-r1.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-lamobo-r1.dts
-@@ -207,6 +207,8 @@
- 		reg = <0x34>;
- 		interrupt-parent = <&nmi_intc>;
- 		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
-+
-+		backup = <3000 200>;
- 	};
- };
- 
--- 
-2.15.1
+> ---
+>   drivers/watchdog/jz4740_wdt.c | 27 ++++++++-------------------
+>   1 file changed, 8 insertions(+), 19 deletions(-)
+> 
+>   v2: No change
+> 
+> diff --git a/drivers/watchdog/jz4740_wdt.c b/drivers/watchdog/jz4740_wdt.c
+> index 6955deb100ef..92d6ca8ceb49 100644
+> --- a/drivers/watchdog/jz4740_wdt.c
+> +++ b/drivers/watchdog/jz4740_wdt.c
+> @@ -178,40 +178,29 @@ static int jz4740_wdt_probe(struct platform_device *pdev)
+>   
+>   	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>   	drvdata->base = devm_ioremap_resource(&pdev->dev, res);
+> -	if (IS_ERR(drvdata->base)) {
+> -		ret = PTR_ERR(drvdata->base);
+> -		goto err_out;
+> -	}
+> +	if (IS_ERR(drvdata->base))
+> +		return PTR_ERR(drvdata->base);
+>   
+> -	drvdata->rtc_clk = clk_get(&pdev->dev, "rtc");
+> +	drvdata->rtc_clk = devm_clk_get(&pdev->dev, "rtc");
+>   	if (IS_ERR(drvdata->rtc_clk)) {
+>   		dev_err(&pdev->dev, "cannot find RTC clock\n");
+> -		ret = PTR_ERR(drvdata->rtc_clk);
+> -		goto err_out;
+> +		return PTR_ERR(drvdata->rtc_clk);
+>   	}
+>   
+> -	ret = watchdog_register_device(&drvdata->wdt);
+> +	ret = devm_watchdog_register_device(&pdev->dev, &drvdata->wdt);
+>   	if (ret < 0)
+> -		goto err_disable_clk;
+> +		return ret;
+>   
+>   	platform_set_drvdata(pdev, drvdata);
+> -	return 0;
+>   
+> -err_disable_clk:
+> -	clk_put(drvdata->rtc_clk);
+> -err_out:
+> -	return ret;
+> +	return 0;
+>   }
+>   
+>   static int jz4740_wdt_remove(struct platform_device *pdev)
+>   {
+>   	struct jz4740_wdt_drvdata *drvdata = platform_get_drvdata(pdev);
+>   
+> -	jz4740_wdt_stop(&drvdata->wdt);
+> -	watchdog_unregister_device(&drvdata->wdt);
+> -	clk_put(drvdata->rtc_clk);
+> -
+> -	return 0;
+> +	return jz4740_wdt_stop(&drvdata->wdt);
+>   }
+>   
+>   static struct platform_driver jz4740_wdt_driver = {
+> 
