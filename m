@@ -1,86 +1,124 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: [PATCH v4 5/6] arm64: allwinner: a64: add simplefb for
- A64 SoC
-Date: Sat, 30 Dec 2017 19:30:42 +0800
-Message-ID: <20171230113043.30237-6-icenowy@aosc.io>
+From: Icenowy Zheng <icenowy@aosc.io>
+Subject: [PATCH v4 6/6] arm64: allwinner: a64: add HDMI regulator to all DTs' simplefb_hdmi
+Date: Sat, 30 Dec 2017 19:30:43 +0800
+Message-ID: <20171230113043.30237-7-icenowy@aosc.io>
 References: <20171230113043.30237-1-icenowy@aosc.io>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBD7TTXJAKGQEROSNZXY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20171230113043.30237-1-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171230113043.30237-1-icenowy@aosc.io>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, Icenowy Zheng <icenowy@aosc.io>
 List-Id: devicetree@vger.kernel.org
 
-The A64 SoC features two display pipelines, one has a LCD output, the
-other has a HDMI output.
+On usual A64 board design the power of HDMI controller is connected to
+DLDO1 of the AXP803 PMIC. If this regulator is shut down, the HDMI
+output will be blank. Therefore the simplefb driver should keep this
+regulator on.
 
-Add support for simplefb for these pipelines on A64 SoC.
+Add the regulator to all currently available A64 boards' simplefb_hdmi
+device node.
 
-Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
 ---
-Changes in v4:
-- Dropped extra clocks.
-- Added labels to the SimpleFB device tree nodes as boards may have
-  extra regulator for display pipeline.
+New patch introduced in v4.
 
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+ arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts     | 4 ++++
+ arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts       | 4 ++++
+ arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts        | 4 ++++
+ arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts     | 4 ++++
+ arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts           | 4 ++++
+ arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts | 4 ++++
+ 6 files changed, 24 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-index fb8ea7c414e1..d803c115d362 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-@@ -42,9 +42,11 @@
-  *     OTHER DEALINGS IN THE SOFTWARE.
-  */
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
+index a6975670cd1c..f98c496e1f30 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
+@@ -283,6 +283,10 @@
+ 	regulator-name = "vcc-rtc";
+ };
  
-+#include <dt-bindings/clock/sun8i-de2.h>
- #include <dt-bindings/clock/sun50i-a64-ccu.h>
- #include <dt-bindings/clock/sun8i-r-ccu.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/reset/sun8i-de2.h>
- #include <dt-bindings/reset/sun50i-a64-ccu.h>
++&simplefb_hdmi {
++	vcc-hdmi-supply = <&reg_dldo1>;
++};
++
+ &uart0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart0_pins_a>;
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts
+index 2beef9e6cb88..7cbbbf238f4f 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts
+@@ -196,6 +196,10 @@
+ 	regulator-name = "vcc-rtc";
+ };
  
- / {
-@@ -52,6 +54,30 @@
- 	#address-cells = <1>;
- 	#size-cells = <1>;
++&simplefb_hdmi {
++	vcc-hdmi-supply = <&reg_dldo1>;
++};
++
+ &uart0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart0_pins_a>;
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
+index 8807664f363a..568de83427d0 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
+@@ -215,6 +215,10 @@
+ 	regulator-name = "vcc-rtc";
+ };
  
-+	chosen {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
++&simplefb_hdmi {
++	vcc-hdmi-supply = <&reg_dldo1>;
++};
 +
-+		simplefb_lcd: framebuffer-lcd {
-+			compatible = "allwinner,simple-framebuffer",
-+				     "simple-framebuffer";
-+			allwinner,pipeline = "mixer0-lcd0";
-+			clocks = <&display_clocks CLK_MIXER0>,
-+				 <&ccu CLK_TCON0>;
-+			status = "disabled";
-+		};
+ &uart0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart0_pins_a>;
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
+index 240d35731d10..ce38080db324 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
+@@ -192,6 +192,10 @@
+ 	regulator-name = "vcc-rtc";
+ };
+ 
++&simplefb_hdmi {
++	vcc-hdmi-supply = <&reg_dldo1>;
++};
 +
-+		simplefb_hdmi: framebuffer-hdmi {
-+			compatible = "allwinner,simple-framebuffer",
-+				     "simple-framebuffer";
-+			allwinner,pipeline = "mixer1-lcd1-hdmi";
-+			clocks = <&display_clocks CLK_MIXER1>,
-+				 <&ccu CLK_TCON1>, <&ccu CLK_HDMI>;
-+			status = "disabled";
-+		};
-+	};
+ &uart0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart0_pins_a>;
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
+index 604cdaedac38..40d9802959c4 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
+@@ -230,6 +230,10 @@
+ 	regulator-name = "vcc-rtc";
+ };
+ 
++&simplefb_hdmi {
++	vcc-hdmi-supply = <&reg_dldo1>;
++};
 +
- 	cpus {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
+ /* On Exp and Euler connectors */
+ &uart0 {
+ 	pinctrl-names = "default";
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
+index abe179de35d7..c21f2331add6 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
+@@ -134,6 +134,10 @@
+ 	regulator-name = "vcc-wifi";
+ };
+ 
++&simplefb_hdmi {
++	vcc-hdmi-supply = <&reg_dldo1>;
++};
++
+ &uart0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart0_pins_a>;
 -- 
 2.14.2
