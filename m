@@ -1,72 +1,33 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v2 5/8] MIPS: jz4740: dts: Add bindings for the jz4740-wdt driver
-Date: Sat, 30 Dec 2017 14:51:05 +0100
-Message-ID: <20171230135108.6834-5-paul@crapouillou.net>
-References: <20171228162939.3928-2-paul@crapouillou.net>
- <20171230135108.6834-1-paul@crapouillou.net>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171230135108.6834-1-paul@crapouillou.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>
-Cc: devicetree@vger.kernel.org, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+From: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
+Subject: [PATCH 0/3] axp20x backup battery charging
+Date: Sat, 30 Dec 2017 16:23:27 +0100
+Message-ID: <20171230152330.28946-1-contact@paulk.fr>
+Reply-To: contact-W9ppeneeCTY@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBC75HK6WUAEBBF67T3JAKGQEJPDPIAA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Also remove the watchdog platform_device from platform.c, since it
-wasn't used anywhere anyway.
+This series introduces support for axp20x backup battery charging, with
+a dedicated device-tree property.
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
----
- arch/mips/boot/dts/ingenic/jz4740.dtsi |  8 ++++++++
- arch/mips/jz4740/platform.c            | 16 ----------------
- 2 files changed, 8 insertions(+), 16 deletions(-)
+I wondered whether to include this in a power-supply driver or not.
+Since it does not, in fact, supply power to the whole system and
+because no status changes over time, I thought it would be inappropriate
+to craft a power supply driver only for this.
+I also wondered whether to stick this into an existing power-supply
+driver, as is done by e.g. twl4030, but we have two distinct supply
+drivers for the axp20x (ac and usb), that may be used together or not.
+Also, the backup battery isn't tied to the power supply anyway.
 
- v2: No change
-
-diff --git a/arch/mips/boot/dts/ingenic/jz4740.dtsi b/arch/mips/boot/dts/ingenic/jz4740.dtsi
-index cd5185bb90ae..26c6b561d6f7 100644
---- a/arch/mips/boot/dts/ingenic/jz4740.dtsi
-+++ b/arch/mips/boot/dts/ingenic/jz4740.dtsi
-@@ -45,6 +45,14 @@
- 		#clock-cells = <1>;
- 	};
- 
-+	watchdog: watchdog@10002000 {
-+		compatible = "ingenic,jz4740-watchdog";
-+		reg = <0x10002000 0x10>;
-+
-+		clocks = <&cgu JZ4740_CLK_RTC>;
-+		clock-names = "rtc";
-+	};
-+
- 	rtc_dev: rtc@10003000 {
- 		compatible = "ingenic,jz4740-rtc";
- 		reg = <0x10003000 0x40>;
-diff --git a/arch/mips/jz4740/platform.c b/arch/mips/jz4740/platform.c
-index 5b7cdd67a9d9..cbc5f8e87230 100644
---- a/arch/mips/jz4740/platform.c
-+++ b/arch/mips/jz4740/platform.c
-@@ -233,22 +233,6 @@ struct platform_device jz4740_adc_device = {
- 	.resource	= jz4740_adc_resources,
- };
- 
--/* Watchdog */
--static struct resource jz4740_wdt_resources[] = {
--	{
--		.start = JZ4740_WDT_BASE_ADDR,
--		.end   = JZ4740_WDT_BASE_ADDR + 0x10 - 1,
--		.flags = IORESOURCE_MEM,
--	},
--};
--
--struct platform_device jz4740_wdt_device = {
--	.name	       = "jz4740-wdt",
--	.id	       = -1,
--	.num_resources = ARRAY_SIZE(jz4740_wdt_resources),
--	.resource      = jz4740_wdt_resources,
--};
--
- /* PWM */
- struct platform_device jz4740_pwm_device = {
- 	.name = "jz4740-pwm",
--- 
-2.11.0
+This is why I thought it would make more sense to put this in the mfd
+driver directly. What do you think?
