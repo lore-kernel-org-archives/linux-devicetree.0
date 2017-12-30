@@ -1,64 +1,68 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v2 2/2] pinctrl: Allow indicating loss of pin states
- during low-power
-Date: Sat, 30 Dec 2017 11:31:19 -0800
-Message-ID: <8890917a-67e2-6ec6-690f-0121d5de4103@gmail.com>
-References: <20171102231551.16220-1-f.fainelli@gmail.com>
- <20171102231551.16220-3-f.fainelli@gmail.com>
- <CACRpkdZtFRB_iy1bDPZ0wkK0jf7pkTGtbZG4gQUJVR+eiO+dhA@mail.gmail.com>
- <20171129170247.GI28152@atomide.com>
- <96cf5d74-3acf-07b9-9ad8-1011cd99a860@gmail.com>
- <CACRpkdbFHj9pM6R3azVPKgbQ-LMmitEdJHQ5BOEb7Vy=kpNk4A@mail.gmail.com>
- <908c66f9-f9bd-a4df-e241-75595a3a3e27@gmail.com>
- <CACRpkdaXrG0rMChf-SVngsPJrsHbAVbUNfH=4m+RX73NHz3iwg@mail.gmail.com>
+From: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Subject: [PATCH 00/11] drm/sun4i: Add A83T HDMI support
+Date: Sat, 30 Dec 2017 22:01:52 +0100
+Message-ID: <20171230210203.24115-1-jernej.skrabec@siol.net>
+Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdaXrG0rMChf-SVngsPJrsHbAVbUNfH=4m+RX73NHz3iwg@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Tony Lindgren <tony@atomide.com>, linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, Charles Keepax <ckeepax@opensource.cirrus.com>, Charles Keepax <ckeepax@opensource.wolfsonmicro.com>, Stephen Warren <swarren@nvidia.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Al Cooper <alcooperx@gmail.com>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDQNBWPU7YERBWH5T7JAKGQEYIO27QY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org
+Cc: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, jernej.skrabec-gGgVlfcn5nU@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Le 12/19/17 à 23:24, Linus Walleij a écrit :
-> On Mon, Dec 11, 2017 at 12:38 AM, Florian Fainelli <f.fainelli@gmail.com> wrote:
->> On 12/02/2017 04:48 AM, Linus Walleij wrote:
-> 
->>> This should solve your problem without having to alter the semantics
->>> of pinctrl_select_state() for everyone.
->>
->> This was exactly what I proposed initially here:
->>
->> http://patchwork.ozlabs.org/patch/734326/
->>
->> I really want to get this fixed, but I can't do that if we keep losing
->> the context of the discussion (pun intended) :).
-> 
-> Oh sorry man. I am clearly too stupid for this job...
+This patch series implements support for A83T DW HDMI and PHY. It is based
+upon Maxime Ripard's "drm/sun4i: Add A83t LVDS support" patch series which
+can be found here:
+http://lists.infradead.org/pipermail/linux-arm-kernel/2017-December/550035.html
 
-No need to slap yourself!
+While exactly this combination of HDMI controller and PHY is not common in
+Allwinner SoCs, this patch series nevertheless makes groundwork for other
+SoCs, which have same DW HDMI IP block, but different PHYs, like H3 and H5.
 
-> 
-> In accordance with things needing to be intuitive, something named
-> *force_* should of course force the setting into the hardware.
-> 
-> The original patch didn't mention the fact that it was hogs
-> and hogs only that was causing the trouble and that is why I
-> got lost. (I guess.) I have been going about this as if it was
-> something generic that affect all states in all devices, and to
-> me hogs is just an abscure corner of pin controlling...
-> 
-> I applied the patchwork patch from above, and elaborated
-> a bit on that it pertains to hogs, let's see what
-> happens.
-> 
-> For the case where a driver (not hog) needs to handle
-> suspend/resume transitions, proper states can hopefully
-> be used.
+All patches can also be found on github:
+https://github.com/jernejsk/linux-1/commits/a83t_hdmi
 
-Your commit message makes that clear now, thanks for applying the patch
-and gott nytt år!
+Please take a look.
+
+Best regards,
+Jernej
+
+Jernej Skrabec (11):
+  clk: sunxi-ng: Don't set k if width is 0 for nkmp plls
+  clk: sunxi-ng: a83t: Add M divider to TCON1 clock
+  drm/bridge/synopsys: dw-hdmi: Enable workaround for v1.32a
+  drm/bridge/synopsys: dw-hdmi: Export some PHY related functions
+  drm/bridge/synopsys: dw-hdmi: Add deinit callback
+  dt-bindings: display: sun4i-drm: Add A83T HDMI pipeline
+  drm/sun4i: Add support for A83T second TCON
+  drm/sun4i: Add support for A83T second DE2 mixer
+  drm/sun4i: Implement A83T HDMI driver
+  ARM: dts: sun8i: a83t: Add HDMI display pipeline
+  ARM: dts: sun8i: a83t: Enable HDMI on BananaPi M3
+
+ .../bindings/display/sunxi/sun4i-drm.txt           | 188 ++++++++++-
+ arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts       |  29 ++
+ arch/arm/boot/dts/sun8i-a83t.dtsi                  | 108 +++++-
+ drivers/clk/sunxi-ng/ccu-sun8i-a83t.c              |   4 +-
+ drivers/clk/sunxi-ng/ccu_nkmp.c                    |  21 +-
+ drivers/gpu/drm/bridge/synopsys/dw-hdmi.c          |  56 +++-
+ drivers/gpu/drm/bridge/synopsys/dw-hdmi.h          |   2 +
+ drivers/gpu/drm/sun4i/Kconfig                      |   9 +
+ drivers/gpu/drm/sun4i/Makefile                     |   1 +
+ drivers/gpu/drm/sun4i/sun4i_tcon.c                 |  46 ++-
+ drivers/gpu/drm/sun4i/sun4i_tcon.h                 |   1 +
+ drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c              | 367 +++++++++++++++++++++
+ drivers/gpu/drm/sun4i/sun8i_mixer.c                |  11 +
+ include/drm/bridge/dw_hdmi.h                       |  11 +
+ 14 files changed, 808 insertions(+), 46 deletions(-)
+ create mode 100644 drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
+
 -- 
-Florian
+2.15.1
