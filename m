@@ -1,13 +1,13 @@
 From: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Subject: [PATCH 04/11] drm/bridge/synopsys: dw-hdmi: Export some
- PHY related functions
-Date: Sat, 30 Dec 2017 22:01:56 +0100
-Message-ID: <20171230210203.24115-5-jernej.skrabec@siol.net>
+Subject: [PATCH 01/11] clk: sunxi-ng: Don't set k if width is 0
+ for nkmp plls
+Date: Sat, 30 Dec 2017 22:01:53 +0100
+Message-ID: <20171230210203.24115-2-jernej.skrabec@siol.net>
 References: <20171230210203.24115-1-jernej.skrabec@siol.net>
 Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDQNBWPU7YERBY75T7JAKGQEKJ2YXCQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDQNBWPU7YERBW75T7JAKGQE5NZA2EA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20171230210203.24115-1-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,168 +20,66 @@ To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, airlied-cv5
 Cc: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, jernej.skrabec-gGgVlfcn5nU@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Parts of PHY code could be useful also for custom PHYs. For example,
-Allwinner A83T has custom PHY which is probably Synopsys gen2 PHY
-with few additional memory mapped registers, so most of the Synopsys PHY
-related code could be reused.
+For example, A83T have nmp plls which are modelled as nkmp plls. Since k
+is not specified, it has offset 0, shift 0 and lowest value 1. This
+means that LSB bit is always set to 1, which may change clock rate.
 
-It turns out that even completely custom HDMI PHYs, such as the one
-found in Allwinner H3, can reuse some of those functions. This would
-suggest that (some?) functions exported in this commit are actually part
-of generic PHY interface and not really specific to Synopsys PHYs.
-
-Export useful PHY functions.
+Fix that by applying k factor only if k width is greater than 0.
 
 Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 ---
- drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 45 ++++++++++++++++++++++---------
- drivers/gpu/drm/bridge/synopsys/dw-hdmi.h |  2 ++
- include/drm/bridge/dw_hdmi.h              | 10 +++++++
- 3 files changed, 44 insertions(+), 13 deletions(-)
+ drivers/clk/sunxi-ng/ccu_nkmp.c | 21 +++++++++++++--------
+ 1 file changed, 13 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-index 7ca14d7325b5..67467d0b683a 100644
---- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-+++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-@@ -1037,19 +1037,21 @@ static void dw_hdmi_phy_enable_svsret(struct dw_hdmi *hdmi, u8 enable)
- 			 HDMI_PHY_CONF0_SVSRET_MASK);
- }
- 
--static void dw_hdmi_phy_gen2_pddq(struct dw_hdmi *hdmi, u8 enable)
-+void dw_hdmi_phy_gen2_pddq(struct dw_hdmi *hdmi, u8 enable)
+diff --git a/drivers/clk/sunxi-ng/ccu_nkmp.c b/drivers/clk/sunxi-ng/ccu_nkmp.c
+index e58c95787f94..709f528af2b3 100644
+--- a/drivers/clk/sunxi-ng/ccu_nkmp.c
++++ b/drivers/clk/sunxi-ng/ccu_nkmp.c
+@@ -81,7 +81,7 @@ static unsigned long ccu_nkmp_recalc_rate(struct clk_hw *hw,
+ 					unsigned long parent_rate)
  {
- 	hdmi_mask_writeb(hdmi, enable, HDMI_PHY_CONF0,
- 			 HDMI_PHY_CONF0_GEN2_PDDQ_OFFSET,
- 			 HDMI_PHY_CONF0_GEN2_PDDQ_MASK);
- }
-+EXPORT_SYMBOL_GPL(dw_hdmi_phy_gen2_pddq);
+ 	struct ccu_nkmp *nkmp = hw_to_ccu_nkmp(hw);
+-	unsigned long n, m, k, p;
++	unsigned long n, m, k = 1, p;
+ 	u32 reg;
  
--static void dw_hdmi_phy_gen2_txpwron(struct dw_hdmi *hdmi, u8 enable)
-+void dw_hdmi_phy_gen2_txpwron(struct dw_hdmi *hdmi, u8 enable)
- {
- 	hdmi_mask_writeb(hdmi, enable, HDMI_PHY_CONF0,
- 			 HDMI_PHY_CONF0_GEN2_TXPWRON_OFFSET,
- 			 HDMI_PHY_CONF0_GEN2_TXPWRON_MASK);
- }
-+EXPORT_SYMBOL_GPL(dw_hdmi_phy_gen2_txpwron);
+ 	reg = readl(nkmp->common.base + nkmp->common.reg);
+@@ -92,11 +92,13 @@ static unsigned long ccu_nkmp_recalc_rate(struct clk_hw *hw,
+ 	if (!n)
+ 		n++;
  
- static void dw_hdmi_phy_sel_data_en_pol(struct dw_hdmi *hdmi, u8 enable)
- {
-@@ -1065,6 +1067,23 @@ static void dw_hdmi_phy_sel_interface_control(struct dw_hdmi *hdmi, u8 enable)
- 			 HDMI_PHY_CONF0_SELDIPIF_MASK);
- }
+-	k = reg >> nkmp->k.shift;
+-	k &= (1 << nkmp->k.width) - 1;
+-	k += nkmp->k.offset;
+-	if (!k)
+-		k++;
++	if (nkmp->k.width) {
++		k = reg >> nkmp->k.shift;
++		k &= (1 << nkmp->k.width) - 1;
++		k += nkmp->k.offset;
++		if (!k)
++			k++;
++	}
  
-+void dw_hdmi_phy_gen2_reset(struct dw_hdmi *hdmi, u8 enable)
-+{
-+	hdmi_mask_writeb(hdmi, enable, HDMI_MC_PHYRSTZ,
-+			 HDMI_MC_PHYRSTZ_PHYRSTZ_OFFSET,
-+			 HDMI_MC_PHYRSTZ_PHYRSTZ_MASK);
-+}
-+EXPORT_SYMBOL_GPL(dw_hdmi_phy_gen2_reset);
-+
-+void dw_hdmi_phy_set_slave_addr(struct dw_hdmi *hdmi)
-+{
-+	hdmi_phy_test_clear(hdmi, 1);
-+	hdmi_writeb(hdmi, HDMI_PHY_I2CM_SLAVE_ADDR_PHY_GEN2,
-+		    HDMI_PHY_I2CM_SLAVE_ADDR);
-+	hdmi_phy_test_clear(hdmi, 0);
-+}
-+EXPORT_SYMBOL_GPL(dw_hdmi_phy_set_slave_addr);
-+
- static void dw_hdmi_phy_power_off(struct dw_hdmi *hdmi)
- {
- 	const struct dw_hdmi_phy_data *phy = hdmi->phy.data;
-@@ -1204,15 +1223,12 @@ static int hdmi_phy_configure(struct dw_hdmi *hdmi)
- 		dw_hdmi_phy_enable_svsret(hdmi, 1);
+ 	m = reg >> nkmp->m.shift;
+ 	m &= (1 << nkmp->m.width) - 1;
+@@ -153,12 +155,15 @@ static int ccu_nkmp_set_rate(struct clk_hw *hw, unsigned long rate,
  
- 	/* PHY reset. The reset signal is active high on Gen2 PHYs. */
--	hdmi_writeb(hdmi, HDMI_MC_PHYRSTZ_PHYRSTZ, HDMI_MC_PHYRSTZ);
--	hdmi_writeb(hdmi, 0, HDMI_MC_PHYRSTZ);
-+	dw_hdmi_phy_gen2_reset(hdmi, 1);
-+	dw_hdmi_phy_gen2_reset(hdmi, 0);
+ 	reg = readl(nkmp->common.base + nkmp->common.reg);
+ 	reg &= ~GENMASK(nkmp->n.width + nkmp->n.shift - 1, nkmp->n.shift);
+-	reg &= ~GENMASK(nkmp->k.width + nkmp->k.shift - 1, nkmp->k.shift);
++	if (nkmp->k.width)
++		reg &= ~GENMASK(nkmp->k.width + nkmp->k.shift - 1,
++				nkmp->k.shift);
+ 	reg &= ~GENMASK(nkmp->m.width + nkmp->m.shift - 1, nkmp->m.shift);
+ 	reg &= ~GENMASK(nkmp->p.width + nkmp->p.shift - 1, nkmp->p.shift);
  
- 	hdmi_writeb(hdmi, HDMI_MC_HEACPHY_RST_ASSERT, HDMI_MC_HEACPHY_RST);
+ 	reg |= (_nkmp.n - nkmp->n.offset) << nkmp->n.shift;
+-	reg |= (_nkmp.k - nkmp->k.offset) << nkmp->k.shift;
++	if (nkmp->k.width)
++		reg |= (_nkmp.k - nkmp->k.offset) << nkmp->k.shift;
+ 	reg |= (_nkmp.m - nkmp->m.offset) << nkmp->m.shift;
+ 	reg |= ilog2(_nkmp.p) << nkmp->p.shift;
  
--	hdmi_phy_test_clear(hdmi, 1);
--	hdmi_writeb(hdmi, HDMI_PHY_I2CM_SLAVE_ADDR_PHY_GEN2,
--		    HDMI_PHY_I2CM_SLAVE_ADDR);
--	hdmi_phy_test_clear(hdmi, 0);
-+	dw_hdmi_phy_set_slave_addr(hdmi);
- 
- 	/* Write to the PHY as configured by the platform */
- 	if (pdata->configure_phy)
-@@ -1251,15 +1267,16 @@ static void dw_hdmi_phy_disable(struct dw_hdmi *hdmi, void *data)
- 	dw_hdmi_phy_power_off(hdmi);
- }
- 
--static enum drm_connector_status dw_hdmi_phy_read_hpd(struct dw_hdmi *hdmi,
--						      void *data)
-+enum drm_connector_status dw_hdmi_phy_read_hpd(struct dw_hdmi *hdmi,
-+					       void *data)
- {
- 	return hdmi_readb(hdmi, HDMI_PHY_STAT0) & HDMI_PHY_HPD ?
- 		connector_status_connected : connector_status_disconnected;
- }
-+EXPORT_SYMBOL_GPL(dw_hdmi_phy_read_hpd);
- 
--static void dw_hdmi_phy_update_hpd(struct dw_hdmi *hdmi, void *data,
--				   bool force, bool disabled, bool rxsense)
-+void dw_hdmi_phy_update_hpd(struct dw_hdmi *hdmi, void *data,
-+			    bool force, bool disabled, bool rxsense)
- {
- 	u8 old_mask = hdmi->phy_mask;
- 
-@@ -1271,8 +1288,9 @@ static void dw_hdmi_phy_update_hpd(struct dw_hdmi *hdmi, void *data,
- 	if (old_mask != hdmi->phy_mask)
- 		hdmi_writeb(hdmi, hdmi->phy_mask, HDMI_PHY_MASK0);
- }
-+EXPORT_SYMBOL_GPL(dw_hdmi_phy_update_hpd);
- 
--static void dw_hdmi_phy_setup_hpd(struct dw_hdmi *hdmi, void *data)
-+void dw_hdmi_phy_setup_hpd(struct dw_hdmi *hdmi, void *data)
- {
- 	/*
- 	 * Configure the PHY RX SENSE and HPD interrupts polarities and clear
-@@ -1291,6 +1309,7 @@ static void dw_hdmi_phy_setup_hpd(struct dw_hdmi *hdmi, void *data)
- 	hdmi_writeb(hdmi, ~(HDMI_IH_PHY_STAT0_HPD | HDMI_IH_PHY_STAT0_RX_SENSE),
- 		    HDMI_IH_MUTE_PHY_STAT0);
- }
-+EXPORT_SYMBOL_GPL(dw_hdmi_phy_setup_hpd);
- 
- static const struct dw_hdmi_phy_ops dw_hdmi_synopsys_phy_ops = {
- 	.init = dw_hdmi_phy_init,
-diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h
-index 9d90eb9c46e5..fd150430d0b3 100644
---- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h
-+++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h
-@@ -950,6 +950,8 @@ enum {
- 
- /* MC_PHYRSTZ field values */
- 	HDMI_MC_PHYRSTZ_PHYRSTZ = 0x01,
-+	HDMI_MC_PHYRSTZ_PHYRSTZ_OFFSET = 0x00,
-+	HDMI_MC_PHYRSTZ_PHYRSTZ_MASK = 0x01,
- 
- /* MC_HEACPHY_RST field values */
- 	HDMI_MC_HEACPHY_RST_ASSERT = 0x1,
-diff --git a/include/drm/bridge/dw_hdmi.h b/include/drm/bridge/dw_hdmi.h
-index 182f83283e24..f5cca4362154 100644
---- a/include/drm/bridge/dw_hdmi.h
-+++ b/include/drm/bridge/dw_hdmi.h
-@@ -159,5 +159,15 @@ void dw_hdmi_audio_disable(struct dw_hdmi *hdmi);
- /* PHY configuration */
- void dw_hdmi_phy_i2c_write(struct dw_hdmi *hdmi, unsigned short data,
- 			   unsigned char addr);
-+enum drm_connector_status dw_hdmi_phy_read_hpd(struct dw_hdmi *hdmi,
-+					       void *data);
-+void dw_hdmi_phy_update_hpd(struct dw_hdmi *hdmi, void *data,
-+			    bool force, bool disabled, bool rxsense);
-+void dw_hdmi_phy_setup_hpd(struct dw_hdmi *hdmi, void *data);
-+
-+void dw_hdmi_phy_gen2_pddq(struct dw_hdmi *hdmi, u8 enable);
-+void dw_hdmi_phy_gen2_txpwron(struct dw_hdmi *hdmi, u8 enable);
-+void dw_hdmi_phy_gen2_reset(struct dw_hdmi *hdmi, u8 enable);
-+void dw_hdmi_phy_set_slave_addr(struct dw_hdmi *hdmi);
- 
- #endif /* __IMX_HDMI_H__ */
 -- 
 2.15.1
