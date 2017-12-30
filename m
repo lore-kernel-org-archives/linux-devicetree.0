@@ -1,55 +1,71 @@
 From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: [PATCH v4 0/6] Allwinner H3/H5/A64(DE2) SimpleFB support (Part 2)
-Date: Sat, 30 Dec 2017 19:30:37 +0800
-Message-ID: <20171230113043.30237-1-icenowy@aosc.io>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Subject: [PATCH v4 1/6] ARM: sunxi: h3/h5: add simplefb nodes
+Date: Sat, 30 Dec 2017 19:30:38 +0800
+Message-ID: <20171230113043.30237-2-icenowy@aosc.io>
+References: <20171230113043.30237-1-icenowy@aosc.io>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBTXSTXJAKGQEHBJDNSI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20171230113043.30237-1-icenowy-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
 To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patchset is the remaining part of Allwinner DE2 SimpleFB support in
-Linux. Some H3/5-related patches are already applied into the sunxi
-tree.
+The H3/H5 SoCs have a HDMI output and a TV Composite output.
 
-PATCH 1 adds the final SimpleFB nodes to the H3/H5 device tree. With it
-applied the SimpleFB will be usable on H3/H5.
+Add simplefb nodes for these outputs.
 
-PATCH 2/3 are for the SRAM requirment of the A64 SoC; PATCH 2 is the
-device tree binding of it and PATCH 3 is the implementation in DE2 CCU
-of it.
+Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+---
+Changes in v4:
+- Dropped extra clocks (bus clocks and HDMI DDC clocks), only keep the
+  clocks that are needed to display framebuffer to the monitor.
 
-PATCH 4/5 are A64 DTSI file parts; PATCH 4 adds DE2 CCU device node and
-PATCH 5 adds SimpleFB device node.
+ arch/arm/boot/dts/sunxi-h3-h5.dtsi | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-PATCH 6 are A64 per-board DTS file changes, which keeps the regulator
-for HVCC pin (a power supply pin on A64 SoC that is used by the HDMI
-controller) on these boards.
-
-Icenowy Zheng (6):
-  ARM: sunxi: h3/h5: add simplefb nodes
-  dt-bindings: add binding for A64 DE2 CCU SRAM
-  clk: sunxi-ng: add support for Allwinner A64 DE2 CCU
-  arm64: allwinner: a64: add DE2 CCU for A64 SoC
-  arm64: allwinner: a64: add simplefb for A64 SoC
-  arm64: allwinner: a64: add HDMI regulator to all DTs' simplefb_hdmi
-
- .../devicetree/bindings/clock/sun8i-de2.txt        |   5 +
- arch/arm/boot/dts/sunxi-h3-h5.dtsi                 |  24 +++++
- .../boot/dts/allwinner/sun50i-a64-bananapi-m64.dts |   4 +
- .../boot/dts/allwinner/sun50i-a64-nanopi-a64.dts   |   4 +
- .../boot/dts/allwinner/sun50i-a64-olinuxino.dts    |   4 +
- .../boot/dts/allwinner/sun50i-a64-orangepi-win.dts |   4 +
- .../arm64/boot/dts/allwinner/sun50i-a64-pine64.dts |   4 +
- .../dts/allwinner/sun50i-a64-sopine-baseboard.dts  |   4 +
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi      |  60 +++++++++++
- drivers/clk/sunxi-ng/ccu-sun8i-de2.c               | 117 ++++++++++++++-------
- 10 files changed, 190 insertions(+), 40 deletions(-)
-
+diff --git a/arch/arm/boot/dts/sunxi-h3-h5.dtsi b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+index fcb909658cf0..7a83b15225c7 100644
+--- a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
++++ b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+@@ -53,6 +53,30 @@
+ 	#address-cells = <1>;
+ 	#size-cells = <1>;
+ 
++	chosen {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++
++		framebuffer-hdmi {
++			compatible = "allwinner,simple-framebuffer",
++				     "simple-framebuffer";
++			allwinner,pipeline = "mixer0-lcd0-hdmi";
++			clocks = <&display_clocks CLK_MIXER0>,
++				 <&ccu CLK_TCON0>, <&ccu CLK_HDMI>;
++			status = "disabled";
++		};
++
++		framebuffer-tve {
++			compatible = "allwinner,simple-framebuffer",
++				     "simple-framebuffer";
++			allwinner,pipeline = "mixer1-lcd1-tve";
++			clocks = <&display_clocks CLK_MIXER1>,
++				 <&ccu CLK_TVE>;
++			status = "disabled";
++		};
++	};
++
+ 	clocks {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
 -- 
 2.14.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
