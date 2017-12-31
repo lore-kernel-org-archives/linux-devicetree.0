@@ -1,92 +1,266 @@
-From: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Subject: [PATCH 11/11] ARM: dts: sun8i: a83t: Enable HDMI on
- BananaPi M3
-Date: Sat, 30 Dec 2017 22:02:03 +0100
-Message-ID: <20171230210203.24115-12-jernej.skrabec@siol.net>
-References: <20171230210203.24115-1-jernej.skrabec@siol.net>
-Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
+From: =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>
+Subject: Re: [PATCH v3 3/3] drm/tinydrm: add driver for ST7735R panels
+Date: Sun, 31 Dec 2017 17:17:20 +0100
+Message-ID: <77b8eb04-4c25-5831-6132-735d52b2e730@tronnes.org>
+References: <1513884233-31540-1-git-send-email-david@lechnology.com>
+ <1513884233-31540-4-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDQNBWPU7YERB5H5T7JAKGQERRZ2BBQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20171230210203.24115-1-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org
-Cc: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, jernej.skrabec-gGgVlfcn5nU@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1513884233-31540-4-git-send-email-david@lechnology.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Lechner <david@lechnology.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc: limor@ladyada.net, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-BananaPi M3 includes HDMI connector, so add support for it.
 
-Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
----
- arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts | 29 ++++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
+Den 21.12.2017 20.23, skrev David Lechner:
+> This adds a new driver for Sitronix ST7735R display panels.
+>
+> This has been tested using an Adafruit 1.8" TFT.
+>
+> Signed-off-by: David Lechner <david@lechnology.com>
+> ---
+>
+> v3 changes:
+> * Changed compatible string
+> * use SPDX license header
+> * Renamed mode struct to use panel name instead of controller name
+>
+> v2 changes:
+> * Change delay from 10ms to 20ms to avoid checkpatch warning
+> * Use mipi_dbi_pipe_enable()/mipi_dbi_pipe_disable() to reduce duplicated code
+> * Rebase on drm-misc-next (tinydrm_lastclose => drm_fb_helper_lastclose)
+> * Use mipi_dbi_debugfs_init
+> * Add mipi->read_commands = NULL; since this display is write-only
+<snip>
+> diff --git a/drivers/gpu/drm/tinydrm/st7735r.c b/drivers/gpu/drm/tinydrm/st7735r.c
+> new file mode 100644
+> index 0000000..0b05b2c
+> --- /dev/null
+> +++ b/drivers/gpu/drm/tinydrm/st7735r.c
+> @@ -0,0 +1,215 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * DRM driver for Sitronix ST7735R panels
+> + *
+> + * Copyright 2017 David Lechner <david@lechnology.com>
+> + */
+> +
+> +#include <linux/delay.h>
+> +#include <linux/dma-buf.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/module.h>
+> +#include <linux/property.h>
+> +#include <linux/spi/spi.h>
+> +#include <video/mipi_display.h>
+> +
+> +#include <drm/drm_fb_helper.h>
+> +#include <drm/drm_gem_framebuffer_helper.h>
+> +#include <drm/tinydrm/mipi-dbi.h>
+> +#include <drm/tinydrm/tinydrm-helpers.h>
+> +
+> +#define ST7735R_FRMCTR1		0xb1
+> +#define ST7735R_FRMCTR2		0xb2
+> +#define ST7735R_FRMCTR3		0xb3
+> +#define ST7735R_INVCTR		0xb4
+> +#define ST7735R_PWCTR1		0xc0
+> +#define ST7735R_PWCTR2		0xc1
+> +#define ST7735R_PWCTR3		0xc2
+> +#define ST7735R_PWCTR4		0xc3
+> +#define ST7735R_PWCTR5		0xc4
+> +#define ST7735R_VMCTR1		0xc5
+> +#define ST7735R_GAMCTRP1	0xe0
+> +#define ST7735R_GAMCTRN1	0xe1
+> +
+> +#define ST7735R_MY	BIT(7)
+> +#define ST7735R_MX	BIT(6)
+> +#define ST7735R_MV	BIT(5)
+> +
+> +static void st7735r_pipe_enable(struct drm_simple_display_pipe *pipe,
+> +				struct drm_crtc_state *crtc_state)
 
-diff --git a/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts b/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts
-index 6550bf0e594b..2002d249e14c 100644
---- a/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts
-+++ b/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts
-@@ -60,6 +60,17 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
-+	connector {
-+		compatible = "hdmi-connector";
-+		type = "a";
-+
-+		port {
-+			hdmi_con_in: endpoint {
-+				remote-endpoint = <&hdmi_out_con>;
-+			};
-+		};
-+	};
-+
- 	reg_usb1_vbus: reg-usb1-vbus {
- 		compatible = "regulator-fixed";
- 		regulator-name = "usb1-vbus";
-@@ -82,6 +93,10 @@
- 	};
- };
- 
-+&de {
-+	status = "okay";
-+};
-+
- &ehci0 {
- 	/* Terminus Tech FE 1.1s 4-port USB 2.0 hub here */
- 	status = "okay";
-@@ -100,6 +115,16 @@
- 	status = "okay";
- };
- 
-+&hdmi {
-+	status = "okay";
-+};
-+
-+&hdmi_out {
-+	hdmi_out_con: endpoint {
-+		remote-endpoint = <&hdmi_con_in>;
-+	};
-+};
-+
- &mdio {
- 	rgmii_phy: ethernet-phy@1 {
- 		compatible = "ethernet-phy-ieee802.3-c22";
-@@ -306,6 +331,10 @@
- 	regulator-name = "vcc-ephy";
- };
- 
-+&tcon1 {
-+	status = "okay";
-+};
-+
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_pb_pins>;
--- 
-2.15.1
+This is confusing, you name the mode after the panel, but not the enable
+function which has an initialization sequence that is also panel specific.
+
+With .enable function named after the panel (and *_pipe_funcs):
+
+Reviewed-by: Noralf Trønnes <noralf@tronnes.org>
+
+> +{
+> +	struct tinydrm_device *tdev = pipe_to_tinydrm(pipe);
+> +	struct mipi_dbi *mipi = mipi_dbi_from_tinydrm(tdev);
+> +	struct device *dev = tdev->drm->dev;
+> +	int ret;
+> +	u8 addr_mode;
+> +
+> +	DRM_DEBUG_KMS("\n");
+> +
+> +	mipi_dbi_hw_reset(mipi);
+> +
+> +	ret = mipi_dbi_command(mipi, MIPI_DCS_SOFT_RESET);
+> +	if (ret) {
+> +		DRM_DEV_ERROR(dev, "Error sending command %d\n", ret);
+> +		return;
+> +	}
+> +
+> +	msleep(150);
+> +
+> +	mipi_dbi_command(mipi, MIPI_DCS_EXIT_SLEEP_MODE);
+> +	msleep(500);
+> +
+> +	mipi_dbi_command(mipi, ST7735R_FRMCTR1, 0x01, 0x2c, 0x2d);
+> +	mipi_dbi_command(mipi, ST7735R_FRMCTR2, 0x01, 0x2c, 0x2d);
+> +	mipi_dbi_command(mipi, ST7735R_FRMCTR3, 0x01, 0x2c, 0x2d, 0x01, 0x2c,
+> +			 0x2d);
+> +	mipi_dbi_command(mipi, ST7735R_INVCTR, 0x07);
+> +	mipi_dbi_command(mipi, ST7735R_PWCTR1, 0xa2, 0x02, 0x84);
+> +	mipi_dbi_command(mipi, ST7735R_PWCTR2, 0xc5);
+> +	mipi_dbi_command(mipi, ST7735R_PWCTR3, 0x0a, 0x00);
+> +	mipi_dbi_command(mipi, ST7735R_PWCTR4, 0x8a, 0x2a);
+> +	mipi_dbi_command(mipi, ST7735R_PWCTR5, 0x8a, 0xee);
+> +	mipi_dbi_command(mipi, ST7735R_VMCTR1, 0x0e);
+> +	mipi_dbi_command(mipi, MIPI_DCS_EXIT_INVERT_MODE);
+> +	switch (mipi->rotation) {
+> +	default:
+> +		addr_mode = ST7735R_MX | ST7735R_MY;
+> +		break;
+> +	case 90:
+> +		addr_mode = ST7735R_MX | ST7735R_MV;
+> +		break;
+> +	case 180:
+> +		addr_mode = 0;
+> +		break;
+> +	case 270:
+> +		addr_mode = ST7735R_MY | ST7735R_MV;
+> +		break;
+> +	}
+> +	mipi_dbi_command(mipi, MIPI_DCS_SET_ADDRESS_MODE, addr_mode);
+> +	mipi_dbi_command(mipi, MIPI_DCS_SET_PIXEL_FORMAT,
+> +			 MIPI_DCS_PIXEL_FMT_16BIT);
+> +	mipi_dbi_command(mipi, ST7735R_GAMCTRP1, 0x0f, 0x1a, 0x0f, 0x18, 0x2f,
+> +			 0x28, 0x20, 0x22, 0x1f, 0x1b, 0x23, 0x37, 0x00, 0x07,
+> +			 0x02, 0x10);
+> +	mipi_dbi_command(mipi, ST7735R_GAMCTRN1, 0x0f, 0x1b, 0x0f, 0x17, 0x33,
+> +			 0x2c, 0x29, 0x2e, 0x30, 0x30, 0x39, 0x3f, 0x00, 0x07,
+> +			 0x03, 0x10);
+> +	mipi_dbi_command(mipi, MIPI_DCS_SET_DISPLAY_ON);
+> +
+> +	msleep(100);
+> +
+> +	mipi_dbi_command(mipi, MIPI_DCS_ENTER_NORMAL_MODE);
+> +
+> +	msleep(20);
+> +
+> +	mipi_dbi_pipe_enable(pipe, crtc_state);
+> +}
+> +
+> +static const struct drm_simple_display_pipe_funcs st7735r_pipe_funcs = {
+> +	.enable		= st7735r_pipe_enable,
+> +	.disable	= mipi_dbi_pipe_disable,
+> +	.update		= tinydrm_display_pipe_update,
+> +	.prepare_fb	= tinydrm_display_pipe_prepare_fb,
+> +};
+> +
+> +static const struct drm_display_mode jd_t18003_t01_mode = {
+> +	TINYDRM_MODE(128, 160, 28, 35),
+> +};
+> +
+> +DEFINE_DRM_GEM_CMA_FOPS(st7735r_fops);
+> +
+> +static struct drm_driver st7735r_driver = {
+> +	.driver_features	= DRIVER_GEM | DRIVER_MODESET | DRIVER_PRIME |
+> +				  DRIVER_ATOMIC,
+> +	.fops			= &st7735r_fops,
+> +	TINYDRM_GEM_DRIVER_OPS,
+> +	.lastclose		= drm_fb_helper_lastclose,
+> +	.debugfs_init		= mipi_dbi_debugfs_init,
+> +	.name			= "st7735r",
+> +	.desc			= "Sitronix ST7735R",
+> +	.date			= "20171128",
+> +	.major			= 1,
+> +	.minor			= 0,
+> +};
+> +
+> +static const struct of_device_id st7735r_of_match[] = {
+> +	{ .compatible = "jianda,jd-t18003-t01" },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, st7735r_of_match);
+> +
+> +static const struct spi_device_id st7735r_id[] = {
+> +	{ "jd-t18003-t01", 0 },
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(spi, st7735r_id);
+> +
+> +static int st7735r_probe(struct spi_device *spi)
+> +{
+> +	struct device *dev = &spi->dev;
+> +	struct mipi_dbi *mipi;
+> +	struct gpio_desc *dc;
+> +	u32 rotation = 0;
+> +	int ret;
+> +
+> +	mipi = devm_kzalloc(dev, sizeof(*mipi), GFP_KERNEL);
+> +	if (!mipi)
+> +		return -ENOMEM;
+> +
+> +	mipi->reset = devm_gpiod_get(dev, "reset", GPIOD_OUT_HIGH);
+> +	if (IS_ERR(mipi->reset)) {
+> +		DRM_DEV_ERROR(dev, "Failed to get gpio 'reset'\n");
+> +		return PTR_ERR(mipi->reset);
+> +	}
+> +
+> +	dc = devm_gpiod_get(dev, "dc", GPIOD_OUT_LOW);
+> +	if (IS_ERR(dc)) {
+> +		DRM_DEV_ERROR(dev, "Failed to get gpio 'dc'\n");
+> +		return PTR_ERR(dc);
+> +	}
+> +
+> +	mipi->backlight = tinydrm_of_find_backlight(dev);
+> +	if (IS_ERR(mipi->backlight))
+> +		return PTR_ERR(mipi->backlight);
+> +
+> +	device_property_read_u32(dev, "rotation", &rotation);
+> +
+> +	ret = mipi_dbi_spi_init(spi, mipi, dc);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Cannot read from Adafruit 1.8" display via SPI */
+> +	mipi->read_commands = NULL;
+> +
+> +	ret = mipi_dbi_init(&spi->dev, mipi, &st7735r_pipe_funcs,
+> +			    &st7735r_driver, &jd_t18003_t01_mode, rotation);
+> +	if (ret)
+> +		return ret;
+> +
+> +	spi_set_drvdata(spi, mipi);
+> +
+> +	return devm_tinydrm_register(&mipi->tinydrm);
+> +}
+> +
+> +static void st7735r_shutdown(struct spi_device *spi)
+> +{
+> +	struct mipi_dbi *mipi = spi_get_drvdata(spi);
+> +
+> +	tinydrm_shutdown(&mipi->tinydrm);
+> +}
+> +
+> +static struct spi_driver st7735r_spi_driver = {
+> +	.driver = {
+> +		.name = "st7735r",
+> +		.owner = THIS_MODULE,
+> +		.of_match_table = st7735r_of_match,
+> +	},
+> +	.id_table = st7735r_id,
+> +	.probe = st7735r_probe,
+> +	.shutdown = st7735r_shutdown,
+> +};
+> +module_spi_driver(st7735r_spi_driver);
+> +
+> +MODULE_DESCRIPTION("Sitronix ST7735R DRM driver");
+> +MODULE_AUTHOR("David Lechner <david@lechnology.com>");
+> +MODULE_LICENSE("GPL");
