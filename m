@@ -1,266 +1,63 @@
 From: =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>
 Subject: Re: [PATCH v3 3/3] drm/tinydrm: add driver for ST7735R panels
-Date: Sun, 31 Dec 2017 17:17:20 +0100
-Message-ID: <77b8eb04-4c25-5831-6132-735d52b2e730@tronnes.org>
+Date: Sun, 31 Dec 2017 17:19:04 +0100
+Message-ID: <2f28d0d7-2074-2e5c-4026-56143ec6ccd6@tronnes.org>
 References: <1513884233-31540-1-git-send-email-david@lechnology.com>
  <1513884233-31540-4-git-send-email-david@lechnology.com>
+ <2f63be06-f9b2-2103-888c-e3f49c40fe82@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1513884233-31540-4-git-send-email-david@lechnology.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Lechner <david@lechnology.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc: limor@ladyada.net, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <2f63be06-f9b2-2103-888c-e3f49c40fe82@lechnology.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: David Lechner <david@lechnology.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, limor@ladyada.net
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-Den 21.12.2017 20.23, skrev David Lechner:
-> This adds a new driver for Sitronix ST7735R display panels.
->
-> This has been tested using an Adafruit 1.8" TFT.
->
-> Signed-off-by: David Lechner <david@lechnology.com>
-> ---
->
-> v3 changes:
-> * Changed compatible string
-> * use SPDX license header
-> * Renamed mode struct to use panel name instead of controller name
->
-> v2 changes:
-> * Change delay from 10ms to 20ms to avoid checkpatch warning
-> * Use mipi_dbi_pipe_enable()/mipi_dbi_pipe_disable() to reduce duplicated code
-> * Rebase on drm-misc-next (tinydrm_lastclose => drm_fb_helper_lastclose)
-> * Use mipi_dbi_debugfs_init
-> * Add mipi->read_commands = NULL; since this display is write-only
-<snip>
-> diff --git a/drivers/gpu/drm/tinydrm/st7735r.c b/drivers/gpu/drm/tinydrm/st7735r.c
-> new file mode 100644
-> index 0000000..0b05b2c
-> --- /dev/null
-> +++ b/drivers/gpu/drm/tinydrm/st7735r.c
-> @@ -0,0 +1,215 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * DRM driver for Sitronix ST7735R panels
-> + *
-> + * Copyright 2017 David Lechner <david@lechnology.com>
-> + */
-> +
-> +#include <linux/delay.h>
-> +#include <linux/dma-buf.h>
-> +#include <linux/gpio/consumer.h>
-> +#include <linux/module.h>
-> +#include <linux/property.h>
-> +#include <linux/spi/spi.h>
-> +#include <video/mipi_display.h>
-> +
-> +#include <drm/drm_fb_helper.h>
-> +#include <drm/drm_gem_framebuffer_helper.h>
-> +#include <drm/tinydrm/mipi-dbi.h>
-> +#include <drm/tinydrm/tinydrm-helpers.h>
-> +
-> +#define ST7735R_FRMCTR1		0xb1
-> +#define ST7735R_FRMCTR2		0xb2
-> +#define ST7735R_FRMCTR3		0xb3
-> +#define ST7735R_INVCTR		0xb4
-> +#define ST7735R_PWCTR1		0xc0
-> +#define ST7735R_PWCTR2		0xc1
-> +#define ST7735R_PWCTR3		0xc2
-> +#define ST7735R_PWCTR4		0xc3
-> +#define ST7735R_PWCTR5		0xc4
-> +#define ST7735R_VMCTR1		0xc5
-> +#define ST7735R_GAMCTRP1	0xe0
-> +#define ST7735R_GAMCTRN1	0xe1
-> +
-> +#define ST7735R_MY	BIT(7)
-> +#define ST7735R_MX	BIT(6)
-> +#define ST7735R_MV	BIT(5)
-> +
-> +static void st7735r_pipe_enable(struct drm_simple_display_pipe *pipe,
-> +				struct drm_crtc_state *crtc_state)
-
-This is confusing, you name the mode after the panel, but not the enable
-function which has an initialization sequence that is also panel specific.
-
-With .enable function named after the panel (and *_pipe_funcs):
-
-Reviewed-by: Noralf Trønnes <noralf@tronnes.org>
-
-> +{
-> +	struct tinydrm_device *tdev = pipe_to_tinydrm(pipe);
-> +	struct mipi_dbi *mipi = mipi_dbi_from_tinydrm(tdev);
-> +	struct device *dev = tdev->drm->dev;
-> +	int ret;
-> +	u8 addr_mode;
-> +
-> +	DRM_DEBUG_KMS("\n");
-> +
-> +	mipi_dbi_hw_reset(mipi);
-> +
-> +	ret = mipi_dbi_command(mipi, MIPI_DCS_SOFT_RESET);
-> +	if (ret) {
-> +		DRM_DEV_ERROR(dev, "Error sending command %d\n", ret);
-> +		return;
-> +	}
-> +
-> +	msleep(150);
-> +
-> +	mipi_dbi_command(mipi, MIPI_DCS_EXIT_SLEEP_MODE);
-> +	msleep(500);
-> +
-> +	mipi_dbi_command(mipi, ST7735R_FRMCTR1, 0x01, 0x2c, 0x2d);
-> +	mipi_dbi_command(mipi, ST7735R_FRMCTR2, 0x01, 0x2c, 0x2d);
-> +	mipi_dbi_command(mipi, ST7735R_FRMCTR3, 0x01, 0x2c, 0x2d, 0x01, 0x2c,
-> +			 0x2d);
-> +	mipi_dbi_command(mipi, ST7735R_INVCTR, 0x07);
-> +	mipi_dbi_command(mipi, ST7735R_PWCTR1, 0xa2, 0x02, 0x84);
-> +	mipi_dbi_command(mipi, ST7735R_PWCTR2, 0xc5);
-> +	mipi_dbi_command(mipi, ST7735R_PWCTR3, 0x0a, 0x00);
-> +	mipi_dbi_command(mipi, ST7735R_PWCTR4, 0x8a, 0x2a);
-> +	mipi_dbi_command(mipi, ST7735R_PWCTR5, 0x8a, 0xee);
-> +	mipi_dbi_command(mipi, ST7735R_VMCTR1, 0x0e);
-> +	mipi_dbi_command(mipi, MIPI_DCS_EXIT_INVERT_MODE);
-> +	switch (mipi->rotation) {
-> +	default:
-> +		addr_mode = ST7735R_MX | ST7735R_MY;
-> +		break;
-> +	case 90:
-> +		addr_mode = ST7735R_MX | ST7735R_MV;
-> +		break;
-> +	case 180:
-> +		addr_mode = 0;
-> +		break;
-> +	case 270:
-> +		addr_mode = ST7735R_MY | ST7735R_MV;
-> +		break;
-> +	}
-> +	mipi_dbi_command(mipi, MIPI_DCS_SET_ADDRESS_MODE, addr_mode);
-> +	mipi_dbi_command(mipi, MIPI_DCS_SET_PIXEL_FORMAT,
-> +			 MIPI_DCS_PIXEL_FMT_16BIT);
-> +	mipi_dbi_command(mipi, ST7735R_GAMCTRP1, 0x0f, 0x1a, 0x0f, 0x18, 0x2f,
-> +			 0x28, 0x20, 0x22, 0x1f, 0x1b, 0x23, 0x37, 0x00, 0x07,
-> +			 0x02, 0x10);
-> +	mipi_dbi_command(mipi, ST7735R_GAMCTRN1, 0x0f, 0x1b, 0x0f, 0x17, 0x33,
-> +			 0x2c, 0x29, 0x2e, 0x30, 0x30, 0x39, 0x3f, 0x00, 0x07,
-> +			 0x03, 0x10);
-> +	mipi_dbi_command(mipi, MIPI_DCS_SET_DISPLAY_ON);
-> +
-> +	msleep(100);
-> +
-> +	mipi_dbi_command(mipi, MIPI_DCS_ENTER_NORMAL_MODE);
-> +
-> +	msleep(20);
-> +
-> +	mipi_dbi_pipe_enable(pipe, crtc_state);
-> +}
-> +
-> +static const struct drm_simple_display_pipe_funcs st7735r_pipe_funcs = {
-> +	.enable		= st7735r_pipe_enable,
-> +	.disable	= mipi_dbi_pipe_disable,
-> +	.update		= tinydrm_display_pipe_update,
-> +	.prepare_fb	= tinydrm_display_pipe_prepare_fb,
-> +};
-> +
-> +static const struct drm_display_mode jd_t18003_t01_mode = {
-> +	TINYDRM_MODE(128, 160, 28, 35),
-> +};
-> +
-> +DEFINE_DRM_GEM_CMA_FOPS(st7735r_fops);
-> +
-> +static struct drm_driver st7735r_driver = {
-> +	.driver_features	= DRIVER_GEM | DRIVER_MODESET | DRIVER_PRIME |
-> +				  DRIVER_ATOMIC,
-> +	.fops			= &st7735r_fops,
-> +	TINYDRM_GEM_DRIVER_OPS,
-> +	.lastclose		= drm_fb_helper_lastclose,
-> +	.debugfs_init		= mipi_dbi_debugfs_init,
-> +	.name			= "st7735r",
-> +	.desc			= "Sitronix ST7735R",
-> +	.date			= "20171128",
-> +	.major			= 1,
-> +	.minor			= 0,
-> +};
-> +
-> +static const struct of_device_id st7735r_of_match[] = {
-> +	{ .compatible = "jianda,jd-t18003-t01" },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, st7735r_of_match);
-> +
-> +static const struct spi_device_id st7735r_id[] = {
-> +	{ "jd-t18003-t01", 0 },
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(spi, st7735r_id);
-> +
-> +static int st7735r_probe(struct spi_device *spi)
-> +{
-> +	struct device *dev = &spi->dev;
-> +	struct mipi_dbi *mipi;
-> +	struct gpio_desc *dc;
-> +	u32 rotation = 0;
-> +	int ret;
-> +
-> +	mipi = devm_kzalloc(dev, sizeof(*mipi), GFP_KERNEL);
-> +	if (!mipi)
-> +		return -ENOMEM;
-> +
-> +	mipi->reset = devm_gpiod_get(dev, "reset", GPIOD_OUT_HIGH);
-> +	if (IS_ERR(mipi->reset)) {
-> +		DRM_DEV_ERROR(dev, "Failed to get gpio 'reset'\n");
-> +		return PTR_ERR(mipi->reset);
-> +	}
-> +
-> +	dc = devm_gpiod_get(dev, "dc", GPIOD_OUT_LOW);
-> +	if (IS_ERR(dc)) {
-> +		DRM_DEV_ERROR(dev, "Failed to get gpio 'dc'\n");
-> +		return PTR_ERR(dc);
-> +	}
-> +
-> +	mipi->backlight = tinydrm_of_find_backlight(dev);
-> +	if (IS_ERR(mipi->backlight))
-> +		return PTR_ERR(mipi->backlight);
-> +
-> +	device_property_read_u32(dev, "rotation", &rotation);
-> +
-> +	ret = mipi_dbi_spi_init(spi, mipi, dc);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Cannot read from Adafruit 1.8" display via SPI */
-> +	mipi->read_commands = NULL;
-> +
-> +	ret = mipi_dbi_init(&spi->dev, mipi, &st7735r_pipe_funcs,
-> +			    &st7735r_driver, &jd_t18003_t01_mode, rotation);
-> +	if (ret)
-> +		return ret;
-> +
-> +	spi_set_drvdata(spi, mipi);
-> +
-> +	return devm_tinydrm_register(&mipi->tinydrm);
-> +}
-> +
-> +static void st7735r_shutdown(struct spi_device *spi)
-> +{
-> +	struct mipi_dbi *mipi = spi_get_drvdata(spi);
-> +
-> +	tinydrm_shutdown(&mipi->tinydrm);
-> +}
-> +
-> +static struct spi_driver st7735r_spi_driver = {
-> +	.driver = {
-> +		.name = "st7735r",
-> +		.owner = THIS_MODULE,
-> +		.of_match_table = st7735r_of_match,
-> +	},
-> +	.id_table = st7735r_id,
-> +	.probe = st7735r_probe,
-> +	.shutdown = st7735r_shutdown,
-> +};
-> +module_spi_driver(st7735r_spi_driver);
-> +
-> +MODULE_DESCRIPTION("Sitronix ST7735R DRM driver");
-> +MODULE_AUTHOR("David Lechner <david@lechnology.com>");
-> +MODULE_LICENSE("GPL");
+CkRlbiAyMS4xMi4yMDE3IDIwLjM1LCBza3JldiBEYXZpZCBMZWNobmVyOgo+IE9uIDEyLzIxLzIw
+MTcgMDE6MjMgUE0sIERhdmlkIExlY2huZXIgd3JvdGU6Cj4+IFRoaXMgYWRkcyBhIG5ldyBkcml2
+ZXIgZm9yIFNpdHJvbml4IFNUNzczNVIgZGlzcGxheSBwYW5lbHMuCj4+Cj4+IFRoaXMgaGFzIGJl
+ZW4gdGVzdGVkIHVzaW5nIGFuIEFkYWZydWl0IDEuOCIgVEZULgo+Pgo+PiBTaWduZWQtb2ZmLWJ5
+OiBEYXZpZCBMZWNobmVyIDxkYXZpZEBsZWNobm9sb2d5LmNvbT4KPj4gLS0tCj4KPiA8c25pcD4K
+Pgo+PiArwqDCoMKgIG1pcGlfZGJpX2NvbW1hbmQobWlwaSwgU1Q3NzM1Ul9HQU1DVFJQMSwgMHgw
+ZiwgMHgxYSwgMHgwZiwgMHgxOCwgCj4+IDB4MmYsCj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqAgMHgyOCwgMHgyMCwgMHgyMiwgMHgxZiwgMHgxYiwgMHgyMywgMHgzNywgMHgwMCwgMHgwNywK
+Pj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAweDAyLCAweDEwKTsKPj4gK8KgwqDCoCBtaXBp
+X2RiaV9jb21tYW5kKG1pcGksIFNUNzczNVJfR0FNQ1RSTjEsIDB4MGYsIDB4MWIsIDB4MGYsIDB4
+MTcsIAo+PiAweDMzLAo+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIDB4MmMsIDB4MjksIDB4
+MmUsIDB4MzAsIDB4MzAsIDB4MzksIDB4M2YsIDB4MDAsIDB4MDcsCj4+ICvCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqAgMHgwMywgMHgxMCk7Cj4gQnkgdGhlIHdheSwgaG93IGRvIHlvdSBrbm93IHdo
+YXQgaXMgdGhlICJyaWdodCIgZ2FtbWEgY3VydmU/IEkgdGhpbmsgSSAKPiBjb3BpZWQgdGhpcyBm
+cm9tIHRoZSBnZW5lcmljIHN0NzczNXIgZHJpdmVyIGluIGZidGZ0LCBidXQgSSBub3RpY2VkIAo+
+IHRoYXQgdGhlcmUgaXMgYWxzbyBhIGRpZmZlcmVudCBjdXJ2ZSBmb3IgdGhlIEFkYWZydWl0IDEu
+OCIgZGlzcGxheSBpbiAKPiBmYnRmdC4gSSdtIHdvbmRlcmluZyBpZiBJIHNob3VsZCBoYXZlIHVz
+ZWQgdGhhdCBvbmUgaW5zdGVhZC4gSSBjYW4ndCAKPiByZWFsbHkgdGVsbCBhIGRpZmZlcmVuY2Ug
+bG9va2luZyBhdCB0aGUgZGlzcGxheS4KCiBGcm9tIHdoYXQgSSBjYW4gdGVsbCB0aGlzIGlzIHRo
+ZSBjdXJ2ZSB1c2VkIGJ5IHRoZSBBcmR1aW5vIGxpYnJhcnk6CgpodHRwczovL2dpdGh1Yi5jb20v
+YWRhZnJ1aXQvQWRhZnJ1aXQtU1Q3NzM1LUxpYnJhcnkvYmxvYi9tYXN0ZXIvQWRhZnJ1aXRfU1Q3
+NzM1LmNwcAoKc3RhdGljIGNvbnN0IHVpbnQ4X3QgUFJPR01FTQogwqAgUmNtZDNbXSA9IHvCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAvLyBJbml0IGZvciA3NzM1UiwgcGFydCAzIChy
+ZWQgb3IgZ3JlZW4gdGFiKQogwqDCoMKgIDQswqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoCAvL8KgIDQgY29tbWFuZHMgaW4gbGlzdDoKIMKgwqDCoCBTVDc3MzVf
+R01DVFJQMSwgMTbCoMKgwqDCoMKgICwgLy/CoCAxOiBNYWdpY2FsIHVuaWNvcm4gZHVzdCwgMTYg
+YXJncywgbm8gCmRlbGF5OgogwqDCoMKgwqDCoCAweDAyLCAweDFjLCAweDA3LCAweDEyLAogwqDC
+oMKgwqDCoCAweDM3LCAweDMyLCAweDI5LCAweDJkLAogwqDCoMKgwqDCoCAweDI5LCAweDI1LCAw
+eDJCLCAweDM5LAogwqDCoMKgwqDCoCAweDAwLCAweDAxLCAweDAzLCAweDEwLAogwqDCoMKgIFNU
+NzczNV9HTUNUUk4xLCAxNsKgwqDCoMKgwqAgLCAvL8KgIDI6IFNwYXJrbGVzIGFuZCByYWluYm93
+cywgMTYgYXJncywgbm8gCmRlbGF5OgogwqDCoMKgwqDCoCAweDAzLCAweDFkLCAweDA3LCAweDA2
+LAogwqDCoMKgwqDCoCAweDJFLCAweDJDLCAweDI5LCAweDJELAogwqDCoMKgwqDCoCAweDJFLCAw
+eDJFLCAweDM3LCAweDNGLAogwqDCoMKgwqDCoCAweDAwLCAweDAwLCAweDAyLCAweDEwLAoKdm9p
+ZCBBZGFmcnVpdF9TVDc3MzU6OmluaXRSKHVpbnQ4X3Qgb3B0aW9ucykgewogwqAgY29tbW9uSW5p
+dChSY21kMSk7Ci4uLgogwqAgY29tbWFuZExpc3QoUmNtZDMpOwoKCk5vcmFsZi4KCl9fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5n
+IGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVk
+ZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
