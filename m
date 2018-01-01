@@ -1,88 +1,56 @@
-From: Eduardo Valentin <edubezval@gmail.com>
-Subject: Re: [PATCH v7 02/11] thermal: armada: Use msleep for long delays
-Date: Mon, 1 Jan 2018 12:55:39 -0800
-Message-ID: <20180101205537.GA29474@localhost.localdomain>
-References: <20171222161413.20816-1-miquel.raynal@free-electrons.com>
- <20171222161413.20816-3-miquel.raynal@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171222161413.20816-3-miquel.raynal@free-electrons.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Miquel Raynal <miquel.raynal@free-electrons.com>
-Cc: Zhang Rui <rui.zhang@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Gregory Clement <gregory.clement@free-electrons.com>, Antoine Tenart <antoine.tenart@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, Baruch Siach <baruch@tkos.co.il>, David Sniatkiwicz <davidsn@marvell.com>
+From: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2] ARM: dts: imx6: RDU2: disable internal watchdog
+Date: Mon,  1 Jan 2018 13:24:51 -0800
+Message-ID: <20180101212451.11516-1-andrew.smirnov@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cphealy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 22, 2017 at 05:14:04PM +0100, Miquel Raynal wrote:
-> From: Baruch Siach <baruch@tkos.co.il>
-> 
-> Use msleep for long (> 10ms) delays, instead of the busy waiting mdelay.
-> All delays are called from the probe routine, where scheduling is
-> allowed.
-> 
-> Signed-off-by: Baruch Siach <baruch@tkos.co.il>
-> Signed-off-by: Miquel Raynal <miquel.raynal@free-electrons.com>
-> Reviewed-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-I am queueing this patch, however, ...
+The system has an external watchdog in the environment processor
+so the internal watchdog is of no use.
 
-> ---
->  drivers/thermal/armada_thermal.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/thermal/armada_thermal.c b/drivers/thermal/armada_thermal.c
-> index 706d74798cbe..6c4af2622d4f 100644
-> --- a/drivers/thermal/armada_thermal.c
-> +++ b/drivers/thermal/armada_thermal.c
-> @@ -113,7 +113,7 @@ static void armada370_init_sensor(struct platform_device *pdev,
->  	reg &= ~PMU_TDC0_START_CAL_MASK;
->  	writel(reg, priv->control);
->  
-> -	mdelay(10);
-> +	msleep(10);
+Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: cphealy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Signed-off-by: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
 
-I want to double check with you that msleep(10) is documented to reach
-up to 20ms, see:
+Changes since [v1]:
+
+ - Submission updated to have correct "From" field.
+
+[v1] lkml.kernel.org/r/20171227035656.4941-2-andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 
 
-WARNING: msleep < 20ms can sleep for up to 20ms; see Documentation/timers/timers-howto.txt
-#43: FILE: drivers/thermal/armada_thermal.c:116:
-+	msleep(10);
+ arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-WARNING: msleep < 20ms can sleep for up to 20ms; see Documentation/timers/timers-howto.txt
-#66: FILE: drivers/thermal/armada_thermal.c:146:
-+		msleep(10);
-
-Just want to check that you are aware of this and that it won't cause
-troubles in the code flows changed in this patch. Driver is still in one piece, correct?
-
->  }
->  
->  static void armada375_init_sensor(struct platform_device *pdev,
-> @@ -127,11 +127,11 @@ static void armada375_init_sensor(struct platform_device *pdev,
->  	reg &= ~A375_HW_RESETn;
->  
->  	writel(reg, priv->control + 4);
-> -	mdelay(20);
-> +	msleep(20);
->  
->  	reg |= A375_HW_RESETn;
->  	writel(reg, priv->control + 4);
-> -	mdelay(50);
-> +	msleep(50);
->  }
->  
->  static void armada380_init_sensor(struct platform_device *pdev,
-> @@ -143,7 +143,7 @@ static void armada380_init_sensor(struct platform_device *pdev,
->  	if (!(reg & A380_HW_RESET)) {
->  		reg |= A380_HW_RESET;
->  		writel(reg, priv->control);
-> -		mdelay(10);
-> +		msleep(10);
->  	}
->  }
->  
-> -- 
-> 2.11.0
-> 
+diff --git a/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi b/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
+index 6bef9a98678e..818bfc8692a5 100644
+--- a/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
+@@ -838,6 +838,10 @@
+ 	status = "okay";
+ };
+ 
++&wdog1 {
++	status = "disabled";
++};
++
+ &audmux {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_audmux>;
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
