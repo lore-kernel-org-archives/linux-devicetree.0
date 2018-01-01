@@ -1,24 +1,47 @@
-From: Eduardo Valentin <edubezval@gmail.com>
-Subject: Re: [1/2] arm64: dts: r8a7795: add thermal cooling management
-Date: Mon, 1 Jan 2018 10:13:35 -0800
-Message-ID: <20180101181333.GA3631@localhost.localdomain>
-References: <20170913105909.13230-2-niklas.soderlund+renesas@ragnatech.se>
+From: David Lechner <david@lechnology.com>
+Subject: [PATCH v4 0/3] DRM driver for Sitronix ST7735R display panels
+Date: Mon,  1 Jan 2018 13:02:13 -0600
+Message-ID: <1514833336-22564-1-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170913105909.13230-2-niklas.soderlund+renesas@ragnatech.se>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund+renesas@ragnatech.se>
-Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, limor@ladyada.net, David Lechner <david@lechnology.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 13, 2017 at 12:59:08PM +0200, Niklas Söderlund wrote:
-> Add nodes and properties for thermal cooling management support.
-> 
-> Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-> ---
-
-Just a reminder, this series should go via your arch tree. You may add
-my acks.
+VGhpcyBzZXJpZXMgYWRkcyBhIG5ldyBEUk0vVGlueURSTSBkcml2ZXIgZm9yIFNpdHJvbml4IFNU
+NzczNVIsIHNwZWNpZmljYWxseQp0aGUgQWRhZnJ1aXQgMS44IiBURlQuCgpOb3RoaW5nIGZhbmN5
+IGhlcmUuIEp1c3QgbW9zdGx5IFRpbnlEUk0gYm9pbGVycGxhdGUgd2l0aCB0aGUgaW5pdCBzZXF1
+ZW5jZQpmcm9tIHRoZSBmYnRmdCBkcml2ZXIgZm9yIHRoZSBzYW1lIHBhbmVsLgoKdjQgY2hhbmdl
+czoKKiBGaXggYWxwaGFiZXRpY2FsIG9yZGVyIG9mIGRldmljZSB0cmVlIHZlbmRvcgoqIGNoYW5n
+ZSBwcmVmaXggb24gcGFuZWwtc3BlY2lmaWMgZnVuY3Rpb25zL3N0cnVjdHMgdG8gcGFuZWwgcHJl
+Zml4IGluc3RlYWQKICBvZiBjb250cm9sbGVyCiogVXNlIGdhbW1hIGN1cnZlIGZyb20gQWRhZnJ1
+aXQncyBBcmR1aW5vIGxpYnJhcnkuCgp2MyBjaGFuZ2VzOgoqIE5ldyBwYXRjaCBmb3IgamlhbmRh
+IHZlbmRvciBwcmVmaXgKKiBDaGFuZ2UgY29tcGF0aWJsZSBzdHJpbmcgaW4gRFQgYmluZGluZ3Mg
+KGRyb3BwZWQgQUNLIGJlY2F1c2Ugb2YgdGhpcykKKiBVc2UgU1BEWCBsaWNlbnNlIElECgpEYXZp
+ZCBMZWNobmVyICgzKToKICBkdC1iaW5kaW5nczogYWRkIGppYW5kYSB2ZW5kb3IgcHJlZml4CiAg
+ZHQtYmluZGluZ3M6IEFkZCBiaW5kaW5nIGZvciBTaXRyb25peCBTVDc3MzVSIGRpc3BsYXkgcGFu
+ZWxzCiAgZHJtL3Rpbnlkcm06IGFkZCBkcml2ZXIgZm9yIFNUNzczNVIgcGFuZWxzCgogLi4uL2Jp
+bmRpbmdzL2Rpc3BsYXkvc2l0cm9uaXgsc3Q3NzM1ci50eHQgICAgICAgICAgfCAgMzUgKysrKwog
+Li4uL2RldmljZXRyZWUvYmluZGluZ3MvdmVuZG9yLXByZWZpeGVzLnR4dCAgICAgICAgfCAgIDEg
+KwogTUFJTlRBSU5FUlMgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAg
+IDYgKwogZHJpdmVycy9ncHUvZHJtL3Rpbnlkcm0vS2NvbmZpZyAgICAgICAgICAgICAgICAgICAg
+fCAgMTAgKwogZHJpdmVycy9ncHUvZHJtL3Rpbnlkcm0vTWFrZWZpbGUgICAgICAgICAgICAgICAg
+ICAgfCAgIDEgKwogZHJpdmVycy9ncHUvZHJtL3Rpbnlkcm0vc3Q3NzM1ci5jICAgICAgICAgICAg
+ICAgICAgfCAyMTUgKysrKysrKysrKysrKysrKysrKysrCiA2IGZpbGVzIGNoYW5nZWQsIDI2OCBp
+bnNlcnRpb25zKCspCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2Rpc3BsYXkvc2l0cm9uaXgsc3Q3NzM1ci50eHQKIGNyZWF0ZSBtb2RlIDEwMDY0
+NCBkcml2ZXJzL2dwdS9kcm0vdGlueWRybS9zdDc3MzVyLmMKCi0tIAoyLjcuNAoKX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcg
+bGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRl
+c2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
