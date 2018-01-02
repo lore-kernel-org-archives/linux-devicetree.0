@@ -1,214 +1,87 @@
-From: Ryder Lee <ryder.lee@mediatek.com>
-Subject: [PATCH 05/12] mfd: mtk-audsys: add MediaTek audio
-	subsystem driver
-Date: Tue, 2 Jan 2018 19:47:30 +0800
-Message-ID: <fbe22b0d78c41b121f04202dcbfcd0cc23a7590d.1514881870.git.ryder.lee@mediatek.com>
-References: <cover.1514881870.git.ryder.lee@mediatek.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v2 2/9] include: media: Add Renesas CEU driver interface
+Date: Tue, 02 Jan 2018 13:50:07 +0200
+Message-ID: <2922415.TB8nfS0gW1@avalon>
+References: <1514469681-15602-1-git-send-email-jacopo+renesas@jmondi.org> <1514469681-15602-3-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <cover.1514881870.git.ryder.lee@mediatek.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>, Lee Jones <lee.jones@linaro.org>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Ryder Lee <ryder.lee@mediatek.com>, Garlic Tseng <garlic.tseng@mediatek.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1514469681-15602-3-git-send-email-jacopo+renesas@jmondi.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: magnus.damm@gmail.com, geert@glider.be, mchehab@kernel.org, hverkuil@xs4all.nl, robh+dt@kernel.org, mark.rutland@arm.com, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add a common driver for the top block of the MediaTek audio subsystem.
-This is a wrapper which manages resources for audio components.
+Hi Jacopo,
 
-Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
----
- drivers/mfd/Kconfig      |   9 ++++
- drivers/mfd/Makefile     |   2 +
- drivers/mfd/mtk-audsys.c | 138 +++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 149 insertions(+)
- create mode 100644 drivers/mfd/mtk-audsys.c
+Thank you for the patch.
 
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index 1d20a80..ea50b51 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -368,6 +368,15 @@ config MFD_MC13XXX_I2C
- 	help
- 	  Select this if your MC13xxx is connected via an I2C bus.
- 
-+config MFD_MEDIATEK_AUDSYS
-+	tristate "MediaTek audio subsystem interface"
-+	select MDF_CORE
-+	select REGMAP_MMIO
-+	help
-+	  Select this if you have a audio subsystem in MediaTek SoC.
-+	  The audio subsystem has at least a clock driver part and some
-+	  audio components.
-+
- config MFD_MXS_LRADC
- 	tristate "Freescale i.MX23/i.MX28 LRADC"
- 	depends on ARCH_MXS || COMPILE_TEST
-diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-index d9474ad..3e20927 100644
---- a/drivers/mfd/Makefile
-+++ b/drivers/mfd/Makefile
-@@ -101,6 +101,8 @@ obj-$(CONFIG_MFD_MC13XXX)	+= mc13xxx-core.o
- obj-$(CONFIG_MFD_MC13XXX_SPI)	+= mc13xxx-spi.o
- obj-$(CONFIG_MFD_MC13XXX_I2C)	+= mc13xxx-i2c.o
- 
-+obj-$(CONFIG_MFD_MEDIATEK_AUDSYS) += mtk-audsys.o
-+
- obj-$(CONFIG_MFD_CORE)		+= mfd-core.o
- 
- obj-$(CONFIG_EZX_PCAP)		+= ezx-pcap.o
-diff --git a/drivers/mfd/mtk-audsys.c b/drivers/mfd/mtk-audsys.c
-new file mode 100644
-index 0000000..89399e1
---- /dev/null
-+++ b/drivers/mfd/mtk-audsys.c
-@@ -0,0 +1,138 @@
-+/*
-+ * Mediatek audio subsystem core driver
-+ *
-+ *  Copyright (c) 2017 MediaTek Inc.
-+ *
-+ * Author: Ryder Lee <ryder.lee@mediatek.com>
-+ *
-+ * For licencing details see kernel-base/COPYING
-+ *
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/module.h>
-+#include <linux/of_platform.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+
-+#define AUDSYS_MAX_CLK_NUM 3
-+
-+struct sys_dev {
-+	struct device *dev;
-+	struct regmap *regmap;
-+	int clk_num;
-+	struct clk *clks[];
-+};
-+
-+static const struct regmap_config aud_regmap_config = {
-+	.reg_bits = 32,
-+	.reg_stride = 4,
-+	.val_bits = 32,
-+	.max_register = 0x15e0,
-+	.cache_type = REGCACHE_NONE,
-+};
-+
-+static int mtk_subsys_enable(struct sys_dev *sys)
-+{
-+	struct device *dev = sys->dev;
-+	struct clk *clk;
-+	int i, ret;
-+
-+	for (i = 0; i < sys->clk_num; i++) {
-+		clk = of_clk_get(dev->of_node, i);
-+		if (IS_ERR(clk)) {
-+			if (PTR_ERR(clk) == -EPROBE_DEFER)
-+				return -EPROBE_DEFER;
-+			break;
-+		}
-+		sys->clks[i] = clk;
-+	}
-+
-+	for (i = 0; i < sys->clk_num && sys->clks[i]; i++) {
-+		ret = clk_prepare_enable(sys->clks[i]);
-+		if (ret)
-+			goto err_enable_clks;
-+	}
-+
-+	return 0;
-+
-+err_enable_clks:
-+	while (--i >= 0)
-+		clk_disable_unprepare(sys->clks[i]);
-+
-+	return ret;
-+}
-+
-+static int mtk_subsys_probe(struct platform_device *pdev)
-+{
-+	struct sys_dev *sys;
-+	struct resource *res;
-+	void __iomem *mmio;
-+	int num, ret;
-+
-+	num = (int)of_device_get_match_data(&pdev->dev);
-+	if (!num)
-+		return -EINVAL;
-+
-+	sys = devm_kzalloc(&pdev->dev, sizeof(*sys) +
-+			   sizeof(struct clk *) * num, GFP_KERNEL);
-+	if (!sys)
-+		return -ENOMEM;
-+
-+	sys->clk_num = num;
-+	sys->dev = &pdev->dev;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	mmio = devm_ioremap_resource(sys->dev, res);
-+	if (IS_ERR(mmio))
-+		return PTR_ERR(mmio);
-+
-+	sys->regmap = devm_regmap_init_mmio(sys->dev, mmio,
-+					    &aud_regmap_config);
-+	if (IS_ERR(sys->regmap))
-+		return PTR_ERR(sys->regmap);
-+
-+	platform_set_drvdata(pdev, sys);
-+
-+	/* Enable top level clocks */
-+	ret = mtk_subsys_enable(sys);
-+	if (ret)
-+		return ret;
-+
-+	return devm_of_platform_populate(sys->dev);
-+};
-+
-+static int mtk_subsys_remove(struct platform_device *pdev)
-+{
-+	struct sys_dev *sys = platform_get_drvdata(pdev);
-+	int i;
-+
-+	for (i = sys->clk_num - 1; i >= 0; i--)
-+		if (sys->clks[i])
-+			clk_disable_unprepare(sys->clks[i]);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id of_match_audsys[] = {
-+	{
-+	  .compatible = "mediatek,mt2701-audsys-core",
-+	  .data = (void *)AUDSYS_MAX_CLK_NUM,
-+	},
-+	{},
-+};
-+MODULE_DEVICE_TABLE(platform, of_match_audsys);
-+
-+static struct platform_driver audsys_drv = {
-+	.probe = mtk_subsys_probe,
-+	.remove	= mtk_subsys_remove,
-+	.driver = {
-+		.name = "mediatek-audsys-core",
-+		.of_match_table = of_match_ptr(of_match_audsys),
-+	},
-+};
-+
-+builtin_platform_driver(audsys_drv);
-+
-+MODULE_DESCRIPTION("Mediatek audio subsystem core driver");
-+MODULE_LICENSE("GPL");
+On Thursday, 28 December 2017 16:01:14 EET Jacopo Mondi wrote:
+> Add renesas-ceu header file.
+> 
+> Do not remove the existing sh_mobile_ceu.h one as long as the original
+> driver does not go away.
+> 
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> ---
+>  include/media/drv-intf/renesas-ceu.h | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+>  create mode 100644 include/media/drv-intf/renesas-ceu.h
+> 
+> diff --git a/include/media/drv-intf/renesas-ceu.h
+> b/include/media/drv-intf/renesas-ceu.h new file mode 100644
+> index 0000000..7470c3f
+> --- /dev/null
+> +++ b/include/media/drv-intf/renesas-ceu.h
+> @@ -0,0 +1,20 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+
+Just out of curiosity, any reason you have picked GPL-2.0+ and not GPL-2.0 ?
+
+You might want to add a copyright header to state copyright ownership
+
+/**
+ * renesas-ceu.h - Renesas CEU driver interface
+ *
+ * Copyright 2017-2018 Jacopo Mondi <jacopo@jmondi.org>
+ */
+
+That's up to you.
+
+> +#ifndef __ASM_RENESAS_CEU_H__
+
+Maybe __MEDIA_DRV_INTF_RENESAS_CEU_H__ ?
+
+> +#define __ASM_RENESAS_CEU_H__
+> +
+> +#define CEU_MAX_SUBDEVS		2
+> +
+> +struct ceu_async_subdev {
+> +	unsigned long flags;
+> +	unsigned char bus_width;
+> +	unsigned char bus_shift;
+> +	unsigned int i2c_adapter_id;
+> +	unsigned int i2c_address;
+> +};
+> +
+> +struct ceu_info {
+
+This is really platform data, how about calling it ceu_platform_data ?
+
+> +	unsigned int num_subdevs;
+> +	struct ceu_async_subdev subdevs[CEU_MAX_SUBDEVS];
+> +};
+> +
+> +#endif /* __ASM_RENESAS_CEU_H__ */
+
+Don't forget to update the comment here too.
+
+Apart from that,
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
 -- 
-1.9.1
+Regards,
+
+Laurent Pinchart
