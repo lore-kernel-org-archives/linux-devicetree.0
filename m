@@ -1,68 +1,116 @@
-From: Suzuki K Poulose <suzuki.poulose-5wv7dgnIgG8@public.gmane.org>
-Subject: [PATCH v11 7/8] dt-bindings: Document devicetree binding for ARM DSU PMU
-Date: Tue,  2 Jan 2018 11:25:32 +0000
-Message-ID: <20180102112533.13640-8-suzuki.poulose@arm.com>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+Subject: [PATCH v11 2/8] of: Add helper for mapping device node to logical CPU
+ number
+Date: Tue,  2 Jan 2018 11:25:27 +0000
+Message-ID: <20180102112533.13640-3-suzuki.poulose@arm.com>
 References: <20180102112533.13640-1-suzuki.poulose@arm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180102112533.13640-1-suzuki.poulose-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: will.deacon-5wv7dgnIgG8@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, jonathan.cameron-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, Suzuki K Poulose <suzuki.poulose-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180102112533.13640-1-suzuki.poulose@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: will.deacon@arm.com
+Cc: mark.rutland@arm.com, robh@kernel.org, sudeep.holla@arm.com, mathieu.poirier@linaro.org, Suzuki K Poulose <suzuki.poulose@arm.com>, peterz@infradead.org, jonathan.cameron@huawei.com, linux-kernel@vger.kernel.org, marc.zyngier@arm.com, devicetree@vger.kernel.org, leo.yan@linaro.org, frowand.list@gmail.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch documents the devicetree bindings for ARM DSU PMU.
+Add a helper to map a device node to a logical CPU number to avoid
+duplication. Currently this is open coded in different places (e.g
+gic-v3, coresight). The helper tries to map device node to a "possible"
+logical CPU id, which may not be online yet. It is the responsibility
+of the user to make sure that the CPU is online. The helper uses
+of_cpu_device_node_get() to retrieve the device node for a given CPU
+(which uses per_cpu data if available else falls back to slower
+of_get_cpu_node()).
 
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Suzuki K Poulose <suzuki.poulose-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree@vger.kernel.org
+Cc: Frank Rowand <frowand.list@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>
+Reviewed-by: Marc Zyngier <marc.zyngier@arm.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 ---
+Changes since V6:
+ - Use faster of_cpu_device_node_get instead of of_get_cpu_node(),
+   which now falls back to latter if called in early.
 Changes since V3:
- - Fixed node name in the example, suggested by Rob
+ - Renamed the helper to of_cpu_node_to_id(), suggested by Rob
+ - Return -ENODEV on failure than nr_cpus_id
 ---
- .../devicetree/bindings/arm/arm-dsu-pmu.txt        | 27 ++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/arm-dsu-pmu.txt
+ drivers/of/base.c  | 26 ++++++++++++++++++++++++++
+ include/linux/of.h |  7 +++++++
+ 2 files changed, 33 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/arm-dsu-pmu.txt b/Documentation/devicetree/bindings/arm/arm-dsu-pmu.txt
-new file mode 100644
-index 000000000000..6efabba530f1
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/arm-dsu-pmu.txt
-@@ -0,0 +1,27 @@
-+* ARM DynamIQ Shared Unit (DSU) Performance Monitor Unit (PMU)
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 26618ba8f92a..a9d6fe86585b 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -316,6 +316,32 @@ struct device_node *of_get_cpu_node(int cpu, unsigned int *thread)
+ EXPORT_SYMBOL(of_get_cpu_node);
+ 
+ /**
++ * of_cpu_node_to_id: Get the logical CPU number for a given device_node
++ *
++ * @cpu_node: Pointer to the device_node for CPU.
++ *
++ * Returns the logical CPU number of the given CPU device_node.
++ * Returns -ENODEV if the CPU is not found.
++ */
++int of_cpu_node_to_id(struct device_node *cpu_node)
++{
++	int cpu;
++	bool found = false;
++	struct device_node *np;
 +
-+ARM DyanmIQ Shared Unit (DSU) integrates one or more CPU cores
-+with a shared L3 memory system, control logic and external interfaces to
-+form a multicore cluster. The PMU enables to gather various statistics on
-+the operations of the DSU. The PMU provides independent 32bit counters that
-+can count any of the supported events, along with a 64bit cycle counter.
-+The PMU is accessed via CPU system registers and has no MMIO component.
++	for_each_possible_cpu(cpu) {
++		np = of_cpu_device_node_get(cpu);
++		found = (cpu_node == np);
++		of_node_put(np);
++		if (found)
++			return cpu;
++	}
 +
-+** DSU PMU required properties:
++	return -ENODEV;
++}
++EXPORT_SYMBOL(of_cpu_node_to_id);
 +
-+- compatible	: should be one of :
++/**
+  * __of_device_is_compatible() - Check if the node matches given constraints
+  * @device: pointer to node
+  * @compat: required compatible string, NULL or "" for any match
+diff --git a/include/linux/of.h b/include/linux/of.h
+index d3dea1d1e3a9..173102dafb07 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -544,6 +544,8 @@ const char *of_prop_next_string(struct property *prop, const char *cur);
+ 
+ bool of_console_check(struct device_node *dn, char *name, int index);
+ 
++extern int of_cpu_node_to_id(struct device_node *np);
 +
-+		"arm,dsu-pmu"
+ #else /* CONFIG_OF */
+ 
+ static inline void of_core_init(void)
+@@ -916,6 +918,11 @@ static inline void of_property_clear_flag(struct property *p, unsigned long flag
+ {
+ }
+ 
++static inline int of_cpu_node_to_id(struct device_node *np)
++{
++	return -ENODEV;
++}
 +
-+- interrupts	: Exactly 1 SPI must be listed.
-+
-+- cpus		: List of phandles for the CPUs connected to this DSU instance.
-+
-+
-+** Example:
-+
-+dsu-pmu-0 {
-+	compatible = "arm,dsu-pmu";
-+	interrupts = <GIC_SPI 02 IRQ_TYPE_LEVEL_HIGH>;
-+	cpus = <&cpu_0>, <&cpu_1>;
-+};
+ #define of_match_ptr(_ptr)	NULL
+ #define of_match_node(_matches, _node)	NULL
+ #endif /* CONFIG_OF */
 -- 
 2.13.6
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
