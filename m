@@ -1,116 +1,65 @@
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: [PATCH v11 2/8] of: Add helper for mapping device node to logical CPU
- number
-Date: Tue,  2 Jan 2018 11:25:27 +0000
-Message-ID: <20180102112533.13640-3-suzuki.poulose@arm.com>
-References: <20180102112533.13640-1-suzuki.poulose@arm.com>
+From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+Subject: Re: [RFC v2 7/9] bluetooth: btrtl: load the config blob from
+ devicetree when available
+Date: Tue, 2 Jan 2018 11:31:06 +0000
+Message-ID: <CAL9uMOH0N-4jgQncmPjK-KyU0vY9Q0ZnHYSAGgz3z3ywzc8Avw@mail.gmail.com>
+References: <20180101204217.26165-1-martin.blumenstingl@googlemail.com>
+ <20180101204217.26165-8-martin.blumenstingl@googlemail.com>
+ <563D6F9F-8495-40D4-BE56-5338ED2B9B99@holtmann.org> <CAL9uMOEMDup4hRkxD-tM8R0YirGs5uQi31AjJUnFCPNMKUdRHg@mail.gmail.com>
+ <E8E39477-CF1A-4A3E-84C5-830E182C2266@holtmann.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180102112533.13640-1-suzuki.poulose@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: will.deacon@arm.com
-Cc: mark.rutland@arm.com, robh@kernel.org, sudeep.holla@arm.com, mathieu.poirier@linaro.org, Suzuki K Poulose <suzuki.poulose@arm.com>, peterz@infradead.org, jonathan.cameron@huawei.com, linux-kernel@vger.kernel.org, marc.zyngier@arm.com, devicetree@vger.kernel.org, leo.yan@linaro.org, frowand.list@gmail.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <E8E39477-CF1A-4A3E-84C5-830E182C2266-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>
+Sender: linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>
+Cc: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "Gustavo F. Padovan" <gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org>, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, jslaby-IBi9RG/b67k@public.gmane.org, johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Larry.Finger-tQ5ms3gMjBLk1uMJSBkQmQ@public.gmane.org, Daniel Drake <drake-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a helper to map a device node to a logical CPU number to avoid
-duplication. Currently this is open coded in different places (e.g
-gic-v3, coresight). The helper tries to map device node to a "possible"
-logical CPU id, which may not be online yet. It is the responsibility
-of the user to make sure that the CPU is online. The helper uses
-of_cpu_device_node_get() to retrieve the device node for a given CPU
-(which uses per_cpu data if available else falls back to slower
-of_get_cpu_node()).
+On Tue, Jan 2, 2018 at 11:19 AM, Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org> wrot=
+e:
+> Hi Carlo,
+>
+>>>> Some Realtek bluetooth devices need a "config" blob. The btrtl driver
+>>>> currently only allows loading this config blob via the request_firmwar=
+e
+>>>> mechanism.
+>>>>
+>>>> The UART Bluetooth chips use this config blob to specify the baudrate,
+>>>> whether flow control is used and some other unknown bits. This means
+>>>> that the config blob is board-specific - thus loading it via
+>>>> request_firmware means that the rootfs is tied to a specific board.
+>>>>
+>>>> The UART Bluetooth chips are implemented through serdev. This means
+>>>> there is also a devicetree node which describes the Bluetooth chip.
+>>>> Thus we can also load the blob from the devicetree node to keep the
+>>>> filesystem independent of any board configuration data. In the future
+>>>> this could be extended to support ACPI as well (in case that's needed)=
+.
+>>>>
+>>>> Parse the devicetree node if it exists and obtain the config blob from
+>>>> there. Otherwise fall back to using the "old" request_firmware
+>>>> mechanism.
+>>>
+>>> where are these config blobs coming from? I think we also need to give =
+people a helping hand on how to add them to DT. I still wonder if the only =
+pieces we are using are the UART config, then maybe skipping the config blo=
+b and allowing for clear named values in DT might be better.
+>>
+>> What about x86 platforms where we do not have DT (I didn't check but I
+>> don't think that the UART config in that case is shipped in the ACPI
+>> tables)?
+>
+> if we have this hardware in x86 systems, then I would really like to see =
+ACPI table dumps. Some pieces might need hardcoding based on ACPI ID.
 
-Cc: devicetree@vger.kernel.org
-Cc: Frank Rowand <frowand.list@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>
-Reviewed-by: Marc Zyngier <marc.zyngier@arm.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
----
-Changes since V6:
- - Use faster of_cpu_device_node_get instead of of_get_cpu_node(),
-   which now falls back to latter if called in early.
-Changes since V3:
- - Renamed the helper to of_cpu_node_to_id(), suggested by Rob
- - Return -ENODEV on failure than nr_cpus_id
----
- drivers/of/base.c  | 26 ++++++++++++++++++++++++++
- include/linux/of.h |  7 +++++++
- 2 files changed, 33 insertions(+)
+Yes, we have, especially on cherry-trail SoCs. In [0] the DSDT of a
+cherry-trail laptop shipping the rtl8723bs (device OBDA8723).
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 26618ba8f92a..a9d6fe86585b 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -316,6 +316,32 @@ struct device_node *of_get_cpu_node(int cpu, unsigned int *thread)
- EXPORT_SYMBOL(of_get_cpu_node);
- 
- /**
-+ * of_cpu_node_to_id: Get the logical CPU number for a given device_node
-+ *
-+ * @cpu_node: Pointer to the device_node for CPU.
-+ *
-+ * Returns the logical CPU number of the given CPU device_node.
-+ * Returns -ENODEV if the CPU is not found.
-+ */
-+int of_cpu_node_to_id(struct device_node *cpu_node)
-+{
-+	int cpu;
-+	bool found = false;
-+	struct device_node *np;
-+
-+	for_each_possible_cpu(cpu) {
-+		np = of_cpu_device_node_get(cpu);
-+		found = (cpu_node == np);
-+		of_node_put(np);
-+		if (found)
-+			return cpu;
-+	}
-+
-+	return -ENODEV;
-+}
-+EXPORT_SYMBOL(of_cpu_node_to_id);
-+
-+/**
-  * __of_device_is_compatible() - Check if the node matches given constraints
-  * @device: pointer to node
-  * @compat: required compatible string, NULL or "" for any match
-diff --git a/include/linux/of.h b/include/linux/of.h
-index d3dea1d1e3a9..173102dafb07 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -544,6 +544,8 @@ const char *of_prop_next_string(struct property *prop, const char *cur);
- 
- bool of_console_check(struct device_node *dn, char *name, int index);
- 
-+extern int of_cpu_node_to_id(struct device_node *np);
-+
- #else /* CONFIG_OF */
- 
- static inline void of_core_init(void)
-@@ -916,6 +918,11 @@ static inline void of_property_clear_flag(struct property *p, unsigned long flag
- {
- }
- 
-+static inline int of_cpu_node_to_id(struct device_node *np)
-+{
-+	return -ENODEV;
-+}
-+
- #define of_match_ptr(_ptr)	NULL
- #define of_match_node(_matches, _node)	NULL
- #endif /* CONFIG_OF */
--- 
-2.13.6
+[0] https://gist.github.com/carlocaione/82bff95ababb67dd33f52a86e94ce3ff
+
+Cheers,
+
+--=20
+Carlo Caione  |  +44.7384.69.16.04  |  Endless
