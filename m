@@ -1,72 +1,404 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [PATCH 4/4] ARM: dts: bcm2837-rpi-3-b: add GPIO expander
-Date: Tue, 2 Jan 2018 20:03:13 +0100 (CET)
-Message-ID: <1524381852.182115.1514919793281@email.1und1.de>
-References: <cover.1514898134.git.baruch@tkos.co.il>
- <a29df633ee568e150c150debde66c0783a57c70a.1514898134.git.baruch@tkos.co.il>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v2 4/6] clk: ingenic: Add JZ47xx TCU clocks driver
+Date: Tue, 2 Jan 2018 11:13:56 -0800
+Message-ID: <20180102191356.GI7997@codeaurora.org>
+References: <20171229125942.27305-2-paul@crapouillou.net>
+ <20180101143344.2099-1-paul@crapouillou.net>
+ <20180101143344.2099-4-paul@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <a29df633ee568e150c150debde66c0783a57c70a.1514898134.git.baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Dave Stevenson <dave.stevenson-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180101143344.2099-4-paul@crapouillou.net>
+Sender: linux-clk-owner@vger.kernel.org
+To: Paul Cercueil <paul@crapouillou.net>
+Cc: Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Lee Jones <lee.jones@linaro.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Baruch,
-
-> Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org> hat am 2. Januar 2018 um 14:19 geschrieben:
-> 
-> 
-> Add a description of the RPi3 GPIO expander that the VC4 firmware controls.
-> 
-> Signed-off-by: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-> ---
->  arch/arm/boot/dts/bcm2837-rpi-3-b.dts | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
-> index b44b3b5af00d..09dca48da2bd 100644
-> --- a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
-> +++ b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
-> @@ -23,6 +23,16 @@
->  			gpios = <&gpio 47 0>;
->  		};
->  	};
+On 01/01, Paul Cercueil wrote:
+> diff --git a/drivers/clk/ingenic/tcu.c b/drivers/clk/ingenic/tcu.c
+> new file mode 100644
+> index 000000000000..36afe3f02f91
+> --- /dev/null
+> +++ b/drivers/clk/ingenic/tcu.c
+> @@ -0,0 +1,336 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Ingenic JZ47xx SoC TCU clocks driver
+> + * Copyright (C) 2018 Paul Cercueil <paul@crapouillou.net>
+> + */
 > +
-> +	soc {
+> +#include <linux/bitops.h>
+> +#include <linux/clk-provider.h>
+> +#include <linux/clkdev.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/mfd/syscon/ingenic-tcu.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/regmap.h>
+> +#include <linux/spinlock.h>
 
-unfortunately this is a common issue of the RPi firmware drivers. These nodes shouldn't be child of the soc, because it's only bound for memory mapped IO. So please move it to the same level as soc. Otherwise we get more warnings with W=1 and Rob Herring gets unhappy.
+Used?
 
-> +		expgpio: expgpio {
-> +			compatible = "brcm,bcm2835-expgpio";
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +			firmware = <&firmware>;
+> +
+> +#include <dt-bindings/clock/ingenic,tcu.h>
+> +
+> +enum ingenic_version {
+> +	ID_JZ4740,
+> +	ID_JZ4770,
+> +	ID_JZ4780,
+> +};
+> +
+> +struct ingenic_tcu {
+> +	struct device_node *np;
 
-Please add the gpio-line-names from Eric's patch [1].
+Is this used?
 
-Thanks
-Stefan
+> +	struct regmap *map;
+> +
+> +	struct clk_onecell_data clocks;
+> +};
+> +
+> +struct ingenic_tcu_clk_info {
+> +	struct clk_init_data init_data;
+> +	u8 gate_bit;
+> +	u8 tcsr_reg;
+> +};
+> +
+> +struct ingenic_tcu_clk {
+> +	struct clk_hw hw;
+> +
+> +	struct ingenic_tcu *tcu;
+> +	const struct ingenic_tcu_clk_info *info;
+> +
+> +	unsigned int idx;
+> +};
+> +
+> +#define to_tcu_clk(_hw) container_of(_hw, struct ingenic_tcu_clk, hw)
+> +
+> +static int ingenic_tcu_enable(struct clk_hw *hw)
+> +{
+> +	struct ingenic_tcu_clk *tcu_clk = to_tcu_clk(hw);
+> +	const struct ingenic_tcu_clk_info *info = tcu_clk->info;
+> +	struct ingenic_tcu *tcu = tcu_clk->tcu;
+> +
+> +	regmap_write(tcu->map, REG_TSCR, BIT(info->gate_bit));
+> +	return 0;
+> +}
+> +
+> +static void ingenic_tcu_disable(struct clk_hw *hw)
+> +{
+> +	struct ingenic_tcu_clk *tcu_clk = to_tcu_clk(hw);
+> +	struct ingenic_tcu *tcu = tcu_clk->tcu;
+> +	const struct ingenic_tcu_clk_info *info = tcu_clk->info;
+> +
+> +	regmap_write(tcu->map, REG_TSSR, BIT(info->gate_bit));
+> +}
+> +
+> +static int ingenic_tcu_is_enabled(struct clk_hw *hw)
+> +{
+> +	struct ingenic_tcu_clk *tcu_clk = to_tcu_clk(hw);
+> +	struct ingenic_tcu *tcu = tcu_clk->tcu;
+> +	const struct ingenic_tcu_clk_info *info = tcu_clk->info;
+> +	unsigned int value;
+> +
+> +	regmap_read(tcu->map, REG_TSR, &value);
+> +
+> +	return !(value & BIT(info->gate_bit));
+> +}
+> +
+> +static u8 ingenic_tcu_get_parent(struct clk_hw *hw)
+> +{
+> +	struct ingenic_tcu_clk *tcu_clk = to_tcu_clk(hw);
+> +	struct ingenic_tcu *tcu = tcu_clk->tcu;
+> +	const struct ingenic_tcu_clk_info *info = tcu_clk->info;
+> +	unsigned int val = 0;
+> +	int ret;
+> +
+> +	ret = regmap_read(tcu->map, info->tcsr_reg, &val);
+> +	WARN_ONCE(ret < 0, "Unable to read TCSR %i", tcu_clk->idx);
+> +
+> +	return (u8) ffs(val & TCSR_PARENT_CLOCK_MASK) - 1;
 
-[1] - https://patchwork.kernel.org/patch/9339857/
+Is the cast necessary?
 
-> +			status = "okay";
-> +		};
-> +	};
->  };
->  
->  /* uart0 communicates with the BT module */
-> -- 
-> 2.15.1
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +}
+> +
+> +static int ingenic_tcu_set_parent(struct clk_hw *hw, u8 idx)
+> +{
+> +	struct ingenic_tcu_clk *tcu_clk = to_tcu_clk(hw);
+> +	struct ingenic_tcu *tcu = tcu_clk->tcu;
+> +	const struct ingenic_tcu_clk_info *info = tcu_clk->info;
+> +	int ret;
+> +
+> +	/*
+> +	 * Our clock provider has the CLK_SET_PARENT_GATE flag set, so we know
+> +	 * that the clk is in unprepared state. To be able to access TCSR
+> +	 * we must ungate the clock supply and we gate it again when done.
+> +	 */
+> +
+> +	regmap_write(tcu->map, REG_TSCR, BIT(info->gate_bit));
+> +
+> +	ret = regmap_update_bits(tcu->map, info->tcsr_reg,
+> +			TCSR_PARENT_CLOCK_MASK, BIT(idx));
+> +	WARN_ONCE(ret < 0, "Unable to update TCSR %i", tcu_clk->idx);
+> +
+> +	regmap_write(tcu->map, REG_TSSR, BIT(info->gate_bit));
+> +
+> +	return 0;
+> +}
+> +
+> +static unsigned long ingenic_tcu_recalc_rate(struct clk_hw *hw,
+> +		unsigned long parent_rate)
+> +{
+> +	struct ingenic_tcu_clk *tcu_clk = to_tcu_clk(hw);
+> +	struct ingenic_tcu *tcu = tcu_clk->tcu;
+> +	const struct ingenic_tcu_clk_info *info = tcu_clk->info;
+> +	unsigned int prescale;
+> +	int ret;
+> +
+> +	ret = regmap_read(tcu->map, info->tcsr_reg, &prescale);
+> +	WARN_ONCE(ret < 0, "Unable to read TCSR %i", tcu_clk->idx);
+> +
+> +	prescale = (prescale & TCSR_PRESCALE_MASK) >> TCSR_PRESCALE_LSB;
+> +
+> +	return parent_rate >> (prescale * 2);
+> +}
+> +
+> +static long ingenic_tcu_round_rate(struct clk_hw *hw, unsigned long req_rate,
+> +		unsigned long *parent_rate)
+> +{
+> +	long rate = (long) *parent_rate;
+
+Is there a reason why rate is signed here?
+
+> +	unsigned int shift;
+> +
+> +	if (req_rate > rate)
+> +		return -EINVAL;
+> +
+> +	for (shift = 0; shift < 10; shift += 2)
+> +		if ((rate >> shift) <= req_rate)
+> +			return rate >> shift;
+> +
+> +	return rate >> 10;
+
+Can it be?
+
+	for (shift = 0; shift < 10; shift += 2)
+		if ((rate >> shift) <= req_rate)
+			break;
+
+	return rate >> shift;
+
+> +}
+> +
+> +static int ingenic_tcu_set_rate(struct clk_hw *hw, unsigned long req_rate,
+> +		unsigned long parent_rate)
+> +{
+> +	struct ingenic_tcu_clk *tcu_clk = to_tcu_clk(hw);
+> +	const struct ingenic_tcu_clk_info *info = tcu_clk->info;
+> +	struct ingenic_tcu *tcu = tcu_clk->tcu;
+> +	u8 prescale = (ffs(parent_rate / req_rate) / 2) << TCSR_PRESCALE_LSB;
+> +	int ret;
+> +
+> +	/*
+> +	 * Our clock provider has the CLK_SET_RATE_GATE flag set, so we know
+> +	 * that the clk is in unprepared state. To be able to access TCSR
+> +	 * we must ungate the clock supply and we gate it again when done.
+> +	 */
+> +
+> +	regmap_write(tcu->map, REG_TSCR, BIT(info->gate_bit));
+> +
+> +	ret = regmap_update_bits(tcu->map, info->tcsr_reg,
+> +				TCSR_PRESCALE_MASK, prescale);
+> +	WARN_ONCE(ret < 0, "Unable to update TCSR %i", tcu_clk->idx);
+> +
+> +	regmap_write(tcu->map, REG_TSSR, BIT(info->gate_bit));
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct clk_ops ingenic_tcu_clk_ops = {
+> +	.get_parent	= ingenic_tcu_get_parent,
+> +	.set_parent	= ingenic_tcu_set_parent,
+> +
+> +	.recalc_rate	= ingenic_tcu_recalc_rate,
+> +	.round_rate	= ingenic_tcu_round_rate,
+> +	.set_rate	= ingenic_tcu_set_rate,
+> +
+> +	.enable		= ingenic_tcu_enable,
+> +	.disable	= ingenic_tcu_disable,
+> +	.is_enabled	= ingenic_tcu_is_enabled,
+> +};
+> +
+> +static const char * const ingenic_tcu_timer_parents[] = {
+> +	"pclk",
+> +	"rtc",
+> +	"ext",
+> +};
+> +
+> +static const struct ingenic_tcu_clk_info ingenic_tcu_clk_info[] = {
+> +#define DEF_TIMER(_name, _gate_bit, _tcsr)				\
+> +	{								\
+> +		.init_data = {						\
+> +			.name = _name,					\
+> +			.parent_names = ingenic_tcu_timer_parents,	\
+> +			.num_parents = ARRAY_SIZE(ingenic_tcu_timer_parents),\
+> +			.ops = &ingenic_tcu_clk_ops,			\
+> +			.flags = CLK_SET_RATE_GATE | CLK_SET_PARENT_GATE,\
+> +		},							\
+> +		.gate_bit = _gate_bit,					\
+> +		.tcsr_reg = _tcsr,					\
+> +	}
+> +	[JZ4740_CLK_TIMER0] = DEF_TIMER("timer0", 0, REG_TCSRc(0)),
+> +	[JZ4740_CLK_TIMER1] = DEF_TIMER("timer1", 1, REG_TCSRc(1)),
+> +	[JZ4740_CLK_TIMER2] = DEF_TIMER("timer2", 2, REG_TCSRc(2)),
+> +	[JZ4740_CLK_TIMER3] = DEF_TIMER("timer3", 3, REG_TCSRc(3)),
+> +	[JZ4740_CLK_TIMER4] = DEF_TIMER("timer4", 4, REG_TCSRc(4)),
+> +	[JZ4740_CLK_TIMER5] = DEF_TIMER("timer5", 5, REG_TCSRc(5)),
+> +	[JZ4740_CLK_TIMER6] = DEF_TIMER("timer6", 6, REG_TCSRc(6)),
+> +	[JZ4740_CLK_TIMER7] = DEF_TIMER("timer7", 7, REG_TCSRc(7)),
+> +	[JZ4740_CLK_WDT]    = DEF_TIMER("wdt",   16, REG_WDT_TCSR),
+> +	[JZ4770_CLK_OST]    = DEF_TIMER("ost",   15, REG_OST_TCSR),
+> +#undef DEF_TIMER
+> +};
+> +
+> +static int ingenic_tcu_register_clock(struct ingenic_tcu *tcu, unsigned int idx,
+> +		const struct ingenic_tcu_clk_info *info)
+> +{
+> +	struct ingenic_tcu_clk *tcu_clk;
+> +	struct clk *clk;
+> +	int err;
+> +
+> +	tcu_clk = kzalloc(sizeof(*tcu_clk), GFP_KERNEL);
+> +	if (!tcu_clk)
+> +		return -ENOMEM;
+> +
+> +	tcu_clk->hw.init = &info->init_data;
+> +	tcu_clk->idx = idx;
+> +	tcu_clk->info = info;
+> +	tcu_clk->tcu = tcu;
+> +
+> +	/* Set EXT as the default parent clock */
+> +	ingenic_tcu_set_parent(&tcu_clk->hw, 2);
+> +
+> +	ingenic_tcu_disable(&tcu_clk->hw);
+> +
+> +	clk = clk_register(NULL, &tcu_clk->hw);
+
+clk_hw_register?
+
+> +	if (IS_ERR(clk)) {
+> +		err = PTR_ERR(clk);
+> +		goto err_free_tcu_clk;
+> +	}
+> +
+> +	err = clk_register_clkdev(clk, info->init_data.name, NULL);
+
+There's a clk_hw_register_clkdev() too.
+
+> +	if (err)
+> +		goto err_clk_unregister;
+> +
+> +	tcu->clocks.clks[idx] = clk;
+> +	return 0;
+> +
+> +err_clk_unregister:
+> +	clk_unregister(clk);
+> +err_free_tcu_clk:
+> +	kfree(tcu_clk);
+> +	return err;
+> +}
+> +
+> +static void __init ingenic_tcu_init(struct device_node *np,
+> +		enum ingenic_version id)
+> +{
+> +	struct ingenic_tcu *tcu;
+> +	size_t i, nb_clks;
+> +	int ret = -ENOMEM;
+> +
+> +	if (id >= ID_JZ4770)
+> +		nb_clks = (JZ4770_CLK_LAST - JZ4740_CLK_TIMER0) + 1;
+> +	else
+> +		nb_clks = (JZ4740_CLK_LAST - JZ4740_CLK_TIMER0) + 1;
+> +
+> +	tcu = kzalloc(sizeof(*tcu), GFP_KERNEL);
+> +	if (!tcu) {
+> +		pr_err("%s: cannot allocate memory\n", __func__);
+
+We don't need allocation error messages. Please run checkpatch.
+
+> +		return;
+> +	}
+> +
+> +	tcu->map = syscon_node_to_regmap(np->parent);
+> +	if (IS_ERR(tcu->map)) {
+> +		pr_err("%s: failed to map TCU registers\n", __func__);
+> +		goto err_free_tcu;
+> +	}
+> +
+> +	tcu->clocks.clk_num = nb_clks;
+> +	tcu->clocks.clks = kcalloc(nb_clks, sizeof(struct clk *), GFP_KERNEL);
+> +	if (!tcu->clocks.clks) {
+> +		pr_err("%s: cannot allocate memory\n", __func__);
+
+We don't need allocation error messages. Please run checkpatch.
+
+> +		goto err_free_tcu;
+> +	}
+> +
+> +	for (i = 0; i < nb_clks; i++) {
+> +		ret = ingenic_tcu_register_clock(tcu, i,
+> +				&ingenic_tcu_clk_info[JZ4740_CLK_TIMER0 + i]);
+> +		if (ret) {
+> +			pr_err("%s: cannot register clocks\n", __func__);
+> +			goto err_unregister;
+> +		}
+> +	}
+> +
+> +	ret = of_clk_add_provider(np, of_clk_src_onecell_get, &tcu->clocks);
+
+Can you add a clk_hw provider instead of a clk provider?
+
+> +	if (ret) {
+> +		pr_err("%s: cannot add OF clock provider\n", __func__);
+> +		goto err_unregister;
+> +	}
+> +
+> +	return;
+> +
+> +err_unregister:
+> +	for (i = 0; i < tcu->clocks.clk_num; i++)
+> +		if (tcu->clocks.clks[i])
+> +			clk_unregister(tcu->clocks.clks[i]);
+> +	kfree(tcu->clocks.clks);
+> +err_free_tcu:
+> +	kfree(tcu);
+> +}
+> +
+
+Can you add a comment here describing why we have to use
+CLK_OF_DECLARE instead of platform drivers?
+
+> +static void __init jz4740_tcu_init(struct device_node *np)
+> +{
+> +	ingenic_tcu_init(np, ID_JZ4740);
+> +}
+> +CLK_OF_DECLARE(ingenic_tcu, "ingenic,jz4740-tcu-clocks", jz4740_tcu_init);
+> +
+> +static void __init jz4770_tcu_init(struct device_node *np)
+> +{
+> +	ingenic_tcu_init(np, ID_JZ4770);
+> +}
+> +CLK_OF_DECLARE(jz4770_tcu, "ingenic,jz4770-tcu-clocks", jz4770_tcu_init);
+> +
+> +static void __init jz4780_tcu_init(struct device_node *np)
+> +{
+> +	ingenic_tcu_init(np, ID_JZ4780);
+> +}
+> +CLK_OF_DECLARE(jz4780_tcu, "ingenic,jz4780-tcu-clocks", jz4780_tcu_init);
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
