@@ -1,7 +1,7 @@
 From: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH 7/8] ARM: dts: keystone-k2g: Move keystone_dsp_gpio to under device-state-control
-Date: Tue, 2 Jan 2018 11:02:01 -0600
-Message-ID: <20180102170202.15045-8-afd@ti.com>
+Subject: [PATCH 1/8] ARM: dts: keystone: Move keystone_irq to under device-state-control
+Date: Tue, 2 Jan 2018 11:01:55 -0600
+Message-ID: <20180102170202.15045-2-afd@ti.com>
 References: <20180102170202.15045-1-afd@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,56 +12,63 @@ To: Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob He
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Andrew F . Davis" <afd-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The keystone_dsp_gpio node describes a device that is a component of the
-device state control module. As such, it should not be a member of soc0
-bus but instead a sub-node of device-state-control.
+The keystone_irq node describes a device that is a component of the device
+state control module. As such, it should not be a member of soc0 bus
+but instead a sub-node of device-state-control.
 
 This move also fixes a warning about not having a reg property. Now
 that this is a sub-node of device-state-control, a syscon type node,
 we add this reg property but relative to the syscon base, this way
 when the dt-binding/driver are updated we can drop the non-standard
-gpio,syscon-dev property completely and simply use get_resource() in
+ti,syscon-dev property completely and simply use get_resource() in
 the driver.
 
 Signed-off-by: Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org>
 Acked-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
 ---
- arch/arm/boot/dts/keystone-k2g.dtsi | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
+ arch/arm/boot/dts/keystone.dtsi | 21 ++++++++++++---------
+ 1 file changed, 12 insertions(+), 9 deletions(-)
 
-diff --git a/arch/arm/boot/dts/keystone-k2g.dtsi b/arch/arm/boot/dts/keystone-k2g.dtsi
-index 19f938e3c27e..71a8588f42e4 100644
---- a/arch/arm/boot/dts/keystone-k2g.dtsi
-+++ b/arch/arm/boot/dts/keystone-k2g.dtsi
-@@ -110,6 +110,14 @@
- 				#interrupt-cells = <1>;
- 				ti,syscon-dev = <&devctrl 0x2a0>;
- 			};
+diff --git a/arch/arm/boot/dts/keystone.dtsi b/arch/arm/boot/dts/keystone.dtsi
+index 93ea5c69ea77..158e0a903f7e 100644
+--- a/arch/arm/boot/dts/keystone.dtsi
++++ b/arch/arm/boot/dts/keystone.dtsi
+@@ -87,8 +87,19 @@
+ 		};
+ 
+ 		devctrl: device-state-control@2620000 {
+-			compatible = "ti,keystone-devctrl", "syscon";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			compatible = "ti,keystone-devctrl", "syscon", "simple-mfd";
+ 			reg = <0x02620000 0x1000>;
 +
-+			dspgpio0: keystone_dsp_gpio@240 {
-+				compatible = "ti,keystone-dsp-gpio";
-+				reg = <0x240 0x4>;
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				gpio,syscon-dev = <&devctrl 0x240>;
++			kirq0: keystone_irq@2a0 {
++				compatible = "ti,keystone-irq";
++				reg = <0x2a0 0x4>;
++				interrupts = <GIC_SPI 4 IRQ_TYPE_EDGE_RISING>;
++				interrupt-controller;
++				#interrupt-cells = <1>;
++				ti,syscon-dev = <&devctrl 0x2a0>;
 +			};
  		};
  
- 		uart0: serial@2530c00 {
-@@ -199,13 +207,6 @@
- 			status = "disabled";
+ 		rstctrl: reset-controller {
+@@ -282,14 +293,6 @@
+ 				  1 0 0x21000A00 0x00000100>;
  		};
  
--		dspgpio0: keystone_dsp_gpio@2620240 {
--			compatible = "ti,keystone-dsp-gpio";
--			gpio-controller;
--			#gpio-cells = <2>;
--			gpio,syscon-dev = <&devctrl 0x240>;
+-		kirq0: keystone_irq@26202a0 {
+-			compatible = "ti,keystone-irq";
+-			interrupts = <GIC_SPI 4 IRQ_TYPE_EDGE_RISING>;
+-			interrupt-controller;
+-			#interrupt-cells = <1>;
+-			ti,syscon-dev = <&devctrl 0x2a0>;
 -		};
 -
- 		dsp0: dsp@10800000 {
- 			compatible = "ti,k2g-dsp";
- 			reg = <0x10800000 0x00100000>,
+ 		pcie0: pcie@21800000 {
+ 			compatible = "ti,keystone-pcie", "snps,dw-pcie";
+ 			clocks = <&clkpcie>;
 -- 
 2.15.1
 
