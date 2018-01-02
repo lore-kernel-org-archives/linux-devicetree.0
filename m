@@ -1,219 +1,67 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH v5 3/3] PCI: mobiveil: Add MSI support for Mobiveil PCIe
- Host
-Date: Tue, 2 Jan 2018 12:02:28 +0000
-Message-ID: <20180102120228.GD10536@red-moon>
-References: <1513181336-19955-1-git-send-email-l.subrahmanya@mobiveil.co.in>
- <23b886bf-b21e-8e8c-460c-42316469f989@arm.com>
- <CAFZiPx3G=khQJqAPs=qnx=bya_MQLfOSPaK3ckNsUq=U2EQGYw@mail.gmail.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v2 0/2] Add efuse driver for Ingenic JZ4780 SoC
+Date: Tue, 2 Jan 2018 12:01:58 +0000
+Message-ID: <828981e5-c23c-8dc4-55e4-23b65b33908b@linaro.org>
+References: <20171228212954.2922-1-malat@debian.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAFZiPx3G=khQJqAPs=qnx=bya_MQLfOSPaK3ckNsUq=U2EQGYw@mail.gmail.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
-Cc: Marc Zyngier <marc.zyngier@arm.com>, linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, robh@kernel.org, devicetree@vger.kernel.org, Mingkai Hu <mingkai.hu@nxp.com>, Peter W Newton <peter.newton@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Raj Raina <rajesh.raina@nxp.com>, Rajan Kapoor <rajan.kapoor@nxp.com>, Prabhjot Singh <prabhjot.singh@nxp.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171228212954.2922-1-malat@debian.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mathieu Malaterre <malat@debian.org>, Marcin Nowakowski <marcin.nowakowski@mips.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Zubair.Kakakhel@mips.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 22, 2017 at 02:27:54PM +0530, Subrahmanya Lingappa wrote:
 
-[...]
 
-> > >  static int mobiveil_host_init(struct mobiveil_pcie *pcie)
-> > >  {
-> > >       u32 value;
-> > > @@ -465,7 +559,8 @@ static int mobiveil_host_init(struct mobiveil_pcie *pcie)
-> > >               (1 << PEX_PIO_ENABLE_SHIFT),
-> > >               PAB_CTRL);
-> > >
-> > > -     csr_writel(pcie, PAB_INTP_INTX_MASK, PAB_INTP_AMBA_MISC_ENB);
-> > > +     csr_writel(pcie, (PAB_INTP_INTX_MASK | PAB_INTP_MSI_MASK),
-> > > +             PAB_INTP_AMBA_MISC_ENB);
-> > >
-> > >       /* program PIO Enable Bit to 1 and Config Window Enable Bit to 1 in
-> > >        * PAB_AXI_PIO_CTRL Register
-> > > @@ -503,6 +598,10 @@ static int mobiveil_host_init(struct mobiveil_pcie *pcie)
-> > >               }
-> > >       }
-> > >
-> > > +     /* setup MSI hardware registers */
-> > > +     if (IS_ENABLED(CONFIG_PCI_MSI))
-> >
-> > Your driver already depends on PCI_MSI_IRQ_DOMAIN, which depends on
-> > PCI_MSI. So this IS_ENABLED() is pointless.
-> >
-> as Lorenzo pointed out on the other thread, I will take out
-> PCI_MSI_IRQ_DOMAIN dependency.
-
-I said that the PCI_MSI_IRQ_DOMAIN dependency was not needed in the
-patch I was commenting on - not that it was not needed at all.
-
-Thanks,
-Lorenzo
-
-> So looks like better to follow other tested drivers and continue to keep it no ?
+On 28/12/17 21:29, Mathieu Malaterre wrote:
+> This patchset bring support for read-only access to the JZ4780 efuse as found
+> on MIPS Creator CI20.
 > 
-> >
-> > > +             mobiveil_pcie_enable_msi(pcie);
-> > > +
-> > >       return err;
-> > >  }
-> > >
-> > > @@ -520,6 +619,118 @@ static int mobiveil_pcie_intx_map(struct irq_domain *domain, unsigned int irq,
-> > >       .map = mobiveil_pcie_intx_map,
-> > >  };
-> > >
-> > > +static struct irq_chip mobiveil_msi_irq_chip = {
-> > > +     .name = "Mobiveil PCIe MSI",
-> > > +     .irq_mask = pci_msi_mask_irq,
-> > > +     .irq_unmask = pci_msi_unmask_irq,
-> > > +};
-> > > +
-> > > +static struct msi_domain_info mobiveil_msi_domain_info = {
-> > > +     .flags  = (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
-> > > +                  MSI_FLAG_PCI_MSIX),
-> > > +     .chip   = &mobiveil_msi_irq_chip,
-> > > +};
-> > > +
-> > > +static void mobiveil_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
-> > > +{
-> > > +     struct mobiveil_pcie *pcie = irq_data_get_irq_chip_data(data);
-> > > +     phys_addr_t addr = virt_to_phys((void *)pcie->msi.msi_pages +
-> > > +                             (data->hwirq * sizeof(int)));
-> > > +
-> > > +     msg->address_lo = lower_32_bits(addr);
-> > > +     msg->address_hi = upper_32_bits(addr);
-> > > +     msg->data = data->hwirq;
-> > > +
-> > > +     dev_dbg(&pcie->pdev->dev, "msi#%d address_hi %#x address_lo %#x\n",
-> > > +             (int)data->hwirq, msg->address_hi, msg->address_lo);
-> > > +}
-> > > +
-> > > +static int mobiveil_msi_set_affinity(struct irq_data *irq_data,
-> > > +             const struct cpumask *mask, bool force)
-> > > +{
-> > > +     return -EINVAL;
-> > > +}
-> > > +
-> > > +static struct irq_chip mobiveil_msi_bottom_irq_chip = {
-> > > +     .name                   = "Mobiveil MSI",
-> > > +     .irq_compose_msi_msg    = mobiveil_compose_msi_msg,
-> > > +     .irq_set_affinity       = mobiveil_msi_set_affinity,
-> > > +};
-> > > +
-> > > +static int mobiveil_irq_msi_domain_alloc(struct irq_domain *domain,
-> > > +             unsigned int virq, unsigned int nr_irqs, void *args)
-> > > +{
-> > > +     struct mobiveil_pcie *pcie = domain->host_data;
-> > > +     struct mobiveil_msi *msi = &pcie->msi;
-> > > +     unsigned long bit;
-> > > +
-> > > +     WARN_ON(nr_irqs != 1);
-> > > +     mutex_lock(&msi->lock);
-> > > +
-> > > +     bit = find_first_zero_bit(msi->msi_irq_in_use, msi->num_of_vectors);
-> > > +     if (bit >= msi->num_of_vectors) {
-> > > +             mutex_unlock(&msi->lock);
-> > > +             return -ENOSPC;
-> > > +     }
-> > > +
-> > > +     set_bit(bit, msi->msi_irq_in_use);
-> > > +
-> > > +     mutex_unlock(&msi->lock);
-> > > +
-> > > +     irq_domain_set_info(domain, virq, bit, &mobiveil_msi_bottom_irq_chip,
-> > > +                         domain->host_data, handle_simple_irq,
-> > > +                         NULL, NULL);
-> > > +     return 0;
-> > > +}
-> > > +
-> > > +static void mobiveil_irq_msi_domain_free(struct irq_domain *domain,
-> > > +             unsigned int virq, unsigned int nr_irqs)
-> > > +{
-> > > +     struct irq_data *d = irq_domain_get_irq_data(domain, virq);
-> > > +     struct mobiveil_pcie *pcie = irq_data_get_irq_chip_data(d);
-> > > +     struct mobiveil_msi *msi = &pcie->msi;
-> > > +
-> > > +     mutex_lock(&msi->lock);
-> > > +
-> > > +     if (!test_bit(d->hwirq, msi->msi_irq_in_use)) {
-> > > +             dev_err(&pcie->pdev->dev, "trying to free unused MSI#%lu\n",
-> > > +                     d->hwirq);
-> > > +     } else {
-> > > +             __clear_bit(d->hwirq, msi->msi_irq_in_use);
-> > > +     }
-> > > +
-> > > +     mutex_unlock(&msi->lock);
-> > > +}
-> > > +
-> > > +static const struct irq_domain_ops msi_domain_ops = {
-> > > +     .alloc  = mobiveil_irq_msi_domain_alloc,
-> > > +     .free   = mobiveil_irq_msi_domain_free,
-> > > +};
-> > > +
-> > > +static int mobiveil_allocate_msi_domains(struct mobiveil_pcie *pcie)
-> > > +{
-> > > +     struct device *dev = &pcie->pdev->dev;
-> > > +     struct fwnode_handle *fwnode = of_node_to_fwnode(dev->of_node);
-> > > +     struct mobiveil_msi *msi = &pcie->msi;
-> > > +
-> > > +     mutex_init(&pcie->msi.lock);
-> > > +     msi->dev_domain = irq_domain_add_linear(NULL, msi->num_of_vectors,
-> > > +                                          &msi_domain_ops, pcie);
-> > > +     if (!msi->dev_domain) {
-> > > +             dev_err(dev, "failed to create IRQ domain\n");
-> > > +             return -ENOMEM;
-> > > +     }
-> > > +
-> > > +     msi->msi_domain = pci_msi_create_irq_domain(fwnode,
-> > > +                             &mobiveil_msi_domain_info, msi->dev_domain);
-> > > +     if (!msi->msi_domain) {
-> > > +             dev_err(dev, "failed to create MSI domain\n");
-> > > +             irq_domain_remove(msi->dev_domain);
-> > > +             return -ENOMEM;
-> > > +     }
-> > > +     return 0;
-> > > +}
-> > > +
-> > >  static int mobiveil_pcie_init_irq_domain(struct mobiveil_pcie *pcie)
-> > >  {
-> > >       struct device *dev = &pcie->pdev->dev;
-> > > @@ -535,6 +746,13 @@ static int mobiveil_pcie_init_irq_domain(struct mobiveil_pcie *pcie)
-> > >               return -ENODEV;
-> > >       }
-> > >
-> > > +#ifdef CONFIG_PCI_MSI
-> >
-> > Useless #ifdef
-> >
-> > > +     /* setup MSI */
-> > > +     ret = mobiveil_allocate_msi_domains(pcie);
-> > > +     if (ret)
-> > > +             return ret;
-> > > +#endif
-> > > +
-> > >       return 0;
-> > >  }
-> > >
-> > >
-> >
-> > Now, there is something that I find a bit annoying: This code looks very
-> > similar to drivers/pci/host/pcie-altera-msi.c, to the extent that I
-> > suspect this is the same IP.
-> >
-> Its a different IP.
+> To keep the driver as simple as possible, it was not possible to re-use most of
+> the nvmem core functionalities. This driver is not compatible with the original
+Can you explain a bit more on not able to re-use nvmem core?
+
+If you are referring to adding nvmem cell entires in sysfs, This should 
+probably go in to nvmem core, rather that in individual providers.
+This is one of the feature my todo list, will try to come up with some 
+thing soon.
+
+thanks,
+srini
+
+> efuse driver as found in the custom linux kernel from upstream (1), in
+> particular it does not expose to the users neither:
+> `/sys/devices/platform/*/chip_id` nor `/sys/devices/platform/*/user_id`.
 > 
-> >
-> > I suggest you investigate whether you can reuse the existing code
-> > instead of adding yet another MSI driver to the kernel.
-> >
-> > Thanks,
-> >
-> >         M.
-> > --
-> > Jazz is not dead. It just smells funny...
+
+> The goal of this driver is to provide access to the MAC address to the dm9000
+> driver.
 > 
+> (1) https://github.com/ZubairLK/CI20_linux/commit/6efd4ffca7dcfaff0794ab60cd6922ce96c60419
 > 
-> Thanks,
-> Subrahmanya
+> Changes in v2:
+> Properly handle offset and byte value from the main entry point.
+> Also add a commit message in patch #2.
+> 
+> Mathieu Malaterre (1):
+>    dts: Probe efuse for CI20
+> 
+> PrasannaKumar Muralidharan (1):
+>    nvmem: add driver for JZ4780 efuse
+> 
+>   .../ABI/testing/sysfs-driver-jz4780-efuse          |  16 ++
+>   .../bindings/nvmem/ingenic,jz4780-efuse.txt        |  17 ++
+>   MAINTAINERS                                        |   5 +
+>   arch/mips/boot/dts/ingenic/jz4780.dtsi             |  40 ++-
+>   arch/mips/configs/ci20_defconfig                   |   2 +
+>   drivers/nvmem/Kconfig                              |  10 +
+>   drivers/nvmem/Makefile                             |   2 +
+>   drivers/nvmem/jz4780-efuse.c                       | 305 +++++++++++++++++++++
+>   8 files changed, 385 insertions(+), 12 deletions(-)
+>   create mode 100644 Documentation/ABI/testing/sysfs-driver-jz4780-efuse
+>   create mode 100644 Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.txt
+>   create mode 100644 drivers/nvmem/jz4780-efuse.c
+> 
