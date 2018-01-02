@@ -1,51 +1,29 @@
-From: PrasannaKumar Muralidharan <prasannatsmkumar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v5 09/15] MIPS: platform: add machtype IDs for more
- Ingenic SoCs
-Date: Tue, 2 Jan 2018 21:29:23 +0530
-Message-ID: <CANc+2y6YXXtFsjCbxP-WVOSXaN9nmtn5VkQ_ZVdVzpvK_eXbKw@mail.gmail.com>
-References: <20180102150848.11314-1-paul@crapouillou.net> <20180102150848.11314-9-paul@crapouillou.net>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 1/4] dt-bindings: at24: consistently document the
+ compatible property
+Date: Tue, 2 Jan 2018 10:00:08 -0600
+Message-ID: <20180102160008.pclglwmfwbjdakxi@rob-hp-laptop>
+References: <20171228104913.29873-1-brgl@bgdev.pl>
+ <20171228104913.29873-2-brgl@bgdev.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180102150848.11314-9-paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
-Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Maarten ter Huurne <maarten-Ph2Y2OKCxY1M656bX5wj8A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-i2c-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20171228104913.29873-2-brgl@bgdev.pl>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Javier Martinez Canillas <javier@dowhile0.org>, David Lechner <david@lechnology.com>, Divagar Mohandass <divagar.mohandass@intel.com>, Peter Rosin <peda@axentia.se>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2 January 2018 at 20:38, Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org> wrote:
-> Add a machtype ID for the JZ4780 SoC, which was missing, and one for the
-> newly supported JZ4770 SoC.
->
-> Signed-off-by: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
+On Thu, Dec 28, 2017 at 11:49:10AM +0100, Bartosz Golaszewski wrote:
+> Current description of the compatible property for at24 is quite vague.
+> 
+> State explicitly that any "<manufacturer>,<model>" pair is accepted as
+> long as a correct fallback is used for non-atmel chips.
+> 
+> Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
 > ---
->  arch/mips/include/asm/bootinfo.h | 2 ++
->  1 file changed, 2 insertions(+)
->
->  v2: No change
->  v3: No change
->  v5: No change
->
-> diff --git a/arch/mips/include/asm/bootinfo.h b/arch/mips/include/asm/bootinfo.h
-> index e26a093bb17a..a301a8f4bc66 100644
-> --- a/arch/mips/include/asm/bootinfo.h
-> +++ b/arch/mips/include/asm/bootinfo.h
-> @@ -79,6 +79,8 @@ enum loongson_machine_type {
->   */
->  #define  MACH_INGENIC_JZ4730   0       /* JZ4730 SOC           */
->  #define  MACH_INGENIC_JZ4740   1       /* JZ4740 SOC           */
-> +#define  MACH_INGENIC_JZ4770   2       /* JZ4770 SOC           */
-> +#define  MACH_INGENIC_JZ4780   3       /* JZ4780 SOC           */
->
->  extern char *system_type;
->  const char *get_system_type(void);
-> --
-> 2.11.0
->
->
+>  Documentation/devicetree/bindings/eeprom/at24.txt | 58 ++++++++++++++---------
+>  1 file changed, 36 insertions(+), 22 deletions(-)
 
-Reviewed-by: PrasannaKumar Muralidharan <prasannatsmkumar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Reviewed-by: Rob Herring <robh@kernel.org>
