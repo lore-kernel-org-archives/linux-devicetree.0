@@ -1,81 +1,86 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH RFC 6/7] serial: Add device tree bindings for GENI based
- UART Controller
-Date: Tue, 2 Jan 2018 09:55:17 -0600
-Message-ID: <20180102155517.j4sqhdtamybtgta4@rob-hp-laptop>
-References: <1514392046-30602-1-git-send-email-kramasub@codeaurora.org>
- <1514392046-30602-7-git-send-email-kramasub@codeaurora.org>
+From: PrasannaKumar Muralidharan <prasannatsmkumar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v5 08/15] MIPS: ingenic: Use common cmdline handling code
+Date: Tue, 2 Jan 2018 21:28:31 +0530
+Message-ID: <CANc+2y7owub-Nr++MYsoGTDTHxiqeqSFsMEL7b_oWLx-OtosRQ@mail.gmail.com>
+References: <20180102150848.11314-1-paul@crapouillou.net> <20180102150848.11314-8-paul@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1514392046-30602-7-git-send-email-kramasub@codeaurora.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-i2c@vger.kernel.org, linux-serial@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, andy.gross@linaro.org, david.brown@linaro.org, mark.rutland@arm.com, corbet@lwn.net, wsa@the-dreams.de, gregkh@linuxfoundation.org, jslaby@suse.com, Girish Mahadevan <girishm@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180102150848.11314-8-paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
+Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Maarten ter Huurne <maarten-Ph2Y2OKCxY1M656bX5wj8A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 27, 2017 at 09:27:25AM -0700, Karthikeyan Ramasubramanian wrote:
-> Add device tree binding support for GENI based UART Controller in the
-> QUP Wrapper.
-> 
-> Signed-off-by: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>
-> Signed-off-by: Girish Mahadevan <girishm@codeaurora.org>
+Hi Paul,
+
+On 2 January 2018 at 20:38, Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org> wrote:
+> From: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+>
+> jz4740_init_cmdline appends all arguments from argv (in fw_arg1) to
+> arcs_cmdline, up to argc (in fw_arg0). The common code in
+> fw_init_cmdline will do the exact same thing when run on a system where
+> fw_arg0 isn't a pointer to kseg0 (it'll also set _fw_envp but we don't
+> use it). Remove the custom implementation & use the generic code.
+>
+> Signed-off-by: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 > ---
->  .../devicetree/bindings/serial/qcom,geni-uart.txt  | 31 ++++++++++++++++++++++
->  1 file changed, 31 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/serial/qcom,geni-uart.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/serial/qcom,geni-uart.txt b/Documentation/devicetree/bindings/serial/qcom,geni-uart.txt
-> new file mode 100644
-> index 0000000..e60ec6a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/serial/qcom,geni-uart.txt
-> @@ -0,0 +1,31 @@
-> +Qualcomm Technologies Inc. GENI based Serial UART Controller driver
-> +
-> +This serial UART driver supports console use-cases. This driver is meant
-> +only for Generic Interface (GENI) based Qualcomm Universal Peripheral (QUP)
-> +cores and isn't backwards compatible.
-> +
-> +Required properties:
-> +- compatible: should contain "qcom,geni-uart, qcom,geni-console"
+>  arch/mips/jz4740/prom.c | 24 ++----------------------
+>  1 file changed, 2 insertions(+), 22 deletions(-)
+>
+>  v2: No change
+>  v3: No change
+>  v4: No change
+>  v5: No change
+>
+> diff --git a/arch/mips/jz4740/prom.c b/arch/mips/jz4740/prom.c
+> index 47e857194ce6..a62dd8e6ecf9 100644
+> --- a/arch/mips/jz4740/prom.c
+> +++ b/arch/mips/jz4740/prom.c
+> @@ -20,33 +20,13 @@
+>  #include <linux/serial_reg.h>
+>
+>  #include <asm/bootinfo.h>
+> +#include <asm/fw/fw.h>
+>  #include <asm/mach-jz4740/base.h>
+>
+> -static __init void jz4740_init_cmdline(int argc, char *argv[])
+> -{
+> -       unsigned int count = COMMAND_LINE_SIZE - 1;
+> -       int i;
+> -       char *dst = &(arcs_cmdline[0]);
+> -       char *src;
+> -
+> -       for (i = 1; i < argc && count; ++i) {
+> -               src = argv[i];
+> -               while (*src && count) {
+> -                       *dst++ = *src++;
+> -                       --count;
+> -               }
+> -               *dst++ = ' ';
+> -       }
+> -       if (i > 1)
+> -               --dst;
+> -
+> -       *dst = 0;
+> -}
+> -
+>  void __init prom_init(void)
+>  {
+> -       jz4740_init_cmdline((int)fw_arg0, (char **)fw_arg1);
+>         mips_machtype = MACH_INGENIC_JZ4740;
+> +       fw_init_cmdline();
+>  }
+>
+>  void __init prom_free_prom_memory(void)
+> --
+> 2.11.0
+>
+>
 
-Is console different programming model or just how you are using the 
-h/w? for the latter, drop it as we have stdout-path to select a console.
-
-> +- reg: Should contain UART register location and length.
-> +- interrupts: Should contain UART core interrupts.
-> +- clocks: clocks needed for UART, includes the core and AHB clock.
-> +- pinctrl-names/pinctrl-0/1: The GPIOs assigned to this core. The names
-> +  Should be "active" and "sleep" for the pin confuguration when core is active
-> +  or when entering sleep state.
-> +- qcom,wrapper-core: Wrapper QUP core containing this UART controller.
-> +
-> +Example:
-> +qup_uart11: qcom,qup_uart@0xa88000 {
-
-Use generic node names and no '0x':
-
-serial@a88000
-
-> +	compatible = "qcom,geni-uart";
-> +	reg = <0xa88000 0x7000>;
-> +	reg-names = "se_phys";
-> +	clock-names = "se-clk", "m-ahb", "s-ahb";
-
-Not documented.
-
-> +	clocks = <&clock_gcc GCC_QUPV3_WRAP0_S0_CLK>,
-> +		<&clock_gcc GCC_QUPV3_WRAP_0_M_AHB_CLK>,
-> +		<&clock_gcc GCC_QUPV3_WRAP_0_S_AHB_CLK>;
-> +	pinctrl-names = "default", "sleep";
-> +	pinctrl-0 = <&qup_1_uart_3_active>;
-> +	pinctrl-1 = <&qup_1_uart_3_sleep>;
-> +	interrupts = <0 355 0>;
-> +	qcom,wrapper-core = <&qup_0>;
-> +};
-> -- 
-> Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
-> 
+Looks good to me.
+Reviewed-by: PrasannaKumar Muralidharan <prasannatsmkumar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
