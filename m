@@ -1,73 +1,72 @@
 From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v5 08/15] MIPS: ingenic: Use common cmdline handling code
-Date: Tue,  2 Jan 2018 16:08:41 +0100
-Message-ID: <20180102150848.11314-8-paul@crapouillou.net>
+Subject: [PATCH v5 03/15] clk: ingenic: support PLLs with no bypass bit
+Date: Tue,  2 Jan 2018 16:08:36 +0100
+Message-ID: <20180102150848.11314-3-paul@crapouillou.net>
 References: <20180102150848.11314-1-paul@crapouillou.net>
-Return-path: <linux-clk-owner@vger.kernel.org>
+Return-path: <linux-mips-bounce@linux-mips.org>
 In-Reply-To: <20180102150848.11314-1-paul@crapouillou.net>
-Sender: linux-clk-owner@vger.kernel.org
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
 To: Ralf Baechle <ralf@linux-mips.org>
-Cc: Maarten ter Huurne <maarten@treewalker.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux-clk@vger.kernel.org, Paul Burton <paul.burton@imgtec.com>
+Cc: Maarten ter Huurne <maarten@treewalker.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux-clk@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
-From: Paul Burton <paul.burton@imgtec.com>
+The second PLL of the JZ4770 does not have a bypass bit.
+This commit makes it possible to support it with the current common CGU
+code.
 
-jz4740_init_cmdline appends all arguments from argv (in fw_arg1) to
-arcs_cmdline, up to argc (in fw_arg0). The common code in
-fw_init_cmdline will do the exact same thing when run on a system where
-fw_arg0 isn't a pointer to kseg0 (it'll also set _fw_envp but we don't
-use it). Remove the custom implementation & use the generic code.
-
-Signed-off-by: Paul Burton <paul.burton@imgtec.com>
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Acked-by: Stephen Boyd <sboyd@codeaurora.org>
 ---
- arch/mips/jz4740/prom.c | 24 ++----------------------
- 1 file changed, 2 insertions(+), 22 deletions(-)
+ drivers/clk/ingenic/cgu.c | 3 ++-
+ drivers/clk/ingenic/cgu.h | 2 ++
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
  v2: No change
  v3: No change
  v4: No change
  v5: No change
 
-diff --git a/arch/mips/jz4740/prom.c b/arch/mips/jz4740/prom.c
-index 47e857194ce6..a62dd8e6ecf9 100644
---- a/arch/mips/jz4740/prom.c
-+++ b/arch/mips/jz4740/prom.c
-@@ -20,33 +20,13 @@
- #include <linux/serial_reg.h>
+diff --git a/drivers/clk/ingenic/cgu.c b/drivers/clk/ingenic/cgu.c
+index a2e73a6d60fd..381c4a17a1fc 100644
+--- a/drivers/clk/ingenic/cgu.c
++++ b/drivers/clk/ingenic/cgu.c
+@@ -100,7 +100,8 @@ ingenic_pll_recalc_rate(struct clk_hw *hw, unsigned long parent_rate)
+ 	n += pll_info->n_offset;
+ 	od_enc = ctl >> pll_info->od_shift;
+ 	od_enc &= GENMASK(pll_info->od_bits - 1, 0);
+-	bypass = !!(ctl & BIT(pll_info->bypass_bit));
++	bypass = !pll_info->no_bypass_bit &&
++		 !!(ctl & BIT(pll_info->bypass_bit));
+ 	enable = !!(ctl & BIT(pll_info->enable_bit));
  
- #include <asm/bootinfo.h>
-+#include <asm/fw/fw.h>
- #include <asm/mach-jz4740/base.h>
+ 	if (bypass)
+diff --git a/drivers/clk/ingenic/cgu.h b/drivers/clk/ingenic/cgu.h
+index f1527cf75b3f..9da34910bd80 100644
+--- a/drivers/clk/ingenic/cgu.h
++++ b/drivers/clk/ingenic/cgu.h
+@@ -48,6 +48,7 @@
+  * @bypass_bit: the index of the bypass bit in the PLL control register
+  * @enable_bit: the index of the enable bit in the PLL control register
+  * @stable_bit: the index of the stable bit in the PLL control register
++ * @no_bypass_bit: if set, the PLL has no bypass functionality
+  */
+ struct ingenic_cgu_pll_info {
+ 	unsigned reg;
+@@ -58,6 +59,7 @@ struct ingenic_cgu_pll_info {
+ 	u8 bypass_bit;
+ 	u8 enable_bit;
+ 	u8 stable_bit;
++	bool no_bypass_bit;
+ };
  
--static __init void jz4740_init_cmdline(int argc, char *argv[])
--{
--	unsigned int count = COMMAND_LINE_SIZE - 1;
--	int i;
--	char *dst = &(arcs_cmdline[0]);
--	char *src;
--
--	for (i = 1; i < argc && count; ++i) {
--		src = argv[i];
--		while (*src && count) {
--			*dst++ = *src++;
--			--count;
--		}
--		*dst++ = ' ';
--	}
--	if (i > 1)
--		--dst;
--
--	*dst = 0;
--}
--
- void __init prom_init(void)
- {
--	jz4740_init_cmdline((int)fw_arg0, (char **)fw_arg1);
- 	mips_machtype = MACH_INGENIC_JZ4740;
-+	fw_init_cmdline();
- }
- 
- void __init prom_free_prom_memory(void)
+ /**
 -- 
 2.11.0
-
