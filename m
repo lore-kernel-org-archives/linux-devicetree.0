@@ -1,107 +1,101 @@
-From: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
-Subject: Re: [PATCH v5 13/15] MIPS: JZ4770: Workaround for corrupted DMA transfers
-Date: Tue, 2 Jan 2018 22:15:14 +0530
-Message-ID: <CANc+2y4mJMMiN4SPiPtcXMrQ0AM_2XGnVRk1Dvyv9VYpNN3x-g@mail.gmail.com>
-References: <20180102150848.11314-1-paul@crapouillou.net> <20180102150848.11314-13-paul@crapouillou.net>
+From: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
+Subject: Re: [PATCH v2 5/8] MIPS: jz4740: dts: Add bindings for the jz4740-wdt
+ driver
+Date: Tue, 02 Jan 2018 17:48:18 +0100
+Message-ID: <1514911698.3623.1@smtp.crapouillou.net>
+References: <20171228162939.3928-2-paul@crapouillou.net>
+        <20171230135108.6834-1-paul@crapouillou.net>
+        <20171230135108.6834-5-paul@crapouillou.net>
+        <CANc+2y5ZUM_ZzXaGgbx9b7O1GF4GrbaYsv97G+akvhP2d2VVUA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20180102150848.11314-13-paul@crapouillou.net>
-Sender: linux-clk-owner@vger.kernel.org
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: Ralf Baechle <ralf@linux-mips.org>, Maarten ter Huurne <maarten@treewalker.org>, devicetree@vger.kernel.org, open list <linux-kernel@vger.kernel.org>, linux-mips@linux-mips.org, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CANc+2y5ZUM_ZzXaGgbx9b7O1GF4GrbaYsv97G+akvhP2d2VVUA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: PrasannaKumar Muralidharan <prasannatsmkumar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Paul,
+Hi PrasannaKumar,
 
-On 2 January 2018 at 20:38, Paul Cercueil <paul@crapouillou.net> wrote:
-> From: Maarten ter Huurne <maarten@treewalker.org>
->
-> We have seen MMC DMA transfers read corrupted data from SDRAM when
-> a burst interval ends at physical address 0x10000000. To avoid this
-> problem, we remove the final page of low memory from the memory map.
->
-> Signed-off-by: Maarten ter Huurne <maarten@treewalker.org>
-> ---
->  arch/mips/jz4740/setup.c | 24 ++++++++++++++++++++++++
->  arch/mips/kernel/setup.c |  8 ++++++++
->  2 files changed, 32 insertions(+)
->
->  v2: No change
->  v3: No change
->  v4: No change
->  v5: No change
->
-> diff --git a/arch/mips/jz4740/setup.c b/arch/mips/jz4740/setup.c
-> index afd84ee966e8..6948b133a15d 100644
-> --- a/arch/mips/jz4740/setup.c
-> +++ b/arch/mips/jz4740/setup.c
-> @@ -23,6 +23,7 @@
->
->  #include <asm/bootinfo.h>
->  #include <asm/mips_machine.h>
-> +#include <asm/page.h>
->  #include <asm/prom.h>
->
->  #include <asm/mach-jz4740/base.h>
-> @@ -102,6 +103,29 @@ void __init arch_init_irq(void)
->         irqchip_init();
->  }
->
-> +/*
-> + * We have seen MMC DMA transfers read corrupted data from SDRAM when a burst
-> + * interval ends at physical address 0x10000000. To avoid this problem, we
-> + * remove the final page of low memory from the memory map.
-> + */
-> +void __init jz4770_reserve_unsafe_for_dma(void)
-> +{
-> +       int i;
-> +
-> +       for (i = 0; i < boot_mem_map.nr_map; i++) {
-> +               struct boot_mem_map_entry *entry = boot_mem_map.map + i;
-> +
-> +               if (entry->type != BOOT_MEM_RAM)
-> +                       continue;
-> +
-> +               if (entry->addr + entry->size != 0x10000000)
-> +                       continue;
-> +
-> +               entry->size -= PAGE_SIZE;
-> +               break;
-> +       }
-> +}
-> +
+Le mar. 2 janv. 2018 =E0 17:37, PrasannaKumar Muralidharan=20
+<prasannatsmkumar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> a =E9crit :
+> Hi Paul,
+>=20
+> On 30 December 2017 at 19:21, Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>=20
+> wrote:
+>>  Also remove the watchdog platform_device from platform.c, since it
+>>  wasn't used anywhere anyway.
+>>=20
+>>  Signed-off-by: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
+>>  ---
+>>   arch/mips/boot/dts/ingenic/jz4740.dtsi |  8 ++++++++
+>>   arch/mips/jz4740/platform.c            | 16 ----------------
+>>   2 files changed, 8 insertions(+), 16 deletions(-)
+>>=20
+>>   v2: No change
+>>=20
+>>  diff --git a/arch/mips/boot/dts/ingenic/jz4740.dtsi=20
+>> b/arch/mips/boot/dts/ingenic/jz4740.dtsi
+>>  index cd5185bb90ae..26c6b561d6f7 100644
+>>  --- a/arch/mips/boot/dts/ingenic/jz4740.dtsi
+>>  +++ b/arch/mips/boot/dts/ingenic/jz4740.dtsi
+>>  @@ -45,6 +45,14 @@
+>>                  #clock-cells =3D <1>;
+>>          };
+>>=20
+>>  +       watchdog: watchdog@10002000 {
+>>  +               compatible =3D "ingenic,jz4740-watchdog";
+>>  +               reg =3D <0x10002000 0x10>;
+>>  +
+>>  +               clocks =3D <&cgu JZ4740_CLK_RTC>;
+>>  +               clock-names =3D "rtc";
+>>  +       };
+>>  +
+>=20
+> The watchdog driver calls jz4740_timer_enable_watchdog and
+> jz4740_timer_disable_watchdog which defined in
+> arch/mips/jz4740/timer.c. It accesses registers iomapped by timer
+> code. Declaring register size as 0x10 does not show the real picture.
+> Better use register size as 0x100 and let timer, wdt, pwm drivers to
+> share them.
 
-Just a wild idea (probably bad too). Changing the memory node in the
-device tree to skip this physical address would work I think. What is
-your opinion about that?
+As you said, it accesses registers iomapped by timer code. So the=20
+watchdog
+driver doesn't need to iomap them.
 
->  static int __init jz4740_machine_setup(void)
->  {
->         mips_machine_setup();
-> diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
-> index 85bc601e9a0d..5a2c20145aee 100644
-> --- a/arch/mips/kernel/setup.c
-> +++ b/arch/mips/kernel/setup.c
-> @@ -879,6 +879,14 @@ static void __init arch_mem_init(char **cmdline_p)
->
->         parse_early_param();
->
-> +#ifdef CONFIG_MACH_JZ4770
-> +       if (current_cpu_type() == CPU_JZRISC &&
-> +                               mips_machtype == MACH_INGENIC_JZ4770) {
-> +               extern void __init jz4770_reserve_unsafe_for_dma(void);
-> +               jz4770_reserve_unsafe_for_dma();
-> +       }
-> +#endif
-> +
->         if (usermem) {
->                 pr_info("User-defined physical RAM map:\n");
->                 print_memory_map();
-> --
-> 2.11.0
->
->
+> Code from one of your branches
+> (https://github.com/OpenDingux/linux/blob/for-upstream-clocksource/arch/m=
+ips/boot/dts/ingenic/jz4740.dtsi)
+> does it. Can you prepare a patch series and send it?
+> I have a patch set that moves timer code out of arch/mips/jz4740/ and
+> does a similar thing for watchdog and pwm. As your new timer driver is
+> better than the existing one I have not sent my patches yet. I would
+> like to see it getting mainlined as it paves way for removing most of
+> code in arch/mips/jz4740.
 
-Thanks,
-PrasannaKumar
+The whole 'for-upstream-clocksource' branch is supposed to go upstream,
+but I can't do it in one big patchset without having lots of breakages=20
+with
+my other patchsets (jz4770 SoC support, and jz4740 watchdog updates)
+currently under review. That also makes it simpler to upstream than=20
+having
+one single patchset that touches 6 different frameworks (MIPS, irq,=20
+clocks,
+clocksource, watchdog, PWM).
+
+So I will submit it in two steps, first the irq/clocks/clocksource=20
+drivers
+(this patchset) hopefully for 4.16, and then the platform/watchdog/PWM=20
+fixes
+for 4.17.
+
+Kind regards,
+-Paul
+=
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
