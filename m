@@ -1,29 +1,118 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/2] cpufreq: imx6q: add 696MHz operating point for i.mx6ul
-Date: Tue, 2 Jan 2018 13:33:07 -0200
-Message-ID: <CAOMZO5ADWdbDoCO8b4JVDag=PH2MgLsLbQ6DJU8VvJh6G6qMkQ@mail.gmail.com>
-References: <1514912859-17691-1-git-send-email-Anson.Huang@nxp.com>
- <1514912859-17691-2-git-send-email-Anson.Huang@nxp.com> <CAOMZO5Do-tyR0ruqfSeJm2FDP7_chNeroFStTF85GnSt_2g5Uw@mail.gmail.com>
- <A2F3BA8B-361A-4809-83FE-4067CD868D5B@nxp.com> <CAOMZO5DvKi4nXfoSBWbe6qedoWO7RiSP5CvJEkBAVUioyVBN=Q@mail.gmail.com>
- <6FFDB281-8293-4D2C-891F-B376B52EFECF@nxp.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v7 2/2] mfd: syscon: Add hardware spinlock support
+Date: Tue, 2 Jan 2018 15:36:20 +0000
+Message-ID: <20180102153620.hhrbov2g5torajim@dell>
+References: <29fa88f883dae4c1f8a3acb2656cbd7c5a539d40.1514180039.git.baolin.wang@linaro.org>
+ <a878ad35d9f38c58d34dac0b331dca029b61a9b8.1514180039.git.baolin.wang@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <6FFDB281-8293-4D2C-891F-B376B52EFECF-3arQi8VN3Tc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Anson Huang <anson.huang-3arQi8VN3Tc@public.gmane.org>
-Cc: "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "A.s. Dong" <aisheng.dong-3arQi8VN3Tc@public.gmane.org>, Jacky Bai <ping.bai-3arQi8VN3Tc@public.gmane.org>, viresh kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <a878ad35d9f38c58d34dac0b331dca029b61a9b8.1514180039.git.baolin.wang@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Baolin Wang <baolin.wang@linaro.org>
+Cc: arnd@arndb.de, robh+dt@kernel.org, mark.rutland@arm.com, broonie@kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 2, 2018 at 1:17 PM, Anson Huang <anson.huang-3arQi8VN3Tc@public.gmane.org> wrote:
+Arnd,
 
-> This change is only valid for mx6ul and mx6ull, other SoCs like 6q/dl/qp are
-> NOT impacted.
+> Some system control registers need hardware spinlock to synchronize
+> between the multiple subsystems, so we should add hardware spinlock
+> support for syscon.
+> 
+> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+> Acked-by: Rob Herring <robh@kernel.org>
 
-Thanks for the clarification:
+... did you sign off on this in the end?
 
-Reviewed-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> ---
+> Changes since v6:
+>  - Treat hwlock id 0 as valid for regmap.
+> 
+> Changes since v5:
+>  - Fix the case that hwspinlock is not enabled.
+> 
+> Changes since v4:
+>  - Add one exapmle to show how to add hwlock.
+>  - Fix the coding style issue.
+> 
+> Changes since v3:
+>  - Add error handling for of_hwspin_lock_get_id()
+> 
+> Changes since v2:
+>  - Add acked tag from Rob.
+> 
+> Changes since v1:
+>  - Remove timeout configuration.
+>  - Modify the binding file to add hwlocks.
+> ---
+>  Documentation/devicetree/bindings/mfd/syscon.txt |    8 ++++++++
+>  drivers/mfd/syscon.c                             |   19 +++++++++++++++++++
+>  2 files changed, 27 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/syscon.txt b/Documentation/devicetree/bindings/mfd/syscon.txt
+> index 8b92d45..25d9e9c 100644
+> --- a/Documentation/devicetree/bindings/mfd/syscon.txt
+> +++ b/Documentation/devicetree/bindings/mfd/syscon.txt
+> @@ -16,9 +16,17 @@ Required properties:
+>  Optional property:
+>  - reg-io-width: the size (in bytes) of the IO accesses that should be
+>    performed on the device.
+> +- hwlocks: reference to a phandle of a hardware spinlock provider node.
+>  
+>  Examples:
+>  gpr: iomuxc-gpr@20e0000 {
+>  	compatible = "fsl,imx6q-iomuxc-gpr", "syscon";
+>  	reg = <0x020e0000 0x38>;
+> +	hwlocks = <&hwlock1 1>;
+> +};
+> +
+> +hwlock1: hwspinlock@40500000 {
+> +	...
+> +	reg = <0x40500000 0x1000>;
+> +	#hwlock-cells = <1>;
+>  };
+> diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
+> index b93fe4c..7eaa40b 100644
+> --- a/drivers/mfd/syscon.c
+> +++ b/drivers/mfd/syscon.c
+> @@ -13,6 +13,7 @@
+>   */
+>  
+>  #include <linux/err.h>
+> +#include <linux/hwspinlock.h>
+>  #include <linux/io.h>
+>  #include <linux/module.h>
+>  #include <linux/list.h>
+> @@ -87,6 +88,24 @@ static struct syscon *of_syscon_register(struct device_node *np)
+>  	if (ret)
+>  		reg_io_width = 4;
+>  
+> +	ret = of_hwspin_lock_get_id(np, 0);
+> +	if (ret > 0 || (IS_ENABLED(CONFIG_HWSPINLOCK) && ret == 0)) {
+> +		syscon_config.use_hwlock = true;
+> +		syscon_config.hwlock_id = ret;
+> +		syscon_config.hwlock_mode = HWLOCK_IRQSTATE;
+> +	} else if (ret < 0) {
+> +		switch (ret) {
+> +		case -ENOENT:
+> +			/* Ignore missing hwlock, it's optional. */
+> +			break;
+> +		default:
+> +			pr_err("Failed to retrieve valid hwlock: %d\n", ret);
+> +			/* fall-through */
+> +		case -EPROBE_DEFER:
+> +			goto err_regmap;
+> +		}
+> +	}
+> +
+>  	syscon_config.reg_stride = reg_io_width;
+>  	syscon_config.val_bits = reg_io_width * 8;
+>  	syscon_config.max_register = resource_size(&res) - reg_io_width;
+
+-- 
+Lee Jones
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
