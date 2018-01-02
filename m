@@ -1,562 +1,240 @@
 From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: [PATCH v5 04/20] firmware: arm_scmi: add common infrastructure and
- support for base protocol
-Date: Tue,  2 Jan 2018 14:42:26 +0000
-Message-ID: <1514904162-11201-5-git-send-email-sudeep.holla@arm.com>
+Subject: [PATCH v5 13/20] firmware: arm_scmi: refactor in preparation to support per-protocol channels
+Date: Tue,  2 Jan 2018 14:42:35 +0000
+Message-ID: <1514904162-11201-14-git-send-email-sudeep.holla@arm.com>
 References: <1514904162-11201-1-git-send-email-sudeep.holla@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1514904162-11201-1-git-send-email-sudeep.holla@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: ALKML <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>
-Cc: Nishanth Menon <nm@ti.com>, Harb Abdulhamid <harba@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, Jassi Brar <jassisinghbrar@gmail.com>, Ryan Harkin <Ryan.Harkin@arm.com>, Roy Franz <roy.franz@cavium.com>, Alexey Klimov <klimov.linux@gmail.com>, Loc Ho <lho@apm.com>, Sudeep Holla <sudeep.holla@arm.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Roy Franz <roy.franz@cavium.com>, Harb Abdulhamid <harba@codeaurora.org>, Nishanth Menon <nm@ti.com>, Arnd Bergmann <arnd@arndb.de>, Loc Ho <lho@apm.com>, Alexey Klimov <klimov.linux@gmail.com>, Ryan Harkin <Ryan.Harkin@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-The base protocol describes the properties of the implementation and
-provide generic error management. The base protocol provides commands
-to describe protocol version, discover implementation specific
-attributes and vendor/sub-vendor identification, list of protocols
-implemented and the various agents are in the system including OSPM
-and the platform. It also supports registering for notifications of
-platform errors.
+In order to support per-protocol channels if available, we need to
+factor out all the mailbox channel information(Tx/Rx payload and
+channel handle) out of the main SCMI instance information structure.
 
-This protocol is mandatory. This patch adds support for the same along
-with some basic infrastructure to add support for other protocols.
+This patch refactors the existing channel information into a separate
+chan_info structure.
 
 Cc: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 ---
- drivers/firmware/arm_scmi/Makefile |   3 +-
- drivers/firmware/arm_scmi/base.c   | 293 +++++++++++++++++++++++++++++++++++++
- drivers/firmware/arm_scmi/common.h |  37 +++++
- drivers/firmware/arm_scmi/driver.c |  53 +++++++
- include/linux/scmi_protocol.h      |  37 +++++
- 5 files changed, 422 insertions(+), 1 deletion(-)
- create mode 100644 drivers/firmware/arm_scmi/base.c
+ drivers/firmware/arm_scmi/driver.c | 86 ++++++++++++++++++++++++--------------
+ 1 file changed, 54 insertions(+), 32 deletions(-)
 
-diff --git a/drivers/firmware/arm_scmi/Makefile b/drivers/firmware/arm_scmi/Makefile
-index b2a24ba2b636..5d9c7ef35f0f 100644
---- a/drivers/firmware/arm_scmi/Makefile
-+++ b/drivers/firmware/arm_scmi/Makefile
-@@ -1,2 +1,3 @@
--obj-y	= scmi-driver.o
-+obj-y	= scmi-driver.o scmi-protocols.o
- scmi-driver-y = driver.o
-+scmi-protocols-y = base.o
-diff --git a/drivers/firmware/arm_scmi/base.c b/drivers/firmware/arm_scmi/base.c
-new file mode 100644
-index 000000000000..2b5fbb724899
---- /dev/null
-+++ b/drivers/firmware/arm_scmi/base.c
-@@ -0,0 +1,293 @@
-+/*
-+ * System Control and Management Interface (SCMI) Base Protocol
-+ *
-+ * Copyright (C) 2017 ARM Ltd.
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-+ * more details.
-+ *
-+ * You should have received a copy of the GNU General Public License along
-+ * with this program. If not, see <http://www.gnu.org/licenses/>.
-+ */
-+
-+#include "common.h"
-+
-+enum scmi_base_protocol_cmd {
-+	BASE_DISCOVER_VENDOR = 0x3,
-+	BASE_DISCOVER_SUB_VENDOR = 0x4,
-+	BASE_DISCOVER_IMPLEMENT_VERSION = 0x5,
-+	BASE_DISCOVER_LIST_PROTOCOLS = 0x6,
-+	BASE_DISCOVER_AGENT = 0x7,
-+	BASE_NOTIFY_ERRORS = 0x8,
-+};
-+
-+struct scmi_msg_resp_base_attributes {
-+	    u8 num_protocols;
-+	    u8 num_agents;
-+	__le16 reserved;
-+};
-+
-+/**
-+ * scmi_base_attributes_get() - gets the implementation details
-+ *	that are associated with the base protocol.
-+ *
-+ * @handle - SCMI entity handle
-+ *
-+ * Return: 0 on success, else appropriate SCMI error.
-+ */
-+static int scmi_base_attributes_get(const struct scmi_handle *handle)
-+{
-+	int ret;
-+	struct scmi_xfer *t;
-+	struct scmi_msg_resp_base_attributes *attr_info;
-+	struct scmi_revision_info *rev = handle->version;
-+
-+	ret = scmi_one_xfer_init(handle, PROTOCOL_ATTRIBUTES,
-+				 SCMI_PROTOCOL_BASE, 0, sizeof(*attr_info), &t);
-+	if (ret)
-+		return ret;
-+
-+	ret = scmi_do_xfer(handle, t);
-+	if (!ret) {
-+		attr_info = t->rx.buf;
-+		rev->num_protocols = attr_info->num_protocols;
-+		rev->num_agents = attr_info->num_agents;
-+	}
-+
-+	scmi_one_xfer_put(handle, t);
-+	return ret;
-+}
-+
-+/**
-+ * scmi_base_vendor_id_get() - gets vendor/subvendor identifier ASCII string.
-+ *
-+ * @handle - SCMI entity handle
-+ * @sub_vendor - specify true if sub-vendor ID is needed
-+ *
-+ * Return: 0 on success, else appropriate SCMI error.
-+ */
-+static int
-+scmi_base_vendor_id_get(const struct scmi_handle *handle, bool sub_vendor)
-+{
-+	u8 cmd;
-+	int ret, size;
-+	char *vendor_id;
-+	struct scmi_xfer *t;
-+	struct scmi_revision_info *rev = handle->version;
-+
-+	if (sub_vendor) {
-+		cmd = BASE_DISCOVER_SUB_VENDOR;
-+		vendor_id = rev->sub_vendor_id;
-+		size = ARRAY_SIZE(rev->sub_vendor_id);
-+	} else {
-+		cmd = BASE_DISCOVER_VENDOR;
-+		vendor_id = rev->vendor_id;
-+		size = ARRAY_SIZE(rev->vendor_id);
-+	}
-+
-+	ret = scmi_one_xfer_init(handle, cmd, SCMI_PROTOCOL_BASE, 0, size, &t);
-+	if (ret)
-+		return ret;
-+
-+	ret = scmi_do_xfer(handle, t);
-+	if (!ret)
-+		memcpy(vendor_id, t->rx.buf, size);
-+
-+	scmi_one_xfer_put(handle, t);
-+	return ret;
-+}
-+
-+/**
-+ * scmi_base_implementation_version_get() - gets a vendor-specific
-+ *	implementation 32-bit version. The format of the version number is
-+ *	vendor-specific
-+ *
-+ * @handle - SCMI entity handle
-+ *
-+ * Return: 0 on success, else appropriate SCMI error.
-+ */
-+static int
-+scmi_base_implementation_version_get(const struct scmi_handle *handle)
-+{
-+	int ret;
-+	__le32 *impl_ver;
-+	struct scmi_xfer *t;
-+	struct scmi_revision_info *rev = handle->version;
-+
-+	ret = scmi_one_xfer_init(handle, BASE_DISCOVER_IMPLEMENT_VERSION,
-+				 SCMI_PROTOCOL_BASE, 0, sizeof(*impl_ver), &t);
-+	if (ret)
-+		return ret;
-+
-+	ret = scmi_do_xfer(handle, t);
-+	if (!ret) {
-+		impl_ver = t->rx.buf;
-+		rev->impl_ver = le32_to_cpu(*impl_ver);
-+	}
-+
-+	scmi_one_xfer_put(handle, t);
-+	return ret;
-+}
-+
-+/**
-+ * scmi_base_implementation_list_get() - gets the list of protocols it is
-+ *	OSPM is allowed to access
-+ *
-+ * @handle - SCMI entity handle
-+ * @protocols_imp - pointer to hold the list of protocol identifiers
-+ *
-+ * Return: 0 on success, else appropriate SCMI error.
-+ */
-+static int scmi_base_implementation_list_get(const struct scmi_handle *handle,
-+					     u8 *protocols_imp)
-+{
-+	u8 *list;
-+	int ret, loop;
-+	struct scmi_xfer *t;
-+	__le32 *num_skip, *num_ret;
-+	u32 tot_num_ret = 0, loop_num_ret;
-+	struct device *dev = handle->dev;
-+
-+	ret = scmi_one_xfer_init(handle, BASE_DISCOVER_LIST_PROTOCOLS,
-+				 SCMI_PROTOCOL_BASE, sizeof(*num_skip), 0, &t);
-+	if (ret)
-+		return ret;
-+
-+	num_skip = t->tx.buf;
-+	num_ret = t->rx.buf;
-+	list = t->rx.buf + sizeof(*num_ret);
-+
-+	do {
-+		/* Set the number of protocols to be skipped/already read */
-+		*num_skip = cpu_to_le32(tot_num_ret);
-+
-+		ret = scmi_do_xfer(handle, t);
-+		if (ret)
-+			break;
-+
-+		loop_num_ret = le32_to_cpu(*num_ret);
-+		if (tot_num_ret + loop_num_ret > MAX_PROTOCOLS_IMP) {
-+			dev_err(dev, "No. of Protocol > MAX_PROTOCOLS_IMP");
-+			break;
-+		}
-+
-+		for (loop = 0; loop < loop_num_ret; loop++)
-+			protocols_imp[tot_num_ret + loop] = *(list + loop);
-+
-+		tot_num_ret += loop_num_ret;
-+	} while (loop_num_ret);
-+
-+	scmi_one_xfer_put(handle, t);
-+	return ret;
-+}
-+
-+/**
-+ * scmi_base_discover_agent_get() - discover the name of an agent
-+ *
-+ * @handle - SCMI entity handle
-+ * @id - Agent identifier
-+ * @name - Agent identifier ASCII string
-+ *
-+ * An agent id of 0 is reserved to identify the platform itself.
-+ * Generally operating system is represented as "OSPM"
-+ *
-+ * Return: 0 on success, else appropriate SCMI error.
-+ */
-+static int scmi_base_discover_agent_get(const struct scmi_handle *handle,
-+					int id, char *name)
-+{
-+	int ret;
-+	struct scmi_xfer *t;
-+
-+	ret = scmi_one_xfer_init(handle, BASE_DISCOVER_AGENT,
-+				 SCMI_PROTOCOL_BASE, sizeof(__le32),
-+				 SCMI_MAX_STR_SIZE, &t);
-+	if (ret)
-+		return ret;
-+
-+	*(__le32 *)t->tx.buf = cpu_to_le32(id);
-+
-+	ret = scmi_do_xfer(handle, t);
-+	if (!ret)
-+		memcpy(name, t->rx.buf, SCMI_MAX_STR_SIZE);
-+
-+	scmi_one_xfer_put(handle, t);
-+	return ret;
-+}
-+
-+/**
-+ * scmi_base_error_notifications_enable() - register/unregister for
-+ *	notifications of errors in the platform
-+ *
-+ * @handle - SCMI entity handle
-+ * @enable - Enable/Disable the notification
-+ *
-+ * Return: 0 on success, else appropriate SCMI error.
-+ */
-+static int
-+scmi_base_error_notifications_enable(const struct scmi_handle *handle, bool en)
-+{
-+	int ret;
-+	struct scmi_xfer *t;
-+
-+	ret = scmi_one_xfer_init(handle, BASE_NOTIFY_ERRORS, SCMI_PROTOCOL_BASE,
-+				 sizeof(__le32), 0, &t);
-+	if (ret)
-+		return ret;
-+
-+	*(__le32 *)t->tx.buf = cpu_to_le32(en & BIT(0));
-+
-+	ret = scmi_do_xfer(handle, t);
-+
-+	scmi_one_xfer_put(handle, t);
-+	return ret;
-+}
-+
-+int scmi_base_protocol_init(struct scmi_handle *h)
-+{
-+	int id, ret;
-+	u8 *prot_imp;
-+	u32 version;
-+	char name[SCMI_MAX_STR_SIZE];
-+	const struct scmi_handle *handle = h;
-+	struct device *dev = handle->dev;
-+	struct scmi_revision_info *rev = handle->version;
-+
-+	ret = scmi_version_get(handle, SCMI_PROTOCOL_BASE, &version);
-+	if (ret)
-+		return ret;
-+
-+	prot_imp = devm_kcalloc(dev, MAX_PROTOCOLS_IMP, sizeof(u8), GFP_KERNEL);
-+	if (!prot_imp)
-+		return -ENOMEM;
-+
-+	rev->major_ver = PROTOCOL_REV_MAJOR(version),
-+	rev->minor_ver = PROTOCOL_REV_MINOR(version);
-+
-+	scmi_base_attributes_get(handle);
-+	scmi_base_vendor_id_get(handle, false);
-+	scmi_base_vendor_id_get(handle, true);
-+	scmi_base_implementation_version_get(handle);
-+	scmi_base_implementation_list_get(handle, prot_imp);
-+	scmi_base_error_notifications_enable(handle, true);
-+	scmi_setup_protocol_implemented(handle, prot_imp);
-+
-+	dev_info(dev, "SCMI Protocol v%d.%d '%s:%s' Firmware version 0x%x\n",
-+		 rev->major_ver, rev->minor_ver, rev->vendor_id,
-+		 rev->sub_vendor_id, rev->impl_ver);
-+	dev_dbg(dev, "Found %d protocol(s) %d agent(s)\n", rev->num_protocols,
-+		rev->num_agents);
-+
-+	for (id = 0; id < rev->num_agents; id++) {
-+		scmi_base_discover_agent_get(handle, id, name);
-+		dev_dbg(dev, "Agent %d: %s\n", id, name);
-+	}
-+
-+	return 0;
-+}
-diff --git a/drivers/firmware/arm_scmi/common.h b/drivers/firmware/arm_scmi/common.h
-index cdfc43427c3c..bc767f4997e0 100644
---- a/drivers/firmware/arm_scmi/common.h
-+++ b/drivers/firmware/arm_scmi/common.h
-@@ -19,9 +19,41 @@
-  */
- 
- #include <linux/completion.h>
-+#include <linux/device.h>
-+#include <linux/errno.h>
-+#include <linux/kernel.h>
- #include <linux/scmi_protocol.h>
- #include <linux/types.h>
- 
-+#define PROTOCOL_REV_MINOR_BITS	16
-+#define PROTOCOL_REV_MINOR_MASK	((1U << PROTOCOL_REV_MINOR_BITS) - 1)
-+#define PROTOCOL_REV_MAJOR(x)	((x) >> PROTOCOL_REV_MINOR_BITS)
-+#define PROTOCOL_REV_MINOR(x)	((x) & PROTOCOL_REV_MINOR_MASK)
-+#define MAX_PROTOCOLS_IMP	16
-+
-+enum scmi_common_cmd {
-+	PROTOCOL_VERSION = 0x0,
-+	PROTOCOL_ATTRIBUTES = 0x1,
-+	PROTOCOL_MESSAGE_ATTRIBUTES = 0x2,
-+};
-+
-+/**
-+ * struct scmi_msg_resp_prot_version - Response for a message
-+ *
-+ * @major_version: Major version of the ABI that firmware supports
-+ * @minor_version: Minor version of the ABI that firmware supports
-+ *
-+ * In general, ABI version changes follow the rule that minor version increments
-+ * are backward compatible. Major revision changes in ABI may not be
-+ * backward compatible.
-+ *
-+ * Response to a generic message with message type SCMI_MSG_VERSION
-+ */
-+struct scmi_msg_resp_prot_version {
-+	__le16 minor_version;
-+	__le16 major_version;
-+};
-+
- /**
-  * struct scmi_msg_hdr - Message(Tx/Rx) header
-  *
-@@ -75,3 +107,8 @@ int scmi_one_xfer_init(const struct scmi_handle *h, u8 msg_id, u8 prot_id,
- 		       size_t tx_size, size_t rx_size, struct scmi_xfer **p);
- int scmi_handle_put(const struct scmi_handle *handle);
- struct scmi_handle *scmi_handle_get(struct device *dev);
-+int scmi_version_get(const struct scmi_handle *h, u8 protocol, u32 *version);
-+void scmi_setup_protocol_implemented(const struct scmi_handle *handle,
-+				     u8 *prot_imp);
-+
-+int scmi_base_protocol_init(struct scmi_handle *h);
 diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
-index 58d8f88893e6..20d083be474c 100644
+index 0c9dda72f10c..24acb421208c 100644
 --- a/drivers/firmware/arm_scmi/driver.c
 +++ b/drivers/firmware/arm_scmi/driver.c
-@@ -108,21 +108,27 @@ struct scmi_desc {
+@@ -105,6 +105,22 @@ struct scmi_desc {
+ };
+ 
+ /**
++ * struct scmi_chan_info - Structure representing a SCMI channel informfation
++ *
++ * @cl: Mailbox Client
++ * @chan: Transmit/Receive mailbox channel
++ * @payload: Transmit/Receive mailbox channel payload area
++ * @dev: Reference to device in the SCMI hierarchy corresponding to this
++ *	 channel
++ */
++struct scmi_chan_info {
++	struct mbox_client cl;
++	struct mbox_chan *chan;
++	void __iomem *payload;
++	struct device *dev;
++};
++
++/**
+  * struct scmi_info - Structure representing a  SCMI instance
+  *
   * @dev: Device pointer
-  * @desc: SoC description for this instance
+@@ -112,10 +128,8 @@ struct scmi_desc {
   * @handle: Instance of SCMI handle to send to clients
-+ * @version: SCMI revision information containing protocol version,
-+ *	implementation version and (sub-)vendor identification.
-  * @cl: Mailbox Client
-  * @tx_chan: Transmit mailbox channel
-  * @tx_payload: Transmit mailbox channel payload area
+  * @version: SCMI revision information containing protocol version,
+  *	implementation version and (sub-)vendor identification.
+- * @cl: Mailbox Client
+- * @tx_chan: Transmit mailbox channel
+- * @tx_payload: Transmit mailbox channel payload area
   * @minfo: Message info
-+ * @protocols_imp: list of protocols implemented, currently maximum of
-+ *	MAX_PROTOCOLS_IMP elements allocated by the base protocol
++ * @tx_cinfo: Reference to SCMI channel information
+  * @protocols_imp: list of protocols implemented, currently maximum of
+  *	MAX_PROTOCOLS_IMP elements allocated by the base protocol
   * @node: list head
-  * @users: Number of users of this instance
-  */
- struct scmi_info {
- 	struct device *dev;
+@@ -126,16 +140,14 @@ struct scmi_info {
  	const struct scmi_desc *desc;
-+	struct scmi_revision_info version;
+ 	struct scmi_revision_info version;
  	struct scmi_handle handle;
- 	struct mbox_client cl;
- 	struct mbox_chan *tx_chan;
- 	void __iomem *tx_payload;
+-	struct mbox_client cl;
+-	struct mbox_chan *tx_chan;
+-	void __iomem *tx_payload;
  	struct scmi_xfers_info minfo;
-+	u8 *protocols_imp;
++	struct scmi_chan_info *tx_cinfo;
+ 	u8 *protocols_imp;
  	struct list_head node;
  	int users;
  };
-@@ -450,6 +456,45 @@ int scmi_one_xfer_init(const struct scmi_handle *handle, u8 msg_id, u8 prot_id,
+ 
+-#define client_to_scmi_info(c)	container_of(c, struct scmi_info, cl)
++#define client_to_scmi_chan_info(c) container_of(c, struct scmi_chan_info, cl)
+ #define handle_to_scmi_info(h)	container_of(h, struct scmi_info, handle)
+ 
+ /*
+@@ -218,10 +230,11 @@ static void scmi_rx_callback(struct mbox_client *cl, void *m)
+ {
+ 	u16 xfer_id;
+ 	struct scmi_xfer *xfer;
+-	struct scmi_info *info = client_to_scmi_info(cl);
++	struct scmi_chan_info *cinfo = client_to_scmi_chan_info(cl);
++	struct device *dev = cinfo->dev;
++	struct scmi_info *info = dev_get_drvdata(dev);
+ 	struct scmi_xfers_info *minfo = &info->minfo;
+-	struct device *dev = info->dev;
+-	struct scmi_shared_mem __iomem *mem = info->tx_payload;
++	struct scmi_shared_mem __iomem *mem = cinfo->payload;
+ 
+ 	xfer_id = MSG_XTRACT_TOKEN(ioread32(&mem->msg_header));
+ 
+@@ -272,8 +285,8 @@ static inline u32 pack_scmi_header(struct scmi_msg_hdr *hdr)
+ static void scmi_tx_prepare(struct mbox_client *cl, void *m)
+ {
+ 	struct scmi_xfer *t = m;
+-	struct scmi_info *info = client_to_scmi_info(cl);
+-	struct scmi_shared_mem __iomem *mem = info->tx_payload;
++	struct scmi_chan_info *cinfo = client_to_scmi_chan_info(cl);
++	struct scmi_shared_mem __iomem *mem = cinfo->payload;
+ 
+ 	/* Mark channel busy + clear error */
+ 	iowrite32(0x0, &mem->channel_status);
+@@ -366,15 +379,15 @@ void scmi_one_xfer_put(const struct scmi_handle *handle, struct scmi_xfer *xfer)
  }
  
- /**
-+ * scmi_version_get() - command to get the revision of the SCMI entity
-+ *
-+ * @handle: Handle to SCMI entity information
-+ *
-+ * Updates the SCMI information in the internal data structure.
-+ *
-+ * Return: 0 if all went fine, else return appropriate error.
-+ */
-+int scmi_version_get(const struct scmi_handle *handle, u8 protocol,
-+		     u32 *version)
-+{
-+	int ret;
-+	__le32 *rev_info;
-+	struct scmi_xfer *t;
-+
-+	ret = scmi_one_xfer_init(handle, PROTOCOL_VERSION, protocol, 0,
-+				 sizeof(*version), &t);
-+	if (ret)
-+		return ret;
-+
-+	ret = scmi_do_xfer(handle, t);
-+	if (!ret) {
-+		rev_info = t->rx.buf;
-+		*version = le32_to_cpu(*rev_info);
-+	}
-+
-+	scmi_one_xfer_put(handle, t);
-+	return ret;
-+}
-+
-+void scmi_setup_protocol_implemented(const struct scmi_handle *handle,
-+				     u8 *prot_imp)
-+{
-+	struct scmi_info *info = handle_to_scmi_info(handle);
-+
-+	info->protocols_imp = prot_imp;
-+}
-+
-+/**
-  * scmi_handle_get() - Get the  SCMI handle for a device
-  *
-  * @dev: pointer to device for which we want SCMI handle
-@@ -679,11 +724,19 @@ static int scmi_probe(struct platform_device *pdev)
+ static bool
+-scmi_xfer_poll_done(const struct scmi_info *info, struct scmi_xfer *xfer)
++scmi_xfer_poll_done(const struct scmi_chan_info *cinfo, struct scmi_xfer *xfer)
+ {
+-	struct scmi_shared_mem *mem = info->tx_payload;
+-	u16 xfer_id = MSG_XTRACT_TOKEN(le32_to_cpu(mem->msg_header));
++	struct scmi_shared_mem __iomem *mem = cinfo->payload;
++	u16 xfer_id = MSG_XTRACT_TOKEN(ioread32(&mem->msg_header));
  
- 	handle = &info->handle;
- 	handle->dev = info->dev;
-+	handle->version = &info->version;
+ 	if (xfer->hdr.seq != xfer_id)
+ 		return false;
  
- 	ret = scmi_mbox_chan_setup(info);
- 	if (ret)
+-	return le32_to_cpu(mem->channel_status) &
++	return ioread32(&mem->channel_status) &
+ 		(SCMI_SHMEM_CHAN_STAT_CHANNEL_ERROR |
+ 		SCMI_SHMEM_CHAN_STAT_CHANNEL_FREE);
+ }
+@@ -396,8 +409,9 @@ int scmi_do_xfer(const struct scmi_handle *handle, struct scmi_xfer *xfer)
+ 	int timeout;
+ 	struct scmi_info *info = handle_to_scmi_info(handle);
+ 	struct device *dev = info->dev;
++	struct scmi_chan_info *cinfo = info->tx_cinfo;
+ 
+-	ret = mbox_send_message(info->tx_chan, xfer);
++	ret = mbox_send_message(cinfo->chan, xfer);
+ 	if (ret < 0) {
+ 		dev_dbg(dev, "mbox send fail %d\n", ret);
  		return ret;
+@@ -413,11 +427,11 @@ int scmi_do_xfer(const struct scmi_handle *handle, struct scmi_xfer *xfer)
+ 		do {
+ 			udelay(5);
+ 			cur = ktime_get();
+-		} while (!scmi_xfer_poll_done(info, xfer) &&
++		} while (!scmi_xfer_poll_done(cinfo, xfer) &&
+ 			 ktime_before(cur, stop));
  
-+	ret = scmi_base_protocol_init(handle);
-+	if (ret) {
-+		dev_err(dev, "unable to communicate with SCMI(%d)\n", ret);
-+		scmi_mbox_free_channel(info);
-+		return ret;
-+	}
-+
- 	mutex_lock(&scmi_list_mutex);
- 	list_add_tail(&info->node, &scmi_list);
- 	mutex_unlock(&scmi_list_mutex);
-diff --git a/include/linux/scmi_protocol.h b/include/linux/scmi_protocol.h
-index 854ed2479993..664da3d763f2 100644
---- a/include/linux/scmi_protocol.h
-+++ b/include/linux/scmi_protocol.h
-@@ -17,11 +17,48 @@
-  */
- #include <linux/types.h>
+ 		if (ktime_before(cur, stop))
+-			scmi_fetch_response(xfer, info->tx_payload);
++			scmi_fetch_response(xfer, cinfo->payload);
+ 		else
+ 			ret = -ETIMEDOUT;
+ 	} else {
+@@ -437,7 +451,7 @@ int scmi_do_xfer(const struct scmi_handle *handle, struct scmi_xfer *xfer)
+ 	 * Unfortunately, we have to kick the mailbox framework after we have
+ 	 * received our message.
+ 	 */
+-	mbox_client_txdone(info->tx_chan, ret);
++	mbox_client_txdone(cinfo->chan, ret);
  
-+#define SCMI_MAX_STR_SIZE	16
+ 	return ret;
+ }
+@@ -667,11 +681,11 @@ static int scmi_mailbox_check(struct device_node *np)
+ 	return of_parse_phandle_with_args(np, "mboxes", "#mbox-cells", 0, &arg);
+ }
+ 
+-static int scmi_mbox_free_channel(struct scmi_info *info)
++static int scmi_mbox_free_channel(struct scmi_chan_info *cinfo)
+ {
+-	if (!IS_ERR_OR_NULL(info->tx_chan)) {
+-		mbox_free_channel(info->tx_chan);
+-		info->tx_chan = NULL;
++	if (!IS_ERR_OR_NULL(cinfo->chan)) {
++		mbox_free_channel(cinfo->chan);
++		cinfo->chan = NULL;
+ 	}
+ 
+ 	return 0;
+@@ -691,7 +705,7 @@ static int scmi_remove(struct platform_device *pdev)
+ 
+ 	if (!ret)
+ 		/* Safe to free channels since no more users */
+-		return scmi_mbox_free_channel(info);
++		return scmi_mbox_free_channel(info->tx_cinfo);
+ 
+ 	return ret;
+ }
+@@ -703,9 +717,17 @@ static inline int scmi_mbox_chan_setup(struct scmi_info *info)
+ 	resource_size_t size;
+ 	struct device *dev = info->dev;
+ 	struct device_node *shmem, *np = dev->of_node;
++	struct scmi_chan_info *cinfo;
+ 	struct mbox_client *cl;
+ 
+-	cl = &info->cl;
++	cinfo = devm_kzalloc(info->dev, sizeof(*cinfo), GFP_KERNEL);
++	if (!cinfo)
++		return -ENOMEM;
 +
-+/**
-+ * struct scmi_revision_info - version information structure
-+ *
-+ * @major_ver: Major ABI version. Change here implies risk of backward
-+ *	compatibility break.
-+ * @minor_ver: Minor ABI version. Change here implies new feature addition,
-+ *	or compatible change in ABI.
-+ * @num_protocols: Number of protocols that are implemented, excluding the
-+ *	base protocol.
-+ * @num_agents: Number of agents in the system.
-+ * @impl_ver: A vendor-specific implementation version.
-+ * @vendor_id: A vendor identifier(Null terminated ASCII string)
-+ * @sub_vendor_id: A sub-vendor identifier(Null terminated ASCII string)
-+ */
-+struct scmi_revision_info {
-+	u16 major_ver;
-+	u16 minor_ver;
-+	u8 num_protocols;
-+	u8 num_agents;
-+	u32 impl_ver;
-+	char vendor_id[SCMI_MAX_STR_SIZE];
-+	char sub_vendor_id[SCMI_MAX_STR_SIZE];
-+};
++	info->tx_cinfo = cinfo;
++	cinfo->dev = dev;
 +
- /**
-  * struct scmi_handle - Handle returned to ARM SCMI clients for usage.
-  *
-  * @dev: pointer to the SCMI device
-+ * @version: pointer to the structure containing SCMI version information
-  */
- struct scmi_handle {
- 	struct device *dev;
-+	struct scmi_revision_info *version;
-+};
-+
-+enum scmi_std_protocol {
-+	SCMI_PROTOCOL_BASE = 0x10,
-+	SCMI_PROTOCOL_POWER = 0x11,
-+	SCMI_PROTOCOL_SYSTEM = 0x12,
-+	SCMI_PROTOCOL_PERF = 0x13,
-+	SCMI_PROTOCOL_CLOCK = 0x14,
-+	SCMI_PROTOCOL_SENSOR = 0x15,
- };
++	cl = &cinfo->cl;
+ 	cl->dev = dev;
+ 	cl->rx_callback = scmi_rx_callback;
+ 	cl->tx_prepare = scmi_tx_prepare;
+@@ -721,16 +743,16 @@ static inline int scmi_mbox_chan_setup(struct scmi_info *info)
+ 	}
+ 
+ 	size = resource_size(&res);
+-	info->tx_payload = devm_ioremap(dev, res.start, size);
+-	if (!info->tx_payload) {
++	cinfo->payload = devm_ioremap(info->dev, res.start, size);
++	if (!cinfo->payload) {
+ 		dev_err(dev, "failed to ioremap SCMI Tx payload\n");
+ 		return -EADDRNOTAVAIL;
+ 	}
+ 
+ 	/* Transmit channel is first entry i.e. index 0 */
+-	info->tx_chan = mbox_request_channel(cl, 0);
+-	if (IS_ERR(info->tx_chan)) {
+-		ret = PTR_ERR(info->tx_chan);
++	cinfo->chan = mbox_request_channel(cl, 0);
++	if (IS_ERR(cinfo->chan)) {
++		ret = PTR_ERR(cinfo->chan);
+ 		if (ret != -EPROBE_DEFER)
+ 			dev_err(dev, "failed to request SCMI Tx mailbox\n");
+ 		return ret;
+@@ -798,7 +820,7 @@ static int scmi_probe(struct platform_device *pdev)
+ 	ret = scmi_base_protocol_init(handle);
+ 	if (ret) {
+ 		dev_err(dev, "unable to communicate with SCMI(%d)\n", ret);
+-		scmi_mbox_free_channel(info);
++		scmi_mbox_free_channel(info->tx_cinfo);
+ 		return ret;
+ 	}
+ 
 -- 
 2.7.4
