@@ -1,55 +1,91 @@
-From: Trent Piepho <tpiepho-cgc2CodaaHDQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 2/3] dt-bindings: mtd: atmel-quadspi: add an optional
- property 'dmacap,memcpy'
-Date: Tue, 2 Jan 2018 19:18:58 +0000
-Message-ID: <1514920738.26695.171.camel@impinj.com>
-References: <cover.1514087323.git.cyrille.pitchen@wedev4u.fr>
-         <143542c61ca674d53da4985bbabc142e8e6ebefc.1514087323.git.cyrille.pitchen@wedev4u.fr>
-         <20171226232330.trljk2ofyvu4ly3n@rob-hp-laptop>
-         <0149ba05-64b1-2739-e61f-78d5170775fb@wedev4u.fr>
-         <20180102102234.GG2612@rfolt0960.corp.atmel.com>
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH] Nokia N9: add support for up/down keys in the dts
+Date: Tue, 2 Jan 2018 20:42:36 +0100
+Message-ID: <20180102194236.ahrhkvnefre2l6gf@earth.universe>
+References: <20180102125948.GA20051@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180102102234.GG2612-fC2aZbRiGnsAAwgTK2POJVCF2YAvjlIb@public.gmane.org>
-Content-Language: en-US
-Content-ID: <3810E1B0D4C84545933E0F2072FEFB05-+1mpgTUVCH2cE4WynfumptQqCkab/8FMAL8bYrjMMd8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org" <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>, "ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org" <ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Cc: "nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org" <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "radu.pirea-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org" <radu.pirea-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, "linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org" <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "vigneshr-l0cyMroinI0@public.gmane.org" <vigneshr-l0cyMroinI0@public.gmane.org>, "marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>"richard-/L3Ra7n9ekc@public.gmane.org" <r>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="w3msx4wwaosk7qlr"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180102125948.GA20051@amd>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: pali.rohar@gmail.com, kernel list <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-omap@vger.kernel.org, tony@atomide.com, khilman@kernel.org, aaro.koskinen@iki.fi, ivo.g.dimitrov.75@gmail.com, patrikbachan@gmail.com, serge@hallyn.com, abcloriens@gmail.com, clayton@craftyguy.net, martijn@brixit.nl, sakari.ailus@linux.intel.com, Filip =?utf-8?Q?Matijevi=C4=87?= <filip.matijevic.pz@gmail.com>, bcousson@baylibre.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCAyMDE4LTAxLTAyIGF0IDExOjIyICswMTAwLCBMdWRvdmljIERlc3JvY2hlcyB3cm90
-ZToNCj4gT24gV2VkLCBEZWMgMjcsIDIwMTcgYXQgMTA6NDA6MDBQTSArMDEwMCwgQ3lyaWxsZSBQ
-aXRjaGVuIHdyb3RlOg0KPiANCj4gPiBPciBtYXliZSBubyBjaGFuZ2UgYXQgYWxsIGlzIHJlcXVp
-cmVkIGF0IHRoZSBhdF94ZG1hYy5jIGRyaXZlciBzaWRlOiB3ZQ0KPiA+IGp1c3QgZG9uJ3QgY2Fy
-ZSBhYm91dCB0aGUgcHJvdmlkZWQgZmxhZ3MgaW4gdGhlICJkbWFzIiBwcm9wZXJ0eSwgZXNwZWNp
-YWxseQ0KPiA+IHRoZSAicGVyaXBoZXJhbCBpZCIuIFRoZXkgd291bGQgYmUgaWdub3JlZCBhbnl3
-YXkgd2hlbiB0aGUgYXRtZWwtcXVhZHNwaS5jDQo+ID4gZHJpdmVyIGxhdGVyIGNhbGxzIGRtYWVu
-Z2luZV9wcmVwX2RtYV9tZW1jcHkoKS4gU28gSSBjb3VsZCBzaW1wbHkgc2V0IHRoZQ0KPiA+IGRt
-YSBjZWxscyB0byAwIGluIHRoZSBkZXZpY2UtdHJlZT8NCj4gPiANCj4gPiBMdWRvdmljLCB3aGF0
-IGRvIHlvdSB0aGluayBhYm91dCB0aGF0ID8NCj4gDQo+IEl0IG1heSB3b3JrIGJ1dCBJIHdvbid0
-IGRvIHRoaXMuIFVzdWFsbHksIGNoYW5uZWxzIHJlcXVlc3RlZCB0aHJvdWdoIHRoZSB4bGF0ZQ0K
-PiBmdW5jdGlvbiBoYXZlIHVzdWFsbHkgdGhlaXIgY2FwYWlibGl0aWVzIHNldCB0byBETUFfU0xB
-VkUgYW5kIG5vdCBETUFfTUVNQ1BZLg0KPiBJbiB0aGUgYXRfeGRtYWMgY2FzZSwgaXQgd29uJ3Qg
-YmUgYW4gaXNzdWUgYnV0IGlmIHlvdSBoYXZlIGEgY29udHJvbGxlcg0KPiB3aGljaCBoYXMgY2hh
-bm5lbHMgd2hpY2ggY2FuIHN1cHBvcnQgb25seSBtZW0tdG8tbWVtIG9yIHBlcmlwaGVyYWwsIGl0
-DQo+IHdvbid0IHdvcmsuDQoNCk1heWJlIG9uZSBjb3VsZCBjcmVhdGUgYW4gIkFUOTFfWERNQUNf
-RFRfIiBtYWNybyB0byBpbmRpY2F0ZSBhIG1lbWNweQ0KY2hhbm5lbC4gIFRoZXJlIGFyZSBzdGls
-bCB1bnVzZWQgYml0cyBmb3IgYW5vdGhlciBmbGFnLiAgSXQgYWxzbyBsb29rcw0KbGlrZSBhdF94
-ZG1hIHVzZXMgcGVyaXBoZXJhbCBpZCAweDNmIGZvciBtZW1jcHkgdHJhbnNmZXJzICh3aWxsIHRo
-YXQNCndvcmsgd2l0aCBtZW1jcHkgRE1BIG9uIG11bHRpcGxlIGNoYW5uZWxzIGF0IHRoZSBzYW1l
-IHRpbWU/KS4gIFNvDQpwZXJoYXBzIHBlcmlkIDB4M2YgY291bGQgYmUgdGhlIGluZGljYXRpb24g
-b2Ygd2FudGluZyBhIG1lbWNweSBjaGFubmVsLA0KcmF0aGVyIHRoYW4gYW5vdGhlciBmbGFnIGJp
-dC4gIEJ1dCBob3dldmVyIGl0J3MgZG9uZSwgb25lIHdyaXRlczoNCg0KZG1hcyA9IDwmZG1hMCBB
-VDkxX1hETUFDX0RUX01FTUNQWT47IGRtYS1uYW1lcyA9ICJyeC10eCI7DQoNCkkgdGhpbmsgb25l
-IGNvdWxkIGhhdmUgdGhlIHF1YWRzcGkgZHJpdmVyIGF1dG9tYXRpY2FsbHkgZmlsbCBpbiB0aGUg
-ZG1hDQpjZWxsIGluIHRoZSBkbWEgc3BlY2lmaWVyIGlmIGl0IGlzIG5vdCBwcmVzZW50IGluIHRo
-ZSBkZXZpY2UgdHJlZS4gIFNvDQpvbmUgY291bGQgd3JpdGUgImRtYXMgPSA8JmRtYTA+IiBhbmQg
-dGhlIGRyaXZlciBhZGRzIHRoZQ0KQVQ5MV9YRE1BQ19EVF9NRU1DUFkgY2VsbCBiZWZvcmUgeGxh
-dGluZy4gIEknbSBub3Qgc3VyZSBpZiB0aGF0J3MgYQ0KZ29vZCBpZGVhIG9yIG5vdC4=
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+--w3msx4wwaosk7qlr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Tue, Jan 02, 2018 at 01:59:48PM +0100, Pavel Machek wrote:
+>=20
+> This adds support for volume up/down keys in the dts.
+>=20
+> Signed-off-by: Pavel Machek <pavel@ucw.cz>
+
+Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+
+-- Sebastian
+
+>=20
+> diff --git a/arch/arm/boot/dts/omap3-n9.dts b/arch/arm/boot/dts/omap3-n9.=
+dts
+> index 39e35f8..57a6679 100644
+> --- a/arch/arm/boot/dts/omap3-n9.dts
+> +++ b/arch/arm/boot/dts/omap3-n9.dts
+> @@ -11,9 +11,10 @@
+>  /dts-v1/;
+> =20
+>  #include "omap3-n950-n9.dtsi"
+> +#include <dt-bindings/input/input.h>
+> =20
+>  / {
+>  	model =3D "Nokia N9";
+>  	compatible =3D "nokia,omap3-n9", "ti,omap36xx", "ti,omap3";
+>  };
+> =20
+> @@ -72,3 +133,9 @@
+>  	st,max-limit-y =3D <46>;
+>  	st,max-limit-z =3D <46>;
+>  };
+> +
+> +&twl_keypad {
+> +	linux,keymap =3D < MATRIX_KEY(6, 8, KEY_VOLUMEUP)
+> +			 MATRIX_KEY(7, 8, KEY_VOLUMEDOWN)
+> +			 >;
+> +};
+>=20
+>=20
+> --=20
+> (english) http://www.livejournal.com/~pavelmachek
+> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/b=
+log.html
+
+
+
+--w3msx4wwaosk7qlr
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlpL4KkACgkQ2O7X88g7
++prlRQ//Y9YXJEp63Ilr687kIxLZrSNSzZD+Brpm2AXN4mjf1YnUqYvzBqwH9oTT
+H29yvC6zrMqc2DMzC/A1jSrj9C0eN7bB3yV8Pc9wFNmW0K5eBapM8MHIDUrQRpEx
+tlxYQRG0stGpiECho6Jto6Wfvz4kPz77/UW3Wg5+Rr03q8Q4YSs7FHnPEW8Dv6ev
+X2gSGkLhzdx54neNzQQhbCGDGXarlyKO0Qf1GE6O+hGBKbGj3+Pg3tWo4OE4bxVM
+bCJysflGti1ZrvPrdBnIfH+hq2yTKDNMvxlQ3VlH4syW9PoCiPujNvsO4igyr3xh
+YecAS/JRMm33NOCi8TeN6anSKCCBhht2mlUwcEIMBCQP2f8DQJFm8gTx3YLQymcx
+FGKYyLKgkot5ILDkf7FWvRiHuxaU8VircVF/KHTkyMrXLgl1oHlTUv2NQ7n7ieNf
+9ALsmQ3WdpySh7SqXgcc5314iI+PgPJjnAKMrsMVvtiqQ2GTkH+3C4Pv8Wngh8Gx
+4UsH/2/wj+q9UvpdB8vTj0IFts/1bTcuHcDzBUIOy0duvAkDCV14OLdVX0gXuvrX
+7HvPT+odS2uk4Wz/8XjNOuhnUTKW5xjSLD3BrUYV9cQLJF08WNyCKFMQEkuvkExz
+lSw5h5Mk20anRku9+apEVy0F/cbzsRpUNww0XzH7ETGPvrf8gbY=
+=mnzd
+-----END PGP SIGNATURE-----
+
+--w3msx4wwaosk7qlr--
