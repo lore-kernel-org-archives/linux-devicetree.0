@@ -1,97 +1,35 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2 1/2] arm64: dts: renesas: salvator-x: Remove
- renesas,no-ether-link property
-Date: Tue, 2 Jan 2018 10:38:24 +0100
-Message-ID: <20180102093823.o6km656xdef7jnwf@verge.net.au>
-References: <1513869539-18803-1-git-send-email-vladimir_zapolskiy@mentor.com>
- <1513869539-18803-2-git-send-email-vladimir_zapolskiy@mentor.com>
- <20171222083203.h5a65uitv7yok5fz@verge.net.au>
- <20171222084048.ssyi53yj34hzejct@verge.net.au>
- <a002072f-dbe4-0b6a-a19f-08dd1ed3a8d2@mentor.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v4 2/3] dt-bindings: Add binding for Sitronix ST7735R
+ display panels
+Date: Tue, 2 Jan 2018 10:41:47 +0100
+Message-ID: <CACRpkdagV=x=yx8Oy_E0MjA2eUs9+tWRWgJVscyBmvFoXctbEg@mail.gmail.com>
+References: <1514833336-22564-1-git-send-email-david@lechnology.com>
+ <1514833336-22564-3-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <a002072f-dbe4-0b6a-a19f-08dd1ed3a8d2@mentor.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
-Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Bogdan Mirea <Bogdan-Stefan_Mirea@mentor.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1514833336-22564-3-git-send-email-david@lechnology.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: David Lechner <david@lechnology.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, limor@ladyada.net, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Vladimir,
-
-Happy New Year!
-
-On Fri, Dec 22, 2017 at 12:22:09PM +0200, Vladimir Zapolskiy wrote:
-> Hi Simon,
-> 
-> On 12/22/2017 10:40 AM, Simon Horman wrote:
-> > On Fri, Dec 22, 2017 at 09:32:03AM +0100, Simon Horman wrote:
-> >> On Thu, Dec 21, 2017 at 05:18:58PM +0200, Vladimir Zapolskiy wrote:
-> >>> From: Bogdan Mirea <Bogdan-Stefan_Mirea@mentor.com>
-> >>>
-> >>> The present change is a bug fix for AVB link iteratively up/down.
-> >>>
-> >>> Steps to reproduce:
-> >>> - start AVB TX stream (Using aplay via MSE),
-> >>> - disconnect+reconnect the eth cable,
-> >>> - after a reconnection the eth connection goes iteratively up/down
-> >>>   without user interaction,
-> >>> - this may heal after some seconds or even stay for minutes.
-> >>>
-> >>> As the documentation specifies, the "renesas,no-ether-link" option
-> >>> should be used when a board does not provide a proper AVB_LINK signal.
-> >>> There is no need for this option enabled on RCAR H3/M3 Salvator-X/XS
-> >>> and ULCB starter kits since the AVB_LINK is correctly handled by HW.
-> >>>
-> >>> Choosing to keep or remove the "renesas,no-ether-link" option will
-> >>> have impact on the code flow in the following ways:
-> >>> - keeping this option enabled may lead to unexpected behavior since
-> >>>   the RX & TX are enabled/disabled directly from adjust_link function
-> >>>   without any HW interrogation,
-> >>> - removing this option, the RX & TX will only be enabled/disabled after
-> >>>   HW interrogation. The HW check is made through the LMON pin in PSR
-> >>>   register which specifies AVB_LINK signal value (0 - at low level;
-> >>>   1 - at high level).
-> >>>
-> >>> In conclusion, the present change is also a safety improvement because
-> >>> it removes the "renesas,no-ether-link" option leading to a proper way
-> >>> of detecting the link state based on HW interrogation and not on
-> >>> software heuristic.
-> >>>
-> >>> Fixes: d25e8ff0d5aa ("arm64: dts: renesas: Extract common Salvator-X board support")
-> >>
-> >> The above shuffles the code around but does not introduce the problem
-> >> as far as I can see. Instead I think we should use:
-> >>
-> >> Fixes: dc36965a8905 ("arm64: dts: r8a7796: salvator-x: Enable EthernetAVB")
-> >> Fixes: 6fa501c549aa ("arm64: dts: r8a7795: enable EthernetAVB on Salvator-X")
-> >>
-> >>> Signed-off-by: Bogdan Mirea <Bogdan-Stefan_Mirea@mentor.com>
-> >>> Signed-off-by: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
-> > 
-> > I have applied this a fix for v4.15 with the updated Fixes tags above.
-> > 
-> 
-> thank you, I was unsure if you expected to get changes which can be used
-> as a base without patch application conflicts (my done choice) or changes,
-> which originally intorduced the bug, but formally require slightly
-> different fixes due to code changes in the middle. If it would be needed,
-> hopefully linux-stable maintainers can resolve the trivial conflicts.
-> 
-> Also you may find this information from the cover letter useful,
-> someone may want to check the relevant board schematics and send
-> similar fixes (if applicable after schematics review and testing):
-> 
->   Note that DTS files for V3M Starter Kit, Draak and Eagle boards
->   contain the same property, the files are untouched due to unavailable
->   schematics to verify if the fix applies to these boards as well.
-
-Thanks. I took a quick look and my findings so far are:
-
-* Eagle: This approach seems applicable as AVB_LINK appears to be hooked up
-* V3M Starter Kit: This approach seems applicable as AVB0_LINK appears to be
-  hooked up
-* Draak: I don't seem to be able to locate documentation at this time
-
-Are you interested in creating follow-up patches?
+T24gTW9uLCBKYW4gMSwgMjAxOCBhdCA4OjAyIFBNLCBEYXZpZCBMZWNobmVyIDxkYXZpZEBsZWNo
+bm9sb2d5LmNvbT4gd3JvdGU6Cgo+IFRoaXMgYWRkcyBhIG5ldyBkZXZpY2UgdHJlZSBiaW5kaW5n
+IGZvciBTaXRyb25peCBTVDc3MzVSIGRpc3BsYXkgcGFuZWxzLAo+IHN1Y2ggYXMgdGhlIEFkYWZy
+dWl0IDEuOCIgVEZULgo+Cj4gU2lnbmVkLW9mZi1ieTogRGF2aWQgTGVjaG5lciA8ZGF2aWRAbGVj
+aG5vbG9neS5jb20+Cj4gUmV2aWV3ZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+
+CgpSZXZpZXdlZC1ieTogTGludXMgV2FsbGVpaiA8bGludXMud2FsbGVpakBsaW5hcm8ub3JnPgoK
+WW91cnMsCkxpbnVzIFdhbGxlaWoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRl
+c2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8v
+ZHJpLWRldmVsCg==
