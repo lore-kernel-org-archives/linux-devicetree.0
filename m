@@ -1,74 +1,173 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH v2 4/9] ARM: dts: r7s72100: Add Capture Engine Unit (CEU)
-Date: Tue, 02 Jan 2018 15:54:02 +0200
-Message-ID: <2050708.XlLFKrlIvW@avalon>
-References: <1514469681-15602-1-git-send-email-jacopo+renesas@jmondi.org> <1514469681-15602-5-git-send-email-jacopo+renesas@jmondi.org>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v5 2/3] PCI: mobiveil: Add Mobiveil PCIe Host Bridge IP
+ driver
+Date: Tue, 2 Jan 2018 14:13:21 +0000
+Message-ID: <20180102141321.GE10536@red-moon>
+References: <1513181317-19914-1-git-send-email-l.subrahmanya@mobiveil.co.in>
+ <20171220170307.GC1709@red-moon>
+ <CAFZiPx1VVLii9hnTZCih8tu5cxvzX4ENgVGy9-WwpaG7vWyUWg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1514469681-15602-5-git-send-email-jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-Cc: magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, geert-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAFZiPx1VVLii9hnTZCih8tu5cxvzX4ENgVGy9-WwpaG7vWyUWg@mail.gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
+Cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, Marc Zyngier <marc.zyngier@arm.com>, robh@kernel.org, devicetree@vger.kernel.org, Mingkai Hu <mingkai.hu@nxp.com>, Peter W Newton <peter.newton@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Raj Raina <rajesh.raina@nxp.com>, Rajan Kapoor <rajan.kapoor@nxp.com>, Prabhjot Singh <prabhjot.singh@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacopo,
+On Fri, Dec 22, 2017 at 01:29:00PM +0530, Subrahmanya Lingappa wrote:
 
-Thank you for the patch.
+[...]
 
-On Thursday, 28 December 2017 16:01:16 EET Jacopo Mondi wrote:
-> Add Capture Engine Unit (CEU) node to device tree.
+> > > +static void mobiveil_pcie_isr(struct irq_desc *desc)
+> > > +{
+> > > +     struct irq_chip *chip = irq_desc_get_chip(desc);
+> > > +     struct mobiveil_pcie *pcie = irq_desc_get_handler_data(desc);
+> > > +     struct device *dev = &pcie->pdev->dev;
+> > > +     u32 intr_status;
+> > > +     unsigned long shifted_status;
+> >
+> > Why not u32 ?
+> >
+> for_each_set_bit() api warns about the variable not being unsigned
+> long. So used the same to take out the warning.
 > 
-> Signed-off-by: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-> ---
->  arch/arm/boot/dts/r7s72100.dtsi | 15 ++++++++++++---
->  1 file changed, 12 insertions(+), 3 deletions(-)
 > 
-> diff --git a/arch/arm/boot/dts/r7s72100.dtsi
-> b/arch/arm/boot/dts/r7s72100.dtsi index ab9645a..b09b032 100644
-> --- a/arch/arm/boot/dts/r7s72100.dtsi
-> +++ b/arch/arm/boot/dts/r7s72100.dtsi
-> @@ -135,9 +135,9 @@
->  			#clock-cells = <1>;
->  			compatible = "renesas,r7s72100-mstp-clocks", "renesas,cpg-mstp-
-clocks";
->  			reg = <0xfcfe042c 4>;
-> -			clocks = <&p0_clk>;
-> -			clock-indices = <R7S72100_CLK_RTC>;
-> -			clock-output-names = "rtc";
-> +			clocks = <&b_clk>, <&p0_clk>;
-> +			clock-indices = <R7S72100_CLK_CEU R7S72100_CLK_RTC>;
-> +			clock-output-names = "ceu", "rtc";
->  		};
+> > > +     u32 bit, virq;
+> > > +     u32 val, mask;
+> > > +
+> > > +     chained_irq_enter(chip, desc);
+> > > +
+> > > +     /* read INTx status */
+> > > +     val = csr_readl(pcie, PAB_INTP_AMBA_MISC_STAT);
+> > > +     mask = csr_readl(pcie, PAB_INTP_AMBA_MISC_ENB);
+> > > +     intr_status = val & mask;
+> > > +
+> > > +     /*
+> > Handle INTx */
+> > > +     if (intr_status & PAB_INTP_INTX_MASK) {
+> > > +             shifted_status = csr_readl(pcie, PAB_INTP_AMBA_MISC_STAT);
+> >
+> > Why can't you reuse val to read the status and create shifted_status
+> > from it ?
+> >
+> > eg
+> >
+> > shifted_status = val << PAB_INTA_POS;
+> > csr_writel(pcie, shifted_status, PAB_INTP_AMBA_MISC_STAT);
+> >
+> > Just a hint to make the loop more readable. BTW, I do not think that
+> > writing shifted_status into that register is OK, see below.
+> >
+> > > +             do {
+> > > +                     for_each_set_bit(bit, &shifted_status, PCI_NUM_INTX) {
+> > > +
+> > > +                             /* clear interrupts */
+> > > +                             csr_writel(pcie, shifted_status <<
+> > PAB_INTA_POS,
+> > > +
+> > PAB_INTP_AMBA_MISC_STAT);
+> >
+> > Should not you clear just the interrupt you are about to handle ?
 > 
->  		mstp7_clks: mstp7_clks@fcfe0430 {
-> @@ -667,4 +667,13 @@
->  		power-domains = <&cpg_clocks>;
->  		status = "disabled";
->  	};
-> +
-> +	ceu: ceu@e8210000 {
-> +		reg = <0xe8210000 0x209c>;
+> PAB_INTP_AMBA_MISC_STAT register has INTA, INTB, INTC, INTD status
+> bits at positions 5,6,7 and 8,
+> they are RW1C bits, so writing 1 to this bit clears the status.
+> So here the status read was written back to it to clear.
 
-With the reg issue pointed out by Geert fixed,
+Understood - the point is that IIUC you should clear just the IRQ (bit)
+that you are handling at each iteration not all at once.
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+What do PAB_INTP_AMBA_MISC_STAT[4:0] represent then ?
 
-> +		compatible = "renesas,r7s72100-ceu";
-> +		interrupts = <GIC_SPI 332 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&mstp6_clks R7S72100_CLK_CEU>;
-> +		power-domains = <&cpg_clocks>;
-> +		status = "disabled";
-> +	};
->  };
+> > > +                             virq = irq_find_mapping(pcie->intx_domain,
+> > > +                                     bit + 1);
+> > > +                             if (virq)
+> > > +
+> > generic_handle_irq(virq);
+> > > +                             else
+> > > +                                     dev_err_ratelimited(dev,
+> > > +                                             "unexpected IRQ, INT%d\n",
+> > > +                                             bit);
+> > > +
+> > > +                     }
+> > > +
+> > > +                     shifted_status = csr_readl(pcie,
+> > > +                                             PAB_INTP_AMBA_MISC_STAT);
+> > > +
+> > > +             } while ((shifted_status >>  PAB_INTA_POS) != 0);
+> >
+> > I do not understand this. Can you explain to me how the
+> > register at:
+> >
+> > PAB_INTP_AMBA_MISC_STAT
+> >
+> > works ?
+> >
+> just repeating what explained before, to ease the readablility.
+> PAB_INTP_AMBA_MISC_STAT register has INTA, INTB, INTC, INTD status
+> bits at positions 5,6,7 and 8,
+> they are RW1C bits, so writing 1 to this bit clears the status.
+> 
+> >
+> > A patch for mediatek has been posted:
+> >
+> > https://patchwork.ozlabs.org/patch/851181/
+> >
+> > It looks like this loop may suffer from the same issue, so please do
+> > have a look.
+> >
+> I will clear the the interrupt after
+> 
+> its hadled by generic_handle_irq()
+> .
+> right ?
 
--- 
-Regards,
+Where ? Can you explain please what every bit in
 
-Laurent Pinchart
+PAB_INTP_AMBA_MISC_STAT
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+represent ?
+
+> > On top of that, most of the operations you are carrying out here
+> > can be done automatically by making them part of the struct irq_chip
+> > methods (ie acking IRQs, masking IRQs, etc, see below).
+> >
+> Any side effects of keeping this code as is ?
+
+Yes, that it will take us more effort to convert it to the usage
+I describe above - which is how it is expected to be written.
+
+[...]
+
+> > > +/* routine to setup the INTx related data */
+> > > +static int mobiveil_pcie_intx_map(struct irq_domain *domain, unsigned int irq,
+> > > +             irq_hw_number_t hwirq)
+> > > +{
+> > > +     irq_set_chip_and_handler(irq, &dummy_irq_chip, handle_simple_irq);
+> >
+> > IIUC, the host bridge acts as an INTX/MSI controller/multiplexer.
+> >
+> > So, instead of relying on
+> > dummy_irq_chip, you should create your own
+> > irq_chip with the methods that you require (eg irq_ack(), irq_mask(),
+> > irq_compose_msi_msg()) and use that as bottom irq_chip for both
+> > INTX and MSI domains.
+> >
+> > That's why I asked you to have a look at pcie-tango.c (except that there
+> > INTX aren't supported but the basic idea does not change) and implement
+> > IRQ domains handling like that same driver.
+> >
+> are there any disadvantages of keeping dummy_irq_chip, as I see quite
+> a few host bridge
+> 
+> drivers including
+> otehr two major soft IP drivers from altera and xilinx with similar
+> MSI implementaion.
+
+See above, this is a new driver, the existing IP drivers will have to
+be converted eventually, new code should set an example not add more
+burden to code refactoring.
+
+Lorenzo
