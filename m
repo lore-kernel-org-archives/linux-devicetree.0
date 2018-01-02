@@ -1,44 +1,64 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [PATCH 0/4] gpio: driver for the RPi3 GPIO expander
-Date: Tue, 2 Jan 2018 19:05:38 +0100 (CET)
-Message-ID: <1090269396.181215.1514916338795@email.1und1.de>
-References: <cover.1514898134.git.baruch@tkos.co.il>
+From: Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH] arm64: dts: angler: add pstore-ramoops support
+Date: Tue, 2 Jan 2018 10:09:49 -0800
+Message-ID: <CAGXu5jJ2YNqbT_n-=K9tYqAc4JDDN+GHDfWbLDQcQxYKawSXuQ@mail.gmail.com>
+References: <1514446709-19347-1-git-send-email-zhuoweizhang@yahoo.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1514898134.git.baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Dave Stevenson <dave.stevenson-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1514446709-19347-1-git-send-email-zhuoweizhang@yahoo.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: zhuoweizhang@yahoo.com
+Cc: jeremymc@redhat.com, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Anton Vorontsov <anton@enomsg.org>, Colin Cross <ccross@android.com>, Tony Luck <tony.luck@intel.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Baruch,
+On Wed, Dec 27, 2017 at 11:38 PM,  <zhuoweizhang@yahoo.com> wrote:
+> From: Zhuowei Zhang <zhuoweizhang@yahoo.com>
+>
+> Support pstore-ramoops for retrieving kernel oops and panics after reboot.
+>
+> The address and configs are taken from the downstream kernel's device tree.
+>
+> Signed-off-by: Zhuowei Zhang <zhuoweizhang@yahoo.com>
 
-> Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org> hat am 2. Januar 2018 um 14:19 geschrieben:
-> 
-> 
-> The Raspberry Pi 3 has a GPIO expander that controls, among others, the 
-> activity LED, and the camera connector GPIOs. The GPIO expander on an I2C bus 
-> that is not directly controlled from the ARM core. The VC4 firmware controls 
-> the I2C bus, and allows the ARM core to set/get GPIO settings over its mailbox 
-> interface.
-> 
-> This series adds support for the RPi3 expander.
-> 
-> The driver is ported from the downstream kernel at 
-> https://github.com/raspberrypi/linux/, branch rpi-4.9.y.
-> 
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-thanks for trying to upstream this. There has been attemps by Eric Anholt (September 2016) and Michael Zoran (March 2017). Some problems like get_direction() has been fixed, but not all of them.
+-Kees
 
-So please look at the followings links first:
-https://patchwork.kernel.org/patch/9339859/
-https://patchwork.kernel.org/patch/9339857/
-http://lists.infradead.org/pipermail/linux-rpi-kernel/2017-March/005903.html
+> ---
+>  arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts b/arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts
+> index dfa08f5..9ce3a6e 100644
+> --- a/arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts
+> +++ b/arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts
+> @@ -37,4 +37,19 @@
+>                         pinctrl-1 = <&blsp1_uart2_sleep>;
+>                 };
+>         };
+> +
+> +       reserved-memory {
+> +               #address-cells = <2>;
+> +               #size-cells = <2>;
+> +               ranges;
+> +
+> +               ramoops@1fe00000 {
+> +                       compatible = "ramoops";
+> +                       reg = <0 0x1fe00000 0 0x00200000>;
+> +                       console-size = <0x100000>;
+> +                       record-size = <0x10000>;
+> +                       ftrace-size = <0x10000>;
+> +                       pmsg-size = <0x80000>;
+> +               };
+> +       };
+>  };
+> --
+> 1.9.1
+>
 
-Stefan
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+
+-- 
+Kees Cook
+Pixel Security
