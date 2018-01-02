@@ -1,7 +1,7 @@
 From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: [PATCH v5 11/20] firmware: arm_scmi: add support for polling based SCMI transfers
-Date: Tue,  2 Jan 2018 14:42:33 +0000
-Message-ID: <1514904162-11201-12-git-send-email-sudeep.holla@arm.com>
+Subject: [PATCH v5 10/20] firmware: arm_scmi: probe and initialise all the supported protocols
+Date: Tue,  2 Jan 2018 14:42:32 +0000
+Message-ID: <1514904162-11201-11-git-send-email-sudeep.holla@arm.com>
 References: <1514904162-11201-1-git-send-email-sudeep.holla@arm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1514904162-11201-1-git-send-email-sudeep.holla@arm.com>
@@ -10,97 +10,97 @@ To: ALKML <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel
 Cc: Sudeep Holla <sudeep.holla@arm.com>, Roy Franz <roy.franz@cavium.com>, Harb Abdulhamid <harba@codeaurora.org>, Nishanth Menon <nm@ti.com>, Arnd Bergmann <arnd@arndb.de>, Loc Ho <lho@apm.com>, Alexey Klimov <klimov.linux@gmail.com>, Ryan Harkin <Ryan.Harkin@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-It would be useful to have options to perform some SCMI transfers
-atomically by polling for the completion flag instead of interrupt
-driven. The SCMI specification has option to disable the interrupt and
-poll for the completion flag in the shared memory.
-
-This patch adds support for polling based SCMI transfers using that
-option. This might be used for uninterrupted/atomic DVFS operations
-from the scheduler context.
+Now that we have basic support for all the protocols in the
+specification, let's probe them individually and initialise them.
 
 Cc: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 ---
- drivers/firmware/arm_scmi/driver.c | 49 +++++++++++++++++++++++++++++++-------
- 1 file changed, 41 insertions(+), 8 deletions(-)
+ drivers/firmware/arm_scmi/driver.c | 51 +++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 50 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
-index 11c18ac9816f..0c9dda72f10c 100644
+index 20d083be474c..11c18ac9816f 100644
 --- a/drivers/firmware/arm_scmi/driver.c
 +++ b/drivers/firmware/arm_scmi/driver.c
-@@ -26,9 +26,11 @@
-  */
- 
- #include <linux/bitmap.h>
-+#include <linux/delay.h>
- #include <linux/export.h>
- #include <linux/io.h>
- #include <linux/kernel.h>
-+#include <linux/ktime.h>
- #include <linux/mailbox_client.h>
- #include <linux/module.h>
- #include <linux/of_address.h>
-@@ -363,6 +365,21 @@ void scmi_one_xfer_put(const struct scmi_handle *handle, struct scmi_xfer *xfer)
- 	up(&minfo->sem_xfer_count);
+@@ -494,6 +494,21 @@ void scmi_setup_protocol_implemented(const struct scmi_handle *handle,
+ 	info->protocols_imp = prot_imp;
  }
  
 +static bool
-+scmi_xfer_poll_done(const struct scmi_info *info, struct scmi_xfer *xfer)
++scmi_is_protocol_implemented(const struct scmi_handle *handle, u8 prot_id)
 +{
-+	struct scmi_shared_mem *mem = info->tx_payload;
-+	u16 xfer_id = MSG_XTRACT_TOKEN(le32_to_cpu(mem->msg_header));
++	int i;
++	struct scmi_info *info = handle_to_scmi_info(handle);
 +
-+	if (xfer->hdr.seq != xfer_id)
++	if (!info->protocols_imp)
 +		return false;
 +
-+	return le32_to_cpu(mem->channel_status) &
-+		(SCMI_SHMEM_CHAN_STAT_CHANNEL_ERROR |
-+		SCMI_SHMEM_CHAN_STAT_CHANNEL_FREE);
++	for (i = 0; i < MAX_PROTOCOLS_IMP; i++)
++		if (info->protocols_imp[i] == prot_id)
++			return true;
++	return false;
 +}
 +
-+#define SCMI_MAX_POLLING_TIMEOUT_NS	(100 * NSEC_PER_USEC)
  /**
-  * scmi_do_xfer() - Do one transfer
+  * scmi_handle_get() - Get the  SCMI handle for a device
   *
-@@ -389,14 +406,30 @@ int scmi_do_xfer(const struct scmi_handle *handle, struct scmi_xfer *xfer)
- 	/* mbox_send_message returns non-negative value on success, so reset */
- 	ret = 0;
+@@ -691,6 +706,23 @@ static inline int scmi_mbox_chan_setup(struct scmi_info *info)
+ 	return 0;
+ }
  
--	/* And we wait for the response. */
--	timeout = msecs_to_jiffies(info->desc->max_rx_timeout_ms);
--	if (!wait_for_completion_timeout(&xfer->done, timeout)) {
--		dev_err(dev, "mbox timed out in resp(caller: %pF)\n",
--			(void *)_RET_IP_);
--		ret = -ETIMEDOUT;
--	} else if (xfer->hdr.status) {
--		ret = scmi_to_linux_errno(xfer->hdr.status);
-+	if (xfer->hdr.poll_completion) {
-+		ktime_t stop, cur;
++static inline void
++scmi_create_protocol_device(struct device_node *np, struct scmi_info *info,
++			    int prot_id)
++{
++	struct scmi_device *sdev;
 +
-+		stop = ktime_add_ns(ktime_get(), SCMI_MAX_POLLING_TIMEOUT_NS);
-+		do {
-+			udelay(5);
-+			cur = ktime_get();
-+		} while (!scmi_xfer_poll_done(info, xfer) &&
-+			 ktime_before(cur, stop));
++	sdev = scmi_device_create(np, info->dev, prot_id);
++	if (!sdev) {
++		dev_err(info->dev, "failed to create %d protocol device\n",
++			prot_id);
++		return;
++	}
 +
-+		if (ktime_before(cur, stop))
-+			scmi_fetch_response(xfer, info->tx_payload);
-+		else
-+			ret = -ETIMEDOUT;
-+	} else {
-+		/* And we wait for the response. */
-+		timeout = msecs_to_jiffies(info->desc->max_rx_timeout_ms);
-+		if (!wait_for_completion_timeout(&xfer->done, timeout)) {
-+			dev_err(dev, "mbox timed out in resp(caller: %pF)\n",
-+				(void *)_RET_IP_);
-+			ret = -ETIMEDOUT;
-+		} else if (xfer->hdr.status) {
-+			ret = scmi_to_linux_errno(xfer->hdr.status);
++	/* setup handle now as the transport is ready */
++	scmi_set_handle(sdev);
++}
++
+ static int scmi_probe(struct platform_device *pdev)
+ {
+ 	int ret;
+@@ -698,7 +730,7 @@ static int scmi_probe(struct platform_device *pdev)
+ 	const struct scmi_desc *desc;
+ 	struct scmi_info *info;
+ 	struct device *dev = &pdev->dev;
+-	struct device_node *np = dev->of_node;
++	struct device_node *child, *np = dev->of_node;
+ 
+ 	/* Only mailbox method supported, check for the presence of one */
+ 	if (scmi_mailbox_check(np)) {
+@@ -741,6 +773,23 @@ static int scmi_probe(struct platform_device *pdev)
+ 	list_add_tail(&info->node, &scmi_list);
+ 	mutex_unlock(&scmi_list_mutex);
+ 
++	for_each_available_child_of_node(np, child) {
++		u32 prot_id;
++
++		if (of_property_read_u32(child, "reg", &prot_id))
++			continue;
++
++		prot_id &= MSG_PROTOCOL_ID_MASK;
++
++		if (!scmi_is_protocol_implemented(handle, prot_id)) {
++			dev_err(dev, "SCMI protocol %d not implemented\n",
++				prot_id);
++			continue;
 +		}
- 	}
- 	/*
- 	 * NOTE: we might prefer not to need the mailbox ticker to manage the
++
++		scmi_create_protocol_device(child, info, prot_id);
++	}
++
+ 	return 0;
+ }
+ 
 -- 
 2.7.4
