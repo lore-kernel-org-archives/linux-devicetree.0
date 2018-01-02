@@ -1,7 +1,7 @@
 From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v5 15/15] MIPS: ingenic: Initial GCW Zero support
-Date: Tue,  2 Jan 2018 16:08:48 +0100
-Message-ID: <20180102150848.11314-15-paul@crapouillou.net>
+Subject: [PATCH v5 10/15] MIPS: ingenic: Add machine info for supported boards
+Date: Tue,  2 Jan 2018 16:08:43 +0100
+Message-ID: <20180102150848.11314-10-paul@crapouillou.net>
 References: <20180102150848.11314-1-paul@crapouillou.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180102150848.11314-1-paul@crapouillou.net>
@@ -10,162 +10,136 @@ To: Ralf Baechle <ralf@linux-mips.org>
 Cc: Maarten ter Huurne <maarten@treewalker.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux-clk@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
-The GCW Zero (http://www.gcw-zero.com) is a retro-gaming focused
-handheld game console, successfully kickstarted in ~2012, running Linux.
+This makes sure that 'mips_machtype' will be initialized to the SoC
+version used on the board.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- arch/mips/boot/dts/ingenic/Makefile |  1 +
- arch/mips/boot/dts/ingenic/gcw0.dts | 61 +++++++++++++++++++++++++++++++++++++
- arch/mips/configs/gcw0_defconfig    | 27 ++++++++++++++++
- arch/mips/jz4740/Kconfig            |  4 +++
- arch/mips/jz4740/boards.c           |  1 +
- 5 files changed, 94 insertions(+)
- create mode 100644 arch/mips/boot/dts/ingenic/gcw0.dts
- create mode 100644 arch/mips/configs/gcw0_defconfig
+ arch/mips/Kconfig         |  1 +
+ arch/mips/jz4740/Makefile |  2 +-
+ arch/mips/jz4740/boards.c | 12 ++++++++++++
+ arch/mips/jz4740/setup.c  | 34 +++++++++++++++++++++++++++++-----
+ 4 files changed, 43 insertions(+), 6 deletions(-)
+ create mode 100644 arch/mips/jz4740/boards.c
 
  v2: No change
  v3: No change
  v4: No change
  v5: Use SPDX license identifier
-     Drop custom CROSS_COMPILE from defconfig
 
-diff --git a/arch/mips/boot/dts/ingenic/Makefile b/arch/mips/boot/dts/ingenic/Makefile
-index 6a31759839b4..5b1361a89e02 100644
---- a/arch/mips/boot/dts/ingenic/Makefile
-+++ b/arch/mips/boot/dts/ingenic/Makefile
-@@ -1,5 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0
- dtb-$(CONFIG_JZ4740_QI_LB60)	+= qi_lb60.dtb
-+dtb-$(CONFIG_JZ4770_GCW0)	+= gcw0.dtb
- dtb-$(CONFIG_JZ4780_CI20)	+= ci20.dtb
+diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+index 350a990fc719..83243e427e36 100644
+--- a/arch/mips/Kconfig
++++ b/arch/mips/Kconfig
+@@ -376,6 +376,7 @@ config MACH_INGENIC
+ 	select BUILTIN_DTB
+ 	select USE_OF
+ 	select LIBFDT
++	select MIPS_MACHINE
  
- obj-y				+= $(patsubst %.dtb, %.dtb.o, $(dtb-y))
-diff --git a/arch/mips/boot/dts/ingenic/gcw0.dts b/arch/mips/boot/dts/ingenic/gcw0.dts
-new file mode 100644
-index 000000000000..4dc72de387db
---- /dev/null
-+++ b/arch/mips/boot/dts/ingenic/gcw0.dts
-@@ -0,0 +1,61 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/dts-v1/;
-+
-+#include "jz4770.dtsi"
-+
-+/ {
-+	compatible = "gcw,zero", "ingenic,jz4770";
-+
-+	aliases {
-+		serial0 = &uart0;
-+		serial1 = &uart1;
-+		serial2 = &uart2;
-+		serial3 = &uart3;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial2:57600n8";
-+	};
-+
-+	board {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "simple-bus";
-+		ranges = <>;
-+
-+		otg_phy: otg-phy {
-+			compatible = "usb-nop-xceiv";
-+			clocks = <&cgu JZ4770_CLK_OTG_PHY>;
-+			clock-names = "main_clk";
-+		};
-+	};
-+};
-+
-+&ext {
-+	clock-frequency = <12000000>;
-+};
-+
-+&uart2 {
-+	status = "okay";
-+};
-+
-+&cgu {
-+	/* Put high-speed peripherals under PLL1, such that we can change the
-+	 * PLL0 frequency on demand without having to suspend peripherals.
-+	 * We use a rate of 432 MHz, which is the least common multiple of
-+	 * 27 MHz (required by TV encoder) and 48 MHz (required by USB host).
-+	 */
-+	assigned-clocks =
-+		<&cgu JZ4770_CLK_PLL1>,
-+		<&cgu JZ4770_CLK_UHC>;
-+	assigned-clock-parents =
-+		<0>,
-+		<&cgu JZ4770_CLK_PLL1>;
-+	assigned-clock-rates =
-+		<432000000>;
-+};
-+
-+&uhc {
-+	/* The WiFi module is connected to the UHC. */
-+	status = "okay";
-+};
-diff --git a/arch/mips/configs/gcw0_defconfig b/arch/mips/configs/gcw0_defconfig
-new file mode 100644
-index 000000000000..99ac1fa3b35f
---- /dev/null
-+++ b/arch/mips/configs/gcw0_defconfig
-@@ -0,0 +1,27 @@
-+CONFIG_MACH_INGENIC=y
-+CONFIG_JZ4770_GCW0=y
-+CONFIG_HIGHMEM=y
-+# CONFIG_BOUNCE is not set
-+CONFIG_PREEMPT_VOLUNTARY=y
-+# CONFIG_SECCOMP is not set
-+CONFIG_NO_HZ_IDLE=y
-+CONFIG_HIGH_RES_TIMERS=y
-+CONFIG_EMBEDDED=y
-+# CONFIG_BLK_DEV_BSG is not set
-+# CONFIG_SUSPEND is not set
-+CONFIG_NET=y
-+CONFIG_PACKET=y
-+CONFIG_UNIX=y
-+CONFIG_INET=y
-+CONFIG_DEVTMPFS=y
-+CONFIG_DEVTMPFS_MOUNT=y
-+CONFIG_NETDEVICES=y
-+CONFIG_SERIAL_8250=y
-+# CONFIG_SERIAL_8250_DEPRECATED_OPTIONS is not set
-+CONFIG_SERIAL_8250_CONSOLE=y
-+CONFIG_SERIAL_8250_INGENIC=y
-+CONFIG_USB=y
-+CONFIG_USB_OHCI_HCD=y
-+CONFIG_USB_OHCI_HCD_PLATFORM=y
-+CONFIG_NOP_USB_XCEIV=y
-+CONFIG_TMPFS=y
-diff --git a/arch/mips/jz4740/Kconfig b/arch/mips/jz4740/Kconfig
-index 29a9361a2b77..4dd0c446ecec 100644
---- a/arch/mips/jz4740/Kconfig
-+++ b/arch/mips/jz4740/Kconfig
-@@ -8,6 +8,10 @@ config JZ4740_QI_LB60
- 	bool "Qi Hardware Ben NanoNote"
- 	select MACH_JZ4740
+ config LANTIQ
+ 	bool "Lantiq based platforms"
+diff --git a/arch/mips/jz4740/Makefile b/arch/mips/jz4740/Makefile
+index 88d6aa7d000b..fc2d3b3c4a80 100644
+--- a/arch/mips/jz4740/Makefile
++++ b/arch/mips/jz4740/Makefile
+@@ -6,7 +6,7 @@
+ # Object file lists.
  
-+config JZ4770_GCW0
-+	bool "Game Consoles Worldwide GCW Zero"
-+	select MACH_JZ4770
-+
- config JZ4780_CI20
- 	bool "MIPS Creator CI20"
- 	select MACH_JZ4780
+ obj-y += prom.o time.o reset.o setup.o \
+-	platform.o timer.o
++	platform.o timer.o boards.o
+ 
+ CFLAGS_setup.o = -I$(src)/../../../scripts/dtc/libfdt
+ 
 diff --git a/arch/mips/jz4740/boards.c b/arch/mips/jz4740/boards.c
-index 13b0bddd8cb7..1389d6eec80f 100644
---- a/arch/mips/jz4740/boards.c
+new file mode 100644
+index 000000000000..13b0bddd8cb7
+--- /dev/null
 +++ b/arch/mips/jz4740/boards.c
-@@ -8,5 +8,6 @@
- #include <asm/mips_machine.h>
+@@ -0,0 +1,12 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Ingenic boards support
++ * Copyright 2017, Paul Cercueil <paul@crapouillou.net>
++ */
++
++#include <asm/bootinfo.h>
++#include <asm/mips_machine.h>
++
++MIPS_MACHINE(MACH_INGENIC_JZ4740, "qi,lb60", "Qi Hardware Ben Nanonote", NULL);
++MIPS_MACHINE(MACH_INGENIC_JZ4780, "img,ci20",
++			"Imagination Technologies CI20", NULL);
+diff --git a/arch/mips/jz4740/setup.c b/arch/mips/jz4740/setup.c
+index 6d0152321819..afd84ee966e8 100644
+--- a/arch/mips/jz4740/setup.c
++++ b/arch/mips/jz4740/setup.c
+@@ -22,6 +22,7 @@
+ #include <linux/of_fdt.h>
  
- MIPS_MACHINE(MACH_INGENIC_JZ4740, "qi,lb60", "Qi Hardware Ben Nanonote", NULL);
-+MIPS_MACHINE(MACH_INGENIC_JZ4770, "gcw,zero", "GCW Zero", NULL);
- MIPS_MACHINE(MACH_INGENIC_JZ4780, "img,ci20",
- 			"Imagination Technologies CI20", NULL);
+ #include <asm/bootinfo.h>
++#include <asm/mips_machine.h>
+ #include <asm/prom.h>
+ 
+ #include <asm/mach-jz4740/base.h>
+@@ -53,16 +54,34 @@ static void __init jz4740_detect_mem(void)
+ 	add_memory_region(0, size, BOOT_MEM_RAM);
+ }
+ 
++static unsigned long __init get_board_mach_type(const void *fdt)
++{
++	const struct mips_machine *mach;
++
++	for (mach = (struct mips_machine *)&__mips_machines_start;
++			mach < (struct mips_machine *)&__mips_machines_end;
++			mach++) {
++		if (!fdt_node_check_compatible(fdt, 0, mach->mach_id))
++			return mach->mach_type;
++	}
++
++	return MACH_INGENIC_JZ4740;
++}
++
+ void __init plat_mem_setup(void)
+ {
+ 	int offset;
+ 
++	if (!early_init_dt_scan(__dtb_start))
++		return;
++
+ 	jz4740_reset_init();
+-	__dt_setup_arch(__dtb_start);
+ 
+ 	offset = fdt_path_offset(__dtb_start, "/memory");
+ 	if (offset < 0)
+ 		jz4740_detect_mem();
++
++	mips_machtype = get_board_mach_type(__dtb_start);
+ }
+ 
+ void __init device_tree_init(void)
+@@ -75,13 +94,18 @@ void __init device_tree_init(void)
+ 
+ const char *get_system_type(void)
+ {
+-	if (IS_ENABLED(CONFIG_MACH_JZ4780))
+-		return "JZ4780";
+-
+-	return "JZ4740";
++	return mips_get_machine_name();
+ }
+ 
+ void __init arch_init_irq(void)
+ {
+ 	irqchip_init();
+ }
++
++static int __init jz4740_machine_setup(void)
++{
++	mips_machine_setup();
++
++	return 0;
++}
++arch_initcall(jz4740_machine_setup);
 -- 
 2.11.0
