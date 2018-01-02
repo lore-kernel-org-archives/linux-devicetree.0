@@ -1,69 +1,66 @@
 From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: [PATCH v5 15/20] firmware: arm_scmi: add device power domain support using genpd
-Date: Tue,  2 Jan 2018 14:42:37 +0000
-Message-ID: <1514904162-11201-16-git-send-email-sudeep.holla@arm.com>
+Subject: [PATCH v5 04/20] firmware: arm_scmi: add common infrastructure and
+ support for base protocol
+Date: Tue,  2 Jan 2018 14:42:26 +0000
+Message-ID: <1514904162-11201-5-git-send-email-sudeep.holla@arm.com>
 References: <1514904162-11201-1-git-send-email-sudeep.holla@arm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1514904162-11201-1-git-send-email-sudeep.holla@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: ALKML <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Roy Franz <roy.franz@cavium.com>, Harb Abdulhamid <harba@codeaurora.org>, Nishanth Menon <nm@ti.com>, Arnd Bergmann <arnd@arndb.de>, Loc Ho <lho@apm.com>, Alexey Klimov <klimov.linux@gmail.com>, Ryan Harkin <Ryan.Harkin@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>, Kevin Hilman <khilman@baylibre.com>
+Cc: Nishanth Menon <nm@ti.com>, Harb Abdulhamid <harba@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, Jassi Brar <jassisinghbrar@gmail.com>, Ryan Harkin <Ryan.Harkin@arm.com>, Roy Franz <roy.franz@cavium.com>, Alexey Klimov <klimov.linux@gmail.com>, Loc Ho <lho@apm.com>, Sudeep Holla <sudeep.holla@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch hooks up the support for device power domain provided by
-SCMI using the Linux generic power domain infrastructure.
+The base protocol describes the properties of the implementation and
+provide generic error management. The base protocol provides commands
+to describe protocol version, discover implementation specific
+attributes and vendor/sub-vendor identification, list of protocols
+implemented and the various agents are in the system including OSPM
+and the platform. It also supports registering for notifications of
+platform errors.
 
-Cc: Kevin Hilman <khilman@baylibre.com>
-Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+This protocol is mandatory. This patch adds support for the same along
+with some basic infrastructure to add support for other protocols.
+
+Cc: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 ---
- drivers/firmware/Kconfig                   |  13 +++
- drivers/firmware/arm_scmi/Makefile         |   1 +
- drivers/firmware/arm_scmi/scmi_pm_domain.c | 140 +++++++++++++++++++++++++++++
- 3 files changed, 154 insertions(+)
- create mode 100644 drivers/firmware/arm_scmi/scmi_pm_domain.c
+ drivers/firmware/arm_scmi/Makefile |   3 +-
+ drivers/firmware/arm_scmi/base.c   | 293 +++++++++++++++++++++++++++++++++++++
+ drivers/firmware/arm_scmi/common.h |  37 +++++
+ drivers/firmware/arm_scmi/driver.c |  53 +++++++
+ include/linux/scmi_protocol.h      |  37 +++++
+ 5 files changed, 422 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/firmware/arm_scmi/base.c
 
-diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
-index 10b917d32087..a0a2d100e28e 100644
---- a/drivers/firmware/Kconfig
-+++ b/drivers/firmware/Kconfig
-@@ -40,6 +40,19 @@ config ARM_SCMI_PROTOCOL
- 	  This protocol library provides interface for all the client drivers
- 	  making use of the features offered by the SCMI.
- 
-+config ARM_SCMI_POWER_DOMAIN
-+	tristate "SCMI power domain driver"
-+	depends on ARM_SCMI_PROTOCOL || (COMPILE_TEST && OF)
-+	default y
-+	select PM_GENERIC_DOMAINS if PM
-+	help
-+	  This enables support for the SCMI power domains which can be
-+	  enabled or disabled via the SCP firmware
-+
-+	  This driver can also be built as a module.  If so, the module
-+	  will be called scmi_pm_domain. Note this may needed early in boot
-+	  before rootfs may be available.
-+
- config ARM_SCPI_PROTOCOL
- 	tristate "ARM System Control and Power Interface (SCPI) Message Protocol"
- 	depends on ARM || ARM64 || COMPILE_TEST
 diff --git a/drivers/firmware/arm_scmi/Makefile b/drivers/firmware/arm_scmi/Makefile
-index 3236890905b9..99e36c580fbc 100644
+index b2a24ba2b636..5d9c7ef35f0f 100644
 --- a/drivers/firmware/arm_scmi/Makefile
 +++ b/drivers/firmware/arm_scmi/Makefile
-@@ -2,3 +2,4 @@ obj-y	= scmi-bus.o scmi-driver.o scmi-protocols.o
- scmi-bus-y = bus.o
+@@ -1,2 +1,3 @@
+-obj-y	= scmi-driver.o
++obj-y	= scmi-driver.o scmi-protocols.o
  scmi-driver-y = driver.o
- scmi-protocols-y = base.o clock.o perf.o power.o sensors.o
-+obj-$(CONFIG_ARM_SCMI_POWER_DOMAIN) += scmi_pm_domain.o
-diff --git a/drivers/firmware/arm_scmi/scmi_pm_domain.c b/drivers/firmware/arm_scmi/scmi_pm_domain.c
++scmi-protocols-y = base.o
+diff --git a/drivers/firmware/arm_scmi/base.c b/drivers/firmware/arm_scmi/base.c
 new file mode 100644
-index 000000000000..c03c06d3840a
+index 000000000000..2b5fbb724899
 --- /dev/null
-+++ b/drivers/firmware/arm_scmi/scmi_pm_domain.c
-@@ -0,0 +1,140 @@
++++ b/drivers/firmware/arm_scmi/base.c
+@@ -0,0 +1,293 @@
 +/*
-+ * SCMI Generic power domain support.
++ * System Control and Management Interface (SCMI) Base Protocol
 + *
 + * Copyright (C) 2017 ARM Ltd.
 + *
@@ -80,127 +77,486 @@ index 000000000000..c03c06d3840a
 + * with this program. If not, see <http://www.gnu.org/licenses/>.
 + */
 +
-+#include <linux/err.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/pm_domain.h>
-+#include <linux/scmi_protocol.h>
++#include "common.h"
 +
-+struct scmi_pm_domain {
-+	struct generic_pm_domain genpd;
-+	const struct scmi_handle *handle;
-+	const char *name;
-+	u32 domain;
++enum scmi_base_protocol_cmd {
++	BASE_DISCOVER_VENDOR = 0x3,
++	BASE_DISCOVER_SUB_VENDOR = 0x4,
++	BASE_DISCOVER_IMPLEMENT_VERSION = 0x5,
++	BASE_DISCOVER_LIST_PROTOCOLS = 0x6,
++	BASE_DISCOVER_AGENT = 0x7,
++	BASE_NOTIFY_ERRORS = 0x8,
 +};
 +
-+#define to_scmi_pd(gpd) container_of(gpd, struct scmi_pm_domain, genpd)
++struct scmi_msg_resp_base_attributes {
++	    u8 num_protocols;
++	    u8 num_agents;
++	__le16 reserved;
++};
 +
-+static int scmi_pd_power(struct generic_pm_domain *domain, bool power_on)
++/**
++ * scmi_base_attributes_get() - gets the implementation details
++ *	that are associated with the base protocol.
++ *
++ * @handle - SCMI entity handle
++ *
++ * Return: 0 on success, else appropriate SCMI error.
++ */
++static int scmi_base_attributes_get(const struct scmi_handle *handle)
 +{
 +	int ret;
-+	u32 state, ret_state;
-+	struct scmi_pm_domain *pd = to_scmi_pd(domain);
-+	const struct scmi_power_ops *ops = pd->handle->power_ops;
++	struct scmi_xfer *t;
++	struct scmi_msg_resp_base_attributes *attr_info;
++	struct scmi_revision_info *rev = handle->version;
 +
-+	if (power_on)
-+		state = SCMI_POWER_STATE_GENERIC_ON;
-+	else
-+		state = SCMI_POWER_STATE_GENERIC_OFF;
++	ret = scmi_one_xfer_init(handle, PROTOCOL_ATTRIBUTES,
++				 SCMI_PROTOCOL_BASE, 0, sizeof(*attr_info), &t);
++	if (ret)
++		return ret;
 +
-+	ret = ops->state_set(pd->handle, pd->domain, state);
-+	if (!ret)
-+		ret = ops->state_get(pd->handle, pd->domain, &ret_state);
-+	if (!ret && state != ret_state)
-+		return -EIO;
++	ret = scmi_do_xfer(handle, t);
++	if (!ret) {
++		attr_info = t->rx.buf;
++		rev->num_protocols = attr_info->num_protocols;
++		rev->num_agents = attr_info->num_agents;
++	}
 +
++	scmi_one_xfer_put(handle, t);
 +	return ret;
 +}
 +
-+static int scmi_pd_power_on(struct generic_pm_domain *domain)
++/**
++ * scmi_base_vendor_id_get() - gets vendor/subvendor identifier ASCII string.
++ *
++ * @handle - SCMI entity handle
++ * @sub_vendor - specify true if sub-vendor ID is needed
++ *
++ * Return: 0 on success, else appropriate SCMI error.
++ */
++static int
++scmi_base_vendor_id_get(const struct scmi_handle *handle, bool sub_vendor)
 +{
-+	return scmi_pd_power(domain, true);
-+}
++	u8 cmd;
++	int ret, size;
++	char *vendor_id;
++	struct scmi_xfer *t;
++	struct scmi_revision_info *rev = handle->version;
 +
-+static int scmi_pd_power_off(struct generic_pm_domain *domain)
-+{
-+	return scmi_pd_power(domain, false);
-+}
-+
-+static int scmi_pm_domain_probe(struct scmi_device *sdev)
-+{
-+	int num_domains, i;
-+	struct device *dev = &sdev->dev;
-+	struct device_node *np = dev->of_node;
-+	struct scmi_pm_domain *scmi_pd;
-+	struct genpd_onecell_data *scmi_pd_data;
-+	struct generic_pm_domain **domains;
-+	const struct scmi_handle *handle = sdev->handle;
-+
-+	if (!handle || !handle->power_ops)
-+		return -ENODEV;
-+
-+	num_domains = handle->power_ops->num_domains_get(handle);
-+	if (num_domains < 0) {
-+		dev_err(dev, "number of domains not found\n");
-+		return num_domains;
++	if (sub_vendor) {
++		cmd = BASE_DISCOVER_SUB_VENDOR;
++		vendor_id = rev->sub_vendor_id;
++		size = ARRAY_SIZE(rev->sub_vendor_id);
++	} else {
++		cmd = BASE_DISCOVER_VENDOR;
++		vendor_id = rev->vendor_id;
++		size = ARRAY_SIZE(rev->vendor_id);
 +	}
 +
-+	scmi_pd = devm_kcalloc(dev, num_domains, sizeof(*scmi_pd), GFP_KERNEL);
-+	if (!scmi_pd)
-+		return -ENOMEM;
++	ret = scmi_one_xfer_init(handle, cmd, SCMI_PROTOCOL_BASE, 0, size, &t);
++	if (ret)
++		return ret;
 +
-+	scmi_pd_data = devm_kzalloc(dev, sizeof(*scmi_pd_data), GFP_KERNEL);
-+	if (!scmi_pd_data)
-+		return -ENOMEM;
++	ret = scmi_do_xfer(handle, t);
++	if (!ret)
++		memcpy(vendor_id, t->rx.buf, size);
 +
-+	domains = devm_kcalloc(dev, num_domains, sizeof(*domains), GFP_KERNEL);
-+	if (!domains)
-+		return -ENOMEM;
++	scmi_one_xfer_put(handle, t);
++	return ret;
++}
 +
-+	for (i = 0; i < num_domains; i++, scmi_pd++) {
-+		u32 state;
++/**
++ * scmi_base_implementation_version_get() - gets a vendor-specific
++ *	implementation 32-bit version. The format of the version number is
++ *	vendor-specific
++ *
++ * @handle - SCMI entity handle
++ *
++ * Return: 0 on success, else appropriate SCMI error.
++ */
++static int
++scmi_base_implementation_version_get(const struct scmi_handle *handle)
++{
++	int ret;
++	__le32 *impl_ver;
++	struct scmi_xfer *t;
++	struct scmi_revision_info *rev = handle->version;
 +
-+		domains[i] = &scmi_pd->genpd;
++	ret = scmi_one_xfer_init(handle, BASE_DISCOVER_IMPLEMENT_VERSION,
++				 SCMI_PROTOCOL_BASE, 0, sizeof(*impl_ver), &t);
++	if (ret)
++		return ret;
 +
-+		scmi_pd->domain = i;
-+		scmi_pd->handle = handle;
-+		scmi_pd->name = handle->power_ops->name_get(handle, i);
-+		scmi_pd->genpd.name = scmi_pd->name;
-+		scmi_pd->genpd.power_off = scmi_pd_power_off;
-+		scmi_pd->genpd.power_on = scmi_pd_power_on;
++	ret = scmi_do_xfer(handle, t);
++	if (!ret) {
++		impl_ver = t->rx.buf;
++		rev->impl_ver = le32_to_cpu(*impl_ver);
++	}
 +
-+		if (handle->power_ops->state_get(handle, i, &state)) {
-+			dev_warn(dev, "failed to get state for domain %d\n", i);
-+			continue;
++	scmi_one_xfer_put(handle, t);
++	return ret;
++}
++
++/**
++ * scmi_base_implementation_list_get() - gets the list of protocols it is
++ *	OSPM is allowed to access
++ *
++ * @handle - SCMI entity handle
++ * @protocols_imp - pointer to hold the list of protocol identifiers
++ *
++ * Return: 0 on success, else appropriate SCMI error.
++ */
++static int scmi_base_implementation_list_get(const struct scmi_handle *handle,
++					     u8 *protocols_imp)
++{
++	u8 *list;
++	int ret, loop;
++	struct scmi_xfer *t;
++	__le32 *num_skip, *num_ret;
++	u32 tot_num_ret = 0, loop_num_ret;
++	struct device *dev = handle->dev;
++
++	ret = scmi_one_xfer_init(handle, BASE_DISCOVER_LIST_PROTOCOLS,
++				 SCMI_PROTOCOL_BASE, sizeof(*num_skip), 0, &t);
++	if (ret)
++		return ret;
++
++	num_skip = t->tx.buf;
++	num_ret = t->rx.buf;
++	list = t->rx.buf + sizeof(*num_ret);
++
++	do {
++		/* Set the number of protocols to be skipped/already read */
++		*num_skip = cpu_to_le32(tot_num_ret);
++
++		ret = scmi_do_xfer(handle, t);
++		if (ret)
++			break;
++
++		loop_num_ret = le32_to_cpu(*num_ret);
++		if (tot_num_ret + loop_num_ret > MAX_PROTOCOLS_IMP) {
++			dev_err(dev, "No. of Protocol > MAX_PROTOCOLS_IMP");
++			break;
 +		}
 +
-+		pm_genpd_init(&scmi_pd->genpd, NULL,
-+			      state == SCMI_POWER_STATE_GENERIC_OFF);
++		for (loop = 0; loop < loop_num_ret; loop++)
++			protocols_imp[tot_num_ret + loop] = *(list + loop);
++
++		tot_num_ret += loop_num_ret;
++	} while (loop_num_ret);
++
++	scmi_one_xfer_put(handle, t);
++	return ret;
++}
++
++/**
++ * scmi_base_discover_agent_get() - discover the name of an agent
++ *
++ * @handle - SCMI entity handle
++ * @id - Agent identifier
++ * @name - Agent identifier ASCII string
++ *
++ * An agent id of 0 is reserved to identify the platform itself.
++ * Generally operating system is represented as "OSPM"
++ *
++ * Return: 0 on success, else appropriate SCMI error.
++ */
++static int scmi_base_discover_agent_get(const struct scmi_handle *handle,
++					int id, char *name)
++{
++	int ret;
++	struct scmi_xfer *t;
++
++	ret = scmi_one_xfer_init(handle, BASE_DISCOVER_AGENT,
++				 SCMI_PROTOCOL_BASE, sizeof(__le32),
++				 SCMI_MAX_STR_SIZE, &t);
++	if (ret)
++		return ret;
++
++	*(__le32 *)t->tx.buf = cpu_to_le32(id);
++
++	ret = scmi_do_xfer(handle, t);
++	if (!ret)
++		memcpy(name, t->rx.buf, SCMI_MAX_STR_SIZE);
++
++	scmi_one_xfer_put(handle, t);
++	return ret;
++}
++
++/**
++ * scmi_base_error_notifications_enable() - register/unregister for
++ *	notifications of errors in the platform
++ *
++ * @handle - SCMI entity handle
++ * @enable - Enable/Disable the notification
++ *
++ * Return: 0 on success, else appropriate SCMI error.
++ */
++static int
++scmi_base_error_notifications_enable(const struct scmi_handle *handle, bool en)
++{
++	int ret;
++	struct scmi_xfer *t;
++
++	ret = scmi_one_xfer_init(handle, BASE_NOTIFY_ERRORS, SCMI_PROTOCOL_BASE,
++				 sizeof(__le32), 0, &t);
++	if (ret)
++		return ret;
++
++	*(__le32 *)t->tx.buf = cpu_to_le32(en & BIT(0));
++
++	ret = scmi_do_xfer(handle, t);
++
++	scmi_one_xfer_put(handle, t);
++	return ret;
++}
++
++int scmi_base_protocol_init(struct scmi_handle *h)
++{
++	int id, ret;
++	u8 *prot_imp;
++	u32 version;
++	char name[SCMI_MAX_STR_SIZE];
++	const struct scmi_handle *handle = h;
++	struct device *dev = handle->dev;
++	struct scmi_revision_info *rev = handle->version;
++
++	ret = scmi_version_get(handle, SCMI_PROTOCOL_BASE, &version);
++	if (ret)
++		return ret;
++
++	prot_imp = devm_kcalloc(dev, MAX_PROTOCOLS_IMP, sizeof(u8), GFP_KERNEL);
++	if (!prot_imp)
++		return -ENOMEM;
++
++	rev->major_ver = PROTOCOL_REV_MAJOR(version),
++	rev->minor_ver = PROTOCOL_REV_MINOR(version);
++
++	scmi_base_attributes_get(handle);
++	scmi_base_vendor_id_get(handle, false);
++	scmi_base_vendor_id_get(handle, true);
++	scmi_base_implementation_version_get(handle);
++	scmi_base_implementation_list_get(handle, prot_imp);
++	scmi_base_error_notifications_enable(handle, true);
++	scmi_setup_protocol_implemented(handle, prot_imp);
++
++	dev_info(dev, "SCMI Protocol v%d.%d '%s:%s' Firmware version 0x%x\n",
++		 rev->major_ver, rev->minor_ver, rev->vendor_id,
++		 rev->sub_vendor_id, rev->impl_ver);
++	dev_dbg(dev, "Found %d protocol(s) %d agent(s)\n", rev->num_protocols,
++		rev->num_agents);
++
++	for (id = 0; id < rev->num_agents; id++) {
++		scmi_base_discover_agent_get(handle, id, name);
++		dev_dbg(dev, "Agent %d: %s\n", id, name);
 +	}
-+
-+	scmi_pd_data->domains = domains;
-+	scmi_pd_data->num_domains = num_domains;
-+
-+	of_genpd_add_provider_onecell(np, scmi_pd_data);
 +
 +	return 0;
 +}
+diff --git a/drivers/firmware/arm_scmi/common.h b/drivers/firmware/arm_scmi/common.h
+index cdfc43427c3c..bc767f4997e0 100644
+--- a/drivers/firmware/arm_scmi/common.h
++++ b/drivers/firmware/arm_scmi/common.h
+@@ -19,9 +19,41 @@
+  */
+ 
+ #include <linux/completion.h>
++#include <linux/device.h>
++#include <linux/errno.h>
++#include <linux/kernel.h>
+ #include <linux/scmi_protocol.h>
+ #include <linux/types.h>
+ 
++#define PROTOCOL_REV_MINOR_BITS	16
++#define PROTOCOL_REV_MINOR_MASK	((1U << PROTOCOL_REV_MINOR_BITS) - 1)
++#define PROTOCOL_REV_MAJOR(x)	((x) >> PROTOCOL_REV_MINOR_BITS)
++#define PROTOCOL_REV_MINOR(x)	((x) & PROTOCOL_REV_MINOR_MASK)
++#define MAX_PROTOCOLS_IMP	16
 +
-+static const struct scmi_device_id scmi_id_table[] = {
-+	{ SCMI_PROTOCOL_POWER },
-+	{ },
++enum scmi_common_cmd {
++	PROTOCOL_VERSION = 0x0,
++	PROTOCOL_ATTRIBUTES = 0x1,
++	PROTOCOL_MESSAGE_ATTRIBUTES = 0x2,
 +};
-+MODULE_DEVICE_TABLE(scmi, scmi_id_table);
 +
-+static struct scmi_driver scmi_power_domain_driver = {
-+	.name = "scmi-power-domain",
-+	.probe = scmi_pm_domain_probe,
-+	.id_table = scmi_id_table,
++/**
++ * struct scmi_msg_resp_prot_version - Response for a message
++ *
++ * @major_version: Major version of the ABI that firmware supports
++ * @minor_version: Minor version of the ABI that firmware supports
++ *
++ * In general, ABI version changes follow the rule that minor version increments
++ * are backward compatible. Major revision changes in ABI may not be
++ * backward compatible.
++ *
++ * Response to a generic message with message type SCMI_MSG_VERSION
++ */
++struct scmi_msg_resp_prot_version {
++	__le16 minor_version;
++	__le16 major_version;
 +};
-+module_scmi_driver(scmi_power_domain_driver);
 +
-+MODULE_AUTHOR("Sudeep Holla <sudeep.holla@arm.com>");
-+MODULE_DESCRIPTION("ARM SCMI power domain driver");
-+MODULE_LICENSE("GPL v2");
+ /**
+  * struct scmi_msg_hdr - Message(Tx/Rx) header
+  *
+@@ -75,3 +107,8 @@ int scmi_one_xfer_init(const struct scmi_handle *h, u8 msg_id, u8 prot_id,
+ 		       size_t tx_size, size_t rx_size, struct scmi_xfer **p);
+ int scmi_handle_put(const struct scmi_handle *handle);
+ struct scmi_handle *scmi_handle_get(struct device *dev);
++int scmi_version_get(const struct scmi_handle *h, u8 protocol, u32 *version);
++void scmi_setup_protocol_implemented(const struct scmi_handle *handle,
++				     u8 *prot_imp);
++
++int scmi_base_protocol_init(struct scmi_handle *h);
+diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
+index 58d8f88893e6..20d083be474c 100644
+--- a/drivers/firmware/arm_scmi/driver.c
++++ b/drivers/firmware/arm_scmi/driver.c
+@@ -108,21 +108,27 @@ struct scmi_desc {
+  * @dev: Device pointer
+  * @desc: SoC description for this instance
+  * @handle: Instance of SCMI handle to send to clients
++ * @version: SCMI revision information containing protocol version,
++ *	implementation version and (sub-)vendor identification.
+  * @cl: Mailbox Client
+  * @tx_chan: Transmit mailbox channel
+  * @tx_payload: Transmit mailbox channel payload area
+  * @minfo: Message info
++ * @protocols_imp: list of protocols implemented, currently maximum of
++ *	MAX_PROTOCOLS_IMP elements allocated by the base protocol
+  * @node: list head
+  * @users: Number of users of this instance
+  */
+ struct scmi_info {
+ 	struct device *dev;
+ 	const struct scmi_desc *desc;
++	struct scmi_revision_info version;
+ 	struct scmi_handle handle;
+ 	struct mbox_client cl;
+ 	struct mbox_chan *tx_chan;
+ 	void __iomem *tx_payload;
+ 	struct scmi_xfers_info minfo;
++	u8 *protocols_imp;
+ 	struct list_head node;
+ 	int users;
+ };
+@@ -450,6 +456,45 @@ int scmi_one_xfer_init(const struct scmi_handle *handle, u8 msg_id, u8 prot_id,
+ }
+ 
+ /**
++ * scmi_version_get() - command to get the revision of the SCMI entity
++ *
++ * @handle: Handle to SCMI entity information
++ *
++ * Updates the SCMI information in the internal data structure.
++ *
++ * Return: 0 if all went fine, else return appropriate error.
++ */
++int scmi_version_get(const struct scmi_handle *handle, u8 protocol,
++		     u32 *version)
++{
++	int ret;
++	__le32 *rev_info;
++	struct scmi_xfer *t;
++
++	ret = scmi_one_xfer_init(handle, PROTOCOL_VERSION, protocol, 0,
++				 sizeof(*version), &t);
++	if (ret)
++		return ret;
++
++	ret = scmi_do_xfer(handle, t);
++	if (!ret) {
++		rev_info = t->rx.buf;
++		*version = le32_to_cpu(*rev_info);
++	}
++
++	scmi_one_xfer_put(handle, t);
++	return ret;
++}
++
++void scmi_setup_protocol_implemented(const struct scmi_handle *handle,
++				     u8 *prot_imp)
++{
++	struct scmi_info *info = handle_to_scmi_info(handle);
++
++	info->protocols_imp = prot_imp;
++}
++
++/**
+  * scmi_handle_get() - Get the  SCMI handle for a device
+  *
+  * @dev: pointer to device for which we want SCMI handle
+@@ -679,11 +724,19 @@ static int scmi_probe(struct platform_device *pdev)
+ 
+ 	handle = &info->handle;
+ 	handle->dev = info->dev;
++	handle->version = &info->version;
+ 
+ 	ret = scmi_mbox_chan_setup(info);
+ 	if (ret)
+ 		return ret;
+ 
++	ret = scmi_base_protocol_init(handle);
++	if (ret) {
++		dev_err(dev, "unable to communicate with SCMI(%d)\n", ret);
++		scmi_mbox_free_channel(info);
++		return ret;
++	}
++
+ 	mutex_lock(&scmi_list_mutex);
+ 	list_add_tail(&info->node, &scmi_list);
+ 	mutex_unlock(&scmi_list_mutex);
+diff --git a/include/linux/scmi_protocol.h b/include/linux/scmi_protocol.h
+index 854ed2479993..664da3d763f2 100644
+--- a/include/linux/scmi_protocol.h
++++ b/include/linux/scmi_protocol.h
+@@ -17,11 +17,48 @@
+  */
+ #include <linux/types.h>
+ 
++#define SCMI_MAX_STR_SIZE	16
++
++/**
++ * struct scmi_revision_info - version information structure
++ *
++ * @major_ver: Major ABI version. Change here implies risk of backward
++ *	compatibility break.
++ * @minor_ver: Minor ABI version. Change here implies new feature addition,
++ *	or compatible change in ABI.
++ * @num_protocols: Number of protocols that are implemented, excluding the
++ *	base protocol.
++ * @num_agents: Number of agents in the system.
++ * @impl_ver: A vendor-specific implementation version.
++ * @vendor_id: A vendor identifier(Null terminated ASCII string)
++ * @sub_vendor_id: A sub-vendor identifier(Null terminated ASCII string)
++ */
++struct scmi_revision_info {
++	u16 major_ver;
++	u16 minor_ver;
++	u8 num_protocols;
++	u8 num_agents;
++	u32 impl_ver;
++	char vendor_id[SCMI_MAX_STR_SIZE];
++	char sub_vendor_id[SCMI_MAX_STR_SIZE];
++};
++
+ /**
+  * struct scmi_handle - Handle returned to ARM SCMI clients for usage.
+  *
+  * @dev: pointer to the SCMI device
++ * @version: pointer to the structure containing SCMI version information
+  */
+ struct scmi_handle {
+ 	struct device *dev;
++	struct scmi_revision_info *version;
++};
++
++enum scmi_std_protocol {
++	SCMI_PROTOCOL_BASE = 0x10,
++	SCMI_PROTOCOL_POWER = 0x11,
++	SCMI_PROTOCOL_SYSTEM = 0x12,
++	SCMI_PROTOCOL_PERF = 0x13,
++	SCMI_PROTOCOL_CLOCK = 0x14,
++	SCMI_PROTOCOL_SENSOR = 0x15,
+ };
 -- 
 2.7.4
