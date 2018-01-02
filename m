@@ -1,69 +1,60 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: [PATCH] Nokia N9: add support for up/down keys in the dts
-Date: Tue, 2 Jan 2018 13:59:48 +0100
-Message-ID: <20180102125948.GA20051@amd>
+From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH V5 2/2] mtd: ofpart: add of_match_table with "fixed-partitions"
+Date: Tue,  2 Jan 2018 14:04:58 +0100
+Message-ID: <20180102130458.16226-2-zajec5@gmail.com>
+References: <20180102130458.16226-1-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="82I3+IH0IqGh5yIs"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-Sender: linux-kernel-owner@vger.kernel.org
-To: pali.rohar@gmail.com, sre@kernel.org, kernel list <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-omap@vger.kernel.org, tony@atomide.com, khilman@kernel.org, aaro.koskinen@iki.fi, ivo.g.dimitrov.75@gmail.com, patrikbachan@gmail.com, serge@hallyn.com, abcloriens@gmail.com, clayton@craftyguy.net, martijn@brixit.nl, sakari.ailus@linux.intel.com, Filip =?utf-8?Q?Matijevi=C4=87?= <filip.matijevic.pz@gmail.com>, bcousson@baylibre.com, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180102130458.16226-1-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 
---82I3+IH0IqGh5yIs
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This allows using this parser with any flash driver that takes care of
+setting of_node (using mtd_set_of_node helper) correctly. Up to now
+support for "fixed-partitions" DT compatibility string was working only
+with flash drivers that were specifying "ofpart" (manually or by letting
+mtd use the default set of parsers).
 
+This matches existing bindings documentation.
 
-This adds support for volume up/down keys in the dts.
+Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+Reviewed-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Tested-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ drivers/mtd/ofpart.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-Signed-off-by: Pavel Machek <pavel@ucw.cz>
-
-diff --git a/arch/arm/boot/dts/omap3-n9.dts b/arch/arm/boot/dts/omap3-n9.dts
-index 39e35f8..57a6679 100644
---- a/arch/arm/boot/dts/omap3-n9.dts
-+++ b/arch/arm/boot/dts/omap3-n9.dts
-@@ -11,9 +11,10 @@
- /dts-v1/;
-=20
- #include "omap3-n950-n9.dtsi"
-+#include <dt-bindings/input/input.h>
-=20
- / {
- 	model =3D "Nokia N9";
- 	compatible =3D "nokia,omap3-n9", "ti,omap36xx", "ti,omap3";
- };
-=20
-@@ -72,3 +133,9 @@
- 	st,max-limit-y =3D <46>;
- 	st,max-limit-z =3D <46>;
- };
-+
-+&twl_keypad {
-+	linux,keymap =3D < MATRIX_KEY(6, 8, KEY_VOLUMEUP)
-+			 MATRIX_KEY(7, 8, KEY_VOLUMEDOWN)
-+			 >;
+diff --git a/drivers/mtd/ofpart.c b/drivers/mtd/ofpart.c
+index 6bdf4e525677..92fcbac046d9 100644
+--- a/drivers/mtd/ofpart.c
++++ b/drivers/mtd/ofpart.c
+@@ -140,9 +140,16 @@ static int parse_ofpart_partitions(struct mtd_info *master,
+ 	return ret;
+ }
+ 
++static const struct of_device_id parse_ofpart_match_table[] = {
++	{ .compatible = "fixed-partitions" },
++	{},
 +};
++MODULE_DEVICE_TABLE(of, parse_ofpart_match_table);
++
+ static struct mtd_part_parser ofpart_parser = {
+ 	.parse_fn = parse_ofpart_partitions,
+ 	.name = "ofpart",
++	.of_match_table = parse_ofpart_match_table,
+ };
+ 
+ static int parse_ofoldpart_partitions(struct mtd_info *master,
+-- 
+2.11.0
 
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---82I3+IH0IqGh5yIs
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlpLgkQACgkQMOfwapXb+vI4QQCgh+ZWUYFWe/812P1CrdqDHPnS
-9vEAoIrY7DxCnIhYVh1onFt5gUcIO72z
-=ajcM
------END PGP SIGNATURE-----
-
---82I3+IH0IqGh5yIs--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
