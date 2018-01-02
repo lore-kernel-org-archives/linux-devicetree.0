@@ -1,104 +1,90 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 1/6] mfd: syscon: Add ingenic-tcu.h header
-Date: Tue, 2 Jan 2018 15:51:44 +0000
-Message-ID: <20180102155144.xbxbw3pazn2xh5ge@dell>
-References: <20171229125942.27305-2-paul@crapouillou.net>
- <20180101143344.2099-1-paul@crapouillou.net>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH RFC 4/7] i2c: Add device tree bindings for GENI I2C
+ Controller
+Date: Tue, 2 Jan 2018 09:51:49 -0600
+Message-ID: <20180102155149.f2wzjvdhoi6cne4x@rob-hp-laptop>
+References: <1514392046-30602-1-git-send-email-kramasub@codeaurora.org>
+ <1514392046-30602-5-git-send-email-kramasub@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-i2c-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180101143344.2099-1-paul@crapouillou.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1514392046-30602-5-git-send-email-kramasub@codeaurora.org>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-i2c@vger.kernel.org, linux-serial@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, andy.gross@linaro.org, david.brown@linaro.org, mark.rutland@arm.com, corbet@lwn.net, wsa@the-dreams.de, gregkh@linuxfoundation.org, jslaby@suse.com, Sagar Dharia <sdharia@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 01 Jan 2018, Paul Cercueil wrote:
-
-> This header contains macros for the registers that are present in the
-> regmap shared by all the drivers related to the TCU (Timer Counter Unit)
-> of the Ingenic JZ47xx SoCs.
+On Wed, Dec 27, 2017 at 09:27:23AM -0700, Karthikeyan Ramasubramanian wrote:
+> Add device tree binding support for I2C Controller in GENI based
+> QUP Wrapper.
 > 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> Signed-off-by: Sagar Dharia <sdharia@codeaurora.org>
+> Signed-off-by: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>
 > ---
->  include/linux/mfd/syscon/ingenic-tcu.h | 57 ++++++++++++++++++++++++++++++++++
->  1 file changed, 57 insertions(+)
->  create mode 100644 include/linux/mfd/syscon/ingenic-tcu.h
+>  .../devicetree/bindings/i2c/i2c-qcom-geni.txt      | 39 ++++++++++++++++++++++
+>  1 file changed, 39 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-qcom-geni.txt
 > 
->  v2: Use SPDX identifier for the license
-> 
-> diff --git a/include/linux/mfd/syscon/ingenic-tcu.h b/include/linux/mfd/syscon/ingenic-tcu.h
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c-qcom-geni.txt b/Documentation/devicetree/bindings/i2c/i2c-qcom-geni.txt
 > new file mode 100644
-> index 000000000000..5962165e1309
+> index 0000000..d2fa9ce
 > --- /dev/null
-> +++ b/include/linux/mfd/syscon/ingenic-tcu.h
-> @@ -0,0 +1,57 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Header file for the Ingenic JZ47xx TCU driver
-> + */
-> +#ifndef __LINUX_CLK_INGENIC_TCU_H_
-> +#define __LINUX_CLK_INGENIC_TCU_H_
+> +++ b/Documentation/devicetree/bindings/i2c/i2c-qcom-geni.txt
+> @@ -0,0 +1,39 @@
+> +Qualcomm Technologies Inc. GENI based I2C Controller driver
 > +
-> +#include <linux/bitops.h>
-> +#include <linux/regmap.h>
+> +Required properties:
+> + - compatible: Should be:
+> +   * "qcom,i2c-geni.
+
+Only 1 version?
+
+> + - reg: Should contain QUP register address and length.
+> + - interrupts: Should contain I2C interrupt.
+> + - clocks: Serial engine core clock, and AHB clocks needed by the device.
+
+Are there really clocks for a firmware based device or these are just 
+clocks in the parent serial engine?
+
+> + - pinctrl-names/pinctrl-0/1: The GPIOs assigned to this core. The names
+> +   should be "active" and "sleep" for the pin confuguration when core is active
+> +   or when entering sleep state.
+> + - #address-cells: Should be <1> Address cells for i2c device address
+> + - #size-cells: Should be <0> as i2c addresses have no size component
+> + - qcom,wrapper-core: Wrapper QUP core containing this I2C controller.
+
+Probably these devices should be child nodes of the QUP core node.
+
 > +
-> +enum ingenic_tcu_reg {
-> +	REG_WDT_TDR	= 0x00,
-> +	REG_WDT_TCER	= 0x04,
-> +	REG_WDT_TCNT	= 0x08,
-> +	REG_WDT_TCSR	= 0x0c,
-> +	REG_TER		= 0x10,
-> +	REG_TESR	= 0x14,
-> +	REG_TECR	= 0x18,
-> +	REG_TSR		= 0x1c,
-> +	REG_TFR		= 0x20,
-> +	REG_TFSR	= 0x24,
-> +	REG_TFCR	= 0x28,
-> +	REG_TSSR	= 0x2c,
-> +	REG_TMR		= 0x30,
-> +	REG_TMSR	= 0x34,
-> +	REG_TMCR	= 0x38,
-> +	REG_TSCR	= 0x3c,
-> +	REG_TDFR0	= 0x40,
-> +	REG_TDHR0	= 0x44,
-> +	REG_TCNT0	= 0x48,
-> +	REG_TCSR0	= 0x4c,
-> +	REG_OST_DR	= 0xe0,
-> +	REG_OST_CNTL	= 0xe4,
-> +	REG_OST_CNTH	= 0xe8,
-> +	REG_OST_TCSR	= 0xec,
-> +	REG_TSTR	= 0xf0,
-> +	REG_TSTSR	= 0xf4,
-> +	REG_TSTCR	= 0xf8,
-> +	REG_OST_CNTHBUF	= 0xfc,
+> +Optional property:
+> + - qcom,clk-freq-out : Desired I2C bus clock frequency in Hz.
+> +   When missing default to 400000Hz.
+
+There's a standard property for this.
+
+> +
+> +Child nodes should conform to i2c bus binding.
+> +
+> +Example:
+> +
+> +i2c@a94000 {
+> +	compatible = "qcom,i2c-geni";
+> +	reg = <0xa94000 0x4000>;
+> +	interrupts = <GIC_SPI 358 0>;
+> +	clock-names = "se-clk", "m-ahb", "s-ahb";
+> +	clocks = <&clock_gcc GCC_QUPV3_WRAP0_S5_CLK>,
+> +		<&clock_gcc GCC_QUPV3_WRAP_0_M_AHB_CLK>,
+> +		<&clock_gcc GCC_QUPV3_WRAP_0_S_AHB_CLK>;
+> +	pinctrl-names = "default", "sleep";
+> +	pinctrl-0 = <&qup_1_i2c_5_active>;
+> +	pinctrl-1 = <&qup_1_i2c_5_sleep>;
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +	qcom,wrapper-core = <&qup_0>;
+> +	qcom,clk-freq-out = <400000>;
 > +};
-
-I don't see a need to have declare these as enums.
-
-> +#define TCSR_RESERVED_BITS		0x3f
-> +#define TCSR_PARENT_CLOCK_MASK		0x07
-> +#define TCSR_PRESCALE_LSB		3
-> +#define TCSR_PRESCALE_MASK		0x38
-> +
-> +#define TCSR_PWM_SD		BIT(9)  /* 0: Shutdown abruptly 1: gracefully */
-> +#define TCSR_PWM_INITL_HIGH	BIT(8)  /* Sets the initial output level */
-> +#define TCSR_PWM_EN		BIT(7)  /* PWM pin output enable */
-> +
-> +#define CHANNEL_STRIDE		0x10
-> +#define REG_TDFRc(c)		(REG_TDFR0 + ((c) * CHANNEL_STRIDE))
-> +#define REG_TDHRc(c)		(REG_TDHR0 + ((c) * CHANNEL_STRIDE))
-> +#define REG_TCNTc(c)		(REG_TCNT0 + ((c) * CHANNEL_STRIDE))
-> +#define REG_TCSRc(c)		(REG_TCSR0 + ((c) * CHANNEL_STRIDE))
-
-It'd be a good idea to namespace all of these pre-processed definitions.
-
-> +#endif /* __LINUX_CLK_INGENIC_TCU_H_ */
-
--- 
-Lee Jones
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+> -- 
+> Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+> 
