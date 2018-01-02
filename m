@@ -1,59 +1,83 @@
-From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Subject: [PATCH 7/7] ARM: dts: imx6ull: add UART8 support
-Date: Tue,  2 Jan 2018 17:42:23 +0100
-Message-ID: <20180102164223.15230-7-stefan@agner.ch>
+From: Stefan Agner <stefan@agner.ch>
+Subject: [PATCH 3/7] ARM: dts: imx6ull: add additional pinfunc defines for
+ i.MX 6ULL
+Date: Tue,  2 Jan 2018 17:42:19 +0100
+Message-ID: <20180102164223.15230-3-stefan@agner.ch>
 References: <20180102164223.15230-1-stefan@agner.ch>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180102164223.15230-1-stefan-XLVq0VzYD2Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
-Cc: fabio.estevam-3arQi8VN3Tc@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180102164223.15230-1-stefan@agner.ch>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: shawnguo@kernel.org, kernel@pengutronix.de
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Bai Ping <ping.bai@nxp.com>, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>, robh+dt@kernel.org, fabio.estevam@nxp.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-In i.MX 6ULL UART8 is part of the AIPS-3 memory map instead of
-AIPS-1. Clocks and interrupts remain the same.
+From: Bai Ping <ping.bai@nxp.com>
 
-Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+On i.MX 6ULL, the pin MUX and CTRL register of BOOT_MODEx and TAMPERx
+pins are available through IOMUXC_SNVS. Add additional pinfunc defines.
+
+Signed-off-by: Bai Ping <ping.bai@nxp.com>
+Signed-off-by: Stefan Agner <stefan@agner.ch>
 ---
- arch/arm/boot/dts/imx6ull.dtsi | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ arch/arm/boot/dts/imx6ull-pinfunc-snvs.h | 29 +++++++++++++++++++++++++++++
+ arch/arm/boot/dts/imx6ull.dtsi           |  1 +
+ 2 files changed, 30 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx6ull-pinfunc-snvs.h
 
+diff --git a/arch/arm/boot/dts/imx6ull-pinfunc-snvs.h b/arch/arm/boot/dts/imx6ull-pinfunc-snvs.h
+new file mode 100644
+index 000000000000..da3f412e4269
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6ull-pinfunc-snvs.h
+@@ -0,0 +1,29 @@
++/*
++ * Copyright (C) 2016 Freescale Semiconductor, Inc.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++#ifndef __DTS_IMX6ULL_PINFUNC_SNVS_H
++#define __DTS_IMX6ULL_PINFUNC_SNVS_H
++/*
++ * The pin function ID is a tuple of
++ * <mux_reg conf_reg input_reg mux_mode input_val>
++ */
++#define MX6ULL_PAD_BOOT_MODE0__GPIO5_IO10                          0x0000 0x0044 0x0000 0x5 0x0
++#define MX6ULL_PAD_BOOT_MODE1__GPIO5_IO11                          0x0004 0x0048 0x0000 0x5 0x0
++#define MX6ULL_PAD_SNVS_TAMPER0__GPIO5_IO00                        0x0008 0x004C 0x0000 0x5 0x0
++#define MX6ULL_PAD_SNVS_TAMPER1__GPIO5_IO01                        0x000C 0x0050 0x0000 0x5 0x0
++#define MX6ULL_PAD_SNVS_TAMPER2__GPIO5_IO02                        0x0010 0x0054 0x0000 0x5 0x0
++#define MX6ULL_PAD_SNVS_TAMPER3__GPIO5_IO03                        0x0014 0x0058 0x0000 0x5 0x0
++#define MX6ULL_PAD_SNVS_TAMPER4__GPIO5_IO04                        0x0018 0x005C 0x0000 0x5 0x0
++#define MX6ULL_PAD_SNVS_TAMPER5__GPIO5_IO05                        0x001C 0x0060 0x0000 0x5 0x0
++#define MX6ULL_PAD_SNVS_TAMPER6__GPIO5_IO06                        0x0020 0x0064 0x0000 0x5 0x0
++#define MX6ULL_PAD_SNVS_TAMPER7__GPIO5_IO07                        0x0024 0x0068 0x0000 0x5 0x0
++#define MX6ULL_PAD_SNVS_TAMPER8__GPIO5_IO08                        0x0028 0x006C 0x0000 0x5 0x0
++#define MX6ULL_PAD_SNVS_TAMPER9__GPIO5_IO09                        0x002C 0x0070 0x0000 0x5 0x0
++
++#endif /* __DTS_IMX6ULL_PINFUNC_SNVS_H */
++
 diff --git a/arch/arm/boot/dts/imx6ull.dtsi b/arch/arm/boot/dts/imx6ull.dtsi
-index bc2cd4fb8b12..571ddd71cdba 100644
+index 0c182917b863..a58c01dc15c3 100644
 --- a/arch/arm/boot/dts/imx6ull.dtsi
 +++ b/arch/arm/boot/dts/imx6ull.dtsi
-@@ -43,6 +43,9 @@
- #include "imx6ull-pinfunc.h"
- #include "imx6ull-pinfunc-snvs.h"
+@@ -41,3 +41,4 @@
  
-+/* Delete UART8 in AIPS-1 (i.MX6UL specific) */
-+/delete-node/ &uart8;
-+
- / {
- 	soc {
- 		aips3: aips-bus@2200000 {
-@@ -56,6 +59,17 @@
- 				compatible = "fsl,imx6ull-iomuxc-snvs";
- 				reg = <0x02290000 0x4000>;
- 			};
-+
-+			uart8: serial@2288000 {
-+				compatible = "fsl,imx6ul-uart",
-+					     "fsl,imx6q-uart";
-+				reg = <0x02288000 0x4000>;
-+				interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&clks IMX6UL_CLK_UART8_IPG>,
-+					 <&clks IMX6UL_CLK_UART8_SERIAL>;
-+				clock-names = "ipg", "per";
-+				status = "disabled";
-+			};
- 		};
- 	};
- };
+ #include "imx6ul.dtsi"
+ #include "imx6ull-pinfunc.h"
++#include "imx6ull-pinfunc-snvs.h"
 -- 
 2.15.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
