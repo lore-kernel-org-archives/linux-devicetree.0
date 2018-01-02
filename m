@@ -1,160 +1,38 @@
-From: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH 5/8] ARM: dts: keystone-k2hk: Move keystone_dsp_gpio to under device-state-control
-Date: Tue, 2 Jan 2018 11:01:59 -0600
-Message-ID: <20180102170202.15045-6-afd@ti.com>
-References: <20180102170202.15045-1-afd@ti.com>
+From: Mathieu Malaterre <malat@debian.org>
+Subject: Re: [PATCH v5 15/15] MIPS: ingenic: Initial GCW Zero support
+Date: Tue, 2 Jan 2018 18:04:12 +0100
+Message-ID: <CA+7wUsw0+dsvmY3wCq=VcfRsovhPPLEJjyEwV5pYUWLcC3i2dA@mail.gmail.com>
+References: <20180102150848.11314-1-paul@crapouillou.net> <20180102150848.11314-15-paul@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180102170202.15045-1-afd-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Andrew F . Davis" <afd-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20180102150848.11314-15-paul@crapouillou.net>
+Sender: linux-clk-owner@vger.kernel.org
+To: Paul Cercueil <paul@crapouillou.net>
+Cc: Ralf Baechle <ralf@linux-mips.org>, Maarten ter Huurne <maarten@treewalker.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The keystone_dsp_gpio nodes describe devices that are a component of the
-device state control module. As such, they should not be a member of soc0
-bus but instead sub-nodes of device-state-control.
+On Tue, Jan 2, 2018 at 4:08 PM, Paul Cercueil <paul@crapouillou.net> wrote:
+> The GCW Zero (http://www.gcw-zero.com) is a retro-gaming focused
+> handheld game console, successfully kickstarted in ~2012, running Linux.
+>
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> ---
+>  arch/mips/boot/dts/ingenic/Makefile |  1 +
+>  arch/mips/boot/dts/ingenic/gcw0.dts | 61 +++++++++++++++++++++++++++++++++++++
+>  arch/mips/configs/gcw0_defconfig    | 27 ++++++++++++++++
+>  arch/mips/jz4740/Kconfig            |  4 +++
+>  arch/mips/jz4740/boards.c           |  1 +
+>  5 files changed, 94 insertions(+)
+>  create mode 100644 arch/mips/boot/dts/ingenic/gcw0.dts
+>  create mode 100644 arch/mips/configs/gcw0_defconfig
+>
+>  v2: No change
+>  v3: No change
+>  v4: No change
+>  v5: Use SPDX license identifier
+>      Drop custom CROSS_COMPILE from defconfig
 
-This move also fixes warnings about not having a reg property. Now
-that this is a sub-node of device-state-control, a syscon type node,
-we add this reg property but relative to the syscon base, this way
-when the dt-binding/driver are updated we can drop the non-standard
-gpio,syscon-dev property completely and simply use get_resource() in
-the driver.
+Thanks for removing CROSS_COMPILE.
 
-Signed-off-by: Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org>
-Acked-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
----
- arch/arm/boot/dts/keystone-k2hk.dtsi | 104 +++++++++++++++++++----------------
- 1 file changed, 57 insertions(+), 47 deletions(-)
-
-diff --git a/arch/arm/boot/dts/keystone-k2hk.dtsi b/arch/arm/boot/dts/keystone-k2hk.dtsi
-index ed59474522cb..ca0f198ba627 100644
---- a/arch/arm/boot/dts/keystone-k2hk.dtsi
-+++ b/arch/arm/boot/dts/keystone-k2hk.dtsi
-@@ -87,60 +87,70 @@
- 			};
- 		};
- 
--		dspgpio0: keystone_dsp_gpio@2620240 {
--			compatible = "ti,keystone-dsp-gpio";
--			gpio-controller;
--			#gpio-cells = <2>;
--			gpio,syscon-dev = <&devctrl 0x240>;
--		};
-+		devctrl: device-state-control@2620000 {
-+			dspgpio0: keystone_dsp_gpio@240 {
-+				compatible = "ti,keystone-dsp-gpio";
-+				reg = <0x240 0x4>;
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				gpio,syscon-dev = <&devctrl 0x240>;
-+			};
- 
--		dspgpio1: keystone_dsp_gpio@2620244 {
--			compatible = "ti,keystone-dsp-gpio";
--			gpio-controller;
--			#gpio-cells = <2>;
--			gpio,syscon-dev = <&devctrl 0x244>;
--		};
-+			dspgpio1: keystone_dsp_gpio@244 {
-+				compatible = "ti,keystone-dsp-gpio";
-+				reg = <0x244 0x4>;
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				gpio,syscon-dev = <&devctrl 0x244>;
-+			};
- 
--		dspgpio2: keystone_dsp_gpio@2620248 {
--			compatible = "ti,keystone-dsp-gpio";
--			gpio-controller;
--			#gpio-cells = <2>;
--			gpio,syscon-dev = <&devctrl 0x248>;
--		};
-+			dspgpio2: keystone_dsp_gpio@248 {
-+				compatible = "ti,keystone-dsp-gpio";
-+				reg = <0x248 0x4>;
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				gpio,syscon-dev = <&devctrl 0x248>;
-+			};
- 
--		dspgpio3: keystone_dsp_gpio@262024c {
--			compatible = "ti,keystone-dsp-gpio";
--			gpio-controller;
--			#gpio-cells = <2>;
--			gpio,syscon-dev = <&devctrl 0x24c>;
--		};
-+			dspgpio3: keystone_dsp_gpio@24c {
-+				compatible = "ti,keystone-dsp-gpio";
-+				reg = <0x24c 0x4>;
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				gpio,syscon-dev = <&devctrl 0x24c>;
-+			};
- 
--		dspgpio4: keystone_dsp_gpio@2620250 {
--			compatible = "ti,keystone-dsp-gpio";
--			gpio-controller;
--			#gpio-cells = <2>;
--			gpio,syscon-dev = <&devctrl 0x250>;
--		};
-+			dspgpio4: keystone_dsp_gpio@250 {
-+				compatible = "ti,keystone-dsp-gpio";
-+				reg = <0x250 0x4>;
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				gpio,syscon-dev = <&devctrl 0x250>;
-+			};
- 
--		dspgpio5: keystone_dsp_gpio@2620254 {
--			compatible = "ti,keystone-dsp-gpio";
--			gpio-controller;
--			#gpio-cells = <2>;
--			gpio,syscon-dev = <&devctrl 0x254>;
--		};
-+			dspgpio5: keystone_dsp_gpio@254 {
-+				compatible = "ti,keystone-dsp-gpio";
-+				reg = <0x254 0x4>;
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				gpio,syscon-dev = <&devctrl 0x254>;
-+			};
- 
--		dspgpio6: keystone_dsp_gpio@2620258 {
--			compatible = "ti,keystone-dsp-gpio";
--			gpio-controller;
--			#gpio-cells = <2>;
--			gpio,syscon-dev = <&devctrl 0x258>;
--		};
-+			dspgpio6: keystone_dsp_gpio@258 {
-+				compatible = "ti,keystone-dsp-gpio";
-+				reg = <0x258 0x4>;
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				gpio,syscon-dev = <&devctrl 0x258>;
-+			};
- 
--		dspgpio7: keystone_dsp_gpio@262025c {
--			compatible = "ti,keystone-dsp-gpio";
--			gpio-controller;
--			#gpio-cells = <2>;
--			gpio,syscon-dev = <&devctrl 0x25c>;
-+			dspgpio7: keystone_dsp_gpio@25c {
-+				compatible = "ti,keystone-dsp-gpio";
-+				reg = <0x25c 0x4>;
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				gpio,syscon-dev = <&devctrl 0x25c>;
-+			};
- 		};
- 
- 		dsp0: dsp@10800000 {
--- 
-2.15.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Mathieu Malaterre <malat@debian.org>
