@@ -1,83 +1,45 @@
 From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH 3/7] ARM: dts: imx6ull: add additional pinfunc defines for
- i.MX 6ULL
-Date: Tue,  2 Jan 2018 17:42:19 +0100
-Message-ID: <20180102164223.15230-3-stefan@agner.ch>
+Subject: [PATCH 5/7] ARM: dts: imx6ul: add ARM architected timer
+Date: Tue,  2 Jan 2018 17:42:21 +0100
+Message-ID: <20180102164223.15230-5-stefan@agner.ch>
 References: <20180102164223.15230-1-stefan@agner.ch>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180102164223.15230-1-stefan@agner.ch>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: shawnguo@kernel.org, kernel@pengutronix.de
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Bai Ping <ping.bai@nxp.com>, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>, robh+dt@kernel.org, fabio.estevam@nxp.com, linux-arm-kernel@lists.infradead.org
+Cc: fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
 List-Id: devicetree@vger.kernel.org
 
-From: Bai Ping <ping.bai@nxp.com>
+Add per-core ARM architected timer. Unfortunately bootloaders (U-Boot)
+currently do not make the necessary initialization. Also specifing the
+clock manually using the clock-frequency property seems not to help.
+Therefor leave the timer disabled by default for now.
 
-On i.MX 6ULL, the pin MUX and CTRL register of BOOT_MODEx and TAMPERx
-pins are available through IOMUXC_SNVS. Add additional pinfunc defines.
-
-Signed-off-by: Bai Ping <ping.bai@nxp.com>
 Signed-off-by: Stefan Agner <stefan@agner.ch>
 ---
- arch/arm/boot/dts/imx6ull-pinfunc-snvs.h | 29 +++++++++++++++++++++++++++++
- arch/arm/boot/dts/imx6ull.dtsi           |  1 +
- 2 files changed, 30 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6ull-pinfunc-snvs.h
+ arch/arm/boot/dts/imx6ul.dtsi | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx6ull-pinfunc-snvs.h b/arch/arm/boot/dts/imx6ull-pinfunc-snvs.h
-new file mode 100644
-index 000000000000..da3f412e4269
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6ull-pinfunc-snvs.h
-@@ -0,0 +1,29 @@
-+/*
-+ * Copyright (C) 2016 Freescale Semiconductor, Inc.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#ifndef __DTS_IMX6ULL_PINFUNC_SNVS_H
-+#define __DTS_IMX6ULL_PINFUNC_SNVS_H
-+/*
-+ * The pin function ID is a tuple of
-+ * <mux_reg conf_reg input_reg mux_mode input_val>
-+ */
-+#define MX6ULL_PAD_BOOT_MODE0__GPIO5_IO10                          0x0000 0x0044 0x0000 0x5 0x0
-+#define MX6ULL_PAD_BOOT_MODE1__GPIO5_IO11                          0x0004 0x0048 0x0000 0x5 0x0
-+#define MX6ULL_PAD_SNVS_TAMPER0__GPIO5_IO00                        0x0008 0x004C 0x0000 0x5 0x0
-+#define MX6ULL_PAD_SNVS_TAMPER1__GPIO5_IO01                        0x000C 0x0050 0x0000 0x5 0x0
-+#define MX6ULL_PAD_SNVS_TAMPER2__GPIO5_IO02                        0x0010 0x0054 0x0000 0x5 0x0
-+#define MX6ULL_PAD_SNVS_TAMPER3__GPIO5_IO03                        0x0014 0x0058 0x0000 0x5 0x0
-+#define MX6ULL_PAD_SNVS_TAMPER4__GPIO5_IO04                        0x0018 0x005C 0x0000 0x5 0x0
-+#define MX6ULL_PAD_SNVS_TAMPER5__GPIO5_IO05                        0x001C 0x0060 0x0000 0x5 0x0
-+#define MX6ULL_PAD_SNVS_TAMPER6__GPIO5_IO06                        0x0020 0x0064 0x0000 0x5 0x0
-+#define MX6ULL_PAD_SNVS_TAMPER7__GPIO5_IO07                        0x0024 0x0068 0x0000 0x5 0x0
-+#define MX6ULL_PAD_SNVS_TAMPER8__GPIO5_IO08                        0x0028 0x006C 0x0000 0x5 0x0
-+#define MX6ULL_PAD_SNVS_TAMPER9__GPIO5_IO09                        0x002C 0x0070 0x0000 0x5 0x0
-+
-+#endif /* __DTS_IMX6ULL_PINFUNC_SNVS_H */
-+
-diff --git a/arch/arm/boot/dts/imx6ull.dtsi b/arch/arm/boot/dts/imx6ull.dtsi
-index 0c182917b863..a58c01dc15c3 100644
---- a/arch/arm/boot/dts/imx6ull.dtsi
-+++ b/arch/arm/boot/dts/imx6ull.dtsi
-@@ -41,3 +41,4 @@
+diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
+index 993fbdbdd506..4d76923e8f44 100644
+--- a/arch/arm/boot/dts/imx6ul.dtsi
++++ b/arch/arm/boot/dts/imx6ul.dtsi
+@@ -110,6 +110,16 @@
+ 		      <0x00a06000 0x2000>;
+ 	};
  
- #include "imx6ul.dtsi"
- #include "imx6ull-pinfunc.h"
-+#include "imx6ull-pinfunc-snvs.h"
++	timer {
++		compatible = "arm,armv7-timer";
++		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
++			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
++			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
++			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
++		interrupt-parent = <&intc>;
++		status = "disabled";
++	};
++
+ 	ckil: clock-cli {
+ 		compatible = "fixed-clock";
+ 		#clock-cells = <0>;
 -- 
 2.15.1
