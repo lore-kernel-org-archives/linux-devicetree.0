@@ -1,71 +1,169 @@
-Return-Path: <SRS0=v5Ay=EG=free-electrons.com=gregory.clement@kernel.org>
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH v3 4/7] mtd: nand: use reworked NAND controller driver with Marvell EBU SoCs
-References: <20180109103637.23798-1-miquel.raynal@free-electrons.com>
-	<20180109103637.23798-5-miquel.raynal@free-electrons.com>
-Date: Thu, 11 Jan 2018 11:16:07 +0100
-In-Reply-To: <20180109103637.23798-5-miquel.raynal@free-electrons.com> (Miquel
-	Raynal's message of "Tue, 9 Jan 2018 11:36:34 +0100")
-Message-ID: <8760887law.fsf@free-electrons.com>
+Return-Path: <SRS0=tbkn=D6=nxp.com=anson.huang@kernel.org>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: Re: [PATCH 1/2] ARM: dts: imx6ul: add 696MHz operating point
+Date: Tue, 2 Jan 2018 15:12:50 +0000
+Message-ID: <E5B0DB53-D0E5-430B-BBCC-EF3899C70DAE@nxp.com>
+References: <1514912859-17691-1-git-send-email-Anson.Huang@nxp.com>,<CAOMZO5C-qgyCJPBHYwjD9zjHqu4eoGDfoB5-BcFdnvSy01MKiQ@mail.gmail.com>
+In-Reply-To: <CAOMZO5C-qgyCJPBHYwjD9zjHqu4eoGDfoB5-BcFdnvSy01MKiQ@mail.gmail.com>
+Content-Language: zh-CN
+Content-Type: multipart/alternative;
+	boundary="_000_E5B0DB53D0E5430BBBCCEF3899C70DAEnxpcom_"
 MIME-Version: 1.0
-Content-Type: text/plain
-To: Miquel Raynal <miquel.raynal@free-electrons.com>
-Cc: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Russell King <linux@armlinux.org.uk>, Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, Eric Miao <eric.y.miao@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Antoine Tenart <antoine.tenart@free-electron>, Nadav Haklai <nadavh@marvell.com>, Ofer Heifetz <oferh@marvell.com>, Hanna Hawa <hannah@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>, Willy Tarreau <w@1wt.eu>, Sean Nyekjaer <sean.nyekjaer@prevas.dk>
+To: Fabio Estevam <festevam@gmail.com>
+Cc: "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS  <devicetree@vger.kernel.org>, linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "A.s. Dong  <aisheng.dong@nxp.com>, Jacky Bai <ping.bai@nxp.com>, viresh kumar" <viresh.kumar@linaro.org>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "Russell King - ARM Linux  <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Miquel,
- 
- On mar., janv. 09 2018, Miquel Raynal <miquel.raynal@free-electrons.com> wrote:
+--_000_E5B0DB53D0E5430BBBCCEF3899C70DAEnxpcom_
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 
-> Choose to compile and embed marvell_nand.c as NAND controller driver
-> instead of the legacy pxa3xx_nand.c for platforms with Marvell EBU
-> SoCs.
->
-> Signed-off-by: Miquel Raynal <miquel.raynal@free-electrons.com>
+SGksIEZhYmlvDQoNCkZyb20gQW5zb24ncyBpUGhvbmUgNg0KDQoNCuWcqCAyMDE45bm0MeaciDLm
+l6XvvIwyMzowM++8jEZhYmlvIEVzdGV2YW0gPGZlc3RldmFtQGdtYWlsLmNvbTxtYWlsdG86ZmVz
+dGV2YW1AZ21haWwuY29tPj4g5YaZ6YGT77yaDQoNCkhpIEFuc29uLA0KDQpPbiBUdWUsIEphbiAy
+LCAyMDE4IGF0IDM6MDcgUE0sIEFuc29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPG1haWx0
+bzpBbnNvbi5IdWFuZ0BueHAuY29tPj4gd3JvdGU6DQpBZGQgNjk2TUh6IG9wZXJhdGluZyBwb2lu
+dCBhY2NvcmRpbmcgdG8gZGF0YXNoZWV0DQooUmV2LiAwLCAxMi8yMDE1KS4NCg0KVGhlcmUgaXMg
+YSBuZXdlciB2ZXJzaW9uIGZyb20gMDUvMjAxNzoNCmh0dHBzOi8vZW1lYTAxLnNhZmVsaW5rcy5w
+cm90ZWN0aW9uLm91dGxvb2suY29tLz91cmw9aHR0cHMlM0ElMkYlMkZ3d3cubnhwLmNvbSUyRmRv
+Y3MlMkZlbiUyRmRhdGEtc2hlZXQlMkZJTVg2VUxBRUMucGRmJmRhdGE9MDIlN0MwMSU3Q0Fuc29u
+Lkh1YW5nJTQwbnhwLmNvbSU3Q2I0ZDUyZjczMDc1ODRkNDZhNTYxMDhkNTUxZjFlZGNjJTdDNjg2
+ZWExZDNiYzJiNGM2ZmE5MmNkOTljNWMzMDE2MzUlN0MwJTdDMSU3QzYzNjUwNTAyMTg3NjQ4Nzk2
+NiZzZGF0YT14bVNHRFk5R01ZTTduVzNSN21Ialhyc0NkcHBqMmtTNFRSS3FXTVpUZEFJJTNEJnJl
+c2VydmVkPTANCg0KVGhlIDY5Nk0gaXMgaW50cm9kdWNlZCBzaW5jZSBSZXYgMCwgc28gZG8geW91
+IHRoaW5rIEkgc2hvdWxkIHVzZSB0aGUgbGF0ZXN0IHZlcnNpb24gaGVyZT8NCg0KDQoNClNpZ25l
+ZC1vZmYtYnk6IEFuc29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPG1haWx0bzpBbnNvbi5I
+dWFuZ0BueHAuY29tPj4NCi0tLQ0KYXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsLmR0c2kgfCAyICsr
+DQoxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspDQoNCmRpZmYgLS1naXQgYS9hcmNoL2Fy
+bS9ib290L2R0cy9pbXg2dWwuZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZ1bC5kdHNpDQpp
+bmRleCBlMGI0YTQ2Li44NmIzMjUxIDEwMDY0NA0KLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14
+NnVsLmR0c2kNCisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZ1bC5kdHNpDQpAQCAtNjgsMTIg
+KzY4LDE0IEBADQogICAgICAgICAgICAgICAgICAgICAgIGNsb2NrLWxhdGVuY3kgPSA8NjEwMzY+
+OyAvKiB0d28gQ0xLMzIgcGVyaW9kcyAqLw0KICAgICAgICAgICAgICAgICAgICAgICBvcGVyYXRp
+bmctcG9pbnRzID0gPA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC8qIGtIeiAgdVYg
+Ki8NCisgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgNjk2MDAwICAxMjc1MDAwDQogICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgNTI4MDAwICAxMTc1MDAwDQogICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgMzk2MDAwICAxMDI1MDAwDQogICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgMTk4MDAwICA5NTAwMDANCjsNCiAgICAgICAgICAgICAgICAgICAgICAgZnNsLHNv
+Yy1vcGVyYXRpbmctcG9pbnRzID0gPA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC8q
+IEtIeiAgdVYgKi8NCisgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgNjk2MDAwICAxMjc1
+MDAwDQoNCldoeSAxLjI3NVY/DQoNCkFjY29yZGluZyB0byB0aGUgZGF0YXNoZWV0LCB0aGUgbWlu
+aW11bSB2YWx1ZSBmb3IgVkREX1NPQ19DQVAgaXMgMS4xNVYNCmZvciBhbGwgZnJlcXVlbmNpZXMu
+DQoNCkFkZGluZyAyNW1WIG9mIG1hcmdpbiBsZWFkcyB0byAxLjE3NVYuDQoNClRoZXJlIGlzIGEg
+Y29tbWVudCBpbiBWRERfQVJNLCBWRERfU09DIG11c3QgTk9UIGxvd2VyIHRoYW4gVkREX0FSTS4N
+Cg0KT3V0cHV0IHZvbHRhZ2UgbXVzdCBiZSBzZXQgdG8gdGhlIGZvbGxvd2luZyBydWxlczoNCuKA
+oiBWRERfQVJNX0NBUCA8PSBWRERfU09DX0NBUA0K4oCiIFZERF9TT0NfQ0FQIC0gVkREX0FSTV9D
+QVAgPCAzMzAgbVYNCg0KQW5zb24uDQo=
 
-Acked-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+--_000_E5B0DB53D0E5430BBBCCEF3899C70DAEnxpcom_
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: base64
 
-Thanks,
+PGh0bWw+DQo8aGVhZD4NCjxtZXRhIGh0dHAtZXF1aXY9IkNvbnRlbnQtVHlwZSIgY29udGVudD0i
+dGV4dC9odG1sOyBjaGFyc2V0PXV0Zi04Ij4NCjwvaGVhZD4NCjxib2R5IGRpcj0iYXV0byI+DQpI
+aSwgRmFiaW88YnI+DQo8YnI+DQo8ZGl2IGlkPSJBcHBsZU1haWxTaWduYXR1cmUiPkZyb20gQW5z
+b24ncyBpUGhvbmUgNg0KPGRpdj4NCjxkaXY+PGJyPg0KPC9kaXY+DQo8L2Rpdj4NCjwvZGl2Pg0K
+PGRpdj48YnI+DQrlnKggMjAxOOW5tDHmnIgy5pel77yMMjM6MDPvvIxGYWJpbyBFc3RldmFtICZs
+dDs8YSBocmVmPSJtYWlsdG86ZmVzdGV2YW1AZ21haWwuY29tIj5mZXN0ZXZhbUBnbWFpbC5jb208
+L2E+Jmd0OyDlhpnpgZPvvJo8YnI+DQo8YnI+DQo8L2Rpdj4NCjxibG9ja3F1b3RlIHR5cGU9ImNp
+dGUiPg0KPGRpdj48c3Bhbj5IaSBBbnNvbiw8L3NwYW4+PGJyPg0KPHNwYW4+PC9zcGFuPjxicj4N
+CjxzcGFuPk9uIFR1ZSwgSmFuIDIsIDIwMTggYXQgMzowNyBQTSwgQW5zb24gSHVhbmcgJmx0Ozxh
+IGhyZWY9Im1haWx0bzpBbnNvbi5IdWFuZ0BueHAuY29tIj5BbnNvbi5IdWFuZ0BueHAuY29tPC9h
+PiZndDsgd3JvdGU6PC9zcGFuPjxicj4NCjxibG9ja3F1b3RlIHR5cGU9ImNpdGUiPjxzcGFuPkFk
+ZCA2OTZNSHogb3BlcmF0aW5nIHBvaW50IGFjY29yZGluZyB0byBkYXRhc2hlZXQ8L3NwYW4+PGJy
+Pg0KPC9ibG9ja3F1b3RlPg0KPGJsb2NrcXVvdGUgdHlwZT0iY2l0ZSI+PHNwYW4+KFJldi4gMCwg
+MTIvMjAxNSkuPC9zcGFuPjxicj4NCjwvYmxvY2txdW90ZT4NCjxzcGFuPjwvc3Bhbj48YnI+DQo8
+c3Bhbj5UaGVyZSBpcyBhIG5ld2VyIHZlcnNpb24gZnJvbSAwNS8yMDE3Ojwvc3Bhbj48YnI+DQo8
+c3Bhbj48YSBocmVmPSJodHRwczovL2VtZWEwMS5zYWZlbGlua3MucHJvdGVjdGlvbi5vdXRsb29r
+LmNvbS8/dXJsPWh0dHBzJTNBJTJGJTJGd3d3Lm54cC5jb20lMkZkb2NzJTJGZW4lMkZkYXRhLXNo
+ZWV0JTJGSU1YNlVMQUVDLnBkZiZhbXA7ZGF0YT0wMiU3QzAxJTdDQW5zb24uSHVhbmclNDBueHAu
+Y29tJTdDYjRkNTJmNzMwNzU4NGQ0NmE1NjEwOGQ1NTFmMWVkY2MlN0M2ODZlYTFkM2JjMmI0YzZm
+YTkyY2Q5OWM1YzMwMTYzNSU3QzAlN0MxJTdDNjM2NTA1MDIxODc2NDg3OTY2JmFtcDtzZGF0YT14
+bVNHRFk5R01ZTTduVzNSN21Ialhyc0NkcHBqMmtTNFRSS3FXTVpUZEFJJTNEJmFtcDtyZXNlcnZl
+ZD0wIj5odHRwczovL2VtZWEwMS5zYWZlbGlua3MucHJvdGVjdGlvbi5vdXRsb29rLmNvbS8/dXJs
+PWh0dHBzJTNBJTJGJTJGd3d3Lm54cC5jb20lMkZkb2NzJTJGZW4lMkZkYXRhLXNoZWV0JTJGSU1Y
+NlVMQUVDLnBkZiZhbXA7ZGF0YT0wMiU3QzAxJTdDQW5zb24uSHVhbmclNDBueHAuY29tJTdDYjRk
+NTJmNzMwNzU4NGQ0NmE1NjEwOGQ1NTFmMWVkY2MlN0M2ODZlYTFkM2JjMmI0YzZmYTkyY2Q5OWM1
+YzMwMTYzNSU3QzAlN0MxJTdDNjM2NTA1MDIxODc2NDg3OTY2JmFtcDtzZGF0YT14bVNHRFk5R01Z
+TTduVzNSN21Ialhyc0NkcHBqMmtTNFRSS3FXTVpUZEFJJTNEJmFtcDtyZXNlcnZlZD0wPC9hPjwv
+c3Bhbj48YnI+DQo8c3Bhbj48L3NwYW4+PGJyPg0KPC9kaXY+DQo8L2Jsb2NrcXVvdGU+DQo8ZGl2
+PlRoZSA2OTZNIGlzIGludHJvZHVjZWQgc2luY2UgUmV2IDAsIHNvIGRvIHlvdSB0aGluayBJIHNo
+b3VsZCB1c2UgdGhlIGxhdGVzdCB2ZXJzaW9uIGhlcmU/PC9kaXY+DQo8ZGl2Pjxicj4NCjwvZGl2
+Pg0KPGJyPg0KPGJsb2NrcXVvdGUgdHlwZT0iY2l0ZSI+DQo8ZGl2Pg0KPGJsb2NrcXVvdGUgdHlw
+ZT0iY2l0ZSI+PHNwYW4+PC9zcGFuPjxicj4NCjwvYmxvY2txdW90ZT4NCjxibG9ja3F1b3RlIHR5
+cGU9ImNpdGUiPjxzcGFuPlNpZ25lZC1vZmYtYnk6IEFuc29uIEh1YW5nICZsdDs8YSBocmVmPSJt
+YWlsdG86QW5zb24uSHVhbmdAbnhwLmNvbSI+QW5zb24uSHVhbmdAbnhwLmNvbTwvYT4mZ3Q7PC9z
+cGFuPjxicj4NCjwvYmxvY2txdW90ZT4NCjxibG9ja3F1b3RlIHR5cGU9ImNpdGUiPjxzcGFuPi0t
+LTwvc3Bhbj48YnI+DQo8L2Jsb2NrcXVvdGU+DQo8YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48c3Bh
+bj5hcmNoL2FybS9ib290L2R0cy9pbXg2dWwuZHRzaSB8IDIgJiM0MzsmIzQzOzwvc3Bhbj48YnI+
+DQo8L2Jsb2NrcXVvdGU+DQo8YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48c3Bhbj4xIGZpbGUgY2hh
+bmdlZCwgMiBpbnNlcnRpb25zKCYjNDM7KTwvc3Bhbj48YnI+DQo8L2Jsb2NrcXVvdGU+DQo8Ymxv
+Y2txdW90ZSB0eXBlPSJjaXRlIj48c3Bhbj48L3NwYW4+PGJyPg0KPC9ibG9ja3F1b3RlPg0KPGJs
+b2NrcXVvdGUgdHlwZT0iY2l0ZSI+PHNwYW4+ZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRz
+L2lteDZ1bC5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsLmR0c2k8L3NwYW4+PGJyPg0K
+PC9ibG9ja3F1b3RlPg0KPGJsb2NrcXVvdGUgdHlwZT0iY2l0ZSI+PHNwYW4+aW5kZXggZTBiNGE0
+Ni4uODZiMzI1MSAxMDA2NDQ8L3NwYW4+PGJyPg0KPC9ibG9ja3F1b3RlPg0KPGJsb2NrcXVvdGUg
+dHlwZT0iY2l0ZSI+PHNwYW4+LS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsLmR0c2k8L3Nw
+YW4+PGJyPg0KPC9ibG9ja3F1b3RlPg0KPGJsb2NrcXVvdGUgdHlwZT0iY2l0ZSI+PHNwYW4+JiM0
+MzsmIzQzOyYjNDM7IGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsLmR0c2k8L3NwYW4+PGJyPg0K
+PC9ibG9ja3F1b3RlPg0KPGJsb2NrcXVvdGUgdHlwZT0iY2l0ZSI+PHNwYW4+QEAgLTY4LDEyICYj
+NDM7NjgsMTQgQEA8L3NwYW4+PGJyPg0KPC9ibG9ja3F1b3RlPg0KPGJsb2NrcXVvdGUgdHlwZT0i
+Y2l0ZSI+PHNwYW4+Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5i
+c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
+Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Y2xvY2stbGF0ZW5jeSA9ICZsdDs2
+MTAzNiZndDs7IC8qIHR3byBDTEszMiBwZXJpb2RzICovPC9zcGFuPjxicj4NCjwvYmxvY2txdW90
+ZT4NCjxibG9ja3F1b3RlIHR5cGU9ImNpdGUiPjxzcGFuPiZuYnNwOyZuYnNwOyZuYnNwOyZuYnNw
+OyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZu
+YnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNw
+O29wZXJhdGluZy1wb2ludHMgPSAmbHQ7PC9zcGFuPjxicj4NCjwvYmxvY2txdW90ZT4NCjxibG9j
+a3F1b3RlIHR5cGU9ImNpdGUiPjxzcGFuPiZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZu
+YnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNw
+OyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZu
+YnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOy8qIGtIeiAmbmJzcDt1ViAq
+Lzwvc3Bhbj48YnI+DQo8L2Jsb2NrcXVvdGU+DQo8YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48c3Bh
+bj4mIzQzOyAmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsm
+bmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJz
+cDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsm
+bmJzcDsmbmJzcDsmbmJzcDs2OTYwMDAgJm5ic3A7MTI3NTAwMDwvc3Bhbj48YnI+DQo8L2Jsb2Nr
+cXVvdGU+DQo8YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48c3Bhbj4mbmJzcDsmbmJzcDsmbmJzcDsm
+bmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJz
+cDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsm
+bmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDs1Mjgw
+MDAgJm5ic3A7MTE3NTAwMDwvc3Bhbj48YnI+DQo8L2Jsb2NrcXVvdGU+DQo8YmxvY2txdW90ZSB0
+eXBlPSJjaXRlIj48c3Bhbj4mbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJz
+cDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsm
+bmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJz
+cDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDszOTYwMDAgJm5ic3A7MTAyNTAwMDwvc3Bh
+bj48YnI+DQo8L2Jsb2NrcXVvdGU+DQo8YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48c3Bhbj4mbmJz
+cDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsm
+bmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJz
+cDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsm
+bmJzcDsmbmJzcDsxOTgwMDAgJm5ic3A7OTUwMDAwPC9zcGFuPjxicj4NCjwvYmxvY2txdW90ZT4N
+CjxibG9ja3F1b3RlIHR5cGU9ImNpdGUiPg0KPGJsb2NrcXVvdGUgdHlwZT0iY2l0ZSI+PHNwYW4+
+Ozwvc3Bhbj48YnI+DQo8L2Jsb2NrcXVvdGU+DQo8L2Jsb2NrcXVvdGU+DQo8YmxvY2txdW90ZSB0
+eXBlPSJjaXRlIj48c3Bhbj4mbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJz
+cDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsm
+bmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDtmc2wsc29jLW9wZXJhdGlu
+Zy1wb2ludHMgPSAmbHQ7PC9zcGFuPjxicj4NCjwvYmxvY2txdW90ZT4NCjxibG9ja3F1b3RlIHR5
+cGU9ImNpdGUiPjxzcGFuPiZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNw
+OyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZu
+YnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNw
+OyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOy8qIEtIeiAmbmJzcDt1ViAqLzwvc3Bhbj48
+YnI+DQo8L2Jsb2NrcXVvdGU+DQo8YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48c3Bhbj4mIzQzOyAm
+bmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJz
+cDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsm
+bmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJz
+cDsmbmJzcDs2OTYwMDAgJm5ic3A7MTI3NTAwMDwvc3Bhbj48YnI+DQo8L2Jsb2NrcXVvdGU+DQo8
+c3Bhbj48L3NwYW4+PGJyPg0KPHNwYW4+V2h5IDEuMjc1Vj88L3NwYW4+PGJyPg0KPHNwYW4+PC9z
+cGFuPjxicj4NCjxzcGFuPkFjY29yZGluZyB0byB0aGUgZGF0YXNoZWV0LCB0aGUgbWluaW11bSB2
+YWx1ZSBmb3IgVkREX1NPQ19DQVAgaXMgMS4xNVY8L3NwYW4+PGJyPg0KPHNwYW4+Zm9yIGFsbCBm
+cmVxdWVuY2llcy48L3NwYW4+PGJyPg0KPHNwYW4+PC9zcGFuPjxicj4NCjxzcGFuPkFkZGluZyAy
+NW1WIG9mIG1hcmdpbiBsZWFkcyB0byAxLjE3NVYuPC9zcGFuPjxicj4NCjwvZGl2Pg0KPC9ibG9j
+a3F1b3RlPg0KPGJyPg0KPGRpdj5UaGVyZSBpcyBhIGNvbW1lbnQgaW4gVkREX0FSTSwgVkREX1NP
+QyBtdXN0IE5PVCBsb3dlciB0aGFuIFZERF9BUk0uPC9kaXY+DQo8ZGl2Pjxicj4NCjwvZGl2Pg0K
+PGRpdj4NCjxkaXY+T3V0cHV0IHZvbHRhZ2UgbXVzdCBiZSBzZXQgdG8gdGhlIGZvbGxvd2luZyBy
+dWxlczo8L2Rpdj4NCjxkaXY+4oCiIFZERF9BUk1fQ0FQICZsdDs9IFZERF9TT0NfQ0FQPC9kaXY+
+DQo8ZGl2PuKAoiBWRERfU09DX0NBUCAtIFZERF9BUk1fQ0FQICZsdDsgMzMwIG1WPC9kaXY+DQo8
+L2Rpdj4NCjxkaXY+PGJyPg0KPC9kaXY+DQo8ZGl2PkFuc29uLjwvZGl2Pg0KPC9ib2R5Pg0KPC9o
+dG1sPg0K
 
-Gregory
-
-> ---
->  arch/arm/configs/mvebu_v7_defconfig | 2 +-
->  arch/arm64/configs/defconfig        | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/arm/configs/mvebu_v7_defconfig b/arch/arm/configs/mvebu_v7_defconfig
-> index 69553704f2dc..4b6e4fd47e5d 100644
-> --- a/arch/arm/configs/mvebu_v7_defconfig
-> +++ b/arch/arm/configs/mvebu_v7_defconfig
-> @@ -57,7 +57,7 @@ CONFIG_MTD_CFI_STAA=y
->  CONFIG_MTD_PHYSMAP_OF=y
->  CONFIG_MTD_M25P80=y
->  CONFIG_MTD_NAND=y
-> -CONFIG_MTD_NAND_PXA3xx=y
-> +CONFIG_MTD_NAND_MARVELL=y
->  CONFIG_MTD_SPI_NOR=y
->  CONFIG_SRAM=y
->  CONFIG_MTD_UBI=y
-> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-> index 6356c6da34ea..b20fa9b31efe 100644
-> --- a/arch/arm64/configs/defconfig
-> +++ b/arch/arm64/configs/defconfig
-> @@ -161,7 +161,7 @@ CONFIG_MTD_BLOCK=y
->  CONFIG_MTD_M25P80=y
->  CONFIG_MTD_NAND=y
->  CONFIG_MTD_NAND_DENALI_DT=y
-> -CONFIG_MTD_NAND_PXA3xx=y
-> +CONFIG_MTD_NAND_MARVELL=y
->  CONFIG_MTD_SPI_NOR=y
->  CONFIG_BLK_DEV_LOOP=y
->  CONFIG_BLK_DEV_NBD=m
-> -- 
-> 2.11.0
->
-
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+--_000_E5B0DB53D0E5430BBBCCEF3899C70DAEnxpcom_--
