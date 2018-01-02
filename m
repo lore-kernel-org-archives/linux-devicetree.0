@@ -1,217 +1,292 @@
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: Re: [PATCH v6 3/6] can: m_can: Add PM Runtime
-Date: Tue, 2 Jan 2018 17:07:00 +0100
-Message-ID: <aea8638a-c847-b55e-ff2d-37999980ba7b@pengutronix.de>
-References: <1513949488-13026-1-git-send-email-faiz_abbas@ti.com>
- <1513949488-13026-4-git-send-email-faiz_abbas@ti.com>
+From: PrasannaKumar Muralidharan <prasannatsmkumar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v5 11/15] MIPS: ingenic: Initial JZ4770 support
+Date: Tue, 2 Jan 2018 21:39:07 +0530
+Message-ID: <CANc+2y7Raw_cmV7U84mCx_ZVULOSxmk_qHSebDNSt+M9=zByQA@mail.gmail.com>
+References: <20180102150848.11314-1-paul@crapouillou.net> <20180102150848.11314-11-paul@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
- protocol="application/pgp-signature";
- boundary="nX9QgqsFdnpBYYnKoj1lIz7By4119uO9i"
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <1513949488-13026-4-git-send-email-faiz_abbas@ti.com>
-Sender: linux-can-owner@vger.kernel.org
-To: Faiz Abbas <faiz_abbas@ti.com>, wg@grandegger.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-can@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, nsekhar@ti.com, fcooper@ti.com, robh@kernel.org, Wenyou.Yang@microchip.com, sergei.shtylyov@cogentembedded.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180102150848.11314-11-paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
+Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Maarten ter Huurne <maarten-Ph2Y2OKCxY1M656bX5wj8A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---nX9QgqsFdnpBYYnKoj1lIz7By4119uO9i
-Content-Type: multipart/mixed; boundary="vb5R6ssIZzboorG9Vz0DBzeuwvvWMABt3";
- protected-headers="v1"
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Faiz Abbas <faiz_abbas@ti.com>, wg@grandegger.com, robh+dt@kernel.org,
- mark.rutland@arm.com
-Cc: linux-can@vger.kernel.org, netdev@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, nsekhar@ti.com,
- fcooper@ti.com, robh@kernel.org, Wenyou.Yang@microchip.com,
- sergei.shtylyov@cogentembedded.com
-Message-ID: <aea8638a-c847-b55e-ff2d-37999980ba7b@pengutronix.de>
-Subject: Re: [PATCH v6 3/6] can: m_can: Add PM Runtime
-References: <1513949488-13026-1-git-send-email-faiz_abbas@ti.com>
- <1513949488-13026-4-git-send-email-faiz_abbas@ti.com>
-In-Reply-To: <1513949488-13026-4-git-send-email-faiz_abbas@ti.com>
+Hi Paul,
 
---vb5R6ssIZzboorG9Vz0DBzeuwvvWMABt3
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-
-On 12/22/2017 02:31 PM, Faiz Abbas wrote:
-> From: Franklin S Cooper Jr <fcooper@ti.com>
->=20
-> Add support for PM Runtime which is the new way to handle managing cloc=
-ks.
-> However, to avoid breaking SoCs not using PM_RUNTIME leave the old clk
-> management approach in place.
-
-There is no PM_RUNTIME anymore since 464ed18ebdb6 ("PM: Eliminate
-CONFIG_PM_RUNTIME")
-
-Have a look at the discussion: https://patchwork.kernel.org/patch/9436507=
-/ :
-
->> Well, I admit it would be nicer if drivers didn't have to worry about =
-
->> whether or not CONFIG_PM was enabled.  A slightly cleaner approach=20
->> from the one outlined above would have the probe routine do this:
->>=20
->> 	my_power_up(dev);
->> 	pm_runtime_set_active(dev);
->> 	pm_runtime_get_noresume(dev);
->> 	pm_runtime_enable(dev);
-
-> PM_RUNTIME is required by OMAP based devices to handle clock management=
-=2E
-> Therefore, this allows future Texas Instruments SoCs that have the MCAN=
- IP
-> to work with this driver.
-
-Who will set the SET_RUNTIME_PM_OPS in this case?
-
-> Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
-> [nsekhar@ti.com: handle pm_runtime_get_sync() failure, fix some bugs]
-> Signed-off-by: Sekhar Nori <nsekhar@ti.com>
-> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+On 2 January 2018 at 20:38, Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org> wrote:
+> Provide just enough bits (clocks, clocksource, uart) to allow a kernel
+> to boot on the JZ4770 SoC to a initramfs userspace.
+>
+> Signed-off-by: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
 > ---
->  drivers/net/can/m_can/m_can.c | 38 ++++++++++++++++++++++++++++++++++-=
----
->  1 file changed, 34 insertions(+), 4 deletions(-)
->=20
-> diff --git a/drivers/net/can/m_can/m_can.c b/drivers/net/can/m_can/m_ca=
-n.c
-> index f72116e..53e764f 100644
-> --- a/drivers/net/can/m_can/m_can.c
-> +++ b/drivers/net/can/m_can/m_can.c
-> @@ -23,6 +23,7 @@
->  #include <linux/of.h>
->  #include <linux/of_device.h>
->  #include <linux/platform_device.h>
-> +#include <linux/pm_runtime.h>
->  #include <linux/iopoll.h>
->  #include <linux/can/dev.h>
-> =20
-> @@ -625,19 +626,33 @@ static int m_can_clk_start(struct m_can_priv *pri=
-v)
->  {
->  	int err;
-> =20
-> +	err =3D pm_runtime_get_sync(priv->device);
-> +	if (err) {
-> +		pm_runtime_put_noidle(priv->device);
-
-Why do you call this in case of an error?
-
-> +		return err;
-> +	}
+>  arch/mips/boot/dts/ingenic/jz4770.dtsi | 212 +++++++++++++++++++++++++++++++++
+>  arch/mips/jz4740/Kconfig               |   6 +
+>  arch/mips/jz4740/time.c                |   2 +-
+>  3 files changed, 219 insertions(+), 1 deletion(-)
+>  create mode 100644 arch/mips/boot/dts/ingenic/jz4770.dtsi
+>
+>  v2: No change
+>  v3: No change
+>  v4: No change
+>  v5: Use SPDX license identifier
+>
+> diff --git a/arch/mips/boot/dts/ingenic/jz4770.dtsi b/arch/mips/boot/dts/ingenic/jz4770.dtsi
+> new file mode 100644
+> index 000000000000..7c2804f3f5f1
+> --- /dev/null
+> +++ b/arch/mips/boot/dts/ingenic/jz4770.dtsi
+> @@ -0,0 +1,212 @@
+> +// SPDX-License-Identifier: GPL-2.0
 > +
->  	err =3D clk_prepare_enable(priv->hclk);
->  	if (err)
-> -		return err;
-> +		goto pm_runtime_put;
-> =20
->  	err =3D clk_prepare_enable(priv->cclk);
->  	if (err)
-> -		clk_disable_unprepare(priv->hclk);
-> +		goto disable_hclk;
-> =20
->  	return err;
+> +#include <dt-bindings/clock/jz4770-cgu.h>
 > +
-> +disable_hclk:
-> +	clk_disable_unprepare(priv->hclk);
-> +pm_runtime_put:
-> +	pm_runtime_put_sync(priv->device);
-> +	return err;
->  }
-> =20
->  static void m_can_clk_stop(struct m_can_priv *priv)
->  {
-> +	pm_runtime_put_sync(priv->device);
+> +/ {
+> +       #address-cells = <1>;
+> +       #size-cells = <1>;
+> +       compatible = "ingenic,jz4770";
 > +
->  	clk_disable_unprepare(priv->cclk);
->  	clk_disable_unprepare(priv->hclk);
->  }
-> @@ -1577,13 +1592,20 @@ static int m_can_plat_probe(struct platform_dev=
-ice *pdev)
->  	/* Enable clocks. Necessary to read Core Release in order to determin=
-e
->  	 * M_CAN version
->  	 */
-> +	pm_runtime_enable(&pdev->dev);
-> +	ret =3D pm_runtime_get_sync(&pdev->dev);
-> +	if (ret)  {
-> +		pm_runtime_put_noidle(&pdev->dev);
-
-Why do you call this in case of error?
-
-> +		goto pm_runtime_fail;
-> +	}
+> +       cpuintc: interrupt-controller {
+> +               #address-cells = <0>;
+> +               #interrupt-cells = <1>;
+> +               interrupt-controller;
+> +               compatible = "mti,cpu-interrupt-controller";
+> +       };
 > +
->  	ret =3D clk_prepare_enable(hclk);
->  	if (ret)
-> -		goto disable_hclk_ret;
-> +		goto pm_runtime_put;
-> =20
->  	ret =3D clk_prepare_enable(cclk);
->  	if (ret)
-> -		goto disable_cclk_ret;
-> +		goto disable_hclk_ret;
-> =20
->  	res =3D platform_get_resource_byname(pdev, IORESOURCE_MEM, "m_can");
->  	addr =3D devm_ioremap_resource(&pdev->dev, res);
-> @@ -1666,6 +1688,11 @@ static int m_can_plat_probe(struct platform_devi=
-ce *pdev)
->  	clk_disable_unprepare(cclk);
->  disable_hclk_ret:
->  	clk_disable_unprepare(hclk);
-> +pm_runtime_put:
-> +	pm_runtime_put_sync(&pdev->dev);
-> +pm_runtime_fail:
-> +	if (ret)
-> +		pm_runtime_disable(&pdev->dev);
->  failed_ret:
->  	return ret;
->  }
-> @@ -1723,6 +1750,9 @@ static int m_can_plat_remove(struct platform_devi=
-ce *pdev)
->  	struct net_device *dev =3D platform_get_drvdata(pdev);
-> =20
->  	unregister_m_can_dev(dev);
+> +       intc: interrupt-controller@10001000 {
+> +               compatible = "ingenic,jz4770-intc";
+> +               reg = <0x10001000 0x40>;
 > +
-> +	pm_runtime_disable(&pdev->dev);
+> +               interrupt-controller;
+> +               #interrupt-cells = <1>;
 > +
->  	platform_set_drvdata(pdev, NULL);
-> =20
->  	free_m_can_dev(dev);
->=20
+> +               interrupt-parent = <&cpuintc>;
+> +               interrupts = <2>;
+> +       };
+> +
+> +       ext: ext {
+> +               compatible = "fixed-clock";
+> +               #clock-cells = <0>;
+> +       };
+> +
+> +       osc32k: osc32k {
+> +               compatible = "fixed-clock";
+> +               #clock-cells = <0>;
+> +               clock-frequency = <32768>;
+> +       };
+> +
+> +       cgu: jz4770-cgu@10000000 {
+> +               compatible = "ingenic,jz4770-cgu";
+> +               reg = <0x10000000 0x100>;
+> +
+> +               clocks = <&ext>, <&osc32k>;
+> +               clock-names = "ext", "osc32k";
+> +
+> +               #clock-cells = <1>;
+> +       };
+> +
+> +       pinctrl: pin-controller@10010000 {
+> +               compatible = "ingenic,jz4770-pinctrl";
+> +               reg = <0x10010000 0x600>;
+> +
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
+> +
+> +               gpa: gpio@0 {
+> +                       compatible = "ingenic,jz4770-gpio";
+> +                       reg = <0>;
+> +
+> +                       gpio-controller;
+> +                       gpio-ranges = <&pinctrl 0 0 32>;
+> +                       #gpio-cells = <2>;
+> +
+> +                       interrupt-controller;
+> +                       #interrupt-cells = <2>;
+> +
+> +                       interrupt-parent = <&intc>;
+> +                       interrupts = <17>;
+> +               };
+> +
+> +               gpb: gpio@1 {
+> +                       compatible = "ingenic,jz4770-gpio";
+> +                       reg = <1>;
+> +
+> +                       gpio-controller;
+> +                       gpio-ranges = <&pinctrl 0 32 32>;
+> +                       #gpio-cells = <2>;
+> +
+> +                       interrupt-controller;
+> +                       #interrupt-cells = <2>;
+> +
+> +                       interrupt-parent = <&intc>;
+> +                       interrupts = <16>;
+> +               };
+> +
+> +               gpc: gpio@2 {
+> +                       compatible = "ingenic,jz4770-gpio";
+> +                       reg = <2>;
+> +
+> +                       gpio-controller;
+> +                       gpio-ranges = <&pinctrl 0 64 32>;
+> +                       #gpio-cells = <2>;
+> +
+> +                       interrupt-controller;
+> +                       #interrupt-cells = <2>;
+> +
+> +                       interrupt-parent = <&intc>;
+> +                       interrupts = <15>;
+> +               };
+> +
+> +               gpd: gpio@3 {
+> +                       compatible = "ingenic,jz4770-gpio";
+> +                       reg = <3>;
+> +
+> +                       gpio-controller;
+> +                       gpio-ranges = <&pinctrl 0 96 32>;
+> +                       #gpio-cells = <2>;
+> +
+> +                       interrupt-controller;
+> +                       #interrupt-cells = <2>;
+> +
+> +                       interrupt-parent = <&intc>;
+> +                       interrupts = <14>;
+> +               };
+> +
+> +               gpe: gpio@4 {
+> +                       compatible = "ingenic,jz4770-gpio";
+> +                       reg = <4>;
+> +
+> +                       gpio-controller;
+> +                       gpio-ranges = <&pinctrl 0 128 32>;
+> +                       #gpio-cells = <2>;
+> +
+> +                       interrupt-controller;
+> +                       #interrupt-cells = <2>;
+> +
+> +                       interrupt-parent = <&intc>;
+> +                       interrupts = <13>;
+> +               };
+> +
+> +               gpf: gpio@5 {
+> +                       compatible = "ingenic,jz4770-gpio";
+> +                       reg = <5>;
+> +
+> +                       gpio-controller;
+> +                       gpio-ranges = <&pinctrl 0 160 32>;
+> +                       #gpio-cells = <2>;
+> +
+> +                       interrupt-controller;
+> +                       #interrupt-cells = <2>;
+> +
+> +                       interrupt-parent = <&intc>;
+> +                       interrupts = <12>;
+> +               };
+> +       };
+> +
+> +       uart0: serial@10030000 {
+> +               compatible = "ingenic,jz4770-uart";
+> +               reg = <0x10030000 0x100>;
+> +
+> +               clocks = <&ext>, <&cgu JZ4770_CLK_UART0>;
+> +               clock-names = "baud", "module";
+> +
+> +               interrupt-parent = <&intc>;
+> +               interrupts = <5>;
+> +
+> +               status = "disabled";
+> +       };
+> +
+> +       uart1: serial@10031000 {
+> +               compatible = "ingenic,jz4770-uart";
+> +               reg = <0x10031000 0x100>;
+> +
+> +               clocks = <&ext>, <&cgu JZ4770_CLK_UART1>;
+> +               clock-names = "baud", "module";
+> +
+> +               interrupt-parent = <&intc>;
+> +               interrupts = <4>;
+> +
+> +               status = "disabled";
+> +       };
+> +
+> +       uart2: serial@10032000 {
+> +               compatible = "ingenic,jz4770-uart";
+> +               reg = <0x10032000 0x100>;
+> +
+> +               clocks = <&ext>, <&cgu JZ4770_CLK_UART2>;
+> +               clock-names = "baud", "module";
+> +
+> +               interrupt-parent = <&intc>;
+> +               interrupts = <3>;
+> +
+> +               status = "disabled";
+> +       };
+> +
+> +       uart3: serial@10033000 {
+> +               compatible = "ingenic,jz4770-uart";
+> +               reg = <0x10033000 0x100>;
+> +
+> +               clocks = <&ext>, <&cgu JZ4770_CLK_UART3>;
+> +               clock-names = "baud", "module";
+> +
+> +               interrupt-parent = <&intc>;
+> +               interrupts = <2>;
+> +
+> +               status = "disabled";
+> +       };
+> +
+> +       uhc: uhc@13430000 {
+> +               compatible = "generic-ohci";
+> +               reg = <0x13430000 0x1000>;
+> +
+> +               clocks = <&cgu JZ4770_CLK_UHC>, <&cgu JZ4770_CLK_UHC_PHY>;
+> +               assigned-clocks = <&cgu JZ4770_CLK_UHC>;
+> +               assigned-clock-rates = <48000000>;
+> +
+> +               interrupt-parent = <&intc>;
+> +               interrupts = <20>;
+> +
+> +               status = "disabled";
+> +       };
+> +};
+> diff --git a/arch/mips/jz4740/Kconfig b/arch/mips/jz4740/Kconfig
+> index 643af2012e14..29a9361a2b77 100644
+> --- a/arch/mips/jz4740/Kconfig
+> +++ b/arch/mips/jz4740/Kconfig
+> @@ -18,6 +18,12 @@ config MACH_JZ4740
+>         bool
+>         select SYS_HAS_CPU_MIPS32_R1
+>
+> +config MACH_JZ4770
+> +       bool
+> +       select MIPS_CPU_SCACHE
+> +       select SYS_HAS_CPU_MIPS32_R2
+> +       select SYS_SUPPORTS_HIGHMEM
+> +
+>  config MACH_JZ4780
+>         bool
+>         select MIPS_CPU_SCACHE
+> diff --git a/arch/mips/jz4740/time.c b/arch/mips/jz4740/time.c
+> index bb1ad5119da4..2ca9160f642a 100644
+> --- a/arch/mips/jz4740/time.c
+> +++ b/arch/mips/jz4740/time.c
+> @@ -113,7 +113,7 @@ static struct clock_event_device jz4740_clockevent = {
+>  #ifdef CONFIG_MACH_JZ4740
+>         .irq = JZ4740_IRQ_TCU0,
+>  #endif
+> -#ifdef CONFIG_MACH_JZ4780
+> +#if defined(CONFIG_MACH_JZ4770) || defined(CONFIG_MACH_JZ4780)
+>         .irq = JZ4780_IRQ_TCU2,
+>  #endif
+>  };
+> --
+> 2.11.0
+>
+>
 
-regards,
-Marc
-
---=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
-
-
---vb5R6ssIZzboorG9Vz0DBzeuwvvWMABt3--
-
---nX9QgqsFdnpBYYnKoj1lIz7By4119uO9i
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCgAdFiEE4bay/IylYqM/npjQHv7KIOw4HPYFAlpLriUACgkQHv7KIOw4
-HPZmbAgAwXEeTVol5rI7d3ZC03OyzX1cHDgIwkhi8lqF+MVxgCo3Lschd1YEye9w
-bgWamrI0AGEn6yTPps30Lz1CqC+JEdHtvs8UslSuLzsLDRHrdQQZjZkOojXnGVB+
-FhkV2xTzjs8E9xQJQU4F+sj/g6N8WOJclpY8tiE8se+CIbhjOUbqL9CagRgLBLLM
-L7gs1B8n1aCIXNQM7eJZHcYif4p/L0jdleeJ2s4wwLdv29Yp/YMtAltcnOxLjuZb
-qp5sqk/HB9AOG3BsMXwThAH2LhRw6U+PMTD0i+156J9CbWUsPhDoplQkkqr0TOJb
-kNgMFJ3g0koU7EzKyTa9LI0E2D7fpQ==
-=EIKu
------END PGP SIGNATURE-----
-
---nX9QgqsFdnpBYYnKoj1lIz7By4119uO9i--
+Looks good to me.
+Reviewed-by: PrasannaKumar Muralidharan <prasannatsmkumar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
