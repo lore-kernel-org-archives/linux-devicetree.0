@@ -1,538 +1,96 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [RESEND PATCH v2 10/15] ASoC: qcom: qdsp6: Add
- support to q6routing driver
-Date: Tue, 2 Jan 2018 15:00:07 -0800
-Message-ID: <20180102230007.GR478@tuxbook>
-References: <20171214173402.19074-1-srinivas.kandagatla@linaro.org>
- <20171214173402.19074-11-srinivas.kandagatla@linaro.org>
+From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+Subject: Re: [RFC v2 7/9] bluetooth: btrtl: load the config blob from
+ devicetree when available
+Date: Tue, 2 Jan 2018 23:06:34 +0000
+Message-ID: <CAL9uMOFyfr_qGf5BeTojkMeWeH8LqPoKj=LrdgEMB2wmhGBxmA@mail.gmail.com>
+References: <20180101204217.26165-1-martin.blumenstingl@googlemail.com>
+ <20180101204217.26165-8-martin.blumenstingl@googlemail.com>
+ <563D6F9F-8495-40D4-BE56-5338ED2B9B99@holtmann.org> <CAL9uMOEMDup4hRkxD-tM8R0YirGs5uQi31AjJUnFCPNMKUdRHg@mail.gmail.com>
+ <E8E39477-CF1A-4A3E-84C5-830E182C2266@holtmann.org> <CAL9uMOH0N-4jgQncmPjK-KyU0vY9Q0ZnHYSAGgz3z3ywzc8Avw@mail.gmail.com>
+ <CAFBinCBB=SmviOMRHGDH6vzjTjV-mrtQEc8nBUhDbJGs9SBpgw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-Content-Disposition: inline
-In-Reply-To: <20171214173402.19074-11-srinivas.kandagatla@linaro.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: srinivas.kandagatla@linaro.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Banajit Goswami <bgoswami@codeaurora.org>, linux-arm-msm@vger.kernel.org, Patrick Lai <plai@codeaurora.org>, Takashi Iwai <tiwai@suse.com>, sboyd@codeaurora.org, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, David Brown <david.brown@linaro.org>, Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org, Andy Gross <andy.gross@linaro.org>, linux-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAFBinCBB=SmviOMRHGDH6vzjTjV-mrtQEc8nBUhDbJGs9SBpgw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Cc: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "Gustavo F. Padovan" <gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org>, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, jslaby-IBi9RG/b67k@public.gmane.org, johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Larry.Finger-tQ5ms3gMjBLk1uMJSBkQmQ@public.gmane.org, Daniel Drake <drake-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu 14 Dec 09:33 PST 2017, srinivas.kandagatla@linaro.org wrote:
+On Tue, Jan 2, 2018 at 9:46 PM, Martin Blumenstingl
+<martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
+> Hi Carlo,
 
-> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> 
-> This patch adds support to q6 routing driver which configures route
-> between ASM and AFE module using ADM apis.
-> 
-> This driver uses dapm widgets to setup the matrix between AFE ports and
-> ASM streams.
-> 
+Hi Martin,
 
-Why is this a separate driver from the q6adm?
+> On Tue, Jan 2, 2018 at 12:31 PM, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org> wrote:
+>> On Tue, Jan 2, 2018 at 11:19 AM, Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org> w=
+rote:
+>>> Hi Carlo,
+>>>
+>>>>>> Some Realtek bluetooth devices need a "config" blob. The btrtl drive=
+r
+>>>>>> currently only allows loading this config blob via the request_firmw=
+are
+>>>>>> mechanism.
+>>>>>>
+>>>>>> The UART Bluetooth chips use this config blob to specify the baudrat=
+e,
+>>>>>> whether flow control is used and some other unknown bits. This means
+>>>>>> that the config blob is board-specific - thus loading it via
+>>>>>> request_firmware means that the rootfs is tied to a specific board.
+>>>>>>
+>>>>>> The UART Bluetooth chips are implemented through serdev. This means
+>>>>>> there is also a devicetree node which describes the Bluetooth chip.
+>>>>>> Thus we can also load the blob from the devicetree node to keep the
+>>>>>> filesystem independent of any board configuration data. In the futur=
+e
+>>>>>> this could be extended to support ACPI as well (in case that's neede=
+d).
+>>>>>>
+>>>>>> Parse the devicetree node if it exists and obtain the config blob fr=
+om
+>>>>>> there. Otherwise fall back to using the "old" request_firmware
+>>>>>> mechanism.
+>>>>>
+>>>>> where are these config blobs coming from? I think we also need to giv=
+e people a helping hand on how to add them to DT. I still wonder if the onl=
+y pieces we are using are the UART config, then maybe skipping the config b=
+lob and allowing for clear named values in DT might be better.
+>>>>
+>>>> What about x86 platforms where we do not have DT (I didn't check but I
+>>>> don't think that the UART config in that case is shipped in the ACPI
+>>>> tables)?
+>>>
+>>> if we have this hardware in x86 systems, then I would really like to se=
+e ACPI table dumps. Some pieces might need hardcoding based on ACPI ID.
+>>
+>> Yes, we have, especially on cherry-trail SoCs. In [0] the DSDT of a
+>> cherry-trail laptop shipping the rtl8723bs (device OBDA8723).
+>>
+>> [0] https://gist.github.com/carlocaione/82bff95ababb67dd33f52a86e94ce3ff
+> so this shows that the UART settings (initial baudrate, HW flow
+> control, etc.) are part of the DSDT
+> however, the actual config blob is not
+>
+> the description of this patch explains: "Parse the devicetree node ...
+> [or] ... fall back to using the "old" request_firmware mechanism."
+> do you have any other solution in mind?
 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> ---
->  sound/soc/qcom/Kconfig           |   5 +
->  sound/soc/qcom/qdsp6/Makefile    |   1 +
->  sound/soc/qcom/qdsp6/q6routing.c | 386 +++++++++++++++++++++++++++++++++++++++
->  sound/soc/qcom/qdsp6/q6routing.h |   9 +
->  4 files changed, 401 insertions(+)
->  create mode 100644 sound/soc/qcom/qdsp6/q6routing.c
->  create mode 100644 sound/soc/qcom/qdsp6/q6routing.h
-> 
-> diff --git a/sound/soc/qcom/Kconfig b/sound/soc/qcom/Kconfig
-> index 121b9c957024..dd8fb0cde614 100644
-> --- a/sound/soc/qcom/Kconfig
-> +++ b/sound/soc/qcom/Kconfig
-> @@ -60,12 +60,17 @@ config SND_SOC_QDSP6_CORE
->  	tristate
->  	default n
->  
-> +config SND_SOC_QDSP6_ROUTING
-> +	tristate
-> +	default n
-> +
->  config SND_SOC_QDSP6
->  	tristate "SoC ALSA audio driver for QDSP6"
->  	select SND_SOC_QDSP6_AFE
->  	select SND_SOC_QDSP6_ADM
->  	select SND_SOC_QDSP6_ASM
->  	select SND_SOC_QDSP6_CORE
-> +	select SND_SOC_QDSP6_ROUTING
->  	help
->  	 To add support for MSM QDSP6 Soc Audio.
->  	 This will enable sound soc platform specific
-> diff --git a/sound/soc/qcom/qdsp6/Makefile b/sound/soc/qcom/qdsp6/Makefile
-> index ad7f10691e54..c1ad060a2341 100644
-> --- a/sound/soc/qcom/qdsp6/Makefile
-> +++ b/sound/soc/qcom/qdsp6/Makefile
-> @@ -2,3 +2,4 @@ obj-$(CONFIG_SND_SOC_QDSP6_AFE) += q6afe.o
->  obj-$(CONFIG_SND_SOC_QDSP6_ADM) += q6adm.o
->  obj-$(CONFIG_SND_SOC_QDSP6_ASM) += q6asm.o
->  obj-$(CONFIG_SND_SOC_QDSP6_CORE) += q6core.o
-> +obj-$(CONFIG_SND_SOC_QDSP6_ROUTING) += q6routing.o
-> diff --git a/sound/soc/qcom/qdsp6/q6routing.c b/sound/soc/qcom/qdsp6/q6routing.c
-> new file mode 100644
-> index 000000000000..f5f12d61a1ee
-> --- /dev/null
-> +++ b/sound/soc/qcom/qdsp6/q6routing.c
-> @@ -0,0 +1,386 @@
-> +/* SPDX-License-Identifier: GPL-2.0
-> +* Copyright (c) 2011-2016, The Linux Foundation
-> +* Copyright (c) 2017, Linaro Limited
-> +*/
-> +#include <linux/init.h>
-> +#include <linux/err.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/bitops.h>
-> +#include <linux/mutex.h>
-> +#include <linux/of_device.h>
-> +#include <linux/slab.h>
-> +#include <sound/core.h>
-> +#include <sound/soc.h>
-> +#include <sound/soc-dapm.h>
-> +#include <sound/pcm.h>
-> +#include <sound/control.h>
-> +#include <sound/asound.h>
-> +#include <sound/pcm_params.h>
-> +#include "q6afe.h"
-> +#include "q6asm.h"
-> +#include "q6adm.h"
-> +#include "q6routing.h"
-> +
-> +struct session_data {
-> +	int state;
-> +	int port_id;
-> +	int path_type;
-> +	int app_type;
-> +	int acdb_id;
-> +	int sample_rate;
-> +	int bits_per_sample;
-> +	int channels;
-> +	int format;
-> +	int perf_mode;
-> +	int numcopps;
-> +	int fedai_id;
-> +	unsigned long copp_map;
-> +};
-> +
-> +struct msm_routing_data {
-> +	struct session_data sessions[MAX_SESSIONS];
-> +	struct device *dev;
-> +	struct mutex lock;
-> +};
-> +
-> +static struct msm_routing_data *routing_data;
-> +
-> +/**
-> + * q6routing_reg_phy_stream() - Register a new stream for route setup
-> + *
-> + * @fedai_id: Frontend dai id.
-> + * @perf_mode: Performace mode.
+As Marcel suggested we can assume that the information in the DSDT is
+correct so that we can get rid of the config blob also for x86
+platforms (assuming that the only useful information in the config
+blobs is the UART configuration).
 
-"Performance"
+Adding the ACPI support on top of your patches is (hopefully) trivial,
+just follow what was done for hci_bcm.c, basically adding a new _HID
+and reading the configuration for GPIOs and UART, all the rest should
+be transparent for serdev.
 
-> + * @stream_id: ASM stream id to map.
-> + * @stream_type: Direction of stream
-> + *
-> + * Return: Will be an negative on error or a zero on success.
-> + */
-> +int q6routing_reg_phy_stream(int fedai_id, int perf_mode,
+I'll test your patches on the hardware I have.
 
-q6routing_stream_open() ?
+Cheers,
 
-> +			   int stream_id, int stream_type)
-> +{
-> +	int j, topology, num_copps = 0;
-> +	struct route_payload payload;
-> +	int copp_idx;
-> +	struct session_data *session;
-> +
-> +	if (!routing_data) {
-> +		pr_err("Routing driver not yet ready\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	session = &routing_data->sessions[stream_id - 1];
-> +	mutex_lock(&routing_data->lock);
-> +	session->fedai_id = fedai_id;
-> +	payload.num_copps = 0; /* only RX needs to use payload */
-> +	topology = NULL_COPP_TOPOLOGY;
-> +	copp_idx = q6adm_open(routing_data->dev, session->port_id,
-> +			      session->path_type, session->sample_rate,
-> +			      session->channels, topology, perf_mode,
-> +			      session->bits_per_sample, 0, 0);
-> +	if ((copp_idx < 0) || (copp_idx >= MAX_COPPS_PER_PORT)) {
-
-Make q6adm_open() not return >= MAX_COPPS_PER_PORT.
-
-And drop the extra parenthesis.
-
-> +		mutex_unlock(&routing_data->lock);
-> +		return -EINVAL;
-> +	}
-> +
-> +	set_bit(copp_idx, &session->copp_map);
-> +	for (j = 0; j < MAX_COPPS_PER_PORT; j++) {
-
-Use for_each_set_bit()
-
-> +		unsigned long copp = session->copp_map;
-> +
-> +		if (test_bit(j, &copp)) {
-> +			payload.port_id[num_copps] = session->port_id;
-> +			payload.copp_idx[num_copps] = j;
-> +			num_copps++;
-> +		}
-> +	}
-> +
-> +	if (num_copps) {
-> +		payload.num_copps = num_copps;
-> +		payload.session_id = stream_id;
-> +		q6adm_matrix_map(routing_data->dev, session->path_type,
-> +				 payload, perf_mode);
-> +	}
-> +	mutex_unlock(&routing_data->lock);
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(q6routing_reg_phy_stream);
-> +
-> +static struct session_data *routing_get_session(struct msm_routing_data *data,
-> +						int port_id, int port_type)
-
-port_type is ignored
-
-> +{
-> +	int i;
-> +
-> +	for (i = 0; i < MAX_SESSIONS; i++)
-> +		if (port_id == data->sessions[i].port_id)
-> +			return &data->sessions[i];
-> +
-> +	return NULL;
-> +}
-> +
-> +static struct session_data *get_session_from_id(struct msm_routing_data *data,
-> +						int fedai_id)
-> +{
-> +	int i;
-> +
-> +	for (i = 0; i < MAX_SESSIONS; i++) {
-> +		if (fedai_id == data->sessions[i].fedai_id)
-> +			return &data->sessions[i];
-> +	}
-> +
-> +	return NULL;
-> +}
-> +/**
-> + * q6routing_dereg_phy_stream() - Deregister a stream
-> + *
-> + * @fedai_id: Frontend dai id.
-> + * @stream_type: Direction of stream
-> + *
-> + * Return: Will be an negative on error or a zero on success.
-> + */
-> +void q6routing_dereg_phy_stream(int fedai_id, int stream_type)
-
-q6routing_stream_close()?
-
-> +{
-> +	struct session_data *session;
-> +	int idx;
-> +
-> +	session = get_session_from_id(routing_data, fedai_id);
-> +	if (!session)
-> +		return;
-> +
-> +	for_each_set_bit(idx, &session->copp_map, MAX_COPPS_PER_PORT)
-> +		q6adm_close(routing_data->dev, session->port_id,
-> +			    session->perf_mode, idx);
-> +
-> +	session->fedai_id = -1;
-> +	session->copp_map = 0;
-> +}
-> +EXPORT_SYMBOL_GPL(q6routing_dereg_phy_stream);
-> +
-> +static int msm_routing_get_audio_mixer(struct snd_kcontrol *kcontrol,
-> +				       struct snd_ctl_elem_value *ucontrol)
-> +{
-> +	struct snd_soc_dapm_context *dapm =
-> +	    snd_soc_dapm_kcontrol_dapm(kcontrol);
-> +	struct soc_mixer_control *mc =
-> +	    (struct soc_mixer_control *)kcontrol->private_value;
-> +	int session_id = mc->shift;
-> +	struct snd_soc_platform *platform = snd_soc_dapm_to_platform(dapm);
-> +	struct msm_routing_data *priv = snd_soc_platform_get_drvdata(platform);
-> +	struct session_data *session = &priv->sessions[session_id];
-> +
-> +	if (session->port_id != -1)
-> +		ucontrol->value.integer.value[0] = 1;
-> +	else
-> +		ucontrol->value.integer.value[0] = 0;
-> +
-> +	return 0;
-> +}
-> +
-> +static int msm_routing_put_audio_mixer(struct snd_kcontrol *kcontrol,
-> +				       struct snd_ctl_elem_value *ucontrol)
-> +{
-> +	struct snd_soc_dapm_context *dapm =
-> +				    snd_soc_dapm_kcontrol_dapm(kcontrol);
-> +	struct snd_soc_platform *platform = snd_soc_dapm_to_platform(dapm);
-> +	struct msm_routing_data *data = snd_soc_platform_get_drvdata(platform);
-> +	struct soc_mixer_control *mc =
-> +		    (struct soc_mixer_control *)kcontrol->private_value;
-> +	struct snd_soc_dapm_update *update = NULL;
-> +	int be_id = mc->reg;
-> +	int session_id = mc->shift;
-> +	struct session_data *session = &data->sessions[session_id];
-> +
-> +	if (ucontrol->value.integer.value[0]) {
-> +		session->port_id = be_id;
-> +		snd_soc_dapm_mixer_update_power(dapm, kcontrol, 1, update);
-> +	} else {
-> +		session->port_id = -1;
-> +		snd_soc_dapm_mixer_update_power(dapm, kcontrol, 0, update);
-> +	}
-> +
-> +	return 1;
-> +}
-> +
-> +static const struct snd_kcontrol_new hdmi_mixer_controls[] = {
-> +	SOC_SINGLE_EXT("MultiMedia1", AFE_PORT_HDMI_RX,
-> +		       MSM_FRONTEND_DAI_MULTIMEDIA1, 1, 0,
-> +		       msm_routing_get_audio_mixer,
-> +		       msm_routing_put_audio_mixer),
-> +	SOC_SINGLE_EXT("MultiMedia2", AFE_PORT_HDMI_RX,
-> +		       MSM_FRONTEND_DAI_MULTIMEDIA2, 1, 0,
-> +		       msm_routing_get_audio_mixer,
-> +		       msm_routing_put_audio_mixer),
-> +	SOC_SINGLE_EXT("MultiMedia3", AFE_PORT_HDMI_RX,
-> +		       MSM_FRONTEND_DAI_MULTIMEDIA3, 1, 0,
-> +		       msm_routing_get_audio_mixer,
-> +		       msm_routing_put_audio_mixer),
-> +	SOC_SINGLE_EXT("MultiMedia4", AFE_PORT_HDMI_RX,
-> +		       MSM_FRONTEND_DAI_MULTIMEDIA4, 1, 0,
-> +		       msm_routing_get_audio_mixer,
-> +		       msm_routing_put_audio_mixer),
-> +	SOC_SINGLE_EXT("MultiMedia5", AFE_PORT_HDMI_RX,
-> +		       MSM_FRONTEND_DAI_MULTIMEDIA5, 1, 0,
-> +		       msm_routing_get_audio_mixer,
-> +		       msm_routing_put_audio_mixer),
-> +	SOC_SINGLE_EXT("MultiMedia6", AFE_PORT_HDMI_RX,
-> +		       MSM_FRONTEND_DAI_MULTIMEDIA6, 1, 0,
-> +		       msm_routing_get_audio_mixer,
-> +		       msm_routing_put_audio_mixer),
-> +	SOC_SINGLE_EXT("MultiMedia7", AFE_PORT_HDMI_RX,
-> +		       MSM_FRONTEND_DAI_MULTIMEDIA7, 1, 0,
-> +		       msm_routing_get_audio_mixer,
-> +		       msm_routing_put_audio_mixer),
-> +	SOC_SINGLE_EXT("MultiMedia8", AFE_PORT_HDMI_RX,
-> +		       MSM_FRONTEND_DAI_MULTIMEDIA8, 1, 0,
-> +		       msm_routing_get_audio_mixer,
-> +		       msm_routing_put_audio_mixer),
-> +};
-> +
-> +static const struct snd_soc_dapm_widget msm_qdsp6_widgets[] = {
-> +	/* Frontend AIF */
-> +	/* Widget name equals to Front-End DAI name<Need confirmation>,
-
-Perhaps this should be confirmed and the comment updated?
-
-> +	 * Stream name must contains substring of front-end dai name
-> +	 */
-> +	SND_SOC_DAPM_AIF_IN("MM_DL1", "MultiMedia1 Playback", 0, 0, 0, 0),
-> +	SND_SOC_DAPM_AIF_IN("MM_DL2", "MultiMedia2 Playback", 0, 0, 0, 0),
-> +	SND_SOC_DAPM_AIF_IN("MM_DL3", "MultiMedia3 Playback", 0, 0, 0, 0),
-> +	SND_SOC_DAPM_AIF_IN("MM_DL4", "MultiMedia4 Playback", 0, 0, 0, 0),
-> +	SND_SOC_DAPM_AIF_IN("MM_DL5", "MultiMedia5 Playback", 0, 0, 0, 0),
-> +	SND_SOC_DAPM_AIF_IN("MM_DL6", "MultiMedia6 Playback", 0, 0, 0, 0),
-> +	SND_SOC_DAPM_AIF_IN("MM_DL7", "MultiMedia7 Playback", 0, 0, 0, 0),
-> +	SND_SOC_DAPM_AIF_IN("MM_DL8", "MultiMedia8 Playback", 0, 0, 0, 0),
-> +
-> +	/* Mixer definitions */
-> +	SND_SOC_DAPM_MIXER("HDMI Mixer", SND_SOC_NOPM, 0, 0,
-> +			   hdmi_mixer_controls,
-> +			   ARRAY_SIZE(hdmi_mixer_controls)),
-> +};
-> +
-> +static const struct snd_soc_dapm_route intercon[] = {
-> +	{"HDMI Mixer", "MultiMedia1", "MM_DL1"},
-> +	{"HDMI Mixer", "MultiMedia2", "MM_DL2"},
-> +	{"HDMI Mixer", "MultiMedia3", "MM_DL3"},
-> +	{"HDMI Mixer", "MultiMedia4", "MM_DL4"},
-> +	{"HDMI Mixer", "MultiMedia5", "MM_DL5"},
-> +	{"HDMI Mixer", "MultiMedia6", "MM_DL6"},
-> +	{"HDMI Mixer", "MultiMedia7", "MM_DL7"},
-> +	{"HDMI Mixer", "MultiMedia8", "MM_DL8"},
-> +	{"HDMI", NULL, "HDMI Mixer"},
-> +	{"HDMI-RX", NULL, "HDMI"},
-> +};
-> +
-> +static int routing_hw_params(struct snd_pcm_substream *substream,
-> +				     struct snd_pcm_hw_params *params)
-> +{
-> +	struct snd_soc_pcm_runtime *rtd = substream->private_data;
-> +	unsigned int be_id = rtd->cpu_dai->id;
-> +	struct snd_soc_platform *platform = rtd->platform;
-> +	struct msm_routing_data *data = snd_soc_platform_get_drvdata(platform);
-> +	struct session_data *session;
-> +	int port_id, port_type, path_type, bits_per_sample;
-
-bits_per_sample is likely unused.
-
-> +
-> +	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
-> +		path_type = ADM_PATH_PLAYBACK;
-> +		port_type = MSM_AFE_PORT_TYPE_RX;
-> +	}
-> +
-> +	port_id = be_id;
-
-Why alias this variable?
-
-> +
-> +	session = routing_get_session(data, port_id, port_type);
-> +
-> +	if (!session) {
-> +		pr_err("No session matrix setup yet..\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	mutex_lock(&data->lock);
-> +
-> +	session->path_type = path_type;
-> +	session->sample_rate = params_rate(params);
-> +	session->channels = params_channels(params);
-> +	session->format = params_format(params);
-> +
-> +	if (session->format == SNDRV_PCM_FORMAT_S16_LE)
-> +		session->bits_per_sample = 16;
-> +	else if (session->format == SNDRV_PCM_FORMAT_S24_LE)
-> +		bits_per_sample = 24;
-
-session-> ?
-
-Perhaps switch on params_format(params) instead? And fail in the default
-case.
-
-> +
-> +	mutex_unlock(&data->lock);
-> +	return 0;
-> +}
-> +
-> +static int routing_close(struct snd_pcm_substream *substream)
-> +{
-> +	return 0;
-> +}
-> +
-> +static int routing_prepare(struct snd_pcm_substream *substream)
-> +{
-> +	return 0;
-> +}
-> +
-> +static struct snd_pcm_ops q6pcm_routing_ops = {
-> +	.hw_params = routing_hw_params,
-> +	.close = routing_close,
-> +	.prepare = routing_prepare,
-> +};
-> +
-> +/* Not used but frame seems to require it */
-
-Remove comment?
-
-> +static int msm_routing_probe(struct snd_soc_platform *platform)
-> +{
-> +	int i;
-> +
-> +	for (i = 0; i < MAX_SESSIONS; i++)
-> +		routing_data->sessions[i].port_id = -1;
-> +
-> +	snd_soc_platform_set_drvdata(platform, routing_data);
-> +
-> +	return 0;
-> +}
-> +
-> +static struct snd_soc_platform_driver msm_soc_routing_platform = {
-> +	.ops = &q6pcm_routing_ops,
-> +	.probe = msm_routing_probe,
-> +	.component_driver = {
-> +			     .dapm_widgets = msm_qdsp6_widgets,
-> +			     .num_dapm_widgets = ARRAY_SIZE(msm_qdsp6_widgets),
-> +			     .dapm_routes = intercon,
-> +			     .num_dapm_routes = ARRAY_SIZE(intercon),
-> +			     },
-> +};
-> +
-> +static int q6pcm_routing_probe(struct platform_device *pdev)
-> +{
-> +
-> +	routing_data = devm_kzalloc(&pdev->dev,
-> +				    sizeof(*routing_data), GFP_KERNEL);
-> +	if (!routing_data)
-> +		return -ENOMEM;
-> +
-> +	routing_data->dev = &pdev->dev;
-> +
-> +	mutex_init(&routing_data->lock);
-> +	dev_set_drvdata(&pdev->dev, routing_data);
-> +
-> +	return devm_snd_soc_register_platform(&pdev->dev,
-> +					      &msm_soc_routing_platform);
-> +}
-> +
-> +static int q6pcm_routing_remove(struct platform_device *pdev)
-> +{
-
-As you return here routing_data will be freed.  The early check in
-q6routing_reg_phy_stream() seems to indicate that this driver can be
-called even though the routing device isn't available.
-
-So you probably want to clear that variable, at least.
-
-> +	return 0;
-> +}
-> +
-> +static struct platform_driver q6pcm_routing_driver = {
-> +	.driver = {
-> +		   .name = "q6routing",
-> +		   .owner = THIS_MODULE,
-
-Drop .owner
-
-> +		   },
-> +	.probe = q6pcm_routing_probe,
-> +	.remove = q6pcm_routing_remove,
-> +};
-> +
-> +module_platform_driver(q6pcm_routing_driver);
-> +
-> +MODULE_DESCRIPTION("Q6 Routing platform");
-> +MODULE_LICENSE("GPL v2");
-> diff --git a/sound/soc/qcom/qdsp6/q6routing.h b/sound/soc/qcom/qdsp6/q6routing.h
-> new file mode 100644
-> index 000000000000..7f0feb196acc
-> --- /dev/null
-> +++ b/sound/soc/qcom/qdsp6/q6routing.h
-> @@ -0,0 +1,9 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef _Q6_PCM_ROUTING_H
-> +#define _Q6_PCM_ROUTING_H
-> +
-> +int q6routing_reg_phy_stream(int fedai_id, int perf_mode,
-> +			   int stream_id, int stream_type);
-> +void q6routing_dereg_phy_stream(int fedai_id, int stream_type);
-> +
-> +#endif /*_Q6_PCM_ROUTING_H */
-> -- 
-> 2.15.0
-> 
+--=20
+Carlo Caione  |  +44.7384.69.16.04  |  Endless
