@@ -1,103 +1,126 @@
-From: PrasannaKumar Muralidharan <prasannatsmkumar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 5/8] MIPS: jz4740: dts: Add bindings for the jz4740-wdt driver
-Date: Tue, 2 Jan 2018 22:07:46 +0530
-Message-ID: <CANc+2y5ZUM_ZzXaGgbx9b7O1GF4GrbaYsv97G+akvhP2d2VVUA@mail.gmail.com>
-References: <20171228162939.3928-2-paul@crapouillou.net> <20171230135108.6834-1-paul@crapouillou.net>
- <20171230135108.6834-5-paul@crapouillou.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171230135108.6834-5-paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
-Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Subject: [PATCH] pinctrl: imx6ul: add IOMUXC SNVS pinctrl driver for i.MX 6ULL
+Date: Tue,  2 Jan 2018 17:40:59 +0100
+Message-ID: <20180102164059.14641-1-stefan@agner.ch>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Cc: fabio.estevam-3arQi8VN3Tc@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bai Ping <ping.bai-3arQi8VN3Tc@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Paul,
+From: Bai Ping <ping.bai-3arQi8VN3Tc@public.gmane.org>
 
-On 30 December 2017 at 19:21, Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org> wrote:
-> Also remove the watchdog platform_device from platform.c, since it
-> wasn't used anywhere anyway.
->
-> Signed-off-by: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
-> ---
->  arch/mips/boot/dts/ingenic/jz4740.dtsi |  8 ++++++++
->  arch/mips/jz4740/platform.c            | 16 ----------------
->  2 files changed, 8 insertions(+), 16 deletions(-)
->
->  v2: No change
->
-> diff --git a/arch/mips/boot/dts/ingenic/jz4740.dtsi b/arch/mips/boot/dts/ingenic/jz4740.dtsi
-> index cd5185bb90ae..26c6b561d6f7 100644
-> --- a/arch/mips/boot/dts/ingenic/jz4740.dtsi
-> +++ b/arch/mips/boot/dts/ingenic/jz4740.dtsi
-> @@ -45,6 +45,14 @@
->                 #clock-cells = <1>;
->         };
->
-> +       watchdog: watchdog@10002000 {
-> +               compatible = "ingenic,jz4740-watchdog";
-> +               reg = <0x10002000 0x10>;
-> +
-> +               clocks = <&cgu JZ4740_CLK_RTC>;
-> +               clock-names = "rtc";
-> +       };
-> +
+On i.MX 6ULL, the BOOT_MODEx and TAMPERx pin MUX and CTRL registers
+are available in a separate IOMUXC_SNVS module. Add support for the
+IOMUXC_SNVS module to the i.MX 6UL pinctrl driver.
 
-The watchdog driver calls jz4740_timer_enable_watchdog and
-jz4740_timer_disable_watchdog which defined in
-arch/mips/jz4740/timer.c. It accesses registers iomapped by timer
-code. Declaring register size as 0x10 does not show the real picture.
-Better use register size as 0x100 and let timer, wdt, pwm drivers to
-share them.
+Signed-off-by: Bai Ping <ping.bai-3arQi8VN3Tc@public.gmane.org>
+Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+---
+ .../bindings/pinctrl/fsl,imx6ul-pinctrl.txt        |  3 +-
+ drivers/pinctrl/freescale/pinctrl-imx6ul.c         | 52 +++++++++++++++++++++-
+ 2 files changed, 52 insertions(+), 3 deletions(-)
 
-Code from one of your branches
-(https://github.com/OpenDingux/linux/blob/for-upstream-clocksource/arch/mips/boot/dts/ingenic/jz4740.dtsi)
-does it. Can you prepare a patch series and send it?
-I have a patch set that moves timer code out of arch/mips/jz4740/ and
-does a similar thing for watchdog and pwm. As your new timer driver is
-better than the existing one I have not sent my patches yet. I would
-like to see it getting mainlined as it paves way for removing most of
-code in arch/mips/jz4740.
+diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx6ul-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/fsl,imx6ul-pinctrl.txt
+index a81bbf37ed66..7ca4f6118d9a 100644
+--- a/Documentation/devicetree/bindings/pinctrl/fsl,imx6ul-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/fsl,imx6ul-pinctrl.txt
+@@ -4,7 +4,8 @@ Please refer to fsl,imx-pinctrl.txt in this directory for common binding part
+ and usage.
+ 
+ Required properties:
+-- compatible: "fsl,imx6ul-iomuxc"
++- compatible: "fsl,imx6ul-iomuxc" for main IOMUX controller or
++  "fsl,imx6ull-iomuxc-snvs" for i.MX 6ULL's SNVS IOMUX controller.
+ - fsl,pins: each entry consists of 6 integers and represents the mux and config
+   setting for one pin.  The first 5 integers <mux_reg conf_reg input_reg mux_val
+   input_val> are specified using a PIN_FUNC_ID macro, which can be found in
+diff --git a/drivers/pinctrl/freescale/pinctrl-imx6ul.c b/drivers/pinctrl/freescale/pinctrl-imx6ul.c
+index 1aeb840aae1d..cbad1c69226d 100644
+--- a/drivers/pinctrl/freescale/pinctrl-imx6ul.c
++++ b/drivers/pinctrl/freescale/pinctrl-imx6ul.c
+@@ -150,6 +150,21 @@ enum imx6ul_pads {
+ 	MX6UL_PAD_CSI_DATA07 = 128,
+ };
+ 
++enum imx6ull_lpsr_pads {
++	MX6ULL_PAD_BOOT_MODE0 = 0,
++	MX6ULL_PAD_BOOT_MODE1 = 1,
++	MX6ULL_PAD_SNVS_TAMPER0 = 2,
++	MX6ULL_PAD_SNVS_TAMPER1 = 3,
++	MX6ULL_PAD_SNVS_TAMPER2 = 4,
++	MX6ULL_PAD_SNVS_TAMPER3 = 5,
++	MX6ULL_PAD_SNVS_TAMPER4 = 6,
++	MX6ULL_PAD_SNVS_TAMPER5 = 7,
++	MX6ULL_PAD_SNVS_TAMPER6 = 8,
++	MX6ULL_PAD_SNVS_TAMPER7 = 9,
++	MX6ULL_PAD_SNVS_TAMPER8 = 10,
++	MX6ULL_PAD_SNVS_TAMPER9 = 11,
++};
++
+ /* Pad names for the pinmux subsystem */
+ static const struct pinctrl_pin_desc imx6ul_pinctrl_pads[] = {
+ 	IMX_PINCTRL_PIN(MX6UL_PAD_RESERVE0),
+@@ -283,20 +298,53 @@ static const struct pinctrl_pin_desc imx6ul_pinctrl_pads[] = {
+ 	IMX_PINCTRL_PIN(MX6UL_PAD_CSI_DATA07),
+ };
+ 
++/* pad for i.MX6ULL lpsr pinmux */
++static struct pinctrl_pin_desc imx6ull_snvs_pinctrl_pads[] = {
++	IMX_PINCTRL_PIN(MX6ULL_PAD_BOOT_MODE0),
++	IMX_PINCTRL_PIN(MX6ULL_PAD_BOOT_MODE1),
++	IMX_PINCTRL_PIN(MX6ULL_PAD_SNVS_TAMPER0),
++	IMX_PINCTRL_PIN(MX6ULL_PAD_SNVS_TAMPER1),
++	IMX_PINCTRL_PIN(MX6ULL_PAD_SNVS_TAMPER2),
++	IMX_PINCTRL_PIN(MX6ULL_PAD_SNVS_TAMPER3),
++	IMX_PINCTRL_PIN(MX6ULL_PAD_SNVS_TAMPER4),
++	IMX_PINCTRL_PIN(MX6ULL_PAD_SNVS_TAMPER5),
++	IMX_PINCTRL_PIN(MX6ULL_PAD_SNVS_TAMPER6),
++	IMX_PINCTRL_PIN(MX6ULL_PAD_SNVS_TAMPER7),
++	IMX_PINCTRL_PIN(MX6ULL_PAD_SNVS_TAMPER8),
++	IMX_PINCTRL_PIN(MX6ULL_PAD_SNVS_TAMPER9),
++};
++
+ static struct imx_pinctrl_soc_info imx6ul_pinctrl_info = {
+ 	.pins = imx6ul_pinctrl_pads,
+ 	.npins = ARRAY_SIZE(imx6ul_pinctrl_pads),
+ 	.gpr_compatible = "fsl,imx6ul-iomuxc-gpr",
+ };
+ 
++static struct imx_pinctrl_soc_info imx6ull_snvs_pinctrl_info = {
++	.pins = imx6ull_snvs_pinctrl_pads,
++	.npins = ARRAY_SIZE(imx6ull_snvs_pinctrl_pads),
++	.flags = ZERO_OFFSET_VALID,
++};
++
+ static struct of_device_id imx6ul_pinctrl_of_match[] = {
+-	{ .compatible = "fsl,imx6ul-iomuxc", },
++	{ .compatible = "fsl,imx6ul-iomuxc", .data = &imx6ul_pinctrl_info, },
++	{ .compatible = "fsl,imx6ull-iomuxc-snvs", .data = &imx6ull_snvs_pinctrl_info, },
+ 	{ /* sentinel */ }
+ };
+ 
+ static int imx6ul_pinctrl_probe(struct platform_device *pdev)
+ {
+-	return imx_pinctrl_probe(pdev, &imx6ul_pinctrl_info);
++	const struct of_device_id *match;
++	struct imx_pinctrl_soc_info *pinctrl_info;
++
++	match = of_match_device(imx6ul_pinctrl_of_match, &pdev->dev);
++
++	if (!match)
++		return -ENODEV;
++
++	pinctrl_info = (struct imx_pinctrl_soc_info *) match->data;
++
++	return imx_pinctrl_probe(pdev, pinctrl_info);
+ }
+ 
+ static struct platform_driver imx6ul_pinctrl_driver = {
+-- 
+2.15.1
 
->         rtc_dev: rtc@10003000 {
->                 compatible = "ingenic,jz4740-rtc";
->                 reg = <0x10003000 0x40>;
-> diff --git a/arch/mips/jz4740/platform.c b/arch/mips/jz4740/platform.c
-> index 5b7cdd67a9d9..cbc5f8e87230 100644
-> --- a/arch/mips/jz4740/platform.c
-> +++ b/arch/mips/jz4740/platform.c
-> @@ -233,22 +233,6 @@ struct platform_device jz4740_adc_device = {
->         .resource       = jz4740_adc_resources,
->  };
->
-> -/* Watchdog */
-> -static struct resource jz4740_wdt_resources[] = {
-> -       {
-> -               .start = JZ4740_WDT_BASE_ADDR,
-> -               .end   = JZ4740_WDT_BASE_ADDR + 0x10 - 1,
-> -               .flags = IORESOURCE_MEM,
-> -       },
-> -};
-> -
-> -struct platform_device jz4740_wdt_device = {
-> -       .name          = "jz4740-wdt",
-> -       .id            = -1,
-> -       .num_resources = ARRAY_SIZE(jz4740_wdt_resources),
-> -       .resource      = jz4740_wdt_resources,
-> -};
-> -
->  /* PWM */
->  struct platform_device jz4740_pwm_device = {
->         .name = "jz4740-pwm",
-> --
-> 2.11.0
->
->
-
-Regards,
-PrasannaKumar
 --
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
