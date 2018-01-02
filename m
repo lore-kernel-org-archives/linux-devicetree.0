@@ -1,156 +1,230 @@
-From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH V5 1/2] mtd: partitions: add of_match_table parser matching
-Date: Tue,  2 Jan 2018 14:04:57 +0100
-Message-ID: <20180102130458.16226-1-zajec5@gmail.com>
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: Re: [PATCH v6 1/6] can: dev: Add support for limiting configured
+ bitrate
+Date: Tue, 2 Jan 2018 14:00:50 +0100
+Message-ID: <b3cb6058-f61f-b643-a26f-c8330d9a3ffa@pengutronix.de>
+References: <1513949488-13026-1-git-send-email-faiz_abbas@ti.com>
+ <1513949488-13026-2-git-send-email-faiz_abbas@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+ protocol="application/pgp-signature";
+ boundary="lojS22k3aMN8TE3gRVpM7XGowopQoGyLZ"
+Return-path: <linux-can-owner@vger.kernel.org>
+In-Reply-To: <1513949488-13026-2-git-send-email-faiz_abbas@ti.com>
+Sender: linux-can-owner@vger.kernel.org
+To: Faiz Abbas <faiz_abbas@ti.com>, wg@grandegger.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-can@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, nsekhar@ti.com, fcooper@ti.com, robh@kernel.org, Wenyou.Yang@microchip.com, sergei.shtylyov@cogentembedded.com
 List-Id: devicetree@vger.kernel.org
 
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--lojS22k3aMN8TE3gRVpM7XGowopQoGyLZ
+Content-Type: multipart/mixed; boundary="sXvgQo1jvj4cX6w3cKFDCEbI3gjdcaGHz";
+ protected-headers="v1"
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+To: Faiz Abbas <faiz_abbas@ti.com>, wg@grandegger.com, robh+dt@kernel.org,
+ mark.rutland@arm.com
+Cc: linux-can@vger.kernel.org, netdev@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, nsekhar@ti.com,
+ fcooper@ti.com, robh@kernel.org, Wenyou.Yang@microchip.com,
+ sergei.shtylyov@cogentembedded.com
+Message-ID: <b3cb6058-f61f-b643-a26f-c8330d9a3ffa@pengutronix.de>
+Subject: Re: [PATCH v6 1/6] can: dev: Add support for limiting configured
+ bitrate
+References: <1513949488-13026-1-git-send-email-faiz_abbas@ti.com>
+ <1513949488-13026-2-git-send-email-faiz_abbas@ti.com>
+In-Reply-To: <1513949488-13026-2-git-send-email-faiz_abbas@ti.com>
 
-Partition parsers can now provide an of_match_table to enable
-flash<-->parser matching via device tree as documented in the
-mtd/partition.txt.
+--sXvgQo1jvj4cX6w3cKFDCEbI3gjdcaGHz
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
 
-It works by looking for a matching parser for every string in the
-"compatibility" property (starting with the most specific one).
+On 12/22/2017 02:31 PM, Faiz Abbas wrote:
+> From: Franklin S Cooper Jr <fcooper@ti.com>
+>=20
+> Various CAN or CAN-FD IP may be able to run at a faster rate than
+> what the transceiver the CAN node is connected to. This can lead to
+> unexpected errors. However, CAN transceivers typically have fixed
+> limitations and provide no means to discover these limitations at
+> runtime. Therefore, add support for a can-transceiver node that
+> can be reused by other CAN peripheral drivers to determine for both
+> CAN and CAN-FD what the max bitrate that can be used. If the user
+> tries to configure CAN to pass these maximum bitrates it will throw
+> an error.
+>=20
+> Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
+> [nsekhar@ti.com: fix build error with !CONFIG_OF]
+> Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+> ---
+> v6 changes:
+> fix build error with !CONFIG_OF
+>=20
+>  drivers/net/can/dev.c   | 39 +++++++++++++++++++++++++++++++++++++++
+>  include/linux/can/dev.h |  8 ++++++++
+>  2 files changed, 47 insertions(+)
+>=20
+> diff --git a/drivers/net/can/dev.c b/drivers/net/can/dev.c
+> index 365a8cc..007cfc0 100644
+> --- a/drivers/net/can/dev.c
+> +++ b/drivers/net/can/dev.c
+> @@ -27,6 +27,7 @@
+>  #include <linux/can/skb.h>
+>  #include <linux/can/netlink.h>
+>  #include <linux/can/led.h>
+> +#include <linux/of.h>
+>  #include <net/rtnetlink.h>
+> =20
+>  #define MOD_DESC "CAN device driver interface"
+> @@ -814,6 +815,30 @@ int open_candev(struct net_device *dev)
+>  }
+>  EXPORT_SYMBOL_GPL(open_candev);
+> =20
+> +#ifdef CONFIG_OF
+> +/*
+> + * Common function that can be used to understand the limitation of
+> + * a transceiver when it provides no means to determine these limitati=
+ons
+> + * at runtime.
+> + */
+> +void of_can_transceiver(struct net_device *dev)
+> +{
+> +	struct device_node *dn;
+> +	struct can_priv *priv =3D netdev_priv(dev);
+> +	struct device_node *np =3D dev->dev.parent->of_node;
+> +	int ret;
+> +
+> +	dn =3D of_get_child_by_name(np, "can-transceiver");
+> +	if (!dn)
+> +		return;
+> +
+> +	ret =3D of_property_read_u32(dn, "max-bitrate", &priv->max_bitrate);
+> +	if ((ret && ret !=3D -EINVAL) || (!ret && !priv->max_bitrate))
+> +		netdev_warn(dev, "Invalid value for transceiver max bitrate. Ignorin=
+g bitrate limit.\n");
+> +}
+> +EXPORT_SYMBOL_GPL(of_can_transceiver);
+> +#endif
+> +
+>  /*
+>   * Common close function for cleanup before the device gets closed.
+>   *
+> @@ -913,6 +938,13 @@ static int can_changelink(struct net_device *dev, =
+struct nlattr *tb[],
+>  					priv->bitrate_const_cnt);
+>  		if (err)
+>  			return err;
+> +
+> +		if (priv->max_bitrate && bt.bitrate > priv->max_bitrate) {
+> +			netdev_err(dev, "arbitration bitrate surpasses transceiver capabili=
+ties of %d bps\n",
+> +				   priv->max_bitrate);
+> +			return -EINVAL;
+> +		}
 
-This support is currently limited to built-in parsers as it uses
-request_module() and friends. This should be sufficient for most cases
-though as compiling parsers as modules isn't a common choice.
+What about movong this check into can_get_bittiming()? Although we loose
+the "arbitration" vs "canfd data".
 
-Signed-off-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
----
-This is based on Brian's patches:
-[RFC PATCH 4/7] mtd: add of_match_mtd_parser() and of_mtd_match_mtd_parser() helpers
-[RFC PATCH 6/7] RFC: mtd: partitions: enable of_match_table matching
+> +
+>  		memcpy(&priv->bittiming, &bt, sizeof(bt));
+> =20
+>  		if (priv->do_set_bittiming) {
+> @@ -997,6 +1029,13 @@ static int can_changelink(struct net_device *dev,=
+ struct nlattr *tb[],
+>  					priv->data_bitrate_const_cnt);
+>  		if (err)
+>  			return err;
+> +
+> +		if (priv->max_bitrate && dbt.bitrate > priv->max_bitrate) {
+> +			netdev_err(dev, "canfd data bitrate surpasses transceiver capabilit=
+ies of %d bps\n",
+> +				   priv->max_bitrate);
+> +			return -EINVAL;
+> +		}
+> +
+>  		memcpy(&priv->data_bittiming, &dbt, sizeof(dbt));
+> =20
+>  		if (priv->do_set_data_bittiming) {
+> diff --git a/include/linux/can/dev.h b/include/linux/can/dev.h
+> index 61f1cf2..fbb7810 100644
+> --- a/include/linux/can/dev.h
+> +++ b/include/linux/can/dev.h
+> @@ -48,6 +48,8 @@ struct can_priv {
+>  	unsigned int data_bitrate_const_cnt;
+>  	struct can_clock clock;
+> =20
+> +	unsigned int max_bitrate;
 
-V1: Put helpers in mtdpart.c instead of drivers/of/of_mtd.c
-    Merge helpers into a single of_mtd_match_mtd_parser
-V3: Add a simple comment to note we will need the best match in the future
-V4: Rework new functions to pick parser with the best match
-    Move new code in parse_mtd_partitions up so it has precedence over flash
-    driver defaults and MTD defaults
-V5: Rework matching code to start checking with the most specific string in the
-    "compatibility" property.
----
- drivers/mtd/mtdpart.c          | 64 ++++++++++++++++++++++++++++++++++++++++++
- include/linux/mtd/partitions.h |  1 +
- 2 files changed, 65 insertions(+)
+Please make it an u32, name it "bitrate_max" and ...
 
-diff --git a/drivers/mtd/mtdpart.c b/drivers/mtd/mtdpart.c
-index be088bccd593..a3aaaa4af992 100644
---- a/drivers/mtd/mtdpart.c
-+++ b/drivers/mtd/mtdpart.c
-@@ -30,6 +30,7 @@
- #include <linux/mtd/mtd.h>
- #include <linux/mtd/partitions.h>
- #include <linux/err.h>
-+#include <linux/of.h>
- 
- #include "mtdcore.h"
- 
-@@ -880,6 +881,48 @@ static int mtd_part_do_parse(struct mtd_part_parser *parser,
- }
- 
- /**
-+ * mtd_part_get_parser_by_cp - find MTD parser by a compatible string
-+ *
-+ * @cp: compatible string describing partitions in a device tree
-+ *
-+ * MTD parsers can specify supported partitions by providing a table of
-+ * compatibility strings. This function finds a parser that advertises support
-+ * for a passed value of "compatible".
-+ */
-+static struct mtd_part_parser *mtd_part_get_parser_by_cp(const char *cp)
-+{
-+	struct mtd_part_parser *p, *ret;
-+
-+	spin_lock(&part_parser_lock);
-+
-+	list_for_each_entry(p, &part_parsers, list) {
-+		const struct of_device_id *matches;
-+
-+		matches = p->of_match_table;
-+		if (!matches)
-+			continue;
-+
-+		for (; matches->name[0] || matches->type[0] || matches->compatible[0];
-+		     matches++) {
-+			if (!matches->compatible[0])
-+				continue;
-+			if (!strcmp(matches->compatible, cp) &&
-+			    try_module_get(p->owner)) {
-+				ret = p;
-+				break;
-+			}
-+		}
-+
-+		if (ret)
-+			break;
-+	}
-+
-+	spin_unlock(&part_parser_lock);
-+
-+	return ret;
-+}
-+
-+/**
-  * parse_mtd_partitions - parse MTD partitions
-  * @master: the master partition (describes whole MTD device)
-  * @types: names of partition parsers to try or %NULL
-@@ -905,8 +948,29 @@ int parse_mtd_partitions(struct mtd_info *master, const char *const *types,
- 			 struct mtd_part_parser_data *data)
- {
- 	struct mtd_part_parser *parser;
-+	struct device_node *np;
-+	struct property *prop;
-+	const char *cp;
- 	int ret, err = 0;
- 
-+	np = of_get_child_by_name(mtd_get_of_node(master), "partitions");
-+	if (np) {
-+		of_property_for_each_string(np, "compatible", prop, cp) {
-+			parser = mtd_part_get_parser_by_cp(cp);
-+			if (!parser)
-+				continue;
-+			ret = mtd_part_do_parse(parser, master, pparts, data);
-+			if (ret > 0) {
-+				of_node_put(np);
-+				return 0;
-+			}
-+			mtd_part_parser_put(parser);
-+			if (ret < 0 && !err)
-+				err = ret;
-+		}
-+		of_node_put(np);
-+	}
-+
- 	if (!types)
- 		types = default_mtd_part_types;
- 
-diff --git a/include/linux/mtd/partitions.h b/include/linux/mtd/partitions.h
-index c4beb70dacbd..11cb0c50cd84 100644
---- a/include/linux/mtd/partitions.h
-+++ b/include/linux/mtd/partitions.h
-@@ -77,6 +77,7 @@ struct mtd_part_parser {
- 	struct list_head list;
- 	struct module *owner;
- 	const char *name;
-+	const struct of_device_id *of_match_table;
- 	int (*parse_fn)(struct mtd_info *, const struct mtd_partition **,
- 			struct mtd_part_parser_data *);
- 	void (*cleanup)(const struct mtd_partition *pparts, int nr_parts);
--- 
-2.11.0
+>> struct can_priv {
+>> 	struct net_device *dev;
+>> 	struct can_device_stats can_stats;
+>>=20
+>> 	struct can_bittiming bittiming, data_bittiming;
+>> 	const struct can_bittiming_const *bittiming_const,
+>> 		*data_bittiming_const;
+>> 	const u16 *termination_const;
+>> 	unsigned int termination_const_cnt;
+>> 	u16 termination;
+>> 	const u32 *bitrate_const;
+>> 	unsigned int bitrate_const_cnt;
+>> 	const u32 *data_bitrate_const;
+>> 	unsigned int data_bitrate_const_cnt;
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+=2E..move it here.
+
+>> 	struct can_clock clock;
+>=20
+
+> +
+>  	enum can_state state;
+> =20
+>  	/* CAN controller features - see include/uapi/linux/can/netlink.h */
+> @@ -166,6 +168,12 @@ void can_put_echo_skb(struct sk_buff *skb, struct =
+net_device *dev,
+>  unsigned int can_get_echo_skb(struct net_device *dev, unsigned int idx=
+);
+>  void can_free_echo_skb(struct net_device *dev, unsigned int idx);
+> =20
+> +#ifdef CONFIG_OF
+> +void of_can_transceiver(struct net_device *dev);
+> +#else
+> +static inline void of_can_transceiver(struct net_device *dev) { }
+> +#endif
+> +
+>  struct sk_buff *alloc_can_skb(struct net_device *dev, struct can_frame=
+ **cf);
+>  struct sk_buff *alloc_canfd_skb(struct net_device *dev,
+>  				struct canfd_frame **cfd);
+>=20
+
+Marc
+
+--=20
+Pengutronix e.K.                  | Marc Kleine-Budde           |
+Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
+
+
+--sXvgQo1jvj4cX6w3cKFDCEbI3gjdcaGHz--
+
+--lojS22k3aMN8TE3gRVpM7XGowopQoGyLZ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCgAdFiEE4bay/IylYqM/npjQHv7KIOw4HPYFAlpLgoUACgkQHv7KIOw4
+HPb0HAgAhHtoVDBzKmlHoWbNn/hn2mGPuclEs3uzGzYja/S18I162PCx8ACkkzqV
+L33f2wTvDkp0uLM1tWMoeq37lhBQxLevEQku4FMa7tDE+6ySzuX/rPPsnMhK2pB5
+CIeSCFpO3bbsx6x9cLeUHYGHxBarMRaTz+La7zN76pGuNBMuaavepm5f1aKELUkY
+MPLd+eT1Gc2eGtaLN8evF1M5Ei4Qq2qBUVQz0eb28nHNiWhuE0msS6MchapgwLP8
+ntfL0CrGjeG6bxH3v8cTYwDtKJHB1cicjALnBBioJCDxHcJApI5KFxKIxTxexFqA
+IUd78eosFLxaSd1C6pD1RPlGW4cI/w==
+=3Js8
+-----END PGP SIGNATURE-----
+
+--lojS22k3aMN8TE3gRVpM7XGowopQoGyLZ--
