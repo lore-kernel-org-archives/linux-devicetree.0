@@ -1,46 +1,49 @@
-From: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
-Subject: [PATCH] ARM: dts: n900: Add aliases for lcd and tvout displays
-Date: Wed,  3 Jan 2018 00:17:14 +0200
-Message-ID: <1514931434-13192-1-git-send-email-ivo.g.dimitrov.75@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: tony@atomide.com, bcousson@baylibre.com
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH v2] PCI: imx6: Add PHY reference clock source support
+Date: Tue, 2 Jan 2018 20:54:50 -0200
+Message-ID: <CAOMZO5AFC9dxhsQjmRrDA7Z3KMkEemryKOBmQhXm19NXKxHkKQ@mail.gmail.com>
+References: <AM5PR0402MB28505BE42AB7774EC90927E18C040@AM5PR0402MB2850.eurprd04.prod.outlook.com>
+ <1514709094-4110-1-git-send-email-ilya@compulab.co.il>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1514709094-4110-1-git-send-email-ilya@compulab.co.il>
+Sender: linux-pci-owner@vger.kernel.org
+To: Ilya Ledvich <ilya@compulab.co.il>
+Cc: Richard Zhu <hongxing.zhu@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-When both lcd and tv are enabled, the order in which they will be probed is
-unknown, so it might happen (and it happens in reality) that tv is
-configured as display0 and lcd as display1, which results in nothing
-displayed on lcd, as display1 is disabled by default.
+Hi Ilya,
 
-Fix that by providing correct aliases for lcd and tv
++ Rob and dt list
 
-Signed-off-by: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
----
- arch/arm/boot/dts/omap3-n900.dts | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+On Sun, Dec 31, 2017 at 6:31 AM, Ilya Ledvich <ilya@compulab.co.il> wrote:
+> i.MX7D variant of the IP can use either Crystal Oscillator input
+> or internal clock input as a Reference Clock input for PCIe PHY.
+> Add support for an optional property 'pcie-phy-refclk-internal'.
+> If present then an internal clock input is used as PCIe PHY
+> reference clock source. By default an external oscillator input
+> is still used.
+>
+> Verified on Compulab SBC-iMX7 Single Board Computer.
+>
+> Signed-off-by: Ilya Ledvich <ilya@compulab.co.il>
+> ---
+>  Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt | 5 +++++
+>  drivers/pci/dwc/pci-imx6.c                               | 8 +++++++-
+>  2 files changed, 12 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+> index 7b1e48b..581bc09 100644
+> --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+> +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+> @@ -50,6 +50,11 @@ Additional required properties for imx7d-pcie:
+>                - "pciephy"
+>                - "apps"
+>
+> +Additional optional properties for imx7d-pcie:
+> +- pcie-phy-refclk-internal: If present then an internal PLL input is used as
+> +  PCIe PHY reference clock source. By default an external oscillator input
+> +  is used.
 
-diff --git a/arch/arm/boot/dts/omap3-n900.dts b/arch/arm/boot/dts/omap3-n900.dts
-index 669c51c..4b9c3a7 100644
---- a/arch/arm/boot/dts/omap3-n900.dts
-+++ b/arch/arm/boot/dts/omap3-n900.dts
-@@ -35,6 +35,8 @@
- 		i2c1 = &i2c1;
- 		i2c2 = &i2c2;
- 		i2c3 = &i2c3;
-+		display0 = &lcd;
-+		display1 = &tv;
- 	};
- 
- 	cpus {
-@@ -965,7 +967,7 @@
- 		ti,esd-recovery-timeout-ms = <8000>;
- 	};
- 
--	acx565akm@2 {
-+	lcd: acx565akm@2 {
- 		compatible = "sony,acx565akm";
- 		spi-max-frequency = <6000000>;
- 		reg = <2>;
--- 
-1.9.1
+Should this contain the vendor prefix, like fsl,pcie-phy-refclk-internal ?
