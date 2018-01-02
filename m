@@ -1,42 +1,41 @@
-From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Subject: Order in "compatibility" DT property ignored by a platform bus
-Date: Tue, 2 Jan 2018 10:19:42 +0100
-Message-ID: <CACna6ry3iOrqbFqS6EroVhhP3szNgfCQxpe=yx1eHmY2oD3big@mail.gmail.com>
+From: Anson Huang <Anson.Huang@nxp.com>
+Subject: [PATCH 1/2] ARM: dts: imx6ul: add 696MHz operating point
+Date: Wed, 3 Jan 2018 01:07:38 +0800
+Message-ID: <1514912859-17691-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Cc: Brian Norris <computersforpeace@gmail.com>
+Content-Type: text/plain
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, rjw@rjwysocki.net, viresh.kumar@linaro.org, ping.bai@nxp.com, aisheng.dong@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-I was wondering how platform bus handles order of strings in the
-"compatibility" property. After reading the code & testing it I
-realized it doesn't.
+Add 696MHz operating point according to datasheet
+(Rev. 0, 12/2015).
 
-The property should store strings ordered from the most specific to
-the most generic. You could expect a more specific string to have a
-priority while matching.
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ arch/arm/boot/dts/imx6ul.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-In platform_match there isn't any magic code for handling that. It
-simply checks if a driver that was passed can support a given device.
-I also did 2 quick tests with:
-1) compatible =3D "foo", "bar";
-2) compatible =3D "bar", "foo";
-and it each case a foo platform driver was used. It just happened to
-be before bar platform driver on kernel's internal list (both drivers
-were built-in).
-
-If you compare this with ARM's setup_machine_fdt you will notice that
-one actually looks for the best matching machine code (it's handled
-with the __of_match_node).
-
-Am I correct understanding this isn't a proper behavior? Are there any
-plans fixing this?
->From what I can see a current design with the "match" callback doesn't
-allow such a change, so I guess it'd need to be reworked first? Were
-there any efforts regarding that?
-
---=20
-Rafa=C5=82
+diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
+index e0b4a46..86b3251 100644
+--- a/arch/arm/boot/dts/imx6ul.dtsi
++++ b/arch/arm/boot/dts/imx6ul.dtsi
+@@ -68,12 +68,14 @@
+ 			clock-latency = <61036>; /* two CLK32 periods */
+ 			operating-points = <
+ 				/* kHz	uV */
++				696000	1275000
+ 				528000	1175000
+ 				396000	1025000
+ 				198000	950000
+ 			>;
+ 			fsl,soc-operating-points = <
+ 				/* KHz	uV */
++				696000	1275000
+ 				528000	1175000
+ 				396000	1175000
+ 				198000	1175000
+-- 
+1.9.1
