@@ -1,101 +1,53 @@
-From: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
-Subject: Re: [PATCH v2 5/8] MIPS: jz4740: dts: Add bindings for the jz4740-wdt
- driver
-Date: Tue, 02 Jan 2018 17:48:18 +0100
-Message-ID: <1514911698.3623.1@smtp.crapouillou.net>
-References: <20171228162939.3928-2-paul@crapouillou.net>
-        <20171230135108.6834-1-paul@crapouillou.net>
-        <20171230135108.6834-5-paul@crapouillou.net>
-        <CANc+2y5ZUM_ZzXaGgbx9b7O1GF4GrbaYsv97G+akvhP2d2VVUA@mail.gmail.com>
+From: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH 0/8] ARM: dts: keystone*: Continued warnings cleanups
+Date: Tue, 2 Jan 2018 11:01:54 -0600
+Message-ID: <20180102170202.15045-1-afd@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CANc+2y5ZUM_ZzXaGgbx9b7O1GF4GrbaYsv97G+akvhP2d2VVUA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: PrasannaKumar Muralidharan <prasannatsmkumar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Andrew F . Davis" <afd-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi PrasannaKumar,
+Hello all,
 
-Le mar. 2 janv. 2018 =E0 17:37, PrasannaKumar Muralidharan=20
-<prasannatsmkumar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> a =E9crit :
-> Hi Paul,
->=20
-> On 30 December 2017 at 19:21, Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>=20
-> wrote:
->>  Also remove the watchdog platform_device from platform.c, since it
->>  wasn't used anywhere anyway.
->>=20
->>  Signed-off-by: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
->>  ---
->>   arch/mips/boot/dts/ingenic/jz4740.dtsi |  8 ++++++++
->>   arch/mips/jz4740/platform.c            | 16 ----------------
->>   2 files changed, 8 insertions(+), 16 deletions(-)
->>=20
->>   v2: No change
->>=20
->>  diff --git a/arch/mips/boot/dts/ingenic/jz4740.dtsi=20
->> b/arch/mips/boot/dts/ingenic/jz4740.dtsi
->>  index cd5185bb90ae..26c6b561d6f7 100644
->>  --- a/arch/mips/boot/dts/ingenic/jz4740.dtsi
->>  +++ b/arch/mips/boot/dts/ingenic/jz4740.dtsi
->>  @@ -45,6 +45,14 @@
->>                  #clock-cells =3D <1>;
->>          };
->>=20
->>  +       watchdog: watchdog@10002000 {
->>  +               compatible =3D "ingenic,jz4740-watchdog";
->>  +               reg =3D <0x10002000 0x10>;
->>  +
->>  +               clocks =3D <&cgu JZ4740_CLK_RTC>;
->>  +               clock-names =3D "rtc";
->>  +       };
->>  +
->=20
-> The watchdog driver calls jz4740_timer_enable_watchdog and
-> jz4740_timer_disable_watchdog which defined in
-> arch/mips/jz4740/timer.c. It accesses registers iomapped by timer
-> code. Declaring register size as 0x10 does not show the real picture.
-> Better use register size as 0x100 and let timer, wdt, pwm drivers to
-> share them.
+Just a couple cleanups for DT warnings when compiling with W=1.
 
-As you said, it accesses registers iomapped by timer code. So the=20
-watchdog
-driver doesn't need to iomap them.
+This clears up 51 more warnings when building keystone_defconfig.
 
-> Code from one of your branches
-> (https://github.com/OpenDingux/linux/blob/for-upstream-clocksource/arch/m=
-ips/boot/dts/ingenic/jz4740.dtsi)
-> does it. Can you prepare a patch series and send it?
-> I have a patch set that moves timer code out of arch/mips/jz4740/ and
-> does a similar thing for watchdog and pwm. As your new timer driver is
-> better than the existing one I have not sent my patches yet. I would
-> like to see it getting mainlined as it paves way for removing most of
-> code in arch/mips/jz4740.
+Based on Santosh's "for_4.16/keystone-dts" branch.
 
-The whole 'for-upstream-clocksource' branch is supposed to go upstream,
-but I can't do it in one big patchset without having lots of breakages=20
-with
-my other patchsets (jz4770 SoC support, and jz4740 watchdog updates)
-currently under review. That also makes it simpler to upstream than=20
-having
-one single patchset that touches 6 different frameworks (MIPS, irq,=20
-clocks,
-clocksource, watchdog, PWM).
+Thanks,
+Andrew
 
-So I will submit it in two steps, first the irq/clocks/clocksource=20
-drivers
-(this patchset) hopefully for 4.16, and then the platform/watchdog/PWM=20
-fixes
-for 4.17.
+Andrew F. Davis (8):
+  ARM: dts: keystone: Move keystone_irq to under device-state-control
+  ARM: dts: keystone: Move reset-controller to under
+    device-state-control
+  ARM: dts: keystone-k2e: Move keystone_dsp_gpio to under
+    device-state-control
+  ARM: dts: keystone-k2l: Move keystone_dsp_gpio to under
+    device-state-control
+  ARM: dts: keystone-k2hk: Move keystone_dsp_gpio to under
+    device-state-control
+  ARM: dts: keystone-k2g: Move keystone_irq to under
+    device-state-control
+  ARM: dts: keystone-k2g: Move keystone_dsp_gpio to under
+    device-state-control
+  ARM: dts: keystone-k2g: Move usb-phy nodes out of soc0
 
-Kind regards,
--Paul
-=
+ arch/arm/boot/dts/keystone-k2e.dtsi  |  13 +++--
+ arch/arm/boot/dts/keystone-k2g.dtsi  |  64 ++++++++++++---------
+ arch/arm/boot/dts/keystone-k2hk.dtsi | 104 +++++++++++++++++++----------------
+ arch/arm/boot/dts/keystone-k2l.dtsi  |  52 ++++++++++--------
+ arch/arm/boot/dts/keystone.dtsi      |  34 +++++++-----
+ 5 files changed, 151 insertions(+), 116 deletions(-)
+
+-- 
+2.15.1
 
 --
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
