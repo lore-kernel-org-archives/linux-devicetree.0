@@ -1,163 +1,73 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2 1/9] dt-bindings: media: Add Renesas CEU bindings
-Date: Tue, 02 Jan 2018 13:45:30 +0200
-Message-ID: <6263435.xWGUCtEJC1@avalon>
-References: <1514469681-15602-1-git-send-email-jacopo+renesas@jmondi.org> <1514469681-15602-2-git-send-email-jacopo+renesas@jmondi.org>
+From: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 00/12] mediatek: rework audio subsystem driver
+Date: Tue, 2 Jan 2018 19:47:09 +0800
+Message-ID: <cover.1514881870.git.ryder.lee@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1514469681-15602-2-git-send-email-jacopo+renesas@jmondi.org>
-Sender: linux-sh-owner@vger.kernel.org
-To: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc: magnus.damm@gmail.com, geert@glider.be, mchehab@kernel.org, hverkuil@xs4all.nl, robh+dt@kernel.org, mark.rutland@arm.com, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Garlic Tseng <garlic.tseng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacopo,
+Hi all,
 
-Thank you for the patch.
+This patch series mainly adds a common driver [5][6] for the top block of
+the MediaTek audio subsystem, which includes clock part and audio components.
+This is a minimal driver that manages shared resources like shared registers,
+and expose a regmap to its sub-nodes. It was tested on the bananapi-r2 and
+the MT2701 EVB.
 
-On Thursday, 28 December 2017 16:01:13 EET Jacopo Mondi wrote:
-> Add bindings documentation for Renesas Capture Engine Unit (CEU).
-> 
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> ---
->  .../devicetree/bindings/media/renesas,ceu.txt      | 85 +++++++++++++++++++
->  1 file changed, 85 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/renesas,ceu.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/media/renesas,ceu.txt
-> b/Documentation/devicetree/bindings/media/renesas,ceu.txt new file mode
-> 100644
-> index 0000000..f45628e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/renesas,ceu.txt
-> @@ -0,0 +1,85 @@
-> +Renesas Capture Engine Unit (CEU)
-> +----------------------------------------------
-> +
-> +The Capture Engine Unit is the image capture interface found on Renesas
-> +RZ chip series and on SH Mobile ones.
+Also, this driver can be reused by other subsystems (e.g. MMSYS, ETHSYS) in
+future patch.
 
-"ones" sound a bit weird. How about "... found in the Renesas SH Mobil and RZ 
-SoCs." ?
+Patch[1]-[4]: rework for audio enable/disable sequences and update some part of
+			  code to make them more generic.
+Patch[7]~[12]: modify both drivers, audio and clock to adapt the new subsystem.
 
-> +The interface supports a single parallel input with data bus width up to
-> +8/16 bits.
+Ryder Lee (12):
+  ASoC: mediatek: fix error handling in mt2701_afe_pcm_dev_probe()
+  ASoC: mediatek: rework clock functions for MT2701
+  ASoC: mediatek: cleanup audio driver for MT2701
+  ASoC: mediatek: update clock related properties of MT2701 AFE
+  mfd: mtk-audsys: add MediaTek audio subsystem driver
+  mfd: add DT bindings for MedaiTek audio subsystem
+  ASoC: mediatek: modify MT2701 AFE driver to adapt subsystem wrapper
+  ASoC: mediatek: modify documentation to adapt subsystem wrapper
+  clk: mediatek: move part of mtk_clk_register_gates() to the new
+    function
+  clk: mediatek: switch to use dev_get_regmap() for MT7622 audsys
+  clk: mediatek: add audsys support for MT2701
+  dt-bindings: clock: mediatek: update audsys bindings to adapt the
+    wrapper
 
-What do you mean by "up to 8/16 bits" ?
-
-> +Required properties:
-> +- compatible
-> +	Must be one of:
-> +	- "renesas,ceu"
-> +	- "renesas,r7s72100-ceu"
-
-This is unclear, as Geert pointed out renesas,ceu sounds like a fallback. I 
-think this could be clarified if you explained how you plan to support other 
-SoCs (in particular the SH Mobile series, when/if it will receive DT support).
-
-> +- reg
-> +	Physical address base and size.
-
-The standard practice, if I'm not mistaken, is to document properties with the 
-description starting on the same line as the property name.
-
-- reg: Physical address base and size.
-
-And nitpicking again, I'd write "register" instead of "physical" to clarify 
-what the properties contains (even if its name should make it clear).
-
-> +- interrupts
-> +	The interrupt specifier.
-> +- pinctrl-names, pinctrl-0
-> +	phandle of pin controller sub-node configuring pins for CEU operations.
-
-pinctrl-names isn't a phandle. If you want to document those properties (not 
-all DT bindings do, I'm not sure what is best) you should document them both, 
-possibly on two separate lines. There are plenty of examples in the upstream 
-DT bindings.
-
-> +- remote-endpoint
-> +	phandle to an 'endpoint' subnode of a remote device node.
-
-As Geert pointed out this isn't a top-level property. I wouldn't document it 
-as such, but instead reference Documentation/devicetree/bindings/media/video-
-interfaces.txt (see Documentation/devicetree/bindings/display/renesas,du.txt 
-or Documentation/devicetree/bindings/media/renesas,drif.txt for examples).
-
-> +CEU supports a single parallel input and should contain a single 'port'
-
-s/CEU/The CEU/
-
-> subnode
-> +with a single 'endpoint'. Optional endpoint properties applicable to
-> parallel
-> +input bus described in "video-interfaces.txt" supported by this driver are:
-> +
-> +- hsync-active
-> +	active state of the HSYNC signal, 0/1 for LOW/HIGH respectively.
-> +- vsync-active
-> +	active state of the VSYNC signal, 0/1 for LOW/HIGH respectively.
-> +
-> +Example:
-> +
-> +The example describes the connection between the Capture Engine Unit and an
-> +OV7670 image sensor sitting on bus i2c1.
-
-Maybe s/sitting on/connected to/ ?
-
-> +ceu: ceu@e8210000 {
-> +	reg = <0xe8210000 0x209c>;
-> +	compatible = "renesas,ceu";
-> +	interrupts = <GIC_SPI 332 IRQ_TYPE_LEVEL_HIGH>;
-> +
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&vio_pins>;
-> +
-> +	status = "okay";
-> +
-> +	port {
-> +		ceu_in: endpoint {
-> +			remote-endpoint = <&ov7670_out>;
-> +
-> +			hsync-active = <1>;
-> +			vsync-active = <0>;
-> +		};
-> +	};
-> +};
-> +
-> +i2c1: i2c@fcfee400 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&i2c1_pins>;
-> +
-> +	status = "okay";
-> +
-> +	clock-frequency = <100000>;
-> +
-> +	ov7670: camera@21 {
-> +		compatible = "ovti,ov7670";
-> +		reg = <0x21>;
-> +
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&vio_pins>;
-> +
-> +		reset-gpios = <&port3 11 GPIO_ACTIVE_LOW>;
-> +		powerdown-gpios = <&port3 12 GPIO_ACTIVE_HIGH>;
-> +
-> +		port {
-> +			ov7670_out: endpoint {
-> +				remote-endpoint = <&ceu_in>;
-> +
-> +				hsync-active = <1>;
-> +				vsync-active = <0>;
-> +			};
-> +		};
-> +	};
-> +};
+ .../bindings/arm/mediatek/mediatek,audsys.txt      |  19 +-
+ .../devicetree/bindings/mfd/mtk-audsys.txt         | 109 +++++
+ .../devicetree/bindings/sound/mt2701-afe-pcm.txt   | 257 +++++-----
+ drivers/clk/mediatek/Kconfig                       |   6 +
+ drivers/clk/mediatek/Makefile                      |   1 +
+ drivers/clk/mediatek/clk-mt2701-aud.c              | 180 +++++++
+ drivers/clk/mediatek/clk-mt7622-aud.c              |  11 +-
+ drivers/clk/mediatek/clk-mtk.c                     |  26 +-
+ drivers/clk/mediatek/clk-mtk.h                     |   4 +
+ drivers/mfd/Kconfig                                |   9 +
+ drivers/mfd/Makefile                               |   2 +
+ drivers/mfd/mtk-audsys.c                           | 138 ++++++
+ include/dt-bindings/clock/mt7622-clk.h             |   3 +-
+ sound/soc/mediatek/mt2701/mt2701-afe-clock-ctrl.c  | 526 +++++++--------------
+ sound/soc/mediatek/mt2701/mt2701-afe-clock-ctrl.h  |  15 +-
+ sound/soc/mediatek/mt2701/mt2701-afe-common.h      |  84 +---
+ sound/soc/mediatek/mt2701/mt2701-afe-pcm.c         | 212 +++------
+ sound/soc/mediatek/mt2701/mt2701-reg.h             |  42 +-
+ 18 files changed, 860 insertions(+), 784 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/mtk-audsys.txt
+ create mode 100644 drivers/clk/mediatek/clk-mt2701-aud.c
+ create mode 100644 drivers/mfd/mtk-audsys.c
 
 -- 
-Regards,
+1.9.1
 
-Laurent Pinchart
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
