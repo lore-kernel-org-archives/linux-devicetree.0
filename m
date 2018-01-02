@@ -1,60 +1,97 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH v2 4/9] ARM: dts: r7s72100: Add Capture Engine Unit (CEU)
-Date: Tue, 2 Jan 2018 10:35:59 +0100
-Message-ID: <CAMuHMdXuApVjg4Sq3tY+p6SAfCqRaJ_GmaC2koiX1ZzDPiXXcQ@mail.gmail.com>
-References: <1514469681-15602-1-git-send-email-jacopo+renesas@jmondi.org> <1514469681-15602-5-git-send-email-jacopo+renesas@jmondi.org>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2 1/2] arm64: dts: renesas: salvator-x: Remove
+ renesas,no-ether-link property
+Date: Tue, 2 Jan 2018 10:38:24 +0100
+Message-ID: <20180102093823.o6km656xdef7jnwf@verge.net.au>
+References: <1513869539-18803-1-git-send-email-vladimir_zapolskiy@mentor.com>
+ <1513869539-18803-2-git-send-email-vladimir_zapolskiy@mentor.com>
+ <20171222083203.h5a65uitv7yok5fz@verge.net.au>
+ <20171222084048.ssyi53yj34hzejct@verge.net.au>
+ <a002072f-dbe4-0b6a-a19f-08dd1ed3a8d2@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1514469681-15602-5-git-send-email-jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <a002072f-dbe4-0b6a-a19f-08dd1ed3a8d2@mentor.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Bogdan Mirea <Bogdan-Stefan_Mirea@mentor.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacopo,
+Hi Vladimir,
 
-On Thu, Dec 28, 2017 at 3:01 PM, Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org> wrote:
-> Add Capture Engine Unit (CEU) node to device tree.
+Happy New Year!
 
-Thanks for your patch!
+On Fri, Dec 22, 2017 at 12:22:09PM +0200, Vladimir Zapolskiy wrote:
+> Hi Simon,
+> 
+> On 12/22/2017 10:40 AM, Simon Horman wrote:
+> > On Fri, Dec 22, 2017 at 09:32:03AM +0100, Simon Horman wrote:
+> >> On Thu, Dec 21, 2017 at 05:18:58PM +0200, Vladimir Zapolskiy wrote:
+> >>> From: Bogdan Mirea <Bogdan-Stefan_Mirea@mentor.com>
+> >>>
+> >>> The present change is a bug fix for AVB link iteratively up/down.
+> >>>
+> >>> Steps to reproduce:
+> >>> - start AVB TX stream (Using aplay via MSE),
+> >>> - disconnect+reconnect the eth cable,
+> >>> - after a reconnection the eth connection goes iteratively up/down
+> >>>   without user interaction,
+> >>> - this may heal after some seconds or even stay for minutes.
+> >>>
+> >>> As the documentation specifies, the "renesas,no-ether-link" option
+> >>> should be used when a board does not provide a proper AVB_LINK signal.
+> >>> There is no need for this option enabled on RCAR H3/M3 Salvator-X/XS
+> >>> and ULCB starter kits since the AVB_LINK is correctly handled by HW.
+> >>>
+> >>> Choosing to keep or remove the "renesas,no-ether-link" option will
+> >>> have impact on the code flow in the following ways:
+> >>> - keeping this option enabled may lead to unexpected behavior since
+> >>>   the RX & TX are enabled/disabled directly from adjust_link function
+> >>>   without any HW interrogation,
+> >>> - removing this option, the RX & TX will only be enabled/disabled after
+> >>>   HW interrogation. The HW check is made through the LMON pin in PSR
+> >>>   register which specifies AVB_LINK signal value (0 - at low level;
+> >>>   1 - at high level).
+> >>>
+> >>> In conclusion, the present change is also a safety improvement because
+> >>> it removes the "renesas,no-ether-link" option leading to a proper way
+> >>> of detecting the link state based on HW interrogation and not on
+> >>> software heuristic.
+> >>>
+> >>> Fixes: d25e8ff0d5aa ("arm64: dts: renesas: Extract common Salvator-X board support")
+> >>
+> >> The above shuffles the code around but does not introduce the problem
+> >> as far as I can see. Instead I think we should use:
+> >>
+> >> Fixes: dc36965a8905 ("arm64: dts: r8a7796: salvator-x: Enable EthernetAVB")
+> >> Fixes: 6fa501c549aa ("arm64: dts: r8a7795: enable EthernetAVB on Salvator-X")
+> >>
+> >>> Signed-off-by: Bogdan Mirea <Bogdan-Stefan_Mirea@mentor.com>
+> >>> Signed-off-by: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+> > 
+> > I have applied this a fix for v4.15 with the updated Fixes tags above.
+> > 
+> 
+> thank you, I was unsure if you expected to get changes which can be used
+> as a base without patch application conflicts (my done choice) or changes,
+> which originally intorduced the bug, but formally require slightly
+> different fixes due to code changes in the middle. If it would be needed,
+> hopefully linux-stable maintainers can resolve the trivial conflicts.
+> 
+> Also you may find this information from the cover letter useful,
+> someone may want to check the relevant board schematics and send
+> similar fixes (if applicable after schematics review and testing):
+> 
+>   Note that DTS files for V3M Starter Kit, Draak and Eagle boards
+>   contain the same property, the files are untouched due to unavailable
+>   schematics to verify if the fix applies to these boards as well.
 
-> Signed-off-by: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+Thanks. I took a quick look and my findings so far are:
 
-With the issue below fixed:
-Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+* Eagle: This approach seems applicable as AVB_LINK appears to be hooked up
+* V3M Starter Kit: This approach seems applicable as AVB0_LINK appears to be
+  hooked up
+* Draak: I don't seem to be able to locate documentation at this time
 
-> --- a/arch/arm/boot/dts/r7s72100.dtsi
-> +++ b/arch/arm/boot/dts/r7s72100.dtsi
-
-> @@ -667,4 +667,13 @@
->                 power-domains = <&cpg_clocks>;
->                 status = "disabled";
->         };
-> +
-> +       ceu: ceu@e8210000 {
-> +               reg = <0xe8210000 0x209c>;
-
-Given the last documented register is at offset 0x209C, the region above is too
-small (also in the example in the DT bindings).
-But due to MMU granularity, it will be accessible anyway.
-
-reg = <0xe8210000 0x3000>;
-
-I assume the mandatory "remote-endpoint" property will come with the board
-(GR-Peach) DTS patch?
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Are you interested in creating follow-up patches?
