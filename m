@@ -1,60 +1,44 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v2 0/2] Add efuse driver for Ingenic JZ4780 SoC
-Date: Tue, 2 Jan 2018 17:58:00 +0000
-Message-ID: <11f64a94-2500-6c5f-d6f9-2db68fcf9c58@linaro.org>
-References: <20171228212954.2922-1-malat@debian.org>
- <828981e5-c23c-8dc4-55e4-23b65b33908b@linaro.org>
- <CANc+2y5cEoqEkqEr9b-APApd42HXQczFWJfGv+MWPNRdWpQr7Q@mail.gmail.com>
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: Re: [PATCH 0/4] gpio: driver for the RPi3 GPIO expander
+Date: Tue, 2 Jan 2018 19:05:38 +0100 (CET)
+Message-ID: <1090269396.181215.1514916338795@email.1und1.de>
+References: <cover.1514898134.git.baruch@tkos.co.il>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CANc+2y5cEoqEkqEr9b-APApd42HXQczFWJfGv+MWPNRdWpQr7Q@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
-Cc: Mathieu Malaterre <malat@debian.org>, Marcin Nowakowski <marcin.nowakowski@mips.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Zubair.Kakakhel@mips.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, open list <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, linux-mips@linux-mips.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1514898134.git.baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Dave Stevenson <dave.stevenson-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Baruch,
 
-
-On 02/01/18 16:17, PrasannaKumar Muralidharan wrote:
-> Hi Srinivas,
+> Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org> hat am 2. Januar 2018 um 14:19 geschrieben:
 > 
-> On 2 January 2018 at 17:31, Srinivas Kandagatla
-> <srinivas.kandagatla@linaro.org> wrote:
->>
->>
->> On 28/12/17 21:29, Mathieu Malaterre wrote:
->>>
->>> This patchset bring support for read-only access to the JZ4780 efuse as
->>> found
->>> on MIPS Creator CI20.
->>>
->>> To keep the driver as simple as possible, it was not possible to re-use
->>> most of
->>> the nvmem core functionalities. This driver is not compatible with the
->>> original
->>
->> Can you explain a bit more on not able to re-use nvmem core?
->>
->> If you are referring to adding nvmem cell entires in sysfs, This should
->> probably go in to nvmem core, rather that in individual providers.
->> This is one of the feature my todo list, will try to come up with some thing
->> soon.
 > 
-> We could not find a way to expose different sized segments using nvmem
-> framework. Do you have any pointers for this?
-
-This does not exist at the moment, but it should be very much doable to 
-add this functionality to nvmem core.
-
-I will keep you loop if I manage to post this patch soon.
-
---srini
-> We were not aware of the fact that nvmem does not expose individual
-> cell entries in sysfs.
+> The Raspberry Pi 3 has a GPIO expander that controls, among others, the 
+> activity LED, and the camera connector GPIOs. The GPIO expander on an I2C bus 
+> that is not directly controlled from the ARM core. The VC4 firmware controls 
+> the I2C bus, and allows the ARM core to set/get GPIO settings over its mailbox 
+> interface.
 > 
-> Regards,
-> PrasannaKumar
+> This series adds support for the RPi3 expander.
 > 
+> The driver is ported from the downstream kernel at 
+> https://github.com/raspberrypi/linux/, branch rpi-4.9.y.
+> 
+
+thanks for trying to upstream this. There has been attemps by Eric Anholt (September 2016) and Michael Zoran (March 2017). Some problems like get_direction() has been fixed, but not all of them.
+
+So please look at the followings links first:
+https://patchwork.kernel.org/patch/9339859/
+https://patchwork.kernel.org/patch/9339857/
+http://lists.infradead.org/pipermail/linux-rpi-kernel/2017-March/005903.html
+
+Stefan
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
