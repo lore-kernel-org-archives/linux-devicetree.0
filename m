@@ -1,145 +1,204 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH v5 2/2] PCI: mediatek: Set up class type and vendor ID
- for MT7622
-Date: Tue, 2 Jan 2018 10:56:59 +0000
-Message-ID: <20180102105659.GB10536@red-moon>
-References: <1514336394-17747-1-git-send-email-honghui.zhang@mediatek.com>
- <1514336394-17747-3-git-send-email-honghui.zhang@mediatek.com>
- <20171227184542.GA79892@bhelgaas-glaptop.roam.corp.google.com>
- <1514425152.25872.39.camel@mhfsdcap03>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1514425152.25872.39.camel@mhfsdcap03>
-Sender: linux-pci-owner@vger.kernel.org
-To: Honghui Zhang <honghui.zhang@mediatek.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, bhelgaas@google.com, matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, ryder.lee@mediatek.com, hongkun.cao@mediatek.com, youlin.pei@mediatek.com, yong.wu@mediatek.com, yt.shen@mediatek.com, sean.wang@mediatek.com, xinping.qian@mediatek.com
+From: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>
+Subject: Re: [RFC v2 8/9] Bluetooth: drop HCI_UART_INIT_PENDING support
+Date: Tue, 2 Jan 2018 12:04:40 +0100
+Message-ID: <5F8922BB-5A97-43B1-88D5-591EB76FF787@holtmann.org>
+References: <20180101204217.26165-1-martin.blumenstingl@googlemail.com>
+ <20180101204217.26165-9-martin.blumenstingl@googlemail.com>
+Mime-Version: 1.0 (Mac OS X Mail 11.2 \(3445.5.20\))
+Content-Type: text/plain;
+        charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180101204217.26165-9-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "Gustavo F. Padovan" <gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Larry Finger <Larry.Finger-tQ5ms3gMjBLk1uMJSBkQmQ@public.gmane.org>, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>, Daniel Drake <drake-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 28, 2017 at 09:39:12AM +0800, Honghui Zhang wrote:
-> On Wed, 2017-12-27 at 12:45 -0600, Bjorn Helgaas wrote:
-> > On Wed, Dec 27, 2017 at 08:59:54AM +0800, honghui.zhang@mediatek.com wrote:
-> > > From: Honghui Zhang <honghui.zhang@mediatek.com>
-> > > 
-> > > The hardware default value of IDs and class type is not correct,
-> > > fix that by setup the correct values before start up.
-> > > 
-> > > Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
-> > > ---
-> > >  drivers/pci/host/pcie-mediatek.c | 12 ++++++++++++
-> > >  include/linux/pci_ids.h          |  2 ++
-> > >  2 files changed, 14 insertions(+)
-> > > 
-> > > diff --git a/drivers/pci/host/pcie-mediatek.c b/drivers/pci/host/pcie-mediatek.c
-> > > index fc29a9a..62aac0ea 100644
-> > > --- a/drivers/pci/host/pcie-mediatek.c
-> > > +++ b/drivers/pci/host/pcie-mediatek.c
-> > > @@ -74,6 +74,10 @@
-> > >  
-> > >  /* PCIe V2 per-port registers */
-> > >  #define PCIE_MSI_VECTOR		0x0c0
-> > > +
-> > > +#define PCIE_CONF_ID		0x100
-> > > +#define PCIE_CONF_CLASS		0x104
-> > > +
-> > >  #define PCIE_INT_MASK		0x420
-> > >  #define INTX_MASK		GENMASK(19, 16)
-> > >  #define INTX_SHIFT		16
-> > > @@ -393,6 +397,14 @@ static int mtk_pcie_startup_port_v2(struct mtk_pcie_port *port)
-> > >  		val |= PCIE_CSR_LTSSM_EN(port->slot) |
-> > >  		       PCIE_CSR_ASPM_L1_EN(port->slot);
-> > >  		writel(val, pcie->base + PCIE_SYS_CFG_V2);
-> > > +
-> > > +		/* Set up vendor ID and device ID for MT7622*/
-> > > +		val = PCI_VENDOR_ID_MEDIATEK;
-> > > +		writel(val, port->base + PCIE_CONF_ID);
-> > > +
-> > > +		/* Set up class code for MT7622 */
-> > > +		val = PCI_CLASS_BRIDGE_PCI << 16;
-> > > +		writel(val, port->base + PCIE_CONF_CLASS);
-> > 
-> > 1) Your comments mention MT7622 specifically, but this code is run for
-> > both mt2712-pcie and mt7622-pcie.  If this code is safe and necessary
-> > for both mt2712-pcie and mt7622-pcie, please remove the mention of
-> > MT7622.
-> 
-> Hmm, the code snippet added here will only be executed by MT7622, since
-> MT2712 will not enter this  "if (pcie->base) {"  condition.
-> Should the mention of MT7622 must be removed in this case?
+Hi Martin,
 
-You should add an explicit way (eg of_device_is_compatible() match for
-instance) to apply the quirk just on the platform that requires it.
+> The three-wire (H5) protocol is the only protocol which uses
+> HCI_UART_INIT_PENDING.
+> Unfortunately the benefits of using this flag are currently unknown. It
+> was added in commit 9f2aee848fe6 ("Bluetooth: Add delayed init sequence
+> support for UART controllers"). In my experiments (with the
+> "rtk_hciattach" tool - a customized version of hciattach for Realtek
+> chipsets) I started the tool before and after this patch while the
+> Bluetooth chipset was disabled (by pulling it's enable GPIO LOW). In
+> both cases hci0 was not created - thus HCI_UART_INIT_PENDING is not
+> required in that case.
+> 
+> Removing this code also has another benefit: hci_serdev.c does not
+> support the delayed initialization / registration. Thus the protocol
+> implementation (hci_h5) never receives any data with this check still
+> in place. For the H5 protocol this means that the initialization never
+> completes (because the sync response never arrives). Even if the
+> initialization would succeed later on the drivers would call
+> hci_uart_init_ready() which schedules the registration which is
+> currently not implemented by hci_serdev.c.
+> 
+> Removing the HCI_UART_INIT_PENDING check makes the code easier to read
+> and also fixes the initalization of devices (implemented with the serdev
+> library) which use the H5 protocol.
+> 
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 
-Checking for "if (pcie->base)" is really not the way to do it.
+I really like Johan to ack this one, but generally I am fine with removing unneeded code.
 
-> > 2) The first comment mentions both "vendor ID and device ID" but you
-> > don't write the device ID.  Since this code applies to both
-> > mt2712-pcie and mt7622-pcie, my guess is that you don't *want* to
-> > write the device ID.  If that's the case, please fix the comment.
-> > 
-> 
-> My bad, I did not check the comments carefully.
-> Thanks.
-> 
-> > 3) If you only need to set the vendor ID, you're performing a 32-bit
-> > write (writel()) to update a 16-bit value.  Please use writew()
-> > instead.
-> > 
-> 
-> Ok, thanks, I guess I could use the following code snippet in the next
-> version:
-> val = readl(port->base + PCIE_CONF_VENDOR_ID)
-> val &= ~GENMASK(15, 0);
-> val |= PCI_VENDOR_ID_MEDIATEK;
-> writel(val, port->base + PCIE_CONF_VENDOR_ID);
+We might also want to look at hciattach to btattach code and make sure it gets removed there as well. I am not even sure anybody used hciattach with H:5 ever.
 
-Have you read Bjorn's comment ? Or there is a problem with using
-a writew() ?
+> ---
+> drivers/bluetooth/hci_h5.c     |  3 ---
+> drivers/bluetooth/hci_ldisc.c  | 38 --------------------------------------
+> drivers/bluetooth/hci_serdev.c |  3 ---
+> drivers/bluetooth/hci_uart.h   |  4 +---
+> 4 files changed, 1 insertion(+), 47 deletions(-)
+> 
+> diff --git a/drivers/bluetooth/hci_h5.c b/drivers/bluetooth/hci_h5.c
+> index 6a8d0d06aba7..6cfc2f276250 100644
+> --- a/drivers/bluetooth/hci_h5.c
+> +++ b/drivers/bluetooth/hci_h5.c
+> @@ -210,8 +210,6 @@ static int h5_open(struct hci_uart *hu)
+> 
+> 	h5->tx_win = H5_TX_WIN_MAX;
+> 
+> -	set_bit(HCI_UART_INIT_PENDING, &hu->hdev_flags);
+> -
+> 	/* Send initial sync request */
+> 	h5_link_control(hu, sync, sizeof(sync));
+> 	mod_timer(&h5->timer, jiffies + H5_SYNC_TIMEOUT);
+> @@ -316,7 +314,6 @@ static void h5_handle_internal_rx(struct hci_uart *hu)
+> 			h5->tx_win = (data[2] & 0x07);
+> 		BT_DBG("Three-wire init complete. tx_win %u", h5->tx_win);
+> 		h5->state = H5_ACTIVE;
+> -		hci_uart_init_ready(hu);
+> 		return;
+> 	} else if (memcmp(data, sleep_req, 2) == 0) {
+> 		BT_DBG("Peer went to sleep");
+> diff --git a/drivers/bluetooth/hci_ldisc.c b/drivers/bluetooth/hci_ldisc.c
+> index c823914b3a80..5dd3e1bebfe4 100644
+> --- a/drivers/bluetooth/hci_ldisc.c
+> +++ b/drivers/bluetooth/hci_ldisc.c
+> @@ -195,39 +195,6 @@ static void hci_uart_write_work(struct work_struct *work)
+> 	clear_bit(HCI_UART_SENDING, &hu->tx_state);
+> }
+> 
+> -static void hci_uart_init_work(struct work_struct *work)
+> -{
+> -	struct hci_uart *hu = container_of(work, struct hci_uart, init_ready);
+> -	int err;
+> -	struct hci_dev *hdev;
+> -
+> -	if (!test_and_clear_bit(HCI_UART_INIT_PENDING, &hu->hdev_flags))
+> -		return;
+> -
+> -	err = hci_register_dev(hu->hdev);
+> -	if (err < 0) {
+> -		BT_ERR("Can't register HCI device");
+> -		hdev = hu->hdev;
+> -		hu->hdev = NULL;
+> -		hci_free_dev(hdev);
+> -		clear_bit(HCI_UART_PROTO_READY, &hu->flags);
+> -		hu->proto->close(hu);
+> -		return;
+> -	}
+> -
+> -	set_bit(HCI_UART_REGISTERED, &hu->flags);
+> -}
+> -
+> -int hci_uart_init_ready(struct hci_uart *hu)
+> -{
+> -	if (!test_bit(HCI_UART_INIT_PENDING, &hu->hdev_flags))
+> -		return -EALREADY;
+> -
+> -	schedule_work(&hu->init_ready);
+> -
+> -	return 0;
+> -}
+> -
+> /* ------- Interface to HCI layer ------ */
+> /* Initialize device */
+> static int hci_uart_open(struct hci_dev *hdev)
+> @@ -490,7 +457,6 @@ static int hci_uart_tty_open(struct tty_struct *tty)
+> 	hu->alignment = 1;
+> 	hu->padding = 0;
+> 
+> -	INIT_WORK(&hu->init_ready, hci_uart_init_work);
+> 	INIT_WORK(&hu->write_work, hci_uart_write_work);
+> 
+> 	percpu_init_rwsem(&hu->proto_lock);
+> @@ -653,9 +619,6 @@ static int hci_uart_register_dev(struct hci_uart *hu)
+> 	else
+> 		hdev->dev_type = HCI_PRIMARY;
+> 
+> -	if (test_bit(HCI_UART_INIT_PENDING, &hu->hdev_flags))
+> -		return 0;
+> -
+> 	if (hci_register_dev(hdev) < 0) {
+> 		BT_ERR("Can't register HCI device");
+> 		hu->hdev = NULL;
+> @@ -699,7 +662,6 @@ static int hci_uart_set_flags(struct hci_uart *hu, unsigned long flags)
+> 	unsigned long valid_flags = BIT(HCI_UART_RAW_DEVICE) |
+> 				    BIT(HCI_UART_RESET_ON_INIT) |
+> 				    BIT(HCI_UART_CREATE_AMP) |
+> -				    BIT(HCI_UART_INIT_PENDING) |
+> 				    BIT(HCI_UART_EXT_CONFIG) |
+> 				    BIT(HCI_UART_VND_DETECT);
+> 
+> diff --git a/drivers/bluetooth/hci_serdev.c b/drivers/bluetooth/hci_serdev.c
+> index e0e6461b9200..fe67eb6d4278 100644
+> --- a/drivers/bluetooth/hci_serdev.c
+> +++ b/drivers/bluetooth/hci_serdev.c
+> @@ -333,9 +333,6 @@ int hci_uart_register_device(struct hci_uart *hu,
+> 	else
+> 		hdev->dev_type = HCI_PRIMARY;
+> 
+> -	if (test_bit(HCI_UART_INIT_PENDING, &hu->hdev_flags))
+> -		return 0;
+> -
+> 	if (hci_register_dev(hdev) < 0) {
+> 		BT_ERR("Can't register HCI device");
+> 		err = -ENODEV;
+> diff --git a/drivers/bluetooth/hci_uart.h b/drivers/bluetooth/hci_uart.h
+> index 66e8c68e4607..47e755ff4092 100644
+> --- a/drivers/bluetooth/hci_uart.h
+> +++ b/drivers/bluetooth/hci_uart.h
+> @@ -53,7 +53,7 @@
+> #define HCI_UART_RAW_DEVICE	0
+> #define HCI_UART_RESET_ON_INIT	1
+> #define HCI_UART_CREATE_AMP	2
+> -#define HCI_UART_INIT_PENDING	3
+> +/* 3 is unused - was HCI_UART_INIT_PENDING */
 
-Lorenzo
+#define HCI_UART_INIT_PENDING	3	/* unused */
 
-> > 4) If you only need to set the vendor ID, please use a definition like
-> > "PCIE_CONF_VENDOR_ID" instead of the ambiguous "PCIE_CONF_ID".
-> > 
-> > 5) If you only need to set the vendor ID, please update the changelog
-> > to mention "vendor ID" specifically instead of the ambiguous "IDs".
+I prefer it this way since it is easier on the eyes.
+
+> #define HCI_UART_EXT_CONFIG	4
+> #define HCI_UART_VND_DETECT	5
 > 
-> > 6) Please add a space before the closing "*/" of the first comment.
-> > 
-> > 7) PCI_CLASS_BRIDGE_PCI is for a PCI-to-PCI bridge, i.e., one that has
-> > PCI on both the primary (upstream) side and the secondary (downstream)
-> > side.  That kind of bridge has a type 1 config header (see
-> > PCI_HEADER_TYPE) and the PCI_PRIMARY_BUS and PCI_SECONDARY_BUS
-> > registers tell us the bus number of the primary and secondary sides.
-> > 
-> > I don't believe this device is a PCI-to-PCI bridge.  I think it's a
-> > *host* bridge that has some non-PCI interface on the upstream side and
-> > should have a type 0 config header.  If that's the case you should use
-> > PCI_CLASS_BRIDGE_HOST instead.
-> > 
+> @@ -83,7 +83,6 @@ struct hci_uart {
+> 	unsigned long		flags;
+> 	unsigned long		hdev_flags;
 > 
-> Thanks very much for your help with the review, I will fix the other
-> issue in the next version.
+> -	struct work_struct	init_ready;
+> 	struct work_struct	write_work;
 > 
-> > >  	}
-> > >  
-> > >  	/* Assert all reset signals */
-> > > diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-> > > index ab20dc5..2480b0e 100644
-> > > --- a/include/linux/pci_ids.h
-> > > +++ b/include/linux/pci_ids.h
-> > > @@ -2113,6 +2113,8 @@
-> > >  
-> > >  #define PCI_VENDOR_ID_MYRICOM		0x14c1
-> > >  
-> > > +#define PCI_VENDOR_ID_MEDIATEK		0x14c3
-> > > +
-> > >  #define PCI_VENDOR_ID_TITAN		0x14D2
-> > >  #define PCI_DEVICE_ID_TITAN_010L	0x8001
-> > >  #define PCI_DEVICE_ID_TITAN_100L	0x8010
-> > > -- 
-> > > 2.6.4
-> > > 
+> 	const struct hci_uart_proto *proto;
+> @@ -115,7 +114,6 @@ int hci_uart_register_device(struct hci_uart *hu, const struct hci_uart_proto *p
+> void hci_uart_unregister_device(struct hci_uart *hu);
 > 
-> 
+> int hci_uart_tx_wakeup(struct hci_uart *hu);
+> -int hci_uart_init_ready(struct hci_uart *hu);
+> void hci_uart_set_baudrate(struct hci_uart *hu, unsigned int speed);
+> void hci_uart_set_flow_control(struct hci_uart *hu, bool enable);
+> void hci_uart_set_speeds(struct hci_uart *hu, unsigned int init_speed,
+
+Regards
+
+Marcel
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
