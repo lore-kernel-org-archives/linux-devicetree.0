@@ -1,128 +1,145 @@
-From: Ludovic Desroches <ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Subject: Re: [PATCH 2/3] dt-bindings: mtd: atmel-quadspi: add an optional
- property 'dmacap,memcpy'
-Date: Tue, 2 Jan 2018 11:22:34 +0100
-Message-ID: <20180102102234.GG2612@rfolt0960.corp.atmel.com>
-References: <cover.1514087323.git.cyrille.pitchen@wedev4u.fr>
- <143542c61ca674d53da4985bbabc142e8e6ebefc.1514087323.git.cyrille.pitchen@wedev4u.fr>
- <20171226232330.trljk2ofyvu4ly3n@rob-hp-laptop>
- <0149ba05-64b1-2739-e61f-78d5170775fb@wedev4u.fr>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v5 2/2] PCI: mediatek: Set up class type and vendor ID
+ for MT7622
+Date: Tue, 2 Jan 2018 10:56:59 +0000
+Message-ID: <20180102105659.GB10536@red-moon>
+References: <1514336394-17747-1-git-send-email-honghui.zhang@mediatek.com>
+ <1514336394-17747-3-git-send-email-honghui.zhang@mediatek.com>
+ <20171227184542.GA79892@bhelgaas-glaptop.roam.corp.google.com>
+ <1514425152.25872.39.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <0149ba05-64b1-2739-e61f-78d5170775fb-yU5RGvR974pGWvitb5QawA@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ludovic Desroches <ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, vigneshr-l0cyMroinI0@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, radu.pirea-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org
+In-Reply-To: <1514425152.25872.39.camel@mhfsdcap03>
+Sender: linux-pci-owner@vger.kernel.org
+To: Honghui Zhang <honghui.zhang@mediatek.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, bhelgaas@google.com, matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, ryder.lee@mediatek.com, hongkun.cao@mediatek.com, youlin.pei@mediatek.com, yong.wu@mediatek.com, yt.shen@mediatek.com, sean.wang@mediatek.com, xinping.qian@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Cyrille,
-
-On Wed, Dec 27, 2017 at 10:40:00PM +0100, Cyrille Pitchen wrote:
-> Hi Rob,
-> 
-> + Ludovic Desroches, maintainer of the DMA controller drivers for AT91 SoCs.
-> 
-> Le 27/12/2017 à 00:23, Rob Herring a écrit :
-> > On Sun, Dec 24, 2017 at 05:36:05AM +0100, Cyrille Pitchen wrote:
-> >> The optional 'dmacap,memcpy' DT property tells the Atmel QSPI controller
-> >> driver to reserve some DMA channel then to use it to perform DMA
-> >> memcpy() during data transfers. This feature relies on the generic
-> >> bounce buffer helper from spi-nor.c.
-> >>
-> >> Signed-off-by: Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>
-> >> ---
-> >>  Documentation/devicetree/bindings/mtd/atmel-quadspi.txt | 5 +++++
-> >>  1 file changed, 5 insertions(+)
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/mtd/atmel-quadspi.txt b/Documentation/devicetree/bindings/mtd/atmel-quadspi.txt
-> >> index b93c1e2f25dd..002d3f0a445b 100644
-> >> --- a/Documentation/devicetree/bindings/mtd/atmel-quadspi.txt
-> >> +++ b/Documentation/devicetree/bindings/mtd/atmel-quadspi.txt
-> >> @@ -12,6 +12,10 @@ Required properties:
-> >>  - #address-cells: Should be <1>.
-> >>  - #size-cells:    Should be <0>.
-> >>  
-> >> +Optional properties:
-> >> +- dmacap,memcpy:  Reserve a DMA channel to perform DMA memcpy() between the
-> >> +                  system memory and the QSPI mapped memory.
+On Thu, Dec 28, 2017 at 09:39:12AM +0800, Honghui Zhang wrote:
+> On Wed, 2017-12-27 at 12:45 -0600, Bjorn Helgaas wrote:
+> > On Wed, Dec 27, 2017 at 08:59:54AM +0800, honghui.zhang@mediatek.com wrote:
+> > > From: Honghui Zhang <honghui.zhang@mediatek.com>
+> > > 
+> > > The hardware default value of IDs and class type is not correct,
+> > > fix that by setup the correct values before start up.
+> > > 
+> > > Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
+> > > ---
+> > >  drivers/pci/host/pcie-mediatek.c | 12 ++++++++++++
+> > >  include/linux/pci_ids.h          |  2 ++
+> > >  2 files changed, 14 insertions(+)
+> > > 
+> > > diff --git a/drivers/pci/host/pcie-mediatek.c b/drivers/pci/host/pcie-mediatek.c
+> > > index fc29a9a..62aac0ea 100644
+> > > --- a/drivers/pci/host/pcie-mediatek.c
+> > > +++ b/drivers/pci/host/pcie-mediatek.c
+> > > @@ -74,6 +74,10 @@
+> > >  
+> > >  /* PCIe V2 per-port registers */
+> > >  #define PCIE_MSI_VECTOR		0x0c0
+> > > +
+> > > +#define PCIE_CONF_ID		0x100
+> > > +#define PCIE_CONF_CLASS		0x104
+> > > +
+> > >  #define PCIE_INT_MASK		0x420
+> > >  #define INTX_MASK		GENMASK(19, 16)
+> > >  #define INTX_SHIFT		16
+> > > @@ -393,6 +397,14 @@ static int mtk_pcie_startup_port_v2(struct mtk_pcie_port *port)
+> > >  		val |= PCIE_CSR_LTSSM_EN(port->slot) |
+> > >  		       PCIE_CSR_ASPM_L1_EN(port->slot);
+> > >  		writel(val, pcie->base + PCIE_SYS_CFG_V2);
+> > > +
+> > > +		/* Set up vendor ID and device ID for MT7622*/
+> > > +		val = PCI_VENDOR_ID_MEDIATEK;
+> > > +		writel(val, port->base + PCIE_CONF_ID);
+> > > +
+> > > +		/* Set up class code for MT7622 */
+> > > +		val = PCI_CLASS_BRIDGE_PCI << 16;
+> > > +		writel(val, port->base + PCIE_CONF_CLASS);
 > > 
-> > How is this a h/w property? Why would I not want to always enable DMA if 
-> > possible?
+> > 1) Your comments mention MT7622 specifically, but this code is run for
+> > both mt2712-pcie and mt7622-pcie.  If this code is safe and necessary
+> > for both mt2712-pcie and mt7622-pcie, please remove the mention of
+> > MT7622.
 > 
-> The number of DMA channels is limited for a given SoC. This number may be
-> lower than the number of enabled controllers (spi, i2c, qspi, aes, sha,
-> des, sdmmc, usart, ...).
-> 
-> So we use a DT property to explicitly tell the matching drivers to request
-> and reserved the DMA channels they need. This policy is not driver or even
-> SoC specific but board specific. It's very common to reserved DMA channels
-> for the most used or most performance dependent controllers, setting the
-> relevant properties in the device-tree then restricting remaining
-> controllers to their PIO mode.
-> 
+> Hmm, the code snippet added here will only be executed by MT7622, since
+> MT2712 will not enter this  "if (pcie->base) {"  condition.
+> Should the mention of MT7622 must be removed in this case?
+
+You should add an explicit way (eg of_device_is_compatible() match for
+instance) to apply the quirk just on the platform that requires it.
+
+Checking for "if (pcie->base)" is really not the way to do it.
+
+> > 2) The first comment mentions both "vendor ID and device ID" but you
+> > don't write the device ID.  Since this code applies to both
+> > mt2712-pcie and mt7622-pcie, my guess is that you don't *want* to
+> > write the device ID.  If that's the case, please fix the comment.
 > > 
-> > Furthermore, you are reusing a property, but giving it a different 
-> > meaning. The current definition is an indication whether a DMA 
-> > controller supports memcpy operations or not. It is not a flag for 
-> > clients to use memcpy channels.
-> >
 > 
-> I don't mind changing the name. I thought it would be better to use some
-> existing one than creating another. However I was not confident on whether
-> "dmacap,memcpy" was actually a good candidate for what I do in the DMA
-> patch for the atmel-quadspi.c driver.
+> My bad, I did not check the comments carefully.
+> Thanks.
 > 
-> Actually, I was relying on your feedbacks :)
+> > 3) If you only need to set the vendor ID, you're performing a 32-bit
+> > write (writel()) to update a 16-bit value.  Please use writew()
+> > instead.
+> > 
 > 
-> > Why don't you use "dmas" property to point to the DMA controller.
-> 
-> I didn't use the "dmas" property because I thought it would not have been
-> consistent with how this property is used in all other nodes of the sama5*
-> device-trees. The flags provided in the dma-cells are designed for "memory
-> to peripheral" or "peripheral to memory" DMA transfers only.
-> 
-> However, here I need to perform some "memory to memory" transfer: the SPI
-> NOR flash memory is mapped into the AHB bus of SAMA5D2 SoCs. Besides,
-> once in Serial Memory Mode, data can no longer be transfered through the
-> TDR or RDR registers of the QSPI controller, only through its AHB mapped
-> memory window.
-> 
-> So I cannot configured the DMA channel for "peripheral to memory" or
-> "memory to peripheral" like for other controllers embedded in the SoC but
-> only for "memory to memory".
-> 
-> Maybe we could extend the flags supported by the "dmas" property but I
-> guess it may require some little rework in the at_xdmac_xlate() function
-> of the at_xdmac.c driver.
-> 
+> Ok, thanks, I guess I could use the following code snippet in the next
+> version:
+> val = readl(port->base + PCIE_CONF_VENDOR_ID)
+> val &= ~GENMASK(15, 0);
+> val |= PCI_VENDOR_ID_MEDIATEK;
+> writel(val, port->base + PCIE_CONF_VENDOR_ID);
 
-I have no objection about changing the at_xdmac_xlate() behavior.
+Have you read Bjorn's comment ? Or there is a problem with using
+a writew() ?
 
->From your cover-letter, I understand that the issue you're trying to
-solve is not only related to the Atmel devices so you may also have to update
-the xlate functions of the other DMA controllers.
+Lorenzo
 
-> Or maybe no change at all is required at the at_xdmac.c driver side: we
-> just don't care about the provided flags in the "dmas" property, especially
-> the "peripheral id". They would be ignored anyway when the atmel-quadspi.c
-> driver later calls dmaengine_prep_dma_memcpy(). So I could simply set the
-> dma cells to 0 in the device-tree?
+> > 4) If you only need to set the vendor ID, please use a definition like
+> > "PCIE_CONF_VENDOR_ID" instead of the ambiguous "PCIE_CONF_ID".
+> > 
+> > 5) If you only need to set the vendor ID, please update the changelog
+> > to mention "vendor ID" specifically instead of the ambiguous "IDs".
 > 
-> Ludovic, what do you think about that ?
-
-It may work but I won't do this. Usually, channels requested through the xlate
-function have usually their capaiblities set to DMA_SLAVE and not DMA_MEMCPY.
-In the at_xdmac case, it won't be an issue but if you have a controller
-which has channels which can support only mem-to-mem or peripheral, it
-won't work.
-
-Regards
-
-Ludovic
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > 6) Please add a space before the closing "*/" of the first comment.
+> > 
+> > 7) PCI_CLASS_BRIDGE_PCI is for a PCI-to-PCI bridge, i.e., one that has
+> > PCI on both the primary (upstream) side and the secondary (downstream)
+> > side.  That kind of bridge has a type 1 config header (see
+> > PCI_HEADER_TYPE) and the PCI_PRIMARY_BUS and PCI_SECONDARY_BUS
+> > registers tell us the bus number of the primary and secondary sides.
+> > 
+> > I don't believe this device is a PCI-to-PCI bridge.  I think it's a
+> > *host* bridge that has some non-PCI interface on the upstream side and
+> > should have a type 0 config header.  If that's the case you should use
+> > PCI_CLASS_BRIDGE_HOST instead.
+> > 
+> 
+> Thanks very much for your help with the review, I will fix the other
+> issue in the next version.
+> 
+> > >  	}
+> > >  
+> > >  	/* Assert all reset signals */
+> > > diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> > > index ab20dc5..2480b0e 100644
+> > > --- a/include/linux/pci_ids.h
+> > > +++ b/include/linux/pci_ids.h
+> > > @@ -2113,6 +2113,8 @@
+> > >  
+> > >  #define PCI_VENDOR_ID_MYRICOM		0x14c1
+> > >  
+> > > +#define PCI_VENDOR_ID_MEDIATEK		0x14c3
+> > > +
+> > >  #define PCI_VENDOR_ID_TITAN		0x14D2
+> > >  #define PCI_DEVICE_ID_TITAN_010L	0x8001
+> > >  #define PCI_DEVICE_ID_TITAN_100L	0x8010
+> > > -- 
+> > > 2.6.4
+> > > 
+> 
+> 
