@@ -1,52 +1,104 @@
-From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RESEND PATCH v2 11/15] ASoC: qcom: qdsp6: Add support to q6afe
- dai driver
-Date: Tue, 2 Jan 2018 15:28:11 -0800
-Message-ID: <20180102232811.GS478@tuxbook>
-References: <20171214173402.19074-1-srinivas.kandagatla@linaro.org>
- <20171214173402.19074-12-srinivas.kandagatla@linaro.org>
+From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 1/8] ARM: dts: keystone: Move keystone_irq to under
+ device-state-control
+Date: Tue, 2 Jan 2018 17:30:04 -0600
+Message-ID: <cce1676d-8e91-c3d4-be79-7896011a8f26@ti.com>
+References: <20180102170202.15045-1-afd@ti.com>
+ <20180102170202.15045-2-afd@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20171214173402.19074-12-srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <20180102170202.15045-2-afd-l0cyMroinI0@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Patrick Lai <plai-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Banajit Goswami <bgoswami-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+To: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu 14 Dec 09:33 PST 2017, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org wrote:
+Hi Andrew,
 
-> From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+On 01/02/2018 11:01 AM, Andrew F. Davis wrote:
+> The keystone_irq node describes a device that is a component of the device
+> state control module. 
+
+I would prefer 'address space' to be added to this statement as this
+module is really not a single IP but really a collection of different
+register sets providing different functionalities. Some of these
+comments apply to the following patches as well.
+
+As such, it should not be a member of soc0 bus
+> but instead a sub-node of device-state-control.
 > 
-> This patch adds support to q6afe backend dais driver.
+> This move also fixes a warning about not having a reg property. Now
+> that this is a sub-node of device-state-control, a syscon type node,
+> we add this reg property but relative to the syscon base, this way
+> when the dt-binding/driver are updated we can drop the non-standard
+> ti,syscon-dev property completely and simply use get_resource() in
+> the driver.
+
+Please add an appropriate 'ranges' property in the parent node following
+the parent-child node convention, it's upto individual drivers to use
+the appropriate API for whether they want to deal with the offset or the
+actual bus addresses. You should not tie this into forcing to use a
+get_resource() without ranges to get the offset.
+
+> 
+> Signed-off-by: Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org>
+> Acked-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/keystone.dtsi | 21 ++++++++++++---------
+>  1 file changed, 12 insertions(+), 9 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/keystone.dtsi b/arch/arm/boot/dts/keystone.dtsi
+> index 93ea5c69ea77..158e0a903f7e 100644
+> --- a/arch/arm/boot/dts/keystone.dtsi
+> +++ b/arch/arm/boot/dts/keystone.dtsi
+> @@ -87,8 +87,19 @@
+>  		};
+>  
+>  		devctrl: device-state-control@2620000 {
+> -			compatible = "ti,keystone-devctrl", "syscon";
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			compatible = "ti,keystone-devctrl", "syscon", "simple-mfd";
+
+nit, can you please maintain the current order of compatible and reg,
+and add the new properties after them.
+
+regards
+Suman
+
+>  			reg = <0x02620000 0x1000>;
+> +
+> +			kirq0: keystone_irq@2a0 {
+> +				compatible = "ti,keystone-irq";
+> +				reg = <0x2a0 0x4>;
+> +				interrupts = <GIC_SPI 4 IRQ_TYPE_EDGE_RISING>;
+> +				interrupt-controller;
+> +				#interrupt-cells = <1>;
+> +				ti,syscon-dev = <&devctrl 0x2a0>;
+> +			};
+>  		};
+>  
+>  		rstctrl: reset-controller {
+> @@ -282,14 +293,6 @@
+>  				  1 0 0x21000A00 0x00000100>;
+>  		};
+>  
+> -		kirq0: keystone_irq@26202a0 {
+> -			compatible = "ti,keystone-irq";
+> -			interrupts = <GIC_SPI 4 IRQ_TYPE_EDGE_RISING>;
+> -			interrupt-controller;
+> -			#interrupt-cells = <1>;
+> -			ti,syscon-dev = <&devctrl 0x2a0>;
+> -		};
+> -
+>  		pcie0: pcie@21800000 {
+>  			compatible = "ti,keystone-pcie", "snps,dw-pcie";
+>  			clocks = <&clkpcie>;
 > 
 
-Isn't the list of backend DAIs platform-dependent?
-
-[..]
-> +static const struct snd_soc_dapm_widget hdmi_dapm_widgets[] = {
-> +	SND_SOC_DAPM_AIF_OUT("HDMI", "HDMI Playback", 0, 0, 0, 0),
-> +	SND_SOC_DAPM_OUTPUT("HDMI-RX"),
-> +};
-> +
-> +static const struct snd_soc_component_driver msm_dai_hdmi_q6_component = {
-
-How will this look beyond HDMI? I'm having issues mapping this to
-downstream.
-
-> +	.name		= "msm-dai-q6-hdmi",
-> +	.dapm_widgets = hdmi_dapm_widgets,
-> +	.num_dapm_widgets = ARRAY_SIZE(hdmi_dapm_widgets),
-> +	.controls = hdmi_config_controls,
-> +	.num_controls = ARRAY_SIZE(hdmi_config_controls),
-> +	.dapm_routes = hdmi_dapm_routes,
-> +	.num_dapm_routes = ARRAY_SIZE(hdmi_dapm_routes),
-> +};
-> +
-
-Regards,
-Bjorn
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
