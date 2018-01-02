@@ -1,34 +1,156 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH 2/2] cpufreq: imx6q: add 696MHz operating point for i.mx6ul
-Date: Tue, 2 Jan 2018 12:37:32 -0200
-Message-ID: <CAOMZO5Do-tyR0ruqfSeJm2FDP7_chNeroFStTF85GnSt_2g5Uw@mail.gmail.com>
-References: <1514912859-17691-1-git-send-email-Anson.Huang@nxp.com> <1514912859-17691-2-git-send-email-Anson.Huang@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1514912859-17691-2-git-send-email-Anson.Huang@nxp.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Anson Huang <Anson.Huang@nxp.com>
-Cc: "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-pm@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Dong Aisheng <aisheng.dong@nxp.com>, Ping Bai <ping.bai@nxp.com>, viresh kumar <viresh.kumar@linaro.org>, rjw@rjwysocki.net, Russell King - ARM Linux <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: [PATCH v5 00/20] firmware: ARM System Control and Management Interface(SCMI) support
+Date: Tue,  2 Jan 2018 14:42:22 +0000
+Message-ID: <1514904162-11201-1-git-send-email-sudeep.holla@arm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: ALKML <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Roy Franz <roy.franz@cavium.com>, Harb Abdulhamid <harba@codeaurora.org>, Nishanth Menon <nm@ti.com>, Arnd Bergmann <arnd@arndb.de>, Loc Ho <lho@apm.com>, Alexey Klimov <klimov.linux@gmail.com>, Ryan Harkin <Ryan.Harkin@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Anson,
+Hi all,
 
-On Tue, Jan 2, 2018 at 3:07 PM, Anson Huang <Anson.Huang@nxp.com> wrote:
+ARM System Control and Management Interface(SCMI) is more flexible and
+easily extensible than any of the existing interfaces. Many vendors were
+involved in the making of this formal specification and is now published[1].
 
-> diff --git a/drivers/cpufreq/imx6q-cpufreq.c b/drivers/cpufreq/imx6q-cpufreq.c
-> index d9b2c2d..cbda0cc 100644
-> --- a/drivers/cpufreq/imx6q-cpufreq.c
-> +++ b/drivers/cpufreq/imx6q-cpufreq.c
-> @@ -120,6 +120,10 @@ static int imx6q_set_target(struct cpufreq_policy *policy, unsigned int index)
->                         clk_set_parent(secondary_sel_clk, pll2_pfd2_396m_clk);
->                 clk_set_parent(step_clk, secondary_sel_clk);
->                 clk_set_parent(pll1_sw_clk, step_clk);
-> +               if (freq_hz > clk_get_rate(pll2_bus_clk)) {
-> +                       clk_set_rate(pll1_sys_clk, new_freq * 1000);
-> +                       clk_set_parent(pll1_sw_clk, pll1_sys_clk);
-> +               }
+There is a strong trend in the industry to provide micro-controllers in
+systems to abstract various power, or other system management tasks.
+These controllers usually have similar interfaces, both in terms of the
+functions that are provided by them, and in terms of how requests are
+communicated to them.
 
-This change should be part of a different patch.
+This specification is to standardise and avoid (any further)
+fragmentation in the design of such interface by various vendors.
 
-Thanks
+This patch set is intended to get feedback on the design and structure
+of the code. This is not complete and not fully tested due to
+non-availability of firmware with full feature set at this time.
+
+It currently doesn't support notification, asynchronous/delayed response,
+perf/power statistics region and sensor register region to name a few.
+I have borrowed some of the ideas of message allocation/management from
+TI SCI.
+
+Changes:
+
+v4[6]->v5:
+	- Rebased to v4.15-rc6
+	- Updated all the gathered Ack/Reviewed-by tags(which includes
+	  all the drivers using SCMI protocol)
+
+v3[5]->v4[6]:
+	- Added SCMI protocol bus to enumerate supported protocols as
+	  suggested by Arnd
+	- Dropped the abstraction to mailbox as it may be optional
+
+v2[4]->v3:
+	- Addressed various comments recieved so far(clock, hwmon and
+	  cpufreq drivers along with scmi drivers)
+	- Hwmon driver now uses core layer to create and manage sysfs
+	  attributes
+	- Added a shim layer to abstract the mailbox interface to support
+	  any custom adaptation required by the controller driver
+	- Simple ARM MHU shim layer using newly added abstraction
+
+v1[3]->v2[4]:
+	- Additional support for polling based DVFS and per protocol
+	  channels
+	- Dependent drivers(clock, hwmon, cpufreq and power domains)
+	- Various other review comments and issued found during testing
+	  addressed
+	- Explicit binding for method dropped as even SMC based method
+	  are adviertised as mailbox
+
+RFC[2]->v1[3]:
+	- Add generic mailbox binding for shared memory(Rob H)
+	- Dropped compatibles per protocol(Suggested by Matt S)
+	- Dropped lot of unnecessary pointer casting(Arnd B)
+	- Dropped packing of structures(Arnd B)
+	- Few other changes/additions based initial testing with firmware
+	  providing SCMI interface to OSPM
+
+--
+Regards,
+Sudeep
+
+[1] http://infocenter.arm.com/help/topic/com.arm.doc.den0056a/index.html
+[2] https://marc.info/?l=linux-kernel&m=149685193627620&w=2
+[3] https://marc.info/?l=linux-arm-kernel&m=149849482623492&w=2
+[4] https://marc.info/?l=devicetree&m=150185763105926&w=2
+[5] https://marc.info/?l=devicetree&m=150660452015351&w=2
+[6] https://marc.info/?l=devicetree&m=150972061408961&w=2
+
+Sudeep Holla (20):
+  dt-bindings: mailbox: add support for mailbox client shared memory
+  dt-bindings: arm: add support for ARM System Control and Management
+    Interface(SCMI) protocol
+  firmware: arm_scmi: add basic driver infrastructure for SCMI
+  firmware: arm_scmi: add common infrastructure and support for base
+    protocol
+  firmware: arm_scmi: add scmi protocol bus to enumerate protocol
+    devices
+  firmware: arm_scmi: add initial support for performance protocol
+  firmware: arm_scmi: add initial support for clock protocol
+  firmware: arm_scmi: add initial support for power protocol
+  firmware: arm_scmi: add initial support for sensor protocol
+  firmware: arm_scmi: probe and initialise all the supported protocols
+  firmware: arm_scmi: add support for polling based SCMI transfers
+  firmware: arm_scmi: add option for polling based performance domain
+    operations
+  firmware: arm_scmi: refactor in preparation to support per-protocol
+    channels
+  firmware: arm_scmi: add per-protocol channels support using idr
+    objects
+  firmware: arm_scmi: add device power domain support using genpd
+  clk: add support for clocks provided by SCMI
+  hwmon: (core) Add hwmon_max to hwmon_sensor_types enumeration
+  hwmon: add support for sensors exported via ARM SCMI
+  cpufreq: add support for CPU DVFS based on SCMI message protocol
+  cpufreq: scmi: add support for fast frequency switching
+
+ Documentation/devicetree/bindings/arm/arm,scmi.txt | 179 +++++
+ .../devicetree/bindings/mailbox/mailbox.txt        |  28 +
+ MAINTAINERS                                        |  11 +-
+ drivers/clk/Kconfig                                |  10 +
+ drivers/clk/Makefile                               |   1 +
+ drivers/clk/clk-scmi.c                             | 213 +++++
+ drivers/cpufreq/Kconfig.arm                        |  11 +
+ drivers/cpufreq/Makefile                           |   1 +
+ drivers/cpufreq/scmi-cpufreq.c                     | 285 +++++++
+ drivers/firmware/Kconfig                           |  34 +
+ drivers/firmware/Makefile                          |   1 +
+ drivers/firmware/arm_scmi/Makefile                 |   5 +
+ drivers/firmware/arm_scmi/base.c                   | 293 +++++++
+ drivers/firmware/arm_scmi/bus.c                    | 232 ++++++
+ drivers/firmware/arm_scmi/clock.c                  | 353 ++++++++
+ drivers/firmware/arm_scmi/common.h                 | 116 +++
+ drivers/firmware/arm_scmi/driver.c                 | 895 +++++++++++++++++++++
+ drivers/firmware/arm_scmi/perf.c                   | 530 ++++++++++++
+ drivers/firmware/arm_scmi/power.c                  | 255 ++++++
+ drivers/firmware/arm_scmi/scmi_pm_domain.c         | 140 ++++
+ drivers/firmware/arm_scmi/sensors.c                | 302 +++++++
+ drivers/hwmon/Kconfig                              |  12 +
+ drivers/hwmon/Makefile                             |   1 +
+ drivers/hwmon/scmi-hwmon.c                         | 233 ++++++
+ include/linux/hwmon.h                              |   1 +
+ include/linux/scmi_protocol.h                      | 272 +++++++
+ 26 files changed, 4409 insertions(+), 5 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/arm,scmi.txt
+ create mode 100644 drivers/clk/clk-scmi.c
+ create mode 100644 drivers/cpufreq/scmi-cpufreq.c
+ create mode 100644 drivers/firmware/arm_scmi/Makefile
+ create mode 100644 drivers/firmware/arm_scmi/base.c
+ create mode 100644 drivers/firmware/arm_scmi/bus.c
+ create mode 100644 drivers/firmware/arm_scmi/clock.c
+ create mode 100644 drivers/firmware/arm_scmi/common.h
+ create mode 100644 drivers/firmware/arm_scmi/driver.c
+ create mode 100644 drivers/firmware/arm_scmi/perf.c
+ create mode 100644 drivers/firmware/arm_scmi/power.c
+ create mode 100644 drivers/firmware/arm_scmi/scmi_pm_domain.c
+ create mode 100644 drivers/firmware/arm_scmi/sensors.c
+ create mode 100644 drivers/hwmon/scmi-hwmon.c
+ create mode 100644 include/linux/scmi_protocol.h
+
+-- 
+2.7.4
