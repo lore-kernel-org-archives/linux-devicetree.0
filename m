@@ -1,159 +1,33 @@
-From: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
-Subject: Re: [PATCH v5 10/15] MIPS: ingenic: Add machine info for supported boards
-Date: Tue, 2 Jan 2018 21:32:57 +0530
-Message-ID: <CANc+2y7ePJ9PwXQp2EQS_CFj541iOkWLbZm7K3U0G7j0bx4RDg@mail.gmail.com>
-References: <20180102150848.11314-1-paul@crapouillou.net> <20180102150848.11314-10-paul@crapouillou.net>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 3/4] dt-bindings: at24: extend the list of supported
+ chips
+Date: Tue, 2 Jan 2018 10:03:55 -0600
+Message-ID: <20180102160355.xllnymodcfccvia7@rob-hp-laptop>
+References: <20171228104913.29873-1-brgl@bgdev.pl>
+ <20171228104913.29873-4-brgl@bgdev.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20180102150848.11314-10-paul@crapouillou.net>
-Sender: linux-clk-owner@vger.kernel.org
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: Ralf Baechle <ralf@linux-mips.org>, Maarten ter Huurne <maarten@treewalker.org>, devicetree@vger.kernel.org, open list <linux-kernel@vger.kernel.org>, linux-mips@linux-mips.org, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20171228104913.29873-4-brgl-ARrdPY/1zhM@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bartosz Golaszewski <brgl-ARrdPY/1zhM@public.gmane.org>
+Cc: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, Divagar Mohandass <divagar.mohandass-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Paul,
-
-On 2 January 2018 at 20:38, Paul Cercueil <paul@crapouillou.net> wrote:
-> This makes sure that 'mips_machtype' will be initialized to the SoC
-> version used on the board.
->
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+On Thu, Dec 28, 2017 at 11:49:12AM +0100, Bartosz Golaszewski wrote:
+> Add other variants of at24 EEPROMs we support in the driver to the
+> list of allowed compatible fallbacks.
+> 
+> Signed-off-by: Bartosz Golaszewski <brgl-ARrdPY/1zhM@public.gmane.org>
+> Reviewed-by: Javier Martinez Canillas <javierm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 > ---
->  arch/mips/Kconfig         |  1 +
->  arch/mips/jz4740/Makefile |  2 +-
->  arch/mips/jz4740/boards.c | 12 ++++++++++++
->  arch/mips/jz4740/setup.c  | 34 +++++++++++++++++++++++++++++-----
->  4 files changed, 43 insertions(+), 6 deletions(-)
->  create mode 100644 arch/mips/jz4740/boards.c
->
->  v2: No change
->  v3: No change
->  v4: No change
->  v5: Use SPDX license identifier
->
-> diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-> index 350a990fc719..83243e427e36 100644
-> --- a/arch/mips/Kconfig
-> +++ b/arch/mips/Kconfig
-> @@ -376,6 +376,7 @@ config MACH_INGENIC
->         select BUILTIN_DTB
->         select USE_OF
->         select LIBFDT
-> +       select MIPS_MACHINE
->
->  config LANTIQ
->         bool "Lantiq based platforms"
-> diff --git a/arch/mips/jz4740/Makefile b/arch/mips/jz4740/Makefile
-> index 88d6aa7d000b..fc2d3b3c4a80 100644
-> --- a/arch/mips/jz4740/Makefile
-> +++ b/arch/mips/jz4740/Makefile
-> @@ -6,7 +6,7 @@
->  # Object file lists.
->
->  obj-y += prom.o time.o reset.o setup.o \
-> -       platform.o timer.o
-> +       platform.o timer.o boards.o
->
->  CFLAGS_setup.o = -I$(src)/../../../scripts/dtc/libfdt
->
-> diff --git a/arch/mips/jz4740/boards.c b/arch/mips/jz4740/boards.c
-> new file mode 100644
-> index 000000000000..13b0bddd8cb7
-> --- /dev/null
-> +++ b/arch/mips/jz4740/boards.c
-> @@ -0,0 +1,12 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Ingenic boards support
-> + * Copyright 2017, Paul Cercueil <paul@crapouillou.net>
-> + */
-> +
-> +#include <asm/bootinfo.h>
-> +#include <asm/mips_machine.h>
-> +
-> +MIPS_MACHINE(MACH_INGENIC_JZ4740, "qi,lb60", "Qi Hardware Ben Nanonote", NULL);
-> +MIPS_MACHINE(MACH_INGENIC_JZ4780, "img,ci20",
-> +                       "Imagination Technologies CI20", NULL);
-> diff --git a/arch/mips/jz4740/setup.c b/arch/mips/jz4740/setup.c
-> index 6d0152321819..afd84ee966e8 100644
-> --- a/arch/mips/jz4740/setup.c
-> +++ b/arch/mips/jz4740/setup.c
-> @@ -22,6 +22,7 @@
->  #include <linux/of_fdt.h>
->
->  #include <asm/bootinfo.h>
-> +#include <asm/mips_machine.h>
->  #include <asm/prom.h>
->
->  #include <asm/mach-jz4740/base.h>
-> @@ -53,16 +54,34 @@ static void __init jz4740_detect_mem(void)
->         add_memory_region(0, size, BOOT_MEM_RAM);
->  }
->
-> +static unsigned long __init get_board_mach_type(const void *fdt)
-> +{
-> +       const struct mips_machine *mach;
-> +
-> +       for (mach = (struct mips_machine *)&__mips_machines_start;
-> +                       mach < (struct mips_machine *)&__mips_machines_end;
-> +                       mach++) {
-> +               if (!fdt_node_check_compatible(fdt, 0, mach->mach_id))
-> +                       return mach->mach_type;
-> +       }
-> +
-> +       return MACH_INGENIC_JZ4740;
-> +}
-> +
->  void __init plat_mem_setup(void)
->  {
->         int offset;
->
-> +       if (!early_init_dt_scan(__dtb_start))
-> +               return;
-> +
->         jz4740_reset_init();
-> -       __dt_setup_arch(__dtb_start);
->
->         offset = fdt_path_offset(__dtb_start, "/memory");
->         if (offset < 0)
->                 jz4740_detect_mem();
-> +
-> +       mips_machtype = get_board_mach_type(__dtb_start);
->  }
->
->  void __init device_tree_init(void)
-> @@ -75,13 +94,18 @@ void __init device_tree_init(void)
->
->  const char *get_system_type(void)
->  {
-> -       if (IS_ENABLED(CONFIG_MACH_JZ4780))
-> -               return "JZ4780";
-> -
-> -       return "JZ4740";
-> +       return mips_get_machine_name();
->  }
->
->  void __init arch_init_irq(void)
->  {
->         irqchip_init();
->  }
-> +
-> +static int __init jz4740_machine_setup(void)
-> +{
-> +       mips_machine_setup();
-> +
-> +       return 0;
-> +}
-> +arch_initcall(jz4740_machine_setup);
-> --
-> 2.11.0
->
->
+>  Documentation/devicetree/bindings/eeprom/at24.txt | 9 +++++++++
+>  1 file changed, 9 insertions(+)
 
-Why add another file in arch/mips/jz4740/? I think declaring a machine
-and compatible string in dts would suffice. Please feel free to
-correct me if I am wrong.
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-Regards,
-PrasannaKumar
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
