@@ -1,49 +1,50 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH v2] PCI: imx6: Add PHY reference clock source support
-Date: Tue, 2 Jan 2018 20:54:50 -0200
-Message-ID: <CAOMZO5AFC9dxhsQjmRrDA7Z3KMkEemryKOBmQhXm19NXKxHkKQ@mail.gmail.com>
-References: <AM5PR0402MB28505BE42AB7774EC90927E18C040@AM5PR0402MB2850.eurprd04.prod.outlook.com>
- <1514709094-4110-1-git-send-email-ilya@compulab.co.il>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v2 4/6] clk: ingenic: Add JZ47xx TCU clocks driver
+Date: Tue, 2 Jan 2018 14:59:55 -0800
+Message-ID: <20180102225955.GL7997@codeaurora.org>
+References: <20171229125942.27305-2-paul@crapouillou.net>
+ <20180101143344.2099-1-paul@crapouillou.net>
+ <20180101143344.2099-4-paul@crapouillou.net>
+ <20180102191356.GI7997@codeaurora.org>
+ <1514923719.15685.0@smtp.crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1514709094-4110-1-git-send-email-ilya@compulab.co.il>
-Sender: linux-pci-owner@vger.kernel.org
-To: Ilya Ledvich <ilya@compulab.co.il>
-Cc: Richard Zhu <hongxing.zhu@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1514923719.15685.0@smtp.crapouillou.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Paul Cercueil <paul@crapouillou.net>
+Cc: Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Lee Jones <lee.jones@linaro.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ilya,
+On 01/02, Paul Cercueil wrote:
+> >> +		goto err_free_tcu;
+> >> +	}
+> >> +
+> >> +	tcu->clocks.clk_num = nb_clks;
+> >> +	tcu->clocks.clks = kcalloc(nb_clks, sizeof(struct clk *),
+> >>GFP_KERNEL);
+> >> +	if (!tcu->clocks.clks) {
+> >> +		pr_err("%s: cannot allocate memory\n", __func__);
+> >
+> >We don't need allocation error messages. Please run checkpatch.
+> 
+> I did run checkpatch, which warned about this, but that's a false
+> positive to me.
+> The callback passed to CLK_OF_DECLARE() has a return type void, so
+> there's no
+> way I can return -ENOMEM, and I don't want the error to be unnoticed.
 
-+ Rob and dt list
+The kernel typically spews a bunch of information when an
+allocation error happens, so your pr_err() will be lost in the
+spew, which is why it's not really necessary.
 
-On Sun, Dec 31, 2017 at 6:31 AM, Ilya Ledvich <ilya@compulab.co.il> wrote:
-> i.MX7D variant of the IP can use either Crystal Oscillator input
-> or internal clock input as a Reference Clock input for PCIe PHY.
-> Add support for an optional property 'pcie-phy-refclk-internal'.
-> If present then an internal clock input is used as PCIe PHY
-> reference clock source. By default an external oscillator input
-> is still used.
->
-> Verified on Compulab SBC-iMX7 Single Board Computer.
->
-> Signed-off-by: Ilya Ledvich <ilya@compulab.co.il>
-> ---
->  Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt | 5 +++++
->  drivers/pci/dwc/pci-imx6.c                               | 8 +++++++-
->  2 files changed, 12 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-> index 7b1e48b..581bc09 100644
-> --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-> @@ -50,6 +50,11 @@ Additional required properties for imx7d-pcie:
->                - "pciephy"
->                - "apps"
->
-> +Additional optional properties for imx7d-pcie:
-> +- pcie-phy-refclk-internal: If present then an internal PLL input is used as
-> +  PCIe PHY reference clock source. By default an external oscillator input
-> +  is used.
+> 
+> About the other remarks - I agree with you, I'll fix these in the V2.
+> 
 
-Should this contain the vendor prefix, like fsl,pcie-phy-refclk-internal ?
+Ok.
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
