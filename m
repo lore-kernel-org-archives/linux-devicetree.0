@@ -1,55 +1,73 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v4 5/6] arm64: allwinner: a64: add simplefb
- for A64 SoC
-Date: Tue, 2 Jan 2018 16:30:25 +0800
-Message-ID: <CAGb2v67XbeyWDcCBjaVygSAHbAk25spRVkWAS3dAU6DbwkGzOg@mail.gmail.com>
-References: <20171230113043.30237-1-icenowy@aosc.io> <20171230113043.30237-6-icenowy@aosc.io>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBPMGVXJAKGQEUJ5Q5QQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20171230113043.30237-6-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+From: Greentime Hu <green.hu@gmail.com>
+Subject: [PATCH v5 33/39] dt-bindings: nds32 SoC Bindings
+Date: Tue,  2 Jan 2018 16:25:05 +0800
+Message-ID: <51d9e9f0a85437742ed8e6770a9e91defd92e5d0.1514874858.git.green.hu@gmail.com>
+References: <cover.1514874857.git.green.hu@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1514874857.git.green.hu@gmail.com>
+In-Reply-To: <cover.1514874857.git.green.hu@gmail.com>
+References: <cover.1514874857.git.green.hu@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: greentime@andestech.com, linux-kernel@vger.kernel.org, arnd@arndb.de, linux-arch@vger.kernel.org, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, netdev@vger.kernel.org, deanbo422@gmail.com, devicetree@vger.kernel.org, viro@zeniv.linux.org.uk, dhowells@redhat.com, will.deacon@arm.com, daniel.lezcano@linaro.org, linux-serial@vger.kernel.org, geert.uytterhoeven@gmail.com, linus.walleij@linaro.org, mark.rutland@arm.com, greg@kroah.com, ren_guo@c-sky.com, rdunlap@infradead.org, davem@davemloft.net, jonas@southpole.se, stefan.kristiansson@saunalahti.fi, shorne@gmail.com
+Cc: green.hu@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Dec 30, 2017 at 7:30 PM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
-> The A64 SoC features two display pipelines, one has a LCD output, the
-> other has a HDMI output.
->
-> Add support for simplefb for these pipelines on A64 SoC.
->
-> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-> ---
-> Changes in v4:
-> - Dropped extra clocks.
-> - Added labels to the SimpleFB device tree nodes as boards may have
->   extra regulator for display pipeline.
->
->  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 26 ++++++++++++++++++++++++++
->  1 file changed, 26 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> index fb8ea7c414e1..d803c115d362 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> @@ -42,9 +42,11 @@
->   *     OTHER DEALINGS IN THE SOFTWARE.
->   */
->
-> +#include <dt-bindings/clock/sun8i-de2.h>
->  #include <dt-bindings/clock/sun50i-a64-ccu.h>
->  #include <dt-bindings/clock/sun8i-r-ccu.h>
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include <dt-bindings/reset/sun8i-de2.h>
+From: Greentime Hu <greentime@andestech.com>
 
-Nit: This isn't used anywhere. Please add it when DE2 DRM support is added.
+This patch adds nds32 SoC(AE3XX and AG101P) binding documents.
 
-ChenYu
+Signed-off-by: Greentime Hu <greentime@andestech.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ .../devicetree/bindings/nds32/andestech-boards     |   40 ++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/nds32/andestech-boards
+
+diff --git a/Documentation/devicetree/bindings/nds32/andestech-boards b/Documentation/devicetree/bindings/nds32/andestech-boards
+new file mode 100644
+index 0000000..f5d7569
+--- /dev/null
++++ b/Documentation/devicetree/bindings/nds32/andestech-boards
+@@ -0,0 +1,40 @@
++Andestech(nds32) AE3XX Platform
++-----------------------------------------------------------------------------
++The AE3XX prototype demonstrates the AE3XX example platform on the FPGA. It
++is composed of one Andestech(nds32) processor and AE3XX.
++
++Required properties (in root node):
++- compatible = "andestech,ae3xx";
++
++Example:
++/dts-v1/;
++/ {
++	compatible = "andestech,ae3xx";
++	#address-cells = <1>;
++	#size-cells = <1>;
++	interrupt-parent = <&intc>;
++};
++
++Andestech(nds32) AG101P Platform
++-----------------------------------------------------------------------------
++AG101P is a generic SoC Platform IP that works with any of Andestech(nds32)
++processors to provide a cost-effective and high performance solution for
++majority of embedded systems in variety of application domains. Users may
++simply attach their IP on one of the system buses together with certain glue
++logics to complete a SoC solution for a specific application. With
++comprehensive simulation and design environments, users may evaluate the
++system performance of their applications and track bugs of their designs
++efficiently. The optional hardware development platform further provides real
++system environment for early prototyping and software/hardware co-development.
++
++Required properties (in root node):
++	compatible = "andestech,ag101p";
++
++Example:
++/dts-v1/;
++/ {
++	compatible = "andestech,ag101p";
++	#address-cells = <1>;
++	#size-cells = <1>;
++	interrupt-parent = <&intc>;
++};
+-- 
+1.7.9.5
