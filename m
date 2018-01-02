@@ -1,70 +1,163 @@
-From: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>
-Subject: Re: [RFC v2 7/9] bluetooth: btrtl: load the config blob from
- devicetree when available
-Date: Tue, 2 Jan 2018 12:38:23 +0100
-Message-ID: <F38429FB-2D20-4EF7-8547-E5A5D67D1618@holtmann.org>
-References: <20180101204217.26165-1-martin.blumenstingl@googlemail.com>
- <20180101204217.26165-8-martin.blumenstingl@googlemail.com>
- <563D6F9F-8495-40D4-BE56-5338ED2B9B99@holtmann.org>
- <CAL9uMOEMDup4hRkxD-tM8R0YirGs5uQi31AjJUnFCPNMKUdRHg@mail.gmail.com>
- <E8E39477-CF1A-4A3E-84C5-830E182C2266@holtmann.org>
- <CAL9uMOH0N-4jgQncmPjK-KyU0vY9Q0ZnHYSAGgz3z3ywzc8Avw@mail.gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 11.2 \(3445.5.20\))
-Content-Type: text/plain;
-        charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL9uMOH0N-4jgQncmPjK-KyU0vY9Q0ZnHYSAGgz3z3ywzc8Avw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
-Cc: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "Gustavo F. Padovan" <gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org>, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, jslaby-IBi9RG/b67k@public.gmane.org, johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Larry.Finger-tQ5ms3gMjBLk1uMJSBkQmQ@public.gmane.org, Daniel Drake <drake-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v2 1/9] dt-bindings: media: Add Renesas CEU bindings
+Date: Tue, 02 Jan 2018 13:45:30 +0200
+Message-ID: <6263435.xWGUCtEJC1@avalon>
+References: <1514469681-15602-1-git-send-email-jacopo+renesas@jmondi.org> <1514469681-15602-2-git-send-email-jacopo+renesas@jmondi.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1514469681-15602-2-git-send-email-jacopo+renesas@jmondi.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: magnus.damm@gmail.com, geert@glider.be, mchehab@kernel.org, hverkuil@xs4all.nl, robh+dt@kernel.org, mark.rutland@arm.com, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Carlo,
+Hi Jacopo,
 
->>>>> Some Realtek bluetooth devices need a "config" blob. The btrtl driver
->>>>> currently only allows loading this config blob via the request_firmware
->>>>> mechanism.
->>>>> 
->>>>> The UART Bluetooth chips use this config blob to specify the baudrate,
->>>>> whether flow control is used and some other unknown bits. This means
->>>>> that the config blob is board-specific - thus loading it via
->>>>> request_firmware means that the rootfs is tied to a specific board.
->>>>> 
->>>>> The UART Bluetooth chips are implemented through serdev. This means
->>>>> there is also a devicetree node which describes the Bluetooth chip.
->>>>> Thus we can also load the blob from the devicetree node to keep the
->>>>> filesystem independent of any board configuration data. In the future
->>>>> this could be extended to support ACPI as well (in case that's needed).
->>>>> 
->>>>> Parse the devicetree node if it exists and obtain the config blob from
->>>>> there. Otherwise fall back to using the "old" request_firmware
->>>>> mechanism.
->>>> 
->>>> where are these config blobs coming from? I think we also need to give people a helping hand on how to add them to DT. I still wonder if the only pieces we are using are the UART config, then maybe skipping the config blob and allowing for clear named values in DT might be better.
->>> 
->>> What about x86 platforms where we do not have DT (I didn't check but I
->>> don't think that the UART config in that case is shipped in the ACPI
->>> tables)?
->> 
->> if we have this hardware in x86 systems, then I would really like to see ACPI table dumps. Some pieces might need hardcoding based on ACPI ID.
+Thank you for the patch.
+
+On Thursday, 28 December 2017 16:01:13 EET Jacopo Mondi wrote:
+> Add bindings documentation for Renesas Capture Engine Unit (CEU).
 > 
-> Yes, we have, especially on cherry-trail SoCs. In [0] the DSDT of a
-> cherry-trail laptop shipping the rtl8723bs (device OBDA8723).
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> ---
+>  .../devicetree/bindings/media/renesas,ceu.txt      | 85 +++++++++++++++++++
+>  1 file changed, 85 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/renesas,ceu.txt
 > 
-> [0] https://gist.github.com/carlocaione/82bff95ababb67dd33f52a86e94ce3ff
+> diff --git a/Documentation/devicetree/bindings/media/renesas,ceu.txt
+> b/Documentation/devicetree/bindings/media/renesas,ceu.txt new file mode
+> 100644
+> index 0000000..f45628e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/renesas,ceu.txt
+> @@ -0,0 +1,85 @@
+> +Renesas Capture Engine Unit (CEU)
+> +----------------------------------------------
+> +
+> +The Capture Engine Unit is the image capture interface found on Renesas
+> +RZ chip series and on SH Mobile ones.
 
-so the BTHx entries normally come at least with the UART configuration. It would be useful check if it is actually correct. And then I think similar handling like what is done in hci_bcm.c and hci_intel.c needs to happen here.
+"ones" sound a bit weird. How about "... found in the Renesas SH Mobil and RZ 
+SoCs." ?
 
-I think that we extended serdev to ACPI as well. Don’t recall of the top of my head if these patches were merged or not. But if they are then it is as simple as a serdev DT based driver. Just add the appropriate _HID and got from there.
+> +The interface supports a single parallel input with data bus width up to
+> +8/16 bits.
 
-However now I think that moving towards making hci_h5.c more like generic abstraction like hci_h4.c and having a hci_rtl.c be specific for Realtek chips seems a bit cleaner direction. Frankly only H:4 and H:5 plain protocols should be used by btattach. And all others should go via serdev.
+What do you mean by "up to 8/16 bits" ?
 
-Regards
+> +Required properties:
+> +- compatible
+> +	Must be one of:
+> +	- "renesas,ceu"
+> +	- "renesas,r7s72100-ceu"
 
-Marcel
+This is unclear, as Geert pointed out renesas,ceu sounds like a fallback. I 
+think this could be clarified if you explained how you plan to support other 
+SoCs (in particular the SH Mobile series, when/if it will receive DT support).
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +- reg
+> +	Physical address base and size.
+
+The standard practice, if I'm not mistaken, is to document properties with the 
+description starting on the same line as the property name.
+
+- reg: Physical address base and size.
+
+And nitpicking again, I'd write "register" instead of "physical" to clarify 
+what the properties contains (even if its name should make it clear).
+
+> +- interrupts
+> +	The interrupt specifier.
+> +- pinctrl-names, pinctrl-0
+> +	phandle of pin controller sub-node configuring pins for CEU operations.
+
+pinctrl-names isn't a phandle. If you want to document those properties (not 
+all DT bindings do, I'm not sure what is best) you should document them both, 
+possibly on two separate lines. There are plenty of examples in the upstream 
+DT bindings.
+
+> +- remote-endpoint
+> +	phandle to an 'endpoint' subnode of a remote device node.
+
+As Geert pointed out this isn't a top-level property. I wouldn't document it 
+as such, but instead reference Documentation/devicetree/bindings/media/video-
+interfaces.txt (see Documentation/devicetree/bindings/display/renesas,du.txt 
+or Documentation/devicetree/bindings/media/renesas,drif.txt for examples).
+
+> +CEU supports a single parallel input and should contain a single 'port'
+
+s/CEU/The CEU/
+
+> subnode
+> +with a single 'endpoint'. Optional endpoint properties applicable to
+> parallel
+> +input bus described in "video-interfaces.txt" supported by this driver are:
+> +
+> +- hsync-active
+> +	active state of the HSYNC signal, 0/1 for LOW/HIGH respectively.
+> +- vsync-active
+> +	active state of the VSYNC signal, 0/1 for LOW/HIGH respectively.
+> +
+> +Example:
+> +
+> +The example describes the connection between the Capture Engine Unit and an
+> +OV7670 image sensor sitting on bus i2c1.
+
+Maybe s/sitting on/connected to/ ?
+
+> +ceu: ceu@e8210000 {
+> +	reg = <0xe8210000 0x209c>;
+> +	compatible = "renesas,ceu";
+> +	interrupts = <GIC_SPI 332 IRQ_TYPE_LEVEL_HIGH>;
+> +
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&vio_pins>;
+> +
+> +	status = "okay";
+> +
+> +	port {
+> +		ceu_in: endpoint {
+> +			remote-endpoint = <&ov7670_out>;
+> +
+> +			hsync-active = <1>;
+> +			vsync-active = <0>;
+> +		};
+> +	};
+> +};
+> +
+> +i2c1: i2c@fcfee400 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&i2c1_pins>;
+> +
+> +	status = "okay";
+> +
+> +	clock-frequency = <100000>;
+> +
+> +	ov7670: camera@21 {
+> +		compatible = "ovti,ov7670";
+> +		reg = <0x21>;
+> +
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&vio_pins>;
+> +
+> +		reset-gpios = <&port3 11 GPIO_ACTIVE_LOW>;
+> +		powerdown-gpios = <&port3 12 GPIO_ACTIVE_HIGH>;
+> +
+> +		port {
+> +			ov7670_out: endpoint {
+> +				remote-endpoint = <&ceu_in>;
+> +
+> +				hsync-active = <1>;
+> +				vsync-active = <0>;
+> +			};
+> +		};
+> +	};
+> +};
+
+-- 
+Regards,
+
+Laurent Pinchart
+
