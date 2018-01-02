@@ -1,43 +1,48 @@
-From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Subject: [PATCH 1/7] ARM: imx: add timer stop flag to ARM power off state
-Date: Tue,  2 Jan 2018 17:42:17 +0100
-Message-ID: <20180102164223.15230-1-stefan@agner.ch>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
-Cc: fabio.estevam-3arQi8VN3Tc@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Anson Huang <anson.huang-3arQi8VN3Tc@public.gmane.org>
+From: Stefan Agner <stefan@agner.ch>
+Subject: [PATCH 6/7] ARM: dts: imx6ull: add IOMUXC SNVS instance
+Date: Tue,  2 Jan 2018 17:42:22 +0100
+Message-ID: <20180102164223.15230-6-stefan@agner.ch>
+References: <20180102164223.15230-1-stefan@agner.ch>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180102164223.15230-1-stefan@agner.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: shawnguo@kernel.org, kernel@pengutronix.de
+Cc: fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
 List-Id: devicetree@vger.kernel.org
 
-When the CPU is in ARM power off state the ARM architected
-timers are stopped. The flag is already present in the higher
-power WAIT mode.
+The i.MX 6ULL features another IOMUX Controller called IOMUXC
+SNVS which allows to control BOOT_MODE and TAMPER pins. Add the
+controller to the i.MX 6ULL specific imx6ull.dtsi device tree.
 
-This allows to use the ARM generic timer on i.MX 6UL/6ULL SoC.
-Without the flag the kernel freezes when the timer enters the
-first time ARM power off mode.
-
-Cc: Anson Huang <anson.huang-3arQi8VN3Tc@public.gmane.org>
-Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Signed-off-by: Stefan Agner <stefan@agner.ch>
 ---
- arch/arm/mach-imx/cpuidle-imx6sx.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/imx6ull.dtsi | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-diff --git a/arch/arm/mach-imx/cpuidle-imx6sx.c b/arch/arm/mach-imx/cpuidle-imx6sx.c
-index c5a5c3a70ab1..d0f14b761ff7 100644
---- a/arch/arm/mach-imx/cpuidle-imx6sx.c
-+++ b/arch/arm/mach-imx/cpuidle-imx6sx.c
-@@ -89,6 +89,7 @@ static struct cpuidle_driver imx6sx_cpuidle_driver = {
- 			 */
- 			.exit_latency = 300,
- 			.target_residency = 500,
-+			.flags = CPUIDLE_FLAG_TIMER_STOP,
- 			.enter = imx6sx_enter_wait,
- 			.name = "LOW-POWER-IDLE",
- 			.desc = "ARM power off",
+diff --git a/arch/arm/boot/dts/imx6ull.dtsi b/arch/arm/boot/dts/imx6ull.dtsi
+index a58c01dc15c3..bc2cd4fb8b12 100644
+--- a/arch/arm/boot/dts/imx6ull.dtsi
++++ b/arch/arm/boot/dts/imx6ull.dtsi
+@@ -42,3 +42,20 @@
+ #include "imx6ul.dtsi"
+ #include "imx6ull-pinfunc.h"
+ #include "imx6ull-pinfunc-snvs.h"
++
++/ {
++	soc {
++		aips3: aips-bus@2200000 {
++			compatible = "fsl,aips-bus", "simple-bus";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			reg = <0x02200000 0x100000>;
++			ranges;
++
++			iomuxc_snvs: iomuxc-snvs@2290000 {
++				compatible = "fsl,imx6ull-iomuxc-snvs";
++				reg = <0x02290000 0x4000>;
++			};
++		};
++	};
++};
 -- 
 2.15.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
