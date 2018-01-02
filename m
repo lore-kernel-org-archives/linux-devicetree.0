@@ -1,64 +1,73 @@
-From: Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH] arm64: dts: angler: add pstore-ramoops support
-Date: Tue, 2 Jan 2018 10:09:49 -0800
-Message-ID: <CAGXu5jJ2YNqbT_n-=K9tYqAc4JDDN+GHDfWbLDQcQxYKawSXuQ@mail.gmail.com>
-References: <1514446709-19347-1-git-send-email-zhuoweizhang@yahoo.com>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH 2/4] dt-bindings: gpio: add raspberry pi GPIO expander
+ binding
+Date: Tue, 2 Jan 2018 19:26:00 +0100 (CET)
+Message-ID: <860502005.181510.1514917560724@email.1und1.de>
+References: <cover.1514898134.git.baruch@tkos.co.il>
+ <4ca1795c6e09eb89f481cdec55180b4f1165bbfd.1514898134.git.baruch@tkos.co.il>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1514446709-19347-1-git-send-email-zhuoweizhang@yahoo.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: zhuoweizhang@yahoo.com
-Cc: jeremymc@redhat.com, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Anton Vorontsov <anton@enomsg.org>, Colin Cross <ccross@android.com>, Tony Luck <tony.luck@intel.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <4ca1795c6e09eb89f481cdec55180b4f1165bbfd.1514898134.git.baruch@tkos.co.il>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Baruch Siach <baruch@tkos.co.il>
+Cc: linux-gpio@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Dave Stevenson <dave.stevenson@raspberrypi.org>, Linus Walleij <linus.walleij@linaro.org>, Eric Anholt <eric@anholt.net>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 27, 2017 at 11:38 PM,  <zhuoweizhang@yahoo.com> wrote:
-> From: Zhuowei Zhang <zhuoweizhang@yahoo.com>
->
-> Support pstore-ramoops for retrieving kernel oops and panics after reboot.
->
-> The address and configs are taken from the downstream kernel's device tree.
->
-> Signed-off-by: Zhuowei Zhang <zhuoweizhang@yahoo.com>
+Hi Baruch,
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
-
--Kees
-
+> Baruch Siach <baruch@tkos.co.il> hat am 2. Januar 2018 um 14:19 geschrieben:
+> 
+> 
+> The Raspberry Pi 3 GPIO expander is controlled by the VC4 firmware over
+> I2C. The firmware mailbox interface allows the ARM core to control the
+> GPIO lines.
+> 
+> Signed-off-by: Baruch Siach <baruch@tkos.co.il>
 > ---
->  arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts b/arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts
-> index dfa08f5..9ce3a6e 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts
-> +++ b/arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts
-> @@ -37,4 +37,19 @@
->                         pinctrl-1 = <&blsp1_uart2_sleep>;
->                 };
->         };
+>  .../bindings/gpio/brcm,bcm2835-expgpio.txt         | 24 ++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/brcm,bcm2835-expgpio.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/brcm,bcm2835-expgpio.txt b/Documentation/devicetree/bindings/gpio/brcm,bcm2835-expgpio.txt
+> new file mode 100644
+> index 000000000000..55257f31a9be
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpio/brcm,bcm2835-expgpio.txt
+> @@ -0,0 +1,24 @@
+> +Raspberry Pi GPIO expander
 > +
-> +       reserved-memory {
-> +               #address-cells = <2>;
-> +               #size-cells = <2>;
-> +               ranges;
+> +The Raspberry Pi 3 GPIO expander is controlled by the VC4 firmware. The
+> +firmware exposes a mailbox interface that allows the ARM core to control the
+> +GPIO lines on the expander.
 > +
-> +               ramoops@1fe00000 {
-> +                       compatible = "ramoops";
-> +                       reg = <0 0x1fe00000 0 0x00200000>;
-> +                       console-size = <0x100000>;
-> +                       record-size = <0x10000>;
-> +                       ftrace-size = <0x10000>;
-> +                       pmsg-size = <0x80000>;
-> +               };
-> +       };
->  };
-> --
-> 1.9.1
->
+> +Required properties:
+> +
+> +- compatible : Should be "brcm,bcm2835-expgpio"
 
+from my understand this driver is specific to the Raspberry Pi and it's vendor is the Raspberry Pi Foundation. So i prefer Eric's suggestion of "raspberrypi,firmware-gpio", which also applies to the filename.
 
-
--- 
-Kees Cook
-Pixel Security
+> +- gpio-controller : Marks the device node as a gpio controller
+> +- #gpio-cells : Should be two.  The first cell is the pin number, and
+> +  the second cell is used to specify the gpio polarity:
+> +  0 = active high
+> +  1 = active low
+> +- firmware : Reference to the RPi firmware device node
+> +
+> +Example:
+> +
+> +expgpio: expgpio {
+> +	compatible = "brcm,bcm2835-expgpio";
+> +	gpio-controller;
+> +	#gpio-cells = <2>;
+> +	firmware = <&firmware>;
+> +};
+> -- 
+> 2.15.1
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
