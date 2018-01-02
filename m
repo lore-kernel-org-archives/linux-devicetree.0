@@ -1,7 +1,7 @@
 From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: [PATCH v5 03/20] firmware: arm_scmi: add basic driver infrastructure for SCMI
-Date: Tue,  2 Jan 2018 14:42:25 +0000
-Message-ID: <1514904162-11201-4-git-send-email-sudeep.holla@arm.com>
+Subject: [PATCH v5 08/20] firmware: arm_scmi: add initial support for power protocol
+Date: Tue,  2 Jan 2018 14:42:30 +0000
+Message-ID: <1514904162-11201-9-git-send-email-sudeep.holla@arm.com>
 References: <1514904162-11201-1-git-send-email-sudeep.holla@arm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1514904162-11201-1-git-send-email-sudeep.holla@arm.com>
@@ -10,109 +10,46 @@ To: ALKML <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel
 Cc: Sudeep Holla <sudeep.holla@arm.com>, Roy Franz <roy.franz@cavium.com>, Harb Abdulhamid <harba@codeaurora.org>, Nishanth Menon <nm@ti.com>, Arnd Bergmann <arnd@arndb.de>, Loc Ho <lho@apm.com>, Alexey Klimov <klimov.linux@gmail.com>, Ryan Harkin <Ryan.Harkin@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-The SCMI is intended to allow OSPM to manage various functions that are
-provided by the hardware platform it is running on, including power and
-performance functions. SCMI provides two levels of abstraction, protocols
-and transports. Protocols define individual groups of system control and
-management messages. A protocol specification describes the messages
-that it supports. Transports describe the method by which protocol
-messages are communicated between agents and the platform.
+The power protocol is intended for management of power states of various
+power domains. The power domain management protocol provides commands to
+describe the protocol version, discover the implementation specific
+attributes, set and get the power state of a domain.
 
-This patch adds basic infrastructure to manage the message allocation,
-initialisation, packing/unpacking and shared memory management.
+This patch adds support for the above mention features of the protocol.
 
 Cc: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+--
+ drivers/firmware/arm_scmi/Makefile |   2 +-
+ drivers/firmware/arm_scmi/power.c  | 242 +++++++++++++++++++++++++++++++++++++
+ include/linux/scmi_protocol.h      |  28 +++++
+ 3 files changed, 271 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/firmware/arm_scmi/power.c
 ---
- MAINTAINERS                        |   3 +-
- drivers/firmware/Kconfig           |  21 ++
- drivers/firmware/Makefile          |   1 +
- drivers/firmware/arm_scmi/Makefile |   2 +
- drivers/firmware/arm_scmi/common.h |  77 ++++
- drivers/firmware/arm_scmi/driver.c | 708 +++++++++++++++++++++++++++++++++++++
- include/linux/scmi_protocol.h      |  27 ++
- 7 files changed, 838 insertions(+), 1 deletion(-)
- create mode 100644 drivers/firmware/arm_scmi/Makefile
- create mode 100644 drivers/firmware/arm_scmi/common.h
- create mode 100644 drivers/firmware/arm_scmi/driver.c
- create mode 100644 include/linux/scmi_protocol.h
+ drivers/firmware/arm_scmi/Makefile |   2 +-
+ drivers/firmware/arm_scmi/power.c  | 255 +++++++++++++++++++++++++++++++++++++
+ include/linux/scmi_protocol.h      |  29 +++++
+ 3 files changed, 285 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/firmware/arm_scmi/power.c
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 56885de4ba44..e7526be3a05b 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -13157,7 +13157,8 @@ F:	Documentation/devicetree/bindings/arm/arm,sc[mp]i.txt
- F:	drivers/clk/clk-scpi.c
- F:	drivers/cpufreq/scpi-cpufreq.c
- F:	drivers/firmware/arm_scpi.c
--F:	include/linux/scpi_protocol.h
-+F:	drivers/firmware/arm_scmi/
-+F:	include/linux/sc[mp]i_protocol.h
- 
- SYSTEM RESET/SHUTDOWN DRIVERS
- M:	Sebastian Reichel <sre@kernel.org>
-diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
-index fa87a055905e..10b917d32087 100644
---- a/drivers/firmware/Kconfig
-+++ b/drivers/firmware/Kconfig
-@@ -19,6 +19,27 @@ config ARM_PSCI_CHECKER
- 	  on and off through hotplug, so for now torture tests and PSCI checker
- 	  are mutually exclusive.
- 
-+config ARM_SCMI_PROTOCOL
-+	bool "ARM System Control and Management Interface (SCMI) Message Protocol"
-+	depends on ARM || ARM64 || COMPILE_TEST
-+	depends on MAILBOX
-+	help
-+	  ARM System Control and Management Interface (SCMI) protocol is a
-+	  set of operating system-independent software interfaces that are
-+	  used in system management. SCMI is extensible and currently provides
-+	  interfaces for: Discovery and self-description of the interfaces
-+	  it supports, Power domain management which is the ability to place
-+	  a given device or domain into the various power-saving states that
-+	  it supports, Performance management which is the ability to control
-+	  the performance of a domain that is composed of compute engines
-+	  such as application processors and other accelerators, Clock
-+	  management which is the ability to set and inquire rates on platform
-+	  managed clocks and Sensor management which is the ability to read
-+	  sensor data, and be notified of sensor value.
-+
-+	  This protocol library provides interface for all the client drivers
-+	  making use of the features offered by the SCMI.
-+
- config ARM_SCPI_PROTOCOL
- 	tristate "ARM System Control and Power Interface (SCPI) Message Protocol"
- 	depends on ARM || ARM64 || COMPILE_TEST
-diff --git a/drivers/firmware/Makefile b/drivers/firmware/Makefile
-index feaa890197f3..33dcc099e021 100644
---- a/drivers/firmware/Makefile
-+++ b/drivers/firmware/Makefile
-@@ -24,6 +24,7 @@ obj-$(CONFIG_QCOM_SCM_32)	+= qcom_scm-32.o
- CFLAGS_qcom_scm-32.o :=$(call as-instr,.arch armv7-a\n.arch_extension sec,-DREQUIRES_SEC=1) -march=armv7-a
- obj-$(CONFIG_TI_SCI_PROTOCOL)	+= ti_sci.o
- 
-+obj-$(CONFIG_ARM_SCMI_PROTOCOL)	+= arm_scmi/
- obj-y				+= broadcom/
- obj-y				+= meson/
- obj-$(CONFIG_GOOGLE_FIRMWARE)	+= google/
 diff --git a/drivers/firmware/arm_scmi/Makefile b/drivers/firmware/arm_scmi/Makefile
-new file mode 100644
-index 000000000000..b2a24ba2b636
---- /dev/null
+index 2130ee9ac825..420c761ced94 100644
+--- a/drivers/firmware/arm_scmi/Makefile
 +++ b/drivers/firmware/arm_scmi/Makefile
-@@ -0,0 +1,2 @@
-+obj-y	= scmi-driver.o
-+scmi-driver-y = driver.o
-diff --git a/drivers/firmware/arm_scmi/common.h b/drivers/firmware/arm_scmi/common.h
+@@ -1,4 +1,4 @@
+ obj-y	= scmi-bus.o scmi-driver.o scmi-protocols.o
+ scmi-bus-y = bus.o
+ scmi-driver-y = driver.o
+-scmi-protocols-y = base.o clock.o perf.o
++scmi-protocols-y = base.o clock.o perf.o power.o
+diff --git a/drivers/firmware/arm_scmi/power.c b/drivers/firmware/arm_scmi/power.c
 new file mode 100644
-index 000000000000..cdfc43427c3c
+index 000000000000..50195bd6bbd2
 --- /dev/null
-+++ b/drivers/firmware/arm_scmi/common.h
-@@ -0,0 +1,77 @@
++++ b/drivers/firmware/arm_scmi/power.c
+@@ -0,0 +1,255 @@
 +/*
-+ * System Control and Management Interface (SCMI) Message Protocol
-+ * driver common header file containing some definitions, structures
-+ * and function prototypes used in all the different SCMI protocols.
++ * System Control and Management Interface (SCMI) Power Protocol
 + *
 + * Copyright (C) 2017 ARM Ltd.
 + *
@@ -128,810 +65,297 @@ index 000000000000..cdfc43427c3c
 + * You should have received a copy of the GNU General Public License along
 + * with this program. If not, see <http://www.gnu.org/licenses/>.
 + */
-+
-+#include <linux/completion.h>
-+#include <linux/scmi_protocol.h>
-+#include <linux/types.h>
-+
-+/**
-+ * struct scmi_msg_hdr - Message(Tx/Rx) header
-+ *
-+ * @id: The identifier of the command being sent
-+ * @protocol_id: The identifier of the protocol used to send @id command
-+ * @seq: The token to identify the message. when a message/command returns,
-+ *       the platform returns the whole message header unmodified including
-+ *	 the token.
-+ */
-+struct scmi_msg_hdr {
-+	u8 id;
-+	u8 protocol_id;
-+	u16 seq;
-+	u32 status;
-+	bool poll_completion;
-+};
-+
-+/**
-+ * struct scmi_msg - Message(Tx/Rx) structure
-+ *
-+ * @buf: Buffer pointer
-+ * @len: Length of data in the Buffer
-+ */
-+struct scmi_msg {
-+	void *buf;
-+	size_t len;
-+};
-+
-+/**
-+ * struct scmi_xfer - Structure representing a message flow
-+ *
-+ * @hdr: Transmit message header
-+ * @tx: Transmit message
-+ * @rx: Receive message, the buffer should be pre-allocated to store
-+ *	message. If request-ACK protocol is used, we can reuse the same
-+ *	buffer for the rx path as we use for the tx path.
-+ * @done: completion event
-+ */
-+
-+struct scmi_xfer {
-+	void *con_priv;
-+	struct scmi_msg_hdr hdr;
-+	struct scmi_msg tx;
-+	struct scmi_msg rx;
-+	struct completion done;
-+};
-+
-+void scmi_one_xfer_put(const struct scmi_handle *h, struct scmi_xfer *xfer);
-+int scmi_do_xfer(const struct scmi_handle *h, struct scmi_xfer *xfer);
-+int scmi_one_xfer_init(const struct scmi_handle *h, u8 msg_id, u8 prot_id,
-+		       size_t tx_size, size_t rx_size, struct scmi_xfer **p);
-+int scmi_handle_put(const struct scmi_handle *handle);
-+struct scmi_handle *scmi_handle_get(struct device *dev);
-diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
-new file mode 100644
-index 000000000000..58d8f88893e6
---- /dev/null
-+++ b/drivers/firmware/arm_scmi/driver.c
-@@ -0,0 +1,708 @@
-+/*
-+ * System Control and Management Interface (SCMI) Message Protocol driver
-+ *
-+ * SCMI Message Protocol is used between the System Control Processor(SCP)
-+ * and the Application Processors(AP). The Message Handling Unit(MHU)
-+ * provides a mechanism for inter-processor communication between SCP's
-+ * Cortex M3 and AP.
-+ *
-+ * SCP offers control and management of the core/cluster power states,
-+ * various power domain DVFS including the core/cluster, certain system
-+ * clocks configuration, thermal sensors and many others.
-+ *
-+ * Copyright (C) 2017 ARM Ltd.
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-+ * more details.
-+ *
-+ * You should have received a copy of the GNU General Public License along
-+ * with this program. If not, see <http://www.gnu.org/licenses/>.
-+ */
-+
-+#include <linux/bitmap.h>
-+#include <linux/export.h>
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/mailbox_client.h>
-+#include <linux/module.h>
-+#include <linux/of_address.h>
-+#include <linux/of_device.h>
-+#include <linux/semaphore.h>
-+#include <linux/slab.h>
 +
 +#include "common.h"
 +
-+#define MSG_ID_SHIFT		0
-+#define MSG_ID_MASK		0xff
-+#define MSG_TYPE_SHIFT		8
-+#define MSG_TYPE_MASK		0x3
-+#define MSG_PROTOCOL_ID_SHIFT	10
-+#define MSG_PROTOCOL_ID_MASK	0xff
-+#define MSG_TOKEN_ID_SHIFT	18
-+#define MSG_TOKEN_ID_MASK	0x3ff
-+#define MSG_XTRACT_TOKEN(header)	\
-+	(((header) >> MSG_TOKEN_ID_SHIFT) & MSG_TOKEN_ID_MASK)
-+
-+enum scmi_error_codes {
-+	SCMI_SUCCESS = 0,	/* Success */
-+	SCMI_ERR_SUPPORT = -1,	/* Not supported */
-+	SCMI_ERR_PARAMS = -2,	/* Invalid Parameters */
-+	SCMI_ERR_ACCESS = -3,	/* Invalid access/permission denied */
-+	SCMI_ERR_ENTRY = -4,	/* Not found */
-+	SCMI_ERR_RANGE = -5,	/* Value out of range */
-+	SCMI_ERR_BUSY = -6,	/* Device busy */
-+	SCMI_ERR_COMMS = -7,	/* Communication Error */
-+	SCMI_ERR_GENERIC = -8,	/* Generic Error */
-+	SCMI_ERR_HARDWARE = -9,	/* Hardware Error */
-+	SCMI_ERR_PROTOCOL = -10,/* Protocol Error */
-+	SCMI_ERR_MAX
++enum scmi_power_protocol_cmd {
++	POWER_DOMAIN_ATTRIBUTES = 0x3,
++	POWER_STATE_SET = 0x4,
++	POWER_STATE_GET = 0x5,
++	POWER_STATE_NOTIFY = 0x6,
 +};
 +
-+/* List of all  SCMI devices active in system */
-+static LIST_HEAD(scmi_list);
-+/* Protection for the entire list */
-+static DEFINE_MUTEX(scmi_list_mutex);
-+
-+/**
-+ * struct scmi_xfers_info - Structure to manage transfer information
-+ *
-+ * @sem_xfer_count: Counting Semaphore for managing max simultaneous
-+ *	Messages.
-+ * @xfer_block: Preallocated Message array
-+ * @xfer_alloc_table: Bitmap table for allocated messages.
-+ *	Index of this bitmap table is also used for message
-+ *	sequence identifier.
-+ * @xfer_lock: Protection for message allocation
-+ */
-+struct scmi_xfers_info {
-+	struct semaphore sem_xfer_count;
-+	struct scmi_xfer *xfer_block;
-+	unsigned long *xfer_alloc_table;
-+	/* protect transfer allocation */
-+	spinlock_t xfer_lock;
++struct scmi_msg_resp_power_attributes {
++	__le16 num_domains;
++	__le16 reserved;
++	__le32 stats_addr_low;
++	__le32 stats_addr_high;
++	__le32 stats_size;
 +};
 +
-+/**
-+ * struct scmi_desc - Description of SoC integration
-+ *
-+ * @max_rx_timeout_ms: Timeout for communication with SoC (in Milliseconds)
-+ * @max_msg: Maximum number of messages that can be pending
-+ *	simultaneously in the system
-+ * @max_msg_size: Maximum size of data per message that can be handled.
-+ */
-+struct scmi_desc {
-+	int max_rx_timeout_ms;
-+	int max_msg;
-+	int max_msg_size;
-+};
-+
-+/**
-+ * struct scmi_info - Structure representing a  SCMI instance
-+ *
-+ * @dev: Device pointer
-+ * @desc: SoC description for this instance
-+ * @handle: Instance of SCMI handle to send to clients
-+ * @cl: Mailbox Client
-+ * @tx_chan: Transmit mailbox channel
-+ * @tx_payload: Transmit mailbox channel payload area
-+ * @minfo: Message info
-+ * @node: list head
-+ * @users: Number of users of this instance
-+ */
-+struct scmi_info {
-+	struct device *dev;
-+	const struct scmi_desc *desc;
-+	struct scmi_handle handle;
-+	struct mbox_client cl;
-+	struct mbox_chan *tx_chan;
-+	void __iomem *tx_payload;
-+	struct scmi_xfers_info minfo;
-+	struct list_head node;
-+	int users;
-+};
-+
-+#define client_to_scmi_info(c)	container_of(c, struct scmi_info, cl)
-+#define handle_to_scmi_info(h)	container_of(h, struct scmi_info, handle)
-+
-+/*
-+ * SCMI specification requires all parameters, message headers, return
-+ * arguments or any protocol data to be expressed in little endian
-+ * format only.
-+ */
-+struct scmi_shared_mem {
-+	__le32 reserved;
-+	__le32 channel_status;
-+#define SCMI_SHMEM_CHAN_STAT_CHANNEL_ERROR	BIT(1)
-+#define SCMI_SHMEM_CHAN_STAT_CHANNEL_FREE	BIT(0)
-+	__le32 reserved1[2];
++struct scmi_msg_resp_power_domain_attributes {
 +	__le32 flags;
-+#define SCMI_SHMEM_FLAG_INTR_ENABLED	BIT(0)
-+	__le32 length;
-+	__le32 msg_header;
-+	u8 msg_payload[0];
++#define SUPPORTS_STATE_SET_NOTIFY(x)	((x) & BIT(31))
++#define SUPPORTS_STATE_SET_ASYNC(x)	((x) & BIT(30))
++#define SUPPORTS_STATE_SET_SYNC(x)	((x) & BIT(29))
++	    u8 name[SCMI_MAX_STR_SIZE];
 +};
 +
-+static const int scmi_linux_errmap[] = {
-+	/* better than switch case as long as return value is continuous */
-+	0,			/* SCMI_SUCCESS */
-+	-EOPNOTSUPP,		/* SCMI_ERR_SUPPORT */
-+	-EINVAL,		/* SCMI_ERR_PARAM */
-+	-EACCES,		/* SCMI_ERR_ACCESS */
-+	-ENOENT,		/* SCMI_ERR_ENTRY */
-+	-ERANGE,		/* SCMI_ERR_RANGE */
-+	-EBUSY,			/* SCMI_ERR_BUSY */
-+	-ECOMM,			/* SCMI_ERR_COMMS */
-+	-EIO,			/* SCMI_ERR_GENERIC */
-+	-EREMOTEIO,		/* SCMI_ERR_HARDWARE */
-+	-EPROTO,		/* SCMI_ERR_PROTOCOL */
++struct scmi_power_set_state {
++	__le32 flags;
++#define STATE_SET_ASYNC		BIT(0)
++	__le32 domain;
++	__le32 state;
 +};
 +
-+static inline int scmi_to_linux_errno(int errno)
-+{
-+	if (errno < SCMI_SUCCESS && errno > SCMI_ERR_MAX)
-+		return scmi_linux_errmap[-errno];
-+	return -EIO;
-+}
++struct scmi_power_state_notify {
++	__le32 domain;
++	__le32 notify_enable;
++};
 +
-+/**
-+ * scmi_dump_header_dbg() - Helper to dump a message header.
-+ *
-+ * @dev: Device pointer corresponding to the SCMI entity
-+ * @hdr: pointer to header.
-+ */
-+static inline void scmi_dump_header_dbg(struct device *dev,
-+					struct scmi_msg_hdr *hdr)
-+{
-+	dev_dbg(dev, "Command ID: %x Sequence ID: %x Protocol: %x\n",
-+		hdr->id, hdr->seq, hdr->protocol_id);
-+}
++struct power_dom_info {
++	bool state_set_sync;
++	bool state_set_async;
++	bool state_set_notify;
++	char name[SCMI_MAX_STR_SIZE];
++};
 +
-+static void scmi_fetch_response(struct scmi_xfer *xfer,
-+				struct scmi_shared_mem __iomem *mem)
-+{
-+	xfer->hdr.status = ioread32(mem->msg_payload);
-+	/* Skip the length of header and statues in payload area i.e 8 bytes*/
-+	xfer->rx.len = min_t(size_t, xfer->rx.len, ioread32(&mem->length) - 8);
++struct scmi_power_info {
++	int num_domains;
++	u64 stats_addr;
++	u32 stats_size;
++	struct power_dom_info *dom_info;
++};
 +
-+	/* Take a copy to the rx buffer.. */
-+	memcpy_fromio(xfer->rx.buf, mem->msg_payload + 4, xfer->rx.len);
-+}
-+
-+/**
-+ * scmi_rx_callback() - mailbox client callback for receive messages
-+ *
-+ * @cl: client pointer
-+ * @m: mailbox message
-+ *
-+ * Processes one received message to appropriate transfer information and
-+ * signals completion of the transfer.
-+ *
-+ * NOTE: This function will be invoked in IRQ context, hence should be
-+ * as optimal as possible.
-+ */
-+static void scmi_rx_callback(struct mbox_client *cl, void *m)
-+{
-+	u16 xfer_id;
-+	struct scmi_xfer *xfer;
-+	struct scmi_info *info = client_to_scmi_info(cl);
-+	struct scmi_xfers_info *minfo = &info->minfo;
-+	struct device *dev = info->dev;
-+	struct scmi_shared_mem __iomem *mem = info->tx_payload;
-+
-+	xfer_id = MSG_XTRACT_TOKEN(ioread32(&mem->msg_header));
-+
-+	/*
-+	 * Are we even expecting this?
-+	 */
-+	if (!test_bit(xfer_id, minfo->xfer_alloc_table)) {
-+		dev_err(dev, "message for %d is not expected!\n", xfer_id);
-+		return;
-+	}
-+
-+	xfer = &minfo->xfer_block[xfer_id];
-+
-+	scmi_dump_header_dbg(dev, &xfer->hdr);
-+	/* Is the message of valid length? */
-+	if (xfer->rx.len > info->desc->max_msg_size) {
-+		dev_err(dev, "unable to handle %zu xfer(max %d)\n",
-+			xfer->rx.len, info->desc->max_msg_size);
-+		return;
-+	}
-+
-+	scmi_fetch_response(xfer, mem);
-+	complete(&xfer->done);
-+}
-+
-+/**
-+ * pack_scmi_header() - packs and returns 32-bit header
-+ *
-+ * @hdr: pointer to header containing all the information on message id,
-+ *	protocol id and sequence id.
-+ */
-+static inline u32 pack_scmi_header(struct scmi_msg_hdr *hdr)
-+{
-+	return ((hdr->id & MSG_ID_MASK) << MSG_ID_SHIFT) |
-+	   ((hdr->seq & MSG_TOKEN_ID_MASK) << MSG_TOKEN_ID_SHIFT) |
-+	   ((hdr->protocol_id & MSG_PROTOCOL_ID_MASK) << MSG_PROTOCOL_ID_SHIFT);
-+}
-+
-+/**
-+ * scmi_tx_prepare() - mailbox client callback to prepare for the transfer
-+ *
-+ * @cl: client pointer
-+ * @m: mailbox message
-+ *
-+ * This function prepares the shared memory which contains the header and the
-+ * payload.
-+ */
-+static void scmi_tx_prepare(struct mbox_client *cl, void *m)
-+{
-+	struct scmi_xfer *t = m;
-+	struct scmi_info *info = client_to_scmi_info(cl);
-+	struct scmi_shared_mem __iomem *mem = info->tx_payload;
-+
-+	/* Mark channel busy + clear error */
-+	iowrite32(0x0, &mem->channel_status);
-+	iowrite32(t->hdr.poll_completion ? 0 : SCMI_SHMEM_FLAG_INTR_ENABLED,
-+		  &mem->flags);
-+	iowrite32(sizeof(mem->msg_header) + t->tx.len, &mem->length);
-+	iowrite32(pack_scmi_header(&t->hdr), &mem->msg_header);
-+	if (t->tx.buf)
-+		memcpy_toio(mem->msg_payload, t->tx.buf, t->tx.len);
-+}
-+
-+/**
-+ * scmi_one_xfer_get() - Allocate one message
-+ *
-+ * @handle: SCMI entity handle
-+ *
-+ * Helper function which is used by various command functions that are
-+ * exposed to clients of this driver for allocating a message traffic event.
-+ *
-+ * This function can sleep depending on pending requests already in the system
-+ * for the SCMI entity. Further, this also holds a spinlock to maintain
-+ * integrity of internal data structures.
-+ *
-+ * Return: 0 if all went fine, else corresponding error.
-+ */
-+static struct scmi_xfer *scmi_one_xfer_get(const struct scmi_handle *handle)
-+{
-+	u16 xfer_id;
-+	int ret, timeout;
-+	struct scmi_xfer *xfer;
-+	unsigned long flags, bit_pos;
-+	struct scmi_info *info = handle_to_scmi_info(handle);
-+	struct scmi_xfers_info *minfo = &info->minfo;
-+
-+	/*
-+	 * Ensure we have only controlled number of pending messages.
-+	 * Ideally, we might just have to wait a single message, be
-+	 * conservative and wait 5 times that..
-+	 */
-+	timeout = msecs_to_jiffies(info->desc->max_rx_timeout_ms) * 5;
-+	ret = down_timeout(&minfo->sem_xfer_count, timeout);
-+	if (ret < 0)
-+		return ERR_PTR(ret);
-+
-+	/* Keep the locked section as small as possible */
-+	spin_lock_irqsave(&minfo->xfer_lock, flags);
-+	bit_pos = find_first_zero_bit(minfo->xfer_alloc_table,
-+				      info->desc->max_msg);
-+	if (bit_pos == info->desc->max_msg) {
-+		spin_unlock_irqrestore(&minfo->xfer_lock, flags);
-+		return ERR_PTR(-ENOMEM);
-+	}
-+	set_bit(bit_pos, minfo->xfer_alloc_table);
-+	spin_unlock_irqrestore(&minfo->xfer_lock, flags);
-+
-+	xfer_id = bit_pos;
-+
-+	xfer = &minfo->xfer_block[xfer_id];
-+	xfer->hdr.seq = xfer_id;
-+	reinit_completion(&xfer->done);
-+
-+	return xfer;
-+}
-+
-+/**
-+ * scmi_one_xfer_put() - Release a message
-+ *
-+ * @minfo: transfer info pointer
-+ * @xfer: message that was reserved by scmi_one_xfer_get
-+ *
-+ * This holds a spinlock to maintain integrity of internal data structures.
-+ */
-+void scmi_one_xfer_put(const struct scmi_handle *handle, struct scmi_xfer *xfer)
-+{
-+	unsigned long flags;
-+	struct scmi_info *info = handle_to_scmi_info(handle);
-+	struct scmi_xfers_info *minfo = &info->minfo;
-+
-+	/*
-+	 * Keep the locked section as small as possible
-+	 * NOTE: we might escape with smp_mb and no lock here..
-+	 * but just be conservative and symmetric.
-+	 */
-+	spin_lock_irqsave(&minfo->xfer_lock, flags);
-+	clear_bit(xfer->hdr.seq, minfo->xfer_alloc_table);
-+	spin_unlock_irqrestore(&minfo->xfer_lock, flags);
-+
-+	/* Increment the count for the next user to get through */
-+	up(&minfo->sem_xfer_count);
-+}
-+
-+/**
-+ * scmi_do_xfer() - Do one transfer
-+ *
-+ * @info: Pointer to SCMI entity information
-+ * @xfer: Transfer to initiate and wait for response
-+ *
-+ * Return: -ETIMEDOUT in case of no response, if transmit error,
-+ *   return corresponding error, else if all goes well,
-+ *   return 0.
-+ */
-+int scmi_do_xfer(const struct scmi_handle *handle, struct scmi_xfer *xfer)
++static int scmi_power_attributes_get(const struct scmi_handle *handle,
++				     struct scmi_power_info *pi)
 +{
 +	int ret;
-+	int timeout;
-+	struct scmi_info *info = handle_to_scmi_info(handle);
-+	struct device *dev = info->dev;
++	struct scmi_xfer *t;
++	struct scmi_msg_resp_power_attributes *attr;
 +
-+	ret = mbox_send_message(info->tx_chan, xfer);
-+	if (ret < 0) {
-+		dev_dbg(dev, "mbox send fail %d\n", ret);
++	ret = scmi_one_xfer_init(handle, PROTOCOL_ATTRIBUTES,
++				 SCMI_PROTOCOL_POWER, 0, sizeof(*attr), &t);
++	if (ret)
 +		return ret;
++
++	attr = t->rx.buf;
++
++	ret = scmi_do_xfer(handle, t);
++	if (!ret) {
++		pi->num_domains = le16_to_cpu(attr->num_domains);
++		pi->stats_addr = le32_to_cpu(attr->stats_addr_low) |
++				(u64)le32_to_cpu(attr->stats_addr_high) << 32;
++		pi->stats_size = le32_to_cpu(attr->stats_size);
 +	}
 +
-+	/* mbox_send_message returns non-negative value on success, so reset */
-+	ret = 0;
-+
-+	/* And we wait for the response. */
-+	timeout = msecs_to_jiffies(info->desc->max_rx_timeout_ms);
-+	if (!wait_for_completion_timeout(&xfer->done, timeout)) {
-+		dev_err(dev, "mbox timed out in resp(caller: %pF)\n",
-+			(void *)_RET_IP_);
-+		ret = -ETIMEDOUT;
-+	} else if (xfer->hdr.status) {
-+		ret = scmi_to_linux_errno(xfer->hdr.status);
-+	}
-+	/*
-+	 * NOTE: we might prefer not to need the mailbox ticker to manage the
-+	 * transfer queueing since the protocol layer queues things by itself.
-+	 * Unfortunately, we have to kick the mailbox framework after we have
-+	 * received our message.
-+	 */
-+	mbox_client_txdone(info->tx_chan, ret);
-+
++	scmi_one_xfer_put(handle, t);
 +	return ret;
 +}
 +
-+/**
-+ * scmi_one_xfer_init() - Allocate and initialise one message
-+ *
-+ * @handle: SCMI entity handle
-+ * @msg_id: Message identifier
-+ * @msg_prot_id: Protocol identifier for the message
-+ * @tx_size: transmit message size
-+ * @rx_size: receive message size
-+ * @p: pointer to the allocated and initialised message
-+ *
-+ * This function allocates the message using @scmi_one_xfer_get and
-+ * initialise the header.
-+ *
-+ * Return: 0 if all went fine with @p pointing to message, else
-+ *	corresponding error.
-+ */
-+int scmi_one_xfer_init(const struct scmi_handle *handle, u8 msg_id, u8 prot_id,
-+		       size_t tx_size, size_t rx_size, struct scmi_xfer **p)
++static int
++scmi_power_domain_attributes_get(const struct scmi_handle *handle, u32 domain,
++				 struct power_dom_info *dom_info)
 +{
 +	int ret;
-+	struct scmi_xfer *xfer;
-+	struct scmi_info *info = handle_to_scmi_info(handle);
-+	struct device *dev = info->dev;
++	struct scmi_xfer *t;
++	struct scmi_msg_resp_power_domain_attributes *attr;
 +
-+	/* Ensure we have sane transfer sizes */
-+	if (rx_size > info->desc->max_msg_size ||
-+	    tx_size > info->desc->max_msg_size)
-+		return -ERANGE;
-+
-+	xfer = scmi_one_xfer_get(handle);
-+	if (IS_ERR(xfer)) {
-+		ret = PTR_ERR(xfer);
-+		dev_err(dev, "failed to get free message slot(%d)\n", ret);
++	ret = scmi_one_xfer_init(handle, POWER_DOMAIN_ATTRIBUTES,
++				 SCMI_PROTOCOL_POWER, sizeof(domain),
++				 sizeof(*attr), &t);
++	if (ret)
 +		return ret;
++
++	*(__le32 *)t->tx.buf = cpu_to_le32(domain);
++	attr = t->rx.buf;
++
++	ret = scmi_do_xfer(handle, t);
++	if (!ret) {
++		u32 flags = le32_to_cpu(attr->flags);
++
++		dom_info->state_set_notify = SUPPORTS_STATE_SET_NOTIFY(flags);
++		dom_info->state_set_async = SUPPORTS_STATE_SET_ASYNC(flags);
++		dom_info->state_set_sync = SUPPORTS_STATE_SET_SYNC(flags);
++		memcpy(dom_info->name, attr->name, SCMI_MAX_STR_SIZE);
 +	}
 +
-+	xfer->tx.len = tx_size;
-+	xfer->rx.len = rx_size ? : info->desc->max_msg_size;
-+	xfer->hdr.id = msg_id;
-+	xfer->hdr.protocol_id = prot_id;
-+	xfer->hdr.poll_completion = false;
-+
-+	*p = xfer;
-+	return 0;
++	scmi_one_xfer_put(handle, t);
++	return ret;
 +}
 +
-+/**
-+ * scmi_handle_get() - Get the  SCMI handle for a device
-+ *
-+ * @dev: pointer to device for which we want SCMI handle
-+ *
-+ * NOTE: The function does not track individual clients of the framework
-+ * and is expected to be maintained by caller of  SCMI protocol library.
-+ * scmi_handle_put must be balanced with successful scmi_handle_get
-+ *
-+ * Return: pointer to handle if successful, NULL on error
-+ */
-+struct scmi_handle *scmi_handle_get(struct device *dev)
++static int
++scmi_power_state_set(const struct scmi_handle *handle, u32 domain, u32 state)
 +{
-+	struct list_head *p;
-+	struct scmi_info *info;
-+	struct scmi_handle *handle = NULL;
++	int ret;
++	struct scmi_xfer *t;
++	struct scmi_power_set_state *st;
 +
-+	mutex_lock(&scmi_list_mutex);
-+	list_for_each(p, &scmi_list) {
-+		info = list_entry(p, struct scmi_info, node);
-+		if (dev->parent == info->dev) {
-+			handle = &info->handle;
-+			info->users++;
-+			break;
-+		}
-+	}
-+	mutex_unlock(&scmi_list_mutex);
++	ret = scmi_one_xfer_init(handle, POWER_STATE_SET, SCMI_PROTOCOL_POWER,
++				 sizeof(*st), 0, &t);
++	if (ret)
++		return ret;
 +
-+	return handle;
++	st = t->tx.buf;
++	st->flags = cpu_to_le32(0);
++	st->domain = cpu_to_le32(domain);
++	st->state = cpu_to_le32(state);
++
++	ret = scmi_do_xfer(handle, t);
++
++	scmi_one_xfer_put(handle, t);
++	return ret;
 +}
 +
-+/**
-+ * scmi_handle_put() - Release the handle acquired by scmi_handle_get
-+ *
-+ * @handle: handle acquired by scmi_handle_get
-+ *
-+ * NOTE: The function does not track individual clients of the framework
-+ * and is expected to be maintained by caller of  SCMI protocol library.
-+ * scmi_handle_put must be balanced with successful scmi_handle_get
-+ *
-+ * Return: 0 is successfully released
-+ *	if null was passed, it returns -EINVAL;
-+ */
-+int scmi_handle_put(const struct scmi_handle *handle)
++static int
++scmi_power_state_get(const struct scmi_handle *handle, u32 domain, u32 *state)
 +{
-+	struct scmi_info *info;
++	int ret;
++	struct scmi_xfer *t;
 +
-+	if (!handle)
-+		return -EINVAL;
++	ret = scmi_one_xfer_init(handle, POWER_STATE_GET, SCMI_PROTOCOL_POWER,
++				 sizeof(u32), sizeof(u32), &t);
++	if (ret)
++		return ret;
 +
-+	info = handle_to_scmi_info(handle);
-+	mutex_lock(&scmi_list_mutex);
-+	if (!WARN_ON(!info->users))
-+		info->users--;
-+	mutex_unlock(&scmi_list_mutex);
++	*(__le32 *)t->tx.buf = cpu_to_le32(domain);
 +
-+	return 0;
-+}
-+
-+static const struct scmi_desc scmi_generic_desc = {
-+	.max_rx_timeout_ms = 30,	/* we may increase this if required */
-+	.max_msg = 20,		/* Limited by MBOX_TX_QUEUE_LEN */
-+	.max_msg_size = 128,
-+};
-+
-+/* Each compatible listed below must have descriptor associated with it */
-+static const struct of_device_id scmi_of_match[] = {
-+	{ .compatible = "arm,scmi", .data = &scmi_generic_desc },
-+	{ /* Sentinel */ },
-+};
-+
-+MODULE_DEVICE_TABLE(of, scmi_of_match);
-+
-+static int scmi_xfer_info_init(struct scmi_info *sinfo)
-+{
-+	int i;
-+	struct scmi_xfer *xfer;
-+	struct device *dev = sinfo->dev;
-+	const struct scmi_desc *desc = sinfo->desc;
-+	struct scmi_xfers_info *info = &sinfo->minfo;
-+
-+	/* Pre-allocated messages, no more than what hdr.seq can support */
-+	if (WARN_ON(desc->max_msg >= (MSG_TOKEN_ID_MASK + 1))) {
-+		dev_err(dev, "Maximum message of %d exceeds supported %d\n",
-+			desc->max_msg, MSG_TOKEN_ID_MASK + 1);
-+		return -EINVAL;
-+	}
-+
-+	info->xfer_block = devm_kcalloc(dev, desc->max_msg,
-+					sizeof(*info->xfer_block), GFP_KERNEL);
-+	if (!info->xfer_block)
-+		return -ENOMEM;
-+
-+	info->xfer_alloc_table = devm_kcalloc(dev, BITS_TO_LONGS(desc->max_msg),
-+					      sizeof(long), GFP_KERNEL);
-+	if (!info->xfer_alloc_table)
-+		return -ENOMEM;
-+
-+	bitmap_zero(info->xfer_alloc_table, desc->max_msg);
-+
-+	/* Pre-initialize the buffer pointer to pre-allocated buffers */
-+	for (i = 0, xfer = info->xfer_block; i < desc->max_msg; i++, xfer++) {
-+		xfer->rx.buf = devm_kcalloc(dev, sizeof(u8), desc->max_msg_size,
-+					    GFP_KERNEL);
-+		if (!xfer->rx.buf)
-+			return -ENOMEM;
-+
-+		xfer->tx.buf = xfer->rx.buf;
-+		init_completion(&xfer->done);
-+	}
-+
-+	spin_lock_init(&info->xfer_lock);
-+
-+	sema_init(&info->sem_xfer_count, desc->max_msg);
-+
-+	return 0;
-+}
-+
-+static int scmi_mailbox_check(struct device_node *np)
-+{
-+	struct of_phandle_args arg;
-+
-+	return of_parse_phandle_with_args(np, "mboxes", "#mbox-cells", 0, &arg);
-+}
-+
-+static int scmi_mbox_free_channel(struct scmi_info *info)
-+{
-+	if (!IS_ERR_OR_NULL(info->tx_chan)) {
-+		mbox_free_channel(info->tx_chan);
-+		info->tx_chan = NULL;
-+	}
-+
-+	return 0;
-+}
-+
-+static int scmi_remove(struct platform_device *pdev)
-+{
-+	int ret = 0;
-+	struct scmi_info *info = platform_get_drvdata(pdev);
-+
-+	mutex_lock(&scmi_list_mutex);
-+	if (info->users)
-+		ret = -EBUSY;
-+	else
-+		list_del(&info->node);
-+	mutex_unlock(&scmi_list_mutex);
-+
++	ret = scmi_do_xfer(handle, t);
 +	if (!ret)
-+		/* Safe to free channels since no more users */
-+		return scmi_mbox_free_channel(info);
++		*state = le32_to_cpu(*(__le32 *)t->rx.buf);
 +
++	scmi_one_xfer_put(handle, t);
 +	return ret;
 +}
 +
-+static inline int scmi_mbox_chan_setup(struct scmi_info *info)
++static int scmi_power_state_notify_enable(const struct scmi_handle *handle,
++					  u32 domain, bool enable)
 +{
 +	int ret;
-+	struct resource res;
-+	resource_size_t size;
-+	struct device *dev = info->dev;
-+	struct device_node *shmem, *np = dev->of_node;
-+	struct mbox_client *cl;
++	struct scmi_xfer *t;
++	struct scmi_power_state_notify *notify;
 +
-+	cl = &info->cl;
-+	cl->dev = dev;
-+	cl->rx_callback = scmi_rx_callback;
-+	cl->tx_prepare = scmi_tx_prepare;
-+	cl->tx_block = false;
-+	cl->knows_txdone = true;
-+
-+	shmem = of_parse_phandle(np, "shmem", 0);
-+	ret = of_address_to_resource(shmem, 0, &res);
-+	of_node_put(shmem);
-+	if (ret) {
-+		dev_err(dev, "failed to get SCMI Tx payload mem resource\n");
++	ret = scmi_one_xfer_init(handle, POWER_STATE_NOTIFY,
++				 SCMI_PROTOCOL_POWER, sizeof(*notify), 0, &t);
++	if (ret)
 +		return ret;
-+	}
 +
-+	size = resource_size(&res);
-+	info->tx_payload = devm_ioremap(dev, res.start, size);
-+	if (!info->tx_payload) {
-+		dev_err(dev, "failed to ioremap SCMI Tx payload\n");
-+		return -EADDRNOTAVAIL;
-+	}
++	notify = t->tx.buf;
++	notify->domain = cpu_to_le32(domain);
++	notify->notify_enable = cpu_to_le32(enable & BIT(0));
 +
-+	/* Transmit channel is first entry i.e. index 0 */
-+	info->tx_chan = mbox_request_channel(cl, 0);
-+	if (IS_ERR(info->tx_chan)) {
-+		ret = PTR_ERR(info->tx_chan);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "failed to request SCMI Tx mailbox\n");
-+		return ret;
-+	}
++	ret = scmi_do_xfer(handle, t);
 +
-+	return 0;
++	scmi_one_xfer_put(handle, t);
++	return ret;
 +}
 +
-+static int scmi_probe(struct platform_device *pdev)
++static int scmi_power_num_domains_get(const struct scmi_handle *handle)
 +{
-+	int ret;
-+	struct scmi_handle *handle;
-+	const struct scmi_desc *desc;
-+	struct scmi_info *info;
-+	struct device *dev = &pdev->dev;
-+	struct device_node *np = dev->of_node;
++	struct scmi_power_info *pi = handle->power_priv;
 +
-+	/* Only mailbox method supported, check for the presence of one */
-+	if (scmi_mailbox_check(np)) {
-+		dev_err(dev, "no mailbox found in %pOF\n", np);
-+		return -EINVAL;
-+	}
++	return pi->num_domains;
++}
 +
-+	desc = of_match_device(scmi_of_match, dev)->data;
++static char *scmi_power_name_get(const struct scmi_handle *handle, u32 domain)
++{
++	struct scmi_power_info *pi = handle->power_priv;
++	struct power_dom_info *dom = pi->dom_info + domain;
 +
-+	info = devm_kzalloc(dev, sizeof(*info), GFP_KERNEL);
-+	if (!info)
++	return dom->name;
++}
++
++static struct scmi_power_ops power_ops = {
++	.num_domains_get = scmi_power_num_domains_get,
++	.name_get = scmi_power_name_get,
++	.state_set = scmi_power_state_set,
++	.state_get = scmi_power_state_get,
++	.state_notify_enable = scmi_power_state_notify_enable,
++};
++
++static int scmi_power_protocol_init(struct scmi_handle *handle)
++{
++	int domain;
++	u32 version;
++	struct scmi_power_info *pinfo;
++
++	scmi_version_get(handle, SCMI_PROTOCOL_POWER, &version);
++
++	dev_dbg(handle->dev, "Power Version %d.%d\n",
++		PROTOCOL_REV_MAJOR(version), PROTOCOL_REV_MINOR(version));
++
++	pinfo = devm_kzalloc(handle->dev, sizeof(*pinfo), GFP_KERNEL);
++	if (!pinfo)
 +		return -ENOMEM;
 +
-+	info->dev = dev;
-+	info->desc = desc;
-+	INIT_LIST_HEAD(&info->node);
++	scmi_power_attributes_get(handle, pinfo);
 +
-+	ret = scmi_xfer_info_init(info);
-+	if (ret)
-+		return ret;
++	pinfo->dom_info = devm_kcalloc(handle->dev, pinfo->num_domains,
++				       sizeof(*pinfo->dom_info), GFP_KERNEL);
++	if (!pinfo->dom_info)
++		return -ENOMEM;
 +
-+	platform_set_drvdata(pdev, info);
++	for (domain = 0; domain < pinfo->num_domains; domain++) {
++		struct power_dom_info *dom = pinfo->dom_info + domain;
 +
-+	handle = &info->handle;
-+	handle->dev = info->dev;
++		scmi_power_domain_attributes_get(handle, domain, dom);
++	}
 +
-+	ret = scmi_mbox_chan_setup(info);
-+	if (ret)
-+		return ret;
-+
-+	mutex_lock(&scmi_list_mutex);
-+	list_add_tail(&info->node, &scmi_list);
-+	mutex_unlock(&scmi_list_mutex);
++	handle->power_ops = &power_ops;
++	handle->power_priv = pinfo;
 +
 +	return 0;
 +}
 +
-+static struct platform_driver scmi_driver = {
-+	.driver = {
-+		   .name = "arm-scmi",
-+		   .of_match_table = scmi_of_match,
-+		   },
-+	.probe = scmi_probe,
-+	.remove = scmi_remove,
-+};
-+
-+module_platform_driver(scmi_driver);
-+
-+MODULE_ALIAS("platform: arm-scmi");
-+MODULE_AUTHOR("Sudeep Holla <sudeep.holla@arm.com>");
-+MODULE_DESCRIPTION("ARM SCMI protocol driver");
-+MODULE_LICENSE("GPL v2");
++static int __init scmi_power_init(void)
++{
++	return scmi_protocol_register(SCMI_PROTOCOL_POWER,
++				      &scmi_power_protocol_init);
++}
++subsys_initcall(scmi_power_init);
 diff --git a/include/linux/scmi_protocol.h b/include/linux/scmi_protocol.h
-new file mode 100644
-index 000000000000..854ed2479993
---- /dev/null
+index 0c2fd3ab464c..95a645f9039d 100644
+--- a/include/linux/scmi_protocol.h
 +++ b/include/linux/scmi_protocol.h
-@@ -0,0 +1,27 @@
-+/*
-+ * SCMI Message Protocol driver header
+@@ -113,10 +113,37 @@ struct scmi_perf_ops {
+ };
+ 
+ /**
++ * struct scmi_power_ops - represents the various operations provided
++ *	by SCMI Power Protocol
 + *
-+ * Copyright (C) 2017 ARM Ltd.
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-+ * more details.
-+ *
-+ * You should have received a copy of the GNU General Public License along with
-+ * this program. If not, see <http://www.gnu.org/licenses/>.
++ * @num_domains_get: get the count of power domains provided by SCMI
++ * @name_get: gets the name of a power domain
++ * @state_set: sets the power state of a power domain
++ * @state_get: gets the power state of a power domain
++ * @state_notify_enable: request notifications from the platform for
++ *	state changes in a specific power domain
 + */
-+#include <linux/types.h>
++struct scmi_power_ops {
++	int (*num_domains_get)(const struct scmi_handle *);
++	char *(*name_get)(const struct scmi_handle *, u32);
++#define SCMI_POWER_STATE_TYPE_SHIFT	30
++#define SCMI_POWER_STATE_ID_MASK	(BIT(28) - 1)
++#define SCMI_POWER_STATE_PARAM(type, id) \
++	((((type) & BIT(0)) << SCMI_POWER_STATE_TYPE_SHIFT) | \
++		((id) & SCMI_POWER_STATE_ID_MASK))
++#define SCMI_POWER_STATE_GENERIC_ON	SCMI_POWER_STATE_PARAM(0, 0)
++#define SCMI_POWER_STATE_GENERIC_OFF	SCMI_POWER_STATE_PARAM(1, 0)
++	int (*state_set)(const struct scmi_handle *, u32, u32);
++	int (*state_get)(const struct scmi_handle *, u32, u32 *);
++	int (*state_notify_enable)(const struct scmi_handle *, u32, bool);
++};
 +
 +/**
-+ * struct scmi_handle - Handle returned to ARM SCMI clients for usage.
-+ *
-+ * @dev: pointer to the SCMI device
-+ */
-+struct scmi_handle {
-+	struct device *dev;
-+};
+  * struct scmi_handle - Handle returned to ARM SCMI clients for usage.
+  *
+  * @dev: pointer to the SCMI device
+  * @version: pointer to the structure containing SCMI version information
++ * @power_ops: pointer to set of power protocol operations
+  * @perf_ops: pointer to set of performance protocol operations
+  * @clk_ops: pointer to set of clock protocol operations
+  */
+@@ -125,9 +152,11 @@ struct scmi_handle {
+ 	struct scmi_revision_info *version;
+ 	struct scmi_perf_ops *perf_ops;
+ 	struct scmi_clk_ops *clk_ops;
++	struct scmi_power_ops *power_ops;
+ 	/* for protocol internal use */
+ 	void *perf_priv;
+ 	void *clk_priv;
++	void *power_priv;
+ };
+ 
+ enum scmi_std_protocol {
 -- 
 2.7.4
