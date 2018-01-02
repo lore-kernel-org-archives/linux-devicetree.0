@@ -1,99 +1,34 @@
-From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Subject: Re: [PATCH v2 2/4] [media] dt/bindings: Add bindings for OV5695
-Date: Tue, 2 Jan 2018 16:25:12 +0200
-Message-ID: <20180102142512.plf55ngluhbumhh6@valkosipuli.retiisi.org.uk>
-References: <1514534905-21393-1-git-send-email-zhengsq@rock-chips.com>
- <1514534905-21393-2-git-send-email-zhengsq@rock-chips.com>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH 2/2] cpufreq: imx6q: add 696MHz operating point for i.mx6ul
+Date: Tue, 2 Jan 2018 12:37:32 -0200
+Message-ID: <CAOMZO5Do-tyR0ruqfSeJm2FDP7_chNeroFStTF85GnSt_2g5Uw@mail.gmail.com>
+References: <1514912859-17691-1-git-send-email-Anson.Huang@nxp.com> <1514912859-17691-2-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1514534905-21393-2-git-send-email-zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ddl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1514912859-17691-2-git-send-email-Anson.Huang@nxp.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Anson Huang <Anson.Huang@nxp.com>
+Cc: "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-pm@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Dong Aisheng <aisheng.dong@nxp.com>, Ping Bai <ping.bai@nxp.com>, viresh kumar <viresh.kumar@linaro.org>, rjw@rjwysocki.net, Russell King - ARM Linux <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Shunqian,
+Hi Anson,
 
-Thanks for the patchset.
+On Tue, Jan 2, 2018 at 3:07 PM, Anson Huang <Anson.Huang@nxp.com> wrote:
 
-On Fri, Dec 29, 2017 at 04:08:23PM +0800, Shunqian Zheng wrote:
-> Add device tree binding documentation for the OV5695 sensor.
-> 
-> Signed-off-by: Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> ---
->  .../devicetree/bindings/media/i2c/ov5695.txt       | 38 ++++++++++++++++++++++
->  1 file changed, 38 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5695.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/ov5695.txt b/Documentation/devicetree/bindings/media/i2c/ov5695.txt
-> new file mode 100644
-> index 0000000..8d87dbc
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/i2c/ov5695.txt
-> @@ -0,0 +1,38 @@
-> +* Omnivision OV5695 MIPI CSI-2 sensor
-> +
-> +Required Properties:
-> +- compatible: should be "ovti,ov5695"
+> diff --git a/drivers/cpufreq/imx6q-cpufreq.c b/drivers/cpufreq/imx6q-cpufreq.c
+> index d9b2c2d..cbda0cc 100644
+> --- a/drivers/cpufreq/imx6q-cpufreq.c
+> +++ b/drivers/cpufreq/imx6q-cpufreq.c
+> @@ -120,6 +120,10 @@ static int imx6q_set_target(struct cpufreq_policy *policy, unsigned int index)
+>                         clk_set_parent(secondary_sel_clk, pll2_pfd2_396m_clk);
+>                 clk_set_parent(step_clk, secondary_sel_clk);
+>                 clk_set_parent(pll1_sw_clk, step_clk);
+> +               if (freq_hz > clk_get_rate(pll2_bus_clk)) {
+> +                       clk_set_rate(pll1_sys_clk, new_freq * 1000);
+> +                       clk_set_parent(pll1_sw_clk, pll1_sys_clk);
+> +               }
 
-s/should/shall/
+This change should be part of a different patch.
 
-> +- clocks: reference to the 24M xvclk input clock.
-
-I presume 24 MHz may be currently assumed by the driver but it's not a
-property of the sensor. You should therefore check the frequency in the
-driver instead.
-
-> +- clock-names: should be "xvclk".
-> +- dovdd-supply: Digital I/O voltage supply, 1.8 volts
-> +- avdd-supply: Analog voltage supply, 2.8 volts
-> +- dvdd-supply: Digital core voltage supply, 1.2 volts
-> +- reset-gpios: Low active reset gpio
-> +
-> +The device node must contain one 'port' child node for its digital output
-
-s/must/shall/
-
-Please add that it shall also contain one endpoint node.
-
-> +video port, in accordance with the video interface bindings defined in
-> +Documentation/devicetree/bindings/media/video-interfaces.txt.
-
-Which properties are mandatory? You may leave out remote-endpoint as it's
-already required by the video interface bindings --- the rest are hardware
-specific in a way or another.
-
-> +
-> +Example:
-> +&i2c1: camera-sensor@36 {
-> +	compatible = "ovti,ov5695";
-> +	reg = <0x36>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&clk_24m_cam>;
-> +
-> +	clocks = <&cru SCLK_TESTCLKOUT1>;
-> +	clock-names = "xvclk";
-> +
-> +	avdd-supply = <&pp2800_cam>;
-> +	dvdd-supply = <&pp1250_cam>;
-> +	dovdd-supply = <&pp1800>;
-> +
-> +	reset-gpios = <&gpio2 5 GPIO_ACTIVE_LOW>;
-> +
-> +	port {
-> +		wcam_out: endpoint {
-> +			remote-endpoint = <&mipi_in_wcam>;
-> +			data-lanes = <1 2>;
-> +		};
-> +	};
-> +};
-
--- 
-Sakari Ailus
-e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks
