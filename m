@@ -1,95 +1,214 @@
 From: Ryder Lee <ryder.lee@mediatek.com>
-Subject: [PATCH 09/12] clk: mediatek: move part of mtk_clk_register_gates() to the new function
-Date: Tue, 2 Jan 2018 19:47:51 +0800
-Message-ID: <f658c6163421800b248e7b96fae05c8d6e043e02.1514881870.git.ryder.lee@mediatek.com>
+Subject: [PATCH 05/12] mfd: mtk-audsys: add MediaTek audio
+	subsystem driver
+Date: Tue, 2 Jan 2018 19:47:30 +0800
+Message-ID: <fbe22b0d78c41b121f04202dcbfcd0cc23a7590d.1514881870.git.ryder.lee@mediatek.com>
 References: <cover.1514881870.git.ryder.lee@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
 In-Reply-To: <cover.1514881870.git.ryder.lee@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Lee Jones <lee.jones@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Brown <broonie@kernel.org>, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, Garlic Tseng <garlic.tseng@mediatek.com>, Ryder Lee <ryder.lee@mediatek.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>, Lee Jones <lee.jones@linaro.org>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Ryder Lee <ryder.lee@mediatek.com>, Garlic Tseng <garlic.tseng@mediatek.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-In some subsystems, the regmap has already been initialized from its parent,
-so there is no need to map it again. To keep flexible, we move some parts to
-the new function - mtk_clk_register_num_gates(), and then use it for those
-subsystems.
+Add a common driver for the top block of the MediaTek audio subsystem.
+This is a wrapper which manages resources for audio components.
 
 Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
 ---
- drivers/clk/mediatek/clk-mtk.c | 26 +++++++++++++++++---------
- drivers/clk/mediatek/clk-mtk.h |  4 ++++
- 2 files changed, 21 insertions(+), 9 deletions(-)
+ drivers/mfd/Kconfig      |   9 ++++
+ drivers/mfd/Makefile     |   2 +
+ drivers/mfd/mtk-audsys.c | 138 +++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 149 insertions(+)
+ create mode 100644 drivers/mfd/mtk-audsys.c
 
-diff --git a/drivers/clk/mediatek/clk-mtk.c b/drivers/clk/mediatek/clk-mtk.c
-index 9c0ae42..815c98f 100644
---- a/drivers/clk/mediatek/clk-mtk.c
-+++ b/drivers/clk/mediatek/clk-mtk.c
-@@ -101,24 +101,16 @@ void mtk_clk_register_factors(const struct mtk_fixed_factor *clks,
- 	}
- }
+diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+index 1d20a80..ea50b51 100644
+--- a/drivers/mfd/Kconfig
++++ b/drivers/mfd/Kconfig
+@@ -368,6 +368,15 @@ config MFD_MC13XXX_I2C
+ 	help
+ 	  Select this if your MC13xxx is connected via an I2C bus.
  
--int mtk_clk_register_gates(struct device_node *node,
-+int mtk_clk_register_num_gates(struct regmap *regmap,
- 		const struct mtk_gate *clks,
- 		int num, struct clk_onecell_data *clk_data)
- {
- 	int i;
- 	struct clk *clk;
--	struct regmap *regmap;
- 
- 	if (!clk_data)
- 		return -ENOMEM;
- 
--	regmap = syscon_node_to_regmap(node);
--	if (IS_ERR(regmap)) {
--		pr_err("Cannot find regmap for %pOF: %ld\n", node,
--				PTR_ERR(regmap));
--		return PTR_ERR(regmap);
--	}
--
- 	for (i = 0; i < num; i++) {
- 		const struct mtk_gate *gate = &clks[i];
- 
-@@ -144,6 +136,22 @@ int mtk_clk_register_gates(struct device_node *node,
- 	return 0;
- }
- 
-+int mtk_clk_register_gates(struct device_node *node,
-+		const struct mtk_gate *clks,
-+		int num, struct clk_onecell_data *clk_data)
-+{
-+	struct regmap *regmap;
++config MFD_MEDIATEK_AUDSYS
++	tristate "MediaTek audio subsystem interface"
++	select MDF_CORE
++	select REGMAP_MMIO
++	help
++	  Select this if you have a audio subsystem in MediaTek SoC.
++	  The audio subsystem has at least a clock driver part and some
++	  audio components.
 +
-+	regmap = syscon_node_to_regmap(node);
-+	if (IS_ERR(regmap)) {
-+		pr_err("Cannot find regmap for %pOF: %ld\n", node,
-+				PTR_ERR(regmap));
-+		return PTR_ERR(regmap);
+ config MFD_MXS_LRADC
+ 	tristate "Freescale i.MX23/i.MX28 LRADC"
+ 	depends on ARCH_MXS || COMPILE_TEST
+diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+index d9474ad..3e20927 100644
+--- a/drivers/mfd/Makefile
++++ b/drivers/mfd/Makefile
+@@ -101,6 +101,8 @@ obj-$(CONFIG_MFD_MC13XXX)	+= mc13xxx-core.o
+ obj-$(CONFIG_MFD_MC13XXX_SPI)	+= mc13xxx-spi.o
+ obj-$(CONFIG_MFD_MC13XXX_I2C)	+= mc13xxx-i2c.o
+ 
++obj-$(CONFIG_MFD_MEDIATEK_AUDSYS) += mtk-audsys.o
++
+ obj-$(CONFIG_MFD_CORE)		+= mfd-core.o
+ 
+ obj-$(CONFIG_EZX_PCAP)		+= ezx-pcap.o
+diff --git a/drivers/mfd/mtk-audsys.c b/drivers/mfd/mtk-audsys.c
+new file mode 100644
+index 0000000..89399e1
+--- /dev/null
++++ b/drivers/mfd/mtk-audsys.c
+@@ -0,0 +1,138 @@
++/*
++ * Mediatek audio subsystem core driver
++ *
++ *  Copyright (c) 2017 MediaTek Inc.
++ *
++ * Author: Ryder Lee <ryder.lee@mediatek.com>
++ *
++ * For licencing details see kernel-base/COPYING
++ *
++ */
++
++#include <linux/clk.h>
++#include <linux/module.h>
++#include <linux/of_platform.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
++
++#define AUDSYS_MAX_CLK_NUM 3
++
++struct sys_dev {
++	struct device *dev;
++	struct regmap *regmap;
++	int clk_num;
++	struct clk *clks[];
++};
++
++static const struct regmap_config aud_regmap_config = {
++	.reg_bits = 32,
++	.reg_stride = 4,
++	.val_bits = 32,
++	.max_register = 0x15e0,
++	.cache_type = REGCACHE_NONE,
++};
++
++static int mtk_subsys_enable(struct sys_dev *sys)
++{
++	struct device *dev = sys->dev;
++	struct clk *clk;
++	int i, ret;
++
++	for (i = 0; i < sys->clk_num; i++) {
++		clk = of_clk_get(dev->of_node, i);
++		if (IS_ERR(clk)) {
++			if (PTR_ERR(clk) == -EPROBE_DEFER)
++				return -EPROBE_DEFER;
++			break;
++		}
++		sys->clks[i] = clk;
 +	}
 +
-+	return mtk_clk_register_num_gates(regmap, clks, num, clk_data);
++	for (i = 0; i < sys->clk_num && sys->clks[i]; i++) {
++		ret = clk_prepare_enable(sys->clks[i]);
++		if (ret)
++			goto err_enable_clks;
++	}
++
++	return 0;
++
++err_enable_clks:
++	while (--i >= 0)
++		clk_disable_unprepare(sys->clks[i]);
++
++	return ret;
 +}
 +
- struct clk *mtk_clk_register_composite(const struct mtk_composite *mc,
- 		void __iomem *base, spinlock_t *lock)
- {
-diff --git a/drivers/clk/mediatek/clk-mtk.h b/drivers/clk/mediatek/clk-mtk.h
-index f10250d..f969c28 100644
---- a/drivers/clk/mediatek/clk-mtk.h
-+++ b/drivers/clk/mediatek/clk-mtk.h
-@@ -159,6 +159,10 @@ struct mtk_gate {
- 	const struct clk_ops *ops;
- };
- 
-+int mtk_clk_register_num_gates(struct regmap *regmap,
-+		const struct mtk_gate *clks, int num,
-+		struct clk_onecell_data *clk_data);
++static int mtk_subsys_probe(struct platform_device *pdev)
++{
++	struct sys_dev *sys;
++	struct resource *res;
++	void __iomem *mmio;
++	int num, ret;
 +
- int mtk_clk_register_gates(struct device_node *node,
- 			const struct mtk_gate *clks, int num,
- 			struct clk_onecell_data *clk_data);
++	num = (int)of_device_get_match_data(&pdev->dev);
++	if (!num)
++		return -EINVAL;
++
++	sys = devm_kzalloc(&pdev->dev, sizeof(*sys) +
++			   sizeof(struct clk *) * num, GFP_KERNEL);
++	if (!sys)
++		return -ENOMEM;
++
++	sys->clk_num = num;
++	sys->dev = &pdev->dev;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	mmio = devm_ioremap_resource(sys->dev, res);
++	if (IS_ERR(mmio))
++		return PTR_ERR(mmio);
++
++	sys->regmap = devm_regmap_init_mmio(sys->dev, mmio,
++					    &aud_regmap_config);
++	if (IS_ERR(sys->regmap))
++		return PTR_ERR(sys->regmap);
++
++	platform_set_drvdata(pdev, sys);
++
++	/* Enable top level clocks */
++	ret = mtk_subsys_enable(sys);
++	if (ret)
++		return ret;
++
++	return devm_of_platform_populate(sys->dev);
++};
++
++static int mtk_subsys_remove(struct platform_device *pdev)
++{
++	struct sys_dev *sys = platform_get_drvdata(pdev);
++	int i;
++
++	for (i = sys->clk_num - 1; i >= 0; i--)
++		if (sys->clks[i])
++			clk_disable_unprepare(sys->clks[i]);
++
++	return 0;
++}
++
++static const struct of_device_id of_match_audsys[] = {
++	{
++	  .compatible = "mediatek,mt2701-audsys-core",
++	  .data = (void *)AUDSYS_MAX_CLK_NUM,
++	},
++	{},
++};
++MODULE_DEVICE_TABLE(platform, of_match_audsys);
++
++static struct platform_driver audsys_drv = {
++	.probe = mtk_subsys_probe,
++	.remove	= mtk_subsys_remove,
++	.driver = {
++		.name = "mediatek-audsys-core",
++		.of_match_table = of_match_ptr(of_match_audsys),
++	},
++};
++
++builtin_platform_driver(audsys_drv);
++
++MODULE_DESCRIPTION("Mediatek audio subsystem core driver");
++MODULE_LICENSE("GPL");
 -- 
 1.9.1
