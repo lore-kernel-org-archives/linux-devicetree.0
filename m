@@ -1,59 +1,55 @@
-From: Greentime Hu <green.hu@gmail.com>
-Subject: [PATCH v5 36/39] net: faraday add nds32 support.
-Date: Tue,  2 Jan 2018 16:25:08 +0800
-Message-ID: <22f8b24d5528a5c938012489ee6cfae193676b80.1514874858.git.green.hu@gmail.com>
-References: <cover.1514874857.git.green.hu@gmail.com>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <cover.1514874857.git.green.hu@gmail.com>
-In-Reply-To: <cover.1514874857.git.green.hu@gmail.com>
-References: <cover.1514874857.git.green.hu@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: greentime@andestech.com, linux-kernel@vger.kernel.org, arnd@arndb.de, linux-arch@vger.kernel.org, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, netdev@vger.kernel.org, deanbo422@gmail.com, devicetree@vger.kernel.org, viro@zeniv.linux.org.uk, dhowells@redhat.com, will.deacon@arm.com, daniel.lezcano@linaro.org, linux-serial@vger.kernel.org, geert.uytterhoeven@gmail.com, linus.walleij@linaro.org, mark.rutland@arm.com, greg@kroah.com, ren_guo@c-sky.com, rdunlap@infradead.org, davem@davemloft.net, jonas@southpole.se, stefan.kristiansson@saunalahti.fi, shorne@gmail.com
-Cc: green.hu@gmail.com
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v4 5/6] arm64: allwinner: a64: add simplefb
+ for A64 SoC
+Date: Tue, 2 Jan 2018 16:30:25 +0800
+Message-ID: <CAGb2v67XbeyWDcCBjaVygSAHbAk25spRVkWAS3dAU6DbwkGzOg@mail.gmail.com>
+References: <20171230113043.30237-1-icenowy@aosc.io> <20171230113043.30237-6-icenowy@aosc.io>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBPMGVXJAKGQEUJ5Q5QQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20171230113043.30237-6-icenowy-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Greentime Hu <greentime@andestech.com>
+On Sat, Dec 30, 2017 at 7:30 PM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
+> The A64 SoC features two display pipelines, one has a LCD output, the
+> other has a HDMI output.
+>
+> Add support for simplefb for these pipelines on A64 SoC.
+>
+> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> ---
+> Changes in v4:
+> - Dropped extra clocks.
+> - Added labels to the SimpleFB device tree nodes as boards may have
+>   extra regulator for display pipeline.
+>
+>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 26 ++++++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> index fb8ea7c414e1..d803c115d362 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> @@ -42,9 +42,11 @@
+>   *     OTHER DEALINGS IN THE SOFTWARE.
+>   */
+>
+> +#include <dt-bindings/clock/sun8i-de2.h>
+>  #include <dt-bindings/clock/sun50i-a64-ccu.h>
+>  #include <dt-bindings/clock/sun8i-r-ccu.h>
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +#include <dt-bindings/reset/sun8i-de2.h>
 
-This patch is used to support nds32 architecture to use these faraday
-mac IP.
+Nit: This isn't used anywhere. Please add it when DE2 DRM support is added.
 
-Signed-off-by: Greentime Hu <greentime@andestech.com>
----
- drivers/net/ethernet/faraday/Kconfig |    8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/net/ethernet/faraday/Kconfig b/drivers/net/ethernet/faraday/Kconfig
-index 040c7f1..0fb8df6 100644
---- a/drivers/net/ethernet/faraday/Kconfig
-+++ b/drivers/net/ethernet/faraday/Kconfig
-@@ -5,7 +5,7 @@
- config NET_VENDOR_FARADAY
- 	bool "Faraday devices"
- 	default y
--	depends on ARM
-+	depends on ARM || NDS32 || COMPILE_TEST
- 	---help---
- 	  If you have a network (Ethernet) card belonging to this class, say Y.
- 
-@@ -18,7 +18,8 @@ if NET_VENDOR_FARADAY
- 
- config FTMAC100
- 	tristate "Faraday FTMAC100 10/100 Ethernet support"
--	depends on ARM
-+	depends on ARM || NDS32 || COMPILE_TEST
-+	depends on !64BIT || BROKEN
- 	select MII
- 	---help---
- 	  This driver supports the FTMAC100 10/100 Ethernet controller
-@@ -27,7 +28,8 @@ config FTMAC100
- 
- config FTGMAC100
- 	tristate "Faraday FTGMAC100 Gigabit Ethernet support"
--	depends on ARM
-+	depends on ARM || NDS32 || COMPILE_TEST
-+	depends on !64BIT || BROKEN
- 	select PHYLIB
- 	---help---
- 	  This driver supports the FTGMAC100 Gigabit Ethernet controller
--- 
-1.7.9.5
+ChenYu
