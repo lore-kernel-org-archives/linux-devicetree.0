@@ -1,79 +1,54 @@
-From: Ludovic Barre <ludovic.Barre@st.com>
-Subject: [PATCH v3 0/7] ARM: stm32: add initial STM32MPU support
-Date: Tue, 2 Jan 2018 16:01:44 +0100
-Message-ID: <1514905311-12925-1-git-send-email-ludovic.Barre@st.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Gerald Baeza <gerald.baeza@st.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Ludovic Barre <ludovic.barre@st.com>
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH v5 01/15] clk: ingenic: Use const pointer to clk_ops in struct
+Date: Tue,  2 Jan 2018 16:08:34 +0100
+Message-ID: <20180102150848.11314-1-paul@crapouillou.net>
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Ralf Baechle <ralf@linux-mips.org>
+Cc: Maarten ter Huurne <maarten@treewalker.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux-clk@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
-From: Ludovic Barre <ludovic.barre@st.com>
+The CGU common code does not modify the pointed clk_ops structure, so it
+should be marked as const.
 
-This patch series extends the existing STM32 microcontrollers (MCUs)
-family to microprocessors (MPUs). The MPU platform (based on
-Arm Cortex-A) is a continuation of the MCU one (based on Arm
-Cortex-M) in that it shares a wide number of hardware blocks.
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Acked-by: Stephen Boyd <sboyd@codeaurora.org>
+---
+ drivers/clk/ingenic/cgu.h        | 2 +-
+ drivers/clk/ingenic/jz4780-cgu.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-change v3:
--Remove bootargs
--Remove armv7m_restart and Share stm32_compat for mcu/mpu
--Modify stm32 kconfig with Arnd template
--Remove patch below (Linus W: Patch applied)
- devicetree: bindings: Document supported STM32 SoC family
- pinctrl: stm32: Add STM32MP157 MPU support
+ v2: New patch in this series
+ v3: No change
+ v4: No change
+ v5: No change
 
-change V2:
--Add stm32 documentation in this serie to avoid merge conflict
-thread: "https://patchwork.kernel.org/patch/10102573/"
--Split bindings (stm32.txt) to separate patches.
--Remove ARCH_STM32_MCU/MPU flags
--Adopt rst format for Documentation/arm/stm32 files
--s/STMicrolectronics/STMicroelectronics/g
-
-Ludovic Barre (7):
-  Documentation: arm: stm32: move to rst format
-  ARM: stm32: prepare stm32 family to welcome armv7 architecture
-  dt-bindings: stm32: add support of STM32MP157
-  ARM: stm32: add initial support for STM32MP157
-  ARM: configs: multi_v7: add stm32 support
-  ARM: dts: stm32: add stm32mp157c initial support
-  ARM: dts: stm32: add initial support of stm32mp157c eval board
-
- Documentation/arm/stm32/overview.rst            |  34 +++++
- Documentation/arm/stm32/overview.txt            |  33 -----
- Documentation/arm/stm32/stm32f429-overview.rst  |  26 ++++
- Documentation/arm/stm32/stm32f429-overview.txt  |  22 ---
- Documentation/arm/stm32/stm32f746-overview.rst  |  33 +++++
- Documentation/arm/stm32/stm32f746-overview.txt  |  34 -----
- Documentation/arm/stm32/stm32h743-overview.rst  |  34 +++++
- Documentation/arm/stm32/stm32h743-overview.txt  |  30 ----
- Documentation/arm/stm32/stm32mp157-overview.rst |  19 +++
- Documentation/devicetree/bindings/arm/stm32.txt |   1 +
- arch/arm/boot/dts/Makefile                      |   6 +-
- arch/arm/boot/dts/stm32mp157-pinctrl.dtsi       | 185 ++++++++++++++++++++++++
- arch/arm/boot/dts/stm32mp157c-ed1.dts           |  28 ++++
- arch/arm/boot/dts/stm32mp157c-ev1.dts           |  18 +++
- arch/arm/boot/dts/stm32mp157c.dtsi              | 139 ++++++++++++++++++
- arch/arm/configs/multi_v7_defconfig             |   3 +
- arch/arm/mach-stm32/Kconfig                     |  38 +++--
- arch/arm/mach-stm32/board-dt.c                  |   5 +-
- 18 files changed, 552 insertions(+), 136 deletions(-)
- create mode 100644 Documentation/arm/stm32/overview.rst
- delete mode 100644 Documentation/arm/stm32/overview.txt
- create mode 100644 Documentation/arm/stm32/stm32f429-overview.rst
- delete mode 100644 Documentation/arm/stm32/stm32f429-overview.txt
- create mode 100644 Documentation/arm/stm32/stm32f746-overview.rst
- delete mode 100644 Documentation/arm/stm32/stm32f746-overview.txt
- create mode 100644 Documentation/arm/stm32/stm32h743-overview.rst
- delete mode 100644 Documentation/arm/stm32/stm32h743-overview.txt
- create mode 100644 Documentation/arm/stm32/stm32mp157-overview.rst
- create mode 100644 arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
- create mode 100644 arch/arm/boot/dts/stm32mp157c-ed1.dts
- create mode 100644 arch/arm/boot/dts/stm32mp157c-ev1.dts
- create mode 100644 arch/arm/boot/dts/stm32mp157c.dtsi
-
+diff --git a/drivers/clk/ingenic/cgu.h b/drivers/clk/ingenic/cgu.h
+index e78b586536ea..f1527cf75b3f 100644
+--- a/drivers/clk/ingenic/cgu.h
++++ b/drivers/clk/ingenic/cgu.h
+@@ -120,7 +120,7 @@ struct ingenic_cgu_gate_info {
+  * @clk_ops: custom clock operation callbacks
+  */
+ struct ingenic_cgu_custom_info {
+-	struct clk_ops *clk_ops;
++	const struct clk_ops *clk_ops;
+ };
+ 
+ /**
+diff --git a/drivers/clk/ingenic/jz4780-cgu.c b/drivers/clk/ingenic/jz4780-cgu.c
+index ac3585ed8228..6427be117ff1 100644
+--- a/drivers/clk/ingenic/jz4780-cgu.c
++++ b/drivers/clk/ingenic/jz4780-cgu.c
+@@ -203,7 +203,7 @@ static int jz4780_otg_phy_set_rate(struct clk_hw *hw, unsigned long req_rate,
+ 	return 0;
+ }
+ 
+-static struct clk_ops jz4780_otg_phy_ops = {
++static const struct clk_ops jz4780_otg_phy_ops = {
+ 	.get_parent = jz4780_otg_phy_get_parent,
+ 	.set_parent = jz4780_otg_phy_set_parent,
+ 
 -- 
-2.7.4
+2.11.0
+
