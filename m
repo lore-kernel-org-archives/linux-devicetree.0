@@ -1,7 +1,7 @@
 From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v5 04/15] clk: ingenic: Add code to enable/disable PLLs
-Date: Tue,  2 Jan 2018 16:08:37 +0100
-Message-ID: <20180102150848.11314-4-paul@crapouillou.net>
+Subject: [PATCH v5 15/15] MIPS: ingenic: Initial GCW Zero support
+Date: Tue,  2 Jan 2018 16:08:48 +0100
+Message-ID: <20180102150848.11314-15-paul@crapouillou.net>
 References: <20180102150848.11314-1-paul@crapouillou.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180102150848.11314-1-paul@crapouillou.net>
@@ -10,170 +10,162 @@ To: Ralf Baechle <ralf@linux-mips.org>
 Cc: Maarten ter Huurne <maarten@treewalker.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux-clk@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
-This commit permits the PLLs to be dynamically enabled and disabled when
-their children clocks are enabled and disabled.
+The GCW Zero (http://www.gcw-zero.com) is a retro-gaming focused
+handheld game console, successfully kickstarted in ~2012, running Linux.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Acked-by: Stephen Boyd <sboyd@codeaurora.org>
 ---
- drivers/clk/ingenic/cgu.c | 89 +++++++++++++++++++++++++++++++++++++++--------
- 1 file changed, 74 insertions(+), 15 deletions(-)
+ arch/mips/boot/dts/ingenic/Makefile |  1 +
+ arch/mips/boot/dts/ingenic/gcw0.dts | 61 +++++++++++++++++++++++++++++++++++++
+ arch/mips/configs/gcw0_defconfig    | 27 ++++++++++++++++
+ arch/mips/jz4740/Kconfig            |  4 +++
+ arch/mips/jz4740/boards.c           |  1 +
+ 5 files changed, 94 insertions(+)
+ create mode 100644 arch/mips/boot/dts/ingenic/gcw0.dts
+ create mode 100644 arch/mips/configs/gcw0_defconfig
 
  v2: No change
  v3: No change
  v4: No change
- v5: No change
+ v5: Use SPDX license identifier
+     Drop custom CROSS_COMPILE from defconfig
 
-diff --git a/drivers/clk/ingenic/cgu.c b/drivers/clk/ingenic/cgu.c
-index 381c4a17a1fc..56a712c9075f 100644
---- a/drivers/clk/ingenic/cgu.c
-+++ b/drivers/clk/ingenic/cgu.c
-@@ -107,9 +107,6 @@ ingenic_pll_recalc_rate(struct clk_hw *hw, unsigned long parent_rate)
- 	if (bypass)
- 		return parent_rate;
+diff --git a/arch/mips/boot/dts/ingenic/Makefile b/arch/mips/boot/dts/ingenic/Makefile
+index 6a31759839b4..5b1361a89e02 100644
+--- a/arch/mips/boot/dts/ingenic/Makefile
++++ b/arch/mips/boot/dts/ingenic/Makefile
+@@ -1,5 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0
+ dtb-$(CONFIG_JZ4740_QI_LB60)	+= qi_lb60.dtb
++dtb-$(CONFIG_JZ4770_GCW0)	+= gcw0.dtb
+ dtb-$(CONFIG_JZ4780_CI20)	+= ci20.dtb
  
--	if (!enable)
--		return 0;
--
- 	for (od = 0; od < pll_info->od_max; od++) {
- 		if (pll_info->od_encoding[od] == od_enc)
- 			break;
-@@ -153,17 +150,25 @@ ingenic_pll_calc(const struct ingenic_cgu_clk_info *clk_info,
- 	return div_u64((u64)parent_rate * m, n * od);
- }
+ obj-y				+= $(patsubst %.dtb, %.dtb.o, $(dtb-y))
+diff --git a/arch/mips/boot/dts/ingenic/gcw0.dts b/arch/mips/boot/dts/ingenic/gcw0.dts
+new file mode 100644
+index 000000000000..4dc72de387db
+--- /dev/null
++++ b/arch/mips/boot/dts/ingenic/gcw0.dts
+@@ -0,0 +1,61 @@
++// SPDX-License-Identifier: GPL-2.0
++/dts-v1/;
++
++#include "jz4770.dtsi"
++
++/ {
++	compatible = "gcw,zero", "ingenic,jz4770";
++
++	aliases {
++		serial0 = &uart0;
++		serial1 = &uart1;
++		serial2 = &uart2;
++		serial3 = &uart3;
++	};
++
++	chosen {
++		stdout-path = "serial2:57600n8";
++	};
++
++	board {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "simple-bus";
++		ranges = <>;
++
++		otg_phy: otg-phy {
++			compatible = "usb-nop-xceiv";
++			clocks = <&cgu JZ4770_CLK_OTG_PHY>;
++			clock-names = "main_clk";
++		};
++	};
++};
++
++&ext {
++	clock-frequency = <12000000>;
++};
++
++&uart2 {
++	status = "okay";
++};
++
++&cgu {
++	/* Put high-speed peripherals under PLL1, such that we can change the
++	 * PLL0 frequency on demand without having to suspend peripherals.
++	 * We use a rate of 432 MHz, which is the least common multiple of
++	 * 27 MHz (required by TV encoder) and 48 MHz (required by USB host).
++	 */
++	assigned-clocks =
++		<&cgu JZ4770_CLK_PLL1>,
++		<&cgu JZ4770_CLK_UHC>;
++	assigned-clock-parents =
++		<0>,
++		<&cgu JZ4770_CLK_PLL1>;
++	assigned-clock-rates =
++		<432000000>;
++};
++
++&uhc {
++	/* The WiFi module is connected to the UHC. */
++	status = "okay";
++};
+diff --git a/arch/mips/configs/gcw0_defconfig b/arch/mips/configs/gcw0_defconfig
+new file mode 100644
+index 000000000000..99ac1fa3b35f
+--- /dev/null
++++ b/arch/mips/configs/gcw0_defconfig
+@@ -0,0 +1,27 @@
++CONFIG_MACH_INGENIC=y
++CONFIG_JZ4770_GCW0=y
++CONFIG_HIGHMEM=y
++# CONFIG_BOUNCE is not set
++CONFIG_PREEMPT_VOLUNTARY=y
++# CONFIG_SECCOMP is not set
++CONFIG_NO_HZ_IDLE=y
++CONFIG_HIGH_RES_TIMERS=y
++CONFIG_EMBEDDED=y
++# CONFIG_BLK_DEV_BSG is not set
++# CONFIG_SUSPEND is not set
++CONFIG_NET=y
++CONFIG_PACKET=y
++CONFIG_UNIX=y
++CONFIG_INET=y
++CONFIG_DEVTMPFS=y
++CONFIG_DEVTMPFS_MOUNT=y
++CONFIG_NETDEVICES=y
++CONFIG_SERIAL_8250=y
++# CONFIG_SERIAL_8250_DEPRECATED_OPTIONS is not set
++CONFIG_SERIAL_8250_CONSOLE=y
++CONFIG_SERIAL_8250_INGENIC=y
++CONFIG_USB=y
++CONFIG_USB_OHCI_HCD=y
++CONFIG_USB_OHCI_HCD_PLATFORM=y
++CONFIG_NOP_USB_XCEIV=y
++CONFIG_TMPFS=y
+diff --git a/arch/mips/jz4740/Kconfig b/arch/mips/jz4740/Kconfig
+index 29a9361a2b77..4dd0c446ecec 100644
+--- a/arch/mips/jz4740/Kconfig
++++ b/arch/mips/jz4740/Kconfig
+@@ -8,6 +8,10 @@ config JZ4740_QI_LB60
+ 	bool "Qi Hardware Ben NanoNote"
+ 	select MACH_JZ4740
  
--static long
--ingenic_pll_round_rate(struct clk_hw *hw, unsigned long req_rate,
--		       unsigned long *prate)
-+static inline const struct ingenic_cgu_clk_info *to_clk_info(
-+		struct ingenic_clk *ingenic_clk)
- {
--	struct ingenic_clk *ingenic_clk = to_ingenic_clk(hw);
- 	struct ingenic_cgu *cgu = ingenic_clk->cgu;
- 	const struct ingenic_cgu_clk_info *clk_info;
++config JZ4770_GCW0
++	bool "Game Consoles Worldwide GCW Zero"
++	select MACH_JZ4770
++
+ config JZ4780_CI20
+ 	bool "MIPS Creator CI20"
+ 	select MACH_JZ4780
+diff --git a/arch/mips/jz4740/boards.c b/arch/mips/jz4740/boards.c
+index 13b0bddd8cb7..1389d6eec80f 100644
+--- a/arch/mips/jz4740/boards.c
++++ b/arch/mips/jz4740/boards.c
+@@ -8,5 +8,6 @@
+ #include <asm/mips_machine.h>
  
- 	clk_info = &cgu->clock_info[ingenic_clk->idx];
- 	BUG_ON(clk_info->type != CGU_CLK_PLL);
- 
-+	return clk_info;
-+}
-+
-+static long
-+ingenic_pll_round_rate(struct clk_hw *hw, unsigned long req_rate,
-+		       unsigned long *prate)
-+{
-+	struct ingenic_clk *ingenic_clk = to_ingenic_clk(hw);
-+	const struct ingenic_cgu_clk_info *clk_info = to_clk_info(ingenic_clk);
-+
- 	return ingenic_pll_calc(clk_info, req_rate, *prate, NULL, NULL, NULL);
- }
- 
-@@ -171,19 +176,14 @@ static int
- ingenic_pll_set_rate(struct clk_hw *hw, unsigned long req_rate,
- 		     unsigned long parent_rate)
- {
--	const unsigned timeout = 100;
- 	struct ingenic_clk *ingenic_clk = to_ingenic_clk(hw);
- 	struct ingenic_cgu *cgu = ingenic_clk->cgu;
--	const struct ingenic_cgu_clk_info *clk_info;
--	const struct ingenic_cgu_pll_info *pll_info;
-+	const struct ingenic_cgu_clk_info *clk_info = to_clk_info(ingenic_clk);
-+	const struct ingenic_cgu_pll_info *pll_info = &clk_info->pll;
- 	unsigned long rate, flags;
--	unsigned m, n, od, i;
-+	unsigned int m, n, od;
- 	u32 ctl;
- 
--	clk_info = &cgu->clock_info[ingenic_clk->idx];
--	BUG_ON(clk_info->type != CGU_CLK_PLL);
--	pll_info = &clk_info->pll;
--
- 	rate = ingenic_pll_calc(clk_info, req_rate, parent_rate,
- 			       &m, &n, &od);
- 	if (rate != req_rate)
-@@ -202,6 +202,26 @@ ingenic_pll_set_rate(struct clk_hw *hw, unsigned long req_rate,
- 	ctl &= ~(GENMASK(pll_info->od_bits - 1, 0) << pll_info->od_shift);
- 	ctl |= pll_info->od_encoding[od - 1] << pll_info->od_shift;
- 
-+	writel(ctl, cgu->base + pll_info->reg);
-+	spin_unlock_irqrestore(&cgu->lock, flags);
-+
-+	return 0;
-+}
-+
-+static int ingenic_pll_enable(struct clk_hw *hw)
-+{
-+	struct ingenic_clk *ingenic_clk = to_ingenic_clk(hw);
-+	struct ingenic_cgu *cgu = ingenic_clk->cgu;
-+	const struct ingenic_cgu_clk_info *clk_info = to_clk_info(ingenic_clk);
-+	const struct ingenic_cgu_pll_info *pll_info = &clk_info->pll;
-+	const unsigned int timeout = 100;
-+	unsigned long flags;
-+	unsigned int i;
-+	u32 ctl;
-+
-+	spin_lock_irqsave(&cgu->lock, flags);
-+	ctl = readl(cgu->base + pll_info->reg);
-+
- 	ctl &= ~BIT(pll_info->bypass_bit);
- 	ctl |= BIT(pll_info->enable_bit);
- 
-@@ -223,10 +243,48 @@ ingenic_pll_set_rate(struct clk_hw *hw, unsigned long req_rate,
- 	return 0;
- }
- 
-+static void ingenic_pll_disable(struct clk_hw *hw)
-+{
-+	struct ingenic_clk *ingenic_clk = to_ingenic_clk(hw);
-+	struct ingenic_cgu *cgu = ingenic_clk->cgu;
-+	const struct ingenic_cgu_clk_info *clk_info = to_clk_info(ingenic_clk);
-+	const struct ingenic_cgu_pll_info *pll_info = &clk_info->pll;
-+	unsigned long flags;
-+	u32 ctl;
-+
-+	spin_lock_irqsave(&cgu->lock, flags);
-+	ctl = readl(cgu->base + pll_info->reg);
-+
-+	ctl &= ~BIT(pll_info->enable_bit);
-+
-+	writel(ctl, cgu->base + pll_info->reg);
-+	spin_unlock_irqrestore(&cgu->lock, flags);
-+}
-+
-+static int ingenic_pll_is_enabled(struct clk_hw *hw)
-+{
-+	struct ingenic_clk *ingenic_clk = to_ingenic_clk(hw);
-+	struct ingenic_cgu *cgu = ingenic_clk->cgu;
-+	const struct ingenic_cgu_clk_info *clk_info = to_clk_info(ingenic_clk);
-+	const struct ingenic_cgu_pll_info *pll_info = &clk_info->pll;
-+	unsigned long flags;
-+	u32 ctl;
-+
-+	spin_lock_irqsave(&cgu->lock, flags);
-+	ctl = readl(cgu->base + pll_info->reg);
-+	spin_unlock_irqrestore(&cgu->lock, flags);
-+
-+	return !!(ctl & BIT(pll_info->enable_bit));
-+}
-+
- static const struct clk_ops ingenic_pll_ops = {
- 	.recalc_rate = ingenic_pll_recalc_rate,
- 	.round_rate = ingenic_pll_round_rate,
- 	.set_rate = ingenic_pll_set_rate,
-+
-+	.enable = ingenic_pll_enable,
-+	.disable = ingenic_pll_disable,
-+	.is_enabled = ingenic_pll_is_enabled,
- };
- 
- /*
-@@ -601,6 +659,7 @@ static int ingenic_register_clock(struct ingenic_cgu *cgu, unsigned idx)
- 		}
- 	} else if (caps & CGU_CLK_PLL) {
- 		clk_init.ops = &ingenic_pll_ops;
-+		clk_init.flags |= CLK_SET_RATE_GATE;
- 
- 		caps &= ~CGU_CLK_PLL;
- 
+ MIPS_MACHINE(MACH_INGENIC_JZ4740, "qi,lb60", "Qi Hardware Ben Nanonote", NULL);
++MIPS_MACHINE(MACH_INGENIC_JZ4770, "gcw,zero", "GCW Zero", NULL);
+ MIPS_MACHINE(MACH_INGENIC_JZ4780, "img,ci20",
+ 			"Imagination Technologies CI20", NULL);
 -- 
 2.11.0
