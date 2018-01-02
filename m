@@ -1,54 +1,179 @@
 From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v5 01/15] clk: ingenic: Use const pointer to clk_ops in struct
-Date: Tue,  2 Jan 2018 16:08:34 +0100
-Message-ID: <20180102150848.11314-1-paul@crapouillou.net>
-Return-path: <linux-clk-owner@vger.kernel.org>
-Sender: linux-clk-owner@vger.kernel.org
+Subject: [PATCH v5 04/15] clk: ingenic: Add code to enable/disable PLLs
+Date: Tue,  2 Jan 2018 16:08:37 +0100
+Message-ID: <20180102150848.11314-4-paul@crapouillou.net>
+References: <20180102150848.11314-1-paul@crapouillou.net>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180102150848.11314-1-paul@crapouillou.net>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Ralf Baechle <ralf@linux-mips.org>
 Cc: Maarten ter Huurne <maarten@treewalker.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux-clk@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
-The CGU common code does not modify the pointed clk_ops structure, so it
-should be marked as const.
+This commit permits the PLLs to be dynamically enabled and disabled when
+their children clocks are enabled and disabled.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 Acked-by: Stephen Boyd <sboyd@codeaurora.org>
 ---
- drivers/clk/ingenic/cgu.h        | 2 +-
- drivers/clk/ingenic/jz4780-cgu.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/clk/ingenic/cgu.c | 89 +++++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 74 insertions(+), 15 deletions(-)
 
- v2: New patch in this series
+ v2: No change
  v3: No change
  v4: No change
  v5: No change
 
-diff --git a/drivers/clk/ingenic/cgu.h b/drivers/clk/ingenic/cgu.h
-index e78b586536ea..f1527cf75b3f 100644
---- a/drivers/clk/ingenic/cgu.h
-+++ b/drivers/clk/ingenic/cgu.h
-@@ -120,7 +120,7 @@ struct ingenic_cgu_gate_info {
-  * @clk_ops: custom clock operation callbacks
-  */
- struct ingenic_cgu_custom_info {
--	struct clk_ops *clk_ops;
-+	const struct clk_ops *clk_ops;
- };
+diff --git a/drivers/clk/ingenic/cgu.c b/drivers/clk/ingenic/cgu.c
+index 381c4a17a1fc..56a712c9075f 100644
+--- a/drivers/clk/ingenic/cgu.c
++++ b/drivers/clk/ingenic/cgu.c
+@@ -107,9 +107,6 @@ ingenic_pll_recalc_rate(struct clk_hw *hw, unsigned long parent_rate)
+ 	if (bypass)
+ 		return parent_rate;
  
- /**
-diff --git a/drivers/clk/ingenic/jz4780-cgu.c b/drivers/clk/ingenic/jz4780-cgu.c
-index ac3585ed8228..6427be117ff1 100644
---- a/drivers/clk/ingenic/jz4780-cgu.c
-+++ b/drivers/clk/ingenic/jz4780-cgu.c
-@@ -203,7 +203,7 @@ static int jz4780_otg_phy_set_rate(struct clk_hw *hw, unsigned long req_rate,
+-	if (!enable)
+-		return 0;
+-
+ 	for (od = 0; od < pll_info->od_max; od++) {
+ 		if (pll_info->od_encoding[od] == od_enc)
+ 			break;
+@@ -153,17 +150,25 @@ ingenic_pll_calc(const struct ingenic_cgu_clk_info *clk_info,
+ 	return div_u64((u64)parent_rate * m, n * od);
+ }
+ 
+-static long
+-ingenic_pll_round_rate(struct clk_hw *hw, unsigned long req_rate,
+-		       unsigned long *prate)
++static inline const struct ingenic_cgu_clk_info *to_clk_info(
++		struct ingenic_clk *ingenic_clk)
+ {
+-	struct ingenic_clk *ingenic_clk = to_ingenic_clk(hw);
+ 	struct ingenic_cgu *cgu = ingenic_clk->cgu;
+ 	const struct ingenic_cgu_clk_info *clk_info;
+ 
+ 	clk_info = &cgu->clock_info[ingenic_clk->idx];
+ 	BUG_ON(clk_info->type != CGU_CLK_PLL);
+ 
++	return clk_info;
++}
++
++static long
++ingenic_pll_round_rate(struct clk_hw *hw, unsigned long req_rate,
++		       unsigned long *prate)
++{
++	struct ingenic_clk *ingenic_clk = to_ingenic_clk(hw);
++	const struct ingenic_cgu_clk_info *clk_info = to_clk_info(ingenic_clk);
++
+ 	return ingenic_pll_calc(clk_info, req_rate, *prate, NULL, NULL, NULL);
+ }
+ 
+@@ -171,19 +176,14 @@ static int
+ ingenic_pll_set_rate(struct clk_hw *hw, unsigned long req_rate,
+ 		     unsigned long parent_rate)
+ {
+-	const unsigned timeout = 100;
+ 	struct ingenic_clk *ingenic_clk = to_ingenic_clk(hw);
+ 	struct ingenic_cgu *cgu = ingenic_clk->cgu;
+-	const struct ingenic_cgu_clk_info *clk_info;
+-	const struct ingenic_cgu_pll_info *pll_info;
++	const struct ingenic_cgu_clk_info *clk_info = to_clk_info(ingenic_clk);
++	const struct ingenic_cgu_pll_info *pll_info = &clk_info->pll;
+ 	unsigned long rate, flags;
+-	unsigned m, n, od, i;
++	unsigned int m, n, od;
+ 	u32 ctl;
+ 
+-	clk_info = &cgu->clock_info[ingenic_clk->idx];
+-	BUG_ON(clk_info->type != CGU_CLK_PLL);
+-	pll_info = &clk_info->pll;
+-
+ 	rate = ingenic_pll_calc(clk_info, req_rate, parent_rate,
+ 			       &m, &n, &od);
+ 	if (rate != req_rate)
+@@ -202,6 +202,26 @@ ingenic_pll_set_rate(struct clk_hw *hw, unsigned long req_rate,
+ 	ctl &= ~(GENMASK(pll_info->od_bits - 1, 0) << pll_info->od_shift);
+ 	ctl |= pll_info->od_encoding[od - 1] << pll_info->od_shift;
+ 
++	writel(ctl, cgu->base + pll_info->reg);
++	spin_unlock_irqrestore(&cgu->lock, flags);
++
++	return 0;
++}
++
++static int ingenic_pll_enable(struct clk_hw *hw)
++{
++	struct ingenic_clk *ingenic_clk = to_ingenic_clk(hw);
++	struct ingenic_cgu *cgu = ingenic_clk->cgu;
++	const struct ingenic_cgu_clk_info *clk_info = to_clk_info(ingenic_clk);
++	const struct ingenic_cgu_pll_info *pll_info = &clk_info->pll;
++	const unsigned int timeout = 100;
++	unsigned long flags;
++	unsigned int i;
++	u32 ctl;
++
++	spin_lock_irqsave(&cgu->lock, flags);
++	ctl = readl(cgu->base + pll_info->reg);
++
+ 	ctl &= ~BIT(pll_info->bypass_bit);
+ 	ctl |= BIT(pll_info->enable_bit);
+ 
+@@ -223,10 +243,48 @@ ingenic_pll_set_rate(struct clk_hw *hw, unsigned long req_rate,
  	return 0;
  }
  
--static struct clk_ops jz4780_otg_phy_ops = {
-+static const struct clk_ops jz4780_otg_phy_ops = {
- 	.get_parent = jz4780_otg_phy_get_parent,
- 	.set_parent = jz4780_otg_phy_set_parent,
++static void ingenic_pll_disable(struct clk_hw *hw)
++{
++	struct ingenic_clk *ingenic_clk = to_ingenic_clk(hw);
++	struct ingenic_cgu *cgu = ingenic_clk->cgu;
++	const struct ingenic_cgu_clk_info *clk_info = to_clk_info(ingenic_clk);
++	const struct ingenic_cgu_pll_info *pll_info = &clk_info->pll;
++	unsigned long flags;
++	u32 ctl;
++
++	spin_lock_irqsave(&cgu->lock, flags);
++	ctl = readl(cgu->base + pll_info->reg);
++
++	ctl &= ~BIT(pll_info->enable_bit);
++
++	writel(ctl, cgu->base + pll_info->reg);
++	spin_unlock_irqrestore(&cgu->lock, flags);
++}
++
++static int ingenic_pll_is_enabled(struct clk_hw *hw)
++{
++	struct ingenic_clk *ingenic_clk = to_ingenic_clk(hw);
++	struct ingenic_cgu *cgu = ingenic_clk->cgu;
++	const struct ingenic_cgu_clk_info *clk_info = to_clk_info(ingenic_clk);
++	const struct ingenic_cgu_pll_info *pll_info = &clk_info->pll;
++	unsigned long flags;
++	u32 ctl;
++
++	spin_lock_irqsave(&cgu->lock, flags);
++	ctl = readl(cgu->base + pll_info->reg);
++	spin_unlock_irqrestore(&cgu->lock, flags);
++
++	return !!(ctl & BIT(pll_info->enable_bit));
++}
++
+ static const struct clk_ops ingenic_pll_ops = {
+ 	.recalc_rate = ingenic_pll_recalc_rate,
+ 	.round_rate = ingenic_pll_round_rate,
+ 	.set_rate = ingenic_pll_set_rate,
++
++	.enable = ingenic_pll_enable,
++	.disable = ingenic_pll_disable,
++	.is_enabled = ingenic_pll_is_enabled,
+ };
+ 
+ /*
+@@ -601,6 +659,7 @@ static int ingenic_register_clock(struct ingenic_cgu *cgu, unsigned idx)
+ 		}
+ 	} else if (caps & CGU_CLK_PLL) {
+ 		clk_init.ops = &ingenic_pll_ops;
++		clk_init.flags |= CLK_SET_RATE_GATE;
+ 
+ 		caps &= ~CGU_CLK_PLL;
  
 -- 
 2.11.0
-
