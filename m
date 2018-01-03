@@ -1,174 +1,98 @@
-From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Subject: Re: [PATCH 06/11] dt-bindings: display: sun4i-drm: Add
- A83T HDMI pipeline
-Date: Wed, 03 Jan 2018 22:32:26 +0100
-Message-ID: <1645801.yZU0HLsLbk@jernej-laptop>
-References: <20171230210203.24115-1-jernej.skrabec@siol.net> <20171230210203.24115-7-jernej.skrabec@siol.net> <20180103202154.eeajt3234w3adqjq@rob-hp-laptop>
-Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Subject: Re: [PATCHv5 1/3] dt-bindings: net: Add DT bindings for Socionext Netsec
+Date: Wed, 3 Jan 2018 21:37:40 +0000
+Message-ID: <CAKv+Gu9Pk_WEOrWZdVK5ty9GaDm4ApvGeksu_6W5DcF0-SOUuA@mail.gmail.com>
+References: <1514783559-4226-1-git-send-email-jassisinghbrar@gmail.com> <1514783660-4290-1-git-send-email-jassisinghbrar@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDQNBWPU7YERB4MXWXJAKGQEJM4Y6EQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180103202154.eeajt3234w3adqjq@rob-hp-laptop>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1514783660-4290-1-git-send-email-jassisinghbrar@gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Jassi Brar <jassisinghbrar@gmail.com>
+Cc: "<netdev@vger.kernel.org>" <netdev@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, "David S. Miller" <davem@davemloft.net>, Arnd Bergmann <arnd.bergmann@linaro.org>, Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi Jassi,
 
-Dne sreda, 03. januar 2018 ob 21:21:54 CET je Rob Herring napisal(a):
-> On Sat, Dec 30, 2017 at 10:01:58PM +0100, Jernej Skrabec wrote:
-> > This commit adds all necessary compatibles and descriptions needed to
-> > implement A83T HDMI pipeline.
-> > 
-> > Mixer is already properly described, so only compatible is added.
-> > 
-> > However, A83T TCON1, which is connected to HDMI, doesn't have channel 0,
-> > contrary to all TCONs currently described. Because of that, TCON
-> > documentation is extended.
-> > 
-> > A83T features Synopsys DW HDMI controller with a custom PHY which looks
-> > like Synopsys Gen2 PHY with few additions. Since there is no
-> > documentation, needed properties were found out through experimentation
-> > and reading BSP code.
-> > 
-> > At the end, example is added for newer SoCs, which features DE2 and DW
-> > HDMI.
-> > 
-> > Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-> > ---
-> > 
-> >  .../bindings/display/sunxi/sun4i-drm.txt           | 188
-> >  ++++++++++++++++++++- 1 file changed, 181 insertions(+), 7 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
-> > b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt index
-> > 9f073af4c711..3eca258096a5 100644
-> > --- a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
-> > +++ b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
-> > 
-> > @@ -64,6 +64,40 @@ Required properties:
-> >      first port should be the input endpoint. The second should be the
-> >      output, usually to an HDMI connector.
-> > 
-> > +DWC HDMI TX Encoder
-> > +-----------------------------
-> > +
-> > +The HDMI transmitter is a Synopsys DesignWare HDMI 1.4 TX controller IP
-> > +with Allwinner's own PHY IP. It supports audio and video outputs and CEC.
-> > +
-> > +These DT bindings follow the Synopsys DWC HDMI TX bindings defined in
-> > +Documentation/devicetree/bindings/display/bridge/dw_hdmi.txt with the
-> > +following device-specific properties.
-> > +
-> > +Required properties:
-> > +
-> > +  - compatible: value must be one of:
-> > +    * "allwinner,sun8i-a83t-dw-hdmi"
-> > +  - reg: two pairs of base address and size of memory-mapped region,
-> > first
-> > +    for controller and second for PHY
-> > +    registers.
-> 
-> Seems like the phy should be a separate node and use the phy binding.
-> You can use the phy binding even if you don't use the kernel phy
-> framework...
+On 1 January 2018 at 05:14,  <jassisinghbrar@gmail.com> wrote:
+> From: Jassi Brar <jassisinghbrar@gmail.com>
+>
+> This patch adds documentation for Device-Tree bindings for the
+> Socionext NetSec Controller driver.
+>
+> Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
+> Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> ---
+>  .../devicetree/bindings/net/socionext-netsec.txt   | 53 ++++++++++++++++++++++
+>  1 file changed, 53 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/socionext-netsec.txt
+>
+> diff --git a/Documentation/devicetree/bindings/net/socionext-netsec.txt b/Documentation/devicetree/bindings/net/socionext-netsec.txt
+> new file mode 100644
+> index 0000000..b70e35b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/socionext-netsec.txt
+> @@ -0,0 +1,53 @@
+> +* Socionext NetSec Ethernet Controller IP
+> +
+> +Required properties:
+> +- compatible: Should be "socionext,synquacer-netsec"
+> +- reg: Address and length of the control register area, followed by the
+> +       address and length of the EEPROM holding the MAC address and
+> +       microengine firmware
+> +- interrupts: Should contain ethernet controller interrupt
+> +- clocks: phandle to the PHY reference clock
+> +- clock-names: Should be "phy_ref_clk"
 
-Unfortunately, it's not so straighforward. Phy is actually accessed through 
-I2C implemented in HDMI controller. Second memory region in this case has 
-small influence on phy. However, it has big influence on controller. For 
-example, magic number has to be written in one register in second memory 
-region in order to unlock read access to any register from first memory region 
-(controller). However, they shouldn't be merged to one region, because first 
-memory region requires byte access while second memory region can be accessed 
-per byte or word.
+If clock-names is mandatory now even when only a single clock is
+specified, you should add it to the example as well. However, please
+be aware that hardware has shipped now with DT images that specify a
+only a single clock and no clock-names property: those will require a
+firmware upgrade before they can use this version of the driver.
 
-To complicate things more, later I want to add support for another SoC which 
-has same glue layer (unlocking read access, etc.) and uses memory mapped phy 
-registers in second memory region.
-
-I think current binding is the least complicated way to represent this.
-
-> 
-> > +  - reg-io-width: See dw_hdmi.txt. Shall be 1.
-> > +  - interrupts: HDMI interrupt number
-> > +  - clocks: phandles to the clocks feeding the HDMI encoder
-> > +    * iahb: the HDMI bus clock
-> > +    * isfr: the HDMI register clock
-> > +    * tmds: the HDMI tmds clock
-> > +  - clock-names: the clock names mentioned above
-> > +  - resets: phandles to the reset controllers driving the encoder
-> > +    * ctrl: the reset line for the controller
-> > +    * phy: the reset line for the PHY
-> > +  - reset-names: the reset names mentioned above
-> > +
-> > +  - ports: A ports node with endpoint definitions as defined in
-> > +    Documentation/devicetree/bindings/media/video-interfaces.txt. The
-> > +    first port should be the input endpoint. The second should be the
-> > +    output, usually to an HDMI connector.
-> > +
-> > 
-> >  TV Encoder
-> >  ----------
-> > 
-> > @@ -94,18 +128,17 @@ Required properties:
-> >     * allwinner,sun7i-a20-tcon
-> >     * allwinner,sun8i-a33-tcon
-> >     * allwinner,sun8i-a83t-tcon-lcd
-> > 
-> > +   * allwinner,sun8i-a83t-tcon-tv
-> > 
-> >     * allwinner,sun8i-v3s-tcon
-> >   
-> >   - reg: base address and size of memory-mapped region
-> >   - interrupts: interrupt associated to this IP
-> > 
-> > - - clocks: phandles to the clocks feeding the TCON. Three are needed:
-> > 
-> > + - clocks: phandles to the clocks feeding the TCON. One is needed:
-> >     - 'ahb': the interface clocks
-> > 
-> > -   - 'tcon-ch0': The clock driving the TCON channel 0
-> > 
-> >   - resets: phandles to the reset controllers driving the encoder
-> >   
-> >     - "lcd": the reset line for the TCON channel 0
-> >   
-> >   - clock-names: the clock names mentioned above
-> >   - reset-names: the reset names mentioned above
-> > 
-> > - - clock-output-names: Name of the pixel clock created
-> > 
-> >  - ports: A ports node with endpoint definitions as defined in
-> >  
-> >    Documentation/devicetree/bindings/media/video-interfaces.txt. The
-> > 
-> > @@ -119,11 +152,31 @@ Required properties:
-> >    channel the endpoint is associated to. If that property is not
-> >    present, the endpoint number will be used as the channel number.
-> > 
-> > -On SoCs other than the A33 and V3s, there is one more clock required:
-> > +Following compatibles:
-> > + * allwinner,sun4i-a10-tcon
-> > + * allwinner,sun5i-a13-tcon
-> > + * allwinner,sun6i-a31-tcon
-> > + * allwinner,sun6i-a31s-tcon
-> > + * allwinner,sun7i-a20-tcon
-> > + * allwinner,sun8i-a33-tcon
-> > + * allwinner,sun8i-a83t-tcon-lcd
-> > + * allwinner,sun8i-v3s-tcon
-> > +have additional required properties:
-> > + - 'tcon-ch0': The clock driving the TCON channel 0
-> 
-> tcon-ch0 is a clock name, not a property.
-
-right.
-
-Best regards,
-Jernej
+> +- phy-mode: See ethernet.txt file in the same directory
+> +- phy-handle: See ethernet.txt in the same directory.
+> +
+> +- mdio device tree subnode: When the Netsec has a phy connected to its local
+> +               mdio, there must be device tree subnode with the following
+> +               required properties:
+> +
+> +       - #address-cells: Must be <1>.
+> +       - #size-cells: Must be <0>.
+> +
+> +       For each phy on the mdio bus, there must be a node with the following
+> +       fields:
+> +       - compatible: Refer to phy.txt
+> +       - reg: phy id used to communicate to phy.
+> +
+> +Optional properties: (See ethernet.txt file in the same directory)
+> +- dma-coherent: Boolean property, must only be present if memory
+> +       accesses performed by the device are cache coherent.
+> +- local-mac-address: See ethernet.txt in the same directory.
+> +- mac-address: See ethernet.txt in the same directory.
+> +- max-speed: See ethernet.txt in the same directory.
+> +- max-frame-size: See ethernet.txt in the same directory.
+> +
+> +Example:
+> +       eth0: ethernet@522d0000 {
+> +               compatible = "socionext,synquacer-netsec";
+> +               reg = <0 0x522d0000 0x0 0x10000>, <0 0x10000000 0x0 0x10000>;
+> +               interrupts = <GIC_SPI 176 IRQ_TYPE_LEVEL_HIGH>;
+> +               clocks = <&clk_netsec>;
+> +               phy-mode = "rgmii";
+> +               max-speed = <1000>;
+> +               max-frame-size = <9000>;
+> +               phy-handle = <&phy1>;
+> +
+> +               mdio {
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +                       phy1: ethernet-phy@1 {
+> +                               compatible = "ethernet-phy-ieee802.3-c22";
+> +                               reg = <1>;
+> +                       };
+> +               };
+> +       };
+> --
+> 2.7.4
+>
