@@ -1,91 +1,75 @@
-From: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC v2 1/9] serdev: implement parity configuration
-Date: Wed, 3 Jan 2018 10:06:33 +0100
-Message-ID: <20180103090633.GP16993@localhost>
-References: <20180101204217.26165-1-martin.blumenstingl@googlemail.com>
- <20180101204217.26165-2-martin.blumenstingl@googlemail.com>
- <4FDCB65A-641A-4134-BAF1-4A777012FDE7@holtmann.org>
- <CAFBinCCq9mYBhzoL1XBVQNGxALg8oK5GB7Md9HJf_mchEMu3-A@mail.gmail.com>
- <CAFBinCD=iuE+ho22kihCFG=AJV5t+JtjRww8PLuq-cAJ2RkAHQ@mail.gmail.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v2 0/9] PCI: Add support to the Cadence PCIe controller
+Date: Wed, 3 Jan 2018 14:44:18 +0530
+Message-ID: <d170202a-4860-7ff5-a6a3-df696ce23729@ti.com>
+References: <cover.1513620412.git.cyrille.pitchen@free-electrons.com>
+ <d30e0abe-8b08-b2bf-8410-e0fc2b18cacc@ti.com>
+ <27684b50-ff08-5238-4cb0-8bc4431211bf@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAFBinCD=iuE+ho22kihCFG=AJV5t+JtjRww8PLuq-cAJ2RkAHQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "Gustavo F. Padovan" <gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org>, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Larry Finger <Larry.Finger-tQ5ms3gMjBLk1uMJSBkQmQ@public.gmane.org>, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>, Daniel Drake <drake-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>, ulrich.hecht+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <27684b50-ff08-5238-4cb0-8bc4431211bf@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>, bhelgaas@google.com, lorenzo.pieralisi@arm.com, linux-pci@vger.kernel.org
+Cc: adouglas@cadence.com, stelford@cadence.com, dgary@cadence.com, kgopi@cadence.com, eandrews@cadence.com, thomas.petazzoni@free-electrons.com, sureshp@cadence.com, nsekhar@ti.com, linux-kernel@vger.kernel.org, robh@kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 02, 2018 at 10:34:04PM +0100, Martin Blumenstingl wrote:
-> On Tue, Jan 2, 2018 at 10:16 PM, Martin Blumenstingl
-> <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
-> > Hi Marcel, Hi Rob,
-> >
-> > On Tue, Jan 2, 2018 at 12:16 PM, Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org> wrote:
-> >> Hi Martin,
-> >>
-> >>> Some Bluetooth modules (for example the ones found in Realtek RTL8723BS
-> >>> and RTL8723DS) want to communicate with the host with even parity
-> >>> enabled.
-> >>> Add a new function and the corresponding internal callbacks so parity
-> >>> can be configured. This supports enabling and disabling parity as well
-> >>> as setting the type to odd or even.
-> >>>
-> >>> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-> >>> ---
-> >>> drivers/tty/serdev/core.c           | 12 ++++++++++++
-> >>> drivers/tty/serdev/serdev-ttyport.c | 21 +++++++++++++++++++++
-> >>> include/linux/serdev.h              |  5 +++++
-> >>> 3 files changed, 38 insertions(+)
-> >>>
-> >>> diff --git a/drivers/tty/serdev/core.c b/drivers/tty/serdev/core.c
-> >>> index 1bef39828ca7..d327b02980f5 100644
-> >>> --- a/drivers/tty/serdev/core.c
-> >>> +++ b/drivers/tty/serdev/core.c
-> >>> @@ -225,6 +225,18 @@ void serdev_device_set_flow_control(struct serdev_device *serdev, bool enable)
-> >>> }
-> >>> EXPORT_SYMBOL_GPL(serdev_device_set_flow_control);
-> >>>
-> >>> +void serdev_device_set_parity(struct serdev_device *serdev, bool enable,
-> >>> +                           bool odd)
-> >>> +{
-> >>> +     struct serdev_controller *ctrl = serdev->ctrl;
-> >>> +
-> >>> +     if (!ctrl || !ctrl->ops->set_parity)
-> >>> +             return;
-> >>> +
-> >>> +     ctrl->ops->set_parity(ctrl, enable, odd);
-> >>> +}
-> >>> +EXPORT_SYMBOL_GPL(serdev_device_set_parity);
-> >>> +
-> >>
-> >> this really needs Robâ€™s ACK before I take the patch.
-> > sure
-> >
-> > I could even live with a NACK in case these two bool parameters are
-> > considered to be ugly
-> > in that case I would propose an enum with three values: DISABLED,
-> > EVEN, ODD so the arguments would look like this:
-> > void serdev_device_set_parity(struct serdev_device *serdev, enum parity)
-> I just discovered: such a patch was already posted by Ulrich Hecht: [0]
+Hi,
+
+On Saturday 30 December 2017 02:23 AM, Cyrille Pitchen wrote:
+> Hi Kishon,
 > 
+> Le 28/12/2017 à 14:00, Kishon Vijay Abraham I a écrit :
+>> Hi Cyrille,
+>>
+>> On Monday 18 December 2017 11:46 PM, Cyrille Pitchen wrote:
+>>> Hi all,
+>>>
+>>> this series of patches adds support to the Cadence PCIe controller.
+>>> It was tested on a ARM64 platform emulated by a Palladium running the
+>>> pci-next kernel.
+>>>
+>>> The host mode was tested with some PCIe devices connected to the Palladium
+>>> through a speed-bridge. Some of those devices were a USB host controller
+>>> and a SATA controller. The PCIe host controller was also tested with a
+>>> second controller configured in endpoint mode and connected back to back
+>>> to the first controller.
+>>>
+>>> The EndPoint Controller (EPC) driver of this series was tested with the
+>>> pci-epf-test.c EndPoint Function (EPF) driver and the pcitest userspace
+>>> program.
+>>
+>> Did you get to test multi function EP?
+>>
 > 
-> [0] https://patchwork.kernel.org/patch/9903787/
+> No I didn't: I tested only with a single function to check for regression
+> but currently I'm not able to test with multiple functions.
+> 
+> With devmem, I've tried to read then write the Physical Function Configuration
+> Register (offset 0x2c0 in the Local Management registers) to enable
+> functions other than function 0.
+> 
+> This is the CDNS_PCIE_LM_EP_FUNC_CFG register that the pcie-cadence_ep.c
+> driver updates in cdns_pcie_ep_write_header() since v2 of the series.
+> 
+> As written in the datasheet, BIT(0) is actually hard-wired to 1, hence
+> function 0 can't be disabled: that makes sense. However other function
+> enable bits were read as 0 whereas the datasheet claims they should be set
+> at power up. Besides, I can't set any of them with devmem.
+> 
+> Actually, I have 2 slightly different datasheets, in the first one I should
+> have 4 functions but only 2 based on the second datasheet.
+> 
+> Then I guess it's a design parameter used when synthesizing the controller.
+> 
+> So I've asked Cadence whether I've missed or misunderstood something in the
+> datasheets or whether the IP they provided me with has a single function
+> for now. I'm waiting for their answers.
 
-Yeah, that would be the preferred way of doing this as it's more
-readable and less error prone (and more easily extended if anyone ever
-needs mark and space parity).
+hmm.. It would be nice to have multi function tested since it would both
+validate multi function support of PCI EP core and the cadence multi-function
+itself.
 
-Also, I know serdev currently fails to check for errors from
-tty_set_termios, but we really need to start doing that. Not all serial
-drivers support (every) parity mode so you need to check the tty termios
-for the actual mode used after tty_set_termios() returns.
-
-Thanks,
-Johan
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks
+Kishon
