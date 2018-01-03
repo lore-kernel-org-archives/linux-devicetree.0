@@ -1,298 +1,159 @@
-From: jacopo mondi <jacopo@jmondi.org>
-Subject: Re: [PATCH v2 3/9] v4l: platform: Add Renesas CEU driver
-Date: Wed, 3 Jan 2018 11:47:48 +0100
-Message-ID: <20180103104748.GC9493@w540>
-References: <1514469681-15602-1-git-send-email-jacopo+renesas@jmondi.org>
- <1514469681-15602-4-git-send-email-jacopo+renesas@jmondi.org>
- <1538398.BnUWTlhJjz@avalon>
+From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH V6 1/2] mtd: partitions: add of_match_table parser matching
+Date: Wed,  3 Jan 2018 11:55:42 +0100
+Message-ID: <20180103105543.17897-1-zajec5@gmail.com>
+References: <20180102130458.16226-1-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1538398.BnUWTlhJjz@avalon>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, magnus.damm@gmail.com, geert@glider.be, mchehab@kernel.org, hverkuil@xs4all.nl, robh+dt@kernel.org, mark.rutland@arm.com, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180102130458.16226-1-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-On Tue, Jan 02, 2018 at 03:46:27PM +0200, Laurent Pinchart wrote:
-> Hi Jacopo,
->
-> Thank you for the patch.
->
-> > +/*
-> > + * ceu_device - CEU device instance
-> > + */
-> > +struct ceu_device {
-> > +	struct device		*dev;
-> > +	struct video_device	vdev;
-> > +	struct v4l2_device	v4l2_dev;
-> > +
-> > +	/* subdevices descriptors */
-> > +	struct ceu_subdev	*subdevs;
-> > +	/* the subdevice currently in use */
-> > +	struct ceu_subdev	*sd;
-> > +	unsigned int		sd_index;
-> > +	unsigned int		num_sd;
-> > +
-> > +	/* platform specific mask with all IRQ sources flagged */
-> > +	u32			irq_mask;
-> > +
-> > +	/* currently configured field and pixel format */
-> > +	enum v4l2_field	field;
-> > +	struct v4l2_pix_format_mplane v4l2_pix;
-> > +
-> > +	/* async subdev notification helpers */
-> > +	struct v4l2_async_notifier notifier;
-> > +	/* pointers to "struct ceu_subdevice -> asd" */
-> > +	struct v4l2_async_subdev **asds;
-> > +
-> > +	/* vb2 queue, capture buffer list and active buffer pointer */
-> > +	struct vb2_queue	vb2_vq;
-> > +	struct list_head	capture;
-> > +	struct vb2_v4l2_buffer	*active;
-> > +	unsigned int		sequence;
-> > +
-> > +	/* mlock - lock device suspend/resume and videobuf2 operations */
->
-> In my review of v1 I commented that lock documentation should explain what
-> data is protected by the lock. As my point seems not to have come across it
-> must not have been clear enough, I'll try to fix that.
->
-> The purpose of a lock is to protect from concurrent access to a resource. In
-> device drivers resources are in most cases either in-memory data or device
-> registers. To design a good locking scheme you need to ask yourself what
-> resources can be accessed concurrently, and then protect all accesses to those
-> resources using locking primitives. Some accesses don't need to be protected
-> (for instance it's common to initialize structure fields in the probe function
-> where no concurrent access from userspace can occur as device nodes are not
-> registered yet), and locking can then be omitted in a case by case basis.
->
-> Lock documentation is essential to understand the locking scheme and should
-> explain what resources are protected by the lock. It's tempting (because it's
-> easy) to instead focus on what code sections the lock covers, but that's not
-> how the locking scheme should be designed, and will eventually be prone to
-> bugs leading to race conditions.
+Partition parsers can now provide an of_match_table to enable
+flash<-->parser matching via device tree as documented in the
+mtd/partition.txt.
 
-Thanks, I got this, but that lock is used to protect concurrent
-accesses to suspend/resume (and thus interface reset) and is used as
-vb2 queue lock. I can mention it guards concurrent interfaces resets,
-but I don't see it being that much different from what I already
-mentioned.
+It works by looking for a matching parser for every string in the
+"compatibility" property (starting with the most specific one).
 
->
-> Obviously a lock will end up preventing multiple code sections from running at
-> the same time, but that's the consequence of the locking scheme, it shouldn't
-> be its cause.
->
-> > +	struct mutex	mlock;
-> > +
-> > +	/* lock - lock access to capture buffer queue and active buffer */
-> > +	spinlock_t	lock;
-> > +
-> > +	/* base - CEU memory base address */
-> > +	void __iomem	*base;
-> > +};
->
-> [snip]
->
-> > +/*
-> > + * ceu_soft_reset() - Software reset the CEU interface
-> > + * @ceu_device: CEU device.
-> > + *
-> > + * Returns 0 for success, -EIO for error.
-> > + */
-> > +static int ceu_soft_reset(struct ceu_device *ceudev)
-> > +{
-> > +	unsigned int i;
-> > +
-> > +	ceu_write(ceudev, CEU_CAPSR, CEU_CAPSR_CPKIL);
-> > +
-> > +	for (i = 0; i < 100; i++) {
-> > +		udelay(1);
->
-> How about moving the delay after the check in case the condition is true
-> immediately ?
->
-> > +		if (!(ceu_read(ceudev, CEU_CSTSR) & CEU_CSTRST_CPTON))
-> > +			break;
-> > +	}
-> > +
-> > +	if (i == 100) {
-> > +		dev_err(ceudev->dev, "soft reset time out\n");
-> > +		return -EIO;
-> > +	}
-> > +
-> > +	for (i = 0; i < 100; i++) {
-> > +		udelay(1);
->
-> Same here.
->
-> > +		if (!(ceu_read(ceudev, CEU_CAPSR) & CEU_CAPSR_CPKIL))
-> > +			return 0;
-> > +	}
-> > +
-> > +	/* if we get here, CEU has not reset properly */
-> > +	return -EIO;
-> > +}
-> > +
-> > +/* CEU Capture Operations */
->
-> Just curious, why have you replaced the block comments by single-line comments
-> ? I pointed out that the format was wrong as you started them with /** and
-> they were not kerneldoc, but I have nothing against splitting the code in
-> sections with headers such as
->
-> /* --------------------------------------------------------------------------
->  * CEU Capture Operations
->  */
->
-> as I do so routinely in my drivers. If that's your preferred style and you
-> thought I asked for a change you can switch back, if you prefer single-line
-> comments that's fine with me too.
+This support is currently limited to built-in parsers as it uses
+request_module() and friends. This should be sufficient for most cases
+though as compiling parsers as modules isn't a common choice.
 
-Yes I borrowed that commenting style from other Renesas drivers you
-wrote, so I went for it for consistency.
+Signed-off-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+---
+This is based on Brian's patches:
+[RFC PATCH 4/7] mtd: add of_match_mtd_parser() and of_mtd_match_mtd_parser() helpers
+[RFC PATCH 6/7] RFC: mtd: partitions: enable of_match_table matching
 
-I recently read about some discussions on block comments, when Mauro
-was trying to replace /***...***/ block comments with a script, and
-I had the feeling there's not that much love for block comments around
-here, and I also find them a bit invasive.
+V1: Put helpers in mtdpart.c instead of drivers/of/of_mtd.c
+    Merge helpers into a single of_mtd_match_mtd_parser
+V3: Add a simple comment to note we will need the best match in the future
+V4: Rework new functions to pick parser with the best match
+    Move new code in parse_mtd_partitions up so it has precedence over flash
+    driver defaults and MTD defaults
+V5: Rework matching code to start checking with the most specific string in the
+    "compatibility" property.
+V6: Initialize "ret" variable in mtd_part_get_parser_by_cp to NULL
+---
+ drivers/mtd/mtdpart.c          | 64 ++++++++++++++++++++++++++++++++++++++++++
+ include/linux/mtd/partitions.h |  1 +
+ 2 files changed, 65 insertions(+)
 
-I used the
-/* --- Code section --- */
-style in the past which I find is a good balance between
-intrusiveness and noticeability but I don't want to introduce
-yet-another-comment-style so I went for single line and that's it.
+diff --git a/drivers/mtd/mtdpart.c b/drivers/mtd/mtdpart.c
+index be088bccd593..b11958adcf45 100644
+--- a/drivers/mtd/mtdpart.c
++++ b/drivers/mtd/mtdpart.c
+@@ -30,6 +30,7 @@
+ #include <linux/mtd/mtd.h>
+ #include <linux/mtd/partitions.h>
+ #include <linux/err.h>
++#include <linux/of.h>
+ 
+ #include "mtdcore.h"
+ 
+@@ -880,6 +881,48 @@ static int mtd_part_do_parse(struct mtd_part_parser *parser,
+ }
+ 
+ /**
++ * mtd_part_get_parser_by_cp - find MTD parser by a compatible string
++ *
++ * @cp: compatible string describing partitions in a device tree
++ *
++ * MTD parsers can specify supported partitions by providing a table of
++ * compatibility strings. This function finds a parser that advertises support
++ * for a passed value of "compatible".
++ */
++static struct mtd_part_parser *mtd_part_get_parser_by_cp(const char *cp)
++{
++	struct mtd_part_parser *p, *ret = NULL;
++
++	spin_lock(&part_parser_lock);
++
++	list_for_each_entry(p, &part_parsers, list) {
++		const struct of_device_id *matches;
++
++		matches = p->of_match_table;
++		if (!matches)
++			continue;
++
++		for (; matches->name[0] || matches->type[0] || matches->compatible[0];
++		     matches++) {
++			if (!matches->compatible[0])
++				continue;
++			if (!strcmp(matches->compatible, cp) &&
++			    try_module_get(p->owner)) {
++				ret = p;
++				break;
++			}
++		}
++
++		if (ret)
++			break;
++	}
++
++	spin_unlock(&part_parser_lock);
++
++	return ret;
++}
++
++/**
+  * parse_mtd_partitions - parse MTD partitions
+  * @master: the master partition (describes whole MTD device)
+  * @types: names of partition parsers to try or %NULL
+@@ -905,8 +948,29 @@ int parse_mtd_partitions(struct mtd_info *master, const char *const *types,
+ 			 struct mtd_part_parser_data *data)
+ {
+ 	struct mtd_part_parser *parser;
++	struct device_node *np;
++	struct property *prop;
++	const char *cp;
+ 	int ret, err = 0;
+ 
++	np = of_get_child_by_name(mtd_get_of_node(master), "partitions");
++	if (np) {
++		of_property_for_each_string(np, "compatible", prop, cp) {
++			parser = mtd_part_get_parser_by_cp(cp);
++			if (!parser)
++				continue;
++			ret = mtd_part_do_parse(parser, master, pparts, data);
++			if (ret > 0) {
++				of_node_put(np);
++				return 0;
++			}
++			mtd_part_parser_put(parser);
++			if (ret < 0 && !err)
++				err = ret;
++		}
++		of_node_put(np);
++	}
++
+ 	if (!types)
+ 		types = default_mtd_part_types;
+ 
+diff --git a/include/linux/mtd/partitions.h b/include/linux/mtd/partitions.h
+index c4beb70dacbd..11cb0c50cd84 100644
+--- a/include/linux/mtd/partitions.h
++++ b/include/linux/mtd/partitions.h
+@@ -77,6 +77,7 @@ struct mtd_part_parser {
+ 	struct list_head list;
+ 	struct module *owner;
+ 	const char *name;
++	const struct of_device_id *of_match_table;
+ 	int (*parse_fn)(struct mtd_info *, const struct mtd_partition **,
+ 			struct mtd_part_parser_data *);
+ 	void (*cleanup)(const struct mtd_partition *pparts, int nr_parts);
+-- 
+2.11.0
 
->
-> [snip]
->
-> > +/*
-> > + * ceu_calc_plane_sizes() - Fill per-plane 'struct v4l2_plane_pix_format'
-> > + *			    information according to the currently configured
-> > + *			    pixel format.
-> > + * @ceu_device: CEU device.
-> > + * @ceu_fmt: Active image format.
-> > + * @pix: Pixel format information (store line width and image sizes)
-> > + *
-> > + * Returns 0 for success.
-> > + */
-> > +static int ceu_calc_plane_sizes(struct ceu_device *ceudev,
-> > +				const struct ceu_fmt *ceu_fmt,
-> > +				struct v4l2_pix_format_mplane *pix)
-> > +{
-> > +	unsigned int bpl, szimage;
-> > +
-> > +	switch (pix->pixelformat) {
-> > +	case V4L2_PIX_FMT_YUYV:
-> > +		pix->num_planes	= 1;
-> > +		bpl		= pix->width * ceu_fmt->bpp / 8;
-> > +		szimage		= pix->height * bpl;
-> > +		ceu_update_plane_sizes(&pix->plane_fmt[0], bpl, szimage);
-> > +		break;
-> > +
-> > +	case V4L2_PIX_FMT_NV16:
-> > +	case V4L2_PIX_FMT_NV61:
-> > +		pix->num_planes	= 2;
-> > +		bpl		= pix->width;
-> > +		szimage		= pix->height * pix->width;
-> > +		ceu_update_plane_sizes(&pix->plane_fmt[0], bpl, szimage);
-> > +		ceu_update_plane_sizes(&pix->plane_fmt[1], bpl, szimage);
-> > +		break;
-> > +
-> > +	case V4L2_PIX_FMT_NV12:
-> > +	case V4L2_PIX_FMT_NV21:
-> > +		pix->num_planes	= 2;
-> > +		bpl		= pix->width;
-> > +		szimage		= pix->height * pix->width;
-> > +		ceu_update_plane_sizes(&pix->plane_fmt[0], bpl, szimage);
-> > +		ceu_update_plane_sizes(&pix->plane_fmt[1], bpl, szimage / 2);
-> > +		break;
-> > +
-> > +	default:
-> > +		pix->num_planes	= 0;
-> > +		dev_err(ceudev->dev,
-> > +			"Format 0x%x not supported\n", pix->pixelformat);
-> > +		return -EINVAL;
->
-> I think you can remove the default case as ceu_try_fmt() should have validated
-> the format already. The compiler will then likely warn so you need to keep a
-> default cause, but it will never be hit, so it can default to any format you
-> want. The function can then be turned into a void.
-
-Yes, that was only to silence the compiler actually...
-
->
-> > +	}
-> > +
-> > +	return 0;
-> > +}
->
-> [snip]
->
-> > +/*
-> > + * ceu_set_default_fmt() - Apply default NV16 memory output format with VGA
-> > + *			   sizes.
-> > + */
-> > +static int ceu_set_default_fmt(struct ceu_device *ceudev)
-> > +{
-> > +	struct v4l2_format v4l2_fmt = {
-> > +		.type = V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE,
-> > +		.fmt.pix_mp = {
-> > +			.width		= VGA_WIDTH,
-> > +			.height		= VGA_HEIGHT,
-> > +			.field		= V4L2_FIELD_NONE,
-> > +			.pixelformat	= V4L2_PIX_FMT_NV16,
-> > +			.num_planes	= 2,
-> > +			.plane_fmt	= {
-> > +				[0]	= {
-> > +					.sizeimage = VGA_WIDTH * VGA_HEIGHT * 2,
-> > +					.bytesperline = VGA_WIDTH * 2,
-> > +				},
-> > +				[1]	= {
-> > +					.sizeimage = VGA_WIDTH * VGA_HEIGHT * 2,
-> > +					.bytesperline = VGA_WIDTH * 2,
-> > +				},
-> > +			},
-> > +		},
-> > +	};
-> > +
-> > +	ceu_try_fmt(ceudev, &v4l2_fmt);
->
-> You've removed the error check here. ceu_try_fmt() shouldn't fail, but it
-> calls a sensor driver subdev operation over which you have no control. It's up
-> to you, but if you decide to ignore errors, I would turn this function into
-> void.
->
-> I know I've asked in my review of v1 for the error check to be removed, but I
-> think I had missed the fact that a subdev operation was called.
->
-
-Yes, and I blindly changed it, so my bad as well..
-
-
-> > +	ceudev->v4l2_pix = v4l2_fmt.fmt.pix_mp;
-> > +
-> > +	return 0;
-> > +}
->
-> [snip]
->
->
->
-> [snip]
->
-
-I have now fixed all of the above comments, and will send v3 shortly!
-
-Thanks
-   j
-
-> --
-> Regards,
->
-> Laurent Pinchart
->
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
