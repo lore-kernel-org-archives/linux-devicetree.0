@@ -1,124 +1,154 @@
-From: Faiz Abbas <faiz_abbas@ti.com>
-Subject: Re: [PATCH v6 3/6] can: m_can: Add PM Runtime
-Date: Wed, 3 Jan 2018 20:36:59 +0530
-Message-ID: <a45431f2-d262-39a1-9152-a2ff75560d21@ti.com>
-References: <1513949488-13026-1-git-send-email-faiz_abbas@ti.com>
- <1513949488-13026-4-git-send-email-faiz_abbas@ti.com>
- <aea8638a-c847-b55e-ff2d-37999980ba7b@pengutronix.de>
- <1308ee81-a1e9-ac5a-2d97-334fa825ef8d@ti.com>
- <7d857263-14a7-6001-8f13-42d80f757573@pengutronix.de>
+From: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Subject: Re: [PATCHv1 1/6] net: dsa: Support internal phy on 'cpu' port
+Date: Wed, 3 Jan 2018 16:07:04 +0100
+Message-ID: <20180103150704.jmrsauyhw3htf4my@earth.universe>
+References: <20180103122609.5482-1-sebastian.reichel@collabora.co.uk>
+ <20180103122609.5482-2-sebastian.reichel@collabora.co.uk>
+ <20180103132128.GI15036@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7d857263-14a7-6001-8f13-42d80f757573@pengutronix.de>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Kleine-Budde <mkl@pengutronix.de>, wg@grandegger.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-can@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, nsekhar@ti.com, fcooper@ti.com, robh@kernel.org, Wenyou.Yang@microchip.com, sergei.shtylyov@cogentembedded.com
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="yrkvtfmhvyj2maox"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20180103132128.GI15036-g2DYL2Zd6BY@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: Vivien Didelot <vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Ian Ray <ian.ray-JJi787mZWgc@public.gmane.org>, Nandor Han <nandor.han-JJi787mZWgc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On Wednesday 03 January 2018 07:55 PM, Marc Kleine-Budde wrote:
-> On 01/03/2018 01:39 PM, Faiz Abbas wrote:
->> On Tuesday 02 January 2018 09:37 PM, Marc Kleine-Budde wrote:
->>> On 12/22/2017 02:31 PM, Faiz Abbas wrote:
->>>> From: Franklin S Cooper Jr <fcooper@ti.com>
->>>>
->>>> Add support for PM Runtime which is the new way to handle managing clocks.
->>>> However, to avoid breaking SoCs not using PM_RUNTIME leave the old clk
->>>> management approach in place.
->>>
->>> There is no PM_RUNTIME anymore since 464ed18ebdb6 ("PM: Eliminate
->>> CONFIG_PM_RUNTIME")
->>
->> Ok. Will change the commit message.
->>
->>>
->>> Have a look at the discussion: https://patchwork.kernel.org/patch/9436507/ :
->>>
->>>>> Well, I admit it would be nicer if drivers didn't have to worry about 
->>>>> whether or not CONFIG_PM was enabled.  A slightly cleaner approach 
->>>>> from the one outlined above would have the probe routine do this:
->>>>>
->>>>> 	my_power_up(dev);
->>>>> 	pm_runtime_set_active(dev);
->>>>> 	pm_runtime_get_noresume(dev);
->>>>> 	pm_runtime_enable(dev);
->>
->> This discussion seems to be about cases in which CONFIG_PM is not
->> enabled. CONFIG_PM is always selected in the case of omap devices.
-> 
-> Yes, but in the commit message you state that you need to support
-> systems that don't have PM_RUNTIME enabled. The only mainline SoCs I see
-> is "arch/arm/boot/dts/sama5d2.dtsi" so far. Please check if they select
-> CONFIG_PM, then we can make the driver much simpler.
+--yrkvtfmhvyj2maox
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Actually the old clock management (for hclk which is the interface
-clock) is still required as mentioned in the cover letter. Will change
-the rather misleading description.
+Hi Andrew,
 
-Thanks,
-Faiz
+On Wed, Jan 03, 2018 at 02:21:28PM +0100, Andrew Lunn wrote:
+> On Wed, Jan 03, 2018 at 01:26:04PM +0100, Sebastian Reichel wrote:
+> > This adds support for enabling the internal phy for a 'cpu' port.
+> > It has been tested on GE B850v3 and B650v3, which have a built-in
+> > MV88E6240 switch connected to a PCIe based network card. Without
+> > this patch the link does not come up and no traffic can be routed
+> > through the switch.
+> >=20
+> > Signed-off-by: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+> > ---
+> >  net/dsa/port.c | 26 ++++++++++++++++++++++----
+> >  1 file changed, 22 insertions(+), 4 deletions(-)
+> >=20
+> > diff --git a/net/dsa/port.c b/net/dsa/port.c
+> > index bb4be2679904..f99c1d34416c 100644
+> > --- a/net/dsa/port.c
+> > +++ b/net/dsa/port.c
+> > @@ -282,6 +282,10 @@ int dsa_port_fixed_link_register_of(struct dsa_por=
+t *dp)
+> >  	int mode;
+> >  	int err;
+> > =20
+> > +	mode =3D of_get_phy_mode(dn);
+> > +	if (mode < 0)
+> > +		mode =3D PHY_INTERFACE_MODE_NA;
+> > +
+> >  	if (of_phy_is_fixed_link(dn)) {
+> >  		err =3D of_phy_register_fixed_link(dn);
+> >  		if (err) {
+> > @@ -292,10 +296,6 @@ int dsa_port_fixed_link_register_of(struct dsa_por=
+t *dp)
+> >  		}
+> > =20
+> >  		phydev =3D of_phy_find_device(dn);
+> > -
+> > -		mode =3D of_get_phy_mode(dn);
+> > -		if (mode < 0)
+> > -			mode =3D PHY_INTERFACE_MODE_NA;
+> >  		phydev->interface =3D mode;
+> > =20
+> >  		genphy_config_init(phydev);
+> > @@ -305,6 +305,24 @@ int dsa_port_fixed_link_register_of(struct dsa_por=
+t *dp)
+> >  			ds->ops->adjust_link(ds, port, phydev);
+> > =20
+> >  		put_device(&phydev->mdio.dev);
+> > +	} else if (mode =3D=3D PHY_INTERFACE_MODE_INTERNAL ||
+> > +		   mode =3D=3D PHY_INTERFACE_MODE_NA) {
+>=20
+> Hi Sebastian
+>=20
+> I understand what you are trying to do, i've got boards which also
+> have back-to-back PHYs for the CPU port. These boards however have the
+> strapping correct, so nothing needs doing in software.
 
-> 
->>>> PM_RUNTIME is required by OMAP based devices to handle clock management.
->>>> Therefore, this allows future Texas Instruments SoCs that have the MCAN IP
->>>> to work with this driver.
->>>
->>> Who will set the SET_RUNTIME_PM_OPS in this case?
->>
->> It is set with a common SET_RUNTIME_PM_OPS in the case of omap at
->> arch/arm/mach-omap2/omap_device.c:632
->>
->> struct dev_pm_domain omap_device_pm_domain = {
->>         .ops = {
->>                 SET_RUNTIME_PM_OPS(_od_runtime_suspend, _od_runtime_resume,
->>                                    NULL)
->>                 USE_PLATFORM_PM_SLEEP_OPS
->>                 SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(_od_suspend_noirq,
->>                                               _od_resume_noirq)
->>         }
->> };
->>
->>
->>>
->>>> Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
->>>> [nsekhar@ti.com: handle pm_runtime_get_sync() failure, fix some bugs]
->>>> Signed-off-by: Sekhar Nori <nsekhar@ti.com>
->>>> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
->>>> ---
->>>>  drivers/net/can/m_can/m_can.c | 38 ++++++++++++++++++++++++++++++++++----
->>>>  1 file changed, 34 insertions(+), 4 deletions(-)
->>>>
->>>> diff --git a/drivers/net/can/m_can/m_can.c b/drivers/net/can/m_can/m_can.c
->>>> index f72116e..53e764f 100644
->>>> --- a/drivers/net/can/m_can/m_can.c
->>>> +++ b/drivers/net/can/m_can/m_can.c
->>>> @@ -23,6 +23,7 @@
->>>>  #include <linux/of.h>
->>>>  #include <linux/of_device.h>
->>>>  #include <linux/platform_device.h>
->>>> +#include <linux/pm_runtime.h>
->>>>  #include <linux/iopoll.h>
->>>>  #include <linux/can/dev.h>
->>>>  
->>>> @@ -625,19 +626,33 @@ static int m_can_clk_start(struct m_can_priv *priv)
->>>>  {
->>>>  	int err;
->>>>  
->>>> +	err = pm_runtime_get_sync(priv->device);
->>>> +	if (err) {
->>>> +		pm_runtime_put_noidle(priv->device);
->>>
->>> Why do you call this in case of an error?
->>
->> pm_runtime_get_sync() increments the usage count of the device before
->> any error is returned. This needs to be decremented using
->> pm_runtime_put_noidle().
-> 
-> Oh, I'm curious how many drivers don't get this right.
-> 
-> Marc
-> 
+What I have is a PCIe intel network card with phy, that is wired to a
+mv88e6240 switch. The network card is exposed as normal network device,
+so phy is enabled when the interface is brought up. The 'cpu' port
+for mv88e6240 has an integrated phy, that needs to be enabled.
+
+Your boards must be different, since mv88e6xxx is being reset during
+probe(). So even if the 'cpu' phy was enabled before driver probe(),
+it would be disabled afterwards.
+
+> But the way you are doing it is wrong. PHY_INTERFACE_MODE_NA means
+> something else has already setup the interface mode, leave it alone.
+
+Ok, I assumed, that PHY_INTERFACE_MODE_NA means "no explicit
+configuration found, use implicit configuration". E.g. for
+mv88e6xxx the downstream ports are not configured in DT, but
+their PHY is enabled.
+
+> PHY_INTERFACE_MODE_INTERNAL means there is some other sort of bus
+> between the MAC and the PHY than the normal MII.
+>=20
+> What you want to say is that there is a PHY on this port, and that you
+> want to configure it to a given fixed configuration, probably 1000
+> Full, with auto-neg turned off. This is something completely different
+> to a fixed phy, which is used when there is no PHY at all.
+
+That's why I put the new code into
+
+if (of_phy_is_fixed_link(...)) {
+    <<< old code >>>
+} else {
+    <<< new code >>>
+}
+
+I agree, that the function name dsa_port_fixed_link_register_of() is
+a bit confusing with the added code. I actually added this to
+dsa_cpu_dsa_setup() and with the rebase to current master it ended
+up there.
+
+> What state is the PHY in, if you don't have this patch? Is it powered
+> down?
+
+The phy is part of mv88e6240, which is being reset during probe.
+So the phy is powered down and DSA is not functional except for
+phy information of downstream ports. The PCIe network interface
+does not detect a carrier.
+
+-- Sebastian
+
+--yrkvtfmhvyj2maox
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlpM8ZUACgkQ2O7X88g7
++pr0KA/9HMqE9FxlW3x08nF3AaBKwVMqUhQCozcIdOQobmP1Rku7drLYugqpCk21
+iXSfswo0pOq6Y3cpYdn1NxKV5fTV6z5+YO0s58qATUVTP4iYWRJz3kqRqM7UHmim
+Ur2zT0Vmv3dl40rWno2Dy6V5HH6EgxrZKD3oz88CdKK8MKB7Q2OE38+qF/tQywNU
+0rueNVzMuolMZxqlENMFittBtIij9LO0uIMgWS094CFGioJMaZhbSAm+uPTR1zj+
+pGpuJ1RrIs0KLFD4y0rSe+AS20PFVC5/13d/6ipwHPtNmKTXBNW6QIEMPibOCQZe
+OCGvlFJE01HEtGLtCSl5Kr3d8ZqXbva3CyCG4Lg9gV9Ab1MhoOylYcahGZ3ynesA
+jePG4eZpL8I8ndm9o7KWrOjY8jhj4FiUGjzmcF1RuR24QczdjAtWkwjZtrPydXp5
+e9rVd8JyI6RNZTw026b4oeaQR4zsj7nFW4PYpTOy8s4AM1BcEBQvI5Gmx+oQQJua
+IKbYcpWEpK7JsDANngV/eoqmgWGeVGypxajKaDTt9x9OkLxjchgO4xY9eKWtDbh8
+WD55sO79HTd18KDRIEprUnt3gstZvugjTyIGt3nA0y5vsUnSWBCpjTy5hcsjOlRg
+1h0Q6Bu4+rdmYDWfxnQVwLcnNRtYQ41SVovebHDhNfM+otqpabA=
+=QeSc
+-----END PGP SIGNATURE-----
+
+--yrkvtfmhvyj2maox--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
