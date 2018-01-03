@@ -1,76 +1,80 @@
-From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Subject: [PATCHv1 1/6] net: dsa: Support internal phy on 'cpu' port
-Date: Wed,  3 Jan 2018 13:26:04 +0100
-Message-ID: <20180103122609.5482-2-sebastian.reichel@collabora.co.uk>
-References: <20180103122609.5482-1-sebastian.reichel@collabora.co.uk>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180103122609.5482-1-sebastian.reichel@collabora.co.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>, Vivien Didelot <vivien.didelot@savoirfairelinux.com>, Florian Fainelli <f.fainelli@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>
-Cc: Ian Ray <ian.ray@ge.com>, Nandor Han <nandor.han@ge.com>, Rob Herring <robh+dt@kernel.org>, "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+From: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>
+Subject: Re: [RFC v2 1/9] serdev: implement parity configuration
+Date: Wed, 3 Jan 2018 13:37:29 +0100
+Message-ID: <046E5A40-D66C-4965-B8D4-E5CE6B44571F@holtmann.org>
+References: <20180101204217.26165-1-martin.blumenstingl@googlemail.com>
+ <20180101204217.26165-2-martin.blumenstingl@googlemail.com>
+ <4FDCB65A-641A-4134-BAF1-4A777012FDE7@holtmann.org>
+ <CAFBinCCq9mYBhzoL1XBVQNGxALg8oK5GB7Md9HJf_mchEMu3-A@mail.gmail.com>
+ <CAFBinCD=iuE+ho22kihCFG=AJV5t+JtjRww8PLuq-cAJ2RkAHQ@mail.gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 11.2 \(3445.5.20\))
+Content-Type: text/plain;
+        charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAFBinCD=iuE+ho22kihCFG=AJV5t+JtjRww8PLuq-cAJ2RkAHQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "Gustavo F. Padovan" <gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org>, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Larry Finger <Larry.Finger-tQ5ms3gMjBLk1uMJSBkQmQ@public.gmane.org>, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>, Daniel Drake <drake-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>, ulrich.hecht+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This adds support for enabling the internal phy for a 'cpu' port.
-It has been tested on GE B850v3 and B650v3, which have a built-in
-MV88E6240 switch connected to a PCIe based network card. Without
-this patch the link does not come up and no traffic can be routed
-through the switch.
+Hi Martin,
 
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
----
- net/dsa/port.c | 26 ++++++++++++++++++++++----
- 1 file changed, 22 insertions(+), 4 deletions(-)
+>>>> Some Bluetooth modules (for example the ones found in Realtek RTL8723BS
+>>>> and RTL8723DS) want to communicate with the host with even parity
+>>>> enabled.
+>>>> Add a new function and the corresponding internal callbacks so parity
+>>>> can be configured. This supports enabling and disabling parity as well
+>>>> as setting the type to odd or even.
+>>>> 
+>>>> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+>>>> ---
+>>>> drivers/tty/serdev/core.c           | 12 ++++++++++++
+>>>> drivers/tty/serdev/serdev-ttyport.c | 21 +++++++++++++++++++++
+>>>> include/linux/serdev.h              |  5 +++++
+>>>> 3 files changed, 38 insertions(+)
+>>>> 
+>>>> diff --git a/drivers/tty/serdev/core.c b/drivers/tty/serdev/core.c
+>>>> index 1bef39828ca7..d327b02980f5 100644
+>>>> --- a/drivers/tty/serdev/core.c
+>>>> +++ b/drivers/tty/serdev/core.c
+>>>> @@ -225,6 +225,18 @@ void serdev_device_set_flow_control(struct serdev_device *serdev, bool enable)
+>>>> }
+>>>> EXPORT_SYMBOL_GPL(serdev_device_set_flow_control);
+>>>> 
+>>>> +void serdev_device_set_parity(struct serdev_device *serdev, bool enable,
+>>>> +                           bool odd)
+>>>> +{
+>>>> +     struct serdev_controller *ctrl = serdev->ctrl;
+>>>> +
+>>>> +     if (!ctrl || !ctrl->ops->set_parity)
+>>>> +             return;
+>>>> +
+>>>> +     ctrl->ops->set_parity(ctrl, enable, odd);
+>>>> +}
+>>>> +EXPORT_SYMBOL_GPL(serdev_device_set_parity);
+>>>> +
+>>> 
+>>> this really needs Rob’s ACK before I take the patch.
+>> sure
+>> 
+>> I could even live with a NACK in case these two bool parameters are
+>> considered to be ugly
+>> in that case I would propose an enum with three values: DISABLED,
+>> EVEN, ODD so the arguments would look like this:
+>> void serdev_device_set_parity(struct serdev_device *serdev, enum parity)
+> I just discovered: such a patch was already posted by Ulrich Hecht: [0]
+> 
+> 
+> [0] https://patchwork.kernel.org/patch/9903787/
 
-diff --git a/net/dsa/port.c b/net/dsa/port.c
-index bb4be2679904..f99c1d34416c 100644
---- a/net/dsa/port.c
-+++ b/net/dsa/port.c
-@@ -282,6 +282,10 @@ int dsa_port_fixed_link_register_of(struct dsa_port *dp)
- 	int mode;
- 	int err;
- 
-+	mode = of_get_phy_mode(dn);
-+	if (mode < 0)
-+		mode = PHY_INTERFACE_MODE_NA;
-+
- 	if (of_phy_is_fixed_link(dn)) {
- 		err = of_phy_register_fixed_link(dn);
- 		if (err) {
-@@ -292,10 +296,6 @@ int dsa_port_fixed_link_register_of(struct dsa_port *dp)
- 		}
- 
- 		phydev = of_phy_find_device(dn);
--
--		mode = of_get_phy_mode(dn);
--		if (mode < 0)
--			mode = PHY_INTERFACE_MODE_NA;
- 		phydev->interface = mode;
- 
- 		genphy_config_init(phydev);
-@@ -305,6 +305,24 @@ int dsa_port_fixed_link_register_of(struct dsa_port *dp)
- 			ds->ops->adjust_link(ds, port, phydev);
- 
- 		put_device(&phydev->mdio.dev);
-+	} else if (mode == PHY_INTERFACE_MODE_INTERNAL ||
-+		   mode == PHY_INTERFACE_MODE_NA) {
-+		phydev = mdiobus_get_phy(ds->slave_mii_bus, port);
-+		if (phydev) {
-+			genphy_config_init(phydev);
-+			genphy_resume(phydev);
-+			genphy_read_status(phydev);
-+
-+			if (ds->ops->adjust_link)
-+				ds->ops->adjust_link(ds, port, phydev);
-+
-+			dev_dbg(ds->dev, "enabled cpu port's phy: %s",
-+				phydev_name(phydev));
-+		} else {
-+			dev_warn(ds->dev, "cpu port has no internal phy and no fixed linked has been configured!");
-+		}
-+	} else {
-+		dev_err(ds->dev, "unsupported phy mode!");
- 	}
- 
- 	return 0;
--- 
-2.15.1
+any idea what the status of this one is? It would be good if we get an ACK from Rob and you just include it in your patch series. I do not see it currently in Linus’ tree or net-next. If it goes via a different path to Linus, we will have a bit of a problem getting this all merged for the next kernel.
+
+Regards
+
+Marcel
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
