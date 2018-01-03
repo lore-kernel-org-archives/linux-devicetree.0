@@ -1,72 +1,182 @@
-From: "'Kishon Vijay Abraham I' via linux-sunxi" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Subject: Re: [PATCH 1/6] phy: sun4i-usb: add support for R40 USB PHY
-Date: Wed, 3 Jan 2018 14:10:09 +0530
-Message-ID: <31c7fe42-5ee6-340c-bd03-1918e3d7710e@ti.com>
-References: <20171008042906.46779-1-icenowy@aosc.io>
- <20171018114219.lykghmhzve5yvhaa@flea.lan>
- <020a2b04-dbcc-032a-89d1-75479dd436e7@ti.com> <4846846.1ddJIksgpP@ice-x220i>
-Reply-To: kishon-l0cyMroinI0@public.gmane.org
+From: jacopo mondi <jacopo@jmondi.org>
+Subject: Re: [PATCH v2 1/9] dt-bindings: media: Add Renesas CEU bindings
+Date: Wed, 3 Jan 2018 09:49:52 +0100
+Message-ID: <20180103084952.GA9493@w540>
+References: <1514469681-15602-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1514469681-15602-2-git-send-email-jacopo+renesas@jmondi.org>
+ <6263435.xWGUCtEJC1@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCOOP4VF5IDRB6NNWLJAKGQESXNIRII-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <4846846.1ddJIksgpP@ice-x220i>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <6263435.xWGUCtEJC1@avalon>
+Sender: linux-media-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, magnus.damm@gmail.com, geert@glider.be, mchehab@kernel.org, hverkuil@xs4all.nl, robh+dt@kernel.org, mark.rutland@arm.com, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Laurent,
 
-On Saturday 30 December 2017 05:08 PM, Icenowy Zheng wrote:
-> =E5=9C=A8 2017=E5=B9=B410=E6=9C=8818=E6=97=A5=E6=98=9F=E6=9C=9F=E4=B8=89 =
-CST =E4=B8=8B=E5=8D=887:46:08=EF=BC=8CKishon Vijay Abraham I =E5=86=99=E9=
-=81=93=EF=BC=9A
->> On Wednesday 18 October 2017 05:12 PM, Maxime Ripard wrote:
->>> On Wed, Oct 18, 2017 at 05:09:00PM +0530, Kishon Vijay Abraham I wrote:
->>>> Hi,
->>>>
->>>> On Tuesday 10 October 2017 02:28 AM, Maxime Ripard wrote:
->>>>> On Sun, Oct 08, 2017 at 04:29:01AM +0000, Icenowy Zheng wrote:
->>>>>> Allwinner R40 features a USB PHY like the one in A64, but with 3 PHY=
-s.
->>>>>>
->>>>>> Add support for it.
->>>>>>
->>>>>> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
->>>>>
->>>>> Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->>>>
->>>> Is this patch good to be merged? I see you have pending comments on th=
-e
->>>> other patch in the series.
->>>
->>> Yeah, but I guess you can merge this one, it's pretty harmless, and it
->>> will reduce the amount of patches to review / merge later on.
->>
->> Thank you for the quick reply.
->>
->> merged with Maxime's and Rob's Ack.
->=20
-> Sorry, but I didn't see the patch appears in linux-next for such long tim=
-e.
->=20
-> Is it lost?
+On Tue, Jan 02, 2018 at 01:45:30PM +0200, Laurent Pinchart wrote:
+> Hi Jacopo,
+>
+> Thank you for the patch.
+>
+> On Thursday, 28 December 2017 16:01:13 EET Jacopo Mondi wrote:
+> > Add bindings documentation for Renesas Capture Engine Unit (CEU).
+> >
+> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> > ---
+> >  .../devicetree/bindings/media/renesas,ceu.txt      | 85 +++++++++++++++++++
+> >  1 file changed, 85 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/media/renesas,ceu.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/media/renesas,ceu.txt
+> > b/Documentation/devicetree/bindings/media/renesas,ceu.txt new file mode
+> > 100644
+> > index 0000000..f45628e
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/media/renesas,ceu.txt
+> > @@ -0,0 +1,85 @@
+> > +Renesas Capture Engine Unit (CEU)
+> > +----------------------------------------------
+> > +
+> > +The Capture Engine Unit is the image capture interface found on Renesas
+> > +RZ chip series and on SH Mobile ones.
+>
+> "ones" sound a bit weird. How about "... found in the Renesas SH Mobil and RZ
+> SoCs." ?
+>
+> > +The interface supports a single parallel input with data bus width up to
+> > +8/16 bits.
+>
+> What do you mean by "up to 8/16 bits" ?
 
-yeah, looks like it. Can you post it again?
-sorry about that :-/
+The input bus width can be 8 or 16 bit.
+
+On a general note: I always assumed DT bindings should describe the
+hardware capabilities. In this case the hardware supports 8 or 16 bits
+as input width, but the driver only cares about the 8 bits case. Which
+one should I describe here?
+
+I will fix all of yours and Geert's remarks in V3.
 
 Thanks
-Kishon
+   j
+>
+> > +Required properties:
+> > +- compatible
+> > +	Must be one of:
+> > +	- "renesas,ceu"
+> > +	- "renesas,r7s72100-ceu"
+>
+> This is unclear, as Geert pointed out renesas,ceu sounds like a fallback. I
+> think this could be clarified if you explained how you plan to support other
+> SoCs (in particular the SH Mobile series, when/if it will receive DT support).
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+
+>
+> > +- reg
+> > +	Physical address base and size.
+>
+> The standard practice, if I'm not mistaken, is to document properties with the
+> description starting on the same line as the property name.
+>
+> - reg: Physical address base and size.
+>
+> And nitpicking again, I'd write "register" instead of "physical" to clarify
+> what the properties contains (even if its name should make it clear).
+>
+> > +- interrupts
+> > +	The interrupt specifier.
+> > +- pinctrl-names, pinctrl-0
+> > +	phandle of pin controller sub-node configuring pins for CEU operations.
+>
+> pinctrl-names isn't a phandle. If you want to document those properties (not
+> all DT bindings do, I'm not sure what is best) you should document them both,
+> possibly on two separate lines. There are plenty of examples in the upstream
+> DT bindings.
+>
+> > +- remote-endpoint
+> > +	phandle to an 'endpoint' subnode of a remote device node.
+>
+> As Geert pointed out this isn't a top-level property. I wouldn't document it
+> as such, but instead reference Documentation/devicetree/bindings/media/video-
+> interfaces.txt (see Documentation/devicetree/bindings/display/renesas,du.txt
+> or Documentation/devicetree/bindings/media/renesas,drif.txt for examples).
+>
+> > +CEU supports a single parallel input and should contain a single 'port'
+>
+> s/CEU/The CEU/
+>
+> > subnode
+> > +with a single 'endpoint'. Optional endpoint properties applicable to
+> > parallel
+> > +input bus described in "video-interfaces.txt" supported by this driver are:
+> > +
+> > +- hsync-active
+> > +	active state of the HSYNC signal, 0/1 for LOW/HIGH respectively.
+> > +- vsync-active
+> > +	active state of the VSYNC signal, 0/1 for LOW/HIGH respectively.
+> > +
+> > +Example:
+> > +
+> > +The example describes the connection between the Capture Engine Unit and an
+> > +OV7670 image sensor sitting on bus i2c1.
+>
+> Maybe s/sitting on/connected to/ ?
+>
+> > +ceu: ceu@e8210000 {
+> > +	reg = <0xe8210000 0x209c>;
+> > +	compatible = "renesas,ceu";
+> > +	interrupts = <GIC_SPI 332 IRQ_TYPE_LEVEL_HIGH>;
+> > +
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&vio_pins>;
+> > +
+> > +	status = "okay";
+> > +
+> > +	port {
+> > +		ceu_in: endpoint {
+> > +			remote-endpoint = <&ov7670_out>;
+> > +
+> > +			hsync-active = <1>;
+> > +			vsync-active = <0>;
+> > +		};
+> > +	};
+> > +};
+> > +
+> > +i2c1: i2c@fcfee400 {
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&i2c1_pins>;
+> > +
+> > +	status = "okay";
+> > +
+> > +	clock-frequency = <100000>;
+> > +
+> > +	ov7670: camera@21 {
+> > +		compatible = "ovti,ov7670";
+> > +		reg = <0x21>;
+> > +
+> > +		pinctrl-names = "default";
+> > +		pinctrl-0 = <&vio_pins>;
+> > +
+> > +		reset-gpios = <&port3 11 GPIO_ACTIVE_LOW>;
+> > +		powerdown-gpios = <&port3 12 GPIO_ACTIVE_HIGH>;
+> > +
+> > +		port {
+> > +			ov7670_out: endpoint {
+> > +				remote-endpoint = <&ceu_in>;
+> > +
+> > +				hsync-active = <1>;
+> > +				vsync-active = <0>;
+> > +			};
+> > +		};
+> > +	};
+> > +};
+>
+> --
+> Regards,
+>
+> Laurent Pinchart
+>
