@@ -1,110 +1,83 @@
-From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Subject: Re: [PATCHv1 3/6] ARM: dts: imx6q-bx50v3: Add internal switch
-Date: Wed, 3 Jan 2018 16:24:52 +0100
-Message-ID: <20180103152452.4lqrjxyxkfqlsnsu@earth.universe>
-References: <20180103122609.5482-1-sebastian.reichel@collabora.co.uk>
- <20180103122609.5482-4-sebastian.reichel@collabora.co.uk>
- <5c87f610-4927-faca-40a7-3f83e7f00ff7@cogentembedded.com>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCHv5 2/3] net: socionext: Add Synquacer NetSec driver
+Date: Wed, 03 Jan 2018 10:35:46 -0500 (EST)
+Message-ID: <20180103.103546.528269429969753470.davem@davemloft.net>
+References: <1514783559-4226-1-git-send-email-jassisinghbrar@gmail.com>
+        <1514783689-4352-1-git-send-email-jassisinghbrar@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="aqwwgutstbzkrv5g"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5c87f610-4927-faca-40a7-3f83e7f00ff7@cogentembedded.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Vivien Didelot <vivien.didelot@savoirfairelinux.com>, Florian Fainelli <f.fainelli@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Ian Ray <ian.ray@ge.com>, Nandor Han <nandor.han@ge.com>, Rob Herring <robh+dt@kernel.org>, "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1514783689-4352-1-git-send-email-jassisinghbrar@gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: jassisinghbrar@gmail.com
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, arnd.bergmann@linaro.org, andrew@lunn.ch, ard.biesheuvel@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, masami.hiramatsu@linaro.org, jaswinder.singh@linaro.org
 List-Id: devicetree@vger.kernel.org
 
+From: jassisinghbrar@gmail.com
+Date: Mon,  1 Jan 2018 10:44:49 +0530
 
---aqwwgutstbzkrv5g
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> +#define DRING_TAIL(r)		((r)->tail)
+> +
+> +#define DRING_HEAD(r)		((r)->head)
 
-Hi,
+These macros do not help readability at all.
 
-On Wed, Jan 03, 2018 at 05:48:42PM +0300, Sergei Shtylyov wrote:
-> Hello!
->=20
-> On 01/03/2018 03:26 PM, Sebastian Reichel wrote:
->=20
-> > B850v3, B650v3 and B450v3 all have a GPIO bit banged MDIO bus to
-> > communicate with a Marvell switch. On all devices the switch is
-> > connected to a PCI based network card, which needs to be referenced
-> > by DT, so this also adds the common PCI root node.
-> >=20
-> > Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-> > ---
-> >   arch/arm/boot/dts/imx6q-bx50v3.dtsi | 37 ++++++++++++++++++++++++++++=
-+++++++++
-> >   1 file changed, 37 insertions(+)
-> >=20
-> > diff --git a/arch/arm/boot/dts/imx6q-bx50v3.dtsi b/arch/arm/boot/dts/im=
-x6q-bx50v3.dtsi
-> > index b915837bbb5f..689981e90e68 100644
-> > --- a/arch/arm/boot/dts/imx6q-bx50v3.dtsi
-> > +++ b/arch/arm/boot/dts/imx6q-bx50v3.dtsi
-> > @@ -92,6 +92,31 @@
-> >   		mux-int-port =3D <1>;
-> >   		mux-ext-port =3D <4>;
-> >   	};
-> > +
-> > +	aliases {
-> > +		mdio-gpio0 =3D &mdio0;
-> > +	};
-> > +
-> > +	mdio0: mdio-gpio {
-> > +		compatible =3D "virtual,mdio-gpio";
-> > +		gpios =3D <&gpio2 5 GPIO_ACTIVE_HIGH>, /* mdc */
-> > +			<&gpio2 7 GPIO_ACTIVE_HIGH>; /* mdio */
-> > +
-> > +		#address-cells =3D <1>;
-> > +		#size-cells =3D <0>;
-> > +
-> > +		switch@0 {
-> > +				compatible =3D "marvell,mv88e6240";
->=20
->    Why suddenly 2 extra tabs instead of 1?
+> +#define MOVE_TAIL(r)		do { \
+> +					if (++(r)->tail == DESC_NUM) \
+> +						(r)->tail = 0; \
+> +				} while (0)
+> +
+> +#define MOVE_HEAD(r)		do { \
+> +					if (++(r)->head == DESC_NUM) \
+> +						(r)->head = 0; \
+> +				} while (0)
+> +
+> +#define JUMP_HEAD(r, n)	do { \
+> +					int i; \
+> +					for (i = 0; i < (n); i++) \
+> +						MOVE_HEAD(r); \
+> +				} while (0)
 
-will be fixed in PATCHv2.
+Neither do these.
 
-> > +				#address-cells =3D <1>;
-> > +				#size-cells =3D <0>;
-> > +				reg =3D <0>;
-> > +
-> > +				switch_ports: ports {
-> > +					#address-cells =3D <1>;
-> > +					#size-cells =3D <0>;
-> > +				};
-> > +		};
-> > +	};
-> >   };
-> >   &ecspi5 {
-> [...]
->=20
-> MBR, Sergei
+And JUMP_HEAD is so inefficient, it's a constant time calculation:
 
--- Sebastian
+	r->head += n;
+	if (r->head >= DESC_NUM)
+		r->head -= DESC_NUM;
 
---aqwwgutstbzkrv5g
-Content-Type: application/pgp-signature; name="signature.asc"
+All of this stuff can be done inline without all of these CPP macros
+which are discouraged, have multiple evaluation issues, and decrease
+the amount of type checking going on.
 
------BEGIN PGP SIGNATURE-----
+If you absolutely must have helpers, use static functions (without
+the inline keyword, let the compiler device).
 
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlpM9bwACgkQ2O7X88g7
-+prQdw//RySyNtqMD+yxuCYLpWRUGYBf2vF5c/Qsb2m6y25S3inAsVTrpxiriUEg
-69Mzg10Lm+hiyj0bN+cmLFKjIWpZjqq+Ko13rbM4kWWvgrwFDg5ZDmGV1QqbNBBI
-+VRda1Q5m1O4ykzAnR3+dcOm8GqK//k8emPg9WGrcjqAgpb/tYgFdabfUM0j9oIs
-YILq42ctXo42Dm+XSPuYmMoC3u4JeMLYpYkNbiBMQIM6wYeExgkEoAJr86LzzCIK
-piReLGFKkZ3lk2MhB074SGCExPqvVuXNdpQ9YV6nVgXPrfbJQc6rKbhj2Z96z/Ts
-cTqV4KGPENUY13SIzvnEri2O6+y0xBmUgnseHQ0rn+/0cSXfBEVEc6OZxonfuYIU
-Zwtg2Pi6P10m+HE80Iayj0H3qjtvohHJ5bHHYa9AioF8E8o0Z4R8cqJyuHwLyNyY
-IoTw07l4ncL7P8H+iUazSQVr2b6WX1CkeD07y7V56NsOm1/LPUZirOCIZzWdfebN
-LOGGYmsEMCxFMGZQw6S71dZyFYOt5QGkyu6z7OH26yIUzTzN/CLvOv7qUntqkD86
-uOand1gdidtSXgKPboa6KjkteICrrg5kmui81JYX4VAt/RMQPhH4pOKd49PU98xO
-NvrVAbyXGi7OLMpblWxn4Gw2veq49PzMDGIhTPRzYWrGpawYy9s=
-=O28n
------END PGP SIGNATURE-----
+> +static inline int available_descs(struct netsec_desc_ring *r)
 
---aqwwgutstbzkrv5g--
+No inline functions in foo.c files, let the compiler device.
+
+> +/*************************************************************/
+> +/*********************** NETDEV_OPS **************************/
+> +/*************************************************************/
+
+Please, comments are not billboards or Star Wars openning sequences.
+Simplify this, thank you.
+
+> +
+> +static void netsec_set_tx_de(struct netsec_priv *priv,
+> +			     struct netsec_desc_ring *dring,
+> +			     const struct netsec_tx_pkt_ctrl *tx_ctrl,
+> +			     const struct netsec_desc *desc,
+> +			     struct sk_buff *skb)
+> +{
+> +	struct netsec_de *de;
+> +	int idx = DRING_HEAD(dring);
+> +	u32 attr;
+
+Please order local variables from longest to shortest line.
+
+Please audit your entire submission for this issue.
+
+Thank you.
