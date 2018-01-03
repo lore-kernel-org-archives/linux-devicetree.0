@@ -1,98 +1,90 @@
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Subject: Re: [PATCHv5 1/3] dt-bindings: net: Add DT bindings for Socionext Netsec
-Date: Wed, 3 Jan 2018 21:37:40 +0000
-Message-ID: <CAKv+Gu9Pk_WEOrWZdVK5ty9GaDm4ApvGeksu_6W5DcF0-SOUuA@mail.gmail.com>
-References: <1514783559-4226-1-git-send-email-jassisinghbrar@gmail.com> <1514783660-4290-1-git-send-email-jassisinghbrar@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] of/fdt: Fix #ifdef dependency of early flattree
+ declarations
+Date: Wed, 3 Jan 2018 15:41:20 -0600
+Message-ID: <20180103214120.jyeq64pe65zfr4fw@rob-hp-laptop>
+References: <1514888297-10791-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1514783660-4290-1-git-send-email-jassisinghbrar@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Jassi Brar <jassisinghbrar@gmail.com>
-Cc: "<netdev@vger.kernel.org>" <netdev@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, "David S. Miller" <davem@davemloft.net>, Arnd Bergmann <arnd.bergmann@linaro.org>, Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1514888297-10791-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Frank Rowand <frowand.list@gmail.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jassi,
-
-On 1 January 2018 at 05:14,  <jassisinghbrar@gmail.com> wrote:
-> From: Jassi Brar <jassisinghbrar@gmail.com>
->
-> This patch adds documentation for Device-Tree bindings for the
-> Socionext NetSec Controller driver.
->
-> Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
-> Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+On Tue, Jan 02, 2018 at 11:18:17AM +0100, Geert Uytterhoeven wrote:
+> If OF_FLATTREE=y, but OF_EARLY_FLATTREE=n:
+> 
+>     drivers/tty/serial/earlycon.o: In function `param_setup_earlycon':
+>     earlycon.c:(.init.text+0x3a4): undefined reference to `early_init_dt_scan_chosen_stdout'
+> 
+> Fix this by moving the early flattree forward declarations and dummy
+> implementations inside an #ifdef CONFIG_OF_EARLY_FLATTREE block.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 > ---
->  .../devicetree/bindings/net/socionext-netsec.txt   | 53 ++++++++++++++++++++++
->  1 file changed, 53 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/socionext-netsec.txt
->
-> diff --git a/Documentation/devicetree/bindings/net/socionext-netsec.txt b/Documentation/devicetree/bindings/net/socionext-netsec.txt
-> new file mode 100644
-> index 0000000..b70e35b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/socionext-netsec.txt
-> @@ -0,0 +1,53 @@
-> +* Socionext NetSec Ethernet Controller IP
-> +
-> +Required properties:
-> +- compatible: Should be "socionext,synquacer-netsec"
-> +- reg: Address and length of the control register area, followed by the
-> +       address and length of the EEPROM holding the MAC address and
-> +       microengine firmware
-> +- interrupts: Should contain ethernet controller interrupt
-> +- clocks: phandle to the PHY reference clock
-> +- clock-names: Should be "phy_ref_clk"
+> Seen after forcing OF_FLATTREE=y on sparc64 allmodconfig
+> (Hi, out-of-tree OF_CONFIGFS!).
 
-If clock-names is mandatory now even when only a single clock is
-specified, you should add it to the example as well. However, please
-be aware that hardware has shipped now with DT images that specify a
-only a single clock and no clock-names property: those will require a
-firmware upgrade before they can use this version of the driver.
+Humm, making FDT actually work with a PDT based system is probably more 
+work...
 
-> +- phy-mode: See ethernet.txt file in the same directory
-> +- phy-handle: See ethernet.txt in the same directory.
+Then again, I guess it could be completely independent like DT overlays 
+on an ACPI system. Though that needs some work too to actually be 
+useful. Primarily, how to anchor overlays to devices on discoverable 
+buses (or discovered by a mechanism other than FDT). 
+
+> ---
+>  include/linux/of_fdt.h | 14 +++++++++-----
+>  1 file changed, 9 insertions(+), 5 deletions(-)
+> 
+> diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
+> index 013c5418aeecfdbd..d81a26df46bb6250 100644
+> --- a/include/linux/of_fdt.h
+> +++ b/include/linux/of_fdt.h
+> @@ -47,6 +47,13 @@ extern void *initial_boot_params;
+>  extern char __dtb_start[];
+>  extern char __dtb_end[];
+>  
+> +/* Other Prototypes */
+> +extern void early_init_devtree(void *);
+> +extern void early_get_first_memblock_info(void *, phys_addr_t *);
+
+Seems like these 2 should be in the ifdef?
+
+> +extern u64 of_flat_dt_translate_address(unsigned long node);
+> +extern void of_fdt_limit_memory(int limit);
 > +
-> +- mdio device tree subnode: When the Netsec has a phy connected to its local
-> +               mdio, there must be device tree subnode with the following
-> +               required properties:
-> +
-> +       - #address-cells: Must be <1>.
-> +       - #size-cells: Must be <0>.
-> +
-> +       For each phy on the mdio bus, there must be a node with the following
-> +       fields:
-> +       - compatible: Refer to phy.txt
-> +       - reg: phy id used to communicate to phy.
-> +
-> +Optional properties: (See ethernet.txt file in the same directory)
-> +- dma-coherent: Boolean property, must only be present if memory
-> +       accesses performed by the device are cache coherent.
-> +- local-mac-address: See ethernet.txt in the same directory.
-> +- mac-address: See ethernet.txt in the same directory.
-> +- max-speed: See ethernet.txt in the same directory.
-> +- max-frame-size: See ethernet.txt in the same directory.
-> +
-> +Example:
-> +       eth0: ethernet@522d0000 {
-> +               compatible = "socionext,synquacer-netsec";
-> +               reg = <0 0x522d0000 0x0 0x10000>, <0 0x10000000 0x0 0x10000>;
-> +               interrupts = <GIC_SPI 176 IRQ_TYPE_LEVEL_HIGH>;
-> +               clocks = <&clk_netsec>;
-> +               phy-mode = "rgmii";
-> +               max-speed = <1000>;
-> +               max-frame-size = <9000>;
-> +               phy-handle = <&phy1>;
-> +
-> +               mdio {
-> +                       #address-cells = <1>;
-> +                       #size-cells = <0>;
-> +                       phy1: ethernet-phy@1 {
-> +                               compatible = "ethernet-phy-ieee802.3-c22";
-> +                               reg = <1>;
-> +                       };
-> +               };
-> +       };
-> --
+> +#ifdef CONFIG_OF_EARLY_FLATTREE
+>  /* For scanning the flat device-tree at boot time */
+>  extern int of_scan_flat_dt(int (*it)(unsigned long node, const char *uname,
+>  				     int depth, void *data),
+> @@ -95,17 +102,14 @@ extern const void *of_flat_dt_match_machine(const void *default_match,
+>  /* Other Prototypes */
+>  extern void unflatten_device_tree(void);
+>  extern void unflatten_and_copy_device_tree(void);
+> -extern void early_init_devtree(void *);
+> -extern void early_get_first_memblock_info(void *, phys_addr_t *);
+> -extern u64 of_flat_dt_translate_address(unsigned long node);
+> -extern void of_fdt_limit_memory(int limit);
+> -#else /* CONFIG_OF_FLATTREE */
+> +#else /* CONFIG_OF_EARLY_FLATTREE */
+>  static inline int early_init_dt_scan_chosen_stdout(void) { return -ENODEV; }
+>  static inline void early_init_fdt_scan_reserved_mem(void) {}
+>  static inline void early_init_fdt_reserve_self(void) {}
+>  static inline const char *of_flat_dt_get_machine_name(void) { return NULL; }
+>  static inline void unflatten_device_tree(void) {}
+>  static inline void unflatten_and_copy_device_tree(void) {}
+> +#endif /* CONFIG_OF_EARLY_FLATTREE */
+>  #endif /* CONFIG_OF_FLATTREE */
+>  
+>  #endif /* __ASSEMBLY__ */
+> -- 
 > 2.7.4
->
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
