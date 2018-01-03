@@ -1,182 +1,75 @@
-From: jacopo mondi <jacopo@jmondi.org>
-Subject: Re: [PATCH v2 1/9] dt-bindings: media: Add Renesas CEU bindings
-Date: Wed, 3 Jan 2018 09:49:52 +0100
-Message-ID: <20180103084952.GA9493@w540>
-References: <1514469681-15602-1-git-send-email-jacopo+renesas@jmondi.org>
- <1514469681-15602-2-git-send-email-jacopo+renesas@jmondi.org>
- <6263435.xWGUCtEJC1@avalon>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <6263435.xWGUCtEJC1@avalon>
-Sender: linux-media-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, magnus.damm@gmail.com, geert@glider.be, mchehab@kernel.org, hverkuil@xs4all.nl, robh+dt@kernel.org, mark.rutland@arm.com, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Icenowy Zheng <icenowy@aosc.io>
+Subject: [PATCH RESEND] phy: sun4i-usb: add support for R40 USB PHY
+Date: Wed,  3 Jan 2018 16:49:44 +0800
+Message-ID: <20180103084944.3145-1-icenowy@aosc.io>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, Icenowy Zheng <icenowy@aosc.io>
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
+Allwinner R40 features a USB PHY like the one in A64, but with 3 PHYs.
 
-On Tue, Jan 02, 2018 at 01:45:30PM +0200, Laurent Pinchart wrote:
-> Hi Jacopo,
->
-> Thank you for the patch.
->
-> On Thursday, 28 December 2017 16:01:13 EET Jacopo Mondi wrote:
-> > Add bindings documentation for Renesas Capture Engine Unit (CEU).
-> >
-> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> > ---
-> >  .../devicetree/bindings/media/renesas,ceu.txt      | 85 +++++++++++++++++++
-> >  1 file changed, 85 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/media/renesas,ceu.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/media/renesas,ceu.txt
-> > b/Documentation/devicetree/bindings/media/renesas,ceu.txt new file mode
-> > 100644
-> > index 0000000..f45628e
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/media/renesas,ceu.txt
-> > @@ -0,0 +1,85 @@
-> > +Renesas Capture Engine Unit (CEU)
-> > +----------------------------------------------
-> > +
-> > +The Capture Engine Unit is the image capture interface found on Renesas
-> > +RZ chip series and on SH Mobile ones.
->
-> "ones" sound a bit weird. How about "... found in the Renesas SH Mobil and RZ
-> SoCs." ?
->
-> > +The interface supports a single parallel input with data bus width up to
-> > +8/16 bits.
->
-> What do you mean by "up to 8/16 bits" ?
+Add support for it.
 
-The input bus width can be 8 or 16 bit.
+Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+When resending, the ACK's by Maxime and Rob are added.
 
-On a general note: I always assumed DT bindings should describe the
-hardware capabilities. In this case the hardware supports 8 or 16 bits
-as input width, but the driver only cares about the 8 bits case. Which
-one should I describe here?
+ Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt |  1 +
+ drivers/phy/allwinner/phy-sun4i-usb.c                   | 12 ++++++++++++
+ 2 files changed, 13 insertions(+)
 
-I will fix all of yours and Geert's remarks in V3.
-
-Thanks
-   j
->
-> > +Required properties:
-> > +- compatible
-> > +	Must be one of:
-> > +	- "renesas,ceu"
-> > +	- "renesas,r7s72100-ceu"
->
-> This is unclear, as Geert pointed out renesas,ceu sounds like a fallback. I
-> think this could be clarified if you explained how you plan to support other
-> SoCs (in particular the SH Mobile series, when/if it will receive DT support).
-
-
->
-> > +- reg
-> > +	Physical address base and size.
->
-> The standard practice, if I'm not mistaken, is to document properties with the
-> description starting on the same line as the property name.
->
-> - reg: Physical address base and size.
->
-> And nitpicking again, I'd write "register" instead of "physical" to clarify
-> what the properties contains (even if its name should make it clear).
->
-> > +- interrupts
-> > +	The interrupt specifier.
-> > +- pinctrl-names, pinctrl-0
-> > +	phandle of pin controller sub-node configuring pins for CEU operations.
->
-> pinctrl-names isn't a phandle. If you want to document those properties (not
-> all DT bindings do, I'm not sure what is best) you should document them both,
-> possibly on two separate lines. There are plenty of examples in the upstream
-> DT bindings.
->
-> > +- remote-endpoint
-> > +	phandle to an 'endpoint' subnode of a remote device node.
->
-> As Geert pointed out this isn't a top-level property. I wouldn't document it
-> as such, but instead reference Documentation/devicetree/bindings/media/video-
-> interfaces.txt (see Documentation/devicetree/bindings/display/renesas,du.txt
-> or Documentation/devicetree/bindings/media/renesas,drif.txt for examples).
->
-> > +CEU supports a single parallel input and should contain a single 'port'
->
-> s/CEU/The CEU/
->
-> > subnode
-> > +with a single 'endpoint'. Optional endpoint properties applicable to
-> > parallel
-> > +input bus described in "video-interfaces.txt" supported by this driver are:
-> > +
-> > +- hsync-active
-> > +	active state of the HSYNC signal, 0/1 for LOW/HIGH respectively.
-> > +- vsync-active
-> > +	active state of the VSYNC signal, 0/1 for LOW/HIGH respectively.
-> > +
-> > +Example:
-> > +
-> > +The example describes the connection between the Capture Engine Unit and an
-> > +OV7670 image sensor sitting on bus i2c1.
->
-> Maybe s/sitting on/connected to/ ?
->
-> > +ceu: ceu@e8210000 {
-> > +	reg = <0xe8210000 0x209c>;
-> > +	compatible = "renesas,ceu";
-> > +	interrupts = <GIC_SPI 332 IRQ_TYPE_LEVEL_HIGH>;
-> > +
-> > +	pinctrl-names = "default";
-> > +	pinctrl-0 = <&vio_pins>;
-> > +
-> > +	status = "okay";
-> > +
-> > +	port {
-> > +		ceu_in: endpoint {
-> > +			remote-endpoint = <&ov7670_out>;
-> > +
-> > +			hsync-active = <1>;
-> > +			vsync-active = <0>;
-> > +		};
-> > +	};
-> > +};
-> > +
-> > +i2c1: i2c@fcfee400 {
-> > +	pinctrl-names = "default";
-> > +	pinctrl-0 = <&i2c1_pins>;
-> > +
-> > +	status = "okay";
-> > +
-> > +	clock-frequency = <100000>;
-> > +
-> > +	ov7670: camera@21 {
-> > +		compatible = "ovti,ov7670";
-> > +		reg = <0x21>;
-> > +
-> > +		pinctrl-names = "default";
-> > +		pinctrl-0 = <&vio_pins>;
-> > +
-> > +		reset-gpios = <&port3 11 GPIO_ACTIVE_LOW>;
-> > +		powerdown-gpios = <&port3 12 GPIO_ACTIVE_HIGH>;
-> > +
-> > +		port {
-> > +			ov7670_out: endpoint {
-> > +				remote-endpoint = <&ceu_in>;
-> > +
-> > +				hsync-active = <1>;
-> > +				vsync-active = <0>;
-> > +			};
-> > +		};
-> > +	};
-> > +};
->
-> --
-> Regards,
->
-> Laurent Pinchart
->
+diff --git a/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt b/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
+index c1ce5a0a652e..07ca4ec4a745 100644
+--- a/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
++++ b/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
+@@ -11,6 +11,7 @@ Required properties:
+   * allwinner,sun8i-a33-usb-phy
+   * allwinner,sun8i-a83t-usb-phy
+   * allwinner,sun8i-h3-usb-phy
++  * allwinner,sun8i-r40-usb-phy
+   * allwinner,sun8i-v3s-usb-phy
+   * allwinner,sun50i-a64-usb-phy
+ - reg : a list of offset + length pairs
+diff --git a/drivers/phy/allwinner/phy-sun4i-usb.c b/drivers/phy/allwinner/phy-sun4i-usb.c
+index aa857be692cf..bee798892b21 100644
+--- a/drivers/phy/allwinner/phy-sun4i-usb.c
++++ b/drivers/phy/allwinner/phy-sun4i-usb.c
+@@ -112,6 +112,7 @@ enum sun4i_usb_phy_type {
+ 	sun8i_a33_phy,
+ 	sun8i_a83t_phy,
+ 	sun8i_h3_phy,
++	sun8i_r40_phy,
+ 	sun8i_v3s_phy,
+ 	sun50i_a64_phy,
+ };
+@@ -919,6 +920,16 @@ static const struct sun4i_usb_phy_cfg sun8i_h3_cfg = {
+ 	.phy0_dual_route = true,
+ };
+ 
++static const struct sun4i_usb_phy_cfg sun8i_r40_cfg = {
++	.num_phys = 3,
++	.type = sun8i_r40_phy,
++	.disc_thresh = 3,
++	.phyctl_offset = REG_PHYCTL_A33,
++	.dedicated_clocks = true,
++	.enable_pmu_unk1 = true,
++	.phy0_dual_route = true,
++};
++
+ static const struct sun4i_usb_phy_cfg sun8i_v3s_cfg = {
+ 	.num_phys = 1,
+ 	.type = sun8i_v3s_phy,
+@@ -948,6 +959,7 @@ static const struct of_device_id sun4i_usb_phy_of_match[] = {
+ 	{ .compatible = "allwinner,sun8i-a33-usb-phy", .data = &sun8i_a33_cfg },
+ 	{ .compatible = "allwinner,sun8i-a83t-usb-phy", .data = &sun8i_a83t_cfg },
+ 	{ .compatible = "allwinner,sun8i-h3-usb-phy", .data = &sun8i_h3_cfg },
++	{ .compatible = "allwinner,sun8i-r40-usb-phy", .data = &sun8i_r40_cfg },
+ 	{ .compatible = "allwinner,sun8i-v3s-usb-phy", .data = &sun8i_v3s_cfg },
+ 	{ .compatible = "allwinner,sun50i-a64-usb-phy",
+ 	  .data = &sun50i_a64_cfg},
+-- 
+2.14.2
