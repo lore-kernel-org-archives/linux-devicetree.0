@@ -1,76 +1,95 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 32/39] dt-bindings: nds32 L2 cache controller Bindings
-Date: Wed, 3 Jan 2018 15:10:13 -0600
-Message-ID: <20180103211013.daryfidm7hdbrsjc@rob-hp-laptop>
-References: <cover.1514874857.git.green.hu@gmail.com>
- <fc1f58a97003b4bedfbb8b6e3d29b1628ff61f9a.1514874858.git.green.hu@gmail.com>
+From: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
+Subject: Re: [PATCH v2 0/9] PCI: Add support to the Cadence PCIe controller
+Date: Wed, 3 Jan 2018 22:22:17 +0100
+Message-ID: <cfba420c-4b2e-c6d0-f708-336a2107f5b7@free-electrons.com>
+References: <cover.1513620412.git.cyrille.pitchen@free-electrons.com>
+ <d30e0abe-8b08-b2bf-8410-e0fc2b18cacc@ti.com>
+ <27684b50-ff08-5238-4cb0-8bc4431211bf@free-electrons.com>
+ <d170202a-4860-7ff5-a6a3-df696ce23729@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <fc1f58a97003b4bedfbb8b6e3d29b1628ff61f9a.1514874858.git.green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greentime Hu <green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: greentime-MUIXKm3Oiri1Z/+hSey0Gg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, deanbo422-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, viro-RmSDqhL/yNMiFSDQTTA3OLVCufUGDwFn@public.gmane.org, dhowells-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, geert.uytterhoeven-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, greg-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org, ren_guo-Y+KPrCd2zL4AvxtiuMwx3w@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, jonas-A9uVI2HLR7kOP4wsBPIw7w@public.gmane.org, stefan.kristiansson-MbMCFXIvDHJFcC0YU169RA@public.gmane.org, shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <d170202a-4860-7ff5-a6a3-df696ce23729@ti.com>
+Content-Language: en-US
+Sender: linux-pci-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>, bhelgaas@google.com, lorenzo.pieralisi@arm.com, linux-pci@vger.kernel.org
+Cc: adouglas@cadence.com, stelford@cadence.com, dgary@cadence.com, kgopi@cadence.com, eandrews@cadence.com, thomas.petazzoni@free-electrons.com, sureshp@cadence.com, nsekhar@ti.com, linux-kernel@vger.kernel.org, robh@kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 02, 2018 at 04:25:04PM +0800, Greentime Hu wrote:
-> From: Greentime Hu <greentime-MUIXKm3Oiri1Z/+hSey0Gg@public.gmane.org>
-> 
-> This patch adds nds32 L2 cache controller binding documents.
-> 
-> Signed-off-by: Greentime Hu <greentime-MUIXKm3Oiri1Z/+hSey0Gg@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/nds32/atl2c.txt |   29 +++++++++++++++++++++
->  1 file changed, 29 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/nds32/atl2c.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/nds32/atl2c.txt b/Documentation/devicetree/bindings/nds32/atl2c.txt
-> new file mode 100644
-> index 0000000..db9f7ec
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/nds32/atl2c.txt
-> @@ -0,0 +1,29 @@
-> +* Andestech L2 cache Controller
-> +
-> +The level-2 cache controller plays an important role in reducing memory latency
-> +for high performance systems, such as thoese designs with AndesCore processors.
-> +Level-2 cache controller in general enhances overall system performance
-> +signigicantly and the system power consumption might be reduced as well by
-> +reducing DRAM accesses.
-> +
-> +This binding specifies what properties must be available in the device tree
-> +representation of an Andestech L2 cache controller.
-> +
-> +Required properties:
-> +	- compatible:
-> +		Usage: required
-> +		Value type: <string>
-> +		Definition: "andestech,atl2c"
-> +	- reg : Physical base address and size of cache controller's memory mapped
-> +	- cache-unified : Specifies the cache is a unified cache.
-> +	- cache-level : Should be set to 2 for a level 2 cache.
-> +
-> +* Example
-> +
-> +	L2: l2-cache@e0500000 {
+Hi Kishon,
 
-cache-controller@...
-
-With that,
-
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
-> +		compatible = "andestech,atl2c";
-> +		reg = <0xe0500000 0x1000>;
-> +		cache-unified;
-> +		cache-level = <2>;
-> +	};
-> +
-> -- 
-> 1.7.9.5
+Le 03/01/2018 à 10:14, Kishon Vijay Abraham I a écrit :
+> Hi,
 > 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> On Saturday 30 December 2017 02:23 AM, Cyrille Pitchen wrote:
+>> Hi Kishon,
+>>
+>> Le 28/12/2017 à 14:00, Kishon Vijay Abraham I a écrit :
+>>> Hi Cyrille,
+>>>
+>>> On Monday 18 December 2017 11:46 PM, Cyrille Pitchen wrote:
+>>>> Hi all,
+>>>>
+>>>> this series of patches adds support to the Cadence PCIe controller.
+>>>> It was tested on a ARM64 platform emulated by a Palladium running the
+>>>> pci-next kernel.
+>>>>
+>>>> The host mode was tested with some PCIe devices connected to the Palladium
+>>>> through a speed-bridge. Some of those devices were a USB host controller
+>>>> and a SATA controller. The PCIe host controller was also tested with a
+>>>> second controller configured in endpoint mode and connected back to back
+>>>> to the first controller.
+>>>>
+>>>> The EndPoint Controller (EPC) driver of this series was tested with the
+>>>> pci-epf-test.c EndPoint Function (EPF) driver and the pcitest userspace
+>>>> program.
+>>>
+>>> Did you get to test multi function EP?
+>>>
+>>
+>> No I didn't: I tested only with a single function to check for regression
+>> but currently I'm not able to test with multiple functions.
+>>
+>> With devmem, I've tried to read then write the Physical Function Configuration
+>> Register (offset 0x2c0 in the Local Management registers) to enable
+>> functions other than function 0.
+>>
+>> This is the CDNS_PCIE_LM_EP_FUNC_CFG register that the pcie-cadence_ep.c
+>> driver updates in cdns_pcie_ep_write_header() since v2 of the series.
+>>
+>> As written in the datasheet, BIT(0) is actually hard-wired to 1, hence
+>> function 0 can't be disabled: that makes sense. However other function
+>> enable bits were read as 0 whereas the datasheet claims they should be set
+>> at power up. Besides, I can't set any of them with devmem.
+>>
+>> Actually, I have 2 slightly different datasheets, in the first one I should
+>> have 4 functions but only 2 based on the second datasheet.
+>>
+>> Then I guess it's a design parameter used when synthesizing the controller.
+>>
+>> So I've asked Cadence whether I've missed or misunderstood something in the
+>> datasheets or whether the IP they provided me with has a single function
+>> for now. I'm waiting for their answers.
+> 
+> hmm.. It would be nice to have multi function tested since it would both
+> validate multi function support of PCI EP core and the cadence multi-function
+> itself.
+>
+
+I will work with Cadence so we try to make it work.
+
+Best regards,
+
+Cyrille
+
+ 
+> Thanks
+> Kishon
+> 
+
+
+-- 
+Cyrille Pitchen, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
