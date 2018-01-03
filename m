@@ -1,300 +1,64 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: mediatek: update clock related properties of MT2701 AFE" to the asoc tree
-Date: Wed, 03 Jan 2018 16:29:19 +0000
-Message-ID: <E1eWlup-0002TQ-Ow@debutante>
-References: <8693f44aac4304ce99836fc5e715a796347541d3.1514881870.git.ryder.lee@mediatek.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <8693f44aac4304ce99836fc5e715a796347541d3.1514881870.git.ryder.lee@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ryder Lee <ryder.lee@mediatek.com>
-Cc: Mark Brown <broonie@kernel.org>Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Garlic Tseng <garlic.tseng@mediatek.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.orgalsa-devel@alsa-project.org
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH] ARM: dts: sun[47]i: Fix display backend 1 output to TCON0 remote endpoint
+Date: Thu,  4 Jan 2018 00:31:55 +0800
+Message-ID: <20180103163155.13975-1-wens@csie.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The patch
+There is a copy-paste error in the display pipeline device tree graph.
+The remote endpoint of the display backend 1's output to TCON0 points
+to the wrong endpoint. This will result in the driver incorrectly
+parsing the relationship of the components.
 
-   ASoC: mediatek: update clock related properties of MT2701 AFE
-
-has been applied to the asoc tree at
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From 0739fdfc0617a86781799d033e8fe758e8e48554 Mon Sep 17 00:00:00 2001
-From: Ryder Lee <ryder.lee@mediatek.com>
-Date: Tue, 2 Jan 2018 19:47:21 +0800
-Subject: [PATCH] ASoC: mediatek: update clock related properties of MT2701 AFE
-
-Add 'assigned-clocks*' properties which are used to initialize default
-domain sources of audio system. we could configure different sets of
-input clocks through DTS now. Hence driver no longer cares about that.
-
-Also we change some 'clock-names' to make them more generic so that
-other chips can reuse gracefully.
-
-Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Reported-by: Andrea Venturi <ennesimamail.av-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Fixes: 0df4cf33a594 ("ARM: dts: sun4i: Add device nodes for display
+		      pipelines")
+Fixes: 5b92b29bed45 ("ARM: dts: sun7i: Add device nodes for display
+		      pipelines")
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 ---
- .../devicetree/bindings/sound/mt2701-afe-pcm.txt   | 207 +++++++++------------
- 1 file changed, 91 insertions(+), 116 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/sound/mt2701-afe-pcm.txt b/Documentation/devicetree/bindings/sound/mt2701-afe-pcm.txt
-index 77a57f84bed4..0450baad2813 100644
---- a/Documentation/devicetree/bindings/sound/mt2701-afe-pcm.txt
-+++ b/Documentation/devicetree/bindings/sound/mt2701-afe-pcm.txt
-@@ -6,51 +6,44 @@ Required properties:
- - interrupts: should contain AFE and ASYS interrupts
- - interrupt-names: should be "afe" and "asys"
- - power-domains: should define the power domain
-+- clocks: Must contain an entry for each entry in clock-names
-+  See ../clocks/clock-bindings.txt for details
- - clock-names: should have these clock names:
--		"infra_sys_audio_clk",
- 		"top_audio_mux1_sel",
- 		"top_audio_mux2_sel",
--		"top_audio_mux1_div",
--		"top_audio_mux2_div",
--		"top_audio_48k_timing",
--		"top_audio_44k_timing",
--		"top_audpll_mux_sel",
--		"top_apll_sel",
--		"top_aud1_pll_98M",
--		"top_aud2_pll_90M",
--		"top_hadds2_pll_98M",
--		"top_hadds2_pll_294M",
--		"top_audpll",
--		"top_audpll_d4",
--		"top_audpll_d8",
--		"top_audpll_d16",
--		"top_audpll_d24",
--		"top_audintbus_sel",
--		"clk_26m",
--		"top_syspll1_d4",
--		"top_aud_k1_src_sel",
--		"top_aud_k2_src_sel",
--		"top_aud_k3_src_sel",
--		"top_aud_k4_src_sel",
--		"top_aud_k5_src_sel",
--		"top_aud_k6_src_sel",
--		"top_aud_k1_src_div",
--		"top_aud_k2_src_div",
--		"top_aud_k3_src_div",
--		"top_aud_k4_src_div",
--		"top_aud_k5_src_div",
--		"top_aud_k6_src_div",
--		"top_aud_i2s1_mclk",
--		"top_aud_i2s2_mclk",
--		"top_aud_i2s3_mclk",
--		"top_aud_i2s4_mclk",
--		"top_aud_i2s5_mclk",
--		"top_aud_i2s6_mclk",
--		"top_asm_m_sel",
--		"top_asm_h_sel",
--		"top_univpll2_d4",
--		"top_univpll2_d2",
--		"top_syspll_d5";
-+		"i2s0_src_sel",
-+		"i2s1_src_sel",
-+		"i2s2_src_sel",
-+		"i2s3_src_sel",
-+		"i2s0_src_div",
-+		"i2s1_src_div",
-+		"i2s2_src_div",
-+		"i2s3_src_div",
-+		"i2s0_mclk_en",
-+		"i2s1_mclk_en",
-+		"i2s2_mclk_en",
-+		"i2s3_mclk_en",
-+		"i2so0_hop_ck",
-+		"i2so1_hop_ck",
-+		"i2so2_hop_ck",
-+		"i2so3_hop_ck",
-+		"i2si0_hop_ck",
-+		"i2si1_hop_ck",
-+		"i2si2_hop_ck",
-+		"i2si3_hop_ck",
-+		"asrc0_out_ck",
-+		"asrc1_out_ck",
-+		"asrc2_out_ck",
-+		"asrc3_out_ck",
-+		"audio_afe_pd",
-+		"audio_afe_conn_pd",
-+		"audio_a1sys_pd",
-+		"audio_a2sys_pd",
-+		"audio_mrgif_pd";
-+- assigned-clocks: list of input clocks and dividers for the audio system.
-+		   See ../clocks/clock-bindings.txt for details.
-+- assigned-clocks-parents: parent of input clocks of assigned clocks.
-+- assigned-clock-rates: list of clock frequencies of assigned clocks.
+This is a late fix for 4.15 that corrects an error in the newly
+added display pipeline graph for the A10 and A20.
+
+---
+ arch/arm/boot/dts/sun4i-a10.dtsi | 2 +-
+ arch/arm/boot/dts/sun7i-a20.dtsi | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a10.dtsi
+index 5840f5c75c3b..4f2f2eea0755 100644
+--- a/arch/arm/boot/dts/sun4i-a10.dtsi
++++ b/arch/arm/boot/dts/sun4i-a10.dtsi
+@@ -1104,7 +1104,7 @@
  
- Example:
+ 					be1_out_tcon0: endpoint@0 {
+ 						reg = <0>;
+-						remote-endpoint = <&tcon1_in_be0>;
++						remote-endpoint = <&tcon0_in_be1>;
+ 					};
  
-@@ -62,93 +55,75 @@ Example:
- 			     <GIC_SPI 132 IRQ_TYPE_LEVEL_LOW>;
- 		interrupt-names	= "afe", "asys";
- 		power-domains = <&scpsys MT2701_POWER_DOMAIN_IFR_MSC>;
--		clocks = <&infracfg CLK_INFRA_AUDIO>,
--			 <&topckgen CLK_TOP_AUD_MUX1_SEL>,
-+		clocks = <&topckgen CLK_TOP_AUD_MUX1_SEL>,
- 			 <&topckgen CLK_TOP_AUD_MUX2_SEL>,
--			 <&topckgen CLK_TOP_AUD_MUX1_DIV>,
--			 <&topckgen CLK_TOP_AUD_MUX2_DIV>,
--			 <&topckgen CLK_TOP_AUD_48K_TIMING>,
--			 <&topckgen CLK_TOP_AUD_44K_TIMING>,
--			 <&topckgen CLK_TOP_AUDPLL_MUX_SEL>,
--			 <&topckgen CLK_TOP_APLL_SEL>,
--			 <&topckgen CLK_TOP_AUD1PLL_98M>,
--			 <&topckgen CLK_TOP_AUD2PLL_90M>,
--			 <&topckgen CLK_TOP_HADDS2PLL_98M>,
--			 <&topckgen CLK_TOP_HADDS2PLL_294M>,
--			 <&topckgen CLK_TOP_AUDPLL>,
--			 <&topckgen CLK_TOP_AUDPLL_D4>,
--			 <&topckgen CLK_TOP_AUDPLL_D8>,
--			 <&topckgen CLK_TOP_AUDPLL_D16>,
--			 <&topckgen CLK_TOP_AUDPLL_D24>,
--			 <&topckgen CLK_TOP_AUDINTBUS_SEL>,
--			 <&clk26m>,
--			 <&topckgen CLK_TOP_SYSPLL1_D4>,
- 			 <&topckgen CLK_TOP_AUD_K1_SRC_SEL>,
- 			 <&topckgen CLK_TOP_AUD_K2_SRC_SEL>,
- 			 <&topckgen CLK_TOP_AUD_K3_SRC_SEL>,
- 			 <&topckgen CLK_TOP_AUD_K4_SRC_SEL>,
--			 <&topckgen CLK_TOP_AUD_K5_SRC_SEL>,
--			 <&topckgen CLK_TOP_AUD_K6_SRC_SEL>,
- 			 <&topckgen CLK_TOP_AUD_K1_SRC_DIV>,
- 			 <&topckgen CLK_TOP_AUD_K2_SRC_DIV>,
- 			 <&topckgen CLK_TOP_AUD_K3_SRC_DIV>,
- 			 <&topckgen CLK_TOP_AUD_K4_SRC_DIV>,
--			 <&topckgen CLK_TOP_AUD_K5_SRC_DIV>,
--			 <&topckgen CLK_TOP_AUD_K6_SRC_DIV>,
- 			 <&topckgen CLK_TOP_AUD_I2S1_MCLK>,
- 			 <&topckgen CLK_TOP_AUD_I2S2_MCLK>,
- 			 <&topckgen CLK_TOP_AUD_I2S3_MCLK>,
- 			 <&topckgen CLK_TOP_AUD_I2S4_MCLK>,
--			 <&topckgen CLK_TOP_AUD_I2S5_MCLK>,
--			 <&topckgen CLK_TOP_AUD_I2S6_MCLK>,
--			 <&topckgen CLK_TOP_ASM_M_SEL>,
--			 <&topckgen CLK_TOP_ASM_H_SEL>,
--			 <&topckgen CLK_TOP_UNIVPLL2_D4>,
--			 <&topckgen CLK_TOP_UNIVPLL2_D2>,
--			 <&topckgen CLK_TOP_SYSPLL_D5>;
-+			 <&audiosys CLK_AUD_I2SO1>,
-+			 <&audiosys CLK_AUD_I2SO2>,
-+			 <&audiosys CLK_AUD_I2SO3>,
-+			 <&audiosys CLK_AUD_I2SO4>,
-+			 <&audiosys CLK_AUD_I2SIN1>,
-+			 <&audiosys CLK_AUD_I2SIN2>,
-+			 <&audiosys CLK_AUD_I2SIN3>,
-+			 <&audiosys CLK_AUD_I2SIN4>,
-+			 <&audiosys CLK_AUD_ASRCO1>,
-+			 <&audiosys CLK_AUD_ASRCO2>,
-+			 <&audiosys CLK_AUD_ASRCO3>,
-+			 <&audiosys CLK_AUD_ASRCO4>,
-+			 <&audiosys CLK_AUD_AFE>,
-+			 <&audiosys CLK_AUD_AFE_CONN>,
-+			 <&audiosys CLK_AUD_A1SYS>,
-+			 <&audiosys CLK_AUD_A2SYS>,
-+			 <&audiosys CLK_AUD_AFE_MRGIF>;
+ 					be1_out_tcon1: endpoint@1 {
+diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
+index 59655e42e4b0..bd0cd3204273 100644
+--- a/arch/arm/boot/dts/sun7i-a20.dtsi
++++ b/arch/arm/boot/dts/sun7i-a20.dtsi
+@@ -1354,7 +1354,7 @@
  
--		clock-names = "infra_sys_audio_clk",
--			      "top_audio_mux1_sel",
-+		clock-names = "top_audio_mux1_sel",
- 			      "top_audio_mux2_sel",
--			      "top_audio_mux1_div",
--			      "top_audio_mux2_div",
--			      "top_audio_48k_timing",
--			      "top_audio_44k_timing",
--			      "top_audpll_mux_sel",
--			      "top_apll_sel",
--			      "top_aud1_pll_98M",
--			      "top_aud2_pll_90M",
--			      "top_hadds2_pll_98M",
--			      "top_hadds2_pll_294M",
--			      "top_audpll",
--			      "top_audpll_d4",
--			      "top_audpll_d8",
--			      "top_audpll_d16",
--			      "top_audpll_d24",
--			      "top_audintbus_sel",
--			      "clk_26m",
--			      "top_syspll1_d4",
--			      "top_aud_k1_src_sel",
--			      "top_aud_k2_src_sel",
--			      "top_aud_k3_src_sel",
--			      "top_aud_k4_src_sel",
--			      "top_aud_k5_src_sel",
--			      "top_aud_k6_src_sel",
--			      "top_aud_k1_src_div",
--			      "top_aud_k2_src_div",
--			      "top_aud_k3_src_div",
--			      "top_aud_k4_src_div",
--			      "top_aud_k5_src_div",
--			      "top_aud_k6_src_div",
--			      "top_aud_i2s1_mclk",
--			      "top_aud_i2s2_mclk",
--			      "top_aud_i2s3_mclk",
--			      "top_aud_i2s4_mclk",
--			      "top_aud_i2s5_mclk",
--			      "top_aud_i2s6_mclk",
--			      "top_asm_m_sel",
--			      "top_asm_h_sel",
--			      "top_univpll2_d4",
--			      "top_univpll2_d2",
--			      "top_syspll_d5";
-+			      "i2s0_src_sel",
-+			      "i2s1_src_sel",
-+			      "i2s2_src_sel",
-+			      "i2s3_src_sel",
-+			      "i2s0_src_div",
-+			      "i2s1_src_div",
-+			      "i2s2_src_div",
-+			      "i2s3_src_div",
-+			      "i2s0_mclk_en",
-+			      "i2s1_mclk_en",
-+			      "i2s2_mclk_en",
-+			      "i2s3_mclk_en",
-+			      "i2so0_hop_ck",
-+			      "i2so1_hop_ck",
-+			      "i2so2_hop_ck",
-+			      "i2so3_hop_ck",
-+			      "i2si0_hop_ck",
-+			      "i2si1_hop_ck",
-+			      "i2si2_hop_ck",
-+			      "i2si3_hop_ck",
-+			      "asrc0_out_ck",
-+			      "asrc1_out_ck",
-+			      "asrc2_out_ck",
-+			      "asrc3_out_ck",
-+			      "audio_afe_pd",
-+			      "audio_afe_conn_pd",
-+			      "audio_a1sys_pd",
-+			      "audio_a2sys_pd",
-+			      "audio_mrgif_pd";
-+
-+		assigned-clocks = <&topckgen CLK_TOP_AUD_MUX1_SEL>,
-+				  <&topckgen CLK_TOP_AUD_MUX2_SEL>,
-+				  <&topckgen CLK_TOP_AUD_MUX1_DIV>,
-+				  <&topckgen CLK_TOP_AUD_MUX2_DIV>;
-+		assigned-clock-parents = <&topckgen CLK_TOP_AUD1PLL_98M>,
-+					 <&topckgen CLK_TOP_AUD2PLL_90M>;
-+		assigned-clock-rates = <0>, <0>, <49152000>, <45158400>;
- 	};
+ 					be1_out_tcon0: endpoint@0 {
+ 						reg = <0>;
+-						remote-endpoint = <&tcon1_in_be0>;
++						remote-endpoint = <&tcon0_in_be1>;
+ 					};
+ 
+ 					be1_out_tcon1: endpoint@1 {
 -- 
 2.15.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
