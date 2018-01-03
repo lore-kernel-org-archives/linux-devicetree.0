@@ -1,72 +1,41 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2 1/9] dt-bindings: media: Add Renesas CEU bindings
-Date: Wed, 03 Jan 2018 13:22:18 +0200
-Message-ID: <6187057.jxUe24LMpy@avalon>
-References: <1514469681-15602-1-git-send-email-jacopo+renesas@jmondi.org> <6263435.xWGUCtEJC1@avalon> <20180103084952.GA9493@w540>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20180103084952.GA9493@w540>
-Sender: linux-media-owner@vger.kernel.org
-To: jacopo mondi <jacopo@jmondi.org>
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, magnus.damm@gmail.com, geert@glider.be, mchehab@kernel.org, hverkuil@xs4all.nl, robh+dt@kernel.org, mark.rutland@arm.com, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Manu Gautam <mgautam@codeaurora.org>
+Subject: [PATCH v4 08/16] dt-bindings: phy-qcom-qusb2: Update binding for QUSB2 V2 version
+Date: Wed,  3 Jan 2018 16:58:41 +0530
+Message-ID: <1514978930-31341-9-git-send-email-mgautam@codeaurora.org>
+References: <1514978930-31341-1-git-send-email-mgautam@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1514978930-31341-1-git-send-email-mgautam@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Felipe Balbi <balbi@kernel.org>, linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vivek Gautam <vivek.gautam@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacopo,
+Update generic compatible string for QUSB2 V2 PHY. This will allow
+all targets using QUSB2 V2 use same string.
 
-On Wednesday, 3 January 2018 10:49:52 EET jacopo mondi wrote:
-> On Tue, Jan 02, 2018 at 01:45:30PM +0200, Laurent Pinchart wrote:
-> > On Thursday, 28 December 2017 16:01:13 EET Jacopo Mondi wrote:
-> >> Add bindings documentation for Renesas Capture Engine Unit (CEU).
-> >> 
-> >> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> >> ---
-> >> 
-> >>  .../devicetree/bindings/media/renesas,ceu.txt      | 85 +++++++++++++++
-> >>  1 file changed, 85 insertions(+)
-> >>  create mode 100644
-> >>  Documentation/devicetree/bindings/media/renesas,ceu.txt
-> >> 
-> >> diff --git a/Documentation/devicetree/bindings/media/renesas,ceu.txt
-> >> b/Documentation/devicetree/bindings/media/renesas,ceu.txt new file mode
-> >> 100644
-> >> index 0000000..f45628e
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/media/renesas,ceu.txt
-> >> @@ -0,0 +1,85 @@
-> >>+Renesas Capture Engine Unit (CEU)
-> >> +----------------------------------------------
-> >> +
-> >> +The Capture Engine Unit is the image capture interface found on Renesas
-> >> +RZ chip series and on SH Mobile ones.
-> > 
-> > "ones" sound a bit weird. How about "... found in the Renesas SH Mobil and
-> > RZ SoCs." ?
-> > 
-> >> +The interface supports a single parallel input with data bus width up
-> >> to
-> >> +8/16 bits.
-> > 
-> > What do you mean by "up to 8/16 bits" ?
-> 
-> The input bus width can be 8 or 16 bit.
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Manu Gautam <mgautam@codeaurora.org>
+---
+ Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-Then how about writing it "The CEU supports a single parallel input with a 
-data bus width of 8 or 16 bits." ?
-
-> On a general note: I always assumed DT bindings should describe the
-> hardware capabilities. In this case the hardware supports 8 or 16 bits
-> as input width, but the driver only cares about the 8 bits case. Which
-> one should I describe here?
-
-You should describe the hardware.
-
-> I will fix all of yours and Geert's remarks in V3.
-
-[snip]
-
+diff --git a/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
+index aa0fcb0..42c9742 100644
+--- a/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
++++ b/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
+@@ -4,7 +4,10 @@ Qualcomm QUSB2 phy controller
+ QUSB2 controller supports LS/FS/HS usb connectivity on Qualcomm chipsets.
+ 
+ Required properties:
+- - compatible: compatible list, contains "qcom,msm8996-qusb2-phy".
++ - compatible: compatible list, contains
++	       "qcom,msm8996-qusb2-phy" for 14nm PHY on msm8996,
++	       "qcom,qusb2-v2-phy" for QUSB2 V2 PHY.
++
+  - reg: offset and length of the PHY register set.
+  - #phy-cells: must be 0.
+ 
 -- 
-Regards,
-
-Laurent Pinchart
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
