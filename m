@@ -1,153 +1,145 @@
-From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] nokia N9: Add support for magnetometer and touchscreen
-Date: Wed, 3 Jan 2018 12:53:42 +0100
-Message-ID: <20180103115342.wnrvbzvxc4dtixdm@earth.universe>
-References: <20180102131722.GA20706@amd>
- <20180102172720.ghtez4d3d2fgcmj6@earth.universe>
- <20180103102553.GA28083@amd>
+From: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
+Subject: Re: [PATCH v2 5/8] MIPS: jz4740: dts: Add bindings for the jz4740-wdt
+ driver
+Date: Wed, 03 Jan 2018 13:01:06 +0100
+Message-ID: <1514980866.1642.0@smtp.crapouillou.net>
+References: <20171228162939.3928-2-paul@crapouillou.net>
+        <20171230135108.6834-1-paul@crapouillou.net>
+        <20171230135108.6834-5-paul@crapouillou.net>
+        <CANc+2y5ZUM_ZzXaGgbx9b7O1GF4GrbaYsv97G+akvhP2d2VVUA@mail.gmail.com>
+        <1514911698.3623.1@smtp.crapouillou.net>
+        <698e7ae5-9f19-1282-7b82-0e2fd2080906@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="bsywoacsfxoermk6"
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20180103102553.GA28083@amd>
+In-Reply-To: <698e7ae5-9f19-1282-7b82-0e2fd2080906-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Cc: pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, aaro.koskinen-X3B1VOXEql0@public.gmane.org, ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, patrikbachan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, serge-A9i7LUbDfNHQT0dZR+AlfA@public.gmane.org, abcloriens-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, clayton-fehKsxFhGzZIf6P1QZMOBw@public.gmane.org, martijn-28JJ9oSIdodmR6Xm/wNWPw@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Filip =?utf-8?Q?Matijevi=C4=87?= <filip.matijevic.pz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: PrasannaKumar Muralidharan <prasannatsmkumar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---bsywoacsfxoermk6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hi,
-
-On Wed, Jan 03, 2018 at 11:25:53AM +0100, Pavel Machek wrote:
-> On Tue 2018-01-02 18:27:20, Sebastian Reichel wrote:
-> > Hi,
-> >=20
-> > On Tue, Jan 02, 2018 at 02:17:22PM +0100, Pavel Machek wrote:
-> > > This adds dts support for magnetometer and touchscreen on Nokia N9.
-> >=20
-> > I think it makes sense to have this splitted.
+Le mer. 3 janv. 2018 =E0 5:46, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> a=20
+=E9crit :
+> On 01/02/2018 08:48 AM, Paul Cercueil wrote:
+>> Hi PrasannaKumar,
+>>=20
+>> Le mar. 2 janv. 2018 =E0 17:37, PrasannaKumar Muralidharan=20
+>> <prasannatsmkumar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> a =E9crit :
+>>> Hi Paul,
+>>>=20
+>>> On 30 December 2017 at 19:21, Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>=20
+>>> wrote:
+>>>>  Also remove the watchdog platform_device from platform.c, since it
+>>>>  wasn't used anywhere anyway.
+>>>>=20
+>>>>  Signed-off-by: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
+>>>>  ---
+>>>>   arch/mips/boot/dts/ingenic/jz4740.dtsi |  8 ++++++++
+>>>>   arch/mips/jz4740/platform.c            | 16 ----------------
+>>>>   2 files changed, 8 insertions(+), 16 deletions(-)
+>>>>=20
+>>>>   v2: No change
+>>>>=20
+>>>>  diff --git a/arch/mips/boot/dts/ingenic/jz4740.dtsi=20
+>>>> b/arch/mips/boot/dts/ingenic/jz4740.dtsi
+>>>>  index cd5185bb90ae..26c6b561d6f7 100644
+>>>>  --- a/arch/mips/boot/dts/ingenic/jz4740.dtsi
+>>>>  +++ b/arch/mips/boot/dts/ingenic/jz4740.dtsi
+>>>>  @@ -45,6 +45,14 @@
+>>>>                  #clock-cells =3D <1>;
+>>>>          };
+>>>>=20
+>>>>  +       watchdog: watchdog@10002000 {
+>>>>  +               compatible =3D "ingenic,jz4740-watchdog";
+>>>>  +               reg =3D <0x10002000 0x10>;
+>>>>  +
+>>>>  +               clocks =3D <&cgu JZ4740_CLK_RTC>;
+>>>>  +               clock-names =3D "rtc";
+>>>>  +       };
+>>>>  +
+>>>=20
+>>> The watchdog driver calls jz4740_timer_enable_watchdog and
+>>> jz4740_timer_disable_watchdog which defined in
+>>> arch/mips/jz4740/timer.c. It accesses registers iomapped by timer
+>>> code. Declaring register size as 0x10 does not show the real=20
+>>> picture.
+>>> Better use register size as 0x100 and let timer, wdt, pwm drivers to
+>>> share them.
+>>=20
+>> As you said, it accesses registers iomapped by timer code. So the=20
+>> watchdog
+>> driver doesn't need to iomap them.
+>>=20
+>>> Code from one of your branches
+>>> (https://github.com/OpenDingux/linux/blob/for-upstream-clocksource/arch=
+/mips/boot/dts/ingenic/jz4740.dtsi)
+>>> does it. Can you prepare a patch series and send it?
+>>> I have a patch set that moves timer code out of arch/mips/jz4740/=20
+>>> and
+>>> does a similar thing for watchdog and pwm. As your new timer driver=20
+>>> is
+>>> better than the existing one I have not sent my patches yet. I would
+>>> like to see it getting mainlined as it paves way for removing most=20
+>>> of
+>>> code in arch/mips/jz4740.
+>>=20
+>> The whole 'for-upstream-clocksource' branch is supposed to go=20
+>> upstream,
+>> but I can't do it in one big patchset without having lots of=20
+>> breakages with
+>> my other patchsets (jz4770 SoC support, and jz4740 watchdog updates)
+>> currently under review. That also makes it simpler to upstream than=20
+>> having
+>> one single patchset that touches 6 different frameworks (MIPS, irq,=20
+>> clocks,
+>> clocksource, watchdog, PWM).
+>>=20
+>> So I will submit it in two steps, first the irq/clocks/clocksource=20
+>> drivers
+>> (this patchset) hopefully for 4.16, and then the=20
+>> platform/watchdog/PWM fixes
+>> for 4.17.
+>>=20
 >=20
-> Creating more work for everyone for little gain? Meh.
-
-More work for everyone? Could you please read Documentation/process
-and actually follow it? It has a section about patches containing a
-single logical change and you add two completly unrelated devices to
-the device tree.
-
-Also I suggest, that you rework your git workflow if this makes
-more work than writing two sentences.
-
-> > > diff --git a/arch/arm/boot/dts/omap3-n9.dts b/arch/arm/boot/dts/omap3=
--n9.dts
-> > > index 39e35f8..57a6679 100644
-> > > --- a/arch/arm/boot/dts/omap3-n9.dts
-> > > +++ b/arch/arm/boot/dts/omap3-n9.dts
-> > > @@ -36,6 +57,22 @@
-> > >  			};
-> > >  		};
-> > >  	};
-> > > +
-> > > +	touch@4b {
-> >=20
-> > touchscreen@
+> I kind of lost it in this exchange, sorry. At this point I don't know=20
+> if something
+> is wrong with the watchdog patches, and I have no clue what the=20
+> upstream path
+> is supposed to be. My working assumption is that 1) something may be=20
+> wrong with
+> the current version of the patches, and, 2), even if not, none of the=20
+> patches
+> is expected to find its way upstream through the watchdog subsystem.=20
+> Plus, 3),
+> even if some of the patches are supposed to go upstream through the=20
+> watchdog
+> subsystem, that won't happen in 4.16, and the patches will be=20
+> resubmitted later
+> when they are ready [and will hopefully marked clearly for submission=20
+> through
+> the watchdog subsystem].
 >=20
-> Ok.
+> With that in mind, I'll mark the series for my reference as "not=20
+> applicable".
+> If this is wrong please let me know.
 >=20
-> > > +		compatible =3D "atmel,maxtouch";
-> > > +		reg =3D <0x4b>;
-> > > +		interrupt-parent =3D <&gpio2>;
-> > > +		interrupts =3D <29 2>; /* gpio_61, IRQF_TRIGGER_FALLING*/
-> >=20
-> > reset-gpios =3D <&gpio3 17 GPIO_ACTIVE_SOMETHING>;
-> >=20
-> > > +		vdd-supply =3D <&vio>;
-> > > +		avdd-supply =3D <&vaux1>;
-> >=20
-> > Those two are not mentioned in the binding and not supported by the
-> > driver as far as I can see?
->=20
-> Driver will need to be fixed, AFAICT :-(.
+> Guenter
 
-Obviously. DTS is only updated when binding has been acknowledged,
-though. To get this working ASAP you can add "always-enabled;" to
-the regulator and remove it once the driver gained support for
-enabling the regulators itself.
+Sorry, my fault, PrasannaKumar mentionned my 'for-upstream-clocksource'=20
+branch requesting
+me to submit it upstream, which I am doing in parallel of this one. I=20
+thought I was
+answering him in the other patchset's thread, hence the confusion.
 
-> > Touchscreen with the same settings is required for n950, so it
-> > should be in the shared n950 + n9 file.
->=20
-> In future, settings will be different for n9/n950: calibration matrix
-> is different as panel is rotated in different way. Still it probably
-> makes sense to share. Ok.
+There is nothing wrong with these watchdog patches. Upstream path is=20
+through the MIPS tree.
 
-The differences can be specified in the specific files by doing
-something like the following:
+Paul
+=
 
-n9-n950.dtsi:
-ts: touchscreen {
-    shared-properties;
-};
-
-n9.dts:
-&ts {
-    only-for-n9;
-};
-
-n950.dts:
-&ts {
-    only-for-n950;
-};
-
-> > > +&i2c3 {
-> > > +	ak8975@0f {
-> > > +		compatible =3D "asahi-kasei,ak8975";
-> > > +		reg =3D <0x0f>;
-> > > +	};
-> > >  };
-> >=20
-> > Looking at the N9 board file this is missing a rotation matrix. This
-> > is supported by the binding:
-> >=20
-> > Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt
->=20
-> Do you have an idea how the rotation matrix should look like? I don't
-> currently have an userland software that could calibrate and test the
-> sensor, so I'd prefer to merge basic binding now and do calibration
-> later.
-
-Well you take the values from sysfs, multiply it with the rotation
-matrix and check if the values look ok. No special userspace tools
-required except mount (for sysfs), ls & cat.
-
--- Sebastian
-
---bsywoacsfxoermk6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlpMxEMACgkQ2O7X88g7
-+pp4ag//cyXjvWD7q6/D85CbBTVGXXbjXA6+CVaGBBB5rpMRE8k4AFiYZI9W87t6
-uzlNTPsU1yDSiNjUUAhbcrSNROn4d7bPMeqm/tNLPkH0yMDULFigg42mB5pagt5+
-b/fa/0t9APmqffemv/GTm4mTU7h7N2AgTFNcgj8d+kaEqCnWAm6a7HKuoOCdtI/o
-QCiVX2uoHNmaYcCM4yyT0MxF/2Pb+wV8LuC0EwjJb38aIiY/C1OnEb37WkKVXAxI
-qJ4tgOF0e7J896IO8HdsDXVZA0MP3vNbkKoPXewbkxB9ZuaWg1fTNsurlmK12HiL
-GL7Njkid8Lh+OJR0dyP7MyXWRlcByXxdApDsz9ZsCGGEQ4oVFeKADALvMnouEVlT
-XoPgQaA73cygTVPAUBT5u2lQdzMkZ0RL6EUdLVJvu15a5MWldhdVZ1xuaWzpeptC
-d66Ep+qN+kE8KbwM6fW+1AAHPLSv2KoFiNPybMqA9IGdUuanrTmlYiXH3rEvYOut
-SdQ//XxIP5I0pBSRbJLW1tIJRIrHHBO/e2FDmhU/UXci4rfBT9ltTUTr/CRxBVw7
-4vbchl27qC3k2k2/2xRCyx32/rPFB1GjevEV6NpThhZmUg9nSRxm3hkOMnrOlz90
-8qzbdpgZhf6L6UFVD6YOb+CW+1cjdIB6nwOalgl7O1SKnzgm2eE=
-=FZGD
------END PGP SIGNATURE-----
-
---bsywoacsfxoermk6--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
