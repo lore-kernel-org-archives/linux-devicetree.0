@@ -1,124 +1,90 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: mediatek: fix error handling in mt2701_afe_pcm_dev_probe()" to the asoc tree
-Date: Wed, 03 Jan 2018 12:12:44 +0000
-Message-ID: <E1eWhuW-0001Yu-G4@debutante>
-References: <6081b70610c31f2c92ae1b83decb887a3f690f80.1514881870.git.ryder.lee@mediatek.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6081b70610c31f2c92ae1b83decb887a3f690f80.1514881870.git.ryder.lee@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ryder Lee <ryder.lee@mediatek.com>
-Cc: Garlic Tseng <garlic.tseng@mediatek.com>, Mark Brown <broonie@kernel.org>Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, alsa-devel@alsa-project.orgGarlic Tseng <garlic.tseng@mediatek.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.orgalsa-devel@alsa-project.org
+From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Subject: Re: [PATCH v2 4/4] [media] dt/bindings: Add bindings for OV2685
+Date: Wed, 3 Jan 2018 14:14:19 +0200
+Message-ID: <20180103121418.r6bysio3cfbl24gn@valkosipuli.retiisi.org.uk>
+References: <1514534905-21393-1-git-send-email-zhengsq@rock-chips.com>
+ <1514534905-21393-4-git-send-email-zhengsq@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1514534905-21393-4-git-send-email-zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ddl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The patch
+Hi Shunqian,
 
-   ASoC: mediatek: fix error handling in mt2701_afe_pcm_dev_probe()
+On Fri, Dec 29, 2017 at 04:08:25PM +0800, Shunqian Zheng wrote:
+> Add device tree binding documentation for the OV2685 sensor.
 
-has been applied to the asoc tree at
+DT bindings should precede the driver. Speaking of which --- you should add
+an entry in the MAINTAINERS file for both.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+> 
+> Signed-off-by: Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> ---
+>  .../devicetree/bindings/media/i2c/ov2685.txt       | 35 ++++++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov2685.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/ov2685.txt b/Documentation/devicetree/bindings/media/i2c/ov2685.txt
+> new file mode 100644
+> index 0000000..85aec03
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/i2c/ov2685.txt
+> @@ -0,0 +1,35 @@
+> +* Omnivision OV2685 MIPI CSI-2 sensor
+> +
+> +Required Properties:
+> +- compatible: should be "ovti,ov2685"
+> +- clocks: reference to the 24M xvclk input clock.
+> +- clock-names: should be "xvclk".
+> +- avdd-supply: Analog voltage supply, 2.8 volts
+> +- dvdd-supply: Digital core voltage supply, 1.2 volts
+> +- reset-gpios: Low active reset gpio
+> +
+> +The device node must contain one 'port' child node for its digital output
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+s/must/shall/
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+Please add that the port shall contain one endpoint node as well.
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+> +video port, in accordance with the video interface bindings defined in
+> +Documentation/devicetree/bindings/media/video-interfaces.txt.
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+Which specific properties are required and which ones are optional?
 
-Thanks,
-Mark
+> +
+> +Example:
+> +	ucam: camera-sensor@3c {
+> +		compatible = "ovti,ov2685";
+> +		reg = <0x3c>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&clk_24m_cam>;
+> +
+> +		clocks = <&cru SCLK_TESTCLKOUT1>;
+> +		clock-names = "xvclk";
+> +
+> +		avdd-supply = <&pp2800_cam>;
+> +		dovdd-supply = <&pp1800>;
+> +		reset-gpios = <&gpio2 3 GPIO_ACTIVE_LOW>;
+> +
+> +		port {
+> +			ucam_out: endpoint {
+> +				remote-endpoint = <&mipi_in_ucam>;
+> +				data-lanes = <1>;
+> +			};
+> +		};
+> +	};
 
->From dd6bb9b16f23f9b95b77713c45bd6182336c5b2e Mon Sep 17 00:00:00 2001
-From: Ryder Lee <ryder.lee@mediatek.com>
-Date: Tue, 2 Jan 2018 19:47:18 +0800
-Subject: [PATCH] ASoC: mediatek: fix error handling in
- mt2701_afe_pcm_dev_probe()
-
-Fix unbalanced error handling path which will get incorrect counts
-if probe failed. The .remove() should be adjusted accordingly.
-
-Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-Tested-by: Garlic Tseng <garlic.tseng@mediatek.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- sound/soc/mediatek/mt2701/mt2701-afe-pcm.c | 31 ++++++++++++++----------------
- 1 file changed, 14 insertions(+), 17 deletions(-)
-
-diff --git a/sound/soc/mediatek/mt2701/mt2701-afe-pcm.c b/sound/soc/mediatek/mt2701/mt2701-afe-pcm.c
-index 8fda182f849b..a7362d1cda1b 100644
---- a/sound/soc/mediatek/mt2701/mt2701-afe-pcm.c
-+++ b/sound/soc/mediatek/mt2701/mt2701-afe-pcm.c
-@@ -1590,12 +1590,16 @@ static int mt2701_afe_pcm_dev_probe(struct platform_device *pdev)
- 	}
- 
- 	platform_set_drvdata(pdev, afe);
--	pm_runtime_enable(&pdev->dev);
--	if (!pm_runtime_enabled(&pdev->dev))
--		goto err_pm_disable;
--	pm_runtime_get_sync(&pdev->dev);
- 
--	ret = snd_soc_register_platform(&pdev->dev, &mtk_afe_pcm_platform);
-+	pm_runtime_enable(dev);
-+	if (!pm_runtime_enabled(dev)) {
-+		ret = mt2701_afe_runtime_resume(dev);
-+		if (ret)
-+			goto err_pm_disable;
-+	}
-+	pm_runtime_get_sync(dev);
-+
-+	ret = snd_soc_register_platform(dev, &mtk_afe_pcm_platform);
- 	if (ret) {
- 		dev_warn(dev, "err_platform\n");
- 		goto err_platform;
-@@ -1610,35 +1614,28 @@ static int mt2701_afe_pcm_dev_probe(struct platform_device *pdev)
- 		goto err_dai_component;
- 	}
- 
--	mt2701_afe_runtime_resume(&pdev->dev);
--
- 	return 0;
- 
- err_dai_component:
--	snd_soc_unregister_component(&pdev->dev);
--
-+	snd_soc_unregister_platform(dev);
- err_platform:
--	snd_soc_unregister_platform(&pdev->dev);
--
-+	pm_runtime_put_sync(dev);
- err_pm_disable:
--	pm_runtime_disable(&pdev->dev);
-+	pm_runtime_disable(dev);
- 
- 	return ret;
- }
- 
- static int mt2701_afe_pcm_dev_remove(struct platform_device *pdev)
- {
--	struct mtk_base_afe *afe = platform_get_drvdata(pdev);
--
-+	pm_runtime_put_sync(&pdev->dev);
- 	pm_runtime_disable(&pdev->dev);
- 	if (!pm_runtime_status_suspended(&pdev->dev))
- 		mt2701_afe_runtime_suspend(&pdev->dev);
--	pm_runtime_put_sync(&pdev->dev);
- 
- 	snd_soc_unregister_component(&pdev->dev);
- 	snd_soc_unregister_platform(&pdev->dev);
--	/* disable afe clock */
--	mt2701_afe_disable_clock(afe);
-+
- 	return 0;
- }
- 
 -- 
-2.15.1
+Regards,
+
+Sakari Ailus
+e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
