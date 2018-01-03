@@ -1,155 +1,72 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2 7/9] media: i2c: ov772x: Remove soc_camera dependencies
-Date: Wed, 03 Jan 2018 17:49:55 +0200
-Message-ID: <2597640.1dqQloDucb@avalon>
-References: <1514469681-15602-1-git-send-email-jacopo+renesas@jmondi.org> <5703631.yJ335LfYLI@avalon> <20180103154458.GD9493@w540>
+From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH V4 3/7] PCI: tegra: Remove PCI_REASSIGN_ALL_BUS flag for
+ Tegra PCIe
+Date: Wed, 3 Jan 2018 15:51:49 +0000
+Message-ID: <20180103155149.GA8929@e107981-ln.cambridge.arm.com>
+References: <1512723493-865-1-git-send-email-mmaddireddy@nvidia.com>
+ <1512723493-865-4-git-send-email-mmaddireddy@nvidia.com>
+ <20171215173643.GA1050@red-moon>
+ <20171220193011.GA31757@ulmo>
+ <20171221104630.GB24280@red-moon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20180103154458.GD9493@w540>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: jacopo mondi <jacopo@jmondi.org>
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, magnus.damm@gmail.com, geert@glider.be, mchehab@kernel.org, hverkuil@xs4all.nl, robh+dt@kernel.org, mark.rutland@arm.com, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20171221104630.GB24280@red-moon>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Manikanta Maddireddy <mmaddireddy-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: cyndis-/1wQRMveznE@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, vidyas-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, kthota-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacopo,
-
-On Wednesday, 3 January 2018 17:44:58 EET jacopo mondi wrote:
-> On Tue, Jan 02, 2018 at 05:44:03PM +0200, Laurent Pinchart wrote:
-> > On Thursday, 28 December 2017 16:01:19 EET Jacopo Mondi wrote:
-> >> Remove soc_camera framework dependencies from ov772x sensor driver.
-> >> - Handle clock and gpios
-> >> - Register async subdevice
-> >> - Remove soc_camera specific g/s_mbus_config operations
-> >> - Change image format colorspace to SRGB
-> > 
-> > Could you explain the rationale for this ?
-> 
-> Hans suggested this, and I assume it is beacause COLORSPACE_JPEG ==
-> (COLORSPACE_SRGB + assumptions on quantization ranges) which does not
-> apply to the sensor.
-
-Could you capture it in the commit message ? :-)
-
-> >> - Remove sizes crop from get_selection as driver can't scale
-> >> - Add kernel doc to driver interface header file
-> >> - Adjust build system
-> > 
-> > That's a lot for a single patch. On the other hand I don't think splitting
-> > this in 7 patches would be a good idea either. If you can find a better
-> > granularity, go for it, otherwise keep it as-is. Same comment for the
-> > tw9910 driver.
-> 
-> I know.
-> I would have kept changes down to the minimum required to remove
-> soc_camera dependencies, but I received comments on other parts of the
-> driver not directly soc_camera specific. I understand this, since I'm
-> touching the driver it is maybe worth changing some parts of it that
-> needs updates..
-> 
-> >> This commit does not remove the original soc_camera based driver as long
-> >> as other platforms depends on soc_camera-based CEU driver.
-> >> 
-> >> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> >> ---
-> >> 
-> >>  drivers/media/i2c/Kconfig  |  11 +++
-> >>  drivers/media/i2c/Makefile |   1 +
-> >>  drivers/media/i2c/ov772x.c | 169 +++++++++++++++++++++++++-------------
-> >>  include/media/i2c/ov772x.h |   8 ++-
-> >>  4 files changed, 130 insertions(+), 59 deletions(-)
-> >> 
-> >> diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
-> >> index cb5d7ff..a61d7f4 100644
-> >> --- a/drivers/media/i2c/Kconfig
-> >> +++ b/drivers/media/i2c/Kconfig
-> > 
-> > [snip]
-> > 
-> >> diff --git a/drivers/media/i2c/ov772x.c b/drivers/media/i2c/ov772x.c
-> >> index 8063835..f7b293f 100644
-> >> --- a/drivers/media/i2c/ov772x.c
-> >> +++ b/drivers/media/i2c/ov772x.c
-> >> @@ -1,6 +1,9 @@
-> > 
-> > [snip]
-> > 
-> >> @@ -25,8 +26,8 @@
-> >> 
-> >>  #include <linux/videodev2.h>
-> >>  
-> >>  #include <media/i2c/ov772x.h>
+On Thu, Dec 21, 2017 at 10:46:30AM +0000, Lorenzo Pieralisi wrote:
+> On Wed, Dec 20, 2017 at 08:30:11PM +0100, Thierry Reding wrote:
+> > On Fri, Dec 15, 2017 at 05:36:43PM +0000, Lorenzo Pieralisi wrote:
+> > > On Fri, Dec 08, 2017 at 02:28:09PM +0530, Manikanta Maddireddy wrote:
+> > > > Primary, secondary and subordinate default bus numbers are 0 in Tegra and
+> > > > it is expecting SW to program these numbers in configration space.
+> > > > 
+> > > > pci_scan_bridge_extend() function programs these numbers in configuration
+> > > > space if secondary & subordinate bus numbers are 0 or PCI_REASSIGN_ALL_BUS
+> > > > flag is set. Since secondary & subordinate default bus numbers are 0,
+> > > > PCI_REASSIGN_ALL_BUS flag can be removed for Tegra PCIe.
+> > > > 
+> > > > Signed-off-by: Manikanta Maddireddy <mmaddireddy-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> > > > ---
+> > > > V3:
+> > > > * new patch in V3
+> > > > V4:
+> > > > * no change in this patch
+> > > > 
+> > > >  drivers/pci/host/pci-tegra.c | 1 -
+> > > >  1 file changed, 1 deletion(-)
+> > > > 
+> > > > diff --git a/drivers/pci/host/pci-tegra.c b/drivers/pci/host/pci-tegra.c
+> > > > index a549c5899e26..0d91f1a3a6b4 100644
+> > > > --- a/drivers/pci/host/pci-tegra.c
+> > > > +++ b/drivers/pci/host/pci-tegra.c
+> > > > @@ -2604,7 +2604,6 @@ static int tegra_pcie_probe(struct platform_device *pdev)
+> > > >  
+> > > >  	tegra_pcie_enable_ports(pcie);
+> > > >  
+> > > > -	pci_add_flags(PCI_REASSIGN_ALL_BUS);
 > > > 
-> > > -#include <media/soc_camera.h>
-> > > -#include <media/v4l2-clk.h>
-> > > +
-> > > +#include <media/v4l2-device.h>
-> > > 
-> > >  #include <media/v4l2-ctrls.h>
+> > > This looks obviously OK to me but I need Thierry's ACK to queue it.
 > > 
-> > I think C comes before D.
+> > Just as an additional note: I think the real reason why this is okay to
+> > do is because we reset the PCI host controller in the kernel driver, so
+> > any bus assignments done by the firmware are reset as well.
 > > 
-> > >  #include <media/v4l2-subdev.h>
-> > >  #include <media/v4l2-image-sizes.h>
-> > 
-> > [snip]
-> > 
-> >> @@ -650,13 +653,63 @@ static int ov772x_s_register(struct v4l2_subdev
-> >> *sd,
-> >>  }
-> >>  #endif
-> >> 
-> >> +static int ov772x_power_on(struct ov772x_priv *priv)
-> >> +{
-> >> +	struct i2c_client *client = v4l2_get_subdevdata(&priv->subdev);
-> >> +	int ret;
-> >> +
-> >> +	if (priv->info->xclk_rate)
-> >> +		ret = clk_set_rate(priv->clk, priv->info->xclk_rate);
-> > 
-> > The return value is then ignored.
-> > 
-> > I wonder whether the clk_set_rate() call shouldn't be kept in board code
-> > as it's a board-specific frequency. DT platforms would use the
-> > assigned-clock-rates property that doesn't require any explicit handling
-> > in the driver.
+> > Acked-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 > 
-> DT based platforms won't have any info->xlkc_rate, so they should be
-> fine. I wonder how could I set rate in board code, as I'm just
-> registering an alias for the clock there...
+> Thank you. This series needs rebasing, we should try to untangle
+> the dependencies between series so that I can actually apply some
+> of these patches that make sense on their own.
 
-Exactly as done by the current code, get the clock and set the rate :) You can 
-do that at initialization time, when you register the alias. Don't forget to 
-put the clock too.
+Manikanta, would you be able to decouple this series from:
 
-> >> +	if (priv->clk) {
-> >> +		ret = clk_prepare_enable(priv->clk);
-> >> +		if (ret)
-> >> +			return ret;
-> >> +	}
-> >> +
-> >> +	if (priv->pwdn_gpio) {
-> >> +		gpiod_set_value(priv->pwdn_gpio, 1);
-> >> +		usleep_range(500, 1000);
-> >> +	}
-> >> +
-> >> +	/* Reset GPIOs are shared in some platforms. */
-> > 
-> > I'd make this a FIXME comment as this is really a hack.
-> > 
-> > 	/*
-> > 	 * FIXME: The reset signal is connected to a shared GPIO on some
-> > 	 * platforms (namely the SuperH Migo-R). Until a framework becomes
-> > 	 * available to handle this cleanly, request the GPIO temporarily
-> > 	 * only to avoid conflicts.
-> > 	 */
-> > 
-> > Same for the tw9910 driver.
-> 
-> Ack.
+https://patchwork.ozlabs.org/patch/832053/
 
--- 
-Regards,
+so that we can make forward progress ? There are some patches in
+this series that I could apply - if rebased.
 
-Laurent Pinchart
+Lorenzo
