@@ -1,72 +1,65 @@
-From: jacopo mondi <jacopo-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 9/9] media: i2c: tw9910: Remove soc_camera dependencies
-Date: Wed, 3 Jan 2018 18:13:47 +0100
-Message-ID: <20180103171347.GF9493@w540>
-References: <1514469681-15602-1-git-send-email-jacopo+renesas@jmondi.org>
- <1514469681-15602-10-git-send-email-jacopo+renesas@jmondi.org>
- <CAOMZO5CjrXfzum7JgimGqvnM7kjMyZZdtpEhvYwO-DLnig=uMQ@mail.gmail.com>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 0/3] irqchip: irq-bcm2836: add support for DT interrupt
+ polarity
+Date: Wed, 3 Jan 2018 17:14:04 +0000
+Message-ID: <eabfb7b6-a7ec-90a5-bb08-23e9787de227@arm.com>
+References: <1513024752-11246-1-git-send-email-stefan.wahren@i2se.com>
+ <d0c81267-8379-d4a1-ec56-fec3492c1df6@i2se.com>
+ <a7939fae-31d1-c743-5957-d88be98a0c63@arm.com>
+ <60587e4d-d285-34e7-3d27-ea1daa1f97d1@i2se.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAOMZO5CjrXfzum7JgimGqvnM7kjMyZZdtpEhvYwO-DLnig=uMQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <60587e4d-d285-34e7-3d27-ea1daa1f97d1-eS4NqCHxEME@public.gmane.org>
+Content-Language: en-GB
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, geert-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Fabio,
+On 03/01/18 17:10, Stefan Wahren wrote:
+> Hi Marc,
+> 
+> 
+> Am 19.12.2017 um 17:36 schrieb Marc Zyngier:
+>> On 19/12/17 07:02, Stefan Wahren wrote:
+>>> Hi Marc,
+>>>
+>>> Am 11.12.2017 um 21:39 schrieb Stefan Wahren:
+>>>> This patch series implements DT polarity support for the 1st level interrupt
+>>>> controller.
+>>>>
+>>>> Stefan Wahren (3):
+>>>>     dt-bindings: bcm2836-l1-intc: add interrupt polarity support
+>>>>     irqchip: irq-bcm2836: add support for DT interrupt polarity
+>>>>     ARM: dts: bcm283x: Define polarity of per-cpu interrupts
+>>>>
+>>>>    .../interrupt-controller/brcm,bcm2836-l1-intc.txt  |  4 +-
+>>>>    arch/arm/boot/dts/bcm2836.dtsi                     | 14 +++----
+>>>>    arch/arm/boot/dts/bcm2837.dtsi                     | 12 +++---
+>>>>    arch/arm/boot/dts/bcm283x.dtsi                     |  1 +
+>>>>    drivers/irqchip/irq-bcm2836.c                      | 46 +++++++++++++---------
+>>>>    5 files changed, 44 insertions(+), 33 deletions(-)
+>>>>
+>>> is this series okay?
+>> Yes, it does look good. I'll queue that for 4.16.
+>>
+>> Thanks,
+>>
+>> 	M.
+> 
+> since i didn't found this in linux-next, please take this as a gentle 
+> reminder.
 
-On Wed, Jan 03, 2018 at 02:41:20PM -0200, Fabio Estevam wrote:
-> Hi Jacopo,
->
-> On Thu, Dec 28, 2017 at 12:01 PM, Jacopo Mondi
-> <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org> wrote:
->
-> > +       if (priv->rstb_gpio) {
-> > +               gpiod_set_value(priv->rstb_gpio, 0);
-> > +               usleep_range(500, 1000);
-> > +               gpiod_set_value(priv->rstb_gpio, 1);
-> > +               usleep_range(500, 1000);
->
-> This seems to be inverted.
->
-> Consider you have an active low GPIO reset.
->
-> In order to reset it:
->
-> Put the GPIO to logic level 0
-> Wait some time
-> Put the GPIO to logic level 1
->
-> gpiod_set_value(priv->rstb_gpio, 1), means the GPIO in the active
-> state (0 in this example).
->
-> , so this should be:
->
-> gpiod_set_value(priv->rstb_gpio, 1);
-> usleep_range(500, 1000);
-> gpiod_set_value(priv->rstb_gpio, 0);
+It will take some time before I push this to tglx, as I'm otherwise
+engaged. Patches are not lost.
 
-That would be true if I would have declared the GPIO to be ACTIVE_LOW.
-See patch [5/9] in this series and search for "rstb". The GPIO (which
-is shared between two devices) is said to be active high...
+Thanks,
 
-Are you maybe suggesting I should declare it ACTIVE_LOW in board setup
-code and invert the set_value() order in the driver as you proposed?
-Don't you think it would be more natural for the driver to follow the
-current sequence, as the reset GPIO is effectively active low (so
-setting it to 0 put the video decoder in reset state and setting it to
-1 wakes the video decoder up)?
-
-I can maybe agree with you for the PDN GPIO instead. That's said to be
-active high, so setting it to 1 disables the video decoder, and yes,
-it feels unnatural in the driver's power up routines to set PDN GPIO
-to 0 and set it to 1 when putting the device to sleep...
-
-Thanks
-   j
-
+	M.
+-- 
+Jazz is not dead. It just smells funny...
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
