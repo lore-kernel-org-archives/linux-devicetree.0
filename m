@@ -1,70 +1,77 @@
-From: Stafford Horne <shorne@gmail.com>
-Subject: Re: [PATCH v5 02/39] openrisc: add ioremap_nocache declaration
- before include asm-generic/io.h and sync ioremap prototype with it.
-Date: Wed, 3 Jan 2018 23:38:03 +0900
-Message-ID: <20180103143803.GI32243@lianli.shorne-pla.net>
-References: <cover.1514874857.git.green.hu@gmail.com>
- <3e5ba33674a883b56e20b35ea9ae34990ea838c8.1514874857.git.green.hu@gmail.com>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCHv1 3/6] ARM: dts: imx6q-bx50v3: Add internal switch
+Date: Wed, 3 Jan 2018 17:48:42 +0300
+Message-ID: <5c87f610-4927-faca-40a7-3f83e7f00ff7@cogentembedded.com>
+References: <20180103122609.5482-1-sebastian.reichel@collabora.co.uk>
+ <20180103122609.5482-4-sebastian.reichel@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <3e5ba33674a883b56e20b35ea9ae34990ea838c8.1514874857.git.green.hu@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greentime Hu <green.hu@gmail.com>
-Cc: greentime@andestech.com, linux-kernel@vger.kernel.org, arnd@arndb.de, linux-arch@vger.kernel.org, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, netdev@vger.kernel.org, deanbo422@gmail.com, devicetree@vger.kernel.org, viro@zeniv.linux.org.uk, dhowells@redhat.com, will.deacon@arm.com, daniel.lezcano@linaro.org, linux-serial@vger.kernel.org, geert.uytterhoeven@gmail.com, linus.walleij@linaro.org, mark.rutland@arm.com, greg@kroah.com, ren_guo@c-sky.com, rdunlap@infradead.org, davem@davemloft.net, jonas@southpole.se, stefan.kristiansson@saunalahti.fi
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180103122609.5482-4-sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Content-Language: en-MW
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Vivien Didelot <vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+Cc: Ian Ray <ian.ray-JJi787mZWgc@public.gmane.org>, Nandor Han <nandor.han-JJi787mZWgc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Hello!
 
-On Tue, Jan 02, 2018 at 04:24:34PM +0800, Greentime Hu wrote:
-> From: Greentime Hu <greentime@andestech.com>
+On 01/03/2018 03:26 PM, Sebastian Reichel wrote:
+
+> B850v3, B650v3 and B450v3 all have a GPIO bit banged MDIO bus to
+> communicate with a Marvell switch. On all devices the switch is
+> connected to a PCI based network card, which needs to be referenced
+> by DT, so this also adds the common PCI root node.
 > 
-> It will be built failed if commit id: d25ea659 is selected. This patch can fix this
-> build error.
-
-Ideally you would mention the commit description since the id is not yet
-usptream.  I found it here (its 1 in this series):
-
-  https://github.com/andestech/linux/commit/d25ea659
-  asm-generic/io.h: move ioremap_nocache/ioremap_uc/ioremap_wc/ioremap_...
-
-> Signed-off-by: Greentime Hu <greentime@andestech.com>
+> Signed-off-by: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
 > ---
->  arch/openrisc/include/asm/io.h |    3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+>   arch/arm/boot/dts/imx6q-bx50v3.dtsi | 37 +++++++++++++++++++++++++++++++++++++
+>   1 file changed, 37 insertions(+)
 > 
-> diff --git a/arch/openrisc/include/asm/io.h b/arch/openrisc/include/asm/io.h
-> index 7c69139..6709b28 100644
-> --- a/arch/openrisc/include/asm/io.h
-> +++ b/arch/openrisc/include/asm/io.h
-> @@ -29,13 +29,14 @@
->  #define PIO_OFFSET		0
->  #define PIO_MASK		0
->  
-> +#define ioremap_nocache ioremap_nocache
->  #include <asm-generic/io.h>
+> diff --git a/arch/arm/boot/dts/imx6q-bx50v3.dtsi b/arch/arm/boot/dts/imx6q-bx50v3.dtsi
+> index b915837bbb5f..689981e90e68 100644
+> --- a/arch/arm/boot/dts/imx6q-bx50v3.dtsi
+> +++ b/arch/arm/boot/dts/imx6q-bx50v3.dtsi
+> @@ -92,6 +92,31 @@
+>   		mux-int-port = <1>;
+>   		mux-ext-port = <4>;
+>   	};
+> +
+> +	aliases {
+> +		mdio-gpio0 = &mdio0;
+> +	};
+> +
+> +	mdio0: mdio-gpio {
+> +		compatible = "virtual,mdio-gpio";
+> +		gpios = <&gpio2 5 GPIO_ACTIVE_HIGH>, /* mdc */
+> +			<&gpio2 7 GPIO_ACTIVE_HIGH>; /* mdio */
+> +
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		switch@0 {
+> +				compatible = "marvell,mv88e6240";
 
-Ideally we could move <asm-generic/io.h> include down to the bottom of the file
-and not have to do the defines like like this, it seems clumsy to me.  In
-'cris', 'nios2' and other architectures I can see they have the generic include
-at the bottom of the file and not need for #define's.
+    Why suddenly 2 extra tabs instead of 1?
 
-I tried that but I get a lot of errors.  Does your patch to asm-generic/io.h
-cause build issues for those architectures as well?
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +				reg = <0>;
+> +
+> +				switch_ports: ports {
+> +					#address-cells = <1>;
+> +					#size-cells = <0>;
+> +				};
+> +		};
+> +	};
+>   };
+>   
+>   &ecspi5 {
+[...]
 
--Stafford
-
->  #include <asm/pgtable.h>
->  
->  extern void __iomem *__ioremap(phys_addr_t offset, unsigned long size,
->  				pgprot_t prot);
->  
-> -static inline void __iomem *ioremap(phys_addr_t offset, unsigned long size)
-> +static inline void __iomem *ioremap(phys_addr_t offset, size_t size)
->  {
->  	return __ioremap(offset, size, PAGE_KERNEL);
->  }
-> -- 
-> 1.7.9.5
-> 
+MBR, Sergei
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
