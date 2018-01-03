@@ -1,121 +1,155 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v2 2/2] media: coda: Add i.MX51 (CodaHx4) support
-Date: Wed, 03 Jan 2018 16:46:54 +0100
-Message-ID: <1514994414.5019.9.camel@pengutronix.de>
-References: <20171218101629.31395-2-p.zabel@pengutronix.de>
-         <201712210511.bpsOELIY%fengguang.wu@intel.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v2 7/9] media: i2c: ov772x: Remove soc_camera dependencies
+Date: Wed, 03 Jan 2018 17:49:55 +0200
+Message-ID: <2597640.1dqQloDucb@avalon>
+References: <1514469681-15602-1-git-send-email-jacopo+renesas@jmondi.org> <5703631.yJ335LfYLI@avalon> <20180103154458.GD9493@w540>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <201712210511.bpsOELIY%fengguang.wu@intel.com>
-Sender: linux-media-owner@vger.kernel.org
-To: kbuild test robot <lkp@intel.com>
-Cc: kbuild-all@01.org, linux-media@vger.kernel.org, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Fabio Estevam <fabio.estevam@nxp.com>, Chris Healy <Chris.Healy@zii.aero>, devicetree@vger.kernel.org, kernel@pengutronix.de
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20180103154458.GD9493@w540>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: jacopo mondi <jacopo@jmondi.org>
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, magnus.damm@gmail.com, geert@glider.be, mchehab@kernel.org, hverkuil@xs4all.nl, robh+dt@kernel.org, mark.rutland@arm.com, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2017-12-21 at 05:52 +0800, kbuild test robot wrote:
-> Hi Philipp,
-> 
-> I love your patch! Perhaps something to improve:
-> 
-> [auto build test WARNING on linuxtv-media/master]
-> [also build test WARNING on v4.15-rc4 next-20171220]
-> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
-> 
-> url:    https://github.com/0day-ci/linux/commits/Philipp-Zabel/media-dt-bindings-coda-Add-compatible-for-CodaHx4-on-i-MX51/20171221-050217
-> base:   git://linuxtv.org/media_tree.git master
-> config: x86_64-allmodconfig (attached as .config)
-> compiler: gcc-7 (Debian 7.2.0-12) 7.2.1 20171025
-> reproduce:
->         # save the attached .config to linux build tree
->         make ARCH=x86_64 
-> 
-> Note: it may well be a FALSE warning.
+Hi Jacopo,
 
-I think it is.
-
->  FWIW you are at least aware of it now.
-> http://gcc.gnu.org/wiki/Better_Uninitialized_Warnings
+On Wednesday, 3 January 2018 17:44:58 EET jacopo mondi wrote:
+> On Tue, Jan 02, 2018 at 05:44:03PM +0200, Laurent Pinchart wrote:
+> > On Thursday, 28 December 2017 16:01:19 EET Jacopo Mondi wrote:
+> >> Remove soc_camera framework dependencies from ov772x sensor driver.
+> >> - Handle clock and gpios
+> >> - Register async subdevice
+> >> - Remove soc_camera specific g/s_mbus_config operations
+> >> - Change image format colorspace to SRGB
+> > 
+> > Could you explain the rationale for this ?
 > 
-> All warnings (new ones prefixed by >>):
-> 
->    drivers/media/platform/coda/coda-bit.c: In function 'coda_setup_iram':
-> > > drivers/media/platform/coda/coda-bit.c:648:28: warning: 'me_bits' may be used uninitialized in this function [-Wmaybe-uninitialized]
-> 
->        iram_info->axi_sram_use |= me_bits;
->                                ^~
-> 
-> vim +/me_bits +648 drivers/media/platform/coda/coda-bit.c
-> 
->    588	
->    589	static void coda_setup_iram(struct coda_ctx *ctx)
->    590	{
->    591		struct coda_iram_info *iram_info = &ctx->iram_info;
->    592		struct coda_dev *dev = ctx->dev;
->    593		int w64, w128;
->    594		int mb_width;
->    595		int dbk_bits;
->    596		int bit_bits;
->    597		int ip_bits;
->    598		int me_bits;
->    599	
->    600		memset(iram_info, 0, sizeof(*iram_info));
->    601		iram_info->next_paddr = dev->iram.paddr;
->    602		iram_info->remaining = dev->iram.size;
->    603	
->    604		if (!dev->iram.vaddr)
->    605			return;
->    606	
->    607		switch (dev->devtype->product) {
->    608		case CODA_HX4:
->    609			dbk_bits = CODA7_USE_HOST_DBK_ENABLE;
->    610			bit_bits = CODA7_USE_HOST_BIT_ENABLE;
->    611			ip_bits = CODA7_USE_HOST_IP_ENABLE;
->    612			me_bits = CODA7_USE_HOST_ME_ENABLE;
->    613			break;
->    614		case CODA_7541:
->    615			dbk_bits = CODA7_USE_HOST_DBK_ENABLE | CODA7_USE_DBK_ENABLE;
->    616			bit_bits = CODA7_USE_HOST_BIT_ENABLE | CODA7_USE_BIT_ENABLE;
->    617			ip_bits = CODA7_USE_HOST_IP_ENABLE | CODA7_USE_IP_ENABLE;
->    618			me_bits = CODA7_USE_HOST_ME_ENABLE | CODA7_USE_ME_ENABLE;
->    619			break;
->    620		case CODA_960:
->    621			dbk_bits = CODA9_USE_HOST_DBK_ENABLE | CODA9_USE_DBK_ENABLE;
->    622			bit_bits = CODA9_USE_HOST_BIT_ENABLE | CODA7_USE_BIT_ENABLE;
->    623			ip_bits = CODA9_USE_HOST_IP_ENABLE | CODA7_USE_IP_ENABLE;
+> Hans suggested this, and I assume it is beacause COLORSPACE_JPEG ==
+> (COLORSPACE_SRGB + assumptions on quantization ranges) which does not
+> apply to the sensor.
 
-This is the only path that continues with me_bits uninitialized.
-In this case ...
+Could you capture it in the commit message ? :-)
 
->    624			break;
->    625		default: /* CODA_DX6 */
->    626			return;
->    627		}
->    628	
->    629		if (ctx->inst_type == CODA_INST_ENCODER) {
->    630			struct coda_q_data *q_data_src;
->    631	
->    632			q_data_src = get_q_data(ctx, V4L2_BUF_TYPE_VIDEO_OUTPUT);
->    633			mb_width = DIV_ROUND_UP(q_data_src->width, 16);
->    634			w128 = mb_width * 128;
->    635			w64 = mb_width * 64;
->    636	
->    637			/* Prioritize in case IRAM is too small for everything */
->    638			if (dev->devtype->product == CODA_HX4 ||
->    639			    dev->devtype->product == CODA_7541) {
->    640				iram_info->search_ram_size = round_up(mb_width * 16 *
->    641								      36 + 2048, 1024);
->    642				iram_info->search_ram_paddr = coda_iram_alloc(iram_info,
->    643							iram_info->search_ram_size);
->    644				if (!iram_info->search_ram_paddr) {
->    645					pr_err("IRAM is smaller than the search ram size\n");
->    646					goto out;
->    647				}
->  > 648				iram_info->axi_sram_use |= me_bits;
+> >> - Remove sizes crop from get_selection as driver can't scale
+> >> - Add kernel doc to driver interface header file
+> >> - Adjust build system
+> > 
+> > That's a lot for a single patch. On the other hand I don't think splitting
+> > this in 7 patches would be a good idea either. If you can find a better
+> > granularity, go for it, otherwise keep it as-is. Same comment for the
+> > tw9910 driver.
+> 
+> I know.
+> I would have kept changes down to the minimum required to remove
+> soc_camera dependencies, but I received comments on other parts of the
+> driver not directly soc_camera specific. I understand this, since I'm
+> touching the driver it is maybe worth changing some parts of it that
+> needs updates..
+> 
+> >> This commit does not remove the original soc_camera based driver as long
+> >> as other platforms depends on soc_camera-based CEU driver.
+> >> 
+> >> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> >> ---
+> >> 
+> >>  drivers/media/i2c/Kconfig  |  11 +++
+> >>  drivers/media/i2c/Makefile |   1 +
+> >>  drivers/media/i2c/ov772x.c | 169 +++++++++++++++++++++++++-------------
+> >>  include/media/i2c/ov772x.h |   8 ++-
+> >>  4 files changed, 130 insertions(+), 59 deletions(-)
+> >> 
+> >> diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
+> >> index cb5d7ff..a61d7f4 100644
+> >> --- a/drivers/media/i2c/Kconfig
+> >> +++ b/drivers/media/i2c/Kconfig
+> > 
+> > [snip]
+> > 
+> >> diff --git a/drivers/media/i2c/ov772x.c b/drivers/media/i2c/ov772x.c
+> >> index 8063835..f7b293f 100644
+> >> --- a/drivers/media/i2c/ov772x.c
+> >> +++ b/drivers/media/i2c/ov772x.c
+> >> @@ -1,6 +1,9 @@
+> > 
+> > [snip]
+> > 
+> >> @@ -25,8 +26,8 @@
+> >> 
+> >>  #include <linux/videodev2.h>
+> >>  
+> >>  #include <media/i2c/ov772x.h>
+> > > 
+> > > -#include <media/soc_camera.h>
+> > > -#include <media/v4l2-clk.h>
+> > > +
+> > > +#include <media/v4l2-device.h>
+> > > 
+> > >  #include <media/v4l2-ctrls.h>
+> > 
+> > I think C comes before D.
+> > 
+> > >  #include <media/v4l2-subdev.h>
+> > >  #include <media/v4l2-image-sizes.h>
+> > 
+> > [snip]
+> > 
+> >> @@ -650,13 +653,63 @@ static int ov772x_s_register(struct v4l2_subdev
+> >> *sd,
+> >>  }
+> >>  #endif
+> >> 
+> >> +static int ov772x_power_on(struct ov772x_priv *priv)
+> >> +{
+> >> +	struct i2c_client *client = v4l2_get_subdevdata(&priv->subdev);
+> >> +	int ret;
+> >> +
+> >> +	if (priv->info->xclk_rate)
+> >> +		ret = clk_set_rate(priv->clk, priv->info->xclk_rate);
+> > 
+> > The return value is then ignored.
+> > 
+> > I wonder whether the clk_set_rate() call shouldn't be kept in board code
+> > as it's a board-specific frequency. DT platforms would use the
+> > assigned-clock-rates property that doesn't require any explicit handling
+> > in the driver.
+> 
+> DT based platforms won't have any info->xlkc_rate, so they should be
+> fine. I wonder how could I set rate in board code, as I'm just
+> registering an alias for the clock there...
 
-... dev->devtype->product == CODA_960, and this use of me_bits is never
-reached.
+Exactly as done by the current code, get the clock and set the rate :) You can 
+do that at initialization time, when you register the alias. Don't forget to 
+put the clock too.
 
-regards
-Philipp
+> >> +	if (priv->clk) {
+> >> +		ret = clk_prepare_enable(priv->clk);
+> >> +		if (ret)
+> >> +			return ret;
+> >> +	}
+> >> +
+> >> +	if (priv->pwdn_gpio) {
+> >> +		gpiod_set_value(priv->pwdn_gpio, 1);
+> >> +		usleep_range(500, 1000);
+> >> +	}
+> >> +
+> >> +	/* Reset GPIOs are shared in some platforms. */
+> > 
+> > I'd make this a FIXME comment as this is really a hack.
+> > 
+> > 	/*
+> > 	 * FIXME: The reset signal is connected to a shared GPIO on some
+> > 	 * platforms (namely the SuperH Migo-R). Until a framework becomes
+> > 	 * available to handle this cleanly, request the GPIO temporarily
+> > 	 * only to avoid conflicts.
+> > 	 */
+> > 
+> > Same for the tw9910 driver.
+> 
+> Ack.
+
+-- 
+Regards,
+
+Laurent Pinchart
