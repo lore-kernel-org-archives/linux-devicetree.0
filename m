@@ -1,227 +1,65 @@
 From: Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH v5 4/5] media: ov5640: add support of DVP parallel interface
-Date: Wed, 3 Jan 2018 10:57:31 +0100
-Message-ID: <1514973452-10464-5-git-send-email-hugues.fruchet@st.com>
-References: <1514973452-10464-1-git-send-email-hugues.fruchet@st.com>
+Subject: [PATCH v5 0/5] Add OV5640 parallel interface and RGB565/YUYV support
+Date: Wed, 3 Jan 2018 10:57:27 +0100
+Message-ID: <1514973452-10464-1-git-send-email-hugues.fruchet@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1514973452-10464-1-git-send-email-hugues.fruchet-qxv4g6HH51o@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support of DVP parallel mode in addition of
-existing MIPI CSI mode. The choice between two modes
-and configuration is made through device tree.
+Enhance OV5640 CSI driver to support also DVP parallel interface.
+Add RGB565 (LE & BE) and YUV422 YUYV format in addition to existing
+YUV422 UYVY format.
+Some other improvements on chip identifier check and removal
+of warnings in powering phase around gpio handling.
 
-Signed-off-by: Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>
----
- drivers/media/i2c/ov5640.c | 148 +++++++++++++++++++++++++++++++++++++++------
- 1 file changed, 130 insertions(+), 18 deletions(-)
+===========
+= history =
+===========
+version 5:
+  - Refine bindings as per Sakari suggestion:
+    https://www.mail-archive.com/linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg124048.html
 
-diff --git a/drivers/media/i2c/ov5640.c b/drivers/media/i2c/ov5640.c
-index 9f031f3..a44b680 100644
---- a/drivers/media/i2c/ov5640.c
-+++ b/drivers/media/i2c/ov5640.c
-@@ -34,13 +34,19 @@
- 
- #define OV5640_DEFAULT_SLAVE_ID 0x3c
- 
-+#define OV5640_REG_SYS_CTRL0		0x3008
- #define OV5640_REG_CHIP_ID		0x300a
-+#define OV5640_REG_IO_MIPI_CTRL00	0x300e
-+#define OV5640_REG_PAD_OUTPUT_ENABLE01	0x3017
-+#define OV5640_REG_PAD_OUTPUT_ENABLE02	0x3018
- #define OV5640_REG_PAD_OUTPUT00		0x3019
-+#define OV5640_REG_SYSTEM_CONTROL1	0x302e
- #define OV5640_REG_SC_PLL_CTRL0		0x3034
- #define OV5640_REG_SC_PLL_CTRL1		0x3035
- #define OV5640_REG_SC_PLL_CTRL2		0x3036
- #define OV5640_REG_SC_PLL_CTRL3		0x3037
- #define OV5640_REG_SLAVE_ID		0x3100
-+#define OV5640_REG_SCCB_SYS_CTRL1	0x3103
- #define OV5640_REG_SYS_ROOT_DIVIDER	0x3108
- #define OV5640_REG_AWB_R_GAIN		0x3400
- #define OV5640_REG_AWB_G_GAIN		0x3402
-@@ -70,6 +76,7 @@
- #define OV5640_REG_HZ5060_CTRL01	0x3c01
- #define OV5640_REG_SIGMADELTA_CTRL0C	0x3c0c
- #define OV5640_REG_FRAME_CTRL01		0x4202
-+#define OV5640_REG_POLARITY_CTRL00	0x4740
- #define OV5640_REG_MIPI_CTRL00		0x4800
- #define OV5640_REG_DEBUG_MODE		0x4814
- #define OV5640_REG_PRE_ISP_TEST_SET1	0x503d
-@@ -982,7 +989,111 @@ static int ov5640_get_gain(struct ov5640_dev *sensor)
- 	return gain & 0x3ff;
- }
- 
--static int ov5640_set_stream(struct ov5640_dev *sensor, bool on)
-+static int ov5640_set_stream_dvp(struct ov5640_dev *sensor, bool on)
-+{
-+	int ret;
-+	unsigned int flags = sensor->ep.bus.parallel.flags;
-+	u8 pclk_pol = 0;
-+	u8 hsync_pol = 0;
-+	u8 vsync_pol = 0;
-+
-+	/*
-+	 * Note about parallel port configuration.
-+	 *
-+	 * When configured in parallel mode, the OV5640 will
-+	 * output 10 bits data on DVP data lines [9:0].
-+	 * If only 8 bits data are wanted, the 8 bits data lines
-+	 * of the camera interface must be physically connected
-+	 * on the DVP data lines [9:2].
-+	 *
-+	 * Control lines polarity can be configured through
-+	 * devicetree endpoint control lines properties.
-+	 * If no endpoint control lines properties are set,
-+	 * polarity will be as below:
-+	 * - VSYNC:	active high
-+	 * - HREF:	active low
-+	 * - PCLK:	active low
-+	 */
-+
-+	if (on) {
-+		/*
-+		 * reset MIPI PCLK/SERCLK divider
-+		 *
-+		 * SC PLL CONTRL1 0
-+		 * - [3..0]:	MIPI PCLK/SERCLK divider
-+		 */
-+		ret = ov5640_mod_reg(sensor, OV5640_REG_SC_PLL_CTRL1, 0x0f, 0);
-+		if (ret)
-+			return ret;
-+
-+		/*
-+		 * configure parallel port control lines polarity
-+		 *
-+		 * POLARITY CTRL0
-+		 * - [5]:	PCLK polarity (0: active low, 1: active high)
-+		 * - [1]:	HREF polarity (0: active low, 1: active high)
-+		 * - [0]:	VSYNC polarity (mismatch here between
-+		 *		datasheet and hardware, 0 is active high
-+		 *		and 1 is active low...)
-+		 */
-+		if (flags & V4L2_MBUS_PCLK_SAMPLE_RISING)
-+			pclk_pol = 1;
-+		if (flags & V4L2_MBUS_HSYNC_ACTIVE_HIGH)
-+			hsync_pol = 1;
-+		if (flags & V4L2_MBUS_VSYNC_ACTIVE_LOW)
-+			vsync_pol = 1;
-+
-+		ret = ov5640_write_reg(sensor,
-+				       OV5640_REG_POLARITY_CTRL00,
-+				       (pclk_pol << 5) |
-+				       (hsync_pol << 1) |
-+				       vsync_pol);
-+
-+		if (ret)
-+			return ret;
-+	}
-+
-+	/*
-+	 * powerdown MIPI TX/RX PHY & disable MIPI
-+	 *
-+	 * MIPI CONTROL 00
-+	 * 4:	 PWDN PHY TX
-+	 * 3:	 PWDN PHY RX
-+	 * 2:	 MIPI enable
-+	 */
-+	ret = ov5640_write_reg(sensor,
-+			       OV5640_REG_IO_MIPI_CTRL00, on ? 0x18 : 0);
-+	if (ret)
-+		return ret;
-+
-+	/*
-+	 * enable VSYNC/HREF/PCLK DVP control lines
-+	 * & D[9:6] DVP data lines
-+	 *
-+	 * PAD OUTPUT ENABLE 01
-+	 * - 6:		VSYNC output enable
-+	 * - 5:		HREF output enable
-+	 * - 4:		PCLK output enable
-+	 * - [3:0]:	D[9:6] output enable
-+	 */
-+	ret = ov5640_write_reg(sensor,
-+			       OV5640_REG_PAD_OUTPUT_ENABLE01,
-+			       on ? 0x7f : 0);
-+	if (ret)
-+		return ret;
-+
-+	/*
-+	 * enable D[5:0] DVP data lines
-+	 *
-+	 * PAD OUTPUT ENABLE 02
-+	 * - [7:2]:	D[5:0] output enable
-+	 */
-+	return ov5640_write_reg(sensor,
-+				OV5640_REG_PAD_OUTPUT_ENABLE02,
-+				on ? 0xfc : 0);
-+}
-+
-+static int ov5640_set_stream_mipi(struct ov5640_dev *sensor, bool on)
- {
- 	int ret;
- 
-@@ -1604,17 +1715,19 @@ static int ov5640_set_power(struct ov5640_dev *sensor, bool on)
- 		if (ret)
- 			goto power_off;
- 
--		/*
--		 * start streaming briefly followed by stream off in
--		 * order to coax the clock lane into LP-11 state.
--		 */
--		ret = ov5640_set_stream(sensor, true);
--		if (ret)
--			goto power_off;
--		usleep_range(1000, 2000);
--		ret = ov5640_set_stream(sensor, false);
--		if (ret)
--			goto power_off;
-+		if (sensor->ep.bus_type == V4L2_MBUS_CSI2) {
-+			/*
-+			 * start streaming briefly followed by stream off in
-+			 * order to coax the clock lane into LP-11 state.
-+			 */
-+			ret = ov5640_set_stream_mipi(sensor, true);
-+			if (ret)
-+				goto power_off;
-+			usleep_range(1000, 2000);
-+			ret = ov5640_set_stream_mipi(sensor, false);
-+			if (ret)
-+				goto power_off;
-+		}
- 
- 		return 0;
- 	}
-@@ -2188,7 +2301,11 @@ static int ov5640_s_stream(struct v4l2_subdev *sd, int enable)
- 				goto out;
- 		}
- 
--		ret = ov5640_set_stream(sensor, enable);
-+		if (sensor->ep.bus_type == V4L2_MBUS_CSI2)
-+			ret = ov5640_set_stream_mipi(sensor, enable);
-+		else
-+			ret = ov5640_set_stream_dvp(sensor, enable);
-+
- 		if (!ret)
- 			sensor->streaming = enable;
- 	}
-@@ -2301,11 +2418,6 @@ static int ov5640_probe(struct i2c_client *client,
- 		return ret;
- 	}
- 
--	if (sensor->ep.bus_type != V4L2_MBUS_CSI2) {
--		dev_err(dev, "invalid bus type, must be MIPI CSI2\n");
--		return -EINVAL;
--	}
--
- 	/* get system clock (xclk) */
- 	sensor->xclk = devm_clk_get(dev, "xclk");
- 	if (IS_ERR(sensor->xclk)) {
+version 4:
+  - Refine bindings as per Sakari suggestion:
+    https://www.mail-archive.com/linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg123609.html
+  - Parallel port control lines polarity can now be configured through
+    devicetree
+
+version 3:
+  - Move chip identifier check at probe according to Fabio Estevam comment:
+    https://www.mail-archive.com/linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg122575.html
+  - Use 16 bits register read for this check as per Steve Longerbeam comment:
+    https://www.mail-archive.com/linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg122692.html
+  - Update bindings to document parallel mode support as per Fabio Estevam comment:
+    https://www.mail-archive.com/linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg122576.html
+  - Enable the whole 10 bits parallel output and document 8/10 bits support
+    in ov5640_set_stream_dvp() to answer to Steve Longerbeam comment:
+    https://www.mail-archive.com/linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg122693.html
+
+version 2:
+  - Fix comments from Sakari Ailus:
+    https://www.mail-archive.com/linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg122259.html
+  - Revisit ov5640_set_stream_dvp() to only configure DVP at streamon
+  - Revisit ov5640_set_stream_dvp() implementation with fewer register settings
+
+version 1:
+  - Initial submission
+
+Hugues Fruchet (5):
+  media: ov5640: switch to gpiod_set_value_cansleep()
+  media: ov5640: check chip id
+  media: dt-bindings: ov5640: refine CSI-2 and add parallel interface
+  media: ov5640: add support of DVP parallel interface
+  media: ov5640: add support of RGB565 and YUYV formats
+
+ .../devicetree/bindings/media/i2c/ov5640.txt       |  46 ++-
+ drivers/media/i2c/ov5640.c                         | 325 ++++++++++++++++++---
+ 2 files changed, 324 insertions(+), 47 deletions(-)
+
 -- 
 1.9.1
 
