@@ -1,48 +1,136 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH] ARM: dts: sun8i: a83t: bananapi-m3: Add LED device nodes
-Date: Wed,  3 Jan 2018 14:28:44 +0800
-Message-ID: <20180103062844.30315-1-wens@csie.org>
+From: Honghui Zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v5 2/2] PCI: mediatek: Set up class type and vendor ID
+ for MT7622
+Date: Wed, 3 Jan 2018 14:39:04 +0800
+Message-ID: <1514961544.25872.49.camel@mhfsdcap03>
+References: <1514336394-17747-1-git-send-email-honghui.zhang@mediatek.com>
+         <1514336394-17747-3-git-send-email-honghui.zhang@mediatek.com>
+         <20171227184542.GA79892@bhelgaas-glaptop.roam.corp.google.com>
+         <1514425152.25872.39.camel@mhfsdcap03> <20180102105659.GB10536@red-moon>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180102105659.GB10536@red-moon>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Cc: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, hongkun.cao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, xinping.qian-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The Bananapi M3 has two controllable LEDs, blue and green, that are tied
-to the PMIC's two GPIO pins.
+On Tue, 2018-01-02 at 10:56 +0000, Lorenzo Pieralisi wrote:
+> On Thu, Dec 28, 2017 at 09:39:12AM +0800, Honghui Zhang wrote:
+> > On Wed, 2017-12-27 at 12:45 -0600, Bjorn Helgaas wrote:
+> > > On Wed, Dec 27, 2017 at 08:59:54AM +0800, honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
+> > > > From: Honghui Zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > > > 
 
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
----
- arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+> > > > +		/* Set up class code for MT7622 */
+> > > > +		val = PCI_CLASS_BRIDGE_PCI << 16;
+> > > > +		writel(val, port->base + PCIE_CONF_CLASS);
+> > > 
+> > > 1) Your comments mention MT7622 specifically, but this code is run for
+> > > both mt2712-pcie and mt7622-pcie.  If this code is safe and necessary
+> > > for both mt2712-pcie and mt7622-pcie, please remove the mention of
+> > > MT7622.
+> > 
+> > Hmm, the code snippet added here will only be executed by MT7622, since
+> > MT2712 will not enter this  "if (pcie->base) {"  condition.
+> > Should the mention of MT7622 must be removed in this case?
+> 
+> You should add an explicit way (eg of_device_is_compatible() match for
+> instance) to apply the quirk just on the platform that requires it.
+> 
+> Checking for "if (pcie->base)" is really not the way to do it.
+> 
 
-diff --git a/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts b/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts
-index 6550bf0e594b..78fe61d97790 100644
---- a/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts
-+++ b/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts
-@@ -60,6 +60,20 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		blue {
-+			label = "bananapi-m3:blue:usr";
-+			gpios = <&axp_gpio 1 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		green {
-+			label = "bananapi-m3:green:usr";
-+			gpios = <&axp_gpio 0 GPIO_ACTIVE_HIGH>;
-+		};
-+	};
-+
- 	reg_usb1_vbus: reg-usb1-vbus {
- 		compatible = "regulator-fixed";
- 		regulator-name = "usb1-vbus";
--- 
-2.15.1
+hi, Lorenzo,
+Thanks very much for your advise.
+Passing the compatible string or platform data into this function needed
+to add some new field in the struct mtk_pcie_port, then I guess both set
+it for MT2712 and MT7622 is an easy way, since re-setting those values
+for MT2712 is safe.
+
+> > > 2) The first comment mentions both "vendor ID and device ID" but you
+> > > don't write the device ID.  Since this code applies to both
+> > > mt2712-pcie and mt7622-pcie, my guess is that you don't *want* to
+> > > write the device ID.  If that's the case, please fix the comment.
+> > > 
+> > 
+> > My bad, I did not check the comments carefully.
+> > Thanks.
+> > 
+> > > 3) If you only need to set the vendor ID, you're performing a 32-bit
+> > > write (writel()) to update a 16-bit value.  Please use writew()
+> > > instead.
+> > > 
+> > 
+> > Ok, thanks, I guess I could use the following code snippet in the next
+> > version:
+> > val = readl(port->base + PCIE_CONF_VENDOR_ID)
+> > val &= ~GENMASK(15, 0);
+> > val |= PCI_VENDOR_ID_MEDIATEK;
+> > writel(val, port->base + PCIE_CONF_VENDOR_ID);
+> 
+> Have you read Bjorn's comment ? Or there is a problem with using
+> a writew() ?
+> 
+
+This control register is a 32bit register, I'm not sure whether the apb
+bus support write an 16bit value with 16bit but not 32bit address
+alignment. I prefer the more safety old way of writel.
+
+I need to do more test about the writew if the code elegant is more
+important.
+
+thanks.
+
+> Lorenzo
+> 
+> > > 4) If you only need to set the vendor ID, please use a definition like
+> > > "PCIE_CONF_VENDOR_ID" instead of the ambiguous "PCIE_CONF_ID".
+> > > 
+> > > 5) If you only need to set the vendor ID, please update the changelog
+> > > to mention "vendor ID" specifically instead of the ambiguous "IDs".
+> > 
+> > > 6) Please add a space before the closing "*/" of the first comment.
+> > > 
+> > > 7) PCI_CLASS_BRIDGE_PCI is for a PCI-to-PCI bridge, i.e., one that has
+> > > PCI on both the primary (upstream) side and the secondary (downstream)
+> > > side.  That kind of bridge has a type 1 config header (see
+> > > PCI_HEADER_TYPE) and the PCI_PRIMARY_BUS and PCI_SECONDARY_BUS
+> > > registers tell us the bus number of the primary and secondary sides.
+> > > 
+> > > I don't believe this device is a PCI-to-PCI bridge.  I think it's a
+> > > *host* bridge that has some non-PCI interface on the upstream side and
+> > > should have a type 0 config header.  If that's the case you should use
+> > > PCI_CLASS_BRIDGE_HOST instead.
+> > > 
+> > 
+> > Thanks very much for your help with the review, I will fix the other
+> > issue in the next version.
+> > 
+> > > >  	}
+> > > >  
+> > > >  	/* Assert all reset signals */
+> > > > diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> > > > index ab20dc5..2480b0e 100644
+> > > > --- a/include/linux/pci_ids.h
+> > > > +++ b/include/linux/pci_ids.h
+> > > > @@ -2113,6 +2113,8 @@
+> > > >  
+> > > >  #define PCI_VENDOR_ID_MYRICOM		0x14c1
+> > > >  
+> > > > +#define PCI_VENDOR_ID_MEDIATEK		0x14c3
+> > > > +
+> > > >  #define PCI_VENDOR_ID_TITAN		0x14D2
+> > > >  #define PCI_DEVICE_ID_TITAN_010L	0x8001
+> > > >  #define PCI_DEVICE_ID_TITAN_100L	0x8010
+> > > > -- 
+> > > > 2.6.4
+> > > > 
+> > 
+> > 
+
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
