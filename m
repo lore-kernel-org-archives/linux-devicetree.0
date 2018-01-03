@@ -1,88 +1,230 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v17 0/5] ZII RAVE platform driver
-Date: Wed, 3 Jan 2018 09:46:21 +0000
-Message-ID: <20180103094621.su4umg2l5hggktlj@dell>
-References: <20171221065118.29726-1-andrew.smirnov@gmail.com>
- <20180102151722.padevvmko7cmh7qv@dell>
- <CAHQ1cqEbesz4esB2Y79a5VERnR3O=hbX00ikH35psO2b-HNJ6g@mail.gmail.com>
+From: Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>
+Subject: [PATCH v5 4/5] media: ov5640: add support of DVP parallel interface
+Date: Wed, 3 Jan 2018 10:57:31 +0100
+Message-ID: <1514973452-10464-5-git-send-email-hugues.fruchet@st.com>
+References: <1514973452-10464-1-git-send-email-hugues.fruchet@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAHQ1cqEbesz4esB2Y79a5VERnR3O=hbX00ikH35psO2b-HNJ6g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1514973452-10464-1-git-send-email-hugues.fruchet-qxv4g6HH51o@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org
-Cc: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Chris Healy <cphealy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Nikita Yushchenko <nikita.yoush-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Philippe Ombredanne <pombredanne-od1rfyK75/E@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Well I guess we better at least include them in the conversation.
+Add support of DVP parallel mode in addition of
+existing MIPI CSI mode. The choice between two modes
+and configuration is made through device tree.
 
-Stephen and Andrew added.
+Signed-off-by: Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>
+---
+ drivers/media/i2c/ov5640.c | 148 +++++++++++++++++++++++++++++++++++++++------
+ 1 file changed, 130 insertions(+), 18 deletions(-)
 
-On Tue, 02 Jan 2018, Andrey Smirnov wrote:
-> On Tue, Jan 2, 2018 at 7:17 AM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> > On Wed, 20 Dec 2017, Andrey Smirnov wrote:
-> >
-> >> Everyone:
-> >>
-> >> This patch series is v17 of the driver for supervisory processor found
-> >> on RAVE series of devices from ZII. Supervisory processor is a PIC
-> >> microcontroller connected to various electrical subsystems on RAVE
-> >> devices whose firmware implements protocol to command/qery them.
-> >>
-> >> NOTE:
-> >>
-> >>  * This driver dependends on crc_ccitt_false(), added by
-> >>    2da9378d531f8cc6670c7497f20d936b706ab80b in 'linux-next', the patch
-> >>    was pulled in by Andrew Morton and is currently avaiting users, so
-> >>    this series might have to go in through Andrew's tree
-> >
-> > Hmm... well that's annoying!  I just attempted to merge this set, but
-> > early build tests fail due to a dependency already merged into -next.
-> >
-> > ../drivers/mfd/rave-sp.c:227:25: error:
-> >     implicit declaration of function ‘crc_ccitt_false’
-> >     [-Werror=implicit-function-declaration]
-> >
-> > We need to figure out if either of the following are true:
-> >
-> >  - Patch [0] can be dropped from Andrew's tree
-> >    - ... and I can take it via the MFD tree instead
-
-> FWIW, it seems to me that the path above should be doable (and might
-> be simpler?). Let me know if any action needs to be taken on my part.
-> 
-> Thanks,
-> Andrey Smirnov
-
-> >  - Patch [0] is on an immutable branch I can pull in to my PR
-> > 
-> > If not, it will have to wait until the next cycle.
-> > 
-> > [0]:
-> > 
-> > Author: Andrey Vostrikov <andrey.vostrikov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-> > Date:   Mon Dec 25 22:39:57 2017 +1100
-> > 
-> >     lib/crc-ccitt: add CCITT-FALSE CRC16 variant
-> > 
-> >     In support of a soon to be published MFD driver using serdev to talk to
-> >     a supervisory processor that uses the CCITT-FALSE CRC16 variant in it's
-> >     protocol, this patch was tested successfully on an i.MX6 ARM platform.
-> > 
-> >     Link: http://lkml.kernel.org/r/20170413142932.27287-1-andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-> >     Signed-off-by: Andrey Vostrikov <andrey.vostrikov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-> >     Signed-off-by: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> >     Tested-by: Chris Healy <cphealy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> >     Signed-off-by: Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
-> >     Signed-off-by: Stephen Rothwell <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>
-
+diff --git a/drivers/media/i2c/ov5640.c b/drivers/media/i2c/ov5640.c
+index 9f031f3..a44b680 100644
+--- a/drivers/media/i2c/ov5640.c
++++ b/drivers/media/i2c/ov5640.c
+@@ -34,13 +34,19 @@
+ 
+ #define OV5640_DEFAULT_SLAVE_ID 0x3c
+ 
++#define OV5640_REG_SYS_CTRL0		0x3008
+ #define OV5640_REG_CHIP_ID		0x300a
++#define OV5640_REG_IO_MIPI_CTRL00	0x300e
++#define OV5640_REG_PAD_OUTPUT_ENABLE01	0x3017
++#define OV5640_REG_PAD_OUTPUT_ENABLE02	0x3018
+ #define OV5640_REG_PAD_OUTPUT00		0x3019
++#define OV5640_REG_SYSTEM_CONTROL1	0x302e
+ #define OV5640_REG_SC_PLL_CTRL0		0x3034
+ #define OV5640_REG_SC_PLL_CTRL1		0x3035
+ #define OV5640_REG_SC_PLL_CTRL2		0x3036
+ #define OV5640_REG_SC_PLL_CTRL3		0x3037
+ #define OV5640_REG_SLAVE_ID		0x3100
++#define OV5640_REG_SCCB_SYS_CTRL1	0x3103
+ #define OV5640_REG_SYS_ROOT_DIVIDER	0x3108
+ #define OV5640_REG_AWB_R_GAIN		0x3400
+ #define OV5640_REG_AWB_G_GAIN		0x3402
+@@ -70,6 +76,7 @@
+ #define OV5640_REG_HZ5060_CTRL01	0x3c01
+ #define OV5640_REG_SIGMADELTA_CTRL0C	0x3c0c
+ #define OV5640_REG_FRAME_CTRL01		0x4202
++#define OV5640_REG_POLARITY_CTRL00	0x4740
+ #define OV5640_REG_MIPI_CTRL00		0x4800
+ #define OV5640_REG_DEBUG_MODE		0x4814
+ #define OV5640_REG_PRE_ISP_TEST_SET1	0x503d
+@@ -982,7 +989,111 @@ static int ov5640_get_gain(struct ov5640_dev *sensor)
+ 	return gain & 0x3ff;
+ }
+ 
+-static int ov5640_set_stream(struct ov5640_dev *sensor, bool on)
++static int ov5640_set_stream_dvp(struct ov5640_dev *sensor, bool on)
++{
++	int ret;
++	unsigned int flags = sensor->ep.bus.parallel.flags;
++	u8 pclk_pol = 0;
++	u8 hsync_pol = 0;
++	u8 vsync_pol = 0;
++
++	/*
++	 * Note about parallel port configuration.
++	 *
++	 * When configured in parallel mode, the OV5640 will
++	 * output 10 bits data on DVP data lines [9:0].
++	 * If only 8 bits data are wanted, the 8 bits data lines
++	 * of the camera interface must be physically connected
++	 * on the DVP data lines [9:2].
++	 *
++	 * Control lines polarity can be configured through
++	 * devicetree endpoint control lines properties.
++	 * If no endpoint control lines properties are set,
++	 * polarity will be as below:
++	 * - VSYNC:	active high
++	 * - HREF:	active low
++	 * - PCLK:	active low
++	 */
++
++	if (on) {
++		/*
++		 * reset MIPI PCLK/SERCLK divider
++		 *
++		 * SC PLL CONTRL1 0
++		 * - [3..0]:	MIPI PCLK/SERCLK divider
++		 */
++		ret = ov5640_mod_reg(sensor, OV5640_REG_SC_PLL_CTRL1, 0x0f, 0);
++		if (ret)
++			return ret;
++
++		/*
++		 * configure parallel port control lines polarity
++		 *
++		 * POLARITY CTRL0
++		 * - [5]:	PCLK polarity (0: active low, 1: active high)
++		 * - [1]:	HREF polarity (0: active low, 1: active high)
++		 * - [0]:	VSYNC polarity (mismatch here between
++		 *		datasheet and hardware, 0 is active high
++		 *		and 1 is active low...)
++		 */
++		if (flags & V4L2_MBUS_PCLK_SAMPLE_RISING)
++			pclk_pol = 1;
++		if (flags & V4L2_MBUS_HSYNC_ACTIVE_HIGH)
++			hsync_pol = 1;
++		if (flags & V4L2_MBUS_VSYNC_ACTIVE_LOW)
++			vsync_pol = 1;
++
++		ret = ov5640_write_reg(sensor,
++				       OV5640_REG_POLARITY_CTRL00,
++				       (pclk_pol << 5) |
++				       (hsync_pol << 1) |
++				       vsync_pol);
++
++		if (ret)
++			return ret;
++	}
++
++	/*
++	 * powerdown MIPI TX/RX PHY & disable MIPI
++	 *
++	 * MIPI CONTROL 00
++	 * 4:	 PWDN PHY TX
++	 * 3:	 PWDN PHY RX
++	 * 2:	 MIPI enable
++	 */
++	ret = ov5640_write_reg(sensor,
++			       OV5640_REG_IO_MIPI_CTRL00, on ? 0x18 : 0);
++	if (ret)
++		return ret;
++
++	/*
++	 * enable VSYNC/HREF/PCLK DVP control lines
++	 * & D[9:6] DVP data lines
++	 *
++	 * PAD OUTPUT ENABLE 01
++	 * - 6:		VSYNC output enable
++	 * - 5:		HREF output enable
++	 * - 4:		PCLK output enable
++	 * - [3:0]:	D[9:6] output enable
++	 */
++	ret = ov5640_write_reg(sensor,
++			       OV5640_REG_PAD_OUTPUT_ENABLE01,
++			       on ? 0x7f : 0);
++	if (ret)
++		return ret;
++
++	/*
++	 * enable D[5:0] DVP data lines
++	 *
++	 * PAD OUTPUT ENABLE 02
++	 * - [7:2]:	D[5:0] output enable
++	 */
++	return ov5640_write_reg(sensor,
++				OV5640_REG_PAD_OUTPUT_ENABLE02,
++				on ? 0xfc : 0);
++}
++
++static int ov5640_set_stream_mipi(struct ov5640_dev *sensor, bool on)
+ {
+ 	int ret;
+ 
+@@ -1604,17 +1715,19 @@ static int ov5640_set_power(struct ov5640_dev *sensor, bool on)
+ 		if (ret)
+ 			goto power_off;
+ 
+-		/*
+-		 * start streaming briefly followed by stream off in
+-		 * order to coax the clock lane into LP-11 state.
+-		 */
+-		ret = ov5640_set_stream(sensor, true);
+-		if (ret)
+-			goto power_off;
+-		usleep_range(1000, 2000);
+-		ret = ov5640_set_stream(sensor, false);
+-		if (ret)
+-			goto power_off;
++		if (sensor->ep.bus_type == V4L2_MBUS_CSI2) {
++			/*
++			 * start streaming briefly followed by stream off in
++			 * order to coax the clock lane into LP-11 state.
++			 */
++			ret = ov5640_set_stream_mipi(sensor, true);
++			if (ret)
++				goto power_off;
++			usleep_range(1000, 2000);
++			ret = ov5640_set_stream_mipi(sensor, false);
++			if (ret)
++				goto power_off;
++		}
+ 
+ 		return 0;
+ 	}
+@@ -2188,7 +2301,11 @@ static int ov5640_s_stream(struct v4l2_subdev *sd, int enable)
+ 				goto out;
+ 		}
+ 
+-		ret = ov5640_set_stream(sensor, enable);
++		if (sensor->ep.bus_type == V4L2_MBUS_CSI2)
++			ret = ov5640_set_stream_mipi(sensor, enable);
++		else
++			ret = ov5640_set_stream_dvp(sensor, enable);
++
+ 		if (!ret)
+ 			sensor->streaming = enable;
+ 	}
+@@ -2301,11 +2418,6 @@ static int ov5640_probe(struct i2c_client *client,
+ 		return ret;
+ 	}
+ 
+-	if (sensor->ep.bus_type != V4L2_MBUS_CSI2) {
+-		dev_err(dev, "invalid bus type, must be MIPI CSI2\n");
+-		return -EINVAL;
+-	}
+-
+ 	/* get system clock (xclk) */
+ 	sensor->xclk = devm_clk_get(dev, "xclk");
+ 	if (IS_ERR(sensor->xclk)) {
 -- 
-Lee Jones
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+1.9.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
