@@ -1,161 +1,160 @@
-From: Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH v5 2/5] media: ov5640: check chip id
-Date: Wed, 3 Jan 2018 10:57:29 +0100
-Message-ID: <1514973452-10464-3-git-send-email-hugues.fruchet@st.com>
+From: Hugues Fruchet <hugues.fruchet@st.com>
+Subject: [PATCH v5 5/5] media: ov5640: add support of RGB565 and YUYV formats
+Date: Wed, 3 Jan 2018 10:57:32 +0100
+Message-ID: <1514973452-10464-6-git-send-email-hugues.fruchet@st.com>
 References: <1514973452-10464-1-git-send-email-hugues.fruchet@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1514973452-10464-1-git-send-email-hugues.fruchet-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1514973452-10464-1-git-send-email-hugues.fruchet@st.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Steve Longerbeam <slongerbeam@gmail.com>, Sakari Ailus <sakari.ailus@iki.fi>, Hans Verkuil <hverkuil@xs4all.nl>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, linux-media@vger.kernel.org, Hugues Fruchet <hugues.fruchet@st.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Verify that chip identifier is correct when probing.
+Add RGB565 (LE & BE) and YUV422 YUYV format in addition
+to existing YUV422 UYVY format.
 
-Signed-off-by: Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>
+Signed-off-by: Hugues Fruchet <hugues.fruchet@st.com>
 ---
- drivers/media/i2c/ov5640.c | 95 ++++++++++++++++++++++++++++++++++++++--------
- 1 file changed, 79 insertions(+), 16 deletions(-)
+ drivers/media/i2c/ov5640.c | 74 +++++++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 67 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/media/i2c/ov5640.c b/drivers/media/i2c/ov5640.c
-index 61071f5..9f031f3 100644
+index a44b680..f017742 100644
 --- a/drivers/media/i2c/ov5640.c
 +++ b/drivers/media/i2c/ov5640.c
-@@ -1547,24 +1547,58 @@ static void ov5640_reset(struct ov5640_dev *sensor)
- 	usleep_range(5000, 10000);
+@@ -76,9 +76,11 @@
+ #define OV5640_REG_HZ5060_CTRL01	0x3c01
+ #define OV5640_REG_SIGMADELTA_CTRL0C	0x3c0c
+ #define OV5640_REG_FRAME_CTRL01		0x4202
++#define OV5640_REG_FORMAT_CONTROL00	0x4300
+ #define OV5640_REG_POLARITY_CTRL00	0x4740
+ #define OV5640_REG_MIPI_CTRL00		0x4800
+ #define OV5640_REG_DEBUG_MODE		0x4814
++#define OV5640_REG_ISP_FORMAT_MUX_CTRL	0x501f
+ #define OV5640_REG_PRE_ISP_TEST_SET1	0x503d
+ #define OV5640_REG_SDE_CTRL0		0x5580
+ #define OV5640_REG_SDE_CTRL1		0x5581
+@@ -106,6 +108,18 @@ enum ov5640_frame_rate {
+ 	OV5640_NUM_FRAMERATES,
+ };
+ 
++struct ov5640_pixfmt {
++	u32 code;
++	u32 colorspace;
++};
++
++static const struct ov5640_pixfmt ov5640_formats[] = {
++	{ MEDIA_BUS_FMT_UYVY8_2X8, V4L2_COLORSPACE_SRGB, },
++	{ MEDIA_BUS_FMT_YUYV8_2X8, V4L2_COLORSPACE_SRGB, },
++	{ MEDIA_BUS_FMT_RGB565_2X8_LE, V4L2_COLORSPACE_SRGB, },
++	{ MEDIA_BUS_FMT_RGB565_2X8_BE, V4L2_COLORSPACE_SRGB, },
++};
++
+ /*
+  * FIXME: remove this when a subdev API becomes available
+  * to set the MIPI CSI-2 virtual channel.
+@@ -1837,17 +1851,23 @@ static int ov5640_try_fmt_internal(struct v4l2_subdev *sd,
+ {
+ 	struct ov5640_dev *sensor = to_ov5640_dev(sd);
+ 	const struct ov5640_mode_info *mode;
++	int i;
+ 
+ 	mode = ov5640_find_mode(sensor, fr, fmt->width, fmt->height, true);
+ 	if (!mode)
+ 		return -EINVAL;
+-
+ 	fmt->width = mode->width;
+ 	fmt->height = mode->height;
+-	fmt->code = sensor->fmt.code;
+ 
+ 	if (new_mode)
+ 		*new_mode = mode;
++
++	for (i = 0; i < ARRAY_SIZE(ov5640_formats); i++)
++		if (ov5640_formats[i].code == fmt->code)
++			break;
++	if (i >= ARRAY_SIZE(ov5640_formats))
++		fmt->code = ov5640_formats[0].code;
++
+ 	return 0;
  }
  
--static int ov5640_set_power(struct ov5640_dev *sensor, bool on)
-+static int ov5640_set_power_on(struct ov5640_dev *sensor)
- {
--	int ret = 0;
-+	struct i2c_client *client = sensor->i2c_client;
-+	int ret;
- 
--	if (on) {
--		clk_prepare_enable(sensor->xclk);
-+	ret = clk_prepare_enable(sensor->xclk);
-+	if (ret) {
-+		dev_err(&client->dev, "%s: failed to enable clock\n",
-+			__func__);
-+		return ret;
-+	}
- 
--		ret = regulator_bulk_enable(OV5640_NUM_SUPPLIES,
--					    sensor->supplies);
--		if (ret)
--			goto xclk_off;
-+	ret = regulator_bulk_enable(OV5640_NUM_SUPPLIES,
-+				    sensor->supplies);
-+	if (ret) {
-+		dev_err(&client->dev, "%s: failed to enable regulators\n",
-+			__func__);
-+		goto xclk_off;
-+	}
-+
-+	ov5640_reset(sensor);
-+	ov5640_power(sensor, true);
-+
-+	ret = ov5640_init_slave_id(sensor);
-+	if (ret)
-+		goto power_off;
-+
-+	return 0;
-+
-+power_off:
-+	ov5640_power(sensor, false);
-+	regulator_bulk_disable(OV5640_NUM_SUPPLIES, sensor->supplies);
-+xclk_off:
-+	clk_disable_unprepare(sensor->xclk);
-+	return ret;
-+}
-+
-+static void ov5640_set_power_off(struct ov5640_dev *sensor)
-+{
-+	ov5640_power(sensor, false);
-+	regulator_bulk_disable(OV5640_NUM_SUPPLIES, sensor->supplies);
-+	clk_disable_unprepare(sensor->xclk);
-+}
- 
--		ov5640_reset(sensor);
--		ov5640_power(sensor, true);
-+static int ov5640_set_power(struct ov5640_dev *sensor, bool on)
-+{
-+	int ret = 0;
- 
--		ret = ov5640_init_slave_id(sensor);
-+	if (on) {
-+		ret = ov5640_set_power_on(sensor);
- 		if (ret)
--			goto power_off;
-+			return ret;
- 
- 		ret = ov5640_restore_mode(sensor);
- 		if (ret)
-@@ -1586,10 +1620,7 @@ static int ov5640_set_power(struct ov5640_dev *sensor, bool on)
- 	}
- 
- power_off:
--	ov5640_power(sensor, false);
--	regulator_bulk_disable(OV5640_NUM_SUPPLIES, sensor->supplies);
--xclk_off:
--	clk_disable_unprepare(sensor->xclk);
-+	ov5640_set_power_off(sensor);
+@@ -1890,6 +1910,45 @@ static int ov5640_set_fmt(struct v4l2_subdev *sd,
  	return ret;
  }
  
-@@ -2202,6 +2233,34 @@ static int ov5640_get_regulators(struct ov5640_dev *sensor)
- 				       sensor->supplies);
- }
- 
-+static int ov5640_check_chip_id(struct ov5640_dev *sensor)
++static int ov5640_set_framefmt(struct ov5640_dev *sensor,
++			       struct v4l2_mbus_framefmt *format)
 +{
-+	struct i2c_client *client = sensor->i2c_client;
 +	int ret = 0;
-+	u16 chip_id;
++	bool is_rgb = false;
++	u8 val;
 +
-+	ret = ov5640_set_power_on(sensor);
++	switch (format->code) {
++	case MEDIA_BUS_FMT_UYVY8_2X8:
++		/* YUV422, UYVY */
++		val = 0x3f;
++		break;
++	case MEDIA_BUS_FMT_YUYV8_2X8:
++		/* YUV422, YUYV */
++		val = 0x30;
++		break;
++	case MEDIA_BUS_FMT_RGB565_2X8_LE:
++		/* RGB565 {g[2:0],b[4:0]},{r[4:0],g[5:3]} */
++		val = 0x6F;
++		is_rgb = true;
++		break;
++	case MEDIA_BUS_FMT_RGB565_2X8_BE:
++		/* RGB565 {r[4:0],g[5:3]},{g[2:0],b[4:0]} */
++		val = 0x61;
++		is_rgb = true;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	/* FORMAT CONTROL00: YUV and RGB formatting */
++	ret = ov5640_write_reg(sensor, OV5640_REG_FORMAT_CONTROL00, val);
 +	if (ret)
 +		return ret;
 +
-+	ret = ov5640_read_reg16(sensor, OV5640_REG_CHIP_ID, &chip_id);
-+	if (ret) {
-+		dev_err(&client->dev, "%s: failed to read chip identifier\n",
-+			__func__);
-+		goto power_off;
-+	}
-+
-+	if (chip_id != 0x5640) {
-+		dev_err(&client->dev, "%s: wrong chip identifier, expected 0x5640, got 0x%x\n",
-+			__func__, chip_id);
-+		ret = -ENXIO;
-+	}
-+
-+power_off:
-+	ov5640_set_power_off(sensor);
-+	return ret;
++	/* FORMAT MUX CONTROL: ISP YUV or RGB */
++	return ov5640_write_reg(sensor, OV5640_REG_ISP_FORMAT_MUX_CTRL,
++				is_rgb ? 0x01 : 0x00);
 +}
-+
- static int ov5640_probe(struct i2c_client *client,
- 			const struct i2c_device_id *id)
+ 
+ /*
+  * Sensor Controls.
+@@ -2275,15 +2334,12 @@ static int ov5640_enum_mbus_code(struct v4l2_subdev *sd,
+ 				  struct v4l2_subdev_pad_config *cfg,
+ 				  struct v4l2_subdev_mbus_code_enum *code)
  {
-@@ -2284,6 +2343,10 @@ static int ov5640_probe(struct i2c_client *client,
+-	struct ov5640_dev *sensor = to_ov5640_dev(sd);
+-
+ 	if (code->pad != 0)
+ 		return -EINVAL;
+-	if (code->index != 0)
++	if (code->index >= ARRAY_SIZE(ov5640_formats))
+ 		return -EINVAL;
  
- 	mutex_init(&sensor->lock);
+-	code->code = sensor->fmt.code;
+-
++	code->code = ov5640_formats[code->index].code;
+ 	return 0;
+ }
  
-+	ret = ov5640_check_chip_id(sensor);
-+	if (ret)
-+		goto entity_cleanup;
+@@ -2299,6 +2355,10 @@ static int ov5640_s_stream(struct v4l2_subdev *sd, int enable)
+ 			ret = ov5640_set_mode(sensor, sensor->current_mode);
+ 			if (ret)
+ 				goto out;
 +
- 	ret = ov5640_init_controls(sensor);
- 	if (ret)
- 		goto entity_cleanup;
++			ret = ov5640_set_framefmt(sensor, &sensor->fmt);
++			if (ret)
++				goto out;
+ 		}
+ 
+ 		if (sensor->ep.bus_type == V4L2_MBUS_CSI2)
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
