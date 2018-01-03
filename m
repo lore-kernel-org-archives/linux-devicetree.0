@@ -1,84 +1,67 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCHv1 1/6] net: dsa: Support internal phy on 'cpu' port
-Date: Wed, 3 Jan 2018 14:21:28 +0100
-Message-ID: <20180103132128.GI15036@lunn.ch>
-References: <20180103122609.5482-1-sebastian.reichel@collabora.co.uk>
- <20180103122609.5482-2-sebastian.reichel@collabora.co.uk>
+From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Subject: [PATCHv2] nokia N9: Add support for magnetometer
+Date: Wed, 3 Jan 2018 15:12:49 +0100
+Message-ID: <20180103141248.GA18821@amd>
+References: <20180102131722.GA20706@amd>
+ <20180102172720.ghtez4d3d2fgcmj6@earth.universe>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="x+6KMIRAuhnl3hBn"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20180103122609.5482-2-sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+In-Reply-To: <20180102172720.ghtez4d3d2fgcmj6-SfvFxonMDyemK9LvCR3Hrw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Cc: Vivien Didelot <vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Ian Ray <ian.ray-JJi787mZWgc@public.gmane.org>, Nandor Han <nandor.han-JJi787mZWgc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, aaro.koskinen-X3B1VOXEql0@public.gmane.org, ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, patrikbachan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, serge-A9i7LUbDfNHQT0dZR+AlfA@public.gmane.org, abcloriens-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, clayton-fehKsxFhGzZIf6P1QZMOBw@public.gmane.org, martijn-28JJ9oSIdodmR6Xm/wNWPw@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Filip =?utf-8?Q?Matijevi=C4=87?= <filip.matijevic.pz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 03, 2018 at 01:26:04PM +0100, Sebastian Reichel wrote:
-> This adds support for enabling the internal phy for a 'cpu' port.
-> It has been tested on GE B850v3 and B650v3, which have a built-in
-> MV88E6240 switch connected to a PCIe based network card. Without
-> this patch the link does not come up and no traffic can be routed
-> through the switch.
-> 
-> Signed-off-by: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-> ---
->  net/dsa/port.c | 26 ++++++++++++++++++++++----
->  1 file changed, 22 insertions(+), 4 deletions(-)
-> 
-> diff --git a/net/dsa/port.c b/net/dsa/port.c
-> index bb4be2679904..f99c1d34416c 100644
-> --- a/net/dsa/port.c
-> +++ b/net/dsa/port.c
-> @@ -282,6 +282,10 @@ int dsa_port_fixed_link_register_of(struct dsa_port *dp)
->  	int mode;
->  	int err;
->  
-> +	mode = of_get_phy_mode(dn);
-> +	if (mode < 0)
-> +		mode = PHY_INTERFACE_MODE_NA;
-> +
->  	if (of_phy_is_fixed_link(dn)) {
->  		err = of_phy_register_fixed_link(dn);
->  		if (err) {
-> @@ -292,10 +296,6 @@ int dsa_port_fixed_link_register_of(struct dsa_port *dp)
->  		}
->  
->  		phydev = of_phy_find_device(dn);
-> -
-> -		mode = of_get_phy_mode(dn);
-> -		if (mode < 0)
-> -			mode = PHY_INTERFACE_MODE_NA;
->  		phydev->interface = mode;
->  
->  		genphy_config_init(phydev);
-> @@ -305,6 +305,24 @@ int dsa_port_fixed_link_register_of(struct dsa_port *dp)
->  			ds->ops->adjust_link(ds, port, phydev);
->  
->  		put_device(&phydev->mdio.dev);
-> +	} else if (mode == PHY_INTERFACE_MODE_INTERNAL ||
-> +		   mode == PHY_INTERFACE_MODE_NA) {
 
-Hi Sebastian
+--x+6KMIRAuhnl3hBn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I understand what you are trying to do, i've got boards which also
-have back-to-back PHYs for the CPU port. These boards however have the
-strapping correct, so nothing needs doing in software.
 
-But the way you are doing it is wrong. PHY_INTERFACE_MODE_NA means
-something else has already setup the interface mode, leave it alone.
-PHY_INTERFACE_MODE_INTERNAL means there is some other sort of bus
-between the MAC and the PHY than the normal MII.
+This adds dts support for magnetometer on Nokia N9.
 
-What you want to say is that there is a PHY on this port, and that you
-want to configure it to a given fixed configuration, probably 1000
-Full, with auto-neg turned off. This is something completely different
-to a fixed phy, which is used when there is no PHY at all.
+Signed-off-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
 
-What state is the PHY in, if you don't have this patch? Is it powered
-down?
+diff --git a/arch/arm/boot/dts/omap3-n9.dts b/arch/arm/boot/dts/omap3-n9.dts
+index 39e35f8..af321d8 100644
+--- a/arch/arm/boot/dts/omap3-n9.dts
++++ b/arch/arm/boot/dts/omap3-n9.dts
+@@ -36,6 +57,12 @@
+ 			};
+ 		};
+ 	};
++
++&i2c3 {
++	ak8975@0f {
++		compatible =3D "asahi-kasei,ak8975";
++		reg =3D <0x0f>;
++	};
+ };
+=20
+ &isp {
 
-	Andrew
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--x+6KMIRAuhnl3hBn
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlpM5OAACgkQMOfwapXb+vJlfgCfe3CWbUueH8SY0WtJAuvIcrWz
+fAsAoJ/R/bqRqmggDZjSpyq+XOVQCIfI
+=PzfU
+-----END PGP SIGNATURE-----
+
+--x+6KMIRAuhnl3hBn--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
