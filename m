@@ -1,90 +1,134 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] of/fdt: Fix #ifdef dependency of early flattree
- declarations
-Date: Wed, 3 Jan 2018 15:41:20 -0600
-Message-ID: <20180103214120.jyeq64pe65zfr4fw@rob-hp-laptop>
-References: <1514888297-10791-1-git-send-email-geert+renesas@glider.be>
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v2 3/6] irqchip: Add the ingenic-tcu-intc driver
+Date: Wed, 03 Jan 2018 22:50:04 +0100
+Message-ID: <1515016205.1642.1@smtp.crapouillou.net>
+References: <20171229125942.27305-2-paul@crapouillou.net>
+        <20180101143344.2099-1-paul@crapouillou.net>
+        <20180101143344.2099-3-paul@crapouillou.net>
+        <20180103205817.4hnoyyomtwmhri76@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1514888297-10791-1-git-send-email-geert+renesas@glider.be>
+In-Reply-To: <20180103205817.4hnoyyomtwmhri76@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Frank Rowand <frowand.list@gmail.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Lee Jones <lee.jones@linaro.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 02, 2018 at 11:18:17AM +0100, Geert Uytterhoeven wrote:
-> If OF_FLATTREE=y, but OF_EARLY_FLATTREE=n:
-> 
->     drivers/tty/serial/earlycon.o: In function `param_setup_earlycon':
->     earlycon.c:(.init.text+0x3a4): undefined reference to `early_init_dt_scan_chosen_stdout'
-> 
-> Fix this by moving the early flattree forward declarations and dummy
-> implementations inside an #ifdef CONFIG_OF_EARLY_FLATTREE block.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
-> Seen after forcing OF_FLATTREE=y on sparc64 allmodconfig
-> (Hi, out-of-tree OF_CONFIGFS!).
+Hi,
 
-Humm, making FDT actually work with a PDT based system is probably more 
-work...
 
-Then again, I guess it could be completely independent like DT overlays 
-on an ACPI system. Though that needs some work too to actually be 
-useful. Primarily, how to anchor overlays to devices on discoverable 
-buses (or discovered by a mechanism other than FDT). 
+Le mer. 3 janv. 2018 =E0 21:58, Rob Herring <robh@kernel.org> a =E9crit :
+> On Mon, Jan 01, 2018 at 03:33:41PM +0100, Paul Cercueil wrote:
+>>  This simple driver handles the IRQ chip of the TCU
+>>  (Timer Counter Unit) of the JZ47xx Ingenic SoCs.
+>>=20
+>>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+>>  ---
+>>   .../bindings/interrupt-controller/ingenic,tcu.txt  |  32 +++++
+>>   drivers/irqchip/Kconfig                            |   6 +
+>>   drivers/irqchip/Makefile                           |   1 +
+>>   drivers/irqchip/irq-ingenic-tcu.c                  | 151=20
+>> +++++++++++++++++++++
+>>   4 files changed, 190 insertions(+)
+>>   create mode 100644=20
+>> Documentation/devicetree/bindings/interrupt-controller/ingenic,tcu.txt
+>>   create mode 100644 drivers/irqchip/irq-ingenic-tcu.c
+>>=20
+>>   v2: Use SPDX identifier for the license
+>>       Make KConfig option select CONFIG_IRQ_DOMAIN since we depend=20
+>> on it
+>>=20
+>>  diff --git=20
+>> a/Documentation/devicetree/bindings/interrupt-controller/ingenic,tcu.txt=
+=20
+>> b/Documentation/devicetree/bindings/interrupt-controller/ingenic,tcu.txt
+>>  new file mode 100644
+>>  index 000000000000..a3e6318f8461
+>>  --- /dev/null
+>>  +++=20
+>> b/Documentation/devicetree/bindings/interrupt-controller/ingenic,tcu.txt
+>>  @@ -0,0 +1,32 @@
+>>  +Ingenic SoCs Timer/Counter Unit Interrupt Controller
+>>  +
+>>  +Required properties:
+>>  +
+>>  +- compatible : should be "ingenic,<socname>-tcu-intc". Valid=20
+>> strings are:
+>>  +  * ingenic,jz4740-tcu-intc
+>>  +  * ingenic,jz4770-tcu-intc
+>>  +  * ingenic,jz4780-tcu-intc
+>>  +- interrupt-controller : Identifies the node as an interrupt=20
+>> controller
+>>  +- #interrupt-cells : Specifies the number of cells needed to=20
+>> encode an
+>>  +  interrupt source. The value shall be 1.
+>>  +- interrupt-parent : phandle of the interrupt controller.
+>>  +- interrupts : Specifies the interrupt the controller is connected=20
+>> to.
+>>  +
+>>  +Example:
+>>  +
+>>  +/ {
+>>  +	regmap {
+>=20
+> regmap is a Linuxism.
 
-> ---
->  include/linux/of_fdt.h | 14 +++++++++-----
->  1 file changed, 9 insertions(+), 5 deletions(-)
-> 
-> diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
-> index 013c5418aeecfdbd..d81a26df46bb6250 100644
-> --- a/include/linux/of_fdt.h
-> +++ b/include/linux/of_fdt.h
-> @@ -47,6 +47,13 @@ extern void *initial_boot_params;
->  extern char __dtb_start[];
->  extern char __dtb_end[];
->  
-> +/* Other Prototypes */
-> +extern void early_init_devtree(void *);
-> +extern void early_get_first_memblock_info(void *, phys_addr_t *);
+Should I just call it "mfd" then? (or better, "mfd@10002000")
 
-Seems like these 2 should be in the ifdef?
 
-> +extern u64 of_flat_dt_translate_address(unsigned long node);
-> +extern void of_fdt_limit_memory(int limit);
-> +
-> +#ifdef CONFIG_OF_EARLY_FLATTREE
->  /* For scanning the flat device-tree at boot time */
->  extern int of_scan_flat_dt(int (*it)(unsigned long node, const char *uname,
->  				     int depth, void *data),
-> @@ -95,17 +102,14 @@ extern const void *of_flat_dt_match_machine(const void *default_match,
->  /* Other Prototypes */
->  extern void unflatten_device_tree(void);
->  extern void unflatten_and_copy_device_tree(void);
-> -extern void early_init_devtree(void *);
-> -extern void early_get_first_memblock_info(void *, phys_addr_t *);
-> -extern u64 of_flat_dt_translate_address(unsigned long node);
-> -extern void of_fdt_limit_memory(int limit);
-> -#else /* CONFIG_OF_FLATTREE */
-> +#else /* CONFIG_OF_EARLY_FLATTREE */
->  static inline int early_init_dt_scan_chosen_stdout(void) { return -ENODEV; }
->  static inline void early_init_fdt_scan_reserved_mem(void) {}
->  static inline void early_init_fdt_reserve_self(void) {}
->  static inline const char *of_flat_dt_get_machine_name(void) { return NULL; }
->  static inline void unflatten_device_tree(void) {}
->  static inline void unflatten_and_copy_device_tree(void) {}
-> +#endif /* CONFIG_OF_EARLY_FLATTREE */
->  #endif /* CONFIG_OF_FLATTREE */
->  
->  #endif /* __ASSEMBLY__ */
-> -- 
-> 2.7.4
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>  +		compatible =3D "simple-mfd", "syscon";
+>=20
+> Need a specific compatible string here. Neither of these are valid by
+> themselves.
+
+So a compatible string not used by any driver? Something like=20
+"ingenic,tcu"?
+Would I need to document it too? (it's just a simple-mfd after all)
+
+
+>>  +		reg =3D <0x10002000 0x1000>;
+>>  +
+>>  +		tcu: interrupt-controller {
+>=20
+> The TCU is only an interrupt controller?
+
+The TCU is a multi-function silicon. It has 8 channels, each one with=20
+its own
+interrupt line, demultiplexed from 2-3 parent IRQs (depending on the=20
+SoC).
+The TCU IRQ driver handles this.
+
+Each channel has a clock, that can be reparented, reclocked, and gated.
+That's the job for the TCU clocks driver.
+
+Being hardware timers, they can be used for accounting and timekeeping=20
+within
+Linux, that's the job for the clocksource driver.
+
+The TCU block also feeds the clocks to the watchdog and the OST (a=20
+separate
+timer block, not handled here).
+
+Each channel can be configured as PWM. A future patchset will convert=20
+the PWM
+driver for Ingenic SoCs to use the TCU clocks and regmap provided by=20
+these
+new drivers.
+
+If your remark was only reffering to the name of the node handle, I can=20
+rename
+it to "tcu_intc", there's no problem.
+
+>>  +			compatible =3D "ingenic,jz4740-tcu-intc";
+>=20
+> Is there a register range associated with this block? If so, add a reg
+> property even if regmap doesn't need it.
+
+Sure.
+
+Thanks for the review!
+
+-Paul
+=
