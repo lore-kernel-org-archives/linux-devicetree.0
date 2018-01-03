@@ -1,46 +1,129 @@
-From: "Niklas =?iso-8859-1?Q?S=F6derlund?=" <niklas.soderlund@ragnatech.se>
-Subject: Re: [1/2] arm64: dts: r8a7795: add thermal cooling management
-Date: Wed, 3 Jan 2018 01:03:52 +0100
-Message-ID: <20180103000352.GB22490@bigcity.dyn.berto.se>
-References: <20170913105909.13230-2-niklas.soderlund+renesas@ragnatech.se>
- <20180101181333.GA3631@localhost.localdomain>
- <20180102091944.py647jheghud7sl2@verge.net.au>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [RESEND PATCH v2 14/15] ASoC: qcom: apq8096: Add db820c machine
+ driver
+Date: Tue, 2 Jan 2018 16:16:54 -0800
+Message-ID: <20180103001654.GU478@tuxbook>
+References: <20171214173402.19074-1-srinivas.kandagatla@linaro.org>
+ <20171214173402.19074-15-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180102091944.py647jheghud7sl2@verge.net.au>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Eduardo Valentin <edubezval@gmail.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org
+In-Reply-To: <20171214173402.19074-15-srinivas.kandagatla@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: srinivas.kandagatla@linaro.org
+Cc: Andy Gross <andy.gross@linaro.org>, Mark Brown <broonie@kernel.org>, linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Patrick Lai <plai@codeaurora.org>, Banajit Goswami <bgoswami@codeaurora.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, sboyd@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon,
+On Thu 14 Dec 09:34 PST 2017, srinivas.kandagatla@linaro.org wrote:
 
-On 2018-01-02 10:19:44 +0100, Simon Horman wrote:
-> On Mon, Jan 01, 2018 at 10:13:35AM -0800, Eduardo Valentin wrote:
-> > On Wed, Sep 13, 2017 at 12:59:08PM +0200, Niklas Söderlund wrote:
-> > > Add nodes and properties for thermal cooling management support.
-> > > 
-> > > Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-> > > ---
-> > 
-> > Just a reminder, this series should go via your arch tree. You may add
-> > my acks.
+> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 > 
-> Ack.
-> 
-> Niklas, could you comment on the readiness of these patches
-> for the renesas tree?
+> uThis patch adds support to DB820c machine driver.
 
-I think maybe the patches might have became a bit outdated since they 
-where posted due to all reg property fixup patches. The blocker for me 
-reposting this series is that the patches this depends 
-'topic/rcar-gen3-cpufreq' on are not yet in the renesas tree next or 
-devel branches. Do you think it would be valuable for me to refresh 
-these patches before the dependencies are picked up?
+Drop 'u' and expand the message to claim that this is the machine driver
+for 8996, used by the db820c.
 
--- 
+[..]
+> +static struct snd_soc_dai_link msm8996_dai_links[] = {
+
+Are there any differences between the DAI links of apq8096 and msm8996?
+
+> +	/* FrontEnd DAI Links */
+> +	{
+> +		.name		= "MultiMedia1 Playback",
+> +		.stream_name	= "MultiMedia1",
+> +		.cpu_dai_name	= "MM_DL1",
+> +		.platform_name	= "q6asm_dai",
+> +		.dynamic	= 1,
+> +		.dpcm_playback	= 1,
+> +
+> +		.codec_dai_name	= "snd-soc-dummy-dai",
+> +		.codec_name = "snd-soc-dummy",
+> +	},
+> +	/* Backend DAI Links */
+> +	{
+> +		.name		= "HDMI Playback",
+> +		.stream_name	= "q6afe_dai",
+> +		.cpu_dai_name	= "HDMI",
+> +		.platform_name	= "q6routing",
+> +		.no_pcm		= 1,
+> +		.dpcm_playback	= 1,
+> +		.be_hw_params_fixup = msm8996_be_hw_params_fixup,
+> +		.codec_dai_name	= "i2s-hifi",
+> +		.codec_name = "hdmi-audio-codec.0.auto",
+> +	},
+> +};
+> +
+> +static int apq8096_sbc_parse_of(struct snd_soc_card *card)
+
+msm8996_parse_of()
+
+> +{
+> +	struct device *dev = card->dev;
+> +	int ret;
+> +
+> +	ret = snd_soc_of_parse_card_name(card, "qcom,model");
+> +	if (ret)
+> +		dev_err(dev, "Error parsing card name: %d\n", ret);
+> +
+> +	return ret;
+> +}
+> +
+> +static int msm_snd_apq8096_probe(struct platform_device *pdev)
+
+msm_snd_msm8996_probe()?
+
+> +{
+> +	int ret;
+> +	struct snd_soc_card *card;
+> +
+> +	card = devm_kzalloc(&pdev->dev, sizeof(*card), GFP_KERNEL);
+> +	if (!card)
+> +		return -ENOMEM;
+> +
+> +	card->dev = &pdev->dev;
+> +
+> +	ret = dma_coerce_mask_and_coherent(card->dev, DMA_BIT_MASK(32));
+> +	if (ret)
+> +		return ret;
+> +
+> +	card->dai_link = msm8996_dai_links;
+> +	card->num_links	= ARRAY_SIZE(msm8996_dai_links);
+> +
+> +	ret = apq8096_sbc_parse_of(card);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Error parsing OF data\n");
+
+No need to print in both parse_of() and here.
+
+> +		return ret;
+> +	}
+> +
+> +	ret = devm_snd_soc_register_card(&pdev->dev, card);
+> +	if (ret)
+> +		dev_err(&pdev->dev, "sound card register failed (%d)!\n", ret);
+> +	else
+> +		dev_err(&pdev->dev, "sound card register Sucessfull\n");
+
+This isn't an error, skip the print here.
+
+> +
+> +	return ret;
+> +}
+> +
+> +static const struct of_device_id msm_snd_apq8096_dt_match[] = {
+> +	{.compatible = "qcom,apq8096-sndcard"},
+> +	{}
+> +};
+> +
+> +static struct platform_driver msm_snd_apq8096_driver = {
+> +	.probe  = msm_snd_apq8096_probe,
+> +	.driver = {
+> +		.name = "msm-snd-apq8096",
+> +		.owner = THIS_MODULE,
+
+Drop the .owner
+
 Regards,
-Niklas Söderlund
+Bjorn
