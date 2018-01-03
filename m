@@ -1,51 +1,177 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [RESEND PATCH v2 15/15] arm64: dts: msm8996:
- db820c: Add sound card support
-Date: Wed, 3 Jan 2018 12:01:18 -0800
-Message-ID: <20180103200118.GB478@tuxbook>
-References: <20171214173402.19074-1-srinivas.kandagatla@linaro.org>
- <20171214173402.19074-16-srinivas.kandagatla@linaro.org>
- <20180103002229.GV478@tuxbook>
- <e03188a1-1db2-29ab-8112-015161125e0b@linaro.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/2] nvmem: add driver for JZ4780 efuse
+Date: Wed, 3 Jan 2018 14:02:11 -0600
+Message-ID: <20180103200211.u56tqesyumsofoff@rob-hp-laptop>
+References: <20171228212954.2922-1-malat@debian.org>
+ <20171228212954.2922-2-malat@debian.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <e03188a1-1db2-29ab-8112-015161125e0b@linaro.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Banajit Goswami <bgoswami@codeaurora.org>, linux-arm-msm@vger.kernel.org, Patrick Lai <plai@codeaurora.org>, Takashi Iwai <tiwai@suse.com>, sboyd@codeaurora.org, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, David Brown <david.brown@linaro.org>, Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org, Andy Gross <andy.gross@linaro.org>, linux-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20171228212954.2922-2-malat@debian.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mathieu Malaterre <malat@debian.org>
+Cc: Marcin Nowakowski <marcin.nowakowski@mips.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Zubair.Kakakhel@mips.com, PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed 03 Jan 08:27 PST 2018, Srinivas Kandagatla wrote:
-
-> Thanks for the comments,
+On Thu, Dec 28, 2017 at 10:29:52PM +0100, Mathieu Malaterre wrote:
+> From: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
 > 
-> On 03/01/18 00:22, Bjorn Andersson wrote:
-> > On Thu 14 Dec 09:34 PST 2017, srinivas.kandagatla@linaro.org wrote:
-> > 
-> > > From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-[..]
-> > > +	        lpass_q6_smmu: arm,smmu-lpass_q6@1600000 {
-> > 
-> > name this node "iommu"
-> will rename it to arm,smmu@1600000
+> This patch brings support for the JZ4780 efuse. Currently it only expose
+> a read only access to the entire 8K bits efuse memory.
 > 
+> Tested-by: Mathieu Malaterre <malat@debian.org>
+> Signed-off-by: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
+> Signed-off-by: Mathieu Malaterre <malat@debian.org>
+> ---
+>  .../ABI/testing/sysfs-driver-jz4780-efuse          |  16 ++
+>  .../bindings/nvmem/ingenic,jz4780-efuse.txt        |  17 ++
 
-I don't think you're supposed to have , in the node names, and whenever
-possible they should be generic names of the function.
+Please split bindings to separate patch.
 
-So analog to "clock-controller", "dma-controller", "serial", "i2c" etc I
-believe this should be "iommu".
+>  MAINTAINERS                                        |   5 +
+>  arch/mips/boot/dts/ingenic/jz4780.dtsi             |  40 ++-
 
-Regards,
-Bjorn
+dts files should also be separate.
+
+>  drivers/nvmem/Kconfig                              |  10 +
+>  drivers/nvmem/Makefile                             |   2 +
+>  drivers/nvmem/jz4780-efuse.c                       | 305 +++++++++++++++++++++
+>  7 files changed, 383 insertions(+), 12 deletions(-)
+>  create mode 100644 Documentation/ABI/testing/sysfs-driver-jz4780-efuse
+>  create mode 100644 Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.txt
+>  create mode 100644 drivers/nvmem/jz4780-efuse.c
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-driver-jz4780-efuse b/Documentation/ABI/testing/sysfs-driver-jz4780-efuse
+> new file mode 100644
+> index 000000000000..bb6f5d6ceea0
+> --- /dev/null
+> +++ b/Documentation/ABI/testing/sysfs-driver-jz4780-efuse
+> @@ -0,0 +1,16 @@
+> +What:		/sys/devices/*/<our-device>/nvmem
+> +Date:		December 2017
+> +Contact:	PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
+> +Description:	read-only access to the efuse on the Ingenic JZ4780 SoC
+> +		The SoC has a one time programmable 8K efuse that is
+> +		split into segments. The driver supports read only.
+> +		The segments are
+> +		0x000   64 bit Random Number
+> +		0x008  128 bit Ingenic Chip ID
+> +		0x018  128 bit Customer ID
+> +		0x028 3520 bit Reserved
+> +		0x1E0    8 bit Protect Segment
+> +		0x1E1 2296 bit HDMI Key
+> +		0x300 2048 bit Security boot key
+
+Why do these need to be exposed to userspace?
+
+sysfs is 1 value per file and this is lots of different things. 
+
+We already have ways to feed random data (entropy) to the system. And we 
+have a way to expose SoC ID info to userspace (socdev).
+
+> +Users:		any user space application which wants to read the Chip
+> +		and Customer ID
+> diff --git a/Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.txt b/Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.txt
+> new file mode 100644
+> index 000000000000..cd6d67ec22fc
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.txt
+> @@ -0,0 +1,17 @@
+> +Ingenic JZ EFUSE driver bindings
+> +
+> +Required properties:
+> +- "compatible"		Must be set to "ingenic,jz4780-efuse"
+> +- "reg"			Register location and length
+> +- "clocks"		Handle for the ahb clock for the efuse.
+> +- "clock-names"		Must be "bus_clk"
+> +
+> +Example:
+> +
+> +efuse: efuse@134100d0 {
+> +	compatible = "ingenic,jz4780-efuse";
+> +	reg = <0x134100D0 0xFF>;
+> +
+> +	clocks = <&cgu JZ4780_CLK_AHB2>;
+> +	clock-names = "bus_clk";
+> +};
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index a6e86e20761e..7a050c20c533 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -6902,6 +6902,11 @@ M:	Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+>  S:	Maintained
+>  F:	drivers/dma/dma-jz4780.c
+>  
+> +INGENIC JZ4780 EFUSE Driver
+> +M:	PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
+> +S:	Maintained
+> +F:	drivers/nvmem/jz4780-efuse.c
+
+Binding file?
+
+> +
+>  INGENIC JZ4780 NAND DRIVER
+>  M:	Harvey Hunt <harveyhuntnexus@gmail.com>
+>  L:	linux-mtd@lists.infradead.org
+> diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+> index 9b5794667aee..3fb9d916a2ea 100644
+> --- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
+> +++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+> @@ -224,21 +224,37 @@
+>  		reg = <0x10002000 0x100>;
+>  	};
+>  
+> -	nemc: nemc@13410000 {
+> -		compatible = "ingenic,jz4780-nemc";
+> -		reg = <0x13410000 0x10000>;
+> -		#address-cells = <2>;
+> +
+> +	ahb2: ahb2 {
+> +		compatible = "simple-bus";
+
+This is an unrelated change and should be its own patch.
+
+> +		#address-cells = <1>;
+>  		#size-cells = <1>;
+> -		ranges = <1 0 0x1b000000 0x1000000
+> -			  2 0 0x1a000000 0x1000000
+> -			  3 0 0x19000000 0x1000000
+> -			  4 0 0x18000000 0x1000000
+> -			  5 0 0x17000000 0x1000000
+> -			  6 0 0x16000000 0x1000000>;
+> +		ranges = <>;
+> +
+> +		nemc: nemc@13410000 {
+> +			compatible = "ingenic,jz4780-nemc";
+> +			reg = <0x13410000 0x10000>;
+> +			#address-cells = <2>;
+> +			#size-cells = <1>;
+> +			ranges = <1 0 0x1b000000 0x1000000
+> +				  2 0 0x1a000000 0x1000000
+> +				  3 0 0x19000000 0x1000000
+> +				  4 0 0x18000000 0x1000000
+> +				  5 0 0x17000000 0x1000000
+> +				  6 0 0x16000000 0x1000000>;
+> +
+> +			clocks = <&cgu JZ4780_CLK_NEMC>;
+> +
+> +			status = "disabled";
+> +		};
+>  
+> -		clocks = <&cgu JZ4780_CLK_NEMC>;
+> +		efuse: efuse@134100d0 {
+> +			compatible = "ingenic,jz4780-efuse";
+> +			reg = <0x134100d0 0xff>;
+
+You are creating an overlapping region here with nemc above. Don't do 
+that.
+
+>  
+> -		status = "disabled";
+> +			clocks = <&cgu JZ4780_CLK_AHB2>;
+> +			clock-names = "bus_clk";
+> +		};
+>  	};
+>  
+>  	bch: bch@134d0000 {
