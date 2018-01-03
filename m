@@ -1,83 +1,76 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 5/6] clocksource: Add a new timer-ingenic driver
-Date: Wed, 3 Jan 2018 15:08:40 -0600
-Message-ID: <20180103210840.hsh4kghuxz7btu5f@rob-hp-laptop>
-References: <20171229125942.27305-2-paul@crapouillou.net>
- <20180101143344.2099-1-paul@crapouillou.net>
- <20180101143344.2099-5-paul@crapouillou.net>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 32/39] dt-bindings: nds32 L2 cache controller Bindings
+Date: Wed, 3 Jan 2018 15:10:13 -0600
+Message-ID: <20180103211013.daryfidm7hdbrsjc@rob-hp-laptop>
+References: <cover.1514874857.git.green.hu@gmail.com>
+ <fc1f58a97003b4bedfbb8b6e3d29b1628ff61f9a.1514874858.git.green.hu@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20180101143344.2099-5-paul@crapouillou.net>
-Sender: linux-clk-owner@vger.kernel.org
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Lee Jones <lee.jones@linaro.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <fc1f58a97003b4bedfbb8b6e3d29b1628ff61f9a.1514874858.git.green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greentime Hu <green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: greentime-MUIXKm3Oiri1Z/+hSey0Gg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, deanbo422-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, viro-RmSDqhL/yNMiFSDQTTA3OLVCufUGDwFn@public.gmane.org, dhowells-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, geert.uytterhoeven-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, greg-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org, ren_guo-Y+KPrCd2zL4AvxtiuMwx3w@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, jonas-A9uVI2HLR7kOP4wsBPIw7w@public.gmane.org, stefan.kristiansson-MbMCFXIvDHJFcC0YU169RA@public.gmane.org, shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 01, 2018 at 03:33:43PM +0100, Paul Cercueil wrote:
-> This driver will use the TCU (Timer Counter Unit) present on the Ingenic
-> JZ47xx SoCs to provide the kernel with a clocksource and timers.
+On Tue, Jan 02, 2018 at 04:25:04PM +0800, Greentime Hu wrote:
+> From: Greentime Hu <greentime-MUIXKm3Oiri1Z/+hSey0Gg@public.gmane.org>
 > 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> This patch adds nds32 L2 cache controller binding documents.
+> 
+> Signed-off-by: Greentime Hu <greentime-MUIXKm3Oiri1Z/+hSey0Gg@public.gmane.org>
 > ---
->  .../devicetree/bindings/timer/ingenic,tcu.txt      |  35 +++
-
-Separate patch please.
-
->  drivers/clocksource/Kconfig                        |   8 +
->  drivers/clocksource/Makefile                       |   1 +
->  drivers/clocksource/timer-ingenic.c                | 256 +++++++++++++++++++++
->  4 files changed, 300 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/timer/ingenic,tcu.txt
->  create mode 100644 drivers/clocksource/timer-ingenic.c
+>  Documentation/devicetree/bindings/nds32/atl2c.txt |   29 +++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/nds32/atl2c.txt
 > 
->  v2: Use SPDX identifier for the license
-> 
-> diff --git a/Documentation/devicetree/bindings/timer/ingenic,tcu.txt b/Documentation/devicetree/bindings/timer/ingenic,tcu.txt
+> diff --git a/Documentation/devicetree/bindings/nds32/atl2c.txt b/Documentation/devicetree/bindings/nds32/atl2c.txt
 > new file mode 100644
-> index 000000000000..e4944972ea53
+> index 0000000..db9f7ec
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/timer/ingenic,tcu.txt
-> @@ -0,0 +1,35 @@
-> +Ingenic JZ47xx SoCs Timer/Counter Unit driver
-> +---------------------------------------------
+> +++ b/Documentation/devicetree/bindings/nds32/atl2c.txt
+> @@ -0,0 +1,29 @@
+> +* Andestech L2 cache Controller
+> +
+> +The level-2 cache controller plays an important role in reducing memory latency
+> +for high performance systems, such as thoese designs with AndesCore processors.
+> +Level-2 cache controller in general enhances overall system performance
+> +signigicantly and the system power consumption might be reduced as well by
+> +reducing DRAM accesses.
+> +
+> +This binding specifies what properties must be available in the device tree
+> +representation of an Andestech L2 cache controller.
 > +
 > +Required properties:
+> +	- compatible:
+> +		Usage: required
+> +		Value type: <string>
+> +		Definition: "andestech,atl2c"
+> +	- reg : Physical base address and size of cache controller's memory mapped
+> +	- cache-unified : Specifies the cache is a unified cache.
+> +	- cache-level : Should be set to 2 for a level 2 cache.
 > +
-> +- compatible : should be "ingenic,<socname>-tcu". Valid strings are:
-> +  * ingenic,jz4740-tcu
-> +  * ingenic,jz4770-tcu
-> +  * ingenic,jz4780-tcu
-> +- interrupt-parent : phandle of the TCU interrupt controller.
-> +- interrupts : Specifies the interrupts the controller is connected to.
-> +- clocks : List of phandle & clock specifiers for the TCU clocks.
-> +- clock-names : List of name strings for the TCU clocks.
-> +- ingenic,channels: a list of TCU channels to be used as timers.
+> +* Example
+> +
+> +	L2: l2-cache@e0500000 {
 
-Why is this needed? This looks like you are trying to assign certain 
-timers to clocksource and clockevent. A common problem, but one that 
-should be decided by describing h/w features. There must be some 
-property present or missing to make you decide to use a given channel or 
-not.
+cache-controller@...
 
-> +
-> +Example:
-> +
-> +/ {
-> +	regmap {
-> +		compatible = "simple-mfd", "syscon";
-> +		reg = <0x10002000 0x1000>;
-> +
-> +		tcu: timer {
-> +			compatible = "ingenic,jz4740-tcu";
-> +
-> +			clocks = <&tcu 0>, <&tcu 1>;
-> +			clock-names = "timer0", "timer1";
+With that,
 
-It's curious that you have timer0 and timer1 here and then channels 0 
-and 1 below. Would your clocks change if you use channel 2 for example? 
-The binding should be a list of clock connections in the h/w, not 
-just what the driver needs or what the used h/w configuration is. 
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-Rob
+> +		compatible = "andestech,atl2c";
+> +		reg = <0xe0500000 0x1000>;
+> +		cache-unified;
+> +		cache-level = <2>;
+> +	};
+> +
+> -- 
+> 1.7.9.5
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
