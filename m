@@ -1,31 +1,32 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCHv5 1/3] dt-bindings: net: Add DT bindings for Socionext
- Netsec
-Date: Wed, 3 Jan 2018 14:48:09 -0600
-Message-ID: <20180103204809.5zyui3sbb7vivlwr@rob-hp-laptop>
-References: <1514783559-4226-1-git-send-email-jassisinghbrar@gmail.com>
- <1514783660-4290-1-git-send-email-jassisinghbrar@gmail.com>
+Subject: Re: [PATCH v2 2/6] dt-bindings: ingenic: Add DT bindings for TCU
+ clocks
+Date: Wed, 3 Jan 2018 14:49:31 -0600
+Message-ID: <20180103204931.lqw3j35kfnqivsab@rob-hp-laptop>
+References: <20171229125942.27305-2-paul@crapouillou.net>
+ <20180101143344.2099-1-paul@crapouillou.net>
+ <20180101143344.2099-2-paul@crapouillou.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1514783660-4290-1-git-send-email-jassisinghbrar@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: jassisinghbrar@gmail.com
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, davem@davemloft.net, arnd.bergmann@linaro.org, andrew@lunn.ch, ard.biesheuvel@linaro.org, mark.rutland@arm.com, masami.hiramatsu@linaro.org, Jassi Brar <jaswinder.singh@linaro.org>
+In-Reply-To: <20180101143344.2099-2-paul@crapouillou.net>
+Sender: linux-clk-owner@vger.kernel.org
+To: Paul Cercueil <paul@crapouillou.net>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Lee Jones <lee.jones@linaro.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 01, 2018 at 10:44:20AM +0530, jassisinghbrar@gmail.com wrote:
-> From: Jassi Brar <jassisinghbrar@gmail.com>
+On Mon, Jan 01, 2018 at 03:33:40PM +0100, Paul Cercueil wrote:
+> This header provides clock numbers for the ingenic,tcu
+> DT binding.
 > 
-> This patch adds documentation for Device-Tree bindings for the
-> Socionext NetSec Controller driver.
-> 
-> Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
-> Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 > ---
->  .../devicetree/bindings/net/socionext-netsec.txt   | 53 ++++++++++++++++++++++
->  1 file changed, 53 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/socionext-netsec.txt
+>  include/dt-bindings/clock/ingenic,tcu.h | 23 +++++++++++++++++++++++
+>  1 file changed, 23 insertions(+)
+>  create mode 100644 include/dt-bindings/clock/ingenic,tcu.h
+> 
+>  v2: Use SPDX identifier for the license
 
 Reviewed-by: Rob Herring <robh@kernel.org>
+
