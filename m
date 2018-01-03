@@ -1,144 +1,161 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH v5 2/2] PCI: mediatek: Set up class type and vendor ID
- for MT7622
-Date: Wed, 3 Jan 2018 12:15:20 +0000
-Message-ID: <20180103121520.GC26554@red-moon>
-References: <1514336394-17747-1-git-send-email-honghui.zhang@mediatek.com>
- <1514336394-17747-3-git-send-email-honghui.zhang@mediatek.com>
- <20171227184542.GA79892@bhelgaas-glaptop.roam.corp.google.com>
- <1514425152.25872.39.camel@mhfsdcap03>
- <20180102105659.GB10536@red-moon>
- <1514961544.25872.49.camel@mhfsdcap03>
+From: Faiz Abbas <faiz_abbas@ti.com>
+Subject: Re: [PATCH v6 1/6] can: dev: Add support for limiting configured
+ bitrate
+Date: Wed, 3 Jan 2018 17:49:33 +0530
+Message-ID: <b023ccf0-ec9b-30b9-f868-aaf7286df247@ti.com>
+References: <1513949488-13026-1-git-send-email-faiz_abbas@ti.com>
+ <1513949488-13026-2-git-send-email-faiz_abbas@ti.com>
+ <b3cb6058-f61f-b643-a26f-c8330d9a3ffa@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1514961544.25872.49.camel@mhfsdcap03>
+In-Reply-To: <b3cb6058-f61f-b643-a26f-c8330d9a3ffa@pengutronix.de>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Honghui Zhang <honghui.zhang@mediatek.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, bhelgaas@google.com, matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, ryder.lee@mediatek.com, hongkun.cao@mediatek.com, youlin.pei@mediatek.com, yong.wu@mediatek.com, yt.shen@mediatek.com, sean.wang@mediatek.com, xinping.qian@mediatek.com
+To: Marc Kleine-Budde <mkl@pengutronix.de>, wg@grandegger.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-can@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, nsekhar@ti.com, fcooper@ti.com, robh@kernel.org, Wenyou.Yang@microchip.com, sergei.shtylyov@cogentembedded.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 03, 2018 at 02:39:04PM +0800, Honghui Zhang wrote:
-> On Tue, 2018-01-02 at 10:56 +0000, Lorenzo Pieralisi wrote:
-> > On Thu, Dec 28, 2017 at 09:39:12AM +0800, Honghui Zhang wrote:
-> > > On Wed, 2017-12-27 at 12:45 -0600, Bjorn Helgaas wrote:
-> > > > On Wed, Dec 27, 2017 at 08:59:54AM +0800, honghui.zhang@mediatek.com wrote:
-> > > > > From: Honghui Zhang <honghui.zhang@mediatek.com>
-> > > > > 
-> 
-> > > > > +		/* Set up class code for MT7622 */
-> > > > > +		val = PCI_CLASS_BRIDGE_PCI << 16;
-> > > > > +		writel(val, port->base + PCIE_CONF_CLASS);
-> > > > 
-> > > > 1) Your comments mention MT7622 specifically, but this code is run for
-> > > > both mt2712-pcie and mt7622-pcie.  If this code is safe and necessary
-> > > > for both mt2712-pcie and mt7622-pcie, please remove the mention of
-> > > > MT7622.
-> > > 
-> > > Hmm, the code snippet added here will only be executed by MT7622, since
-> > > MT2712 will not enter this  "if (pcie->base) {"  condition.
-> > > Should the mention of MT7622 must be removed in this case?
-> > 
-> > You should add an explicit way (eg of_device_is_compatible() match for
-> > instance) to apply the quirk just on the platform that requires it.
-> > 
-> > Checking for "if (pcie->base)" is really not the way to do it.
-> > 
-> 
-> hi, Lorenzo,
-> Thanks very much for your advise.
-> Passing the compatible string or platform data into this function needed
-> to add some new field in the struct mtk_pcie_port, then I guess both set
-> it for MT2712 and MT7622 is an easy way, since re-setting those values
-> for MT2712 is safe.
+Hi Marc,
 
-You have a pointer to the host bridge DT node through the
-mtk_pcie_port.pcie->dev pointer, use it to carry out the compatible
-match, you have to apply quirks only if needed - I do not want to
-guess it.
+On Tuesday 02 January 2018 06:30 PM, Marc Kleine-Budde wrote:
+> On 12/22/2017 02:31 PM, Faiz Abbas wrote:
+>> From: Franklin S Cooper Jr <fcooper@ti.com>
+>>
+>> Various CAN or CAN-FD IP may be able to run at a faster rate than
+>> what the transceiver the CAN node is connected to. This can lead to
+>> unexpected errors. However, CAN transceivers typically have fixed
+>> limitations and provide no means to discover these limitations at
+>> runtime. Therefore, add support for a can-transceiver node that
+>> can be reused by other CAN peripheral drivers to determine for both
+>> CAN and CAN-FD what the max bitrate that can be used. If the user
+>> tries to configure CAN to pass these maximum bitrates it will throw
+>> an error.
+>>
+>> Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
+>> [nsekhar@ti.com: fix build error with !CONFIG_OF]
+>> Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+>> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+>> ---
+>> v6 changes:
+>> fix build error with !CONFIG_OF
+>>
+>>  drivers/net/can/dev.c   | 39 +++++++++++++++++++++++++++++++++++++++
+>>  include/linux/can/dev.h |  8 ++++++++
+>>  2 files changed, 47 insertions(+)
+>>
+>> diff --git a/drivers/net/can/dev.c b/drivers/net/can/dev.c
+>> index 365a8cc..007cfc0 100644
+>> --- a/drivers/net/can/dev.c
+>> +++ b/drivers/net/can/dev.c
+>> @@ -27,6 +27,7 @@
+>>  #include <linux/can/skb.h>
+>>  #include <linux/can/netlink.h>
+>>  #include <linux/can/led.h>
+>> +#include <linux/of.h>
+>>  #include <net/rtnetlink.h>
+>>  
+>>  #define MOD_DESC "CAN device driver interface"
+>> @@ -814,6 +815,30 @@ int open_candev(struct net_device *dev)
+>>  }
+>>  EXPORT_SYMBOL_GPL(open_candev);
+>>  
+>> +#ifdef CONFIG_OF
+>> +/*
+>> + * Common function that can be used to understand the limitation of
+>> + * a transceiver when it provides no means to determine these limitations
+>> + * at runtime.
+>> + */
+>> +void of_can_transceiver(struct net_device *dev)
+>> +{
+>> +	struct device_node *dn;
+>> +	struct can_priv *priv = netdev_priv(dev);
+>> +	struct device_node *np = dev->dev.parent->of_node;
+>> +	int ret;
+>> +
+>> +	dn = of_get_child_by_name(np, "can-transceiver");
+>> +	if (!dn)
+>> +		return;
+>> +
+>> +	ret = of_property_read_u32(dn, "max-bitrate", &priv->max_bitrate);
+>> +	if ((ret && ret != -EINVAL) || (!ret && !priv->max_bitrate))
+>> +		netdev_warn(dev, "Invalid value for transceiver max bitrate. Ignoring bitrate limit.\n");
+>> +}
+>> +EXPORT_SYMBOL_GPL(of_can_transceiver);
+>> +#endif
+>> +
+>>  /*
+>>   * Common close function for cleanup before the device gets closed.
+>>   *
+>> @@ -913,6 +938,13 @@ static int can_changelink(struct net_device *dev, struct nlattr *tb[],
+>>  					priv->bitrate_const_cnt);
+>>  		if (err)
+>>  			return err;
+>> +
+>> +		if (priv->max_bitrate && bt.bitrate > priv->max_bitrate) {
+>> +			netdev_err(dev, "arbitration bitrate surpasses transceiver capabilities of %d bps\n",
+>> +				   priv->max_bitrate);
+>> +			return -EINVAL;
+>> +		}
+> 
+> What about movong this check into can_get_bittiming()? Although we loose
+> the "arbitration" vs "canfd data".
 
-Lorenzo
+I would prefer to keep the distinction.
 
-> > > > 2) The first comment mentions both "vendor ID and device ID" but you
-> > > > don't write the device ID.  Since this code applies to both
-> > > > mt2712-pcie and mt7622-pcie, my guess is that you don't *want* to
-> > > > write the device ID.  If that's the case, please fix the comment.
-> > > > 
-> > > 
-> > > My bad, I did not check the comments carefully.
-> > > Thanks.
-> > > 
-> > > > 3) If you only need to set the vendor ID, you're performing a 32-bit
-> > > > write (writel()) to update a 16-bit value.  Please use writew()
-> > > > instead.
-> > > > 
-> > > 
-> > > Ok, thanks, I guess I could use the following code snippet in the next
-> > > version:
-> > > val = readl(port->base + PCIE_CONF_VENDOR_ID)
-> > > val &= ~GENMASK(15, 0);
-> > > val |= PCI_VENDOR_ID_MEDIATEK;
-> > > writel(val, port->base + PCIE_CONF_VENDOR_ID);
-> > 
-> > Have you read Bjorn's comment ? Or there is a problem with using
-> > a writew() ?
-> > 
 > 
-> This control register is a 32bit register, I'm not sure whether the apb
-> bus support write an 16bit value with 16bit but not 32bit address
-> alignment. I prefer the more safety old way of writel.
+>> +
+>>  		memcpy(&priv->bittiming, &bt, sizeof(bt));
+>>  
+>>  		if (priv->do_set_bittiming) {
+>> @@ -997,6 +1029,13 @@ static int can_changelink(struct net_device *dev, struct nlattr *tb[],
+>>  					priv->data_bitrate_const_cnt);
+>>  		if (err)
+>>  			return err;
+>> +
+>> +		if (priv->max_bitrate && dbt.bitrate > priv->max_bitrate) {
+>> +			netdev_err(dev, "canfd data bitrate surpasses transceiver capabilities of %d bps\n",
+>> +				   priv->max_bitrate);
+>> +			return -EINVAL;
+>> +		}
+>> +
+>>  		memcpy(&priv->data_bittiming, &dbt, sizeof(dbt));
+>>  
+>>  		if (priv->do_set_data_bittiming) {
+>> diff --git a/include/linux/can/dev.h b/include/linux/can/dev.h
+>> index 61f1cf2..fbb7810 100644
+>> --- a/include/linux/can/dev.h
+>> +++ b/include/linux/can/dev.h
+>> @@ -48,6 +48,8 @@ struct can_priv {
+>>  	unsigned int data_bitrate_const_cnt;
+>>  	struct can_clock clock;
+>>  
+>> +	unsigned int max_bitrate;
 > 
-> I need to do more test about the writew if the code elegant is more
-> important.
+> Please make it an u32, name it "bitrate_max" and ...
+
+Sure.
+
 > 
-> thanks.
+>>> struct can_priv {
+>>> 	struct net_device *dev;
+>>> 	struct can_device_stats can_stats;
+>>>
+>>> 	struct can_bittiming bittiming, data_bittiming;
+>>> 	const struct can_bittiming_const *bittiming_const,
+>>> 		*data_bittiming_const;
+>>> 	const u16 *termination_const;
+>>> 	unsigned int termination_const_cnt;
+>>> 	u16 termination;
+>>> 	const u32 *bitrate_const;
+>>> 	unsigned int bitrate_const_cnt;
+>>> 	const u32 *data_bitrate_const;
+>>> 	unsigned int data_bitrate_const_cnt;
 > 
-> > Lorenzo
-> > 
-> > > > 4) If you only need to set the vendor ID, please use a definition like
-> > > > "PCIE_CONF_VENDOR_ID" instead of the ambiguous "PCIE_CONF_ID".
-> > > > 
-> > > > 5) If you only need to set the vendor ID, please update the changelog
-> > > > to mention "vendor ID" specifically instead of the ambiguous "IDs".
-> > > 
-> > > > 6) Please add a space before the closing "*/" of the first comment.
-> > > > 
-> > > > 7) PCI_CLASS_BRIDGE_PCI is for a PCI-to-PCI bridge, i.e., one that has
-> > > > PCI on both the primary (upstream) side and the secondary (downstream)
-> > > > side.  That kind of bridge has a type 1 config header (see
-> > > > PCI_HEADER_TYPE) and the PCI_PRIMARY_BUS and PCI_SECONDARY_BUS
-> > > > registers tell us the bus number of the primary and secondary sides.
-> > > > 
-> > > > I don't believe this device is a PCI-to-PCI bridge.  I think it's a
-> > > > *host* bridge that has some non-PCI interface on the upstream side and
-> > > > should have a type 0 config header.  If that's the case you should use
-> > > > PCI_CLASS_BRIDGE_HOST instead.
-> > > > 
-> > > 
-> > > Thanks very much for your help with the review, I will fix the other
-> > > issue in the next version.
-> > > 
-> > > > >  	}
-> > > > >  
-> > > > >  	/* Assert all reset signals */
-> > > > > diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-> > > > > index ab20dc5..2480b0e 100644
-> > > > > --- a/include/linux/pci_ids.h
-> > > > > +++ b/include/linux/pci_ids.h
-> > > > > @@ -2113,6 +2113,8 @@
-> > > > >  
-> > > > >  #define PCI_VENDOR_ID_MYRICOM		0x14c1
-> > > > >  
-> > > > > +#define PCI_VENDOR_ID_MEDIATEK		0x14c3
-> > > > > +
-> > > > >  #define PCI_VENDOR_ID_TITAN		0x14D2
-> > > > >  #define PCI_DEVICE_ID_TITAN_010L	0x8001
-> > > > >  #define PCI_DEVICE_ID_TITAN_100L	0x8010
-> > > > > -- 
-> > > > > 2.6.4
-> > > > > 
-> > > 
-> > > 
-> 
-> 
+> ...move it here.
+
+Ok.
+
+Thanks,
+Faiz
