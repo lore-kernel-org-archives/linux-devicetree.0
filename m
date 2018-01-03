@@ -1,45 +1,63 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] dts: Probe efuse for CI20
-Date: Wed, 3 Jan 2018 14:04:13 -0600
-Message-ID: <20180103200413.cpv6wxeeumaw62l5@rob-hp-laptop>
-References: <20171228212954.2922-1-malat@debian.org>
- <20171228212954.2922-3-malat@debian.org>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [RESEND PATCH v2 14/15] ASoC: qcom: apq8096: Add
+ db820c machine driver
+Date: Wed, 3 Jan 2018 12:04:54 -0800
+Message-ID: <20180103200454.GC478@tuxbook>
+References: <20171214173402.19074-1-srinivas.kandagatla@linaro.org>
+ <20171214173402.19074-15-srinivas.kandagatla@linaro.org>
+ <20180103001654.GU478@tuxbook>
+ <3acca412-4ef7-6e61-d250-2b35c1fe9fe8@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
 Content-Disposition: inline
-In-Reply-To: <20171228212954.2922-3-malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Cc: Marcin Nowakowski <marcin.nowakowski-8NJIiSa5LzA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Zubair.Kakakhel-8NJIiSa5LzA@public.gmane.org, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, PrasannaKumar Muralidharan <prasannatsmkumar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+In-Reply-To: <3acca412-4ef7-6e61-d250-2b35c1fe9fe8@linaro.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Banajit Goswami <bgoswami@codeaurora.org>, linux-arm-msm@vger.kernel.org, Patrick Lai <plai@codeaurora.org>, Takashi Iwai <tiwai@suse.com>, sboyd@codeaurora.org, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, David Brown <david.brown@linaro.org>, Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org, Andy Gross <andy.gross@linaro.org>, linux-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 28, 2017 at 10:29:53PM +0100, Mathieu Malaterre wrote:
-> MIPS Creator CI20 comes with JZ4780 SoC. Provides access to the efuse block
-> using jz4780 efuse driver.
-> 
-> Signed-off-by: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-> ---
->  arch/mips/configs/ci20_defconfig | 2 ++
+On Wed 03 Jan 08:27 PST 2018, Srinivas Kandagatla wrote:
 
-Your subject indicates this is a dts patch which it is not.
+> Thanks for the review comments.
+> 
+> 
+> On 03/01/18 00:16, Bjorn Andersson wrote:
+> > On Thu 14 Dec 09:34 PST 2017, srinivas.kandagatla@linaro.org wrote:
+> > 
+> > > From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> > > 
+> > > uThis patch adds support to DB820c machine driver.
+> > 
+> > Drop 'u' and expand the message to claim that this is the machine driver
+> > for 8996, used by the db820c.
+> > 
+> > [..]
+> > > +static struct snd_soc_dai_link msm8996_dai_links[] = {
+> > 
+> > Are there any differences between the DAI links of apq8096 and msm8996?
+> > 
+> This driver is more of board specific,
+> Am not 100% sure about msm8996, on apq8096 in particularly on db820c we got
+> hdmi and analog audio connected via slimbus and also I2S on lowspeed
+> connector.
+> 
 
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/arch/mips/configs/ci20_defconfig b/arch/mips/configs/ci20_defconfig
-> index b5f4ad8f2c45..62c63617e97a 100644
-> --- a/arch/mips/configs/ci20_defconfig
-> +++ b/arch/mips/configs/ci20_defconfig
-> @@ -171,3 +171,5 @@ CONFIG_STACKTRACE=y
->  # CONFIG_FTRACE is not set
->  CONFIG_CMDLINE_BOOL=y
->  CONFIG_CMDLINE="earlycon console=ttyS4,115200 clk_ignore_unused"
-> +CONFIG_NVMEM=y
-> +CONFIG_JZ4780_EFUSE=y
-> -- 
-> 2.11.0
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Can this be kept platform specific and the board specific routing put in
+DT?
+
+I don't think we want to have a machine-driver for each board. Right now
+you have 25 dtbs in mainline, that's going to be a lot of machine
+drivers...
+
+Regards,
+Bjorn
