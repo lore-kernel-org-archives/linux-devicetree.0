@@ -1,83 +1,94 @@
-From: Manikanta Maddireddy <mmaddireddy-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH V4 3/7] PCI: tegra: Remove PCI_REASSIGN_ALL_BUS flag for
- Tegra PCIe
-Date: Wed, 3 Jan 2018 21:54:03 +0530
-Message-ID: <25d10221-67c8-59c4-46d1-9bff239bd6bd@nvidia.com>
-References: <1512723493-865-1-git-send-email-mmaddireddy@nvidia.com>
- <1512723493-865-4-git-send-email-mmaddireddy@nvidia.com>
- <20171215173643.GA1050@red-moon> <20171220193011.GA31757@ulmo>
- <20171221104630.GB24280@red-moon>
- <20180103155149.GA8929@e107981-ln.cambridge.arm.com>
+From: jacopo mondi <jacopo@jmondi.org>
+Subject: Re: [PATCH v2 9/9] media: i2c: tw9910: Remove soc_camera dependencies
+Date: Wed, 3 Jan 2018 17:24:43 +0100
+Message-ID: <20180103162443.GE9493@w540>
+References: <1514469681-15602-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1514469681-15602-10-git-send-email-jacopo+renesas@jmondi.org>
+ <3834014.tgMKCuKOQE@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180103155149.GA8929-4tUPXFaYRHv6sAKXYmQ0tx/iLCjYCKR+VpNB7YpNyf8@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: cyndis-/1wQRMveznE@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, vidyas-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, kthota-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <3834014.tgMKCuKOQE@avalon>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, magnus.damm@gmail.com, geert@glider.be, mchehab@kernel.org, hverkuil@xs4all.nl, robh+dt@kernel.org, mark.rutland@arm.com, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Laurent,
 
+On Tue, Jan 02, 2018 at 05:50:38PM +0200, Laurent Pinchart wrote:
+> Hi Jacopo,
+>
+> Thank you for the patch.
+>
+> On Thursday, 28 December 2017 16:01:21 EET Jacopo Mondi wrote:
+> > -	priv->clk = v4l2_clk_get(&client->dev, "mclk");
+> > -	if (IS_ERR(priv->clk))
+> > +	priv->clk = clk_get(&client->dev, "mclk");
+>
+> The clock signal is called XTI (see page 60 of http://www.tecworth.com/
+> administrator/upload/200956419240864.pdf). You should add a clock alias as for
+> the ov7725.
 
-On 03-Jan-18 9:21 PM, Lorenzo Pieralisi wrote:
-> On Thu, Dec 21, 2017 at 10:46:30AM +0000, Lorenzo Pieralisi wrote:
->> On Wed, Dec 20, 2017 at 08:30:11PM +0100, Thierry Reding wrote:
->>> On Fri, Dec 15, 2017 at 05:36:43PM +0000, Lorenzo Pieralisi wrote:
->>>> On Fri, Dec 08, 2017 at 02:28:09PM +0530, Manikanta Maddireddy wrote:
->>>>> Primary, secondary and subordinate default bus numbers are 0 in Tegra and
->>>>> it is expecting SW to program these numbers in configration space.
->>>>>
->>>>> pci_scan_bridge_extend() function programs these numbers in configuration
->>>>> space if secondary & subordinate bus numbers are 0 or PCI_REASSIGN_ALL_BUS
->>>>> flag is set. Since secondary & subordinate default bus numbers are 0,
->>>>> PCI_REASSIGN_ALL_BUS flag can be removed for Tegra PCIe.
->>>>>
->>>>> Signed-off-by: Manikanta Maddireddy <mmaddireddy-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->>>>> ---
->>>>> V3:
->>>>> * new patch in V3
->>>>> V4:
->>>>> * no change in this patch
->>>>>
->>>>>  drivers/pci/host/pci-tegra.c | 1 -
->>>>>  1 file changed, 1 deletion(-)
->>>>>
->>>>> diff --git a/drivers/pci/host/pci-tegra.c b/drivers/pci/host/pci-tegra.c
->>>>> index a549c5899e26..0d91f1a3a6b4 100644
->>>>> --- a/drivers/pci/host/pci-tegra.c
->>>>> +++ b/drivers/pci/host/pci-tegra.c
->>>>> @@ -2604,7 +2604,6 @@ static int tegra_pcie_probe(struct platform_device *pdev)
->>>>>  
->>>>>  	tegra_pcie_enable_ports(pcie);
->>>>>  
->>>>> -	pci_add_flags(PCI_REASSIGN_ALL_BUS);
->>>>
->>>> This looks obviously OK to me but I need Thierry's ACK to queue it.
->>>
->>> Just as an additional note: I think the real reason why this is okay to
->>> do is because we reset the PCI host controller in the kernel driver, so
->>> any bus assignments done by the firmware are reset as well.
->>>
->>> Acked-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->>
->> Thank you. This series needs rebasing, we should try to untangle
->> the dependencies between series so that I can actually apply some
->> of these patches that make sense on their own.
-> 
-> Manikanta, would you be able to decouple this series from:
-> 
-> https://patchwork.ozlabs.org/patch/832053/
-> 
-> so that we can make forward progress ? There are some patches in
-> this series that I could apply - if rebased.
-> 
-> Lorenzo
-> 
+I don't think Migo-R board code should provide any alias for XTI
+clock, as the clock is generated by an on-board oscillator and not
+from the SoC.
 
-Sure, I will decouple and send this series again.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Also, changing the name in the driver seems safe, as `git grep tw9910
+arch/` returns that only mach-ecovec uses TW9910 (Migo-R apart) and it
+seems like also in that case the clock comes from an oscillator and it
+is not provided by the SoC.
+
+>
+> > +	if (PTR_ERR(priv->clk) == -ENOENT) {
+> > +		priv->clk = NULL;
+> > +	} else if (IS_ERR(priv->clk)) {
+> > +		dev_err(&client->dev, "Unable to get mclk clock\n");
+> >  		return PTR_ERR(priv->clk);
+> > +	}
+> > +
+> > +	priv->pdn_gpio = gpiod_get_optional(&client->dev, "pdn",
+> > +					    GPIOD_OUT_HIGH);
+> > +	if (IS_ERR(priv->pdn_gpio)) {
+> > +		dev_info(&client->dev, "Unable to get GPIO \"pdn\"");
+> > +		ret = PTR_ERR(priv->pdn_gpio);
+> > +		goto error_clk_put;
+> > +	}
+> >
+> >  	ret = tw9910_video_probe(client);
+> >  	if (ret < 0)
+> > -		v4l2_clk_put(priv->clk);
+> > +		goto error_gpio_put;
+> > +
+> > +	ret = v4l2_async_register_subdev(&priv->subdev);
+> > +	if (ret)
+> > +		goto error_gpio_put;
+> > +
+> > +	return ret;
+> > +
+> > +error_gpio_put:
+> > +	if (priv->pdn_gpio)
+> > +		gpiod_put(priv->pdn_gpio);
+> > +error_clk_put:
+> > +	clk_put(priv->clk);
+> >
+> >  	return ret;
+> >  }
+>
+> [snip]
+>
+> With these small issues fixed, and the comments to ov7725 that apply to tw9910
+> addressed,
+>
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+Thanks
+   j
+
+>
+> --
+> Regards,
+>
+> Laurent Pinchart
+>
