@@ -1,65 +1,121 @@
-From: Rasmus Villemoes <rasmus.villemoes-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
-Subject: [PATCH v2] ARM: dts: ls1021a: add nodes for on-chip ram
-Date: Wed, 3 Jan 2018 16:45:45 +0100
-Message-ID: <1514994345-2471-1-git-send-email-rasmus.villemoes@prevas.dk>
-References: <1513870698-31264-1-git-send-email-rasmus.villemoes@prevas.dk>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v2 2/2] media: coda: Add i.MX51 (CodaHx4) support
+Date: Wed, 03 Jan 2018 16:46:54 +0100
+Message-ID: <1514994414.5019.9.camel@pengutronix.de>
+References: <20171218101629.31395-2-p.zabel@pengutronix.de>
+         <201712210511.bpsOELIY%fengguang.wu@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1513870698-31264-1-git-send-email-rasmus.villemoes-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Cc: Rasmus Villemoes <rasmus.villemoes-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <201712210511.bpsOELIY%fengguang.wu@intel.com>
+Sender: linux-media-owner@vger.kernel.org
+To: kbuild test robot <lkp@intel.com>
+Cc: kbuild-all@01.org, linux-media@vger.kernel.org, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Fabio Estevam <fabio.estevam@nxp.com>, Chris Healy <Chris.Healy@zii.aero>, devicetree@vger.kernel.org, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-Although the two nodes constitute one contiguous 128K region, still
-describe them separately:
+On Thu, 2017-12-21 at 05:52 +0800, kbuild test robot wrote:
+> Hi Philipp,
+> 
+> I love your patch! Perhaps something to improve:
+> 
+> [auto build test WARNING on linuxtv-media/master]
+> [also build test WARNING on v4.15-rc4 next-20171220]
+> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+> 
+> url:    https://github.com/0day-ci/linux/commits/Philipp-Zabel/media-dt-bindings-coda-Add-compatible-for-CodaHx4-on-i-MX51/20171221-050217
+> base:   git://linuxtv.org/media_tree.git master
+> config: x86_64-allmodconfig (attached as .config)
+> compiler: gcc-7 (Debian 7.2.0-12) 7.2.1 20171025
+> reproduce:
+>         # save the attached .config to linux build tree
+>         make ARCH=x86_64 
+> 
+> Note: it may well be a FALSE warning.
 
-- That's how they are described in the reference manual: "Each OCRAM
-  occupies a 64 KB of address region...", and the names ocram1 and
-  ocram2 are also as used in the manual.
+I think it is.
 
-- The two areas are treated differently by the boot ROM code: OCRAM2 is
-  zero-initialized, while, again quoting the RM, "software must perform
-  the zero initialization of OCRAM1."
+>  FWIW you are at least aware of it now.
+> http://gcc.gnu.org/wiki/Better_Uninitialized_Warnings
+> 
+> All warnings (new ones prefixed by >>):
+> 
+>    drivers/media/platform/coda/coda-bit.c: In function 'coda_setup_iram':
+> > > drivers/media/platform/coda/coda-bit.c:648:28: warning: 'me_bits' may be used uninitialized in this function [-Wmaybe-uninitialized]
+> 
+>        iram_info->axi_sram_use |= me_bits;
+>                                ^~
+> 
+> vim +/me_bits +648 drivers/media/platform/coda/coda-bit.c
+> 
+>    588	
+>    589	static void coda_setup_iram(struct coda_ctx *ctx)
+>    590	{
+>    591		struct coda_iram_info *iram_info = &ctx->iram_info;
+>    592		struct coda_dev *dev = ctx->dev;
+>    593		int w64, w128;
+>    594		int mb_width;
+>    595		int dbk_bits;
+>    596		int bit_bits;
+>    597		int ip_bits;
+>    598		int me_bits;
+>    599	
+>    600		memset(iram_info, 0, sizeof(*iram_info));
+>    601		iram_info->next_paddr = dev->iram.paddr;
+>    602		iram_info->remaining = dev->iram.size;
+>    603	
+>    604		if (!dev->iram.vaddr)
+>    605			return;
+>    606	
+>    607		switch (dev->devtype->product) {
+>    608		case CODA_HX4:
+>    609			dbk_bits = CODA7_USE_HOST_DBK_ENABLE;
+>    610			bit_bits = CODA7_USE_HOST_BIT_ENABLE;
+>    611			ip_bits = CODA7_USE_HOST_IP_ENABLE;
+>    612			me_bits = CODA7_USE_HOST_ME_ENABLE;
+>    613			break;
+>    614		case CODA_7541:
+>    615			dbk_bits = CODA7_USE_HOST_DBK_ENABLE | CODA7_USE_DBK_ENABLE;
+>    616			bit_bits = CODA7_USE_HOST_BIT_ENABLE | CODA7_USE_BIT_ENABLE;
+>    617			ip_bits = CODA7_USE_HOST_IP_ENABLE | CODA7_USE_IP_ENABLE;
+>    618			me_bits = CODA7_USE_HOST_ME_ENABLE | CODA7_USE_ME_ENABLE;
+>    619			break;
+>    620		case CODA_960:
+>    621			dbk_bits = CODA9_USE_HOST_DBK_ENABLE | CODA9_USE_DBK_ENABLE;
+>    622			bit_bits = CODA9_USE_HOST_BIT_ENABLE | CODA7_USE_BIT_ENABLE;
+>    623			ip_bits = CODA9_USE_HOST_IP_ENABLE | CODA7_USE_IP_ENABLE;
 
-Signed-off-by: Rasmus Villemoes <rasmus.villemoes-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
----
-v2: add changelog explaining the split in two nodes.
+This is the only path that continues with me_bits uninitialized.
+In this case ...
 
-arch/arm/boot/dts/ls1021a.dtsi | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+>    624			break;
+>    625		default: /* CODA_DX6 */
+>    626			return;
+>    627		}
+>    628	
+>    629		if (ctx->inst_type == CODA_INST_ENCODER) {
+>    630			struct coda_q_data *q_data_src;
+>    631	
+>    632			q_data_src = get_q_data(ctx, V4L2_BUF_TYPE_VIDEO_OUTPUT);
+>    633			mb_width = DIV_ROUND_UP(q_data_src->width, 16);
+>    634			w128 = mb_width * 128;
+>    635			w64 = mb_width * 64;
+>    636	
+>    637			/* Prioritize in case IRAM is too small for everything */
+>    638			if (dev->devtype->product == CODA_HX4 ||
+>    639			    dev->devtype->product == CODA_7541) {
+>    640				iram_info->search_ram_size = round_up(mb_width * 16 *
+>    641								      36 + 2048, 1024);
+>    642				iram_info->search_ram_paddr = coda_iram_alloc(iram_info,
+>    643							iram_info->search_ram_size);
+>    644				if (!iram_info->search_ram_paddr) {
+>    645					pr_err("IRAM is smaller than the search ram size\n");
+>    646					goto out;
+>    647				}
+>  > 648				iram_info->axi_sram_use |= me_bits;
 
-diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
-index 96aa7752dd0d..7bb5896b3726 100644
---- a/arch/arm/boot/dts/ls1021a.dtsi
-+++ b/arch/arm/boot/dts/ls1021a.dtsi
-@@ -748,5 +748,21 @@
- 					<0000 0 0 3 &gic GIC_SPI 191 IRQ_TYPE_LEVEL_HIGH>,
- 					<0000 0 0 4 &gic GIC_SPI 193 IRQ_TYPE_LEVEL_HIGH>;
- 		};
-+
-+		ocram1: sram@10000000 {
-+			compatible = "mmio-sram";
-+			reg = <0x0 0x10000000 0x0 0x10000>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x0 0x10000000 0x10000>;
-+		};
-+
-+		ocram2: sram@10010000 {
-+			compatible = "mmio-sram";
-+			reg = <0x0 0x10010000 0x0 0x10000>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x0 0x10010000 0x10000>;
-+		};
- 	};
- };
--- 
-2.7.4
+... dev->devtype->product == CODA_960, and this use of me_bits is never
+reached.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+regards
+Philipp
