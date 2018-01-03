@@ -1,109 +1,106 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH] nokia N9: Add support for magnetometer and touchscreen
-Date: Wed, 3 Jan 2018 11:25:53 +0100
-Message-ID: <20180103102553.GA28083@amd>
-References: <20180102131722.GA20706@amd>
- <20180102172720.ghtez4d3d2fgcmj6@earth.universe>
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] arm64: dts: renesas: salvator-x: Remove
+ renesas,no-ether-link property
+Date: Wed, 3 Jan 2018 11:26:43 +0100
+Message-ID: <20180103102643.rejwzkim7wzhz22z@verge.net.au>
+References: <1513869539-18803-1-git-send-email-vladimir_zapolskiy@mentor.com>
+ <1513869539-18803-2-git-send-email-vladimir_zapolskiy@mentor.com>
+ <20171222083203.h5a65uitv7yok5fz@verge.net.au>
+ <20171222084048.ssyi53yj34hzejct@verge.net.au>
+ <a002072f-dbe4-0b6a-a19f-08dd1ed3a8d2@mentor.com>
+ <20180102093823.o6km656xdef7jnwf@verge.net.au>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="r5Pyd7+fXNt84Ff3"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20180102172720.ghtez4d3d2fgcmj6@earth.universe>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>
-Cc: pali.rohar@gmail.com, kernel list <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-omap@vger.kernel.org, tony@atomide.com, khilman@kernel.org, aaro.koskinen@iki.fi, ivo.g.dimitrov.75@gmail.com, patrikbachan@gmail.com, serge@hallyn.com, abcloriens@gmail.com, clayton@craftyguy.net, martijn@brixit.nl, sakari.ailus@linux.intel.com, Filip =?utf-8?Q?Matijevi=C4=87?= <filip.matijevic.pz@gmail.com>, bcousson@baylibre.com, devicetree@vger.kernel.org
+In-Reply-To: <20180102093823.o6km656xdef7jnwf-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Cc: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Bogdan Mirea <Bogdan-Stefan_Mirea-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Jan 02, 2018 at 10:38:24AM +0100, Simon Horman wrote:
+> Hi Vladimir,
+> 
+> Happy New Year!
+> 
+> On Fri, Dec 22, 2017 at 12:22:09PM +0200, Vladimir Zapolskiy wrote:
+> > Hi Simon,
+> > 
+> > On 12/22/2017 10:40 AM, Simon Horman wrote:
+> > > On Fri, Dec 22, 2017 at 09:32:03AM +0100, Simon Horman wrote:
+> > >> On Thu, Dec 21, 2017 at 05:18:58PM +0200, Vladimir Zapolskiy wrote:
+> > >>> From: Bogdan Mirea <Bogdan-Stefan_Mirea-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+> > >>>
+> > >>> The present change is a bug fix for AVB link iteratively up/down.
+> > >>>
+> > >>> Steps to reproduce:
+> > >>> - start AVB TX stream (Using aplay via MSE),
+> > >>> - disconnect+reconnect the eth cable,
+> > >>> - after a reconnection the eth connection goes iteratively up/down
+> > >>>   without user interaction,
+> > >>> - this may heal after some seconds or even stay for minutes.
+> > >>>
+> > >>> As the documentation specifies, the "renesas,no-ether-link" option
+> > >>> should be used when a board does not provide a proper AVB_LINK signal.
+> > >>> There is no need for this option enabled on RCAR H3/M3 Salvator-X/XS
+> > >>> and ULCB starter kits since the AVB_LINK is correctly handled by HW.
+> > >>>
+> > >>> Choosing to keep or remove the "renesas,no-ether-link" option will
+> > >>> have impact on the code flow in the following ways:
+> > >>> - keeping this option enabled may lead to unexpected behavior since
+> > >>>   the RX & TX are enabled/disabled directly from adjust_link function
+> > >>>   without any HW interrogation,
+> > >>> - removing this option, the RX & TX will only be enabled/disabled after
+> > >>>   HW interrogation. The HW check is made through the LMON pin in PSR
+> > >>>   register which specifies AVB_LINK signal value (0 - at low level;
+> > >>>   1 - at high level).
+> > >>>
+> > >>> In conclusion, the present change is also a safety improvement because
+> > >>> it removes the "renesas,no-ether-link" option leading to a proper way
+> > >>> of detecting the link state based on HW interrogation and not on
+> > >>> software heuristic.
+> > >>>
+> > >>> Fixes: d25e8ff0d5aa ("arm64: dts: renesas: Extract common Salvator-X board support")
+> > >>
+> > >> The above shuffles the code around but does not introduce the problem
+> > >> as far as I can see. Instead I think we should use:
+> > >>
+> > >> Fixes: dc36965a8905 ("arm64: dts: r8a7796: salvator-x: Enable EthernetAVB")
+> > >> Fixes: 6fa501c549aa ("arm64: dts: r8a7795: enable EthernetAVB on Salvator-X")
+> > >>
+> > >>> Signed-off-by: Bogdan Mirea <Bogdan-Stefan_Mirea-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+> > >>> Signed-off-by: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+> > > 
+> > > I have applied this a fix for v4.15 with the updated Fixes tags above.
+> > > 
+> > 
+> > thank you, I was unsure if you expected to get changes which can be used
+> > as a base without patch application conflicts (my done choice) or changes,
+> > which originally intorduced the bug, but formally require slightly
+> > different fixes due to code changes in the middle. If it would be needed,
+> > hopefully linux-stable maintainers can resolve the trivial conflicts.
+> > 
+> > Also you may find this information from the cover letter useful,
+> > someone may want to check the relevant board schematics and send
+> > similar fixes (if applicable after schematics review and testing):
+> > 
+> >   Note that DTS files for V3M Starter Kit, Draak and Eagle boards
+> >   contain the same property, the files are untouched due to unavailable
+> >   schematics to verify if the fix applies to these boards as well.
+> 
+> Thanks. I took a quick look and my findings so far are:
+> 
+> * Eagle: This approach seems applicable as AVB_LINK appears to be hooked up
+> * V3M Starter Kit: This approach seems applicable as AVB0_LINK appears to be
+>   hooked up
+> * Draak: I don't seem to be able to locate documentation at this time
 
---r5Pyd7+fXNt84Ff3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I have now obtained Draak documentation. It seems that this approach is
+applicable to that board too as AVB0_LINK appears to be hooked up.
 
-On Tue 2018-01-02 18:27:20, Sebastian Reichel wrote:
-> Hi,
->=20
-> On Tue, Jan 02, 2018 at 02:17:22PM +0100, Pavel Machek wrote:
-> > This adds dts support for magnetometer and touchscreen on Nokia N9.
->=20
-> I think it makes sense to have this splitted.
-
-Creating more work for everyone for little gain? Meh.
-
-> > diff --git a/arch/arm/boot/dts/omap3-n9.dts b/arch/arm/boot/dts/omap3-n=
-9.dts
-> > index 39e35f8..57a6679 100644
-> > --- a/arch/arm/boot/dts/omap3-n9.dts
-> > +++ b/arch/arm/boot/dts/omap3-n9.dts
-> > @@ -36,6 +57,22 @@
-> >  			};
-> >  		};
-> >  	};
-> > +
-> > +	touch@4b {
->=20
-> touchscreen@
-
-Ok.
-
-> > +		compatible =3D "atmel,maxtouch";
-> > +		reg =3D <0x4b>;
-> > +		interrupt-parent =3D <&gpio2>;
-> > +		interrupts =3D <29 2>; /* gpio_61, IRQF_TRIGGER_FALLING*/
->=20
-> reset-gpios =3D <&gpio3 17 GPIO_ACTIVE_SOMETHING>;
->=20
-> > +		vdd-supply =3D <&vio>;
-> > +		avdd-supply =3D <&vaux1>;
->=20
-> Those two are not mentioned in the binding and not supported by the
-> driver as far as I can see?
-
-Driver will need to be fixed, AFAICT :-(.
-
-> Touchscreen with the same settings is required for n950, so it
-> should be in the shared n950 + n9 file.
-
-In future, settings will be different for n9/n950: calibration matrix
-is different as panel is rotated in different way. Still it probably
-makes sense to share. Ok.
-
-> > +&i2c3 {
-> > +	ak8975@0f {
-> > +		compatible =3D "asahi-kasei,ak8975";
-> > +		reg =3D <0x0f>;
-> > +	};
-> >  };
->=20
-> Looking at the N9 board file this is missing a rotation matrix. This
-> is supported by the binding:
->=20
-> Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt
-
-Do you have an idea how the rotation matrix should look like? I don't
-currently have an userland software that could calibrate and test the
-sensor, so I'd prefer to merge basic binding now and do calibration
-later.
-
-Best regards,
-									Pavel
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---r5Pyd7+fXNt84Ff3
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlpMr7EACgkQMOfwapXb+vJp/gCfSEwsIp7eOvdP8HBddQ4DltMd
-pfAAoId9OEf4iR9nAyvzgFZsD3nZtE8C
-=CUSD
------END PGP SIGNATURE-----
-
---r5Pyd7+fXNt84Ff3--
+> Are you interested in creating follow-up patches?
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
