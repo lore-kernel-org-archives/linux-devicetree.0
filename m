@@ -1,970 +1,152 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: mediatek: rework clock functions for MT2701" to the asoc tree
-Date: Wed, 03 Jan 2018 15:43:01 +0000
-Message-ID: <E1eWlC1-0000Rv-2B@debutante>
-References: <0dc98a0b1d315a8b04472324b5789c640c337cb6.1514881870.git.ryder.lee@mediatek.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <0dc98a0b1d315a8b04472324b5789c640c337cb6.1514881870.git.ryder.lee@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ryder Lee <ryder.lee@mediatek.com>
-Cc: Garlic Tseng <garlic.tseng@mediatek.com>, Mark Brown <broonie@kernel.org>Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, alsa-devel@alsa-project.orgGarlic Tseng <garlic.tseng@mediatek.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.orgalsa-devel@alsa-project.org
+From: jacopo mondi <jacopo-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 7/9] media: i2c: ov772x: Remove soc_camera dependencies
+Date: Wed, 3 Jan 2018 16:44:58 +0100
+Message-ID: <20180103154458.GD9493@w540>
+References: <1514469681-15602-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1514469681-15602-8-git-send-email-jacopo+renesas@jmondi.org>
+ <5703631.yJ335LfYLI@avalon>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5703631.yJ335LfYLI@avalon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, geert-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The patch
+Hi Laurent,
 
-   ASoC: mediatek: rework clock functions for MT2701
+On Tue, Jan 02, 2018 at 05:44:03PM +0200, Laurent Pinchart wrote:
+> Hi Jacopo,
+>
+> Thank you for the patch.
+>
+> On Thursday, 28 December 2017 16:01:19 EET Jacopo Mondi wrote:
+> > Remove soc_camera framework dependencies from ov772x sensor driver.
+> > - Handle clock and gpios
+> > - Register async subdevice
+> > - Remove soc_camera specific g/s_mbus_config operations
+> > - Change image format colorspace to SRGB
+>
+> Could you explain the rationale for this ?
 
-has been applied to the asoc tree at
+Hans suggested this, and I assume it is beacause COLORSPACE_JPEG ==
+(COLORSPACE_SRGB + assumptions on quantization ranges) which does not
+apply to the sensor.
+>
+> > - Remove sizes crop from get_selection as driver can't scale
+> > - Add kernel doc to driver interface header file
+> > - Adjust build system
+>
+> That's a lot for a single patch. On the other hand I don't think splitting
+> this in 7 patches would be a good idea either. If you can find a better
+> granularity, go for it, otherwise keep it as-is. Same comment for the tw9910
+> driver.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+I know.
+I would have kept changes down to the minimum required to remove
+soc_camera dependencies, but I received comments on other parts of the
+driver not directly soc_camera specific. I understand this, since I'm
+touching the driver it is maybe worth changing some parts of it that
+needs updates..
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+>
+> > This commit does not remove the original soc_camera based driver as long
+> > as other platforms depends on soc_camera-based CEU driver.
+> >
+> > Signed-off-by: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+> > ---
+> >  drivers/media/i2c/Kconfig  |  11 +++
+> >  drivers/media/i2c/Makefile |   1 +
+> >  drivers/media/i2c/ov772x.c | 169 ++++++++++++++++++++++++++++-------------
+> >  include/media/i2c/ov772x.h |   8 ++-
+> >  4 files changed, 130 insertions(+), 59 deletions(-)
+> >
+> > diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
+> > index cb5d7ff..a61d7f4 100644
+> > --- a/drivers/media/i2c/Kconfig
+> > +++ b/drivers/media/i2c/Kconfig
+>
+> [snip]
+>
+> > diff --git a/drivers/media/i2c/ov772x.c b/drivers/media/i2c/ov772x.c
+> > index 8063835..f7b293f 100644
+> > --- a/drivers/media/i2c/ov772x.c
+> > +++ b/drivers/media/i2c/ov772x.c
+> > @@ -1,6 +1,9 @@
+>
+> [snip]
+>
+> > @@ -25,8 +26,8 @@
+> >  #include <linux/videodev2.h>
+> >
+> >  #include <media/i2c/ov772x.h>
+> > -#include <media/soc_camera.h>
+> > -#include <media/v4l2-clk.h>
+> > +
+> > +#include <media/v4l2-device.h>
+> >  #include <media/v4l2-ctrls.h>
+>
+> I think C comes before D.
+>
+> >  #include <media/v4l2-subdev.h>
+> >  #include <media/v4l2-image-sizes.h>
+>
+> [snip]
+>
+> > @@ -650,13 +653,63 @@ static int ov772x_s_register(struct v4l2_subdev *sd,
+> >  }
+> >  #endif
+> >
+> > +static int ov772x_power_on(struct ov772x_priv *priv)
+> > +{
+> > +	struct i2c_client *client = v4l2_get_subdevdata(&priv->subdev);
+> > +	int ret;
+> > +
+> > +	if (priv->info->xclk_rate)
+> > +		ret = clk_set_rate(priv->clk, priv->info->xclk_rate);
+>
+> The return value is then ignored.
+>
+> I wonder whether the clk_set_rate() call shouldn't be kept in board code as
+> it's a board-specific frequency. DT platforms would use the assigned-clock-
+> rates property that doesn't require any explicit handling in the driver.
+>
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+DT based platforms won't have any info->xlkc_rate, so they should be
+fine. I wonder how could I set rate in board code, as I'm just
+registering an alias for the clock there...
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+> > +	if (priv->clk) {
+> > +		ret = clk_prepare_enable(priv->clk);
+> > +		if (ret)
+> > +			return ret;
+> > +	}
+> > +
+> > +	if (priv->pwdn_gpio) {
+> > +		gpiod_set_value(priv->pwdn_gpio, 1);
+> > +		usleep_range(500, 1000);
+> > +	}
+> > +
+> > +	/* Reset GPIOs are shared in some platforms. */
+>
+> I'd make this a FIXME comment as this is really a hack.
+>
+> 	/*
+> 	 * FIXME: The reset signal is connected to a shared GPIO on some
+> 	 * platforms (namely the SuperH Migo-R). Until a framework becomes
+> 	 * available to handle this cleanly, request the GPIO temporarily
+> 	 * only to avoid conflicts.
+> 	 */
+>
+> Same for the tw9910 driver.
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+Ack.
 
-Thanks,
-Mark
-
->From d8d99d8ed658a705909b07ba21b643c53851d70c Mon Sep 17 00:00:00 2001
-From: Ryder Lee <ryder.lee@mediatek.com>
-Date: Tue, 2 Jan 2018 19:47:19 +0800
-Subject: [PATCH] ASoC: mediatek: rework clock functions for MT2701
-
-Reworks clock part to make it more reasonable. The current changes are:
-
-- Replace regmap operations by CCF APIs. Doing so, we just need to handle
-  the element clocks and can also get accurate information via CCF.
-
-- Rename clocks to make them more generic so that the future revisions
-  of the IP can adapt gracefully.
-
-- Regroup 'aud_clks[]' by usage - the basic needs and I2S parts:
-
-  The new code just keep the common clocks in array and let SoC self decide
-  I2S numbers - If future chips have different sets of channels we will
-  add a little more abstract here.
-
-  Moreover, this patch moves I2S clocks to the struct mt2701_i2s_data
-  so that we can easily manage them when calls .prepare() and .shutdown().
-
-Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-Tested-by: Garlic Tseng <garlic.tseng@mediatek.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- sound/soc/mediatek/mt2701/mt2701-afe-clock-ctrl.c | 518 +++++++---------------
- sound/soc/mediatek/mt2701/mt2701-afe-clock-ctrl.h |  15 +-
- sound/soc/mediatek/mt2701/mt2701-afe-common.h     |  64 +--
- sound/soc/mediatek/mt2701/mt2701-afe-pcm.c        |  45 +-
- 4 files changed, 200 insertions(+), 442 deletions(-)
-
-diff --git a/sound/soc/mediatek/mt2701/mt2701-afe-clock-ctrl.c b/sound/soc/mediatek/mt2701/mt2701-afe-clock-ctrl.c
-index affa7fb25dd9..75ccdca5811d 100644
---- a/sound/soc/mediatek/mt2701/mt2701-afe-clock-ctrl.c
-+++ b/sound/soc/mediatek/mt2701/mt2701-afe-clock-ctrl.c
-@@ -21,442 +21,256 @@
- #include "mt2701-afe-common.h"
- #include "mt2701-afe-clock-ctrl.h"
- 
--static const char *aud_clks[MT2701_CLOCK_NUM] = {
--	[MT2701_AUD_INFRA_SYS_AUDIO] = "infra_sys_audio_clk",
--	[MT2701_AUD_AUD_MUX1_SEL] = "top_audio_mux1_sel",
--	[MT2701_AUD_AUD_MUX2_SEL] = "top_audio_mux2_sel",
--	[MT2701_AUD_AUD_MUX1_DIV] = "top_audio_mux1_div",
--	[MT2701_AUD_AUD_MUX2_DIV] = "top_audio_mux2_div",
--	[MT2701_AUD_AUD_48K_TIMING] = "top_audio_48k_timing",
--	[MT2701_AUD_AUD_44K_TIMING] = "top_audio_44k_timing",
--	[MT2701_AUD_AUDPLL_MUX_SEL] = "top_audpll_mux_sel",
--	[MT2701_AUD_APLL_SEL] = "top_apll_sel",
--	[MT2701_AUD_AUD1PLL_98M] = "top_aud1_pll_98M",
--	[MT2701_AUD_AUD2PLL_90M] = "top_aud2_pll_90M",
--	[MT2701_AUD_HADDS2PLL_98M] = "top_hadds2_pll_98M",
--	[MT2701_AUD_HADDS2PLL_294M] = "top_hadds2_pll_294M",
--	[MT2701_AUD_AUDPLL] = "top_audpll",
--	[MT2701_AUD_AUDPLL_D4] = "top_audpll_d4",
--	[MT2701_AUD_AUDPLL_D8] = "top_audpll_d8",
--	[MT2701_AUD_AUDPLL_D16] = "top_audpll_d16",
--	[MT2701_AUD_AUDPLL_D24] = "top_audpll_d24",
--	[MT2701_AUD_AUDINTBUS] = "top_audintbus_sel",
--	[MT2701_AUD_CLK_26M] = "clk_26m",
--	[MT2701_AUD_SYSPLL1_D4] = "top_syspll1_d4",
--	[MT2701_AUD_AUD_K1_SRC_SEL] = "top_aud_k1_src_sel",
--	[MT2701_AUD_AUD_K2_SRC_SEL] = "top_aud_k2_src_sel",
--	[MT2701_AUD_AUD_K3_SRC_SEL] = "top_aud_k3_src_sel",
--	[MT2701_AUD_AUD_K4_SRC_SEL] = "top_aud_k4_src_sel",
--	[MT2701_AUD_AUD_K5_SRC_SEL] = "top_aud_k5_src_sel",
--	[MT2701_AUD_AUD_K6_SRC_SEL] = "top_aud_k6_src_sel",
--	[MT2701_AUD_AUD_K1_SRC_DIV] = "top_aud_k1_src_div",
--	[MT2701_AUD_AUD_K2_SRC_DIV] = "top_aud_k2_src_div",
--	[MT2701_AUD_AUD_K3_SRC_DIV] = "top_aud_k3_src_div",
--	[MT2701_AUD_AUD_K4_SRC_DIV] = "top_aud_k4_src_div",
--	[MT2701_AUD_AUD_K5_SRC_DIV] = "top_aud_k5_src_div",
--	[MT2701_AUD_AUD_K6_SRC_DIV] = "top_aud_k6_src_div",
--	[MT2701_AUD_AUD_I2S1_MCLK] = "top_aud_i2s1_mclk",
--	[MT2701_AUD_AUD_I2S2_MCLK] = "top_aud_i2s2_mclk",
--	[MT2701_AUD_AUD_I2S3_MCLK] = "top_aud_i2s3_mclk",
--	[MT2701_AUD_AUD_I2S4_MCLK] = "top_aud_i2s4_mclk",
--	[MT2701_AUD_AUD_I2S5_MCLK] = "top_aud_i2s5_mclk",
--	[MT2701_AUD_AUD_I2S6_MCLK] = "top_aud_i2s6_mclk",
--	[MT2701_AUD_ASM_M_SEL] = "top_asm_m_sel",
--	[MT2701_AUD_ASM_H_SEL] = "top_asm_h_sel",
--	[MT2701_AUD_UNIVPLL2_D4] = "top_univpll2_d4",
--	[MT2701_AUD_UNIVPLL2_D2] = "top_univpll2_d2",
--	[MT2701_AUD_SYSPLL_D5] = "top_syspll_d5",
-+static const char *const base_clks[] = {
-+	[MT2701_TOP_AUD_MCLK_SRC0] = "top_audio_mux1_sel",
-+	[MT2701_TOP_AUD_MCLK_SRC1] = "top_audio_mux2_sel",
-+	[MT2701_AUDSYS_AFE] = "audio_afe_pd",
-+	[MT2701_AUDSYS_AFE_CONN] = "audio_afe_conn_pd",
-+	[MT2701_AUDSYS_A1SYS] = "audio_a1sys_pd",
-+	[MT2701_AUDSYS_A2SYS] = "audio_a2sys_pd",
- };
- 
- int mt2701_init_clock(struct mtk_base_afe *afe)
- {
- 	struct mt2701_afe_private *afe_priv = afe->platform_priv;
--	int i = 0;
--
--	for (i = 0; i < MT2701_CLOCK_NUM; i++) {
--		afe_priv->clocks[i] = devm_clk_get(afe->dev, aud_clks[i]);
--		if (IS_ERR(afe_priv->clocks[i])) {
--			dev_warn(afe->dev, "%s devm_clk_get %s fail\n",
--				 __func__, aud_clks[i]);
--			return PTR_ERR(aud_clks[i]);
-+	int i;
-+
-+	for (i = 0; i < MT2701_BASE_CLK_NUM; i++) {
-+		afe_priv->base_ck[i] = devm_clk_get(afe->dev, base_clks[i]);
-+		if (IS_ERR(afe_priv->base_ck[i])) {
-+			dev_err(afe->dev, "failed to get %s\n", base_clks[i]);
-+			return PTR_ERR(afe_priv->base_ck[i]);
- 		}
- 	}
- 
--	return 0;
--}
-+	/* Get I2S related clocks */
-+	for (i = 0; i < MT2701_I2S_NUM; i++) {
-+		struct mt2701_i2s_path *i2s_path = &afe_priv->i2s_path[i];
-+		char name[13];
- 
--int mt2701_afe_enable_clock(struct mtk_base_afe *afe)
--{
--	int ret = 0;
-+		snprintf(name, sizeof(name), "i2s%d_src_sel", i);
-+		i2s_path->sel_ck = devm_clk_get(afe->dev, name);
-+		if (IS_ERR(i2s_path->sel_ck)) {
-+			dev_err(afe->dev, "failed to get %s\n", name);
-+			return PTR_ERR(i2s_path->sel_ck);
-+		}
- 
--	ret = mt2701_turn_on_a1sys_clock(afe);
--	if (ret) {
--		dev_err(afe->dev, "%s turn_on_a1sys_clock fail %d\n",
--			__func__, ret);
--		return ret;
--	}
-+		snprintf(name, sizeof(name), "i2s%d_src_div", i);
-+		i2s_path->div_ck = devm_clk_get(afe->dev, name);
-+		if (IS_ERR(i2s_path->div_ck)) {
-+			dev_err(afe->dev, "failed to get %s\n", name);
-+			return PTR_ERR(i2s_path->div_ck);
-+		}
- 
--	ret = mt2701_turn_on_a2sys_clock(afe);
--	if (ret) {
--		dev_err(afe->dev, "%s turn_on_a2sys_clock fail %d\n",
--			__func__, ret);
--		mt2701_turn_off_a1sys_clock(afe);
--		return ret;
--	}
-+		snprintf(name, sizeof(name), "i2s%d_mclk_en", i);
-+		i2s_path->mclk_ck = devm_clk_get(afe->dev, name);
-+		if (IS_ERR(i2s_path->mclk_ck)) {
-+			dev_err(afe->dev, "failed to get %s\n", name);
-+			return PTR_ERR(i2s_path->mclk_ck);
-+		}
- 
--	ret = mt2701_turn_on_afe_clock(afe);
--	if (ret) {
--		dev_err(afe->dev, "%s turn_on_afe_clock fail %d\n",
--			__func__, ret);
--		mt2701_turn_off_a1sys_clock(afe);
--		mt2701_turn_off_a2sys_clock(afe);
--		return ret;
-+		snprintf(name, sizeof(name), "i2so%d_hop_ck", i);
-+		i2s_path->hop_ck[I2S_OUT] = devm_clk_get(afe->dev, name);
-+		if (IS_ERR(i2s_path->hop_ck[I2S_OUT])) {
-+			dev_err(afe->dev, "failed to get %s\n", name);
-+			return PTR_ERR(i2s_path->hop_ck[I2S_OUT]);
-+		}
-+
-+		snprintf(name, sizeof(name), "i2si%d_hop_ck", i);
-+		i2s_path->hop_ck[I2S_IN] = devm_clk_get(afe->dev, name);
-+		if (IS_ERR(i2s_path->hop_ck[I2S_IN])) {
-+			dev_err(afe->dev, "failed to get %s\n", name);
-+			return PTR_ERR(i2s_path->hop_ck[I2S_IN]);
-+		}
-+
-+		snprintf(name, sizeof(name), "asrc%d_out_ck", i);
-+		i2s_path->asrco_ck = devm_clk_get(afe->dev, name);
-+		if (IS_ERR(i2s_path->asrco_ck)) {
-+			dev_err(afe->dev, "failed to get %s\n", name);
-+			return PTR_ERR(i2s_path->asrco_ck);
-+		}
- 	}
- 
--	regmap_update_bits(afe->regmap, ASYS_TOP_CON,
--			   AUDIO_TOP_CON0_A1SYS_A2SYS_ON,
--			   AUDIO_TOP_CON0_A1SYS_A2SYS_ON);
--	regmap_update_bits(afe->regmap, AFE_DAC_CON0,
--			   AFE_DAC_CON0_AFE_ON,
--			   AFE_DAC_CON0_AFE_ON);
--	regmap_write(afe->regmap, PWR2_TOP_CON,
--		     PWR2_TOP_CON_INIT_VAL);
--	regmap_write(afe->regmap, PWR1_ASM_CON1,
--		     PWR1_ASM_CON1_INIT_VAL);
--	regmap_write(afe->regmap, PWR2_ASM_CON1,
--		     PWR2_ASM_CON1_INIT_VAL);
-+	/* Some platforms may support BT path */
-+	afe_priv->mrgif_ck = devm_clk_get(afe->dev, "audio_mrgif_pd");
-+	if (IS_ERR(afe_priv->mrgif_ck)) {
-+		if (PTR_ERR(afe_priv->mrgif_ck) == -EPROBE_DEFER)
-+			return -EPROBE_DEFER;
- 
--	return 0;
--}
-+		afe_priv->mrgif_ck = NULL;
-+	}
- 
--void mt2701_afe_disable_clock(struct mtk_base_afe *afe)
--{
--	mt2701_turn_off_afe_clock(afe);
--	mt2701_turn_off_a1sys_clock(afe);
--	mt2701_turn_off_a2sys_clock(afe);
--	regmap_update_bits(afe->regmap, ASYS_TOP_CON,
--			   AUDIO_TOP_CON0_A1SYS_A2SYS_ON, 0);
--	regmap_update_bits(afe->regmap, AFE_DAC_CON0,
--			   AFE_DAC_CON0_AFE_ON, 0);
-+	return 0;
- }
- 
--int mt2701_turn_on_a1sys_clock(struct mtk_base_afe *afe)
-+int mt2701_afe_enable_i2s(struct mtk_base_afe *afe, int id, int dir)
- {
- 	struct mt2701_afe_private *afe_priv = afe->platform_priv;
--	int ret = 0;
-+	struct mt2701_i2s_path *i2s_path = &afe_priv->i2s_path[id];
-+	int ret;
- 
--	/* Set Mux */
--	ret = clk_prepare_enable(afe_priv->clocks[MT2701_AUD_AUD_MUX1_SEL]);
-+	ret = clk_prepare_enable(i2s_path->asrco_ck);
- 	if (ret) {
--		dev_err(afe->dev, "%s clk_prepare_enable %s fail %d\n",
--			__func__, aud_clks[MT2701_AUD_AUD_MUX1_SEL], ret);
--		goto A1SYS_CLK_AUD_MUX1_SEL_ERR;
-+		dev_err(afe->dev, "failed to enable ASRC clock %d\n", ret);
-+		return ret;
- 	}
- 
--	ret = clk_set_parent(afe_priv->clocks[MT2701_AUD_AUD_MUX1_SEL],
--			     afe_priv->clocks[MT2701_AUD_AUD1PLL_98M]);
-+	ret = clk_prepare_enable(i2s_path->hop_ck[dir]);
- 	if (ret) {
--		dev_err(afe->dev, "%s clk_set_parent %s-%s fail %d\n", __func__,
--			aud_clks[MT2701_AUD_AUD_MUX1_SEL],
--			aud_clks[MT2701_AUD_AUD1PLL_98M], ret);
--		goto A1SYS_CLK_AUD_MUX1_SEL_ERR;
-+		dev_err(afe->dev, "failed to enable I2S clock %d\n", ret);
-+		goto err_hop_ck;
- 	}
- 
--	/* Set Divider */
--	ret = clk_prepare_enable(afe_priv->clocks[MT2701_AUD_AUD_MUX1_DIV]);
--	if (ret) {
--		dev_err(afe->dev, "%s clk_prepare_enable %s fail %d\n",
--			__func__,
--			aud_clks[MT2701_AUD_AUD_MUX1_DIV],
--			ret);
--		goto A1SYS_CLK_AUD_MUX1_DIV_ERR;
--	}
-+	return 0;
- 
--	ret = clk_set_rate(afe_priv->clocks[MT2701_AUD_AUD_MUX1_DIV],
--			   MT2701_AUD_AUD_MUX1_DIV_RATE);
--	if (ret) {
--		dev_err(afe->dev, "%s clk_set_parent %s-%d fail %d\n", __func__,
--			aud_clks[MT2701_AUD_AUD_MUX1_DIV],
--			MT2701_AUD_AUD_MUX1_DIV_RATE, ret);
--		goto A1SYS_CLK_AUD_MUX1_DIV_ERR;
--	}
-+err_hop_ck:
-+	clk_disable_unprepare(i2s_path->asrco_ck);
- 
--	/* Enable clock gate */
--	ret = clk_prepare_enable(afe_priv->clocks[MT2701_AUD_AUD_48K_TIMING]);
--	if (ret) {
--		dev_err(afe->dev, "%s clk_prepare_enable %s fail %d\n",
--			__func__, aud_clks[MT2701_AUD_AUD_48K_TIMING], ret);
--		goto A1SYS_CLK_AUD_48K_ERR;
--	}
-+	return ret;
-+}
- 
--	/* Enable infra audio */
--	ret = clk_prepare_enable(afe_priv->clocks[MT2701_AUD_INFRA_SYS_AUDIO]);
--	if (ret) {
--		dev_err(afe->dev, "%s clk_prepare_enable %s fail %d\n",
--			__func__, aud_clks[MT2701_AUD_INFRA_SYS_AUDIO], ret);
--		goto A1SYS_CLK_INFRA_ERR;
--	}
-+void mt2701_afe_disable_i2s(struct mtk_base_afe *afe, int id, int dir)
-+{
-+	struct mt2701_afe_private *afe_priv = afe->platform_priv;
-+	struct mt2701_i2s_path *i2s_path = &afe_priv->i2s_path[id];
- 
--	return 0;
-+	clk_disable_unprepare(i2s_path->hop_ck[dir]);
-+	clk_disable_unprepare(i2s_path->asrco_ck);
-+}
- 
--A1SYS_CLK_INFRA_ERR:
--	clk_disable_unprepare(afe_priv->clocks[MT2701_AUD_INFRA_SYS_AUDIO]);
--A1SYS_CLK_AUD_48K_ERR:
--	clk_disable_unprepare(afe_priv->clocks[MT2701_AUD_AUD_48K_TIMING]);
--A1SYS_CLK_AUD_MUX1_DIV_ERR:
--	clk_disable_unprepare(afe_priv->clocks[MT2701_AUD_AUD_MUX1_DIV]);
--A1SYS_CLK_AUD_MUX1_SEL_ERR:
--	clk_disable_unprepare(afe_priv->clocks[MT2701_AUD_AUD_MUX1_SEL]);
-+int mt2701_afe_enable_mclk(struct mtk_base_afe *afe, int id)
-+{
-+	struct mt2701_afe_private *afe_priv = afe->platform_priv;
-+	struct mt2701_i2s_path *i2s_path = &afe_priv->i2s_path[id];
- 
--	return ret;
-+	return clk_prepare_enable(i2s_path->mclk_ck);
- }
- 
--void mt2701_turn_off_a1sys_clock(struct mtk_base_afe *afe)
-+void mt2701_afe_disable_mclk(struct mtk_base_afe *afe, int id)
- {
- 	struct mt2701_afe_private *afe_priv = afe->platform_priv;
-+	struct mt2701_i2s_path *i2s_path = &afe_priv->i2s_path[id];
- 
--	clk_disable_unprepare(afe_priv->clocks[MT2701_AUD_INFRA_SYS_AUDIO]);
--	clk_disable_unprepare(afe_priv->clocks[MT2701_AUD_AUD_48K_TIMING]);
--	clk_disable_unprepare(afe_priv->clocks[MT2701_AUD_AUD_MUX1_DIV]);
--	clk_disable_unprepare(afe_priv->clocks[MT2701_AUD_AUD_MUX1_SEL]);
-+	clk_disable_unprepare(i2s_path->mclk_ck);
- }
- 
--int mt2701_turn_on_a2sys_clock(struct mtk_base_afe *afe)
-+int mt2701_enable_btmrg_clk(struct mtk_base_afe *afe)
- {
- 	struct mt2701_afe_private *afe_priv = afe->platform_priv;
--	int ret = 0;
- 
--	/* Set Mux */
--	ret = clk_prepare_enable(afe_priv->clocks[MT2701_AUD_AUD_MUX2_SEL]);
--	if (ret) {
--		dev_err(afe->dev, "%s clk_prepare_enable %s fail %d\n",
--			__func__, aud_clks[MT2701_AUD_AUD_MUX2_SEL], ret);
--		goto A2SYS_CLK_AUD_MUX2_SEL_ERR;
--	}
-+	return clk_prepare_enable(afe_priv->mrgif_ck);
-+}
- 
--	ret = clk_set_parent(afe_priv->clocks[MT2701_AUD_AUD_MUX2_SEL],
--			     afe_priv->clocks[MT2701_AUD_AUD2PLL_90M]);
--	if (ret) {
--		dev_err(afe->dev, "%s clk_set_parent %s-%s fail %d\n", __func__,
--			aud_clks[MT2701_AUD_AUD_MUX2_SEL],
--			aud_clks[MT2701_AUD_AUD2PLL_90M], ret);
--		goto A2SYS_CLK_AUD_MUX2_SEL_ERR;
--	}
-+void mt2701_disable_btmrg_clk(struct mtk_base_afe *afe)
-+{
-+	struct mt2701_afe_private *afe_priv = afe->platform_priv;
- 
--	/* Set Divider */
--	ret = clk_prepare_enable(afe_priv->clocks[MT2701_AUD_AUD_MUX2_DIV]);
--	if (ret) {
--		dev_err(afe->dev, "%s clk_prepare_enable %s fail %d\n",
--			__func__, aud_clks[MT2701_AUD_AUD_MUX2_DIV], ret);
--		goto A2SYS_CLK_AUD_MUX2_DIV_ERR;
--	}
-+	clk_disable_unprepare(afe_priv->mrgif_ck);
-+}
- 
--	ret = clk_set_rate(afe_priv->clocks[MT2701_AUD_AUD_MUX2_DIV],
--			   MT2701_AUD_AUD_MUX2_DIV_RATE);
--	if (ret) {
--		dev_err(afe->dev, "%s clk_set_parent %s-%d fail %d\n", __func__,
--			aud_clks[MT2701_AUD_AUD_MUX2_DIV],
--			MT2701_AUD_AUD_MUX2_DIV_RATE, ret);
--		goto A2SYS_CLK_AUD_MUX2_DIV_ERR;
--	}
-+static int mt2701_afe_enable_audsys(struct mtk_base_afe *afe)
-+{
-+	struct mt2701_afe_private *afe_priv = afe->platform_priv;
-+	int ret;
- 
--	/* Enable clock gate */
--	ret = clk_prepare_enable(afe_priv->clocks[MT2701_AUD_AUD_44K_TIMING]);
--	if (ret) {
--		dev_err(afe->dev, "%s clk_prepare_enable %s fail %d\n",
--			__func__, aud_clks[MT2701_AUD_AUD_44K_TIMING], ret);
--		goto A2SYS_CLK_AUD_44K_ERR;
--	}
-+	ret = clk_prepare_enable(afe_priv->base_ck[MT2701_AUDSYS_AFE]);
-+	if (ret)
-+		return ret;
- 
--	/* Enable infra audio */
--	ret = clk_prepare_enable(afe_priv->clocks[MT2701_AUD_INFRA_SYS_AUDIO]);
--	if (ret) {
--		dev_err(afe->dev, "%s clk_prepare_enable %s fail %d\n",
--			__func__, aud_clks[MT2701_AUD_INFRA_SYS_AUDIO], ret);
--		goto A2SYS_CLK_INFRA_ERR;
--	}
-+	ret = clk_prepare_enable(afe_priv->base_ck[MT2701_AUDSYS_A1SYS]);
-+	if (ret)
-+		goto err_audio_a1sys;
-+
-+	ret = clk_prepare_enable(afe_priv->base_ck[MT2701_AUDSYS_A2SYS]);
-+	if (ret)
-+		goto err_audio_a2sys;
-+
-+	ret = clk_prepare_enable(afe_priv->base_ck[MT2701_AUDSYS_AFE_CONN]);
-+	if (ret)
-+		goto err_afe_conn;
- 
- 	return 0;
- 
--A2SYS_CLK_INFRA_ERR:
--	clk_disable_unprepare(afe_priv->clocks[MT2701_AUD_INFRA_SYS_AUDIO]);
--A2SYS_CLK_AUD_44K_ERR:
--	clk_disable_unprepare(afe_priv->clocks[MT2701_AUD_AUD_44K_TIMING]);
--A2SYS_CLK_AUD_MUX2_DIV_ERR:
--	clk_disable_unprepare(afe_priv->clocks[MT2701_AUD_AUD_MUX2_DIV]);
--A2SYS_CLK_AUD_MUX2_SEL_ERR:
--	clk_disable_unprepare(afe_priv->clocks[MT2701_AUD_AUD_MUX2_SEL]);
-+err_afe_conn:
-+	clk_disable_unprepare(afe_priv->base_ck[MT2701_AUDSYS_A2SYS]);
-+err_audio_a2sys:
-+	clk_disable_unprepare(afe_priv->base_ck[MT2701_AUDSYS_A1SYS]);
-+err_audio_a1sys:
-+	clk_disable_unprepare(afe_priv->base_ck[MT2701_AUDSYS_AFE]);
- 
- 	return ret;
- }
- 
--void mt2701_turn_off_a2sys_clock(struct mtk_base_afe *afe)
-+static void mt2701_afe_disable_audsys(struct mtk_base_afe *afe)
- {
- 	struct mt2701_afe_private *afe_priv = afe->platform_priv;
- 
--	clk_disable_unprepare(afe_priv->clocks[MT2701_AUD_INFRA_SYS_AUDIO]);
--	clk_disable_unprepare(afe_priv->clocks[MT2701_AUD_AUD_44K_TIMING]);
--	clk_disable_unprepare(afe_priv->clocks[MT2701_AUD_AUD_MUX2_DIV]);
--	clk_disable_unprepare(afe_priv->clocks[MT2701_AUD_AUD_MUX2_SEL]);
-+	clk_disable_unprepare(afe_priv->base_ck[MT2701_AUDSYS_AFE_CONN]);
-+	clk_disable_unprepare(afe_priv->base_ck[MT2701_AUDSYS_A2SYS]);
-+	clk_disable_unprepare(afe_priv->base_ck[MT2701_AUDSYS_A1SYS]);
-+	clk_disable_unprepare(afe_priv->base_ck[MT2701_AUDSYS_AFE]);
- }
- 
--int mt2701_turn_on_afe_clock(struct mtk_base_afe *afe)
-+int mt2701_afe_enable_clock(struct mtk_base_afe *afe)
- {
--	struct mt2701_afe_private *afe_priv = afe->platform_priv;
- 	int ret;
- 
--	/* enable INFRA_SYS */
--	ret = clk_prepare_enable(afe_priv->clocks[MT2701_AUD_INFRA_SYS_AUDIO]);
--	if (ret) {
--		dev_err(afe->dev, "%s clk_prepare_enable %s fail %d\n",
--			__func__, aud_clks[MT2701_AUD_INFRA_SYS_AUDIO], ret);
--		goto AFE_AUD_INFRA_ERR;
--	}
--
--	/* Set MT2701_AUD_AUDINTBUS to MT2701_AUD_SYSPLL1_D4 */
--	ret = clk_prepare_enable(afe_priv->clocks[MT2701_AUD_AUDINTBUS]);
--	if (ret) {
--		dev_err(afe->dev, "%s clk_prepare_enable %s fail %d\n",
--			__func__, aud_clks[MT2701_AUD_AUDINTBUS], ret);
--		goto AFE_AUD_AUDINTBUS_ERR;
--	}
--
--	ret = clk_set_parent(afe_priv->clocks[MT2701_AUD_AUDINTBUS],
--			     afe_priv->clocks[MT2701_AUD_SYSPLL1_D4]);
--	if (ret) {
--		dev_err(afe->dev, "%s clk_set_parent %s-%s fail %d\n", __func__,
--			aud_clks[MT2701_AUD_AUDINTBUS],
--			aud_clks[MT2701_AUD_SYSPLL1_D4], ret);
--		goto AFE_AUD_AUDINTBUS_ERR;
--	}
--
--	/* Set MT2701_AUD_ASM_H_SEL to MT2701_AUD_UNIVPLL2_D2 */
--	ret = clk_prepare_enable(afe_priv->clocks[MT2701_AUD_ASM_H_SEL]);
--	if (ret) {
--		dev_err(afe->dev, "%s clk_prepare_enable %s fail %d\n",
--			__func__, aud_clks[MT2701_AUD_ASM_H_SEL], ret);
--		goto AFE_AUD_ASM_H_ERR;
--	}
--
--	ret = clk_set_parent(afe_priv->clocks[MT2701_AUD_ASM_H_SEL],
--			     afe_priv->clocks[MT2701_AUD_UNIVPLL2_D2]);
--	if (ret) {
--		dev_err(afe->dev, "%s clk_set_parent %s-%s fail %d\n", __func__,
--			aud_clks[MT2701_AUD_ASM_H_SEL],
--			aud_clks[MT2701_AUD_UNIVPLL2_D2], ret);
--		goto AFE_AUD_ASM_H_ERR;
--	}
--
--	/* Set MT2701_AUD_ASM_M_SEL to MT2701_AUD_UNIVPLL2_D4 */
--	ret = clk_prepare_enable(afe_priv->clocks[MT2701_AUD_ASM_M_SEL]);
-+	/* Enable audio system */
-+	ret = mt2701_afe_enable_audsys(afe);
- 	if (ret) {
--		dev_err(afe->dev, "%s clk_prepare_enable %s fail %d\n",
--			__func__, aud_clks[MT2701_AUD_ASM_M_SEL], ret);
--		goto AFE_AUD_ASM_M_ERR;
-+		dev_err(afe->dev, "failed to enable audio system %d\n", ret);
-+		return ret;
- 	}
- 
--	ret = clk_set_parent(afe_priv->clocks[MT2701_AUD_ASM_M_SEL],
--			     afe_priv->clocks[MT2701_AUD_UNIVPLL2_D4]);
--	if (ret) {
--		dev_err(afe->dev, "%s clk_set_parent %s-%s fail %d\n", __func__,
--			aud_clks[MT2701_AUD_ASM_M_SEL],
--			aud_clks[MT2701_AUD_UNIVPLL2_D4], ret);
--		goto AFE_AUD_ASM_M_ERR;
--	}
-+	regmap_update_bits(afe->regmap, ASYS_TOP_CON,
-+			   AUDIO_TOP_CON0_A1SYS_A2SYS_ON,
-+			   AUDIO_TOP_CON0_A1SYS_A2SYS_ON);
-+	regmap_update_bits(afe->regmap, AFE_DAC_CON0,
-+			   AFE_DAC_CON0_AFE_ON,
-+			   AFE_DAC_CON0_AFE_ON);
- 
--	regmap_update_bits(afe->regmap, AUDIO_TOP_CON0,
--			   AUDIO_TOP_CON0_PDN_AFE, 0);
--	regmap_update_bits(afe->regmap, AUDIO_TOP_CON0,
--			   AUDIO_TOP_CON0_PDN_APLL_CK, 0);
--	regmap_update_bits(afe->regmap, AUDIO_TOP_CON4,
--			   AUDIO_TOP_CON4_PDN_A1SYS, 0);
--	regmap_update_bits(afe->regmap, AUDIO_TOP_CON4,
--			   AUDIO_TOP_CON4_PDN_A2SYS, 0);
--	regmap_update_bits(afe->regmap, AUDIO_TOP_CON4,
--			   AUDIO_TOP_CON4_PDN_AFE_CONN, 0);
-+	/* Configure ASRC */
-+	regmap_write(afe->regmap, PWR1_ASM_CON1, PWR1_ASM_CON1_INIT_VAL);
-+	regmap_write(afe->regmap, PWR2_ASM_CON1, PWR2_ASM_CON1_INIT_VAL);
- 
- 	return 0;
--
--AFE_AUD_ASM_M_ERR:
--	clk_disable_unprepare(afe_priv->clocks[MT2701_AUD_ASM_M_SEL]);
--AFE_AUD_ASM_H_ERR:
--	clk_disable_unprepare(afe_priv->clocks[MT2701_AUD_ASM_H_SEL]);
--AFE_AUD_AUDINTBUS_ERR:
--	clk_disable_unprepare(afe_priv->clocks[MT2701_AUD_AUDINTBUS]);
--AFE_AUD_INFRA_ERR:
--	clk_disable_unprepare(afe_priv->clocks[MT2701_AUD_INFRA_SYS_AUDIO]);
--
--	return ret;
- }
- 
--void mt2701_turn_off_afe_clock(struct mtk_base_afe *afe)
-+int mt2701_afe_disable_clock(struct mtk_base_afe *afe)
- {
--	struct mt2701_afe_private *afe_priv = afe->platform_priv;
-+	regmap_update_bits(afe->regmap, ASYS_TOP_CON,
-+			   AUDIO_TOP_CON0_A1SYS_A2SYS_ON, 0);
-+	regmap_update_bits(afe->regmap, AFE_DAC_CON0,
-+			   AFE_DAC_CON0_AFE_ON, 0);
- 
--	clk_disable_unprepare(afe_priv->clocks[MT2701_AUD_INFRA_SYS_AUDIO]);
--
--	clk_disable_unprepare(afe_priv->clocks[MT2701_AUD_AUDINTBUS]);
--	clk_disable_unprepare(afe_priv->clocks[MT2701_AUD_ASM_H_SEL]);
--	clk_disable_unprepare(afe_priv->clocks[MT2701_AUD_ASM_M_SEL]);
--
--	regmap_update_bits(afe->regmap, AUDIO_TOP_CON0,
--			   AUDIO_TOP_CON0_PDN_AFE, AUDIO_TOP_CON0_PDN_AFE);
--	regmap_update_bits(afe->regmap, AUDIO_TOP_CON0,
--			   AUDIO_TOP_CON0_PDN_APLL_CK,
--			   AUDIO_TOP_CON0_PDN_APLL_CK);
--	regmap_update_bits(afe->regmap, AUDIO_TOP_CON4,
--			   AUDIO_TOP_CON4_PDN_A1SYS,
--			   AUDIO_TOP_CON4_PDN_A1SYS);
--	regmap_update_bits(afe->regmap, AUDIO_TOP_CON4,
--			   AUDIO_TOP_CON4_PDN_A2SYS,
--			   AUDIO_TOP_CON4_PDN_A2SYS);
--	regmap_update_bits(afe->regmap, AUDIO_TOP_CON4,
--			   AUDIO_TOP_CON4_PDN_AFE_CONN,
--			   AUDIO_TOP_CON4_PDN_AFE_CONN);
-+	mt2701_afe_disable_audsys(afe);
-+
-+	return 0;
- }
- 
- void mt2701_mclk_configuration(struct mtk_base_afe *afe, int id, int domain,
- 			       int mclk)
- {
--	struct mt2701_afe_private *afe_priv = afe->platform_priv;
-+	struct mt2701_afe_private *priv = afe->platform_priv;
-+	struct mt2701_i2s_path *i2s_path = &priv->i2s_path[id];
- 	int ret;
--	int aud_src_div_id = MT2701_AUD_AUD_K1_SRC_DIV + id;
--	int aud_src_clk_id = MT2701_AUD_AUD_K1_SRC_SEL + id;
- 
--	/* Set MCLK Kx_SRC_SEL(domain) */
--	ret = clk_prepare_enable(afe_priv->clocks[aud_src_clk_id]);
--	if (ret)
--		dev_err(afe->dev, "%s clk_prepare_enable %s fail %d\n",
--			__func__, aud_clks[aud_src_clk_id], ret);
--
--	if (domain == 0) {
--		ret = clk_set_parent(afe_priv->clocks[aud_src_clk_id],
--				     afe_priv->clocks[MT2701_AUD_AUD_MUX1_SEL]);
--		if (ret)
--			dev_err(afe->dev, "%s clk_set_parent %s-%s fail %d\n",
--				__func__, aud_clks[aud_src_clk_id],
--				aud_clks[MT2701_AUD_AUD_MUX1_SEL], ret);
--	} else {
--		ret = clk_set_parent(afe_priv->clocks[aud_src_clk_id],
--				     afe_priv->clocks[MT2701_AUD_AUD_MUX2_SEL]);
--		if (ret)
--			dev_err(afe->dev, "%s clk_set_parent %s-%s fail %d\n",
--				__func__, aud_clks[aud_src_clk_id],
--				aud_clks[MT2701_AUD_AUD_MUX2_SEL], ret);
--	}
--	clk_disable_unprepare(afe_priv->clocks[aud_src_clk_id]);
-+	/* Set mclk source */
-+	if (domain == 0)
-+		ret = clk_set_parent(i2s_path->sel_ck,
-+				     priv->base_ck[MT2701_TOP_AUD_MCLK_SRC0]);
-+	else
-+		ret = clk_set_parent(i2s_path->sel_ck,
-+				     priv->base_ck[MT2701_TOP_AUD_MCLK_SRC1]);
- 
--	/* Set MCLK Kx_SRC_DIV(divider) */
--	ret = clk_prepare_enable(afe_priv->clocks[aud_src_div_id]);
- 	if (ret)
--		dev_err(afe->dev, "%s clk_prepare_enable %s fail %d\n",
--			__func__, aud_clks[aud_src_div_id], ret);
-+		dev_err(afe->dev, "failed to set domain%d mclk source %d\n",
-+			domain, ret);
- 
--	ret = clk_set_rate(afe_priv->clocks[aud_src_div_id], mclk);
-+	/* Set mclk divider */
-+	ret = clk_set_rate(i2s_path->div_ck, mclk);
- 	if (ret)
--		dev_err(afe->dev, "%s clk_set_rate %s-%d fail %d\n", __func__,
--			aud_clks[aud_src_div_id], mclk, ret);
--	clk_disable_unprepare(afe_priv->clocks[aud_src_div_id]);
-+		dev_err(afe->dev, "failed to set mclk divider %d\n", ret);
- }
- 
- MODULE_DESCRIPTION("MT2701 afe clock control");
-diff --git a/sound/soc/mediatek/mt2701/mt2701-afe-clock-ctrl.h b/sound/soc/mediatek/mt2701/mt2701-afe-clock-ctrl.h
-index 6497d570cf09..15417d9d6597 100644
---- a/sound/soc/mediatek/mt2701/mt2701-afe-clock-ctrl.h
-+++ b/sound/soc/mediatek/mt2701/mt2701-afe-clock-ctrl.h
-@@ -21,16 +21,15 @@ struct mtk_base_afe;
- 
- int mt2701_init_clock(struct mtk_base_afe *afe);
- int mt2701_afe_enable_clock(struct mtk_base_afe *afe);
--void mt2701_afe_disable_clock(struct mtk_base_afe *afe);
-+int mt2701_afe_disable_clock(struct mtk_base_afe *afe);
- 
--int mt2701_turn_on_a1sys_clock(struct mtk_base_afe *afe);
--void mt2701_turn_off_a1sys_clock(struct mtk_base_afe *afe);
-+int mt2701_afe_enable_i2s(struct mtk_base_afe *afe, int id, int dir);
-+void mt2701_afe_disable_i2s(struct mtk_base_afe *afe, int id, int dir);
-+int mt2701_afe_enable_mclk(struct mtk_base_afe *afe, int id);
-+void mt2701_afe_disable_mclk(struct mtk_base_afe *afe, int id);
- 
--int mt2701_turn_on_a2sys_clock(struct mtk_base_afe *afe);
--void mt2701_turn_off_a2sys_clock(struct mtk_base_afe *afe);
--
--int mt2701_turn_on_afe_clock(struct mtk_base_afe *afe);
--void mt2701_turn_off_afe_clock(struct mtk_base_afe *afe);
-+int mt2701_enable_btmrg_clk(struct mtk_base_afe *afe);
-+void mt2701_disable_btmrg_clk(struct mtk_base_afe *afe);
- 
- void mt2701_mclk_configuration(struct mtk_base_afe *afe, int id, int domain,
- 			       int mclk);
-diff --git a/sound/soc/mediatek/mt2701/mt2701-afe-common.h b/sound/soc/mediatek/mt2701/mt2701-afe-common.h
-index c19430e98adf..ce5bd4dc864d 100644
---- a/sound/soc/mediatek/mt2701/mt2701-afe-common.h
-+++ b/sound/soc/mediatek/mt2701/mt2701-afe-common.h
-@@ -69,53 +69,14 @@ enum {
- 	MT2701_IRQ_ASYS_END,
- };
- 
--/* 2701 clock def */
--enum audio_system_clock_type {
--	MT2701_AUD_INFRA_SYS_AUDIO,
--	MT2701_AUD_AUD_MUX1_SEL,
--	MT2701_AUD_AUD_MUX2_SEL,
--	MT2701_AUD_AUD_MUX1_DIV,
--	MT2701_AUD_AUD_MUX2_DIV,
--	MT2701_AUD_AUD_48K_TIMING,
--	MT2701_AUD_AUD_44K_TIMING,
--	MT2701_AUD_AUDPLL_MUX_SEL,
--	MT2701_AUD_APLL_SEL,
--	MT2701_AUD_AUD1PLL_98M,
--	MT2701_AUD_AUD2PLL_90M,
--	MT2701_AUD_HADDS2PLL_98M,
--	MT2701_AUD_HADDS2PLL_294M,
--	MT2701_AUD_AUDPLL,
--	MT2701_AUD_AUDPLL_D4,
--	MT2701_AUD_AUDPLL_D8,
--	MT2701_AUD_AUDPLL_D16,
--	MT2701_AUD_AUDPLL_D24,
--	MT2701_AUD_AUDINTBUS,
--	MT2701_AUD_CLK_26M,
--	MT2701_AUD_SYSPLL1_D4,
--	MT2701_AUD_AUD_K1_SRC_SEL,
--	MT2701_AUD_AUD_K2_SRC_SEL,
--	MT2701_AUD_AUD_K3_SRC_SEL,
--	MT2701_AUD_AUD_K4_SRC_SEL,
--	MT2701_AUD_AUD_K5_SRC_SEL,
--	MT2701_AUD_AUD_K6_SRC_SEL,
--	MT2701_AUD_AUD_K1_SRC_DIV,
--	MT2701_AUD_AUD_K2_SRC_DIV,
--	MT2701_AUD_AUD_K3_SRC_DIV,
--	MT2701_AUD_AUD_K4_SRC_DIV,
--	MT2701_AUD_AUD_K5_SRC_DIV,
--	MT2701_AUD_AUD_K6_SRC_DIV,
--	MT2701_AUD_AUD_I2S1_MCLK,
--	MT2701_AUD_AUD_I2S2_MCLK,
--	MT2701_AUD_AUD_I2S3_MCLK,
--	MT2701_AUD_AUD_I2S4_MCLK,
--	MT2701_AUD_AUD_I2S5_MCLK,
--	MT2701_AUD_AUD_I2S6_MCLK,
--	MT2701_AUD_ASM_M_SEL,
--	MT2701_AUD_ASM_H_SEL,
--	MT2701_AUD_UNIVPLL2_D4,
--	MT2701_AUD_UNIVPLL2_D2,
--	MT2701_AUD_SYSPLL_D5,
--	MT2701_CLOCK_NUM
-+enum audio_base_clock {
-+	MT2701_TOP_AUD_MCLK_SRC0,
-+	MT2701_TOP_AUD_MCLK_SRC1,
-+	MT2701_AUDSYS_AFE,
-+	MT2701_AUDSYS_AFE_CONN,
-+	MT2701_AUDSYS_A1SYS,
-+	MT2701_AUDSYS_A2SYS,
-+	MT2701_BASE_CLK_NUM,
- };
- 
- static const unsigned int mt2701_afe_backup_list[] = {
-@@ -144,7 +105,6 @@ struct mtk_base_irq_data;
- 
- struct mt2701_i2s_data {
- 	int i2s_ctrl_reg;
--	int i2s_pwn_shift;
- 	int i2s_asrc_fs_shift;
- 	int i2s_asrc_fs_mask;
- };
-@@ -161,11 +121,17 @@ struct mt2701_i2s_path {
- 	int on[I2S_DIR_NUM];
- 	int occupied[I2S_DIR_NUM];
- 	const struct mt2701_i2s_data *i2s_data[2];
-+	struct clk *hop_ck[I2S_DIR_NUM];
-+	struct clk *sel_ck;
-+	struct clk *div_ck;
-+	struct clk *mclk_ck;
-+	struct clk *asrco_ck;
- };
- 
- struct mt2701_afe_private {
--	struct clk *clocks[MT2701_CLOCK_NUM];
- 	struct mt2701_i2s_path i2s_path[MT2701_I2S_NUM];
-+	struct clk *base_ck[MT2701_BASE_CLK_NUM];
-+	struct clk *mrgif_ck;
- 	bool mrg_enable[MT2701_STREAM_DIR_NUM];
- };
- 
-diff --git a/sound/soc/mediatek/mt2701/mt2701-afe-pcm.c b/sound/soc/mediatek/mt2701/mt2701-afe-pcm.c
-index a7362d1cda1b..33f809228f25 100644
---- a/sound/soc/mediatek/mt2701/mt2701-afe-pcm.c
-+++ b/sound/soc/mediatek/mt2701/mt2701-afe-pcm.c
-@@ -97,21 +97,12 @@ static int mt2701_afe_i2s_startup(struct snd_pcm_substream *substream,
- {
- 	struct snd_soc_pcm_runtime *rtd = substream->private_data;
- 	struct mtk_base_afe *afe = snd_soc_platform_get_drvdata(rtd->platform);
--	struct mt2701_afe_private *afe_priv = afe->platform_priv;
- 	int i2s_num = mt2701_dai_num_to_i2s(afe, dai->id);
--	int clk_num = MT2701_AUD_AUD_I2S1_MCLK + i2s_num;
--	int ret = 0;
- 
- 	if (i2s_num < 0)
- 		return i2s_num;
- 
--	/* enable mclk */
--	ret = clk_prepare_enable(afe_priv->clocks[clk_num]);
--	if (ret)
--		dev_err(afe->dev, "Failed to enable mclk for I2S: %d\n",
--			i2s_num);
--
--	return ret;
-+	return mt2701_afe_enable_mclk(afe, i2s_num);
- }
- 
- static int mt2701_afe_i2s_path_shutdown(struct snd_pcm_substream *substream,
-@@ -151,9 +142,9 @@ static int mt2701_afe_i2s_path_shutdown(struct snd_pcm_substream *substream,
- 	/* disable i2s */
- 	regmap_update_bits(afe->regmap, i2s_data->i2s_ctrl_reg,
- 			   ASYS_I2S_CON_I2S_EN, 0);
--	regmap_update_bits(afe->regmap, AUDIO_TOP_CON4,
--			   1 << i2s_data->i2s_pwn_shift,
--			   1 << i2s_data->i2s_pwn_shift);
-+
-+	mt2701_afe_disable_i2s(afe, i2s_num, stream_dir);
-+
- 	return 0;
- }
- 
-@@ -165,7 +156,6 @@ static void mt2701_afe_i2s_shutdown(struct snd_pcm_substream *substream,
- 	struct mt2701_afe_private *afe_priv = afe->platform_priv;
- 	int i2s_num = mt2701_dai_num_to_i2s(afe, dai->id);
- 	struct mt2701_i2s_path *i2s_path;
--	int clk_num = MT2701_AUD_AUD_I2S1_MCLK + i2s_num;
- 
- 	if (i2s_num < 0)
- 		return;
-@@ -185,7 +175,7 @@ static void mt2701_afe_i2s_shutdown(struct snd_pcm_substream *substream,
- 
- I2S_UNSTART:
- 	/* disable mclk */
--	clk_disable_unprepare(afe_priv->clocks[clk_num]);
-+	mt2701_afe_disable_mclk(afe, i2s_num);
- }
- 
- static int mt2701_i2s_path_prepare_enable(struct snd_pcm_substream *substream,
-@@ -251,9 +241,7 @@ static int mt2701_i2s_path_prepare_enable(struct snd_pcm_substream *substream,
- 			   fs << i2s_data->i2s_asrc_fs_shift);
- 
- 	/* enable i2s */
--	regmap_update_bits(afe->regmap, AUDIO_TOP_CON4,
--			   1 << i2s_data->i2s_pwn_shift,
--			   0 << i2s_data->i2s_pwn_shift);
-+	mt2701_afe_enable_i2s(afe, i2s_num, stream_dir);
- 
- 	/* reset i2s hw status before enable */
- 	regmap_update_bits(afe->regmap, i2s_data->i2s_ctrl_reg,
-@@ -339,9 +327,11 @@ static int mt2701_btmrg_startup(struct snd_pcm_substream *substream,
- 	struct snd_soc_pcm_runtime *rtd = substream->private_data;
- 	struct mtk_base_afe *afe = snd_soc_platform_get_drvdata(rtd->platform);
- 	struct mt2701_afe_private *afe_priv = afe->platform_priv;
-+	int ret;
- 
--	regmap_update_bits(afe->regmap, AUDIO_TOP_CON4,
--			   AUDIO_TOP_CON4_PDN_MRGIF, 0);
-+	ret = mt2701_enable_btmrg_clk(afe);
-+	if (ret)
-+		return ret;
- 
- 	afe_priv->mrg_enable[substream->stream] = 1;
- 	return 0;
-@@ -406,9 +396,7 @@ static void mt2701_btmrg_shutdown(struct snd_pcm_substream *substream,
- 				   AFE_MRGIF_CON_MRG_EN, 0);
- 		regmap_update_bits(afe->regmap, AFE_MRGIF_CON,
- 				   AFE_MRGIF_CON_MRG_I2S_EN, 0);
--		regmap_update_bits(afe->regmap, AUDIO_TOP_CON4,
--				   AUDIO_TOP_CON4_PDN_MRGIF,
--				   AUDIO_TOP_CON4_PDN_MRGIF);
-+		mt2701_disable_btmrg_clk(afe);
- 	}
- 	afe_priv->mrg_enable[substream->stream] = 0;
- }
-@@ -1386,14 +1374,12 @@ static const struct mt2701_i2s_data mt2701_i2s_data[MT2701_I2S_NUM][2] = {
- 	{
- 		{
- 			.i2s_ctrl_reg = ASYS_I2SO1_CON,
--			.i2s_pwn_shift = 6,
- 			.i2s_asrc_fs_shift = 0,
- 			.i2s_asrc_fs_mask = 0x1f,
- 
- 		},
- 		{
- 			.i2s_ctrl_reg = ASYS_I2SIN1_CON,
--			.i2s_pwn_shift = 0,
- 			.i2s_asrc_fs_shift = 0,
- 			.i2s_asrc_fs_mask = 0x1f,
- 
-@@ -1402,14 +1388,12 @@ static const struct mt2701_i2s_data mt2701_i2s_data[MT2701_I2S_NUM][2] = {
- 	{
- 		{
- 			.i2s_ctrl_reg = ASYS_I2SO2_CON,
--			.i2s_pwn_shift = 7,
- 			.i2s_asrc_fs_shift = 5,
- 			.i2s_asrc_fs_mask = 0x1f,
- 
- 		},
- 		{
- 			.i2s_ctrl_reg = ASYS_I2SIN2_CON,
--			.i2s_pwn_shift = 1,
- 			.i2s_asrc_fs_shift = 5,
- 			.i2s_asrc_fs_mask = 0x1f,
- 
-@@ -1418,14 +1402,12 @@ static const struct mt2701_i2s_data mt2701_i2s_data[MT2701_I2S_NUM][2] = {
- 	{
- 		{
- 			.i2s_ctrl_reg = ASYS_I2SO3_CON,
--			.i2s_pwn_shift = 8,
- 			.i2s_asrc_fs_shift = 10,
- 			.i2s_asrc_fs_mask = 0x1f,
- 
- 		},
- 		{
- 			.i2s_ctrl_reg = ASYS_I2SIN3_CON,
--			.i2s_pwn_shift = 2,
- 			.i2s_asrc_fs_shift = 10,
- 			.i2s_asrc_fs_mask = 0x1f,
- 
-@@ -1434,14 +1416,12 @@ static const struct mt2701_i2s_data mt2701_i2s_data[MT2701_I2S_NUM][2] = {
- 	{
- 		{
- 			.i2s_ctrl_reg = ASYS_I2SO4_CON,
--			.i2s_pwn_shift = 9,
- 			.i2s_asrc_fs_shift = 15,
- 			.i2s_asrc_fs_mask = 0x1f,
- 
- 		},
- 		{
- 			.i2s_ctrl_reg = ASYS_I2SIN4_CON,
--			.i2s_pwn_shift = 3,
- 			.i2s_asrc_fs_shift = 15,
- 			.i2s_asrc_fs_mask = 0x1f,
- 
-@@ -1483,8 +1463,7 @@ static int mt2701_afe_runtime_suspend(struct device *dev)
- {
- 	struct mtk_base_afe *afe = dev_get_drvdata(dev);
- 
--	mt2701_afe_disable_clock(afe);
--	return 0;
-+	return mt2701_afe_disable_clock(afe);
- }
- 
- static int mt2701_afe_runtime_resume(struct device *dev)
--- 
-2.15.1
+Thanks
+    j
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
