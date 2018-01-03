@@ -1,58 +1,45 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: Order in "compatibility" DT property ignored by a platform bus
-Date: Wed, 3 Jan 2018 15:29:40 -0600
-Message-ID: <20180103212940.gza4vmxrpsgb4cy2@rob-hp-laptop>
-References: <CACna6ry3iOrqbFqS6EroVhhP3szNgfCQxpe=yx1eHmY2oD3big@mail.gmail.com>
+Subject: Re: [PATCH 1/5] drm/panel: simple: add support for Ampire
+ AM-800480AYTZQW-00H
+Date: Wed, 3 Jan 2018 15:29:55 -0600
+Message-ID: <20180103211257.ybddbf6cbdudkv5y@rob-hp-laptop>
+References: <1514883738-16297-1-git-send-email-jagan@amarulasolutions.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CACna6ry3iOrqbFqS6EroVhhP3szNgfCQxpe=yx1eHmY2oD3big-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1514883738-16297-1-git-send-email-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 02, 2018 at 10:19:42AM +0100, Rafał Miłecki wrote:
-> I was wondering how platform bus handles order of strings in the
-> "compatibility" property. After reading the code & testing it I
-> realized it doesn't.
+On Tue, Jan 02, 2018 at 02:32:14PM +0530, Jagan Teki wrote:
+> This adds support for the Ampire AM-800480AYTZQW-00H 7.0" WGA LCD,
+> which can be supported by the simple panel driver.
 > 
-> The property should store strings ordered from the most specific to
-> the most generic. You could expect a more specific string to have a
-> priority while matching.
+> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> ---
+>  .../display/panel/ampire,am-800480aytzqw-00h.txt   |  7 ++++++
+>  drivers/gpu/drm/panel/panel-simple.c               | 27 ++++++++++++++++++++++
+>  2 files changed, 34 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/ampire,am-800480aytzqw-00h.txt
 > 
-> In platform_match there isn't any magic code for handling that. It
-> simply checks if a driver that was passed can support a given device.
-> I also did 2 quick tests with:
-> 1) compatible = "foo", "bar";
-> 2) compatible = "bar", "foo";
+> diff --git a/Documentation/devicetree/bindings/display/panel/ampire,am-800480aytzqw-00h.txt b/Documentation/devicetree/bindings/display/panel/ampire,am-800480aytzqw-00h.txt
+> new file mode 100644
+> index 0000000..bfa7a70
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/panel/ampire,am-800480aytzqw-00h.txt
+> @@ -0,0 +1,7 @@
+> +Ampire AM-800480AYTZQW-00H 7.0" WVGA TFT LCD panel
+> +
+> +Required properties:
+> +- compatible: should be "ampire,am-800480aytzqw-00h"
+> +
+> +This binding is compatible with the simple-panel binding, which is specified
+> +in simple-panel.txt in this directory.
 
-Strictly speaking one of these has to be invalid, but I get your point.
-
-> and it each case a foo platform driver was used. It just happened to
-> be before bar platform driver on kernel's internal list (both drivers
-> were built-in).
-> 
-> If you compare this with ARM's setup_machine_fdt you will notice that
-> one actually looks for the best matching machine code (it's handled
-> with the __of_match_node).
-> 
-> Am I correct understanding this isn't a proper behavior? 
-
-Yes. The current state is that multiple drivers matching is not 
-supported (or undefined behavior).
-
-> Are there any
-> plans fixing this?
-
-Not that I'm aware of. I think it should really only be a problem when 
-you have a generic driver and then a device specific driver. It seems to 
-be a rare enough problem that no one has bothered to fix it for years.
-
-It gets more complicated because what happens in the 2nd case if driver 
-foo is built-in and driver bar is loaded later?
+You need to be explicit as to which properties from it you are using.
 
 Rob
 --
