@@ -1,106 +1,298 @@
-From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] arm64: dts: renesas: salvator-x: Remove
- renesas,no-ether-link property
-Date: Wed, 3 Jan 2018 11:26:43 +0100
-Message-ID: <20180103102643.rejwzkim7wzhz22z@verge.net.au>
-References: <1513869539-18803-1-git-send-email-vladimir_zapolskiy@mentor.com>
- <1513869539-18803-2-git-send-email-vladimir_zapolskiy@mentor.com>
- <20171222083203.h5a65uitv7yok5fz@verge.net.au>
- <20171222084048.ssyi53yj34hzejct@verge.net.au>
- <a002072f-dbe4-0b6a-a19f-08dd1ed3a8d2@mentor.com>
- <20180102093823.o6km656xdef7jnwf@verge.net.au>
+From: jacopo mondi <jacopo@jmondi.org>
+Subject: Re: [PATCH v2 3/9] v4l: platform: Add Renesas CEU driver
+Date: Wed, 3 Jan 2018 11:47:48 +0100
+Message-ID: <20180103104748.GC9493@w540>
+References: <1514469681-15602-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1514469681-15602-4-git-send-email-jacopo+renesas@jmondi.org>
+ <1538398.BnUWTlhJjz@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180102093823.o6km656xdef7jnwf-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Cc: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Bogdan Mirea <Bogdan-Stefan_Mirea-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <1538398.BnUWTlhJjz@avalon>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, magnus.damm@gmail.com, geert@glider.be, mchehab@kernel.org, hverkuil@xs4all.nl, robh+dt@kernel.org, mark.rutland@arm.com, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 02, 2018 at 10:38:24AM +0100, Simon Horman wrote:
-> Hi Vladimir,
-> 
-> Happy New Year!
-> 
-> On Fri, Dec 22, 2017 at 12:22:09PM +0200, Vladimir Zapolskiy wrote:
-> > Hi Simon,
-> > 
-> > On 12/22/2017 10:40 AM, Simon Horman wrote:
-> > > On Fri, Dec 22, 2017 at 09:32:03AM +0100, Simon Horman wrote:
-> > >> On Thu, Dec 21, 2017 at 05:18:58PM +0200, Vladimir Zapolskiy wrote:
-> > >>> From: Bogdan Mirea <Bogdan-Stefan_Mirea-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-> > >>>
-> > >>> The present change is a bug fix for AVB link iteratively up/down.
-> > >>>
-> > >>> Steps to reproduce:
-> > >>> - start AVB TX stream (Using aplay via MSE),
-> > >>> - disconnect+reconnect the eth cable,
-> > >>> - after a reconnection the eth connection goes iteratively up/down
-> > >>>   without user interaction,
-> > >>> - this may heal after some seconds or even stay for minutes.
-> > >>>
-> > >>> As the documentation specifies, the "renesas,no-ether-link" option
-> > >>> should be used when a board does not provide a proper AVB_LINK signal.
-> > >>> There is no need for this option enabled on RCAR H3/M3 Salvator-X/XS
-> > >>> and ULCB starter kits since the AVB_LINK is correctly handled by HW.
-> > >>>
-> > >>> Choosing to keep or remove the "renesas,no-ether-link" option will
-> > >>> have impact on the code flow in the following ways:
-> > >>> - keeping this option enabled may lead to unexpected behavior since
-> > >>>   the RX & TX are enabled/disabled directly from adjust_link function
-> > >>>   without any HW interrogation,
-> > >>> - removing this option, the RX & TX will only be enabled/disabled after
-> > >>>   HW interrogation. The HW check is made through the LMON pin in PSR
-> > >>>   register which specifies AVB_LINK signal value (0 - at low level;
-> > >>>   1 - at high level).
-> > >>>
-> > >>> In conclusion, the present change is also a safety improvement because
-> > >>> it removes the "renesas,no-ether-link" option leading to a proper way
-> > >>> of detecting the link state based on HW interrogation and not on
-> > >>> software heuristic.
-> > >>>
-> > >>> Fixes: d25e8ff0d5aa ("arm64: dts: renesas: Extract common Salvator-X board support")
-> > >>
-> > >> The above shuffles the code around but does not introduce the problem
-> > >> as far as I can see. Instead I think we should use:
-> > >>
-> > >> Fixes: dc36965a8905 ("arm64: dts: r8a7796: salvator-x: Enable EthernetAVB")
-> > >> Fixes: 6fa501c549aa ("arm64: dts: r8a7795: enable EthernetAVB on Salvator-X")
-> > >>
-> > >>> Signed-off-by: Bogdan Mirea <Bogdan-Stefan_Mirea-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-> > >>> Signed-off-by: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-> > > 
-> > > I have applied this a fix for v4.15 with the updated Fixes tags above.
-> > > 
-> > 
-> > thank you, I was unsure if you expected to get changes which can be used
-> > as a base without patch application conflicts (my done choice) or changes,
-> > which originally intorduced the bug, but formally require slightly
-> > different fixes due to code changes in the middle. If it would be needed,
-> > hopefully linux-stable maintainers can resolve the trivial conflicts.
-> > 
-> > Also you may find this information from the cover letter useful,
-> > someone may want to check the relevant board schematics and send
-> > similar fixes (if applicable after schematics review and testing):
-> > 
-> >   Note that DTS files for V3M Starter Kit, Draak and Eagle boards
-> >   contain the same property, the files are untouched due to unavailable
-> >   schematics to verify if the fix applies to these boards as well.
-> 
-> Thanks. I took a quick look and my findings so far are:
-> 
-> * Eagle: This approach seems applicable as AVB_LINK appears to be hooked up
-> * V3M Starter Kit: This approach seems applicable as AVB0_LINK appears to be
->   hooked up
-> * Draak: I don't seem to be able to locate documentation at this time
+Hi Laurent,
 
-I have now obtained Draak documentation. It seems that this approach is
-applicable to that board too as AVB0_LINK appears to be hooked up.
+On Tue, Jan 02, 2018 at 03:46:27PM +0200, Laurent Pinchart wrote:
+> Hi Jacopo,
+>
+> Thank you for the patch.
+>
+> > +/*
+> > + * ceu_device - CEU device instance
+> > + */
+> > +struct ceu_device {
+> > +	struct device		*dev;
+> > +	struct video_device	vdev;
+> > +	struct v4l2_device	v4l2_dev;
+> > +
+> > +	/* subdevices descriptors */
+> > +	struct ceu_subdev	*subdevs;
+> > +	/* the subdevice currently in use */
+> > +	struct ceu_subdev	*sd;
+> > +	unsigned int		sd_index;
+> > +	unsigned int		num_sd;
+> > +
+> > +	/* platform specific mask with all IRQ sources flagged */
+> > +	u32			irq_mask;
+> > +
+> > +	/* currently configured field and pixel format */
+> > +	enum v4l2_field	field;
+> > +	struct v4l2_pix_format_mplane v4l2_pix;
+> > +
+> > +	/* async subdev notification helpers */
+> > +	struct v4l2_async_notifier notifier;
+> > +	/* pointers to "struct ceu_subdevice -> asd" */
+> > +	struct v4l2_async_subdev **asds;
+> > +
+> > +	/* vb2 queue, capture buffer list and active buffer pointer */
+> > +	struct vb2_queue	vb2_vq;
+> > +	struct list_head	capture;
+> > +	struct vb2_v4l2_buffer	*active;
+> > +	unsigned int		sequence;
+> > +
+> > +	/* mlock - lock device suspend/resume and videobuf2 operations */
+>
+> In my review of v1 I commented that lock documentation should explain what
+> data is protected by the lock. As my point seems not to have come across it
+> must not have been clear enough, I'll try to fix that.
+>
+> The purpose of a lock is to protect from concurrent access to a resource. In
+> device drivers resources are in most cases either in-memory data or device
+> registers. To design a good locking scheme you need to ask yourself what
+> resources can be accessed concurrently, and then protect all accesses to those
+> resources using locking primitives. Some accesses don't need to be protected
+> (for instance it's common to initialize structure fields in the probe function
+> where no concurrent access from userspace can occur as device nodes are not
+> registered yet), and locking can then be omitted in a case by case basis.
+>
+> Lock documentation is essential to understand the locking scheme and should
+> explain what resources are protected by the lock. It's tempting (because it's
+> easy) to instead focus on what code sections the lock covers, but that's not
+> how the locking scheme should be designed, and will eventually be prone to
+> bugs leading to race conditions.
 
-> Are you interested in creating follow-up patches?
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks, I got this, but that lock is used to protect concurrent
+accesses to suspend/resume (and thus interface reset) and is used as
+vb2 queue lock. I can mention it guards concurrent interfaces resets,
+but I don't see it being that much different from what I already
+mentioned.
+
+>
+> Obviously a lock will end up preventing multiple code sections from running at
+> the same time, but that's the consequence of the locking scheme, it shouldn't
+> be its cause.
+>
+> > +	struct mutex	mlock;
+> > +
+> > +	/* lock - lock access to capture buffer queue and active buffer */
+> > +	spinlock_t	lock;
+> > +
+> > +	/* base - CEU memory base address */
+> > +	void __iomem	*base;
+> > +};
+>
+> [snip]
+>
+> > +/*
+> > + * ceu_soft_reset() - Software reset the CEU interface
+> > + * @ceu_device: CEU device.
+> > + *
+> > + * Returns 0 for success, -EIO for error.
+> > + */
+> > +static int ceu_soft_reset(struct ceu_device *ceudev)
+> > +{
+> > +	unsigned int i;
+> > +
+> > +	ceu_write(ceudev, CEU_CAPSR, CEU_CAPSR_CPKIL);
+> > +
+> > +	for (i = 0; i < 100; i++) {
+> > +		udelay(1);
+>
+> How about moving the delay after the check in case the condition is true
+> immediately ?
+>
+> > +		if (!(ceu_read(ceudev, CEU_CSTSR) & CEU_CSTRST_CPTON))
+> > +			break;
+> > +	}
+> > +
+> > +	if (i == 100) {
+> > +		dev_err(ceudev->dev, "soft reset time out\n");
+> > +		return -EIO;
+> > +	}
+> > +
+> > +	for (i = 0; i < 100; i++) {
+> > +		udelay(1);
+>
+> Same here.
+>
+> > +		if (!(ceu_read(ceudev, CEU_CAPSR) & CEU_CAPSR_CPKIL))
+> > +			return 0;
+> > +	}
+> > +
+> > +	/* if we get here, CEU has not reset properly */
+> > +	return -EIO;
+> > +}
+> > +
+> > +/* CEU Capture Operations */
+>
+> Just curious, why have you replaced the block comments by single-line comments
+> ? I pointed out that the format was wrong as you started them with /** and
+> they were not kerneldoc, but I have nothing against splitting the code in
+> sections with headers such as
+>
+> /* --------------------------------------------------------------------------
+>  * CEU Capture Operations
+>  */
+>
+> as I do so routinely in my drivers. If that's your preferred style and you
+> thought I asked for a change you can switch back, if you prefer single-line
+> comments that's fine with me too.
+
+Yes I borrowed that commenting style from other Renesas drivers you
+wrote, so I went for it for consistency.
+
+I recently read about some discussions on block comments, when Mauro
+was trying to replace /***...***/ block comments with a script, and
+I had the feeling there's not that much love for block comments around
+here, and I also find them a bit invasive.
+
+I used the
+/* --- Code section --- */
+style in the past which I find is a good balance between
+intrusiveness and noticeability but I don't want to introduce
+yet-another-comment-style so I went for single line and that's it.
+
+>
+> [snip]
+>
+> > +/*
+> > + * ceu_calc_plane_sizes() - Fill per-plane 'struct v4l2_plane_pix_format'
+> > + *			    information according to the currently configured
+> > + *			    pixel format.
+> > + * @ceu_device: CEU device.
+> > + * @ceu_fmt: Active image format.
+> > + * @pix: Pixel format information (store line width and image sizes)
+> > + *
+> > + * Returns 0 for success.
+> > + */
+> > +static int ceu_calc_plane_sizes(struct ceu_device *ceudev,
+> > +				const struct ceu_fmt *ceu_fmt,
+> > +				struct v4l2_pix_format_mplane *pix)
+> > +{
+> > +	unsigned int bpl, szimage;
+> > +
+> > +	switch (pix->pixelformat) {
+> > +	case V4L2_PIX_FMT_YUYV:
+> > +		pix->num_planes	= 1;
+> > +		bpl		= pix->width * ceu_fmt->bpp / 8;
+> > +		szimage		= pix->height * bpl;
+> > +		ceu_update_plane_sizes(&pix->plane_fmt[0], bpl, szimage);
+> > +		break;
+> > +
+> > +	case V4L2_PIX_FMT_NV16:
+> > +	case V4L2_PIX_FMT_NV61:
+> > +		pix->num_planes	= 2;
+> > +		bpl		= pix->width;
+> > +		szimage		= pix->height * pix->width;
+> > +		ceu_update_plane_sizes(&pix->plane_fmt[0], bpl, szimage);
+> > +		ceu_update_plane_sizes(&pix->plane_fmt[1], bpl, szimage);
+> > +		break;
+> > +
+> > +	case V4L2_PIX_FMT_NV12:
+> > +	case V4L2_PIX_FMT_NV21:
+> > +		pix->num_planes	= 2;
+> > +		bpl		= pix->width;
+> > +		szimage		= pix->height * pix->width;
+> > +		ceu_update_plane_sizes(&pix->plane_fmt[0], bpl, szimage);
+> > +		ceu_update_plane_sizes(&pix->plane_fmt[1], bpl, szimage / 2);
+> > +		break;
+> > +
+> > +	default:
+> > +		pix->num_planes	= 0;
+> > +		dev_err(ceudev->dev,
+> > +			"Format 0x%x not supported\n", pix->pixelformat);
+> > +		return -EINVAL;
+>
+> I think you can remove the default case as ceu_try_fmt() should have validated
+> the format already. The compiler will then likely warn so you need to keep a
+> default cause, but it will never be hit, so it can default to any format you
+> want. The function can then be turned into a void.
+
+Yes, that was only to silence the compiler actually...
+
+>
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+>
+> [snip]
+>
+> > +/*
+> > + * ceu_set_default_fmt() - Apply default NV16 memory output format with VGA
+> > + *			   sizes.
+> > + */
+> > +static int ceu_set_default_fmt(struct ceu_device *ceudev)
+> > +{
+> > +	struct v4l2_format v4l2_fmt = {
+> > +		.type = V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE,
+> > +		.fmt.pix_mp = {
+> > +			.width		= VGA_WIDTH,
+> > +			.height		= VGA_HEIGHT,
+> > +			.field		= V4L2_FIELD_NONE,
+> > +			.pixelformat	= V4L2_PIX_FMT_NV16,
+> > +			.num_planes	= 2,
+> > +			.plane_fmt	= {
+> > +				[0]	= {
+> > +					.sizeimage = VGA_WIDTH * VGA_HEIGHT * 2,
+> > +					.bytesperline = VGA_WIDTH * 2,
+> > +				},
+> > +				[1]	= {
+> > +					.sizeimage = VGA_WIDTH * VGA_HEIGHT * 2,
+> > +					.bytesperline = VGA_WIDTH * 2,
+> > +				},
+> > +			},
+> > +		},
+> > +	};
+> > +
+> > +	ceu_try_fmt(ceudev, &v4l2_fmt);
+>
+> You've removed the error check here. ceu_try_fmt() shouldn't fail, but it
+> calls a sensor driver subdev operation over which you have no control. It's up
+> to you, but if you decide to ignore errors, I would turn this function into
+> void.
+>
+> I know I've asked in my review of v1 for the error check to be removed, but I
+> think I had missed the fact that a subdev operation was called.
+>
+
+Yes, and I blindly changed it, so my bad as well..
+
+
+> > +	ceudev->v4l2_pix = v4l2_fmt.fmt.pix_mp;
+> > +
+> > +	return 0;
+> > +}
+>
+> [snip]
+>
+>
+>
+> [snip]
+>
+
+I have now fixed all of the above comments, and will send v3 shortly!
+
+Thanks
+   j
+
+> --
+> Regards,
+>
+> Laurent Pinchart
+>
