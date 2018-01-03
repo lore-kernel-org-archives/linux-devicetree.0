@@ -1,144 +1,45 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [RESEND PATCH v2 14/15] ASoC: qcom: apq8096: Add db820c machine
- driver
-Date: Wed, 3 Jan 2018 09:20:45 -0800
-Message-ID: <f72f32dd-e248-47c3-23cc-eabe1b85d9ae@codeaurora.org>
-References: <20171214173402.19074-1-srinivas.kandagatla@linaro.org>
- <20171214173402.19074-15-srinivas.kandagatla@linaro.org>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH v2 9/9] media: i2c: tw9910: Remove soc_camera dependencies
+Date: Wed, 3 Jan 2018 15:27:53 -0200
+Message-ID: <CAOMZO5Biwbwct_vBD3zXyFvFgW00JxVnFoDcQthARVLxdqPYhA@mail.gmail.com>
+References: <1514469681-15602-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1514469681-15602-10-git-send-email-jacopo+renesas@jmondi.org>
+ <CAOMZO5CjrXfzum7JgimGqvnM7kjMyZZdtpEhvYwO-DLnig=uMQ@mail.gmail.com> <20180103171347.GF9493@w540>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20171214173402.19074-15-srinivas.kandagatla@linaro.org>
-Content-Language: en-US
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: srinivas.kandagatla@linaro.org, Andy Gross <andy.gross@linaro.org>, Mark Brown <broonie@kernel.org>, linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org
-Cc: David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Patrick Lai <plai@codeaurora.org>, Banajit Goswami <bgoswami@codeaurora.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20180103171347.GF9493@w540>
+Sender: linux-sh-owner@vger.kernel.org
+To: jacopo mondi <jacopo@jmondi.org>
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Magnus Damm <magnus.damm@gmail.com>, geert@glider.be, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-renesas-soc@vger.kernel.org, linux-media <linux-media@vger.kernel.org>, linux-sh@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/14/2017 09:34 AM, srinivas.kandagatla@linaro.org wrote:
-> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->
-> uThis patch adds support to DB820c machine driver.
->
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> ---
->  sound/soc/qcom/Kconfig   |   9 +++-
->  sound/soc/qcom/apq8096.c | 124 +++++++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 132 insertions(+), 1 deletion(-)
->  create mode 100644 sound/soc/qcom/apq8096.c
->
-> diff --git a/sound/soc/qcom/Kconfig b/sound/soc/qcom/Kconfig
-> index ecd1e4ba834d..748ccc3edefa 100644
-> --- a/sound/soc/qcom/Kconfig
-> +++ b/sound/soc/qcom/Kconfig
-> @@ -72,7 +72,6 @@ config SND_SOC_QDSP6_ASM_DAI
->  	tristate
->  	default n
->  
-> -
->  config SND_SOC_QDSP6
->  	tristate "SoC ALSA audio driver for QDSP6"
->  	select SND_SOC_QDSP6_AFE
-> @@ -87,3 +86,11 @@ config SND_SOC_QDSP6
->  	 This will enable sound soc platform specific
->  	 audio drivers. This includes q6asm, q6adm,
->  	 q6afe interfaces to DSP using apr.
-> +
-> +config SND_SOC_MSM8996
-> +	tristate "SoC Machine driver for MSM8996 and APQ8096 boards"
-> +	select SND_SOC_QDSP6V2
-> +	default n
-> +	help
-> +	 To add support for SoC audio on MSM8996 and APQ8096 boards
-> +
-> diff --git a/sound/soc/qcom/apq8096.c b/sound/soc/qcom/apq8096.c
-> new file mode 100644
-> index 000000000000..5b2036317f71
-> --- /dev/null
-> +++ b/sound/soc/qcom/apq8096.c
-> @@ -0,0 +1,124 @@
-> +/*
-> + * Copyright (c) 2017 The Linux Foundation. All rights reserved.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 and
-> + * only version 2 as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + *
-> + */
-> +#include <linux/clk.h>
+Hi Jacopo,
 
-No clk usage though?
+On Wed, Jan 3, 2018 at 3:13 PM, jacopo mondi <jacopo@jmondi.org> wrote:
 
-> +#include <linux/platform_device.h>
-> +#include <linux/module.h>
-> +#include <linux/of_device.h>
-> +#include <sound/soc.h>
-[...]
-> +static struct snd_soc_dai_link msm8996_dai_links[] = {
-> +	/* FrontEnd DAI Links */
-> +	{
-> +		.name		= "MultiMedia1 Playback",
-> +		.stream_name	= "MultiMedia1",
-> +		.cpu_dai_name	= "MM_DL1",
-> +		.platform_name	= "q6asm_dai",
-> +		.dynamic	= 1,
-> +		.dpcm_playback	= 1,
-> +
-> +		.codec_dai_name	= "snd-soc-dummy-dai",
-> +		.codec_name = "snd-soc-dummy",
-> +	},
-> +	/* Backend DAI Links */
-> +	{
-> +		.name		= "HDMI Playback",
-> +		.stream_name	= "q6afe_dai",
-> +		.cpu_dai_name	= "HDMI",
-> +		.platform_name	= "q6routing",
-> +		.no_pcm		= 1,
-> +		.dpcm_playback	= 1,
-> +		.be_hw_params_fixup = msm8996_be_hw_params_fixup,
-> +		.codec_dai_name	= "i2s-hifi",
-> +		.codec_name = "hdmi-audio-codec.0.auto",
-> +	},
-> +};
-> +
-> +static int apq8096_sbc_parse_of(struct snd_soc_card *card)
-> +{
-> +	struct device *dev = card->dev;
-> +	int ret;
-> +
-> +	ret = snd_soc_of_parse_card_name(card, "qcom,model");
-> +	if (ret)
-> +		dev_err(dev, "Error parsing card name: %d\n", ret);
+> That would be true if I would have declared the GPIO to be ACTIVE_LOW.
+> See patch [5/9] in this series and search for "rstb". The GPIO (which
+> is shared between two devices) is said to be active high...
 
-So this prints an error, and the caller also prints an error when it
-fails. Double error messages?
+Just looked at your patch 5/9 and it seems it only works because you
+made two inversions :-)
 
-> +
-> +	return ret;
-> +}
-> +
-> +static int msm_snd_apq8096_probe(struct platform_device *pdev)
-> +{
-> +	int ret;
-> +	struct snd_soc_card *card;
-> +
-> +	card = devm_kzalloc(&pdev->dev, sizeof(*card), GFP_KERNEL);
-> +	if (!card)
-> +		return -ENOMEM;
-> +
-> +	card->dev = &pdev->dev;
-> +
-> +	ret = dma_coerce_mask_and_coherent(card->dev, DMA_BIT_MASK(32));
+Initially the rest GPIO was doing:
 
-Why do we need to do this? Can you add some sort of comment in the code
-about why?
+-       gpio_set_value(GPIO_PTT3, 0);
+-       mdelay(10);
+-       gpio_set_value(GPIO_PTT3, 1);
+-       mdelay(10); /* wait to let chip come out of reset */
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+So this is an active low reset.
+
+So you should have converted it to:
+
+GPIO_LOOKUP("sh7722_pfc", GPIO_PTT3, "rstb", GPIO_ACTIVE_LOW),
+
+and then in this patch you should do as I said earlier:
+
+gpiod_set_value(priv->rstb_gpio, 1);
+usleep_range(500, 1000);
+gpiod_set_value(priv->rstb_gpio, 0);
