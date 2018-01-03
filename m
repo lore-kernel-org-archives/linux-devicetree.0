@@ -1,60 +1,46 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 3/4] bcm2835-gpio-exp: Driver for GPIO expander via
- mailbox service
-Date: Wed, 3 Jan 2018 11:08:15 +0100
-Message-ID: <CACRpkdb73jGGRm5OrXLGYSOjMni-NsOwdC7TXH2k+iAEnAvL2g@mail.gmail.com>
-References: <cover.1514898134.git.baruch@tkos.co.il> <bcac00c71b29c359b59053a30d817a8f17d6731d.1514898134.git.baruch@tkos.co.il>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [1/2] arm64: dts: r8a7795: add thermal cooling management
+Date: Wed, 3 Jan 2018 11:14:38 +0100
+Message-ID: <20180103101438.il5grrfihewiduqe@verge.net.au>
+References: <20170913105909.13230-2-niklas.soderlund+renesas@ragnatech.se>
+ <20180101181333.GA3631@localhost.localdomain>
+ <20180102091944.py647jheghud7sl2@verge.net.au>
+ <20180103000352.GB22490@bigcity.dyn.berto.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <bcac00c71b29c359b59053a30d817a8f17d6731d.1514898134.git.baruch@tkos.co.il>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Baruch Siach <baruch@tkos.co.il>
-Cc: Dave Stevenson <dave.stevenson@raspberrypi.org>, Eric Anholt <eric@anholt.net>, Stefan Wahren <stefan.wahren@i2se.com>, linux-gpio@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-rpi-kernel <linux-rpi-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180103000352.GB22490@bigcity.dyn.berto.se>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
+Cc: Eduardo Valentin <edubezval@gmail.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 2, 2018 at 2:19 PM, Baruch Siach <baruch@tkos.co.il> wrote:
+On Wed, Jan 03, 2018 at 01:03:52AM +0100, Niklas Söderlund wrote:
+> Hi Simon,
+> 
+> On 2018-01-02 10:19:44 +0100, Simon Horman wrote:
+> > On Mon, Jan 01, 2018 at 10:13:35AM -0800, Eduardo Valentin wrote:
+> > > On Wed, Sep 13, 2017 at 12:59:08PM +0200, Niklas Söderlund wrote:
+> > > > Add nodes and properties for thermal cooling management support.
+> > > > 
+> > > > Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+> > > > ---
+> > > 
+> > > Just a reminder, this series should go via your arch tree. You may add
+> > > my acks.
+> > 
+> > Ack.
+> > 
+> > Niklas, could you comment on the readiness of these patches
+> > for the renesas tree?
+> 
+> I think maybe the patches might have became a bit outdated since they 
+> where posted due to all reg property fixup patches. The blocker for me 
+> reposting this series is that the patches this depends 
+> 'topic/rcar-gen3-cpufreq' on are not yet in the renesas tree next or 
+> devel branches. Do you think it would be valuable for me to refresh 
+> these patches before the dependencies are picked up?
 
-> +config GPIO_BCM_EXP
-> +       bool "Broadcom Exp GPIO"
-> +       depends on OF_GPIO && RASPBERRYPI_FIRMWARE && (ARCH_BCM2835 || COMPILE_TEST)
-> +       help
-> +         Turn on GPIO support for Broadcom chips using the firmware mailbox
-> +         to communicate with VideoCore on BCM283x chips.
-
-Should this be
-
-default RASPBERRYPI_FIRMWARE
-
-So it is always available if the firmware interface is there?
-
-> +#include <linux/err.h>
-> +#include <linux/gpio.h>
-
-Just use
-
-#include <linux/driver.h>
-
-> +#define MODULE_NAME "brcmexp-gpio"
-> +#define NUM_GPIO 8
-> +
-> +struct brcmexp_gpio {
-> +       struct gpio_chip gc;
-> +       struct device *dev;
-> +       struct rpi_firmware *fw;
-> +};
-> +
-> +struct gpio_set_config {
-> +       u32 gpio, direction, polarity, term_en, term_pull_up, state;
-> +};
-> +
-> +struct gpio_get_config {
-> +       u32 gpio, direction, polarity, term_en, term_pull_up;
-> +};
-
-Seems to support some pin control stuff, hm?
-
-The pull ups seems unused though so OK.
-
-Yours,
-Linus Walleij
+Probably not. I'll try to work on getting cpufreq upstream :)
