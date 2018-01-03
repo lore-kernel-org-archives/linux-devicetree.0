@@ -1,95 +1,61 @@
-From: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
-Subject: Re: [PATCH v2 0/9] PCI: Add support to the Cadence PCIe controller
-Date: Wed, 3 Jan 2018 22:22:17 +0100
-Message-ID: <cfba420c-4b2e-c6d0-f708-336a2107f5b7@free-electrons.com>
-References: <cover.1513620412.git.cyrille.pitchen@free-electrons.com>
- <d30e0abe-8b08-b2bf-8410-e0fc2b18cacc@ti.com>
- <27684b50-ff08-5238-4cb0-8bc4431211bf@free-electrons.com>
- <d170202a-4860-7ff5-a6a3-df696ce23729@ti.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: Order in "compatibility" DT property ignored by a platform bus
+Date: Wed, 3 Jan 2018 15:29:40 -0600
+Message-ID: <20180103212940.gza4vmxrpsgb4cy2@rob-hp-laptop>
+References: <CACna6ry3iOrqbFqS6EroVhhP3szNgfCQxpe=yx1eHmY2oD3big@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <d170202a-4860-7ff5-a6a3-df696ce23729@ti.com>
-Content-Language: en-US
-Sender: linux-pci-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, bhelgaas@google.com, lorenzo.pieralisi@arm.com, linux-pci@vger.kernel.org
-Cc: adouglas@cadence.com, stelford@cadence.com, dgary@cadence.com, kgopi@cadence.com, eandrews@cadence.com, thomas.petazzoni@free-electrons.com, sureshp@cadence.com, nsekhar@ti.com, linux-kernel@vger.kernel.org, robh@kernel.org, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CACna6ry3iOrqbFqS6EroVhhP3szNgfCQxpe=yx1eHmY2oD3big-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Kishon,
-
-Le 03/01/2018 à 10:14, Kishon Vijay Abraham I a écrit :
-> Hi,
+On Tue, Jan 02, 2018 at 10:19:42AM +0100, RafaÅ‚ MiÅ‚ecki wrote:
+> I was wondering how platform bus handles order of strings in the
+> "compatibility" property. After reading the code & testing it I
+> realized it doesn't.
 > 
-> On Saturday 30 December 2017 02:23 AM, Cyrille Pitchen wrote:
->> Hi Kishon,
->>
->> Le 28/12/2017 à 14:00, Kishon Vijay Abraham I a écrit :
->>> Hi Cyrille,
->>>
->>> On Monday 18 December 2017 11:46 PM, Cyrille Pitchen wrote:
->>>> Hi all,
->>>>
->>>> this series of patches adds support to the Cadence PCIe controller.
->>>> It was tested on a ARM64 platform emulated by a Palladium running the
->>>> pci-next kernel.
->>>>
->>>> The host mode was tested with some PCIe devices connected to the Palladium
->>>> through a speed-bridge. Some of those devices were a USB host controller
->>>> and a SATA controller. The PCIe host controller was also tested with a
->>>> second controller configured in endpoint mode and connected back to back
->>>> to the first controller.
->>>>
->>>> The EndPoint Controller (EPC) driver of this series was tested with the
->>>> pci-epf-test.c EndPoint Function (EPF) driver and the pcitest userspace
->>>> program.
->>>
->>> Did you get to test multi function EP?
->>>
->>
->> No I didn't: I tested only with a single function to check for regression
->> but currently I'm not able to test with multiple functions.
->>
->> With devmem, I've tried to read then write the Physical Function Configuration
->> Register (offset 0x2c0 in the Local Management registers) to enable
->> functions other than function 0.
->>
->> This is the CDNS_PCIE_LM_EP_FUNC_CFG register that the pcie-cadence_ep.c
->> driver updates in cdns_pcie_ep_write_header() since v2 of the series.
->>
->> As written in the datasheet, BIT(0) is actually hard-wired to 1, hence
->> function 0 can't be disabled: that makes sense. However other function
->> enable bits were read as 0 whereas the datasheet claims they should be set
->> at power up. Besides, I can't set any of them with devmem.
->>
->> Actually, I have 2 slightly different datasheets, in the first one I should
->> have 4 functions but only 2 based on the second datasheet.
->>
->> Then I guess it's a design parameter used when synthesizing the controller.
->>
->> So I've asked Cadence whether I've missed or misunderstood something in the
->> datasheets or whether the IP they provided me with has a single function
->> for now. I'm waiting for their answers.
+> The property should store strings ordered from the most specific to
+> the most generic. You could expect a more specific string to have a
+> priority while matching.
 > 
-> hmm.. It would be nice to have multi function tested since it would both
-> validate multi function support of PCI EP core and the cadence multi-function
-> itself.
->
+> In platform_match there isn't any magic code for handling that. It
+> simply checks if a driver that was passed can support a given device.
+> I also did 2 quick tests with:
+> 1) compatible = "foo", "bar";
+> 2) compatible = "bar", "foo";
 
-I will work with Cadence so we try to make it work.
+Strictly speaking one of these has to be invalid, but I get your point.
 
-Best regards,
-
-Cyrille
-
- 
-> Thanks
-> Kishon
+> and it each case a foo platform driver was used. It just happened to
+> be before bar platform driver on kernel's internal list (both drivers
+> were built-in).
 > 
+> If you compare this with ARM's setup_machine_fdt you will notice that
+> one actually looks for the best matching machine code (it's handled
+> with the __of_match_node).
+> 
+> Am I correct understanding this isn't a proper behavior? 
 
+Yes. The current state is that multiple drivers matching is not 
+supported (or undefined behavior).
 
--- 
-Cyrille Pitchen, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+> Are there any
+> plans fixing this?
+
+Not that I'm aware of. I think it should really only be a problem when 
+you have a generic driver and then a device specific driver. It seems to 
+be a rare enough problem that no one has bothered to fix it for years.
+
+It gets more complicated because what happens in the 2nd case if driver 
+foo is built-in and driver bar is loaded later?
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
