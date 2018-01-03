@@ -1,248 +1,42 @@
-From: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 05/12] mfd: mtk-audsys: add MediaTek audio subsystem
- driver
-Date: Wed, 3 Jan 2018 20:24:27 +0800
-Message-ID: <1514982267.23243.40.camel@mtkswgap22>
-References: <cover.1514881870.git.ryder.lee@mediatek.com>
-         <fbe22b0d78c41b121f04202dcbfcd0cc23a7590d.1514881870.git.ryder.lee@mediatek.com>
-         <20180102163103.dqxsl4bylqwn6o5b@dell>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180102163103.dqxsl4bylqwn6o5b@dell>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Garlic Tseng <garlic.tseng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+Subject: [PATCHv1 0/6] GEHC Bx50 Switch Support
+Date: Wed,  3 Jan 2018 13:26:03 +0100
+Message-ID: <20180103122609.5482-1-sebastian.reichel@collabora.co.uk>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>, Vivien Didelot <vivien.didelot@savoirfairelinux.com>, Florian Fainelli <f.fainelli@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>
+Cc: Ian Ray <ian.ray@ge.com>, Nandor Han <nandor.han@ge.com>, Rob Herring <robh+dt@kernel.org>, "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sebastian Reichel <sebastian.reichel@collabora.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2018-01-02 at 16:31 +0000, Lee Jones wrote:
-> On Tue, 02 Jan 2018, Ryder Lee wrote:
-> 
-> > Add a common driver for the top block of the MediaTek audio subsystem.
-> > This is a wrapper which manages resources for audio components.
-> > 
-> > Signed-off-by: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Hi,
 
-> > diff --git a/drivers/mfd/mtk-audsys.c b/drivers/mfd/mtk-audsys.c
-> > new file mode 100644
-> > index 0000000..89399e1
-> > --- /dev/null
-> > +++ b/drivers/mfd/mtk-audsys.c
-> > @@ -0,0 +1,138 @@
-> > +/*
-> > + * Mediatek audio subsystem core driver
-> > + *
-> > + *  Copyright (c) 2017 MediaTek Inc.
-> > + *
-> > + * Author: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > + *
-> > + * For licencing details see kernel-base/COPYING
-> 
-> You can't do that.
-> 
-> Grep for SPDX to see what is expected.
+This adds support for the internal switch found in GE Healthcare
+B450v3, B650v3 and B850v3. All devices use a GPIO bitbanged MDIO
+bus to communicate with the switch and a PCIe based network card
+for exchanging network data. The cpu network data link requires,
+that the switch's internal phy interface is enabled, so support
+for that is added by the first patch in this series.
 
-Okay.
-> > + *
-> > + */
-> > +
-> > +#include <linux/clk.h>
-> > +#include <linux/module.h>
-> > +#include <linux/of_platform.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/regmap.h>
-> > +
-> > +#define AUDSYS_MAX_CLK_NUM 3
-> 
-> When is this not 3?
+The patch series is based on v4.15-rc6.
 
-If other subsystems have different clocks numbers.
+-- Sebastian
 
-> > +struct sys_dev {
-> > +	struct device *dev;
-> > +	struct regmap *regmap;
-> > +	int clk_num;
-> > +	struct clk *clks[];
-> > +};
-> > +
-> > +static const struct regmap_config aud_regmap_config = {
-> > +	.reg_bits = 32,
-> > +	.reg_stride = 4,
-> > +	.val_bits = 32,
-> > +	.max_register = 0x15e0,
-> > +	.cache_type = REGCACHE_NONE,
-> > +};
-> > +
-> > +static int mtk_subsys_enable(struct sys_dev *sys)
-> > +{
-> > +	struct device *dev = sys->dev;
-> 
-> I would remove dev and regmap from the sys_dev struct and pass in pdev
-> directly into this function.  Then use platform_get_drvdata() as you
-> did in .remove().
-> 
-> > +	struct clk *clk;
-> > +	int i, ret;
-> > +
-> > +	for (i = 0; i < sys->clk_num; i++) {
-> > +		clk = of_clk_get(dev->of_node, i);
-> > +		if (IS_ERR(clk)) {
-> > +			if (PTR_ERR(clk) == -EPROBE_DEFER)
-> > +				return -EPROBE_DEFER;
-> > +			break;
-> > +		}
-> > +		sys->clks[i] = clk;
-> > +	}
-> > +
-> > +	for (i = 0; i < sys->clk_num && sys->clks[i]; i++) {
-> 
-> Why do you need a separate loop for this?
-> 
-> Just prepare and enable valid clocks in the for() loop above.
+Sebastian Reichel (6):
+  net: dsa: Support internal phy on 'cpu' port
+  net: dsa: mv88e6xxx: add 88E6240 DT compatible
+  ARM: dts: imx6q-bx50v3: Add internal switch
+  ARM: dts: imx6q-b850v3: Add switch port configuration
+  ARM: dts: imx6q-b650v3: Add switch port configuration
+  ARM: dts: imx6q-b450v3: Add switch port configuration
 
-Ohh, it's a mistake. Thanks for reminding me.
+ .../devicetree/bindings/net/dsa/marvell.txt        |  6 +-
+ arch/arm/boot/dts/imx6q-b450v3.dts                 | 47 +++++++++++++++
+ arch/arm/boot/dts/imx6q-b650v3.dts                 | 47 +++++++++++++++
+ arch/arm/boot/dts/imx6q-b850v3.dts                 | 70 ++++++++++++++++++++++
+ arch/arm/boot/dts/imx6q-bx50v3.dtsi                | 37 ++++++++++++
+ drivers/net/dsa/mv88e6xxx/chip.c                   |  4 ++
+ net/dsa/port.c                                     | 26 ++++++--
+ 7 files changed, 231 insertions(+), 6 deletions(-)
 
-> > +		ret = clk_prepare_enable(sys->clks[i]);
-> > +		if (ret)
-> > +			goto err_enable_clks;
-> > +	}
-> > +
-> > +	return 0;
-> > +
-> > +err_enable_clks:
-> > +	while (--i >= 0)
-> > +		clk_disable_unprepare(sys->clks[i]);
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +static int mtk_subsys_probe(struct platform_device *pdev)
-> > +{
-> > +	struct sys_dev *sys;
-> > +	struct resource *res;
-> > +	void __iomem *mmio;
-> > +	int num, ret;
-> > +
-> > +	num = (int)of_device_get_match_data(&pdev->dev);
-> > +	if (!num)
-> > +		return -EINVAL;
-> 
-> This is a very rigid method of achieving your aim.  Please find a way
-> to make this more dynamic.  You're probably better off counting the
-> elements within the property, checking to ensure there aren't more
-> than the maximum pre-allocated/allowed clocks, then using the number
-> gleaned directly from the Device Tree.
-
-Just in case other MTK subsystems can reuse this driver and set their
-own clock numbers in SoC data table, but yes, it's too rigid.
-
-> > +	sys = devm_kzalloc(&pdev->dev, sizeof(*sys) +
-> > +			   sizeof(struct clk *) * num, GFP_KERNEL);
-> 
-> You need to add bracketing here for clarity.
-
-Okay.
-
-> > +	if (!sys)
-> > +		return -ENOMEM;
-> > +
-> > +	sys->clk_num = num;
-> > +	sys->dev = &pdev->dev;
-> 
-> Why are you saving the device pointer?
-
-will remove it.
-
-> > +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > +	mmio = devm_ioremap_resource(sys->dev, res);
-> > +	if (IS_ERR(mmio))
-> > +		return PTR_ERR(mmio);
-> > +
-> > +	sys->regmap = devm_regmap_init_mmio(sys->dev, mmio,
-> > +					    &aud_regmap_config);
-> 
-> Why are you saving a devm'ed regmap pointer?
-
-We don't really need this 'sys->regmap" in driver, but need to
-initialize mmio so that its subnodes can obtain regmap through
-dev_get_regmap().
-
-> > +	if (IS_ERR(sys->regmap))
-> > +		return PTR_ERR(sys->regmap);
-> > +
-> > +	platform_set_drvdata(pdev, sys);
-> > +
-> > +	/* Enable top level clocks */
-> > +	ret = mtk_subsys_enable(sys);
-> 
-> mtk_subsys_enable_clks()
-
-Okay.
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	return devm_of_platform_populate(sys->dev);
-> > +};
-> > +
-> > +static int mtk_subsys_remove(struct platform_device *pdev)
-> > +{
-> > +	struct sys_dev *sys = platform_get_drvdata(pdev);
-> > +	int i;
-> > +
-> > +	for (i = sys->clk_num - 1; i >= 0; i--)
-> > +		if (sys->clks[i])
-> 
-> This check is superfluous as the clk subsystem does this for you.
-> 
-> > +			clk_disable_unprepare(sys->clks[i]);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static const struct of_device_id of_match_audsys[] = {
-> > +	{
-> > +	  .compatible = "mediatek,mt2701-audsys-core",
-> > +	  .data = (void *)AUDSYS_MAX_CLK_NUM,
-> 
-> You can remove this line.
-
-Okay
-> > +	},
-> > +	{},
-> > +};
-> > +MODULE_DEVICE_TABLE(platform, of_match_audsys);
-> > +
-> > +static struct platform_driver audsys_drv = {
-> > +	.probe = mtk_subsys_probe,
-> > +	.remove	= mtk_subsys_remove,
-> > +	.driver = {
-> > +		.name = "mediatek-audsys-core",
-> > +		.of_match_table = of_match_ptr(of_match_audsys),
-> > +	},
-> > +};
-> > +
-> > +builtin_platform_driver(audsys_drv);
-> > +
-> > +MODULE_DESCRIPTION("Mediatek audio subsystem core driver");
-> 
-> > +MODULE_LICENSE("GPL");
-> 
-> <just_checking>
->   Are you sure this is what you want?
-> </just_checking>
-> 
-
-The reason to add this driver is some MTK subsystem blocks expose more
-than a single functionality but register those in different kernel
-subsystems (e.g., AUDSYS includes audio components and clock part).
-
-But I think I should just add a property "simple-mfd" in DTS instead of
-adding this driver.
-
-Thanks.
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+2.15.1
