@@ -1,7 +1,7 @@
 From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Subject: [PATCHv1 2/6] net: dsa: mv88e6xxx: add 88E6240 DT compatible
-Date: Wed,  3 Jan 2018 13:26:05 +0100
-Message-ID: <20180103122609.5482-3-sebastian.reichel@collabora.co.uk>
+Subject: [PATCHv1 1/6] net: dsa: Support internal phy on 'cpu' port
+Date: Wed,  3 Jan 2018 13:26:04 +0100
+Message-ID: <20180103122609.5482-2-sebastian.reichel@collabora.co.uk>
 References: <20180103122609.5482-1-sebastian.reichel@collabora.co.uk>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180103122609.5482-1-sebastian.reichel@collabora.co.uk>
@@ -10,45 +10,67 @@ To: Andrew Lunn <andrew@lunn.ch>, Vivien Didelot <vivien.didelot@savoirfairelinu
 Cc: Ian Ray <ian.ray@ge.com>, Nandor Han <nandor.han@ge.com>, Rob Herring <robh+dt@kernel.org>, "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sebastian Reichel <sebastian.reichel@collabora.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-Add compatible for Marvell 88E6240 switch.
+This adds support for enabling the internal phy for a 'cpu' port.
+It has been tested on GE B850v3 and B650v3, which have a built-in
+MV88E6240 switch connected to a PCIe based network card. Without
+this patch the link does not come up and no traffic can be routed
+through the switch.
 
 Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
 ---
- Documentation/devicetree/bindings/net/dsa/marvell.txt | 6 ++++--
- drivers/net/dsa/mv88e6xxx/chip.c                      | 4 ++++
- 2 files changed, 8 insertions(+), 2 deletions(-)
+ net/dsa/port.c | 26 ++++++++++++++++++++++----
+ 1 file changed, 22 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/net/dsa/marvell.txt b/Documentation/devicetree/bindings/net/dsa/marvell.txt
-index 1d4d0f49c9d0..cf437b526f7f 100644
---- a/Documentation/devicetree/bindings/net/dsa/marvell.txt
-+++ b/Documentation/devicetree/bindings/net/dsa/marvell.txt
-@@ -14,8 +14,10 @@ The properties described here are those specific to Marvell devices.
- Additional required and optional properties can be found in dsa.txt.
+diff --git a/net/dsa/port.c b/net/dsa/port.c
+index bb4be2679904..f99c1d34416c 100644
+--- a/net/dsa/port.c
++++ b/net/dsa/port.c
+@@ -282,6 +282,10 @@ int dsa_port_fixed_link_register_of(struct dsa_port *dp)
+ 	int mode;
+ 	int err;
  
- Required properties:
--- compatible		: Should be one of "marvell,mv88e6085" or
--			  "marvell,mv88e6190"
-+- compatible		: Should be one of the following
-+ * "marvell,mv88e6085"
-+ * "marvell,mv88e6190"
-+ * "marvell,mv88e6240"
- - reg			: Address on the MII bus for the switch.
++	mode = of_get_phy_mode(dn);
++	if (mode < 0)
++		mode = PHY_INTERFACE_MODE_NA;
++
+ 	if (of_phy_is_fixed_link(dn)) {
+ 		err = of_phy_register_fixed_link(dn);
+ 		if (err) {
+@@ -292,10 +296,6 @@ int dsa_port_fixed_link_register_of(struct dsa_port *dp)
+ 		}
  
- Optional properties:
-diff --git a/drivers/net/dsa/mv88e6xxx/chip.c b/drivers/net/dsa/mv88e6xxx/chip.c
-index 66d33e97cbc5..78ff06239b58 100644
---- a/drivers/net/dsa/mv88e6xxx/chip.c
-+++ b/drivers/net/dsa/mv88e6xxx/chip.c
-@@ -4012,6 +4012,10 @@ static const struct of_device_id mv88e6xxx_of_match[] = {
- 		.compatible = "marvell,mv88e6190",
- 		.data = &mv88e6xxx_table[MV88E6190],
- 	},
-+	{
-+		.compatible = "marvell,mv88e6240",
-+		.data = &mv88e6xxx_table[MV88E6240],
-+	},
- 	{ /* sentinel */ },
- };
+ 		phydev = of_phy_find_device(dn);
+-
+-		mode = of_get_phy_mode(dn);
+-		if (mode < 0)
+-			mode = PHY_INTERFACE_MODE_NA;
+ 		phydev->interface = mode;
  
+ 		genphy_config_init(phydev);
+@@ -305,6 +305,24 @@ int dsa_port_fixed_link_register_of(struct dsa_port *dp)
+ 			ds->ops->adjust_link(ds, port, phydev);
+ 
+ 		put_device(&phydev->mdio.dev);
++	} else if (mode == PHY_INTERFACE_MODE_INTERNAL ||
++		   mode == PHY_INTERFACE_MODE_NA) {
++		phydev = mdiobus_get_phy(ds->slave_mii_bus, port);
++		if (phydev) {
++			genphy_config_init(phydev);
++			genphy_resume(phydev);
++			genphy_read_status(phydev);
++
++			if (ds->ops->adjust_link)
++				ds->ops->adjust_link(ds, port, phydev);
++
++			dev_dbg(ds->dev, "enabled cpu port's phy: %s",
++				phydev_name(phydev));
++		} else {
++			dev_warn(ds->dev, "cpu port has no internal phy and no fixed linked has been configured!");
++		}
++	} else {
++		dev_err(ds->dev, "unsupported phy mode!");
+ 	}
+ 
+ 	return 0;
 -- 
 2.15.1
