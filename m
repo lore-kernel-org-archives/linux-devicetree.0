@@ -1,53 +1,42 @@
-From: Manu Gautam <mgautam@codeaurora.org>
-Subject: [PATCH v4 12/16] dt-bindings: phy-qcom-qmp: Update bindings for QMP V3 USB PHY
-Date: Wed,  3 Jan 2018 16:58:45 +0530
-Message-ID: <1514978930-31341-13-git-send-email-mgautam@codeaurora.org>
-References: <1514978930-31341-1-git-send-email-mgautam@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1514978930-31341-1-git-send-email-mgautam@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Felipe Balbi <balbi@kernel.org>, linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vivek Gautam <vivek.gautam@codeaurora.org>, Varadarajan Narayanan <varada@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH] PCI: exynos: remove the deprecated phy codes
+Date: Wed, 3 Jan 2018 11:42:59 +0000
+Message-ID: <20180103114259.GA26554@red-moon>
+References: <CGME20171227094329epcas1p2a7b0a0f6130db4361592d8966d5ecb85@epcas1p2.samsung.com>
+ <20171227094327.5671-1-jh80.chung@samsung.com>
+ <20180102163407.GA9887@e107981-ln.cambridge.arm.com>
+ <adf86cd6-ba78-33d5-284f-a31e0e9bf13c@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <adf86cd6-ba78-33d5-284f-a31e0e9bf13c@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Jaehoon Chung <jh80.chung@samsung.com>
+Cc: linux-pci@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bhelgaas@kernel.org, robh+dt@kernel.org, krzk@kernel.org, jingoohan1@gmail.com, mark.rutland@arm.com, kgene@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Update compatible string and clock names for QMP version V3
-USB PHY.
+On Wed, Jan 03, 2018 at 02:26:29PM +0900, Jaehoon Chung wrote:
+> On 01/03/2018 01:34 AM, Lorenzo Pieralisi wrote:
+> > On Wed, Dec 27, 2017 at 06:43:27PM +0900, Jaehoon Chung wrote:
+> >> pci-exynos had updated to use the PHY framework.
+> >> (drivers/phy/samsung/phy-exynos-pcie.c)
+> >> Removed the depreccated codes relevant to phy in pci-exynos.c.
+> >> Instead, use the phy-exynos-pcie.c file.
+> >>
+> >> Modified the binding documentation.
+> >>
+> >> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
+> >> ---
+> >>  .../bindings/pci/samsung,exynos5440-pcie.txt       |  58 ++----
+> >>  drivers/pci/dwc/pci-exynos.c                       | 219 ++-------------------
+> >>  2 files changed, 22 insertions(+), 255 deletions(-)
+> > 
+> > I have updated the commit log to the patch below, please
+> > check before I push it out.
+> 
+> Looks good to me. At next time, i will write the commit-msg more carefully.
 
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Manu Gautam <mgautam@codeaurora.org>
----
- Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+No problem, applied to pci/dwc for v4.16, thanks.
 
-diff --git a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-index b6a9f2b..dcf1b8f 100644
---- a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-+++ b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-@@ -8,7 +8,8 @@ Required properties:
-  - compatible: compatible list, contains:
- 	       "qcom,ipq8074-qmp-pcie-phy" for PCIe phy on IPQ8074
- 	       "qcom,msm8996-qmp-pcie-phy" for 14nm PCIe phy on msm8996,
--	       "qcom,msm8996-qmp-usb3-phy" for 14nm USB3 phy on msm8996.
-+	       "qcom,msm8996-qmp-usb3-phy" for 14nm USB3 phy on msm8996,
-+	       "qcom,qmp-v3-usb3-phy" for USB3 QMP V3 phy.
- 
-  - reg: offset and length of register set for PHY's common serdes block.
- 
-@@ -25,10 +26,13 @@ Required properties:
-  - clock-names: "cfg_ahb" for phy config clock,
- 		"aux" for phy aux clock,
- 		"ref" for 19.2 MHz ref clk,
-+		"com_aux" for phy common block aux clock,
- 		For "qcom,msm8996-qmp-pcie-phy" must contain:
- 			"aux", "cfg_ahb", "ref".
- 		For "qcom,msm8996-qmp-usb3-phy" must contain:
- 			"aux", "cfg_ahb", "ref".
-+		For "qcom,qmp-v3-usb3-phy" must contain:
-+			"aux", "cfg_ahb", "ref", "com_aux".
- 
-  - resets: a list of phandles and reset controller specifier pairs,
- 	   one for each entry in reset-names.
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Lorenzo
