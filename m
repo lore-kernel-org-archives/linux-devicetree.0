@@ -1,125 +1,59 @@
-From: hl <hl@rock-chips.com>
-Subject: Re: [RFC] pwm-backlight: Allow backlight to remain disabled on boot
-Date: Thu, 4 Jan 2018 10:18:33 +0800
-Message-ID: <6b14a283-0ded-e22c-8f81-5c241ad57463@rock-chips.com>
-References: <1406806970-12561-1-git-send-email-thierry.reding@gmail.com>
+From: Peter Robinson <pbrobinson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 4/4] ARM: dts: bcm2837-rpi-3-b: add GPIO expander
+Date: Thu, 4 Jan 2018 03:06:47 +0000
+Message-ID: <CALeDE9M2-WXz-zp-7Sx0VbrG7aa16box9oOtRKONXsnokrZEUw@mail.gmail.com>
+References: <cover.1514898134.git.baruch@tkos.co.il> <a29df633ee568e150c150debde66c0783a57c70a.1514898134.git.baruch@tkos.co.il>
+ <1524381852.182115.1514919793281@email.1und1.de> <804535329.243555.1515010649018@email.1und1.de>
+ <3993684b-5b99-6c38-6247-999f7564762b@raspberrypi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1406806970-12561-1-git-send-email-thierry.reding@gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Thierry Reding <thierry.reding@gmail.com>, Jingoo Han <jg1.han@samsung.com>, Bryan Wu <cooloney@gmail.com>, Lee Jones <lee.jones@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Brian Norris <briannorris@google.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Doug Anderson <dianders@google.com>, Matthias Kaehlcke <mka@google.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Kumar Gala <galak@codeaurora.org>, Eric Miao <eric.y.miao@gmail.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <3993684b-5b99-6c38-6247-999f7564762b-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>
+Cc: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgQWxsLAoKIMKgwqDCoCBTaW5jZSBtYW55IHBhbmVsIHBvd2VyIHNlcXVlbmNlIHJlcXVlc3Qg
-YmFja2xpZ2h0IHN0YXkgZGlzYWJsZQoKYmVmb3JlIHBhbmVsIHBvd2VyIHJlYWR5LCBidXQgd2l0
-aCBub3cgcHdtLWJhY2tsaWdodCBkcnZpZXIsIGl0IGRlZmF1bHQgdG8KCmVuYWJsZSBiYWNrbGln
-aHQgd2hlbiBwd20tYmFja2xpZ2h0IHByb2JlLCBpdCBtZXNzIHVwIHRoZSBwYW5lbCBwb3dlciAK
-c2VxdWVuY2UuCgpTbyB3ZSBuZWVkIHRoaXMgcGF0Y2guIFRoaXMgcGF0Y2ggaGF2ZSBiZWVuIGZs
-eSBmb3IgYSBsb25nIHRpbWUsIGRvZXMgCmFueW9uZSBoYXZlIHBsYW4KCnRvIG1lcmdlIGl0PwoK
-Ck9uIFRodXJzZGF5LCBKdWx5IDMxLCAyMDE0IDA3OjQyIFBNLCBUaGllcnJ5IFJlZGluZyB3cm90
-ZToKPiBGcm9tOiBUaGllcnJ5IFJlZGluZyA8dHJlZGluZ0BudmlkaWEuY29tPgo+Cj4gVGhlIGRl
-ZmF1bHQgZm9yIGJhY2tsaWdodCBkZXZpY2VzIGlzIHRvIGJlIGVuYWJsZWQgaW1tZWRpYXRlbHkg
-d2hlbgo+IHJlZ2lzdGVyaW5nIHdpdGggdGhlIGJhY2tsaWdodCBjb3JlLiBUaGlzIGNhbiBiZSB1
-c2VmdWwgZm9yIHNldHVwcyB0aGF0Cj4gdXNlIGEgc2ltcGxlIGZyYW1lYnVmZmVyIGRldmljZSBh
-bmQgd2hlcmUgdGhlIGJhY2tsaWdodCBjYW5ub3Qgb3RoZXJ3aXNlCj4gYmUgaG9va2VkIHVwIHRv
-IHRoZSBwYW5lbC4KPgo+IEhvd2V2ZXIsIHdoZW4gZGVhbGluZyB3aXRoIG1vcmUgY29tcGxleCBz
-ZXR1cHMsIHN1Y2ggYXMgdGhvc2Ugb2YgcmVjZW50Cj4gQVJNIFNvQ3MsIHRoaXMgY2FuIGJlIHBy
-b2JsZW1hdGljLiBTaW5jZSB0aGUgYmFja2xpZ2h0IGlzIHVzdWFsbHkgc2V0dXAKPiBzZXBhcmF0
-ZWx5IGZyb20gdGhlIGRpc3BsYXkgY29udHJvbGxlciwgdGhlIHByb2JlIG9yZGVyIGlzIG5vdCB1
-c3VhbGx5Cj4gZGV0ZXJtaW5pc3RpYy4gVGhhdCBjYW4gbGVhZCB0byBzaXR1YXRpb25zIHdoZXJl
-IHRoZSBiYWNrbGlnaHQgd2lsbCBiZQo+IHBvd2VyZWQgdXAgYW5kIHRoZSBwYW5lbCB3aWxsIHNo
-b3cgYW4gdW5pbml0aWFsaXplZCBmcmFtZWJ1ZmZlci4KPgo+IEZ1cnRoZXJtb3JlLCBzdWJzeXN0
-ZW1zIHN1Y2ggYXMgRFJNIGhhdmUgYWR2YW5jZWQgZnVuY3Rpb25hbGl0eSB0byBzZXQKPiB0aGUg
-cG93ZXIgbW9kZSBvZiBhIHBhbmVsLiBJbiBvcmRlciB0byBhbGxvdyBzdWNoIHNldHVwcyB0byBw
-b3dlciB1cCB0aGUKPiBwYW5lbCBhdCBleGFjdGx5IHRoZSByaWdodCBtb21lbnQsIGEgd2F5IGlz
-IG5lZWRlZCB0byBwcmV2ZW50IHRoZQo+IGJhY2tsaWdodCBjb3JlIGZyb20gcG93ZXJpbmcgdGhl
-IGJhY2tsaWdodCB1cCBhdXRvbWF0aWNhbGx5IHdoZW4gaXQgaXMKPiByZWdpc3RlcmVkLgo+Cj4g
-VGhpcyBjb21taXQgaW50cm9kdWNlcyBhIG5ldyBib290X29mZiBmaWVsZCBpbiB0aGUgcGxhdGZv
-cm0gZGF0YSAoYW5kCj4gYWxzbyBpbXBsZW1lbnRzIGdldHRpbmcgdGhlIHNhbWUgaW5mb3JtYXRp
-b24gZnJvbSBkZXZpY2UgdHJlZSkuIFdoZW4gc2V0Cj4gdGhlIGluaXRpYWwgYmFja2xpZ2h0IHBv
-d2VyIG1vZGUgd2lsbCBiZSBzZXQgdG8gIm9mZiIuCj4KPiBTaWduZWQtb2ZmLWJ5OiBUaGllcnJ5
-IFJlZGluZyA8dHJlZGluZ0BudmlkaWEuY29tPgo+IC0tLQo+IEkndmUgYmVlbiBtZWFuaW5nIHRv
-IHNlbmQgdGhpcyBmb3IgYSB3aGlsZSBidXQgd2FzIGFsd2F5cyBob2xkaW5nIGJhY2sKPiBiZWNh
-dXNlIG9mIHRoZSBpbmRvY3RyaW5hdGlvbiB0aGF0IHRoaXMgdHlwZSBvZiBjb25maWd1cmF0aW9u
-IHNob3VsZG4ndAo+IGJlIHBhcnQgb2YgZGV2aWNlIHRyZWUuIEhvd2V2ZXIgdGhpcyBpc3N1ZSB3
-YXMgcmVjZW50bHkgcmFpc2VkIGFnYWluIGluCj4gdGhlIGNvbnRleHQgb2YgcG93ZXIgdXAgc2Vx
-dWVuY2VzIGZvciBkaXNwbGF5IHBhbmVscy4gQXMgZGVzY3JpYmVkIGFib3ZlCj4gdGhlIGlzc3Vl
-IGlzIHRoYXQgcGFuZWwgZGF0YXNoZWV0cyByZWNvbW1lbmQgdGhhdCB0aGUgYmFja2xpZ2h0IGF0
-dGFjaGVkCj4gdG8gYSBwYW5lbCBiZSB0dXJuZWQgb24gYXQgdGhlIHZlcnkgbGFzdCBzdGVwIHRv
-IGF2b2lkIHZpc3VhbCBnbGl0Y2hlcwo+IGR1cmluZyB0aGUgcGFuZWwncyBwb3dlciB1cCBzZXF1
-ZW5jZS4gV2l0aCB0aGUgY3VycmVudCBpbXBsZW1lbnRhdGlvbiBpdAo+IGlzIHR5cGljYWwgZm9y
-IHRoZSBiYWNrbGlnaHQgdG8gYmUgcHJvYmVkIGJlZm9yZSB0aGUgZGlzcGxheSBwYW5lbC4gVGhh
-dAo+IGhhcywgaW4gbWFueSBjYXNlcywgdGhlIHNpZGUtZWZmZWN0IG9mIGVuYWJsaW5nIHRoZSBi
-YWNrbGlnaHQsIHRoZXJlZm9yZQo+IG1ha2luZyB0aGUgc2NyZWVuIGNvbnRlbnQgdmlzaWJsZSBi
-ZWZvcmUgaXQncyBhY3R1YWxseSBpbml0aWFsaXplZC4KPgo+IFNvbWUgcGFuZWxzIGNvbWUgdXAg
-d2l0aCByYW5kb20gZ2FyYmFnZSB3aGVuIHVuaW5pdGlhbGl6ZWQsIG90aGVycyBzaG93Cj4gYWxs
-IHdoaXRlLiBXaXRoIHNvbWUgbHVjayB0aGUgcGFuZWwgd2lsbCBiZSBhbGwgYmxhY2sgYW5kIHVz
-ZXJzIHdvbid0Cj4gcmVhbGx5IG5vdGljZS4KPgo+IFRoaXMgcGF0Y2ggaXMgYW4gYXR0ZW1wdCB0
-byBlbmFibGUgYm9hcmRzIHRvIG92ZXJyaWRlIHRoZSBkZWZhdWx0IG9mCj4gdHVybmluZyBvbiB0
-aGUgYmFja2xpZ2h0IGZvciB0aGUgcHdtLWJhY2tsaWdodCBkcml2ZXIuIEknbSBub3Qgc3VyZSBp
-Zgo+IHRoZXJlIHdhcyBhIHNwZWNpZmljIHJlYXNvbiB0byB0dXJuIG9uIHRoZSBiYWNrbGlnaHQg
-YnkgZGVmYXVsdCB3aGVuCj4gdGhpcyBkcml2ZXIgd2FzIGluaXRpYWxseSB3cml0dGVuLCBidXQg
-dGhlIGZhY3QgaXMgdGhhdCBzaW5jZSBpdCBoYXMKPiBwcmV0dHkgbXVjaCBhbHdheXMgYmVlbiBs
-aWtlIHRoaXMgd2UgY2FuJ3QgcmVhbGx5IGdvIGFuZCBjaGFuZ2UgdGhlCj4gZGVmYXVsdCwgb3Ro
-ZXJ3aXNlIGEgbG90IG9mIHBlb3BsZSBtYXkgZW5kIHVwIHdpdGggbm8gYmFja2xpZ2h0IGFuZCBu
-bwo+IGNsdWUgYXMgdG8gaG93IHRvIGVuYWJsZSBpdC4gU28gdGhlIG9ubHkgcmVhc29uYWJsZSB0
-aGluZyB3ZSBjYW4gZG8gaXMKPiB0byBrZWVwIHRoZSBvbGQgYmVoYXZpb3VyIGFuZCBnaXZlIG5l
-dyBib2FyZHMgYSB3YXkgdG8gb3ZlcnJpZGUgaXQgaWYKPiB0aGV5IGtub3cgdGhhdCBzb21lIG90
-aGVyIHBhcnQgb2YgdGhlIHN0YWNrIHdpbGwgZW5hYmxlIGl0IGF0IHRoZSByaWdodAo+IG1vbWVu
-dC4KPgo+ICAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvdmlkZW8vYmFja2xpZ2h0L3B3bS1iYWNr
-bGlnaHQudHh0ICAgICAgICAgfCAxICsKPiAgIGRyaXZlcnMvdmlkZW8vYmFja2xpZ2h0L3B3bV9i
-bC5jICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgOCArKysrKysrKwo+ICAgaW5j
-bHVkZS9saW51eC9wd21fYmFja2xpZ2h0LmggICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgfCAyICsrCj4gICAzIGZpbGVzIGNoYW5nZWQsIDExIGluc2VydGlvbnMoKykKPgo+IGRp
-ZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdmlkZW8vYmFja2xp
-Z2h0L3B3bS1iYWNrbGlnaHQudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L3ZpZGVvL2JhY2tsaWdodC9wd20tYmFja2xpZ2h0LnR4dAo+IGluZGV4IDc2NGRiODZkNDQxYS4u
-NjVlMDAxYTE3MzNkIDEwMDY0NAo+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy92aWRlby9iYWNrbGlnaHQvcHdtLWJhY2tsaWdodC50eHQKPiArKysgYi9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdmlkZW8vYmFja2xpZ2h0L3B3bS1iYWNrbGlnaHQudHh0
-Cj4gQEAgLTE3LDYgKzE3LDcgQEAgT3B0aW9uYWwgcHJvcGVydGllczoKPiAgICAgICAgICAgICAg
-ICAgICJwd21zIiBwcm9wZXJ0eSAoc2VlIFBXTSBiaW5kaW5nWzBdKQo+ICAgICAtIGVuYWJsZS1n
-cGlvczogY29udGFpbnMgYSBzaW5nbGUgR1BJTyBzcGVjaWZpZXIgZm9yIHRoZSBHUElPIHdoaWNo
-IGVuYWJsZXMKPiAgICAgICAgICAgICAgICAgICAgIGFuZCBkaXNhYmxlcyB0aGUgYmFja2xpZ2h0
-IChzZWUgR1BJTyBiaW5kaW5nWzFdKQo+ICsgIC0gYmFja2xpZ2h0LWJvb3Qtb2ZmOiBrZWVwIHRo
-ZSBiYWNrbGlnaHQgZGlzYWJsZWQgb24gYm9vdAo+ICAgCj4gICBbMF06IERvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9wd20vcHdtLnR4dAo+ICAgWzFdOiBEb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvZ3Bpby9ncGlvLnR4dAo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3Zp
-ZGVvL2JhY2tsaWdodC9wd21fYmwuYyBiL2RyaXZlcnMvdmlkZW8vYmFja2xpZ2h0L3B3bV9ibC5j
-Cj4gaW5kZXggZDdhM2QxM2U3MmVjLi42MmFkZmM5ZDM3YTcgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVy
-cy92aWRlby9iYWNrbGlnaHQvcHdtX2JsLmMKPiArKysgYi9kcml2ZXJzL3ZpZGVvL2JhY2tsaWdo
-dC9wd21fYmwuYwo+IEBAIC0xNzMsNiArMTczLDggQEAgc3RhdGljIGludCBwd21fYmFja2xpZ2h0
-X3BhcnNlX2R0KHN0cnVjdCBkZXZpY2UgKmRldiwKPiAgIAkJZGF0YS0+bWF4X2JyaWdodG5lc3Mt
-LTsKPiAgIAl9Cj4gICAKPiArCWRhdGEtPmJvb3Rfb2ZmID0gb2ZfcHJvcGVydHlfcmVhZF9ib29s
-KG5vZGUsICJiYWNrbGlnaHQtYm9vdC1vZmYiKTsKPiArCj4gICAJcmV0dXJuIDA7Cj4gICB9Cj4g
-ICAKPiBAQCAtMzE3LDYgKzMxOSwxMiBAQCBzdGF0aWMgaW50IHB3bV9iYWNrbGlnaHRfcHJvYmUo
-c3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKPiAgIAl9Cj4gICAKPiAgIAlibC0+cHJvcHMu
-YnJpZ2h0bmVzcyA9IGRhdGEtPmRmdF9icmlnaHRuZXNzOwo+ICsKPiArCWlmIChkYXRhLT5ib290
-X29mZikKPiArCQlibC0+cHJvcHMucG93ZXIgPSBGQl9CTEFOS19QT1dFUkRPV047Cj4gKwllbHNl
-Cj4gKwkJYmwtPnByb3BzLnBvd2VyID0gRkJfQkxBTktfVU5CTEFOSzsKPiArCj4gICAJYmFja2xp
-Z2h0X3VwZGF0ZV9zdGF0dXMoYmwpOwo+ICAgCj4gICAJcGxhdGZvcm1fc2V0X2RydmRhdGEocGRl
-diwgYmwpOwo+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L3B3bV9iYWNrbGlnaHQuaCBiL2lu
-Y2x1ZGUvbGludXgvcHdtX2JhY2tsaWdodC5oCj4gaW5kZXggZWZkZDkyMjdhNDljLi4xZmMxNDk4
-OWRhNGEgMTAwNjQ0Cj4gLS0tIGEvaW5jbHVkZS9saW51eC9wd21fYmFja2xpZ2h0LmgKPiArKysg
-Yi9pbmNsdWRlL2xpbnV4L3B3bV9iYWNrbGlnaHQuaAo+IEBAIC0xNSw2ICsxNSw4IEBAIHN0cnVj
-dCBwbGF0Zm9ybV9wd21fYmFja2xpZ2h0X2RhdGEgewo+ICAgCXVuc2lnbmVkIGludCAqbGV2ZWxz
-Owo+ICAgCS8qIFRPRE8gcmVtb3ZlIG9uY2UgYWxsIHVzZXJzIGFyZSBzd2l0Y2hlZCB0byBncGlv
-ZF8qIEFQSSAqLwo+ICAgCWludCBlbmFibGVfZ3BpbzsKPiArCWJvb2wgYm9vdF9vZmY7Cj4gKwo+
-ICAgCWludCAoKmluaXQpKHN0cnVjdCBkZXZpY2UgKmRldik7Cj4gICAJaW50ICgqbm90aWZ5KShz
-dHJ1Y3QgZGV2aWNlICpkZXYsIGludCBicmlnaHRuZXNzKTsKPiAgIAl2b2lkICgqbm90aWZ5X2Fm
-dGVyKShzdHJ1Y3QgZGV2aWNlICpkZXYsIGludCBicmlnaHRuZXNzKTsKCgoKX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWls
-aW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0
-cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+>>> Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> hat am 2. Januar 2018 um 20:03
+>>> geschrieben:
+>>>
+>>>
+>>> Hi Baruch,
+>>>
+>>>> Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org> hat am 2. Januar 2018 um 14:19
+>>>> geschrieben:
+>>>
+>>>
+>>>> +               expgpio: expgpio {
+>>>> +                       compatible = "brcm,bcm2835-expgpio";
+>>>> +                       gpio-controller;
+>>>> +                       #gpio-cells = <2>;
+>>>> +                       firmware = <&firmware>;
+>>>
+>>>
+>>> Please add the gpio-line-names from Eric's patch [1].
+>>>
+>>> Thanks
+>>> Stefan
+>>>
+>>> [1] - https://patchwork.kernel.org/patch/9339857/
+>>>
+>>
+>> sorry i missed the fact that the same GPIO expander is on the CM3. So
+>> please move the exgpio node to bcm2837.dtsi and only define the
+>> gpio-line-names in this file.
+>
+>
+> The GPIO expander is not a part of the BCM2837 SoC, and not all
+> BCM2837-based Pis have a GPIO expander - see the Pi 2+.
+
+There's two ways that's generally handled upstream, either just
+duplicate across the two .dts files or to put it in a separate .dtsi
+and include it in the relevant .dts files, see arch/arm/boot/dts/axp*
+as relevant examples.
+
+Peter
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
