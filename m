@@ -1,150 +1,174 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH v3 1/9] dt-bindings: media: Add Renesas CEU bindings
-Date: Fri, 05 Jan 2018 00:28:03 +0200
-Message-ID: <14433032.8RBNSVMmkm@avalon>
-References: <1515081797-17174-1-git-send-email-jacopo+renesas@jmondi.org> <1515081797-17174-2-git-send-email-jacopo+renesas@jmondi.org>
+From: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC] PCI: Cleanup drivers/pci/Makefile
+Date: Thu, 4 Jan 2018 16:30:20 -0600
+Message-ID: <20180104223020.GI189897@bhelgaas-glaptop.roam.corp.google.com>
+References: <20180102191639.GD6211@bhelgaas-glaptop.roam.corp.google.com>
+ <20180103211540.21906-1-cyrille.pitchen@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1515081797-17174-2-git-send-email-jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20180103211540.21906-1-cyrille.pitchen-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-Cc: magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, geert-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sakari.ailus-X3B1VOXEql0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Cyrille Pitchen <cyrille.pitchen-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, stelford-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, dgary-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, kgopi-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, eandrews-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, sureshp-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacopo,
-
-Thank you for the patch.
-
-On Thursday, 4 January 2018 18:03:09 EET Jacopo Mondi wrote:
-> Add bindings documentation for Renesas Capture Engine Unit (CEU).
+On Wed, Jan 03, 2018 at 10:15:40PM +0100, Cyrille Pitchen wrote:
+> Remove empty lines, useless comments and sort rules by alphabetical
+> order.
 > 
-> Signed-off-by: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Cyrille Pitchen <cyrille.pitchen-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 > ---
->  .../devicetree/bindings/media/renesas,ceu.txt      | 85 +++++++++++++++++++
->  1 file changed, 85 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/renesas,ceu.txt
+> Hi Bjorn,
 > 
-> diff --git a/Documentation/devicetree/bindings/media/renesas,ceu.txt
-> b/Documentation/devicetree/bindings/media/renesas,ceu.txt new file mode
-> 100644
-> index 0000000..a4f3c05
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/renesas,ceu.txt
-> @@ -0,0 +1,85 @@
-> +Renesas Capture Engine Unit (CEU)
-> +----------------------------------------------
-> +
-> +The Capture Engine Unit is the image capture interface found in the Renesas
-> +SH Mobile and RZ SoCs.
-> +
-> +The interface supports a single parallel input with data bus width of 8 or
-> 16
-> +bits.
-> +
-> +Required properties:
-> +- compatible: Must be one of the following.
-> +	- "renesas,r7s72100-ceu" for CEU units found in R7S72100 (RZ/A1) SoCs.
-> +	- "renesas,ceu" as a generic fallback.
+> This is the kernel oops I get when I test this patch.
+> I've applied it on top of the series for the Cadence PCIe controller.
+> I didn't have time to investigate more yet, sorry!
+> 
+> kernel BUG at drivers/base/driver.c:153!
+> Internal error: Oops - BUG: 0 [#1] PREEMPT SMP                  
+> Modules linked in:                                              
+> CPU: 0 PID: 1 Comm: swapper/0 Not tainted 4.15.0-rc4+ #151      
+> Hardware name: Cadence CSP (DT)                                 
+> pstate: 40000005 (nZcv daif -PAN -UAO)
+> pc : driver_register+0xc0/0xf8
+> lr : pcie_port_service_register+0x4c/0x60
+> sp : ffffffc006457d90
+> x29: ffffffc006457d90 x28: 0000000000000000
+> x27: ffffff80086e2028 x26: ffffff800884a000
+> x25: ffffff8008690474 x24: ffffff80086d7068
+> x23: ffffff800868b0b8 x22: ffffff80086d7078
+> x21: 0000000000000000 x20: ffffff80088692d4
+> x19: ffffff80086af380 x18: 0000000000000000
+> x17: 000000000000037f x16: 0000000000000000
+> x15: 0000000000000000 x14: 0000000000000400
+> x13: 0000000000000001 x12: 0000000000000000
+> x11: 0000000000000001 x10: 0000000000000980
+> x9 : ffffffc006457b60 x8 : ffffffc0064589e0
+> x7 : ffffffc006458100 x6 : 000000000000a6e8
+> x5 : 000000000000a6e8 x4 : 0000000000000000
+> x1 : ffffff800881d720 x0 : ffffff800881c820
+> Process swapper/0 (pid: 1, stack limit = 0x00000000d680c8f0)
+> Call trace:
+>  driver_register+0xc0/0xf8
+>  pcied_init+0x24/0x7c
+>  do_one_initcall+0x38/0x120
+>  kernel_init_freeable+0x134/0x1d0
+>  kernel_init+0x10/0x100
+>  ret_from_fork+0x10/0x18
+> Code: 2a1403e0 a94153f3 a8c27bfd d65f03c0 (d4210000)
 
-As asked in my review of patch 3/9, what's your policy for compatible strings 
-? As far as I understand there's no generic CEU, as the SH4 and RZ versions 
-are not compatible. Should the "renesas,ceu" compatible string then be 
-replaced by "renesas,rz-ceu" ?
+Thanks, I think this happens because we have
 
-> +       SH Mobile CPUs do not currently support OF, and they configure their
-> +	CEU interfaces using platform data. The "compatible" list will be
-> +	expanded once SH Mobile will be made OF-capable.
+  device_initcall(pcied_init);
+  device_initcall(pcie_portdrv_init);
 
-The first sentence is out of scope, or at least its second half. I'd drop this 
-completely, or possibly capture it in the commit message.
+and pcied_init() depends on something done by pcie_portdrv_init().  I
+think this is a mess but it's a lot of work to clean up.  So I guess
+we'll just rely on the link ordering for now.
 
-> +- reg: Registers address base and size.
-> +- interrupts: The interrupt specifier.
+>  drivers/pci/Makefile | 84 +++++++++++++++++++++-------------------------------
+>  1 file changed, 33 insertions(+), 51 deletions(-)
+> 
+> diff --git a/drivers/pci/Makefile b/drivers/pci/Makefile
+> index 3b6c22afb2aa..fd4401cf1b4a 100644
+> --- a/drivers/pci/Makefile
+> +++ b/drivers/pci/Makefile
+> @@ -3,57 +3,39 @@
+>  # Makefile for the PCI bus specific drivers.
+>  #
+>  
+> -obj-$(CONFIG_PCI)	+= access.o bus.o probe.o host-bridge.o remove.o pci.o \
+> -			pci-driver.o search.o pci-sysfs.o rom.o setup-res.o \
+> -			irq.o vpd.o setup-bus.o vc.o mmap.o setup-irq.o
+> +ccflags-$(CONFIG_PCI_DEBUG) := -DDEBUG
+>  
+> +# PCI core
+> +obj-$(CONFIG_ACPI)			+= pci-acpi.o
+> +obj-$(CONFIG_HOTPLUG_PCI)		+= hotplug/
+> +obj-$(CONFIG_PCI)			+= access.o bus.o probe.o host-bridge.o \
+> +					   remove.o pci.o pci-driver.o search.o \
+> +					   pci-sysfs.o rom.o setup-res.o irq.o \
+> +					   vpd.o setup-bus.o vc.o mmap.o \
+> +					   setup-irq.o
+>  ifdef CONFIG_PCI
+> -obj-$(CONFIG_PROC_FS) += proc.o
+> -obj-$(CONFIG_SYSFS) += slot.o
+> -obj-$(CONFIG_OF) += of.o
+> +obj-$(CONFIG_OF)			+= of.o
+> +obj-$(CONFIG_PROC_FS)			+= proc.o
+> +obj-$(CONFIG_SYSFS)			+= slot.o
+>  endif
+> -
+> -obj-$(CONFIG_PCI_QUIRKS) += quirks.o
+> -
+> -# Build PCI Express stuff if needed
+> -obj-$(CONFIG_PCIEPORTBUS) += pcie/
+> -
+> -# Build the PCI Hotplug drivers if we were asked to
+> -obj-$(CONFIG_HOTPLUG_PCI) += hotplug/
+> -
+> -# Build the PCI MSI interrupt support
+> -obj-$(CONFIG_PCI_MSI) += msi.o
+> -
+> -obj-$(CONFIG_PCI_ATS) += ats.o
+> -obj-$(CONFIG_PCI_IOV) += iov.o
+> -
+> -#
+> -# ACPI Related PCI FW Functions
+> -# ACPI _DSM provided firmware instance and string name
+> -#
+> -obj-$(CONFIG_ACPI)    += pci-acpi.o
+> -
+> -# SMBIOS provided firmware instance and labels
+> -obj-$(CONFIG_PCI_LABEL) += pci-label.o
+> -
+> -# Intel MID platform PM support
+> -obj-$(CONFIG_X86_INTEL_MID) += pci-mid.o
+> -
+> -obj-$(CONFIG_PCI_SYSCALL) += syscall.o
+> -
+> -obj-$(CONFIG_PCI_STUB) += pci-stub.o
+> -
+> -obj-$(CONFIG_PCI_ECAM) += ecam.o
+> -
+> -obj-$(CONFIG_XEN_PCIDEV_FRONTEND) += xen-pcifront.o
+> -
+> -ccflags-$(CONFIG_PCI_DEBUG) := -DDEBUG
+> -
+> -# PCI host controller drivers
+> -obj-y += host/
+> -obj-y += switch/
+> -
+> -obj-$(CONFIG_PCI_ENDPOINT)	+= endpoint/
+> -obj-$(CONFIG_PCIE_CADENCE)	+= cadence/
+> -# PCI dwc controller drivers
+> -obj-y				+= dwc/
+> +obj-$(CONFIG_PCIEPORTBUS)		+= pcie/
+> +obj-$(CONFIG_PCI_ATS)			+= ats.o
+> +obj-$(CONFIG_PCI_ECAM)			+= ecam.o
+> +obj-$(CONFIG_PCI_IOV)			+= iov.o
+> +obj-$(CONFIG_PCI_LABEL)			+= pci-label.o
+> +obj-$(CONFIG_PCI_MSI)			+= msi.o
+> +obj-$(CONFIG_PCI_QUIRKS)		+= quirks.o
+> +obj-$(CONFIG_PCI_STUB)			+= pci-stub.o
+> +obj-$(CONFIG_PCI_SYSCALL)		+= syscall.o
+> +obj-$(CONFIG_X86_INTEL_MID)		+= pci-mid.o
+> +obj-$(CONFIG_XEN_PCIDEV_FRONTEND)	+= xen-pcifront.o
 > +
-> +The CEU supports a single parallel input and should contain a single 'port'
-> +subnode with a single 'endpoint'. Connection to input devices are modeled
-> +according to the video interfaces OF bindings specified in:
-> +Documentation/devicetree/bindings/media/video-interfaces.txt
+> +# PCI controllers
+> +obj-y					+= host/
+> +obj-y					+= switch/
+> +obj-$(CONFIG_PCI_ENDPOINT)		+= endpoint/
 > +
-> +Optional endpoint properties applicable to parallel input bus described in
-> +the above mentioned "video-interfaces.txt" file are supported by this
-> driver:
-
-I know it's hard to get rid of that habit, but drivers are out of scope for DT 
-bindings so they should not be mentioned. You should of course document the 
-properties, and explain whether they are mandatory and optional.
-
-> +
-> +- hsync-active: Active state of the HSYNC signal, 0/1 for LOW/HIGH
-> respectively.
-> +- vsync-active: Active state of the VSYNC signal, 0/1 for LOW/HIGH
-> respectively.
-> +
-> +Example:
-> +
-> +The example describes the connection between the Capture Engine Unit and an
-> +OV7670 image sensor connected to i2c1 interface.
-> +
-> +ceu: ceu@e8210000 {
-> +	reg = <0xe8210000 0x209c>;
-> +	compatible = "renesas,ceu";
-
-Don't forget to update this example when you'll address my comment about 
-compatible strings.
-
-> +	interrupts = <GIC_SPI 332 IRQ_TYPE_LEVEL_HIGH>;
-> +
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&vio_pins>;
-> +
-> +	status = "okay";
-> +
-> +	port {
-> +		ceu_in: endpoint {
-> +			remote-endpoint = <&ov7670_out>;
-> +
-> +			hsync-active = <1>;
-> +			vsync-active = <0>;
-> +		};
-> +	};
-> +};
-> +
-> +i2c1: i2c@fcfee400 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&i2c1_pins>;
-> +
-> +	status = "okay";
-> +
-> +	clock-frequency = <100000>;
-> +
-> +	ov7670: camera@21 {
-> +		compatible = "ovti,ov7670";
-> +		reg = <0x21>;
-> +
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&vio_pins>;
-> +
-> +		reset-gpios = <&port3 11 GPIO_ACTIVE_LOW>;
-> +		powerdown-gpios = <&port3 12 GPIO_ACTIVE_HIGH>;
-> +
-> +		port {
-> +			ov7670_out: endpoint {
-> +				remote-endpoint = <&ceu_in>;
-> +
-> +				hsync-active = <1>;
-> +				vsync-active = <0>;
-> +			};
-> +		};
-> +	};
-> +};
-
--- 
-Regards,
-
-Laurent Pinchart
-
+> +# PCI controllers supporting both host and endpoint modes:
+> +# their associated drivers must currently be linked after the EPC/EPF libraries
+> +obj-$(CONFIG_PCIE_CADENCE)		+= cadence/
+> +obj-y					+= dwc/
+> -- 
+> 2.11.0
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
