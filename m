@@ -1,45 +1,59 @@
-From: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2 0/2] media: ov7670: Implement mbus configuration
-Date: Thu,  4 Jan 2018 10:52:31 +0100
-Message-ID: <1515059553-10219-1-git-send-email-jacopo+renesas@jmondi.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: corbet-T1hC0tSOHrs@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus-X3B1VOXEql0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Subject: [PATCH v2 2/2] media: dt-bindings: Add OF properties to ov7670
+Date: Thu,  4 Jan 2018 10:52:33 +0100
+Message-ID: <1515059553-10219-3-git-send-email-jacopo+renesas@jmondi.org>
+References: <1515059553-10219-1-git-send-email-jacopo+renesas@jmondi.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1515059553-10219-1-git-send-email-jacopo+renesas@jmondi.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: corbet@lwn.net, mchehab@kernel.org, sakari.ailus@iki.fi, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
-   this series adds mbus configuration properties to ov7670 sensor driver.
+Describe newly introduced OF properties for ov7670 image sensor.
+The driver supports two standard properties to configure synchronism
+signals polarities and two custom properties already supported as
+platform data options by the driver.
+---
+ Documentation/devicetree/bindings/media/i2c/ov7670.txt | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-I have sent v1 a few days ago and forgot to cc device tree people. Doing it
-now with bindings description and implementation split in 2 separate patches.
-
-I have fixed Sakari's comment on v1, and I'm sending v2 out with support for
-"pll-bypass" custom property as it was in v1. If we decide it is not worth
-to make an OF property out of it, I will drop it in v3. Technically it is not
-even an mbus configuration option, so I'm fine dropping it eventually.
-
-Thanks
-  j
-
-v1->v2:
-- Split bindings description and implementation
-- Addressed Sakari's comments on v1
-- Check for return values of register writes in set_fmt()
-- TODO: decide if "pll-bypass" should be an OF property.
-
-Jacopo Mondi (2):
-  v4l2: i2c: ov7670: Implement OF mbus configuration
-  media: dt-bindings: Add OF properties to ov7670
-
- .../devicetree/bindings/media/i2c/ov7670.txt       |  14 +++
- drivers/media/i2c/ov7670.c                         | 124 ++++++++++++++++++---
- 2 files changed, 124 insertions(+), 14 deletions(-)
-
---
+diff --git a/Documentation/devicetree/bindings/media/i2c/ov7670.txt b/Documentation/devicetree/bindings/media/i2c/ov7670.txt
+index 826b656..57ded18 100644
+--- a/Documentation/devicetree/bindings/media/i2c/ov7670.txt
++++ b/Documentation/devicetree/bindings/media/i2c/ov7670.txt
+@@ -9,11 +9,22 @@ Required Properties:
+ - clocks: reference to the xclk input clock.
+ - clock-names: should be "xclk".
+ 
++The following properties, as defined by video interfaces OF bindings
++"Documentation/devicetree/bindings/media/video-interfaces.txt" are supported:
++
++- hsync-active: active state of the HSYNC signal, 0/1 for LOW/HIGH respectively.
++- vsync-active: active state of the VSYNC signal, 0/1 for LOW/HIGH respectively.
++
++Default is high active state for both vsync and hsync signals.
++
+ Optional Properties:
+ - reset-gpios: reference to the GPIO connected to the resetb pin, if any.
+   Active is low.
+ - powerdown-gpios: reference to the GPIO connected to the pwdn pin, if any.
+   Active is high.
++- ov7670,pll-bypass: set to 1 to bypass PLL for pixel clock generation.
++- ov7670,pclk-hb-disable: set to 1 to suppress pixel clock output signal during
++  horizontal blankings.
+ 
+ The device node must contain one 'port' child node for its digital output
+ video port, in accordance with the video interface bindings defined in
+@@ -34,6 +45,9 @@ Example:
+ 			assigned-clocks = <&pck0>;
+ 			assigned-clock-rates = <25000000>;
+ 
++			vsync-active = <0>;
++			ov7670,pclk-hb-disable = <1>;
++
+ 			port {
+ 				ov7670_0: endpoint {
+ 					remote-endpoint = <&isi_0>;
+-- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
