@@ -1,37 +1,71 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH 0/3] PCI: move DT PCI functions to PCI core
-Date: Thu,  4 Jan 2018 15:12:12 -0600
-Message-ID: <20180104211215.11344-1-robh@kernel.org>
-Return-path: <linux-pci-owner@vger.kernel.org>
-Sender: linux-pci-owner@vger.kernel.org
+Subject: [PATCH 3/3] PCI: make of_irq_parse_pci static
+Date: Thu,  4 Jan 2018 15:12:15 -0600
+Message-ID: <20180104211215.11344-4-robh@kernel.org>
+References: <20180104211215.11344-1-robh@kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180104211215.11344-1-robh@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Bjorn Helgaas <bhelgaas@google.com>
 Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Frank Rowand <frowand.list@gmail.com>, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Most subsystem specific functions have been moved into the respective
-subsystems. Only PCI and networking remain. This series moves most of the
-PCI related code to drivers/pci/of.c. Some bus address functions for PCI
-remain in of/address.c because we don't have infrastructure to split up
-the per bus helper functions.
+Now that the DT PCI code is merged into drivers/pci, of_irq_parse_pci can
+be static.
 
-I expect Bjorn to take this series, so PPC maintainers please ack.
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Frank Rowand <frowand.list@gmail.com>
+Cc: linux-pci@vger.kernel.org
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+ drivers/pci/of.c       | 3 +--
+ include/linux/of_pci.h | 6 ------
+ 2 files changed, 1 insertion(+), 8 deletions(-)
 
-Rob
-
-Rob Herring (3):
-  PCI: move OF related PCI functions into PCI core
-  powerpc/pci: use of_irq_parse_and_map_pci helper
-  PCI: make of_irq_parse_pci static
-
- arch/arm/mach-mvebu/Kconfig      |   1 -
- arch/powerpc/kernel/pci-common.c |   8 +-
- drivers/of/Kconfig               |  16 --
- drivers/of/Makefile              |   2 -
- drivers/of/address.c             |   8 +-
- drivers/of/of_pci.c              | 384 -----------------------------
- drivers/of/of_pci_irq.c          | 131 ----------
- drivers/pci/of.c                 | 505 +++++++++++++++++++++++++++++++++++++++
- include/linux/of_pci.h           |   8 +-
- 9 files changed, 510 insertions(+), 553 deletions(-)
- delete mode 100644 drivers/of/of_pci.c
- delete mode 100644 drivers/of/of_pci_irq.c
+diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+index 859a43dd098d..511a5ec83f6e 100644
+--- a/drivers/pci/of.c
++++ b/drivers/pci/of.c
+@@ -479,7 +479,7 @@ int of_pci_map_rid(struct device_node *np, u32 rid,
+  * PCI tree until an device-node is found, at which point it will finish
+  * resolving using the OF tree walking.
+  */
+-int of_irq_parse_pci(const struct pci_dev *pdev, struct of_phandle_args *out_irq)
++static int of_irq_parse_pci(const struct pci_dev *pdev, struct of_phandle_args *out_irq)
+ {
+ 	struct device_node *dn, *ppnode;
+ 	struct pci_dev *ppdev;
+@@ -569,7 +569,6 @@ int of_irq_parse_pci(const struct pci_dev *pdev, struct of_phandle_args *out_irq
+ 	}
+ 	return rc;
+ }
+-EXPORT_SYMBOL_GPL(of_irq_parse_pci);
+ 
+ /**
+  * of_irq_parse_and_map_pci() - Decode a PCI irq from the device tree and map to a virq
+diff --git a/include/linux/of_pci.h b/include/linux/of_pci.h
+index f0e129e848ea..88865e0ebf4d 100644
+--- a/include/linux/of_pci.h
++++ b/include/linux/of_pci.h
+@@ -10,7 +10,6 @@ struct of_phandle_args;
+ struct device_node;
+ 
+ #if IS_ENABLED(CONFIG_OF) && IS_ENABLED(CONFIG_PCI)
+-int of_irq_parse_pci(const struct pci_dev *pdev, struct of_phandle_args *out_irq);
+ struct device_node *of_pci_find_child_device(struct device_node *parent,
+ 					     unsigned int devfn);
+ int of_pci_get_devfn(struct device_node *np);
+@@ -23,11 +22,6 @@ int of_pci_map_rid(struct device_node *np, u32 rid,
+ 		   const char *map_name, const char *map_mask_name,
+ 		   struct device_node **target, u32 *id_out);
+ #else
+-static inline int of_irq_parse_pci(const struct pci_dev *pdev, struct of_phandle_args *out_irq)
+-{
+-	return 0;
+-}
+-
+ static inline struct device_node *of_pci_find_child_device(struct device_node *parent,
+ 					     unsigned int devfn)
+ {
+-- 
+2.14.1
