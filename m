@@ -1,32 +1,63 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [RECEND PATCH V7 12/12] arm64: dts: add clocks for SC9860
-Date: Thu, 4 Jan 2018 17:51:29 +0100
-Message-ID: <CAK8P3a0NNQYkXjYLZoPpzacc0pf8Cydv7muVigm_r9UsMqO_og@mail.gmail.com>
-References: <20171207125715.16160-1-chunyan.zhang@spreadtrum.com>
- <1515049684-23481-1-git-send-email-zhang.chunyan@linaro.org> <1515049684-23481-2-git-send-email-zhang.chunyan@linaro.org>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [1/2] arm64: dts: r8a7795: add thermal cooling management
+Date: Thu, 4 Jan 2018 17:53:09 +0100
+Message-ID: <20180104165308.pr4klattmpg46iwm@verge.net.au>
+References: <20170913105909.13230-2-niklas.soderlund+renesas@ragnatech.se>
+ <20180101181333.GA3631@localhost.localdomain>
+ <20180102091944.py647jheghud7sl2@verge.net.au>
+ <20180103000352.GB22490@bigcity.dyn.berto.se>
+ <20180103101438.il5grrfihewiduqe@verge.net.au>
+ <CAMuHMdWf76hNbQva_z9-2bCbBiGfA-veK9GdCqTyThaiBsNpMQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1515049684-23481-2-git-send-email-zhang.chunyan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chunyan Zhang <zhang.chunyan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: arm-soc <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chunyan Zhang <zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdWf76hNbQva_z9-2bCbBiGfA-veK9GdCqTyThaiBsNpMQ@mail.gmail.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, Eduardo Valentin <edubezval@gmail.com>, Linux PM list <linux-pm@vger.kernel.org>, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 4, 2018 at 8:08 AM, Chunyan Zhang <zhang.chunyan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> From: Chunyan Zhang <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
->
-> Some clocks on SC9860 are in the same address area with syscon devices,
-> those are what have a property of 'sprd,syscon' which would refer to
-> syscon devices, others would have a reg property indicated their address
-> ranges.
->
-> Signed-off-by: Chunyan Zhang <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+On Wed, Jan 03, 2018 at 11:25:37AM +0100, Geert Uytterhoeven wrote:
+> Hi Simon,
+> 
+> On Wed, Jan 3, 2018 at 11:14 AM, Simon Horman <horms@verge.net.au> wrote:
+> > On Wed, Jan 03, 2018 at 01:03:52AM +0100, Niklas Söderlund wrote:
+> >> On 2018-01-02 10:19:44 +0100, Simon Horman wrote:
+> >> > On Mon, Jan 01, 2018 at 10:13:35AM -0800, Eduardo Valentin wrote:
+> >> > > On Wed, Sep 13, 2017 at 12:59:08PM +0200, Niklas Söderlund wrote:
+> >> > > > Add nodes and properties for thermal cooling management support.
+> >> > > >
+> >> > > > Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+> >> > > > ---
+> >> > >
+> >> > > Just a reminder, this series should go via your arch tree. You may add
+> >> > > my acks.
+> >> >
+> >> > Ack.
+> >> >
+> >> > Niklas, could you comment on the readiness of these patches
+> >> > for the renesas tree?
+> >>
+> >> I think maybe the patches might have became a bit outdated since they
+> >> where posted due to all reg property fixup patches. The blocker for me
+> >> reposting this series is that the patches this depends
+> >> 'topic/rcar-gen3-cpufreq' on are not yet in the renesas tree next or
+> >> devel branches. Do you think it would be valuable for me to refresh
+> >> these patches before the dependencies are picked up?
+> >
+> > Probably not. I'll try to work on getting cpufreq upstream :)
+> 
+> I think it's working fine in renesas-drivers, isn't it?
 
-Applied, thanks!
+There was some cleanup of the DTS patches pending.
+That has now happened, been posted, reviewed and merged :)
 
-     Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> As in the mean time the R-Car Gen3 CPG/MSSR drivers gained suspend/resume
+> support, the only missing part is support for restoring the Z* clocks during
+> system resume.  Unless that is handled automatically by the cpufreq core.
+> For secondary CPU cores, this may be handled by the CPU hotplug code.
+> For the primary CPU core, I don't know.
+
+Thanks, I'll look into that.
