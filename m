@@ -1,235 +1,175 @@
-From: Ilia Lin <ilialin-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH v2 01/11] soc: qcom: Separate kryo l2 accessors from PMU driver
-Date: Thu,  4 Jan 2018 13:10:05 +0200
-Message-ID: <1515064215-22202-2-git-send-email-ilialin@codeaurora.org>
+From: Ilia Lin <ilialin@codeaurora.org>
+Subject: [PATCH v2 02/11] clk: qcom: Fix .set_rate to handle alpha PLLs w/wo dynamic update
+Date: Thu,  4 Jan 2018 13:10:06 +0200
+Message-ID: <1515064215-22202-3-git-send-email-ilialin@codeaurora.org>
 References: <1515064215-22202-1-git-send-email-ilialin@codeaurora.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1515064215-22202-1-git-send-email-ilialin-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ilialin-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, nicolas.dechesne-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, celster-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, tfinkel-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1515064215-22202-1-git-send-email-ilialin@codeaurora.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, sboyd@codeaurora.org
+Cc: devicetree@vger.kernel.org, mark.rutland@arm.com, will.deacon@arm.com, rnayak@codeaurora.org, ilialin@codeaurora.org, amit.kucheria@linaro.org, nicolas.dechesne@linaro.org, celster@codeaurora.org, tfinkel@codeaurora.org, Taniya Das <tdas@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-The driver provides kernel level API for other drivers
-to access the MSM8996 L2 cache registers.
-Separating the L2 access code from the PMU driver and
-making it public to allow other drivers use it.
-The accesses must be separated with a single spinlock,
-maintained in this driver.
+From: Taniya Das <tdas@codeaurora.org>
 
-Signed-off-by: Ilia Lin <ilialin-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+From: Taniya Das <tdas@codeaurora.org>
+
+Alpha PLLs which do not support dynamic update feature
+need to be explicitly disabled before a rate change.
+The ones which do support dynamic update do so within a
+single vco range, so add a min/max freq check for such
+PLLs so they fall in the vco range.
+
+Signed-off-by: Taniya Das <tdas@codeaurora.org>
+Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+Signed-off-by: Ilia Lin <ilialin@codeaurora.org>
 ---
- arch/arm64/Kconfig.platforms         |  7 ++++
- drivers/perf/qcom_l2_pmu.c           | 48 +--------------------------
- drivers/soc/qcom/Makefile            |  1 +
- drivers/soc/qcom/kryo-l2-accessors.c | 64 ++++++++++++++++++++++++++++++++++++
- include/soc/qcom/kryo-l2-accessors.h | 22 +++++++++++++
- 5 files changed, 95 insertions(+), 47 deletions(-)
- create mode 100644 drivers/soc/qcom/kryo-l2-accessors.c
- create mode 100644 include/soc/qcom/kryo-l2-accessors.h
+ drivers/clk/qcom/clk-alpha-pll.c | 72 ++++++++++++++++++++++++++++++++++------
+ drivers/clk/qcom/clk-alpha-pll.h |  5 +++
+ 2 files changed, 66 insertions(+), 11 deletions(-)
 
-diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
-index 2401373..a6a6504 100644
---- a/arch/arm64/Kconfig.platforms
-+++ b/arch/arm64/Kconfig.platforms
-@@ -144,6 +144,13 @@ config ARCH_REALTEK
- 	  This enables support for the ARMv8 based Realtek chipsets,
- 	  like the RTD1295.
+diff --git a/drivers/clk/qcom/clk-alpha-pll.c b/drivers/clk/qcom/clk-alpha-pll.c
+index 47a1da3..ffdb160 100644
+--- a/drivers/clk/qcom/clk-alpha-pll.c
++++ b/drivers/clk/qcom/clk-alpha-pll.c
+@@ -376,19 +376,47 @@ static unsigned long alpha_pll_calc_rate(u64 prate, u32 l, u32 a)
+ 	return alpha_pll_calc_rate(prate, l, a);
+ }
  
-+config ARCH_MSM8996
-+    bool "Enable Support for Qualcomm Technologies, Inc. MSM8996"
-+	depends on ARCH_QCOM
-+	help
-+	This enables support for the MSM8996 chipset. If you do not
-+	wish to build a kernel that runs on this chipset, say 'N' here.
+-static int clk_alpha_pll_set_rate(struct clk_hw *hw, unsigned long rate,
+-				  unsigned long prate)
++static int alpha_pll_set_rate(struct clk_hw *hw, unsigned long rate,
++			      unsigned long prate,
++			      int (*enable)(struct clk_hw *hw),
++			      void (*disable)(struct clk_hw *hw))
+ {
++	bool need_reenabling = false;
+ 	struct clk_alpha_pll *pll = to_clk_alpha_pll(hw);
+ 	const struct pll_vco *vco;
+ 	u32 l, off = pll->offset;
+ 	u64 a;
+ 
+ 	rate = alpha_pll_round_rate(rate, prate, &l, &a);
+-	vco = alpha_pll_find_vco(pll, rate);
+-	if (!vco) {
+-		pr_err("alpha pll not in a valid vco range\n");
+-		return -EINVAL;
 +
- config ARCH_ROCKCHIP
- 	bool "Rockchip Platforms"
- 	select ARCH_HAS_RESET_CONTROLLER
-diff --git a/drivers/perf/qcom_l2_pmu.c b/drivers/perf/qcom_l2_pmu.c
-index 4fdc848..ba5f241 100644
---- a/drivers/perf/qcom_l2_pmu.c
-+++ b/drivers/perf/qcom_l2_pmu.c
-@@ -30,7 +30,7 @@
- 
- #include <asm/barrier.h>
- #include <asm/local64.h>
--#include <asm/sysreg.h>
-+#include <soc/qcom/kryo-l2-accessors.h>
- 
- #define MAX_L2_CTRS             9
- 
-@@ -87,9 +87,6 @@
- #define L2_COUNTER_RELOAD       BIT_ULL(31)
- #define L2_CYCLE_COUNTER_RELOAD BIT_ULL(63)
- 
--#define L2CPUSRSELR_EL1         sys_reg(3, 3, 15, 0, 6)
--#define L2CPUSRDR_EL1           sys_reg(3, 3, 15, 0, 7)
--
- #define reg_idx(reg, i)         (((i) * IA_L2_REG_OFFSET) + reg##_BASE)
- 
- /*
-@@ -107,49 +104,6 @@
- #define L2_EVENT_STREX                     0x421
- #define L2_EVENT_CLREX                     0x422
- 
--static DEFINE_RAW_SPINLOCK(l2_access_lock);
--
--/**
-- * set_l2_indirect_reg: write value to an L2 register
-- * @reg: Address of L2 register.
-- * @value: Value to be written to register.
-- *
-- * Use architecturally required barriers for ordering between system register
-- * accesses
-- */
--static void set_l2_indirect_reg(u64 reg, u64 val)
--{
--	unsigned long flags;
--
--	raw_spin_lock_irqsave(&l2_access_lock, flags);
--	write_sysreg_s(reg, L2CPUSRSELR_EL1);
--	isb();
--	write_sysreg_s(val, L2CPUSRDR_EL1);
--	isb();
--	raw_spin_unlock_irqrestore(&l2_access_lock, flags);
--}
--
--/**
-- * get_l2_indirect_reg: read an L2 register value
-- * @reg: Address of L2 register.
-- *
-- * Use architecturally required barriers for ordering between system register
-- * accesses
-- */
--static u64 get_l2_indirect_reg(u64 reg)
--{
--	u64 val;
--	unsigned long flags;
--
--	raw_spin_lock_irqsave(&l2_access_lock, flags);
--	write_sysreg_s(reg, L2CPUSRSELR_EL1);
--	isb();
--	val = read_sysreg_s(L2CPUSRDR_EL1);
--	raw_spin_unlock_irqrestore(&l2_access_lock, flags);
--
--	return val;
--}
--
- struct cluster_pmu;
- 
- /*
-diff --git a/drivers/soc/qcom/Makefile b/drivers/soc/qcom/Makefile
-index 40c56f6..2bf8d93 100644
---- a/drivers/soc/qcom/Makefile
-+++ b/drivers/soc/qcom/Makefile
-@@ -10,3 +10,4 @@ obj-$(CONFIG_QCOM_SMEM_STATE) += smem_state.o
- obj-$(CONFIG_QCOM_SMP2P)	+= smp2p.o
- obj-$(CONFIG_QCOM_SMSM)	+= smsm.o
- obj-$(CONFIG_QCOM_WCNSS_CTRL) += wcnss_ctrl.o
-+obj-$(CONFIG_ARCH_MSM8996) +=	kryo-l2-accessors.o
-diff --git a/drivers/soc/qcom/kryo-l2-accessors.c b/drivers/soc/qcom/kryo-l2-accessors.c
-new file mode 100644
-index 0000000..6743848
---- /dev/null
-+++ b/drivers/soc/qcom/kryo-l2-accessors.c
-@@ -0,0 +1,64 @@
-+/*
-+ * Copyright (c) 2014-2015, 2018, The Linux Foundation. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 and
-+ * only version 2 as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
++	if (pll->flags & SUPPORTS_DYNAMIC_UPDATE) {
++		/*
++		 * PLLs which support dynamic updates support one single
++		 * vco range, between min_rate and max_rate supported
++		 */
++		if (rate < pll->min_rate || rate > pll->max_rate) {
++			pr_err("alpha pll rate outside supported min/max range\n");
++			return -EINVAL;
++		}
++	} else {
++		/*
++		 * All alpha PLLs which do not support dynamic update,
++		 * should be disabled before a vco update.
++		 */
++		if (clk_hw_is_enabled(hw)) {
++			disable(hw);
++			need_reenabling = true;
++		}
 +
-+#include <linux/spinlock.h>
-+#include <asm/sysreg.h>
-+#include <soc/qcom/kryo-l2-accessors.h>
++		vco = alpha_pll_find_vco(pll, rate);
++		if (!vco) {
++			pr_err("alpha pll not in a valid vco range\n");
++			return -EINVAL;
++		}
 +
-+#define L2CPUSRSELR_EL1         sys_reg(3, 3, 15, 0, 6)
-+#define L2CPUSRDR_EL1           sys_reg(3, 3, 15, 0, 7)
++		regmap_update_bits(pll->clkr.regmap, off + PLL_USER_CTL,
++				   PLL_VCO_MASK << PLL_VCO_SHIFT,
++				   vco->val << PLL_VCO_SHIFT);
+ 	}
+ 
+ 	regmap_write(pll->clkr.regmap, off + PLL_L_VAL, l);
+@@ -401,16 +429,29 @@ static int clk_alpha_pll_set_rate(struct clk_hw *hw, unsigned long rate,
+ 		regmap_write(pll->clkr.regmap, off + PLL_ALPHA_VAL_U, a >> 32);
+ 	}
+ 
+-	regmap_update_bits(pll->clkr.regmap, off + PLL_USER_CTL,
+-			   PLL_VCO_MASK << PLL_VCO_SHIFT,
+-			   vco->val << PLL_VCO_SHIFT);
+-
+ 	regmap_update_bits(pll->clkr.regmap, off + PLL_USER_CTL, PLL_ALPHA_EN,
+ 			   PLL_ALPHA_EN);
+ 
++	if (need_reenabling)
++		enable(hw);
 +
-+static DEFINE_RAW_SPINLOCK(l2_access_lock);
-+
-+/**
-+ * set_l2_indirect_reg: write value to an L2 register
-+ * @reg: Address of L2 register.
-+ * @value: Value to be written to register.
-+ *
-+ * Use architecturally required barriers for ordering between system register
-+ * accesses, and system registers with respect to device memory
-+ */
-+void set_l2_indirect_reg(u64 reg, u64 val)
+ 	return 0;
+ }
+ 
++static int clk_alpha_pll_set_rate(struct clk_hw *hw, unsigned long rate,
++				  unsigned long prate)
 +{
-+	unsigned long flags;
-+
-+	raw_spin_lock_irqsave(&l2_access_lock, flags);
-+	write_sysreg_s(reg, L2CPUSRSELR_EL1);
-+	isb();
-+	write_sysreg_s(val, L2CPUSRDR_EL1);
-+	isb();
-+	raw_spin_unlock_irqrestore(&l2_access_lock, flags);
++	return alpha_pll_set_rate(hw, rate, prate, clk_alpha_pll_enable,
++				  clk_alpha_pll_disable);
 +}
-+EXPORT_SYMBOL(set_l2_indirect_reg);
 +
-+/**
-+ * get_l2_indirect_reg: read an L2 register value
-+ * @reg: Address of L2 register.
-+ *
-+ * Use architecturally required barriers for ordering between system register
-+ * accesses, and system registers with respect to device memory
-+ */
-+u64 get_l2_indirect_reg(u64 reg)
++static int clk_alpha_pll_hwfsm_set_rate(struct clk_hw *hw, unsigned long rate,
++					unsigned long prate)
 +{
-+	u64 val;
-+	unsigned long flags;
-+
-+	raw_spin_lock_irqsave(&l2_access_lock, flags);
-+	write_sysreg_s(reg, L2CPUSRSELR_EL1);
-+	isb();
-+	val = read_sysreg_s(L2CPUSRDR_EL1);
-+	raw_spin_unlock_irqrestore(&l2_access_lock, flags);
-+
-+	return val;
++	return alpha_pll_set_rate(hw, rate, prate, clk_alpha_pll_hwfsm_enable,
++				  clk_alpha_pll_hwfsm_disable);
 +}
-+EXPORT_SYMBOL(get_l2_indirect_reg);
-diff --git a/include/soc/qcom/kryo-l2-accessors.h b/include/soc/qcom/kryo-l2-accessors.h
-new file mode 100644
-index 0000000..e9a5eab
---- /dev/null
-+++ b/include/soc/qcom/kryo-l2-accessors.h
-@@ -0,0 +1,22 @@
-+/*
-+ * Copyright (c) 2018, The Linux Foundation. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 and
-+ * only version 2 as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
 +
-+#ifndef __ASM_ARCH_MSM_MSM_KRYO_L2_ACCESSORS_H
-+#define __ASM_ARCH_MSM_MSM_KRYO_L2_ACCESSORS_H
+ static long clk_alpha_pll_round_rate(struct clk_hw *hw, unsigned long rate,
+ 				     unsigned long *prate)
+ {
+@@ -420,6 +461,15 @@ static long clk_alpha_pll_round_rate(struct clk_hw *hw, unsigned long rate,
+ 	unsigned long min_freq, max_freq;
+ 
+ 	rate = alpha_pll_round_rate(rate, *prate, &l, &a);
 +
-+#ifdef CONFIG_ARCH_QCOM
-+void set_l2_indirect_reg(u64 reg_addr, u64 val);
-+u64 get_l2_indirect_reg(u64 reg_addr);
-+#endif
++	if (pll->flags & SUPPORTS_DYNAMIC_UPDATE) {
++		if (rate < pll->min_rate)
++			rate = pll->min_rate;
++		else if (rate > pll->max_rate)
++			rate = pll->max_rate;
++		return rate;
++	}
 +
-+#endif
+ 	if (alpha_pll_find_vco(pll, rate))
+ 		return rate;
+ 
+@@ -445,7 +495,7 @@ static long clk_alpha_pll_round_rate(struct clk_hw *hw, unsigned long rate,
+ 	.is_enabled = clk_alpha_pll_hwfsm_is_enabled,
+ 	.recalc_rate = clk_alpha_pll_recalc_rate,
+ 	.round_rate = clk_alpha_pll_round_rate,
+-	.set_rate = clk_alpha_pll_set_rate,
++	.set_rate = clk_alpha_pll_hwfsm_set_rate,
+ };
+ EXPORT_SYMBOL_GPL(clk_alpha_pll_hwfsm_ops);
+ 
+diff --git a/drivers/clk/qcom/clk-alpha-pll.h b/drivers/clk/qcom/clk-alpha-pll.h
+index d6e1ee2..7aaa11c 100644
+--- a/drivers/clk/qcom/clk-alpha-pll.h
++++ b/drivers/clk/qcom/clk-alpha-pll.h
+@@ -27,6 +27,8 @@ struct pll_vco {
+  * struct clk_alpha_pll - phase locked loop (PLL)
+  * @offset: base address of registers
+  * @vco_table: array of VCO settings
++ * @min_rate: Minimim rate for PLLs with single VCO range
++ * @max_rate: Maximun rate for PLLs with single VCO range
+  * @clkr: regmap clock handle
+  */
+ struct clk_alpha_pll {
+@@ -37,8 +39,11 @@ struct clk_alpha_pll {
+ #define SUPPORTS_OFFLINE_REQ	BIT(0)
+ #define SUPPORTS_16BIT_ALPHA	BIT(1)
+ #define SUPPORTS_FSM_MODE	BIT(2)
++#define SUPPORTS_DYNAMIC_UPDATE	BIT(3)
+ 	u8 flags;
+ 
++	unsigned long min_rate;
++	unsigned long max_rate;
+ 	struct clk_regmap clkr;
+ };
+ 
 -- 
 1.9.1
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
