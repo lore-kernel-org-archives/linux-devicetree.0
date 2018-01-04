@@ -1,112 +1,153 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH v5 01/12] dt-bindings: panel: lvds: Document power-supply
- property
-Date: Thu, 4 Jan 2018 20:44:36 +0100
-Message-ID: <20180104194436.reka6nw5hf32o4p3@flea.lan>
-References: <cover.e5a47cc96ec5274dd932daa2bde47df073087da9.1513854122.git-series.maxime.ripard@free-electrons.com>
- <0a6a3abcf1a6b7f0e66a81af8a44c5c0566ce06c.1513854122.git-series.maxime.ripard@free-electrons.com>
- <2493504.1OPucrC18r@avalon>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH v5 1/3] clocksource/drivers/atcpit100: Add andestech
+ atcpit100 timer
+Date: Thu, 4 Jan 2018 20:48:27 +0100
+Message-ID: <efdb249a-8dc0-e076-a1db-20cecdbf4c13@linaro.org>
+References: <1513057621-19084-1-git-send-email-rickchen36@gmail.com>
+ <1513057621-19084-2-git-send-email-rickchen36@gmail.com>
+ <bb7383ba-bb8e-3cbd-4ce0-faaefa8ed114@linaro.org>
+ <CAEbi=3cEEtLQRiv-cyUwEmcBNOC2Sz7AhzZkpznQWYb9VUojug@mail.gmail.com>
+ <ff51fff7-e963-f9fd-10d6-9b90a64d7aac@linaro.org>
+ <CAEbi=3c4yAx7Tejz8aPw3-3vj89t8cg-zNEY-vbF7KaMo8OM0Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="woaiir26rjmrhcin"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <2493504.1OPucrC18r@avalon>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Daniel Vetter <daniel.vetter@intel.com>, David Airlie <airlied@linux.ie>, Chen-Yu Tsai <wens@csie.org>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, plaes@plaes.org, icenowy@aosc.io, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, jernej.skrabec@siol.net, devicetree@vger.kernel.org, thierry.reding@gmail.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <CAEbi=3c4yAx7Tejz8aPw3-3vj89t8cg-zNEY-vbF7KaMo8OM0Q@mail.gmail.com>
+Content-Language: en-US
+Sender: netdev-owner@vger.kernel.org
+To: Greentime Hu <green.hu@gmail.com>
+Cc: Greentime <greentime@andestech.com>, Rick Chen <rickchen36@gmail.com>, Rick Chen <rick@andestech.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Linus Walleij <linus.walleij@linaro.org>, linux-arch <linux-arch@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, netdev <netdev@vger.kernel.org>, Vincent Chen <deanbo422@gmail.com>, DTML <devicetree@vger.kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, David Howells <dhowells@redhat.com>, Will Deacon <will.deacon@arm.com>, linux-serial@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 04/01/2018 15:06, Greentime Hu wrote:
+> Hi, Daniel:
+> 
+> 2018-01-04 21:50 GMT+08:00 Daniel Lezcano <daniel.lezcano@linaro.org>:
+>>
+>> Hi,
+>>
+>> sorry I missed your answer. Comments below.
+>>
+>> On 13/12/2017 07:06, Greentime Hu wrote:
+>>> Hi, Daniel:
+>>>
+>>> 2017-12-12 18:05 GMT+08:00 Daniel Lezcano <daniel.lezcano@linaro.org>:
+>>>> On 12/12/2017 06:46, Rick Chen wrote:
+>>>>> ATCPIT100 is often used on the Andes architecture,
+>>>>> This timer provide 4 PIT channels. Each PIT channel is a
+>>>>> multi-function timer, can be configured as 32,16,8 bit timers
+>>>>> or PWM as well.
+>>>>>
+>>>>> For system timer it will set channel 1 32-bit timer0 as clock
+>>>>> source and count downwards until underflow and restart again.
+>>>>
+>>>> [ ... ]
+>>>>
+>>>>> +config CLKSRC_ATCPIT100
+>>>>> +     bool "Clocksource for AE3XX platform"
+>>>>> +     depends on NDS32 || COMPILE_TEST
+>>>>> +     depends on HAS_IOMEM
+>>>>> +     help
+>>>>> +       This option enables support for the Andestech AE3XX platform timers.
+>>>>
+>>>> Hi Rick,
+>>>>
+>>>> the general rule for the Kconfig is:
+>>>>
+>>>> bool "Clocksource for AE3XX platform" if COMPILE_TEST
 
---woaiir26rjmrhcin
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+BTW, select TIMER_OF is missing.
 
-Hi Laurent,
+>>>> and no deps on the platform.
+>>>>
+>>>> It is up to the platform Kconfig to select the option.
+>>>>
+>>>> We want here a silent option but make it selectable in case of
+>>>> compilation test coverage.
+>>>
+>>>
+>>> The way we like to use it is because
+>>> 1. This timer is a basic component to boot an nds32 CPU and it should
+>>> be able to select without COMPILE_TEST for nds32 architecture.
+>>
+>> Yes, so you don't need it to be selectable, you must select it from the
+>> platform's Kconfig.
+> 
+> I am not sure that I get your point or not.
+> We don't have a CONFIG_PLAT_AE3XX.
+> Do you mean we should create one and select CLKSRC_ATCPIT100 under
+> CONFIG_PLAT_AE3XX?
 
-On Fri, Dec 22, 2017 at 02:08:20PM +0200, Laurent Pinchart wrote:
-> Hi Maxime,
->=20
-> Thank you for the patch.
->=20
-> On Thursday, 21 December 2017 13:02:27 EET Maxime Ripard wrote:
-> > The power-supply property is used by a vast majority of panels, includi=
-ng
-> > panel-simple. Let's document it as a common property
-> >=20
-> > Reviewed-by: Rob Herring <robh@kernel.org>
-> > Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
-> > ---
-> >  Documentation/devicetree/bindings/display/panel/panel-common.txt | 6 +=
-+++++
-> > Documentation/devicetree/bindings/display/panel/panel-lvds.txt   | 1 +
-> > Documentation/devicetree/bindings/display/panel/simple-panel.txt | 2 +-=
- 3
-> > files changed, 8 insertions(+), 1 deletion(-)
-> >=20
-> > diff --git
-> > a/Documentation/devicetree/bindings/display/panel/panel-common.txt
-> > b/Documentation/devicetree/bindings/display/panel/panel-common.txt index
-> > ec52c472c845..125ea68052af 100644
-> > --- a/Documentation/devicetree/bindings/display/panel/panel-common.txt
-> > +++ b/Documentation/devicetree/bindings/display/panel/panel-common.txt
-> > @@ -78,6 +78,12 @@ used for panels that implement compatible control
-> > signals. while active. Active high reset signals can be supported by
-> > inverting the GPIO specifier polarity flag.
-> >=20
-> > +Power
-> > +-----
-> > +
-> > +- power-supply: many display panels need an additional power supply in
-> > +  order to be fully powered-up. For such panels, power-supply contains
-> > +  a phandle to the regulator powering the panel.
->=20
-> I think we should give more details here about the limitations of this=20
-> property. How about the following explanation ?
->=20
-> - power-supply: display panels require power to be supplied. While severa=
-l=20
-> panels need more than one power supply with panel-specific constraints=20
-> governing the order and timings of the power supplies, in many cases a si=
-ngle=20
-> power supply is sufficient, either because the panel has a single power r=
-ail,=20
-> or because all its power rails can be driven by the same supply. In that =
-case=20
-> the power-supply property specifies the supply powering the panel as a ph=
-andle=20
-> to a regulator.
+No. Can't you add in arch/ndis32/Kconfig ?
 
-That works for me. Do you want me to resend it with that text, or
-should I merge it (and if so, with your Reviewed-by or Acked-by?)?
++select TIMER_ATCPIT100
 
-Thanks!
-Maxime
+Like:
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm64/Kconfig#n50
 
---woaiir26rjmrhcin
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
+>>> 2. It seems conflict with debug info. I am not sure if there is
+>>> another way to debug kernel(with debug info) with COMPILE_TEST and
+>>> DEBUG_INFO because we need this driver for nds32 architecture.
+>>>
+>>> Symbol: DEBUG_INFO [=n]
+>>> Type  : boolean
+>>> Prompt: Compile the kernel with debug info
+>>>   Location:
+>>>     -> Kernel hacking
+>>>       -> Compile-time checks and compiler options
+>>>   Defined at lib/Kconfig.debug:140
+>>>   Depends on: DEBUG_KERNEL [=y] && !COMPILE_TEST [=n]
+>>
+>> The COMPILE_TEST option is only there to allow cross-compilation test
+>> coverage, it does not select or unselect the driver in usual way.
+>>
+>> If the COMPILE_TEST is enabled, then the option will appear in the
+>> menuconfig, so that gives the opportunity to select/unselect it.
+>>
+>> Otherwise, the Kconfig's platform selects automatically the driver and
+>> the user *can't* unselect it from the menuconfig as it is a silent
+>> option and that is certainly what you want.
+>>
+>>>> Also, this driver is not a CLKSRC but a TIMER. Rename CLKSRC_ATCPIT100
+>>>> to TIMER_ATCPIT100.
+>>>
+>>> Thanks. We will rename it in the next version patch.
+>>
+>> You just resend an entire series V5 for the architecture. I'm confused,
+>> what is the merging path ?
+> 
+> Sorry. I didn't get your point.
+> We sent the timer patch and the architecture patch together because it
+> would be easier for reviewer to check the vdso implementations.
+> What do you mean about the merging path?
 
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlpOhCMACgkQ0rTAlCFN
-r3SflQ//Y9OW9OxnA5ZyAIjP6p89CuRfVMg8DYdVrpcOzQXz6D4WAX5tDqwz+4cc
-eOzmm/nuoNyXF65laAWJrR3qcqCqhY/zMC06Zby+r0dMaWndW1hcKlSXTBdf3gw0
-jxZeRJxjoel8EsblgqVdwMJ8x990huMEbl0Ki5jdKfw5xkoOdivBzofdrjsXGYaX
-lP4/WvAExLNTai0DT7WQIo6mYj/vvhCeZTJSKIIDqEpCmOLRPhjE6acg3jGGa8lw
-tgi+LQsY1A8fJkdGm1hNaIzap7jIvJonoPvCYwyNSavFAenMWvMaruMf+X6fBSjD
-9liXqM56fn4y4vLhdaQWJ+9diMQIpngNkvUb3+Y1qVy4pHaZaAEbOENtYUgU/UPW
-yuVEOV4FVk/UNB0P+OYpdwYB/oCoQ0fQswVrv+hc4Rs2Zry+64B2VCzmaYiR/Ep4
-eS7kfevBxf9iwe62X/T0/FTJW7hnRaWi0zSUfdyxPqw/LM3brq8+TWm7+5MRGDmp
-DhAmsxRV2PXycSIaHaspkz5j82Pp6IbpEuifWAAFyzvPPox+cRBnzkjtOtCzU3Ye
-ybTqSeaLL+H1DQqcAuvWuVUuK+X444vWpCDA/cBO4dwulC44squ8p5rV9/Ont2CF
-sp5F3mYofmse03uS5Sy1lG83oXHRtk/kAy0qnYWYed8EnTwX9Zo=
-=v92t
------END PGP SIGNATURE-----
+I received a [Vx y/3] series and I received a [Vx y/39].
 
---woaiir26rjmrhcin--
+The former from Rick Chen means to me "please pick them through your tree".
+
+The latter from you means to me "can you ack the patches so I can merge
+them through my tree". Note you will have to resend the entire arch
+series for every single review/comment (that could end up upset the
+Cc'ed people).
+
+Which one should I review ? I can not track different patchset
+implementing the same thing. Which one should I comment, review ? Are
+the comments I did on [Vx y/3] taken into account in the arch series ?
+etc ...
+
+Please clarify, it is confusing and impossible to review in this situation.
+
+I suggest we stick to the x/3 series, so I can comment it and you can
+resend a new version without resending the entire arch series. So I can
+merge it through my tree, and you get it via eg. a shared immutable
+branch. The arch series will be reduced by 3 patches.
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
