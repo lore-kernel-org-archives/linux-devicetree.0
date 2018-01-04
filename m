@@ -1,41 +1,63 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sun[47]i: Fix display backend 1 output to
- TCON0 remote endpoint
-Date: Thu, 4 Jan 2018 14:27:52 +0100
-Message-ID: <20180104132752.pcixtjugwfvlshpl@flea.lan>
-References: <20180103163155.13975-1-wens@csie.org>
+From: maxime.ripard@free-electrons.com
+Subject: Re: [PATCH v3 05/11] ARM: sun8i: h3/h5: add DE2 CCU device node for H3
+Date: Thu, 4 Jan 2018 14:39:47 +0100
+Message-ID: <20180104133947.slerf6m52suarmym@flea.lan>
+References: <20171222122243.25735-1-icenowy@aosc.io>
+ <20171222122243.25735-6-icenowy@aosc.io>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ghu4skuw4u3vrhsf"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20180103163155.13975-1-wens-jdAy2FN1RRM@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============1435266400=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20171222122243.25735-6-icenowy@aosc.io>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Icenowy Zheng <icenowy@aosc.io>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 
---ghu4skuw4u3vrhsf
+--===============1435266400==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="zk2cvzwthowfwzah"
+Content-Disposition: inline
+
+
+--zk2cvzwthowfwzah
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jan 04, 2018 at 12:31:55AM +0800, Chen-Yu Tsai wrote:
-> There is a copy-paste error in the display pipeline device tree graph.
-> The remote endpoint of the display backend 1's output to TCON0 points
-> to the wrong endpoint. This will result in the driver incorrectly
-> parsing the relationship of the components.
+On Fri, Dec 22, 2017 at 08:22:37PM +0800, Icenowy Zheng wrote:
+> The DE2 in H3/H5 has a clock control unit in it, and the behavior is
+> slightly different between H3 and H5.
 >=20
-> Reported-by: Andrea Venturi <ennesimamail.av-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Fixes: 0df4cf33a594 ("ARM: dts: sun4i: Add device nodes for display
-> 		      pipelines")
-> Fixes: 5b92b29bed45 ("ARM: dts: sun7i: Add device nodes for display
-> 		      pipelines")
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> Add the common parts in H3/H5 DTSI, and add the compatible string in H3
+> DTSI.
+>=20
+> The compatible string of H5 DE2 CCU will be added in a separated patch.
+>=20
+> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> ---
+> Changes in v2:
+> - Use H3 DE2 CCU compatible as it's discovered that H3 and A83T DE2 CCU a=
+re
+>   not equal.
+>=20
+>  arch/arm/boot/dts/sun8i-h3.dtsi    |  4 ++++
+>  arch/arm/boot/dts/sunxi-h3-h5.dtsi | 14 ++++++++++++++
 
-Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Could you split that patch in half, with the common part in one patch,
+and the H3 part in a second one?
 
+This is a nightmare to merge otherwise.
+
+Thanks!
 Maxime
 
 --=20
@@ -43,28 +65,36 @@ Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
 
---ghu4skuw4u3vrhsf
+--zk2cvzwthowfwzah
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlpOK9cACgkQ0rTAlCFN
-r3RrCA//eh6mI0i0UY7f0XBj4vP/WevV5+BM6ETlNvYzsOFwTDtFcPDm2UACF6FZ
-052ebofr0C6c4GHv1yr/6383h3lB1t45PNN96V38gwbPNAJF1osmfRY/4XHorBT1
-DNY/mHJ/vy5hQjhOfxFrbnDGue93f8gBnyaG+jKw+npYAYg9hs/5a1IcEgHEbViI
-dUsxqmjzDxFmbhxm6bpUl2ENqBUaCkxTCSluGLehVKoX0u6Tss+3LG/jttuCD4yk
-k0rnKhXW7iqEYcDcOsefrF2n2Y88oZkqbo2P5tMyPV9Cgm/m/su4ZjAVLyNfl/kY
-MjZvn9iMle2kEFOpnHWilV9UKh9pGM3qI0q4oUV4dCajB1CPgcWUPfPLX0MFqXug
-DUN9gH5s1KzPTDwtubeZfDzX+FMy6h7LHzcWAPihJiy/F51HgpEtAtWVIfmevc1e
-HUX+H36ml+jLBqlbX/SB3h1mRinr4vYqWs8HHtNsTeB0y9VA9cCdxkE6oXLJNmLU
-b/mZ4tKCBv82QevXkAMOya2J5bjLAcx77v5dlJm8xlUEaueYtJe3oqpgZetXj2lo
-RovRoQip9kvf/PkyeSLXW7CeKzOMypq/7MPs9wP0Y0lD7U6XKti41KyphdOAh16B
-FaYCxgZeCIafupYuNoudvnBX5CRbQNiajB4GLqo/XegYK8g6F8M=
-=e8fR
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlpOLqIACgkQ0rTAlCFN
+r3QD1g//ePPYcmkRIkvrM/CYO4ihi7Iw3MMqGYhYsN9M+KHZxYHyQgUf6LfPFSnR
+zCTUkXCuc7jWeEapIaiAsNC2GqeZuiza9WxvKuVVdkVeod1lOGWPuVTZr52QK0ge
+QJw8Ai3+g1PKm8gI1xr2gTgxhzZgjE5wgnBeWJ1oehxGdBeznh/X2FI208XVakwE
+njgWQy04yy//nYNoErcpUhSRXadkd4ljxKxMAvOBqvgOiT3WgdAv18Crb3bXs8HD
+4BB/T/mbzM3/zyVMDLkvwcOIrjOKPkVLCg2aahFfDarvXoFeqRZSkJ9GnUcNF2ri
+Q1zt7AgX7e4uZNRx7yDb7AxszUvIi1NKg3ZNF16a5V0knwsM/oQ7IGKneARSpJ/3
+KlqtLq+VlYAFpRu3O451RaSEStOiVoo6mc2OutioFlewRg2h041WtmF2IIol4YtW
+VIVXVwqQNzdYrgZTSxH1lu2dnBGO3cmJ24HiUtKDN6alxqQHZGGNWCDQU5Yi3Odz
+4vhok/iDT9yV1w/yp1t9tnvXUNtTa0EBFv3cXm33aewaOMOSsaZnDe7SkuBcHXTC
+KbCZApUIcQJ6h/7+yxdrNtrpKeh3iDm94/viex3Bp8BLBpJPMFCT0rcRvlPP/5Hp
+AhIu3C5uJpMfG4upaA0vS/xoD19SvDnn1TO3lOyQcSvY7CFSjw0=
+=c6Na
 -----END PGP SIGNATURE-----
 
---ghu4skuw4u3vrhsf--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--zk2cvzwthowfwzah--
+
+--===============1435266400==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============1435266400==--
