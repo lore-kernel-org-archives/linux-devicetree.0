@@ -1,42 +1,53 @@
 From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH v2 4/7] drm/panel: simple: Add support for KEO TX31D200VM0BAA
-Date: Thu,  4 Jan 2018 11:42:22 +0530
-Message-ID: <1515046345-15881-5-git-send-email-jagan@amarulasolutions.com>
+Subject: [PATCH v2 1/7] drm/panel: simple: add support for Ampire
+ AM-800480AYTZQW-00H
+Date: Thu,  4 Jan 2018 11:42:19 +0530
+Message-ID: <1515046345-15881-2-git-send-email-jagan@amarulasolutions.com>
 References: <1515046345-15881-1-git-send-email-jagan@amarulasolutions.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1515046345-15881-1-git-send-email-jagan@amarulasolutions.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Shawn Guo <shawnguo@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Matteo Lisi <matteo.lisi@engicam.com>, Michael Trimarchi <michael@amarulasolutions.com>, Jagan Teki <jagan@amarulasolutions.com>
+Cc: devicetree@vger.kernel.org, Matteo Lisi <matteo.lisi@engicam.com>, linux-kernel@vger.kernel.org, Jagan Teki <jagan@amarulasolutions.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Michael Trimarchi <michael@amarulasolutions.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This adds support for the Kaohsiung Opto-Electronics.,
-TX31D200VM0BAA 12.3" HSXGA LVDS panel, which can be
-supported by the simple panel driver.
+This adds support for the Ampire AM-800480AYTZQW-00H 7.0" WGA LCD,
+which can be supported by the simple panel driver.
 
 Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 ---
 Changes for v2:
 - Updated binding info about optional properties, node and example
 
- .../bindings/display/panel/koe,tx31d200vm0baa.txt  | 25 ++++++++++++++++++++
+ .../display/panel/ampire,am-800480aytzqw-00h.txt   | 25 ++++++++++++++++++++
  drivers/gpu/drm/panel/panel-simple.c               | 27 ++++++++++++++++++++++
  2 files changed, 52 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/koe,tx31d200vm0baa.txt
+ create mode 100644 Documentation/devicetree/bindings/display/panel/ampire,am-800480aytzqw-00h.txt
 
-diff --git a/Documentation/devicetree/bindings/display/panel/koe,tx31d200vm0baa.txt b/Documentation/devicetree/bindings/display/panel/koe,tx31d200vm0baa.txt
+diff --git a/Documentation/devicetree/bindings/display/panel/ampire,am-800480aytzqw-00h.txt b/Documentation/devicetree/bindings/display/panel/ampire,am-800480aytzqw-00h.txt
 new file mode 100644
-index 0000000..6a036ed
+index 0000000..abb5eee
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/koe,tx31d200vm0baa.txt
++++ b/Documentation/devicetree/bindings/display/panel/ampire,am-800480aytzqw-00h.txt
 @@ -0,0 +1,25 @@
-+Kaohsiung Opto-Electronics. TX31D200VM0BAA 12.3" HSXGA LVDS panel
++Ampire AM-800480AYTZQW-00H 7.0" WVGA TFT LCD panel
 +
 +This binding is compatible with the simple-panel binding, which is specified
 +in simple-panel.txt in this directory.
 +
 +Required properties:
-+- compatible: should be "koe,tx31d200vm0baa"
++- compatible: should be "ampire,am-800480aytzqw-00h"
 +
 +Optional properties:
 +- backlight: phandle of the backlight device attached to the panel
@@ -46,7 +57,7 @@ index 0000000..6a036ed
 +
 +Example:
 +	panel {
-+		compatible = "koe,tx31d200vm0baa";
++		compatible = "ampire,am-800480aytzqw-00h";
 +		backlight = <&backlight_lvds>;
 +
 +		port {
@@ -56,49 +67,49 @@ index 0000000..6a036ed
 +		};
 +	};
 diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index e262462..ef3973d 100644
+index 8fd0b01..e262462 100644
 --- a/drivers/gpu/drm/panel/panel-simple.c
 +++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -1267,6 +1267,30 @@ static const struct panel_desc innolux_zj070na_01p = {
- 	},
+@@ -412,6 +412,30 @@ static const struct panel_desc ampire_am_480272h3tmqw_t01h = {
+ 	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
  };
  
-+static const struct display_timing koe_tx31d200vm0baa_timing = {
-+	.pixelclock = { 39600000, 43200000, 48000000 },
-+	.hactive = { 1280, 1280, 1280 },
-+	.hfront_porch = { 16, 36, 56 },
-+	.hback_porch = { 16, 36, 56 },
-+	.hsync_len = { 8, 8, 8 },
++static const struct display_timing ampire_am_800480aytzqw_00h_timing = {
++	.pixelclock = { 27700000, 29200000, 39600000 },
++	.hactive = { 800, 800, 800 },
++	.hfront_porch = { 12, 40, 212 },
++	.hback_porch = { 88, 88, 88 },
++	.hsync_len = { 1, 2, 40 },
 +	.vactive = { 480, 480, 480 },
-+	.vfront_porch = { 6, 21, 33.5 },
-+	.vback_porch = { 6, 21, 33.5 },
-+	.vsync_len = { 8, 8, 8 },
++	.vfront_porch = { 1, 13, 88 },
++	.vback_porch = { 32, 32, 32 },
++	.vsync_len = { 1, 2, 3 },
 +	.flags = DISPLAY_FLAGS_DE_HIGH,
 +};
 +
-+static const struct panel_desc koe_tx31d200vm0baa = {
-+	.timings = &koe_tx31d200vm0baa_timing,
++static const struct panel_desc ampire_am_800480aytzqw_00h = {
++	.timings = &ampire_am_800480aytzqw_00h_timing,
 +	.num_timings = 1,
 +	.bpc = 6,
 +	.size = {
-+		.width = 292,
-+		.height = 109,
++		.width = 154,
++		.height = 86,
 +	},
 +	.bus_format = MEDIA_BUS_FMT_RGB666_1X7X3_SPWG,
 +};
 +
- static const struct display_timing kyo_tcg121xglp_timing = {
- 	.pixelclock = { 52000000, 65000000, 71000000 },
- 	.hactive = { 1024, 1024, 1024 },
-@@ -2180,6 +2204,9 @@ static const struct of_device_id platform_of_match[] = {
- 		.compatible = "innolux,zj070na-01p",
- 		.data = &innolux_zj070na_01p,
+ static const struct drm_display_mode ampire_am800480r3tmqwa1h_mode = {
+ 	.clock = 33333,
+ 	.hdisplay = 800,
+@@ -2054,6 +2078,9 @@ static const struct of_device_id platform_of_match[] = {
+ 		.compatible = "ampire,am-480272h3tmqw-t01h",
+ 		.data = &ampire_am_480272h3tmqw_t01h,
  	}, {
-+		.compatible = "koe,tx31d200vm0baa",
-+		.data = &koe_tx31d200vm0baa,
++		.compatible = "ampire,am-800480aytzqw-00h",
++		.data = &ampire_am_800480aytzqw_00h,
 +	}, {
- 		.compatible = "kyo,tcg121xglp",
- 		.data = &kyo_tcg121xglp,
+ 		.compatible = "ampire,am800480r3tmqwa1h",
+ 		.data = &ampire_am800480r3tmqwa1h,
  	}, {
 -- 
 2.7.4
