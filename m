@@ -1,63 +1,37 @@
-From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH v2 1/7] drm/panel: simple: add support for Ampire
- AM-800480AYTZQW-00H
-Date: Thu,  4 Jan 2018 11:42:19 +0530
-Message-ID: <1515046345-15881-2-git-send-email-jagan@amarulasolutions.com>
+From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Subject: [PATCH v2 5/7] ARM: dts: imx6q-icore-ofcap12: Switch LVDS timings from panel-simple
+Date: Thu,  4 Jan 2018 11:42:23 +0530
+Message-ID: <1515046345-15881-6-git-send-email-jagan@amarulasolutions.com>
 References: <1515046345-15881-1-git-send-email-jagan@amarulasolutions.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1515046345-15881-1-git-send-email-jagan@amarulasolutions.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: devicetree@vger.kernel.org, Matteo Lisi <matteo.lisi@engicam.com>, linux-kernel@vger.kernel.org, Jagan Teki <jagan@amarulasolutions.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Michael Trimarchi <michael@amarulasolutions.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1515046345-15881-1-git-send-email-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds support for the Ampire AM-800480AYTZQW-00H 7.0" WGA LCD,
-which can be supported by the simple panel driver.
+Switch to use koe_tx31d200vm0baa LVDS timings from
+panel-simple instead hard coding the same in dts.
 
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 ---
 Changes for v2:
-- Updated binding info about optional properties, node and example
+- none
 
- .../display/panel/ampire,am-800480aytzqw-00h.txt   | 25 ++++++++++++++++++++
- drivers/gpu/drm/panel/panel-simple.c               | 27 ++++++++++++++++++++++
- 2 files changed, 52 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/ampire,am-800480aytzqw-00h.txt
+ arch/arm/boot/dts/imx6q-icore-ofcap12.dts | 31 +++++++++++++++++--------------
+ 1 file changed, 17 insertions(+), 14 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/display/panel/ampire,am-800480aytzqw-00h.txt b/Documentation/devicetree/bindings/display/panel/ampire,am-800480aytzqw-00h.txt
-new file mode 100644
-index 0000000..abb5eee
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/ampire,am-800480aytzqw-00h.txt
-@@ -0,0 +1,25 @@
-+Ampire AM-800480AYTZQW-00H 7.0" WVGA TFT LCD panel
+diff --git a/arch/arm/boot/dts/imx6q-icore-ofcap12.dts b/arch/arm/boot/dts/imx6q-icore-ofcap12.dts
+index 9e230f5..6e27c81 100644
+--- a/arch/arm/boot/dts/imx6q-icore-ofcap12.dts
++++ b/arch/arm/boot/dts/imx6q-icore-ofcap12.dts
+@@ -48,28 +48,31 @@
+ / {
+ 	model = "Engicam i.CoreM6 Quad/Dual OpenFrame Capacitive touch 12 Kit";
+ 	compatible = "engicam,imx6-icore", "fsl,imx6q";
 +
-+This binding is compatible with the simple-panel binding, which is specified
-+in simple-panel.txt in this directory.
-+
-+Required properties:
-+- compatible: should be "ampire,am-800480aytzqw-00h"
-+
-+Optional properties:
-+- backlight: phandle of the backlight device attached to the panel
-+
-+Optional nodes:
-+- Video port for LVDS panel input.
-+
-+Example:
 +	panel {
-+		compatible = "ampire,am-800480aytzqw-00h";
++		compatible = "koe,tx31d200vm0baa";
 +		backlight = <&backlight_lvds>;
 +
 +		port {
@@ -66,50 +40,41 @@ index 0000000..abb5eee
 +			};
 +		};
 +	};
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index 8fd0b01..e262462 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -412,6 +412,30 @@ static const struct panel_desc ampire_am_480272h3tmqw_t01h = {
- 	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
  };
  
-+static const struct display_timing ampire_am_800480aytzqw_00h_timing = {
-+	.pixelclock = { 27700000, 29200000, 39600000 },
-+	.hactive = { 800, 800, 800 },
-+	.hfront_porch = { 12, 40, 212 },
-+	.hback_porch = { 88, 88, 88 },
-+	.hsync_len = { 1, 2, 40 },
-+	.vactive = { 480, 480, 480 },
-+	.vfront_porch = { 1, 13, 88 },
-+	.vback_porch = { 32, 32, 32 },
-+	.vsync_len = { 1, 2, 3 },
-+	.flags = DISPLAY_FLAGS_DE_HIGH,
-+};
+ &ldb {
+ 	status = "okay";
+ 
+ 	lvds-channel@0 {
+-		fsl,data-mapping = "spwg";
+-		fsl,data-width = <18>;
++		reg = <0>;
+ 		status = "okay";
+ 
+-		display-timings {
+-			native-mode = <&timing0>;
+-			timing0: timing0 {
+-				clock-frequency = <46800000>;
+-				hactive = <1280>;
+-				vactive = <480>;
+-				hback-porch = <353>;
+-				hfront-porch = <47>;
+-				vback-porch = <39>;
+-				vfront-porch = <4>;
+-				hsync-len = <8>;
+-				vsync-len = <2>;
++		port@4 {
++			reg = <4>;
 +
-+static const struct panel_desc ampire_am_800480aytzqw_00h = {
-+	.timings = &ampire_am_800480aytzqw_00h_timing,
-+	.num_timings = 1,
-+	.bpc = 6,
-+	.size = {
-+		.width = 154,
-+		.height = 86,
-+	},
-+	.bus_format = MEDIA_BUS_FMT_RGB666_1X7X3_SPWG,
-+};
-+
- static const struct drm_display_mode ampire_am800480r3tmqwa1h_mode = {
- 	.clock = 33333,
- 	.hdisplay = 800,
-@@ -2054,6 +2078,9 @@ static const struct of_device_id platform_of_match[] = {
- 		.compatible = "ampire,am-480272h3tmqw-t01h",
- 		.data = &ampire_am_480272h3tmqw_t01h,
- 	}, {
-+		.compatible = "ampire,am-800480aytzqw-00h",
-+		.data = &ampire_am_800480aytzqw_00h,
-+	}, {
- 		.compatible = "ampire,am800480r3tmqwa1h",
- 		.data = &ampire_am800480r3tmqwa1h,
- 	}, {
++			lvds0_out: endpoint {
++				remote-endpoint = <&panel_in>;
+ 			};
+ 		};
+ 	};
 -- 
 2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
