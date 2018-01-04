@@ -1,85 +1,88 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH 01/11] clk: sunxi-ng: Don't set k if width is 0 for nkmp
- plls
-Date: Thu, 4 Jan 2018 22:45:18 +0800
-Message-ID: <CAGb2v67B23yUdACijKxosfFG_os5WndiBKX02DGA4PFUkxDx9g@mail.gmail.com>
-References: <20171230210203.24115-1-jernej.skrabec@siol.net>
- <20171230210203.24115-2-jernej.skrabec@siol.net>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH v2 0/8] ARM: sun9i: SMP support with Multi-Cluster Power
+ Management
+Date: Thu, 4 Jan 2018 15:58:38 +0100
+Message-ID: <20180104145838.qk5sbtg3vjg33txt@flea.lan>
+References: <20180104143754.2425-1-wens@csie.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20171230210203.24115-2-jernej.skrabec@siol.net>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jernej Skrabec <jernej.skrabec@siol.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, Jose.Abreu@synopsys.com, Neil Armstrong <narmstrong@baylibre.com>, David Airlie <airlied@linux.ie>, Mike Turquette <mturquette@baylibre.com>, linux-sunxi <linux-sunxi@googlegroups.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-clk <linux-clk@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="xtt3sqz4iux7esfv"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180104143754.2425-1-wens@csie.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mylene JOSSERAND <mylene.josserand@free-electrons.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, Nicolas Pitre <nicolas.pitre@linaro.org>, Dave Martin <Dave.Martin@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gU3VuLCBEZWMgMzEsIDIwMTcgYXQgNTowMSBBTSwgSmVybmVqIFNrcmFiZWMgPGplcm5lai5z
-a3JhYmVjQHNpb2wubmV0PiB3cm90ZToKPiBGb3IgZXhhbXBsZSwgQTgzVCBoYXZlIG5tcCBwbGxz
-IHdoaWNoIGFyZSBtb2RlbGxlZCBhcyBua21wIHBsbHMuIFNpbmNlIGsKPiBpcyBub3Qgc3BlY2lm
-aWVkLCBpdCBoYXMgb2Zmc2V0IDAsIHNoaWZ0IDAgYW5kIGxvd2VzdCB2YWx1ZSAxLiBUaGlzCj4g
-bWVhbnMgdGhhdCBMU0IgYml0IGlzIGFsd2F5cyBzZXQgdG8gMSwgd2hpY2ggbWF5IGNoYW5nZSBj
-bG9jayByYXRlLgo+Cj4gRml4IHRoYXQgYnkgYXBwbHlpbmcgayBmYWN0b3Igb25seSBpZiBrIHdp
-ZHRoIGlzIGdyZWF0ZXIgdGhhbiAwLgo+Cj4gU2lnbmVkLW9mZi1ieTogSmVybmVqIFNrcmFiZWMg
-PGplcm5lai5za3JhYmVjQHNpb2wubmV0Pgo+IC0tLQo+ICBkcml2ZXJzL2Nsay9zdW54aS1uZy9j
-Y3VfbmttcC5jIHwgMjEgKysrKysrKysrKysrKy0tLS0tLS0tCj4gIDEgZmlsZSBjaGFuZ2VkLCAx
-MyBpbnNlcnRpb25zKCspLCA4IGRlbGV0aW9ucygtKQo+Cj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMv
-Y2xrL3N1bnhpLW5nL2NjdV9ua21wLmMgYi9kcml2ZXJzL2Nsay9zdW54aS1uZy9jY3VfbmttcC5j
-Cj4gaW5kZXggZTU4Yzk1Nzg3Zjk0Li43MDlmNTI4YWYyYjMgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVy
-cy9jbGsvc3VueGktbmcvY2N1X25rbXAuYwo+ICsrKyBiL2RyaXZlcnMvY2xrL3N1bnhpLW5nL2Nj
-dV9ua21wLmMKPiBAQCAtODEsNyArODEsNyBAQCBzdGF0aWMgdW5zaWduZWQgbG9uZyBjY3Vfbmtt
-cF9yZWNhbGNfcmF0ZShzdHJ1Y3QgY2xrX2h3ICpodywKPiAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgdW5zaWduZWQgbG9uZyBwYXJlbnRfcmF0ZSkKPiAgewo+ICAgICAg
-ICAgc3RydWN0IGNjdV9ua21wICpua21wID0gaHdfdG9fY2N1X25rbXAoaHcpOwo+IC0gICAgICAg
-dW5zaWduZWQgbG9uZyBuLCBtLCBrLCBwOwo+ICsgICAgICAgdW5zaWduZWQgbG9uZyBuLCBtLCBr
-ID0gMSwgcDsKPiAgICAgICAgIHUzMiByZWc7Cj4KPiAgICAgICAgIHJlZyA9IHJlYWRsKG5rbXAt
-PmNvbW1vbi5iYXNlICsgbmttcC0+Y29tbW9uLnJlZyk7Cj4gQEAgLTkyLDExICs5MiwxMyBAQCBz
-dGF0aWMgdW5zaWduZWQgbG9uZyBjY3VfbmttcF9yZWNhbGNfcmF0ZShzdHJ1Y3QgY2xrX2h3ICpo
-dywKPiAgICAgICAgIGlmICghbikKPiAgICAgICAgICAgICAgICAgbisrOwo+Cj4gLSAgICAgICBr
-ID0gcmVnID4+IG5rbXAtPmsuc2hpZnQ7Cj4gLSAgICAgICBrICY9ICgxIDw8IG5rbXAtPmsud2lk
-dGgpIC0gMTsKPiAtICAgICAgIGsgKz0gbmttcC0+ay5vZmZzZXQ7Cj4gLSAgICAgICBpZiAoIWsp
-Cj4gLSAgICAgICAgICAgICAgIGsrKzsKPiArICAgICAgIGlmIChua21wLT5rLndpZHRoKSB7Cj4g
-KyAgICAgICAgICAgICAgIGsgPSByZWcgPj4gbmttcC0+ay5zaGlmdDsKPiArICAgICAgICAgICAg
-ICAgayAmPSAoMSA8PCBua21wLT5rLndpZHRoKSAtIDE7Cj4gKyAgICAgICAgICAgICAgIGsgKz0g
-bmttcC0+ay5vZmZzZXQ7Cj4gKyAgICAgICAgICAgICAgIGlmICghaykKPiArICAgICAgICAgICAg
-ICAgICAgICAgICBrKys7Cj4gKyAgICAgICB9CgpUaGUgY29uZGl0aW9uYWwgc2hvdWxkbid0IGJl
-IG5lY2Vzc2FyeS4gV2l0aCBua21wLT5rLndpZHRoID0gMCwKeW91J2Qgc2ltcGx5IGdldCBrICYg
-MCwgd2hpY2ggaXMgMCwgd2hpY2ggdGhlbiBnZXRzIGJ1bXBlZCB1cCB0byAxLAp1bmxlc3Mgay5v
-ZmZzZXQgPiAxLCB3aGljaCB3b3VsZCBiZSBhIGJ1Zy4KCj4KPiAgICAgICAgIG0gPSByZWcgPj4g
-bmttcC0+bS5zaGlmdDsKPiAgICAgICAgIG0gJj0gKDEgPDwgbmttcC0+bS53aWR0aCkgLSAxOwo+
-IEBAIC0xNTMsMTIgKzE1NSwxNSBAQCBzdGF0aWMgaW50IGNjdV9ua21wX3NldF9yYXRlKHN0cnVj
-dCBjbGtfaHcgKmh3LCB1bnNpZ25lZCBsb25nIHJhdGUsCj4KPiAgICAgICAgIHJlZyA9IHJlYWRs
-KG5rbXAtPmNvbW1vbi5iYXNlICsgbmttcC0+Y29tbW9uLnJlZyk7Cj4gICAgICAgICByZWcgJj0g
-fkdFTk1BU0sobmttcC0+bi53aWR0aCArIG5rbXAtPm4uc2hpZnQgLSAxLCBua21wLT5uLnNoaWZ0
-KTsKPiAtICAgICAgIHJlZyAmPSB+R0VOTUFTSyhua21wLT5rLndpZHRoICsgbmttcC0+ay5zaGlm
-dCAtIDEsIG5rbXAtPmsuc2hpZnQpOwo+ICsgICAgICAgaWYgKG5rbXAtPmsud2lkdGgpCj4gKyAg
-ICAgICAgICAgICAgIHJlZyAmPSB+R0VOTUFTSyhua21wLT5rLndpZHRoICsgbmttcC0+ay5zaGlm
-dCAtIDEsCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBua21wLT5rLnNoaWZ0KTsK
-PiAgICAgICAgIHJlZyAmPSB+R0VOTUFTSyhua21wLT5tLndpZHRoICsgbmttcC0+bS5zaGlmdCAt
-IDEsIG5rbXAtPm0uc2hpZnQpOwo+ICAgICAgICAgcmVnICY9IH5HRU5NQVNLKG5rbXAtPnAud2lk
-dGggKyBua21wLT5wLnNoaWZ0IC0gMSwgbmttcC0+cC5zaGlmdCk7Cj4KPiAgICAgICAgIHJlZyB8
-PSAoX25rbXAubiAtIG5rbXAtPm4ub2Zmc2V0KSA8PCBua21wLT5uLnNoaWZ0Owo+IC0gICAgICAg
-cmVnIHw9IChfbmttcC5rIC0gbmttcC0+ay5vZmZzZXQpIDw8IG5rbXAtPmsuc2hpZnQ7Cj4gKyAg
-ICAgICBpZiAobmttcC0+ay53aWR0aCkKPiArICAgICAgICAgICAgICAgcmVnIHw9IChfbmttcC5r
-IC0gbmttcC0+ay5vZmZzZXQpIDw8IG5rbXAtPmsuc2hpZnQ7CgpJIHRoaW5rIGEgYmV0dGVyIHdh
-eSB3b3VsZCBiZQoKICAgICAgICByZWcgfD0gKChfbmttcC5rIC0gbmttcC0+ay5vZmZzZXQpIDw8
-IG5rbXAtPmsuc2hpZnQpICYKICAgICAgICAgICAgICAgR0VOTUFTSyhua21wLT5rLndpZHRoICsg
-bmttcC0+ay5zaGlmdCAtIDEsIG5rbXAtPmsuc2hpZnQpOwoKQW5kIGRvIHRoaXMgZm9yIGFsbCB0
-aGUgZmFjdG9ycywgbm90IGp1c3Qgay4gVGhpcyBwYXR0ZXJuIGlzIHdoYXQKcmVnbWFwX3VwZGF0
-ZV9iaXRzIGRvZXMsIHdoaWNoIHNlZW1zIG11Y2ggc2FmZXIuIEkgd29uZGVyIHdoYXQKR0VOTUFT
-SygpIHdpdGggYSBuZWdhdGl2ZSB2YWx1ZSB3b3VsZCBkbyB0aG91Z2guLi4KCkNoZW5ZdQoKPiAg
-ICAgICAgIHJlZyB8PSAoX25rbXAubSAtIG5rbXAtPm0ub2Zmc2V0KSA8PCBua21wLT5tLnNoaWZ0
-Owo+ICAgICAgICAgcmVnIHw9IGlsb2cyKF9ua21wLnApIDw8IG5rbXAtPnAuc2hpZnQ7Cj4KPiAt
-LQo+IDIuMTUuMQo+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
-ZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZl
-bAo=
+
+--xtt3sqz4iux7esfv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Jan 04, 2018 at 10:37:46PM +0800, Chen-Yu Tsai wrote:
+> This is v2 of my sun9i SMP support with MCPM series which was started
+> over two years ago [1]. We've tried to implement PSCI for both the A80
+> and A83T. Results were not promising. The issue is that these two chips
+> have a broken security extensions implementation. If a specific bit is
+> not burned in its e-fuse, most if not all security protections don't
+> work [2]. Even worse, non-secure access to the GIC become secure. This
+> requires a crazy workaround in the GIC driver which probably doesn't work
+> in all cases [3].
+>=20
+> Nicolas mentioned that the MCPM framework is likely overkill in our
+> case [4]. However the framework does provide cluster/core state tracking
+> and proper sequencing of cache related operations. We could rework
+> the code to use standard smp_ops, but I would like to actually get
+> a working version in first.
+>=20
+> Much of the sunxi-specific MCPM code is derived from Allwinner code and
+> documentation, with some references to the other MCPM implementations,
+> as well as the Cortex's Technical Reference Manuals for the power
+> sequencing info.
+>=20
+> One major difference compared to other platforms is we currently do not
+> have a standalone PMU or other embedded firmware to do the actually power
+> sequencing. All power/reset control is done by the kernel. Nicolas
+> mentioned that a new optional callback should be added in cases where the
+> kernel has to do the actual power down [5]. For now however I'm using a
+> dedicated single thread workqueue. CPU and cluster power off work is
+> queued from the .{cpu,cluster}_powerdown_prepare callbacks. This solution
+> is somewhat heavy, as I have a total of 10 static work structs. It might
+> also be a bit racy, as nothing prevents the system from bringing a core
+> back before the asynchronous work shuts it down. This would likely
+> happen under a heavily loaded system with a scheduler that brings cores
+> in and out of the system frequently. In simple use-cases it performs OK.
+
+It all looks sane to me
+Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--xtt3sqz4iux7esfv
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlpOQR0ACgkQ0rTAlCFN
+r3Sy5g//TZs7B/BSXol06Jnyhlg/OQq0TgqLFGV76DIw7cyGXGknzmODGibP3Ylf
+pYaiPTS+LCYWbkezgGTury4ic+g2SoteCd8OUiqDZGR/LiOafI9R4FFIA02HgdF+
+oYCSmCvUBalFS8iSNJazGfj0CcLtq9zwyWuDO2S3h2JaL+Bz4MuHfQw3wN4P3ki5
+WkRABZnPRaoZI9g9OpVssY/x7WmLUD1252Y/f2cU2kz0VjRrvJSJmf3s3dB78sIH
+LsidcS6rvl7Qb8Qpq4KokOQkGpYaOprMuXuxL8KwcBKjFlCeRDp7h/jbJsa/ejSq
+ll+hMJtQ9CPxGopL0jNByZQEa0/Uud+a5VOZxryQV0rwN9XYsCir4iIRuJEMj34/
+AxXntX1ZAhe5r3o8qWrqQ6nVGVWO2PmpQPKa1V+NmepA1nABCJPRmXl2JFqiYC8m
+/8TBEisq1p/gyAZkNyAZL84Vyh6wvpwZNaVh/XzQVsiTebVDCWwYwMihOtG1nNYh
+AxxLoXFk8I8EjsJkQwXs6MFpZ1hVCnprUuZUVavRaZXa1V86/3EC0fWwDzVvHDq1
+3XhIHh2S8li5IbyrFnQuwfV6NZnVBmNBSefOs7/xseN/Mhks7C+ZSEC/f95vDVSS
+Gij72u+hyALFW0y0KHHiwb8qNmTZSU4MFEvRb1PUQQEFLxVxcf8=
+=sDJ/
+-----END PGP SIGNATURE-----
+
+--xtt3sqz4iux7esfv--
