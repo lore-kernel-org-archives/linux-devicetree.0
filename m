@@ -1,153 +1,177 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH v5 1/3] clocksource/drivers/atcpit100: Add andestech
- atcpit100 timer
-Date: Thu, 4 Jan 2018 20:48:27 +0100
-Message-ID: <efdb249a-8dc0-e076-a1db-20cecdbf4c13@linaro.org>
-References: <1513057621-19084-1-git-send-email-rickchen36@gmail.com>
- <1513057621-19084-2-git-send-email-rickchen36@gmail.com>
- <bb7383ba-bb8e-3cbd-4ce0-faaefa8ed114@linaro.org>
- <CAEbi=3cEEtLQRiv-cyUwEmcBNOC2Sz7AhzZkpznQWYb9VUojug@mail.gmail.com>
- <ff51fff7-e963-f9fd-10d6-9b90a64d7aac@linaro.org>
- <CAEbi=3c4yAx7Tejz8aPw3-3vj89t8cg-zNEY-vbF7KaMo8OM0Q@mail.gmail.com>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: [PATCH] ASoC: codecs: dmic: Use channel map for
+	configs with a single mic
+Date: Thu,  4 Jan 2018 11:48:48 -0800
+Message-ID: <20180104194848.198941-1-mka@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <CAEbi=3c4yAx7Tejz8aPw3-3vj89t8cg-zNEY-vbF7KaMo8OM0Q@mail.gmail.com>
-Content-Language: en-US
-Sender: netdev-owner@vger.kernel.org
-To: Greentime Hu <green.hu@gmail.com>
-Cc: Greentime <greentime@andestech.com>, Rick Chen <rickchen36@gmail.com>, Rick Chen <rick@andestech.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Linus Walleij <linus.walleij@linaro.org>, linux-arch <linux-arch@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, netdev <netdev@vger.kernel.org>, Vincent Chen <deanbo422@gmail.com>, DTML <devicetree@vger.kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, David Howells <dhowells@redhat.com>, Will Deacon <will.deacon@arm.com>, linux-serial@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, huang lin <hl@rock-chips.com>, Arnaud Pouliquen <arnaud.pouliquen@st.com>, linux-kernel@vger.kernel.org, Matthias Kaehlcke <mka@chromium.org>, Bhumika Goyal <bhumirks@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 04/01/2018 15:06, Greentime Hu wrote:
-> Hi, Daniel:
-> 
-> 2018-01-04 21:50 GMT+08:00 Daniel Lezcano <daniel.lezcano@linaro.org>:
->>
->> Hi,
->>
->> sorry I missed your answer. Comments below.
->>
->> On 13/12/2017 07:06, Greentime Hu wrote:
->>> Hi, Daniel:
->>>
->>> 2017-12-12 18:05 GMT+08:00 Daniel Lezcano <daniel.lezcano@linaro.org>:
->>>> On 12/12/2017 06:46, Rick Chen wrote:
->>>>> ATCPIT100 is often used on the Andes architecture,
->>>>> This timer provide 4 PIT channels. Each PIT channel is a
->>>>> multi-function timer, can be configured as 32,16,8 bit timers
->>>>> or PWM as well.
->>>>>
->>>>> For system timer it will set channel 1 32-bit timer0 as clock
->>>>> source and count downwards until underflow and restart again.
->>>>
->>>> [ ... ]
->>>>
->>>>> +config CLKSRC_ATCPIT100
->>>>> +     bool "Clocksource for AE3XX platform"
->>>>> +     depends on NDS32 || COMPILE_TEST
->>>>> +     depends on HAS_IOMEM
->>>>> +     help
->>>>> +       This option enables support for the Andestech AE3XX platform timers.
->>>>
->>>> Hi Rick,
->>>>
->>>> the general rule for the Kconfig is:
->>>>
->>>> bool "Clocksource for AE3XX platform" if COMPILE_TEST
+The DMIC DAI driver specifies a number of 1 to 8 channels for each DAI.
+The actual number of mics can currently not be configured in the device
+tree or audio glue, but is derived from the min/max channels of the CPU
+and codec DAI. A typical CPU DAI has two or more channels, in consequence
+a single mic is treated as a stereo/multi channel device, even though
+only one channel carries audio data.
 
-BTW, select TIMER_OF is missing.
+This change adds the option to specify the number of used DMIC channels
+in the device tree. If a single channel is used we export a channel map
+that marks all unused channels as invalid to indicate userspace that the
+capture device is mono.
 
->>>> and no deps on the platform.
->>>>
->>>> It is up to the platform Kconfig to select the option.
->>>>
->>>> We want here a silent option but make it selectable in case of
->>>> compilation test coverage.
->>>
->>>
->>> The way we like to use it is because
->>> 1. This timer is a basic component to boot an nds32 CPU and it should
->>> be able to select without COMPILE_TEST for nds32 architecture.
->>
->> Yes, so you don't need it to be selectable, you must select it from the
->> platform's Kconfig.
-> 
-> I am not sure that I get your point or not.
-> We don't have a CONFIG_PLAT_AE3XX.
-> Do you mean we should create one and select CLKSRC_ATCPIT100 under
-> CONFIG_PLAT_AE3XX?
+Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+---
+ Documentation/devicetree/bindings/sound/dmic.txt |  2 +
+ sound/soc/codecs/dmic.c                          | 72 +++++++++++++++++++++---
+ 2 files changed, 65 insertions(+), 9 deletions(-)
 
-No. Can't you add in arch/ndis32/Kconfig ?
-
-+select TIMER_ATCPIT100
-
-Like:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm64/Kconfig#n50
-
-
->>> 2. It seems conflict with debug info. I am not sure if there is
->>> another way to debug kernel(with debug info) with COMPILE_TEST and
->>> DEBUG_INFO because we need this driver for nds32 architecture.
->>>
->>> Symbol: DEBUG_INFO [=n]
->>> Type  : boolean
->>> Prompt: Compile the kernel with debug info
->>>   Location:
->>>     -> Kernel hacking
->>>       -> Compile-time checks and compiler options
->>>   Defined at lib/Kconfig.debug:140
->>>   Depends on: DEBUG_KERNEL [=y] && !COMPILE_TEST [=n]
->>
->> The COMPILE_TEST option is only there to allow cross-compilation test
->> coverage, it does not select or unselect the driver in usual way.
->>
->> If the COMPILE_TEST is enabled, then the option will appear in the
->> menuconfig, so that gives the opportunity to select/unselect it.
->>
->> Otherwise, the Kconfig's platform selects automatically the driver and
->> the user *can't* unselect it from the menuconfig as it is a silent
->> option and that is certainly what you want.
->>
->>>> Also, this driver is not a CLKSRC but a TIMER. Rename CLKSRC_ATCPIT100
->>>> to TIMER_ATCPIT100.
->>>
->>> Thanks. We will rename it in the next version patch.
->>
->> You just resend an entire series V5 for the architecture. I'm confused,
->> what is the merging path ?
-> 
-> Sorry. I didn't get your point.
-> We sent the timer patch and the architecture patch together because it
-> would be easier for reviewer to check the vdso implementations.
-> What do you mean about the merging path?
-
-I received a [Vx y/3] series and I received a [Vx y/39].
-
-The former from Rick Chen means to me "please pick them through your tree".
-
-The latter from you means to me "can you ack the patches so I can merge
-them through my tree". Note you will have to resend the entire arch
-series for every single review/comment (that could end up upset the
-Cc'ed people).
-
-Which one should I review ? I can not track different patchset
-implementing the same thing. Which one should I comment, review ? Are
-the comments I did on [Vx y/3] taken into account in the arch series ?
-etc ...
-
-Please clarify, it is confusing and impossible to review in this situation.
-
-I suggest we stick to the x/3 series, so I can comment it and you can
-resend a new version without resending the entire arch series. So I can
-merge it through my tree, and you get it via eg. a shared immutable
-branch. The arch series will be reduced by 3 patches.
-
+diff --git a/Documentation/devicetree/bindings/sound/dmic.txt b/Documentation/devicetree/bindings/sound/dmic.txt
+index 54c8ef6498a8..f7bf65611453 100644
+--- a/Documentation/devicetree/bindings/sound/dmic.txt
++++ b/Documentation/devicetree/bindings/sound/dmic.txt
+@@ -7,10 +7,12 @@ Required properties:
+ 
+ Optional properties:
+ 	- dmicen-gpios: GPIO specifier for dmic to control start and stop
++	- num-channels: Number of microphones on this DAI
+ 
+ Example node:
+ 
+ 	dmic_codec: dmic@0 {
+ 		compatible = "dmic-codec";
+ 		dmicen-gpios = <&gpio4 3 GPIO_ACTIVE_HIGH>;
++		num-channels = <1>;
+ 	};
+diff --git a/sound/soc/codecs/dmic.c b/sound/soc/codecs/dmic.c
+index b88a1ee66f80..c705a25b138e 100644
+--- a/sound/soc/codecs/dmic.c
++++ b/sound/soc/codecs/dmic.c
+@@ -29,24 +29,29 @@
+ #include <sound/soc.h>
+ #include <sound/soc-dapm.h>
+ 
++struct dmic {
++	struct gpio_desc *gpio_en;
++	int channels;
++};
++
+ static int dmic_daiops_trigger(struct snd_pcm_substream *substream,
+ 		int cmd, struct snd_soc_dai *dai)
+ {
+-	struct gpio_desc *dmic_en = snd_soc_dai_get_drvdata(dai);
++	struct dmic *dmic = snd_soc_dai_get_drvdata(dai);
+ 
+-	if (!dmic_en)
++	if (!dmic || !dmic->gpio_en)
+ 		return 0;
+ 
+ 	switch (cmd) {
+ 	case SNDRV_PCM_TRIGGER_START:
+ 	case SNDRV_PCM_TRIGGER_RESUME:
+ 	case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
+-		gpiod_set_value(dmic_en, 1);
++		gpiod_set_value(dmic->gpio_en, 1);
+ 		break;
+ 	case SNDRV_PCM_TRIGGER_STOP:
+ 	case SNDRV_PCM_TRIGGER_SUSPEND:
+ 	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
+-		gpiod_set_value(dmic_en, 0);
++		gpiod_set_value(dmic->gpio_en, 0);
+ 		break;
+ 	}
+ 
+@@ -57,6 +62,42 @@ static const struct snd_soc_dai_ops dmic_dai_ops = {
+ 	.trigger	= dmic_daiops_trigger,
+ };
+ 
++const struct snd_pcm_chmap_elem dmic_chmaps_single[] = {
++	{ .channels = 1,
++	  .map = { SNDRV_CHMAP_MONO } },
++	{ .channels = 2,
++	  .map = { SNDRV_CHMAP_FL, SNDRV_CHMAP_NA } },
++	{ .channels = 4,
++	  .map = { SNDRV_CHMAP_FL, SNDRV_CHMAP_NA,
++		   SNDRV_CHMAP_NA, SNDRV_CHMAP_NA } },
++	{ .channels = 6,
++	  .map = { SNDRV_CHMAP_FL, SNDRV_CHMAP_NA,
++		   SNDRV_CHMAP_NA, SNDRV_CHMAP_NA,
++		   SNDRV_CHMAP_NA, SNDRV_CHMAP_NA } },
++	{ .channels = 8,
++	  .map = { SNDRV_CHMAP_FL, SNDRV_CHMAP_NA,
++		   SNDRV_CHMAP_NA, SNDRV_CHMAP_NA,
++		   SNDRV_CHMAP_NA, SNDRV_CHMAP_NA,
++		   SNDRV_CHMAP_NA, SNDRV_CHMAP_NA } },
++	{ }
++};
++
++static int dmic_pcm_new(struct snd_soc_pcm_runtime *rtd,
++			      struct snd_soc_dai *dai)
++{
++	struct dmic *dmic = snd_soc_dai_get_drvdata(dai);
++	int err;
++
++	if (dmic->channels == 1) {
++		err = snd_pcm_add_chmap_ctls(rtd->pcm, SNDRV_PCM_STREAM_CAPTURE,
++					     dmic_chmaps_single, 8, 0, NULL);
++		if (err < 0)
++			return err;
++	}
++
++	return 0;
++}
++
+ static struct snd_soc_dai_driver dmic_dai = {
+ 	.name = "dmic-hifi",
+ 	.capture = {
+@@ -69,18 +110,31 @@ static struct snd_soc_dai_driver dmic_dai = {
+ 			| SNDRV_PCM_FMTBIT_S16_LE,
+ 	},
+ 	.ops    = &dmic_dai_ops,
++	.pcm_new = dmic_pcm_new,
+ };
+ 
+ static int dmic_codec_probe(struct snd_soc_codec *codec)
+ {
+-	struct gpio_desc *dmic_en;
++	struct dmic *dmic;
++	int err;
++	u32 pval;
++
++	dmic = devm_kzalloc(codec->dev, sizeof(*dmic), GFP_KERNEL);
++	if (!dmic)
++		return -ENOMEM;
+ 
+-	dmic_en = devm_gpiod_get_optional(codec->dev,
++	dmic->gpio_en = devm_gpiod_get_optional(codec->dev,
+ 					"dmicen", GPIOD_OUT_LOW);
+-	if (IS_ERR(dmic_en))
+-		return PTR_ERR(dmic_en);
++	if (IS_ERR(dmic->gpio_en))
++		return PTR_ERR(dmic->gpio_en);
++
++	err = of_property_read_u32(codec->dev->of_node, "num-channels", &pval);
++	if (!err)
++		dmic->channels = (int)pval;
++	else if (err != -ENOENT)
++		return err;
+ 
+-	snd_soc_codec_set_drvdata(codec, dmic_en);
++	snd_soc_codec_set_drvdata(codec, dmic);
+ 
+ 	return 0;
+ }
 -- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+2.16.0.rc0.223.g4a4ac83678-goog
