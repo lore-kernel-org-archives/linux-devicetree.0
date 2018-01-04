@@ -1,7 +1,7 @@
 From: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v2 07/10] ARM: dts: keystone-k2g: Move keystone_dsp_gpio to under device-state-control
-Date: Thu, 4 Jan 2018 13:56:58 -0600
-Message-ID: <20180104195701.4042-8-afd@ti.com>
+Subject: [PATCH v2 10/10] ARM: dts: keystone-k2e-clocks: Fix missing unit address separator
+Date: Thu, 4 Jan 2018 13:57:01 -0600
+Message-ID: <20180104195701.4042-11-afd@ti.com>
 References: <20180104195701.4042-1-afd@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,56 +12,32 @@ To: Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob He
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Andrew F . Davis" <afd-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The keystone_irq node describes a device that is a member of the device
-state control module address space. As such, it should not be a member
-of soc0 bus but instead a sub-node of device-state-control.
+From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
 
-This move also fixes a warning about not having a reg property. Now
-that this is a sub-node of device-state-control, a syscon type node,
-we add this reg property but relative to the syscon base, this way
-when the dt-binding/driver are updated we can drop the non-standard
-gpio,syscon-dev property completely and simply use get_resource() in
-the driver.
+Commit 95d8b41c765b ("ARM: dts: keystone-k2e-clocks: Add missing unit
+name to clock nodes that have regs") fixed the unit names on various
+clock nodes but missed out adding the unit address separator on the
+clkhyperlink0 clock node. Fix the same.
 
-Signed-off-by: Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org>
-Acked-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Fixes: 95d8b41c765b ("ARM: dts: keystone-k2e-clocks: Add missing unit name to clock nodes that have regs")
+Signed-off-by: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
 ---
- arch/arm/boot/dts/keystone-k2g.dtsi | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
+ arch/arm/boot/dts/keystone-k2e-clocks.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/keystone-k2g.dtsi b/arch/arm/boot/dts/keystone-k2g.dtsi
-index 225175d14826..d83dbfe24b49 100644
---- a/arch/arm/boot/dts/keystone-k2g.dtsi
-+++ b/arch/arm/boot/dts/keystone-k2g.dtsi
-@@ -111,6 +111,14 @@
- 				#interrupt-cells = <1>;
- 				ti,syscon-dev = <&devctrl 0x2a0>;
- 			};
-+
-+			dspgpio0: keystone_dsp_gpio@240 {
-+				compatible = "ti,keystone-dsp-gpio";
-+				reg = <0x240 0x4>;
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				gpio,syscon-dev = <&devctrl 0x240>;
-+			};
- 		};
+diff --git a/arch/arm/boot/dts/keystone-k2e-clocks.dtsi b/arch/arm/boot/dts/keystone-k2e-clocks.dtsi
+index 5e0e7d232161..f7592155a740 100644
+--- a/arch/arm/boot/dts/keystone-k2e-clocks.dtsi
++++ b/arch/arm/boot/dts/keystone-k2e-clocks.dtsi
+@@ -42,7 +42,7 @@ clocks {
+ 		domain-id = <0>;
+ 	};
  
- 		uart0: serial@2530c00 {
-@@ -200,13 +208,6 @@
- 			status = "disabled";
- 		};
- 
--		dspgpio0: keystone_dsp_gpio@2620240 {
--			compatible = "ti,keystone-dsp-gpio";
--			gpio-controller;
--			#gpio-cells = <2>;
--			gpio,syscon-dev = <&devctrl 0x240>;
--		};
--
- 		dsp0: dsp@10800000 {
- 			compatible = "ti,k2g-dsp";
- 			reg = <0x10800000 0x00100000>,
+-	clkhyperlink0: clkhyperlink02350030 {
++	clkhyperlink0: clkhyperlink0@2350030 {
+ 		#clock-cells = <0>;
+ 		compatible = "ti,keystone,psc-clock";
+ 		clocks = <&chipclk12>;
 -- 
 2.15.1
 
