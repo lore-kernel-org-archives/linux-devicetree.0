@@ -1,67 +1,68 @@
-From: Georgi Djakov <georgi.djakov@linaro.org>
-Subject: Re: [PATCH v11 2/6] mailbox: qcom: Create APCS child device for clock
- controller
-Date: Thu, 4 Jan 2018 18:56:33 +0200
-Message-ID: <f279f1ff-2117-c587-5018-3b3eeeedff8a@linaro.org>
-References: <20171205154701.27730-1-georgi.djakov@linaro.org>
- <20171205154701.27730-3-georgi.djakov@linaro.org>
- <CABb+yY146ho0gtbUzDv-Z_xESkU2y=UYfBA6i+522+m58LkABQ@mail.gmail.com>
- <20171224050625.GH12655@minitux>
- <CABb+yY3e1YTnf4ZYvXVzXPhOT9-6PzusDfpWRBorwd9nB97SSQ@mail.gmail.com>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: [PATCH] ASoC: simple-card: Pass 'reg' property in the
+	examples
+Date: Thu,  4 Jan 2018 15:24:57 -0200
+Message-ID: <1515086697-25900-1-git-send-email-festevam@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <CABb+yY3e1YTnf4ZYvXVzXPhOT9-6PzusDfpWRBorwd9nB97SSQ@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-clk-owner@vger.kernel.org
-To: Jassi Brar <jassisinghbrar@gmail.com>, Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>, linux-clk@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org, Devicetree List <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: broonie@kernel.org
+Cc: Fabio Estevam <fabio.estevam@nxp.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jassi,
+From: Fabio Estevam <fabio.estevam@nxp.com>
 
-On 12/29/2017 08:14 AM, Jassi Brar wrote:
-> Hi Bjorn,
-> 
-> On Sun, Dec 24, 2017 at 10:36 AM, Bjorn Andersson
-> <bjorn.andersson@linaro.org> wrote:
->> On Fri 22 Dec 20:57 PST 2017, Jassi Brar wrote:
->>
->>> On Tue, Dec 5, 2017 at 9:16 PM, Georgi Djakov <georgi.djakov@linaro.org> wrote:
->>>> There is a clock controller functionality provided by the APCS hardware
->>>> block of msm8916 devices. The device-tree would represent an APCS node
->>>> with both mailbox and clock provider properties.
->>>>
->>> The spec might depict a 'clock' box and 'mailbox' box inside the
->>> bigger APCS box. However, from the code I see in this patchset, they
->>> are orthogonal and can & should be represented as independent DT
->>> nodes.
->>
->> The APCS consists of a number of different hardware blocks, one of them
->> being the "APCS global" block, which is what this node and drivers
->> relate to. On 8916 this contains both the IPC register and clock
->> control. But it's still just one block according to the hardware
->> specification.
->>
->> As such DT should describe the one hardware block by one node IMHO.
->>
-> In my even humbler opinion, DT should describe a h/w functional unit
-> which _could_ be seen as a standalone component.
+Since unit addresses are passed to simple-audio-card,dai-link a
+corresponding 'reg' property is needed, otherwise dtc complains
+(when building with W=1) in case someone copies the bindings example
+into a real dts file:
 
-The APCS is one separate register block related to the CPU cluster. I
-haven't seen any strict guidelines for such cases in the DT docs, and
-during the discussion got the impression that this is the preferred
-binding. Rob has also reviewed the binding, so we should be fine to move
-forward with this one.
+Warning (unit_address_vs_reg): Node /sound-digital/simple-audio-card,dai-link@0 has a unit name, but no reg property
 
-> For example, if this APCS had a mac controller, would we also populate
-> a netdev from mailbox driver? And what if next revision moves/drops
-> this clock controller out of APCS, keeping mailbox controller exactly
-> same?
+Improve the example by passing the correct 'reg' properties.
 
-The clock controller may change in some next SoC architecture and that's
-why the SoC version is also part of the the compatible string.
+Signed-off-by: Fabio Estevam <fabio.estevam@nxp.com>
+---
+ Documentation/devicetree/bindings/sound/simple-card.txt | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Thanks,
-Georgi
+diff --git a/Documentation/devicetree/bindings/sound/simple-card.txt b/Documentation/devicetree/bindings/sound/simple-card.txt
+index 166f229..17c13e7 100644
+--- a/Documentation/devicetree/bindings/sound/simple-card.txt
++++ b/Documentation/devicetree/bindings/sound/simple-card.txt
+@@ -140,6 +140,7 @@ sound {
+ 	simple-audio-card,name = "Cubox Audio";
+ 
+ 	simple-audio-card,dai-link@0 {		/* I2S - HDMI */
++		reg = <0>;
+ 		format = "i2s";
+ 		cpu {
+ 			sound-dai = <&audio1 0>;
+@@ -150,6 +151,7 @@ sound {
+ 	};
+ 
+ 	simple-audio-card,dai-link@1 {		/* S/PDIF - HDMI */
++		reg = <1>;
+ 		cpu {
+ 			sound-dai = <&audio1 1>;
+ 		};
+@@ -159,6 +161,7 @@ sound {
+ 	};
+ 
+ 	simple-audio-card,dai-link@2 {		/* S/PDIF - S/PDIF */
++		reg = <2>;
+ 		cpu {
+ 			sound-dai = <&audio1 1>;
+ 		};
+-- 
+2.7.4
