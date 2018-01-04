@@ -1,7 +1,7 @@
 From: Chunyan Zhang <zhang.chunyan@linaro.org>
-Subject: [PATCH V2 1/5] bindings: regulator: added support for suspend states
-Date: Thu,  4 Jan 2018 15:22:44 +0800
-Message-ID: <1515050568-23876-2-git-send-email-zhang.chunyan@linaro.org>
+Subject: [PATCH V2 3/5] drivers: regulator: leave one item to record whether regulator is enabled
+Date: Thu,  4 Jan 2018 15:22:46 +0800
+Message-ID: <1515050568-23876-4-git-send-email-zhang.chunyan@linaro.org>
 References: <1515050568-23876-1-git-send-email-zhang.chunyan@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1515050568-23876-1-git-send-email-zhang.chunyan@linaro.org>
@@ -10,46 +10,107 @@ To: Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>
 Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, Chunyan Zhang <zhang.lyra@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Some systems need to set regulators to specific states when they enter
-low power modes, especially around CPUs. There are many of these modes
-depending on the particular runtime state.
+The items "disabled" and "enabled" are a little redundant, since only one
+of them would be set to record if the regulator device should keep on
+or be switched to off in suspend states.
 
-Currently the regulator consumers are not granted permission to change
-suspend state of regulator devices, the constraints are configured at
-startup.  In order to allow changes in a vlotage range, we need to add
-new properties for voltage range and a flag to give permission to
-change the suspend voltage and suspend on/off in suspend mode.
+So in this patch, the "disabled" was removed, only leave the "enabled":
+  - enabled == 1 for regulator-on-in-suspend
+  - enabled == 0 for regulator-off-in-suspend
+  - enabled == -1 means do nothing when entering suspend mode.
 
 Signed-off-by: Chunyan Zhang <zhang.chunyan@linaro.org>
 ---
- Documentation/devicetree/bindings/regulator/regulator.txt | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+ drivers/regulator/core.c          | 14 ++++++--------
+ drivers/regulator/of_regulator.c  |  6 ++++--
+ include/linux/regulator/machine.h | 12 +++++++++---
+ 3 files changed, 19 insertions(+), 13 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/regulator/regulator.txt b/Documentation/devicetree/bindings/regulator/regulator.txt
-index 378f6dc..532e286 100644
---- a/Documentation/devicetree/bindings/regulator/regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/regulator.txt
-@@ -42,8 +42,19 @@ Optional properties:
- - regulator-state-[mem/disk] node has following common properties:
- 	- regulator-on-in-suspend: regulator should be on in suspend state.
- 	- regulator-off-in-suspend: regulator should be off in suspend state.
--	- regulator-suspend-microvolt: regulator should be set to this voltage
--	  in suspend.
-+	- regulator-suspend-min-microvolt: minimum voltage may be set in
-+	  suspend state.
-+	- regulator-suspend-max-microvolt: maximum voltage may be set in
-+	  suspend state.
-+	- regulator-suspend-microvolt: the default voltage which regulator
-+	  would be set in suspend. The voltage for suspend also can be
-+	  adjusted among {regulator-suspend-min-microvolt,
-+	  regulator-suspend-max-microvolt} by calling
-+	  regulator_set_suspend_voltage(). This property is not deprecated,
-+	  setting voltage for suspend mode via API the regulator driver
-+	  provides is recommended.
-+	- regulator-changeable-in-suspend: whether the default voltage and
-+	  the regulator on/off in suspend can be changed in runtime.
- 	- regulator-mode: operating mode in the given suspend state.
- 	  The set of possible operating modes depends on the capabilities of
- 	  every hardware so the valid modes are documented on each regulator
+diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
+index 97bc9f7..5ea80e9 100644
+--- a/drivers/regulator/core.c
++++ b/drivers/regulator/core.c
+@@ -742,21 +742,19 @@ static int suspend_set_state(struct regulator_dev *rdev,
+ 	 * only warn if the driver implements set_suspend_voltage or
+ 	 * set_suspend_mode callback.
+ 	 */
+-	if (!rstate->enabled && !rstate->disabled) {
++	if (rstate->enabled != ENABLE_IN_SUSPEND &&
++	    rstate->enabled != DISABLE_IN_SUSPEND) {
+ 		if (rdev->desc->ops->set_suspend_voltage ||
+ 		    rdev->desc->ops->set_suspend_mode)
+ 			rdev_warn(rdev, "No configuration\n");
+ 		return 0;
+ 	}
+ 
+-	if (rstate->enabled && rstate->disabled) {
+-		rdev_err(rdev, "invalid configuration\n");
+-		return -EINVAL;
+-	}
+-
+-	if (rstate->enabled && rdev->desc->ops->set_suspend_enable)
++	if (rstate->enabled == ENABLE_IN_SUSPEND &&
++		rdev->desc->ops->set_suspend_enable)
+ 		ret = rdev->desc->ops->set_suspend_enable(rdev);
+-	else if (rstate->disabled && rdev->desc->ops->set_suspend_disable)
++	else if (rstate->enabled == DISABLE_IN_SUSPEND &&
++		rdev->desc->ops->set_suspend_disable)
+ 		ret = rdev->desc->ops->set_suspend_disable(rdev);
+ 	else /* OK if set_suspend_enable or set_suspend_disable is NULL */
+ 		ret = 0;
+diff --git a/drivers/regulator/of_regulator.c b/drivers/regulator/of_regulator.c
+index 14637a0..41dad42 100644
+--- a/drivers/regulator/of_regulator.c
++++ b/drivers/regulator/of_regulator.c
+@@ -177,10 +177,12 @@ static void of_get_regulation_constraints(struct device_node *np,
+ 
+ 		if (of_property_read_bool(suspend_np,
+ 					"regulator-on-in-suspend"))
+-			suspend_state->enabled = true;
++			suspend_state->enabled = ENABLE_IN_SUSPEND;
+ 		else if (of_property_read_bool(suspend_np,
+ 					"regulator-off-in-suspend"))
+-			suspend_state->disabled = true;
++			suspend_state->enabled = DISABLE_IN_SUSPEND;
++		else
++			suspend_state->enabled = DO_NOTHING_IN_SUSPEND;
+ 
+ 		if (!of_property_read_u32(suspend_np,
+ 					"regulator-suspend-microvolt", &pval))
+diff --git a/include/linux/regulator/machine.h b/include/linux/regulator/machine.h
+index 9cd4fef..e50519f 100644
+--- a/include/linux/regulator/machine.h
++++ b/include/linux/regulator/machine.h
+@@ -42,6 +42,11 @@ struct regulator;
+ #define REGULATOR_CHANGE_DRMS		0x10
+ #define REGULATOR_CHANGE_BYPASS		0x20
+ 
++/* operations in suspend mode */
++#define DO_NOTHING_IN_SUSPEND	(-1)
++#define DISABLE_IN_SUSPEND	0
++#define ENABLE_IN_SUSPEND	1
++
+ /* Regulator active discharge flags */
+ enum regulator_active_discharge {
+ 	REGULATOR_ACTIVE_DISCHARGE_DEFAULT,
+@@ -58,14 +63,15 @@ enum regulator_active_discharge {
+  *
+  * @uV: Operating voltage during suspend.
+  * @mode: Operating mode during suspend.
+- * @enabled: Enabled during suspend.
+- * @disabled: Disabled during suspend.
++ * @enabled: operations during suspend.
++ *	     - DO_NOTHING_IN_SUSPEND
++ *	     - DISABLE_IN_SUSPEND
++ *	     - ENABLE_IN_SUSPEND
+  */
+ struct regulator_state {
+ 	int uV;	/* suspend voltage */
+ 	unsigned int mode; /* suspend regulator operating mode */
+ 	int enabled; /* is regulator enabled in this suspend state */
+-	int disabled; /* is the regulator disabled in this suspend state */
+ };
+ 
+ /**
 -- 
 2.7.4
