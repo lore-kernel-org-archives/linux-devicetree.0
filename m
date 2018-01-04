@@ -1,8 +1,8 @@
 From: =?UTF-8?q?Niklas=20S=C3=B6derlund?=
         <niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>
-Subject: [PATCH 2/2] arm64: dts: r8a7796: update register size for thermal
-Date: Thu,  4 Jan 2018 22:31:08 +0100
-Message-ID: <20180104213108.24080-3-niklas.soderlund+renesas@ragnatech.se>
+Subject: [PATCH 1/2] arm64: dts: r8a7795: update register size for thermal
+Date: Thu,  4 Jan 2018 22:31:07 +0100
+Message-ID: <20180104213108.24080-2-niklas.soderlund+renesas@ragnatech.se>
 References: <20180104213108.24080-1-niklas.soderlund+renesas@ragnatech.se>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -21,17 +21,17 @@ fused or not.
 
 Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>
 ---
- arch/arm64/boot/dts/renesas/r8a7796.dtsi | 2 +-
+ arch/arm64/boot/dts/renesas/r8a7795.dtsi | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a7796.dtsi b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
-index ef10fb548681d36a..990ea798dbf6995d 100644
---- a/arch/arm64/boot/dts/renesas/r8a7796.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
-@@ -1625,7 +1625,7 @@
+diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+index 19b7de57704c67e8..1214a5e777596a3c 100644
+--- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+@@ -2385,7 +2385,7 @@
  
  		tsc: thermal@e6198000 {
- 			compatible = "renesas,r8a7796-thermal";
+ 			compatible = "renesas,r8a7795-thermal";
 -			reg = <0 0xe6198000 0 0x68>,
 +			reg = <0 0xe6198000 0 0x6c>,
  			      <0 0xe61a0000 0 0x5c>,
