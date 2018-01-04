@@ -1,102 +1,40 @@
-From: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v2 04/10] ARM: dts: keystone-k2l: Move keystone_dsp_gpio to under device-state-control
-Date: Thu, 4 Jan 2018 13:56:55 -0600
-Message-ID: <20180104195701.4042-5-afd@ti.com>
-References: <20180104195701.4042-1-afd@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH 0/3] usb: renesas_usbhs: Add RZ/A1 support
+Date: Thu,  4 Jan 2018 15:01:47 -0500
+Message-ID: <20180104200150.11352-1-chris.brandt@renesas.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180104195701.4042-1-afd-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Andrew F . Davis" <afd-l0cyMroinI0@public.gmane.org>
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The keystone_irq node describes a device that is a member of the device
-state control module address space. As such, it should not be a member
-of soc0 bus but instead a sub-node of device-state-control.
+This series adds RZ/A1 gadget support to the renesas_usbhs driver.
+Basically, it's almost the same HW as the R-Car (and SH) parts.
+The only real difference is the some extra registers for the PHY.
 
-This move also fixes warnings about not having a reg property. Now
-that this is a sub-node of device-state-control, a syscon type node,
-we add this reg property but relative to the syscon base, this way
-when the dt-binding/driver are updated we can drop the non-standard
-gpio,syscon-dev property completely and simply use get_resource() in
-the driver.
+This was tested on an RSK board by connecting to a PC as an
+Ethernet CDC gadget.
 
-Signed-off-by: Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org>
-Acked-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
----
- arch/arm/boot/dts/keystone-k2l.dtsi | 52 +++++++++++++++++++++----------------
- 1 file changed, 29 insertions(+), 23 deletions(-)
+Chris Brandt (3):
+  usb: renesas_usbhs: Add support for RZ/A1
+  dt-bindings: usb: renesas_usbhs: Add support for RZ/A1
+  ARM: dts: r7s72100: add USB device to device tree
 
-diff --git a/arch/arm/boot/dts/keystone-k2l.dtsi b/arch/arm/boot/dts/keystone-k2l.dtsi
-index b61a830f4a4d..374c80124c4e 100644
---- a/arch/arm/boot/dts/keystone-k2l.dtsi
-+++ b/arch/arm/boot/dts/keystone-k2l.dtsi
-@@ -289,32 +289,38 @@
- 			clocks = <&clkosr>;
- 		};
- 
--		dspgpio0: keystone_dsp_gpio@2620240 {
--			compatible = "ti,keystone-dsp-gpio";
--			gpio-controller;
--			#gpio-cells = <2>;
--			gpio,syscon-dev = <&devctrl 0x240>;
--		};
-+		devctrl: device-state-control@2620000 {
-+			dspgpio0: keystone_dsp_gpio@240 {
-+				compatible = "ti,keystone-dsp-gpio";
-+				reg = <0x240 0x4>;
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				gpio,syscon-dev = <&devctrl 0x240>;
-+			};
- 
--		dspgpio1: keystone_dsp_gpio@2620244 {
--			compatible = "ti,keystone-dsp-gpio";
--			gpio-controller;
--			#gpio-cells = <2>;
--			gpio,syscon-dev = <&devctrl 0x244>;
--		};
-+			dspgpio1: keystone_dsp_gpio@244 {
-+				compatible = "ti,keystone-dsp-gpio";
-+				reg = <0x244 0x4>;
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				gpio,syscon-dev = <&devctrl 0x244>;
-+			};
- 
--		dspgpio2: keystone_dsp_gpio@2620248 {
--			compatible = "ti,keystone-dsp-gpio";
--			gpio-controller;
--			#gpio-cells = <2>;
--			gpio,syscon-dev = <&devctrl 0x248>;
--		};
-+			dspgpio2: keystone_dsp_gpio@248 {
-+				compatible = "ti,keystone-dsp-gpio";
-+				reg = <0x248 0x4>;
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				gpio,syscon-dev = <&devctrl 0x248>;
-+			};
- 
--		dspgpio3: keystone_dsp_gpio@262024c {
--			compatible = "ti,keystone-dsp-gpio";
--			gpio-controller;
--			#gpio-cells = <2>;
--			gpio,syscon-dev = <&devctrl 0x24c>;
-+			dspgpio3: keystone_dsp_gpio@24c {
-+				compatible = "ti,keystone-dsp-gpio";
-+				reg = <0x24c 0x4>;
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				gpio,syscon-dev = <&devctrl 0x24c>;
-+			};
- 		};
- 
- 		dsp0: dsp@10800000 {
+ .../devicetree/bindings/usb/renesas_usbhs.txt      |  2 +
+ arch/arm/boot/dts/r7s72100.dtsi                    | 20 +++++++++
+ drivers/usb/renesas_usbhs/Makefile                 |  2 +-
+ drivers/usb/renesas_usbhs/common.c                 | 17 +++++++
+ drivers/usb/renesas_usbhs/common.h                 |  6 +++
+ drivers/usb/renesas_usbhs/rza.c                    | 52 ++++++++++++++++++++++
+ drivers/usb/renesas_usbhs/rza.h                    |  4 ++
+ include/linux/usb/renesas_usbhs.h                  |  1 +
+ 8 files changed, 103 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/usb/renesas_usbhs/rza.c
+ create mode 100644 drivers/usb/renesas_usbhs/rza.h
+
 -- 
 2.15.1
+
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
