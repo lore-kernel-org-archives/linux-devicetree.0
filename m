@@ -1,136 +1,202 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2] dt: psci: Update DT bindings to support hierarchical
- PSCI states
-Date: Thu, 4 Jan 2018 12:31:32 +0000
-Message-ID: <20180104123132.GA28646@e107155-lin>
-References: <1514472037-25969-1-git-send-email-ulf.hansson@linaro.org>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [RFC PATCH 09/12] mmc: sdhci: Use software timer when timeout
+ greater than hardware capablility
+Date: Thu, 4 Jan 2018 18:29:14 +0530
+Message-ID: <2da01441-84d0-0d96-610d-2f9a3055ccc7@ti.com>
+References: <20171214130941.26666-1-kishon@ti.com>
+ <20171214130941.26666-10-kishon@ti.com>
+ <74170f0a-329a-2c66-7ad4-a1fedb9747df@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1514472037-25969-1-git-send-email-ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, Brendan Jackman <Brendan.Jackman-5wv7dgnIgG8@public.gmane.org>, Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <74170f0a-329a-2c66-7ad4-a1fedb9747df@intel.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Adrian Hunter <adrian.hunter@intel.com>, Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, nsekhar@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Ulf,
+Hi Adrian,
 
-I will suggest some wording changes not of which are not compulsory and
-left to you to pick up or drop.
-
-On 28/12/17 14:40, Ulf Hansson wrote:
-> From: Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+On Wednesday 20 December 2017 07:41 PM, Adrian Hunter wrote:
+> On 14/12/17 15:09, Kishon Vijay Abraham I wrote:
+>> Errata i834 in AM572x Sitara Processors Silicon Revision 2.0, 1.1
+>> (SPRZ429K July 2014–Revised March 2017 [1]) mentions
+>> Under high speed HS200 and SDR104 modes, the functional clock for MMC
+>> modules will reach up to 192 MHz. At this frequency, the maximum obtainable
+>> timeout (DTO = 0xE) through MMC host controller is (1/192MHz)*2^27 = 700ms.
+>> Commands taking longer than 700ms may be affected by this small window
+>> frame. Workaround for this errata is use a software timer instead of
+>> hardware timer to provide the delay requested by the upper layer.
+>>
+>> While this errata is specific to AM572x, it is applicable to all sdhci
+>> based controllers when a particular request require timeout greater
+>> than hardware capability.
 > 
-> Update DT bindings to represent hierarchical CPU and CPU domain idle states
-> for PSCI. Also update the PSCI examples to clearly show how flattened and
-> hierarchical idle states can be represented in DT.
+> It doesn't work for our controllers.  Even if the data timeout interrupt is
+> disabled, it seems like the timeout still "happens" in some fashion - after
+> which the host controller starts misbehaving.
+
+even if the data timeout doesn't get disabled, count = 0xE is still present. So
+ideally this shouldn't break any existing platforms no?
 > 
-> Signed-off-by: Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
+> So you will need to add a quirk.
 > 
-> Changes in v2:
-> 	- Addressed comments from Rob.
-> 	- Updated some labels in the examples to get more consistency.
+>>
+>> Re-use the software timer already implemented in sdhci to program the
+>> correct timeout value and also disable the hardware timeout when
+>> the required timeout is greater than hardware capabiltiy in order to
+>> avoid spurious timeout interrupts.
+>>
+>> This patch is based on the earlier patch implemented for omap_hsmmc [2]
+>>
+>> [1] -> http://www.ti.com/lit/er/sprz429k/sprz429k.pdf
+>> [2] -> https://patchwork.kernel.org/patch/9791449/
+>>
+>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>> ---
+>>  drivers/mmc/host/sdhci.c | 41 +++++++++++++++++++++++++++++++++++++++--
+>>  drivers/mmc/host/sdhci.h | 11 +++++++++++
+>>  2 files changed, 50 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+>> index e9290a3439d5..d0655e1d2cc7 100644
+>> --- a/drivers/mmc/host/sdhci.c
+>> +++ b/drivers/mmc/host/sdhci.c
+>> @@ -673,6 +673,27 @@ static void sdhci_adma_table_post(struct sdhci_host *host,
+>>  	}
+>>  }
+>>  
+>> +static void sdhci_calc_sw_timeout(struct sdhci_host *host,
+>> +				  struct mmc_command *cmd,
+>> +				  unsigned int target_timeout)
+>> +{
+>> +	struct mmc_host *mmc = host->mmc;
+>> +	struct mmc_ios *ios = &mmc->ios;
+>> +	struct mmc_data *data = cmd->data;
+>> +	unsigned long long transfer_time;
+>> +
+>> +	if (data) {
+>> +		transfer_time = MMC_BLOCK_TRANSFER_TIME_MS(data->blksz,
+>> +							   ios->bus_width,
+>> +							   ios->clock);
 > 
-> For your information, I have picked up the work from Lina Iyer around the so
-> called CPU cluster idling series [1,2] and I working on new versions. However,
-> I decided to post the updates to the PSCI DT bindings first, as they will be
-> needed to be agreed upon before further changes can be done to the PSCI firmware
-> driver.
+> If it has a value, actual_clock is better than ios->clock.
+
+okay.
 > 
-> Note, these bindings have been discussed over and over again, at LKML, but
-> especially also at various Linux conferences, like LPC and Linaro Connect. We
-> finally came to a conclusion and the changes we agreed upon, should be reflected
-> in this update.
+>> +		/* calculate timeout for the entire data */
+>> +		host->data_timeout = (data->blocks * (target_timeout +
+>> +						      transfer_time));
+>> +	} else if (cmd->flags & MMC_RSP_BUSY) {
+>> +		host->data_timeout = cmd->busy_timeout * MSEC_PER_SEC;
 > 
-> Of course, it's a while ago since the latest discussions, but hopefully people
-> don't have too hard time to remember.
+> Doesn't need MSEC_PER_SEC multiplier.
+
+right.
 > 
-> Kind regards
-> Uffe
+>> +	}
+>> +}
+>> +
+>>  static u8 sdhci_calc_timeout(struct sdhci_host *host, struct mmc_command *cmd)
+>>  {
+>>  	u8 count;
+>> @@ -732,8 +753,12 @@ static u8 sdhci_calc_timeout(struct sdhci_host *host, struct mmc_command *cmd)
+>>  	}
+>>  
+>>  	if (count >= 0xF) {
+>> -		DBG("Too large timeout 0x%x requested for CMD%d!\n",
+>> -		    count, cmd->opcode);
+>> +		DBG("Too large timeout.. using SW timeout for CMD%d!\n",
+>> +		    cmd->opcode);
+>> +		sdhci_calc_sw_timeout(host, cmd, target_timeout);
+>> +		host->ier &= ~SDHCI_INT_DATA_TIMEOUT;
+>> +		sdhci_writel(host, host->ier, SDHCI_INT_ENABLE);
+>> +		sdhci_writel(host, host->ier, SDHCI_SIGNAL_ENABLE);
+>>  		count = 0xE;
+>>  	}
+>>  
+>> @@ -1198,6 +1223,14 @@ static void sdhci_finish_command(struct sdhci_host *host)
+>>  {
+>>  	struct mmc_command *cmd = host->cmd;
+>>  
+>> +	if (host->data_timeout) {
+>> +		unsigned long timeout;
+>> +
+>> +		timeout = jiffies +
+>> +			  msecs_to_jiffies(host->data_timeout);
+>> +		sdhci_mod_timer(host, host->cmd->mrq, timeout);
 > 
-> [1]
-> https://www.spinics.net/lists/arm-kernel/msg566200.html
+> cmd could be the sbc or a stop cmd or a command during transfer, so this
+> needs more logic.
+
+host->data_timeout gets set only for data commands or commands with busy
+timeout. But I guess for commands during data transfer, host->data_timeout
+might still be set?
+
+Checking sdhci_data_line_cmd(mrq->cmd) in addition to host->data_timeout should
+take care of all cases right?
 > 
-> [2]
-> https://lwn.net/Articles/716300/
+>> +	}
+>> +
+>>  	host->cmd = NULL;
+>>  
+>>  	if (cmd->flags & MMC_RSP_PRESENT) {
+>> @@ -2341,6 +2374,10 @@ static bool sdhci_request_done(struct sdhci_host *host)
+>>  		return true;
+>>  	}
+>>  
+>> +	host->data_timeout = 0;
+>> +	host->ier |= SDHCI_INT_DATA_TIMEOUT;
+>> +	sdhci_writel(host, host->ier, SDHCI_INT_ENABLE);
+>> +	sdhci_writel(host, host->ier, SDHCI_SIGNAL_ENABLE);
 > 
-> ---
->  Documentation/devicetree/bindings/arm/psci.txt | 152 +++++++++++++++++++++++++
->  1 file changed, 152 insertions(+)
+> sdhci can have 2 requests in progress to allow for commands to be sent while
+> a data transfer is in progress, so this is not necessarily the data transfer
+> request that is done.  Also we want to avoid unnecessary register writes.
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/psci.txt b/Documentation/devicetree/bindings/arm/psci.txt
-> index a2c4f1d..8a09bd2 100644
-> --- a/Documentation/devicetree/bindings/arm/psci.txt
-> +++ b/Documentation/devicetree/bindings/arm/psci.txt
-> @@ -105,7 +105,159 @@ Case 3: PSCI v0.2 and PSCI v0.1.
->  		...
->  	};
->  
-> +PSCI v1.0 onwards, supports OS-Initiated mode for powering off CPUs and CPU
-> +clusters from the firmware.
 
-Since we are trying to avoid usage of "clusters"(as it's not architecturally
-defined, but I know it's too late as it widely used everywhere). Also this
-binding is not just OSI specific, it can be used for Platform Co-ordinated
-also so let's not specify them at all.
+okay.. got it.
+>>  	sdhci_del_timer(host, mrq);
+>>  
+>>  	/*
+>> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
+>> index 54bc444c317f..e6e0278bea1a 100644
+>> --- a/drivers/mmc/host/sdhci.h
+>> +++ b/drivers/mmc/host/sdhci.h
+>> @@ -332,6 +332,15 @@ struct sdhci_adma2_64_desc {
+>>  /* Allow for a a command request and a data request at the same time */
+>>  #define SDHCI_MAX_MRQS		2
+>>  
+>> +/*
+>> + * Time taken for transferring one block. It is multiplied by a constant
+>> + * factor '2' to account for any errors
+>> + */
+>> +#define MMC_BLOCK_TRANSFER_TIME_MS(blksz, bus_width, freq)		\
+>> +				   ((unsigned long long)		\
+>> +				   (2 * (((blksz) * MSEC_PER_SEC *	\
+>> +				   (8 / (bus_width))) / (freq))))
+> 
+> I don't think the macro helps make the code more readable.  Might just as
+> well write a nice function to calculate the entire data request timeout.
 
-How about:
-"ARM systems can have multiple cores sometimes in hierarchical arrangement.
-This often, but not always, maps directly to the processor power topology
-of the system. Individual nodes in a topology have their own specific power
-states and can be better represented in DT hierarchically"
+okay.
+> 
+>> +
+>>  enum sdhci_cookie {
+>>  	COOKIE_UNMAPPED,
+>>  	COOKIE_PRE_MAPPED,	/* mapped by sdhci_pre_req() */
+>> @@ -546,6 +555,8 @@ struct sdhci_host {
+>>  	/* Host SDMA buffer boundary. */
+>>  	u32			sdma_boundary;
+>>  
+>> +	unsigned long long	data_timeout;
+> 
+> msecs_to_jiffies() will truncate to 'unsigned int' anyway, so this might as
+> well be 'unsigned int'.
+> 
 
-> For such topologies the PSCI firmware driver acts
+okay.
 
-PSCI firmware can be represented as a pseudo power controller ?
-
-> +as pseudo-controller, which may be specified in the psci DT node. The
-> +definitions of the CPU and the CPU cluster topology, must conform to the domain
-> +idle state specification [3].
-
-I assume it should be  "..definitions of the idle states for CPU and the CPU
-topology" above, otherwise they should conform to topology binding :) rather
-than domain idle state bindings.
-
-> The domain idle states themselves, must be
-> +compatible with the defined 'domain-idle-state' binding [1], and also need to
-> +specify the arm,psci-suspend-param property for each idle state.
-> +
-> +DT allows representing CPU and CPU cluster idle states in two different ways -
-> +
-> +The flattened model as given in Example 1, lists CPU's idle states followed by
-> +the domain idle state that the CPUs may choose. This is the general practice
-> +followed in PSCI firmwares that support Platform Coordinated mode.
-
-I would rather drop the above statement or specify in Example 2 that it can be
-used for both OSI and PC.
-
-> Note that
-> +the idle states are all compatible with "arm,idle-state".
-> +
-> +Example 2 represents the hierarchical model of CPU and domain idle states.
-> +CPUs define their domain provider in their DT node. The domain controls the
-> +power to the CPU and possibly other h/w blocks that would be powered off when
-> +the CPU is powered off. The CPU's idle states may therefore be considered as
-> +the domain's idle states and have the compatible "arm,idle-state". Such domains
-> +may be embedded within another domain that represents common h/w blocks between
-> +these CPUs viz. the cluster. The idle states of the cluster would be
-> +represented as the domain's idle states. In order to use OS-Initiated mode of
-> +PSCI in the firmware, the hierarchical representation must be used.
-> +
-
-Can we avoid using poweroff as it's one of the idle states and not the only
-one ?
-
-Other than that, the examples look good to me.
-
---
-Regards,
-Sudeep
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks
+Kishon
