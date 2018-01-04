@@ -1,73 +1,136 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [RESEND PATCH v2 14/15] ASoC: qcom: apq8096: Add
- db820c machine driver
-Date: Thu, 4 Jan 2018 12:02:44 +0000
-Message-ID: <20180104120244.GE10774@sirena.org.uk>
-References: <20171214173402.19074-1-srinivas.kandagatla@linaro.org>
- <20171214173402.19074-15-srinivas.kandagatla@linaro.org>
- <f72f32dd-e248-47c3-23cc-eabe1b85d9ae@codeaurora.org>
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2] dt: psci: Update DT bindings to support hierarchical
+ PSCI states
+Date: Thu, 4 Jan 2018 12:31:32 +0000
+Message-ID: <20180104123132.GA28646@e107155-lin>
+References: <1514472037-25969-1-git-send-email-ulf.hansson@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1157706251455896090=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <f72f32dd-e248-47c3-23cc-eabe1b85d9ae@codeaurora.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Banajit Goswami <bgoswami@codeaurora.org>, linux-arm-msm@vger.kernel.org, Patrick Lai <plai@codeaurora.org>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, srinivas.kandagatla@linaro.org, linux-arm-kernel@lists.infradead.org, Andy Gross <andy.gross@linaro.org>, linux-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1514472037-25969-1-git-send-email-ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, Brendan Jackman <Brendan.Jackman-5wv7dgnIgG8@public.gmane.org>, Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Ulf,
 
---===============1157706251455896090==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="sfyO1m2EN8ZOtJL6"
-Content-Disposition: inline
+I will suggest some wording changes not of which are not compulsory and
+left to you to pick up or drop.
 
+On 28/12/17 14:40, Ulf Hansson wrote:
+> From: Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> 
+> Update DT bindings to represent hierarchical CPU and CPU domain idle states
+> for PSCI. Also update the PSCI examples to clearly show how flattened and
+> hierarchical idle states can be represented in DT.
+> 
+> Signed-off-by: Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+> 
+> Changes in v2:
+> 	- Addressed comments from Rob.
+> 	- Updated some labels in the examples to get more consistency.
+> 
+> For your information, I have picked up the work from Lina Iyer around the so
+> called CPU cluster idling series [1,2] and I working on new versions. However,
+> I decided to post the updates to the PSCI DT bindings first, as they will be
+> needed to be agreed upon before further changes can be done to the PSCI firmware
+> driver.
+> 
+> Note, these bindings have been discussed over and over again, at LKML, but
+> especially also at various Linux conferences, like LPC and Linaro Connect. We
+> finally came to a conclusion and the changes we agreed upon, should be reflected
+> in this update.
+> 
+> Of course, it's a while ago since the latest discussions, but hopefully people
+> don't have too hard time to remember.
+> 
+> Kind regards
+> Uffe
+> 
+> [1]
+> https://www.spinics.net/lists/arm-kernel/msg566200.html
+> 
+> [2]
+> https://lwn.net/Articles/716300/
+> 
+> ---
+>  Documentation/devicetree/bindings/arm/psci.txt | 152 +++++++++++++++++++++++++
+>  1 file changed, 152 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/psci.txt b/Documentation/devicetree/bindings/arm/psci.txt
+> index a2c4f1d..8a09bd2 100644
+> --- a/Documentation/devicetree/bindings/arm/psci.txt
+> +++ b/Documentation/devicetree/bindings/arm/psci.txt
+> @@ -105,7 +105,159 @@ Case 3: PSCI v0.2 and PSCI v0.1.
+>  		...
+>  	};
+>  
+> +PSCI v1.0 onwards, supports OS-Initiated mode for powering off CPUs and CPU
+> +clusters from the firmware.
 
---sfyO1m2EN8ZOtJL6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Since we are trying to avoid usage of "clusters"(as it's not architecturally
+defined, but I know it's too late as it widely used everywhere). Also this
+binding is not just OSI specific, it can be used for Platform Co-ordinated
+also so let's not specify them at all.
 
-On Wed, Jan 03, 2018 at 09:20:45AM -0800, Stephen Boyd wrote:
-> On 12/14/2017 09:34 AM, srinivas.kandagatla@linaro.org wrote:
+How about:
+"ARM systems can have multiple cores sometimes in hierarchical arrangement.
+This often, but not always, maps directly to the processor power topology
+of the system. Individual nodes in a topology have their own specific power
+states and can be better represented in DT hierarchically"
 
-> > uThis patch adds support to DB820c machine driver.
+> For such topologies the PSCI firmware driver acts
 
-> > +	ret = dma_coerce_mask_and_coherent(card->dev, DMA_BIT_MASK(32));
+PSCI firmware can be represented as a pseudo power controller ?
 
-> Why do we need to do this? Can you add some sort of comment in the code
-> about why?
+> +as pseudo-controller, which may be specified in the psci DT node. The
+> +definitions of the CPU and the CPU cluster topology, must conform to the domain
+> +idle state specification [3].
 
-And why are we applying DMA restrictions in a machine driver?
+I assume it should be  "..definitions of the idle states for CPU and the CPU
+topology" above, otherwise they should conform to topology binding :) rather
+than domain idle state bindings.
 
---sfyO1m2EN8ZOtJL6
-Content-Type: application/pgp-signature; name="signature.asc"
+> The domain idle states themselves, must be
+> +compatible with the defined 'domain-idle-state' binding [1], and also need to
+> +specify the arm,psci-suspend-param property for each idle state.
+> +
+> +DT allows representing CPU and CPU cluster idle states in two different ways -
+> +
+> +The flattened model as given in Example 1, lists CPU's idle states followed by
+> +the domain idle state that the CPUs may choose. This is the general practice
+> +followed in PSCI firmwares that support Platform Coordinated mode.
 
------BEGIN PGP SIGNATURE-----
+I would rather drop the above statement or specify in Example 2 that it can be
+used for both OSI and PC.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlpOF+MACgkQJNaLcl1U
-h9DqSAf/TRTXDKdOETvzPNSKGaWNVG2ljRSTEBuPrReetgJ+PI1o30yx4FGcKhyV
-MiDyv/O+wn1bkKSZ9o3TpSbz+e1Vwk/ceFEKrNwPxT1iK7Z2gqP0VbrnJ3g7nAjq
-l2A2PvlIuZA8gD0F19g8r9dXgTLiuWSxduYY4YZIK4ns9JmSZi+VyfAwL/p2pKE4
-EQkGHDmfm9x3vC85U1x2G4Bc+f8LmFWQhc3tbuxeqkZz1S/AK5IDzvpAPG93jCvx
-QqaxW6uHYkYhZgqQJxojomPmkzWvT83YrsSbVlsRit1lQE2PQYBuKm+exmkWQJb5
-nrZGGyAF1SzKBMfd6IrccOWBQOwwSA==
-=5JJo
------END PGP SIGNATURE-----
+> Note that
+> +the idle states are all compatible with "arm,idle-state".
+> +
+> +Example 2 represents the hierarchical model of CPU and domain idle states.
+> +CPUs define their domain provider in their DT node. The domain controls the
+> +power to the CPU and possibly other h/w blocks that would be powered off when
+> +the CPU is powered off. The CPU's idle states may therefore be considered as
+> +the domain's idle states and have the compatible "arm,idle-state". Such domains
+> +may be embedded within another domain that represents common h/w blocks between
+> +these CPUs viz. the cluster. The idle states of the cluster would be
+> +represented as the domain's idle states. In order to use OS-Initiated mode of
+> +PSCI in the firmware, the hierarchical representation must be used.
+> +
 
---sfyO1m2EN8ZOtJL6--
+Can we avoid using poweroff as it's one of the idle states and not the only
+one ?
 
---===============1157706251455896090==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Other than that, the examples look good to me.
 
-
---===============1157706251455896090==--
+--
+Regards,
+Sudeep
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
