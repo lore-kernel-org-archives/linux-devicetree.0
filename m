@@ -1,101 +1,79 @@
 From: <ilialin@codeaurora.org>
-Subject: RE: [PATCH 04/10] clk: qcom: Add CPU clock driver for msm8996
-Date: Thu, 4 Jan 2018 13:15:23 +0200
-Message-ID: <027f01d3854d$52fa55b0$f8ef0110$@codeaurora.org>
-References: <1513081897-31612-1-git-send-email-ilialin@codeaurora.org> <1513081897-31612-5-git-send-email-ilialin@codeaurora.org> <20171215223525.tzcycllxsl72hway@rob-hp-laptop>
+Subject: RE: [PATCH 01/10] soc: qcom: Separate kryo l2 accessors from PMU driver
+Date: Thu, 4 Jan 2018 13:15:51 +0200
+Message-ID: <028101d3854d$63e14500$2ba3cf00$@codeaurora.org>
+References: <1513081897-31612-1-git-send-email-ilialin@codeaurora.org> <1513081897-31612-2-git-send-email-ilialin@codeaurora.org> <20171212140302.au4wart4uhwm7lfq@lakrids.cambridge.arm.com> <20171222020636.GG7997@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain;
         charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20171215223525.tzcycllxsl72hway@rob-hp-laptop>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20171222020636.GG7997@codeaurora.org>
 Content-Language: en-us
-Sender: linux-clk-owner@vger.kernel.org
-To: 'Rob Herring' <robh@kernel.org>
-Cc: linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, sboyd@codeaurora.org, devicetree@vger.kernel.org, mark.rutland@arm.com, will.deacon@arm.com, rnayak@codeaurora.org, qualcomm-lt@lists.linaro.org, celster@codeaurora.org, tfinkel@codeaurora.org
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: 'Stephen Boyd' <sboyd@codeaurora.org>, 'Mark Rutland' <mark.rutland@arm.com>
+Cc: linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, will.deacon@arm.com, rnayak@codeaurora.org, qualcomm-lt@lists.linaro.org, celster@codeaurora.org, tfinkel@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-This is address in the V2: https://patchwork.kernel.org/patch/10144489/
+Tested COMPILE_TEST and found OK.
 
 > -----Original Message-----
-> From: Rob Herring [mailto:robh@kernel.org]
-> Sent: Saturday, December 16, 2017 12:35 AM
-> To: Ilia Lin <ilialin@codeaurora.org>
-> Cc: linux-clk@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
-linux-
-> arm-msm@vger.kernel.org; sboyd@codeaurora.org;
-> devicetree@vger.kernel.org; mark.rutland@arm.com;
-> will.deacon@arm.com; rnayak@codeaurora.org; qualcomm-
-> lt@lists.linaro.org; celster@codeaurora.org; tfinkel@codeaurora.org
-> Subject: Re: [PATCH 04/10] clk: qcom: Add CPU clock driver for msm8996
+> From: Stephen Boyd [mailto:sboyd@codeaurora.org]
+> Sent: Friday, December 22, 2017 4:07 AM
+> To: Mark Rutland <mark.rutland@arm.com>
+> Cc: Ilia Lin <ilialin@codeaurora.org>; linux-clk@vger.kernel.org;
+linux-arm-
+> kernel@lists.infradead.org; linux-arm-msm@vger.kernel.org;
+> devicetree@vger.kernel.org; will.deacon@arm.com;
+> rnayak@codeaurora.org; qualcomm-lt@lists.linaro.org;
+> celster@codeaurora.org; tfinkel@codeaurora.org
+> Subject: Re: [PATCH 01/10] soc: qcom: Separate kryo l2 accessors from PMU
+> driver
 > 
-> On Tue, Dec 12, 2017 at 02:31:31PM +0200, Ilia Lin wrote:
-> > From: Rajendra Nayak <rnayak@codeaurora.org>
+> On 12/12, Mark Rutland wrote:
+> > On Tue, Dec 12, 2017 at 02:31:28PM +0200, Ilia Lin wrote:
+> > > + * accesses, and system registers with respect to device memory  */
+> > > +void set_l2_indirect_reg(u64 reg, u64 val) {
+> > > +	unsigned long flags;
+> > > +	mb();
 > >
-> > Each of the CPU clusters (Power and Perf) on msm8996 are clocked via 2
-> > PLLs, a primary and alternate. There are also
-> > 2 Mux'es, a primary and secondary all connected together as shown
-> > below
+> > We didn't need this for the PMU driver, so it's unfortuante that it
+> > now has to pay the cost.
 > >
-> >                              +-------+
-> >               XO             |       |
-> >           +------------------>0      |
-> >                              |       |
-> >                    PLL/2     | SMUX  +----+
-> >                      +------->1      |    |
-> >                      |       |       |    |
-> >                      |       +-------+    |    +-------+
-> >                      |                    +---->0      |
-> >                      |                         |       |
-> > +---------------+    |             +----------->1      | CPU clk
-> > |Primary PLL    +----+ PLL_EARLY   |           |       +------>
-> > |               +------+-----------+    +------>2 PMUX |
-> > +---------------+      |                |      |       |
-> >                        |   +------+     |   +-->3      |
-> >                        +--^+  ACD +-----+   |  +-------+
-> > +---------------+          +------+         |
-> > |Alt PLL        |                           |
-> > |               +---------------------------+
-> > +---------------+         PLL_EARLY
-> >
-> > The primary PLL is what drives the CPU clk, except for times when we
-> > are reprogramming the PLL itself (for rate changes) when we
-> > temporarily switch to an alternate PLL. A subsequent patch adds
-> > support to switch between primary and alternate PLL during rate
-> > changes.
-> >
-> > The primary PLL operates on a single VCO range, between 600Mhz and
-> > 3Ghz. However the CPUs do support OPPs with frequencies between
-> 300Mhz
-> > and 600Mhz. In order to support running the CPUs at those frequencies
-> > we end up having to lock the PLL at twice the rate and drive the CPU
-> > clk via the PLL/2 output and SMUX.
-> >
-> > So for frequencies above 600Mhz we follow the following path  Primary
-> > PLL --> PLL_EARLY --> PMUX(1) --> CPU clk and for frequencies between
-> > 300Mhz and 600Mhz we follow  Primary PLL --> PLL/2 --> SMUX(1) -->
-> > PMUX(0) --> CPU clk Support for this is added in a subsequent patch as
-> > well.
-> >
-> > ACD stands for Adaptive Clock Distribution and is used to detect
-> > voltage droops. We do not add support for ACD as yet.
-> > This can be added at a later point as needed.
-> >
-> > Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> > Signed-off-by: Ilia Lin <ilialin@codeaurora.org>
-> > ---
-> >  .../devicetree/bindings/clock/qcom,kryocc.txt      |  17 +
+> > Can we please factor this mb() into the callers that need it?
 > 
-> If you respin, please make bindings a separate patch. In any case,
+> +1
 > 
-> Reviewed-by: Rob Herring <robh@kernel.org>
+> >
+> > > +	raw_spin_lock_irqsave(&l2_access_lock, flags);
+> > > +	write_sysreg_s(reg, L2CPUSRSELR_EL1);
+> > > +	isb();
+> > > +	write_sysreg_s(val, L2CPUSRDR_EL1);
+> > > +	isb();
+> > > +	raw_spin_unlock_irqrestore(&l2_access_lock, flags); }
+> > > +EXPORT_SYMBOL(set_l2_indirect_reg);
+> >
+> > [...]
+> >
+> > > +#ifdef CONFIG_ARCH_QCOM
+> > > +void set_l2_indirect_reg(u64 reg_addr, u64 val);
+> > > +u64 get_l2_indirect_reg(u64 reg_addr); #else static inline void
+> > > +set_l2_indirect_reg(u32 reg_addr, u32 val) {} static inline u32
+> > > +get_l2_indirect_reg(u32 reg_addr) {
+> > > +	return 0;
+> > > +}
+> > > +#endif
+> > > +#endif
+> >
+> > Are there any drivers that will bne built for !CONFIG_ARCH_QCOM that
+> > reference this?
+> >
+> > It might be better to not have the stub versions, so that we get a
+> > build-error if they are erroneously used.
+> >
 > 
-> >  drivers/clk/qcom/Kconfig                           |   8 +
-> >  drivers/clk/qcom/Makefile                          |   1 +
-> >  drivers/clk/qcom/clk-cpu-8996.c                    | 388
-> +++++++++++++++++++++
-> >  4 files changed, 414 insertions(+)
-> >  create mode 100644
-> > Documentation/devicetree/bindings/clock/qcom,kryocc.txt
-> >  create mode 100644 drivers/clk/qcom/clk-cpu-8996.c
-
+> Does that approach make COMPILE_TEST break?
+> 
+> --
+> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a
+> Linux Foundation Collaborative Project
