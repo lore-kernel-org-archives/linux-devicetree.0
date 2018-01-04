@@ -1,7 +1,7 @@
 From: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v2 08/10] ARM: dts: keystone-k2g: Move usb-phy nodes out of soc0
-Date: Thu, 4 Jan 2018 13:56:59 -0600
-Message-ID: <20180104195701.4042-9-afd@ti.com>
+Subject: [PATCH v2 03/10] ARM: dts: keystone-k2e: Move keystone_dsp_gpio to under device-state-control
+Date: Thu, 4 Jan 2018 13:56:54 -0600
+Message-ID: <20180104195701.4042-4-afd@ti.com>
 References: <20180104195701.4042-1-afd@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,70 +12,47 @@ To: Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob He
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Andrew F . Davis" <afd-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The two usb-phy nodes are not memory-mapped devices on the
-SoC but rather dummy phys for SoCs with transparent autonomous
-NOP phys. Move these to outside soc0 to their own node like
-done elsewhere.
+The keystone_irq node describes a device that is a member of the device
+state control module address space. As such, it should not be a member
+of soc0 bus but instead a sub-node of device-state-control.
+
+This move also fixes a warning about not having a reg property. Now
+that this is a sub-node of device-state-control, a syscon type node,
+we add this reg property but relative to the syscon base, this way
+when the dt-binding/driver are updated we can drop the non-standard
+gpio,syscon-dev property completely and simply use get_resource() in
+the driver.
 
 Signed-off-by: Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org>
 Acked-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
 ---
- arch/arm/boot/dts/keystone-k2g.dtsi | 28 ++++++++++++++++++----------
- 1 file changed, 18 insertions(+), 10 deletions(-)
+ arch/arm/boot/dts/keystone-k2e.dtsi | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm/boot/dts/keystone-k2g.dtsi b/arch/arm/boot/dts/keystone-k2g.dtsi
-index d83dbfe24b49..cdaf519721b1 100644
---- a/arch/arm/boot/dts/keystone-k2g.dtsi
-+++ b/arch/arm/boot/dts/keystone-k2g.dtsi
-@@ -69,6 +69,24 @@
- 		interrupts = <GIC_SPI 4 IRQ_TYPE_EDGE_RISING>;
- 	};
- 
-+	usbphy {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		compatible = "simple-bus";
-+
-+		usb0_phy: usb-phy@0 {
-+			compatible = "usb-nop-xceiv";
-+			reg = <0>;
-+			status = "disabled";
-+		};
-+
-+		usb1_phy: usb-phy@1 {
-+			compatible = "usb-nop-xceiv";
-+			reg = <1>;
-+			status = "disabled";
-+		};
-+	};
-+
- 	soc0: soc@0 {
- 		#address-cells = <1>;
- 		#size-cells = <1>;
-@@ -465,11 +483,6 @@
- 			status = "disabled";
- 		};
- 
--		usb0_phy: usb-phy@0 {
--			compatible = "usb-nop-xceiv";
--			status = "disabled";
--		};
--
- 		keystone_usb0: keystone-dwc3@2680000 {
- 			compatible = "ti,keystone-dwc3";
- 			#address-cells = <1>;
-@@ -493,11 +506,6 @@
+diff --git a/arch/arm/boot/dts/keystone-k2e.dtsi b/arch/arm/boot/dts/keystone-k2e.dtsi
+index 0bcd3f8a9c45..085e7326ea8e 100644
+--- a/arch/arm/boot/dts/keystone-k2e.dtsi
++++ b/arch/arm/boot/dts/keystone-k2e.dtsi
+@@ -109,11 +109,14 @@
  			};
  		};
  
--		usb1_phy: usb-phy@1 {
--			compatible = "usb-nop-xceiv";
--			status = "disabled";
--		};
--
- 		keystone_usb1: keystone-dwc3@2580000 {
- 			compatible = "ti,keystone-dwc3";
- 			#address-cells = <1>;
+-		dspgpio0: keystone_dsp_gpio@2620240 {
+-			compatible = "ti,keystone-dsp-gpio";
+-			gpio-controller;
+-			#gpio-cells = <2>;
+-			gpio,syscon-dev = <&devctrl 0x240>;
++		devctrl: device-state-control@2620000 {
++			dspgpio0: keystone_dsp_gpio@240 {
++				compatible = "ti,keystone-dsp-gpio";
++				reg = <0x240 0x4>;
++				gpio-controller;
++				#gpio-cells = <2>;
++				gpio,syscon-dev = <&devctrl 0x240>;
++			};
+ 		};
+ 
+ 		dsp0: dsp@10800000 {
 -- 
 2.15.1
 
