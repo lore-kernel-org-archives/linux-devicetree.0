@@ -1,13 +1,12 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v2 2/8] ARM: dts: sun9i: Add CCI-400 device
- nodes for A80
-Date: Thu,  4 Jan 2018 22:37:48 +0800
-Message-ID: <20180104143754.2425-3-wens@csie.org>
+Subject: [PATCH v2 7/8] ARM: sun9i: mcpm: Support cpu0 hotplug
+Date: Thu,  4 Jan 2018 22:37:53 +0800
+Message-ID: <20180104143754.2425-8-wens@csie.org>
 References: <20180104143754.2425-1-wens@csie.org>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBVHYXDJAKGQE5B2ZSJA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBV7YXDJAKGQEFHY243Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20180104143754.2425-1-wens-jdAy2FN1RRM@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,122 +19,149 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: Mylene JOSSERAND <mylene.josserand-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The A80 includes an ARM CCI-400 interconnect to support multi-cluster
-CPU caches.
+The BROM has a branch that checks if the primary core is hotplugging.
+If the magic flag is set, execution jumps to the address set in the
+software entry register. (Secondary cores always branch to the that
+address.)
 
-Also add the maximum clock frequency for the CPUs, as listed in the
-A80 Optimus Board FEX file.
+This patch sets the flags that makes BROM jump execution on the
+primary core (cpu0) to the SMP software entry code when the core is
+powered back up. After it is re-integrated into the system, the flag
+is cleared.
 
 Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 ---
- arch/arm/boot/dts/sun9i-a80.dtsi | 46 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 46 insertions(+)
+ arch/arm/mach-sunxi/mcpm.c | 54 +++++++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 51 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sun9i-a80.dtsi b/arch/arm/boot/dts/sun9i-a80.dtsi
-index 90eac0b2a193..85fb800af8ab 100644
---- a/arch/arm/boot/dts/sun9i-a80.dtsi
-+++ b/arch/arm/boot/dts/sun9i-a80.dtsi
-@@ -63,48 +63,64 @@
- 		cpu0: cpu@0 {
- 			compatible = "arm,cortex-a7";
- 			device_type = "cpu";
-+			cci-control-port = <&cci_control0>;
-+			clock-frequency = <12000000>;
- 			reg = <0x0>;
- 		};
+diff --git a/arch/arm/mach-sunxi/mcpm.c b/arch/arm/mach-sunxi/mcpm.c
+index ddc26b5fec48..c8d74c783644 100644
+--- a/arch/arm/mach-sunxi/mcpm.c
++++ b/arch/arm/mach-sunxi/mcpm.c
+@@ -56,8 +56,12 @@
+ #define PRCM_PWR_SWITCH_REG(c, cpu)	(0x140 + 0x10 * (c) + 0x4 * (cpu))
+ #define PRCM_CPU_SOFT_ENTRY_REG		0x164
  
- 		cpu1: cpu@1 {
- 			compatible = "arm,cortex-a7";
- 			device_type = "cpu";
-+			cci-control-port = <&cci_control0>;
-+			clock-frequency = <12000000>;
- 			reg = <0x1>;
- 		};
- 
- 		cpu2: cpu@2 {
- 			compatible = "arm,cortex-a7";
- 			device_type = "cpu";
-+			cci-control-port = <&cci_control0>;
-+			clock-frequency = <12000000>;
- 			reg = <0x2>;
- 		};
- 
- 		cpu3: cpu@3 {
- 			compatible = "arm,cortex-a7";
- 			device_type = "cpu";
-+			cci-control-port = <&cci_control0>;
-+			clock-frequency = <12000000>;
- 			reg = <0x3>;
- 		};
- 
- 		cpu4: cpu@100 {
- 			compatible = "arm,cortex-a15";
- 			device_type = "cpu";
-+			cci-control-port = <&cci_control1>;
-+			clock-frequency = <18000000>;
- 			reg = <0x100>;
- 		};
- 
- 		cpu5: cpu@101 {
- 			compatible = "arm,cortex-a15";
- 			device_type = "cpu";
-+			cci-control-port = <&cci_control1>;
-+			clock-frequency = <18000000>;
- 			reg = <0x101>;
- 		};
- 
- 		cpu6: cpu@102 {
- 			compatible = "arm,cortex-a15";
- 			device_type = "cpu";
-+			cci-control-port = <&cci_control1>;
-+			clock-frequency = <18000000>;
- 			reg = <0x102>;
- 		};
- 
- 		cpu7: cpu@103 {
- 			compatible = "arm,cortex-a15";
- 			device_type = "cpu";
-+			cci-control-port = <&cci_control1>;
-+			clock-frequency = <18000000>;
- 			reg = <0x103>;
- 		};
- 	};
-@@ -431,6 +447,36 @@
- 			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
- 		};
- 
-+		cci: cci@1c90000 {
-+			compatible = "arm,cci-400";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			reg = <0x01c90000 0x1000>;
-+			ranges = <0x0 0x01c90000 0x10000>;
++#define CPU0_SUPPORT_HOTPLUG_MAGIC0	0xFA50392F
++#define CPU0_SUPPORT_HOTPLUG_MAGIC1	0x790DCA3A
 +
-+			cci_control0: slave-if@4000 {
-+				compatible = "arm,cci-400-ctrl-if";
-+				interface-type = "ace";
-+				reg = <0x4000 0x1000>;
-+			};
+ static void __iomem *cpucfg_base;
+ static void __iomem *prcm_base;
++static void __iomem *sram_b_smp_base;
+ 
+ static bool sunxi_core_is_cortex_a15(unsigned int core, unsigned int cluster)
+ {
+@@ -116,6 +120,17 @@ static int sunxi_cpu_power_switch_set(unsigned int cpu, unsigned int cluster,
+ 	return 0;
+ }
+ 
++static void sunxi_cpu0_hotplug_support_set(bool enable)
++{
++	if (enable) {
++		writel(CPU0_SUPPORT_HOTPLUG_MAGIC0, sram_b_smp_base);
++		writel(CPU0_SUPPORT_HOTPLUG_MAGIC1, sram_b_smp_base + 0x4);
++	} else {
++		writel(0x0, sram_b_smp_base);
++		writel(0x0, sram_b_smp_base + 0x4);
++	}
++}
 +
-+			cci_control1: slave-if@5000 {
-+				compatible = "arm,cci-400-ctrl-if";
-+				interface-type = "ace";
-+				reg = <0x5000 0x1000>;
-+			};
+ static int sunxi_cpu_powerup(unsigned int cpu, unsigned int cluster)
+ {
+ 	u32 reg;
+@@ -124,6 +139,10 @@ static int sunxi_cpu_powerup(unsigned int cpu, unsigned int cluster)
+ 	if (cpu >= SUNXI_CPUS_PER_CLUSTER || cluster >= SUNXI_NR_CLUSTERS)
+ 		return -EINVAL;
+ 
++	/* Set hotplug support magic flags for cpu0 */
++	if (cluster == 0 && cpu == 0)
++		sunxi_cpu0_hotplug_support_set(true);
 +
-+			pmu@9000 {
-+				 compatible = "arm,cci-400-pmu,r1";
-+				 reg = <0x9000 0x5000>;
-+				 interrupts = <GIC_SPI 134 IRQ_TYPE_LEVEL_HIGH>,
-+					      <GIC_SPI 134 IRQ_TYPE_LEVEL_HIGH>,
-+					      <GIC_SPI 134 IRQ_TYPE_LEVEL_HIGH>,
-+					      <GIC_SPI 134 IRQ_TYPE_LEVEL_HIGH>,
-+					      <GIC_SPI 134 IRQ_TYPE_LEVEL_HIGH>;
-+			};
-+		};
+ 	/* assert processor power-on reset */
+ 	reg = readl(prcm_base + PRCM_CPU_PO_RST_CTRL(cluster));
+ 	reg &= ~PRCM_CPU_PO_RST_CTRL_CORE(cpu);
+@@ -406,6 +425,13 @@ static void sunxi_cluster_powerdown(struct work_struct *_work)
+ 	sunxi_do_cluster_powerdown(cluster);
+ }
+ 
++static void sunxi_cpu_is_up(unsigned int cpu, unsigned int cluster)
++{
++	/* Clear hotplug support magic flags for cpu0 */
++	if (cluster == 0 && cpu == 0)
++		sunxi_cpu0_hotplug_support_set(false);
++}
 +
- 		de_clocks: clock@3000000 {
- 			compatible = "allwinner,sun9i-a80-de-clks";
- 			reg = <0x03000000 0x30>;
+ static int sunxi_wait_for_powerdown(unsigned int cpu, unsigned int cluster)
+ {
+ 	int ret;
+@@ -425,6 +451,7 @@ static const struct mcpm_platform_ops sunxi_power_ops = {
+ 	.cluster_powerdown_prepare = sunxi_cluster_powerdown_prepare,
+ 	.cpu_cache_disable	   = sunxi_cpu_cache_disable,
+ 	.cluster_cache_disable	   = sunxi_cluster_cache_disable,
++	.cpu_is_up		   = sunxi_cpu_is_up,
+ 	.wait_for_powerdown	   = sunxi_wait_for_powerdown,
+ };
+ 
+@@ -484,7 +511,7 @@ static void sunxi_mcpm_setup_entry_point(void)
+ 
+ static int __init sunxi_mcpm_init(void)
+ {
+-	struct device_node *cpucfg_node, *node;
++	struct device_node *cpucfg_node, *sram_node, *node;
+ 	struct resource res;
+ 	int ret;
+ 	int i, j;
+@@ -525,12 +552,26 @@ static int __init sunxi_mcpm_init(void)
+ 		goto err_put_cpucfg_node;
+ 	}
+ 
++	sram_node = of_find_compatible_node(NULL, NULL,
++					    "allwinner,sun9i-a80-smp-sram");
++	if (!sram_node) {
++		ret = -ENODEV;
++		goto err_unmap_release_cpucfg;
++	}
++
++	sram_b_smp_base = of_io_request_and_map(sram_node, 0, "sunxi-mcpm");
++	if (IS_ERR(sram_b_smp_base)) {
++		ret = PTR_ERR(sram_b_smp_base);
++		pr_err("%s: failed to map secure SRAM\n", __func__);
++		goto err_put_sram_node;
++	}
++
+ 	/* Initialize our strictly ordered workqueue */
+ 	sunxi_mcpm_wq = alloc_ordered_workqueue("%s", 0, "sunxi-mcpm");
+ 	if (!sunxi_mcpm_wq) {
+ 		ret = -ENOMEM;
+ 		pr_err("%s: failed to create our workqueue\n", __func__);
+-		goto err_unmap_release_cpucfg;
++		goto err_unmap_release_secure_sram;
+ 	}
+ 
+ 	/* Initialize power down work */
+@@ -556,8 +597,9 @@ static int __init sunxi_mcpm_init(void)
+ 	if (ret)
+ 		goto err_destroy_workqueue;
+ 
+-	/* We don't need the CPUCFG device node anymore */
++	/* We don't need the CPUCFG and SRAM device nodes anymore */
+ 	of_node_put(cpucfg_node);
++	of_node_put(sram_node);
+ 
+ 	/* Set the hardware entry point address */
+ 	sunxi_mcpm_setup_entry_point();
+@@ -571,6 +613,12 @@ static int __init sunxi_mcpm_init(void)
+ 
+ err_destroy_workqueue:
+ 	destroy_workqueue(sunxi_mcpm_wq);
++err_unmap_release_secure_sram:
++	iounmap(sram_b_smp_base);
++	of_address_to_resource(sram_node, 0, &res);
++	release_mem_region(res.start, resource_size(&res));
++err_put_sram_node:
++	of_node_put(sram_node);
+ err_unmap_release_cpucfg:
+ 	iounmap(cpucfg_base);
+ 	of_address_to_resource(cpucfg_node, 0, &res);
 -- 
 2.15.1
