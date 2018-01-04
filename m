@@ -1,7 +1,7 @@
 From: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v2 05/10] ARM: dts: keystone-k2hk: Move keystone_dsp_gpio to under device-state-control
-Date: Thu, 4 Jan 2018 13:56:56 -0600
-Message-ID: <20180104195701.4042-6-afd@ti.com>
+Subject: [PATCH v2 04/10] ARM: dts: keystone-k2l: Move keystone_dsp_gpio to under device-state-control
+Date: Thu, 4 Jan 2018 13:56:55 -0600
+Message-ID: <20180104195701.4042-5-afd@ti.com>
 References: <20180104195701.4042-1-afd@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -26,15 +26,15 @@ the driver.
 Signed-off-by: Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org>
 Acked-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
 ---
- arch/arm/boot/dts/keystone-k2hk.dtsi | 104 +++++++++++++++++++----------------
- 1 file changed, 57 insertions(+), 47 deletions(-)
+ arch/arm/boot/dts/keystone-k2l.dtsi | 52 +++++++++++++++++++++----------------
+ 1 file changed, 29 insertions(+), 23 deletions(-)
 
-diff --git a/arch/arm/boot/dts/keystone-k2hk.dtsi b/arch/arm/boot/dts/keystone-k2hk.dtsi
-index ed59474522cb..ca0f198ba627 100644
---- a/arch/arm/boot/dts/keystone-k2hk.dtsi
-+++ b/arch/arm/boot/dts/keystone-k2hk.dtsi
-@@ -87,60 +87,70 @@
- 			};
+diff --git a/arch/arm/boot/dts/keystone-k2l.dtsi b/arch/arm/boot/dts/keystone-k2l.dtsi
+index b61a830f4a4d..374c80124c4e 100644
+--- a/arch/arm/boot/dts/keystone-k2l.dtsi
++++ b/arch/arm/boot/dts/keystone-k2l.dtsi
+@@ -289,32 +289,38 @@
+ 			clocks = <&clkosr>;
  		};
  
 -		dspgpio0: keystone_dsp_gpio@2620240 {
@@ -85,68 +85,12 @@ index ed59474522cb..ca0f198ba627 100644
 -			gpio-controller;
 -			#gpio-cells = <2>;
 -			gpio,syscon-dev = <&devctrl 0x24c>;
--		};
 +			dspgpio3: keystone_dsp_gpio@24c {
 +				compatible = "ti,keystone-dsp-gpio";
 +				reg = <0x24c 0x4>;
 +				gpio-controller;
 +				#gpio-cells = <2>;
 +				gpio,syscon-dev = <&devctrl 0x24c>;
-+			};
- 
--		dspgpio4: keystone_dsp_gpio@2620250 {
--			compatible = "ti,keystone-dsp-gpio";
--			gpio-controller;
--			#gpio-cells = <2>;
--			gpio,syscon-dev = <&devctrl 0x250>;
--		};
-+			dspgpio4: keystone_dsp_gpio@250 {
-+				compatible = "ti,keystone-dsp-gpio";
-+				reg = <0x250 0x4>;
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				gpio,syscon-dev = <&devctrl 0x250>;
-+			};
- 
--		dspgpio5: keystone_dsp_gpio@2620254 {
--			compatible = "ti,keystone-dsp-gpio";
--			gpio-controller;
--			#gpio-cells = <2>;
--			gpio,syscon-dev = <&devctrl 0x254>;
--		};
-+			dspgpio5: keystone_dsp_gpio@254 {
-+				compatible = "ti,keystone-dsp-gpio";
-+				reg = <0x254 0x4>;
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				gpio,syscon-dev = <&devctrl 0x254>;
-+			};
- 
--		dspgpio6: keystone_dsp_gpio@2620258 {
--			compatible = "ti,keystone-dsp-gpio";
--			gpio-controller;
--			#gpio-cells = <2>;
--			gpio,syscon-dev = <&devctrl 0x258>;
--		};
-+			dspgpio6: keystone_dsp_gpio@258 {
-+				compatible = "ti,keystone-dsp-gpio";
-+				reg = <0x258 0x4>;
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				gpio,syscon-dev = <&devctrl 0x258>;
-+			};
- 
--		dspgpio7: keystone_dsp_gpio@262025c {
--			compatible = "ti,keystone-dsp-gpio";
--			gpio-controller;
--			#gpio-cells = <2>;
--			gpio,syscon-dev = <&devctrl 0x25c>;
-+			dspgpio7: keystone_dsp_gpio@25c {
-+				compatible = "ti,keystone-dsp-gpio";
-+				reg = <0x25c 0x4>;
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				gpio,syscon-dev = <&devctrl 0x25c>;
 +			};
  		};
  
