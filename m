@@ -1,7 +1,7 @@
 From: <sean.wang@mediatek.com>
-Subject: [PATCH 10/12] arm64: dts: mt7622: add ethernet device nodes
-Date: Thu, 4 Jan 2018 17:41:00 +0800
-Message-ID: <fcb6981ef688bed54b097139d2b03a3641af5ed3.1515057696.git.sean.wang@mediatek.com>
+Subject: [PATCH 02/12] arm64: dts: mt7622: add clock controller device nodes
+Date: Thu, 4 Jan 2018 17:40:52 +0800
+Message-ID: <b0ba541de4018f4f832267a94c1ab30a0e0cd8d8.1515057696.git.sean.wang@mediatek.com>
 References: <cover.1515057696.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -9,93 +9,137 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1515057696.git.sean.wang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: robh+dt@kernel.org, matthias.bgg@gmail.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>, Stephen Boyd <sboyd@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
 From: Sean Wang <sean.wang@mediatek.com>
 
-add ethernet device nodes which enable GMAC1 with SGMII interface
+Add clock controller nodes for MT7622 and include header for topckgen,
+infracfg, pericfg, apmixedsys, ethsys, sgmiisys, pciesys and ssusbsys
+for those devices nodes to be added afterwards.
+
+In addition, provides an oscillator node for the source of PLLs and dummy
+clock for PWARP to complement missing support of clock gate for the
+wrapper circuit in the driver.
 
 Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+Cc: Stephen Boyd <sboyd@codeaurora.org>
 ---
- arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts | 22 ++++++++++++++++++++
- arch/arm64/boot/dts/mediatek/mt7622.dtsi     | 31 ++++++++++++++++++++++++++++
- 2 files changed, 53 insertions(+)
+ arch/arm64/boot/dts/mediatek/mt7622.dtsi | 76 ++++++++++++++++++++++++++++++++
+ 1 file changed, 76 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts b/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
-index 20b1160..d4609a1 100644
---- a/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
-@@ -249,6 +249,28 @@
- 	status = "okay";
- };
- 
-+&eth {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&eth_pins>;
-+	status = "okay";
-+
-+	gmac1: mac@1 {
-+		compatible = "mediatek,eth-mac";
-+		reg = <1>;
-+		phy-handle = <&phy5>;
-+	};
-+
-+	mdio-bus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		phy5: ethernet-phy@5 {
-+			reg = <5>;
-+			phy-mode = "sgmii";
-+		};
-+	};
-+};
-+
- &i2c1 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&i2c1_pins>;
 diff --git a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-index 540d2fe..04a047e 100644
+index b111fec..9730f0e 100644
 --- a/arch/arm64/boot/dts/mediatek/mt7622.dtsi
 +++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-@@ -477,6 +477,37 @@
- 		#reset-cells = <1>;
+@@ -8,6 +8,8 @@
+ 
+ #include <dt-bindings/interrupt-controller/irq.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/clock/mt7622-clk.h>
++#include <dt-bindings/reset/mt7622-reset.h>
+ 
+ / {
+ 	compatible = "mediatek,mt7622";
+@@ -48,6 +50,19 @@
+ 		clock-frequency = <280000000>;
  	};
  
-+	eth: ethernet@1b100000 {
-+		compatible = "mediatek,mt7622-eth",
-+			     "mediatek,mt2701-eth",
-+			     "syscon";
-+		reg = <0 0x1b100000 0 0x20000>;
-+		interrupts = <GIC_SPI 223 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_SPI 224 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_SPI 225 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&topckgen CLK_TOP_ETH_SEL>,
-+			 <&ethsys CLK_ETH_ESW_EN>,
-+			 <&ethsys CLK_ETH_GP0_EN>,
-+			 <&ethsys CLK_ETH_GP1_EN>,
-+			 <&ethsys CLK_ETH_GP2_EN>,
-+			 <&sgmiisys CLK_SGMII_TX250M_EN>,
-+			 <&sgmiisys CLK_SGMII_RX250M_EN>,
-+			 <&sgmiisys CLK_SGMII_CDR_REF>,
-+			 <&sgmiisys CLK_SGMII_CDR_FB>,
-+			 <&topckgen CLK_TOP_SGMIIPLL>,
-+			 <&apmixedsys CLK_APMIXED_ETH2PLL>;
-+		clock-names = "ethif", "esw", "gp0", "gp1", "gp2",
-+			      "sgmii_tx250m", "sgmii_rx250m",
-+			      "sgmii_cdr_ref", "sgmii_cdr_fb", "sgmii_ck",
-+			      "eth2pll";
-+		power-domains = <&scpsys MT7622_POWER_DOMAIN_ETHSYS>;
-+		mediatek,ethsys = <&ethsys>;
-+		mediatek,sgmiisys = <&sgmiisys>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		status = "disabled";
++	pwrap_clk: dummy40m {
++		compatible = "fixed-clock";
++		clock-frequency = <40000000>;
++		#clock-cells = <0>;
 +	};
 +
- 	sgmiisys: sgmiisys@1b128000 {
- 		compatible = "mediatek,mt7622-sgmiisys",
- 			     "syscon";
++	clk25m: oscillator@0 {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <25000000>;
++		clock-output-names = "clkxtal";
++	};
++
+ 	psci {
+ 		compatible  = "arm,psci-0.2";
+ 		method      = "smc";
+@@ -78,6 +93,22 @@
+ 			      IRQ_TYPE_LEVEL_HIGH)>;
+ 	};
+ 
++	infracfg: infracfg@10000000 {
++		compatible = "mediatek,mt7622-infracfg",
++			     "syscon";
++		reg = <0 0x10000000 0 0x1000>;
++		#clock-cells = <1>;
++		#reset-cells = <1>;
++	};
++
++	pericfg: pericfg@10002000 {
++		compatible = "mediatek,mt7622-pericfg",
++			     "syscon";
++		reg = <0 0x10002000 0 0x1000>;
++		#clock-cells = <1>;
++		#reset-cells = <1>;
++	};
++
+ 	sysirq: interrupt-controller@10200620 {
+ 		compatible = "mediatek,mt7622-sysirq",
+ 			     "mediatek,mt6577-sysirq";
+@@ -87,6 +118,20 @@
+ 		reg = <0 0x10200620 0 0x20>;
+ 	};
+ 
++	apmixedsys: apmixedsys@10209000 {
++		compatible = "mediatek,mt7622-apmixedsys",
++			     "syscon";
++		reg = <0 0x10209000 0 0x1000>;
++		#clock-cells = <1>;
++	};
++
++	topckgen: topckgen@10210000 {
++		compatible = "mediatek,mt7622-topckgen",
++			     "syscon";
++		reg = <0 0x10210000 0 0x1000>;
++		#clock-cells = <1>;
++	};
++
+ 	gic: interrupt-controller@10300000 {
+ 		compatible = "arm,gic-400";
+ 		interrupt-controller;
+@@ -107,4 +152,35 @@
+ 		clock-names = "baud", "bus";
+ 		status = "disabled";
+ 	};
++
++	ssusbsys: ssusbsys@1a000000 {
++		compatible = "mediatek,mt7622-ssusbsys",
++			     "syscon";
++		reg = <0 0x1a000000 0 0x1000>;
++		#clock-cells = <1>;
++		#reset-cells = <1>;
++	};
++
++	pciesys: pciesys@1a100800 {
++		compatible = "mediatek,mt7622-pciesys",
++			     "syscon";
++		reg = <0 0x1a100800 0 0x1000>;
++		#clock-cells = <1>;
++		#reset-cells = <1>;
++	};
++
++	ethsys: syscon@1b000000 {
++		compatible = "mediatek,mt7622-ethsys",
++			     "syscon";
++		reg = <0 0x1b000000 0 0x1000>;
++		#clock-cells = <1>;
++		#reset-cells = <1>;
++	};
++
++	sgmiisys: sgmiisys@1b128000 {
++		compatible = "mediatek,mt7622-sgmiisys",
++			     "syscon";
++		reg = <0 0x1b128000 0 0x1000>;
++		#clock-cells = <1>;
++	};
+ };
 -- 
 2.7.4
