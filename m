@@ -1,125 +1,106 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v5 1/2] PCI: mediatek: Clear IRQ status after IRQ
- dispatched to avoid reentry
-Date: Thu, 4 Jan 2018 18:40:40 +0000
-Message-ID: <20180104184040.GE12239@red-moon>
-References: <1514336394-17747-1-git-send-email-honghui.zhang@mediatek.com>
- <1514336394-17747-2-git-send-email-honghui.zhang@mediatek.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH 06/11] dt-bindings: display: sun4i-drm: Add A83T HDMI
+ pipeline
+Date: Thu, 4 Jan 2018 19:52:10 +0100
+Message-ID: <20180104185210.afsvsofq7q35psa6@flea.lan>
+References: <20171230210203.24115-1-jernej.skrabec@siol.net>
+ <20171230210203.24115-7-jernej.skrabec@siol.net>
+ <20180103202154.eeajt3234w3adqjq@rob-hp-laptop>
+ <1645801.yZU0HLsLbk@jernej-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-clk-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1514336394-17747-2-git-send-email-honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
-Cc: bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, hongkun.cao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, xinping.qian-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org
+In-Reply-To: <1645801.yZU0HLsLbk@jernej-laptop>
+Sender: linux-clk-owner@vger.kernel.org
+To: Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@siol.net>
+Cc: Rob Herring <robh@kernel.org>, airlied@linux.ie, mark.rutland@arm.com, wens@csie.org, architt@codeaurora.org, a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com, mturquette@baylibre.com, sboyd@codeaurora.org, Jose.Abreu@synopsys.com, narmstrong@baylibre.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-[+Marc]
-
-On Wed, Dec 27, 2017 at 08:59:53AM +0800, honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
-> From: Honghui Zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+On Wed, Jan 03, 2018 at 10:32:26PM +0100, Jernej Škrabec wrote:
+> Hi Rob,
 > 
-> There maybe a same IRQ reentry scenario after IRQ received in current
-> IRQ handle flow:
-> 	EP device		PCIe host driver	EP driver
-> 1. issue an IRQ
-> 			2. received IRQ
-> 			3. clear IRQ status
-> 			4. dispatch IRQ
-> 						5. clear IRQ source
-> The IRQ status was not successfully cleared at step 2 since the IRQ
-> source was not cleared yet. So the PCIe host driver may receive the
-> same IRQ after step 5. Then there's an IRQ reentry occurred.
-> Even worse, if the reentry IRQ was not an IRQ that EP driver expected,
-> it may not handle the IRQ. Then we may run into the infinite loop from
-> step 2 to step 4.
-> Clear the IRQ status after IRQ have been dispatched to avoid the IRQ
-> reentry.
-> This patch also fix another INTx IRQ issue by initialize the iterate
-> before the loop. If an INTx IRQ re-occurred while we are dispatching
-> the INTx IRQ, then iterate may start from PCI_NUM_INTX + INTX_SHIFT
-> instead of INTX_SHIFT for the second time entering the
-> for_each_set_bit_from() loop.
-
-This looks like two different issues that should be fixed with two
-patches.
-
-> Signed-off-by: Honghui Zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> Acked-by: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> ---
->  drivers/pci/host/pcie-mediatek.c | 11 ++++++-----
->  1 file changed, 6 insertions(+), 5 deletions(-)
-
-For the sake of uniformity, I first want to understand why this
-driver does not call:
-
-chained_irq_enter/exit()
-
-in the primary handler (mtk_pcie_intr_handler()).
-
-With the GIC as a primary interrupt controller we have not
-even figured out how current code can actually work without
-calling the chained_* API.
-
-I want to come up with a consistent handling of IRQ domains for
-all host bridges and any discrepancy should be explained.
-
-> diff --git a/drivers/pci/host/pcie-mediatek.c b/drivers/pci/host/pcie-mediatek.c
-> index db93efd..fc29a9a 100644
-> --- a/drivers/pci/host/pcie-mediatek.c
-> +++ b/drivers/pci/host/pcie-mediatek.c
-> @@ -601,15 +601,16 @@ static irqreturn_t mtk_pcie_intr_handler(int irq, void *data)
->  	struct mtk_pcie_port *port = (struct mtk_pcie_port *)data;
->  	unsigned long status;
->  	u32 virq;
-> -	u32 bit = INTX_SHIFT;
-> +	u32 bit;
->  
->  	while ((status = readl(port->base + PCIE_INT_STATUS)) & INTX_MASK) {
-> +		bit = INTX_SHIFT;
->  		for_each_set_bit_from(bit, &status, PCI_NUM_INTX + INTX_SHIFT) {
-> -			/* Clear the INTx */
-> -			writel(1 << bit, port->base + PCIE_INT_STATUS);
->  			virq = irq_find_mapping(port->irq_domain,
->  						bit - INTX_SHIFT);
->  			generic_handle_irq(virq);
-> +			/* Clear the INTx */
-> +			writel(1 << bit, port->base + PCIE_INT_STATUS);
-
-I think that these masking/acking should actually be done through
-the irq_chip hooks (see for instance pci-ftpci100.c) - that would
-make this kind of bugs much easier to prevent (because the IRQ
-layer does the sequencing for you).
-
-Marc (CC'ed) has a more comprehensive view on this than me - I would
-like to get to a point where all host bridges uses a consistent
-approach for chained IRQ handling and I hope this bug fix can be
-a starting point.
-
-Thanks,
-Lorenzo
-
->  		}
->  	}
->  
-> @@ -619,10 +620,10 @@ static irqreturn_t mtk_pcie_intr_handler(int irq, void *data)
->  
->  			while ((imsi_status = readl(port->base + PCIE_IMSI_STATUS))) {
->  				for_each_set_bit(bit, &imsi_status, MTK_MSI_IRQS_NUM) {
-> -					/* Clear the MSI */
-> -					writel(1 << bit, port->base + PCIE_IMSI_STATUS);
->  					virq = irq_find_mapping(port->msi_domain, bit);
->  					generic_handle_irq(virq);
-> +					/* Clear the MSI */
-> +					writel(1 << bit, port->base + PCIE_IMSI_STATUS);
->  				}
->  			}
->  			/* Clear MSI interrupt status */
-> -- 
-> 2.6.4
+> Dne sreda, 03. januar 2018 ob 21:21:54 CET je Rob Herring napisal(a):
+> > On Sat, Dec 30, 2017 at 10:01:58PM +0100, Jernej Skrabec wrote:
+> > > This commit adds all necessary compatibles and descriptions needed to
+> > > implement A83T HDMI pipeline.
+> > > 
+> > > Mixer is already properly described, so only compatible is added.
+> > > 
+> > > However, A83T TCON1, which is connected to HDMI, doesn't have channel 0,
+> > > contrary to all TCONs currently described. Because of that, TCON
+> > > documentation is extended.
+> > > 
+> > > A83T features Synopsys DW HDMI controller with a custom PHY which looks
+> > > like Synopsys Gen2 PHY with few additions. Since there is no
+> > > documentation, needed properties were found out through experimentation
+> > > and reading BSP code.
+> > > 
+> > > At the end, example is added for newer SoCs, which features DE2 and DW
+> > > HDMI.
+> > > 
+> > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > > ---
+> > > 
+> > >  .../bindings/display/sunxi/sun4i-drm.txt           | 188
+> > >  ++++++++++++++++++++- 1 file changed, 181 insertions(+), 7 deletions(-)
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+> > > b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt index
+> > > 9f073af4c711..3eca258096a5 100644
+> > > --- a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+> > > +++ b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+> > > 
+> > > @@ -64,6 +64,40 @@ Required properties:
+> > >      first port should be the input endpoint. The second should be the
+> > >      output, usually to an HDMI connector.
+> > > 
+> > > +DWC HDMI TX Encoder
+> > > +-----------------------------
+> > > +
+> > > +The HDMI transmitter is a Synopsys DesignWare HDMI 1.4 TX controller IP
+> > > +with Allwinner's own PHY IP. It supports audio and video outputs and CEC.
+> > > +
+> > > +These DT bindings follow the Synopsys DWC HDMI TX bindings defined in
+> > > +Documentation/devicetree/bindings/display/bridge/dw_hdmi.txt with the
+> > > +following device-specific properties.
+> > > +
+> > > +Required properties:
+> > > +
+> > > +  - compatible: value must be one of:
+> > > +    * "allwinner,sun8i-a83t-dw-hdmi"
+> > > +  - reg: two pairs of base address and size of memory-mapped region,
+> > > first
+> > > +    for controller and second for PHY
+> > > +    registers.
+> > 
+> > Seems like the phy should be a separate node and use the phy binding.
+> > You can use the phy binding even if you don't use the kernel phy
+> > framework...
 > 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Unfortunately, it's not so straighforward. Phy is actually accessed through 
+> I2C implemented in HDMI controller. Second memory region in this case has 
+> small influence on phy. However, it has big influence on controller. For 
+> example, magic number has to be written in one register in second memory 
+> region in order to unlock read access to any register from first memory region 
+> (controller). However, they shouldn't be merged to one region, because first 
+> memory region requires byte access while second memory region can be accessed 
+> per byte or word.
+> 
+> To complicate things more, later I want to add support for another SoC which 
+> has same glue layer (unlocking read access, etc.) and uses memory mapped phy 
+> registers in second memory region.
+> 
+> I think current binding is the least complicated way to represent this.
+
+I agree with Rob here. I did a similar thing for the DSI patches I've
+sent a few monthes ago and it turned out to not be that difficult, so
+I'm sure you can come up with something :)
+
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
