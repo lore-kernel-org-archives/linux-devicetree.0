@@ -1,7 +1,7 @@
 From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH v2 2/2] media: dt-bindings: Add OF properties to ov7670
-Date: Thu,  4 Jan 2018 10:52:33 +0100
-Message-ID: <1515059553-10219-3-git-send-email-jacopo+renesas@jmondi.org>
+Subject: [PATCH v2 1/2] v4l2: i2c: ov7670: Implement OF mbus configuration
+Date: Thu,  4 Jan 2018 10:52:32 +0100
+Message-ID: <1515059553-10219-2-git-send-email-jacopo+renesas@jmondi.org>
 References: <1515059553-10219-1-git-send-email-jacopo+renesas@jmondi.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1515059553-10219-1-git-send-email-jacopo+renesas@jmondi.org>
@@ -10,50 +10,219 @@ To: corbet@lwn.net, mchehab@kernel.org, sakari.ailus@iki.fi, robh+dt@kernel.org,
 Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Describe newly introduced OF properties for ov7670 image sensor.
-The driver supports two standard properties to configure synchronism
-signals polarities and two custom properties already supported as
-platform data options by the driver.
----
- Documentation/devicetree/bindings/media/i2c/ov7670.txt | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ov7670 driver supports two optional properties supplied through platform
+data, but currently does not support any standard video interface
+property.
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/ov7670.txt b/Documentation/devicetree/bindings/media/i2c/ov7670.txt
-index 826b656..57ded18 100644
---- a/Documentation/devicetree/bindings/media/i2c/ov7670.txt
-+++ b/Documentation/devicetree/bindings/media/i2c/ov7670.txt
-@@ -9,11 +9,22 @@ Required Properties:
- - clocks: reference to the xclk input clock.
- - clock-names: should be "xclk".
+Add support through OF parsing for 2 generic properties (vsync and hsync
+polarities) and for two custom properties already supported by platform
+data.
+
+While at there, check return value of register writes in set_fmt
+function and rationalize spacings.
+
+Signal polarities and pixel clock blanking verified through scope and
+image capture.
+
+Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+---
+ drivers/media/i2c/ov7670.c | 124 ++++++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 110 insertions(+), 14 deletions(-)
+
+diff --git a/drivers/media/i2c/ov7670.c b/drivers/media/i2c/ov7670.c
+index 950a0ac..d40a601 100644
+--- a/drivers/media/i2c/ov7670.c
++++ b/drivers/media/i2c/ov7670.c
+@@ -21,6 +21,7 @@
+ #include <linux/gpio/consumer.h>
+ #include <media/v4l2-device.h>
+ #include <media/v4l2-ctrls.h>
++#include <media/v4l2-fwnode.h>
+ #include <media/v4l2-mediabus.h>
+ #include <media/v4l2-image-sizes.h>
+ #include <media/i2c/ov7670.h>
+@@ -237,6 +238,7 @@ struct ov7670_info {
+ 	struct clk *clk;
+ 	struct gpio_desc *resetb_gpio;
+ 	struct gpio_desc *pwdn_gpio;
++	unsigned int mbus_config;	/* Media bus configuration flags */
+ 	int min_width;			/* Filter out smaller sizes */
+ 	int min_height;			/* Filter out smaller sizes */
+ 	int clock_speed;		/* External clock speed (MHz) */
+@@ -995,7 +997,7 @@ static int ov7670_set_fmt(struct v4l2_subdev *sd,
+ #ifdef CONFIG_VIDEO_V4L2_SUBDEV_API
+ 	struct v4l2_mbus_framefmt *mbus_fmt;
+ #endif
+-	unsigned char com7;
++	unsigned char com7, com10 = 0;
+ 	int ret;
  
-+The following properties, as defined by video interfaces OF bindings
-+"Documentation/devicetree/bindings/media/video-interfaces.txt" are supported:
-+
-+- hsync-active: active state of the HSYNC signal, 0/1 for LOW/HIGH respectively.
-+- vsync-active: active state of the VSYNC signal, 0/1 for LOW/HIGH respectively.
-+
-+Default is high active state for both vsync and hsync signals.
-+
- Optional Properties:
- - reset-gpios: reference to the GPIO connected to the resetb pin, if any.
-   Active is low.
- - powerdown-gpios: reference to the GPIO connected to the pwdn pin, if any.
-   Active is high.
-+- ov7670,pll-bypass: set to 1 to bypass PLL for pixel clock generation.
-+- ov7670,pclk-hb-disable: set to 1 to suppress pixel clock output signal during
-+  horizontal blankings.
+ 	if (format->pad)
+@@ -1015,7 +1017,6 @@ static int ov7670_set_fmt(struct v4l2_subdev *sd,
+ 	}
  
- The device node must contain one 'port' child node for its digital output
- video port, in accordance with the video interface bindings defined in
-@@ -34,6 +45,9 @@ Example:
- 			assigned-clocks = <&pck0>;
- 			assigned-clock-rates = <25000000>;
- 
-+			vsync-active = <0>;
-+			ov7670,pclk-hb-disable = <1>;
+ 	ret = ov7670_try_fmt_internal(sd, &format->format, &ovfmt, &wsize);
+-
+ 	if (ret)
+ 		return ret;
+ 	/*
+@@ -1026,16 +1027,41 @@ static int ov7670_set_fmt(struct v4l2_subdev *sd,
+ 	 */
+ 	com7 = ovfmt->regs[0].value;
+ 	com7 |= wsize->com7_bit;
+-	ov7670_write(sd, REG_COM7, com7);
++	ret = ov7670_write(sd, REG_COM7, com7);
++	if (ret)
++		return ret;
 +
- 			port {
- 				ov7670_0: endpoint {
- 					remote-endpoint = <&isi_0>;
++	/*
++	 * Configure the media bus through COM10 register
++	 */
++	if (info->mbus_config & V4L2_MBUS_VSYNC_ACTIVE_LOW)
++		com10 |= COM10_VS_NEG;
++	if (info->mbus_config & V4L2_MBUS_HSYNC_ACTIVE_LOW)
++		com10 |= COM10_HREF_REV;
++	if (info->pclk_hb_disable)
++		com10 |= COM10_PCLK_HB;
++	ret = ov7670_write(sd, REG_COM10, com10);
++	if (ret)
++		return ret;
++
+ 	/*
+ 	 * Now write the rest of the array.  Also store start/stops
+ 	 */
+-	ov7670_write_array(sd, ovfmt->regs + 1);
+-	ov7670_set_hw(sd, wsize->hstart, wsize->hstop, wsize->vstart,
+-			wsize->vstop);
+-	ret = 0;
+-	if (wsize->regs)
++	ret = ov7670_write_array(sd, ovfmt->regs + 1);
++	if (ret)
++		return ret;
++
++	ret = ov7670_set_hw(sd, wsize->hstart, wsize->hstop, wsize->vstart,
++			    wsize->vstop);
++	if (ret)
++		return ret;
++
++	if (wsize->regs) {
+ 		ret = ov7670_write_array(sd, wsize->regs);
++		if (ret)
++			return ret;
++	}
++
+ 	info->fmt = ovfmt;
+ 
+ 	/*
+@@ -1048,8 +1074,10 @@ static int ov7670_set_fmt(struct v4l2_subdev *sd,
+ 	 * to write it unconditionally, and that will make the frame
+ 	 * rate persistent too.
+ 	 */
+-	if (ret == 0)
+-		ret = ov7670_write(sd, REG_CLKRC, info->clkrc);
++	ret = ov7670_write(sd, REG_CLKRC, info->clkrc);
++	if (ret)
++		return ret;
++
+ 	return 0;
+ }
+ 
+@@ -1658,6 +1686,71 @@ static int ov7670_init_gpio(struct i2c_client *client, struct ov7670_info *info)
+ 	return 0;
+ }
+ 
++/*
++ * ov7670_parse_dt() - Parse device tree to collect mbus configuration
++ *			properties
++ */
++static int ov7670_parse_dt(struct device *dev,
++			   struct ov7670_info *info)
++{
++	struct fwnode_handle *fwnode = dev_fwnode(dev);
++	struct v4l2_fwnode_endpoint bus_cfg;
++	struct fwnode_handle *ep;
++	u32 propval;
++	int ret;
++
++	if (!fwnode)
++		return -EINVAL;
++
++	ep = fwnode_graph_get_next_endpoint(fwnode, NULL);
++	if (!ep)
++		return -EINVAL;
++
++	ret = v4l2_fwnode_endpoint_parse(ep, &bus_cfg);
++	if (ret) {
++		fwnode_handle_put(fwnode);
++		return ret;
++	}
++
++	/* Any CSI-2 property set? */
++	if (bus_cfg.bus_type != V4L2_MBUS_PARALLEL) {
++		fwnode_handle_put(fwnode);
++		return -EINVAL;
++	}
++	info->mbus_config = bus_cfg.bus.parallel.flags;
++	fwnode_handle_put(fwnode);
++
++	/* Parse custom OF properties. */
++	info->pclk_hb_disable = false;
++	info->pll_bypass = false;
++
++	ret = fwnode_property_read_u32(ep, "ov7670,pclk-hb-disable", &propval);
++	if (ret < 0 && ret != -EINVAL) {
++		dev_err(dev,
++			"Unable to parse property \"ov7670,pclk-hb-disable\"\n");
++		fwnode_handle_put(ep);
++		return ret;
++
++	} else if (ret == 0 && propval) {
++		info->pclk_hb_disable = true;
++	}
++
++	ret = fwnode_property_read_u32(ep, "ov7670,pll-bypass", &propval);
++	if (ret < 0 && ret != -EINVAL) {
++		dev_err(dev,
++			"Unable to parse property \"ov7670,pll-bypass\"\n");
++		fwnode_handle_put(ep);
++		return ret;
++
++	} else if (ret == 0 && propval) {
++		info->pll_bypass = true;
++	}
++
++	fwnode_handle_put(ep);
++
++	return 0;
++}
++
+ static int ov7670_probe(struct i2c_client *client,
+ 			const struct i2c_device_id *id)
+ {
+@@ -1678,7 +1771,13 @@ static int ov7670_probe(struct i2c_client *client,
+ #endif
+ 
+ 	info->clock_speed = 30; /* default: a guess */
+-	if (client->dev.platform_data) {
++
++	if (dev_fwnode(&client->dev)) {
++		ret = ov7670_parse_dt(&client->dev, info);
++		if (ret)
++			return ret;
++
++	} else if (client->dev.platform_data) {
+ 		struct ov7670_config *config = client->dev.platform_data;
+ 
+ 		/*
+@@ -1745,9 +1844,6 @@ static int ov7670_probe(struct i2c_client *client,
+ 	tpf.denominator = 30;
+ 	info->devtype->set_framerate(sd, &tpf);
+ 
+-	if (info->pclk_hb_disable)
+-		ov7670_write(sd, REG_COM10, COM10_PCLK_HB);
+-
+ 	v4l2_ctrl_handler_init(&info->hdl, 10);
+ 	v4l2_ctrl_new_std(&info->hdl, &ov7670_ctrl_ops,
+ 			V4L2_CID_BRIGHTNESS, 0, 255, 1, 128);
 -- 
 2.7.4
