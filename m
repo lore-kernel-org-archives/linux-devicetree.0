@@ -1,63 +1,53 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [1/2] arm64: dts: r8a7795: add thermal cooling management
-Date: Thu, 4 Jan 2018 17:53:09 +0100
-Message-ID: <20180104165308.pr4klattmpg46iwm@verge.net.au>
-References: <20170913105909.13230-2-niklas.soderlund+renesas@ragnatech.se>
- <20180101181333.GA3631@localhost.localdomain>
- <20180102091944.py647jheghud7sl2@verge.net.au>
- <20180103000352.GB22490@bigcity.dyn.berto.se>
- <20180103101438.il5grrfihewiduqe@verge.net.au>
- <CAMuHMdWf76hNbQva_z9-2bCbBiGfA-veK9GdCqTyThaiBsNpMQ@mail.gmail.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v2 0/4] arm64: defconfig: enable additional led triggers
+Date: Thu, 4 Jan 2018 17:54:13 +0100
+Message-ID: <CAK8P3a1OFSM3MLojnJSaRBG0BzOV9_dGPf5TEBtyTDBBp9PpZw@mail.gmail.com>
+References: <cover.1509951550.git.amit.kucheria@linaro.org>
+ <CAHLCerN4sYpU7PJG7JLhAy644s3jz9KD_myKWfOoOkEResPu-Q@mail.gmail.com>
+ <CAK8P3a0+4ACDucmNQ3OL_0UjJnK6d3JXOb6_z5jtMQ986uZkLQ@mail.gmail.com> <CAP245DUnO6qoXXoAOakQ_HYTTbR+CgO-nQ-Jm5nOaPeySm968g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdWf76hNbQva_z9-2bCbBiGfA-veK9GdCqTyThaiBsNpMQ@mail.gmail.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, Eduardo Valentin <edubezval@gmail.com>, Linux PM list <linux-pm@vger.kernel.org>, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAP245DUnO6qoXXoAOakQ_HYTTbR+CgO-nQ-Jm5nOaPeySm968g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lakml <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Manivannan Sadhasivam <manivannan.sadhasivam-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 03, 2018 at 11:25:37AM +0100, Geert Uytterhoeven wrote:
-> Hi Simon,
-> 
-> On Wed, Jan 3, 2018 at 11:14 AM, Simon Horman <horms@verge.net.au> wrote:
-> > On Wed, Jan 03, 2018 at 01:03:52AM +0100, Niklas Söderlund wrote:
-> >> On 2018-01-02 10:19:44 +0100, Simon Horman wrote:
-> >> > On Mon, Jan 01, 2018 at 10:13:35AM -0800, Eduardo Valentin wrote:
-> >> > > On Wed, Sep 13, 2017 at 12:59:08PM +0200, Niklas Söderlund wrote:
-> >> > > > Add nodes and properties for thermal cooling management support.
-> >> > > >
-> >> > > > Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-> >> > > > ---
-> >> > >
-> >> > > Just a reminder, this series should go via your arch tree. You may add
-> >> > > my acks.
-> >> >
-> >> > Ack.
-> >> >
-> >> > Niklas, could you comment on the readiness of these patches
-> >> > for the renesas tree?
-> >>
-> >> I think maybe the patches might have became a bit outdated since they
-> >> where posted due to all reg property fixup patches. The blocker for me
-> >> reposting this series is that the patches this depends
-> >> 'topic/rcar-gen3-cpufreq' on are not yet in the renesas tree next or
-> >> devel branches. Do you think it would be valuable for me to refresh
-> >> these patches before the dependencies are picked up?
-> >
-> > Probably not. I'll try to work on getting cpufreq upstream :)
-> 
-> I think it's working fine in renesas-drivers, isn't it?
+On Tue, Jan 2, 2018 at 8:19 AM, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Thu, Dec 21, 2017 at 8:46 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+>> On Wed, Dec 6, 2017 at 9:57 AM, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>>> (Adding Arnd)
+>>>
+>>> Now that the merge window rush has abated, can you please apply this
+>>> trivial series?
+>>>
+>>> On Mon, Nov 6, 2017 at 12:38 PM, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>>>> This patchset enables the kernel panic and disk-activity trigger for LEDs
+>>>> and then enables the panic trigger for three 96Boards - DB410c, Hikey and
+>>>> Hikey960.
+>>>>
+>>>> DB410c and Hikey panic behaviour has been tested by triggering a panic
+>>>> through /proc/sysrq-trigger, while Hikey960 is only compile-tested.
+>>
+>> I applied all four now, but it would have been easier for me if you had either
+>> sent them to the platform maintainers, or to arm-DgEjT+Ai2yi4UlQgPVntAg@public.gmane.org
+>
+> The platform maintainers are cc'ed but I guess nobody took them since
+> the patchset touched 3 different platforms and a common defconfig.
+>
+> I'll remember to cc arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org in the future but is there any
+> reason why this email address isn't listed in MAINTAINERS?
 
-There was some cleanup of the DTS patches pending.
-That has now happened, been posted, reviewed and merged :)
+We normally want to have all patches merged through the platform
+maintainers, and have no ambiguity regarding who picks things up.
+More importantly, being listed in the MAINTAINERS file would result
+in us getting thousands of patches each merge window mixed in with
+the stuff that we actually do need to see, so that would likely be more
+lossy and more work for us.
 
-> As in the mean time the R-Car Gen3 CPG/MSSR drivers gained suspend/resume
-> support, the only missing part is support for restoring the Z* clocks during
-> system resume.  Unless that is handled automatically by the cpufreq core.
-> For secondary CPU cores, this may be handled by the CPU hotplug code.
-> For the primary CPU core, I don't know.
-
-Thanks, I'll look into that.
+      Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
