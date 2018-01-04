@@ -1,42 +1,68 @@
 From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH v2 0/7] ARM: dts: imx6q: engicam LVDS panel changes
-Date: Thu,  4 Jan 2018 11:42:18 +0530
-Message-ID: <1515046345-15881-1-git-send-email-jagan@amarulasolutions.com>
+Subject: [PATCH v2 3/7] ARM: dts: imx6dl-icore: Add LVDS node
+Date: Thu,  4 Jan 2018 11:42:21 +0530
+Message-ID: <1515046345-15881-4-git-send-email-jagan@amarulasolutions.com>
+References: <1515046345-15881-1-git-send-email-jagan@amarulasolutions.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1515046345-15881-1-git-send-email-jagan@amarulasolutions.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Shawn Guo <shawnguo@kernel.org>
 Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Matteo Lisi <matteo.lisi@engicam.com>, Michael Trimarchi <michael@amarulasolutions.com>, Jagan Teki <jagan@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
-Series add LVDS panel attributes on panel drivers instead of defining
-them in dts nodes, and also added new icorem6 engicam boards
+Add ampire,am-800480aytzqw-00h LVDS support by using
+timings from panel-simple.
 
-Jagan Teki (7):
-  drm/panel: simple: add support for Ampire AM-800480AYTZQW-00H
-  ARM: dts: imx6q-icore: Switch LVDS timings from panel-simple
-  ARM: dts: imx6dl-icore: Add LVDS node
-  drm/panel: simple: Add support for KEO TX31D200VM0BAA
-  ARM: dts: imx6q-icore-ofcap12: Switch LVDS timings from panel-simple
-  ARM: dts: imx6q: Add Engicam i.CoreM6 Quad/Dual OpenFrame Cap 7
-    initial support
-  ARM: dts: imx6q: Add Engicam i.CoreM6 1.5 Quad/Dual MIPI starter kit
-    support
+Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+---
+Changes for v2:
+- none
 
- .../display/panel/ampire,am-800480aytzqw-00h.txt   | 25 +++++++++
- .../bindings/display/panel/koe,tx31d200vm0baa.txt  | 25 +++++++++
- arch/arm/boot/dts/Makefile                         |  2 +
- arch/arm/boot/dts/imx6dl-icore.dts                 | 28 ++++++++++
- arch/arm/boot/dts/imx6q-icore-mipi.dts             | 25 +++++++++
- arch/arm/boot/dts/imx6q-icore-ofcap12.dts          | 31 ++++++-----
- arch/arm/boot/dts/imx6q-icore-ofcap7.dts           | 65 ++++++++++++++++++++++
- arch/arm/boot/dts/imx6q-icore.dts                  | 31 ++++++-----
- arch/arm/boot/dts/imx6qdl-icore.dtsi               | 25 ++++++++-
- drivers/gpu/drm/panel/panel-simple.c               | 54 ++++++++++++++++++
- 10 files changed, 282 insertions(+), 29 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/display/panel/ampire,am-800480aytzqw-00h.txt
- create mode 100644 Documentation/devicetree/bindings/display/panel/koe,tx31d200vm0baa.txt
- create mode 100644 arch/arm/boot/dts/imx6q-icore-mipi.dts
- create mode 100644 arch/arm/boot/dts/imx6q-icore-ofcap7.dts
+ arch/arm/boot/dts/imx6dl-icore.dts | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
+diff --git a/arch/arm/boot/dts/imx6dl-icore.dts b/arch/arm/boot/dts/imx6dl-icore.dts
+index 971f9fc..74bff84 100644
+--- a/arch/arm/boot/dts/imx6dl-icore.dts
++++ b/arch/arm/boot/dts/imx6dl-icore.dts
+@@ -48,6 +48,17 @@
+ / {
+ 	model = "Engicam i.CoreM6 DualLite/Solo Starter Kit";
+ 	compatible = "engicam,imx6-icore", "fsl,imx6dl";
++
++	panel {
++		compatible = "ampire,am-800480aytzqw-00h";
++		backlight = <&backlight_lvds>;
++
++		port {
++			panel_in: endpoint {
++				remote-endpoint = <&lvds0_out>;
++			};
++		};
++	};
+ };
+ 
+ &can1 {
+@@ -66,3 +77,20 @@
+ 		interrupts = <31 IRQ_TYPE_EDGE_FALLING>;
+ 	};
+ };
++
++&ldb {
++	status = "okay";
++
++	lvds-channel@0 {
++		reg = <0>;
++		status = "okay";
++
++		port@4 {
++			reg = <4>;
++
++			lvds0_out: endpoint {
++				remote-endpoint = <&panel_in>;
++			};
++		};
++	};
++};
 -- 
 2.7.4
