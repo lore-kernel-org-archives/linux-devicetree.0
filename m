@@ -1,66 +1,124 @@
 From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2 0/8] ARM: sun9i: SMP support with Multi-Cluster Power
- Management
-Date: Thu, 4 Jan 2018 18:04:09 +0000
-Message-ID: <20180104180409.GD12239@red-moon>
-References: <20180104143754.2425-1-wens@csie.org>
- <20180104145838.qk5sbtg3vjg33txt@flea.lan>
+Subject: Re: [PATCH v5 1/2] PCI: mediatek: Clear IRQ status after IRQ
+ dispatched to avoid reentry
+Date: Thu, 4 Jan 2018 18:40:40 +0000
+Message-ID: <20180104184040.GE12239@red-moon>
+References: <1514336394-17747-1-git-send-email-honghui.zhang@mediatek.com>
+ <1514336394-17747-2-git-send-email-honghui.zhang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20180104145838.qk5sbtg3vjg33txt-ZC1Zs529Oq4@public.gmane.org>
+In-Reply-To: <1514336394-17747-2-git-send-email-honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mylene JOSSERAND <mylene.josserand-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>
+To: honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Cc: bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, hongkun.cao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, xinping.qian-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 04, 2018 at 03:58:38PM +0100, Maxime Ripard wrote:
-> On Thu, Jan 04, 2018 at 10:37:46PM +0800, Chen-Yu Tsai wrote:
-> > This is v2 of my sun9i SMP support with MCPM series which was started
-> > over two years ago [1]. We've tried to implement PSCI for both the A80
-> > and A83T. Results were not promising. The issue is that these two chips
-> > have a broken security extensions implementation. If a specific bit is
-> > not burned in its e-fuse, most if not all security protections don't
-> > work [2]. Even worse, non-secure access to the GIC become secure. This
-> > requires a crazy workaround in the GIC driver which probably doesn't work
-> > in all cases [3].
-> > 
-> > Nicolas mentioned that the MCPM framework is likely overkill in our
-> > case [4]. However the framework does provide cluster/core state tracking
-> > and proper sequencing of cache related operations. We could rework
-> > the code to use standard smp_ops, but I would like to actually get
-> > a working version in first.
-> > 
-> > Much of the sunxi-specific MCPM code is derived from Allwinner code and
-> > documentation, with some references to the other MCPM implementations,
-> > as well as the Cortex's Technical Reference Manuals for the power
-> > sequencing info.
-> > 
-> > One major difference compared to other platforms is we currently do not
-> > have a standalone PMU or other embedded firmware to do the actually power
-> > sequencing. All power/reset control is done by the kernel. Nicolas
-> > mentioned that a new optional callback should be added in cases where the
-> > kernel has to do the actual power down [5]. For now however I'm using a
-> > dedicated single thread workqueue. CPU and cluster power off work is
-> > queued from the .{cpu,cluster}_powerdown_prepare callbacks. This solution
-> > is somewhat heavy, as I have a total of 10 static work structs. It might
-> > also be a bit racy, as nothing prevents the system from bringing a core
-> > back before the asynchronous work shuts it down. This would likely
-> > happen under a heavily loaded system with a scheduler that brings cores
-> > in and out of the system frequently. In simple use-cases it performs OK.
+[+Marc]
+
+On Wed, Dec 27, 2017 at 08:59:53AM +0800, honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
+> From: Honghui Zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 > 
-> It all looks sane to me
-> Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> There maybe a same IRQ reentry scenario after IRQ received in current
+> IRQ handle flow:
+> 	EP device		PCIe host driver	EP driver
+> 1. issue an IRQ
+> 			2. received IRQ
+> 			3. clear IRQ status
+> 			4. dispatch IRQ
+> 						5. clear IRQ source
+> The IRQ status was not successfully cleared at step 2 since the IRQ
+> source was not cleared yet. So the PCIe host driver may receive the
+> same IRQ after step 5. Then there's an IRQ reentry occurred.
+> Even worse, if the reentry IRQ was not an IRQ that EP driver expected,
+> it may not handle the IRQ. Then we may run into the infinite loop from
+> step 2 to step 4.
+> Clear the IRQ status after IRQ have been dispatched to avoid the IRQ
+> reentry.
+> This patch also fix another INTx IRQ issue by initialize the iterate
+> before the loop. If an INTx IRQ re-occurred while we are dispatching
+> the INTx IRQ, then iterate may start from PCI_NUM_INTX + INTX_SHIFT
+> instead of INTX_SHIFT for the second time entering the
+> for_each_set_bit_from() loop.
 
-It does not to me, sorry. You do not need MCPM (and workqueues) to
-do SMP bring-up.
+This looks like two different issues that should be fixed with two
+patches.
 
-Nico explained why, just do it:
+> Signed-off-by: Honghui Zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> Acked-by: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> ---
+>  drivers/pci/host/pcie-mediatek.c | 11 ++++++-----
+>  1 file changed, 6 insertions(+), 5 deletions(-)
 
-commit 905cdf9dda5d ("ARM: hisi/hip04: remove the MCPM overhead")
+For the sake of uniformity, I first want to understand why this
+driver does not call:
 
+chained_irq_enter/exit()
+
+in the primary handler (mtk_pcie_intr_handler()).
+
+With the GIC as a primary interrupt controller we have not
+even figured out how current code can actually work without
+calling the chained_* API.
+
+I want to come up with a consistent handling of IRQ domains for
+all host bridges and any discrepancy should be explained.
+
+> diff --git a/drivers/pci/host/pcie-mediatek.c b/drivers/pci/host/pcie-mediatek.c
+> index db93efd..fc29a9a 100644
+> --- a/drivers/pci/host/pcie-mediatek.c
+> +++ b/drivers/pci/host/pcie-mediatek.c
+> @@ -601,15 +601,16 @@ static irqreturn_t mtk_pcie_intr_handler(int irq, void *data)
+>  	struct mtk_pcie_port *port = (struct mtk_pcie_port *)data;
+>  	unsigned long status;
+>  	u32 virq;
+> -	u32 bit = INTX_SHIFT;
+> +	u32 bit;
+>  
+>  	while ((status = readl(port->base + PCIE_INT_STATUS)) & INTX_MASK) {
+> +		bit = INTX_SHIFT;
+>  		for_each_set_bit_from(bit, &status, PCI_NUM_INTX + INTX_SHIFT) {
+> -			/* Clear the INTx */
+> -			writel(1 << bit, port->base + PCIE_INT_STATUS);
+>  			virq = irq_find_mapping(port->irq_domain,
+>  						bit - INTX_SHIFT);
+>  			generic_handle_irq(virq);
+> +			/* Clear the INTx */
+> +			writel(1 << bit, port->base + PCIE_INT_STATUS);
+
+I think that these masking/acking should actually be done through
+the irq_chip hooks (see for instance pci-ftpci100.c) - that would
+make this kind of bugs much easier to prevent (because the IRQ
+layer does the sequencing for you).
+
+Marc (CC'ed) has a more comprehensive view on this than me - I would
+like to get to a point where all host bridges uses a consistent
+approach for chained IRQ handling and I hope this bug fix can be
+a starting point.
+
+Thanks,
 Lorenzo
+
+>  		}
+>  	}
+>  
+> @@ -619,10 +620,10 @@ static irqreturn_t mtk_pcie_intr_handler(int irq, void *data)
+>  
+>  			while ((imsi_status = readl(port->base + PCIE_IMSI_STATUS))) {
+>  				for_each_set_bit(bit, &imsi_status, MTK_MSI_IRQS_NUM) {
+> -					/* Clear the MSI */
+> -					writel(1 << bit, port->base + PCIE_IMSI_STATUS);
+>  					virq = irq_find_mapping(port->msi_domain, bit);
+>  					generic_handle_irq(virq);
+> +					/* Clear the MSI */
+> +					writel(1 << bit, port->base + PCIE_IMSI_STATUS);
+>  				}
+>  			}
+>  			/* Clear MSI interrupt status */
+> -- 
+> 2.6.4
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
