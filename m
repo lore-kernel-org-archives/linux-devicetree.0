@@ -1,48 +1,108 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [RESEND PATCH v2 14/15] ASoC: qcom: apq8096: Add db820c machine
- driver
-Date: Thu, 4 Jan 2018 13:44:30 +0000
-Message-ID: <418b531d-9d51-80c5-85aa-8ab8ef27bebb@linaro.org>
-References: <20171214173402.19074-1-srinivas.kandagatla@linaro.org>
- <20171214173402.19074-15-srinivas.kandagatla@linaro.org>
- <f72f32dd-e248-47c3-23cc-eabe1b85d9ae@codeaurora.org>
- <20180104120244.GE10774@sirena.org.uk>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH v5 1/3] clocksource/drivers/atcpit100: Add andestech
+ atcpit100 timer
+Date: Thu, 4 Jan 2018 14:50:09 +0100
+Message-ID: <ff51fff7-e963-f9fd-10d6-9b90a64d7aac@linaro.org>
+References: <1513057621-19084-1-git-send-email-rickchen36@gmail.com>
+ <1513057621-19084-2-git-send-email-rickchen36@gmail.com>
+ <bb7383ba-bb8e-3cbd-4ce0-faaefa8ed114@linaro.org>
+ <CAEbi=3cEEtLQRiv-cyUwEmcBNOC2Sz7AhzZkpznQWYb9VUojug@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20180104120244.GE10774@sirena.org.uk>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <CAEbi=3cEEtLQRiv-cyUwEmcBNOC2Sz7AhzZkpznQWYb9VUojug@mail.gmail.com>
 Content-Language: en-US
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: Andy Gross <andy.gross@linaro.org>, linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Patrick Lai <plai@codeaurora.org>, Banajit Goswami <bgoswami@codeaurora.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Sender: linux-arch-owner@vger.kernel.org
+To: Greentime Hu <green.hu@gmail.com>, Greentime <greentime@andestech.com>
+Cc: Rick Chen <rickchen36@gmail.com>, Rick Chen <rick@andestech.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Linus Walleij <linus.walleij@linaro.org>, linux-arch <linux-arch@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, netdev <netdev@vger.kernel.org>, Vincent Chen <deanbo422@gmail.com>, DTML <devicetree@vger.kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, David Howells <dhowells@redhat.com>, Will Deacon <will.deacon@arm.com>, linux-serial@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
+Hi,
 
-On 04/01/18 12:02, Mark Brown wrote:
-> On Wed, Jan 03, 2018 at 09:20:45AM -0800, Stephen Boyd wrote:
->> On 12/14/2017 09:34 AM, srinivas.kandagatla@linaro.org wrote:
+sorry I missed your answer. Comments below.
+
+On 13/12/2017 07:06, Greentime Hu wrote:
+> Hi, Daniel:
 > 
->>> uThis patch adds support to DB820c machine driver.
+> 2017-12-12 18:05 GMT+08:00 Daniel Lezcano <daniel.lezcano@linaro.org>:
+>> On 12/12/2017 06:46, Rick Chen wrote:
+>>> ATCPIT100 is often used on the Andes architecture,
+>>> This timer provide 4 PIT channels. Each PIT channel is a
+>>> multi-function timer, can be configured as 32,16,8 bit timers
+>>> or PWM as well.
+>>>
+>>> For system timer it will set channel 1 32-bit timer0 as clock
+>>> source and count downwards until underflow and restart again.
+>>
+>> [ ... ]
+>>
+>>> +config CLKSRC_ATCPIT100
+>>> +     bool "Clocksource for AE3XX platform"
+>>> +     depends on NDS32 || COMPILE_TEST
+>>> +     depends on HAS_IOMEM
+>>> +     help
+>>> +       This option enables support for the Andestech AE3XX platform timers.
+>>
+>> Hi Rick,
+>>
+>> the general rule for the Kconfig is:
+>>
+>> bool "Clocksource for AE3XX platform" if COMPILE_TEST
+>>
+>> and no deps on the platform.
+>>
+>> It is up to the platform Kconfig to select the option.
+>>
+>> We want here a silent option but make it selectable in case of
+>> compilation test coverage.
 > 
->>> +	ret = dma_coerce_mask_and_coherent(card->dev, DMA_BIT_MASK(32));
 > 
->> Why do we need to do this? Can you add some sort of comment in the code
->> about why?
+> The way we like to use it is because
+> 1. This timer is a basic component to boot an nds32 CPU and it should
+> be able to select without COMPILE_TEST for nds32 architecture.
+
+Yes, so you don't need it to be selectable, you must select it from the
+platform's Kconfig.
+
+> 2. It seems conflict with debug info. I am not sure if there is
+> another way to debug kernel(with debug info) with COMPILE_TEST and
+> DEBUG_INFO because we need this driver for nds32 architecture.
 > 
-> And why are we applying DMA restrictions in a machine driver?
+> Symbol: DEBUG_INFO [=n]
+> Type  : boolean
+> Prompt: Compile the kernel with debug info
+>   Location:
+>     -> Kernel hacking
+>       -> Compile-time checks and compiler options
+>   Defined at lib/Kconfig.debug:140
+>   Depends on: DEBUG_KERNEL [=y] && !COMPILE_TEST [=n]
 
-Initially I had this in pcm driver, but looking at example usage of 
-snd_dma_alloc_pages, most of them use card->dev and some of them use pcm 
-device for allocating dma memory.
+The COMPILE_TEST option is only there to allow cross-compilation test
+coverage, it does not select or unselect the driver in usual way.
 
-Also, as I moved most dsp static services and dais out of DT, except 
-codec and sound card, sound card device was the only choice I had for 
-binding with iommu and enforcing iova range restrictions.
+If the COMPILE_TEST is enabled, then the option will appear in the
+menuconfig, so that gives the opportunity to select/unselect it.
 
-This call will be replaced by dma-ranges property in DT either way.
+Otherwise, the Kconfig's platform selects automatically the driver and
+the user *can't* unselect it from the menuconfig as it is a silent
+option and that is certainly what you want.
 
-
---srini
+>> Also, this driver is not a CLKSRC but a TIMER. Rename CLKSRC_ATCPIT100
+>> to TIMER_ATCPIT100.
 > 
+> Thanks. We will rename it in the next version patch.
+
+You just resend an entire series V5 for the architecture. I'm confused,
+what is the merging path ?
+
+Thanks.
+  -- Daniel
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
