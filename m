@@ -1,150 +1,67 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Applied "ASoC: mediatek: add some core clocks for MT2701 AFE" to the
- asoc tree
-Date: Thu, 04 Jan 2018 17:42:55 +0000
-Message-ID: <E1eX9Xb-00068V-3K@debutante>
-References: <d93643da906e25360a7dbbdcbfaa2228dfd688bf.1515038387.git.ryder.lee@mediatek.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2 0/8] ARM: sun9i: SMP support with Multi-Cluster Power
+ Management
+Date: Thu, 4 Jan 2018 18:04:09 +0000
+Message-ID: <20180104180409.GD12239@red-moon>
+References: <20180104143754.2425-1-wens@csie.org>
+ <20180104145838.qk5sbtg3vjg33txt@flea.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <d93643da906e25360a7dbbdcbfaa2228dfd688bf.1515038387.git.ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Garlic Tseng <garlic.tseng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20180104145838.qk5sbtg3vjg33txt-ZC1Zs529Oq4@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mylene JOSSERAND <mylene.josserand-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The patch
+On Thu, Jan 04, 2018 at 03:58:38PM +0100, Maxime Ripard wrote:
+> On Thu, Jan 04, 2018 at 10:37:46PM +0800, Chen-Yu Tsai wrote:
+> > This is v2 of my sun9i SMP support with MCPM series which was started
+> > over two years ago [1]. We've tried to implement PSCI for both the A80
+> > and A83T. Results were not promising. The issue is that these two chips
+> > have a broken security extensions implementation. If a specific bit is
+> > not burned in its e-fuse, most if not all security protections don't
+> > work [2]. Even worse, non-secure access to the GIC become secure. This
+> > requires a crazy workaround in the GIC driver which probably doesn't work
+> > in all cases [3].
+> > 
+> > Nicolas mentioned that the MCPM framework is likely overkill in our
+> > case [4]. However the framework does provide cluster/core state tracking
+> > and proper sequencing of cache related operations. We could rework
+> > the code to use standard smp_ops, but I would like to actually get
+> > a working version in first.
+> > 
+> > Much of the sunxi-specific MCPM code is derived from Allwinner code and
+> > documentation, with some references to the other MCPM implementations,
+> > as well as the Cortex's Technical Reference Manuals for the power
+> > sequencing info.
+> > 
+> > One major difference compared to other platforms is we currently do not
+> > have a standalone PMU or other embedded firmware to do the actually power
+> > sequencing. All power/reset control is done by the kernel. Nicolas
+> > mentioned that a new optional callback should be added in cases where the
+> > kernel has to do the actual power down [5]. For now however I'm using a
+> > dedicated single thread workqueue. CPU and cluster power off work is
+> > queued from the .{cpu,cluster}_powerdown_prepare callbacks. This solution
+> > is somewhat heavy, as I have a total of 10 static work structs. It might
+> > also be a bit racy, as nothing prevents the system from bringing a core
+> > back before the asynchronous work shuts it down. This would likely
+> > happen under a heavily loaded system with a scheduler that brings cores
+> > in and out of the system frequently. In simple use-cases it performs OK.
+> 
+> It all looks sane to me
+> Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-   ASoC: mediatek: add some core clocks for MT2701 AFE
+It does not to me, sorry. You do not need MCPM (and workqueues) to
+do SMP bring-up.
 
-has been applied to the asoc tree at
+Nico explained why, just do it:
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+commit 905cdf9dda5d ("ARM: hisi/hip04: remove the MCPM overhead")
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From 96365d9fdb2f0d81bfc010298289a8c168931cd0 Mon Sep 17 00:00:00 2001
-From: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Date: Thu, 4 Jan 2018 15:44:07 +0800
-Subject: [PATCH] ASoC: mediatek: add some core clocks for MT2701 AFE
-
-Add three core clocks for MT2701 AFE.
-
-Signed-off-by: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Signed-off-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
- sound/soc/mediatek/mt2701/mt2701-afe-clock-ctrl.c | 30 ++++++++++++++++++++++-
- sound/soc/mediatek/mt2701/mt2701-afe-common.h     |  3 +++
- 2 files changed, 32 insertions(+), 1 deletion(-)
-
-diff --git a/sound/soc/mediatek/mt2701/mt2701-afe-clock-ctrl.c b/sound/soc/mediatek/mt2701/mt2701-afe-clock-ctrl.c
-index 56a057c78c9a..949fc3a1d025 100644
---- a/sound/soc/mediatek/mt2701/mt2701-afe-clock-ctrl.c
-+++ b/sound/soc/mediatek/mt2701/mt2701-afe-clock-ctrl.c
-@@ -18,8 +18,11 @@
- #include "mt2701-afe-clock-ctrl.h"
- 
- static const char *const base_clks[] = {
-+	[MT2701_INFRA_SYS_AUDIO] = "infra_sys_audio_clk",
- 	[MT2701_TOP_AUD_MCLK_SRC0] = "top_audio_mux1_sel",
- 	[MT2701_TOP_AUD_MCLK_SRC1] = "top_audio_mux2_sel",
-+	[MT2701_TOP_AUD_A1SYS] = "top_audio_a1sys_hp",
-+	[MT2701_TOP_AUD_A2SYS] = "top_audio_a2sys_hp",
- 	[MT2701_AUDSYS_AFE] = "audio_afe_pd",
- 	[MT2701_AUDSYS_AFE_CONN] = "audio_afe_conn_pd",
- 	[MT2701_AUDSYS_A1SYS] = "audio_a1sys_pd",
-@@ -169,10 +172,26 @@ static int mt2701_afe_enable_audsys(struct mtk_base_afe *afe)
- 	struct mt2701_afe_private *afe_priv = afe->platform_priv;
- 	int ret;
- 
--	ret = clk_prepare_enable(afe_priv->base_ck[MT2701_AUDSYS_AFE]);
-+	/* Enable infra clock gate */
-+	ret = clk_prepare_enable(afe_priv->base_ck[MT2701_INFRA_SYS_AUDIO]);
- 	if (ret)
- 		return ret;
- 
-+	/* Enable top a1sys clock gate */
-+	ret = clk_prepare_enable(afe_priv->base_ck[MT2701_TOP_AUD_A1SYS]);
-+	if (ret)
-+		goto err_a1sys;
-+
-+	/* Enable top a2sys clock gate */
-+	ret = clk_prepare_enable(afe_priv->base_ck[MT2701_TOP_AUD_A2SYS]);
-+	if (ret)
-+		goto err_a2sys;
-+
-+	/* Internal clock gates */
-+	ret = clk_prepare_enable(afe_priv->base_ck[MT2701_AUDSYS_AFE]);
-+	if (ret)
-+		goto err_afe;
-+
- 	ret = clk_prepare_enable(afe_priv->base_ck[MT2701_AUDSYS_A1SYS]);
- 	if (ret)
- 		goto err_audio_a1sys;
-@@ -193,6 +212,12 @@ static int mt2701_afe_enable_audsys(struct mtk_base_afe *afe)
- 	clk_disable_unprepare(afe_priv->base_ck[MT2701_AUDSYS_A1SYS]);
- err_audio_a1sys:
- 	clk_disable_unprepare(afe_priv->base_ck[MT2701_AUDSYS_AFE]);
-+err_afe:
-+	clk_disable_unprepare(afe_priv->base_ck[MT2701_TOP_AUD_A2SYS]);
-+err_a2sys:
-+	clk_disable_unprepare(afe_priv->base_ck[MT2701_TOP_AUD_A1SYS]);
-+err_a1sys:
-+	clk_disable_unprepare(afe_priv->base_ck[MT2701_INFRA_SYS_AUDIO]);
- 
- 	return ret;
- }
-@@ -205,6 +230,9 @@ static void mt2701_afe_disable_audsys(struct mtk_base_afe *afe)
- 	clk_disable_unprepare(afe_priv->base_ck[MT2701_AUDSYS_A2SYS]);
- 	clk_disable_unprepare(afe_priv->base_ck[MT2701_AUDSYS_A1SYS]);
- 	clk_disable_unprepare(afe_priv->base_ck[MT2701_AUDSYS_AFE]);
-+	clk_disable_unprepare(afe_priv->base_ck[MT2701_TOP_AUD_A1SYS]);
-+	clk_disable_unprepare(afe_priv->base_ck[MT2701_TOP_AUD_A2SYS]);
-+	clk_disable_unprepare(afe_priv->base_ck[MT2701_INFRA_SYS_AUDIO]);
- }
- 
- int mt2701_afe_enable_clock(struct mtk_base_afe *afe)
-diff --git a/sound/soc/mediatek/mt2701/mt2701-afe-common.h b/sound/soc/mediatek/mt2701/mt2701-afe-common.h
-index 9a2b301a4c21..ae8ddeacfbfe 100644
---- a/sound/soc/mediatek/mt2701/mt2701-afe-common.h
-+++ b/sound/soc/mediatek/mt2701/mt2701-afe-common.h
-@@ -61,8 +61,11 @@ enum {
- };
- 
- enum audio_base_clock {
-+	MT2701_INFRA_SYS_AUDIO,
- 	MT2701_TOP_AUD_MCLK_SRC0,
- 	MT2701_TOP_AUD_MCLK_SRC1,
-+	MT2701_TOP_AUD_A1SYS,
-+	MT2701_TOP_AUD_A2SYS,
- 	MT2701_AUDSYS_AFE,
- 	MT2701_AUDSYS_AFE_CONN,
- 	MT2701_AUDSYS_A1SYS,
--- 
-2.15.1
+Lorenzo
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
