@@ -1,7 +1,7 @@
 From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH v2 7/7] ARM: dts: imx6q: Add Engicam i.CoreM6 1.5 Quad/Dual MIPI starter kit support
-Date: Thu,  4 Jan 2018 11:42:25 +0530
-Message-ID: <1515046345-15881-8-git-send-email-jagan@amarulasolutions.com>
+Subject: [PATCH v2 4/7] drm/panel: simple: Add support for KEO TX31D200VM0BAA
+Date: Thu,  4 Jan 2018 11:42:22 +0530
+Message-ID: <1515046345-15881-5-git-send-email-jagan@amarulasolutions.com>
 References: <1515046345-15881-1-git-send-email-jagan@amarulasolutions.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1515046345-15881-1-git-send-email-jagan@amarulasolutions.com>
@@ -10,109 +10,95 @@ To: Shawn Guo <shawnguo@kernel.org>
 Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Matteo Lisi <matteo.lisi@engicam.com>, Michael Trimarchi <michael@amarulasolutions.com>, Jagan Teki <jagan@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
-i.CoreM6 1.5 is an another i.CoreM6 QDL cpu modules which can be connected
-to EDIMM starter kit design with eMMC and MIPI-CSI interfaces suitable for
-Android and video capture application.
-
-notable features:
-CPU			NXP i.MX6 S/DL/D/Q, Up to 4 x Cortex-A9@800MHz
-Memory  		Up to 2 GB DDR3-1066
-Video Interfaces	Up to 1 Parallel Up to 2 LVDS HDMI 1.4
-			port 8 bit CSI INPUT MIPI-CSI INPUT
-1 x 10/100 Ethernet interface, 2 x USB, 1 x PCIe, 1 x I2S etc
+This adds support for the Kaohsiung Opto-Electronics.,
+TX31D200VM0BAA 12.3" HSXGA LVDS panel, which can be
+supported by the simple panel driver.
 
 Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 ---
 Changes for v2:
-- new patch
+- Updated binding info about optional properties, node and example
 
- arch/arm/boot/dts/Makefile             |  1 +
- arch/arm/boot/dts/imx6q-icore-mipi.dts | 25 +++++++++++++++++++++++++
- arch/arm/boot/dts/imx6qdl-icore.dtsi   | 23 +++++++++++++++++++++++
- 3 files changed, 49 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6q-icore-mipi.dts
+ .../bindings/display/panel/koe,tx31d200vm0baa.txt  | 25 ++++++++++++++++++++
+ drivers/gpu/drm/panel/panel-simple.c               | 27 ++++++++++++++++++++++
+ 2 files changed, 52 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/koe,tx31d200vm0baa.txt
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 11d0544..9b6a5ef 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -449,6 +449,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
- 	imx6q-hummingboard-emmc-som-v15.dtb \
- 	imx6q-hummingboard-som-v15.dtb \
- 	imx6q-icore.dtb \
-+	imx6q-icore-mipi.dtb \
- 	imx6q-icore-ofcap10.dtb \
- 	imx6q-icore-ofcap12.dtb \
- 	imx6q-icore-ofcap7.dtb \
-diff --git a/arch/arm/boot/dts/imx6q-icore-mipi.dts b/arch/arm/boot/dts/imx6q-icore-mipi.dts
+diff --git a/Documentation/devicetree/bindings/display/panel/koe,tx31d200vm0baa.txt b/Documentation/devicetree/bindings/display/panel/koe,tx31d200vm0baa.txt
 new file mode 100644
-index 0000000..acd3d33
+index 0000000..6a036ed
 --- /dev/null
-+++ b/arch/arm/boot/dts/imx6q-icore-mipi.dts
++++ b/Documentation/devicetree/bindings/display/panel/koe,tx31d200vm0baa.txt
 @@ -0,0 +1,25 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (C) 2017 Engicam S.r.l.
-+ * Copyright (C) 2017 Amarula Solutions B.V.
-+ * Author: Jagan Teki <jagan@amarulasolutions.com>
-+ */
++Kaohsiung Opto-Electronics. TX31D200VM0BAA 12.3" HSXGA LVDS panel
 +
-+/dts-v1/;
++This binding is compatible with the simple-panel binding, which is specified
++in simple-panel.txt in this directory.
 +
-+#include "imx6q.dtsi"
-+#include "imx6qdl-icore.dtsi"
++Required properties:
++- compatible: should be "koe,tx31d200vm0baa"
 +
-+/ {
-+	model = "Engicam i.CoreM6 Quad/Dual MIPI Starter Kit";
-+	compatible = "engicam,imx6-icore", "fsl,imx6q";
-+};
++Optional properties:
++- backlight: phandle of the backlight device attached to the panel
 +
-+&hdmi {
-+	ddc-i2c-bus = <&i2c2>;
-+	status = "okay";
-+};
++Optional nodes:
++- Video port for LVDS panel input.
 +
-+&usdhc3 {
-+	status = "okay";
-+};
-diff --git a/arch/arm/boot/dts/imx6qdl-icore.dtsi b/arch/arm/boot/dts/imx6qdl-icore.dtsi
-index 5fd9e00..d696447 100644
---- a/arch/arm/boot/dts/imx6qdl-icore.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-icore.dtsi
-@@ -265,6 +265,14 @@
- 	status = "okay";
++Example:
++	panel {
++		compatible = "koe,tx31d200vm0baa";
++		backlight = <&backlight_lvds>;
++
++		port {
++			panel_in: endpoint {
++				remote-endpoint = <&lvds0_out>;
++			};
++		};
++	};
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index e262462..ef3973d 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -1267,6 +1267,30 @@ static const struct panel_desc innolux_zj070na_01p = {
+ 	},
  };
  
-+&usdhc3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc3>;
-+	no-1-8-v;
-+	non-removable;
-+	status = "disabled";
++static const struct display_timing koe_tx31d200vm0baa_timing = {
++	.pixelclock = { 39600000, 43200000, 48000000 },
++	.hactive = { 1280, 1280, 1280 },
++	.hfront_porch = { 16, 36, 56 },
++	.hback_porch = { 16, 36, 56 },
++	.hsync_len = { 8, 8, 8 },
++	.vactive = { 480, 480, 480 },
++	.vfront_porch = { 6, 21, 33.5 },
++	.vback_porch = { 6, 21, 33.5 },
++	.vsync_len = { 8, 8, 8 },
++	.flags = DISPLAY_FLAGS_DE_HIGH,
 +};
 +
- &iomuxc {
- 	pinctrl_audmux: audmux {
- 		fsl,pins = <
-@@ -378,4 +386,19 @@
- 			MX6QDL_PAD_SD1_DAT3__SD1_DATA3 0x17070
- 		>;
- 	};
++static const struct panel_desc koe_tx31d200vm0baa = {
++	.timings = &koe_tx31d200vm0baa_timing,
++	.num_timings = 1,
++	.bpc = 6,
++	.size = {
++		.width = 292,
++		.height = 109,
++	},
++	.bus_format = MEDIA_BUS_FMT_RGB666_1X7X3_SPWG,
++};
 +
-+	pinctrl_usdhc3: usdhc3grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_SD3_CMD__SD3_CMD    0x17059
-+			MX6QDL_PAD_SD3_CLK__SD3_CLK    0x10059
-+			MX6QDL_PAD_SD3_DAT0__SD3_DATA0 0x17059
-+			MX6QDL_PAD_SD3_DAT1__SD3_DATA1 0x17059
-+			MX6QDL_PAD_SD3_DAT2__SD3_DATA2 0x17059
-+			MX6QDL_PAD_SD3_DAT3__SD3_DATA3 0x17059
-+			MX6QDL_PAD_SD3_DAT4__SD3_DATA4 0x17059
-+			MX6QDL_PAD_SD3_DAT5__SD3_DATA5 0x17059
-+			MX6QDL_PAD_SD3_DAT6__SD3_DATA6 0x17059
-+			MX6QDL_PAD_SD3_DAT7__SD3_DATA7 0x17059
-+		>;
-+	};
- };
+ static const struct display_timing kyo_tcg121xglp_timing = {
+ 	.pixelclock = { 52000000, 65000000, 71000000 },
+ 	.hactive = { 1024, 1024, 1024 },
+@@ -2180,6 +2204,9 @@ static const struct of_device_id platform_of_match[] = {
+ 		.compatible = "innolux,zj070na-01p",
+ 		.data = &innolux_zj070na_01p,
+ 	}, {
++		.compatible = "koe,tx31d200vm0baa",
++		.data = &koe_tx31d200vm0baa,
++	}, {
+ 		.compatible = "kyo,tcg121xglp",
+ 		.data = &kyo_tcg121xglp,
+ 	}, {
 -- 
 2.7.4
