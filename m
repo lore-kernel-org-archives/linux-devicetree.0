@@ -1,182 +1,181 @@
-From: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v6 3/6] can: m_can: Add PM Runtime
-Date: Thu, 4 Jan 2018 16:18:02 +0100
-Message-ID: <31b6a902-19d9-2068-1028-b95dfba036bb@pengutronix.de>
-References: <1513949488-13026-1-git-send-email-faiz_abbas@ti.com>
- <1513949488-13026-4-git-send-email-faiz_abbas@ti.com>
- <aea8638a-c847-b55e-ff2d-37999980ba7b@pengutronix.de>
- <1308ee81-a1e9-ac5a-2d97-334fa825ef8d@ti.com>
- <7d857263-14a7-6001-8f13-42d80f757573@pengutronix.de>
- <a45431f2-d262-39a1-9152-a2ff75560d21@ti.com>
- <cb306ae5-87c5-f6ef-0c40-3b47e208d256@pengutronix.de>
- <6bdaab16-cb16-e039-473c-52dd295bd4ba@ti.com>
+From: Eugen Hristev <eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Subject: Re: [PATCH 12/14] iio: adc: at91-sama5d2_adc: support for position
+ and pressure channels
+Date: Thu, 4 Jan 2018 17:17:54 +0200
+Message-ID: <25045512-f372-3f25-e84f-ed809db9dde3@microchip.com>
+References: <1513955241-10985-1-git-send-email-eugen.hristev@microchip.com>
+ <1513955241-10985-13-git-send-email-eugen.hristev@microchip.com>
+ <20171229170236.06bf6394@archlinux>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
- protocol="application/pgp-signature";
- boundary="mILBW1zXMwVlUrZ8tOETLXDbr33dozHgF"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <6bdaab16-cb16-e039-473c-52dd295bd4ba-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Faiz Abbas <faiz_abbas-l0cyMroinI0@public.gmane.org>, wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, fcooper-l0cyMroinI0@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Wenyou.Yang-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171229170236.06bf6394@archlinux>
+Content-Language: en-US
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---mILBW1zXMwVlUrZ8tOETLXDbr33dozHgF
-Content-Type: multipart/mixed; boundary="KIt3gJ0iOZIS8x9PKgdXdKuDa71mnuNQl";
- protected-headers="v1"
-From: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-To: Faiz Abbas <faiz_abbas-l0cyMroinI0@public.gmane.org>, wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org,
- mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org,
- devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org,
- fcooper-l0cyMroinI0@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Wenyou.Yang-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org,
- sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org
-Message-ID: <31b6a902-19d9-2068-1028-b95dfba036bb-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v6 3/6] can: m_can: Add PM Runtime
-References: <1513949488-13026-1-git-send-email-faiz_abbas-l0cyMroinI0@public.gmane.org>
- <1513949488-13026-4-git-send-email-faiz_abbas-l0cyMroinI0@public.gmane.org>
- <aea8638a-c847-b55e-ff2d-37999980ba7b-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
- <1308ee81-a1e9-ac5a-2d97-334fa825ef8d-l0cyMroinI0@public.gmane.org>
- <7d857263-14a7-6001-8f13-42d80f757573-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
- <a45431f2-d262-39a1-9152-a2ff75560d21-l0cyMroinI0@public.gmane.org>
- <cb306ae5-87c5-f6ef-0c40-3b47e208d256-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
- <6bdaab16-cb16-e039-473c-52dd295bd4ba-l0cyMroinI0@public.gmane.org>
-In-Reply-To: <6bdaab16-cb16-e039-473c-52dd295bd4ba-l0cyMroinI0@public.gmane.org>
 
---KIt3gJ0iOZIS8x9PKgdXdKuDa71mnuNQl
-Content-Type: text/plain; charset=utf-8
-Content-Language: de-DE
-Content-Transfer-Encoding: quoted-printable
 
-On 01/04/2018 04:17 PM, Faiz Abbas wrote:
-> Hi,
->=20
-> On Wednesday 03 January 2018 08:47 PM, Marc Kleine-Budde wrote:
->> On 01/03/2018 04:06 PM, Faiz Abbas wrote:
->>> Hi,
->>>
->>> On Wednesday 03 January 2018 07:55 PM, Marc Kleine-Budde wrote:
->>>> On 01/03/2018 01:39 PM, Faiz Abbas wrote:
->>>>> On Tuesday 02 January 2018 09:37 PM, Marc Kleine-Budde wrote:
->>>>>> On 12/22/2017 02:31 PM, Faiz Abbas wrote:
->>>>>>> From: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
->>>>>>>
->>>>>>> Add support for PM Runtime which is the new way to handle managin=
-g clocks.
->>>>>>> However, to avoid breaking SoCs not using PM_RUNTIME leave the ol=
-d clk
->>>>>>> management approach in place.
->>>>>>
->>>>>> There is no PM_RUNTIME anymore since 464ed18ebdb6 ("PM: Eliminate
->>>>>> CONFIG_PM_RUNTIME")
->>>>>
->>>>> Ok. Will change the commit message.
->>>>>
->>>>>>
->>>>>> Have a look at the discussion: https://patchwork.kernel.org/patch/=
-9436507/ :
->>>>>>
->>>>>>>> Well, I admit it would be nicer if drivers didn't have to worry =
-about=20
->>>>>>>> whether or not CONFIG_PM was enabled.  A slightly cleaner approa=
-ch=20
->>>>>>>> from the one outlined above would have the probe routine do this=
-:
->>>>>>>>
->>>>>>>> 	my_power_up(dev);
->>>>>>>> 	pm_runtime_set_active(dev);
->>>>>>>> 	pm_runtime_get_noresume(dev);
->>>>>>>> 	pm_runtime_enable(dev);
->>>>>
->>>>> This discussion seems to be about cases in which CONFIG_PM is not
->>>>> enabled. CONFIG_PM is always selected in the case of omap devices.
->>>>
->>>> Yes, but in the commit message you state that you need to support
->>>> systems that don't have PM_RUNTIME enabled. The only mainline SoCs I=
- see
->>>> is "arch/arm/boot/dts/sama5d2.dtsi" so far. Please check if they sel=
-ect
->>>> CONFIG_PM, then we can make the driver much simpler.
->>>
->>> Actually the old clock management (for hclk which is the interface
->>> clock) is still required as mentioned in the cover letter. Will chang=
-e
->>> the rather misleading description.
+On 29.12.2017 19:02, Jonathan Cameron wrote:
+> On Fri, 22 Dec 2017 17:07:19 +0200
+> Eugen Hristev <eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org> wrote:
+> 
+>> The ADC IP supports position and pressure measurements for a touchpad
+>> connected on channels 0,1,2,3 for a 4-wire touchscreen with pressure
+>> measurement support.
+>> Using the inkern API, a driver can request a trigger and read the
+>> channel values from the ADC.
+>> The implementation provides a trigger named "touch" which can be
+>> connected to a consumer driver.
+>> Once a driver connects and attaches a pollfunc to this trigger, the
+>> configure trigger callback is called, and then the ADC driver will
+>> initialize pad measurement.
+>> First step is to enable touchscreen 4wire support and enable
+>> pen detect IRQ.
+>> Once a pen is detected, a periodic trigger is setup to trigger every
+>> 2 ms (e.g.) and sample the resistive touchscreen values. The trigger poll
+>> is called, and the consumer driver is then woke up, and it can read the
+>> respective channels for the values : X, and Y for position and pressure
+>> channel.
+>> Because only one trigger can be active in hardware in the same time,
+>> while touching the pad, the ADC will block any attempt to use the
+>> triggered buffer. Same, conversions using the software trigger are also
+>> impossible (since the periodic trigger is setup).
+>> If some driver wants to attach while the trigger is in use, it will
+>> also fail.
+>> Once the pen is not detected anymore, the trigger is free for use (hardware
+>> or software trigger, with or without DMA).
+>> Channels 0,1,2 and 3 are unavailable if a touchscreen is enabled.
 >>
->> Ok. So you can use the code as discussed on
->> https://patchwork.kernel.org/patch/9436507/ ?
->=20
-> Looking at the kernel configuration, it seems like SAMA5D2 platform
-> selects CONFIG_PM (Wenyou, please confirm). So, it seems like the only
-> users of this driver always have CONFIG_PM enabled.
->=20
-> So I guess the best way is to maintain the current code for pm_runtime_=
-*
-> and move the clock enable/disable to pm_runtime callbacks.
->=20
-> Something like this:
->=20
-> m_can_runtime_resume()
-> {
-> 	clk_prepare_enable(cclk);
-> 	clk_prepare_enable(hclk);
-> }
->=20
-> m_can_runtime_suspend()
-> {
-> 	clk_disable_unprepare(cclk);
-> 	clk_disable_unprepare(hclk);
-> }
->=20
-> SET_RUNTIME_PM_OPS(m_can_runtime_suspend, m_can_runtime_resume, NULL)
->=20
-> static void m_can_start(struct net_device *dev)
-> {
-> 	pm_runtime_get_sync(dev)
-> 	...
-> }
->=20
-> static void m_can_stop(struct net_device *dev)
-> {
-> 	...
-> 	pm_runtime_put_sync(dev)
-> }
->=20
-> Does that sound okay? If yes, I will go work on the implementation.
+>> Some parts of this patch are based on initial original work by
+>> Mohamed Jamsheeth Hajanajubudeen and Bandaru Venkateswara Swamy
+>>
+> OK, so comments inline.
+> 
+> What I'm missing currently though is an explanation of why the slightly
+> more standard arrangement of using a callback buffer doesn't work here.
+> The only addition I think you need to do that is to allow a consumer to
+> request a particular trigger.  I also think some of the other provisions
+> could be handled using standard features and slightly reducing the flexibility.
+> I don't know for example if it's useful to allow other channels to be
+> read when touch is not in progress or not.
+> 
+> So restrictions:
+> 
+> 1. Touch screen channels can only be read when touch is enabled.
+>   - use the available_scan_masks to control this. Or the callback that lets
+>     you do the same dynamically.
+> 2. You need to push these channels to your consumer driver.
+>   - register a callback buffer rather than jumping through the hoops to
+>     insert your own pollfunc.  That will call a function in your
+>     consumer, providing the data from the 3 channels directly.
+> 3. You need to make sure it is using the right driver.  For that you
+>     will I think need a new interface.
+> 
+> Various other comments inline. I may well be missing something as this is
+> a fair bit of complex code to read - if so then next version should have
+> a clear cover letter describing why this more standard approach can't be
+> used.
 
-ACK + error checking.
+Hello Jonathan and thanks for the review of my patch series,
 
-Marc
+before starting and working over the required modifications and 
+suggestions that you sent me, I want to be a little more explicit about 
+the design of my implementation.
+Hope this will clarify some things, and maybe I can as well understand 
+better what you have in mind to support this feature set.
 
---=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
+Why have I picked a pollfunction: We discussed a while back on the 
+mailing list that you do not have an inkern mechanism to expose the 
+triggers to other drivers, and that it may be a good idea to have it for 
+such kind of actually multi function device, instead of having a MFD 
+driver, an ADC driver, and an Input driver, all sharing the same 
+register map, the same IRQ , etc, with some kind of synchronization to 
+avoid stepping on each other for the hardware resource.
+So I considered to expose the trigger by attaching and detaching 
+pollfunctions to it. Which is the main thing what we use a trigger for.
+
+So, what I had in mind, was to create a consumer driver that will 
+request triggers from the IIO device just like other drivers request 
+channels (part which is already done in IIO).
+In order to do this I had to somehow wake up the consumer driver when 
+new data was available from the touchscreen. So, having the IRQ only in 
+the ADC device, and then on Pen detect and No pen detect just start or 
+stop the periodic trigger, which needs to be polled. The magic part is 
+that the consumer driver has a poll function already attached to this 
+trigger, so the poll function is just called every time we have new 
+data. The poll function is attached as an irq handler, and then we can 
+reuse all the read_raw data by using a scheduled work from the consumer 
+driver, to read the channels.
+To do this, the ADC registers a special trigger named "touch trigger" 
+which is never enabled by the ADC driver. Instead, when a pollfunc is 
+attached to it, the attach function will also configure it with enabled 
+state. In the ADC, this means to start the touchscreen functionality. If 
+the touch is requested, it will standby and wait for pen detect IRQ.
+Once we have pen detect, we can use a periodic trigger to sample the 
+touch data, and poll the "touch" trigger. The consumer driver will wake 
+up and schedule a work , that will use the standard read raw interface 
+(inkern) that will read three virtual channels (position + pressure). 
+They are not actual hardware channels, as the touch information is being 
+received on channels 0,1,2,3, but reading these virtual channels will 
+read from different registers inside the ADC IP ( x position, y 
+position, pressure), do some computations on the data, and feed the 
+consumer with the values , hiding the behind the scenes hardware 
+specific calculations.
+After trigger is polled , the ADC will resume normal functionality, and 
+the consumer driver will continue to sleep.
+We need to have a periodic trigger to sample the data because the actual 
+analog to digital conversion inside the IP block needs to be triggered. 
+The touchscreen data measurements cannot happen in hardware without 
+being triggered. If I try with a hrtimer to get a periodic IRQ to just 
+read the data, it will never be ready. The datasheet states that the 
+touchscreen measurements "will be attached to the conversion sequence". 
+So the periodic trigger is forcing a conversion sequence. This could be 
+done with a software trigger as well, but why the hassle to start it 
+every 2 milliseconds (or other time interval), if we can do it by 
+periodic trigger ?
+Once we get the No pen IRQ, we stop the periodic trigger and it can be 
+used in another purpose (software or external as of now in the driver, 
+in the future we can add PWM trigger and Timer trigger)
+
+In short, the ADC in Sama5D2 also supports touchscreen, and in 
+touchscreen mode , 4 of the channels are being used for this purpose. 
+This however, doesn't stop the ADC to use the other channels . The 
+hardware has 12 total single channels and they can be paired to have 6 
+more differential channels. The only thing that is blocked is the 
+trigger, but only if the pen is touching (when we start the periodic 
+trigger to sample the touchscreen). If the pen is not touching, an 
+external trigger or software trigger can be used without any issues (so 
+why limit the functionality, if this is available from hardware ?). 
+Because of the reason I discussed above (touchscreen sequence must be 
+triggered), we cannot use another trigger in the same time.
 
 
---KIt3gJ0iOZIS8x9PKgdXdKuDa71mnuNQl--
+I see your idea with the callback buffer and it's worth exploring. 
+Mainly this series was to actually show you what I had in mind about 
+supporting the resistive touchscreen, and to give you some actually 
+working code/patch, so we can discuss based on real implementation, not 
+just suppositions.
 
---mILBW1zXMwVlUrZ8tOETLXDbr33dozHgF
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+You are right in many of the other comments that you said, and I will 
+come up with a v2 to this series. For now, I need to know if this is a 
+good or right direction in which I am going, or I should try to change 
+all the mechanism to callback buffer ? Or maybe I am totally in a bad 
+direction ?
+The requirements are that the consumer driver needs to be somehow woke 
+up for every new touch data available, and report to the input 
+subsystem. As it was done before, the at91 old driver, just creates and 
+registers an input device by itself, and then reports the position and 
+touches. I was thinking that with this trigger consumer implementation, 
+things can be better in terms of subsystem separation and support.
 
------BEGIN PGP SIGNATURE-----
+Thanks again and let me know of your thoughts,
 
-iQEzBAEBCgAdFiEE4bay/IylYqM/npjQHv7KIOw4HPYFAlpORaoACgkQHv7KIOw4
-HPYEpggA0J7mlmUVHxbUACUbX5XlAzSwJZ6O/D59kiMso88Wmxntj04KQocDCoCx
-Fvr8zMW/C04k/uhkcX8xgNNFbstRi6QTUYPLvu/Qh9n5o1hGMGZaemWPQQ86RUDz
-OFM5gpVBfKftOx1tLrAWSc2BnS5BVljc96+0lK/htdHGjlIr2YRq9gn7F+Hhm7Fa
-BOwzpW6wgUUuRr1UyrsTQPCDgIDgD1PUq0l25pRUFEH2or1Ks5uf4vpyEiIMDa19
-R2rEd2vPjJibxhnzxf1etgzkrBxEl4DviPi3pSo7x8h2WhFY2+FuYvEi98Wps5Ko
-7F6XMEYhXfpy47qu+HTfJJtKl2+Riw==
-=y6XA
------END PGP SIGNATURE-----
+Eugen
 
---mILBW1zXMwVlUrZ8tOETLXDbr33dozHgF--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+
+[...]
