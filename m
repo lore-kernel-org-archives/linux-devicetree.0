@@ -1,137 +1,110 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v4 0/2] Initial Allwinner V3s CSI Support
-Date: Thu, 4 Jan 2018 15:06:25 +0100
-Message-ID: <20180104140625.5gbeaj5vgetusjlf@flea.lan>
-References: <1513935138-35223-1-git-send-email-yong.deng@magewell.com>
- <1513950408.841.81.camel@megous.com>
- <20171225111526.4663f997f5d6bfc6cf157f10@magewell.com>
- <20171225085802.lfyk4blmbqxq6r2m@core.my.home>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Greentime Hu <green.hu@gmail.com>
+Subject: Re: [PATCH v5 1/3] clocksource/drivers/atcpit100: Add andestech
+ atcpit100 timer
+Date: Thu, 4 Jan 2018 22:06:38 +0800
+Message-ID: <CAEbi=3c4yAx7Tejz8aPw3-3vj89t8cg-zNEY-vbF7KaMo8OM0Q@mail.gmail.com>
+References: <1513057621-19084-1-git-send-email-rickchen36@gmail.com>
+ <1513057621-19084-2-git-send-email-rickchen36@gmail.com> <bb7383ba-bb8e-3cbd-4ce0-faaefa8ed114@linaro.org>
+ <CAEbi=3cEEtLQRiv-cyUwEmcBNOC2Sz7AhzZkpznQWYb9VUojug@mail.gmail.com> <ff51fff7-e963-f9fd-10d6-9b90a64d7aac@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="nnhklmqa5czybvrd"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBYXJXDJAKGQELUCXQYI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20171225085802.lfyk4blmbqxq6r2m-9v8tmBix7cb9zxVx7UNMDg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-Cc: Yong <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rick Chang <rick.chang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunx
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <ff51fff7-e963-f9fd-10d6-9b90a64d7aac@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Greentime <greentime@andestech.com>, Rick Chen <rickchen36@gmail.com>, Rick Chen <rick@andestech.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Linus Walleij <linus.walleij@linaro.org>, linux-arch <linux-arch@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, netdev <netdev@vger.kernel.org>, Vincent Chen <deanbo422@gmail.com>, DTML <devicetree@vger.kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, David Howells <dhowells@redhat.com>, Will Deacon <will.deacon@arm.com>, linux-serial@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi, Daniel:
 
---nnhklmqa5czybvrd
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+2018-01-04 21:50 GMT+08:00 Daniel Lezcano <daniel.lezcano@linaro.org>:
+>
+> Hi,
+>
+> sorry I missed your answer. Comments below.
+>
+> On 13/12/2017 07:06, Greentime Hu wrote:
+>> Hi, Daniel:
+>>
+>> 2017-12-12 18:05 GMT+08:00 Daniel Lezcano <daniel.lezcano@linaro.org>:
+>>> On 12/12/2017 06:46, Rick Chen wrote:
+>>>> ATCPIT100 is often used on the Andes architecture,
+>>>> This timer provide 4 PIT channels. Each PIT channel is a
+>>>> multi-function timer, can be configured as 32,16,8 bit timers
+>>>> or PWM as well.
+>>>>
+>>>> For system timer it will set channel 1 32-bit timer0 as clock
+>>>> source and count downwards until underflow and restart again.
+>>>
+>>> [ ... ]
+>>>
+>>>> +config CLKSRC_ATCPIT100
+>>>> +     bool "Clocksource for AE3XX platform"
+>>>> +     depends on NDS32 || COMPILE_TEST
+>>>> +     depends on HAS_IOMEM
+>>>> +     help
+>>>> +       This option enables support for the Andestech AE3XX platform timers.
+>>>
+>>> Hi Rick,
+>>>
+>>> the general rule for the Kconfig is:
+>>>
+>>> bool "Clocksource for AE3XX platform" if COMPILE_TEST
+>>>
+>>> and no deps on the platform.
+>>>
+>>> It is up to the platform Kconfig to select the option.
+>>>
+>>> We want here a silent option but make it selectable in case of
+>>> compilation test coverage.
+>>
+>>
+>> The way we like to use it is because
+>> 1. This timer is a basic component to boot an nds32 CPU and it should
+>> be able to select without COMPILE_TEST for nds32 architecture.
+>
+> Yes, so you don't need it to be selectable, you must select it from the
+> platform's Kconfig.
 
-On Mon, Dec 25, 2017 at 09:58:02AM +0100, Ond=C5=99ej Jirman wrote:
-> Hello,
->=20
-> On Mon, Dec 25, 2017 at 11:15:26AM +0800, Yong wrote:
-> > Hi,
-> >=20
-> > On Fri, 22 Dec 2017 14:46:48 +0100
-> > Ond=C5=99ej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org> wrote:
-> >=20
-> > > Hello,
-> > >=20
-> > > Yong Deng p=C3=AD=C5=A1e v P=C3=A1 22. 12. 2017 v 17:32 +0800:
-> > > >=20
-> > > > Test input 0:
-> > > >=20
-> > > >         Control ioctls:
-> > > >                 test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Suppo=
-rted)
-> > > >                 test VIDIOC_QUERYCTRL: OK (Not Supported)
-> > > >                 test VIDIOC_G/S_CTRL: OK (Not Supported)
-> > > >                 test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
-> > > >                 test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Su=
-pported)
-> > > >                 test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
-> > > >                 Standard Controls: 0 Private Controls: 0
-> > >=20
-> > > I'm not sure if your driver passes control queries to the subdev. It
-> > > did not originally, and I'm not sure you picked up the change from my
-> > > version of the driver. "Not supported" here seems to indicate that it
-> > > does not.
-> > >=20
-> > > I'd be interested what's the recommended practice here. It sure helps
-> > > with some apps that expect to be able to modify various input control=
-s
-> > > directly on the /dev/video# device. These are then supported out of t=
-he
-> > > box.
-> > >=20
-> > > It's a one-line change. See:
-> > >=20
-> > > https://www.kernel.org/doc/html/latest/media/kapi/v4l2-controls.html#=
-in
-> > > heriting-controls
-> >=20
-> > I think this is a feature and not affect the driver's main function.
-> > I just focused on making the CSI main function to work properly in=20
-> > the initial version. Is this feature mandatory or most commonly used?
->=20
-> I grepped the platform/ code and it seems, that inheriting controls
-> from subdevs is pretty common for input drivers. (there are varying
-> approaches though, some inherit by hand in the link function, some
-> just register and empty ctrl_handler on the v4l2_dev and leave the
-> rest to the core).
->=20
-> Practically, I haven't found a common app that would allow me to enter
-> both /dev/video0 and /dev/v4l-subdevX. I'm sure anyone can write one
-> themselves, but it would be better if current controls were available
-> at the /dev/video0 device automatically.
->=20
-> It's much simpler for the userspace apps than the alternative, which
-> is trying to identify the correct subdev that is currently
-> associated with the CSI driver at runtime, which is not exactly
-> straightforward and requires much more code, than a few lines in
-> the kernel, that are required to inherit controls:
+I am not sure that I get your point or not.
+We don't have a CONFIG_PLAT_AE3XX.
+Do you mean we should create one and select CLKSRC_ATCPIT100 under
+CONFIG_PLAT_AE3XX?
 
-And it becomes much more complicated once you have the same controls
-on the v4l2 device and subdevice, which is not that uncommon.
+>> 2. It seems conflict with debug info. I am not sure if there is
+>> another way to debug kernel(with debug info) with COMPILE_TEST and
+>> DEBUG_INFO because we need this driver for nds32 architecture.
+>>
+>> Symbol: DEBUG_INFO [=n]
+>> Type  : boolean
+>> Prompt: Compile the kernel with debug info
+>>   Location:
+>>     -> Kernel hacking
+>>       -> Compile-time checks and compiler options
+>>   Defined at lib/Kconfig.debug:140
+>>   Depends on: DEBUG_KERNEL [=y] && !COMPILE_TEST [=n]
+>
+> The COMPILE_TEST option is only there to allow cross-compilation test
+> coverage, it does not select or unselect the driver in usual way.
+>
+> If the COMPILE_TEST is enabled, then the option will appear in the
+> menuconfig, so that gives the opportunity to select/unselect it.
+>
+> Otherwise, the Kconfig's platform selects automatically the driver and
+> the user *can't* unselect it from the menuconfig as it is a silent
+> option and that is certainly what you want.
+>
+>>> Also, this driver is not a CLKSRC but a TIMER. Rename CLKSRC_ATCPIT100
+>>> to TIMER_ATCPIT100.
+>>
+>> Thanks. We will rename it in the next version patch.
+>
+> You just resend an entire series V5 for the architecture. I'm confused,
+> what is the merging path ?
 
-Maxime
+Sorry. I didn't get your point.
+We sent the timer patch and the architecture patch together because it
+would be easier for reviewer to check the vdso implementations.
+What do you mean about the merging path?
 
-
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
-
---nnhklmqa5czybvrd
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlpONOAACgkQ0rTAlCFN
-r3Rs5Q//YLSLMwb1Age/HpT5S5h7AAMyD70Uq04lOC/U7YoCvYGcybYGZ0zvpjjF
-RfH8BaJ3HJzfzz0Y6buVK5UVwra/bjuKpcqECC8TyJgvMrX6oOLNLtRfwBeuT7na
-/c6kz0LuYUrjkaidQlTpMXWCNgpK8shOt32VkLexy/6Q17Su7QFIZJseIbCAgVd/
-b0pEL/dYSzh/QfmOA5sn9d9gg76uT/wZ17wKMgG4IOELCuaLOBiHTg6yJig1Safx
-jRpWoTOkLwvHp0hhwDH7yY7o4yCN6E17NBlYeGN4mvIZ2FG/NlFXiaAQALIXRj89
-Qn0RTCPVb8ipgiss0aimPIst5w/WJHSEAJkJOj8Dx66Cg1qD6VL1dELQdwfIxFcG
-9jNVlMeYKfcRD/aPklEJqYpWMKSFXaJJbcWqAOTo9B2LEHec5aEQhKMZ8z355rZT
-F5FZNYSe/0NBIxUVmDTtJFkqoO7c3mBYmZvxx9KBC/r50zQJteVeXRNwRfjsH2Le
-jkyThgVkSMdGZJD7hMyExLsw2K6dq7+ztoKNY1drDledpRlu4dnjzophZ6Zt33dJ
-ArmnyY+lofB0l7aeabZgiTWwnAF6hc6VJKml3gLloa3qJ1eLbHUJAjBsscltgpSO
-XYaWiaYGeUHh8SM6P30MvIiYxi5x+lctXwIX6dE+YSC17fGCn/A=
-=ZplK
------END PGP SIGNATURE-----
-
---nnhklmqa5czybvrd--
+Thanks.
