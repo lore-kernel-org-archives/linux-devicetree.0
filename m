@@ -1,57 +1,37 @@
-From: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 0/8] ARM: sun9i: SMP support with
- Multi-Cluster Power Management
-Date: Thu, 4 Jan 2018 15:56:32 -0500 (EST)
-Message-ID: <nycvar.YSQ.7.76.1801041517410.3310@knanqh.ubzr>
-References: <20180104143754.2425-1-wens@csie.org>
-Reply-To: nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCE6L2HOQQPRBAVKXLJAKGQEGSB6WJA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180104143754.2425-1-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mylene JOSSERAND <mylene.josserand-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>
+From: Rob Herring <robh@kernel.org>
+Subject: [PATCH 0/3] PCI: move DT PCI functions to PCI core
+Date: Thu,  4 Jan 2018 15:12:12 -0600
+Message-ID: <20180104211215.11344-1-robh@kernel.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Frank Rowand <frowand.list@gmail.com>, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 4 Jan 2018, Chen-Yu Tsai wrote:
+Most subsystem specific functions have been moved into the respective
+subsystems. Only PCI and networking remain. This series moves most of the
+PCI related code to drivers/pci/of.c. Some bus address functions for PCI
+remain in of/address.c because we don't have infrastructure to split up
+the per bus helper functions.
 
-> Nicolas mentioned that the MCPM framework is likely overkill in our
-> case [4]. However the framework does provide cluster/core state tracking
-> and proper sequencing of cache related operations. We could rework
-> the code to use standard smp_ops, but I would like to actually get
-> a working version in first.
-> 
-> [...] For now however I'm using a
-> dedicated single thread workqueue. CPU and cluster power off work is
-> queued from the .{cpu,cluster}_powerdown_prepare callbacks. This solution
-> is somewhat heavy, as I have a total of 10 static work structs. It might
-> also be a bit racy, as nothing prevents the system from bringing a core
-> back before the asynchronous work shuts it down. This would likely
-> happen under a heavily loaded system with a scheduler that brings cores
-> in and out of the system frequently. In simple use-cases it performs OK.
+I expect Bjorn to take this series, so PPC maintainers please ack.
 
-If you know up front your code is racy then this doesn't fully qualify 
-as a "working version". Furthermore you're trading custom cluster/core 
-state tracking for workqueue handling which doesn't look like a winning 
-tradeoff to me. Especially given you can't have asynchronous CPU wakeups 
-in hardware from an IRQ to deal with then the state tracking becomes 
-very simple.
+Rob
 
-If you hook into struct smp_operations directly, you'll have direct 
-access to both .cpu_die and .cpu_kill methods which are executed on the 
-target CPU and on a different CPU respectively, which is exactly what 
-you need. Those calls are already serialized with .smp_boot_secondary so 
-you don't have to worry about races. The only thing you need to protect 
-against races is your cluster usage count. Your code will end up being 
-simpler than what you have now. See arch/arm/mach-hisi/platmcpm.c for 
-example.
+Rob Herring (3):
+  PCI: move OF related PCI functions into PCI core
+  powerpc/pci: use of_irq_parse_and_map_pci helper
+  PCI: make of_irq_parse_pci static
 
-
-Nicolas
+ arch/arm/mach-mvebu/Kconfig      |   1 -
+ arch/powerpc/kernel/pci-common.c |   8 +-
+ drivers/of/Kconfig               |  16 --
+ drivers/of/Makefile              |   2 -
+ drivers/of/address.c             |   8 +-
+ drivers/of/of_pci.c              | 384 -----------------------------
+ drivers/of/of_pci_irq.c          | 131 ----------
+ drivers/pci/of.c                 | 505 +++++++++++++++++++++++++++++++++++++++
+ include/linux/of_pci.h           |   8 +-
+ 9 files changed, 510 insertions(+), 553 deletions(-)
+ delete mode 100644 drivers/of/of_pci.c
+ delete mode 100644 drivers/of/of_pci_irq.c
