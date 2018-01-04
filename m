@@ -1,108 +1,81 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH v5 1/3] clocksource/drivers/atcpit100: Add andestech
- atcpit100 timer
-Date: Thu, 4 Jan 2018 14:50:09 +0100
-Message-ID: <ff51fff7-e963-f9fd-10d6-9b90a64d7aac@linaro.org>
-References: <1513057621-19084-1-git-send-email-rickchen36@gmail.com>
- <1513057621-19084-2-git-send-email-rickchen36@gmail.com>
- <bb7383ba-bb8e-3cbd-4ce0-faaefa8ed114@linaro.org>
- <CAEbi=3cEEtLQRiv-cyUwEmcBNOC2Sz7AhzZkpznQWYb9VUojug@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <CAEbi=3cEEtLQRiv-cyUwEmcBNOC2Sz7AhzZkpznQWYb9VUojug@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-arch-owner@vger.kernel.org
-To: Greentime Hu <green.hu@gmail.com>, Greentime <greentime@andestech.com>
-Cc: Rick Chen <rickchen36@gmail.com>, Rick Chen <rick@andestech.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Linus Walleij <linus.walleij@linaro.org>, linux-arch <linux-arch@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, netdev <netdev@vger.kernel.org>, Vincent Chen <deanbo422@gmail.com>, DTML <devicetree@vger.kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, David Howells <dhowells@redhat.com>, Will Deacon <will.deacon@arm.com>, linux-serial@vger.kernel.org
+From: Ilya Ledvich <ilya@compulab.co.il>
+Subject: [PATCH v3] PCI: imx6: Add PHY reference clock source support
+Date: Thu,  4 Jan 2018 15:52:57 +0200
+Message-ID: <1515073977-10153-1-git-send-email-ilya@compulab.co.il>
+References: <CAOMZO5AFC9dxhsQjmRrDA7Z3KMkEemryKOBmQhXm19NXKxHkKQ@mail.gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAOMZO5AFC9dxhsQjmRrDA7Z3KMkEemryKOBmQhXm19NXKxHkKQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Richard Zhu <hongxing.zhu@nxp.com>, Lucas Stach <l.stach@pengutronix.de>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Ilya Ledvich <ilya@compulab.co.il>
 List-Id: devicetree@vger.kernel.org
 
+i.MX7D variant of the IP can use either Crystal Oscillator input
+or internal clock input as a Reference Clock input for PCIe PHY.
+Add support for an optional property 'fsl,pcie-phy-refclk-internal'.
+If present then an internal clock input is used as PCIe PHY
+reference clock source. By default an external oscillator input
+is still used.
 
-Hi,
+Verified on Compulab SBC-iMX7 Single Board Computer.
 
-sorry I missed your answer. Comments below.
+Signed-off-by: Ilya Ledvich <ilya@compulab.co.il>
+---
+changes since V2:
+	add a vendor prefix 'fsl' to a new property
 
-On 13/12/2017 07:06, Greentime Hu wrote:
-> Hi, Daniel:
-> 
-> 2017-12-12 18:05 GMT+08:00 Daniel Lezcano <daniel.lezcano@linaro.org>:
->> On 12/12/2017 06:46, Rick Chen wrote:
->>> ATCPIT100 is often used on the Andes architecture,
->>> This timer provide 4 PIT channels. Each PIT channel is a
->>> multi-function timer, can be configured as 32,16,8 bit timers
->>> or PWM as well.
->>>
->>> For system timer it will set channel 1 32-bit timer0 as clock
->>> source and count downwards until underflow and restart again.
->>
->> [ ... ]
->>
->>> +config CLKSRC_ATCPIT100
->>> +     bool "Clocksource for AE3XX platform"
->>> +     depends on NDS32 || COMPILE_TEST
->>> +     depends on HAS_IOMEM
->>> +     help
->>> +       This option enables support for the Andestech AE3XX platform timers.
->>
->> Hi Rick,
->>
->> the general rule for the Kconfig is:
->>
->> bool "Clocksource for AE3XX platform" if COMPILE_TEST
->>
->> and no deps on the platform.
->>
->> It is up to the platform Kconfig to select the option.
->>
->> We want here a silent option but make it selectable in case of
->> compilation test coverage.
-> 
-> 
-> The way we like to use it is because
-> 1. This timer is a basic component to boot an nds32 CPU and it should
-> be able to select without COMPILE_TEST for nds32 architecture.
+ Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt | 5 +++++
+ drivers/pci/dwc/pci-imx6.c                               | 8 +++++++-
+ 2 files changed, 12 insertions(+), 1 deletion(-)
 
-Yes, so you don't need it to be selectable, you must select it from the
-platform's Kconfig.
-
-> 2. It seems conflict with debug info. I am not sure if there is
-> another way to debug kernel(with debug info) with COMPILE_TEST and
-> DEBUG_INFO because we need this driver for nds32 architecture.
-> 
-> Symbol: DEBUG_INFO [=n]
-> Type  : boolean
-> Prompt: Compile the kernel with debug info
->   Location:
->     -> Kernel hacking
->       -> Compile-time checks and compiler options
->   Defined at lib/Kconfig.debug:140
->   Depends on: DEBUG_KERNEL [=y] && !COMPILE_TEST [=n]
-
-The COMPILE_TEST option is only there to allow cross-compilation test
-coverage, it does not select or unselect the driver in usual way.
-
-If the COMPILE_TEST is enabled, then the option will appear in the
-menuconfig, so that gives the opportunity to select/unselect it.
-
-Otherwise, the Kconfig's platform selects automatically the driver and
-the user *can't* unselect it from the menuconfig as it is a silent
-option and that is certainly what you want.
-
->> Also, this driver is not a CLKSRC but a TIMER. Rename CLKSRC_ATCPIT100
->> to TIMER_ATCPIT100.
-> 
-> Thanks. We will rename it in the next version patch.
-
-You just resend an entire series V5 for the architecture. I'm confused,
-what is the merging path ?
-
-Thanks.
-  -- Daniel
-
+diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+index 7b1e48b..1591a6a 100644
+--- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
++++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+@@ -50,6 +50,11 @@ Additional required properties for imx7d-pcie:
+ 	       - "pciephy"
+ 	       - "apps"
+ 
++Additional optional properties for imx7d-pcie:
++- fsl,pcie-phy-refclk-internal: If present then an internal PLL input is used
++  as PCIe PHY reference clock source. By default an external oscillator input
++  is used.
++
+ Example:
+ 
+ 	pcie@0x01000000 {
+diff --git a/drivers/pci/dwc/pci-imx6.c b/drivers/pci/dwc/pci-imx6.c
+index b734835..36812d3 100644
+--- a/drivers/pci/dwc/pci-imx6.c
++++ b/drivers/pci/dwc/pci-imx6.c
+@@ -61,6 +61,7 @@ struct imx6_pcie {
+ 	u32			tx_swing_low;
+ 	int			link_gen;
+ 	struct regulator	*vpcie;
++	bool			pciephy_refclk_sel;
+ };
+ 
+ /* Parameters for the waiting for PCIe PHY PLL to lock on i.MX7 */
+@@ -474,7 +475,9 @@ static void imx6_pcie_init_phy(struct imx6_pcie *imx6_pcie)
+ 	switch (imx6_pcie->variant) {
+ 	case IMX7D:
+ 		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
+-				   IMX7D_GPR12_PCIE_PHY_REFCLK_SEL, 0);
++				   IMX7D_GPR12_PCIE_PHY_REFCLK_SEL,
++				   imx6_pcie->pciephy_refclk_sel ?
++				   IMX7D_GPR12_PCIE_PHY_REFCLK_SEL : 0);
+ 		break;
+ 	case IMX6SX:
+ 		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
+@@ -840,6 +843,9 @@ static int imx6_pcie_probe(struct platform_device *pdev)
+ 		imx6_pcie->vpcie = NULL;
+ 	}
+ 
++	imx6_pcie->pciephy_refclk_sel =
++		of_property_read_bool(node, "fsl,pcie-phy-refclk-internal");
++
+ 	platform_set_drvdata(pdev, imx6_pcie);
+ 
+ 	ret = imx6_add_pcie_port(imx6_pcie, pdev);
 -- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+1.9.1
