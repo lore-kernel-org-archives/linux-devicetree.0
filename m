@@ -1,7 +1,7 @@
 From: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v2 10/10] ARM: dts: keystone-k2e-clocks: Fix missing unit address separator
-Date: Thu, 4 Jan 2018 13:57:01 -0600
-Message-ID: <20180104195701.4042-11-afd@ti.com>
+Subject: [PATCH v2 02/10] ARM: dts: keystone: Move reset-controller to under device-state-control
+Date: Thu, 4 Jan 2018 13:56:53 -0600
+Message-ID: <20180104195701.4042-3-afd@ti.com>
 References: <20180104195701.4042-1-afd@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,32 +12,48 @@ To: Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob He
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Andrew F . Davis" <afd-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+The keystone_irq node describes a device that is a member of the device
+state control module address space. As such, it should not be a member
+of soc0 bus but instead a sub-node of device-state-control.
 
-Commit 95d8b41c765b ("ARM: dts: keystone-k2e-clocks: Add missing unit
-name to clock nodes that have regs") fixed the unit names on various
-clock nodes but missed out adding the unit address separator on the
-clkhyperlink0 clock node. Fix the same.
+This move also fixes a warning about not having a reg property. Now
+that this is a sub-node of device-state-control, a syscon type node,
+we add this reg property but relative to the syscon base, this way
+when the dt-binding/driver are updated we can drop the non-standard
+ti,syscon-dev property completely and simply use get_resource() in
+the driver.
 
-Fixes: 95d8b41c765b ("ARM: dts: keystone-k2e-clocks: Add missing unit name to clock nodes that have regs")
-Signed-off-by: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+Signed-off-by: Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org>
+Acked-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
 ---
- arch/arm/boot/dts/keystone-k2e-clocks.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/keystone.dtsi | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm/boot/dts/keystone-k2e-clocks.dtsi b/arch/arm/boot/dts/keystone-k2e-clocks.dtsi
-index 5e0e7d232161..f7592155a740 100644
---- a/arch/arm/boot/dts/keystone-k2e-clocks.dtsi
-+++ b/arch/arm/boot/dts/keystone-k2e-clocks.dtsi
-@@ -42,7 +42,7 @@ clocks {
- 		domain-id = <0>;
- 	};
+diff --git a/arch/arm/boot/dts/keystone.dtsi b/arch/arm/boot/dts/keystone.dtsi
+index d726896ffb38..5246042f522b 100644
+--- a/arch/arm/boot/dts/keystone.dtsi
++++ b/arch/arm/boot/dts/keystone.dtsi
+@@ -101,13 +101,14 @@
+ 				#interrupt-cells = <1>;
+ 				ti,syscon-dev = <&devctrl 0x2a0>;
+ 			};
+-		};
  
--	clkhyperlink0: clkhyperlink02350030 {
-+	clkhyperlink0: clkhyperlink0@2350030 {
- 		#clock-cells = <0>;
- 		compatible = "ti,keystone,psc-clock";
- 		clocks = <&chipclk12>;
+-		rstctrl: reset-controller {
+-			compatible = "ti,keystone-reset";
+-			ti,syscon-pll = <&pllctrl 0xe4>;
+-			ti,syscon-dev = <&devctrl 0x328>;
+-			ti,wdt-list = <0>;
++			rstctrl: reset-controller@328 {
++				compatible = "ti,keystone-reset";
++				reg = <0x328 0x10>;
++				ti,syscon-pll = <&pllctrl 0xe4>;
++				ti,syscon-dev = <&devctrl 0x328>;
++				ti,wdt-list = <0>;
++			};
+ 		};
+ 
+ 		/include/ "keystone-clocks.dtsi"
 -- 
 2.15.1
 
