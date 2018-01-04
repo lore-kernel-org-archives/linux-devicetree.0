@@ -1,150 +1,54 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [RFC] pwm-backlight: Allow backlight to remain disabled on boot
-Date: Thu, 4 Jan 2018 10:22:10 +0200
-Message-ID: <6a77b1bc-29fa-2bc5-baeb-0cba8747137a@ti.com>
-References: <1406806970-12561-1-git-send-email-thierry.reding@gmail.com>
- <6b14a283-0ded-e22c-8f81-5c241ad57463@rock-chips.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH] of/fdt: Fix #ifdef dependency of early flattree declarations
+Date: Thu, 4 Jan 2018 09:33:25 +0100
+Message-ID: <CAMuHMdX-xdcHvwD6Ljrn5BapJJ-qcwzsN4Ax1nGVOxdAFZs-kw@mail.gmail.com>
+References: <1514888297-10791-1-git-send-email-geert+renesas@glider.be> <201801040759.rKYq0B7R%fengguang.wu@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <6b14a283-0ded-e22c-8f81-5c241ad57463@rock-chips.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: hl <hl@rock-chips.com>, Thierry Reding <thierry.reding@gmail.com>, Jingoo Han <jg1.han@samsung.com>, Bryan Wu <cooloney@gmail.com>, Lee Jones <lee.jones@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Eric Miao <eric.y.miao@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Tomi Valkeinen <tomi.valkeinen@ti.com>, linux-kernel@vger.kernel.org, Doug Anderson <dianders@google.com>, Matthias Kaehlcke <mka@google.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Brian Norris <briannorris@google.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <201801040759.rKYq0B7R%fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, kbuild-all-JC7UmRfGjtg@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpPbiAyMDE4LTAxLTA0IDA0OjE4LCBobCB3cm90ZToKPiBIaSBBbGwsCj4gCj4gwqDCoMKg
-IFNpbmNlIG1hbnkgcGFuZWwgcG93ZXIgc2VxdWVuY2UgcmVxdWVzdCBiYWNrbGlnaHQgc3RheSBk
-aXNhYmxlCj4gCj4gYmVmb3JlIHBhbmVsIHBvd2VyIHJlYWR5LCBidXQgd2l0aCBub3cgcHdtLWJh
-Y2tsaWdodCBkcnZpZXIsIGl0IGRlZmF1bHQgdG8KPiAKPiBlbmFibGUgYmFja2xpZ2h0IHdoZW4g
-cHdtLWJhY2tsaWdodCBwcm9iZSwgaXQgbWVzcyB1cCB0aGUgcGFuZWwgcG93ZXIKPiBzZXF1ZW5j
-ZS4KPiAKPiBTbyB3ZSBuZWVkIHRoaXMgcGF0Y2guIFRoaXMgcGF0Y2ggaGF2ZSBiZWVuIGZseSBm
-b3IgYSBsb25nIHRpbWUsIGRvZXMKPiBhbnlvbmUgaGF2ZSBwbGFuCj4gCj4gdG8gbWVyZ2UgaXQ/
-Cgp5b3Ugc2hvdWxkIG5vdCBuZWVkIHRoaXMgYW55bW9yZSBzaW5jZSB3ZSBoYXZlOgo4OTJjNzc4
-OGM3MjRiYWNrbGlnaHQ6IHB3bV9ibDogRml4IEdQSU8gb3V0IGZvciB1bmltcGxlbWVudGVkCi5n
-ZXRfZGlyZWN0aW9uKCkKCmQxYjgxMjk0NTc1MCBiYWNrbGlnaHQ6IHB3bV9ibDogQ2hlY2sgdGhl
-IFBXTSBzdGF0ZSBmb3IgaW5pdGlhbApiYWNrbGlnaHQgcG93ZXIgc3RhdGUKCjc2MTNjOTIyMzE1
-ZSBiYWNrbGlnaHQ6IHB3bV9ibDogTW92ZSB0aGUgY2hlY2tzIGZvciBpbml0aWFsIHBvd2VyIHN0
-YXRlCnRvIGEgc2VwYXJhdGUgZnVuY3Rpb24KCldpdGggdGhlc2UgaW4gcGxhY2UgdGhlIGJhY2ts
-aWdodCB3aWxsIGJlIGtlcHQgZGlzYWJsZWQgaWYgaXQgd2FzCmRpc2FibGVkIGR1cmluZyBib290
-IF9pZl8geW91IGhhdmUgYm9vdGVkIHZpYSBEVCBfYW5kXyB5b3UgaGF2ZSBhCnBoYW5kbGUgcG9p
-bnRpbmcgdG8gdGhlIGJhY2tsaWdodCBub2RlIChpbXBseWluZyB0aGF0IHRoZSBiYWNrbGlnaHQg
-aXMKbWFuYWdlZCBieSB0aGUgZGlzcGxheSBkcml2ZXIpLgoKPiAKPiAKPiBPbiBUaHVyc2RheSwg
-SnVseSAzMSwgMjAxNCAwNzo0MiBQTSwgVGhpZXJyeSBSZWRpbmcgd3JvdGU6Cj4+IEZyb206IFRo
-aWVycnkgUmVkaW5nIDx0cmVkaW5nQG52aWRpYS5jb20+Cj4+Cj4+IFRoZSBkZWZhdWx0IGZvciBi
-YWNrbGlnaHQgZGV2aWNlcyBpcyB0byBiZSBlbmFibGVkIGltbWVkaWF0ZWx5IHdoZW4KPj4gcmVn
-aXN0ZXJpbmcgd2l0aCB0aGUgYmFja2xpZ2h0IGNvcmUuIFRoaXMgY2FuIGJlIHVzZWZ1bCBmb3Ig
-c2V0dXBzIHRoYXQKPj4gdXNlIGEgc2ltcGxlIGZyYW1lYnVmZmVyIGRldmljZSBhbmQgd2hlcmUg
-dGhlIGJhY2tsaWdodCBjYW5ub3Qgb3RoZXJ3aXNlCj4+IGJlIGhvb2tlZCB1cCB0byB0aGUgcGFu
-ZWwuCj4+Cj4+IEhvd2V2ZXIsIHdoZW4gZGVhbGluZyB3aXRoIG1vcmUgY29tcGxleCBzZXR1cHMs
-IHN1Y2ggYXMgdGhvc2Ugb2YgcmVjZW50Cj4+IEFSTSBTb0NzLCB0aGlzIGNhbiBiZSBwcm9ibGVt
-YXRpYy4gU2luY2UgdGhlIGJhY2tsaWdodCBpcyB1c3VhbGx5IHNldHVwCj4+IHNlcGFyYXRlbHkg
-ZnJvbSB0aGUgZGlzcGxheSBjb250cm9sbGVyLCB0aGUgcHJvYmUgb3JkZXIgaXMgbm90IHVzdWFs
-bHkKPj4gZGV0ZXJtaW5pc3RpYy4gVGhhdCBjYW4gbGVhZCB0byBzaXR1YXRpb25zIHdoZXJlIHRo
-ZSBiYWNrbGlnaHQgd2lsbCBiZQo+PiBwb3dlcmVkIHVwIGFuZCB0aGUgcGFuZWwgd2lsbCBzaG93
-IGFuIHVuaW5pdGlhbGl6ZWQgZnJhbWVidWZmZXIuCj4+Cj4+IEZ1cnRoZXJtb3JlLCBzdWJzeXN0
-ZW1zIHN1Y2ggYXMgRFJNIGhhdmUgYWR2YW5jZWQgZnVuY3Rpb25hbGl0eSB0byBzZXQKPj4gdGhl
-IHBvd2VyIG1vZGUgb2YgYSBwYW5lbC4gSW4gb3JkZXIgdG8gYWxsb3cgc3VjaCBzZXR1cHMgdG8g
-cG93ZXIgdXAgdGhlCj4+IHBhbmVsIGF0IGV4YWN0bHkgdGhlIHJpZ2h0IG1vbWVudCwgYSB3YXkg
-aXMgbmVlZGVkIHRvIHByZXZlbnQgdGhlCj4+IGJhY2tsaWdodCBjb3JlIGZyb20gcG93ZXJpbmcg
-dGhlIGJhY2tsaWdodCB1cCBhdXRvbWF0aWNhbGx5IHdoZW4gaXQgaXMKPj4gcmVnaXN0ZXJlZC4K
-Pj4KPj4gVGhpcyBjb21taXQgaW50cm9kdWNlcyBhIG5ldyBib290X29mZiBmaWVsZCBpbiB0aGUg
-cGxhdGZvcm0gZGF0YSAoYW5kCj4+IGFsc28gaW1wbGVtZW50cyBnZXR0aW5nIHRoZSBzYW1lIGlu
-Zm9ybWF0aW9uIGZyb20gZGV2aWNlIHRyZWUpLiBXaGVuIHNldAo+PiB0aGUgaW5pdGlhbCBiYWNr
-bGlnaHQgcG93ZXIgbW9kZSB3aWxsIGJlIHNldCB0byAib2ZmIi4KPj4KPj4gU2lnbmVkLW9mZi1i
-eTogVGhpZXJyeSBSZWRpbmcgPHRyZWRpbmdAbnZpZGlhLmNvbT4KPj4gLS0tCj4+IEkndmUgYmVl
-biBtZWFuaW5nIHRvIHNlbmQgdGhpcyBmb3IgYSB3aGlsZSBidXQgd2FzIGFsd2F5cyBob2xkaW5n
-IGJhY2sKPj4gYmVjYXVzZSBvZiB0aGUgaW5kb2N0cmluYXRpb24gdGhhdCB0aGlzIHR5cGUgb2Yg
-Y29uZmlndXJhdGlvbiBzaG91bGRuJ3QKPj4gYmUgcGFydCBvZiBkZXZpY2UgdHJlZS4gSG93ZXZl
-ciB0aGlzIGlzc3VlIHdhcyByZWNlbnRseSByYWlzZWQgYWdhaW4gaW4KPj4gdGhlIGNvbnRleHQg
-b2YgcG93ZXIgdXAgc2VxdWVuY2VzIGZvciBkaXNwbGF5IHBhbmVscy4gQXMgZGVzY3JpYmVkIGFi
-b3ZlCj4+IHRoZSBpc3N1ZSBpcyB0aGF0IHBhbmVsIGRhdGFzaGVldHMgcmVjb21tZW5kIHRoYXQg
-dGhlIGJhY2tsaWdodCBhdHRhY2hlZAo+PiB0byBhIHBhbmVsIGJlIHR1cm5lZCBvbiBhdCB0aGUg
-dmVyeSBsYXN0IHN0ZXAgdG8gYXZvaWQgdmlzdWFsIGdsaXRjaGVzCj4+IGR1cmluZyB0aGUgcGFu
-ZWwncyBwb3dlciB1cCBzZXF1ZW5jZS4gV2l0aCB0aGUgY3VycmVudCBpbXBsZW1lbnRhdGlvbiBp
-dAo+PiBpcyB0eXBpY2FsIGZvciB0aGUgYmFja2xpZ2h0IHRvIGJlIHByb2JlZCBiZWZvcmUgdGhl
-IGRpc3BsYXkgcGFuZWwuIFRoYXQKPj4gaGFzLCBpbiBtYW55IGNhc2VzLCB0aGUgc2lkZS1lZmZl
-Y3Qgb2YgZW5hYmxpbmcgdGhlIGJhY2tsaWdodCwgdGhlcmVmb3JlCj4+IG1ha2luZyB0aGUgc2Ny
-ZWVuIGNvbnRlbnQgdmlzaWJsZSBiZWZvcmUgaXQncyBhY3R1YWxseSBpbml0aWFsaXplZC4KPj4K
-Pj4gU29tZSBwYW5lbHMgY29tZSB1cCB3aXRoIHJhbmRvbSBnYXJiYWdlIHdoZW4gdW5pbml0aWFs
-aXplZCwgb3RoZXJzIHNob3cKPj4gYWxsIHdoaXRlLiBXaXRoIHNvbWUgbHVjayB0aGUgcGFuZWwg
-d2lsbCBiZSBhbGwgYmxhY2sgYW5kIHVzZXJzIHdvbid0Cj4+IHJlYWxseSBub3RpY2UuCj4+Cj4+
-IFRoaXMgcGF0Y2ggaXMgYW4gYXR0ZW1wdCB0byBlbmFibGUgYm9hcmRzIHRvIG92ZXJyaWRlIHRo
-ZSBkZWZhdWx0IG9mCj4+IHR1cm5pbmcgb24gdGhlIGJhY2tsaWdodCBmb3IgdGhlIHB3bS1iYWNr
-bGlnaHQgZHJpdmVyLiBJJ20gbm90IHN1cmUgaWYKPj4gdGhlcmUgd2FzIGEgc3BlY2lmaWMgcmVh
-c29uIHRvIHR1cm4gb24gdGhlIGJhY2tsaWdodCBieSBkZWZhdWx0IHdoZW4KPj4gdGhpcyBkcml2
-ZXIgd2FzIGluaXRpYWxseSB3cml0dGVuLCBidXQgdGhlIGZhY3QgaXMgdGhhdCBzaW5jZSBpdCBo
-YXMKPj4gcHJldHR5IG11Y2ggYWx3YXlzIGJlZW4gbGlrZSB0aGlzIHdlIGNhbid0IHJlYWxseSBn
-byBhbmQgY2hhbmdlIHRoZQo+PiBkZWZhdWx0LCBvdGhlcndpc2UgYSBsb3Qgb2YgcGVvcGxlIG1h
-eSBlbmQgdXAgd2l0aCBubyBiYWNrbGlnaHQgYW5kIG5vCj4+IGNsdWUgYXMgdG8gaG93IHRvIGVu
-YWJsZSBpdC4gU28gdGhlIG9ubHkgcmVhc29uYWJsZSB0aGluZyB3ZSBjYW4gZG8gaXMKPj4gdG8g
-a2VlcCB0aGUgb2xkIGJlaGF2aW91ciBhbmQgZ2l2ZSBuZXcgYm9hcmRzIGEgd2F5IHRvIG92ZXJy
-aWRlIGl0IGlmCj4+IHRoZXkga25vdyB0aGF0IHNvbWUgb3RoZXIgcGFydCBvZiB0aGUgc3RhY2sg
-d2lsbCBlbmFibGUgaXQgYXQgdGhlIHJpZ2h0Cj4+IG1vbWVudC4KPj4KPj4gwqAgLi4uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvdmlkZW8vYmFja2xpZ2h0L3B3bS1iYWNrbGlnaHQudHh0wqDCoMKgwqDC
-oMKgwqDCoCB8IDEgKwo+PiDCoCBkcml2ZXJzL3ZpZGVvL2JhY2tsaWdodC9wd21fYmwuY8KgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoCB8Cj4+IDggKysrKysrKysKPj4gwqAgaW5jbHVkZS9saW51eC9wd21fYmFja2xpZ2h0LmjC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqAgfAo+PiAyICsrCj4+IMKgIDMgZmlsZXMgY2hhbmdlZCwgMTEgaW5zZXJ0
-aW9ucygrKQo+Pgo+PiBkaWZmIC0tZ2l0Cj4+IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL3ZpZGVvL2JhY2tsaWdodC9wd20tYmFja2xpZ2h0LnR4dAo+PiBiL0RvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy92aWRlby9iYWNrbGlnaHQvcHdtLWJhY2tsaWdodC50eHQK
-Pj4gaW5kZXggNzY0ZGI4NmQ0NDFhLi42NWUwMDFhMTczM2QgMTAwNjQ0Cj4+IC0tLSBhL0RvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy92aWRlby9iYWNrbGlnaHQvcHdtLWJhY2tsaWdo
-dC50eHQKPj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZpZGVvL2Jh
-Y2tsaWdodC9wd20tYmFja2xpZ2h0LnR4dAo+PiBAQCAtMTcsNiArMTcsNyBAQCBPcHRpb25hbCBw
-cm9wZXJ0aWVzOgo+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAicHdtcyIgcHJv
-cGVydHkgKHNlZSBQV00gYmluZGluZ1swXSkKPj4gwqDCoMKgIC0gZW5hYmxlLWdwaW9zOiBjb250
-YWlucyBhIHNpbmdsZSBHUElPIHNwZWNpZmllciBmb3IgdGhlIEdQSU8KPj4gd2hpY2ggZW5hYmxl
-cwo+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBhbmQgZGlzYWJsZXMg
-dGhlIGJhY2tsaWdodCAoc2VlIEdQSU8gYmluZGluZ1sxXSkKPj4gK8KgIC0gYmFja2xpZ2h0LWJv
-b3Qtb2ZmOiBrZWVwIHRoZSBiYWNrbGlnaHQgZGlzYWJsZWQgb24gYm9vdAo+PiDCoCDCoCBbMF06
-IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wd20vcHdtLnR4dAo+PiDCoCBbMV06
-IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncGlvL2dwaW8udHh0Cj4+IGRpZmYg
-LS1naXQgYS9kcml2ZXJzL3ZpZGVvL2JhY2tsaWdodC9wd21fYmwuYwo+PiBiL2RyaXZlcnMvdmlk
-ZW8vYmFja2xpZ2h0L3B3bV9ibC5jCj4+IGluZGV4IGQ3YTNkMTNlNzJlYy4uNjJhZGZjOWQzN2E3
-IDEwMDY0NAo+PiAtLS0gYS9kcml2ZXJzL3ZpZGVvL2JhY2tsaWdodC9wd21fYmwuYwo+PiArKysg
-Yi9kcml2ZXJzL3ZpZGVvL2JhY2tsaWdodC9wd21fYmwuYwo+PiBAQCAtMTczLDYgKzE3Myw4IEBA
-IHN0YXRpYyBpbnQgcHdtX2JhY2tsaWdodF9wYXJzZV9kdChzdHJ1Y3QgZGV2aWNlICpkZXYsCj4+
-IMKgwqDCoMKgwqDCoMKgwqDCoCBkYXRhLT5tYXhfYnJpZ2h0bmVzcy0tOwo+PiDCoMKgwqDCoMKg
-IH0KPj4gwqAgK8KgwqDCoCBkYXRhLT5ib290X29mZiA9IG9mX3Byb3BlcnR5X3JlYWRfYm9vbChu
-b2RlLAo+PiAiYmFja2xpZ2h0LWJvb3Qtb2ZmIik7Cj4+ICsKPj4gwqDCoMKgwqDCoCByZXR1cm4g
-MDsKPj4gwqAgfQo+PiDCoCBAQCAtMzE3LDYgKzMxOSwxMiBAQCBzdGF0aWMgaW50IHB3bV9iYWNr
-bGlnaHRfcHJvYmUoc3RydWN0Cj4+IHBsYXRmb3JtX2RldmljZSAqcGRldikKPj4gwqDCoMKgwqDC
-oCB9Cj4+IMKgIMKgwqDCoMKgwqAgYmwtPnByb3BzLmJyaWdodG5lc3MgPSBkYXRhLT5kZnRfYnJp
-Z2h0bmVzczsKPj4gKwo+PiArwqDCoMKgIGlmIChkYXRhLT5ib290X29mZikKPj4gK8KgwqDCoMKg
-wqDCoMKgIGJsLT5wcm9wcy5wb3dlciA9IEZCX0JMQU5LX1BPV0VSRE9XTjsKPj4gK8KgwqDCoCBl
-bHNlCj4+ICvCoMKgwqDCoMKgwqDCoCBibC0+cHJvcHMucG93ZXIgPSBGQl9CTEFOS19VTkJMQU5L
-Owo+PiArCj4+IMKgwqDCoMKgwqAgYmFja2xpZ2h0X3VwZGF0ZV9zdGF0dXMoYmwpOwo+PiDCoCDC
-oMKgwqDCoMKgIHBsYXRmb3JtX3NldF9kcnZkYXRhKHBkZXYsIGJsKTsKPj4gZGlmZiAtLWdpdCBh
-L2luY2x1ZGUvbGludXgvcHdtX2JhY2tsaWdodC5oCj4+IGIvaW5jbHVkZS9saW51eC9wd21fYmFj
-a2xpZ2h0LmgKPj4gaW5kZXggZWZkZDkyMjdhNDljLi4xZmMxNDk4OWRhNGEgMTAwNjQ0Cj4+IC0t
-LSBhL2luY2x1ZGUvbGludXgvcHdtX2JhY2tsaWdodC5oCj4+ICsrKyBiL2luY2x1ZGUvbGludXgv
-cHdtX2JhY2tsaWdodC5oCj4+IEBAIC0xNSw2ICsxNSw4IEBAIHN0cnVjdCBwbGF0Zm9ybV9wd21f
-YmFja2xpZ2h0X2RhdGEgewo+PiDCoMKgwqDCoMKgIHVuc2lnbmVkIGludCAqbGV2ZWxzOwo+PiDC
-oMKgwqDCoMKgIC8qIFRPRE8gcmVtb3ZlIG9uY2UgYWxsIHVzZXJzIGFyZSBzd2l0Y2hlZCB0byBn
-cGlvZF8qIEFQSSAqLwo+PiDCoMKgwqDCoMKgIGludCBlbmFibGVfZ3BpbzsKPj4gK8KgwqDCoCBi
-b29sIGJvb3Rfb2ZmOwo+PiArCj4+IMKgwqDCoMKgwqAgaW50ICgqaW5pdCkoc3RydWN0IGRldmlj
-ZSAqZGV2KTsKPj4gwqDCoMKgwqDCoCBpbnQgKCpub3RpZnkpKHN0cnVjdCBkZXZpY2UgKmRldiwg
-aW50IGJyaWdodG5lc3MpOwo+PiDCoMKgwqDCoMKgIHZvaWQgKCpub3RpZnlfYWZ0ZXIpKHN0cnVj
-dCBkZXZpY2UgKmRldiwgaW50IGJyaWdodG5lc3MpOwo+IAo+IAo+IAo+IF9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCj4gbGludXgtYXJtLWtlcm5lbCBtYWls
-aW5nIGxpc3QKPiBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKPiBodHRwOi8v
-bGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwKCi0g
-UMOpdGVyCgpUZXhhcyBJbnN0cnVtZW50cyBGaW5sYW5kIE95LCBQb3Jra2FsYW5rYXR1IDIyLCAw
-MDE4MCBIZWxzaW5raS4KWS10dW5udXMvQnVzaW5lc3MgSUQ6IDA2MTU1MjEtNC4gS290aXBhaWtr
-YS9Eb21pY2lsZTogSGVsc2lua2kKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJu
-ZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFu
-L2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+Hi Fengguang,
+
+On Thu, Jan 4, 2018 at 12:16 AM, kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> wrote:
+> I love your patch! Yet something to improve:
+
+Thanks, I love your report!
+
+> url:    https://github.com/0day-ci/linux/commits/Geert-Uytterhoeven/of-fdt-Fix-ifdef-dependency-of-early-flattree-declarations/20180104-062259
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
+> config: i386-randconfig-i0-201800 (attached as .config)
+> compiler: gcc-7 (Debian 7.2.0-12) 7.2.1 20171025
+> reproduce:
+>         # save the attached .config to linux build tree
+>         make ARCH=i386
+>
+> All errors (new ones prefixed by >>):
+>
+>    drivers/tty/serial/earlycon.c: In function 'param_setup_earlycon':
+>>> drivers/tty/serial/earlycon.c:221:11: error: implicit declaration of function 'early_init_dt_scan_chosen_stdout' [-Werror=implicit-function-declaration]
+>        return early_init_dt_scan_chosen_stdout();
+>               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>    cc1: some warnings being treated as errors
+
+Bummer, of course the dummies should be provided based on complementary
+logic... Will fix in v2.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
