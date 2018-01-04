@@ -1,85 +1,120 @@
-From: <sean.wang@mediatek.com>
-Subject: [PATCH 01/12] dt-bindings: clock: mediatek: add missing required #reset-cells
-Date: Thu, 4 Jan 2018 17:40:51 +0800
-Message-ID: <084288e2520f9bd3ccdb3cf7aeef8ebcae48e6d7.1515057696.git.sean.wang@mediatek.com>
+From: <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 09/12] arm64: dts: mt7622: add flash related device nodes
+Date: Thu, 4 Jan 2018 17:40:59 +0800
+Message-ID: <157338ea729032365251766dcc3134861de33562.1515057696.git.sean.wang@mediatek.com>
 References: <cover.1515057696.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1515057696.git.sean.wang@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, matthias.bgg@gmail.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>, Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1515057696.git.sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, RogerCC Lin <rogercc.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Guochun Mao <guochun.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Sean Wang <sean.wang@mediatek.com>
+From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-All ethsys, pciesys and ssusbsys internally include reset controller, so
-explicitly add back these missing cell definitions to related bindings
-and examples.
+add nodes for NOR flash, parallel Nand flash with error correction code
+support.
 
-Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-Cc: Rob Herring <robh@kernel.org>
-Cc: Stephen Boyd <sboyd@codeaurora.org>
+Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: RogerCC Lin <rogercc.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Guochun Mao <guochun.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 ---
- Documentation/devicetree/bindings/arm/mediatek/mediatek,ethsys.txt   | 2 ++
- Documentation/devicetree/bindings/arm/mediatek/mediatek,pciesys.txt  | 2 ++
- Documentation/devicetree/bindings/arm/mediatek/mediatek,ssusbsys.txt | 2 ++
- 3 files changed, 6 insertions(+)
+ arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts | 23 +++++++++++++++++++
+ arch/arm64/boot/dts/mediatek/mt7622.dtsi     | 34 ++++++++++++++++++++++++++++
+ 2 files changed, 57 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,ethsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,ethsys.txt
-index 7aa3fa1..8f5335b 100644
---- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,ethsys.txt
-+++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,ethsys.txt
-@@ -9,6 +9,7 @@ Required Properties:
- 	- "mediatek,mt2701-ethsys", "syscon"
- 	- "mediatek,mt7622-ethsys", "syscon"
- - #clock-cells: Must be 1
-+- #reset-cells: Must be 1
- 
- The ethsys controller uses the common clk binding from
- Documentation/devicetree/bindings/clock/clock-bindings.txt
-@@ -20,4 +21,5 @@ ethsys: clock-controller@1b000000 {
- 	compatible = "mediatek,mt2701-ethsys", "syscon";
- 	reg = <0 0x1b000000 0 0x1000>;
- 	#clock-cells = <1>;
-+	#reset-cells = <1>;
+diff --git a/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts b/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
+index 3b2eacc..20b1160 100644
+--- a/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
++++ b/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
+@@ -235,6 +235,10 @@
+ 	};
  };
-diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,pciesys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,pciesys.txt
-index d5d5f12..7fe5dc6 100644
---- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,pciesys.txt
-+++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,pciesys.txt
-@@ -8,6 +8,7 @@ Required Properties:
- - compatible: Should be:
- 	- "mediatek,mt7622-pciesys", "syscon"
- - #clock-cells: Must be 1
-+- #reset-cells: Must be 1
  
- The PCIESYS controller uses the common clk binding from
- Documentation/devicetree/bindings/clock/clock-bindings.txt
-@@ -19,4 +20,5 @@ pciesys: pciesys@1a100800 {
- 	compatible = "mediatek,mt7622-pciesys", "syscon";
- 	reg = <0 0x1a100800 0 0x1000>;
- 	#clock-cells = <1>;
-+	#reset-cells = <1>;
++&bch {
++	status = "disabled";
++};
++
+ &btif {
+ 	status = "okay";
  };
-diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,ssusbsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,ssusbsys.txt
-index 00760019..b8184da 100644
---- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,ssusbsys.txt
-+++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,ssusbsys.txt
-@@ -8,6 +8,7 @@ Required Properties:
- - compatible: Should be:
- 	- "mediatek,mt7622-ssusbsys", "syscon"
- - #clock-cells: Must be 1
-+- #reset-cells: Must be 1
+@@ -257,6 +261,25 @@
+ 	status = "okay";
+ };
  
- The SSUSBSYS controller uses the common clk binding from
- Documentation/devicetree/bindings/clock/clock-bindings.txt
-@@ -19,4 +20,5 @@ ssusbsys: ssusbsys@1a000000 {
- 	compatible = "mediatek,mt7622-ssusbsys", "syscon";
- 	reg = <0 0x1a000000 0 0x1000>;
- 	#clock-cells = <1>;
-+	#reset-cells = <1>;
- };
++&nandc {
++	pinctrl-names = "default";
++	pinctrl-0 = <&parallel_nand_pins>;
++	status = "disabled";
++};
++
++&nor_flash {
++	pinctrl-names = "default";
++	pinctrl-0 = <&spi_nor_pins>;
++	status = "disabled";
++
++	flash@0 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "jedec,spi-nor";
++		reg = <0>;
++	};
++};
++
+ &pwm {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pwm7_pins>;
+diff --git a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+index 681c87a..540d2fe 100644
+--- a/arch/arm64/boot/dts/mediatek/mt7622.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+@@ -395,6 +395,40 @@
+ 		status = "disabled";
+ 	};
+ 
++	nandc: nfi@1100d000 {
++		compatible = "mediatek,mt7622-nfc";
++		reg = <0 0x1100D000 0 0x1000>;
++		interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&pericfg CLK_PERI_NFI_PD>,
++			 <&pericfg CLK_PERI_SNFI_PD>;
++		clock-names = "nfi_clk", "pad_clk";
++		ecc-engine = <&bch>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "disabled";
++	};
++
++	bch: ecc@1100e000 {
++		compatible = "mediatek,mt7622-ecc";
++		reg = <0 0x1100e000 0 0x1000>;
++		interrupts = <GIC_SPI 95 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&pericfg CLK_PERI_NFIECC_PD>;
++		clock-names = "nfiecc_clk";
++		status = "disabled";
++	};
++
++	nor_flash: spi@11014000 {
++		compatible = "mediatek,mt7622-nor",
++			     "mediatek,mt8173-nor";
++		reg = <0 0x11014000 0 0xe0>;
++		clocks = <&pericfg CLK_PERI_FLASH_PD>,
++			 <&topckgen CLK_TOP_FLASH_SEL>;
++		clock-names = "spi", "sf";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		status = "disabled";
++	};
++
+ 	spi1: spi@11016000 {
+ 		compatible = "mediatek,mt7622-spi";
+ 		reg = <0 0x11016000 0 0x100>;
 -- 
 2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
