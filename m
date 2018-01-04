@@ -1,7 +1,7 @@
 From: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 1/3] usb: renesas_usbhs: Add support for RZ/A1
-Date: Thu,  4 Jan 2018 15:01:48 -0500
-Message-ID: <20180104200150.11352-2-chris.brandt@renesas.com>
+Subject: [PATCH 3/3] ARM: dts: r7s72100: add USB device to device tree
+Date: Thu,  4 Jan 2018 15:01:50 -0500
+Message-ID: <20180104200150.11352-4-chris.brandt@renesas.com>
 References: <20180104200150.11352-1-chris.brandt@renesas.com>
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20180104200150.11352-1-chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
@@ -10,200 +10,42 @@ To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
 Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the capability to support RZ/A1 SoCs.
+Add USB device support.
 
 Signed-off-by: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 ---
- drivers/usb/renesas_usbhs/Makefile |  2 +-
- drivers/usb/renesas_usbhs/common.c | 17 +++++++++++++
- drivers/usb/renesas_usbhs/common.h |  6 +++++
- drivers/usb/renesas_usbhs/rza.c    | 52 ++++++++++++++++++++++++++++++++++++++
- drivers/usb/renesas_usbhs/rza.h    |  4 +++
- include/linux/usb/renesas_usbhs.h  |  1 +
- 6 files changed, 81 insertions(+), 1 deletion(-)
- create mode 100644 drivers/usb/renesas_usbhs/rza.c
- create mode 100644 drivers/usb/renesas_usbhs/rza.h
+ arch/arm/boot/dts/r7s72100.dtsi | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-diff --git a/drivers/usb/renesas_usbhs/Makefile b/drivers/usb/renesas_usbhs/Makefile
-index fac147a3ad23..5c5b51bb48ef 100644
---- a/drivers/usb/renesas_usbhs/Makefile
-+++ b/drivers/usb/renesas_usbhs/Makefile
-@@ -5,7 +5,7 @@
- 
- obj-$(CONFIG_USB_RENESAS_USBHS)	+= renesas_usbhs.o
- 
--renesas_usbhs-y			:= common.o mod.o pipe.o fifo.o rcar2.o rcar3.o
-+renesas_usbhs-y			:= common.o mod.o pipe.o fifo.o rcar2.o rcar3.o rza.o
- 
- ifneq ($(CONFIG_USB_RENESAS_USBHS_HCD),)
- 	renesas_usbhs-y		+= mod_host.o
-diff --git a/drivers/usb/renesas_usbhs/common.c b/drivers/usb/renesas_usbhs/common.c
-index c5289b3ecf8d..2abefd3d6050 100644
---- a/drivers/usb/renesas_usbhs/common.c
-+++ b/drivers/usb/renesas_usbhs/common.c
-@@ -17,6 +17,7 @@
- #include "common.h"
- #include "rcar2.h"
- #include "rcar3.h"
-+#include "rza.h"
- 
- /*
-  *		image of renesas_usbhs
-@@ -480,6 +481,10 @@ static const struct of_device_id usbhs_of_match[] = {
- 		.compatible = "renesas,usbhs-r8a77995",
- 		.data = (void *)USBHS_TYPE_RCAR_GEN3_WITH_PLL,
- 	},
-+	{
-+		.compatible = "renesas,usbhs-r7s72100",
-+		.data = (void *)USBHS_TYPE_RZA1,
-+	},
- 	{
- 		.compatible = "renesas,rcar-gen2-usbhs",
- 		.data = (void *)USBHS_TYPE_RCAR_GEN2,
-@@ -488,6 +493,10 @@ static const struct of_device_id usbhs_of_match[] = {
- 		.compatible = "renesas,rcar-gen3-usbhs",
- 		.data = (void *)USBHS_TYPE_RCAR_GEN3,
- 	},
-+	{
-+		.compatible = "renesas,rza1-usbhs",
-+		.data = (void *)USBHS_TYPE_RZA1,
-+	},
- 	{ },
+diff --git a/arch/arm/boot/dts/r7s72100.dtsi b/arch/arm/boot/dts/r7s72100.dtsi
+index ab9645a42eca..eb414e735185 100644
+--- a/arch/arm/boot/dts/r7s72100.dtsi
++++ b/arch/arm/boot/dts/r7s72100.dtsi
+@@ -667,4 +667,24 @@
+ 		power-domains = <&cpg_clocks>;
+ 		status = "disabled";
+ 	};
++
++	usbhs0: usbhs@e8010000 {
++		compatible = "renesas,usbhs-r7s72100";
++		reg = <0xe8010000 0x1A0>;
++		interrupts = <GIC_SPI (73-32) IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&mstp7_clks R7S72100_CLK_USB0>;
++		renesas,buswait = <4>;
++		power-domains = <&cpg_clocks>;
++		status = "disabled";
++	};
++
++	usbhs1: usbhs@e8207000 {
++		compatible = "renesas,usbhs-r7s72100";
++		reg = <0xe8207000 0x1A0>;
++		interrupts = <GIC_SPI (74-32) IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&mstp7_clks R7S72100_CLK_USB1>;
++		renesas,buswait = <4>;
++		power-domains = <&cpg_clocks>;
++		status = "disabled";
++	};
  };
- MODULE_DEVICE_TABLE(of, usbhs_of_match);
-@@ -520,6 +529,11 @@ static struct renesas_usbhs_platform_info *usbhs_parse_dt(struct device *dev)
- 		dparam->pipe_size = ARRAY_SIZE(usbhsc_new_pipe);
- 	}
- 
-+	if (dparam->type == USBHS_TYPE_RZA1) {
-+		dparam->pipe_configs = usbhsc_new_pipe;
-+		dparam->pipe_size = ARRAY_SIZE(usbhsc_new_pipe);
-+	}
-+
- 	return info;
- }
- 
-@@ -591,6 +605,9 @@ static int usbhs_probe(struct platform_device *pdev)
- 				dev_err(&pdev->dev, "no notifier registered\n");
- 		}
- 		break;
-+	case USBHS_TYPE_RZA1:
-+		priv->pfunc = usbhs_rza1_ops;
-+		break;
- 	default:
- 		if (!info->platform_callback.get_id) {
- 			dev_err(&pdev->dev, "no platform callbacks");
-diff --git a/drivers/usb/renesas_usbhs/common.h b/drivers/usb/renesas_usbhs/common.h
-index c9747f064601..f619afeae2b8 100644
---- a/drivers/usb/renesas_usbhs/common.h
-+++ b/drivers/usb/renesas_usbhs/common.h
-@@ -98,6 +98,7 @@ struct usbhs_priv;
- #define D2FIFOCTR	0x00F2	/* for R-Car Gen2 */
- #define D3FIFOSEL	0x00F4	/* for R-Car Gen2 */
- #define D3FIFOCTR	0x00F6	/* for R-Car Gen2 */
-+#define SUSPMODE	0x0102	/* for RZ/A */
- 
- /* SYSCFG */
- #define SCKE	(1 << 10)	/* USB Module Clock Enable */
-@@ -106,6 +107,8 @@ struct usbhs_priv;
- #define DRPD	(1 << 5)	/* D+ Line/D- Line Resistance Control */
- #define DPRPU	(1 << 4)	/* D+ Line Resistance Control */
- #define USBE	(1 << 0)	/* USB Module Operation Enable */
-+#define UCKSEL	(1 << 2)	/* Clock Select for RZ/A1 */
-+#define UPLLE	(1 << 1)	/* USB PLL Enable for RZ/A1 */
- 
- /* DVSTCTR */
- #define EXTLP	(1 << 10)	/* Controls the EXTLP pin output state */
-@@ -233,6 +236,9 @@ struct usbhs_priv;
- #define USBSPD_SPEED_FULL	0x2
- #define USBSPD_SPEED_HIGH	0x3
- 
-+/* SUSPMODE */
-+#define SUSPM		(1 << 14)	/* SuspendM Control */
-+
- /*
-  *		struct
-  */
-diff --git a/drivers/usb/renesas_usbhs/rza.c b/drivers/usb/renesas_usbhs/rza.c
-new file mode 100644
-index 000000000000..b76e836d2c3d
---- /dev/null
-+++ b/drivers/usb/renesas_usbhs/rza.c
-@@ -0,0 +1,52 @@
-+// SPDX-License-Identifier: GPL-1.0+
-+/*
-+ * Renesas USB driver RZ/A initialization and power control
-+ *
-+ * Copyright (C) 2018 Chris Brandt
-+ * Copyright (C) 2018 Renesas Electronics Corporation
-+ */
-+
-+#include <linux/delay.h>
-+#include <linux/io.h>
-+#include <linux/of_device.h>
-+#include "common.h"
-+#include "rza.h"
-+
-+static int usbhs_rza1_hardware_init(struct platform_device *pdev)
-+{
-+	struct usbhs_priv *priv = usbhs_pdev_to_priv(pdev);
-+	struct device_node *usb_x1_clk, *extal_clk;
-+	u32 freq_usb = 0, freq_extal = 0;
-+
-+	/* Input Clock Selection (NOTE: ch0 controls both ch0 and ch1) */
-+	usb_x1_clk = of_find_node_by_name(NULL, "usb_x1");
-+	extal_clk = of_find_node_by_name(NULL, "extal");
-+	of_property_read_u32(usb_x1_clk, "clock-frequency", &freq_usb);
-+	of_property_read_u32(extal_clk, "clock-frequency", &freq_extal);
-+	if (freq_usb == 0) {
-+		if (freq_extal == 12000000) {
-+			/* Select 12MHz XTAL */
-+			usbhs_bset(priv, SYSCFG, UCKSEL, UCKSEL);
-+		} else {
-+			dev_err(usbhs_priv_to_dev(priv), "A 48MHz USB clock or 12MHz main clock is required.\n");
-+			return -EIO;
-+		}
-+	}
-+
-+	/* Enable USB PLL (NOTE: ch0 controls both ch0 and ch1) */
-+	usbhs_bset(priv, SYSCFG, UPLLE, UPLLE);
-+	udelay(1000);
-+	usbhs_bset(priv, SUSPMODE, SUSPM, SUSPM);
-+
-+	return 0;
-+}
-+
-+static int usbhs_rza_get_id(struct platform_device *pdev)
-+{
-+	return USBHS_GADGET;
-+}
-+
-+const struct renesas_usbhs_platform_callback usbhs_rza1_ops = {
-+	.hardware_init = usbhs_rza1_hardware_init,
-+	.get_id = usbhs_rza_get_id,
-+};
-diff --git a/drivers/usb/renesas_usbhs/rza.h b/drivers/usb/renesas_usbhs/rza.h
-new file mode 100644
-index 000000000000..ca917ca54f6d
---- /dev/null
-+++ b/drivers/usb/renesas_usbhs/rza.h
-@@ -0,0 +1,4 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include "common.h"
-+
-+extern const struct renesas_usbhs_platform_callback usbhs_rza1_ops;
-diff --git a/include/linux/usb/renesas_usbhs.h b/include/linux/usb/renesas_usbhs.h
-index 9482735d4ca5..53924f8e840c 100644
---- a/include/linux/usb/renesas_usbhs.h
-+++ b/include/linux/usb/renesas_usbhs.h
-@@ -195,6 +195,7 @@ struct renesas_usbhs_driver_param {
- #define USBHS_TYPE_RCAR_GEN2		1
- #define USBHS_TYPE_RCAR_GEN3		2
- #define USBHS_TYPE_RCAR_GEN3_WITH_PLL	3
-+#define USBHS_TYPE_RZA1			4
- 
- /*
-  * option:
 -- 
 2.15.1
 
