@@ -1,7 +1,7 @@
 From: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v2 06/10] ARM: dts: keystone-k2g: Move keystone_irq to under device-state-control
-Date: Thu, 4 Jan 2018 13:56:57 -0600
-Message-ID: <20180104195701.4042-7-afd@ti.com>
+Subject: [PATCH v2 01/10] ARM: dts: keystone: Move keystone_irq to under device-state-control
+Date: Thu, 4 Jan 2018 13:56:52 -0600
+Message-ID: <20180104195701.4042-2-afd@ti.com>
 References: <20180104195701.4042-1-afd@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -26,14 +26,14 @@ the driver.
 Signed-off-by: Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org>
 Acked-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
 ---
- arch/arm/boot/dts/keystone-k2g.dtsi | 22 +++++++++++++---------
+ arch/arm/boot/dts/keystone.dtsi | 22 +++++++++++++---------
  1 file changed, 13 insertions(+), 9 deletions(-)
 
-diff --git a/arch/arm/boot/dts/keystone-k2g.dtsi b/arch/arm/boot/dts/keystone-k2g.dtsi
-index fd061718dc0a..225175d14826 100644
---- a/arch/arm/boot/dts/keystone-k2g.dtsi
-+++ b/arch/arm/boot/dts/keystone-k2g.dtsi
-@@ -97,8 +97,20 @@
+diff --git a/arch/arm/boot/dts/keystone.dtsi b/arch/arm/boot/dts/keystone.dtsi
+index 93ea5c69ea77..d726896ffb38 100644
+--- a/arch/arm/boot/dts/keystone.dtsi
++++ b/arch/arm/boot/dts/keystone.dtsi
+@@ -87,8 +87,20 @@
  		};
  
  		devctrl: device-state-control@2620000 {
@@ -46,30 +46,30 @@ index fd061718dc0a..225175d14826 100644
 +
 +			kirq0: keystone_irq@2a0 {
 +				compatible = "ti,keystone-irq";
-+				reg = <0x2a0 0x10>;
-+				interrupts = <GIC_SPI 1 IRQ_TYPE_EDGE_RISING>;
++				reg = <0x2a0 0x4>;
++				interrupts = <GIC_SPI 4 IRQ_TYPE_EDGE_RISING>;
 +				interrupt-controller;
 +				#interrupt-cells = <1>;
 +				ti,syscon-dev = <&devctrl 0x2a0>;
 +			};
  		};
  
- 		uart0: serial@2530c00 {
-@@ -188,14 +200,6 @@
- 			status = "disabled";
+ 		rstctrl: reset-controller {
+@@ -282,14 +294,6 @@
+ 				  1 0 0x21000A00 0x00000100>;
  		};
  
 -		kirq0: keystone_irq@26202a0 {
 -			compatible = "ti,keystone-irq";
--			interrupts = <GIC_SPI 1 IRQ_TYPE_EDGE_RISING>;
+-			interrupts = <GIC_SPI 4 IRQ_TYPE_EDGE_RISING>;
 -			interrupt-controller;
 -			#interrupt-cells = <1>;
 -			ti,syscon-dev = <&devctrl 0x2a0>;
 -		};
 -
- 		dspgpio0: keystone_dsp_gpio@2620240 {
- 			compatible = "ti,keystone-dsp-gpio";
- 			gpio-controller;
+ 		pcie0: pcie@21800000 {
+ 			compatible = "ti,keystone-pcie", "snps,dw-pcie";
+ 			clocks = <&clkpcie>;
 -- 
 2.15.1
 
