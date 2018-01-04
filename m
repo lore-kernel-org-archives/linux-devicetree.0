@@ -1,77 +1,141 @@
-From: Alexey Klimov <klimov.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v5 03/20] firmware: arm_scmi: add basic driver
- infrastructure for SCMI
-Date: Thu, 4 Jan 2018 19:21:45 +0000
-Message-ID: <CALW4P+J3RQFV3AuJ3-QHt8-JR12e8PquKbouDEJvWxWOfXcD1A@mail.gmail.com>
-References: <1514904162-11201-1-git-send-email-sudeep.holla@arm.com> <1514904162-11201-4-git-send-email-sudeep.holla@arm.com>
+From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
+Subject: Re: [PATCH 01/11] clk: sunxi-ng: Don't set k if width is 0 for nkmp plls
+Date: Thu, 04 Jan 2018 20:28:16 +0100
+Message-ID: <3625461.aU9oqMdpo3@jernej-laptop>
+References: <20171230210203.24115-1-jernej.skrabec@siol.net> <20171230210203.24115-2-jernej.skrabec@siol.net> <CAGb2v67B23yUdACijKxosfFG_os5WndiBKX02DGA4PFUkxDx9g@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1514904162-11201-4-git-send-email-sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Cc: ALKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Roy Franz <roy.franz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Harb Abdulhamid <harba-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Ryan Harkin <Ryan.Harkin-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAGb2v67B23yUdACijKxosfFG_os5WndiBKX02DGA4PFUkxDx9g@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Archit Taneja <architt@codeaurora.org>, a.hajda@samsung.com, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Jose.Abreu@synopsys.com, Neil Armstrong <narmstrong@baylibre.com>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sudeep,
+Hi,
 
-thank you for working on this.
+Dne četrtek, 04. januar 2018 ob 15:45:18 CET je Chen-Yu Tsai napisal(a):
+> On Sun, Dec 31, 2017 at 5:01 AM, Jernej Skrabec <jernej.skrabec@siol.net> 
+wrote:
+> > For example, A83T have nmp plls which are modelled as nkmp plls. Since k
+> > is not specified, it has offset 0, shift 0 and lowest value 1. This
+> > means that LSB bit is always set to 1, which may change clock rate.
+> > 
+> > Fix that by applying k factor only if k width is greater than 0.
+> > 
+> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > ---
+> > 
+> >  drivers/clk/sunxi-ng/ccu_nkmp.c | 21 +++++++++++++--------
+> >  1 file changed, 13 insertions(+), 8 deletions(-)
+> > 
+> > diff --git a/drivers/clk/sunxi-ng/ccu_nkmp.c
+> > b/drivers/clk/sunxi-ng/ccu_nkmp.c index e58c95787f94..709f528af2b3 100644
+> > --- a/drivers/clk/sunxi-ng/ccu_nkmp.c
+> > +++ b/drivers/clk/sunxi-ng/ccu_nkmp.c
+> > @@ -81,7 +81,7 @@ static unsigned long ccu_nkmp_recalc_rate(struct clk_hw
+> > *hw,> 
+> >                                         unsigned long parent_rate)
+> >  
+> >  {
+> >  
+> >         struct ccu_nkmp *nkmp = hw_to_ccu_nkmp(hw);
+> > 
+> > -       unsigned long n, m, k, p;
+> > +       unsigned long n, m, k = 1, p;
+> > 
+> >         u32 reg;
+> >         
+> >         reg = readl(nkmp->common.base + nkmp->common.reg);
+> > 
+> > @@ -92,11 +92,13 @@ static unsigned long ccu_nkmp_recalc_rate(struct
+> > clk_hw *hw,> 
+> >         if (!n)
+> >         
+> >                 n++;
+> > 
+> > -       k = reg >> nkmp->k.shift;
+> > -       k &= (1 << nkmp->k.width) - 1;
+> > -       k += nkmp->k.offset;
+> > -       if (!k)
+> > -               k++;
+> > +       if (nkmp->k.width) {
+> > +               k = reg >> nkmp->k.shift;
+> > +               k &= (1 << nkmp->k.width) - 1;
+> > +               k += nkmp->k.offset;
+> > +               if (!k)
+> > +                       k++;
+> > +       }
+> 
+> The conditional shouldn't be necessary. With nkmp->k.width = 0,
+> you'd simply get k & 0, which is 0, which then gets bumped up to 1,
+> unless k.offset > 1, which would be a bug.
+> 
+> >         m = reg >> nkmp->m.shift;
+> >         m &= (1 << nkmp->m.width) - 1;
+> > 
+> > @@ -153,12 +155,15 @@ static int ccu_nkmp_set_rate(struct clk_hw *hw,
+> > unsigned long rate,> 
+> >         reg = readl(nkmp->common.base + nkmp->common.reg);
+> >         reg &= ~GENMASK(nkmp->n.width + nkmp->n.shift - 1, nkmp->n.shift);
+> > 
+> > -       reg &= ~GENMASK(nkmp->k.width + nkmp->k.shift - 1, nkmp->k.shift);
+> > +       if (nkmp->k.width)
+> > +               reg &= ~GENMASK(nkmp->k.width + nkmp->k.shift - 1,
+> > +                               nkmp->k.shift);
+> > 
+> >         reg &= ~GENMASK(nkmp->m.width + nkmp->m.shift - 1, nkmp->m.shift);
+> >         reg &= ~GENMASK(nkmp->p.width + nkmp->p.shift - 1, nkmp->p.shift);
+> >         
+> >         reg |= (_nkmp.n - nkmp->n.offset) << nkmp->n.shift;
+> > 
+> > -       reg |= (_nkmp.k - nkmp->k.offset) << nkmp->k.shift;
+> > +       if (nkmp->k.width)
+> > +               reg |= (_nkmp.k - nkmp->k.offset) << nkmp->k.shift;
+> 
+> I think a better way would be
+> 
+>         reg |= ((_nkmp.k - nkmp->k.offset) << nkmp->k.shift) &
+>                GENMASK(nkmp->k.width + nkmp->k.shift - 1, nkmp->k.shift);
+> 
+> And do this for all the factors, not just k. This pattern is what
+> regmap_update_bits does, which seems much safer. I wonder what
+> GENMASK() with a negative value would do though...
 
-On Tue, Jan 2, 2018 at 2:42 PM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
+You're right, GENMASK(-1, 0) equals 0 (calculated by hand, not tested). This 
+seems much more elegant solution. 
 
-[...]
+Semi-related question: All nmp PLLs have much wider N range than real nkmp 
+PLLs. This causes integer overflow when using nkmp formula from datasheet. 
+Usually, N is 1-256 for nmp PLLs, which means that for very high N factors, it 
+overflows. This also causes issue that M factor is never higher than 1.
 
-> diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
-> new file mode 100644
-> index 000000000000..58d8f88893e6
-> --- /dev/null
-> +++ b/drivers/firmware/arm_scmi/driver.c
+I was wondering, if patch would be acceptable which would change this formula:
 
-[..]
+RATE = (24MHz * N * K) / (M * P)
 
-> + * Return: 0 is successfully released
-> + *     if null was passed, it returns -EINVAL;
-> + */
-> +int scmi_handle_put(const struct scmi_handle *handle)
-> +{
-> +       struct scmi_info *info;
-> +
-> +       if (!handle)
-> +               return -EINVAL;
-> +
-> +       info = handle_to_scmi_info(handle);
-> +       mutex_lock(&scmi_list_mutex);
-> +       if (!WARN_ON(!info->users))
-> +               info->users--;
-> +       mutex_unlock(&scmi_list_mutex);
-> +
-> +       return 0;
-> +}
-> +
-> +static const struct scmi_desc scmi_generic_desc = {
-> +       .max_rx_timeout_ms = 30,        /* we may increase this if required */
+to this:
 
-What are your thoughts about making it a module parameter?
+RATE ((24MHz / M) * N * K) / P
 
-IIRC, this may required to be increased when someone uses debugging
-version of firmware, for example.
-In such case someone might need to recompile the kernel in order to
-boot with enabled and initialized scmi.
+I checked all M factors and are all in 1-4 or 1-2 range, which means it 
+wouldn't have any impact for real nkmp PLLs when parent is 24 MHz clock which 
+is probably always.
 
-Also, there can be a chance that another transport will be used that
-will require larger than 5 * 30 ms delay (such kind of transport can
-be kinda useless, I know, but can help with development).
+What do you think?
 
-With module parameter you can still boot passing the larger timeout
-parameter to the module from cmdline.
-
-> +       .max_msg = 20,          /* Limited by MBOX_TX_QUEUE_LEN */
-> +       .max_msg_size = 128,
-> +};
+I discovered that when I tried to set A83T PLL_VIDEO to 346.5 MHz which is 
+possible only when above formula is changed.
 
 Best regards,
-Alexey
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Jernej
+
+> 
+> ChenYu
+> 
+> >         reg |= (_nkmp.m - nkmp->m.offset) << nkmp->m.shift;
+> >         reg |= ilog2(_nkmp.p) << nkmp->p.shift;
+> > 
+> > --
+> > 2.15.1
