@@ -1,226 +1,101 @@
-From: Ilia Lin <ilialin@codeaurora.org>
-Subject: [PATCH v2 11/11] DT: QCOM: Add thermal mitigation to msm8996
-Date: Thu,  4 Jan 2018 13:10:15 +0200
-Message-ID: <1515064215-22202-12-git-send-email-ilialin@codeaurora.org>
-References: <1515064215-22202-1-git-send-email-ilialin@codeaurora.org>
+From: <ilialin@codeaurora.org>
+Subject: RE: [PATCH 01/10] soc: qcom: Separate kryo l2 accessors from PMU driver
+Date: Thu, 4 Jan 2018 13:13:02 +0200
+Message-ID: <027b01d3854c$ff085060$fd18f120$@codeaurora.org>
+References: <1513081897-31612-1-git-send-email-ilialin@codeaurora.org> <1513081897-31612-2-git-send-email-ilialin@codeaurora.org> <20171212140302.au4wart4uhwm7lfq@lakrids.cambridge.arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1515064215-22202-1-git-send-email-ilialin@codeaurora.org>
+In-Reply-To: <20171212140302.au4wart4uhwm7lfq@lakrids.cambridge.arm.com>
+Content-Language: en-us
 Sender: linux-clk-owner@vger.kernel.org
-To: linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, sboyd@codeaurora.org
-Cc: devicetree@vger.kernel.org, mark.rutland@arm.com, will.deacon@arm.com, rnayak@codeaurora.org, ilialin@codeaurora.org, amit.kucheria@linaro.org, nicolas.dechesne@linaro.org, celster@codeaurora.org, tfinkel@codeaurora.org
+To: 'Mark Rutland' <mark.rutland@arm.com>
+Cc: linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, sboyd@codeaurora.org, devicetree@vger.kernel.org, will.deacon@arm.com, rnayak@codeaurora.org, qualcomm-lt@lists.linaro.org, celster@codeaurora.org, tfinkel@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Add thermal mitigation configuration to msm8996.
-With the cpufreq-dt OPP table the CPU frequency may be
-scaled and therefore throttled by the thermal config.
+This is address in the V2: https://patchwork.kernel.org/patch/10144473/
 
-Signed-off-by: Ilia Lin <ilialin@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/msm8996.dtsi | 98 +++++++++++++++++++++++++++++++----
- 1 file changed, 87 insertions(+), 11 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-index 8beea7e..6fa061f 100644
---- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-@@ -14,6 +14,7 @@
- #include <dt-bindings/clock/qcom,gcc-msm8996.h>
- #include <dt-bindings/clock/qcom,mmcc-msm8996.h>
- #include <dt-bindings/clock/qcom,rpmcc.h>
-+#include <dt-bindings/thermal/thermal.h>
- 
- / {
- 	model = "Qualcomm Technologies, Inc. MSM8996";
-@@ -88,6 +89,10 @@
- 			enable-method = "psci";
- 			clocks = <&kryocc 0>;
- 			operating-points-v2 = <&cluster0_opp>;
-+			/* cooling options */
-+			cooling-min-level = <0>;
-+			cooling-max-level = <15>;
-+			#cooling-cells = <2>;
- 			next-level-cache = <&L2_0>;
- 			L2_0: l2-cache {
- 			      compatible = "cache";
-@@ -102,6 +107,10 @@
- 			enable-method = "psci";
- 			clocks = <&kryocc 0>;
- 			operating-points-v2 = <&cluster0_opp>;
-+			/* cooling options */
-+			cooling-min-level = <0>;
-+			cooling-max-level = <15>;
-+			#cooling-cells = <2>;
- 			next-level-cache = <&L2_0>;
- 		};
- 
-@@ -112,6 +121,10 @@
- 			enable-method = "psci";
- 			clocks = <&kryocc 1>;
- 			operating-points-v2 = <&cluster1_opp>;
-+			/* cooling options */
-+			cooling-min-level = <0>;
-+			cooling-max-level = <15>;
-+			#cooling-cells = <2>;
- 			next-level-cache = <&L2_1>;
- 			L2_1: l2-cache {
- 			      compatible = "cache";
-@@ -126,6 +139,10 @@
- 			enable-method = "psci";
- 			clocks = <&kryocc 1>;
- 			operating-points-v2 = <&cluster1_opp>;
-+			/* cooling options */
-+			cooling-min-level = <0>;
-+			cooling-max-level = <15>;
-+			#cooling-cells = <2>;
- 			next-level-cache = <&L2_1>;
- 		};
- 
-@@ -336,18 +353,33 @@
- 			thermal-sensors = <&tsens0 3>;
- 
- 			trips {
--				cpu_alert0: trip0 {
-+				cpu_alert0: cpu_alert0 {
- 					temperature = <75000>;
- 					hysteresis = <2000>;
-+					type = "active";
-+				};
-+				cpu_warn0: cpu_warn0 {
-+					temperature = <90000>;
-+					hysteresis = <2000>;
- 					type = "passive";
- 				};
--
--				cpu_crit0: trip1 {
-+				cpu_crit0: cpu_crit0 {
- 					temperature = <110000>;
- 					hysteresis = <2000>;
- 					type = "critical";
- 				};
- 			};
-+
-+			cooling-maps {
-+				map0 {
-+					trip = <&cpu_alert0>;
-+					cooling-device = <&CPU0 THERMAL_NO_LIMIT 7>;
-+				};
-+				map1 {
-+					trip = <&cpu_warn0>;
-+					cooling-device = <&CPU0 8 THERMAL_NO_LIMIT>;
-+				};
-+			};
- 		};
- 
- 		cpu-thermal1 {
-@@ -357,18 +389,33 @@
- 			thermal-sensors = <&tsens0 5>;
- 
- 			trips {
--				cpu_alert1: trip0 {
-+				cpu_alert1: cpu_alert1 {
- 					temperature = <75000>;
- 					hysteresis = <2000>;
-+					type = "active";
-+				};
-+				cpu_warn1: cpu_warn1 {
-+					temperature = <90000>;
-+					hysteresis = <2000>;
- 					type = "passive";
- 				};
--
--				cpu_crit1: trip1 {
-+				cpu_crit1: cpu_crit1 {
- 					temperature = <110000>;
- 					hysteresis = <2000>;
- 					type = "critical";
- 				};
- 			};
-+
-+			cooling-maps {
-+				map0 {
-+					trip = <&cpu_alert1>;
-+					cooling-device = <&CPU0 THERMAL_NO_LIMIT 7>;
-+				};
-+				map1 {
-+					trip = <&cpu_warn1>;
-+					cooling-device = <&CPU0 8 THERMAL_NO_LIMIT>;
-+				};
-+			};
- 		};
- 
- 		cpu-thermal2 {
-@@ -378,18 +425,32 @@
- 			thermal-sensors = <&tsens0 8>;
- 
- 			trips {
--				cpu_alert2: trip0 {
-+				cpu_alert2: cpu_alert2 {
- 					temperature = <75000>;
- 					hysteresis = <2000>;
-+					type = "active";
-+				};
-+				cpu_warn2: cpu_warn2 {
-+					temperature = <90000>;
-+					hysteresis = <2000>;
- 					type = "passive";
- 				};
--
--				cpu_crit2: trip1 {
-+				cpu_crit2: cpu_crit2 {
- 					temperature = <110000>;
- 					hysteresis = <2000>;
- 					type = "critical";
- 				};
- 			};
-+			cooling-maps {
-+				map0 {
-+					trip = <&cpu_alert2>;
-+					cooling-device = <&CPU2 THERMAL_NO_LIMIT 7>;
-+				};
-+				map1 {
-+					trip = <&cpu_warn2>;
-+					cooling-device = <&CPU2 8 THERMAL_NO_LIMIT>;
-+				};
-+			};
- 		};
- 
- 		cpu-thermal3 {
-@@ -399,18 +460,33 @@
- 			thermal-sensors = <&tsens0 10>;
- 
- 			trips {
--				cpu_alert3: trip0 {
-+				cpu_alert3: cpu_alert3 {
- 					temperature = <75000>;
- 					hysteresis = <2000>;
-+					type = "active";
-+				};
-+				cpu_warn3: cpu_warn3 {
-+					temperature = <90000>;
-+					hysteresis = <2000>;
- 					type = "passive";
- 				};
--
- 				cpu_crit3: trip1 {
- 					temperature = <110000>;
- 					hysteresis = <2000>;
- 					type = "critical";
- 				};
- 			};
-+
-+			cooling-maps {
-+				map0 {
-+					trip = <&cpu_alert3>;
-+					cooling-device = <&CPU2 THERMAL_NO_LIMIT 7>;
-+				};
-+				map1 {
-+					trip = <&cpu_warn3>;
-+					cooling-device = <&CPU2 8 THERMAL_NO_LIMIT>;
-+				};
-+			};
- 		};
- 	};
- 
--- 
-1.9.1
+> -----Original Message-----
+> From: Mark Rutland [mailto:mark.rutland@arm.com]
+> Sent: Tuesday, December 12, 2017 4:03 PM
+> To: Ilia Lin <ilialin@codeaurora.org>
+> Cc: linux-clk@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+linux-
+> arm-msm@vger.kernel.org; sboyd@codeaurora.org;
+> devicetree@vger.kernel.org; will.deacon@arm.com;
+> rnayak@codeaurora.org; qualcomm-lt@lists.linaro.org;
+> celster@codeaurora.org; tfinkel@codeaurora.org
+> Subject: Re: [PATCH 01/10] soc: qcom: Separate kryo l2 accessors from PMU
+> driver
+> 
+> Hi,
+> 
+> On Tue, Dec 12, 2017 at 02:31:28PM +0200, Ilia Lin wrote:
+> > The driver provides kernel level API for other drivers to access the
+> > MSM8996 L2 cache registers.
+> > Separating the L2 access code from the PMU driver and making it public
+> > to allow other drivers use it.
+> > The accesses must be separated with a single spinlock, maintained in
+> > this driver.
+> 
+> > -static void set_l2_indirect_reg(u64 reg, u64 val) -{
+> > -	unsigned long flags;
+> > -
+> > -	raw_spin_lock_irqsave(&l2_access_lock, flags);
+> > -	write_sysreg_s(reg, L2CPUSRSELR_EL1);
+> > -	isb();
+> > -	write_sysreg_s(val, L2CPUSRDR_EL1);
+> > -	isb();
+> > -	raw_spin_unlock_irqrestore(&l2_access_lock, flags);
+> > -}
+> 
+> > +/**
+> > + * set_l2_indirect_reg: write value to an L2 register
+> > + * @reg: Address of L2 register.
+> > + * @value: Value to be written to register.
+> > + *
+> > + * Use architecturally required barriers for ordering between system
+> > +register
+> > + * accesses, and system registers with respect to device memory  */
+> > +void set_l2_indirect_reg(u64 reg, u64 val) {
+> > +	unsigned long flags;
+> > +	mb();
+> 
+> We didn't need this for the PMU driver, so it's unfortuante that it now
+has to
+> pay the cost.
+> 
+> Can we please factor this mb() into the callers that need it?
+> 
+> > +	raw_spin_lock_irqsave(&l2_access_lock, flags);
+> > +	write_sysreg_s(reg, L2CPUSRSELR_EL1);
+> > +	isb();
+> > +	write_sysreg_s(val, L2CPUSRDR_EL1);
+> > +	isb();
+> > +	raw_spin_unlock_irqrestore(&l2_access_lock, flags); }
+> > +EXPORT_SYMBOL(set_l2_indirect_reg);
+> 
+> [...]
+> 
+> > +#ifdef CONFIG_ARCH_QCOM
+> > +void set_l2_indirect_reg(u64 reg_addr, u64 val);
+> > +u64 get_l2_indirect_reg(u64 reg_addr); #else static inline void
+> > +set_l2_indirect_reg(u32 reg_addr, u32 val) {} static inline u32
+> > +get_l2_indirect_reg(u32 reg_addr) {
+> > +	return 0;
+> > +}
+> > +#endif
+> > +#endif
+> 
+> Are there any drivers that will bne built for !CONFIG_ARCH_QCOM that
+> reference this?
+> 
+> It might be better to not have the stub versions, so that we get a
+build-error
+> if they are erroneously used.
+> 
+> Thannks,
+> Mark.
 
