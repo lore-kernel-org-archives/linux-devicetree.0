@@ -1,181 +1,141 @@
-From: Eugen Hristev <eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Subject: Re: [PATCH 12/14] iio: adc: at91-sama5d2_adc: support for position
- and pressure channels
-Date: Thu, 4 Jan 2018 17:17:54 +0200
-Message-ID: <25045512-f372-3f25-e84f-ed809db9dde3@microchip.com>
-References: <1513955241-10985-1-git-send-email-eugen.hristev@microchip.com>
- <1513955241-10985-13-git-send-email-eugen.hristev@microchip.com>
- <20171229170236.06bf6394@archlinux>
+From: =?UTF-8?Q?=27Ond=C5=99ej_Jirman=27_via_linux=2Dsunxi?= <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Subject: Re: [PATCH v4 0/2] Initial Allwinner V3s CSI Support
+Date: Thu, 4 Jan 2018 16:27:41 +0100
+Message-ID: <20180104152741.m6bsno4vdh65ouw3@core.my.home>
+References: <1513935138-35223-1-git-send-email-yong.deng@magewell.com>
+ <1513950408.841.81.camel@megous.com>
+ <20171225111526.4663f997f5d6bfc6cf157f10@magewell.com>
+ <20171225085802.lfyk4blmbqxq6r2m@core.my.home>
+ <20180104140625.5gbeaj5vgetusjlf@flea.lan>
+Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171229170236.06bf6394@archlinux>
-Content-Language: en-US
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDXLF6FR5INBB7EPXHJAKGQER6V4VNI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20180104140625.5gbeaj5vgetusjlf-ZC1Zs529Oq4@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Yong <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rick Chang <rick.chang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunx
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Jan 04, 2018 at 03:06:25PM +0100, Maxime Ripard wrote:
+> On Mon, Dec 25, 2017 at 09:58:02AM +0100, Ond=C5=99ej Jirman wrote:
+> > Hello,
+> >=20
+> > On Mon, Dec 25, 2017 at 11:15:26AM +0800, Yong wrote:
+> > > Hi,
+> > >=20
+> > > On Fri, 22 Dec 2017 14:46:48 +0100
+> > > Ond=C5=99ej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org> wrote:
+> > >=20
+> > > > Hello,
+> > > >=20
+> > > > Yong Deng p=C3=AD=C5=A1e v P=C3=A1 22. 12. 2017 v 17:32 +0800:
+> > > > >=20
+> > > > > Test input 0:
+> > > > >=20
+> > > > >         Control ioctls:
+> > > > >                 test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Sup=
+ported)
+> > > > >                 test VIDIOC_QUERYCTRL: OK (Not Supported)
+> > > > >                 test VIDIOC_G/S_CTRL: OK (Not Supported)
+> > > > >                 test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
+> > > > >                 test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not =
+Supported)
+> > > > >                 test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+> > > > >                 Standard Controls: 0 Private Controls: 0
+> > > >=20
+> > > > I'm not sure if your driver passes control queries to the subdev. I=
+t
+> > > > did not originally, and I'm not sure you picked up the change from =
+my
+> > > > version of the driver. "Not supported" here seems to indicate that =
+it
+> > > > does not.
+> > > >=20
+> > > > I'd be interested what's the recommended practice here. It sure hel=
+ps
+> > > > with some apps that expect to be able to modify various input contr=
+ols
+> > > > directly on the /dev/video# device. These are then supported out of=
+ the
+> > > > box.
+> > > >=20
+> > > > It's a one-line change. See:
+> > > >=20
+> > > > https://www.kernel.org/doc/html/latest/media/kapi/v4l2-controls.htm=
+l#in
+> > > > heriting-controls
+> > >=20
+> > > I think this is a feature and not affect the driver's main function.
+> > > I just focused on making the CSI main function to work properly in=20
+> > > the initial version. Is this feature mandatory or most commonly used?
+> >=20
+> > I grepped the platform/ code and it seems, that inheriting controls
+> > from subdevs is pretty common for input drivers. (there are varying
+> > approaches though, some inherit by hand in the link function, some
+> > just register and empty ctrl_handler on the v4l2_dev and leave the
+> > rest to the core).
+> >=20
+> > Practically, I haven't found a common app that would allow me to enter
+> > both /dev/video0 and /dev/v4l-subdevX. I'm sure anyone can write one
+> > themselves, but it would be better if current controls were available
+> > at the /dev/video0 device automatically.
+> >=20
+> > It's much simpler for the userspace apps than the alternative, which
+> > is trying to identify the correct subdev that is currently
+> > associated with the CSI driver at runtime, which is not exactly
+> > straightforward and requires much more code, than a few lines in
+> > the kernel, that are required to inherit controls:
+>=20
+> And it becomes much more complicated once you have the same controls
+> on the v4l2 device and subdevice, which is not that uncommon.
+
+Hi Maxime,
+
+I don't think you understand the issue. In your hypothetical situation, if =
+the
+CSI device will have any controls in the future, the merging of controls fr=
+om
+subdev will be done automatically anyway, it's not some optional feature.
+
+Also userspace will not get any more complicated than without my proposed c=
+hange
+to the driver. It will be at most the same as without the change if any sub=
+dev
+controls are masked by the CSI device controls.
+
+This CSI driver has no controls anyway. All my change does is create an emp=
+ty
+handler for future controls of the CSI driver, so that apps can depend on t=
+his
+merging behavior right now, and not wait until someone adds the first contr=
+ol
+to the CSI driver.
+
+regards,
+  o.j.
+
+>=20
+> Maxime
+>=20
+>=20
+>=20
+> --=20
+> Maxime Ripard, Free Electrons
+> Embedded Linux and Kernel engineering
+> http://free-electrons.com
 
 
-On 29.12.2017 19:02, Jonathan Cameron wrote:
-> On Fri, 22 Dec 2017 17:07:19 +0200
-> Eugen Hristev <eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org> wrote:
-> 
->> The ADC IP supports position and pressure measurements for a touchpad
->> connected on channels 0,1,2,3 for a 4-wire touchscreen with pressure
->> measurement support.
->> Using the inkern API, a driver can request a trigger and read the
->> channel values from the ADC.
->> The implementation provides a trigger named "touch" which can be
->> connected to a consumer driver.
->> Once a driver connects and attaches a pollfunc to this trigger, the
->> configure trigger callback is called, and then the ADC driver will
->> initialize pad measurement.
->> First step is to enable touchscreen 4wire support and enable
->> pen detect IRQ.
->> Once a pen is detected, a periodic trigger is setup to trigger every
->> 2 ms (e.g.) and sample the resistive touchscreen values. The trigger poll
->> is called, and the consumer driver is then woke up, and it can read the
->> respective channels for the values : X, and Y for position and pressure
->> channel.
->> Because only one trigger can be active in hardware in the same time,
->> while touching the pad, the ADC will block any attempt to use the
->> triggered buffer. Same, conversions using the software trigger are also
->> impossible (since the periodic trigger is setup).
->> If some driver wants to attach while the trigger is in use, it will
->> also fail.
->> Once the pen is not detected anymore, the trigger is free for use (hardware
->> or software trigger, with or without DMA).
->> Channels 0,1,2 and 3 are unavailable if a touchscreen is enabled.
->>
->> Some parts of this patch are based on initial original work by
->> Mohamed Jamsheeth Hajanajubudeen and Bandaru Venkateswara Swamy
->>
-> OK, so comments inline.
-> 
-> What I'm missing currently though is an explanation of why the slightly
-> more standard arrangement of using a callback buffer doesn't work here.
-> The only addition I think you need to do that is to allow a consumer to
-> request a particular trigger.  I also think some of the other provisions
-> could be handled using standard features and slightly reducing the flexibility.
-> I don't know for example if it's useful to allow other channels to be
-> read when touch is not in progress or not.
-> 
-> So restrictions:
-> 
-> 1. Touch screen channels can only be read when touch is enabled.
->   - use the available_scan_masks to control this. Or the callback that lets
->     you do the same dynamically.
-> 2. You need to push these channels to your consumer driver.
->   - register a callback buffer rather than jumping through the hoops to
->     insert your own pollfunc.  That will call a function in your
->     consumer, providing the data from the 3 channels directly.
-> 3. You need to make sure it is using the right driver.  For that you
->     will I think need a new interface.
-> 
-> Various other comments inline. I may well be missing something as this is
-> a fair bit of complex code to read - if so then next version should have
-> a clear cover letter describing why this more standard approach can't be
-> used.
-
-Hello Jonathan and thanks for the review of my patch series,
-
-before starting and working over the required modifications and 
-suggestions that you sent me, I want to be a little more explicit about 
-the design of my implementation.
-Hope this will clarify some things, and maybe I can as well understand 
-better what you have in mind to support this feature set.
-
-Why have I picked a pollfunction: We discussed a while back on the 
-mailing list that you do not have an inkern mechanism to expose the 
-triggers to other drivers, and that it may be a good idea to have it for 
-such kind of actually multi function device, instead of having a MFD 
-driver, an ADC driver, and an Input driver, all sharing the same 
-register map, the same IRQ , etc, with some kind of synchronization to 
-avoid stepping on each other for the hardware resource.
-So I considered to expose the trigger by attaching and detaching 
-pollfunctions to it. Which is the main thing what we use a trigger for.
-
-So, what I had in mind, was to create a consumer driver that will 
-request triggers from the IIO device just like other drivers request 
-channels (part which is already done in IIO).
-In order to do this I had to somehow wake up the consumer driver when 
-new data was available from the touchscreen. So, having the IRQ only in 
-the ADC device, and then on Pen detect and No pen detect just start or 
-stop the periodic trigger, which needs to be polled. The magic part is 
-that the consumer driver has a poll function already attached to this 
-trigger, so the poll function is just called every time we have new 
-data. The poll function is attached as an irq handler, and then we can 
-reuse all the read_raw data by using a scheduled work from the consumer 
-driver, to read the channels.
-To do this, the ADC registers a special trigger named "touch trigger" 
-which is never enabled by the ADC driver. Instead, when a pollfunc is 
-attached to it, the attach function will also configure it with enabled 
-state. In the ADC, this means to start the touchscreen functionality. If 
-the touch is requested, it will standby and wait for pen detect IRQ.
-Once we have pen detect, we can use a periodic trigger to sample the 
-touch data, and poll the "touch" trigger. The consumer driver will wake 
-up and schedule a work , that will use the standard read raw interface 
-(inkern) that will read three virtual channels (position + pressure). 
-They are not actual hardware channels, as the touch information is being 
-received on channels 0,1,2,3, but reading these virtual channels will 
-read from different registers inside the ADC IP ( x position, y 
-position, pressure), do some computations on the data, and feed the 
-consumer with the values , hiding the behind the scenes hardware 
-specific calculations.
-After trigger is polled , the ADC will resume normal functionality, and 
-the consumer driver will continue to sleep.
-We need to have a periodic trigger to sample the data because the actual 
-analog to digital conversion inside the IP block needs to be triggered. 
-The touchscreen data measurements cannot happen in hardware without 
-being triggered. If I try with a hrtimer to get a periodic IRQ to just 
-read the data, it will never be ready. The datasheet states that the 
-touchscreen measurements "will be attached to the conversion sequence". 
-So the periodic trigger is forcing a conversion sequence. This could be 
-done with a software trigger as well, but why the hassle to start it 
-every 2 milliseconds (or other time interval), if we can do it by 
-periodic trigger ?
-Once we get the No pen IRQ, we stop the periodic trigger and it can be 
-used in another purpose (software or external as of now in the driver, 
-in the future we can add PWM trigger and Timer trigger)
-
-In short, the ADC in Sama5D2 also supports touchscreen, and in 
-touchscreen mode , 4 of the channels are being used for this purpose. 
-This however, doesn't stop the ADC to use the other channels . The 
-hardware has 12 total single channels and they can be paired to have 6 
-more differential channels. The only thing that is blocked is the 
-trigger, but only if the pen is touching (when we start the periodic 
-trigger to sample the touchscreen). If the pen is not touching, an 
-external trigger or software trigger can be used without any issues (so 
-why limit the functionality, if this is available from hardware ?). 
-Because of the reason I discussed above (touchscreen sequence must be 
-triggered), we cannot use another trigger in the same time.
-
-
-I see your idea with the callback buffer and it's worth exploring. 
-Mainly this series was to actually show you what I had in mind about 
-supporting the resistive touchscreen, and to give you some actually 
-working code/patch, so we can discuss based on real implementation, not 
-just suppositions.
-
-You are right in many of the other comments that you said, and I will 
-come up with a v2 to this series. For now, I need to know if this is a 
-good or right direction in which I am going, or I should try to change 
-all the mechanism to callback buffer ? Or maybe I am totally in a bad 
-direction ?
-The requirements are that the consumer driver needs to be somehow woke 
-up for every new touch data available, and report to the input 
-subsystem. As it was done before, the at91 old driver, just creates and 
-registers an input device by itself, and then reports the position and 
-touches. I was thinking that with this trigger consumer implementation, 
-things can be better in terms of subsystem separation and support.
-
-Thanks again and let me know of your thoughts,
-
-Eugen
-
-
-
-[...]
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
