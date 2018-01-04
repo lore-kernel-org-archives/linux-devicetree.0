@@ -1,141 +1,118 @@
-From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
-Subject: Re: [PATCH 01/11] clk: sunxi-ng: Don't set k if width is 0 for nkmp plls
-Date: Thu, 04 Jan 2018 20:28:16 +0100
-Message-ID: <3625461.aU9oqMdpo3@jernej-laptop>
-References: <20171230210203.24115-1-jernej.skrabec@siol.net> <20171230210203.24115-2-jernej.skrabec@siol.net> <CAGb2v67B23yUdACijKxosfFG_os5WndiBKX02DGA4PFUkxDx9g@mail.gmail.com>
+From: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 1/8] ARM: dts: keystone: Move keystone_irq to under
+ device-state-control
+Date: Thu, 4 Jan 2018 13:34:45 -0600
+Message-ID: <753e7340-ae4c-d2ed-c312-44032257f549@ti.com>
+References: <20180102170202.15045-1-afd@ti.com>
+ <20180102170202.15045-2-afd@ti.com>
+ <cce1676d-8e91-c3d4-be79-7896011a8f26@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAGb2v67B23yUdACijKxosfFG_os5WndiBKX02DGA4PFUkxDx9g@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Archit Taneja <architt@codeaurora.org>, a.hajda@samsung.com, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Jose.Abreu@synopsys.com, Neil Armstrong <narmstrong@baylibre.com>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cce1676d-8e91-c3d4-be79-7896011a8f26-l0cyMroinI0@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-Dne četrtek, 04. januar 2018 ob 15:45:18 CET je Chen-Yu Tsai napisal(a):
-> On Sun, Dec 31, 2017 at 5:01 AM, Jernej Skrabec <jernej.skrabec@siol.net> 
-wrote:
-> > For example, A83T have nmp plls which are modelled as nkmp plls. Since k
-> > is not specified, it has offset 0, shift 0 and lowest value 1. This
-> > means that LSB bit is always set to 1, which may change clock rate.
-> > 
-> > Fix that by applying k factor only if k width is greater than 0.
-> > 
-> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> > ---
-> > 
-> >  drivers/clk/sunxi-ng/ccu_nkmp.c | 21 +++++++++++++--------
-> >  1 file changed, 13 insertions(+), 8 deletions(-)
-> > 
-> > diff --git a/drivers/clk/sunxi-ng/ccu_nkmp.c
-> > b/drivers/clk/sunxi-ng/ccu_nkmp.c index e58c95787f94..709f528af2b3 100644
-> > --- a/drivers/clk/sunxi-ng/ccu_nkmp.c
-> > +++ b/drivers/clk/sunxi-ng/ccu_nkmp.c
-> > @@ -81,7 +81,7 @@ static unsigned long ccu_nkmp_recalc_rate(struct clk_hw
-> > *hw,> 
-> >                                         unsigned long parent_rate)
-> >  
-> >  {
-> >  
-> >         struct ccu_nkmp *nkmp = hw_to_ccu_nkmp(hw);
-> > 
-> > -       unsigned long n, m, k, p;
-> > +       unsigned long n, m, k = 1, p;
-> > 
-> >         u32 reg;
-> >         
-> >         reg = readl(nkmp->common.base + nkmp->common.reg);
-> > 
-> > @@ -92,11 +92,13 @@ static unsigned long ccu_nkmp_recalc_rate(struct
-> > clk_hw *hw,> 
-> >         if (!n)
-> >         
-> >                 n++;
-> > 
-> > -       k = reg >> nkmp->k.shift;
-> > -       k &= (1 << nkmp->k.width) - 1;
-> > -       k += nkmp->k.offset;
-> > -       if (!k)
-> > -               k++;
-> > +       if (nkmp->k.width) {
-> > +               k = reg >> nkmp->k.shift;
-> > +               k &= (1 << nkmp->k.width) - 1;
-> > +               k += nkmp->k.offset;
-> > +               if (!k)
-> > +                       k++;
-> > +       }
+On 01/02/2018 05:30 PM, Suman Anna wrote:
+> Hi Andrew,
 > 
-> The conditional shouldn't be necessary. With nkmp->k.width = 0,
-> you'd simply get k & 0, which is 0, which then gets bumped up to 1,
-> unless k.offset > 1, which would be a bug.
+> On 01/02/2018 11:01 AM, Andrew F. Davis wrote:
+>> The keystone_irq node describes a device that is a component of the device
+>> state control module. 
 > 
-> >         m = reg >> nkmp->m.shift;
-> >         m &= (1 << nkmp->m.width) - 1;
-> > 
-> > @@ -153,12 +155,15 @@ static int ccu_nkmp_set_rate(struct clk_hw *hw,
-> > unsigned long rate,> 
-> >         reg = readl(nkmp->common.base + nkmp->common.reg);
-> >         reg &= ~GENMASK(nkmp->n.width + nkmp->n.shift - 1, nkmp->n.shift);
-> > 
-> > -       reg &= ~GENMASK(nkmp->k.width + nkmp->k.shift - 1, nkmp->k.shift);
-> > +       if (nkmp->k.width)
-> > +               reg &= ~GENMASK(nkmp->k.width + nkmp->k.shift - 1,
-> > +                               nkmp->k.shift);
-> > 
-> >         reg &= ~GENMASK(nkmp->m.width + nkmp->m.shift - 1, nkmp->m.shift);
-> >         reg &= ~GENMASK(nkmp->p.width + nkmp->p.shift - 1, nkmp->p.shift);
-> >         
-> >         reg |= (_nkmp.n - nkmp->n.offset) << nkmp->n.shift;
-> > 
-> > -       reg |= (_nkmp.k - nkmp->k.offset) << nkmp->k.shift;
-> > +       if (nkmp->k.width)
-> > +               reg |= (_nkmp.k - nkmp->k.offset) << nkmp->k.shift;
+> I would prefer 'address space' to be added to this statement as this
+> module is really not a single IP but really a collection of different
+> register sets providing different functionalities. Some of these
+> comments apply to the following patches as well.
 > 
-> I think a better way would be
+
+Works for me, will re-word.
+
+> As such, it should not be a member of soc0 bus
+>> but instead a sub-node of device-state-control.
+>>
+>> This move also fixes a warning about not having a reg property. Now
+>> that this is a sub-node of device-state-control, a syscon type node,
+>> we add this reg property but relative to the syscon base, this way
+>> when the dt-binding/driver are updated we can drop the non-standard
+>> ti,syscon-dev property completely and simply use get_resource() in
+>> the driver.
 > 
->         reg |= ((_nkmp.k - nkmp->k.offset) << nkmp->k.shift) &
->                GENMASK(nkmp->k.width + nkmp->k.shift - 1, nkmp->k.shift);
+> Please add an appropriate 'ranges' property in the parent node following
+> the parent-child node convention, it's upto individual drivers to use
+> the appropriate API for whether they want to deal with the offset or the
+> actual bus addresses. You should not tie this into forcing to use a
+> get_resource() without ranges to get the offset.
 > 
-> And do this for all the factors, not just k. This pattern is what
-> regmap_update_bits does, which seems much safer. I wonder what
-> GENMASK() with a negative value would do though...
 
-You're right, GENMASK(-1, 0) equals 0 (calculated by hand, not tested). This 
-seems much more elegant solution. 
+Will add.
 
-Semi-related question: All nmp PLLs have much wider N range than real nkmp 
-PLLs. This causes integer overflow when using nkmp formula from datasheet. 
-Usually, N is 1-256 for nmp PLLs, which means that for very high N factors, it 
-overflows. This also causes issue that M factor is never higher than 1.
-
-I was wondering, if patch would be acceptable which would change this formula:
-
-RATE = (24MHz * N * K) / (M * P)
-
-to this:
-
-RATE ((24MHz / M) * N * K) / P
-
-I checked all M factors and are all in 1-4 or 1-2 range, which means it 
-wouldn't have any impact for real nkmp PLLs when parent is 24 MHz clock which 
-is probably always.
-
-What do you think?
-
-I discovered that when I tried to set A83T PLL_VIDEO to 346.5 MHz which is 
-possible only when above formula is changed.
-
-Best regards,
-Jernej
-
+>>
+>> Signed-off-by: Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org>
+>> Acked-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/keystone.dtsi | 21 ++++++++++++---------
+>>  1 file changed, 12 insertions(+), 9 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/keystone.dtsi b/arch/arm/boot/dts/keystone.dtsi
+>> index 93ea5c69ea77..158e0a903f7e 100644
+>> --- a/arch/arm/boot/dts/keystone.dtsi
+>> +++ b/arch/arm/boot/dts/keystone.dtsi
+>> @@ -87,8 +87,19 @@
+>>  		};
+>>  
+>>  		devctrl: device-state-control@2620000 {
+>> -			compatible = "ti,keystone-devctrl", "syscon";
+>> +			#address-cells = <1>;
+>> +			#size-cells = <1>;
+>> +			compatible = "ti,keystone-devctrl", "syscon", "simple-mfd";
 > 
-> ChenYu
+> nit, can you please maintain the current order of compatible and reg,
+> and add the new properties after them.
 > 
-> >         reg |= (_nkmp.m - nkmp->m.offset) << nkmp->m.shift;
-> >         reg |= ilog2(_nkmp.p) << nkmp->p.shift;
-> > 
-> > --
-> > 2.15.1
+
+#address/size-cells are the first properties in many other nodes,
+including the top level soc0, I have no real preference, so I'll change
+it around if you prefer.
+
+> regards
+> Suman
+> 
+>>  			reg = <0x02620000 0x1000>;
+>> +
+>> +			kirq0: keystone_irq@2a0 {
+>> +				compatible = "ti,keystone-irq";
+>> +				reg = <0x2a0 0x4>;
+>> +				interrupts = <GIC_SPI 4 IRQ_TYPE_EDGE_RISING>;
+>> +				interrupt-controller;
+>> +				#interrupt-cells = <1>;
+>> +				ti,syscon-dev = <&devctrl 0x2a0>;
+>> +			};
+>>  		};
+>>  
+>>  		rstctrl: reset-controller {
+>> @@ -282,14 +293,6 @@
+>>  				  1 0 0x21000A00 0x00000100>;
+>>  		};
+>>  
+>> -		kirq0: keystone_irq@26202a0 {
+>> -			compatible = "ti,keystone-irq";
+>> -			interrupts = <GIC_SPI 4 IRQ_TYPE_EDGE_RISING>;
+>> -			interrupt-controller;
+>> -			#interrupt-cells = <1>;
+>> -			ti,syscon-dev = <&devctrl 0x2a0>;
+>> -		};
+>> -
+>>  		pcie0: pcie@21800000 {
+>>  			compatible = "ti,keystone-pcie", "snps,dw-pcie";
+>>  			clocks = <&clkpcie>;
+>>
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
