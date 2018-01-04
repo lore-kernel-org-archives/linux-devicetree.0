@@ -1,228 +1,40 @@
-From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH v2 1/2] v4l2: i2c: ov7670: Implement OF mbus configuration
-Date: Thu,  4 Jan 2018 10:52:32 +0100
-Message-ID: <1515059553-10219-2-git-send-email-jacopo+renesas@jmondi.org>
-References: <1515059553-10219-1-git-send-email-jacopo+renesas@jmondi.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1515059553-10219-1-git-send-email-jacopo+renesas@jmondi.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: corbet@lwn.net, mchehab@kernel.org, sakari.ailus@iki.fi, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 06/12] arm64: dts: mt7622: add cpufreq related device
+ nodes
+Date: Thu, 4 Jan 2018 18:01:14 +0800
+Message-ID: <1515060074.30687.62.camel@mtkswgap22>
+References: <cover.1515057696.git.sean.wang@mediatek.com>
+         <7e61305594b7bbcdefe31f64ca5603cbdbd9f4cf.1515057696.git.sean.wang@mediatek.com>
+         <20180104094526.GC19742@vireshk-i7>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180104094526.GC19742@vireshk-i7>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-ov7670 driver supports two optional properties supplied through platform
-data, but currently does not support any standard video interface
-property.
+On Thu, 2018-01-04 at 15:15 +0530, Viresh Kumar wrote:
+> On 04-01-18, 17:40, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
+> > diff --git a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+> > index 5b7f0a3..90b2761 100644
+> > --- a/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+> > +++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+> > @@ -18,6 +18,50 @@
+> >  	#address-cells = <2>;
+> >  	#size-cells = <2>;
+> >  
+> > +	cpu_opp_table: opp_table {
+> 
+> Rob recently asked me to do name the nodes with "-" instead of "_". So
+> this becomes "cpu_opp_table: opp-table {" then.
+> 
 
-Add support through OF parsing for 2 generic properties (vsync and hsync
-polarities) and for two custom properties already supported by platform
-data.
+okay, I will do it in the next version.
 
-While at there, check return value of register writes in set_fmt
-function and rationalize spacings.
-
-Signal polarities and pixel clock blanking verified through scope and
-image capture.
-
-Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
----
- drivers/media/i2c/ov7670.c | 124 ++++++++++++++++++++++++++++++++++++++++-----
- 1 file changed, 110 insertions(+), 14 deletions(-)
-
-diff --git a/drivers/media/i2c/ov7670.c b/drivers/media/i2c/ov7670.c
-index 950a0ac..d40a601 100644
---- a/drivers/media/i2c/ov7670.c
-+++ b/drivers/media/i2c/ov7670.c
-@@ -21,6 +21,7 @@
- #include <linux/gpio/consumer.h>
- #include <media/v4l2-device.h>
- #include <media/v4l2-ctrls.h>
-+#include <media/v4l2-fwnode.h>
- #include <media/v4l2-mediabus.h>
- #include <media/v4l2-image-sizes.h>
- #include <media/i2c/ov7670.h>
-@@ -237,6 +238,7 @@ struct ov7670_info {
- 	struct clk *clk;
- 	struct gpio_desc *resetb_gpio;
- 	struct gpio_desc *pwdn_gpio;
-+	unsigned int mbus_config;	/* Media bus configuration flags */
- 	int min_width;			/* Filter out smaller sizes */
- 	int min_height;			/* Filter out smaller sizes */
- 	int clock_speed;		/* External clock speed (MHz) */
-@@ -995,7 +997,7 @@ static int ov7670_set_fmt(struct v4l2_subdev *sd,
- #ifdef CONFIG_VIDEO_V4L2_SUBDEV_API
- 	struct v4l2_mbus_framefmt *mbus_fmt;
- #endif
--	unsigned char com7;
-+	unsigned char com7, com10 = 0;
- 	int ret;
- 
- 	if (format->pad)
-@@ -1015,7 +1017,6 @@ static int ov7670_set_fmt(struct v4l2_subdev *sd,
- 	}
- 
- 	ret = ov7670_try_fmt_internal(sd, &format->format, &ovfmt, &wsize);
--
- 	if (ret)
- 		return ret;
- 	/*
-@@ -1026,16 +1027,41 @@ static int ov7670_set_fmt(struct v4l2_subdev *sd,
- 	 */
- 	com7 = ovfmt->regs[0].value;
- 	com7 |= wsize->com7_bit;
--	ov7670_write(sd, REG_COM7, com7);
-+	ret = ov7670_write(sd, REG_COM7, com7);
-+	if (ret)
-+		return ret;
-+
-+	/*
-+	 * Configure the media bus through COM10 register
-+	 */
-+	if (info->mbus_config & V4L2_MBUS_VSYNC_ACTIVE_LOW)
-+		com10 |= COM10_VS_NEG;
-+	if (info->mbus_config & V4L2_MBUS_HSYNC_ACTIVE_LOW)
-+		com10 |= COM10_HREF_REV;
-+	if (info->pclk_hb_disable)
-+		com10 |= COM10_PCLK_HB;
-+	ret = ov7670_write(sd, REG_COM10, com10);
-+	if (ret)
-+		return ret;
-+
- 	/*
- 	 * Now write the rest of the array.  Also store start/stops
- 	 */
--	ov7670_write_array(sd, ovfmt->regs + 1);
--	ov7670_set_hw(sd, wsize->hstart, wsize->hstop, wsize->vstart,
--			wsize->vstop);
--	ret = 0;
--	if (wsize->regs)
-+	ret = ov7670_write_array(sd, ovfmt->regs + 1);
-+	if (ret)
-+		return ret;
-+
-+	ret = ov7670_set_hw(sd, wsize->hstart, wsize->hstop, wsize->vstart,
-+			    wsize->vstop);
-+	if (ret)
-+		return ret;
-+
-+	if (wsize->regs) {
- 		ret = ov7670_write_array(sd, wsize->regs);
-+		if (ret)
-+			return ret;
-+	}
-+
- 	info->fmt = ovfmt;
- 
- 	/*
-@@ -1048,8 +1074,10 @@ static int ov7670_set_fmt(struct v4l2_subdev *sd,
- 	 * to write it unconditionally, and that will make the frame
- 	 * rate persistent too.
- 	 */
--	if (ret == 0)
--		ret = ov7670_write(sd, REG_CLKRC, info->clkrc);
-+	ret = ov7670_write(sd, REG_CLKRC, info->clkrc);
-+	if (ret)
-+		return ret;
-+
- 	return 0;
- }
- 
-@@ -1658,6 +1686,71 @@ static int ov7670_init_gpio(struct i2c_client *client, struct ov7670_info *info)
- 	return 0;
- }
- 
-+/*
-+ * ov7670_parse_dt() - Parse device tree to collect mbus configuration
-+ *			properties
-+ */
-+static int ov7670_parse_dt(struct device *dev,
-+			   struct ov7670_info *info)
-+{
-+	struct fwnode_handle *fwnode = dev_fwnode(dev);
-+	struct v4l2_fwnode_endpoint bus_cfg;
-+	struct fwnode_handle *ep;
-+	u32 propval;
-+	int ret;
-+
-+	if (!fwnode)
-+		return -EINVAL;
-+
-+	ep = fwnode_graph_get_next_endpoint(fwnode, NULL);
-+	if (!ep)
-+		return -EINVAL;
-+
-+	ret = v4l2_fwnode_endpoint_parse(ep, &bus_cfg);
-+	if (ret) {
-+		fwnode_handle_put(fwnode);
-+		return ret;
-+	}
-+
-+	/* Any CSI-2 property set? */
-+	if (bus_cfg.bus_type != V4L2_MBUS_PARALLEL) {
-+		fwnode_handle_put(fwnode);
-+		return -EINVAL;
-+	}
-+	info->mbus_config = bus_cfg.bus.parallel.flags;
-+	fwnode_handle_put(fwnode);
-+
-+	/* Parse custom OF properties. */
-+	info->pclk_hb_disable = false;
-+	info->pll_bypass = false;
-+
-+	ret = fwnode_property_read_u32(ep, "ov7670,pclk-hb-disable", &propval);
-+	if (ret < 0 && ret != -EINVAL) {
-+		dev_err(dev,
-+			"Unable to parse property \"ov7670,pclk-hb-disable\"\n");
-+		fwnode_handle_put(ep);
-+		return ret;
-+
-+	} else if (ret == 0 && propval) {
-+		info->pclk_hb_disable = true;
-+	}
-+
-+	ret = fwnode_property_read_u32(ep, "ov7670,pll-bypass", &propval);
-+	if (ret < 0 && ret != -EINVAL) {
-+		dev_err(dev,
-+			"Unable to parse property \"ov7670,pll-bypass\"\n");
-+		fwnode_handle_put(ep);
-+		return ret;
-+
-+	} else if (ret == 0 && propval) {
-+		info->pll_bypass = true;
-+	}
-+
-+	fwnode_handle_put(ep);
-+
-+	return 0;
-+}
-+
- static int ov7670_probe(struct i2c_client *client,
- 			const struct i2c_device_id *id)
- {
-@@ -1678,7 +1771,13 @@ static int ov7670_probe(struct i2c_client *client,
- #endif
- 
- 	info->clock_speed = 30; /* default: a guess */
--	if (client->dev.platform_data) {
-+
-+	if (dev_fwnode(&client->dev)) {
-+		ret = ov7670_parse_dt(&client->dev, info);
-+		if (ret)
-+			return ret;
-+
-+	} else if (client->dev.platform_data) {
- 		struct ov7670_config *config = client->dev.platform_data;
- 
- 		/*
-@@ -1745,9 +1844,6 @@ static int ov7670_probe(struct i2c_client *client,
- 	tpf.denominator = 30;
- 	info->devtype->set_framerate(sd, &tpf);
- 
--	if (info->pclk_hb_disable)
--		ov7670_write(sd, REG_COM10, COM10_PCLK_HB);
--
- 	v4l2_ctrl_handler_init(&info->hdl, 10);
- 	v4l2_ctrl_new_std(&info->hdl, &ov7670_ctrl_ops,
- 			V4L2_CID_BRIGHTNESS, 0, 255, 1, 128);
--- 
-2.7.4
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
