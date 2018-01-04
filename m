@@ -1,68 +1,60 @@
-From: Philippe Ombredanne <pombredanne-od1rfyK75/E@public.gmane.org>
-Subject: Re: [PATCH 05/12] arm64: dts: mt7622: add PMIC MT6380 related nodes
-Date: Thu, 4 Jan 2018 11:27:16 +0100
-Message-ID: <CAOFm3uF0WHO6_Y6dKu3DnAd759tA2hNQs=0-P86s1A0e==27Ow@mail.gmail.com>
-References: <cover.1515057696.git.sean.wang@mediatek.com> <0109846a8a501ca3cae33acfceb919960fddfcbf.1515057696.git.sean.wang@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <0109846a8a501ca3cae33acfceb919960fddfcbf.1515057696.git.sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+From: Ilia Lin <ilialin@codeaurora.org>
+Subject: [PATCH v2 00/11] clk: qcom: CPU clock driver for msm8996
+Date: Thu,  4 Jan 2018 13:10:04 +0200
+Message-ID: <1515064215-22202-1-git-send-email-ilialin@codeaurora.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, sboyd@codeaurora.org
+Cc: devicetree@vger.kernel.org, mark.rutland@arm.com, will.deacon@arm.com, rnayak@codeaurora.org, ilialin@codeaurora.org, amit.kucheria@linaro.org, nicolas.dechesne@linaro.org, celster@codeaurora.org, tfinkel@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Sean,
+[v2]
+ * Addressed comments from Rob Herring for bindings
+ * Addressed comments from Mark Rutland for memory barrier
+ * Addressed comments from Julien Thierry for clock reenabling condition
+ * Tuned the HW configuration for clock frequencies below 600MHz
 
-On Thu, Jan 4, 2018 at 10:40 AM,  <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
->
-> Enable pwrap and MT6380 on mt7622-rfb1 board. Also add all mt6380
-> regulator nodes in an alone file to allow similar boards using MT6380
-> able to resue the configuration.
->
-> Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/mediatek/mt6380.dtsi     | 91 ++++++++++++++++++++++++++++
->  arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts |  8 +++
->  arch/arm64/boot/dts/mediatek/mt7622.dtsi     | 12 ++++
->  3 files changed, 111 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/mediatek/mt6380.dtsi
->
-> diff --git a/arch/arm64/boot/dts/mediatek/mt6380.dtsi b/arch/arm64/boot/dts/mediatek/mt6380.dtsi
-> new file mode 100644
-> index 0000000..7eb7dc2
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/mediatek/mt6380.dtsi
-> @@ -0,0 +1,91 @@
-> +/*
-> + * Copyright (c) 2018 MediaTek Inc.
-> + * Author: Chenglin Xu <chenglin.xu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> + *        Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
+This series adds support for the CPU clocks on msm8996 devices.
+A previous post of RFC can be found here
+https://patchwork.kernel.org/patch/10106867/
 
-Would you mind using SPDX tags instead of this fine but long legalese?
-This is documented in Thomas patches [1].
+Ilia Lin (6):
+  soc: qcom: Separate kryo l2 accessors from PMU driver
+  clk: qcom: Add DT bindings for CPU clock driver for msm8996
+  clk: qcom: clk-cpu-8996: Prepare PLLs on probe
+  clk: qcom: Add ACD path to CPU clock driver for msm8996
+  DT: QCOM: Add cpufreq-dt to msm8996
+  DT: QCOM: Add thermal mitigation to msm8996
 
-Also if you could spread the word in your team, this would earn you
-good karma points.
-Thank you!
+Rajendra Nayak (4):
+  clk: qcom: Make clk_alpha_pll_configure available to modules
+  clk: qcom: Add CPU clock driver for msm8996
+  clk: qcom: cpu-8996: Add support to switch to alternate PLL
+  clk: qcom: cpu-8996: Add support to switch below 600Mhz
 
-[1] https://lkml.org/lkml/2017/12/28/323
+Taniya Das (1):
+  clk: qcom: Fix .set_rate to handle alpha PLLs w/wo dynamic update
+
+ .../devicetree/bindings/clock/qcom,kryocc.txt      |  17 +
+ arch/arm64/Kconfig.platforms                       |   7 +
+ arch/arm64/boot/dts/qcom/apq8096-db820c.dts        |   2 +-
+ arch/arm64/boot/dts/qcom/msm8996.dtsi              | 282 ++++++++++-
+ drivers/clk/qcom/Kconfig                           |   8 +
+ drivers/clk/qcom/Makefile                          |   1 +
+ drivers/clk/qcom/clk-alpha-pll.c                   |  73 ++-
+ drivers/clk/qcom/clk-alpha-pll.h                   |   5 +
+ drivers/clk/qcom/clk-cpu-8996.c                    | 543 +++++++++++++++++++++
+ drivers/cpufreq/cpufreq-dt-platdev.c               |   3 +
+ drivers/perf/qcom_l2_pmu.c                         |  48 +-
+ drivers/soc/qcom/Makefile                          |   1 +
+ drivers/soc/qcom/kryo-l2-accessors.c               |  64 +++
+ include/soc/qcom/kryo-l2-accessors.h               |  22 +
+ 14 files changed, 1006 insertions(+), 70 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,kryocc.txt
+ create mode 100644 drivers/clk/qcom/clk-cpu-8996.c
+ create mode 100644 drivers/soc/qcom/kryo-l2-accessors.c
+ create mode 100644 include/soc/qcom/kryo-l2-accessors.h
+
 -- 
-Cordially
-Philippe Ombredanne
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
+
