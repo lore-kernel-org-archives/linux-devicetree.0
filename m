@@ -1,110 +1,63 @@
-From: Greentime Hu <green.hu@gmail.com>
-Subject: Re: [PATCH v5 1/3] clocksource/drivers/atcpit100: Add andestech
- atcpit100 timer
-Date: Thu, 4 Jan 2018 22:06:38 +0800
-Message-ID: <CAEbi=3c4yAx7Tejz8aPw3-3vj89t8cg-zNEY-vbF7KaMo8OM0Q@mail.gmail.com>
-References: <1513057621-19084-1-git-send-email-rickchen36@gmail.com>
- <1513057621-19084-2-git-send-email-rickchen36@gmail.com> <bb7383ba-bb8e-3cbd-4ce0-faaefa8ed114@linaro.org>
- <CAEbi=3cEEtLQRiv-cyUwEmcBNOC2Sz7AhzZkpznQWYb9VUojug@mail.gmail.com> <ff51fff7-e963-f9fd-10d6-9b90a64d7aac@linaro.org>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: sun8i: a83t: bananapi-m3: Add LED device nodes
+Date: Thu, 4 Jan 2018 15:10:42 +0100
+Message-ID: <20180104141042.zcsmyohzyyod6nlt@flea.lan>
+References: <20180103062844.30315-1-wens@csie.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <ff51fff7-e963-f9fd-10d6-9b90a64d7aac@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Greentime <greentime@andestech.com>, Rick Chen <rickchen36@gmail.com>, Rick Chen <rick@andestech.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Linus Walleij <linus.walleij@linaro.org>, linux-arch <linux-arch@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, netdev <netdev@vger.kernel.org>, Vincent Chen <deanbo422@gmail.com>, DTML <devicetree@vger.kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, David Howells <dhowells@redhat.com>, Will Deacon <will.deacon@arm.com>, linux-serial@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ujvdaj6rmu2v2ghz"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20180103062844.30315-1-wens-jdAy2FN1RRM@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi, Daniel:
 
-2018-01-04 21:50 GMT+08:00 Daniel Lezcano <daniel.lezcano@linaro.org>:
->
-> Hi,
->
-> sorry I missed your answer. Comments below.
->
-> On 13/12/2017 07:06, Greentime Hu wrote:
->> Hi, Daniel:
->>
->> 2017-12-12 18:05 GMT+08:00 Daniel Lezcano <daniel.lezcano@linaro.org>:
->>> On 12/12/2017 06:46, Rick Chen wrote:
->>>> ATCPIT100 is often used on the Andes architecture,
->>>> This timer provide 4 PIT channels. Each PIT channel is a
->>>> multi-function timer, can be configured as 32,16,8 bit timers
->>>> or PWM as well.
->>>>
->>>> For system timer it will set channel 1 32-bit timer0 as clock
->>>> source and count downwards until underflow and restart again.
->>>
->>> [ ... ]
->>>
->>>> +config CLKSRC_ATCPIT100
->>>> +     bool "Clocksource for AE3XX platform"
->>>> +     depends on NDS32 || COMPILE_TEST
->>>> +     depends on HAS_IOMEM
->>>> +     help
->>>> +       This option enables support for the Andestech AE3XX platform timers.
->>>
->>> Hi Rick,
->>>
->>> the general rule for the Kconfig is:
->>>
->>> bool "Clocksource for AE3XX platform" if COMPILE_TEST
->>>
->>> and no deps on the platform.
->>>
->>> It is up to the platform Kconfig to select the option.
->>>
->>> We want here a silent option but make it selectable in case of
->>> compilation test coverage.
->>
->>
->> The way we like to use it is because
->> 1. This timer is a basic component to boot an nds32 CPU and it should
->> be able to select without COMPILE_TEST for nds32 architecture.
->
-> Yes, so you don't need it to be selectable, you must select it from the
-> platform's Kconfig.
+--ujvdaj6rmu2v2ghz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I am not sure that I get your point or not.
-We don't have a CONFIG_PLAT_AE3XX.
-Do you mean we should create one and select CLKSRC_ATCPIT100 under
-CONFIG_PLAT_AE3XX?
+On Wed, Jan 03, 2018 at 02:28:44PM +0800, Chen-Yu Tsai wrote:
+> The Bananapi M3 has two controllable LEDs, blue and green, that are tied
+> to the PMIC's two GPIO pins.
+>=20
+> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 
->> 2. It seems conflict with debug info. I am not sure if there is
->> another way to debug kernel(with debug info) with COMPILE_TEST and
->> DEBUG_INFO because we need this driver for nds32 architecture.
->>
->> Symbol: DEBUG_INFO [=n]
->> Type  : boolean
->> Prompt: Compile the kernel with debug info
->>   Location:
->>     -> Kernel hacking
->>       -> Compile-time checks and compiler options
->>   Defined at lib/Kconfig.debug:140
->>   Depends on: DEBUG_KERNEL [=y] && !COMPILE_TEST [=n]
->
-> The COMPILE_TEST option is only there to allow cross-compilation test
-> coverage, it does not select or unselect the driver in usual way.
->
-> If the COMPILE_TEST is enabled, then the option will appear in the
-> menuconfig, so that gives the opportunity to select/unselect it.
->
-> Otherwise, the Kconfig's platform selects automatically the driver and
-> the user *can't* unselect it from the menuconfig as it is a silent
-> option and that is certainly what you want.
->
->>> Also, this driver is not a CLKSRC but a TIMER. Rename CLKSRC_ATCPIT100
->>> to TIMER_ATCPIT100.
->>
->> Thanks. We will rename it in the next version patch.
->
-> You just resend an entire series V5 for the architecture. I'm confused,
-> what is the merging path ?
+Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-Sorry. I didn't get your point.
-We sent the timer patch and the architecture patch together because it
-would be easier for reviewer to check the vdso implementations.
-What do you mean about the merging path?
+Thanks!
+Maxime
 
-Thanks.
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--ujvdaj6rmu2v2ghz
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlpONeEACgkQ0rTAlCFN
+r3SxRA/9EAs2eNGiJiZ6LQkXa47QGW6voJU6B6CISQ7P0GlpErO2n///mQB4GL7j
+jBn40gkOkJzm2E1olU4pEE5R2BwOHfg1ag4JEpQAmCnrcIP617x32PBixCPgloed
+Qt9RhKJPZvDsbamx6ygSB42zvwWqX9gYjWDpdjThXnyqG9n9+Pv/GRF0J4k6J2EK
++8JMIqzU/nPl85WE6fAv1LxApfPI/QyxghfHwK8cmcopIPSgopAbLRjH6uNXe5x9
+i+gPjffz27h0lmA+GhEFucCDAuOOdDx/icXZ5rnMN6Q2w7xKtryn2B0CS6pGLy3x
+q2hjizddRbqCO7uD67BI0eklzDHQujvFi7WKQXgtvQPaZlB2cW8wsHdHs3vCO5Bk
+T4Zjc7dbwBJes8rQGzsJ2/w+VLfypmdyMis+k9Ys3VJZD06lyYCSERQ4I+MiQz2S
+zwcV/WpdNSRbErDK/L2aW9d8YuTq4mPEkWAO1KJDFtEBVZse5MLk3iCoyGf7sMqI
+zAIKkXkzRWyfx83QY6p6/PhfFBXAdI/gxgOu3t6JF/0ksMaE40udZbnLsWKxt41r
+DtEaeN1FfKvrL5JcuUqj852RM93FU+MMqBOMLMb1q0blbmsHoOX5+aYPVoks8zYU
+gYqvVj/xuWohnQG4oQOWkdrNIiPx7DjS7nmIhRe2Flmd330zKRw=
+=+BcW
+-----END PGP SIGNATURE-----
+
+--ujvdaj6rmu2v2ghz--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
