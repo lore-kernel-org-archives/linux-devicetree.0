@@ -1,162 +1,69 @@
-From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] dt: psci: Update DT bindings to support hierarchical
- PSCI states
-Date: Thu, 4 Jan 2018 14:16:12 +0100
-Message-ID: <CAPDyKFo3ZoQHWcWMYD6nnYcr8i4Hdrg3Mbvi9TOZouh5t9g3uA@mail.gmail.com>
-References: <1514472037-25969-1-git-send-email-ulf.hansson@linaro.org> <20180104123132.GA28646@e107155-lin>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: sun[47]i: Fix display backend 1 output to
+ TCON0 remote endpoint
+Date: Thu, 4 Jan 2018 14:27:52 +0100
+Message-ID: <20180104132752.pcixtjugwfvlshpl@flea.lan>
+References: <20180103163155.13975-1-wens@csie.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ghu4skuw4u3vrhsf"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180104123132.GA28646@e107155-lin>
+Content-Disposition: inline
+In-Reply-To: <20180103163155.13975-1-wens-jdAy2FN1RRM@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, Brendan Jackman <Brendan.Jackman-5wv7dgnIgG8@public.gmane.org>, Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sudeep,
 
-On 4 January 2018 at 13:31, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
-> Hi Ulf,
->
-> I will suggest some wording changes not of which are not compulsory and
-> left to you to pick up or drop.
+--ghu4skuw4u3vrhsf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks for reviewing!
+On Thu, Jan 04, 2018 at 12:31:55AM +0800, Chen-Yu Tsai wrote:
+> There is a copy-paste error in the display pipeline device tree graph.
+> The remote endpoint of the display backend 1's output to TCON0 points
+> to the wrong endpoint. This will result in the driver incorrectly
+> parsing the relationship of the components.
+>=20
+> Reported-by: Andrea Venturi <ennesimamail.av-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Fixes: 0df4cf33a594 ("ARM: dts: sun4i: Add device nodes for display
+> 		      pipelines")
+> Fixes: 5b92b29bed45 ("ARM: dts: sun7i: Add device nodes for display
+> 		      pipelines")
+> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 
->
-> On 28/12/17 14:40, Ulf Hansson wrote:
->> From: Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>
->> Update DT bindings to represent hierarchical CPU and CPU domain idle states
->> for PSCI. Also update the PSCI examples to clearly show how flattened and
->> hierarchical idle states can be represented in DT.
->>
->> Signed-off-by: Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> Signed-off-by: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> ---
->>
->> Changes in v2:
->>       - Addressed comments from Rob.
->>       - Updated some labels in the examples to get more consistency.
->>
->> For your information, I have picked up the work from Lina Iyer around the so
->> called CPU cluster idling series [1,2] and I working on new versions. However,
->> I decided to post the updates to the PSCI DT bindings first, as they will be
->> needed to be agreed upon before further changes can be done to the PSCI firmware
->> driver.
->>
->> Note, these bindings have been discussed over and over again, at LKML, but
->> especially also at various Linux conferences, like LPC and Linaro Connect. We
->> finally came to a conclusion and the changes we agreed upon, should be reflected
->> in this update.
->>
->> Of course, it's a while ago since the latest discussions, but hopefully people
->> don't have too hard time to remember.
->>
->> Kind regards
->> Uffe
->>
->> [1]
->> https://www.spinics.net/lists/arm-kernel/msg566200.html
->>
->> [2]
->> https://lwn.net/Articles/716300/
->>
->> ---
->>  Documentation/devicetree/bindings/arm/psci.txt | 152 +++++++++++++++++++++++++
->>  1 file changed, 152 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/arm/psci.txt b/Documentation/devicetree/bindings/arm/psci.txt
->> index a2c4f1d..8a09bd2 100644
->> --- a/Documentation/devicetree/bindings/arm/psci.txt
->> +++ b/Documentation/devicetree/bindings/arm/psci.txt
->> @@ -105,7 +105,159 @@ Case 3: PSCI v0.2 and PSCI v0.1.
->>               ...
->>       };
->>
->> +PSCI v1.0 onwards, supports OS-Initiated mode for powering off CPUs and CPU
->> +clusters from the firmware.
->
-> Since we are trying to avoid usage of "clusters"(as it's not architecturally
-> defined, but I know it's too late as it widely used everywhere). Also this
-> binding is not just OSI specific, it can be used for Platform Co-ordinated
-> also so let's not specify them at all.
->
-> How about:
-> "ARM systems can have multiple cores sometimes in hierarchical arrangement.
-> This often, but not always, maps directly to the processor power topology
-> of the system. Individual nodes in a topology have their own specific power
-> states and can be better represented in DT hierarchically"
+Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-Sounds great! Let me change to this!
+Maxime
 
->
->> For such topologies the PSCI firmware driver acts
->
-> PSCI firmware can be represented as a pseudo power controller ?
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 
-Yeah, this isn't very clear. I figure out something better or perhaps
-just drop this.
+--ghu4skuw4u3vrhsf
+Content-Type: application/pgp-signature; name="signature.asc"
 
->
->> +as pseudo-controller, which may be specified in the psci DT node. The
->> +definitions of the CPU and the CPU cluster topology, must conform to the domain
->> +idle state specification [3].
->
-> I assume it should be  "..definitions of the idle states for CPU and the CPU
-> topology" above, otherwise they should conform to topology binding :) rather
-> than domain idle state bindings.
+-----BEGIN PGP SIGNATURE-----
 
-Yep.
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlpOK9cACgkQ0rTAlCFN
+r3RrCA//eh6mI0i0UY7f0XBj4vP/WevV5+BM6ETlNvYzsOFwTDtFcPDm2UACF6FZ
+052ebofr0C6c4GHv1yr/6383h3lB1t45PNN96V38gwbPNAJF1osmfRY/4XHorBT1
+DNY/mHJ/vy5hQjhOfxFrbnDGue93f8gBnyaG+jKw+npYAYg9hs/5a1IcEgHEbViI
+dUsxqmjzDxFmbhxm6bpUl2ENqBUaCkxTCSluGLehVKoX0u6Tss+3LG/jttuCD4yk
+k0rnKhXW7iqEYcDcOsefrF2n2Y88oZkqbo2P5tMyPV9Cgm/m/su4ZjAVLyNfl/kY
+MjZvn9iMle2kEFOpnHWilV9UKh9pGM3qI0q4oUV4dCajB1CPgcWUPfPLX0MFqXug
+DUN9gH5s1KzPTDwtubeZfDzX+FMy6h7LHzcWAPihJiy/F51HgpEtAtWVIfmevc1e
+HUX+H36ml+jLBqlbX/SB3h1mRinr4vYqWs8HHtNsTeB0y9VA9cCdxkE6oXLJNmLU
+b/mZ4tKCBv82QevXkAMOya2J5bjLAcx77v5dlJm8xlUEaueYtJe3oqpgZetXj2lo
+RovRoQip9kvf/PkyeSLXW7CeKzOMypq/7MPs9wP0Y0lD7U6XKti41KyphdOAh16B
+FaYCxgZeCIafupYuNoudvnBX5CRbQNiajB4GLqo/XegYK8g6F8M=
+=e8fR
+-----END PGP SIGNATURE-----
 
->
->> The domain idle states themselves, must be
->> +compatible with the defined 'domain-idle-state' binding [1], and also need to
->> +specify the arm,psci-suspend-param property for each idle state.
->> +
->> +DT allows representing CPU and CPU cluster idle states in two different ways -
->> +
->> +The flattened model as given in Example 1, lists CPU's idle states followed by
->> +the domain idle state that the CPUs may choose. This is the general practice
->> +followed in PSCI firmwares that support Platform Coordinated mode.
->
-> I would rather drop the above statement or specify in Example 2 that it can be
-> used for both OSI and PC.
-
-Yeah, I fully agree, this needs to be more clear in the doc.
-
->
->> Note that
->> +the idle states are all compatible with "arm,idle-state".
->> +
->> +Example 2 represents the hierarchical model of CPU and domain idle states.
->> +CPUs define their domain provider in their DT node. The domain controls the
->> +power to the CPU and possibly other h/w blocks that would be powered off when
->> +the CPU is powered off. The CPU's idle states may therefore be considered as
->> +the domain's idle states and have the compatible "arm,idle-state". Such domains
->> +may be embedded within another domain that represents common h/w blocks between
->> +these CPUs viz. the cluster. The idle states of the cluster would be
->> +represented as the domain's idle states. In order to use OS-Initiated mode of
->> +PSCI in the firmware, the hierarchical representation must be used.
->> +
->
-> Can we avoid using poweroff as it's one of the idle states and not the only
-> one ?
-
-Yeah, I guess "low power state" or "idle state" is better?
-
-Additionally we mentioning "clusters" here again. I may be difficult
-to avoid using that terminology, when describing how things work. I
-can try, but perhaps it's just easier to make a statement early on to
-describe what "clusters" means in this context? Or what do you think?
-
->
-> Other than that, the examples look good to me.
-
-Great, thanks!
-
-Kind regards
-Uffe
+--ghu4skuw4u3vrhsf--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
