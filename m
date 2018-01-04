@@ -1,63 +1,39 @@
-From: Rob Herring <robh@kernel.org>
-Subject: [PATCH 2/3] powerpc/pci: use of_irq_parse_and_map_pci helper
-Date: Thu,  4 Jan 2018 15:12:14 -0600
-Message-ID: <20180104211215.11344-3-robh@kernel.org>
-References: <20180104211215.11344-1-robh@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180104211215.11344-1-robh@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Frank Rowand <frowand.list@gmail.com>, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org
+From: =?UTF-8?q?Niklas=20S=C3=B6derlund?=
+        <niklas.soderlund+renesas@ragnatech.se>
+Subject: [PATCH 0/2] arm64: dts: r8a779[56]: update register size for thermal
+Date: Thu,  4 Jan 2018 22:31:06 +0100
+Message-ID: <20180104213108.24080-1-niklas.soderlund+renesas@ragnatech.se>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
+Cc: linux-renesas-soc@vger.kernel.org, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
 List-Id: devicetree@vger.kernel.org
 
-Instead of calling both of_irq_parse_pci and irq_create_of_mapping, call
-of_irq_parse_and_map_pci instead which does the same thing. This will
-allow making of_irq_parse_pci a private, static function.
+Hi,
 
-This changes the logic slightly in that the fallback path will also be
-taken if irq_create_of_mapping fails internally.
+This series updates the register size for the thermal hardware. In later 
+versions of the datasheet one additional register is documented. This 
+register is needed to be able to determine if calibration data should be 
+read from register or if static values from the driver should be used.
 
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: linuxppc-dev@lists.ozlabs.org
-Signed-off-by: Rob Herring <robh@kernel.org>
----
- arch/powerpc/kernel/pci-common.c | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
+There is already a posted RFC patch which make use of this additional 
+register (THSCP) if the register size described in DT covers it.  
+Currently no hardware where the calibration value is fused have been 
+found so that patch is not tested and therefore kept back until such a 
+system is found. In the mean time there is no harm in getting the 
+correct register size described in DT now that it's documented in the 
+datasheet (Rev 0.80).
 
-diff --git a/arch/powerpc/kernel/pci-common.c b/arch/powerpc/kernel/pci-common.c
-index 0ac7aa346c69..f65c07dec23e 100644
---- a/arch/powerpc/kernel/pci-common.c
-+++ b/arch/powerpc/kernel/pci-common.c
-@@ -339,7 +339,6 @@ struct pci_controller* pci_find_hose_for_OF_device(struct device_node* node)
-  */
- static int pci_read_irq_line(struct pci_dev *pci_dev)
- {
--	struct of_phandle_args oirq;
- 	unsigned int virq;
- 
- 	pr_debug("PCI: Try to map irq for %s...\n", pci_name(pci_dev));
-@@ -348,7 +347,7 @@ static int pci_read_irq_line(struct pci_dev *pci_dev)
- 	memset(&oirq, 0xff, sizeof(oirq));
- #endif
- 	/* Try to get a mapping from the device-tree */
--	if (of_irq_parse_pci(pci_dev, &oirq)) {
-+	if (!of_irq_parse_and_map_pci(pci_dev, 0, 0)) {
- 		u8 line, pin;
- 
- 		/* If that fails, lets fallback to what is in the config
-@@ -372,11 +371,6 @@ static int pci_read_irq_line(struct pci_dev *pci_dev)
- 		virq = irq_create_mapping(NULL, line);
- 		if (virq)
- 			irq_set_irq_type(virq, IRQ_TYPE_LEVEL_LOW);
--	} else {
--		pr_debug(" Got one, spec %d cells (0x%08x 0x%08x...) on %pOF\n",
--			 oirq.args_count, oirq.args[0], oirq.args[1], oirq.np);
--
--		virq = irq_create_of_mapping(&oirq);
- 	}
- 
- 	if (!virq) {
+Niklas Söderlund (2):
+  arm64: dts: r8a7795: update register size for thermal
+  arm64: dts: r8a7796: update register size for thermal
+
+ arch/arm64/boot/dts/renesas/r8a7795.dtsi | 2 +-
+ arch/arm64/boot/dts/renesas/r8a7796.dtsi | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
 -- 
-2.14.1
+2.15.1
