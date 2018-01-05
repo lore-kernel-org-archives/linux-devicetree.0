@@ -1,31 +1,50 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 10/12] clk: mediatek: switch to use dev_get_regmap() for
- MT7622 audsys
-Date: Fri, 5 Jan 2018 09:51:15 -0600
-Message-ID: <20180105155115.xihnhkvlrj3lozsx@rob-hp-laptop>
-References: <cover.1514881870.git.ryder.lee@mediatek.com>
- <cbdada9cdbafda2452fe171a81588ce5b0d4f688.1514881870.git.ryder.lee@mediatek.com>
+From: =?UTF-8?q?Niklas=20S=C3=B6derlund?=
+        <niklas.soderlund+renesas@ragnatech.se>
+Subject: [PATCH v2 1/2] arm64: dts: r8a7795: update register size for thermal
+Date: Fri,  5 Jan 2018 16:54:46 +0100
+Message-ID: <20180105155447.10071-2-niklas.soderlund+renesas@ragnatech.se>
+References: <20180105155447.10071-1-niklas.soderlund+renesas@ragnatech.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <cbdada9cdbafda2452fe171a81588ce5b0d4f688.1514881870.git.ryder.lee@mediatek.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Ryder Lee <ryder.lee@mediatek.com>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Brown <broonie@kernel.org>, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, Garlic Tseng <garlic.tseng@mediatek.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20180105155447.10071-1-niklas.soderlund+renesas@ragnatech.se>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
+Cc: linux-renesas-soc@vger.kernel.org, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 02, 2018 at 07:47:52PM +0800, Ryder Lee wrote:
-> As the new audsys wrapper driver is in place, switch to use dev_get_regmap()
-> to obtain the regmap from its parent.
-> 
-> This patch also add missing clock data 'CLK_AUDIO_AFE_CONN'.
+To be able to read fused calibration values from hardware the size of
+the register resource of TSC1 needs to be incremented to cover one more
+register which holds the information if the calibration values have been
+fused or not.
 
-"also" is a keyword for this belonging in a separate patch.
+Instead of increasing TSC1 size to the value from the datasheet update
+all TSC's size to the smallest granularity of the address decoder
+circuitry
 
-> 
-> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-> ---
->  drivers/clk/mediatek/clk-mt7622-aud.c  | 11 +++++++++--
->  include/dt-bindings/clock/mt7622-clk.h |  3 ++-
->  2 files changed, 11 insertions(+), 3 deletions(-)
+Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ arch/arm64/boot/dts/renesas/r8a7795.dtsi | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+index 19b7de57704c67e8..ce85704976f0d3ef 100644
+--- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+@@ -2385,9 +2385,9 @@
+ 
+ 		tsc: thermal@e6198000 {
+ 			compatible = "renesas,r8a7795-thermal";
+-			reg = <0 0xe6198000 0 0x68>,
+-			      <0 0xe61a0000 0 0x5c>,
+-			      <0 0xe61a8000 0 0x5c>;
++			reg = <0 0xe6198000 0 0x100>,
++			      <0 0xe61a0000 0 0x100>,
++			      <0 0xe61a8000 0 0x100>;
+ 			interrupts = <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>;
+-- 
+2.15.1
