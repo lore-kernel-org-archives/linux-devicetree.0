@@ -1,71 +1,57 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v1 5/6] clk: mediatek: update missing clock data for
- MT7622 audsys
-Date: Fri, 5 Jan 2018 13:04:04 -0600
-Message-ID: <20180105190404.37c5gyjgoboibbrl@rob-hp-laptop>
-References: <cover.1515038387.git.ryder.lee@mediatek.com>
- <296e97ad8720d575918657e821bb2a01a2d31c49.1515038387.git.ryder.lee@mediatek.com>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH] ASoC: codecs: dmic: Use channel map for configs with a
+ single mic
+Date: Fri, 5 Jan 2018 11:18:36 -0800
+Message-ID: <20180105191836.GA111999@google.com>
+References: <20180104194848.198941-1-mka@chromium.org>
+ <20180104195438.GA200397@google.com>
+ <295ce358-c00e-74ce-50c1-1df32c2c6cf7@st.com>
+ <20180105120455.GA9076@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <296e97ad8720d575918657e821bb2a01a2d31c49.1515038387.git.ryder.lee@mediatek.com>
+In-Reply-To: <20180105120455.GA9076@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ryder Lee <ryder.lee@mediatek.com>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, Mark Brown <broonie@kernel.org>, Lee Jones <lee.jones@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, Garlic Tseng <garlic.tseng@mediatek.com>
+To: Mark Brown <broonie@kernel.org>
+Cc: Arnaud Pouliquen <arnaud.pouliquen@st.com>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Bhumika Goyal <bhumirks@gmail.com>, huang lin <hl@rock-chips.com>, Brian Norris <briannorris@chromium.org>, Dylan Reid <dgreid@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 04, 2018 at 03:44:21PM +0800, Ryder Lee wrote:
-> Add missing clock data 'CLK_AUDIO_AFE_CONN' for MT7622 audsys.
-> 
-> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-> ---
->  drivers/clk/mediatek/clk-mt7622-aud.c  | 3 ++-
->  include/dt-bindings/clock/mt7622-clk.h | 3 ++-
->  2 files changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/clk/mediatek/clk-mt7622-aud.c b/drivers/clk/mediatek/clk-mt7622-aud.c
-> index fad7d9f..96959ad 100644
-> --- a/drivers/clk/mediatek/clk-mt7622-aud.c
-> +++ b/drivers/clk/mediatek/clk-mt7622-aud.c
-> @@ -106,6 +106,7 @@
->  	GATE_AUDIO1(CLK_AUDIO_INTDIR, "audio_intdir", "intdir_sel", 20),
->  	GATE_AUDIO1(CLK_AUDIO_A1SYS, "audio_a1sys", "a1sys_hp_sel", 21),
->  	GATE_AUDIO1(CLK_AUDIO_A2SYS, "audio_a2sys", "a2sys_hp_sel", 22),
-> +	GATE_AUDIO1(CLK_AUDIO_AFE_CONN, "audio_afe_conn", "a1sys_hp_sel", 23),
->  	/* AUDIO2 */
->  	GATE_AUDIO2(CLK_AUDIO_UL1, "audio_ul1", "a1sys_hp_sel", 0),
->  	GATE_AUDIO2(CLK_AUDIO_UL2, "audio_ul2", "a1sys_hp_sel", 1),
-> @@ -146,7 +147,7 @@ static int clk_mt7622_audiosys_init(struct platform_device *pdev)
->  	clk_data = mtk_alloc_clk_data(CLK_AUDIO_NR_CLK);
->  
->  	mtk_clk_register_gates(node, audio_clks, ARRAY_SIZE(audio_clks),
-> -			       clk_data);
-> +				   clk_data);
+El Fri, Jan 05, 2018 at 12:04:55PM +0000 Mark Brown ha dit:
 
-Drop this unrelated change.
-
->  
->  	r = of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
->  	if (r)
-> diff --git a/include/dt-bindings/clock/mt7622-clk.h b/include/dt-bindings/clock/mt7622-clk.h
-> index 3e514ed..e9d77f0 100644
-> --- a/include/dt-bindings/clock/mt7622-clk.h
-> +++ b/include/dt-bindings/clock/mt7622-clk.h
-> @@ -235,7 +235,8 @@
->  #define CLK_AUDIO_MEM_ASRC3		43
->  #define CLK_AUDIO_MEM_ASRC4		44
->  #define CLK_AUDIO_MEM_ASRC5		45
-> -#define CLK_AUDIO_NR_CLK		46
-> +#define CLK_AUDIO_AFE_CONN		46
-> +#define CLK_AUDIO_NR_CLK		47
->  
->  /* SSUSBSYS */
->  
-> -- 
-> 1.9.1
+> On Fri, Jan 05, 2018 at 11:45:43AM +0100, Arnaud Pouliquen wrote:
 > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > >> +             num-channels = <1>;
+> 
+> > In your implementation seems not linked to hardware but software...
+> 
+> > DMIC driver description specifies the channels_max to 8 channels.
+> > I suppose that it is used for DMIC codecs that integrate filters and are
+> > connected to CPU DAI with I2S/PCM links. But it can be also used for
+> > DMIC connected to CPU DAI with a SPI link (in this case decimation
+> > filter in on Soc side).
+> 
+> The intention with the DMIC CODEC is that it's used when the CPU
+> directly has PDM inputs and the DMICs are just directly wired to it
+> (stereo is obviously the norm here but some SoCs may bunch things up
+> further for use with mic arrays).
+> 
+> > If we continue to support both use cases, specify the number of channels
+> > seems reasonable but this should be use to change the max channel
+> > constraint, not to declare a control.
+> 
+> Yes, that would seem the most obvious thing - it's how we handle things
+> like CPU DAIs that support very high channel counts when connected to
+> stereo CODECs for example.  It's not obvious why we'd use a channel map
+> here instead.
+
+Thanks for the feedback!
+
+I experimented initially with changing channels_max, but overwriting
+dmic_dai.capture.channels_max didn't seem right since it would affect
+other possible instances of the codec. I overlooked that this can be
+avoided by passing a *copy* with adjusted channels_max to
+snd_soc_register_codec().
+
+Matthias
