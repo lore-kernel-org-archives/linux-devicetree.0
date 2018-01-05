@@ -1,29 +1,138 @@
-From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [PATCH 3/3] ARM: dts: r7s72100: add USB device to device tree
-Date: Fri, 5 Jan 2018 10:53:16 +0100
-Message-ID: <20180105095316.5cqcsnaglhaoylhr@verge.net.au>
-References: <20180104200150.11352-1-chris.brandt@renesas.com>
- <20180104200150.11352-4-chris.brandt@renesas.com>
+From: Yixun Lan <yixun.lan@amlogic.com>
+Subject: [PATCH 4/6] ARM64: dts: meson-axg: uart: Add the pinctrl info description
+Date: Fri, 5 Jan 2018 17:56:19 +0800
+Message-ID: <20180105095621.196472-5-yixun.lan@amlogic.com>
+References: <20180105095621.196472-1-yixun.lan@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20180104200150.11352-4-chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180105095621.196472-1-yixun.lan@amlogic.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org
+Cc: Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Carlo Caione <carlo@caione.org>, Yixun Lan <yixun.lan@amlogic.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 04, 2018 at 03:01:50PM -0500, Chris Brandt wrote:
-> Add USB device support.
-> 
-> Signed-off-by: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Describe the pinctrl info for the UART controller which found
+in the Meson-AXG SoCs.
 
-Hi Chris,
+Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
+---
+ arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 96 ++++++++++++++++++++++++++++++
+ 1 file changed, 96 insertions(+)
 
-it looks like there have been some requests for (minor) changes to this
-patch. Please consider addressing those and reposting.
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+index f6bf01cfff4b..78bb206e2897 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+@@ -303,6 +303,70 @@
+ 						function = "pwm_d";
+ 					};
+ 				};
++
++				uart_a_pins: uart_a {
++					mux {
++						groups = "uart_tx_a",
++							"uart_rx_a";
++						function = "uart_a";
++					};
++				};
++
++				uart_a_cts_rts_pins: uart_a_cts_rts {
++					mux {
++						groups = "uart_ctx_a",
++							"uart_rts_a";
++						function = "uart_a";
++					};
++				};
++
++				uart_b_x_pins: uart_b_x {
++					mux {
++						groups = "uart_tx_b_x",
++							"uart_rx_b_x";
++						function = "uart_b";
++					};
++				};
++
++				uart_b_x_cts_rts_pins: uart_b_x_cts_rts {
++					mux {
++						groups = "uart_cts_b_x",
++							"uart_rts_b_x";
++						function = "uart_b";
++					};
++				};
++
++				uart_b_z_pins: uart_b_z {
++					mux {
++						groups = "uart_tx_b_z",
++							"uart_rx_b_z";
++						function = "uart_b";
++					};
++				};
++
++				uart_b_z_cts_rts_pins: uart_b_z_cts_rts {
++					mux {
++						groups = "uart_cts_b_z",
++							"uart_rts_b_z";
++						function = "uart_b";
++					};
++				};
++
++				uart_ao_b_z_pins: uart_ao_b_z {
++					mux {
++						groups = "uart_ao_tx_b_z",
++							"uart_ao_rx_b_z";
++						function = "uart_ao_b_groupz";
++					};
++				};
++
++				uart_ao_b_z_cts_rts_pins: uart_ao_b_z_cts_rts {
++					mux {
++						groups = "uart_ao_cts_b_z",
++							"uart_ao_rts_b_z";
++						function = "uart_ao_b_groupz";
++					};
++				};
+ 			};
+ 		};
+ 
+@@ -346,6 +410,38 @@
+ 					#gpio-cells = <2>;
+ 					gpio-ranges = <&pinctrl_aobus 0 0 15>;
+ 				};
++
++				uart_ao_a_pins: uart_ao_a {
++					mux {
++						groups = "uart_ao_tx_a",
++							"uart_ao_rx_a";
++						function = "uart_ao_a";
++					};
++				};
++
++				uart_ao_a_cts_rts_pins: uart_ao_a_cts_rts {
++					mux {
++						groups = "uart_ao_cts_a",
++							"uart_ao_rts_a";
++						function = "uart_ao_a";
++					};
++				};
++
++				uart_ao_b_pins: uart_ao_b {
++					mux {
++						groups = "uart_ao_tx_b",
++							"uart_ao_rx_b";
++						function = "uart_ao_b";
++					};
++				};
++
++				uart_ao_b_cts_rts_pins: uart_ao_b_cts_rts {
++					mux {
++						groups = "uart_ao_cts_b",
++							"uart_ao_rts_b";
++						function = "uart_ao_b";
++					};
++				};
+ 			};
+ 
+ 			pwm_AO_ab: pwm@7000 {
+-- 
+2.15.1
