@@ -1,164 +1,57 @@
-From: Greentime Hu <green.hu@gmail.com>
-Subject: Re: [PATCH v5 1/3] clocksource/drivers/atcpit100: Add andestech
- atcpit100 timer
-Date: Fri, 5 Jan 2018 16:45:37 +0800
-Message-ID: <CAEbi=3frQYZHb0yiMvNk_JUiUCy6ca0tbrsM_pt49LtkMy47mw@mail.gmail.com>
-References: <1513057621-19084-1-git-send-email-rickchen36@gmail.com>
- <1513057621-19084-2-git-send-email-rickchen36@gmail.com> <bb7383ba-bb8e-3cbd-4ce0-faaefa8ed114@linaro.org>
- <CAEbi=3cEEtLQRiv-cyUwEmcBNOC2Sz7AhzZkpznQWYb9VUojug@mail.gmail.com>
- <ff51fff7-e963-f9fd-10d6-9b90a64d7aac@linaro.org> <CAEbi=3c4yAx7Tejz8aPw3-3vj89t8cg-zNEY-vbF7KaMo8OM0Q@mail.gmail.com>
- <efdb249a-8dc0-e076-a1db-20cecdbf4c13@linaro.org>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH 1/2] arm64: dts: r8a7795: update register size for thermal
+Date: Fri, 5 Jan 2018 09:47:11 +0100
+Message-ID: <CAMuHMdU97udtf4+vo_SaGyYaEk1eV4QEmeqWiGF4iVp045w=6A@mail.gmail.com>
+References: <20180104213108.24080-1-niklas.soderlund+renesas@ragnatech.se> <20180104213108.24080-2-niklas.soderlund+renesas@ragnatech.se>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <efdb249a-8dc0-e076-a1db-20cecdbf4c13@linaro.org>
-Sender: linux-arch-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Greentime <greentime@andestech.com>, Rick Chen <rickchen36@gmail.com>, Rick Chen <rick@andestech.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Linus Walleij <linus.walleij@linaro.org>, linux-arch <linux-arch@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, netdev <netdev@vger.kernel.org>, Vincent Chen <deanbo422@gmail.com>, DTML <devicetree@vger.kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, David Howells <dhowells@redhat.com>, Will Deacon <will.deacon@arm.com>, linux-serial@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180104213108.24080-2-niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Daniel:
+On Thu, Jan 4, 2018 at 10:31 PM, Niklas S=C3=B6derlund
+<niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org> wrote:
+> To be able to read fused calibration values from hardware the size of
+> the register resource of TSC1 needs to be incremented to cover one more
+> register which holds the information if the calibration values have been
+> fused or not.
+>
+> Signed-off-by: Niklas S=C3=B6derlund <niklas.soderlund+renesas@ragnatech.=
+se>
 
-2018-01-05 3:48 GMT+08:00 Daniel Lezcano <daniel.lezcano@linaro.org>:
-> On 04/01/2018 15:06, Greentime Hu wrote:
->> Hi, Daniel:
->>
->> 2018-01-04 21:50 GMT+08:00 Daniel Lezcano <daniel.lezcano@linaro.org>:
->>>
->>> Hi,
->>>
->>> sorry I missed your answer. Comments below.
->>>
->>> On 13/12/2017 07:06, Greentime Hu wrote:
->>>> Hi, Daniel:
->>>>
->>>> 2017-12-12 18:05 GMT+08:00 Daniel Lezcano <daniel.lezcano@linaro.org>:
->>>>> On 12/12/2017 06:46, Rick Chen wrote:
->>>>>> ATCPIT100 is often used on the Andes architecture,
->>>>>> This timer provide 4 PIT channels. Each PIT channel is a
->>>>>> multi-function timer, can be configured as 32,16,8 bit timers
->>>>>> or PWM as well.
->>>>>>
->>>>>> For system timer it will set channel 1 32-bit timer0 as clock
->>>>>> source and count downwards until underflow and restart again.
->>>>>
->>>>> [ ... ]
->>>>>
->>>>>> +config CLKSRC_ATCPIT100
->>>>>> +     bool "Clocksource for AE3XX platform"
->>>>>> +     depends on NDS32 || COMPILE_TEST
->>>>>> +     depends on HAS_IOMEM
->>>>>> +     help
->>>>>> +       This option enables support for the Andestech AE3XX platform timers.
->>>>>
->>>>> Hi Rick,
->>>>>
->>>>> the general rule for the Kconfig is:
->>>>>
->>>>> bool "Clocksource for AE3XX platform" if COMPILE_TEST
->
-> BTW, select TIMER_OF is missing.
+Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 
-We don't select here because we select TIMER_OF in arch/nds32/Kconfig
-I am not sure if I still need to select TIMER_OF here?
+> --- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+> +++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+> @@ -2385,7 +2385,7 @@
+>
+>                 tsc: thermal@e6198000 {
+>                         compatible =3D "renesas,r8a7795-thermal";
+> -                       reg =3D <0 0xe6198000 0 0x68>,
+> +                       reg =3D <0 0xe6198000 0 0x6c>,
 
->>>>> and no deps on the platform.
->>>>>
->>>>> It is up to the platform Kconfig to select the option.
->>>>>
->>>>> We want here a silent option but make it selectable in case of
->>>>> compilation test coverage.
->>>>
->>>>
->>>> The way we like to use it is because
->>>> 1. This timer is a basic component to boot an nds32 CPU and it should
->>>> be able to select without COMPILE_TEST for nds32 architecture.
->>>
->>> Yes, so you don't need it to be selectable, you must select it from the
->>> platform's Kconfig.
->>
->> I am not sure that I get your point or not.
->> We don't have a CONFIG_PLAT_AE3XX.
->> Do you mean we should create one and select CLKSRC_ATCPIT100 under
->> CONFIG_PLAT_AE3XX?
->
-> No. Can't you add in arch/ndis32/Kconfig ?
->
-> +select TIMER_ATCPIT100
->
-> Like:
->
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm64/Kconfig#n50
+Perhaps we should just make it 0x100?
+I'd be very surprised if that would be smaller than the granularity of the
+address decoder circuitry.
 
-IMHO, it might be a little bit wierd if we select TIMER_ATCPIT100 in
-arch/nds32/Kconfig because it is part of SoC instead of CPU.
-If we change to another SoC with another timer, we need to select
-another TIMER in arch/nds32/Kconfig and delete TIMER_ATCPIT100.
-It seems more flexible to be selected in driver layer.
+Gr{oetje,eeting}s,
 
-It seems to be the timer is part of the arch to be selected in arch's Kconfig.
-arch/arc/Kconfig:       select ARC_TIMERS
-arch/arc/Kconfig:       select ARC_TIMERS_64BIT
-arch/arm/Kconfig:       select ARM_ARCH_TIMER
-arch/arm64/Kconfig:     select ARM_ARCH_TIMER
-arch/blackfin/Kconfig:  select BFIN_GPTIMERS
+                        Geert
 
->>>> 2. It seems conflict with debug info. I am not sure if there is
->>>> another way to debug kernel(with debug info) with COMPILE_TEST and
->>>> DEBUG_INFO because we need this driver for nds32 architecture.
->>>>
->>>> Symbol: DEBUG_INFO [=n]
->>>> Type  : boolean
->>>> Prompt: Compile the kernel with debug info
->>>>   Location:
->>>>     -> Kernel hacking
->>>>       -> Compile-time checks and compiler options
->>>>   Defined at lib/Kconfig.debug:140
->>>>   Depends on: DEBUG_KERNEL [=y] && !COMPILE_TEST [=n]
->>>
->>> The COMPILE_TEST option is only there to allow cross-compilation test
->>> coverage, it does not select or unselect the driver in usual way.
->>>
->>> If the COMPILE_TEST is enabled, then the option will appear in the
->>> menuconfig, so that gives the opportunity to select/unselect it.
->>>
->>> Otherwise, the Kconfig's platform selects automatically the driver and
->>> the user *can't* unselect it from the menuconfig as it is a silent
->>> option and that is certainly what you want.
->>>
->>>>> Also, this driver is not a CLKSRC but a TIMER. Rename CLKSRC_ATCPIT100
->>>>> to TIMER_ATCPIT100.
->>>>
->>>> Thanks. We will rename it in the next version patch.
->>>
->>> You just resend an entire series V5 for the architecture. I'm confused,
->>> what is the merging path ?
->>
->> Sorry. I didn't get your point.
->> We sent the timer patch and the architecture patch together because it
->> would be easier for reviewer to check the vdso implementations.
->> What do you mean about the merging path?
->
-> I received a [Vx y/3] series and I received a [Vx y/39].
->
-> The former from Rick Chen means to me "please pick them through your tree".
->
-> The latter from you means to me "can you ack the patches so I can merge
-> them through my tree". Note you will have to resend the entire arch
-> series for every single review/comment (that could end up upset the
-> Cc'ed people).
->
-> Which one should I review ? I can not track different patchset
-> implementing the same thing. Which one should I comment, review ? Are
-> the comments I did on [Vx y/3] taken into account in the arch series ?
-> etc ...
->
-> Please clarify, it is confusing and impossible to review in this situation.
->
-> I suggest we stick to the x/3 series, so I can comment it and you can
-> resend a new version without resending the entire arch series. So I can
-> merge it through my tree, and you get it via eg. a shared immutable
-> branch. The arch series will be reduced by 3 patches.
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
 
-Thanks for your explanation. :)
-I will send these 2 patch set separately next time.
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
