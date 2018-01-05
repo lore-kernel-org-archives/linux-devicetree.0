@@ -1,35 +1,61 @@
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [RFC PATCH v11 4/5] PCI / PM: Add support for the PCIe WAKE# signal for OF
-Date: Fri, 05 Jan 2018 01:11:55 +0100
-Message-ID: <1652279.Kf304cK0PT@aspire.rjw.lan>
-References: <20171225114742.18920-1-jeffy.chen@rock-chips.com> <6120485.xubBpvge6h@aspire.rjw.lan> <20180103200837.GP3875@atomide.com>
+From: Brian Norris <briannorris@chromium.org>
+Subject: Re: [RFC PATCH v11 4/5] PCI / PM: Add support for the PCIe WAKE#
+ signal for OF
+Date: Thu, 4 Jan 2018 16:41:31 -0800
+Message-ID: <20180105004130.GA151625@google.com>
+References: <20171225114742.18920-1-jeffy.chen@rock-chips.com>
+ <9593014.U0c2JQdoEZ@aspire.rjw.lan>
+ <5A41A0A7.5070605@rock-chips.com>
+ <5491520.JsEYlZiECc@aspire.rjw.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180103200837.GP3875@atomide.com>
+Content-Disposition: inline
+In-Reply-To: <5491520.JsEYlZiECc@aspire.rjw.lan>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: JeffyChen <jeffy.chen@rock-chips.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Linux PM <linux-pm@vger.kernel.org>, Shawn Lin <shawn.lin@rock-chips.com>, Brian Norris <briannorris@chromium.org>, Doug Anderson <dianders@chromium.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux PCI <linux-pci@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: JeffyChen <jeffy.chen@rock-chips.com>, tony@atomide.com, linux-kernel@vger.kernel.org, bhelgaas@google.com, linux-pm@vger.kernel.org, shawn.lin@rock-chips.com, dianders@chromium.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, January 3, 2018 9:08:37 PM CET Tony Lindgren wrote:
-> Hi,
-> 
-> * Rafael J. Wysocki <rjw@rjwysocki.net> [171228 17:33]:
-> > So we are fine except for the race and we need the wakeirq field in wakeup
-> > sources to automatically arm the wakeup IRQs during suspend.
+Hi,
+
+Trying to catch up on this thread...
+
+On Wed, Dec 27, 2017 at 01:57:07AM +0100, Rafael J. Wysocki wrote:
+> On Tuesday, December 26, 2017 2:06:47 AM CET JeffyChen wrote:
+> > Hi Rafael,
 > > 
-> > If I'm not mistaken, we only need something like the patch below (untested).
-> 
-> Yeah for your patch below works just fine for my
-> test cases so:
-> 
-> Tested-by: Tony Lindgren <tony@atomide.com>
+> > Thanks for your reply :)
+> > 
+> > On 12/26/2017 08:11 AM, Rafael J. Wysocki wrote:
+> > >> >+
+> > >> >+	dn = pci_device_to_OF_node(ppdev);
+> > >> >+	if (!dn)
+> > >> >+		return 0;
+> > >> >+
+> > >> >+	irq = of_irq_get_byname(dn, "wakeup");
+> > > Why is this a property of the bridge and not of the device itself?
 
-Cool, thanks!
+Wait, isn't 'dn' the port node, not the bridge node?
 
-Let me respin it with a subject/changelog.
+> > That is suggested by Brian, because in that way, the wakeup pin would 
+> > not "tied to what exact device is installed (or no device, if it's a slot)."
 
-Thanks,
-Rafael
+I believe my thinking has evolved a bit over time, and I definitely am
+not the one true authority on this. I'll explain my main concerns, and
+whatever solution resolves these concerns is fine with me.
+
+* I was primarily interested in avoiding handling WAKE# in the endpoint
+  drivers (e.g., as mwifiex is today).
+* I was also interested in not having to redefine a new DT device
+  node (with new "pciABCD,1234" compatible property) for each new device
+  attached. That just won't work for removable cards.
+
+I need to reread the rest of this thread a few times to really
+understand what Rafael and Tony are discussing. But I feel like some of
+this is still moving away from the second point above.
+
+> But I don't think it works when there are two devices using different WAKE#
+> interrupt lines under the same bridge.  Or how does it work then?
+
+Brian
