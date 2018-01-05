@@ -1,7 +1,7 @@
 From: Hyun Kwon <hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 06/10] dt-bindings: display: xlnx: Add ZynqMP DP subsystem bindings
-Date: Thu, 4 Jan 2018 18:05:55 -0800
-Message-ID: <1515117959-18068-7-git-send-email-hyun.kwon@xilinx.com>
+Subject: [PATCH 05/10] drm: xlnx: Xilinx DRM KMS driver
+Date: Thu, 4 Jan 2018 18:05:54 -0800
+Message-ID: <1515117959-18068-6-git-send-email-hyun.kwon@xilinx.com>
 References: <1515117959-18068-1-git-send-email-hyun.kwon@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,114 +12,605 @@ To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79u
 Cc: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Hyun Kwon <hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This add a dt binding for ZynqMP DP subsystem.
+Xilinx has various platforms for display, where users can create
+using multiple IPs in the programmable FPGA fabric, or where
+some hardened piepline is available on the chip. Furthermore,
+hardened pipeline can also interact with soft logics in FPGA.
+
+The Xilinx DRM KMS is a softwrae layer to glue subdevice drivers
+with DRM core and integrate multiple subdevice drivers together.
 
 Signed-off-by: Hyun Kwon <hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 ---
- .../bindings/display/xlnx/xlnx,zynqmp-dpsub.txt    | 94 ++++++++++++++++++++++
- 1 file changed, 94 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/xlnx/xlnx,zynqmp-dpsub.txt
+ MAINTAINERS                      |   8 +
+ drivers/gpu/drm/Kconfig          |   2 +
+ drivers/gpu/drm/Makefile         |   1 +
+ drivers/gpu/drm/xlnx/Kconfig     |  12 ++
+ drivers/gpu/drm/xlnx/Makefile    |   2 +
+ drivers/gpu/drm/xlnx/xlnx_crtc.c |   1 +
+ drivers/gpu/drm/xlnx/xlnx_drv.c  | 436 +++++++++++++++++++++++++++++++++++++++
+ drivers/gpu/drm/xlnx/xlnx_drv.h  |  22 ++
+ drivers/gpu/drm/xlnx/xlnx_fb.c   |   1 +
+ drivers/gpu/drm/xlnx/xlnx_gem.c  |   1 +
+ 10 files changed, 486 insertions(+)
+ create mode 100644 drivers/gpu/drm/xlnx/Kconfig
+ create mode 100644 drivers/gpu/drm/xlnx/Makefile
+ create mode 100644 drivers/gpu/drm/xlnx/xlnx_drv.c
+ create mode 100644 drivers/gpu/drm/xlnx/xlnx_drv.h
 
-diff --git a/Documentation/devicetree/bindings/display/xlnx/xlnx,zynqmp-dpsub.txt b/Documentation/devicetree/bindings/display/xlnx/xlnx,zynqmp-dpsub.txt
+diff --git a/MAINTAINERS b/MAINTAINERS
+index d4b1635..101a3e6 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -4785,6 +4785,14 @@ F:	drivers/gpu/drm/etnaviv/
+ F:	include/uapi/drm/etnaviv_drm.h
+ F:	Documentation/devicetree/bindings/display/etnaviv/
+ 
++DRM DRIVERS FOR XILINX
++M:	Hyun Kwon <hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
++L:	dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
++S:	Maintained
++F:	drivers/gpu/drm/xlnx/
++F:	Documentation/devicetree/bindings/display/xlnx/
++T:	git git://anongit.freedesktop.org/drm/drm-misc
++
+ DRM DRIVERS FOR ZTE ZX
+ M:	Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+ L:	dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
+index 0bc3744..82b7fc3 100644
+--- a/drivers/gpu/drm/Kconfig
++++ b/drivers/gpu/drm/Kconfig
+@@ -293,6 +293,8 @@ source "drivers/gpu/drm/pl111/Kconfig"
+ 
+ source "drivers/gpu/drm/tve200/Kconfig"
+ 
++source "drivers/gpu/drm/xlnx/Kconfig"
++
+ # Keep legacy drivers last
+ 
+ menuconfig DRM_LEGACY
+diff --git a/drivers/gpu/drm/Makefile b/drivers/gpu/drm/Makefile
+index dd5ae67..72ee1a1 100644
+--- a/drivers/gpu/drm/Makefile
++++ b/drivers/gpu/drm/Makefile
+@@ -103,3 +103,4 @@ obj-$(CONFIG_DRM_TINYDRM) += tinydrm/
+ obj-$(CONFIG_DRM_PL111) += pl111/
+ obj-$(CONFIG_DRM_TVE200) += tve200/
+ obj-$(CONFIG_DRM_SCHED)	+= scheduler/
++obj-$(CONFIG_DRM_XLNX)	+= xlnx/
+diff --git a/drivers/gpu/drm/xlnx/Kconfig b/drivers/gpu/drm/xlnx/Kconfig
 new file mode 100644
-index 0000000..4e478ca
+index 0000000..19fd7cd
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/display/xlnx/xlnx,zynqmp-dpsub.txt
-@@ -0,0 +1,94 @@
-+Xilinx ZynqMP DisplayPort subsystem
-+-----------------------------------
++++ b/drivers/gpu/drm/xlnx/Kconfig
+@@ -0,0 +1,12 @@
++config DRM_XLNX
++	tristate "Xilinx DRM KMS Driver"
++	depends on DRM && OF
++	select DRM_KMS_HELPER
++	select DRM_KMS_CMA_HELPER
++	select DRM_GEM_CMA_HELPER
++	help
++	  Xilinx DRM KMS driver. Choose this option if you have
++	  a Xilinx SoCs with hardened display pipeline or soft
++	  display pipeline using Xilinx IPs in FPGA. This module
++	  provides the kernel mode setting functionalities
++	  for Xilinx display drivers.
+diff --git a/drivers/gpu/drm/xlnx/Makefile b/drivers/gpu/drm/xlnx/Makefile
+new file mode 100644
+index 0000000..c60a281
+--- /dev/null
++++ b/drivers/gpu/drm/xlnx/Makefile
+@@ -0,0 +1,2 @@
++xlnx_drm-objs += xlnx_crtc.o xlnx_drv.o xlnx_fb.o xlnx_gem.o
++obj-$(CONFIG_DRM_XLNX) += xlnx_drm.o
+diff --git a/drivers/gpu/drm/xlnx/xlnx_crtc.c b/drivers/gpu/drm/xlnx/xlnx_crtc.c
+index 57ee939..8387e1e 100644
+--- a/drivers/gpu/drm/xlnx/xlnx_crtc.c
++++ b/drivers/gpu/drm/xlnx/xlnx_crtc.c
+@@ -13,6 +13,7 @@
+ #include <linux/list.h>
+ 
+ #include "xlnx_crtc.h"
++#include "xlnx_drv.h"
+ 
+ /*
+  * Overview
+diff --git a/drivers/gpu/drm/xlnx/xlnx_drv.c b/drivers/gpu/drm/xlnx/xlnx_drv.c
+new file mode 100644
+index 0000000..273420b
+--- /dev/null
++++ b/drivers/gpu/drm/xlnx/xlnx_drv.c
+@@ -0,0 +1,436 @@
++/*
++ * Xilinx DRM KMS Driver
++ *
++ *  Copyright (C) 2013 - 2018 Xilinx, Inc.
++ *
++ *  Author: Hyun Woo Kwon <hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
++ *
++ * SPDX-License-Identifier: GPL-2.0
++ */
 +
-+Required properties:
++#include <drm/drmP.h>
++#include <drm/drm_atomic.h>
++#include <drm/drm_atomic_helper.h>
++#include <drm/drm_crtc_helper.h>
++#include <drm/drm_gem_cma_helper.h>
++#include <drm/drm_of.h>
 +
-+- compatible: Must be "xlnx,zynqmp-dpsub-1.7".
++#include <linux/component.h>
++#include <linux/device.h>
++#include <linux/dma-buf.h>
++#include <linux/module.h>
++#include <linux/of_graph.h>
++#include <linux/platform_device.h>
++#include <linux/reservation.h>
 +
-+- reg: Physical base address and length of the registers set for the device.
-+- reg-names: Must be "dp", "blend", "av_buf", and "aud" to map logical register
-+  partitions.
++#include "xlnx_crtc.h"
++#include "xlnx_fb.h"
++#include "xlnx_gem.h"
 +
-+- interrupts: Interrupt number.
-+- interrupts-parent: phandle for interrupt controller.
++#define DRIVER_NAME	"xlnx"
++#define DRIVER_DESC	"Xilinx DRM KMS Driver"
++#define DRIVER_DATE	"20130509"
++#define DRIVER_MAJOR	1
++#define DRIVER_MINOR	0
 +
-+- clocks: phandles for axi, audio, non-live video, and live video clocks.
-+  axi clock is required. Audio clock is optional. If not present, audio will
-+  be disabled. One of non-live or live video clock should be present.
-+- clock-names: The identification strings are required. "aclk" for axi clock.
-+  "dp_aud_clk" for audio clock. "dp_vtc_pixel_clk_in" for non-live video clock.
-+  "dp_live_video_in_clk" for live video clock (clock from programmable logic).
++static uint xlnx_fbdev_vres = 2;
++module_param_named(fbdev_vres, xlnx_fbdev_vres, uint, 0444);
++MODULE_PARM_DESC(fbdev_vres,
++		 "fbdev virtual resolution multiplier for fb (default: 2)");
 +
-+- phys: phandles for phy specifier.
-+- phy-names: The identifier strings. "dp-phy" followed by index.
-+
-+- power-domains: phandle for the corresponding power domain
-+
-+- ports: crtc and encoder ports are required using DT bindings defined in
-+  Documentation/devicetree/bindings/graph.txt.
-+
-+- vid-layer, gfx-layer: Required to represent available layers
-+
-+Required layer properties
-+
-+- dmas: phandles for DMA channels as defined in
-+  Documentation/devicetree/bindings/dma/dma.txt.
-+- dma-names: The identifier strings are required. "graphics0" for graphics
-+  layer. "video" followed by index for video layer
-+
-+Optional child node
-+
-+- The driver populates any child device node in this node. This can be used,
-+  for example, to populate the sound device from the DisplayPort subsystem
-+  driver.
-+
-+Example:
-+	zynqmp_dpsub: zynqmp_dpsub@fd4a0000 {
-+		compatible = "xlnx,zynqmp-dpsub-1.7";
-+		reg = <0x0 0xfd4a0000 0x0 0x1000>,
-+		      <0x0 0xfd4aa000 0x0 0x1000>,
-+		      <0x0 0xfd4ab000 0x0 0x1000>,
-+		      <0x0 0xfd4ac000 0x0 0x1000>;
-+		reg-names = "dp", "blend", "av_buf", "aud";
-+		interrupts = <0 119 4>;
-+		interrupt-parent = <&gic>;
-+
-+		clock-names = "dp_apb_clk", "dp_aud_clk", "dp_live_video_in_clk";
-+		clocks = <&dp_aclk>, <&clkc 17>, <&si570_1>;
-+
-+		phys = <&lane1 PHY_TYPE_DP 0 1 27000000>,
-+		       <&lane0 PHY_TYPE_DP 1 1 27000000>;
-+		phy-names = "dp-phy0", "dp-phy1";
-+
-+		power-domains = <&pd_dp>;
-+
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		vid-layer {
-+			dma-names = "vid0", "vid1", "vid2";
-+			dmas = <&xlnx_dpdma 0>,
-+			       <&xlnx_dpdma 1>,
-+			       <&xlnx_dpdma 2>;
-+		};
-+
-+		gfx-layer {
-+			dma-names = "gfx0";
-+			dmas = <&xlnx_dpdma 3>;
-+		};
-+
-+		crtc_port: port@0 {
-+			reg = <0>;
-+			crtc: endpoint {
-+				remote-endpoint = <&encoder>;
-+			};
-+		};
-+		port@1 {
-+			reg = <1>;
-+			encoder: endpoint {
-+				remote-endpoint = <&crtc>;
-+			};
-+		};
-+	};
++/**
++ * struct xlnx_drm - Xilinx DRM private data
++ * @drm: DRM core
++ * @crtc: Xilinx DRM CRTC helper
++ * @fb: DRM fb helper
++ * @pdev: platform device
++ * @suspend_state: atomic state for suspend / resume
++ */
++struct xlnx_drm {
++	struct drm_device *drm;
++	struct xlnx_crtc_helper *crtc;
++	struct drm_fb_helper *fb;
++	struct platform_device *pdev;
++	struct drm_atomic_state *suspend_state;
 +};
 +
++/**
++ * xlnx_get_crtc_helper - Return the crtc helper instance
++ * @drm: DRM device
++ *
++ * Return: the crtc helper instance
++ */
++struct xlnx_crtc_helper *xlnx_get_crtc_helper(struct drm_device *drm)
++{
++	struct xlnx_drm *xlnx_drm = drm->dev_private;
++
++	return xlnx_drm->crtc;
++}
++
++/**
++ * xlnx_get_align - Return the align requirement through CRTC helper
++ * @drm: DRM device
++ *
++ * Return: the alignment requirement
++ */
++unsigned int xlnx_get_align(struct drm_device *drm)
++{
++	struct xlnx_drm *xlnx_drm = drm->dev_private;
++
++	return xlnx_crtc_helper_get_align(xlnx_drm->crtc);
++}
++
++/**
++ * xlnx_get_format - Return the current format of CRTC
++ * @drm: DRM device
++ *
++ * Return: the current CRTC format
++ */
++uint32_t xlnx_get_format(struct drm_device *drm)
++{
++	struct xlnx_drm *xlnx_drm = drm->dev_private;
++
++	return xlnx_crtc_helper_get_format(xlnx_drm->crtc);
++}
++
++static void xlnx_output_poll_changed(struct drm_device *drm)
++{
++	struct xlnx_drm *xlnx_drm = drm->dev_private;
++
++	xlnx_fb_hotplug_event(xlnx_drm->fb);
++}
++
++static const struct drm_mode_config_funcs xlnx_mode_config_funcs = {
++	.fb_create		= xlnx_fb_create,
++	.output_poll_changed	= xlnx_output_poll_changed,
++	.atomic_check		= drm_atomic_helper_check,
++	.atomic_commit		= drm_atomic_helper_commit,
++};
++
++static struct drm_mode_config_helper_funcs xlnx_mode_config_helper_funcs = {
++	.atomic_commit_tail = drm_atomic_helper_commit_tail,
++};
++
++static int xlnx_enable_vblank(struct drm_device *drm, unsigned int crtc)
++{
++	struct xlnx_drm *xlnx_drm = drm->dev_private;
++
++	return xlnx_crtc_helper_enable_vblank(xlnx_drm->crtc, crtc);
++}
++
++static void xlnx_disable_vblank(struct drm_device *drm, unsigned int crtc)
++{
++	struct xlnx_drm *xlnx_drm = drm->dev_private;
++
++	xlnx_crtc_helper_disable_vblank(xlnx_drm->crtc, crtc);
++}
++
++static void xlnx_mode_config_init(struct drm_device *drm)
++{
++	struct xlnx_drm *xlnx_drm = drm->dev_private;
++	struct xlnx_crtc_helper *crtc = xlnx_drm->crtc;
++
++	drm->mode_config.min_width = 0;
++	drm->mode_config.min_height = 0;
++	drm->mode_config.max_width = xlnx_crtc_helper_get_max_width(crtc);
++	drm->mode_config.max_height = xlnx_crtc_helper_get_max_height(crtc);
++}
++
++static void xlnx_lastclose(struct drm_device *drm)
++{
++	struct xlnx_drm *xlnx_drm = drm->dev_private;
++
++	xlnx_fb_restore_mode(xlnx_drm->fb);
++}
++
++static const struct file_operations xlnx_fops = {
++	.owner		= THIS_MODULE,
++	.open		= drm_open,
++	.release	= drm_release,
++	.unlocked_ioctl	= drm_ioctl,
++	.mmap		= drm_gem_cma_mmap,
++	.poll		= drm_poll,
++	.read		= drm_read,
++#ifdef CONFIG_COMPAT
++	.compat_ioctl	= drm_compat_ioctl,
++#endif
++	.llseek		= noop_llseek,
++};
++
++static struct drm_driver xlnx_drm_driver = {
++	.driver_features		= DRIVER_MODESET | DRIVER_GEM |
++					  DRIVER_ATOMIC | DRIVER_PRIME,
++	.lastclose			= xlnx_lastclose,
++
++	.enable_vblank			= xlnx_enable_vblank,
++	.disable_vblank			= xlnx_disable_vblank,
++
++	.prime_handle_to_fd		= drm_gem_prime_handle_to_fd,
++	.prime_fd_to_handle		= drm_gem_prime_fd_to_handle,
++	.gem_prime_export		= drm_gem_prime_export,
++	.gem_prime_import		= drm_gem_prime_import,
++	.gem_prime_get_sg_table		= drm_gem_cma_prime_get_sg_table,
++	.gem_prime_import_sg_table	= drm_gem_cma_prime_import_sg_table,
++	.gem_prime_vmap			= drm_gem_cma_prime_vmap,
++	.gem_prime_vunmap		= drm_gem_cma_prime_vunmap,
++	.gem_prime_mmap			= drm_gem_cma_prime_mmap,
++	.gem_free_object		= drm_gem_cma_free_object,
++	.gem_vm_ops			= &drm_gem_cma_vm_ops,
++	.dumb_create			= xlnx_gem_cma_dumb_create,
++	.dumb_destroy			= drm_gem_dumb_destroy,
++
++	.fops				= &xlnx_fops,
++
++	.name				= DRIVER_NAME,
++	.desc				= DRIVER_DESC,
++	.date				= DRIVER_DATE,
++	.major				= DRIVER_MAJOR,
++	.minor				= DRIVER_MINOR,
++};
++
++static int xlnx_bind(struct device *dev)
++{
++	struct xlnx_drm *xlnx_drm;
++	struct drm_device *drm;
++	const struct drm_format_info *info;
++	struct platform_device *pdev = to_platform_device(dev);
++	int ret;
++	u32 format;
++
++	drm = drm_dev_alloc(&xlnx_drm_driver, &pdev->dev);
++	if (IS_ERR(drm))
++		return PTR_ERR(drm);
++
++	xlnx_drm = devm_kzalloc(drm->dev, sizeof(*xlnx_drm), GFP_KERNEL);
++	if (!xlnx_drm) {
++		ret = -ENOMEM;
++		goto err_drm;
++	}
++
++	drm_mode_config_init(drm);
++	drm->mode_config.funcs = &xlnx_mode_config_funcs;
++	drm->mode_config.helper_private = &xlnx_mode_config_helper_funcs;
++
++	ret = drm_vblank_init(drm, 1);
++	if (ret) {
++		dev_err(&pdev->dev, "failed to initialize vblank\n");
++		goto err_xlnx_drm;
++	}
++
++	drm->irq_enabled = 1;
++	drm->dev_private = xlnx_drm;
++	xlnx_drm->drm = drm;
++	drm_kms_helper_poll_init(drm);
++	platform_set_drvdata(pdev, xlnx_drm);
++
++	xlnx_drm->crtc = xlnx_crtc_helper_init(drm);
++	if (IS_ERR(xlnx_drm->crtc)) {
++		ret = PTR_ERR(xlnx_drm->crtc);
++		goto err_xlnx_drm;
++	}
++
++	ret = component_bind_all(drm->dev, drm);
++	if (ret)
++		goto err_crtc;
++
++	xlnx_mode_config_init(drm);
++	drm_mode_config_reset(drm);
++	dma_set_mask(drm->dev, xlnx_crtc_helper_get_dma_mask(xlnx_drm->crtc));
++
++	format = xlnx_crtc_helper_get_format(xlnx_drm->crtc);
++	info = drm_format_info(format);
++	if (info && info->depth && info->cpp[0]) {
++		unsigned int align;
++
++		align = xlnx_crtc_helper_get_align(xlnx_drm->crtc);
++		xlnx_drm->fb = xlnx_fb_init(drm, info->cpp[0] * 8, 1, align,
++					    xlnx_fbdev_vres);
++		if (IS_ERR(xlnx_drm->fb))
++			dev_err(&pdev->dev,
++				"failed to initialize drm fb\n");
++	} else {
++		/* fbdev emulation is optional */
++		dev_info(&pdev->dev, "fbdev is not initialized\n");
++	}
++
++	ret = drm_dev_register(drm, 0);
++	if (ret < 0)
++		goto err_fb;
++
++	return 0;
++
++err_fb:
++	if (xlnx_drm->fb)
++		xlnx_fb_fini(xlnx_drm->fb);
++	component_unbind_all(drm->dev, drm);
++err_crtc:
++	xlnx_crtc_helper_fini(drm, xlnx_drm->crtc);
++err_xlnx_drm:
++	drm_mode_config_cleanup(drm);
++err_drm:
++	drm_dev_unref(drm);
++	return ret;
++}
++
++static void xlnx_unbind(struct device *dev)
++{
++	struct xlnx_drm *xlnx_drm = dev_get_drvdata(dev);
++	struct drm_device *drm = xlnx_drm->drm;
++
++	drm_dev_unregister(drm);
++	if (xlnx_drm->fb)
++		xlnx_fb_fini(xlnx_drm->fb);
++	component_unbind_all(drm->dev, drm);
++	xlnx_crtc_helper_fini(drm, xlnx_drm->crtc);
++	drm_kms_helper_poll_fini(drm);
++	drm_mode_config_cleanup(drm);
++	drm_dev_unref(drm);
++}
++
++static const struct component_master_ops xlnx_master_ops = {
++	.bind	= xlnx_bind,
++	.unbind	= xlnx_unbind,
++};
++
++static int xlnx_of_component_probe(struct device *dev,
++				   int (*compare_of)(struct device *, void *),
++				   const struct component_master_ops *m_ops)
++{
++	struct device_node *ep, *port, *remote;
++	struct component_match *match = NULL;
++	int i;
++
++	if (!dev->of_node)
++		return -EINVAL;
++
++	for (i = 0; ; i++) {
++		port = of_parse_phandle(dev->of_node, "ports", i);
++		if (!port)
++			break;
++
++		if (!of_device_is_available(port->parent)) {
++			of_node_put(port);
++			continue;
++		}
++
++		component_match_add(dev, &match, compare_of, port->parent);
++		of_node_put(port);
++	}
++
++	if (i == 0) {
++		dev_err(dev, "missing 'ports' property\n");
++		return -ENODEV;
++	}
++
++	if (!match) {
++		dev_err(dev, "no available port\n");
++		return -ENODEV;
++	}
++
++	for (i = 0; ; i++) {
++		port = of_parse_phandle(dev->of_node, "ports", i);
++		if (!port)
++			break;
++
++		if (!of_device_is_available(port->parent)) {
++			of_node_put(port);
++			continue;
++		}
++
++		for_each_child_of_node(port, ep) {
++			remote = of_graph_get_remote_port_parent(ep);
++			if (!remote || !of_device_is_available(remote)) {
++				of_node_put(remote);
++				continue;
++			} else if (!of_device_is_available(remote->parent)) {
++				dev_warn(dev, "parent dev of %s unavailable\n",
++					 remote->full_name);
++				of_node_put(remote);
++				continue;
++			}
++			component_match_add(dev, &match, compare_of, remote);
++			of_node_put(remote);
++		}
++		of_node_put(port);
++	}
++
++	return component_master_add_with_match(dev, m_ops, match);
++}
++
++static int xlnx_compare_of(struct device *dev, void *data)
++{
++	return dev->of_node == data;
++}
++
++static int xlnx_platform_probe(struct platform_device *pdev)
++{
++	return xlnx_of_component_probe(&pdev->dev, xlnx_compare_of,
++				       &xlnx_master_ops);
++}
++
++static int xlnx_platform_remove(struct platform_device *pdev)
++{
++	component_master_del(&pdev->dev, &xlnx_master_ops);
++	return 0;
++}
++
++static void xlnx_platform_shutdown(struct platform_device *pdev)
++{
++	struct xlnx_drm *xlnx_drm = platform_get_drvdata(pdev);
++
++	drm_put_dev(xlnx_drm->drm);
++}
++
++static int __maybe_unused xlnx_pm_suspend(struct device *dev)
++{
++	struct xlnx_drm *xlnx_drm = dev_get_drvdata(dev);
++	struct drm_device *drm = xlnx_drm->drm;
++
++	drm_kms_helper_poll_disable(drm);
++
++	xlnx_drm->suspend_state = drm_atomic_helper_suspend(drm);
++	if (IS_ERR(xlnx_drm->suspend_state)) {
++		drm_kms_helper_poll_enable(drm);
++		return PTR_ERR(xlnx_drm->suspend_state);
++	}
++
++	return 0;
++}
++
++static int __maybe_unused xlnx_pm_resume(struct device *dev)
++{
++	struct xlnx_drm *xlnx_drm = dev_get_drvdata(dev);
++	struct drm_device *drm = xlnx_drm->drm;
++
++	drm_atomic_helper_resume(drm, xlnx_drm->suspend_state);
++	drm_kms_helper_poll_enable(drm);
++
++	return 0;
++}
++
++static const struct dev_pm_ops xlnx_pm_ops = {
++	SET_SYSTEM_SLEEP_PM_OPS(xlnx_pm_suspend, xlnx_pm_resume)
++};
++
++static const struct of_device_id xlnx_of_match[] = {
++	{ .compatible = "xlnx,kms", },
++	{ /* end of table */ },
++};
++MODULE_DEVICE_TABLE(of, xlnx_of_match);
++
++static struct platform_driver xlnx_driver = {
++	.probe			= xlnx_platform_probe,
++	.remove			= xlnx_platform_remove,
++	.shutdown		= xlnx_platform_shutdown,
++	.driver			= {
++		.name		= "xlnx-drm",
++		.pm		= &xlnx_pm_ops,
++		.of_match_table	= xlnx_of_match,
++	},
++};
++
++module_platform_driver(xlnx_driver);
++
++MODULE_AUTHOR("Xilinx, Inc.");
++MODULE_DESCRIPTION("Xilinx DRM KMS Driver");
++MODULE_LICENSE("GPL v2");
+diff --git a/drivers/gpu/drm/xlnx/xlnx_drv.h b/drivers/gpu/drm/xlnx/xlnx_drv.h
+new file mode 100644
+index 0000000..6ec285c
+--- /dev/null
++++ b/drivers/gpu/drm/xlnx/xlnx_drv.h
+@@ -0,0 +1,22 @@
++/*
++ * Xilinx DRM KMS Header for Xilinx
++ *
++ *  Copyright (C) 2013 - 2018 Xilinx, Inc.
++ *
++ *  Author: Hyun Woo Kwon <hyunk-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
++ *
++ * SPDX-License-Identifier: GPL-2.0
++ */
++
++#ifndef _XLNX_DRV_H_
++#define _XLNX_DRV_H_
++
++struct drm_device;
++struct xlnx_crtc_helper;
++
++uint32_t xlnx_get_format(struct drm_device *drm);
++unsigned int xlnx_get_align(struct drm_device *drm);
++struct xlnx_crtc_helper *xlnx_get_crtc_helper(struct drm_device *drm);
++struct xlnx_bridge_helper *xlnx_get_bridge_helper(struct drm_device *drm);
++
++#endif /* _XLNX_DRV_H_ */
+diff --git a/drivers/gpu/drm/xlnx/xlnx_fb.c b/drivers/gpu/drm/xlnx/xlnx_fb.c
+index dbe9fbf..029a4d3 100644
+--- a/drivers/gpu/drm/xlnx/xlnx_fb.c
++++ b/drivers/gpu/drm/xlnx/xlnx_fb.c
+@@ -18,6 +18,7 @@
+ #include <drm/drm_fb_helper.h>
+ #include <drm/drm_gem_cma_helper.h>
+ 
++#include "xlnx_drv.h"
+ #include "xlnx_fb.h"
+ 
+ #define XLNX_MAX_PLANES	4
+diff --git a/drivers/gpu/drm/xlnx/xlnx_gem.c b/drivers/gpu/drm/xlnx/xlnx_gem.c
+index af1abdc..6395f65 100644
+--- a/drivers/gpu/drm/xlnx/xlnx_gem.c
++++ b/drivers/gpu/drm/xlnx/xlnx_gem.c
+@@ -11,6 +11,7 @@
+ #include <drm/drmP.h>
+ #include <drm/drm_gem_cma_helper.h>
+ 
++#include "xlnx_drv.h"
+ #include "xlnx_gem.h"
+ 
+ /*
 -- 
 2.7.4
 
