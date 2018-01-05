@@ -1,124 +1,30 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH v5 20/20] cpufreq: scmi: add support for fast frequency
- switching
-Date: Fri, 5 Jan 2018 10:45:50 +0000
-Message-ID: <f9c3f16a-f33a-4d28-0893-3507af0732c4@arm.com>
-References: <1514904162-11201-1-git-send-email-sudeep.holla@arm.com>
- <1514904162-11201-21-git-send-email-sudeep.holla@arm.com>
- <CALW4P++xNXWUYoAEjV2=zfj-ps+JSD3kkkKRAeED08UF3Gabfw@mail.gmail.com>
+From: Herbert Xu <herbert@gondor.apana.org.au>
+Subject: Re: [PATCH v5] hwrng: exynos - add Samsung Exynos True RNG driver
+Date: Fri, 5 Jan 2018 22:14:44 +1100
+Message-ID: <20180105111444.GA16156@gondor.apana.org.au>
+References: <20171222132338.30054-1-l.stelmach@samsung.com>
+ <CGME20171222164840eucas1p17e3d17666ba3d0c5fced2d1c9259bf0b@eucas1p1.samsung.com>
+ <20171222164835.1051-1-l.stelmach@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CALW4P++xNXWUYoAEjV2=zfj-ps+JSD3kkkKRAeED08UF3Gabfw@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-pm-owner@vger.kernel.org
-To: Alexey Klimov <klimov.linux@gmail.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, ALKML <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Roy Franz <roy.franz@cavium.com>, Harb Abdulhamid <harba@codeaurora.org>, Nishanth Menon <nm@ti.com>, Arnd Bergmann <arnd@arndb.de>, Loc Ho <lho@apm.com>, Ryan Harkin <Ryan.Harkin@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>, linux-pm@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20171222164835.1051-1-l.stelmach@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: =?utf-8?Q?=C5=81ukasz?= Stelmach <l.stelmach@samsung.com>
+Cc: Philippe Ombredanne <pombredanne@nexb.com>, "Andrew F . Davis" <afd@ti.com>, PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>, Rob Herring <robh+dt@kernel.org>, Matt Mackall <mpm@selenic.com>, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-crypto@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Dec 22, 2017 at 05:48:35PM +0100, Łukasz Stelmach wrote:
+> Add support for True Random Number Generator found in Samsung Exynos
+> 5250+ SoCs.
+> 
+> Signed-off-by: Łukasz Stelmach <l.stelmach@samsung.com>
+> Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-
-On 04/01/18 22:10, Alexey Klimov wrote:
-> Hi Sudeep,
-> 
-> On Tue, Jan 2, 2018 at 2:42 PM, Sudeep Holla <sudeep.holla@arm.com> wrote:
->> The cpufreq core provides option for drivers to implement fast_switch
->> callback which is invoked for frequency switching from interrupt context.
->>
->> This patch adds support for fast_switch callback in SCMI cpufreq driver
->> by making use of polling based SCMI transfer. It also sets the flag
->> fast_switch_possible.
->>
->> Cc: linux-pm@vger.kernel.org
->> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
->> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
->> ---
->>  drivers/cpufreq/scmi-cpufreq.c | 15 +++++++++++++++
->>  1 file changed, 15 insertions(+)
->>
->> diff --git a/drivers/cpufreq/scmi-cpufreq.c b/drivers/cpufreq/scmi-cpufreq.c
->> index 0ee9335d0063..d0a82d7c6fd4 100644
->> --- a/drivers/cpufreq/scmi-cpufreq.c
->> +++ b/drivers/cpufreq/scmi-cpufreq.c
->> @@ -64,6 +64,19 @@ scmi_cpufreq_set_target(struct cpufreq_policy *policy, unsigned int index)
->>         return perf_ops->freq_set(handle, priv->domain_id, freq, false);
->>  }
->>
->> +static unsigned int scmi_cpufreq_fast_switch(struct cpufreq_policy *policy,
->> +                                            unsigned int target_freq)
->> +{
->> +       struct scmi_data *priv = policy->driver_data;
->> +       struct scmi_perf_ops *perf_ops = handle->perf_ops;
->> +
->> +       if (!perf_ops->freq_set(handle, priv->domain_id,
->> +                               target_freq * 1000, true))
->> +               return target_freq;
->> +
->> +       return 0;
->> +}
-> 
-> Could you please explain how it's supposed to work for purpose of fast
-> frequency switching?
-> 
-> I am trying to track down ->freq_set.
-> So it looks like this will fire an scmi perf level set command and
-> will poll for this command to complete without asking for firmware to
-> send command completion irq.
-> 
-> scmi_perf_level_set() will call the following functions:
-> 
-> scmi_one_xfer_init();
-> scmi_do_xfer(handle, t);
-> scmi_one_xfer_put(handle, t);
-> 
-> 
-> The first function in the list calls scmi_one_xfer_get() which has
-> this in the description (I guess because of down_timeout()):
-> "This function can sleep depending on pending requests already in the system
-> for the SCMI entity. Further, this also holds a spinlock to maintain
-> integrity of internal data structures."
-> 
-> So it can sleep.
-> 
-
-Indeed, I can drop the whole semaphore story and expect the caller to
-retry in case buffer is full which is very rare condition.
-
-> As far as I see description of fast frequency switching it's required
-> for fast_switch to not sleep:
-> (file Documentation/cpu-freq/cpu-drivers.txt)
-> 
-> "This function is used for frequency switching from scheduler's context.
-> Not all drivers are expected to implement it, as sleeping from within
-> this callback isn't allowed. This callback must be highly optimized to
-> do switching as fast as possible."
-> 
-> 
-> The other questions to this implementation of fast switching:
-> 
-> 1) Fast switching callback must be highly optimized. Is it now? I see
-> few spinlocks (in scmi mbox client and in the mailbox framework) there
-> and polling functionality with udelay(5) inside that will timeout (if
-> my calculations are correct) after 0.5 ms.
-
-Do you have any alternate ideas to avoid that and still achieve fast
-switching ?
-
-> 2) Is it highly dependent on transport? If mailbox transport
-> ->send_data() may sleep or hrtimer-based polling in mailbox framework
-> will be used, then this fast switch won't work, right?
-> 
-
-Yes.
-
-> I am still looking into that: I can be wrong and just trying to
-> understand if it is all okay.
-> 
-
-Thanks for taking a look at this.
-
+Patch applied.  Thanks.
 -- 
-Regards,
-Sudeep
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
