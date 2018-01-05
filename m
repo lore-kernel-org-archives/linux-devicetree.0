@@ -1,56 +1,58 @@
-From: Ran Wang <ran.wang_1@nxp.com>
-Subject: [PATCH 3/4] arm64: dts: ls1046a: Enable usb3-lpm-capable for usb3 node
-Date: Fri, 5 Jan 2018 17:40:08 +0800
-Message-ID: <20180105094009.22599-3-ran.wang_1@nxp.com>
-References: <20180105094009.22599-1-ran.wang_1@nxp.com>
+From: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 6/6] ARM64: dts: meson-axg: enable the UART_A controller
+Date: Fri, 05 Jan 2018 11:27:25 +0100
+Message-ID: <1515148045.5048.19.camel@baylibre.com>
+References: <20180105095621.196472-1-yixun.lan@amlogic.com>
+         <20180105095621.196472-7-yixun.lan@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180105094009.22599-1-ran.wang_1@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Shawn Guo <shawnguo@kernel.org>, Felipe Balbi <balbi@kernel.org>, Li Yang <leoyang.li@nxp.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, Ran Wang <ran.wang_1@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180105095621.196472-7-yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Enable USB3 HW LPM feature for ls1046a and active patch for
-snps erratum A-010131. It will disable U1/U2 temperary when
-initiate U3 request.
+On Fri, 2018-01-05 at 17:56 +0800, Yixun Lan wrote:
+> The UART_A is connect to a BT module in the S400 board.
 
-Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
----
- arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi |    6 ++++++
- 1 files changed, 6 insertions(+), 0 deletions(-)
+The UART_A is connected to a BT module on the S400 board.
+                     --                --
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-index c115f17..07ca420 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-@@ -611,6 +611,8 @@
- 			dr_mode = "host";
- 			snps,quirk-frame-length-adjustment = <0x20>;
- 			snps,dis_rxdet_inp3_quirk;
-+			usb3-lpm-capable;
-+			snps,dis-u1u2-when-u3-quirk;
- 		};
- 
- 		usb1: usb@3000000 {
-@@ -620,6 +622,8 @@
- 			dr_mode = "host";
- 			snps,quirk-frame-length-adjustment = <0x20>;
- 			snps,dis_rxdet_inp3_quirk;
-+			usb3-lpm-capable;
-+			snps,dis-u1u2-when-u3-quirk;
- 		};
- 
- 		usb2: usb@3100000 {
-@@ -629,6 +633,8 @@
- 			dr_mode = "host";
- 			snps,quirk-frame-length-adjustment = <0x20>;
- 			snps,dis_rxdet_inp3_quirk;
-+			usb3-lpm-capable;
-+			snps,dis-u1u2-when-u3-quirk;
- 		};
- 
- 		sata: sata@3200000 {
--- 
-1.7.1
+Apart from this:
+Acked-by: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+
+
+> 
+> Signed-off-by: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  arch/arm64/boot/dts/amlogic/meson-axg-s400.dts | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
+> index 2b79be356996..7e03b8da4856 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
+> @@ -14,9 +14,16 @@
+>  
+>  	aliases {
+>  		serial0 = &uart_AO;
+> +		serial1 = &uart_A;
+>  	};
+>  };
+>  
+> +&uart_A {
+> +	status = "okay";
+> +	pinctrl-0 = <&uart_a_pins>;
+> +	pinctrl-names = "default";
+> +};
+> +
+>  &uart_AO {
+>  	status = "okay";
+>  	pinctrl-0 = <&uart_ao_a_pins>;
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
