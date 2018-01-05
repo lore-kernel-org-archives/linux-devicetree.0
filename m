@@ -1,32 +1,70 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 05/15] dt-bindings: clock: Add jz4770-cgu.h header
-Date: Fri, 5 Jan 2018 10:34:00 -0600
-Message-ID: <20180105163400.qg6q7znrv4s5wrfd@rob-hp-laptop>
-References: <20180102150848.11314-1-paul@crapouillou.net>
- <20180102150848.11314-5-paul@crapouillou.net>
+From: Jassi Brar <jassisinghbrar@gmail.com>
+Subject: Re: [PATCHv5 1/3] dt-bindings: net: Add DT bindings for Socionext Netsec
+Date: Fri, 5 Jan 2018 22:11:30 +0530
+Message-ID: <CABb+yY1RPQFtmc7amcN++xhVhVOqBizK1NXehuVKpughq2Tvfg@mail.gmail.com>
+References: <1514783559-4226-1-git-send-email-jassisinghbrar@gmail.com>
+ <1514783660-4290-1-git-send-email-jassisinghbrar@gmail.com> <CAKv+Gu9Pk_WEOrWZdVK5ty9GaDm4ApvGeksu_6W5DcF0-SOUuA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20180102150848.11314-5-paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
-Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Maarten ter Huurne <maarten-Ph2Y2OKCxY1M656bX5wj8A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <CAKv+Gu9Pk_WEOrWZdVK5ty9GaDm4ApvGeksu_6W5DcF0-SOUuA@mail.gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: "<netdev@vger.kernel.org>" <netdev@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, "David S. Miller" <davem@davemloft.net>, Arnd Bergmann <arnd.bergmann@linaro.org>, Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 02, 2018 at 04:08:38PM +0100, Paul Cercueil wrote:
-> This will be used from the devicetree bindings to specify the clocks
-> that should be obtained from the jz4770-cgu driver.
-> 
-> Signed-off-by: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
-> Acked-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> ---
->  include/dt-bindings/clock/jz4770-cgu.h | 58 ++++++++++++++++++++++++++++++++++
->  1 file changed, 58 insertions(+)
->  create mode 100644 include/dt-bindings/clock/jz4770-cgu.h
+Hi Ard,
 
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Thu, Jan 4, 2018 at 3:07 AM, Ard Biesheuvel
+<ard.biesheuvel@linaro.org> wrote:
+> Hi Jassi,
+>
+> On 1 January 2018 at 05:14,  <jassisinghbrar@gmail.com> wrote:
+>> From: Jassi Brar <jassisinghbrar@gmail.com>
+>>
+>> This patch adds documentation for Device-Tree bindings for the
+>> Socionext NetSec Controller driver.
+>>
+>> Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
+>> Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+>> ---
+>>  .../devicetree/bindings/net/socionext-netsec.txt   | 53 ++++++++++++++++++++++
+>>  1 file changed, 53 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/net/socionext-netsec.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/net/socionext-netsec.txt b/Documentation/devicetree/bindings/net/socionext-netsec.txt
+>> new file mode 100644
+>> index 0000000..b70e35b
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/net/socionext-netsec.txt
+>> @@ -0,0 +1,53 @@
+>> +* Socionext NetSec Ethernet Controller IP
+>> +
+>> +Required properties:
+>> +- compatible: Should be "socionext,synquacer-netsec"
+>> +- reg: Address and length of the control register area, followed by the
+>> +       address and length of the EEPROM holding the MAC address and
+>> +       microengine firmware
+>> +- interrupts: Should contain ethernet controller interrupt
+>> +- clocks: phandle to the PHY reference clock
+>> +- clock-names: Should be "phy_ref_clk"
+>
+> If clock-names is mandatory now even when only a single clock is
+> specified,
+>
+I know. Usually I follow maintainer's opinion unless I see myself
+losing sleep doing that.
+
+> you should add it to the example as well.
+>
+Done. Thanks
+
+> However, please
+> be aware that hardware has shipped now with DT images that specify a
+> only a single clock and no clock-names property: those will require a
+> firmware upgrade before they can use this version of the driver.
+>
+Ok, for now I have dared ignore clock-names in driver.... until we
+have to support again instance that take in more than one clock.
+
+Thanks.
