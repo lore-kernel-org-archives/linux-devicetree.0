@@ -1,60 +1,144 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH 7/7] xtensa: remove arch specific early DT functions
-Date: Fri,  5 Jan 2018 17:20:54 -0600
-Message-ID: <20180105232054.27394-8-robh@kernel.org>
+Subject: [PATCH 1/7] of/fdt: use memblock_virt_alloc for early alloc
+Date: Fri,  5 Jan 2018 17:20:48 -0600
+Message-ID: <20180105232054.27394-2-robh@kernel.org>
 References: <20180105232054.27394-1-robh@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-mips-bounce@linux-mips.org>
 In-Reply-To: <20180105232054.27394-1-robh@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
 To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Frank Rowand <frowand.list@gmail.com>, Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>, linux-xtensa@linux-xtensa.org
+Cc: Frank Rowand <frowand.list@gmail.com>, Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>, linux-xtensa@linux-xtensa.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Ley Foon Tan <lftan@altera.com>, nios2-dev@lists.rocketboards.org, Ralf Baechle <ralf@linux-mips.org>, linux-mips@linux-mips.org, James Hogan <jhogan@kernel.org>, linux-metag@vger.kernel.org, Mikael Starvik <starvik@axis.com>, Jesper Nilsson <jesper.nilsson@axis.com>, linux-cris-kernel@axis.com
 List-Id: devicetree@vger.kernel.org
 
-Now that the DT core code handles bootmem arches, we can remove the xtensa
-specific early_init_dt_alloc_memory_arch function. The common
-early_init_dt_add_memory_arch can be used too now that xtensa switched to
-memblock.
+memblock_virt_alloc() works for both memblock and bootmem, so use it and
+make early_init_dt_alloc_memory_arch a static function. The arches using
+bootmem define early_init_dt_alloc_memory_arch as either:
 
-Cc: Chris Zankel <chris@zankel.net>
-Cc: Max Filippov <jcmvbkbc@gmail.com>
-Cc: linux-xtensa@linux-xtensa.org
+__alloc_bootmem(size, align, __pa(MAX_DMA_ADDRESS))
+
+or:
+
+alloc_bootmem_align(size, align)
+
+Both of these evaluate to the same thing as does memblock_virt_alloc for
+bootmem. So we can disable the arch specific functions by making
+early_init_dt_alloc_memory_arch static and they can be removed in
+subsequent commits.
+
+Cc: Frank Rowand <frowand.list@gmail.com>
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
-This is dependent on patch 1. Please ack and I'll take or apply after
-4.16-rc1.
+ drivers/of/fdt.c       | 16 ++++------------
+ drivers/of/unittest.c  | 11 ++++++++---
+ include/linux/of_fdt.h |  1 -
+ 3 files changed, 12 insertions(+), 16 deletions(-)
 
- arch/xtensa/kernel/setup.c | 12 ------------
- 1 file changed, 12 deletions(-)
-
-diff --git a/arch/xtensa/kernel/setup.c b/arch/xtensa/kernel/setup.c
-index 08175df7a69e..82bd1a94157c 100644
---- a/arch/xtensa/kernel/setup.c
-+++ b/arch/xtensa/kernel/setup.c
-@@ -20,7 +20,6 @@
- #include <linux/mm.h>
- #include <linux/proc_fs.h>
- #include <linux/screen_info.h>
--#include <linux/bootmem.h>
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index 4675e5ac4d11..444e65aa0d29 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -14,6 +14,7 @@
+ #include <linux/crc32.h>
  #include <linux/kernel.h>
- #include <linux/percpu.h>
- #include <linux/cpu.h>
-@@ -218,17 +217,6 @@ static int __init xtensa_dt_io_area(unsigned long node, const char *uname,
+ #include <linux/initrd.h>
++#include <linux/bootmem.h>
+ #include <linux/memblock.h>
+ #include <linux/mutex.h>
+ #include <linux/of.h>
+@@ -1183,14 +1184,6 @@ int __init __weak early_init_dt_reserve_memory_arch(phys_addr_t base,
+ 	return memblock_reserve(base, size);
  }
- #endif
 
--void __init early_init_dt_add_memory_arch(u64 base, u64 size)
+-/*
+- * called from unflatten_device_tree() to bootstrap devicetree itself
+- * Architectures can override this definition if memblock isn't used
+- */
+-void * __init __weak early_init_dt_alloc_memory_arch(u64 size, u64 align)
 -{
--	size &= PAGE_MASK;
--	memblock_add(base, size);
+-	return __va(memblock_alloc(size, align));
 -}
--
--void * __init early_init_dt_alloc_memory_arch(u64 size, u64 align)
--{
--	return __alloc_bootmem(size, align, 0);
--}
--
- void __init early_init_devtree(void *params)
+ #else
+ void __init __weak early_init_dt_add_memory_arch(u64 base, u64 size)
  {
- 	early_init_dt_scan(params);
+@@ -1209,13 +1202,12 @@ int __init __weak early_init_dt_reserve_memory_arch(phys_addr_t base,
+ 		  &base, &size, nomap ? " (nomap)" : "");
+ 	return -ENOSYS;
+ }
++#endif
+
+-void * __init __weak early_init_dt_alloc_memory_arch(u64 size, u64 align)
++static void * __init early_init_dt_alloc_memory_arch(u64 size, u64 align)
+ {
+-	WARN_ON(1);
+-	return NULL;
++	return memblock_virt_alloc(size, align);
+ }
+-#endif
+
+ bool __init early_init_dt_verify(void *params)
+ {
+diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+index 0f8052f1355c..7a9abaae874d 100644
+--- a/drivers/of/unittest.c
++++ b/drivers/of/unittest.c
+@@ -5,6 +5,7 @@
+
+ #define pr_fmt(fmt) "### dt-test ### " fmt
+
++#include <linux/bootmem.h>
+ #include <linux/clk.h>
+ #include <linux/err.h>
+ #include <linux/errno.h>
+@@ -2053,6 +2054,11 @@ static struct overlay_info overlays[] = {
+
+ static struct device_node *overlay_base_root;
+
++static void * __init dt_alloc_memory(u64 size, u64 align)
++{
++	return memblock_virt_alloc(size, align);
++}
++
+ /*
+  * Create base device tree for the overlay unittest.
+  *
+@@ -2092,8 +2098,7 @@ void __init unittest_unflatten_overlay_base(void)
+ 		return;
+ 	}
+
+-	info->data = early_init_dt_alloc_memory_arch(size,
+-					     roundup_pow_of_two(FDT_V17_SIZE));
++	info->data = dt_alloc_memory(size, roundup_pow_of_two(FDT_V17_SIZE));
+ 	if (!info->data) {
+ 		pr_err("alloc for dtb 'overlay_base' failed");
+ 		return;
+@@ -2102,7 +2107,7 @@ void __init unittest_unflatten_overlay_base(void)
+ 	memcpy(info->data, info->dtb_begin, size);
+
+ 	__unflatten_device_tree(info->data, NULL, &info->np_overlay,
+-				early_init_dt_alloc_memory_arch, true);
++				dt_alloc_memory, true);
+ 	overlay_base_root = info->np_overlay;
+ }
+
+diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
+index 444e6e283828..02c05028d0ba 100644
+--- a/include/linux/of_fdt.h
++++ b/include/linux/of_fdt.h
+@@ -83,7 +83,6 @@ extern void early_init_dt_add_memory_arch(u64 base, u64 size);
+ extern int early_init_dt_mark_hotplug_memory_arch(u64 base, u64 size);
+ extern int early_init_dt_reserve_memory_arch(phys_addr_t base, phys_addr_t size,
+ 					     bool no_map);
+-extern void * early_init_dt_alloc_memory_arch(u64 size, u64 align);
+ extern u64 dt_mem_next_cell(int s, const __be32 **cellp);
+
+ /* Early flat tree scan hooks */
 --
 2.14.1
