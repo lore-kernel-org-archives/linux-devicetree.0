@@ -1,48 +1,48 @@
 From: Thinh Nguyen <Thinh.Nguyen-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 00/15] usb: dwc3: Add new updates for DWC_usb31
-Date: Fri, 5 Jan 2018 12:13:34 -0800
-Message-ID: <cover.1515182391.git.thinhn@synopsys.com>
+Subject: [PATCH 08/15] usb: dwc3: Make RX/TX threshold configurable
+Date: Fri, 5 Jan 2018 12:14:48 -0800
+Message-ID: <8446dc260efb993507a219ae11815607b8e58027.1515182391.git.thinhn@synopsys.com>
+References: <cover.1515182391.git.thinhn@synopsys.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thinh Nguyen <Thinh.Nguyen-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Vamsi Krishna Samavedam <vskrishn-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "Gustavo A. R. Silva" <garsilva-L1vi/lXTdts+Va1GwOuvDg@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1515182391.git.thinhn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thinh Nguyen <Thinh.Nguyen-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 Cc: John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch series adds new updates and some fixes for DWC_usb31.
+DWC_usb31 periodic transfer at 48K+ bytes per interval may need
+modification to the TX/RX packet threshold to achieve optimal result.
+Add properties to make it configurable.
 
+Cc: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Thinh Nguyen <thinhn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+---
+ Documentation/devicetree/bindings/usb/dwc3.txt | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Thinh Nguyen (15):
-  usb: dwc3: Device SoftReset PHY synchonization delay
-  usb: core: urb: Check SSP isoc ep comp descriptor
-  usb: dwc3: Update DWC_usb31 GTXFIFOSIZ reg fields
-  usb: dwc3: Check IP revision for GTXFIFOSIZ
-  usb: dwc3: Add DWC_usb31 GRXTHRCFG bit fields
-  usb: dwc3: gadget: Check IP revision for GRXTHRCFG
-  usb: dwc3: Add DWC_usb31 GTXTHRCFG reg fields
-  usb: dwc3: Make RX/TX threshold configurable
-  usb: dwc3: Check for ESS TX/RX threshold config
-  usb: dwc3: gadget: Set maxpacket size for ep0 IN
-  usb: dwc3: ep0: Reset TRB counter for ep0 IN
-  usb: dwc3: Dump LSP and BMU debug info
-  usb: dwc3: Track DWC_usb31 VERSIONTYPE
-  usb: dwc3: Add disabling of start_transfer failure quirk
-  usb: dwc3: Add workaround for isoc start transfer failure
-
- Documentation/devicetree/bindings/usb/dwc3.txt |   9 ++
- drivers/usb/core/urb.c                         |   8 +
- drivers/usb/dwc3/core.c                        |  74 ++++++++-
- drivers/usb/dwc3/core.h                        |  57 +++++++
- drivers/usb/dwc3/debugfs.c                     |   5 +
- drivers/usb/dwc3/ep0.c                         |   7 +-
- drivers/usb/dwc3/gadget.c                      | 202 ++++++++++++++++++++++++-
- 7 files changed, 353 insertions(+), 9 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
+index 52fb41046b34..02dde83d02fa 100644
+--- a/Documentation/devicetree/bindings/usb/dwc3.txt
++++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+@@ -55,6 +55,12 @@ Optional properties:
+  - snps,quirk-frame-length-adjustment: Value for GFLADJ_30MHZ field of GFLADJ
+ 	register for post-silicon frame length adjustment when the
+ 	fladj_30mhz_sdbnd signal is invalid or incorrect.
++ - snps,rx_thr_sel_prd: set to enable periodic ESS RX packet threshold.
++ - snps,rx_thr_num_pkt_prd: periodic ESS RX packet threshold count.
++ - snps,rx_max_burst_prd: Max periodic ESS RX burst size.
++ - snps,tx_thr_sel_prd: set to enable periodic ESS TX packet threshold.
++ - snps,tx_thr_num_pkt_prd: periodic ESS TX packet threshold count.
++ - snps,tx_max_burst_prd: Max periodic ESS TX burst size.
+ 
+  - <DEPRECATED> tx-fifo-resize: determines if the FIFO *has* to be reallocated.
+ 
 -- 
 2.11.0
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
