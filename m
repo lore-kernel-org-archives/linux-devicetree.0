@@ -1,57 +1,70 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH] ASoC: codecs: dmic: Use channel map for configs with a
- single mic
-Date: Fri, 5 Jan 2018 11:18:36 -0800
-Message-ID: <20180105191836.GA111999@google.com>
-References: <20180104194848.198941-1-mka@chromium.org>
- <20180104195438.GA200397@google.com>
- <295ce358-c00e-74ce-50c1-1df32c2c6cf7@st.com>
- <20180105120455.GA9076@sirena.org.uk>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH V2 1/5] bindings: regulator: added support for suspend
+ states
+Date: Fri, 5 Jan 2018 19:18:37 +0000
+Message-ID: <20180105191837.GI9076@sirena.org.uk>
+References: <1515050568-23876-1-git-send-email-zhang.chunyan@linaro.org>
+ <1515050568-23876-2-git-send-email-zhang.chunyan@linaro.org>
+ <20180105185328.zmt33idv2cqled62@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="TA4f0niHM6tHt3xR"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180105120455.GA9076@sirena.org.uk>
+In-Reply-To: <20180105185328.zmt33idv2cqled62@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Arnaud Pouliquen <arnaud.pouliquen@st.com>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Bhumika Goyal <bhumirks@gmail.com>, huang lin <hl@rock-chips.com>, Brian Norris <briannorris@chromium.org>, Dylan Reid <dgreid@chromium.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Chunyan Zhang <zhang.chunyan@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, Chunyan Zhang <zhang.lyra@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-El Fri, Jan 05, 2018 at 12:04:55PM +0000 Mark Brown ha dit:
 
-> On Fri, Jan 05, 2018 at 11:45:43AM +0100, Arnaud Pouliquen wrote:
-> 
-> > >> +             num-channels = <1>;
-> 
-> > In your implementation seems not linked to hardware but software...
-> 
-> > DMIC driver description specifies the channels_max to 8 channels.
-> > I suppose that it is used for DMIC codecs that integrate filters and are
-> > connected to CPU DAI with I2S/PCM links. But it can be also used for
-> > DMIC connected to CPU DAI with a SPI link (in this case decimation
-> > filter in on Soc side).
-> 
-> The intention with the DMIC CODEC is that it's used when the CPU
-> directly has PDM inputs and the DMICs are just directly wired to it
-> (stereo is obviously the norm here but some SoCs may bunch things up
-> further for use with mic arrays).
-> 
-> > If we continue to support both use cases, specify the number of channels
-> > seems reasonable but this should be use to change the max channel
-> > constraint, not to declare a control.
-> 
-> Yes, that would seem the most obvious thing - it's how we handle things
-> like CPU DAIs that support very high channel counts when connected to
-> stereo CODECs for example.  It's not obvious why we'd use a channel map
-> here instead.
+--TA4f0niHM6tHt3xR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks for the feedback!
+On Fri, Jan 05, 2018 at 12:53:28PM -0600, Rob Herring wrote:
+> On Thu, Jan 04, 2018 at 03:22:44PM +0800, Chunyan Zhang wrote:
 
-I experimented initially with changing channels_max, but overwriting
-dmic_dai.capture.channels_max didn't seem right since it would affect
-other possible instances of the codec. I overlooked that this can be
-avoided by passing a *copy* with adjusted channels_max to
-snd_soc_register_codec().
+> > +	- regulator-suspend-microvolt: the default voltage which regulator
+> > +	  would be set in suspend. The voltage for suspend also can be
+> > +	  adjusted among {regulator-suspend-min-microvolt,
+> > +	  regulator-suspend-max-microvolt} by calling
+> > +	  regulator_set_suspend_voltage(). This property is not deprecated,
 
-Matthias
+> You mean "is deprecated", right?
+
+I suspect "is now" but yeah.
+
+> > +	- regulator-changeable-in-suspend: whether the default voltage and
+> > +	  the regulator on/off in suspend can be changed in runtime.
+
+> Is this not implied by having the constraints? Or the driver should know=
+=20
+> this. The simply means you have some 2nd bank of registers for settings=
+=20
+> while in suspend mode, right?
+
+No, it means that the software has permission to use those changes to
+those registers - we only want to be changing things if the user has
+permission to change them since some systems will have specific
+constraints, we don't know if it's safe without being explicitly told.
+You're right that we could infer this from a range being provided
+though, let's do that.
+
+--TA4f0niHM6tHt3xR
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlpPz4wACgkQJNaLcl1U
+h9Bw0Af8DE4uBWuWCGnJ/xfe248ZqZqGZdbawvrIN5wYkyG4cbJWms96q1dLdCF4
+cW7eRhoKxVjbydF6uGxQ1ih5dlw2+wOxMP3OqeCfjY+y6uhNoNMu35M5ZCl+saFo
+bLtlsvV2ZkF7HzPTMuuGyE8xbuJiqT5t852dd55juBh3xV3GuHKE8Rzm2ft82Xkk
+oqTMV8ctynFIEgydpXAJskduEXTxvjkEF1EOO1QD3b9TnIzNl3L/+p7V1DxxbFfH
+qbxUjMe0ZYtreiCm+FUBZzvSBStR76PerqF4nHs86gxoBSvEJOGl0T/PiI9h2+zv
+5/Av6JXaxgNso8TA6EIsblfQURFpWA==
+=ScHH
+-----END PGP SIGNATURE-----
+
+--TA4f0niHM6tHt3xR--
