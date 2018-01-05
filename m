@@ -1,53 +1,36 @@
-From: Yixun Lan <yixun.lan@amlogic.com>
-Subject: [PATCH 2/6] ARM64: dts: meson-axg: uart: fix address space range
-Date: Fri, 5 Jan 2018 17:56:17 +0800
-Message-ID: <20180105095621.196472-3-yixun.lan@amlogic.com>
-References: <20180105095621.196472-1-yixun.lan@amlogic.com>
+From: Ran Wang <ran.wang_1@nxp.com>
+Subject: [PATCH 1/4] arm: dts: ls1021a: Enable usb3-lpm-capable for usb3 node
+Date: Fri, 5 Jan 2018 17:40:06 +0800
+Message-ID: <20180105094009.22599-1-ran.wang_1@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180105095621.196472-1-yixun.lan@amlogic.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Neil Armstrong <narmstrong@baylibre.com>, Yixun Lan <yixun.lan@amlogic.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Jerome Brunet <jbrunet@baylibre.com>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Shawn Guo <shawnguo@kernel.org>, Felipe Balbi <balbi@kernel.org>, Li Yang <leoyang.li@nxp.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, Ran Wang <ran.wang_1@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-The address space range is actually 0x18, fixed here.
+Enable USB3 HW LPM feature for ls1021a and active patch for
+snps erratum A-010131. It will disable U1/U2 temperary when
+initiate U3 request.
 
-Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
+Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/ls1021a.dtsi |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-index 1c6002b3fe34..9636a7c5f6ed 100644
---- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-@@ -143,14 +143,14 @@
+diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
+index f81fad2..21a4488 100644
+--- a/arch/arm/boot/dts/ls1021a.dtsi
++++ b/arch/arm/boot/dts/ls1021a.dtsi
+@@ -709,6 +709,8 @@
+ 			dr_mode = "host";
+ 			snps,quirk-frame-length-adjustment = <0x20>;
+ 			snps,dis_rxdet_inp3_quirk;
++			usb3-lpm-capable;
++			snps,dis-u1u2-when-u3-quirk;
+ 		};
  
- 			uart_A: serial@24000 {
- 				compatible = "amlogic,meson-gx-uart";
--				reg = <0x0 0x24000 0x0 0x14>;
-+				reg = <0x0 0x24000 0x0 0x18>;
- 				interrupts = <GIC_SPI 26 IRQ_TYPE_EDGE_RISING>;
- 				status = "disabled";
- 			};
- 
- 			uart_B: serial@23000 {
- 				compatible = "amlogic,meson-gx-uart";
--				reg = <0x0 0x23000 0x0 0x14>;
-+				reg = <0x0 0x23000 0x0 0x18>;
- 				interrupts = <GIC_SPI 75 IRQ_TYPE_EDGE_RISING>;
- 				status = "disabled";
- 			};
+ 		pcie@3400000 {
 -- 
-2.15.1
+1.7.1
