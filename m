@@ -1,7 +1,7 @@
 From: Hyun Kwon <hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 02/10] drm: xlnx: Add xlnx crtc of Xilinx DRM KMS
-Date: Thu, 4 Jan 2018 18:05:51 -0800
-Message-ID: <1515117959-18068-3-git-send-email-hyun.kwon@xilinx.com>
+Subject: [PATCH 09/10] drm: xlnx: ZynqMP DP subsystem DRM KMS driver
+Date: Thu, 4 Jan 2018 18:05:58 -0800
+Message-ID: <1515117959-18068-10-git-send-email-hyun.kwon@xilinx.com>
 References: <1515117959-18068-1-git-send-email-hyun.kwon@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,26 +12,55 @@ To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79u
 Cc: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Hyun Kwon <hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-xlnx_crtc is a part of Xilinx DRM KMS and a layer that
-provides some interface between the Xilinx DRM KMS and
-crtc drivers.
+This is a wrapper around the ZynqMP Display and DisplayPort drivers.
 
 Signed-off-by: Hyun Kwon <hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 ---
- drivers/gpu/drm/xlnx/xlnx_crtc.c | 194 +++++++++++++++++++++++++++++++++++++++
- drivers/gpu/drm/xlnx/xlnx_crtc.h |  70 ++++++++++++++
- 2 files changed, 264 insertions(+)
- create mode 100644 drivers/gpu/drm/xlnx/xlnx_crtc.c
- create mode 100644 drivers/gpu/drm/xlnx/xlnx_crtc.h
+ drivers/gpu/drm/xlnx/Kconfig        |  11 +++
+ drivers/gpu/drm/xlnx/Makefile       |   3 +
+ drivers/gpu/drm/xlnx/zynqmp_dpsub.c | 141 ++++++++++++++++++++++++++++++++++++
+ drivers/gpu/drm/xlnx/zynqmp_dpsub.h |  19 +++++
+ 4 files changed, 174 insertions(+)
+ create mode 100644 drivers/gpu/drm/xlnx/zynqmp_dpsub.c
+ create mode 100644 drivers/gpu/drm/xlnx/zynqmp_dpsub.h
 
-diff --git a/drivers/gpu/drm/xlnx/xlnx_crtc.c b/drivers/gpu/drm/xlnx/xlnx_crtc.c
+diff --git a/drivers/gpu/drm/xlnx/Kconfig b/drivers/gpu/drm/xlnx/Kconfig
+index 19fd7cd..7c5529c 100644
+--- a/drivers/gpu/drm/xlnx/Kconfig
++++ b/drivers/gpu/drm/xlnx/Kconfig
+@@ -10,3 +10,14 @@ config DRM_XLNX
+ 	  display pipeline using Xilinx IPs in FPGA. This module
+ 	  provides the kernel mode setting functionalities
+ 	  for Xilinx display drivers.
++
++config DRM_ZYNQMP_DPSUB
++	tristate "ZynqMP DP Subsystem Driver"
++	depends on ARCH_ZYNQMP && OF && DRM_XLNX && COMMON_CLK
++	select DMA_ENGINE
++	select GENERIC_PHY
++	help
++	  DRM KMS driver for ZynqMP DP Subsystem controller. Choose
++	  this option if you have a Xilinx ZynqMP SoC with DisplayPort
++	  subsystem. The driver provides the kernel mode setting
++	  functionlaities for ZynqMP DP subsystem.
+diff --git a/drivers/gpu/drm/xlnx/Makefile b/drivers/gpu/drm/xlnx/Makefile
+index c60a281..064a05a 100644
+--- a/drivers/gpu/drm/xlnx/Makefile
++++ b/drivers/gpu/drm/xlnx/Makefile
+@@ -1,2 +1,5 @@
+ xlnx_drm-objs += xlnx_crtc.o xlnx_drv.o xlnx_fb.o xlnx_gem.o
+ obj-$(CONFIG_DRM_XLNX) += xlnx_drm.o
++
++zynqmp-dpsub-objs += zynqmp_disp.o zynqmp_dpsub.o zynqmp_dp.o
++obj-$(CONFIG_DRM_ZYNQMP_DPSUB) += zynqmp-dpsub.o
+diff --git a/drivers/gpu/drm/xlnx/zynqmp_dpsub.c b/drivers/gpu/drm/xlnx/zynqmp_dpsub.c
 new file mode 100644
-index 0000000..57ee939
+index 0000000..ccca798
 --- /dev/null
-+++ b/drivers/gpu/drm/xlnx/xlnx_crtc.c
-@@ -0,0 +1,194 @@
++++ b/drivers/gpu/drm/xlnx/zynqmp_dpsub.c
+@@ -0,0 +1,141 @@
 +/*
-+ * Xilinx DRM crtc driver
++ * ZynqMP DP Subsystem Driver
 + *
 + *  Copyright (C) 2017 - 2018 Xilinx, Inc.
 + *
@@ -40,198 +69,145 @@ index 0000000..57ee939
 + * SPDX-License-Identifier: GPL-2.0
 + */
 +
-+#include <drm/drmP.h>
++#include <linux/component.h>
++#include <linux/module.h>
++#include <linux/of_platform.h>
++#include <linux/platform_device.h>
++#include <linux/pm_runtime.h>
 +
-+#include <linux/list.h>
++#include "zynqmp_disp.h"
++#include "zynqmp_dp.h"
++#include "zynqmp_dpsub.h"
 +
-+#include "xlnx_crtc.h"
++static int
++zynqmp_dpsub_bind(struct device *dev, struct device *master, void *data)
++{
++	int ret;
 +
-+/*
-+ * Overview
-+ * --------
-+ *
-+ * The Xilinx CRTC layer is to enable the custom interface to CRTC drivers.
-+ * The interface is used by Xilinx DRM driver where it needs CRTC
-+ * functionailty. CRTC drivers should attach the desired callbacks
-+ * to struct xlnx_crtc and register the xlnx_crtc with correcsponding
-+ * drm_device. It's highly recommended CRTC drivers register all callbacks
-+ * even though many of them are optional.
-+ * The CRTC helper simply walks through the registered CRTC device,
-+ * and call the callbacks.
-+ */
++	ret = zynqmp_disp_bind(dev, master, data);
++	if (ret)
++		return ret;
 +
-+/**
-+ * struct xlnx_crtc_helper - Xilinx CRTC helper
-+ * @xlnx_crtcs: list of Xilinx CRTC devices
-+ * @lock: lock to protect @xlnx_crtcs
-+ * @drm: back pointer to DRM core
-+ */
-+struct xlnx_crtc_helper {
-+	struct list_head xlnx_crtcs;
-+	struct mutex lock; /* lock for @xlnx_crtcs */
-+	struct drm_device *drm;
++	/* zynqmp_disp should bind first, so zynqmp_dp encoder can find crtc */
++	ret = zynqmp_dp_bind(dev, master, data);
++	if (ret)
++		return ret;
++
++	return 0;
++}
++
++static void
++zynqmp_dpsub_unbind(struct device *dev, struct device *master, void *data)
++{
++	zynqmp_dp_unbind(dev, master, data);
++	zynqmp_disp_unbind(dev, master, data);
++}
++
++static const struct component_ops zynqmp_dpsub_component_ops = {
++	.bind	= zynqmp_dpsub_bind,
++	.unbind	= zynqmp_dpsub_unbind,
 +};
 +
-+#define XLNX_CRTC_MAX_HEIGHT_WIDTH	UINT_MAX
-+
-+int xlnx_crtc_helper_enable_vblank(struct xlnx_crtc_helper *helper,
-+				   unsigned int crtc_id)
++static int zynqmp_dpsub_probe(struct platform_device *pdev)
 +{
-+	struct xlnx_crtc *crtc;
++	struct zynqmp_dpsub *dpsub;
++	int ret;
 +
-+	list_for_each_entry(crtc, &helper->xlnx_crtcs, list)
-+		if (drm_crtc_index(&crtc->crtc) == crtc_id)
-+			if (crtc->enable_vblank)
-+				return crtc->enable_vblank(crtc);
-+	return -ENODEV;
-+}
++	dpsub = devm_kzalloc(&pdev->dev, sizeof(*dpsub), GFP_KERNEL);
++	if (!dpsub)
++		return -ENOMEM;
 +
-+void xlnx_crtc_helper_disable_vblank(struct xlnx_crtc_helper *helper,
-+				     unsigned int crtc_id)
-+{
-+	struct xlnx_crtc *crtc;
++	/* Sub-driver will access dpsub from drvdata */
++	platform_set_drvdata(pdev, dpsub);
++	pm_runtime_enable(&pdev->dev);
 +
-+	list_for_each_entry(crtc, &helper->xlnx_crtcs, list) {
-+		if (drm_crtc_index(&crtc->crtc) == crtc_id) {
-+			if (crtc->disable_vblank)
-+				crtc->disable_vblank(crtc);
-+			return;
-+		}
-+	}
-+}
++	/*
++	 * DP should be probed first so that the zynqmp_disp can set the output
++	 * format accordingly.
++	 */
++	ret = zynqmp_dp_probe(pdev);
++	if (ret)
++		goto err_pm;
 +
-+unsigned int xlnx_crtc_helper_get_align(struct xlnx_crtc_helper *helper)
-+{
-+	struct xlnx_crtc *crtc;
-+	unsigned int align = 1, tmp;
++	ret = zynqmp_disp_probe(pdev);
++	if (ret)
++		goto err_dp;
 +
-+	list_for_each_entry(crtc, &helper->xlnx_crtcs, list) {
-+		if (crtc->get_align) {
-+			tmp = crtc->get_align(crtc);
-+			align = ALIGN(align, tmp);
-+		}
++	ret = component_add(&pdev->dev, &zynqmp_dpsub_component_ops);
++	if (ret)
++		goto err_disp;
++
++	/* Populate the sound child nodes */
++	ret = of_platform_populate(pdev->dev.of_node, NULL, NULL, &pdev->dev);
++	if (ret) {
++		dev_err(&pdev->dev, "failed to populate child nodes\n");
++		goto err_component;
 +	}
 +
-+	return align;
++	dev_info(&pdev->dev, "ZynqMP DisplayPort Subsystem driver probed");
++
++	return 0;
++
++err_component:
++	component_del(&pdev->dev, &zynqmp_dpsub_component_ops);
++err_disp:
++	zynqmp_disp_remove(pdev);
++err_dp:
++	zynqmp_dp_remove(pdev);
++err_pm:
++	pm_runtime_disable(&pdev->dev);
++	return ret;
 +}
 +
-+u64 xlnx_crtc_helper_get_dma_mask(struct xlnx_crtc_helper *helper)
++static int zynqmp_dpsub_remove(struct platform_device *pdev)
 +{
-+	struct xlnx_crtc *crtc;
-+	u64 mask = DMA_BIT_MASK(sizeof(dma_addr_t) * 8), tmp;
++	int err, ret = 0;
 +
-+	list_for_each_entry(crtc, &helper->xlnx_crtcs, list) {
-+		if (crtc->get_dma_mask) {
-+			tmp = crtc->get_dma_mask(crtc);
-+			mask = min(mask, tmp);
-+		}
-+	}
++	of_platform_depopulate(&pdev->dev);
++	component_del(&pdev->dev, &zynqmp_dpsub_component_ops);
 +
-+	return mask;
++	err = zynqmp_disp_remove(pdev);
++	if (err)
++		ret = -EIO;
++
++	err = zynqmp_dp_remove(pdev);
++	if (err)
++		ret = -EIO;
++
++	pm_runtime_disable(&pdev->dev);
++
++	return err;
 +}
 +
-+int xlnx_crtc_helper_get_max_width(struct xlnx_crtc_helper *helper)
-+{
-+	struct xlnx_crtc *crtc;
-+	unsigned int width = XLNX_CRTC_MAX_HEIGHT_WIDTH, tmp;
++static const struct of_device_id zynqmp_dpsub_of_match[] = {
++	{ .compatible = "xlnx,zynqmp-dpsub-1.7", },
++	{ /* end of table */ },
++};
++MODULE_DEVICE_TABLE(of, zynqmp_dpsub_of_match);
 +
-+	list_for_each_entry(crtc, &helper->xlnx_crtcs, list) {
-+		if (crtc->get_max_width) {
-+			tmp = crtc->get_max_width(crtc);
-+			width = min(width, tmp);
-+		}
-+	}
++static struct platform_driver zynqmp_dpsub_driver = {
++	.probe			= zynqmp_dpsub_probe,
++	.remove			= zynqmp_dpsub_remove,
++	.driver			= {
++		.owner		= THIS_MODULE,
++		.name		= "zynqmp-display",
++		.of_match_table	= zynqmp_dpsub_of_match,
++	},
++};
 +
-+	return width;
-+}
++module_platform_driver(zynqmp_dpsub_driver);
 +
-+int xlnx_crtc_helper_get_max_height(struct xlnx_crtc_helper *helper)
-+{
-+	struct xlnx_crtc *crtc;
-+	unsigned int height = XLNX_CRTC_MAX_HEIGHT_WIDTH, tmp;
-+
-+	list_for_each_entry(crtc, &helper->xlnx_crtcs, list) {
-+		if (crtc->get_max_height) {
-+			tmp = crtc->get_max_height(crtc);
-+			height = min(height, tmp);
-+		}
-+	}
-+
-+	return height;
-+}
-+
-+uint32_t xlnx_crtc_helper_get_format(struct xlnx_crtc_helper *helper)
-+{
-+	struct xlnx_crtc *crtc;
-+	u32 format = 0, tmp;
-+
-+	list_for_each_entry(crtc, &helper->xlnx_crtcs, list) {
-+		if (crtc->get_format) {
-+			tmp = crtc->get_format(crtc);
-+			if (format && format != tmp)
-+				return 0;
-+			format = tmp;
-+		}
-+	}
-+
-+	return format;
-+}
-+
-+struct xlnx_crtc_helper *xlnx_crtc_helper_init(struct drm_device *drm)
-+{
-+	struct xlnx_crtc_helper *helper;
-+
-+	helper = devm_kzalloc(drm->dev, sizeof(*helper), GFP_KERNEL);
-+	if (!helper)
-+		return ERR_PTR(-ENOMEM);
-+
-+	INIT_LIST_HEAD(&helper->xlnx_crtcs);
-+	mutex_init(&helper->lock);
-+	helper->drm = drm;
-+
-+	return helper;
-+}
-+
-+void xlnx_crtc_helper_fini(struct drm_device *drm,
-+			   struct xlnx_crtc_helper *helper)
-+{
-+	if (WARN_ON(helper->drm != drm))
-+		return;
-+
-+	if (WARN_ON(!list_empty(&helper->xlnx_crtcs)))
-+		return;
-+
-+	mutex_destroy(&helper->lock);
-+	devm_kfree(drm->dev, helper);
-+}
-+
-+void xlnx_crtc_register(struct drm_device *drm, struct xlnx_crtc *crtc)
-+{
-+	struct xlnx_crtc_helper *helper = xlnx_get_crtc_helper(drm);
-+
-+	mutex_lock(&helper->lock);
-+	list_add_tail(&crtc->list, &helper->xlnx_crtcs);
-+	mutex_unlock(&helper->lock);
-+}
-+EXPORT_SYMBOL_GPL(xlnx_crtc_register);
-+
-+void xlnx_crtc_unregister(struct drm_device *drm, struct xlnx_crtc *crtc)
-+{
-+	struct xlnx_crtc_helper *helper = xlnx_get_crtc_helper(drm);
-+
-+	mutex_lock(&helper->lock);
-+	list_del(&crtc->list);
-+	mutex_unlock(&helper->lock);
-+}
-+EXPORT_SYMBOL_GPL(xlnx_crtc_unregister);
-diff --git a/drivers/gpu/drm/xlnx/xlnx_crtc.h b/drivers/gpu/drm/xlnx/xlnx_crtc.h
++MODULE_AUTHOR("Xilinx, Inc.");
++MODULE_DESCRIPTION("ZynqMP DP Subsystem Driver");
++MODULE_LICENSE("GPL v2");
+diff --git a/drivers/gpu/drm/xlnx/zynqmp_dpsub.h b/drivers/gpu/drm/xlnx/zynqmp_dpsub.h
 new file mode 100644
-index 0000000..db7404e
+index 0000000..df5713a
 --- /dev/null
-+++ b/drivers/gpu/drm/xlnx/xlnx_crtc.h
-@@ -0,0 +1,70 @@
++++ b/drivers/gpu/drm/xlnx/zynqmp_dpsub.h
+@@ -0,0 +1,19 @@
 +/*
-+ * Xilinx DRM crtc header
++ * ZynqMP DPSUB Subsystem Driver
 + *
 + *  Copyright (C) 2017 - 2018 Xilinx, Inc.
 + *
@@ -240,66 +216,15 @@ index 0000000..db7404e
 + * SPDX-License-Identifier: GPL-2.0
 + */
 +
-+#ifndef _XLNX_CRTC_H_
-+#define _XLNX_CRTC_H_
++#ifndef _ZYNQMP_DPSUB_H_
++#define _ZYNQMP_DPSUB_H_
 +
-+/**
-+ * struct xlnx_crtc - Xilinx CRTC device
-+ * @crtc: DRM CRTC device
-+ * @list: list node for Xilinx CRTC device list
-+ * @enable_vblank: Enable vblank
-+ * @disable_vblank: Disable vblank
-+ * @get_align: Get the alignment requirement of CRTC device
-+ * @get_dma_mask: Get the dma mask of CRTC device
-+ * @get_max_width: Get the maximum supported width
-+ * @get_max_height: Get the maximum supported height
-+ * @get_format: Get the current format of CRTC device
-+ */
-+struct xlnx_crtc {
-+	struct drm_crtc crtc;
-+	struct list_head list;
-+	int (*enable_vblank)(struct xlnx_crtc *crtc);
-+	void (*disable_vblank)(struct xlnx_crtc *crtc);
-+	unsigned int (*get_align)(struct xlnx_crtc *crtc);
-+	u64 (*get_dma_mask)(struct xlnx_crtc *crtc);
-+	int (*get_max_width)(struct xlnx_crtc *crtc);
-+	int (*get_max_height)(struct xlnx_crtc *crtc);
-+	uint32_t (*get_format)(struct xlnx_crtc *crtc);
++struct zynqmp_dpsub {
++	struct zynqmp_dp *dp;
++	struct zynqmp_disp *disp;
 +};
 +
-+/*
-+ * Helper functions: used within Xlnx DRM
-+ */
-+
-+struct xlnx_crtc_helper;
-+
-+int xlnx_crtc_helper_enable_vblank(struct xlnx_crtc_helper *helper,
-+				   unsigned int crtc_id);
-+void xlnx_crtc_helper_disable_vblank(struct xlnx_crtc_helper *helper,
-+				     unsigned int crtc_id);
-+unsigned int xlnx_crtc_helper_get_align(struct xlnx_crtc_helper *helper);
-+u64 xlnx_crtc_helper_get_dma_mask(struct xlnx_crtc_helper *helper);
-+int xlnx_crtc_helper_get_max_width(struct xlnx_crtc_helper *helper);
-+int xlnx_crtc_helper_get_max_height(struct xlnx_crtc_helper *helper);
-+uint32_t xlnx_crtc_helper_get_format(struct xlnx_crtc_helper *helper);
-+
-+struct xlnx_crtc_helper *xlnx_crtc_helper_init(struct drm_device *drm);
-+void xlnx_crtc_helper_fini(struct drm_device *drm,
-+			   struct xlnx_crtc_helper *helper);
-+
-+/*
-+ * CRTC registration: used by other sub-driver modules
-+ */
-+
-+static inline struct xlnx_crtc *to_xlnx_crtc(struct drm_crtc *crtc)
-+{
-+	return container_of(crtc, struct xlnx_crtc, crtc);
-+}
-+
-+void xlnx_crtc_register(struct drm_device *drm, struct xlnx_crtc *crtc);
-+void xlnx_crtc_unregister(struct drm_device *drm, struct xlnx_crtc *crtc);
-+
-+#endif /* _XLNX_CRTC_H_ */
++#endif /* _ZYNQMP_DPSUB_H_ */
 -- 
 2.7.4
 
