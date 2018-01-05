@@ -1,59 +1,32 @@
-From: Rob Herring <robh@kernel.org>
-Subject: [PATCH 3/7] metag: remove arch specific early DT functions
-Date: Fri,  5 Jan 2018 17:20:50 -0600
-Message-ID: <20180105232054.27394-4-robh@kernel.org>
-References: <20180105232054.27394-1-robh@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180105232054.27394-1-robh@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Frank Rowand <frowand.list@gmail.com>, James Hogan <jhogan@kernel.org>, linux-metag@vger.kernel.org
+From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v4 1/2] ARM64: dts: meson-axg: add ethernet mac controller
+Date: Fri, 05 Jan 2018 15:26:04 -0800
+Message-ID: <7hmv1r28hf.fsf@baylibre.com>
+References: <20171216035527.96952-1-yixun.lan@amlogic.com>
+        <20171216035527.96952-2-yixun.lan@amlogic.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171216035527.96952-2-yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org> (Yixun Lan's
+        message of "Sat, 16 Dec 2017 11:55:26 +0800")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Now that the DT core code handles bootmem arches, we can remove the metag
-specific early_init_dt_alloc_memory_arch function. As the default
-early_init_dt_add_memory_arch just does a WARN, we can remove it too.
+Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org> writes:
 
-Cc: James Hogan <jhogan@kernel.org>
-Cc: linux-metag@vger.kernel.org
-Signed-off-by: Rob Herring <robh@kernel.org>
----
-This is dependent on patch 1. Please ack and I'll take or apply after
-4.16-rc1.
+> Add DT info for the stmmac ethernet MAC which found in
+> the Amlogic's Meson-AXG SoC, also describe the ethernet
+> pinctrl & clock information here.
+>
+> Reviewed-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
 
- arch/metag/kernel/devtree.c | 14 --------------
- 1 file changed, 14 deletions(-)
+Applied to v4.16/dt64,
 
-diff --git a/arch/metag/kernel/devtree.c b/arch/metag/kernel/devtree.c
-index 18dd7aea9fdc..6af749a64438 100644
---- a/arch/metag/kernel/devtree.c
-+++ b/arch/metag/kernel/devtree.c
-@@ -14,26 +14,12 @@
- #include <linux/init.h>
- #include <linux/export.h>
- #include <linux/types.h>
--#include <linux/bootmem.h>
--#include <linux/memblock.h>
--#include <linux/of.h>
- #include <linux/of_fdt.h>
-
- #include <asm/setup.h>
- #include <asm/page.h>
- #include <asm/mach/arch.h>
-
--void __init early_init_dt_add_memory_arch(u64 base, u64 size)
--{
--	pr_err("%s(%llx, %llx)\n",
--	       __func__, base, size);
--}
--
--void * __init early_init_dt_alloc_memory_arch(u64 size, u64 align)
--{
--	return alloc_bootmem_align(size, align);
--}
--
- static const void * __init arch_get_next_mach(const char *const **match)
- {
- 	static const struct machine_desc *mdesc = __arch_info_begin;
+Kevin
 --
-2.14.1
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
