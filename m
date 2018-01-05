@@ -1,88 +1,136 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] ASoC: codecs: dmic: Use channel map for
- configs with a single mic
-Date: Fri, 5 Jan 2018 12:04:55 +0000
-Message-ID: <20180105120455.GA9076@sirena.org.uk>
-References: <20180104194848.198941-1-mka@chromium.org>
- <20180104195438.GA200397@google.com>
- <295ce358-c00e-74ce-50c1-1df32c2c6cf7@st.com>
+From: "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] cpufreq: imx6q: add 696MHz operating point for i.mx6ul
+Date: Fri, 5 Jan 2018 13:21:10 +0100
+Message-ID: <CAJZ5v0it+Gc5nTa5Vt8X8_OPHh6ndcQB3peAQA1SDsuQ2+FZKA@mail.gmail.com>
+References: <1514912859-17691-1-git-send-email-Anson.Huang@nxp.com> <1514912859-17691-2-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============4680387216041692221=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <295ce358-c00e-74ce-50c1-1df32c2c6cf7@st.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, huang lin <hl@rock-chips.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Brian Norris <briannorris@chromium.org>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Matthias Kaehlcke <mka@chromium.org>, Dylan Reid <dgreid@chromium.org>, Bhumika Goyal <bhumirks@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1514912859-17691-2-git-send-email-Anson.Huang-3arQi8VN3Tc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Anson Huang <Anson.Huang-3arQi8VN3Tc@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux PM <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ping Bai <ping.bai-3arQi8VN3Tc@public.gmane.org>, aisheng.dong-3arQi8VN3Tc@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Jan 2, 2018 at 6:07 PM, Anson Huang <Anson.Huang-3arQi8VN3Tc@public.gmane.org> wrote:
+> Add 696MHz operating point for i.MX6UL, only for those
+> parts with speed grading fuse set to 2b'10 supports
+> 696MHz operating point, so, speed grading check is also
+> added for i.MX6UL in this patch, the clock tree for each
+> operating point are as below:
+>
+> 696MHz:
+>     pll1                       696000000
+>        pll1_bypass             696000000
+>           pll1_sys             696000000
+>              pll1_sw           696000000
+>                 arm            696000000
+> 528MHz:
+>     pll2                       528000000
+>        pll2_bypass             528000000
+>           pll2_bus             528000000
+>              ca7_secondary_sel 528000000
+>                 step           528000000
+>                    pll1_sw     528000000
+>                       arm      528000000
+> 396MHz:
+>     pll2_pfd2_396m             396000000
+>        ca7_secondary_sel       396000000
+>           step                 396000000
+>              pll1_sw           396000000
+>                 arm            396000000
+> 198MHz:
+>     pll2_pfd2_396m             396000000
+>        ca7_secondary_sel       396000000
+>           step                 396000000
+>              pll1_sw           396000000
+>                 arm            198000000
+>
+> Signed-off-by: Anson Huang <Anson.Huang-3arQi8VN3Tc@public.gmane.org>
 
---===============4680387216041692221==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="HcAYCG3uE/tztfnV"
-Content-Disposition: inline
+This doesn't apply for me and in a nontrivial way.
 
+What kernel is it against?
 
---HcAYCG3uE/tztfnV
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Jan 05, 2018 at 11:45:43AM +0100, Arnaud Pouliquen wrote:
-
-> >> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 num-channels =3D <1>;
-
-> In your implementation seems not linked to hardware but software...
-
-> DMIC driver description specifies the channels_max to 8 channels.
-> I suppose that it is used for DMIC codecs that integrate filters and are
-> connected to CPU DAI with I2S/PCM links. But it can be also used for
-> DMIC connected to CPU DAI with a SPI link (in this case decimation
-> filter in on Soc side).
-
-The intention with the DMIC CODEC is that it's used when the CPU
-directly has PDM inputs and the DMICs are just directly wired to it
-(stereo is obviously the norm here but some SoCs may bunch things up
-further for use with mic arrays).
-
-> If we continue to support both use cases, specify the number of channels
-> seems reasonable but this should be use to change the max channel
-> constraint, not to declare a control.
-
-Yes, that would seem the most obvious thing - it's how we handle things
-like CPU DAIs that support very high channel counts when connected to
-stereo CODECs for example.  It's not obvious why we'd use a channel map
-here instead.
-
---HcAYCG3uE/tztfnV
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlpPaeYACgkQJNaLcl1U
-h9CoNwf+M4j9vaeXo+/z58OdIMwap1oV2G2/VqOsynaNnIt5CMYO4MCMeAkkwNfz
-OuWIrXi8iSOuKSjlqx/gf7YYnxXPR2ndxehOe7NS6a/Bjzmwis5eA5dBCDrF1S6p
-cQ8QTdQaIgq1KGAG6u276sb8TKDcL1MOkYYTTUHpky94lGbCBvJP4nxrMnMSG9LI
-q6XkdWVjKzCbuXwk05fXFB1W0Gwyz1VQRSmFYzC6CTDc3bgqT76TgrgtCBkoyKFx
-q7hFHzEE29Y53OFiiOFEE9DeY3ewIg4L4HVXOX4XotdAUCkNIe4srX/udEG+gPkl
-zJJvCoHag89oKEvTqoOUl27UA4VqRA==
-=MDpT
------END PGP SIGNATURE-----
-
---HcAYCG3uE/tztfnV--
-
---===============4680387216041692221==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============4680387216041692221==--
+> ---
+>  drivers/cpufreq/imx6q-cpufreq.c | 46 ++++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 45 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/cpufreq/imx6q-cpufreq.c b/drivers/cpufreq/imx6q-cpufreq.c
+> index d9b2c2d..cbda0cc 100644
+> --- a/drivers/cpufreq/imx6q-cpufreq.c
+> +++ b/drivers/cpufreq/imx6q-cpufreq.c
+> @@ -120,6 +120,10 @@ static int imx6q_set_target(struct cpufreq_policy *policy, unsigned int index)
+>                         clk_set_parent(secondary_sel_clk, pll2_pfd2_396m_clk);
+>                 clk_set_parent(step_clk, secondary_sel_clk);
+>                 clk_set_parent(pll1_sw_clk, step_clk);
+> +               if (freq_hz > clk_get_rate(pll2_bus_clk)) {
+> +                       clk_set_rate(pll1_sys_clk, new_freq * 1000);
+> +                       clk_set_parent(pll1_sw_clk, pll1_sys_clk);
+> +               }
+>         } else {
+>                 clk_set_parent(step_clk, pll2_pfd2_396m_clk);
+>                 clk_set_parent(pll1_sw_clk, step_clk);
+> @@ -244,6 +248,43 @@ static void imx6q_opp_check_speed_grading(struct device *dev)
+>         of_node_put(np);
+>  }
+>
+> +#define OCOTP_CFG3_6UL_SPEED_696MHZ    0x2
+> +
+> +static void imx6ul_opp_check_speed_grading(struct device *dev)
+> +{
+> +       struct device_node *np;
+> +       void __iomem *base;
+> +       u32 val;
+> +
+> +       np = of_find_compatible_node(NULL, NULL, "fsl,imx6ul-ocotp");
+> +       if (!np)
+> +               return;
+> +
+> +       base = of_iomap(np, 0);
+> +       if (!base) {
+> +               dev_err(dev, "failed to map ocotp\n");
+> +               goto put_node;
+> +       }
+> +
+> +       /*
+> +        * Speed GRADING[1:0] defines the max speed of ARM:
+> +        * 2b'00: Reserved;
+> +        * 2b'01: 528000000Hz;
+> +        * 2b'10: 696000000Hz;
+> +        * 2b'11: Reserved;
+> +        * We need to set the max speed of ARM according to fuse map.
+> +        */
+> +       val = readl_relaxed(base + OCOTP_CFG3);
+> +       val >>= OCOTP_CFG3_SPEED_SHIFT;
+> +       val &= 0x3;
+> +       if (val != OCOTP_CFG3_6UL_SPEED_696MHZ)
+> +               if (dev_pm_opp_disable(dev, 696000000))
+> +                       dev_warn(dev, "failed to disable 696MHz OPP\n");
+> +       iounmap(base);
+> +put_node:
+> +       of_node_put(np);
+> +}
+> +
+>  static int imx6q_cpufreq_probe(struct platform_device *pdev)
+>  {
+>         struct device_node *np;
+> @@ -311,7 +352,10 @@ static int imx6q_cpufreq_probe(struct platform_device *pdev)
+>                 goto put_reg;
+>         }
+>
+> -       imx6q_opp_check_speed_grading(cpu_dev);
+> +       if (of_machine_is_compatible("fsl,imx6ul"))
+> +               imx6ul_opp_check_speed_grading(cpu_dev);
+> +       else
+> +               imx6q_opp_check_speed_grading(cpu_dev);
+>
+>         /* Because we have added the OPPs here, we must free them */
+>         free_opp = true;
+> --
+> 1.9.1
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
