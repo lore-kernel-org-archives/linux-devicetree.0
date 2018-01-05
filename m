@@ -1,66 +1,63 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 3/3] ARM: dts: r7s72100: add USB device to device tree
-Date: Fri, 5 Jan 2018 09:53:09 +0100
-Message-ID: <CAMuHMdWmoi3D9-XGXjefCsB2SgNjAH_G6uteSaTiWAN_krXhng@mail.gmail.com>
-References: <20180104200150.11352-1-chris.brandt@renesas.com> <20180104200150.11352-4-chris.brandt@renesas.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH v3 1/9] dt-bindings: media: Add Renesas CEU bindings
+Date: Fri, 5 Jan 2018 09:56:56 +0100
+Message-ID: <CAMuHMdU=CCsn21pkzmKN=9yFn4f2H6QAKSJ5DWCzRBT-F=U=dA@mail.gmail.com>
+References: <1515081797-17174-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1515081797-17174-2-git-send-email-jacopo+renesas@jmondi.org> <14433032.8RBNSVMmkm@avalon>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20180104200150.11352-4-chris.brandt@renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Chris Brandt <chris.brandt@renesas.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, USB list <linux-usb@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <14433032.8RBNSVMmkm@avalon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 4, 2018 at 9:01 PM, Chris Brandt <chris.brandt@renesas.com> wrote:
-> Add USB device support.
+On Thu, Jan 4, 2018 at 11:28 PM, Laurent Pinchart
+<laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org> wrote:
+> On Thursday, 4 January 2018 18:03:09 EET Jacopo Mondi wrote:
+>> Add bindings documentation for Renesas Capture Engine Unit (CEU).
+
+>> +++ b/Documentation/devicetree/bindings/media/renesas,ceu.txt
+>> @@ -0,0 +1,85 @@
+>> +Renesas Capture Engine Unit (CEU)
+>> +----------------------------------------------
+>> +
+>> +The Capture Engine Unit is the image capture interface found in the Renesas
+>> +SH Mobile and RZ SoCs.
+>> +
+>> +The interface supports a single parallel input with data bus width of 8 or
+>> 16
+>> +bits.
+>> +
+>> +Required properties:
+>> +- compatible: Must be one of the following.
+>> +     - "renesas,r7s72100-ceu" for CEU units found in R7S72100 (RZ/A1) SoCs.
+>> +     - "renesas,ceu" as a generic fallback.
 >
-> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+> As asked in my review of patch 3/9, what's your policy for compatible strings
+> ? As far as I understand there's no generic CEU, as the SH4 and RZ versions
+> are not compatible. Should the "renesas,ceu" compatible string then be
+> replaced by "renesas,rz-ceu" ?
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+If they're not compatible, it indeed doesn't make much sense to have a
+generic "renesas,ceu".
 
-Minor nits below.
-
-> --- a/arch/arm/boot/dts/r7s72100.dtsi
-> +++ b/arch/arm/boot/dts/r7s72100.dtsi
-> @@ -667,4 +667,24 @@
->                 power-domains = <&cpg_clocks>;
->                 status = "disabled";
->         };
-> +
-> +       usbhs0: usbhs@e8010000 {
-> +               compatible = "renesas,usbhs-r7s72100";
-> +               reg = <0xe8010000 0x1A0>;
-
-0x1a0
-
-> +               interrupts = <GIC_SPI (73-32) IRQ_TYPE_LEVEL_HIGH>;
-
-"41", all other interrupt properties already have the SPI offset subtracted?
-
-> +               clocks = <&mstp7_clks R7S72100_CLK_USB0>;
-> +               renesas,buswait = <4>;
-> +               power-domains = <&cpg_clocks>;
-> +               status = "disabled";
-> +       };
-> +
-> +       usbhs1: usbhs@e8207000 {
-> +               compatible = "renesas,usbhs-r7s72100";
-> +               reg = <0xe8207000 0x1A0>;
-
-0x1a0
-
-> +               interrupts = <GIC_SPI (74-32) IRQ_TYPE_LEVEL_HIGH>;
-
-"42", all other interrupt properties already have the SPI offset subtracted?
+Note that anything with "rz-" is a bad idea, as after RZ/A1, Renesas introduced
+RZ/G1, RZ/N1, and RZ/T1, which are completely different (yes I know
+we have a few of these in use, unfortunately).
 
 Gr{oetje,eeting}s,
 
                         Geert
 
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
 
 In personal conversations with technical people, I call myself a hacker. But
 when I'm talking to journalists I just say "programmer" or something like that.
                                 -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
