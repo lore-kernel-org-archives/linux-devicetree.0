@@ -1,57 +1,82 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v5 2/3] PCI: mobiveil: Add Mobiveil PCIe Host Bridge IP
- driver
-Date: Fri, 5 Jan 2018 14:01:02 +0000
-Message-ID: <20180105140102.GA24933@red-moon>
-References: <1513181317-19914-1-git-send-email-l.subrahmanya@mobiveil.co.in>
- <20171220170307.GC1709@red-moon>
+From: Yixun Lan <yixun.lan@amlogic.com>
+Subject: Re: [PATCH 4/6] ARM64: dts: meson-axg: uart: Add the pinctrl info
+ description
+Date: Fri, 5 Jan 2018 22:22:43 +0800
+Message-ID: <f10b2e0e-4e65-42af-5358-f107aa631132@amlogic.com>
+References: <20180105095621.196472-1-yixun.lan@amlogic.com>
+ <20180105095621.196472-5-yixun.lan@amlogic.com>
+ <1515148123.5048.22.camel@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20171220170307.GC1709@red-moon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Subrahmanya Lingappa <l.subrahmanya-DTHOJn6Rh8lhmhkoCovsdw@public.gmane.org>
-Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mingkai.hu-3arQi8VN3Tc@public.gmane.org, peter.newton-3arQi8VN3Tc@public.gmane.org, minghuan.lian-3arQi8VN3Tc@public.gmane.org, rajesh.raina-3arQi8VN3Tc@public.gmane.org, rajan.kapoor-3arQi8VN3Tc@public.gmane.org, prabhjot.singh-3arQi8VN3Tc@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1515148123.5048.22.camel@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org
+Cc: yixun.lan@amlogic.com, Neil Armstrong <narmstrong@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 20, 2017 at 05:03:07PM +0000, Lorenzo Pieralisi wrote:
+On 01/05/2018 06:28 PM, Jerome Brunet wrote:
+> On Fri, 2018-01-05 at 17:56 +0800, Yixun Lan wrote:
+>> Describe the pinctrl info for the UART controller which 
+.
 
-[...]
-
-> > +static int mobiveil_pcie_init_irq_domain(struct mobiveil_pcie *pcie)
-> > +{
-> > +	struct device *dev = &pcie->pdev->dev;
-> > +	struct device_node *node = dev->of_node;
-> > +	int ret;
+>> +				uart_a_cts_rts_pins: uart_a_cts_rts {
+>> +					mux {
+>> +						groups = "uart_ctx_a",
 > 
-> ret is unused
+> uart_ctx_a does not exist in pinctrl
 > 
-> > +	/* setup INTx */
-> > +	pcie->intx_domain = irq_domain_add_linear(node,
-> > +				PCI_NUM_INTX + 1, &intx_domain_ops, pcie);
+sorry, it's a typo, it's uart_cts_a
+
+em. end of the Friday is really bad time for me to compose the patches..
+
+
+>> +							"uart_rts_a";
+>> +						function = "uart_a";
+>> +					};
+>> +				};
+>> +
+>> +				uart_b_x_pins: uart_b_x {
+>> +					mux {
+>> +						groups = "uart_tx_b_x",
+>> +							"uart_rx_b_x";
+>> +						function = "uart_b";
+>> +					};
+>> +				};
+>> +
+>> +				uart_b_x_cts_rts_pins: uart_b_x_cts_rts {
+>> +					mux {
+>> +						groups = "uart_cts_b_x",
+>> +							"uart_rts_b_x";
+>> +						function = "uart_b";
+>> +					};
+>> +				};
+>> +
+>> +				uart_b_z_pins: uart_b_z {
+>> +					mux {
+>> +						groups = "uart_tx_b_z",
+>> +							"uart_rx_b_z";
+>> +						function = "uart_b";
+>> +					};
+>> +				};
+>> +
+>> +				uart_b_z_cts_rts_pins: uart_b_z_cts_rts {
+>> +					mux {
+>> +						groups = "uart_cts_b_z",
+>> +							"uart_rts_b_z";
+>> +						function = "uart_b";
+>> +					};
+>> +				};
+>> +
+>> +				uart_ao_b_z_pins: uart_ao_b_z {
+>> +					mux {
+>> +						groups = "uart_ao_tx_b_z",
+>> +							"uart_ao_rx_b_z";
+>> +						function = "uart_ao_b_groupz";
 > 
-> You should use PCI_NUM_INTX and add pci_irqd_intx_xlate() as the
-> domain ops .xlate.
+> "uart_ao_b_groupz" function does not exist in pinctrl
+typo, uart_ao_b_gpioz
 
-Actually that's not quite correct - so scrap this. The point here is,
-the PCI host controller interrupt domain has to have 4 hwirqs (this
-is a pseudo interrupt controller - a multiplexer) and it
-is through DT interrupt-map that INTx pins (1-4) can be mapped to the
-"PCI interrupt controller hwirq inputs" that we consider numbered
-from 0 to 3.
-
-It is not that clean-cut but IMO it is the DT interrupt mapping that
-should carry out the translation.
-
-See for instance:
-
-arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-
-This requires DT/irqchip maintainers acknowledgement before proceeding.
-
-Lorenzo
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+.
