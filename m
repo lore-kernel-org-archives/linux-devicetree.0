@@ -1,55 +1,55 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH] of: Use SPDX license tag for DT files
-Date: Thu, 4 Jan 2018 18:01:53 -0800
-Message-ID: <3548d411-51a9-a5bc-f4eb-b94381b350e0@gmail.com>
-References: <20180104230540.6791-1-robh@kernel.org>
+From: Hyun Kwon <hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 01/10] dt-bindings: display: xlnx: Add Xilinx kms bindings
+Date: Thu, 4 Jan 2018 18:05:50 -0800
+Message-ID: <1515117959-18068-2-git-send-email-hyun.kwon@xilinx.com>
+References: <1515117959-18068-1-git-send-email-hyun.kwon@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180104230540.6791-1-robh@kernel.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-kernel@vger.kernel.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Paul Mackerras <paulus@samba.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1515117959-18068-1-git-send-email-hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Hyun Kwon <hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/04/18 15:05, Rob Herring wrote:
-> Convert remaining DT files to use SPDX-License-Identifier tags.
-> 
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-> Cc: Paul Mackerras <paulus@samba.org>
-> Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
->  drivers/of/Kconfig                              |  1 +
->  drivers/of/address.c                            |  2 +-
->  drivers/of/base.c                               |  6 +-----
->  drivers/of/device.c                             |  1 +
->  drivers/of/dynamic.c                            |  1 +
->  drivers/of/fdt.c                                |  5 +----
->  drivers/of/fdt_address.c                        |  6 +-----
->  drivers/of/irq.c                                |  6 +-----
->  drivers/of/kobj.c                               |  2 +-
->  drivers/of/of_numa.c                            | 13 +------------
->  drivers/of/of_private.h                         |  6 +-----
->  drivers/of/of_reserved_mem.c                    |  6 +-----
->  drivers/of/overlay.c                            |  5 +----
->  drivers/of/pdt.c                                |  6 +-----
->  drivers/of/platform.c                           |  7 +------
->  drivers/of/property.c                           |  6 +-----
->  drivers/of/resolver.c                           |  5 +----
->  drivers/of/unittest-data/overlay_bad_symbol.dts |  1 +
->  include/linux/of.h                              |  6 +-----
->  include/linux/of_dma.h                          |  5 +----
->  include/linux/of_fdt.h                          |  5 +----
->  include/linux/of_gpio.h                         |  6 +-----
->  include/linux/of_graph.h                        |  5 +----
->  include/linux/of_pdt.h                          |  6 +-----
->  include/linux/of_platform.h                     |  7 +------
->  25 files changed, 25 insertions(+), 100 deletions(-)
+The dt binding for Xilinx DRM KMS driver.
 
-Reviewed-by: Frank Rowand <frank.rowand@sony.com>
+Signed-off-by: Hyun Kwon <hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+---
+ .../devicetree/bindings/display/xlnx/xlnx,kms.txt    | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/xlnx/xlnx,kms.txt
 
-< snip >
+diff --git a/Documentation/devicetree/bindings/display/xlnx/xlnx,kms.txt b/Documentation/devicetree/bindings/display/xlnx/xlnx,kms.txt
+new file mode 100644
+index 0000000..8dcd552
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/xlnx/xlnx,kms.txt
+@@ -0,0 +1,20 @@
++Xilinx KMS Pipeline
++-------------------
++
++Xilinx display pipelines can be designed with hardened video IPs and soft video
++IPs in programmable logic. This KMS module provides the common functionality
++of individual subdevice drivers, and glue logics between them.
++
++Required properties:
++
++- compatible: Must be "xlnx,kms".
++
++- ports: phandles for CRTC ports, using the DT bindings defined in
++  Documentation/devicetree/bindings/graph.txt.
++
++Example:
++
++	xlnx_drm: xlnx_drm {
++		compatible = "xlnx,kms";
++		ports = <&crtc_port>;
++	};
+-- 
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
