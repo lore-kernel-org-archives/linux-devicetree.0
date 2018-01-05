@@ -1,28 +1,41 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH v2] ARM64: dts: meson-axg: add the SPICC controller
-Date: Fri, 05 Jan 2018 15:03:39 -0800
-Message-ID: <7hr2r329is.fsf@baylibre.com>
-References: <20171215144217.223593-1-yixun.lan@amlogic.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Rob Herring <robh@kernel.org>
+Subject: [PATCH 0/7] DT: consolidate bootmem support
+Date: Fri,  5 Jan 2018 17:14:17 -0600
+Message-ID: <20180105231424.19247-1-robh@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171215144217.223593-1-yixun.lan@amlogic.com> (Yixun Lan's
-        message of "Fri, 15 Dec 2017 22:42:17 +0800")
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yixun Lan <yixun.lan@amlogic.com>
-Cc: devicetree@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Carlo Caione <carlo@caione.org>, Sunny Luo <sunny.luo@amlogic.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Yixun Lan <yixun.lan@amlogic.com> writes:
+This series adds support for bootmem to the DT core code and removes the 
+remaining arch specific early_init_dt_alloc_memory_arch implementations.
 
-> From: Sunny Luo <sunny.luo@amlogic.com>
->
-> Add DT info for the SPICC controller which found in
-> the Amlogic's Meson-AXG SoC.
->
-> Signed-off-by: Sunny Luo <sunny.luo@amlogic.com>
-> Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
+Compile tested only on arm64, mips, x86, and xtensa.
 
-Applied with Neil's tag.
+Rob
 
-Kevin
+Rob Herring (7):
+  of/fdt: use memblock_virt_alloc for early alloc
+  cris: remove arch specific early DT functions
+  metag: remove arch specific early DT functions
+  mips: remove arch specific early_init_dt_alloc_memory_arch
+  nios2: remove arch specific early_init_dt_alloc_memory_arch
+  x86: remove arch specific early_init_dt_alloc_memory_arch
+  xtensa: remove arch specific early DT functions
+
+ arch/cris/kernel/Makefile     | 19 -------------------
+ arch/cris/kernel/devicetree.c | 15 ---------------
+ arch/metag/kernel/devtree.c   | 14 --------------
+ arch/mips/kernel/prom.c       |  5 -----
+ arch/nios2/kernel/prom.c      |  5 -----
+ arch/x86/kernel/devicetree.c  |  6 ------
+ arch/xtensa/kernel/setup.c    | 12 ------------
+ drivers/of/fdt.c              | 16 ++++------------
+ drivers/of/unittest.c         | 11 ++++++++---
+ include/linux/of_fdt.h        |  1 -
+ 10 files changed, 12 insertions(+), 92 deletions(-)
+ delete mode 100644 arch/cris/kernel/devicetree.c
+
+-- 
+2.14.1
