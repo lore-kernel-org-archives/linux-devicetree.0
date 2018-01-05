@@ -1,85 +1,86 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] of/fdt: Fix #ifdef dependency of early flattree declarations
-Date: Fri, 5 Jan 2018 14:26:26 -0600
-Message-ID: <CAL_JsqJH4inAKjq9eH_j-aQhwODfCYOe0Qt2nPP=jS2au99OKQ@mail.gmail.com>
-References: <1515056916-6411-1-git-send-email-geert+renesas@glider.be>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH] ASoC: codecs: dmic: Make number of channels configurable
+Date: Fri,  5 Jan 2018 12:39:57 -0800
+Message-ID: <20180105203957.184883-1-mka@chromium.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1515056916-6411-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bhumika Goyal <bhumirks-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnaud Pouliquen <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>, huang lin <hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 4, 2018 at 3:08 AM, Geert Uytterhoeven
-<geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org> wrote:
-> If OF_FLATTREE=y, but OF_EARLY_FLATTREE=n:
->
->     drivers/tty/serial/earlycon.o: In function `param_setup_earlycon':
->     earlycon.c:(.init.text+0x3a4): undefined reference to `early_init_dt_scan_chosen_stdout'
->
-> Fix this by moving the early flattree forward declarations and dummy
-> implementations inside an #ifdef CONFIG_OF_EARLY_FLATTREE block.
->
-> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-> ---
-> Seen after forcing OF_FLATTREE=y on sparc64 allmodconfig
-> (Hi, out-of-tree OF_CONFIGFS!).
->
-> v2:
->   - Move "#ifdef CONFIG_OF_EARLY_FLATTREE" section outside "#ifdef
->     CONFIG_OF_FLATTREE" section to provide dummies if !OF_FLATTREE,
->   - Move architecture-specific early_init_devtree() and
->     early_get_first_memblock_info() inside "#ifdef
->     CONFIG_OF_EARLY_FLATTREE" section.
-> ---
->  include/linux/of_fdt.h | 12 ++++++++----
->  1 file changed, 8 insertions(+), 4 deletions(-)
->
-> diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
-> index 013c5418aeecfdbd..444e6e283828a27e 100644
-> --- a/include/linux/of_fdt.h
-> +++ b/include/linux/of_fdt.h
-> @@ -47,6 +47,12 @@ extern void *initial_boot_params;
->  extern char __dtb_start[];
->  extern char __dtb_end[];
->
-> +/* Other Prototypes */
-> +extern u64 of_flat_dt_translate_address(unsigned long node);
-> +extern void of_fdt_limit_memory(int limit);
-> +#endif /* CONFIG_OF_FLATTREE */
-> +
-> +#ifdef CONFIG_OF_EARLY_FLATTREE
->  /* For scanning the flat device-tree at boot time */
->  extern int of_scan_flat_dt(int (*it)(unsigned long node, const char *uname,
->                                      int depth, void *data),
-> @@ -97,16 +103,14 @@ extern void unflatten_device_tree(void);
->  extern void unflatten_and_copy_device_tree(void);
->  extern void early_init_devtree(void *);
->  extern void early_get_first_memblock_info(void *, phys_addr_t *);
-> -extern u64 of_flat_dt_translate_address(unsigned long node);
-> -extern void of_fdt_limit_memory(int limit);
-> -#else /* CONFIG_OF_FLATTREE */
-> +#else /* CONFIG_OF_EARLY_FLATTREE */
->  static inline int early_init_dt_scan_chosen_stdout(void) { return -ENODEV; }
->  static inline void early_init_fdt_scan_reserved_mem(void) {}
->  static inline void early_init_fdt_reserve_self(void) {}
->  static inline const char *of_flat_dt_get_machine_name(void) { return NULL; }
->  static inline void unflatten_device_tree(void) {}
->  static inline void unflatten_and_copy_device_tree(void) {}
-> -#endif /* CONFIG_OF_FLATTREE */
-> +#endif /* CONFIG_OF_EARLY_FLATTREE */
+The DMIC DAI driver specifies a number of 1 to 8 channels for each DAI.
+The actual number of mics can currently not be configured in the device
+tree or audio glue, but is derived from the min/max channels of the CPU
+and codec DAI. A typical CPU DAI has two or more channels, in consequence
+a single mic is treated as a stereo/multi channel device, even though
+only one channel carries audio data.
 
-Really, I think most of these shouldn't need dummy versions as they
-are called from DT only code, but I guess we had some need to have
-them. Ideally, we'd also remove some of these and avoid any arch
-specific code, but looks like most do get used. I do see some further
-memblock/bootmem clean-up we can do.
+This change adds the option to specify the number of used DMIC channels
+in the device tree. When specified this value overwrites the default
+channels_max value of 8 in the snd_soc_dai_driver struct of the codec.
 
-Anyway, it better than it was with your change, so I've applied it.
+Signed-off-by: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+---
+ Documentation/devicetree/bindings/sound/dmic.txt |  2 ++
+ sound/soc/codecs/dmic.c                          | 24 +++++++++++++++++++++++-
+ 2 files changed, 25 insertions(+), 1 deletion(-)
 
-Rob
+diff --git a/Documentation/devicetree/bindings/sound/dmic.txt b/Documentation/devicetree/bindings/sound/dmic.txt
+index 54c8ef6498a8..f7bf65611453 100644
+--- a/Documentation/devicetree/bindings/sound/dmic.txt
++++ b/Documentation/devicetree/bindings/sound/dmic.txt
+@@ -7,10 +7,12 @@ Required properties:
+ 
+ Optional properties:
+ 	- dmicen-gpios: GPIO specifier for dmic to control start and stop
++	- num-channels: Number of microphones on this DAI
+ 
+ Example node:
+ 
+ 	dmic_codec: dmic@0 {
+ 		compatible = "dmic-codec";
+ 		dmicen-gpios = <&gpio4 3 GPIO_ACTIVE_HIGH>;
++		num-channels = <1>;
+ 	};
+diff --git a/sound/soc/codecs/dmic.c b/sound/soc/codecs/dmic.c
+index b88a1ee66f80..c88f974ebe3e 100644
+--- a/sound/soc/codecs/dmic.c
++++ b/sound/soc/codecs/dmic.c
+@@ -107,8 +107,30 @@ static const struct snd_soc_codec_driver soc_dmic = {
+ 
+ static int dmic_dev_probe(struct platform_device *pdev)
+ {
++	int err;
++	u32 chans;
++	struct snd_soc_dai_driver *dai_drv = &dmic_dai;
++
++	if (pdev->dev.of_node) {
++		err = of_property_read_u32(pdev->dev.of_node, "num-channels", &chans);
++		if (err && (err != -ENOENT))
++			return err;
++
++		if (!err) {
++			if (chans < 1 || chans > 8)
++				return -EINVAL;
++
++			dai_drv = devm_kzalloc(&pdev->dev, sizeof(*dai_drv), GFP_KERNEL);
++			if (!dai_drv)
++				return -ENOMEM;
++
++			memcpy(dai_drv, &dmic_dai, sizeof(*dai_drv));
++			dai_drv->capture.channels_max = chans;
++		}
++	}
++
+ 	return snd_soc_register_codec(&pdev->dev,
+-			&soc_dmic, &dmic_dai, 1);
++			&soc_dmic, dai_drv, 1);
+ }
+ 
+ static int dmic_dev_remove(struct platform_device *pdev)
+-- 
+2.16.0.rc0.223.g4a4ac83678-goog
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
