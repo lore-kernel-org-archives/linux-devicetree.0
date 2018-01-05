@@ -1,114 +1,70 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv2] Device tree binding for Avago APDS990X light sensor
-Date: Fri, 5 Jan 2018 10:01:37 -0600
-Message-ID: <20180105160137.nr7oqvpbp2oao5fm@rob-hp-laptop>
-References: <20171227091828.GA3307@amd>
- <20171227180000.6ejpbqmr736nqx5i@kekkonen.localdomain>
- <20171227200147.GB16799@amd>
- <20171227211643.nnwtm4j6cyftlm66@kekkonen.localdomain>
- <20180102124450.GA18659@amd>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [linux-sunxi] [PATCH v2 3/6] ARM: sun4i: Convert to CCU
+Date: Fri, 5 Jan 2018 08:10:54 -0800
+Message-ID: <CAOi56cXTrGg+mx4aJsrMTHcwAV4KLCUZDy9bjpAq1hi1gngKAg@mail.gmail.com>
+References: <cover.a58841efb571d44013658505f3fa140536a89d1c.1490545262.git-series.plaes@plaes.org>
+ <4357a69da97f46a324eec4c766f4bc9d9e7733ff.1490545262.git-series.plaes@plaes.org>
+ <CAOi56cUjqjcZRz6VSwUWcrW=4RQyqyZHtm1vuM3HT2ypdPJ78g@mail.gmail.com>
+ <20171212172635.2utwz3koyo5iwglt@plaes.org> <CAOi56cUeRrKQnJ-akJPB160-60aBzy64bDgFeoqMpHRJSCnDeQ@mail.gmail.com>
+ <20171213170933.qyfn3hgnrvjpmod7@plaes.org> <20171213171358.oocp24c2mdon45o5@plaes.org>
+ <CAOi56cX0Uw=jiAhNSZ8p8_1LPbd7zePkS5kTnMf+ua0v98zfVg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20180102124450.GA18659@amd>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Cc: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, aaro.koskinen-X3B1VOXEql0@public.gmane.org, ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, patrikbachan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, serge-A9i7LUbDfNHQT0dZR+AlfA@public.gmane.org, abcloriens-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, clayton-fehKsxFhGzZIf6P1QZMOBw@public.gmane.org, martijn-28JJ9oSIdodmR6Xm/wNWPw@public.gmane.org, Filip =?utf-8?Q?Matijevi=C4=87?= <filip.matijevic.pz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAOi56cX0Uw=jiAhNSZ8p8_1LPbd7zePkS5kTnMf+ua0v98zfVg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Priit Laes <plaes@plaes.org>
+Cc: Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, lkml <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-clk@vger.kernel.org, linux-sunxi@googlegroups.com, Icenowy Zheng <icenowy@aosc.xyz>, Russell King <linux@armlinux.org.uk>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Philipp Zabel <p.zabel@pengutronix.de>, Olof Johansson <olof@lixom.net>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 02, 2018 at 01:44:51PM +0100, Pavel Machek wrote:
-> From: Filip Matijević <filip.matijevic.pz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> 
-> This prepares binding for light sensor used in Nokia N9.
+On Wed, Dec 13, 2017 at 11:46 AM, Kevin Hilman <khilman@baylibre.com> wrote:
+> On Wed, Dec 13, 2017 at 9:13 AM, Priit Laes <plaes@plaes.org> wrote:
+>> On Wed, Dec 13, 2017 at 05:09:33PM +0000, Priit Laes wrote:
+>>> On Tue, Dec 12, 2017 at 01:24:52PM -0800, Kevin Hilman wrote:
+>>> > On Tue, Dec 12, 2017 at 9:26 AM, Priit Laes <plaes@plaes.org> wrote:
+>>> > > On Mon, Dec 11, 2017 at 02:22:30PM -0800, Kevin Hilman wrote:
+>>> > >> On Sun, Mar 26, 2017 at 10:20 AM, Priit Laes <plaes@plaes.org> wrote:
+>>> > >> > Convert sun4i-a10.dtsi to new CCU driver.
+>>> > >> >
+>>> > >> > Signed-off-by: Priit Laes <plaes@plaes.org>
+>>> > >>
+>>> > >> I finally got around to bisecting a mainline boot failure on
+>>> > >> sun4i-a10-cubieboard that's been happening for quite a while.  Based
+>>> > >> on on kernelci.org, it showed up sometime during the v4.15 merge
+>>> > >> window[1].  It bisected down to this commit (in mainline as commit
+>>> > >> 41193869f2bdb585ce09bfdd16d9482aadd560ad).
+>>> > >>
+>>> > >> When it fails, there is no output on the serial console, so I don't
+>>> > >> know exactly how it's failing, just that it no longer boots.
+>>> > >
+>>> > > We tried out latest 4.15 with various compilers and it works:
+>>> > > - gcc version 7.1.1 20170622 (Red Hat Cross 7.1.1-3) (GCC) - A10 Gemei G9 tablet
+>>> > > - gcc 7.2.0-debian - A10 Cubieboard
+>>> >
+>>> > And you can reproduce the bug with gcc5 or gcc6?
+>>>
+>>> Tried following commits on Gemei G9 (A10 tablet):
+>>> * 4.15.0-rc3-00037-gd39a01eff9af - latest master
+>>> * 4.14.0-rc1-00002-g41193869f2bd - the exact commit, causing the issue.
+>>>
+>>> With the same Linaro toolchain:
+>>> (gcc version 5.3.1 20160412 (Linaro GCC 5.3-2016.05))
+>>
+>> And I also tried the same dtb and zImage from kernelci page [1] and it works with
+>> that too...
+>>
+>> https://storage.kernelci.org/mainline/master/v4.15-rc3/arm/sunxi_defconfig/
+>
+> Can you share a full boot-log (including all the u-boot output etc.)
+> so I can see exactly how the kernel is being loaded?    Especially the
+> u-boot version?
+>
+> As $SUBJECT patch seems to be changing clocks around, perhaps this is
+> an issue where some u-boot dependency is uncovered, and older versions
+> of u-boot don't play well with this change.
 
-"dt-bindings: ..." is the preferred subject prefix.
+Ping.
 
-> 
-> Signed-off-by: Filip Matijević <filip.matijevic.pz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Signed-off-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-> 
-> diff --git a/Documentation/devicetree/bindings/misc/avago-apds990x.txt b/Documentation/devicetree/bindings/misc/avago-apds990x.txt
-> new file mode 100644
-> index 0000000..480c0b1
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/misc/avago-apds990x.txt
+This is still failing in mainline, but passing int stable <= v4.14
 
-Put this with other light sensors whether you use IIO or not:
-
-bindings/iio/light/
-
-> @@ -0,0 +1,41 @@
-> +Avago APDS990X driver
-
-Bindings aren't drivers.
-
-> +
-> +https://docs.broadcom.com/docs/AV02-2867EN
-> +
-> +Required properties:
-> +- compatible: "avago,apds990x"
-> +- reg: address on the I2C bus
-> +- interrupts: external interrupt line number
-> +- vdd-supply: power supply for VDD
-> +- vled-supply: power supply for LEDA
-> +- avago,ga: Glass attenuation
-
-We already have "upisemi,glass-coef". Can we align on something common.
-
-> +- avago,cf1: Clear channel factor 1
-> +- avago,irf1: IR channel factor 1
-> +- avago,cf2: Clear channel factor 2
-> +- avago,irf2: IR channel factor 2
-
-Perhaps 2 properties with 2 cells for factor 1 and 2.
-
-> +- avago,df: Device factor
-
-Units/range for all these?
-
-> +- avago,pdrive: IR current, one of APDS_IRLED_CURR_XXXmA values
-
-Don't we have standard current property for LEDs?
-
-> +- avago,ppcount: Proximity pulse count
-
-Is this standard for prox sensors?
-
-> +
-> +Example (Nokia N9):
-> +
-> +	als_ps@39 {
-
-light-sensor@39
-
-> +		compatible = "avago,apds990x";
-> +		reg = <0x39>;
-> +
-> +		interrupt-parent = <&gpio3>;
-> +		interrupts = <19 (IRQ_TYPE_EDGE_FALLING | IRQ_TYPE_LEVEL_LOW)>; /* gpio_83 */
-> +
-> +		vdd-supply = <&vaux1>;
-> +		vled-supply = <&vbat>;
-> +
-> +		avago,ga	= <168834>;
-> +		avago,cf1	= <4096>;
-> +		avago,irf1	= <7824>;
-> +		avago,cf2	= <877>;
-> +		avago,irf2	= <1575>;
-> +		avago,df	= <52>;
-> +
-> +		avago,pdrive	= <0x2>; /* APDS_IRLED_CURR_25mA */
-> +		avago,ppcount	= <5>;
-> +	};
-> 
-> -- 
-> (english) http://www.livejournal.com/~pavelmachek
-> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Kevin
