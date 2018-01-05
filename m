@@ -1,52 +1,93 @@
-From: Madalin Bucur <madalin.bucur-3arQi8VN3Tc@public.gmane.org>
-Subject: [PATCH net] of_mdio: avoid MDIO bus removal when a PHY is missing
-Date: Fri, 5 Jan 2018 11:36:14 +0200
-Message-ID: <1515144974-31377-1-git-send-email-madalin.bucur@nxp.com>
-Reply-To: <madalin.bucur-3arQi8VN3Tc@public.gmane.org>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH v5 00/12] drm/sun4i: Add A83t LVDS support
+Date: Fri, 5 Jan 2018 10:39:47 +0100
+Message-ID: <20180105093947.kldzo2bdukt4volx@flea.lan>
+References: <cover.e5a47cc96ec5274dd932daa2bde47df073087da9.1513854122.git-series.maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: andrew-g2DYL2Zd6BY@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
-Cc: geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Madalin Bucur <madalin.bucur-3arQi8VN3Tc@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============0893143505=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <cover.e5a47cc96ec5274dd932daa2bde47df073087da9.1513854122.git-series.maxime.ripard@free-electrons.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Daniel Vetter <daniel.vetter@intel.com>, David Airlie <airlied@linux.ie>, Chen-Yu Tsai <wens@csie.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, jernej.skrabec@siol.net, plaes@plaes.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, thierry.reding@gmail.com, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-arm-kernel@lists.infradead.org, icenowy@aosc.io
 List-Id: devicetree@vger.kernel.org
 
-If one of the child devices is missing the of_mdiobus_register_phy()
-call will return -ENODEV. When a missing device is encountered the
-registration of the remaining PHYs is stopped and the MDIO bus will
-fail to register. Propagate all errors except ENODEV to avoid it.
 
-Signed-off-by: Madalin Bucur <madalin.bucur-3arQi8VN3Tc@public.gmane.org>
----
- drivers/of/of_mdio.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+--===============0893143505==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="ebymzglsx6bane4u"
+Content-Disposition: inline
 
-diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
-index 3481e69..93d41275 100644
---- a/drivers/of/of_mdio.c
-+++ b/drivers/of/of_mdio.c
-@@ -231,7 +231,7 @@ int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
- 			rc = of_mdiobus_register_phy(mdio, child, addr);
- 		else
- 			rc = of_mdiobus_register_device(mdio, child, addr);
--		if (rc)
-+		if (rc && rc != -ENODEV)
- 			goto unregister;
- 	}
- 
-@@ -255,7 +255,7 @@ int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
- 
- 			if (of_mdiobus_child_is_phy(child)) {
- 				rc = of_mdiobus_register_phy(mdio, child, addr);
--				if (rc)
-+				if (rc && rc != -ENODEV)
- 					goto unregister;
- 			}
- 		}
--- 
-2.1.0
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--ebymzglsx6bane4u
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Dec 21, 2017 at 12:02:26PM +0100, Maxime Ripard wrote:
+> Hi,
+>=20
+> Here is an attempt at supporting the LVDS output in our DRM driver. This
+> has been tested on the A83T (with DE2), but since everything is basically
+> in the TCON, it should also be usable on the older SoCs with minor
+> modifications.
+>=20
+> This was the occasion to refactor a bunch of things. The most notable ones
+> would be the documentation, and split of the UI layers in the mixer code,
+> and the switch to kfifo for our endpoint parsing code in the driver that
+> fixes an issue introduced by the switch to BFS.
+>=20
+> Let me know what you think,
+> Maxime
+
+I've applied all the patches.
+
+Thanks!
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--ebymzglsx6bane4u
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlpPR+IACgkQ0rTAlCFN
+r3S3mg/5AbHVbKQZCBniqOB+FQxPGFT8bXlurCNw1n4GScTJNk+nDWo/bGeFcYNz
+/vNp1VBLJTj6BfXZS91HePdTUiY6fM3eewzIWpxsJzHlADLyzFwxqJBb87UYmHnR
++cVhTEiJbViDAtBCdG6OYPaDTjRbWGqklk1c/6fXb6a33wlenw/EI9VxeU/i9Ldu
+5JstLaE68IrR7Uj3fq7kUepVK6PXZulsFbsjmal0HKUV4P3OGfbQewh7G87ie3sX
+wFQ0zejWEahmFkLoOzdmUMPq+lBYdIDeeG/bxdRFtZ9/FIzSiSiJmwVyuGn/dt05
+lVnMOc/ZE8eQDDfJKgmqSOMjb0qsWwLkSzfOin7IaO+ZY5XiWws6U04WgRn5DDMC
+VtXcKtNHBmj8cDlXAo4XWoIUvZxX77X4FW2HC33hWBc36CVUc4wrZKBLBXAAzbTE
+XeVxnhhHRtRH3Epg4AJsaWqaaUA/nIEMDe0DxAnZkb2uPEVLZcAymAdXlK3mNhr+
+7bnl5/2TAJg23eH0iu9t5B348K0Akzi5Xg0Av9Ba8jXPcdLOSNqsjpk76Z7oSwk6
+/dzY6Y4iJJELCRpgUhQ+24xfsWHgA9oqraK+Dgd5zD4MqQDQYdQ6ZNQ0qy375pqp
+14lJMp3nsVQOJK9Cd2JEhVLyuXMEdIVbCni2wMaZ6u36ioV7g0k=
+=AMFT
+-----END PGP SIGNATURE-----
+
+--ebymzglsx6bane4u--
+
+--===============0893143505==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============0893143505==--
