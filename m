@@ -1,43 +1,59 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH 4/7] mips: remove arch specific early_init_dt_alloc_memory_arch
-Date: Fri,  5 Jan 2018 17:14:21 -0600
-Message-ID: <20180105231424.19247-5-robh@kernel.org>
+Subject: [PATCH 3/7] metag: remove arch specific early DT functions
+Date: Fri,  5 Jan 2018 17:14:20 -0600
+Message-ID: <20180105231424.19247-4-robh@kernel.org>
 References: <20180105231424.19247-1-robh@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180105231424.19247-1-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Frank Rowand <frowand.list@gmail.com>, Ralf Baechle <ralf@linux-mips.org>, linux-mips@linux-mips.org
+Cc: Frank Rowand <frowand.list@gmail.com>, James Hogan <jhogan@kernel.org>, linux-metag@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Now that the DT core code handles bootmem arches, we can remove the MIPS
-specific early_init_dt_alloc_memory_arch function.
+Now that the DT core code handles bootmem arches, we can remove the metag
+specific early_init_dt_alloc_memory_arch function. As the default
+early_init_dt_add_memory_arch just does a WARN, we can remove it too.
 
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: linux-mips@linux-mips.org
+Cc: James Hogan <jhogan@kernel.org>
+Cc: linux-metag@vger.kernel.org
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
 This is dependent on patch 1. Please ack and I'll take or apply after   
 4.16-rc1.
 
- arch/mips/kernel/prom.c | 5 -----
- 1 file changed, 5 deletions(-)
+ arch/metag/kernel/devtree.c | 14 --------------
+ 1 file changed, 14 deletions(-)
 
-diff --git a/arch/mips/kernel/prom.c b/arch/mips/kernel/prom.c
-index 0dbcd152a1a9..89950b7bf536 100644
---- a/arch/mips/kernel/prom.c
-+++ b/arch/mips/kernel/prom.c
-@@ -44,11 +44,6 @@ void __init early_init_dt_add_memory_arch(u64 base, u64 size)
- 	return add_memory_region(base, size, BOOT_MEM_RAM);
- }
+diff --git a/arch/metag/kernel/devtree.c b/arch/metag/kernel/devtree.c
+index 18dd7aea9fdc..6af749a64438 100644
+--- a/arch/metag/kernel/devtree.c
++++ b/arch/metag/kernel/devtree.c
+@@ -14,26 +14,12 @@
+ #include <linux/init.h>
+ #include <linux/export.h>
+ #include <linux/types.h>
+-#include <linux/bootmem.h>
+-#include <linux/memblock.h>
+-#include <linux/of.h>
+ #include <linux/of_fdt.h>
  
--void * __init early_init_dt_alloc_memory_arch(u64 size, u64 align)
+ #include <asm/setup.h>
+ #include <asm/page.h>
+ #include <asm/mach/arch.h>
+ 
+-void __init early_init_dt_add_memory_arch(u64 base, u64 size)
 -{
--	return __alloc_bootmem(size, align, __pa(MAX_DMA_ADDRESS));
+-	pr_err("%s(%llx, %llx)\n",
+-	       __func__, base, size);
 -}
 -
- int __init early_init_dt_reserve_memory_arch(phys_addr_t base,
- 					phys_addr_t size, bool nomap)
+-void * __init early_init_dt_alloc_memory_arch(u64 size, u64 align)
+-{
+-	return alloc_bootmem_align(size, align);
+-}
+-
+ static const void * __init arch_get_next_mach(const char *const **match)
  {
+ 	static const struct machine_desc *mdesc = __arch_info_begin;
 -- 
 2.14.1
