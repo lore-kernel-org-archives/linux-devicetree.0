@@ -1,27 +1,37 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 3/5] media: dt-bindings: ov5640: refine CSI-2 and add
- parallel interface
-Date: Fri, 5 Jan 2018 12:41:12 -0600
-Message-ID: <20180105184112.pdtpk524bbrxrq5h@rob-hp-laptop>
-References: <1514973452-10464-1-git-send-email-hugues.fruchet@st.com>
- <1514973452-10464-4-git-send-email-hugues.fruchet@st.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/7] drm/panel: simple: add support for Ampire
+ AM-800480AYTZQW-00H
+Date: Fri, 5 Jan 2018 12:46:21 -0600
+Message-ID: <20180105184621.25m3n7cvkt5prkel@rob-hp-laptop>
+References: <1515046345-15881-1-git-send-email-jagan@amarulasolutions.com>
+ <1515046345-15881-2-git-send-email-jagan@amarulasolutions.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1514973452-10464-4-git-send-email-hugues.fruchet@st.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Hugues Fruchet <hugues.fruchet@st.com>
-Cc: Steve Longerbeam <slongerbeam@gmail.com>, Sakari Ailus <sakari.ailus@iki.fi>, Hans Verkuil <hverkuil@xs4all.nl>, Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-media@vger.kernel.org, Benjamin Gaignard <benjamin.gaignard@linaro.org>
+In-Reply-To: <1515046345-15881-2-git-send-email-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 03, 2018 at 10:57:30AM +0100, Hugues Fruchet wrote:
-> Refine CSI-2 endpoint documentation and add bindings
-> for DVP parallel interface support.
+On Thu, Jan 04, 2018 at 11:42:19AM +0530, Jagan Teki wrote:
+> This adds support for the Ampire AM-800480AYTZQW-00H 7.0" WGA LCD,
+> which can be supported by the simple panel driver.
 > 
-> Signed-off-by: Hugues Fruchet <hugues.fruchet@st.com>
+> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 > ---
->  .../devicetree/bindings/media/i2c/ov5640.txt       | 46 +++++++++++++++++++++-
->  1 file changed, 44 insertions(+), 2 deletions(-)
+> Changes for v2:
+> - Updated binding info about optional properties, node and example
+> 
+>  .../display/panel/ampire,am-800480aytzqw-00h.txt   | 25 ++++++++++++++++++++
 
-Reviewed-by: Rob Herring <robh@kernel.org>                 
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>                 
+
+>  drivers/gpu/drm/panel/panel-simple.c               | 27 ++++++++++++++++++++++
+>  2 files changed, 52 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/ampire,am-800480aytzqw-00h.txt
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
