@@ -1,82 +1,55 @@
-From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 2/3] mailbox: Add support for Hi3660 mailbox
-Date: Fri, 5 Jan 2018 09:58:57 +0530
-Message-ID: <CABb+yY2z4jDWJdDY2WRw5Mhv+ArTuvLgqJ9RyVoUJj3O1d=o6A@mail.gmail.com>
-References: <1513682145-19892-1-git-send-email-zhongkaihua@huawei.com> <1513682145-19892-3-git-send-email-zhongkaihua@huawei.com>
+From: Chunyan Zhang <zhang.lyra@gmail.com>
+Subject: Re: [PATCH V7 12/12] arm64: dts: add clocks for SC9860
+Date: Fri, 5 Jan 2018 13:27:08 +0800
+Message-ID: <CAAfSe-uOkPd+T98N8SqytcTQD=L0VR_SAw3SGKAKT_gHuLaPcg@mail.gmail.com>
+References: <20171207125715.16160-1-chunyan.zhang@spreadtrum.com>
+ <20171207125715.16160-13-chunyan.zhang@spreadtrum.com> <CAK8P3a3XA+p__p9+B-jCONUDe1MuOgsee6oD0USmwK06iXqH9g@mail.gmail.com>
+ <CAK8P3a2Qpbr6EB+qWMQqCLkbnVddL+MHx1sFNs-+97ZQ=QaHeg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1513682145-19892-3-git-send-email-zhongkaihua-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kaihua Zhong <zhongkaihua-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, suzhuangluan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, xuezhiliang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, kevin.wangtao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <CAK8P3a2Qpbr6EB+qWMQqCLkbnVddL+MHx1sFNs-+97ZQ=QaHeg@mail.gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Chunyan Zhang <chunyan.zhang@spreadtrum.com>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-clk <linux-clk@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Mark Brown <broonie@kernel.org>, Xiaolong Zhang <xiaolong.zhang@spreadtrum.com>, Ben Li <ben.li@spreadtrum.com>, Orson Zhai <orson.zhai@spreadtrum.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 19, 2017 at 4:45 PM, Kaihua Zhong <zhongkaihua-hv44wF8Li93QT0dZR+AlfA@public.gmane.org> wrote:
-
-.....
-> diff --git a/drivers/mailbox/hi3660-mailbox.c b/drivers/mailbox/hi3660-mailbox.c
-> new file mode 100644
-> index 0000000..3ceca40
-> --- /dev/null
-> +++ b/drivers/mailbox/hi3660-mailbox.c
-> @@ -0,0 +1,319 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +// Copyright (c) 2017 Hisilicon Limited.
-> +// Copyright (c) 2017 Linaro Limited.
-
-A blank here please.
-
-> +#include <linux/bitops.h>
-> +#include <linux/delay.h>
-> +#include <linux/device.h>
-> +#include <linux/err.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/io.h>
-> +#include <linux/iopoll.h>
-
-.....
-> +
-> +static inline struct hi3660_mbox *to_hi3660_mbox(struct mbox_controller *mbox)
+On 5 January 2018 at 07:01, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Thu, Jan 4, 2018 at 10:34 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+>> On Thu, Dec 7, 2017 at 1:57 PM, Chunyan Zhang
+>> <chunyan.zhang@spreadtrum.com> wrote:
+>>> Some clocks on SC9860 are in the same address area with syscon devices,
+>>> those are what have a property of 'sprd,syscon' which would refer to
+>>> syscon devices, others would have a reg property indicated their address
+>>> ranges.
+>>>
+>>> Signed-off-by: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
+>>> ---
+>>>  arch/arm64/boot/dts/sprd/sc9860.dtsi | 115 +++++++++++++++++++++++++++++++++++
+>>>  arch/arm64/boot/dts/sprd/whale2.dtsi |  18 +++++-
+>>>  2 files changed, 131 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/arch/arm64/boot/dts/sprd/sc9860.dtsi b/arch/arm64/boot/dts/sprd/sc9860.dtsi
+>>> index 7b7d8ce..bf03da4 100644
+>>> --- a/arch/arm64/boot/dts/sprd/sc9860.dtsi
+>>> +++ b/arch/arm64/boot/dts/sprd/sc9860.dtsi
+>>> @@ -7,6 +7,7 @@
+>>>   */
+>>>
+>>>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>>> +#include <dt-bindings/clock/sprd,sc9860-clk.h>
+>>>  #include "whale2.dtsi"
+>>
+>> This caused a build error since the sprd,sc9860-clk.h file does not
+>> exist, I'll revert or undo the patch tomorrow.
 >
-inline in .c is out of fasion these days
-> +{
-> +       return container_of(mbox, struct hi3660_mbox, controller);
-> +}
-> +
+> I've taken another look, and fixing it by removing the broken #include
+> was easier than undoing the patches, so I did that now, see
+> https://patchwork.kernel.org/patch/10145773/
 
-....
-> +
-> +static int hi3660_mbox_startup(struct mbox_chan *chan)
-> +{
-> +       int ret;
-> +
-> +       ret = hi3660_mbox_check_state(chan);
-> +       if (ret)
-> +               return ret;
-> +
-> +       ret = hi3660_mbox_unlock(chan);
-> +       if (ret)
-> +               return ret;
-> +
-> +       ret = hi3660_mbox_acquire_channel(chan);
-> +       if (ret)
-> +               return ret;
-> +
-> +       return 0;
-> +}
-Do you not need to do "release channel" for shutdown() ?
+Ok, thanks Arnd!
 
-.....
-> +
-> +static int hi3660_mbox_send_data(struct mbox_chan *chan, void *msg)
-> +{
-> +       return hi3660_mbox_send(chan, msg);
+Chunyan
+
 >
-Please directly have hi3660_mbox_send as .send_data
-
-Cheers!
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>       Arnd
