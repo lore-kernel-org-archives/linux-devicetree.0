@@ -1,147 +1,186 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH v5 1/2] PCI: mediatek: Clear IRQ status after IRQ
- dispatched to avoid reentry
-Date: Fri, 5 Jan 2018 17:42:27 +0000
-Message-ID: <1de755e8-6654-b789-159f-248231fab7b0@arm.com>
-References: <1514336394-17747-1-git-send-email-honghui.zhang@mediatek.com>
- <1514336394-17747-2-git-send-email-honghui.zhang@mediatek.com>
- <20180104184040.GE12239@red-moon>
- <88c84a3e-17ea-08f2-e5fc-4799b41de267@arm.com>
- <1515153107.25872.57.camel@mhfsdcap03>
+From: jacopo mondi <jacopo@jmondi.org>
+Subject: Re: [PATCH v3 1/9] dt-bindings: media: Add Renesas CEU bindings
+Date: Fri, 5 Jan 2018 18:55:09 +0100
+Message-ID: <20180105175509.GK9493@w540>
+References: <1515081797-17174-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1515081797-17174-2-git-send-email-jacopo+renesas@jmondi.org>
+ <14433032.8RBNSVMmkm@avalon>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1515153107.25872.57.camel@mhfsdcap03>
-Content-Language: en-GB
-Sender: linux-kernel-owner@vger.kernel.org
-To: Honghui Zhang <honghui.zhang@mediatek.com>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, bhelgaas@google.com, matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, ryder.lee@mediatek.com, hongkun.cao@mediatek.com, youlin.pei@mediatek.com, yong.wu@mediatek.com, yt.shen@mediatek.com, sean.wang@mediatek.com, xinping.qian@mediatek.com
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <14433032.8RBNSVMmkm@avalon>
+Sender: linux-sh-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, magnus.damm@gmail.com, geert@glider.be, mchehab@kernel.org, hverkuil@xs4all.nl, festevam@gmail.com, sakari.ailus@iki.fi, robh+dt@kernel.org, mark.rutland@arm.com, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/01/18 11:51, Honghui Zhang wrote:
-> On Thu, 2018-01-04 at 19:04 +0000, Marc Zyngier wrote:
->> On 04/01/18 18:40, Lorenzo Pieralisi wrote:
->>> [+Marc]
->>>
->>> On Wed, Dec 27, 2017 at 08:59:53AM +0800, honghui.zhang@mediatek.com wrote:
->>>> From: Honghui Zhang <honghui.zhang@mediatek.com>
->>>>
->>>> There maybe a same IRQ reentry scenario after IRQ received in current
->>>> IRQ handle flow:
->>>> 	EP device		PCIe host driver	EP driver
->>>> 1. issue an IRQ
->>>> 			2. received IRQ
->>>> 			3. clear IRQ status
->>>> 			4. dispatch IRQ
->>>> 						5. clear IRQ source
->>>> The IRQ status was not successfully cleared at step 2 since the IRQ
->>>> source was not cleared yet. So the PCIe host driver may receive the
->>>> same IRQ after step 5. Then there's an IRQ reentry occurred.
->>>> Even worse, if the reentry IRQ was not an IRQ that EP driver expected,
->>>> it may not handle the IRQ. Then we may run into the infinite loop from
->>>> step 2 to step 4.
->>>> Clear the IRQ status after IRQ have been dispatched to avoid the IRQ
->>>> reentry.
->>>> This patch also fix another INTx IRQ issue by initialize the iterate
->>>> before the loop. If an INTx IRQ re-occurred while we are dispatching
->>>> the INTx IRQ, then iterate may start from PCI_NUM_INTX + INTX_SHIFT
->>>> instead of INTX_SHIFT for the second time entering the
->>>> for_each_set_bit_from() loop.
->>>
->>> This looks like two different issues that should be fixed with two
->>> patches.
-> 
-> Ok, I split this into two patches and figure out a more reasonable
-> approach by using irq_chip solution.
-> 
->>>
->>>> Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
->>>> Acked-by: Ryder Lee <ryder.lee@mediatek.com>
->>>> ---
->>>>  drivers/pci/host/pcie-mediatek.c | 11 ++++++-----
->>>>  1 file changed, 6 insertions(+), 5 deletions(-)
->>>
->>> For the sake of uniformity, I first want to understand why this
->>> driver does not call:
->>>
->>> chained_irq_enter/exit()
->>>
->>> in the primary handler (mtk_pcie_intr_handler()).
->>>
->>> With the GIC as a primary interrupt controller we have not
->>> even figured out how current code can actually work without
->>> calling the chained_* API.
->>>
->>> I want to come up with a consistent handling of IRQ domains for
->>> all host bridges and any discrepancy should be explained.
->>
->> That's because this driver is a huge hack, see below:
->>
->>>
->>>> diff --git a/drivers/pci/host/pcie-mediatek.c b/drivers/pci/host/pcie-mediatek.c
->>>> index db93efd..fc29a9a 100644
->>>> --- a/drivers/pci/host/pcie-mediatek.c
->>>> +++ b/drivers/pci/host/pcie-mediatek.c
->>>> @@ -601,15 +601,16 @@ static irqreturn_t mtk_pcie_intr_handler(int irq, void *data)
->>
->> This function is not a chained irqchip, but an interrupt handler...
->>
->>>>  	struct mtk_pcie_port *port = (struct mtk_pcie_port *)data;
->>>>  	unsigned long status;
->>>>  	u32 virq;
->>>> -	u32 bit = INTX_SHIFT;
->>>> +	u32 bit;
->>>>  
->>>>  	while ((status = readl(port->base + PCIE_INT_STATUS)) & INTX_MASK) {
->>>> +		bit = INTX_SHIFT;
->>>>  		for_each_set_bit_from(bit, &status, PCI_NUM_INTX + INTX_SHIFT) {
->>>> -			/* Clear the INTx */
->>>> -			writel(1 << bit, port->base + PCIE_INT_STATUS);
->>>>  			virq = irq_find_mapping(port->irq_domain,
->>>>  						bit - INTX_SHIFT);
->>>>  			generic_handle_irq(virq);
->>
->> and nonetheless, this calls into generic_handle_irq(). That's a complete
->> violation of the interrupt layering. Maybe there is a good reason for
->> it, but I'd like to know which one.
->>
->> Which means that all of the ack/mask has to be done outside of the
->> irqchip framework too... Disgusting.
->>
->>>> +			/* Clear the INTx */
->>>> +			writel(1 << bit, port->base + PCIE_INT_STATUS);
->>>
->>> I think that these masking/acking should actually be done through
->>> the irq_chip hooks (see for instance pci-ftpci100.c) - that would
->>> make this kind of bugs much easier to prevent (because the IRQ
->>> layer does the sequencing for you).
->>
->> +1.
->>
-> 
-> Thanks for your advice, I need to do some homework to have a better
-> understanding of the irq_chip approach.
-> 
->>> Marc (CC'ed) has a more comprehensive view on this than me - I would
->>> like to get to a point where all host bridges uses a consistent
->>> approach for chained IRQ handling and I hope this bug fix can be
->>> a starting point.
->>
->> +1 again. We definitely need to come up with some form of common
->> approach for all these host drivers, and maybe turn that into a library...
->>
-> 
-> Well, this is beyond my knowledge now, I guess I can figure out how to
-> using irq_chip for the first step, then I may following this "common
-> approach" after we have a solution for that?
+Hi Laurent,
 
-We can help you with that at a later time indeed. the urgent thing is to
-fix this driver so that it does the right thing, and we can then look at
-using a common approach for a number of them.
+On Fri, Jan 05, 2018 at 12:28:03AM +0200, Laurent Pinchart wrote:
+> Hi Jacopo,
+>
+> Thank you for the patch.
+>
+> On Thursday, 4 January 2018 18:03:09 EET Jacopo Mondi wrote:
+> > Add bindings documentation for Renesas Capture Engine Unit (CEU).
+> >
+> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> > ---
+> >  .../devicetree/bindings/media/renesas,ceu.txt      | 85 +++++++++++++++++++
+> >  1 file changed, 85 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/media/renesas,ceu.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/media/renesas,ceu.txt
+> > b/Documentation/devicetree/bindings/media/renesas,ceu.txt new file mode
+> > 100644
+> > index 0000000..a4f3c05
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/media/renesas,ceu.txt
+> > @@ -0,0 +1,85 @@
+> > +Renesas Capture Engine Unit (CEU)
+> > +----------------------------------------------
+> > +
+> > +The Capture Engine Unit is the image capture interface found in the Renesas
+> > +SH Mobile and RZ SoCs.
+> > +
+> > +The interface supports a single parallel input with data bus width of 8 or
+> > 16
+> > +bits.
+> > +
+> > +Required properties:
+> > +- compatible: Must be one of the following.
+> > +	- "renesas,r7s72100-ceu" for CEU units found in R7S72100 (RZ/A1) SoCs.
+> > +	- "renesas,ceu" as a generic fallback.
+>
+> As asked in my review of patch 3/9, what's your policy for compatible strings
+> ? As far as I understand there's no generic CEU, as the SH4 and RZ versions
+> are not compatible. Should the "renesas,ceu" compatible string then be
+> replaced by "renesas,rz-ceu" ?
 
-Thanks,
+No, there's actually no generic CEU, as it differs from RZ and SH4 and
+it differs even more between RZ/A1-[H|M] and, say, RZ/A1-L (not sure about
+RZ/G and other variants mentioned by Geert's reply to your comment
+though). In facts, between the RZ/A1-H and SH4 one I (you actually)
+have found a single register difference, while between A1-H and A1-L
+there are differences in the supported capture modes (RZ/A1-L supports
+'data enable fetch mode' while A1-H does not).
 
-	M.
--- 
-Jazz is not dead. It just smells funny...
+Can we drop the generic fallback completely, and do as we've done for
+the RZ pin controller, where we use the part number for all compatible
+string?
+
+So that:
+r7s72100-ceu would be RZ/A1-[H|M]
+r7s72102-ceu would be RZ/A1-L
+r7s72103-ceu would be RZ/A1-LU
+
+>
+> > +       SH Mobile CPUs do not currently support OF, and they configure their
+> > +	CEU interfaces using platform data. The "compatible" list will be
+> > +	expanded once SH Mobile will be made OF-capable.
+>
+> The first sentence is out of scope, or at least its second half. I'd drop this
+> completely, or possibly capture it in the commit message.
+>
+
+I was under the impression you asked for this, I'll drop it
+
+> > +- reg: Registers address base and size.
+> > +- interrupts: The interrupt specifier.
+> > +
+> > +The CEU supports a single parallel input and should contain a single 'port'
+> > +subnode with a single 'endpoint'. Connection to input devices are modeled
+> > +according to the video interfaces OF bindings specified in:
+> > +Documentation/devicetree/bindings/media/video-interfaces.txt
+> > +
+> > +Optional endpoint properties applicable to parallel input bus described in
+> > +the above mentioned "video-interfaces.txt" file are supported by this
+> > driver:
+>
+> I know it's hard to get rid of that habit, but drivers are out of scope for DT
+> bindings so they should not be mentioned. You should of course document the
+> properties, and explain whether they are mandatory and optional.
+>
+
+That's out of scope from this series, but what's the rationale behind
+this? I mean, the CEU hw can do -a lot- of things this driver does not
+support, what I'm describing here is what the driver controlling this
+hw supports...
+
+Anyway, I'll 's/by this driver//'
+
+> > +
+> > +- hsync-active: Active state of the HSYNC signal, 0/1 for LOW/HIGH
+> > respectively.
+> > +- vsync-active: Active state of the VSYNC signal, 0/1 for LOW/HIGH
+> > respectively.
+> > +
+> > +Example:
+> > +
+> > +The example describes the connection between the Capture Engine Unit and an
+> > +OV7670 image sensor connected to i2c1 interface.
+> > +
+> > +ceu: ceu@e8210000 {
+> > +	reg = <0xe8210000 0x209c>;
+> > +	compatible = "renesas,ceu";
+>
+> Don't forget to update this example when you'll address my comment about
+> compatible strings.
+
+Right, I'll use the r7s72100 string.
+
+Thanks
+   j
+>
+> > +	interrupts = <GIC_SPI 332 IRQ_TYPE_LEVEL_HIGH>;
+> > +
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&vio_pins>;
+> > +
+> > +	status = "okay";
+> > +
+> > +	port {
+> > +		ceu_in: endpoint {
+> > +			remote-endpoint = <&ov7670_out>;
+> > +
+> > +			hsync-active = <1>;
+> > +			vsync-active = <0>;
+> > +		};
+> > +	};
+> > +};
+> > +
+> > +i2c1: i2c@fcfee400 {
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&i2c1_pins>;
+> > +
+> > +	status = "okay";
+> > +
+> > +	clock-frequency = <100000>;
+> > +
+> > +	ov7670: camera@21 {
+> > +		compatible = "ovti,ov7670";
+> > +		reg = <0x21>;
+> > +
+> > +		pinctrl-names = "default";
+> > +		pinctrl-0 = <&vio_pins>;
+> > +
+> > +		reset-gpios = <&port3 11 GPIO_ACTIVE_LOW>;
+> > +		powerdown-gpios = <&port3 12 GPIO_ACTIVE_HIGH>;
+> > +
+> > +		port {
+> > +			ov7670_out: endpoint {
+> > +				remote-endpoint = <&ceu_in>;
+> > +
+> > +				hsync-active = <1>;
+> > +				vsync-active = <0>;
+> > +			};
+> > +		};
+> > +	};
+> > +};
+>
+> --
+> Regards,
+>
+> Laurent Pinchart
+>
