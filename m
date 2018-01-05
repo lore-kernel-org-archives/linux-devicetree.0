@@ -1,70 +1,94 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [linux-sunxi] [PATCH v2 3/6] ARM: sun4i: Convert to CCU
-Date: Fri, 5 Jan 2018 08:10:54 -0800
-Message-ID: <CAOi56cXTrGg+mx4aJsrMTHcwAV4KLCUZDy9bjpAq1hi1gngKAg@mail.gmail.com>
-References: <cover.a58841efb571d44013658505f3fa140536a89d1c.1490545262.git-series.plaes@plaes.org>
- <4357a69da97f46a324eec4c766f4bc9d9e7733ff.1490545262.git-series.plaes@plaes.org>
- <CAOi56cUjqjcZRz6VSwUWcrW=4RQyqyZHtm1vuM3HT2ypdPJ78g@mail.gmail.com>
- <20171212172635.2utwz3koyo5iwglt@plaes.org> <CAOi56cUeRrKQnJ-akJPB160-60aBzy64bDgFeoqMpHRJSCnDeQ@mail.gmail.com>
- <20171213170933.qyfn3hgnrvjpmod7@plaes.org> <20171213171358.oocp24c2mdon45o5@plaes.org>
- <CAOi56cX0Uw=jiAhNSZ8p8_1LPbd7zePkS5kTnMf+ua0v98zfVg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOi56cX0Uw=jiAhNSZ8p8_1LPbd7zePkS5kTnMf+ua0v98zfVg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Priit Laes <plaes@plaes.org>
-Cc: Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, lkml <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-clk@vger.kernel.org, linux-sunxi@googlegroups.com, Icenowy Zheng <icenowy@aosc.xyz>, Russell King <linux@armlinux.org.uk>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Philipp Zabel <p.zabel@pengutronix.de>, Olof Johansson <olof@lixom.net>
+From: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>
+Subject: Re: [RFC v2 7/9] bluetooth: btrtl: load the config blob from
+ devicetree when available
+Date: Fri, 5 Jan 2018 17:15:48 +0100
+Message-ID: <1F394D8B-CFB8-48BA-BC6B-15D1EE51DB08@holtmann.org>
+References: <20180101204217.26165-1-martin.blumenstingl@googlemail.com>
+ <20180101204217.26165-8-martin.blumenstingl@googlemail.com>
+ <563D6F9F-8495-40D4-BE56-5338ED2B9B99@holtmann.org>
+ <CAL9uMOEMDup4hRkxD-tM8R0YirGs5uQi31AjJUnFCPNMKUdRHg@mail.gmail.com>
+ <E8E39477-CF1A-4A3E-84C5-830E182C2266@holtmann.org>
+ <CAL9uMOH0N-4jgQncmPjK-KyU0vY9Q0ZnHYSAGgz3z3ywzc8Avw@mail.gmail.com>
+ <CAFBinCBB=SmviOMRHGDH6vzjTjV-mrtQEc8nBUhDbJGs9SBpgw@mail.gmail.com>
+ <CAL9uMOFyfr_qGf5BeTojkMeWeH8LqPoKj=LrdgEMB2wmhGBxmA@mail.gmail.com>
+ <CAFBinCAFsDRpp=4We1hQPiutM1Q0MrqebPLyS3e2_e+JcBoSmg@mail.gmail.com>
+ <CAL9uMOGkZefjD_JNxjf4yJ0ATFtOG5Cm_XQq1fy0VQDjiMFBmg@mail.gmail.com>
+ <EC216531-81EC-4EE8-BAC4-C6954C222092@holtmann.org>
+Mime-Version: 1.0 (Mac OS X Mail 11.2 \(3445.5.20\))
+Content-Type: text/plain;
+        charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <EC216531-81EC-4EE8-BAC4-C6954C222092-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>
+Sender: linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+Cc: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "Gustavo F. Padovan" <gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org>, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Larry Finger <Larry.Finger-tQ5ms3gMjBLk1uMJSBkQmQ@public.gmane.org>, Daniel Drake <drake-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 13, 2017 at 11:46 AM, Kevin Hilman <khilman@baylibre.com> wrote:
-> On Wed, Dec 13, 2017 at 9:13 AM, Priit Laes <plaes@plaes.org> wrote:
->> On Wed, Dec 13, 2017 at 05:09:33PM +0000, Priit Laes wrote:
->>> On Tue, Dec 12, 2017 at 01:24:52PM -0800, Kevin Hilman wrote:
->>> > On Tue, Dec 12, 2017 at 9:26 AM, Priit Laes <plaes@plaes.org> wrote:
->>> > > On Mon, Dec 11, 2017 at 02:22:30PM -0800, Kevin Hilman wrote:
->>> > >> On Sun, Mar 26, 2017 at 10:20 AM, Priit Laes <plaes@plaes.org> wrote:
->>> > >> > Convert sun4i-a10.dtsi to new CCU driver.
->>> > >> >
->>> > >> > Signed-off-by: Priit Laes <plaes@plaes.org>
->>> > >>
->>> > >> I finally got around to bisecting a mainline boot failure on
->>> > >> sun4i-a10-cubieboard that's been happening for quite a while.  Based
->>> > >> on on kernelci.org, it showed up sometime during the v4.15 merge
->>> > >> window[1].  It bisected down to this commit (in mainline as commit
->>> > >> 41193869f2bdb585ce09bfdd16d9482aadd560ad).
->>> > >>
->>> > >> When it fails, there is no output on the serial console, so I don't
->>> > >> know exactly how it's failing, just that it no longer boots.
->>> > >
->>> > > We tried out latest 4.15 with various compilers and it works:
->>> > > - gcc version 7.1.1 20170622 (Red Hat Cross 7.1.1-3) (GCC) - A10 Gemei G9 tablet
->>> > > - gcc 7.2.0-debian - A10 Cubieboard
->>> >
->>> > And you can reproduce the bug with gcc5 or gcc6?
->>>
->>> Tried following commits on Gemei G9 (A10 tablet):
->>> * 4.15.0-rc3-00037-gd39a01eff9af - latest master
->>> * 4.14.0-rc1-00002-g41193869f2bd - the exact commit, causing the issue.
->>>
->>> With the same Linaro toolchain:
->>> (gcc version 5.3.1 20160412 (Linaro GCC 5.3-2016.05))
->>
->> And I also tried the same dtb and zImage from kernelci page [1] and it works with
->> that too...
->>
->> https://storage.kernelci.org/mainline/master/v4.15-rc3/arm/sunxi_defconfig/
->
-> Can you share a full boot-log (including all the u-boot output etc.)
-> so I can see exactly how the kernel is being loaded?    Especially the
-> u-boot version?
->
-> As $SUBJECT patch seems to be changing clocks around, perhaps this is
-> an issue where some u-boot dependency is uncovered, and older versions
-> of u-boot don't play well with this change.
+Hi Carlo,
 
-Ping.
+>>>> As Marcel suggested we can assume that the information in the DSDT is
+>>>> correct so that we can get rid of the config blob also for x86
+>>>> platforms (assuming that the only useful information in the config
+>>>> blobs is the UART configuration).
+>>> in my tests I tried to send only the firmware without the config to my
+>>> RTL8723BS. unfortunately the last firmware chunk (sent to the
+>>> controller) times out in that case (even if I set a proper baudrate
+>>> before or if I specify no baudrate at all and keep the serdev at
+>>> 115200)
+>> 
+>> What's in the config blobs besides UART configuration?
+> 
+> is anybody writing a rtlfw.c tool (like nokfw.c) so that we can print out what we actually have in these config files?
+> 
+>> It's odd because reading into hciattach_rtk.c it seems that the config
+>> file is actually only used by the userspace tools (hciattach) to
+>> retrieve the UART configuration and nothing else, whereas in the
+>> kernel driver the config blob is appended to the firmware.
+> 
+> Frankly, I am inclined to not use the config file even for DT based system and just allow specifying the UART settings via normal DT properties like we do for Broadcom and others.
 
-This is still failing in mainline, but passing int stable <= v4.14
+so I googled for a few config files and this is what this turns into:
 
-Kevin
+Analyzing rtl8723d_config_1000000_noflow.dms
+Signature:   0x8723ab55
+Data length: 41
+len=1   offset=f4,{ 01 }
+len=2   offset=f6,{ 81 00 }
+len=2   offset=fa,{ 12 80 }
+len=16  offset=0c,{ 04 50 00 00 50 c5 ea 19 e1 1b fd af 5b 01 a4 0b }
+len=1   offset=d9,{ 0f }
+len=1   offset=e4,{ 08 }
+Analyzing rtl8723d_config.dms
+Signature:   0x8723ab55
+Data length: 41
+len=1   offset=f4,{ 01 }
+len=2   offset=f6,{ 81 00 }
+len=2   offset=fa,{ 12 80 }
+len=16  offset=0c,{ 02 80 92 04 50 c5 ea 19 e1 1b fd af 5f 01 a4 0b }
+len=1   offset=d9,{ 0f }
+len=1   offset=e4,{ 08 }
+Analyzing rtl8822b_config.bin
+Signature:   0x8723ab55
+Data length: 8
+len=1   offset=d9,{ 0f }
+len=1   offset=e4,{ 08 }
+
+The first two are some UART based ones and the last one is USB based.
+
+So the 0x3c offset seems to be the BD_ADDR and 0x0c offset is the UART configuration. It would be good to know which settings the other ones control.
+
+Also the 16 octet UART config blob seems to be decoded like this:
+
+	uart_config {
+		le32 baudrate;
+		u8[8] reserved1;
+		u8 flowctl;
+		u8[3] reserved2;
+	}
+
+Actually hciattach_rtk just takes the baud rate and and hardware flow control bit out of this file. That is clearly two things that are better written in plain text in the DT file.
+
+Regards
+
+Marcel
