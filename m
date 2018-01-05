@@ -1,66 +1,60 @@
-From: Yixun Lan <yixun.lan@amlogic.com>
-Subject: Re: [PATCH 1/6] ARM64: dts: meson-axg: uart: drop legacy compatible
- name from EE UART
-Date: Fri, 5 Jan 2018 21:11:12 +0800
-Message-ID: <9463e936-922b-b9ed-69c2-06cee127b2c1@amlogic.com>
-References: <20180105095621.196472-1-yixun.lan@amlogic.com>
- <20180105095621.196472-2-yixun.lan@amlogic.com>
- <1515148228.5048.25.camel@baylibre.com>
+From: Chris Brandt <Chris.Brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH 3/3] ARM: dts: r7s72100: add USB device to device tree
+Date: Fri, 5 Jan 2018 13:24:56 +0000
+Message-ID: <SG2PR06MB116569E2C504789CBA4090918A1C0@SG2PR06MB1165.apcprd06.prod.outlook.com>
+References: <20180104200150.11352-1-chris.brandt@renesas.com>
+ <20180104200150.11352-4-chris.brandt@renesas.com>
+ <CAMuHMdWmoi3D9-XGXjefCsB2SgNjAH_G6uteSaTiWAN_krXhng@mail.gmail.com>
+ <SG2PR06MB11653DA8D7101215AECE3B698A1C0@SG2PR06MB1165.apcprd06.prod.outlook.com>
+ <CAMuHMdVq6FcCE0G5c3fm-GvAfORyNy9zwO5j-Ph-4oTN9+wsvQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1515148228.5048.25.camel@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org
-Cc: yixun.lan@amlogic.com, Neil Armstrong <narmstrong@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMuHMdVq6FcCE0G5c3fm-GvAfORyNy9zwO5j-Ph-4oTN9+wsvQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, USB list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/05/2018 06:30 PM, Jerome Brunet wrote:
-> On Fri, 2018-01-05 at 17:56 +0800, Yixun Lan wrote:
->> For the UART controller in EE domain, they require 'pclk' to work.
-> 
-> they ? "the driver" maybe ?
-> 
->> Current logic of the code will force to go for legacy clock probe
->> if it found current compatible string match to 'amlogic,meson-ao-uart'.
-> 
-> did you mean "amlogic,meson-uart" instead ?
-> 
-good catch! it's "amlogic,meson-uart"
-
-
-> Apart from that
-> 
-> Acked-by: Jerome Brunet <jbrunet@baylibre.com>
-> 
->>
->> Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
->> ---
->>  arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 4 ++--
->>  1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
->> index e2b8a9c8bf0b..1c6002b3fe34 100644
->> --- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
->> +++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
->> @@ -142,14 +142,14 @@
->>  			};
->>  
->>  			uart_A: serial@24000 {
->> -				compatible = "amlogic,meson-gx-uart", "amlogic,meson-uart";
->> +				compatible = "amlogic,meson-gx-uart";
->>  				reg = <0x0 0x24000 0x0 0x14>;
->>  				interrupts = <GIC_SPI 26 IRQ_TYPE_EDGE_RISING>;
->>  				status = "disabled";
->>  			};
->>  
->>  			uart_B: serial@23000 {
->> -				compatible = "amlogic,meson-gx-uart", "amlogic,meson-uart";
->> +				compatible = "amlogic,meson-gx-uart";
->>  				reg = <0x0 0x23000 0x0 0x14>;
->>  				interrupts = <GIC_SPI 75 IRQ_TYPE_EDGE_RISING>;
->>  				status = "disabled";
-> 
-> .
-> 
+SGkgR2VlcnQsDQoNCk9uIEZyaWRheSwgSmFudWFyeSAwNSwgMjAxOCwgR2VlcnQgVXl0dGVyaG9l
+dmVuIHdyb3RlOg0KPiA+IEJ1dCB0aGVuLi4udGhlIG51bWJlciBnb2VzIGJhY2sgdG8gJzczJyB3
+aGVuIHlvdSBsb29rIGF0IGl0IGluDQo+ID4gL3Byb2MvaW50ZXJydXB0cy4NCj4gDQo+IEhhdmlu
+ZyBhbiBpZGVudGljYWwgbnVtYmVyIGluIC9wcm9jL2ludGVycnVwdHMgaXMgYSBjb2luY2lkZW5j
+ZS4NCj4gVGhlc2UgbnVtYmVycyBhcmUgdmlydHVhbCwgYW5kIG1heSBjaGFuZ2UgZXZlbiBhY3Jv
+c3MgcmVib290cy4NCg0KSSdtIG5vdCB0YWxraW5nIGFib3V0IHRoZSBpZCBudW1iZXIgKHRoZSAx
+c3QgY29sdW1uKS4gSSdtIHRhbGtpbmcgDQphYm91dCB0aGUgNHRoIGNvbHVtbi4NCg0KJCB1bmFt
+ZSAtcnMNCkxpbnV4IDQuMTUuMC1yYzUtMDAwMDgtZzM2NmQyMmVhMDkxYg0KJCBjYXQgL3Byb2Mv
+aW50ZXJydXB0cw0KICAgICAgICAgICBDUFUwDQogMTc6ICAgICAgIDIzNjUgICAgIEdJQy0wIDEz
+NSBFZGdlICAgICAgb3N0bQ0KIDE4OiAgICAgICAgICAwICAgICBHSUMtMCAyMzAgTGV2ZWwgICAg
+IGU4MDA4MDAwLnNlcmlhbDpyeCBlcnINCiAxOTogICAgICAgICA0NSAgICAgR0lDLTAgMjMxIExl
+dmVsICAgICBlODAwODAwMC5zZXJpYWw6cnggZnVsbA0KIDIwOiAgICAgICAgMTk0ICAgICBHSUMt
+MCAyMzIgTGV2ZWwgICAgIGU4MDA4MDAwLnNlcmlhbDp0eCBlbXB0eQ0KIDIxOiAgICAgICAgICAw
+ICAgICBHSUMtMCAyMjkgTGV2ZWwgICAgIGU4MDA4MDAwLnNlcmlhbDpicmVhaw0KIDI0OiAgICAg
+ICAgICAwICAgICBHSUMtMCAxODkgTGV2ZWwgICAgIHJpaWMtdGVuZA0KIDI1OiAgICAgICAgICAw
+ICAgICBHSUMtMCAxOTAgRWRnZSAgICAgIHJpaWMtcmRyZg0KIDI2OiAgICAgICAgICAwICAgICBH
+SUMtMCAxOTEgRWRnZSAgICAgIHJpaWMtdGRyZQ0KIDI3OiAgICAgICAgICAwICAgICBHSUMtMCAx
+OTIgTGV2ZWwgICAgIHJpaWMtc3RvcA0KIDI5OiAgICAgICAgICAwICAgICBHSUMtMCAxOTQgTGV2
+ZWwgICAgIHJpaWMtbmFjaw0KIDMyOiAgICAgICAgMTYwICAgICBHSUMtMCAyMTMgTGV2ZWwgICAg
+IHJpaWMtdGVuZA0KIDMzOiAgICAgICAgMTYwICAgICBHSUMtMCAyMTQgRWRnZSAgICAgIHJpaWMt
+cmRyZg0KIDM0OiAgICAgICAgNDgwICAgICBHSUMtMCAyMTUgRWRnZSAgICAgIHJpaWMtdGRyZQ0K
+IDM1OiAgICAgICAgMjQwICAgICBHSUMtMCAyMTYgTGV2ZWwgICAgIHJpaWMtc3RvcA0KIDM3OiAg
+ICAgICAgICAwICAgICBHSUMtMCAyMTggTGV2ZWwgICAgIHJpaWMtbmFjaw0KIDQwOiAgICAgICAg
+ICAwICAgICBHSUMtMCAxMzkgTGV2ZWwgICAgIGZjZmYwMDAwLnRpbWVyDQogNDI6ICAgICAgICAg
+IDAgICAgIEdJQy0wIDMwNSBMZXZlbCAgICAgZTgwNGU4MDAuc2QNCiA0MzogICAgICAgICA1MiAg
+ICAgR0lDLTAgMzA2IExldmVsICAgICBlODA0ZTgwMC5zZA0KIDQ0OiAgICAgICAgICAwICAgICBH
+SUMtMCAzMDcgTGV2ZWwgICAgIGU4MDRlODAwLnNkDQogNDU6ICAgICAgICAgIDAgICAgIEdJQy0w
+IDMwOCBFZGdlICAgICAgc2gtcnRjIHBlcmlvZA0KIDQ2OiAgICAgICAgICAwICAgICBHSUMtMCAz
+MDkgRWRnZSAgICAgIHNoLXJ0YyBjYXJyeQ0KIDQ3OiAgICAgICAgICAwICAgICBHSUMtMCAzMTAg
+RWRnZSAgICAgIHNoLXJ0YyBhbGFybQ0KIDQ4OiAgICAgICAgICAwICAgICBHSUMtMCAgNzMgTGV2
+ZWwgICAgIGU4MDEwMDAwLnVzYmhzDQpFcnI6ICAgICAgICAgIDANCg0KDQo+ID4gQW55IG9waW5p
+b25zPz8/Pw0KPiANCj4gTm90IHJlYWxseSwgZXhjZXB0IHRoYXQgbm8gc2luZ2xlIC5kdHMoaSkg
+ZmlsZSBzZWVtcyB0byBoYXZlICItIDMyIi4NCg0KVGhlbiBJIGNhbiBiZSBhIHBpb25lZXIgb2Yg
+bmV3IHNvZnR3YXJlISEgIDspDQoNCg0KSSdsbCBqdXN0IGNoYW5nZSBpdCBiYWNrIHRvIGEgc2lu
+Z2xlIG51bWJlciB3aGVuIEkgdXBzdHJlYW0gY29kZSBqdXN0IHRvDQpiZSBjb25zaXN0ZW50Lg0K
+DQoNClRoYW5rcywNCkNocmlzDQoNCg==
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
