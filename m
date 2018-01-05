@@ -1,65 +1,73 @@
-From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Subject: [PATCH] of: unittest: refactor Makefile
-Date: Fri,  5 Jan 2018 20:55:30 +0900
-Message-ID: <1515153330-11810-1-git-send-email-yamada.masahiro@socionext.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Sean Young <sean@mess.org>
+Subject: Re: [PATCH v3 0/6] arm: sunxi: IR support for A83T
+Date: Fri, 5 Jan 2018 12:02:53 +0000
+Message-ID: <20180105120253.zvwaz25scuk76bnt@gofer.mess.org>
+References: <20171219080747.4507-1-embed3d@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20171219080747.4507-1-embed3d@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philipp Rossak <embed3d@gmail.com>
+Cc: mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@free-electrons.com, wens@csie.org, linux@armlinux.org.uk, p.zabel@pengutronix.de, andi.shyti@samsung.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-Some cleanups:
- - use obj-$(CONFIG_OF_OVERLAY) instead of ifdef ... endif
- - compute targets from obj-y
+On Tue, Dec 19, 2017 at 09:07:41AM +0100, Philipp Rossak wrote:
+> This patch series adds support for the sunxi A83T ir module and enhances 
+> the sunxi-ir driver. Right now the base clock frequency for the ir driver
+> is a hard coded define and is set to 8 MHz.
+> This works for the most common ir receivers. On the Sinovoip Bananapi M3 
+> the ir receiver needs, a 3 MHz base clock frequency to work without
+> problems with this driver.
+> 
+> This patch series adds support for an optinal property that makes it able
+> to override the default base clock frequency and enables the ir interface 
+> on the a83t and the Bananapi M3.
+> 
+> changes since v2:
+> * reorder cir pin (alphabetical)
+> * fix typo in documentation
+> 
+> changes since v1:
+> * fix typos, reword Documentation
+> * initialize 'b_clk_freq' to 'SUNXI_IR_BASE_CLK' & remove if statement
+> * change dev_info() to dev_dbg()
+> * change naming to cir* in dts/dtsi
+> * Added acked Ackedi-by to related patch
+> * use whole memory block instead of registers needed + fix for h3/h5
+> 
+> changes since rfc:
+> * The property is now optinal. If the property is not available in 
+>   the dtb the driver uses the default base clock frequency.
+> * the driver prints out the the selected base clock frequency.
+> * changed devicetree property from base-clk-frequency to clock-frequency
+> 
+> Regards,
+> Philipp
+> 
+> 
+> Philipp Rossak (6):
+>   media: rc: update sunxi-ir driver to get base clock frequency from
+>     devicetree
+>   media: dt: bindings: Update binding documentation for sunxi IR
+>     controller
+>   arm: dts: sun8i: a83t: Add the cir pin for the A83T
+>   arm: dts: sun8i: a83t: Add support for the cir interface
+>   arm: dts: sun8i: a83t: bananapi-m3: Enable IR controller
+>   arm: dts: sun8i: h3-h8: ir register size should be the whole memory
+>     block
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
----
+I can take this series (through rc-core, i.e. linux-media), but I need an
+maintainer Acked-by: for the sun[x8]i dts changes (all four patches).
 
- drivers/of/unittest-data/Makefile | 19 +++++--------------
- 1 file changed, 5 insertions(+), 14 deletions(-)
+>  Documentation/devicetree/bindings/media/sunxi-ir.txt |  3 +++
+>  arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts         |  7 +++++++
+>  arch/arm/boot/dts/sun8i-a83t.dtsi                    | 15 +++++++++++++++
+>  arch/arm/boot/dts/sunxi-h3-h5.dtsi                   |  2 +-
+>  drivers/media/rc/sunxi-cir.c                         | 19 +++++++++++--------
+>  5 files changed, 37 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/of/unittest-data/Makefile b/drivers/of/unittest-data/Makefile
-index 32389ac..df69797 100644
---- a/drivers/of/unittest-data/Makefile
-+++ b/drivers/of/unittest-data/Makefile
-@@ -2,19 +2,12 @@
- DTC_FLAGS_testcases := -Wno-interrupts_property
- obj-y += testcases.dtb.o
- 
--targets += testcases.dtb testcases.dtb.S
-+obj-$(CONFIG_OF_OVERLAY) += overlay.dtb.o \
-+			    overlay_bad_phandle.dtb.o \
-+			    overlay_bad_symbol.dtb.o \
-+			    overlay_base.dtb.o
- 
--ifdef CONFIG_OF_OVERLAY
--
--obj-y += overlay.dtb.o
--obj-y += overlay_bad_phandle.dtb.o
--obj-y += overlay_bad_symbol.dtb.o
--obj-y += overlay_base.dtb.o
--
--targets += overlay.dtb overlay.dtb.S
--targets += overlay_bad_phandle.dtb overlay_bad_phandle.dtb.S
--targets += overlay_bad_symbol.dtb overlay_bad_symbol.dtb.S
--targets += overlay_base.dtb overlay_base.dtb.S
-+targets += $(foreach suffix, dtb dtb.S, $(patsubst %.dtb.o,%.$(suffix),$(obj-y)))
- 
- # enable creation of __symbols__ node
- DTC_FLAGS_overlay := -@
-@@ -22,8 +15,6 @@ DTC_FLAGS_overlay_bad_phandle := -@
- DTC_FLAGS_overlay_bad_symbol := -@
- DTC_FLAGS_overlay_base := -@
- 
--endif
--
- .PRECIOUS: \
- 	$(obj)/%.dtb.S \
- 	$(obj)/%.dtb
--- 
-2.7.4
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks
+Sean
