@@ -1,77 +1,53 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH 2/7] cris: remove arch specific early DT functions
-Date: Fri,  5 Jan 2018 17:20:49 -0600
-Message-ID: <20180105232054.27394-3-robh@kernel.org>
+Subject: [PATCH 6/7] x86: remove arch specific early_init_dt_alloc_memory_arch
+Date: Fri,  5 Jan 2018 17:20:53 -0600
+Message-ID: <20180105232054.27394-7-robh@kernel.org>
 References: <20180105232054.27394-1-robh@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180105232054.27394-1-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Frank Rowand <frowand.list@gmail.com>, Mikael Starvik <starvik@axis.com>, Jesper Nilsson <jesper.nilsson@axis.com>, linux-cris-kernel@axis.com
+Cc: Frank Rowand <frowand.list@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Now that the DT core code handles bootmem arches, we can remove the cris
-specific early_init_dt_alloc_memory_arch function. As the default
-early_init_dt_add_memory_arch just does a WARN, we can just remove the
-entire devicetree.c file.
+Now that the DT core code handles bootmem arches, we can remove the x86
+specific early_init_dt_alloc_memory_arch function.
 
-Cc: Mikael Starvik <starvik@axis.com>
-Cc: Jesper Nilsson <jesper.nilsson@axis.com>
-Cc: linux-cris-kernel@axis.com
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: x86@kernel.org
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
 This is dependent on patch 1. Please ack and I'll take or apply after
 4.16-rc1.
 
- arch/cris/kernel/Makefile     | 19 -------------------
- arch/cris/kernel/devicetree.c | 15 ---------------
- 2 files changed, 34 deletions(-)
- delete mode 100644 arch/cris/kernel/devicetree.c
+ arch/x86/kernel/devicetree.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
-diff --git a/arch/cris/kernel/Makefile b/arch/cris/kernel/Makefile
-index af075a5fb9aa..e69de29bb2d1 100644
---- a/arch/cris/kernel/Makefile
-+++ b/arch/cris/kernel/Makefile
-@@ -1,19 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0
--# $Id: Makefile,v 1.12 2004/10/19 13:07:43 starvik Exp $
--#
--# Makefile for the linux kernel.
--#
--
--CPPFLAGS_vmlinux.lds := -DDRAM_VIRTUAL_BASE=0x$(CONFIG_ETRAX_DRAM_VIRTUAL_BASE)
--extra-y	:= vmlinux.lds
--
--obj-y   := process.o traps.o irq.o ptrace.o setup.o time.o sys_cris.o
--obj-y += devicetree.o
--obj-y += stacktrace.o
--
--obj-$(CONFIG_MODULES)    += crisksyms.o
--obj-$(CONFIG_MODULES)	 += module.o
--obj-$(CONFIG_SYSTEM_PROFILER)   += profile.o
--
--clean:
--
-diff --git a/arch/cris/kernel/devicetree.c b/arch/cris/kernel/devicetree.c
-deleted file mode 100644
-index 36e1c658229f..000000000000
---- a/arch/cris/kernel/devicetree.c
-+++ /dev/null
-@@ -1,15 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--#include <linux/init.h>
+diff --git a/arch/x86/kernel/devicetree.c b/arch/x86/kernel/devicetree.c
+index 76e07698e6d1..25de5f6ca997 100644
+--- a/arch/x86/kernel/devicetree.c
++++ b/arch/x86/kernel/devicetree.c
+@@ -2,7 +2,6 @@
+ /*
+  * Architecture specific OF callbacks.
+  */
 -#include <linux/bootmem.h>
--#include <linux/printk.h>
--
--void __init early_init_dt_add_memory_arch(u64 base, u64 size)
--{
--	pr_err("%s(%llx, %llx)\n",
--	       __func__, base, size);
--}
--
+ #include <linux/export.h>
+ #include <linux/io.h>
+ #include <linux/interrupt.h>
+@@ -39,11 +38,6 @@ void __init early_init_dt_add_memory_arch(u64 base, u64 size)
+ 	BUG();
+ }
+
 -void * __init early_init_dt_alloc_memory_arch(u64 size, u64 align)
 -{
--	return alloc_bootmem_align(size, align);
+-	return __alloc_bootmem(size, align, __pa(MAX_DMA_ADDRESS));
 -}
+-
+ void __init add_dtb(u64 data)
+ {
+ 	initial_dtb = data + offsetof(struct setup_data, data);
 --
 2.14.1
