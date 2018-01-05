@@ -1,7 +1,7 @@
 From: Hyun Kwon <hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 04/10] drm: xlnx: Add xlnx gem of Xilinx DRM KMS
-Date: Thu, 4 Jan 2018 18:05:53 -0800
-Message-ID: <1515117959-18068-5-git-send-email-hyun.kwon@xilinx.com>
+Subject: [PATCH 06/10] dt-bindings: display: xlnx: Add ZynqMP DP subsystem bindings
+Date: Thu, 4 Jan 2018 18:05:55 -0800
+Message-ID: <1515117959-18068-7-git-send-email-hyun.kwon@xilinx.com>
 References: <1515117959-18068-1-git-send-email-hyun.kwon@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,85 +12,114 @@ To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79u
 Cc: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Hyun Kwon <hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Implement a simple wrapper around drm_gem_cma_dumb_create_internal()
-for alignment.
+This add a dt binding for ZynqMP DP subsystem.
 
 Signed-off-by: Hyun Kwon <hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 ---
- drivers/gpu/drm/xlnx/xlnx_gem.c | 38 ++++++++++++++++++++++++++++++++++++++
- drivers/gpu/drm/xlnx/xlnx_gem.h | 18 ++++++++++++++++++
- 2 files changed, 56 insertions(+)
- create mode 100644 drivers/gpu/drm/xlnx/xlnx_gem.c
- create mode 100644 drivers/gpu/drm/xlnx/xlnx_gem.h
+ .../bindings/display/xlnx/xlnx,zynqmp-dpsub.txt    | 94 ++++++++++++++++++++++
+ 1 file changed, 94 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/xlnx/xlnx,zynqmp-dpsub.txt
 
-diff --git a/drivers/gpu/drm/xlnx/xlnx_gem.c b/drivers/gpu/drm/xlnx/xlnx_gem.c
+diff --git a/Documentation/devicetree/bindings/display/xlnx/xlnx,zynqmp-dpsub.txt b/Documentation/devicetree/bindings/display/xlnx/xlnx,zynqmp-dpsub.txt
 new file mode 100644
-index 0000000..af1abdc
+index 0000000..4e478ca
 --- /dev/null
-+++ b/drivers/gpu/drm/xlnx/xlnx_gem.c
-@@ -0,0 +1,38 @@
-+/*
-+ * Xilinx DRM KMS GEM helper
-+ *
-+ *  Copyright (C) 2015 - 2018 Xilinx, Inc.
-+ *
-+ *  Author: Hyun Woo Kwon <hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-+ *
-+ * SPDX-License-Identifier: GPL-2.0
-+ */
++++ b/Documentation/devicetree/bindings/display/xlnx/xlnx,zynqmp-dpsub.txt
+@@ -0,0 +1,94 @@
++Xilinx ZynqMP DisplayPort subsystem
++-----------------------------------
 +
-+#include <drm/drmP.h>
-+#include <drm/drm_gem_cma_helper.h>
++Required properties:
 +
-+#include "xlnx_gem.h"
++- compatible: Must be "xlnx,zynqmp-dpsub-1.7".
 +
-+/*
-+ * xlnx_gem_cma_dumb_create - (struct drm_driver)->dumb_create callback
-+ * @file_priv: drm_file object
-+ * @drm: DRM object
-+ * @args: info for dumb scanout buffer creation
-+ *
-+ * This function is for dumb_create callback of drm_driver struct. Simply
-+ * it wraps around drm_gem_cma_dumb_create() and sets the pitch value
-+ * by retrieving the value from the device.
-+ *
-+ * Return: The return value from drm_gem_cma_dumb_create()
-+ */
-+int xlnx_gem_cma_dumb_create(struct drm_file *file_priv, struct drm_device *drm,
-+			     struct drm_mode_create_dumb *args)
-+{
-+	int pitch = DIV_ROUND_UP(args->width * args->bpp, 8);
-+	unsigned int align = xlnx_get_align(drm);
++- reg: Physical base address and length of the registers set for the device.
++- reg-names: Must be "dp", "blend", "av_buf", and "aud" to map logical register
++  partitions.
 +
-+	if (!args->pitch || !IS_ALIGNED(args->pitch, align))
-+		args->pitch = ALIGN(pitch, align);
++- interrupts: Interrupt number.
++- interrupts-parent: phandle for interrupt controller.
 +
-+	return drm_gem_cma_dumb_create_internal(file_priv, drm, args);
-+}
-diff --git a/drivers/gpu/drm/xlnx/xlnx_gem.h b/drivers/gpu/drm/xlnx/xlnx_gem.h
-new file mode 100644
-index 0000000..bed8ff9
---- /dev/null
-+++ b/drivers/gpu/drm/xlnx/xlnx_gem.h
-@@ -0,0 +1,18 @@
-+/*
-+ * Xilinx DRM KMS GEM helper header
-+ *
-+ *  Copyright (C) 2015 - 2018 Xilinx, Inc.
-+ *
-+ *  Author: Hyun Woo Kwon <hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-+ *
-+ * SPDX-License-Identifier: GPL-2.0
-+ */
++- clocks: phandles for axi, audio, non-live video, and live video clocks.
++  axi clock is required. Audio clock is optional. If not present, audio will
++  be disabled. One of non-live or live video clock should be present.
++- clock-names: The identification strings are required. "aclk" for axi clock.
++  "dp_aud_clk" for audio clock. "dp_vtc_pixel_clk_in" for non-live video clock.
++  "dp_live_video_in_clk" for live video clock (clock from programmable logic).
 +
-+#ifndef _XLNX_GEM_H_
-+#define _XLNX_GEM_H_
++- phys: phandles for phy specifier.
++- phy-names: The identifier strings. "dp-phy" followed by index.
 +
-+int xlnx_gem_cma_dumb_create(struct drm_file *file_priv,
-+			     struct drm_device *drm,
-+			     struct drm_mode_create_dumb *args);
++- power-domains: phandle for the corresponding power domain
 +
-+#endif /* _XLNX_GEM_H_ */
++- ports: crtc and encoder ports are required using DT bindings defined in
++  Documentation/devicetree/bindings/graph.txt.
++
++- vid-layer, gfx-layer: Required to represent available layers
++
++Required layer properties
++
++- dmas: phandles for DMA channels as defined in
++  Documentation/devicetree/bindings/dma/dma.txt.
++- dma-names: The identifier strings are required. "graphics0" for graphics
++  layer. "video" followed by index for video layer
++
++Optional child node
++
++- The driver populates any child device node in this node. This can be used,
++  for example, to populate the sound device from the DisplayPort subsystem
++  driver.
++
++Example:
++	zynqmp_dpsub: zynqmp_dpsub@fd4a0000 {
++		compatible = "xlnx,zynqmp-dpsub-1.7";
++		reg = <0x0 0xfd4a0000 0x0 0x1000>,
++		      <0x0 0xfd4aa000 0x0 0x1000>,
++		      <0x0 0xfd4ab000 0x0 0x1000>,
++		      <0x0 0xfd4ac000 0x0 0x1000>;
++		reg-names = "dp", "blend", "av_buf", "aud";
++		interrupts = <0 119 4>;
++		interrupt-parent = <&gic>;
++
++		clock-names = "dp_apb_clk", "dp_aud_clk", "dp_live_video_in_clk";
++		clocks = <&dp_aclk>, <&clkc 17>, <&si570_1>;
++
++		phys = <&lane1 PHY_TYPE_DP 0 1 27000000>,
++		       <&lane0 PHY_TYPE_DP 1 1 27000000>;
++		phy-names = "dp-phy0", "dp-phy1";
++
++		power-domains = <&pd_dp>;
++
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		vid-layer {
++			dma-names = "vid0", "vid1", "vid2";
++			dmas = <&xlnx_dpdma 0>,
++			       <&xlnx_dpdma 1>,
++			       <&xlnx_dpdma 2>;
++		};
++
++		gfx-layer {
++			dma-names = "gfx0";
++			dmas = <&xlnx_dpdma 3>;
++		};
++
++		crtc_port: port@0 {
++			reg = <0>;
++			crtc: endpoint {
++				remote-endpoint = <&encoder>;
++			};
++		};
++		port@1 {
++			reg = <1>;
++			encoder: endpoint {
++				remote-endpoint = <&crtc>;
++			};
++		};
++	};
++};
++
 -- 
 2.7.4
 
