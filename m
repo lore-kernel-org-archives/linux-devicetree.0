@@ -1,70 +1,48 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH V2 1/5] bindings: regulator: added support for suspend
- states
-Date: Fri, 5 Jan 2018 19:18:37 +0000
-Message-ID: <20180105191837.GI9076@sirena.org.uk>
-References: <1515050568-23876-1-git-send-email-zhang.chunyan@linaro.org>
- <1515050568-23876-2-git-send-email-zhang.chunyan@linaro.org>
- <20180105185328.zmt33idv2cqled62@rob-hp-laptop>
+From: Thinh Nguyen <Thinh.Nguyen-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 00/15] usb: dwc3: Add new updates for DWC_usb31
+Date: Fri, 5 Jan 2018 12:13:34 -0800
+Message-ID: <cover.1515182391.git.thinhn@synopsys.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="TA4f0niHM6tHt3xR"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180105185328.zmt33idv2cqled62@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Chunyan Zhang <zhang.chunyan@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, Chunyan Zhang <zhang.lyra@gmail.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thinh Nguyen <Thinh.Nguyen-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Vamsi Krishna Samavedam <vskrishn-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "Gustavo A. R. Silva" <garsilva-L1vi/lXTdts+Va1GwOuvDg@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>
+Cc: John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+This patch series adds new updates and some fixes for DWC_usb31.
 
---TA4f0niHM6tHt3xR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jan 05, 2018 at 12:53:28PM -0600, Rob Herring wrote:
-> On Thu, Jan 04, 2018 at 03:22:44PM +0800, Chunyan Zhang wrote:
+Thinh Nguyen (15):
+  usb: dwc3: Device SoftReset PHY synchonization delay
+  usb: core: urb: Check SSP isoc ep comp descriptor
+  usb: dwc3: Update DWC_usb31 GTXFIFOSIZ reg fields
+  usb: dwc3: Check IP revision for GTXFIFOSIZ
+  usb: dwc3: Add DWC_usb31 GRXTHRCFG bit fields
+  usb: dwc3: gadget: Check IP revision for GRXTHRCFG
+  usb: dwc3: Add DWC_usb31 GTXTHRCFG reg fields
+  usb: dwc3: Make RX/TX threshold configurable
+  usb: dwc3: Check for ESS TX/RX threshold config
+  usb: dwc3: gadget: Set maxpacket size for ep0 IN
+  usb: dwc3: ep0: Reset TRB counter for ep0 IN
+  usb: dwc3: Dump LSP and BMU debug info
+  usb: dwc3: Track DWC_usb31 VERSIONTYPE
+  usb: dwc3: Add disabling of start_transfer failure quirk
+  usb: dwc3: Add workaround for isoc start transfer failure
 
-> > +	- regulator-suspend-microvolt: the default voltage which regulator
-> > +	  would be set in suspend. The voltage for suspend also can be
-> > +	  adjusted among {regulator-suspend-min-microvolt,
-> > +	  regulator-suspend-max-microvolt} by calling
-> > +	  regulator_set_suspend_voltage(). This property is not deprecated,
+ Documentation/devicetree/bindings/usb/dwc3.txt |   9 ++
+ drivers/usb/core/urb.c                         |   8 +
+ drivers/usb/dwc3/core.c                        |  74 ++++++++-
+ drivers/usb/dwc3/core.h                        |  57 +++++++
+ drivers/usb/dwc3/debugfs.c                     |   5 +
+ drivers/usb/dwc3/ep0.c                         |   7 +-
+ drivers/usb/dwc3/gadget.c                      | 202 ++++++++++++++++++++++++-
+ 7 files changed, 353 insertions(+), 9 deletions(-)
 
-> You mean "is deprecated", right?
+-- 
+2.11.0
 
-I suspect "is now" but yeah.
-
-> > +	- regulator-changeable-in-suspend: whether the default voltage and
-> > +	  the regulator on/off in suspend can be changed in runtime.
-
-> Is this not implied by having the constraints? Or the driver should know=
-=20
-> this. The simply means you have some 2nd bank of registers for settings=
-=20
-> while in suspend mode, right?
-
-No, it means that the software has permission to use those changes to
-those registers - we only want to be changing things if the user has
-permission to change them since some systems will have specific
-constraints, we don't know if it's safe without being explicitly told.
-You're right that we could infer this from a range being provided
-though, let's do that.
-
---TA4f0niHM6tHt3xR
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlpPz4wACgkQJNaLcl1U
-h9Bw0Af8DE4uBWuWCGnJ/xfe248ZqZqGZdbawvrIN5wYkyG4cbJWms96q1dLdCF4
-cW7eRhoKxVjbydF6uGxQ1ih5dlw2+wOxMP3OqeCfjY+y6uhNoNMu35M5ZCl+saFo
-bLtlsvV2ZkF7HzPTMuuGyE8xbuJiqT5t852dd55juBh3xV3GuHKE8Rzm2ft82Xkk
-oqTMV8ctynFIEgydpXAJskduEXTxvjkEF1EOO1QD3b9TnIzNl3L/+p7V1DxxbFfH
-qbxUjMe0ZYtreiCm+FUBZzvSBStR76PerqF4nHs86gxoBSvEJOGl0T/PiI9h2+zv
-5/Av6JXaxgNso8TA6EIsblfQURFpWA==
-=ScHH
------END PGP SIGNATURE-----
-
---TA4f0niHM6tHt3xR--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
