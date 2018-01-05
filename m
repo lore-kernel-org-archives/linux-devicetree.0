@@ -1,73 +1,88 @@
-From: Sean Young <sean@mess.org>
-Subject: Re: [PATCH v3 0/6] arm: sunxi: IR support for A83T
-Date: Fri, 5 Jan 2018 12:02:53 +0000
-Message-ID: <20180105120253.zvwaz25scuk76bnt@gofer.mess.org>
-References: <20171219080747.4507-1-embed3d@gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH] ASoC: codecs: dmic: Use channel map for
+ configs with a single mic
+Date: Fri, 5 Jan 2018 12:04:55 +0000
+Message-ID: <20180105120455.GA9076@sirena.org.uk>
+References: <20180104194848.198941-1-mka@chromium.org>
+ <20180104195438.GA200397@google.com>
+ <295ce358-c00e-74ce-50c1-1df32c2c6cf7@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171219080747.4507-1-embed3d@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Rossak <embed3d@gmail.com>
-Cc: mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@free-electrons.com, wens@csie.org, linux@armlinux.org.uk, p.zabel@pengutronix.de, andi.shyti@samsung.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+Content-Type: multipart/mixed; boundary="===============4680387216041692221=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <295ce358-c00e-74ce-50c1-1df32c2c6cf7@st.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, huang lin <hl@rock-chips.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Brian Norris <briannorris@chromium.org>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Matthias Kaehlcke <mka@chromium.org>, Dylan Reid <dgreid@chromium.org>, Bhumika Goyal <bhumirks@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 19, 2017 at 09:07:41AM +0100, Philipp Rossak wrote:
-> This patch series adds support for the sunxi A83T ir module and enhances 
-> the sunxi-ir driver. Right now the base clock frequency for the ir driver
-> is a hard coded define and is set to 8 MHz.
-> This works for the most common ir receivers. On the Sinovoip Bananapi M3 
-> the ir receiver needs, a 3 MHz base clock frequency to work without
-> problems with this driver.
-> 
-> This patch series adds support for an optinal property that makes it able
-> to override the default base clock frequency and enables the ir interface 
-> on the a83t and the Bananapi M3.
-> 
-> changes since v2:
-> * reorder cir pin (alphabetical)
-> * fix typo in documentation
-> 
-> changes since v1:
-> * fix typos, reword Documentation
-> * initialize 'b_clk_freq' to 'SUNXI_IR_BASE_CLK' & remove if statement
-> * change dev_info() to dev_dbg()
-> * change naming to cir* in dts/dtsi
-> * Added acked Ackedi-by to related patch
-> * use whole memory block instead of registers needed + fix for h3/h5
-> 
-> changes since rfc:
-> * The property is now optinal. If the property is not available in 
->   the dtb the driver uses the default base clock frequency.
-> * the driver prints out the the selected base clock frequency.
-> * changed devicetree property from base-clk-frequency to clock-frequency
-> 
-> Regards,
-> Philipp
-> 
-> 
-> Philipp Rossak (6):
->   media: rc: update sunxi-ir driver to get base clock frequency from
->     devicetree
->   media: dt: bindings: Update binding documentation for sunxi IR
->     controller
->   arm: dts: sun8i: a83t: Add the cir pin for the A83T
->   arm: dts: sun8i: a83t: Add support for the cir interface
->   arm: dts: sun8i: a83t: bananapi-m3: Enable IR controller
->   arm: dts: sun8i: h3-h8: ir register size should be the whole memory
->     block
 
-I can take this series (through rc-core, i.e. linux-media), but I need an
-maintainer Acked-by: for the sun[x8]i dts changes (all four patches).
-
->  Documentation/devicetree/bindings/media/sunxi-ir.txt |  3 +++
->  arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts         |  7 +++++++
->  arch/arm/boot/dts/sun8i-a83t.dtsi                    | 15 +++++++++++++++
->  arch/arm/boot/dts/sunxi-h3-h5.dtsi                   |  2 +-
->  drivers/media/rc/sunxi-cir.c                         | 19 +++++++++++--------
->  5 files changed, 37 insertions(+), 9 deletions(-)
+--===============4680387216041692221==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="HcAYCG3uE/tztfnV"
+Content-Disposition: inline
 
 
-Thanks
-Sean
+--HcAYCG3uE/tztfnV
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, Jan 05, 2018 at 11:45:43AM +0100, Arnaud Pouliquen wrote:
+
+> >> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 num-channels =3D <1>;
+
+> In your implementation seems not linked to hardware but software...
+
+> DMIC driver description specifies the channels_max to 8 channels.
+> I suppose that it is used for DMIC codecs that integrate filters and are
+> connected to CPU DAI with I2S/PCM links. But it can be also used for
+> DMIC connected to CPU DAI with a SPI link (in this case decimation
+> filter in on Soc side).
+
+The intention with the DMIC CODEC is that it's used when the CPU
+directly has PDM inputs and the DMICs are just directly wired to it
+(stereo is obviously the norm here but some SoCs may bunch things up
+further for use with mic arrays).
+
+> If we continue to support both use cases, specify the number of channels
+> seems reasonable but this should be use to change the max channel
+> constraint, not to declare a control.
+
+Yes, that would seem the most obvious thing - it's how we handle things
+like CPU DAIs that support very high channel counts when connected to
+stereo CODECs for example.  It's not obvious why we'd use a channel map
+here instead.
+
+--HcAYCG3uE/tztfnV
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlpPaeYACgkQJNaLcl1U
+h9CoNwf+M4j9vaeXo+/z58OdIMwap1oV2G2/VqOsynaNnIt5CMYO4MCMeAkkwNfz
+OuWIrXi8iSOuKSjlqx/gf7YYnxXPR2ndxehOe7NS6a/Bjzmwis5eA5dBCDrF1S6p
+cQ8QTdQaIgq1KGAG6u276sb8TKDcL1MOkYYTTUHpky94lGbCBvJP4nxrMnMSG9LI
+q6XkdWVjKzCbuXwk05fXFB1W0Gwyz1VQRSmFYzC6CTDc3bgqT76TgrgtCBkoyKFx
+q7hFHzEE29Y53OFiiOFEE9DeY3ewIg4L4HVXOX4XotdAUCkNIe4srX/udEG+gPkl
+zJJvCoHag89oKEvTqoOUl27UA4VqRA==
+=MDpT
+-----END PGP SIGNATURE-----
+
+--HcAYCG3uE/tztfnV--
+
+--===============4680387216041692221==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============4680387216041692221==--
