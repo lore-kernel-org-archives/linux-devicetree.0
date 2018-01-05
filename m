@@ -1,28 +1,147 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [v2 PATCH 3/6] dt-bindings: usb: mtu3: update USB wakeup
- properties
-Date: Fri, 5 Jan 2018 11:21:00 -0600
-Message-ID: <20180105172100.gqa5uw7sdnhvukzn@rob-hp-laptop>
-References: <41c6b0f2e959c07eff261060e57fd180a750071a.1514967463.git.chunfeng.yun@mediatek.com>
- <9ded06bb1264f2c05ba7f52ecf1619d5e595d80f.1514967463.git.chunfeng.yun@mediatek.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH v5 1/2] PCI: mediatek: Clear IRQ status after IRQ
+ dispatched to avoid reentry
+Date: Fri, 5 Jan 2018 17:42:27 +0000
+Message-ID: <1de755e8-6654-b789-159f-248231fab7b0@arm.com>
+References: <1514336394-17747-1-git-send-email-honghui.zhang@mediatek.com>
+ <1514336394-17747-2-git-send-email-honghui.zhang@mediatek.com>
+ <20180104184040.GE12239@red-moon>
+ <88c84a3e-17ea-08f2-e5fc-4799b41de267@arm.com>
+ <1515153107.25872.57.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <9ded06bb1264f2c05ba7f52ecf1619d5e595d80f.1514967463.git.chunfeng.yun@mediatek.com>
+In-Reply-To: <1515153107.25872.57.camel@mhfsdcap03>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc: Mathias Nyman <mathias.nyman@intel.com>, Felipe Balbi <felipe.balbi@linux.intel.com>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>, Catalin Marinas <catalin.marinas@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Honghui Zhang <honghui.zhang@mediatek.com>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, bhelgaas@google.com, matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, ryder.lee@mediatek.com, hongkun.cao@mediatek.com, youlin.pei@mediatek.com, yong.wu@mediatek.com, yt.shen@mediatek.com, sean.wang@mediatek.com, xinping.qian@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 03, 2018 at 04:53:19PM +0800, Chunfeng Yun wrote:
-> Add two arguments in "mediatek,syscon-wakeup" to support multi
-> wakeup glue layer between SSUSB and SPM, and use standard property
-> "wakeup-source" to replace the private "mediatek,enable-wakeup"
+On 05/01/18 11:51, Honghui Zhang wrote:
+> On Thu, 2018-01-04 at 19:04 +0000, Marc Zyngier wrote:
+>> On 04/01/18 18:40, Lorenzo Pieralisi wrote:
+>>> [+Marc]
+>>>
+>>> On Wed, Dec 27, 2017 at 08:59:53AM +0800, honghui.zhang@mediatek.com wrote:
+>>>> From: Honghui Zhang <honghui.zhang@mediatek.com>
+>>>>
+>>>> There maybe a same IRQ reentry scenario after IRQ received in current
+>>>> IRQ handle flow:
+>>>> 	EP device		PCIe host driver	EP driver
+>>>> 1. issue an IRQ
+>>>> 			2. received IRQ
+>>>> 			3. clear IRQ status
+>>>> 			4. dispatch IRQ
+>>>> 						5. clear IRQ source
+>>>> The IRQ status was not successfully cleared at step 2 since the IRQ
+>>>> source was not cleared yet. So the PCIe host driver may receive the
+>>>> same IRQ after step 5. Then there's an IRQ reentry occurred.
+>>>> Even worse, if the reentry IRQ was not an IRQ that EP driver expected,
+>>>> it may not handle the IRQ. Then we may run into the infinite loop from
+>>>> step 2 to step 4.
+>>>> Clear the IRQ status after IRQ have been dispatched to avoid the IRQ
+>>>> reentry.
+>>>> This patch also fix another INTx IRQ issue by initialize the iterate
+>>>> before the loop. If an INTx IRQ re-occurred while we are dispatching
+>>>> the INTx IRQ, then iterate may start from PCI_NUM_INTX + INTX_SHIFT
+>>>> instead of INTX_SHIFT for the second time entering the
+>>>> for_each_set_bit_from() loop.
+>>>
+>>> This looks like two different issues that should be fixed with two
+>>> patches.
 > 
-> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> ---
->  Documentation/devicetree/bindings/usb/mediatek,mtu3.txt | 15 ++++++++++-----
->  1 file changed, 10 insertions(+), 5 deletions(-)
+> Ok, I split this into two patches and figure out a more reasonable
+> approach by using irq_chip solution.
+> 
+>>>
+>>>> Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
+>>>> Acked-by: Ryder Lee <ryder.lee@mediatek.com>
+>>>> ---
+>>>>  drivers/pci/host/pcie-mediatek.c | 11 ++++++-----
+>>>>  1 file changed, 6 insertions(+), 5 deletions(-)
+>>>
+>>> For the sake of uniformity, I first want to understand why this
+>>> driver does not call:
+>>>
+>>> chained_irq_enter/exit()
+>>>
+>>> in the primary handler (mtk_pcie_intr_handler()).
+>>>
+>>> With the GIC as a primary interrupt controller we have not
+>>> even figured out how current code can actually work without
+>>> calling the chained_* API.
+>>>
+>>> I want to come up with a consistent handling of IRQ domains for
+>>> all host bridges and any discrepancy should be explained.
+>>
+>> That's because this driver is a huge hack, see below:
+>>
+>>>
+>>>> diff --git a/drivers/pci/host/pcie-mediatek.c b/drivers/pci/host/pcie-mediatek.c
+>>>> index db93efd..fc29a9a 100644
+>>>> --- a/drivers/pci/host/pcie-mediatek.c
+>>>> +++ b/drivers/pci/host/pcie-mediatek.c
+>>>> @@ -601,15 +601,16 @@ static irqreturn_t mtk_pcie_intr_handler(int irq, void *data)
+>>
+>> This function is not a chained irqchip, but an interrupt handler...
+>>
+>>>>  	struct mtk_pcie_port *port = (struct mtk_pcie_port *)data;
+>>>>  	unsigned long status;
+>>>>  	u32 virq;
+>>>> -	u32 bit = INTX_SHIFT;
+>>>> +	u32 bit;
+>>>>  
+>>>>  	while ((status = readl(port->base + PCIE_INT_STATUS)) & INTX_MASK) {
+>>>> +		bit = INTX_SHIFT;
+>>>>  		for_each_set_bit_from(bit, &status, PCI_NUM_INTX + INTX_SHIFT) {
+>>>> -			/* Clear the INTx */
+>>>> -			writel(1 << bit, port->base + PCIE_INT_STATUS);
+>>>>  			virq = irq_find_mapping(port->irq_domain,
+>>>>  						bit - INTX_SHIFT);
+>>>>  			generic_handle_irq(virq);
+>>
+>> and nonetheless, this calls into generic_handle_irq(). That's a complete
+>> violation of the interrupt layering. Maybe there is a good reason for
+>> it, but I'd like to know which one.
+>>
+>> Which means that all of the ack/mask has to be done outside of the
+>> irqchip framework too... Disgusting.
+>>
+>>>> +			/* Clear the INTx */
+>>>> +			writel(1 << bit, port->base + PCIE_INT_STATUS);
+>>>
+>>> I think that these masking/acking should actually be done through
+>>> the irq_chip hooks (see for instance pci-ftpci100.c) - that would
+>>> make this kind of bugs much easier to prevent (because the IRQ
+>>> layer does the sequencing for you).
+>>
+>> +1.
+>>
+> 
+> Thanks for your advice, I need to do some homework to have a better
+> understanding of the irq_chip approach.
+> 
+>>> Marc (CC'ed) has a more comprehensive view on this than me - I would
+>>> like to get to a point where all host bridges uses a consistent
+>>> approach for chained IRQ handling and I hope this bug fix can be
+>>> a starting point.
+>>
+>> +1 again. We definitely need to come up with some form of common
+>> approach for all these host drivers, and maybe turn that into a library...
+>>
+> 
+> Well, this is beyond my knowledge now, I guess I can figure out how to
+> using irq_chip for the first step, then I may following this "common
+> approach" after we have a solution for that?
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+We can help you with that at a later time indeed. the urgent thing is to
+fix this driver so that it does the right thing, and we can then look at
+using a common approach for a number of them.
+
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
