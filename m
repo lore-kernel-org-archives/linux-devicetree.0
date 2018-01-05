@@ -1,31 +1,93 @@
-From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v4 1/2] ARM64: dts: meson-axg: add ethernet mac controller
-Date: Fri, 05 Jan 2018 15:26:04 -0800
-Message-ID: <7hmv1r28hf.fsf@baylibre.com>
-References: <20171216035527.96952-1-yixun.lan@amlogic.com>
-        <20171216035527.96952-2-yixun.lan@amlogic.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 5/6] clocksource: Add a new timer-ingenic driver
+Date: Fri, 5 Jan 2018 17:27:56 -0600
+Message-ID: <CAL_Jsq+DQnfX29AOJWMtH9ZB7=neOVwiyZggEuwOmazzVQ6MVg@mail.gmail.com>
+References: <20171229125942.27305-2-paul@crapouillou.net> <20180101143344.2099-1-paul@crapouillou.net>
+ <20180101143344.2099-5-paul@crapouillou.net> <20180103210840.hsh4kghuxz7btu5f@rob-hp-laptop>
+ <1515016576.1642.2@smtp.crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171216035527.96952-2-yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org> (Yixun Lan's
-        message of "Sat, 16 Dec 2017 11:55:26 +0800")
+In-Reply-To: <1515016576.1642.2-nb6JAIIttxhEPksTRSfcJOTW4wlIGRCZ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
+Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org> writes:
-
-> Add DT info for the stmmac ethernet MAC which found in
-> the Amlogic's Meson-AXG SoC, also describe the ethernet
-> pinctrl & clock information here.
+On Wed, Jan 3, 2018 at 3:56 PM, Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org> wrote:
+> Hi,
 >
-> Reviewed-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> Signed-off-by: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
+> Le mer. 3 janv. 2018 à 22:08, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> a écrit :
+>>
+>> On Mon, Jan 01, 2018 at 03:33:43PM +0100, Paul Cercueil wrote:
+>>>
+>>>  This driver will use the TCU (Timer Counter Unit) present on the Ingenic
+>>>  JZ47xx SoCs to provide the kernel with a clocksource and timers.
+>>>
+>>>  Signed-off-by: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
+>>>  ---
+>>>   .../devicetree/bindings/timer/ingenic,tcu.txt      |  35 +++
+>>
+>>
+>> Separate patch please.
+>
+>
+> OK.
+>
+>
+>>>   drivers/clocksource/Kconfig                        |   8 +
+>>>   drivers/clocksource/Makefile                       |   1 +
+>>>   drivers/clocksource/timer-ingenic.c                | 256
+>>> +++++++++++++++++++++
+>>>   4 files changed, 300 insertions(+)
+>>>   create mode 100644
+>>> Documentation/devicetree/bindings/timer/ingenic,tcu.txt
+>>>   create mode 100644 drivers/clocksource/timer-ingenic.c
+>>>
+>>>   v2: Use SPDX identifier for the license
+>>>
+>>>  diff --git a/Documentation/devicetree/bindings/timer/ingenic,tcu.txt
+>>> b/Documentation/devicetree/bindings/timer/ingenic,tcu.txt
+>>>  new file mode 100644
+>>>  index 000000000000..e4944972ea53
+>>>  --- /dev/null
+>>>  +++ b/Documentation/devicetree/bindings/timer/ingenic,tcu.txt
+>>>  @@ -0,0 +1,35 @@
+>>>  +Ingenic JZ47xx SoCs Timer/Counter Unit driver
+>>>  +---------------------------------------------
+>>>  +
+>>>  +Required properties:
+>>>  +
+>>>  +- compatible : should be "ingenic,<socname>-tcu". Valid strings are:
+>>>  +  * ingenic,jz4740-tcu
+>>>  +  * ingenic,jz4770-tcu
+>>>  +  * ingenic,jz4780-tcu
+>>>  +- interrupt-parent : phandle of the TCU interrupt controller.
+>>>  +- interrupts : Specifies the interrupts the controller is connected to.
+>>>  +- clocks : List of phandle & clock specifiers for the TCU clocks.
+>>>  +- clock-names : List of name strings for the TCU clocks.
+>>>  +- ingenic,channels: a list of TCU channels to be used as timers.
+>>
+>>
+>> Why is this needed? This looks like you are trying to assign certain
+>> timers to clocksource and clockevent. A common problem, but one that
+>> should be decided by describing h/w features. There must be some
+>> property present or missing to make you decide to use a given channel or
+>> not.
+>
+>
+> Well, it's not easy; some TCU channels will be used as PWM, and there's no
+> way
+> to know that when the clocksource driver probes. And which ones are PWM /
+> which
+> ones are not, is board-specific. If you have a better solution though, I
+> take it.
 
-Applied to v4.16/dt64,
+Aren't the PWMs connected to something? Describe those in DT and then
+you can find the free ones.
 
-Kevin
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
