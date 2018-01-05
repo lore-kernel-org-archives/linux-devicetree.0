@@ -1,79 +1,110 @@
-From: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
-Subject: Re: [RFC PATCH v11 4/5] PCI / PM: Add support for the PCIe WAKE# signal for OF
-Date: Fri, 05 Jan 2018 02:13:33 +0100
-Message-ID: <2806186.IK6EZBC0cX@aspire.rjw.lan>
-References: <20171225114742.18920-1-jeffy.chen@rock-chips.com> <5491520.JsEYlZiECc@aspire.rjw.lan> <20180105004130.GA151625@google.com>
+From: "Yang, Wenyou" <Wenyou.Yang@Microchip.com>
+Subject: Re: [PATCH v6 3/6] can: m_can: Add PM Runtime
+Date: Fri, 5 Jan 2018 09:23:32 +0800
+Message-ID: <ce18f01b-e55a-9cb0-0b02-ab718be6a6fc@Microchip.com>
+References: <1513949488-13026-1-git-send-email-faiz_abbas@ti.com>
+ <1513949488-13026-4-git-send-email-faiz_abbas@ti.com>
+ <aea8638a-c847-b55e-ff2d-37999980ba7b@pengutronix.de>
+ <1308ee81-a1e9-ac5a-2d97-334fa825ef8d@ti.com>
+ <7d857263-14a7-6001-8f13-42d80f757573@pengutronix.de>
+ <a45431f2-d262-39a1-9152-a2ff75560d21@ti.com>
+ <cb306ae5-87c5-f6ef-0c40-3b47e208d256@pengutronix.de>
+ <6bdaab16-cb16-e039-473c-52dd295bd4ba@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180105004130.GA151625-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: JeffyChen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-can-owner@vger.kernel.org>
+In-Reply-To: <6bdaab16-cb16-e039-473c-52dd295bd4ba@ti.com>
+Content-Language: en-US
+Sender: linux-can-owner@vger.kernel.org
+To: Faiz Abbas <faiz_abbas@ti.com>, Marc Kleine-Budde <mkl@pengutronix.de>, wg@grandegger.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-can@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, nsekhar@ti.com, fcooper@ti.com, robh@kernel.org, sergei.shtylyov@cogentembedded.com
 List-Id: devicetree@vger.kernel.org
 
-On Friday, January 5, 2018 1:41:31 AM CET Brian Norris wrote:
+
+
+On 2018/1/4 23:17, Faiz Abbas wrote:
 > Hi,
-> 
-> Trying to catch up on this thread...
-> 
-> On Wed, Dec 27, 2017 at 01:57:07AM +0100, Rafael J. Wysocki wrote:
-> > On Tuesday, December 26, 2017 2:06:47 AM CET JeffyChen wrote:
-> > > Hi Rafael,
-> > > 
-> > > Thanks for your reply :)
-> > > 
-> > > On 12/26/2017 08:11 AM, Rafael J. Wysocki wrote:
-> > > >> >+
-> > > >> >+	dn = pci_device_to_OF_node(ppdev);
-> > > >> >+	if (!dn)
-> > > >> >+		return 0;
-> > > >> >+
-> > > >> >+	irq = of_irq_get_byname(dn, "wakeup");
-> > > > Why is this a property of the bridge and not of the device itself?
-> 
-> Wait, isn't 'dn' the port node, not the bridge node?
+>
+> On Wednesday 03 January 2018 08:47 PM, Marc Kleine-Budde wrote:
+>> On 01/03/2018 04:06 PM, Faiz Abbas wrote:
+>>> Hi,
+>>>
+>>> On Wednesday 03 January 2018 07:55 PM, Marc Kleine-Budde wrote:
+>>>> On 01/03/2018 01:39 PM, Faiz Abbas wrote:
+>>>>> On Tuesday 02 January 2018 09:37 PM, Marc Kleine-Budde wrote:
+>>>>>> On 12/22/2017 02:31 PM, Faiz Abbas wrote:
+>>>>>>> From: Franklin S Cooper Jr <fcooper@ti.com>
+>>>>>>>
+>>>>>>> Add support for PM Runtime which is the new way to handle managing clocks.
+>>>>>>> However, to avoid breaking SoCs not using PM_RUNTIME leave the old clk
+>>>>>>> management approach in place.
+>>>>>> There is no PM_RUNTIME anymore since 464ed18ebdb6 ("PM: Eliminate
+>>>>>> CONFIG_PM_RUNTIME")
+>>>>> Ok. Will change the commit message.
+>>>>>
+>>>>>> Have a look at the discussion: https://patchwork.kernel.org/patch/9436507/ :
+>>>>>>
+>>>>>>>> Well, I admit it would be nicer if drivers didn't have to worry about
+>>>>>>>> whether or not CONFIG_PM was enabled.  A slightly cleaner approach
+>>>>>>>> from the one outlined above would have the probe routine do this:
+>>>>>>>>
+>>>>>>>> 	my_power_up(dev);
+>>>>>>>> 	pm_runtime_set_active(dev);
+>>>>>>>> 	pm_runtime_get_noresume(dev);
+>>>>>>>> 	pm_runtime_enable(dev);
+>>>>> This discussion seems to be about cases in which CONFIG_PM is not
+>>>>> enabled. CONFIG_PM is always selected in the case of omap devices.
+>>>> Yes, but in the commit message you state that you need to support
+>>>> systems that don't have PM_RUNTIME enabled. The only mainline SoCs I see
+>>>> is "arch/arm/boot/dts/sama5d2.dtsi" so far. Please check if they select
+>>>> CONFIG_PM, then we can make the driver much simpler.
+>>> Actually the old clock management (for hclk which is the interface
+>>> clock) is still required as mentioned in the cover letter. Will change
+>>> the rather misleading description.
+>> Ok. So you can use the code as discussed on
+>> https://patchwork.kernel.org/patch/9436507/ ?
+> Looking at the kernel configuration, it seems like SAMA5D2 platform
+> selects CONFIG_PM (Wenyou, please confirm).
+Confirmed.  The CONFIG_PM is selected.
 
-I may be confused about the structure you have in DT.
-
-In the device hierarchy PCIe ports are represented as bridges.
-
-> > > That is suggested by Brian, because in that way, the wakeup pin would 
-> > > not "tied to what exact device is installed (or no device, if it's a slot)."
-> 
-> I believe my thinking has evolved a bit over time, and I definitely am
-> not the one true authority on this. I'll explain my main concerns, and
-> whatever solution resolves these concerns is fine with me.
-> 
-> * I was primarily interested in avoiding handling WAKE# in the endpoint
->   drivers (e.g., as mwifiex is today).
-
-OK, everybody on this thread is interested in that. :-)
-
-> * I was also interested in not having to redefine a new DT device
->   node (with new "pciABCD,1234" compatible property) for each new device
->   attached. That just won't work for removable cards.
-
-So if you make it the property of a bridge, it should be fine (as long
-as the bridge itself is not removable).
-
-> I need to reread the rest of this thread a few times to really
-> understand what Rafael and Tony are discussing. But I feel like some of
-> this is still moving away from the second point above.
-> 
-> > But I don't think it works when there are two devices using different WAKE#
-> > interrupt lines under the same bridge.  Or how does it work then?
-
-We seem to have agreed that this case needs to be neglected here.
-
-The "wakeup-interrupt" property at the bridge level basically has to be defined
-as the wakeup interrupt for all devices on the bus under the bridge.
-
-Thanks,
-Rafael
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> So, it seems like the only
+> users of this driver always have CONFIG_PM enabled.
+>
+> So I guess the best way is to maintain the current code for pm_runtime_*
+> and move the clock enable/disable to pm_runtime callbacks.
+>
+> Something like this:
+>
+> m_can_runtime_resume()
+> {
+> 	clk_prepare_enable(cclk);
+> 	clk_prepare_enable(hclk);
+> }
+>
+> m_can_runtime_suspend()
+> {
+> 	clk_disable_unprepare(cclk);
+> 	clk_disable_unprepare(hclk);
+> }
+>
+> SET_RUNTIME_PM_OPS(m_can_runtime_suspend, m_can_runtime_resume, NULL)
+>
+> static void m_can_start(struct net_device *dev)
+> {
+> 	pm_runtime_get_sync(dev)
+> 	...
+> }
+>
+> static void m_can_stop(struct net_device *dev)
+> {
+> 	...
+> 	pm_runtime_put_sync(dev)
+> }
+>
+> Does that sound okay? If yes, I will go work on the implementation.
+>
+> Thanks,
+> Faiz
+Best Regards,
+Wenyou Yang
