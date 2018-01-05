@@ -1,30 +1,145 @@
-From: Herbert Xu <herbert@gondor.apana.org.au>
-Subject: Re: [PATCH v5] hwrng: exynos - add Samsung Exynos True RNG driver
-Date: Fri, 5 Jan 2018 22:14:44 +1100
-Message-ID: <20180105111444.GA16156@gondor.apana.org.au>
-References: <20171222132338.30054-1-l.stelmach@samsung.com>
- <CGME20171222164840eucas1p17e3d17666ba3d0c5fced2d1c9259bf0b@eucas1p1.samsung.com>
- <20171222164835.1051-1-l.stelmach@samsung.com>
+From: Honghui Zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v5 1/2] PCI: mediatek: Clear IRQ status after IRQ
+ dispatched to avoid reentry
+Date: Fri, 5 Jan 2018 19:51:47 +0800
+Message-ID: <1515153107.25872.57.camel@mhfsdcap03>
+References: <1514336394-17747-1-git-send-email-honghui.zhang@mediatek.com>
+         <1514336394-17747-2-git-send-email-honghui.zhang@mediatek.com>
+         <20180104184040.GE12239@red-moon>
+         <88c84a3e-17ea-08f2-e5fc-4799b41de267@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171222164835.1051-1-l.stelmach@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: =?utf-8?Q?=C5=81ukasz?= Stelmach <l.stelmach@samsung.com>
-Cc: Philippe Ombredanne <pombredanne@nexb.com>, "Andrew F . Davis" <afd@ti.com>, PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>, Rob Herring <robh+dt@kernel.org>, Matt Mackall <mpm@selenic.com>, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-crypto@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <88c84a3e-17ea-08f2-e5fc-4799b41de267-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, hongkun.cao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, xinping.qian-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 22, 2017 at 05:48:35PM +0100, Łukasz Stelmach wrote:
-> Add support for True Random Number Generator found in Samsung Exynos
-> 5250+ SoCs.
-> 
-> Signed-off-by: Łukasz Stelmach <l.stelmach@samsung.com>
-> Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+On Thu, 2018-01-04 at 19:04 +0000, Marc Zyngier wrote:
+> On 04/01/18 18:40, Lorenzo Pieralisi wrote:
+> > [+Marc]
+> > 
+> > On Wed, Dec 27, 2017 at 08:59:53AM +0800, honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
+> >> From: Honghui Zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> >>
+> >> There maybe a same IRQ reentry scenario after IRQ received in current
+> >> IRQ handle flow:
+> >> 	EP device		PCIe host driver	EP driver
+> >> 1. issue an IRQ
+> >> 			2. received IRQ
+> >> 			3. clear IRQ status
+> >> 			4. dispatch IRQ
+> >> 						5. clear IRQ source
+> >> The IRQ status was not successfully cleared at step 2 since the IRQ
+> >> source was not cleared yet. So the PCIe host driver may receive the
+> >> same IRQ after step 5. Then there's an IRQ reentry occurred.
+> >> Even worse, if the reentry IRQ was not an IRQ that EP driver expected,
+> >> it may not handle the IRQ. Then we may run into the infinite loop from
+> >> step 2 to step 4.
+> >> Clear the IRQ status after IRQ have been dispatched to avoid the IRQ
+> >> reentry.
+> >> This patch also fix another INTx IRQ issue by initialize the iterate
+> >> before the loop. If an INTx IRQ re-occurred while we are dispatching
+> >> the INTx IRQ, then iterate may start from PCI_NUM_INTX + INTX_SHIFT
+> >> instead of INTX_SHIFT for the second time entering the
+> >> for_each_set_bit_from() loop.
+> > 
+> > This looks like two different issues that should be fixed with two
+> > patches.
 
-Patch applied.  Thanks.
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Ok, I split this into two patches and figure out a more reasonable
+approach by using irq_chip solution.
+
+> > 
+> >> Signed-off-by: Honghui Zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> >> Acked-by: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> >> ---
+> >>  drivers/pci/host/pcie-mediatek.c | 11 ++++++-----
+> >>  1 file changed, 6 insertions(+), 5 deletions(-)
+> > 
+> > For the sake of uniformity, I first want to understand why this
+> > driver does not call:
+> > 
+> > chained_irq_enter/exit()
+> > 
+> > in the primary handler (mtk_pcie_intr_handler()).
+> > 
+> > With the GIC as a primary interrupt controller we have not
+> > even figured out how current code can actually work without
+> > calling the chained_* API.
+> > 
+> > I want to come up with a consistent handling of IRQ domains for
+> > all host bridges and any discrepancy should be explained.
+> 
+> That's because this driver is a huge hack, see below:
+> 
+> > 
+> >> diff --git a/drivers/pci/host/pcie-mediatek.c b/drivers/pci/host/pcie-mediatek.c
+> >> index db93efd..fc29a9a 100644
+> >> --- a/drivers/pci/host/pcie-mediatek.c
+> >> +++ b/drivers/pci/host/pcie-mediatek.c
+> >> @@ -601,15 +601,16 @@ static irqreturn_t mtk_pcie_intr_handler(int irq, void *data)
+> 
+> This function is not a chained irqchip, but an interrupt handler...
+> 
+> >>  	struct mtk_pcie_port *port = (struct mtk_pcie_port *)data;
+> >>  	unsigned long status;
+> >>  	u32 virq;
+> >> -	u32 bit = INTX_SHIFT;
+> >> +	u32 bit;
+> >>  
+> >>  	while ((status = readl(port->base + PCIE_INT_STATUS)) & INTX_MASK) {
+> >> +		bit = INTX_SHIFT;
+> >>  		for_each_set_bit_from(bit, &status, PCI_NUM_INTX + INTX_SHIFT) {
+> >> -			/* Clear the INTx */
+> >> -			writel(1 << bit, port->base + PCIE_INT_STATUS);
+> >>  			virq = irq_find_mapping(port->irq_domain,
+> >>  						bit - INTX_SHIFT);
+> >>  			generic_handle_irq(virq);
+> 
+> and nonetheless, this calls into generic_handle_irq(). That's a complete
+> violation of the interrupt layering. Maybe there is a good reason for
+> it, but I'd like to know which one.
+> 
+> Which means that all of the ack/mask has to be done outside of the
+> irqchip framework too... Disgusting.
+> 
+> >> +			/* Clear the INTx */
+> >> +			writel(1 << bit, port->base + PCIE_INT_STATUS);
+> > 
+> > I think that these masking/acking should actually be done through
+> > the irq_chip hooks (see for instance pci-ftpci100.c) - that would
+> > make this kind of bugs much easier to prevent (because the IRQ
+> > layer does the sequencing for you).
+> 
+> +1.
+> 
+
+Thanks for your advice, I need to do some homework to have a better
+understanding of the irq_chip approach.
+
+> > Marc (CC'ed) has a more comprehensive view on this than me - I would
+> > like to get to a point where all host bridges uses a consistent
+> > approach for chained IRQ handling and I hope this bug fix can be
+> > a starting point.
+> 
+> +1 again. We definitely need to come up with some form of common
+> approach for all these host drivers, and maybe turn that into a library...
+> 
+
+Well, this is beyond my knowledge now, I guess I can figure out how to
+using irq_chip for the first step, then I may following this "common
+approach" after we have a solution for that?
+
+thanks.
+> Thanks,
+> 
+> 	M.
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
