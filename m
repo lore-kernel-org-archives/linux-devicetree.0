@@ -1,7 +1,7 @@
 From: Hyun Kwon <hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 03/10] drm: xlnx: Add xlnx fb of Xilinx DRM KMS
-Date: Thu, 4 Jan 2018 18:05:52 -0800
-Message-ID: <1515117959-18068-4-git-send-email-hyun.kwon@xilinx.com>
+Subject: [PATCH 10/10] drm: xlnx: zynqmp: Add debugfs
+Date: Thu, 4 Jan 2018 18:05:59 -0800
+Message-ID: <1515117959-18068-11-git-send-email-hyun.kwon@xilinx.com>
 References: <1515117959-18068-1-git-send-email-hyun.kwon@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -9,528 +9,771 @@ Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1515117959-18068-1-git-send-email-hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Hyun Kwon <hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Hyun Kwon <hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Tejas Upadhyay <tejasu-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Helpers for framebuffers backed by cma allocator.
+Debugfs can be used to exploit some specific setting. Main purpose
+is for testing and debug diagnostic.
 
+Signed-off-by: Tejas Upadhyay <tejasu-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 Signed-off-by: Hyun Kwon <hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 ---
- drivers/gpu/drm/xlnx/xlnx_fb.c | 467 +++++++++++++++++++++++++++++++++++++++++
- drivers/gpu/drm/xlnx/xlnx_fb.h |  30 +++
- 2 files changed, 497 insertions(+)
- create mode 100644 drivers/gpu/drm/xlnx/xlnx_fb.c
- create mode 100644 drivers/gpu/drm/xlnx/xlnx_fb.h
+ drivers/gpu/drm/xlnx/Kconfig       |  21 +++
+ drivers/gpu/drm/xlnx/zynqmp_disp.c | 326 +++++++++++++++++++++++++++++++++++++
+ drivers/gpu/drm/xlnx/zynqmp_dp.c   | 304 ++++++++++++++++++++++++++++++++++
+ 3 files changed, 651 insertions(+)
 
-diff --git a/drivers/gpu/drm/xlnx/xlnx_fb.c b/drivers/gpu/drm/xlnx/xlnx_fb.c
-new file mode 100644
-index 0000000..dbe9fbf
---- /dev/null
-+++ b/drivers/gpu/drm/xlnx/xlnx_fb.c
-@@ -0,0 +1,467 @@
-+/*
-+ * Xilinx DRM KMS Framebuffer helper
-+ *
-+ *  Copyright (C) 2015 - 2018 Xilinx, Inc.
-+ *
-+ *  Author: Hyun Woo Kwon <hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-+ *
-+ * Based on drm_fb_cma_helper.c
-+ *
-+ *  Copyright (C) 2012 Analog Device Inc.
-+ *
-+ * SPDX-License-Identifier: GPL-2.0
-+ */
+diff --git a/drivers/gpu/drm/xlnx/Kconfig b/drivers/gpu/drm/xlnx/Kconfig
+index 7c5529c..befce0f 100644
+--- a/drivers/gpu/drm/xlnx/Kconfig
++++ b/drivers/gpu/drm/xlnx/Kconfig
+@@ -21,3 +21,24 @@ config DRM_ZYNQMP_DPSUB
+ 	  this option if you have a Xilinx ZynqMP SoC with DisplayPort
+ 	  subsystem. The driver provides the kernel mode setting
+ 	  functionlaities for ZynqMP DP subsystem.
 +
-+#include <drm/drmP.h>
-+#include <drm/drm_crtc.h>
-+#include <drm/drm_crtc_helper.h>
-+#include <drm/drm_fb_helper.h>
-+#include <drm/drm_gem_cma_helper.h>
++config DRM_ZYNQMP_DISP_DEBUG_FS
++	bool "ZynqMP Display debugfs"
++	depends on DEBUG_FS && DRM_ZYNQMP_DPSUB
++	select DRM_ZYNQMP_DP_DEBUG_FS
++	help
++	  Enable the debugfs code for DP Sub driver. The debugfs code
++	  enables debugging or testing related features. It exposes some
++	  low level controls to the user space to help testing automation,
++	  as well as can enable additional diagnostic or statistical
++	  information.
 +
-+#include "xlnx_fb.h"
++config DRM_ZYNQMP_DP_DEBUG_FS
++	bool "ZynqMP DP debugfs"
++	depends on DEBUG_FS && DRM_ZYNQMP_DPSUB
++	help
++	  Enable the debugfs code for DP driver. The debugfs code
++	  enables debugging or testing related features. It exposes some
++	  low level controls to the user space to help testing automation,
++	  as well as can enable additional diagnostic or statistical
++	  information.
+diff --git a/drivers/gpu/drm/xlnx/zynqmp_disp.c b/drivers/gpu/drm/xlnx/zynqmp_disp.c
+index 68f829c..9fe6d49 100644
+--- a/drivers/gpu/drm/xlnx/zynqmp_disp.c
++++ b/drivers/gpu/drm/xlnx/zynqmp_disp.c
+@@ -17,6 +17,7 @@
+ #include <drm/drm_plane_helper.h>
+ 
+ #include <linux/clk.h>
++#include <linux/debugfs.h>
+ #include <linux/device.h>
+ #include <linux/dmaengine.h>
+ #include <linux/interrupt.h>
+@@ -508,6 +509,325 @@ static void zynqmp_disp_set(void __iomem *base, int offset, u32 set)
+ 	zynqmp_disp_write(base, offset, zynqmp_disp_read(base, offset) | set);
+ }
+ 
++#ifdef CONFIG_DRM_ZYNQMP_DISP_DEBUG_FS
 +
-+#define XLNX_MAX_PLANES	4
++#define ZYNQMP_DISP_DEBUGFS_READ_MAX_SIZE	32UL
++#define ZYNQMP_DISP_DEBUGFS_MAX_BG_COLOR_VAL	0xFFF
++#define IN_RANGE(x, min, max) ({		\
++		typeof(x) _x = (x);		\
++		_x >= (min) && _x <= (max); })
 +
-+struct xlnx_fb {
-+	struct drm_framebuffer		base;
-+	struct drm_gem_cma_object	*obj[XLNX_MAX_PLANES];
++/* Match xilinx_dp_testcases vs dp_debugfs_reqs[] entry */
++enum zynqmp_disp_testcases {
++	DP_SUB_TC_BG_COLOR,
++	DP_SUB_TC_OUTPUT_FMT,
++	DP_SUB_TC_NONE
 +};
 +
-+struct xlnx_fbdev {
-+	struct drm_fb_helper fb_helper;
-+	struct xlnx_fb	*fb;
-+	unsigned int align;
-+	unsigned int vres_mult;
++struct zynqmp_disp_debugfs {
++	enum zynqmp_disp_testcases testcase;
++	u16 r_value;
++	u16 g_value;
++	u16 b_value;
++	u32 output_fmt;
++	struct zynqmp_disp *zynqmp_disp;
 +};
 +
-+static inline struct xlnx_fbdev *to_fbdev(struct drm_fb_helper *fb_helper)
-+{
-+	return container_of(fb_helper, struct xlnx_fbdev, fb_helper);
-+}
-+
-+static inline struct xlnx_fb *to_fb(struct drm_framebuffer *base_fb)
-+{
-+	return container_of(base_fb, struct xlnx_fb, base);
-+}
-+
-+static void xlnx_fb_destroy(struct drm_framebuffer *base_fb)
-+{
-+	struct xlnx_fb *fb = to_fb(base_fb);
-+	int i;
-+
-+	for (i = 0; i < XLNX_MAX_PLANES; i++)
-+		if (fb->obj[i])
-+			drm_gem_object_unreference_unlocked(&fb->obj[i]->base);
-+
-+	drm_framebuffer_cleanup(base_fb);
-+	kfree(fb);
-+}
-+
-+static int xlnx_fb_create_handle(struct drm_framebuffer *base_fb,
-+				 struct drm_file *file_priv,
-+				 unsigned int *handle)
-+{
-+	struct xlnx_fb *fb = to_fb(base_fb);
-+
-+	return drm_gem_handle_create(file_priv, &fb->obj[0]->base, handle);
-+}
-+
-+static struct drm_framebuffer_funcs xlnx_fb_funcs = {
-+	.destroy	= xlnx_fb_destroy,
-+	.create_handle	= xlnx_fb_create_handle,
++static struct dentry *zynqmp_disp_debugfs_dir;
++struct zynqmp_disp_debugfs disp_debugfs;
++struct zynqmp_disp_debugfs_request {
++	const char *req;
++	enum zynqmp_disp_testcases tc;
++	ssize_t (*read_handler)(char **kern_buff);
++	ssize_t (*write_handler)(char **cmd);
 +};
 +
-+/**
-+ * xlnx_fb_alloc - Allocate a xlnx_fb
-+ * @drm: DRM object
-+ * @mode_cmd: drm_mode_fb_cmd2 struct
-+ * @obj: pointers for returned drm_gem_cma_objects
-+ * @num_planes: number of planes to be allocated
-+ *
-+ * This function is based on drm_fb_cma_alloc().
-+ *
-+ * Return: a xlnx_fb object, or ERR_PTR.
-+ */
-+static struct xlnx_fb *
-+xlnx_fb_alloc(struct drm_device *drm,
-+	      const struct drm_mode_fb_cmd2 *mode_cmd,
-+	      struct drm_gem_cma_object **obj, unsigned int num_planes)
++static void
++zynqmp_disp_set_output_fmt(struct zynqmp_disp *disp, unsigned int id);
++static s64 zynqmp_disp_debugfs_argument_value(char *arg)
 +{
-+	struct xlnx_fb *fb;
-+	int ret;
-+	int i;
++	s64 value;
 +
-+	fb = kzalloc(sizeof(*fb), GFP_KERNEL);
-+	if (!fb)
-+		return ERR_PTR(-ENOMEM);
++	if (!arg)
++		return -1;
 +
-+	drm_helper_mode_fill_fb_struct(drm, &fb->base, mode_cmd);
++	if (!kstrtos64(arg, 0, &value))
++		return value;
 +
-+	for (i = 0; i < num_planes; i++)
-+		fb->obj[i] = obj[i];
++	return -1;
++}
 +
-+	ret = drm_framebuffer_init(drm, &fb->base, &xlnx_fb_funcs);
-+	if (ret) {
-+		dev_err(drm->dev, "Failed to initialize fb: %d\n", ret);
-+		kfree(fb);
-+		return ERR_PTR(ret);
++static ssize_t
++zynqmp_disp_debugfs_background_color_write(char **disp_test_arg)
++{
++	char *r_color, *g_color, *b_color;
++	s64 r_val, g_val, b_val;
++
++	r_color = strsep(disp_test_arg, " ");
++	g_color = strsep(disp_test_arg, " ");
++	b_color = strsep(disp_test_arg, " ");
++
++	/* char * to int conversion */
++	r_val = zynqmp_disp_debugfs_argument_value(r_color);
++	g_val = zynqmp_disp_debugfs_argument_value(g_color);
++	b_val = zynqmp_disp_debugfs_argument_value(b_color);
++
++	if (!(IN_RANGE(r_val, 0, ZYNQMP_DISP_DEBUGFS_MAX_BG_COLOR_VAL) &&
++	      IN_RANGE(g_val, 0, ZYNQMP_DISP_DEBUGFS_MAX_BG_COLOR_VAL) &&
++	      IN_RANGE(b_val, 0, ZYNQMP_DISP_DEBUGFS_MAX_BG_COLOR_VAL)))
++		return -EINVAL;
++
++	disp_debugfs.r_value = r_val;
++	disp_debugfs.g_value = g_val;
++	disp_debugfs.b_value = b_val;
++
++	disp_debugfs.testcase = DP_SUB_TC_BG_COLOR;
++
++	return 0;
++}
++
++static ssize_t
++zynqmp_disp_debugfs_output_display_format_write(char **disp_test_arg)
++{
++	char *output_format;
++	struct zynqmp_disp *disp = disp_debugfs.zynqmp_disp;
++
++	/* Read the value from a user value */
++	output_format = strsep(disp_test_arg, " ");
++	if (strncmp(output_format, "rgb", 3) == 0) {
++		disp_debugfs.output_fmt =
++			ZYNQMP_DISP_V_BLEND_OUTPUT_VID_FMT_RGB;
++	} else if (strncmp(output_format, "ycbcr444", 8) == 0) {
++		disp_debugfs.output_fmt =
++			ZYNQMP_DISP_V_BLEND_OUTPUT_VID_FMT_YCBCR444;
++	} else if (strncmp(output_format, "ycbcr422", 8) == 0) {
++		disp_debugfs.output_fmt =
++			ZYNQMP_DISP_V_BLEND_OUTPUT_VID_FMT_YCBCR422;
++	} else if (strncmp(output_format, "yonly", 5) == 0) {
++		disp_debugfs.output_fmt =
++			ZYNQMP_DISP_V_BLEND_OUTPUT_VID_FMT_YONLY;
++	} else {
++		dev_err(disp->dev, "Invalid output format\n");
++		return -EINVAL;
 +	}
 +
-+	return fb;
++	disp_debugfs.testcase = DP_SUB_TC_OUTPUT_FMT;
++
++	return 0;
 +}
 +
-+/**
-+ * xlnx_fb_get_paddr - Get physycal address of framebuffer
-+ * @base_fb: the framebuffer
-+ * @plane: which plane
-+ *
-+ * This function is based on drm_fb_cma_get_gem_obj().
-+ *
-+ * Return: a physical address of the plane, or 0
-+ */
-+dma_addr_t
-+xlnx_fb_get_paddr(struct drm_framebuffer *base_fb, unsigned int plane)
++static ssize_t
++zynqmp_disp_debugfs_output_display_format_read(char **kern_buff)
 +{
-+	struct xlnx_fb *fb = to_fb(base_fb);
++	size_t out_str_len;
 +
-+	if (plane >= XLNX_MAX_PLANES)
++	disp_debugfs.testcase = DP_SUB_TC_NONE;
++	disp_debugfs.output_fmt = 0;
++
++	out_str_len = strlen("Success");
++	out_str_len = min(ZYNQMP_DISP_DEBUGFS_READ_MAX_SIZE, out_str_len);
++	snprintf(*kern_buff, out_str_len, "%s", "Success");
++
++	return 0;
++}
++
++static ssize_t
++zynqmp_disp_debugfs_background_color_read(char **kern_buff)
++{
++	size_t out_str_len;
++
++	disp_debugfs.testcase = DP_SUB_TC_NONE;
++	disp_debugfs.r_value = 0;
++	disp_debugfs.g_value = 0;
++	disp_debugfs.b_value = 0;
++
++	out_str_len = strlen("Success");
++	out_str_len = min(ZYNQMP_DISP_DEBUGFS_READ_MAX_SIZE, out_str_len);
++	snprintf(*kern_buff, out_str_len, "%s", "Success");
++
++	return 0;
++}
++
++/* Match xilinx_dp_testcases vs dp_debugfs_reqs[] entry */
++struct zynqmp_disp_debugfs_request disp_debugfs_reqs[] = {
++	{"BACKGROUND_COLOR", DP_SUB_TC_BG_COLOR,
++		zynqmp_disp_debugfs_background_color_read,
++		zynqmp_disp_debugfs_background_color_write},
++	{"OUTPUT_DISPLAY_FORMAT", DP_SUB_TC_OUTPUT_FMT,
++		zynqmp_disp_debugfs_output_display_format_read,
++		zynqmp_disp_debugfs_output_display_format_write},
++};
++
++static ssize_t
++zynqmp_disp_debugfs_write(struct file *f, const char __user *buf,
++			  size_t size, loff_t *pos)
++{
++	char *kern_buff, *disp_test_req, *kern_buff_start;
++	int ret;
++	unsigned int i;
++
++	if (*pos != 0 || size <= 0)
++		return -EINVAL;
++
++	if (disp_debugfs.testcase != DP_SUB_TC_NONE)
++		return -EBUSY;
++
++	kern_buff = kzalloc(size, GFP_KERNEL);
++	if (!kern_buff)
++		return -ENOMEM;
++	kern_buff_start = kern_buff;
++
++	ret = strncpy_from_user(kern_buff, buf, size);
++	if (ret < 0) {
++		kfree(kern_buff_start);
++		return ret;
++	}
++
++	/* Read the testcase name and argument from a user request */
++	disp_test_req = strsep(&kern_buff, " ");
++
++	for (i = 0; i < ARRAY_SIZE(disp_debugfs_reqs); i++) {
++		if (!strcasecmp(disp_test_req, disp_debugfs_reqs[i].req))
++			if (!disp_debugfs_reqs[i].write_handler(&kern_buff)) {
++				kfree(kern_buff_start);
++				return size;
++			}
++	}
++	kfree(kern_buff_start);
++	return -EINVAL;
++}
++
++static ssize_t zynqmp_disp_debugfs_read(struct file *f, char __user *buf,
++					size_t size, loff_t *pos)
++{
++	char *kern_buff = NULL;
++	size_t kern_buff_len, out_str_len;
++	enum zynqmp_disp_testcases tc;
++	int ret;
++
++	if (size <= 0)
++		return -EINVAL;
++
++	if (*pos != 0)
 +		return 0;
 +
-+	return fb->obj[plane]->paddr;
-+}
-+EXPORT_SYMBOL_GPL(xlnx_fb_get_paddr);
++	kern_buff = kzalloc(ZYNQMP_DISP_DEBUGFS_READ_MAX_SIZE, GFP_KERNEL);
++	if (!kern_buff) {
++		disp_debugfs.testcase = DP_SUB_TC_NONE;
++		return -ENOMEM;
++	}
 +
-+static int
-+xlnx_fb_ioctl(struct fb_info *info, unsigned int cmd, unsigned long arg)
-+{
-+	struct drm_fb_helper *fb_helper = info->par;
-+	unsigned int i;
-+	int ret = 0;
-+
-+	switch (cmd) {
-+	case FBIO_WAITFORVSYNC:
-+		for (i = 0; i < fb_helper->crtc_count; i++) {
-+			struct drm_mode_set *mode_set;
-+			struct drm_crtc *crtc;
-+
-+			mode_set = &fb_helper->crtc_info[i].mode_set;
-+			crtc = mode_set->crtc;
-+			ret = drm_crtc_vblank_get(crtc);
-+			if (!ret) {
-+				drm_crtc_wait_one_vblank(crtc);
-+				drm_crtc_vblank_put(crtc);
-+			}
++	tc = disp_debugfs.testcase;
++	if (tc == DP_SUB_TC_NONE) {
++		out_str_len = strlen("No testcase executed");
++		out_str_len = min(ZYNQMP_DISP_DEBUGFS_READ_MAX_SIZE,
++				  out_str_len);
++		snprintf(kern_buff, out_str_len, "%s", "No testcase executed");
++	} else {
++		ret = disp_debugfs_reqs[tc].read_handler(&kern_buff);
++		if (ret) {
++			kfree(kern_buff);
++			return ret;
 +		}
++	}
++
++	kern_buff_len = strlen(kern_buff);
++	size = min(size, kern_buff_len);
++
++	ret = copy_to_user(buf, kern_buff, size);
++
++	kfree(kern_buff);
++	if (ret)
 +		return ret;
-+	default:
-+		return -ENOTTY;
++
++	*pos = size + 1;
++	return size;
++}
++
++static const struct file_operations fops_zynqmp_disp_dbgfs = {
++	.owner = THIS_MODULE,
++	.read = zynqmp_disp_debugfs_read,
++	.write = zynqmp_disp_debugfs_write,
++};
++
++static int zynqmp_disp_debugfs_init(struct zynqmp_disp *disp)
++{
++	int err;
++	struct dentry *zynqmp_disp_debugfs_file;
++
++	disp_debugfs.testcase = DP_SUB_TC_NONE;
++	disp_debugfs.zynqmp_disp = disp;
++
++	zynqmp_disp_debugfs_dir = debugfs_create_dir("disp", NULL);
++	if (!zynqmp_disp_debugfs_dir) {
++		dev_err(disp->dev, "debugfs_create_dir failed\n");
++		return -ENODEV;
 +	}
++
++	zynqmp_disp_debugfs_file =
++		debugfs_create_file("testcase", 0444,
++				    zynqmp_disp_debugfs_dir, NULL,
++				    &fops_zynqmp_disp_dbgfs);
++	if (!zynqmp_disp_debugfs_file) {
++		dev_err(disp->dev, "debugfs_create_file testcase failed\n");
++		err = -ENODEV;
++		goto err_dbgfs;
++	}
++	return 0;
++
++err_dbgfs:
++	debugfs_remove_recursive(zynqmp_disp_debugfs_dir);
++	zynqmp_disp_debugfs_dir = NULL;
++	return err;
++}
++
++static void zynqmp_disp_debugfs_exit(struct zynqmp_disp *disp)
++{
++	debugfs_remove_recursive(zynqmp_disp_debugfs_dir);
++	zynqmp_disp_debugfs_dir = NULL;
++}
++
++static void zynqmp_disp_debugfs_bg_color(struct zynqmp_disp *disp)
++{
++	if (disp_debugfs.testcase == DP_SUB_TC_BG_COLOR) {
++		zynqmp_disp_write(disp->blend.base,
++				  ZYNQMP_DISP_V_BLEND_BG_CLR_0,
++				  disp_debugfs.r_value);
++		zynqmp_disp_write(disp->blend.base,
++				  ZYNQMP_DISP_V_BLEND_BG_CLR_1,
++				  disp_debugfs.g_value);
++		zynqmp_disp_write(disp->blend.base,
++				  ZYNQMP_DISP_V_BLEND_BG_CLR_2,
++				  disp_debugfs.b_value);
++	}
++}
++
++static void
++zynqmp_disp_set_debugfs_output_fmt(struct zynqmp_disp *disp)
++{
++	if (disp_debugfs.testcase == DP_SUB_TC_OUTPUT_FMT)
++		zynqmp_disp_set_output_fmt(disp, disp_debugfs.output_fmt);
++}
++#else
++static void zynqmp_disp_debugfs_exit(struct zynqmp_disp *disp)
++{
++}
++
++static int zynqmp_disp_debugfs_init(struct zynqmp_disp *disp)
++{
++	return 0;
++}
++
++static void zynqmp_disp_debugfs_bg_color(struct zynqmp_disp *disp)
++{
++}
++
++static void
++zynqmp_disp_set_debugfs_output_fmt(struct zynqmp_disp *disp)
++{
++}
++#endif /* CONFIG_DP_DEBUG_FS */
++
+ /*
+  * Clock functions
+  */
+@@ -597,6 +917,8 @@ zynqmp_disp_blend_set_output_fmt(struct zynqmp_disp_blend *blend, u32 fmt)
+ 	u32 *offsets;
+ 	u32 offset, i;
+ 
++	if (fmt == ZYNQMP_DISP_V_BLEND_OUTPUT_VID_FMT_YCBCR422)
++		fmt |= ZYNQMP_DISP_V_BLEND_OUTPUT_EN_DOWNSAMPLE;
+ 	zynqmp_disp_write(blend->base, ZYNQMP_DISP_V_BLEND_OUTPUT_VID_FMT, fmt);
+ 	if (fmt == ZYNQMP_DISP_V_BLEND_OUTPUT_VID_FMT_RGB) {
+ 		coeffs = reset_coeffs;
+@@ -1941,6 +2263,7 @@ static void zynqmp_disp_set_bg_color(struct zynqmp_disp *disp,
+ 				     u32 c0, u32 c1, u32 c2)
+ {
+ 	zynqmp_disp_blend_set_bg_color(&disp->blend, c0, c1, c2);
++	zynqmp_disp_debugfs_bg_color(disp);
+ }
+ 
+ /**
+@@ -2572,6 +2895,7 @@ zynqmp_disp_crtc_atomic_enable(struct drm_crtc *crtc,
+ 		return;
+ 	}
+ 	zynqmp_disp_set_output_fmt(disp, disp->color);
++	zynqmp_disp_set_debugfs_output_fmt(disp);
+ 	zynqmp_disp_set_bg_color(disp, disp->bg_c0, disp->bg_c1, disp->bg_c2);
+ 	zynqmp_disp_enable(disp);
+ 	/* Delay of 3 vblank intervals for timing gen to be stable */
+@@ -2911,6 +3235,7 @@ int zynqmp_disp_probe(struct platform_device *pdev)
+ 	ret = zynqmp_disp_layer_create(disp);
+ 	if (ret)
+ 		goto error_aclk;
++	zynqmp_disp_debugfs_init(disp);
+ 
+ 	return 0;
+ 
+@@ -2924,6 +3249,7 @@ int zynqmp_disp_remove(struct platform_device *pdev)
+ 	struct zynqmp_dpsub *dpsub = platform_get_drvdata(pdev);
+ 	struct zynqmp_disp *disp = dpsub->disp;
+ 
++	zynqmp_disp_debugfs_exit(disp);
+ 	zynqmp_disp_layer_destroy(disp);
+ 	if (disp->audclk)
+ 		zynqmp_disp_clk_disable(disp->audclk, &disp->audclk_en);
+diff --git a/drivers/gpu/drm/xlnx/zynqmp_dp.c b/drivers/gpu/drm/xlnx/zynqmp_dp.c
+index ce3c7c5..66fbad0 100644
+--- a/drivers/gpu/drm/xlnx/zynqmp_dp.c
++++ b/drivers/gpu/drm/xlnx/zynqmp_dp.c
+@@ -16,6 +16,7 @@
+ #include <drm/drm_dp_helper.h>
+ #include <drm/drm_of.h>
+ 
++#include <linux/debugfs.h>
+ #include <linux/delay.h>
+ #include <linux/device.h>
+ #include <linux/module.h>
+@@ -371,6 +372,306 @@ static void zynqmp_dp_set(void __iomem *base, int offset, u32 set)
+ }
+ 
+ /*
++ * Debugfs functions
++ */
++
++#ifdef CONFIG_DRM_ZYNQMP_DP_DEBUG_FS
++
++#define ZYNQMP_DP_DEBUGFS_READ_MAX_SIZE	32UL
++#define ZYNQMP_DP_DEBUGFS_UINT8_MAX_STR	"255"
++#define IN_RANGE(x, min, max) ({		\
++		typeof(x) _x = (x);		\
++		_x >= (min) && _x <= (max); })
++
++/* Match zynqmp_dp_testcases vs debugfs_reqs[] entry */
++enum zynqmp_dp_testcases {
++	DP_TC_LINK_RATE,
++	DP_TC_LANE_COUNT,
++	DP_TC_OUTPUT_FMT,
++	DP_TC_NONE
++};
++
++struct zynqmp_dp_debugfs {
++	enum zynqmp_dp_testcases testcase;
++	u8 link_rate;
++	u8 lane_cnt;
++	u8 old_output_fmt;
++	struct zynqmp_dp *dp;
++};
++
++static struct dentry *zynqmp_dp_debugfs_dir;
++static struct zynqmp_dp_debugfs dp_debugfs;
++struct zynqmp_dp_debugfs_request {
++	const char *req;
++	enum zynqmp_dp_testcases tc;
++	ssize_t (*read_handler)(char **kern_buff);
++	ssize_t (*write_handler)(char **cmd);
++};
++
++static s64 zynqmp_dp_debugfs_argument_value(char *arg)
++{
++	s64 value;
++
++	if (!arg)
++		return -1;
++
++	if (!kstrtos64(arg, 0, &value))
++		return value;
++
++	return -1;
++}
++
++static ssize_t zynqmp_dp_debugfs_max_linkrate_write(char **dp_test_arg)
++{
++	char *link_rate_arg;
++	s64 link_rate;
++
++	link_rate_arg = strsep(dp_test_arg, " ");
++	link_rate = zynqmp_dp_debugfs_argument_value(link_rate_arg);
++	if (link_rate < 0 || (link_rate != DP_HIGH_BIT_RATE2 &&
++			      link_rate != DP_HIGH_BIT_RATE &&
++			      link_rate != DP_REDUCED_BIT_RATE))
++		return -EINVAL;
++
++	dp_debugfs.link_rate = drm_dp_link_rate_to_bw_code(link_rate);
++	dp_debugfs.testcase = DP_TC_LINK_RATE;
 +
 +	return 0;
 +}
 +
-+static struct fb_ops xlnx_fbdev_ops = {
-+	.owner		= THIS_MODULE,
-+	.fb_fillrect	= sys_fillrect,
-+	.fb_copyarea	= sys_copyarea,
-+	.fb_imageblit	= sys_imageblit,
-+	.fb_check_var	= drm_fb_helper_check_var,
-+	.fb_set_par	= drm_fb_helper_set_par,
-+	.fb_blank	= drm_fb_helper_blank,
-+	.fb_pan_display	= drm_fb_helper_pan_display,
-+	.fb_setcmap	= drm_fb_helper_setcmap,
-+	.fb_ioctl	= xlnx_fb_ioctl,
-+};
-+
-+/**
-+ * xlnx_fbdev_create - Create the fbdev with a framebuffer
-+ * @fb_helper: fb helper structure
-+ * @size: framebuffer size info
-+ *
-+ * This function is based on drm_fbdev_cma_create().
-+ *
-+ * Return: 0 if successful, or the error code.
-+ */
-+static int xlnx_fbdev_create(struct drm_fb_helper *fb_helper,
-+			     struct drm_fb_helper_surface_size *size)
++static ssize_t zynqmp_dp_debugfs_max_lanecnt_write(char **dp_test_arg)
 +{
-+	struct xlnx_fbdev *fbdev = to_fbdev(fb_helper);
-+	struct drm_mode_fb_cmd2 mode_cmd = { 0 };
-+	struct drm_device *drm = fb_helper->dev;
-+	struct drm_gem_cma_object *obj;
-+	struct drm_framebuffer *base_fb;
-+	unsigned int bytes_per_pixel;
-+	unsigned long offset;
-+	struct fb_info *fbi;
-+	size_t bytes;
-+	int ret;
++	char *lane_cnt_arg;
++	s64 lane_count;
 +
-+	dev_dbg(drm->dev, "surface width(%d), height(%d) and bpp(%d)\n",
-+		size->surface_width, size->surface_height, size->surface_bpp);
++	lane_cnt_arg = strsep(dp_test_arg, " ");
++	lane_count = zynqmp_dp_debugfs_argument_value(lane_cnt_arg);
++	if (lane_count < 0 || !IN_RANGE(lane_count, 1,
++					ZYNQMP_DP_MAX_LANES))
++		return -EINVAL;
 +
-+	bytes_per_pixel = DIV_ROUND_UP(size->surface_bpp, 8);
-+
-+	mode_cmd.width = size->surface_width;
-+	mode_cmd.height = size->surface_height;
-+	mode_cmd.pitches[0] = ALIGN(size->surface_width * bytes_per_pixel,
-+				    fbdev->align);
-+	mode_cmd.pixel_format = xlnx_get_format(drm);
-+
-+	mode_cmd.height *= fbdev->vres_mult;
-+	bytes = mode_cmd.pitches[0] * mode_cmd.height;
-+	obj = drm_gem_cma_create(drm, bytes);
-+	if (IS_ERR(obj))
-+		return PTR_ERR(obj);
-+
-+	fbi = framebuffer_alloc(0, drm->dev);
-+	if (!fbi) {
-+		dev_err(drm->dev, "Failed to allocate framebuffer info.\n");
-+		ret = -ENOMEM;
-+		goto err_drm_gem_cma_free_object;
-+	}
-+
-+	fbdev->fb = xlnx_fb_alloc(drm, &mode_cmd, &obj, 1);
-+	if (IS_ERR(fbdev->fb)) {
-+		dev_err(drm->dev, "Failed to allocate DRM framebuffer.\n");
-+		ret = PTR_ERR(fbdev->fb);
-+		goto err_framebuffer_release;
-+	}
-+
-+	base_fb = &fbdev->fb->base;
-+	fb_helper->fb = base_fb;
-+	fb_helper->fbdev = fbi;
-+	fbi->par = fb_helper;
-+	fbi->flags = FBINFO_FLAG_DEFAULT;
-+	fbi->fbops = &xlnx_fbdev_ops;
-+
-+	ret = fb_alloc_cmap(&fbi->cmap, 256, 0);
-+	if (ret) {
-+		dev_err(drm->dev, "Failed to allocate color map.\n");
-+		goto err_xlnx_fb_destroy;
-+	}
-+
-+	drm_fb_helper_fill_fix(fbi, base_fb->pitches[0],
-+			       base_fb->format->depth);
-+	drm_fb_helper_fill_var(fbi, fb_helper, base_fb->width, base_fb->height);
-+	fbi->var.yres = base_fb->height / fbdev->vres_mult;
-+
-+	offset = fbi->var.xoffset * bytes_per_pixel;
-+	offset += fbi->var.yoffset * base_fb->pitches[0];
-+
-+	drm->mode_config.fb_base = (resource_size_t)obj->paddr;
-+	fbi->screen_base = (char __iomem *)(obj->vaddr + offset);
-+	fbi->fix.smem_start = (unsigned long)(obj->paddr + offset);
-+	fbi->screen_size = bytes;
-+	fbi->fix.smem_len = bytes;
++	dp_debugfs.lane_cnt = lane_count;
++	dp_debugfs.testcase = DP_TC_LANE_COUNT;
 +
 +	return 0;
-+
-+err_xlnx_fb_destroy:
-+	drm_framebuffer_unregister_private(base_fb);
-+	xlnx_fb_destroy(base_fb);
-+err_framebuffer_release:
-+	framebuffer_release(fbi);
-+err_drm_gem_cma_free_object:
-+	drm_gem_cma_free_object(&obj->base);
-+	return ret;
 +}
 +
-+static struct drm_fb_helper_funcs xlnx_fb_helper_funcs = {
-+	.fb_probe = xlnx_fbdev_create,
-+};
-+
-+/**
-+ * xlnx_fb_init - Allocate and initializes the Xilinx framebuffer
-+ * @drm: DRM device
-+ * @preferred_bpp: preferred bits per pixel for the device
-+ * @max_conn_count: maximum number of connectors
-+ * @align: alignment value for pitch
-+ * @vres_mult: multiplier for virtual resolution
-+ *
-+ * This function is based on drm_fbdev_cma_init().
-+ *
-+ * Return: a newly allocated drm_fb_helper struct or a ERR_PTR.
-+ */
-+struct drm_fb_helper *
-+xlnx_fb_init(struct drm_device *drm, int preferred_bpp,
-+	     unsigned int max_conn_count, unsigned int align,
-+	     unsigned int vres_mult)
++static ssize_t zynqmp_dp_debugfs_max_linkrate_read(char **kern_buff)
 +{
-+	struct xlnx_fbdev *fbdev;
-+	struct drm_fb_helper *fb_helper;
++	struct zynqmp_dp *dp = dp_debugfs.dp;
++	size_t output_str_len;
++	u8 dpcd_link_bw;
 +	int ret;
 +
-+	fbdev = kzalloc(sizeof(*fbdev), GFP_KERNEL);
-+	if (!fbdev)
-+		return ERR_PTR(-ENOMEM);
++	dp_debugfs.testcase = DP_TC_NONE;
++	dp_debugfs.link_rate = 0;
 +
-+	fbdev->vres_mult = vres_mult;
-+	fbdev->align = align;
-+	fb_helper = &fbdev->fb_helper;
-+	drm_fb_helper_prepare(drm, fb_helper, &xlnx_fb_helper_funcs);
-+
-+	ret = drm_fb_helper_init(drm, fb_helper, max_conn_count);
++	/* Getting Sink Side Link Rate */
++	ret = drm_dp_dpcd_readb(&dp->aux, DP_LINK_BW_SET, &dpcd_link_bw);
 +	if (ret < 0) {
-+		dev_err(drm->dev, "Failed to initialize drm fb helper.\n");
-+		goto err_free;
++		dev_err(dp->dev, "Failed to read link rate via AUX.\n");
++		kfree(*kern_buff);
++		return ret;
 +	}
 +
-+	ret = drm_fb_helper_single_add_all_connectors(fb_helper);
++	output_str_len = strlen(ZYNQMP_DP_DEBUGFS_UINT8_MAX_STR);
++	output_str_len = min(ZYNQMP_DP_DEBUGFS_READ_MAX_SIZE, output_str_len);
++	snprintf(*kern_buff, output_str_len, "%u", dpcd_link_bw);
++
++	return 0;
++}
++
++static ssize_t zynqmp_dp_debugfs_max_lanecnt_read(char **kern_buff)
++{
++	struct zynqmp_dp *dp = dp_debugfs.dp;
++	size_t output_str_len;
++	u8 dpcd_lane_cnt;
++	int ret;
++
++	dp_debugfs.testcase = DP_TC_NONE;
++	dp_debugfs.lane_cnt = 0;
++
++	/* Getting Sink Side Lane Count */
++	ret = drm_dp_dpcd_readb(&dp->aux, DP_LANE_COUNT_SET, &dpcd_lane_cnt);
 +	if (ret < 0) {
-+		dev_err(drm->dev, "Failed to add connectors.\n");
-+		goto err_drm_fb_helper_fini;
++		dev_err(dp->dev, "Failed to read link rate via AUX.\n");
++		kfree(*kern_buff);
++		return ret;
 +	}
 +
-+	ret = drm_fb_helper_initial_config(fb_helper, preferred_bpp);
-+	if (ret < 0) {
-+		dev_err(drm->dev, "Failed to set initial hw configuration.\n");
-+		goto err_drm_fb_helper_fini;
++	dpcd_lane_cnt &= DP_LANE_COUNT_MASK;
++	output_str_len = strlen(ZYNQMP_DP_DEBUGFS_UINT8_MAX_STR);
++	output_str_len = min(ZYNQMP_DP_DEBUGFS_READ_MAX_SIZE, output_str_len);
++	snprintf(*kern_buff, output_str_len, "%u", dpcd_lane_cnt);
++
++	return 0;
++}
++
++/* Match zynqmp_dp_testcases vs dp_debugfs_reqs[] entry */
++static struct zynqmp_dp_debugfs_request debugfs_reqs[] = {
++	{"LINK_RATE", DP_TC_LINK_RATE,
++			zynqmp_dp_debugfs_max_linkrate_read,
++			zynqmp_dp_debugfs_max_linkrate_write},
++	{"LANE_COUNT", DP_TC_LANE_COUNT,
++			zynqmp_dp_debugfs_max_lanecnt_read,
++			zynqmp_dp_debugfs_max_lanecnt_write},
++};
++
++static ssize_t zynqmp_dp_debugfs_read(struct file *f, char __user *buf,
++				      size_t size, loff_t *pos)
++{
++	char *kern_buff = NULL;
++	size_t kern_buff_len, out_str_len;
++	enum zynqmp_dp_testcases tc;
++	int ret;
++
++	if (size <= 0)
++		return -EINVAL;
++
++	if (*pos != 0)
++		return 0;
++
++	kern_buff = kzalloc(ZYNQMP_DP_DEBUGFS_READ_MAX_SIZE, GFP_KERNEL);
++	if (!kern_buff) {
++		dp_debugfs.testcase = DP_TC_NONE;
++		return -ENOMEM;
 +	}
 +
-+	return fb_helper;
++	tc = dp_debugfs.testcase;
++	if (tc == DP_TC_NONE) {
++		out_str_len = strlen("No testcase executed");
++		out_str_len = min(ZYNQMP_DP_DEBUGFS_READ_MAX_SIZE, out_str_len);
++		snprintf(kern_buff, out_str_len, "%s", "No testcase executed");
++	} else {
++		ret = debugfs_reqs[tc].read_handler(&kern_buff);
++		if (ret) {
++			kfree(kern_buff);
++			return ret;
++		}
++	}
 +
-+err_drm_fb_helper_fini:
-+	drm_fb_helper_fini(fb_helper);
-+err_free:
-+	kfree(fbdev);
-+	return ERR_PTR(ret);
++	kern_buff_len = strlen(kern_buff);
++	size = min(size, kern_buff_len);
++
++	ret = copy_to_user(buf, kern_buff, size);
++
++	kfree(kern_buff);
++	if (ret)
++		return ret;
++
++	*pos = size + 1;
++	return size;
 +}
 +
-+/**
-+ * xlnx_fbdev_defio_fini - Free the defio fb
-+ * @fbi: fb_info struct
-+ *
-+ * This function is based on drm_fbdev_cma_defio_fini().
-+ */
-+static void xlnx_fbdev_defio_fini(struct fb_info *fbi)
++static ssize_t
++zynqmp_dp_debugfs_write(struct file *f, const char __user *buf,
++			size_t size, loff_t *pos)
 +{
-+	if (!fbi->fbdefio)
-+		return;
-+
-+	fb_deferred_io_cleanup(fbi);
-+	kfree(fbi->fbdefio);
-+	kfree(fbi->fbops);
-+}
-+
-+/**
-+ * xlnx_fbdev_fini - Free the Xilinx framebuffer
-+ * @fb_helper: drm_fb_helper struct
-+ *
-+ * This function is based on drm_fbdev_cma_fini().
-+ */
-+void xlnx_fb_fini(struct drm_fb_helper *fb_helper)
-+{
-+	struct xlnx_fbdev *fbdev = to_fbdev(fb_helper);
-+
-+	drm_fb_helper_unregister_fbi(&fbdev->fb_helper);
-+	if (fbdev->fb_helper.fbdev)
-+		xlnx_fbdev_defio_fini(fbdev->fb_helper.fbdev);
-+
-+	if (fbdev->fb_helper.fb)
-+		drm_framebuffer_remove(fbdev->fb_helper.fb);
-+
-+	drm_fb_helper_fini(&fbdev->fb_helper);
-+	kfree(fbdev);
-+}
-+
-+/**
-+ * xlnx_fb_restore_mode - Restores initial framebuffer mode
-+ * @fb_helper: drm_fb_helper struct, may be NULL
-+ *
-+ * This function is based on drm_fbdev_cma_restore_mode() and usually called
-+ * from the Xilinx DRM drivers lastclose callback.
-+ */
-+void xlnx_fb_restore_mode(struct drm_fb_helper *fb_helper)
-+{
-+	if (!fb_helper)
-+		return;
-+	drm_fb_helper_restore_fbdev_mode_unlocked(fb_helper);
-+}
-+
-+/**
-+ * xlnx_fb_create - (struct drm_mode_config_funcs *)->fb_create callback
-+ * @drm: DRM device
-+ * @file_priv: drm file private data
-+ * @mode_cmd: mode command for fb creation
-+ *
-+ * This functions creates a drm_framebuffer for given mode @mode_cmd. This
-+ * functions is intended to be used for the fb_create callback function of
-+ * drm_mode_config_funcs.
-+ *
-+ * Return: a drm_framebuffer object if successful, or ERR_PTR.
-+ */
-+struct drm_framebuffer *
-+xlnx_fb_create(struct drm_device *drm, struct drm_file *file_priv,
-+	       const struct drm_mode_fb_cmd2 *mode_cmd)
-+{
-+	struct xlnx_fb *fb;
-+	struct drm_gem_cma_object *objs[XLNX_MAX_PLANES];
-+	struct drm_gem_object *obj;
-+	const struct drm_format_info *info;
-+	struct drm_format_name_buf format_name;
++	char *kern_buff, *kern_buff_start;
++	char *dp_test_req;
 +	int ret;
 +	int i;
 +
-+	info = drm_format_info(mode_cmd->pixel_format);
-+	if (!info) {
-+		dev_err(drm->dev, "unsupported framebuffer format %s\n",
-+			drm_get_format_name(mode_cmd->pixel_format,
-+					    &format_name));
-+		ret = -EINVAL;
-+		goto err_out;
++	if (*pos != 0 || size <= 0)
++		return -EINVAL;
++
++	if (dp_debugfs.testcase != DP_TC_NONE)
++		return -EBUSY;
++
++	kern_buff = kzalloc(size, GFP_KERNEL);
++	if (!kern_buff)
++		return -ENOMEM;
++	kern_buff_start = kern_buff;
++
++	ret = strncpy_from_user(kern_buff, buf, size);
++	if (ret < 0) {
++		kfree(kern_buff_start);
++		return ret;
 +	}
 +
-+	for (i = 0; i < info->num_planes; i++) {
-+		unsigned int width = mode_cmd->width / (i ? info->hsub : 1);
-+		unsigned int height = mode_cmd->height / (i ? info->vsub : 1);
-+		unsigned int min_size;
++	/* Read the testcase name and argument from a user request */
++	dp_test_req = strsep(&kern_buff, " ");
 +
-+		obj = drm_gem_object_lookup(file_priv,
-+					    mode_cmd->handles[i]);
-+		if (!obj) {
-+			dev_err(drm->dev, "Failed to lookup GEM object\n");
-+			ret = -ENXIO;
-+			goto err_gem_object_unreference;
-+		}
-+
-+		min_size = (height - 1) * mode_cmd->pitches[i] + width *
-+			   info->cpp[i] + mode_cmd->offsets[i];
-+
-+		if (obj->size < min_size) {
-+			drm_gem_object_unreference_unlocked(obj);
-+			ret = -EINVAL;
-+			goto err_gem_object_unreference;
-+		}
-+		objs[i] = to_drm_gem_cma_obj(obj);
++	for (i = 0; i < ARRAY_SIZE(debugfs_reqs); i++) {
++		if (!strcasecmp(dp_test_req, debugfs_reqs[i].req))
++			if (!debugfs_reqs[i].write_handler(&kern_buff)) {
++				kfree(kern_buff_start);
++				return size;
++			}
 +	}
 +
-+	fb = xlnx_fb_alloc(drm, mode_cmd, objs, i);
-+	if (IS_ERR(fb)) {
-+		ret = PTR_ERR(fb);
-+		goto err_gem_object_unreference;
-+	}
-+
-+	fb->base.format = info;
-+
-+	return &fb->base;
-+
-+err_gem_object_unreference:
-+	for (i--; i >= 0; i--)
-+		drm_gem_object_unreference_unlocked(&objs[i]->base);
-+err_out:
-+	return ERR_PTR(ret);
++	kfree(kern_buff_start);
++	return -EINVAL;
 +}
 +
-+/**
-+ * xlnx_fb_hotplug_event - Poll for hotpulug events
-+ * @fb_helper: drm_fb_helper struct, may be NULL
-+ *
-+ * This function is based on drm_fbdev_cma_hotplug_event() and usually called
-+ * from the Xilinx DRM drivers output_poll_changed callback.
-+ */
-+void xlnx_fb_hotplug_event(struct drm_fb_helper *fb_helper)
++static const struct file_operations fops_zynqmp_dp_dbgfs = {
++	.owner = THIS_MODULE,
++	.read = zynqmp_dp_debugfs_read,
++	.write = zynqmp_dp_debugfs_write,
++};
++
++static int zynqmp_dp_debugfs_init(struct zynqmp_dp *dp)
 +{
-+	if (!fb_helper)
-+		return;
-+	drm_fb_helper_hotplug_event(fb_helper);
++	int err;
++	struct dentry *zynqmp_dp_debugfs_file;
++
++	dp_debugfs.testcase = DP_TC_NONE;
++	dp_debugfs.dp = dp;
++
++	zynqmp_dp_debugfs_dir = debugfs_create_dir("dp", NULL);
++	if (!zynqmp_dp_debugfs_dir) {
++		dev_err(dp->dev, "debugfs_create_dir failed\n");
++		return -ENODEV;
++	}
++
++	zynqmp_dp_debugfs_file =
++		debugfs_create_file("testcase", 0444, zynqmp_dp_debugfs_dir,
++				    NULL, &fops_zynqmp_dp_dbgfs);
++	if (!zynqmp_dp_debugfs_file) {
++		dev_err(dp->dev, "debugfs_create_file testcase failed\n");
++		err = -ENODEV;
++		goto err_dbgfs;
++	}
++	return 0;
++
++err_dbgfs:
++	debugfs_remove_recursive(zynqmp_dp_debugfs_dir);
++	zynqmp_dp_debugfs_dir = NULL;
++	return err;
 +}
-diff --git a/drivers/gpu/drm/xlnx/xlnx_fb.h b/drivers/gpu/drm/xlnx/xlnx_fb.h
-new file mode 100644
-index 0000000..3f7e962
---- /dev/null
-+++ b/drivers/gpu/drm/xlnx/xlnx_fb.h
-@@ -0,0 +1,30 @@
++
++static void zynqmp_dp_debugfs_exit(struct zynqmp_dp *dp)
++{
++	debugfs_remove_recursive(zynqmp_dp_debugfs_dir);
++	zynqmp_dp_debugfs_dir = NULL;
++}
++
++static void zynqmp_dp_debugfs_mode_config(struct zynqmp_dp *dp)
++{
++	dp->mode.bw_code =
++		dp_debugfs.link_rate ? dp_debugfs.link_rate : dp->mode.bw_code;
++	dp->mode.lane_cnt =
++		dp_debugfs.lane_cnt ? dp_debugfs.lane_cnt : dp->mode.lane_cnt;
++}
++
++#else /* DRM_ZYNQMP_DP_DEBUG_FS */
++
++static int zynqmp_dp_debugfs_init(struct zynqmp_dp *dp)
++{
++	return 0;
++}
++
++static void zynqmp_dp_debugfs_exit(struct zynqmp_dp *dp)
++{
++}
++
++static void zynqmp_dp_debugfs_mode_config(struct zynqmp_dp *dp)
++{
++}
++
++#endif /* DRM_ZYNQMP_DP_DEBUG_FS */
++
 +/*
-+ * Xilinx DRM KMS Framebuffer helper header
-+ *
-+ *  Copyright (C) 2015 - 2018 Xilinx, Inc.
-+ *
-+ *  Author: Hyun Woo Kwon <hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-+ *
-+ * SPDX-License-Identifier: GPL-2.0
-+ */
-+
-+#ifndef _XLNX_FB_H_
-+#define _XLNX_FB_H_
-+
-+struct drm_fb_helper;
-+
-+dma_addr_t
-+xlnx_fb_get_paddr(struct drm_framebuffer *base_fb, unsigned int plane);
-+
-+void xlnx_fb_restore_mode(struct drm_fb_helper *fb_helper);
-+struct drm_framebuffer *
-+xlnx_fb_create(struct drm_device *drm, struct drm_file *file_priv,
-+	       const struct drm_mode_fb_cmd2 *mode_cmd);
-+void xlnx_fb_hotplug_event(struct drm_fb_helper *fb_helper);
-+struct drm_fb_helper *
-+xlnx_fb_init(struct drm_device *drm, int preferred_bpp,
-+	     unsigned int max_conn_count, unsigned int align,
-+	     unsigned int vres_mult);
-+void xlnx_fb_fini(struct drm_fb_helper *fb_helper);
-+
-+#endif /* _XLNX_FB_H_ */
+  * Internal functions: used by zynqmp_disp.c
+  */
+ 
+@@ -597,6 +898,7 @@ static int zynqmp_dp_mode_configure(struct zynqmp_dp *dp, int pclock,
+ 			dp->mode.bw_code = bws[i];
+ 			dp->mode.lane_cnt = lane_cnt;
+ 			dp->mode.pclock = pclock;
++			zynqmp_dp_debugfs_mode_config(dp);
+ 			return dp->mode.bw_code;
+ 		}
+ 	}
+@@ -1840,6 +2142,7 @@ int zynqmp_dp_probe(struct platform_device *pdev)
+ 	dpsub = platform_get_drvdata(pdev);
+ 	dpsub->dp = dp;
+ 	dp->dpsub = dpsub;
++	zynqmp_dp_debugfs_init(dp);
+ 
+ 	return 0;
+ 
+@@ -1855,6 +2158,7 @@ int zynqmp_dp_remove(struct platform_device *pdev)
+ 	struct zynqmp_dpsub *dpsub = platform_get_drvdata(pdev);
+ 	struct zynqmp_dp *dp = dpsub->dp;
+ 
++	zynqmp_dp_debugfs_exit(dp);
+ 	zynqmp_dp_write(dp->iomem, ZYNQMP_DP_TX_ENABLE, 0);
+ 	drm_dp_aux_unregister(&dp->aux);
+ 	zynqmp_dp_exit_phy(dp);
 -- 
 2.7.4
 
