@@ -1,37 +1,45 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 4/7] drm/panel: simple: Add support for KEO
- TX31D200VM0BAA
-Date: Fri, 5 Jan 2018 12:47:00 -0600
-Message-ID: <20180105184700.tf45evf2ftflth5w@rob-hp-laptop>
-References: <1515046345-15881-1-git-send-email-jagan@amarulasolutions.com>
- <1515046345-15881-5-git-send-email-jagan@amarulasolutions.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v2 2/3] dt-bindings: usb: renesas_usbhs: Add support for RZ/A1
+Date: Fri,  5 Jan 2018 13:46:08 -0500
+Message-ID: <20180105184609.24106-3-chris.brandt@renesas.com>
+References: <20180105184609.24106-1-chris.brandt@renesas.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1515046345-15881-5-git-send-email-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+In-Reply-To: <20180105184609.24106-1-chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 04, 2018 at 11:42:22AM +0530, Jagan Teki wrote:
-> This adds support for the Kaohsiung Opto-Electronics.,
-> TX31D200VM0BAA 12.3" HSXGA LVDS panel, which can be
-> supported by the simple panel driver.
-> 
-> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-> ---
-> Changes for v2:
-> - Updated binding info about optional properties, node and example
-> 
->  .../bindings/display/panel/koe,tx31d200vm0baa.txt  | 25 ++++++++++++++++++++
+Document support for RZ/A1 SoCs
 
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>                 
+Signed-off-by: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+---
+v2:
+ * Added Reviewed-by
+---
+ Documentation/devicetree/bindings/usb/renesas_usbhs.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
->  drivers/gpu/drm/panel/panel-simple.c               | 27 ++++++++++++++++++++++
->  2 files changed, 52 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/koe,tx31d200vm0baa.txt
+diff --git a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
+index 47394ab788e3..d060172f1529 100644
+--- a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
++++ b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
+@@ -13,8 +13,10 @@ Required properties:
+ 	- "renesas,usbhs-r8a7795" for r8a7795 (R-Car H3) compatible device
+ 	- "renesas,usbhs-r8a7796" for r8a7796 (R-Car M3-W) compatible device
+ 	- "renesas,usbhs-r8a77995" for r8a77995 (R-Car D3) compatible device
++	- "renesas,usbhs-r7s72100" for r7s72100 (RZ/A1) compatible device
+ 	- "renesas,rcar-gen2-usbhs" for R-Car Gen2 or RZ/G1 compatible devices
+ 	- "renesas,rcar-gen3-usbhs" for R-Car Gen3 compatible device
++	- "renesas,rza1-usbhs" for RZ/A1 compatible device
+ 
+ 	When compatible with the generic version, nodes must list the
+ 	SoC-specific version corresponding to the platform first followed
+-- 
+2.15.1
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
