@@ -1,63 +1,122 @@
 From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH v2 4/5] pinctrl: imx7ulp: constify struct imx_cfg_params_decode
-Date: Sat,  6 Jan 2018 15:25:52 +0100
-Message-ID: <20180106142553.15322-5-stefan@agner.ch>
+Subject: [PATCH v2 5/5] pinctrl: imx6ul: add IOMUXC SNVS pinctrl driver for i.MX 6ULL
+Date: Sat,  6 Jan 2018 15:25:53 +0100
+Message-ID: <20180106142553.15322-6-stefan@agner.ch>
 References: <20180106142553.15322-1-stefan@agner.ch>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180106142553.15322-1-stefan@agner.ch>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linus.walleij@linaro.org, shawnguo@kernel.org, kernel@pengutronix.de
-Cc: fabio.estevam@nxp.com, aisheng.dong@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
+Cc: fabio.estevam@nxp.com, aisheng.dong@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Bai Ping <ping.bai@nxp.com>, Stefan Agner <stefan@agner.ch>
 List-Id: devicetree@vger.kernel.org
 
-The decode parameters are constant mark them const.
+From: Bai Ping <ping.bai@nxp.com>
 
-Cc: Dong Aisheng <aisheng.dong@nxp.com>
+On i.MX 6ULL, the BOOT_MODEx and TAMPERx pin MUX and CTRL registers
+are available in a separate IOMUXC_SNVS module. Add support for the
+IOMUXC_SNVS module to the i.MX 6UL pinctrl driver.
+
+Signed-off-by: Bai Ping <ping.bai@nxp.com>
 Signed-off-by: Stefan Agner <stefan@agner.ch>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- drivers/pinctrl/freescale/pinctrl-imx.c     | 2 +-
- drivers/pinctrl/freescale/pinctrl-imx.h     | 2 +-
- drivers/pinctrl/freescale/pinctrl-imx7ulp.c | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ .../bindings/pinctrl/fsl,imx6ul-pinctrl.txt        |  3 +-
+ drivers/pinctrl/freescale/pinctrl-imx6ul.c         | 52 ++++++++++++++++++++--
+ 2 files changed, 50 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/pinctrl/freescale/pinctrl-imx.c b/drivers/pinctrl/freescale/pinctrl-imx.c
-index 86256d25c4a3..24aaddd760a0 100644
---- a/drivers/pinctrl/freescale/pinctrl-imx.c
-+++ b/drivers/pinctrl/freescale/pinctrl-imx.c
-@@ -255,7 +255,7 @@ static u32 imx_pinconf_decode_generic_config(struct imx_pinctrl *ipctl,
- 					      unsigned int num_configs)
- {
- 	const struct imx_pinctrl_soc_info *info = ipctl->info;
--	struct imx_cfg_params_decode *decode;
-+	const struct imx_cfg_params_decode *decode;
- 	enum pin_config_param param;
- 	u32 raw_config = 0;
- 	u32 param_val;
-diff --git a/drivers/pinctrl/freescale/pinctrl-imx.h b/drivers/pinctrl/freescale/pinctrl-imx.h
-index 41ee75537da4..038e8c0e5b96 100644
---- a/drivers/pinctrl/freescale/pinctrl-imx.h
-+++ b/drivers/pinctrl/freescale/pinctrl-imx.h
-@@ -71,7 +71,7 @@ struct imx_pinctrl_soc_info {
- 	bool generic_pinconf;
- 	const struct pinconf_generic_params *custom_params;
- 	unsigned int num_custom_params;
--	struct imx_cfg_params_decode *decodes;
-+	const struct imx_cfg_params_decode *decodes;
- 	unsigned int num_decodes;
- 	void (*fixup)(unsigned long *configs, unsigned int num_configs,
- 		      u32 *raw_config);
-diff --git a/drivers/pinctrl/freescale/pinctrl-imx7ulp.c b/drivers/pinctrl/freescale/pinctrl-imx7ulp.c
-index 0406d8b39e6a..f363e45fd246 100644
---- a/drivers/pinctrl/freescale/pinctrl-imx7ulp.c
-+++ b/drivers/pinctrl/freescale/pinctrl-imx7ulp.c
-@@ -266,7 +266,7 @@ static const struct pinctrl_pin_desc imx7ulp_pinctrl_pads[] = {
- #define BP_MUX_MODE		8
- #define BM_PULL_ENABLED		BIT(1)
+diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx6ul-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/fsl,imx6ul-pinctrl.txt
+index a81bbf37ed66..7ca4f6118d9a 100644
+--- a/Documentation/devicetree/bindings/pinctrl/fsl,imx6ul-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/fsl,imx6ul-pinctrl.txt
+@@ -4,7 +4,8 @@ Please refer to fsl,imx-pinctrl.txt in this directory for common binding part
+ and usage.
  
--struct imx_cfg_params_decode imx7ulp_cfg_decodes[] = {
-+static const struct imx_cfg_params_decode imx7ulp_cfg_decodes[] = {
- 	IMX_CFG_PARAMS_DECODE(PIN_CONFIG_DRIVE_STRENGTH, 		BIT(6), 6),
- 	IMX_CFG_PARAMS_DECODE(PIN_CONFIG_DRIVE_PUSH_PULL,		BIT(5), 5),
- 	IMX_CFG_PARAMS_DECODE(PIN_CONFIG_SLEW_RATE,			BIT(2), 2),
+ Required properties:
+-- compatible: "fsl,imx6ul-iomuxc"
++- compatible: "fsl,imx6ul-iomuxc" for main IOMUX controller or
++  "fsl,imx6ull-iomuxc-snvs" for i.MX 6ULL's SNVS IOMUX controller.
+ - fsl,pins: each entry consists of 6 integers and represents the mux and config
+   setting for one pin.  The first 5 integers <mux_reg conf_reg input_reg mux_val
+   input_val> are specified using a PIN_FUNC_ID macro, which can be found in
+diff --git a/drivers/pinctrl/freescale/pinctrl-imx6ul.c b/drivers/pinctrl/freescale/pinctrl-imx6ul.c
+index 1aeb840aae1d..4580717ade19 100644
+--- a/drivers/pinctrl/freescale/pinctrl-imx6ul.c
++++ b/drivers/pinctrl/freescale/pinctrl-imx6ul.c
+@@ -150,6 +150,21 @@ enum imx6ul_pads {
+ 	MX6UL_PAD_CSI_DATA07 = 128,
+ };
+ 
++enum imx6ull_lpsr_pads {
++	MX6ULL_PAD_BOOT_MODE0 = 0,
++	MX6ULL_PAD_BOOT_MODE1 = 1,
++	MX6ULL_PAD_SNVS_TAMPER0 = 2,
++	MX6ULL_PAD_SNVS_TAMPER1 = 3,
++	MX6ULL_PAD_SNVS_TAMPER2 = 4,
++	MX6ULL_PAD_SNVS_TAMPER3 = 5,
++	MX6ULL_PAD_SNVS_TAMPER4 = 6,
++	MX6ULL_PAD_SNVS_TAMPER5 = 7,
++	MX6ULL_PAD_SNVS_TAMPER6 = 8,
++	MX6ULL_PAD_SNVS_TAMPER7 = 9,
++	MX6ULL_PAD_SNVS_TAMPER8 = 10,
++	MX6ULL_PAD_SNVS_TAMPER9 = 11,
++};
++
+ /* Pad names for the pinmux subsystem */
+ static const struct pinctrl_pin_desc imx6ul_pinctrl_pads[] = {
+ 	IMX_PINCTRL_PIN(MX6UL_PAD_RESERVE0),
+@@ -283,20 +298,49 @@ static const struct pinctrl_pin_desc imx6ul_pinctrl_pads[] = {
+ 	IMX_PINCTRL_PIN(MX6UL_PAD_CSI_DATA07),
+ };
+ 
+-static struct imx_pinctrl_soc_info imx6ul_pinctrl_info = {
++/* pad for i.MX6ULL lpsr pinmux */
++static const struct pinctrl_pin_desc imx6ull_snvs_pinctrl_pads[] = {
++	IMX_PINCTRL_PIN(MX6ULL_PAD_BOOT_MODE0),
++	IMX_PINCTRL_PIN(MX6ULL_PAD_BOOT_MODE1),
++	IMX_PINCTRL_PIN(MX6ULL_PAD_SNVS_TAMPER0),
++	IMX_PINCTRL_PIN(MX6ULL_PAD_SNVS_TAMPER1),
++	IMX_PINCTRL_PIN(MX6ULL_PAD_SNVS_TAMPER2),
++	IMX_PINCTRL_PIN(MX6ULL_PAD_SNVS_TAMPER3),
++	IMX_PINCTRL_PIN(MX6ULL_PAD_SNVS_TAMPER4),
++	IMX_PINCTRL_PIN(MX6ULL_PAD_SNVS_TAMPER5),
++	IMX_PINCTRL_PIN(MX6ULL_PAD_SNVS_TAMPER6),
++	IMX_PINCTRL_PIN(MX6ULL_PAD_SNVS_TAMPER7),
++	IMX_PINCTRL_PIN(MX6ULL_PAD_SNVS_TAMPER8),
++	IMX_PINCTRL_PIN(MX6ULL_PAD_SNVS_TAMPER9),
++};
++
++static const struct imx_pinctrl_soc_info imx6ul_pinctrl_info = {
+ 	.pins = imx6ul_pinctrl_pads,
+ 	.npins = ARRAY_SIZE(imx6ul_pinctrl_pads),
+ 	.gpr_compatible = "fsl,imx6ul-iomuxc-gpr",
+ };
+ 
+-static struct of_device_id imx6ul_pinctrl_of_match[] = {
+-	{ .compatible = "fsl,imx6ul-iomuxc", },
++static const struct imx_pinctrl_soc_info imx6ull_snvs_pinctrl_info = {
++	.pins = imx6ull_snvs_pinctrl_pads,
++	.npins = ARRAY_SIZE(imx6ull_snvs_pinctrl_pads),
++	.flags = ZERO_OFFSET_VALID,
++};
++
++static const struct of_device_id imx6ul_pinctrl_of_match[] = {
++	{ .compatible = "fsl,imx6ul-iomuxc", .data = &imx6ul_pinctrl_info, },
++	{ .compatible = "fsl,imx6ull-iomuxc-snvs", .data = &imx6ull_snvs_pinctrl_info, },
+ 	{ /* sentinel */ }
+ };
+ 
+ static int imx6ul_pinctrl_probe(struct platform_device *pdev)
+ {
+-	return imx_pinctrl_probe(pdev, &imx6ul_pinctrl_info);
++	const struct imx_pinctrl_soc_info *pinctrl_info;
++
++	pinctrl_info = of_device_get_match_data(&pdev->dev);
++	if (!pinctrl_info)
++		return -ENODEV;
++
++	return imx_pinctrl_probe(pdev, pinctrl_info);
+ }
+ 
+ static struct platform_driver imx6ul_pinctrl_driver = {
 -- 
 2.15.1
