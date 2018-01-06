@@ -1,45 +1,50 @@
-From: jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: [PATCH net-next v6 3/3] MAINTAINERS: Add entry for Socionext ethernet driver
-Date: Sat,  6 Jan 2018 19:44:56 +0530
-Message-ID: <1515248096-4314-1-git-send-email-jassisinghbrar@gmail.com>
-References: <1515247999-4041-1-git-send-email-jassisinghbrar@gmail.com>
+From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Subject: [PATCH v2 0/5] constify struct imx_pinctrl_soc_info
+Date: Sat,  6 Jan 2018 15:25:48 +0100
+Message-ID: <20180106142553.15322-1-stefan@agner.ch>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1515247999-4041-1-git-send-email-jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, arnd.bergmann-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Cc: fabio.estevam-3arQi8VN3Tc@public.gmane.org, aisheng.dong-3arQi8VN3Tc@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+This patchset grew out of the discussion around the first version
+of "pinctrl: imx6ul: add IOMUXC SNVS pinctrl driver for i.MX 6ULL".
+This is necessary for pinctrls of SoCs with multiple compatible
+strings (currently only imx7d) since the struct uses the .data
+pointer in struct of_device_id. It is also helpful for all other
+SoCs since it decreases the .data section for all drivers by 1276
+bytes.
 
-Add entry for the Socionext Netsec controller driver and DT bindings.
+Bai Ping (1):
+  pinctrl: imx6ul: add IOMUXC SNVS pinctrl driver for i.MX 6ULL
 
-Acked-by: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Signed-off-by: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
+Stefan Agner (4):
+  pinctrl: imx: use struct imx_pinctrl_soc_info as a const
+  pinctrl: imx7d: simplify imx7d_pinctrl_probe
+  pinctrl: imx: constify struct imx_pinctrl_soc_info
+  pinctrl: imx7ulp: constify struct imx_cfg_params_decode
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 753799d..3995483 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12645,6 +12645,13 @@ F:	drivers/md/raid*
- F:	include/linux/raid/
- F:	include/uapi/linux/raid/
- 
-+SOCIONEXT (SNI) NETSEC NETWORK DRIVER
-+M:	Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-+L:	netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-+S:	Maintained
-+F:	drivers/net/ethernet/socionext/netsec.c
-+F:	Documentation/devicetree/bindings/net/socionext-netsec.txt
-+
- SONIC NETWORK DRIVER
- M:	Thomas Bogendoerfer <tsbogend-I1c7kopa9pxLokYuJOExCg@public.gmane.org>
- L:	netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+ .../bindings/pinctrl/fsl,imx6ul-pinctrl.txt        |  3 +-
+ drivers/pinctrl/freescale/pinctrl-imx.c            | 81 ++++++++++------------
+ drivers/pinctrl/freescale/pinctrl-imx.h            | 13 ++--
+ drivers/pinctrl/freescale/pinctrl-imx25.c          |  2 +-
+ drivers/pinctrl/freescale/pinctrl-imx35.c          |  2 +-
+ drivers/pinctrl/freescale/pinctrl-imx50.c          |  2 +-
+ drivers/pinctrl/freescale/pinctrl-imx51.c          |  2 +-
+ drivers/pinctrl/freescale/pinctrl-imx53.c          |  2 +-
+ drivers/pinctrl/freescale/pinctrl-imx6dl.c         |  2 +-
+ drivers/pinctrl/freescale/pinctrl-imx6q.c          |  2 +-
+ drivers/pinctrl/freescale/pinctrl-imx6sl.c         |  2 +-
+ drivers/pinctrl/freescale/pinctrl-imx6sx.c         |  2 +-
+ drivers/pinctrl/freescale/pinctrl-imx6ul.c         | 52 ++++++++++++--
+ drivers/pinctrl/freescale/pinctrl-imx7d.c          | 10 +--
+ drivers/pinctrl/freescale/pinctrl-imx7ulp.c        |  7 +-
+ drivers/pinctrl/freescale/pinctrl-vf610.c          |  5 +-
+ 16 files changed, 111 insertions(+), 78 deletions(-)
+
 -- 
-2.7.4
+2.15.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
