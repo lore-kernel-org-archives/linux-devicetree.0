@@ -1,40 +1,73 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: Re: [PATCH 2/7] ARM: dts: imx6ul: update i.MX 6UltraLite iomux
- headers
-Date: Sat, 06 Jan 2018 11:47:08 +0100
-Message-ID: <1cce13f19ae1f4242437292a2960d38e@agner.ch>
-References: <20180102164223.15230-1-stefan@agner.ch>
- <20180102164223.15230-2-stefan@agner.ch>
- <20180105164505.uzv7nu3r6awuyxzu@rob-hp-laptop>
+From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Subject: Re: [PATCH] pinctrl: imx6ul: add IOMUXC SNVS pinctrl driver for i.MX
+ 6ULL
+Date: Sat, 06 Jan 2018 12:14:28 +0100
+Message-ID: <b6d157d12f87caa1ad2ab7c500aa17b2@agner.ch>
+References: <20180102164059.14641-1-stefan@agner.ch>
+ <CACRpkdYKiLeRZdBCWie+UGK=96FicXXmWvGUvwNFD2ZWOUx7Rw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180105164505.uzv7nu3r6awuyxzu@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Fugang Duan <fugang.duan@nxp.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACRpkdYKiLeRZdBCWie+UGK=96FicXXmWvGUvwNFD2ZWOUx7Rw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bai Ping <ping.bai-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2018-01-05 17:45, Rob Herring wrote:
-> On Tue, Jan 02, 2018 at 05:42:18PM +0100, Stefan Agner wrote:
->> From: Fugang Duan <fugang.duan@nxp.com>
->>
->> Update i.MX 6UltraLite IOMUXC pin defines.
+On 2018-01-03 09:09, Linus Walleij wrote:
+> On Tue, Jan 2, 2018 at 5:40 PM, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org> wrote:
 > 
-> That's obvious reading the diff. The commit message should tell me why. 
-> They were wrong?
+>> From: Bai Ping <ping.bai-3arQi8VN3Tc@public.gmane.org>
+>>
+>> On i.MX 6ULL, the BOOT_MODEx and TAMPERx pin MUX and CTRL registers
+>> are available in a separate IOMUXC_SNVS module. Add support for the
+>> IOMUXC_SNVS module to the i.MX 6UL pinctrl driver.
+>>
+>> Signed-off-by: Bai Ping <ping.bai-3arQi8VN3Tc@public.gmane.org>
+>> Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+> 
+> So 6 unsigned long 32 bit is succeeded by 6 unsigned long long, 64 bit?
+> 
+> Someone is having fun naming these platforms I see.
 
-I guess pretty much :-)
+Hehe, yeah definitely. At least they use proper type suffixes ;-)
 
-What I can tell from the change itself it seems that daisy chain
-configurations were missing. And some additional pinmux options. Will
-update the commit message accordingly.
+> 
+>>  Required properties:
+>> -- compatible: "fsl,imx6ul-iomuxc"
+>> +- compatible: "fsl,imx6ul-iomuxc" for main IOMUX controller or
+>> +  "fsl,imx6ull-iomuxc-snvs" for i.MX 6ULL's SNVS IOMUX controller.
+> 
+> Pretty uncontroversial change but still nice to give the DT people a chance
+> to ACK it.
+> 
+>>  static int imx6ul_pinctrl_probe(struct platform_device *pdev)
+>>  {
+>> -       return imx_pinctrl_probe(pdev, &imx6ul_pinctrl_info);
+>> +       const struct of_device_id *match;
+>> +       struct imx_pinctrl_soc_info *pinctrl_info;
+>> +
+>> +       match = of_match_device(imx6ul_pinctrl_of_match, &pdev->dev);
+>> +
+>> +       if (!match)
+>> +               return -ENODEV;
+>> +
+>> +       pinctrl_info = (struct imx_pinctrl_soc_info *) match->data;
+> 
+> 1. Do not use a cast on void * pointers.
+> 
+> 2. Use this function:
+> extern const void *of_device_get_match_data(const struct device *dev);
+> 
+> From <linux/of_device.h>
+
+Ok. We use the same code in pinmux-imx7d.c, will send a patch to
+simplify that too.
 
 --
 Stefan
-
-> 
->>
->> Signed-off-by: Fugang Duan <fugang.duan@nxp.com>
->> Signed-off-by: Stefan Agner <stefan@agner.ch>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
