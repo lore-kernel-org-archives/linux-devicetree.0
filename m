@@ -1,7 +1,7 @@
 From: Yixun Lan <yixun.lan@amlogic.com>
-Subject: [PATCH v2 3/5] ARM64: dts: meson-axg: uart: Add the pinctrl info description
-Date: Sat, 6 Jan 2018 08:10:42 +0800
-Message-ID: <20180106001044.108163-4-yixun.lan@amlogic.com>
+Subject: [PATCH v2 5/5] ARM64: dts: meson-axg: enable the UART_A controller
+Date: Sat, 6 Jan 2018 08:10:44 +0800
+Message-ID: <20180106001044.108163-6-yixun.lan@amlogic.com>
 References: <20180106001044.108163-1-yixun.lan@amlogic.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,134 +12,38 @@ To: Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org
 Cc: Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Carlo Caione <carlo@caione.org>, Yixun Lan <yixun.lan@amlogic.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Describe the pinctrl info for the UART controller which is found
-in the Meson-AXG SoCs.
+The UART_A is connected to a BT module on the S400 board.
 
+Acked-by: Jerome Brunet <jbrunet@baylibre.com>
 Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 97 ++++++++++++++++++++++++++++++
- 1 file changed, 97 insertions(+)
+ arch/arm64/boot/dts/amlogic/meson-axg-s400.dts | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-index 644d0f9eaf8c..1eb45781c850 100644
---- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-@@ -448,6 +448,70 @@
- 						function = "spi1";
- 					};
- 				};
-+
-+				uart_a_pins: uart_a {
-+					mux {
-+						groups = "uart_tx_a",
-+							"uart_rx_a";
-+						function = "uart_a";
-+					};
-+				};
-+
-+				uart_a_cts_rts_pins: uart_a_cts_rts {
-+					mux {
-+						groups = "uart_cts_a",
-+							"uart_rts_a";
-+						function = "uart_a";
-+					};
-+				};
-+
-+				uart_b_x_pins: uart_b_x {
-+					mux {
-+						groups = "uart_tx_b_x",
-+							"uart_rx_b_x";
-+						function = "uart_b";
-+					};
-+				};
-+
-+				uart_b_x_cts_rts_pins: uart_b_x_cts_rts {
-+					mux {
-+						groups = "uart_cts_b_x",
-+							"uart_rts_b_x";
-+						function = "uart_b";
-+					};
-+				};
-+
-+				uart_b_z_pins: uart_b_z {
-+					mux {
-+						groups = "uart_tx_b_z",
-+							"uart_rx_b_z";
-+						function = "uart_b";
-+					};
-+				};
-+
-+				uart_b_z_cts_rts_pins: uart_b_z_cts_rts {
-+					mux {
-+						groups = "uart_cts_b_z",
-+							"uart_rts_b_z";
-+						function = "uart_b";
-+					};
-+				};
-+
-+				uart_ao_b_z_pins: uart_ao_b_z {
-+					mux {
-+						groups = "uart_ao_tx_b_z",
-+							"uart_ao_rx_b_z";
-+						function = "uart_ao_b_gpioz";
-+					};
-+				};
-+
-+				uart_ao_b_z_cts_rts_pins: uart_ao_b_z_cts_rts {
-+					mux {
-+						groups = "uart_ao_cts_b_z",
-+							"uart_ao_rts_b_z";
-+						function = "uart_ao_b_gpioz";
-+					};
-+				};
- 			};
- 		};
+diff --git a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
+index 9c1b78028ccb..d56894dbb209 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
+@@ -14,6 +14,7 @@
  
-@@ -492,12 +556,45 @@
- 					gpio-ranges = <&pinctrl_aobus 0 0 15>;
- 				};
+ 	aliases {
+ 		serial0 = &uart_AO;
++		serial1 = &uart_A;
+ 	};
+ };
  
-+
- 				remote_input_ao_pins: remote_input_ao {
- 					mux {
- 						groups = "remote_input_ao";
- 						function = "remote_input_ao";
- 					};
- 				};
-+
-+				uart_ao_a_pins: uart_ao_a {
-+					mux {
-+						groups = "uart_ao_tx_a",
-+							"uart_ao_rx_a";
-+						function = "uart_ao_a";
-+					};
-+				};
-+
-+				uart_ao_a_cts_rts_pins: uart_ao_a_cts_rts {
-+					mux {
-+						groups = "uart_ao_cts_a",
-+							"uart_ao_rts_a";
-+						function = "uart_ao_a";
-+					};
-+				};
-+
-+				uart_ao_b_pins: uart_ao_b {
-+					mux {
-+						groups = "uart_ao_tx_b",
-+							"uart_ao_rx_b";
-+						function = "uart_ao_b";
-+					};
-+				};
-+
-+				uart_ao_b_cts_rts_pins: uart_ao_b_cts_rts {
-+					mux {
-+						groups = "uart_ao_cts_b",
-+							"uart_ao_rts_b";
-+						function = "uart_ao_b";
-+					};
-+				};
- 			};
+@@ -24,6 +25,12 @@
+ 	pinctrl-names = "default";
+ };
  
- 			pwm_AO_ab: pwm@7000 {
++&uart_A {
++	status = "okay";
++	pinctrl-0 = <&uart_a_pins>;
++	pinctrl-names = "default";
++};
++
+ &uart_AO {
+ 	status = "okay";
+ 	pinctrl-0 = <&uart_ao_a_pins>;
 -- 
 2.15.1
