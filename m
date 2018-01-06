@@ -1,120 +1,61 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH 2/2] cpufreq: imx6q: add 696MHz operating point for
- i.mx6ul
-Date: Sat, 6 Jan 2018 03:05:41 +0000
-Message-ID: <AM3PR04MB131556AF9BDE24E071A51300F51D0@AM3PR04MB1315.eurprd04.prod.outlook.com>
-References: <1514912859-17691-1-git-send-email-Anson.Huang@nxp.com>
- <1514912859-17691-2-git-send-email-Anson.Huang@nxp.com>
- <CAJZ5v0it+Gc5nTa5Vt8X8_OPHh6ndcQB3peAQA1SDsuQ2+FZKA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CAJZ5v0it+Gc5nTa5Vt8X8_OPHh6ndcQB3peAQA1SDsuQ2+FZKA@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-pm-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux PM <linux-pm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Jacky Bai <ping.bai@nxp.com>, "A.s. Dong" <aisheng.dong@nxp.com>
+From: Icenowy Zheng <icenowy@aosc.io>
+Subject: [PATCH 0/7] Initial Allwinner H6 support
+Date: Sat,  6 Jan 2018 12:18:06 +0800
+Message-ID: <20180106041813.46256-1-icenowy@aosc.io>
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, linux-sunxi@googlegroups.com, Icenowy Zheng <icenowy@aosc.io>
 List-Id: devicetree@vger.kernel.org
 
-SGksIFJhZmFlbA0KDQpCZXN0IFJlZ2FyZHMhDQpBbnNvbiBIdWFuZw0KDQoNCj4gLS0tLS1Pcmln
-aW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogcmp3eXNvY2tpQGdtYWlsLmNvbSBbbWFpbHRvOnJq
-d3lzb2NraUBnbWFpbC5jb21dIE9uIEJlaGFsZiBPZiBSYWZhZWwNCj4gSi4gV3lzb2NraQ0KPiBT
-ZW50OiAyMDE4LTAxLTA1IDg6MjEgUE0NCj4gVG86IEFuc29uIEh1YW5nIDxhbnNvbi5odWFuZ0Bu
-eHAuY29tPg0KPiBDYzogbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBkZXZp
-Y2V0cmVlQHZnZXIua2VybmVsLm9yZzsgTGludXgNCj4gUE0gPGxpbnV4LXBtQHZnZXIua2VybmVs
-Lm9yZz47IExpbnV4IEtlcm5lbCBNYWlsaW5nIExpc3QgPGxpbnV4LQ0KPiBrZXJuZWxAdmdlci5r
-ZXJuZWwub3JnPjsgU2hhd24gR3VvIDxzaGF3bmd1b0BrZXJuZWwub3JnPjsgU2FzY2hhIEhhdWVy
-DQo+IDxrZXJuZWxAcGVuZ3V0cm9uaXguZGU+OyBGYWJpbyBFc3RldmFtIDxmYWJpby5lc3RldmFt
-QG54cC5jb20+OyBSb2INCj4gSGVycmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPjsgTWFyayBSdXRs
-YW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT47DQo+IFJ1c3NlbGwgS2luZyAtIEFSTSBMaW51eCA8
-bGludXhAYXJtbGludXgub3JnLnVrPjsgUmFmYWVsIEouIFd5c29ja2kNCj4gPHJqd0Byand5c29j
-a2kubmV0PjsgVmlyZXNoIEt1bWFyIDx2aXJlc2gua3VtYXJAbGluYXJvLm9yZz47IEphY2t5IEJh
-aQ0KPiA8cGluZy5iYWlAbnhwLmNvbT47IEEucy4gRG9uZyA8YWlzaGVuZy5kb25nQG54cC5jb20+
-DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggMi8yXSBjcHVmcmVxOiBpbXg2cTogYWRkIDY5Nk1IeiBv
-cGVyYXRpbmcgcG9pbnQgZm9yDQo+IGkubXg2dWwNCj4gDQo+IE9uIFR1ZSwgSmFuIDIsIDIwMTgg
-YXQgNjowNyBQTSwgQW5zb24gSHVhbmcgPEFuc29uLkh1YW5nQG54cC5jb20+IHdyb3RlOg0KPiA+
-IEFkZCA2OTZNSHogb3BlcmF0aW5nIHBvaW50IGZvciBpLk1YNlVMLCBvbmx5IGZvciB0aG9zZSBw
-YXJ0cyB3aXRoDQo+ID4gc3BlZWQgZ3JhZGluZyBmdXNlIHNldCB0byAyYicxMCBzdXBwb3J0cyA2
-OTZNSHogb3BlcmF0aW5nIHBvaW50LCBzbywNCj4gPiBzcGVlZCBncmFkaW5nIGNoZWNrIGlzIGFs
-c28gYWRkZWQgZm9yIGkuTVg2VUwgaW4gdGhpcyBwYXRjaCwgdGhlIGNsb2NrDQo+ID4gdHJlZSBm
-b3IgZWFjaCBvcGVyYXRpbmcgcG9pbnQgYXJlIGFzIGJlbG93Og0KPiA+DQo+ID4gNjk2TUh6Og0K
-PiA+ICAgICBwbGwxICAgICAgICAgICAgICAgICAgICAgICA2OTYwMDAwMDANCj4gPiAgICAgICAg
-cGxsMV9ieXBhc3MgICAgICAgICAgICAgNjk2MDAwMDAwDQo+ID4gICAgICAgICAgIHBsbDFfc3lz
-ICAgICAgICAgICAgIDY5NjAwMDAwMA0KPiA+ICAgICAgICAgICAgICBwbGwxX3N3ICAgICAgICAg
-ICA2OTYwMDAwMDANCj4gPiAgICAgICAgICAgICAgICAgYXJtICAgICAgICAgICAgNjk2MDAwMDAw
-DQo+ID4gNTI4TUh6Og0KPiA+ICAgICBwbGwyICAgICAgICAgICAgICAgICAgICAgICA1MjgwMDAw
-MDANCj4gPiAgICAgICAgcGxsMl9ieXBhc3MgICAgICAgICAgICAgNTI4MDAwMDAwDQo+ID4gICAg
-ICAgICAgIHBsbDJfYnVzICAgICAgICAgICAgIDUyODAwMDAwMA0KPiA+ICAgICAgICAgICAgICBj
-YTdfc2Vjb25kYXJ5X3NlbCA1MjgwMDAwMDANCj4gPiAgICAgICAgICAgICAgICAgc3RlcCAgICAg
-ICAgICAgNTI4MDAwMDAwDQo+ID4gICAgICAgICAgICAgICAgICAgIHBsbDFfc3cgICAgIDUyODAw
-MDAwMA0KPiA+ICAgICAgICAgICAgICAgICAgICAgICBhcm0gICAgICA1MjgwMDAwMDANCj4gPiAz
-OTZNSHo6DQo+ID4gICAgIHBsbDJfcGZkMl8zOTZtICAgICAgICAgICAgIDM5NjAwMDAwMA0KPiA+
-ICAgICAgICBjYTdfc2Vjb25kYXJ5X3NlbCAgICAgICAzOTYwMDAwMDANCj4gPiAgICAgICAgICAg
-c3RlcCAgICAgICAgICAgICAgICAgMzk2MDAwMDAwDQo+ID4gICAgICAgICAgICAgIHBsbDFfc3cg
-ICAgICAgICAgIDM5NjAwMDAwMA0KPiA+ICAgICAgICAgICAgICAgICBhcm0gICAgICAgICAgICAz
-OTYwMDAwMDANCj4gPiAxOThNSHo6DQo+ID4gICAgIHBsbDJfcGZkMl8zOTZtICAgICAgICAgICAg
-IDM5NjAwMDAwMA0KPiA+ICAgICAgICBjYTdfc2Vjb25kYXJ5X3NlbCAgICAgICAzOTYwMDAwMDAN
-Cj4gPiAgICAgICAgICAgc3RlcCAgICAgICAgICAgICAgICAgMzk2MDAwMDAwDQo+ID4gICAgICAg
-ICAgICAgIHBsbDFfc3cgICAgICAgICAgIDM5NjAwMDAwMA0KPiA+ICAgICAgICAgICAgICAgICBh
-cm0gICAgICAgICAgICAxOTgwMDAwMDANCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEFuc29uIEh1
-YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiANCj4gVGhpcyBkb2Vzbid0IGFwcGx5IGZvciBt
-ZSBhbmQgaW4gYSBub250cml2aWFsIHdheS4NCj4gDQo+IFdoYXQga2VybmVsIGlzIGl0IGFnYWlu
-c3Q/DQoNCkkgZGlkIGl0IGJhc2VkIG9uIGxpbnV4LW5leHQsIGl0IHNob3VsZCBiZSBvbiBsaW51
-eC1uZXh0LXBtIGJyYW5jaCwgSSByZWRvDQp0aGUgcGF0Y2ggc2V0IFYyIGJhc2VkIG9uIGxpbnV4
-LW5leHQtcG0sIGFsc28gcmVkbyB0aGUgdGVzdCwNCnNvcnJ5IGZvciB0aGUgaW5jb252ZW5pZW5j
-ZS4NCg0KQW5zb24uDQoNCj4gDQo+ID4gLS0tDQo+ID4gIGRyaXZlcnMvY3B1ZnJlcS9pbXg2cS1j
-cHVmcmVxLmMgfCA0Ng0KPiA+ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KystDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCA0NSBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0p
-DQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9jcHVmcmVxL2lteDZxLWNwdWZyZXEuYw0K
-PiA+IGIvZHJpdmVycy9jcHVmcmVxL2lteDZxLWNwdWZyZXEuYyBpbmRleCBkOWIyYzJkLi5jYmRh
-MGNjIDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvY3B1ZnJlcS9pbXg2cS1jcHVmcmVxLmMNCj4g
-PiArKysgYi9kcml2ZXJzL2NwdWZyZXEvaW14NnEtY3B1ZnJlcS5jDQo+ID4gQEAgLTEyMCw2ICsx
-MjAsMTAgQEAgc3RhdGljIGludCBpbXg2cV9zZXRfdGFyZ2V0KHN0cnVjdCBjcHVmcmVxX3BvbGlj
-eQ0KPiAqcG9saWN5LCB1bnNpZ25lZCBpbnQgaW5kZXgpDQo+ID4gICAgICAgICAgICAgICAgICAg
-ICAgICAgY2xrX3NldF9wYXJlbnQoc2Vjb25kYXJ5X3NlbF9jbGssIHBsbDJfcGZkMl8zOTZtX2Ns
-ayk7DQo+ID4gICAgICAgICAgICAgICAgIGNsa19zZXRfcGFyZW50KHN0ZXBfY2xrLCBzZWNvbmRh
-cnlfc2VsX2Nsayk7DQo+ID4gICAgICAgICAgICAgICAgIGNsa19zZXRfcGFyZW50KHBsbDFfc3df
-Y2xrLCBzdGVwX2Nsayk7DQo+ID4gKyAgICAgICAgICAgICAgIGlmIChmcmVxX2h6ID4gY2xrX2dl
-dF9yYXRlKHBsbDJfYnVzX2NsaykpIHsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBjbGtf
-c2V0X3JhdGUocGxsMV9zeXNfY2xrLCBuZXdfZnJlcSAqIDEwMDApOw0KPiA+ICsgICAgICAgICAg
-ICAgICAgICAgICAgIGNsa19zZXRfcGFyZW50KHBsbDFfc3dfY2xrLCBwbGwxX3N5c19jbGspOw0K
-PiA+ICsgICAgICAgICAgICAgICB9DQo+ID4gICAgICAgICB9IGVsc2Ugew0KPiA+ICAgICAgICAg
-ICAgICAgICBjbGtfc2V0X3BhcmVudChzdGVwX2NsaywgcGxsMl9wZmQyXzM5Nm1fY2xrKTsNCj4g
-PiAgICAgICAgICAgICAgICAgY2xrX3NldF9wYXJlbnQocGxsMV9zd19jbGssIHN0ZXBfY2xrKTsg
-QEAgLTI0NCw2DQo+ID4gKzI0OCw0MyBAQCBzdGF0aWMgdm9pZCBpbXg2cV9vcHBfY2hlY2tfc3Bl
-ZWRfZ3JhZGluZyhzdHJ1Y3QgZGV2aWNlICpkZXYpDQo+ID4gICAgICAgICBvZl9ub2RlX3B1dChu
-cCk7DQo+ID4gIH0NCj4gPg0KPiA+ICsjZGVmaW5lIE9DT1RQX0NGRzNfNlVMX1NQRUVEXzY5Nk1I
-WiAgICAweDINCj4gPiArDQo+ID4gK3N0YXRpYyB2b2lkIGlteDZ1bF9vcHBfY2hlY2tfc3BlZWRf
-Z3JhZGluZyhzdHJ1Y3QgZGV2aWNlICpkZXYpIHsNCj4gPiArICAgICAgIHN0cnVjdCBkZXZpY2Vf
-bm9kZSAqbnA7DQo+ID4gKyAgICAgICB2b2lkIF9faW9tZW0gKmJhc2U7DQo+ID4gKyAgICAgICB1
-MzIgdmFsOw0KPiA+ICsNCj4gPiArICAgICAgIG5wID0gb2ZfZmluZF9jb21wYXRpYmxlX25vZGUo
-TlVMTCwgTlVMTCwgImZzbCxpbXg2dWwtb2NvdHAiKTsNCj4gPiArICAgICAgIGlmICghbnApDQo+
-ID4gKyAgICAgICAgICAgICAgIHJldHVybjsNCj4gPiArDQo+ID4gKyAgICAgICBiYXNlID0gb2Zf
-aW9tYXAobnAsIDApOw0KPiA+ICsgICAgICAgaWYgKCFiYXNlKSB7DQo+ID4gKyAgICAgICAgICAg
-ICAgIGRldl9lcnIoZGV2LCAiZmFpbGVkIHRvIG1hcCBvY290cFxuIik7DQo+ID4gKyAgICAgICAg
-ICAgICAgIGdvdG8gcHV0X25vZGU7DQo+ID4gKyAgICAgICB9DQo+ID4gKw0KPiA+ICsgICAgICAg
-LyoNCj4gPiArICAgICAgICAqIFNwZWVkIEdSQURJTkdbMTowXSBkZWZpbmVzIHRoZSBtYXggc3Bl
-ZWQgb2YgQVJNOg0KPiA+ICsgICAgICAgICogMmInMDA6IFJlc2VydmVkOw0KPiA+ICsgICAgICAg
-ICogMmInMDE6IDUyODAwMDAwMEh6Ow0KPiA+ICsgICAgICAgICogMmInMTA6IDY5NjAwMDAwMEh6
-Ow0KPiA+ICsgICAgICAgICogMmInMTE6IFJlc2VydmVkOw0KPiA+ICsgICAgICAgICogV2UgbmVl
-ZCB0byBzZXQgdGhlIG1heCBzcGVlZCBvZiBBUk0gYWNjb3JkaW5nIHRvIGZ1c2UgbWFwLg0KPiA+
-ICsgICAgICAgICovDQo+ID4gKyAgICAgICB2YWwgPSByZWFkbF9yZWxheGVkKGJhc2UgKyBPQ09U
-UF9DRkczKTsNCj4gPiArICAgICAgIHZhbCA+Pj0gT0NPVFBfQ0ZHM19TUEVFRF9TSElGVDsNCj4g
-PiArICAgICAgIHZhbCAmPSAweDM7DQo+ID4gKyAgICAgICBpZiAodmFsICE9IE9DT1RQX0NGRzNf
-NlVMX1NQRUVEXzY5Nk1IWikNCj4gPiArICAgICAgICAgICAgICAgaWYgKGRldl9wbV9vcHBfZGlz
-YWJsZShkZXYsIDY5NjAwMDAwMCkpDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgZGV2X3dh
-cm4oZGV2LCAiZmFpbGVkIHRvIGRpc2FibGUgNjk2TUh6IE9QUFxuIik7DQo+ID4gKyAgICAgICBp
-b3VubWFwKGJhc2UpOw0KPiA+ICtwdXRfbm9kZToNCj4gPiArICAgICAgIG9mX25vZGVfcHV0KG5w
-KTsNCj4gPiArfQ0KPiA+ICsNCj4gPiAgc3RhdGljIGludCBpbXg2cV9jcHVmcmVxX3Byb2JlKHN0
-cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpICB7DQo+ID4gICAgICAgICBzdHJ1Y3QgZGV2aWNl
-X25vZGUgKm5wOw0KPiA+IEBAIC0zMTEsNyArMzUyLDEwIEBAIHN0YXRpYyBpbnQgaW14NnFfY3B1
-ZnJlcV9wcm9iZShzdHJ1Y3QNCj4gcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPiA+ICAgICAgICAg
-ICAgICAgICBnb3RvIHB1dF9yZWc7DQo+ID4gICAgICAgICB9DQo+ID4NCj4gPiAtICAgICAgIGlt
-eDZxX29wcF9jaGVja19zcGVlZF9ncmFkaW5nKGNwdV9kZXYpOw0KPiA+ICsgICAgICAgaWYgKG9m
-X21hY2hpbmVfaXNfY29tcGF0aWJsZSgiZnNsLGlteDZ1bCIpKQ0KPiA+ICsgICAgICAgICAgICAg
-ICBpbXg2dWxfb3BwX2NoZWNrX3NwZWVkX2dyYWRpbmcoY3B1X2Rldik7DQo+ID4gKyAgICAgICBl
-bHNlDQo+ID4gKyAgICAgICAgICAgICAgIGlteDZxX29wcF9jaGVja19zcGVlZF9ncmFkaW5nKGNw
-dV9kZXYpOw0KPiA+DQo+ID4gICAgICAgICAvKiBCZWNhdXNlIHdlIGhhdmUgYWRkZWQgdGhlIE9Q
-UHMgaGVyZSwgd2UgbXVzdCBmcmVlIHRoZW0gKi8NCj4gPiAgICAgICAgIGZyZWVfb3BwID0gdHJ1
-ZTsNCj4gPiAtLQ0KPiA+IDEuOS4xDQo+ID4NCg==
+This patchset adds initial support for the Allwinner H6 SoC.
+
+It's quite different from earlier Allwinner SoCs. For example, the
+memory map is refactored, and the CCU is rearranged. It's also the first
+Allwinner SoC with PCI Express interface, and the second one with USB
+3.0 (the first one is A80).
+
+This patchset adds the most basical support for it, including the main pin
+controller, the main CCU and the basical device tree.
+
+Icenowy Zheng (7):
+  pinctrl: sunxi: add support for pin controllers without bus gate
+  pinctrl: sunxi: support pin controllers with holes among IRQ banks
+  pinctrl: sunxi: add support for the Allwinner H6 main pin controller
+  clk: sunxi-ng: Support fixed post-dividers on NKMP style clocks
+  clk: sunxi-ng: add support for the Allwinner H6 CCU
+  arm64: allwinner: h6: add the basical Allwinner H6 DTSI file
+  arm64: allwinner: h6: add support for Pine H64 board
+
+ .../devicetree/bindings/clock/sunxi-ccu.txt        |    1 +
+ .../bindings/pinctrl/allwinner,sunxi-pinctrl.txt   |    4 +-
+ arch/arm64/boot/dts/allwinner/Makefile             |    1 +
+ .../boot/dts/allwinner/sun50i-h6-pine-h64.dts      |   66 ++
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi       |  214 ++++
+ drivers/clk/sunxi-ng/Kconfig                       |    5 +
+ drivers/clk/sunxi-ng/Makefile                      |    1 +
+ drivers/clk/sunxi-ng/ccu-sun50i-h6.c               | 1206 ++++++++++++++++++++
+ drivers/clk/sunxi-ng/ccu-sun50i-h6.h               |   63 +
+ drivers/clk/sunxi-ng/ccu_nkmp.c                    |   20 +-
+ drivers/clk/sunxi-ng/ccu_nkmp.h                    |    2 +
+ drivers/pinctrl/sunxi/Kconfig                      |    4 +
+ drivers/pinctrl/sunxi/Makefile                     |    1 +
+ drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c          |  679 +++++++++++
+ drivers/pinctrl/sunxi/pinctrl-sun8i-a33.c          |    4 +-
+ drivers/pinctrl/sunxi/pinctrl-sun8i-v3s.c          |    4 +-
+ drivers/pinctrl/sunxi/pinctrl-sunxi.c              |   46 +-
+ drivers/pinctrl/sunxi/pinctrl-sunxi.h              |   42 +-
+ include/dt-bindings/clock/sun50i-h6-ccu.h          |  159 +++
+ include/dt-bindings/reset/sun50i-h6-ccu.h          |  110 ++
+ 20 files changed, 2595 insertions(+), 37 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
+ create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+ create mode 100644 drivers/clk/sunxi-ng/ccu-sun50i-h6.c
+ create mode 100644 drivers/clk/sunxi-ng/ccu-sun50i-h6.h
+ create mode 100644 drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c
+ create mode 100644 include/dt-bindings/clock/sun50i-h6-ccu.h
+ create mode 100644 include/dt-bindings/reset/sun50i-h6-ccu.h
+
+-- 
+2.14.2
+
