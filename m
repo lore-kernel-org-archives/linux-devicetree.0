@@ -1,50 +1,34 @@
-From: Brian Norris <briannorris@chromium.org>
-Subject: [PATCH 2/3] ARM: tegra: paz00: drop nonstandard 'backlight-boot-off'
-Date: Fri,  5 Jan 2018 16:47:56 -0800
-Message-ID: <20180106004757.8239-2-briannorris@chromium.org>
-References: <20180106004757.8239-1-briannorris@chromium.org>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH] ARM64: dts: meson-gxl: add internal ethernet PHY irq
+Date: Fri, 05 Jan 2018 16:54:24 -0800
+Message-ID: <7h1sj324e7.fsf@baylibre.com>
+References: <20171218102713.4506-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180106004757.8239-1-briannorris@chromium.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Heiko Stuebner <heiko@sntech.de>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>
-Cc: devicetree@vger.kernel.org, Lin Huang <hl@rock-chips.com>, Brian Norris <briannorris@chromium.org>, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171218102713.4506-1-jbrunet@baylibre.com> (Jerome Brunet's
+        message of "Mon, 18 Dec 2017 11:27:13 +0100")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jerome Brunet <jbrunet@baylibre.com>
+Cc: Carlo Caione <carlo@caione.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This was used out-of-tree as a hack for resolving issues where some
-systems expect the backlight to turn on automatically at boot, while
-others expect to manage the backlight status via a DRM/panel driver.
-Those issues have since been fixed upstream in pwm_bl.c without device
-tree hacks, and so this un-documented property should no longer be
-useful.
+Jerome Brunet <jbrunet@baylibre.com> writes:
 
-Signed-off-by: Brian Norris <briannorris@chromium.org>
----
- arch/arm/boot/dts/tegra20-paz00.dts | 2 --
- 1 file changed, 2 deletions(-)
+> Add the interrupt of the internal ethernet PHY
+>
+> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> ---
+> Hi Kevin,
+>
+> This changes depends on the net-next changes adding interrupt support [0].
+> It is really important that this change is not merged before its
+> dependency.
+>
+> If it is merged before, instead of polling, the phy would wait for an
+> interrupt which has not been configured and will never fire.
 
-diff --git a/arch/arm/boot/dts/tegra20-paz00.dts b/arch/arm/boot/dts/tegra20-paz00.dts
-index 30436969adc0..12c63b23ed5e 100644
---- a/arch/arm/boot/dts/tegra20-paz00.dts
-+++ b/arch/arm/boot/dts/tegra20-paz00.dts
-@@ -504,8 +504,6 @@
- 
- 		brightness-levels = <0 16 32 48 64 80 96 112 128 144 160 176 192 208 224 240 255>;
- 		default-brightness-level = <10>;
--
--		backlight-boot-off;
- 	};
- 
- 	clocks {
--- 
-2.16.0.rc0.223.g4a4ac83678-goog
+Thanks for the warning. I'll wait and merge these after -rc1 to be sure
+of all dependencies.
+
+Kevin
