@@ -1,39 +1,40 @@
-From: Li Wei <liwei213@huawei.com>
-Subject: [PATCH v7 4/5] arm64: defconfig: enable configs for Hisilicon ufs
-Date: Sat, 6 Jan 2018 17:51:16 +0800
-Message-ID: <20180106095117.67907-5-liwei213@huawei.com>
-References: <20180106095117.67907-1-liwei213@huawei.com>
+From: Stefan Agner <stefan@agner.ch>
+Subject: Re: [PATCH 2/7] ARM: dts: imx6ul: update i.MX 6UltraLite iomux
+ headers
+Date: Sat, 06 Jan 2018 11:47:08 +0100
+Message-ID: <1cce13f19ae1f4242437292a2960d38e@agner.ch>
+References: <20180102164223.15230-1-stefan@agner.ch>
+ <20180102164223.15230-2-stefan@agner.ch>
+ <20180105164505.uzv7nu3r6awuyxzu@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180106095117.67907-1-liwei213@huawei.com>
+In-Reply-To: <20180105164505.uzv7nu3r6awuyxzu@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, xuwei5@hisilicon.com, catalin.marinas@arm.com, will.deacon@arm.com, vinholikatti@gmail.com, jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, khilman@baylibre.com, arnd@arndb.de, gregory.clement@free-electrons.com, thomas.petazzoni@free-electrons.com, yamada.masahiro@socionext.com, riku.voipio@linaro.org, treding@nvidia.com, krzk@kernel.org, eric@anholt.net, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-scsi@vger.kernel.org
-Cc: zangleigang@hisilicon.com, gengjianfeng@hisilicon.com, guodong.xu@linaro.org, zhangfei.gao@linaro.org, fengbaopeng@hisilicon.com
+To: Rob Herring <robh@kernel.org>
+Cc: shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Fugang Duan <fugang.duan@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-This enable configs for Hisilicon Hixxxx UFS driver.
+On 2018-01-05 17:45, Rob Herring wrote:
+> On Tue, Jan 02, 2018 at 05:42:18PM +0100, Stefan Agner wrote:
+>> From: Fugang Duan <fugang.duan@nxp.com>
+>>
+>> Update i.MX 6UltraLite IOMUXC pin defines.
+> 
+> That's obvious reading the diff. The commit message should tell me why. 
+> They were wrong?
 
-Signed-off-by: Li Wei <liwei213@huawei.com>
-Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
-Signed-off-by: Guodong Xu <guodong.xu@linaro.org>
----
- arch/arm64/configs/defconfig | 3 +++
- 1 file changed, 3 insertions(+)
+I guess pretty much :-)
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 6356c6da34ea..fa6f921eed86 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -174,6 +174,9 @@ CONFIG_BLK_DEV_SD=y
- CONFIG_SCSI_SAS_ATA=y
- CONFIG_SCSI_HISI_SAS=y
- CONFIG_SCSI_HISI_SAS_PCI=y
-+CONFIG_SCSI_UFSHCD=y
-+CONFIG_SCSI_UFSHCD_PLATFORM=y
-+CONFIG_SCSI_UFS_HISI=y
- CONFIG_ATA=y
- CONFIG_SATA_AHCI=y
- CONFIG_SATA_AHCI_PLATFORM=y
--- 
-2.15.0
+What I can tell from the change itself it seems that daisy chain
+configurations were missing. And some additional pinmux options. Will
+update the commit message accordingly.
+
+--
+Stefan
+
+> 
+>>
+>> Signed-off-by: Fugang Duan <fugang.duan@nxp.com>
+>> Signed-off-by: Stefan Agner <stefan@agner.ch>
