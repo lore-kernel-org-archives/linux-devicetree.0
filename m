@@ -1,196 +1,100 @@
-From: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
-Subject: Re: [PATCH v2 1/2] nvmem: add driver for JZ4780 efuse
-Date: Sat, 6 Jan 2018 18:13:21 +0530
-Message-ID: <CANc+2y5Y9fYh5V5OG_o+-92-uLYew7yNObLGTYPhGyx2eExywA@mail.gmail.com>
-References: <20171228212954.2922-1-malat@debian.org> <20171228212954.2922-2-malat@debian.org>
- <20180103200211.u56tqesyumsofoff@rob-hp-laptop>
+From: Jun Li <jun.li-3arQi8VN3Tc@public.gmane.org>
+Subject: RE: [PATCH 1/2] dt-bindings: usb-xhci: add usb3-resume-missing-cas
+ property
+Date: Sat, 6 Jan 2018 14:09:41 +0000
+Message-ID: <VI1PR0402MB3917130B9C19EE653275E4AB891D0@VI1PR0402MB3917.eurprd04.prod.outlook.com>
+References: <1513051038-20311-1-git-send-email-jun.li@nxp.com>
+ <20171215222600.qffkck67qjwwpref@rob-hp-laptop>
+ <VI1PR0402MB3917A48717786AD69B393C3D890E0@VI1PR0402MB3917.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180103200211.u56tqesyumsofoff@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mathieu Malaterre <malat@debian.org>, Marcin Nowakowski <marcin.nowakowski@mips.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Zubair.Kakakhel@mips.com, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, open list <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, linux-mips@linux-mips.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <VI1PR0402MB3917A48717786AD69B393C3D890E0-9IDQY6o3qQgCJ0qg4/1i1Y3W/0Ik+aLCnBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jun Li <jun.li-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi Rob
 
-On 4 January 2018 at 01:32, Rob Herring <robh@kernel.org> wrote:
-> On Thu, Dec 28, 2017 at 10:29:52PM +0100, Mathieu Malaterre wrote:
->> From: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
->>
->> This patch brings support for the JZ4780 efuse. Currently it only expose
->> a read only access to the entire 8K bits efuse memory.
->>
->> Tested-by: Mathieu Malaterre <malat@debian.org>
->> Signed-off-by: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
->> Signed-off-by: Mathieu Malaterre <malat@debian.org>
->> ---
->>  .../ABI/testing/sysfs-driver-jz4780-efuse          |  16 ++
->>  .../bindings/nvmem/ingenic,jz4780-efuse.txt        |  17 ++
->
-> Please split bindings to separate patch.
->
->>  MAINTAINERS                                        |   5 +
->>  arch/mips/boot/dts/ingenic/jz4780.dtsi             |  40 ++-
->
-> dts files should also be separate.
->
->>  drivers/nvmem/Kconfig                              |  10 +
->>  drivers/nvmem/Makefile                             |   2 +
->>  drivers/nvmem/jz4780-efuse.c                       | 305 +++++++++++++++++++++
->>  7 files changed, 383 insertions(+), 12 deletions(-)
->>  create mode 100644 Documentation/ABI/testing/sysfs-driver-jz4780-efuse
->>  create mode 100644 Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.txt
->>  create mode 100644 drivers/nvmem/jz4780-efuse.c
->>
->> diff --git a/Documentation/ABI/testing/sysfs-driver-jz4780-efuse b/Documentation/ABI/testing/sysfs-driver-jz4780-efuse
->> new file mode 100644
->> index 000000000000..bb6f5d6ceea0
->> --- /dev/null
->> +++ b/Documentation/ABI/testing/sysfs-driver-jz4780-efuse
->> @@ -0,0 +1,16 @@
->> +What:                /sys/devices/*/<our-device>/nvmem
->> +Date:                December 2017
->> +Contact:     PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
->> +Description: read-only access to the efuse on the Ingenic JZ4780 SoC
->> +             The SoC has a one time programmable 8K efuse that is
->> +             split into segments. The driver supports read only.
->> +             The segments are
->> +             0x000   64 bit Random Number
->> +             0x008  128 bit Ingenic Chip ID
->> +             0x018  128 bit Customer ID
->> +             0x028 3520 bit Reserved
->> +             0x1E0    8 bit Protect Segment
->> +             0x1E1 2296 bit HDMI Key
->> +             0x300 2048 bit Security boot key
->
-> Why do these need to be exposed to userspace?
->
-> sysfs is 1 value per file and this is lots of different things.
->
-> We already have ways to feed random data (entropy) to the system. And we
-> have a way to expose SoC ID info to userspace (socdev).
+> -----Original Message-----
+> From: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org [mailto:linux-usb-
+> owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org] On Behalf Of Jun Li
+> Sent: Monday, December 18, 2017 4:36 PM
+> To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org; gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org;
+> mark.rutland-5wv7dgnIgG8@public.gmane.org; linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
+> devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Subject: RE: [PATCH 1/2] dt-bindings: usb-xhci: add usb3-resume-missing-c=
+as
+> property
+>=20
+> > -----Original Message-----
+> > From: Rob Herring [mailto:robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org]
+> > Sent: Saturday, December 16, 2017 6:26 AM
+> > To: Jun Li <jun.li-3arQi8VN3Tc@public.gmane.org>
+> > Cc: mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org; gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org;
+> > mark.rutland-5wv7dgnIgG8@public.gmane.org; linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
+> > devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> > Subject: Re: [PATCH 1/2] dt-bindings: usb-xhci: add
+> > usb3-resume-missing-cas property
+> >
+> > On Tue, Dec 12, 2017 at 11:57:17AM +0800, Li Jun wrote:
+> > > Adding 'usb3-resume-missing-cas' property to enable XHCI_MISSING_CAS
+> > > quirk flag in case there is CAS missing if device plugged in S3.
+> > >
+> > > Signed-off-by: Li Jun <jun.li-3arQi8VN3Tc@public.gmane.org>
+> > > ---
+> > >  Documentation/devicetree/bindings/usb/usb-xhci.txt | 2 ++
+> > >  1 file changed, 2 insertions(+)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/usb/usb-xhci.txt
+> > > b/Documentation/devicetree/bindings/usb/usb-xhci.txt
+> > > index e2ea59b..c413e188 100644
+> > > --- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
+> > > +++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
+> > > @@ -32,6 +32,8 @@ Optional properties:
+> > >    - usb3-lpm-capable: determines if platform is USB3 LPM capable
+> > >    - quirk-broken-port-ped: set if the controller has broken port
+> > > disable
+> > mechanism
+> > >    - imod-interval-ns: default interrupt moderation interval is
+> > > 5000ns
+> > > +  - usb3-resume-missing-cas: set if the CAS(Cold Attach Status) may
+> > > + lose in
+> > case
+> > > +    usb3 device plugged in while system sleep.
+> >
+> > This should be implied by an SoC specific compatible string for the XHC=
+I block.
+>=20
+> The quirk is already using on some PCI platforms(xhci-pci.c), so I think =
+it will be
+> possible used for other SoCs as well in future.
 
-Currently ingenic chip id is not used anywhere. The vendor BSP exposed
-only chip id and customer id. Should we do the same? Please provide
-your suggestion.
+Do you still think I should add SoC specific compatible string for this?
 
->> +Users:               any user space application which wants to read the Chip
->> +             and Customer ID
->> diff --git a/Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.txt b/Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.txt
->> new file mode 100644
->> index 000000000000..cd6d67ec22fc
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.txt
->> @@ -0,0 +1,17 @@
->> +Ingenic JZ EFUSE driver bindings
->> +
->> +Required properties:
->> +- "compatible"               Must be set to "ingenic,jz4780-efuse"
->> +- "reg"                      Register location and length
->> +- "clocks"           Handle for the ahb clock for the efuse.
->> +- "clock-names"              Must be "bus_clk"
->> +
->> +Example:
->> +
->> +efuse: efuse@134100d0 {
->> +     compatible = "ingenic,jz4780-efuse";
->> +     reg = <0x134100D0 0xFF>;
->> +
->> +     clocks = <&cgu JZ4780_CLK_AHB2>;
->> +     clock-names = "bus_clk";
->> +};
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index a6e86e20761e..7a050c20c533 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -6902,6 +6902,11 @@ M:     Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
->>  S:   Maintained
->>  F:   drivers/dma/dma-jz4780.c
->>
->> +INGENIC JZ4780 EFUSE Driver
->> +M:   PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
->> +S:   Maintained
->> +F:   drivers/nvmem/jz4780-efuse.c
->
-> Binding file?
-
-Sorry, missed it. Will add it.
-
->> +
->>  INGENIC JZ4780 NAND DRIVER
->>  M:   Harvey Hunt <harveyhuntnexus@gmail.com>
->>  L:   linux-mtd@lists.infradead.org
->> diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi b/arch/mips/boot/dts/ingenic/jz4780.dtsi
->> index 9b5794667aee..3fb9d916a2ea 100644
->> --- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
->> +++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
->> @@ -224,21 +224,37 @@
->>               reg = <0x10002000 0x100>;
->>       };
->>
->> -     nemc: nemc@13410000 {
->> -             compatible = "ingenic,jz4780-nemc";
->> -             reg = <0x13410000 0x10000>;
->> -             #address-cells = <2>;
->> +
->> +     ahb2: ahb2 {
->> +             compatible = "simple-bus";
->
-> This is an unrelated change and should be its own patch.
-
-The efuse register address range is a subset of address range of nemc.
-So decided to make nemc and efuse as nodes with parent node ahb2. This
-is required for efuse driver to work. I am not able to understand what
-you mean by unrelated change. Can you please explain it?
-
->> +             #address-cells = <1>;
->>               #size-cells = <1>;
->> -             ranges = <1 0 0x1b000000 0x1000000
->> -                       2 0 0x1a000000 0x1000000
->> -                       3 0 0x19000000 0x1000000
->> -                       4 0 0x18000000 0x1000000
->> -                       5 0 0x17000000 0x1000000
->> -                       6 0 0x16000000 0x1000000>;
->> +             ranges = <>;
->> +
->> +             nemc: nemc@13410000 {
->> +                     compatible = "ingenic,jz4780-nemc";
->> +                     reg = <0x13410000 0x10000>;
->> +                     #address-cells = <2>;
->> +                     #size-cells = <1>;
->> +                     ranges = <1 0 0x1b000000 0x1000000
->> +                               2 0 0x1a000000 0x1000000
->> +                               3 0 0x19000000 0x1000000
->> +                               4 0 0x18000000 0x1000000
->> +                               5 0 0x17000000 0x1000000
->> +                               6 0 0x16000000 0x1000000>;
->> +
->> +                     clocks = <&cgu JZ4780_CLK_NEMC>;
->> +
->> +                     status = "disabled";
->> +             };
->>
->> -             clocks = <&cgu JZ4780_CLK_NEMC>;
->> +             efuse: efuse@134100d0 {
->> +                     compatible = "ingenic,jz4780-efuse";
->> +                     reg = <0x134100d0 0xff>;
->
-> You are creating an overlapping region here with nemc above. Don't do
-> that.
-
-Should "reg = <0x13410000 0x10000>;" be used instead?
-
->
->>
->> -             status = "disabled";
->> +                     clocks = <&cgu JZ4780_CLK_AHB2>;
->> +                     clock-names = "bus_clk";
->> +             };
->>       };
->>
->>       bch: bch@134d0000 {
-
-Thanks,
-PrasannaKumar
+Jun Li
+>=20
+> thanks
+> Jun Li
+>=20
+> >
+> > Rob
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-usb" in t=
+he body of
+> a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org More majordomo info at
+> https://emea01.safelinks.protection.outlook.com/?url=3Dhttp%3A%2F%2Fvger.=
+ke
+> rnel.org%2Fmajordomo-
+> info.html&data=3D02%7C01%7Cjun.li%40nxp.com%7C4ab4c3f3e85e475b06f808d
+> 545f2615a%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C636491829
+> 682216310&sdata=3D8YEh55OxgmvsQAi5mtZS%2B5wdcWTRiXuKsfyoxmCjILQ%3D
+> &reserved=3D0
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
