@@ -1,180 +1,59 @@
-From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Subject: [PATCH v2 3/5] pinctrl: imx: constify struct imx_pinctrl_soc_info
-Date: Sat,  6 Jan 2018 15:25:51 +0100
-Message-ID: <20180106142553.15322-4-stefan@agner.ch>
+From: Stefan Agner <stefan@agner.ch>
+Subject: [PATCH v2 2/5] pinctrl: imx7d: simplify imx7d_pinctrl_probe
+Date: Sat,  6 Jan 2018 15:25:50 +0100
+Message-ID: <20180106142553.15322-3-stefan@agner.ch>
 References: <20180106142553.15322-1-stefan@agner.ch>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180106142553.15322-1-stefan-XLVq0VzYD2Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
-Cc: fabio.estevam-3arQi8VN3Tc@public.gmane.org, aisheng.dong-3arQi8VN3Tc@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180106142553.15322-1-stefan@agner.ch>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linus.walleij@linaro.org, shawnguo@kernel.org, kernel@pengutronix.de
+Cc: aisheng.dong@nxp.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>, robh+dt@kernel.org, fabio.estevam@nxp.com, Arvind Yadav <arvind.yadav.cs@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Now that imx_pinctrl_probe accepts const struct imx_pinctrl_soc_info
-we can constify all declarations of struct imx_pinctrl_soc_info.
+Using of_device_get_match_data in imx7d_pinctrl_probe simplifies
+the function. Also get rid of the void pointer cast since
+imx_pinctrl_probe now accepts const struct imx_pinctrl_soc_info.
 
-Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Cc: Arvind Yadav <arvind.yadav.cs@gmail.com>
+Signed-off-by: Stefan Agner <stefan@agner.ch>
 ---
- drivers/pinctrl/freescale/pinctrl-imx25.c   | 2 +-
- drivers/pinctrl/freescale/pinctrl-imx35.c   | 2 +-
- drivers/pinctrl/freescale/pinctrl-imx50.c   | 2 +-
- drivers/pinctrl/freescale/pinctrl-imx51.c   | 2 +-
- drivers/pinctrl/freescale/pinctrl-imx53.c   | 2 +-
- drivers/pinctrl/freescale/pinctrl-imx6dl.c  | 2 +-
- drivers/pinctrl/freescale/pinctrl-imx6q.c   | 2 +-
- drivers/pinctrl/freescale/pinctrl-imx6sl.c  | 2 +-
- drivers/pinctrl/freescale/pinctrl-imx6sx.c  | 2 +-
- drivers/pinctrl/freescale/pinctrl-imx7ulp.c | 2 +-
- drivers/pinctrl/freescale/pinctrl-vf610.c   | 2 +-
- 11 files changed, 11 insertions(+), 11 deletions(-)
+ drivers/pinctrl/freescale/pinctrl-imx7d.c | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/pinctrl/freescale/pinctrl-imx25.c b/drivers/pinctrl/freescale/pinctrl-imx25.c
-index d7367fabe712..db6d9d1382f9 100644
---- a/drivers/pinctrl/freescale/pinctrl-imx25.c
-+++ b/drivers/pinctrl/freescale/pinctrl-imx25.c
-@@ -309,7 +309,7 @@ static const struct pinctrl_pin_desc imx25_pinctrl_pads[] = {
- 	IMX_PINCTRL_PIN(MX25_PAD_BOOT_MODE1),
- };
+diff --git a/drivers/pinctrl/freescale/pinctrl-imx7d.c b/drivers/pinctrl/freescale/pinctrl-imx7d.c
+index 754159ee7b1e..0b0a2f33b06a 100644
+--- a/drivers/pinctrl/freescale/pinctrl-imx7d.c
++++ b/drivers/pinctrl/freescale/pinctrl-imx7d.c
+@@ -378,16 +378,12 @@ static const struct of_device_id imx7d_pinctrl_of_match[] = {
  
--static struct imx_pinctrl_soc_info imx25_pinctrl_info = {
-+static const struct imx_pinctrl_soc_info imx25_pinctrl_info = {
- 	.pins = imx25_pinctrl_pads,
- 	.npins = ARRAY_SIZE(imx25_pinctrl_pads),
- };
-diff --git a/drivers/pinctrl/freescale/pinctrl-imx35.c b/drivers/pinctrl/freescale/pinctrl-imx35.c
-index 6315ba6af431..6927946ae4b5 100644
---- a/drivers/pinctrl/freescale/pinctrl-imx35.c
-+++ b/drivers/pinctrl/freescale/pinctrl-imx35.c
-@@ -999,7 +999,7 @@ static const struct pinctrl_pin_desc imx35_pinctrl_pads[] = {
- 	IMX_PINCTRL_PIN(MX35_PAD_TEST_MODE),
- };
+ static int imx7d_pinctrl_probe(struct platform_device *pdev)
+ {
+-	const struct of_device_id *match;
+-	struct imx_pinctrl_soc_info *pinctrl_info;
++	const struct imx_pinctrl_soc_info *pinctrl_info;
  
--static struct imx_pinctrl_soc_info imx35_pinctrl_info = {
-+static const struct imx_pinctrl_soc_info imx35_pinctrl_info = {
- 	.pins = imx35_pinctrl_pads,
- 	.npins = ARRAY_SIZE(imx35_pinctrl_pads),
- };
-diff --git a/drivers/pinctrl/freescale/pinctrl-imx50.c b/drivers/pinctrl/freescale/pinctrl-imx50.c
-index 8e3a17df5c5d..eb349b97290f 100644
---- a/drivers/pinctrl/freescale/pinctrl-imx50.c
-+++ b/drivers/pinctrl/freescale/pinctrl-imx50.c
-@@ -385,7 +385,7 @@ static const struct pinctrl_pin_desc imx50_pinctrl_pads[] = {
- 	IMX_PINCTRL_PIN(MX50_PAD_EIM_CRE),
- };
+-	match = of_match_device(imx7d_pinctrl_of_match, &pdev->dev);
+-
+-	if (!match)
++	pinctrl_info = of_device_get_match_data(&pdev->dev);
++	if (!pinctrl_info)
+ 		return -ENODEV;
  
--static struct imx_pinctrl_soc_info imx50_pinctrl_info = {
-+static const struct imx_pinctrl_soc_info imx50_pinctrl_info = {
- 	.pins = imx50_pinctrl_pads,
- 	.npins = ARRAY_SIZE(imx50_pinctrl_pads),
- 	.gpr_compatible = "fsl,imx50-iomuxc-gpr",
-diff --git a/drivers/pinctrl/freescale/pinctrl-imx51.c b/drivers/pinctrl/freescale/pinctrl-imx51.c
-index eeac64ba2709..49acd991b5fb 100644
---- a/drivers/pinctrl/freescale/pinctrl-imx51.c
-+++ b/drivers/pinctrl/freescale/pinctrl-imx51.c
-@@ -762,7 +762,7 @@ static const struct pinctrl_pin_desc imx51_pinctrl_pads[] = {
- 	IMX_PINCTRL_PIN(MX51_PAD_CSI1_MCLK),
- };
- 
--static struct imx_pinctrl_soc_info imx51_pinctrl_info = {
-+static const struct imx_pinctrl_soc_info imx51_pinctrl_info = {
- 	.pins = imx51_pinctrl_pads,
- 	.npins = ARRAY_SIZE(imx51_pinctrl_pads),
- };
-diff --git a/drivers/pinctrl/freescale/pinctrl-imx53.c b/drivers/pinctrl/freescale/pinctrl-imx53.c
-index 46a9572f3473..6dd0c60eaea4 100644
---- a/drivers/pinctrl/freescale/pinctrl-imx53.c
-+++ b/drivers/pinctrl/freescale/pinctrl-imx53.c
-@@ -448,7 +448,7 @@ static const struct pinctrl_pin_desc imx53_pinctrl_pads[] = {
- 	IMX_PINCTRL_PIN(MX53_PAD_GPIO_18),
- };
- 
--static struct imx_pinctrl_soc_info imx53_pinctrl_info = {
-+static const struct imx_pinctrl_soc_info imx53_pinctrl_info = {
- 	.pins = imx53_pinctrl_pads,
- 	.npins = ARRAY_SIZE(imx53_pinctrl_pads),
- 	.gpr_compatible = "fsl,imx53-iomuxc-gpr",
-diff --git a/drivers/pinctrl/freescale/pinctrl-imx6dl.c b/drivers/pinctrl/freescale/pinctrl-imx6dl.c
-index 3f25ca5867cc..91b85fc01de8 100644
---- a/drivers/pinctrl/freescale/pinctrl-imx6dl.c
-+++ b/drivers/pinctrl/freescale/pinctrl-imx6dl.c
-@@ -457,7 +457,7 @@ static const struct pinctrl_pin_desc imx6dl_pinctrl_pads[] = {
- 	IMX_PINCTRL_PIN(MX6DL_PAD_SD4_DAT7),
- };
- 
--static struct imx_pinctrl_soc_info imx6dl_pinctrl_info = {
-+static const struct imx_pinctrl_soc_info imx6dl_pinctrl_info = {
- 	.pins = imx6dl_pinctrl_pads,
- 	.npins = ARRAY_SIZE(imx6dl_pinctrl_pads),
- 	.gpr_compatible = "fsl,imx6q-iomuxc-gpr",
-diff --git a/drivers/pinctrl/freescale/pinctrl-imx6q.c b/drivers/pinctrl/freescale/pinctrl-imx6q.c
-index d61651c40458..5f653d69d0f5 100644
---- a/drivers/pinctrl/freescale/pinctrl-imx6q.c
-+++ b/drivers/pinctrl/freescale/pinctrl-imx6q.c
-@@ -460,7 +460,7 @@ static const struct pinctrl_pin_desc imx6q_pinctrl_pads[] = {
- 	IMX_PINCTRL_PIN(MX6Q_PAD_SD2_DAT3),
- };
- 
--static struct imx_pinctrl_soc_info imx6q_pinctrl_info = {
-+static const struct imx_pinctrl_soc_info imx6q_pinctrl_info = {
- 	.pins = imx6q_pinctrl_pads,
- 	.npins = ARRAY_SIZE(imx6q_pinctrl_pads),
- 	.gpr_compatible = "fsl,imx6q-iomuxc-gpr",
-diff --git a/drivers/pinctrl/freescale/pinctrl-imx6sl.c b/drivers/pinctrl/freescale/pinctrl-imx6sl.c
-index d023f6b00623..1167dc273c04 100644
---- a/drivers/pinctrl/freescale/pinctrl-imx6sl.c
-+++ b/drivers/pinctrl/freescale/pinctrl-imx6sl.c
-@@ -363,7 +363,7 @@ static const struct pinctrl_pin_desc imx6sl_pinctrl_pads[] = {
- 	IMX_PINCTRL_PIN(MX6SL_PAD_WDOG_B),
- };
- 
--static struct imx_pinctrl_soc_info imx6sl_pinctrl_info = {
-+static const struct imx_pinctrl_soc_info imx6sl_pinctrl_info = {
- 	.pins = imx6sl_pinctrl_pads,
- 	.npins = ARRAY_SIZE(imx6sl_pinctrl_pads),
- 	.gpr_compatible = "fsl,imx6sl-iomuxc-gpr",
-diff --git a/drivers/pinctrl/freescale/pinctrl-imx6sx.c b/drivers/pinctrl/freescale/pinctrl-imx6sx.c
-index 898b781701e6..15ea56c75f68 100644
---- a/drivers/pinctrl/freescale/pinctrl-imx6sx.c
-+++ b/drivers/pinctrl/freescale/pinctrl-imx6sx.c
-@@ -367,7 +367,7 @@ static const struct pinctrl_pin_desc imx6sx_pinctrl_pads[] = {
- 	IMX_PINCTRL_PIN(MX6SX_PAD_USB_H_STROBE),
- };
- 
--static struct imx_pinctrl_soc_info imx6sx_pinctrl_info = {
-+static const struct imx_pinctrl_soc_info imx6sx_pinctrl_info = {
- 	.pins = imx6sx_pinctrl_pads,
- 	.npins = ARRAY_SIZE(imx6sx_pinctrl_pads),
- 	.gpr_compatible = "fsl,imx6sx-iomuxc-gpr",
-diff --git a/drivers/pinctrl/freescale/pinctrl-imx7ulp.c b/drivers/pinctrl/freescale/pinctrl-imx7ulp.c
-index 9161c984f57b..0406d8b39e6a 100644
---- a/drivers/pinctrl/freescale/pinctrl-imx7ulp.c
-+++ b/drivers/pinctrl/freescale/pinctrl-imx7ulp.c
-@@ -324,7 +324,7 @@ static int imx7ulp_pmx_gpio_set_direction(struct pinctrl_dev *pctldev,
- 	return 0;
+-	pinctrl_info = (struct imx_pinctrl_soc_info *) match->data;
+-
+ 	return imx_pinctrl_probe(pdev, pinctrl_info);
  }
  
--static struct imx_pinctrl_soc_info imx7ulp_pinctrl_info = {
-+static const struct imx_pinctrl_soc_info imx7ulp_pinctrl_info = {
- 	.pins = imx7ulp_pinctrl_pads,
- 	.npins = ARRAY_SIZE(imx7ulp_pinctrl_pads),
- 	.flags = ZERO_OFFSET_VALID | SHARE_MUX_CONF_REG,
-diff --git a/drivers/pinctrl/freescale/pinctrl-vf610.c b/drivers/pinctrl/freescale/pinctrl-vf610.c
-index 42745c690be3..c078f859ae15 100644
---- a/drivers/pinctrl/freescale/pinctrl-vf610.c
-+++ b/drivers/pinctrl/freescale/pinctrl-vf610.c
-@@ -318,7 +318,7 @@ static int vf610_pmx_gpio_set_direction(struct pinctrl_dev *pctldev,
- 	return 0;
- }
- 
--static struct imx_pinctrl_soc_info vf610_pinctrl_info = {
-+static const struct imx_pinctrl_soc_info vf610_pinctrl_info = {
- 	.pins = vf610_pinctrl_pads,
- 	.npins = ARRAY_SIZE(vf610_pinctrl_pads),
- 	.flags = SHARE_MUX_CONF_REG | ZERO_OFFSET_VALID,
 -- 
 2.15.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
