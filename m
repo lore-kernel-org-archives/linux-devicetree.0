@@ -1,52 +1,63 @@
-From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Subject: [PATCH v2 0/5] constify struct imx_pinctrl_soc_info
-Date: Sat,  6 Jan 2018 15:25:48 +0100
-Message-ID: <20180106142553.15322-1-stefan@agner.ch>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
-Cc: fabio.estevam-3arQi8VN3Tc@public.gmane.org, aisheng.dong-3arQi8VN3Tc@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+From: Stefan Agner <stefan@agner.ch>
+Subject: [PATCH v2 4/5] pinctrl: imx7ulp: constify struct imx_cfg_params_decode
+Date: Sat,  6 Jan 2018 15:25:52 +0100
+Message-ID: <20180106142553.15322-5-stefan@agner.ch>
+References: <20180106142553.15322-1-stefan@agner.ch>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180106142553.15322-1-stefan@agner.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linus.walleij@linaro.org, shawnguo@kernel.org, kernel@pengutronix.de
+Cc: fabio.estevam@nxp.com, aisheng.dong@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
 List-Id: devicetree@vger.kernel.org
 
-This patchset grew out of the discussion around the first version
-of "pinctrl: imx6ul: add IOMUXC SNVS pinctrl driver for i.MX 6ULL".
-This is necessary for pinctrls of SoCs with multiple compatible
-strings (currently only imx7d) since the struct uses the .data
-pointer in struct of_device_id. It is also helpful for all other
-SoCs since it decreases the .data section for all drivers by 1276
-bytes.
+The decode parameters are constant mark them const.
 
-Bai Ping (1):
-  pinctrl: imx6ul: add IOMUXC SNVS pinctrl driver for i.MX 6ULL
+Cc: Dong Aisheng <aisheng.dong@nxp.com>
+Signed-off-by: Stefan Agner <stefan@agner.ch>
+---
+ drivers/pinctrl/freescale/pinctrl-imx.c     | 2 +-
+ drivers/pinctrl/freescale/pinctrl-imx.h     | 2 +-
+ drivers/pinctrl/freescale/pinctrl-imx7ulp.c | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-Stefan Agner (4):
-  pinctrl: imx: use struct imx_pinctrl_soc_info as a const
-  pinctrl: imx7d: simplify imx7d_pinctrl_probe
-  pinctrl: imx: constify struct imx_pinctrl_soc_info
-  pinctrl: imx7ulp: constify struct imx_cfg_params_decode
-
- .../bindings/pinctrl/fsl,imx6ul-pinctrl.txt        |  3 +-
- drivers/pinctrl/freescale/pinctrl-imx.c            | 81 ++++++++++------------
- drivers/pinctrl/freescale/pinctrl-imx.h            | 13 ++--
- drivers/pinctrl/freescale/pinctrl-imx25.c          |  2 +-
- drivers/pinctrl/freescale/pinctrl-imx35.c          |  2 +-
- drivers/pinctrl/freescale/pinctrl-imx50.c          |  2 +-
- drivers/pinctrl/freescale/pinctrl-imx51.c          |  2 +-
- drivers/pinctrl/freescale/pinctrl-imx53.c          |  2 +-
- drivers/pinctrl/freescale/pinctrl-imx6dl.c         |  2 +-
- drivers/pinctrl/freescale/pinctrl-imx6q.c          |  2 +-
- drivers/pinctrl/freescale/pinctrl-imx6sl.c         |  2 +-
- drivers/pinctrl/freescale/pinctrl-imx6sx.c         |  2 +-
- drivers/pinctrl/freescale/pinctrl-imx6ul.c         | 52 ++++++++++++--
- drivers/pinctrl/freescale/pinctrl-imx7d.c          | 10 +--
- drivers/pinctrl/freescale/pinctrl-imx7ulp.c        |  7 +-
- drivers/pinctrl/freescale/pinctrl-vf610.c          |  5 +-
- 16 files changed, 111 insertions(+), 78 deletions(-)
-
+diff --git a/drivers/pinctrl/freescale/pinctrl-imx.c b/drivers/pinctrl/freescale/pinctrl-imx.c
+index 86256d25c4a3..24aaddd760a0 100644
+--- a/drivers/pinctrl/freescale/pinctrl-imx.c
++++ b/drivers/pinctrl/freescale/pinctrl-imx.c
+@@ -255,7 +255,7 @@ static u32 imx_pinconf_decode_generic_config(struct imx_pinctrl *ipctl,
+ 					      unsigned int num_configs)
+ {
+ 	const struct imx_pinctrl_soc_info *info = ipctl->info;
+-	struct imx_cfg_params_decode *decode;
++	const struct imx_cfg_params_decode *decode;
+ 	enum pin_config_param param;
+ 	u32 raw_config = 0;
+ 	u32 param_val;
+diff --git a/drivers/pinctrl/freescale/pinctrl-imx.h b/drivers/pinctrl/freescale/pinctrl-imx.h
+index 41ee75537da4..038e8c0e5b96 100644
+--- a/drivers/pinctrl/freescale/pinctrl-imx.h
++++ b/drivers/pinctrl/freescale/pinctrl-imx.h
+@@ -71,7 +71,7 @@ struct imx_pinctrl_soc_info {
+ 	bool generic_pinconf;
+ 	const struct pinconf_generic_params *custom_params;
+ 	unsigned int num_custom_params;
+-	struct imx_cfg_params_decode *decodes;
++	const struct imx_cfg_params_decode *decodes;
+ 	unsigned int num_decodes;
+ 	void (*fixup)(unsigned long *configs, unsigned int num_configs,
+ 		      u32 *raw_config);
+diff --git a/drivers/pinctrl/freescale/pinctrl-imx7ulp.c b/drivers/pinctrl/freescale/pinctrl-imx7ulp.c
+index 0406d8b39e6a..f363e45fd246 100644
+--- a/drivers/pinctrl/freescale/pinctrl-imx7ulp.c
++++ b/drivers/pinctrl/freescale/pinctrl-imx7ulp.c
+@@ -266,7 +266,7 @@ static const struct pinctrl_pin_desc imx7ulp_pinctrl_pads[] = {
+ #define BP_MUX_MODE		8
+ #define BM_PULL_ENABLED		BIT(1)
+ 
+-struct imx_cfg_params_decode imx7ulp_cfg_decodes[] = {
++static const struct imx_cfg_params_decode imx7ulp_cfg_decodes[] = {
+ 	IMX_CFG_PARAMS_DECODE(PIN_CONFIG_DRIVE_STRENGTH, 		BIT(6), 6),
+ 	IMX_CFG_PARAMS_DECODE(PIN_CONFIG_DRIVE_PUSH_PULL,		BIT(5), 5),
+ 	IMX_CFG_PARAMS_DECODE(PIN_CONFIG_SLEW_RATE,			BIT(2), 2),
 -- 
 2.15.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
