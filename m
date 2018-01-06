@@ -1,70 +1,145 @@
-From: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v2 2/5] ARM64: dts: meson-axg: uart: drop legacy compatible name from EE UART
-Date: Sat, 6 Jan 2018 08:10:41 +0800
-Message-ID: <20180106001044.108163-3-yixun.lan@amlogic.com>
+From: Yixun Lan <yixun.lan@amlogic.com>
+Subject: [PATCH v2 3/5] ARM64: dts: meson-axg: uart: Add the pinctrl info description
+Date: Sat, 6 Jan 2018 08:10:42 +0800
+Message-ID: <20180106001044.108163-4-yixun.lan@amlogic.com>
 References: <20180106001044.108163-1-yixun.lan@amlogic.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180106001044.108163-1-yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180106001044.108163-1-yixun.lan@amlogic.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org
+Cc: Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Carlo Caione <carlo@caione.org>, Yixun Lan <yixun.lan@amlogic.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-When update the clock info for the UART controller in the EE domain,
-the driver explicitly require 'pclk' in order to work properly.
+Describe the pinctrl info for the UART controller which is found
+in the Meson-AXG SoCs.
 
-With current logic of the code, the driver will go for the legacy clock probe
-routine[1] if it find current compatible string match to 'amlogic,meson-uart',
-which result in not requesting the 'pclk' clock, thus break the driver in the end.
-
-[1] drivers/tty/serial/meson_uart.c:685
-
-        /* Use legacy way until all platforms switch to new bindings */
-	if (of_device_is_compatible(pdev->dev.of_node, "amlogic,meson-uart"))
-		ret = meson_uart_probe_clocks_legacy(pdev, port);
-	else
-		ret = meson_uart_probe_clocks(pdev, port);
-
-Acked-by: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Signed-off-by: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 97 ++++++++++++++++++++++++++++++
+ 1 file changed, 97 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-index 70c776ef7aa7..644d0f9eaf8c 100644
+index 644d0f9eaf8c..1eb45781c850 100644
 --- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
 +++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-@@ -164,17 +164,21 @@
- 			};
- 
- 			uart_A: serial@24000 {
--				compatible = "amlogic,meson-gx-uart", "amlogic,meson-uart";
-+				compatible = "amlogic,meson-gx-uart";
- 				reg = <0x0 0x24000 0x0 0x18>;
- 				interrupts = <GIC_SPI 26 IRQ_TYPE_EDGE_RISING>;
- 				status = "disabled";
-+				clocks = <&xtal>, <&clkc CLKID_UART0>, <&xtal>;
-+				clock-names = "xtal", "pclk", "baud";
- 			};
- 
- 			uart_B: serial@23000 {
--				compatible = "amlogic,meson-gx-uart", "amlogic,meson-uart";
-+				compatible = "amlogic,meson-gx-uart";
- 				reg = <0x0 0x23000 0x0 0x18>;
- 				interrupts = <GIC_SPI 75 IRQ_TYPE_EDGE_RISING>;
- 				status = "disabled";
-+				clocks = <&xtal>, <&clkc CLKID_UART1>, <&xtal>;
-+				clock-names = "xtal", "pclk", "baud";
+@@ -448,6 +448,70 @@
+ 						function = "spi1";
+ 					};
+ 				};
++
++				uart_a_pins: uart_a {
++					mux {
++						groups = "uart_tx_a",
++							"uart_rx_a";
++						function = "uart_a";
++					};
++				};
++
++				uart_a_cts_rts_pins: uart_a_cts_rts {
++					mux {
++						groups = "uart_cts_a",
++							"uart_rts_a";
++						function = "uart_a";
++					};
++				};
++
++				uart_b_x_pins: uart_b_x {
++					mux {
++						groups = "uart_tx_b_x",
++							"uart_rx_b_x";
++						function = "uart_b";
++					};
++				};
++
++				uart_b_x_cts_rts_pins: uart_b_x_cts_rts {
++					mux {
++						groups = "uart_cts_b_x",
++							"uart_rts_b_x";
++						function = "uart_b";
++					};
++				};
++
++				uart_b_z_pins: uart_b_z {
++					mux {
++						groups = "uart_tx_b_z",
++							"uart_rx_b_z";
++						function = "uart_b";
++					};
++				};
++
++				uart_b_z_cts_rts_pins: uart_b_z_cts_rts {
++					mux {
++						groups = "uart_cts_b_z",
++							"uart_rts_b_z";
++						function = "uart_b";
++					};
++				};
++
++				uart_ao_b_z_pins: uart_ao_b_z {
++					mux {
++						groups = "uart_ao_tx_b_z",
++							"uart_ao_rx_b_z";
++						function = "uart_ao_b_gpioz";
++					};
++				};
++
++				uart_ao_b_z_cts_rts_pins: uart_ao_b_z_cts_rts {
++					mux {
++						groups = "uart_ao_cts_b_z",
++							"uart_ao_rts_b_z";
++						function = "uart_ao_b_gpioz";
++					};
++				};
  			};
  		};
  
+@@ -492,12 +556,45 @@
+ 					gpio-ranges = <&pinctrl_aobus 0 0 15>;
+ 				};
+ 
++
+ 				remote_input_ao_pins: remote_input_ao {
+ 					mux {
+ 						groups = "remote_input_ao";
+ 						function = "remote_input_ao";
+ 					};
+ 				};
++
++				uart_ao_a_pins: uart_ao_a {
++					mux {
++						groups = "uart_ao_tx_a",
++							"uart_ao_rx_a";
++						function = "uart_ao_a";
++					};
++				};
++
++				uart_ao_a_cts_rts_pins: uart_ao_a_cts_rts {
++					mux {
++						groups = "uart_ao_cts_a",
++							"uart_ao_rts_a";
++						function = "uart_ao_a";
++					};
++				};
++
++				uart_ao_b_pins: uart_ao_b {
++					mux {
++						groups = "uart_ao_tx_b",
++							"uart_ao_rx_b";
++						function = "uart_ao_b";
++					};
++				};
++
++				uart_ao_b_cts_rts_pins: uart_ao_b_cts_rts {
++					mux {
++						groups = "uart_ao_cts_b",
++							"uart_ao_rts_b";
++						function = "uart_ao_b";
++					};
++				};
+ 			};
+ 
+ 			pwm_AO_ab: pwm@7000 {
 -- 
 2.15.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
