@@ -1,34 +1,202 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH] ARM64: dts: meson-gxl: add internal ethernet PHY irq
-Date: Fri, 05 Jan 2018 16:54:24 -0800
-Message-ID: <7h1sj324e7.fsf@baylibre.com>
-References: <20171218102713.4506-1-jbrunet@baylibre.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: [PATCH 1/2] dt-bindings: pinctrl: Add Qualcomm SDM845 TLMM binding
+Date: Fri,  5 Jan 2018 17:51:03 -0800
+Message-ID: <20180106015104.19143-1-bjorn.andersson@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171218102713.4506-1-jbrunet@baylibre.com> (Jerome Brunet's
-        message of "Mon, 18 Dec 2017 11:27:13 +0100")
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Carlo Caione <carlo@caione.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Jerome Brunet <jbrunet@baylibre.com> writes:
+This adds the DeviceTree binding for the Qualcomm SDM845 TLMM block.
 
-> Add the interrupt of the internal ethernet PHY
->
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-> ---
-> Hi Kevin,
->
-> This changes depends on the net-next changes adding interrupt support [0].
-> It is really important that this change is not merged before its
-> dependency.
->
-> If it is merged before, instead of polling, the phy would wait for an
-> interrupt which has not been configured and will never fire.
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
+ .../bindings/pinctrl/qcom,sdm845-pinctrl.txt       | 176 +++++++++++++++++++++
+ 1 file changed, 176 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
 
-Thanks for the warning. I'll wait and merge these after -rc1 to be sure
-of all dependencies.
-
-Kevin
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
+new file mode 100644
+index 000000000000..9ce1fd55d63e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
+@@ -0,0 +1,176 @@
++Qualcomm SDM845 TLMM block
++
++This binding describes the Top Level Mode Multiplexer block found in the
++SDM845 platform.
++
++- compatible:
++	Usage: required
++	Value type: <string>
++	Definition: must be "qcom,sdm845-pinctrl"
++
++- reg:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: the base address and size of the TLMM register space.
++
++- interrupts:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: should specify the TLMM summary IRQ.
++
++- interrupt-controller:
++	Usage: required
++	Value type: <none>
++	Definition: identifies this node as an interrupt controller
++
++- #interrupt-cells:
++	Usage: required
++	Value type: <u32>
++	Definition: must be 2. Specifying the pin number and flags, as defined
++		    in <dt-bindings/interrupt-controller/irq.h>
++
++- gpio-controller:
++	Usage: required
++	Value type: <none>
++	Definition: identifies this node as a gpio controller
++
++- #gpio-cells:
++	Usage: required
++	Value type: <u32>
++	Definition: must be 2. Specifying the pin number and flags, as defined
++		    in <dt-bindings/gpio/gpio.h>
++
++Please refer to ../gpio/gpio.txt and ../interrupt-controller/interrupts.txt for
++a general description of GPIO and interrupt bindings.
++
++Please refer to pinctrl-bindings.txt in this directory for details of the
++common pinctrl bindings used by client devices, including the meaning of the
++phrase "pin configuration node".
++
++The pin configuration nodes act as a container for an arbitrary number of
++subnodes. Each of these subnodes represents some desired configuration for a
++pin, a group, or a list of pins or groups. This configuration can include the
++mux function to select on those pin(s)/group(s), and various pin configuration
++parameters, such as pull-up, drive strength, etc.
++
++
++PIN CONFIGURATION NODES:
++
++The name of each subnode is not important; all subnodes should be enumerated
++and processed purely based on their content.
++
++Each subnode only affects those parameters that are explicitly listed. In
++other words, a subnode that lists a mux function but no pin configuration
++parameters implies no information about any pin configuration parameters.
++Similarly, a pin subnode that describes a pullup parameter implies no
++information about e.g. the mux function.
++
++
++The following generic properties as defined in pinctrl-bindings.txt are valid
++to specify in a pin configuration subnode:
++
++- pins:
++	Usage: required
++	Value type: <string-array>
++	Definition: List of gpio pins affected by the properties specified in
++		    this subnode.
++
++		    Valid pins are:
++		      gpio0-gpio149
++		        Supports mux, bias and drive-strength
++
++		      sdc2_clk, sdc2_cmd, sdc2_data
++		        Supports bias and drive-strength
++
++- function:
++	Usage: required
++	Value type: <string>
++	Definition: Specify the alternative function to be configured for the
++		    specified pins. Functions are only valid for gpio pins.
++		    Valid values are:
++
++		    gpio, adsp_ext, agera_pll, atest_char, atest_tsens,
++		    atest_tsens2, atest_usb1, atest_usb10, atest_usb11,
++		    atest_usb12, atest_usb13, atest_usb2, atest_usb20,
++		    atest_usb21, atest_usb22, atest_usb23, audio_ref,
++		    btfm_slimbus, cam_mclk, cci_async, cci_i2c, cci_timer0,
++		    cci_timer1, cci_timer2, cci_timer3, cci_timer4, cri_trng,
++		    cri_trng0, cri_trng1, dbg_out, ddr_bist, ddr_pxi0,
++		    ddr_pxi1, ddr_pxi2, ddr_pxi3, edp_hot, edp_lcd, gcc_gp1,
++		    gcc_gp2, gcc_gp3, jitter_bist, ldo_en, ldo_update,
++		    lpass_slimbus, m_voc, mdp_vsync, mdp_vsync0, mdp_vsync1,
++		    mdp_vsync2, mdp_vsync3, mss_lte, nav_pps, pa_indicator,
++		    pci_e0, pci_e1, phase_flag, pll_bist, pll_bypassnl,
++		    pll_reset, pri_mi2s, pri_mi2s_ws, prng_rosc, qdss_cti,
++		    qdss, qlink_enable, qlink_request, qua_mi2s, qup0, qup1,
++		    qup10, qup11, qup12, qup13, qup14, qup15, qup2, qup3, qup4,
++		    qup5, qup6, qup7, qup8, qup9, qup_l4, qup_l5, qup_l6,
++		    sd_write, sdc4_clk, sdc4_cmd, sdc4_data, sec_mi2s, sp_cmu,
++		    spkr_i2s, ter_mi2s, tgu_ch0, tgu_ch1, tgu_ch2, tgu_ch3,
++		    tsense_pwm1, tsense_pwm2, tsif1_clk, tsif1_data, tsif1_en,
++		    tsif1_error, tsif1_sync, tsif2_clk, tsif2_data, tsif2_en,
++		    tsif2_error, tsif2_sync, uim1_clk, uim1_data, uim1_present,
++		    uim1_reset, uim2_clk, uim2_data, uim2_present, uim2_reset,
++		    uim_batt, usb_phy, vfr_1, vsense_trigger, wlan1_adc0,
++		    wlan1_adc1, wlan2_adc0, wlan2_adc1,
++
++- bias-disable:
++	Usage: optional
++	Value type: <none>
++	Definition: The specified pins should be configued as no pull.
++
++- bias-pull-down:
++	Usage: optional
++	Value type: <none>
++	Definition: The specified pins should be configued as pull down.
++
++- bias-pull-up:
++	Usage: optional
++	Value type: <none>
++	Definition: The specified pins should be configued as pull up.
++
++- output-high:
++	Usage: optional
++	Value type: <none>
++	Definition: The specified pins are configured in output mode, driven
++		    high.
++		    Not valid for sdc pins.
++
++- output-low:
++	Usage: optional
++	Value type: <none>
++	Definition: The specified pins are configured in output mode, driven
++		    low.
++		    Not valid for sdc pins.
++
++- drive-strength:
++	Usage: optional
++	Value type: <u32>
++	Definition: Selects the drive strength for the specified pins, in mA.
++		    Valid values are: 2, 4, 6, 8, 10, 12, 14 and 16
++
++Example:
++
++	tlmm: pinctrl@03400000 {
++		compatible = "qcom,sdm845-pinctrl";
++		reg = <0x03400000 0xc00000>;
++		interrupts = <GIC_SPI 208 0>;
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++
++		qup9_active: qup9-active {
++			mux {
++				pins = "gpio4", "gpio5";
++				function = "qup9";
++			};
++
++			config {
++				pins = "gpio4", "gpio5";
++				drive-strength = <2>;
++				bias-disable;
++			};
++		};
++	};
++
+-- 
+2.15.0
