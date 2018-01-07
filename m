@@ -1,42 +1,71 @@
-From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Subject: [PATCH v2] libfdt: remove unnecessary include directive from <linux/libfdt.h>
-Date: Sun,  7 Jan 2018 12:02:16 +0900
-Message-ID: <1515294136-19427-1-git-send-email-yamada.masahiro@socionext.com>
+From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Subject: Re: [PATCH 3/7] ARM: dts: imx6ull: add additional pinfunc defines for
+ i.MX 6ULL
+Date: Sun, 07 Jan 2018 10:52:39 +0100
+Message-ID: <b183c2a38596cd3f3726777c79e027f9@agner.ch>
+References: <20180102164223.15230-1-stefan@agner.ch>
+ <20180102164223.15230-3-stefan@agner.ch>
+ <20180105164930.qomk75eo7vzyglvn@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180105164930.qomk75eo7vzyglvn@rob-hp-laptop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Philippe Ombredanne <pombredanne-od1rfyK75/E@public.gmane.org>, Kate Stewart <kstewart-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bai Ping <ping.bai-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-<linux/libfdt.h> is a wrapper of scripts/dtc/libfdt/libfdt.h
-It should not do more than its job.  In fact, libfdt.h depends
-on fdt.h, and scripts/dtc/libfdt/libfdt.h includes fdt.h already.
-Trust the work in the upstream DTC project.
+On 2018-01-05 17:49, Rob Herring wrote:
+> On Tue, Jan 02, 2018 at 05:42:19PM +0100, Stefan Agner wrote:
+>> From: Bai Ping <ping.bai-3arQi8VN3Tc@public.gmane.org>
+>>
+>> On i.MX 6ULL, the pin MUX and CTRL register of BOOT_MODEx and TAMPERx
+>> pins are available through IOMUXC_SNVS. Add additional pinfunc defines.
+>>
+>> Signed-off-by: Bai Ping <ping.bai-3arQi8VN3Tc@public.gmane.org>
+>> Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/imx6ull-pinfunc-snvs.h | 29 +++++++++++++++++++++++++++++
+>>  arch/arm/boot/dts/imx6ull.dtsi           |  1 +
+>>  2 files changed, 30 insertions(+)
+>>  create mode 100644 arch/arm/boot/dts/imx6ull-pinfunc-snvs.h
+>>
+>> diff --git a/arch/arm/boot/dts/imx6ull-pinfunc-snvs.h b/arch/arm/boot/dts/imx6ull-pinfunc-snvs.h
+>> new file mode 100644
+>> index 000000000000..da3f412e4269
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/imx6ull-pinfunc-snvs.h
+>> @@ -0,0 +1,29 @@
+>> +/*
+>> + * Copyright (C) 2016 Freescale Semiconductor, Inc.
+> 
+> It's 2018 now.
+> 
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
----
+I don't think you are supposed to chance copyright year unless you
+change it significantly.
 
-Changes in v2:
-  - Rephrase commit-log a bit (remove ../../)
+At least that article suggests so:
+https://www.copyrightlaws.com/copyright-notice-year/
 
- include/linux/libfdt.h | 1 -
- 1 file changed, 1 deletion(-)
+I took that patch from the downstream NXP kernel, so I guess 2016 was
+the year of first publication...
 
-diff --git a/include/linux/libfdt.h b/include/linux/libfdt.h
-index 27ba06e..90ed4eb 100644
---- a/include/linux/libfdt.h
-+++ b/include/linux/libfdt.h
-@@ -3,7 +3,6 @@
- #define _INCLUDE_LIBFDT_H_
- 
- #include <linux/libfdt_env.h>
--#include "../../scripts/dtc/libfdt/fdt.h"
- #include "../../scripts/dtc/libfdt/libfdt.h"
- 
- #endif /* _INCLUDE_LIBFDT_H_ */
--- 
-2.7.4
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * published by the Free Software Foundation.
+> 
+> Use SPDX. With that,
 
+Agreed.
+
+> 
+> Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+--
+Stefan
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
