@@ -1,83 +1,45 @@
-From: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 2/2] media: ov9650: add device tree binding
-Date: Mon,  8 Jan 2018 01:54:24 +0900
-Message-ID: <1515344064-23156-3-git-send-email-akinobu.mita@gmail.com>
-References: <1515344064-23156-1-git-send-email-akinobu.mita@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1515344064-23156-1-git-send-email-akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jacopo Mondi <jacopo-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>, "H . Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+From: Akinobu Mita <akinobu.mita@gmail.com>
+Subject: [PATCH v2 0/2] media: ov9650: support device tree probing
+Date: Mon,  8 Jan 2018 01:54:22 +0900
+Message-ID: <1515344064-23156-1-git-send-email-akinobu.mita@gmail.com>
+Return-path: <linux-media-owner@vger.kernel.org>
+Sender: linux-media-owner@vger.kernel.org
+To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Akinobu Mita <akinobu.mita@gmail.com>, Jacopo Mondi <jacopo@jmondi.org>, "H . Nikolaus Schaller" <hns@goldelico.com>, Hugues Fruchet <hugues.fruchet@st.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Now the ov9650 driver supports device tree probing.  So this adds a
-device tree binding documentation.
+This patchset adds device tree probing for ov9650 driver. This contains
+an actual driver change and a newly added binding documentation part.
 
-Cc: Jacopo Mondi <jacopo-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-Cc: H. Nikolaus Schaller <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Cc: Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>
-Cc: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
 * Changelog v2
 - Split binding documentation, suggested by Rob Herring and Jacopo Mondi
 - Improve the wording for compatible property in the binding documentation,
   suggested by Jacopo Mondi
 - Improve the description for the device node in the binding documentation,
   suggested by Sakari Ailus
+- Remove ov965x_gpio_set() helper and open-code it, suggested by Jacopo Mondi
+  and Sakari Ailus
+- Call clk_prepare_enable() in s_power callback instead of probe, suggested
+  by Sakari Ailus
+- Unify clk and gpio configuration in a single if-else block and, also add
+  a check either platform data or fwnode is actually specified, suggested
+  by Jacopo Mondi
+- Add CONFIG_OF guards, suggested by Jacopo Mondi
 
- .../devicetree/bindings/media/i2c/ov9650.txt       | 36 ++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
+Akinobu Mita (2):
+  media: ov9650: support device tree probing
+  media: ov9650: add device tree binding
+
+ .../devicetree/bindings/media/i2c/ov9650.txt       |  36 ++++++
+ drivers/media/i2c/ov9650.c                         | 130 +++++++++++++++------
+ 2 files changed, 128 insertions(+), 38 deletions(-)
  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov9650.txt
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/ov9650.txt b/Documentation/devicetree/bindings/media/i2c/ov9650.txt
-new file mode 100644
-index 0000000..506dfc5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/ov9650.txt
-@@ -0,0 +1,36 @@
-+* Omnivision OV9650/OV9652 CMOS sensor
-+
-+Required Properties:
-+- compatible: shall be one of
-+	"ovti,ov9650"
-+	"ovti,ov9652"
-+- clocks: reference to the xvclk input clock.
-+
-+Optional Properties:
-+- reset-gpios: reference to the GPIO connected to the resetb pin, if any.
-+  Active is high.
-+- powerdown-gpios: reference to the GPIO connected to the pwdn pin, if any.
-+  Active is high.
-+
-+The device node shall contain one 'port' child node with one child 'endpoint'
-+subnode for its digital output video port, in accordance with the video
-+interface bindings defined in Documentation/devicetree/bindings/media/
-+video-interfaces.txt.
-+
-+Example:
-+
-+&i2c0 {
-+	ov9650: camera@30 {
-+		compatible = "ovti,ov9650";
-+		reg = <0x30>;
-+		reset-gpios = <&axi_gpio_0 0 GPIO_ACTIVE_HIGH>;
-+		powerdown-gpios = <&axi_gpio_0 1 GPIO_ACTIVE_HIGH>;
-+		clocks = <&xclk>;
-+
-+		port {
-+			ov9650_0: endpoint {
-+				remote-endpoint = <&vcap1_in0>;
-+			};
-+		};
-+	};
-+};
+Cc: Jacopo Mondi <jacopo@jmondi.org>
+Cc: H. Nikolaus Schaller <hns@goldelico.com>
+Cc: Hugues Fruchet <hugues.fruchet@st.com>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+Cc: Rob Herring <robh@kernel.org>
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
