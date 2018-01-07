@@ -1,98 +1,52 @@
-From: Miquel RAYNAL <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 2/5] mtd: nand: add reworked Marvell NAND controller
- driver
-Date: Sun, 7 Jan 2018 22:46:43 +0100
-Message-ID: <20180107224643.760eac74@xps13>
-References: <20171219132942.27433-1-miquel.raynal@free-electrons.com>
-        <20171219132942.27433-3-miquel.raynal@free-electrons.com>
-        <20171221111428.0aa3e65e@bbrezillon>
+From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Subject: Re: [PATCH] Revert "ARM: dts: bcm283x: Fix DTC warnings about missing phy-cells"
+Date: Sun, 07 Jan 2018 14:08:23 -0800
+Message-ID: <87incdjp9k.fsf@anholt.net>
+References: <1515332212-23593-1-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha512; protocol="application/pgp-signature"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171221111428.0aa3e65e@bbrezillon>
+In-Reply-To: <1515332212-23593-1-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Boris,
+--=-=-=
+Content-Type: text/plain
 
-On Thu, 21 Dec 2017 11:14:28 +0100
-Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> writes:
 
-> Hi Miquel,
-> 
-> On Tue, 19 Dec 2017 14:29:39 +0100
-> Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> 
-> > Add marvell_nand driver which aims at replacing the existing
-> > pxa3xx_nand driver.
-> > 
-> > The new driver intends to be easier to understand and follows the
-> > brand new NAND framework rules by implementing hooks for every
-> > pattern the controller might support and referencing them inside a
-> > parser object that will be given to the core at each ->exec_op()
-> > call.
-> > 
-> > Raw accessors are implemented, useful to test/debug
-> > memory/filesystem corruptions. Userspace binaries contained in the
-> > mtd-utils package may now be used and their output trusted.
-> > 
-> > Timings may not be kept from the bootloader anymore, the timings
-> > used for instance in U-Boot were not optimal and it supposed to
-> > have NAND support (and initialized) in the bootloader.  
-> 
-> Hm, AFAIR the old driver was able to dynamically adjust the timings
-> when the NAND was ONFI compliant.
-> 
-> > 
-> > Thanks to the improved timings, implementation of ONFI mode 5
-> > support (with EDO managed by adding a delay on data sampling),
-> > merging the commands together and optimizing writes in the command
-> > registers, the new driver may achieve faster throughputs in both
-> > directions. Measurements show an improvement of about +23% read
-> > throughput and +24% write throughput. These measurements have been
-> > done with an Armada-385-DB-AP (4kiB NAND pages forced in 4-bit
-> > strength BCH ECC correction) using the userspace tool 'flash_speed'
-> > from the MTD test suite.
-> > 
-> > Besides these important topics, the new driver addresses several
-> > unsolved known issues in the old driver which:
-> > - did not work with ECC soft neither with ECC none ;
-> > - relied on naked read/write (which is unchanged) while the NFCv1
-> >   embedded in the pxa3xx platforms do not implement it, so several
-> >   NAND commands did not actually ever work without any notice (like
-> >   reading the ONFI PARAM_PAGE or SET/GET_FEATURES) ;
-> > - wrote the OOB data correctly, but was not able to read it
-> > correctly past the first OOB data chunk ;
-> > - did not displayed ECC bytes ;  
-> 
-> 	    ^display
-> 
-> and I'm not even sure display is the right term here. How about
-> 'retrieve'.
-> 
-> > - used device tree bindings that did not allow more than one NAND
-> > chip, and did not allow to choose the correct chip select if not
-> >   incrementing from 0. Plus, the Ready/Busy line used had to be 0.
-> > 
-> > Old device tree bindings are still supported but deprecated. A more
-> > hierarchical view has to be used to keep the controller and the NAND
-> > chip structures clearly separated both inside the device tree and
-> > also in the driver code.
-> > 
-> > Signed-off-by: Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> > Tested-by: Sean Nyekjaer <sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
-> > Tested-by: Willy Tarreau <w@1wt.eu>
-> > ---
+> This reverts commit 014d6da6cb2525d7f48fb08c705cb130cc7b5f4a.
+>
+> The DT clean up could trigger an endless deferred probe of DWC2 USB driver
+> on the Raspberry Pi 2/3. So revert the change until we fixed the probing
+> issue.
 
+Why's that?  I found that I needed to enable the generic no-op phy
+driver, but other than that it was fine.
 
-I made all the changes you requested, let me the time to do further
-tests and I will send a v3.
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Thanks,
-Miquèl
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlpSmlcACgkQtdYpNtH8
+nuieRg/+IMEWys2PF4yp101GtGCgjt1xGV+PngZEq2PSB9DsrDRrQmLuTx7rJDar
+rrI8+1paRRfSJ9fGlofNqqu4hdIoE+b8xBd2YWIEGQQnC6nCv27WVT8hV1HfYZhU
+ka/rMwhFmOsZnTiDSfuGVj1Iqpug1G1jTFW4v4KSfGYZEYvBKwm7lHlP7RjsUdvK
+skJkI8IcCsUy36cISiy2cnkKhhxEeZ0dFCsMUEVUC+k58eXlK/q0YNnNw1tYjQ5u
+z89Jt5RpopX7YhxtABYAXytj5F9p+nAFv0cYxIejG1OEQaN+CdeqScjY3HW+8n2/
+qxpWbfx5TGuxxa7CAPGer3gc2fa7Zai7z8P5hP4ognwPEGQgvrl3gFL/kP9V+z0R
+jJ02c44gukn+c8CxXj+gulTOIDhXn1CtQK20xU0Rp8+H6C68v6JAvCWv5IT+mODz
+x2GhAlbY0Bxt3L18knwa8tWyWB/40xhBMfMQ1HBoAdkIb0Y6APuTodcGzEjZmKK7
+XuFWI+5hovfe9KyVZdHzd0UCRV0Bfw/cijzthzLie01V+fp5gQO1fDARK1K2kDZw
+oEMXHrNvBjNRCr/WfEClUAQJlEP+PTwjcJb4sTPletXp/bD9ickBbn2xuYSknZmt
+AGCFCosSYP3LchJ7PT9LTUPaiAkNohTC1he/CfEKhHyB5l0/gcw=
+=dBVE
+-----END PGP SIGNATURE-----
+--=-=-=--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
