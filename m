@@ -1,224 +1,141 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/3] mtd: spi-nor: add optional DMA-safe bounce buffer
- for data transfer
-Date: Sun, 7 Jan 2018 21:49:00 +0100
-Message-ID: <20180107214900.21bfed26@bbrezillon>
-References: <cover.1514087323.git.cyrille.pitchen@wedev4u.fr>
-        <fc2440c6f52877f28286d89691049e5cba10e6a7.1514087323.git.cyrille.pitchen@wedev4u.fr>
+From: Miquel RAYNAL <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 1/5] dt-bindings: mtd: add Marvell NAND controller
+ documentation
+Date: Sun, 7 Jan 2018 22:43:20 +0100
+Message-ID: <20180107224320.597c3a51@xps13>
+References: <20171219132942.27433-1-miquel.raynal@free-electrons.com>
+        <20171219132942.27433-2-miquel.raynal@free-electrons.com>
+        <20171220210511.ty2e7mkiktvn4een@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <fc2440c6f52877f28286d89691049e5cba10e6a7.1514087323.git.cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>
-Cc: computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, vigneshr-l0cyMroinI0@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, radu.pirea-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171220210511.ty2e7mkiktvn4een@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Ezequiel
 List-Id: devicetree@vger.kernel.org
 
-Hi Cyrille,
+Hi Rob,
 
-On Sun, 24 Dec 2017 05:36:04 +0100
-Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org> wrote:
+On Wed, 20 Dec 2017 15:05:11 -0600
+Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
 
-> This patch has two purposes:
+> On Tue, Dec 19, 2017 at 02:29:38PM +0100, Miquel Raynal wrote:
+> > Document the legacy and the new bindings for Marvell NAND
+> > controller.
+> > 
+> > The pxa3xx_nand.c driver does only support legacy bindings, which
+> > are incomplete and inaccurate. A rework of this controller (called
+> > marvell_nand.c) does support both.
+> > 
+> > Signed-off-by: Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> > ---
+> >  .../devicetree/bindings/mtd/marvell-nand.txt       | 123
+> > +++++++++++++++++++++ 1 file changed, 123 insertions(+)
+> >  create mode 100644
+> > Documentation/devicetree/bindings/mtd/marvell-nand.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/mtd/marvell-nand.txt
+> > b/Documentation/devicetree/bindings/mtd/marvell-nand.txt new file
+> > mode 100644 index 000000000000..aa6a1ed045b2
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/mtd/marvell-nand.txt
+> > @@ -0,0 +1,123 @@
+> > +Marvell NAND Flash Controller (NFC)
+> > +
+> > +Required properties:
+> > +- compatible: can be one of the following:
+> > +    * "marvell,armada-8k-nand-controller"
+> > +    * "marvell,armada370-nand-controller"
+> > +    * "marvell,pxa3xx-nand-controller"
+> > +    * "marvell,armada-8k-nand" (deprecated)
+> > +    * "marvell,armada370-nand" (deprecated)
+> > +    * "marvell,pxa3xx-nand" (deprecated)
+> > +  Compatibles marked deprecated support only the old bindings
+> > described
+> > +  at the bottom.
+> > +- reg: NAND flash controller memory area.
+> > +- #address-cells: shall be set to 1. Encode the NAND CS.
+> > +- #size-cells: shall be set to 0.
+> > +- interrupts: shall define the NAND controller interrupt.
+> > +- clocks: shall reference the NAND controller clock.
+> > +- marvell,system-controller: Set to retrieve the syscon node that
+> > handles
+> > +  NAND controller related registers (only required with the
+> > +  "marvell,armada-8k-nand[-controller]" compatibles).
+> > +
+> > +Optional properties:
+> > +- label: see partition.txt. New platforms shall omit this property.
+> > +- dmas: shall reference DMA channel associated to the NAND
+> > controller.
+> > +  This property is only used with
+> > "marvell,pxa3xx-nand[-controller]"
+> > +  compatible strings.
+> > +- dma-names: shall be "rxtx".
+> > +  This property is only used with
+> > "marvell,pxa3xx-nand[-controller]"
+> > +  compatible strings.
+> > +
+> > +Optional children nodes:
+> > +Children nodes represent the available NAND chips.
+> > +
+> > +Required properties:
+> > +- reg: shall contain the native Chip Select ids (0-3)
+> > +- marvell,rb: shall contain the native Ready/Busy ids (0-1)  
 > 
-> 1 - To fix the compatible issue between the MTD and SPI sub-systems
-> 
-> The MTD sub-system has no particular requirement about the memory areas it
-> uses. Especially, ubifs is well known for using vmalloc'ed buffers, which
-> then are not DMA-safe. There are reasons behind that, so we have to deal
-> with it.
+> We already have at least 2 other <vendor>,rb properties. Let's not
+> add a 3rd and make a common one instead.
 
-Well, the only reason is that it's easier to deal with
-virtually contiguous memory region, and since the LEB/PEB size can be
-quite big (especially for NAND devices) we have to allocate it with
-vmalloc() to prevent memory fragmentation.
-
-The solution would be to allocate an array of ubi->min_io_size buffers
-using kzalloc() and write/read to/from the MTD device using this
-granularity, but this approach would require quite a few changes and
-that's not the topic here.
+I switched to "nand-rb", added this property in nand.txt (in another
+commit) and updated all the DT accordingly.
 
 > 
-> On the other hand, the SPI sub-system clearly states in the kernel doc for
-> 'struct spi-transfer' (include/linux/spi/spi.h) that both .tx_buf and
-> .rx_buf must point into "dma-safe memory". This requirement has not been
-> taken into account by the m25p80.c driver, at the border between MTD and
-> SPI, for a long time now. So it's high time to fix this issue.
+> > +
+> > +Optional properties:
+> > +- marvell,nand-keep-config: orders the driver not to take the
+> > timings
+> > +  from the core and leaving them completely untouched. Bootloader
+> > +  timings will then be used.
+> > +- label: MTD name.
+> > +- nand-on-flash-bbt: see nand.txt.
+> > +- nand-ecc-mode: see nand.txt. Will use hardware ECC if not
+> > specified. +- nand-ecc-algo: see nand.txt. This property may be
+> > added when using
+> > +  hardware ECC for clarification but will be ignored by the driver
+> > +  because ECC mode is chosen depending on the page size and the
+> > strength
+> > +  required by the NAND chip. This value may be overwritten with
+> > +  nand-ecc-strength property.  
+> 
+> If not used, then drop it.
 
-I agree, even if I guess the MTD layer is not the only offender and
-having this bounce buffer logic at the SPI level would be even better
-IMO. But let's solve the problem in the SPI-NOR layer for now.
+Well, nand-ecc-algo will be useful when not using the ECC
+engine, so it cannot be removed. I tried to explain better the
+situation.
 
 > 
-> 2 - To help other SPI flash controller drivers to perform DMA transfers
+> > +- nand-ecc-strength: see nand.txt.
+> > +- nand-ecc-step-size: see nand.txt. This has no effect and will be
+> > +  ignored by the driver when using hardware ECC because Marvell's
+> > NAND
+> > +  flash controller does use fixed strength (1-bit for Hamming,
+> > 16-bit
+> > +  for BCH), so the step size will shrink or grow in order to fit
+> > the
+> > +  required strength. Step sizes are not completely random for all
+> > and
+> > +  follow certain patterns described in AN-379, "Marvell SoC NFC
+> > ECC".  
 > 
-> Those controller drivers suffer the same issue as those behind the
-> m25p80.c driver in the SPI sub-system: They may be provided by the MTD
-> sub-system with buffers not suited to DMA operations. We want to avoid
-> each controller to implement its own bounce buffer so we offer them some
-> optional bounce buffer, allocated and managed by the spi-nor framework
-> itself, as an helper to add support to DMA transfers.
-> 
-> Then the patch adds two hardware capabilities for SPI flash controllers,
-> SNOR_HWCAPS_WR_BOUNCE and SNOR_HWCAPS_RD_BOUNCE.
+> Same here.
 
-Do you have good reasons to handle the read/write path independently? I
-mean, if you need a bounce buffer for one of them it's likely that
-you'll need it for both.
+The comment about being ignored was not accurate, I simply removed
+that part.
 
-> 
-> SPI flash controller drivers are supposed to use them to request the
-> spi-nor framework to allocate an optional bounce buffer in some
-> DMA-safe memory area then to use it in some cases during (Fast) Read
-> and/or Page Program operations.
-> 
-> More precisely, the bounce buffer is used if and only if two conditions
-> are met:
-> 1 - The SPI flash controller driver has declared the
->     SNOR_HWCAPS_RD_BOUNCE, resp. SNOR_HWCAPS_WR_BOUNCE for (Fast) Read,
->     resp. Page Program operations.
-> 2 - The buffer provided by the above MTD layer is not already in a
->     DMA-safe area.
-> 
-> This policy avoid using the bounce buffer when not explicitly requested
-> or when not needed, hence limiting the performance penalty.
-> 
-> Besides, the bounce buffer is allocated once for all at the very first
-> time it is actually needed.
-
-Hm, I think it would be better to allocate the buffer at detection/probe
-time, when you have all the information you need (sector_size?). My
-fear is that you might not be able to kmalloc() a large buffer the
-first time a read/write operation is performed, and that means the
-operation might randomly fail/succeed depending on when the first IO
-operation is done. If you do it at probe time, you'll be able to detect
-the allocation failure early and stop the MTD dev registration when
-this is the case.
-
-> This means that as long as all buffers
-> provided by the above MTD layer are allocated in some DMA-safe areas, the
-> bounce buffer itself is never allocated.
-> 
-> Finally, the bounce buffer size is limited to 256KiB, the currently known
-> maximum erase sector size. This tradeoff should still provide good
-> performances even if new memory parts come with even larger erase sector
-> sizes, limiting the memory footprint at the same time.
-> 
-> Signed-off-by: Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>
-> ---
->  drivers/mtd/devices/m25p80.c  |   4 +-
->  drivers/mtd/spi-nor/spi-nor.c | 136 +++++++++++++++++++++++++++++++++++++++---
->  include/linux/mtd/spi-nor.h   |   8 +++
->  3 files changed, 139 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/mtd/devices/m25p80.c b/drivers/mtd/devices/m25p80.c
-> index a4e18f6aaa33..60878c62a654 100644
-> --- a/drivers/mtd/devices/m25p80.c
-> +++ b/drivers/mtd/devices/m25p80.c
-> @@ -239,7 +239,9 @@ static int m25p_probe(struct spi_device *spi)
->  	struct spi_nor_hwcaps hwcaps = {
->  		.mask = SNOR_HWCAPS_READ |
->  			SNOR_HWCAPS_READ_FAST |
-> -			SNOR_HWCAPS_PP,
-> +			SNOR_HWCAPS_PP |
-> +			SNOR_HWCAPS_RD_BOUNCE |
-> +			SNOR_HWCAPS_WR_BOUNCE,
->  	};
->  	char *flash_name;
->  	int ret;
-> diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
-> index 8bafd462f0ae..59f9fbd45234 100644
-> --- a/drivers/mtd/spi-nor/spi-nor.c
-> +++ b/drivers/mtd/spi-nor/spi-nor.c
-> @@ -14,8 +14,10 @@
->  #include <linux/errno.h>
->  #include <linux/module.h>
->  #include <linux/device.h>
-> +#include <linux/highmem.h>
->  #include <linux/mutex.h>
->  #include <linux/math64.h>
-> +#include <linux/mm.h>
->  #include <linux/sizes.h>
->  #include <linux/slab.h>
->  
-> @@ -1232,6 +1234,56 @@ static const struct flash_info spi_nor_ids[] = {
->  	{ },
->  };
->  
-> +static bool spi_nor_is_dma_safe(const void *buf)
-> +{
-> +	if (is_vmalloc_addr(buf))
-> +		return false;
-> +
-> +#ifdef CONFIG_HIGHMEM
-> +	if ((unsigned long)buf >= PKMAP_BASE &&
-> +	    (unsigned long)buf < (PKMAP_BASE + (LAST_PKMAP * PAGE_SIZE)))
-> +		return false;
-> +#endif
-> +
-> +	return true;
-> +}
-> +
-> +static int spi_nor_get_bounce_buffer(struct spi_nor *nor,
-> +				     u_char **buffer,
-> +				     size_t *buffer_size)
-> +{
-> +	const struct flash_info *info = nor->info;
-> +	/*
-> +	 * Limit the size of the bounce buffer to 256KB: this is currently
-> +	 * the largest known erase sector size (> page size) and should be
-> +	 * enough to still reach good performances if some day new memory
-> +	 * parts use even larger erase sector sizes.
-> +	 */
-> +	size_t size = min_t(size_t, info->sector_size, SZ_256K);
-
-Wow! That's a huge max size for a buffer allocated with kmalloc. Are
-you sure you shouldn't shrink it a bit? Don't know what the usual
-sector_size is, but AFAIU sector_size is the ->erasesize, and read/write
-operations are done at a ->writesize or ->writebufsize granularity.
-
-> +
-> +	/*
-> +	 * Allocate the bounce buffer once for all at the first time it is
-> +	 * actually needed. This prevents wasting some precious memory
-> +	 * in cases where it would never be needed.
-> +	 */
-> +	if (unlikely(!nor->bounce_buffer)) {
-
-I've been told that unlikely/likely() specifiers are not so useful
-these days and are sometime doing worse than when nothing is specified.
-I must admit I never went as far as evaluating it myself, but I don't
-think it's really needed here (the time spent doing this check is
-likely to be negligible compared to the IO operation).
-
-> +		nor->bounce_buffer = devm_kmalloc(nor->dev, size, GFP_KERNEL);
-
-Nope, devm_kmalloc() is not DMA-safe (see this thread [1]).
-
-> +
-> +		/*
-> +		 * The SPI flash controller driver has required and expects to
-> +		 * use the DMA-safe bounce buffer, so we can't recover from
-> +		 * this allocation failure.
-> +		 */
-> +		if (!nor->bounce_buffer)
-> +			return -ENOMEM;
-> +	}
-> +
-> +	*buffer = nor->bounce_buffer;
-> +	*buffer_size = size;
-> +
-> +	return 0;
-> +}
-> +
-
-Regards,
-
-Boris
-
-[1]http://linux-arm-kernel.infradead.narkive.com/vyJqy0RQ/question-devm-kmalloc-for-dma
+Thanks,
+Miquèl
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
