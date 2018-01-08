@@ -1,40 +1,60 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sun[47]i: Fix display backend 1 output to TCON0
- remote endpoint
-Date: Mon, 8 Jan 2018 16:26:16 +0800
-Message-ID: <CAGb2v66HQ1+u--dLzVn8tjG+fYvdeYPuUkV4p-Zc1ctOsrSXrQ@mail.gmail.com>
-References: <20180103163155.13975-1-wens@csie.org> <20180104132752.pcixtjugwfvlshpl@flea.lan>
+From: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2 3/5] ARM64: dts: meson-axg: uart: Add the pinctrl
+ info description
+Date: Mon, 08 Jan 2018 09:42:54 +0100
+Message-ID: <1515400974.5048.58.camel@baylibre.com>
+References: <20180106001044.108163-1-yixun.lan@amlogic.com>
+         <20180106001044.108163-4-yixun.lan@amlogic.com>
+         <CAFBinCCuQ-NK747+GHDkhZty_UMMgzCYOYFcNTrRDJgU8OM=Gw@mail.gmail.com>
+         <b2571e30-d543-9288-68cf-1af86bb5f4bc@amlogic.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180104132752.pcixtjugwfvlshpl-ZC1Zs529Oq4@public.gmane.org>
+In-Reply-To: <b2571e30-d543-9288-68cf-1af86bb5f4bc-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Cc: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Xingyun Chen <xingyu.chen-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 4, 2018 at 9:27 PM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> On Thu, Jan 04, 2018 at 12:31:55AM +0800, Chen-Yu Tsai wrote:
->> There is a copy-paste error in the display pipeline device tree graph.
->> The remote endpoint of the display backend 1's output to TCON0 points
->> to the wrong endpoint. This will result in the driver incorrectly
->> parsing the relationship of the components.
->>
->> Reported-by: Andrea Venturi <ennesimamail.av-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> Fixes: 0df4cf33a594 ("ARM: dts: sun4i: Add device nodes for display
->>                     pipelines")
->> Fixes: 5b92b29bed45 ("ARM: dts: sun7i: Add device nodes for display
->>                     pipelines")
->> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
->
-> Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+On Mon, 2018-01-08 at 14:07 +0800, Yixun Lan wrote:
+> > (the following question just came up while I was looking at this
+> > patch, but I guess it's more a question towards the pinctrl driver)
+> > the name of the function looks a bit "weird" since below you are also
+> > using "uart_ao_b"
+> 
+> you right here, it's a question related to pinctrl subsystem.
+> from my point of view, it's even weird from the hardware perspective:
+>  that, the UART function of AO domain route the pin of EE domain..
+> 
+> > did you choose "uart_ao_b_gpioz" here because we cannot have the same
+> > function name for the periphs and AO pinctrl or is there some other
+> > reason?
+> > 
+> 
+> Current there is a conflict in the code level which both two pinctrl
+> tree (EE, AO) are using the same macro[1] to expand the definitions, so
+> there would be conflict symbol if we name both as 'uart_ao_b'
+> 
+> I think your idea of having an uniform function 'uart_ao_b' for both
+> pinctrl subsystem is actually possible/positive..
+> 
+> I will think about your suggestion and come up with a patch later,
+> thanks a lot!
+> 
+> 
+> [1] drivers/pinctrl/meson/pinctrl-meson.h
+> 
+> #define FUNCTION(fn)                                                    \
+>         {                                                               \
+>                 .name = #fn,                                            \
+>                 .groups = fn ## _groups,                                \
+>                 .num_groups = ARRAY_SIZE(fn ## _groups),                \
+>         }
 
-Applied (a few days ago).
-
-This will be sent out in a pull request later.
-
-ChenYu
+The name feels weird because it should have been uart_ao_b_z ... We missed it in
+the initial review. Except for correcting the function name, I don't think this
+justify a change a pinctrl
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
