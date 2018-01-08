@@ -1,69 +1,88 @@
-From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [PATCH v3 2/3] dt-bindings: usb: renesas_usbhs: Add support for
- RZ/A1
-Date: Mon, 8 Jan 2018 08:57:10 +0100
-Message-ID: <20180108075709.woqjjkb7eg4de47u@verge.net.au>
-References: <20180105224647.42262-1-chris.brandt@renesas.com>
- <20180105224647.42262-3-chris.brandt@renesas.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH v2 0/2] arm64: dts: r8a779[56]: update register size for thermal
+Date: Mon, 8 Jan 2018 09:02:16 +0100
+Message-ID: <CAMuHMdUNMoiEQS+Tk3o-FTz0_AKt+8GL3ju8_w174GJiCNoytw@mail.gmail.com>
+References: <20180105155447.10071-1-niklas.soderlund+renesas@ragnatech.se> <20180108065911.dz2z4a4aaqjw6qfd@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20180105224647.42262-3-chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <20180108065911.dz2z4a4aaqjw6qfd-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Cc: =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 05, 2018 at 05:46:46PM -0500, Chris Brandt wrote:
-> Document support for RZ/A1 SoCs
-> 
-> Signed-off-by: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-> ---
-> v3:
->  * Removed "renesas,usbhs-r7s72100"
+Hi Simon,
 
-Unless I am mistaken you want both renesas,usbhs-r7s72100, for the SoC
-and renesas,rza1-usbhs for the family[*] of SoCs (which currently only has one
-member upstream).
+On Mon, Jan 8, 2018 at 7:59 AM, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org> wrote:
+> On Fri, Jan 05, 2018 at 04:54:45PM +0100, Niklas S=C3=B6derlund wrote:
+>> This series updates the register size for the thermal hardware. In later
+>> versions of the datasheet one additional register is documented. This
+>> register is needed to be able to determine if calibration data should be
+>> read from register or if static values from the driver should be used.
+>>
+>> There is already a posted RFC patch which make use of this additional
+>> register (THSCP) if the register size described in DT covers it.
+>> Currently no hardware where the calibration value is fused have been
+>> found so that patch is not tested and therefore kept back until such a
+>> system is found. In the mean time there is no harm in getting the
+>> correct register size described in DT now that it's documented in the
+>> datasheet (Rev 0.80).
+>>
+>> * Changes since v1
+>> - Increase size from just covering the new register in TSC1 to
+>>   increasing the size of all TSC's to 0x100 which is the smallest
+>>   granularity of the address decoder circuitry. Suggested by Geert.
+>>
+>> Niklas S=C3=B6derlund (2):
+>>   arm64: dts: r8a7795: update register size for thermal
+>>   arm64: dts: r8a7796: update register size for thermal
+>
+> Applied, but this seems to go in the opposite direction of:
+>
+> 846106d9d973 ("ARM: dts: r8a7793: Reduce size of thermal registers")
+> 1af62038f499 ("ARM: dts: r8a7791: Reduce size of thermal registers")
+> d0191d85a237 ("ARM: dts: r8a7790: Reduce size of thermal registers")
+>
+> Should those patches be dropped and the register areas grown to 0x100
+> instead?
 
-Similar to the way there are per-SoC compat strings for R-Car Gen2 and Gen3
-SoCs, and per-SoC family fallback compat strings to Gen2 and Gen3.
+There are two "policies" to specify register block lengths:
+  1. Cover all registers documented in the datasheet, and nothing more (at =
+the
+   low/high end),
+  2. Use a power-of-two that covers all registers, which is most probably
+    what matches the actual address decoder in the hardware.
 
-The motivation for this that empirically SoC families seem to be able to
-share the implementation on the driver-side, so only the fallback compat
-strings need to be implemented in the driver by defining per-SoC compat
-strings we have the flexibility to implement them if differences emerge
-between SoCs in the same family.
+Of course, we all know datasheets are volatile, and registers may appear or
+disappear any time ;-)
 
-[*] I used the term family here to group SoCs together. I acknowledge that
-Renesas may not refer to them in this way.
+In reality, ioremap() granularity is PAGE_SIZE, which is also a power-of-tw=
+o.
 
+So personally, I'm more leaning towards policy #2.
 
+The 3 commits you refer to use policy #1, but covered a register not
+documented in the datasheet.
 
-> v2:
->  * Added Reviewed-by
-> ---
->  Documentation/devicetree/bindings/usb/renesas_usbhs.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-> index 47394ab788e3..fa16d8d33815 100644
-> --- a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-> +++ b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-> @@ -15,6 +15,7 @@ Required properties:
->  	- "renesas,usbhs-r8a77995" for r8a77995 (R-Car D3) compatible device
->  	- "renesas,rcar-gen2-usbhs" for R-Car Gen2 or RZ/G1 compatible devices
->  	- "renesas,rcar-gen3-usbhs" for R-Car Gen3 compatible device
-> +	- "renesas,rza1-usbhs" for RZ/A1 compatible device
->  
->  	When compatible with the generic version, nodes must list the
->  	SoC-specific version corresponding to the platform first followed
-> -- 
-> 2.15.1
-> 
-> 
+Note that some drivers (SD?) use the register block lengths to check if a
+feature is available or not. Ideally they should use the compatible value
+instead.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
