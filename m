@@ -1,115 +1,77 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH v4 4/4] ARM: pinctrl: sunxi-pinctrl: fix pin funtion can
- not be match correctly.
-Date: Mon, 8 Jan 2018 16:46:36 +0100
-Message-ID: <20180108154636.vqwcyb4cznqyclip@flea>
-References: <20171213144748.GA18267@arx-s1>
- <20171213154549.5zn4uxhsssqw3pb7@flea.lan>
- <CAJeuY79_w+8Gv=jRxK4tajiecNSAZkMGYY_d7PJmsjyOZHPkJw@mail.gmail.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v6 13/16] arm64: acpi: Remove __init from
+ acpi_psci_use_hvc() for use by SDEI
+Date: Mon, 8 Jan 2018 15:51:37 +0000
+Message-ID: <20180108155137.GB2530@red-moon>
+References: <20180108153818.22743-1-james.morse@arm.com>
+ <20180108153818.22743-14-james.morse@arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="smfllbht5q2nnop2"
-Return-path: <linux-pwm-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <kvmarm-bounces@lists.cs.columbia.edu>
 Content-Disposition: inline
-In-Reply-To: <CAJeuY79_w+8Gv=jRxK4tajiecNSAZkMGYY_d7PJmsjyOZHPkJw@mail.gmail.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Hao Zhang <hao5781286@gmail.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, robh+dt@kernel.org, Mark Rutland <mark.rutland@arm.com>, linux@armlinux.org.uk, Chen-Yu Tsai <wens@csie.org>, Linus Walleij <linus.walleij@linaro.org>, open list <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/Allwinner sunXi SoC support" <linux-arm-kernel@lists.infradead.org>, linux-pwm@vger.kernel.org
+In-Reply-To: <20180108153818.22743-14-james.morse@arm.com>
+List-Unsubscribe: <https://lists.cs.columbia.edu/mailman/options/kvmarm>,
+ <mailto:kvmarm-request@lists.cs.columbia.edu?subject=unsubscribe>
+List-Archive: <https://lists.cs.columbia.edu/pipermail/kvmarm>
+List-Post: <mailto:kvmarm@lists.cs.columbia.edu>
+List-Help: <mailto:kvmarm-request@lists.cs.columbia.edu?subject=help>
+List-Subscribe: <https://lists.cs.columbia.edu/mailman/listinfo/kvmarm>,
+ <mailto:kvmarm-request@lists.cs.columbia.edu?subject=subscribe>
+Errors-To: kvmarm-bounces@lists.cs.columbia.edu
+Sender: kvmarm-bounces@lists.cs.columbia.edu
+To: James Morse <james.morse@arm.com>
+Cc: devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Heyi Guo <guoheyi@huawei.com>, kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org, Loc Ho <lho@apm.com>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Jan 08, 2018 at 03:38:15PM +0000, James Morse wrote:
+> SDEI inherits the 'use hvc' bit that is also used by PSCI. PSCI does all
+> its initialisation early, SDEI does its late.
+> 
+> Remove the __init annotation from acpi_psci_use_hvc().
+> 
+> Signed-off-by: James Morse <james.morse@arm.com>
+> Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+> ---
+> The function name is unchanged as this bit is named 'PSCI_USE_HVC'
+> in table 5-37 of ACPIv6.2.
+> 
+>  arch/arm64/kernel/acpi.c | 2 +-
+>  include/linux/psci.h     | 3 ++-
+>  2 files changed, 3 insertions(+), 2 deletions(-)
 
---smfllbht5q2nnop2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 
-On Mon, Jan 08, 2018 at 07:08:53PM +0800, Hao Zhang wrote:
-> 2017-12-13 23:45 GMT+08:00 Maxime Ripard <maxime.ripard@free-electrons.co=
-m>:
-> > Hi,
-> >
-> > Thanks for your patch!
-> >
-> > On Wed, Dec 13, 2017 at 10:47:48PM +0800, hao_zhang wrote:
-> >> Pin function can not be match correctly when SUNXI_PIN describe with
-> >> mutiple variant and same function.
-> >>
-> >> such as:
-> >> on pinctrl-sun4i-a10.c
-> >>
-> >> SUNXI_PIN(SUNXI_PINCTRL_PIN(B, 2),
-> >>               SUNXI_FUNCTION(0x0, "gpio_in"),
-> >>               SUNXI_FUNCTION(0x1, "gpio_out"),
-> >>               SUNXI_FUNCTION_VARIANT(0x2, "pwm",    /* PWM0 */
-> >>                       PINCTRL_SUN4I_A10 |
-> >>                       PINCTRL_SUN7I_A20),
-> >>               SUNXI_FUNCTION_VARIANT(0x3, "pwm",    /* PWM0 */
-> >>                       PINCTRL_SUN8I_R40)),
-> >>
-> >> it would always match to the first variant function
-> >> (PINCTRL_SUN4I_A10, PINCTRL_SUN7I_A20)
-> >>
-> >> so we should add variant compare on it.
-> >>
-> >> Signed-off-by: hao_zhang <hao5781286@gmail.com>
-> >> ---
-> >>  drivers/pinctrl/sunxi/pinctrl-sunxi.c | 6 ++++--
-> >>  1 file changed, 4 insertions(+), 2 deletions(-)
-> >>
-> >> diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/s=
-unxi/pinctrl-sunxi.c
-> >> index 4b6cb25..f23e74e 100644
-> >> --- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-> >> +++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-> >> @@ -83,9 +83,11 @@ sunxi_pinctrl_desc_find_function_by_name(struct sun=
-xi_pinctrl *pctl,
-> >>                       struct sunxi_desc_function *func =3D pin->functi=
-ons;
-> >>
-> >>                       while (func->name) {
-> >> -                             if (!strcmp(func->name, func_name))
-> >> +                             if (!strcmp(func->name, func_name)) {
-> >> +                                     if (!(func->variant) ||
-> >> +                                        (func->variant & pctl->varian=
-t))
-> >
-> > I guess it would be better to have:
-> >         if (!strcmp(func->name, func_name) &&
-> >             (!func->variant || (func->variant & pctl->variant)))
->=20
-> It would over 80 characters, can i change it by this ?
-> if (!strcmp(func->name, func_name) &&
->          (func->variant & pctl->variant ||
->           !func->variant))
-
-It feels more natural to have !func->variant first, but feel free to
-have it split that way yes.
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---smfllbht5q2nnop2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlpTklsACgkQ0rTAlCFN
-r3RwxhAAjWqcU+len+EEdYH75LkzkI4KQAdOJVxV7QeX/8lY8xPr4kPCg3wSvy+9
-I4U5+/MMIVyr9jP5oVSnQnhOaMLtecGKImQfgGkM9BbcvR+04JngWUYnCH0vpu8A
-4WBDEv7fdPD4KQXQ18nUC1dHPmpbY46rJS5AihtBNbFJfHTu5pUqzCWxQd2y08in
-KFnkmngZ2DiuXSzzM84PC/hgJocT8D+t0NOD5m2iIgKLrqtjP02ZzzQnFRJL9qFu
-Z+8gLtWPRsGhYGWnDLk5bsoUOn239bmryNr4NYhKHniWp50R7HrDeJdtMvcbfRB5
-svW3BJl/h9EDRecOIPml/OzdhsV6cU3kLnbFy6xnAONQByxLWPy8bsDMzrOmhQ/S
-i6L6biIWoVOV/k7XhRjyuKcEPATUwl7s1PyNWInfTWrfvr3nNwt2EqYSA1LiMd9E
-+Az02lpXHuJo132xwtKpTMHggyeWIqb0RxOsvPgUilIBFzthCGmrXjjchpv2SDaE
-51feRdyEp+0yvQXRmVOxZrTSeKyIYsRbrDdBPY2qxvTDI8BIQ0Jdj4PsXvTBJSb+
-uGethP0BAgo9oHqGCGLEUM6JtYcSkF8Yglfbd+VG+YL2BrmmivPrQakwucLHLP9d
-W+By68rVaW3JbrKqCLLEboEQJ0Z3jXB3CDYmBnQKI8xWclsC8OE=
-=JdF4
------END PGP SIGNATURE-----
-
---smfllbht5q2nnop2--
+> diff --git a/arch/arm64/kernel/acpi.c b/arch/arm64/kernel/acpi.c
+> index b3162715ed78..252396a96c78 100644
+> --- a/arch/arm64/kernel/acpi.c
+> +++ b/arch/arm64/kernel/acpi.c
+> @@ -117,7 +117,7 @@ bool __init acpi_psci_present(void)
+>  }
+>  
+>  /* Whether HVC must be used instead of SMC as the PSCI conduit */
+> -bool __init acpi_psci_use_hvc(void)
+> +bool acpi_psci_use_hvc(void)
+>  {
+>  	return acpi_gbl_FADT.arm_boot_flags & ACPI_FADT_PSCI_USE_HVC;
+>  }
+> diff --git a/include/linux/psci.h b/include/linux/psci.h
+> index 6306ab10af18..f724fd8c78e8 100644
+> --- a/include/linux/psci.h
+> +++ b/include/linux/psci.h
+> @@ -47,10 +47,11 @@ static inline int psci_dt_init(void) { return 0; }
+>  #if defined(CONFIG_ARM_PSCI_FW) && defined(CONFIG_ACPI)
+>  int __init psci_acpi_init(void);
+>  bool __init acpi_psci_present(void);
+> -bool __init acpi_psci_use_hvc(void);
+> +bool acpi_psci_use_hvc(void);
+>  #else
+>  static inline int psci_acpi_init(void) { return 0; }
+>  static inline bool acpi_psci_present(void) { return false; }
+> +static inline bool acpi_psci_use_hvc(void) {return false; }
+>  #endif
+>  
+>  #endif /* __LINUX_PSCI_H */
+> -- 
+> 2.15.0
+> 
