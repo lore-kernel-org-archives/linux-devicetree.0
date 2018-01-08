@@ -1,69 +1,44 @@
-From: David Lechner <david@lechnology.com>
-Subject: [PATCH v5 17/44] dt-bindings: clock: Add bindings for DA8XX CFGCHIP gate clocks
-Date: Sun,  7 Jan 2018 20:17:16 -0600
-Message-ID: <1515377863-20358-18-git-send-email-david@lechnology.com>
-References: <1515377863-20358-1-git-send-email-david@lechnology.com>
+From: Anson Huang <Anson.Huang@nxp.com>
+Subject: [PATCH V3 1/2] ARM: dts: imx6ul: add 696MHz operating point
+Date: Mon, 8 Jan 2018 10:04:50 +0800
+Message-ID: <1515377091-10422-1-git-send-email-Anson.Huang@nxp.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1515377863-20358-1-git-send-email-david@lechnology.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org, David Lechner <david@lechnology.com>
+To: shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, rjw@rjwysocki.net, viresh.kumar@linaro.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This adds a new binding for the gate clocks present in the CFGCHIP syscon
-registers in TI DA8XX SoCs. There are actually other gate clocks in this
-block that could be added in the future, but TBCLK is currently the only
-one being used.
+Add 696MHz operating point according to datasheet
+(Rev. 0, 12/2015).
 
-Signed-off-by: David Lechner <david@lechnology.com>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
 ---
- .../clock/ti/davinci/da8xx-cfgchip-gate.txt        | 38 ++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/ti/davinci/da8xx-cfgchip-gate.txt
+changes since v2:
+	add reviewed-by.
+ arch/arm/boot/dts/imx6ul.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/clock/ti/davinci/da8xx-cfgchip-gate.txt b/Documentation/devicetree/bindings/clock/ti/davinci/da8xx-cfgchip-gate.txt
-new file mode 100644
-index 0000000..55821b0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/ti/davinci/da8xx-cfgchip-gate.txt
-@@ -0,0 +1,38 @@
-+Binding for TI DA8XX/OMAP-L13X/AM17XX/AM18XX CFGCHIP gate clocks
-+
-+TI DA8XX/OMAP-L13X/AM17XX/AM18XX SoCs contain a general purpose set of
-+registers call CFGCHIPn. Some of these registers function as clock
-+gates. This document describes the bindings for those clocks.
-+
-+Required properties:
-+- compatible: shall be "ti,da830-tbclk".
-+- #clock-cells: from common clock binding; shall be set to 0.
-+- clocks: phandle to the parent clock
-+
-+Optional properties:
-+- clock-output-names: from common clock binding.
-+
-+Parent:
-+This node must be a child of a "ti,da830-cfgchip" node.
-+
-+Assignment:
-+The assigned-clocks and assigned-clock-parents from the common clock bindings
-+can be used to indicate which parent clock should be used.
-+
-+Examples:
-+
-+	cfgchip: syscon@1417c {
-+		compatible = "ti,da830-cfgchip", "syscon", "simple-mfd";
-+		reg = <0x1417c 0x14>;
-+
-+		ehrpwm_tbclk: tbclk {
-+			compatible = "ti,da830-tbclk";
-+			#clock-cells = <0>;
-+			clocks = <&psc1 17>;
-+			clock-output-names = "ehrpwm_tbclk";
-+		};
-+	};
-+
-+Also see:
-+- Documentation/devicetree/bindings/clock/clock-bindings.txt
-+
+diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
+index d5181f8..963e169 100644
+--- a/arch/arm/boot/dts/imx6ul.dtsi
++++ b/arch/arm/boot/dts/imx6ul.dtsi
+@@ -68,12 +68,14 @@
+ 			clock-latency = <61036>; /* two CLK32 periods */
+ 			operating-points = <
+ 				/* kHz	uV */
++				696000	1275000
+ 				528000	1175000
+ 				396000	1025000
+ 				198000	950000
+ 			>;
+ 			fsl,soc-operating-points = <
+ 				/* KHz	uV */
++				696000	1275000
+ 				528000	1175000
+ 				396000	1175000
+ 				198000	1175000
 -- 
-2.7.4
+1.9.1
