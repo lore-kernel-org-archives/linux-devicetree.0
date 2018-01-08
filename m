@@ -1,107 +1,70 @@
-From: Kyle Evans <kevans91-OYTqUY/oFF8@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: dts: sunxi: Add sid for a83t
-Date: Mon, 8 Jan 2018 09:30:57 -0600
-Message-ID: <CACNAnaHOuPH05hsJ-jt1135-Giknb-DOuvjeQRSGVR2L7Xc-Cg@mail.gmail.com>
-References: <20171219210523.10428-1-kevans91@ksu.edu> <20171221145512.llxvzkcrjpquhczi@flea.lan>
- <CACNAnaE9GiVTXD-TV1xXyBJKtTGKpdA6n0REk6a=qm218EgHbg@mail.gmail.com>
- <20171221152630.2vf57x5o2yi5sv3n@flea.lan> <20171221190903.56ebae536acf51401c63802c@bidouilliste.com>
- <20171222083508.dfcp6egfvxykmogg@flea.lan> <20171222110727.520df7394234f6a5dc0b9ec0@bidouilliste.com>
- <CAGb2v64mf-ihyOs-WJZuVa4Yib3Szp90RZu_a1EeQ1LJXnoXEQ@mail.gmail.com> <20180104140119.5pyfihp4zs2poz35@flea.lan>
-Reply-To: kevans91-OYTqUY/oFF8@public.gmane.org
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v5 0/5] Add OV5640 parallel interface and RGB565/YUYV
+ support
+Date: Mon, 8 Jan 2018 16:38:11 +0100
+Message-ID: <20180108153811.5xrvbaekm6nxtoa6@flea>
+References: <1514973452-10464-1-git-send-email-hugues.fruchet@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCRMXPGDSQIRBTM5Z3JAKGQE7VKAHEI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180104140119.5pyfihp4zs2poz35-ZC1Zs529Oq4@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Emmanuel Vadot <manu-xXdDKFdH5B3kFDPD4ZthVA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="svijk2twi5xfreba"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1514973452-10464-1-git-send-email-hugues.fruchet-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>
+Cc: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 4, 2018 at 8:01 AM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> On Fri, Dec 22, 2017 at 06:11:52PM +0800, Chen-Yu Tsai wrote:
->> On Fri, Dec 22, 2017 at 6:07 PM, Emmanuel Vadot <manu-xXdDKFdH5B3kFDPD4ZthVA@public.gmane.org> wrote:
->> > On Fri, 22 Dec 2017 09:35:08 +0100
->> > Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->> >
->> >> On Thu, Dec 21, 2017 at 07:09:03PM +0100, Emmanuel Vadot wrote:
->> >> >
->> >> >  Hi Maxime,
->> >> >
->> >> > On Thu, 21 Dec 2017 16:26:30 +0100
->> >> > Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->> >> >
->> >> > > Hi,
->> >> > >
->> >> > > On Thu, Dec 21, 2017 at 09:19:24AM -0600, Kyle Evans wrote:
->> >> > > > On Thu, Dec 21, 2017 at 8:55 AM, Maxime Ripard
->> >> > > > <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->> >> > > > > Hi Kyle,
->> >> > > > >
->> >> > > > > On Tue, Dec 19, 2017 at 03:05:23PM -0600, kevans91-OYTqUY/oFF8@public.gmane.org wrote:
->> >> > > > >> Allwinner a83t has a 1 KB sid block with efuse for security rootkey and
->> >> > > > >> thermal calibration data, add node to describe it.
->> >> > > > >>
->> >> > > > >> a83t-sid is not currently supported by nvmem/sunxi-sid, but it is
->> >> > > > >> supported in an external driver for FreeBSD.
->> >> > > > >>
->> >> > > > >> Signed-off-by: Kyle Evans <kevans91-OYTqUY/oFF8@public.gmane.org>
->> >> > > > >
->> >> > > > > The patch looks fine in itself, but we've had a number of issues with
->> >> > > > > the register layout (and access patterns) in the past, so I'd rather
->> >> > > > > have something that works in Linux too if possible.
->> >> > > >
->> >> > > > I have a patch that I think should make it work fine on Linux [1], but
->> >> > > > I'm afraid I have little to no capability to test it myself and so I
->> >> > > > did not add it as well.
->> >> > > >
->> >> > > > I do know that the rootkey is offset 0x200 into the given space [2],
->> >> > > > as is the case with the H3, and that the readout quirk is not needed.
->> >> > > > I wasn't 100% sure that the a83t has 2Kbit worth of efuse space as the
->> >> > > > H3, but I do know that thermal data can be found at 0x34 and 0x38 in
->> >> > > > this space.
->> >> > >
->> >> > > Then maybe we should leave it aside until someone takes some time on
->> >> > > the A83t.
->> >> >
->> >> >  Take some time on the Linux driver and do not apply this patch for
->> >> > now you mean ?
->> >>
->> >> Yep.
->> >>
->> >> Maxime
->> >
->> >  Since linux doesn't have the compatible in it's driver what would
->> > be the harm to add the node in the DTS ? If a quirks is needed because
->> > some region is weird this would go in the driver right ? I don't see a
->> > technical problem for adding this node right now.
->> >  If Kyle confirm the lenght of the region and that no quirk is needed
->> > will it be enough ?
->>
->> I guess I wasn't very clear. I'm OK with the patch going in. The device
->> node currently says nothing about how much efuse space there is. The
->> memory region covers that and the control section, and the size matches
->> what the memory map says.
->>
->> The size and offset of the efuse space would be dealt with in the driver.
->
-> Let's merge it then.
->
-> Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->
-> Maxime
 
-Hi,
+--svijk2twi5xfreba
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-What does the timeline for these things normally look like? I'm new to
-these parts. =)
+Hi Hugues,
 
-Thanks,
+On Wed, Jan 03, 2018 at 10:57:27AM +0100, Hugues Fruchet wrote:
+> Enhance OV5640 CSI driver to support also DVP parallel interface.
+> Add RGB565 (LE & BE) and YUV422 YUYV format in addition to existing
+> YUV422 UYVY format.
+> Some other improvements on chip identifier check and removal
+> of warnings in powering phase around gpio handling.
 
-Kyle Evans
+I've been trying to use your patches on top of 4.14, but I cannot seem
+to get any signal out of it.
+
+What is your test setup and which commands are you running?
+
+Thanks!
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--svijk2twi5xfreba
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlpTkGIACgkQ0rTAlCFN
+r3T9QQ//QEAsQ+K1knpUpX1Xr9LZIPfpwmpxOYgT4qssv4L8QSjlGqtxRVw9bi0r
+qFkvgykSN2rpAWsM5TbaBe436Zqor1UqirjUshisUB3TAlmaIcR9MRydb0TpWOce
+OeCuARuS9JytW1n/Ox1QS26ZnZ+uu17SFCgsFzUzgsfd8mBXj6ajWUHnDDEFa5J1
+Q3QZdUiQ6tdVkNGn6NGJu6qYEHKhfiwX5YU9nWtvrSjn4XqALaK7+uihctTir1cH
+gQJAtX+rcjJx3703UKAoa4iVc2xiMrGT2fnEuKZKpZ2kbuEyaZg1ELuKuSOVpXAv
+LKbStOx36fssya2r2uUbJ8fBawxpVS4yYA+4M1y7iKVipDAWtz4d81xj3BsAY4Xr
+yYvaHKZY5OUAtFMZAkJKifKNg7qrLeq5k6G2vhsDf1uDyJEVmrljBqAG8Qw/RYLz
+FNto17/9jE2UuFvMy/SaB2nG4CrjXPNTj957JnRaMFPeY1jS9WiTG6YYSzMcM+nM
+pD4mWS3WXDCjJ/jUxBRVA3VHmghd3U7MvCgAlVA9h9gsU+QgEd7lXmuWliIbgJoJ
+zfn63DUPgDro0/ZhyUlS/QnYpnou3AiEU2rD9CItXohvaYxrA+zXKddBwVdZg1CV
+8IqdvVYeKUS6GgJXn381IM+cjVsjJS9uNl43pJ+KDBLOtqr5Fog=
+=fp9s
+-----END PGP SIGNATURE-----
+
+--svijk2twi5xfreba--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
