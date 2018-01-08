@@ -1,75 +1,148 @@
 From: David Lechner <david@lechnology.com>
-Subject: [PATCH v5 31/44] ARM: davinci: remove CONFIG_DAVINCI_RESET_CLOCKS
-Date: Sun,  7 Jan 2018 20:23:50 -0600
-Message-ID: <1515378238-23105-2-git-send-email-david@lechnology.com>
-References: <1515378238-23105-1-git-send-email-david@lechnology.com>
+Subject: [PATCH v5 11/44] clk: davinci: Add platform information for TI DA830 PSC
+Date: Sun,  7 Jan 2018 20:17:10 -0600
+Message-ID: <1515377863-20358-12-git-send-email-david@lechnology.com>
+References: <1515377863-20358-1-git-send-email-david@lechnology.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1515378238-23105-1-git-send-email-david@lechnology.com>
+In-Reply-To: <1515377863-20358-1-git-send-email-david@lechnology.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org, David Lechner <david@lechnology.com>
 List-Id: devicetree@vger.kernel.org
 
-The common clock framework will take care of disabling unused clocks when
-we switch from the legacy davinci clocks and having this enabled will
-cause compile errors after we switch, so remove it now.
+This adds platform-specific declarations for the PSC clocks on TI DA830/
+OMAP-L137/AM17XX SoCs.
 
 Signed-off-by: David Lechner <david@lechnology.com>
 ---
- arch/arm/mach-davinci/Kconfig               | 12 ------------
- arch/arm/mach-davinci/common.c              |  1 -
- arch/arm/mach-davinci/include/mach/common.h |  6 ------
- 3 files changed, 19 deletions(-)
+ drivers/clk/davinci/Makefile    |  1 +
+ drivers/clk/davinci/psc-da830.c | 96 +++++++++++++++++++++++++++++++++++++++++
+ include/linux/clk/davinci.h     |  2 +
+ 3 files changed, 99 insertions(+)
+ create mode 100644 drivers/clk/davinci/psc-da830.c
 
-diff --git a/arch/arm/mach-davinci/Kconfig b/arch/arm/mach-davinci/Kconfig
-index 05c3eecf..ba9912b 100644
---- a/arch/arm/mach-davinci/Kconfig
-+++ b/arch/arm/mach-davinci/Kconfig
-@@ -231,18 +231,6 @@ config DAVINCI_MUX_WARNINGS
- 	  to change the pin multiplexing setup. When there are no warnings
- 	  printed, it's safe to deselect DAVINCI_MUX for your product.
+diff --git a/drivers/clk/davinci/Makefile b/drivers/clk/davinci/Makefile
+index cd1bf2c..fb14c8c 100644
+--- a/drivers/clk/davinci/Makefile
++++ b/drivers/clk/davinci/Makefile
+@@ -10,4 +10,5 @@ obj-$(CONFIG_ARCH_DAVINCI_DM644x)	+= pll-dm644x.o
+ obj-$(CONFIG_ARCH_DAVINCI_DM646x)	+= pll-dm646x.o
  
--config DAVINCI_RESET_CLOCKS
--	bool "Reset unused clocks during boot"
--	depends on ARCH_DAVINCI
--	help
--	  Say Y if you want to reset unused clocks during boot.
--	  This option saves power, but assumes all drivers are
--	  using the clock framework. Broken drivers that do not
--	  yet use clock framework may not work with this option.
--	  If you are booting from another operating system, you
--	  probably do not want this option enabled until your
--	  device drivers work properly.
--
- endmenu
- 
+ obj-y += psc.o
++obj-$(CONFIG_ARCH_DAVINCI_DA830)	+= psc-da830.o
  endif
-diff --git a/arch/arm/mach-davinci/common.c b/arch/arm/mach-davinci/common.c
-index bcb6a7b..e03f95c 100644
---- a/arch/arm/mach-davinci/common.c
-+++ b/arch/arm/mach-davinci/common.c
-@@ -118,5 +118,4 @@ void __init davinci_common_init(const struct davinci_soc_info *soc_info)
- void __init davinci_init_late(void)
- {
- 	davinci_cpufreq_init();
--	davinci_clk_disable_unused();
- }
-diff --git a/arch/arm/mach-davinci/include/mach/common.h b/arch/arm/mach-davinci/include/mach/common.h
-index f0d5e858..c86a058 100644
---- a/arch/arm/mach-davinci/include/mach/common.h
-+++ b/arch/arm/mach-davinci/include/mach/common.h
-@@ -82,12 +82,6 @@ extern void davinci_common_init(const struct davinci_soc_info *soc_info);
- extern void davinci_init_ide(void);
- void davinci_init_late(void);
+diff --git a/drivers/clk/davinci/psc-da830.c b/drivers/clk/davinci/psc-da830.c
+new file mode 100644
+index 0000000..193b08f
+--- /dev/null
++++ b/drivers/clk/davinci/psc-da830.c
+@@ -0,0 +1,96 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * PSC clock descriptions for TI DA830/OMAP-L137/AM17XX
++ *
++ * Copyright (C) 2017 David Lechner <david@lechnology.com>
++ */
++
++#include <linux/clk-provider.h>
++#include <linux/clkdev.h>
++#include <linux/init.h>
++#include <linux/types.h>
++
++#include "psc.h"
++
++static const struct davinci_psc_clk_info da830_psc0_info[] __initconst = {
++	LPSC(0, 0, tpcc, pll0_sysclk2, LPSC_ALWAYS_ENABLED),
++	LPSC(1, 0, tptc0, pll0_sysclk2, LPSC_ALWAYS_ENABLED),
++	LPSC(2, 0, tptc1, pll0_sysclk2, LPSC_ALWAYS_ENABLED),
++	LPSC(3, 0, aemif, pll0_sysclk3, LPSC_ALWAYS_ENABLED),
++	LPSC(4, 0, spi0, pll0_sysclk2, 0),
++	LPSC(5, 0, mmcsd, pll0_sysclk2, 0),
++	LPSC(6, 0, aintc, pll0_sysclk4, LPSC_ALWAYS_ENABLED),
++	LPSC(7, 0, arm_rom, pll0_sysclk2, LPSC_ALWAYS_ENABLED),
++	LPSC(8, 0, secu_mgr, pll0_sysclk4, LPSC_ALWAYS_ENABLED),
++	LPSC(9, 0, uart0, pll0_sysclk2, 0),
++	LPSC(10, 0, scr0_ss, pll0_sysclk2, LPSC_ALWAYS_ENABLED),
++	LPSC(11, 0, scr1_ss, pll0_sysclk2, LPSC_ALWAYS_ENABLED),
++	LPSC(12, 0, scr2_ss, pll0_sysclk2, LPSC_ALWAYS_ENABLED),
++	LPSC(13, 0, dmax, pll0_sysclk2, LPSC_ALWAYS_ENABLED),
++	LPSC(14, 0, arm, pll0_sysclk6, LPSC_ALWAYS_ENABLED),
++	{ }
++};
++
++static const struct davinci_psc_clk_info da830_psc1_info[] __initconst = {
++	LPSC(1, 0, usb0, pll0_sysclk2, 0),
++	LPSC(2, 0, usb1, pll0_sysclk4, 0),
++	LPSC(3, 0, gpio, pll0_sysclk4, 0),
++	LPSC(5, 0, emac, pll0_sysclk4, 0),
++	LPSC(6, 0, emif3, pll0_sysclk5, LPSC_ALWAYS_ENABLED),
++	LPSC(7, 0, mcasp0, pll0_sysclk2, 0),
++	LPSC(8, 0, mcasp1, pll0_sysclk2, 0),
++	LPSC(9, 0, mcasp2, pll0_sysclk2, 0),
++	LPSC(10, 0, spi1, pll0_sysclk2, 0),
++	LPSC(11, 0, i2c1, pll0_sysclk4, 0),
++	LPSC(12, 0, uart1, pll0_sysclk2, 0),
++	LPSC(13, 0, uart2, pll0_sysclk2, 0),
++	LPSC(16, 0, lcdc, pll0_sysclk2, 0),
++	LPSC(17, 0, pwm, pll0_sysclk2, 0),
++	LPSC(20, 0, ecap, pll0_sysclk2, 0),
++	LPSC(21, 0, eqep, pll0_sysclk2, 0),
++	{ }
++};
++
++void __init da830_psc_clk_init(void __iomem *psc0, void __iomem *psc1)
++{
++	struct clk_onecell_data *clk_data;
++
++	clk_data = davinci_psc_register_clocks(psc0, da830_psc0_info, 16);
++	if (!clk_data)
++		return;
++
++	clk_register_clkdev(clk_data->clks[4], NULL, "spi_davinci.0");
++	clk_register_clkdev(clk_data->clks[5], NULL, "da830-mmc.0");
++	clk_register_clkdev(clk_data->clks[9], NULL, "serial8250.0");
++	clk_register_clkdev(clk_data->clks[14], "arm", NULL);
++
++	clk_free_onecell_data(clk_data);
++
++	clk_data = davinci_psc_register_clocks(psc1, da830_psc1_info, 32);
++	if (!clk_data)
++		return;
++
++	clk_register_clkdev(clk_data->clks[1], NULL, "musb-da8xx");
++	clk_register_clkdev(clk_data->clks[1], NULL, "cppi41-dmaengine");
++	clk_register_clkdev(clk_data->clks[2], NULL, "ohci-da8xx");
++	clk_register_clkdev(clk_data->clks[3], "gpio", NULL);
++	clk_register_clkdev(clk_data->clks[5], NULL, "davinci_emac.1");
++	clk_register_clkdev(clk_data->clks[5], "fck", "davinci_mdio.0");
++	clk_register_clkdev(clk_data->clks[7], NULL, "davinci-mcasp.0");
++	clk_register_clkdev(clk_data->clks[8], NULL, "davinci-mcasp.1");
++	clk_register_clkdev(clk_data->clks[9], NULL, "davinci-mcasp.2");
++	clk_register_clkdev(clk_data->clks[10], NULL, "spi_davinci.1");
++	clk_register_clkdev(clk_data->clks[11], NULL, "i2c_davinci.2");
++	clk_register_clkdev(clk_data->clks[12], NULL, "serial8250.1");
++	clk_register_clkdev(clk_data->clks[13], NULL, "serial8250.2");
++	clk_register_clkdev(clk_data->clks[16], "fck", "da8xx_lcdc.0");
++	clk_register_clkdev(clk_data->clks[17], "fck", "ehrpwm.0");
++	clk_register_clkdev(clk_data->clks[17], "fck", "ehrpwm.1");
++	clk_register_clkdev(clk_data->clks[20], "fck", "ecap.0");
++	clk_register_clkdev(clk_data->clks[20], "fck", "ecap.1");
++	clk_register_clkdev(clk_data->clks[20], "fck", "ecap.2");
++	clk_register_clkdev(clk_data->clks[21], NULL, "eqep.0");
++	clk_register_clkdev(clk_data->clks[21], NULL, "eqep.1");
++
++	clk_free_onecell_data(clk_data);
++}
+diff --git a/include/linux/clk/davinci.h b/include/linux/clk/davinci.h
+index d495de7..3ec8100 100644
+--- a/include/linux/clk/davinci.h
++++ b/include/linux/clk/davinci.h
+@@ -16,4 +16,6 @@ void dm365_pll_clk_init(void __iomem *pll1, void __iomem *pll2);
+ void dm644x_pll_clk_init(void __iomem *pll1, void __iomem *pll2);
+ void dm646x_pll_clk_init(void __iomem *pll1, void __iomem *pll2);
  
--#ifdef CONFIG_DAVINCI_RESET_CLOCKS
--int davinci_clk_disable_unused(void);
--#else
--static inline int davinci_clk_disable_unused(void) { return 0; }
--#endif
--
- #ifdef CONFIG_CPU_FREQ
- int davinci_cpufreq_init(void);
- #else
++void da830_psc_clk_init(void __iomem *psc0, void __iomem *psc1);
++
+ #endif /* __LINUX_CLK_DAVINCI_H__ */
 -- 
 2.7.4
