@@ -1,91 +1,63 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH] phy: work around 'phys' references to usb-phy devices
-Date: Tue, 9 Jan 2018 00:02:54 +0530
-Message-ID: <aa02104b-d80d-8b12-4403-b5cedc23f03a@ti.com>
-References: <20180108130116.80148-1-arnd@arndb.de>
+From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Subject: Re: [PATCH v2 1/5] pinctrl: imx: use struct imx_pinctrl_soc_info as a
+ const
+Date: Mon, 08 Jan 2018 21:52:36 +0100
+Message-ID: <f12aa7b7b3aea7a691a1acd14b8daa58@agner.ch>
+References: <20180106142553.15322-1-stefan@agner.ch>
+ <20180106142553.15322-2-stefan@agner.ch> <20180108164855.GA6504@t450s.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180108130116.80148-1-arnd@arndb.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Eric Anholt <eric@anholt.net>, Florian Fainelli <f.fainelli@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-usb@vger.kernel.org, stable@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>, Felipe Balbi <balbi@kernel.org>, Andrzej Pietrasiewicz <andrzej.p@samsung.com>, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180108164855.GA6504-gtbVdJvtf7D/PtFMR13I2A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+Cc: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, aisheng.dong-3arQi8VN3Tc@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arvind Yadav <arvind.yadav.cs-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+On 2018-01-08 17:48, Gary Bisson wrote:
+> Hi Stefan,
+> 
+> On Sat, Jan 06, 2018 at 03:25:49PM +0100, Stefan Agner wrote:
+>> For some SoCs the struct imx_pinctrl_soc_info is passed through
+>> of_device_id.data which is const. Most variables are already const
+>> or otherwise not written. However, some fields are modified at
+>> runtime. Move those fields to the dynamically allocated struct
+>> imx_pinctrl.
+>>
+>> Fixes: b3060044e495 ("pinctrl: freescale: imx7d: make of_device_ids const")
+>> Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> Cc: Arvind Yadav <arvind.yadav.cs-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> Cc: Dong Aisheng <aisheng.dong-3arQi8VN3Tc@public.gmane.org>
+>> Cc: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+>> Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+> 
+> This is actually more or less a revert of a previous commit:
+> b28742be4709 pinctrl: imx: remove const qualifier of imx_pinctrl_soc_info
 
-On Monday 08 January 2018 06:31 PM, Arnd Bergmann wrote:
-> Stefan Wahren reports a problem with a warning fix that was merged
-> for v4.15: we had lots of device nodes with a 'phys' property pointing
-> to a device node that is not compliant with the binding documented in
-> Documentation/devicetree/bindings/phy/phy-bindings.txt
-> 
-> This generally works because USB HCD drivers that support both the generic
-> phy subsystem and the older usb-phy subsystem ignore most errors from
-> phy_get() and related calls and then use the usb-phy driver instead.
-> 
-> However, usb_add_hcd() (along with the respective functions in dwc2 and
-> dwc3) propagate the EPROBE_DEFER return code so we can try again whenever
-> the driver gets loaded. In case the driver is written for the usb-phy
-> subsystem (like usb-generic-phy aka usb-nop-xceiv), we will never load
-> a generic-phy driver for it, and keep failing here.
-> 
-> There is only a small number of remaining usb-phy drivers that support
-> device tree, so this adds a workaround by providing a full list of the
-> potentially affected drivers, and always failing the probe with -ENODEV
-> here, which is the same behavior that we used to get with incorrect
-> device tree files. Since we generally want older kernels to also want
-> to work with the fixed devicetree files, it would be good to backport
-> the patch into stable kernels as well (3.13+ are possibly affected).
-> Reverting back to the DTS sources that work would in theory fix USB
-> support for now, but in the long run we'd run into the same problem
-> again when the drivers get ported from usb-phy to generic-phy.
-> 
-> Fixes: 014d6da6cb25 ("ARM: dts: bcm283x: Fix DTC warnings about missing phy-cells")
-> Link: https://marc.info/?l=linux-usb&m=151518314314753&w=2
-> Cc: stable@vger.kernel.org
-> Cc: Stefan Wahren <stefan.wahren@i2se.com>
-> Cc: Felipe Balbi <balbi@kernel.org>
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
-> This obviously needs to be tested, I wrote this up as a reply to
-> Stefan's bug report. I'm fairly sure that I covered all usb-phy
-> driver strings here. My goal is to have a fix merged into 4.15
-> rather than reverting all the DT fixes.
+Hm, I see. However, back then imx_pinctrl_probe still consumed a
+non-const struct imx_pinctrl_soc_info pointer. So this constifies all
+the way through. 
 
-Shouldn't the fix be in phy consumer drivers to not return error if it's able
-to find the phy either using usb-phy or generic phy?
-> ---
->  drivers/phy/phy-core.c | 27 +++++++++++++++++++++++++++
->  1 file changed, 27 insertions(+)
 > 
-> diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
-> index b4964b067aec..bb4dd2a2de2d 100644
-> --- a/drivers/phy/phy-core.c
-> +++ b/drivers/phy/phy-core.c
-> @@ -387,6 +387,24 @@ int phy_calibrate(struct phy *phy)
->  }
->  EXPORT_SYMBOL_GPL(phy_calibrate);
->  
-> +static struct of_device_id __maybe_unused legacy_usbphy[] = {
-> +	{ .compatible = "fsl,imx23-usbphy" },
-> +	{ .compatible = "fsl,imx6q-usbphy" },
-> +	{ .compatible = "fsl,imx6sl-usbphy" },
-> +	{ .compatible = "fsl,imx6sx-usbphy" },
-> +	{ .compatible = "fsl,imx6ul-usbphy" },
-> +	{ .compatible = "fsl,vf610-usbphy" },
-> +	{ .compatible = "nvidia,tegra20-usb-phy" },
-> +	{ .compatible = "nvidia,tegra30-usb-phy" },
-> +	{ .compatible = "nxp,isp1301" },
-> +	{ .compatible = "ti,am335x-usb-ctrl-module" },
-> +	{ .compatible = "ti,am335x-usb-phy" },
-> +	{ .compatible = "ti,keystone-usbphy" },
-> +	{ .compatible = "ti,twl6030-usb" },
-> +	{ .compatible = "usb-nop-xceiv" },
-> +	{},
+> Note that the idea for this commit was to get dt-overlays working and
+> able to do pinctrl changes using configfs interface to load an overlay
+> (using Pantelis patch). Not sure where we stand on loading such overlay
+> from user-space, is it still something that will happen?
 
-"ti,am335x-usb-ctrl-module" and "ti,twl6030-usb" are not phys.
+I am all for dt-overlays and actually also hope that it will make it
+completely into mainline. So whatever prevents using device tree
+overlays should be addressed.
 
-Thanks
-Kishon
+It seems that ngroups is now part of struct pinctrl_dev (num_groups),
+which is still writable. So we should be fine?
+
+As far as I can tell all remaining properties come from the drivers
+directly and should not be influenced by anything in the device tree....
+
+--
+Stefan
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
