@@ -1,44 +1,109 @@
-From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v6 0/2] Documentation and driver of logicoreIP
-Date: Mon, 8 Jan 2018 13:43:33 +0100
-Message-ID: <5529878b-9ef3-86b7-4c35-0aad79aa44c8@xilinx.com>
-References: <CAK8P3a0z6HF8Rg08HUj7_T+7ZxxnHoReiu68bNzF6CnEooQSdA@mail.gmail.com>
- <1513881186-26020-1-git-send-email-dshah@xilinx.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH] phy: work around 'phys' references to usb-phy devices
+Date: Mon,  8 Jan 2018 14:01:10 +0100
+Message-ID: <20180108130116.80148-1-arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1513881186-26020-1-git-send-email-dshah-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dhaval Shah <dhaval.shah-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, arnd-r2nGTMty4D4@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, pombredanne-od1rfyK75/E@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hyunk-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, Dhaval Shah <dshah-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Stefan Wahren <stefan.wahren@i2se.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Felipe Balbi <balbi@kernel.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org, Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, Andrzej Pietrasiewicz <andrzej.p@samsung.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 21.12.2017 19:33, Dhaval Shah wrote:
-> 1st patch provide Device Tree binding document for logicoreIP
-> 2nd patch provide the xlnx_vcu logicoreIP driver, Kconfig changes
-> and Makefile changes for the driver.
-> 
-> Dhaval Shah (2):
->   dt-bindings: misc: Add DT bindings to xlnx_vcu driver
->   misc: xlnx_vcu: Add Xilinx ZYNQMP VCU logicoreIP init driver
-> 
->  .../devicetree/bindings/soc/xilinx/xlnx,vcu.txt    |  31 +
->  drivers/soc/xilinx/Kconfig                         |  15 +
->  drivers/soc/xilinx/Makefile                        |   1 +
->  drivers/soc/xilinx/xlnx_vcu.c                      | 630 +++++++++++++++++++++
->  4 files changed, 677 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/soc/xilinx/xlnx,vcu.txt
->  create mode 100644 drivers/soc/xilinx/xlnx_vcu.c
-> 
+Stefan Wahren reports a problem with a warning fix that was merged
+for v4.15: we had lots of device nodes with a 'phys' property pointing
+to a device node that is not compliant with the binding documented in
+Documentation/devicetree/bindings/phy/phy-bindings.txt
 
-It looks like there is no any other concern regarding these patches
-that's why I have applied them.
+This generally works because USB HCD drivers that support both the generic
+phy subsystem and the older usb-phy subsystem ignore most errors from
+phy_get() and related calls and then use the usb-phy driver instead.
 
-Thanks,
-Michal
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+However, usb_add_hcd() (along with the respective functions in dwc2 and
+dwc3) propagate the EPROBE_DEFER return code so we can try again whenever
+the driver gets loaded. In case the driver is written for the usb-phy
+subsystem (like usb-generic-phy aka usb-nop-xceiv), we will never load
+a generic-phy driver for it, and keep failing here.
+
+There is only a small number of remaining usb-phy drivers that support
+device tree, so this adds a workaround by providing a full list of the
+potentially affected drivers, and always failing the probe with -ENODEV
+here, which is the same behavior that we used to get with incorrect
+device tree files. Since we generally want older kernels to also want
+to work with the fixed devicetree files, it would be good to backport
+the patch into stable kernels as well (3.13+ are possibly affected).
+Reverting back to the DTS sources that work would in theory fix USB
+support for now, but in the long run we'd run into the same problem
+again when the drivers get ported from usb-phy to generic-phy.
+
+Fixes: 014d6da6cb25 ("ARM: dts: bcm283x: Fix DTC warnings about missing phy-cells")
+Link: https://marc.info/?l=linux-usb&m=151518314314753&w=2
+Cc: stable@vger.kernel.org
+Cc: Stefan Wahren <stefan.wahren@i2se.com>
+Cc: Felipe Balbi <balbi@kernel.org>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+This obviously needs to be tested, I wrote this up as a reply to
+Stefan's bug report. I'm fairly sure that I covered all usb-phy
+driver strings here. My goal is to have a fix merged into 4.15
+rather than reverting all the DT fixes.
+---
+ drivers/phy/phy-core.c | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
+
+diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
+index b4964b067aec..bb4dd2a2de2d 100644
+--- a/drivers/phy/phy-core.c
++++ b/drivers/phy/phy-core.c
+@@ -387,6 +387,24 @@ int phy_calibrate(struct phy *phy)
+ }
+ EXPORT_SYMBOL_GPL(phy_calibrate);
+ 
++static struct of_device_id __maybe_unused legacy_usbphy[] = {
++	{ .compatible = "fsl,imx23-usbphy" },
++	{ .compatible = "fsl,imx6q-usbphy" },
++	{ .compatible = "fsl,imx6sl-usbphy" },
++	{ .compatible = "fsl,imx6sx-usbphy" },
++	{ .compatible = "fsl,imx6ul-usbphy" },
++	{ .compatible = "fsl,vf610-usbphy" },
++	{ .compatible = "nvidia,tegra20-usb-phy" },
++	{ .compatible = "nvidia,tegra30-usb-phy" },
++	{ .compatible = "nxp,isp1301" },
++	{ .compatible = "ti,am335x-usb-ctrl-module" },
++	{ .compatible = "ti,am335x-usb-phy" },
++	{ .compatible = "ti,keystone-usbphy" },
++	{ .compatible = "ti,twl6030-usb" },
++	{ .compatible = "usb-nop-xceiv" },
++	{},
++};
++
+ /**
+  * _of_phy_get() - lookup and obtain a reference to a phy by phandle
+  * @np: device_node for which to get the phy
+@@ -410,6 +428,15 @@ static struct phy *_of_phy_get(struct device_node *np, int index)
+ 	if (ret)
+ 		return ERR_PTR(-ENODEV);
+ 
++	/*
++	 * Some USB host controllers use a "phys" property to refer to
++	 * a device that does not have a generic phy driver but that
++	 * has a driver for the older usb-phy framework.
++	 * We must not return -EPROBE_DEFER for those, so bail out early.
++	 */
++	if (of_match_node(legacy_usbphy, args.np))
++		return ERR_PTR(-ENODEV);
++
+ 	mutex_lock(&phy_provider_mutex);
+ 	phy_provider = of_phy_provider_lookup(args.np);
+ 	if (IS_ERR(phy_provider) || !try_module_get(phy_provider->owner)) {
+-- 
+2.9.0
