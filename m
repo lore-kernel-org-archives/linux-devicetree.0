@@ -1,57 +1,50 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v3 0/3] usb: renesas_usbhs: Add RZ/A1 support
-Date: Mon, 8 Jan 2018 13:15:08 +0100
-Message-ID: <CAMuHMdXu22ihgkVgPhCtbk9X21nyk3SFwGAiObEgcv=Kf2H-ow@mail.gmail.com>
-References: <20180105224647.42262-1-chris.brandt@renesas.com>
- <CAMuHMdV+1Y+OozRa0P2MJZQ-rT+ZfmW4iy2AYya1EMgrjb+y8Q@mail.gmail.com> <SG2PR06MB1165E6B9D4C00EE2A98E8E348A130@SG2PR06MB1165.apcprd06.prod.outlook.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <SG2PR06MB1165E6B9D4C00EE2A98E8E348A130@SG2PR06MB1165.apcprd06.prod.outlook.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Chris Brandt <Chris.Brandt@renesas.com>
-Cc: Simon Horman <horms@verge.net.au>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, USB list <linux-usb@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+From: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v4 2/3] dt-bindings: usb: renesas_usbhs: Add support for RZ/A1
+Date: Mon,  8 Jan 2018 07:30:54 -0500
+Message-ID: <20180108123055.64890-3-chris.brandt@renesas.com>
+References: <20180108123055.64890-1-chris.brandt@renesas.com>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180108123055.64890-1-chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Chris,
+Document support for RZ/A1 SoCs
 
-On Mon, Jan 8, 2018 at 12:59 PM, Chris Brandt <Chris.Brandt@renesas.com> wrote:
-> On Monday, January 08, 2018, Geert Uytterhoeven wrote:
->> Thanks for the update, but I think there has been a misunderstanding.
->> I didn't mean to drop "renesas,usbhs-r7s72100" everywhere, only from
->> the matching in the driver.
->
-> Opps, I was all kinds of confused then.
->
-> So, before I submit a V4, here is my understanding:
->
-> drivers/.../common.c
->  * contains -only-  '.compatible = "renesas,rza1-usbhs"'
+Signed-off-by: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+---
+v4:
+ * Re-added "renesas,usbhs-r7s72100"
+v3:
+ * Removed "renesas,usbhs-r7s72100"
+v2:
+ * Added Reviewed-by
+---
+ Documentation/devicetree/bindings/usb/renesas_usbhs.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-OK.
+diff --git a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
+index 47394ab788e3..d060172f1529 100644
+--- a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
++++ b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
+@@ -13,8 +13,10 @@ Required properties:
+ 	- "renesas,usbhs-r8a7795" for r8a7795 (R-Car H3) compatible device
+ 	- "renesas,usbhs-r8a7796" for r8a7796 (R-Car M3-W) compatible device
+ 	- "renesas,usbhs-r8a77995" for r8a77995 (R-Car D3) compatible device
++	- "renesas,usbhs-r7s72100" for r7s72100 (RZ/A1) compatible device
+ 	- "renesas,rcar-gen2-usbhs" for R-Car Gen2 or RZ/G1 compatible devices
+ 	- "renesas,rcar-gen3-usbhs" for R-Car Gen3 compatible device
++	- "renesas,rza1-usbhs" for RZ/A1 compatible device
+ 
+ 	When compatible with the generic version, nodes must list the
+ 	SoC-specific version corresponding to the platform first followed
+-- 
+2.15.1
 
-> Documentation/.../renesas_usbhs.txt
->  * contains both "renesas,usbhs-r7s72100" and "renesas,rza1-usbhs"
-
-OK.
-
-> r7s72100.dtsi
-> * usbhs0: usb@e8010000 {
->     compatible = "renesas,usbhs-r7s72100", "renesas,rza1-usbhs";
-
-OK.
-
-> Is this correct?
-
-Yes.
-
-Gr{oetje,eeting}s,
-
-                        Geert
 
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
