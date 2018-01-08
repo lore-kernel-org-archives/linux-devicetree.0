@@ -1,87 +1,107 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v5 1/3] clocksource/drivers/atcpit100: Add andestech
- atcpit100 timer
-Date: Mon, 8 Jan 2018 16:26:30 +0100
-Message-ID: <CAK8P3a2NVj_M5eHT92fJYNBG3x9juVnHW6uV32p3-ytfqjARxg@mail.gmail.com>
-References: <1513057621-19084-1-git-send-email-rickchen36@gmail.com>
- <1513057621-19084-2-git-send-email-rickchen36@gmail.com> <bb7383ba-bb8e-3cbd-4ce0-faaefa8ed114@linaro.org>
- <CAEbi=3cEEtLQRiv-cyUwEmcBNOC2Sz7AhzZkpznQWYb9VUojug@mail.gmail.com>
- <ff51fff7-e963-f9fd-10d6-9b90a64d7aac@linaro.org> <CAEbi=3c4yAx7Tejz8aPw3-3vj89t8cg-zNEY-vbF7KaMo8OM0Q@mail.gmail.com>
- <efdb249a-8dc0-e076-a1db-20cecdbf4c13@linaro.org> <CAEbi=3frQYZHb0yiMvNk_JUiUCy6ca0tbrsM_pt49LtkMy47mw@mail.gmail.com>
- <1e75edb3-8f7b-796c-6871-1612b027050e@linaro.org>
+From: Kyle Evans <kevans91-OYTqUY/oFF8@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: dts: sunxi: Add sid for a83t
+Date: Mon, 8 Jan 2018 09:30:57 -0600
+Message-ID: <CACNAnaHOuPH05hsJ-jt1135-Giknb-DOuvjeQRSGVR2L7Xc-Cg@mail.gmail.com>
+References: <20171219210523.10428-1-kevans91@ksu.edu> <20171221145512.llxvzkcrjpquhczi@flea.lan>
+ <CACNAnaE9GiVTXD-TV1xXyBJKtTGKpdA6n0REk6a=qm218EgHbg@mail.gmail.com>
+ <20171221152630.2vf57x5o2yi5sv3n@flea.lan> <20171221190903.56ebae536acf51401c63802c@bidouilliste.com>
+ <20171222083508.dfcp6egfvxykmogg@flea.lan> <20171222110727.520df7394234f6a5dc0b9ec0@bidouilliste.com>
+ <CAGb2v64mf-ihyOs-WJZuVa4Yib3Szp90RZu_a1EeQ1LJXnoXEQ@mail.gmail.com> <20180104140119.5pyfihp4zs2poz35@flea.lan>
+Reply-To: kevans91-OYTqUY/oFF8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <1e75edb3-8f7b-796c-6871-1612b027050e@linaro.org>
-Sender: linux-arch-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Greentime Hu <green.hu@gmail.com>, Greentime <greentime@andestech.com>, Rick Chen <rickchen36@gmail.com>, Rick Chen <rick@andestech.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, linux-arch <linux-arch@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, netdev <netdev@vger.kernel.org>, Vincent Chen <deanbo422@gmail.com>, DTML <devicetree@vger.kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, David Howells <dhowells@redhat.com>, Will Deacon <will.deacon@arm.com>, linux-serial@vger.kernel.org
+Return-path: <linux-sunxi+bncBCRMXPGDSQIRBTM5Z3JAKGQE7VKAHEI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180104140119.5pyfihp4zs2poz35-ZC1Zs529Oq4@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Emmanuel Vadot <manu-xXdDKFdH5B3kFDPD4ZthVA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 5, 2018 at 10:31 AM, Daniel Lezcano
-<daniel.lezcano@linaro.org> wrote:
->>> No. Can't you add in arch/ndis32/Kconfig ?
->>>
->>> +select TIMER_ATCPIT100
->>>
->>> Like:
->>>
->>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm64/Kconfig#n50
+On Thu, Jan 4, 2018 at 8:01 AM, Maxime Ripard
+<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> On Fri, Dec 22, 2017 at 06:11:52PM +0800, Chen-Yu Tsai wrote:
+>> On Fri, Dec 22, 2017 at 6:07 PM, Emmanuel Vadot <manu-xXdDKFdH5B3kFDPD4ZthVA@public.gmane.org> wrote:
+>> > On Fri, 22 Dec 2017 09:35:08 +0100
+>> > Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+>> >
+>> >> On Thu, Dec 21, 2017 at 07:09:03PM +0100, Emmanuel Vadot wrote:
+>> >> >
+>> >> >  Hi Maxime,
+>> >> >
+>> >> > On Thu, 21 Dec 2017 16:26:30 +0100
+>> >> > Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+>> >> >
+>> >> > > Hi,
+>> >> > >
+>> >> > > On Thu, Dec 21, 2017 at 09:19:24AM -0600, Kyle Evans wrote:
+>> >> > > > On Thu, Dec 21, 2017 at 8:55 AM, Maxime Ripard
+>> >> > > > <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+>> >> > > > > Hi Kyle,
+>> >> > > > >
+>> >> > > > > On Tue, Dec 19, 2017 at 03:05:23PM -0600, kevans91-OYTqUY/oFF8@public.gmane.org wrote:
+>> >> > > > >> Allwinner a83t has a 1 KB sid block with efuse for security rootkey and
+>> >> > > > >> thermal calibration data, add node to describe it.
+>> >> > > > >>
+>> >> > > > >> a83t-sid is not currently supported by nvmem/sunxi-sid, but it is
+>> >> > > > >> supported in an external driver for FreeBSD.
+>> >> > > > >>
+>> >> > > > >> Signed-off-by: Kyle Evans <kevans91-OYTqUY/oFF8@public.gmane.org>
+>> >> > > > >
+>> >> > > > > The patch looks fine in itself, but we've had a number of issues with
+>> >> > > > > the register layout (and access patterns) in the past, so I'd rather
+>> >> > > > > have something that works in Linux too if possible.
+>> >> > > >
+>> >> > > > I have a patch that I think should make it work fine on Linux [1], but
+>> >> > > > I'm afraid I have little to no capability to test it myself and so I
+>> >> > > > did not add it as well.
+>> >> > > >
+>> >> > > > I do know that the rootkey is offset 0x200 into the given space [2],
+>> >> > > > as is the case with the H3, and that the readout quirk is not needed.
+>> >> > > > I wasn't 100% sure that the a83t has 2Kbit worth of efuse space as the
+>> >> > > > H3, but I do know that thermal data can be found at 0x34 and 0x38 in
+>> >> > > > this space.
+>> >> > >
+>> >> > > Then maybe we should leave it aside until someone takes some time on
+>> >> > > the A83t.
+>> >> >
+>> >> >  Take some time on the Linux driver and do not apply this patch for
+>> >> > now you mean ?
+>> >>
+>> >> Yep.
+>> >>
+>> >> Maxime
+>> >
+>> >  Since linux doesn't have the compatible in it's driver what would
+>> > be the harm to add the node in the DTS ? If a quirks is needed because
+>> > some region is weird this would go in the driver right ? I don't see a
+>> > technical problem for adding this node right now.
+>> >  If Kyle confirm the lenght of the region and that no quirk is needed
+>> > will it be enough ?
 >>
->> IMHO, it might be a little bit wierd if we select TIMER_ATCPIT100 in
->> arch/nds32/Kconfig because it is part of SoC instead of CPU.
->> If we change to another SoC with another timer, we need to select
->> another TIMER in arch/nds32/Kconfig and delete TIMER_ATCPIT100.
->> It seems more flexible to be selected in driver layer.
+>> I guess I wasn't very clear. I'm OK with the patch going in. The device
+>> node currently says nothing about how much efuse space there is. The
+>> memory region covers that and the control section, and the size matches
+>> what the memory map says.
 >>
->> It seems to be the timer is part of the arch to be selected in arch's Kconfig.
->> arch/arc/Kconfig:       select ARC_TIMERS
->> arch/arc/Kconfig:       select ARC_TIMERS_64BIT
->> arch/arm/Kconfig:       select ARM_ARCH_TIMER
->> arch/arm64/Kconfig:     select ARM_ARCH_TIMER
->> arch/blackfin/Kconfig:  select BFIN_GPTIMERS
+>> The size and offset of the efuse space would be dealt with in the driver.
 >
-> No, the timer must be selected from the arch/soc's or whatever Kconfig.
-> Not in the clocksource's Kconfig.
+> Let's merge it then.
 >
-> eg.
+> Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 >
-> on ARM:
->
-> arch/arm/mach-vt8500/Kconfig:   select VT8500_TIMER
-> arch/arm/mach-bcm/Kconfig:      select BCM_KONA_TIMER
-> arch/arm/mach-actions/Kconfig:  select OWL_TIMER
-> arch/arm/mach-digicolor/Kconfig:        select DIGICOLOR_TIMER
->
-> etc ...
->
-> on ARM64:
->
-> arch/arm64/Kconfig.platforms:   select OWL_TIMER
-> arch/arm64/Kconfig.platforms:       select ARM_TIMER_SP804
-> arch/arm64/Kconfig.platforms:       select MTK_TIMER
->
-> etc ...
+> Maxime
 
-I'd actually prefer to not do it for ARM either: Most other subsystems
-don't do that, and I don't see a strong reason why clocksource should
-be special here.
+Hi,
 
-Selecting 'TIMER_OF' from the individual drivers that need it (as you
-suggest) makes sense, but I think for ARM we treat SoC families
-as a bit too special, in the end they are for the most part collections
-of individual hardware blocks that may or may not be present on
-some chip.
+What does the timeline for these things normally look like? I'm new to
+these parts. =)
 
-In case of risc-v and nds32, I expect that the separation will be
-even less visibile in the hardware, as a typical model here is
-that one company designs SoCs for multiple customers that each
-have different requirements. Some of them may have one
-timer and some have another timer or multiple timers, but there
-is no strict separation between SoC families as I understand.
-Here we'd be better off not having a per-SoC Kconfig option at
-all, just a generic defconfig that enables all the drivers that might
-be used, and integrators can have a defconfig file that only
-enables the stuff they actually use on a given chip.
+Thanks,
 
-      Arnd
+Kyle Evans
