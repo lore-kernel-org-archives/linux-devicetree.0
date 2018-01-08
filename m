@@ -1,40 +1,47 @@
 From: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH 2/3] ARM: dts: mvebu: add sdram controller node to Armada-38x
-Date: Tue,  9 Jan 2018 11:31:57 +1300
-Message-ID: <20180108223158.21930-3-chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH 1/3] ARM: dts: enable L2 cache parity and ecc on db-xc3-24g4xg
+ board
+Date: Tue,  9 Jan 2018 11:31:56 +1300
+Message-ID: <20180108223158.21930-2-chris.packham@alliedtelesis.co.nz>
 References: <20180108223158.21930-1-chris.packham@alliedtelesis.co.nz>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20180108223158.21930-1-chris.packham@alliedtelesis.co.nz>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: jlu@pengutronix.de, linux@armlinux.org.uk, bp@alien8.de, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Chris Packham <chris.packham@alliedtelesis.co.nz>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Chris Packham <chris.packham@alliedtelesis.co.nz>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
-
-The Armada-38x uses an SDRAM controller that is compatible with the
-Armada-XP. The key difference is the width of the bus (XP is 64/32, 38x
-is 32/16). The SDRAM controller registers are the same between the two
-SoCs.
 
 Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
 ---
- arch/arm/boot/dts/armada-38x.dtsi | 5 +++++
+ arch/arm/boot/dts/armada-xp-db-xc3-24g4xg.dts | 5 +++++
  1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm/boot/dts/armada-38x.dtsi b/arch/arm/boot/dts/armada-38x.dtsi
-index 00ff549d4e39..6d34c5ec178f 100644
---- a/arch/arm/boot/dts/armada-38x.dtsi
-+++ b/arch/arm/boot/dts/armada-38x.dtsi
-@@ -138,6 +138,11 @@
- 			#size-cells = <1>;
- 			ranges = <0 MBUS_ID(0xf0, 0x01) 0 0x100000>;
+diff --git a/arch/arm/boot/dts/armada-xp-db-xc3-24g4xg.dts b/arch/arm/boot/dts/armada-xp-db-xc3-24g4xg.dts
+index 06fce35d7491..00ca489fc788 100644
+--- a/arch/arm/boot/dts/armada-xp-db-xc3-24g4xg.dts
++++ b/arch/arm/boot/dts/armada-xp-db-xc3-24g4xg.dts
+@@ -70,6 +70,11 @@
+ 	};
+ };
  
-+			sdramc@1400 {
-+				compatible = "marvell,armada-xp-sdram-controller";
-+				reg = <0x1400 0x500>;
-+			};
++&L2 {
++	arm,parity-enable;
++	marvell,ecc-enable;
++};
 +
- 			L2: cache-controller@8000 {
- 				compatible = "arm,pl310-cache";
- 				reg = <0x8000 0x1000>;
+ &devbus_bootcs {
+ 	status = "okay";
+ 
 -- 
 2.15.1
