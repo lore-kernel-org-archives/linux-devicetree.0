@@ -1,304 +1,197 @@
-From: jacopo mondi <jacopo@jmondi.org>
-Subject: Re: [PATCH v2 1/2] media: ov9650: support device tree probing
-Date: Mon, 8 Jan 2018 10:18:38 +0100
-Message-ID: <20180108091838.GM9493@w540>
-References: <1515344064-23156-1-git-send-email-akinobu.mita@gmail.com>
- <1515344064-23156-2-git-send-email-akinobu.mita@gmail.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: Re: [PATCH 01/11] clk: sunxi-ng: Don't set k if
+ width is 0 for nkmp plls
+Date: Mon, 8 Jan 2018 17:19:47 +0800
+Message-ID: <CAGb2v6463B-JVw5A9C39iiuo7Xzj3Bq06m6VzdAUqr0b-S91MQ@mail.gmail.com>
+References: <20171230210203.24115-1-jernej.skrabec@siol.net>
+ <20171230210203.24115-2-jernej.skrabec@siol.net> <CAGb2v67B23yUdACijKxosfFG_os5WndiBKX02DGA4PFUkxDx9g@mail.gmail.com>
+ <3625461.aU9oqMdpo3@jernej-laptop>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1515344064-23156-2-git-send-email-akinobu.mita@gmail.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Akinobu Mita <akinobu.mita@gmail.com>
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, "H . Nikolaus Schaller" <hns@goldelico.com>, Hugues Fruchet <hugues.fruchet@st.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>, Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBS7PZTJAKGQEAVBEDDY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <3625461.aU9oqMdpo3@jernej-laptop>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Laurent Pinchart <Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Akinobu,
+On Fri, Jan 5, 2018 at 3:28 AM, Jernej =C5=A0krabec <jernej.skrabec-ix9DCk4F938@public.gmane.org=
+t> wrote:
+> Hi,
+>
+> Dne =C4=8Detrtek, 04. januar 2018 ob 15:45:18 CET je Chen-Yu Tsai napisal=
+(a):
+>> On Sun, Dec 31, 2017 at 5:01 AM, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org=
+>
+> wrote:
+>> > For example, A83T have nmp plls which are modelled as nkmp plls. Since=
+ k
+>> > is not specified, it has offset 0, shift 0 and lowest value 1. This
+>> > means that LSB bit is always set to 1, which may change clock rate.
+>> >
+>> > Fix that by applying k factor only if k width is greater than 0.
+>> >
+>> > Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+>> > ---
+>> >
+>> >  drivers/clk/sunxi-ng/ccu_nkmp.c | 21 +++++++++++++--------
+>> >  1 file changed, 13 insertions(+), 8 deletions(-)
+>> >
+>> > diff --git a/drivers/clk/sunxi-ng/ccu_nkmp.c
+>> > b/drivers/clk/sunxi-ng/ccu_nkmp.c index e58c95787f94..709f528af2b3 100=
+644
+>> > --- a/drivers/clk/sunxi-ng/ccu_nkmp.c
+>> > +++ b/drivers/clk/sunxi-ng/ccu_nkmp.c
+>> > @@ -81,7 +81,7 @@ static unsigned long ccu_nkmp_recalc_rate(struct clk=
+_hw
+>> > *hw,>
+>> >                                         unsigned long parent_rate)
+>> >
+>> >  {
+>> >
+>> >         struct ccu_nkmp *nkmp =3D hw_to_ccu_nkmp(hw);
+>> >
+>> > -       unsigned long n, m, k, p;
+>> > +       unsigned long n, m, k =3D 1, p;
+>> >
+>> >         u32 reg;
+>> >
+>> >         reg =3D readl(nkmp->common.base + nkmp->common.reg);
+>> >
+>> > @@ -92,11 +92,13 @@ static unsigned long ccu_nkmp_recalc_rate(struct
+>> > clk_hw *hw,>
+>> >         if (!n)
+>> >
+>> >                 n++;
+>> >
+>> > -       k =3D reg >> nkmp->k.shift;
+>> > -       k &=3D (1 << nkmp->k.width) - 1;
+>> > -       k +=3D nkmp->k.offset;
+>> > -       if (!k)
+>> > -               k++;
+>> > +       if (nkmp->k.width) {
+>> > +               k =3D reg >> nkmp->k.shift;
+>> > +               k &=3D (1 << nkmp->k.width) - 1;
+>> > +               k +=3D nkmp->k.offset;
+>> > +               if (!k)
+>> > +                       k++;
+>> > +       }
+>>
+>> The conditional shouldn't be necessary. With nkmp->k.width =3D 0,
+>> you'd simply get k & 0, which is 0, which then gets bumped up to 1,
+>> unless k.offset > 1, which would be a bug.
+>>
+>> >         m =3D reg >> nkmp->m.shift;
+>> >         m &=3D (1 << nkmp->m.width) - 1;
+>> >
+>> > @@ -153,12 +155,15 @@ static int ccu_nkmp_set_rate(struct clk_hw *hw,
+>> > unsigned long rate,>
+>> >         reg =3D readl(nkmp->common.base + nkmp->common.reg);
+>> >         reg &=3D ~GENMASK(nkmp->n.width + nkmp->n.shift - 1, nkmp->n.s=
+hift);
+>> >
+>> > -       reg &=3D ~GENMASK(nkmp->k.width + nkmp->k.shift - 1, nkmp->k.s=
+hift);
+>> > +       if (nkmp->k.width)
+>> > +               reg &=3D ~GENMASK(nkmp->k.width + nkmp->k.shift - 1,
+>> > +                               nkmp->k.shift);
+>> >
+>> >         reg &=3D ~GENMASK(nkmp->m.width + nkmp->m.shift - 1, nkmp->m.s=
+hift);
+>> >         reg &=3D ~GENMASK(nkmp->p.width + nkmp->p.shift - 1, nkmp->p.s=
+hift);
+>> >
+>> >         reg |=3D (_nkmp.n - nkmp->n.offset) << nkmp->n.shift;
+>> >
+>> > -       reg |=3D (_nkmp.k - nkmp->k.offset) << nkmp->k.shift;
+>> > +       if (nkmp->k.width)
+>> > +               reg |=3D (_nkmp.k - nkmp->k.offset) << nkmp->k.shift;
+>>
+>> I think a better way would be
+>>
+>>         reg |=3D ((_nkmp.k - nkmp->k.offset) << nkmp->k.shift) &
+>>                GENMASK(nkmp->k.width + nkmp->k.shift - 1, nkmp->k.shift)=
+;
+>>
+>> And do this for all the factors, not just k. This pattern is what
+>> regmap_update_bits does, which seems much safer. I wonder what
+>> GENMASK() with a negative value would do though...
+>
+> You're right, GENMASK(-1, 0) equals 0 (calculated by hand, not tested). T=
+his
+> seems much more elegant solution.
+>
+> Semi-related question: All nmp PLLs have much wider N range than real nkm=
+p
+> PLLs. This causes integer overflow when using nkmp formula from datasheet=
+.
+> Usually, N is 1-256 for nmp PLLs, which means that for very high N factor=
+s, it
+> overflows. This also causes issue that M factor is never higher than 1.
 
-   just one small comments below
+Sounds like we can't use u8 for storing the factors. At least the
+intermediate values we use to calculate the rates.
 
-On Mon, Jan 08, 2018 at 01:54:23AM +0900, Akinobu Mita wrote:
-> The ov9650 driver currently only supports legacy platform data probe.
-> This change adds device tree probing.
 >
-> There has been an attempt to add device tree support for ov9650 driver
-> by Hugues Fruchet as a part of the patchset that adds support of OV9655
-> camera (http://www.spinics.net/lists/linux-media/msg117903.html), but
-> it wasn't merged into mainline because creating a separate driver for
-> OV9655 is preferred.
+> I was wondering, if patch would be acceptable which would change this for=
+mula:
 >
-> This is very similar to Hugues's patch, but not supporting new device.
+> RATE =3D (24MHz * N * K) / (M * P)
 >
-> Cc: Jacopo Mondi <jacopo@jmondi.org>
-> Cc: H. Nikolaus Schaller <hns@goldelico.com>
-> Cc: Hugues Fruchet <hugues.fruchet@st.com>
-> Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
-> Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-> Cc: Rob Herring <robh@kernel.org>
-> Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
-> ---
-> * Changelog v2
-> - Split binding documentation, suggested by Rob Herring and Jacopo Mondi
-> - Remove ov965x_gpio_set() helper and open-code it, suggested by Jacopo Mondi
->   and Sakari Ailus
-> - Call clk_prepare_enable() in s_power callback instead of probe, suggested
->   by Sakari Ailus
-> - Unify clk and gpio configuration in a single if-else block and, also add
->   a check either platform data or fwnode is actually specified, suggested
->   by Jacopo Mondi
-> - Add CONFIG_OF guards, suggested by Jacopo Mondi
+> to this:
 >
->  drivers/media/i2c/ov9650.c | 130 ++++++++++++++++++++++++++++++++-------------
->  1 file changed, 92 insertions(+), 38 deletions(-)
+> RATE ((24MHz / M) * N * K) / P
 >
-> diff --git a/drivers/media/i2c/ov9650.c b/drivers/media/i2c/ov9650.c
-> index 69433e1..99a3eab 100644
-> --- a/drivers/media/i2c/ov9650.c
-> +++ b/drivers/media/i2c/ov9650.c
-> @@ -11,8 +11,10 @@
->   * it under the terms of the GNU General Public License version 2 as
->   * published by the Free Software Foundation.
->   */
-> +#include <linux/clk.h>
->  #include <linux/delay.h>
->  #include <linux/gpio.h>
-> +#include <linux/gpio/consumer.h>
->  #include <linux/i2c.h>
->  #include <linux/kernel.h>
->  #include <linux/media.h>
-> @@ -249,9 +251,10 @@ struct ov965x {
->  	struct v4l2_subdev sd;
->  	struct media_pad pad;
->  	enum v4l2_mbus_type bus_type;
-> -	int gpios[NUM_GPIOS];
-> +	struct gpio_desc *gpios[NUM_GPIOS];
->  	/* External master clock frequency */
->  	unsigned long mclk_frequency;
-> +	struct clk *clk;
+> I checked all M factors and are all in 1-4 or 1-2 range, which means it
+> wouldn't have any impact for real nkmp PLLs when parent is 24 MHz clock w=
+hich
+> is probably always.
 >
->  	/* Protects the struct fields below */
->  	struct mutex lock;
-> @@ -513,24 +516,27 @@ static int ov965x_set_color_matrix(struct ov965x *ov965x)
->  	return 0;
->  }
->
-> -static void ov965x_gpio_set(int gpio, int val)
-> -{
-> -	if (gpio_is_valid(gpio))
-> -		gpio_set_value(gpio, val);
-> -}
-> -
-> -static void __ov965x_set_power(struct ov965x *ov965x, int on)
-> +static int __ov965x_set_power(struct ov965x *ov965x, int on)
->  {
->  	if (on) {
-> -		ov965x_gpio_set(ov965x->gpios[GPIO_PWDN], 0);
-> -		ov965x_gpio_set(ov965x->gpios[GPIO_RST], 0);
-> +		int ret = clk_prepare_enable(ov965x->clk);
-> +
-> +		if (ret)
-> +			return ret;
-> +
-> +		gpiod_set_value_cansleep(ov965x->gpios[GPIO_PWDN], 0);
-> +		gpiod_set_value_cansleep(ov965x->gpios[GPIO_RST], 0);
->  		msleep(25);
->  	} else {
-> -		ov965x_gpio_set(ov965x->gpios[GPIO_RST], 1);
-> -		ov965x_gpio_set(ov965x->gpios[GPIO_PWDN], 1);
-> +		gpiod_set_value_cansleep(ov965x->gpios[GPIO_RST], 1);
-> +		gpiod_set_value_cansleep(ov965x->gpios[GPIO_PWDN], 1);
-> +
-> +		clk_disable_unprepare(ov965x->clk);
->  	}
->
->  	ov965x->streaming = 0;
-> +
-> +	return 0;
->  }
->
->  static int ov965x_s_power(struct v4l2_subdev *sd, int on)
-> @@ -543,8 +549,8 @@ static int ov965x_s_power(struct v4l2_subdev *sd, int on)
->
->  	mutex_lock(&ov965x->lock);
->  	if (ov965x->power == !on) {
-> -		__ov965x_set_power(ov965x, on);
-> -		if (on) {
-> +		ret = __ov965x_set_power(ov965x, on);
-> +		if (!ret && on) {
->  			ret = ov965x_write_array(client,
->  						 ov965x_init_regs);
->  			ov965x->apply_frame_fmt = 1;
-> @@ -1408,16 +1414,17 @@ static const struct v4l2_subdev_ops ov965x_subdev_ops = {
->  /*
->   * Reset and power down GPIOs configuration
->   */
-> -static int ov965x_configure_gpios(struct ov965x *ov965x,
-> -				  const struct ov9650_platform_data *pdata)
-> +static int ov965x_configure_gpios_pdata(struct ov965x *ov965x,
-> +				const struct ov9650_platform_data *pdata)
->  {
->  	int ret, i;
-> +	int gpios[NUM_GPIOS];
->
-> -	ov965x->gpios[GPIO_PWDN] = pdata->gpio_pwdn;
-> -	ov965x->gpios[GPIO_RST]  = pdata->gpio_reset;
-> +	gpios[GPIO_PWDN] = pdata->gpio_pwdn;
-> +	gpios[GPIO_RST]  = pdata->gpio_reset;
->
->  	for (i = 0; i < ARRAY_SIZE(ov965x->gpios); i++) {
-> -		int gpio = ov965x->gpios[i];
-> +		int gpio = gpios[i];
->
->  		if (!gpio_is_valid(gpio))
->  			continue;
-> @@ -1427,9 +1434,30 @@ static int ov965x_configure_gpios(struct ov965x *ov965x,
->  			return ret;
->  		v4l2_dbg(1, debug, &ov965x->sd, "set gpio %d to 1\n", gpio);
->
-> -		gpio_set_value(gpio, 1);
-> +		gpio_set_value_cansleep(gpio, 1);
->  		gpio_export(gpio, 0);
-> -		ov965x->gpios[i] = gpio;
-> +		ov965x->gpios[i] = gpio_to_desc(gpio);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int ov965x_configure_gpios(struct ov965x *ov965x)
-> +{
-> +	struct device *dev = &ov965x->client->dev;
-> +
-> +	ov965x->gpios[GPIO_PWDN] = devm_gpiod_get_optional(dev, "powerdown",
-> +							GPIOD_OUT_HIGH);
-> +	if (IS_ERR(ov965x->gpios[GPIO_PWDN])) {
-> +		dev_info(dev, "can't get %s GPIO\n", "powerdown");
-> +		return PTR_ERR(ov965x->gpios[GPIO_PWDN]);
-> +	}
-> +
-> +	ov965x->gpios[GPIO_RST] = devm_gpiod_get_optional(dev, "reset",
-> +							GPIOD_OUT_HIGH);
-> +	if (IS_ERR(ov965x->gpios[GPIO_RST])) {
-> +		dev_info(dev, "can't get %s GPIO\n", "reset");
-> +		return PTR_ERR(ov965x->gpios[GPIO_RST]);
->  	}
->
->  	return 0;
-> @@ -1443,7 +1471,10 @@ static int ov965x_detect_sensor(struct v4l2_subdev *sd)
->  	int ret;
->
->  	mutex_lock(&ov965x->lock);
-> -	__ov965x_set_power(ov965x, 1);
-> +	ret = __ov965x_set_power(ov965x, 1);
-> +	if (ret)
-> +		goto out;
-> +
->  	msleep(25);
->
->  	/* Check sensor revision */
-> @@ -1463,6 +1494,7 @@ static int ov965x_detect_sensor(struct v4l2_subdev *sd)
->  			ret = -ENODEV;
->  		}
->  	}
-> +out:
->  	mutex_unlock(&ov965x->lock);
->
->  	return ret;
-> @@ -1476,23 +1508,39 @@ static int ov965x_probe(struct i2c_client *client,
->  	struct ov965x *ov965x;
->  	int ret;
->
-> -	if (!pdata) {
-> -		dev_err(&client->dev, "platform data not specified\n");
-> -		return -EINVAL;
-> -	}
-> -
-> -	if (pdata->mclk_frequency == 0) {
-> -		dev_err(&client->dev, "MCLK frequency not specified\n");
-> -		return -EINVAL;
-> -	}
-> -
->  	ov965x = devm_kzalloc(&client->dev, sizeof(*ov965x), GFP_KERNEL);
->  	if (!ov965x)
->  		return -ENOMEM;
->
-> -	mutex_init(&ov965x->lock);
->  	ov965x->client = client;
-> -	ov965x->mclk_frequency = pdata->mclk_frequency;
-> +
-> +	if (pdata) {
-> +		if (pdata->mclk_frequency == 0) {
-> +			dev_err(&client->dev, "MCLK frequency not specified\n");
-> +			return -EINVAL;
-> +		}
-> +		ov965x->mclk_frequency = pdata->mclk_frequency;
-> +
-> +		ret = ov965x_configure_gpios_pdata(ov965x, pdata);
-> +		if (ret < 0)
-> +			return ret;
-> +	} else if (dev_fwnode(&client->dev)) {
-> +		ov965x->clk = devm_clk_get(&ov965x->client->dev, NULL);
-> +		if (IS_ERR(ov965x->clk))
-> +			return PTR_ERR(ov965x->clk);
-> +		ov965x->mclk_frequency = clk_get_rate(ov965x->clk);
-> +
-> +		ret = ov965x_configure_gpios(ov965x);
-> +		if (ret < 0)
-> +			return ret;
-> +	} else {
-> +		dev_err(&client->dev,
-> +			"Neither platform data nor device property specified\n");
-> +
-> +		return -EINVAL;
-> +	}
-> +
-> +	mutex_init(&ov965x->lock);
->
->  	sd = &ov965x->sd;
->  	v4l2_i2c_subdev_init(sd, client, &ov965x_subdev_ops);
-> @@ -1502,10 +1550,6 @@ static int ov965x_probe(struct i2c_client *client,
->  	sd->flags |= V4L2_SUBDEV_FL_HAS_DEVNODE |
->  		     V4L2_SUBDEV_FL_HAS_EVENTS;
->
-> -	ret = ov965x_configure_gpios(ov965x, pdata);
-> -	if (ret < 0)
-> -		goto err_mutex;
-> -
->  	ov965x->pad.flags = MEDIA_PAD_FL_SOURCE;
->  	sd->entity.function = MEDIA_ENT_F_CAM_SENSOR;
->  	ret = media_entity_pads_init(&sd->entity, 1, &ov965x->pad);
-> @@ -1561,9 +1605,19 @@ static const struct i2c_device_id ov965x_id[] = {
->  };
->  MODULE_DEVICE_TABLE(i2c, ov965x_id);
->
-> +#if IS_ENABLED(CONFIG_OF)
-> +static const struct of_device_id ov965x_of_match[] = {
-> +	{ .compatible = "ovti,ov9650", },
-> +	{ .compatible = "ovti,ov9652", },
-> +	{ /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(of, ov965x_of_match);
-> +#endif
-> +
->  static struct i2c_driver ov965x_i2c_driver = {
->  	.driver = {
->  		.name	= DRIVER_NAME,
-> +		.of_match_table = of_match_ptr(ov965x_of_match),
+> What do you think?
 
-If CONFIG_OF is not defined, this will break compilation.
-Please guard this with #if IS_ENABLED(CONFIG_OF) as well.
+I think this is acceptable. M is normally the pre-divider, so this
+actually fits how the hardware works, including possible rounding
+errors.
 
-Apart from this:
+ChenYu
 
-Reviewed-by: Jacopo Mondi <jacopo@jmondi.org>
-
-Thanks
-   j
-
->  	},
->  	.probe		= ov965x_probe,
->  	.remove		= ov965x_remove,
+> I discovered that when I tried to set A83T PLL_VIDEO to 346.5 MHz which i=
+s
+> possible only when above formula is changed.
+>
+> Best regards,
+> Jernej
+>
+>>
+>> ChenYu
+>>
+>> >         reg |=3D (_nkmp.m - nkmp->m.offset) << nkmp->m.shift;
+>> >         reg |=3D ilog2(_nkmp.p) << nkmp->p.shift;
+>> >
+>> > --
+>> > 2.15.1
+>
+>
+>
+>
 > --
-> 2.7.4
->
+> You received this message because you are subscribed to the Google Groups=
+ "linux-sunxi" group.
+> To unsubscribe from this group and stop receiving emails from it, send an=
+ email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+> For more options, visit https://groups.google.com/d/optout.
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
