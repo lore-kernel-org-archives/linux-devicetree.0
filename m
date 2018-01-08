@@ -1,174 +1,97 @@
-From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Subject: [PATCH v5 12/44] clk: davinci: Add platform information for TI DA850 PSC
-Date: Sun,  7 Jan 2018 20:17:11 -0600
-Message-ID: <1515377863-20358-13-git-send-email-david@lechnology.com>
+From: David Lechner <david@lechnology.com>
+Subject: [PATCH v5 01/44] dt-bindings: clock: Add new bindings for TI Davinci
+ PLL clocks
+Date: Sun,  7 Jan 2018 20:17:00 -0600
+Message-ID: <1515377863-20358-2-git-send-email-david@lechnology.com>
 References: <1515377863-20358-1-git-send-email-david@lechnology.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1515377863-20358-1-git-send-email-david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Adam Ford <aford173-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1515377863-20358-1-git-send-email-david@lechnology.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, David Lechner <david@lechnology.com>, Kevin Hilman <khilman@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Adam Ford <aford173@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This adds platform-specific declarations for the PSC clocks on TI DA850/
-OMAP-L138/AM18XX SoCs.
+This adds a new binding for the PLL IP blocks in the mach-davinci family
+of processors. Currently, only the SYSCLKn and AUXCLK outputs are needed,
+but in the future additional child nodes could be added for OBSCLK and
+BPDIV.
 
-Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Note: Although these PLL controllers are very similar to the TI Keystone
+SoCs, we are not re-using those bindings. The Keystone bindings use a
+legacy one-node-per-clock binding. Furthermore, the mach-davinici SoCs
+have a slightly different PLL register layout and a number of quirks that
+can't be handled by the existing bindings, so the keystone bindings could
+not be used as-is anyway.
+
+Signed-off-by: David Lechner <david@lechnology.com>
 ---
- drivers/clk/davinci/Makefile    |   1 +
- drivers/clk/davinci/psc-da850.c | 117 ++++++++++++++++++++++++++++++++++++++++
- include/linux/clk/davinci.h     |   1 +
- 3 files changed, 119 insertions(+)
- create mode 100644 drivers/clk/davinci/psc-da850.c
+ .../devicetree/bindings/clock/ti/davinci/pll.txt   | 47 ++++++++++++++++++++++
+ 1 file changed, 47 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/ti/davinci/pll.txt
 
-diff --git a/drivers/clk/davinci/Makefile b/drivers/clk/davinci/Makefile
-index fb14c8c..aef0390 100644
---- a/drivers/clk/davinci/Makefile
-+++ b/drivers/clk/davinci/Makefile
-@@ -11,4 +11,5 @@ obj-$(CONFIG_ARCH_DAVINCI_DM646x)	+= pll-dm646x.o
- 
- obj-y += psc.o
- obj-$(CONFIG_ARCH_DAVINCI_DA830)	+= psc-da830.o
-+obj-$(CONFIG_ARCH_DAVINCI_DA850)	+= psc-da850.o
- endif
-diff --git a/drivers/clk/davinci/psc-da850.c b/drivers/clk/davinci/psc-da850.c
+diff --git a/Documentation/devicetree/bindings/clock/ti/davinci/pll.txt b/Documentation/devicetree/bindings/clock/ti/davinci/pll.txt
 new file mode 100644
-index 0000000..3b4583d
+index 0000000..99bf5da
 --- /dev/null
-+++ b/drivers/clk/davinci/psc-da850.c
-@@ -0,0 +1,117 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * PSC clock descriptions for TI DA850/OMAP-L138/AM18XX
-+ *
-+ * Copyright (C) 2017 David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-+ */
++++ b/Documentation/devicetree/bindings/clock/ti/davinci/pll.txt
+@@ -0,0 +1,47 @@
++Binding for TI DaVinci PLL Controllers
 +
-+#include <linux/clk-provider.h>
-+#include <linux/clkdev.h>
-+#include <linux/init.h>
-+#include <linux/of.h>
-+#include <linux/types.h>
++The PLL provides clocks to most of the components on the SoC. In addition
++to the PLL itself, this controller also contains bypasses, gates, dividers,
++an multiplexers for various clock signals.
 +
-+#include "psc.h"
++Required properties:
++- compatible: shall be one of:
++	- "ti,da850-pll0" for PLL0 on DA850/OMAP-L138/AM18XX
++	- "ti,da850-pll1" for PLL1 on DA850/OMAP-L138/AM18XX
++- reg: physical base address and size of the controller's register area.
++- clocks: phandle to the PLL input clock source
 +
-+static const struct davinci_psc_clk_info da850_psc0_info[] __initconst = {
-+	LPSC(0, 0, tpcc0, pll0_sysclk2, LPSC_ALWAYS_ENABLED),
-+	LPSC(1, 0, tptc0, pll0_sysclk2, LPSC_ALWAYS_ENABLED),
-+	LPSC(2, 0, tptc1, pll0_sysclk2, LPSC_ALWAYS_ENABLED),
-+	LPSC(3, 0, aemif, pll0_sysclk3, 0),
-+	LPSC(4, 0, spi0, pll0_sysclk2, 0),
-+	LPSC(5, 0, mmcsd0, pll0_sysclk2, 0),
-+	LPSC(6, 0, aintc, pll0_sysclk4, LPSC_ALWAYS_ENABLED),
-+	LPSC(7, 0, arm_rom, pll0_sysclk2, LPSC_ALWAYS_ENABLED),
-+	LPSC(9, 0, uart0, pll0_sysclk2, 0),
-+	LPSC(13, 0, pruss, pll0_sysclk2, 0),
-+	LPSC(14, 0, arm, pll0_sysclk6, LPSC_ALWAYS_ENABLED),
-+	LPSC(15, 1, dsp, pll0_sysclk1, LPSC_FORCE | LPSC_LOCAL_RESET),
-+	{ }
-+};
++Optional child nodes:
 +
-+static const struct davinci_psc_clk_info da850_psc1_info[] __initconst = {
-+	LPSC(0, 0, tpcc1, pll0_sysclk2, LPSC_ALWAYS_ENABLED),
-+	LPSC(1, 0, usb0, pll0_sysclk2, 0),
-+	LPSC(2, 0, usb1, pll0_sysclk4, 0),
-+	LPSC(3, 0, gpio, pll0_sysclk4, 0),
-+	LPSC(5, 0, emac, pll0_sysclk4, 0),
-+	LPSC(6, 0, emif3, pll0_sysclk5, LPSC_ALWAYS_ENABLED),
-+	LPSC(7, 0, mcasp0, async3, 0),
-+	LPSC(8, 0, sata, pll0_sysclk2, LPSC_FORCE),
-+	LPSC(9, 0, vpif, pll0_sysclk2, 0),
-+	LPSC(10, 0, spi1, async3, 0),
-+	LPSC(11, 0, i2c1, pll0_sysclk4, 0),
-+	LPSC(12, 0, uart1, async3, 0),
-+	LPSC(13, 0, uart2, async3, 0),
-+	LPSC(14, 0, mcbsp0, async3, 0),
-+	LPSC(15, 0, mcbsp1, async3, 0),
-+	LPSC(16, 0, lcdc, pll0_sysclk2, 0),
-+	LPSC(17, 0, ehrpwm, async3, 0),
-+	LPSC(18, 0, mmcsd1, pll0_sysclk2, 0),
-+	LPSC(20, 0, ecap, async3, 0),
-+	LPSC(21, 0, tptc2, pll0_sysclk2, LPSC_ALWAYS_ENABLED),
-+	{ }
-+};
++sysclk
++	Describes the PLLDIVn divider clocks that provide the SYSCLKn clock
++	domains. The node name must be "sysclk". Consumers of this node should
++	use "n" in "SYSCLKn" as the parameter for the clock cell.
 +
-+void __init da850_psc_clk_init(void __iomem *psc0, void __iomem *psc1)
-+{
-+	struct clk_onecell_data *clk_data;
++	Required properties:
++	- #clock-cells: must be 1
 +
-+	clk_data = davinci_psc_register_clocks(psc0, da850_psc0_info, 16);
-+	if (!clk_data)
-+		return;
++auxclk
++	Describes the AUXCLK output of the PLL. The node name must be "auxclk".
 +
-+	clk_register_clkdev(clk_data->clks[3], NULL, "ti-aemif");
-+	clk_register_clkdev(clk_data->clks[3], "aemif", "davinci-nand.0");
-+	clk_register_clkdev(clk_data->clks[4], NULL, "spi_davinci.0");
-+	clk_register_clkdev(clk_data->clks[5], NULL, "da830-mmc.0");
-+	clk_register_clkdev(clk_data->clks[9], NULL, "serial8250.0");
-+	clk_register_clkdev(clk_data->clks[14], "arm", NULL);
-+	clk_register_clkdev(clk_data->clks[15], NULL, "davinci-rproc.0");
++	Required properties:
++	- #clock-cells: must be 0
 +
-+	clk_free_onecell_data(clk_data);
++Examples:
 +
-+	clk_data = davinci_psc_register_clocks(psc1, da850_psc1_info, 32);
-+	if (!clk_data)
-+		return;
++	pll0: clock-controller@11000 {
++		compatible = "ti,da850-pll0";
++		reg = <0x11000 0x1000>;
++		clocks = <&ref_clk>;
 +
-+	clk_register_clkdev(clk_data->clks[1], "usb20_psc_clk", NULL);
-+	clk_register_clkdev(clk_data->clks[1], NULL, "musb-da8xx");
-+	clk_register_clkdev(clk_data->clks[1], NULL, "cppi41-dmaengine");
-+	clk_register_clkdev(clk_data->clks[2], NULL, "ohci-da8xx");
-+	clk_register_clkdev(clk_data->clks[3], "gpio", NULL);
-+	clk_register_clkdev(clk_data->clks[5], NULL, "davinci_emac.1");
-+	clk_register_clkdev(clk_data->clks[5], "fck", "davinci_mdio.0");
-+	clk_register_clkdev(clk_data->clks[7], NULL, "davinci-mcasp.0");
-+	clk_register_clkdev(clk_data->clks[8], "fck", "ahci_da850");
-+	clk_register_clkdev(clk_data->clks[9], NULL, "vpif");
-+	clk_register_clkdev(clk_data->clks[10], NULL, "spi_davinci.1");
-+	clk_register_clkdev(clk_data->clks[11], NULL, "i2c_davinci.2");
-+	clk_register_clkdev(clk_data->clks[12], NULL, "serial8250.1");
-+	clk_register_clkdev(clk_data->clks[13], NULL, "serial8250.2");
-+	clk_register_clkdev(clk_data->clks[14], NULL, "davinci-mcbsp.0");
-+	clk_register_clkdev(clk_data->clks[15], NULL, "davinci-mcbsp.1");
-+	clk_register_clkdev(clk_data->clks[16], "fck", "da8xx_lcdc.0");
-+	clk_register_clkdev(clk_data->clks[17], "fck", "ehrpwm.0");
-+	clk_register_clkdev(clk_data->clks[17], "fck", "ehrpwm.1");
-+	clk_register_clkdev(clk_data->clks[18], NULL, "da830-mmc.1");
-+	clk_register_clkdev(clk_data->clks[20], "fck", "ecap.0");
-+	clk_register_clkdev(clk_data->clks[20], "fck", "ecap.1");
-+	clk_register_clkdev(clk_data->clks[20], "fck", "ecap.2");
++		pll0_sysclk: sysclk {
++			#clock-cells = <1>;
++		};
 +
-+	clk_free_onecell_data(clk_data);
-+}
++		pll0_aux_clk: auxclk {
++			#clock-cells = <0>;
++		};
++	};
 +
-+#ifdef CONFIG_OF
-+static void __init of_da850_psc0_clk_init(struct device_node *node)
-+{
-+	of_davinci_psc_clk_init(node, da850_psc0_info, 16);
-+}
-+CLK_OF_DECLARE(da850_psc0_clk, "ti,da850-psc0", of_da850_psc0_clk_init);
-+
-+static void __init of_da850_psc1_clk_init(struct device_node *node)
-+{
-+	of_davinci_psc_clk_init(node, da850_psc1_info, 32);
-+}
-+CLK_OF_DECLARE(da850_psc1_clk, "ti,da850-psc1", of_da850_psc1_clk_init);
-+#endif
-diff --git a/include/linux/clk/davinci.h b/include/linux/clk/davinci.h
-index 3ec8100..3d8bdfa 100644
---- a/include/linux/clk/davinci.h
-+++ b/include/linux/clk/davinci.h
-@@ -17,5 +17,6 @@ void dm644x_pll_clk_init(void __iomem *pll1, void __iomem *pll2);
- void dm646x_pll_clk_init(void __iomem *pll1, void __iomem *pll2);
- 
- void da830_psc_clk_init(void __iomem *psc0, void __iomem *psc1);
-+void da850_psc_clk_init(void __iomem *psc0, void __iomem *psc1);
- 
- #endif /* __LINUX_CLK_DAVINCI_H__ */
++Also see:
++- Documentation/devicetree/bindings/clock/clock-bindings.txt
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
