@@ -1,61 +1,125 @@
-From: "liwei (CM)" <liwei213-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: =?utf-8?B?562U5aSNOiBbUEFUQ0ggdjcgMC81XSBzY3NpOiB1ZnM6IGFkZCB1ZnMgZHJp?=
- =?utf-8?Q?ver_code_for_Hisilicon_Hi3660_SoC?=
-Date: Mon, 8 Jan 2018 01:41:38 +0000
-Message-ID: <1699CE87DE933F49876AD744B5DC140FA52644@DGGEMM506-MBS.china.huawei.com>
-References: <20180106095117.67907-1-liwei213@huawei.com>
- <127f93dd-29c8-8cfc-9b02-5dc72609a272@linaro.org>
+From: Anson Huang <anson.huang-3arQi8VN3Tc@public.gmane.org>
+Subject: RE: [PATCH 2/2] cpufreq: imx6q: add 696MHz operating point for
+ i.mx6ul
+Date: Mon, 8 Jan 2018 01:56:52 +0000
+Message-ID: <AM3PR04MB131599C49BF8197F9C7140C3F5130@AM3PR04MB1315.eurprd04.prod.outlook.com>
+References: <1514912859-17691-1-git-send-email-Anson.Huang@nxp.com>
+ <CAJZ5v0it+Gc5nTa5Vt8X8_OPHh6ndcQB3peAQA1SDsuQ2+FZKA@mail.gmail.com>
+ <AM3PR04MB131556AF9BDE24E071A51300F51D0@AM3PR04MB1315.eurprd04.prod.outlook.com>
+ <2009633.KF2URkV5n1@aspire.rjw.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <127f93dd-29c8-8cfc-9b02-5dc72609a272-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Content-Language: zh-CN
+In-Reply-To: <2009633.KF2URkV5n1-yvgW3jdyMHm1GS7QM15AGw@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: zhangfei <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "xuwei (O)" <xuwei5-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "catalin.marinas-5wv7dgnIgG8@public.gmane.org" <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "vinholikatti-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <vinholikatti-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "jejb-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org" <jejb-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, "martin.petersen-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org" <martin.petersen-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, "khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org" <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org" <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, "riku.voipio-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <riku.voipio-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: zangleigang <zangleigang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Gengjianfeng <gengjianfeng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Fengbaopeng (kevin, Kirin Solution Dept)" <fengbaopeng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+To: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
+Cc: "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux PM <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jacky Bai <ping.bai-3arQi8VN3Tc@public.gmane.org>, "A.s. Dong" <aisheng.dong-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkuIFpoYW5nZmVpDQoNClRoYW5rIHlvdSwgSSB3aWxsIGFkZCBpdCBpbiB0aGUgbmV4dCBwYXRj
-aC4NCg0KLS0tLS3pgq7ku7bljp/ku7YtLS0tLQ0K5Y+R5Lu25Lq6OiB6aGFuZ2ZlaSBbbWFpbHRv
-OnpoYW5nZmVpLmdhb0BsaW5hcm8ub3JnXSANCuWPkemAgeaXtumXtDogMjAxOOW5tDHmnIg45pel
-IDk6NDANCuaUtuS7tuS6ujogbGl3ZWkgKENNKTsgcm9iaCtkdEBrZXJuZWwub3JnOyBtYXJrLnJ1
-dGxhbmRAYXJtLmNvbTsgeHV3ZWkgKE8pOyBjYXRhbGluLm1hcmluYXNAYXJtLmNvbTsgd2lsbC5k
-ZWFjb25AYXJtLmNvbTsgdmluaG9saWthdHRpQGdtYWlsLmNvbTsgamVqYkBsaW51eC52bmV0Lmli
-bS5jb207IG1hcnRpbi5wZXRlcnNlbkBvcmFjbGUuY29tOyBraGlsbWFuQGJheWxpYnJlLmNvbTsg
-YXJuZEBhcm5kYi5kZTsgZ3JlZ29yeS5jbGVtZW50QGZyZWUtZWxlY3Ryb25zLmNvbTsgdGhvbWFz
-LnBldGF6em9uaUBmcmVlLWVsZWN0cm9ucy5jb207IHlhbWFkYS5tYXNhaGlyb0Bzb2Npb25leHQu
-Y29tOyByaWt1LnZvaXBpb0BsaW5hcm8ub3JnOyB0cmVkaW5nQG52aWRpYS5jb207IGtyemtAa2Vy
-bmVsLm9yZzsgZXJpY0BhbmhvbHQubmV0OyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGlu
-dXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRl
-YWQub3JnOyBsaW51eC1zY3NpQHZnZXIua2VybmVsLm9yZw0K5oqE6YCBOiB6YW5nbGVpZ2FuZzsg
-R2VuZ2ppYW5mZW5nOyBndW9kb25nLnh1QGxpbmFyby5vcmc7IEZlbmdiYW9wZW5nIChrZXZpbiwg
-S2lyaW4gU29sdXRpb24gRGVwdCkNCuS4u+mimDogUmU6IFtQQVRDSCB2NyAwLzVdIHNjc2k6IHVm
-czogYWRkIHVmcyBkcml2ZXIgY29kZSBmb3IgSGlzaWxpY29uIEhpMzY2MCBTb0MNCg0KSGksIFdl
-aQ0KDQoNCk9uIDIwMTjlubQwMeaciDA25pelIDE3OjUxLCBMaSBXZWkgd3JvdGU6DQo+IFRoaXMg
-cGF0Y2hzZXQgYWRkcyBkcml2ZXIgc3VwcG9ydCBmb3IgVUZTIGZvciBIaTM2NjAgU29DLiBJdCBp
-cyB2ZXJpZmllZCBvbiBIaUtleTk2MCBib2FyZC4NClVzdWFsbHkgaGVyZSBzaG91bGQgbGlzdCB0
-aGUgY2hhbmdlIGNvbXBhcmVkIHdpdGggdGhlIGxhc3QgY2hhbmdlIHNldCwgdG8gbWFrZSBpdCBl
-YXNpZXIgdG8gcmV2aWV3ZXIsIHdobyBtYXkgcGF5IG1vcmUgYXR0ZW50aW9uIHRvIHRoZSBkaWZm
-ZXJlbmNlcy4NCg0KRm9yIGV4YW1wbGUNCnY3Onh4eCAvL2NoYW5nZSBzaW5jZSB2Ng0KdjY6eHh4
-IC8vIGNoYW5nZSBzaW5jZSB2NQ0KDQoNCg0KPiBMaSBXZWkgKDUpOg0KPiAgICBzY3NpOiB1ZnM6
-IGFkZCBIaXNpbGljb24gdWZzIGRyaXZlciBjb2RlDQo+ICAgIGR0LWJpbmRpbmdzOiBzY3NpOiB1
-ZnM6IGFkZCBkb2N1bWVudCBmb3IgaGlzaS11ZnMNCj4gICAgYXJtNjQ6IGR0czogYWRkIHVmcyBk
-dHMgbm9kZQ0KPiAgICBhcm02NDogZGVmY29uZmlnOiBlbmFibGUgY29uZmlncyBmb3IgSGlzaWxp
-Y29uIHVmcw0KPiAgICBhcm02NDogZGVmY29uZmlnOiBlbmFibGUgZjJmcyBhbmQgc3F1YXNoZnMN
-Cj4NCj4gICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdWZzL3Vmcy1oaXNpLnR4
-dCB8ICA0MyArKw0KPiAgIGFyY2gvYXJtNjQvYm9vdC9kdHMvaGlzaWxpY29uL2hpMzY2MC5kdHNp
-ICAgICAgICAgIHwgIDIwICsNCj4gICBhcmNoL2FybTY0L2NvbmZpZ3MvZGVmY29uZmlnICAgICAg
-ICAgICAgICAgICAgICAgICB8ICAxMSArDQo+ICAgZHJpdmVycy9zY3NpL3Vmcy9LY29uZmlnICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDkgKw0KPiAgIGRyaXZlcnMvc2NzaS91ZnMvTWFr
-ZWZpbGUgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAxICsNCj4gICBkcml2ZXJzL3Njc2kv
-dWZzL3Vmcy1oaXNpLmMgICAgICAgICAgICAgICAgICAgICAgICB8IDYyMSArKysrKysrKysrKysr
-KysrKysrKysNCj4gICBkcml2ZXJzL3Njc2kvdWZzL3Vmcy1oaXNpLmggICAgICAgICAgICAgICAg
-ICAgICAgICB8IDExNiArKysrDQo+ICAgNyBmaWxlcyBjaGFuZ2VkLCA4MjEgaW5zZXJ0aW9ucygr
-KQ0KPiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvdWZzL3Vmcy1oaXNpLnR4dA0KPiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL3Njc2kv
-dWZzL3Vmcy1oaXNpLmMNCj4gICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9zY3NpL3Vmcy91
-ZnMtaGlzaS5oDQo+DQoNCg==
+
+
+Best Regards!
+Anson Huang
+
+
+> -----Original Message-----
+> From: Rafael J. Wysocki [mailto:rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org]
+> Sent: 2018-01-08 7:34 AM
+> To: Anson Huang <anson.huang-3arQi8VN3Tc@public.gmane.org>
+> Cc: Rafael J. Wysocki <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>; linux-arm-
+> kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Linux PM <linux-
+> pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>; Linux Kernel Mailing List <linux-
+> kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>; Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>; Sascha Hauer
+> <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>; Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>; Rob
+> Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>; Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>;
+> Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>; Viresh Kumar
+> <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>; Jacky Bai <ping.bai-3arQi8VN3Tc@public.gmane.org>; A.s. Dong
+> <aisheng.dong-3arQi8VN3Tc@public.gmane.org>
+> Subject: Re: [PATCH 2/2] cpufreq: imx6q: add 696MHz operating point for
+> i.mx6ul
+>=20
+> On Saturday, January 6, 2018 4:05:41 AM CET Anson Huang wrote:
+> > Hi, Rafael
+> >
+> > Best Regards!
+> > Anson Huang
+> >
+> >
+> > > -----Original Message-----
+> > > From: rjwysocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org [mailto:rjwysocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org] On Behalf Of
+> > > Rafael J. Wysocki
+> > > Sent: 2018-01-05 8:21 PM
+> > > To: Anson Huang <anson.huang-3arQi8VN3Tc@public.gmane.org>
+> > > Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org;
+> > > devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Linux PM <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>;
+> > > Linux Kernel Mailing List <linux- kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>; Shawn Guo
+> > > <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>; Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>; Fabio
+> > > Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>; Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>;
+> > > Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>; Russell King - ARM Linux
+> > > <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>; Rafael J. Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>;
+> > > Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>; Jacky Bai
+> > > <ping.bai-3arQi8VN3Tc@public.gmane.org>; A.s. Dong <aisheng.dong-3arQi8VN3Tc@public.gmane.org>
+> > > Subject: Re: [PATCH 2/2] cpufreq: imx6q: add 696MHz operating point
+> > > for i.mx6ul
+> > >
+> > > On Tue, Jan 2, 2018 at 6:07 PM, Anson Huang <Anson.Huang-3arQi8VN3Tc@public.gmane.org>
+> wrote:
+> > > > Add 696MHz operating point for i.MX6UL, only for those parts with
+> > > > speed grading fuse set to 2b'10 supports 696MHz operating point,
+> > > > so, speed grading check is also added for i.MX6UL in this patch,
+> > > > the clock tree for each operating point are as below:
+> > > >
+> > > > 696MHz:
+> > > >     pll1                       696000000
+> > > >        pll1_bypass             696000000
+> > > >           pll1_sys             696000000
+> > > >              pll1_sw           696000000
+> > > >                 arm            696000000
+> > > > 528MHz:
+> > > >     pll2                       528000000
+> > > >        pll2_bypass             528000000
+> > > >           pll2_bus             528000000
+> > > >              ca7_secondary_sel 528000000
+> > > >                 step           528000000
+> > > >                    pll1_sw     528000000
+> > > >                       arm      528000000
+> > > > 396MHz:
+> > > >     pll2_pfd2_396m             396000000
+> > > >        ca7_secondary_sel       396000000
+> > > >           step                 396000000
+> > > >              pll1_sw           396000000
+> > > >                 arm            396000000
+> > > > 198MHz:
+> > > >     pll2_pfd2_396m             396000000
+> > > >        ca7_secondary_sel       396000000
+> > > >           step                 396000000
+> > > >              pll1_sw           396000000
+> > > >                 arm            198000000
+> > > >
+> > > > Signed-off-by: Anson Huang <Anson.Huang-3arQi8VN3Tc@public.gmane.org>
+> > >
+> > > This doesn't apply for me and in a nontrivial way.
+> > >
+> > > What kernel is it against?
+> >
+> > I did it based on linux-next, it should be on linux-next-pm branch, I
+> > redo the patch set V2 based on linux-next-pm, also redo the test,
+> > sorry for the inconvenience.
+>=20
+> But you didn't add the Reviewed-by: tags from Fabio to them.
+>=20
+> Was that on purpose or by mistake?
+>=20
+> Thanks,
+> Rafael
+
+It was my mistake, I thought it will be added by maintainer, I will add the=
+m and set a V3
+patch set. Thanks.
+
+Anson.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
