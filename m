@@ -1,62 +1,41 @@
-From: jacopo mondi <jacopo-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] media: ov9650: support device tree probing
-Date: Mon, 8 Jan 2018 11:29:44 +0100
-Message-ID: <20180108102944.GN9493@w540>
-References: <1515344064-23156-1-git-send-email-akinobu.mita@gmail.com>
- <1515344064-23156-2-git-send-email-akinobu.mita@gmail.com>
- <20180108091838.GM9493@w540>
- <20180108093712.xqpxmgbqsmkhw632@paasikivi.fi.intel.com>
+From: Dong Aisheng <dongas86@gmail.com>
+Subject: Re: [PATCH v2 0/5] constify struct imx_pinctrl_soc_info
+Date: Mon, 8 Jan 2018 18:32:24 +0800
+Message-ID: <20180108103224.GB32635@b29396-OptiPlex-7040>
+References: <20180106142553.15322-1-stefan@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180108093712.xqpxmgbqsmkhw632-z7MJbOB4PBP+e+fPlCVrcFDQ4js95KgL@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "H . Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <20180106142553.15322-1-stefan@agner.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stefan Agner <stefan@agner.ch>
+Cc: linus.walleij@linaro.org, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, aisheng.dong@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Sakari,
+On Sat, Jan 06, 2018 at 03:25:48PM +0100, Stefan Agner wrote:
+> This patchset grew out of the discussion around the first version
+> of "pinctrl: imx6ul: add IOMUXC SNVS pinctrl driver for i.MX 6ULL".
+> This is necessary for pinctrls of SoCs with multiple compatible
+> strings (currently only imx7d) since the struct uses the .data
+> pointer in struct of_device_id. It is also helpful for all other
+> SoCs since it decreases the .data section for all drivers by 1276
+> bytes.
+> 
+> Bai Ping (1):
+>   pinctrl: imx6ul: add IOMUXC SNVS pinctrl driver for i.MX 6ULL
+> 
+> Stefan Agner (4):
+>   pinctrl: imx: use struct imx_pinctrl_soc_info as a const
+>   pinctrl: imx7d: simplify imx7d_pinctrl_probe
+>   pinctrl: imx: constify struct imx_pinctrl_soc_info
+>   pinctrl: imx7ulp: constify struct imx_cfg_params_decode
+> 
 
-On Mon, Jan 08, 2018 at 11:37:12AM +0200, Sakari Ailus wrote:
-> Hi Jacopo,
->
-> On Mon, Jan 08, 2018 at 10:18:38AM +0100, jacopo mondi wrote:
-> > > @@ -1561,9 +1605,19 @@ static const struct i2c_device_id ov965x_id[] = {
-> > >  };
-> > >  MODULE_DEVICE_TABLE(i2c, ov965x_id);
-> > >
-> > > +#if IS_ENABLED(CONFIG_OF)
-> > > +static const struct of_device_id ov965x_of_match[] = {
-> > > +	{ .compatible = "ovti,ov9650", },
-> > > +	{ .compatible = "ovti,ov9652", },
-> > > +	{ /* sentinel */ }
-> > > +};
-> > > +MODULE_DEVICE_TABLE(of, ov965x_of_match);
-> > > +#endif
-> > > +
-> > >  static struct i2c_driver ov965x_i2c_driver = {
-> > >  	.driver = {
-> > >  		.name	= DRIVER_NAME,
-> > > +		.of_match_table = of_match_ptr(ov965x_of_match),
-> >
-> > If CONFIG_OF is not defined, this will break compilation.
-> > Please guard this with #if IS_ENABLED(CONFIG_OF) as well.
->
-> of_match_ptr() will be NULL if CONFIG_OF is not defined, so AFAICT this is
-> fine.
->
+This patch series looks really good to me.
 
-That's even better. Thanks for pointing this out!
-Please ignore my comment then!
+So
+Acked-by: Dong Aisheng <aisheng.dong@nxp.com>
 
-Cheers
-   j
-
-> --
-> Sakari Ailus
-> sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards
+Dong Aisheng
