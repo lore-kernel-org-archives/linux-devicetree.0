@@ -1,92 +1,174 @@
-From: David Lechner <david@lechnology.com>
-Subject: [PATCH v5 05/44] clk: davinci: Add platform information for TI DM355 PLL
-Date: Sun,  7 Jan 2018 20:17:04 -0600
-Message-ID: <1515377863-20358-6-git-send-email-david@lechnology.com>
+From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Subject: [PATCH v5 12/44] clk: davinci: Add platform information for TI DA850 PSC
+Date: Sun,  7 Jan 2018 20:17:11 -0600
+Message-ID: <1515377863-20358-13-git-send-email-david@lechnology.com>
 References: <1515377863-20358-1-git-send-email-david@lechnology.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1515377863-20358-1-git-send-email-david@lechnology.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org, David Lechner <david@lechnology.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1515377863-20358-1-git-send-email-david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Adam Ford <aford173-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds platform-specific declarations for the PLL clocks on TI
-DaVinci 355 based systems.
+This adds platform-specific declarations for the PSC clocks on TI DA850/
+OMAP-L138/AM18XX SoCs.
 
-Signed-off-by: David Lechner <david@lechnology.com>
+Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
 ---
- drivers/clk/davinci/Makefile    |  1 +
- drivers/clk/davinci/pll-dm355.c | 40 ++++++++++++++++++++++++++++++++++++++++
- include/linux/clk/davinci.h     |  1 +
- 3 files changed, 42 insertions(+)
- create mode 100644 drivers/clk/davinci/pll-dm355.c
+ drivers/clk/davinci/Makefile    |   1 +
+ drivers/clk/davinci/psc-da850.c | 117 ++++++++++++++++++++++++++++++++++++++++
+ include/linux/clk/davinci.h     |   1 +
+ 3 files changed, 119 insertions(+)
+ create mode 100644 drivers/clk/davinci/psc-da850.c
 
 diff --git a/drivers/clk/davinci/Makefile b/drivers/clk/davinci/Makefile
-index 13049d4..6720bd0 100644
+index fb14c8c..aef0390 100644
 --- a/drivers/clk/davinci/Makefile
 +++ b/drivers/clk/davinci/Makefile
-@@ -4,4 +4,5 @@ ifeq ($(CONFIG_COMMON_CLK), y)
- obj-y += pll.o
- obj-$(CONFIG_ARCH_DAVINCI_DA830)	+= pll-da830.o
- obj-$(CONFIG_ARCH_DAVINCI_DA850)	+= pll-da850.o
-+obj-$(CONFIG_ARCH_DAVINCI_DM355)	+= pll-dm355.o
+@@ -11,4 +11,5 @@ obj-$(CONFIG_ARCH_DAVINCI_DM646x)	+= pll-dm646x.o
+ 
+ obj-y += psc.o
+ obj-$(CONFIG_ARCH_DAVINCI_DA830)	+= psc-da830.o
++obj-$(CONFIG_ARCH_DAVINCI_DA850)	+= psc-da850.o
  endif
-diff --git a/drivers/clk/davinci/pll-dm355.c b/drivers/clk/davinci/pll-dm355.c
+diff --git a/drivers/clk/davinci/psc-da850.c b/drivers/clk/davinci/psc-da850.c
 new file mode 100644
-index 0000000..972fd2b
+index 0000000..3b4583d
 --- /dev/null
-+++ b/drivers/clk/davinci/pll-dm355.c
-@@ -0,0 +1,40 @@
++++ b/drivers/clk/davinci/psc-da850.c
+@@ -0,0 +1,117 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * PLL clock descriptions for TI DM355
++ * PSC clock descriptions for TI DA850/OMAP-L138/AM18XX
 + *
-+ * Copyright (C) 2017 David Lechner <david@lechnology.com>
++ * Copyright (C) 2017 David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
 + */
 +
++#include <linux/clk-provider.h>
++#include <linux/clkdev.h>
 +#include <linux/init.h>
++#include <linux/of.h>
 +#include <linux/types.h>
 +
-+#include "pll.h"
++#include "psc.h"
 +
-+static const struct davinci_pll_divclk_info dm355_pll1_divclk_info[] __initconst = {
-+	DIVCLK(1, pll1_sysclk1, pll1, DIVCLK_FIXED_DIV),
-+	DIVCLK(2, pll1_sysclk2, pll1, DIVCLK_FIXED_DIV),
-+	DIVCLK(3, pll1_sysclk3, pll1, 0),
-+	DIVCLK(4, pll1_sysclk4, pll1, 0),
++static const struct davinci_psc_clk_info da850_psc0_info[] __initconst = {
++	LPSC(0, 0, tpcc0, pll0_sysclk2, LPSC_ALWAYS_ENABLED),
++	LPSC(1, 0, tptc0, pll0_sysclk2, LPSC_ALWAYS_ENABLED),
++	LPSC(2, 0, tptc1, pll0_sysclk2, LPSC_ALWAYS_ENABLED),
++	LPSC(3, 0, aemif, pll0_sysclk3, 0),
++	LPSC(4, 0, spi0, pll0_sysclk2, 0),
++	LPSC(5, 0, mmcsd0, pll0_sysclk2, 0),
++	LPSC(6, 0, aintc, pll0_sysclk4, LPSC_ALWAYS_ENABLED),
++	LPSC(7, 0, arm_rom, pll0_sysclk2, LPSC_ALWAYS_ENABLED),
++	LPSC(9, 0, uart0, pll0_sysclk2, 0),
++	LPSC(13, 0, pruss, pll0_sysclk2, 0),
++	LPSC(14, 0, arm, pll0_sysclk6, LPSC_ALWAYS_ENABLED),
++	LPSC(15, 1, dsp, pll0_sysclk1, LPSC_FORCE | LPSC_LOCAL_RESET),
 +	{ }
 +};
 +
-+static const struct davinci_pll_divclk_info dm355_pll2_divclk_info[] __initconst = {
-+	DIVCLK(1, pll2_sysclk1, pll2, DIVCLK_FIXED_DIV),
++static const struct davinci_psc_clk_info da850_psc1_info[] __initconst = {
++	LPSC(0, 0, tpcc1, pll0_sysclk2, LPSC_ALWAYS_ENABLED),
++	LPSC(1, 0, usb0, pll0_sysclk2, 0),
++	LPSC(2, 0, usb1, pll0_sysclk4, 0),
++	LPSC(3, 0, gpio, pll0_sysclk4, 0),
++	LPSC(5, 0, emac, pll0_sysclk4, 0),
++	LPSC(6, 0, emif3, pll0_sysclk5, LPSC_ALWAYS_ENABLED),
++	LPSC(7, 0, mcasp0, async3, 0),
++	LPSC(8, 0, sata, pll0_sysclk2, LPSC_FORCE),
++	LPSC(9, 0, vpif, pll0_sysclk2, 0),
++	LPSC(10, 0, spi1, async3, 0),
++	LPSC(11, 0, i2c1, pll0_sysclk4, 0),
++	LPSC(12, 0, uart1, async3, 0),
++	LPSC(13, 0, uart2, async3, 0),
++	LPSC(14, 0, mcbsp0, async3, 0),
++	LPSC(15, 0, mcbsp1, async3, 0),
++	LPSC(16, 0, lcdc, pll0_sysclk2, 0),
++	LPSC(17, 0, ehrpwm, async3, 0),
++	LPSC(18, 0, mmcsd1, pll0_sysclk2, 0),
++	LPSC(20, 0, ecap, async3, 0),
++	LPSC(21, 0, tptc2, pll0_sysclk2, LPSC_ALWAYS_ENABLED),
 +	{ }
 +};
 +
-+void __init dm355_pll_clk_init(void __iomem *pll1, void __iomem *pll2)
++void __init da850_psc_clk_init(void __iomem *psc0, void __iomem *psc1)
 +{
-+	const struct davinci_pll_divclk_info *info;
++	struct clk_onecell_data *clk_data;
 +
-+	davinci_pll_clk_register("pll1", "ref_clk", pll1);
-+	for (info = dm355_pll1_divclk_info; info->name; info++)
-+		davinci_pll_divclk_register(info, pll1);
-+	davinci_pll_aux_clk_register("pll1_aux_clk", "ref_clk", pll1);
-+	davinci_pll_bpdiv_clk_register("pll1_sysclkbp", "ref_clk", pll1);
++	clk_data = davinci_psc_register_clocks(psc0, da850_psc0_info, 16);
++	if (!clk_data)
++		return;
 +
-+	davinci_pll_clk_register("pll2", "ref_clk", pll2);
-+	for (info = dm355_pll2_divclk_info; info->name; info++)
-+		davinci_pll_divclk_register(info, pll2);
-+	davinci_pll_bpdiv_clk_register("pll2_sysclkbp", "ref_clk", pll2);
++	clk_register_clkdev(clk_data->clks[3], NULL, "ti-aemif");
++	clk_register_clkdev(clk_data->clks[3], "aemif", "davinci-nand.0");
++	clk_register_clkdev(clk_data->clks[4], NULL, "spi_davinci.0");
++	clk_register_clkdev(clk_data->clks[5], NULL, "da830-mmc.0");
++	clk_register_clkdev(clk_data->clks[9], NULL, "serial8250.0");
++	clk_register_clkdev(clk_data->clks[14], "arm", NULL);
++	clk_register_clkdev(clk_data->clks[15], NULL, "davinci-rproc.0");
++
++	clk_free_onecell_data(clk_data);
++
++	clk_data = davinci_psc_register_clocks(psc1, da850_psc1_info, 32);
++	if (!clk_data)
++		return;
++
++	clk_register_clkdev(clk_data->clks[1], "usb20_psc_clk", NULL);
++	clk_register_clkdev(clk_data->clks[1], NULL, "musb-da8xx");
++	clk_register_clkdev(clk_data->clks[1], NULL, "cppi41-dmaengine");
++	clk_register_clkdev(clk_data->clks[2], NULL, "ohci-da8xx");
++	clk_register_clkdev(clk_data->clks[3], "gpio", NULL);
++	clk_register_clkdev(clk_data->clks[5], NULL, "davinci_emac.1");
++	clk_register_clkdev(clk_data->clks[5], "fck", "davinci_mdio.0");
++	clk_register_clkdev(clk_data->clks[7], NULL, "davinci-mcasp.0");
++	clk_register_clkdev(clk_data->clks[8], "fck", "ahci_da850");
++	clk_register_clkdev(clk_data->clks[9], NULL, "vpif");
++	clk_register_clkdev(clk_data->clks[10], NULL, "spi_davinci.1");
++	clk_register_clkdev(clk_data->clks[11], NULL, "i2c_davinci.2");
++	clk_register_clkdev(clk_data->clks[12], NULL, "serial8250.1");
++	clk_register_clkdev(clk_data->clks[13], NULL, "serial8250.2");
++	clk_register_clkdev(clk_data->clks[14], NULL, "davinci-mcbsp.0");
++	clk_register_clkdev(clk_data->clks[15], NULL, "davinci-mcbsp.1");
++	clk_register_clkdev(clk_data->clks[16], "fck", "da8xx_lcdc.0");
++	clk_register_clkdev(clk_data->clks[17], "fck", "ehrpwm.0");
++	clk_register_clkdev(clk_data->clks[17], "fck", "ehrpwm.1");
++	clk_register_clkdev(clk_data->clks[18], NULL, "da830-mmc.1");
++	clk_register_clkdev(clk_data->clks[20], "fck", "ecap.0");
++	clk_register_clkdev(clk_data->clks[20], "fck", "ecap.1");
++	clk_register_clkdev(clk_data->clks[20], "fck", "ecap.2");
++
++	clk_free_onecell_data(clk_data);
 +}
++
++#ifdef CONFIG_OF
++static void __init of_da850_psc0_clk_init(struct device_node *node)
++{
++	of_davinci_psc_clk_init(node, da850_psc0_info, 16);
++}
++CLK_OF_DECLARE(da850_psc0_clk, "ti,da850-psc0", of_da850_psc0_clk_init);
++
++static void __init of_da850_psc1_clk_init(struct device_node *node)
++{
++	of_davinci_psc_clk_init(node, da850_psc1_info, 32);
++}
++CLK_OF_DECLARE(da850_psc1_clk, "ti,da850-psc1", of_da850_psc1_clk_init);
++#endif
 diff --git a/include/linux/clk/davinci.h b/include/linux/clk/davinci.h
-index 7b08fe0..95333fe 100644
+index 3ec8100..3d8bdfa 100644
 --- a/include/linux/clk/davinci.h
 +++ b/include/linux/clk/davinci.h
-@@ -11,5 +11,6 @@
+@@ -17,5 +17,6 @@ void dm644x_pll_clk_init(void __iomem *pll1, void __iomem *pll2);
+ void dm646x_pll_clk_init(void __iomem *pll1, void __iomem *pll2);
  
- void da830_pll_clk_init(void __iomem *pll);
- void da850_pll_clk_init(void __iomem *pll0, void __iomem *pll1);
-+void dm355_pll_clk_init(void __iomem *pll1, void __iomem *pll2);
+ void da830_psc_clk_init(void __iomem *psc0, void __iomem *psc1);
++void da850_psc_clk_init(void __iomem *psc0, void __iomem *psc1);
  
  #endif /* __LINUX_CLK_DAVINCI_H__ */
 -- 
 2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
