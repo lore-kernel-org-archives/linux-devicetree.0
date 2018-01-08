@@ -1,43 +1,52 @@
-From: Gary Bisson <gary.bisson@boundarydevices.com>
-Subject: Re: [PATCH v2 1/5] pinctrl: imx: use struct imx_pinctrl_soc_info as
- a const
-Date: Mon, 8 Jan 2018 17:48:55 +0100
-Message-ID: <20180108164855.GA6504@t450s.lan>
-References: <20180106142553.15322-1-stefan@agner.ch>
- <20180106142553.15322-2-stefan@agner.ch>
+From: Hugues FRUCHET <hugues.fruchet-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH v5 0/5] Add OV5640 parallel interface and RGB565/YUYV
+ support
+Date: Mon, 8 Jan 2018 17:13:39 +0000
+Message-ID: <3010811e-ed37-4489-6a9f-6cc835f41575@st.com>
+References: <1514973452-10464-1-git-send-email-hugues.fruchet@st.com>
+ <20180108153811.5xrvbaekm6nxtoa6@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180106142553.15322-2-stefan@agner.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Agner <stefan@agner.ch>
-Cc: linus.walleij@linaro.org, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, aisheng.dong@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Arvind Yadav <arvind.yadav.cs@gmail.com>
+Content-Type: text/plain; charset="Windows-1252"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180108153811.5xrvbaekm6nxtoa6@flea>
+Content-Language: en-US
+Content-ID: <F28FB6BF15967F4694CBD7C24E092B0F-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stefan,
+Hi Maxime,
 
-On Sat, Jan 06, 2018 at 03:25:49PM +0100, Stefan Agner wrote:
-> For some SoCs the struct imx_pinctrl_soc_info is passed through
-> of_device_id.data which is const. Most variables are already const
-> or otherwise not written. However, some fields are modified at
-> runtime. Move those fields to the dynamically allocated struct
-> imx_pinctrl.
+I'm using a ST board with OV5640 wired in parallel bus output in order 
+to interface to my STM32 DCMI parallel interface.
+Perhaps could you describe your setup so I could help on understanding 
+the problem on your side. From my past experience with this sensor 
+module, you can first check hsync/vsync polarities, the datasheet is 
+buggy on VSYNC polarity as documented in patch 4/5.
+
+Best regards,
+Hugues.
+
+On 01/08/2018 04:38 PM, Maxime Ripard wrote:
+> Hi Hugues,
 > 
-> Fixes: b3060044e495 ("pinctrl: freescale: imx7d: make of_device_ids const")
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: Arvind Yadav <arvind.yadav.cs@gmail.com>
-> Cc: Dong Aisheng <aisheng.dong@nxp.com>
-> Cc: Gary Bisson <gary.bisson@boundarydevices.com>
-> Signed-off-by: Stefan Agner <stefan@agner.ch>
-
-This is actually more or less a revert of a previous commit:
-b28742be4709 pinctrl: imx: remove const qualifier of imx_pinctrl_soc_info
-
-Note that the idea for this commit was to get dt-overlays working and
-able to do pinctrl changes using configfs interface to load an overlay
-(using Pantelis patch). Not sure where we stand on loading such overlay
-from user-space, is it still something that will happen?
-
-Regards,
-Gary
+> On Wed, Jan 03, 2018 at 10:57:27AM +0100, Hugues Fruchet wrote:
+>> Enhance OV5640 CSI driver to support also DVP parallel interface.
+>> Add RGB565 (LE & BE) and YUV422 YUYV format in addition to existing
+>> YUV422 UYVY format.
+>> Some other improvements on chip identifier check and removal
+>> of warnings in powering phase around gpio handling.
+> 
+> I've been trying to use your patches on top of 4.14, but I cannot seem
+> to get any signal out of it.
+> 
+> What is your test setup and which commands are you running?
+> 
+> Thanks!
+> Maxime
+> --
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
