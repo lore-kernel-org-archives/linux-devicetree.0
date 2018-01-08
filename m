@@ -1,82 +1,72 @@
-From: Hao Zhang <hao5781286-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 4/4] ARM: pinctrl: sunxi-pinctrl: fix pin funtion can
- not be match correctly.
-Date: Mon, 8 Jan 2018 19:08:53 +0800
-Message-ID: <CAJeuY79_w+8Gv=jRxK4tajiecNSAZkMGYY_d7PJmsjyOZHPkJw@mail.gmail.com>
-References: <20171213144748.GA18267@arx-s1> <20171213154549.5zn4uxhsssqw3pb7@flea.lan>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [GIT PULL] Immutable branch between MFD, TTY and Watchdog due for
+ the v4.16 merge window
+Date: Mon, 8 Jan 2018 11:09:18 +0000
+Message-ID: <20180108110918.nj4pzjbcoyhodkrc@dell>
+References: <20171221065118.29726-1-andrew.smirnov@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171213154549.5zn4uxhsssqw3pb7-ZC1Zs529Oq4@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20171221065118.29726-1-andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM/Allwinner sunXi SoC support" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, cphealy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Nikita Yushchenko <nikita.yoush-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Philippe Ombredanne <pombredanne-od1rfyK75/E@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2017-12-13 23:45 GMT+08:00 Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
-> Hi,
->
-> Thanks for your patch!
->
-> On Wed, Dec 13, 2017 at 10:47:48PM +0800, hao_zhang wrote:
->> Pin function can not be match correctly when SUNXI_PIN describe with
->> mutiple variant and same function.
->>
->> such as:
->> on pinctrl-sun4i-a10.c
->>
->> SUNXI_PIN(SUNXI_PINCTRL_PIN(B, 2),
->>               SUNXI_FUNCTION(0x0, "gpio_in"),
->>               SUNXI_FUNCTION(0x1, "gpio_out"),
->>               SUNXI_FUNCTION_VARIANT(0x2, "pwm",    /* PWM0 */
->>                       PINCTRL_SUN4I_A10 |
->>                       PINCTRL_SUN7I_A20),
->>               SUNXI_FUNCTION_VARIANT(0x3, "pwm",    /* PWM0 */
->>                       PINCTRL_SUN8I_R40)),
->>
->> it would always match to the first variant function
->> (PINCTRL_SUN4I_A10, PINCTRL_SUN7I_A20)
->>
->> so we should add variant compare on it.
->>
->> Signed-off-by: hao_zhang <hao5781286-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->>  drivers/pinctrl/sunxi/pinctrl-sunxi.c | 6 ++++--
->>  1 file changed, 4 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
->> index 4b6cb25..f23e74e 100644
->> --- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
->> +++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
->> @@ -83,9 +83,11 @@ sunxi_pinctrl_desc_find_function_by_name(struct sunxi_pinctrl *pctl,
->>                       struct sunxi_desc_function *func = pin->functions;
->>
->>                       while (func->name) {
->> -                             if (!strcmp(func->name, func_name))
->> +                             if (!strcmp(func->name, func_name)) {
->> +                                     if (!(func->variant) ||
->> +                                        (func->variant & pctl->variant))
->
-> I guess it would be better to have:
->         if (!strcmp(func->name, func_name) &&
->             (!func->variant || (func->variant & pctl->variant)))
+Enjoy!
 
-It would over 80 characters, can i change it by this ?
-if (!strcmp(func->name, func_name) &&
-         (func->variant & pctl->variant ||
-          !func->variant))
+The following changes since commit 4fbd8d194f06c8a3fd2af1ce560ddb31f7ec8323:
 
->
-> Once fixed,
-> Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->
-> Thanks!
-> Maxime
->
-> --
-> Maxime Ripard, Free Electrons
-> Embedded Linux and Kernel engineering
-> http://free-electrons.com
+  Linux 4.15-rc1 (2017-11-26 16:01:47 -0800)
+
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git tags/ib-mfd-tty-watchdog-v4.16
+
+for you to fetch changes up to a8b751eb709ecefe0a81a0112d9c01b2181a3efa:
+
+  dt-bindings: watchdog: Add bindings for RAVE SP watchdog driver (2018-01-08 10:08:37 +0000)
+
+----------------------------------------------------------------
+Immutable branch between MFD, TTY and Watchdog due for the v4.16 merge window
+
+----------------------------------------------------------------
+Andrew Morton (1):
+      lib/crc-ccitt: Add CCITT-FALSE CRC16 variant
+
+Andrey Smirnov (5):
+      serdev: Make .remove in struct serdev_device_driver optional
+      serdev: Introduce devm_serdev_device_open()
+      mfd: Add driver for RAVE Supervisory Processor
+      watchdog: Add RAVE SP watchdog driver
+      dt-bindings: watchdog: Add bindings for RAVE SP watchdog driver
+
+ .../bindings/watchdog/zii,rave-sp-wdt.txt          |  39 ++
+ Documentation/driver-model/devres.txt              |   3 +
+ drivers/mfd/Kconfig                                |   8 +
+ drivers/mfd/Makefile                               |   2 +
+ drivers/mfd/rave-sp.c                              | 710 +++++++++++++++++++++
+ drivers/tty/serdev/core.c                          |  31 +-
+ drivers/watchdog/Kconfig                           |   7 +
+ drivers/watchdog/Makefile                          |   1 +
+ drivers/watchdog/rave-sp-wdt.c                     | 337 ++++++++++
+ include/linux/crc-ccitt.h                          |   7 +
+ include/linux/mfd/rave-sp.h                        |  60 ++
+ include/linux/serdev.h                             |   1 +
+ lib/crc-ccitt.c                                    |  58 +-
+ 13 files changed, 1261 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/zii,rave-sp-wdt.txt
+ create mode 100644 drivers/mfd/rave-sp.c
+ create mode 100644 drivers/watchdog/rave-sp-wdt.c
+ create mode 100644 include/linux/mfd/rave-sp.h
+
+-- 
+Lee Jones
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
