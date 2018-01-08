@@ -1,68 +1,85 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH v2 6/9] PCI: cadence: Add host driver for Cadence PCIe
- controller
-Date: Mon, 8 Jan 2018 16:44:20 -0600
-Message-ID: <20180108224420.GC31640@bhelgaas-glaptop.roam.corp.google.com>
-References: <cover.1513620412.git.cyrille.pitchen@free-electrons.com>
- <4b2b67ad54e14ee5e1f83af65e9932ce408e82ec.1513620412.git.cyrille.pitchen@free-electrons.com>
- <20171228230111.GB19819@bhelgaas-glaptop.roam.corp.google.com>
- <c34c6480-7297-8756-6bc2-8c8e6a451f0d@free-electrons.com>
+From: Karthik Ramasubramanian <kramasub-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH RFC 2/7] soc: qcom: Add device tree binding for GENI SE
+Date: Mon, 8 Jan 2018 16:57:36 -0700
+Message-ID: <4caa6656-8c30-6697-7157-934b7975bff5@codeaurora.org>
+References: <1514392046-30602-1-git-send-email-kramasub@codeaurora.org>
+ <1514392046-30602-3-git-send-email-kramasub@codeaurora.org>
+ <20180102154629.s6rni5r3big2g5sv@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <c34c6480-7297-8756-6bc2-8c8e6a451f0d@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
-Cc: bhelgaas@google.com, kishon@ti.com, lorenzo.pieralisi@arm.com, linux-pci@vger.kernel.org, adouglas@cadence.com, stelford@cadence.com, dgary@cadence.com, kgopi@cadence.com, eandrews@cadence.com, thomas.petazzoni@free-electrons.com, sureshp@cadence.com, nsekhar@ti.com, linux-kernel@vger.kernel.org, robh@kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180102154629.s6rni5r3big2g5sv@rob-hp-laptop>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, jslaby-IBi9RG/b67k@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 29, 2017 at 11:08:38PM +0100, Cyrille Pitchen wrote:
-> Hi Bjorn,
+
+
+On 1/2/2018 8:46 AM, Rob Herring wrote:
+> On Wed, Dec 27, 2017 at 09:27:21AM -0700, Karthikeyan Ramasubramanian wrote:
+>> Add device tree binding support for the QCOM GENI SE driver.
+>>
+>> Signed-off-by: Karthikeyan Ramasubramanian <kramasub-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>> ---
+>>   .../devicetree/bindings/soc/qcom/qcom,geni-se.txt         | 15 +++++++++++++++
+>>   1 file changed, 15 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
+>> new file mode 100644
+>> index 0000000..5108b62
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
+>> @@ -0,0 +1,15 @@
+>> +Qualcomm Technologies, Inc. GENI Serial Engine Driver
+>> +
+>> +GENI Serial Engine Driver manages the GENI firmware based Qualcomm Universal
+>> +Peripheral (QUP) Wrapper. GENI SE Driver also manages the common aspects of
+>> +individual Serial Engines that composes the QUP Wrapper.
 > 
-> Le 29/12/2017 à 00:01, Bjorn Helgaas a écrit :
-> > On Mon, Dec 18, 2017 at 07:16:06PM +0100, Cyrille Pitchen wrote:
-> >> This patch adds support to the Cadence PCIe controller in host mode.
-> >>
-> >> The "cadence/" entry in drivers/pci/Makefile is placed after the
-> >> "endpoint/" entry so when the next patch introduces a EPC driver for the
-> >> Cadence PCIe controller, drivers/pci/cadence/pcie-cadence-ep.o will be
-> >> linked after drivers/pci/endpoint/*.o objects, otherwise the built-in
-> >> pci-cadence-ep driver would be probed before the PCI endpoint libraries
-> >> would have been initialized, which would result in a kernel crash.
-> >>
-> >> Signed-off-by: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
-> > 
-> >> diff --git a/drivers/pci/Makefile b/drivers/pci/Makefile
-> >> index 7284a7f6ad1e..a66ddb347798 100644
-> >> --- a/drivers/pci/Makefile
-> >> +++ b/drivers/pci/Makefile
-> >> @@ -54,5 +54,6 @@ obj-y += host/
-> >>  obj-y += switch/
-> >>  
-> >>  obj-$(CONFIG_PCI_ENDPOINT)	+= endpoint/
-> >> +obj-$(CONFIG_PCI_CADENCE)	+= cadence/
-> >>  # PCI dwc controller drivers
-> >>  obj-y				+= dwc/
-> > 
-> > I don't like the fact that the cadence/ rule looks different than the
-> > dwc/ rule for no obvious reason.  With some work, the dwc/ rule could
-> > maybe be made to look like:
+> Bindings describe h/w, not drivers.
+I will update the bindings to describe just the h/w and remove any 
+driver description.
 > 
-> I've tried to understand why dwc uses obj-y instead of
-> obj-$(CONFIG_PCIE_DW), here is what I've found:
+>> +
+>> +Required properties:
+>> +- compatible:		Must be "qcom,geni-se-qup".
 > 
-> In drivers/pci/dwc/Makefile there is some obj-$(CONFIG_ARM64) rule to
-> generate the pcie-hisi.o object like there are other obj-$(CONFIG_ARM64)
-> rules in drivers/pci/host/Makefile produce objects like pci-thunder-ecam.o
-> for instance.
-
-Right, I missed that pcie-hisi.o rule.  That one needs to be compiled
-even if CONFIG_PCI_HISI is not enabled.
-
-It might be useful to have a Makefile comment along the lines of:
-
-  # pcie-hisi.o quirks are needed even without CONFIG_PCIE_DW
-
-Bjorn
+> Only one version of the h/w?
+There is more than one hardware version. The h/w provides registers to 
+identify the hardware version. The driver currently uses those registers 
+to support any version-specific operations. So I am not sure if the 
+compatible field needs to reflect the h/w version.
+> 
+>> +- reg:			Must contain QUP register address and length.
+>> +
+>> +Example:
+>> +	qup_0: qcom,geni_se_qup_0@8c0000 {
+> 
+> Don't use '_' in node names.
+I will update the bindings to not use '_'.
+> 
+>> +		compatible = "qcom,geni-se-qup";
+>> +		reg = <0x8c0000 0x6000>;
+>> +	}
+>> -- 
+>> Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+>> a Linux Foundation Collaborative Project
+>>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+Regards,
+Karthik.
+-- 
+Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
