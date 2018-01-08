@@ -1,88 +1,40 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH v2 0/2] arm64: dts: r8a779[56]: update register size for thermal
-Date: Mon, 8 Jan 2018 09:02:16 +0100
-Message-ID: <CAMuHMdUNMoiEQS+Tk3o-FTz0_AKt+8GL3ju8_w174GJiCNoytw@mail.gmail.com>
-References: <20180105155447.10071-1-niklas.soderlund+renesas@ragnatech.se> <20180108065911.dz2z4a4aaqjw6qfd@verge.net.au>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: sun[47]i: Fix display backend 1 output to TCON0
+ remote endpoint
+Date: Mon, 8 Jan 2018 16:26:16 +0800
+Message-ID: <CAGb2v66HQ1+u--dLzVn8tjG+fYvdeYPuUkV4p-Zc1ctOsrSXrQ@mail.gmail.com>
+References: <20180103163155.13975-1-wens@csie.org> <20180104132752.pcixtjugwfvlshpl@flea.lan>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180108065911.dz2z4a4aaqjw6qfd-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+In-Reply-To: <20180104132752.pcixtjugwfvlshpl-ZC1Zs529Oq4@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Cc: =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon,
-
-On Mon, Jan 8, 2018 at 7:59 AM, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org> wrote:
-> On Fri, Jan 05, 2018 at 04:54:45PM +0100, Niklas S=C3=B6derlund wrote:
->> This series updates the register size for the thermal hardware. In later
->> versions of the datasheet one additional register is documented. This
->> register is needed to be able to determine if calibration data should be
->> read from register or if static values from the driver should be used.
+On Thu, Jan 4, 2018 at 9:27 PM, Maxime Ripard
+<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> On Thu, Jan 04, 2018 at 12:31:55AM +0800, Chen-Yu Tsai wrote:
+>> There is a copy-paste error in the display pipeline device tree graph.
+>> The remote endpoint of the display backend 1's output to TCON0 points
+>> to the wrong endpoint. This will result in the driver incorrectly
+>> parsing the relationship of the components.
 >>
->> There is already a posted RFC patch which make use of this additional
->> register (THSCP) if the register size described in DT covers it.
->> Currently no hardware where the calibration value is fused have been
->> found so that patch is not tested and therefore kept back until such a
->> system is found. In the mean time there is no harm in getting the
->> correct register size described in DT now that it's documented in the
->> datasheet (Rev 0.80).
->>
->> * Changes since v1
->> - Increase size from just covering the new register in TSC1 to
->>   increasing the size of all TSC's to 0x100 which is the smallest
->>   granularity of the address decoder circuitry. Suggested by Geert.
->>
->> Niklas S=C3=B6derlund (2):
->>   arm64: dts: r8a7795: update register size for thermal
->>   arm64: dts: r8a7796: update register size for thermal
+>> Reported-by: Andrea Venturi <ennesimamail.av-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> Fixes: 0df4cf33a594 ("ARM: dts: sun4i: Add device nodes for display
+>>                     pipelines")
+>> Fixes: 5b92b29bed45 ("ARM: dts: sun7i: Add device nodes for display
+>>                     pipelines")
+>> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 >
-> Applied, but this seems to go in the opposite direction of:
->
-> 846106d9d973 ("ARM: dts: r8a7793: Reduce size of thermal registers")
-> 1af62038f499 ("ARM: dts: r8a7791: Reduce size of thermal registers")
-> d0191d85a237 ("ARM: dts: r8a7790: Reduce size of thermal registers")
->
-> Should those patches be dropped and the register areas grown to 0x100
-> instead?
+> Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-There are two "policies" to specify register block lengths:
-  1. Cover all registers documented in the datasheet, and nothing more (at =
-the
-   low/high end),
-  2. Use a power-of-two that covers all registers, which is most probably
-    what matches the actual address decoder in the hardware.
+Applied (a few days ago).
 
-Of course, we all know datasheets are volatile, and registers may appear or
-disappear any time ;-)
+This will be sent out in a pull request later.
 
-In reality, ioremap() granularity is PAGE_SIZE, which is also a power-of-tw=
-o.
-
-So personally, I'm more leaning towards policy #2.
-
-The 3 commits you refer to use policy #1, but covered a register not
-documented in the datasheet.
-
-Note that some drivers (SD?) use the register block lengths to check if a
-feature is available or not. Ideally they should use the compatible value
-instead.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+ChenYu
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
