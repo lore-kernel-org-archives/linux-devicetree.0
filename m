@@ -1,44 +1,213 @@
-From: Mikko Perttunen <mperttunen@nvidia.com>
-Subject: [PATCH 4/6] dt-bindings: tegra: Add documentation for nvidia,tegra194-pmc
-Date: Mon, 8 Jan 2018 06:54:36 +0200
-Message-ID: <1515387278-29777-5-git-send-email-mperttunen@nvidia.com>
-References: <1515387278-29777-1-git-send-email-mperttunen@nvidia.com>
+From: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 3/5] ARM64: dts: meson-axg: uart: Add the pinctrl info
+ description
+Date: Mon, 8 Jan 2018 14:07:43 +0800
+Message-ID: <b2571e30-d543-9288-68cf-1af86bb5f4bc@amlogic.com>
+References: <20180106001044.108163-1-yixun.lan@amlogic.com>
+ <20180106001044.108163-4-yixun.lan@amlogic.com>
+ <CAFBinCCuQ-NK747+GHDkhZty_UMMgzCYOYFcNTrRDJgU8OM=Gw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1515387278-29777-1-git-send-email-mperttunen@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: thierry.reding@gmail.com, jonathanh@nvidia.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: talho@nvidia.com, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Mikko Perttunen <mperttunen@nvidia.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAFBinCCuQ-NK747+GHDkhZty_UMMgzCYOYFcNTrRDJgU8OM=Gw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Cc: yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Xingyun Chen <xingyu.chen-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The Tegra194 power management controller has one additional register
-aperture to be specified in the device tree node.
+Hi Martin
 
-Signed-off-by: Mikko Perttunen <mperttunen@nvidia.com>
----
- Documentation/devicetree/bindings/arm/tegra/nvidia,tegra186-pmc.txt | 2 ++
- 1 file changed, 2 insertions(+)
+On 01/08/18 04:19, Martin Blumenstingl wrote:
+> Hi Yixun,
+> 
+> On Sat, Jan 6, 2018 at 1:10 AM, Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org> wrote:
+>> Describe the pinctrl info for the UART controller which is found
+>> in the Meson-AXG SoCs.
+>>
+>> Signed-off-by: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
+>> ---
+>>  arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 97 ++++++++++++++++++++++++++++++
+>>  1 file changed, 97 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+>> index 644d0f9eaf8c..1eb45781c850 100644
+>> --- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+>> +++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+>> @@ -448,6 +448,70 @@
+>>                                                 function = "spi1";
+>>                                         };
+>>                                 };
+>> +
+>> +                               uart_a_pins: uart_a {
+>> +                                       mux {
+>> +                                               groups = "uart_tx_a",
+>> +                                                       "uart_rx_a";
+>> +                                               function = "uart_a";
+>> +                                       };
+>> +                               };
+>> +
+>> +                               uart_a_cts_rts_pins: uart_a_cts_rts {
+>> +                                       mux {
+>> +                                               groups = "uart_cts_a",
+>> +                                                       "uart_rts_a";
+>> +                                               function = "uart_a";
+>> +                                       };
+>> +                               };
+>> +
+>> +                               uart_b_x_pins: uart_b_x {
+>> +                                       mux {
+>> +                                               groups = "uart_tx_b_x",
+>> +                                                       "uart_rx_b_x";
+>> +                                               function = "uart_b";
+>> +                                       };
+>> +                               };
+>> +
+>> +                               uart_b_x_cts_rts_pins: uart_b_x_cts_rts {
+>> +                                       mux {
+>> +                                               groups = "uart_cts_b_x",
+>> +                                                       "uart_rts_b_x";
+>> +                                               function = "uart_b";
+>> +                                       };
+>> +                               };
+>> +
+>> +                               uart_b_z_pins: uart_b_z {
+>> +                                       mux {
+>> +                                               groups = "uart_tx_b_z",
+>> +                                                       "uart_rx_b_z";
+>> +                                               function = "uart_b";
+>> +                                       };
+>> +                               };
+>> +
+>> +                               uart_b_z_cts_rts_pins: uart_b_z_cts_rts {
+>> +                                       mux {
+>> +                                               groups = "uart_cts_b_z",
+>> +                                                       "uart_rts_b_z";
+>> +                                               function = "uart_b";
+>> +                                       };
+>> +                               };
+>> +
+>> +                               uart_ao_b_z_pins: uart_ao_b_z {
+>> +                                       mux {
+>> +                                               groups = "uart_ao_tx_b_z",
+>> +                                                       "uart_ao_rx_b_z";
+>> +                                               function = "uart_ao_b_gpioz";
+> (the following question just came up while I was looking at this
+> patch, but I guess it's more a question towards the pinctrl driver)
+> the name of the function looks a bit "weird" since below you are also
+> using "uart_ao_b"
+you right here, it's a question related to pinctrl subsystem.
+from my point of view, it's even weird from the hardware perspective:
+ that, the UART function of AO domain route the pin of EE domain..
 
-diff --git a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra186-pmc.txt b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra186-pmc.txt
-index 078a58b0302f..5a3bf7c5a7a0 100644
---- a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra186-pmc.txt
-+++ b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra186-pmc.txt
-@@ -3,6 +3,7 @@ NVIDIA Tegra Power Management Controller (PMC)
- Required properties:
- - compatible: Should contain one of the following:
-   - "nvidia,tegra186-pmc": for Tegra186
-+  - "nvidia,tegra194-pmc": for Tegra194
- - reg: Must contain an (offset, length) pair of the register set for each
-   entry in reg-names.
- - reg-names: Must include the following entries:
-@@ -10,6 +11,7 @@ Required properties:
-   - "wake"
-   - "aotag"
-   - "scratch"
-+  - "misc" (Only for Tegra194)
- 
- Optional properties:
- - nvidia,invert-interrupt: If present, inverts the PMU interrupt signal.
--- 
-2.1.4
+> did you choose "uart_ao_b_gpioz" here because we cannot have the same
+> function name for the periphs and AO pinctrl or is there some other
+> reason?
+> 
+Current there is a conflict in the code level which both two pinctrl
+tree (EE, AO) are using the same macro[1] to expand the definitions, so
+there would be conflict symbol if we name both as 'uart_ao_b'
+
+I think your idea of having an uniform function 'uart_ao_b' for both
+pinctrl subsystem is actually possible/positive..
+
+I will think about your suggestion and come up with a patch later,
+thanks a lot!
+
+
+[1] drivers/pinctrl/meson/pinctrl-meson.h
+
+#define FUNCTION(fn)                                                    \
+        {                                                               \
+                .name = #fn,                                            \
+                .groups = fn ## _groups,                                \
+                .num_groups = ARRAY_SIZE(fn ## _groups),                \
+        }
+
+
+
+
+> I am asking because I would have expected it to look like this:
+>     groups = "uart_ao_tx_b_z", "uart_ao_rx_b_z";
+>     function = "uart_ao_b";
+> 
+> (same for the cts/rts pins below)
+> 
+>> +                                       };
+>> +                               };
+>> +
+>> +                               uart_ao_b_z_cts_rts_pins: uart_ao_b_z_cts_rts {
+>> +                                       mux {
+>> +                                               groups = "uart_ao_cts_b_z",
+>> +                                                       "uart_ao_rts_b_z";
+>> +                                               function = "uart_ao_b_gpioz";
+>> +                                       };
+>> +                               };
+>>                         };
+>>                 };
+>>
+>> @@ -492,12 +556,45 @@
+>>                                         gpio-ranges = <&pinctrl_aobus 0 0 15>;
+>>                                 };
+>>
+>> +
+> did you add this additional newline on purpose?
+>>                                 remote_input_ao_pins: remote_input_ao {
+>>                                         mux {
+>>                                                 groups = "remote_input_ao";
+>>                                                 function = "remote_input_ao";
+>>                                         };
+>>                                 };
+>> +
+>> +                               uart_ao_a_pins: uart_ao_a {
+>> +                                       mux {
+>> +                                               groups = "uart_ao_tx_a",
+>> +                                                       "uart_ao_rx_a";
+>> +                                               function = "uart_ao_a";
+>> +                                       };
+>> +                               };
+>> +
+>> +                               uart_ao_a_cts_rts_pins: uart_ao_a_cts_rts {
+>> +                                       mux {
+>> +                                               groups = "uart_ao_cts_a",
+>> +                                                       "uart_ao_rts_a";
+>> +                                               function = "uart_ao_a";
+>> +                                       };
+>> +                               };
+>> +
+>> +                               uart_ao_b_pins: uart_ao_b {
+>> +                                       mux {
+>> +                                               groups = "uart_ao_tx_b",
+>> +                                                       "uart_ao_rx_b";
+>> +                                               function = "uart_ao_b";
+>> +                                       };
+>> +                               };
+>> +
+>> +                               uart_ao_b_cts_rts_pins: uart_ao_b_cts_rts {
+>> +                                       mux {
+>> +                                               groups = "uart_ao_cts_b",
+>> +                                                       "uart_ao_rts_b";
+>> +                                               function = "uart_ao_b";
+>> +                                       };
+>> +                               };
+>>                         };
+>>
+>>                         pwm_AO_ab: pwm@7000 {
+>> --
+>> 2.15.1
+>>
+>>
+>> _______________________________________________
+>> linux-amlogic mailing list
+>> linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>> http://lists.infradead.org/mailman/listinfo/linux-amlogic
+> 
+> Regards
+> Martin
+> 
+> .
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
