@@ -1,102 +1,73 @@
-From: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] media: ov9650: add device tree binding
-Date: Mon, 8 Jan 2018 11:35:13 +0200
-Message-ID: <20180108093513.nvr2e7vbt7imai2p@paasikivi.fi.intel.com>
-References: <1515344064-23156-1-git-send-email-akinobu.mita@gmail.com>
- <1515344064-23156-3-git-send-email-akinobu.mita@gmail.com>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH] Revert "ARM: dts: bcm283x: Fix DTC warnings about missing
+ phy-cells"
+Date: Mon, 8 Jan 2018 10:36:42 +0100
+Message-ID: <dd0372b5-e16c-ce77-ce39-2c4ffa61f663@i2se.com>
+References: <1515332212-23593-1-git-send-email-stefan.wahren@i2se.com>
+ <87incdjp9k.fsf@anholt.net> <df3db2e7-5d0f-9c1c-b005-41cf00e7d851@i2se.com>
+ <CAK8P3a3qfiX_ZsD8pLmoTJZ2+Q8PkHGmfTFW=NL8P8QFML_dLw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1515344064-23156-3-git-send-email-akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jacopo Mondi <jacopo-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>, "H . Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAK8P3a3qfiX_ZsD8pLmoTJZ2+Q8PkHGmfTFW=NL8P8QFML_dLw@mail.gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: DTML <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Eric Anholt <eric@anholt.net>, arm-soc <arm@kernel.org>, Olof Johansson <olof@lixom.net>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Akinobu,
+Hi Arnd,
 
-Thanks for the update.
 
-On Mon, Jan 08, 2018 at 01:54:24AM +0900, Akinobu Mita wrote:
-> Now the ov9650 driver supports device tree probing.  So this adds a
-> device tree binding documentation.
-> 
-> Cc: Jacopo Mondi <jacopo-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-> Cc: H. Nikolaus Schaller <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-> Cc: Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>
-> Cc: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-> Cc: Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>
-> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
-> * Changelog v2
-> - Split binding documentation, suggested by Rob Herring and Jacopo Mondi
-> - Improve the wording for compatible property in the binding documentation,
->   suggested by Jacopo Mondi
-> - Improve the description for the device node in the binding documentation,
->   suggested by Sakari Ailus
-> 
->  .../devicetree/bindings/media/i2c/ov9650.txt       | 36 ++++++++++++++++++++++
->  1 file changed, 36 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov9650.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/ov9650.txt b/Documentation/devicetree/bindings/media/i2c/ov9650.txt
-> new file mode 100644
-> index 0000000..506dfc5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/i2c/ov9650.txt
-> @@ -0,0 +1,36 @@
-> +* Omnivision OV9650/OV9652 CMOS sensor
-> +
-> +Required Properties:
-> +- compatible: shall be one of
-> +	"ovti,ov9650"
-> +	"ovti,ov9652"
-> +- clocks: reference to the xvclk input clock.
-> +
-> +Optional Properties:
-> +- reset-gpios: reference to the GPIO connected to the resetb pin, if any.
-> +  Active is high.
-> +- powerdown-gpios: reference to the GPIO connected to the pwdn pin, if any.
-> +  Active is high.
-> +
-> +The device node shall contain one 'port' child node with one child 'endpoint'
-> +subnode for its digital output video port, in accordance with the video
-> +interface bindings defined in Documentation/devicetree/bindings/media/
-> +video-interfaces.txt.
-> +
-> +Example:
-> +
-> +&i2c0 {
-> +	ov9650: camera@30 {
-> +		compatible = "ovti,ov9650";
-> +		reg = <0x30>;
-> +		reset-gpios = <&axi_gpio_0 0 GPIO_ACTIVE_HIGH>;
-> +		powerdown-gpios = <&axi_gpio_0 1 GPIO_ACTIVE_HIGH>;
-> +		clocks = <&xclk>;
-> +
-> +		port {
-> +			ov9650_0: endpoint {
-> +				remote-endpoint = <&vcap1_in0>;
-> +			};
-> +		};
-> +	};
-> +};
+Am 08.01.2018 um 10:27 schrieb Arnd Bergmann:
+> On Mon, Jan 8, 2018 at 10:15 AM, Stefan Wahren <stefan.wahren@i2se.com> wrote:
+>> Hi Eric,
+>> Am 07.01.2018 um 23:08 schrieb Eric Anholt:
+>>> Stefan Wahren <stefan.wahren@i2se.com> writes:
+>>>
+>>>> This reverts commit 014d6da6cb2525d7f48fb08c705cb130cc7b5f4a.
+>>>>
+>>>> The DT clean up could trigger an endless deferred probe of DWC2 USB
+>>>> driver
+>>>> on the Raspberry Pi 2/3. So revert the change until we fixed the probing
+>>>> issue.
+>>> Why's that?  I found that I needed to enable the generic no-op phy
+>>> driver, but other than that it was fine.
+>>
+>> in order to avoid this regression. Changing the configuration is not a
+>> solution for the kernelci guys.
+>>
+>> Btw
+>>
+>> CONFIG_NOP_USB_XCEIV=y
+>>
+>> is already enabled in arm64/defconfig and the issue still occured. Do you
+>> mean a different option?
+> Obviously we need to fix this, but I really want to understand what exactly
+> happened so we can fix the code if possible rather than making the
+> dts file incompatible with the binding again.
 
-I was going to say you're missing the MAINTAINERS entry for this newly
-added file but then I noticed that the entire driver is missing an entry.
-Still this file should have a MAINTAINERS entry added for it independently
-of that, in the same patch.
+i fully agree, but dwc2 "hacking" usually requires more time than 
+reverting this change.
 
-Cc Sylwester.
+>
+> Do you have any more insight into how we get into the deferred probe
+> situation?
 
--- 
-Kind regards,
+I send this bug report [1] on Friday to linux-usb.
 
-Sakari Ailus
-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Stefan
+
+[1] - https://marc.info/?l=linux-usb&m=151518314314753&w=2
+
+>
+>         Arnd
