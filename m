@@ -1,109 +1,47 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH] phy: work around 'phys' references to usb-phy devices
-Date: Mon,  8 Jan 2018 14:01:10 +0100
-Message-ID: <20180108130116.80148-1-arnd@arndb.de>
+From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 01/20] dt-bindings: timer: Add Actions Semi S700
+Date: Mon,  8 Jan 2018 14:28:40 +0100
+Message-ID: <1515418139-23276-1-git-send-email-daniel.lezcano@linaro.org>
+References: <1bbaef2e-4080-3f54-7db3-a8989acfd691@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Stefan Wahren <stefan.wahren@i2se.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Felipe Balbi <balbi@kernel.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org, Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, Andrzej Pietrasiewicz <andrzej.p@samsung.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1bbaef2e-4080-3f54-7db3-a8989acfd691-GANU6spQydw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "moderated list:ARM/ACTIONS SEMI
+        ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Stefan Wahren reports a problem with a warning fix that was merged
-for v4.15: we had lots of device nodes with a 'phys' property pointing
-to a device node that is not compliant with the binding documented in
-Documentation/devicetree/bindings/phy/phy-bindings.txt
+From: Andreas Färber <afaerber-l3A5Bk7waGM@public.gmane.org>
 
-This generally works because USB HCD drivers that support both the generic
-phy subsystem and the older usb-phy subsystem ignore most errors from
-phy_get() and related calls and then use the usb-phy driver instead.
+Define a compatible string for the Actions Semi S700 SoC timer.
 
-However, usb_add_hcd() (along with the respective functions in dwc2 and
-dwc3) propagate the EPROBE_DEFER return code so we can try again whenever
-the driver gets loaded. In case the driver is written for the usb-phy
-subsystem (like usb-generic-phy aka usb-nop-xceiv), we will never load
-a generic-phy driver for it, and keep failing here.
-
-There is only a small number of remaining usb-phy drivers that support
-device tree, so this adds a workaround by providing a full list of the
-potentially affected drivers, and always failing the probe with -ENODEV
-here, which is the same behavior that we used to get with incorrect
-device tree files. Since we generally want older kernels to also want
-to work with the fixed devicetree files, it would be good to backport
-the patch into stable kernels as well (3.13+ are possibly affected).
-Reverting back to the DTS sources that work would in theory fix USB
-support for now, but in the long run we'd run into the same problem
-again when the drivers get ported from usb-phy to generic-phy.
-
-Fixes: 014d6da6cb25 ("ARM: dts: bcm283x: Fix DTC warnings about missing phy-cells")
-Link: https://marc.info/?l=linux-usb&m=151518314314753&w=2
-Cc: stable@vger.kernel.org
-Cc: Stefan Wahren <stefan.wahren@i2se.com>
-Cc: Felipe Balbi <balbi@kernel.org>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Andreas Färber <afaerber-l3A5Bk7waGM@public.gmane.org>
+Signed-off-by: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
-This obviously needs to be tested, I wrote this up as a reply to
-Stefan's bug report. I'm fairly sure that I covered all usb-phy
-driver strings here. My goal is to have a fix merged into 4.15
-rather than reverting all the DT fixes.
----
- drivers/phy/phy-core.c | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+ Documentation/devicetree/bindings/timer/actions,owl-timer.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
-index b4964b067aec..bb4dd2a2de2d 100644
---- a/drivers/phy/phy-core.c
-+++ b/drivers/phy/phy-core.c
-@@ -387,6 +387,24 @@ int phy_calibrate(struct phy *phy)
- }
- EXPORT_SYMBOL_GPL(phy_calibrate);
+diff --git a/Documentation/devicetree/bindings/timer/actions,owl-timer.txt b/Documentation/devicetree/bindings/timer/actions,owl-timer.txt
+index e3c28da..977054f 100644
+--- a/Documentation/devicetree/bindings/timer/actions,owl-timer.txt
++++ b/Documentation/devicetree/bindings/timer/actions,owl-timer.txt
+@@ -2,6 +2,7 @@ Actions Semi Owl Timer
  
-+static struct of_device_id __maybe_unused legacy_usbphy[] = {
-+	{ .compatible = "fsl,imx23-usbphy" },
-+	{ .compatible = "fsl,imx6q-usbphy" },
-+	{ .compatible = "fsl,imx6sl-usbphy" },
-+	{ .compatible = "fsl,imx6sx-usbphy" },
-+	{ .compatible = "fsl,imx6ul-usbphy" },
-+	{ .compatible = "fsl,vf610-usbphy" },
-+	{ .compatible = "nvidia,tegra20-usb-phy" },
-+	{ .compatible = "nvidia,tegra30-usb-phy" },
-+	{ .compatible = "nxp,isp1301" },
-+	{ .compatible = "ti,am335x-usb-ctrl-module" },
-+	{ .compatible = "ti,am335x-usb-phy" },
-+	{ .compatible = "ti,keystone-usbphy" },
-+	{ .compatible = "ti,twl6030-usb" },
-+	{ .compatible = "usb-nop-xceiv" },
-+	{},
-+};
-+
- /**
-  * _of_phy_get() - lookup and obtain a reference to a phy by phandle
-  * @np: device_node for which to get the phy
-@@ -410,6 +428,15 @@ static struct phy *_of_phy_get(struct device_node *np, int index)
- 	if (ret)
- 		return ERR_PTR(-ENODEV);
- 
-+	/*
-+	 * Some USB host controllers use a "phys" property to refer to
-+	 * a device that does not have a generic phy driver but that
-+	 * has a driver for the older usb-phy framework.
-+	 * We must not return -EPROBE_DEFER for those, so bail out early.
-+	 */
-+	if (of_match_node(legacy_usbphy, args.np))
-+		return ERR_PTR(-ENODEV);
-+
- 	mutex_lock(&phy_provider_mutex);
- 	phy_provider = of_phy_provider_lookup(args.np);
- 	if (IS_ERR(phy_provider) || !try_module_get(phy_provider->owner)) {
+ Required properties:
+ - compatible      :  "actions,s500-timer" for S500
++                     "actions,s700-timer" for S700
+                      "actions,s900-timer" for S900
+ - reg             :  Offset and length of the register set for the device.
+ - interrupts      :  Should contain the interrupts.
 -- 
-2.9.0
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
