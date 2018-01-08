@@ -1,48 +1,51 @@
-From: Andy Duan <fugang.duan-3arQi8VN3Tc@public.gmane.org>
-Subject: RE: [PATCH 2/7] ARM: dts: imx6ul: update i.MX 6UltraLite iomux
- headers
-Date: Mon, 8 Jan 2018 01:37:32 +0000
-Message-ID: <AM4PR0401MB2260424162DA2879389BCB63FF130@AM4PR0401MB2260.eurprd04.prod.outlook.com>
-References: <20180102164223.15230-1-stefan@agner.ch>
- <20180102164223.15230-2-stefan@agner.ch>
- <20180105164505.uzv7nu3r6awuyxzu@rob-hp-laptop>
+From: zhangfei <zhangfei.gao@linaro.org>
+Subject: Re: [PATCH v7 0/5] scsi: ufs: add ufs driver code for Hisilicon
+ Hi3660 SoC
+Date: Mon, 8 Jan 2018 09:39:37 +0800
+Message-ID: <127f93dd-29c8-8cfc-9b02-5dc72609a272@linaro.org>
+References: <20180106095117.67907-1-liwei213@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180105164505.uzv7nu3r6awuyxzu@rob-hp-laptop>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180106095117.67907-1-liwei213@huawei.com>
 Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Cc: "shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Li Wei <liwei213@huawei.com>, robh+dt@kernel.org, mark.rutland@arm.com, xuwei5@hisilicon.com, catalin.marinas@arm.com, will.deacon@arm.com, vinholikatti@gmail.com, jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, khilman@baylibre.com, arnd@arndb.de, gregory.clement@free-electrons.com, thomas.petazzoni@free-electrons.com, yamada.masahiro@socionext.com, riku.voipio@linaro.org, treding@nvidia.com, krzk@kernel.org, eric@anholt.net, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-scsi@vger.kernel.org
+Cc: zangleigang@hisilicon.com, gengjianfeng@hisilicon.com, guodong.xu@linaro.org, fengbaopeng@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> Sent: Saturday, January 06, 2018 12:45 =
-AM
->To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
->Cc: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org; Fabio Estevam
-><fabio.estevam-3arQi8VN3Tc@public.gmane.org>; mark.rutland-5wv7dgnIgG8@public.gmane.org; linux-arm-
->kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-
->kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Andy Duan <fugang.duan-3arQi8VN3Tc@public.gmane.org>
->Subject: Re: [PATCH 2/7] ARM: dts: imx6ul: update i.MX 6UltraLite iomux
->headers
->
->On Tue, Jan 02, 2018 at 05:42:18PM +0100, Stefan Agner wrote:
->> From: Fugang Duan <fugang.duan-3arQi8VN3Tc@public.gmane.org>
->>
->> Update i.MX 6UltraLite IOMUXC pin defines.
->
->That's obvious reading the diff. The commit message should tell me why.
->They were wrong?
->
-Yes, the previous iomux header parts of pin setting were wrong, which was g=
-enerated by IOMUX tool during SOC bringup.
-The updated header correct the wrong pin setting.
+Hi, Wei
 
->>
->> Signed-off-by: Fugang Duan <fugang.duan-3arQi8VN3Tc@public.gmane.org>
->> Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+On 2018年01月06日 17:51, Li Wei wrote:
+> This patchset adds driver support for UFS for Hi3660 SoC. It is verified on HiKey960 board.
+Usually here should list the change compared with the last change set, 
+to make it easier
+to reviewer, who may pay more attention to the differences.
+
+For example
+v7:xxx //change since v6
+v6:xxx // change since v5
+
+
+
+> Li Wei (5):
+>    scsi: ufs: add Hisilicon ufs driver code
+>    dt-bindings: scsi: ufs: add document for hisi-ufs
+>    arm64: dts: add ufs dts node
+>    arm64: defconfig: enable configs for Hisilicon ufs
+>    arm64: defconfig: enable f2fs and squashfs
+>
+>   Documentation/devicetree/bindings/ufs/ufs-hisi.txt |  43 ++
+>   arch/arm64/boot/dts/hisilicon/hi3660.dtsi          |  20 +
+>   arch/arm64/configs/defconfig                       |  11 +
+>   drivers/scsi/ufs/Kconfig                           |   9 +
+>   drivers/scsi/ufs/Makefile                          |   1 +
+>   drivers/scsi/ufs/ufs-hisi.c                        | 621 +++++++++++++++++++++
+>   drivers/scsi/ufs/ufs-hisi.h                        | 116 ++++
+>   7 files changed, 821 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/ufs/ufs-hisi.txt
+>   create mode 100644 drivers/scsi/ufs/ufs-hisi.c
+>   create mode 100644 drivers/scsi/ufs/ufs-hisi.h
+>
