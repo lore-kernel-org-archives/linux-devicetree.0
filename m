@@ -1,7 +1,7 @@
 From: David Lechner <david@lechnology.com>
-Subject: [PATCH v5 29/44] ARM: da8xx: add new USB PHY clock init using common clock framework
-Date: Sun,  7 Jan 2018 20:17:28 -0600
-Message-ID: <1515377863-20358-30-git-send-email-david@lechnology.com>
+Subject: [PATCH v5 25/44] ARM: dm355: add new clock init using common clock framework
+Date: Sun,  7 Jan 2018 20:17:24 -0600
+Message-ID: <1515377863-20358-26-git-send-email-david@lechnology.com>
 References: <1515377863-20358-1-git-send-email-david@lechnology.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1515377863-20358-1-git-send-email-david@lechnology.com>
@@ -10,143 +10,113 @@ To: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@list
 Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org, David Lechner <david@lechnology.com>
 List-Id: devicetree@vger.kernel.org
 
-This adds the new USB PHY clock init in mach-davinci/usb-da8xx.c using
+This adds the new board-specfic clock init in mach-davinci/dm355.c using
 the new common clock framework drivers.
 
 The #ifdefs are needed to prevent compile errors until the entire
 ARCH_DAVINCI is converted.
 
+Also clean up the #includes since we are adding some here.
+
 Signed-off-by: David Lechner <david@lechnology.com>
 ---
- arch/arm/mach-davinci/usb-da8xx.c | 84 ++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 83 insertions(+), 1 deletion(-)
+ arch/arm/mach-davinci/dm355.c | 47 +++++++++++++++++++++++++++++++++----------
+ 1 file changed, 36 insertions(+), 11 deletions(-)
 
-diff --git a/arch/arm/mach-davinci/usb-da8xx.c b/arch/arm/mach-davinci/usb-da8xx.c
-index d480a02..d7340670 100644
---- a/arch/arm/mach-davinci/usb-da8xx.c
-+++ b/arch/arm/mach-davinci/usb-da8xx.c
-@@ -2,28 +2,36 @@
- /*
-  * DA8xx USB
+diff --git a/arch/arm/mach-davinci/dm355.c b/arch/arm/mach-davinci/dm355.c
+index f294804..f087840 100644
+--- a/arch/arm/mach-davinci/dm355.c
++++ b/arch/arm/mach-davinci/dm355.c
+@@ -8,31 +8,37 @@
+  * is licensed "as is" without any warranty of any kind, whether express
+  * or implied.
   */
+-#include <linux/init.h>
 +#include <linux/clk-provider.h>
  #include <linux/clk.h>
+-#include <linux/serial_8250.h>
+-#include <linux/platform_device.h>
 +#include <linux/clk/davinci.h>
 +#include <linux/clkdev.h>
- #include <linux/delay.h>
  #include <linux/dma-mapping.h>
- #include <linux/init.h>
- #include <linux/mfd/da8xx-cfgchip.h>
-+#include <linux/mfd/syscon.h>
- #include <linux/phy/phy.h>
- #include <linux/platform_data/usb-davinci.h>
- #include <linux/platform_device.h>
- #include <linux/usb/musb.h>
+ #include <linux/dmaengine.h>
+-#include <linux/spi/spi.h>
++#include <linux/init.h>
+ #include <linux/platform_data/edma.h>
+ #include <linux/platform_data/gpio-davinci.h>
+ #include <linux/platform_data/spi-davinci.h>
++#include <linux/platform_device.h>
++#include <linux/serial_8250.h>
++#include <linux/spi/spi.h>
  
--#include <mach/clock.h>
- #include <mach/common.h>
+ #include <asm/mach/map.h>
+ 
++#include <mach/common.h>
  #include <mach/cputype.h>
- #include <mach/da8xx.h>
+-#include "psc.h"
+-#include <mach/mux.h>
  #include <mach/irqs.h>
+-#include <mach/time.h>
++#include <mach/mux.h>
+ #include <mach/serial.h>
+-#include <mach/common.h>
++#include <mach/time.h>
  
++#include "asp.h"
+ #include "davinci.h"
+-#include "clock.h"
+ #include "mux.h"
+-#include "asp.h"
++
 +#ifndef CONFIG_COMMON_CLK
-+#include <mach/clock.h>
- #include "clock.h"
++#include "clock.h"
++#include "psc.h"
 +#endif
  
- #define DA8XX_USB0_BASE		0x01e00000
- #define DA8XX_USB1_BASE		0x01e25000
+ #define DM355_UART2_BASE	(IO_PHYS + 0x206000)
+ #define DM355_OSD_BASE		(IO_PHYS + 0x70200)
+@@ -43,6 +49,7 @@
+  */
+ #define DM355_REF_FREQ		24000000	/* 24 or 36 MHz */
  
 +#ifndef CONFIG_COMMON_CLK
- static struct clk *usb20_clk;
+ static struct pll_data pll1_data = {
+ 	.num       = 1,
+ 	.phys_base = DAVINCI_PLL1_BASE,
+@@ -382,7 +389,7 @@ static struct clk_lookup dm355_clks[] = {
+ 	CLK(NULL, "usb", &usb_clk),
+ 	CLK(NULL, NULL, NULL),
+ };
+-
 +#endif
+ /*----------------------------------------------------------------------*/
  
- static struct platform_device da8xx_usb_phy = {
- 	.name		= "da8xx-usb-phy",
-@@ -128,6 +136,7 @@ int __init da8xx_register_usb11(struct da8xx_ohci_root_hub *pdata)
- 	return platform_device_register(&da8xx_usb11_device);
- }
+ static u64 dm355_spi0_dma_mask = DMA_BIT_MASK(32);
+@@ -1046,7 +1053,25 @@ void __init dm355_init(void)
  
-+#ifndef CONFIG_COMMON_CLK
- static struct clk usb_refclkin = {
- 	.name		= "usb_refclkin",
- 	.set_rate	= davinci_simple_set_rate,
-@@ -354,3 +363,76 @@ int __init da8xx_register_usb11_phy_clk(bool use_usb_refclkin)
- 
- 	return ret;
- }
+ void __init dm355_init_time(void)
+ {
++#ifdef CONFIG_COMMON_CLK
++	void __iomem *pll1, *pll2, *psc;
++
++	pll1 = ioremap(DAVINCI_PLL1_BASE, SZ_4K);
++	pll2 = ioremap(DAVINCI_PLL2_BASE, SZ_4K);
++	psc = ioremap(DAVINCI_PWR_SLEEP_CNTRL_BASE, SZ_4K);
++
++	clk_register_fixed_rate(NULL, "ref_clk", NULL, 0, DM355_REF_FREQ);
++	dm355_pll_clk_init(pll1, pll2);
++	dm355_psc_clk_init(psc);
++
++	/* NOTE:  clkout1 can be externally gated by muxing GPIO-18 */
++	clk_register_fixed_factor(NULL, "clkout1", "pll1_aux_clk", 0, 1, 1);
++	clk_register_fixed_factor(NULL, "clkout2", "pll1_sysclkbp", 0, 1, 1);
++	/* NOTE:  clkout3 can be externally gated by muxing GPIO-16 */
++	clk_register_fixed_factor(NULL, "clkout3", "pll2_sysclkbp", 0, 1, 1);
 +#else
-+/**
-+ * da8xx_register_usb20_phy_clk - register USB0PHYCLKMUX clock
-+ *
-+ * @use_usb_refclkin: Selects the parent clock - either "usb_refclkin" if true
-+ *	or "pll0_aux_clk" if false.
-+ */
-+int __init da8xx_register_usb20_phy_clk(bool use_usb_refclkin)
-+{
-+	struct regmap *cfgchip;
-+	struct clk *usb0_psc_clk, *clk;
-+	struct clk_hw *parent;
-+
-+	cfgchip = syscon_regmap_lookup_by_compatible("ti,da830-cfgchip");
-+	if (IS_ERR(cfgchip))
-+		cfgchip = syscon_regmap_lookup_by_pdevname("syscon");
-+	if (IS_ERR(cfgchip))
-+		return PTR_ERR(cfgchip);
-+
-+	usb0_psc_clk = clk_get_sys("musb-da8xx", NULL);
-+	if (IS_ERR(usb0_psc_clk))
-+		return PTR_ERR(usb0_psc_clk);
-+
-+	clk = da8xx_usb0_phy_clk_register("usb0_phy_clk", "usb_refclkin",
-+					  "pll0_aux_clk", usb0_psc_clk, cfgchip);
-+	if (IS_ERR(clk)) {
-+		clk_put(usb0_psc_clk);
-+		return PTR_ERR(clk);
-+	}
-+
-+	parent = clk_hw_get_parent_by_index(__clk_get_hw(clk),
-+					    use_usb_refclkin ? 0 : 1);
-+	if (parent)
-+		clk_set_parent(clk, parent->clk);
-+	else
-+		pr_warn("%s: Failed to find parent clock\n", __func__);
-+
-+	return clk_register_clkdev(clk, "usb20_phy", "da8xx-usb-phy");
-+}
-+
-+/**
-+ * da8xx_register_usb11_phy_clk - register USB1PHYCLKMUX clock
-+ *
-+ * @use_usb_refclkin: Selects the parent clock - either "usb_refclkin" if true
-+ *	or "usb0_phy_clk" if false.
-+ */
-+int __init da8xx_register_usb11_phy_clk(bool use_usb_refclkin)
-+{
-+	struct regmap *cfgchip;
-+	struct clk *clk;
-+	struct clk_hw *parent;
-+
-+	cfgchip = syscon_regmap_lookup_by_compatible("ti,da830-cfgchip");
-+	if (IS_ERR(cfgchip))
-+		cfgchip = syscon_regmap_lookup_by_pdevname("syscon");
-+	if (IS_ERR(cfgchip))
-+		return PTR_ERR(cfgchip);
-+
-+	clk = da8xx_usb1_phy_clk_register("usb1_phy_clk", "usb0_phy_clk",
-+					  "usb_refclkin", cfgchip);
-+	if (IS_ERR(clk))
-+		return PTR_ERR(clk);
-+
-+	parent = clk_hw_get_parent_by_index(__clk_get_hw(clk),
-+					    use_usb_refclkin ? 1 : 0);
-+	if (parent)
-+		clk_set_parent(clk, parent->clk);
-+	else
-+		pr_warn("%s: Failed to find parent clock\n", __func__);
-+
-+	return clk_register_clkdev(clk, "usb11_phy", "da8xx-usb-phy");
-+}
+ 	davinci_clk_init(dm355_clks);
 +#endif
+ 	davinci_timer_init();
+ }
+ 
 -- 
 2.7.4
