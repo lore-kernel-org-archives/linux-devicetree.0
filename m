@@ -1,61 +1,43 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V2 1/5] bindings: regulator: added support for suspend
- states
-Date: Mon, 8 Jan 2018 12:35:33 +0000
-Message-ID: <20180108123533.GE11698@sirena.org.uk>
-References: <1515050568-23876-1-git-send-email-zhang.chunyan@linaro.org>
- <1515050568-23876-2-git-send-email-zhang.chunyan@linaro.org>
- <20180105185328.zmt33idv2cqled62@rob-hp-laptop>
- <20180105191837.GI9076@sirena.org.uk>
- <CAG2=9p-ec1oVe-+O0TGYFF-E5dGrP3FoRZXb1sCyjNScVvGNQg@mail.gmail.com>
+From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v6 0/2] Documentation and driver of logicoreIP
+Date: Mon, 8 Jan 2018 13:43:33 +0100
+Message-ID: <5529878b-9ef3-86b7-4c35-0aad79aa44c8@xilinx.com>
+References: <CAK8P3a0z6HF8Rg08HUj7_T+7ZxxnHoReiu68bNzF6CnEooQSdA@mail.gmail.com>
+ <1513881186-26020-1-git-send-email-dshah@xilinx.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="9l24NVCWtSuIVIod"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAG2=9p-ec1oVe-+O0TGYFF-E5dGrP3FoRZXb1sCyjNScVvGNQg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1513881186-26020-1-git-send-email-dshah-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chunyan Zhang <zhang.chunyan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chunyan Zhang <zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Dhaval Shah <dhaval.shah-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, arnd-r2nGTMty4D4@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, pombredanne-od1rfyK75/E@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hyunk-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, Dhaval Shah <dshah-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 21.12.2017 19:33, Dhaval Shah wrote:
+> 1st patch provide Device Tree binding document for logicoreIP
+> 2nd patch provide the xlnx_vcu logicoreIP driver, Kconfig changes
+> and Makefile changes for the driver.
+> 
+> Dhaval Shah (2):
+>   dt-bindings: misc: Add DT bindings to xlnx_vcu driver
+>   misc: xlnx_vcu: Add Xilinx ZYNQMP VCU logicoreIP init driver
+> 
+>  .../devicetree/bindings/soc/xilinx/xlnx,vcu.txt    |  31 +
+>  drivers/soc/xilinx/Kconfig                         |  15 +
+>  drivers/soc/xilinx/Makefile                        |   1 +
+>  drivers/soc/xilinx/xlnx_vcu.c                      | 630 +++++++++++++++++++++
+>  4 files changed, 677 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/xilinx/xlnx,vcu.txt
+>  create mode 100644 drivers/soc/xilinx/xlnx_vcu.c
+> 
 
---9l24NVCWtSuIVIod
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+It looks like there is no any other concern regarding these patches
+that's why I have applied them.
 
-On Mon, Jan 08, 2018 at 02:36:36PM +0800, Chunyan Zhang wrote:
-> On 6 January 2018 at 03:18, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-
-> > No, it means that the software has permission to use those changes to
-> > those registers - we only want to be changing things if the user has
-> > permission to change them since some systems will have specific
-> > constraints, we don't know if it's safe without being explicitly told.
-> > You're right that we could infer this from a range being provided
-> > though, let's do that.
-
-> Ok, so we don't need this property IIUC, and instead we just need to check
-> if the regulator-suspend-min-microvolt and regulator-suspend-max-microvolt
-> are set to the same value, right?
-
-Yes.
-
---9l24NVCWtSuIVIod
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlpTZZQACgkQJNaLcl1U
-h9Dtigf+L8Ds7R6DYPDJApzyqaVRbHO40Noi0YsyljhtyjvEEIZ7egYeBMe4PHOu
-85IovrsZ2NatFdQooepeACQeTUycIZlFRB8SGlh9QEZLhSEW98wMta3YixIL/iB6
-hohaE/haBIixTircxFSFr7SN6o7PIs96yUzJ9snUQr3EN0cfS9LZs9co9uSLyaNh
-IwxFTxbQKGrum/IGnq3TxvKVYFbVrUGKxuTgGEnrfSXCJRgZfjIfiRBPWDJjqsdk
-EC9SJIB8DXKtGZjgEyd+PM95G04dlbpltny8k+9FBR94Lg53YD9GplLF7ZmsuupO
-55QBlamq0Hi8oB8VN15KWfxlaQqs/A==
-=ahAB
------END PGP SIGNATURE-----
-
---9l24NVCWtSuIVIod--
+Thanks,
+Michal
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
