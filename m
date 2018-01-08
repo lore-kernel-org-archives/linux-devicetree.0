@@ -1,106 +1,83 @@
-From: Lucas Stach <l.stach@pengutronix.de>
-Subject: Re: [PATCH v3] PCI: imx6: Add PHY reference clock source support
-Date: Mon, 08 Jan 2018 11:43:52 +0100
-Message-ID: <1515408232.12538.7.camel@pengutronix.de>
-References: <CAOMZO5AFC9dxhsQjmRrDA7Z3KMkEemryKOBmQhXm19NXKxHkKQ@mail.gmail.com>
-         <1515073977-10153-1-git-send-email-ilya@compulab.co.il>
+From: Hao Zhang <hao5781286-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 4/4] ARM: pinctrl: sunxi-pinctrl: fix pin funtion can
+ not be match correctly.
+Date: Mon, 8 Jan 2018 19:08:53 +0800
+Message-ID: <CAJeuY79_w+8Gv=jRxK4tajiecNSAZkMGYY_d7PJmsjyOZHPkJw@mail.gmail.com>
+References: <20171213144748.GA18267@arx-s1> <20171213154549.5zn4uxhsssqw3pb7@flea.lan>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1515073977-10153-1-git-send-email-ilya@compulab.co.il>
-Sender: linux-pci-owner@vger.kernel.org
-To: Ilya Ledvich <ilya@compulab.co.il>, Richard Zhu <hongxing.zhu@nxp.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171213154549.5zn4uxhsssqw3pb7-ZC1Zs529Oq4@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM/Allwinner sunXi SoC support" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am Donnerstag, den 04.01.2018, 15:52 +0200 schrieb Ilya Ledvich:
-> i.MX7D variant of the IP can use either Crystal Oscillator input
-> or internal clock input as a Reference Clock input for PCIe PHY.
-> Add support for an optional property 'fsl,pcie-phy-refclk-internal'.
-> If present then an internal clock input is used as PCIe PHY
-> reference clock source. By default an external oscillator input
-> is still used.
-> 
-> Verified on Compulab SBC-iMX7 Single Board Computer.
+2017-12-13 23:45 GMT+08:00 Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
+> Hi,
+>
+> Thanks for your patch!
+>
+> On Wed, Dec 13, 2017 at 10:47:48PM +0800, hao_zhang wrote:
+>> Pin function can not be match correctly when SUNXI_PIN describe with
+>> mutiple variant and same function.
+>>
+>> such as:
+>> on pinctrl-sun4i-a10.c
+>>
+>> SUNXI_PIN(SUNXI_PINCTRL_PIN(B, 2),
+>>               SUNXI_FUNCTION(0x0, "gpio_in"),
+>>               SUNXI_FUNCTION(0x1, "gpio_out"),
+>>               SUNXI_FUNCTION_VARIANT(0x2, "pwm",    /* PWM0 */
+>>                       PINCTRL_SUN4I_A10 |
+>>                       PINCTRL_SUN7I_A20),
+>>               SUNXI_FUNCTION_VARIANT(0x3, "pwm",    /* PWM0 */
+>>                       PINCTRL_SUN8I_R40)),
+>>
+>> it would always match to the first variant function
+>> (PINCTRL_SUN4I_A10, PINCTRL_SUN7I_A20)
+>>
+>> so we should add variant compare on it.
+>>
+>> Signed-off-by: hao_zhang <hao5781286-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>>  drivers/pinctrl/sunxi/pinctrl-sunxi.c | 6 ++++--
+>>  1 file changed, 4 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+>> index 4b6cb25..f23e74e 100644
+>> --- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+>> +++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+>> @@ -83,9 +83,11 @@ sunxi_pinctrl_desc_find_function_by_name(struct sunxi_pinctrl *pctl,
+>>                       struct sunxi_desc_function *func = pin->functions;
+>>
+>>                       while (func->name) {
+>> -                             if (!strcmp(func->name, func_name))
+>> +                             if (!strcmp(func->name, func_name)) {
+>> +                                     if (!(func->variant) ||
+>> +                                        (func->variant & pctl->variant))
+>
+> I guess it would be better to have:
+>         if (!strcmp(func->name, func_name) &&
+>             (!func->variant || (func->variant & pctl->variant)))
 
-Sorry to get in late here, but I would rather have the external clock
-input modeled as a real clock and only use the internal clock if that
-isn't present.
+It would over 80 characters, can i change it by this ?
+if (!strcmp(func->name, func_name) &&
+         (func->variant & pctl->variant ||
+          !func->variant))
 
-Are you even sure that the i.MX7 clock you mention isn't the already
-documented "pcie_bus" clock? This one is also allowed to be sourced
-externally on the i.MX6.
-
-Regards,
-Lucas
-
-> Signed-off-by: Ilya Ledvich <ilya@compulab.co.il>
-> ---
-> changes since V2:
-> 	add a vendor prefix 'fsl' to a new property
-> 
->  Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt | 5 +++++
->  drivers/pci/dwc/pci-imx6.c                               | 8
-> +++++++-
->  2 files changed, 12 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt 
-> b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-> index 7b1e48b..1591a6a 100644
-> --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-> @@ -50,6 +50,11 @@ Additional required properties for imx7d-pcie:
->  	       - "pciephy"
->  	       - "apps"
->  
-> +Additional optional properties for imx7d-pcie:
-> +- fsl,pcie-phy-refclk-internal: If present then an internal PLL
-> input is used
-> +  as PCIe PHY reference clock source. By default an external
-> oscillator input
-> +  is used.
-> +
->  Example:
->  
->  	pcie@0x01000000 {
-> diff --git a/drivers/pci/dwc/pci-imx6.c b/drivers/pci/dwc/pci-imx6.c
-> index b734835..36812d3 100644
-> --- a/drivers/pci/dwc/pci-imx6.c
-> +++ b/drivers/pci/dwc/pci-imx6.c
-> @@ -61,6 +61,7 @@ struct imx6_pcie {
->  	u32			tx_swing_low;
->  	int			link_gen;
->  	struct regulator	*vpcie;
-> +	bool			pciephy_refclk_sel;
->  };
->  
->  /* Parameters for the waiting for PCIe PHY PLL to lock on i.MX7 */
-> @@ -474,7 +475,9 @@ static void imx6_pcie_init_phy(struct imx6_pcie
-> *imx6_pcie)
->  	switch (imx6_pcie->variant) {
->  	case IMX7D:
->  		regmap_update_bits(imx6_pcie->iomuxc_gpr,
-> IOMUXC_GPR12,
-> -				   IMX7D_GPR12_PCIE_PHY_REFCLK_SEL,
-> 0);
-> +				   IMX7D_GPR12_PCIE_PHY_REFCLK_SEL,
-> +				   imx6_pcie->pciephy_refclk_sel ?
-> +				   IMX7D_GPR12_PCIE_PHY_REFCLK_SEL :
-> 0);
->  		break;
->  	case IMX6SX:
->  		regmap_update_bits(imx6_pcie->iomuxc_gpr,
-> IOMUXC_GPR12,
-> @@ -840,6 +843,9 @@ static int imx6_pcie_probe(struct platform_device
-> *pdev)
->  		imx6_pcie->vpcie = NULL;
->  	}
->  
-> +	imx6_pcie->pciephy_refclk_sel =
-> +		of_property_read_bool(node, "fsl,pcie-phy-refclk-
-> internal");
-> +
->  	platform_set_drvdata(pdev, imx6_pcie);
->  
->  	ret = imx6_add_pcie_port(imx6_pcie, pdev);
+>
+> Once fixed,
+> Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>
+> Thanks!
+> Maxime
+>
+> --
+> Maxime Ripard, Free Electrons
+> Embedded Linux and Kernel engineering
+> http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
