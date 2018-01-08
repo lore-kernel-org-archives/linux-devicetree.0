@@ -1,97 +1,93 @@
 From: David Lechner <david@lechnology.com>
-Subject: [PATCH v5 01/44] dt-bindings: clock: Add new bindings for TI Davinci
- PLL clocks
-Date: Sun,  7 Jan 2018 20:17:00 -0600
-Message-ID: <1515377863-20358-2-git-send-email-david@lechnology.com>
+Subject: [PATCH v5 07/44] clk: davinci: Add platform information for TI DM644x PLL
+Date: Sun,  7 Jan 2018 20:17:06 -0600
+Message-ID: <1515377863-20358-8-git-send-email-david@lechnology.com>
 References: <1515377863-20358-1-git-send-email-david@lechnology.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1515377863-20358-1-git-send-email-david@lechnology.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, David Lechner <david@lechnology.com>, Kevin Hilman <khilman@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Adam Ford <aford173@gmail.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org, David Lechner <david@lechnology.com>
 List-Id: devicetree@vger.kernel.org
 
-This adds a new binding for the PLL IP blocks in the mach-davinci family
-of processors. Currently, only the SYSCLKn and AUXCLK outputs are needed,
-but in the future additional child nodes could be added for OBSCLK and
-BPDIV.
-
-Note: Although these PLL controllers are very similar to the TI Keystone
-SoCs, we are not re-using those bindings. The Keystone bindings use a
-legacy one-node-per-clock binding. Furthermore, the mach-davinici SoCs
-have a slightly different PLL register layout and a number of quirks that
-can't be handled by the existing bindings, so the keystone bindings could
-not be used as-is anyway.
+This adds platform-specific declarations for the PLL clocks on TI
+DaVinci 644x based systems.
 
 Signed-off-by: David Lechner <david@lechnology.com>
 ---
- .../devicetree/bindings/clock/ti/davinci/pll.txt   | 47 ++++++++++++++++++++++
- 1 file changed, 47 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/ti/davinci/pll.txt
+ drivers/clk/davinci/Makefile     |  1 +
+ drivers/clk/davinci/pll-dm644x.c | 41 ++++++++++++++++++++++++++++++++++++++++
+ include/linux/clk/davinci.h      |  1 +
+ 3 files changed, 43 insertions(+)
+ create mode 100644 drivers/clk/davinci/pll-dm644x.c
 
-diff --git a/Documentation/devicetree/bindings/clock/ti/davinci/pll.txt b/Documentation/devicetree/bindings/clock/ti/davinci/pll.txt
+diff --git a/drivers/clk/davinci/Makefile b/drivers/clk/davinci/Makefile
+index 353aa02..59d8ab6 100644
+--- a/drivers/clk/davinci/Makefile
++++ b/drivers/clk/davinci/Makefile
+@@ -6,4 +6,5 @@ obj-$(CONFIG_ARCH_DAVINCI_DA830)	+= pll-da830.o
+ obj-$(CONFIG_ARCH_DAVINCI_DA850)	+= pll-da850.o
+ obj-$(CONFIG_ARCH_DAVINCI_DM355)	+= pll-dm355.o
+ obj-$(CONFIG_ARCH_DAVINCI_DM365)	+= pll-dm365.o
++obj-$(CONFIG_ARCH_DAVINCI_DM644x)	+= pll-dm644x.o
+ endif
+diff --git a/drivers/clk/davinci/pll-dm644x.c b/drivers/clk/davinci/pll-dm644x.c
 new file mode 100644
-index 0000000..99bf5da
+index 0000000..b0d0373
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/ti/davinci/pll.txt
-@@ -0,0 +1,47 @@
-+Binding for TI DaVinci PLL Controllers
++++ b/drivers/clk/davinci/pll-dm644x.c
+@@ -0,0 +1,41 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * PLL clock descriptions for TI DM644X
++ *
++ * Copyright (C) 2017 David Lechner <david@lechnology.com>
++ */
 +
-+The PLL provides clocks to most of the components on the SoC. In addition
-+to the PLL itself, this controller also contains bypasses, gates, dividers,
-+an multiplexers for various clock signals.
++#include <linux/init.h>
++#include <linux/types.h>
 +
-+Required properties:
-+- compatible: shall be one of:
-+	- "ti,da850-pll0" for PLL0 on DA850/OMAP-L138/AM18XX
-+	- "ti,da850-pll1" for PLL1 on DA850/OMAP-L138/AM18XX
-+- reg: physical base address and size of the controller's register area.
-+- clocks: phandle to the PLL input clock source
++#include "pll.h"
 +
-+Optional child nodes:
++static const struct davinci_pll_divclk_info dm644x_pll1_divclk_info[] __initconst = {
++	DIVCLK(1, pll1_sysclk1, pll1, DIVCLK_FIXED_DIV),
++	DIVCLK(2, pll1_sysclk2, pll1, DIVCLK_FIXED_DIV),
++	DIVCLK(3, pll1_sysclk3, pll1, DIVCLK_FIXED_DIV),
++	DIVCLK(5, pll1_sysclk5, pll1, DIVCLK_FIXED_DIV),
++	{ }
++};
 +
-+sysclk
-+	Describes the PLLDIVn divider clocks that provide the SYSCLKn clock
-+	domains. The node name must be "sysclk". Consumers of this node should
-+	use "n" in "SYSCLKn" as the parameter for the clock cell.
++static const struct davinci_pll_divclk_info dm644x_pll2_divclk_info[] __initconst = {
++	DIVCLK(1, pll2_sysclk1, pll2, 0),
++	DIVCLK(2, pll2_sysclk2, pll2, 0),
++	{ }
++};
 +
-+	Required properties:
-+	- #clock-cells: must be 1
++void __init dm644x_pll_clk_init(void __iomem *pll1, void __iomem *pll2)
++{
++	const struct davinci_pll_divclk_info *info;
 +
-+auxclk
-+	Describes the AUXCLK output of the PLL. The node name must be "auxclk".
++	davinci_pll_clk_register("pll1", "ref_clk", pll1);
++	for (info = dm644x_pll1_divclk_info; info->name; info++)
++		davinci_pll_divclk_register(info, pll1);
++	davinci_pll_aux_clk_register("pll1_aux_clk", "ref_clk", pll1);
++	davinci_pll_bpdiv_clk_register("pll1_sysclkbp", "ref_clk", pll1);
 +
-+	Required properties:
-+	- #clock-cells: must be 0
-+
-+Examples:
-+
-+	pll0: clock-controller@11000 {
-+		compatible = "ti,da850-pll0";
-+		reg = <0x11000 0x1000>;
-+		clocks = <&ref_clk>;
-+
-+		pll0_sysclk: sysclk {
-+			#clock-cells = <1>;
-+		};
-+
-+		pll0_aux_clk: auxclk {
-+			#clock-cells = <0>;
-+		};
-+	};
-+
-+Also see:
-+- Documentation/devicetree/bindings/clock/clock-bindings.txt
++	davinci_pll_clk_register("pll2", "ref_clk", pll2);
++	for (info = dm644x_pll2_divclk_info; info->name; info++)
++		davinci_pll_divclk_register(info, pll2);
++	davinci_pll_bpdiv_clk_register("pll2_sysclkbp", "ref_clk", pll2);
++}
+diff --git a/include/linux/clk/davinci.h b/include/linux/clk/davinci.h
+index 5bf60a7..535990a 100644
+--- a/include/linux/clk/davinci.h
++++ b/include/linux/clk/davinci.h
+@@ -13,5 +13,6 @@ void da830_pll_clk_init(void __iomem *pll);
+ void da850_pll_clk_init(void __iomem *pll0, void __iomem *pll1);
+ void dm355_pll_clk_init(void __iomem *pll1, void __iomem *pll2);
+ void dm365_pll_clk_init(void __iomem *pll1, void __iomem *pll2);
++void dm644x_pll_clk_init(void __iomem *pll1, void __iomem *pll2);
+ 
+ #endif /* __LINUX_CLK_DAVINCI_H__ */
 -- 
 2.7.4
