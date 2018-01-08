@@ -1,41 +1,32 @@
-From: Dong Aisheng <dongas86@gmail.com>
-Subject: Re: [PATCH v2 0/5] constify struct imx_pinctrl_soc_info
-Date: Mon, 8 Jan 2018 18:32:24 +0800
-Message-ID: <20180108103224.GB32635@b29396-OptiPlex-7040>
-References: <20180106142553.15322-1-stefan@agner.ch>
+From: Dong Aisheng <dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/2] clk: imx: imx7d: add the snvs clock
+Date: Mon, 8 Jan 2018 18:33:42 +0800
+Message-ID: <20180108103342.GC32635@b29396-OptiPlex-7040>
+References: <1515078402-22135-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20180106142553.15322-1-stefan@agner.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Agner <stefan@agner.ch>
-Cc: linus.walleij@linaro.org, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, aisheng.dong@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-imx@nxp.com
+In-Reply-To: <1515078402-22135-1-git-send-email-Anson.Huang-3arQi8VN3Tc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Anson Huang <Anson.Huang-3arQi8VN3Tc@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-imx-3arQi8VN3Tc@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jan 06, 2018 at 03:25:48PM +0100, Stefan Agner wrote:
-> This patchset grew out of the discussion around the first version
-> of "pinctrl: imx6ul: add IOMUXC SNVS pinctrl driver for i.MX 6ULL".
-> This is necessary for pinctrls of SoCs with multiple compatible
-> strings (currently only imx7d) since the struct uses the .data
-> pointer in struct of_device_id. It is also helpful for all other
-> SoCs since it decreases the .data section for all drivers by 1276
-> bytes.
+On Thu, Jan 04, 2018 at 11:06:41PM +0800, Anson Huang wrote:
+> According to the i.MX7D Reference Manual,
+> SNVS block has a clock gate, accessing SNVS block
+> would need this clock gate to be enabled, add it
+> into clock tree so that SNVS module driver can
+> operate this clock gate.
 > 
-> Bai Ping (1):
->   pinctrl: imx6ul: add IOMUXC SNVS pinctrl driver for i.MX 6ULL
-> 
-> Stefan Agner (4):
->   pinctrl: imx: use struct imx_pinctrl_soc_info as a const
->   pinctrl: imx7d: simplify imx7d_pinctrl_probe
->   pinctrl: imx: constify struct imx_pinctrl_soc_info
->   pinctrl: imx7ulp: constify struct imx_cfg_params_decode
-> 
+> Signed-off-by: Anson Huang <Anson.Huang-3arQi8VN3Tc@public.gmane.org>
 
-This patch series looks really good to me.
-
-So
-Acked-by: Dong Aisheng <aisheng.dong@nxp.com>
+Acked-by: Dong Aisheng <aisheng.dong-3arQi8VN3Tc@public.gmane.org>
 
 Regards
 Dong Aisheng
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
