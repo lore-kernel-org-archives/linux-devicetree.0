@@ -1,7 +1,7 @@
 From: David Lechner <david@lechnology.com>
-Subject: [PATCH v5 20/44] dt-bindings: clock: Add bindings for TI DA8XX USB PHY clocks
-Date: Sun,  7 Jan 2018 20:17:19 -0600
-Message-ID: <1515377863-20358-21-git-send-email-david@lechnology.com>
+Subject: [PATCH v5 27/44] ARM: dm644x: add new clock init using common clock framework
+Date: Sun,  7 Jan 2018 20:17:26 -0600
+Message-ID: <1515377863-20358-28-git-send-email-david@lechnology.com>
 References: <1515377863-20358-1-git-send-email-david@lechnology.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1515377863-20358-1-git-send-email-david@lechnology.com>
@@ -10,75 +10,101 @@ To: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@list
 Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org, David Lechner <david@lechnology.com>
 List-Id: devicetree@vger.kernel.org
 
-This adds a new binding for TI DA8XX USB PHY clocks. These clocks are part
-of a syscon register called CFGCHIP3.
+This adds the new board-specfic clock init in mach-davinci/dm644x.c using
+the new common clock framework drivers.
+
+The #ifdefs are needed to prevent compile errors until the entire
+ARCH_DAVINCI is converted.
+
+Also clean up the #includes since we are adding some here.
 
 Signed-off-by: David Lechner <david@lechnology.com>
 ---
- .../clock/ti/davinci/da8xx-cfgchip-usb-phy.txt     | 55 ++++++++++++++++++++++
- 1 file changed, 55 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/ti/davinci/da8xx-cfgchip-usb-phy.txt
+ arch/arm/mach-davinci/dm644x.c | 36 ++++++++++++++++++++++++++++--------
+ 1 file changed, 28 insertions(+), 8 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/clock/ti/davinci/da8xx-cfgchip-usb-phy.txt b/Documentation/devicetree/bindings/clock/ti/davinci/da8xx-cfgchip-usb-phy.txt
-new file mode 100644
-index 0000000..8a12e1b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/ti/davinci/da8xx-cfgchip-usb-phy.txt
-@@ -0,0 +1,55 @@
-+Binding for TI DA8XX/OMAP-L13X/AM17XX/AM18XX CFGCHIP USB PHY clocks
+diff --git a/arch/arm/mach-davinci/dm644x.c b/arch/arm/mach-davinci/dm644x.c
+index b409801..bc2e243 100644
+--- a/arch/arm/mach-davinci/dm644x.c
++++ b/arch/arm/mach-davinci/dm644x.c
+@@ -8,28 +8,34 @@
+  * is licensed "as is" without any warranty of any kind, whether express
+  * or implied.
+  */
+-#include <linux/init.h>
++#include <linux/clk-provider.h>
+ #include <linux/clk.h>
+-#include <linux/serial_8250.h>
++#include <linux/clk/davinci.h>
++#include <linux/clkdev.h>
+ #include <linux/dmaengine.h>
+-#include <linux/platform_device.h>
++#include <linux/init.h>
+ #include <linux/platform_data/edma.h>
+ #include <linux/platform_data/gpio-davinci.h>
++#include <linux/platform_device.h>
++#include <linux/serial_8250.h>
+ 
+ #include <asm/mach/map.h>
+ 
++#include <mach/common.h>
+ #include <mach/cputype.h>
+ #include <mach/irqs.h>
+-#include "psc.h"
+ #include <mach/mux.h>
+-#include <mach/time.h>
+ #include <mach/serial.h>
+-#include <mach/common.h>
++#include <mach/time.h>
+ 
++#include "asp.h"
+ #include "davinci.h"
+-#include "clock.h"
+ #include "mux.h"
+-#include "asp.h"
 +
-+TI DA8XX/OMAP-L13X/AM17XX/AM18XX SoCs contain a general purpose set of
-+registers call CFGCHIPn. Some of these registers function as the USB PHY
-+clocks. This document describes the bindings for those clocks.
++#ifndef CONFIG_COMMON_CLK
++#include "clock.h"
++#include "psc.h"
++#endif
+ 
+ /*
+  * Device specific clocks
+@@ -43,6 +49,7 @@
+ #define DM644X_EMAC_CNTRL_RAM_OFFSET	0x2000
+ #define DM644X_EMAC_CNTRL_RAM_SIZE	0x2000
+ 
++#ifndef CONFIG_COMMON_CLK
+ static struct pll_data pll1_data = {
+ 	.num       = 1,
+ 	.phys_base = DAVINCI_PLL1_BASE,
+@@ -326,6 +333,7 @@ static struct clk_lookup dm644x_clks[] = {
+ 	CLK("davinci-wdt", NULL, &timer2_clk),
+ 	CLK(NULL, NULL, NULL),
+ };
++#endif
+ 
+ static struct emac_platform_data dm644x_emac_pdata = {
+ 	.ctrl_reg_offset	= DM644X_EMAC_CNTRL_OFFSET,
+@@ -934,7 +942,19 @@ void __init dm644x_init(void)
+ 
+ void __init dm644x_init_time(void)
+ {
++#ifdef CONFIG_COMMON_CLK
++	void __iomem *pll1, *pll2, *psc;
 +
-+Required properties:
-+- compatible: shall be one of:
-+	- "ti,da830-usb0-phy-clock" for the USB 2.0 PHY
-+	- "ti,da830-usb1-phy-clock" for the USB 1.1 PHY
-+- #clock-cells: from common clock binding; shall be set to 0.
-+- clocks: phandle list of clocks corresponding to clock-names
-+- clock-names: depends on compatible:
-+	- for "ti,da830-usb0-phy-clock" must be "usb_refclkin", "auxclk",
-+		"usb0_lpsc"
-+	- for "ti,da830-usb1-phy-clock" must be "usb0_phy", "usb_refclkin"
++	pll1 = ioremap(DAVINCI_PLL1_BASE, SZ_4K);
++	pll2 = ioremap(DAVINCI_PLL2_BASE, SZ_4K);
++	psc = ioremap(DAVINCI_PWR_SLEEP_CNTRL_BASE, SZ_4K);
 +
-+Optional properties:
-+- clock-output-names: from common clock binding.
-+
-+Parent:
-+	This node must be a child of a "ti,da830-cfgchip" node.
-+
-+Assignment:
-+	The assigned-clocks and assigned-clock-parents properties from the
-+	common clock bindings can be used to indicate which parent clock should
-+	be used. Note: for "ti,da830-usb0-phy-clock", only "usb_refclkin" or
-+	"auxclk" can be used as the assigned parent clock ("usb0_lpsc" is not
-+	an actual parent clock and only used internally).
-+
-+Examples:
-+
-+	cfgchip: syscon@1417c {
-+		compatible = "ti,da830-cfgchip", "syscon", "simple-mfd";
-+		reg = <0x1417c 0x14>;
-+
-+		usb0_phy_clk: usb0-phy-clock {
-+			compatible = "ti,da830-usb0-phy-clock";
-+			#clock-cells = <0>;
-+			clocks = <&usb_refclkin>, <&pll0_aux_clk>, <&psc1 1>;
-+			clock-names = "usb_refclkin", "auxclk", "usb0_lpsc";
-+			clock-output-names = "usb0_phy_clk";
-+		};
-+
-+		usb1_phy_clk: usb1-phy-clock {
-+			compatible = "ti,da830-usb1-phy-clock";
-+			#clock-cells = <0>;
-+			clocks = <&usb0_phy_clk>, <&usb_refclkin>;
-+			clock-names = "usb0_phy", "usb_refclkin";
-+			clock-output-names = "usb1_phy_clk";
-+		};
-+	};
-+
-+Also see:
-+- Documentation/devicetree/bindings/clock/clock-bindings.txt
++	clk_register_fixed_rate(NULL, "ref_clk", NULL, 0, DM644X_REF_FREQ);
++	dm644x_pll_clk_init(pll1, pll2);
++	dm644x_psc_clk_init(psc);
++#else
+ 	davinci_clk_init(dm644x_clks);
++#endif
+ 	davinci_timer_init();
+ }
+ 
 -- 
 2.7.4
