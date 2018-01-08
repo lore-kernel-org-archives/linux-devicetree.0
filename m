@@ -1,78 +1,77 @@
-From: Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v3 1/4] media: ov5695: add support for OV5695 sensor
-Date: Mon,  8 Jan 2018 21:36:04 +0800
-Message-ID: <1515418567-14406-1-git-send-email-zhengsq@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ddl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: Shunqian Zheng <zhengsq@rock-chips.com>
+Subject: [PATCH v3 3/4] media: ov2685: add support for OV2685 sensor
+Date: Mon,  8 Jan 2018 21:36:06 +0800
+Message-ID: <1515418567-14406-3-git-send-email-zhengsq@rock-chips.com>
+References: <1515418567-14406-1-git-send-email-zhengsq@rock-chips.com>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1515418567-14406-1-git-send-email-zhengsq@rock-chips.com>
+Sender: linux-media-owner@vger.kernel.org
+To: mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, ddl@rock-chips.com, tfiga@chromium.org, Shunqian Zheng <zhengsq@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds driver for Omnivision's ov5695 sensor,
-the driver supports following features:
- - supported resolutions
-   + 2592x1944 at 30fps
-   + 1920x1080 at 30fps
-   + 1296x972 at 60fps
-   + 1280x720 at 30fps
-   + 640x480 at 120fps
- - test patterns
- - manual exposure/gain(analog and digital) control
- - vblank and hblank
- - media controller
- - runtime pm
+This patch adds driver for Omnivision's ov2685 sensor.
+Though the ov2685 can output yuv data, this driver only
+supports the raw bayer format, including the following features:
+  - output 1600x1200 at 30fps
+  - test patterns
+  - manual exposure/gain control
+  - vblank and hblank
+  - media controller
+  - runtime pm
 
-Signed-off-by: Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Signed-off-by: Shunqian Zheng <zhengsq@rock-chips.com>
 ---
- drivers/media/i2c/Kconfig  |   11 +
- drivers/media/i2c/Makefile |    1 +
- drivers/media/i2c/ov5695.c | 1392 ++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 1404 insertions(+)
- create mode 100644 drivers/media/i2c/ov5695.c
+ drivers/media/i2c/Kconfig  |  12 +
+ drivers/media/i2c/Makefile |   1 +
+ drivers/media/i2c/ov2685.c | 838 +++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 851 insertions(+)
+ create mode 100644 drivers/media/i2c/ov2685.c
 
 diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
-index 3c6d642..55b37c8 100644
+index 55b37c8..63a175d 100644
 --- a/drivers/media/i2c/Kconfig
 +++ b/drivers/media/i2c/Kconfig
-@@ -645,6 +645,17 @@ config VIDEO_OV5670
+@@ -586,6 +586,18 @@ config VIDEO_OV2659
  	  To compile this driver as a module, choose M here: the
- 	  module will be called ov5670.
+ 	  module will be called ov2659.
  
-+config VIDEO_OV5695
-+	tristate "OmniVision OV5695 sensor support"
-+	depends on I2C && VIDEO_V4L2
++config VIDEO_OV2685
++	tristate "OmniVision OV2685 sensor support"
++	depends on VIDEO_V4L2 && I2C && MEDIA_CONTROLLER
 +	depends on MEDIA_CAMERA_SUPPORT
++	select V4L2_FWNODE
 +	---help---
 +	  This is a Video4Linux2 sensor-level driver for the OmniVision
-+	  OV5695 camera.
++	  OV2685 camera.
 +
 +	  To compile this driver as a module, choose M here: the
-+	  module will be called ov5695.
++	  module will be called ov2685.
 +
- config VIDEO_OV7640
- 	tristate "OmniVision OV7640 sensor support"
- 	depends on I2C && VIDEO_V4L2
+ config VIDEO_OV5640
+ 	tristate "OmniVision OV5640 sensor support"
+ 	depends on OF
 diff --git a/drivers/media/i2c/Makefile b/drivers/media/i2c/Makefile
-index 548a9ef..a063030 100644
+index a063030..3054c69 100644
 --- a/drivers/media/i2c/Makefile
 +++ b/drivers/media/i2c/Makefile
-@@ -65,6 +65,7 @@ obj-$(CONFIG_VIDEO_OV5640) += ov5640.o
+@@ -61,6 +61,7 @@ obj-$(CONFIG_VIDEO_SONY_BTF_MPX) += sony-btf-mpx.o
+ obj-$(CONFIG_VIDEO_UPD64031A) += upd64031a.o
+ obj-$(CONFIG_VIDEO_UPD64083) += upd64083.o
+ obj-$(CONFIG_VIDEO_OV2640) += ov2640.o
++obj-$(CONFIG_VIDEO_OV2685) += ov2685.o
+ obj-$(CONFIG_VIDEO_OV5640) += ov5640.o
  obj-$(CONFIG_VIDEO_OV5645) += ov5645.o
  obj-$(CONFIG_VIDEO_OV5647) += ov5647.o
- obj-$(CONFIG_VIDEO_OV5670) += ov5670.o
-+obj-$(CONFIG_VIDEO_OV5695) += ov5695.o
- obj-$(CONFIG_VIDEO_OV6650) += ov6650.o
- obj-$(CONFIG_VIDEO_OV7640) += ov7640.o
- obj-$(CONFIG_VIDEO_OV7670) += ov7670.o
-diff --git a/drivers/media/i2c/ov5695.c b/drivers/media/i2c/ov5695.c
+diff --git a/drivers/media/i2c/ov2685.c b/drivers/media/i2c/ov2685.c
 new file mode 100644
-index 0000000..7e8bd82
+index 0000000..e0faaab
 --- /dev/null
-+++ b/drivers/media/i2c/ov5695.c
-@@ -0,0 +1,1392 @@
++++ b/drivers/media/i2c/ov2685.c
+@@ -0,0 +1,838 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * ov5695 driver
++ * ov2685 driver
 + *
 + * Copyright (C) 2017 Fuzhou Rockchip Electronics Co., Ltd.
 + */
@@ -91,683 +90,225 @@ index 0000000..7e8bd82
 +#include <media/v4l2-ctrls.h>
 +#include <media/v4l2-subdev.h>
 +
-+#ifndef V4L2_CID_DIGITAL_GAIN
-+#define V4L2_CID_DIGITAL_GAIN		V4L2_CID_GAIN
-+#endif
++#define CHIP_ID				0x2685
++#define OV2685_REG_CHIP_ID		0x300a
 +
-+/* 45Mhz * 4 Binning */
-+#define OV5695_PIXEL_RATE		(45 * 1000 * 1000 * 4)
-+#define CHIP_ID				0x005695
-+#define OV5695_REG_CHIP_ID		0x300a
++#define REG_SC_CTRL_MODE		0x0100
++#define     SC_CTRL_MODE_STANDBY	0x0
++#define     SC_CTRL_MODE_STREAMING	BIT(0)
 +
-+#define OV5695_REG_CTRL_MODE		0x0100
-+#define OV5695_MODE_SW_STANDBY		0x0
-+#define OV5695_MODE_STREAMING		BIT(0)
++#define OV2685_REG_EXPOSURE		0x3500
++#define	OV2685_EXPOSURE_MIN		4
++#define	OV2685_EXPOSURE_STEP		1
 +
-+#define OV5695_REG_EXPOSURE		0x3500
-+#define	OV5695_EXPOSURE_MIN		4
-+#define	OV5695_EXPOSURE_STEP		1
-+#define OV5695_VTS_MAX			0x7fff
++#define OV2685_REG_VTS			0x380e
++#define OV2685_VTS_MAX			0x7fff
 +
-+#define OV5695_REG_ANALOG_GAIN		0x3509
-+#define	ANALOG_GAIN_MIN			0x10
-+#define	ANALOG_GAIN_MAX			0xf8
-+#define	ANALOG_GAIN_STEP		1
-+#define	ANALOG_GAIN_DEFAULT		0xf8
++#define OV2685_REG_GAIN			0x350a
++#define OV2685_GAIN_MIN			0
++#define OV2685_GAIN_MAX			0x07ff
++#define OV2685_GAIN_STEP		0x1
++#define OV2685_GAIN_DEFAULT		0x0036
 +
-+#define OV5695_REG_DIGI_GAIN_H		0x350a
-+#define OV5695_REG_DIGI_GAIN_L		0x350b
-+#define OV5695_DIGI_GAIN_L_MASK		0x3f
-+#define OV5695_DIGI_GAIN_H_SHIFT	6
-+#define OV5695_DIGI_GAIN_MIN		0
-+#define OV5695_DIGI_GAIN_MAX		(0x4000 - 1)
-+#define OV5695_DIGI_GAIN_STEP		1
-+#define OV5695_DIGI_GAIN_DEFAULT	1024
-+
-+#define OV5695_REG_TEST_PATTERN		0x4503
-+#define	OV5695_TEST_PATTERN_ENABLE	0x80
-+#define	OV5695_TEST_PATTERN_DISABLE	0x0
-+
-+#define OV5695_REG_VTS			0x380e
++#define OV2685_REG_TEST_PATTERN		0x5080
++#define OV2685_TEST_PATTERN_DISABLED		0x00
++#define OV2685_TEST_PATTERN_COLOR_BAR		0x80
++#define OV2685_TEST_PATTERN_RANDOM		0x81
++#define OV2685_TEST_PATTERN_COLOR_BAR_FADE	0x88
++#define OV2685_TEST_PATTERN_BW_SQUARE		0x92
++#define OV2685_TEST_PATTERN_COLOR_SQUARE	0x82
 +
 +#define REG_NULL			0xFFFF
 +
-+#define OV5695_REG_VALUE_08BIT		1
-+#define OV5695_REG_VALUE_16BIT		2
-+#define OV5695_REG_VALUE_24BIT		3
++#define OV2685_REG_VALUE_08BIT		1
++#define OV2685_REG_VALUE_16BIT		2
++#define OV2685_REG_VALUE_24BIT		3
 +
-+#define OV5695_LANES			2
-+#define OV5695_BITS_PER_SAMPLE		10
++#define OV2685_LANES			1
++#define OV2685_BITS_PER_SAMPLE		10
 +
 +struct regval {
 +	u16 addr;
 +	u8 val;
 +};
 +
-+struct ov5695_mode {
++struct ov2685_mode {
 +	u32 width;
 +	u32 height;
-+	u32 max_fps;
++	u32 exp_def;
 +	u32 hts_def;
 +	u32 vts_def;
-+	u32 exp_def;
 +	const struct regval *reg_list;
 +};
 +
-+struct ov5695 {
++struct ov2685 {
 +	struct i2c_client	*client;
 +	struct clk		*xvclk;
-+	struct regulator        *avdd_regulator;
-+	struct regulator        *dovdd_regulator;
-+	struct regulator        *dvdd_regulator;
++	struct regulator	*avdd_regulator;	/* Analog power */
++	struct regulator	*dovdd_regulator;	/* Digital I/O power */
++	struct regulator	*dvdd_regulator;	/* Digital core power */
 +	struct gpio_desc	*reset_gpio;
 +
++	bool			streaming;
++	struct mutex		mutex;
 +	struct v4l2_subdev	subdev;
 +	struct media_pad	pad;
-+	struct v4l2_ctrl_handler ctrl_handler;
-+	struct v4l2_ctrl	*exposure;
 +	struct v4l2_ctrl	*anal_gain;
-+	struct v4l2_ctrl	*digi_gain;
++	struct v4l2_ctrl	*exposure;
 +	struct v4l2_ctrl	*hblank;
 +	struct v4l2_ctrl	*vblank;
 +	struct v4l2_ctrl	*test_pattern;
-+	struct mutex		mutex;
-+	bool			streaming;
-+	const struct ov5695_mode *cur_mode;
++	struct v4l2_ctrl_handler ctrl_handler;
++
++	const struct ov2685_mode *cur_mode;
 +};
 +
-+#define to_ov5695(sd) container_of(sd, struct ov5695, subdev)
++#define to_ov2685(sd) container_of(sd, struct ov2685, subdev)
 +
-+/*
-+ * Xclk 24Mhz
-+ * Pclk 45Mhz
-+ * linelength 672(0x2a0)
-+ * framelength 2232(0x8b8)
-+ * grabwindow_width 1296
-+ * grabwindow_height 972
-+ * max_framerate 30fps
-+ * mipi_datarate per lane 840Mbps
-+ */
-+static const struct regval ov5695_global_regs[] = {
++/* PLL settings bases on 24M xvclk */
++static struct regval ov2685_1600x1200_regs[] = {
 +	{0x0103, 0x01},
 +	{0x0100, 0x00},
-+	{0x0300, 0x04},
-+	{0x0301, 0x00},
-+	{0x0302, 0x69},
-+	{0x0303, 0x00},
-+	{0x0304, 0x00},
-+	{0x0305, 0x01},
-+	{0x0307, 0x00},
-+	{0x030b, 0x00},
-+	{0x030c, 0x00},
-+	{0x030d, 0x1e},
-+	{0x030e, 0x04},
-+	{0x030f, 0x03},
-+	{0x0312, 0x01},
-+	{0x3000, 0x00},
-+	{0x3002, 0xa1},
-+	{0x0308, 0x00},
-+	{0x0310, 0x00},
-+	{0x3022, 0x51},
-+	{0x3106, 0x15},
-+	{0x3107, 0x01},
-+	{0x3108, 0x05},
-+	{0x3500, 0x00},
-+	{0x3501, 0x45},
-+	{0x3502, 0x00},
-+	{0x3503, 0x08},
-+	{0x3504, 0x03},
-+	{0x3505, 0x8c},
-+	{0x3507, 0x03},
-+	{0x3508, 0x00},
-+	{0x3509, 0x10},
-+	{0x350c, 0x00},
-+	{0x350d, 0x80},
-+	{0x3510, 0x00},
-+	{0x3511, 0x02},
-+	{0x3512, 0x00},
-+	{0x3601, 0x55},
-+	{0x3602, 0x58},
-+	{0x3614, 0x30},
-+	{0x3615, 0x77},
-+	{0x3621, 0x08},
-+	{0x3624, 0x40},
-+	{0x3633, 0x0c},
-+	{0x3634, 0x0c},
-+	{0x3635, 0x0c},
-+	{0x3636, 0x0c},
-+	{0x3638, 0x00},
-+	{0x3639, 0x00},
-+	{0x363a, 0x00},
-+	{0x363b, 0x00},
-+	{0x363c, 0xff},
-+	{0x363d, 0xfa},
-+	{0x3650, 0x44},
-+	{0x3651, 0x44},
-+	{0x3652, 0x44},
-+	{0x3653, 0x44},
-+	{0x3654, 0x44},
-+	{0x3655, 0x44},
-+	{0x3656, 0x44},
-+	{0x3657, 0x44},
-+	{0x3660, 0x00},
-+	{0x3661, 0x00},
-+	{0x3662, 0x00},
-+	{0x366a, 0x00},
-+	{0x366e, 0x0c},
-+	{0x3673, 0x04},
-+	{0x3700, 0x14},
-+	{0x3703, 0x0c},
-+	{0x3715, 0x01},
-+	{0x3733, 0x10},
-+	{0x3734, 0x40},
-+	{0x373f, 0xa0},
-+	{0x3765, 0x20},
-+	{0x37a1, 0x1d},
-+	{0x37a8, 0x26},
-+	{0x37ab, 0x14},
-+	{0x37c2, 0x04},
-+	{0x37cb, 0x09},
-+	{0x37cc, 0x13},
-+	{0x37cd, 0x1f},
-+	{0x37ce, 0x1f},
++	{0x3002, 0x00},
++	{0x3016, 0x1c},
++	{0x3018, 0x44},
++	{0x301d, 0xf0},
++	{0x3020, 0x00},
++	{0x3082, 0x37},
++	{0x3083, 0x03},
++	{0x3084, 0x09},
++	{0x3085, 0x04},
++	{0x3086, 0x00},
++	{0x3087, 0x00},
++	{0x3501, 0x4e},
++	{0x3502, 0xe0},
++	{0x3503, 0x07},
++	{0x350b, 0x36},
++	{0x3600, 0xb4},
++	{0x3603, 0x35},
++	{0x3604, 0x24},
++	{0x3605, 0x00},
++	{0x3620, 0x24},
++	{0x3621, 0x34},
++	{0x3622, 0x03},
++	{0x3628, 0x10},
++	{0x3705, 0x3c},
++	{0x370a, 0x21},
++	{0x370c, 0x50},
++	{0x370d, 0xc0},
++	{0x3717, 0x58},
++	{0x3718, 0x80},
++	{0x3720, 0x00},
++	{0x3721, 0x09},
++	{0x3722, 0x06},
++	{0x3723, 0x59},
++	{0x3738, 0x99},
++	{0x3781, 0x80},
++	{0x3784, 0x0c},
++	{0x3789, 0x60},
 +	{0x3800, 0x00},
 +	{0x3801, 0x00},
 +	{0x3802, 0x00},
 +	{0x3803, 0x00},
-+	{0x3804, 0x0a},
-+	{0x3805, 0x3f},
-+	{0x3806, 0x07},
-+	{0x3807, 0xaf},
-+	{0x3808, 0x05},
-+	{0x3809, 0x10},
-+	{0x380a, 0x03},
-+	{0x380b, 0xcc},
-+	{0x380c, 0x02},
-+	{0x380d, 0xa0},
-+	{0x380e, 0x08},
-+	{0x380f, 0xb8},
-+	{0x3810, 0x00},
-+	{0x3811, 0x06},
-+	{0x3812, 0x00},
-+	{0x3813, 0x06},
-+	{0x3814, 0x03},
-+	{0x3815, 0x01},
-+	{0x3816, 0x03},
-+	{0x3817, 0x01},
-+	{0x3818, 0x00},
-+	{0x3819, 0x00},
-+	{0x381a, 0x00},
-+	{0x381b, 0x01},
-+	{0x3820, 0x8b},
-+	{0x3821, 0x01},
-+	{0x3c80, 0x08},
-+	{0x3c82, 0x00},
-+	{0x3c83, 0x00},
-+	{0x3c88, 0x00},
-+	{0x3d85, 0x14},
-+	{0x3f02, 0x08},
-+	{0x3f03, 0x10},
-+	{0x4008, 0x02},
-+	{0x4009, 0x09},
-+	{0x404e, 0x20},
-+	{0x4501, 0x00},
-+	{0x4502, 0x10},
-+	{0x4800, 0x00},
-+	{0x481f, 0x2a},
-+	{0x4837, 0x13},
-+	{0x5000, 0x17},
-+	{0x5780, 0x3e},
-+	{0x5781, 0x0f},
-+	{0x5782, 0x44},
-+	{0x5783, 0x02},
-+	{0x5784, 0x01},
-+	{0x5785, 0x01},
-+	{0x5786, 0x00},
-+	{0x5787, 0x04},
-+	{0x5788, 0x02},
-+	{0x5789, 0x0f},
-+	{0x578a, 0xfd},
-+	{0x578b, 0xf5},
-+	{0x578c, 0xf5},
-+	{0x578d, 0x03},
-+	{0x578e, 0x08},
-+	{0x578f, 0x0c},
-+	{0x5790, 0x08},
-+	{0x5791, 0x06},
-+	{0x5792, 0x00},
-+	{0x5793, 0x52},
-+	{0x5794, 0xa3},
-+	{0x5b00, 0x00},
-+	{0x5b01, 0x1c},
-+	{0x5b02, 0x00},
-+	{0x5b03, 0x7f},
-+	{0x5b05, 0x6c},
-+	{0x5e10, 0xfc},
-+	{0x4010, 0xf1},
-+	{0x3503, 0x08},
-+	{0x3505, 0x8c},
-+	{0x3507, 0x03},
-+	{0x3508, 0x00},
-+	{0x3509, 0xf8},
-+	{REG_NULL, 0x00},
-+};
-+
-+/*
-+ * Xclk 24Mhz
-+ * Pclk 45Mhz
-+ * linelength 740(0x2e4)
-+ * framelength 2024(0x7e8)
-+ * grabwindow_width 2592
-+ * grabwindow_height 1944
-+ * max_framerate 30fps
-+ * mipi_datarate per lane 840Mbps
-+ */
-+static const struct regval ov5695_2592x1944_regs[] = {
-+	{0x3501, 0x7e},
-+	{0x366e, 0x18},
-+	{0x3800, 0x00},
-+	{0x3801, 0x00},
-+	{0x3802, 0x00},
-+	{0x3803, 0x04},
-+	{0x3804, 0x0a},
-+	{0x3805, 0x3f},
-+	{0x3806, 0x07},
-+	{0x3807, 0xab},
-+	{0x3808, 0x0a},
-+	{0x3809, 0x20},
-+	{0x380a, 0x07},
-+	{0x380b, 0x98},
-+	{0x380c, 0x02},
-+	{0x380d, 0xe4},
-+	{0x380e, 0x07},
-+	{0x380f, 0xe8},
-+	{0x3811, 0x06},
-+	{0x3813, 0x08},
-+	{0x3814, 0x01},
-+	{0x3816, 0x01},
-+	{0x3817, 0x01},
-+	{0x3820, 0x88},
-+	{0x3821, 0x00},
-+	{0x4501, 0x00},
-+	{0x4008, 0x04},
-+	{0x4009, 0x13},
-+	{REG_NULL, 0x00},
-+};
-+
-+/*
-+ * Xclk 24Mhz
-+ * Pclk 45Mhz
-+ * linelength 672(0x2a0)
-+ * framelength 2232(0x8b8)
-+ * grabwindow_width 1920
-+ * grabwindow_height 1080
-+ * max_framerate 30fps
-+ * mipi_datarate per lane 840Mbps
-+ */
-+static const struct regval ov5695_1920x1080_regs[] = {
-+	{0x3501, 0x45},
-+	{0x366e, 0x18},
-+	{0x3800, 0x01},
-+	{0x3801, 0x50},
-+	{0x3802, 0x01},
-+	{0x3803, 0xb8},
-+	{0x3804, 0x08},
-+	{0x3805, 0xef},
-+	{0x3806, 0x05},
-+	{0x3807, 0xf7},
-+	{0x3808, 0x07},
-+	{0x3809, 0x80},
++	{0x3804, 0x06},
++	{0x3805, 0x4f},
++	{0x3806, 0x04},
++	{0x3807, 0xbf},
++	{0x3808, 0x06},
++	{0x3809, 0x40},
 +	{0x380a, 0x04},
-+	{0x380b, 0x38},
-+	{0x380c, 0x02},
-+	{0x380d, 0xa0},
-+	{0x380e, 0x08},
-+	{0x380f, 0xb8},
-+	{0x3811, 0x06},
-+	{0x3813, 0x04},
-+	{0x3814, 0x01},
-+	{0x3816, 0x01},
-+	{0x3817, 0x01},
-+	{0x3820, 0x88},
-+	{0x3821, 0x00},
-+	{0x4501, 0x00},
-+	{0x4008, 0x04},
-+	{0x4009, 0x13},
-+	{REG_NULL, 0x00}
-+};
-+
-+/*
-+ * Xclk 24Mhz
-+ * Pclk 45Mhz
-+ * linelength 740(0x02e4)
-+ * framelength 1012(0x03f4)
-+ * grabwindow_width 1296
-+ * grabwindow_height 972
-+ * max_framerate 60fps
-+ * mipi_datarate per lane 840Mbps
-+ */
-+static const struct regval ov5695_1296x972_regs[] = {
-+	{0x0103, 0x01},
-+	{0x0100, 0x00},
-+	{0x0300, 0x04},
-+	{0x0301, 0x00},
-+	{0x0302, 0x69},
-+	{0x0303, 0x00},
-+	{0x0304, 0x00},
-+	{0x0305, 0x01},
-+	{0x0307, 0x00},
-+	{0x030b, 0x00},
-+	{0x030c, 0x00},
-+	{0x030d, 0x1e},
-+	{0x030e, 0x04},
-+	{0x030f, 0x03},
-+	{0x0312, 0x01},
-+	{0x3000, 0x00},
-+	{0x3002, 0x21},
-+	{0x3016, 0x32},
-+	{0x3022, 0x51},
-+	{0x3106, 0x15},
-+	{0x3107, 0x01},
-+	{0x3108, 0x05},
-+	{0x3500, 0x00},
-+	{0x3501, 0x3e},
-+	{0x3502, 0x00},
-+	{0x3503, 0x08},
-+	{0x3504, 0x03},
-+	{0x3505, 0x8c},
-+	{0x3507, 0x03},
-+	{0x3508, 0x00},
-+	{0x3509, 0x10},
-+	{0x350c, 0x00},
-+	{0x350d, 0x80},
-+	{0x3510, 0x00},
-+	{0x3511, 0x02},
-+	{0x3512, 0x00},
-+	{0x3601, 0x55},
-+	{0x3602, 0x58},
-+	{0x3611, 0x58},
-+	{0x3614, 0x30},
-+	{0x3615, 0x77},
-+	{0x3621, 0x08},
-+	{0x3624, 0x40},
-+	{0x3633, 0x0c},
-+	{0x3634, 0x0c},
-+	{0x3635, 0x0c},
-+	{0x3636, 0x0c},
-+	{0x3638, 0x00},
-+	{0x3639, 0x00},
-+	{0x363a, 0x00},
-+	{0x363b, 0x00},
-+	{0x363c, 0xff},
-+	{0x363d, 0xfa},
-+	{0x3650, 0x44},
-+	{0x3651, 0x44},
-+	{0x3652, 0x44},
-+	{0x3653, 0x44},
-+	{0x3654, 0x44},
-+	{0x3655, 0x44},
-+	{0x3656, 0x44},
-+	{0x3657, 0x44},
-+	{0x3660, 0x00},
-+	{0x3661, 0x00},
-+	{0x3662, 0x00},
-+	{0x366a, 0x00},
-+	{0x366e, 0x0c},
-+	{0x3673, 0x04},
-+	{0x3700, 0x14},
-+	{0x3703, 0x0c},
-+	{0x3706, 0x24},
-+	{0x3714, 0x27},
-+	{0x3715, 0x01},
-+	{0x3716, 0x00},
-+	{0x3717, 0x02},
-+	{0x3733, 0x10},
-+	{0x3734, 0x40},
-+	{0x373f, 0xa0},
-+	{0x3765, 0x20},
-+	{0x37a1, 0x1d},
-+	{0x37a8, 0x26},
-+	{0x37ab, 0x14},
-+	{0x37c2, 0x04},
-+	{0x37c3, 0xf0},
-+	{0x37cb, 0x09},
-+	{0x37cc, 0x13},
-+	{0x37cd, 0x1f},
-+	{0x37ce, 0x1f},
-+	{0x3800, 0x00},
-+	{0x3801, 0x00},
-+	{0x3802, 0x00},
-+	{0x3803, 0x00},
-+	{0x3804, 0x0a},
-+	{0x3805, 0x3f},
-+	{0x3806, 0x07},
-+	{0x3807, 0xaf},
-+	{0x3808, 0x05},
-+	{0x3809, 0x10},
-+	{0x380a, 0x03},
-+	{0x380b, 0xcc},
-+	{0x380c, 0x02},
-+	{0x380d, 0xe4},
-+	{0x380e, 0x03},
-+	{0x380f, 0xf4},
++	{0x380b, 0xb0},
++	{0x380c, 0x06},
++	{0x380d, 0xa4},
++	{0x380e, 0x05},
++	{0x380f, 0x0e},
 +	{0x3810, 0x00},
-+	{0x3811, 0x00},
++	{0x3811, 0x08},
 +	{0x3812, 0x00},
-+	{0x3813, 0x06},
-+	{0x3814, 0x03},
-+	{0x3815, 0x01},
-+	{0x3816, 0x03},
-+	{0x3817, 0x01},
-+	{0x3818, 0x00},
-+	{0x3819, 0x00},
-+	{0x381a, 0x00},
-+	{0x381b, 0x01},
-+	{0x3820, 0x8b},
-+	{0x3821, 0x01},
-+	{0x3c80, 0x08},
-+	{0x3c82, 0x00},
-+	{0x3c83, 0x00},
-+	{0x3c88, 0x00},
-+	{0x3d85, 0x14},
-+	{0x3f02, 0x08},
-+	{0x3f03, 0x10},
++	{0x3813, 0x08},
++	{0x3814, 0x11},
++	{0x3815, 0x11},
++	{0x3819, 0x04},
++	{0x3820, 0xc0},
++	{0x3821, 0x00},
++	{0x3a06, 0x01},
++	{0x3a07, 0x84},
++	{0x3a08, 0x01},
++	{0x3a09, 0x43},
++	{0x3a0a, 0x24},
++	{0x3a0b, 0x60},
++	{0x3a0c, 0x28},
++	{0x3a0d, 0x60},
++	{0x3a0e, 0x04},
++	{0x3a0f, 0x8c},
++	{0x3a10, 0x05},
++	{0x3a11, 0x0c},
++	{0x4000, 0x81},
++	{0x4001, 0x40},
 +	{0x4008, 0x02},
 +	{0x4009, 0x09},
-+	{0x404e, 0x20},
-+	{0x4501, 0x00},
-+	{0x4502, 0x10},
-+	{0x4800, 0x00},
-+	{0x481f, 0x2a},
-+	{0x4837, 0x13},
-+	{0x5000, 0x13},
-+	{0x5780, 0x3e},
-+	{0x5781, 0x0f},
-+	{0x5782, 0x44},
-+	{0x5783, 0x02},
-+	{0x5784, 0x01},
-+	{0x5785, 0x01},
-+	{0x5786, 0x00},
-+	{0x5787, 0x04},
-+	{0x5788, 0x02},
-+	{0x5789, 0x0f},
-+	{0x578a, 0xfd},
-+	{0x578b, 0xf5},
-+	{0x578c, 0xf5},
-+	{0x578d, 0x03},
-+	{0x578e, 0x08},
-+	{0x578f, 0x0c},
-+	{0x5790, 0x08},
-+	{0x5791, 0x06},
-+	{0x5792, 0x00},
-+	{0x5793, 0x52},
-+	{0x5794, 0xa3},
-+	{0x5b00, 0x00},
-+	{0x5b01, 0x1c},
-+	{0x5b02, 0x00},
-+	{0x5b03, 0x7f},
-+	{0x5b05, 0x6c},
-+	{0x5e10, 0xfc},
-+	{0x4010, 0xf1},
-+	{0x3503, 0x08},
-+	{0x3505, 0x8c},
-+	{0x3507, 0x03},
-+	{0x3508, 0x00},
-+	{0x3509, 0xf8},
-+	{0x0100, 0x01},
++	{0x4300, 0x00},
++	{0x430e, 0x00},
++	{0x4602, 0x02},
++	{0x481b, 0x40},
++	{0x481f, 0x40},
++	{0x4837, 0x18},
++	{0x5000, 0x1f},
++	{0x5001, 0x05},
++	{0x5002, 0x30},
++	{0x5003, 0x04},
++	{0x5004, 0x00},
++	{0x5005, 0x0c},
++	{0x5280, 0x15},
++	{0x5281, 0x06},
++	{0x5282, 0x06},
++	{0x5283, 0x08},
++	{0x5284, 0x1c},
++	{0x5285, 0x1c},
++	{0x5286, 0x20},
++	{0x5287, 0x10},
 +	{REG_NULL, 0x00}
 +};
 +
-+/*
-+ * Xclk 24Mhz
-+ * Pclk 45Mhz
-+ * linelength 672(0x2a0)
-+ * framelength 2232(0x8b8)
-+ * grabwindow_width 1280
-+ * grabwindow_height 720
-+ * max_framerate 30fps
-+ * mipi_datarate per lane 840Mbps
-+ */
-+static const struct regval ov5695_1280x720_regs[] = {
-+	{0x3501, 0x45},
-+	{0x366e, 0x0c},
-+	{0x3800, 0x00},
-+	{0x3801, 0x00},
-+	{0x3802, 0x01},
-+	{0x3803, 0x00},
-+	{0x3804, 0x0a},
-+	{0x3805, 0x3f},
-+	{0x3806, 0x06},
-+	{0x3807, 0xaf},
-+	{0x3808, 0x05},
-+	{0x3809, 0x00},
-+	{0x380a, 0x02},
-+	{0x380b, 0xd0},
-+	{0x380c, 0x02},
-+	{0x380d, 0xa0},
-+	{0x380e, 0x08},
-+	{0x380f, 0xb8},
-+	{0x3811, 0x06},
-+	{0x3813, 0x02},
-+	{0x3814, 0x03},
-+	{0x3816, 0x03},
-+	{0x3817, 0x01},
-+	{0x3820, 0x8b},
-+	{0x3821, 0x01},
-+	{0x4501, 0x00},
-+	{0x4008, 0x02},
-+	{0x4009, 0x09},
-+	{REG_NULL, 0x00}
-+};
-+
-+/*
-+ * Xclk 24Mhz
-+ * Pclk 45Mhz
-+ * linelength 672(0x2a0)
-+ * framelength 558(0x22e)
-+ * grabwindow_width 640
-+ * grabwindow_height 480
-+ * max_framerate 120fps
-+ * mipi_datarate per lane 840Mbps
-+ */
-+static const struct regval ov5695_640x480_regs[] = {
-+	{0x3501, 0x22},
-+	{0x366e, 0x0c},
-+	{0x3800, 0x00},
-+	{0x3801, 0x00},
-+	{0x3802, 0x00},
-+	{0x3803, 0x08},
-+	{0x3804, 0x0a},
-+	{0x3805, 0x3f},
-+	{0x3806, 0x07},
-+	{0x3807, 0xa7},
-+	{0x3808, 0x02},
-+	{0x3809, 0x80},
-+	{0x380a, 0x01},
-+	{0x380b, 0xe0},
-+	{0x380c, 0x02},
-+	{0x380d, 0xa0},
-+	{0x380e, 0x02},
-+	{0x380f, 0x2e},
-+	{0x3811, 0x06},
-+	{0x3813, 0x04},
-+	{0x3814, 0x07},
-+	{0x3816, 0x05},
-+	{0x3817, 0x03},
-+	{0x3820, 0x8d},
-+	{0x3821, 0x01},
-+	{0x4501, 0x00},
-+	{0x4008, 0x02},
-+	{0x4009, 0x09},
-+	{REG_NULL, 0x00}
-+};
-+
-+static const struct ov5695_mode supported_modes[] = {
-+	{
-+		.width = 2592,
-+		.height = 1944,
-+		.max_fps = 30,
-+		.exp_def = 0x0450,
-+		.hts_def = 0x02e4 * 4,
-+		.vts_def = 0x07e8,
-+		.reg_list = ov5695_2592x1944_regs,
-+	},
-+	{
-+		.width = 1920,
-+		.height = 1080,
-+		.max_fps = 30,
-+		.exp_def = 0x0450,
-+		.hts_def = 0x02a0 * 4,
-+		.vts_def = 0x08b8,
-+		.reg_list = ov5695_1920x1080_regs,
-+	},
-+	{
-+		.width = 1296,
-+		.height = 972,
-+		.max_fps = 60,
-+		.exp_def = 0x03e0,
-+		.hts_def = 0x02e4 * 4,
-+		.vts_def = 0x03f4,
-+		.reg_list = ov5695_1296x972_regs,
-+	},
-+	{
-+		.width = 1280,
-+		.height = 720,
-+		.max_fps = 30,
-+		.exp_def = 0x0450,
-+		.hts_def = 0x02a0 * 4,
-+		.vts_def = 0x08b8,
-+		.reg_list = ov5695_1280x720_regs,
-+	},
-+	{
-+		.width = 640,
-+		.height = 480,
-+		.max_fps = 120,
-+		.exp_def = 0x0450,
-+		.hts_def = 0x02a0 * 4,
-+		.vts_def = 0x022e,
-+		.reg_list = ov5695_640x480_regs,
-+	},
-+};
-+
-+#define OV5695_LINK_FREQ_420MHZ		420000000
++#define OV2685_LINK_FREQ_330MHZ		330000000
 +static const s64 link_freq_menu_items[] = {
-+	OV5695_LINK_FREQ_420MHZ
++	OV2685_LINK_FREQ_330MHZ
 +};
 +
-+static const char * const ov5695_test_pattern_menu[] = {
++static const char * const ov2685_test_pattern_menu[] = {
 +	"Disabled",
-+	"Vertical Color Bar Type 1",
-+	"Vertical Color Bar Type 2",
-+	"Vertical Color Bar Type 3",
-+	"Vertical Color Bar Type 4"
++	"Color Bar",
++	"Color Bar FADE",
++	"Random Data",
++	"Black White Square",
++	"Color Square"
++};
++
++static const int ov2685_test_pattern_val[] = {
++	OV2685_TEST_PATTERN_DISABLED,
++	OV2685_TEST_PATTERN_COLOR_BAR,
++	OV2685_TEST_PATTERN_COLOR_BAR_FADE,
++	OV2685_TEST_PATTERN_RANDOM,
++	OV2685_TEST_PATTERN_BW_SQUARE,
++	OV2685_TEST_PATTERN_COLOR_SQUARE,
++};
++
++static const struct ov2685_mode supported_modes[] = {
++	{
++		.width = 1600,
++		.height = 1200,
++		.exp_def = 0x04ee,
++		.hts_def = 0x06a4,
++		.vts_def = 0x050e,
++		.reg_list = ov2685_1600x1200_regs,
++	},
 +};
 +
 +/* Write registers up to 4 at a time */
-+static int ov5695_write_reg(struct i2c_client *client, u16 reg,
++static int ov2685_write_reg(struct i2c_client *client, u16 reg,
 +			    u32 len, u32 val)
 +{
-+	u32 buf_i, val_i;
++	u32 val_i, buf_i;
 +	u8 buf[6];
 +	u8 *val_p;
 +	__be32 val_be;
@@ -792,22 +333,22 @@ index 0000000..7e8bd82
 +	return 0;
 +}
 +
-+static int ov5695_write_array(struct i2c_client *client,
++static int ov2685_write_array(struct i2c_client *client,
 +			      const struct regval *regs)
 +{
-+	u32 i;
 +	int ret = 0;
++	u32 i;
 +
 +	for (i = 0; ret == 0 && regs[i].addr != REG_NULL; i++)
-+		ret = ov5695_write_reg(client, regs[i].addr,
-+				       OV5695_REG_VALUE_08BIT, regs[i].val);
++		ret = ov2685_write_reg(client, regs[i].addr,
++				       OV2685_REG_VALUE_08BIT, regs[i].val);
 +
 +	return ret;
 +}
 +
 +/* Read registers up to 4 at a time */
-+static int ov5695_read_reg(struct i2c_client *client, u16 reg, unsigned int len,
-+			   u32 *val)
++static int ov2685_read_reg(struct i2c_client *client, u16 reg,
++			   u32 len, u32 *val)
 +{
 +	struct i2c_msg msgs[2];
 +	u8 *data_be_p;
@@ -840,351 +381,249 @@ index 0000000..7e8bd82
 +	return 0;
 +}
 +
-+static int ov5695_get_reso_dist(const struct ov5695_mode *mode,
-+				struct v4l2_mbus_framefmt *framefmt)
++static void ov2685_fill_fmt(struct ov2685 *ov2685,
++			    struct v4l2_mbus_framefmt *fmt)
 +{
-+	return abs(mode->width - framefmt->width) +
-+	       abs(mode->height - framefmt->height);
++	fmt->code = MEDIA_BUS_FMT_SBGGR10_1X10;
++	fmt->width = ov2685->cur_mode->width;
++	fmt->height = ov2685->cur_mode->height;
++	fmt->field = V4L2_FIELD_NONE;
 +}
 +
-+static const struct ov5695_mode *
-+ov5695_find_best_fit(struct v4l2_subdev_format *fmt)
-+{
-+	struct v4l2_mbus_framefmt *framefmt = &fmt->format;
-+	int dist;
-+	int cur_best_fit = 0;
-+	int cur_best_fit_dist = -1;
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(supported_modes); i++) {
-+		dist = ov5695_get_reso_dist(&supported_modes[i], framefmt);
-+		if (cur_best_fit_dist == -1 || dist < cur_best_fit_dist) {
-+			cur_best_fit_dist = dist;
-+			cur_best_fit = i;
-+		}
-+	}
-+
-+	return &supported_modes[cur_best_fit];
-+}
-+
-+static int ov5695_set_fmt(struct v4l2_subdev *sd,
++static int ov2685_set_fmt(struct v4l2_subdev *sd,
 +			  struct v4l2_subdev_pad_config *cfg,
 +			  struct v4l2_subdev_format *fmt)
 +{
-+	struct ov5695 *ov5695 = to_ov5695(sd);
-+	const struct ov5695_mode *mode;
-+	s64 h_blank, vblank_def;
++	struct ov2685 *ov2685 = to_ov2685(sd);
++	struct v4l2_mbus_framefmt *mbus_fmt = &fmt->format;
 +
-+	mutex_lock(&ov5695->mutex);
-+
-+	mode = ov5695_find_best_fit(fmt);
-+	fmt->format.code = MEDIA_BUS_FMT_SBGGR10_1X10;
-+	fmt->format.width = mode->width;
-+	fmt->format.height = mode->height;
-+	fmt->format.field = V4L2_FIELD_NONE;
-+	if (fmt->which == V4L2_SUBDEV_FORMAT_TRY) {
-+#ifdef CONFIG_VIDEO_V4L2_SUBDEV_API
-+		*v4l2_subdev_get_try_format(sd, cfg, fmt->pad) = fmt->format;
-+#else
-+		mutex_unlock(&ov5695->mutex);
-+		return -ENOTTY;
-+#endif
-+	} else {
-+		ov5695->cur_mode = mode;
-+		h_blank = mode->hts_def - mode->width;
-+		__v4l2_ctrl_modify_range(ov5695->hblank, h_blank,
-+					 h_blank, 1, h_blank);
-+		vblank_def = mode->vts_def - mode->height;
-+		__v4l2_ctrl_modify_range(ov5695->vblank, vblank_def,
-+					 OV5695_VTS_MAX - mode->height,
-+					 1, vblank_def);
-+	}
-+
-+	mutex_unlock(&ov5695->mutex);
++	ov2685_fill_fmt(ov2685, mbus_fmt);
 +
 +	return 0;
 +}
 +
-+static int ov5695_get_fmt(struct v4l2_subdev *sd,
++static int ov2685_get_fmt(struct v4l2_subdev *sd,
 +			  struct v4l2_subdev_pad_config *cfg,
 +			  struct v4l2_subdev_format *fmt)
 +{
-+	struct ov5695 *ov5695 = to_ov5695(sd);
-+	const struct ov5695_mode *mode = ov5695->cur_mode;
++	struct ov2685 *ov2685 = to_ov2685(sd);
++	struct v4l2_mbus_framefmt *mbus_fmt = &fmt->format;
 +
-+	mutex_lock(&ov5695->mutex);
-+	if (fmt->which == V4L2_SUBDEV_FORMAT_TRY) {
-+#ifdef CONFIG_VIDEO_V4L2_SUBDEV_API
-+		fmt->format = *v4l2_subdev_get_try_format(sd, cfg, fmt->pad);
-+#else
-+		mutex_unlock(&ov5695->mutex);
-+		return -ENOTTY;
-+#endif
-+	} else {
-+		fmt->format.width = mode->width;
-+		fmt->format.height = mode->height;
-+		fmt->format.code = MEDIA_BUS_FMT_SBGGR10_1X10;
-+		fmt->format.field = V4L2_FIELD_NONE;
-+	}
-+	mutex_unlock(&ov5695->mutex);
++	ov2685_fill_fmt(ov2685, mbus_fmt);
 +
 +	return 0;
 +}
 +
-+static int ov5695_enum_mbus_code(struct v4l2_subdev *sd,
++static int ov2685_enum_mbus_code(struct v4l2_subdev *sd,
 +				 struct v4l2_subdev_pad_config *cfg,
 +				 struct v4l2_subdev_mbus_code_enum *code)
 +{
-+	if (code->index != 0)
++	if (code->index >= ARRAY_SIZE(supported_modes))
 +		return -EINVAL;
++
 +	code->code = MEDIA_BUS_FMT_SBGGR10_1X10;
 +
 +	return 0;
 +}
 +
-+static int ov5695_enum_frame_sizes(struct v4l2_subdev *sd,
++static int ov2685_enum_frame_sizes(struct v4l2_subdev *sd,
 +				   struct v4l2_subdev_pad_config *cfg,
 +				   struct v4l2_subdev_frame_size_enum *fse)
 +{
-+	if (fse->index > ARRAY_SIZE(supported_modes))
++	int index = fse->index;
++
++	if (index >= ARRAY_SIZE(supported_modes))
 +		return -EINVAL;
 +
-+	if (fse->code != MEDIA_BUS_FMT_SBGGR10_1X10)
-+		return -EINVAL;
++	fse->code = MEDIA_BUS_FMT_SBGGR10_1X10;
 +
-+	fse->min_width  = supported_modes[fse->index].width;
-+	fse->max_width  = supported_modes[fse->index].width;
-+	fse->max_height = supported_modes[fse->index].height;
-+	fse->min_height = supported_modes[fse->index].height;
++	fse->min_width  = supported_modes[index].width;
++	fse->max_width  = supported_modes[index].width;
++	fse->max_height = supported_modes[index].height;
++	fse->min_height = supported_modes[index].height;
 +
 +	return 0;
 +}
 +
-+static int ov5695_enable_test_pattern(struct ov5695 *ov5695, u32 pattern)
-+{
-+	u32 val;
-+
-+	if (pattern)
-+		val = (pattern - 1) | OV5695_TEST_PATTERN_ENABLE;
-+	else
-+		val = OV5695_TEST_PATTERN_DISABLE;
-+
-+	return ov5695_write_reg(ov5695->client, OV5695_REG_TEST_PATTERN,
-+				OV5695_REG_VALUE_08BIT, val);
-+}
-+
-+static int __ov5695_start_stream(struct ov5695 *ov5695)
-+{
-+	int ret;
-+
-+	ret = ov5695_write_array(ov5695->client, ov5695_global_regs);
-+	if (ret)
-+		return ret;
-+	ret = ov5695_write_array(ov5695->client, ov5695->cur_mode->reg_list);
-+	if (ret)
-+		return ret;
-+
-+	/* In case these controls are set before streaming */
-+	ret = __v4l2_ctrl_handler_setup(&ov5695->ctrl_handler);
-+	if (ret)
-+		return ret;
-+
-+	return ov5695_write_reg(ov5695->client, OV5695_REG_CTRL_MODE,
-+				OV5695_REG_VALUE_08BIT, OV5695_MODE_STREAMING);
-+}
-+
-+static int __ov5695_stop_stream(struct ov5695 *ov5695)
-+{
-+	return ov5695_write_reg(ov5695->client, OV5695_REG_CTRL_MODE,
-+				OV5695_REG_VALUE_08BIT, OV5695_MODE_SW_STANDBY);
-+}
-+
-+static int ov5695_s_stream(struct v4l2_subdev *sd, int on)
-+{
-+	struct ov5695 *ov5695 = to_ov5695(sd);
-+	struct i2c_client *client = ov5695->client;
-+	int ret = 0;
-+
-+	mutex_lock(&ov5695->mutex);
-+	on = !!on;
-+	if (on == ov5695->streaming)
-+		goto unlock_and_return;
-+
-+	if (on) {
-+		ret = pm_runtime_get_sync(&client->dev);
-+		if (ret < 0) {
-+			pm_runtime_put_noidle(&client->dev);
-+			goto unlock_and_return;
-+		}
-+
-+		ret = __ov5695_start_stream(ov5695);
-+		if (ret) {
-+			v4l2_err(sd, "start stream failed while write regs\n");
-+			pm_runtime_put(&client->dev);
-+			goto unlock_and_return;
-+		}
-+	} else {
-+		__ov5695_stop_stream(ov5695);
-+		ret = pm_runtime_put(&client->dev);
-+	}
-+
-+	ov5695->streaming = on;
-+
-+unlock_and_return:
-+	mutex_unlock(&ov5695->mutex);
-+
-+	return ret;
-+}
-+
 +/* Calculate the delay in us by clock rate and clock cycles */
-+static inline u32 ov5695_cal_delay(struct ov5695 *ov5695, u32 cycles)
++static inline u32 ov2685_cal_delay(struct ov2685 *ov2685, u32 cycles)
 +{
-+	return DIV_ROUND_UP(cycles, clk_get_rate(ov5695->xvclk) / 1000 / 1000);
++	return DIV_ROUND_UP(cycles, clk_get_rate(ov2685->xvclk) / 1000 / 1000);
 +}
 +
-+static int __ov5695_power_on(struct ov5695 *ov5695)
++static int __ov2685_power_on(struct ov2685 *ov2685)
 +{
 +	int ret;
 +	u32 delay_us;
-+	struct device *dev = &ov5695->client->dev;
++	struct device *dev = &ov2685->client->dev;
 +
-+	ret = clk_prepare_enable(ov5695->xvclk);
++	ret = clk_prepare_enable(ov2685->xvclk);
 +	if (ret < 0) {
 +		dev_err(dev, "Failed to enable xvclk\n");
 +		return ret;
 +	}
++	clk_set_rate(ov2685->xvclk, 24000000);
 +
-+	gpiod_set_value_cansleep(ov5695->reset_gpio, 1);
-+
++	gpiod_set_value_cansleep(ov2685->reset_gpio, 1);
 +	/* AVDD and DOVDD may rise in any order */
-+	ret = regulator_enable(ov5695->avdd_regulator);
++	ret = regulator_enable(ov2685->avdd_regulator);
 +	if (ret < 0) {
-+		dev_err(dev, "Failed to enable regulator\n");
-+		goto disable_clk;
++		dev_err(dev, "Failed to enable AVDD regulator\n");
++		goto disable_xvclk;
 +	}
-+	ret = regulator_enable(ov5695->dovdd_regulator);
++	ret = regulator_enable(ov2685->dovdd_regulator);
 +	if (ret < 0) {
 +		dev_err(dev, "Failed to enable DOVDD regulator\n");
 +		goto disable_avdd;
 +	}
-+	/* DVDD must rise after AVDD and DOVDD */
-+	ret = regulator_enable(ov5695->dvdd_regulator);
++	ret = regulator_enable(ov2685->dvdd_regulator);
 +	if (ret < 0) {
 +		dev_err(dev, "Failed to enable DVDD regulator\n");
 +		goto disable_dovdd;
 +	}
-+
-+	gpiod_set_value_cansleep(ov5695->reset_gpio, 0);
-+	/* 8192 cycles prior to first SCCB transaction */
-+	delay_us = ov5695_cal_delay(ov5695, 8192);
++	/* The minimum delay between AVDD and reset rising can be 0 */
++	gpiod_set_value_cansleep(ov2685->reset_gpio, 0);
++	/* 8192 xvclk cycles prior to the first SCCB transaction */
++	delay_us = ov2685_cal_delay(ov2685, 8192);
 +	usleep_range(delay_us, delay_us * 2);
++
++	/* HACK: ov2685 would output messy data after reset(R0103),
++	 * writing register before .s_stream() as a workaround
++	 */
++	ret = ov2685_write_array(ov2685->client, ov2685->cur_mode->reg_list);
++	if (ret)
++		goto disable_dvdd;
 +
 +	return 0;
 +
++disable_dvdd:
++	regulator_disable(ov2685->dvdd_regulator);
 +disable_dovdd:
-+	regulator_disable(ov5695->dovdd_regulator);
++	regulator_disable(ov2685->dovdd_regulator);
 +disable_avdd:
-+	regulator_disable(ov5695->avdd_regulator);
-+disable_clk:
-+	clk_disable_unprepare(ov5695->xvclk);
++	regulator_disable(ov2685->avdd_regulator);
++disable_xvclk:
++	clk_disable_unprepare(ov2685->xvclk);
 +
 +	return ret;
 +}
 +
-+static void __ov5695_power_off(struct ov5695 *ov5695)
++static void __ov2685_power_off(struct ov2685 *ov2685)
 +{
-+	clk_disable_unprepare(ov5695->xvclk);
-+	gpiod_set_value_cansleep(ov5695->reset_gpio, 1);
-+	regulator_disable(ov5695->dvdd_regulator);
-+	regulator_disable(ov5695->dovdd_regulator);
-+	regulator_disable(ov5695->avdd_regulator);
++	/* 512 xvclk cycles after the last SCCB transaction or MIPI frame end */
++	u32 delay_us = ov2685_cal_delay(ov2685, 512);
++
++	usleep_range(delay_us, delay_us * 2);
++	clk_disable_unprepare(ov2685->xvclk);
++	gpiod_set_value_cansleep(ov2685->reset_gpio, 1);
++	regulator_disable(ov2685->dvdd_regulator);
++	regulator_disable(ov2685->dovdd_regulator);
++	regulator_disable(ov2685->avdd_regulator);
 +}
 +
-+static int ov5695_runtime_resume(struct device *dev)
++static int ov2685_s_stream(struct v4l2_subdev *sd, int on)
 +{
-+	struct i2c_client *client = to_i2c_client(dev);
-+	struct v4l2_subdev *sd = i2c_get_clientdata(client);
-+	struct ov5695 *ov5695 = to_ov5695(sd);
-+
-+	return __ov5695_power_on(ov5695);
-+}
-+
-+static int ov5695_runtime_suspend(struct device *dev)
-+{
-+	struct i2c_client *client = to_i2c_client(dev);
-+	struct v4l2_subdev *sd = i2c_get_clientdata(client);
-+	struct ov5695 *ov5695 = to_ov5695(sd);
-+
-+	__ov5695_power_off(ov5695);
-+
-+	return 0;
-+}
-+
-+#ifdef CONFIG_VIDEO_V4L2_SUBDEV_API
-+static int ov5695_open(struct v4l2_subdev *sd, struct v4l2_subdev_fh *fh)
-+{
-+	struct ov5695 *ov5695 = to_ov5695(sd);
-+	struct v4l2_mbus_framefmt *try_fmt =
-+				v4l2_subdev_get_try_format(sd, fh->pad, 0);
-+
-+	mutex_lock(&ov5695->mutex);
-+	/* Initialize try_fmt */
-+	try_fmt->width = ov5695->cur_mode->width;
-+	try_fmt->height = ov5695->cur_mode->height;
-+	try_fmt->code = MEDIA_BUS_FMT_SBGGR10_1X10;
-+	try_fmt->field = V4L2_FIELD_NONE;
-+
-+	mutex_unlock(&ov5695->mutex);
-+	/* No crop or compose */
-+
-+	return 0;
-+}
-+#endif
-+
-+static const struct dev_pm_ops ov5695_pm_ops = {
-+	SET_RUNTIME_PM_OPS(ov5695_runtime_suspend,
-+			   ov5695_runtime_resume, NULL)
-+};
-+
-+#ifdef CONFIG_VIDEO_V4L2_SUBDEV_API
-+static const struct v4l2_subdev_internal_ops ov5695_internal_ops = {
-+	.open = ov5695_open,
-+};
-+#endif
-+
-+static const struct v4l2_subdev_video_ops ov5695_video_ops = {
-+	.s_stream = ov5695_s_stream,
-+};
-+
-+static const struct v4l2_subdev_pad_ops ov5695_pad_ops = {
-+	.enum_mbus_code = ov5695_enum_mbus_code,
-+	.enum_frame_size = ov5695_enum_frame_sizes,
-+	.get_fmt = ov5695_get_fmt,
-+	.set_fmt = ov5695_set_fmt,
-+};
-+
-+static const struct v4l2_subdev_ops ov5695_subdev_ops = {
-+	.video	= &ov5695_video_ops,
-+	.pad	= &ov5695_pad_ops,
-+};
-+
-+static int ov5695_set_ctrl(struct v4l2_ctrl *ctrl)
-+{
-+	struct ov5695 *ov5695 = container_of(ctrl->handler,
-+					     struct ov5695, ctrl_handler);
-+	struct i2c_client *client = ov5695->client;
-+	s64 max;
++	struct ov2685 *ov2685 = to_ov2685(sd);
++	struct i2c_client *client = ov2685->client;
 +	int ret = 0;
++
++	mutex_lock(&ov2685->mutex);
++
++	on = !!on;
++	if (on == ov2685->streaming)
++		goto unlock_and_return;
++
++	if (on) {
++		ret = pm_runtime_get_sync(&ov2685->client->dev);
++		if (ret < 0) {
++			pm_runtime_put_noidle(&client->dev);
++			goto unlock_and_return;
++		}
++		ret = ov2685_write_reg(client, REG_SC_CTRL_MODE,
++				OV2685_REG_VALUE_08BIT, SC_CTRL_MODE_STREAMING);
++		if (ret) {
++			pm_runtime_put(&client->dev);
++			goto unlock_and_return;
++		}
++	} else {
++		ov2685_write_reg(client, REG_SC_CTRL_MODE,
++				OV2685_REG_VALUE_08BIT, SC_CTRL_MODE_STANDBY);
++		pm_runtime_put(&ov2685->client->dev);
++	}
++
++	ov2685->streaming = on;
++
++unlock_and_return:
++	mutex_unlock(&ov2685->mutex);
++
++	return ret;
++}
++
++#ifdef CONFIG_VIDEO_V4L2_SUBDEV_API
++static int ov2685_open(struct v4l2_subdev *sd, struct v4l2_subdev_fh *fh)
++{
++	struct ov2685 *ov2685 = to_ov2685(sd);
++	struct v4l2_mbus_framefmt *try_fmt;
++
++	mutex_lock(&ov2685->mutex);
++
++	try_fmt = v4l2_subdev_get_try_format(sd, fh->pad, 0);
++	/* Initialize try_fmt */
++	ov2685_fill_fmt(ov2685, try_fmt);
++
++	mutex_unlock(&ov2685->mutex);
++
++	return 0;
++}
++#endif
++
++static int ov2685_runtime_resume(struct device *dev)
++{
++	struct i2c_client *client = to_i2c_client(dev);
++	struct v4l2_subdev *sd = i2c_get_clientdata(client);
++	struct ov2685 *ov2685 = to_ov2685(sd);
++	int ret;
++
++	ret = __ov2685_power_on(ov2685);
++	if (ret)
++		return ret;
++
++	return __v4l2_ctrl_handler_setup(&ov2685->ctrl_handler);
++}
++
++static int ov2685_runtime_suspend(struct device *dev)
++{
++	struct i2c_client *client = to_i2c_client(dev);
++	struct v4l2_subdev *sd = i2c_get_clientdata(client);
++	struct ov2685 *ov2685 = to_ov2685(sd);
++
++	__ov2685_power_off(ov2685);
++
++	return 0;
++}
++
++static const struct dev_pm_ops ov2685_pm_ops = {
++	SET_RUNTIME_PM_OPS(ov2685_runtime_suspend,
++			   ov2685_runtime_resume, NULL)
++};
++
++static int ov2685_set_ctrl(struct v4l2_ctrl *ctrl)
++{
++	struct ov2685 *ov2685 = container_of(ctrl->handler,
++					     struct ov2685, ctrl_handler);
++	struct i2c_client *client = ov2685->client;
++	s64 max_expo;
++	int ret;
 +
 +	/* Propagate change of current control to all related controls */
 +	switch (ctrl->id) {
 +	case V4L2_CID_VBLANK:
 +		/* Update max exposure while meeting expected vblanking */
-+		max = ov5695->cur_mode->height + ctrl->val - 4;
-+		__v4l2_ctrl_modify_range(ov5695->exposure,
-+					 ov5695->exposure->minimum, max,
-+					 ov5695->exposure->step,
-+					 ov5695->exposure->default_value);
++		max_expo = ov2685->cur_mode->height + ctrl->val - 4;
++		__v4l2_ctrl_modify_range(ov2685->exposure,
++					 ov2685->exposure->minimum, max_expo,
++					 ov2685->exposure->step,
++					 ov2685->exposure->default_value);
 +		break;
 +	}
 +
@@ -1193,29 +632,22 @@ index 0000000..7e8bd82
 +
 +	switch (ctrl->id) {
 +	case V4L2_CID_EXPOSURE:
-+		/* 4 least significant bits of expsoure are fractional part */
-+		ret = ov5695_write_reg(ov5695->client, OV5695_REG_EXPOSURE,
-+				       OV5695_REG_VALUE_24BIT, ctrl->val << 4);
++		ret = ov2685_write_reg(ov2685->client, OV2685_REG_EXPOSURE,
++				       OV2685_REG_VALUE_24BIT, ctrl->val << 4);
 +		break;
 +	case V4L2_CID_ANALOGUE_GAIN:
-+		ret = ov5695_write_reg(ov5695->client, OV5695_REG_ANALOG_GAIN,
-+				       OV5695_REG_VALUE_08BIT, ctrl->val);
-+		break;
-+	case V4L2_CID_DIGITAL_GAIN:
-+		ret = ov5695_write_reg(ov5695->client, OV5695_REG_DIGI_GAIN_L,
-+				       OV5695_REG_VALUE_08BIT,
-+				       ctrl->val & OV5695_DIGI_GAIN_L_MASK);
-+		ret = ov5695_write_reg(ov5695->client, OV5695_REG_DIGI_GAIN_H,
-+				       OV5695_REG_VALUE_08BIT,
-+				       ctrl->val >> OV5695_DIGI_GAIN_H_SHIFT);
++		ret = ov2685_write_reg(ov2685->client, OV2685_REG_GAIN,
++				       OV2685_REG_VALUE_16BIT, ctrl->val);
 +		break;
 +	case V4L2_CID_VBLANK:
-+		ret = ov5695_write_reg(ov5695->client, OV5695_REG_VTS,
-+				       OV5695_REG_VALUE_16BIT,
-+				       ctrl->val + ov5695->cur_mode->height);
++		ret = ov2685_write_reg(ov2685->client, OV2685_REG_VTS,
++				       OV2685_REG_VALUE_16BIT,
++				       ctrl->val + ov2685->cur_mode->height);
 +		break;
 +	case V4L2_CID_TEST_PATTERN:
-+		ret = ov5695_enable_test_pattern(ov5695, ctrl->val);
++		ret = ov2685_write_reg(ov2685->client, OV2685_REG_TEST_PATTERN,
++				       OV2685_REG_VALUE_08BIT,
++				       ov2685_test_pattern_val[ctrl->val]);
 +		break;
 +	default:
 +		dev_warn(&client->dev, "%s Unhandled id:0x%x, val:0x%x\n",
@@ -1228,76 +660,93 @@ index 0000000..7e8bd82
 +	return ret;
 +}
 +
-+static const struct v4l2_ctrl_ops ov5695_ctrl_ops = {
-+	.s_ctrl = ov5695_set_ctrl,
++static const struct v4l2_subdev_video_ops ov2685_video_ops = {
++	.s_stream = ov2685_s_stream,
 +};
 +
-+static int ov5695_initialize_controls(struct ov5695 *ov5695)
++static const struct v4l2_subdev_pad_ops ov2685_pad_ops = {
++	.enum_mbus_code = ov2685_enum_mbus_code,
++	.enum_frame_size = ov2685_enum_frame_sizes,
++	.get_fmt = ov2685_get_fmt,
++	.set_fmt = ov2685_set_fmt,
++};
++
++static const struct v4l2_subdev_ops ov2685_subdev_ops = {
++	.video	= &ov2685_video_ops,
++	.pad	= &ov2685_pad_ops,
++};
++
++#ifdef CONFIG_VIDEO_V4L2_SUBDEV_API
++static const struct v4l2_subdev_internal_ops ov2685_internal_ops = {
++	.open = ov2685_open,
++};
++#endif
++
++static const struct v4l2_ctrl_ops ov2685_ctrl_ops = {
++	.s_ctrl = ov2685_set_ctrl,
++};
++
++static int ov2685_initialize_controls(struct ov2685 *ov2685)
 +{
-+	const struct ov5695_mode *mode;
++	const struct ov2685_mode *mode;
 +	struct v4l2_ctrl_handler *handler;
 +	struct v4l2_ctrl *ctrl;
-+	s64 exposure_max, vblank_def;
-+	u32 h_blank;
++	u64 exposure_max;
++	u32 pixel_rate, h_blank;
 +	int ret;
 +
-+	handler = &ov5695->ctrl_handler;
-+	mode = ov5695->cur_mode;
++	handler = &ov2685->ctrl_handler;
++	mode = ov2685->cur_mode;
 +	ret = v4l2_ctrl_handler_init(handler, 8);
 +	if (ret)
 +		return ret;
-+	handler->lock = &ov5695->mutex;
++	handler->lock = &ov2685->mutex;
 +
 +	ctrl = v4l2_ctrl_new_int_menu(handler, NULL, V4L2_CID_LINK_FREQ,
 +				      0, 0, link_freq_menu_items);
 +	if (ctrl)
 +		ctrl->flags |= V4L2_CTRL_FLAG_READ_ONLY;
 +
++	pixel_rate = (link_freq_menu_items[0] * 2 * OV2685_LANES) /
++		     OV2685_BITS_PER_SAMPLE;
 +	v4l2_ctrl_new_std(handler, NULL, V4L2_CID_PIXEL_RATE,
-+			  0, OV5695_PIXEL_RATE, 1, OV5695_PIXEL_RATE);
++			  0, pixel_rate, 1, pixel_rate);
 +
 +	h_blank = mode->hts_def - mode->width;
-+	ov5695->hblank = v4l2_ctrl_new_std(handler, NULL, V4L2_CID_HBLANK,
++	ov2685->hblank = v4l2_ctrl_new_std(handler, NULL, V4L2_CID_HBLANK,
 +				h_blank, h_blank, 1, h_blank);
-+	if (ov5695->hblank)
-+		ov5695->hblank->flags |= V4L2_CTRL_FLAG_READ_ONLY;
++	if (ov2685->hblank)
++		ov2685->hblank->flags |= V4L2_CTRL_FLAG_READ_ONLY;
 +
-+	vblank_def = mode->vts_def - mode->height;
-+	ov5695->vblank = v4l2_ctrl_new_std(handler, &ov5695_ctrl_ops,
-+				V4L2_CID_VBLANK, vblank_def,
-+				OV5695_VTS_MAX - mode->height,
-+				1, vblank_def);
++	ov2685->vblank = v4l2_ctrl_new_std(handler, &ov2685_ctrl_ops,
++				V4L2_CID_VBLANK, mode->vts_def - mode->height,
++				OV2685_VTS_MAX - mode->height, 1,
++				mode->vts_def - mode->height);
 +
 +	exposure_max = mode->vts_def - 4;
-+	ov5695->exposure = v4l2_ctrl_new_std(handler, &ov5695_ctrl_ops,
-+				V4L2_CID_EXPOSURE, OV5695_EXPOSURE_MIN,
-+				exposure_max, OV5695_EXPOSURE_STEP,
++	ov2685->exposure = v4l2_ctrl_new_std(handler, &ov2685_ctrl_ops,
++				V4L2_CID_EXPOSURE, OV2685_EXPOSURE_MIN,
++				exposure_max, OV2685_EXPOSURE_STEP,
 +				mode->exp_def);
 +
-+	ov5695->anal_gain = v4l2_ctrl_new_std(handler, &ov5695_ctrl_ops,
-+				V4L2_CID_ANALOGUE_GAIN, ANALOG_GAIN_MIN,
-+				ANALOG_GAIN_MAX, ANALOG_GAIN_STEP,
-+				ANALOG_GAIN_DEFAULT);
++	ov2685->anal_gain = v4l2_ctrl_new_std(handler, &ov2685_ctrl_ops,
++				V4L2_CID_ANALOGUE_GAIN, OV2685_GAIN_MIN,
++				OV2685_GAIN_MAX, OV2685_GAIN_STEP,
++				OV2685_GAIN_DEFAULT);
 +
-+	/* Digital gain */
-+	ov5695->digi_gain = v4l2_ctrl_new_std(handler, &ov5695_ctrl_ops,
-+				V4L2_CID_DIGITAL_GAIN, OV5695_DIGI_GAIN_MIN,
-+				OV5695_DIGI_GAIN_MAX, OV5695_DIGI_GAIN_STEP,
-+				OV5695_DIGI_GAIN_DEFAULT);
-+
-+	ov5695->test_pattern = v4l2_ctrl_new_std_menu_items(handler,
-+				&ov5695_ctrl_ops, V4L2_CID_TEST_PATTERN,
-+				ARRAY_SIZE(ov5695_test_pattern_menu) - 1,
-+				0, 0, ov5695_test_pattern_menu);
++	ov2685->test_pattern = v4l2_ctrl_new_std_menu_items(handler,
++				&ov2685_ctrl_ops, V4L2_CID_TEST_PATTERN,
++				ARRAY_SIZE(ov2685_test_pattern_menu) - 1,
++				0, 0, ov2685_test_pattern_menu);
 +
 +	if (handler->error) {
 +		ret = handler->error;
-+		dev_err(&ov5695->client->dev,
++		dev_err(&ov2685->client->dev,
 +			"Failed to init controls(%d)\n", ret);
 +		goto err_free_handler;
 +	}
 +
-+	ov5695->subdev.ctrl_handler = handler;
++	ov2685->subdev.ctrl_handler = handler;
 +
 +	return 0;
 +
@@ -1307,165 +756,156 @@ index 0000000..7e8bd82
 +	return ret;
 +}
 +
-+static int ov5695_check_sensor_id(struct ov5695 *ov5695,
++static int ov2685_check_sensor_id(struct ov2685 *ov2685,
 +				  struct i2c_client *client)
 +{
-+	struct device *dev = &ov5695->client->dev;
-+	u32 id;
++	struct device *dev = &ov2685->client->dev;
 +	int ret;
++	u32 id = 0;
 +
-+	ret = __ov5695_power_on(ov5695);
++	ret = __ov2685_power_on(ov2685);
 +	if (ret)
 +		return ret;
-+	ret = ov5695_read_reg(client, OV5695_REG_CHIP_ID,
-+			      OV5695_REG_VALUE_24BIT, &id);
-+	__ov5695_power_off(ov5695);
++
++	ret = ov2685_read_reg(client, OV2685_REG_CHIP_ID,
++			      OV2685_REG_VALUE_16BIT, &id);
++	__ov2685_power_off(ov2685);
 +
 +	if (id != CHIP_ID) {
-+		dev_err(dev, "Unexpected sensor id(%06x), ret(%d)\n", id, ret);
++		dev_err(dev, "Unexpected sensor id(%04x), ret(%d)\n", id, ret);
 +		return ret;
 +	}
 +
-+	dev_info(dev, "Detected OV%06x sensor\n", CHIP_ID);
++	dev_info(dev, "Detected OV%04x sensor\n", CHIP_ID);
 +
 +	return 0;
 +}
 +
-+static int ov5695_probe(struct i2c_client *client,
++static int ov2685_probe(struct i2c_client *client,
 +			const struct i2c_device_id *id)
 +{
 +	struct device *dev = &client->dev;
-+	struct ov5695 *ov5695;
-+	struct v4l2_subdev *sd;
++	struct ov2685 *ov2685;
 +	int ret;
 +
-+	ov5695 = devm_kzalloc(dev, sizeof(*ov5695), GFP_KERNEL);
-+	if (!ov5695)
++	ov2685 = devm_kzalloc(dev, sizeof(*ov2685), GFP_KERNEL);
++	if (!ov2685)
 +		return -ENOMEM;
 +
-+	ov5695->client = client;
-+	ov5695->cur_mode = &supported_modes[0];
++	ov2685->client = client;
++	ov2685->cur_mode = &supported_modes[0];
 +
-+	ov5695->xvclk = devm_clk_get(dev, "xvclk");
-+	if (IS_ERR(ov5695->xvclk)) {
++	ov2685->xvclk = devm_clk_get(dev, "xvclk");
++	if (IS_ERR(ov2685->xvclk)) {
 +		dev_err(dev, "Failed to get xvclk\n");
 +		return -EINVAL;
 +	}
-+	ret = clk_set_rate(ov5695->xvclk, 24000000);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to set xvclk rate (24M)\n");
-+		return ret;
-+	}
 +
-+	ov5695->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
-+	if (IS_ERR(ov5695->reset_gpio)) {
++	ov2685->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
++	if (IS_ERR(ov2685->reset_gpio)) {
 +		dev_err(dev, "Failed to get reset-gpios\n");
 +		return -EINVAL;
 +	}
 +
-+	ov5695->avdd_regulator = devm_regulator_get(dev, "avdd");
-+	if (IS_ERR(ov5695->avdd_regulator)) {
++	ov2685->avdd_regulator = devm_regulator_get(dev, "avdd");
++	if (IS_ERR(ov2685->avdd_regulator)) {
 +		dev_err(dev, "Failed to get avdd-supply\n");
 +		return -EINVAL;
 +	}
-+	ov5695->dovdd_regulator = devm_regulator_get(dev, "dovdd");
-+	if (IS_ERR(ov5695->dovdd_regulator)) {
++	ov2685->dovdd_regulator = devm_regulator_get(dev, "dovdd");
++	if (IS_ERR(ov2685->dovdd_regulator)) {
 +		dev_err(dev, "Failed to get dovdd-supply\n");
 +		return -EINVAL;
 +	}
-+	ov5695->dvdd_regulator = devm_regulator_get(dev, "dvdd");
-+	if (IS_ERR(ov5695->dvdd_regulator)) {
++	ov2685->dvdd_regulator = devm_regulator_get(dev, "dvdd");
++	if (IS_ERR(ov2685->dvdd_regulator)) {
 +		dev_err(dev, "Failed to get dvdd-supply\n");
 +		return -EINVAL;
 +	}
 +
-+	mutex_init(&ov5695->mutex);
++	mutex_init(&ov2685->mutex);
++	v4l2_i2c_subdev_init(&ov2685->subdev, client, &ov2685_subdev_ops);
++	ret = ov2685_initialize_controls(ov2685);
++	if (ret)
++		goto destroy_mutex;
 +
-+	sd = &ov5695->subdev;
-+	v4l2_i2c_subdev_init(sd, client, &ov5695_subdev_ops);
++	ret = ov2685_check_sensor_id(ov2685, client);
++	if (ret)
++		goto free_ctrl_handler;
++
 +#ifdef CONFIG_VIDEO_V4L2_SUBDEV_API
-+	sd->internal_ops = &ov5695_internal_ops;
-+	sd->flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
++	ov2685->subdev.internal_ops = &ov2685_internal_ops;
++	ov2685->subdev.flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
 +#endif
-+
-+	ret = ov5695_initialize_controls(ov5695);
-+	if (ret)
-+		return ret;
-+	ret = ov5695_check_sensor_id(ov5695, client);
-+	if (ret)
-+		return ret;
-+
 +#if defined(CONFIG_MEDIA_CONTROLLER)
-+	ov5695->pad.flags = MEDIA_PAD_FL_SOURCE;
-+	sd->entity.function = MEDIA_ENT_F_CAM_SENSOR;
-+	ret = media_entity_pads_init(&sd->entity, 1, &ov5695->pad);
++	ov2685->pad.flags = MEDIA_PAD_FL_SOURCE;
++	ov2685->subdev.entity.function = MEDIA_ENT_F_CAM_SENSOR;
++	ret = media_entity_pads_init(&ov2685->subdev.entity, 1, &ov2685->pad);
 +	if (ret < 0)
-+		return ret;
++		goto free_ctrl_handler;
 +#endif
 +
-+	ret = v4l2_async_register_subdev(sd);
++	ret = v4l2_async_register_subdev(&ov2685->subdev);
 +	if (ret) {
 +		dev_err(dev, "v4l2 async register subdev failed\n");
 +		goto clean_entity;
 +	}
 +
 +	pm_runtime_enable(dev);
-+	dev_info(dev, "Probe successfully\n");
 +
 +	return 0;
 +
 +clean_entity:
 +#if defined(CONFIG_MEDIA_CONTROLLER)
-+	media_entity_cleanup(&sd->entity);
++	media_entity_cleanup(&ov2685->subdev.entity);
 +#endif
++free_ctrl_handler:
++	v4l2_ctrl_handler_free(&ov2685->ctrl_handler);
++destroy_mutex:
++	mutex_destroy(&ov2685->mutex);
 +
 +	return ret;
 +}
 +
-+static int ov5695_remove(struct i2c_client *client)
++static int ov2685_remove(struct i2c_client *client)
 +{
 +	struct v4l2_subdev *sd = i2c_get_clientdata(client);
-+	struct ov5695 *ov5695 = to_ov5695(sd);
++	struct ov2685 *ov2685 = to_ov2685(sd);
 +
 +	v4l2_async_unregister_subdev(sd);
 +#if defined(CONFIG_MEDIA_CONTROLLER)
 +	media_entity_cleanup(&sd->entity);
 +#endif
-+	v4l2_ctrl_handler_free(&ov5695->ctrl_handler);
-+	mutex_destroy(&ov5695->mutex);
++	v4l2_ctrl_handler_free(&ov2685->ctrl_handler);
++	mutex_destroy(&ov2685->mutex);
 +
 +	pm_runtime_disable(&client->dev);
 +	if (!pm_runtime_status_suspended(&client->dev))
-+		__ov5695_power_off(ov5695);
++		__ov2685_power_off(ov2685);
 +	pm_runtime_set_suspended(&client->dev);
 +
 +	return 0;
 +}
 +
-+static const struct of_device_id ov5695_of_match[] = {
-+	{ .compatible = "ovti,ov5695" },
++static const struct of_device_id ov2685_of_match[] = {
++	{ .compatible = "ovti,ov2685" },
 +	{},
 +};
 +
-+static struct i2c_driver ov5695_i2c_driver = {
++static struct i2c_driver ov2685_i2c_driver = {
 +	.driver = {
-+		.name = "ov5695",
++		.name = "ov2685",
 +		.owner = THIS_MODULE,
-+		.pm = &ov5695_pm_ops,
-+		.of_match_table = ov5695_of_match
++		.pm = &ov2685_pm_ops,
++		.of_match_table = ov2685_of_match
 +	},
-+	.probe		= &ov5695_probe,
-+	.remove		= &ov5695_remove,
++	.probe		= &ov2685_probe,
++	.remove		= &ov2685_remove,
 +};
 +
-+module_i2c_driver(ov5695_i2c_driver);
++module_i2c_driver(ov2685_i2c_driver);
 +
-+MODULE_DESCRIPTION("OmniVision ov5695 sensor driver");
++MODULE_DESCRIPTION("OmniVision ov2685 sensor driver");
 +MODULE_LICENSE("GPL v2");
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
