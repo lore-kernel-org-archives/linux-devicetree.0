@@ -1,73 +1,51 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH] Revert "ARM: dts: bcm283x: Fix DTC warnings about missing
- phy-cells"
-Date: Mon, 8 Jan 2018 10:36:42 +0100
-Message-ID: <dd0372b5-e16c-ce77-ce39-2c4ffa61f663@i2se.com>
-References: <1515332212-23593-1-git-send-email-stefan.wahren@i2se.com>
- <87incdjp9k.fsf@anholt.net> <df3db2e7-5d0f-9c1c-b005-41cf00e7d851@i2se.com>
- <CAK8P3a3qfiX_ZsD8pLmoTJZ2+Q8PkHGmfTFW=NL8P8QFML_dLw@mail.gmail.com>
+From: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] media: ov9650: support device tree probing
+Date: Mon, 8 Jan 2018 11:37:12 +0200
+Message-ID: <20180108093712.xqpxmgbqsmkhw632@paasikivi.fi.intel.com>
+References: <1515344064-23156-1-git-send-email-akinobu.mita@gmail.com>
+ <1515344064-23156-2-git-send-email-akinobu.mita@gmail.com>
+ <20180108091838.GM9493@w540>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAK8P3a3qfiX_ZsD8pLmoTJZ2+Q8PkHGmfTFW=NL8P8QFML_dLw@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: DTML <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Eric Anholt <eric@anholt.net>, arm-soc <arm@kernel.org>, Olof Johansson <olof@lixom.net>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20180108091838.GM9493@w540>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jacopo mondi <jacopo-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+Cc: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "H . Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+Hi Jacopo,
 
+On Mon, Jan 08, 2018 at 10:18:38AM +0100, jacopo mondi wrote:
+> > @@ -1561,9 +1605,19 @@ static const struct i2c_device_id ov965x_id[] = {
+> >  };
+> >  MODULE_DEVICE_TABLE(i2c, ov965x_id);
+> >
+> > +#if IS_ENABLED(CONFIG_OF)
+> > +static const struct of_device_id ov965x_of_match[] = {
+> > +	{ .compatible = "ovti,ov9650", },
+> > +	{ .compatible = "ovti,ov9652", },
+> > +	{ /* sentinel */ }
+> > +};
+> > +MODULE_DEVICE_TABLE(of, ov965x_of_match);
+> > +#endif
+> > +
+> >  static struct i2c_driver ov965x_i2c_driver = {
+> >  	.driver = {
+> >  		.name	= DRIVER_NAME,
+> > +		.of_match_table = of_match_ptr(ov965x_of_match),
+> 
+> If CONFIG_OF is not defined, this will break compilation.
+> Please guard this with #if IS_ENABLED(CONFIG_OF) as well.
 
-Am 08.01.2018 um 10:27 schrieb Arnd Bergmann:
-> On Mon, Jan 8, 2018 at 10:15 AM, Stefan Wahren <stefan.wahren@i2se.com> wrote:
->> Hi Eric,
->> Am 07.01.2018 um 23:08 schrieb Eric Anholt:
->>> Stefan Wahren <stefan.wahren@i2se.com> writes:
->>>
->>>> This reverts commit 014d6da6cb2525d7f48fb08c705cb130cc7b5f4a.
->>>>
->>>> The DT clean up could trigger an endless deferred probe of DWC2 USB
->>>> driver
->>>> on the Raspberry Pi 2/3. So revert the change until we fixed the probing
->>>> issue.
->>> Why's that?  I found that I needed to enable the generic no-op phy
->>> driver, but other than that it was fine.
->>
->> in order to avoid this regression. Changing the configuration is not a
->> solution for the kernelci guys.
->>
->> Btw
->>
->> CONFIG_NOP_USB_XCEIV=y
->>
->> is already enabled in arm64/defconfig and the issue still occured. Do you
->> mean a different option?
-> Obviously we need to fix this, but I really want to understand what exactly
-> happened so we can fix the code if possible rather than making the
-> dts file incompatible with the binding again.
+of_match_ptr() will be NULL if CONFIG_OF is not defined, so AFAICT this is
+fine.
 
-i fully agree, but dwc2 "hacking" usually requires more time than 
-reverting this change.
-
->
-> Do you have any more insight into how we get into the deferred probe
-> situation?
-
-I send this bug report [1] on Friday to linux-usb.
-
-Stefan
-
-[1] - https://marc.info/?l=linux-usb&m=151518314314753&w=2
-
->
->         Arnd
+-- 
+Sakari Ailus
+sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
