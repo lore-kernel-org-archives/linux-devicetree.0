@@ -1,118 +1,112 @@
 From: David Lechner <david@lechnology.com>
-Subject: [PATCH v5 28/44] ARM: dm646x: add new clock init using common clock framework
-Date: Sun,  7 Jan 2018 20:17:27 -0600
-Message-ID: <1515377863-20358-29-git-send-email-david@lechnology.com>
+Subject: [PATCH v5 03/44] clk: davinci: Add platform information for TI DA830
+ PLL
+Date: Sun,  7 Jan 2018 20:17:02 -0600
+Message-ID: <1515377863-20358-4-git-send-email-david@lechnology.com>
 References: <1515377863-20358-1-git-send-email-david@lechnology.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1515377863-20358-1-git-send-email-david@lechnology.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org, David Lechner <david@lechnology.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, David Lechner <david@lechnology.com>, Kevin Hilman <khilman@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Adam Ford <aford173@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This adds the new board-specfic clock init in mach-davinci/dm646x.c using
-the new common clock framework drivers.
-
-The #ifdefs are needed to prevent compile errors until the entire
-ARCH_DAVINCI is converted.
-
-Also clean up the #includes since we are adding some here.
+This adds platform-specific declarations for the PLL clocks on TI DA830/
+OMAP-L137/AM17XX SoCs.
 
 Signed-off-by: David Lechner <david@lechnology.com>
 ---
- arch/arm/mach-davinci/dm646x.c | 41 +++++++++++++++++++++++++++++++++--------
- 1 file changed, 33 insertions(+), 8 deletions(-)
+ drivers/clk/davinci/Makefile    |  1 +
+ drivers/clk/davinci/pll-da830.c | 38 ++++++++++++++++++++++++++++++++++++++
+ include/linux/clk/davinci.h     | 14 ++++++++++++++
+ 3 files changed, 53 insertions(+)
+ create mode 100644 drivers/clk/davinci/pll-da830.c
+ create mode 100644 include/linux/clk/davinci.h
 
-diff --git a/arch/arm/mach-davinci/dm646x.c b/arch/arm/mach-davinci/dm646x.c
-index d4d7658..bdaf769 100644
---- a/arch/arm/mach-davinci/dm646x.c
-+++ b/arch/arm/mach-davinci/dm646x.c
-@@ -8,29 +8,35 @@
-  * is licensed "as is" without any warranty of any kind, whether express
-  * or implied.
-  */
-+#include <linux/clk-provider.h>
-+#include <linux/clk.h>
-+#include <linux/clk/davinci.h>
-+#include <linux/clkdev.h>
- #include <linux/dma-mapping.h>
- #include <linux/dmaengine.h>
- #include <linux/init.h>
--#include <linux/clk.h>
--#include <linux/serial_8250.h>
--#include <linux/platform_device.h>
- #include <linux/platform_data/edma.h>
- #include <linux/platform_data/gpio-davinci.h>
-+#include <linux/platform_device.h>
-+#include <linux/serial_8250.h>
+diff --git a/drivers/clk/davinci/Makefile b/drivers/clk/davinci/Makefile
+index d9673bd..9061e19 100644
+--- a/drivers/clk/davinci/Makefile
++++ b/drivers/clk/davinci/Makefile
+@@ -2,4 +2,5 @@
  
- #include <asm/mach/map.h>
- 
-+#include <mach/common.h>
- #include <mach/cputype.h>
- #include <mach/irqs.h>
--#include "psc.h"
- #include <mach/mux.h>
--#include <mach/time.h>
- #include <mach/serial.h>
--#include <mach/common.h>
-+#include <mach/time.h>
- 
-+#include "asp.h"
- #include "davinci.h"
--#include "clock.h"
- #include "mux.h"
--#include "asp.h"
+ ifeq ($(CONFIG_COMMON_CLK), y)
+ obj-y += pll.o
++obj-$(CONFIG_ARCH_DAVINCI_DA830)	+= pll-da830.o
+ endif
+diff --git a/drivers/clk/davinci/pll-da830.c b/drivers/clk/davinci/pll-da830.c
+new file mode 100644
+index 0000000..369db59
+--- /dev/null
++++ b/drivers/clk/davinci/pll-da830.c
+@@ -0,0 +1,38 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * PLL clock descriptions for TI DA830/OMAP-L137/AM17XX
++ *
++ * Copyright (C) 2017 David Lechner <david@lechnology.com>
++ */
 +
-+#ifndef CONFIG_COMMON_CLK
-+#include "clock.h"
-+#include "psc.h"
-+#endif
- 
- #define DAVINCI_VPIF_BASE       (0x01C12000)
- 
-@@ -46,6 +52,7 @@
- #define DM646X_EMAC_CNTRL_RAM_OFFSET	0x2000
- #define DM646X_EMAC_CNTRL_RAM_SIZE	0x2000
- 
-+#ifndef CONFIG_COMMON_CLK
- static struct pll_data pll1_data = {
- 	.num       = 1,
- 	.phys_base = DAVINCI_PLL1_BASE,
-@@ -356,6 +363,7 @@ static struct clk_lookup dm646x_clks[] = {
- 	CLK(NULL, "vpif1", &vpif1_clk),
- 	CLK(NULL, NULL, NULL),
- };
-+#endif
- 
- static struct emac_platform_data dm646x_emac_pdata = {
- 	.ctrl_reg_offset	= DM646X_EMAC_CNTRL_OFFSET,
-@@ -953,9 +961,26 @@ void __init dm646x_init(void)
- void __init dm646x_init_time(unsigned long ref_clk_rate,
- 			     unsigned long aux_clkin_rate)
- {
-+#ifdef CONFIG_COMMON_CLK
-+	void __iomem *pll1, *pll2, *psc;
-+	struct clk *clk;
++#include <linux/init.h>
++#include <linux/types.h>
 +
-+	pll1 = ioremap(DAVINCI_PLL1_BASE, SZ_4K);
-+	pll2 = ioremap(DAVINCI_PLL2_BASE, SZ_4K);
-+	psc = ioremap(DAVINCI_PWR_SLEEP_CNTRL_BASE, SZ_4K);
++#include "pll.h"
 +
-+	clk_register_fixed_rate(NULL, "ref_clk", NULL, 0, ref_clk_rate);
-+	clk_register_fixed_rate(NULL, "aux_clkin", NULL, 0, aux_clkin_rate);
-+	dm646x_pll_clk_init(pll1, pll2);
-+	dm646x_psc_clk_init(psc);
-+	/* no LPSC, always enabled; c.f. spruep9a */
-+	clk = clk_register_fixed_factor(NULL, "timer2", "pll1_sysclk3", 0, 1, 1);
-+	clk_register_clkdev(clk, NULL, "davinci-wdt");
-+#else
- 	ref_clk.rate = ref_clk_rate;
- 	aux_clkin.rate = aux_clkin_rate;
- 	davinci_clk_init(dm646x_clks);
-+#endif
- 	davinci_timer_init();
- }
- 
++/*
++ * NB: Technically, the clocks flagged as DIVCLK_FIXED_DIV are "fixed ratio",
++ * meaning that we could change the divider as long as we keep the correct
++ * ratio between all of the clocks, but we don't support that because there is
++ * currently not a need for it.
++ */
++
++static const struct davinci_pll_divclk_info da830_pll_divclk_info[] __initconst = {
++	DIVCLK(2, pll0_sysclk2, pll0, DIVCLK_FIXED_DIV),
++	DIVCLK(3, pll0_sysclk3, pll0, 0),
++	DIVCLK(4, pll0_sysclk4, pll0, DIVCLK_FIXED_DIV),
++	DIVCLK(5, pll0_sysclk5, pll0, 0),
++	DIVCLK(6, pll0_sysclk6, pll0, DIVCLK_FIXED_DIV),
++	DIVCLK(7, pll0_sysclk7, pll0, 0),
++	{ }
++};
++
++void __init da830_pll_clk_init(void __iomem *pll)
++{
++	const struct davinci_pll_divclk_info *info;
++
++	davinci_pll_clk_register("pll0", "ref_clk", pll);
++	davinci_pll_aux_clk_register("pll0_aux_clk", "ref_clk", pll);
++	for (info = da830_pll_divclk_info; info->name; info++)
++		davinci_pll_divclk_register(info, pll);
++}
+diff --git a/include/linux/clk/davinci.h b/include/linux/clk/davinci.h
+new file mode 100644
+index 0000000..4f4d60d
+--- /dev/null
++++ b/include/linux/clk/davinci.h
+@@ -0,0 +1,14 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * TI Davinci clocks
++ *
++ * Copyright (C) 2017 David Lechner <david@lechnology.com>
++ */
++#ifndef __LINUX_CLK_DAVINCI_H__
++#define __LINUX_CLK_DAVINCI_H__
++
++#include <linux/types.h>
++
++void da830_pll_clk_init(void __iomem *pll);
++
++#endif /* __LINUX_CLK_DAVINCI_H__ */
 -- 
 2.7.4
