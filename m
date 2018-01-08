@@ -1,7 +1,7 @@
 From: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v4 2/3] dt-bindings: usb: renesas_usbhs: Add support for RZ/A1
-Date: Mon,  8 Jan 2018 07:30:54 -0500
-Message-ID: <20180108123055.64890-3-chris.brandt@renesas.com>
+Subject: [PATCH v4 3/3] ARM: dts: r7s72100: add USB device to device tree
+Date: Mon,  8 Jan 2018 07:30:55 -0500
+Message-ID: <20180108123055.64890-4-chris.brandt@renesas.com>
 References: <20180108123055.64890-1-chris.brandt@renesas.com>
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20180108123055.64890-1-chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
@@ -10,36 +10,53 @@ To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
 Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Document support for RZ/A1 SoCs
+Add USB device support.
 
 Signed-off-by: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 ---
 v4:
- * Re-added "renesas,usbhs-r7s72100"
+ * Changed to "renesas,usbhs-r7s72100", "renesas,rza1-usbhs"
 v3:
- * Removed "renesas,usbhs-r7s72100"
+ * Changed from "renesas,usbhs-r7s72100" to "renesas,rza1-usbhs"
 v2:
+ * Node name is now generic 'usb@'
+ * GIC_SPI (73-32) is now just GIC_SPI 41
+ * All hex number are lower case
  * Added Reviewed-by
 ---
- Documentation/devicetree/bindings/usb/renesas_usbhs.txt | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm/boot/dts/r7s72100.dtsi | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-index 47394ab788e3..d060172f1529 100644
---- a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-+++ b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-@@ -13,8 +13,10 @@ Required properties:
- 	- "renesas,usbhs-r8a7795" for r8a7795 (R-Car H3) compatible device
- 	- "renesas,usbhs-r8a7796" for r8a7796 (R-Car M3-W) compatible device
- 	- "renesas,usbhs-r8a77995" for r8a77995 (R-Car D3) compatible device
-+	- "renesas,usbhs-r7s72100" for r7s72100 (RZ/A1) compatible device
- 	- "renesas,rcar-gen2-usbhs" for R-Car Gen2 or RZ/G1 compatible devices
- 	- "renesas,rcar-gen3-usbhs" for R-Car Gen3 compatible device
-+	- "renesas,rza1-usbhs" for RZ/A1 compatible device
- 
- 	When compatible with the generic version, nodes must list the
- 	SoC-specific version corresponding to the platform first followed
+diff --git a/arch/arm/boot/dts/r7s72100.dtsi b/arch/arm/boot/dts/r7s72100.dtsi
+index ab9645a42eca..bd6366d1800b 100644
+--- a/arch/arm/boot/dts/r7s72100.dtsi
++++ b/arch/arm/boot/dts/r7s72100.dtsi
+@@ -667,4 +667,24 @@
+ 		power-domains = <&cpg_clocks>;
+ 		status = "disabled";
+ 	};
++
++	usbhs0: usb@e8010000 {
++		compatible = "renesas,usbhs-r7s72100", "renesas,rza1-usbhs";
++		reg = <0xe8010000 0x1a0>;
++		interrupts = <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&mstp7_clks R7S72100_CLK_USB0>;
++		renesas,buswait = <4>;
++		power-domains = <&cpg_clocks>;
++		status = "disabled";
++	};
++
++	usbhs1: usb@e8207000 {
++		compatible = "renesas,usbhs-r7s72100", "renesas,rza1-usbhs";
++		reg = <0xe8207000 0x1a0>;
++		interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&mstp7_clks R7S72100_CLK_USB1>;
++		renesas,buswait = <4>;
++		power-domains = <&cpg_clocks>;
++		status = "disabled";
++	};
+ };
 -- 
 2.15.1
 
