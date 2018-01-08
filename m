@@ -1,161 +1,59 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH V8 3/3] OPP: Allow "opp-hz" and "opp-microvolt" to
- contain magic values
-Date: Mon, 8 Jan 2018 09:46:43 +0530
-Message-ID: <20180108041643.GC4003@vireshk-i7>
-References: <cover.1513591822.git.viresh.kumar@linaro.org>
- <476d7ae69184d787ccc6d99f8df6069007fd0a91.1513591822.git.viresh.kumar@linaro.org>
- <20171226202955.32j7gzonrixtwdpt@rob-hp-laptop>
- <20171227085645.GF8312@vireshk-i7>
- <CAL_JsqJzMfNhHK=6Wt4dzBRS9BVGMZ-f7uk3OnUupudTfwuyUA@mail.gmail.com>
- <20171228043725.GB8652@vireshk-i7>
- <20171229003253.GD7997@codeaurora.org>
- <20171229045854.GE8652@vireshk-i7>
- <20180105221954.GC21040@codeaurora.org>
+From: Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 0/6] Initial support for NVIDIA Tegra194
+Date: Mon, 8 Jan 2018 06:54:32 +0200
+Message-ID: <1515387278-29777-1-git-send-email-mperttunen@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180105221954.GC21040@codeaurora.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Rob Herring <robh@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Kevin Hilman <khilman@kernel.org>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Rafael Wysocki <rjw@rjwysocki.net>, linux-pm@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, Sudeep Holla <sudeep.holla@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: talho-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05-01-18, 14:19, Stephen Boyd wrote:
-> On 12/29, Viresh Kumar wrote:
+Hello everyone,
 
-> Could you please point to Kevin's comments and also include the
+this series adds initial support for the NVIDIA Tegra194 "Xavier"
+system-on-chip. Initially UART, I2C, SDMMC, as well as the PMIC
+are supported, allowing booting to a console.
 
-https://lkml.kernel.org/r/m2r30i4w35.fsf@baylibre.com
+The changes consist almost completely of the new device trees,
+however some fixes are required in the BPMP driver to support the
+new channel layout in Tegra194.
 
-> reasoning behind magic values in the commit text for the patch?
-> It would be very helpful to know why something is done a certain
-> way. The two to three line commit text in this patch is not
-> helpful right now.
+The series has been tested on Tegra186 (Jetson TX2) and Tegra194
+(P2972).
 
-Sure.
+Cheers,
+Mikko
 
-> > https://github.com/rrnayak/linux/commits/genpd-performance-state
-> 
-> Thanks for the pointer. That whole matching devices with
-> of_match_device() is not looking good.
+Mikko Perttunen (6):
+  firmware: tegra: Simplify channel management
+  soc/tegra: Add Tegra194 SoC configuration option
+  soc/tegra: pmc: Add Tegra194 compatibility string
+  dt-bindings: tegra: Add documentation for nvidia,tegra194-pmc
+  arm64: tegra: Add Tegra194 chip device tree
+  arm64: tegra: Add device tree for the Tegra194 P2972-0000 board
 
-Yeah, I agree, but that was done because we didn't had these bindings
-then. Once these bindings are in place, we wouldn't require the
-of_match_device() thingy.
-
-> I don't see how we're going to convince each driver to move to
-> using the OPP framework to set a performance state + clk
-> frequency when they're going to want/need to have certain clks
-> and regulators in hand to do something besides set the frequency
-> or voltage. Probably we're going to have a hybrid approach, where
-> some drivers can just set rate and voltage through OPP because
-> it's fairly well fixed (think CPU or GPU frequency scaling),
-> while other drivers are going to set frequency and
-> voltage/performance state based on some calculation of their
-> required frequency (think of display panels or even the uart baud
-> rate or i2c bus frequency requirements).
-
-The OPP framework doesn't (and shouldn't) force drivers to move to the
-dev_pm_opp_set_rate() API. That is optional and is provided to make
-user code simpler.
-
-So, if a driver wants to handle everything by itself, it will just use
-the OPP core as "provider" for the data it needs and do everything by
-itself.
-
-> For these other drivers, I don't really want to see the OPP
-> framework proxy all the clk and regulator calls into the
-> appropriate framework by wrapping clk_round_rate(),
-> regulator_set_load(), etc. with opp_*() APIs. This becomes
-> especially annoying if OPP framework is grabbing and holding
-> these clk and regulator references in the core, instead of
-> letting the driver figure that out and tell the OPP framework
-> what resources it should operate on.
-
-Sure.
-
-> So really, I'm hoping that OPP framework "stays away" and acts as
-> a data hole, sometimes, where we can look up the performance
-> state for a particular frequency, but also have it do everything
-> to set some particular performance state and frequency, etc. if
-> the user wants that.
-
-That's how I see it as well.
-
-> And also OPP framework hopefully doesn't
-> force a rigid set of frequencies that a particular clk can be set
-> to, so that we can calculate frequencies for things like display
-> panels based on height and width of the panel, or uart baud rate
-> which is entirely use-case driven, and then ask OPP framework to
-> tell us what the performance state of a particular domain would
-> be if we are within some frequency range. Because sometimes we
-> really can't determine every possible frequency that a clk can be
-> running at, but we can figure out the maximum frequency that a
-> clk can be running at for a particular voltage/performance state
-> to support it.
-
-That makes sense to me. We can do that once we have someone who wants
-to use OPP core for such devices.
-
-> I'm not asking for test code. A git tree pointer in cover letter
-> is sufficient, with the full and complete solution to the
-> problem. Then only a few patches out of the tree sent to the list
-> is fine if you want to chunk it up into sub-topics. That way the
-> list and reviewers aren't overloaded, but if someone wants to
-> review the full picture they can do that easily.
-
-That's fine.
-
-> >         	mmc_opp_table: mmc-opp-table {
-> >         		compatible = "operating-points-v2";
-> >         		opp-shared;
-> >         
-> >         		opp00 {
-> >         			opp-hz = /bits/ 64 <208000000>;
-> >         			required-opp = <&domain_opp_1>;
-> 
-> It can have multiple phandles though, right? Makes me think it
-> should have been called 'required-opps' instead.
-
-Okay.
-
-> > static unsigned int foo_get_performance(struct generic_pm_domain *genpd,
-> > 			                struct dev_pm_opp *opp)
-> > {
-> >         /*
-> >          * Simply return freq value as we passed the state in opp-hz.
-> >          *
-> >          * If we choose to use platform-specific bindings instead of opp-hz,
-> >          * then only this routine requires to change to read the DT and provide
-> >          * the value from platform specific binding.
-> 
-> If we wanted to change this function to do a platform specific
-> thing, will we somehow get a way to access the DT node of the opp
-> passed into this function?
-
-Yes, we can do that. The OPP core already stores pointer to the node
-in the OPP structure, we will just need another API to expose that.
-
-> Also, I don't see how the foo_get_performance function will use
-> the genpd pointer passed here. Maybe that's never used?
-
-It depends actually and I think its better to pass it anyway. What if
-a single driver is handling multiple genpds and wants to do things
-differently for them? It should know which genpd it is called for,
-looks like  basic requirement to me.
-
-> Finally, I would think that a "getter" like this function would
-> be informing the framework about what the current performance
-> state is, not translating an OPP into a performance state. So the
-> whole thing looks like a misnomer, and probably should be called
-> something like xlate_opp_performance.
-
-Sure, I can name it anything.
-
-So the question still stands, are we all okay for using magic values
-or we want platform specific properties ?
+ .../bindings/arm/tegra/nvidia,tegra186-pmc.txt     |   2 +
+ arch/arm64/boot/dts/nvidia/Makefile                |   1 +
+ arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi     | 246 +++++++++++++++
+ arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts |  14 +
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi           | 334 +++++++++++++++++++++
+ arch/arm64/configs/defconfig                       |   1 +
+ drivers/firmware/tegra/bpmp.c                      | 142 ++++-----
+ drivers/soc/tegra/Kconfig                          |  10 +
+ drivers/soc/tegra/pmc.c                            |   1 +
+ include/dt-bindings/clock/tegra194-clock.h         |  59 ++++
+ include/dt-bindings/gpio/tegra194-gpio.h           |  59 ++++
+ include/dt-bindings/reset/tegra194-reset.h         |  40 +++
+ include/soc/tegra/bpmp.h                           |   4 +-
+ 13 files changed, 833 insertions(+), 80 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
+ create mode 100644 arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
+ create mode 100644 arch/arm64/boot/dts/nvidia/tegra194.dtsi
+ create mode 100644 include/dt-bindings/clock/tegra194-clock.h
+ create mode 100644 include/dt-bindings/gpio/tegra194-gpio.h
+ create mode 100644 include/dt-bindings/reset/tegra194-reset.h
 
 -- 
-viresh
+2.1.4
