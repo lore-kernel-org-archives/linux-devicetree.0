@@ -1,184 +1,87 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH v2 3/9] PCI: Add generic function to probe PCI host
- controllers
-Date: Mon, 8 Jan 2018 14:33:05 +0000
-Message-ID: <20180108143305.GC32027@red-moon>
-References: <cover.1513620412.git.cyrille.pitchen@free-electrons.com>
- <4eb40ebbad84527f57ffea73435a46407d0b1637.1513620412.git.cyrille.pitchen@free-electrons.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v5 1/3] clocksource/drivers/atcpit100: Add andestech
+ atcpit100 timer
+Date: Mon, 8 Jan 2018 16:26:30 +0100
+Message-ID: <CAK8P3a2NVj_M5eHT92fJYNBG3x9juVnHW6uV32p3-ytfqjARxg@mail.gmail.com>
+References: <1513057621-19084-1-git-send-email-rickchen36@gmail.com>
+ <1513057621-19084-2-git-send-email-rickchen36@gmail.com> <bb7383ba-bb8e-3cbd-4ce0-faaefa8ed114@linaro.org>
+ <CAEbi=3cEEtLQRiv-cyUwEmcBNOC2Sz7AhzZkpznQWYb9VUojug@mail.gmail.com>
+ <ff51fff7-e963-f9fd-10d6-9b90a64d7aac@linaro.org> <CAEbi=3c4yAx7Tejz8aPw3-3vj89t8cg-zNEY-vbF7KaMo8OM0Q@mail.gmail.com>
+ <efdb249a-8dc0-e076-a1db-20cecdbf4c13@linaro.org> <CAEbi=3frQYZHb0yiMvNk_JUiUCy6ca0tbrsM_pt49LtkMy47mw@mail.gmail.com>
+ <1e75edb3-8f7b-796c-6871-1612b027050e@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4eb40ebbad84527f57ffea73435a46407d0b1637.1513620412.git.cyrille.pitchen@free-electrons.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
-Cc: bhelgaas@google.com, kishon@ti.com, linux-pci@vger.kernel.org, adouglas@cadence.com, stelford@cadence.com, dgary@cadence.com, kgopi@cadence.com, eandrews@cadence.com, thomas.petazzoni@free-electrons.com, sureshp@cadence.com, nsekhar@ti.com, linux-kernel@vger.kernel.org, robh@kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <1e75edb3-8f7b-796c-6871-1612b027050e@linaro.org>
+Sender: linux-arch-owner@vger.kernel.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Greentime Hu <green.hu@gmail.com>, Greentime <greentime@andestech.com>, Rick Chen <rickchen36@gmail.com>, Rick Chen <rick@andestech.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, linux-arch <linux-arch@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, netdev <netdev@vger.kernel.org>, Vincent Chen <deanbo422@gmail.com>, DTML <devicetree@vger.kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, David Howells <dhowells@redhat.com>, Will Deacon <will.deacon@arm.com>, linux-serial@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 18, 2017 at 07:16:03PM +0100, Cyrille Pitchen wrote:
-> This patchs moves generic source code from
-> drivers/pci/host/pci-host-common.c into drivers/pci/probe.c.
-> 
-> Indeed the extracted lines of code were duplicated by many host
-> controller drivers. Regrouping them into a generic function gives a
-> change to properly share this code without introducing a useless
-> dependency to PCI_HOST_COMMON, which selects PCI_ECAM when not needed by
-> most host controller drivers.
-> 
-> Signed-off-by: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
-> ---
->  drivers/pci/host/pci-host-common.c | 38 +++--------------------------
->  drivers/pci/probe.c                | 50 ++++++++++++++++++++++++++++++++++++++
->  include/linux/pci.h                |  3 +++
->  3 files changed, 57 insertions(+), 34 deletions(-)
-> 
-> diff --git a/drivers/pci/host/pci-host-common.c b/drivers/pci/host/pci-host-common.c
-> index a613ea310e76..ba5d3dab5d89 100644
-> --- a/drivers/pci/host/pci-host-common.c
-> +++ b/drivers/pci/host/pci-host-common.c
-> @@ -72,7 +72,6 @@ int pci_host_common_probe(struct platform_device *pdev,
->  	const char *type;
->  	struct device *dev = &pdev->dev;
->  	struct device_node *np = dev->of_node;
-> -	struct pci_bus *bus, *child;
->  	struct pci_host_bridge *bridge;
->  	struct pci_config_window *cfg;
->  	struct list_head resources;
-> @@ -95,41 +94,12 @@ int pci_host_common_probe(struct platform_device *pdev,
->  	if (IS_ERR(cfg))
->  		return PTR_ERR(cfg);
->  
-> -	/* Do not reassign resources if probe only */
-> -	if (!pci_has_flag(PCI_PROBE_ONLY))
-> -		pci_add_flags(PCI_REASSIGN_ALL_BUS);
-> -
-> -	list_splice_init(&resources, &bridge->windows);
-> -	bridge->dev.parent = dev;
-> -	bridge->sysdata = cfg;
-> -	bridge->busnr = cfg->busr.start;
-> -	bridge->ops = &ops->pci_ops;
-> -	bridge->map_irq = of_irq_parse_and_map_pci;
-> -	bridge->swizzle_irq = pci_common_swizzle;
+On Fri, Jan 5, 2018 at 10:31 AM, Daniel Lezcano
+<daniel.lezcano@linaro.org> wrote:
+>>> No. Can't you add in arch/ndis32/Kconfig ?
+>>>
+>>> +select TIMER_ATCPIT100
+>>>
+>>> Like:
+>>>
+>>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm64/Kconfig#n50
+>>
+>> IMHO, it might be a little bit wierd if we select TIMER_ATCPIT100 in
+>> arch/nds32/Kconfig because it is part of SoC instead of CPU.
+>> If we change to another SoC with another timer, we need to select
+>> another TIMER in arch/nds32/Kconfig and delete TIMER_ATCPIT100.
+>> It seems more flexible to be selected in driver layer.
+>>
+>> It seems to be the timer is part of the arch to be selected in arch's Kconfig.
+>> arch/arc/Kconfig:       select ARC_TIMERS
+>> arch/arc/Kconfig:       select ARC_TIMERS_64BIT
+>> arch/arm/Kconfig:       select ARM_ARCH_TIMER
+>> arch/arm64/Kconfig:     select ARM_ARCH_TIMER
+>> arch/blackfin/Kconfig:  select BFIN_GPTIMERS
+>
+> No, the timer must be selected from the arch/soc's or whatever Kconfig.
+> Not in the clocksource's Kconfig.
+>
+> eg.
+>
+> on ARM:
+>
+> arch/arm/mach-vt8500/Kconfig:   select VT8500_TIMER
+> arch/arm/mach-bcm/Kconfig:      select BCM_KONA_TIMER
+> arch/arm/mach-actions/Kconfig:  select OWL_TIMER
+> arch/arm/mach-digicolor/Kconfig:        select DIGICOLOR_TIMER
+>
+> etc ...
+>
+> on ARM64:
+>
+> arch/arm64/Kconfig.platforms:   select OWL_TIMER
+> arch/arm64/Kconfig.platforms:       select ARM_TIMER_SP804
+> arch/arm64/Kconfig.platforms:       select MTK_TIMER
+>
+> etc ...
 
-Hi Cyrille,
+I'd actually prefer to not do it for ARM either: Most other subsystems
+don't do that, and I don't see a strong reason why clocksource should
+be special here.
 
-I appreciate the idea, I think though that the setting of
-PCI_REASSIGN_ALL_BUS and the bridge hooks/members initialization should
-be left to the host bridges probe routines, that was the reasoning
-behind adding those hooks to struct pci_host_bridge in the first place.
+Selecting 'TIMER_OF' from the individual drivers that need it (as you
+suggest) makes sense, but I think for ARM we treat SoC families
+as a bit too special, in the end they are for the most part collections
+of individual hardware blocks that may or may not be present on
+some chip.
 
-You can create an OF wrapper that does call the resulting function (eg
-of_pci_host_common_probe()) that sets the {map/swizzle}_irq() to the OF
-version and then call pci_host_common_probe().
+In case of risc-v and nds32, I expect that the separation will be
+even less visibile in the hardware, as a typical model here is
+that one company designs SoCs for multiple customers that each
+have different requirements. Some of them may have one
+timer and some have another timer or multiple timers, but there
+is no strict separation between SoC families as I understand.
+Here we'd be better off not having a per-SoC Kconfig option at
+all, just a generic defconfig that enables all the drivers that might
+be used, and integrators can have a defconfig file that only
+enables the stuff they actually use on a given chip.
 
-Lorenzo
-
-> -
-> -	ret = pci_scan_root_bus_bridge(bridge);
-> -	if (ret < 0) {
-> -		dev_err(dev, "Scanning root bridge failed");
-> +	ret = pci_host_probe(bridge, dev, cfg->busr.start, &ops->pci_ops, cfg,
-> +			     &resources);
-> +	if (ret) {
-> +		pci_free_resource_list(&resources);
->  		return ret;
->  	}
->  
-> -	bus = bridge->bus;
-> -
-> -	/*
-> -	 * We insert PCI resources into the iomem_resource and
-> -	 * ioport_resource trees in either pci_bus_claim_resources()
-> -	 * or pci_bus_assign_resources().
-> -	 */
-> -	if (pci_has_flag(PCI_PROBE_ONLY)) {
-> -		pci_bus_claim_resources(bus);
-> -	} else {
-> -		pci_bus_size_bridges(bus);
-> -		pci_bus_assign_resources(bus);
-> -
-> -		list_for_each_entry(child, &bus->children, node)
-> -			pcie_bus_configure_settings(child);
-> -	}
-> -
-> -	pci_bus_add_devices(bus);
->  	return 0;
->  }
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 1360db508035..3dfdc579b7de 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -2685,6 +2685,56 @@ struct pci_bus *pci_create_root_bus(struct device *parent, int bus,
->  }
->  EXPORT_SYMBOL_GPL(pci_create_root_bus);
->  
-> +int pci_host_probe(struct pci_host_bridge *bridge,
-> +		   struct device *parent,
-> +		   int busnr,
-> +		   struct pci_ops *ops,
-> +		   void *sysdata,
-> +		   struct list_head *resources)
-> +{
-> +	struct pci_bus *bus, *child;
-> +	int ret;
-> +
-> +	/* Do not reassign resources if probe only */
-> +	if (!pci_has_flag(PCI_PROBE_ONLY))
-> +		pci_add_flags(PCI_REASSIGN_ALL_BUS);
-> +
-> +	list_splice_init(resources, &bridge->windows);
-> +	bridge->dev.parent = parent;
-> +	bridge->sysdata = sysdata;
-> +	bridge->busnr = busnr;
-> +	bridge->ops = ops;
-> +	bridge->map_irq = of_irq_parse_and_map_pci;
-> +	bridge->swizzle_irq = pci_common_swizzle;
-> +
-> +	ret = pci_scan_root_bus_bridge(bridge);
-> +	if (ret < 0) {
-> +		dev_err(parent, "Scanning root bridge failed");
-> +		return ret;
-> +	}
-> +
-> +	bus = bridge->bus;
-> +
-> +	/*
-> +	 * We insert PCI resources into the iomem_resource and
-> +	 * ioport_resource trees in either pci_bus_claim_resources()
-> +	 * or pci_bus_assign_resources().
-> +	 */
-> +	if (pci_has_flag(PCI_PROBE_ONLY)) {
-> +		pci_bus_claim_resources(bus);
-> +	} else {
-> +		pci_bus_size_bridges(bus);
-> +		pci_bus_assign_resources(bus);
-> +
-> +		list_for_each_entry(child, &bus->children, node)
-> +			pcie_bus_configure_settings(child);
-> +	}
-> +
-> +	pci_bus_add_devices(bus);
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(pci_host_probe);
-> +
->  int pci_bus_insert_busn_res(struct pci_bus *b, int bus, int bus_max)
->  {
->  	struct resource *res = &b->busn_res;
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 11823f4f1d83..e76df07dac07 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -879,6 +879,9 @@ struct pci_bus *pci_scan_bus(int bus, struct pci_ops *ops, void *sysdata);
->  struct pci_bus *pci_create_root_bus(struct device *parent, int bus,
->  				    struct pci_ops *ops, void *sysdata,
->  				    struct list_head *resources);
-> +int pci_host_probe(struct pci_host_bridge *bridge, struct device *parent,
-> +		   int busnr, struct pci_ops *ops, void *sysdata,
-> +		   struct list_head *resources);
->  int pci_bus_insert_busn_res(struct pci_bus *b, int bus, int busmax);
->  int pci_bus_update_busn_res_end(struct pci_bus *b, int busmax);
->  void pci_bus_release_busn_res(struct pci_bus *b);
-> -- 
-> 2.11.0
-> 
+      Arnd
