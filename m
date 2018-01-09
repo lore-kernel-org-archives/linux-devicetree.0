@@ -1,61 +1,73 @@
-From: Anson Huang <Anson.Huang@nxp.com>
-Subject: [PATCH V4 1/2] clk: imx: imx7d: add the snvs clock
-Date: Tue, 9 Jan 2018 17:52:05 +0800
-Message-ID: <1515491526-14060-1-git-send-email-Anson.Huang@nxp.com>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: Re: [PATCH 1/7] ARM: imx: add timer stop flag to ARM power off state
+Date: Tue, 09 Jan 2018 11:13:23 +0100
+Message-ID: <1515492803.12538.29.camel@pengutronix.de>
+References: <20180102164223.15230-1-stefan@agner.ch>
+         <20180109092232.GA26312@b29396-OptiPlex-7040>
+         <AM3PR04MB13155287E5AAAF5407AF68A6F5100@AM3PR04MB1315.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: horia.geanta@nxp.com, aymen.sghaier@nxp.com, herbert@gondor.apana.org.au, davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, mturquette@baylibre.com, sboyd@codeaurora.org, adriana.reus@nxp.com, stefan@agner.ch, dongas86@gmail.com
-Cc: devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <AM3PR04MB13155287E5AAAF5407AF68A6F5100@AM3PR04MB1315.eurprd04.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Anson Huang <anson.huang@nxp.com>, Dong Aisheng <dongas86@gmail.com>, Stefan Agner <stefan@agner.ch>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-According to the i.MX7D Reference Manual,
-SNVS block has a clock gate, accessing SNVS block
-would need this clock gate to be enabled, add it
-into clock tree so that SNVS module driver can
-operate this clock gate.
+Am Dienstag, den 09.01.2018, 09:25 +0000 schrieb Anson Huang:
+> 
+> Best Regards!
+> Anson Huang
+> 
+> 
+> > -----Original Message-----
+> > From: Dong Aisheng [mailto:dongas86@gmail.com]
+> > Sent: 2018-01-09 5:23 PM
+> > To: Stefan Agner <stefan@agner.ch>
+> > Cc: shawnguo@kernel.org; kernel@pengutronix.de; Fabio Estevam
+> > <fabio.estevam@nxp.com>; robh+dt@kernel.org; mark.rutland@arm.com;
+> > linux-arm-kernel@lists.infradead.org; devicetree@vger.kernel.org;
+> > linux-
+> > kernel@vger.kernel.org; Anson Huang <anson.huang@nxp.com>; dl-
+> > linux-imx
+> > <linux-imx@nxp.com>
+> > Subject: Re: [PATCH 1/7] ARM: imx: add timer stop flag to ARM power
+> > off state
+> > 
+> > On Tue, Jan 02, 2018 at 05:42:17PM +0100, Stefan Agner wrote:
+> > > When the CPU is in ARM power off state the ARM architected timers
+> > > are
+> > > stopped. The flag is already present in the higher power WAIT
+> > > mode.
+> > > 
+> > > This allows to use the ARM generic timer on i.MX 6UL/6ULL SoC.
+> > > Without the flag the kernel freezes when the timer enters the
+> > > first
+> > > time ARM power off mode.
+> > > 
+> > > Cc: Anson Huang <anson.huang@nxp.com>
+> > > Signed-off-by: Stefan Agner <stefan@agner.ch>
+> > 
+> > It seems ok at my side.
+> > Did you meet the real issue? If yes, how to reproduce?
+> > 
+> > Both mx6sx and mx6ul are using GPT which do not need that flag,
+> > suppose we
+> > should remove it, right?
+> > Anson can help confirm it.
+> 
+> For UP system like i.MX6SX, we do NOT enable "cortex-a9-twd-timer",
+> so local
+> timer is NOT used, GPT is used instead, GPT's clock is NOT disabled
+> when cpuidle,
+> so I think we should remove all these Timer stop flag for 6SX
+> CPUIDLE.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Acked-by: Dong Aisheng <aisheng.dong@nxp.com>
-Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
----
- drivers/clk/imx/clk-imx7d.c             | 1 +
- include/dt-bindings/clock/imx7d-clock.h | 3 ++-
- 2 files changed, 3 insertions(+), 1 deletion(-)
+It's correct to set the flag even on UP systems, as the flag means the
+CPU _local_ timer is stopped in this sleep mode. Also there are systems
+out there which are using the TWD on UP, as it operates at a higher
+frequency leading to better wakeup granularity.
 
-diff --git a/drivers/clk/imx/clk-imx7d.c b/drivers/clk/imx/clk-imx7d.c
-index 80dc211..f34f1ec 100644
---- a/drivers/clk/imx/clk-imx7d.c
-+++ b/drivers/clk/imx/clk-imx7d.c
-@@ -795,6 +795,7 @@ static void __init imx7d_clocks_init(struct device_node *ccm_node)
- 	clks[IMX7D_DRAM_PHYM_ALT_ROOT_CLK] = imx_clk_gate4("dram_phym_alt_root_clk", "dram_phym_alt_post_div", base + 0x4130, 0);
- 	clks[IMX7D_DRAM_ALT_ROOT_CLK] = imx_clk_gate4("dram_alt_root_clk", "dram_alt_post_div", base + 0x4130, 0);
- 	clks[IMX7D_OCOTP_CLK] = imx_clk_gate4("ocotp_clk", "ipg_root_clk", base + 0x4230, 0);
-+	clks[IMX7D_SNVS_CLK] = imx_clk_gate4("snvs_clk", "ipg_root_clk", base + 0x4250, 0);
- 	clks[IMX7D_USB_HSIC_ROOT_CLK] = imx_clk_gate4("usb_hsic_root_clk", "usb_hsic_post_div", base + 0x4420, 0);
- 	clks[IMX7D_SDMA_CORE_CLK] = imx_clk_gate4("sdma_root_clk", "ahb_root_clk", base + 0x4480, 0);
- 	clks[IMX7D_PCIE_CTRL_ROOT_CLK] = imx_clk_gate4("pcie_ctrl_root_clk", "pcie_ctrl_post_div", base + 0x4600, 0);
-diff --git a/include/dt-bindings/clock/imx7d-clock.h b/include/dt-bindings/clock/imx7d-clock.h
-index e2f99ae..dc51904 100644
---- a/include/dt-bindings/clock/imx7d-clock.h
-+++ b/include/dt-bindings/clock/imx7d-clock.h
-@@ -452,5 +452,6 @@
- #define IMX7D_OCOTP_CLK			439
- #define IMX7D_NAND_RAWNAND_CLK		440
- #define IMX7D_NAND_USDHC_BUS_RAWNAND_CLK 441
--#define IMX7D_CLK_END			442
-+#define IMX7D_SNVS_CLK			442
-+#define IMX7D_CLK_END			443
- #endif /* __DT_BINDINGS_CLOCK_IMX7D_H */
--- 
-1.9.1
+Regards,
+Lucas
