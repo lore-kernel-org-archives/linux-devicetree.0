@@ -1,105 +1,96 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [Letux-kernel] [PATCH v5 3/5] misc serdev: Add w2sg0004 (gps
- receiver) power control driver
-Date: Tue, 9 Jan 2018 12:55:11 +0100
-Message-ID: <90F9A8E4-035A-4A9E-8AAB-757491D63E69@goldelico.com>
-References: <cover.1512114576.git.hns@goldelico.com>
- <5494ad34b39a6c62601e3747440268dfb3be7d5a.1512114576.git.hns@goldelico.com>
- <20171222124427.GI3374@localhost>
- <91850CC3-B280-4701-9D07-96AFF3A79A6F@goldelico.com>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <91850CC3-B280-4701-9D07-96AFF3A79A6F@goldelico.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Johan Hovold <johan@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>, Thierry Reding <treding@nvidia.com>, Jonathan Cameron <jic23@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Tony Lindgren <tony@atomide.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Russell King <linux@armlinux.org.uk>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Kevin Hilman <khilman@baylibre.com>, =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, kernel@pyra-handheld.com, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, linux-omap <linux-omap@vger.kernel.org>, =?utf-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [RFC PATCH 0/9] soc: samsung: Add support of suspend-to-RAM on Exynos5433
+Date: Tue, 9 Jan 2018 12:56:32 +0100
+Message-ID: <CAJKOXPcJPbVR+WqAzhM8Tuud1Pd9W2p_23iTUveXc5aJtgTJCg@mail.gmail.com>
+References: <CGME20180109075904epcas2p302d58aacfbb2195e455a25c90a1c610b@epcas2p3.samsung.com>
+ <1515484746-10656-1-git-send-email-cw00.choi@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1515484746-10656-1-git-send-email-cw00.choi@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chanwoo Choi <cw00.choi@samsung.com>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, kgene@kernel.org, Tomasz Figa <tomasz.figa@gmail.com>, chanwoo@kernel.org, Jaehoon Chung <jh80.chung@samsung.com>, Inki Dae <inki.dae@samsung.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Johan,
+On Tue, Jan 9, 2018 at 8:58 AM, Chanwoo Choi <cw00.choi@samsung.com> wrote:
+> In the mainline, there is no case to support the suspend-to-RAM for Samsung
+> Exynos SoC. This patchset support the suspend-to-RAM for 64bit Exynos SoC.
+>
+> For 32bit, arch/arm/mach-exynos/* directoy contains the suspend-related
+> codes such as suspend.c/exynos.c. But, 64bit Exynos should contain
+> the suspend-related codes in the drivers/soc/samsung/*. So, this patchset
+> develop the patch4/5 for drivers/soc/samsung/exynos-pm.c. to support suspend
+> 64bit Exynos SoC.
+>
+> But, I'm not sure what is proper approach for both 32/64bit Exynos.
+> - Approach1 : Split out the supend-related codes between 32/64bit.
+>   : arch/arm/mach-exynos/* contains the suspend-related codes for 32bit.
+>   : drivers/soc/samsung/* contains the suspend-related codes for 64bit.
+> - Approach2 : Consolidate the all suspend-related codes to drivers/soc/samsung/.
 
-> Am 22.12.2017 um 15:40 schrieb H. Nikolaus Schaller <hns@goldelico.com>:
-> 
-> Hi Johan,
-> 
->> Am 22.12.2017 um 13:44 schrieb Johan Hovold <johan@kernel.org>:
->> 
->> On Fri, Dec 01, 2017 at 08:49:36AM +0100, H. Nikolaus Schaller wrote:
->>> Add driver for Wi2Wi W2SG0004/84 GPS module connected to some SoC UART.
->>> 
->>> It uses serdev API hooks to monitor and forward the UART traffic to /dev/ttyGPSn
->>> and turn on/off the module. It also detects if the module is turned on (sends data)
->>> but should be off, e.g. if it was already turned on during boot or power-on-reset.
->>> 
->>> Additionally, rfkill block/unblock can be used to control an external LNA
->>> (and power down the module if not needed).
->>> 
->>> The driver concept is based on code developed by Neil Brown <neilb@suse.de>
->>> but simplified and adapted to use the new serdev API introduced in v4.11.
->> 
->> I'm sorry (and I know this discussion has been going on for a long
->> time),but this still feels like too much of a hack.
+I prefer approach #2 - consolidate the code... unless this creates
+some unmaintainable monster :)
 
-Happy new year ... Happy new attempt...
+Best regards,
+Krzysztof
 
-Let's restart this discussion and focus on the main roadblock (others are minor
-details which can be sorted out later).
-
-If it feels like a hack, the key issue seems to me to be the choice of
-the API to present the GPS data to user space. Right?
-
-I see three reasonable options how this presentation can be done:
-
-1. char device
-2. tty device
-3. some new gps interface API (similar to network, bluetooth interfaces)
-4. no driver and use the UART tty directly
-
-Pros and cons:
-
-1. char device
-+ seems to save resources (but IMHO doesn't if we look deeper to handle select, blocking, buffer overflow)
-- the standard function of buffering a character stream has to be done by this driver again, although tty subsystem already has proper buffering
-- no line disciplines (e.g. if some gps client wants to translate CR and NL or use canonical/noncanonical mode)
-- capabilities of the interface change if same chip is connected through USB or Bluetooth serial interface
-
-2. tty device
-+ full tty port like USB, Bluetooth or UART connection (w/o driver)
-+ handles tcsetattr like USB, Bluetooth or UART
-+ buffering and line disciplines come for free (at least wrt. driver code)
-+ tested
-- seems to appear to be complex and overkill and a hack (but IMHO is neither)
-
-3. some new gps interface API
-+ could become very elegant and general
-- does not exist (AFAIK not even a plan but I am not aware of everything)
-- no user-space daemons and applications exist which use it
-
-4. no driver and use UART directly
-+ a non-solution seems to be attractive
-- must turn on/off chip by gpio hacks from user-space
-- can not guarantee (!) to power off the chip if the last user-space process using it is killed
-  (which is essential for power-management of a handheld, battery operated device)
-
-I would clearly prefer 3 over 2 over 1 over 4.
-
-So do you see a chance that the kernel core team provides something useable
-(not perfect) for variant 3 in reasonable time (let's say 3-6 months)?
-
-If not, I want to suggest to accept the second-best choice 2. for now and we
-will update the driver as soon as 3. appears. IMHO it would be a good test case
-for a new subsystem.
-
-Please advise how you want to proceed.
-
-BR and thanks,
-Nikolaus
+>
+> Please let us know your opinion.
+>
+> The patch1/2/3 and 6/7/8/9 is just general patch. So, I add 'RFC' prefix to
+> only cover-letter, patch4/5. If you want to add the 'RFC' prefix to all
+> patches, I'll add 'RFC' prefix on v2.
+>
+> Based on:
+> - git://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux.git (branch: for-next)
+>
+> Need to discuss patch4/5:
+> - patch4: soc: samsung: Add generic power-management driver for Exynos
+> - patch5: soc: samsung: pm: Add support for suspend-to-ram of Exynos5433
+>
+> [Remaining Issues]
+> - The hang-out happen when disabling the MMC clocks on dw_mmc.c.
+>   I reported to Jaehoon Chung. He is checking this issue. To test the
+>   suspend-to-ram temporarily, you need to add CLK_IS_CRITICAL flag to
+>   'aclk_mmc2/aclk_mmc0/sclk_mmc2/sclk_mmc0'.
+> - I enabled the at least kernel configuration in order to test
+>   the suspend-to-RAM. So, I need to test it more time with DRM/Multimedia
+>   and other. But, the suspend-to-RAM of cpu is successful.
+> - Exynos5433 SoC has two EXYNOS5433_EINT_WAKEUP_MASKx registers. The
+>   pinctr-exynos.c need to handle the extra EINT_WAKEUP_MASKx for Exynos5433.
+>   The suspend-to-ram test is failed on first time and then next tryout is ok.
+>   I'm developing it.
+>
+> Chanwoo Choi (9):
+>   clk: samsung: exynos5433: Add clock flag to support suspend-to-ram
+>   soc: samsung: pmu: Add powerup_conf callback
+>   soc: samsung: pmu: Add the PMU data of exynos5433 to support low-power state
+>   soc: samsung: Add generic power-management driver for Exynos
+>   soc: samsung: pm: Add support for suspend-to-ram of Exynos5433
+>   arm64: dts: exynos: Add iRAM device-tree node for Exynos5433
+>   arm64: dts: exynos: Use power key as a wakeup source on TM2/TM2E board
+>   arm64: dts: exynos: Add cpu_suspend property of PSCI for exynos5433
+>   arm64: dts: exynos: Add cpu topology information for Exynos5433 SoC
+>
+>  arch/arm/mach-exynos/common.h                      |   3 -
+>  arch/arm/mach-exynos/exynos.c                      |  23 +-
+>  .../boot/dts/exynos/exynos5433-tm2-common.dtsi     |   1 +
+>  arch/arm64/boot/dts/exynos/exynos5433.dtsi         |  47 ++++
+>  drivers/clk/samsung/clk-exynos5433.c               |  22 +-
+>  drivers/soc/samsung/Makefile                       |   5 +-
+>  drivers/soc/samsung/exynos-pm.c                    | 214 +++++++++++++++
+>  drivers/soc/samsung/exynos-pmu.c                   |   9 +
+>  drivers/soc/samsung/exynos-pmu.h                   |   3 +
+>  drivers/soc/samsung/exynos5433-pmu.c               | 286 +++++++++++++++++++++
+>  include/linux/soc/samsung/exynos-pm.h              |  21 ++
+>  include/linux/soc/samsung/exynos-pmu.h             |   1 +
+>  include/linux/soc/samsung/exynos-regs-pmu.h        | 148 +++++++++++
+>  13 files changed, 745 insertions(+), 38 deletions(-)
+>  create mode 100644 drivers/soc/samsung/exynos-pm.c
+>  create mode 100644 drivers/soc/samsung/exynos5433-pmu.c
+>  create mode 100644 include/linux/soc/samsung/exynos-pm.h
+>
+> --
+> 1.9.1
+>
