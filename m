@@ -1,93 +1,62 @@
-From: Dong Aisheng <dongas86@gmail.com>
-Subject: Re: [PATCH V3 2/2] ARM: dts: imx7s: add snvs rtc clock
-Date: Tue, 9 Jan 2018 17:47:16 +0800
-Message-ID: <20180109094716.GH26312@b29396-OptiPlex-7040>
-References: <1515489651-13488-1-git-send-email-Anson.Huang@nxp.com>
- <1515489651-13488-2-git-send-email-Anson.Huang@nxp.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 04/16] ARM: dtsi: axp209: add node for ADC
+Date: Tue, 9 Jan 2018 10:48:46 +0100
+Message-ID: <20180109094846.fubahuqk5f4yuzrm@flea>
+References: <cover.1e46d70f7931be8154b450a2fcdf066450a1aa6f.1515486346.git-series.quentin.schulz@free-electrons.com>
+ <d4de180d7f9555c3851f29a8c34d1f706cafd83e.1515486346.git-series.quentin.schulz@free-electrons.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="hdj2fkanbsoihfpk"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBCNA2LJAKGQE23WVB6Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <1515489651-13488-2-git-send-email-Anson.Huang@nxp.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Anson Huang <Anson.Huang@nxp.com>
-Cc: horia.geanta@nxp.com, aymen.sghaier@nxp.com, herbert@gondor.apana.org.au, davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, mturquette@baylibre.com, sboyd@codeaurora.org, adriana.reus@nxp.com, stefan@agner.ch, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-imx@nxp.com
+In-Reply-To: <d4de180d7f9555c3851f29a8c34d1f706cafd83e.1515486346.git-series.quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 09, 2018 at 05:20:51PM +0800, Anson Huang wrote:
-> Add i.MX7 SNVS RTC clock.
+
+--hdj2fkanbsoihfpk
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+
+On Tue, Jan 09, 2018 at 10:33:35AM +0100, Quentin Schulz wrote:
+> This adds a DT node for the ADC of the PMIC so that there can be
+> consumers of its IIO channels declaring their consumptions via DT.
 > 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Signed-off-by: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 > ---
-> changes since v2:
-> 	improve the binding doc statement about clocks.
->  Documentation/devicetree/bindings/crypto/fsl-sec4.txt | 15 +++++++++++++++
->  arch/arm/boot/dts/imx7s.dtsi                          |  2 ++
->  2 files changed, 17 insertions(+)
+>  arch/arm/boot/dts/axp209.dtsi | 5 +++++
+>  1 file changed, 5 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/crypto/fsl-sec4.txt b/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
-> index 76aec8a..7329f29 100644
-> --- a/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
-> +++ b/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
-> @@ -415,12 +415,25 @@ Secure Non-Volatile Storage (SNVS) Low Power (LP) RTC Node
->  	value type: <u32>
->  	Definition: LP register offset. default it is 0x34.
->  
-> +   - clocks
-> +      Usage: required if SNVS LP RTC requires explicit enablement of clocks
-> +      Value type: <prop_encoded-array>
-> +      Definition:  a clock specifier describing the clock required for
-> +          enabling and disabling SNVS LP RTC.
-> +
-
-This clock seem optional.
-Should we indicate it here explicitly?
-
-BTW, i thought we probably could update poweroff and key as well at
-the same time since device tree changes can go separately.
-Does it make sense?
-
-Regards
-Dong Aisheng
-
-> +   - clock-names
-> +      Usage: required if SNVS LP RTC requires explicit enablement of clocks
-> +      Value type: <string>
-> +      Definition: clock name string should be "snvs-rtc".
-> +
->  EXAMPLE
->  	sec_mon_rtc_lp@1 {
->  		compatible = "fsl,sec-v4.0-mon-rtc-lp";
->  		interrupts = <93 2>;
->  		regmap = <&snvs>;
->  		offset = <0x34>;
-> +		clocks = <&clks IMX7D_SNVS_CLK>;
-> +		clock-names = "snvs-rtc";
+> diff --git a/arch/arm/boot/dts/axp209.dtsi b/arch/arm/boot/dts/axp209.dtsi
+> index 897103e..a2e0052 100644
+> --- a/arch/arm/boot/dts/axp209.dtsi
+> +++ b/arch/arm/boot/dts/axp209.dtsi
+> @@ -58,6 +58,11 @@
+>  		status = "disabled";
 >  	};
 >  
->  =====================================================================
-> @@ -543,6 +556,8 @@ FULL EXAMPLE
->  			regmap = <&sec_mon>;
->  			offset = <0x34>;
->  			interrupts = <93 2>;
-> +			clocks = <&clks IMX7D_SNVS_CLK>;
-> +			clock-names = "snvs-rtc";
->  		};
->  
->  		snvs-pwrkey@020cc000 {
-> diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
-> index 9aa2bb9..02baf42 100644
-> --- a/arch/arm/boot/dts/imx7s.dtsi
-> +++ b/arch/arm/boot/dts/imx7s.dtsi
-> @@ -551,6 +551,8 @@
->  					offset = <0x34>;
->  					interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>,
->  						     <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
-> +					clocks = <&clks IMX7D_SNVS_CLK>;
-> +					clock-names = "snvs-rtc";
->  				};
->  
->  				snvs_poweroff: snvs-poweroff {
-> -- 
-> 1.9.1
-> 
+> +	axp_adc: axp-adc {
+
+The node nade should be adc.
+
+> +		compatible = "x-powers,axp20x-adc";
+
+And your compatible shouldn't have a wildcard but the first design
+that introduced that IP.
+
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--hdj2fkanbsoihfpk--
