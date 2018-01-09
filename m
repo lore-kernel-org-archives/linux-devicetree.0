@@ -1,128 +1,52 @@
-From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
-Subject: Re: [PATCH 04/11] drm/bridge/synopsys: dw-hdmi: Export some PHY related functions
-Date: Tue, 09 Jan 2018 17:33:37 +0100
-Message-ID: <303103903.KTokUV0fdz@jernej-laptop>
-References: <20171230210203.24115-1-jernej.skrabec@siol.net> <10903755.CJpSM8RM5e@jernej-laptop> <1586880.7NXXgpct7p@avalon>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH V2 1/5] bindings: regulator: added support for suspend
+ states
+Date: Tue, 9 Jan 2018 16:40:52 +0000
+Message-ID: <20180109164052.GD11471@sirena.org.uk>
+References: <1515050568-23876-1-git-send-email-zhang.chunyan@linaro.org>
+ <1515050568-23876-2-git-send-email-zhang.chunyan@linaro.org>
+ <20180105185328.zmt33idv2cqled62@rob-hp-laptop>
+ <20180105191837.GI9076@sirena.org.uk>
+ <CAG2=9p-ec1oVe-+O0TGYFF-E5dGrP3FoRZXb1sCyjNScVvGNQg@mail.gmail.com>
+ <20180108123533.GE11698@sirena.org.uk>
+ <CAG2=9p9D1QHErF22A+aA9OwvnBiuxAOV27iYYCzC_5ZpZzF9eQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1586880.7NXXgpct7p@avalon>
-Sender: linux-clk-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Archit Taneja <architt@codeaurora.org>, maxime.ripard@free-electrons.com, airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org, a.hajda@samsung.com, mturquette@baylibre.com, sboyd@codeaurora.org, Jose.Abreu@synopsys.com, narmstrong@baylibre.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-sunxi@googlegroups.com
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="8nsIa27JVQLqB7/C"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAG2=9p9D1QHErF22A+aA9OwvnBiuxAOV27iYYCzC_5ZpZzF9eQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chunyan Zhang <zhang.chunyan@linaro.org>
+Cc: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, Chunyan Zhang <zhang.lyra@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-Dne torek, 09. januar 2018 ob 17:08:55 CET je Laurent Pinchart napisal(a):
-> Hello,
-> 
-> On Tuesday, 9 January 2018 17:58:46 EET Jernej Škrabec wrote:
-> > Dne torek, 09. januar 2018 ob 11:43:08 CET je Archit Taneja napisal(a):
-> > > On 12/31/2017 02:31 AM, Jernej Skrabec wrote:
-> > >> Parts of PHY code could be useful also for custom PHYs. For example,
-> > >> Allwinner A83T has custom PHY which is probably Synopsys gen2 PHY
-> > >> with few additional memory mapped registers, so most of the Synopsys
-> > >> PHY
-> > >> related code could be reused.
-> > >> 
-> > >> It turns out that even completely custom HDMI PHYs, such as the one
-> > >> found in Allwinner H3, can reuse some of those functions. This would
-> > >> suggest that (some?) functions exported in this commit are actually
-> > >> part
-> > >> of generic PHY interface and not really specific to Synopsys PHYs.
-> > >> 
-> > >> Export useful PHY functions.
-> > >> 
-> > >> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> > >> ---
-> > >> 
-> > >> drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 45 +++++++++++++++++-------
-> > >> drivers/gpu/drm/bridge/synopsys/dw-hdmi.h |  2 ++
-> > >> include/drm/bridge/dw_hdmi.h              | 10 +++++++
-> > >> 3 files changed, 44 insertions(+), 13 deletions(-)
-> > >> 
-> > >> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> > >> b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c index
-> > >> 7ca14d7325b5..67467d0b683a 100644
-> > >> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> > >> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> 
-> [snip]
-> 
-> > >> @@ -1065,6 +1067,23 @@ static void
-> > >> dw_hdmi_phy_sel_interface_control(struct dw_hdmi *hdmi, u8 enable)
-> > >> 
-> > >>   			 HDMI_PHY_CONF0_SELDIPIF_MASK);
-> > >>   
-> > >>   }
-> > >> 
-> > >> +void dw_hdmi_phy_gen2_reset(struct dw_hdmi *hdmi, u8 enable)
-> > >> +{
-> > >> +	hdmi_mask_writeb(hdmi, enable, HDMI_MC_PHYRSTZ,
-> > >> +			 HDMI_MC_PHYRSTZ_PHYRSTZ_OFFSET,
-> > >> +			 HDMI_MC_PHYRSTZ_PHYRSTZ_MASK);
-> > >> +}
-> > >> +EXPORT_SYMBOL_GPL(dw_hdmi_phy_gen2_reset);
-> 
-> I don't remember the details, is the reset signal Gen2-specific ?
+--8nsIa27JVQLqB7/C
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I don't know, since there is not much documentation. Should I remove "gen2" 
-from the name?
+On Tue, Jan 09, 2018 at 02:08:45PM +0800, Chunyan Zhang wrote:
 
-> 
-> How about asserting and deasserting the reset signal in the same call
-> instead of having to call this function twice ?
+> Then, do we need a flag as well to give permission to change
+> 'suspend_state->enabled'?
 
-A83T BSP driver clears txpwron and sets pddq between asserting and deasserting 
-reset. I'll test if it works with your proposal.
+Yes, that's a separate thing which people might want to control even if
+the voltage can't be changed.
 
-> 
-> > >> +void dw_hdmi_phy_set_slave_addr(struct dw_hdmi *hdmi)
-> > >> +{
-> > >> +	hdmi_phy_test_clear(hdmi, 1);
-> > >> +	hdmi_writeb(hdmi, HDMI_PHY_I2CM_SLAVE_ADDR_PHY_GEN2,
-> > >> +		    HDMI_PHY_I2CM_SLAVE_ADDR);
-> > >> +	hdmi_phy_test_clear(hdmi, 0);
-> > >> +}
-> > >> +EXPORT_SYMBOL_GPL(dw_hdmi_phy_set_slave_addr);
-> > > 
-> > > Should this be called dw_hdmi_phy_gen2_set_slave_addr?
-> > 
-> > Probably. I will rename it in v2 to be consistent with other phy
-> > functions.
-> 
-> The I2C write function is called dw_hdmi_phy_i2c_write(). If we want to be
-> conosistent we should either rename this one to dw_hdmi_phy_i2c_set_addr()
-> or rename them both to dw_hdmi_phy_gen2_i2c_write() and
-> dw_hdmi_phy_gen2_i2c_set_addr(). I think I'd prefer the former, and we could
-> even drop gen2 from dw_hdmi_phy_gen2_pddq() and dw_hdmi_phy_gen2_txpwron()
-> if desired.
+--8nsIa27JVQLqB7/C
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Ok, then I'll name it dw_hdmi_phy_i2c_set_addr(). I'll leave other names as 
-they are.
+-----BEGIN PGP SIGNATURE-----
 
-Best regards,
-Jernej
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlpU8JMACgkQJNaLcl1U
+h9CtuQf/fgF6WEWtr9flybBFF7M8LNdCqQfuB7EcD/lsyPH07kMNL2jjqcvAEekj
+bHnzt5orDJqXMlsvY2NHxVYDkWcC5LG80qDETd/ncEbS7i0mGbznXGxrlt/LgrTY
+l6fN6tCEbhJlPPLEpOvQnaiMfi9CX2hHwHDDxyknwC1vyFHrEZqr+b8H/X2jSyAC
+C9BlVcc/kIf9Ms0BV9gWpIctbGvV8+wqaupIkc6/RJsIiOKJStuNcwHxgTLD3/CL
+iFlmOddDcJKoti2fub+nOPuyf4/xmqS3MEliOi5PKdWBL2wDj/Q9ReTgyyOufbAX
+Y0MFmWrT+hD9bZ7OdrxRFHH7e43y5w==
+=0wf8
+-----END PGP SIGNATURE-----
 
-> 
-> > > Looks good otherwise. Same for patches 3 and 4 in this series.
-> > > 
-> > >> +
-> > >> 
-> > >>   static void dw_hdmi_phy_power_off(struct dw_hdmi *hdmi)
-> > >>   {
-> > >>   
-> > >>   	const struct dw_hdmi_phy_data *phy = hdmi->phy.data;
-> 
-> [snip]
-> 
-> --
-> Regards,
-> 
-> Laurent Pinchart
-
-
-
-
+--8nsIa27JVQLqB7/C--
