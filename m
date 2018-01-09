@@ -1,27 +1,104 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH net, v3] of_mdio: avoid MDIO bus removal when a PHY is
- missing
-Date: Tue, 9 Jan 2018 14:58:48 +0100
-Message-ID: <20180109135848.GC27447@lunn.ch>
-References: <1515501814-11517-1-git-send-email-madalin.bucur@nxp.com>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: Re: [PATCH 1/7] ARM: imx: add timer stop flag to ARM power off state
+Date: Tue, 09 Jan 2018 15:04:29 +0100
+Message-ID: <1515506669.12538.31.camel@pengutronix.de>
+References: <20180102164223.15230-1-stefan@agner.ch>
+         <20180109092232.GA26312@b29396-OptiPlex-7040>
+         <AM3PR04MB13155287E5AAAF5407AF68A6F5100@AM3PR04MB1315.eurprd04.prod.outlook.com>
+         <1515492803.12538.29.camel@pengutronix.de>
+         <bacee8fe00b0ab54dfa6692bfc956ffd@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1515501814-11517-1-git-send-email-madalin.bucur@nxp.com>
+In-Reply-To: <bacee8fe00b0ab54dfa6692bfc956ffd@agner.ch>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Madalin Bucur <madalin.bucur@nxp.com>
-Cc: f.fainelli@gmail.com, davem@davemloft.net, geert+renesas@glider.be, robh+dt@kernel.org, frowand.list@gmail.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Stefan Agner <stefan@agner.ch>
+Cc: Anson Huang <anson.huang@nxp.com>, Dong Aisheng <dongas86@gmail.com>, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, dl-linux-imx <linux-imx@nxp.com>, kernel@pengutronix.de, Fabio Estevam <fabio.estevam@nxp.com>, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 09, 2018 at 02:43:34PM +0200, Madalin Bucur wrote:
-> If one of the child devices is missing the of_mdiobus_register_phy()
-> call will return -ENODEV. When a missing device is encountered the
-> registration of the remaining PHYs is stopped and the MDIO bus will
-> fail to register. Propagate all errors except ENODEV to avoid it.
+Am Dienstag, den 09.01.2018, 14:37 +0100 schrieb Stefan Agner:
+> On 2018-01-09 11:13, Lucas Stach wrote:
+> > Am Dienstag, den 09.01.2018, 09:25 +0000 schrieb Anson Huang:
+> > > 
+> > > Best Regards!
+> > > Anson Huang
+> > > 
+> > > 
+> > > > -----Original Message-----
+> > > > From: Dong Aisheng [mailto:dongas86@gmail.com]
+> > > > Sent: 2018-01-09 5:23 PM
+> > > > To: Stefan Agner <stefan@agner.ch>
+> > > > Cc: shawnguo@kernel.org; kernel@pengutronix.de; Fabio Estevam
+> > > > <fabio.estevam@nxp.com>; robh+dt@kernel.org; mark.rutland@arm.c
+> > > > om;
+> > > > linux-arm-kernel@lists.infradead.org; devicetree@vger.kernel.or
+> > > > g;
+> > > > linux-
+> > > > kernel@vger.kernel.org; Anson Huang <anson.huang@nxp.com>; dl-
+> > > > linux-imx
+> > > > <linux-imx@nxp.com>
+> > > > Subject: Re: [PATCH 1/7] ARM: imx: add timer stop flag to ARM
+> > > > power
+> > > > off state
+> > > > 
+> > > > On Tue, Jan 02, 2018 at 05:42:17PM +0100, Stefan Agner wrote:
+> > > > > When the CPU is in ARM power off state the ARM architected
+> > > > > timers
+> > > > > are
+> > > > > stopped. The flag is already present in the higher power WAIT
+> > > > > mode.
+> > > > > 
+> > > > > This allows to use the ARM generic timer on i.MX 6UL/6ULL
+> > > > > SoC.
+> > > > > Without the flag the kernel freezes when the timer enters the
+> > > > > first
+> > > > > time ARM power off mode.
+> > > > > 
+> > > > > Cc: Anson Huang <anson.huang@nxp.com>
+> > > > > Signed-off-by: Stefan Agner <stefan@agner.ch>
+> > > > 
+> > > > It seems ok at my side.
+> > > > Did you meet the real issue? If yes, how to reproduce?
+> > > > 
+> > > > Both mx6sx and mx6ul are using GPT which do not need that flag,
+> > > > suppose we
+> > > > should remove it, right?
+> > > > Anson can help confirm it.
+> > > 
+> > > For UP system like i.MX6SX, we do NOT enable "cortex-a9-twd-
+> > > timer",
+> > > so local
+> > > timer is NOT used, GPT is used instead, GPT's clock is NOT
+> > > disabled
+> > > when cpuidle,
+> > > so I think we should remove all these Timer stop flag for 6SX
+> > > CPUIDLE.
+> > 
+> > It's correct to set the flag even on UP systems, as the flag means
+> > the
+> > CPU _local_ timer is stopped in this sleep mode. Also there are
+> > systems
+> > out there which are using the TWD on UP, as it operates at a higher
+> > frequency leading to better wakeup granularity.
 > 
-> Signed-off-by: Madalin Bucur <madalin.bucur@nxp.com>
+> Documentation/devicetree/bindings/arm/twd.txt states that TWD
+> provides
+> "per-cpu local timer". But as far as I can see TWD still uses SPI
+> interrupts, routed through GIC, so is this the differentiation?
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Maybe what I wrote wasn't entirely clear. I completely agree with this
+patch.
 
-    Andrew
+The TWD on Cortex-A9 is a CPU local timer, same as the architected
+timer in later cores. It doesn't provide all the benefits of the
+architected timer (the clock frequency varies with CPU core clock and
+it's not virt capable), but some systems still prefer it over the i.MX
+GPT, as it provides much better wakeup granularity.
+
+So annotating the CPU idle states with the timer stop flag is the right
+thing to do. This flag has nothing to with the usage of GPT or TWD on a
+specific system.
+
+Regards,
+Lucas
