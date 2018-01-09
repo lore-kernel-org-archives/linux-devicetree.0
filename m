@@ -1,56 +1,93 @@
-From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [PATCH v3 0/3] usb: renesas_usbhs: Add RZ/A1 support
-Date: Tue, 9 Jan 2018 10:02:14 +0100
-Message-ID: <20180109090214.pf4qgb44bssquspu@verge.net.au>
-References: <20180105224647.42262-1-chris.brandt@renesas.com>
- <CAMuHMdV+1Y+OozRa0P2MJZQ-rT+ZfmW4iy2AYya1EMgrjb+y8Q@mail.gmail.com>
- <SG2PR06MB1165E6B9D4C00EE2A98E8E348A130@SG2PR06MB1165.apcprd06.prod.outlook.com>
- <CAMuHMdXu22ihgkVgPhCtbk9X21nyk3SFwGAiObEgcv=Kf2H-ow@mail.gmail.com>
+From: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Subject: Re: [PATCH] ASoC: codecs: dmic: Make number of
+	channels configurable
+Date: Tue, 9 Jan 2018 10:04:17 +0100
+Message-ID: <b4ab0392-8ce8-721a-0f70-22bfd358ced6@st.com>
+References: <20180105203957.184883-1-mka@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdXu22ihgkVgPhCtbk9X21nyk3SFwGAiObEgcv=Kf2H-ow-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Chris Brandt <Chris.Brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, USB list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20180105203957.184883-1-mka@chromium.org>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Matthias Kaehlcke <mka@chromium.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, huang lin <hl@rock-chips.com>, Brian Norris <briannorris@chromium.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Dylan Reid <dgreid@chromium.org>, Bhumika Goyal <bhumirks@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 08, 2018 at 01:15:08PM +0100, Geert Uytterhoeven wrote:
-> Hi Chris,
-> 
-> On Mon, Jan 8, 2018 at 12:59 PM, Chris Brandt <Chris.Brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org> wrote:
-> > On Monday, January 08, 2018, Geert Uytterhoeven wrote:
-> >> Thanks for the update, but I think there has been a misunderstanding.
-> >> I didn't mean to drop "renesas,usbhs-r7s72100" everywhere, only from
-> >> the matching in the driver.
-> >
-> > Opps, I was all kinds of confused then.
-> >
-> > So, before I submit a V4, here is my understanding:
-> >
-> > drivers/.../common.c
-> >  * contains -only-  '.compatible = "renesas,rza1-usbhs"'
-> 
-> OK.
-> 
-> > Documentation/.../renesas_usbhs.txt
-> >  * contains both "renesas,usbhs-r7s72100" and "renesas,rza1-usbhs"
-> 
-> OK.
-> 
-> > r7s72100.dtsi
-> > * usbhs0: usb@e8010000 {
-> >     compatible = "renesas,usbhs-r7s72100", "renesas,rza1-usbhs";
-> 
-> OK.
-> 
-> > Is this correct?
-> 
-> Yes.
-
-Ack.
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGVsbG8gTWF0aGlhcywKCk5leHQgdGltZSBjb3VsZCB5b3UgYWRkIHBhdGNoIHZlcnNpb24gaW4g
+eW91ciBtYWlsIHN1YmplY3QgKCBbUEFUQ0ggdlhdKQplYXNpZXIgdG8gZm9sbG93IHZlcnNpb25z
+IDotKS4KCm90aGVyd2lzZSwKCkFja2VkLWJ5OiBBcm5hdWQgUG91bGlxdWVuIDxhcm5hdWQucG91
+bGlxdWVuQHN0LmNvbT4KClJlZ2FyZHMsCkFybmF1ZAoKT24gMDEvMDUvMjAxOCAwOTozOSBQTSwg
+TWF0dGhpYXMgS2FlaGxja2Ugd3JvdGU6Cj4gVGhlIERNSUMgREFJIGRyaXZlciBzcGVjaWZpZXMg
+YSBudW1iZXIgb2YgMSB0byA4IGNoYW5uZWxzIGZvciBlYWNoIERBSS4KPiBUaGUgYWN0dWFsIG51
+bWJlciBvZiBtaWNzIGNhbiBjdXJyZW50bHkgbm90IGJlIGNvbmZpZ3VyZWQgaW4gdGhlIGRldmlj
+ZQo+IHRyZWUgb3IgYXVkaW8gZ2x1ZSwgYnV0IGlzIGRlcml2ZWQgZnJvbSB0aGUgbWluL21heCBj
+aGFubmVscyBvZiB0aGUgQ1BVCj4gYW5kIGNvZGVjIERBSS4gQSB0eXBpY2FsIENQVSBEQUkgaGFz
+IHR3byBvciBtb3JlIGNoYW5uZWxzLCBpbiBjb25zZXF1ZW5jZQo+IGEgc2luZ2xlIG1pYyBpcyB0
+cmVhdGVkIGFzIGEgc3RlcmVvL211bHRpIGNoYW5uZWwgZGV2aWNlLCBldmVuIHRob3VnaAo+IG9u
+bHkgb25lIGNoYW5uZWwgY2FycmllcyBhdWRpbyBkYXRhLgo+IAo+IFRoaXMgY2hhbmdlIGFkZHMg
+dGhlIG9wdGlvbiB0byBzcGVjaWZ5IHRoZSBudW1iZXIgb2YgdXNlZCBETUlDIGNoYW5uZWxzCj4g
+aW4gdGhlIGRldmljZSB0cmVlLiBXaGVuIHNwZWNpZmllZCB0aGlzIHZhbHVlIG92ZXJ3cml0ZXMg
+dGhlIGRlZmF1bHQKPiBjaGFubmVsc19tYXggdmFsdWUgb2YgOCBpbiB0aGUgc25kX3NvY19kYWlf
+ZHJpdmVyIHN0cnVjdCBvZiB0aGUgY29kZWMuCj4gCj4gU2lnbmVkLW9mZi1ieTogTWF0dGhpYXMg
+S2FlaGxja2UgPG1rYUBjaHJvbWl1bS5vcmc+Cj4gLS0tCj4gwqBEb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3Mvc291bmQvZG1pYy50eHQgfMKgIDIgKysKPiDCoHNvdW5kL3NvYy9jb2Rl
+Y3MvZG1pYy5jwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqAgfCAyNAo+ICsrKysrKysrKysrKysrKysrKysrKysrLQo+IMKgMiBmaWxlcyBjaGFuZ2VkLCAy
+NSBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCj4gCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zb3VuZC9kbWljLnR4dAo+IGIvRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvdW5kL2RtaWMudHh0Cj4gaW5kZXggNTRjOGVmNjQ5OGE4
+Li5mN2JmNjU2MTE0NTMgMTAwNjQ0Cj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL3NvdW5kL2RtaWMudHh0Cj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL3NvdW5kL2RtaWMudHh0Cj4gQEAgLTcsMTAgKzcsMTIgQEAgUmVxdWlyZWQgcHJvcGVy
+dGllczoKPiDCoAo+IMKgT3B0aW9uYWwgcHJvcGVydGllczoKPiDCoMKgwqDCoMKgwqDCoMKgIC0g
+ZG1pY2VuLWdwaW9zOiBHUElPIHNwZWNpZmllciBmb3IgZG1pYyB0byBjb250cm9sIHN0YXJ0IGFu
+ZCBzdG9wCj4gK8KgwqDCoMKgwqDCoCAtIG51bS1jaGFubmVsczogTnVtYmVyIG9mIG1pY3JvcGhv
+bmVzIG9uIHRoaXMgREFJCj4gwqAKPiDCoEV4YW1wbGUgbm9kZToKPiDCoAo+IMKgwqDCoMKgwqDC
+oMKgwqAgZG1pY19jb2RlYzogZG1pY0AwIHsKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoCBjb21wYXRpYmxlID0gImRtaWMtY29kZWMiOwo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgIGRtaWNlbi1ncGlvcyA9IDwmZ3BpbzQgMyBHUElPX0FDVElWRV9ISUdIPjsKPiAr
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBudW0tY2hhbm5lbHMgPSA8MT47Cj4gwqDCoMKg
+wqDCoMKgwqDCoCB9Owo+IGRpZmYgLS1naXQgYS9zb3VuZC9zb2MvY29kZWNzL2RtaWMuYyBiL3Nv
+dW5kL3NvYy9jb2RlY3MvZG1pYy5jCj4gaW5kZXggYjg4YTFlZTY2ZjgwLi5jODhmOTc0ZWJlM2Ug
+MTAwNjQ0Cj4gLS0tIGEvc291bmQvc29jL2NvZGVjcy9kbWljLmMKPiArKysgYi9zb3VuZC9zb2Mv
+Y29kZWNzL2RtaWMuYwo+IEBAIC0xMDcsOCArMTA3LDMwIEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3Qg
+c25kX3NvY19jb2RlY19kcml2ZXIgc29jX2RtaWMgPSB7Cj4gwqAKPiDCoHN0YXRpYyBpbnQgZG1p
+Y19kZXZfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKPiDCoHsKPiArwqDCoMKg
+wqDCoMKgIGludCBlcnI7Cj4gK8KgwqDCoMKgwqDCoCB1MzIgY2hhbnM7Cj4gK8KgwqDCoMKgwqDC
+oCBzdHJ1Y3Qgc25kX3NvY19kYWlfZHJpdmVyICpkYWlfZHJ2ID0gJmRtaWNfZGFpOwo+ICsKPiAr
+wqDCoMKgwqDCoMKgIGlmIChwZGV2LT5kZXYub2Zfbm9kZSkgewo+ICvCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgIGVyciA9IG9mX3Byb3BlcnR5X3JlYWRfdTMyKHBkZXYtPmRldi5vZl9ub2Rl
+LAo+ICJudW0tY2hhbm5lbHMiLCAmY2hhbnMpOwo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgIGlmIChlcnIgJiYgKGVyciAhPSAtRU5PRU5UKSkKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcmV0dXJuIGVycjsKPiArCj4gK8KgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqAgaWYgKCFlcnIpIHsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqAgaWYgKGNoYW5zIDwgMSB8fCBjaGFucyA+IDgpCj4gK8KgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCByZXR1
+cm4gLUVJTlZBTDsKPiArCj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgIGRhaV9kcnYgPSBkZXZtX2t6YWxsb2MoJnBkZXYtPmRldiwKPiBzaXplb2YoKmRhaV9k
+cnYpLCBHRlBfS0VSTkVMKTsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqAgaWYgKCFkYWlfZHJ2KQo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcmV0dXJuIC1FTk9NRU07Cj4gKwo+ICvCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBtZW1jcHkoZGFpX2Rydiwg
+JmRtaWNfZGFpLCBzaXplb2YoKmRhaV9kcnYpKTsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqAgZGFpX2Rydi0+Y2FwdHVyZS5jaGFubmVsc19tYXggPSBjaGFu
+czsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB9Cj4gK8KgwqDCoMKgwqDCoCB9Cj4g
+KwoKPiDCoMKgwqDCoMKgwqDCoMKgIHJldHVybiBzbmRfc29jX3JlZ2lzdGVyX2NvZGVjKCZwZGV2
+LT5kZXYsCj4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgICZz
+b2NfZG1pYywgJmRtaWNfZGFpLCAxKTsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqAgJnNvY19kbWljLCBkYWlfZHJ2LCAxKTsKPiDCoH0KPiDCoAo+IMKgc3Rh
+dGljIGludCBkbWljX2Rldl9yZW1vdmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKPiAt
+LSAKPiAyLjE2LjAucmMwLjIyMy5nNGE0YWM4MzY3OC1nb29nCj4gCl9fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkFsc2EtZGV2ZWwgbWFpbGluZyBsaXN0CkFs
+c2EtZGV2ZWxAYWxzYS1wcm9qZWN0Lm9yZwpodHRwOi8vbWFpbG1hbi5hbHNhLXByb2plY3Qub3Jn
+L21haWxtYW4vbGlzdGluZm8vYWxzYS1kZXZlbAo=
