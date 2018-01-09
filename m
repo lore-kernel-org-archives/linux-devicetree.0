@@ -1,111 +1,27 @@
-From: Kyle Evans <kevans91-OYTqUY/oFF8@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: dts: sunxi: Add sid for a83t
-Date: Tue, 9 Jan 2018 07:55:13 -0600
-Message-ID: <CACNAnaFRWLp=qFm-8EL+E_7cV4XBLU8Ct7LwBerrhreQ4kWt6g@mail.gmail.com>
-References: <20171219210523.10428-1-kevans91@ksu.edu> <20171221145512.llxvzkcrjpquhczi@flea.lan>
- <CACNAnaE9GiVTXD-TV1xXyBJKtTGKpdA6n0REk6a=qm218EgHbg@mail.gmail.com>
- <20171221152630.2vf57x5o2yi5sv3n@flea.lan> <20171221190903.56ebae536acf51401c63802c@bidouilliste.com>
- <20171222083508.dfcp6egfvxykmogg@flea.lan> <20171222110727.520df7394234f6a5dc0b9ec0@bidouilliste.com>
- <CAGb2v64mf-ihyOs-WJZuVa4Yib3Szp90RZu_a1EeQ1LJXnoXEQ@mail.gmail.com>
- <20180104140119.5pyfihp4zs2poz35@flea.lan> <CACNAnaHOuPH05hsJ-jt1135-Giknb-DOuvjeQRSGVR2L7Xc-Cg@mail.gmail.com>
- <20180109133412.uyai4s6vfnh37hn2@flea>
-Reply-To: kevans91-OYTqUY/oFF8@public.gmane.org
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH net, v3] of_mdio: avoid MDIO bus removal when a PHY is
+ missing
+Date: Tue, 9 Jan 2018 14:58:48 +0100
+Message-ID: <20180109135848.GC27447@lunn.ch>
+References: <1515501814-11517-1-git-send-email-madalin.bucur@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCRMXPGDSQIRBX4T2PJAKGQE7KNQU6A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180109133412.uyai4s6vfnh37hn2@flea>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Emmanuel Vadot <manu-xXdDKFdH5B3kFDPD4ZthVA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1515501814-11517-1-git-send-email-madalin.bucur@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Madalin Bucur <madalin.bucur@nxp.com>
+Cc: f.fainelli@gmail.com, davem@davemloft.net, geert+renesas@glider.be, robh+dt@kernel.org, frowand.list@gmail.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 9, 2018 at 7:34 AM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> On Mon, Jan 08, 2018 at 09:30:57AM -0600, Kyle Evans wrote:
->> On Thu, Jan 4, 2018 at 8:01 AM, Maxime Ripard
->> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->> > On Fri, Dec 22, 2017 at 06:11:52PM +0800, Chen-Yu Tsai wrote:
->> >> On Fri, Dec 22, 2017 at 6:07 PM, Emmanuel Vadot <manu-xXdDKFdH5B3kFDPD4ZthVA@public.gmane.org> wrote:
->> >> > On Fri, 22 Dec 2017 09:35:08 +0100
->> >> > Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->> >> >
->> >> >> On Thu, Dec 21, 2017 at 07:09:03PM +0100, Emmanuel Vadot wrote:
->> >> >> >
->> >> >> >  Hi Maxime,
->> >> >> >
->> >> >> > On Thu, 21 Dec 2017 16:26:30 +0100
->> >> >> > Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->> >> >> >
->> >> >> > > Hi,
->> >> >> > >
->> >> >> > > On Thu, Dec 21, 2017 at 09:19:24AM -0600, Kyle Evans wrote:
->> >> >> > > > On Thu, Dec 21, 2017 at 8:55 AM, Maxime Ripard
->> >> >> > > > <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->> >> >> > > > > Hi Kyle,
->> >> >> > > > >
->> >> >> > > > > On Tue, Dec 19, 2017 at 03:05:23PM -0600, kevans91-OYTqUY/oFF8@public.gmane.org wrote:
->> >> >> > > > >> Allwinner a83t has a 1 KB sid block with efuse for security rootkey and
->> >> >> > > > >> thermal calibration data, add node to describe it.
->> >> >> > > > >>
->> >> >> > > > >> a83t-sid is not currently supported by nvmem/sunxi-sid, but it is
->> >> >> > > > >> supported in an external driver for FreeBSD.
->> >> >> > > > >>
->> >> >> > > > >> Signed-off-by: Kyle Evans <kevans91-OYTqUY/oFF8@public.gmane.org>
->> >> >> > > > >
->> >> >> > > > > The patch looks fine in itself, but we've had a number of issues with
->> >> >> > > > > the register layout (and access patterns) in the past, so I'd rather
->> >> >> > > > > have something that works in Linux too if possible.
->> >> >> > > >
->> >> >> > > > I have a patch that I think should make it work fine on Linux [1], but
->> >> >> > > > I'm afraid I have little to no capability to test it myself and so I
->> >> >> > > > did not add it as well.
->> >> >> > > >
->> >> >> > > > I do know that the rootkey is offset 0x200 into the given space [2],
->> >> >> > > > as is the case with the H3, and that the readout quirk is not needed.
->> >> >> > > > I wasn't 100% sure that the a83t has 2Kbit worth of efuse space as the
->> >> >> > > > H3, but I do know that thermal data can be found at 0x34 and 0x38 in
->> >> >> > > > this space.
->> >> >> > >
->> >> >> > > Then maybe we should leave it aside until someone takes some time on
->> >> >> > > the A83t.
->> >> >> >
->> >> >> >  Take some time on the Linux driver and do not apply this patch for
->> >> >> > now you mean ?
->> >> >>
->> >> >> Yep.
->> >> >>
->> >> >> Maxime
->> >> >
->> >> >  Since linux doesn't have the compatible in it's driver what would
->> >> > be the harm to add the node in the DTS ? If a quirks is needed because
->> >> > some region is weird this would go in the driver right ? I don't see a
->> >> > technical problem for adding this node right now.
->> >> >  If Kyle confirm the lenght of the region and that no quirk is needed
->> >> > will it be enough ?
->> >>
->> >> I guess I wasn't very clear. I'm OK with the patch going in. The device
->> >> node currently says nothing about how much efuse space there is. The
->> >> memory region covers that and the control section, and the size matches
->> >> what the memory map says.
->> >>
->> >> The size and offset of the efuse space would be dealt with in the driver.
->> >
->> > Let's merge it then.
->> >
->> > Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->>
->> What does the timeline for these things normally look like? I'm new to
->> these parts. =)
->
-> We're one week away from the merge window, so it's a bit late for it
-> to be merged in 4.16, but it'll be in 4.17.
+On Tue, Jan 09, 2018 at 02:43:34PM +0200, Madalin Bucur wrote:
+> If one of the child devices is missing the of_mdiobus_register_phy()
+> call will return -ENODEV. When a missing device is encountered the
+> registration of the remaining PHYs is stopped and the MDIO bus will
+> fail to register. Propagate all errors except ENODEV to avoid it.
+> 
+> Signed-off-by: Madalin Bucur <madalin.bucur@nxp.com>
 
-Ok, cool, that makes sense.
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-Thanks!
+    Andrew
