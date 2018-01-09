@@ -1,126 +1,334 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH v5 01/44] dt-bindings: clock: Add new bindings for TI
- Davinci PLL clocks
-Date: Tue, 9 Jan 2018 18:05:23 +0530
-Message-ID: <0f90b5f7-f21e-5f81-1154-9a815bbb786d@ti.com>
-References: <1515377863-20358-1-git-send-email-david@lechnology.com>
- <1515377863-20358-2-git-send-email-david@lechnology.com>
- <ebd677dc-44a4-5053-2509-e3ee948ccf98@ti.com>
- <22409e49-5c14-4068-b137-7535afaf90d7@lechnology.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [RFC PATCH 4/9] soc: samsung: Add generic power-management driver
+ for Exynos
+Date: Tue, 9 Jan 2018 13:37:40 +0100
+Message-ID: <CAJKOXPd5nZApbx-v2dZhuUy5ociUwNGHa_wAoz1b-XKbJy1nmg@mail.gmail.com>
+References: <CGME20180109075905epcas1p40431a90ecc3530f2200ade028bf54594@epcas1p4.samsung.com>
+ <1515484746-10656-1-git-send-email-cw00.choi@samsung.com> <1515484746-10656-5-git-send-email-cw00.choi@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <22409e49-5c14-4068-b137-7535afaf90d7@lechnology.com>
-Content-Language: en-US
-Sender: linux-clk-owner@vger.kernel.org
-To: David Lechner <david@lechnology.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1515484746-10656-5-git-send-email-cw00.choi@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chanwoo Choi <cw00.choi@samsung.com>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, kgene@kernel.org, Tomasz Figa <tomasz.figa@gmail.com>, chanwoo@kernel.org, Jaehoon Chung <jh80.chung@samsung.com>, Inki Dae <inki.dae@samsung.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jonghwa Lee <jonghwa3.lee@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 08 January 2018 09:59 PM, David Lechner wrote:
-> On 01/08/2018 08:00 AM, Sekhar Nori wrote:
->> On Monday 08 January 2018 07:47 AM, David Lechner wrote:
->>> This adds a new binding for the PLL IP blocks in the mach-davinci family
->>> of processors. Currently, only the SYSCLKn and AUXCLK outputs are
->>> needed,
->>> but in the future additional child nodes could be added for OBSCLK and
->>> BPDIV.
->>>
->>> Note: Although these PLL controllers are very similar to the TI Keystone
->>> SoCs, we are not re-using those bindings. The Keystone bindings use a
->>> legacy one-node-per-clock binding. Furthermore, the mach-davinici SoCs
->>
->> Not sure what is meant by "legacy one-node-per-clock binding"
-> 
-> It's a term I picked up from of_clk_detect_critical()
-> 
->  * Do not use this function. It exists only for legacy Device Tree
->  * bindings, such as the one-clock-per-node style that are outdated.
->  * Those bindings typically put all clock data into .dts and the Linux
->  * driver has no clock data, thus making it impossible to set this flag
->  * correctly from the driver. Only those drivers may call
->  * of_clk_detect_critical from their setup functions.
+On Tue, Jan 9, 2018 at 8:59 AM, Chanwoo Choi <cw00.choi@samsung.com> wrote:
+> To enter suspend, Exynos SoC requires the some machine dependent procedures.
+> This patch introduces the generic power-management driver to support
+> those requirements and generic interface for power state management.
+>
+> Signed-off-by: Jonghwa Lee <jonghwa3.lee@samsung.com>
+> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+> ---
+>  arch/arm/mach-exynos/common.h         |   1 -
+>  arch/arm/mach-exynos/exynos.c         |  23 +----
+>  drivers/soc/samsung/Makefile          |   2 +-
+>  drivers/soc/samsung/exynos-pm.c       | 176 ++++++++++++++++++++++++++++++++++
+>  include/linux/soc/samsung/exynos-pm.h |  21 ++++
+>  5 files changed, 199 insertions(+), 24 deletions(-)
+>  create mode 100644 drivers/soc/samsung/exynos-pm.c
+>  create mode 100644 include/linux/soc/samsung/exynos-pm.h
+>
+> diff --git a/arch/arm/mach-exynos/common.h b/arch/arm/mach-exynos/common.h
+> index afbc143a3d5d..ad482c0fc131 100644
+> --- a/arch/arm/mach-exynos/common.h
+> +++ b/arch/arm/mach-exynos/common.h
+> @@ -119,7 +119,6 @@ enum {
+>   * Magic values for bootloader indicating chosen low power mode.
+>   * See also Documentation/arm/Samsung/Bootloader-interface.txt
+>   */
+> -#define EXYNOS_SLEEP_MAGIC     0x00000bad
+>  #define EXYNOS_AFTR_MAGIC      0xfcba0d10
+>
+>  void exynos_set_boot_flag(unsigned int cpu, unsigned int mode);
+> diff --git a/arch/arm/mach-exynos/exynos.c b/arch/arm/mach-exynos/exynos.c
+> index fbd108ce8745..0d5265d175c4 100644
+> --- a/arch/arm/mach-exynos/exynos.c
+> +++ b/arch/arm/mach-exynos/exynos.c
+> @@ -12,6 +12,7 @@
+>  #include <linux/of_fdt.h>
 
-Okay, I still don't understand the outdated style. I looked at clocks
-defined in arch/arm/boot/dts/stih407-clock.dtsi which is the only file
-that uses clock-critical and don't particularly see anything wrong with
-the way clocks are defined there.
+of_address.h might be not needed anymore.
 
-Anyway, I guess we digress. As long as this patch series is not using
-the "legacy style", we are good :)
+>  #include <linux/platform_device.h>
+>  #include <linux/irqchip.h>
+> +#include <linux/soc/samsung/exynos-pm.h>
+>  #include <linux/soc/samsung/exynos-regs-pmu.h>
+>
+>  #include <asm/cacheflush.h>
+> @@ -41,28 +42,6 @@
+>         .id                = -1,
+>  };
+>
+> -void __iomem *sysram_base_addr __ro_after_init;
+> -void __iomem *sysram_ns_base_addr __ro_after_init;
+> -
+> -void __init exynos_sysram_init(void)
+> -{
+> -       struct device_node *node;
+> -
+> -       for_each_compatible_node(node, NULL, "samsung,exynos4210-sysram") {
+> -               if (!of_device_is_available(node))
+> -                       continue;
+> -               sysram_base_addr = of_iomap(node, 0);
+> -               break;
+> -       }
+> -
+> -       for_each_compatible_node(node, NULL, "samsung,exynos4210-sysram-ns") {
+> -               if (!of_device_is_available(node))
+> -                       continue;
+> -               sysram_ns_base_addr = of_iomap(node, 0);
+> -               break;
+> -       }
+> -}
+> -
+>  static void __init exynos_init_late(void)
+>  {
+>         if (of_machine_is_compatible("samsung,exynos5440"))
+> diff --git a/drivers/soc/samsung/Makefile b/drivers/soc/samsung/Makefile
+> index d2e637339a45..58ca5bdabf1f 100644
+> --- a/drivers/soc/samsung/Makefile
+> +++ b/drivers/soc/samsung/Makefile
+> @@ -1,5 +1,5 @@
+>  # SPDX-License-Identifier: GPL-2.0
+> -obj-$(CONFIG_EXYNOS_PMU)       += exynos-pmu.o
+> +obj-$(CONFIG_EXYNOS_PMU)       += exynos-pmu.o exynos-pm.o
+>
+>  obj-$(CONFIG_EXYNOS_PMU_ARM_DRIVERS)   += exynos3250-pmu.o exynos4-pmu.o \
+>                                         exynos5250-pmu.o exynos5420-pmu.o \
+> diff --git a/drivers/soc/samsung/exynos-pm.c b/drivers/soc/samsung/exynos-pm.c
+> new file mode 100644
+> index 000000000000..45d84bbe5e61
+> --- /dev/null
+> +++ b/drivers/soc/samsung/exynos-pm.c
+> @@ -0,0 +1,176 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +//
+> +// based on arch/arm/mach-exynos/suspend.c
+> +// Copyright (c) 2018 Samsung Electronics Co., Ltd.
+> +//
+> +// Exynos Power Management support driver
+> +
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_fdt.h>
+> +#include <linux/kernel.h>
+> +#include <linux/regulator/machine.h>
+> +#include <linux/syscore_ops.h>
+> +#include <linux/suspend.h>
+> +
+> +#include <asm/cpuidle.h>
+> +#include <asm/io.h>
+> +#include <asm/suspend.h>
+> +
+> +#include <linux/soc/samsung/exynos-pm.h>
+> +#include <linux/soc/samsung/exynos-pmu.h>
+> +
+> +/*
+> + * The struct exynos_pm_data contains the callbacks of
+> + * both struct platform_suspend_ops and syscore_ops.
+> + * This structure is listed according to the call order,
+> + * because the callback call order for the two structures is mixed.
+> + */
+> +struct exynos_pm_data {
+> +       int (*prepare)(void);                   /* for platform_suspend_ops */
+> +       int (*suspend)(void);                   /* for syscore_ops */
+> +       int (*enter)(suspend_state_t state);    /* for platform_suspend_ops */
+> +       void (*resume)(void);                   /* for syscore_ops */
+> +       void (*finish)(void);                   /* for platform_suspend_ops */
+> +};
+> +
+> +static struct platform_suspend_ops exynos_pm_suspend_ops;
+> +static struct syscore_ops exynos_pm_syscore_ops;
+> +static const struct exynos_pm_data *pm_data  __ro_after_init;
 
->>> have a slightly different PLL register layout and a number of quirks
->>> that
->>> can't be handled by the existing bindings, so the keystone bindings
->>> could
->>> not be used as-is anyway.
->>
->> Right, I think different register layout between the processors is the
->> main reason for a new driver. This should be sufficient reason IMO.
->>
->>>
->>> Signed-off-by: David Lechner <david@lechnology.com>
->>> ---
->>>   .../devicetree/bindings/clock/ti/davinci/pll.txt   | 47
->>> ++++++++++++++++++++++
->>>   1 file changed, 47 insertions(+)
->>>   create mode 100644
->>> Documentation/devicetree/bindings/clock/ti/davinci/pll.txt
->>>
->>> diff --git
->>> a/Documentation/devicetree/bindings/clock/ti/davinci/pll.txt
->>> b/Documentation/devicetree/bindings/clock/ti/davinci/pll.txt
->>> new file mode 100644
->>> index 0000000..99bf5da
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/clock/ti/davinci/pll.txt
->>> @@ -0,0 +1,47 @@
->>> +Binding for TI DaVinci PLL Controllers
->>> +
->>> +The PLL provides clocks to most of the components on the SoC. In
->>> addition
->>> +to the PLL itself, this controller also contains bypasses, gates,
->>> dividers,
->>> +an multiplexers for various clock signals.
->>> +
->>> +Required properties:
->>> +- compatible: shall be one of:
->>> +    - "ti,da850-pll0" for PLL0 on DA850/OMAP-L138/AM18XX
->>> +    - "ti,da850-pll1" for PLL1 on DA850/OMAP-L138/AM18XX
->>
->> These PLLs are same IP so they should use the same compatible. You can
->> initialize both PLLs for DA850 based on the same compatible.
->>
-> 
-> But they are not exactly the same. For example, PLL0 has 7 PLLDIV clocks
-> while
-> PLL1 only has 3. PLL0 has PREDIV while PLL1 does not. PLL0 has certain
-> SYSCLKs
-> that are fixed-ratio but PLL1 does not have any of these. There are even
-> more
-> differences, but these are the ones we are actually using.
+It is already const, so __initconst?
 
-We need each element of the PLLC to be modeled individually as a clock
-node. That is, PLL should only model the multiplier, the dividers
-including post and prediv should be modeled as divider clocks (hopefully
-being able to use the clk-divider.c library). The sysclks can be
-fixed-factor-clock type clocks.
+> +
+> +void __iomem *sysram_base_addr __ro_after_init;
+> +void __iomem *sysram_ns_base_addr __ro_after_init;
+> +
+> +static int exynos_pm_prepare(void)
+> +{
+> +       int ret;
+> +
+> +       /*
+> +        * REVISIT: It would be better if struct platform_suspend_ops
+> +        * .prepare handler get the suspend_state_t as a parameter to
+> +        * avoid hard-coding the suspend to mem state. It's safe to do
+> +        * it now only because the suspend_valid_only_mem function is
+> +        * used as the .valid callback used to check if a given state
+> +        * is supported by the platform anyways.
+> +        */
+> +       ret = regulator_suspend_prepare(PM_SUSPEND_MEM);
+> +       if (ret) {
+> +               pr_err("Failed to prepare regulators for suspend (%d)\n", ret);
+> +               return ret;
+> +       }
+> +
+> +       if (pm_data->prepare) {
+> +               ret = pm_data->prepare();
+> +               if (ret) {
+> +                       pr_err("Failed to prepare for suspend (%d)\n", ret);
+> +                       return ret;
+> +               }
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static int exynos_pm_suspend(void)
+> +{
+> +       if (pm_data->suspend)
+> +               return pm_data->suspend();
+> +
+> +       return 0;
+> +}
+> +
+> +static int exynos_pm_enter(suspend_state_t state)
+> +{
+> +       int ret;
+> +
+> +       exynos_sys_powerdown_conf(SYS_SLEEP);
+> +
+> +       ret = pm_data->enter(state);
+> +       if (ret) {
+> +               pr_err("Failed to enter sleep\n");
+> +               return ret;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static void exynos_pm_resume(void)
+> +{
+> +       exynos_sys_powerup_conf(SYS_SLEEP);
+> +
+> +       if (pm_data->resume)
+> +               pm_data->resume();
+> +}
+> +
+> +static void exynos_pm_finish(void)
+> +{
+> +       int ret;
+> +
+> +       ret = regulator_suspend_finish();
+> +       if (ret)
+> +               pr_warn("Failed to resume regulators from suspend (%d)\n", ret);
+> +
+> +       if (pm_data->finish)
+> +               pm_data->finish();
+> +}
+> +
+> +/*
+> + * Split the data between ARM architectures because it is relatively big
+> + * and useless on other arch.
+> + */
+> +#ifdef CONFIG_EXYNOS_PMU_ARM_DRIVERS
+> +#define exynos_pm_data_arm_ptr(data)   (&data)
+> +#else
+> +#define exynos_pm_data_arm_ptr(data)   NULL
+> +#endif
+> +
+> +static const struct of_device_id exynos_pm_of_device_ids[] = {
+> +       { /*sentinel*/ },
+> +};
+> +
+> +void __init exynos_sysram_init(void)
+> +{
+> +       struct device_node *np;
+> +
+> +       for_each_compatible_node(np, NULL, "samsung,exynos4210-sysram") {
+> +               if (!of_device_is_available(np))
+> +                       continue;
+> +               sysram_base_addr = of_iomap(np, 0);
+> +               break;
+> +       }
+> +
+> +       for_each_compatible_node(np, NULL, "samsung,exynos4210-sysram-ns") {
+> +               if (!of_device_is_available(np))
+> +                       continue;
+> +               sysram_ns_base_addr = of_iomap(np, 0);
+> +               break;
+> +       }
+> +}
+> +
+> +static int __init exynos_pm_init(void)
+> +{
+> +       const struct of_device_id *match;
+> +       struct device_node *np;
+> +
+> +       np = of_find_matching_node_and_match(NULL,
+> +                                       exynos_pm_of_device_ids, &match);
+> +       if (!np) {
+> +               pr_err("Failed to find PMU node for Exynos Power-Management\n");
+> +               return -ENODEV;
+> +       }
+> +       pm_data = (const struct exynos_pm_data *) match->data;
+> +
+> +       exynos_sysram_init();
+> +
+> +       exynos_pm_suspend_ops.valid     = suspend_valid_only_mem;
+> +       exynos_pm_suspend_ops.prepare   = exynos_pm_prepare;
+> +       exynos_pm_syscore_ops.suspend   = exynos_pm_suspend;
+> +       exynos_pm_suspend_ops.enter     = exynos_pm_enter;
+> +       exynos_pm_syscore_ops.resume    = exynos_pm_resume;
+> +       exynos_pm_suspend_ops.finish    = exynos_pm_finish;
+> +
+> +       register_syscore_ops(&exynos_pm_syscore_ops);
+> +       suspend_set_ops(&exynos_pm_suspend_ops);
+> +
+> +       return 0;
+> +}
+> +postcore_initcall(exynos_pm_init);
 
-Without this flexible mechanism, we cannot (at least later) model things
-like DIV4.5 clock which is the only clock which derives from the output
-of PLL multiplier before the post divider is applied.
+As I mentioned in cover letter, please move here first ARMv7 code. Now
+it looks like duplicating the existing code.
 
-Since with DT there are are no retakes, we need to get this right the
-first time and modifying later will not be an option.
+> diff --git a/include/linux/soc/samsung/exynos-pm.h b/include/linux/soc/samsung/exynos-pm.h
+> new file mode 100644
+> index 000000000000..b1afe95ed10c
+> --- /dev/null
+> +++ b/include/linux/soc/samsung/exynos-pm.h
+> @@ -0,0 +1,21 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +//
+> +// Copyright (c) 2018 Samsung Electronics Co., Ltd.
+> +//
+> +// Header for Exynos Power-Management support driver
 
-> 
-> So, if we use the same compatible, we either have to come up with device
-> tree
-> bindings to describe all of this (yuck) or I suppose we can look at the
-> REVID
-> register to electronically determine exactly what we have. I went with the
-> simpler option of just creating two different compatible strings.
+Use header-style SPDX and comment.
 
-Thanks,
-Sekhar
+Best regards,
+Krzysztof
+
+> +
+> +#ifndef __LINUX_SOC_EXYNOS_PM_H
+> +#define __LINUX_SOC_EXYNOS_PM_H
+> +
+> +/*
+> + * Magic values for bootloader indicating chosen low power mode.
+> + * See also Documentation/arm/Samsung/Bootloader-interface.txt
+> + */
+> +#define EXYNOS_SLEEP_MAGIC     0x00000bad
+> +
+> +extern void __iomem *sysram_base_addr;
+> +extern void __iomem *sysram_ns_base_addr;
+
+Since these are now global symbols, they need nice exynos prefix.
+Also, probably they should not be globally modifiable. Only
+exynos_sysram_init() should write there. Instead export a global
+accessor (get()) and rest should use that one.
+
+Best regards,
+Krzysztof
+
+> +
+> +extern void exynos_sysram_init(void);
+> +
+> +#endif /* __LINUX_SOC_EXYNOS_PMU_H */
+> --
+> 1.9.1
+>
