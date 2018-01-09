@@ -1,49 +1,39 @@
-From: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-Subject: Re: [PATCH 3/4] bcm2835-gpio-exp: Driver for GPIO expander via
- mailbox service
-Date: Tue, 9 Jan 2018 15:41:35 +0200
-Message-ID: <20180109134135.32i6slkhmqsjnmne@tarshish>
-References: <cover.1514898134.git.baruch@tkos.co.il>
- <bcac00c71b29c359b59053a30d817a8f17d6731d.1514898134.git.baruch@tkos.co.il>
- <2013811470.181895.1514918984637@email.1und1.de>
+From: =?UTF-8?Q?Rafa=C5=82_Mi=C5=82ecki?= <rafal@milecki.pl>
+Subject: Re: [PATCH V6 1/2] mtd: partitions: add of_match_table parser matching
+Date: Tue, 09 Jan 2018 14:47:41 +0100
+Message-ID: <2043e7d0214dffd5b0515cfdea2ed1d6@milecki.pl>
+References: <20180102130458.16226-1-zajec5@gmail.com>
+ <20180103105543.17897-1-zajec5@gmail.com>
+ <CAL_JsqLYjUsWGAYm978oPmMAue6YDRb=K00gReZTia6iaJ6xsA@mail.gmail.com>
+ <9a799300a0730a0103fe744878fb1a9f@milecki.pl>
+ <20180109104245.0f8cf097@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <2013811470.181895.1514918984637-7tX72C7vayboQLBSYMtkGA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Dave Stevenson <dave.stevenson-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <20180109104245.0f8cf097@bbrezillon>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE
+ TREE BINDINGS" <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Jonas Gorski <jonas.gorski@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Frank Rowand <frowand.list@gmail.com>, Richard Weinberger <richard@nod.at>, Linus Walleij <linus.walleij@linaro.org>, =?UTF-8?Q?Rafa=C5=82_Mi=C5=82ecki?= <zajec5@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, John Crispin <john@phrozen.org>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stefan,
-
-On Tue, Jan 02, 2018 at 07:49:44PM +0100, Stefan Wahren wrote:
-
-[...]
-
-> > +	ret = rpi_firmware_property(gpio->fw, RPI_FIRMWARE_GET_GPIO_CONFIG,
-> > +				    &get, sizeof(get));
-> > +	if (ret) {
-> > +		dev_err(gpio->dev,
-> > +			"Failed to get GPIO %u config (%d)\n", off, ret);
-> > +		return ret;
-> > +	}
+On 2018-01-09 10:42, Boris Brezillon wrote:
+> Rafal, I had a look at your v7 and it looks sane, so I'll queue it for
+> 4.16 unless Rob has other concerns.
 > 
-> Shouldn't we also check the in-bound status at get.gpio?
+> Thanks for your patience.
 
-What is the in-bound status value? May you refer me to the documentation?
+Sounds great, thanks!
 
-> And in all the other gpio ops?
-
-Thanks,
-baruch
-
--- 
-     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
-=}------------------------------------------------ooO--U--Ooo------------{=
-   - baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org - tel: +972.52.368.4656, http://www.tkos.co.il -
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
