@@ -1,68 +1,96 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: [PATCH 2/9] soc: samsung: pmu: Add powerup_conf callback
-Date: Tue, 09 Jan 2018 16:58:59 +0900
-Message-ID: <1515484746-10656-3-git-send-email-cw00.choi@samsung.com>
-References: <1515484746-10656-1-git-send-email-cw00.choi@samsung.com>
-        <CGME20180109075905epcas1p4e601230d86dd686db28796165178dafa@epcas1p4.samsung.com>
+From: jacopo mondi <jacopo@jmondi.org>
+Subject: Re: [PATCH v2 2/2] media: dt-bindings: Add OF properties to ov7670
+Date: Tue, 9 Jan 2018 09:01:11 +0100
+Message-ID: <20180109080111.GD25666@w540>
+References: <1515059553-10219-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1515059553-10219-3-git-send-email-jacopo+renesas@jmondi.org>
+ <20180109033555.vgofzbnpx37iqaon@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1515484746-10656-1-git-send-email-cw00.choi@samsung.com>
+Content-Disposition: inline
+In-Reply-To: <20180109033555.vgofzbnpx37iqaon@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: krzk@kernel.org, m.szyprowski@samsung.com, s.nawrocki@samsung.com, kgene@kernel.org
-Cc: tomasz.figa@gmail.com, cw00.choi@samsung.com, chanwoo@kernel.org, jh80.chung@samsung.com, inki.dae@samsung.com, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, corbet@lwn.net, mchehab@kernel.org, sakari.ailus@iki.fi, mark.rutland@arm.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the powerup_conf callback which is used to re-initialize
-the PMU registers during the resume state.
+Hi Rob,
+   thanks for comments
 
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
----
- drivers/soc/samsung/exynos-pmu.c       | 8 ++++++++
- drivers/soc/samsung/exynos-pmu.h       | 1 +
- include/linux/soc/samsung/exynos-pmu.h | 1 +
- 3 files changed, 10 insertions(+)
+On Mon, Jan 08, 2018 at 09:35:55PM -0600, Rob Herring wrote:
+> On Thu, Jan 04, 2018 at 10:52:33AM +0100, Jacopo Mondi wrote:
+> > Describe newly introduced OF properties for ov7670 image sensor.
+> > The driver supports two standard properties to configure synchronism
+> > signals polarities and two custom properties already supported as
+> > platform data options by the driver.
+>
+> Missing S-o-b.
+>
 
-diff --git a/drivers/soc/samsung/exynos-pmu.c b/drivers/soc/samsung/exynos-pmu.c
-index f56adbd9fb8b..cfc9de518344 100644
---- a/drivers/soc/samsung/exynos-pmu.c
-+++ b/drivers/soc/samsung/exynos-pmu.c
-@@ -58,6 +58,14 @@ void exynos_sys_powerdown_conf(enum sys_powerdown mode)
- 		pmu_data->powerdown_conf_extra(mode);
- }
- 
-+void exynos_sys_powerup_conf(enum sys_powerdown mode)
-+{
-+	const struct exynos_pmu_data *pmu_data = pmu_context->pmu_data;
-+
-+	if (pmu_data->powerup_conf)
-+		pmu_data->powerup_conf(mode);
-+}
-+
- /*
-  * Split the data between ARM architectures because it is relatively big
-  * and useless on other arch.
-diff --git a/drivers/soc/samsung/exynos-pmu.h b/drivers/soc/samsung/exynos-pmu.h
-index 977e4daf5a0f..efbaf8929252 100644
---- a/drivers/soc/samsung/exynos-pmu.h
-+++ b/drivers/soc/samsung/exynos-pmu.h
-@@ -24,6 +24,7 @@ struct exynos_pmu_data {
- 	void (*pmu_init)(void);
- 	void (*powerdown_conf)(enum sys_powerdown);
- 	void (*powerdown_conf_extra)(enum sys_powerdown);
-+	void (*powerup_conf)(enum sys_powerdown);
- };
- 
- extern void __iomem *pmu_base_addr;
-diff --git a/include/linux/soc/samsung/exynos-pmu.h b/include/linux/soc/samsung/exynos-pmu.h
-index e57eb4b6cc5a..3aacf7b18401 100644
---- a/include/linux/soc/samsung/exynos-pmu.h
-+++ b/include/linux/soc/samsung/exynos-pmu.h
-@@ -22,6 +22,7 @@ enum sys_powerdown {
- };
- 
- extern void exynos_sys_powerdown_conf(enum sys_powerdown mode);
-+extern void exynos_sys_powerup_conf(enum sys_powerdown mode);
- #ifdef CONFIG_EXYNOS_PMU
- extern struct regmap *exynos_get_pmu_regmap(void);
- #else
--- 
-1.9.1
+Ups, that was trivial, sorry about that
+
+> > ---
+> >  Documentation/devicetree/bindings/media/i2c/ov7670.txt | 14 ++++++++++++++
+> >  1 file changed, 14 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/media/i2c/ov7670.txt b/Documentation/devicetree/bindings/media/i2c/ov7670.txt
+> > index 826b656..57ded18 100644
+> > --- a/Documentation/devicetree/bindings/media/i2c/ov7670.txt
+> > +++ b/Documentation/devicetree/bindings/media/i2c/ov7670.txt
+> > @@ -9,11 +9,22 @@ Required Properties:
+> >  - clocks: reference to the xclk input clock.
+> >  - clock-names: should be "xclk".
+> >
+> > +The following properties, as defined by video interfaces OF bindings
+> > +"Documentation/devicetree/bindings/media/video-interfaces.txt" are supported:
+> > +
+> > +- hsync-active: active state of the HSYNC signal, 0/1 for LOW/HIGH respectively.
+> > +- vsync-active: active state of the VSYNC signal, 0/1 for LOW/HIGH respectively.
+>
+> Don't these go in the endpoint? Not sure offhand.
+>
+
+Yes they do. I will list them as "Optional endpoint properties", and
+
+> > +
+> > +Default is high active state for both vsync and hsync signals.
+> > +
+> >  Optional Properties:
+> >  - reset-gpios: reference to the GPIO connected to the resetb pin, if any.
+> >    Active is low.
+> >  - powerdown-gpios: reference to the GPIO connected to the pwdn pin, if any.
+> >    Active is high.
+> > +- ov7670,pll-bypass: set to 1 to bypass PLL for pixel clock generation.
+>
+> Boolean instead?
+>
+
+Do we have booleans? I had a look at device tree specs and grep for
+"true"/"false" in arch/arm*/boot/dts, and didn't find that much.
+Seems like they're actually strings, am I wrong?
+
+Thanks
+   j
+
+> > +- ov7670,pclk-hb-disable: set to 1 to suppress pixel clock output signal during
+> > +  horizontal blankings.
+>
+> ditto
+>
+> >
+> >  The device node must contain one 'port' child node for its digital output
+> >  video port, in accordance with the video interface bindings defined in
+> > @@ -34,6 +45,9 @@ Example:
+> >  			assigned-clocks = <&pck0>;
+> >  			assigned-clock-rates = <25000000>;
+> >
+> > +			vsync-active = <0>;
+> > +			ov7670,pclk-hb-disable = <1>;
+> > +
+> >  			port {
+> >  				ov7670_0: endpoint {
+> >  					remote-endpoint = <&isi_0>;
+> > --
+> > 2.7.4
+> >
