@@ -1,54 +1,38 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 14/15] usb: dwc3: Add disabling of start_transfer failure
- quirk
-Date: Mon, 8 Jan 2018 22:16:02 -0600
-Message-ID: <20180109041602.f4tk5jynnno2xgvk@rob-hp-laptop>
-References: <cover.1515182391.git.thinhn@synopsys.com>
- <3c63b5f97343d276049e1d59ef2371160004b137.1515182391.git.thinhn@synopsys.com>
+Subject: Re: [PATCH] ASoC: codecs: dmic: Make number of channels configurable
+Date: Mon, 8 Jan 2018 22:17:10 -0600
+Message-ID: <20180109041710.xjnyjvkxkrqhgnlg@rob-hp-laptop>
+References: <20180105203957.184883-1-mka@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <3c63b5f97343d276049e1d59ef2371160004b137.1515182391.git.thinhn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <20180105203957.184883-1-mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thinh Nguyen <Thinh.Nguyen-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Cc: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+To: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bhumika Goyal <bhumirks-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnaud Pouliquen <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>, huang lin <hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 05, 2018 at 12:16:02PM -0800, Thinh Nguyen wrote:
-> In DWC_usb31 version 1.70a-ea06 and prior needs a SW workaround for isoc
-> START TRANSFER command failure. However, some affected versions may have
-> RTL patches to fix this without a SW workaround. Add this quirk to
-> disable the SW workaround when it is not needed.
-
-I really think this one should be implied by compatible strings.
-
-> Synopsys STAR 9001202023: Wrong microframe number for isochronous IN
-> endpoints.
+On Fri, Jan 05, 2018 at 12:39:57PM -0800, Matthias Kaehlcke wrote:
+> The DMIC DAI driver specifies a number of 1 to 8 channels for each DAI.
+> The actual number of mics can currently not be configured in the device
+> tree or audio glue, but is derived from the min/max channels of the CPU
+> and codec DAI. A typical CPU DAI has two or more channels, in consequence
+> a single mic is treated as a stereo/multi channel device, even though
+> only one channel carries audio data.
 > 
-> Cc: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-> Signed-off-by: Thinh Nguyen <thinhn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+> This change adds the option to specify the number of used DMIC channels
+> in the device tree. When specified this value overwrites the default
+> channels_max value of 8 in the snd_soc_dai_driver struct of the codec.
+> 
+> Signed-off-by: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/usb/dwc3.txt | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
-> index 02dde83d02fa..c03a3b363cde 100644
-> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
-> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
-> @@ -15,6 +15,9 @@ Optional properties:
->   - phys: from the *Generic PHY* bindings
->   - phy-names: from the *Generic PHY* bindings; supported names are "usb2-phy"
->  	or "usb3-phy".
-> + - snps,dis_start_transfer_quirk: when set, disable isoc START TRANSFER command
-> +			failure SW work-around for DWC_usb31 version 1.70a-ea06
-> +			and prior.
->   - snps,usb3_lpm_capable: determines if platform is USB3 LPM capable
->   - snps,disable_scramble_quirk: true when SW should disable data scrambling.
->  	Only really useful for FPGA builds.
-> -- 
-> 2.11.0
-> 
+>  Documentation/devicetree/bindings/sound/dmic.txt |  2 ++
+
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+>  sound/soc/codecs/dmic.c                          | 24 +++++++++++++++++++++++-
+>  2 files changed, 25 insertions(+), 1 deletion(-)
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
