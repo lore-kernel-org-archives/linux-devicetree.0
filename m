@@ -1,50 +1,66 @@
-From: Anson Huang <Anson.Huang@nxp.com>
-Subject: [PATCH V3 1/2] clk: imx: imx7d: add the snvs clock
-Date: Tue, 9 Jan 2018 17:20:50 +0800
-Message-ID: <1515489651-13488-1-git-send-email-Anson.Huang@nxp.com>
+From: Dong Aisheng <dongas86@gmail.com>
+Subject: Re: [PATCH 7/7] ARM: dts: imx6ull: add UART8 support
+Date: Tue, 9 Jan 2018 17:38:21 +0800
+Message-ID: <20180109093821.GF26312@b29396-OptiPlex-7040>
+References: <20180102164223.15230-1-stefan@agner.ch>
+ <20180102164223.15230-7-stefan@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180102164223.15230-7-stefan@agner.ch>
 Sender: linux-kernel-owner@vger.kernel.org
-To: horia.geanta@nxp.com, aymen.sghaier@nxp.com, herbert@gondor.apana.org.au, davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, mturquette@baylibre.com, sboyd@codeaurora.org, adriana.reus@nxp.com, stefan@agner.ch, dongas86@gmail.com
-Cc: linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+To: Stefan Agner <stefan@agner.ch>
+Cc: shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-According to the i.MX7D Reference Manual,
-SNVS block has a clock gate, accessing SNVS block
-would need this clock gate to be enabled, add it
-into clock tree so that SNVS module driver can
-operate this clock gate.
+On Tue, Jan 02, 2018 at 05:42:23PM +0100, Stefan Agner wrote:
+> In i.MX 6ULL UART8 is part of the AIPS-3 memory map instead of
+> AIPS-1. Clocks and interrupts remain the same.
+> 
+> Signed-off-by: Stefan Agner <stefan@agner.ch>
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- drivers/clk/imx/clk-imx7d.c             | 1 +
- include/dt-bindings/clock/imx7d-clock.h | 3 ++-
- 2 files changed, 3 insertions(+), 1 deletion(-)
+Acked-by: Dong Aisheng <aisheng.dong@nxp.com>
 
-diff --git a/drivers/clk/imx/clk-imx7d.c b/drivers/clk/imx/clk-imx7d.c
-index 80dc211..f34f1ec 100644
---- a/drivers/clk/imx/clk-imx7d.c
-+++ b/drivers/clk/imx/clk-imx7d.c
-@@ -795,6 +795,7 @@ static void __init imx7d_clocks_init(struct device_node *ccm_node)
- 	clks[IMX7D_DRAM_PHYM_ALT_ROOT_CLK] = imx_clk_gate4("dram_phym_alt_root_clk", "dram_phym_alt_post_div", base + 0x4130, 0);
- 	clks[IMX7D_DRAM_ALT_ROOT_CLK] = imx_clk_gate4("dram_alt_root_clk", "dram_alt_post_div", base + 0x4130, 0);
- 	clks[IMX7D_OCOTP_CLK] = imx_clk_gate4("ocotp_clk", "ipg_root_clk", base + 0x4230, 0);
-+	clks[IMX7D_SNVS_CLK] = imx_clk_gate4("snvs_clk", "ipg_root_clk", base + 0x4250, 0);
- 	clks[IMX7D_USB_HSIC_ROOT_CLK] = imx_clk_gate4("usb_hsic_root_clk", "usb_hsic_post_div", base + 0x4420, 0);
- 	clks[IMX7D_SDMA_CORE_CLK] = imx_clk_gate4("sdma_root_clk", "ahb_root_clk", base + 0x4480, 0);
- 	clks[IMX7D_PCIE_CTRL_ROOT_CLK] = imx_clk_gate4("pcie_ctrl_root_clk", "pcie_ctrl_post_div", base + 0x4600, 0);
-diff --git a/include/dt-bindings/clock/imx7d-clock.h b/include/dt-bindings/clock/imx7d-clock.h
-index e2f99ae..dc51904 100644
---- a/include/dt-bindings/clock/imx7d-clock.h
-+++ b/include/dt-bindings/clock/imx7d-clock.h
-@@ -452,5 +452,6 @@
- #define IMX7D_OCOTP_CLK			439
- #define IMX7D_NAND_RAWNAND_CLK		440
- #define IMX7D_NAND_USDHC_BUS_RAWNAND_CLK 441
--#define IMX7D_CLK_END			442
-+#define IMX7D_SNVS_CLK			442
-+#define IMX7D_CLK_END			443
- #endif /* __DT_BINDINGS_CLOCK_IMX7D_H */
--- 
-1.9.1
+Regards
+Dong Aisheng
+
+> ---
+>  arch/arm/boot/dts/imx6ull.dtsi | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/imx6ull.dtsi b/arch/arm/boot/dts/imx6ull.dtsi
+> index bc2cd4fb8b12..571ddd71cdba 100644
+> --- a/arch/arm/boot/dts/imx6ull.dtsi
+> +++ b/arch/arm/boot/dts/imx6ull.dtsi
+> @@ -43,6 +43,9 @@
+>  #include "imx6ull-pinfunc.h"
+>  #include "imx6ull-pinfunc-snvs.h"
+>  
+> +/* Delete UART8 in AIPS-1 (i.MX6UL specific) */
+> +/delete-node/ &uart8;
+> +
+>  / {
+>  	soc {
+>  		aips3: aips-bus@2200000 {
+> @@ -56,6 +59,17 @@
+>  				compatible = "fsl,imx6ull-iomuxc-snvs";
+>  				reg = <0x02290000 0x4000>;
+>  			};
+> +
+> +			uart8: serial@2288000 {
+> +				compatible = "fsl,imx6ul-uart",
+> +					     "fsl,imx6q-uart";
+> +				reg = <0x02288000 0x4000>;
+> +				interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks = <&clks IMX6UL_CLK_UART8_IPG>,
+> +					 <&clks IMX6UL_CLK_UART8_SERIAL>;
+> +				clock-names = "ipg", "per";
+> +				status = "disabled";
+> +			};
+>  		};
+>  	};
+>  };
+> -- 
+> 2.15.1
+> 
