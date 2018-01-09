@@ -1,179 +1,90 @@
-From: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>
-Subject: Re: [RFC v2 7/9] bluetooth: btrtl: load the config blob from
- devicetree when available
-Date: Tue, 9 Jan 2018 16:26:11 +0100
-Message-ID: <E1D87ADD-74F8-46A2-9F04-F68A3866F032@holtmann.org>
-References: <20180101204217.26165-1-martin.blumenstingl@googlemail.com>
- <20180101204217.26165-8-martin.blumenstingl@googlemail.com>
- <563D6F9F-8495-40D4-BE56-5338ED2B9B99@holtmann.org>
- <CAL9uMOEMDup4hRkxD-tM8R0YirGs5uQi31AjJUnFCPNMKUdRHg@mail.gmail.com>
- <E8E39477-CF1A-4A3E-84C5-830E182C2266@holtmann.org>
- <CAL9uMOH0N-4jgQncmPjK-KyU0vY9Q0ZnHYSAGgz3z3ywzc8Avw@mail.gmail.com>
- <CAFBinCBB=SmviOMRHGDH6vzjTjV-mrtQEc8nBUhDbJGs9SBpgw@mail.gmail.com>
- <CAL9uMOFyfr_qGf5BeTojkMeWeH8LqPoKj=LrdgEMB2wmhGBxmA@mail.gmail.com>
- <CAFBinCAFsDRpp=4We1hQPiutM1Q0MrqebPLyS3e2_e+JcBoSmg@mail.gmail.com>
- <CAL9uMOGkZefjD_JNxjf4yJ0ATFtOG5Cm_XQq1fy0VQDjiMFBmg@mail.gmail.com>
- <EC216531-81EC-4EE8-BAC4-C6954C222092@holtmann.org>
- <1F394D8B-CFB8-48BA-BC6B-15D1EE51DB08@holtmann.org>
- <41669609-3E28-473D-8616-71B9D0EEDCDF@holtmann.org>
- <CAFBinCBasb-WkLngxL2RAk9YMihC437ZgPKSkOd7Fm0RHG_aTw@mail.gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 11.2 \(3445.5.20\))
-Content-Type: text/plain;
-        charset=utf-8
-Content-Transfer-Encoding: 8BIT
+From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 03/11] drm/bridge/synopsys: dw-hdmi: Enable workaround for
+ v1.32a
+Date: Tue, 9 Jan 2018 16:29:47 +0100
+Message-ID: <9e9269be-fde7-7654-30c0-85a26760b9ad@baylibre.com>
+References: <20171230210203.24115-1-jernej.skrabec@siol.net>
+ <20171230210203.24115-4-jernej.skrabec@siol.net> <3367423.0HCaRuLuz8@avalon>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAFBinCBasb-WkLngxL2RAk9YMihC437ZgPKSkOd7Fm0RHG_aTw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <3367423.0HCaRuLuz8@avalon>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "Gustavo F. Padovan" <gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org>, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Larry Finger <Larry.Finger-tQ5ms3gMjBLk1uMJSBkQmQ@public.gmane.org>, Daniel Drake <drake-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Cc: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Martin,
+Hi,
 
->>>>>>> As Marcel suggested we can assume that the information in the DSDT is
->>>>>>> correct so that we can get rid of the config blob also for x86
->>>>>>> platforms (assuming that the only useful information in the config
->>>>>>> blobs is the UART configuration).
->>>>>> in my tests I tried to send only the firmware without the config to my
->>>>>> RTL8723BS. unfortunately the last firmware chunk (sent to the
->>>>>> controller) times out in that case (even if I set a proper baudrate
->>>>>> before or if I specify no baudrate at all and keep the serdev at
->>>>>> 115200)
->>>>> 
->>>>> What's in the config blobs besides UART configuration?
->>>> 
->>>> is anybody writing a rtlfw.c tool (like nokfw.c) so that we can print out what we actually have in these config files?
->>>> 
->>>>> It's odd because reading into hciattach_rtk.c it seems that the config
->>>>> file is actually only used by the userspace tools (hciattach) to
->>>>> retrieve the UART configuration and nothing else, whereas in the
->>>>> kernel driver the config blob is appended to the firmware.
->>>> 
->>>> Frankly, I am inclined to not use the config file even for DT based system and just allow specifying the UART settings via normal DT properties like we do for Broadcom and others.
->>> 
->>> so I googled for a few config files and this is what this turns into:
->>> 
->>> Analyzing rtl8723d_config_1000000_noflow.dms
->>> Signature:   0x8723ab55
->>> Data length: 41
->>> len=1   offset=f4,{ 01 }
->>> len=2   offset=f6,{ 81 00 }
->>> len=2   offset=fa,{ 12 80 }
->>> len=16  offset=0c,{ 04 50 00 00 50 c5 ea 19 e1 1b fd af 5b 01 a4 0b }
->>> len=1   offset=d9,{ 0f }
->>> len=1   offset=e4,{ 08 }
->>> Analyzing rtl8723d_config.dms
->>> Signature:   0x8723ab55
->>> Data length: 41
->>> len=1   offset=f4,{ 01 }
->>> len=2   offset=f6,{ 81 00 }
->>> len=2   offset=fa,{ 12 80 }
->>> len=16  offset=0c,{ 02 80 92 04 50 c5 ea 19 e1 1b fd af 5f 01 a4 0b }
->>> len=1   offset=d9,{ 0f }
->>> len=1   offset=e4,{ 08 }
->>> Analyzing rtl8822b_config.bin
->>> Signature:   0x8723ab55
->>> Data length: 8
->>> len=1   offset=d9,{ 0f }
->>> len=1   offset=e4,{ 08 }
->>> 
->>> The first two are some UART based ones and the last one is USB based.
->>> 
->>> So the 0x3c offset seems to be the BD_ADDR and 0x0c offset is the UART configuration. It would be good to know which settings the other ones control.
-> this matches my findings from the hciattach_rtk tool for rtl8723bs_bt
-> and rtl8723ds_bt
+I think this question is for Jose.
+
+On 09/01/2018 13:56, Laurent Pinchart wrote:
+> Hi Jernej,
 > 
->>> Also the 16 octet UART config blob seems to be decoded like this:
->>> 
->>>      uart_config {
->>>              le32 baudrate;
->>>              u8[8] reserved1;
->>>              u8 flowctl;
->>>              u8[3] reserved2;
->>>      }
->>> 
-> I could not find this in any of the rtl8723bs_bt or rtl8723ds_bt sources
-> so thank you for sharing this (even though this descriptin is missing
-> a few bytes)!
+> Thank you for the patch.
 > 
->>> Actually hciattach_rtk just takes the baud rate and and hardware flow control bit out of this file. That is clearly two things that are better written in plain text in the DT file.
-> this matches my findings apart from that hciattach_rtk also appends
-> the config blob to the "firmware patch" that is being uploaded to the
-> device
-> if you are brave you can have a look at [0]
+> On Saturday, 30 December 2017 23:01:55 EET Jernej Skrabec wrote:
+>> Allwinner SoCs have dw hdmi controller v1.32a which exhibits same
+>> magenta line issue as i.MX6Q and i.MX6DL. Enable workaround for it.
 
-so this makes kinda sense. If you do not load the config file, you end up with the ROM defaults for all their “efuse” settings. Since it is essentially just a memory area where the config file overwrites defaults, this is all fine.
+We observe the same issue on Amlogic SoCs with the dw hdmi controller v2.01a.
 
-They have to extract the UART settings out of it since they also need to handled special during the firmware loading / boot process. This is also means if there is no config file or not UART settings in the config file, the process should use the default values.
+Rockchip seems to also use count=1 for 0x200a, 0x201a and 0x211a in
+https://github.com/rockchip-linux/kernel/commit/cafa8ebd5f4df41425d6f2f61633d5bc64f20e65
 
->> so this is actually some funny stuff if you start to understand it.
->> 
->> Analyzing rtl8723b_config.dms
->> Signature: 0x8723ab55
->> Data len:  38
->> len=8   offset=00f4,{ 01 00 00 00 05 50 00 00 }
->> len=16  offset=000c,{ 02 80 92 04 50 c5 ea 19 e1 1b f1 af 5f 01 a4 0b },UART_CONFIG
->> len=1   offset=0027,{ 63 }
->> len=1   offset=00fe,{ 01 }
->> Analyzing rtl8723d_config_1000000_noflow.dms
->> Signature: 0x8723ab55
->> Data len:  41
->> len=1   offset=00f4,{ 01 }
->> len=2   offset=00f6,{ 81 00 }
->> len=2   offset=00fa,{ 12 80 }
->> len=16  offset=000c,{ 04 50 00 00 50 c5 ea 19 e1 1b fd af 5b 01 a4 0b },UART_CONFIG
->> len=1   offset=00d9,{ 0f }
->> len=1   offset=00e4,{ 08 }
->> 
->> Seems like Realtek really defines memory offsets in this file and they can be defined in various different ways.
-> wow, that is interesting - I was wondering why they called it "offset"
-> instead of "config_id" (or something similar)
+Changelog is :
+The issue can be worked around by issuing a TMDS software reset and
+then write one of the FC registers several times. After tested, the
+number of iterations of RK3399/RK3328(v2.11a), RK3368(v2.01a),
+RK3288(v2.00a) is one.
 
-It makes sense, they are just “patching” their configuration space.
+Can you confirm it is necessary ?
 
->> So 00f4,{ 01 00 00 00 05 50 00 00 } defines the whole PCM settings for interface 1 and 2. And 00f4,{ 01 } + 00f6,{ 81 00 } + 00fa,{ 12 80 } is the same PCM settings, but with only pieces of it defined.
->> 
->> This also means a 000c,{ 04 50 00 00 50 } for just setting the baud rate is as valid if flow control defaults to off and all other values are actual defaults. So code inside hciattach_rtk.c is also kind faulty on how it handles the flow control bit. It works if the config files all have offset 000c in it, but if not, then they are going funky.
->> 
->> Since these are efuse settings, I really wonder if there is just a HCI vendor command to read out the defaults and we use that to compare. And what I would really like to know is what these settings are suppose to change. Since even for USB, we are actually not even applying them.
-> the idea with the vendor command to read out existing memory is interesting
+Neil
+
+>>
+>> Tests show that one iteration is enough.
+>>
+>> Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 > 
-> based on the code in "btrtl.c" it seems that we are applying the
-> settings from the config blob.
-> we are simply appending it at the end of the "firmware patch", see [1]
-
-I am pretty sure it is all the same for USB and UART.
-
->> Anyway, I am certain that for Realtek UART devices, we just want to specify max-speed DT property like we do with the others. And then maybe a flow-control DT property to control that one (following what nfcmrvl.txt does). We can use the rtlfw tool that I wrote to extract the values from Realtek provided config files. Frankly the PCM settings we have to deal with as well at some point. But that is also missing for Broadcom and others.
-> just to make sure I understand you correctly: would you generate the
-> config blob in-memory (in a function in btrtl.c) and hardcode all
-> unknown bits (the reserved bits in the UART config entry for example)
-> or would you mandate that a config blob is present (so
-> request_firmware can fetch it) for "high-speed" operation?
+> This does not break R-Car DU, so
 > 
-> for PCM: I cannot test that anyways since the Amlogic platform does
-> not have audio support yet
+> Acked-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
 > 
->> Also if there is no config file, we should be able to just assume no flow control, 115200 baud rate and H:5 as protocol. That means that almost all chips will just work. They are just slow since we do not deal with the max-speed setting.
-> my problem so far was that uploading the firmware patch without
-> appending a config blob (see [1]) broke the UART communication (it was
-> not 115200 baud as before, and I also tried other speeds such as
-> 1500000 and 1000000 baud - neither worked)
-> however, extracting the existing values from the efuse using a vendor
-> command might give a hint why (maybe they are fallling back to some
-> exotic baudrate in that case, etc…)
-
-Have you tried to just create a config file with just the signature 0x8723ab55 and data len set to 0. So essentially an empty config file. I am curious if such a default config is good enough to get things working. Or if they have actually faulty defaults in their ROM that need overwriting to make things fly.
-
-Btw. I am curious why the UART speed is in that file anyway if we have to change it anyway via HCI command. So normally the boot UART speed is what is needed to know, not what final high speed we are using. So this is a bit odd.
-
-I wonder if just loading the config file if present and then use a DT property max-speed to select the speed (even if it is different from the config file).
-
-For me this means that we can have a general config file on disk, but actually allow overwriting the UART speed via DT. Otherwise we might just want to add extra offset entries for the config blob loading from disk and extend it with the DT values. So it would be some sort of overload.
-
-Regards
-
-Marcel
+>> ---
+>>  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 8 +++++---
+>>  1 file changed, 5 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+>> b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c index
+>> a38db40ce990..7ca14d7325b5 100644
+>> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+>> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+>> @@ -1634,9 +1634,10 @@ static void dw_hdmi_clear_overflow(struct dw_hdmi
+>> *hdmi) * then write one of the FC registers several times.
+>>  	 *
+>>  	 * The number of iterations matters and depends on the HDMI TX revision
+>> -	 * (and possibly on the platform). So far only i.MX6Q (v1.30a) and
+>> -	 * i.MX6DL (v1.31a) have been identified as needing the workaround, with
+>> -	 * 4 and 1 iterations respectively.
+>> +	 * (and possibly on the platform). So far i.MX6Q (v1.30a), i.MX6DL
+>> +	 * (v1.31a) and multiple Allwinner SoCs (v1.32a) have been identified
+>> +	 * as needing the workaround, with 4 iterations for v1.30a and 1
+>> +	 * iteration for others.
+>>  	 */
+>>
+>>  	switch (hdmi->version) {
+>> @@ -1644,6 +1645,7 @@ static void dw_hdmi_clear_overflow(struct dw_hdmi
+>> *hdmi) count = 4;
+>>  		break;
+>>  	case 0x131a:
+>> +	case 0x132a:
+>>  		count = 1;
+>>  		break;
+>>  	default:
+> 
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
