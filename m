@@ -1,39 +1,53 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 2/2] pinctrl: qcom: Add sdm845 pinctrl driver
-Date: Tue, 9 Jan 2018 15:39:59 +0100
-Message-ID: <CACRpkdba2HTeWGAegPv-32PBKh1qZYnF_1ctPaf3p4chSD8yBQ@mail.gmail.com>
-References: <20180106015104.19143-1-bjorn.andersson@linaro.org>
- <20180106015104.19143-2-bjorn.andersson@linaro.org> <20180108154403.GO12655@minitux>
+Subject: Re: [PATCH] ARM: realview: remove eb-mp clcd IRQ
+Date: Tue, 9 Jan 2018 15:47:37 +0100
+Message-ID: <CACRpkdY-6Djmofix1BhFEwnKAD3wC7PkqKCiJVFbWvseaXxO3w@mail.gmail.com>
+References: <20171221213146.3146805-1-arnd@arndb.de> <CACRpkdbCWZB1ZkrdGe0s0GfNVWEYY+NThy4ce-+SBtU-s=WNbQ@mail.gmail.com>
+ <3cc1ad94-0a62-2f35-d204-2b89b8ba642b@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20180108154403.GO12655@minitux>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <3cc1ad94-0a62-2f35-d204-2b89b8ba642b@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 8, 2018 at 4:44 PM, Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
-> On Fri 05 Jan 17:51 PST 2018, Bjorn Andersson wrote:
->
->> From: Rajendra Nayak <rnayak@codeaurora.org>
->>
->> This adds the pinctrl definitions for the TLMM of SDM845.
->>
->> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
->> [bjorn: consolidated functions]
->> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
->
-> Linus,
->
-> This patch is missing some updates introduced between engineering and
-> production hardware, which I missed this while reviewing the patch.
->
-> So please don't merge this patch, and forgive me for noise.
+On Mon, Jan 8, 2018 at 5:31 PM, Robin Murphy <robin.murphy@arm.com> wrote:
+> On 21/12/17 22:08, Linus Walleij wrote:
 
-OK waiting for respin. Let's see if the DT bindings get some review
-in the meantime.
+>> I do think the reference design has a character LCD, and I
+>> do think it has an interrupt, it's just undocumented so
+>> someone with this board would have to test it manually
+>> to figure out which line it is. Whoever uses this design
+>> will get to it if ever.
+>
+> FWIW the EB baseboard is *physically* the same regardless of the CPU, it's
+> just flashed with a Core-Tile-specific FPGA bitstream.
+
+Aha I always wondered how that works :)
+
+> I've just tried
+> firing up an 11MPCore one, and indeed the character LCD does light up with
+> the kernel version. I can't convince the recalcitrant beast to actually get
+> to userspace, though, so I can't confirm what the interrupt's deal is.
+
+Yeah the driver survives fine without an IRQ too so it just works ...
+
+> The baseboard manual (DUI0303E) says it's interrupt 22 on the board-level
+> secondary GICs, and since neither the CT11MP nor its corresponding FPGA
+> (AN152) mention any alternate routing direct to the Core Tile GIC, I'd guess
+> it probably still is. On the other hand, though, it also says this:
+>
+>   "... However this interrupt signal is reserved for future use and you
+>    must use a polling routine instead of an interrupt service routine."
+>
+> So maybe it's appropriate to just remove the interrupt everywhere :/
+
+Hm I don't think there will be future releases of these EB
+boards anytime soon, so I suspect we could just add it.
+
+But as it works fine without IRQ we can just leave it as well.
 
 Yours,
 Linus Walleij
