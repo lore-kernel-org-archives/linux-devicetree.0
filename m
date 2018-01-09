@@ -1,92 +1,189 @@
-From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 03/11] drm/bridge/synopsys: dw-hdmi: Enable workaround for
- v1.32a
-Date: Tue, 9 Jan 2018 16:29:47 +0100
-Message-ID: <9e9269be-fde7-7654-30c0-85a26760b9ad@baylibre.com>
-References: <20171230210203.24115-1-jernej.skrabec@siol.net>
- <20171230210203.24115-4-jernej.skrabec@siol.net> <3367423.0HCaRuLuz8@avalon>
+From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
+Subject: Re: [linux-sunxi] Re: [PATCH 01/11] clk: sunxi-ng: Don't set k if width is 0 for nkmp plls
+Date: Tue, 09 Jan 2018 16:54:34 +0100
+Message-ID: <1542502.H6M8hg3JYZ@jernej-laptop>
+References: <20171230210203.24115-1-jernej.skrabec@siol.net> <3625461.aU9oqMdpo3@jernej-laptop> <CAGb2v6463B-JVw5A9C39iiuo7Xzj3Bq06m6VzdAUqr0b-S91MQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3367423.0HCaRuLuz8@avalon>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Cc: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <CAGb2v6463B-JVw5A9C39iiuo7Xzj3Bq06m6VzdAUqr0b-S91MQ@mail.gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Archit Taneja <architt@codeaurora.org>, a.hajda@samsung.com, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Jose.Abreu@synopsys.com, Neil Armstrong <narmstrong@baylibre.com>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Chen-Yu,
 
-I think this question is for Jose.
+Dne ponedeljek, 08. januar 2018 ob 10:19:47 CET je Chen-Yu Tsai napisal(a):
+> On Fri, Jan 5, 2018 at 3:28 AM, Jernej Škrabec <jernej.skrabec@siol.net> 
+wrote:
+> > Hi,
+> > 
+> > Dne četrtek, 04. januar 2018 ob 15:45:18 CET je Chen-Yu Tsai napisal(a):
+> >> On Sun, Dec 31, 2017 at 5:01 AM, Jernej Skrabec <jernej.skrabec@siol.net>
+> > 
+> > wrote:
+> >> > For example, A83T have nmp plls which are modelled as nkmp plls. Since
+> >> > k
+> >> > is not specified, it has offset 0, shift 0 and lowest value 1. This
+> >> > means that LSB bit is always set to 1, which may change clock rate.
+> >> > 
+> >> > Fix that by applying k factor only if k width is greater than 0.
+> >> > 
+> >> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> >> > ---
+> >> > 
+> >> >  drivers/clk/sunxi-ng/ccu_nkmp.c | 21 +++++++++++++--------
+> >> >  1 file changed, 13 insertions(+), 8 deletions(-)
+> >> > 
+> >> > diff --git a/drivers/clk/sunxi-ng/ccu_nkmp.c
+> >> > b/drivers/clk/sunxi-ng/ccu_nkmp.c index e58c95787f94..709f528af2b3
+> >> > 100644
+> >> > --- a/drivers/clk/sunxi-ng/ccu_nkmp.c
+> >> > +++ b/drivers/clk/sunxi-ng/ccu_nkmp.c
+> >> > @@ -81,7 +81,7 @@ static unsigned long ccu_nkmp_recalc_rate(struct
+> >> > clk_hw
+> >> > *hw,>
+> >> > 
+> >> >                                         unsigned long parent_rate)
+> >> >  
+> >> >  {
+> >> >  
+> >> >         struct ccu_nkmp *nkmp = hw_to_ccu_nkmp(hw);
+> >> > 
+> >> > -       unsigned long n, m, k, p;
+> >> > +       unsigned long n, m, k = 1, p;
+> >> > 
+> >> >         u32 reg;
+> >> >         
+> >> >         reg = readl(nkmp->common.base + nkmp->common.reg);
+> >> > 
+> >> > @@ -92,11 +92,13 @@ static unsigned long ccu_nkmp_recalc_rate(struct
+> >> > clk_hw *hw,>
+> >> > 
+> >> >         if (!n)
+> >> >         
+> >> >                 n++;
+> >> > 
+> >> > -       k = reg >> nkmp->k.shift;
+> >> > -       k &= (1 << nkmp->k.width) - 1;
+> >> > -       k += nkmp->k.offset;
+> >> > -       if (!k)
+> >> > -               k++;
+> >> > +       if (nkmp->k.width) {
+> >> > +               k = reg >> nkmp->k.shift;
+> >> > +               k &= (1 << nkmp->k.width) - 1;
+> >> > +               k += nkmp->k.offset;
+> >> > +               if (!k)
+> >> > +                       k++;
+> >> > +       }
+> >> 
+> >> The conditional shouldn't be necessary. With nkmp->k.width = 0,
+> >> you'd simply get k & 0, which is 0, which then gets bumped up to 1,
+> >> unless k.offset > 1, which would be a bug.
+> >> 
+> >> >         m = reg >> nkmp->m.shift;
+> >> >         m &= (1 << nkmp->m.width) - 1;
+> >> > 
+> >> > @@ -153,12 +155,15 @@ static int ccu_nkmp_set_rate(struct clk_hw *hw,
+> >> > unsigned long rate,>
+> >> > 
+> >> >         reg = readl(nkmp->common.base + nkmp->common.reg);
+> >> >         reg &= ~GENMASK(nkmp->n.width + nkmp->n.shift - 1,
+> >> >         nkmp->n.shift);
+> >> > 
+> >> > -       reg &= ~GENMASK(nkmp->k.width + nkmp->k.shift - 1,
+> >> > nkmp->k.shift);
+> >> > +       if (nkmp->k.width)
+> >> > +               reg &= ~GENMASK(nkmp->k.width + nkmp->k.shift - 1,
+> >> > +                               nkmp->k.shift);
+> >> > 
+> >> >         reg &= ~GENMASK(nkmp->m.width + nkmp->m.shift - 1,
+> >> >         nkmp->m.shift);
+> >> >         reg &= ~GENMASK(nkmp->p.width + nkmp->p.shift - 1,
+> >> >         nkmp->p.shift);
+> >> >         
+> >> >         reg |= (_nkmp.n - nkmp->n.offset) << nkmp->n.shift;
+> >> > 
+> >> > -       reg |= (_nkmp.k - nkmp->k.offset) << nkmp->k.shift;
+> >> > +       if (nkmp->k.width)
+> >> > +               reg |= (_nkmp.k - nkmp->k.offset) << nkmp->k.shift;
+> >> 
+> >> I think a better way would be
+> >> 
+> >>         reg |= ((_nkmp.k - nkmp->k.offset) << nkmp->k.shift) &
+> >>         
+> >>                GENMASK(nkmp->k.width + nkmp->k.shift - 1, nkmp->k.shift);
+> >> 
+> >> And do this for all the factors, not just k. This pattern is what
+> >> regmap_update_bits does, which seems much safer. I wonder what
+> >> GENMASK() with a negative value would do though...
+> > 
+> > You're right, GENMASK(-1, 0) equals 0 (calculated by hand, not tested).
+> > This seems much more elegant solution.
+> > 
+> > Semi-related question: All nmp PLLs have much wider N range than real nkmp
+> > PLLs. This causes integer overflow when using nkmp formula from datasheet.
+> > Usually, N is 1-256 for nmp PLLs, which means that for very high N
+> > factors, it overflows. This also causes issue that M factor is never
+> > higher than 1.
+> Sounds like we can't use u8 for storing the factors. At least the
+> intermediate values we use to calculate the rates.
 
-On 09/01/2018 13:56, Laurent Pinchart wrote:
-> Hi Jernej,
+Only issue with u8 could be max field in struct ccu_mult_internal for K factor. 
+But since it's not used, there is no issue. All intermediate variables in 
+ccu_nkmp are wider.
+
 > 
-> Thank you for the patch.
+> > I was wondering, if patch would be acceptable which would change this
+> > formula:
+> > 
+> > RATE = (24MHz * N * K) / (M * P)
+> > 
+> > to this:
+> > 
+> > RATE ((24MHz / M) * N * K) / P
+> > 
+> > I checked all M factors and are all in 1-4 or 1-2 range, which means it
+> > wouldn't have any impact for real nkmp PLLs when parent is 24 MHz clock
+> > which is probably always.
+> > 
+> > What do you think?
 > 
-> On Saturday, 30 December 2017 23:01:55 EET Jernej Skrabec wrote:
->> Allwinner SoCs have dw hdmi controller v1.32a which exhibits same
->> magenta line issue as i.MX6Q and i.MX6DL. Enable workaround for it.
+> I think this is acceptable. M is normally the pre-divider, so this
+> actually fits how the hardware works, including possible rounding
+> errors.
 
-We observe the same issue on Amlogic SoCs with the dw hdmi controller v2.01a.
+Ok, I'll add a patch for that in v2.
 
-Rockchip seems to also use count=1 for 0x200a, 0x201a and 0x211a in
-https://github.com/rockchip-linux/kernel/commit/cafa8ebd5f4df41425d6f2f61633d5bc64f20e65
+Best regards,
+Jernej
 
-Changelog is :
-The issue can be worked around by issuing a TMDS software reset and
-then write one of the FC registers several times. After tested, the
-number of iterations of RK3399/RK3328(v2.11a), RK3368(v2.01a),
-RK3288(v2.00a) is one.
-
-Can you confirm it is necessary ?
-
-Neil
-
->>
->> Tests show that one iteration is enough.
->>
->> Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 > 
-> This does not break R-Car DU, so
+> ChenYu
 > 
-> Acked-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-> 
->> ---
->>  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 8 +++++---
->>  1 file changed, 5 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
->> b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c index
->> a38db40ce990..7ca14d7325b5 100644
->> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
->> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
->> @@ -1634,9 +1634,10 @@ static void dw_hdmi_clear_overflow(struct dw_hdmi
->> *hdmi) * then write one of the FC registers several times.
->>  	 *
->>  	 * The number of iterations matters and depends on the HDMI TX revision
->> -	 * (and possibly on the platform). So far only i.MX6Q (v1.30a) and
->> -	 * i.MX6DL (v1.31a) have been identified as needing the workaround, with
->> -	 * 4 and 1 iterations respectively.
->> +	 * (and possibly on the platform). So far i.MX6Q (v1.30a), i.MX6DL
->> +	 * (v1.31a) and multiple Allwinner SoCs (v1.32a) have been identified
->> +	 * as needing the workaround, with 4 iterations for v1.30a and 1
->> +	 * iteration for others.
->>  	 */
->>
->>  	switch (hdmi->version) {
->> @@ -1644,6 +1645,7 @@ static void dw_hdmi_clear_overflow(struct dw_hdmi
->> *hdmi) count = 4;
->>  		break;
->>  	case 0x131a:
->> +	case 0x132a:
->>  		count = 1;
->>  		break;
->>  	default:
-> 
+> > I discovered that when I tried to set A83T PLL_VIDEO to 346.5 MHz which is
+> > possible only when above formula is changed.
+> > 
+> > Best regards,
+> > Jernej
+> > 
+> >> ChenYu
+> >> 
+> >> >         reg |= (_nkmp.m - nkmp->m.offset) << nkmp->m.shift;
+> >> >         reg |= ilog2(_nkmp.p) << nkmp->p.shift;
+> >> > 
+> >> > --
+> >> > 2.15.1
+> > 
+> > --
+> > You received this message because you are subscribed to the Google Groups
+> > "linux-sunxi" group. To unsubscribe from this group and stop receiving
+> > emails from it, send an email to
+> > linux-sunxi+unsubscribe@googlegroups.com. For more options, visit
+> > https://groups.google.com/d/optout.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+
+
