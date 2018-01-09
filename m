@@ -1,54 +1,51 @@
 From: Chris Lew <clew@codeaurora.org>
-Subject: Re: [PATCH 5/6] rpmsg: Introduce rpmsg_get_rproc_name
-Date: Tue, 9 Jan 2018 11:08:52 -0800
-Message-ID: <449b7b39-dc6a-dfcd-c149-03da03e5350d@codeaurora.org>
+Subject: Re: [PATCH 1/6] dt-bindings: soc: qcom: Add label for GLINK bindings
+Date: Tue, 9 Jan 2018 11:11:36 -0800
+Message-ID: <24be93c8-d09e-5250-d654-d5f7a24c094b@codeaurora.org>
 References: <1513634534-22861-1-git-send-email-clew@codeaurora.org>
- <1513634534-22861-6-git-send-email-clew@codeaurora.org>
- <20171219175202.GB12655@minitux>
+ <1513634534-22861-2-git-send-email-clew@codeaurora.org>
+ <20171220183000.rhxgyikfqzxmqkjo@rob-hp-laptop>
+ <20171221013557.GE12655@minitux>
+ <d6ad476e-b68c-a1ed-9256-5997312a6024@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171219175202.GB12655@minitux>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <d6ad476e-b68c-a1ed-9256-5997312a6024@codeaurora.org>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: robh+dt@kernel.org, andy.gross@linaro.org, david.brown@linaro.org, aneela@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh@kernel.org>
+Cc: andy.gross@linaro.org, david.brown@linaro.org, aneela@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 12/19/2017 9:52 AM, Bjorn Andersson wrote:
-> On Mon 18 Dec 14:02 PST 2017, Chris Lew wrote:
-> 
->> Add support for client's to query the edge name their channel is
->> registered for. This is useful for clients who share the same channel
->> identifier across different remote procs.
+On 12/21/2017 11:36 AM, Stephen Boyd wrote:
+> On 12/20/2017 05:35 PM, Bjorn Andersson wrote:
+>> On Wed 20 Dec 10:30 PST 2017, Rob Herring wrote:
 >>
+>>> On Mon, Dec 18, 2017 at 02:02:09PM -0800, Chris Lew wrote:
+>>>> Add a label property to identify the edge this node represents.
+>>> Why does a user need to know this?
+>>>
+>> We have multiple remoteproc instances, each one having one or more
+>> associated SMD or GLINK links (this node), exposing logical
+>> communication channels. Some of these logical channels are exposed to
+>> user space and we need a way to distinguish them there.
+>>
+>> In the current implementation of SMD this value goes straight into an
+>> sysfs attribute that we can use when writing udev rules and for the DIAG
+>> implementation to pair up channels related to the same remoteproc. This
+>> adds the equivalent information for glink-backed channels.
+>>
+>>
+>> I'm therefor in favor of picking this patch.
 > 
-> I presume this will result in a strcmp in some client driver?
-> 
-> When we're registering the rpmsg device, as part of handling of an
-> arriving "open request", we do look for an of_node with matching
-> qcom,glink-channels and if one is found we point the dev->of_node of the
-> new device to this node.
-> 
-> So I would suggest that you, in your client driver, use this to decide
-> which instance you're on; regardless if you're using compatible based
-> driver matching.
-> 
-> Does this work for you?
-> 
-> Regards,
-> Bjorn
+> Please add these details to the commit log. Just writing what the patch
+> is doing isn't very helpful.
 > 
 
-Yea I think this works for us, we can drop this patch.
-
-Just to confirm my understanding, clients can use rpdev->dev.of_node to 
-get the parent of_node and from there get the label field? Also to 
-ensure of_node is set, client's need to add their channel to the dt with 
-qcom,glink-channels.
+Ok, will do.
 
 -- 
 Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
