@@ -1,110 +1,56 @@
 From: Stefan Riedmueller <s.riedmueller-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH v5 0/6] ARM: dts: Add PHYTEC phyCORE-i.MX 6 and phyBOARD-Mira carrier board support
-Date: Tue, 9 Jan 2018 17:09:54 +0100
-Message-ID: <1515514200-9801-1-git-send-email-s.riedmueller@phytec.de>
+Subject: [PATCH v5 6/6] ARM: imx_v6_v7_defconfig: Enable Dialog Semiconductor DA9062 driver
+Date: Tue, 9 Jan 2018 17:10:00 +0100
+Message-ID: <1515514200-9801-7-git-send-email-s.riedmueller@phytec.de>
+References: <1515514200-9801-1-git-send-email-s.riedmueller@phytec.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1515514200-9801-1-git-send-email-s.riedmueller-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org
 Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Stefan Riedmueller <s.riedmueller-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patchset adds support for the PHYTEC phyCORE-i.MX 6 and phyBOARD-Mira.
+The phyCORE-i.MX 6 uses the DA9062/63 PMIC, RTC and Watchdog driver.
 
-Following boards are included:
-phyBOARD-Mira with phyCORE-i.MX 6 Quad/Dual with:
-- i.MX 6Quad/Dual SOC
-- NAND or eMMC
-- HDMI interface
-- LVDS display interface
-- Gigabit Ethernet
-- USB Host
-- CAN
-- RS232
-- PCIe
-This board also contains an LVDS camera interface and parallel display
-interface which are not yet supported.
+Enable these options by default.
 
-phyBAORD-Mira with phyCORE-i.MX 6 DualLight/Solo with:
-- i.MX 6DualLight/Solo
-- NAND
-- HDMI interface
-- 100 MBit/s Ethernet
-- USB Host
-- RS232
+Signed-off-by: Stefan Riedmueller <s.riedmueller-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
+Reviewed-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+---
+ arch/arm/configs/imx_v6_v7_defconfig | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-phyBOARD-Mira with phyCORE-i.MX 6 QuadPlus with:
-- i.MX 6QuadPlus SOC
-- NAND
-- HDMI interface
-- LVDS display interface
-- Gigabit Ethernet
-- USB Host
-- CAN
-- RS232
-- PCIe
-This board also contains an LVDS camera interface and parallel display
-interface which are not yet supported.
-
-The entire series is based on v4.15-rc4.
-
-Changes since v1:
-- Removed unnecessary ipu aliases
-- Added unit-address to memory node name
-- Fixed eeprom compatible to correct vendor name (atmel instead of cat)
-- Fixed rtc compatible to correct vendor name (microcrystal instead of mc)
-- Changed pcie regulator to be used with vpcie-supply in &pcie node and
-  removed regulator-always-on
-- Changed pcie reset-gpio polarity to GPIO_ACTIVE_LOW
-- Replaced fsl,uart-has-rtscts by uart-has-rtscts
-- Fixed typos in defconfig patch
-
-Changes since v2:
-- Fixed typo in patch subject PATCH 4/6
-- Added reviewed by tags on PATCH 4/6 and PATCH 6/6
-
-Changes since v3:
-- Removed model and compatible from phycore dtsi
-- Changed flash compatible to jedec,spi-nor
-- Renamed some_green node to som-led-green
-- Dropped labels for eeprom, pmic, da9062_wdt and da9062_reg
-- Renamed flash label to m25p80
-- Put compatible at beginning of property lists
-- Changed copyright year to 2018
-- Added reviewed by tags on PATCH 1/6, 2/6, 3/6 and 5/6
-
-Changes since v4:
-- Rearranged &m25p80 node in dts files to fit alphabetical order
-- Fixed a parenthesis for uniformity in mira dtsi
-
-Christian Hemp (2):
-  ARM: dts: imx6: Add support for phyBOARD-Mira i.MX 6Quad/Dual RDK
-  ARM: dts: imx6: Add support for phyBOARD-Mira i.MX 6 DualLight/Solo
-    RDK
-
-Enrico Scholz (1):
-  ARM: dts: imx6: Add support for phyBOARD-Mira with i.MX 6QuadPlus
-
-Stefan Riedmueller (3):
-  ARM: dts: imx6: Add initial support for phyCORE-i.MX 6 SOM
-  ARM: dts: imx6: Add initial support for phyBOARD-Mira
-  ARM: imx_v6_v7_defconfig: Enable Dialog Semiconductor DA9062 driver
-
- arch/arm/boot/dts/Makefile                        |   4 +
- arch/arm/boot/dts/imx6dl-phytec-mira-rdk-nand.dts |  64 ++++
- arch/arm/boot/dts/imx6q-phytec-mira-rdk-emmc.dts  |  72 ++++
- arch/arm/boot/dts/imx6q-phytec-mira-rdk-nand.dts  |  72 ++++
- arch/arm/boot/dts/imx6qdl-phytec-mira.dtsi        | 390 ++++++++++++++++++++++
- arch/arm/boot/dts/imx6qdl-phytec-phycore-som.dtsi | 279 ++++++++++++++++
- arch/arm/boot/dts/imx6qp-phytec-mira-rdk-nand.dts |  72 ++++
- arch/arm/configs/imx_v6_v7_defconfig              |   4 +
- 8 files changed, 957 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6dl-phytec-mira-rdk-nand.dts
- create mode 100644 arch/arm/boot/dts/imx6q-phytec-mira-rdk-emmc.dts
- create mode 100644 arch/arm/boot/dts/imx6q-phytec-mira-rdk-nand.dts
- create mode 100644 arch/arm/boot/dts/imx6qdl-phytec-mira.dtsi
- create mode 100644 arch/arm/boot/dts/imx6qdl-phytec-phycore-som.dtsi
- create mode 100644 arch/arm/boot/dts/imx6qp-phytec-mira-rdk-nand.dts
-
+diff --git a/arch/arm/configs/imx_v6_v7_defconfig b/arch/arm/configs/imx_v6_v7_defconfig
+index 6726c83..e3c4163 100644
+--- a/arch/arm/configs/imx_v6_v7_defconfig
++++ b/arch/arm/configs/imx_v6_v7_defconfig
+@@ -216,8 +216,10 @@ CONFIG_THERMAL_WRITABLE_TRIPS=y
+ CONFIG_CPU_THERMAL=y
+ CONFIG_IMX_THERMAL=y
+ CONFIG_WATCHDOG=y
++CONFIG_DA9062_WATCHDOG=y
+ CONFIG_IMX2_WDT=y
+ CONFIG_MFD_DA9052_I2C=y
++CONFIG_MFD_DA9062=y
+ CONFIG_MFD_MC13XXX_SPI=y
+ CONFIG_MFD_MC13XXX_I2C=y
+ CONFIG_MFD_STMPE=y
+@@ -225,6 +227,7 @@ CONFIG_REGULATOR=y
+ CONFIG_REGULATOR_FIXED_VOLTAGE=y
+ CONFIG_REGULATOR_ANATOP=y
+ CONFIG_REGULATOR_DA9052=y
++CONFIG_REGULATOR_DA9062=y
+ CONFIG_REGULATOR_GPIO=y
+ CONFIG_REGULATOR_MC13783=y
+ CONFIG_REGULATOR_MC13892=y
+@@ -348,6 +351,7 @@ CONFIG_RTC_DRV_ISL1208=y
+ CONFIG_RTC_DRV_PCF8523=y
+ CONFIG_RTC_DRV_PCF8563=y
+ CONFIG_RTC_DRV_M41T80=y
++CONFIG_RTC_DRV_DA9063=y
+ CONFIG_RTC_DRV_MC13XXX=y
+ CONFIG_RTC_DRV_MXC=y
+ CONFIG_RTC_DRV_SNVS=y
 -- 
 2.7.4
 
