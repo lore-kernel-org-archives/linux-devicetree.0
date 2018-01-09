@@ -1,93 +1,55 @@
-From: Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Subject: Re: [PATCH] ASoC: codecs: dmic: Make number of
-	channels configurable
-Date: Tue, 9 Jan 2018 10:04:17 +0100
-Message-ID: <b4ab0392-8ce8-721a-0f70-22bfd358ced6@st.com>
-References: <20180105203957.184883-1-mka@chromium.org>
+From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Subject: [PATCH V5 0/7] Add loadable kernel module and power management support
+Date: Tue, 9 Jan 2018 14:49:30 +0530
+Message-ID: <1515489577-2197-1-git-send-email-mmaddireddy@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20180105203957.184883-1-mka@chromium.org>
-Content-Language: en-US
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Matthias Kaehlcke <mka@chromium.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, huang lin <hl@rock-chips.com>, Brian Norris <briannorris@chromium.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Dylan Reid <dgreid@chromium.org>, Bhumika Goyal <bhumirks@gmail.com>
+Content-Type: text/plain
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: thierry.reding@gmail.com, bhelgaas@google.com, lorenzo.pieralisi@arm.com, cyndis@kapsi.fi
+Cc: jonathanh@nvidia.com, robh+dt@kernel.org, frowand.list@gmail.com, rjw@rjwysocki.net, tglx@linutronix.de, vidyas@nvidia.com, kthota@nvidia.com, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-pm@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8gTWF0aGlhcywKCk5leHQgdGltZSBjb3VsZCB5b3UgYWRkIHBhdGNoIHZlcnNpb24gaW4g
-eW91ciBtYWlsIHN1YmplY3QgKCBbUEFUQ0ggdlhdKQplYXNpZXIgdG8gZm9sbG93IHZlcnNpb25z
-IDotKS4KCm90aGVyd2lzZSwKCkFja2VkLWJ5OiBBcm5hdWQgUG91bGlxdWVuIDxhcm5hdWQucG91
-bGlxdWVuQHN0LmNvbT4KClJlZ2FyZHMsCkFybmF1ZAoKT24gMDEvMDUvMjAxOCAwOTozOSBQTSwg
-TWF0dGhpYXMgS2FlaGxja2Ugd3JvdGU6Cj4gVGhlIERNSUMgREFJIGRyaXZlciBzcGVjaWZpZXMg
-YSBudW1iZXIgb2YgMSB0byA4IGNoYW5uZWxzIGZvciBlYWNoIERBSS4KPiBUaGUgYWN0dWFsIG51
-bWJlciBvZiBtaWNzIGNhbiBjdXJyZW50bHkgbm90IGJlIGNvbmZpZ3VyZWQgaW4gdGhlIGRldmlj
-ZQo+IHRyZWUgb3IgYXVkaW8gZ2x1ZSwgYnV0IGlzIGRlcml2ZWQgZnJvbSB0aGUgbWluL21heCBj
-aGFubmVscyBvZiB0aGUgQ1BVCj4gYW5kIGNvZGVjIERBSS4gQSB0eXBpY2FsIENQVSBEQUkgaGFz
-IHR3byBvciBtb3JlIGNoYW5uZWxzLCBpbiBjb25zZXF1ZW5jZQo+IGEgc2luZ2xlIG1pYyBpcyB0
-cmVhdGVkIGFzIGEgc3RlcmVvL211bHRpIGNoYW5uZWwgZGV2aWNlLCBldmVuIHRob3VnaAo+IG9u
-bHkgb25lIGNoYW5uZWwgY2FycmllcyBhdWRpbyBkYXRhLgo+IAo+IFRoaXMgY2hhbmdlIGFkZHMg
-dGhlIG9wdGlvbiB0byBzcGVjaWZ5IHRoZSBudW1iZXIgb2YgdXNlZCBETUlDIGNoYW5uZWxzCj4g
-aW4gdGhlIGRldmljZSB0cmVlLiBXaGVuIHNwZWNpZmllZCB0aGlzIHZhbHVlIG92ZXJ3cml0ZXMg
-dGhlIGRlZmF1bHQKPiBjaGFubmVsc19tYXggdmFsdWUgb2YgOCBpbiB0aGUgc25kX3NvY19kYWlf
-ZHJpdmVyIHN0cnVjdCBvZiB0aGUgY29kZWMuCj4gCj4gU2lnbmVkLW9mZi1ieTogTWF0dGhpYXMg
-S2FlaGxja2UgPG1rYUBjaHJvbWl1bS5vcmc+Cj4gLS0tCj4gwqBEb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3Mvc291bmQvZG1pYy50eHQgfMKgIDIgKysKPiDCoHNvdW5kL3NvYy9jb2Rl
-Y3MvZG1pYy5jwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqAgfCAyNAo+ICsrKysrKysrKysrKysrKysrKysrKysrLQo+IMKgMiBmaWxlcyBjaGFuZ2VkLCAy
-NSBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCj4gCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zb3VuZC9kbWljLnR4dAo+IGIvRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvdW5kL2RtaWMudHh0Cj4gaW5kZXggNTRjOGVmNjQ5OGE4
-Li5mN2JmNjU2MTE0NTMgMTAwNjQ0Cj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL3NvdW5kL2RtaWMudHh0Cj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL3NvdW5kL2RtaWMudHh0Cj4gQEAgLTcsMTAgKzcsMTIgQEAgUmVxdWlyZWQgcHJvcGVy
-dGllczoKPiDCoAo+IMKgT3B0aW9uYWwgcHJvcGVydGllczoKPiDCoMKgwqDCoMKgwqDCoMKgIC0g
-ZG1pY2VuLWdwaW9zOiBHUElPIHNwZWNpZmllciBmb3IgZG1pYyB0byBjb250cm9sIHN0YXJ0IGFu
-ZCBzdG9wCj4gK8KgwqDCoMKgwqDCoCAtIG51bS1jaGFubmVsczogTnVtYmVyIG9mIG1pY3JvcGhv
-bmVzIG9uIHRoaXMgREFJCj4gwqAKPiDCoEV4YW1wbGUgbm9kZToKPiDCoAo+IMKgwqDCoMKgwqDC
-oMKgwqAgZG1pY19jb2RlYzogZG1pY0AwIHsKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoCBjb21wYXRpYmxlID0gImRtaWMtY29kZWMiOwo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgIGRtaWNlbi1ncGlvcyA9IDwmZ3BpbzQgMyBHUElPX0FDVElWRV9ISUdIPjsKPiAr
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBudW0tY2hhbm5lbHMgPSA8MT47Cj4gwqDCoMKg
-wqDCoMKgwqDCoCB9Owo+IGRpZmYgLS1naXQgYS9zb3VuZC9zb2MvY29kZWNzL2RtaWMuYyBiL3Nv
-dW5kL3NvYy9jb2RlY3MvZG1pYy5jCj4gaW5kZXggYjg4YTFlZTY2ZjgwLi5jODhmOTc0ZWJlM2Ug
-MTAwNjQ0Cj4gLS0tIGEvc291bmQvc29jL2NvZGVjcy9kbWljLmMKPiArKysgYi9zb3VuZC9zb2Mv
-Y29kZWNzL2RtaWMuYwo+IEBAIC0xMDcsOCArMTA3LDMwIEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3Qg
-c25kX3NvY19jb2RlY19kcml2ZXIgc29jX2RtaWMgPSB7Cj4gwqAKPiDCoHN0YXRpYyBpbnQgZG1p
-Y19kZXZfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKPiDCoHsKPiArwqDCoMKg
-wqDCoMKgIGludCBlcnI7Cj4gK8KgwqDCoMKgwqDCoCB1MzIgY2hhbnM7Cj4gK8KgwqDCoMKgwqDC
-oCBzdHJ1Y3Qgc25kX3NvY19kYWlfZHJpdmVyICpkYWlfZHJ2ID0gJmRtaWNfZGFpOwo+ICsKPiAr
-wqDCoMKgwqDCoMKgIGlmIChwZGV2LT5kZXYub2Zfbm9kZSkgewo+ICvCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgIGVyciA9IG9mX3Byb3BlcnR5X3JlYWRfdTMyKHBkZXYtPmRldi5vZl9ub2Rl
-LAo+ICJudW0tY2hhbm5lbHMiLCAmY2hhbnMpOwo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgIGlmIChlcnIgJiYgKGVyciAhPSAtRU5PRU5UKSkKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcmV0dXJuIGVycjsKPiArCj4gK8KgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqAgaWYgKCFlcnIpIHsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqAgaWYgKGNoYW5zIDwgMSB8fCBjaGFucyA+IDgpCj4gK8KgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCByZXR1
-cm4gLUVJTlZBTDsKPiArCj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgIGRhaV9kcnYgPSBkZXZtX2t6YWxsb2MoJnBkZXYtPmRldiwKPiBzaXplb2YoKmRhaV9k
-cnYpLCBHRlBfS0VSTkVMKTsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqAgaWYgKCFkYWlfZHJ2KQo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcmV0dXJuIC1FTk9NRU07Cj4gKwo+ICvCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBtZW1jcHkoZGFpX2Rydiwg
-JmRtaWNfZGFpLCBzaXplb2YoKmRhaV9kcnYpKTsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqAgZGFpX2Rydi0+Y2FwdHVyZS5jaGFubmVsc19tYXggPSBjaGFu
-czsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB9Cj4gK8KgwqDCoMKgwqDCoCB9Cj4g
-KwoKPiDCoMKgwqDCoMKgwqDCoMKgIHJldHVybiBzbmRfc29jX3JlZ2lzdGVyX2NvZGVjKCZwZGV2
-LT5kZXYsCj4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgICZz
-b2NfZG1pYywgJmRtaWNfZGFpLCAxKTsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqAgJnNvY19kbWljLCBkYWlfZHJ2LCAxKTsKPiDCoH0KPiDCoAo+IMKgc3Rh
-dGljIGludCBkbWljX2Rldl9yZW1vdmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKPiAt
-LSAKPiAyLjE2LjAucmMwLjIyMy5nNGE0YWM4MzY3OC1nb29nCj4gCl9fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkFsc2EtZGV2ZWwgbWFpbGluZyBsaXN0CkFs
-c2EtZGV2ZWxAYWxzYS1wcm9qZWN0Lm9yZwpodHRwOi8vbWFpbG1hbi5hbHNhLXByb2plY3Qub3Jn
-L21haWxtYW4vbGlzdGluZm8vYWxzYS1kZXZlbAo=
+This series of patches adds loadable kernel module and power management
+support to Tegra PCIe host controller driver. irq_set_msi_desc() and
+tegra_cpuidle_pcie_irqs_in_use() symbols will be taken care in next
+set of patches.
+
+These patches are tested on Jetson TK1, TX1 and TX2 platforms, following
+are the verification details.
+	- Multiple module insert & remove
+	- PCIe device functionality after module insert
+	- Free clock, resets, regulators, powergate, iomem and interrupt
+	resources after module remove
+	- PCIe device functionality after resume from RAM
+
+V2: PM QoS fix is dropped in V2 from this series because the fix is
+incorporated in latest 'commit 0759e80b84e3 ("PM / QoS: Fix device resume
+latency framework")'. Update commit message of few patches in V2.
+
+V3: Patches to export irq_set_msi_desc() and tegra_cpuidle_pcie_irqs_in_use()
+are dropped based on review comments. These symbols will be addressed in next
+series. Took care of few other review comments.
+
+V4: Dropped pci_find_host_bridge() export patch and added new patch to use
+bus->sysdata for private data.
+
+V5: Decouple from https://patchwork.ozlabs.org/patch/832053/ and rebase
+on top of linux-next
+
+Manikanta Maddireddy (7):
+  of: Export of_pci_range_to_resource()
+  PCI: tegra: Use bus->sysdata to store and get host private data
+  PCI: tegra: Remove PCI_REASSIGN_ALL_BUS flag for Tegra PCIe
+  PCI: tegra: Free resources on probe failure
+  PCI: tegra: Add loadable kernel module support
+  PCI: tegra: Broadcast PME_Turn_Off message before link goes to L2
+  PCI: tegra: Add power management support
+
+ drivers/of/address.c         |   1 +
+ drivers/pci/host/Kconfig     |   2 +-
+ drivers/pci/host/pci-tegra.c | 333 ++++++++++++++++++++++++++++++++-----------
+ 3 files changed, 253 insertions(+), 83 deletions(-)
+
+-- 
+2.1.4
