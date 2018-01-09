@@ -1,96 +1,90 @@
-From: jacopo mondi <jacopo@jmondi.org>
-Subject: Re: [PATCH v2 2/2] media: dt-bindings: Add OF properties to ov7670
-Date: Tue, 9 Jan 2018 09:01:11 +0100
-Message-ID: <20180109080111.GD25666@w540>
-References: <1515059553-10219-1-git-send-email-jacopo+renesas@jmondi.org>
- <1515059553-10219-3-git-send-email-jacopo+renesas@jmondi.org>
- <20180109033555.vgofzbnpx37iqaon@rob-hp-laptop>
+From: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 0/6] arm: sunxi: IR support for A83T
+Date: Tue, 9 Jan 2018 09:02:43 +0100
+Message-ID: <bdaaea4c-4145-3b93-2f97-00c5c6449ddd@gmail.com>
+References: <20171219080747.4507-1-embed3d@gmail.com>
+ <20180105120253.zvwaz25scuk76bnt@gofer.mess.org>
+ <20180105145913.ddb5l5dyt7yn3kwc@flea.lan>
+Reply-To: embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180109033555.vgofzbnpx37iqaon@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, corbet@lwn.net, mchehab@kernel.org, sakari.ailus@iki.fi, mark.rutland@arm.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Return-path: <linux-sunxi+bncBD257DPK24NRBJ7O2HJAKGQECOOBLCA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180105145913.ddb5l5dyt7yn3kwc-ZC1Zs529Oq4@public.gmane.org>
+Content-Language: en-US
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sean Young <sean-hENCXIMQXOg@public.gmane.org>
+Cc: mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-   thanks for comments
 
-On Mon, Jan 08, 2018 at 09:35:55PM -0600, Rob Herring wrote:
-> On Thu, Jan 04, 2018 at 10:52:33AM +0100, Jacopo Mondi wrote:
-> > Describe newly introduced OF properties for ov7670 image sensor.
-> > The driver supports two standard properties to configure synchronism
-> > signals polarities and two custom properties already supported as
-> > platform data options by the driver.
->
-> Missing S-o-b.
->
 
-Ups, that was trivial, sorry about that
+On 05.01.2018 15:59, Maxime Ripard wrote:
+> Hi,
+> 
+> On Fri, Jan 05, 2018 at 12:02:53PM +0000, Sean Young wrote:
+>> On Tue, Dec 19, 2017 at 09:07:41AM +0100, Philipp Rossak wrote:
+>>> This patch series adds support for the sunxi A83T ir module and enhances
+>>> the sunxi-ir driver. Right now the base clock frequency for the ir driver
+>>> is a hard coded define and is set to 8 MHz.
+>>> This works for the most common ir receivers. On the Sinovoip Bananapi M3
+>>> the ir receiver needs, a 3 MHz base clock frequency to work without
+>>> problems with this driver.
+>>>
+>>> This patch series adds support for an optinal property that makes it able
+>>> to override the default base clock frequency and enables the ir interface
+>>> on the a83t and the Bananapi M3.
+>>>
+>>> changes since v2:
+>>> * reorder cir pin (alphabetical)
+>>> * fix typo in documentation
+>>>
+>>> changes since v1:
+>>> * fix typos, reword Documentation
+>>> * initialize 'b_clk_freq' to 'SUNXI_IR_BASE_CLK' & remove if statement
+>>> * change dev_info() to dev_dbg()
+>>> * change naming to cir* in dts/dtsi
+>>> * Added acked Ackedi-by to related patch
+>>> * use whole memory block instead of registers needed + fix for h3/h5
+>>>
+>>> changes since rfc:
+>>> * The property is now optinal. If the property is not available in
+>>>    the dtb the driver uses the default base clock frequency.
+>>> * the driver prints out the the selected base clock frequency.
+>>> * changed devicetree property from base-clk-frequency to clock-frequency
+>>>
+>>> Regards,
+>>> Philipp
+>>>
+>>>
+>>> Philipp Rossak (6):
+>>>    media: rc: update sunxi-ir driver to get base clock frequency from
+>>>      devicetree
+>>>    media: dt: bindings: Update binding documentation for sunxi IR
+>>>      controller
+>>>    arm: dts: sun8i: a83t: Add the cir pin for the A83T
+>>>    arm: dts: sun8i: a83t: Add support for the cir interface
+>>>    arm: dts: sun8i: a83t: bananapi-m3: Enable IR controller
+>>>    arm: dts: sun8i: h3-h8: ir register size should be the whole memory
+>>>      block
+>>
+>> I can take this series (through rc-core, i.e. linux-media), but I need an
+>> maintainer Acked-by: for the sun[x8]i dts changes (all four patches).
+> 
+> We'll merge them through our tree. We usually have a rather big number
+> of patches around, so we'd be better off avoiding conflicts :)
+> 
+> Philipp, can you resubmit the DTs as soon as -rc1 is out?
+> 
+> Thanks!
+> Maxime
+> 
+Yes, I can do this!
 
-> > ---
-> >  Documentation/devicetree/bindings/media/i2c/ov7670.txt | 14 ++++++++++++++
-> >  1 file changed, 14 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/media/i2c/ov7670.txt b/Documentation/devicetree/bindings/media/i2c/ov7670.txt
-> > index 826b656..57ded18 100644
-> > --- a/Documentation/devicetree/bindings/media/i2c/ov7670.txt
-> > +++ b/Documentation/devicetree/bindings/media/i2c/ov7670.txt
-> > @@ -9,11 +9,22 @@ Required Properties:
-> >  - clocks: reference to the xclk input clock.
-> >  - clock-names: should be "xclk".
-> >
-> > +The following properties, as defined by video interfaces OF bindings
-> > +"Documentation/devicetree/bindings/media/video-interfaces.txt" are supported:
-> > +
-> > +- hsync-active: active state of the HSYNC signal, 0/1 for LOW/HIGH respectively.
-> > +- vsync-active: active state of the VSYNC signal, 0/1 for LOW/HIGH respectively.
->
-> Don't these go in the endpoint? Not sure offhand.
->
-
-Yes they do. I will list them as "Optional endpoint properties", and
-
-> > +
-> > +Default is high active state for both vsync and hsync signals.
-> > +
-> >  Optional Properties:
-> >  - reset-gpios: reference to the GPIO connected to the resetb pin, if any.
-> >    Active is low.
-> >  - powerdown-gpios: reference to the GPIO connected to the pwdn pin, if any.
-> >    Active is high.
-> > +- ov7670,pll-bypass: set to 1 to bypass PLL for pixel clock generation.
->
-> Boolean instead?
->
-
-Do we have booleans? I had a look at device tree specs and grep for
-"true"/"false" in arch/arm*/boot/dts, and didn't find that much.
-Seems like they're actually strings, am I wrong?
-
-Thanks
-   j
-
-> > +- ov7670,pclk-hb-disable: set to 1 to suppress pixel clock output signal during
-> > +  horizontal blankings.
->
-> ditto
->
-> >
-> >  The device node must contain one 'port' child node for its digital output
-> >  video port, in accordance with the video interface bindings defined in
-> > @@ -34,6 +45,9 @@ Example:
-> >  			assigned-clocks = <&pck0>;
-> >  			assigned-clock-rates = <25000000>;
-> >
-> > +			vsync-active = <0>;
-> > +			ov7670,pclk-hb-disable = <1>;
-> > +
-> >  			port {
-> >  				ov7670_0: endpoint {
-> >  					remote-endpoint = <&isi_0>;
-> > --
-> > 2.7.4
-> >
+Regards,
+Philipp
