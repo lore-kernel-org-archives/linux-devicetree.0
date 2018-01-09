@@ -1,62 +1,74 @@
-From: Chris Lew <clew-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 4/6] rpmsg: glink: Expose rpmsg name attr for glink
-Date: Tue, 9 Jan 2018 10:44:13 -0800
-Message-ID: <09610000-059f-48f0-c1e3-d3dcdab4996a@codeaurora.org>
-References: <1513634534-22861-1-git-send-email-clew@codeaurora.org>
- <1513634534-22861-5-git-send-email-clew@codeaurora.org>
- <1d29f603-b113-9931-d7b6-980c959b8b6b@codeaurora.org>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH v5 0/5] Add OV5640 parallel interface and RGB565/YUYV
+ support
+Date: Tue, 9 Jan 2018 19:49:04 +0100
+Message-ID: <20180109184904.dsfv26sym5trr2fs@flea>
+References: <1514973452-10464-1-git-send-email-hugues.fruchet@st.com>
+ <20180108153811.5xrvbaekm6nxtoa6@flea>
+ <3010811e-ed37-4489-6a9f-6cc835f41575@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1d29f603-b113-9931-d7b6-980c959b8b6b-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: aneela-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="k5wo54tp6bqqq7cp"
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <3010811e-ed37-4489-6a9f-6cc835f41575@st.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Hugues FRUCHET <hugues.fruchet@st.com>
+Cc: Steve Longerbeam <slongerbeam@gmail.com>, Sakari Ailus <sakari.ailus@iki.fi>, Hans Verkuil <hverkuil@xs4all.nl>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, Benjamin Gaignard <benjamin.gaignard@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
 
+--k5wo54tp6bqqq7cp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 12/18/2017 2:48 PM, Stephen Boyd wrote:
-> On 12/18/2017 02:02 PM, Chris Lew wrote:
->> Expose the name field as an attr so clients listening to uevents for
->> rpmsg can identify the edge the events correspond to.
->>
->> Signed-off-by: Chris Lew <clew-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->> ---
->>   drivers/rpmsg/qcom_glink_native.c | 18 ++++++++++++++++++
->>   1 file changed, 18 insertions(+)
->>
->> diff --git a/drivers/rpmsg/qcom_glink_native.c b/drivers/rpmsg/qcom_glink_native.c
->> index 786f2eca01f1..a897ccea3098 100644
->> --- a/drivers/rpmsg/qcom_glink_native.c
->> +++ b/drivers/rpmsg/qcom_glink_native.c
->> @@ -1558,6 +1558,22 @@ static void qcom_glink_work(struct work_struct *work)
->>   	}
->>   }
->>   
->> +static ssize_t rpmsg_name_show(struct device *dev,
->> +			       struct device_attribute *attr, char *buf)
->> +{
->> +	struct rpmsg_device *rpdev = to_rpmsg_device(dev);
->> +	struct qcom_glink_device *gdev = to_glink_device(rpdev);
->> +
->> +	return snprintf(buf, RPMSG_NAME_SIZE, "%s\n", gdev->glink->name);
->> +}
->> +static DEVICE_ATTR_RO(rpmsg_name);
->> +
->> +static struct attribute *qcom_glink_attrs[] = {
-> 
-> const?
-> 
+Hi Hugues,
 
-Thanks Stephen, will change to "static const struct attribute *"
+On Mon, Jan 08, 2018 at 05:13:39PM +0000, Hugues FRUCHET wrote:
+> I'm using a ST board with OV5640 wired in parallel bus output in order=20
+> to interface to my STM32 DCMI parallel interface.
+> Perhaps could you describe your setup so I could help on understanding=20
+> the problem on your side. From my past experience with this sensor=20
+> module, you can first check hsync/vsync polarities, the datasheet is=20
+> buggy on VSYNC polarity as documented in patch 4/5.
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I'm testing using the driver, using a parallel interface:
+https://patchwork.kernel.org/patch/10129463/
+
+The bus is 8-bits wide, and like I was saying, we had a separate
+driver for the ov5640 that is working fine with that driver, so the
+hardware setup works, and the capture driver should be mostly ok too.
+
+By dumping the registers, I've seen some differences on the clock
+setup, I'll try to hack something tomorrow and let you know :)
+
+Thanks!
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--k5wo54tp6bqqq7cp
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlpVDpwACgkQ0rTAlCFN
+r3R9eQ//W9qd5aq7bXkpRHpqAAvX32d+ZozVyRgRWEeM6TDkYSg1trSXlH9iolId
+d8xLTqc/HFN3Cx1DyxO9BvWfFqfm1m+9t37kQtB9xKs/v5gxTF7C59SXAWxrJJnQ
+y9GB+CdIWsA6HmT7mBO37GBkItPQ5G9e+ArLbsv43uPvZw7TpkeBFvHc8IEPl9s4
+WkQFYcZ+Mr5blDRdXK+/B683QI+pZz0FATHVuMUOhfytzXtoXbQr6OVuCo74Ku2W
+AVOzeFyG0PNEbl+UFEd2cUUgI+4QCetud1ttv8pQi4iQvnfdkE1VhsCtISivFjgD
+FOIk7uAdagKBGfC+2OMmvZvHjhSaYnzVMe28rB3gVCze9uDoXfTp8vZSU04v9SKd
+Kq080fueFHTL+qrQAkjwOA2u/llDpVJfhy7ZlA8/A+PnAeidzXV31lNAzYdMGrtG
++zMYQY4DV3ggWWm6J9xOBjasHVND/pI9aP9VJu+jgxtyWzReyHxyMGEBDWb6qQNW
+x2JlYK1PTDrgMWqsgcLsmbav2/U5SMPc4hTbxw+FNgeVi4lyXb6DFPjV0XiHh8Qc
+GBL0cgkZwHL6QZAPfCl8Sq95bFvpyoVSvKfGh9zKsbrMbs+AIf/hRaMyuni17E6H
+HiIb43If1QaOT1VIZS4EOTX3lrqSG5pmgYz2xpbTa1L0Sntya0k=
+=FcnG
+-----END PGP SIGNATURE-----
+
+--k5wo54tp6bqqq7cp--
