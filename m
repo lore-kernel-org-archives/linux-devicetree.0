@@ -1,68 +1,40 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 03/11] drm/bridge/synopsys: dw-hdmi: Enable workaround for v1.32a
-Date: Tue, 09 Jan 2018 14:56:21 +0200
-Message-ID: <3367423.0HCaRuLuz8@avalon>
-References: <20171230210203.24115-1-jernej.skrabec@siol.net> <20171230210203.24115-4-jernej.skrabec@siol.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20171230210203.24115-4-jernej.skrabec@siol.net>
-Sender: linux-clk-owner@vger.kernel.org
-To: dri-devel@lists.freedesktop.org
-Cc: Jernej Skrabec <jernej.skrabec@siol.net>, maxime.ripard@free-electrons.com, airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org, architt@codeaurora.org, a.hajda@samsung.com, Jose.Abreu@synopsys.com, devicetree@vger.kernel.org, narmstrong@baylibre.com, mturquette@baylibre.com, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Subject: [PATCHv1 0/3] spi: support for Socionext Synquacer platform
+Date: Tue,  9 Jan 2018 18:39:43 +0530
+Message-ID: <1515503383-8909-1-git-send-email-jassisinghbrar@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jernej,
+From: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-Thank you for the patch.
+Hello,
 
-On Saturday, 30 December 2017 23:01:55 EET Jernej Skrabec wrote:
-> Allwinner SoCs have dw hdmi controller v1.32a which exhibits same
-> magenta line issue as i.MX6Q and i.MX6DL. Enable workaround for it.
-> 
-> Tests show that one iteration is enough.
-> 
-> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+ Support for Socionext's FIP controller intended for flash device interfacing.
+The controller can operate in 'direct' or 'command' mode. One mode directly
+talks and provide a read/write i/f to the flash device. Other works as plain
+SPI mode. This driver runs the controller as a SPI controller.
 
-This does not break R-Car DU, so
+Jassi Brar (3):
+  dt-bindings: spi: Add DT bindings for Synquacer
+  spi: Add spi driver for Socionext Synquacer platform
+  MAINTAINERS: Add entry for Synquacer SPI driver
 
-Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-> ---
->  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c index
-> a38db40ce990..7ca14d7325b5 100644
-> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> @@ -1634,9 +1634,10 @@ static void dw_hdmi_clear_overflow(struct dw_hdmi
-> *hdmi) * then write one of the FC registers several times.
->  	 *
->  	 * The number of iterations matters and depends on the HDMI TX revision
-> -	 * (and possibly on the platform). So far only i.MX6Q (v1.30a) and
-> -	 * i.MX6DL (v1.31a) have been identified as needing the workaround, with
-> -	 * 4 and 1 iterations respectively.
-> +	 * (and possibly on the platform). So far i.MX6Q (v1.30a), i.MX6DL
-> +	 * (v1.31a) and multiple Allwinner SoCs (v1.32a) have been identified
-> +	 * as needing the workaround, with 4 iterations for v1.30a and 1
-> +	 * iteration for others.
->  	 */
-> 
->  	switch (hdmi->version) {
-> @@ -1644,6 +1645,7 @@ static void dw_hdmi_clear_overflow(struct dw_hdmi
-> *hdmi) count = 4;
->  		break;
->  	case 0x131a:
-> +	case 0x132a:
->  		count = 1;
->  		break;
->  	default:
+ .../devicetree/bindings/spi/spi-synquacer.txt      |  24 +
+ MAINTAINERS                                        |   7 +
+ drivers/spi/Kconfig                                |  11 +
+ drivers/spi/Makefile                               |   1 +
+ drivers/spi/spi-synquacer.c                        | 664 +++++++++++++++++++++
+ 5 files changed, 707 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/spi/spi-synquacer.txt
+ create mode 100644 drivers/spi/spi-synquacer.c
 
 -- 
-Regards,
+2.7.4
 
-Laurent Pinchart
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
