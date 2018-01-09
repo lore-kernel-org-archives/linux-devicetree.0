@@ -1,62 +1,126 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH 3/9] soc: samsung: pmu: Add the PMU data of exynos5433 to
- support low-power state
-Date: Tue, 9 Jan 2018 13:33:36 +0100
-Message-ID: <CAJKOXPdijTxJAR0AxnMtxKm3T_y7vSv=k22jKMB87xsb6S-wPA@mail.gmail.com>
-References: <CGME20180109075905epcas1p321b8898a0d45287d63364e1aa768fdab@epcas1p3.samsung.com>
- <1515484746-10656-1-git-send-email-cw00.choi@samsung.com> <1515484746-10656-4-git-send-email-cw00.choi@samsung.com>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH v5 01/44] dt-bindings: clock: Add new bindings for TI
+ Davinci PLL clocks
+Date: Tue, 9 Jan 2018 18:05:23 +0530
+Message-ID: <0f90b5f7-f21e-5f81-1154-9a815bbb786d@ti.com>
+References: <1515377863-20358-1-git-send-email-david@lechnology.com>
+ <1515377863-20358-2-git-send-email-david@lechnology.com>
+ <ebd677dc-44a4-5053-2509-e3ee948ccf98@ti.com>
+ <22409e49-5c14-4068-b137-7535afaf90d7@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1515484746-10656-4-git-send-email-cw00.choi@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, kgene@kernel.org, Tomasz Figa <tomasz.figa@gmail.com>, chanwoo@kernel.org, Jaehoon Chung <jh80.chung@samsung.com>, Inki Dae <inki.dae@samsung.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jonghwa Lee <jonghwa3.lee@samsung.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <22409e49-5c14-4068-b137-7535afaf90d7@lechnology.com>
+Content-Language: en-US
+Sender: linux-clk-owner@vger.kernel.org
+To: David Lechner <david@lechnology.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 9, 2018 at 8:59 AM, Chanwoo Choi <cw00.choi@samsung.com> wrote:
-> This patch adds the PMU (Power Management Unit) data of exynos5433 SoC
-> in order to support the various power modes. Each power mode has
-> the different value for reducing the power-consumption.
->
-> Signed-off-by: Jonghwa Lee <jonghwa3.lee@samsung.com>
-> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
-> ---
->  arch/arm/mach-exynos/common.h               |   2 -
->  drivers/soc/samsung/Makefile                |   3 +-
->  drivers/soc/samsung/exynos-pmu.c            |   1 +
->  drivers/soc/samsung/exynos-pmu.h            |   2 +
->  drivers/soc/samsung/exynos5433-pmu.c        | 286 ++++++++++++++++++++++++++++
->  include/linux/soc/samsung/exynos-regs-pmu.h | 148 ++++++++++++++
->  6 files changed, 439 insertions(+), 3 deletions(-)
->  create mode 100644 drivers/soc/samsung/exynos5433-pmu.c
->
-> diff --git a/arch/arm/mach-exynos/common.h b/arch/arm/mach-exynos/common.h
-> index 098f84a149a3..afbc143a3d5d 100644
-> --- a/arch/arm/mach-exynos/common.h
-> +++ b/arch/arm/mach-exynos/common.h
-> @@ -125,8 +125,6 @@ enum {
->  void exynos_set_boot_flag(unsigned int cpu, unsigned int mode);
->  void exynos_clear_boot_flag(unsigned int cpu, unsigned int mode);
->
-> -extern u32 exynos_get_eint_wake_mask(void);
-> -
->  #ifdef CONFIG_PM_SLEEP
->  extern void __init exynos_pm_init(void);
->  #else
-> diff --git a/drivers/soc/samsung/Makefile b/drivers/soc/samsung/Makefile
-> index 29f294baac6e..d2e637339a45 100644
-> --- a/drivers/soc/samsung/Makefile
-> +++ b/drivers/soc/samsung/Makefile
-> @@ -2,5 +2,6 @@
->  obj-$(CONFIG_EXYNOS_PMU)       += exynos-pmu.o
->
->  obj-$(CONFIG_EXYNOS_PMU_ARM_DRIVERS)   += exynos3250-pmu.o exynos4-pmu.o \
-> -                                       exynos5250-pmu.o exynos5420-pmu.o
-> +                                       exynos5250-pmu.o exynos5420-pmu.o \
-> +                                       exynos5433-pmu.o
+On Monday 08 January 2018 09:59 PM, David Lechner wrote:
+> On 01/08/2018 08:00 AM, Sekhar Nori wrote:
+>> On Monday 08 January 2018 07:47 AM, David Lechner wrote:
+>>> This adds a new binding for the PLL IP blocks in the mach-davinci family
+>>> of processors. Currently, only the SYSCLKn and AUXCLK outputs are
+>>> needed,
+>>> but in the future additional child nodes could be added for OBSCLK and
+>>> BPDIV.
+>>>
+>>> Note: Although these PLL controllers are very similar to the TI Keystone
+>>> SoCs, we are not re-using those bindings. The Keystone bindings use a
+>>> legacy one-node-per-clock binding. Furthermore, the mach-davinici SoCs
+>>
+>> Not sure what is meant by "legacy one-node-per-clock binding"
+> 
+> It's a term I picked up from of_clk_detect_critical()
+> 
+>  * Do not use this function. It exists only for legacy Device Tree
+>  * bindings, such as the one-clock-per-node style that are outdated.
+>  * Those bindings typically put all clock data into .dts and the Linux
+>  * driver has no clock data, thus making it impossible to set this flag
+>  * correctly from the driver. Only those drivers may call
+>  * of_clk_detect_critical from their setup functions.
 
-... ah, I forgot. No. Exynos5433 is not ARMv7.
+Okay, I still don't understand the outdated style. I looked at clocks
+defined in arch/arm/boot/dts/stih407-clock.dtsi which is the only file
+that uses clock-critical and don't particularly see anything wrong with
+the way clocks are defined there.
 
- Best regards,
-Krzysztof
+Anyway, I guess we digress. As long as this patch series is not using
+the "legacy style", we are good :)
+
+>>> have a slightly different PLL register layout and a number of quirks
+>>> that
+>>> can't be handled by the existing bindings, so the keystone bindings
+>>> could
+>>> not be used as-is anyway.
+>>
+>> Right, I think different register layout between the processors is the
+>> main reason for a new driver. This should be sufficient reason IMO.
+>>
+>>>
+>>> Signed-off-by: David Lechner <david@lechnology.com>
+>>> ---
+>>>   .../devicetree/bindings/clock/ti/davinci/pll.txt   | 47
+>>> ++++++++++++++++++++++
+>>>   1 file changed, 47 insertions(+)
+>>>   create mode 100644
+>>> Documentation/devicetree/bindings/clock/ti/davinci/pll.txt
+>>>
+>>> diff --git
+>>> a/Documentation/devicetree/bindings/clock/ti/davinci/pll.txt
+>>> b/Documentation/devicetree/bindings/clock/ti/davinci/pll.txt
+>>> new file mode 100644
+>>> index 0000000..99bf5da
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/clock/ti/davinci/pll.txt
+>>> @@ -0,0 +1,47 @@
+>>> +Binding for TI DaVinci PLL Controllers
+>>> +
+>>> +The PLL provides clocks to most of the components on the SoC. In
+>>> addition
+>>> +to the PLL itself, this controller also contains bypasses, gates,
+>>> dividers,
+>>> +an multiplexers for various clock signals.
+>>> +
+>>> +Required properties:
+>>> +- compatible: shall be one of:
+>>> +    - "ti,da850-pll0" for PLL0 on DA850/OMAP-L138/AM18XX
+>>> +    - "ti,da850-pll1" for PLL1 on DA850/OMAP-L138/AM18XX
+>>
+>> These PLLs are same IP so they should use the same compatible. You can
+>> initialize both PLLs for DA850 based on the same compatible.
+>>
+> 
+> But they are not exactly the same. For example, PLL0 has 7 PLLDIV clocks
+> while
+> PLL1 only has 3. PLL0 has PREDIV while PLL1 does not. PLL0 has certain
+> SYSCLKs
+> that are fixed-ratio but PLL1 does not have any of these. There are even
+> more
+> differences, but these are the ones we are actually using.
+
+We need each element of the PLLC to be modeled individually as a clock
+node. That is, PLL should only model the multiplier, the dividers
+including post and prediv should be modeled as divider clocks (hopefully
+being able to use the clk-divider.c library). The sysclks can be
+fixed-factor-clock type clocks.
+
+Without this flexible mechanism, we cannot (at least later) model things
+like DIV4.5 clock which is the only clock which derives from the output
+of PLL multiplier before the post divider is applied.
+
+Since with DT there are are no retakes, we need to get this right the
+first time and modifying later will not be an option.
+
+> 
+> So, if we use the same compatible, we either have to come up with device
+> tree
+> bindings to describe all of this (yuck) or I suppose we can look at the
+> REVID
+> register to electronically determine exactly what we have. I went with the
+> simpler option of just creating two different compatible strings.
+
+Thanks,
+Sekhar
