@@ -1,148 +1,123 @@
-From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v5 0/6] iommu/arm-smmu: Add runtime pm/sleep support
-Date: Tue, 9 Jan 2018 17:19:15 +0530
-Message-ID: <70e20deb-66fa-9e69-8b36-ba7b17d9390c@codeaurora.org>
-References: <1515492109-753-1-git-send-email-vivek.gautam@codeaurora.org>
-	<1568773.GtDhb2pIXv@aspire.rjw.lan>
+From: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Subject: RE: [PATCH v5 0/5] Add OV5640 parallel interface and RGB565/YUYV
+ support
+Date: Tue, 9 Jan 2018 11:50:05 +0000
+Message-ID: <TY1PR06MB0895E8328AC5EB376C4556EEC0100@TY1PR06MB0895.apcprd06.prod.outlook.com>
+References: <1514973452-10464-1-git-send-email-hugues.fruchet@st.com>
+ <TY1PR06MB0895C74B45AF75CEB9F7AA4BC0130@TY1PR06MB0895.apcprd06.prod.outlook.com>
+ <a02789f0-d41c-7dfb-406c-fe29ccc0dc9e@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <1568773.GtDhb2pIXv-yvgW3jdyMHm1GS7QM15AGw@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, len.brown-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <a02789f0-d41c-7dfb-406c-fe29ccc0dc9e-qxv4g6HH51o@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hugues FRUCHET <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 01/09/2018 04:53 PM, Rafael J. Wysocki wrote:
-> On Tuesday, January 9, 2018 11:01:43 AM CET Vivek Gautam wrote:
->> This series provides the support for turning on the arm-smmu's
->> clocks/power domains using runtime pm. This is done using the
->> recently introduced device links patches, which lets the smmu's
->> runtime to follow the master's runtime pm, so the smmu remains
->> powered only when the masters use it.
->>
->> It also adds support for Qcom's arm-smmu-v2 variant that
->> has different clocks and power requirements.
->>
->> Took some reference from the exynos runtime patches [2].
->>
->> Previous version of the patchset [1].
->>
->> After much discussion [4] over the use of pm_runtime_get/put() in
->> .unmap op path for the arm-smmu, and after disussing over more than
->> a couple of approaches to address this, we are putting forward the
->> changes *without* using pm_runtime APIs in 'unmap'. Rather, letting
->> the client device take the control of powering on/off the connected
->> iommu through pm_runtime_get(put)_suppliers() APIs for the scnerios
->> when the iommu power can't be directly controlled by clients through
->> device links.
->> Rafael has agreed to export the suppliers APIs [5].
->>
->> [V5]
->>     * Dropped runtime pm calls from "arm_smmu_unmap" op as discussed over
->>       the list [4] for the last patch series.
->>     * Added a patch to export pm_runtime_get/put_suppliers() APIs to the
->>       series as agreed with Rafael [5].
->>     * Added the related patch for msm drm iommu layer to use
->>       pm_runtime_get/put_suppliers() APIs in msm_mmu_funcs.
->>     * Dropped arm-mmu500 clock patch since that would break existing
->>       platforms.
->>     * Changed compatible 'qcom,msm8996-smmu-v2' to 'qcom,smmu-v2' to reflect
->>       the IP version rather than the platform on which it is used.
->>       The same IP is used across multiple platforms including msm8996,
->>       and sdm845 etc.
->>     * Using clock bulk APIs to handle the clocks available to the IP as
->>       suggested by Stephen Boyd.
->>     * The first patch in v4 version of the patch-series:
->>       ("iommu/arm-smmu: Fix the error path in arm_smmu_add_device") has
->>       already made it to mainline.
->>
->> [V4]
->>     * Reworked the clock handling part. We now take clock names as data
->>       in the driver for supported compatible versions, and loop over them
->>       to get, enable, and disable the clocks.
->>     * Using qcom,msm8996 based compatibles for bindings instead of a generic
->>       qcom compatible.
->>     * Refactor MMU500 patch to just add the necessary clock names data and
->>       corresponding bindings.
->>     * Added the pm_runtime_get/put() calls in .unmap iommu op (fix added by
->>       Stanimir on top of previous patch version.
->>     * Added a patch to fix error path in arm_smmu_add_device()
->>     * Removed patch 3/5 of V3 patch series that added qcom,smmu-v2 bindings.
->>
->> [V3]
->>     * Reworked the patches to keep the clocks init/enabling function
->>       separately for each compatible.
->>
->>     * Added clocks bindings for MMU40x/500.
->>
->>     * Added a new compatible for qcom,smmu-v2 implementation and
->>       the clock bindings for the same.
->>
->>     * Rebased on top of 4.11-rc1
->>
->> [V2]
->>     * Split the patches little differently.
->>
->>     * Addressed comments.
->>
->>     * Removed the patch #4 [3] from previous post
->>       for arm-smmu context save restore. Planning to
->>       post this separately after reworking/addressing Robin's
->>       feedback.
->>
->>     * Reversed the sequence to disable clocks than enabling.
->>       This was required for those cases where the
->>       clocks are populated in a dependent order from DT.
->>
->> [1] https://www.spinics.net/lists/arm-kernel/msg567488.html
->> [2] https://lkml.org/lkml/2016/10/20/70
->> [3] https://patchwork.kernel.org/patch/9389717/
->> [4] https://patchwork.kernel.org/patch/9827825/
->> [5] https://patchwork.kernel.org/patch/10102445/
->>
->> Sricharan R (3):
->>    iommu/arm-smmu: Add pm_runtime/sleep ops
->>    iommu/arm-smmu: Invoke pm_runtime during probe, add/remove device
->>    iommu/arm-smmu: Add the device_link between masters and smmu
->>
->> Vivek Gautam (3):
->>    base: power: runtime: Export pm_runtime_get/put_suppliers
->>    iommu/arm-smmu: Add support for qcom,smmu-v2 variant
->>    drm/msm: iommu: Replace runtime calls with runtime suppliers
->>
->>   .../devicetree/bindings/iommu/arm,smmu.txt         |  35 ++++++
->>   drivers/base/power/runtime.c                       |   2 +
->>   drivers/gpu/drm/msm/msm_iommu.c                    |  16 +--
->>   drivers/iommu/arm-smmu.c                           | 124 ++++++++++++++++++++-
->>   4 files changed, 163 insertions(+), 14 deletions(-)
-> I need some time to review the series.
-
-Sure, thanks Rafael.
-
-regards
-Vivek
-
->
-> Thanks,
-> Rafael
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+SGVsbG8gSHVndWVzLA0KDQp0aGFuayB5b3UgZm9yIGdldHRpbmcgYmFjayB0byBtZSwgSSdsbCBs
+b29rIGludG8geW91ciBzdWdnZXN0aW9ucyBpbiB0aGUgbmV4dCBmZXcgZGF5cywgSSdsbCBnaXZl
+IHlvdSBhIGZlZWRiYWNrIGFzIHNvb24gYXMgSSBrbm93IG1vcmUuDQoNClRoYW5rcywNCkZhYg0K
+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjUgMC81XSBBZGQgT1Y1NjQwIHBhcmFsbGVsIGludGVy
+ZmFjZSBhbmQgUkdCNTY1L1lVWVYgc3VwcG9ydA0KPg0KPiBIaSBGYWJyaXppbywNCj4NCj4gSGFw
+cHkgdG8gc2VlIHRoYXQgdGhpcyBwYXRjaCBzZXJpZXMgaXMgb2YgaW50ZXJlc3QgOykNCj4NCj4g
+QXMgeW91IGNhbiBzZWUgaW4gbWFpbCB0aHJlYWQsIE1heGltZSBSaXBhcmQgaXMgYWxzbyB0ZXN0
+aW5nIGl0Og0KPiBodHRwczovL3d3dy5tYWlsLWFyY2hpdmUuY29tL2xpbnV4LW1lZGlhQHZnZXIu
+a2VybmVsLm9yZy9tc2cxMjQzMjIuaHRtbA0KPg0KPiBGb3IgQlQ2NTYgc3VwcG9ydCwgaXQgd2Fz
+IG5vdCBpbml0aWFsbHkgcGxhbm5lZCBidXQgaXQgc2VlbXMNCj4gc3RyYWlnaHRmb3J3YXJkIHRv
+IGNvZGUgaXQsIGFuZCBhbnl3YXkgSSBoYXZlIHRvIGFkZCBKUEVHIHN1cHBvcnQsIHNvIEkNCj4g
+Y291bGQgYWRkIEJUNjU2IHN1cHBvcnQgaW4gbmV4dCBwYXRjaCBzZXJpZXMuDQo+DQo+IEZvciB5
+b3VyIHN5bXB0b20sIEkgd291bGQgc2F5IHNhbWUgYXMgSSBzYWlkIHRvIE1heGltZSwgY2hlY2sg
+Zmlyc3QgdGhlDQo+IHBvbGFyaXR5IG9mIHN5bmMgc2lnbmFscyAoaHlzbmMvdnlzbmMvcGNsaykg
+YmV0d2VlbiBJU1AgYW5kIE9WNTY0MC4NCj4gTm90ZSBhbHNvIHRoYXQgc2V2ZXJhbCBmcmFtZXMg
+YXJlIG5lZWRlZCB0byBnZXQgYSBub24tYmxhY2sgcGljdHVyZS4NCj4gWW91IGNhbiBhbHNvIHVz
+ZSB0aGUgY29sb3JiYXIgdGVzdCB0byB2YWxpZGF0ZSBidXMgY29ubmVjdGlvbiBiZXR3ZWVuDQo+
+IElTUCBhbmQgc2Vuc29yLg0KPg0KPiBIZXJlIGFyZSB0aGUgeWF2dGEgY29tbWFuZHMgdGhhdCBJ
+J20gY29tbW9ubHkgdXNpbmc6DQo+DQo+ICogZ3JhYiBRVkdBIFJHQjU2NSByYXcgZnJhbWUgKG5v
+dGUgdGhlIHNraXA9MTAgdG8gZ2V0IGEgY29ycmVjdCBpbWFnZSkNCj4geWF2dGEgLXMgMzIweDI0
+MCAtbiAzIC0tY2FwdHVyZT0xMyAtLXNraXA9MTAgLS1mb3JtYXQ9UkdCNTY1IC9kZXYvdmlkZW8w
+DQo+IC0tZmlsZT1ncmFiLTMyMHgyNDAtcmdiNTY1LSMucmF3DQo+DQo+ICogZ3JhYiBRVkdBIFlV
+ViBmcmFtZQ0KPiB5YXZ0YSAtcyAzMjB4MjQwIC1uIDMgLS1jYXB0dXJlPTEzIC0tc2tpcD0xMCAt
+LWZvcm1hdD1ZVVlWIC9kZXYvdmlkZW8wDQo+IC0tZmlsZT1ncmFiLTMyMHgyNDAteXV5di0jLnJh
+dw0KPg0KPiAqIGdyYWIgUVZHQSBjb2xvcmJhciBSR0I1NjUgcmF3IGZyYW1lDQo+IHlhdnRhIC1z
+IDMyMHgyNDAgLW4gMyAtdyAnMHgwMDlmMDkwMyAxJyAtLWNhcHR1cmU9MSAtLWZvcm1hdD1SR0I1
+NjUNCj4gL2Rldi92aWRlbzAgLS1maWxlPWdyYWItY29sb3JiYXItMzIweDI0MC1yZ2I1NjUtIy5y
+YXcNCj4NCj4gKiBkaXNhYmxlIGNvbG9yYmFycw0KPiB5YXZ0YSAtcyAzMjB4MjQwIC1uIDMgLXcg
+JzB4MDA5ZjA5MDMgMCcgL2Rldi92aWRlbzANCj4NCj4NCj4gSG9wZSB0aGlzIHdpbGwgaGVscCAh
+DQo+DQo+IEJlc3QgcmVnYXJkcywNCj4gSHVndWVzLg0KPg0KPiBPbiAwMS8wOC8yMDE4IDA5OjU0
+IFBNLCBGYWJyaXppbyBDYXN0cm8gd3JvdGU6DQo+ID4gSGVsbG8gSHVndWVzLA0KPiA+DQo+ID4g
+dGhhbmsgeW91IGZvciB0aGUgcGF0Y2ggc2VyaWVzLg0KPiA+IEkgYW0gaGF2aW5nIGEgZ28gd2l0
+aCB5b3VyIHBhdGNoZXMsIGFuZCBhbHRob3VnaCB0aGV5IHNlZW0gYWxyaWdodCwgSSBkb24ndCBz
+ZWVtIHRvIGJlIGFibGUgdG8gZ3JhYiBhIG5vbi1ibGFjayBwaWN0dXJlIG9uIHRoZSBpV2F2ZQ0K
+PiBpd2cyMGQgaW4gcGxhaW4gRFZQIG1vZGUsIGJ1dCBpZiBJIHN3aXRjaCB0byBCVDY1NiBqdXN0
+IGJ5IHNldHRpbmcgcmVnaXN0ZXIgMHg0NzMwIHRvIDB4MDEgKEkga25vdywgaXQncyBhIG5hc3R5
+IGhhY2suLi4pIEkgY2FuIGdldA0KPiBzb21ldGhpbmcgc2Vuc2libGUgb3V0Lg0KPiA+DQo+ID4g
+QXQgdGhlIG1vbWVudCB0aGVyZSBpcyBubyBwcm9wZXIgQlQ2NTYgc3VwcG9ydCBpbiB0aGUgZHJp
+dmVyLCBJIHdhcyB3b25kZXJpbmcgaWYgeW91IGhhdmUgYW55IHBsYW5zIHRvIGVuaGFuY2UgdGhl
+IG92NTY0MCBkcml2ZXIgYQ0KPiBsaXR0bGUgYml0IGZ1cnRoZXIgdG8gYWRkIHByb3BlciBCVDY1
+NiBzdXBwb3J0IGFzIGl0IG1heSBiZSBjb252ZW5pZW50Lg0KPiA+DQo+ID4gRG8geW91IGtub3cg
+aWYgc29tZW9uZSBlbHNlIHdhcyBhYmxlIHRvIGdldCBEVlAgdG8gd29yayBieSBtZWFucyBvZiB0
+aGlzIHBhdGNoIHNlcmllcyBvbiBhIG5vbi1TVE0zMiBwbGF0Zm9ybT8NCj4gPg0KPiA+IFRoYW5r
+cywNCj4gPiBGYWJyaXppbw0KPiA+DQo+ID4NCj4gPj4gU3ViamVjdDogW1BBVENIIHY1IDAvNV0g
+QWRkIE9WNTY0MCBwYXJhbGxlbCBpbnRlcmZhY2UgYW5kIFJHQjU2NS9ZVVlWIHN1cHBvcnQNCj4g
+Pj4NCj4gPj4gRW5oYW5jZSBPVjU2NDAgQ1NJIGRyaXZlciB0byBzdXBwb3J0IGFsc28gRFZQIHBh
+cmFsbGVsIGludGVyZmFjZS4NCj4gPj4gQWRkIFJHQjU2NSAoTEUgJiBCRSkgYW5kIFlVVjQyMiBZ
+VVlWIGZvcm1hdCBpbiBhZGRpdGlvbiB0byBleGlzdGluZw0KPiA+PiBZVVY0MjIgVVlWWSBmb3Jt
+YXQuDQo+ID4+IFNvbWUgb3RoZXIgaW1wcm92ZW1lbnRzIG9uIGNoaXAgaWRlbnRpZmllciBjaGVj
+ayBhbmQgcmVtb3ZhbA0KPiA+PiBvZiB3YXJuaW5ncyBpbiBwb3dlcmluZyBwaGFzZSBhcm91bmQg
+Z3BpbyBoYW5kbGluZy4NCj4gPj4NCj4gPj4gPT09PT09PT09PT0NCj4gPj4gPSBoaXN0b3J5ID0N
+Cj4gPj4gPT09PT09PT09PT0NCj4gPj4gdmVyc2lvbiA1Og0KPiA+PiAgICAtIFJlZmluZSBiaW5k
+aW5ncyBhcyBwZXIgU2FrYXJpIHN1Z2dlc3Rpb246DQo+ID4+ICAgICAgaHR0cHM6Ly93d3cubWFp
+bC1hcmNoaXZlLmNvbS9saW51eC1tZWRpYUB2Z2VyLmtlcm5lbC5vcmcvbXNnMTI0MDQ4Lmh0bWwN
+Cj4gPj4NCj4gPj4gdmVyc2lvbiA0Og0KPiA+PiAgICAtIFJlZmluZSBiaW5kaW5ncyBhcyBwZXIg
+U2FrYXJpIHN1Z2dlc3Rpb246DQo+ID4+ICAgICAgaHR0cHM6Ly93d3cubWFpbC1hcmNoaXZlLmNv
+bS9saW51eC1tZWRpYUB2Z2VyLmtlcm5lbC5vcmcvbXNnMTIzNjA5Lmh0bWwNCj4gPj4gICAgLSBQ
+YXJhbGxlbCBwb3J0IGNvbnRyb2wgbGluZXMgcG9sYXJpdHkgY2FuIG5vdyBiZSBjb25maWd1cmVk
+IHRocm91Z2gNCj4gPj4gICAgICBkZXZpY2V0cmVlDQo+ID4+DQo+ID4+IHZlcnNpb24gMzoNCj4g
+Pj4gICAgLSBNb3ZlIGNoaXAgaWRlbnRpZmllciBjaGVjayBhdCBwcm9iZSBhY2NvcmRpbmcgdG8g
+RmFiaW8gRXN0ZXZhbSBjb21tZW50Og0KPiA+PiAgICAgIGh0dHBzOi8vd3d3Lm1haWwtYXJjaGl2
+ZS5jb20vbGludXgtbWVkaWFAdmdlci5rZXJuZWwub3JnL21zZzEyMjU3NS5odG1sDQo+ID4+ICAg
+IC0gVXNlIDE2IGJpdHMgcmVnaXN0ZXIgcmVhZCBmb3IgdGhpcyBjaGVjayBhcyBwZXIgU3RldmUg
+TG9uZ2VyYmVhbSBjb21tZW50Og0KPiA+PiAgICAgIGh0dHBzOi8vd3d3Lm1haWwtYXJjaGl2ZS5j
+b20vbGludXgtbWVkaWFAdmdlci5rZXJuZWwub3JnL21zZzEyMjY5Mi5odG1sDQo+ID4+ICAgIC0g
+VXBkYXRlIGJpbmRpbmdzIHRvIGRvY3VtZW50IHBhcmFsbGVsIG1vZGUgc3VwcG9ydCBhcyBwZXIg
+RmFiaW8gRXN0ZXZhbSBjb21tZW50Og0KPiA+PiAgICAgIGh0dHBzOi8vd3d3Lm1haWwtYXJjaGl2
+ZS5jb20vbGludXgtbWVkaWFAdmdlci5rZXJuZWwub3JnL21zZzEyMjU3Ni5odG1sDQo+ID4+ICAg
+IC0gRW5hYmxlIHRoZSB3aG9sZSAxMCBiaXRzIHBhcmFsbGVsIG91dHB1dCBhbmQgZG9jdW1lbnQg
+OC8xMCBiaXRzIHN1cHBvcnQNCj4gPj4gICAgICBpbiBvdjU2NDBfc2V0X3N0cmVhbV9kdnAoKSB0
+byBhbnN3ZXIgdG8gU3RldmUgTG9uZ2VyYmVhbSBjb21tZW50Og0KPiA+PiAgICAgIGh0dHBzOi8v
+d3d3Lm1haWwtYXJjaGl2ZS5jb20vbGludXgtbWVkaWFAdmdlci5rZXJuZWwub3JnL21zZzEyMjY5
+My5odG1sDQo+ID4+DQo+ID4+IHZlcnNpb24gMjoNCj4gPj4gICAgLSBGaXggY29tbWVudHMgZnJv
+bSBTYWthcmkgQWlsdXM6DQo+ID4+ICAgICAgaHR0cHM6Ly93d3cubWFpbC1hcmNoaXZlLmNvbS9s
+aW51eC1tZWRpYUB2Z2VyLmtlcm5lbC5vcmcvbXNnMTIyMjU5Lmh0bWwNCj4gPj4gICAgLSBSZXZp
+c2l0IG92NTY0MF9zZXRfc3RyZWFtX2R2cCgpIHRvIG9ubHkgY29uZmlndXJlIERWUCBhdCBzdHJl
+YW1vbg0KPiA+PiAgICAtIFJldmlzaXQgb3Y1NjQwX3NldF9zdHJlYW1fZHZwKCkgaW1wbGVtZW50
+YXRpb24gd2l0aCBmZXdlciByZWdpc3RlciBzZXR0aW5ncw0KPiA+Pg0KPiA+PiB2ZXJzaW9uIDE6
+DQo+ID4+ICAgIC0gSW5pdGlhbCBzdWJtaXNzaW9uDQo+ID4+DQo+ID4+IEh1Z3VlcyBGcnVjaGV0
+ICg1KToNCj4gPj4gICAgbWVkaWE6IG92NTY0MDogc3dpdGNoIHRvIGdwaW9kX3NldF92YWx1ZV9j
+YW5zbGVlcCgpDQo+ID4+ICAgIG1lZGlhOiBvdjU2NDA6IGNoZWNrIGNoaXAgaWQNCj4gPj4gICAg
+bWVkaWE6IGR0LWJpbmRpbmdzOiBvdjU2NDA6IHJlZmluZSBDU0ktMiBhbmQgYWRkIHBhcmFsbGVs
+IGludGVyZmFjZQ0KPiA+PiAgICBtZWRpYTogb3Y1NjQwOiBhZGQgc3VwcG9ydCBvZiBEVlAgcGFy
+YWxsZWwgaW50ZXJmYWNlDQo+ID4+ICAgIG1lZGlhOiBvdjU2NDA6IGFkZCBzdXBwb3J0IG9mIFJH
+QjU2NSBhbmQgWVVZViBmb3JtYXRzDQo+ID4+DQo+ID4+ICAgLi4uL2RldmljZXRyZWUvYmluZGlu
+Z3MvbWVkaWEvaTJjL292NTY0MC50eHQgICAgICAgfCAgNDYgKystDQo+ID4+ICAgZHJpdmVycy9t
+ZWRpYS9pMmMvb3Y1NjQwLmMgICAgICAgICAgICAgICAgICAgICAgICAgfCAzMjUgKysrKysrKysr
+KysrKysrKysrLS0tDQo+ID4+ICAgMiBmaWxlcyBjaGFuZ2VkLCAzMjQgaW5zZXJ0aW9ucygrKSwg
+NDcgZGVsZXRpb25zKC0pDQo+ID4+DQo+ID4+IC0tDQo+ID4+IDEuOS4xDQo+ID4+DQo+ID4+IC0t
+DQo+ID4+IFRvIHVuc3Vic2NyaWJlIGZyb20gdGhpcyBsaXN0OiBzZW5kIHRoZSBsaW5lICJ1bnN1
+YnNjcmliZSBkZXZpY2V0cmVlIiBpbg0KPiA+PiB0aGUgYm9keSBvZiBhIG1lc3NhZ2UgdG8gbWFq
+b3Jkb21vQHZnZXIua2VybmVsLm9yZw0KPiA+PiBNb3JlIG1ham9yZG9tbyBpbmZvIGF0ICBodHRw
+Oi8vdmdlci5rZXJuZWwub3JnL21ham9yZG9tby1pbmZvLmh0bWwNCj4gPg0KPiA+DQo+ID4NCj4g
+PiBSZW5lc2FzIEVsZWN0cm9uaWNzIEV1cm9wZSBMdGQsIER1a2VzIE1lYWRvdywgTWlsbGJvYXJk
+IFJvYWQsIEJvdXJuZSBFbmQsIEJ1Y2tpbmdoYW1zaGlyZSwgU0w4IDVGSCwgVUsuIFJlZ2lzdGVy
+ZWQgaW4gRW5nbGFuZA0KPiAmIFdhbGVzIHVuZGVyIFJlZ2lzdGVyZWQgTm8uIDA0NTg2NzA5Lg0K
+PiA+DQoNCg0KDQpSZW5lc2FzIEVsZWN0cm9uaWNzIEV1cm9wZSBMdGQsIER1a2VzIE1lYWRvdywg
+TWlsbGJvYXJkIFJvYWQsIEJvdXJuZSBFbmQsIEJ1Y2tpbmdoYW1zaGlyZSwgU0w4IDVGSCwgVUsu
+IFJlZ2lzdGVyZWQgaW4gRW5nbGFuZCAmIFdhbGVzIHVuZGVyIFJlZ2lzdGVyZWQgTm8uIDA0NTg2
+NzA5Lg0K
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
