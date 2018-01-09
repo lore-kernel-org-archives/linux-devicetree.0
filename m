@@ -1,58 +1,69 @@
-From: Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v4 5/5] [media] MAINTAINERS: add entries for OV2685/OV5695 sensor drivers
-Date: Tue,  9 Jan 2018 22:48:24 +0800
-Message-ID: <1515509304-15941-6-git-send-email-zhengsq@rock-chips.com>
+From: Shunqian Zheng <zhengsq@rock-chips.com>
+Subject: [PATCH v4 3/5] dt-bindings: media: Add bindings for OV2685
+Date: Tue,  9 Jan 2018 22:48:22 +0800
+Message-ID: <1515509304-15941-4-git-send-email-zhengsq@rock-chips.com>
 References: <1515509304-15941-1-git-send-email-zhengsq@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1515509304-15941-1-git-send-email-zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ddl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1515509304-15941-1-git-send-email-zhengsq@rock-chips.com>
+Sender: linux-media-owner@vger.kernel.org
+To: mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, ddl@rock-chips.com, tfiga@chromium.org, Shunqian Zheng <zhengsq@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-Add maintainer entries for the OV2685 and OV5695 V4L2 sensor drivers.
+Add device tree binding documentation for the OV2685 sensor.
 
-Signed-off-by: Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Signed-off-by: Shunqian Zheng <zhengsq@rock-chips.com>
 ---
- MAINTAINERS | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ .../devicetree/bindings/media/i2c/ov2685.txt       | 41 ++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/ov2685.txt
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 85773bf..32afc69 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -10032,6 +10032,13 @@ T:	git git://linuxtv.org/media_tree.git
- S:	Maintained
- F:	drivers/media/i2c/ov13858.c
- 
-+OMNIVISION OV2685 SENSOR DRIVER
-+M:	Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-+L:	linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-+T:	git git://linuxtv.org/media_tree.git
-+S:	Maintained
-+F:	drivers/media/i2c/ov2685.c
+diff --git a/Documentation/devicetree/bindings/media/i2c/ov2685.txt b/Documentation/devicetree/bindings/media/i2c/ov2685.txt
+new file mode 100644
+index 0000000..f1586a2
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/i2c/ov2685.txt
+@@ -0,0 +1,41 @@
++* Omnivision OV2685 MIPI CSI-2 sensor
 +
- OMNIVISION OV5640 SENSOR DRIVER
- M:	Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
- L:	linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-@@ -10046,6 +10053,13 @@ T:	git git://linuxtv.org/media_tree.git
- S:	Maintained
- F:	drivers/media/i2c/ov5647.c
- 
-+OMNIVISION OV5695 SENSOR DRIVER
-+M:	Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-+L:	linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-+T:	git git://linuxtv.org/media_tree.git
-+S:	Maintained
-+F:	drivers/media/i2c/ov5695.c
++Required Properties:
++- compatible: shall be "ovti,ov2685"
++- clocks: reference to the xvclk input clock
++- clock-names: shall be "xvclk"
++- avdd-supply: Analog voltage supply, 2.8 volts
++- dovdd-supply: Digital I/O voltage supply, 1.8 volts
++- dvdd-supply: Digital core voltage supply, 1.8 volts
++- reset-gpios: Low active reset gpio
 +
- OMNIVISION OV7670 SENSOR DRIVER
- M:	Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>
- L:	linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
++The device node shall contain one 'port' child node with an
++'endpoint' subnode for its digital output video port,
++in accordance with the video interface bindings defined in
++Documentation/devicetree/bindings/media/video-interfaces.txt.
++The endpoint optional property 'data-lanes' shall be "<1>".
++
++Example:
++&i2c7 {
++	camera-sensor: ov2685@3c {
++		compatible = "ovti,ov2685";
++		reg = <0x3c>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&clk_24m_cam>;
++
++		clocks = <&cru SCLK_TESTCLKOUT1>;
++		clock-names = "xvclk";
++
++		avdd-supply = <&pp2800_cam>;
++		dovdd-supply = <&pp1800>;
++		dvdd-supply = <&pp1800>;
++		reset-gpios = <&gpio2 3 GPIO_ACTIVE_LOW>;
++
++		port {
++			ucam_out: endpoint {
++				remote-endpoint = <&mipi_in_ucam>;
++				data-lanes = <1>;
++			};
++		};
++	};
++};
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
