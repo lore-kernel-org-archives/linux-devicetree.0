@@ -1,40 +1,88 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH V2 2/2] ARM: dts: imx7s: add snvs rtc clock
-Date: Tue, 9 Jan 2018 07:26:43 -0200
-Message-ID: <CAOMZO5DKsgydHaoKrrRngMck_9aQqFja9SParvDiD6V79ryuHg@mail.gmail.com>
-References: <1515466276-5541-1-git-send-email-Anson.Huang@nxp.com> <1515466276-5541-2-git-send-email-Anson.Huang@nxp.com>
+From: Dong Aisheng <dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 3/7] ARM: dts: imx6ull: add additional pinfunc defines
+ for i.MX 6ULL
+Date: Tue, 9 Jan 2018 17:30:15 +0800
+Message-ID: <20180109093015.GC26312@b29396-OptiPlex-7040>
+References: <20180102164223.15230-1-stefan@agner.ch>
+ <20180102164223.15230-3-stefan@agner.ch>
+ <20180105164930.qomk75eo7vzyglvn@rob-hp-laptop>
+ <b183c2a38596cd3f3726777c79e027f9@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1515466276-5541-2-git-send-email-Anson.Huang@nxp.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Anson Huang <Anson.Huang@nxp.com>
-Cc: Horia Geanta Neag <horia.geanta@nxp.com>, aymen.sghaier@nxp.com, Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, adriana.reus@nxp.com, Stefan Agner <stefan@agner.ch>, Dong Aisheng <dongas86@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-clk@vger.kernel.org, linux-crypto@vger.kernel.org"moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <l>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <b183c2a38596cd3f3726777c79e027f9-XLVq0VzYD2Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bai Ping <ping.bai-3arQi8VN3Tc@public.gmane.org>, linux-imx-3arQi8VN3Tc@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Anson,
+On Sun, Jan 07, 2018 at 10:52:39AM +0100, Stefan Agner wrote:
+> On 2018-01-05 17:49, Rob Herring wrote:
+> > On Tue, Jan 02, 2018 at 05:42:19PM +0100, Stefan Agner wrote:
+> >> From: Bai Ping <ping.bai-3arQi8VN3Tc@public.gmane.org>
+> >>
+> >> On i.MX 6ULL, the pin MUX and CTRL register of BOOT_MODEx and TAMPERx
+> >> pins are available through IOMUXC_SNVS. Add additional pinfunc defines.
+> >>
+> >> Signed-off-by: Bai Ping <ping.bai-3arQi8VN3Tc@public.gmane.org>
+> >> Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+> >> ---
+> >>  arch/arm/boot/dts/imx6ull-pinfunc-snvs.h | 29 +++++++++++++++++++++++++++++
+> >>  arch/arm/boot/dts/imx6ull.dtsi           |  1 +
+> >>  2 files changed, 30 insertions(+)
+> >>  create mode 100644 arch/arm/boot/dts/imx6ull-pinfunc-snvs.h
+> >>
+> >> diff --git a/arch/arm/boot/dts/imx6ull-pinfunc-snvs.h b/arch/arm/boot/dts/imx6ull-pinfunc-snvs.h
+> >> new file mode 100644
+> >> index 000000000000..da3f412e4269
+> >> --- /dev/null
+> >> +++ b/arch/arm/boot/dts/imx6ull-pinfunc-snvs.h
+> >> @@ -0,0 +1,29 @@
+> >> +/*
+> >> + * Copyright (C) 2016 Freescale Semiconductor, Inc.
+> > 
+> > It's 2018 now.
+> > 
+> 
+> I don't think you are supposed to chance copyright year unless you
+> change it significantly.
+> 
+> At least that article suggests so:
+> https://www.copyrightlaws.com/copyright-notice-year/
+> 
+> I took that patch from the downstream NXP kernel, so I guess 2016 was
+> the year of first publication...
+> 
 
-On Tue, Jan 9, 2018 at 12:51 AM, Anson Huang <Anson.Huang@nxp.com> wrote:
+Can you help add below copyright if you keep NXP sign-off as Author?
+Then you don't need delete the old one.
 
-> +   - clocks
-> +      Usage: required if SNVS LP RTC requires explicit enablement of clocks
-> +      Value type: <prop_encoded-array>
-> +      Definition:  A list of phandle and clock specifier pairs describing
-> +          the clocks required for enabling and disabling SNVS LP RTC.
+Copyright 2017 NXP.
 
+And SPDX mentioned by Rob.
 
-It is a single clock that is used here, so it would be better to
-describe the text as:
+Otherwise,
+Acked-by: Dong Aisheng <aisheng.dong-3arQi8VN3Tc@public.gmane.org>
 
-      Definition:  A clock specifier describing the clock required for
-enabling and disabling SNVS LP RTC
+Regards
+Dong Aisheng
 
-> +   - clock-names
-> +      Usage: required if SNVS LP RTC requires explicit enablement of clocks
-> +      Value type: <string>
-> +      Definition: A list of clock name strings in the same order as the
-> +          clocks property.
-
-and here you must describe that the name should be "snvs-rtc":
-
-      Definition: Clock name string should be "snvs-rtc".
+> >> + *
+> >> + * This program is free software; you can redistribute it and/or modify
+> >> + * it under the terms of the GNU General Public License version 2 as
+> >> + * published by the Free Software Foundation.
+> > 
+> > Use SPDX. With that,
+> 
+> Agreed.
+> 
+> > 
+> > Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> 
+> --
+> Stefan
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
