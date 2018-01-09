@@ -1,189 +1,264 @@
-From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
-Subject: Re: [linux-sunxi] Re: [PATCH 01/11] clk: sunxi-ng: Don't set k if width is 0 for nkmp plls
-Date: Tue, 09 Jan 2018 16:54:34 +0100
-Message-ID: <1542502.H6M8hg3JYZ@jernej-laptop>
-References: <20171230210203.24115-1-jernej.skrabec@siol.net> <3625461.aU9oqMdpo3@jernej-laptop> <CAGb2v6463B-JVw5A9C39iiuo7Xzj3Bq06m6VzdAUqr0b-S91MQ@mail.gmail.com>
+From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Subject: Re: [PATCH 04/11] drm/bridge/synopsys: dw-hdmi: Export
+ some PHY related functions
+Date: Tue, 09 Jan 2018 16:58:46 +0100
+Message-ID: <10903755.CJpSM8RM5e@jernej-laptop>
+References: <20171230210203.24115-1-jernej.skrabec@siol.net> <20171230210203.24115-5-jernej.skrabec@siol.net> <6b454804-e910-e8e8-6d2b-5bc25c7a4d4c@codeaurora.org>
+Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <CAGb2v6463B-JVw5A9C39iiuo7Xzj3Bq06m6VzdAUqr0b-S91MQ@mail.gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Archit Taneja <architt@codeaurora.org>, a.hajda@samsung.com, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Jose.Abreu@synopsys.com, Neil Armstrong <narmstrong@baylibre.com>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>
+Return-path: <linux-sunxi+bncBDQNBWPU7YERBOWN2PJAKGQE3P2BN4I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <6b454804-e910-e8e8-6d2b-5bc25c7a4d4c-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Chen-Yu,
+Hi Archit,
 
-Dne ponedeljek, 08. januar 2018 ob 10:19:47 CET je Chen-Yu Tsai napisal(a):
-> On Fri, Jan 5, 2018 at 3:28 AM, Jernej Škrabec <jernej.skrabec@siol.net> 
-wrote:
-> > Hi,
+Dne torek, 09. januar 2018 ob 11:43:08 CET je Archit Taneja napisal(a):
+> On 12/31/2017 02:31 AM, Jernej Skrabec wrote:
+> > Parts of PHY code could be useful also for custom PHYs. For example,
+> > Allwinner A83T has custom PHY which is probably Synopsys gen2 PHY
+> > with few additional memory mapped registers, so most of the Synopsys PHY
+> > related code could be reused.
 > > 
-> > Dne četrtek, 04. januar 2018 ob 15:45:18 CET je Chen-Yu Tsai napisal(a):
-> >> On Sun, Dec 31, 2017 at 5:01 AM, Jernej Skrabec <jernej.skrabec@siol.net>
+> > It turns out that even completely custom HDMI PHYs, such as the one
+> > found in Allwinner H3, can reuse some of those functions. This would
+> > suggest that (some?) functions exported in this commit are actually part
+> > of generic PHY interface and not really specific to Synopsys PHYs.
 > > 
-> > wrote:
-> >> > For example, A83T have nmp plls which are modelled as nkmp plls. Since
-> >> > k
-> >> > is not specified, it has offset 0, shift 0 and lowest value 1. This
-> >> > means that LSB bit is always set to 1, which may change clock rate.
-> >> > 
-> >> > Fix that by applying k factor only if k width is greater than 0.
-> >> > 
-> >> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> >> > ---
-> >> > 
-> >> >  drivers/clk/sunxi-ng/ccu_nkmp.c | 21 +++++++++++++--------
-> >> >  1 file changed, 13 insertions(+), 8 deletions(-)
-> >> > 
-> >> > diff --git a/drivers/clk/sunxi-ng/ccu_nkmp.c
-> >> > b/drivers/clk/sunxi-ng/ccu_nkmp.c index e58c95787f94..709f528af2b3
-> >> > 100644
-> >> > --- a/drivers/clk/sunxi-ng/ccu_nkmp.c
-> >> > +++ b/drivers/clk/sunxi-ng/ccu_nkmp.c
-> >> > @@ -81,7 +81,7 @@ static unsigned long ccu_nkmp_recalc_rate(struct
-> >> > clk_hw
-> >> > *hw,>
-> >> > 
-> >> >                                         unsigned long parent_rate)
-> >> >  
-> >> >  {
-> >> >  
-> >> >         struct ccu_nkmp *nkmp = hw_to_ccu_nkmp(hw);
-> >> > 
-> >> > -       unsigned long n, m, k, p;
-> >> > +       unsigned long n, m, k = 1, p;
-> >> > 
-> >> >         u32 reg;
-> >> >         
-> >> >         reg = readl(nkmp->common.base + nkmp->common.reg);
-> >> > 
-> >> > @@ -92,11 +92,13 @@ static unsigned long ccu_nkmp_recalc_rate(struct
-> >> > clk_hw *hw,>
-> >> > 
-> >> >         if (!n)
-> >> >         
-> >> >                 n++;
-> >> > 
-> >> > -       k = reg >> nkmp->k.shift;
-> >> > -       k &= (1 << nkmp->k.width) - 1;
-> >> > -       k += nkmp->k.offset;
-> >> > -       if (!k)
-> >> > -               k++;
-> >> > +       if (nkmp->k.width) {
-> >> > +               k = reg >> nkmp->k.shift;
-> >> > +               k &= (1 << nkmp->k.width) - 1;
-> >> > +               k += nkmp->k.offset;
-> >> > +               if (!k)
-> >> > +                       k++;
-> >> > +       }
-> >> 
-> >> The conditional shouldn't be necessary. With nkmp->k.width = 0,
-> >> you'd simply get k & 0, which is 0, which then gets bumped up to 1,
-> >> unless k.offset > 1, which would be a bug.
-> >> 
-> >> >         m = reg >> nkmp->m.shift;
-> >> >         m &= (1 << nkmp->m.width) - 1;
-> >> > 
-> >> > @@ -153,12 +155,15 @@ static int ccu_nkmp_set_rate(struct clk_hw *hw,
-> >> > unsigned long rate,>
-> >> > 
-> >> >         reg = readl(nkmp->common.base + nkmp->common.reg);
-> >> >         reg &= ~GENMASK(nkmp->n.width + nkmp->n.shift - 1,
-> >> >         nkmp->n.shift);
-> >> > 
-> >> > -       reg &= ~GENMASK(nkmp->k.width + nkmp->k.shift - 1,
-> >> > nkmp->k.shift);
-> >> > +       if (nkmp->k.width)
-> >> > +               reg &= ~GENMASK(nkmp->k.width + nkmp->k.shift - 1,
-> >> > +                               nkmp->k.shift);
-> >> > 
-> >> >         reg &= ~GENMASK(nkmp->m.width + nkmp->m.shift - 1,
-> >> >         nkmp->m.shift);
-> >> >         reg &= ~GENMASK(nkmp->p.width + nkmp->p.shift - 1,
-> >> >         nkmp->p.shift);
-> >> >         
-> >> >         reg |= (_nkmp.n - nkmp->n.offset) << nkmp->n.shift;
-> >> > 
-> >> > -       reg |= (_nkmp.k - nkmp->k.offset) << nkmp->k.shift;
-> >> > +       if (nkmp->k.width)
-> >> > +               reg |= (_nkmp.k - nkmp->k.offset) << nkmp->k.shift;
-> >> 
-> >> I think a better way would be
-> >> 
-> >>         reg |= ((_nkmp.k - nkmp->k.offset) << nkmp->k.shift) &
-> >>         
-> >>                GENMASK(nkmp->k.width + nkmp->k.shift - 1, nkmp->k.shift);
-> >> 
-> >> And do this for all the factors, not just k. This pattern is what
-> >> regmap_update_bits does, which seems much safer. I wonder what
-> >> GENMASK() with a negative value would do though...
+> > Export useful PHY functions.
 > > 
-> > You're right, GENMASK(-1, 0) equals 0 (calculated by hand, not tested).
-> > This seems much more elegant solution.
+> > Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+> > ---
 > > 
-> > Semi-related question: All nmp PLLs have much wider N range than real nkmp
-> > PLLs. This causes integer overflow when using nkmp formula from datasheet.
-> > Usually, N is 1-256 for nmp PLLs, which means that for very high N
-> > factors, it overflows. This also causes issue that M factor is never
-> > higher than 1.
-> Sounds like we can't use u8 for storing the factors. At least the
-> intermediate values we use to calculate the rates.
-
-Only issue with u8 could be max field in struct ccu_mult_internal for K factor. 
-But since it's not used, there is no issue. All intermediate variables in 
-ccu_nkmp are wider.
-
+> >   drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 45
+> >   ++++++++++++++++++++++---------
+> >   drivers/gpu/drm/bridge/synopsys/dw-hdmi.h |  2 ++
+> >   include/drm/bridge/dw_hdmi.h              | 10 +++++++
+> >   3 files changed, 44 insertions(+), 13 deletions(-)
+> > 
+> > diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> > b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c index
+> > 7ca14d7325b5..67467d0b683a 100644
+> > --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> > +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> > @@ -1037,19 +1037,21 @@ static void dw_hdmi_phy_enable_svsret(struct
+> > dw_hdmi *hdmi, u8 enable)> 
+> >   			 HDMI_PHY_CONF0_SVSRET_MASK);
+> >   
+> >   }
+> > 
+> > -static void dw_hdmi_phy_gen2_pddq(struct dw_hdmi *hdmi, u8 enable)
+> > +void dw_hdmi_phy_gen2_pddq(struct dw_hdmi *hdmi, u8 enable)
+> > 
+> >   {
+> >   
+> >   	hdmi_mask_writeb(hdmi, enable, HDMI_PHY_CONF0,
+> >   	
+> >   			 HDMI_PHY_CONF0_GEN2_PDDQ_OFFSET,
+> >   			 HDMI_PHY_CONF0_GEN2_PDDQ_MASK);
+> >   
+> >   }
+> > 
+> > +EXPORT_SYMBOL_GPL(dw_hdmi_phy_gen2_pddq);
+> > 
+> > -static void dw_hdmi_phy_gen2_txpwron(struct dw_hdmi *hdmi, u8 enable)
+> > +void dw_hdmi_phy_gen2_txpwron(struct dw_hdmi *hdmi, u8 enable)
+> > 
+> >   {
+> >   
+> >   	hdmi_mask_writeb(hdmi, enable, HDMI_PHY_CONF0,
+> >   	
+> >   			 HDMI_PHY_CONF0_GEN2_TXPWRON_OFFSET,
+> >   			 HDMI_PHY_CONF0_GEN2_TXPWRON_MASK);
+> >   
+> >   }
+> > 
+> > +EXPORT_SYMBOL_GPL(dw_hdmi_phy_gen2_txpwron);
+> > 
+> >   static void dw_hdmi_phy_sel_data_en_pol(struct dw_hdmi *hdmi, u8 enable)
+> >   {
+> > 
+> > @@ -1065,6 +1067,23 @@ static void
+> > dw_hdmi_phy_sel_interface_control(struct dw_hdmi *hdmi, u8 enable)> 
+> >   			 HDMI_PHY_CONF0_SELDIPIF_MASK);
+> >   
+> >   }
+> > 
+> > +void dw_hdmi_phy_gen2_reset(struct dw_hdmi *hdmi, u8 enable)
+> > +{
+> > +	hdmi_mask_writeb(hdmi, enable, HDMI_MC_PHYRSTZ,
+> > +			 HDMI_MC_PHYRSTZ_PHYRSTZ_OFFSET,
+> > +			 HDMI_MC_PHYRSTZ_PHYRSTZ_MASK);
+> > +}
+> > +EXPORT_SYMBOL_GPL(dw_hdmi_phy_gen2_reset);
+> > +
+> > +void dw_hdmi_phy_set_slave_addr(struct dw_hdmi *hdmi)
+> > +{
+> > +	hdmi_phy_test_clear(hdmi, 1);
+> > +	hdmi_writeb(hdmi, HDMI_PHY_I2CM_SLAVE_ADDR_PHY_GEN2,
+> > +		    HDMI_PHY_I2CM_SLAVE_ADDR);
+> > +	hdmi_phy_test_clear(hdmi, 0);
+> > +}
+> > +EXPORT_SYMBOL_GPL(dw_hdmi_phy_set_slave_addr);
 > 
-> > I was wondering, if patch would be acceptable which would change this
-> > formula:
-> > 
-> > RATE = (24MHz * N * K) / (M * P)
-> > 
-> > to this:
-> > 
-> > RATE ((24MHz / M) * N * K) / P
-> > 
-> > I checked all M factors and are all in 1-4 or 1-2 range, which means it
-> > wouldn't have any impact for real nkmp PLLs when parent is 24 MHz clock
-> > which is probably always.
-> > 
-> > What do you think?
-> 
-> I think this is acceptable. M is normally the pre-divider, so this
-> actually fits how the hardware works, including possible rounding
-> errors.
+> Should this be called dw_hdmi_phy_gen2_set_slave_addr?
 
-Ok, I'll add a patch for that in v2.
+Probably. I will rename it in v2 to be consistent with other phy functions.
 
 Best regards,
 Jernej
 
 > 
-> ChenYu
+> Looks good otherwise. Same for patches 3 and 4 in this series.
 > 
-> > I discovered that when I tried to set A83T PLL_VIDEO to 346.5 MHz which is
-> > possible only when above formula is changed.
+> Thanks,
+> Archit
+> 
+> > +
 > > 
-> > Best regards,
-> > Jernej
+> >   static void dw_hdmi_phy_power_off(struct dw_hdmi *hdmi)
+> >   {
+> >   
+> >   	const struct dw_hdmi_phy_data *phy = hdmi->phy.data;
 > > 
-> >> ChenYu
-> >> 
-> >> >         reg |= (_nkmp.m - nkmp->m.offset) << nkmp->m.shift;
-> >> >         reg |= ilog2(_nkmp.p) << nkmp->p.shift;
-> >> > 
-> >> > --
-> >> > 2.15.1
+> > @@ -1204,15 +1223,12 @@ static int hdmi_phy_configure(struct dw_hdmi
+> > *hdmi)
 > > 
-> > --
-> > You received this message because you are subscribed to the Google Groups
-> > "linux-sunxi" group. To unsubscribe from this group and stop receiving
-> > emails from it, send an email to
-> > linux-sunxi+unsubscribe@googlegroups.com. For more options, visit
-> > https://groups.google.com/d/optout.
-
-
-
-
+> >   		dw_hdmi_phy_enable_svsret(hdmi, 1);
+> >   	
+> >   	/* PHY reset. The reset signal is active high on Gen2 PHYs. */
+> > 
+> > -	hdmi_writeb(hdmi, HDMI_MC_PHYRSTZ_PHYRSTZ, HDMI_MC_PHYRSTZ);
+> > -	hdmi_writeb(hdmi, 0, HDMI_MC_PHYRSTZ);
+> > +	dw_hdmi_phy_gen2_reset(hdmi, 1);
+> > +	dw_hdmi_phy_gen2_reset(hdmi, 0);
+> > 
+> >   	hdmi_writeb(hdmi, HDMI_MC_HEACPHY_RST_ASSERT, HDMI_MC_HEACPHY_RST);
+> > 
+> > -	hdmi_phy_test_clear(hdmi, 1);
+> > -	hdmi_writeb(hdmi, HDMI_PHY_I2CM_SLAVE_ADDR_PHY_GEN2,
+> > -		    HDMI_PHY_I2CM_SLAVE_ADDR);
+> > -	hdmi_phy_test_clear(hdmi, 0);
+> > +	dw_hdmi_phy_set_slave_addr(hdmi);
+> > 
+> >   	/* Write to the PHY as configured by the platform */
+> >   	if (pdata->configure_phy)
+> > 
+> > @@ -1251,15 +1267,16 @@ static void dw_hdmi_phy_disable(struct dw_hdmi
+> > *hdmi, void *data)> 
+> >   	dw_hdmi_phy_power_off(hdmi);
+> >   
+> >   }
+> > 
+> > -static enum drm_connector_status dw_hdmi_phy_read_hpd(struct dw_hdmi
+> > *hdmi, -						      void *data)
+> > +enum drm_connector_status dw_hdmi_phy_read_hpd(struct dw_hdmi *hdmi,
+> > +					       void *data)
+> > 
+> >   {
+> >   
+> >   	return hdmi_readb(hdmi, HDMI_PHY_STAT0) & HDMI_PHY_HPD ?
+> >   	
+> >   		connector_status_connected : connector_status_disconnected;
+> >   
+> >   }
+> > 
+> > +EXPORT_SYMBOL_GPL(dw_hdmi_phy_read_hpd);
+> > 
+> > -static void dw_hdmi_phy_update_hpd(struct dw_hdmi *hdmi, void *data,
+> > -				   bool force, bool disabled, bool rxsense)
+> > +void dw_hdmi_phy_update_hpd(struct dw_hdmi *hdmi, void *data,
+> > +			    bool force, bool disabled, bool rxsense)
+> > 
+> >   {
+> >   
+> >   	u8 old_mask = hdmi->phy_mask;
+> > 
+> > @@ -1271,8 +1288,9 @@ static void dw_hdmi_phy_update_hpd(struct dw_hdmi
+> > *hdmi, void *data,> 
+> >   	if (old_mask != hdmi->phy_mask)
+> >   	
+> >   		hdmi_writeb(hdmi, hdmi->phy_mask, HDMI_PHY_MASK0);
+> >   
+> >   }
+> > 
+> > +EXPORT_SYMBOL_GPL(dw_hdmi_phy_update_hpd);
+> > 
+> > -static void dw_hdmi_phy_setup_hpd(struct dw_hdmi *hdmi, void *data)
+> > +void dw_hdmi_phy_setup_hpd(struct dw_hdmi *hdmi, void *data)
+> > 
+> >   {
+> >   
+> >   	/*
+> >   	
+> >   	 * Configure the PHY RX SENSE and HPD interrupts polarities and clear
+> > 
+> > @@ -1291,6 +1309,7 @@ static void dw_hdmi_phy_setup_hpd(struct dw_hdmi
+> > *hdmi, void *data)> 
+> >   	hdmi_writeb(hdmi, ~(HDMI_IH_PHY_STAT0_HPD |
+> >   	HDMI_IH_PHY_STAT0_RX_SENSE),
+> >   	
+> >   		    HDMI_IH_MUTE_PHY_STAT0);
+> >   
+> >   }
+> > 
+> > +EXPORT_SYMBOL_GPL(dw_hdmi_phy_setup_hpd);
+> > 
+> >   static const struct dw_hdmi_phy_ops dw_hdmi_synopsys_phy_ops = {
+> >   
+> >   	.init = dw_hdmi_phy_init,
+> > 
+> > diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h
+> > b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h index
+> > 9d90eb9c46e5..fd150430d0b3 100644
+> > --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h
+> > +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h
+> > @@ -950,6 +950,8 @@ enum {
+> > 
+> >   /* MC_PHYRSTZ field values */
+> >   
+> >   	HDMI_MC_PHYRSTZ_PHYRSTZ = 0x01,
+> > 
+> > +	HDMI_MC_PHYRSTZ_PHYRSTZ_OFFSET = 0x00,
+> > +	HDMI_MC_PHYRSTZ_PHYRSTZ_MASK = 0x01,
+> > 
+> >   /* MC_HEACPHY_RST field values */
+> >   
+> >   	HDMI_MC_HEACPHY_RST_ASSERT = 0x1,
+> > 
+> > diff --git a/include/drm/bridge/dw_hdmi.h b/include/drm/bridge/dw_hdmi.h
+> > index 182f83283e24..f5cca4362154 100644
+> > --- a/include/drm/bridge/dw_hdmi.h
+> > +++ b/include/drm/bridge/dw_hdmi.h
+> > @@ -159,5 +159,15 @@ void dw_hdmi_audio_disable(struct dw_hdmi *hdmi);
+> > 
+> >   /* PHY configuration */
+> >   void dw_hdmi_phy_i2c_write(struct dw_hdmi *hdmi, unsigned short data,
+> >   
+> >   			   unsigned char addr);
+> > 
+> > +enum drm_connector_status dw_hdmi_phy_read_hpd(struct dw_hdmi *hdmi,
+> > +					       void *data);
+> > +void dw_hdmi_phy_update_hpd(struct dw_hdmi *hdmi, void *data,
+> > +			    bool force, bool disabled, bool rxsense);
+> > +void dw_hdmi_phy_setup_hpd(struct dw_hdmi *hdmi, void *data);
+> > +
+> > +void dw_hdmi_phy_gen2_pddq(struct dw_hdmi *hdmi, u8 enable);
+> > +void dw_hdmi_phy_gen2_txpwron(struct dw_hdmi *hdmi, u8 enable);
+> > +void dw_hdmi_phy_gen2_reset(struct dw_hdmi *hdmi, u8 enable);
+> > +void dw_hdmi_phy_set_slave_addr(struct dw_hdmi *hdmi);
+> > 
+> >   #endif /* __IMX_HDMI_H__ */
+> 
+> --
+> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+> a Linux Foundation Collaborative Project
