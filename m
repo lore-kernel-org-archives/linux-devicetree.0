@@ -1,197 +1,159 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 04/11] drm/bridge/synopsys: dw-hdmi: Export some PHY related functions
-Date: Tue, 09 Jan 2018 15:30:22 +0200
-Message-ID: <4765263.5spOVExvvT@avalon>
-References: <20171230210203.24115-1-jernej.skrabec@siol.net> <20171230210203.24115-5-jernej.skrabec@siol.net>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: dts: sunxi: Add sid for a83t
+Date: Tue, 9 Jan 2018 14:34:12 +0100
+Message-ID: <20180109133412.uyai4s6vfnh37hn2@flea>
+References: <20171219210523.10428-1-kevans91@ksu.edu>
+ <20171221145512.llxvzkcrjpquhczi@flea.lan>
+ <CACNAnaE9GiVTXD-TV1xXyBJKtTGKpdA6n0REk6a=qm218EgHbg@mail.gmail.com>
+ <20171221152630.2vf57x5o2yi5sv3n@flea.lan>
+ <20171221190903.56ebae536acf51401c63802c@bidouilliste.com>
+ <20171222083508.dfcp6egfvxykmogg@flea.lan>
+ <20171222110727.520df7394234f6a5dc0b9ec0@bidouilliste.com>
+ <CAGb2v64mf-ihyOs-WJZuVa4Yib3Szp90RZu_a1EeQ1LJXnoXEQ@mail.gmail.com>
+ <20180104140119.5pyfihp4zs2poz35@flea.lan>
+ <CACNAnaHOuPH05hsJ-jt1135-Giknb-DOuvjeQRSGVR2L7Xc-Cg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20171230210203.24115-5-jernej.skrabec@siol.net>
-Sender: linux-clk-owner@vger.kernel.org
-To: dri-devel@lists.freedesktop.org
-Cc: Jernej Skrabec <jernej.skrabec@siol.net>, maxime.ripard@free-electrons.com, airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org, architt@codeaurora.org, a.hajda@samsung.com, Jose.Abreu@synopsys.com, devicetree@vger.kernel.org, narmstrong@baylibre.com, mturquette@baylibre.com, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="vc7qj476uzdqvh2o"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CACNAnaHOuPH05hsJ-jt1135-Giknb-DOuvjeQRSGVR2L7Xc-Cg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kyle Evans <kevans91-OYTqUY/oFF8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Emmanuel Vadot <manu-xXdDKFdH5B3kFDPD4ZthVA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jernej,
 
-Thank you for the patch.
+--vc7qj476uzdqvh2o
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Saturday, 30 December 2017 23:01:56 EET Jernej Skrabec wrote:
-> Parts of PHY code could be useful also for custom PHYs. For example,
-> Allwinner A83T has custom PHY which is probably Synopsys gen2 PHY
-> with few additional memory mapped registers, so most of the Synopsys PHY
-> related code could be reused.
-> 
-> It turns out that even completely custom HDMI PHYs, such as the one
-> found in Allwinner H3, can reuse some of those functions. This would
-> suggest that (some?) functions exported in this commit are actually part
-> of generic PHY interface and not really specific to Synopsys PHYs.
+On Mon, Jan 08, 2018 at 09:30:57AM -0600, Kyle Evans wrote:
+> On Thu, Jan 4, 2018 at 8:01 AM, Maxime Ripard
+> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> > On Fri, Dec 22, 2017 at 06:11:52PM +0800, Chen-Yu Tsai wrote:
+> >> On Fri, Dec 22, 2017 at 6:07 PM, Emmanuel Vadot <manu-xXdDKFdH5B3kFDPD4ZthVA@public.gmane.org=
+> wrote:
+> >> > On Fri, 22 Dec 2017 09:35:08 +0100
+> >> > Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> >> >
+> >> >> On Thu, Dec 21, 2017 at 07:09:03PM +0100, Emmanuel Vadot wrote:
+> >> >> >
+> >> >> >  Hi Maxime,
+> >> >> >
+> >> >> > On Thu, 21 Dec 2017 16:26:30 +0100
+> >> >> > Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> >> >> >
+> >> >> > > Hi,
+> >> >> > >
+> >> >> > > On Thu, Dec 21, 2017 at 09:19:24AM -0600, Kyle Evans wrote:
+> >> >> > > > On Thu, Dec 21, 2017 at 8:55 AM, Maxime Ripard
+> >> >> > > > <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> >> >> > > > > Hi Kyle,
+> >> >> > > > >
+> >> >> > > > > On Tue, Dec 19, 2017 at 03:05:23PM -0600, kevans91-OYTqUY/oFF8@public.gmane.org =
+wrote:
+> >> >> > > > >> Allwinner a83t has a 1 KB sid block with efuse for securit=
+y rootkey and
+> >> >> > > > >> thermal calibration data, add node to describe it.
+> >> >> > > > >>
+> >> >> > > > >> a83t-sid is not currently supported by nvmem/sunxi-sid, bu=
+t it is
+> >> >> > > > >> supported in an external driver for FreeBSD.
+> >> >> > > > >>
+> >> >> > > > >> Signed-off-by: Kyle Evans <kevans91-OYTqUY/oFF8@public.gmane.org>
+> >> >> > > > >
+> >> >> > > > > The patch looks fine in itself, but we've had a number of i=
+ssues with
+> >> >> > > > > the register layout (and access patterns) in the past, so I=
+'d rather
+> >> >> > > > > have something that works in Linux too if possible.
+> >> >> > > >
+> >> >> > > > I have a patch that I think should make it work fine on Linux=
+ [1], but
+> >> >> > > > I'm afraid I have little to no capability to test it myself a=
+nd so I
+> >> >> > > > did not add it as well.
+> >> >> > > >
+> >> >> > > > I do know that the rootkey is offset 0x200 into the given spa=
+ce [2],
+> >> >> > > > as is the case with the H3, and that the readout quirk is not=
+ needed.
+> >> >> > > > I wasn't 100% sure that the a83t has 2Kbit worth of efuse spa=
+ce as the
+> >> >> > > > H3, but I do know that thermal data can be found at 0x34 and =
+0x38 in
+> >> >> > > > this space.
+> >> >> > >
+> >> >> > > Then maybe we should leave it aside until someone takes some ti=
+me on
+> >> >> > > the A83t.
+> >> >> >
+> >> >> >  Take some time on the Linux driver and do not apply this patch f=
+or
+> >> >> > now you mean ?
+> >> >>
+> >> >> Yep.
+> >> >>
+> >> >> Maxime
+> >> >
+> >> >  Since linux doesn't have the compatible in it's driver what would
+> >> > be the harm to add the node in the DTS ? If a quirks is needed becau=
+se
+> >> > some region is weird this would go in the driver right ? I don't see=
+ a
+> >> > technical problem for adding this node right now.
+> >> >  If Kyle confirm the lenght of the region and that no quirk is needed
+> >> > will it be enough ?
+> >>
+> >> I guess I wasn't very clear. I'm OK with the patch going in. The device
+> >> node currently says nothing about how much efuse space there is. The
+> >> memory region covers that and the control section, and the size matches
+> >> what the memory map says.
+> >>
+> >> The size and offset of the efuse space would be dealt with in the driv=
+er.
+> >
+> > Let's merge it then.
+> >
+> > Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>=20
+> What does the timeline for these things normally look like? I'm new to
+> these parts. =3D)
 
-That's correct, those functions control the interface between the HDMI 
-controller and the PHY. They're not specific to Synopsys PHYs, but they're 
-specific to the PHY interface as designed by Synopsys.
+We're one week away from the merge window, so it's a bit late for it
+to be merged in 4.16, but it'll be in 4.17.
 
-> Export useful PHY functions.
-> 
-> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> ---
->  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 45 ++++++++++++++++++++-------
->  drivers/gpu/drm/bridge/synopsys/dw-hdmi.h |  2 ++
->  include/drm/bridge/dw_hdmi.h              | 10 +++++++
->  3 files changed, 44 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c index
-> 7ca14d7325b5..67467d0b683a 100644
-> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> @@ -1037,19 +1037,21 @@ static void dw_hdmi_phy_enable_svsret(struct dw_hdmi
-> *hdmi, u8 enable) HDMI_PHY_CONF0_SVSRET_MASK);
->  }
-> 
-> -static void dw_hdmi_phy_gen2_pddq(struct dw_hdmi *hdmi, u8 enable)
-> +void dw_hdmi_phy_gen2_pddq(struct dw_hdmi *hdmi, u8 enable)
->  {
->  	hdmi_mask_writeb(hdmi, enable, HDMI_PHY_CONF0,
->  			 HDMI_PHY_CONF0_GEN2_PDDQ_OFFSET,
->  			 HDMI_PHY_CONF0_GEN2_PDDQ_MASK);
->  }
-> +EXPORT_SYMBOL_GPL(dw_hdmi_phy_gen2_pddq);
-> 
-> -static void dw_hdmi_phy_gen2_txpwron(struct dw_hdmi *hdmi, u8 enable)
-> +void dw_hdmi_phy_gen2_txpwron(struct dw_hdmi *hdmi, u8 enable)
->  {
->  	hdmi_mask_writeb(hdmi, enable, HDMI_PHY_CONF0,
->  			 HDMI_PHY_CONF0_GEN2_TXPWRON_OFFSET,
->  			 HDMI_PHY_CONF0_GEN2_TXPWRON_MASK);
->  }
-> +EXPORT_SYMBOL_GPL(dw_hdmi_phy_gen2_txpwron);
-> 
->  static void dw_hdmi_phy_sel_data_en_pol(struct dw_hdmi *hdmi, u8 enable)
->  {
-> @@ -1065,6 +1067,23 @@ static void dw_hdmi_phy_sel_interface_control(struct
-> dw_hdmi *hdmi, u8 enable) HDMI_PHY_CONF0_SELDIPIF_MASK);
->  }
-> 
-> +void dw_hdmi_phy_gen2_reset(struct dw_hdmi *hdmi, u8 enable)
-> +{
-> +	hdmi_mask_writeb(hdmi, enable, HDMI_MC_PHYRSTZ,
-> +			 HDMI_MC_PHYRSTZ_PHYRSTZ_OFFSET,
-> +			 HDMI_MC_PHYRSTZ_PHYRSTZ_MASK);
-> +}
-> +EXPORT_SYMBOL_GPL(dw_hdmi_phy_gen2_reset);
-> +
-> +void dw_hdmi_phy_set_slave_addr(struct dw_hdmi *hdmi)
-> +{
-> +	hdmi_phy_test_clear(hdmi, 1);
-> +	hdmi_writeb(hdmi, HDMI_PHY_I2CM_SLAVE_ADDR_PHY_GEN2,
-> +		    HDMI_PHY_I2CM_SLAVE_ADDR);
-> +	hdmi_phy_test_clear(hdmi, 0);
-> +}
-> +EXPORT_SYMBOL_GPL(dw_hdmi_phy_set_slave_addr);
+Maxime
 
-Should the I2C address be passed as an argument ?
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 
->  static void dw_hdmi_phy_power_off(struct dw_hdmi *hdmi)
->  {
->  	const struct dw_hdmi_phy_data *phy = hdmi->phy.data;
-> @@ -1204,15 +1223,12 @@ static int hdmi_phy_configure(struct dw_hdmi *hdmi)
->  		dw_hdmi_phy_enable_svsret(hdmi, 1);
-> 
->  	/* PHY reset. The reset signal is active high on Gen2 PHYs. */
-> -	hdmi_writeb(hdmi, HDMI_MC_PHYRSTZ_PHYRSTZ, HDMI_MC_PHYRSTZ);
-> -	hdmi_writeb(hdmi, 0, HDMI_MC_PHYRSTZ);
-> +	dw_hdmi_phy_gen2_reset(hdmi, 1);
-> +	dw_hdmi_phy_gen2_reset(hdmi, 0);
-> 
->  	hdmi_writeb(hdmi, HDMI_MC_HEACPHY_RST_ASSERT, HDMI_MC_HEACPHY_RST);
-> 
-> -	hdmi_phy_test_clear(hdmi, 1);
-> -	hdmi_writeb(hdmi, HDMI_PHY_I2CM_SLAVE_ADDR_PHY_GEN2,
-> -		    HDMI_PHY_I2CM_SLAVE_ADDR);
-> -	hdmi_phy_test_clear(hdmi, 0);
-> +	dw_hdmi_phy_set_slave_addr(hdmi);
-> 
->  	/* Write to the PHY as configured by the platform */
->  	if (pdata->configure_phy)
-> @@ -1251,15 +1267,16 @@ static void dw_hdmi_phy_disable(struct dw_hdmi
-> *hdmi, void *data) dw_hdmi_phy_power_off(hdmi);
->  }
-> 
-> -static enum drm_connector_status dw_hdmi_phy_read_hpd(struct dw_hdmi *hdmi,
-> -						      void *data)
-> +enum drm_connector_status dw_hdmi_phy_read_hpd(struct dw_hdmi *hdmi,
-> +					       void *data)
->  {
->  	return hdmi_readb(hdmi, HDMI_PHY_STAT0) & HDMI_PHY_HPD ?
->  		connector_status_connected : connector_status_disconnected;
->  }
-> +EXPORT_SYMBOL_GPL(dw_hdmi_phy_read_hpd);
-> 
-> -static void dw_hdmi_phy_update_hpd(struct dw_hdmi *hdmi, void *data,
-> -				   bool force, bool disabled, bool rxsense)
-> +void dw_hdmi_phy_update_hpd(struct dw_hdmi *hdmi, void *data,
-> +			    bool force, bool disabled, bool rxsense)
->  {
->  	u8 old_mask = hdmi->phy_mask;
-> 
-> @@ -1271,8 +1288,9 @@ static void dw_hdmi_phy_update_hpd(struct dw_hdmi
-> *hdmi, void *data, if (old_mask != hdmi->phy_mask)
->  		hdmi_writeb(hdmi, hdmi->phy_mask, HDMI_PHY_MASK0);
->  }
-> +EXPORT_SYMBOL_GPL(dw_hdmi_phy_update_hpd);
-> 
-> -static void dw_hdmi_phy_setup_hpd(struct dw_hdmi *hdmi, void *data)
-> +void dw_hdmi_phy_setup_hpd(struct dw_hdmi *hdmi, void *data)
->  {
->  	/*
->  	 * Configure the PHY RX SENSE and HPD interrupts polarities and clear
-> @@ -1291,6 +1309,7 @@ static void dw_hdmi_phy_setup_hpd(struct dw_hdmi
-> *hdmi, void *data) hdmi_writeb(hdmi, ~(HDMI_IH_PHY_STAT0_HPD |
-> HDMI_IH_PHY_STAT0_RX_SENSE), HDMI_IH_MUTE_PHY_STAT0);
->  }
-> +EXPORT_SYMBOL_GPL(dw_hdmi_phy_setup_hpd);
-> 
->  static const struct dw_hdmi_phy_ops dw_hdmi_synopsys_phy_ops = {
->  	.init = dw_hdmi_phy_init,
-> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h
-> b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h index
-> 9d90eb9c46e5..fd150430d0b3 100644
-> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h
-> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h
-> @@ -950,6 +950,8 @@ enum {
-> 
->  /* MC_PHYRSTZ field values */
->  	HDMI_MC_PHYRSTZ_PHYRSTZ = 0x01,
-> +	HDMI_MC_PHYRSTZ_PHYRSTZ_OFFSET = 0x00,
-> +	HDMI_MC_PHYRSTZ_PHYRSTZ_MASK = 0x01,
-> 
->  /* MC_HEACPHY_RST field values */
->  	HDMI_MC_HEACPHY_RST_ASSERT = 0x1,
-> diff --git a/include/drm/bridge/dw_hdmi.h b/include/drm/bridge/dw_hdmi.h
-> index 182f83283e24..f5cca4362154 100644
-> --- a/include/drm/bridge/dw_hdmi.h
-> +++ b/include/drm/bridge/dw_hdmi.h
-> @@ -159,5 +159,15 @@ void dw_hdmi_audio_disable(struct dw_hdmi *hdmi);
->  /* PHY configuration */
->  void dw_hdmi_phy_i2c_write(struct dw_hdmi *hdmi, unsigned short data,
->  			   unsigned char addr);
-> +enum drm_connector_status dw_hdmi_phy_read_hpd(struct dw_hdmi *hdmi,
-> +					       void *data);
-> +void dw_hdmi_phy_update_hpd(struct dw_hdmi *hdmi, void *data,
-> +			    bool force, bool disabled, bool rxsense);
-> +void dw_hdmi_phy_setup_hpd(struct dw_hdmi *hdmi, void *data);
-> +
-> +void dw_hdmi_phy_gen2_pddq(struct dw_hdmi *hdmi, u8 enable);
-> +void dw_hdmi_phy_gen2_txpwron(struct dw_hdmi *hdmi, u8 enable);
-> +void dw_hdmi_phy_gen2_reset(struct dw_hdmi *hdmi, u8 enable);
-> +void dw_hdmi_phy_set_slave_addr(struct dw_hdmi *hdmi);
-> 
->  #endif /* __IMX_HDMI_H__ */
+--vc7qj476uzdqvh2o
+Content-Type: application/pgp-signature; name="signature.asc"
 
--- 
-Regards,
+-----BEGIN PGP SIGNATURE-----
 
-Laurent Pinchart
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlpUxNMACgkQ0rTAlCFN
+r3T7jg/+JvuvajV6yDK4RyyUBdut5K4qjAUnQjX0brxio9BXPuQwlIVZFdOdASIq
+uPWBFYNbZyF66JDO3SnGM+ID8/yH2tG1y19z+EAHNXGPt4lqpLNwocik53gh8fUU
+IlKz+7MnLwf+zr+PgckZJNPYfWiunAl/pS8d4oECGh+yKqC/OKyMirmESVWTRJb0
+um1Q5zcHeDllsEicBLU4kkCX4RqJvWTkFMhQ4VUhtl0OtAzRS0QpRy3bmhdGPYIn
+uT1GVj6hHx4y+7VdOAVWKJyCmS3INhEeRzUBxzLGl/JAxjVRgLRl1RETt4BEFTsI
+UrGB7G768W/WWJ63fpMczspW6Ii5lHSc5Ed3jbiz/pAELdkhIrqFDc8xj1PxORvu
+YnqBUKBoikV4VQ4XVmM2CEMEFM3irDee4G840dnURz9F8n+btHOpyDtUP8cIsQoo
+61KNLC0+Jc8tUqlc4iDJTS6Dbc961t6U1fo0tcZbkCh8xi6iO6HmFMKJkA9eN+hU
+C+NLGZFCXEODxH/b6/jLQkqIrvKJWFllIlZTYam41YbjoSKm4IMsg6UvYoAoO/PQ
+XDTOAp8r9xQlI/wwt1IACrgmG8eDO6DOnEdRRC5EmIbfeTkmq/zQx+ylawoeeU4v
+5V5rA7DyRC5RMrsgtAVF5Wotg9SOmEQ2GgTSVjNyMhSi1gyXk2k=
+=fE1M
+-----END PGP SIGNATURE-----
 
+--vc7qj476uzdqvh2o--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
