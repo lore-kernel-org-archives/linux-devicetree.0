@@ -1,74 +1,55 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH v5 0/5] Add OV5640 parallel interface and RGB565/YUYV
- support
-Date: Tue, 9 Jan 2018 19:49:04 +0100
-Message-ID: <20180109184904.dsfv26sym5trr2fs@flea>
-References: <1514973452-10464-1-git-send-email-hugues.fruchet@st.com>
- <20180108153811.5xrvbaekm6nxtoa6@flea>
- <3010811e-ed37-4489-6a9f-6cc835f41575@st.com>
+From: Chris Lew <clew@codeaurora.org>
+Subject: Re: [PATCH 5/6] rpmsg: Introduce rpmsg_get_rproc_name
+Date: Tue, 9 Jan 2018 11:08:52 -0800
+Message-ID: <449b7b39-dc6a-dfcd-c149-03da03e5350d@codeaurora.org>
+References: <1513634534-22861-1-git-send-email-clew@codeaurora.org>
+ <1513634534-22861-6-git-send-email-clew@codeaurora.org>
+ <20171219175202.GB12655@minitux>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="k5wo54tp6bqqq7cp"
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <3010811e-ed37-4489-6a9f-6cc835f41575@st.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Hugues FRUCHET <hugues.fruchet@st.com>
-Cc: Steve Longerbeam <slongerbeam@gmail.com>, Sakari Ailus <sakari.ailus@iki.fi>, Hans Verkuil <hverkuil@xs4all.nl>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171219175202.GB12655@minitux>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: robh+dt@kernel.org, andy.gross@linaro.org, david.brown@linaro.org, aneela@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---k5wo54tp6bqqq7cp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hi Hugues,
+On 12/19/2017 9:52 AM, Bjorn Andersson wrote:
+> On Mon 18 Dec 14:02 PST 2017, Chris Lew wrote:
+> 
+>> Add support for client's to query the edge name their channel is
+>> registered for. This is useful for clients who share the same channel
+>> identifier across different remote procs.
+>>
+> 
+> I presume this will result in a strcmp in some client driver?
+> 
+> When we're registering the rpmsg device, as part of handling of an
+> arriving "open request", we do look for an of_node with matching
+> qcom,glink-channels and if one is found we point the dev->of_node of the
+> new device to this node.
+> 
+> So I would suggest that you, in your client driver, use this to decide
+> which instance you're on; regardless if you're using compatible based
+> driver matching.
+> 
+> Does this work for you?
+> 
+> Regards,
+> Bjorn
+> 
 
-On Mon, Jan 08, 2018 at 05:13:39PM +0000, Hugues FRUCHET wrote:
-> I'm using a ST board with OV5640 wired in parallel bus output in order=20
-> to interface to my STM32 DCMI parallel interface.
-> Perhaps could you describe your setup so I could help on understanding=20
-> the problem on your side. From my past experience with this sensor=20
-> module, you can first check hsync/vsync polarities, the datasheet is=20
-> buggy on VSYNC polarity as documented in patch 4/5.
+Yea I think this works for us, we can drop this patch.
 
-I'm testing using the driver, using a parallel interface:
-https://patchwork.kernel.org/patch/10129463/
+Just to confirm my understanding, clients can use rpdev->dev.of_node to 
+get the parent of_node and from there get the label field? Also to 
+ensure of_node is set, client's need to add their channel to the dt with 
+qcom,glink-channels.
 
-The bus is 8-bits wide, and like I was saying, we had a separate
-driver for the ov5640 that is working fine with that driver, so the
-hardware setup works, and the capture driver should be mostly ok too.
-
-By dumping the registers, I've seen some differences on the clock
-setup, I'll try to hack something tomorrow and let you know :)
-
-Thanks!
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---k5wo54tp6bqqq7cp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlpVDpwACgkQ0rTAlCFN
-r3R9eQ//W9qd5aq7bXkpRHpqAAvX32d+ZozVyRgRWEeM6TDkYSg1trSXlH9iolId
-d8xLTqc/HFN3Cx1DyxO9BvWfFqfm1m+9t37kQtB9xKs/v5gxTF7C59SXAWxrJJnQ
-y9GB+CdIWsA6HmT7mBO37GBkItPQ5G9e+ArLbsv43uPvZw7TpkeBFvHc8IEPl9s4
-WkQFYcZ+Mr5blDRdXK+/B683QI+pZz0FATHVuMUOhfytzXtoXbQr6OVuCo74Ku2W
-AVOzeFyG0PNEbl+UFEd2cUUgI+4QCetud1ttv8pQi4iQvnfdkE1VhsCtISivFjgD
-FOIk7uAdagKBGfC+2OMmvZvHjhSaYnzVMe28rB3gVCze9uDoXfTp8vZSU04v9SKd
-Kq080fueFHTL+qrQAkjwOA2u/llDpVJfhy7ZlA8/A+PnAeidzXV31lNAzYdMGrtG
-+zMYQY4DV3ggWWm6J9xOBjasHVND/pI9aP9VJu+jgxtyWzReyHxyMGEBDWb6qQNW
-x2JlYK1PTDrgMWqsgcLsmbav2/U5SMPc4hTbxw+FNgeVi4lyXb6DFPjV0XiHh8Qc
-GBL0cgkZwHL6QZAPfCl8Sq95bFvpyoVSvKfGh9zKsbrMbs+AIf/hRaMyuni17E6H
-HiIb43If1QaOT1VIZS4EOTX3lrqSG5pmgYz2xpbTa1L0Sntya0k=
-=FcnG
------END PGP SIGNATURE-----
-
---k5wo54tp6bqqq7cp--
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
