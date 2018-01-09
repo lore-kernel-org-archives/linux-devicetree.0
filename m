@@ -1,53 +1,74 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH] ARM: realview: remove eb-mp clcd IRQ
-Date: Tue, 9 Jan 2018 15:47:37 +0100
-Message-ID: <CACRpkdY-6Djmofix1BhFEwnKAD3wC7PkqKCiJVFbWvseaXxO3w@mail.gmail.com>
-References: <20171221213146.3146805-1-arnd@arndb.de> <CACRpkdbCWZB1ZkrdGe0s0GfNVWEYY+NThy4ce-+SBtU-s=WNbQ@mail.gmail.com>
- <3cc1ad94-0a62-2f35-d204-2b89b8ba642b@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3cc1ad94-0a62-2f35-d204-2b89b8ba642b@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+From: Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v4 1/5] dt-bindings: media: Add bindings for OV5695
+Date: Tue,  9 Jan 2018 22:48:20 +0800
+Message-ID: <1515509304-15941-2-git-send-email-zhengsq@rock-chips.com>
+References: <1515509304-15941-1-git-send-email-zhengsq@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1515509304-15941-1-git-send-email-zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ddl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 8, 2018 at 5:31 PM, Robin Murphy <robin.murphy@arm.com> wrote:
-> On 21/12/17 22:08, Linus Walleij wrote:
+Add device tree binding documentation for the OV5695 sensor.
 
->> I do think the reference design has a character LCD, and I
->> do think it has an interrupt, it's just undocumented so
->> someone with this board would have to test it manually
->> to figure out which line it is. Whoever uses this design
->> will get to it if ever.
->
-> FWIW the EB baseboard is *physically* the same regardless of the CPU, it's
-> just flashed with a Core-Tile-specific FPGA bitstream.
+Signed-off-by: Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+---
+ .../devicetree/bindings/media/i2c/ov5695.txt       | 41 ++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5695.txt
 
-Aha I always wondered how that works :)
+diff --git a/Documentation/devicetree/bindings/media/i2c/ov5695.txt b/Documentation/devicetree/bindings/media/i2c/ov5695.txt
+new file mode 100644
+index 0000000..2f2f698
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/i2c/ov5695.txt
+@@ -0,0 +1,41 @@
++* Omnivision OV5695 MIPI CSI-2 sensor
++
++Required Properties:
++- compatible: shall be "ovti,ov5695"
++- clocks: reference to the xvclk input clock
++- clock-names: shall be "xvclk"
++- avdd-supply: Analog voltage supply, 2.8 volts
++- dovdd-supply: Digital I/O voltage supply, 1.8 volts
++- dvdd-supply: Digital core voltage supply, 1.2 volts
++- reset-gpios: Low active reset gpio
++
++The device node shall contain one 'port' child node with an
++'endpoint' subnode for its digital output video port,
++in accordance with the video interface bindings defined in
++Documentation/devicetree/bindings/media/video-interfaces.txt.
++The endpoint optional property 'data-lanes' shall be "<1 2>".
++
++Example:
++&i2c7 {
++	camera-sensor: ov5695@36 {
++		compatible = "ovti,ov5695";
++		reg = <0x36>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&clk_24m_cam>;
++
++		clocks = <&cru SCLK_TESTCLKOUT1>;
++		clock-names = "xvclk";
++
++		avdd-supply = <&pp2800_cam>;
++		dovdd-supply = <&pp1800>;
++		dvdd-supply = <&pp1250_cam>;
++		reset-gpios = <&gpio2 5 GPIO_ACTIVE_LOW>;
++
++		port {
++			wcam_out: endpoint {
++				remote-endpoint = <&mipi_in_wcam>;
++				data-lanes = <1 2>;
++			};
++		};
++	};
++};
+-- 
+1.9.1
 
-> I've just tried
-> firing up an 11MPCore one, and indeed the character LCD does light up with
-> the kernel version. I can't convince the recalcitrant beast to actually get
-> to userspace, though, so I can't confirm what the interrupt's deal is.
-
-Yeah the driver survives fine without an IRQ too so it just works ...
-
-> The baseboard manual (DUI0303E) says it's interrupt 22 on the board-level
-> secondary GICs, and since neither the CT11MP nor its corresponding FPGA
-> (AN152) mention any alternate routing direct to the Core Tile GIC, I'd guess
-> it probably still is. On the other hand, though, it also says this:
->
->   "... However this interrupt signal is reserved for future use and you
->    must use a polling routine instead of an interrupt service routine."
->
-> So maybe it's appropriate to just remove the interrupt everywhere :/
-
-Hm I don't think there will be future releases of these EB
-boards anytime soon, so I suspect we could just add it.
-
-But as it works fine without IRQ we can just leave it as well.
-
-Yours,
-Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
