@@ -1,73 +1,105 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 01/10] dt-bindings: display: xlnx: Add Xilinx kms bindings
-Date: Mon, 8 Jan 2018 22:00:11 -0600
-Message-ID: <20180109040011.crwkn5j76cmdfvfm@rob-hp-laptop>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 06/10] dt-bindings: display: xlnx: Add ZynqMP DP
+ subsystem bindings
+Date: Mon, 8 Jan 2018 22:07:13 -0600
+Message-ID: <20180109040713.rusxuzhkhp262zgf@rob-hp-laptop>
 References: <1515117959-18068-1-git-send-email-hyun.kwon@xilinx.com>
- <1515117959-18068-2-git-send-email-hyun.kwon@xilinx.com>
+ <1515117959-18068-7-git-send-email-hyun.kwon@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <1515117959-18068-2-git-send-email-hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hyun Kwon <hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1515117959-18068-7-git-send-email-hyun.kwon@xilinx.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Hyun Kwon <hyun.kwon@xilinx.com>
+Cc: devicetree@vger.kernel.org, Michal Simek <michal.simek@xilinx.com>, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 04, 2018 at 06:05:50PM -0800, Hyun Kwon wrote:
-> The dt binding for Xilinx DRM KMS driver.
-
-Bindings are for h/w, not drivers.
-
-> 
-> Signed-off-by: Hyun Kwon <hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> ---
->  .../devicetree/bindings/display/xlnx/xlnx,kms.txt    | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/xlnx/xlnx,kms.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/display/xlnx/xlnx,kms.txt b/Documentation/devicetree/bindings/display/xlnx/xlnx,kms.txt
-> new file mode 100644
-> index 0000000..8dcd552
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/xlnx/xlnx,kms.txt
-> @@ -0,0 +1,20 @@
-> +Xilinx KMS Pipeline
-> +-------------------
-> +
-> +Xilinx display pipelines can be designed with hardened video IPs and soft video
-> +IPs in programmable logic. This KMS module provides the common functionality
-> +of individual subdevice drivers, and glue logics between them.
-> +
-> +Required properties:
-> +
-> +- compatible: Must be "xlnx,kms".
-> +
-> +- ports: phandles for CRTC ports, using the DT bindings defined in
-> +  Documentation/devicetree/bindings/graph.txt.
-
-This use of ports is not part of the graph binding.
-
-> +
-> +Example:
-> +
-> +	xlnx_drm: xlnx_drm {
-> +		compatible = "xlnx,kms";
-
-drm and kms are Linuxisms.
-
-Why do you need this node?
-
-> +		ports = <&crtc_port>;
-> +	};
-> -- 
-> 2.7.4
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gVGh1LCBKYW4gMDQsIDIwMTggYXQgMDY6MDU6NTVQTSAtMDgwMCwgSHl1biBLd29uIHdyb3Rl
+Ogo+IFRoaXMgYWRkIGEgZHQgYmluZGluZyBmb3IgWnlucU1QIERQIHN1YnN5c3RlbS4KPiAKPiBT
+aWduZWQtb2ZmLWJ5OiBIeXVuIEt3b24gPGh5dW4ua3dvbkB4aWxpbnguY29tPgo+IC0tLQo+ICAu
+Li4vYmluZGluZ3MvZGlzcGxheS94bG54L3hsbngsenlucW1wLWRwc3ViLnR4dCAgICB8IDk0ICsr
+KysrKysrKysrKysrKysrKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDk0IGluc2VydGlvbnMoKykK
+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
+aXNwbGF5L3hsbngveGxueCx6eW5xbXAtZHBzdWIudHh0Cj4gCj4gZGlmZiAtLWdpdCBhL0RvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3hsbngveGxueCx6eW5xbXAtZHBz
+dWIudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkveGxueC94
+bG54LHp5bnFtcC1kcHN1Yi50eHQKPiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+IGluZGV4IDAwMDAw
+MDAuLjRlNDc4Y2EKPiAtLS0gL2Rldi9udWxsCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2Rpc3BsYXkveGxueC94bG54LHp5bnFtcC1kcHN1Yi50eHQKPiBAQCAtMCww
+ICsxLDk0IEBACj4gK1hpbGlueCBaeW5xTVAgRGlzcGxheVBvcnQgc3Vic3lzdGVtCj4gKy0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCj4gKwo+ICtSZXF1aXJlZCBwcm9wZXJ0aWVz
+Ogo+ICsKPiArLSBjb21wYXRpYmxlOiBNdXN0IGJlICJ4bG54LHp5bnFtcC1kcHN1Yi0xLjciLgo+
+ICsKPiArLSByZWc6IFBoeXNpY2FsIGJhc2UgYWRkcmVzcyBhbmQgbGVuZ3RoIG9mIHRoZSByZWdp
+c3RlcnMgc2V0IGZvciB0aGUgZGV2aWNlLgo+ICstIHJlZy1uYW1lczogTXVzdCBiZSAiZHAiLCAi
+YmxlbmQiLCAiYXZfYnVmIiwgYW5kICJhdWQiIHRvIG1hcCBsb2dpY2FsIHJlZ2lzdGVyCj4gKyAg
+cGFydGl0aW9ucy4KPiArCj4gKy0gaW50ZXJydXB0czogSW50ZXJydXB0IG51bWJlci4KPiArLSBp
+bnRlcnJ1cHRzLXBhcmVudDogcGhhbmRsZSBmb3IgaW50ZXJydXB0IGNvbnRyb2xsZXIuCj4gKwo+
+ICstIGNsb2NrczogcGhhbmRsZXMgZm9yIGF4aSwgYXVkaW8sIG5vbi1saXZlIHZpZGVvLCBhbmQg
+bGl2ZSB2aWRlbyBjbG9ja3MuCj4gKyAgYXhpIGNsb2NrIGlzIHJlcXVpcmVkLiBBdWRpbyBjbG9j
+ayBpcyBvcHRpb25hbC4gSWYgbm90IHByZXNlbnQsIGF1ZGlvIHdpbGwKPiArICBiZSBkaXNhYmxl
+ZC4gT25lIG9mIG5vbi1saXZlIG9yIGxpdmUgdmlkZW8gY2xvY2sgc2hvdWxkIGJlIHByZXNlbnQu
+Cj4gKy0gY2xvY2stbmFtZXM6IFRoZSBpZGVudGlmaWNhdGlvbiBzdHJpbmdzIGFyZSByZXF1aXJl
+ZC4gImFjbGsiIGZvciBheGkgY2xvY2suCj4gKyAgImRwX2F1ZF9jbGsiIGZvciBhdWRpbyBjbG9j
+ay4gImRwX3Z0Y19waXhlbF9jbGtfaW4iIGZvciBub24tbGl2ZSB2aWRlbyBjbG9jay4KPiArICAi
+ZHBfbGl2ZV92aWRlb19pbl9jbGsiIGZvciBsaXZlIHZpZGVvIGNsb2NrIChjbG9jayBmcm9tIHBy
+b2dyYW1tYWJsZSBsb2dpYykuCgoiX2NsayIgaXMgcmVkdW5kYW50LgoKPiArCj4gKy0gcGh5czog
+cGhhbmRsZXMgZm9yIHBoeSBzcGVjaWZpZXIuCj4gKy0gcGh5LW5hbWVzOiBUaGUgaWRlbnRpZmll
+ciBzdHJpbmdzLiAiZHAtcGh5IiBmb2xsb3dlZCBieSBpbmRleC4KPiArCj4gKy0gcG93ZXItZG9t
+YWluczogcGhhbmRsZSBmb3IgdGhlIGNvcnJlc3BvbmRpbmcgcG93ZXIgZG9tYWluCj4gKwo+ICst
+IHBvcnRzOiBjcnRjIGFuZCBlbmNvZGVyIHBvcnRzIGFyZSByZXF1aXJlZCB1c2luZyBEVCBiaW5k
+aW5ncyBkZWZpbmVkIGluCj4gKyAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dy
+YXBoLnR4dC4KCklzbid0IHRoZSBjb25uZWN0aW9uIGNydGMtPmVuY29kZXI/CgpBbHNvLCBjcnRj
+IGlzIHByZXR0eSBtdWNoIGEgRFJNIHRlcm0uIERvbid0IHVzZSB0aGF0IGluIGJpbmRpbmdzLiAK
+RGVzY3JpYmUgdGhlIGgvdyBibG9ja3MuCgo+ICsKPiArLSB2aWQtbGF5ZXIsIGdmeC1sYXllcjog
+UmVxdWlyZWQgdG8gcmVwcmVzZW50IGF2YWlsYWJsZSBsYXllcnMKPiArCj4gK1JlcXVpcmVkIGxh
+eWVyIHByb3BlcnRpZXMKPiArCj4gKy0gZG1hczogcGhhbmRsZXMgZm9yIERNQSBjaGFubmVscyBh
+cyBkZWZpbmVkIGluCj4gKyAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RtYS9k
+bWEudHh0Lgo+ICstIGRtYS1uYW1lczogVGhlIGlkZW50aWZpZXIgc3RyaW5ncyBhcmUgcmVxdWly
+ZWQuICJncmFwaGljczAiIGZvciBncmFwaGljcwo+ICsgIGxheWVyLiAidmlkZW8iIGZvbGxvd2Vk
+IGJ5IGluZGV4IGZvciB2aWRlbyBsYXllcgo+ICsKPiArT3B0aW9uYWwgY2hpbGQgbm9kZQo+ICsK
+PiArLSBUaGUgZHJpdmVyIHBvcHVsYXRlcyBhbnkgY2hpbGQgZGV2aWNlIG5vZGUgaW4gdGhpcyBu
+b2RlLiBUaGlzIGNhbiBiZSB1c2VkLAo+ICsgIGZvciBleGFtcGxlLCB0byBwb3B1bGF0ZSB0aGUg
+c291bmQgZGV2aWNlIGZyb20gdGhlIERpc3BsYXlQb3J0IHN1YnN5c3RlbQo+ICsgIGRyaXZlci4K
+PiArCj4gK0V4YW1wbGU6Cj4gKwl6eW5xbXBfZHBzdWI6IHp5bnFtcF9kcHN1YkBmZDRhMDAwMCB7
+CgpkaXNwbGF5LWNvbnRyb2xsZXJALi4uCgo+ICsJCWNvbXBhdGlibGUgPSAieGxueCx6eW5xbXAt
+ZHBzdWItMS43IjsKPiArCQlyZWcgPSA8MHgwIDB4ZmQ0YTAwMDAgMHgwIDB4MTAwMD4sCj4gKwkJ
+ICAgICAgPDB4MCAweGZkNGFhMDAwIDB4MCAweDEwMDA+LAo+ICsJCSAgICAgIDwweDAgMHhmZDRh
+YjAwMCAweDAgMHgxMDAwPiwKPiArCQkgICAgICA8MHgwIDB4ZmQ0YWMwMDAgMHgwIDB4MTAwMD47
+Cj4gKwkJcmVnLW5hbWVzID0gImRwIiwgImJsZW5kIiwgImF2X2J1ZiIsICJhdWQiOwo+ICsJCWlu
+dGVycnVwdHMgPSA8MCAxMTkgND47Cj4gKwkJaW50ZXJydXB0LXBhcmVudCA9IDwmZ2ljPjsKPiAr
+Cj4gKwkJY2xvY2stbmFtZXMgPSAiZHBfYXBiX2NsayIsICJkcF9hdWRfY2xrIiwgImRwX2xpdmVf
+dmlkZW9faW5fY2xrIjsKPiArCQljbG9ja3MgPSA8JmRwX2FjbGs+LCA8JmNsa2MgMTc+LCA8JnNp
+NTcwXzE+Owo+ICsKPiArCQlwaHlzID0gPCZsYW5lMSBQSFlfVFlQRV9EUCAwIDEgMjcwMDAwMDA+
+LAo+ICsJCSAgICAgICA8JmxhbmUwIFBIWV9UWVBFX0RQIDEgMSAyNzAwMDAwMD47Cj4gKwkJcGh5
+LW5hbWVzID0gImRwLXBoeTAiLCAiZHAtcGh5MSI7Cj4gKwo+ICsJCXBvd2VyLWRvbWFpbnMgPSA8
+JnBkX2RwPjsKPiArCj4gKwkJI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gKwkJI3NpemUtY2VsbHMg
+PSA8MD47Cj4gKwo+ICsJCXZpZC1sYXllciB7Cj4gKwkJCWRtYS1uYW1lcyA9ICJ2aWQwIiwgInZp
+ZDEiLCAidmlkMiI7Cj4gKwkJCWRtYXMgPSA8JnhsbnhfZHBkbWEgMD4sCj4gKwkJCSAgICAgICA8
+JnhsbnhfZHBkbWEgMT4sCj4gKwkJCSAgICAgICA8JnhsbnhfZHBkbWEgMj47Cj4gKwkJfTsKPiAr
+Cj4gKwkJZ2Z4LWxheWVyIHsKClRoZXNlIDIgbm9kZXMgZG9uJ3Qgc2VlbSBuZWNlc3NhcnkuIEp1
+c3QgbWFrZSAiZG1hcyIgdGFrZSA0IHZhbHVlcyBhbmQgCmRlZmluZSB3aGVyZSB0aGUgZ2Z4MCBj
+aGFubmVsIGlzIGxvY2F0ZWQgKGluZGV4IDAgb3IgMz8pLgoKPiArCQkJZG1hLW5hbWVzID0gImdm
+eDAiOwo+ICsJCQlkbWFzID0gPCZ4bG54X2RwZG1hIDM+Owo+ICsJCX07Cj4gKwo+ICsJCWNydGNf
+cG9ydDogcG9ydEAwIHsKPiArCQkJcmVnID0gPDA+Owo+ICsJCQljcnRjOiBlbmRwb2ludCB7Cj4g
+KwkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmVuY29kZXI+Owo+ICsJCQl9Owo+ICsJCX07Cj4gKwkJ
+cG9ydEAxIHsKCk11bHRpcGxlIHBvcnQgbm9kZXMgc2hvdWxkIGJlIHVuZGVyIGEgcG9ydHMgbm9k
+ZSBlc3BlY2lhbGx5IGlmIHlvdSBoYXZlIApvdGhlciBjaGlsZCBub2Rlcy4KCj4gKwkJCXJlZyA9
+IDwxPjsKPiArCQkJZW5jb2RlcjogZW5kcG9pbnQgewo+ICsJCQkJcmVtb3RlLWVuZHBvaW50ID0g
+PCZjcnRjPjsKPiArCQkJfTsKPiArCQl9Owo+ICsJfTsKPiArfTsKPiArCj4gLS0gCj4gMi43LjQK
+PiAKPiAtLQo+IFRvIHVuc3Vic2NyaWJlIGZyb20gdGhpcyBsaXN0OiBzZW5kIHRoZSBsaW5lICJ1
+bnN1YnNjcmliZSBkZXZpY2V0cmVlIiBpbgo+IHRoZSBib2R5IG9mIGEgbWVzc2FnZSB0byBtYWpv
+cmRvbW9Admdlci5rZXJuZWwub3JnCj4gTW9yZSBtYWpvcmRvbW8gaW5mbyBhdCAgaHR0cDovL3Zn
+ZXIua2VybmVsLm9yZy9tYWpvcmRvbW8taW5mby5odG1sCl9fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVs
+QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWls
+bWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
