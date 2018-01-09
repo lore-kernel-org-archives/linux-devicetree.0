@@ -1,100 +1,149 @@
-From: Karthik Ramasubramanian <kramasub@codeaurora.org>
-Subject: Re: [PATCH RFC 6/7] serial: Add device tree bindings for GENI based
- UART Controller
-Date: Tue, 9 Jan 2018 11:36:30 -0700
-Message-ID: <068baf4d-963e-f177-311d-d2c76d27a6f9@codeaurora.org>
-References: <1514392046-30602-1-git-send-email-kramasub@codeaurora.org>
- <1514392046-30602-7-git-send-email-kramasub@codeaurora.org>
- <20180102155517.j4sqhdtamybtgta4@rob-hp-laptop>
+From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Subject: Re: [PATCH 04/11] drm/bridge/synopsys: dw-hdmi: Export
+ some PHY related functions
+Date: Tue, 09 Jan 2018 19:42:26 +0100
+Message-ID: <1523919.I1QF6T1ars@jernej-laptop>
+References: <20171230210203.24115-1-jernej.skrabec@siol.net> <10903755.CJpSM8RM5e@jernej-laptop> <1586880.7NXXgpct7p@avalon>
+Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20180102155517.j4sqhdtamybtgta4@rob-hp-laptop>
-Content-Language: en-US
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-i2c@vger.kernel.org, linux-serial@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, andy.gross@linaro.org, david.brown@linaro.org, mark.rutland@arm.com, corbet@lwn.net, wsa@the-dreams.de, gregkh@linuxfoundation.org, jslaby@suse.com, Girish Mahadevan <girishm@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDQNBWPU7YERBFU22TJAKGQE3PRX2PI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1586880.7NXXgpct7p@avalon>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Laurent,
 
+Dne torek, 09. januar 2018 ob 17:08:55 CET je Laurent Pinchart napisal(a):
+> Hello,
+>=20
+> On Tuesday, 9 January 2018 17:58:46 EET Jernej =C5=A0krabec wrote:
+> > Dne torek, 09. januar 2018 ob 11:43:08 CET je Archit Taneja napisal(a):
+> > > On 12/31/2017 02:31 AM, Jernej Skrabec wrote:
+> > >> Parts of PHY code could be useful also for custom PHYs. For example,
+> > >> Allwinner A83T has custom PHY which is probably Synopsys gen2 PHY
+> > >> with few additional memory mapped registers, so most of the Synopsys
+> > >> PHY
+> > >> related code could be reused.
+> > >>=20
+> > >> It turns out that even completely custom HDMI PHYs, such as the one
+> > >> found in Allwinner H3, can reuse some of those functions. This would
+> > >> suggest that (some?) functions exported in this commit are actually
+> > >> part
+> > >> of generic PHY interface and not really specific to Synopsys PHYs.
+> > >>=20
+> > >> Export useful PHY functions.
+> > >>=20
+> > >> Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+> > >> ---
+> > >>=20
+> > >> drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 45 +++++++++++++++++----=
+---
+> > >> drivers/gpu/drm/bridge/synopsys/dw-hdmi.h |  2 ++
+> > >> include/drm/bridge/dw_hdmi.h              | 10 +++++++
+> > >> 3 files changed, 44 insertions(+), 13 deletions(-)
+> > >>=20
+> > >> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> > >> b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c index
+> > >> 7ca14d7325b5..67467d0b683a 100644
+> > >> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> > >> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+>=20
+> [snip]
+>=20
+> > >> @@ -1065,6 +1067,23 @@ static void
+> > >> dw_hdmi_phy_sel_interface_control(struct dw_hdmi *hdmi, u8 enable)
+> > >>=20
+> > >>   			 HDMI_PHY_CONF0_SELDIPIF_MASK);
+> > >>  =20
+> > >>   }
+> > >>=20
+> > >> +void dw_hdmi_phy_gen2_reset(struct dw_hdmi *hdmi, u8 enable)
+> > >> +{
+> > >> +	hdmi_mask_writeb(hdmi, enable, HDMI_MC_PHYRSTZ,
+> > >> +			 HDMI_MC_PHYRSTZ_PHYRSTZ_OFFSET,
+> > >> +			 HDMI_MC_PHYRSTZ_PHYRSTZ_MASK);
+> > >> +}
+> > >> +EXPORT_SYMBOL_GPL(dw_hdmi_phy_gen2_reset);
+>=20
+> I don't remember the details, is the reset signal Gen2-specific ?
 
-On 1/2/2018 8:55 AM, Rob Herring wrote:
-> On Wed, Dec 27, 2017 at 09:27:25AM -0700, Karthikeyan Ramasubramanian wrote:
->> Add device tree binding support for GENI based UART Controller in the
->> QUP Wrapper.
->>
->> Signed-off-by: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>
->> Signed-off-by: Girish Mahadevan <girishm@codeaurora.org>
->> ---
->>   .../devicetree/bindings/serial/qcom,geni-uart.txt  | 31 ++++++++++++++++++++++
->>   1 file changed, 31 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/serial/qcom,geni-uart.txt
->>
->> diff --git a/Documentation/devicetree/bindings/serial/qcom,geni-uart.txt b/Documentation/devicetree/bindings/serial/qcom,geni-uart.txt
->> new file mode 100644
->> index 0000000..e60ec6a
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/serial/qcom,geni-uart.txt
->> @@ -0,0 +1,31 @@
->> +Qualcomm Technologies Inc. GENI based Serial UART Controller driver
->> +
->> +This serial UART driver supports console use-cases. This driver is meant
->> +only for Generic Interface (GENI) based Qualcomm Universal Peripheral (QUP)
->> +cores and isn't backwards compatible.
->> +
->> +Required properties:
->> +- compatible: should contain "qcom,geni-uart, qcom,geni-console"
-> 
-> Is console different programming model or just how you are using the
-> h/w? for the latter, drop it as we have stdout-path to select a console.
-The console programming model is different from a regular UART port and 
-hence the compatible field contains console in it.
-> 
->> +- reg: Should contain UART register location and length.
->> +- interrupts: Should contain UART core interrupts.
->> +- clocks: clocks needed for UART, includes the core and AHB clock.
->> +- pinctrl-names/pinctrl-0/1: The GPIOs assigned to this core. The names
->> +  Should be "active" and "sleep" for the pin confuguration when core is active
->> +  or when entering sleep state.
->> +- qcom,wrapper-core: Wrapper QUP core containing this UART controller.
->> +
->> +Example:
->> +qup_uart11: qcom,qup_uart@0xa88000 {
-> 
-> Use generic node names and no '0x':
-> 
-> serial@a88000
-I will update as per the recommendation.
-> 
->> +	compatible = "qcom,geni-uart";
->> +	reg = <0xa88000 0x7000>;
->> +	reg-names = "se_phys";
->> +	clock-names = "se-clk", "m-ahb", "s-ahb";
-> 
-> Not documented.
-I will add the documentation for the missing element.
-> 
->> +	clocks = <&clock_gcc GCC_QUPV3_WRAP0_S0_CLK>,
->> +		<&clock_gcc GCC_QUPV3_WRAP_0_M_AHB_CLK>,
->> +		<&clock_gcc GCC_QUPV3_WRAP_0_S_AHB_CLK>;
->> +	pinctrl-names = "default", "sleep";
->> +	pinctrl-0 = <&qup_1_uart_3_active>;
->> +	pinctrl-1 = <&qup_1_uart_3_sleep>;
->> +	interrupts = <0 355 0>;
->> +	qcom,wrapper-core = <&qup_0>;
->> +};
->> -- 
->> Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
->> a Linux Foundation Collaborative Project
->>
+According to this comment:
+
+/* PHY reset. The reset signal is active high on Gen2 PHYs. */
+
+I would guess that it is not specific to Gen2, otherwise the comment wouldn=
+'t=20
+be needed. I will remove "gen2" from the name.
+
+>=20
+> How about asserting and deasserting the reset signal in the same call
+> instead of having to call this function twice ?
+
+It works on A83T if reset signal is asserted and deasserted immediately. I=
+=20
+will change function according to your proposal.
+
+Best regards,
+Jernej
+
+>=20
+> > >> +void dw_hdmi_phy_set_slave_addr(struct dw_hdmi *hdmi)
+> > >> +{
+> > >> +	hdmi_phy_test_clear(hdmi, 1);
+> > >> +	hdmi_writeb(hdmi, HDMI_PHY_I2CM_SLAVE_ADDR_PHY_GEN2,
+> > >> +		    HDMI_PHY_I2CM_SLAVE_ADDR);
+> > >> +	hdmi_phy_test_clear(hdmi, 0);
+> > >> +}
+> > >> +EXPORT_SYMBOL_GPL(dw_hdmi_phy_set_slave_addr);
+> > >=20
+> > > Should this be called dw_hdmi_phy_gen2_set_slave_addr?
+> >=20
+> > Probably. I will rename it in v2 to be consistent with other phy
+> > functions.
+>=20
+> The I2C write function is called dw_hdmi_phy_i2c_write(). If we want to b=
+e
+> conosistent we should either rename this one to dw_hdmi_phy_i2c_set_addr(=
+)
+> or rename them both to dw_hdmi_phy_gen2_i2c_write() and
+> dw_hdmi_phy_gen2_i2c_set_addr(). I think I'd prefer the former, and we co=
+uld
+> even drop gen2 from dw_hdmi_phy_gen2_pddq() and dw_hdmi_phy_gen2_txpwron(=
+)
+> if desired.
+>=20
+> > > Looks good otherwise. Same for patches 3 and 4 in this series.
+> > >=20
+> > >> +
+> > >>=20
+> > >>   static void dw_hdmi_phy_power_off(struct dw_hdmi *hdmi)
+> > >>   {
+> > >>  =20
+> > >>   	const struct dw_hdmi_phy_data *phy =3D hdmi->phy.data;
+>=20
+> [snip]
+>=20
 > --
-> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
-Regards,
-Karthik.
--- 
-Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+> Regards,
+>=20
+> Laurent Pinchart
+
+
+
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
