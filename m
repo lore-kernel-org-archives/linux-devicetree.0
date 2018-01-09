@@ -1,65 +1,46 @@
-From: Gary Bisson <gary.bisson@boundarydevices.com>
-Subject: Re: [PATCH v2 1/5] pinctrl: imx: use struct imx_pinctrl_soc_info as
- a const
-Date: Tue, 9 Jan 2018 15:33:29 +0100
-Message-ID: <20180109143329.GA23576@t450s.lan>
-References: <20180106142553.15322-1-stefan@agner.ch>
- <20180106142553.15322-2-stefan@agner.ch>
- <20180108164855.GA6504@t450s.lan>
- <f12aa7b7b3aea7a691a1acd14b8daa58@agner.ch>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 5/5] pinctrl: imx6ul: add IOMUXC SNVS pinctrl driver
+ for i.MX 6ULL
+Date: Tue, 9 Jan 2018 15:33:57 +0100
+Message-ID: <CACRpkda8TaV+6kknZXFHqpac3qA8RGtDPSJQNjveyzsWFv5Q0Q@mail.gmail.com>
+References: <20180106142553.15322-1-stefan@agner.ch> <20180106142553.15322-6-stefan@agner.ch>
+ <CACRpkdYJcS3Ng=uR-iPgJ22ABfbiVENjWGsaWwShUfbg1hU4+g@mail.gmail.com> <CAOMZO5CjCv1Lg6sazyJWS_xZvD6bXhW=1poYMEFUbgodAST5Yg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <f12aa7b7b3aea7a691a1acd14b8daa58@agner.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Agner <stefan@agner.ch>
-Cc: linus.walleij@linaro.org, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, aisheng.dong@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Arvind Yadav <arvind.yadav.cs@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOMZO5CjCv1Lg6sazyJWS_xZvD6bXhW=1poYMEFUbgodAST5Yg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Dong Aisheng <aisheng.dong-3arQi8VN3Tc@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bai Ping <ping.bai-3arQi8VN3Tc@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stefan,
+On Tue, Jan 9, 2018 at 3:11 PM, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Tue, Jan 9, 2018 at 12:07 PM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>
+>> Patch applied.
+>>
+>> I need clear maintainership for Freescale pin controllers.
+>>
+>> Stefan, would you consider making a patch adding you, Dong
+>> Aisheng and Shawn Guo as maintainers in
+>> MAINTAINERS for
+>> drivers/pinctrl/freescale/*
+>> Documentation/devicetree/bindings/pinctrl/fsl,*
+>> ?
+>>
+>> I don't know if Shawn want to be added, but he wrote the first
+>> version so unless he says explicitly no I think he should be
+>> included.
+>>
+>> Sascha, do you also wanna be included?
+>
+> I would also like to be included, if possible.
 
-On Mon, Jan 08, 2018 at 09:52:36PM +0100, Stefan Agner wrote:
-> On 2018-01-08 17:48, Gary Bisson wrote:
-> > Hi Stefan,
-> > 
-> > On Sat, Jan 06, 2018 at 03:25:49PM +0100, Stefan Agner wrote:
-> >> For some SoCs the struct imx_pinctrl_soc_info is passed through
-> >> of_device_id.data which is const. Most variables are already const
-> >> or otherwise not written. However, some fields are modified at
-> >> runtime. Move those fields to the dynamically allocated struct
-> >> imx_pinctrl.
-> >>
-> >> Fixes: b3060044e495 ("pinctrl: freescale: imx7d: make of_device_ids const")
-> >> Cc: Shawn Guo <shawnguo@kernel.org>
-> >> Cc: Arvind Yadav <arvind.yadav.cs@gmail.com>
-> >> Cc: Dong Aisheng <aisheng.dong@nxp.com>
-> >> Cc: Gary Bisson <gary.bisson@boundarydevices.com>
-> >> Signed-off-by: Stefan Agner <stefan@agner.ch>
-> > 
-> > This is actually more or less a revert of a previous commit:
-> > b28742be4709 pinctrl: imx: remove const qualifier of imx_pinctrl_soc_info
-> 
-> Hm, I see. However, back then imx_pinctrl_probe still consumed a
-> non-const struct imx_pinctrl_soc_info pointer. So this constifies all
-> the way through. 
-> 
-> > 
-> > Note that the idea for this commit was to get dt-overlays working and
-> > able to do pinctrl changes using configfs interface to load an overlay
-> > (using Pantelis patch). Not sure where we stand on loading such overlay
-> > from user-space, is it still something that will happen?
-> 
-> I am all for dt-overlays and actually also hope that it will make it
-> completely into mainline. So whatever prevents using device tree
-> overlays should be addressed.
-> 
-> It seems that ngroups is now part of struct pinctrl_dev (num_groups),
-> which is still writable. So we should be fine?
+The more the merrier :D
 
-Correct, I forgot about the generic pinmux/pinctrl patches. Indeed
-having the structure as const is perfectly fine now, even with
-dt-overlays in mind.
-
-Regards,
-Gary
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
