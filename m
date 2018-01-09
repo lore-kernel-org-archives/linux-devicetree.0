@@ -1,63 +1,68 @@
-From: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 13/16] power: supply: axp20x_battery: add
- support for AXP813
-Date: Tue, 9 Jan 2018 23:53:55 +1100
-Message-ID: <CAGRGNgVfok-UrKFNtkq1QteJqUphFBRH_U+nJcy=dPkzN6W08g@mail.gmail.com>
-References: <cover.1e46d70f7931be8154b450a2fcdf066450a1aa6f.1515486346.git-series.quentin.schulz@free-electrons.com>
- <a1c061eb50edfd3519ece6c8177085b55d7aefc6.1515486346.git-series.quentin.schulz@free-electrons.com>
-Reply-To: julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 03/11] drm/bridge/synopsys: dw-hdmi: Enable workaround for v1.32a
+Date: Tue, 09 Jan 2018 14:56:21 +0200
+Message-ID: <3367423.0HCaRuLuz8@avalon>
+References: <20171230210203.24115-1-jernej.skrabec@siol.net> <20171230210203.24115-4-jernej.skrabec@siol.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDQIP76OUQLBB6HW2LJAKGQEKZ5HHKA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <a1c061eb50edfd3519ece6c8177085b55d7aefc6.1515486346.git-series.quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Mailing List, Arm" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20171230210203.24115-4-jernej.skrabec@siol.net>
+Sender: linux-clk-owner@vger.kernel.org
+To: dri-devel@lists.freedesktop.org
+Cc: Jernej Skrabec <jernej.skrabec@siol.net>, maxime.ripard@free-electrons.com, airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org, architt@codeaurora.org, a.hajda@samsung.com, Jose.Abreu@synopsys.com, devicetree@vger.kernel.org, narmstrong@baylibre.com, mturquette@baylibre.com, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Quentin,
+Hi Jernej,
 
-On Tue, Jan 9, 2018 at 8:33 PM, Quentin Schulz
-<quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> The X-Powers AXP813 PMIC has got some slight differences from
-> AXP20X/AXP22X PMICs:
->  - the maximum voltage supplied by the PMIC is 4.35 instead of 4.36/4.24
->  for AXP20X/AXP22X,
->  - the constant charge current formula is different,
->
-> It also has a bit to tell whether the battery percentage returned by the
-> PMIC is valid.
->
-> Signed-off-by: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Thank you for the patch.
+
+On Saturday, 30 December 2017 23:01:55 EET Jernej Skrabec wrote:
+> Allwinner SoCs have dw hdmi controller v1.32a which exhibits same
+> magenta line issue as i.MX6Q and i.MX6DL. Enable workaround for it.
+> 
+> Tests show that one iteration is enough.
+> 
+> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+
+This does not break R-Car DU, so
+
+Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
 > ---
->  drivers/power/supply/axp20x_battery.c | 42 ++++++++++++++++++++++++++++-
->  1 file changed, 42 insertions(+)
->
-> diff --git a/drivers/power/supply/axp20x_battery.c b/drivers/power/supply/axp20x_battery.c
-> index d73c78f..dad72a5 100644
-> --- a/drivers/power/supply/axp20x_battery.c
-> +++ b/drivers/power/supply/axp20x_battery.c
-> @@ -46,6 +46,8 @@
->  #define AXP20X_CHRG_CTRL1_TGT_4_2V     (2 << 5)
->  #define AXP20X_CHRG_CTRL1_TGT_4_36V    (3 << 5)
->
-> +#define AXP813_CHRG_CTRL1_TGT_4_35V    (3 << 5)
-> +
->  #define AXP22X_CHRG_CTRL1_TGT_4_22V    (1 << 5)
->  #define AXP22X_CHRG_CTRL1_TGT_4_24V    (3 << 5)
-
-Should these be "alphabetical", i.e. AXP20X, AXP22X, AXP813?
-
-Thanks,
+>  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c index
+> a38db40ce990..7ca14d7325b5 100644
+> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> @@ -1634,9 +1634,10 @@ static void dw_hdmi_clear_overflow(struct dw_hdmi
+> *hdmi) * then write one of the FC registers several times.
+>  	 *
+>  	 * The number of iterations matters and depends on the HDMI TX revision
+> -	 * (and possibly on the platform). So far only i.MX6Q (v1.30a) and
+> -	 * i.MX6DL (v1.31a) have been identified as needing the workaround, with
+> -	 * 4 and 1 iterations respectively.
+> +	 * (and possibly on the platform). So far i.MX6Q (v1.30a), i.MX6DL
+> +	 * (v1.31a) and multiple Allwinner SoCs (v1.32a) have been identified
+> +	 * as needing the workaround, with 4 iterations for v1.30a and 1
+> +	 * iteration for others.
+>  	 */
+> 
+>  	switch (hdmi->version) {
+> @@ -1644,6 +1645,7 @@ static void dw_hdmi_clear_overflow(struct dw_hdmi
+> *hdmi) count = 4;
+>  		break;
+>  	case 0x131a:
+> +	case 0x132a:
+>  		count = 1;
+>  		break;
+>  	default:
 
 -- 
-Julian Calaby
+Regards,
 
-Email: julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Profile: http://www.google.com/profiles/julian.calaby/
+Laurent Pinchart
+
