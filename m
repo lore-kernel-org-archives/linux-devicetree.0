@@ -1,51 +1,51 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv1 1/3] dt-bindings: spi: Add DT bindings for Synquacer
-Date: Tue, 9 Jan 2018 16:44:15 +0000
-Message-ID: <20180109164415.GE11471@sirena.org.uk>
-References: <1515503383-8909-1-git-send-email-jassisinghbrar@gmail.com>
- <1515503432-8971-1-git-send-email-jassisinghbrar@gmail.com>
+From: =?UTF-8?q?Niklas=20S=C3=B6derlund?=
+        <niklas.soderlund+renesas@ragnatech.se>
+Subject: [PATCH] ARM: dts: lager: Add CEC clock for HDMI transmitter
+Date: Tue,  9 Jan 2018 17:49:04 +0100
+Message-ID: <20180109164904.24523-1-niklas.soderlund+renesas@ragnatech.se>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="LSp5EJdfMPwZcMS1"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1515503432-8971-1-git-send-email-jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Hans Verkuil <hverkuil@xs4all.nl>
+Cc: =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
 List-Id: devicetree@vger.kernel.org
 
+The adv7511 on the Lager board has a 12 MHz fixed clock
+for the CEC block. Specify this in the dts to enable CEC support.
 
---LSp5EJdfMPwZcMS1
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Based on a similar patch for Koelsch by Hans Verkuil.
 
-On Tue, Jan 09, 2018 at 06:40:32PM +0530, jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+Tested-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+---
+ arch/arm/boot/dts/r8a7790-lager.dts | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-> +- socionext,use-rtm: boolean, if required to use "retimed clock" for RX
-> +- socionext,set-aces: boolean, if same active clock edges field to be set.
-
-What are these and why are they configurable?  The active clock edges
-thing in particular sounds a little like it might be related to the SPI
-modes?
-
---LSp5EJdfMPwZcMS1
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlpU8V4ACgkQJNaLcl1U
-h9DTMQf+P2m5eBQbWjEb1w8QqkD8h27UqvVEYRmcdZDXZ7Uk8P72uxMcxrATqerz
-onlhm4G4O5GB43YW1ZBrYfMG1jzokHZsLTgBKGrns+q9WP5OpO1eKRtI549lpXCY
-k/dDq1ggrSiATHoiaPDBfkZbVSKUBXskr0SRUKQ8bfPBljUTaIfMcgiaC4TRD7Bc
-KNfZbklYfuERTNjY00pRGtL4QdXGeMXoD/mLJNl7EyBOAqAJc+80qX1DS3C9Uql/
-3KWbBXoiqXt8rkU142IRZQ8v3Qjuh8TPvk4y07XgF4A/8+dNQXDqTFFzrSjgSFxi
-orVGmrRGY02te5R7DyLk9dnCLiaMew==
-=b18O
------END PGP SIGNATURE-----
-
---LSp5EJdfMPwZcMS1--
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/r8a7790-lager.dts b/arch/arm/boot/dts/r8a7790-lager.dts
+index e3d27783b6b56b42..b8bbaa87a5ab7c99 100644
+--- a/arch/arm/boot/dts/r8a7790-lager.dts
++++ b/arch/arm/boot/dts/r8a7790-lager.dts
+@@ -670,11 +670,19 @@
+ 		};
+ 	};
+ 
++	cec_clock: cec-clock {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <12000000>;
++	};
++
+ 	hdmi@39 {
+ 		compatible = "adi,adv7511w";
+ 		reg = <0x39>;
+ 		interrupt-parent = <&gpio1>;
+ 		interrupts = <15 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&cec_clock>;
++		clock-names = "cec";
+ 
+ 		adi,input-depth = <8>;
+ 		adi,input-colorspace = "rgb";
+-- 
+2.15.1
