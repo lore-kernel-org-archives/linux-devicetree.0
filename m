@@ -1,122 +1,129 @@
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH v5 0/6] iommu/arm-smmu: Add runtime pm/sleep support
-Date: Tue, 09 Jan 2018 12:23:23 +0100
-Message-ID: <1568773.GtDhb2pIXv@aspire.rjw.lan>
-References: <1515492109-753-1-git-send-email-vivek.gautam@codeaurora.org>
+From: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/9] clk: samsung: exynos5433: Add clock flag to support suspend-to-ram
+Date: Tue, 9 Jan 2018 12:44:12 +0100
+Message-ID: <CAJKOXPc2Y0KX=gozGaMfJJM1B2gsPgLQ4rF5_R8wq5F6=Sxc7g@mail.gmail.com>
+References: <CGME20180109075905epcas1p1486543d8fec46f47d9d5ac350d841337@epcas1p1.samsung.com>
+ <1515484746-10656-1-git-send-email-cw00.choi@samsung.com> <1515484746-10656-2-git-send-email-cw00.choi@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1515492109-753-1-git-send-email-vivek.gautam@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vivek Gautam <vivek.gautam@codeaurora.org>
-Cc: joro@8bytes.org, robh+dt@kernel.org, mark.rutland@arm.com, gregkh@linuxfoundation.org, robdclark@gmail.com, will.deacon@arm.com, robin.murphy@arm.com, sboyd@codeaurora.org, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, len.brown@intel.com, pavel@ucw.cz, airlied@linux.ie, sricharan@codeaurora.org, m.szyprowski@samsung.com, architt@codeaurora.org, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1515484746-10656-2-git-send-email-cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, chanwoo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, January 9, 2018 11:01:43 AM CET Vivek Gautam wrote:
-> This series provides the support for turning on the arm-smmu's
-> clocks/power domains using runtime pm. This is done using the
-> recently introduced device links patches, which lets the smmu's
-> runtime to follow the master's runtime pm, so the smmu remains
-> powered only when the masters use it.
-> 
-> It also adds support for Qcom's arm-smmu-v2 variant that
-> has different clocks and power requirements.
-> 
-> Took some reference from the exynos runtime patches [2].
-> 
-> Previous version of the patchset [1].
-> 
-> After much discussion [4] over the use of pm_runtime_get/put() in
-> .unmap op path for the arm-smmu, and after disussing over more than
-> a couple of approaches to address this, we are putting forward the
-> changes *without* using pm_runtime APIs in 'unmap'. Rather, letting
-> the client device take the control of powering on/off the connected
-> iommu through pm_runtime_get(put)_suppliers() APIs for the scnerios
-> when the iommu power can't be directly controlled by clients through
-> device links.
-> Rafael has agreed to export the suppliers APIs [5].
-> 
-> [V5]
->    * Dropped runtime pm calls from "arm_smmu_unmap" op as discussed over
->      the list [4] for the last patch series.
->    * Added a patch to export pm_runtime_get/put_suppliers() APIs to the
->      series as agreed with Rafael [5].
->    * Added the related patch for msm drm iommu layer to use
->      pm_runtime_get/put_suppliers() APIs in msm_mmu_funcs.
->    * Dropped arm-mmu500 clock patch since that would break existing
->      platforms.
->    * Changed compatible 'qcom,msm8996-smmu-v2' to 'qcom,smmu-v2' to reflect
->      the IP version rather than the platform on which it is used.
->      The same IP is used across multiple platforms including msm8996,
->      and sdm845 etc.
->    * Using clock bulk APIs to handle the clocks available to the IP as
->      suggested by Stephen Boyd.
->    * The first patch in v4 version of the patch-series:
->      ("iommu/arm-smmu: Fix the error path in arm_smmu_add_device") has
->      already made it to mainline.
-> 
-> [V4]
->    * Reworked the clock handling part. We now take clock names as data
->      in the driver for supported compatible versions, and loop over them
->      to get, enable, and disable the clocks.
->    * Using qcom,msm8996 based compatibles for bindings instead of a generic
->      qcom compatible.
->    * Refactor MMU500 patch to just add the necessary clock names data and
->      corresponding bindings.
->    * Added the pm_runtime_get/put() calls in .unmap iommu op (fix added by
->      Stanimir on top of previous patch version.
->    * Added a patch to fix error path in arm_smmu_add_device()
->    * Removed patch 3/5 of V3 patch series that added qcom,smmu-v2 bindings.
-> 
-> [V3]
->    * Reworked the patches to keep the clocks init/enabling function
->      separately for each compatible.
-> 
->    * Added clocks bindings for MMU40x/500.
-> 
->    * Added a new compatible for qcom,smmu-v2 implementation and
->      the clock bindings for the same.
-> 
->    * Rebased on top of 4.11-rc1
-> 
-> [V2]
->    * Split the patches little differently.
-> 
->    * Addressed comments.
-> 
->    * Removed the patch #4 [3] from previous post
->      for arm-smmu context save restore. Planning to
->      post this separately after reworking/addressing Robin's
->      feedback.
-> 
->    * Reversed the sequence to disable clocks than enabling.
->      This was required for those cases where the
->      clocks are populated in a dependent order from DT.
-> 
-> [1] https://www.spinics.net/lists/arm-kernel/msg567488.html
-> [2] https://lkml.org/lkml/2016/10/20/70
-> [3] https://patchwork.kernel.org/patch/9389717/
-> [4] https://patchwork.kernel.org/patch/9827825/
-> [5] https://patchwork.kernel.org/patch/10102445/
-> 
-> Sricharan R (3):
->   iommu/arm-smmu: Add pm_runtime/sleep ops
->   iommu/arm-smmu: Invoke pm_runtime during probe, add/remove device
->   iommu/arm-smmu: Add the device_link between masters and smmu
-> 
-> Vivek Gautam (3):
->   base: power: runtime: Export pm_runtime_get/put_suppliers
->   iommu/arm-smmu: Add support for qcom,smmu-v2 variant
->   drm/msm: iommu: Replace runtime calls with runtime suppliers
-> 
->  .../devicetree/bindings/iommu/arm,smmu.txt         |  35 ++++++
->  drivers/base/power/runtime.c                       |   2 +
->  drivers/gpu/drm/msm/msm_iommu.c                    |  16 +--
->  drivers/iommu/arm-smmu.c                           | 124 ++++++++++++++++++++-
->  4 files changed, 163 insertions(+), 14 deletions(-)
+On Tue, Jan 9, 2018 at 8:58 AM, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+> This patch adds the CLK_IS_CRITICAL and CLK_IGNORE_UNUSED flag
+> to some clocks in order to avoid the hang-out in the suspend mode.
+>
+> Signed-off-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Cc: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> ---
+>  drivers/clk/samsung/clk-exynos5433.c | 22 +++++++++++-----------
+>  1 file changed, 11 insertions(+), 11 deletions(-)
+>
+> diff --git a/drivers/clk/samsung/clk-exynos5433.c b/drivers/clk/samsung/clk-exynos5433.c
+> index db270908037a..3dc53cd0c730 100644
+> --- a/drivers/clk/samsung/clk-exynos5433.c
+> +++ b/drivers/clk/samsung/clk-exynos5433.c
+> @@ -583,25 +583,25 @@
+>                         CLK_SET_RATE_PARENT | CLK_IGNORE_UNUSED, 0),
+>         GATE(CLK_ACLK_CAM1_333, "aclk_cam1_333", "div_aclk_cam1_333",
+>                         ENABLE_ACLK_TOP, 13,
+> -                       CLK_SET_RATE_PARENT | CLK_IGNORE_UNUSED, 0),
+> +                       CLK_SET_RATE_PARENT | CLK_IS_CRITICAL, 0),
+>         GATE(CLK_ACLK_CAM1_400, "aclk_cam1_400", "div_aclk_cam1_400",
+>                         ENABLE_ACLK_TOP, 12,
+>                         CLK_SET_RATE_PARENT | CLK_IS_CRITICAL, 0),
+>         GATE(CLK_ACLK_CAM1_552, "aclk_cam1_552", "div_aclk_cam1_552",
+>                         ENABLE_ACLK_TOP, 11,
+> -                       CLK_SET_RATE_PARENT | CLK_IGNORE_UNUSED, 0),
+> +                       CLK_SET_RATE_PARENT | CLK_IS_CRITICAL, 0),
+>         GATE(CLK_ACLK_CAM0_333, "aclk_cam0_333", "div_aclk_cam0_333",
+>                         ENABLE_ACLK_TOP, 10,
+> -                       CLK_SET_RATE_PARENT | CLK_IGNORE_UNUSED, 0),
+> +                       CLK_SET_RATE_PARENT | CLK_IS_CRITICAL, 0),
+>         GATE(CLK_ACLK_CAM0_400, "aclk_cam0_400", "div_aclk_cam0_400",
+>                         ENABLE_ACLK_TOP, 9,
+>                         CLK_SET_RATE_PARENT | CLK_IS_CRITICAL, 0),
+>         GATE(CLK_ACLK_CAM0_552, "aclk_cam0_552", "div_aclk_cam0_552",
+>                         ENABLE_ACLK_TOP, 8,
+> -                       CLK_SET_RATE_PARENT | CLK_IGNORE_UNUSED, 0),
+> +                       CLK_SET_RATE_PARENT | CLK_IS_CRITICAL, 0),
+>         GATE(CLK_ACLK_ISP_DIS_400, "aclk_isp_dis_400", "div_aclk_isp_dis_400",
+>                         ENABLE_ACLK_TOP, 7,
+> -                       CLK_SET_RATE_PARENT | CLK_IGNORE_UNUSED, 0),
+> +                       CLK_SET_RATE_PARENT | CLK_IS_CRITICAL, 0),
+>         GATE(CLK_ACLK_ISP_400, "aclk_isp_400", "div_aclk_isp_400",
+>                         ENABLE_ACLK_TOP, 6,
+>                         CLK_SET_RATE_PARENT | CLK_IS_CRITICAL, 0),
+> @@ -624,11 +624,11 @@
+>
+>         /* ENABLE_SCLK_TOP_CAM1 */
+>         GATE(CLK_SCLK_ISP_SENSOR2, "sclk_isp_sensor2", "div_sclk_isp_sensor2_b",
+> -                       ENABLE_SCLK_TOP_CAM1, 7, 0, 0),
+> +                       ENABLE_SCLK_TOP_CAM1, 7, CLK_IGNORE_UNUSED, 0),
+>         GATE(CLK_SCLK_ISP_SENSOR1, "sclk_isp_sensor1", "div_sclk_isp_sensor1_b",
+>                         ENABLE_SCLK_TOP_CAM1, 6, 0, 0),
+>         GATE(CLK_SCLK_ISP_SENSOR0, "sclk_isp_sensor0", "div_sclk_isp_sensor0_b",
+> -                       ENABLE_SCLK_TOP_CAM1, 5, 0, 0),
+> +                       ENABLE_SCLK_TOP_CAM1, 5, CLK_IGNORE_UNUSED, 0),
 
-I need some time to review the series.
+Marking this and few others related to ISP as ignore_unused or
+is_critical looks like a hacky workaround for wrong topology or
+missing clock users. The real cause should be fixed instead marking
+all the clocks as critical or ignore_unused.
 
-Thanks,
-Rafael
+Best regards,
+Krzysztof
+
+>         GATE(CLK_SCLK_ISP_MCTADC_CAM1, "sclk_isp_mctadc_cam1", "oscclk",
+>                         ENABLE_SCLK_TOP_CAM1, 4, 0, 0),
+>         GATE(CLK_SCLK_ISP_UART_CAM1, "sclk_isp_uart_cam1", "div_sclk_isp_uart",
+> @@ -636,7 +636,7 @@
+>         GATE(CLK_SCLK_ISP_SPI1_CAM1, "sclk_isp_spi1_cam1", "div_sclk_isp_spi1_b",
+>                         ENABLE_SCLK_TOP_CAM1, 1, 0, 0),
+>         GATE(CLK_SCLK_ISP_SPI0_CAM1, "sclk_isp_spi0_cam1", "div_sclk_isp_spi0_b",
+> -                       ENABLE_SCLK_TOP_CAM1, 0, 0, 0),
+> +                       ENABLE_SCLK_TOP_CAM1, 0, CLK_IGNORE_UNUSED, 0),
+>
+>         /* ENABLE_SCLK_TOP_DISP */
+>         GATE(CLK_SCLK_HDMI_SPDIF_DISP, "sclk_hdmi_spdif_disp",
+> @@ -654,7 +654,7 @@
+>                         ENABLE_SCLK_TOP_FSYS, 4, CLK_SET_RATE_PARENT, 0),
+>         GATE(CLK_SCLK_UFSUNIPRO_FSYS, "sclk_ufsunipro_fsys",
+>                         "div_sclk_ufsunipro", ENABLE_SCLK_TOP_FSYS,
+> -                       3, CLK_SET_RATE_PARENT, 0),
+> +                       3, CLK_SET_RATE_PARENT | CLK_IS_CRITICAL, 0),
+>         GATE(CLK_SCLK_USBHOST30_FSYS, "sclk_usbhost30_fsys",
+>                         "div_sclk_usbhost30", ENABLE_SCLK_TOP_FSYS,
+>                         1, CLK_SET_RATE_PARENT, 0),
+> @@ -2982,7 +2982,7 @@ static void __init exynos5433_cmu_peris_init(struct device_node *np)
+>         GATE(CLK_PCLK_AUD_SLIMBUS, "pclk_aud_slimbus", "div_aclk_aud",
+>                         ENABLE_PCLK_AUD, 6, 0, 0),
+>         GATE(CLK_PCLK_AUD_UART, "pclk_aud_uart", "div_aclk_aud",
+> -                       ENABLE_PCLK_AUD, 5, 0, 0),
+> +                       ENABLE_PCLK_AUD, 5, CLK_IS_CRITICAL, 0),
+>         GATE(CLK_PCLK_AUD_PCM, "pclk_aud_pcm", "div_aclk_aud",
+>                         ENABLE_PCLK_AUD, 4, 0, 0),
+>         GATE(CLK_PCLK_AUD_I2S, "pclk_aud_i2s", "div_aclk_aud",
+> @@ -3008,7 +3008,7 @@ static void __init exynos5433_cmu_peris_init(struct device_node *np)
+>         GATE(CLK_SCLK_AUD_SLIMBUS, "sclk_aud_slimbus", "div_sclk_aud_slimbus",
+>                         ENABLE_SCLK_AUD1, 4, 0, 0),
+>         GATE(CLK_SCLK_AUD_UART, "sclk_aud_uart", "div_sclk_aud_uart",
+> -                       ENABLE_SCLK_AUD1, 3, CLK_IGNORE_UNUSED, 0),
+> +                       ENABLE_SCLK_AUD1, 3, CLK_IS_CRITICAL, 0),
+>         GATE(CLK_SCLK_AUD_PCM, "sclk_aud_pcm", "div_sclk_aud_pcm",
+>                         ENABLE_SCLK_AUD1, 2, 0, 0),
+>         GATE(CLK_SCLK_I2S_BCLK, "sclk_i2s_bclk", "ioclk_i2s_bclk",
+> --
+> 1.9.1
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
