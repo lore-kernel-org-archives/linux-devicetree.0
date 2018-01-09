@@ -1,73 +1,119 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv1 2/3] spi: Add spi driver for Socionext Synquacer
- platform
-Date: Tue, 9 Jan 2018 17:41:41 +0000
-Message-ID: <20180109174141.GF11471@sirena.org.uk>
-References: <1515503383-8909-1-git-send-email-jassisinghbrar@gmail.com>
- <1515503448-9025-1-git-send-email-jassisinghbrar@gmail.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="vKFfOv5t3oGVpiF+"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1515503448-9025-1-git-send-email-jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "ASoC: codecs: dmic: Make number of channels configurable" to the asoc tree
+Date: Tue, 09 Jan 2018 17:43:48 +0000
+Message-ID: <E1eYxwC-0006dW-Rc@debutante>
+References: <20180105203957.184883-1-mka@chromium.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180105203957.184883-1-mka@chromium.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthias Kaehlcke <mka@chromium.org>
+Cc: Arnaud Pouliquen <arnaud.pouliquen@st.com>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, huang lin <hl@rock-chips.com>, Brian Norris <briannorris@chromium.org>Arnaud Pouliquen <arnaud.pouliquen@st.com>, linux-kernel@vger.kernel.org, Dylan Reid <dgreid@chromium.org>, Bhumika Goyal <bhumirks@gmail.com>alsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
+The patch
 
---vKFfOv5t3oGVpiF+
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+   ASoC: codecs: dmic: Make number of channels configurable
 
-On Tue, Jan 09, 2018 at 06:40:48PM +0530, jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+has been applied to the asoc tree at
 
-This is basically fine, a couple of style things plus the question I had
-on the bindings:
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
 
-> +++ b/drivers/spi/spi-synquacer.c
-> @@ -0,0 +1,664 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Synquacer HSSPI controller driver
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-Mixing C and C++ style comments on adjacent lines looks messy, just make
-the whole thing C++.
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-> +       speed = xfer->speed_hz ? : spi->max_speed_hz;
-> +       bpw = xfer->bits_per_word ? : spi->bits_per_word;
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-I'm not a big fan of all the ternery operator use in the driver, it's
-not super helpful for legibility.
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-> +	if (sspi->bpw == 8)
-> +		words = xfer->len / 1;
-> +	else if (sspi->bpw == 16)
-> +		words = xfer->len / 2;
-> +	else
-> +		words = xfer->len / 4;
+Thanks,
+Mark
 
-This should be a switch statement; a safety check for invalid values
-wouldn't go amiss either.
+>From 7fb59e940f6225beed0b24cd09e9fad9aebb7565 Mon Sep 17 00:00:00 2001
+From: Matthias Kaehlcke <mka@chromium.org>
+Date: Fri, 5 Jan 2018 12:39:57 -0800
+Subject: [PATCH] ASoC: codecs: dmic: Make number of channels configurable
 
---vKFfOv5t3oGVpiF+
-Content-Type: application/pgp-signature; name="signature.asc"
+The DMIC DAI driver specifies a number of 1 to 8 channels for each DAI.
+The actual number of mics can currently not be configured in the device
+tree or audio glue, but is derived from the min/max channels of the CPU
+and codec DAI. A typical CPU DAI has two or more channels, in consequence
+a single mic is treated as a stereo/multi channel device, even though
+only one channel carries audio data.
 
------BEGIN PGP SIGNATURE-----
+This change adds the option to specify the number of used DMIC channels
+in the device tree. When specified this value overwrites the default
+channels_max value of 8 in the snd_soc_dai_driver struct of the codec.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlpU/tQACgkQJNaLcl1U
-h9DFTQf9FAgzVFX1w6D/dFOUsfcbtbkQWrmWZAAXV30Wxyl+hJnCp6TGnp1rrP72
-NOUfah+YjrtFhAkisxiXRA575kQGklojE6w2PogHjMbijtDy6rVEtg9G6r0rHcGb
-B8wwjgjQFEyO3bmvIW9YoN/pZ8fG56PLCceOxikuknTpISt5opzaSkNtbRHk2BpT
-EHtuDGm/YpFiGMZjaiTvHJv7c3wmvU/tp0Qi/9IfuyVZHlvYid7yVWYNY/73nd82
-ZZ+cGzCPhOCLXzXGP19EhdIj7PliJxX9Ea7x7I6DLj0hZGIIPQINOIFfIiVm9aZS
-l2fBEjcng/1kSV92bSzFaZMWd+l1eQ==
-=hNKz
------END PGP SIGNATURE-----
+Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ Documentation/devicetree/bindings/sound/dmic.txt |  2 ++
+ sound/soc/codecs/dmic.c                          | 24 +++++++++++++++++++++++-
+ 2 files changed, 25 insertions(+), 1 deletion(-)
 
---vKFfOv5t3oGVpiF+--
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/sound/dmic.txt b/Documentation/devicetree/bindings/sound/dmic.txt
+index 54c8ef6498a8..f7bf65611453 100644
+--- a/Documentation/devicetree/bindings/sound/dmic.txt
++++ b/Documentation/devicetree/bindings/sound/dmic.txt
+@@ -7,10 +7,12 @@ Required properties:
+ 
+ Optional properties:
+ 	- dmicen-gpios: GPIO specifier for dmic to control start and stop
++	- num-channels: Number of microphones on this DAI
+ 
+ Example node:
+ 
+ 	dmic_codec: dmic@0 {
+ 		compatible = "dmic-codec";
+ 		dmicen-gpios = <&gpio4 3 GPIO_ACTIVE_HIGH>;
++		num-channels = <1>;
+ 	};
+diff --git a/sound/soc/codecs/dmic.c b/sound/soc/codecs/dmic.c
+index b88a1ee66f80..c88f974ebe3e 100644
+--- a/sound/soc/codecs/dmic.c
++++ b/sound/soc/codecs/dmic.c
+@@ -107,8 +107,30 @@ static const struct snd_soc_codec_driver soc_dmic = {
+ 
+ static int dmic_dev_probe(struct platform_device *pdev)
+ {
++	int err;
++	u32 chans;
++	struct snd_soc_dai_driver *dai_drv = &dmic_dai;
++
++	if (pdev->dev.of_node) {
++		err = of_property_read_u32(pdev->dev.of_node, "num-channels", &chans);
++		if (err && (err != -ENOENT))
++			return err;
++
++		if (!err) {
++			if (chans < 1 || chans > 8)
++				return -EINVAL;
++
++			dai_drv = devm_kzalloc(&pdev->dev, sizeof(*dai_drv), GFP_KERNEL);
++			if (!dai_drv)
++				return -ENOMEM;
++
++			memcpy(dai_drv, &dmic_dai, sizeof(*dai_drv));
++			dai_drv->capture.channels_max = chans;
++		}
++	}
++
+ 	return snd_soc_register_codec(&pdev->dev,
+-			&soc_dmic, &dmic_dai, 1);
++			&soc_dmic, dai_drv, 1);
+ }
+ 
+ static int dmic_dev_remove(struct platform_device *pdev)
+-- 
+2.15.1
