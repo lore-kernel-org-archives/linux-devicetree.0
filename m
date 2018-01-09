@@ -1,119 +1,98 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: codecs: dmic: Make number of channels configurable" to the asoc tree
-Date: Tue, 09 Jan 2018 17:43:48 +0000
-Message-ID: <E1eYxwC-0006dW-Rc@debutante>
-References: <20180105203957.184883-1-mka@chromium.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180105203957.184883-1-mka@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: Arnaud Pouliquen <arnaud.pouliquen@st.com>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, huang lin <hl@rock-chips.com>, Brian Norris <briannorris@chromium.org>Arnaud Pouliquen <arnaud.pouliquen@st.com>, linux-kernel@vger.kernel.org, Dylan Reid <dgreid@chromium.org>, Bhumika Goyal <bhumirks@gmail.com>alsa-devel@alsa-project.org
+From: Andreas Kemnade <andreas@kemnade.info>
+Subject: Re: [Letux-kernel] [PATCH v5 3/5] misc serdev: Add w2sg0004 (gps
+ receiver) power control driver
+Date: Tue, 9 Jan 2018 18:43:47 +0100
+Message-ID: <20180109184347.28ba0a6e@aktux>
+References: <cover.1512114576.git.hns@goldelico.com>
+ <5494ad34b39a6c62601e3747440268dfb3be7d5a.1512114576.git.hns@goldelico.com>
+ <20171222124427.GI3374@localhost>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============6059395284625569922=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20171222124427.GI3374@localhost>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Johan Hovold <johan@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, Jonathan Cameron <jic23@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Tony Lindgren <tony@atomide.com>, "H.
+ Nikolaus Schaller" <hns@goldelico.com>, kernel@pyra-handheld.com, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Thierry Reding <treding@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Kevin Hilman <khilman@baylibre.com>, =?UTF-8?B?QmVub8OudA==?= Cousson <bcousson@baylibre.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-omap@vger.kernel.org, Andreas =?UTF-8?B?RsOkcmJlcg==?= <afaerber@suse.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The patch
+--===============6059395284625569922==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/pEQl1CzGmESId=o.5bEznB6"; protocol="application/pgp-signature"
 
-   ASoC: codecs: dmic: Make number of channels configurable
+--Sig_/pEQl1CzGmESId=o.5bEznB6
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-has been applied to the asoc tree at
+On Fri, 22 Dec 2017 13:44:27 +0100
+Johan Hovold <johan@kernel.org> wrote:
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+[...]
+> I'd suggest reiterating the problem you're trying to solve and
+> enumerating the previously discussed potential solutions in order to
+> find a proper abstraction level for this (before getting lost in
+> implementation details).
+>=20
+The main point here is in short words: Having a device powered on or off
+when the uart it is attached to, is used or not used anymore,
+so the already available userspace applications do not need to be changed.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+I digged out a bit around:
+alternative aproaches were:
+adding hooks to the uart/tty layer:
+https://marc.info/?l=3Dlinux-kernel&m=3D143333222014616&w=3D2
+https://marc.info/?l=3Ddevicetree&m=3D143130955414580&w=3D2
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+I do not find it right now in my archive:
+adding a virtual gpio for dtr to the omap_serial driver.
+The driver behind the virtual io would then handle pm. One reason it was
+rejected was that the devicetree should only contain real hardware and
+not virtual stuff.
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+Regards,
+Andreas
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+--Sig_/pEQl1CzGmESId=o.5bEznB6
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-Thanks,
-Mark
+-----BEGIN PGP SIGNATURE-----
 
->From 7fb59e940f6225beed0b24cd09e9fad9aebb7565 Mon Sep 17 00:00:00 2001
-From: Matthias Kaehlcke <mka@chromium.org>
-Date: Fri, 5 Jan 2018 12:39:57 -0800
-Subject: [PATCH] ASoC: codecs: dmic: Make number of channels configurable
+iQIzBAEBCAAdFiEEjNsZ3bHwkfCKTen3ifE1O/ULBjQFAlpU/1MACgkQifE1O/UL
+BjTciw/8C3LRMdrbI6LWSLDOq8cLJB3ClyMWSG1gVpo4+lXr6yDw0jkBOo4GUJU+
+PVngZhi/q5aJWD65I84xkJBYphAeVNhmMvWwrPj/RDWg5d8xWIlnY/0qOt6wDQ8r
+eLcr7WzCjp89Uhe23noYyo1ioa+qGiiB+4s33/D/1mfZOWi9cM3nfrVDDpG16g49
+uXyPEOhHUj7CVvhLVE3EQWlHifT2W2xULQ1iIZAq9ip7yEzr/C2t6d0JcfWYD2RW
+qcXVGHptpTi9mM7L+OzKp3Th7SzlZxcqchOw0z3boL85o0gZNRaQ5hK5UHmYTORm
+zvBcYD4s6RemnQtsOmtF2xGLc9oU2cTVS59kqxOiZE5KYyn17c/ftAbXS8Q5YLTz
+bCI9Q4UPmLyEW1KFo8UbRIXJHy0OA3op17JFCkHTUFKOWqYZ4DXrhgfGr/CYAj4j
+DHk2m74Z4QerCQoNLNLyAWduslMBmPzwPqBpRrM0/bbmSjlc9DZa5JxhH+GYoAfZ
+4slaEVYwN3iaBn7U9MSB8JE8QQ6ZKL+cM+AUxtj/UnkGdraV5R42Lb7WP2z6Ej+h
+qz7S7QaXIpD+r5yl0OHxVMAKIMcIQYDWOT/X9tzw9sCBLwJRoWeS+CF0wRsMaUit
+vnt5EU/TwyefsoG9dEpUkDYHpO7xRpPeqorPqI1JjfdmAf9gsAs=
+=W8y9
+-----END PGP SIGNATURE-----
 
-The DMIC DAI driver specifies a number of 1 to 8 channels for each DAI.
-The actual number of mics can currently not be configured in the device
-tree or audio glue, but is derived from the min/max channels of the CPU
-and codec DAI. A typical CPU DAI has two or more channels, in consequence
-a single mic is treated as a stereo/multi channel device, even though
-only one channel carries audio data.
+--Sig_/pEQl1CzGmESId=o.5bEznB6--
 
-This change adds the option to specify the number of used DMIC channels
-in the device tree. When specified this value overwrites the default
-channels_max value of 8 in the snd_soc_dai_driver struct of the codec.
 
-Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Acked-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- Documentation/devicetree/bindings/sound/dmic.txt |  2 ++
- sound/soc/codecs/dmic.c                          | 24 +++++++++++++++++++++++-
- 2 files changed, 25 insertions(+), 1 deletion(-)
+--===============6059395284625569922==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
-diff --git a/Documentation/devicetree/bindings/sound/dmic.txt b/Documentation/devicetree/bindings/sound/dmic.txt
-index 54c8ef6498a8..f7bf65611453 100644
---- a/Documentation/devicetree/bindings/sound/dmic.txt
-+++ b/Documentation/devicetree/bindings/sound/dmic.txt
-@@ -7,10 +7,12 @@ Required properties:
- 
- Optional properties:
- 	- dmicen-gpios: GPIO specifier for dmic to control start and stop
-+	- num-channels: Number of microphones on this DAI
- 
- Example node:
- 
- 	dmic_codec: dmic@0 {
- 		compatible = "dmic-codec";
- 		dmicen-gpios = <&gpio4 3 GPIO_ACTIVE_HIGH>;
-+		num-channels = <1>;
- 	};
-diff --git a/sound/soc/codecs/dmic.c b/sound/soc/codecs/dmic.c
-index b88a1ee66f80..c88f974ebe3e 100644
---- a/sound/soc/codecs/dmic.c
-+++ b/sound/soc/codecs/dmic.c
-@@ -107,8 +107,30 @@ static const struct snd_soc_codec_driver soc_dmic = {
- 
- static int dmic_dev_probe(struct platform_device *pdev)
- {
-+	int err;
-+	u32 chans;
-+	struct snd_soc_dai_driver *dai_drv = &dmic_dai;
-+
-+	if (pdev->dev.of_node) {
-+		err = of_property_read_u32(pdev->dev.of_node, "num-channels", &chans);
-+		if (err && (err != -ENOENT))
-+			return err;
-+
-+		if (!err) {
-+			if (chans < 1 || chans > 8)
-+				return -EINVAL;
-+
-+			dai_drv = devm_kzalloc(&pdev->dev, sizeof(*dai_drv), GFP_KERNEL);
-+			if (!dai_drv)
-+				return -ENOMEM;
-+
-+			memcpy(dai_drv, &dmic_dai, sizeof(*dai_drv));
-+			dai_drv->capture.channels_max = chans;
-+		}
-+	}
-+
- 	return snd_soc_register_codec(&pdev->dev,
--			&soc_dmic, &dmic_dai, 1);
-+			&soc_dmic, dai_drv, 1);
- }
- 
- static int dmic_dev_remove(struct platform_device *pdev)
--- 
-2.15.1
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============6059395284625569922==--
