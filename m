@@ -1,46 +1,39 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 5/5] pinctrl: imx6ul: add IOMUXC SNVS pinctrl driver
- for i.MX 6ULL
-Date: Tue, 9 Jan 2018 15:33:57 +0100
-Message-ID: <CACRpkda8TaV+6kknZXFHqpac3qA8RGtDPSJQNjveyzsWFv5Q0Q@mail.gmail.com>
-References: <20180106142553.15322-1-stefan@agner.ch> <20180106142553.15322-6-stefan@agner.ch>
- <CACRpkdYJcS3Ng=uR-iPgJ22ABfbiVENjWGsaWwShUfbg1hU4+g@mail.gmail.com> <CAOMZO5CjCv1Lg6sazyJWS_xZvD6bXhW=1poYMEFUbgodAST5Yg@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 2/2] pinctrl: qcom: Add sdm845 pinctrl driver
+Date: Tue, 9 Jan 2018 15:39:59 +0100
+Message-ID: <CACRpkdba2HTeWGAegPv-32PBKh1qZYnF_1ctPaf3p4chSD8yBQ@mail.gmail.com>
+References: <20180106015104.19143-1-bjorn.andersson@linaro.org>
+ <20180106015104.19143-2-bjorn.andersson@linaro.org> <20180108154403.GO12655@minitux>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOMZO5CjCv1Lg6sazyJWS_xZvD6bXhW=1poYMEFUbgodAST5Yg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Dong Aisheng <aisheng.dong-3arQi8VN3Tc@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bai Ping <ping.bai-3arQi8VN3Tc@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20180108154403.GO12655@minitux>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 9, 2018 at 3:11 PM, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Tue, Jan 9, 2018 at 12:07 PM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+On Mon, Jan 8, 2018 at 4:44 PM, Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+> On Fri 05 Jan 17:51 PST 2018, Bjorn Andersson wrote:
 >
->> Patch applied.
+>> From: Rajendra Nayak <rnayak@codeaurora.org>
 >>
->> I need clear maintainership for Freescale pin controllers.
+>> This adds the pinctrl definitions for the TLMM of SDM845.
 >>
->> Stefan, would you consider making a patch adding you, Dong
->> Aisheng and Shawn Guo as maintainers in
->> MAINTAINERS for
->> drivers/pinctrl/freescale/*
->> Documentation/devicetree/bindings/pinctrl/fsl,*
->> ?
->>
->> I don't know if Shawn want to be added, but he wrote the first
->> version so unless he says explicitly no I think he should be
->> included.
->>
->> Sascha, do you also wanna be included?
+>> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+>> [bjorn: consolidated functions]
+>> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 >
-> I would also like to be included, if possible.
+> Linus,
+>
+> This patch is missing some updates introduced between engineering and
+> production hardware, which I missed this while reviewing the patch.
+>
+> So please don't merge this patch, and forgive me for noise.
 
-The more the merrier :D
+OK waiting for respin. Let's see if the DT bindings get some review
+in the meantime.
 
 Yours,
 Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
