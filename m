@@ -1,69 +1,141 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH 3/4] bcm2835-gpio-exp: Driver for GPIO expander via
- mailbox service
-Date: Tue, 9 Jan 2018 21:15:48 +0100 (CET)
-Message-ID: <1723770444.122196.1515528948685@email.1und1.de>
-References: <cover.1514898134.git.baruch@tkos.co.il>
- <bcac00c71b29c359b59053a30d817a8f17d6731d.1514898134.git.baruch@tkos.co.il>
- <2013811470.181895.1514918984637@email.1und1.de>
- <20180109134135.32i6slkhmqsjnmne@tarshish>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH net-next 1/2 v10] net: ethernet: Add DT bindings for the Gemini ethernet
+Date: Tue,  9 Jan 2018 23:10:52 +0100
+Message-ID: <20180109221053.927-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20180109134135.32i6slkhmqsjnmne@tarshish>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Baruch Siach <baruch@tkos.co.il>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Eric Anholt <eric@anholt.net>, Dave Stevenson <dave.stevenson@raspberrypi.org>, linux-gpio@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, phil@raspberrypi.org
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux-CoA6ZxLDdyEEUmgCuDUIdw@public.gmane.org>
+Cc: Janos Laube <janos.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paulius Zaleckas <paulius.zaleckas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Hans Ulli Kroll <ulli.kroll-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tobias Waldvogel <tobias.waldvogel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Baruch,
+This adds the device tree bindings for the Gemini ethernet
+controller. It is pretty straight-forward, using standard
+bindings and modelling the two child ports as child devices
+under the parent ethernet controller device.
 
-> Baruch Siach <baruch@tkos.co.il> hat am 9. Januar 2018 um 14:41 geschrieben:
-> 
-> 
-> Hi Stefan,
-> 
-> On Tue, Jan 02, 2018 at 07:49:44PM +0100, Stefan Wahren wrote:
-> 
-> [...]
-> 
-> > > +	ret = rpi_firmware_property(gpio->fw, RPI_FIRMWARE_GET_GPIO_CONFIG,
-> > > +				    &get, sizeof(get));
-> > > +	if (ret) {
-> > > +		dev_err(gpio->dev,
-> > > +			"Failed to get GPIO %u config (%d)\n", off, ret);
-> > > +		return ret;
-> > > +	}
-> > 
-> > Shouldn't we also check the in-bound status at get.gpio?
-> 
-> What is the in-bound status value? May you refer me to the documentation?
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Tobias Waldvogel <tobias.waldvogel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Michał Mirosław <mirq-linux-CoA6ZxLDdyEEUmgCuDUIdw@public.gmane.org>
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ChangeLog v9->v10:
+- Resend with the driver.
+ChangeLog v8->v9:
+- Collect Rob's ACK.
+ChangeLog v7->v8:
+- Use ethernet-port@0 and ethernet-port@1 with unit names
+  and following OF graph requirements.
+---
+ .../bindings/net/cortina,gemini-ethernet.txt       | 92 ++++++++++++++++++++++
+ 1 file changed, 92 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/cortina,gemini-ethernet.txt
 
-unfortunately this mailbox property isn't documented here [1]. So please refer to Phil's explanation [2].
+diff --git a/Documentation/devicetree/bindings/net/cortina,gemini-ethernet.txt b/Documentation/devicetree/bindings/net/cortina,gemini-ethernet.txt
+new file mode 100644
+index 000000000000..6c559981d110
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/cortina,gemini-ethernet.txt
+@@ -0,0 +1,92 @@
++Cortina Systems Gemini Ethernet Controller
++==========================================
++
++This ethernet controller is found in the Gemini SoC family:
++StorLink SL3512 and SL3516, also known as Cortina Systems
++CS3512 and CS3516.
++
++Required properties:
++- compatible: must be "cortina,gemini-ethernet"
++- reg: must contain the global registers and the V-bit and A-bit
++  memory areas, in total three register sets.
++- syscon: a phandle to the system controller
++- #address-cells: must be specified, must be <1>
++- #size-cells: must be specified, must be <1>
++- ranges: should be state like this giving a 1:1 address translation
++  for the subnodes
++
++The subnodes represents the two ethernet ports in this device.
++They are not independent of each other since they share resources
++in the parent node, and are thus children.
++
++Required subnodes:
++- port0: contains the resources for ethernet port 0
++- port1: contains the resources for ethernet port 1
++
++Required subnode properties:
++- compatible: must be "cortina,gemini-ethernet-port"
++- reg: must contain two register areas: the DMA/TOE memory and
++  the GMAC memory area of the port
++- interrupts: should contain the interrupt line of the port.
++  this is nominally a level interrupt active high.
++- resets: this must provide an SoC-integrated reset line for
++  the port.
++- clocks: this should contain a handle to the PCLK clock for
++  clocking the silicon in this port
++- clock-names: must be "PCLK"
++
++Optional subnode properties:
++- phy-mode: see ethernet.txt
++- phy-handle: see ethernet.txt
++
++Example:
++
++mdio-bus {
++	(...)
++	phy0: ethernet-phy@1 {
++		reg = <1>;
++		device_type = "ethernet-phy";
++	};
++	phy1: ethernet-phy@3 {
++		reg = <3>;
++		device_type = "ethernet-phy";
++	};
++};
++
++
++ethernet@60000000 {
++	compatible = "cortina,gemini-ethernet";
++	reg = <0x60000000 0x4000>, /* Global registers, queue */
++	      <0x60004000 0x2000>, /* V-bit */
++	      <0x60006000 0x2000>; /* A-bit */
++	syscon = <&syscon>;
++	#address-cells = <1>;
++	#size-cells = <1>;
++	ranges;
++
++	gmac0: ethernet-port@0 {
++		compatible = "cortina,gemini-ethernet-port";
++		reg = <0x60008000 0x2000>, /* Port 0 DMA/TOE */
++		      <0x6000a000 0x2000>; /* Port 0 GMAC */
++		interrupt-parent = <&intcon>;
++		interrupts = <1 IRQ_TYPE_LEVEL_HIGH>;
++		resets = <&syscon GEMINI_RESET_GMAC0>;
++		clocks = <&syscon GEMINI_CLK_GATE_GMAC0>;
++		clock-names = "PCLK";
++		phy-mode = "rgmii";
++		phy-handle = <&phy0>;
++	};
++
++	gmac1: ethernet-port@1 {
++		compatible = "cortina,gemini-ethernet-port";
++		reg = <0x6000c000 0x2000>, /* Port 1 DMA/TOE */
++		      <0x6000e000 0x2000>; /* Port 1 GMAC */
++		interrupt-parent = <&intcon>;
++		interrupts = <2 IRQ_TYPE_LEVEL_HIGH>;
++		resets = <&syscon GEMINI_RESET_GMAC1>;
++		clocks = <&syscon GEMINI_CLK_GATE_GMAC1>;
++		clock-names = "PCLK";
++		phy-mode = "rgmii";
++		phy-handle = <&phy1>;
++	};
++};
+-- 
+2.14.3
 
-I assume gpio_get_config.gpio of the response would be 0x80000000 in case of an invalid request. But i didn't test it yet.
-
-This was my solution [3] for the RPI_FIRMWARE_GET_CUSTOMER_OTP. But it hadn't been reviewed yet.
-
-Stefan
-
-[1] - https://github.com/raspberrypi/firmware/wiki/Mailbox-property-interface
-[2] - http://lists.infradead.org/pipermail/linux-rpi-kernel/2018-January/007237.html
-[3] - https://github.com/lategoodbye/rpi-zero/blob/bcm2835-otp/drivers/nvmem/raspberrypi-otp.c#L61
-
-> 
-> > And in all the other gpio ops?
-> 
-> Thanks,
-> baruch
-> 
-> -- 
->      http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
-> =}------------------------------------------------ooO--U--Ooo------------{=
->    - baruch@tkos.co.il - tel: +972.52.368.4656, http://www.tkos.co.il -
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
