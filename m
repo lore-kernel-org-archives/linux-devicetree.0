@@ -1,111 +1,55 @@
-From: Hugues FRUCHET <hugues.fruchet-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH v5 0/5] Add OV5640 parallel interface and RGB565/YUYV
- support
-Date: Tue, 9 Jan 2018 08:48:15 +0000
-Message-ID: <a02789f0-d41c-7dfb-406c-fe29ccc0dc9e@st.com>
-References: <1514973452-10464-1-git-send-email-hugues.fruchet@st.com>
- <TY1PR06MB0895C74B45AF75CEB9F7AA4BC0130@TY1PR06MB0895.apcprd06.prod.outlook.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v4 2/3] dt-bindings: usb: renesas_usbhs: Add support for
+ RZ/A1
+Date: Tue, 9 Jan 2018 10:01:02 +0100
+Message-ID: <20180109090101.ggn56dgrzyw5xihc@verge.net.au>
+References: <20180108123055.64890-1-chris.brandt@renesas.com>
+ <20180108123055.64890-3-chris.brandt@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <TY1PR06MB0895C74B45AF75CEB9F7AA4BC0130-/PRLmSCtZ16EeHdvShrxA20DtJ1/0DrXvxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
-Content-Language: en-US
-Content-ID: <20E34881DCD7A44395399259ABB7969D-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180108123055.64890-3-chris.brandt@renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Chris Brandt <chris.brandt@renesas.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgRmFicml6aW8sDQoNCkhhcHB5IHRvIHNlZSB0aGF0IHRoaXMgcGF0Y2ggc2VyaWVzIGlzIG9m
-IGludGVyZXN0IDspDQoNCkFzIHlvdSBjYW4gc2VlIGluIG1haWwgdGhyZWFkLCBNYXhpbWUgUmlw
-YXJkIGlzIGFsc28gdGVzdGluZyBpdDoNCmh0dHBzOi8vd3d3Lm1haWwtYXJjaGl2ZS5jb20vbGlu
-dXgtbWVkaWFAdmdlci5rZXJuZWwub3JnL21zZzEyNDMyMi5odG1sDQoNCkZvciBCVDY1NiBzdXBw
-b3J0LCBpdCB3YXMgbm90IGluaXRpYWxseSBwbGFubmVkIGJ1dCBpdCBzZWVtcyANCnN0cmFpZ2h0
-Zm9yd2FyZCB0byBjb2RlIGl0LCBhbmQgYW55d2F5IEkgaGF2ZSB0byBhZGQgSlBFRyBzdXBwb3J0
-LCBzbyBJIA0KY291bGQgYWRkIEJUNjU2IHN1cHBvcnQgaW4gbmV4dCBwYXRjaCBzZXJpZXMuDQoN
-CkZvciB5b3VyIHN5bXB0b20sIEkgd291bGQgc2F5IHNhbWUgYXMgSSBzYWlkIHRvIE1heGltZSwg
-Y2hlY2sgZmlyc3QgdGhlIA0KcG9sYXJpdHkgb2Ygc3luYyBzaWduYWxzIChoeXNuYy92eXNuYy9w
-Y2xrKSBiZXR3ZWVuIElTUCBhbmQgT1Y1NjQwLg0KTm90ZSBhbHNvIHRoYXQgc2V2ZXJhbCBmcmFt
-ZXMgYXJlIG5lZWRlZCB0byBnZXQgYSBub24tYmxhY2sgcGljdHVyZS4NCllvdSBjYW4gYWxzbyB1
-c2UgdGhlIGNvbG9yYmFyIHRlc3QgdG8gdmFsaWRhdGUgYnVzIGNvbm5lY3Rpb24gYmV0d2VlbiAN
-CklTUCBhbmQgc2Vuc29yLg0KDQpIZXJlIGFyZSB0aGUgeWF2dGEgY29tbWFuZHMgdGhhdCBJJ20g
-Y29tbW9ubHkgdXNpbmc6DQoNCiogZ3JhYiBRVkdBIFJHQjU2NSByYXcgZnJhbWUgKG5vdGUgdGhl
-IHNraXA9MTAgdG8gZ2V0IGEgY29ycmVjdCBpbWFnZSkNCnlhdnRhIC1zIDMyMHgyNDAgLW4gMyAt
-LWNhcHR1cmU9MTMgLS1za2lwPTEwIC0tZm9ybWF0PVJHQjU2NSAvZGV2L3ZpZGVvMCANCi0tZmls
-ZT1ncmFiLTMyMHgyNDAtcmdiNTY1LSMucmF3DQoNCiogZ3JhYiBRVkdBIFlVViBmcmFtZQ0KeWF2
-dGEgLXMgMzIweDI0MCAtbiAzIC0tY2FwdHVyZT0xMyAtLXNraXA9MTAgLS1mb3JtYXQ9WVVZViAv
-ZGV2L3ZpZGVvMCANCi0tZmlsZT1ncmFiLTMyMHgyNDAteXV5di0jLnJhdw0KDQoqIGdyYWIgUVZH
-QSBjb2xvcmJhciBSR0I1NjUgcmF3IGZyYW1lDQp5YXZ0YSAtcyAzMjB4MjQwIC1uIDMgLXcgJzB4
-MDA5ZjA5MDMgMScgLS1jYXB0dXJlPTEgLS1mb3JtYXQ9UkdCNTY1IA0KL2Rldi92aWRlbzAgLS1m
-aWxlPWdyYWItY29sb3JiYXItMzIweDI0MC1yZ2I1NjUtIy5yYXcNCg0KKiBkaXNhYmxlIGNvbG9y
-YmFycw0KeWF2dGEgLXMgMzIweDI0MCAtbiAzIC13ICcweDAwOWYwOTAzIDAnIC9kZXYvdmlkZW8w
-DQoNCg0KSG9wZSB0aGlzIHdpbGwgaGVscCAhDQoNCkJlc3QgcmVnYXJkcywNCkh1Z3Vlcy4NCg0K
-T24gMDEvMDgvMjAxOCAwOTo1NCBQTSwgRmFicml6aW8gQ2FzdHJvIHdyb3RlOg0KPiBIZWxsbyBI
-dWd1ZXMsDQo+IA0KPiB0aGFuayB5b3UgZm9yIHRoZSBwYXRjaCBzZXJpZXMuDQo+IEkgYW0gaGF2
-aW5nIGEgZ28gd2l0aCB5b3VyIHBhdGNoZXMsIGFuZCBhbHRob3VnaCB0aGV5IHNlZW0gYWxyaWdo
-dCwgSSBkb24ndCBzZWVtIHRvIGJlIGFibGUgdG8gZ3JhYiBhIG5vbi1ibGFjayBwaWN0dXJlIG9u
-IHRoZSBpV2F2ZSBpd2cyMGQgaW4gcGxhaW4gRFZQIG1vZGUsIGJ1dCBpZiBJIHN3aXRjaCB0byBC
-VDY1NiBqdXN0IGJ5IHNldHRpbmcgcmVnaXN0ZXIgMHg0NzMwIHRvIDB4MDEgKEkga25vdywgaXQn
-cyBhIG5hc3R5IGhhY2suLi4pIEkgY2FuIGdldCBzb21ldGhpbmcgc2Vuc2libGUgb3V0Lg0KPiAN
-Cj4gQXQgdGhlIG1vbWVudCB0aGVyZSBpcyBubyBwcm9wZXIgQlQ2NTYgc3VwcG9ydCBpbiB0aGUg
-ZHJpdmVyLCBJIHdhcyB3b25kZXJpbmcgaWYgeW91IGhhdmUgYW55IHBsYW5zIHRvIGVuaGFuY2Ug
-dGhlIG92NTY0MCBkcml2ZXIgYSBsaXR0bGUgYml0IGZ1cnRoZXIgdG8gYWRkIHByb3BlciBCVDY1
-NiBzdXBwb3J0IGFzIGl0IG1heSBiZSBjb252ZW5pZW50Lg0KPiANCj4gRG8geW91IGtub3cgaWYg
-c29tZW9uZSBlbHNlIHdhcyBhYmxlIHRvIGdldCBEVlAgdG8gd29yayBieSBtZWFucyBvZiB0aGlz
-IHBhdGNoIHNlcmllcyBvbiBhIG5vbi1TVE0zMiBwbGF0Zm9ybT8NCj4gDQo+IFRoYW5rcywNCj4g
-RmFicml6aW8NCj4gDQo+IA0KPj4gU3ViamVjdDogW1BBVENIIHY1IDAvNV0gQWRkIE9WNTY0MCBw
-YXJhbGxlbCBpbnRlcmZhY2UgYW5kIFJHQjU2NS9ZVVlWIHN1cHBvcnQNCj4+DQo+PiBFbmhhbmNl
-IE9WNTY0MCBDU0kgZHJpdmVyIHRvIHN1cHBvcnQgYWxzbyBEVlAgcGFyYWxsZWwgaW50ZXJmYWNl
-Lg0KPj4gQWRkIFJHQjU2NSAoTEUgJiBCRSkgYW5kIFlVVjQyMiBZVVlWIGZvcm1hdCBpbiBhZGRp
-dGlvbiB0byBleGlzdGluZw0KPj4gWVVWNDIyIFVZVlkgZm9ybWF0Lg0KPj4gU29tZSBvdGhlciBp
-bXByb3ZlbWVudHMgb24gY2hpcCBpZGVudGlmaWVyIGNoZWNrIGFuZCByZW1vdmFsDQo+PiBvZiB3
-YXJuaW5ncyBpbiBwb3dlcmluZyBwaGFzZSBhcm91bmQgZ3BpbyBoYW5kbGluZy4NCj4+DQo+PiA9
-PT09PT09PT09PQ0KPj4gPSBoaXN0b3J5ID0NCj4+ID09PT09PT09PT09DQo+PiB2ZXJzaW9uIDU6
-DQo+PiAgICAtIFJlZmluZSBiaW5kaW5ncyBhcyBwZXIgU2FrYXJpIHN1Z2dlc3Rpb246DQo+PiAg
-ICAgIGh0dHBzOi8vd3d3Lm1haWwtYXJjaGl2ZS5jb20vbGludXgtbWVkaWFAdmdlci5rZXJuZWwu
-b3JnL21zZzEyNDA0OC5odG1sDQo+Pg0KPj4gdmVyc2lvbiA0Og0KPj4gICAgLSBSZWZpbmUgYmlu
-ZGluZ3MgYXMgcGVyIFNha2FyaSBzdWdnZXN0aW9uOg0KPj4gICAgICBodHRwczovL3d3dy5tYWls
-LWFyY2hpdmUuY29tL2xpbnV4LW1lZGlhQHZnZXIua2VybmVsLm9yZy9tc2cxMjM2MDkuaHRtbA0K
-Pj4gICAgLSBQYXJhbGxlbCBwb3J0IGNvbnRyb2wgbGluZXMgcG9sYXJpdHkgY2FuIG5vdyBiZSBj
-b25maWd1cmVkIHRocm91Z2gNCj4+ICAgICAgZGV2aWNldHJlZQ0KPj4NCj4+IHZlcnNpb24gMzoN
-Cj4+ICAgIC0gTW92ZSBjaGlwIGlkZW50aWZpZXIgY2hlY2sgYXQgcHJvYmUgYWNjb3JkaW5nIHRv
-IEZhYmlvIEVzdGV2YW0gY29tbWVudDoNCj4+ICAgICAgaHR0cHM6Ly93d3cubWFpbC1hcmNoaXZl
-LmNvbS9saW51eC1tZWRpYUB2Z2VyLmtlcm5lbC5vcmcvbXNnMTIyNTc1Lmh0bWwNCj4+ICAgIC0g
-VXNlIDE2IGJpdHMgcmVnaXN0ZXIgcmVhZCBmb3IgdGhpcyBjaGVjayBhcyBwZXIgU3RldmUgTG9u
-Z2VyYmVhbSBjb21tZW50Og0KPj4gICAgICBodHRwczovL3d3dy5tYWlsLWFyY2hpdmUuY29tL2xp
-bnV4LW1lZGlhQHZnZXIua2VybmVsLm9yZy9tc2cxMjI2OTIuaHRtbA0KPj4gICAgLSBVcGRhdGUg
-YmluZGluZ3MgdG8gZG9jdW1lbnQgcGFyYWxsZWwgbW9kZSBzdXBwb3J0IGFzIHBlciBGYWJpbyBF
-c3RldmFtIGNvbW1lbnQ6DQo+PiAgICAgIGh0dHBzOi8vd3d3Lm1haWwtYXJjaGl2ZS5jb20vbGlu
-dXgtbWVkaWFAdmdlci5rZXJuZWwub3JnL21zZzEyMjU3Ni5odG1sDQo+PiAgICAtIEVuYWJsZSB0
-aGUgd2hvbGUgMTAgYml0cyBwYXJhbGxlbCBvdXRwdXQgYW5kIGRvY3VtZW50IDgvMTAgYml0cyBz
-dXBwb3J0DQo+PiAgICAgIGluIG92NTY0MF9zZXRfc3RyZWFtX2R2cCgpIHRvIGFuc3dlciB0byBT
-dGV2ZSBMb25nZXJiZWFtIGNvbW1lbnQ6DQo+PiAgICAgIGh0dHBzOi8vd3d3Lm1haWwtYXJjaGl2
-ZS5jb20vbGludXgtbWVkaWFAdmdlci5rZXJuZWwub3JnL21zZzEyMjY5My5odG1sDQo+Pg0KPj4g
-dmVyc2lvbiAyOg0KPj4gICAgLSBGaXggY29tbWVudHMgZnJvbSBTYWthcmkgQWlsdXM6DQo+PiAg
-ICAgIGh0dHBzOi8vd3d3Lm1haWwtYXJjaGl2ZS5jb20vbGludXgtbWVkaWFAdmdlci5rZXJuZWwu
-b3JnL21zZzEyMjI1OS5odG1sDQo+PiAgICAtIFJldmlzaXQgb3Y1NjQwX3NldF9zdHJlYW1fZHZw
-KCkgdG8gb25seSBjb25maWd1cmUgRFZQIGF0IHN0cmVhbW9uDQo+PiAgICAtIFJldmlzaXQgb3Y1
-NjQwX3NldF9zdHJlYW1fZHZwKCkgaW1wbGVtZW50YXRpb24gd2l0aCBmZXdlciByZWdpc3RlciBz
-ZXR0aW5ncw0KPj4NCj4+IHZlcnNpb24gMToNCj4+ICAgIC0gSW5pdGlhbCBzdWJtaXNzaW9uDQo+
-Pg0KPj4gSHVndWVzIEZydWNoZXQgKDUpOg0KPj4gICAgbWVkaWE6IG92NTY0MDogc3dpdGNoIHRv
-IGdwaW9kX3NldF92YWx1ZV9jYW5zbGVlcCgpDQo+PiAgICBtZWRpYTogb3Y1NjQwOiBjaGVjayBj
-aGlwIGlkDQo+PiAgICBtZWRpYTogZHQtYmluZGluZ3M6IG92NTY0MDogcmVmaW5lIENTSS0yIGFu
-ZCBhZGQgcGFyYWxsZWwgaW50ZXJmYWNlDQo+PiAgICBtZWRpYTogb3Y1NjQwOiBhZGQgc3VwcG9y
-dCBvZiBEVlAgcGFyYWxsZWwgaW50ZXJmYWNlDQo+PiAgICBtZWRpYTogb3Y1NjQwOiBhZGQgc3Vw
-cG9ydCBvZiBSR0I1NjUgYW5kIFlVWVYgZm9ybWF0cw0KPj4NCj4+ICAgLi4uL2RldmljZXRyZWUv
-YmluZGluZ3MvbWVkaWEvaTJjL292NTY0MC50eHQgICAgICAgfCAgNDYgKystDQo+PiAgIGRyaXZl
-cnMvbWVkaWEvaTJjL292NTY0MC5jICAgICAgICAgICAgICAgICAgICAgICAgIHwgMzI1ICsrKysr
-KysrKysrKysrKysrKy0tLQ0KPj4gICAyIGZpbGVzIGNoYW5nZWQsIDMyNCBpbnNlcnRpb25zKCsp
-LCA0NyBkZWxldGlvbnMoLSkNCj4+DQo+PiAtLQ0KPj4gMS45LjENCj4+DQo+PiAtLQ0KPj4gVG8g
-dW5zdWJzY3JpYmUgZnJvbSB0aGlzIGxpc3Q6IHNlbmQgdGhlIGxpbmUgInVuc3Vic2NyaWJlIGRl
-dmljZXRyZWUiIGluDQo+PiB0aGUgYm9keSBvZiBhIG1lc3NhZ2UgdG8gbWFqb3Jkb21vQHZnZXIu
-a2VybmVsLm9yZw0KPj4gTW9yZSBtYWpvcmRvbW8gaW5mbyBhdCAgaHR0cDovL3ZnZXIua2VybmVs
-Lm9yZy9tYWpvcmRvbW8taW5mby5odG1sDQo+IA0KPiANCj4gDQo+IFJlbmVzYXMgRWxlY3Ryb25p
-Y3MgRXVyb3BlIEx0ZCwgRHVrZXMgTWVhZG93LCBNaWxsYm9hcmQgUm9hZCwgQm91cm5lIEVuZCwg
-QnVja2luZ2hhbXNoaXJlLCBTTDggNUZILCBVSy4gUmVnaXN0ZXJlZCBpbiBFbmdsYW5kICYgV2Fs
-ZXMgdW5kZXIgUmVnaXN0ZXJlZCBOby4gMDQ1ODY3MDkuDQo+IA==
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Mon, Jan 08, 2018 at 07:30:54AM -0500, Chris Brandt wrote:
+> Document support for RZ/A1 SoCs
+> 
+> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+
+> ---
+> v4:
+>  * Re-added "renesas,usbhs-r7s72100"
+> v3:
+>  * Removed "renesas,usbhs-r7s72100"
+> v2:
+>  * Added Reviewed-by
+> ---
+>  Documentation/devicetree/bindings/usb/renesas_usbhs.txt | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
+> index 47394ab788e3..d060172f1529 100644
+> --- a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
+> +++ b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
+> @@ -13,8 +13,10 @@ Required properties:
+>  	- "renesas,usbhs-r8a7795" for r8a7795 (R-Car H3) compatible device
+>  	- "renesas,usbhs-r8a7796" for r8a7796 (R-Car M3-W) compatible device
+>  	- "renesas,usbhs-r8a77995" for r8a77995 (R-Car D3) compatible device
+> +	- "renesas,usbhs-r7s72100" for r7s72100 (RZ/A1) compatible device
+>  	- "renesas,rcar-gen2-usbhs" for R-Car Gen2 or RZ/G1 compatible devices
+>  	- "renesas,rcar-gen3-usbhs" for R-Car Gen3 compatible device
+> +	- "renesas,rza1-usbhs" for RZ/A1 compatible device
+>  
+>  	When compatible with the generic version, nodes must list the
+>  	SoC-specific version corresponding to the platform first followed
+> -- 
+> 2.15.1
+> 
+> 
