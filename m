@@ -1,104 +1,56 @@
-From: Lucas Stach <l.stach@pengutronix.de>
-Subject: Re: [PATCH 1/7] ARM: imx: add timer stop flag to ARM power off state
-Date: Tue, 09 Jan 2018 15:04:29 +0100
-Message-ID: <1515506669.12538.31.camel@pengutronix.de>
-References: <20180102164223.15230-1-stefan@agner.ch>
-         <20180109092232.GA26312@b29396-OptiPlex-7040>
-         <AM3PR04MB13155287E5AAAF5407AF68A6F5100@AM3PR04MB1315.eurprd04.prod.outlook.com>
-         <1515492803.12538.29.camel@pengutronix.de>
-         <bacee8fe00b0ab54dfa6692bfc956ffd@agner.ch>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 5/5] pinctrl: imx6ul: add IOMUXC SNVS pinctrl driver
+ for i.MX 6ULL
+Date: Tue, 9 Jan 2018 15:07:47 +0100
+Message-ID: <CACRpkdYJcS3Ng=uR-iPgJ22ABfbiVENjWGsaWwShUfbg1hU4+g@mail.gmail.com>
+References: <20180106142553.15322-1-stefan@agner.ch>
+ <20180106142553.15322-6-stefan@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <bacee8fe00b0ab54dfa6692bfc956ffd@agner.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Agner <stefan@agner.ch>
-Cc: Anson Huang <anson.huang@nxp.com>, Dong Aisheng <dongas86@gmail.com>, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, dl-linux-imx <linux-imx@nxp.com>, kernel@pengutronix.de, Fabio Estevam <fabio.estevam@nxp.com>, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180106142553.15322-6-stefan@agner.ch>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stefan Agner <stefan@agner.ch>, Dong Aisheng <aisheng.dong@nxp.com>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Bai Ping <ping.bai@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, den 09.01.2018, 14:37 +0100 schrieb Stefan Agner:
-> On 2018-01-09 11:13, Lucas Stach wrote:
-> > Am Dienstag, den 09.01.2018, 09:25 +0000 schrieb Anson Huang:
-> > > 
-> > > Best Regards!
-> > > Anson Huang
-> > > 
-> > > 
-> > > > -----Original Message-----
-> > > > From: Dong Aisheng [mailto:dongas86@gmail.com]
-> > > > Sent: 2018-01-09 5:23 PM
-> > > > To: Stefan Agner <stefan@agner.ch>
-> > > > Cc: shawnguo@kernel.org; kernel@pengutronix.de; Fabio Estevam
-> > > > <fabio.estevam@nxp.com>; robh+dt@kernel.org; mark.rutland@arm.c
-> > > > om;
-> > > > linux-arm-kernel@lists.infradead.org; devicetree@vger.kernel.or
-> > > > g;
-> > > > linux-
-> > > > kernel@vger.kernel.org; Anson Huang <anson.huang@nxp.com>; dl-
-> > > > linux-imx
-> > > > <linux-imx@nxp.com>
-> > > > Subject: Re: [PATCH 1/7] ARM: imx: add timer stop flag to ARM
-> > > > power
-> > > > off state
-> > > > 
-> > > > On Tue, Jan 02, 2018 at 05:42:17PM +0100, Stefan Agner wrote:
-> > > > > When the CPU is in ARM power off state the ARM architected
-> > > > > timers
-> > > > > are
-> > > > > stopped. The flag is already present in the higher power WAIT
-> > > > > mode.
-> > > > > 
-> > > > > This allows to use the ARM generic timer on i.MX 6UL/6ULL
-> > > > > SoC.
-> > > > > Without the flag the kernel freezes when the timer enters the
-> > > > > first
-> > > > > time ARM power off mode.
-> > > > > 
-> > > > > Cc: Anson Huang <anson.huang@nxp.com>
-> > > > > Signed-off-by: Stefan Agner <stefan@agner.ch>
-> > > > 
-> > > > It seems ok at my side.
-> > > > Did you meet the real issue? If yes, how to reproduce?
-> > > > 
-> > > > Both mx6sx and mx6ul are using GPT which do not need that flag,
-> > > > suppose we
-> > > > should remove it, right?
-> > > > Anson can help confirm it.
-> > > 
-> > > For UP system like i.MX6SX, we do NOT enable "cortex-a9-twd-
-> > > timer",
-> > > so local
-> > > timer is NOT used, GPT is used instead, GPT's clock is NOT
-> > > disabled
-> > > when cpuidle,
-> > > so I think we should remove all these Timer stop flag for 6SX
-> > > CPUIDLE.
-> > 
-> > It's correct to set the flag even on UP systems, as the flag means
-> > the
-> > CPU _local_ timer is stopped in this sleep mode. Also there are
-> > systems
-> > out there which are using the TWD on UP, as it operates at a higher
-> > frequency leading to better wakeup granularity.
-> 
-> Documentation/devicetree/bindings/arm/twd.txt states that TWD
-> provides
-> "per-cpu local timer". But as far as I can see TWD still uses SPI
-> interrupts, routed through GIC, so is this the differentiation?
+On Sat, Jan 6, 2018 at 3:25 PM, Stefan Agner <stefan@agner.ch> wrote:
 
-Maybe what I wrote wasn't entirely clear. I completely agree with this
-patch.
+> From: Bai Ping <ping.bai@nxp.com>
+>
+> On i.MX 6ULL, the BOOT_MODEx and TAMPERx pin MUX and CTRL registers
+> are available in a separate IOMUXC_SNVS module. Add support for the
+> IOMUXC_SNVS module to the i.MX 6UL pinctrl driver.
+>
+> Signed-off-by: Bai Ping <ping.bai@nxp.com>
+> Signed-off-by: Stefan Agner <stefan@agner.ch>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-The TWD on Cortex-A9 is a CPU local timer, same as the architected
-timer in later cores. It doesn't provide all the benefits of the
-architected timer (the clock frequency varies with CPU core clock and
-it's not virt capable), but some systems still prefer it over the i.MX
-GPT, as it provides much better wakeup granularity.
+Patch applied.
 
-So annotating the CPU idle states with the timer stop flag is the right
-thing to do. This flag has nothing to with the usage of GPT or TWD on a
-specific system.
+I need clear maintainership for Freescale pin controllers.
 
-Regards,
-Lucas
+Stefan, would you consider making a patch adding you, Dong
+Aisheng and Shawn Guo as maintainers in
+MAINTAINERS for
+drivers/pinctrl/freescale/*
+Documentation/devicetree/bindings/pinctrl/fsl,*
+?
+
+I don't know if Shawn want to be added, but he wrote the first
+version so unless he says explicitly no I think he should be
+included.
+
+Sascha, do you also wanna be included?
+
+Yours,
+Linus Walleij
