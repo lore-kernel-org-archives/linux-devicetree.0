@@ -1,153 +1,122 @@
-From: Archit Taneja <architt@codeaurora.org>
-Subject: Re: [PATCH 04/11] drm/bridge/synopsys: dw-hdmi: Export some PHY
- related functions
-Date: Tue, 9 Jan 2018 16:13:08 +0530
-Message-ID: <6b454804-e910-e8e8-6d2b-5bc25c7a4d4c@codeaurora.org>
-References: <20171230210203.24115-1-jernej.skrabec@siol.net>
- <20171230210203.24115-5-jernej.skrabec@siol.net>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH v5 0/6] iommu/arm-smmu: Add runtime pm/sleep support
+Date: Tue, 09 Jan 2018 12:23:23 +0100
+Message-ID: <1568773.GtDhb2pIXv@aspire.rjw.lan>
+References: <1515492109-753-1-git-send-email-vivek.gautam@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20171230210203.24115-5-jernej.skrabec@siol.net>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jernej Skrabec <jernej.skrabec@siol.net>, maxime.ripard@free-electrons.com, airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org, a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com
-Cc: Jose.Abreu@synopsys.com, devicetree@vger.kernel.org, narmstrong@baylibre.com, mturquette@baylibre.com, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-sunxi@googlegroups.com, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1515492109-753-1-git-send-email-vivek.gautam@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vivek Gautam <vivek.gautam@codeaurora.org>
+Cc: joro@8bytes.org, robh+dt@kernel.org, mark.rutland@arm.com, gregkh@linuxfoundation.org, robdclark@gmail.com, will.deacon@arm.com, robin.murphy@arm.com, sboyd@codeaurora.org, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, len.brown@intel.com, pavel@ucw.cz, airlied@linux.ie, sricharan@codeaurora.org, m.szyprowski@samsung.com, architt@codeaurora.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-CgpPbiAxMi8zMS8yMDE3IDAyOjMxIEFNLCBKZXJuZWogU2tyYWJlYyB3cm90ZToKPiBQYXJ0cyBv
-ZiBQSFkgY29kZSBjb3VsZCBiZSB1c2VmdWwgYWxzbyBmb3IgY3VzdG9tIFBIWXMuIEZvciBleGFt
-cGxlLAo+IEFsbHdpbm5lciBBODNUIGhhcyBjdXN0b20gUEhZIHdoaWNoIGlzIHByb2JhYmx5IFN5
-bm9wc3lzIGdlbjIgUEhZCj4gd2l0aCBmZXcgYWRkaXRpb25hbCBtZW1vcnkgbWFwcGVkIHJlZ2lz
-dGVycywgc28gbW9zdCBvZiB0aGUgU3lub3BzeXMgUEhZCj4gcmVsYXRlZCBjb2RlIGNvdWxkIGJl
-IHJldXNlZC4KPiAKPiBJdCB0dXJucyBvdXQgdGhhdCBldmVuIGNvbXBsZXRlbHkgY3VzdG9tIEhE
-TUkgUEhZcywgc3VjaCBhcyB0aGUgb25lCj4gZm91bmQgaW4gQWxsd2lubmVyIEgzLCBjYW4gcmV1
-c2Ugc29tZSBvZiB0aG9zZSBmdW5jdGlvbnMuIFRoaXMgd291bGQKPiBzdWdnZXN0IHRoYXQgKHNv
-bWU/KSBmdW5jdGlvbnMgZXhwb3J0ZWQgaW4gdGhpcyBjb21taXQgYXJlIGFjdHVhbGx5IHBhcnQK
-PiBvZiBnZW5lcmljIFBIWSBpbnRlcmZhY2UgYW5kIG5vdCByZWFsbHkgc3BlY2lmaWMgdG8gU3lu
-b3BzeXMgUEhZcy4KPiAKPiBFeHBvcnQgdXNlZnVsIFBIWSBmdW5jdGlvbnMuCj4gCj4gU2lnbmVk
-LW9mZi1ieTogSmVybmVqIFNrcmFiZWMgPGplcm5lai5za3JhYmVjQHNpb2wubmV0Pgo+IC0tLQo+
-ICAgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9zeW5vcHN5cy9kdy1oZG1pLmMgfCA0NSArKysrKysr
-KysrKysrKysrKysrKysrLS0tLS0tLS0tCj4gICBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3N5bm9w
-c3lzL2R3LWhkbWkuaCB8ICAyICsrCj4gICBpbmNsdWRlL2RybS9icmlkZ2UvZHdfaGRtaS5oICAg
-ICAgICAgICAgICB8IDEwICsrKysrKysKPiAgIDMgZmlsZXMgY2hhbmdlZCwgNDQgaW5zZXJ0aW9u
-cygrKSwgMTMgZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9i
-cmlkZ2Uvc3lub3BzeXMvZHctaGRtaS5jIGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9zeW5vcHN5
-cy9kdy1oZG1pLmMKPiBpbmRleCA3Y2ExNGQ3MzI1YjUuLjY3NDY3ZDBiNjgzYSAxMDA2NDQKPiAt
-LS0gYS9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3N5bm9wc3lzL2R3LWhkbWkuYwo+ICsrKyBiL2Ry
-aXZlcnMvZ3B1L2RybS9icmlkZ2Uvc3lub3BzeXMvZHctaGRtaS5jCj4gQEAgLTEwMzcsMTkgKzEw
-MzcsMjEgQEAgc3RhdGljIHZvaWQgZHdfaGRtaV9waHlfZW5hYmxlX3N2c3JldChzdHJ1Y3QgZHdf
-aGRtaSAqaGRtaSwgdTggZW5hYmxlKQo+ICAgCQkJIEhETUlfUEhZX0NPTkYwX1NWU1JFVF9NQVNL
-KTsKPiAgIH0KPiAgIAo+IC1zdGF0aWMgdm9pZCBkd19oZG1pX3BoeV9nZW4yX3BkZHEoc3RydWN0
-IGR3X2hkbWkgKmhkbWksIHU4IGVuYWJsZSkKPiArdm9pZCBkd19oZG1pX3BoeV9nZW4yX3BkZHEo
-c3RydWN0IGR3X2hkbWkgKmhkbWksIHU4IGVuYWJsZSkKPiAgIHsKPiAgIAloZG1pX21hc2tfd3Jp
-dGViKGhkbWksIGVuYWJsZSwgSERNSV9QSFlfQ09ORjAsCj4gICAJCQkgSERNSV9QSFlfQ09ORjBf
-R0VOMl9QRERRX09GRlNFVCwKPiAgIAkJCSBIRE1JX1BIWV9DT05GMF9HRU4yX1BERFFfTUFTSyk7
-Cj4gICB9Cj4gK0VYUE9SVF9TWU1CT0xfR1BMKGR3X2hkbWlfcGh5X2dlbjJfcGRkcSk7Cj4gICAK
-PiAtc3RhdGljIHZvaWQgZHdfaGRtaV9waHlfZ2VuMl90eHB3cm9uKHN0cnVjdCBkd19oZG1pICpo
-ZG1pLCB1OCBlbmFibGUpCj4gK3ZvaWQgZHdfaGRtaV9waHlfZ2VuMl90eHB3cm9uKHN0cnVjdCBk
-d19oZG1pICpoZG1pLCB1OCBlbmFibGUpCj4gICB7Cj4gICAJaGRtaV9tYXNrX3dyaXRlYihoZG1p
-LCBlbmFibGUsIEhETUlfUEhZX0NPTkYwLAo+ICAgCQkJIEhETUlfUEhZX0NPTkYwX0dFTjJfVFhQ
-V1JPTl9PRkZTRVQsCj4gICAJCQkgSERNSV9QSFlfQ09ORjBfR0VOMl9UWFBXUk9OX01BU0spOwo+
-ICAgfQo+ICtFWFBPUlRfU1lNQk9MX0dQTChkd19oZG1pX3BoeV9nZW4yX3R4cHdyb24pOwo+ICAg
-Cj4gICBzdGF0aWMgdm9pZCBkd19oZG1pX3BoeV9zZWxfZGF0YV9lbl9wb2woc3RydWN0IGR3X2hk
-bWkgKmhkbWksIHU4IGVuYWJsZSkKPiAgIHsKPiBAQCAtMTA2NSw2ICsxMDY3LDIzIEBAIHN0YXRp
-YyB2b2lkIGR3X2hkbWlfcGh5X3NlbF9pbnRlcmZhY2VfY29udHJvbChzdHJ1Y3QgZHdfaGRtaSAq
-aGRtaSwgdTggZW5hYmxlKQo+ICAgCQkJIEhETUlfUEhZX0NPTkYwX1NFTERJUElGX01BU0spOwo+
-ICAgfQo+ICAgCj4gK3ZvaWQgZHdfaGRtaV9waHlfZ2VuMl9yZXNldChzdHJ1Y3QgZHdfaGRtaSAq
-aGRtaSwgdTggZW5hYmxlKQo+ICt7Cj4gKwloZG1pX21hc2tfd3JpdGViKGhkbWksIGVuYWJsZSwg
-SERNSV9NQ19QSFlSU1RaLAo+ICsJCQkgSERNSV9NQ19QSFlSU1RaX1BIWVJTVFpfT0ZGU0VULAo+
-ICsJCQkgSERNSV9NQ19QSFlSU1RaX1BIWVJTVFpfTUFTSyk7Cj4gK30KPiArRVhQT1JUX1NZTUJP
-TF9HUEwoZHdfaGRtaV9waHlfZ2VuMl9yZXNldCk7Cj4gKwo+ICt2b2lkIGR3X2hkbWlfcGh5X3Nl
-dF9zbGF2ZV9hZGRyKHN0cnVjdCBkd19oZG1pICpoZG1pKQo+ICt7Cj4gKwloZG1pX3BoeV90ZXN0
-X2NsZWFyKGhkbWksIDEpOwo+ICsJaGRtaV93cml0ZWIoaGRtaSwgSERNSV9QSFlfSTJDTV9TTEFW
-RV9BRERSX1BIWV9HRU4yLAo+ICsJCSAgICBIRE1JX1BIWV9JMkNNX1NMQVZFX0FERFIpOwo+ICsJ
-aGRtaV9waHlfdGVzdF9jbGVhcihoZG1pLCAwKTsKPiArfQo+ICtFWFBPUlRfU1lNQk9MX0dQTChk
-d19oZG1pX3BoeV9zZXRfc2xhdmVfYWRkcik7CgpTaG91bGQgdGhpcyBiZSBjYWxsZWQgZHdfaGRt
-aV9waHlfZ2VuMl9zZXRfc2xhdmVfYWRkcj8KCkxvb2tzIGdvb2Qgb3RoZXJ3aXNlLiBTYW1lIGZv
-ciBwYXRjaGVzIDMgYW5kIDQgaW4gdGhpcyBzZXJpZXMuCgpUaGFua3MsCkFyY2hpdAoKPiArCj4g
-ICBzdGF0aWMgdm9pZCBkd19oZG1pX3BoeV9wb3dlcl9vZmYoc3RydWN0IGR3X2hkbWkgKmhkbWkp
-Cj4gICB7Cj4gICAJY29uc3Qgc3RydWN0IGR3X2hkbWlfcGh5X2RhdGEgKnBoeSA9IGhkbWktPnBo
-eS5kYXRhOwo+IEBAIC0xMjA0LDE1ICsxMjIzLDEyIEBAIHN0YXRpYyBpbnQgaGRtaV9waHlfY29u
-ZmlndXJlKHN0cnVjdCBkd19oZG1pICpoZG1pKQo+ICAgCQlkd19oZG1pX3BoeV9lbmFibGVfc3Zz
-cmV0KGhkbWksIDEpOwo+ICAgCj4gICAJLyogUEhZIHJlc2V0LiBUaGUgcmVzZXQgc2lnbmFsIGlz
-IGFjdGl2ZSBoaWdoIG9uIEdlbjIgUEhZcy4gKi8KPiAtCWhkbWlfd3JpdGViKGhkbWksIEhETUlf
-TUNfUEhZUlNUWl9QSFlSU1RaLCBIRE1JX01DX1BIWVJTVFopOwo+IC0JaGRtaV93cml0ZWIoaGRt
-aSwgMCwgSERNSV9NQ19QSFlSU1RaKTsKPiArCWR3X2hkbWlfcGh5X2dlbjJfcmVzZXQoaGRtaSwg
-MSk7Cj4gKwlkd19oZG1pX3BoeV9nZW4yX3Jlc2V0KGhkbWksIDApOwo+ICAgCj4gICAJaGRtaV93
-cml0ZWIoaGRtaSwgSERNSV9NQ19IRUFDUEhZX1JTVF9BU1NFUlQsIEhETUlfTUNfSEVBQ1BIWV9S
-U1QpOwo+ICAgCj4gLQloZG1pX3BoeV90ZXN0X2NsZWFyKGhkbWksIDEpOwo+IC0JaGRtaV93cml0
-ZWIoaGRtaSwgSERNSV9QSFlfSTJDTV9TTEFWRV9BRERSX1BIWV9HRU4yLAo+IC0JCSAgICBIRE1J
-X1BIWV9JMkNNX1NMQVZFX0FERFIpOwo+IC0JaGRtaV9waHlfdGVzdF9jbGVhcihoZG1pLCAwKTsK
-PiArCWR3X2hkbWlfcGh5X3NldF9zbGF2ZV9hZGRyKGhkbWkpOwo+ICAgCj4gICAJLyogV3JpdGUg
-dG8gdGhlIFBIWSBhcyBjb25maWd1cmVkIGJ5IHRoZSBwbGF0Zm9ybSAqLwo+ICAgCWlmIChwZGF0
-YS0+Y29uZmlndXJlX3BoeSkKPiBAQCAtMTI1MSwxNSArMTI2NywxNiBAQCBzdGF0aWMgdm9pZCBk
-d19oZG1pX3BoeV9kaXNhYmxlKHN0cnVjdCBkd19oZG1pICpoZG1pLCB2b2lkICpkYXRhKQo+ICAg
-CWR3X2hkbWlfcGh5X3Bvd2VyX29mZihoZG1pKTsKPiAgIH0KPiAgIAo+IC1zdGF0aWMgZW51bSBk
-cm1fY29ubmVjdG9yX3N0YXR1cyBkd19oZG1pX3BoeV9yZWFkX2hwZChzdHJ1Y3QgZHdfaGRtaSAq
-aGRtaSwKPiAtCQkJCQkJICAgICAgdm9pZCAqZGF0YSkKPiArZW51bSBkcm1fY29ubmVjdG9yX3N0
-YXR1cyBkd19oZG1pX3BoeV9yZWFkX2hwZChzdHJ1Y3QgZHdfaGRtaSAqaGRtaSwKPiArCQkJCQkg
-ICAgICAgdm9pZCAqZGF0YSkKPiAgIHsKPiAgIAlyZXR1cm4gaGRtaV9yZWFkYihoZG1pLCBIRE1J
-X1BIWV9TVEFUMCkgJiBIRE1JX1BIWV9IUEQgPwo+ICAgCQljb25uZWN0b3Jfc3RhdHVzX2Nvbm5l
-Y3RlZCA6IGNvbm5lY3Rvcl9zdGF0dXNfZGlzY29ubmVjdGVkOwo+ICAgfQo+ICtFWFBPUlRfU1lN
-Qk9MX0dQTChkd19oZG1pX3BoeV9yZWFkX2hwZCk7Cj4gICAKPiAtc3RhdGljIHZvaWQgZHdfaGRt
-aV9waHlfdXBkYXRlX2hwZChzdHJ1Y3QgZHdfaGRtaSAqaGRtaSwgdm9pZCAqZGF0YSwKPiAtCQkJ
-CSAgIGJvb2wgZm9yY2UsIGJvb2wgZGlzYWJsZWQsIGJvb2wgcnhzZW5zZSkKPiArdm9pZCBkd19o
-ZG1pX3BoeV91cGRhdGVfaHBkKHN0cnVjdCBkd19oZG1pICpoZG1pLCB2b2lkICpkYXRhLAo+ICsJ
-CQkgICAgYm9vbCBmb3JjZSwgYm9vbCBkaXNhYmxlZCwgYm9vbCByeHNlbnNlKQo+ICAgewo+ICAg
-CXU4IG9sZF9tYXNrID0gaGRtaS0+cGh5X21hc2s7Cj4gICAKPiBAQCAtMTI3MSw4ICsxMjg4LDkg
-QEAgc3RhdGljIHZvaWQgZHdfaGRtaV9waHlfdXBkYXRlX2hwZChzdHJ1Y3QgZHdfaGRtaSAqaGRt
-aSwgdm9pZCAqZGF0YSwKPiAgIAlpZiAob2xkX21hc2sgIT0gaGRtaS0+cGh5X21hc2spCj4gICAJ
-CWhkbWlfd3JpdGViKGhkbWksIGhkbWktPnBoeV9tYXNrLCBIRE1JX1BIWV9NQVNLMCk7Cj4gICB9
-Cj4gK0VYUE9SVF9TWU1CT0xfR1BMKGR3X2hkbWlfcGh5X3VwZGF0ZV9ocGQpOwo+ICAgCj4gLXN0
-YXRpYyB2b2lkIGR3X2hkbWlfcGh5X3NldHVwX2hwZChzdHJ1Y3QgZHdfaGRtaSAqaGRtaSwgdm9p
-ZCAqZGF0YSkKPiArdm9pZCBkd19oZG1pX3BoeV9zZXR1cF9ocGQoc3RydWN0IGR3X2hkbWkgKmhk
-bWksIHZvaWQgKmRhdGEpCj4gICB7Cj4gICAJLyoKPiAgIAkgKiBDb25maWd1cmUgdGhlIFBIWSBS
-WCBTRU5TRSBhbmQgSFBEIGludGVycnVwdHMgcG9sYXJpdGllcyBhbmQgY2xlYXIKPiBAQCAtMTI5
-MSw2ICsxMzA5LDcgQEAgc3RhdGljIHZvaWQgZHdfaGRtaV9waHlfc2V0dXBfaHBkKHN0cnVjdCBk
-d19oZG1pICpoZG1pLCB2b2lkICpkYXRhKQo+ICAgCWhkbWlfd3JpdGViKGhkbWksIH4oSERNSV9J
-SF9QSFlfU1RBVDBfSFBEIHwgSERNSV9JSF9QSFlfU1RBVDBfUlhfU0VOU0UpLAo+ICAgCQkgICAg
-SERNSV9JSF9NVVRFX1BIWV9TVEFUMCk7Cj4gICB9Cj4gK0VYUE9SVF9TWU1CT0xfR1BMKGR3X2hk
-bWlfcGh5X3NldHVwX2hwZCk7Cj4gICAKPiAgIHN0YXRpYyBjb25zdCBzdHJ1Y3QgZHdfaGRtaV9w
-aHlfb3BzIGR3X2hkbWlfc3lub3BzeXNfcGh5X29wcyA9IHsKPiAgIAkuaW5pdCA9IGR3X2hkbWlf
-cGh5X2luaXQsCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2Uvc3lub3BzeXMv
-ZHctaGRtaS5oIGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9zeW5vcHN5cy9kdy1oZG1pLmgKPiBp
-bmRleCA5ZDkwZWI5YzQ2ZTUuLmZkMTUwNDMwZDBiMyAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dw
-dS9kcm0vYnJpZGdlL3N5bm9wc3lzL2R3LWhkbWkuaAo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9i
-cmlkZ2Uvc3lub3BzeXMvZHctaGRtaS5oCj4gQEAgLTk1MCw2ICs5NTAsOCBAQCBlbnVtIHsKPiAg
-IAo+ICAgLyogTUNfUEhZUlNUWiBmaWVsZCB2YWx1ZXMgKi8KPiAgIAlIRE1JX01DX1BIWVJTVFpf
-UEhZUlNUWiA9IDB4MDEsCj4gKwlIRE1JX01DX1BIWVJTVFpfUEhZUlNUWl9PRkZTRVQgPSAweDAw
-LAo+ICsJSERNSV9NQ19QSFlSU1RaX1BIWVJTVFpfTUFTSyA9IDB4MDEsCj4gICAKPiAgIC8qIE1D
-X0hFQUNQSFlfUlNUIGZpZWxkIHZhbHVlcyAqLwo+ICAgCUhETUlfTUNfSEVBQ1BIWV9SU1RfQVNT
-RVJUID0gMHgxLAo+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2RybS9icmlkZ2UvZHdfaGRtaS5oIGIv
-aW5jbHVkZS9kcm0vYnJpZGdlL2R3X2hkbWkuaAo+IGluZGV4IDE4MmY4MzI4M2UyNC4uZjVjY2E0
-MzYyMTU0IDEwMDY0NAo+IC0tLSBhL2luY2x1ZGUvZHJtL2JyaWRnZS9kd19oZG1pLmgKPiArKysg
-Yi9pbmNsdWRlL2RybS9icmlkZ2UvZHdfaGRtaS5oCj4gQEAgLTE1OSw1ICsxNTksMTUgQEAgdm9p
-ZCBkd19oZG1pX2F1ZGlvX2Rpc2FibGUoc3RydWN0IGR3X2hkbWkgKmhkbWkpOwo+ICAgLyogUEhZ
-IGNvbmZpZ3VyYXRpb24gKi8KPiAgIHZvaWQgZHdfaGRtaV9waHlfaTJjX3dyaXRlKHN0cnVjdCBk
-d19oZG1pICpoZG1pLCB1bnNpZ25lZCBzaG9ydCBkYXRhLAo+ICAgCQkJICAgdW5zaWduZWQgY2hh
-ciBhZGRyKTsKPiArZW51bSBkcm1fY29ubmVjdG9yX3N0YXR1cyBkd19oZG1pX3BoeV9yZWFkX2hw
-ZChzdHJ1Y3QgZHdfaGRtaSAqaGRtaSwKPiArCQkJCQkgICAgICAgdm9pZCAqZGF0YSk7Cj4gK3Zv
-aWQgZHdfaGRtaV9waHlfdXBkYXRlX2hwZChzdHJ1Y3QgZHdfaGRtaSAqaGRtaSwgdm9pZCAqZGF0
-YSwKPiArCQkJICAgIGJvb2wgZm9yY2UsIGJvb2wgZGlzYWJsZWQsIGJvb2wgcnhzZW5zZSk7Cj4g
-K3ZvaWQgZHdfaGRtaV9waHlfc2V0dXBfaHBkKHN0cnVjdCBkd19oZG1pICpoZG1pLCB2b2lkICpk
-YXRhKTsKPiArCj4gK3ZvaWQgZHdfaGRtaV9waHlfZ2VuMl9wZGRxKHN0cnVjdCBkd19oZG1pICpo
-ZG1pLCB1OCBlbmFibGUpOwo+ICt2b2lkIGR3X2hkbWlfcGh5X2dlbjJfdHhwd3JvbihzdHJ1Y3Qg
-ZHdfaGRtaSAqaGRtaSwgdTggZW5hYmxlKTsKPiArdm9pZCBkd19oZG1pX3BoeV9nZW4yX3Jlc2V0
-KHN0cnVjdCBkd19oZG1pICpoZG1pLCB1OCBlbmFibGUpOwo+ICt2b2lkIGR3X2hkbWlfcGh5X3Nl
-dF9zbGF2ZV9hZGRyKHN0cnVjdCBkd19oZG1pICpoZG1pKTsKPiAgIAo+ICAgI2VuZGlmIC8qIF9f
-SU1YX0hETUlfSF9fICovCj4gCgotLSAKUXVhbGNvbW0gSW5ub3ZhdGlvbiBDZW50ZXIsIEluYy4g
-aXMgYSBtZW1iZXIgb2YgQ29kZSBBdXJvcmEgRm9ydW0sCmEgTGludXggRm91bmRhdGlvbiBDb2xs
-YWJvcmF0aXZlIFByb2plY3QKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0
-b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJp
-LWRldmVsCg==
+On Tuesday, January 9, 2018 11:01:43 AM CET Vivek Gautam wrote:
+> This series provides the support for turning on the arm-smmu's
+> clocks/power domains using runtime pm. This is done using the
+> recently introduced device links patches, which lets the smmu's
+> runtime to follow the master's runtime pm, so the smmu remains
+> powered only when the masters use it.
+> 
+> It also adds support for Qcom's arm-smmu-v2 variant that
+> has different clocks and power requirements.
+> 
+> Took some reference from the exynos runtime patches [2].
+> 
+> Previous version of the patchset [1].
+> 
+> After much discussion [4] over the use of pm_runtime_get/put() in
+> .unmap op path for the arm-smmu, and after disussing over more than
+> a couple of approaches to address this, we are putting forward the
+> changes *without* using pm_runtime APIs in 'unmap'. Rather, letting
+> the client device take the control of powering on/off the connected
+> iommu through pm_runtime_get(put)_suppliers() APIs for the scnerios
+> when the iommu power can't be directly controlled by clients through
+> device links.
+> Rafael has agreed to export the suppliers APIs [5].
+> 
+> [V5]
+>    * Dropped runtime pm calls from "arm_smmu_unmap" op as discussed over
+>      the list [4] for the last patch series.
+>    * Added a patch to export pm_runtime_get/put_suppliers() APIs to the
+>      series as agreed with Rafael [5].
+>    * Added the related patch for msm drm iommu layer to use
+>      pm_runtime_get/put_suppliers() APIs in msm_mmu_funcs.
+>    * Dropped arm-mmu500 clock patch since that would break existing
+>      platforms.
+>    * Changed compatible 'qcom,msm8996-smmu-v2' to 'qcom,smmu-v2' to reflect
+>      the IP version rather than the platform on which it is used.
+>      The same IP is used across multiple platforms including msm8996,
+>      and sdm845 etc.
+>    * Using clock bulk APIs to handle the clocks available to the IP as
+>      suggested by Stephen Boyd.
+>    * The first patch in v4 version of the patch-series:
+>      ("iommu/arm-smmu: Fix the error path in arm_smmu_add_device") has
+>      already made it to mainline.
+> 
+> [V4]
+>    * Reworked the clock handling part. We now take clock names as data
+>      in the driver for supported compatible versions, and loop over them
+>      to get, enable, and disable the clocks.
+>    * Using qcom,msm8996 based compatibles for bindings instead of a generic
+>      qcom compatible.
+>    * Refactor MMU500 patch to just add the necessary clock names data and
+>      corresponding bindings.
+>    * Added the pm_runtime_get/put() calls in .unmap iommu op (fix added by
+>      Stanimir on top of previous patch version.
+>    * Added a patch to fix error path in arm_smmu_add_device()
+>    * Removed patch 3/5 of V3 patch series that added qcom,smmu-v2 bindings.
+> 
+> [V3]
+>    * Reworked the patches to keep the clocks init/enabling function
+>      separately for each compatible.
+> 
+>    * Added clocks bindings for MMU40x/500.
+> 
+>    * Added a new compatible for qcom,smmu-v2 implementation and
+>      the clock bindings for the same.
+> 
+>    * Rebased on top of 4.11-rc1
+> 
+> [V2]
+>    * Split the patches little differently.
+> 
+>    * Addressed comments.
+> 
+>    * Removed the patch #4 [3] from previous post
+>      for arm-smmu context save restore. Planning to
+>      post this separately after reworking/addressing Robin's
+>      feedback.
+> 
+>    * Reversed the sequence to disable clocks than enabling.
+>      This was required for those cases where the
+>      clocks are populated in a dependent order from DT.
+> 
+> [1] https://www.spinics.net/lists/arm-kernel/msg567488.html
+> [2] https://lkml.org/lkml/2016/10/20/70
+> [3] https://patchwork.kernel.org/patch/9389717/
+> [4] https://patchwork.kernel.org/patch/9827825/
+> [5] https://patchwork.kernel.org/patch/10102445/
+> 
+> Sricharan R (3):
+>   iommu/arm-smmu: Add pm_runtime/sleep ops
+>   iommu/arm-smmu: Invoke pm_runtime during probe, add/remove device
+>   iommu/arm-smmu: Add the device_link between masters and smmu
+> 
+> Vivek Gautam (3):
+>   base: power: runtime: Export pm_runtime_get/put_suppliers
+>   iommu/arm-smmu: Add support for qcom,smmu-v2 variant
+>   drm/msm: iommu: Replace runtime calls with runtime suppliers
+> 
+>  .../devicetree/bindings/iommu/arm,smmu.txt         |  35 ++++++
+>  drivers/base/power/runtime.c                       |   2 +
+>  drivers/gpu/drm/msm/msm_iommu.c                    |  16 +--
+>  drivers/iommu/arm-smmu.c                           | 124 ++++++++++++++++++++-
+>  4 files changed, 163 insertions(+), 14 deletions(-)
+
+I need some time to review the series.
+
+Thanks,
+Rafael
