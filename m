@@ -1,128 +1,46 @@
-From: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/9] clk: samsung: exynos5433: Add clock flag to support suspend-to-ram
-Date: Tue, 9 Jan 2018 12:44:12 +0100
-Message-ID: <CAJKOXPc2Y0KX=gozGaMfJJM1B2gsPgLQ4rF5_R8wq5F6=Sxc7g@mail.gmail.com>
-References: <CGME20180109075905epcas1p1486543d8fec46f47d9d5ac350d841337@epcas1p1.samsung.com>
- <1515484746-10656-1-git-send-email-cw00.choi@samsung.com> <1515484746-10656-2-git-send-email-cw00.choi@samsung.com>
+From: Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>
+Subject: [PATCH 3/3] ARM: dts: imx7d-sdb: Add support for mpl3115 sensor
+Date: Tue, 9 Jan 2018 09:46:25 -0200
+Message-ID: <1515498385-23198-3-git-send-email-marco.franchi@nxp.com>
+References: <1515498385-23198-1-git-send-email-marco.franchi@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1515484746-10656-2-git-send-email-cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <1515498385-23198-1-git-send-email-marco.franchi-3arQi8VN3Tc@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, chanwoo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: fabio.estevam-3arQi8VN3Tc@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 9, 2018 at 8:58 AM, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
-> This patch adds the CLK_IS_CRITICAL and CLK_IGNORE_UNUSED flag
-> to some clocks in order to avoid the hang-out in the suspend mode.
->
-> Signed-off-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Cc: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> ---
->  drivers/clk/samsung/clk-exynos5433.c | 22 +++++++++++-----------
->  1 file changed, 11 insertions(+), 11 deletions(-)
->
-> diff --git a/drivers/clk/samsung/clk-exynos5433.c b/drivers/clk/samsung/clk-exynos5433.c
-> index db270908037a..3dc53cd0c730 100644
-> --- a/drivers/clk/samsung/clk-exynos5433.c
-> +++ b/drivers/clk/samsung/clk-exynos5433.c
-> @@ -583,25 +583,25 @@
->                         CLK_SET_RATE_PARENT | CLK_IGNORE_UNUSED, 0),
->         GATE(CLK_ACLK_CAM1_333, "aclk_cam1_333", "div_aclk_cam1_333",
->                         ENABLE_ACLK_TOP, 13,
-> -                       CLK_SET_RATE_PARENT | CLK_IGNORE_UNUSED, 0),
-> +                       CLK_SET_RATE_PARENT | CLK_IS_CRITICAL, 0),
->         GATE(CLK_ACLK_CAM1_400, "aclk_cam1_400", "div_aclk_cam1_400",
->                         ENABLE_ACLK_TOP, 12,
->                         CLK_SET_RATE_PARENT | CLK_IS_CRITICAL, 0),
->         GATE(CLK_ACLK_CAM1_552, "aclk_cam1_552", "div_aclk_cam1_552",
->                         ENABLE_ACLK_TOP, 11,
-> -                       CLK_SET_RATE_PARENT | CLK_IGNORE_UNUSED, 0),
-> +                       CLK_SET_RATE_PARENT | CLK_IS_CRITICAL, 0),
->         GATE(CLK_ACLK_CAM0_333, "aclk_cam0_333", "div_aclk_cam0_333",
->                         ENABLE_ACLK_TOP, 10,
-> -                       CLK_SET_RATE_PARENT | CLK_IGNORE_UNUSED, 0),
-> +                       CLK_SET_RATE_PARENT | CLK_IS_CRITICAL, 0),
->         GATE(CLK_ACLK_CAM0_400, "aclk_cam0_400", "div_aclk_cam0_400",
->                         ENABLE_ACLK_TOP, 9,
->                         CLK_SET_RATE_PARENT | CLK_IS_CRITICAL, 0),
->         GATE(CLK_ACLK_CAM0_552, "aclk_cam0_552", "div_aclk_cam0_552",
->                         ENABLE_ACLK_TOP, 8,
-> -                       CLK_SET_RATE_PARENT | CLK_IGNORE_UNUSED, 0),
-> +                       CLK_SET_RATE_PARENT | CLK_IS_CRITICAL, 0),
->         GATE(CLK_ACLK_ISP_DIS_400, "aclk_isp_dis_400", "div_aclk_isp_dis_400",
->                         ENABLE_ACLK_TOP, 7,
-> -                       CLK_SET_RATE_PARENT | CLK_IGNORE_UNUSED, 0),
-> +                       CLK_SET_RATE_PARENT | CLK_IS_CRITICAL, 0),
->         GATE(CLK_ACLK_ISP_400, "aclk_isp_400", "div_aclk_isp_400",
->                         ENABLE_ACLK_TOP, 6,
->                         CLK_SET_RATE_PARENT | CLK_IS_CRITICAL, 0),
-> @@ -624,11 +624,11 @@
->
->         /* ENABLE_SCLK_TOP_CAM1 */
->         GATE(CLK_SCLK_ISP_SENSOR2, "sclk_isp_sensor2", "div_sclk_isp_sensor2_b",
-> -                       ENABLE_SCLK_TOP_CAM1, 7, 0, 0),
-> +                       ENABLE_SCLK_TOP_CAM1, 7, CLK_IGNORE_UNUSED, 0),
->         GATE(CLK_SCLK_ISP_SENSOR1, "sclk_isp_sensor1", "div_sclk_isp_sensor1_b",
->                         ENABLE_SCLK_TOP_CAM1, 6, 0, 0),
->         GATE(CLK_SCLK_ISP_SENSOR0, "sclk_isp_sensor0", "div_sclk_isp_sensor0_b",
-> -                       ENABLE_SCLK_TOP_CAM1, 5, 0, 0),
-> +                       ENABLE_SCLK_TOP_CAM1, 5, CLK_IGNORE_UNUSED, 0),
+The i.MX 7D SDB has a MPL3115 Pressure sensor.
+Add support for this sensor, which is included in the trivial i2c devices 
+and according to the bindings documentation, just need a compatible field 
+and an address.
 
-Marking this and few others related to ISP as ignore_unused or
-is_critical looks like a hacky workaround for wrong topology or
-missing clock users. The real cause should be fixed instead marking
-all the clocks as critical or ignore_unused.
+Signed-off-by: Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>
+---
+ arch/arm/boot/dts/imx7d-sdb.dts | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Best regards,
-Krzysztof
+diff --git a/arch/arm/boot/dts/imx7d-sdb.dts b/arch/arm/boot/dts/imx7d-sdb.dts
+index a7a5dc7..a20c942 100644
+--- a/arch/arm/boot/dts/imx7d-sdb.dts
++++ b/arch/arm/boot/dts/imx7d-sdb.dts
+@@ -336,6 +336,11 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_i2c2>;
+ 	status = "okay";
++
++	mpl3115@60 {
++		compatible = "fsl,mpl3115";
++		reg = <0x60>;
++	};
+ };
+ 
+ &i2c3 {
+-- 
+2.7.4
 
->         GATE(CLK_SCLK_ISP_MCTADC_CAM1, "sclk_isp_mctadc_cam1", "oscclk",
->                         ENABLE_SCLK_TOP_CAM1, 4, 0, 0),
->         GATE(CLK_SCLK_ISP_UART_CAM1, "sclk_isp_uart_cam1", "div_sclk_isp_uart",
-> @@ -636,7 +636,7 @@
->         GATE(CLK_SCLK_ISP_SPI1_CAM1, "sclk_isp_spi1_cam1", "div_sclk_isp_spi1_b",
->                         ENABLE_SCLK_TOP_CAM1, 1, 0, 0),
->         GATE(CLK_SCLK_ISP_SPI0_CAM1, "sclk_isp_spi0_cam1", "div_sclk_isp_spi0_b",
-> -                       ENABLE_SCLK_TOP_CAM1, 0, 0, 0),
-> +                       ENABLE_SCLK_TOP_CAM1, 0, CLK_IGNORE_UNUSED, 0),
->
->         /* ENABLE_SCLK_TOP_DISP */
->         GATE(CLK_SCLK_HDMI_SPDIF_DISP, "sclk_hdmi_spdif_disp",
-> @@ -654,7 +654,7 @@
->                         ENABLE_SCLK_TOP_FSYS, 4, CLK_SET_RATE_PARENT, 0),
->         GATE(CLK_SCLK_UFSUNIPRO_FSYS, "sclk_ufsunipro_fsys",
->                         "div_sclk_ufsunipro", ENABLE_SCLK_TOP_FSYS,
-> -                       3, CLK_SET_RATE_PARENT, 0),
-> +                       3, CLK_SET_RATE_PARENT | CLK_IS_CRITICAL, 0),
->         GATE(CLK_SCLK_USBHOST30_FSYS, "sclk_usbhost30_fsys",
->                         "div_sclk_usbhost30", ENABLE_SCLK_TOP_FSYS,
->                         1, CLK_SET_RATE_PARENT, 0),
-> @@ -2982,7 +2982,7 @@ static void __init exynos5433_cmu_peris_init(struct device_node *np)
->         GATE(CLK_PCLK_AUD_SLIMBUS, "pclk_aud_slimbus", "div_aclk_aud",
->                         ENABLE_PCLK_AUD, 6, 0, 0),
->         GATE(CLK_PCLK_AUD_UART, "pclk_aud_uart", "div_aclk_aud",
-> -                       ENABLE_PCLK_AUD, 5, 0, 0),
-> +                       ENABLE_PCLK_AUD, 5, CLK_IS_CRITICAL, 0),
->         GATE(CLK_PCLK_AUD_PCM, "pclk_aud_pcm", "div_aclk_aud",
->                         ENABLE_PCLK_AUD, 4, 0, 0),
->         GATE(CLK_PCLK_AUD_I2S, "pclk_aud_i2s", "div_aclk_aud",
-> @@ -3008,7 +3008,7 @@ static void __init exynos5433_cmu_peris_init(struct device_node *np)
->         GATE(CLK_SCLK_AUD_SLIMBUS, "sclk_aud_slimbus", "div_sclk_aud_slimbus",
->                         ENABLE_SCLK_AUD1, 4, 0, 0),
->         GATE(CLK_SCLK_AUD_UART, "sclk_aud_uart", "div_sclk_aud_uart",
-> -                       ENABLE_SCLK_AUD1, 3, CLK_IGNORE_UNUSED, 0),
-> +                       ENABLE_SCLK_AUD1, 3, CLK_IS_CRITICAL, 0),
->         GATE(CLK_SCLK_AUD_PCM, "sclk_aud_pcm", "div_sclk_aud_pcm",
->                         ENABLE_SCLK_AUD1, 2, 0, 0),
->         GATE(CLK_SCLK_I2S_BCLK, "sclk_i2s_bclk", "ioclk_i2s_bclk",
-> --
-> 1.9.1
->
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
