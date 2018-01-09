@@ -1,140 +1,79 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH 2/2] ARM: dts: imx7s: add snvs rtc clock
-Date: Tue, 9 Jan 2018 02:20:57 +0000
-Message-ID: <AM3PR04MB1315E7F99FAB7F0720B37756F5100@AM3PR04MB1315.eurprd04.prod.outlook.com>
-References: <1515078402-22135-1-git-send-email-Anson.Huang@nxp.com>
- <1515078402-22135-2-git-send-email-Anson.Huang@nxp.com>
- <20180108103915.GD32635@b29396-OptiPlex-7040>
- <AM3PR04MB131588945BE9C5504C6EC0E8F5100@AM3PR04MB1315.eurprd04.prod.outlook.com>
- <20180109021704.GG32635@b29396-OptiPlex-7040>
+From: Anson Huang <Anson.Huang@nxp.com>
+Subject: [PATCH V2 2/2] ARM: dts: imx7s: add snvs rtc clock
+Date: Tue, 9 Jan 2018 10:51:16 +0800
+Message-ID: <1515466276-5541-2-git-send-email-Anson.Huang@nxp.com>
+References: <1515466276-5541-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180109021704.GG32635@b29396-OptiPlex-7040>
-Content-Language: en-US
+In-Reply-To: <1515466276-5541-1-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dong Aisheng <dongas86@gmail.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "stefan@agner.ch" <stefan@agner.ch>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>
+To: horia.geanta@nxp.com, aymen.sghaier@nxp.com, herbert@gondor.apana.org.au, davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, mturquette@baylibre.com, sboyd@codeaurora.org, adriana.reus@nxp.com, stefan@agner.ch, dongas86@gmail.com
+Cc: linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Add i.MX7 SNVS RTC clock.
 
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+changes since v1:
+	update snvs lp rtc binding-doc for clock info.
+ Documentation/devicetree/bindings/crypto/fsl-sec4.txt | 16 ++++++++++++++++
+ arch/arm/boot/dts/imx7s.dtsi                          |  2 ++
+ 2 files changed, 18 insertions(+)
 
-Best Regards!
-Anson Huang
-
-
-> -----Original Message-----
-> From: Dong Aisheng [mailto:dongas86@gmail.com]
-> Sent: 2018-01-09 10:17 AM
-> To: Anson Huang <anson.huang@nxp.com>
-> Cc: linux-arm-kernel@lists.infradead.org; linux-clk@vger.kernel.org; linu=
-x-
-> kernel@vger.kernel.org; devicetree@vger.kernel.org; dl-linux-imx <linux-
-> imx@nxp.com>; shawnguo@kernel.org; kernel@pengutronix.de; Fabio
-> Estevam <fabio.estevam@nxp.com>; mturquette@baylibre.com;
-> sboyd@codeaurora.org; robh+dt@kernel.org; mark.rutland@arm.com;
-> stefan@agner.ch; linux@armlinux.org.uk
-> Subject: Re: [PATCH 2/2] ARM: dts: imx7s: add snvs rtc clock
->=20
-> On Tue, Jan 09, 2018 at 01:43:25AM +0000, Anson Huang wrote:
-> >
-> >
-> > Best Regards!
-> > Anson Huang
-> >
-> >
-> > > -----Original Message-----
-> > > From: Dong Aisheng [mailto:dongas86@gmail.com]
-> > > Sent: 2018-01-08 6:39 PM
-> > > To: Anson Huang <anson.huang@nxp.com>
-> > > Cc: linux-arm-kernel@lists.infradead.org; linux-clk@vger.kernel.org;
-> > > linux- kernel@vger.kernel.org; devicetree@vger.kernel.org;
-> > > dl-linux-imx <linux- imx@nxp.com>; shawnguo@kernel.org;
-> > > kernel@pengutronix.de; Fabio Estevam <fabio.estevam@nxp.com>;
-> > > mturquette@baylibre.com; sboyd@codeaurora.org; robh+dt@kernel.org;
-> > > mark.rutland@arm.com; stefan@agner.ch; linux@armlinux.org.uk
-> > > Subject: Re: [PATCH 2/2] ARM: dts: imx7s: add snvs rtc clock
-> > >
-> > > On Thu, Jan 04, 2018 at 11:06:42PM +0800, Anson Huang wrote:
-> > > > Add i.MX7 SNVS RTC clock.
-> > > >
-> > > > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> > >
-> > > If this clock IMX7D_SNVS_CLK is used for all SNVS sub modules, then
-> > > snvs_poweroff and snvs_pwrkey should also rely on it, right?
-> > >
-> > > How about add them all in one time?
-> > >
-> > > BTW, syscon-poweroff seems still not introduce clock support and
-> > > fsl,sec-v4.0- pwrkey also does not handle clock, they may need to be =
-added
-> later.
-> > >
-> > > Regards
-> > > Dong Aisheng
-> >
-> > Yes, I thought about it before sending patch, but currently the
-> > poweroff and pwrkey driver do NOT handle clocks, so I plan to add them =
-later,
-> including handling clocks in driver and dtb.
-> >
->=20
-> SNVS RTC binding doc does not claim a optional clock support, you probabl=
-y
-> may need update the binding doc as well.
->=20
-> BTW, Should mx6 platforms need the same fixes?
-> If yes, we'd better fix them all.
-
-I.MX6 platforms has no such SNVS CCGR clock gate, no need to change.
-OK, I will update the SNVS RTC binding doc and send out a V2 patch set.
-
-Anson.
-
->=20
-> Regards
-> Dong Aisheng
->=20
-> > Anson
-> >
-> > >
-> > > > ---
-> > > >  arch/arm/boot/dts/imx7s.dtsi | 2 ++
-> > > >  1 file changed, 2 insertions(+)
-> > > >
-> > > > diff --git a/arch/arm/boot/dts/imx7s.dtsi
-> > > > b/arch/arm/boot/dts/imx7s.dtsi index e718fd2..f9b97f3 100644
-> > > > --- a/arch/arm/boot/dts/imx7s.dtsi
-> > > > +++ b/arch/arm/boot/dts/imx7s.dtsi
-> > > > @@ -534,6 +534,8 @@
-> > > >  					offset =3D <0x34>;
-> > > >  					interrupts =3D <GIC_SPI 19
-> > > IRQ_TYPE_LEVEL_HIGH>,
-> > > >  						     <GIC_SPI 20
-> > > IRQ_TYPE_LEVEL_HIGH>;
-> > > > +					clocks =3D <&clks IMX7D_SNVS_CLK>;
-> > > > +					clock-names =3D "snvs-rtc";
-> > > >  				};
-> > > >
-> > > >  				snvs_poweroff: snvs-poweroff {
-> > > > --
-> > > > 1.9.1
-> > > >
-> > > > --
-> > > > To unsubscribe from this list: send the line "unsubscribe linux-clk=
-"
-> > > > in the body of a message to majordomo@vger.kernel.org More
-> > > > majordomo info at
-> > > > https://emea01.safelinks.protection.outlook.com/?url=3Dhttp%3A%2F%2=
-F
-> > > > vger
-> > > > .kernel.org%2Fmajordomo-
-> > > info.html&data=3D02%7C01%7CAnson.Huang%40nxp.com
-> > > > %7Cd10ff23b822b4cd16c2708d5568417c6%7C686ea1d3bc2b4c6fa92cd99c5
-> c30
-> > > 1635
-> > > > %7C0%7C0%7C636510047707248763&sdata=3DFMx22hfKxs7YA%2F1zCVeYC
-> nVX
-> > > 9Ck4MmB9
-> > > > GuolA51V2eg%3D&reserved=3D0
+diff --git a/Documentation/devicetree/bindings/crypto/fsl-sec4.txt b/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
+index 76aec8a..da66ac4 100644
+--- a/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
++++ b/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
+@@ -415,12 +415,26 @@ Secure Non-Volatile Storage (SNVS) Low Power (LP) RTC Node
+ 	value type: <u32>
+ 	Definition: LP register offset. default it is 0x34.
+ 
++   - clocks
++      Usage: required if SNVS LP RTC requires explicit enablement of clocks
++      Value type: <prop_encoded-array>
++      Definition:  A list of phandle and clock specifier pairs describing
++          the clocks required for enabling and disabling SNVS LP RTC.
++
++   - clock-names
++      Usage: required if SNVS LP RTC requires explicit enablement of clocks
++      Value type: <string>
++      Definition: A list of clock name strings in the same order as the
++          clocks property.
++
+ EXAMPLE
+ 	sec_mon_rtc_lp@1 {
+ 		compatible = "fsl,sec-v4.0-mon-rtc-lp";
+ 		interrupts = <93 2>;
+ 		regmap = <&snvs>;
+ 		offset = <0x34>;
++		clocks = <&clks IMX7D_SNVS_CLK>;
++		clock-names = "snvs-rtc";
+ 	};
+ 
+ =====================================================================
+@@ -543,6 +557,8 @@ FULL EXAMPLE
+ 			regmap = <&sec_mon>;
+ 			offset = <0x34>;
+ 			interrupts = <93 2>;
++			clocks = <&clks IMX7D_SNVS_CLK>;
++			clock-names = "snvs-rtc";
+ 		};
+ 
+ 		snvs-pwrkey@020cc000 {
+diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
+index 9aa2bb9..02baf42 100644
+--- a/arch/arm/boot/dts/imx7s.dtsi
++++ b/arch/arm/boot/dts/imx7s.dtsi
+@@ -551,6 +551,8 @@
+ 					offset = <0x34>;
+ 					interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>,
+ 						     <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
++					clocks = <&clks IMX7D_SNVS_CLK>;
++					clock-names = "snvs-rtc";
+ 				};
+ 
+ 				snvs_poweroff: snvs-poweroff {
+-- 
+1.9.1
