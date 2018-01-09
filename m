@@ -1,51 +1,38 @@
-From: Anson Huang <Anson.Huang@nxp.com>
-Subject: [PATCH V2 1/2] clk: imx: imx7d: add the snvs clock
-Date: Tue, 9 Jan 2018 10:51:15 +0800
-Message-ID: <1515466276-5541-1-git-send-email-Anson.Huang@nxp.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 01/12] dt-bindings: clock: mediatek: add missing required
+ #reset-cells
+Date: Mon, 8 Jan 2018 21:34:02 -0600
+Message-ID: <20180109033402.bxk6ukd5zyzemnya@rob-hp-laptop>
+References: <cover.1515057696.git.sean.wang@mediatek.com>
+ <084288e2520f9bd3ccdb3cf7aeef8ebcae48e6d7.1515057696.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: horia.geanta@nxp.com, aymen.sghaier@nxp.com, herbert@gondor.apana.org.au, davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, mturquette@baylibre.com, sboyd@codeaurora.org, adriana.reus@nxp.com, stefan@agner.ch, dongas86@gmail.com
-Cc: linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <084288e2520f9bd3ccdb3cf7aeef8ebcae48e6d7.1515057696.git.sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Cc: matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-According to the i.MX7D Reference Manual,
-SNVS block has a clock gate, accessing SNVS block
-would need this clock gate to be enabled, add it
-into clock tree so that SNVS module driver can
-operate this clock gate.
+On Thu, Jan 04, 2018 at 05:40:51PM +0800, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
+> From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> 
+> All ethsys, pciesys and ssusbsys internally include reset controller, so
+> explicitly add back these missing cell definitions to related bindings
+> and examples.
+> 
+> Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/arm/mediatek/mediatek,ethsys.txt   | 2 ++
+>  Documentation/devicetree/bindings/arm/mediatek/mediatek,pciesys.txt  | 2 ++
+>  Documentation/devicetree/bindings/arm/mediatek/mediatek,ssusbsys.txt | 2 ++
+>  3 files changed, 6 insertions(+)
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-no changes since v1.
- drivers/clk/imx/clk-imx7d.c             | 1 +
- include/dt-bindings/clock/imx7d-clock.h | 3 ++-
- 2 files changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/clk/imx/clk-imx7d.c b/drivers/clk/imx/clk-imx7d.c
-index 80dc211..f34f1ec 100644
---- a/drivers/clk/imx/clk-imx7d.c
-+++ b/drivers/clk/imx/clk-imx7d.c
-@@ -795,6 +795,7 @@ static void __init imx7d_clocks_init(struct device_node *ccm_node)
- 	clks[IMX7D_DRAM_PHYM_ALT_ROOT_CLK] = imx_clk_gate4("dram_phym_alt_root_clk", "dram_phym_alt_post_div", base + 0x4130, 0);
- 	clks[IMX7D_DRAM_ALT_ROOT_CLK] = imx_clk_gate4("dram_alt_root_clk", "dram_alt_post_div", base + 0x4130, 0);
- 	clks[IMX7D_OCOTP_CLK] = imx_clk_gate4("ocotp_clk", "ipg_root_clk", base + 0x4230, 0);
-+	clks[IMX7D_SNVS_CLK] = imx_clk_gate4("snvs_clk", "ipg_root_clk", base + 0x4250, 0);
- 	clks[IMX7D_USB_HSIC_ROOT_CLK] = imx_clk_gate4("usb_hsic_root_clk", "usb_hsic_post_div", base + 0x4420, 0);
- 	clks[IMX7D_SDMA_CORE_CLK] = imx_clk_gate4("sdma_root_clk", "ahb_root_clk", base + 0x4480, 0);
- 	clks[IMX7D_PCIE_CTRL_ROOT_CLK] = imx_clk_gate4("pcie_ctrl_root_clk", "pcie_ctrl_post_div", base + 0x4600, 0);
-diff --git a/include/dt-bindings/clock/imx7d-clock.h b/include/dt-bindings/clock/imx7d-clock.h
-index e2f99ae..dc51904 100644
---- a/include/dt-bindings/clock/imx7d-clock.h
-+++ b/include/dt-bindings/clock/imx7d-clock.h
-@@ -452,5 +452,6 @@
- #define IMX7D_OCOTP_CLK			439
- #define IMX7D_NAND_RAWNAND_CLK		440
- #define IMX7D_NAND_USDHC_BUS_RAWNAND_CLK 441
--#define IMX7D_CLK_END			442
-+#define IMX7D_SNVS_CLK			442
-+#define IMX7D_CLK_END			443
- #endif /* __DT_BINDINGS_CLOCK_IMX7D_H */
--- 
-1.9.1
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
