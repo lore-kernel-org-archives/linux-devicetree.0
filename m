@@ -1,41 +1,108 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH v3 1/4] media: ov5695: add support for OV5695 sensor
-Date: Wed, 10 Jan 2018 00:17:45 +0200
-Message-ID: <20180109221745.mvqhice2vpbzftoa@valkosipuli.retiisi.org.uk>
-References: <1515418567-14406-1-git-send-email-zhengsq@rock-chips.com>
- <20180108222022.4hvo7pax4wunnf22@valkosipuli.retiisi.org.uk>
- <c4e639fc-7650-5f00-3e70-8f2bd37f1262@rock-chips.com>
+From: Stefan Agner <stefan@agner.ch>
+Subject: Re: [PATCH 1/7] ARM: imx: add timer stop flag to ARM power off state
+Date: Tue, 09 Jan 2018 23:21:45 +0100
+Message-ID: <0f9c60bc8986b5d8cf15449173f77da5@agner.ch>
+References: <20180102164223.15230-1-stefan@agner.ch>
+ <20180109092232.GA26312@b29396-OptiPlex-7040>
+ <AM3PR04MB13155287E5AAAF5407AF68A6F5100@AM3PR04MB1315.eurprd04.prod.outlook.com>
+ <1515492803.12538.29.camel@pengutronix.de>
+ <bacee8fe00b0ab54dfa6692bfc956ffd@agner.ch>
+ <1515506669.12538.31.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <c4e639fc-7650-5f00-3e70-8f2bd37f1262@rock-chips.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Shunqian Zheng <zhengsq@rock-chips.com>
-Cc: mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, ddl@rock-chips.com, tfiga@chromium.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1515506669.12538.31.camel@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lucas Stach <l.stach@pengutronix.de>
+Cc: Anson Huang <anson.huang@nxp.com>, Dong Aisheng <dongas86@gmail.com>, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, dl-linux-imx <linux-imx@nxp.com>, kernel@pengutronix.de, Fabio Estevam <fabio.estevam@nxp.com>, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Shunqian,
-
-On Tue, Jan 09, 2018 at 10:52:30PM +0800, Shunqian Zheng wrote:
-> Hi Sakari,
+On 2018-01-09 15:04, Lucas Stach wrote:
+> Am Dienstag, den 09.01.2018, 14:37 +0100 schrieb Stefan Agner:
+>> On 2018-01-09 11:13, Lucas Stach wrote:
+>> > Am Dienstag, den 09.01.2018, 09:25 +0000 schrieb Anson Huang:
+>> > >
+>> > > Best Regards!
+>> > > Anson Huang
+>> > >
+>> > >
+>> > > > -----Original Message-----
+>> > > > From: Dong Aisheng [mailto:dongas86@gmail.com]
+>> > > > Sent: 2018-01-09 5:23 PM
+>> > > > To: Stefan Agner <stefan@agner.ch>
+>> > > > Cc: shawnguo@kernel.org; kernel@pengutronix.de; Fabio Estevam
+>> > > > <fabio.estevam@nxp.com>; robh+dt@kernel.org; mark.rutland@arm.c
+>> > > > om;
+>> > > > linux-arm-kernel@lists.infradead.org; devicetree@vger.kernel.or
+>> > > > g;
+>> > > > linux-
+>> > > > kernel@vger.kernel.org; Anson Huang <anson.huang@nxp.com>; dl-
+>> > > > linux-imx
+>> > > > <linux-imx@nxp.com>
+>> > > > Subject: Re: [PATCH 1/7] ARM: imx: add timer stop flag to ARM
+>> > > > power
+>> > > > off state
+>> > > >
+>> > > > On Tue, Jan 02, 2018 at 05:42:17PM +0100, Stefan Agner wrote:
+>> > > > > When the CPU is in ARM power off state the ARM architected
+>> > > > > timers
+>> > > > > are
+>> > > > > stopped. The flag is already present in the higher power WAIT
+>> > > > > mode.
+>> > > > >
+>> > > > > This allows to use the ARM generic timer on i.MX 6UL/6ULL
+>> > > > > SoC.
+>> > > > > Without the flag the kernel freezes when the timer enters the
+>> > > > > first
+>> > > > > time ARM power off mode.
+>> > > > >
+>> > > > > Cc: Anson Huang <anson.huang@nxp.com>
+>> > > > > Signed-off-by: Stefan Agner <stefan@agner.ch>
+>> > > >
+>> > > > It seems ok at my side.
+>> > > > Did you meet the real issue? If yes, how to reproduce?
+>> > > >
+>> > > > Both mx6sx and mx6ul are using GPT which do not need that flag,
+>> > > > suppose we
+>> > > > should remove it, right?
+>> > > > Anson can help confirm it.
+>> > >
+>> > > For UP system like i.MX6SX, we do NOT enable "cortex-a9-twd-
+>> > > timer",
+>> > > so local
+>> > > timer is NOT used, GPT is used instead, GPT's clock is NOT
+>> > > disabled
+>> > > when cpuidle,
+>> > > so I think we should remove all these Timer stop flag for 6SX
+>> > > CPUIDLE.
+>> >
+>> > It's correct to set the flag even on UP systems, as the flag means
+>> > the
+>> > CPU _local_ timer is stopped in this sleep mode. Also there are
+>> > systems
+>> > out there which are using the TWD on UP, as it operates at a higher
+>> > frequency leading to better wakeup granularity.
+>>
+>> Documentation/devicetree/bindings/arm/twd.txt states that TWD
+>> provides
+>> "per-cpu local timer". But as far as I can see TWD still uses SPI
+>> interrupts, routed through GIC, so is this the differentiation?
 > 
+> Maybe what I wrote wasn't entirely clear. I completely agree with this
+> patch.
 > 
-> On 2018年01月09日 06:20, Sakari Ailus wrote:
-> > Hi Shunqian,
-> > 
-> > Could you next time add a cover page to the patchset that details the
-> > changes from the previous version?
-> > 
-> > Please also add a MAINTAINERS entry. DT binding files should also precede
-> > the driver.
-> Done.
-> By the way, why DT binding files should precede the driver?
+> The TWD on Cortex-A9 is a CPU local timer, same as the architected
+> timer in later cores. It doesn't provide all the benefits of the
+> architected timer (the clock frequency varies with CPU core clock and
+> it's not virt capable), but some systems still prefer it over the i.MX
+> GPT, as it provides much better wakeup granularity.
+> 
+> So annotating the CPU idle states with the timer stop flag is the right
+> thing to do. This flag has nothing to with the usage of GPT or TWD on a
+> specific system.
 
-DT bindings are independent of the driver but the driver depends on the
-properties defined in the device's DT bindings.
+Can I take that as an Acked-by?
 
--- 
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi
+--
+Stefan
