@@ -1,47 +1,38 @@
-From: Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>
-Subject: [PATCH 3/3] ARM: dts: imx7d-sdb: Add support for mpl3115 sensor
-Date: Tue, 9 Jan 2018 09:46:25 -0200
-Message-ID: <1515498385-23198-3-git-send-email-marco.franchi@nxp.com>
+From: Marco Franchi <marco.franchi@nxp.com>
+Subject: [PATCH 2/3] ARM: imx: Update imx_v6_v7_defconfig for mag3110 support
+Date: Tue, 9 Jan 2018 09:46:24 -0200
+Message-ID: <1515498385-23198-2-git-send-email-marco.franchi@nxp.com>
 References: <1515498385-23198-1-git-send-email-marco.franchi@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1515498385-23198-1-git-send-email-marco.franchi-3arQi8VN3Tc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: fabio.estevam-3arQi8VN3Tc@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1515498385-23198-1-git-send-email-marco.franchi@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: shawnguo@kernel.org
+Cc: fabio.estevam@nxp.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Marco Franchi <marco.franchi@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-The i.MX 7D SDB has a MPL3115 Pressure sensor.
-Add support for this sensor, which is included in the trivial i2c devices 
-and according to the bindings documentation, just need a compatible field 
-and an address.
+The i.MX 6UL EVK has support for the MAG3110 Magnetometer sensor, included 
+in its base board by default.
 
-Signed-off-by: Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>
+So add support for this Magnetometer in the imx_v6_v7_defconfig.
+
+Signed-off-by: Marco Franchi <marco.franchi@nxp.com>
 ---
- arch/arm/boot/dts/imx7d-sdb.dts | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/arm/configs/imx_v6_v7_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/imx7d-sdb.dts b/arch/arm/boot/dts/imx7d-sdb.dts
-index a7a5dc7..a20c942 100644
---- a/arch/arm/boot/dts/imx7d-sdb.dts
-+++ b/arch/arm/boot/dts/imx7d-sdb.dts
-@@ -336,6 +336,11 @@
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_i2c2>;
- 	status = "okay";
-+
-+	mpl3115@60 {
-+		compatible = "fsl,mpl3115";
-+		reg = <0x60>;
-+	};
- };
- 
- &i2c3 {
+diff --git a/arch/arm/configs/imx_v6_v7_defconfig b/arch/arm/configs/imx_v6_v7_defconfig
+index 4cb9829..ebff980 100644
+--- a/arch/arm/configs/imx_v6_v7_defconfig
++++ b/arch/arm/configs/imx_v6_v7_defconfig
+@@ -369,6 +369,7 @@ CONFIG_COMMON_CLK_PWM=y
+ CONFIG_IIO=y
+ CONFIG_IMX7D_ADC=y
+ CONFIG_VF610_ADC=y
++CONFIG_MAG3110=y
+ CONFIG_MPL3115=y
+ CONFIG_PWM=y
+ CONFIG_PWM_FSL_FTM=y
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
