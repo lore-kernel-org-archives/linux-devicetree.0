@@ -1,100 +1,144 @@
-From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH v5 6/6] drm/msm: iommu: Replace runtime calls with runtime
-	suppliers
-Date: Tue,  9 Jan 2018 15:31:49 +0530
-Message-ID: <1515492109-753-7-git-send-email-vivek.gautam@codeaurora.org>
-References: <1515492109-753-1-git-send-email-vivek.gautam@codeaurora.org>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH V3 2/2] ARM: dts: imx7s: add snvs rtc clock
+Date: Tue, 9 Jan 2018 10:03:18 +0000
+Message-ID: <AM3PR04MB13150428BE76FF16EA9C15DDF5100@AM3PR04MB1315.eurprd04.prod.outlook.com>
+References: <1515489651-13488-1-git-send-email-Anson.Huang@nxp.com>
+ <1515489651-13488-2-git-send-email-Anson.Huang@nxp.com>
+ <20180109094716.GH26312@b29396-OptiPlex-7040>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <1515492109-753-1-git-send-email-vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Cc: len.brown-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180109094716.GH26312@b29396-OptiPlex-7040>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dong Aisheng <dongas86@gmail.com>
+Cc: =?iso-8859-2?Q?Horia_Geant=E3?= <horia.geanta@nxp.com>, Aymen Sghaier <aymen.sghaier@nxp.com>, "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>, "davem@davemloft.net" <davem@davemloft.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>, Adriana Reus <adriana.reus@nxp.com>, "stefan@agner.ch" <stefan@agner.ch>, "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-While handling the concerned iommu, there should not be a
-need to power control the drm devices from iommu interface.
-If these drm devices need to be powered around this time,
-the respective drivers should take care of this.
 
-Replace the pm_runtime_get/put_sync(<drm_device>) with
-pm_runtime_get/put_suppliers(<drm_device>) calls, to power-up
-the connected iommu through the device link interface.
-In case the device link is not setup these get/put_suppliers()
-calls will be a no-op, and the iommu driver should take care of
-powering on its devices accordingly.
 
-Signed-off-by: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
----
+Best Regards!
+Anson Huang
 
- * New patch added in this series for client side change for using
-   pm_runtime_get_suppliers() and pm_runtime_put_suppliers().
 
- drivers/gpu/drm/msm/msm_iommu.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+> -----Original Message-----
+> From: Dong Aisheng [mailto:dongas86@gmail.com]
+> Sent: 2018-01-09 5:47 PM
+> To: Anson Huang <anson.huang@nxp.com>
+> Cc: Horia Geant=E3 <horia.geanta@nxp.com>; Aymen Sghaier
+> <aymen.sghaier@nxp.com>; herbert@gondor.apana.org.au;
+> davem@davemloft.net; robh+dt@kernel.org; mark.rutland@arm.com;
+> shawnguo@kernel.org; kernel@pengutronix.de; Fabio Estevam
+> <fabio.estevam@nxp.com>; linux@armlinux.org.uk;
+> mturquette@baylibre.com; sboyd@codeaurora.org; Adriana Reus
+> <adriana.reus@nxp.com>; stefan@agner.ch; linux-crypto@vger.kernel.org;
+> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; linux-arm-
+> kernel@lists.infradead.org; linux-clk@vger.kernel.org; dl-linux-imx <linu=
+x-
+> imx@nxp.com>
+> Subject: Re: [PATCH V3 2/2] ARM: dts: imx7s: add snvs rtc clock
+>=20
+> On Tue, Jan 09, 2018 at 05:20:51PM +0800, Anson Huang wrote:
+> > Add i.MX7 SNVS RTC clock.
+> >
+> > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> > ---
+> > changes since v2:
+> > 	improve the binding doc statement about clocks.
+> >  Documentation/devicetree/bindings/crypto/fsl-sec4.txt | 15
+> +++++++++++++++
+> >  arch/arm/boot/dts/imx7s.dtsi                          |  2 ++
+> >  2 files changed, 17 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
+> > b/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
+> > index 76aec8a..7329f29 100644
+> > --- a/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
+> > +++ b/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
+> > @@ -415,12 +415,25 @@ Secure Non-Volatile Storage (SNVS) Low Power (LP)
+> RTC Node
+> >  	value type: <u32>
+> >  	Definition: LP register offset. default it is 0x34.
+> >
+> > +   - clocks
+> > +      Usage: required if SNVS LP RTC requires explicit enablement of c=
+locks
+> > +      Value type: <prop_encoded-array>
+> > +      Definition:  a clock specifier describing the clock required for
+> > +          enabling and disabling SNVS LP RTC.
+> > +
+>=20
+> This clock seem optional.
+> Should we indicate it here explicitly?
 
-diff --git a/drivers/gpu/drm/msm/msm_iommu.c b/drivers/gpu/drm/msm/msm_iommu.c
-index b23d33622f37..1ab629bbee69 100644
---- a/drivers/gpu/drm/msm/msm_iommu.c
-+++ b/drivers/gpu/drm/msm/msm_iommu.c
-@@ -40,9 +40,9 @@ static int msm_iommu_attach(struct msm_mmu *mmu, const char * const *names,
- 	struct msm_iommu *iommu = to_msm_iommu(mmu);
- 	int ret;
- 
--	pm_runtime_get_sync(mmu->dev);
-+	pm_runtime_get_suppliers(mmu->dev);
- 	ret = iommu_attach_device(iommu->domain, mmu->dev);
--	pm_runtime_put_sync(mmu->dev);
-+	pm_runtime_put_suppliers(mmu->dev);
- 
- 	return ret;
- }
-@@ -52,9 +52,9 @@ static void msm_iommu_detach(struct msm_mmu *mmu, const char * const *names,
- {
- 	struct msm_iommu *iommu = to_msm_iommu(mmu);
- 
--	pm_runtime_get_sync(mmu->dev);
-+	pm_runtime_get_suppliers(mmu->dev);
- 	iommu_detach_device(iommu->domain, mmu->dev);
--	pm_runtime_put_sync(mmu->dev);
-+	pm_runtime_put_suppliers(mmu->dev);
- }
- 
- static int msm_iommu_map(struct msm_mmu *mmu, uint64_t iova,
-@@ -63,9 +63,9 @@ static int msm_iommu_map(struct msm_mmu *mmu, uint64_t iova,
- 	struct msm_iommu *iommu = to_msm_iommu(mmu);
- 	size_t ret;
- 
--//	pm_runtime_get_sync(mmu->dev);
-+	pm_runtime_get_suppliers(mmu->dev);
- 	ret = iommu_map_sg(iommu->domain, iova, sgt->sgl, sgt->nents, prot);
--//	pm_runtime_put_sync(mmu->dev);
-+	pm_runtime_put_suppliers(mmu->dev);
- 	WARN_ON(ret < 0);
- 
- 	return (ret == len) ? 0 : -EINVAL;
-@@ -76,9 +76,9 @@ static int msm_iommu_unmap(struct msm_mmu *mmu, uint64_t iova,
- {
- 	struct msm_iommu *iommu = to_msm_iommu(mmu);
- 
--	pm_runtime_get_sync(mmu->dev);
-+	pm_runtime_get_suppliers(mmu->dev);
- 	iommu_unmap(iommu->domain, iova, len);
--	pm_runtime_put_sync(mmu->dev);
-+	pm_runtime_put_suppliers(mmu->dev);
- 
- 	return 0;
- }
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Will add a optional in usage.
+
+
+>=20
+> BTW, i thought we probably could update poweroff and key as well at the s=
+ame
+> time since device tree changes can go separately.
+> Does it make sense?
+
+I think this patch set is only for RTC case since snvs-rtc driver already h=
+andle the clock.
+But for poweroff and powerkey, their drivers are NOT handling clocks curren=
+tly, we
+can add them when driver ready to handle clocks. Should be in another patch=
+ set later.
+
+Anson.
+
+>=20
+> Regards
+> Dong Aisheng
+>=20
+> > +   - clock-names
+> > +      Usage: required if SNVS LP RTC requires explicit enablement of c=
+locks
+> > +      Value type: <string>
+> > +      Definition: clock name string should be "snvs-rtc".
+> > +
+> >  EXAMPLE
+> >  	sec_mon_rtc_lp@1 {
+> >  		compatible =3D "fsl,sec-v4.0-mon-rtc-lp";
+> >  		interrupts =3D <93 2>;
+> >  		regmap =3D <&snvs>;
+> >  		offset =3D <0x34>;
+> > +		clocks =3D <&clks IMX7D_SNVS_CLK>;
+> > +		clock-names =3D "snvs-rtc";
+> >  	};
+> >
+> >
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > @@ -543,6 +556,8 @@ FULL EXAMPLE
+> >  			regmap =3D <&sec_mon>;
+> >  			offset =3D <0x34>;
+> >  			interrupts =3D <93 2>;
+> > +			clocks =3D <&clks IMX7D_SNVS_CLK>;
+> > +			clock-names =3D "snvs-rtc";
+> >  		};
+> >
+> >  		snvs-pwrkey@020cc000 {
+> > diff --git a/arch/arm/boot/dts/imx7s.dtsi
+> > b/arch/arm/boot/dts/imx7s.dtsi index 9aa2bb9..02baf42 100644
+> > --- a/arch/arm/boot/dts/imx7s.dtsi
+> > +++ b/arch/arm/boot/dts/imx7s.dtsi
+> > @@ -551,6 +551,8 @@
+> >  					offset =3D <0x34>;
+> >  					interrupts =3D <GIC_SPI 19
+> IRQ_TYPE_LEVEL_HIGH>,
+> >  						     <GIC_SPI 20
+> IRQ_TYPE_LEVEL_HIGH>;
+> > +					clocks =3D <&clks IMX7D_SNVS_CLK>;
+> > +					clock-names =3D "snvs-rtc";
+> >  				};
+> >
+> >  				snvs_poweroff: snvs-poweroff {
+> > --
+> > 1.9.1
+> >
