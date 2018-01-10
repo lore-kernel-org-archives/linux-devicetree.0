@@ -1,127 +1,124 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RESEND PATCH v9 00/13] Add STM32 DFSDM support
-Date: Wed, 10 Jan 2018 10:36:07 +0000
-Message-ID: <20180110103607.GD9003@sirena.org.uk>
-References: <1515579195-12894-1-git-send-email-arnaud.pouliquen@st.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH 3/9] soc: samsung: pmu: Add the PMU data of exynos5433 to
+ support low-power state
+Date: Wed, 10 Jan 2018 10:53:56 +0000
+Message-ID: <0adffb4c-019f-a637-881c-d919c67cdbcf@arm.com>
+References: <1515484746-10656-1-git-send-email-cw00.choi@samsung.com>
+ <CGME20180109075905epcas1p321b8898a0d45287d63364e1aa768fdab@epcas1p3.samsung.com>
+ <1515484746-10656-4-git-send-email-cw00.choi@samsung.com>
+ <b639da18-a069-aeb7-ceca-30c79b1c25c8@arm.com> <5A557078.50101@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="RhUH2Ysw6aD5utA4"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1515579195-12894-1-git-send-email-arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnaud Pouliquen <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <5A557078.50101@samsung.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Chanwoo Choi <cw00.choi@samsung.com>
+Cc: inki.dae@samsung.com, Jonghwa Lee <jonghwa3.lee@samsung.com>, linux-samsung-soc@vger.kernel.org, chanwoo@kernel.org, devicetree@vger.kernel.org, tomasz.figa@gmail.com, krzk@kernel.org, linux-kernel@vger.kernel.org, jh80.chung@samsung.com, kgene@kernel.org, s.nawrocki@samsung.com, Sudeep Holla <sudeep.holla@arm.com>, linux-arm-kernel@lists.infradead.org, m.szyprowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-
---RhUH2Ysw6aD5utA4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Jan 10, 2018 at 11:13:02AM +0100, Arnaud Pouliquen wrote:
-
-> Jonathan's comment for you, posted for this version:
-> >So Mark, over to you. I'm happy if you want to do the immutable branch o=
-nce=20
-> >any issue you find are fixed, or I can do it.=20
-> >I'm just looking for acks or a pull request now.
-
-Jonathan, this is a pretty weird way of doing things - the bulk of the
-series is for IIO so I'd have expected it to go in via the IIO tree.
-It's especially odd to end up with the driver which isn't a build
-dependency in my tree.
-
-The following changes since commit 4fbd8d194f06c8a3fd2af1ce560ddb31f7ec8323:
-
-  Linux 4.15-rc1 (2017-11-26 16:01:47 -0800)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git tags/ii=
-o-asoc-sync
-
-for you to fetch changes up to 16cbca06fa8288a4f58426fc898b141e12ee8008:
-
-  IIO: consumer: allow to set buffer sizes (2018-01-10 10:30:14 +0000)
-
-----------------------------------------------------------------
-IIO: ST DFSDM support
-
-This is the IIO portion of some patches adding support for the ST DFSDM
-IP, it's shared with ASoC as the hardware is also used for audio.
-
-----------------------------------------------------------------
-Arnaud Pouliquen (10):
-      docs: driver-api: add iio hw consumer section
-      IIO: hw_consumer: add devm_iio_hw_consumer_alloc
-      IIO: inkern: API for manipulating channel attributes
-      IIO: Add DT bindings for sigma delta adc modulator
-      IIO: ADC: add sigma delta modulator support
-      IIO: add DT bindings for stm32 DFSDM filter
-      IIO: ADC: add stm32 DFSDM core support
-      IIO: ADC: add STM32 DFSDM sigma delta ADC support
-      IIO: ADC: add stm32 DFSDM support for PDM microphone
-      IIO: consumer: allow to set buffer sizes
-
-Lars-Peter Clausen (1):
-      iio: Add hardware consumer buffer support
-
- .../ABI/testing/sysfs-bus-iio-dfsdm-adc-stm32      |   16 +
- .../bindings/iio/adc/sigma-delta-modulator.txt     |   13 +
- .../bindings/iio/adc/st,stm32-dfsdm-adc.txt        |  128 +++
- Documentation/driver-api/iio/hw-consumer.rst       |   51 +
- Documentation/driver-api/iio/index.rst             |    1 +
- drivers/iio/adc/Kconfig                            |   37 +
- drivers/iio/adc/Makefile                           |    3 +
- drivers/iio/adc/sd_adc_modulator.c                 |   68 ++
- drivers/iio/adc/stm32-dfsdm-adc.c                  | 1216 ++++++++++++++++=
-++++
- drivers/iio/adc/stm32-dfsdm-core.c                 |  309 +++++
- drivers/iio/adc/stm32-dfsdm.h                      |  310 +++++
- drivers/iio/buffer/Kconfig                         |   10 +
- drivers/iio/buffer/Makefile                        |    1 +
- drivers/iio/buffer/industrialio-buffer-cb.c        |   11 +
- drivers/iio/buffer/industrialio-hw-consumer.c      |  247 ++++
- drivers/iio/inkern.c                               |   17 +-
- include/linux/iio/adc/stm32-dfsdm-adc.h            |   18 +
- include/linux/iio/consumer.h                       |   37 +
- include/linux/iio/hw-consumer.h                    |   21 +
- include/linux/iio/iio.h                            |   28 -
- include/linux/iio/types.h                          |   28 +
- 21 files changed, 2537 insertions(+), 33 deletions(-)
- create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-dfsdm-adc-stm32
- create mode 100644 Documentation/devicetree/bindings/iio/adc/sigma-delta-m=
-odulator.txt
- create mode 100644 Documentation/devicetree/bindings/iio/adc/st,stm32-dfsd=
-m-adc.txt
- create mode 100644 Documentation/driver-api/iio/hw-consumer.rst
- create mode 100644 drivers/iio/adc/sd_adc_modulator.c
- create mode 100644 drivers/iio/adc/stm32-dfsdm-adc.c
- create mode 100644 drivers/iio/adc/stm32-dfsdm-core.c
- create mode 100644 drivers/iio/adc/stm32-dfsdm.h
- create mode 100644 drivers/iio/buffer/industrialio-hw-consumer.c
- create mode 100644 include/linux/iio/adc/stm32-dfsdm-adc.h
- create mode 100644 include/linux/iio/hw-consumer.h
-
---RhUH2Ysw6aD5utA4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlpV7JcACgkQJNaLcl1U
-h9AxjQf/c7wRX61FxoxONfLFCc+jA1dek8tWPYjVlydqz+TehYiy7owUx6U4aSaq
-bKpyN37TeNHf0I1l+aaiYLFc1QTeB/+EUyLAXyeCDI6KHVeHuC6soUKY9YHBasEP
-wKjJnGhkqVZ0rmPVWxRMMsi1SCus4Vu3QnQQwSp+nO3PEwTNCHW0cDL6+bXKnU4T
-GiCFwTLWrkqo4ng+/GkGZMErryiYFzVl3vlHGCApvJzzxYpwia1UgrJvxRWTmwQh
-vw8ruNMPDPI1T0MWeSeT7YYW3DxqNJOIwv4pjLsV60wmxs5Z9qTiS9cV02xj3Zvw
-8d4K5ZNFirDU0fDg3ywUUwNTFX95aQ==
-=a0f7
------END PGP SIGNATURE-----
-
---RhUH2Ysw6aD5utA4--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+CgpPbiAxMC8wMS8xOCAwMTo0NiwgQ2hhbndvbyBDaG9pIHdyb3RlOgo+IE9uIDIwMTjrhYQgMDHs
+m5QgMDnsnbwgMjM6MTEsIFN1ZGVlcCBIb2xsYSB3cm90ZToKPj4KPj4KPj4gT24gMDkvMDEvMTgg
+MDc6NTksIENoYW53b28gQ2hvaSB3cm90ZToKPj4+IFRoaXMgcGF0Y2ggYWRkcyB0aGUgUE1VIChQ
+b3dlciBNYW5hZ2VtZW50IFVuaXQpIGRhdGEgb2YgZXh5bm9zNTQzMyBTb0MKPj4+IGluIG9yZGVy
+IHRvIHN1cHBvcnQgdGhlIHZhcmlvdXMgcG93ZXIgbW9kZXMuIEVhY2ggcG93ZXIgbW9kZSBoYXMK
+Pj4+IHRoZSBkaWZmZXJlbnQgdmFsdWUgZm9yIHJlZHVjaW5nIHRoZSBwb3dlci1jb25zdW1wdGlv
+bi4KPj4+Cj4+PiBTaWduZWQtb2ZmLWJ5OiBKb25naHdhIExlZSA8am9uZ2h3YTMubGVlQHNhbXN1
+bmcuY29tPgo+Pj4gU2lnbmVkLW9mZi1ieTogQ2hhbndvbyBDaG9pIDxjdzAwLmNob2lAc2Ftc3Vu
+Zy5jb20+Cj4+PiAtLS0KPj4+ICBhcmNoL2FybS9tYWNoLWV4eW5vcy9jb21tb24uaCAgICAgICAg
+ICAgICAgIHwgICAyIC0KPj4+ICBkcml2ZXJzL3NvYy9zYW1zdW5nL01ha2VmaWxlICAgICAgICAg
+ICAgICAgIHwgICAzICstCj4+PiAgZHJpdmVycy9zb2Mvc2Ftc3VuZy9leHlub3MtcG11LmMgICAg
+ICAgICAgICB8ICAgMSArCj4+PiAgZHJpdmVycy9zb2Mvc2Ftc3VuZy9leHlub3MtcG11LmggICAg
+ICAgICAgICB8ICAgMiArCj4+PiAgZHJpdmVycy9zb2Mvc2Ftc3VuZy9leHlub3M1NDMzLXBtdS5j
+ICAgICAgICB8IDI4NiArKysrKysrKysrKysrKysrKysrKysrKysrKysrCj4+PiAgaW5jbHVkZS9s
+aW51eC9zb2Mvc2Ftc3VuZy9leHlub3MtcmVncy1wbXUuaCB8IDE0OCArKysrKysrKysrKysrKwo+
+Pj4gIDYgZmlsZXMgY2hhbmdlZCwgNDM5IGluc2VydGlvbnMoKyksIDMgZGVsZXRpb25zKC0pCj4+
+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvc29jL3NhbXN1bmcvZXh5bm9zNTQzMy1wbXUu
+Ywo+Pj4KPj4KPj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3NvYy9zYW1zdW5nL2V4eW5vczU0MzMt
+cG11LmMgYi9kcml2ZXJzL3NvYy9zYW1zdW5nL2V4eW5vczU0MzMtcG11LmMKPj4+IG5ldyBmaWxl
+IG1vZGUgMTAwNjQ0Cj4+PiBpbmRleCAwMDAwMDAwMDAwMDAuLjI1NzFlNjE1MjJmMAo+Pj4gLS0t
+IC9kZXYvbnVsbAo+Pj4gKysrIGIvZHJpdmVycy9zb2Mvc2Ftc3VuZy9leHlub3M1NDMzLXBtdS5j
+Cj4+PiBAQCAtMCwwICsxLDI4NiBAQAo+Pj4gKy8vIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBH
+UEwtMi4wCj4+PiArLy8KPj4+ICsvLyBDb3B5cmlnaHQgKGMpIDIwMTggU2Ftc3VuZyBFbGVjdHJv
+bmljcyBDby4sIEx0ZC4KPj4+ICsvLyBDb3B5cmlnaHQgKGMpIEpvbmdod2EgTGVlIDxqb25naHdh
+My5sZWVAc2Ftc3VuZy5jb20+Cj4+PiArLy8gQ29weXJpZ2h0IChjKSBDaGFud29vIENob2kgPGN3
+MDAuY2hvaUBzYW1zdW5nLmNvbT4KPj4+ICsvLwo+Pj4gKy8vIEVYWU5PUzU0MzMgLSBDUFUgUE1V
+IChQb3dlciBNYW5hZ2VtZW50IFVuaXQpIHN1cHBvcnQKPj4+ICsKPj4+ICsjaW5jbHVkZSA8bGlu
+dXgvc29jL3NhbXN1bmcvZXh5bm9zLXJlZ3MtcG11Lmg+Cj4+PiArI2luY2x1ZGUgPGxpbnV4L3Nv
+Yy9zYW1zdW5nL2V4eW5vcy1wbXUuaD4KPj4+ICsKPj4+ICsjaW5jbHVkZSAiZXh5bm9zLXBtdS5o
+Igo+Pj4gKwo+Pj4gK3N0YXRpYyBzdHJ1Y3QgZXh5bm9zX3BtdV9jb25mIGV4eW5vczU0MzNfcG11
+X2NvbmZpZ1tdID0gewo+Pj4gKwkvKiB7IC5vZmZzZXQgPSBhZGRyZXNzLAkudmFsID0geyBBRlRS
+LCBMUEEsIFNMRUVQIH0gfSAqLwo+Pj4gKwl7IEVYWU5PUzU0MzNfQVRMQVNfQ1BVMF9TWVNfUFdS
+X1JFRywJCQl7IDB4MCwgMHgwLCAweDggfSB9LAo+Pj4gKwl7IEVYWU5PUzU0MzNfRElTX0lSUV9B
+VExBU19DUFUwX0NFTlRSQUxfU1lTX1BXUl9SRUcsCXsgMHgwLCAweDAsIDB4MCB9IH0sCj4+PiAr
+CXsgRVhZTk9TNTQzM19BVExBU19DUFUxX1NZU19QV1JfUkVHLAkJCXsgMHgwLCAweDAsIDB4OCB9
+IH0sCj4+PiArCXsgRVhZTk9TNTQzM19ESVNfSVJRX0FUTEFTX0NQVTFfQ0VOVFJBTF9TWVNfUFdS
+X1JFRywJeyAweDAsIDB4MCwgMHgwIH0gfSwKPj4+ICsJeyBFWFlOT1M1NDMzX0FUTEFTX0NQVTJf
+U1lTX1BXUl9SRUcsCQkJeyAweDAsIDB4MCwgMHg4IH0gfSwKPj4+ICsJeyBFWFlOT1M1NDMzX0RJ
+U19JUlFfQVRMQVNfQ1BVMl9DRU5UUkFMX1NZU19QV1JfUkVHLAl7IDB4MCwgMHgwLCAweDAgfSB9
+LAo+Pj4gKwl7IEVYWU5PUzU0MzNfQVRMQVNfQ1BVM19TWVNfUFdSX1JFRywJCQl7IDB4MCwgMHgw
+LCAweDggfSB9LAo+Pj4gKwl7IEVYWU5PUzU0MzNfRElTX0lSUV9BVExBU19DUFUzX0NFTlRSQUxf
+U1lTX1BXUl9SRUcsCXsgMHgwLCAweDAsIDB4MCB9IH0sCj4+PiArCXsgRVhZTk9TNTQzM19BUE9M
+TE9fQ1BVMF9TWVNfUFdSX1JFRywJCQl7IDB4MCwgMHgwLCAweDggfSB9LAo+Pj4gKwl7IEVYWU5P
+UzU0MzNfRElTX0lSUV9BUE9MTE9fQ1BVMF9DRU5UUkFMX1NZU19QV1JfUkVHLAl7IDB4MCwgMHgw
+LCAweDAgfSB9LAo+Pj4gKwl7IEVYWU5PUzU0MzNfQVBPTExPX0NQVTFfU1lTX1BXUl9SRUcsCQkJ
+eyAweDAsIDB4MCwgMHg4IH0gfSwKPj4+ICsJeyBFWFlOT1M1NDMzX0RJU19JUlFfQVBPTExPX0NQ
+VTFfQ0VOVFJBTF9TWVNfUFdSX1JFRywJeyAweDAsIDB4MCwgMHgwIH0gfSwKPj4+ICsJeyBFWFlO
+T1M1NDMzX0FQT0xMT19DUFUyX1NZU19QV1JfUkVHLAkJCXsgMHgwLCAweDAsIDB4OCB9IH0sCj4+
+PiArCXsgRVhZTk9TNTQzM19ESVNfSVJRX0FQT0xMT19DUFUyX0NFTlRSQUxfU1lTX1BXUl9SRUcs
+CXsgMHgwLCAweDAsIDB4MCB9IH0sCj4+PiArCXsgRVhZTk9TNTQzM19BUE9MTE9fQ1BVM19TWVNf
+UFdSX1JFRywJCQl7IDB4MCwgMHgwLCAweDggfSB9LAo+Pj4gKwl7IEVYWU5PUzU0MzNfRElTX0lS
+UV9BUE9MTE9fQ1BVM19DRU5UUkFMX1NZU19QV1JfUkVHLAl7IDB4MCwgMHgwLCAweDAgfSB9LAo+
+Pj4gKwl7IEVYWU5PUzU0MzNfQVRMQVNfTk9OQ1BVX1NZU19QV1JfUkVHLAkJCXsgMHgwLCAweDAs
+IDB4OCB9IH0sCj4+PiArCXsgRVhZTk9TNTQzM19BUE9MTE9fTk9OQ1BVX1NZU19QV1JfUkVHLAkJ
+CXsgMHgwLCAweDAsIDB4OCB9IH0sCj4+Cj4+Cj4+IDEuIEZpcnN0IG9mIGFsbCB3aHkgZG8geW91
+IG5lZWQgYW55IG9mIHRoZXNlIENQVSByZWxhdGVkIFBNVSBjb25maWcKPj4gICAgcmVnaXN0ZXJz
+IGluIGtlcm5lbCA/IEZyb20gdGhlIGluZm9ybWF0aW9uIEkgZ2F0aGVyZWQgdGhpcyBpcyBBUk02
+NAo+PiAgICBTb0MgdXNpbmcgUFNDSS4gVGhlc2UgYXJlIG5lZWRlZCBqdXN0IGluIFBTQ0kgaW1w
+bGVtZW50YXRpb24gYW5kIG5vdAo+PiAgICBpbiBrZXJuZWwuIFNvIGNhbiB5b3UgZWxhYm9yYXRl
+IG9uIHdoeSB0aGVyZSBhcmUgcHJlc2VudCBoZXJlID8KPiAKPiBUaGUgMzJiaXQgRXh5bm9zIHVz
+ZWQgdGhlICdzbWMnIGNhbGwgdG8gZW50ZXIgdGhlIHN1c3BlbmQgbW9kZQo+IGFuZCBuZWVkIHRv
+IGhhbmRsZSB0aGUgUE1VIHJlZ2lzdGVycy4KPiAKCk9LCgo+IEV2ZW4gaWYgUFNDSSByZXBsYWNl
+cyB0aGUgJ3NtYycgY2FsbCBvbiB0aGUgRXh5bm9zNTQzMywKPiB0aGUgRXh5bm9zNTQzMydzIGRv
+Y3VtZW50IHJlcXVpcmVzIHRoZSBoYW5kbGluZyBvZiBQTVUgY29uZmlnCj4gcmVsYXRlZCB0byBD
+UFUgZm9yIHRoZSBzdXNwZW5kIG1vZGUuCj4KCk9LIGJ1dCBkb2VzIGl0IHN0YXRlIGl0IG5lZWRz
+IHRvIGJlIGluIGtlcm5lbCA/KGkuZS4gaW4gRUwxIE5TKQoKPiBJTUhPLCBJZiB0aGUgc2VjdXJl
+IE9TIGltcGxlbWVudGVkIHRoZSBhbGwgc29tZXRoaW5nIHJlbGF0ZWQgdG8gQ1BVLAo+IGl0IG1p
+Z2h0IGJlIHVubmVjZXNzYXJ5IHRvIGhhbmRsZSB0aGUgUE1VIHJlZ2lzdGVycy4gSSB0aGluayB0
+aGF0Cj4gaXQgZGVwZW5kIG9uIGhvdyB0byBkZXNpZ24gdGhlIFNvQyBieSBIL1cgQXJjaGl0ZWN0
+LiBUaGlzIGlzIGp1c3QgbXkgb3Bpbmlvbi4KPiAKCkV2ZW4gaWYgaXQgY2FuIGJlIGFjY2Vzc2Vk
+IGluIGtlcm5lbCwgYmV0dGVyIHRvIGtlZXAgYWxsIHRoZXNlIGluIFBTQ0kKaW1wbGVtZW50YXRp
+b24gdGhhdCBkb2VzIHRoZSBhY3R1YWwgcG93ZXIgc3RhdGUgbWFuYWdlbWVudC4gTWl4aW5nIHRo
+ZW0KaW4gYm90aCBrZXJuZWwgYW5kIFBTQ0kgaW1wbGVtZW50YXRpb24gaXMganVzdCBhIG1lc3Mg
+VEJIIGFuZCBub3QgZWFzeQp0byBtYWludGFpbiB0aGUgcGxhdGZvcm0gaWYgc29tZSBpc3N1ZXMg
+cG9wIHVwLgoKPj4KPj4gMi4gQXJlIHRoZXJlIGFueSBwdWJsaWMgZG9jdW1lbnRzIHRoYXQgdGhl
+c2UgbmFtZXMgbWFwIHRvID8KPiAKPiBUaGVyZSBpcyBubyBwdWJsaWMgZG9jdW1lbnQuIEl0IGlz
+IGNvbmZpZGVudGlhbC4KPiAKCkkgZ3Vlc3NlZCBzbyBhbmQgaGVuY2UgcmFpc2VkIHRvIHJlbW92
+ZSBpdC4KCj4+ICAgIElmIHRoZXJlIGlzIG5vbmUsIHBsZWFzZSByZXBsYWNlIHRoZXNlIGNvZGVu
+YW1lcyhBVExBUywgQVBPTExPKSB3aXRoCj4+ICAgIGFwcHJvcHJpYXRlbHkuCj4gCj4gSW4gdGhl
+IEV4eW5vczU0MzMsICdhcG9sbG8nIGluZGljYXRlcyB0aGUgTElUVExFIGNvcmVzIChjcHUwLTMs
+IGNvcnRleC1hNTMpCj4gYW5kICdhdGxhcycgaW5kaWNhdGVzIHRoZSBiaWcgY29yZXMgKGNwdTQt
+NywgY29ydGV4LWE1NykKPiAKPiBFeHlub3M1NDMzIGFscmVhZHkgdXNlZCB0aGUgJ2Fwb2xsbycg
+YW5kICdhdGxhcycgb24gY2xrLWV4eW5vczU0MzMuYyBkcml2ZXIKPiBhbmQgdGhlcm1hbCBkZXZp
+Y2UtdHJlZSBub2RlLiBJdCBpcyBiZXR0ZXIgdG8gdXNlIHRoZSBvcmlnaW5hbCByZWdpc3RlciBu
+YW1lCj4gaW4gdGhlIGRvY3VtZW50IGluIG9yZGVyIHRvIHJlZHVjZSB0aGUgY29uZnVzaW9uIG9m
+IHRoZSBjaGFuZ2Ugb2YgcmVnaXN0ZXIgbmFtZQo+IGV2ZW4gaWYgZG9jdW1lbnQgaXMgbm90IHB1
+YmxpYy4KPiAKPiBBbHNvLCBleHlub3M3IHVzZWQgdGhlICdhdGxhcycgd29yZCBmb3IgYmlnIGNv
+cmVzLgo+IAoKSSBkaXNhZ3JlZS4gSWYgeW91IGRvbid0IGhhdmUgYW55IHB1YmxpYyBkb2N1bWVu
+dHMsIHRoZW4gYmV0dGVyIHVzZQpuYW1lcyBvdGhlciBkZXZlbG9wZXJzIGFyZSB1c2VkIHRvIGFu
+ZCBub3Qgc29tZSBjb2RlIG5hbWVzIHdoaWNoCm90aGVyd2lzZSBpcyBub3Qgc2VlbiBpbiBhbnkg
+b3RoZXIgcGFydCBvZiB0aGUgY29kZSBiYXNlLiBHcmVwcGluZwpqdXN0IHNob3dzIEV4eW5vcyB1
+c2luZyB0aGVzZSBjb2RlIG5hbWVzIHdoaWNoIGFyZSBnZW5lcmFsbHkgcmVzdHJpY3RlZApmb3Ig
+aW50ZXJuYWwgdXNlLgoKLS0gClJlZ2FyZHMsClN1ZGVlcAoKX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QK
+bGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRl
+YWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
