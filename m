@@ -1,48 +1,93 @@
-From: Thinh Nguyen <Thinh.Nguyen-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v2 12/14] usb: dwc3: Add disabling of start_transfer failure quirk
-Date: Wed, 10 Jan 2018 13:16:30 -0800
-Message-ID: <c7ffa52bccfaea0cf80fd689ff0009427d4a1b51.1515618218.git.thinhn@synopsys.com>
-References: <cover.1515618218.git.thinhn@synopsys.com>
+From: Jae Hyun Yoo <jae.hyun.yoo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH linux dev-4.10 0/6] Add support PECI and PECI hwmon
+ drivers
+Date: Wed, 10 Jan 2018 13:46:34 -0800
+Message-ID: <e81095ff-d491-9977-25e6-7ba6d28d5e72@linux.intel.com>
+References: <20180109223126.13093-1-jae.hyun.yoo@linux.intel.com>
+ <20180110101755.GA5822@kroah.com>
+ <006c4a95-9299-bd17-6dec-52578e8461ae@linux.intel.com>
+ <20180110191703.GA20248@kroah.com>
+ <8997e43c-683e-418d-4e2b-1fe3fefe254e@linux.intel.com>
+ <20180110202740.GA27703@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1515618218.git.thinhn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <20180110202740.GA27703-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thinh Nguyen <Thinh.Nguyen-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+To: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, andrew-zrmu5oMJ5Fs@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, jdelvare-IBi9RG/b67k@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jae Hyun Yoo <jae.hyun.yoo-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-In DWC_usb31 version 1.70a-ea06 and prior needs a SW workaround for isoc
-START TRANSFER command failure. However, some affected versions may have
-RTL patches to fix this without a SW workaround. Add this quirk to
-disable the SW workaround when it is not needed.
+On 1/10/2018 12:27 PM, Greg KH wrote:
+> On Wed, Jan 10, 2018 at 11:30:05AM -0800, Jae Hyun Yoo wrote:
+>> On 1/10/2018 11:17 AM, Greg KH wrote:
+>>> On Wed, Jan 10, 2018 at 11:14:34AM -0800, Jae Hyun Yoo wrote:
+>>>> On 1/10/2018 2:17 AM, Greg KH wrote:
+>>>>> On Tue, Jan 09, 2018 at 02:31:20PM -0800, Jae Hyun Yoo wrote:
+>>>>>> From: Jae Hyun Yoo <jae.hyun.yoo-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+>>>>>>
+>>>>>> Hello,
+>>>>>>
+>>>>>> This patch set provides support for PECI of AST2400/2500 which can give us PECI
+>>>>>> functionalities such as temperature monitoring, platform manageability,
+>>>>>> processor diagnostics and failure analysis. Also provides generic peci.h and
+>>>>>> peci_ioctl.h headers to provide compatibility to peci drivers that can be
+>>>>>> implemented later e.g. Nuvoton's BMC SoC family.
+>>>>>
+>>>>> What is the "dev-4.10" in the subject for?  4.10 is really old and
+>>>>> obsolete :(
+>>>>>
+>>>>> thanks,
+>>>>>
+>>>>> greg k-h
+>>>>>
+>>>>
+>>>> I made this patch set on top of the v4.10 which OpenBmc project is currently
+>>>> using. I'll rebase this patch set onto the current kernel.org mainline.
+>>>
+>>> What is "OpenBmc", and why are they using an obsolete and insecure
+>>> kernel for their project?  That seems like a very foolish thing to do...
+>>>
+>>> thanks,
+>>>
+>>> greg k-h
+>>>
+>>
+>> OpenBmc is an open source project to create a highly extensible framework
+>> for BMC (Board Management Controller) software for data-center computer
+>> systems:
+>> https://github.com/openbmc
+>>
+>> Its current mainline is v4.10 but it is being kept upgrading so it will be
+>> upgraded to the latest stable or long-term version soon.
+> 
+> Why hasn't it been updated in the year since 4.10 was released?  That's
+> a _very_ long time to be running on a totally insecure kernel, and no
+> new development should ever be done on old kernels, that's even crazier
+> (as we can't go back in time and accept patches for new features to old
+> releases...)
+> 
 
-Synopsys STAR 9001202023: Wrong microframe number for isochronous IN
-endpoints.
+Thanks for your pointing it out and I totally agree with you. Actually, 
+we are preparing 4.13 update for now and an another update will be 
+followed up. As I answered above, I'll rebase this patch set onto the 
+latest kernel.org mainline. Sorry for my misunderstanding of upstream 
+process.
 
-Cc: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Signed-off-by: Thinh Nguyen <thinhn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
----
- Documentation/devicetree/bindings/usb/dwc3.txt | 3 +++
- 1 file changed, 3 insertions(+)
+> It sounds like the openbmc project needs to learn how to manage their
+> kernels a whole lot better, who do I need to go poke about this?
+>  > thanks,
+> 
+> greg k-h
+> 
 
-diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
-index a532fa6bf884..db53d8506084 100644
---- a/Documentation/devicetree/bindings/usb/dwc3.txt
-+++ b/Documentation/devicetree/bindings/usb/dwc3.txt
-@@ -15,6 +15,9 @@ Optional properties:
-  - phys: from the *Generic PHY* bindings
-  - phy-names: from the *Generic PHY* bindings; supported names are "usb2-phy"
- 	or "usb3-phy".
-+ - snps,dis-start-transfer-quirk: when set, disable isoc START TRANSFER command
-+			failure SW work-around for DWC_usb31 version 1.70a-ea06
-+			and prior.
-  - snps,usb3_lpm_capable: determines if platform is USB3 LPM capable
-  - snps,disable_scramble_quirk: true when SW should disable data scrambling.
- 	Only really useful for FPGA builds.
--- 
-2.11.0
+I've already cc'ed openbmc developers so they are also seeing this 
+thread. Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org> is the openbmc kernel maintainer.
 
+Thanks,
+Jae
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
