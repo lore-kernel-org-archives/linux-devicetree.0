@@ -1,61 +1,53 @@
-From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Subject: Re: [PATCH v5 0/5] Add OV5640 parallel interface and RGB565/YUYV
- support
-Date: Thu, 11 Jan 2018 00:25:08 +0200
-Message-ID: <20180110222508.4x5kimanevttmqis@valkosipuli.retiisi.org.uk>
-References: <1514973452-10464-1-git-send-email-hugues.fruchet@st.com>
- <20180108153811.5xrvbaekm6nxtoa6@flea>
- <3010811e-ed37-4489-6a9f-6cc835f41575@st.com>
- <20180110153724.l77zpdgxfbzkznuf@flea>
- <2089de18-1f7f-6d6e-7aee-9dc424bca335@st.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <2089de18-1f7f-6d6e-7aee-9dc424bca335-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hugues FRUCHET <hugues.fruchet-qxv4g6HH51o@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Subject: [PATCH 0/4] backlight: pwm_bl: support linear interpolation and brightness to human eye
+Date: Wed, 10 Jan 2018 23:30:42 +0100
+Message-ID: <20180110223046.17696-1-enric.balletbo@collabora.com>
+Return-path: <linux-leds-owner@vger.kernel.org>
+Sender: linux-leds-owner@vger.kernel.org
+To: Daniel Thompson <daniel.thompson@linaro.org>, Doug Anderson <dianders@google.com>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>
+Cc: Jingoo Han <jingoohan1@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Brian Norris <briannorris@google.com>, Guenter Roeck <groeck@google.com>, Lee Jones <lee.jones@linaro.org>, Alexandru Stan <amstan@google.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Hugues,
+Dear all,
 
-On Wed, Jan 10, 2018 at 03:51:07PM +0000, Hugues FRUCHET wrote:
-> Good news Maxime !
-> 
-> Have you seen that you can adapt the polarities through devicetree ?
-> 
-> +                       /* Parallel bus endpoint */
-> +                       ov5640_to_parallel: endpoint {
-> [...]
-> +                               hsync-active = <0>;
-> +                               vsync-active = <0>;
-> +                               pclk-sample = <1>;
-> +                       };
-> 
-> Doing so you can adapt to your SoC/board setup easily.
-> 
-> If you don't put those lines in devicetree, the ov5640 default init 
-> sequence is used which set the polarity as defined in below comment:
-> ov5640_set_stream_dvp()
-> [...]
-> +        * Control lines polarity can be configured through
-> +        * devicetree endpoint control lines properties.
-> +        * If no endpoint control lines properties are set,
-> +        * polarity will be as below:
-> +        * - VSYNC:     active high
-> +        * - HREF:      active low
-> +        * - PCLK:      active low
-> +        */
-> [...]
+This series is a first patchset based on the discussion of two previous RFCs
+[1] and [2].
 
-The properties are at the moment documented as mandatory in DT binding
-documentation.
+The first and second patch what tries to solve is the problem of granularity
+for high resolution PWMs. The idea is simple interpolate between 2
+brightness values so we can have a high PWM duty cycle (a 16 bits PWM is up
+to 65535 possible steps) without having to list out every possible value in
+the dts. I think that this patch is required to not break backward
+compability, to be more flexible and also extend the functionality to be
+able to use high resolution PWM with enough steps to have a good UI
+experience in userspace.
+
+The thirth and fourth patch is a bit more ambicious, the idea is let decide
+the driver the brightness-levels required in function of the PWM resolution.
+To do this create a brightness-levels table filled with the CIE 1931
+algorithm values to convert brightness to PWM duty cycle.
+
+More detailed info is available in the commit message of every patch.
+
+Both functionalities were tested on a Samsung Chromebook Plus (that has a
+16 bits PWM) and a SL50 device (with a 8 bits PWM)
+
+Waiting for your feedback.
+
+[1] http://www.spinics.net/lists/devicetree/msg193262.html
+[2] https://lkml.org/lkml/2017/11/16/301
+
+Best regards,
+
+Enric Balletbo i Serra (4):
+  backlight: pwm_bl: linear interpolation between brightness-levels
+  dt-bindings: pwm-backlight: add a num-interpolation-steps property.
+  backlight: pwm_bl: compute brightness of LED linearly to human eye.
+  dt-bindings: pwm-backlight: move brightness-levels to optional.
+
+ .../bindings/leds/backlight/pwm-backlight.txt      |  36 +++-
+ drivers/video/backlight/pwm_bl.c                   | 237 +++++++++++++++++++--
+ 2 files changed, 253 insertions(+), 20 deletions(-)
 
 -- 
-Sakari Ailus
-e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.15.1
