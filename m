@@ -1,40 +1,113 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH v4 2/3] dt-bindings: usb: renesas_usbhs: Add support for
- RZ/A1
-Date: Wed, 10 Jan 2018 08:31:55 +0000
-Message-ID: <TY1PR06MB0992F61847A2928F149ECB4AD8110@TY1PR06MB0992.apcprd06.prod.outlook.com>
-References: <20180108123055.64890-1-chris.brandt@renesas.com>
- <20180108123055.64890-3-chris.brandt@renesas.com>
+From: Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: Hi3660: Remove 'CPU_NAP' idle state
+Date: Wed, 10 Jan 2018 09:38:57 +0100
+Message-ID: <CAKfTPtBZWcwMKg6rxP0wMnihYFCtXh2KWgERYqFFVtFVnrTK9A@mail.gmail.com>
+References: <1515472362-19979-1-git-send-email-leo.yan@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180108123055.64890-3-chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Content-Language: ja-JP
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Chris Brandt <Chris.Brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1515472362-19979-1-git-send-email-leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, LAK <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kevin Wang <jean.wangtao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Chris-san,
-(And I added Felipe's email as To)
+On 9 January 2018 at 05:32, Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> Thanks a lot for Vincent Guittot careful work to find bug for 'CPU_NAP'
+> idle state.  At early time, the CPU CA73 CPU_NAP idle state has been
+> supported on Hikey960.  Later we found the system has the hang issue
+> and for resolving this issue Hisilicon released new MCU firmware, but
+> unfortunately the new MCU firmware has side effect and results in the
+> CA73 CPU cannot really enter CPU_NAP state and roll back to WFI state.
+>
+> After discussion we cannot see the possibility to enable CA73 CPU_NAP
+> state anymore on Hikey960, based on this conclusion we should remove
+> this state from DT binding.
+>
+> Cc: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: Kevin Wang <jean.wangtao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-> From: Chris Brandt, Sent: Monday, January 8, 2018 9:31 PM
->=20
-> Document support for RZ/A1 SoCs
->=20
-> Signed-off-by: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Tested-by: Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+
 > ---
-
-Thank you for the patch!
-
-Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-
-Best regards,
-Yoshihiro Shimoda
-
+>  arch/arm64/boot/dts/hisilicon/hi3660.dtsi | 32 ++++---------------------------
+>  1 file changed, 4 insertions(+), 28 deletions(-)
+>
+> diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+> index ab0b95b..8fddf0d 100644
+> --- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+> +++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+> @@ -96,11 +96,7 @@
+>                         reg = <0x0 0x100>;
+>                         enable-method = "psci";
+>                         next-level-cache = <&A73_L2>;
+> -                       cpu-idle-states = <
+> -                                       &CPU_NAP
+> -                                       &CPU_SLEEP
+> -                                       &CLUSTER_SLEEP_1
+> -                       >;
+> +                       cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP_1>;
+>                 };
+>
+>                 cpu5: cpu@101 {
+> @@ -109,11 +105,7 @@
+>                         reg = <0x0 0x101>;
+>                         enable-method = "psci";
+>                         next-level-cache = <&A73_L2>;
+> -                       cpu-idle-states = <
+> -                                       &CPU_NAP
+> -                                       &CPU_SLEEP
+> -                                       &CLUSTER_SLEEP_1
+> -                       >;
+> +                       cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP_1>;
+>                 };
+>
+>                 cpu6: cpu@102 {
+> @@ -122,11 +114,7 @@
+>                         reg = <0x0 0x102>;
+>                         enable-method = "psci";
+>                         next-level-cache = <&A73_L2>;
+> -                       cpu-idle-states = <
+> -                                       &CPU_NAP
+> -                                       &CPU_SLEEP
+> -                                       &CLUSTER_SLEEP_1
+> -                       >;
+> +                       cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP_1>;
+>                 };
+>
+>                 cpu7: cpu@103 {
+> @@ -135,24 +123,12 @@
+>                         reg = <0x0 0x103>;
+>                         enable-method = "psci";
+>                         next-level-cache = <&A73_L2>;
+> -                       cpu-idle-states = <
+> -                                       &CPU_NAP
+> -                                       &CPU_SLEEP
+> -                                       &CLUSTER_SLEEP_1
+> -                       >;
+> +                       cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP_1>;
+>                 };
+>
+>                 idle-states {
+>                         entry-method = "psci";
+>
+> -                       CPU_NAP: cpu-nap {
+> -                               compatible = "arm,idle-state";
+> -                               arm,psci-suspend-param = <0x0000001>;
+> -                               entry-latency-us = <7>;
+> -                               exit-latency-us = <2>;
+> -                               min-residency-us = <15>;
+> -                       };
+> -
+>                         CPU_SLEEP: cpu-sleep {
+>                                 compatible = "arm,idle-state";
+>                                 local-timer-stop;
+> --
+> 2.7.4
+>
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
