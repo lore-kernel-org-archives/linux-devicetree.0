@@ -1,68 +1,77 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: [PATCH] ARM: lpc3250: fix uda1380 gpio numbers
-Date: Wed, 10 Jan 2018 17:22:00 +0100
-Message-ID: <20180110162220.224945-1-arnd@arndb.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>, Sylvain Lemieux <slemieux.tyco-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH 2/3] dt-bindings: pinctrl: Add a ngpios-ranges property
+Date: Wed, 10 Jan 2018 08:37:33 -0800
+Message-ID: <20180110163733.GH21040@codeaurora.org>
+References: <20180110015848.11480-1-sboyd@codeaurora.org>
+ <20180110015848.11480-3-sboyd@codeaurora.org>
+ <CACRpkdaN6vmV4L4U76DvD5BN+j1RYCQakTysA+GGPdT8Chc-iw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CACRpkdaN6vmV4L4U76DvD5BN+j1RYCQakTysA+GGPdT8Chc-iw@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@secretlab.ca>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, Timur Tabi <timur@codeaurora.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, linux-gpio@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-dtc warns about obviously incorrect GPIO numbers for the audio codec
-on both lpc32xx boards:
+On 01/10, Linus Walleij wrote:
+> On Wed, Jan 10, 2018 at 2:58 AM, Stephen Boyd <sboyd@codeaurora.org> wrote:
+> 
+> > +- ngpios-ranges:
+> > +       Usage: optional
+> > +       Value type: <prop-encoded-array>
+> > +       Definition: Tuples of GPIO ranges (base, size) indicating
+> > +                   GPIOs available for use.
+> > +
+> >  Please refer to ../gpio/gpio.txt and ../interrupt-controller/interrupts.txt for
+> >  a general description of GPIO and interrupt bindings.
+> 
+> I like the tuples syntax. That's fine. It's like gpio-ranges we have
+> already to map between pin controllers and GPIO.
+> 
+> I don't think we can reuse gpio-ranges because that is
+> exclusively for pin control ATM, it would be fine if the ranges
+> were for a specific device, like pin control does, like:
+> 
+> gpio-ranges = <&secure_world_thing 0 20 10>;
+> 
+> But you definately would need a node to tie it to, so that the
+> driver for that node can specify that it's gonna take the
+> GPIOs.
+> 
+> But I think the semantics should be the inverse. That you
+> point out "holes" with the lines we *can't* use.
 
-arch/arm/boot/dts/lpc3250-phy3250.dtb: Warning (gpios_property): reset-gpio property size (12) too small for cell size 3 in /ahb/apb/i2c@400A0000/uda1380@18
-arch/arm/boot/dts/lpc3250-phy3250.dtb: Warning (gpios_property): power-gpio property size (12) too small for cell size 3 in /ahb/apb/i2c@400A0000/uda1380@18
-arch/arm/boot/dts/lpc3250-ea3250.dtb: Warning (gpios_property): reset-gpio property size (12) too small for cell size 3 in /ahb/apb/i2c@400A0000/uda1380@18
-arch/arm/boot/dts/lpc3250-ea3250.dtb: Warning (gpios_property): power-gpio property size (12) too small for cell size 3 in /ahb/apb/i2c@400A0000/uda1380@18
+Ok. I can invert the logic and push it into the core part of the
+code. I'll leave the ACPI part in the msm driver.
 
-It looks like the nodes are written for a different binding that combines
-the GPIO number into a single number rather than a bank/number pair.
-I found the right numbers on stackexchange.com, so this patch fixes
-the warning and has a reasonable chance of getting things to actually
-work.
+> 
+> We already support a generic property "ngpios" that says how
+> many of the GPIOs (counted from zero) that can be used,
+> so if those should be able to use this as a generic property it
+> is better with the inverse semantics and say that the
+> "reserved-gpio-ranges", "secureworld-gpio-ranges"
+> (or whatever we decide to call it) takes precedence over
+> ngpios so we don't end up in ambigous places.
+> 
+> Then, will it be possible to put the parsing, handling and
+> disablement of these ranges into drivers/gpio/gpiolib-of.c
+> where we handle the ranges today, or do we need to
+> do it in the individual drivers?
+> 
 
-Link: https://unix.stackexchange.com/questions/59497/alsa-asoc-how-to-correctly-load-devices-drivers/62217#62217
-Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
----
- arch/arm/boot/dts/lpc3250-ea3250.dts  | 4 ++--
- arch/arm/boot/dts/lpc3250-phy3250.dts | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+I'll cook that up right now to do the inverse thing in the
+gpiolib core code with a 'reserved-gpio-ranges' property. I
+haven't looked in much detail, but I would hope that it would
+work pretty easily. Should it be decoupled from the
+GPIOLIB_IRQCHIP config? If the idea is generic, then it may not
+be related to irq lines, but for the qcom driver it was all fine
+because all three concepts: irq, gpios, and pins have a one to
+one relationship. The only place it breaks down is if we have
+more pins than gpios, in which case I punted and just considered
+non-gpio pins as always valid.
 
-diff --git a/arch/arm/boot/dts/lpc3250-ea3250.dts b/arch/arm/boot/dts/lpc3250-ea3250.dts
-index c43adb7b4d7c..58ea0a4e7afa 100644
---- a/arch/arm/boot/dts/lpc3250-ea3250.dts
-+++ b/arch/arm/boot/dts/lpc3250-ea3250.dts
-@@ -156,8 +156,8 @@
- 	uda1380: uda1380@18 {
- 		compatible = "nxp,uda1380";
- 		reg = <0x18>;
--		power-gpio = <&gpio 0x59 0>;
--		reset-gpio = <&gpio 0x51 0>;
-+		power-gpio = <&gpio 3 10 0>;
-+		reset-gpio = <&gpio 3 2 0>;
- 		dac-clk = "wspll";
- 	};
- 
-diff --git a/arch/arm/boot/dts/lpc3250-phy3250.dts b/arch/arm/boot/dts/lpc3250-phy3250.dts
-index c72eb9845603..1e1c2f517a82 100644
---- a/arch/arm/boot/dts/lpc3250-phy3250.dts
-+++ b/arch/arm/boot/dts/lpc3250-phy3250.dts
-@@ -81,8 +81,8 @@
- 	uda1380: uda1380@18 {
- 		compatible = "nxp,uda1380";
- 		reg = <0x18>;
--		power-gpio = <&gpio 0x59 0>;
--		reset-gpio = <&gpio 0x51 0>;
-+		power-gpio = <&gpio 3 10 0>;
-+		reset-gpio = <&gpio 3 2 0>;
- 		dac-clk = "wspll";
- 	};
- 
 -- 
-2.9.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
