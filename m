@@ -1,44 +1,83 @@
 From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH v2 1/7] ARM: imx: add timer stop flag to ARM power off state
-Date: Wed, 10 Jan 2018 22:04:47 +0100
-Message-ID: <20180110210453.19264-1-stefan@agner.ch>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Subject: [PATCH v2 3/7] ARM: dts: imx6ull: add additional pinfunc defines for
+ i.MX 6ULL
+Date: Wed, 10 Jan 2018 22:04:49 +0100
+Message-ID: <20180110210453.19264-3-stefan@agner.ch>
+References: <20180110210453.19264-1-stefan@agner.ch>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180110210453.19264-1-stefan@agner.ch>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: shawnguo@kernel.org, kernel@pengutronix.de
-Cc: fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>, Anson Huang <anson.huang@nxp.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Bai Ping <ping.bai@nxp.com>, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>, robh+dt@kernel.org, fabio.estevam@nxp.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-When the CPU is in ARM power off state the ARM architected
-timers are stopped. The flag is already present in the higher
-power WAIT mode.
+From: Bai Ping <ping.bai@nxp.com>
 
-This allows to use the ARM generic timer on i.MX 6UL/6ULL SoC.
-Without the flag the kernel freezes when the timer enters the
-first time ARM power off mode.
+On i.MX 6ULL, the pin MUX and CTRL register of BOOT_MODEx and TAMPERx
+pins are available through IOMUXC_SNVS. Add additional pinfunc defines.
 
-Note: The default timer on i.MX6SX is the i.MX GPT timer which is
-not disabled during CPU idle. However, the timer is not affected
-by the CPUIDLE_FLAG_TIMER_STOP flag. The flag only affects CPU
-local timers.
-
-Cc: Anson Huang <anson.huang@nxp.com>
+Signed-off-by: Bai Ping <ping.bai@nxp.com>
 Signed-off-by: Stefan Agner <stefan@agner.ch>
-Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Dong Aisheng <aisheng.dong@nxp.com>
 ---
- arch/arm/mach-imx/cpuidle-imx6sx.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/imx6ull-pinfunc-snvs.h | 27 +++++++++++++++++++++++++++
+ arch/arm/boot/dts/imx6ull.dtsi           |  1 +
+ 2 files changed, 28 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx6ull-pinfunc-snvs.h
 
-diff --git a/arch/arm/mach-imx/cpuidle-imx6sx.c b/arch/arm/mach-imx/cpuidle-imx6sx.c
-index c5a5c3a70ab1..d0f14b761ff7 100644
---- a/arch/arm/mach-imx/cpuidle-imx6sx.c
-+++ b/arch/arm/mach-imx/cpuidle-imx6sx.c
-@@ -89,6 +89,7 @@ static struct cpuidle_driver imx6sx_cpuidle_driver = {
- 			 */
- 			.exit_latency = 300,
- 			.target_residency = 500,
-+			.flags = CPUIDLE_FLAG_TIMER_STOP,
- 			.enter = imx6sx_enter_wait,
- 			.name = "LOW-POWER-IDLE",
- 			.desc = "ARM power off",
+diff --git a/arch/arm/boot/dts/imx6ull-pinfunc-snvs.h b/arch/arm/boot/dts/imx6ull-pinfunc-snvs.h
+new file mode 100644
+index 000000000000..fa900c15405d
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6ull-pinfunc-snvs.h
+@@ -0,0 +1,27 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2016 Freescale Semiconductor, Inc.
++ * Copyright (C) 2017 NXP
++ */
++
++#ifndef __DTS_IMX6ULL_PINFUNC_SNVS_H
++#define __DTS_IMX6ULL_PINFUNC_SNVS_H
++/*
++ * The pin function ID is a tuple of
++ * <mux_reg conf_reg input_reg mux_mode input_val>
++ */
++#define MX6ULL_PAD_BOOT_MODE0__GPIO5_IO10                          0x0000 0x0044 0x0000 0x5 0x0
++#define MX6ULL_PAD_BOOT_MODE1__GPIO5_IO11                          0x0004 0x0048 0x0000 0x5 0x0
++#define MX6ULL_PAD_SNVS_TAMPER0__GPIO5_IO00                        0x0008 0x004C 0x0000 0x5 0x0
++#define MX6ULL_PAD_SNVS_TAMPER1__GPIO5_IO01                        0x000C 0x0050 0x0000 0x5 0x0
++#define MX6ULL_PAD_SNVS_TAMPER2__GPIO5_IO02                        0x0010 0x0054 0x0000 0x5 0x0
++#define MX6ULL_PAD_SNVS_TAMPER3__GPIO5_IO03                        0x0014 0x0058 0x0000 0x5 0x0
++#define MX6ULL_PAD_SNVS_TAMPER4__GPIO5_IO04                        0x0018 0x005C 0x0000 0x5 0x0
++#define MX6ULL_PAD_SNVS_TAMPER5__GPIO5_IO05                        0x001C 0x0060 0x0000 0x5 0x0
++#define MX6ULL_PAD_SNVS_TAMPER6__GPIO5_IO06                        0x0020 0x0064 0x0000 0x5 0x0
++#define MX6ULL_PAD_SNVS_TAMPER7__GPIO5_IO07                        0x0024 0x0068 0x0000 0x5 0x0
++#define MX6ULL_PAD_SNVS_TAMPER8__GPIO5_IO08                        0x0028 0x006C 0x0000 0x5 0x0
++#define MX6ULL_PAD_SNVS_TAMPER9__GPIO5_IO09                        0x002C 0x0070 0x0000 0x5 0x0
++
++#endif /* __DTS_IMX6ULL_PINFUNC_SNVS_H */
++
+diff --git a/arch/arm/boot/dts/imx6ull.dtsi b/arch/arm/boot/dts/imx6ull.dtsi
+index 0c182917b863..a58c01dc15c3 100644
+--- a/arch/arm/boot/dts/imx6ull.dtsi
++++ b/arch/arm/boot/dts/imx6ull.dtsi
+@@ -41,3 +41,4 @@
+ 
+ #include "imx6ul.dtsi"
+ #include "imx6ull-pinfunc.h"
++#include "imx6ull-pinfunc-snvs.h"
 -- 
 2.15.1
