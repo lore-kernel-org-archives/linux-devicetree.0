@@ -1,41 +1,48 @@
 From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: [PATCH 0/3] Support qcom pinctrl protected pins
-Date: Tue,  9 Jan 2018 17:58:45 -0800
-Message-ID: <20180110015848.11480-1-sboyd@codeaurora.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
+Subject: [PATCH 2/3] dt-bindings: pinctrl: Add a ngpios-ranges property
+Date: Tue,  9 Jan 2018 17:58:47 -0800
+Message-ID: <20180110015848.11480-3-sboyd@codeaurora.org>
+References: <20180110015848.11480-1-sboyd@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180110015848.11480-1-sboyd@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Linus Walleij <linus.walleij@linaro.org>
 Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Timur Tabi <timur@codeaurora.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patchset proposes a solution to describing the valid
-pins for a pin controller in a semi-generic way so that qcom
-platforms can expose the pins that are really available.
+Some qcom platforms make some GPIOs or pins unavailable for use
+by non-secure operating systems, and thus reading or writing the
+registers for those pins will cause access control issues.
+Introduce a DT property to describe the set of GPIOs that are
+available for use so that higher level OSes are able to know what
+pins to avoid reading/writing.
 
-Typically, this has been done by having drivers and firmware 
-descriptions only use pins they know they have access to, and that
-still works now because we no longer read the pin direction at
-boot. But there are still some userspace drivers and debugfs facilities
-that don't know what pins are available and attempt to read everything
-they can. On qcom platforms, this may lead to a system hang, which isn't 
-very nice behavior, even if root is the only user that can trigger it.
+Cc: <devicetree@vger.kernel.org>
+Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
+---
 
-The proposal is to describe the valid pins and then not allow things to
-cause problems by using the invalid pins. Obviously, the firmware may
-mess this up, so this is mostly a nice to have feature or a safety net
-so that things don't blow up easily.
+I stuck this inside msm8996, but maybe it can go somewhere more generic?
 
-Stephen Boyd (3):
-  gpiolib: Export gpiochip_irqchip_irq_valid() to drivers
-  dt-bindings: pinctrl: Add a ngpios-ranges property
-  pinctrl: qcom: Don't allow protected pins to be requested
+ Documentation/devicetree/bindings/pinctrl/qcom,msm8996-pinctrl.txt | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
- .../bindings/pinctrl/qcom,msm8996-pinctrl.txt      |  6 ++
- drivers/gpio/gpiolib.c                             |  5 +-
- drivers/pinctrl/qcom/pinctrl-msm.c                 | 98 +++++++++++++++++++++-
- include/linux/gpio/driver.h                        |  3 +
- 4 files changed, 106 insertions(+), 6 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,msm8996-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,msm8996-pinctrl.txt
+index aaf01e929eea..8354ab270486 100644
+--- a/Documentation/devicetree/bindings/pinctrl/qcom,msm8996-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,msm8996-pinctrl.txt
+@@ -40,6 +40,12 @@ MSM8996 platform.
+ 	Definition: must be 2. Specifying the pin number and flags, as defined
+ 		    in <dt-bindings/gpio/gpio.h>
+ 
++- ngpios-ranges:
++	Usage: optional
++	Value type: <prop-encoded-array>
++	Definition: Tuples of GPIO ranges (base, size) indicating
++		    GPIOs available for use.
++
+ Please refer to ../gpio/gpio.txt and ../interrupt-controller/interrupts.txt for
+ a general description of GPIO and interrupt bindings.
+ 
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
