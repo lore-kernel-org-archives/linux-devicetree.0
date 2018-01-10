@@ -1,7 +1,7 @@
 From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH v2 6/7] ARM: dts: imx6ull: add IOMUXC SNVS instance
-Date: Wed, 10 Jan 2018 22:04:52 +0100
-Message-ID: <20180110210453.19264-6-stefan@agner.ch>
+Subject: [PATCH v2 4/7] ARM: dts: imx6ul: add interrupt of virt-capable GIC
+Date: Wed, 10 Jan 2018 22:04:50 +0100
+Message-ID: <20180110210453.19264-4-stefan@agner.ch>
 References: <20180110210453.19264-1-stefan@agner.ch>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180110210453.19264-1-stefan@agner.ch>
@@ -10,41 +10,29 @@ To: shawnguo@kernel.org, kernel@pengutronix.de
 Cc: fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
 List-Id: devicetree@vger.kernel.org
 
-The i.MX 6ULL features another IOMUX Controller called IOMUXC
-SNVS which allows to control BOOT_MODE and TAMPER pins. Add the
-controller to the i.MX 6ULL specific imx6ull.dtsi device tree.
+The Cortex-A7 and its GIC support virtualization extensions. To
+make use of them the CPU private interrupt needs to be specified.
 
 Signed-off-by: Stefan Agner <stefan@agner.ch>
 Reviewed-by: Rob Herring <robh@kernel.org>
-Acked-by: Dong Aisheng <aisheng.dong@nxp.com>
 ---
- arch/arm/boot/dts/imx6ull.dtsi | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ arch/arm/boot/dts/imx6ul.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx6ull.dtsi b/arch/arm/boot/dts/imx6ull.dtsi
-index a58c01dc15c3..bc2cd4fb8b12 100644
---- a/arch/arm/boot/dts/imx6ull.dtsi
-+++ b/arch/arm/boot/dts/imx6ull.dtsi
-@@ -42,3 +42,20 @@
- #include "imx6ul.dtsi"
- #include "imx6ull-pinfunc.h"
- #include "imx6ull-pinfunc-snvs.h"
-+
-+/ {
-+	soc {
-+		aips3: aips-bus@2200000 {
-+			compatible = "fsl,aips-bus", "simple-bus";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			reg = <0x02200000 0x100000>;
-+			ranges;
-+
-+			iomuxc_snvs: iomuxc-snvs@2290000 {
-+				compatible = "fsl,imx6ull-iomuxc-snvs";
-+				reg = <0x02290000 0x4000>;
-+			};
-+		};
-+	};
-+};
+diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
+index 1b14e4d39c26..993fbdbdd506 100644
+--- a/arch/arm/boot/dts/imx6ul.dtsi
++++ b/arch/arm/boot/dts/imx6ul.dtsi
+@@ -100,8 +100,10 @@
+ 
+ 	intc: interrupt-controller@a01000 {
+ 		compatible = "arm,gic-400", "arm,cortex-a7-gic";
++		interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
+ 		#interrupt-cells = <3>;
+ 		interrupt-controller;
++		interrupt-parent = <&intc>;
+ 		reg = <0x00a01000 0x1000>,
+ 		      <0x00a02000 0x2000>,
+ 		      <0x00a04000 0x2000>,
 -- 
 2.15.1
