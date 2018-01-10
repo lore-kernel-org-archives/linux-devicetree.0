@@ -1,48 +1,189 @@
 From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: [PATCH 2/3] dt-bindings: pinctrl: Add a ngpios-ranges property
-Date: Tue,  9 Jan 2018 17:58:47 -0800
-Message-ID: <20180110015848.11480-3-sboyd@codeaurora.org>
+Subject: [PATCH 3/3] pinctrl: qcom: Don't allow protected pins to be requested
+Date: Tue,  9 Jan 2018 17:58:48 -0800
+Message-ID: <20180110015848.11480-4-sboyd@codeaurora.org>
 References: <20180110015848.11480-1-sboyd@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 In-Reply-To: <20180110015848.11480-1-sboyd@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-arm-msm-owner@vger.kernel.org
 To: Linus Walleij <linus.walleij@linaro.org>
 Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Timur Tabi <timur@codeaurora.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 Some qcom platforms make some GPIOs or pins unavailable for use
 by non-secure operating systems, and thus reading or writing the
-registers for those pins will cause access control issues.
-Introduce a DT property to describe the set of GPIOs that are
-available for use so that higher level OSes are able to know what
-pins to avoid reading/writing.
+registers for those pins will cause access control issues and
+reset the device. With a DT/ACPI property to describe the set of
+pins that are available for use, parse the available pins and set
+the irq valid bits for gpiolib to know what to consider 'valid'.
+This should avoid any issues with gpiolib. Furthermore, implement
+the pinmux_ops::request function so that pinmux can also make
+sure to not use pins that are unavailable.
 
-Cc: <devicetree@vger.kernel.org>
 Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
 ---
+ drivers/pinctrl/qcom/pinctrl-msm.c | 98 ++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 94 insertions(+), 4 deletions(-)
 
-I stuck this inside msm8996, but maybe it can go somewhere more generic?
-
- Documentation/devicetree/bindings/pinctrl/qcom,msm8996-pinctrl.txt | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,msm8996-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,msm8996-pinctrl.txt
-index aaf01e929eea..8354ab270486 100644
---- a/Documentation/devicetree/bindings/pinctrl/qcom,msm8996-pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/qcom,msm8996-pinctrl.txt
-@@ -40,6 +40,12 @@ MSM8996 platform.
- 	Definition: must be 2. Specifying the pin number and flags, as defined
- 		    in <dt-bindings/gpio/gpio.h>
+diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
+index 7a960590ecaa..4a251268ebc4 100644
+--- a/drivers/pinctrl/qcom/pinctrl-msm.c
++++ b/drivers/pinctrl/qcom/pinctrl-msm.c
+@@ -105,6 +105,17 @@ static const struct pinctrl_ops msm_pinctrl_ops = {
+ 	.dt_free_map		= pinctrl_utils_free_map,
+ };
  
-+- ngpios-ranges:
-+	Usage: optional
-+	Value type: <prop-encoded-array>
-+	Definition: Tuples of GPIO ranges (base, size) indicating
-+		    GPIOs available for use.
++static int msm_pinmux_request(struct pinctrl_dev *pctldev, unsigned offset)
++{
++	struct msm_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
++	struct gpio_chip *chip = &pctrl->chip;
 +
- Please refer to ../gpio/gpio.txt and ../interrupt-controller/interrupts.txt for
- a general description of GPIO and interrupt bindings.
++	if (gpiochip_irqchip_irq_valid(chip, offset))
++		return 0;
++
++	return -EINVAL;
++}
++
+ static int msm_get_functions_count(struct pinctrl_dev *pctldev)
+ {
+ 	struct msm_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
+@@ -166,6 +177,7 @@ static int msm_pinmux_set_mux(struct pinctrl_dev *pctldev,
+ }
  
+ static const struct pinmux_ops msm_pinmux_ops = {
++	.request		= msm_pinmux_request,
+ 	.get_functions_count	= msm_get_functions_count,
+ 	.get_function_name	= msm_get_function_name,
+ 	.get_function_groups	= msm_get_function_groups,
+@@ -506,6 +518,9 @@ static void msm_gpio_dbg_show_one(struct seq_file *s,
+ 		"pull up"
+ 	};
+ 
++	if (!gpiochip_irqchip_irq_valid(chip, offset))
++		return;
++
+ 	g = &pctrl->soc->groups[offset];
+ 	ctl_reg = readl(pctrl->regs + g->ctl_reg);
+ 
+@@ -516,7 +531,7 @@ static void msm_gpio_dbg_show_one(struct seq_file *s,
+ 
+ 	seq_printf(s, " %-8s: %-3s %d", g->name, is_out ? "out" : "in", func);
+ 	seq_printf(s, " %dmA", msm_regval_to_drive(drive));
+-	seq_printf(s, " %s", pulls[pull]);
++	seq_printf(s, " %s\n", pulls[pull]);
+ }
+ 
+ static void msm_gpio_dbg_show(struct seq_file *s, struct gpio_chip *chip)
+@@ -524,10 +539,8 @@ static void msm_gpio_dbg_show(struct seq_file *s, struct gpio_chip *chip)
+ 	unsigned gpio = chip->base;
+ 	unsigned i;
+ 
+-	for (i = 0; i < chip->ngpio; i++, gpio++) {
++	for (i = 0; i < chip->ngpio; i++, gpio++)
+ 		msm_gpio_dbg_show_one(s, NULL, chip, i, gpio);
+-		seq_puts(s, "\n");
+-	}
+ }
+ 
+ #else
+@@ -808,6 +821,76 @@ static void msm_gpio_irq_handler(struct irq_desc *desc)
+ 	chained_irq_exit(chip, desc);
+ }
+ 
++static int msm_gpio_init_irq_valid_mask(struct gpio_chip *chip,
++					struct msm_pinctrl *pctrl)
++{
++	int ret;
++	unsigned int len, i;
++	unsigned int max_gpios = pctrl->soc->ngpios;
++	struct device_node *np = pctrl->dev->of_node;
++
++	/* The number of GPIOs in the ACPI tables */
++	ret = device_property_read_u16_array(pctrl->dev, "gpios", NULL, 0);
++	if (ret > 0 && ret < max_gpios) {
++		u16 *tmp;
++
++		len = ret;
++		tmp = kmalloc_array(len, sizeof(tmp[0]), GFP_KERNEL);
++		if (!tmp)
++			return -ENOMEM;
++
++		ret = device_property_read_u16_array(pctrl->dev, "gpios", tmp,
++						     len);
++		if (ret < 0) {
++			dev_err(pctrl->dev, "could not read list of GPIOs\n");
++			kfree(tmp);
++			return ret;
++		}
++
++		bitmap_zero(chip->irq_valid_mask, max_gpios);
++		for (i = 0; i < len; i++)
++			set_bit(tmp[i], chip->irq_valid_mask);
++
++		return 0;
++	}
++
++	/* If there's a DT ngpios-ranges property then add those ranges */
++	ret = of_property_count_u32_elems(np,  "ngpios-ranges");
++	if (ret > 0 && ret % 2 == 0 && ret / 2 < max_gpios) {
++		u32 start;
++		u32 count;
++
++		len = ret / 2;
++		bitmap_zero(chip->irq_valid_mask, max_gpios);
++
++		for (i = 0; i < len; i++) {
++			of_property_read_u32_index(np, "ngpios-ranges",
++						   i * 2, &start);
++			of_property_read_u32_index(np, "ngpios-ranges",
++						   i * 2 + 1, &count);
++			bitmap_set(chip->irq_valid_mask, start, count);
++		}
++	}
++
++	return 0;
++}
++
++static bool msm_gpio_needs_irq_valid_mask(struct msm_pinctrl *pctrl)
++{
++	int ret;
++	struct device_node *np = pctrl->dev->of_node;
++
++	ret = device_property_read_u16_array(pctrl->dev, "gpios", NULL, 0);
++	if (ret > 0)
++		return true;
++
++	ret = of_property_count_u32_elems(np,  "ngpios-ranges");
++	if (ret > 0 && ret % 2 == 0)
++		return true;
++
++	return false;
++}
++
+ static int msm_gpio_init(struct msm_pinctrl *pctrl)
+ {
+ 	struct gpio_chip *chip;
+@@ -824,6 +907,7 @@ static int msm_gpio_init(struct msm_pinctrl *pctrl)
+ 	chip->parent = pctrl->dev;
+ 	chip->owner = THIS_MODULE;
+ 	chip->of_node = pctrl->dev->of_node;
++	chip->irq_need_valid_mask = msm_gpio_needs_irq_valid_mask(pctrl);
+ 
+ 	ret = gpiochip_add_data(&pctrl->chip, pctrl);
+ 	if (ret) {
+@@ -831,6 +915,12 @@ static int msm_gpio_init(struct msm_pinctrl *pctrl)
+ 		return ret;
+ 	}
+ 
++	ret = msm_gpio_init_irq_valid_mask(chip, pctrl);
++	if (ret) {
++		dev_err(pctrl->dev, "Failed to setup irq valid bits\n");
++		return ret;
++	}
++
+ 	ret = gpiochip_add_pin_range(&pctrl->chip, dev_name(pctrl->dev), 0, 0, chip->ngpio);
+ 	if (ret) {
+ 		dev_err(pctrl->dev, "Failed to add pin range\n");
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
