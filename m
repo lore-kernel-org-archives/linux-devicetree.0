@@ -1,124 +1,67 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH 3/9] soc: samsung: pmu: Add the PMU data of exynos5433
- to support low-power state
-Date: Wed, 10 Jan 2018 10:46:32 +0900
-Message-ID: <5A557078.50101@samsung.com>
-References: <1515484746-10656-1-git-send-email-cw00.choi@samsung.com>
-        <CGME20180109075905epcas1p321b8898a0d45287d63364e1aa768fdab@epcas1p3.samsung.com>
-        <1515484746-10656-4-git-send-email-cw00.choi@samsung.com>
-        <b639da18-a069-aeb7-ceca-30c79b1c25c8@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <b639da18-a069-aeb7-ceca-30c79b1c25c8@arm.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>, krzk@kernel.org, m.szyprowski@samsung.com, s.nawrocki@samsung.com, kgene@kernel.org
-Cc: tomasz.figa@gmail.com, chanwoo@kernel.org, jh80.chung@samsung.com, inki.dae@samsung.com, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jonghwa Lee <jonghwa3.lee@samsung.com>
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH 1/3] gpiolib: Export gpiochip_irqchip_irq_valid() to drivers
+Date: Tue,  9 Jan 2018 17:58:46 -0800
+Message-ID: <20180110015848.11480-2-sboyd@codeaurora.org>
+References: <20180110015848.11480-1-sboyd@codeaurora.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180110015848.11480-1-sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2018년 01월 09일 23:11, Sudeep Holla wrote:
-> 
-> 
-> On 09/01/18 07:59, Chanwoo Choi wrote:
->> This patch adds the PMU (Power Management Unit) data of exynos5433 SoC
->> in order to support the various power modes. Each power mode has
->> the different value for reducing the power-consumption.
->>
->> Signed-off-by: Jonghwa Lee <jonghwa3.lee@samsung.com>
->> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
->> ---
->>  arch/arm/mach-exynos/common.h               |   2 -
->>  drivers/soc/samsung/Makefile                |   3 +-
->>  drivers/soc/samsung/exynos-pmu.c            |   1 +
->>  drivers/soc/samsung/exynos-pmu.h            |   2 +
->>  drivers/soc/samsung/exynos5433-pmu.c        | 286 ++++++++++++++++++++++++++++
->>  include/linux/soc/samsung/exynos-regs-pmu.h | 148 ++++++++++++++
->>  6 files changed, 439 insertions(+), 3 deletions(-)
->>  create mode 100644 drivers/soc/samsung/exynos5433-pmu.c
->>
-> 
->> diff --git a/drivers/soc/samsung/exynos5433-pmu.c b/drivers/soc/samsung/exynos5433-pmu.c
->> new file mode 100644
->> index 000000000000..2571e61522f0
->> --- /dev/null
->> +++ b/drivers/soc/samsung/exynos5433-pmu.c
->> @@ -0,0 +1,286 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +//
->> +// Copyright (c) 2018 Samsung Electronics Co., Ltd.
->> +// Copyright (c) Jonghwa Lee <jonghwa3.lee@samsung.com>
->> +// Copyright (c) Chanwoo Choi <cw00.choi@samsung.com>
->> +//
->> +// EXYNOS5433 - CPU PMU (Power Management Unit) support
->> +
->> +#include <linux/soc/samsung/exynos-regs-pmu.h>
->> +#include <linux/soc/samsung/exynos-pmu.h>
->> +
->> +#include "exynos-pmu.h"
->> +
->> +static struct exynos_pmu_conf exynos5433_pmu_config[] = {
->> +	/* { .offset = address,	.val = { AFTR, LPA, SLEEP } } */
->> +	{ EXYNOS5433_ATLAS_CPU0_SYS_PWR_REG,			{ 0x0, 0x0, 0x8 } },
->> +	{ EXYNOS5433_DIS_IRQ_ATLAS_CPU0_CENTRAL_SYS_PWR_REG,	{ 0x0, 0x0, 0x0 } },
->> +	{ EXYNOS5433_ATLAS_CPU1_SYS_PWR_REG,			{ 0x0, 0x0, 0x8 } },
->> +	{ EXYNOS5433_DIS_IRQ_ATLAS_CPU1_CENTRAL_SYS_PWR_REG,	{ 0x0, 0x0, 0x0 } },
->> +	{ EXYNOS5433_ATLAS_CPU2_SYS_PWR_REG,			{ 0x0, 0x0, 0x8 } },
->> +	{ EXYNOS5433_DIS_IRQ_ATLAS_CPU2_CENTRAL_SYS_PWR_REG,	{ 0x0, 0x0, 0x0 } },
->> +	{ EXYNOS5433_ATLAS_CPU3_SYS_PWR_REG,			{ 0x0, 0x0, 0x8 } },
->> +	{ EXYNOS5433_DIS_IRQ_ATLAS_CPU3_CENTRAL_SYS_PWR_REG,	{ 0x0, 0x0, 0x0 } },
->> +	{ EXYNOS5433_APOLLO_CPU0_SYS_PWR_REG,			{ 0x0, 0x0, 0x8 } },
->> +	{ EXYNOS5433_DIS_IRQ_APOLLO_CPU0_CENTRAL_SYS_PWR_REG,	{ 0x0, 0x0, 0x0 } },
->> +	{ EXYNOS5433_APOLLO_CPU1_SYS_PWR_REG,			{ 0x0, 0x0, 0x8 } },
->> +	{ EXYNOS5433_DIS_IRQ_APOLLO_CPU1_CENTRAL_SYS_PWR_REG,	{ 0x0, 0x0, 0x0 } },
->> +	{ EXYNOS5433_APOLLO_CPU2_SYS_PWR_REG,			{ 0x0, 0x0, 0x8 } },
->> +	{ EXYNOS5433_DIS_IRQ_APOLLO_CPU2_CENTRAL_SYS_PWR_REG,	{ 0x0, 0x0, 0x0 } },
->> +	{ EXYNOS5433_APOLLO_CPU3_SYS_PWR_REG,			{ 0x0, 0x0, 0x8 } },
->> +	{ EXYNOS5433_DIS_IRQ_APOLLO_CPU3_CENTRAL_SYS_PWR_REG,	{ 0x0, 0x0, 0x0 } },
->> +	{ EXYNOS5433_ATLAS_NONCPU_SYS_PWR_REG,			{ 0x0, 0x0, 0x8 } },
->> +	{ EXYNOS5433_APOLLO_NONCPU_SYS_PWR_REG,			{ 0x0, 0x0, 0x8 } },
-> 
-> 
-> 1. First of all why do you need any of these CPU related PMU config
->    registers in kernel ? From the information I gathered this is ARM64
->    SoC using PSCI. These are needed just in PSCI implementation and not
->    in kernel. So can you elaborate on why there are present here ?
+Some pinctrl drivers can use the gpiochip irq valid information
+to figure out if certain gpios are exposed to the kernel for
+usage or not. Expose this API so we can use it in the
+pinmux_ops::request ops.
 
-The 32bit Exynos used the 'smc' call to enter the suspend mode
-and need to handle the PMU registers.
+Signed-off-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+---
+ drivers/gpio/gpiolib.c      | 5 +++--
+ include/linux/gpio/driver.h | 3 +++
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
-Even if PSCI replaces the 'smc' call on the Exynos5433,
-the Exynos5433's document requires the handling of PMU config
-related to CPU for the suspend mode.
-
-IMHO, If the secure OS implemented the all something related to CPU,
-it might be unnecessary to handle the PMU registers. I think that
-it depend on how to design the SoC by H/W Architect. This is just my opinion.
-
-> 
-> 2. Are there any public documents that these names map to ?
-
-There is no public document. It is confidential.
-
->    If there is none, please replace these codenames(ATLAS, APOLLO) with
->    appropriately.
-
-In the Exynos5433, 'apollo' indicates the LITTLE cores (cpu0-3, cortex-a53)
-and 'atlas' indicates the big cores (cpu4-7, cortex-a57)
-
-Exynos5433 already used the 'apollo' and 'atlas' on clk-exynos5433.c driver
-and thermal device-tree node. It is better to use the original register name
-in the document in order to reduce the confusion of the change of register name
-even if document is not public.
-
-Also, exynos7 used the 'atlas' word for big cores.
-
-> 
-> Sorry if these are already answered, just point me to those threads.
-> 
-
-
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index b80936a25caa..c18b7b60ea1d 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -1503,14 +1503,15 @@ static void gpiochip_irqchip_free_valid_mask(struct gpio_chip *gpiochip)
+ 	gpiochip->irq.valid_mask = NULL;
+ }
+ 
+-static bool gpiochip_irqchip_irq_valid(const struct gpio_chip *gpiochip,
+-				       unsigned int offset)
++bool gpiochip_irqchip_irq_valid(const struct gpio_chip *gpiochip,
++				unsigned int offset)
+ {
+ 	/* No mask means all valid */
+ 	if (likely(!gpiochip->irq.valid_mask))
+ 		return true;
+ 	return test_bit(offset, gpiochip->irq.valid_mask);
+ }
++EXPORT_SYMBOL_GPL(gpiochip_irqchip_irq_valid);
+ 
+ /**
+  * gpiochip_set_cascaded_irqchip() - connects a cascaded irqchip to a gpiochip
+diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
+index 7258cd676df4..1ba9a331ec51 100644
+--- a/include/linux/gpio/driver.h
++++ b/include/linux/gpio/driver.h
+@@ -436,6 +436,9 @@ int gpiochip_irqchip_add_key(struct gpio_chip *gpiochip,
+ 			     struct lock_class_key *lock_key,
+ 			     struct lock_class_key *request_key);
+ 
++bool gpiochip_irqchip_irq_valid(const struct gpio_chip *gpiochip,
++				unsigned int offset);
++
+ #ifdef CONFIG_LOCKDEP
+ 
+ /*
 -- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
