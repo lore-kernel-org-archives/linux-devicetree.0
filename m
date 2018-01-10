@@ -1,65 +1,36 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v3 3/9] doc: dt-bindings: Add doc for Ingenic TCU IRQ driver
-Date: Wed, 10 Jan 2018 23:48:32 +0100
-Message-ID: <20180110224838.16711-3-paul@crapouillou.net>
-References: <20180101143344.2099-1-paul@crapouillou.net>
- <20180110224838.16711-1-paul@crapouillou.net>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180110224838.16711-1-paul@crapouillou.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Lee Jones <lee.jones@linaro.org>
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+From: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
+Subject: [PATCH v3 4/6] PCI: Add vendor ID for Cadence
+Date: Wed, 10 Jan 2018 23:47:33 +0100
+Message-ID: <fc146d33849fc3143866249254fbcc82c1823775.1515621150.git.cyrille.pitchen@free-electrons.com>
+References: <cover.1515621150.git.cyrille.pitchen@free-electrons.com>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <cover.1515621150.git.cyrille.pitchen@free-electrons.com>
+In-Reply-To: <cover.1515621150.git.cyrille.pitchen@free-electrons.com>
+References: <cover.1515621150.git.cyrille.pitchen@free-electrons.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: bhelgaas@google.com, kishon@ti.com, lorenzo.pieralisi@arm.com, linux-pci@vger.kernel.org
+Cc: adouglas@cadence.com, stelford@cadence.com, dgary@cadence.com, kgopi@cadence.com, eandrews@cadence.com, thomas.petazzoni@free-electrons.com, sureshp@cadence.com, nsekhar@ti.com, linux-kernel@vger.kernel.org, robh@kernel.org, devicetree@vger.kernel.org, Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-Add documentation about how to properly use the Ingenic TCU
-(Timer/Counter Unit) IRQ driver from devicetree.
+This patch adds a new PCI vendor ID for Cadence.
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Signed-off-by: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
 ---
- .../bindings/interrupt-controller/ingenic,tcu.txt  | 33 ++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/ingenic,tcu.txt
+ include/linux/pci_ids.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
- v3: New patch in this series
-
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/ingenic,tcu.txt b/Documentation/devicetree/bindings/interrupt-controller/ingenic,tcu.txt
-new file mode 100644
-index 000000000000..e3a7d2354172
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/ingenic,tcu.txt
-@@ -0,0 +1,33 @@
-+Ingenic SoCs Timer/Counter Unit Interrupt Controller
+diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+index ab20dc5db423..eb13e84e1fef 100644
+--- a/include/linux/pci_ids.h
++++ b/include/linux/pci_ids.h
+@@ -2381,6 +2381,8 @@
+ 
+ #define PCI_VENDOR_ID_LENOVO		0x17aa
+ 
++#define PCI_VENDOR_ID_CDNS		0x17cd
 +
-+Required properties:
-+
-+- compatible : should be "ingenic,<socname>-tcu-intc". Valid strings are:
-+  * ingenic,jz4740-tcu-intc
-+  * ingenic,jz4770-tcu-intc
-+  * ingenic,jz4780-tcu-intc
-+- interrupt-controller : Identifies the node as an interrupt controller
-+- #interrupt-cells : Specifies the number of cells needed to encode an
-+  interrupt source. The value shall be 1.
-+- interrupt-parent : phandle of the interrupt controller.
-+- interrupts : Specifies the interrupt the controller is connected to.
-+
-+Example:
-+
-+/ {
-+	mfd@10002000 {
-+		compatible = "ingenic,tcu", "simple-mfd", "syscon";
-+		reg = <0x10002000 0x1000>;
-+
-+		tcu_irq: interrupt-controller {
-+			compatible = "ingenic,jz4740-tcu-intc";
-+			reg = <0x10002020 0x20>;
-+
-+			interrupt-controller;
-+			#interrupt-cells = <1>;
-+
-+			interrupt-parent = <&intc>;
-+			interrupts = <15>;
-+		};
-+	};
-+};
+ #define PCI_VENDOR_ID_ARECA		0x17d3
+ #define PCI_DEVICE_ID_ARECA_1110	0x1110
+ #define PCI_DEVICE_ID_ARECA_1120	0x1120
 -- 
 2.11.0
