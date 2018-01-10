@@ -1,62 +1,65 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH V5 0/7] Add loadable kernel module and power management
- support
-Date: Wed, 10 Jan 2018 17:15:21 +0000
-Message-ID: <20180110171521.GA26960@e107981-ln.cambridge.arm.com>
-References: <1515489577-2197-1-git-send-email-mmaddireddy@nvidia.com>
+From: Patrice CHOTARD <patrice.chotard@st.com>
+Subject: Re: [PATCH 0/7] ARM: dts: STi: Fix DT dtc warnings
+Date: Wed, 10 Jan 2018 17:17:27 +0000
+Message-ID: <20f04806-2f33-3c16-d790-4a93c4c7187a@st.com>
+References: <1515572469-19276-1-git-send-email-patrice.chotard@st.com>
+ <CAK8P3a2qgyJ8Hgr6fLnn6jVRhHVtcc1kxzyD2N7Bb7gzPe1xfg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1515489577-2197-1-git-send-email-mmaddireddy@nvidia.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Cc: thierry.reding@gmail.com, bhelgaas@google.com, cyndis@kapsi.fi, jonathanh@nvidia.com, robh+dt@kernel.org, frowand.list@gmail.com, rjw@rjwysocki.net, tglx@linutronix.de, vidyas@nvidia.com, kthota@nvidia.com, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAK8P3a2qgyJ8Hgr6fLnn6jVRhHVtcc1kxzyD2N7Bb7gzPe1xfg@mail.gmail.com>
+Content-Language: en-US
+Content-ID: <7630DBEE210AB34EA615475BCCF6F10F@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>, Russell King - ARM Linux <linux@armlinux.org.uk>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 09, 2018 at 02:49:30PM +0530, Manikanta Maddireddy wrote:
-> This series of patches adds loadable kernel module and power management
-> support to Tegra PCIe host controller driver. irq_set_msi_desc() and
-> tegra_cpuidle_pcie_irqs_in_use() symbols will be taken care in next
-> set of patches.
-> 
-> These patches are tested on Jetson TK1, TX1 and TX2 platforms, following
-> are the verification details.
-> 	- Multiple module insert & remove
-> 	- PCIe device functionality after module insert
-> 	- Free clock, resets, regulators, powergate, iomem and interrupt
-> 	resources after module remove
-> 	- PCIe device functionality after resume from RAM
-> 
-> V2: PM QoS fix is dropped in V2 from this series because the fix is
-> incorporated in latest 'commit 0759e80b84e3 ("PM / QoS: Fix device resume
-> latency framework")'. Update commit message of few patches in V2.
-> 
-> V3: Patches to export irq_set_msi_desc() and tegra_cpuidle_pcie_irqs_in_use()
-> are dropped based on review comments. These symbols will be addressed in next
-> series. Took care of few other review comments.
-> 
-> V4: Dropped pci_find_host_bridge() export patch and added new patch to use
-> bus->sysdata for private data.
-> 
-> V5: Decouple from https://patchwork.ozlabs.org/patch/832053/ and rebase
-> on top of linux-next
-> 
-> Manikanta Maddireddy (7):
->   of: Export of_pci_range_to_resource()
->   PCI: tegra: Use bus->sysdata to store and get host private data
->   PCI: tegra: Remove PCI_REASSIGN_ALL_BUS flag for Tegra PCIe
->   PCI: tegra: Free resources on probe failure
->   PCI: tegra: Add loadable kernel module support
->   PCI: tegra: Broadcast PME_Turn_Off message before link goes to L2
->   PCI: tegra: Add power management support
-> 
->  drivers/of/address.c         |   1 +
->  drivers/pci/host/Kconfig     |   2 +-
->  drivers/pci/host/pci-tegra.c | 333 ++++++++++++++++++++++++++++++++-----------
->  3 files changed, 253 insertions(+), 83 deletions(-)
+Hi Arnd
 
-Can I ask you please to rebase this series against my pci/tegra branch ?
+On 01/10/2018 04:52 PM, Arnd Bergmann wrote:
+> On Wed, Jan 10, 2018 at 9:21 AM,  <patrice.chotard@st.com> wrote:
+>> From: Patrice Chotard <patrice.chotard@st.com>
+>>
+>> This series fixes all dtc warnings related to STi platforms dt files.
+>> It has been triggered by Rob Herring [1]
+>>
+>> [1] https://www.spinics.net/lists/devicetree/msg206209.html
+>>
+>> For most of implicated node, a simple move outside the soc node
+>> solves the warnings.
+>>
+>> Patrice Chotard (7):
+>>    ARM: dts: STi: fix bindings notation
+>>    ARM: dts: STi: Add gpio polarity for "hdmi,hpd-gpio" property
+>>    ARM: dts: STi: Move clocks without reg outside soc
+>>    ARM: dts: STi: Move leds node outside soc node
+>>    ARM: dts: STi: Move usb2_picophyX nodes without reg out of soc
+>>    ARM: dts: STi: Move sound related nodes without reg out of soc
+>>    ARM: dts: STi: Add fake reg property for sti-display-subsystem
+> 
+> Thanks a lot for addressing these!
+> 
+> As far as I can tell, there is one patch in particular that addresses a warning
+> we get at the default warning level: "ARM: dts: STi: Add gpio polarity for
+> "hdmi,hpd-gpio" property". Should we merge that one for 4.15 to get closer
+> to a clean build again? I'm not sure whether we can address the other
 
-Thanks,
-Lorenzo
+How do you want to proceed with this particular patch ?
+Do you want me to send a pull-request with this patch ?
+
+Patrice
+
+> dtc warnings, but we're getting fairly close now.
+> 
+>         Arnd
+> 
