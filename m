@@ -1,77 +1,23 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH 2/3] dt-bindings: pinctrl: Add a ngpios-ranges property
-Date: Wed, 10 Jan 2018 08:37:33 -0800
-Message-ID: <20180110163733.GH21040@codeaurora.org>
-References: <20180110015848.11480-1-sboyd@codeaurora.org>
- <20180110015848.11480-3-sboyd@codeaurora.org>
- <CACRpkdaN6vmV4L4U76DvD5BN+j1RYCQakTysA+GGPdT8Chc-iw@mail.gmail.com>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH 1/3] ARM: dts: imx6ul-evk: Add support for mag3110 sensor
+Date: Wed, 10 Jan 2018 14:51:59 -0200
+Message-ID: <CAOMZO5B-_E3mpf7gU02+LAeqSpnNx75yUR-7GSOMYmoVKz3q6g@mail.gmail.com>
+References: <1515498385-23198-1-git-send-email-marco.franchi@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdaN6vmV4L4U76DvD5BN+j1RYCQakTysA+GGPdT8Chc-iw@mail.gmail.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@secretlab.ca>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, Timur Tabi <timur@codeaurora.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, linux-gpio@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1515498385-23198-1-git-send-email-marco.franchi@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marco Franchi <marco.franchi@nxp.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/10, Linus Walleij wrote:
-> On Wed, Jan 10, 2018 at 2:58 AM, Stephen Boyd <sboyd@codeaurora.org> wrote:
-> 
-> > +- ngpios-ranges:
-> > +       Usage: optional
-> > +       Value type: <prop-encoded-array>
-> > +       Definition: Tuples of GPIO ranges (base, size) indicating
-> > +                   GPIOs available for use.
-> > +
-> >  Please refer to ../gpio/gpio.txt and ../interrupt-controller/interrupts.txt for
-> >  a general description of GPIO and interrupt bindings.
-> 
-> I like the tuples syntax. That's fine. It's like gpio-ranges we have
-> already to map between pin controllers and GPIO.
-> 
-> I don't think we can reuse gpio-ranges because that is
-> exclusively for pin control ATM, it would be fine if the ranges
-> were for a specific device, like pin control does, like:
-> 
-> gpio-ranges = <&secure_world_thing 0 20 10>;
-> 
-> But you definately would need a node to tie it to, so that the
-> driver for that node can specify that it's gonna take the
-> GPIOs.
-> 
-> But I think the semantics should be the inverse. That you
-> point out "holes" with the lines we *can't* use.
+On Tue, Jan 9, 2018 at 9:46 AM, Marco Franchi <marco.franchi@nxp.com> wrote:
+> The i.MX 6UL EVK has a MAG3110 Magnetometer sensor in its base board.
+> Add support for this sensor, which is included in the trivial i2c devices
+> and according to the bindings documentation, just need a compatible field
+> and an address.
+>
+> Signed-off-by: Marco Franchi <marco.franchi@nxp.com>
 
-Ok. I can invert the logic and push it into the core part of the
-code. I'll leave the ACPI part in the msm driver.
-
-> 
-> We already support a generic property "ngpios" that says how
-> many of the GPIOs (counted from zero) that can be used,
-> so if those should be able to use this as a generic property it
-> is better with the inverse semantics and say that the
-> "reserved-gpio-ranges", "secureworld-gpio-ranges"
-> (or whatever we decide to call it) takes precedence over
-> ngpios so we don't end up in ambigous places.
-> 
-> Then, will it be possible to put the parsing, handling and
-> disablement of these ranges into drivers/gpio/gpiolib-of.c
-> where we handle the ranges today, or do we need to
-> do it in the individual drivers?
-> 
-
-I'll cook that up right now to do the inverse thing in the
-gpiolib core code with a 'reserved-gpio-ranges' property. I
-haven't looked in much detail, but I would hope that it would
-work pretty easily. Should it be decoupled from the
-GPIOLIB_IRQCHIP config? If the idea is generic, then it may not
-be related to irq lines, but for the qcom driver it was all fine
-because all three concepts: irq, gpios, and pins have a one to
-one relationship. The only place it breaks down is if we have
-more pins than gpios, in which case I punted and just considered
-non-gpio pins as always valid.
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
