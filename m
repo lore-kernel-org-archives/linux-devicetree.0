@@ -1,82 +1,126 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/3] dt-bindings: pinctrl: Add a ngpios-ranges property
-Date: Wed, 10 Jan 2018 14:37:53 +0100
-Message-ID: <CACRpkdaN6vmV4L4U76DvD5BN+j1RYCQakTysA+GGPdT8Chc-iw@mail.gmail.com>
-References: <20180110015848.11480-1-sboyd@codeaurora.org> <20180110015848.11480-3-sboyd@codeaurora.org>
+From: Ilya Ledvich <ilya@compulab.co.il>
+Subject: Re: [PATCH v3] PCI: imx6: Add PHY reference clock source support
+Date: Wed, 10 Jan 2018 15:43:41 +0200
+Message-ID: <498e20c0-7b86-0f86-7555-64a012b85b9e@compulab.co.il>
+References: <CAOMZO5AFC9dxhsQjmRrDA7Z3KMkEemryKOBmQhXm19NXKxHkKQ@mail.gmail.com>
+ <1515073977-10153-1-git-send-email-ilya@compulab.co.il>
+ <1515408232.12538.7.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180110015848.11480-3-sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1515408232.12538.7.camel@pengutronix.de>
+Content-Language: en-US
+Sender: linux-pci-owner@vger.kernel.org
+To: Lucas Stach <l.stach@pengutronix.de>, Richard Zhu <hongxing.zhu@nxp.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 10, 2018 at 2:58 AM, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+Hi Lucas,
 
-> Some qcom platforms make some GPIOs or pins unavailable for use
-> by non-secure operating systems, and thus reading or writing the
-> registers for those pins will cause access control issues.
-> Introduce a DT property to describe the set of GPIOs that are
-> available for use so that higher level OSes are able to know what
-> pins to avoid reading/writing.
->
-> Cc: <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-> Signed-off-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+On 01/08/2018 12:43 PM, Lucas Stach wrote:
+> Am Donnerstag, den 04.01.2018, 15:52 +0200 schrieb Ilya Ledvich:
+>> i.MX7D variant of the IP can use either Crystal Oscillator input
+>> or internal clock input as a Reference Clock input for PCIe PHY.
+>> Add support for an optional property 'fsl,pcie-phy-refclk-internal'.
+>> If present then an internal clock input is used as PCIe PHY
+>> reference clock source. By default an external oscillator input
+>> is still used.
+>>
+>> Verified on Compulab SBC-iMX7 Single Board Computer.
+>=20
+> Sorry to get in late here, but I would rather have the external clock
+> input modeled as a real clock and only use the internal clock if that
+> isn't present.
+>=20
 
-I like the idea, let's check what we think about the details regarding
-naming and semantics, I need feedback from some DT people
-in particular.
+I tried to follow the logic described in the iMX7 TRM, where external=20
+oscillator is a default option. Additionally, the external clock input=20
+model you've suggested, requires additional changes in the iMX7 SabreSD=20
+board (and probably other boards which use an external input too)=20
+devicetree files.
 
-Paging in Grant on this as he might have some input.
+> Are you even sure that the i.MX7 clock you mention isn't the already
+> documented "pcie_bus" clock? This one is also allowed to be sourced
+> externally on the i.MX6.
 
-> I stuck this inside msm8996, but maybe it can go somewhere more generic?
+To the best of my understanding it's not the pcie_bus clock, but I'm=20
+absolutely sure. Could anybody from the BSP team guys elaborate on this=20
+issue? Thanks a lot!
+Best regards,
+Ilya.
 
-Yeah just put it in Documentation/devicetree/bindings/gpio/gpio.txt
-Everyone and its dog doing GPIO reservations "from another world"
-will need to use this.
-
-> +- ngpios-ranges:
-> +       Usage: optional
-> +       Value type: <prop-encoded-array>
-> +       Definition: Tuples of GPIO ranges (base, size) indicating
-> +                   GPIOs available for use.
-> +
->  Please refer to ../gpio/gpio.txt and ../interrupt-controller/interrupts.txt for
->  a general description of GPIO and interrupt bindings.
-
-I like the tuples syntax. That's fine. It's like gpio-ranges we have
-already to map between pin controllers and GPIO.
-
-I don't think we can reuse gpio-ranges because that is
-exclusively for pin control ATM, it would be fine if the ranges
-were for a specific device, like pin control does, like:
-
-gpio-ranges = <&secure_world_thing 0 20 10>;
-
-But you definately would need a node to tie it to, so that the
-driver for that node can specify that it's gonna take the
-GPIOs.
-
-But I think the semantics should be the inverse. That you
-point out "holes" with the lines we *can't* use.
-
-We already support a generic property "ngpios" that says how
-many of the GPIOs (counted from zero) that can be used,
-so if those should be able to use this as a generic property it
-is better with the inverse semantics and say that the
-"reserved-gpio-ranges", "secureworld-gpio-ranges"
-(or whatever we decide to call it) takes precedence over
-ngpios so we don't end up in ambigous places.
-
-Then, will it be possible to put the parsing, handling and
-disablement of these ranges into drivers/gpio/gpiolib-of.c
-where we handle the ranges today, or do we need to
-do it in the individual drivers?
-
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> ---
+>> changes since V2:
+>> 	add a vendor prefix 'fsl' to a new property
+>>
+>>  =C2=A0Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt | 5 ++=
++++
+>>  =C2=A0drivers/pci/dwc/pci-imx6.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0|=
+ 8
+>> +++++++-
+>>  =C2=A02 files changed, 12 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+>> b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+>> index 7b1e48b..1591a6a 100644
+>> --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+>> +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+>> @@ -50,6 +50,11 @@ Additional required properties for imx7d-pcie:
+>>  =C2=A0	=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0- "pciephy"
+>>  =C2=A0	=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0- "apps"
+>>  =20
+>> +Additional optional properties for imx7d-pcie:
+>> +- fsl,pcie-phy-refclk-internal: If present then an internal PLL
+>> input is used
+>> +=C2=A0=C2=A0as PCIe PHY reference clock source. By default an externa=
+l
+>> oscillator input
+>> +=C2=A0=C2=A0is used.
+>> +
+>>  =C2=A0Example:
+>>  =20
+>>  =C2=A0	pcie@0x01000000 {
+>> diff --git a/drivers/pci/dwc/pci-imx6.c b/drivers/pci/dwc/pci-imx6.c
+>> index b734835..36812d3 100644
+>> --- a/drivers/pci/dwc/pci-imx6.c
+>> +++ b/drivers/pci/dwc/pci-imx6.c
+>> @@ -61,6 +61,7 @@ struct imx6_pcie {
+>>  =C2=A0	u32			tx_swing_low;
+>>  =C2=A0	int			link_gen;
+>>  =C2=A0	struct regulator	*vpcie;
+>> +	bool			pciephy_refclk_sel;
+>>  =C2=A0};
+>>  =20
+>>  =C2=A0/* Parameters for the waiting for PCIe PHY PLL to lock on i.MX7=
+ */
+>> @@ -474,7 +475,9 @@ static void imx6_pcie_init_phy(struct imx6_pcie
+>> *imx6_pcie)
+>>  =C2=A0	switch (imx6_pcie->variant) {
+>>  =C2=A0	case IMX7D:
+>>  =C2=A0		regmap_update_bits(imx6_pcie->iomuxc_gpr,
+>> IOMUXC_GPR12,
+>> -				=C2=A0=C2=A0=C2=A0IMX7D_GPR12_PCIE_PHY_REFCLK_SEL,
+>> 0);
+>> +				=C2=A0=C2=A0=C2=A0IMX7D_GPR12_PCIE_PHY_REFCLK_SEL,
+>> +				=C2=A0=C2=A0=C2=A0imx6_pcie->pciephy_refclk_sel ?
+>> +				=C2=A0=C2=A0=C2=A0IMX7D_GPR12_PCIE_PHY_REFCLK_SEL :
+>> 0);
+>>  =C2=A0		break;
+>>  =C2=A0	case IMX6SX:
+>>  =C2=A0		regmap_update_bits(imx6_pcie->iomuxc_gpr,
+>> IOMUXC_GPR12,
+>> @@ -840,6 +843,9 @@ static int imx6_pcie_probe(struct platform_device
+>> *pdev)
+>>  =C2=A0		imx6_pcie->vpcie =3D NULL;
+>>  =C2=A0	}
+>>  =20
+>> +	imx6_pcie->pciephy_refclk_sel =3D
+>> +		of_property_read_bool(node, "fsl,pcie-phy-refclk-
+>> internal");
+>> +
+>>  =C2=A0	platform_set_drvdata(pdev, imx6_pcie);
+>>  =20
+>>  =C2=A0	ret =3D imx6_add_pcie_port(imx6_pcie, pdev);
