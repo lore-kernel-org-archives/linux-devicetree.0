@@ -1,89 +1,114 @@
-From: <alexandru.ardelean-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 1/3] staging: iio: adc: ad7192: fix external frequency setting
-Date: Wed, 10 Jan 2018 13:29:54 +0200
-Message-ID: <20180110112956.23931-1-alexandru.ardelean@analog.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH] dt-bindings: Nokia N9 audio support
+Date: Wed, 10 Jan 2018 12:31:02 +0100
+Message-ID: <20180110113102.GA26812@amd>
+References: <20171227091828.GA3307@amd>
+ <20171227180000.6ejpbqmr736nqx5i@kekkonen.localdomain>
+ <20171227200147.GB16799@amd>
+ <20171227211643.nnwtm4j6cyftlm66@kekkonen.localdomain>
+ <20180102124450.GA18659@amd>
+ <20180105160137.nr7oqvpbp2oao5fm@rob-hp-laptop>
+ <20180108222054.GA17452@amd>
+ <20180110085315.GA17841@amd>
+ <20180110093930.wq5darjgtuugc6ad@paasikivi.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandru Ardelean <alexandru.ardelean-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="G4iJoqBmSsgzjUCe"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180110093930.wq5darjgtuugc6ad@paasikivi.fi.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Rob Herring <robh@kernel.org>, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, pali.rohar@gmail.com, sre@kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-omap@vger.kernel.org, tony@atomide.com, khilman@kernel.org, aaro.koskinen@iki.fi, ivo.g.dimitrov.75@gmail.com, patrikbachan@gmail.com, serge@hallyn.com, abcloriens@gmail.com, clayton@craftyguy.net, martijn@brixit.nl, Filip =?utf-8?Q?Matijevi=C4=87?= <filip.matijevic.pz@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Alexandru Ardelean <alexandru.ardelean-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
 
-According to the datasheet:
-* 0 - external crystal, connected from pin MCLK1 to MCLK2
-* 1 - external clock, applied to MCLK2 pin
-* 2 - internal 4.92 Mhz clock; pin MCLK2 is tristated
-* 3 - internal 4.92 Mhz clock; internal clock is available on MCLK2
+--G4iJoqBmSsgzjUCe
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Which means that the external clock value only has sense
-for value 1 (AD7192_CLK_EXT_MCLK2).
+Hi!
 
-Also added range validation for the external frequency
-setting, which the datasheet mentions that it's
-between 2.4576 and 5.12 Mhz.
+> On Wed, Jan 10, 2018 at 09:53:15AM +0100, Pavel Machek wrote:
+> > From: Filip Matijevi=C4=87 <filip.matijevic.pz@gmail.com>
+> >=20
+> > Add bindings for Nokia N9 audio components.
+> >=20
+> > Signed-off-by: Filip Matijevi=C4=87 <filip.matijevic.pz@gmail.com>
+> > Signed-off-by: Pavel Machek <pavel@ucw.cz>
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/media/ti-wl1273.txt b/Do=
+cumentation/devicetree/bindings/media/ti-wl1273.txt
+> > new file mode 100644
+> > index 0000000..21db389
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/media/ti-wl1273.txt
+> > @@ -0,0 +1,36 @@
+> > +Texas Instruments - wl1273 radio/bluetooth module
+> > +
+> > +Required properties:
+> > +
+> > +- compatible - "ti,wl1273-core"
+> > +- reg - I2C slave address
+> > +- interrupts       - The interrupt output from the device.
+> > +- interrupt-parent - The parent interrupt controller.
+> > +- power-gpio       - gpio pin to power the device.
+> > +
+> > +- wl1273radio child - compatible =3D "ti,wl1273-fm-radio";
+>=20
+> I'd document this under a separate section, as the compatible property for
+> the other child node.
+>=20
+> You use "property - description" here but "property: description" in the
+> file below. It'd be nice to be consistent, albeit it's separate
+> files.
 
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
----
- drivers/staging/iio/adc/ad7192.c | 22 +++++++++++++++-------
- 1 file changed, 15 insertions(+), 7 deletions(-)
+Heh. If we want to do consistency, it should be consistent in whole
+documentation. I looked at cec-gpio.txt and it uses both
+styles. Sampled few more files, and seems ":" is more common here.
 
-diff --git a/drivers/staging/iio/adc/ad7192.c b/drivers/staging/iio/adc/ad7192.c
-index 7f204013d6d4..7bc04101d133 100644
---- a/drivers/staging/iio/adc/ad7192.c
-+++ b/drivers/staging/iio/adc/ad7192.c
-@@ -141,6 +141,8 @@
- #define AD7192_GPOCON_P1DAT	BIT(1) /* P1 state */
- #define AD7192_GPOCON_P0DAT	BIT(0) /* P0 state */
- 
-+#define AD7192_EXT_FREQ_MHZ_MIN	2457600
-+#define AD7192_EXT_FREQ_MHZ_MAX	5120000
- #define AD7192_INT_FREQ_MHZ	4915200
- 
- /* NOTE:
-@@ -217,6 +219,12 @@ static int ad7192_calibrate_all(struct ad7192_state *st)
- 				ARRAY_SIZE(ad7192_calib_arr));
- }
- 
-+static inline bool ad7192_valid_external_frequency(u32 freq)
-+{
-+	return (freq >= AD7192_EXT_FREQ_MHZ_MIN &&
-+		freq <= AD7192_EXT_FREQ_MHZ_MAX);
-+}
-+
- static int ad7192_setup(struct ad7192_state *st,
- 			const struct ad7192_platform_data *pdata)
- {
-@@ -245,16 +253,16 @@ static int ad7192_setup(struct ad7192_state *st,
- 
- 	switch (pdata->clock_source_sel) {
- 	case AD7192_CLK_EXT_MCLK1_2:
--	case AD7192_CLK_EXT_MCLK2:
--		st->mclk = AD7192_INT_FREQ_MHZ;
--		break;
- 	case AD7192_CLK_INT:
- 	case AD7192_CLK_INT_CO:
--		if (pdata->ext_clk_hz)
--			st->mclk = pdata->ext_clk_hz;
--		else
--			st->mclk = AD7192_INT_FREQ_MHZ;
-+		st->mclk = AD7192_INT_FREQ_MHZ;
- 		break;
-+	case AD7192_CLK_EXT_MCLK2:
-+		if (ad7192_valid_external_frequency(pdata->clock_source_sel)) {
-+			st->mclk = pdata->clock_source_sel;
-+			break;
-+		}
-+		/* FALLTHROUGH */
- 	default:
- 		ret = -EINVAL;
- 		goto out;
--- 
-2.14.1
+> > +
+> > +Optional properties:
+> > +
+> > +- wl1273codec child - compatible =3D "ti,wl1273codec";
+>=20
+> "ti,wl1273-codec"
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ok.
+
+> > diff --git a/Documentation/devicetree/bindings/sound/nokia,n9.txt b/Doc=
+umentation/devicetree/bindings/sound/nokia,n9.txt
+> > new file mode 100644
+> > index 0000000..230b1eb
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/sound/nokia,n9.txt
+> > @@ -0,0 +1,32 @@
+> > +* Nokia N9/N950 audio setup
+> > +
+>=20
+> A small description saying what this really is would be nice.
+
+I'm actually not sure what to say here. Suggestions?
+
+Thanks,
+									Pavel
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--G4iJoqBmSsgzjUCe
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlpV+XYACgkQMOfwapXb+vI8egCfWctQNJhRkE7/Y6qXth/sj3wB
+TlMAn15ol3CMRAyNXDMyCAHOyfP2nJ85
+=jA5z
+-----END PGP SIGNATURE-----
+
+--G4iJoqBmSsgzjUCe--
