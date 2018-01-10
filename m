@@ -1,172 +1,131 @@
-From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Subject: [PATCH 1/4] backlight: pwm_bl: linear interpolation between brightness-levels
-Date: Wed, 10 Jan 2018 23:30:43 +0100
-Message-ID: <20180110223046.17696-2-enric.balletbo@collabora.com>
-References: <20180110223046.17696-1-enric.balletbo@collabora.com>
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <20180110223046.17696-1-enric.balletbo@collabora.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Daniel Thompson <daniel.thompson@linaro.org>, Doug Anderson <dianders@google.com>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>
-Cc: Jingoo Han <jingoohan1@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Brian Norris <briannorris@google.com>, Guenter Roeck <groeck@google.com>, Lee Jones <lee.jones@linaro.org>, Alexandru Stan <amstan@google.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
+Subject: [PATCH v3 1/6] PCI: Regroup all PCI related entries into drivers/pci/Makefile
+Date: Wed, 10 Jan 2018 23:47:30 +0100
+Message-ID: <ee3d115d7127b1a0561b48ba2c0997b8bd06044a.1515621150.git.cyrille.pitchen@free-electrons.com>
+References: <cover.1515621150.git.cyrille.pitchen@free-electrons.com>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <cover.1515621150.git.cyrille.pitchen@free-electrons.com>
+In-Reply-To: <cover.1515621150.git.cyrille.pitchen@free-electrons.com>
+References: <cover.1515621150.git.cyrille.pitchen@free-electrons.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: bhelgaas@google.com, kishon@ti.com, lorenzo.pieralisi@arm.com, linux-pci@vger.kernel.org
+Cc: adouglas@cadence.com, stelford@cadence.com, dgary@cadence.com, kgopi@cadence.com, eandrews@cadence.com, thomas.petazzoni@free-electrons.com, sureshp@cadence.com, nsekhar@ti.com, linux-kernel@vger.kernel.org, robh@kernel.org, devicetree@vger.kernel.org, Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-Setting num-interpolated-steps in the dts will allow you to have linear
-interpolation between values of brightness-levels. This way a high
-resolution pwm duty cycle can be used without having to list out every
-possible value in the dts. This system also allows for gamma corrected
-values.
+Clean up drivers/Makefile by moving the pci/endpoint and pci/dwc entries
+from drivers/Makefile into drivers/pci/Makefile.
 
-The most simple example is interpolate between two brightness values a
-number of steps, this can be done setting the following in the dts:
+Since we don't want to introduce any dependency between CONFIG_PCI and
+CONFIG_PCI_ENDPOINT, we now always execute drivers/pci/Makefile.
 
-  brightness-levels = <0 65535>;
-  num-interpolated-steps = <1024>;
-  default-brightness-level = <512>;
+Hence all Makefiles in drivers/pci/ were updated accordingly so no file is
+compiled when CONFIG_PCI is not defined.
 
-This will create a brightness-level table with the following values:
+Also, we add a comment to reinforce that EPC and EPF libraries must be
+initialized before their users. Hence built-in EPC drivers, such as
+those of Designware, are linked after the endpoint core libraries.
 
-  <0 63 126 189 252 315 378 441 ... 64260 64323 64386 64449 65535>
+Finally, we add another comment to explain why obj-y has been chosen
+instead of obj-$(CONFIG_PCIE_DW) to parse the dwc/ sub-folder.
 
-Another use case can be describe a gamma corrected curve, as we have
-better sensitivity at low luminance than high luminance we probably
-want have smaller steps for low brightness levels values and bigger
-steps for high brightness levels values. This can be achieved with
-the following in the dts:
-
-  brightness-levels = <0 4096 65535>;
-  num-interpolated-steps = <1024>;
-  default-brightness-level = <512>;
-
-This will create a brightness-levels table with the following values:
-
-  <0 4 8 12 16 20 ... 4096 4156 4216 4276 ... 65535>
-
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Signed-off-by: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
 ---
-Changes since RFCv2:
-- Replace use-linear-interpolation for num-interpolated-steps so it's
-  more flexible to specify any kind of curve to the user.
-- Reworked the code to interpolate between two points.
-  - Pre-compute the brightness-levels table at boot.
-Changes since RFCv1:
-- Add linear interpolation for high resolution PWM.
+ drivers/Makefile          |  5 +----
+ drivers/pci/Kconfig       |  1 +
+ drivers/pci/Makefile      | 13 ++++++++++---
+ drivers/pci/dwc/Makefile  |  2 ++
+ drivers/pci/host/Makefile |  2 ++
+ 5 files changed, 16 insertions(+), 7 deletions(-)
 
- drivers/video/backlight/pwm_bl.c | 88 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 88 insertions(+)
-
-diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
-index 8e3f1245f5c5..eabe0a4462af 100644
---- a/drivers/video/backlight/pwm_bl.c
-+++ b/drivers/video/backlight/pwm_bl.c
-@@ -147,7 +147,11 @@ static int pwm_backlight_parse_dt(struct device *dev,
- 				  struct platform_pwm_backlight_data *data)
- {
- 	struct device_node *node = dev->of_node;
-+	unsigned int num_levels = 0;
-+	unsigned int levels_count;
-+	unsigned int num_steps;
- 	struct property *prop;
-+	unsigned int *table;
- 	int length;
- 	u32 value;
- 	int ret;
-@@ -167,6 +171,7 @@ static int pwm_backlight_parse_dt(struct device *dev,
- 	/* read brightness levels from DT property */
- 	if (data->max_brightness > 0) {
- 		size_t size = sizeof(*data->levels) * data->max_brightness;
-+		unsigned int i, j, n = 0;
+diff --git a/drivers/Makefile b/drivers/Makefile
+index e06f7f633f73..8189b1edec00 100644
+--- a/drivers/Makefile
++++ b/drivers/Makefile
+@@ -16,10 +16,7 @@ obj-$(CONFIG_PINCTRL)		+= pinctrl/
+ obj-$(CONFIG_GPIOLIB)		+= gpio/
+ obj-y				+= pwm/
  
- 		data->levels = devm_kzalloc(dev, size, GFP_KERNEL);
- 		if (!data->levels)
-@@ -184,6 +189,89 @@ static int pwm_backlight_parse_dt(struct device *dev,
- 			return ret;
+-obj-$(CONFIG_PCI)		+= pci/
+-obj-$(CONFIG_PCI_ENDPOINT)	+= pci/endpoint/
+-# PCI dwc controller drivers
+-obj-y				+= pci/dwc/
++obj-y				+= pci/
  
- 		data->dft_brightness = value;
-+
-+		/*
-+		 * This property is optional, if is set enables linear
-+		 * interpolation between each of the values of brightness levels
-+		 * and creates a new pre-computed table.
-+		 */
-+		ret = of_property_read_u32(node, "num-interpolated-steps",
-+					   &num_steps);
-+		if (ret < 0)
-+			return ret;
-+
-+		/*
-+		 * Make sure that there is at least two entries in the
-+		 * brightness-levels table, otherwise we can't interpolate
-+		 * between two points.
-+		 */
-+		if (num_steps) {
-+			if (data->max_brightness < 2) {
-+				dev_err(dev, "can't interpolate\n");
-+				return -EINVAL;
-+			}
-+
-+			/*
-+			 * Recalculate the number of brightness levels, now
-+			 * taking in consideration the number of interpolated
-+			 * steps between two levels.
-+			 */
-+			for (i = 0; i < data->max_brightness - 1; i++) {
-+				if ((data->levels[i + 1] - data->levels[i]) /
-+				   num_steps)
-+					num_levels += num_steps;
-+				else
-+					num_levels++;
-+			}
-+			num_levels++;
-+			dev_dbg(dev, "new number of brightness levels: %d\n",
-+				num_levels);
-+
-+			/*
-+			 * Create a new table of brightness levels with all the
-+			 * interpolated steps.
-+			 */
-+			table = kcalloc(num_levels, sizeof(*table), GFP_KERNEL);
-+			if (!table)
-+				return -ENOMEM;
-+
-+			/* Fill the interpolated table. */
-+			levels_count = 0;
-+			for (i = 0; i < data->max_brightness - 1; i++) {
-+				value = data->levels[i];
-+				n = (data->levels[i + 1] - value) / num_steps;
-+				if (n > 0) {
-+					for (j = 0; j < num_steps; j++) {
-+						table[levels_count] = value;
-+						value += n;
-+						levels_count++;
-+					}
-+				} else {
-+					table[levels_count] = data->levels[i];
-+					levels_count++;
-+				}
-+			}
-+			table[levels_count] = data->levels[i];
-+
-+			/*
-+			 * As we use interpolation lets remove current
-+			 * brightness levels table for the new interpolated
-+			 * table.
-+			 */
-+			devm_kfree(dev, data->levels);
-+			data->levels = devm_kcalloc(dev, num_levels,
-+						    sizeof(*data->levels),
-+						    GFP_KERNEL);
-+			memcpy(data->levels, table,
-+			       num_levels * sizeof(*table));
-+			kfree(table);
-+			/*
-+			 * Reassign max_brightness value to the new total number
-+			 * of brightness levels.
-+			 */
-+			data->max_brightness = num_levels;
-+		}
-+
- 		data->max_brightness--;
- 	}
+ obj-$(CONFIG_PARISC)		+= parisc/
+ obj-$(CONFIG_RAPIDIO)		+= rapidio/
+diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+index bda151788f3f..7eeb969ab86a 100644
+--- a/drivers/pci/Kconfig
++++ b/drivers/pci/Kconfig
+@@ -125,6 +125,7 @@ config PCI_PASID
  
+ config PCI_LABEL
+ 	def_bool y if (DMI || ACPI)
++	depends on PCI
+ 	select NLS
+ 
+ config PCI_HYPERV
+diff --git a/drivers/pci/Makefile b/drivers/pci/Makefile
+index c7819b973df7..ddb5aa6640d7 100644
+--- a/drivers/pci/Makefile
++++ b/drivers/pci/Makefile
+@@ -3,12 +3,15 @@
+ # Makefile for the PCI bus specific drivers.
+ #
+ 
+-obj-y		+= access.o bus.o probe.o host-bridge.o remove.o pci.o \
++obj-$(CONFIG_PCI)	+= access.o bus.o probe.o host-bridge.o remove.o pci.o \
+ 			pci-driver.o search.o pci-sysfs.o rom.o setup-res.o \
+ 			irq.o vpd.o setup-bus.o vc.o mmap.o setup-irq.o
+ 
++ifdef CONFIG_PCI
+ obj-$(CONFIG_PROC_FS) += proc.o
+ obj-$(CONFIG_SYSFS) += slot.o
++obj-$(CONFIG_OF) += of.o
++endif
+ 
+ obj-$(CONFIG_PCI_QUIRKS) += quirks.o
+ 
+@@ -44,10 +47,14 @@ obj-$(CONFIG_PCI_ECAM) += ecam.o
+ 
+ obj-$(CONFIG_XEN_PCIDEV_FRONTEND) += xen-pcifront.o
+ 
+-obj-$(CONFIG_OF) += of.o
+-
+ ccflags-$(CONFIG_PCI_DEBUG) := -DDEBUG
+ 
+ # PCI host controller drivers
+ obj-y += host/
+ obj-y += switch/
++
++obj-$(CONFIG_PCI_ENDPOINT)	+= endpoint/
++
++# Endpoint library must be initialized before its users
++# pcie-hisi.o quirks are needed even without CONFIG_PCIE_DW
++obj-y				+= dwc/
+diff --git a/drivers/pci/dwc/Makefile b/drivers/pci/dwc/Makefile
+index a9d8a6fb48e3..5d2ce72c7a52 100644
+--- a/drivers/pci/dwc/Makefile
++++ b/drivers/pci/dwc/Makefile
+@@ -25,4 +25,6 @@ obj-$(CONFIG_PCIE_HISI_STB) += pcie-histb.o
+ # ARM64 and use internal ifdefs to only build the pieces we need
+ # depending on whether ACPI, the DT driver, or both are enabled.
+ 
++ifdef CONFIG_PCI
+ obj-$(CONFIG_ARM64) += pcie-hisi.o
++endif
+diff --git a/drivers/pci/host/Makefile b/drivers/pci/host/Makefile
+index 34ec1d88f961..3b1059190867 100644
+--- a/drivers/pci/host/Makefile
++++ b/drivers/pci/host/Makefile
+@@ -34,6 +34,8 @@ obj-$(CONFIG_VMD) += vmd.o
+ # ARM64 and use internal ifdefs to only build the pieces we need
+ # depending on whether ACPI, the DT driver, or both are enabled.
+ 
++ifdef CONFIG_PCI
+ obj-$(CONFIG_ARM64) += pci-thunder-ecam.o
+ obj-$(CONFIG_ARM64) += pci-thunder-pem.o
+ obj-$(CONFIG_ARM64) += pci-xgene.o
++endif
 -- 
-2.15.1
+2.11.0
