@@ -1,52 +1,55 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: [PATCH] arm64: dts: add #cooling-cells to CPU nodes
-Date: Wed, 10 Jan 2018 22:06:48 +0100
-Message-ID: <20180110210706.2331225-1-arnd@arndb.de>
+From: Thinh Nguyen <Thinh.Nguyen-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v2 00/14] usb: dwc3: Add new updates for DWC_usb31
+Date: Wed, 10 Jan 2018 13:12:13 -0800
+Message-ID: <cover.1515618218.git.thinhn@synopsys.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Andrew-sh Cheng <andrew-sh.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thinh Nguyen <Thinh.Nguyen-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Vamsi Krishna Samavedam <vskrishn-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Li Jun <jun.li-3arQi8VN3Tc@public.gmane.org>, "Gustavo A. R. Silva" <garsilva-L1vi/lXTdts+Va1GwOuvDg@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>
+Cc: John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-dtc complains about the lack of #coolin-cells properties for the
-CPU nodes that are referred to as "cooling-device":
+This patch series adds new updates and some fixes for DWC_usb31.
 
-arch/arm64/boot/dts/mediatek/mt8173-evb.dtb: Warning (cooling_device_property): Missing property '#cooling-cells' in node /cpus/cpu@0 or bad phandle (referred from /thermal-zones/cpu_thermal/cooling-maps/map@0:cooling-device[0])
-arch/arm64/boot/dts/mediatek/mt8173-evb.dtb: Warning (cooling_device_property): Missing property '#cooling-cells' in node /cpus/cpu@100 or bad phandle (referred from /thermal-zones/cpu_thermal/cooling-maps/map@1:cooling-device[0])
+Changes in v2:
+ - Add another patch to the series to increase mass_storage max_speed
+ - Separate "usb: dwc3: ep0: Reset TRB counter for ep0 IN" from series
+ - Separate "usb: dwc3: gadget: Set maxpacket size for ep0 IN" from series
+ - Use msleep() instead of mdelay() for SoftReset PHY sync delay
+ - Rename new USB31 macros from DWC3_USB31_* to DWC31_*
+ - Rename device properties and replace '_' with '-'
+ - Minor fixes in the commit messages
 
-Apparently this property must be '<2>' to match the binding.
 
-Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
----
-If this looks ok, I'd apply it directly to the fixes branch
-for 4.15, as the warning is one that was introduced in this
-release.
----
- arch/arm64/boot/dts/mediatek/mt8173.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-index b477ad790071..9fbe4705ee88 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-@@ -155,6 +155,7 @@
- 			reg = <0x000>;
- 			enable-method = "psci";
- 			cpu-idle-states = <&CPU_SLEEP_0>;
-+			#cooling-cells = <2>;
- 			clocks = <&infracfg CLK_INFRA_CA53SEL>,
- 				 <&apmixedsys CLK_APMIXED_MAINPLL>;
- 			clock-names = "cpu", "intermediate";
-@@ -179,6 +180,7 @@
- 			reg = <0x100>;
- 			enable-method = "psci";
- 			cpu-idle-states = <&CPU_SLEEP_0>;
-+			#cooling-cells = <2>;
- 			clocks = <&infracfg CLK_INFRA_CA57SEL>,
- 				 <&apmixedsys CLK_APMIXED_MAINPLL>;
- 			clock-names = "cpu", "intermediate";
+Thinh Nguyen (14):
+  usb: dwc3: Add SoftReset PHY synchonization delay
+  usb: core: urb: Check SSP isoc ep comp descriptor
+  usb: dwc3: Update DWC_usb31 GTXFIFOSIZ reg fields
+  usb: dwc3: Check IP revision for GTXFIFOSIZ
+  usb: dwc3: Add DWC_usb31 GRXTHRCFG bit fields
+  usb: dwc3: gadget: Check IP revision for GRXTHRCFG
+  usb: dwc3: Add DWC_usb31 GTXTHRCFG reg fields
+  usb: dwc3: Make TX/RX threshold configurable
+  usb: dwc3: Check for ESS TX/RX threshold config
+  usb: dwc3: Dump LSP and BMU debug info
+  usb: dwc3: Track DWC_usb31 VERSIONTYPE
+  usb: dwc3: Add disabling of start_transfer failure quirk
+  usb: dwc3: Add workaround for isoc start transfer failure
+  usb: gadget: mass_storage: Set max_speed to SSP
+
+ Documentation/devicetree/bindings/usb/dwc3.txt |   7 +
+ drivers/usb/core/urb.c                         |   8 +
+ drivers/usb/dwc3/core.c                        |  72 ++++++++-
+ drivers/usb/dwc3/core.h                        |  53 +++++++
+ drivers/usb/dwc3/debugfs.c                     |   5 +
+ drivers/usb/dwc3/gadget.c                      | 200 ++++++++++++++++++++++++-
+ drivers/usb/gadget/legacy/mass_storage.c       |   2 +-
+ 7 files changed, 338 insertions(+), 9 deletions(-)
+
 -- 
-2.9.0
+2.11.0
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
