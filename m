@@ -1,33 +1,51 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH 2/3] dt-bindings: pinctrl: Add a ngpios-ranges property
-Date: Wed, 10 Jan 2018 19:59:31 +0200
-Message-ID: <1515607171.7000.879.camel@linux.intel.com>
-References: <20180110015848.11480-1-sboyd@codeaurora.org>
-         <20180110015848.11480-3-sboyd@codeaurora.org>
-         <CACRpkdaN6vmV4L4U76DvD5BN+j1RYCQakTysA+GGPdT8Chc-iw@mail.gmail.com>
-         <20180110163733.GH21040@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180110163733.GH21040@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@secretlab.ca>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, Timur Tabi <timur@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, linux-gpio@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH] ARM: dts: Fix smartreflex compatible for omap3 shared mpu-iva instance
+Date: Wed, 10 Jan 2018 10:14:15 -0800
+Message-ID: <20180110181415.29197-1-tony@atomide.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2018-01-10 at 08:37 -0800, Stephen Boyd wrote:
-> On 01/10, Linus Walleij wrote:
-> > On Wed, Jan 10, 2018 at 2:58 AM, Stephen Boyd <sboyd@codeaurora.org>
-> > wrote:
+The smartreflex instance for mpu and iva is shared. Let's fix this as I've
+already gotten confused myself few times wondering where the mpu instance
+is. Note that we are still probing the driver using platform data so this
+change is safe to do.
 
-> for the qcom driver it was all fine
-> because all three concepts: irq, gpios, and pins have a one to
-> one relationship.
+Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+---
+ Documentation/devicetree/bindings/power/ti-smartreflex.txt | 2 +-
+ arch/arm/boot/dts/omap3.dtsi                               | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-Just a side note: While it might be the case for most of the
-controllers, don't assume it's a generic case.
-
+diff --git a/Documentation/devicetree/bindings/power/ti-smartreflex.txt b/Documentation/devicetree/bindings/power/ti-smartreflex.txt
+--- a/Documentation/devicetree/bindings/power/ti-smartreflex.txt
++++ b/Documentation/devicetree/bindings/power/ti-smartreflex.txt
+@@ -7,7 +7,7 @@ Required properties:
+ 
+ compatible: Shall be one of the following:
+ 	    "ti,omap3-smartreflex-core"
+-	    "ti,omap3-smartreflex-iva"
++	    "ti,omap3-smartreflex-mpu-iva"
+ 	    "ti,omap4-smartreflex-core"
+ 	    "ti,omap4-smartreflex-mpu"
+ 	    "ti,omap4-smartreflex-iva"
+diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
+--- a/arch/arm/boot/dts/omap3.dtsi
++++ b/arch/arm/boot/dts/omap3.dtsi
+@@ -595,7 +595,7 @@
+ 		};
+ 
+ 		smartreflex_mpu_iva: smartreflex@480c9000 {
+-			compatible = "ti,omap3-smartreflex-iva";
++			compatible = "ti,omap3-smartreflex-mpu-iva";
+ 			ti,hwmods = "smartreflex_mpu_iva";
+ 			reg = <0x480c9000 0x400>;
+ 			interrupts = <18>;
 -- 
-Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Intel Finland Oy
+2.15.0
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
