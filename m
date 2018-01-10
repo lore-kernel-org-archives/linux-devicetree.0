@@ -1,95 +1,323 @@
-From: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
-Subject: [PATCH v3 5/6] dt-bindings: PCI: cadence: Add DT bindings for Cadence PCIe host controller
-Date: Wed, 10 Jan 2018 23:47:34 +0100
-Message-ID: <70a79e6a961de90db7199ae98a299b0de001c20c.1515621150.git.cyrille.pitchen@free-electrons.com>
-References: <cover.1515621150.git.cyrille.pitchen@free-electrons.com>
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <cover.1515621150.git.cyrille.pitchen@free-electrons.com>
-In-Reply-To: <cover.1515621150.git.cyrille.pitchen@free-electrons.com>
-References: <cover.1515621150.git.cyrille.pitchen@free-electrons.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: bhelgaas@google.com, kishon@ti.com, lorenzo.pieralisi@arm.com, linux-pci@vger.kernel.org
-Cc: adouglas@cadence.com, stelford@cadence.com, dgary@cadence.com, kgopi@cadence.com, eandrews@cadence.com, thomas.petazzoni@free-electrons.com, sureshp@cadence.com, nsekhar@ti.com, linux-kernel@vger.kernel.org, robh@kernel.org, devicetree@vger.kernel.org, Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH v3 8/9] clocksource: Add a new timer-ingenic driver
+Date: Wed, 10 Jan 2018 23:48:37 +0100
+Message-ID: <20180110224838.16711-8-paul@crapouillou.net>
+References: <20180101143344.2099-1-paul@crapouillou.net>
+ <20180110224838.16711-1-paul@crapouillou.net>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180110224838.16711-1-paul@crapouillou.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Lee Jones <lee.jones@linaro.org>
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
-From: Scott Telford <stelford@cadence.com>
+This driver will use the TCU (Timer Counter Unit) present on the Ingenic
+JZ47xx SoCs to provide the kernel with a clocksource and timers.
 
-This patch adds documentation for the DT bindings of the Cadence PCIe
-controller when configured in host (Root Complex) mode.
-
-Signed-off-by: Scott Telford <stelford@cadence.com>
-Signed-off-by: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- .../bindings/pci/cdns,cdns-pcie-host.txt           | 60 ++++++++++++++++++++++
- 1 file changed, 60 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
+ drivers/clocksource/Kconfig         |   8 ++
+ drivers/clocksource/Makefile        |   1 +
+ drivers/clocksource/timer-ingenic.c | 258 ++++++++++++++++++++++++++++++++++++
+ 3 files changed, 267 insertions(+)
+ create mode 100644 drivers/clocksource/timer-ingenic.c
 
-diff --git a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
+ v2: Use SPDX identifier for the license
+ v3: - Move documentation to its own patch
+     - Search the devicetree for PWM clients, and use all the TCU
+	   channels that won't be used for PWM
+
+diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+index c729a88007d0..7b6dedf0347d 100644
+--- a/drivers/clocksource/Kconfig
++++ b/drivers/clocksource/Kconfig
+@@ -583,4 +583,12 @@ config CLKSRC_ST_LPC
+ 	  Enable this option to use the Low Power controller timer
+ 	  as clocksource.
+ 
++config INGENIC_TIMER
++	bool "Clocksource/timer using the TCU in Ingenic JZ SoCs"
++	depends on MACH_INGENIC || COMPILE_TEST
++	select CLKSRC_OF
++	default y
++	help
++	  Support for the timer/counter unit of the Ingenic JZ SoCs.
++
+ endmenu
+diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
+index 72711f1491e3..607c7de07d02 100644
+--- a/drivers/clocksource/Makefile
++++ b/drivers/clocksource/Makefile
+@@ -73,5 +73,6 @@ obj-$(CONFIG_ASM9260_TIMER)		+= asm9260_timer.o
+ obj-$(CONFIG_H8300_TMR8)		+= h8300_timer8.o
+ obj-$(CONFIG_H8300_TMR16)		+= h8300_timer16.o
+ obj-$(CONFIG_H8300_TPU)			+= h8300_tpu.o
++obj-$(CONFIG_INGENIC_TIMER)		+= timer-ingenic.o
+ obj-$(CONFIG_CLKSRC_ST_LPC)		+= clksrc_st_lpc.o
+ obj-$(CONFIG_X86_NUMACHIP)		+= numachip.o
+diff --git a/drivers/clocksource/timer-ingenic.c b/drivers/clocksource/timer-ingenic.c
 new file mode 100644
-index 000000000000..20a33f38f69d
+index 000000000000..6a26e75af05b
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
-@@ -0,0 +1,60 @@
-+* Cadence PCIe host controller
++++ b/drivers/clocksource/timer-ingenic.c
+@@ -0,0 +1,258 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Ingenic JZ47xx SoC TCU clocksource driver
++ * Copyright (C) 2018 Paul Cercueil <paul@crapouillou.net>
++ */
 +
-+This PCIe controller inherits the base properties defined in
-+host-generic-pci.txt.
++#include <linux/bitops.h>
++#include <linux/clk.h>
++#include <linux/clockchips.h>
++#include <linux/err.h>
++#include <linux/interrupt.h>
++#include <linux/mfd/syscon.h>
++#include <linux/mfd/syscon/ingenic-tcu.h>
++#include <linux/of_address.h>
++#include <linux/of_irq.h>
++#include <linux/regmap.h>
++#include <linux/slab.h>
 +
-+Required properties:
-+- compatible: Should contain "cdns,cdns-pcie-host" to identify the IP used.
-+- reg: Should contain the controller register base address, PCIe configuration
-+  window base address, and AXI interface region base address respectively.
-+- reg-names: Must be "reg", "cfg" and "mem" respectively.
-+- #address-cells: Set to <3>
-+- #size-cells: Set to <2>
-+- device_type: Set to "pci"
-+- ranges: Ranges for the PCI memory and I/O regions
-+- #interrupt-cells: Set to <1>
-+- interrupt-map-mask and interrupt-map: Standard PCI properties to define the
-+  mapping of the PCIe interface to interrupt numbers.
++#define NUM_CHANNELS	8
 +
-+Optional properties:
-+- cdns,max-outbound-regions: Set to maximum number of outbound regions
-+  (default 32)
-+- cdns,no-bar-match-nbits: Set into the no BAR match register to configure the
-+  number of least significant bits kept during inbound (PCIe -> AXI) address
-+  translations (default 32)
-+- vendor-id: The PCI vendor ID (16 bits, default is design dependent)
-+- device-id: The PCI device ID (16 bits, default is design dependent)
++struct ingenic_tcu;
 +
-+Example:
-+
-+pcie@fb000000 {
-+	compatible = "cdns,cdns-pcie-host";
-+	device_type = "pci";
-+	#address-cells = <3>;
-+	#size-cells = <2>;
-+	bus-range = <0x0 0xff>;
-+	linux,pci-domain = <0>;
-+	cdns,max-outbound-regions = <16>;
-+	cdns,no-bar-match-nbits = <32>;
-+	vendor-id = /bits/ 16 <0x17cd>;
-+	device-id = /bits/ 16 <0x0200>;
-+
-+	reg = <0x0 0xfb000000  0x0 0x01000000>,
-+	      <0x0 0x41000000  0x0 0x00001000>,
-+	      <0x0 0x40000000  0x0 0x04000000>;
-+	reg-names = "reg", "cfg", "mem";
-+
-+	ranges = <0x02000000 0x0 0x42000000  0x0 0x42000000  0x0 0x1000000>,
-+		 <0x01000000 0x0 0x43000000  0x0 0x43000000  0x0 0x0010000>;
-+
-+	#interrupt-cells = <0x1>;
-+
-+	interrupt-map = <0x0 0x0 0x0  0x1  &gic  0x0 0x0 0x0 14 0x1
-+			 0x0 0x0 0x0  0x2  &gic  0x0 0x0 0x0 15 0x1
-+			 0x0 0x0 0x0  0x3  &gic  0x0 0x0 0x0 16 0x1
-+			 0x0 0x0 0x0  0x4  &gic  0x0 0x0 0x0 17 0x1>;
-+
-+	interrupt-map-mask = <0x0 0x0 0x0  0x7>;
-+
-+	msi-parent = <&its_pci>;
++struct ingenic_tcu_channel {
++	unsigned int idx;
++	struct clk *clk;
 +};
++
++struct ingenic_tcu {
++	struct ingenic_tcu_channel channels[NUM_CHANNELS];
++	unsigned long requested;
++	struct regmap *map;
++};
++
++struct ingenic_clock_event_device {
++	struct clock_event_device cevt;
++	struct ingenic_tcu_channel *channel;
++	char name[32];
++};
++
++#define ingenic_cevt(_evt) \
++	container_of(_evt, struct ingenic_clock_event_device, cevt)
++
++static inline struct ingenic_tcu *to_ingenic_tcu(struct ingenic_tcu_channel *ch)
++{
++	return container_of(ch, struct ingenic_tcu, channels[ch->idx]);
++}
++
++static int ingenic_tcu_cevt_set_state_shutdown(struct clock_event_device *evt)
++{
++	struct ingenic_clock_event_device *jzcevt = ingenic_cevt(evt);
++	struct ingenic_tcu_channel *channel = jzcevt->channel;
++	struct ingenic_tcu *tcu = to_ingenic_tcu(channel);
++	unsigned int idx = channel->idx;
++
++	regmap_write(tcu->map, TCU_REG_TECR, BIT(idx));
++	return 0;
++}
++
++static int ingenic_tcu_cevt_set_next(unsigned long next,
++		struct clock_event_device *evt)
++{
++	struct ingenic_clock_event_device *jzcevt = ingenic_cevt(evt);
++	struct ingenic_tcu_channel *channel = jzcevt->channel;
++	struct ingenic_tcu *tcu = to_ingenic_tcu(channel);
++	unsigned int idx = channel->idx;
++
++	if (next > 0xffff)
++		return -EINVAL;
++
++	regmap_write(tcu->map, TCU_REG_TDFRc(idx), (unsigned int) next);
++	regmap_write(tcu->map, TCU_REG_TCNTc(idx), 0);
++	regmap_write(tcu->map, TCU_REG_TESR, BIT(idx));
++
++	return 0;
++}
++
++static irqreturn_t ingenic_tcu_cevt_cb(int irq, void *dev_id)
++{
++	struct clock_event_device *cevt = dev_id;
++	struct ingenic_clock_event_device *jzcevt = ingenic_cevt(cevt);
++	struct ingenic_tcu_channel *channel = jzcevt->channel;
++	struct ingenic_tcu *tcu = to_ingenic_tcu(channel);
++	unsigned int idx = channel->idx;
++
++	regmap_write(tcu->map, TCU_REG_TECR, BIT(idx));
++
++	if (cevt->event_handler)
++		cevt->event_handler(cevt);
++
++	return IRQ_HANDLED;
++}
++
++static int __init ingenic_tcu_req_channel(struct ingenic_tcu_channel *channel)
++{
++	struct ingenic_tcu *tcu = to_ingenic_tcu(channel);
++	char buf[16];
++	int err;
++
++	if (test_and_set_bit(channel->idx, &tcu->requested))
++		return -EBUSY;
++
++	snprintf(buf, sizeof(buf), "timer%u", channel->idx);
++	channel->clk = clk_get(NULL, buf);
++	if (IS_ERR(channel->clk)) {
++		err = PTR_ERR(channel->clk);
++		goto out_release;
++	}
++
++	err = clk_prepare_enable(channel->clk);
++	if (err)
++		goto out_clk_put;
++
++	return 0;
++
++out_clk_put:
++	clk_put(channel->clk);
++out_release:
++	clear_bit(channel->idx, &tcu->requested);
++	return err;
++}
++
++static int __init ingenic_tcu_reset_channel(struct device_node *np,
++		struct ingenic_tcu_channel *channel)
++{
++	struct ingenic_tcu *tcu = to_ingenic_tcu(channel);
++
++	return regmap_update_bits(tcu->map, TCU_REG_TCSRc(channel->idx),
++				0xffff & ~TCU_TCSR_RESERVED_BITS, 0);
++}
++
++static void __init ingenic_tcu_free_channel(struct ingenic_tcu_channel *channel)
++{
++	struct ingenic_tcu *tcu = to_ingenic_tcu(channel);
++
++	clk_disable_unprepare(channel->clk);
++	clk_put(channel->clk);
++	clear_bit(channel->idx, &tcu->requested);
++}
++
++static const char * const ingenic_tcu_timer_names[] = {
++	"TCU0", "TCU1", "TCU2", "TCU3", "TCU4", "TCU5", "TCU6", "TCU7",
++};
++
++static int __init ingenic_tcu_setup_cevt(struct device_node *np,
++		struct ingenic_tcu *tcu, unsigned int idx)
++{
++	struct ingenic_tcu_channel *channel = &tcu->channels[idx];
++	struct ingenic_clock_event_device *jzcevt;
++	unsigned long rate;
++	int err, virq;
++
++	err = ingenic_tcu_req_channel(channel);
++	if (err)
++		return err;
++
++	err = ingenic_tcu_reset_channel(np, channel);
++	if (err)
++		goto err_out_free_channel;
++
++	rate = clk_get_rate(channel->clk);
++	if (!rate) {
++		err = -EINVAL;
++		goto err_out_free_channel;
++	}
++
++	jzcevt = kzalloc(sizeof(*jzcevt), GFP_KERNEL);
++	if (!jzcevt) {
++		err = -ENOMEM;
++		goto err_out_free_channel;
++	}
++
++	virq = irq_of_parse_and_map(np, idx);
++	if (!virq) {
++		err = -EINVAL;
++		goto err_out_kfree_jzcevt;
++	}
++
++	err = request_irq(virq, ingenic_tcu_cevt_cb, IRQF_TIMER,
++			ingenic_tcu_timer_names[idx], &jzcevt->cevt);
++	if (err)
++		goto err_out_irq_dispose_mapping;
++
++	jzcevt->channel = channel;
++	snprintf(jzcevt->name, sizeof(jzcevt->name), "ingenic-tcu-chan%u",
++		 channel->idx);
++
++	jzcevt->cevt.cpumask = cpumask_of(smp_processor_id());
++	jzcevt->cevt.features = CLOCK_EVT_FEAT_ONESHOT;
++	jzcevt->cevt.name = jzcevt->name;
++	jzcevt->cevt.rating = 200;
++	jzcevt->cevt.set_state_shutdown = ingenic_tcu_cevt_set_state_shutdown;
++	jzcevt->cevt.set_next_event = ingenic_tcu_cevt_set_next;
++
++	clockevents_config_and_register(&jzcevt->cevt, rate, 10, (1 << 16) - 1);
++
++	return 0;
++
++err_out_irq_dispose_mapping:
++	irq_dispose_mapping(virq);
++err_out_kfree_jzcevt:
++	kfree(jzcevt);
++err_out_free_channel:
++	ingenic_tcu_free_channel(channel);
++	return err;
++}
++
++static int __init ingenic_tcu_init(struct device_node *np)
++{
++	unsigned long available_channels = GENMASK(NUM_CHANNELS - 1, 0);
++	struct device_node *node;
++	struct ingenic_tcu *tcu;
++	unsigned int i, channel;
++	int err;
++	u32 val;
++
++	for_each_node_with_property(node, "pwms") {
++		err = of_property_read_u32_index(node, "pwms", 1, &val);
++		if (!err && val >= NUM_CHANNELS)
++			err = -EINVAL;
++		if (err) {
++			pr_err("timer-ingenic: Unable to parse PWM nodes!");
++			break;
++		}
++
++		pr_info("timer-ingenic: Reserving channel %u for PWM", val);
++		available_channels &= ~BIT(val);
++	}
++
++	tcu = kzalloc(sizeof(*tcu), GFP_KERNEL);
++	if (!tcu)
++		return -ENOMEM;
++
++	tcu->map = syscon_node_to_regmap(np->parent);
++	if (IS_ERR(tcu->map)) {
++		err = PTR_ERR(tcu->map);
++		kfree(tcu);
++		return err;
++	}
++
++	for (i = 0; i < NUM_CHANNELS; i++)
++		tcu->channels[i].idx = i;
++
++	for_each_set_bit(channel, &available_channels, NUM_CHANNELS) {
++		err = ingenic_tcu_setup_cevt(np, tcu, channel);
++		if (err) {
++			pr_warn("timer-ingenic: Unable to init TCU channel %u: %i",
++					channel, err);
++			continue;
++		}
++	}
++
++	return 0;
++}
++
++/* We only probe via devicetree, no need for a platform driver */
++CLOCKSOURCE_OF_DECLARE(jz4740_tcu, "ingenic,jz4740-tcu", ingenic_tcu_init);
++CLOCKSOURCE_OF_DECLARE(jz4770_tcu, "ingenic,jz4770-tcu", ingenic_tcu_init);
++CLOCKSOURCE_OF_DECLARE(jz4780_tcu, "ingenic,jz4780-tcu", ingenic_tcu_init);
 -- 
 2.11.0
