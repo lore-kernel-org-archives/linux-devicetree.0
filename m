@@ -1,41 +1,75 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH v4 1/3] usb: renesas_usbhs: Add support for RZ/A1
-Date: Wed, 10 Jan 2018 08:31:44 +0000
-Message-ID: <TY1PR06MB099252DAE68A824D9CC712B7D8110@TY1PR06MB0992.apcprd06.prod.outlook.com>
-References: <20180108123055.64890-1-chris.brandt@renesas.com>
- <20180108123055.64890-2-chris.brandt@renesas.com>
- <TY1PR06MB0992C908652672902D18D824D8110@TY1PR06MB0992.apcprd06.prod.outlook.com>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 2/3] ARM: dts: mvebu: add sdram controller node to Armada-38x
+Date: Wed, 10 Jan 2018 09:31:37 +0100
+Message-ID: <87tvvu6ro6.fsf@free-electrons.com>
+References: <20180108223158.21930-1-chris.packham@alliedtelesis.co.nz>
+        <20180108223158.21930-3-chris.packham@alliedtelesis.co.nz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <TY1PR06MB0992C908652672902D18D824D8110-/PRLmSCtZ16WJvbLRFYGcG0DtJ1/0DrXvxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
-Content-Language: ja-JP
+In-Reply-To: <20180108223158.21930-3-chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org> (Chris
+        Packham's message of "Tue, 9 Jan 2018 11:31:57 +1300")
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Chris Brandt <Chris.Brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+To: Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+Cc: jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-+Felipe
+Hi Chris,
+ 
+ On mar., janv. 09 2018, Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org> wrote:
 
-> -----Original Message-----
-> From: Yoshihiro Shimoda, Sent: Wednesday, January 10, 2018 5:27 PM
->=20
-> Hi Chris-san,
->=20
-> > From: Chris Brandt, Sent: Monday, January 8, 2018 9:31 PM
-> >
-> > This patch adds the capability to support RZ/A1 SoCs.
-> >
-> > Signed-off-by: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
->=20
-> Thank you for the patch!
->=20
-> Acked-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
->=20
-> Best regards,
-> Yoshihiro Shimoda
+> The Armada-38x uses an SDRAM controller that is compatible with the
+> Armada-XP. The key difference is the width of the bus (XP is 64/32, 38x
+> is 32/16). The SDRAM controller registers are the same between the two
+> SoCs.
+>
+> Signed-off-by: Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/armada-38x.dtsi | 5 +++++
+>  1 file changed, 5 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/armada-38x.dtsi b/arch/arm/boot/dts/armada-38x.dtsi
+> index 00ff549d4e39..6d34c5ec178f 100644
+> --- a/arch/arm/boot/dts/armada-38x.dtsi
+> +++ b/arch/arm/boot/dts/armada-38x.dtsi
+> @@ -138,6 +138,11 @@
+>  			#size-cells = <1>;
+>  			ranges = <0 MBUS_ID(0xf0, 0x01) 0 0x100000>;
+>  
+> +			sdramc@1400 {
 
+Could you add a label? Thanks to this it would be possible to
+enable/disable it at board level in a esay way.
+
+> +				compatible = "marvell,armada-xp-sdram-controller";
+> +				reg = <0x1400 0x500>;
+
+What about adding status = "disabled" ?
+
+Thanks to this we can enable it at board level only if we really want
+it, it would avoid nasty regression on boards that don't need it, if an
+issue occurs. Unless you are sure that it is completely safe to enable
+it for everyone.
+
+Thanks,
+
+Gregory
+
+
+> +			};
+> +
+>  			L2: cache-controller@8000 {
+>  				compatible = "arm,pl310-cache";
+>  				reg = <0x8000 0x1000>;
+> -- 
+> 2.15.1
+>
+
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
