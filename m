@@ -1,49 +1,21 @@
-From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Subject: Re: [PATCH linux dev-4.10 3/6] drivers/misc: Add driver for Aspeed
- PECI and generic PECI headers
-Date: Wed, 10 Jan 2018 11:34:54 -0800
-Message-ID: <d0977a2f-485c-f425-0a3b-7a20d0292273@linux.intel.com>
-References: <20180109223126.13093-1-jae.hyun.yoo@linux.intel.com>
- <20180109223126.13093-4-jae.hyun.yoo@linux.intel.com>
- <20180110102011.GC5822@kroah.com>
+From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Subject: Re: [PATCH net-next v6 0/3] Socionext Synquacer NETSEC driver
+Date: Wed, 10 Jan 2018 14:51:38 -0500 (EST)
+Message-ID: <20180110.145138.1782619033802775128.davem@davemloft.net>
+References: <1515247999-4041-1-git-send-email-jassisinghbrar@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180110102011.GC5822@kroah.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: joel@jms.id.au, andrew@aj.id.au, arnd@arndb.de, jdelvare@suse.com, linux@roeck-us.net, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-arm-kernel@lists.infradead.org, openbmc@lists.ozlabs.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1515247999-4041-1-git-send-email-jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd.bergmann-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 1/10/2018 2:20 AM, Greg KH wrote:
-> On Tue, Jan 09, 2018 at 02:31:23PM -0800, Jae Hyun Yoo wrote:
->> +#pragma pack(push, 1)
->> +struct peci_xfer_msg {
->> +	unsigned char client_addr;
->> +	unsigned char tx_len;
->> +	unsigned char rx_len;
->> +	unsigned char tx_buf[MAX_BUFFER_SIZE];
->> +	unsigned char rx_buf[MAX_BUFFER_SIZE];
->> +};
->> +#pragma pack(pop)
-> 
-> For any structure that crosses the user/kernel boundry, you _HAVE_ to
-> use the "__" variant.  So for here you would use __u8 instead of
-> "unsigned char" in order for things to work properly.
-> 
-> I'm guessing you didn't test this all out on a mixed 32/64 bit system?
-> 
-> Please fix up and test to ensure that it all works properly before
-> resubmitting.
-> 
-> thanks,
-> 
-> greg k-h
-> 
 
-Thanks for your pointing it out. I'll fix this.
-
-Thanks a lot,
-Jae
+Series applied, thank you.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
