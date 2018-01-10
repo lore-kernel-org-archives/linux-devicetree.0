@@ -1,44 +1,69 @@
 From: Shunqian Zheng <zhengsq@rock-chips.com>
-Subject: [PATCH v5 0/4] Add supports for OV2685 and OV5695 sensors
-Date: Wed, 10 Jan 2018 10:06:03 +0800
-Message-ID: <1515549967-5302-1-git-send-email-zhengsq@rock-chips.com>
+Subject: [PATCH v5 1/4] dt-bindings: media: Add bindings for OV5695
+Date: Wed, 10 Jan 2018 10:06:04 +0800
+Message-ID: <1515549967-5302-2-git-send-email-zhengsq@rock-chips.com>
+References: <1515549967-5302-1-git-send-email-zhengsq@rock-chips.com>
 Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1515549967-5302-1-git-send-email-zhengsq@rock-chips.com>
 Sender: linux-media-owner@vger.kernel.org
 To: mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
 Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, ddl@rock-chips.com, tfiga@chromium.org, Shunqian Zheng <zhengsq@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-This adds the OV2685 and OV5695 sensor supports.
+Add device tree binding documentation for the OV5695 sensor.
 
-Changes of v5,
- - Squash the MAINTAINERS entry to driver patch
-
-Mainly changes of v4 are addressing the comments from Sakari,
-including,
- - Put dt binding before driver in series
- - Add MAINTAINERS entries
- - Use regulator_bulk_*()
- - Fix the pm_runtime_* in probe()
- - Fix the typo of 2685 0x3008/0x3010 regs
-
-Shunqian Zheng (4):
-  dt-bindings: media: Add bindings for OV5695
-  media: ov5695: add support for OV5695 sensor
-  dt-bindings: media: Add bindings for OV2685
-  media: ov2685: add support for OV2685 sensor
-
- .../devicetree/bindings/media/i2c/ov2685.txt       |   41 +
- .../devicetree/bindings/media/i2c/ov5695.txt       |   41 +
- MAINTAINERS                                        |   14 +
- drivers/media/i2c/Kconfig                          |   23 +
- drivers/media/i2c/Makefile                         |    2 +
- drivers/media/i2c/ov2685.c                         |  842 ++++++++++++
- drivers/media/i2c/ov5695.c                         | 1396 ++++++++++++++++++++
- 7 files changed, 2359 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/ov2685.txt
+Signed-off-by: Shunqian Zheng <zhengsq@rock-chips.com>
+---
+ .../devicetree/bindings/media/i2c/ov5695.txt       | 41 ++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5695.txt
- create mode 100644 drivers/media/i2c/ov2685.c
- create mode 100644 drivers/media/i2c/ov5695.c
 
+diff --git a/Documentation/devicetree/bindings/media/i2c/ov5695.txt b/Documentation/devicetree/bindings/media/i2c/ov5695.txt
+new file mode 100644
+index 0000000..2f2f698
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/i2c/ov5695.txt
+@@ -0,0 +1,41 @@
++* Omnivision OV5695 MIPI CSI-2 sensor
++
++Required Properties:
++- compatible: shall be "ovti,ov5695"
++- clocks: reference to the xvclk input clock
++- clock-names: shall be "xvclk"
++- avdd-supply: Analog voltage supply, 2.8 volts
++- dovdd-supply: Digital I/O voltage supply, 1.8 volts
++- dvdd-supply: Digital core voltage supply, 1.2 volts
++- reset-gpios: Low active reset gpio
++
++The device node shall contain one 'port' child node with an
++'endpoint' subnode for its digital output video port,
++in accordance with the video interface bindings defined in
++Documentation/devicetree/bindings/media/video-interfaces.txt.
++The endpoint optional property 'data-lanes' shall be "<1 2>".
++
++Example:
++&i2c7 {
++	camera-sensor: ov5695@36 {
++		compatible = "ovti,ov5695";
++		reg = <0x36>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&clk_24m_cam>;
++
++		clocks = <&cru SCLK_TESTCLKOUT1>;
++		clock-names = "xvclk";
++
++		avdd-supply = <&pp2800_cam>;
++		dovdd-supply = <&pp1800>;
++		dvdd-supply = <&pp1250_cam>;
++		reset-gpios = <&gpio2 5 GPIO_ACTIVE_LOW>;
++
++		port {
++			wcam_out: endpoint {
++				remote-endpoint = <&mipi_in_wcam>;
++				data-lanes = <1 2>;
++			};
++		};
++	};
++};
 -- 
 1.9.1
