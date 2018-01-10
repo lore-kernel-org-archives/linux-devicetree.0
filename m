@@ -1,62 +1,67 @@
-From: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
-Subject: [PATCH v3 2/9] dt-bindings: ingenic: Add DT bindings for TCU clocks
-Date: Wed, 10 Jan 2018 23:48:31 +0100
-Message-ID: <20180110224838.16711-2-paul@crapouillou.net>
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH v3 5/9] doc: dt-bindings: Add doc for the Ingenic TCU timers driver
+Date: Wed, 10 Jan 2018 23:48:34 +0100
+Message-ID: <20180110224838.16711-5-paul@crapouillou.net>
 References: <20180101143344.2099-1-paul@crapouillou.net>
  <20180110224838.16711-1-paul@crapouillou.net>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180110224838.16711-1-paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180110224838.16711-1-paul@crapouillou.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Lee Jones <lee.jones@linaro.org>
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
-This header provides clock numbers for the ingenic,tcu
-DT binding.
+Add documentation about how to properly use the Ingenic TCU
+(Timer/Counter Unit) timers driver from devicetree.
 
-Signed-off-by: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- include/dt-bindings/clock/ingenic,tcu.h | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
- create mode 100644 include/dt-bindings/clock/ingenic,tcu.h
+ .../devicetree/bindings/timer/ingenic,tcu.txt      | 35 ++++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/timer/ingenic,tcu.txt
 
- v2: Use SPDX identifier for the license
- v3: No change
+ v3: New patch in this series
 
-diff --git a/include/dt-bindings/clock/ingenic,tcu.h b/include/dt-bindings/clock/ingenic,tcu.h
+diff --git a/Documentation/devicetree/bindings/timer/ingenic,tcu.txt b/Documentation/devicetree/bindings/timer/ingenic,tcu.txt
 new file mode 100644
-index 000000000000..179815d7b3bb
+index 000000000000..dd76877efb8b
 --- /dev/null
-+++ b/include/dt-bindings/clock/ingenic,tcu.h
-@@ -0,0 +1,23 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * This header provides clock numbers for the ingenic,tcu DT binding.
-+ */
++++ b/Documentation/devicetree/bindings/timer/ingenic,tcu.txt
+@@ -0,0 +1,35 @@
++Ingenic JZ47xx SoCs Timer/Counter Unit driver
++---------------------------------------------
 +
-+#ifndef __DT_BINDINGS_CLOCK_INGENIC_TCU_H__
-+#define __DT_BINDINGS_CLOCK_INGENIC_TCU_H__
++Required properties:
 +
-+#define JZ4740_CLK_TIMER0	0
-+#define JZ4740_CLK_TIMER1	1
-+#define JZ4740_CLK_TIMER2	2
-+#define JZ4740_CLK_TIMER3	3
-+#define JZ4740_CLK_TIMER4	4
-+#define JZ4740_CLK_TIMER5	5
-+#define JZ4740_CLK_TIMER6	6
-+#define JZ4740_CLK_TIMER7	7
-+#define JZ4740_CLK_WDT		8
-+#define JZ4740_CLK_LAST		JZ4740_CLK_WDT
++- compatible : should be "ingenic,<socname>-tcu". Valid strings are:
++  * ingenic,jz4740-tcu
++  * ingenic,jz4770-tcu
++  * ingenic,jz4780-tcu
++- interrupt-parent : phandle of the TCU interrupt controller.
++- interrupts : Specifies the interrupts the controller is connected to.
++- clocks : List of phandle & clock specifiers for the TCU clocks.
++- clock-names : List of name strings for the TCU clocks.
 +
-+#define JZ4770_CLK_OST		9
-+#define JZ4770_CLK_LAST		JZ4770_CLK_OST
++Example:
 +
-+#endif /* __DT_BINDINGS_CLOCK_INGENIC_TCU_H__ */
++/ {
++	mfd@10002000 {
++		compatible = "ingenic,tcu", "simple-mfd", "syscon";
++		reg = <0x10002000 0x1000>;
++
++		tcu_timer: timer {
++			compatible = "ingenic,jz4740-tcu";
++			reg = <0x10002010 0xFF0>;
++
++			clocks = <&tcu 0>, <&tcu 1>, <&tcu 2>, <&tcu 3>,
++					 <&tcu 4>, <&tcu 5>, <&tcu 6>, <&tcu 7>;
++			clock-names = "timer0", "timer1", "timer2", "timer3",
++						  "timer4", "timer5", "timer6", "timer7";
++
++			interrupt-parent = <&tcu>;
++			interrupts = <0 1 2 3 4 5 6 7>;
++		};
++	};
++};
 -- 
 2.11.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
