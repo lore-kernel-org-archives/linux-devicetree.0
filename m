@@ -1,90 +1,62 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v3 1/9] mfd: syscon: Add ingenic-tcu.h header
-Date: Wed, 10 Jan 2018 23:48:30 +0100
-Message-ID: <20180110224838.16711-1-paul@crapouillou.net>
+From: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
+Subject: [PATCH v3 2/9] dt-bindings: ingenic: Add DT bindings for TCU clocks
+Date: Wed, 10 Jan 2018 23:48:31 +0100
+Message-ID: <20180110224838.16711-2-paul@crapouillou.net>
 References: <20180101143344.2099-1-paul@crapouillou.net>
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20180101143344.2099-1-paul@crapouillou.net>
-Sender: linux-clk-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Lee Jones <lee.jones@linaro.org>
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+ <20180110224838.16711-1-paul@crapouillou.net>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180110224838.16711-1-paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This header contains macros for the registers that are present in the
-regmap shared by all the drivers related to the TCU (Timer Counter Unit)
-of the Ingenic JZ47xx SoCs.
+This header provides clock numbers for the ingenic,tcu
+DT binding.
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Signed-off-by: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- include/linux/mfd/syscon/ingenic-tcu.h | 54 ++++++++++++++++++++++++++++++++++
- 1 file changed, 54 insertions(+)
- create mode 100644 include/linux/mfd/syscon/ingenic-tcu.h
+ include/dt-bindings/clock/ingenic,tcu.h | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
+ create mode 100644 include/dt-bindings/clock/ingenic,tcu.h
 
  v2: Use SPDX identifier for the license
- v3: - Use macros instead of enum
-     - Add 'TCU_' at the beginning of each macro
-	 - Remove useless include <linux/regmap.h>
+ v3: No change
 
-diff --git a/include/linux/mfd/syscon/ingenic-tcu.h b/include/linux/mfd/syscon/ingenic-tcu.h
+diff --git a/include/dt-bindings/clock/ingenic,tcu.h b/include/dt-bindings/clock/ingenic,tcu.h
 new file mode 100644
-index 000000000000..96dd59f7c3b2
+index 000000000000..179815d7b3bb
 --- /dev/null
-+++ b/include/linux/mfd/syscon/ingenic-tcu.h
-@@ -0,0 +1,54 @@
++++ b/include/dt-bindings/clock/ingenic,tcu.h
+@@ -0,0 +1,23 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +/*
-+ * Header file for the Ingenic JZ47xx TCU driver
++ * This header provides clock numbers for the ingenic,tcu DT binding.
 + */
-+#ifndef __LINUX_CLK_INGENIC_TCU_H_
-+#define __LINUX_CLK_INGENIC_TCU_H_
 +
-+#include <linux/bitops.h>
++#ifndef __DT_BINDINGS_CLOCK_INGENIC_TCU_H__
++#define __DT_BINDINGS_CLOCK_INGENIC_TCU_H__
 +
-+#define TCU_REG_WDT_TDR		0x00
-+#define TCU_REG_WDT_TCER	0x04
-+#define TCU_REG_WDT_TCNT	0x08
-+#define TCU_REG_WDT_TCSR	0x0c
-+#define TCU_REG_TER		0x10
-+#define TCU_REG_TESR		0x14
-+#define TCU_REG_TECR		0x18
-+#define TCU_REG_TSR		0x1c
-+#define TCU_REG_TFR		0x20
-+#define TCU_REG_TFSR		0x24
-+#define TCU_REG_TFCR		0x28
-+#define TCU_REG_TSSR		0x2c
-+#define TCU_REG_TMR		0x30
-+#define TCU_REG_TMSR		0x34
-+#define TCU_REG_TMCR		0x38
-+#define TCU_REG_TSCR		0x3c
-+#define TCU_REG_TDFR0		0x40
-+#define TCU_REG_TDHR0		0x44
-+#define TCU_REG_TCNT0		0x48
-+#define TCU_REG_TCSR0		0x4c
-+#define TCU_REG_OST_DR		0xe0
-+#define TCU_REG_OST_CNTL	0xe4
-+#define TCU_REG_OST_CNTH	0xe8
-+#define TCU_REG_OST_TCSR	0xec
-+#define TCU_REG_TSTR		0xf0
-+#define TCU_REG_TSTSR		0xf4
-+#define TCU_REG_TSTCR		0xf8
-+#define TCU_REG_OST_CNTHBUF	0xfc
++#define JZ4740_CLK_TIMER0	0
++#define JZ4740_CLK_TIMER1	1
++#define JZ4740_CLK_TIMER2	2
++#define JZ4740_CLK_TIMER3	3
++#define JZ4740_CLK_TIMER4	4
++#define JZ4740_CLK_TIMER5	5
++#define JZ4740_CLK_TIMER6	6
++#define JZ4740_CLK_TIMER7	7
++#define JZ4740_CLK_WDT		8
++#define JZ4740_CLK_LAST		JZ4740_CLK_WDT
 +
-+#define TCU_TCSR_RESERVED_BITS		0x3f
-+#define TCU_TCSR_PARENT_CLOCK_MASK	0x07
-+#define TCU_TCSR_PRESCALE_LSB		3
-+#define TCU_TCSR_PRESCALE_MASK		0x38
++#define JZ4770_CLK_OST		9
++#define JZ4770_CLK_LAST		JZ4770_CLK_OST
 +
-+#define TCU_TCSR_PWM_SD		BIT(9)	/* 0: Shutdown abruptly 1: gracefully */
-+#define TCU_TCSR_PWM_INITL_HIGH	BIT(8)	/* Sets the initial output level */
-+#define TCU_TCSR_PWM_EN		BIT(7)	/* PWM pin output enable */
-+
-+#define TCU_CHANNEL_STRIDE	0x10
-+#define TCU_REG_TDFRc(c)	(TCU_REG_TDFR0 + ((c) * TCU_CHANNEL_STRIDE))
-+#define TCU_REG_TDHRc(c)	(TCU_REG_TDHR0 + ((c) * TCU_CHANNEL_STRIDE))
-+#define TCU_REG_TCNTc(c)	(TCU_REG_TCNT0 + ((c) * TCU_CHANNEL_STRIDE))
-+#define TCU_REG_TCSRc(c)	(TCU_REG_TCSR0 + ((c) * TCU_CHANNEL_STRIDE))
-+
-+#endif /* __LINUX_CLK_INGENIC_TCU_H_ */
++#endif /* __DT_BINDINGS_CLOCK_INGENIC_TCU_H__ */
 -- 
 2.11.0
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
