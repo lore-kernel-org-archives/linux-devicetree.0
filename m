@@ -1,213 +1,72 @@
-From: <patrice.chotard@st.com>
-Subject: [PATCH 5/7] ARM: dts: STi: Move usb2_picophyX nodes without reg property out of soc
-Date: Wed, 10 Jan 2018 09:21:06 +0100
-Message-ID: <1515572469-19276-7-git-send-email-patrice.chotard@st.com>
-References: <1515572469-19276-1-git-send-email-patrice.chotard@st.com>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH 1/3] ARM: dts: enable L2 cache parity and ecc on db-xc3-24g4xg board
+Date: Wed, 10 Jan 2018 09:24:04 +0100
+Message-ID: <87y3l66s0r.fsf@free-electrons.com>
+References: <20180108223158.21930-1-chris.packham@alliedtelesis.co.nz>
+        <20180108223158.21930-2-chris.packham@alliedtelesis.co.nz>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1515572469-19276-1-git-send-email-patrice.chotard@st.com>
+In-Reply-To: <20180108223158.21930-2-chris.packham@alliedtelesis.co.nz> (Chris
+        Packham's message of "Tue, 9 Jan 2018 11:31:56 +1300")
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: patrice.chotard@st.com
+To: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Cc: jlu@pengutronix.de, linux@armlinux.org.uk, bp@alien8.de, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Patrice Chotard <patrice.chotard@st.com>
+Hi Chris,
 
-Move usb2_picophyX nodes outside from soc node, this allows to fix
-the following warning when compiling dtb with W=1 option :
+ On mar., janv. 09 2018, Chris Packham <chris.packham@alliedtelesis.co.nz> wrote:
 
-arch/arm/boot/dts/stih410-b2120.dtb: Warning (simple_bus_reg):
-Node /soc/phy2 missing or empty reg/ranges property
-arch/arm/boot/dts/stih410-b2120.dtb: Warning (simple_bus_reg):
-Node /soc/phy3 missing or empty reg/ranges property
+Could you have add a (even small) message in the commit log?
 
-arch/arm/boot/dts/stih410-b2120.dtb: Warning (simple_bus_reg):
-Node /soc/phy2 missing or empty reg/ranges property
-arch/arm/boot/dts/stih410-b2120.dtb: Warning (simple_bus_reg):
-Node /soc/phy3 missing or empty reg/ranges property
+Also could you improve the title by specify that it applies on
+armada-xp, like this:
 
-arch/arm/boot/dts/stih418-b2199.dtb: Warning (simple_bus_reg):
-Node /soc/phy2 missing or empty reg/ranges property
-arch/arm/boot/dts/stih418-b2199.dtb: Warning (simple_bus_reg):
-Node /soc/phy3 missing or empty reg/ranges property
+ARM: dts: armada-xp: enable L2 cache parity and ecc on db-xc3-24g4xg
 
-Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
----
- arch/arm/boot/dts/stih410-b2120.dts | 16 +++++++--------
- arch/arm/boot/dts/stih410-b2260.dts | 16 +++++++--------
- arch/arm/boot/dts/stih410.dtsi      | 40 ++++++++++++++++++-------------------
- arch/arm/boot/dts/stih418.dtsi      | 34 +++++++++++++++----------------
- 4 files changed, 53 insertions(+), 53 deletions(-)
 
-diff --git a/arch/arm/boot/dts/stih410-b2120.dts b/arch/arm/boot/dts/stih410-b2120.dts
-index 37a42af..8a03ade 100644
---- a/arch/arm/boot/dts/stih410-b2120.dts
-+++ b/arch/arm/boot/dts/stih410-b2120.dts
-@@ -28,6 +28,14 @@
- 		ethernet0 = &ethernet0;
- 	};
- 
-+	usb2_picophy1: phy2 {
-+		status = "okay";
-+	};
-+
-+	usb2_picophy2: phy3 {
-+		status = "okay";
-+	};
-+
- 	soc {
- 
- 		mmc0: sdhci@9060000 {
-@@ -37,14 +45,6 @@
- 			sd-uhs-ddr50;
- 		};
- 
--		usb2_picophy1: phy2 {
--			status = "okay";
--		};
--
--		usb2_picophy2: phy3 {
--			status = "okay";
--		};
--
- 		ohci0: usb@9a03c00 {
- 			status = "okay";
- 		};
-diff --git a/arch/arm/boot/dts/stih410-b2260.dts b/arch/arm/boot/dts/stih410-b2260.dts
-index 69c2abc..a2d1e54 100644
---- a/arch/arm/boot/dts/stih410-b2260.dts
-+++ b/arch/arm/boot/dts/stih410-b2260.dts
-@@ -57,6 +57,14 @@
- 		};
- 	};
- 
-+	usb2_picophy1: phy2 {
-+		status = "okay";
-+	};
-+
-+	usb2_picophy2: phy3 {
-+		status = "okay";
-+	};
-+
- 	soc {
- 		/* Low speed expansion connector */
- 		uart0: serial@9830000 {
-@@ -127,14 +135,6 @@
- 			status = "okay";
- 		};
- 
--		usb2_picophy1: phy2 {
--			status = "okay";
--		};
--
--		usb2_picophy2: phy3 {
--			status = "okay";
--		};
--
- 		ohci0: usb@9a03c00 {
- 			status = "okay";
- 		};
-diff --git a/arch/arm/boot/dts/stih410.dtsi b/arch/arm/boot/dts/stih410.dtsi
-index e4b7e3d..a76fee9 100644
---- a/arch/arm/boot/dts/stih410.dtsi
-+++ b/arch/arm/boot/dts/stih410.dtsi
-@@ -15,29 +15,29 @@
- 		bdisp0 = &bdisp0;
- 	};
- 
--	soc {
--		usb2_picophy1: phy2 {
--			compatible = "st,stih407-usb2-phy";
--			#phy-cells = <0>;
--			st,syscfg = <&syscfg_core 0xf8 0xf4>;
--			resets = <&softreset STIH407_PICOPHY_SOFTRESET>,
--				 <&picophyreset STIH407_PICOPHY0_RESET>;
--			reset-names = "global", "port";
--
--			status = "disabled";
--		};
-+	usb2_picophy1: phy2 {
-+		compatible = "st,stih407-usb2-phy";
-+		#phy-cells = <0>;
-+		st,syscfg = <&syscfg_core 0xf8 0xf4>;
-+		resets = <&softreset STIH407_PICOPHY_SOFTRESET>,
-+		 <&picophyreset STIH407_PICOPHY0_RESET>;
-+		reset-names = "global", "port";
-+
-+		status = "disabled";
-+	};
- 
--		usb2_picophy2: phy3 {
--			compatible = "st,stih407-usb2-phy";
--			#phy-cells = <0>;
--			st,syscfg = <&syscfg_core 0xfc 0xf4>;
--			resets = <&softreset STIH407_PICOPHY_SOFTRESET>,
--				 <&picophyreset STIH407_PICOPHY1_RESET>;
--			reset-names = "global", "port";
-+	usb2_picophy2: phy3 {
-+		compatible = "st,stih407-usb2-phy";
-+		#phy-cells = <0>;
-+		st,syscfg = <&syscfg_core 0xfc 0xf4>;
-+		resets = <&softreset STIH407_PICOPHY_SOFTRESET>,
-+			 <&picophyreset STIH407_PICOPHY1_RESET>;
-+		reset-names = "global", "port";
- 
--			status = "disabled";
--		};
-+		status = "disabled";
-+	};
- 
-+	soc {
- 		ohci0: usb@9a03c00 {
- 			compatible = "st,st-ohci-300x";
- 			reg = <0x9a03c00 0x100>;
-diff --git a/arch/arm/boot/dts/stih418.dtsi b/arch/arm/boot/dts/stih418.dtsi
-index e6525ab..b3912a3 100644
---- a/arch/arm/boot/dts/stih418.dtsi
-+++ b/arch/arm/boot/dts/stih418.dtsi
-@@ -29,25 +29,25 @@
- 		};
- 	};
- 
--	soc {
--		usb2_picophy1: phy2 {
--			compatible = "st,stih407-usb2-phy";
--			#phy-cells = <0>;
--			st,syscfg = <&syscfg_core 0xf8 0xf4>;
--			resets = <&softreset STIH407_PICOPHY_SOFTRESET>,
--				 <&picophyreset STIH407_PICOPHY0_RESET>;
--			reset-names = "global", "port";
--		};
-+	usb2_picophy1: phy2 {
-+		compatible = "st,stih407-usb2-phy";
-+		#phy-cells = <0>;
-+		st,syscfg = <&syscfg_core 0xf8 0xf4>;
-+		resets = <&softreset STIH407_PICOPHY_SOFTRESET>,
-+			 <&picophyreset STIH407_PICOPHY0_RESET>;
-+		reset-names = "global", "port";
-+	};
- 
--		usb2_picophy2: phy3 {
--			compatible = "st,stih407-usb2-phy";
--			#phy-cells = <0>;
--			st,syscfg = <&syscfg_core 0xfc 0xf4>;
--			resets = <&softreset STIH407_PICOPHY_SOFTRESET>,
--				 <&picophyreset STIH407_PICOPHY1_RESET>;
--			reset-names = "global", "port";
--		};
-+	usb2_picophy2: phy3 {
-+		compatible = "st,stih407-usb2-phy";
-+		#phy-cells = <0>;
-+		st,syscfg = <&syscfg_core 0xfc 0xf4>;
-+		resets = <&softreset STIH407_PICOPHY_SOFTRESET>,
-+			 <&picophyreset STIH407_PICOPHY1_RESET>;
-+		reset-names = "global", "port";
-+	};
- 
-+	soc {
- 		ohci0: usb@9a03c00 {
- 			compatible = "st,st-ohci-300x";
- 			reg = <0x9a03c00 0x100>;
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> ---
+>  arch/arm/boot/dts/armada-xp-db-xc3-24g4xg.dts | 5 +++++
+>  1 file changed, 5 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/armada-xp-db-xc3-24g4xg.dts b/arch/arm/boot/dts/armada-xp-db-xc3-24g4xg.dts
+> index 06fce35d7491..00ca489fc788 100644
+> --- a/arch/arm/boot/dts/armada-xp-db-xc3-24g4xg.dts
+> +++ b/arch/arm/boot/dts/armada-xp-db-xc3-24g4xg.dts
+> @@ -70,6 +70,11 @@
+>  	};
+>  };
+>  
+> +&L2 {
+> +	arm,parity-enable;
+> +	marvell,ecc-enable;
+
+It is not a problem for me to already applied the device tree change
+even if the driver is not merged yet. But I would like to have an
+acked-by on this new property by either a device tree maintainer or at
+least the EDAC maintainer, of course having both acked-by would be
+perfect ! :)
+
+Thanks,
+
+Gregory
+
+
+
+
+> +};
+> +
+>  &devbus_bootcs {
+>  	status = "okay";
+>  
+> -- 
+> 2.15.1
+>
+
 -- 
-1.9.1
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
