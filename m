@@ -1,124 +1,124 @@
-From: Jiaying Liang <jliang-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCH v3 2/2] dt-bindings: mailbox: Add Xilinx IPI Mailbox
-Date: Wed, 10 Jan 2018 01:22:13 +0000
-Message-ID: <BY1PR0201MB0885F2BCD9FE353171B54888B0110@BY1PR0201MB0885.namprd02.prod.outlook.com>
-References: <1515109891-17133-1-git-send-email-jliang@xilinx.com>
- <1515109891-17133-3-git-send-email-jliang@xilinx.com>
- <CABb+yY00n6fLiQXftj-TMhT6q=KopZMkLYr6DpYE8CvxH-gz8Q@mail.gmail.com>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH 3/9] soc: samsung: pmu: Add the PMU data of exynos5433
+ to support low-power state
+Date: Wed, 10 Jan 2018 10:46:32 +0900
+Message-ID: <5A557078.50101@samsung.com>
+References: <1515484746-10656-1-git-send-email-cw00.choi@samsung.com>
+        <CGME20180109075905epcas1p321b8898a0d45287d63364e1aa768fdab@epcas1p3.samsung.com>
+        <1515484746-10656-4-git-send-email-cw00.choi@samsung.com>
+        <b639da18-a069-aeb7-ceca-30c79b1c25c8@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CABb+yY00n6fLiQXftj-TMhT6q=KopZMkLYr6DpYE8CvxH-gz8Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <b639da18-a069-aeb7-ceca-30c79b1c25c8@arm.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sudeep Holla <sudeep.holla@arm.com>, krzk@kernel.org, m.szyprowski@samsung.com, s.nawrocki@samsung.com, kgene@kernel.org
+Cc: tomasz.figa@gmail.com, chanwoo@kernel.org, jh80.chung@samsung.com, inki.dae@samsung.com, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jonghwa Lee <jonghwa3.lee@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogSmFzc2kgQnJhciBbbWFp
-bHRvOmphc3Npc2luZ2hicmFyQGdtYWlsLmNvbV0NCj4gU2VudDogVHVlc2RheSwgSmFudWFyeSAw
-OSwgMjAxOCAxMjowMCBBTQ0KPiBUbzogSmlheWluZyBMaWFuZyA8amxpYW5nQHhpbGlueC5jb20+
-DQo+IENjOiBNaWNoYWwgU2ltZWsgPG1pY2hhbC5zaW1la0B4aWxpbnguY29tPjsgUm9iIEhlcnJp
-bmcNCj4gPHJvYmgrZHRAa2VybmVsLm9yZz47IE1hcmsgUnV0bGFuZCA8bWFyay5ydXRsYW5kQGFy
-bS5jb20+OyBsaW51eC1hcm0tDQo+IGtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBEZXZpY2V0
-cmVlIExpc3QgPGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnPjsNCj4gTGludXggS2VybmVsIE1h
-aWxpbmcgTGlzdCA8bGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZz47IEppYXlpbmcgTGlhbmcN
-Cj4gPGpsaWFuZ0B4aWxpbnguY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYzIDIvMl0gZHQt
-YmluZGluZ3M6IG1haWxib3g6IEFkZCBYaWxpbnggSVBJIE1haWxib3gNCj4gDQo+IE9uIEZyaSwg
-SmFuIDUsIDIwMTggYXQgNToyMSBBTSwgV2VuZHkgTGlhbmcgPHdlbmR5LmxpYW5nQHhpbGlueC5j
-b20+IHdyb3RlOg0KPiA+IFhpbGlueCBaeW5xTVAgSVBJKEludGVyIFByb2Nlc3NvciBJbnRlcnJ1
-cHQpIGlzIGEgaGFyZHdhcmUgYmxvY2sgaW4NCj4gPiBaeW5xTVAgU29DIHVzZWQgZm9yIHRoZSBj
-b21tdW5pY2F0aW9uIGJldHdlZW4gdmFyaW91cyBwcm9jZXNzb3INCj4gPiBzeXN0ZW1zLg0KPiA+
-DQo+ID4gU2lnbmVkLW9mZi1ieTogV2VuZHkgTGlhbmcgPGpsaWFuZ0B4aWxpbnguY29tPg0KPiA+
-IC0tLQ0KPiA+ICAuLi4vYmluZGluZ3MvbWFpbGJveC94bG54LHp5bnFtcC1pcGktbWFpbGJveC50
-eHQgICB8IDEwNA0KPiArKysrKysrKysrKysrKysrKysrKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQs
-IDEwNCBpbnNlcnRpb25zKCspDQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NA0KPiA+IERvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tYWlsYm94L3hsbngsenlucW1wLWlwaS1tYWlsYm94
-LnR4dA0KPiA+DQo+ID4gZGlmZiAtLWdpdA0KPiA+IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL21haWxib3gveGxueCx6eW5xbXAtaXBpLW1haWxib3gudHgNCj4gPiB0DQo+ID4g
-Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWFpbGJveC94bG54LHp5bnFtcC1p
-cGktDQo+IG1haWxib3gudHgNCj4gPiB0DQo+ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gPiBp
-bmRleCAwMDAwMDAwLi41ZTI3MGEzDQo+ID4gLS0tIC9kZXYvbnVsbA0KPiA+ICsrKyBiL0RvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tYWlsYm94L3hsbngsenlucW1wLWlwaS0NCj4g
-bWFpbGJvDQo+ID4gKysrIHgudHh0DQo+ID4gQEAgLTAsMCArMSwxMDQgQEANCj4gPiArWGlsaW54
-IElQSSBNYWlsYm94IENvbnRyb2xsZXINCj4gPiArPT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PQ0KPiA+ICsNCj4gPiArVGhlIFhpbGlueCBJUEkoSW50ZXIgUHJvY2Vzc29y
-IEludGVycnVwdCkgbWFpbGJveCBjb250cm9sbGVyIGlzIHRvDQo+ID4gK21hbmFnZSBtZXNzYWdp
-bmcgYmV0d2VlbiB0d28gWGlsaW54IFp5bnEgVWx0cmFTY2FsZSsgTVBTb0MgSVBJDQo+ID4gK2Fn
-ZW50cy4gRWFjaCBJUEkgYWdlbnQgb3ducyByZWdpc3RlcnMgdXNlZCBmb3Igbm90aWZpY2F0aW9u
-IGFuZCBidWZmZXJzIGZvcg0KPiBtZXNzYWdlLg0KPiA+ICsNCj4gPiArICAgICAgICAgICAgICAg
-Ky0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0rDQo+ID4gKyAgICAgICAgICAg
-ICAgIHwgWGlsaW54IFp5bnFNUCBJUEkgQ29udHJvbGxlciAgICAgICAgfA0KPiA+ICsgICAgICAg
-ICAgICAgICArLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLSsNCj4gPiArICAg
-ICstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLSsNCj4g
-PiArQVRGICAgICAgICAgICAgICAgICAgICB8ICAgICAgICAgICAgICAgICAgICAgfA0KPiA+ICsg
-ICAgICAgICAgICAgICAgICAgICAgIHwgICAgICAgICAgICAgICAgICAgICB8DQo+ID4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgfCAgICAgICAgICAgICAgICAgICAgIHwNCj4gPiArICAgICstLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLSsgICAgICAgICAgICAgfA0KPiA+ICsgICAgICAgICAgICAg
-ICAgICAgICAgIHwgICAgICAgICAgICAgICAgICAgICB8DQo+ID4gKyAgICAgICAgICAgICAgICAg
-ICAgICAgfCAgICAgICAgICAgICAgICAgICAgIHwNCj4gPiArICAgICstLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLSsNCj4gPiArICAgICAgICAgICAgKy0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLSsNCj4gPiArICAgICAgICAg
-ICAgfCAgKy0tLS0tLS0tLS0tLS0tLS0rICAgKy0tLS0tLS0tLS0tLS0tLS0rIHwNCj4gPiArSGFy
-ZHdhcmUgICAgfCAgfCAgSVBJIEFnZW50ICAgICB8ICAgfCAgSVBJIEJ1ZmZlcnMgICB8IHwNCj4g
-PiArICAgICAgICAgICAgfCAgfCAgUmVnaXN0ZXJzICAgICB8ICAgfCAgICAgICAgICAgICAgICB8
-IHwNCj4gPiArICAgICAgICAgICAgfCAgfCAgICAgICAgICAgICAgICB8ICAgfCAgICAgICAgICAg
-ICAgICB8IHwNCj4gPiArICAgICAgICAgICAgfCAgKy0tLS0tLS0tLS0tLS0tLS0rICAgKy0tLS0t
-LS0tLS0tLS0tLS0rIHwNCj4gPiArICAgICAgICAgICAgfCAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgIHwNCj4gPiArICAgICAgICAgICAgfCBYaWxpbnggSVBJIEFnZW50
-IEJsb2NrICAgICAgICAgICAgICAgICAgIHwNCj4gPiArICAgICAgICAgICAgKy0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLSsNCj4gPiArDQo+ID4gKw0KPiA+ICtDb250
-cm9sbGVyIERldmljZSBOb2RlOg0KPiA+ICs9PT09PT09PT09PT09PT09PT09PT09PT09PT0NCj4g
-PiArUmVxdWlyZWQgcHJvcGVydGllczoNCj4gPiArLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4gPiAr
-LSBjb21wYXRpYmxlOiAgICAgICAgICBTaGFsbCBiZTogInhsbngsenlucW1wLWlwaS1tYWlsYm94
-Ig0KPiA+ICstIHJlZzogICAgICAgICAgICAgICAgIElQSSBidWZmZXJzIGFkZHJlc3MgcmFuZ2Vz
-DQo+ID4gKy0gcmVnLW5hbWVzOiAgICAgICAgICAgTmFtZXMgb2YgdGhlIHJlZyByZXNvdXJjZXMu
-IEl0IHNob3VsZCBoYXZlOg0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICogbG9jYWxfcmVx
-dWVzdF9yZWdpb24NCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgIC0gSVBJIHJlcXVlc3Qg
-bXNnIGJ1ZmZlciB3cml0dGVuIGJ5IGxvY2FsIGFuZCByZWFkDQo+ID4gKyAgICAgICAgICAgICAg
-ICAgICAgICAgICAgIGJ5IHJlbW90ZQ0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICogbG9j
-YWxfcmVzcG9uc2VfcmVnaW9uDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAtIElQSSBy
-ZXNwb25zZSBtc2cgYnVmZmVyIHdyaXR0ZW4gYnkgbG9jYWwgYW5kIHJlYWQNCj4gPiArICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgYnkgcmVtb3RlDQo+ID4gKyAgICAgICAgICAgICAgICAgICAg
-ICAgKiByZW1vdGVfcmVxdWVzdF9yZWdpb24NCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAg
-IC0gSVBJIHJlcXVlc3QgbXNnIGJ1ZmZlciB3cml0dGVuIGJ5IHJlbW90ZSBhbmQgcmVhZA0KPiA+
-ICsgICAgICAgICAgICAgICAgICAgICAgICAgICBieSBsb2NhbA0KPiA+ICsgICAgICAgICAgICAg
-ICAgICAgICAgICogcmVtb3RlX3Jlc3BvbnNlX3JlZ2lvbg0KPiA+ICsgICAgICAgICAgICAgICAg
-ICAgICAgICAgLSBJUEkgcmVzcG9uc2UgbXNnIGJ1ZmZlciB3cml0dGVuIGJ5IHJlbW90ZSBhbmQg
-cmVhZA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICBieSBsb2NhbA0KPiA+DQo+IHNo
-bWVtIGlzIG9wdGlvbiBhbmQgZXh0ZXJuYWwgdG8gdGhlIGNvbnRyb2xsZXIuIEl0IHNob3VsZCBi
-ZSBwYXNzZWQgdmlhDQo+IGNsaWVudCdzIGJpbmRpbmcuDQo+IFBsZWFzZSBoYXZlIGEgbG9vayBh
-dCBTdWRlZXAncyBwcm9wb3NlZCBwYXRjaA0KPiBodHRwczovL3d3dy5zcGluaWNzLm5ldC9saXN0
-cy9hcm0ta2VybmVsL21zZzYyNjEyMC5odG1sDQpbV2VuZHldIHRoYW5rcyBmb3IgdGhlIGxpbmss
-IGJ1dCB0aG9zZSAnYnVmZmVycyIgYXJlIHJlZ2lzdGVycyBpbiB0aGUgaGFyZHdhcmUNCmJ1dCBu
-b3QgbWVtb3J5LiBJdCBsb29rcyBsaWtlIGEgYml0IGhhY2t5IHRvIGFjY2VzcyB0aGVtIGFzIG1l
-bW9yeS4NCj4gDQo+ID4gKy0gI21ib3gtY2VsbHM6ICAgICAgICAgU2hhbGwgYmUgMS4gSXQgY29u
-dGFpbnM6DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgKiB0eCgwKSBvciByeCgxKSBjaGFu
-bmVsDQo+ID4gKy0geGxueCxpcGktaWRzOiAgICAgICAgICAgICAgICBYaWxpbnggSVBJIGFnZW50
-IElEcyBvZiB0aGUgdHdvIHBlZXJzIG9mIHRoZQ0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAg
-IFhpbGlueCBJUEkgY29tbXVuaWNhdGlvbiBjaGFubmVsLg0KPiA+ICstIGludGVycnVwdC1wYXJl
-bnQ6ICAgIFBoYW5kbGUgZm9yIHRoZSBpbnRlcnJ1cHQgY29udHJvbGxlcg0KPiA+ICstIGludGVy
-cnVwdHM6ICAgICAgICAgIEludGVycnVwdCBpbmZvcm1hdGlvbiBjb3JyZXNwb25kaW5nIHRvIHRo
-ZQ0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGludGVycnVwdC1uYW1lcyBwcm9wZXJ0eS4N
-Cj4gPiArDQo+ID4gK09wdGlvbmFsIHByb3BlcnRpZXM6DQo+ID4gKy0tLS0tLS0tLS0tLS0tLS0t
-LS0tDQo+ID4gKy0gbWV0aG9kOiAgICAgICAgICAgICAgVGhlIG1ldGhvZCBvZiBhY2Nlc3Npbmcg
-dGhlIElQSSBhZ2VudCByZWdpc3RlcnMuDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgUGVy
-bWl0dGVkIHZhbHVlcyBhcmU6ICJzbWMiIGFuZCAiaHZjIi4gRGVmYXVsdCBpcw0KPiA+ICsgICAg
-ICAgICAgICAgICAgICAgICAgICJzbWMiLg0KPiA+ICsNCj4gQW5kcmUgYWxtb3N0IGltcGxlbWVu
-dGVkIHRoZSBnZW5lcmljIGRyaXZlci4gQ2FuIHlvdSBwbGVhc2UgaGF2ZSBhIGxvb2sgYXQNCj4g
-aHR0cHM6Ly93d3cuc3Bpbmljcy5uZXQvbGlzdHMvYXJtLWtlcm5lbC9tc2c1OTU0MTYuaHRtbA0K
-PiBhbmQgc2VlIGlmIHlvdSBjYW4ganVzdCBmaW5pc2ggaXQgb2ZmPw0KW1dlbmR5XSBUaGlzIG1h
-aWxib3ggY29udHJvbGxlciBpcyBhYm91dCB0byB1c2UgWGlsaW54IElQSSBoYXJkd2FyZSBhcyBt
-YWlsYm94Lg0KV2UgdXNlIGl0IHRvIHNlbmQgbm90aWZpY2F0aW9uL3Nob3J0IHJlcXVlc3QgdG8g
-ZmlybXdhcmUgKHVzdWFsbHkgcnVubmluZyBvbg0KYW5vdGhlciBjb3JlIG9uIFNvQyksIGFuZCBh
-bHNvIHRvIHJlY2VpdmUgbm90aWZpY2F0aW9uL3Nob3J0IHJlcXVlc3QgZnJvbSBmaXJtd2FyZS4N
-CkludGVycnVwdCBpcyB1c2VkIGluIHRoZSByZWNlaXZpbmcgZGlyZWN0aW9uLiBJdCBsb29rcyBk
-aWZmZXJlbnQgdG8gdGhlIHVzYWdlIG9mDQptYWlsYm94IGRyaXZlciBmcm9tIHRoZSBsaW5rLiBJ
-cyB0aGVyZSBhIHBsYW4gdG8gZXh0ZW5kIHRoZSBBUk0gU01DIG1haWxib3ggZHJpdmVyDQp0byBi
-b3RoIHRyaWdnZXIgZmlybXdhcmUgYWN0aW9ucyBhbmQgcmVjZWl2ZSByZXF1ZXN0IGZyb20gZmly
-bXdhcmU/DQoNClRoYW5rcywNCldlbmR5DQoNCj4gDQo+IFRoYW5rcw0K
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 2018년 01월 09일 23:11, Sudeep Holla wrote:
+> 
+> 
+> On 09/01/18 07:59, Chanwoo Choi wrote:
+>> This patch adds the PMU (Power Management Unit) data of exynos5433 SoC
+>> in order to support the various power modes. Each power mode has
+>> the different value for reducing the power-consumption.
+>>
+>> Signed-off-by: Jonghwa Lee <jonghwa3.lee@samsung.com>
+>> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+>> ---
+>>  arch/arm/mach-exynos/common.h               |   2 -
+>>  drivers/soc/samsung/Makefile                |   3 +-
+>>  drivers/soc/samsung/exynos-pmu.c            |   1 +
+>>  drivers/soc/samsung/exynos-pmu.h            |   2 +
+>>  drivers/soc/samsung/exynos5433-pmu.c        | 286 ++++++++++++++++++++++++++++
+>>  include/linux/soc/samsung/exynos-regs-pmu.h | 148 ++++++++++++++
+>>  6 files changed, 439 insertions(+), 3 deletions(-)
+>>  create mode 100644 drivers/soc/samsung/exynos5433-pmu.c
+>>
+> 
+>> diff --git a/drivers/soc/samsung/exynos5433-pmu.c b/drivers/soc/samsung/exynos5433-pmu.c
+>> new file mode 100644
+>> index 000000000000..2571e61522f0
+>> --- /dev/null
+>> +++ b/drivers/soc/samsung/exynos5433-pmu.c
+>> @@ -0,0 +1,286 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +//
+>> +// Copyright (c) 2018 Samsung Electronics Co., Ltd.
+>> +// Copyright (c) Jonghwa Lee <jonghwa3.lee@samsung.com>
+>> +// Copyright (c) Chanwoo Choi <cw00.choi@samsung.com>
+>> +//
+>> +// EXYNOS5433 - CPU PMU (Power Management Unit) support
+>> +
+>> +#include <linux/soc/samsung/exynos-regs-pmu.h>
+>> +#include <linux/soc/samsung/exynos-pmu.h>
+>> +
+>> +#include "exynos-pmu.h"
+>> +
+>> +static struct exynos_pmu_conf exynos5433_pmu_config[] = {
+>> +	/* { .offset = address,	.val = { AFTR, LPA, SLEEP } } */
+>> +	{ EXYNOS5433_ATLAS_CPU0_SYS_PWR_REG,			{ 0x0, 0x0, 0x8 } },
+>> +	{ EXYNOS5433_DIS_IRQ_ATLAS_CPU0_CENTRAL_SYS_PWR_REG,	{ 0x0, 0x0, 0x0 } },
+>> +	{ EXYNOS5433_ATLAS_CPU1_SYS_PWR_REG,			{ 0x0, 0x0, 0x8 } },
+>> +	{ EXYNOS5433_DIS_IRQ_ATLAS_CPU1_CENTRAL_SYS_PWR_REG,	{ 0x0, 0x0, 0x0 } },
+>> +	{ EXYNOS5433_ATLAS_CPU2_SYS_PWR_REG,			{ 0x0, 0x0, 0x8 } },
+>> +	{ EXYNOS5433_DIS_IRQ_ATLAS_CPU2_CENTRAL_SYS_PWR_REG,	{ 0x0, 0x0, 0x0 } },
+>> +	{ EXYNOS5433_ATLAS_CPU3_SYS_PWR_REG,			{ 0x0, 0x0, 0x8 } },
+>> +	{ EXYNOS5433_DIS_IRQ_ATLAS_CPU3_CENTRAL_SYS_PWR_REG,	{ 0x0, 0x0, 0x0 } },
+>> +	{ EXYNOS5433_APOLLO_CPU0_SYS_PWR_REG,			{ 0x0, 0x0, 0x8 } },
+>> +	{ EXYNOS5433_DIS_IRQ_APOLLO_CPU0_CENTRAL_SYS_PWR_REG,	{ 0x0, 0x0, 0x0 } },
+>> +	{ EXYNOS5433_APOLLO_CPU1_SYS_PWR_REG,			{ 0x0, 0x0, 0x8 } },
+>> +	{ EXYNOS5433_DIS_IRQ_APOLLO_CPU1_CENTRAL_SYS_PWR_REG,	{ 0x0, 0x0, 0x0 } },
+>> +	{ EXYNOS5433_APOLLO_CPU2_SYS_PWR_REG,			{ 0x0, 0x0, 0x8 } },
+>> +	{ EXYNOS5433_DIS_IRQ_APOLLO_CPU2_CENTRAL_SYS_PWR_REG,	{ 0x0, 0x0, 0x0 } },
+>> +	{ EXYNOS5433_APOLLO_CPU3_SYS_PWR_REG,			{ 0x0, 0x0, 0x8 } },
+>> +	{ EXYNOS5433_DIS_IRQ_APOLLO_CPU3_CENTRAL_SYS_PWR_REG,	{ 0x0, 0x0, 0x0 } },
+>> +	{ EXYNOS5433_ATLAS_NONCPU_SYS_PWR_REG,			{ 0x0, 0x0, 0x8 } },
+>> +	{ EXYNOS5433_APOLLO_NONCPU_SYS_PWR_REG,			{ 0x0, 0x0, 0x8 } },
+> 
+> 
+> 1. First of all why do you need any of these CPU related PMU config
+>    registers in kernel ? From the information I gathered this is ARM64
+>    SoC using PSCI. These are needed just in PSCI implementation and not
+>    in kernel. So can you elaborate on why there are present here ?
+
+The 32bit Exynos used the 'smc' call to enter the suspend mode
+and need to handle the PMU registers.
+
+Even if PSCI replaces the 'smc' call on the Exynos5433,
+the Exynos5433's document requires the handling of PMU config
+related to CPU for the suspend mode.
+
+IMHO, If the secure OS implemented the all something related to CPU,
+it might be unnecessary to handle the PMU registers. I think that
+it depend on how to design the SoC by H/W Architect. This is just my opinion.
+
+> 
+> 2. Are there any public documents that these names map to ?
+
+There is no public document. It is confidential.
+
+>    If there is none, please replace these codenames(ATLAS, APOLLO) with
+>    appropriately.
+
+In the Exynos5433, 'apollo' indicates the LITTLE cores (cpu0-3, cortex-a53)
+and 'atlas' indicates the big cores (cpu4-7, cortex-a57)
+
+Exynos5433 already used the 'apollo' and 'atlas' on clk-exynos5433.c driver
+and thermal device-tree node. It is better to use the original register name
+in the document in order to reduce the confusion of the change of register name
+even if document is not public.
+
+Also, exynos7 used the 'atlas' word for big cores.
+
+> 
+> Sorry if these are already answered, just point me to those threads.
+> 
+
+
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
