@@ -1,131 +1,90 @@
-From: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
-Subject: [PATCH v3 1/6] PCI: Regroup all PCI related entries into drivers/pci/Makefile
-Date: Wed, 10 Jan 2018 23:47:30 +0100
-Message-ID: <ee3d115d7127b1a0561b48ba2c0997b8bd06044a.1515621150.git.cyrille.pitchen@free-electrons.com>
-References: <cover.1515621150.git.cyrille.pitchen@free-electrons.com>
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <cover.1515621150.git.cyrille.pitchen@free-electrons.com>
-In-Reply-To: <cover.1515621150.git.cyrille.pitchen@free-electrons.com>
-References: <cover.1515621150.git.cyrille.pitchen@free-electrons.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: bhelgaas@google.com, kishon@ti.com, lorenzo.pieralisi@arm.com, linux-pci@vger.kernel.org
-Cc: adouglas@cadence.com, stelford@cadence.com, dgary@cadence.com, kgopi@cadence.com, eandrews@cadence.com, thomas.petazzoni@free-electrons.com, sureshp@cadence.com, nsekhar@ti.com, linux-kernel@vger.kernel.org, robh@kernel.org, devicetree@vger.kernel.org, Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH v3 1/9] mfd: syscon: Add ingenic-tcu.h header
+Date: Wed, 10 Jan 2018 23:48:30 +0100
+Message-ID: <20180110224838.16711-1-paul@crapouillou.net>
+References: <20180101143344.2099-1-paul@crapouillou.net>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20180101143344.2099-1-paul@crapouillou.net>
+Sender: linux-clk-owner@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Lee Jones <lee.jones@linaro.org>
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
-Clean up drivers/Makefile by moving the pci/endpoint and pci/dwc entries
-from drivers/Makefile into drivers/pci/Makefile.
+This header contains macros for the registers that are present in the
+regmap shared by all the drivers related to the TCU (Timer Counter Unit)
+of the Ingenic JZ47xx SoCs.
 
-Since we don't want to introduce any dependency between CONFIG_PCI and
-CONFIG_PCI_ENDPOINT, we now always execute drivers/pci/Makefile.
-
-Hence all Makefiles in drivers/pci/ were updated accordingly so no file is
-compiled when CONFIG_PCI is not defined.
-
-Also, we add a comment to reinforce that EPC and EPF libraries must be
-initialized before their users. Hence built-in EPC drivers, such as
-those of Designware, are linked after the endpoint core libraries.
-
-Finally, we add another comment to explain why obj-y has been chosen
-instead of obj-$(CONFIG_PCIE_DW) to parse the dwc/ sub-folder.
-
-Signed-off-by: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- drivers/Makefile          |  5 +----
- drivers/pci/Kconfig       |  1 +
- drivers/pci/Makefile      | 13 ++++++++++---
- drivers/pci/dwc/Makefile  |  2 ++
- drivers/pci/host/Makefile |  2 ++
- 5 files changed, 16 insertions(+), 7 deletions(-)
+ include/linux/mfd/syscon/ingenic-tcu.h | 54 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 54 insertions(+)
+ create mode 100644 include/linux/mfd/syscon/ingenic-tcu.h
 
-diff --git a/drivers/Makefile b/drivers/Makefile
-index e06f7f633f73..8189b1edec00 100644
---- a/drivers/Makefile
-+++ b/drivers/Makefile
-@@ -16,10 +16,7 @@ obj-$(CONFIG_PINCTRL)		+= pinctrl/
- obj-$(CONFIG_GPIOLIB)		+= gpio/
- obj-y				+= pwm/
- 
--obj-$(CONFIG_PCI)		+= pci/
--obj-$(CONFIG_PCI_ENDPOINT)	+= pci/endpoint/
--# PCI dwc controller drivers
--obj-y				+= pci/dwc/
-+obj-y				+= pci/
- 
- obj-$(CONFIG_PARISC)		+= parisc/
- obj-$(CONFIG_RAPIDIO)		+= rapidio/
-diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
-index bda151788f3f..7eeb969ab86a 100644
---- a/drivers/pci/Kconfig
-+++ b/drivers/pci/Kconfig
-@@ -125,6 +125,7 @@ config PCI_PASID
- 
- config PCI_LABEL
- 	def_bool y if (DMI || ACPI)
-+	depends on PCI
- 	select NLS
- 
- config PCI_HYPERV
-diff --git a/drivers/pci/Makefile b/drivers/pci/Makefile
-index c7819b973df7..ddb5aa6640d7 100644
---- a/drivers/pci/Makefile
-+++ b/drivers/pci/Makefile
-@@ -3,12 +3,15 @@
- # Makefile for the PCI bus specific drivers.
- #
- 
--obj-y		+= access.o bus.o probe.o host-bridge.o remove.o pci.o \
-+obj-$(CONFIG_PCI)	+= access.o bus.o probe.o host-bridge.o remove.o pci.o \
- 			pci-driver.o search.o pci-sysfs.o rom.o setup-res.o \
- 			irq.o vpd.o setup-bus.o vc.o mmap.o setup-irq.o
- 
-+ifdef CONFIG_PCI
- obj-$(CONFIG_PROC_FS) += proc.o
- obj-$(CONFIG_SYSFS) += slot.o
-+obj-$(CONFIG_OF) += of.o
-+endif
- 
- obj-$(CONFIG_PCI_QUIRKS) += quirks.o
- 
-@@ -44,10 +47,14 @@ obj-$(CONFIG_PCI_ECAM) += ecam.o
- 
- obj-$(CONFIG_XEN_PCIDEV_FRONTEND) += xen-pcifront.o
- 
--obj-$(CONFIG_OF) += of.o
--
- ccflags-$(CONFIG_PCI_DEBUG) := -DDEBUG
- 
- # PCI host controller drivers
- obj-y += host/
- obj-y += switch/
+ v2: Use SPDX identifier for the license
+ v3: - Use macros instead of enum
+     - Add 'TCU_' at the beginning of each macro
+	 - Remove useless include <linux/regmap.h>
+
+diff --git a/include/linux/mfd/syscon/ingenic-tcu.h b/include/linux/mfd/syscon/ingenic-tcu.h
+new file mode 100644
+index 000000000000..96dd59f7c3b2
+--- /dev/null
++++ b/include/linux/mfd/syscon/ingenic-tcu.h
+@@ -0,0 +1,54 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Header file for the Ingenic JZ47xx TCU driver
++ */
++#ifndef __LINUX_CLK_INGENIC_TCU_H_
++#define __LINUX_CLK_INGENIC_TCU_H_
 +
-+obj-$(CONFIG_PCI_ENDPOINT)	+= endpoint/
++#include <linux/bitops.h>
 +
-+# Endpoint library must be initialized before its users
-+# pcie-hisi.o quirks are needed even without CONFIG_PCIE_DW
-+obj-y				+= dwc/
-diff --git a/drivers/pci/dwc/Makefile b/drivers/pci/dwc/Makefile
-index a9d8a6fb48e3..5d2ce72c7a52 100644
---- a/drivers/pci/dwc/Makefile
-+++ b/drivers/pci/dwc/Makefile
-@@ -25,4 +25,6 @@ obj-$(CONFIG_PCIE_HISI_STB) += pcie-histb.o
- # ARM64 and use internal ifdefs to only build the pieces we need
- # depending on whether ACPI, the DT driver, or both are enabled.
- 
-+ifdef CONFIG_PCI
- obj-$(CONFIG_ARM64) += pcie-hisi.o
-+endif
-diff --git a/drivers/pci/host/Makefile b/drivers/pci/host/Makefile
-index 34ec1d88f961..3b1059190867 100644
---- a/drivers/pci/host/Makefile
-+++ b/drivers/pci/host/Makefile
-@@ -34,6 +34,8 @@ obj-$(CONFIG_VMD) += vmd.o
- # ARM64 and use internal ifdefs to only build the pieces we need
- # depending on whether ACPI, the DT driver, or both are enabled.
- 
-+ifdef CONFIG_PCI
- obj-$(CONFIG_ARM64) += pci-thunder-ecam.o
- obj-$(CONFIG_ARM64) += pci-thunder-pem.o
- obj-$(CONFIG_ARM64) += pci-xgene.o
-+endif
++#define TCU_REG_WDT_TDR		0x00
++#define TCU_REG_WDT_TCER	0x04
++#define TCU_REG_WDT_TCNT	0x08
++#define TCU_REG_WDT_TCSR	0x0c
++#define TCU_REG_TER		0x10
++#define TCU_REG_TESR		0x14
++#define TCU_REG_TECR		0x18
++#define TCU_REG_TSR		0x1c
++#define TCU_REG_TFR		0x20
++#define TCU_REG_TFSR		0x24
++#define TCU_REG_TFCR		0x28
++#define TCU_REG_TSSR		0x2c
++#define TCU_REG_TMR		0x30
++#define TCU_REG_TMSR		0x34
++#define TCU_REG_TMCR		0x38
++#define TCU_REG_TSCR		0x3c
++#define TCU_REG_TDFR0		0x40
++#define TCU_REG_TDHR0		0x44
++#define TCU_REG_TCNT0		0x48
++#define TCU_REG_TCSR0		0x4c
++#define TCU_REG_OST_DR		0xe0
++#define TCU_REG_OST_CNTL	0xe4
++#define TCU_REG_OST_CNTH	0xe8
++#define TCU_REG_OST_TCSR	0xec
++#define TCU_REG_TSTR		0xf0
++#define TCU_REG_TSTSR		0xf4
++#define TCU_REG_TSTCR		0xf8
++#define TCU_REG_OST_CNTHBUF	0xfc
++
++#define TCU_TCSR_RESERVED_BITS		0x3f
++#define TCU_TCSR_PARENT_CLOCK_MASK	0x07
++#define TCU_TCSR_PRESCALE_LSB		3
++#define TCU_TCSR_PRESCALE_MASK		0x38
++
++#define TCU_TCSR_PWM_SD		BIT(9)	/* 0: Shutdown abruptly 1: gracefully */
++#define TCU_TCSR_PWM_INITL_HIGH	BIT(8)	/* Sets the initial output level */
++#define TCU_TCSR_PWM_EN		BIT(7)	/* PWM pin output enable */
++
++#define TCU_CHANNEL_STRIDE	0x10
++#define TCU_REG_TDFRc(c)	(TCU_REG_TDFR0 + ((c) * TCU_CHANNEL_STRIDE))
++#define TCU_REG_TDHRc(c)	(TCU_REG_TDHR0 + ((c) * TCU_CHANNEL_STRIDE))
++#define TCU_REG_TCNTc(c)	(TCU_REG_TCNT0 + ((c) * TCU_CHANNEL_STRIDE))
++#define TCU_REG_TCSRc(c)	(TCU_REG_TCSR0 + ((c) * TCU_CHANNEL_STRIDE))
++
++#endif /* __LINUX_CLK_INGENIC_TCU_H_ */
 -- 
 2.11.0
+
