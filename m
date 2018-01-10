@@ -1,47 +1,54 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 0/7] ARM: dts: STi: Fix DT dtc warnings
-Date: Wed, 10 Jan 2018 16:52:43 +0100
-Message-ID: <CAK8P3a2qgyJ8Hgr6fLnn6jVRhHVtcc1kxzyD2N7Bb7gzPe1xfg@mail.gmail.com>
-References: <1515572469-19276-1-git-send-email-patrice.chotard@st.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH] ARM: dts: s5pv210: add interrupt-parent for ohci
+Date: Wed, 10 Jan 2018 17:10:11 +0100
+Message-ID: <20180110161045.4052684-1-arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1515572469-19276-1-git-send-email-patrice.chotard-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Guenter Roeck <linux@roeck-us.net>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 10, 2018 at 9:21 AM,  <patrice.chotard-qxv4g6HH51o@public.gmane.org> wrote:
-> From: Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>
->
-> This series fixes all dtc warnings related to STi platforms dt files.
-> It has been triggered by Rob Herring [1]
->
-> [1] https://www.spinics.net/lists/devicetree/msg206209.html
->
-> For most of implicated node, a simple move outside the soc node
-> solves the warnings.
->
-> Patrice Chotard (7):
->   ARM: dts: STi: fix bindings notation
->   ARM: dts: STi: Add gpio polarity for "hdmi,hpd-gpio" property
->   ARM: dts: STi: Move clocks without reg outside soc
->   ARM: dts: STi: Move leds node outside soc node
->   ARM: dts: STi: Move usb2_picophyX nodes without reg out of soc
->   ARM: dts: STi: Move sound related nodes without reg out of soc
->   ARM: dts: STi: Add fake reg property for sti-display-subsystem
+The ohci-hcd node has an interrupt number but no interrupt-parent,
+leading to a warning with current dtc versions:
 
-Thanks a lot for addressing these!
+arch/arm/boot/dts/s5pv210-aquila.dtb: Warning (interrupts_property): Missing interrupt-parent for /soc/ohci@ec300000
+arch/arm/boot/dts/s5pv210-goni.dtb: Warning (interrupts_property): Missing interrupt-parent for /soc/ohci@ec300000
+arch/arm/boot/dts/s5pv210-smdkc110.dtb: Warning (interrupts_property): Missing interrupt-parent for /soc/ohci@ec300000
+arch/arm/boot/dts/s5pv210-smdkv210.dtb: Warning (interrupts_property): Missing interrupt-parent for /soc/ohci@ec300000
+arch/arm/boot/dts/s5pv210-torbreck.dtb: Warning (interrupts_property): Missing interrupt-parent for /soc/ohci@ec300000
 
-As far as I can tell, there is one patch in particular that addresses a warning
-we get at the default warning level: "ARM: dts: STi: Add gpio polarity for
-"hdmi,hpd-gpio" property". Should we merge that one for 4.15 to get closer
-to a clean build again? I'm not sure whether we can address the other
-dtc warnings, but we're getting fairly close now.
+As seen from the related exynos dts files, the ohci and ehci controllers
+always share one interrupt number, and the number is the same here as
+well, so setting the same interrupt-parent is the reasonable solution
+here.
 
-       Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ arch/arm/boot/dts/s5pv210.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm/boot/dts/s5pv210.dtsi b/arch/arm/boot/dts/s5pv210.dtsi
+index 247c0029659c..67358562a6ea 100644
+--- a/arch/arm/boot/dts/s5pv210.dtsi
++++ b/arch/arm/boot/dts/s5pv210.dtsi
+@@ -460,6 +460,7 @@
+ 			compatible = "samsung,exynos4210-ohci";
+ 			reg = <0xec300000 0x100>;
+ 			interrupts = <23>;
++			interrupt-parent = <&vic1>;
+ 			clocks = <&clocks CLK_USB_HOST>;
+ 			clock-names = "usbhost";
+ 			#address-cells = <1>;
+-- 
+2.9.0
