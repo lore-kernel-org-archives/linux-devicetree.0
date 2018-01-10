@@ -1,72 +1,36 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH 1/3] ARM: dts: enable L2 cache parity and ecc on db-xc3-24g4xg board
-Date: Wed, 10 Jan 2018 09:24:04 +0100
-Message-ID: <87y3l66s0r.fsf@free-electrons.com>
-References: <20180108223158.21930-1-chris.packham@alliedtelesis.co.nz>
-        <20180108223158.21930-2-chris.packham@alliedtelesis.co.nz>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH v4 1/3] usb: renesas_usbhs: Add support for RZ/A1
+Date: Wed, 10 Jan 2018 08:26:39 +0000
+Message-ID: <TY1PR06MB0992C908652672902D18D824D8110@TY1PR06MB0992.apcprd06.prod.outlook.com>
+References: <20180108123055.64890-1-chris.brandt@renesas.com>
+ <20180108123055.64890-2-chris.brandt@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180108223158.21930-2-chris.packham@alliedtelesis.co.nz> (Chris
-        Packham's message of "Tue, 9 Jan 2018 11:31:56 +1300")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc: jlu@pengutronix.de, linux@armlinux.org.uk, bp@alien8.de, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180108123055.64890-2-chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Content-Language: ja-JP
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Cc: "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Chris Brandt <Chris.Brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Chris,
+Hi Chris-san,
 
- On mar., janv. 09 2018, Chris Packham <chris.packham@alliedtelesis.co.nz> wrote:
+> From: Chris Brandt, Sent: Monday, January 8, 2018 9:31 PM
+>=20
+> This patch adds the capability to support RZ/A1 SoCs.
+>=20
+> Signed-off-by: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 
-Could you have add a (even small) message in the commit log?
+Thank you for the patch!
 
-Also could you improve the title by specify that it applies on
-armada-xp, like this:
+Acked-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 
-ARM: dts: armada-xp: enable L2 cache parity and ecc on db-xc3-24g4xg
+Best regards,
+Yoshihiro Shimoda
 
-
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-> ---
->  arch/arm/boot/dts/armada-xp-db-xc3-24g4xg.dts | 5 +++++
->  1 file changed, 5 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/armada-xp-db-xc3-24g4xg.dts b/arch/arm/boot/dts/armada-xp-db-xc3-24g4xg.dts
-> index 06fce35d7491..00ca489fc788 100644
-> --- a/arch/arm/boot/dts/armada-xp-db-xc3-24g4xg.dts
-> +++ b/arch/arm/boot/dts/armada-xp-db-xc3-24g4xg.dts
-> @@ -70,6 +70,11 @@
->  	};
->  };
->  
-> +&L2 {
-> +	arm,parity-enable;
-> +	marvell,ecc-enable;
-
-It is not a problem for me to already applied the device tree change
-even if the driver is not merged yet. But I would like to have an
-acked-by on this new property by either a device tree maintainer or at
-least the EDAC maintainer, of course having both acked-by would be
-perfect ! :)
-
-Thanks,
-
-Gregory
-
-
-
-
-> +};
-> +
->  &devbus_bootcs {
->  	status = "okay";
->  
-> -- 
-> 2.15.1
->
-
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
