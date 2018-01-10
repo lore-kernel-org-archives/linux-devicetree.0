@@ -1,72 +1,305 @@
-From: Marc Dietrich <marvin24@gmx.de>
-Subject: Re: [PATCH 2/3] ARM: tegra: paz00: drop nonstandard 'backlight-boot-off'
-Date: Wed, 10 Jan 2018 12:31:31 +0100
-Message-ID: <27065017.X8cFkIFnZg@fb07-iapwap2>
-References: <20180106004757.8239-1-briannorris@chromium.org> <20180106004757.8239-2-briannorris@chromium.org>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH linux dev-4.10 3/6] drivers/misc: Add driver for Aspeed
+ PECI and generic PECI headers
+Date: Wed, 10 Jan 2018 12:55:33 +0100
+Message-ID: <CAK8P3a3MaSEYnwk2_OadBSyKnBiwXsHw_RocvPDqL6oea9MuJA@mail.gmail.com>
+References: <20180109223126.13093-1-jae.hyun.yoo@linux.intel.com> <20180109223126.13093-4-jae.hyun.yoo@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart2399094.HeAjPAVIu4"; micalg="pgp-sha256"; protocol="application/pgp-signature"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180106004757.8239-2-briannorris@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Norris <briannorris@chromium.org>
-Cc: Heiko Stuebner <heiko@sntech.de>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, Lin Huang <hl@rock-chips.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-hwmon-owner@vger.kernel.org>
+In-Reply-To: <20180109223126.13093-4-jae.hyun.yoo@linux.intel.com>
+Sender: linux-hwmon-owner@vger.kernel.org
+To: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+Cc: Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, gregkh <gregkh@linuxfoundation.org>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org, DTML <devicetree@vger.kernel.org>, linux-hwmon@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
---nextPart2399094.HeAjPAVIu4
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="ISO-8859-1"
+On Tue, Jan 9, 2018 at 11:31 PM, Jae Hyun Yoo
+<jae.hyun.yoo@linux.intel.com> wrote:
+> This commit adds driver implementation for Aspeed PECI. Also adds
+> generic peci.h and peci_ioctl.h files to provide compatibility
+> to peci drivers that can be implemented later e.g. Nuvoton's BMC
+> SoC family.
+>
+> Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
 
-Hi,
+> +#include <linux/clk.h>
+> +#include <linux/crc8.h>
+> +#include <linux/delay.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/io.h>
+> +#include <linux/jiffies.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/miscdevice.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/peci_ioctl.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/semaphore.h>
+> +#include <linux/types.h>
+> +#include <linux/uaccess.h>
 
-Am Samstag, 6. Januar 2018, 01:47:56 CET schrieb Brian Norris:
-> This was used out-of-tree as a hack for resolving issues where some
-> systems expect the backlight to turn on automatically at boot, while
-> others expect to manage the backlight status via a DRM/panel driver.
-> Those issues have since been fixed upstream in pwm_bl.c without device
-> tree hacks, and so this un-documented property should no longer be
-> useful.
-> 
-> Signed-off-by: Brian Norris <briannorris@chromium.org>
+semaphore.h is not used here and can be dropped.
 
-seems to work again. Thanks!
+> +static struct aspeed_peci *aspeed_peci_priv;
 
-Reviewed-by: Marc Dietrich <marvin24@gmx.de>
-
-> ---
->  arch/arm/boot/dts/tegra20-paz00.dts | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/tegra20-paz00.dts
-> b/arch/arm/boot/dts/tegra20-paz00.dts index 30436969adc0..12c63b23ed5e
-> 100644
-> --- a/arch/arm/boot/dts/tegra20-paz00.dts
-> +++ b/arch/arm/boot/dts/tegra20-paz00.dts
-> @@ -504,8 +504,6 @@
-> 
->  		brightness-levels = <0 16 32 48 64 80 96 112 128 144 160 176 192 208 224
-> 240 255>; default-brightness-level = <10>;
-> -
-> -		backlight-boot-off;
->  	};
-> 
->  	clocks {
+Try to avoid instance variables like this one. You should always be able to find
+that pointer from whatever structure you were called with.
 
 
---nextPart2399094.HeAjPAVIu4
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
+> +       timeout = wait_for_completion_interruptible_timeout(
+> +                                       &priv->xfer_complete,
+> +                                       msecs_to_jiffies(priv->cmd_timeout_ms));
+> +
+> +       dev_dbg(priv->dev, "INT_STS : 0x%08x\n", priv->sts);
+> +       if (!regmap_read(priv->regmap, AST_PECI_CMD, &peci_state))
+> +               dev_dbg(priv->dev, "PECI_STATE : 0x%lx\n",
+> +                       PECI_CMD_STS_GET(peci_state));
+> +       else
+> +               dev_dbg(priv->dev, "PECI_STATE : read error\n");
+> +
+> +       if (timeout <= 0 || !(priv->sts & PECI_INT_CMD_DONE)) {
+> +               if (timeout <= 0) {
+> +                       dev_dbg(priv->dev, "Timeout waiting for a response!\n");
+> +                       rc = -ETIME;
+> +               } else {
+> +                       dev_dbg(priv->dev, "No valid response!\n");
+> +                       rc = -EFAULT;
+> +               }
+> +               return rc;
+> +       }
 
------BEGIN PGP SIGNATURE-----
+You don't seem to handle -ERESTARTSYS correct here. Either do it
+right, or drop the _interruptible part above.
 
-iQEzBAABCAAdFiEEySF+t0C8+8jyqfBvrJ5Hf0cUG2gFAlpV+ZMACgkQrJ5Hf0cU
-G2h0ywgAhPmeR2Lc4M0SYhpOv6r+s2TQoqfB55bqHyJT662DMi++jSMno7H/7zLo
-kNdubWhadXe2mUcW0QfzaRdRFUMh5YHx0oeE0Rxln/CPywQHXOVHtFhull72beMQ
-sAzctL+cDpLYeNI255QUKbvXwQ8yVk9AGinm3KgDo92b6xPITUcmUZdOCyWWiPml
-fmJ1jcbU14X4FuwNrA3QCiuylZaB07dhglK9QpV/4TMAj7wZrV1pEAx5IcwL6S/U
-O/7H2UmTK3SNmYjOAEZFa+N8Br8FEQTQNy78iCwMB6vbmnJtTHne6UQ3RRarOyNf
-zgGNTlqgISpxq3V8QvcyO4jehoGkkg==
-=gTu9
------END PGP SIGNATURE-----
+> +typedef int (*ioctl_fn)(struct aspeed_peci *, void *);
+> +
+> +static ioctl_fn peci_ioctl_fn[PECI_CMD_MAX] = {
+> +       ioctl_xfer_msg,
+> +       ioctl_ping,
+> +       ioctl_get_dib,
+> +       ioctl_get_temp,
+> +       ioctl_rd_pkg_cfg,
+> +       ioctl_wr_pkg_cfg,
+> +       ioctl_rd_ia_msr,
+> +       NULL, /* Reserved */
+> +       ioctl_rd_pci_cfg,
+> +       NULL, /* Reserved */
+> +       ioctl_rd_pci_cfg_local,
+> +       ioctl_wr_pci_cfg_local,
+> +};
+> +
+> +
+> +long peci_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+> +{
+> +       struct aspeed_peci *priv;
+> +       long ret = 0;
+> +       void __user *argp = (void __user *)arg;
+> +       int timeout = PECI_IDLE_CHECK_TIMEOUT;
+> +       u8 msg[sizeof(struct peci_xfer_msg)];
+> +       unsigned int peci_cmd, msg_size;
+> +       u32 cmd_sts;
+> +
+> +       /*
+> +        * Treat it as an inter module call when filp is null but only in case
+> +        * the private data is initialized.
+> +        */
+> +       if (filp)
+> +               priv = container_of(filp->private_data,
+> +                                   struct aspeed_peci, miscdev);
+> +       else
+> +               priv = aspeed_peci_priv;
 
---nextPart2399094.HeAjPAVIu4--
+Drop this.
+
+> +       if (!priv)
+> +               return -ENXIO;
+> +
+> +       switch (cmd) {
+> +       case PECI_IOC_XFER:
+> +       case PECI_IOC_PING:
+> +       case PECI_IOC_GET_DIB:
+> +       case PECI_IOC_GET_TEMP:
+> +       case PECI_IOC_RD_PKG_CFG:
+> +       case PECI_IOC_WR_PKG_CFG:
+> +       case PECI_IOC_RD_IA_MSR:
+> +       case PECI_IOC_RD_PCI_CFG:
+> +       case PECI_IOC_RD_PCI_CFG_LOCAL:
+> +       case PECI_IOC_WR_PCI_CFG_LOCAL:
+> +               peci_cmd = _IOC_TYPE(cmd) - PECI_IOC_BASE;
+> +               msg_size = _IOC_SIZE(cmd);
+> +               break;
+
+Having to keep the switch() statement and the array above seems a
+little fragile. Can you just do one or the other?
+
+Regarding the command set, you have both a low-level PECI_IOC_XFER
+interface and a high-level interface. Can you explain why? I'd think that
+generally speaking it's better to have only one of the two.
+
+> +       /* Check command sts and bus idle state */
+> +       while (!regmap_read(priv->regmap, AST_PECI_CMD, &cmd_sts)
+> +              && (cmd_sts & (PECI_CMD_STS_MASK | PECI_CMD_PIN_MON))) {
+> +               if (timeout-- < 0) {
+> +                       dev_dbg(priv->dev, "Timeout waiting for idle state!\n");
+> +                       ret = -ETIME;
+> +                       goto out;
+> +               }
+> +               usleep_range(10000, 11000);
+> +       };
+
+To implement timeout, it's better to replace the counter with a
+jiffies/time_before or ktime_get()/ktime_before() check, since usleep_range()
+is might sleep considerably longer than expected.
+
+> +EXPORT_SYMBOL_GPL(peci_ioctl);
+
+No user of this, so drop it.
+
+> +static int aspeed_peci_open(struct inode *inode, struct file *filp)
+> +{
+> +       struct aspeed_peci *priv =
+> +               container_of(filp->private_data, struct aspeed_peci, miscdev);
+> +
+> +       atomic_inc(&priv->ref_count);
+> +
+> +       dev_dbg(priv->dev, "ref_count : %d\n", atomic_read(&priv->ref_count));
+> +
+> +       return 0;
+> +}
+> +
+> +static int aspeed_peci_release(struct inode *inode, struct file *filp)
+> +{
+> +       struct aspeed_peci *priv =
+> +               container_of(filp->private_data, struct aspeed_peci, miscdev);
+> +
+> +       atomic_dec(&priv->ref_count);
+> +
+> +       dev_dbg(priv->dev, "ref_count : %d\n", atomic_read(&priv->ref_count));
+> +
+> +       return 0;
+> +}
+
+Nothing uses that reference count, drop it.
+
+> new file mode 100644
+> index 0000000..66322c6
+> --- /dev/null
+> +++ b/include/misc/peci.h
+> @@ -0,0 +1,11 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +// Copyright (c) 2017 Intel Corporation
+> +
+> +#ifndef __PECI_H
+> +#define __PECI_H
+> +
+> +#include <linux/peci_ioctl.h>
+> +
+> +long peci_ioctl(struct file *filp, unsigned int cmd, unsigned long arg);
+> +
+> +#endif /* __PECI_H */
+
+Not used anywhere.
+
+> diff --git a/include/uapi/linux/peci_ioctl.h b/include/uapi/linux/peci_ioctl.h
+> new file mode 100644
+> index 0000000..8386848
+> --- /dev/null
+> +++ b/include/uapi/linux/peci_ioctl.h
+> @@ -0,0 +1,270 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +// Copyright (c) 2017 Intel Corporation
+> +
+> +#ifndef __PECI_IOCTL_H
+> +#define __PECI_IOCTL_H
+> +
+> +#include <linux/ioctl.h>
+> +
+> +/* Base Address of 48d */
+> +#define PECI_BASE_ADDR  0x30  /* The PECI client's default address of 0x30 */
+> +#define PECI_OFFSET_MAX 8     /* Max numver of CPU clients */
+> +
+> +/* PCI Access */
+> +#define MAX_PCI_READ_LEN 24  /* Number of bytes of the PCI Space read */
+> +
+> +#define PCI_BUS0_CPU0      0x00
+> +#define PCI_BUS0_CPU1      0x80
+> +#define PCI_CPUBUSNO_BUS   0x00
+> +#define PCI_CPUBUSNO_DEV   0x08
+> +#define PCI_CPUBUSNO_FUNC  0x02
+> +#define PCI_CPUBUSNO       0xcc
+> +#define PCI_CPUBUSNO_1     0xd0
+> +#define PCI_CPUBUSNO_VALID 0xd4
+
+I can't tell for sure, but this file seems to be mixing the kernel API with
+hardware specific macros that are not needed in user space. Can you move
+some of this file into the driver itself?
+
+This might go back to the previous question about the high-level and
+low-level interfaces: if you can drop the low-level ioctl interface, more
+of this header can become private to the driver.
+
+> +/* Package Identifier Read Parameter Value */
+> +#define PKG_ID_CPU_ID               0x0000  /* 0 - CPUID Info */
+> +#define PKG_ID_PLATFORM_ID          0x0001  /* 1 - Platform ID */
+> +#define PKG_ID_UNCORE_ID            0x0002  /* 2 - Uncore Device ID */
+> +#define PKG_ID_MAX_THREAD_ID        0x0003  /* 3 - Max Thread ID */
+> +#define PKG_ID_MICROCODE_REV        0x0004  /* 4 - CPU Microcode Update Revision */
+> +#define PKG_ID_MACHINE_CHECK_STATUS 0x0005  /* 5 - Machine Check Status */
+> +
+> +/* RdPkgConfig Index */
+> +#define MBX_INDEX_CPU_ID            0   /* Package Identifier Read */
+> +#define MBX_INDEX_VR_DEBUG          1   /* VR Debug */
+> +#define MBX_INDEX_PKG_TEMP_READ     2   /* Package Temperature Read */
+> +#define MBX_INDEX_ENERGY_COUNTER    3   /* Energy counter */
+> +#define MBX_INDEX_ENERGY_STATUS     4   /* DDR Energy Status */
+> +#define MBX_INDEX_WAKE_MODE_BIT     5   /* "Wake on PECI" Mode bit */
+> +#define MBX_INDEX_EPI               6   /* Efficient Performance Indication */
+
+Who defines these constants? Are they specific to the aspeed BMC, to the HECI
+protocol, or to a particular version of the remote endpoint?
+
+> +#pragma pack(push, 1)
+> +struct peci_xfer_msg {
+> +       unsigned char client_addr;
+> +       unsigned char tx_len;
+> +       unsigned char rx_len;
+> +       unsigned char tx_buf[MAX_BUFFER_SIZE];
+> +       unsigned char rx_buf[MAX_BUFFER_SIZE];
+> +};
+> +#pragma pack(pop)
+> +
+> +struct peci_ping_msg {
+> +       unsigned char target;
+> +};
+> +
+> +struct peci_get_dib_msg {
+> +       unsigned char target;
+> +       unsigned int  dib;
+> +};
+> +
+> +struct peci_get_temp_msg {
+> +       unsigned char target;
+> +       signed short  temp_raw;
+> +};
+
+Aside from what Greg already said about the types, please be careful to
+also avoid implicit padding in the API data structures, including the end of the
+structure.
+
+> +#define PECI_IOC_RD_PCI_CFG \
+> +       _IOWR(PECI_IOC_BASE + PECI_CMD_RD_PCI_CFG, 0, \
+> +               struct peci_rd_pci_cfg_msg)
+> +
+> +#define PECI_IOC_RD_PCI_CFG_LOCAL \
+> +       _IOWR(PECI_IOC_BASE + PECI_CMD_RD_PCI_CFG_LOCAL, 0, \
+> +               struct peci_rd_pci_cfg_local_msg)
+> +
+> +#define PECI_IOC_WR_PCI_CFG_LOCAL \
+> +       _IOWR(PECI_IOC_BASE + PECI_CMD_WR_PCI_CFG_LOCAL, 0, \
+> +               struct peci_wr_pci_cfg_local_msg)
+
+Can you give some background on what these do? In particular, who
+is configuring whose PCI devices?
+
+        Arnd
