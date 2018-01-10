@@ -1,95 +1,188 @@
-From: Prabhakar Kushwaha <prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org>
-Subject: RE: [PATCH] Documentation: binding: Update endianness usage
-Date: Wed, 10 Jan 2018 08:47:27 +0000
-Message-ID: <HE1PR04MB124133C61732D0A903D5C54D97110@HE1PR04MB1241.eurprd04.prod.outlook.com>
-References: <1511954855-8593-1-git-send-email-prabhakar.kushwaha@nxp.com>
-         <1512105209.10062.1.camel@buserror.net>
-         <HE1PR04MB12414AFA5F8081730B89378497390@HE1PR04MB1241.eurprd04.prod.outlook.com>
-         <1512165311.10062.3.camel@buserror.net>
-         <HE1PR04MB1241226CD3B7ABD6D5FA2D91973C0@HE1PR04MB1241.eurprd04.prod.outlook.com>
-         <1512441957.10062.6.camel@buserror.net>
-         <HE1PR04MB1241ADD02E472BA492AE1C8F973D0@HE1PR04MB1241.eurprd04.prod.outlook.com>
- <1512504459.10062.9.camel@buserror.net>
- <HE1PR04MB1241F1A70CDBA5A94D4D2CE597320@HE1PR04MB1241.eurprd04.prod.outlook.com>
- <HE1PR04MB124174461F845000614CDAA197320@HE1PR04MB1241.eurprd04.prod.outlook.com>
- <HE1PR04MB124148862807D5BD05E4E5AF970D0@HE1PR04MB1241.eurprd04.prod.outlook.com>
+From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Subject: [PATCH] dt-bindings: Nokia N9 audio support
+Date: Wed, 10 Jan 2018 09:53:15 +0100
+Message-ID: <20180110085315.GA17841@amd>
+References: <20171227091828.GA3307@amd>
+ <20171227180000.6ejpbqmr736nqx5i@kekkonen.localdomain>
+ <20171227200147.GB16799@amd>
+ <20171227211643.nnwtm4j6cyftlm66@kekkonen.localdomain>
+ <20180102124450.GA18659@amd>
+ <20180105160137.nr7oqvpbp2oao5fm@rob-hp-laptop>
+ <20180108222054.GA17452@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="a8Wt8u1KmwUX3Y2C"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <HE1PR04MB124148862807D5BD05E4E5AF970D0-6LN7OEpIatU9TB6uw0n1oM9NdZoXdze2vxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180108222054.GA17452@amd>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: "dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, aaro.koskinen-X3B1VOXEql0@public.gmane.org, ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, patrikbachan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, serge-A9i7LUbDfNHQT0dZR+AlfA@public.gmane.org, abcloriens-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, clayton-fehKsxFhGzZIf6P1QZMOBw@public.gmane.org, martijn-28JJ9oSIdodmR6Xm/wNWPw@public.gmane.org, Filip =?utf-8?Q?Matijevi=C4=87?= <filip.matijevic.pz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgU2NvdHQsDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFByYWJoYWth
-ciBLdXNod2FoYQ0KPiBTZW50OiBUaHVyc2RheSwgRGVjZW1iZXIgMjEsIDIwMTcgMTA6NTAgQU0N
-Cj4gVG86IFByYWJoYWthciBLdXNod2FoYSA8cHJhYmhha2FyLmt1c2h3YWhhQG54cC5jb20+OyBT
-Y290dCBXb29kDQo+IDxvc3NAYnVzZXJyb3IubmV0PjsgbGludXgtbXRkQGxpc3RzLmluZnJhZGVh
-ZC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnDQo+IENjOiBkZWRla2luZDFAZ21haWwu
-Y29tOyBjb21wdXRlcnNmb3JwZWFjZUBnbWFpbC5jb20NCj4gU3ViamVjdDogUkU6IFtQQVRDSF0g
-RG9jdW1lbnRhdGlvbjogYmluZGluZzogVXBkYXRlIGVuZGlhbm5lc3MgdXNhZ2UNCj4gDQo+IEhp
-IFNjb3R0LA0KPiANCj4gDQo+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiBGcm9t
-OiBkZXZpY2V0cmVlLW93bmVyQHZnZXIua2VybmVsLm9yZyBbbWFpbHRvOmRldmljZXRyZWUtDQo+
-ID4gb3duZXJAdmdlci5rZXJuZWwub3JnXSBPbiBCZWhhbGYgT2YgUHJhYmhha2FyIEt1c2h3YWhh
-DQo+ID4gU2VudDogV2VkbmVzZGF5LCBEZWNlbWJlciAwNiwgMjAxNyA0OjI5IFBNDQo+ID4gVG86
-IFNjb3R0IFdvb2QgPG9zc0BidXNlcnJvci5uZXQ+OyBsaW51eC1tdGRAbGlzdHMuaW5mcmFkZWFk
-Lm9yZzsNCj4gPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZw0KPiA+IENjOiBkZWRla2luZDFA
-Z21haWwuY29tOyBjb21wdXRlcnNmb3JwZWFjZUBnbWFpbC5jb20NCj4gPiBTdWJqZWN0OiBSRTog
-W1BBVENIXSBEb2N1bWVudGF0aW9uOiBiaW5kaW5nOiBVcGRhdGUgZW5kaWFubmVzcyB1c2FnZQ0K
-PiA+DQo+ID4NCj4gPg0KPiA+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+IEZy
-b206IFByYWJoYWthciBLdXNod2FoYQ0KPiA+ID4gU2VudDogV2VkbmVzZGF5LCBEZWNlbWJlciAw
-NiwgMjAxNyA0OjA1IFBNDQo+ID4gPiBUbzogJ1Njb3R0IFdvb2QnIDxvc3NAYnVzZXJyb3IubmV0
-PjsgbGludXgtbXRkQGxpc3RzLmluZnJhZGVhZC5vcmc7DQo+ID4gPiBkZXZpY2V0cmVlQHZnZXIu
-a2VybmVsLm9yZw0KPiA+ID4gQ2M6IGRlZGVraW5kMUBnbWFpbC5jb207IGNvbXB1dGVyc2ZvcnBl
-YWNlQGdtYWlsLmNvbQ0KPiA+ID4gU3ViamVjdDogUkU6IFtQQVRDSF0gRG9jdW1lbnRhdGlvbjog
-YmluZGluZzogVXBkYXRlIGVuZGlhbm5lc3MgdXNhZ2UNCj4gPiA+DQo+ID4gPg0KPiA+ID4gPiAt
-LS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+ID4gPiBGcm9tOiBTY290dCBXb29kIFttYWls
-dG86b3NzQGJ1c2Vycm9yLm5ldF0NCj4gPiA+ID4gU2VudDogV2VkbmVzZGF5LCBEZWNlbWJlciAw
-NiwgMjAxNyAxOjM4IEFNDQo+ID4gPiA+IFRvOiBQcmFiaGFrYXIgS3VzaHdhaGEgPHByYWJoYWth
-ci5rdXNod2FoYUBueHAuY29tPjsgbGludXgtDQo+ID4gPiA+IG10ZEBsaXN0cy5pbmZyYWRlYWQu
-b3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZw0KPiA+ID4gPiBDYzogZGVkZWtpbmQxQGdt
-YWlsLmNvbTsgY29tcHV0ZXJzZm9ycGVhY2VAZ21haWwuY29tDQo+ID4gPiA+IFN1YmplY3Q6IFJl
-OiBbUEFUQ0hdIERvY3VtZW50YXRpb246IGJpbmRpbmc6IFVwZGF0ZSBlbmRpYW5uZXNzIHVzYWdl
-DQo+ID4gPiA+DQo+ID4gPiA+IE9uIFR1ZSwgMjAxNy0xMi0wNSBhdCAwOTo0NSArMDAwMCwgUHJh
-Ymhha2FyIEt1c2h3YWhhIHdyb3RlOg0KPiA+ID4gPiA+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdl
-LS0tLS0NCj4gPiA+ID4gPiA+IEZyb206IFNjb3R0IFdvb2QgW21haWx0bzpvc3NAYnVzZXJyb3Iu
-bmV0XQ0KPiA+ID4gPiA+ID4gU2VudDogVHVlc2RheSwgRGVjZW1iZXIgMDUsIDIwMTcgODoxNiBB
-TQ0KPiA+ID4gPiA+ID4gVG86IFByYWJoYWthciBLdXNod2FoYSA8cHJhYmhha2FyLmt1c2h3YWhh
-QG54cC5jb20+OyBsaW51eC0NCj4gPiA+ID4gPiA+IG10ZEBsaXN0cy5pbmZyYWRlYWQub3JnOyBk
-ZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZw0KPiA+ID4gPiA+ID4gQ2M6IGRlZGVraW5kMUBnbWFp
-bC5jb207IGNvbXB1dGVyc2ZvcnBlYWNlQGdtYWlsLmNvbQ0KPiA+ID4gPiA+ID4gU3ViamVjdDog
-UmU6IFtQQVRDSF0gRG9jdW1lbnRhdGlvbjogYmluZGluZzogVXBkYXRlIGVuZGlhbm5lc3MgdXNh
-Z2UNCj4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiBJIG5vdyBzZWUgeW91ciBwYXRjaCB0byBvZl9m
-bGFzaF9wcm9iZS4uLiB3aGVyZSBpcyB0aGUgbm9uLUlGQy1zcGVjaWZpYw0KPiA+ID4gPiA+ID4g
-YmluZGluZyB0aGF0IHNheXMgdGhlICpwYXJlbnQqIG9mIGEgQ0ZJIG5vZGUgc2hvdWxkIGJlIGxv
-b2tlZCBhdCBmb3INCj4gdGhpcz8NCj4gPiA+ID4gPiA+IFdoZXJlwqBpbiBnZW5lcmFsIGFyZSBl
-bmRpYW4gcHJvcGVydGllcyBrZXB0IGluIHRoZSBwYXJlbnQgb2YgdGhlIG5vZGUNCj4gPiB3aXRo
-DQo+ID4gPiA+ID4gPiAicmVnIj/CoMKgVGhlIHJpZ2h0IGFuc3dlciBpcyB0byBhZGQgZW5kaWFu
-bmVzcyB0byBtdGQtcGh5c21hcC50eHQuDQo+ID4gPiA+ID4gPg0KPiA+ID4gPiA+DQo+ID4gPiA+
-ID4gRmxhc2hlcyBhcmUgYWx3YXlzIGxpdHRsZXIgZW5kaWFuLg0KPiA+ID4gPg0KPiA+ID4gPiBX
-ZSB3b3VsZG4ndCBiZSBoYXZpbmcgdGhpcyBkaXNjdXNzaW9uIGlmIHRoYXQgd2VyZSB0cnVlLi4u
-ICBUaGlzIGlzIGFib3V0IGhvdw0KPiA+ID4gPiBpdCBwcmVzZW50cyB0byB0aGUgQ1BVLCBub3Qg
-YWJvdXQgaG93IHRoZSBhY3R1YWwgcGlucyBvbiB0aGUgY2hpcCBhcmUNCj4gPiA+ID4gbnVtYmVy
-ZWQuDQo+ID4gPiA+DQo+ID4gPg0KPiA+ID4gR290IHlvdXIgcG9pbnQgOikNCj4gPiA+DQo+ID4g
-PiA+ID4gSXQgaXMgYmVjYXVzZSBvZiBJRkMgY29udHJvbGxlciBiZWhhdmlvciwgZW5kaWFubmVz
-cyBpcyByZXF1aXJlZC4NCj4gPiA+ID4gPiBTbyBhcyBwZXIgbXkgdW5kZXJzdGFuZGluZywgdGhp
-cyBpbmZvIHNob3VsZCBnbyBpbiBJRkMgYmluZGluZy4NCj4gPiA+ID4NCj4gPiA+ID4gSWYgdGhl
-IGluZm8gc2hvdWxkIGdvIGluIHRoZSBJRkMgYmluZGluZyB3aHkgaXMgdGhlIGNvZGUgaW4gYSBu
-b24tSUZDLXNwZWNpZmljDQo+ID4gPiA+IHBsYWNlPw0KPiA+ID4gPg0KPiA+ID4NCj4gPiA+IE5v
-dyBJIHVuZGVyc3RhbmQgeW91ciBwb2ludC4NCj4gPiA+IFNvIEkgc2hvdWxkIGJlIG1vdmluZyBl
-bmRpYW5uZXNzIHByb3BlcnR5IGRldGFpbCBpbiBtdGQtcGh5c21hcC50eHQuDQo+ID4gPg0KPiA+
-ID4gSXMgbXkgdW5kZXJzdGFuZGluZyBjb3JyZWN0Pw0KPiA+ID4NCj4gPg0KPiA+IEEgc2Vjb25k
-IHRob3VnaHQsDQo+ID4gSUZDIGJpbmRpbmcgd2FzIHVwZGF0ZWQgYmVjYXVzZSB0aGVyZSBpcyBu
-byBJRkMtTk9SIGRyaXZlci4gSXQgdXNlcyBnZW5lcmljDQo+IEZsYXNoDQo+ID4gZnJhbWV3b3Jr
-Lg0KPiA+DQo+ID4gSSBhbSBqdXN0IHRyeWluZyB0byBnZXQgbW9yZSB1bmRlcnN0YW5kaW5nLg0K
-PiA+DQo+IA0KPiBEbyB5b3UgaGF2ZSBhbnkgY29tbWVudC9jb25jZXJuIG9uIHRoaXMgcGF0Y2gu
-DQo+IE1heSBJIGdvIGFoZWFkIGFuZCByZXF1ZXN0IGZvciB0aGUgbWVyZ2VyIG9mIHVwZGF0ZWQg
-cGF0Y2ggaS5lLg0KPiBodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzEwMDg0MzMx
-Lw0KPiANCg0KUGxlYXNlIGxldCBtZSBrbm93IGlmIHlvdSBoYXZlIGFueSBjb25jZXJuIG9uIHRo
-aXMgcGF0Y2guIA0KDQotLXByYWJoYWthcg0KDQo=
+
+--a8Wt8u1KmwUX3Y2C
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+=46rom: Filip Matijevi=C4=87 <filip.matijevic.pz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+
+Add bindings for Nokia N9 audio components.
+
+Signed-off-by: Filip Matijevi=C4=87 <filip.matijevic.pz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+
+diff --git a/Documentation/devicetree/bindings/media/ti-wl1273.txt b/Docume=
+ntation/devicetree/bindings/media/ti-wl1273.txt
+new file mode 100644
+index 0000000..21db389
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/ti-wl1273.txt
+@@ -0,0 +1,36 @@
++Texas Instruments - wl1273 radio/bluetooth module
++
++Required properties:
++
++- compatible - "ti,wl1273-core"
++- reg - I2C slave address
++- interrupts       - The interrupt output from the device.
++- interrupt-parent - The parent interrupt controller.
++- power-gpio       - gpio pin to power the device.
++
++- wl1273radio child - compatible =3D "ti,wl1273-fm-radio";
++
++Optional properties:
++
++- wl1273codec child - compatible =3D "ti,wl1273codec";
++
++Example:
++
++wl1273core: wl1273core@22 {
++		compatible =3D "ti,wl1273-core";
++		reg =3D <0x22>;
++
++		pinctrl-names =3D "default";
++		pinctrl-0 =3D <&wl1273_gpio>;
++
++		interrupt-parent =3D <&gpio2>;
++		interrupts =3D <11 2>; /* gpio_43, IRQF_TRIGGER_FALLING */
++
++		wl1273radio: wl1273radio {
++			compatible =3D "ti,wl1273-fm-radio";
++		};
++
++		wl1273codec: wl1273codec {
++			compatible =3D "ti,wl1273-codec";
++		};
++	};
+diff --git a/Documentation/devicetree/bindings/sound/nokia,n9.txt b/Documen=
+tation/devicetree/bindings/sound/nokia,n9.txt
+new file mode 100644
+index 0000000..230b1eb
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/nokia,n9.txt
+@@ -0,0 +1,32 @@
++* Nokia N9/N950 audio setup
++
++Required properties:
++- compatible: "nokia,n9-audio"
++
++- nokia,twl4030-cpu-dai: phandle for the McBSP node connected to TWL4030
++- nokia,tlv320dac33-cpu-dai: phandle for the McBSP node connected to TLV32=
+0DAC33
++- nokia,wl1273-cpu-dai: phandle for the McBSP node connected to WL1273
++
++- nokia,twl4030-codec: phandle for the TWL4030 codec
++- nokia,tlv320dac33-codec: phandle for the TLV320DAC33 codec
++- nokia,wl1273-codec: phandle for the WL1273 codec
++- nokia,headphone-amplifier: phandle for the TPA6130A2 node
++
++- nokia,speaker-amplifier-gpios: GPIO for speaker amplifier
++
++Example:
++
++sound: n9-audio {
++	compatible =3D "nokia,n9-audio";
++
++	nokia,twl4030-cpu-dai =3D <&mcbsp3>;
++	nokia,tlv320dac33-cpu-dai =3D <&mcbsp2>;
++	nokia,wl1273-cpu-dai =3D <&mcbsp4>;
++
++	nokia,twl4030-codec =3D <&twl4030_audio>;
++	nokia,tlv320dac33-codec =3D <&tlv320dac33>;
++	nokia,wl1273-codec =3D <&wl1273codec>;
++	nokia,headphone-amplifier =3D <&tpa6140a2>;
++
++	nokia,speaker-amplifier-gpios =3D <&twl_gpio 7 GPIO_ACTIVE_HIGH>;
++};
+diff --git a/Documentation/devicetree/bindings/sound/tlv320dac33.txt b/Docu=
+mentation/devicetree/bindings/sound/tlv320dac33.txt
+new file mode 100644
+index 0000000..8e981f7
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/tlv320dac33.txt
+@@ -0,0 +1,39 @@
++Texas Instruments - tlv320dac33 Codec module
++
++The tlv320dac33 serial control bus communicates through I2C protocols.
++
++Required properties:
++
++- compatible - "ti,tlv320dac33"
++- reg - I2C slave address
++
++Optional properties:
++
++- power-gpio - gpio pin to power the device
++
++- avdd-supply, dvdd-supply, iovdd-supply: power supplies for the device as=
+ covered
++  in Documentation/devicetree/bindings/regulator/regulator.txt
++
++- interrupts       - The interrupt output from the device.
++- interrupt-parent - The parent interrupt controller.
++
++- ti,keep-bclk 	- Keep the BCLK running in FIFO modes
++- ti,burst-bclkdiv - BCLK divider value in burst mode
++
++Example:
++
++tlv320dac33: tlv320dac33@19 {
++	compatible =3D "ti,tlv320dac33";
++	reg =3D <0x19>;
++
++	avdd-supply =3D <&vaux4>;
++	dvdd-supply =3D <&vio>;
++	iovdd-supply =3D <&vio>;
++
++	interrupt-parent =3D <&gpio2>;
++	interrupts =3D <21 1>; /* gpio_53, IRQF_TRIGGER_RISING */
++	power-gpio =3D <&gpio2 28 0>; /* gpio_60 */
++
++	ti,keep-bclk;
++	ti,burst-bclkdiv =3D /bits/ 8 <3>;
++};
+
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--a8Wt8u1KmwUX3Y2C
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlpV1HsACgkQMOfwapXb+vIMUgCfQiJowXDCBohzyldvIJ4pLWzp
+i/EAnA2SlDggNUupVR91b8ilJzE6o97d
+=eBwj
+-----END PGP SIGNATURE-----
+
+--a8Wt8u1KmwUX3Y2C--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
