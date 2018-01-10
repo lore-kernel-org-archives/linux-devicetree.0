@@ -1,169 +1,182 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH V8 3/3] OPP: Allow "opp-hz" and "opp-microvolt" to
- contain magic values
-Date: Tue, 9 Jan 2018 18:54:54 -0800
-Message-ID: <20180110025454.GG21040@codeaurora.org>
-References: <cover.1513591822.git.viresh.kumar@linaro.org>
- <476d7ae69184d787ccc6d99f8df6069007fd0a91.1513591822.git.viresh.kumar@linaro.org>
- <20171226202955.32j7gzonrixtwdpt@rob-hp-laptop>
- <20171227085645.GF8312@vireshk-i7>
- <CAL_JsqJzMfNhHK=6Wt4dzBRS9BVGMZ-f7uk3OnUupudTfwuyUA@mail.gmail.com>
- <20171228043725.GB8652@vireshk-i7>
- <20171229003253.GD7997@codeaurora.org>
- <20171229045854.GE8652@vireshk-i7>
- <20180105221954.GC21040@codeaurora.org>
- <20180108041643.GC4003@vireshk-i7>
+From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Subject: Re: [PATCH v5 01/44] dt-bindings: clock: Add new bindings for TI
+ Davinci PLL clocks
+Date: Tue, 9 Jan 2018 21:01:29 -0600
+Message-ID: <ba7fa842-cfc5-6f6f-f9bf-09c74ab08ec2@lechnology.com>
+References: <1515377863-20358-1-git-send-email-david@lechnology.com>
+ <1515377863-20358-2-git-send-email-david@lechnology.com>
+ <ebd677dc-44a4-5053-2509-e3ee948ccf98@ti.com>
+ <22409e49-5c14-4068-b137-7535afaf90d7@lechnology.com>
+ <0f90b5f7-f21e-5f81-1154-9a815bbb786d@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180108041643.GC4003@vireshk-i7>
-Sender: linux-pm-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Rob Herring <robh@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Kevin Hilman <khilman@kernel.org>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Rafael Wysocki <rjw@rjwysocki.net>, linux-pm@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, Sudeep Holla <sudeep.holla@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <0f90b5f7-f21e-5f81-1154-9a815bbb786d-l0cyMroinI0@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Adam Ford <aford173-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/08, Viresh Kumar wrote:
-> On 05-01-18, 14:19, Stephen Boyd wrote:
-> > On 12/29, Viresh Kumar wrote:
+On 01/09/2018 06:35 AM, Sekhar Nori wrote:
+> On Monday 08 January 2018 09:59 PM, David Lechner wrote:
+>> On 01/08/2018 08:00 AM, Sekhar Nori wrote:
+>>> On Monday 08 January 2018 07:47 AM, David Lechner wrote:
+>>>> This adds a new binding for the PLL IP blocks in the mach-davinci family
+>>>> of processors. Currently, only the SYSCLKn and AUXCLK outputs are
+>>>> needed,
+>>>> but in the future additional child nodes could be added for OBSCLK and
+>>>> BPDIV.
+>>>>
+>>>> Note: Although these PLL controllers are very similar to the TI Keystone
+>>>> SoCs, we are not re-using those bindings. The Keystone bindings use a
+>>>> legacy one-node-per-clock binding. Furthermore, the mach-davinici SoCs
+>>>
+>>> Not sure what is meant by "legacy one-node-per-clock binding"
+>>
+>> It's a term I picked up from of_clk_detect_critical()
+>>
+>>   * Do not use this function. It exists only for legacy Device Tree
+>>   * bindings, such as the one-clock-per-node style that are outdated.
+>>   * Those bindings typically put all clock data into .dts and the Linux
+>>   * driver has no clock data, thus making it impossible to set this flag
+>>   * correctly from the driver. Only those drivers may call
+>>   * of_clk_detect_critical from their setup functions.
 > 
-> > Could you please point to Kevin's comments and also include the
+> Okay, I still don't understand the outdated style. I looked at clocks
+> defined in arch/arm/boot/dts/stih407-clock.dtsi which is the only file
+> that uses clock-critical and don't particularly see anything wrong with
+> the way clocks are defined there.
 > 
-> https://lkml.kernel.org/r/m2r30i4w35.fsf@baylibre.com
-
-Ok. That thread was months ago. Shocked I can't remember!
-
-My read of Kevin's comments lead me to think he's saying that a
-generic 'domain-performance-state' property is worse than putting
-the numbers directly inside of the opp table with a comment above
-it. Now that's all fine, but now that we have required-opps
-binding we sort of have the domain-performance-state property
-again, but it's a phandle instead of a raw state number.
-
-So we have
-
-	required-opps = <&perf_state>;
-
-but what was proposed before was
-
-	domain-performance-state = <1>;
-
-or Kevin's 
-
-	opp-table = <100000 1>;
-
->From what I can tell, the domain-performance-state proposal was
-at the same abstraction level as the OPP itself, but now that's
-moved to be inside of the power domain OPPs. So now we're talking
-about describing some power domains performance levels with the
-OPP binding, for a power domain, not describing a performance
-state for some unknown power domain that's associated with a
-device's OPP table.
-
-The power domain is not running at any sort of frequency for us.
-It's using some particular voltage, but we may or may not know
-what that voltage is depending on the platform. This makes me see
-it as 
-
-	power_domain_opp {
-
-	    low: point0 {
-		opp-microvolt = <950000>
-	    };
-
-	    medium: point1 {
-		opp-microvolt = <975000>
-	    };
-
-	    high: point2 {
-		opp-microvolt = <1000000>
-	    };
-	};
-
-for some sort of power domain that deals with voltages. This
-makes perfect sense. The power domain needs to be at some voltage
-and the binding says that. Honestly, the whole required-opps
-thing works great here and it's all wonderful, and it looks like
-can even be used for other OPP linking in the future, like
-connecting frequencies between CPUs and caches.
-
-Where it starts to break down is when the voltage isn't known to
-the user, just some number that we've agreed means "low",
-"medium", "high" or whatever. Again, the binding looks similar:
-
-
-	power_domain_opp {
-	    low: point0 {
-	    	qcom,corner = <0>;
-	    };
-
-	    medium: point1 {
-	    	qcom,corner = <10>;
-	    };
-
-	    high: point2 {
-	    	qcom,corner = <250>;
-	    };
-	};
-
-but now the number is only meaningful to the power domain driver.
-What we really care about is associating some firmware specific
-information via the phandle to some frequency that a device is
-using. Behind the scenes of the firmware, that number is really
-being translated into some voltage, like opp-microvolt =
-<950000>, but we don't know what that is and it could vary at
-runtime.
-
-It all feels really close, and it totally works for the non-magic
-value parts that we have to deal with, but I'm not convinced that
-we should stick the firmware specific information into some
-generic OPP property just so we don't have to review the binding
-again. Hopefully there's some other reason why we shouldn't come
-up with a firmware specific binding for this piece of
-information.
-
-> > >          * If we choose to use platform-specific bindings instead of opp-hz,
-> > >          * then only this routine requires to change to read the DT and provide
-> > >          * the value from platform specific binding.
-> > 
-> > If we wanted to change this function to do a platform specific
-> > thing, will we somehow get a way to access the DT node of the opp
-> > passed into this function?
+> Anyway, I guess we digress. As long as this patch series is not using
+> the "legacy style", we are good :)
 > 
-> Yes, we can do that. The OPP core already stores pointer to the node
-> in the OPP structure, we will just need another API to expose that.
-
-Great!
-
+>>>> have a slightly different PLL register layout and a number of quirks
+>>>> that
+>>>> can't be handled by the existing bindings, so the keystone bindings
+>>>> could
+>>>> not be used as-is anyway.
+>>>
+>>> Right, I think different register layout between the processors is the
+>>> main reason for a new driver. This should be sufficient reason IMO.
+>>>
+>>>>
+>>>> Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+>>>> ---
+>>>>    .../devicetree/bindings/clock/ti/davinci/pll.txt   | 47
+>>>> ++++++++++++++++++++++
+>>>>    1 file changed, 47 insertions(+)
+>>>>    create mode 100644
+>>>> Documentation/devicetree/bindings/clock/ti/davinci/pll.txt
+>>>>
+>>>> diff --git
+>>>> a/Documentation/devicetree/bindings/clock/ti/davinci/pll.txt
+>>>> b/Documentation/devicetree/bindings/clock/ti/davinci/pll.txt
+>>>> new file mode 100644
+>>>> index 0000000..99bf5da
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/clock/ti/davinci/pll.txt
+>>>> @@ -0,0 +1,47 @@
+>>>> +Binding for TI DaVinci PLL Controllers
+>>>> +
+>>>> +The PLL provides clocks to most of the components on the SoC. In
+>>>> addition
+>>>> +to the PLL itself, this controller also contains bypasses, gates,
+>>>> dividers,
+>>>> +an multiplexers for various clock signals.
+>>>> +
+>>>> +Required properties:
+>>>> +- compatible: shall be one of:
+>>>> +    - "ti,da850-pll0" for PLL0 on DA850/OMAP-L138/AM18XX
+>>>> +    - "ti,da850-pll1" for PLL1 on DA850/OMAP-L138/AM18XX
+>>>
+>>> These PLLs are same IP so they should use the same compatible. You can
+>>> initialize both PLLs for DA850 based on the same compatible.
+>>>
+>>
+>> But they are not exactly the same. For example, PLL0 has 7 PLLDIV clocks
+>> while
+>> PLL1 only has 3. PLL0 has PREDIV while PLL1 does not. PLL0 has certain
+>> SYSCLKs
+>> that are fixed-ratio but PLL1 does not have any of these. There are even
+>> more
+>> differences, but these are the ones we are actually using.
 > 
-> > Also, I don't see how the foo_get_performance function will use
-> > the genpd pointer passed here. Maybe that's never used?
-> 
-> It depends actually and I think its better to pass it anyway. What if
-> a single driver is handling multiple genpds and wants to do things
-> differently for them? It should know which genpd it is called for,
-> looks like  basic requirement to me.
+> We need each element of the PLLC to be modeled individually as a clock
+> node.
 
-Ok, fair enough.
+I gave this a good think while I have been working on this series
+and I came to the conclusion that we really don't need to do this.
+These components are all internal to the PLL IP block, so the
+compatible string is enough to tell us what we have. They only
+thing we need really in the device tree bindings are the connections
+that are external to the IP block.
 
-> 
-> > Finally, I would think that a "getter" like this function would
-> > be informing the framework about what the current performance
-> > state is, not translating an OPP into a performance state. So the
-> > whole thing looks like a misnomer, and probably should be called
-> > something like xlate_opp_performance.
-> 
-> Sure, I can name it anything.
 
-Alright. Sounds like my read of the code is correct.
-
+> That is, PLL should only model the multiplier, the dividers
+> including post and prediv should be modeled as divider clocks (hopefully
+> being able to use the clk-divider.c library). The sysclks can be
+> fixed-factor-clock type clocks.
 > 
-> So the question still stands, are we all okay for using magic values
-> or we want platform specific properties ?
+> Without this flexible mechanism, we cannot (at least later) model things
+> like DIV4.5 clock which is the only clock which derives from the output
+> of PLL multiplier before the post divider is applied.
+> 
+> Since with DT there are are no retakes, we need to get this right the
+> first time and modifying later will not be an option.
 > 
 
-Kevin?
+So, the full device tree binding would look something like this:
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
++
++	pll0: clock-controller@11000 {
++		compatible = "ti,da850-pll0";
++		reg = <0x11000 0x1000>;
++		clocks = <&ref_clk>, <&pll1_sysclk 3>, <&pll1_obsclk>;
++		clock-names = "oscin", pll1_sysclk3", "pll1_osbclk";
++		oscin-square-wave;
++
++		pll0_sysclk: sysclk {
++			#clock-cells = <1>;
++		};
++
++		pll0_auxclk: auxclk {
++			#clock-cells = <0>;
++		};
++
++		pll0_div45: div4.5 {
++			#clock-cells = <0>;
++		};
++
++		pll0_obsclk: obsclk {
++			#clock-cells = <0>;
++			assigned-clocks = <&pll0_sysclk 1>;
++			assigned-clock-names = "ocsrc";
++		};
++	};
+
+There are three clocks coming into the IP block and there are 11 clocks
+going out (sysclk is 7 clocks). And you can specify the board-specific
+configuration, like having the "oscin-square-wave" flag when a square wave
+is used instead of a crystal oscillator and you can assign the multiplexer
+input that will be used by obsclk. (And, this binding is totally compatible
+with the binding I have already proposed - although, I see now it would
+be better to go ahead and add the clocks-names property.)
+
+How everything connects together is all implemented in the driver and the
+driver will be able to know what to do just by looking at the compatible
+string.
+
+Part of my motivation for doing things this way comes from my recent
+experience with writing some bindings for some LCD panels. These
+device tree bindings were notorious for trying to be one-size-fits
+all will lots of properties to try to describe all of the internal
+workings. And it turns out that just having a new compatible string
+for each device or variant and pushing all of details of the quirks
+into the driver is much simpler and cleaner and will make it easier
+for other projects to reuse the bindings.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
