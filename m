@@ -1,192 +1,213 @@
-From: <patrice.chotard-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH 4/7] ARM: dts: STi: Move leds node outside soc node
-Date: Wed, 10 Jan 2018 09:21:04 +0100
-Message-ID: <1515572469-19276-5-git-send-email-patrice.chotard@st.com>
+From: <patrice.chotard@st.com>
+Subject: [PATCH 5/7] ARM: dts: STi: Move usb2_picophyX nodes without reg property out of soc
+Date: Wed, 10 Jan 2018 09:21:06 +0100
+Message-ID: <1515572469-19276-7-git-send-email-patrice.chotard@st.com>
 References: <1515572469-19276-1-git-send-email-patrice.chotard@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1515572469-19276-1-git-send-email-patrice.chotard-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: patrice.chotard-qxv4g6HH51o@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1515572469-19276-1-git-send-email-patrice.chotard@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: patrice.chotard@st.com
 List-Id: devicetree@vger.kernel.org
 
-From: Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>
+From: Patrice Chotard <patrice.chotard@st.com>
 
-Leds are not part of soc, so nove them outside soc node.
-This allows to fix the following warnings when compiling
-dtb with W=1 option :
-
-arch/arm/boot/dts/stih407-b2120.dtb: Warning (simple_bus_reg):
-Node /soc/leds missing or empty reg/ranges property
+Move usb2_picophyX nodes outside from soc node, this allows to fix
+the following warning when compiling dtb with W=1 option :
 
 arch/arm/boot/dts/stih410-b2120.dtb: Warning (simple_bus_reg):
-Node /soc/leds missing or empty reg/ranges property
+Node /soc/phy2 missing or empty reg/ranges property
+arch/arm/boot/dts/stih410-b2120.dtb: Warning (simple_bus_reg):
+Node /soc/phy3 missing or empty reg/ranges property
+
+arch/arm/boot/dts/stih410-b2120.dtb: Warning (simple_bus_reg):
+Node /soc/phy2 missing or empty reg/ranges property
+arch/arm/boot/dts/stih410-b2120.dtb: Warning (simple_bus_reg):
+Node /soc/phy3 missing or empty reg/ranges property
 
 arch/arm/boot/dts/stih418-b2199.dtb: Warning (simple_bus_reg):
-Node /soc/leds missing or empty reg/ranges property
+Node /soc/phy2 missing or empty reg/ranges property
+arch/arm/boot/dts/stih418-b2199.dtb: Warning (simple_bus_reg):
+Node /soc/phy3 missing or empty reg/ranges property
 
-Signed-off-by: Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>
+Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
 ---
- arch/arm/boot/dts/stih410-b2260.dts  | 49 ++++++++++++++++++------------------
- arch/arm/boot/dts/stih418-b2199.dts  | 26 +++++++++----------
- arch/arm/boot/dts/stihxxx-b2120.dtsi | 26 +++++++++----------
- 3 files changed, 50 insertions(+), 51 deletions(-)
+ arch/arm/boot/dts/stih410-b2120.dts | 16 +++++++--------
+ arch/arm/boot/dts/stih410-b2260.dts | 16 +++++++--------
+ arch/arm/boot/dts/stih410.dtsi      | 40 ++++++++++++++++++-------------------
+ arch/arm/boot/dts/stih418.dtsi      | 34 +++++++++++++++----------------
+ 4 files changed, 53 insertions(+), 53 deletions(-)
 
+diff --git a/arch/arm/boot/dts/stih410-b2120.dts b/arch/arm/boot/dts/stih410-b2120.dts
+index 37a42af..8a03ade 100644
+--- a/arch/arm/boot/dts/stih410-b2120.dts
++++ b/arch/arm/boot/dts/stih410-b2120.dts
+@@ -28,6 +28,14 @@
+ 		ethernet0 = &ethernet0;
+ 	};
+ 
++	usb2_picophy1: phy2 {
++		status = "okay";
++	};
++
++	usb2_picophy2: phy3 {
++		status = "okay";
++	};
++
+ 	soc {
+ 
+ 		mmc0: sdhci@9060000 {
+@@ -37,14 +45,6 @@
+ 			sd-uhs-ddr50;
+ 		};
+ 
+-		usb2_picophy1: phy2 {
+-			status = "okay";
+-		};
+-
+-		usb2_picophy2: phy3 {
+-			status = "okay";
+-		};
+-
+ 		ohci0: usb@9a03c00 {
+ 			status = "okay";
+ 		};
 diff --git a/arch/arm/boot/dts/stih410-b2260.dts b/arch/arm/boot/dts/stih410-b2260.dts
-index faafc7b..69c2abc 100644
+index 69c2abc..a2d1e54 100644
 --- a/arch/arm/boot/dts/stih410-b2260.dts
 +++ b/arch/arm/boot/dts/stih410-b2260.dts
-@@ -29,36 +29,35 @@
- 		ethernet0 = &ethernet0;
+@@ -57,6 +57,14 @@
+ 		};
+ 	};
+ 
++	usb2_picophy1: phy2 {
++		status = "okay";
++	};
++
++	usb2_picophy2: phy3 {
++		status = "okay";
++	};
++
+ 	soc {
+ 		/* Low speed expansion connector */
+ 		uart0: serial@9830000 {
+@@ -127,14 +135,6 @@
+ 			status = "okay";
+ 		};
+ 
+-		usb2_picophy1: phy2 {
+-			status = "okay";
+-		};
+-
+-		usb2_picophy2: phy3 {
+-			status = "okay";
+-		};
+-
+ 		ohci0: usb@9a03c00 {
+ 			status = "okay";
+ 		};
+diff --git a/arch/arm/boot/dts/stih410.dtsi b/arch/arm/boot/dts/stih410.dtsi
+index e4b7e3d..a76fee9 100644
+--- a/arch/arm/boot/dts/stih410.dtsi
++++ b/arch/arm/boot/dts/stih410.dtsi
+@@ -15,29 +15,29 @@
+ 		bdisp0 = &bdisp0;
  	};
  
 -	soc {
+-		usb2_picophy1: phy2 {
+-			compatible = "st,stih407-usb2-phy";
+-			#phy-cells = <0>;
+-			st,syscfg = <&syscfg_core 0xf8 0xf4>;
+-			resets = <&softreset STIH407_PICOPHY_SOFTRESET>,
+-				 <&picophyreset STIH407_PICOPHY0_RESET>;
+-			reset-names = "global", "port";
 -
--		leds {
--			compatible = "gpio-leds";
--			user_green_1 {
--				label = "User_green_1";
--				gpios = <&pio1 3 GPIO_ACTIVE_LOW>;
--				linux,default-trigger = "heartbeat";
--				default-state = "off";
--			};
-+	leds {
-+		compatible = "gpio-leds";
-+		user_green_1 {
-+			label = "User_green_1";
-+			gpios = <&pio1 3 GPIO_ACTIVE_LOW>;
-+			linux,default-trigger = "heartbeat";
-+			default-state = "off";
-+		};
+-			status = "disabled";
+-		};
++	usb2_picophy1: phy2 {
++		compatible = "st,stih407-usb2-phy";
++		#phy-cells = <0>;
++		st,syscfg = <&syscfg_core 0xf8 0xf4>;
++		resets = <&softreset STIH407_PICOPHY_SOFTRESET>,
++		 <&picophyreset STIH407_PICOPHY0_RESET>;
++		reset-names = "global", "port";
++
++		status = "disabled";
++	};
  
--			user_green_2 {
--				label = "User_green_2";
--				gpios = <&pio4 1 GPIO_ACTIVE_LOW>;
--				default-state = "off";
--			};
-+		user_green_2 {
-+			label = "User_green_2";
-+			gpios = <&pio4 1 GPIO_ACTIVE_LOW>;
-+			default-state = "off";
-+		};
+-		usb2_picophy2: phy3 {
+-			compatible = "st,stih407-usb2-phy";
+-			#phy-cells = <0>;
+-			st,syscfg = <&syscfg_core 0xfc 0xf4>;
+-			resets = <&softreset STIH407_PICOPHY_SOFTRESET>,
+-				 <&picophyreset STIH407_PICOPHY1_RESET>;
+-			reset-names = "global", "port";
++	usb2_picophy2: phy3 {
++		compatible = "st,stih407-usb2-phy";
++		#phy-cells = <0>;
++		st,syscfg = <&syscfg_core 0xfc 0xf4>;
++		resets = <&softreset STIH407_PICOPHY_SOFTRESET>,
++			 <&picophyreset STIH407_PICOPHY1_RESET>;
++		reset-names = "global", "port";
  
--			user_green_3 {
--				label = "User_green_3";
--				gpios = <&pio2 1 GPIO_ACTIVE_LOW>;
--				default-state = "off";
--			};
-+		user_green_3 {
-+			label = "User_green_3";
-+			gpios = <&pio2 1 GPIO_ACTIVE_LOW>;
-+			default-state = "off";
-+		};
- 
--			user_green_4 {
--				label = "User_green_4";
--				gpios = <&pio2 5 GPIO_ACTIVE_LOW>;
--				default-state = "off";
--			};
-+		user_green_4 {
-+			label = "User_green_4";
-+			gpios = <&pio2 5 GPIO_ACTIVE_LOW>;
-+			default-state = "off";
- 		};
+-			status = "disabled";
+-		};
++		status = "disabled";
 +	};
  
 +	soc {
- 		/* Low speed expansion connector */
- 		uart0: serial@9830000 {
- 			label = "LS-UART0";
-diff --git a/arch/arm/boot/dts/stih418-b2199.dts b/arch/arm/boot/dts/stih418-b2199.dts
-index 5418a0e..1ce38ce 100644
---- a/arch/arm/boot/dts/stih418-b2199.dts
-+++ b/arch/arm/boot/dts/stih418-b2199.dts
-@@ -28,24 +28,24 @@
- 		ethernet0 = &ethernet0;
+ 		ohci0: usb@9a03c00 {
+ 			compatible = "st,st-ohci-300x";
+ 			reg = <0x9a03c00 0x100>;
+diff --git a/arch/arm/boot/dts/stih418.dtsi b/arch/arm/boot/dts/stih418.dtsi
+index e6525ab..b3912a3 100644
+--- a/arch/arm/boot/dts/stih418.dtsi
++++ b/arch/arm/boot/dts/stih418.dtsi
+@@ -29,25 +29,25 @@
+ 		};
  	};
  
-+	leds {
-+		compatible = "gpio-leds";
-+		red {
-+			label = "Front Panel LED";
-+			gpios = <&pio4 1 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "heartbeat";
-+		};
-+		green {
-+			gpios = <&pio1 3 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+	};
-+
- 	soc {
- 		sbc_serial0: serial@9530000 {
- 			status = "okay";
- 		};
- 
--		leds {
--			compatible = "gpio-leds";
--			red {
--				label = "Front Panel LED";
--				gpios = <&pio4 1 GPIO_ACTIVE_HIGH>;
--				linux,default-trigger = "heartbeat";
--			};
--			green {
--				gpios = <&pio1 3 GPIO_ACTIVE_HIGH>;
--				default-state = "off";
--			};
+-	soc {
+-		usb2_picophy1: phy2 {
+-			compatible = "st,stih407-usb2-phy";
+-			#phy-cells = <0>;
+-			st,syscfg = <&syscfg_core 0xf8 0xf4>;
+-			resets = <&softreset STIH407_PICOPHY_SOFTRESET>,
+-				 <&picophyreset STIH407_PICOPHY0_RESET>;
+-			reset-names = "global", "port";
 -		};
--
- 		i2c@9842000 {
- 			status = "okay";
- 		};
-diff --git a/arch/arm/boot/dts/stihxxx-b2120.dtsi b/arch/arm/boot/dts/stihxxx-b2120.dtsi
-index 68783e8..1fd3a2b 100644
---- a/arch/arm/boot/dts/stihxxx-b2120.dtsi
-+++ b/arch/arm/boot/dts/stihxxx-b2120.dtsi
-@@ -10,24 +10,24 @@
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/media/c8sectpfe.h>
- / {
-+	leds {
-+		compatible = "gpio-leds";
-+		red {
-+			label = "Front Panel LED";
-+			gpios = <&pio4 1 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "heartbeat";
-+		};
-+		green {
-+			gpios = <&pio1 3 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
++	usb2_picophy1: phy2 {
++		compatible = "st,stih407-usb2-phy";
++		#phy-cells = <0>;
++		st,syscfg = <&syscfg_core 0xf8 0xf4>;
++		resets = <&softreset STIH407_PICOPHY_SOFTRESET>,
++			 <&picophyreset STIH407_PICOPHY0_RESET>;
++		reset-names = "global", "port";
 +	};
-+
- 	soc {
- 		sbc_serial0: serial@9530000 {
- 			status = "okay";
- 		};
  
--		leds {
--			compatible = "gpio-leds";
--			red {
--				label = "Front Panel LED";
--				gpios = <&pio4 1 GPIO_ACTIVE_HIGH>;
--				linux,default-trigger = "heartbeat";
--			};
--			green {
--				gpios = <&pio1 3 GPIO_ACTIVE_HIGH>;
--				default-state = "off";
--			};
+-		usb2_picophy2: phy3 {
+-			compatible = "st,stih407-usb2-phy";
+-			#phy-cells = <0>;
+-			st,syscfg = <&syscfg_core 0xfc 0xf4>;
+-			resets = <&softreset STIH407_PICOPHY_SOFTRESET>,
+-				 <&picophyreset STIH407_PICOPHY1_RESET>;
+-			reset-names = "global", "port";
 -		};
--
- 		pwm0: pwm@9810000 {
- 			status = "okay";
- 		};
++	usb2_picophy2: phy3 {
++		compatible = "st,stih407-usb2-phy";
++		#phy-cells = <0>;
++		st,syscfg = <&syscfg_core 0xfc 0xf4>;
++		resets = <&softreset STIH407_PICOPHY_SOFTRESET>,
++			 <&picophyreset STIH407_PICOPHY1_RESET>;
++		reset-names = "global", "port";
++	};
+ 
++	soc {
+ 		ohci0: usb@9a03c00 {
+ 			compatible = "st,st-ohci-300x";
+ 			reg = <0x9a03c00 0x100>;
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
