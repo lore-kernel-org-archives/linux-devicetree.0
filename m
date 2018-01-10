@@ -1,57 +1,61 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH v2 5/7] ARM: dts: imx6ul: add ARM architected timer
-Date: Wed, 10 Jan 2018 22:04:51 +0100
-Message-ID: <20180110210453.19264-5-stefan@agner.ch>
+From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Subject: [PATCH v2 7/7] ARM: dts: imx6ull: add UART8 support
+Date: Wed, 10 Jan 2018 22:04:53 +0100
+Message-ID: <20180110210453.19264-7-stefan@agner.ch>
 References: <20180110210453.19264-1-stefan@agner.ch>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180110210453.19264-1-stefan@agner.ch>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: shawnguo@kernel.org, kernel@pengutronix.de
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>, robh+dt@kernel.org, fabio.estevam@nxp.com, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180110210453.19264-1-stefan-XLVq0VzYD2Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Cc: fabio.estevam-3arQi8VN3Tc@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add per-core ARM architected timer. Unfortunately bootloaders (U-Boot)
-currently do not make the necessary initialization. Also specifing the
-clock manually using the clock-frequency property seems not to help.
-Therefor leave the timer disabled by default for now.
+In i.MX 6ULL UART8 is part of the AIPS-3 memory map instead of
+AIPS-1. Clocks and interrupts remain the same.
 
-Signed-off-by: Stefan Agner <stefan@agner.ch>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Acked-by: Dong Aisheng <aisheng.dong-3arQi8VN3Tc@public.gmane.org>
 ---
- arch/arm/boot/dts/imx6ul.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ arch/arm/boot/dts/imx6ull.dtsi | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
-index 993fbdbdd506..4d76923e8f44 100644
---- a/arch/arm/boot/dts/imx6ul.dtsi
-+++ b/arch/arm/boot/dts/imx6ul.dtsi
-@@ -110,6 +110,16 @@
- 		      <0x00a06000 0x2000>;
- 	};
+diff --git a/arch/arm/boot/dts/imx6ull.dtsi b/arch/arm/boot/dts/imx6ull.dtsi
+index bc2cd4fb8b12..571ddd71cdba 100644
+--- a/arch/arm/boot/dts/imx6ull.dtsi
++++ b/arch/arm/boot/dts/imx6ull.dtsi
+@@ -43,6 +43,9 @@
+ #include "imx6ull-pinfunc.h"
+ #include "imx6ull-pinfunc-snvs.h"
  
-+	timer {
-+		compatible = "arm,armv7-timer";
-+		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
-+		interrupt-parent = <&intc>;
-+		status = "disabled";
-+	};
++/* Delete UART8 in AIPS-1 (i.MX6UL specific) */
++/delete-node/ &uart8;
 +
- 	ckil: clock-cli {
- 		compatible = "fixed-clock";
- 		#clock-cells = <0>;
+ / {
+ 	soc {
+ 		aips3: aips-bus@2200000 {
+@@ -56,6 +59,17 @@
+ 				compatible = "fsl,imx6ull-iomuxc-snvs";
+ 				reg = <0x02290000 0x4000>;
+ 			};
++
++			uart8: serial@2288000 {
++				compatible = "fsl,imx6ul-uart",
++					     "fsl,imx6q-uart";
++				reg = <0x02288000 0x4000>;
++				interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&clks IMX6UL_CLK_UART8_IPG>,
++					 <&clks IMX6UL_CLK_UART8_SERIAL>;
++				clock-names = "ipg", "per";
++				status = "disabled";
++			};
+ 		};
+ 	};
+ };
 -- 
 2.15.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
