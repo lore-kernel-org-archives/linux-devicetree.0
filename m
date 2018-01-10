@@ -1,112 +1,95 @@
-From: Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: Hi3660: Remove 'CPU_NAP' idle state
-Date: Wed, 10 Jan 2018 09:38:57 +0100
-Message-ID: <CAKfTPtBZWcwMKg6rxP0wMnihYFCtXh2KWgERYqFFVtFVnrTK9A@mail.gmail.com>
-References: <1515472362-19979-1-git-send-email-leo.yan@linaro.org>
+From: Prabhakar Kushwaha <prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org>
+Subject: RE: [PATCH] Documentation: binding: Update endianness usage
+Date: Wed, 10 Jan 2018 08:47:27 +0000
+Message-ID: <HE1PR04MB124133C61732D0A903D5C54D97110@HE1PR04MB1241.eurprd04.prod.outlook.com>
+References: <1511954855-8593-1-git-send-email-prabhakar.kushwaha@nxp.com>
+         <1512105209.10062.1.camel@buserror.net>
+         <HE1PR04MB12414AFA5F8081730B89378497390@HE1PR04MB1241.eurprd04.prod.outlook.com>
+         <1512165311.10062.3.camel@buserror.net>
+         <HE1PR04MB1241226CD3B7ABD6D5FA2D91973C0@HE1PR04MB1241.eurprd04.prod.outlook.com>
+         <1512441957.10062.6.camel@buserror.net>
+         <HE1PR04MB1241ADD02E472BA492AE1C8F973D0@HE1PR04MB1241.eurprd04.prod.outlook.com>
+ <1512504459.10062.9.camel@buserror.net>
+ <HE1PR04MB1241F1A70CDBA5A94D4D2CE597320@HE1PR04MB1241.eurprd04.prod.outlook.com>
+ <HE1PR04MB124174461F845000614CDAA197320@HE1PR04MB1241.eurprd04.prod.outlook.com>
+ <HE1PR04MB124148862807D5BD05E4E5AF970D0@HE1PR04MB1241.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1515472362-19979-1-git-send-email-leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <HE1PR04MB124148862807D5BD05E4E5AF970D0-6LN7OEpIatU9TB6uw0n1oM9NdZoXdze2vxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, LAK <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kevin Wang <jean.wangtao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: "dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 9 January 2018 at 05:32, Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> Thanks a lot for Vincent Guittot careful work to find bug for 'CPU_NAP'
-> idle state.  At early time, the CPU CA73 CPU_NAP idle state has been
-> supported on Hikey960.  Later we found the system has the hang issue
-> and for resolving this issue Hisilicon released new MCU firmware, but
-> unfortunately the new MCU firmware has side effect and results in the
-> CA73 CPU cannot really enter CPU_NAP state and roll back to WFI state.
->
-> After discussion we cannot see the possibility to enable CA73 CPU_NAP
-> state anymore on Hikey960, based on this conclusion we should remove
-> this state from DT binding.
->
-> Cc: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Kevin Wang <jean.wangtao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-
-Tested-by: Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-
-> ---
->  arch/arm64/boot/dts/hisilicon/hi3660.dtsi | 32 ++++---------------------------
->  1 file changed, 4 insertions(+), 28 deletions(-)
->
-> diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-> index ab0b95b..8fddf0d 100644
-> --- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-> +++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-> @@ -96,11 +96,7 @@
->                         reg = <0x0 0x100>;
->                         enable-method = "psci";
->                         next-level-cache = <&A73_L2>;
-> -                       cpu-idle-states = <
-> -                                       &CPU_NAP
-> -                                       &CPU_SLEEP
-> -                                       &CLUSTER_SLEEP_1
-> -                       >;
-> +                       cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP_1>;
->                 };
->
->                 cpu5: cpu@101 {
-> @@ -109,11 +105,7 @@
->                         reg = <0x0 0x101>;
->                         enable-method = "psci";
->                         next-level-cache = <&A73_L2>;
-> -                       cpu-idle-states = <
-> -                                       &CPU_NAP
-> -                                       &CPU_SLEEP
-> -                                       &CLUSTER_SLEEP_1
-> -                       >;
-> +                       cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP_1>;
->                 };
->
->                 cpu6: cpu@102 {
-> @@ -122,11 +114,7 @@
->                         reg = <0x0 0x102>;
->                         enable-method = "psci";
->                         next-level-cache = <&A73_L2>;
-> -                       cpu-idle-states = <
-> -                                       &CPU_NAP
-> -                                       &CPU_SLEEP
-> -                                       &CLUSTER_SLEEP_1
-> -                       >;
-> +                       cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP_1>;
->                 };
->
->                 cpu7: cpu@103 {
-> @@ -135,24 +123,12 @@
->                         reg = <0x0 0x103>;
->                         enable-method = "psci";
->                         next-level-cache = <&A73_L2>;
-> -                       cpu-idle-states = <
-> -                                       &CPU_NAP
-> -                                       &CPU_SLEEP
-> -                                       &CLUSTER_SLEEP_1
-> -                       >;
-> +                       cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP_1>;
->                 };
->
->                 idle-states {
->                         entry-method = "psci";
->
-> -                       CPU_NAP: cpu-nap {
-> -                               compatible = "arm,idle-state";
-> -                               arm,psci-suspend-param = <0x0000001>;
-> -                               entry-latency-us = <7>;
-> -                               exit-latency-us = <2>;
-> -                               min-residency-us = <15>;
-> -                       };
-> -
->                         CPU_SLEEP: cpu-sleep {
->                                 compatible = "arm,idle-state";
->                                 local-timer-stop;
-> --
-> 2.7.4
->
+SGkgU2NvdHQsDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFByYWJoYWth
+ciBLdXNod2FoYQ0KPiBTZW50OiBUaHVyc2RheSwgRGVjZW1iZXIgMjEsIDIwMTcgMTA6NTAgQU0N
+Cj4gVG86IFByYWJoYWthciBLdXNod2FoYSA8cHJhYmhha2FyLmt1c2h3YWhhQG54cC5jb20+OyBT
+Y290dCBXb29kDQo+IDxvc3NAYnVzZXJyb3IubmV0PjsgbGludXgtbXRkQGxpc3RzLmluZnJhZGVh
+ZC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnDQo+IENjOiBkZWRla2luZDFAZ21haWwu
+Y29tOyBjb21wdXRlcnNmb3JwZWFjZUBnbWFpbC5jb20NCj4gU3ViamVjdDogUkU6IFtQQVRDSF0g
+RG9jdW1lbnRhdGlvbjogYmluZGluZzogVXBkYXRlIGVuZGlhbm5lc3MgdXNhZ2UNCj4gDQo+IEhp
+IFNjb3R0LA0KPiANCj4gDQo+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiBGcm9t
+OiBkZXZpY2V0cmVlLW93bmVyQHZnZXIua2VybmVsLm9yZyBbbWFpbHRvOmRldmljZXRyZWUtDQo+
+ID4gb3duZXJAdmdlci5rZXJuZWwub3JnXSBPbiBCZWhhbGYgT2YgUHJhYmhha2FyIEt1c2h3YWhh
+DQo+ID4gU2VudDogV2VkbmVzZGF5LCBEZWNlbWJlciAwNiwgMjAxNyA0OjI5IFBNDQo+ID4gVG86
+IFNjb3R0IFdvb2QgPG9zc0BidXNlcnJvci5uZXQ+OyBsaW51eC1tdGRAbGlzdHMuaW5mcmFkZWFk
+Lm9yZzsNCj4gPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZw0KPiA+IENjOiBkZWRla2luZDFA
+Z21haWwuY29tOyBjb21wdXRlcnNmb3JwZWFjZUBnbWFpbC5jb20NCj4gPiBTdWJqZWN0OiBSRTog
+W1BBVENIXSBEb2N1bWVudGF0aW9uOiBiaW5kaW5nOiBVcGRhdGUgZW5kaWFubmVzcyB1c2FnZQ0K
+PiA+DQo+ID4NCj4gPg0KPiA+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+IEZy
+b206IFByYWJoYWthciBLdXNod2FoYQ0KPiA+ID4gU2VudDogV2VkbmVzZGF5LCBEZWNlbWJlciAw
+NiwgMjAxNyA0OjA1IFBNDQo+ID4gPiBUbzogJ1Njb3R0IFdvb2QnIDxvc3NAYnVzZXJyb3IubmV0
+PjsgbGludXgtbXRkQGxpc3RzLmluZnJhZGVhZC5vcmc7DQo+ID4gPiBkZXZpY2V0cmVlQHZnZXIu
+a2VybmVsLm9yZw0KPiA+ID4gQ2M6IGRlZGVraW5kMUBnbWFpbC5jb207IGNvbXB1dGVyc2ZvcnBl
+YWNlQGdtYWlsLmNvbQ0KPiA+ID4gU3ViamVjdDogUkU6IFtQQVRDSF0gRG9jdW1lbnRhdGlvbjog
+YmluZGluZzogVXBkYXRlIGVuZGlhbm5lc3MgdXNhZ2UNCj4gPiA+DQo+ID4gPg0KPiA+ID4gPiAt
+LS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+ID4gPiBGcm9tOiBTY290dCBXb29kIFttYWls
+dG86b3NzQGJ1c2Vycm9yLm5ldF0NCj4gPiA+ID4gU2VudDogV2VkbmVzZGF5LCBEZWNlbWJlciAw
+NiwgMjAxNyAxOjM4IEFNDQo+ID4gPiA+IFRvOiBQcmFiaGFrYXIgS3VzaHdhaGEgPHByYWJoYWth
+ci5rdXNod2FoYUBueHAuY29tPjsgbGludXgtDQo+ID4gPiA+IG10ZEBsaXN0cy5pbmZyYWRlYWQu
+b3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZw0KPiA+ID4gPiBDYzogZGVkZWtpbmQxQGdt
+YWlsLmNvbTsgY29tcHV0ZXJzZm9ycGVhY2VAZ21haWwuY29tDQo+ID4gPiA+IFN1YmplY3Q6IFJl
+OiBbUEFUQ0hdIERvY3VtZW50YXRpb246IGJpbmRpbmc6IFVwZGF0ZSBlbmRpYW5uZXNzIHVzYWdl
+DQo+ID4gPiA+DQo+ID4gPiA+IE9uIFR1ZSwgMjAxNy0xMi0wNSBhdCAwOTo0NSArMDAwMCwgUHJh
+Ymhha2FyIEt1c2h3YWhhIHdyb3RlOg0KPiA+ID4gPiA+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdl
+LS0tLS0NCj4gPiA+ID4gPiA+IEZyb206IFNjb3R0IFdvb2QgW21haWx0bzpvc3NAYnVzZXJyb3Iu
+bmV0XQ0KPiA+ID4gPiA+ID4gU2VudDogVHVlc2RheSwgRGVjZW1iZXIgMDUsIDIwMTcgODoxNiBB
+TQ0KPiA+ID4gPiA+ID4gVG86IFByYWJoYWthciBLdXNod2FoYSA8cHJhYmhha2FyLmt1c2h3YWhh
+QG54cC5jb20+OyBsaW51eC0NCj4gPiA+ID4gPiA+IG10ZEBsaXN0cy5pbmZyYWRlYWQub3JnOyBk
+ZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZw0KPiA+ID4gPiA+ID4gQ2M6IGRlZGVraW5kMUBnbWFp
+bC5jb207IGNvbXB1dGVyc2ZvcnBlYWNlQGdtYWlsLmNvbQ0KPiA+ID4gPiA+ID4gU3ViamVjdDog
+UmU6IFtQQVRDSF0gRG9jdW1lbnRhdGlvbjogYmluZGluZzogVXBkYXRlIGVuZGlhbm5lc3MgdXNh
+Z2UNCj4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiBJIG5vdyBzZWUgeW91ciBwYXRjaCB0byBvZl9m
+bGFzaF9wcm9iZS4uLiB3aGVyZSBpcyB0aGUgbm9uLUlGQy1zcGVjaWZpYw0KPiA+ID4gPiA+ID4g
+YmluZGluZyB0aGF0IHNheXMgdGhlICpwYXJlbnQqIG9mIGEgQ0ZJIG5vZGUgc2hvdWxkIGJlIGxv
+b2tlZCBhdCBmb3INCj4gdGhpcz8NCj4gPiA+ID4gPiA+IFdoZXJlwqBpbiBnZW5lcmFsIGFyZSBl
+bmRpYW4gcHJvcGVydGllcyBrZXB0IGluIHRoZSBwYXJlbnQgb2YgdGhlIG5vZGUNCj4gPiB3aXRo
+DQo+ID4gPiA+ID4gPiAicmVnIj/CoMKgVGhlIHJpZ2h0IGFuc3dlciBpcyB0byBhZGQgZW5kaWFu
+bmVzcyB0byBtdGQtcGh5c21hcC50eHQuDQo+ID4gPiA+ID4gPg0KPiA+ID4gPiA+DQo+ID4gPiA+
+ID4gRmxhc2hlcyBhcmUgYWx3YXlzIGxpdHRsZXIgZW5kaWFuLg0KPiA+ID4gPg0KPiA+ID4gPiBX
+ZSB3b3VsZG4ndCBiZSBoYXZpbmcgdGhpcyBkaXNjdXNzaW9uIGlmIHRoYXQgd2VyZSB0cnVlLi4u
+ICBUaGlzIGlzIGFib3V0IGhvdw0KPiA+ID4gPiBpdCBwcmVzZW50cyB0byB0aGUgQ1BVLCBub3Qg
+YWJvdXQgaG93IHRoZSBhY3R1YWwgcGlucyBvbiB0aGUgY2hpcCBhcmUNCj4gPiA+ID4gbnVtYmVy
+ZWQuDQo+ID4gPiA+DQo+ID4gPg0KPiA+ID4gR290IHlvdXIgcG9pbnQgOikNCj4gPiA+DQo+ID4g
+PiA+ID4gSXQgaXMgYmVjYXVzZSBvZiBJRkMgY29udHJvbGxlciBiZWhhdmlvciwgZW5kaWFubmVz
+cyBpcyByZXF1aXJlZC4NCj4gPiA+ID4gPiBTbyBhcyBwZXIgbXkgdW5kZXJzdGFuZGluZywgdGhp
+cyBpbmZvIHNob3VsZCBnbyBpbiBJRkMgYmluZGluZy4NCj4gPiA+ID4NCj4gPiA+ID4gSWYgdGhl
+IGluZm8gc2hvdWxkIGdvIGluIHRoZSBJRkMgYmluZGluZyB3aHkgaXMgdGhlIGNvZGUgaW4gYSBu
+b24tSUZDLXNwZWNpZmljDQo+ID4gPiA+IHBsYWNlPw0KPiA+ID4gPg0KPiA+ID4NCj4gPiA+IE5v
+dyBJIHVuZGVyc3RhbmQgeW91ciBwb2ludC4NCj4gPiA+IFNvIEkgc2hvdWxkIGJlIG1vdmluZyBl
+bmRpYW5uZXNzIHByb3BlcnR5IGRldGFpbCBpbiBtdGQtcGh5c21hcC50eHQuDQo+ID4gPg0KPiA+
+ID4gSXMgbXkgdW5kZXJzdGFuZGluZyBjb3JyZWN0Pw0KPiA+ID4NCj4gPg0KPiA+IEEgc2Vjb25k
+IHRob3VnaHQsDQo+ID4gSUZDIGJpbmRpbmcgd2FzIHVwZGF0ZWQgYmVjYXVzZSB0aGVyZSBpcyBu
+byBJRkMtTk9SIGRyaXZlci4gSXQgdXNlcyBnZW5lcmljDQo+IEZsYXNoDQo+ID4gZnJhbWV3b3Jr
+Lg0KPiA+DQo+ID4gSSBhbSBqdXN0IHRyeWluZyB0byBnZXQgbW9yZSB1bmRlcnN0YW5kaW5nLg0K
+PiA+DQo+IA0KPiBEbyB5b3UgaGF2ZSBhbnkgY29tbWVudC9jb25jZXJuIG9uIHRoaXMgcGF0Y2gu
+DQo+IE1heSBJIGdvIGFoZWFkIGFuZCByZXF1ZXN0IGZvciB0aGUgbWVyZ2VyIG9mIHVwZGF0ZWQg
+cGF0Y2ggaS5lLg0KPiBodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzEwMDg0MzMx
+Lw0KPiANCg0KUGxlYXNlIGxldCBtZSBrbm93IGlmIHlvdSBoYXZlIGFueSBjb25jZXJuIG9uIHRo
+aXMgcGF0Y2guIA0KDQotLXByYWJoYWthcg0KDQo=
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
