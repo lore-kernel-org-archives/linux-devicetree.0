@@ -1,54 +1,287 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv1 2/3] spi: Add spi driver for Socionext Synquacer
- platform
-Date: Wed, 10 Jan 2018 10:08:11 +0000
-Message-ID: <20180110100811.GA9003@sirena.org.uk>
-References: <1515503383-8909-1-git-send-email-jassisinghbrar@gmail.com>
- <1515503448-9025-1-git-send-email-jassisinghbrar@gmail.com>
- <1515527945.25398.59.camel@impinj.com>
+From: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Subject: [RESEND PATCH v9 01/13] iio: Add hardware consumer
+	buffer support
+Date: Wed, 10 Jan 2018 11:13:03 +0100
+Message-ID: <1515579195-12894-2-git-send-email-arnaud.pouliquen@st.com>
+References: <1515579195-12894-1-git-send-email-arnaud.pouliquen@st.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="k+w/mQv8wyuph6w0"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1515527945.25398.59.camel-cgc2CodaaHDQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Trent Piepho <tpiepho-cgc2CodaaHDQT0dZR+AlfA@public.gmane.org>
-Cc: "jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1515579195-12894-1-git-send-email-arnaud.pouliquen@st.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Alexandre Torgue <alexandre.torgue@st.com>, linux-iio@vger.kernel.org, arnaud.pouliquen@st.com, Maxime Coquelin <mcoquelin.stm32@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+From: Lars-Peter Clausen <lars@metafoo.de>
 
---k+w/mQv8wyuph6w0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Hardware consumer interface can be used when one IIO device has
+a direct connection to another device in hardware.
 
-On Tue, Jan 09, 2018 at 07:59:05PM +0000, Trent Piepho wrote:
+Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
+Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+---
+ drivers/iio/buffer/Kconfig                    |  10 ++
+ drivers/iio/buffer/Makefile                   |   1 +
+ drivers/iio/buffer/industrialio-hw-consumer.c | 181 ++++++++++++++++++++++++++
+ include/linux/iio/hw-consumer.h               |  19 +++
+ 4 files changed, 211 insertions(+)
+ create mode 100644 drivers/iio/buffer/industrialio-hw-consumer.c
+ create mode 100644 include/linux/iio/hw-consumer.h
 
-> Usually when a device has a fifo that must be emptied before it
-> overflows, it is either emptied from an interrupt handler or the
-> interrupt handler will queue a work function or tasklet that will empty
-> it.  Doing it from user context has a maximum latency that is too high.
-
-It wouldn't be the first SPI controller that lacked interrupt support,
-this is depressingly common.
-
---k+w/mQv8wyuph6w0
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlpV5ggACgkQJNaLcl1U
-h9AsXwf/WfMgkMYa8rvhyNICuLNn+InEZgGVNJvBV5HRwCV8gE98f0V6efON76Cw
-YfX8OHYcNXZt006cPJbkjzptKzFv73zsRAt5TV3zOuPm3j02iKPSQWpLWX2hHCZH
-RO+nWq1aGnYHkdq1f1Bjm/71kUSo2QRE2yJ7XLvv+GsoRhfZfF6UVeXcUigjFIq7
-GF2OWUYngx09URu6zBBPwC4k/BTRq3eDMKs21d7chBCmcH3SKG8oW/lMmJaFKJTl
-QmHCAM2Fg/Dha4ZXQwLrZArNgMJRR/f+xulIU/3FZssGXObtaDG+Egwtns3v4w66
-O+okhpkmc2eJAoKdcPWy8ASZ93pQXw==
-=xhmk
------END PGP SIGNATURE-----
-
---k+w/mQv8wyuph6w0--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/iio/buffer/Kconfig b/drivers/iio/buffer/Kconfig
+index 4ffd3db..338774c 100644
+--- a/drivers/iio/buffer/Kconfig
++++ b/drivers/iio/buffer/Kconfig
+@@ -29,6 +29,16 @@ config IIO_BUFFER_DMAENGINE
+ 
+ 	  Should be selected by drivers that want to use this functionality.
+ 
++config IIO_BUFFER_HW_CONSUMER
++	tristate "Industrial I/O HW buffering"
++	help
++	  Provides a way to bonding when an IIO device has a direct connection
++	  to another device in hardware. In this case buffers for data transfers
++	  are handled by hardware.
++
++	  Should be selected by drivers that want to use the generic Hw consumer
++	  interface.
++
+ config IIO_KFIFO_BUF
+ 	tristate "Industrial I/O buffering based on kfifo"
+ 	help
+diff --git a/drivers/iio/buffer/Makefile b/drivers/iio/buffer/Makefile
+index 85beaae..324a36b 100644
+--- a/drivers/iio/buffer/Makefile
++++ b/drivers/iio/buffer/Makefile
+@@ -6,5 +6,6 @@
+ obj-$(CONFIG_IIO_BUFFER_CB) += industrialio-buffer-cb.o
+ obj-$(CONFIG_IIO_BUFFER_DMA) += industrialio-buffer-dma.o
+ obj-$(CONFIG_IIO_BUFFER_DMAENGINE) += industrialio-buffer-dmaengine.o
++obj-$(CONFIG_IIO_BUFFER_HW_CONSUMER) += industrialio-hw-consumer.o
+ obj-$(CONFIG_IIO_TRIGGERED_BUFFER) += industrialio-triggered-buffer.o
+ obj-$(CONFIG_IIO_KFIFO_BUF) += kfifo_buf.o
+diff --git a/drivers/iio/buffer/industrialio-hw-consumer.c b/drivers/iio/buffer/industrialio-hw-consumer.c
+new file mode 100644
+index 0000000..993ecdc
+--- /dev/null
++++ b/drivers/iio/buffer/industrialio-hw-consumer.c
+@@ -0,0 +1,181 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright 2017 Analog Devices Inc.
++ *  Author: Lars-Peter Clausen <lars@metafoo.de>
++ */
++
++#include <linux/err.h>
++#include <linux/export.h>
++#include <linux/slab.h>
++#include <linux/module.h>
++
++#include <linux/iio/iio.h>
++#include <linux/iio/consumer.h>
++#include <linux/iio/hw-consumer.h>
++#include <linux/iio/buffer_impl.h>
++
++/**
++ * struct iio_hw_consumer - IIO hw consumer block
++ * @buffers: hardware buffers list head.
++ * @channels: IIO provider channels.
++ */
++struct iio_hw_consumer {
++	struct list_head buffers;
++	struct iio_channel *channels;
++};
++
++struct hw_consumer_buffer {
++	struct list_head head;
++	struct iio_dev *indio_dev;
++	struct iio_buffer buffer;
++	long scan_mask[];
++};
++
++static struct hw_consumer_buffer *iio_buffer_to_hw_consumer_buffer(
++	struct iio_buffer *buffer)
++{
++	return container_of(buffer, struct hw_consumer_buffer, buffer);
++}
++
++static void iio_hw_buf_release(struct iio_buffer *buffer)
++{
++	struct hw_consumer_buffer *hw_buf =
++		iio_buffer_to_hw_consumer_buffer(buffer);
++	kfree(hw_buf);
++}
++
++static const struct iio_buffer_access_funcs iio_hw_buf_access = {
++	.release = &iio_hw_buf_release,
++	.modes = INDIO_BUFFER_HARDWARE,
++};
++
++static struct hw_consumer_buffer *iio_hw_consumer_get_buffer(
++	struct iio_hw_consumer *hwc, struct iio_dev *indio_dev)
++{
++	size_t mask_size = BITS_TO_LONGS(indio_dev->masklength) * sizeof(long);
++	struct hw_consumer_buffer *buf;
++
++	list_for_each_entry(buf, &hwc->buffers, head) {
++		if (buf->indio_dev == indio_dev)
++			return buf;
++	}
++
++	buf = kzalloc(sizeof(*buf) + mask_size, GFP_KERNEL);
++	if (!buf)
++		return NULL;
++
++	buf->buffer.access = &iio_hw_buf_access;
++	buf->indio_dev = indio_dev;
++	buf->buffer.scan_mask = buf->scan_mask;
++
++	iio_buffer_init(&buf->buffer);
++	list_add_tail(&buf->head, &hwc->buffers);
++
++	return buf;
++}
++
++/**
++ * iio_hw_consumer_alloc() - Allocate IIO hardware consumer
++ * @dev: Pointer to consumer device.
++ *
++ * Returns a valid iio_hw_consumer on success or a ERR_PTR() on failure.
++ */
++struct iio_hw_consumer *iio_hw_consumer_alloc(struct device *dev)
++{
++	struct hw_consumer_buffer *buf;
++	struct iio_hw_consumer *hwc;
++	struct iio_channel *chan;
++	int ret;
++
++	hwc = kzalloc(sizeof(*hwc), GFP_KERNEL);
++	if (!hwc)
++		return ERR_PTR(-ENOMEM);
++
++	INIT_LIST_HEAD(&hwc->buffers);
++
++	hwc->channels = iio_channel_get_all(dev);
++	if (IS_ERR(hwc->channels)) {
++		ret = PTR_ERR(hwc->channels);
++		goto err_free_hwc;
++	}
++
++	chan = &hwc->channels[0];
++	while (chan->indio_dev) {
++		buf = iio_hw_consumer_get_buffer(hwc, chan->indio_dev);
++		if (!buf) {
++			ret = -ENOMEM;
++			goto err_put_buffers;
++		}
++		set_bit(chan->channel->scan_index, buf->buffer.scan_mask);
++		chan++;
++	}
++
++	return hwc;
++
++err_put_buffers:
++	list_for_each_entry(buf, &hwc->buffers, head)
++		iio_buffer_put(&buf->buffer);
++	iio_channel_release_all(hwc->channels);
++err_free_hwc:
++	kfree(hwc);
++	return ERR_PTR(ret);
++}
++EXPORT_SYMBOL_GPL(iio_hw_consumer_alloc);
++
++/**
++ * iio_hw_consumer_free() - Free IIO hardware consumer
++ * @hwc: hw consumer to free.
++ */
++void iio_hw_consumer_free(struct iio_hw_consumer *hwc)
++{
++	struct hw_consumer_buffer *buf, *n;
++
++	iio_channel_release_all(hwc->channels);
++	list_for_each_entry_safe(buf, n, &hwc->buffers, head)
++		iio_buffer_put(&buf->buffer);
++	kfree(hwc);
++}
++EXPORT_SYMBOL_GPL(iio_hw_consumer_free);
++
++/**
++ * iio_hw_consumer_enable() - Enable IIO hardware consumer
++ * @hwc: iio_hw_consumer to enable.
++ *
++ * Returns 0 on success.
++ */
++int iio_hw_consumer_enable(struct iio_hw_consumer *hwc)
++{
++	struct hw_consumer_buffer *buf;
++	int ret;
++
++	list_for_each_entry(buf, &hwc->buffers, head) {
++		ret = iio_update_buffers(buf->indio_dev, &buf->buffer, NULL);
++		if (ret)
++			goto err_disable_buffers;
++	}
++
++	return 0;
++
++err_disable_buffers:
++	list_for_each_entry_continue_reverse(buf, &hwc->buffers, head)
++		iio_update_buffers(buf->indio_dev, NULL, &buf->buffer);
++	return ret;
++}
++EXPORT_SYMBOL_GPL(iio_hw_consumer_enable);
++
++/**
++ * iio_hw_consumer_disable() - Disable IIO hardware consumer
++ * @hwc: iio_hw_consumer to disable.
++ */
++void iio_hw_consumer_disable(struct iio_hw_consumer *hwc)
++{
++	struct hw_consumer_buffer *buf;
++
++	list_for_each_entry(buf, &hwc->buffers, head)
++		iio_update_buffers(buf->indio_dev, NULL, &buf->buffer);
++}
++EXPORT_SYMBOL_GPL(iio_hw_consumer_disable);
++
++MODULE_AUTHOR("Lars-Peter Clausen <lars@metafoo.de>");
++MODULE_DESCRIPTION("Hardware consumer buffer the IIO framework");
++MODULE_LICENSE("GPL v2");
+diff --git a/include/linux/iio/hw-consumer.h b/include/linux/iio/hw-consumer.h
+new file mode 100644
+index 0000000..db8c00b
+--- /dev/null
++++ b/include/linux/iio/hw-consumer.h
+@@ -0,0 +1,19 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Industrial I/O in kernel hardware consumer interface
++ *
++ * Copyright 2017 Analog Devices Inc.
++ *  Author: Lars-Peter Clausen <lars@metafoo.de>
++ */
++
++#ifndef LINUX_IIO_HW_CONSUMER_H
++#define LINUX_IIO_HW_CONSUMER_H
++
++struct iio_hw_consumer;
++
++struct iio_hw_consumer *iio_hw_consumer_alloc(struct device *dev);
++void iio_hw_consumer_free(struct iio_hw_consumer *hwc);
++int iio_hw_consumer_enable(struct iio_hw_consumer *hwc);
++void iio_hw_consumer_disable(struct iio_hw_consumer *hwc);
++
++#endif
+-- 
+2.7.4
