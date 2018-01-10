@@ -1,46 +1,78 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [RFC PATCH 0/9] soc: samsung: Add support of suspend-to-RAM on
- Exynos5433
-Date: Wed, 10 Jan 2018 18:19:50 +0900
-Message-ID: <5A55DAB6.2020808@samsung.com>
-References: <CGME20180109075904epcas2p302d58aacfbb2195e455a25c90a1c610b@epcas2p3.samsung.com>
-        <1515484746-10656-1-git-send-email-cw00.choi@samsung.com>
-        <CAJKOXPcJPbVR+WqAzhM8Tuud1Pd9W2p_23iTUveXc5aJtgTJCg@mail.gmail.com>
+From: jacopo mondi <jacopo-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 1/4] dt-bindings: media: Add bindings for OV5695
+Date: Wed, 10 Jan 2018 10:20:10 +0100
+Message-ID: <20180110092010.GC6834@w540>
+References: <1515549967-5302-1-git-send-email-zhengsq@rock-chips.com>
+ <1515549967-5302-2-git-send-email-zhengsq@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CAJKOXPcJPbVR+WqAzhM8Tuud1Pd9W2p_23iTUveXc5aJtgTJCg@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, kgene@kernel.org, Tomasz Figa <tomasz.figa@gmail.com>, chanwoo@kernel.org, Jaehoon Chung <jh80.chung@samsung.com>, Inki Dae <inki.dae@samsung.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1515549967-5302-2-git-send-email-zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ddl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2018년 01월 09일 20:56, Krzysztof Kozlowski wrote:
-> On Tue, Jan 9, 2018 at 8:58 AM, Chanwoo Choi <cw00.choi@samsung.com> wrote:
->> In the mainline, there is no case to support the suspend-to-RAM for Samsung
->> Exynos SoC. This patchset support the suspend-to-RAM for 64bit Exynos SoC.
->>
->> For 32bit, arch/arm/mach-exynos/* directoy contains the suspend-related
->> codes such as suspend.c/exynos.c. But, 64bit Exynos should contain
->> the suspend-related codes in the drivers/soc/samsung/*. So, this patchset
->> develop the patch4/5 for drivers/soc/samsung/exynos-pm.c. to support suspend
->> 64bit Exynos SoC.
->>
->> But, I'm not sure what is proper approach for both 32/64bit Exynos.
->> - Approach1 : Split out the supend-related codes between 32/64bit.
->>   : arch/arm/mach-exynos/* contains the suspend-related codes for 32bit.
->>   : drivers/soc/samsung/* contains the suspend-related codes for 64bit.
->> - Approach2 : Consolidate the all suspend-related codes to drivers/soc/samsung/.
-> 
-> I prefer approach #2 - consolidate the code... unless this creates
-> some unmaintainable monster :)
+Hi Shunqian,
 
-I'll try to consolidate code.
+On Wed, Jan 10, 2018 at 10:06:04AM +0800, Shunqian Zheng wrote:
+> Add device tree binding documentation for the OV5695 sensor.
+>
+> Signed-off-by: Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> ---
+>  .../devicetree/bindings/media/i2c/ov5695.txt       | 41 ++++++++++++++++++++++
+>  1 file changed, 41 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5695.txt
+>
+> diff --git a/Documentation/devicetree/bindings/media/i2c/ov5695.txt b/Documentation/devicetree/bindings/media/i2c/ov5695.txt
+> new file mode 100644
+> index 0000000..2f2f698
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/i2c/ov5695.txt
+> @@ -0,0 +1,41 @@
+> +* Omnivision OV5695 MIPI CSI-2 sensor
+> +
+> +Required Properties:
+> +- compatible: shall be "ovti,ov5695"
+> +- clocks: reference to the xvclk input clock
+> +- clock-names: shall be "xvclk"
+> +- avdd-supply: Analog voltage supply, 2.8 volts
+> +- dovdd-supply: Digital I/O voltage supply, 1.8 volts
+> +- dvdd-supply: Digital core voltage supply, 1.2 volts
+> +- reset-gpios: Low active reset gpio
+> +
+> +The device node shall contain one 'port' child node with an
+> +'endpoint' subnode for its digital output video port,
+> +in accordance with the video interface bindings defined in
+> +Documentation/devicetree/bindings/media/video-interfaces.txt.
+> +The endpoint optional property 'data-lanes' shall be "<1 2>".
 
-[snip]
+What happens if the property is not present? What's the default?
 
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+I would:
+
+Required Properties:
+- compatible: ..
+....
+
+Option Endpoint Properties:
+- data-lanes: ...
+
+> +
+> +Example:
+> +&i2c7 {
+> +	camera-sensor: ov5695@36 {
+
+You have inverted the label with the node name which should be generic
+
+        ov5695: camera@36 {
+
+
+        }
+Thanks
+   j
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
