@@ -1,323 +1,725 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v3 8/9] clocksource: Add a new timer-ingenic driver
-Date: Wed, 10 Jan 2018 23:48:37 +0100
-Message-ID: <20180110224838.16711-8-paul@crapouillou.net>
-References: <20180101143344.2099-1-paul@crapouillou.net>
- <20180110224838.16711-1-paul@crapouillou.net>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180110224838.16711-1-paul@crapouillou.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Lee Jones <lee.jones@linaro.org>
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+From: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
+Subject: [PATCH v3 6/6] PCI: cadence: Add host driver for Cadence PCIe controller
+Date: Wed, 10 Jan 2018 23:47:35 +0100
+Message-ID: <990730f5c1156b3bb15f56fa877719941f219016.1515621150.git.cyrille.pitchen@free-electrons.com>
+References: <cover.1515621150.git.cyrille.pitchen@free-electrons.com>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <cover.1515621150.git.cyrille.pitchen@free-electrons.com>
+In-Reply-To: <cover.1515621150.git.cyrille.pitchen@free-electrons.com>
+References: <cover.1515621150.git.cyrille.pitchen@free-electrons.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: bhelgaas@google.com, kishon@ti.com, lorenzo.pieralisi@arm.com, linux-pci@vger.kernel.org
+Cc: adouglas@cadence.com, stelford@cadence.com, dgary@cadence.com, kgopi@cadence.com, eandrews@cadence.com, thomas.petazzoni@free-electrons.com, sureshp@cadence.com, nsekhar@ti.com, linux-kernel@vger.kernel.org, robh@kernel.org, devicetree@vger.kernel.org, Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-This driver will use the TCU (Timer Counter Unit) present on the Ingenic
-JZ47xx SoCs to provide the kernel with a clocksource and timers.
+This patch adds support to the Cadence PCIe controller in host mode.
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Signed-off-by: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
 ---
- drivers/clocksource/Kconfig         |   8 ++
- drivers/clocksource/Makefile        |   1 +
- drivers/clocksource/timer-ingenic.c | 258 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 267 insertions(+)
- create mode 100644 drivers/clocksource/timer-ingenic.c
+ MAINTAINERS                             |   7 +
+ drivers/pci/Kconfig                     |   1 +
+ drivers/pci/Makefile                    |   1 +
+ drivers/pci/cadence/Kconfig             |  16 ++
+ drivers/pci/cadence/Makefile            |   3 +
+ drivers/pci/cadence/pcie-cadence-host.c | 336 ++++++++++++++++++++++++++++++++
+ drivers/pci/cadence/pcie-cadence.c      |  68 +++++++
+ drivers/pci/cadence/pcie-cadence.h      | 196 +++++++++++++++++++
+ 8 files changed, 628 insertions(+)
+ create mode 100644 drivers/pci/cadence/Kconfig
+ create mode 100644 drivers/pci/cadence/Makefile
+ create mode 100644 drivers/pci/cadence/pcie-cadence-host.c
+ create mode 100644 drivers/pci/cadence/pcie-cadence.c
+ create mode 100644 drivers/pci/cadence/pcie-cadence.h
 
- v2: Use SPDX identifier for the license
- v3: - Move documentation to its own patch
-     - Search the devicetree for PWM clients, and use all the TCU
-	   channels that won't be used for PWM
-
-diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-index c729a88007d0..7b6dedf0347d 100644
---- a/drivers/clocksource/Kconfig
-+++ b/drivers/clocksource/Kconfig
-@@ -583,4 +583,12 @@ config CLKSRC_ST_LPC
- 	  Enable this option to use the Low Power controller timer
- 	  as clocksource.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 13945646b95d..cc24c74a946e 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -10402,6 +10402,13 @@ S:	Maintained
+ F:	Documentation/devicetree/bindings/pci/pci-armada8k.txt
+ F:	drivers/pci/dwc/pcie-armada8k.c
  
-+config INGENIC_TIMER
-+	bool "Clocksource/timer using the TCU in Ingenic JZ SoCs"
-+	depends on MACH_INGENIC || COMPILE_TEST
-+	select CLKSRC_OF
-+	default y
-+	help
-+	  Support for the timer/counter unit of the Ingenic JZ SoCs.
++PCI DRIVER FOR CADENCE PCIE IP
++M:	Alan Douglas <adouglas@cadence.com>
++L:	linux-pci@vger.kernel.org
++S:	Maintained
++F:	Documentation/devicetree/bindings/pci/cdns,*.txt
++F:	drivers/pci/cadence/pcie-cadence*
 +
- endmenu
-diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
-index 72711f1491e3..607c7de07d02 100644
---- a/drivers/clocksource/Makefile
-+++ b/drivers/clocksource/Makefile
-@@ -73,5 +73,6 @@ obj-$(CONFIG_ASM9260_TIMER)		+= asm9260_timer.o
- obj-$(CONFIG_H8300_TMR8)		+= h8300_timer8.o
- obj-$(CONFIG_H8300_TMR16)		+= h8300_timer16.o
- obj-$(CONFIG_H8300_TPU)			+= h8300_tpu.o
-+obj-$(CONFIG_INGENIC_TIMER)		+= timer-ingenic.o
- obj-$(CONFIG_CLKSRC_ST_LPC)		+= clksrc_st_lpc.o
- obj-$(CONFIG_X86_NUMACHIP)		+= numachip.o
-diff --git a/drivers/clocksource/timer-ingenic.c b/drivers/clocksource/timer-ingenic.c
+ PCI DRIVER FOR FREESCALE LAYERSCAPE
+ M:	Minghuan Lian <minghuan.Lian@freescale.com>
+ M:	Mingkai Hu <mingkai.hu@freescale.com>
+diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+index 7eeb969ab86a..dee90cc1dcaf 100644
+--- a/drivers/pci/Kconfig
++++ b/drivers/pci/Kconfig
+@@ -136,6 +136,7 @@ config PCI_HYPERV
+           PCI devices from a PCI backend to support PCI driver domains.
+ 
+ source "drivers/pci/hotplug/Kconfig"
++source "drivers/pci/cadence/Kconfig"
+ source "drivers/pci/dwc/Kconfig"
+ source "drivers/pci/host/Kconfig"
+ source "drivers/pci/endpoint/Kconfig"
+diff --git a/drivers/pci/Makefile b/drivers/pci/Makefile
+index ddb5aa6640d7..941970936840 100644
+--- a/drivers/pci/Makefile
++++ b/drivers/pci/Makefile
+@@ -56,5 +56,6 @@ obj-y += switch/
+ obj-$(CONFIG_PCI_ENDPOINT)	+= endpoint/
+ 
+ # Endpoint library must be initialized before its users
++obj-$(CONFIG_PCIE_CADENCE)	+= cadence/
+ # pcie-hisi.o quirks are needed even without CONFIG_PCIE_DW
+ obj-y				+= dwc/
+diff --git a/drivers/pci/cadence/Kconfig b/drivers/pci/cadence/Kconfig
 new file mode 100644
-index 000000000000..6a26e75af05b
+index 000000000000..0123d384a628
 --- /dev/null
-+++ b/drivers/clocksource/timer-ingenic.c
-@@ -0,0 +1,258 @@
++++ b/drivers/pci/cadence/Kconfig
+@@ -0,0 +1,16 @@
++menu "Cadence PCIe controllers support"
++
++config PCIE_CADENCE
++	bool
++
++config PCIE_CADENCE_HOST
++	bool "Cadence PCIe host controller"
++	depends on OF
++	select IRQ_DOMAIN
++	select PCIE_CADENCE
++	help
++	  Say Y here if you want to support the Cadence PCIe controller in host
++	  mode. This PCIe controller may be embedded into many different vendors
++	  SoCs.
++
++endmenu
+diff --git a/drivers/pci/cadence/Makefile b/drivers/pci/cadence/Makefile
+new file mode 100644
+index 000000000000..589601a8ff89
+--- /dev/null
++++ b/drivers/pci/cadence/Makefile
+@@ -0,0 +1,3 @@
++# SPDX-License-Identifier: GPL-2.0
++obj-$(CONFIG_PCIE_CADENCE) += pcie-cadence.o
++obj-$(CONFIG_PCIE_CADENCE_HOST) += pcie-cadence-host.o
+diff --git a/drivers/pci/cadence/pcie-cadence-host.c b/drivers/pci/cadence/pcie-cadence-host.c
+new file mode 100644
+index 000000000000..26caf8963e3c
+--- /dev/null
++++ b/drivers/pci/cadence/pcie-cadence-host.c
+@@ -0,0 +1,336 @@
 +// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Ingenic JZ47xx SoC TCU clocksource driver
-+ * Copyright (C) 2018 Paul Cercueil <paul@crapouillou.net>
-+ */
++// Copyright (c) 2017 Cadence
++// Cadence PCIe host controller driver.
++// Author: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
 +
-+#include <linux/bitops.h>
-+#include <linux/clk.h>
-+#include <linux/clockchips.h>
-+#include <linux/err.h>
-+#include <linux/interrupt.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/mfd/syscon/ingenic-tcu.h>
++#include <linux/kernel.h>
 +#include <linux/of_address.h>
-+#include <linux/of_irq.h>
-+#include <linux/regmap.h>
-+#include <linux/slab.h>
++#include <linux/of_pci.h>
++#include <linux/platform_device.h>
++#include <linux/pm_runtime.h>
 +
-+#define NUM_CHANNELS	8
++#include "pcie-cadence.h"
 +
-+struct ingenic_tcu;
-+
-+struct ingenic_tcu_channel {
-+	unsigned int idx;
-+	struct clk *clk;
++/**
++ * struct cdns_pcie_rc - private data for this PCIe Root Complex driver
++ * @pcie: Cadence PCIe controller
++ * @dev: pointer to PCIe device
++ * @cfg_res: start/end offsets in the physical system memory to map PCI
++ *           configuration space accesses
++ * @bus_range: first/last buses behind the PCIe host controller
++ * @cfg_base: IO mapped window to access the PCI configuration space of a
++ *            single function at a time
++ * @max_regions: maximum number of regions supported by the hardware
++ * @no_bar_nbits: Number of bits to keep for inbound (PCIe -> CPU) address
++ *                translation (nbits sets into the "no BAR match" register)
++ * @vendor_id: PCI vendor ID
++ * @device_id: PCI device ID
++ */
++struct cdns_pcie_rc {
++	struct cdns_pcie	pcie;
++	struct device		*dev;
++	struct resource		*cfg_res;
++	struct resource		*bus_range;
++	void __iomem		*cfg_base;
++	u32			max_regions;
++	u32			no_bar_nbits;
++	u16			vendor_id;
++	u16			device_id;
 +};
 +
-+struct ingenic_tcu {
-+	struct ingenic_tcu_channel channels[NUM_CHANNELS];
-+	unsigned long requested;
-+	struct regmap *map;
-+};
-+
-+struct ingenic_clock_event_device {
-+	struct clock_event_device cevt;
-+	struct ingenic_tcu_channel *channel;
-+	char name[32];
-+};
-+
-+#define ingenic_cevt(_evt) \
-+	container_of(_evt, struct ingenic_clock_event_device, cevt)
-+
-+static inline struct ingenic_tcu *to_ingenic_tcu(struct ingenic_tcu_channel *ch)
++static void __iomem *cdns_pci_map_bus(struct pci_bus *bus, unsigned int devfn,
++				      int where)
 +{
-+	return container_of(ch, struct ingenic_tcu, channels[ch->idx]);
-+}
++	struct pci_host_bridge *bridge = pci_find_host_bridge(bus);
++	struct cdns_pcie_rc *rc = pci_host_bridge_priv(bridge);
++	struct cdns_pcie *pcie = &rc->pcie;
++	unsigned int busn = bus->number;
++	u32 addr0, desc0;
 +
-+static int ingenic_tcu_cevt_set_state_shutdown(struct clock_event_device *evt)
-+{
-+	struct ingenic_clock_event_device *jzcevt = ingenic_cevt(evt);
-+	struct ingenic_tcu_channel *channel = jzcevt->channel;
-+	struct ingenic_tcu *tcu = to_ingenic_tcu(channel);
-+	unsigned int idx = channel->idx;
++	if (busn == rc->bus_range->start) {
++		/*
++		 * Only the root port (devfn == 0) is connected to this bus.
++		 * All other PCI devices are behind some bridge hence on another
++		 * bus.
++		 */
++		if (devfn)
++			return NULL;
 +
-+	regmap_write(tcu->map, TCU_REG_TECR, BIT(idx));
-+	return 0;
-+}
-+
-+static int ingenic_tcu_cevt_set_next(unsigned long next,
-+		struct clock_event_device *evt)
-+{
-+	struct ingenic_clock_event_device *jzcevt = ingenic_cevt(evt);
-+	struct ingenic_tcu_channel *channel = jzcevt->channel;
-+	struct ingenic_tcu *tcu = to_ingenic_tcu(channel);
-+	unsigned int idx = channel->idx;
-+
-+	if (next > 0xffff)
-+		return -EINVAL;
-+
-+	regmap_write(tcu->map, TCU_REG_TDFRc(idx), (unsigned int) next);
-+	regmap_write(tcu->map, TCU_REG_TCNTc(idx), 0);
-+	regmap_write(tcu->map, TCU_REG_TESR, BIT(idx));
-+
-+	return 0;
-+}
-+
-+static irqreturn_t ingenic_tcu_cevt_cb(int irq, void *dev_id)
-+{
-+	struct clock_event_device *cevt = dev_id;
-+	struct ingenic_clock_event_device *jzcevt = ingenic_cevt(cevt);
-+	struct ingenic_tcu_channel *channel = jzcevt->channel;
-+	struct ingenic_tcu *tcu = to_ingenic_tcu(channel);
-+	unsigned int idx = channel->idx;
-+
-+	regmap_write(tcu->map, TCU_REG_TECR, BIT(idx));
-+
-+	if (cevt->event_handler)
-+		cevt->event_handler(cevt);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int __init ingenic_tcu_req_channel(struct ingenic_tcu_channel *channel)
-+{
-+	struct ingenic_tcu *tcu = to_ingenic_tcu(channel);
-+	char buf[16];
-+	int err;
-+
-+	if (test_and_set_bit(channel->idx, &tcu->requested))
-+		return -EBUSY;
-+
-+	snprintf(buf, sizeof(buf), "timer%u", channel->idx);
-+	channel->clk = clk_get(NULL, buf);
-+	if (IS_ERR(channel->clk)) {
-+		err = PTR_ERR(channel->clk);
-+		goto out_release;
++		return pcie->reg_base + (where & 0xfff);
 +	}
 +
-+	err = clk_prepare_enable(channel->clk);
-+	if (err)
-+		goto out_clk_put;
++	/* Update Output registers for AXI region 0. */
++	addr0 = CDNS_PCIE_AT_OB_REGION_PCI_ADDR0_NBITS(12) |
++		CDNS_PCIE_AT_OB_REGION_PCI_ADDR0_DEVFN(devfn) |
++		CDNS_PCIE_AT_OB_REGION_PCI_ADDR0_BUS(busn);
++	cdns_pcie_writel(pcie, CDNS_PCIE_AT_OB_REGION_PCI_ADDR0(0), addr0);
 +
-+	return 0;
++	/* Configuration Type 0 or Type 1 access. */
++	desc0 = CDNS_PCIE_AT_OB_REGION_DESC0_HARDCODED_RID |
++		CDNS_PCIE_AT_OB_REGION_DESC0_DEVFN(0);
++	/*
++	 * The bus number was already set once for all in desc1 by
++	 * cdns_pcie_host_init_address_translation().
++	 */
++	if (busn == rc->bus_range->start + 1)
++		desc0 |= CDNS_PCIE_AT_OB_REGION_DESC0_TYPE_CONF_TYPE0;
++	else
++		desc0 |= CDNS_PCIE_AT_OB_REGION_DESC0_TYPE_CONF_TYPE1;
++	cdns_pcie_writel(pcie, CDNS_PCIE_AT_OB_REGION_DESC0(0), desc0);
 +
-+out_clk_put:
-+	clk_put(channel->clk);
-+out_release:
-+	clear_bit(channel->idx, &tcu->requested);
-+	return err;
++	return rc->cfg_base + (where & 0xfff);
 +}
 +
-+static int __init ingenic_tcu_reset_channel(struct device_node *np,
-+		struct ingenic_tcu_channel *channel)
-+{
-+	struct ingenic_tcu *tcu = to_ingenic_tcu(channel);
-+
-+	return regmap_update_bits(tcu->map, TCU_REG_TCSRc(channel->idx),
-+				0xffff & ~TCU_TCSR_RESERVED_BITS, 0);
-+}
-+
-+static void __init ingenic_tcu_free_channel(struct ingenic_tcu_channel *channel)
-+{
-+	struct ingenic_tcu *tcu = to_ingenic_tcu(channel);
-+
-+	clk_disable_unprepare(channel->clk);
-+	clk_put(channel->clk);
-+	clear_bit(channel->idx, &tcu->requested);
-+}
-+
-+static const char * const ingenic_tcu_timer_names[] = {
-+	"TCU0", "TCU1", "TCU2", "TCU3", "TCU4", "TCU5", "TCU6", "TCU7",
++static struct pci_ops cdns_pcie_host_ops = {
++	.map_bus	= cdns_pci_map_bus,
++	.read		= pci_generic_config_read,
++	.write		= pci_generic_config_write,
 +};
 +
-+static int __init ingenic_tcu_setup_cevt(struct device_node *np,
-+		struct ingenic_tcu *tcu, unsigned int idx)
-+{
-+	struct ingenic_tcu_channel *channel = &tcu->channels[idx];
-+	struct ingenic_clock_event_device *jzcevt;
-+	unsigned long rate;
-+	int err, virq;
++static const struct of_device_id cdns_pcie_host_of_match[] = {
++	{ .compatible = "cdns,cdns-pcie-host" },
 +
-+	err = ingenic_tcu_req_channel(channel);
++	{ },
++};
++
++static int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
++{
++	struct cdns_pcie *pcie = &rc->pcie;
++	u32 value, ctrl;
++
++	/*
++	 * Set the root complex BAR configuration register:
++	 * - disable both BAR0 and BAR1.
++	 * - enable Prefetchable Memory Base and Limit registers in type 1
++	 *   config space (64 bits).
++	 * - enable IO Base and Limit registers in type 1 config
++	 *   space (32 bits).
++	 */
++	ctrl = CDNS_PCIE_LM_BAR_CFG_CTRL_DISABLED;
++	value = CDNS_PCIE_LM_RC_BAR_CFG_BAR0_CTRL(ctrl) |
++		CDNS_PCIE_LM_RC_BAR_CFG_BAR1_CTRL(ctrl) |
++		CDNS_PCIE_LM_RC_BAR_CFG_PREFETCH_MEM_ENABLE |
++		CDNS_PCIE_LM_RC_BAR_CFG_PREFETCH_MEM_64BITS |
++		CDNS_PCIE_LM_RC_BAR_CFG_IO_ENABLE |
++		CDNS_PCIE_LM_RC_BAR_CFG_IO_32BITS;
++	cdns_pcie_writel(pcie, CDNS_PCIE_LM_RC_BAR_CFG, value);
++
++	/* Set root port configuration space */
++	if (rc->vendor_id != 0xffff)
++		cdns_pcie_rp_writew(pcie, PCI_VENDOR_ID, rc->vendor_id);
++	if (rc->device_id != 0xffff)
++		cdns_pcie_rp_writew(pcie, PCI_DEVICE_ID, rc->device_id);
++
++	cdns_pcie_rp_writeb(pcie, PCI_CLASS_REVISION, 0);
++	cdns_pcie_rp_writeb(pcie, PCI_CLASS_PROG, 0);
++	cdns_pcie_rp_writew(pcie, PCI_CLASS_DEVICE, PCI_CLASS_BRIDGE_PCI);
++
++	return 0;
++}
++
++static int cdns_pcie_host_init_address_translation(struct cdns_pcie_rc *rc)
++{
++	struct cdns_pcie *pcie = &rc->pcie;
++	struct resource *cfg_res = rc->cfg_res;
++	struct resource *mem_res = pcie->mem_res;
++	struct resource *bus_range = rc->bus_range;
++	struct device *dev = rc->dev;
++	struct device_node *np = dev->of_node;
++	struct of_pci_range_parser parser;
++	struct of_pci_range range;
++	u32 addr0, addr1, desc1;
++	u64 cpu_addr;
++	int r, err;
++
++	/*
++	 * Reserve region 0 for PCI configure space accesses:
++	 * OB_REGION_PCI_ADDR0 and OB_REGION_DESC0 are updated dynamically by
++	 * cdns_pci_map_bus(), other region registers are set here once for all.
++	 */
++	addr1 = 0; /* Should be programmed to zero. */
++	desc1 = CDNS_PCIE_AT_OB_REGION_DESC1_BUS(bus_range->start);
++	cdns_pcie_writel(pcie, CDNS_PCIE_AT_OB_REGION_PCI_ADDR1(0), addr1);
++	cdns_pcie_writel(pcie, CDNS_PCIE_AT_OB_REGION_DESC1(0), desc1);
++
++	cpu_addr = cfg_res->start - mem_res->start;
++	addr0 = CDNS_PCIE_AT_OB_REGION_CPU_ADDR0_NBITS(12) |
++		(lower_32_bits(cpu_addr) & GENMASK(31, 8));
++	addr1 = upper_32_bits(cpu_addr);
++	cdns_pcie_writel(pcie, CDNS_PCIE_AT_OB_REGION_CPU_ADDR0(0), addr0);
++	cdns_pcie_writel(pcie, CDNS_PCIE_AT_OB_REGION_CPU_ADDR1(0), addr1);
++
++	err = of_pci_range_parser_init(&parser, np);
 +	if (err)
 +		return err;
 +
-+	err = ingenic_tcu_reset_channel(np, channel);
++	r = 1;
++	for_each_of_pci_range(&parser, &range) {
++		bool is_io;
++
++		if (r >= rc->max_regions)
++			break;
++
++		if ((range.flags & IORESOURCE_TYPE_BITS) == IORESOURCE_MEM)
++			is_io = false;
++		else if ((range.flags & IORESOURCE_TYPE_BITS) == IORESOURCE_IO)
++			is_io = true;
++		else
++			continue;
++
++		cdns_pcie_set_outbound_region(pcie, r, is_io,
++					      range.cpu_addr,
++					      range.pci_addr,
++					      range.size);
++		r++;
++	}
++
++	/*
++	 * Set Root Port no BAR match Inbound Translation registers:
++	 * needed for MSI and DMA.
++	 * Root Port BAR0 and BAR1 are disabled, hence no need to set their
++	 * inbound translation registers.
++	 */
++	addr0 = CDNS_PCIE_AT_IB_RP_BAR_ADDR0_NBITS(rc->no_bar_nbits);
++	addr1 = 0;
++	cdns_pcie_writel(pcie, CDNS_PCIE_AT_IB_RP_BAR_ADDR0(RP_NO_BAR), addr0);
++	cdns_pcie_writel(pcie, CDNS_PCIE_AT_IB_RP_BAR_ADDR1(RP_NO_BAR), addr1);
++
++	return 0;
++}
++
++static int cdns_pcie_host_init(struct device *dev,
++			       struct list_head *resources,
++			       struct cdns_pcie_rc *rc)
++{
++	struct resource *bus_range = NULL;
++	int err;
++
++	/* Parse our PCI ranges and request their resources */
++	err = pci_parse_request_of_pci_ranges(dev, resources, &bus_range);
 +	if (err)
-+		goto err_out_free_channel;
++		return err;
 +
-+	rate = clk_get_rate(channel->clk);
-+	if (!rate) {
-+		err = -EINVAL;
-+		goto err_out_free_channel;
-+	}
++	rc->bus_range = bus_range;
++	rc->pcie.bus = bus_range->start;
 +
-+	jzcevt = kzalloc(sizeof(*jzcevt), GFP_KERNEL);
-+	if (!jzcevt) {
-+		err = -ENOMEM;
-+		goto err_out_free_channel;
-+	}
-+
-+	virq = irq_of_parse_and_map(np, idx);
-+	if (!virq) {
-+		err = -EINVAL;
-+		goto err_out_kfree_jzcevt;
-+	}
-+
-+	err = request_irq(virq, ingenic_tcu_cevt_cb, IRQF_TIMER,
-+			ingenic_tcu_timer_names[idx], &jzcevt->cevt);
++	err = cdns_pcie_host_init_root_port(rc);
 +	if (err)
-+		goto err_out_irq_dispose_mapping;
++		goto err_out;
 +
-+	jzcevt->channel = channel;
-+	snprintf(jzcevt->name, sizeof(jzcevt->name), "ingenic-tcu-chan%u",
-+		 channel->idx);
-+
-+	jzcevt->cevt.cpumask = cpumask_of(smp_processor_id());
-+	jzcevt->cevt.features = CLOCK_EVT_FEAT_ONESHOT;
-+	jzcevt->cevt.name = jzcevt->name;
-+	jzcevt->cevt.rating = 200;
-+	jzcevt->cevt.set_state_shutdown = ingenic_tcu_cevt_set_state_shutdown;
-+	jzcevt->cevt.set_next_event = ingenic_tcu_cevt_set_next;
-+
-+	clockevents_config_and_register(&jzcevt->cevt, rate, 10, (1 << 16) - 1);
++	err = cdns_pcie_host_init_address_translation(rc);
++	if (err)
++		goto err_out;
 +
 +	return 0;
 +
-+err_out_irq_dispose_mapping:
-+	irq_dispose_mapping(virq);
-+err_out_kfree_jzcevt:
-+	kfree(jzcevt);
-+err_out_free_channel:
-+	ingenic_tcu_free_channel(channel);
++ err_out:
++	pci_free_resource_list(resources);
 +	return err;
 +}
 +
-+static int __init ingenic_tcu_init(struct device_node *np)
++static int cdns_pcie_host_probe(struct platform_device *pdev)
 +{
-+	unsigned long available_channels = GENMASK(NUM_CHANNELS - 1, 0);
-+	struct device_node *node;
-+	struct ingenic_tcu *tcu;
-+	unsigned int i, channel;
-+	int err;
-+	u32 val;
++	const char *type;
++	struct device *dev = &pdev->dev;
++	struct device_node *np = dev->of_node;
++	struct pci_host_bridge *bridge;
++	struct list_head resources;
++	struct cdns_pcie_rc *rc;
++	struct cdns_pcie *pcie;
++	struct resource *res;
++	int ret;
 +
-+	for_each_node_with_property(node, "pwms") {
-+		err = of_property_read_u32_index(node, "pwms", 1, &val);
-+		if (!err && val >= NUM_CHANNELS)
-+			err = -EINVAL;
-+		if (err) {
-+			pr_err("timer-ingenic: Unable to parse PWM nodes!");
-+			break;
-+		}
-+
-+		pr_info("timer-ingenic: Reserving channel %u for PWM", val);
-+		available_channels &= ~BIT(val);
-+	}
-+
-+	tcu = kzalloc(sizeof(*tcu), GFP_KERNEL);
-+	if (!tcu)
++	bridge = devm_pci_alloc_host_bridge(dev, sizeof(*rc));
++	if (!bridge)
 +		return -ENOMEM;
 +
-+	tcu->map = syscon_node_to_regmap(np->parent);
-+	if (IS_ERR(tcu->map)) {
-+		err = PTR_ERR(tcu->map);
-+		kfree(tcu);
-+		return err;
++	rc = pci_host_bridge_priv(bridge);
++	rc->dev = dev;
++
++	pcie = &rc->pcie;
++	pcie->is_rc = true;
++
++	rc->max_regions = 32;
++	of_property_read_u32(np, "cdns,max-outbound-regions", &rc->max_regions);
++
++	rc->no_bar_nbits = 32;
++	of_property_read_u32(np, "cdns,no-bar-match-nbits", &rc->no_bar_nbits);
++
++	rc->vendor_id = 0xffff;
++	of_property_read_u16(np, "vendor-id", &rc->vendor_id);
++
++	rc->device_id = 0xffff;
++	of_property_read_u16(np, "device-id", &rc->device_id);
++
++	type = of_get_property(np, "device_type", NULL);
++	if (!type || strcmp(type, "pci")) {
++		dev_err(dev, "invalid \"device_type\" %s\n", type);
++		return -EINVAL;
 +	}
 +
-+	for (i = 0; i < NUM_CHANNELS; i++)
-+		tcu->channels[i].idx = i;
-+
-+	for_each_set_bit(channel, &available_channels, NUM_CHANNELS) {
-+		err = ingenic_tcu_setup_cevt(np, tcu, channel);
-+		if (err) {
-+			pr_warn("timer-ingenic: Unable to init TCU channel %u: %i",
-+					channel, err);
-+			continue;
-+		}
++	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "reg");
++	pcie->reg_base = devm_ioremap_resource(dev, res);
++	if (IS_ERR(pcie->reg_base)) {
++		dev_err(dev, "missing \"reg\"\n");
++		return PTR_ERR(pcie->reg_base);
 +	}
++
++	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "cfg");
++	rc->cfg_base = devm_pci_remap_cfg_resource(dev, res);
++	if (IS_ERR(rc->cfg_base)) {
++		dev_err(dev, "missing \"cfg\"\n");
++		return PTR_ERR(rc->cfg_base);
++	}
++	rc->cfg_res = res;
++
++	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "mem");
++	if (!res) {
++		dev_err(dev, "missing \"mem\"\n");
++		return -EINVAL;
++	}
++	pcie->mem_res = res;
++
++	pm_runtime_enable(dev);
++	ret = pm_runtime_get_sync(dev);
++	if (ret < 0) {
++		dev_err(dev, "pm_runtime_get_sync() failed\n");
++		goto err_get_sync;
++	}
++
++	ret = cdns_pcie_host_init(dev, &resources, rc);
++	if (ret)
++		goto err_init;
++
++	list_splice_init(&resources, &bridge->windows);
++	bridge->dev.parent = dev;
++	bridge->busnr = pcie->bus;
++	bridge->ops = &cdns_pcie_host_ops;
++	bridge->map_irq = of_irq_parse_and_map_pci;
++	bridge->swizzle_irq = pci_common_swizzle;
++
++	ret = pci_host_probe(bridge);
++	if (ret < 0)
++		goto err_host_probe;
 +
 +	return 0;
++
++ err_host_probe:
++	pci_free_resource_list(&resources);
++
++ err_init:
++	pm_runtime_put_sync(dev);
++
++ err_get_sync:
++	pm_runtime_disable(dev);
++
++	return ret;
 +}
 +
-+/* We only probe via devicetree, no need for a platform driver */
-+CLOCKSOURCE_OF_DECLARE(jz4740_tcu, "ingenic,jz4740-tcu", ingenic_tcu_init);
-+CLOCKSOURCE_OF_DECLARE(jz4770_tcu, "ingenic,jz4770-tcu", ingenic_tcu_init);
-+CLOCKSOURCE_OF_DECLARE(jz4780_tcu, "ingenic,jz4780-tcu", ingenic_tcu_init);
++static struct platform_driver cdns_pcie_host_driver = {
++	.driver = {
++		.name = "cdns-pcie-host",
++		.of_match_table = cdns_pcie_host_of_match,
++	},
++	.probe = cdns_pcie_host_probe,
++};
++builtin_platform_driver(cdns_pcie_host_driver);
+diff --git a/drivers/pci/cadence/pcie-cadence.c b/drivers/pci/cadence/pcie-cadence.c
+new file mode 100644
+index 000000000000..5c76e7f4c5f9
+--- /dev/null
++++ b/drivers/pci/cadence/pcie-cadence.c
+@@ -0,0 +1,68 @@
++// SPDX-License-Identifier: GPL-2.0
++// Copyright (c) 2017 Cadence
++// Cadence PCIe controller driver.
++// Author: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
++
++#include <linux/kernel.h>
++
++#include "pcie-cadence.h"
++
++void cdns_pcie_set_outbound_region(struct cdns_pcie *pcie, u32 r, bool is_io,
++				   u64 cpu_addr, u64 pci_addr, size_t size)
++{
++	/*
++	 * roundup_pow_of_two() returns an unsigned long, which is not suited
++	 * for 64bit values.
++	 */
++	u64 sz = 1ULL << fls64(size - 1);
++	int nbits = ilog2(sz);
++	u32 addr0, addr1, desc0, desc1;
++
++	if (nbits < 8)
++		nbits = 8;
++
++	/* Set the PCI address */
++	addr0 = CDNS_PCIE_AT_OB_REGION_PCI_ADDR0_NBITS(nbits) |
++		(lower_32_bits(pci_addr) & GENMASK(31, 8));
++	addr1 = upper_32_bits(pci_addr);
++
++	cdns_pcie_writel(pcie, CDNS_PCIE_AT_OB_REGION_PCI_ADDR0(r), addr0);
++	cdns_pcie_writel(pcie, CDNS_PCIE_AT_OB_REGION_PCI_ADDR1(r), addr1);
++
++	/* Set the PCIe header descriptor */
++	if (is_io)
++		desc0 = CDNS_PCIE_AT_OB_REGION_DESC0_TYPE_IO;
++	else
++		desc0 = CDNS_PCIE_AT_OB_REGION_DESC0_TYPE_MEM;
++	desc1 = 0;
++
++	if (pcie->is_rc) {
++		desc0 |= CDNS_PCIE_AT_OB_REGION_DESC0_HARDCODED_RID |
++			 CDNS_PCIE_AT_OB_REGION_DESC0_DEVFN(0);
++		desc1 |= CDNS_PCIE_AT_OB_REGION_DESC1_BUS(pcie->bus);
++	}
++
++	cdns_pcie_writel(pcie, CDNS_PCIE_AT_OB_REGION_DESC0(r), desc0);
++	cdns_pcie_writel(pcie, CDNS_PCIE_AT_OB_REGION_DESC1(r), desc1);
++
++	/* Set the CPU address */
++	cpu_addr -= pcie->mem_res->start;
++	addr0 = CDNS_PCIE_AT_OB_REGION_CPU_ADDR0_NBITS(nbits) |
++		(lower_32_bits(cpu_addr) & GENMASK(31, 8));
++	addr1 = upper_32_bits(cpu_addr);
++
++	cdns_pcie_writel(pcie, CDNS_PCIE_AT_OB_REGION_CPU_ADDR0(r), addr0);
++	cdns_pcie_writel(pcie, CDNS_PCIE_AT_OB_REGION_CPU_ADDR1(r), addr1);
++}
++
++void cdns_pcie_reset_outbound_region(struct cdns_pcie *pcie, u32 r)
++{
++	cdns_pcie_writel(pcie, CDNS_PCIE_AT_OB_REGION_PCI_ADDR0(r), 0);
++	cdns_pcie_writel(pcie, CDNS_PCIE_AT_OB_REGION_PCI_ADDR1(r), 0);
++
++	cdns_pcie_writel(pcie, CDNS_PCIE_AT_OB_REGION_DESC0(r), 0);
++	cdns_pcie_writel(pcie, CDNS_PCIE_AT_OB_REGION_DESC1(r), 0);
++
++	cdns_pcie_writel(pcie, CDNS_PCIE_AT_OB_REGION_CPU_ADDR0(r), 0);
++	cdns_pcie_writel(pcie, CDNS_PCIE_AT_OB_REGION_CPU_ADDR1(r), 0);
++}
+diff --git a/drivers/pci/cadence/pcie-cadence.h b/drivers/pci/cadence/pcie-cadence.h
+new file mode 100644
+index 000000000000..3a15b4016352
+--- /dev/null
++++ b/drivers/pci/cadence/pcie-cadence.h
+@@ -0,0 +1,196 @@
++// SPDX-License-Identifier: GPL-2.0
++// Copyright (c) 2017 Cadence
++// Cadence PCIe controller driver.
++// Author: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
++
++#ifndef _PCIE_CADENCE_H
++#define _PCIE_CADENCE_H
++
++#include <linux/kernel.h>
++#include <linux/pci.h>
++
++/*
++ * Local Management Registers
++ */
++#define CDNS_PCIE_LM_BASE	0x00100000
++
++/* Vendor ID Register */
++#define CDNS_PCIE_LM_ID		(CDNS_PCIE_LM_BASE + 0x0044)
++#define  CDNS_PCIE_LM_ID_VENDOR_MASK	GENMASK(15, 0)
++#define  CDNS_PCIE_LM_ID_VENDOR_SHIFT	0
++#define  CDNS_PCIE_LM_ID_VENDOR(vid) \
++	(((vid) << CDNS_PCIE_LM_ID_VENDOR_SHIFT) & CDNS_PCIE_LM_ID_VENDOR_MASK)
++#define  CDNS_PCIE_LM_ID_SUBSYS_MASK	GENMASK(31, 16)
++#define  CDNS_PCIE_LM_ID_SUBSYS_SHIFT	16
++#define  CDNS_PCIE_LM_ID_SUBSYS(sub) \
++	(((sub) << CDNS_PCIE_LM_ID_SUBSYS_SHIFT) & CDNS_PCIE_LM_ID_SUBSYS_MASK)
++
++/* Root Port Requestor ID Register */
++#define CDNS_PCIE_LM_RP_RID	(CDNS_PCIE_LM_BASE + 0x0228)
++#define  CDNS_PCIE_LM_RP_RID_MASK	GENMASK(15, 0)
++#define  CDNS_PCIE_LM_RP_RID_SHIFT	0
++#define  CDNS_PCIE_LM_RP_RID_(rid) \
++	(((rid) << CDNS_PCIE_LM_RP_RID_SHIFT) & CDNS_PCIE_LM_RP_RID_MASK)
++
++/* Root Complex BAR Configuration Register */
++#define CDNS_PCIE_LM_RC_BAR_CFG	(CDNS_PCIE_LM_BASE + 0x0300)
++#define  CDNS_PCIE_LM_RC_BAR_CFG_BAR0_APERTURE_MASK	GENMASK(5, 0)
++#define  CDNS_PCIE_LM_RC_BAR_CFG_BAR0_APERTURE(a) \
++	(((a) << 0) & CDNS_PCIE_LM_RC_BAR_CFG_BAR0_APERTURE_MASK)
++#define  CDNS_PCIE_LM_RC_BAR_CFG_BAR0_CTRL_MASK		GENMASK(8, 6)
++#define  CDNS_PCIE_LM_RC_BAR_CFG_BAR0_CTRL(c) \
++	(((c) << 6) & CDNS_PCIE_LM_RC_BAR_CFG_BAR0_CTRL_MASK)
++#define  CDNS_PCIE_LM_RC_BAR_CFG_BAR1_APERTURE_MASK	GENMASK(13, 9)
++#define  CDNS_PCIE_LM_RC_BAR_CFG_BAR1_APERTURE(a) \
++	(((a) << 9) & CDNS_PCIE_LM_RC_BAR_CFG_BAR1_APERTURE_MASK)
++#define  CDNS_PCIE_LM_RC_BAR_CFG_BAR1_CTRL_MASK		GENMASK(16, 14)
++#define  CDNS_PCIE_LM_RC_BAR_CFG_BAR1_CTRL(c) \
++	(((c) << 14) & CDNS_PCIE_LM_RC_BAR_CFG_BAR1_CTRL_MASK)
++#define  CDNS_PCIE_LM_RC_BAR_CFG_PREFETCH_MEM_ENABLE	BIT(17)
++#define  CDNS_PCIE_LM_RC_BAR_CFG_PREFETCH_MEM_32BITS	0
++#define  CDNS_PCIE_LM_RC_BAR_CFG_PREFETCH_MEM_64BITS	BIT(18)
++#define  CDNS_PCIE_LM_RC_BAR_CFG_IO_ENABLE		BIT(19)
++#define  CDNS_PCIE_LM_RC_BAR_CFG_IO_16BITS		0
++#define  CDNS_PCIE_LM_RC_BAR_CFG_IO_32BITS		BIT(20)
++#define  CDNS_PCIE_LM_RC_BAR_CFG_CHECK_ENABLE		BIT(31)
++
++/* BAR control values applicable to both Endpoint Function and Root Complex */
++#define  CDNS_PCIE_LM_BAR_CFG_CTRL_DISABLED		0x0
++#define  CDNS_PCIE_LM_BAR_CFG_CTRL_IO_32BITS		0x1
++#define  CDNS_PCIE_LM_BAR_CFG_CTRL_MEM_32BITS		0x4
++#define  CDNS_PCIE_LM_BAR_CFG_CTRL_PREFETCH_MEM_32BITS	0x5
++#define  CDNS_PCIE_LM_BAR_CFG_CTRL_MEM_64BITS		0x6
++#define  CDNS_PCIE_LM_BAR_CFG_CTRL_PREFETCH_MEM_64BITS	0x7
++
++
++/*
++ * Root Port Registers (PCI configuration space for the root port function)
++ */
++#define CDNS_PCIE_RP_BASE	0x00200000
++
++
++/*
++ * Address Translation Registers
++ */
++#define CDNS_PCIE_AT_BASE	0x00400000
++
++/* Region r Outbound AXI to PCIe Address Translation Register 0 */
++#define CDNS_PCIE_AT_OB_REGION_PCI_ADDR0(r) \
++	(CDNS_PCIE_AT_BASE + 0x0000 + ((r) & 0x1f) * 0x0020)
++#define  CDNS_PCIE_AT_OB_REGION_PCI_ADDR0_NBITS_MASK	GENMASK(5, 0)
++#define  CDNS_PCIE_AT_OB_REGION_PCI_ADDR0_NBITS(nbits) \
++	(((nbits) - 1) & CDNS_PCIE_AT_OB_REGION_PCI_ADDR0_NBITS_MASK)
++#define  CDNS_PCIE_AT_OB_REGION_PCI_ADDR0_DEVFN_MASK	GENMASK(19, 12)
++#define  CDNS_PCIE_AT_OB_REGION_PCI_ADDR0_DEVFN(devfn) \
++	(((devfn) << 12) & CDNS_PCIE_AT_OB_REGION_PCI_ADDR0_DEVFN_MASK)
++#define  CDNS_PCIE_AT_OB_REGION_PCI_ADDR0_BUS_MASK	GENMASK(27, 20)
++#define  CDNS_PCIE_AT_OB_REGION_PCI_ADDR0_BUS(bus) \
++	(((bus) << 20) & CDNS_PCIE_AT_OB_REGION_PCI_ADDR0_BUS_MASK)
++
++/* Region r Outbound AXI to PCIe Address Translation Register 1 */
++#define CDNS_PCIE_AT_OB_REGION_PCI_ADDR1(r) \
++	(CDNS_PCIE_AT_BASE + 0x0004 + ((r) & 0x1f) * 0x0020)
++
++/* Region r Outbound PCIe Descriptor Register 0 */
++#define CDNS_PCIE_AT_OB_REGION_DESC0(r) \
++	(CDNS_PCIE_AT_BASE + 0x0008 + ((r) & 0x1f) * 0x0020)
++#define  CDNS_PCIE_AT_OB_REGION_DESC0_TYPE_MASK		GENMASK(3, 0)
++#define  CDNS_PCIE_AT_OB_REGION_DESC0_TYPE_MEM		0x2
++#define  CDNS_PCIE_AT_OB_REGION_DESC0_TYPE_IO		0x6
++#define  CDNS_PCIE_AT_OB_REGION_DESC0_TYPE_CONF_TYPE0	0xa
++#define  CDNS_PCIE_AT_OB_REGION_DESC0_TYPE_CONF_TYPE1	0xb
++#define  CDNS_PCIE_AT_OB_REGION_DESC0_TYPE_NORMAL_MSG	0xc
++#define  CDNS_PCIE_AT_OB_REGION_DESC0_TYPE_VENDOR_MSG	0xd
++/* Bit 23 MUST be set in RC mode. */
++#define  CDNS_PCIE_AT_OB_REGION_DESC0_HARDCODED_RID	BIT(23)
++#define  CDNS_PCIE_AT_OB_REGION_DESC0_DEVFN_MASK	GENMASK(31, 24)
++#define  CDNS_PCIE_AT_OB_REGION_DESC0_DEVFN(devfn) \
++	(((devfn) << 24) & CDNS_PCIE_AT_OB_REGION_DESC0_DEVFN_MASK)
++
++/* Region r Outbound PCIe Descriptor Register 1 */
++#define CDNS_PCIE_AT_OB_REGION_DESC1(r)	\
++	(CDNS_PCIE_AT_BASE + 0x000c + ((r) & 0x1f) * 0x0020)
++#define  CDNS_PCIE_AT_OB_REGION_DESC1_BUS_MASK	GENMASK(7, 0)
++#define  CDNS_PCIE_AT_OB_REGION_DESC1_BUS(bus) \
++	((bus) & CDNS_PCIE_AT_OB_REGION_DESC1_BUS_MASK)
++
++/* Region r AXI Region Base Address Register 0 */
++#define CDNS_PCIE_AT_OB_REGION_CPU_ADDR0(r) \
++	(CDNS_PCIE_AT_BASE + 0x0018 + ((r) & 0x1f) * 0x0020)
++#define  CDNS_PCIE_AT_OB_REGION_CPU_ADDR0_NBITS_MASK	GENMASK(5, 0)
++#define  CDNS_PCIE_AT_OB_REGION_CPU_ADDR0_NBITS(nbits) \
++	(((nbits) - 1) & CDNS_PCIE_AT_OB_REGION_CPU_ADDR0_NBITS_MASK)
++
++/* Region r AXI Region Base Address Register 1 */
++#define CDNS_PCIE_AT_OB_REGION_CPU_ADDR1(r) \
++	(CDNS_PCIE_AT_BASE + 0x001c + ((r) & 0x1f) * 0x0020)
++
++/* Root Port BAR Inbound PCIe to AXI Address Translation Register */
++#define CDNS_PCIE_AT_IB_RP_BAR_ADDR0(bar) \
++	(CDNS_PCIE_AT_BASE + 0x0800 + (bar) * 0x0008)
++#define  CDNS_PCIE_AT_IB_RP_BAR_ADDR0_NBITS_MASK	GENMASK(5, 0)
++#define  CDNS_PCIE_AT_IB_RP_BAR_ADDR0_NBITS(nbits) \
++	(((nbits) - 1) & CDNS_PCIE_AT_IB_RP_BAR_ADDR0_NBITS_MASK)
++#define CDNS_PCIE_AT_IB_RP_BAR_ADDR1(bar) \
++	(CDNS_PCIE_AT_BASE + 0x0804 + (bar) * 0x0008)
++
++enum cdns_pcie_rp_bar {
++	RP_BAR0,
++	RP_BAR1,
++	RP_NO_BAR
++};
++
++/**
++ * struct cdns_pcie - private data for Cadence PCIe controller drivers
++ * @reg_base: IO mapped register base
++ * @mem_res: start/end offsets in the physical system memory to map PCI accesses
++ * @is_rc: tell whether the PCIe controller mode is Root Complex or Endpoint.
++ * @bus: In Root Complex mode, the bus number
++ */
++struct cdns_pcie {
++	void __iomem		*reg_base;
++	struct resource		*mem_res;
++	bool			is_rc;
++	u8			bus;
++};
++
++/* Register access */
++static inline void cdns_pcie_writeb(struct cdns_pcie *pcie, u32 reg, u8 value)
++{
++	writeb(value, pcie->reg_base + reg);
++}
++
++static inline void cdns_pcie_writew(struct cdns_pcie *pcie, u32 reg, u16 value)
++{
++	writew(value, pcie->reg_base + reg);
++}
++
++static inline void cdns_pcie_writel(struct cdns_pcie *pcie, u32 reg, u32 value)
++{
++	writel(value, pcie->reg_base + reg);
++}
++
++static inline u32 cdns_pcie_readl(struct cdns_pcie *pcie, u32 reg)
++{
++	return readl(pcie->reg_base + reg);
++}
++
++/* Root Port register access */
++static inline void cdns_pcie_rp_writeb(struct cdns_pcie *pcie,
++				       u32 reg, u8 value)
++{
++	writeb(value, pcie->reg_base + CDNS_PCIE_RP_BASE + reg);
++}
++
++static inline void cdns_pcie_rp_writew(struct cdns_pcie *pcie,
++				       u32 reg, u16 value)
++{
++	writew(value, pcie->reg_base + CDNS_PCIE_RP_BASE + reg);
++}
++
++void cdns_pcie_set_outbound_region(struct cdns_pcie *pcie, u32 r, bool is_io,
++				   u64 cpu_addr, u64 pci_addr, size_t size);
++
++void cdns_pcie_reset_outbound_region(struct cdns_pcie *pcie, u32 r);
++
++#endif /* _PCIE_CADENCE_H */
 -- 
 2.11.0
