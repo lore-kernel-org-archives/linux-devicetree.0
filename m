@@ -1,306 +1,123 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Applied "iio: Add hardware consumer buffer support" to the asoc tree
-Date: Wed, 10 Jan 2018 11:13:44 +0000
-Message-ID: <E1eZEKG-000552-6y@debutante>
-References: <1512744566-13233-2-git-send-email-arnaud.pouliquen@st.com>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1512744566-13233-2-git-send-email-arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Cc: Arnaud Pouliquen <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.orgarnaud.pouliquen-qxv4g6HH51o@public.gmane.org, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.orgalsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+From: <alexandru.ardelean-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 2/3] staging: iio: adc: ad7192: add device-tree support to driver
+Date: Wed, 10 Jan 2018 13:29:55 +0200
+Message-ID: <20180110112956.23931-2-alexandru.ardelean@analog.com>
+References: <20180110112956.23931-1-alexandru.ardelean@analog.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180110112956.23931-1-alexandru.ardelean-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandru Ardelean <alexandru.ardelean-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The patch
+From: Alexandru Ardelean <alexandru.ardelean-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
 
-   iio: Add hardware consumer buffer support
+Adds device-tree support to the ad7192 driver.
+This change re-uses the "ad7192_platform_data" struct,
+and populates it with fields defined in the device-tree.
 
-has been applied to the asoc tree at
+Re-using the platform_data struct adds a minimal
+change to the driver, and keeps the possibility
+of defining a platform_data struct.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+A provided "ad7192_platform_data" struct is preferred
+over the device-tree to reduce impact for users when
+using the newer driver.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+This will add up to sizeof(struct ad7192_platform_data) bytes
+(~12 bytes) on the stack during the probing of the device.
+But it is a bit less error-proner than using alloc & free
+during the probe call.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From 48b66f8f936f369bb1a43c12aedbfeb2975baf4c Mon Sep 17 00:00:00 2001
-From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Date: Wed, 10 Jan 2018 11:13:03 +0100
-Subject: [PATCH] iio: Add hardware consumer buffer support
-
-Hardware consumer interface can be used when one IIO device has
-a direct connection to another device in hardware.
-
-Signed-off-by: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
 ---
- drivers/iio/buffer/Kconfig                    |  10 ++
- drivers/iio/buffer/Makefile                   |   1 +
- drivers/iio/buffer/industrialio-hw-consumer.c | 181 ++++++++++++++++++++++++++
- include/linux/iio/hw-consumer.h               |  19 +++
- 4 files changed, 211 insertions(+)
- create mode 100644 drivers/iio/buffer/industrialio-hw-consumer.c
- create mode 100644 include/linux/iio/hw-consumer.h
+ drivers/staging/iio/adc/ad7192.c | 50 ++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 48 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/iio/buffer/Kconfig b/drivers/iio/buffer/Kconfig
-index 4ffd3db7817f..338774cba19b 100644
---- a/drivers/iio/buffer/Kconfig
-+++ b/drivers/iio/buffer/Kconfig
-@@ -29,6 +29,16 @@ config IIO_BUFFER_DMAENGINE
+diff --git a/drivers/staging/iio/adc/ad7192.c b/drivers/staging/iio/adc/ad7192.c
+index 7bc04101d133..d8cfdf18933b 100644
+--- a/drivers/staging/iio/adc/ad7192.c
++++ b/drivers/staging/iio/adc/ad7192.c
+@@ -625,18 +625,63 @@ static const struct iio_chan_spec ad7193_channels[] = {
+ 	IIO_CHAN_SOFT_TIMESTAMP(14),
+ };
  
- 	  Should be selected by drivers that want to use this functionality.
- 
-+config IIO_BUFFER_HW_CONSUMER
-+	tristate "Industrial I/O HW buffering"
-+	help
-+	  Provides a way to bonding when an IIO device has a direct connection
-+	  to another device in hardware. In this case buffers for data transfers
-+	  are handled by hardware.
-+
-+	  Should be selected by drivers that want to use the generic Hw consumer
-+	  interface.
-+
- config IIO_KFIFO_BUF
- 	tristate "Industrial I/O buffering based on kfifo"
- 	help
-diff --git a/drivers/iio/buffer/Makefile b/drivers/iio/buffer/Makefile
-index 95f9f41c58b7..1403eb2f9409 100644
---- a/drivers/iio/buffer/Makefile
-+++ b/drivers/iio/buffer/Makefile
-@@ -7,5 +7,6 @@
- obj-$(CONFIG_IIO_BUFFER_CB) += industrialio-buffer-cb.o
- obj-$(CONFIG_IIO_BUFFER_DMA) += industrialio-buffer-dma.o
- obj-$(CONFIG_IIO_BUFFER_DMAENGINE) += industrialio-buffer-dmaengine.o
-+obj-$(CONFIG_IIO_BUFFER_HW_CONSUMER) += industrialio-hw-consumer.o
- obj-$(CONFIG_IIO_TRIGGERED_BUFFER) += industrialio-triggered-buffer.o
- obj-$(CONFIG_IIO_KFIFO_BUF) += kfifo_buf.o
-diff --git a/drivers/iio/buffer/industrialio-hw-consumer.c b/drivers/iio/buffer/industrialio-hw-consumer.c
-new file mode 100644
-index 000000000000..993ecdcdab64
---- /dev/null
-+++ b/drivers/iio/buffer/industrialio-hw-consumer.c
-@@ -0,0 +1,181 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright 2017 Analog Devices Inc.
-+ *  Author: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-+ */
-+
-+#include <linux/err.h>
-+#include <linux/export.h>
-+#include <linux/slab.h>
-+#include <linux/module.h>
-+
-+#include <linux/iio/iio.h>
-+#include <linux/iio/consumer.h>
-+#include <linux/iio/hw-consumer.h>
-+#include <linux/iio/buffer_impl.h>
-+
-+/**
-+ * struct iio_hw_consumer - IIO hw consumer block
-+ * @buffers: hardware buffers list head.
-+ * @channels: IIO provider channels.
-+ */
-+struct iio_hw_consumer {
-+	struct list_head buffers;
-+	struct iio_channel *channels;
-+};
-+
-+struct hw_consumer_buffer {
-+	struct list_head head;
-+	struct iio_dev *indio_dev;
-+	struct iio_buffer buffer;
-+	long scan_mask[];
-+};
-+
-+static struct hw_consumer_buffer *iio_buffer_to_hw_consumer_buffer(
-+	struct iio_buffer *buffer)
++static int ad7192_parse_dt(struct device *dev, struct device_node *np,
++			   struct ad7192_platform_data *pdata)
 +{
-+	return container_of(buffer, struct hw_consumer_buffer, buffer);
-+}
-+
-+static void iio_hw_buf_release(struct iio_buffer *buffer)
-+{
-+	struct hw_consumer_buffer *hw_buf =
-+		iio_buffer_to_hw_consumer_buffer(buffer);
-+	kfree(hw_buf);
-+}
-+
-+static const struct iio_buffer_access_funcs iio_hw_buf_access = {
-+	.release = &iio_hw_buf_release,
-+	.modes = INDIO_BUFFER_HARDWARE,
-+};
-+
-+static struct hw_consumer_buffer *iio_hw_consumer_get_buffer(
-+	struct iio_hw_consumer *hwc, struct iio_dev *indio_dev)
-+{
-+	size_t mask_size = BITS_TO_LONGS(indio_dev->masklength) * sizeof(long);
-+	struct hw_consumer_buffer *buf;
-+
-+	list_for_each_entry(buf, &hwc->buffers, head) {
-+		if (buf->indio_dev == indio_dev)
-+			return buf;
-+	}
-+
-+	buf = kzalloc(sizeof(*buf) + mask_size, GFP_KERNEL);
-+	if (!buf)
-+		return NULL;
-+
-+	buf->buffer.access = &iio_hw_buf_access;
-+	buf->indio_dev = indio_dev;
-+	buf->buffer.scan_mask = buf->scan_mask;
-+
-+	iio_buffer_init(&buf->buffer);
-+	list_add_tail(&buf->head, &hwc->buffers);
-+
-+	return buf;
-+}
-+
-+/**
-+ * iio_hw_consumer_alloc() - Allocate IIO hardware consumer
-+ * @dev: Pointer to consumer device.
-+ *
-+ * Returns a valid iio_hw_consumer on success or a ERR_PTR() on failure.
-+ */
-+struct iio_hw_consumer *iio_hw_consumer_alloc(struct device *dev)
-+{
-+	struct hw_consumer_buffer *buf;
-+	struct iio_hw_consumer *hwc;
-+	struct iio_channel *chan;
 +	int ret;
 +
-+	hwc = kzalloc(sizeof(*hwc), GFP_KERNEL);
-+	if (!hwc)
-+		return ERR_PTR(-ENOMEM);
-+
-+	INIT_LIST_HEAD(&hwc->buffers);
-+
-+	hwc->channels = iio_channel_get_all(dev);
-+	if (IS_ERR(hwc->channels)) {
-+		ret = PTR_ERR(hwc->channels);
-+		goto err_free_hwc;
++	ret = of_property_read_u8(np, "adi,clock-source-select",
++				  &pdata->clock_source_sel);
++	if (ret < 0) {
++		pdata->clock_source_sel = AD7192_CLK_INT;
++		dev_info(dev, "No clock source specified. Using int clock\n");
 +	}
 +
-+	chan = &hwc->channels[0];
-+	while (chan->indio_dev) {
-+		buf = iio_hw_consumer_get_buffer(hwc, chan->indio_dev);
-+		if (!buf) {
-+			ret = -ENOMEM;
-+			goto err_put_buffers;
++	if (pdata->clock_source_sel == AD7192_CLK_EXT_MCLK2) {
++		ret = of_property_read_u32(np, "adi,external-clock-Hz",
++					   &pdata->ext_clk_hz);
++		if (ret < 0 ||
++		    !ad7192_valid_external_frequency(&pdata->ext_clk_hz)) {
++			dev_err(dev, "Invalid or no freq for ext clock\n");
++			return -EINVAL;
 +		}
-+		set_bit(chan->channel->scan_index, buf->buffer.scan_mask);
-+		chan++;
 +	}
 +
-+	return hwc;
-+
-+err_put_buffers:
-+	list_for_each_entry(buf, &hwc->buffers, head)
-+		iio_buffer_put(&buf->buffer);
-+	iio_channel_release_all(hwc->channels);
-+err_free_hwc:
-+	kfree(hwc);
-+	return ERR_PTR(ret);
-+}
-+EXPORT_SYMBOL_GPL(iio_hw_consumer_alloc);
-+
-+/**
-+ * iio_hw_consumer_free() - Free IIO hardware consumer
-+ * @hwc: hw consumer to free.
-+ */
-+void iio_hw_consumer_free(struct iio_hw_consumer *hwc)
-+{
-+	struct hw_consumer_buffer *buf, *n;
-+
-+	iio_channel_release_all(hwc->channels);
-+	list_for_each_entry_safe(buf, n, &hwc->buffers, head)
-+		iio_buffer_put(&buf->buffer);
-+	kfree(hwc);
-+}
-+EXPORT_SYMBOL_GPL(iio_hw_consumer_free);
-+
-+/**
-+ * iio_hw_consumer_enable() - Enable IIO hardware consumer
-+ * @hwc: iio_hw_consumer to enable.
-+ *
-+ * Returns 0 on success.
-+ */
-+int iio_hw_consumer_enable(struct iio_hw_consumer *hwc)
-+{
-+	struct hw_consumer_buffer *buf;
-+	int ret;
-+
-+	list_for_each_entry(buf, &hwc->buffers, head) {
-+		ret = iio_update_buffers(buf->indio_dev, &buf->buffer, NULL);
-+		if (ret)
-+			goto err_disable_buffers;
-+	}
++	pdata->refin2_en = of_property_read_bool(np, "adi,refin2-pins-enable");
++	pdata->sinc3_en = of_property_read_bool(np, "adi,sinc3-filter-enable");
++	pdata->chop_en = of_property_read_bool(np, "adi,chop-enable");
++	pdata->buf_en = of_property_read_bool(np, "adi,buffer-enable");
++	pdata->unipolar_en = of_property_read_bool(np, "adi,unipolar-enable");
++	pdata->rej60_en =
++		of_property_read_bool(np, "adi,rejection-60-Hz-enable");
++	pdata->burnout_curr_en =
++		of_property_read_bool(np, "adi,burnout-currents-enable");
 +
 +	return 0;
-+
-+err_disable_buffers:
-+	list_for_each_entry_continue_reverse(buf, &hwc->buffers, head)
-+		iio_update_buffers(buf->indio_dev, NULL, &buf->buffer);
-+	return ret;
 +}
-+EXPORT_SYMBOL_GPL(iio_hw_consumer_enable);
 +
-+/**
-+ * iio_hw_consumer_disable() - Disable IIO hardware consumer
-+ * @hwc: iio_hw_consumer to disable.
-+ */
-+void iio_hw_consumer_disable(struct iio_hw_consumer *hwc)
-+{
-+	struct hw_consumer_buffer *buf;
+ static int ad7192_probe(struct spi_device *spi)
+ {
+ 	const struct ad7192_platform_data *pdata = dev_get_platdata(&spi->dev);
++	struct device_node *of_node = dev_of_node(&spi->dev);
++	struct ad7192_platform_data lpdata;
+ 	struct ad7192_state *st;
+ 	struct iio_dev *indio_dev;
+ 	int ret, voltage_uv = 0;
+ 
+-	if (!pdata) {
+-		dev_err(&spi->dev, "no platform data?\n");
++	if (!pdata && !of_node) {
++		dev_err(&spi->dev, "no platform data or device tree config\n");
+ 		return -ENODEV;
+ 	}
+ 
++	if (!pdata) {
++		memset(&lpdata, 0, sizeof(lpdata));
++		ret = ad7192_parse_dt(&spi->dev, of_node, &lpdata);
++		if (ret)
++			return ret;
++		pdata = &lpdata;
++	}
 +
-+	list_for_each_entry(buf, &hwc->buffers, head)
-+		iio_update_buffers(buf->indio_dev, NULL, &buf->buffer);
-+}
-+EXPORT_SYMBOL_GPL(iio_hw_consumer_disable);
-+
-+MODULE_AUTHOR("Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>");
-+MODULE_DESCRIPTION("Hardware consumer buffer the IIO framework");
-+MODULE_LICENSE("GPL v2");
-diff --git a/include/linux/iio/hw-consumer.h b/include/linux/iio/hw-consumer.h
-new file mode 100644
-index 000000000000..db8c00b9c7a5
---- /dev/null
-+++ b/include/linux/iio/hw-consumer.h
-@@ -0,0 +1,19 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Industrial I/O in kernel hardware consumer interface
-+ *
-+ * Copyright 2017 Analog Devices Inc.
-+ *  Author: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-+ */
-+
-+#ifndef LINUX_IIO_HW_CONSUMER_H
-+#define LINUX_IIO_HW_CONSUMER_H
-+
-+struct iio_hw_consumer;
-+
-+struct iio_hw_consumer *iio_hw_consumer_alloc(struct device *dev);
-+void iio_hw_consumer_free(struct iio_hw_consumer *hwc);
-+int iio_hw_consumer_enable(struct iio_hw_consumer *hwc);
-+void iio_hw_consumer_disable(struct iio_hw_consumer *hwc);
-+
-+#endif
+ 	if (!spi->irq) {
+ 		dev_err(&spi->dev, "no IRQ?\n");
+ 		return -ENODEV;
+@@ -682,6 +727,7 @@ static int ad7192_probe(struct spi_device *spi)
+ 	spi_set_drvdata(spi, indio_dev);
+ 	st->devid = spi_get_device_id(spi)->driver_data;
+ 	indio_dev->dev.parent = &spi->dev;
++	indio_dev->dev.of_node = of_node;
+ 	indio_dev->name = spi_get_device_id(spi)->name;
+ 	indio_dev->modes = INDIO_DIRECT_MODE;
+ 
 -- 
-2.15.1
+2.14.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
