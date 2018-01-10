@@ -1,51 +1,33 @@
-From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 1/7] ARM: imx: add timer stop flag to ARM power off state
-Date: Wed, 10 Jan 2018 18:48:42 +0100
-Message-ID: <1515606522.12538.44.camel@pengutronix.de>
-References: <20180102164223.15230-1-stefan@agner.ch>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH 2/3] dt-bindings: pinctrl: Add a ngpios-ranges property
+Date: Wed, 10 Jan 2018 19:59:31 +0200
+Message-ID: <1515607171.7000.879.camel@linux.intel.com>
+References: <20180110015848.11480-1-sboyd@codeaurora.org>
+         <20180110015848.11480-3-sboyd@codeaurora.org>
+         <CACRpkdaN6vmV4L4U76DvD5BN+j1RYCQakTysA+GGPdT8Chc-iw@mail.gmail.com>
+         <20180110163733.GH21040@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180102164223.15230-1-stefan-XLVq0VzYD2Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Anson Huang <anson.huang-3arQi8VN3Tc@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180110163733.GH21040@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@secretlab.ca>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, Timur Tabi <timur@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, linux-gpio@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, den 02.01.2018, 17:42 +0100 schrieb Stefan Agner:
-> When the CPU is in ARM power off state the ARM architected
-> timers are stopped. The flag is already present in the higher
-> power WAIT mode.
-> 
-> This allows to use the ARM generic timer on i.MX 6UL/6ULL SoC.
-> Without the flag the kernel freezes when the timer enters the
-> first time ARM power off mode.
-> 
-> Cc: Anson Huang <anson.huang-3arQi8VN3Tc@public.gmane.org>
-> Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+On Wed, 2018-01-10 at 08:37 -0800, Stephen Boyd wrote:
+> On 01/10, Linus Walleij wrote:
+> > On Wed, Jan 10, 2018 at 2:58 AM, Stephen Boyd <sboyd@codeaurora.org>
+> > wrote:
 
-Reviewed-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> for the qcom driver it was all fine
+> because all three concepts: irq, gpios, and pins have a one to
+> one relationship.
 
-> ---
->  arch/arm/mach-imx/cpuidle-imx6sx.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/arm/mach-imx/cpuidle-imx6sx.c b/arch/arm/mach-
-> imx/cpuidle-imx6sx.c
-> index c5a5c3a70ab1..d0f14b761ff7 100644
-> --- a/arch/arm/mach-imx/cpuidle-imx6sx.c
-> +++ b/arch/arm/mach-imx/cpuidle-imx6sx.c
-> @@ -89,6 +89,7 @@ static struct cpuidle_driver imx6sx_cpuidle_driver
-> = {
->  			 */
->  			.exit_latency = 300,
->  			.target_residency = 500,
-> +			.flags = CPUIDLE_FLAG_TIMER_STOP,
->  			.enter = imx6sx_enter_wait,
->  			.name = "LOW-POWER-IDLE",
->  			.desc = "ARM power off",
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Just a side note: While it might be the case for most of the
+controllers, don't assume it's a generic case.
+
+-- 
+Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Intel Finland Oy
