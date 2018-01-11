@@ -1,37 +1,43 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] libfdt: remove unnecessary include directive from
- <linux/libfdt.h>
-Date: Thu, 11 Jan 2018 14:39:25 -0600
-Message-ID: <20180111203925.e2lsvxudhnivtai6@rob-hp-laptop>
-References: <1515294136-19427-1-git-send-email-yamada.masahiro@socionext.com>
+Subject: Re: [PATCH v2 2/2] media: ov9650: add device tree binding
+Date: Thu, 11 Jan 2018 14:40:22 -0600
+Message-ID: <20180111204022.rhcttpptc4id6fk6@rob-hp-laptop>
+References: <1515344064-23156-1-git-send-email-akinobu.mita@gmail.com>
+ <1515344064-23156-3-git-send-email-akinobu.mita@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1515294136-19427-1-git-send-email-yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+In-Reply-To: <1515344064-23156-3-git-send-email-akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Philippe Ombredanne <pombredanne-od1rfyK75/E@public.gmane.org>, Kate Stewart <kstewart-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+To: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jacopo Mondi <jacopo-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>, "H . Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jan 07, 2018 at 12:02:16PM +0900, Masahiro Yamada wrote:
-> <linux/libfdt.h> is a wrapper of scripts/dtc/libfdt/libfdt.h
-> It should not do more than its job.  In fact, libfdt.h depends
-> on fdt.h, and scripts/dtc/libfdt/libfdt.h includes fdt.h already.
-> Trust the work in the upstream DTC project.
+On Mon, Jan 08, 2018 at 01:54:24AM +0900, Akinobu Mita wrote:
+> Now the ov9650 driver supports device tree probing.  So this adds a
+> device tree binding documentation.
 > 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+> Cc: Jacopo Mondi <jacopo-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+> Cc: H. Nikolaus Schaller <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+> Cc: Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>
+> Cc: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+> Cc: Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>
+> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
+> * Changelog v2
+> - Split binding documentation, suggested by Rob Herring and Jacopo Mondi
+> - Improve the wording for compatible property in the binding documentation,
+>   suggested by Jacopo Mondi
+> - Improve the description for the device node in the binding documentation,
+>   suggested by Sakari Ailus
 > 
-> Changes in v2:
->   - Rephrase commit-log a bit (remove ../../)
-> 
->  include/linux/libfdt.h | 1 -
->  1 file changed, 1 deletion(-)
+>  .../devicetree/bindings/media/i2c/ov9650.txt       | 36 ++++++++++++++++++++++
+>  1 file changed, 36 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov9650.txt
 
-Applied, thanks.
-
-Rob
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
