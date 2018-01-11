@@ -1,176 +1,198 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 3/3] drm: rcar-du: add R8A77970 support
-Date: Thu, 11 Jan 2018 19:54:35 +0300
-Message-ID: <20180111170103.676775968@cogentembedded.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH 1/3] drm: rcar-du: lvds: refactor LVDS startup
+Date: Thu, 11 Jan 2018 19:54:33 +0300
+Message-ID: <20180111170055.878913975__10953.1020782471$1515689953$gmane$org@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-15
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline; filename=drm-rcar-du-add-R8A77970-support.patch
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline; filename=drm-rcar-du-lvds-refactor-LVDS-startup.patch
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 List-Id: devicetree@vger.kernel.org
 
-Add support for the R-Car  V3M  (R8A77970) SoC to the DU driver (this SoC
-has only  1 display port). Note that there are some differences  with the
-other R-Car gen3 SoCs in the LVDS encoder part, e.g. LVDPLLCR has the same
-layout  as  on the R-Car gen2 SoCs...
+After the recent correction of the R-Car gen3 LVDCR1 value, already similar
+enough at their  ends rcar_du_lvdsenc_start_gen{2|3}() started asking for a
+merge and it's becoming actually necessary with the addition the R-Car V3M
+(R8A77970) support -- this  gen3 SoC  has gen2-like LVDPLLCR layout.
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+BTW, such a merge saves 72 bytes of the object code with AArch64 gcc 4.8.5.
+
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
 ---
- Documentation/devicetree/bindings/display/renesas,du.txt |    1 
- drivers/gpu/drm/rcar-du/rcar_du_drv.c                    |   23 +++++++++++++++
- drivers/gpu/drm/rcar-du/rcar_du_drv.h                    |    1 
- drivers/gpu/drm/rcar-du/rcar_du_group.c                  |   10 +++---
- drivers/gpu/drm/rcar-du/rcar_du_lvdsenc.c                |   20 +++++++++----
- 5 files changed, 45 insertions(+), 10 deletions(-)
+ drivers/gpu/drm/rcar-du/rcar_du_lvdsenc.c |  132 ++++++++++++------------------
+ 1 file changed, 54 insertions(+), 78 deletions(-)
 
-Index: linux/Documentation/devicetree/bindings/display/renesas,du.txt
-===================================================================
---- linux.orig/Documentation/devicetree/bindings/display/renesas,du.txt
-+++ linux/Documentation/devicetree/bindings/display/renesas,du.txt
-@@ -13,6 +13,7 @@ Required Properties:
-     - "renesas,du-r8a7794" for R8A7794 (R-Car E2) compatible DU
-     - "renesas,du-r8a7795" for R8A7795 (R-Car H3) compatible DU
-     - "renesas,du-r8a7796" for R8A7796 (R-Car M3-W) compatible DU
-+    - "renesas,du-r8a77970" for R8A77970 (R-Car V3M) compatible DU
- 
-   - reg: A list of base address and length of each memory resource, one for
-     each entry in the reg-names property.
-Index: linux/drivers/gpu/drm/rcar-du/rcar_du_drv.c
-===================================================================
---- linux.orig/drivers/gpu/drm/rcar-du/rcar_du_drv.c
-+++ linux/drivers/gpu/drm/rcar-du/rcar_du_drv.c
-@@ -258,6 +258,28 @@ static const struct rcar_du_device_info
- 	.dpll_ch =  BIT(1),
- };
- 
-+static const struct rcar_du_device_info rcar_du_r8a77970_info = {
-+	.gen = 3,
-+	.model = R8A77970,
-+	.features = RCAR_DU_FEATURE_CRTC_IRQ_CLOCK
-+		  | RCAR_DU_FEATURE_EXT_CTRL_REGS
-+		  | RCAR_DU_FEATURE_VSP1_SOURCE,
-+	.num_crtcs = 1,
-+	.routes = {
-+		/* R8A77970 has one RGB output and one LVDS output. */
-+		[RCAR_DU_OUTPUT_DPAD0] = {
-+			.possible_crtcs = BIT(0),
-+			.port = 1,
-+		},
-+		[RCAR_DU_OUTPUT_LVDS0] = {
-+			.possible_crtcs = BIT(0),
-+			.port = 0,
-+		},
-+	},
-+	.num_lvds = 1,
-+	.dpll_ch  = BIT(1),
-+};
-+
- static const struct of_device_id rcar_du_of_table[] = {
- 	{ .compatible = "renesas,du-r8a7743", .data = &rzg1_du_r8a7743_info },
- 	{ .compatible = "renesas,du-r8a7745", .data = &rzg1_du_r8a7745_info },
-@@ -269,6 +291,7 @@ static const struct of_device_id rcar_du
- 	{ .compatible = "renesas,du-r8a7794", .data = &rcar_du_r8a7794_info },
- 	{ .compatible = "renesas,du-r8a7795", .data = &rcar_du_r8a7795_info },
- 	{ .compatible = "renesas,du-r8a7796", .data = &rcar_du_r8a7796_info },
-+	{ .compatible = "renesas,du-r8a77970", .data = &rcar_du_r8a77970_info },
- 	{ }
- };
- 
-Index: linux/drivers/gpu/drm/rcar-du/rcar_du_drv.h
-===================================================================
---- linux.orig/drivers/gpu/drm/rcar-du/rcar_du_drv.h
-+++ linux/drivers/gpu/drm/rcar-du/rcar_du_drv.h
-@@ -59,6 +59,7 @@ enum rcar_du_model {
- 	R8A7794,
- 	R8A7795,
- 	R8A7796,
-+	R8A77970,
- };
- 
- /*
-Index: linux/drivers/gpu/drm/rcar-du/rcar_du_group.c
-===================================================================
---- linux.orig/drivers/gpu/drm/rcar-du/rcar_du_group.c
-+++ linux/drivers/gpu/drm/rcar-du/rcar_du_group.c
-@@ -133,10 +133,12 @@ static void rcar_du_group_setup(struct r
- 	rcar_du_group_write(rgrp, DORCR, DORCR_PG1D_DS1 | DORCR_DPRS);
- 
- 	/* Apply planes to CRTCs association. */
--	mutex_lock(&rgrp->lock);
--	rcar_du_group_write(rgrp, DPTSR, (rgrp->dptsr_planes << 16) |
--			    rgrp->dptsr_planes);
--	mutex_unlock(&rgrp->lock);
-+	if (rcdu->info->num_crtcs > 1) {
-+		mutex_lock(&rgrp->lock);
-+		rcar_du_group_write(rgrp, DPTSR, (rgrp->dptsr_planes << 16) |
-+				    rgrp->dptsr_planes);
-+		mutex_unlock(&rgrp->lock);
-+	}
- }
- 
- /*
 Index: linux/drivers/gpu/drm/rcar-du/rcar_du_lvdsenc.c
 ===================================================================
 --- linux.orig/drivers/gpu/drm/rcar-du/rcar_du_lvdsenc.c
 +++ linux/drivers/gpu/drm/rcar-du/rcar_du_lvdsenc.c
-@@ -71,8 +71,10 @@ static int rcar_du_lvdsenc_start(struct
+@@ -39,98 +39,41 @@ static void rcar_lvds_write(struct rcar_
+ 	iowrite32(data, lvds->mmio + reg);
+ }
+ 
+-static void rcar_du_lvdsenc_start_gen2(struct rcar_du_lvdsenc *lvds,
+-				       struct rcar_du_crtc *rcrtc)
++static u32 rcar_lvds_gen2_lvdpllcr(unsigned int freq)
+ {
+-	const struct drm_display_mode *mode = &rcrtc->crtc.mode;
+-	unsigned int freq = mode->clock;
+-	u32 lvdcr0;
+-	u32 pllcr;
++	u32 lvdpllcr;
+ 
+-	/* PLL clock configuration */
+ 	if (freq < 39000)
+-		pllcr = LVDPLLCR_CEEN | LVDPLLCR_COSEL | LVDPLLCR_PLLDLYCNT_38M;
++		lvdpllcr = LVDPLLCR_PLLDLYCNT_38M;
+ 	else if (freq < 61000)
+-		pllcr = LVDPLLCR_CEEN | LVDPLLCR_COSEL | LVDPLLCR_PLLDLYCNT_60M;
++		lvdpllcr = LVDPLLCR_PLLDLYCNT_60M;
+ 	else if (freq < 121000)
+-		pllcr = LVDPLLCR_CEEN | LVDPLLCR_COSEL | LVDPLLCR_PLLDLYCNT_121M;
++		lvdpllcr = LVDPLLCR_PLLDLYCNT_121M;
+ 	else
+-		pllcr = LVDPLLCR_PLLDLYCNT_150M;
+-
+-	rcar_lvds_write(lvds, LVDPLLCR, pllcr);
+-
+-	/*
+-	 * Select the input, hardcode mode 0, enable LVDS operation and turn
+-	 * bias circuitry on.
+-	 */
+-	lvdcr0 = (lvds->mode << LVDCR0_LVMD_SHIFT) | LVDCR0_BEN | LVDCR0_LVEN;
+-	if (rcrtc->index == 2)
+-		lvdcr0 |= LVDCR0_DUSEL;
+-	rcar_lvds_write(lvds, LVDCR0, lvdcr0);
++		return LVDPLLCR_PLLDLYCNT_150M;
+ 
+-	/* Turn all the channels on. */
+-	rcar_lvds_write(lvds, LVDCR1,
+-			LVDCR1_CHSTBY(3) | LVDCR1_CHSTBY(2) |
+-			LVDCR1_CHSTBY(1) | LVDCR1_CHSTBY(0) | LVDCR1_CLKSTBY);
+-
+-	/*
+-	 * Turn the PLL on, wait for the startup delay, and turn the output
+-	 * on.
+-	 */
+-	lvdcr0 |= LVDCR0_PLLON;
+-	rcar_lvds_write(lvds, LVDCR0, lvdcr0);
+-
+-	usleep_range(100, 150);
+-
+-	lvdcr0 |= LVDCR0_LVRES;
+-	rcar_lvds_write(lvds, LVDCR0, lvdcr0);
++	return lvdpllcr | LVDPLLCR_CEEN | LVDPLLCR_COSEL;
+ }
+ 
+-static void rcar_du_lvdsenc_start_gen3(struct rcar_du_lvdsenc *lvds,
+-				       struct rcar_du_crtc *rcrtc)
++static u32 rcar_lvds_gen3_lvdpllcr(unsigned int freq)
+ {
+-	const struct drm_display_mode *mode = &rcrtc->crtc.mode;
+-	unsigned int freq = mode->clock;
+-	u32 lvdcr0;
+-	u32 pllcr;
+-
+-	/* PLL clock configuration */
+ 	if (freq < 42000)
+-		pllcr = LVDPLLCR_PLLDIVCNT_42M;
++		return LVDPLLCR_PLLDIVCNT_42M;
+ 	else if (freq < 85000)
+-		pllcr = LVDPLLCR_PLLDIVCNT_85M;
++		return LVDPLLCR_PLLDIVCNT_85M;
+ 	else if (freq < 128000)
+-		pllcr = LVDPLLCR_PLLDIVCNT_128M;
+-	else
+-		pllcr = LVDPLLCR_PLLDIVCNT_148M;
+-
+-	rcar_lvds_write(lvds, LVDPLLCR, pllcr);
+-
+-	/* Turn all the channels on. */
+-	rcar_lvds_write(lvds, LVDCR1,
+-			LVDCR1_CHSTBY(3) | LVDCR1_CHSTBY(2) |
+-			LVDCR1_CHSTBY(1) | LVDCR1_CHSTBY(0) | LVDCR1_CLKSTBY);
+-
+-	/*
+-	 * Turn the PLL on, set it to LVDS normal mode, wait for the startup
+-	 * delay and turn the output on.
+-	 */
+-	lvdcr0 = (lvds->mode << LVDCR0_LVMD_SHIFT) | LVDCR0_PLLON;
+-	rcar_lvds_write(lvds, LVDCR0, lvdcr0);
+-
+-	lvdcr0 |= LVDCR0_PWD;
+-	rcar_lvds_write(lvds, LVDCR0, lvdcr0);
++		return LVDPLLCR_PLLDIVCNT_128M;
+ 
+-	usleep_range(100, 150);
+-
+-	lvdcr0 |= LVDCR0_LVRES;
+-	rcar_lvds_write(lvds, LVDCR0, lvdcr0);
++	return LVDPLLCR_PLLDIVCNT_148M;
+ }
+ 
+ static int rcar_du_lvdsenc_start(struct rcar_du_lvdsenc *lvds,
  				 struct rcar_du_crtc *rcrtc)
  {
- 	u32 lvdhcr, lvdpllcr, lvdcr0 = lvds->mode << LVDCR0_LVMD_SHIFT;
-+	const struct rcar_du_device_info *info = lvds->dev->info;
- 	const struct drm_display_mode *mode = &rcrtc->crtc.mode;
--	unsigned int gen = lvds->dev->info->gen;
-+	unsigned int gen = info->gen;
-+	enum rcar_du_model model = info->model;
- 	unsigned int freq = mode->clock;
+-	u32 lvdhcr;
++	u32 lvdhcr, lvdpllcr, lvdcr0 = lvds->mode << LVDCR0_LVMD_SHIFT;
++	const struct drm_display_mode *mode = &rcrtc->crtc.mode;
++	unsigned int gen = lvds->dev->info->gen;
++	unsigned int freq = mode->clock;
  	int ret;
  
-@@ -104,7 +106,7 @@ static int rcar_du_lvdsenc_start(struct
+ 	if (lvds->enabled)
+@@ -158,14 +101,47 @@ static int rcar_du_lvdsenc_start(struct
+ 	else
+ 		lvdhcr = LVDCHCR_CHSEL_CH(0, 0) | LVDCHCR_CHSEL_CH(1, 1)
+ 		       | LVDCHCR_CHSEL_CH(2, 2) | LVDCHCR_CHSEL_CH(3, 3);
+-
  	rcar_lvds_write(lvds, LVDCHCR, lvdhcr);
  
- 	/* PLL clock configuration */
--	if (gen < 3)
-+	if (gen < 3 || model == R8A77970)
- 		lvdpllcr = rcar_lvds_gen2_lvdpllcr(freq);
+-	/* Perform generation-specific initialization. */
+-	if (lvds->dev->info->gen < 3)
+-		rcar_du_lvdsenc_start_gen2(lvds, rcrtc);
++	/* PLL clock configuration */
++	if (gen < 3)
++		lvdpllcr = rcar_lvds_gen2_lvdpllcr(freq);
  	else
- 		lvdpllcr = rcar_lvds_gen3_lvdpllcr(freq);
-@@ -136,6 +138,12 @@ static int rcar_du_lvdsenc_start(struct
- 		rcar_lvds_write(lvds, LVDCR0, lvdcr0);
- 	}
- 
-+	/* Turn on the LVDS PHY on R-Car V3M. */
-+	if (model == R8A77970) {
-+		lvdcr0 |= LVDCR0_LVEN;
+-		rcar_du_lvdsenc_start_gen3(lvds, rcrtc);
++		lvdpllcr = rcar_lvds_gen3_lvdpllcr(freq);
++	rcar_lvds_write(lvds, LVDPLLCR,	lvdpllcr);
++
++	if (gen < 3) {
++		/*
++		 * Select the input, enable LVDS operation, and turn
++		 * the bias circuitry on.
++		 */
++		lvdcr0 |= LVDCR0_BEN | LVDCR0_LVEN;
++		if (rcrtc->index == 2)
++			lvdcr0 |= LVDCR0_DUSEL;
 +		rcar_lvds_write(lvds, LVDCR0, lvdcr0);
 +	}
 +
- 	/* Wait for the startup delay. */
- 	usleep_range(100, 150);
++	/* Turn all the channels on. */
++	rcar_lvds_write(lvds, LVDCR1,
++			LVDCR1_CHSTBY(3) | LVDCR1_CHSTBY(2) |
++			LVDCR1_CHSTBY(1) | LVDCR1_CHSTBY(0) | LVDCR1_CLKSTBY);
++
++	/* Turn the PLL on. */
++	lvdcr0 |= LVDCR0_PLLON;
++	rcar_lvds_write(lvds, LVDCR0, lvdcr0);
++
++	if (gen > 2) {
++		/* Turn on the LVDS normal mode. */
++		lvdcr0 |= LVDCR0_PWD;
++		rcar_lvds_write(lvds, LVDCR0, lvdcr0);
++	}
++
++	/* Wait for the startup delay. */
++	usleep_range(100, 150);
++
++	/* Turn the output on. */
++	lvdcr0 |= LVDCR0_LVRES;
++	rcar_lvds_write(lvds, LVDCR0, lvdcr0);
  
-@@ -177,14 +185,14 @@ int rcar_du_lvdsenc_enable(struct rcar_d
- void rcar_du_lvdsenc_atomic_check(struct rcar_du_lvdsenc *lvds,
- 				  struct drm_display_mode *mode)
- {
--	struct rcar_du_device *rcdu = lvds->dev;
-+	const struct rcar_du_device_info *info = lvds->dev->info;
+ 	lvds->enabled = true;
  
- 	/*
- 	 * The internal LVDS encoder has a restricted clock frequency operating
--	 * range (30MHz to 150MHz on Gen2, 25.175MHz to 148.5MHz on Gen3). Clamp
--	 * the clock accordingly.
-+	 * range (30MHz to 150MHz on Gen2 and R-Car V3M, 25.175MHz to 148.5MHz
-+	 * on Gen3). Clamp the clock accordingly.
- 	 */
--	if (rcdu->info->gen < 3)
-+	if (info->gen < 3 || info->model == R8A77970)
- 		mode->clock = clamp(mode->clock, 30000, 150000);
- 	else
- 		mode->clock = clamp(mode->clock, 25175, 148500);
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
