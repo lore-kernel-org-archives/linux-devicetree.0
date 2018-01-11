@@ -1,7 +1,7 @@
 From: Baruch Siach <baruch@tkos.co.il>
-Subject: [PATCH v2 2/4] dt-bindings: gpio: add raspberry pi GPIO expander binding
-Date: Thu, 11 Jan 2018 21:44:25 +0200
-Message-ID: <a93ba9ec4d3d3ff6d1e2a79f4f813a2f86c4086b.1515698418.git.baruch@tkos.co.il>
+Subject: [PATCH v2 4/4] ARM: dts: bcm2837-rpi-3-b: add GPIO expander
+Date: Thu, 11 Jan 2018 21:44:27 +0200
+Message-ID: <1cb81e3d7a1b1f7ccf374952fa7e8d2147c186fb.1515698418.git.baruch@tkos.co.il>
 References: <cover.1515698418.git.baruch@tkos.co.il>
 Return-path: <linux-gpio-owner@vger.kernel.org>
 In-Reply-To: <cover.1515698418.git.baruch@tkos.co.il>
@@ -10,49 +10,39 @@ To: Dave Stevenson <dave.stevenson@raspberrypi.org>, Eric Anholt <eric@anholt.ne
 Cc: linux-gpio@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Michael Zoran <mzoran@crowfest.net>, Baruch Siach <baruch@tkos.co.il>
 List-Id: devicetree@vger.kernel.org
 
-The Raspberry Pi 3 GPIO expander is controlled by the VC4 firmware over
-I2C. The firmware mailbox interface allows the ARM core to control the
-GPIO lines.
+Add a description of the RPi3 GPIO expander that the VC4 firmware controls.
 
 Signed-off-by: Baruch Siach <baruch@tkos.co.il>
 ---
 v2:
-  * Rename compatible string to raspberrypi,firmware-gpio
+  * Move GPIO expander node out of the soc container
+  * Rename compatible string
+  * Add gpio-line-names property
 ---
- .../bindings/gpio/raspberrypi,firmware-gpio.txt    | 24 ++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/raspberrypi,firmware-gpio.txt
+ arch/arm/boot/dts/bcm2837-rpi-3-b.dts | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/gpio/raspberrypi,firmware-gpio.txt b/Documentation/devicetree/bindings/gpio/raspberrypi,firmware-gpio.txt
-new file mode 100644
-index 000000000000..8faf269cf541
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/raspberrypi,firmware-gpio.txt
-@@ -0,0 +1,24 @@
-+Raspberry Pi GPIO expander
+diff --git a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
+index b44b3b5af00d..24555e8a43ec 100644
+--- a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
++++ b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
+@@ -23,6 +23,16 @@
+ 			gpios = <&gpio 47 0>;
+ 		};
+ 	};
 +
-+The Raspberry Pi 3 GPIO expander is controlled by the VC4 firmware. The
-+firmware exposes a mailbox interface that allows the ARM core to control the
-+GPIO lines on the expander.
-+
-+Required properties:
-+
-+- compatible : Should be "raspberrypi,firmware-gpio"
-+- gpio-controller : Marks the device node as a gpio controller
-+- #gpio-cells : Should be two.  The first cell is the pin number, and
-+  the second cell is used to specify the gpio polarity:
-+  0 = active high
-+  1 = active low
-+- firmware : Reference to the RPi firmware device node
-+
-+Example:
-+
-+expgpio: expgpio {
-+	compatible = "raspberrypi,firmware-gpio";
-+	gpio-controller;
-+	#gpio-cells = <2>;
-+	firmware = <&firmware>;
-+};
++	expgpio: gpio-expander {
++		compatible = "raspberrypi,firmware-gpio";
++		gpio-controller;
++		#gpio-cells = <2>;
++		firmware = <&firmware>;
++		gpio-line-names = "BT_ON", "WL_ON", "STATUS_LED", "LAN_RUN",
++			"HPD_N", "CAM_GPIO0", "CAM_GPIO1", "PWR_LOW_N";
++		status = "okay";
++	};
+ };
+ 
+ /* uart0 communicates with the BT module */
 -- 
 2.15.1
 
