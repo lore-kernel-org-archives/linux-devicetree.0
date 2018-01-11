@@ -1,198 +1,124 @@
 From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 Subject: [PATCH 1/3] drm: rcar-du: lvds: refactor LVDS startup
 Date: Thu, 11 Jan 2018 19:54:33 +0300
-Message-ID: <20180111170055.878913975__10953.1020782471$1515689953$gmane$org@cogentembedded.com>
+Message-ID: <20180111170055.878913975__14800.0606721782$1515689959$gmane$org@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline; filename=drm-rcar-du-lvds-refactor-LVDS-startup.patch
-Sender: linux-renesas-soc-owner@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline;
+ filename=drm-rcar-du-lvds-refactor-LVDS-startup.patch
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 List-Id: devicetree@vger.kernel.org
 
-After the recent correction of the R-Car gen3 LVDCR1 value, already similar
-enough at their  ends rcar_du_lvdsenc_start_gen{2|3}() started asking for a
-merge and it's becoming actually necessary with the addition the R-Car V3M
-(R8A77970) support -- this  gen3 SoC  has gen2-like LVDPLLCR layout.
-
-BTW, such a merge saves 72 bytes of the object code with AArch64 gcc 4.8.5.
-
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-
----
- drivers/gpu/drm/rcar-du/rcar_du_lvdsenc.c |  132 ++++++++++++------------------
- 1 file changed, 54 insertions(+), 78 deletions(-)
-
-Index: linux/drivers/gpu/drm/rcar-du/rcar_du_lvdsenc.c
-===================================================================
---- linux.orig/drivers/gpu/drm/rcar-du/rcar_du_lvdsenc.c
-+++ linux/drivers/gpu/drm/rcar-du/rcar_du_lvdsenc.c
-@@ -39,98 +39,41 @@ static void rcar_lvds_write(struct rcar_
- 	iowrite32(data, lvds->mmio + reg);
- }
- 
--static void rcar_du_lvdsenc_start_gen2(struct rcar_du_lvdsenc *lvds,
--				       struct rcar_du_crtc *rcrtc)
-+static u32 rcar_lvds_gen2_lvdpllcr(unsigned int freq)
- {
--	const struct drm_display_mode *mode = &rcrtc->crtc.mode;
--	unsigned int freq = mode->clock;
--	u32 lvdcr0;
--	u32 pllcr;
-+	u32 lvdpllcr;
- 
--	/* PLL clock configuration */
- 	if (freq < 39000)
--		pllcr = LVDPLLCR_CEEN | LVDPLLCR_COSEL | LVDPLLCR_PLLDLYCNT_38M;
-+		lvdpllcr = LVDPLLCR_PLLDLYCNT_38M;
- 	else if (freq < 61000)
--		pllcr = LVDPLLCR_CEEN | LVDPLLCR_COSEL | LVDPLLCR_PLLDLYCNT_60M;
-+		lvdpllcr = LVDPLLCR_PLLDLYCNT_60M;
- 	else if (freq < 121000)
--		pllcr = LVDPLLCR_CEEN | LVDPLLCR_COSEL | LVDPLLCR_PLLDLYCNT_121M;
-+		lvdpllcr = LVDPLLCR_PLLDLYCNT_121M;
- 	else
--		pllcr = LVDPLLCR_PLLDLYCNT_150M;
--
--	rcar_lvds_write(lvds, LVDPLLCR, pllcr);
--
--	/*
--	 * Select the input, hardcode mode 0, enable LVDS operation and turn
--	 * bias circuitry on.
--	 */
--	lvdcr0 = (lvds->mode << LVDCR0_LVMD_SHIFT) | LVDCR0_BEN | LVDCR0_LVEN;
--	if (rcrtc->index == 2)
--		lvdcr0 |= LVDCR0_DUSEL;
--	rcar_lvds_write(lvds, LVDCR0, lvdcr0);
-+		return LVDPLLCR_PLLDLYCNT_150M;
- 
--	/* Turn all the channels on. */
--	rcar_lvds_write(lvds, LVDCR1,
--			LVDCR1_CHSTBY(3) | LVDCR1_CHSTBY(2) |
--			LVDCR1_CHSTBY(1) | LVDCR1_CHSTBY(0) | LVDCR1_CLKSTBY);
--
--	/*
--	 * Turn the PLL on, wait for the startup delay, and turn the output
--	 * on.
--	 */
--	lvdcr0 |= LVDCR0_PLLON;
--	rcar_lvds_write(lvds, LVDCR0, lvdcr0);
--
--	usleep_range(100, 150);
--
--	lvdcr0 |= LVDCR0_LVRES;
--	rcar_lvds_write(lvds, LVDCR0, lvdcr0);
-+	return lvdpllcr | LVDPLLCR_CEEN | LVDPLLCR_COSEL;
- }
- 
--static void rcar_du_lvdsenc_start_gen3(struct rcar_du_lvdsenc *lvds,
--				       struct rcar_du_crtc *rcrtc)
-+static u32 rcar_lvds_gen3_lvdpllcr(unsigned int freq)
- {
--	const struct drm_display_mode *mode = &rcrtc->crtc.mode;
--	unsigned int freq = mode->clock;
--	u32 lvdcr0;
--	u32 pllcr;
--
--	/* PLL clock configuration */
- 	if (freq < 42000)
--		pllcr = LVDPLLCR_PLLDIVCNT_42M;
-+		return LVDPLLCR_PLLDIVCNT_42M;
- 	else if (freq < 85000)
--		pllcr = LVDPLLCR_PLLDIVCNT_85M;
-+		return LVDPLLCR_PLLDIVCNT_85M;
- 	else if (freq < 128000)
--		pllcr = LVDPLLCR_PLLDIVCNT_128M;
--	else
--		pllcr = LVDPLLCR_PLLDIVCNT_148M;
--
--	rcar_lvds_write(lvds, LVDPLLCR, pllcr);
--
--	/* Turn all the channels on. */
--	rcar_lvds_write(lvds, LVDCR1,
--			LVDCR1_CHSTBY(3) | LVDCR1_CHSTBY(2) |
--			LVDCR1_CHSTBY(1) | LVDCR1_CHSTBY(0) | LVDCR1_CLKSTBY);
--
--	/*
--	 * Turn the PLL on, set it to LVDS normal mode, wait for the startup
--	 * delay and turn the output on.
--	 */
--	lvdcr0 = (lvds->mode << LVDCR0_LVMD_SHIFT) | LVDCR0_PLLON;
--	rcar_lvds_write(lvds, LVDCR0, lvdcr0);
--
--	lvdcr0 |= LVDCR0_PWD;
--	rcar_lvds_write(lvds, LVDCR0, lvdcr0);
-+		return LVDPLLCR_PLLDIVCNT_128M;
- 
--	usleep_range(100, 150);
--
--	lvdcr0 |= LVDCR0_LVRES;
--	rcar_lvds_write(lvds, LVDCR0, lvdcr0);
-+	return LVDPLLCR_PLLDIVCNT_148M;
- }
- 
- static int rcar_du_lvdsenc_start(struct rcar_du_lvdsenc *lvds,
- 				 struct rcar_du_crtc *rcrtc)
- {
--	u32 lvdhcr;
-+	u32 lvdhcr, lvdpllcr, lvdcr0 = lvds->mode << LVDCR0_LVMD_SHIFT;
-+	const struct drm_display_mode *mode = &rcrtc->crtc.mode;
-+	unsigned int gen = lvds->dev->info->gen;
-+	unsigned int freq = mode->clock;
- 	int ret;
- 
- 	if (lvds->enabled)
-@@ -158,14 +101,47 @@ static int rcar_du_lvdsenc_start(struct
- 	else
- 		lvdhcr = LVDCHCR_CHSEL_CH(0, 0) | LVDCHCR_CHSEL_CH(1, 1)
- 		       | LVDCHCR_CHSEL_CH(2, 2) | LVDCHCR_CHSEL_CH(3, 3);
--
- 	rcar_lvds_write(lvds, LVDCHCR, lvdhcr);
- 
--	/* Perform generation-specific initialization. */
--	if (lvds->dev->info->gen < 3)
--		rcar_du_lvdsenc_start_gen2(lvds, rcrtc);
-+	/* PLL clock configuration */
-+	if (gen < 3)
-+		lvdpllcr = rcar_lvds_gen2_lvdpllcr(freq);
- 	else
--		rcar_du_lvdsenc_start_gen3(lvds, rcrtc);
-+		lvdpllcr = rcar_lvds_gen3_lvdpllcr(freq);
-+	rcar_lvds_write(lvds, LVDPLLCR,	lvdpllcr);
-+
-+	if (gen < 3) {
-+		/*
-+		 * Select the input, enable LVDS operation, and turn
-+		 * the bias circuitry on.
-+		 */
-+		lvdcr0 |= LVDCR0_BEN | LVDCR0_LVEN;
-+		if (rcrtc->index == 2)
-+			lvdcr0 |= LVDCR0_DUSEL;
-+		rcar_lvds_write(lvds, LVDCR0, lvdcr0);
-+	}
-+
-+	/* Turn all the channels on. */
-+	rcar_lvds_write(lvds, LVDCR1,
-+			LVDCR1_CHSTBY(3) | LVDCR1_CHSTBY(2) |
-+			LVDCR1_CHSTBY(1) | LVDCR1_CHSTBY(0) | LVDCR1_CLKSTBY);
-+
-+	/* Turn the PLL on. */
-+	lvdcr0 |= LVDCR0_PLLON;
-+	rcar_lvds_write(lvds, LVDCR0, lvdcr0);
-+
-+	if (gen > 2) {
-+		/* Turn on the LVDS normal mode. */
-+		lvdcr0 |= LVDCR0_PWD;
-+		rcar_lvds_write(lvds, LVDCR0, lvdcr0);
-+	}
-+
-+	/* Wait for the startup delay. */
-+	usleep_range(100, 150);
-+
-+	/* Turn the output on. */
-+	lvdcr0 |= LVDCR0_LVRES;
-+	rcar_lvds_write(lvds, LVDCR0, lvdcr0);
- 
- 	lvds->enabled = true;
- 
+QWZ0ZXIgdGhlIHJlY2VudCBjb3JyZWN0aW9uIG9mIHRoZSBSLUNhciBnZW4zIExWRENSMSB2YWx1
+ZSwgYWxyZWFkeSBzaW1pbGFyCmVub3VnaCBhdCB0aGVpciAgZW5kcyByY2FyX2R1X2x2ZHNlbmNf
+c3RhcnRfZ2VuezJ8M30oKSBzdGFydGVkIGFza2luZyBmb3IgYQptZXJnZSBhbmQgaXQncyBiZWNv
+bWluZyBhY3R1YWxseSBuZWNlc3Nhcnkgd2l0aCB0aGUgYWRkaXRpb24gdGhlIFItQ2FyIFYzTQoo
+UjhBNzc5NzApIHN1cHBvcnQgLS0gdGhpcyAgZ2VuMyBTb0MgIGhhcyBnZW4yLWxpa2UgTFZEUExM
+Q1IgbGF5b3V0LgoKQlRXLCBzdWNoIGEgbWVyZ2Ugc2F2ZXMgNzIgYnl0ZXMgb2YgdGhlIG9iamVj
+dCBjb2RlIHdpdGggQUFyY2g2NCBnY2MgNC44LjUuCgpTaWduZWQtb2ZmLWJ5OiBTZXJnZWkgU2h0
+eWx5b3YgPHNlcmdlaS5zaHR5bHlvdkBjb2dlbnRlbWJlZGRlZC5jb20+CgotLS0KIGRyaXZlcnMv
+Z3B1L2RybS9yY2FyLWR1L3JjYXJfZHVfbHZkc2VuYy5jIHwgIDEzMiArKysrKysrKysrKystLS0t
+LS0tLS0tLS0tLS0tLS0KIDEgZmlsZSBjaGFuZ2VkLCA1NCBpbnNlcnRpb25zKCspLCA3OCBkZWxl
+dGlvbnMoLSkKCkluZGV4OiBsaW51eC9kcml2ZXJzL2dwdS9kcm0vcmNhci1kdS9yY2FyX2R1X2x2
+ZHNlbmMuYwo9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09Ci0tLSBsaW51eC5vcmlnL2RyaXZlcnMvZ3B1L2RybS9yY2FyLWR1
+L3JjYXJfZHVfbHZkc2VuYy5jCisrKyBsaW51eC9kcml2ZXJzL2dwdS9kcm0vcmNhci1kdS9yY2Fy
+X2R1X2x2ZHNlbmMuYwpAQCAtMzksOTggKzM5LDQxIEBAIHN0YXRpYyB2b2lkIHJjYXJfbHZkc193
+cml0ZShzdHJ1Y3QgcmNhcl8KIAlpb3dyaXRlMzIoZGF0YSwgbHZkcy0+bW1pbyArIHJlZyk7CiB9
+CiAKLXN0YXRpYyB2b2lkIHJjYXJfZHVfbHZkc2VuY19zdGFydF9nZW4yKHN0cnVjdCByY2FyX2R1
+X2x2ZHNlbmMgKmx2ZHMsCi0JCQkJICAgICAgIHN0cnVjdCByY2FyX2R1X2NydGMgKnJjcnRjKQor
+c3RhdGljIHUzMiByY2FyX2x2ZHNfZ2VuMl9sdmRwbGxjcih1bnNpZ25lZCBpbnQgZnJlcSkKIHsK
+LQljb25zdCBzdHJ1Y3QgZHJtX2Rpc3BsYXlfbW9kZSAqbW9kZSA9ICZyY3J0Yy0+Y3J0Yy5tb2Rl
+OwotCXVuc2lnbmVkIGludCBmcmVxID0gbW9kZS0+Y2xvY2s7Ci0JdTMyIGx2ZGNyMDsKLQl1MzIg
+cGxsY3I7CisJdTMyIGx2ZHBsbGNyOwogCi0JLyogUExMIGNsb2NrIGNvbmZpZ3VyYXRpb24gKi8K
+IAlpZiAoZnJlcSA8IDM5MDAwKQotCQlwbGxjciA9IExWRFBMTENSX0NFRU4gfCBMVkRQTExDUl9D
+T1NFTCB8IExWRFBMTENSX1BMTERMWUNOVF8zOE07CisJCWx2ZHBsbGNyID0gTFZEUExMQ1JfUExM
+RExZQ05UXzM4TTsKIAllbHNlIGlmIChmcmVxIDwgNjEwMDApCi0JCXBsbGNyID0gTFZEUExMQ1Jf
+Q0VFTiB8IExWRFBMTENSX0NPU0VMIHwgTFZEUExMQ1JfUExMRExZQ05UXzYwTTsKKwkJbHZkcGxs
+Y3IgPSBMVkRQTExDUl9QTExETFlDTlRfNjBNOwogCWVsc2UgaWYgKGZyZXEgPCAxMjEwMDApCi0J
+CXBsbGNyID0gTFZEUExMQ1JfQ0VFTiB8IExWRFBMTENSX0NPU0VMIHwgTFZEUExMQ1JfUExMRExZ
+Q05UXzEyMU07CisJCWx2ZHBsbGNyID0gTFZEUExMQ1JfUExMRExZQ05UXzEyMU07CiAJZWxzZQot
+CQlwbGxjciA9IExWRFBMTENSX1BMTERMWUNOVF8xNTBNOwotCi0JcmNhcl9sdmRzX3dyaXRlKGx2
+ZHMsIExWRFBMTENSLCBwbGxjcik7Ci0KLQkvKgotCSAqIFNlbGVjdCB0aGUgaW5wdXQsIGhhcmRj
+b2RlIG1vZGUgMCwgZW5hYmxlIExWRFMgb3BlcmF0aW9uIGFuZCB0dXJuCi0JICogYmlhcyBjaXJj
+dWl0cnkgb24uCi0JICovCi0JbHZkY3IwID0gKGx2ZHMtPm1vZGUgPDwgTFZEQ1IwX0xWTURfU0hJ
+RlQpIHwgTFZEQ1IwX0JFTiB8IExWRENSMF9MVkVOOwotCWlmIChyY3J0Yy0+aW5kZXggPT0gMikK
+LQkJbHZkY3IwIHw9IExWRENSMF9EVVNFTDsKLQlyY2FyX2x2ZHNfd3JpdGUobHZkcywgTFZEQ1Iw
+LCBsdmRjcjApOworCQlyZXR1cm4gTFZEUExMQ1JfUExMRExZQ05UXzE1ME07CiAKLQkvKiBUdXJu
+IGFsbCB0aGUgY2hhbm5lbHMgb24uICovCi0JcmNhcl9sdmRzX3dyaXRlKGx2ZHMsIExWRENSMSwK
+LQkJCUxWRENSMV9DSFNUQlkoMykgfCBMVkRDUjFfQ0hTVEJZKDIpIHwKLQkJCUxWRENSMV9DSFNU
+QlkoMSkgfCBMVkRDUjFfQ0hTVEJZKDApIHwgTFZEQ1IxX0NMS1NUQlkpOwotCi0JLyoKLQkgKiBU
+dXJuIHRoZSBQTEwgb24sIHdhaXQgZm9yIHRoZSBzdGFydHVwIGRlbGF5LCBhbmQgdHVybiB0aGUg
+b3V0cHV0Ci0JICogb24uCi0JICovCi0JbHZkY3IwIHw9IExWRENSMF9QTExPTjsKLQlyY2FyX2x2
+ZHNfd3JpdGUobHZkcywgTFZEQ1IwLCBsdmRjcjApOwotCi0JdXNsZWVwX3JhbmdlKDEwMCwgMTUw
+KTsKLQotCWx2ZGNyMCB8PSBMVkRDUjBfTFZSRVM7Ci0JcmNhcl9sdmRzX3dyaXRlKGx2ZHMsIExW
+RENSMCwgbHZkY3IwKTsKKwlyZXR1cm4gbHZkcGxsY3IgfCBMVkRQTExDUl9DRUVOIHwgTFZEUExM
+Q1JfQ09TRUw7CiB9CiAKLXN0YXRpYyB2b2lkIHJjYXJfZHVfbHZkc2VuY19zdGFydF9nZW4zKHN0
+cnVjdCByY2FyX2R1X2x2ZHNlbmMgKmx2ZHMsCi0JCQkJICAgICAgIHN0cnVjdCByY2FyX2R1X2Ny
+dGMgKnJjcnRjKQorc3RhdGljIHUzMiByY2FyX2x2ZHNfZ2VuM19sdmRwbGxjcih1bnNpZ25lZCBp
+bnQgZnJlcSkKIHsKLQljb25zdCBzdHJ1Y3QgZHJtX2Rpc3BsYXlfbW9kZSAqbW9kZSA9ICZyY3J0
+Yy0+Y3J0Yy5tb2RlOwotCXVuc2lnbmVkIGludCBmcmVxID0gbW9kZS0+Y2xvY2s7Ci0JdTMyIGx2
+ZGNyMDsKLQl1MzIgcGxsY3I7Ci0KLQkvKiBQTEwgY2xvY2sgY29uZmlndXJhdGlvbiAqLwogCWlm
+IChmcmVxIDwgNDIwMDApCi0JCXBsbGNyID0gTFZEUExMQ1JfUExMRElWQ05UXzQyTTsKKwkJcmV0
+dXJuIExWRFBMTENSX1BMTERJVkNOVF80Mk07CiAJZWxzZSBpZiAoZnJlcSA8IDg1MDAwKQotCQlw
+bGxjciA9IExWRFBMTENSX1BMTERJVkNOVF84NU07CisJCXJldHVybiBMVkRQTExDUl9QTExESVZD
+TlRfODVNOwogCWVsc2UgaWYgKGZyZXEgPCAxMjgwMDApCi0JCXBsbGNyID0gTFZEUExMQ1JfUExM
+RElWQ05UXzEyOE07Ci0JZWxzZQotCQlwbGxjciA9IExWRFBMTENSX1BMTERJVkNOVF8xNDhNOwot
+Ci0JcmNhcl9sdmRzX3dyaXRlKGx2ZHMsIExWRFBMTENSLCBwbGxjcik7Ci0KLQkvKiBUdXJuIGFs
+bCB0aGUgY2hhbm5lbHMgb24uICovCi0JcmNhcl9sdmRzX3dyaXRlKGx2ZHMsIExWRENSMSwKLQkJ
+CUxWRENSMV9DSFNUQlkoMykgfCBMVkRDUjFfQ0hTVEJZKDIpIHwKLQkJCUxWRENSMV9DSFNUQlko
+MSkgfCBMVkRDUjFfQ0hTVEJZKDApIHwgTFZEQ1IxX0NMS1NUQlkpOwotCi0JLyoKLQkgKiBUdXJu
+IHRoZSBQTEwgb24sIHNldCBpdCB0byBMVkRTIG5vcm1hbCBtb2RlLCB3YWl0IGZvciB0aGUgc3Rh
+cnR1cAotCSAqIGRlbGF5IGFuZCB0dXJuIHRoZSBvdXRwdXQgb24uCi0JICovCi0JbHZkY3IwID0g
+KGx2ZHMtPm1vZGUgPDwgTFZEQ1IwX0xWTURfU0hJRlQpIHwgTFZEQ1IwX1BMTE9OOwotCXJjYXJf
+bHZkc193cml0ZShsdmRzLCBMVkRDUjAsIGx2ZGNyMCk7Ci0KLQlsdmRjcjAgfD0gTFZEQ1IwX1BX
+RDsKLQlyY2FyX2x2ZHNfd3JpdGUobHZkcywgTFZEQ1IwLCBsdmRjcjApOworCQlyZXR1cm4gTFZE
+UExMQ1JfUExMRElWQ05UXzEyOE07CiAKLQl1c2xlZXBfcmFuZ2UoMTAwLCAxNTApOwotCi0JbHZk
+Y3IwIHw9IExWRENSMF9MVlJFUzsKLQlyY2FyX2x2ZHNfd3JpdGUobHZkcywgTFZEQ1IwLCBsdmRj
+cjApOworCXJldHVybiBMVkRQTExDUl9QTExESVZDTlRfMTQ4TTsKIH0KIAogc3RhdGljIGludCBy
+Y2FyX2R1X2x2ZHNlbmNfc3RhcnQoc3RydWN0IHJjYXJfZHVfbHZkc2VuYyAqbHZkcywKIAkJCQkg
+c3RydWN0IHJjYXJfZHVfY3J0YyAqcmNydGMpCiB7Ci0JdTMyIGx2ZGhjcjsKKwl1MzIgbHZkaGNy
+LCBsdmRwbGxjciwgbHZkY3IwID0gbHZkcy0+bW9kZSA8PCBMVkRDUjBfTFZNRF9TSElGVDsKKwlj
+b25zdCBzdHJ1Y3QgZHJtX2Rpc3BsYXlfbW9kZSAqbW9kZSA9ICZyY3J0Yy0+Y3J0Yy5tb2RlOwor
+CXVuc2lnbmVkIGludCBnZW4gPSBsdmRzLT5kZXYtPmluZm8tPmdlbjsKKwl1bnNpZ25lZCBpbnQg
+ZnJlcSA9IG1vZGUtPmNsb2NrOwogCWludCByZXQ7CiAKIAlpZiAobHZkcy0+ZW5hYmxlZCkKQEAg
+LTE1OCwxNCArMTAxLDQ3IEBAIHN0YXRpYyBpbnQgcmNhcl9kdV9sdmRzZW5jX3N0YXJ0KHN0cnVj
+dAogCWVsc2UKIAkJbHZkaGNyID0gTFZEQ0hDUl9DSFNFTF9DSCgwLCAwKSB8IExWRENIQ1JfQ0hT
+RUxfQ0goMSwgMSkKIAkJICAgICAgIHwgTFZEQ0hDUl9DSFNFTF9DSCgyLCAyKSB8IExWRENIQ1Jf
+Q0hTRUxfQ0goMywgMyk7Ci0KIAlyY2FyX2x2ZHNfd3JpdGUobHZkcywgTFZEQ0hDUiwgbHZkaGNy
+KTsKIAotCS8qIFBlcmZvcm0gZ2VuZXJhdGlvbi1zcGVjaWZpYyBpbml0aWFsaXphdGlvbi4gKi8K
+LQlpZiAobHZkcy0+ZGV2LT5pbmZvLT5nZW4gPCAzKQotCQlyY2FyX2R1X2x2ZHNlbmNfc3RhcnRf
+Z2VuMihsdmRzLCByY3J0Yyk7CisJLyogUExMIGNsb2NrIGNvbmZpZ3VyYXRpb24gKi8KKwlpZiAo
+Z2VuIDwgMykKKwkJbHZkcGxsY3IgPSByY2FyX2x2ZHNfZ2VuMl9sdmRwbGxjcihmcmVxKTsKIAll
+bHNlCi0JCXJjYXJfZHVfbHZkc2VuY19zdGFydF9nZW4zKGx2ZHMsIHJjcnRjKTsKKwkJbHZkcGxs
+Y3IgPSByY2FyX2x2ZHNfZ2VuM19sdmRwbGxjcihmcmVxKTsKKwlyY2FyX2x2ZHNfd3JpdGUobHZk
+cywgTFZEUExMQ1IsCWx2ZHBsbGNyKTsKKworCWlmIChnZW4gPCAzKSB7CisJCS8qCisJCSAqIFNl
+bGVjdCB0aGUgaW5wdXQsIGVuYWJsZSBMVkRTIG9wZXJhdGlvbiwgYW5kIHR1cm4KKwkJICogdGhl
+IGJpYXMgY2lyY3VpdHJ5IG9uLgorCQkgKi8KKwkJbHZkY3IwIHw9IExWRENSMF9CRU4gfCBMVkRD
+UjBfTFZFTjsKKwkJaWYgKHJjcnRjLT5pbmRleCA9PSAyKQorCQkJbHZkY3IwIHw9IExWRENSMF9E
+VVNFTDsKKwkJcmNhcl9sdmRzX3dyaXRlKGx2ZHMsIExWRENSMCwgbHZkY3IwKTsKKwl9CisKKwkv
+KiBUdXJuIGFsbCB0aGUgY2hhbm5lbHMgb24uICovCisJcmNhcl9sdmRzX3dyaXRlKGx2ZHMsIExW
+RENSMSwKKwkJCUxWRENSMV9DSFNUQlkoMykgfCBMVkRDUjFfQ0hTVEJZKDIpIHwKKwkJCUxWRENS
+MV9DSFNUQlkoMSkgfCBMVkRDUjFfQ0hTVEJZKDApIHwgTFZEQ1IxX0NMS1NUQlkpOworCisJLyog
+VHVybiB0aGUgUExMIG9uLiAqLworCWx2ZGNyMCB8PSBMVkRDUjBfUExMT047CisJcmNhcl9sdmRz
+X3dyaXRlKGx2ZHMsIExWRENSMCwgbHZkY3IwKTsKKworCWlmIChnZW4gPiAyKSB7CisJCS8qIFR1
+cm4gb24gdGhlIExWRFMgbm9ybWFsIG1vZGUuICovCisJCWx2ZGNyMCB8PSBMVkRDUjBfUFdEOwor
+CQlyY2FyX2x2ZHNfd3JpdGUobHZkcywgTFZEQ1IwLCBsdmRjcjApOworCX0KKworCS8qIFdhaXQg
+Zm9yIHRoZSBzdGFydHVwIGRlbGF5LiAqLworCXVzbGVlcF9yYW5nZSgxMDAsIDE1MCk7CisKKwkv
+KiBUdXJuIHRoZSBvdXRwdXQgb24uICovCisJbHZkY3IwIHw9IExWRENSMF9MVlJFUzsKKwlyY2Fy
+X2x2ZHNfd3JpdGUobHZkcywgTFZEQ1IwLCBsdmRjcjApOwogCiAJbHZkcy0+ZW5hYmxlZCA9IHRy
+dWU7CiAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRy
+aS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRw
+czovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
