@@ -1,32 +1,73 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/3] arm: spear600: Add missing interrupt-parent of rtc
-Date: Thu, 11 Jan 2018 07:47:07 -0600
-Message-ID: <CAL_JsqJT+987J89+SqZEgC6C=ioGwLHKrRWxPSFKHV7UN5JewA@mail.gmail.com>
-References: <a062d9ed0d3365b578156a780202fa533e725374.1515650104.git.viresh.kumar@linaro.org>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH V5 3/7] PCI: tegra: Remove PCI_REASSIGN_ALL_BUS flag for
+ Tegra PCIe
+Date: Thu, 11 Jan 2018 13:49:25 +0000
+Message-ID: <20180111134925.GA10168@red-moon>
+References: <1515489577-2197-1-git-send-email-mmaddireddy@nvidia.com>
+ <1515489577-2197-4-git-send-email-mmaddireddy@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <a062d9ed0d3365b578156a780202fa533e725374.1515650104.git.viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1515489577-2197-4-git-send-email-mmaddireddy@nvidia.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Manikanta Maddireddy <mmaddireddy@nvidia.com>, bhelgaas@google.com
+Cc: thierry.reding@gmail.com, cyndis@kapsi.fi, jonathanh@nvidia.com, robh+dt@kernel.org, frowand.list@gmail.com, rjw@rjwysocki.net, tglx@linutronix.de, vidyas@nvidia.com, kthota@nvidia.com, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 10, 2018 at 11:58 PM, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> The interrupt-parent of rtc was missing, add it.
->
-> Fixes: 8113ba917dfa ("ARM: SPEAr: DT: Update device nodes")
-> Cc: stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org # v3.8+
-> Reported-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-> Signed-off-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Hi Bjorn,
+
+On Tue, Jan 09, 2018 at 02:49:33PM +0530, Manikanta Maddireddy wrote:
+> Primary, secondary and subordinate default bus numbers are 0 in Tegra and
+> it is expecting SW to program these numbers in configration space.
+> 
+> pci_scan_bridge_extend() function programs these numbers in configuration
+> space if secondary & subordinate bus numbers are 0 or PCI_REASSIGN_ALL_BUS
+> flag is set. Since secondary & subordinate default bus numbers are 0,
+> PCI_REASSIGN_ALL_BUS flag can be removed for Tegra PCIe.
+> 
+> Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+> Acked-by: Thierry Reding <treding@nvidia.com>
+
+Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+
+Would you mind applying this patch (NB: it is the patch in the v5
+version - this patch - not the one in v6 that is a rebased version):
+
+https://patchwork.ozlabs.org/patch/857318/
+
+to your pci/resource branch please (there is a dependency) ?
+
+This would allow me to apply the rest of the patches in the series
+that I consider mergeable independently of your tree branches, to
+simplify the dependency.
+
+Thanks !
+Lorenzo
+
 > ---
->  arch/arm/boot/dts/spear600.dtsi | 1 +
->  1 file changed, 1 insertion(+)
-
-For all three patches:
-
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> V3:
+> * new patch in V3
+> V4:
+> * no change in this patch
+> V5:
+> * no change in this patch
+> 
+>  drivers/pci/host/pci-tegra.c | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/drivers/pci/host/pci-tegra.c b/drivers/pci/host/pci-tegra.c
+> index d790a26ad87e..e4b47ebc91fe 100644
+> --- a/drivers/pci/host/pci-tegra.c
+> +++ b/drivers/pci/host/pci-tegra.c
+> @@ -2293,7 +2293,6 @@ static int tegra_pcie_probe(struct platform_device *pdev)
+>  
+>  	tegra_pcie_enable_ports(pcie);
+>  
+> -	pci_add_flags(PCI_REASSIGN_ALL_BUS);
+>  	host->busnr = pcie->busn.start;
+>  	host->dev.parent = &pdev->dev;
+>  	host->ops = &tegra_pcie_ops;
+> -- 
+> 2.1.4
+> 
