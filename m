@@ -1,122 +1,63 @@
-From: Hyun Kwon <hyunk-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCH 00/10] Xilinx ZynqMP DisplayPort subsystem DRM KMS driver
-Date: Thu, 11 Jan 2018 02:07:08 +0000
-Message-ID: <BY1PR0201MB10002CAFCC860052538BA14DD6160@BY1PR0201MB1000.namprd02.prod.outlook.com>
-References: <1515117959-18068-1-git-send-email-hyun.kwon@xilinx.com>
- <20180109095649.GK26573@phenom.ffwll.local>
+From: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v3 0/5] ARM64: dts: meson-axg: UART DT updates
+Date: Thu, 11 Jan 2018 10:33:56 +0800
+Message-ID: <20180111023401.125658-1-yixun.lan@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180109095649.GK26573-dv86pmgwkMBes7Z6vYuT8azUEOm+Xw19@public.gmane.org>
-Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>
-Cc: "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+To: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgRGFuaWVsLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IERhbmll
-bCBWZXR0ZXIgW21haWx0bzpkYW5pZWwudmV0dGVyQGZmd2xsLmNoXSBPbiBCZWhhbGYgT2YgRGFu
-aWVsDQo+IFZldHRlcg0KPiBTZW50OiBUdWVzZGF5LCBKYW51YXJ5IDA5LCAyMDE4IDE6NTcgQU0N
-Cj4gVG86IEh5dW4gS3dvbiA8aHl1bmtAeGlsaW54LmNvbT4NCj4gQ2M6IGRyaS1kZXZlbEBsaXN0
-cy5mcmVlZGVza3RvcC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBNaWNoYWwNCj4g
-U2ltZWsgPG1pY2hhbC5zaW1la0B4aWxpbnguY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIDAw
-LzEwXSBYaWxpbnggWnlucU1QIERpc3BsYXlQb3J0IHN1YnN5c3RlbSBEUk0NCj4gS01TIGRyaXZl
-cg0KPiANCj4gT24gVGh1LCBKYW4gMDQsIDIwMTggYXQgMDY6MDU6NDlQTSAtMDgwMCwgSHl1biBL
-d29uIHdyb3RlOg0KPiA+IEhpLA0KPiA+DQo+ID4gVGhpcyBwYXRjaHNldCBhZGRzIHRoZSBEUk0g
-S01TIGRyaXZlciBmb3IgWGlsaW54IFp5bnFNUCBEaXNwbGF5UG9ydA0KPiA+IHN1YnN5c3RlbS4g
-VGhlIFhpbGlueCBaeW5xTVAgU29DIGhhcyBhIGhhcmRlbmVkIGZ1bGwgZGlzcGxheSBwaXBlbGlu
-ZQ0KPiA+IHdoaWNoIHN1cHBvcnRzIGJsZW5kaW5nIG9mIHVwIHRvIDIgcGxhbmVzLCBhbmQgdGhl
-IGVuY29kZXIgaXMNCj4gPiBEaXNwbGF5UG9ydCB2MS4yIGNvbXBhdGlibGUuDQo+ID4NCj4gPiBU
-aGlzIHNlcmllcyBtYWlubHkgaW5jbHVkZXMgMiBzZXRzOiBYaWxpbnggRFJNIEtNUyAocGF0Y2gg
-MS8xMCAtIDUvMTApDQo+ID4gYW5kIFp5bnFNUCBEUCBzdWJzeXN0ZW0gZHJpdmVycyAocGF0Y2gg
-Ni8xMCAtIDEwLzEwKS4NCj4gPg0KPiA+IFRoZSBYaWxpbnggRFJNIEtNUyBpcyBpbnRlbmRlZCBh
-cyBhIGNvbW1vbiBsYXllciBzaGFyZWQgYWNyb3NzIG90aGVyDQo+ID4gKHVwY29taW5nKSBYaWxp
-bnggc3ViLWRyaXZlcnMuIEl0IGhlbHBzIHN1Yi1kcml2ZXJzIGZvciBib3RoIGhhcmRlbmVkIGFz
-DQo+ID4gd2VsbCBhcyBzb2Z0IElQcyBpbnRlcm9wZXJhdGUgdG9nZXRoZXIuDQo+ID4NCj4gPiBa
-eW5xTVAgRFAgc3Vic3lzdGVtIGRyaXZlciBpcyBhIHN1Yi1kcml2ZXIgdGhhdCBpbXBsZW1lbnRz
-DQo+IGNvcnJlc3BvbmRpbmcNCj4gPiBkcm0gb2JqZWN0cyAoY3J0YywgcGxhbmUsIGVuY29kZXIs
-IGNvbm5lY3RvciwsLCkgZm9yIFp5bnFNUCBTb0MgZGlzcGxheQ0KPiA+IHBpcGVsaW5lLiBUaGUg
-ZW50aXJlIHBpcGVsaW5lIGlzIG1haW5seSBwYXJ0aXRpb25lZCBpbnRvIDIgYmxvY2tzOg0KPiA+
-IGdlbmVyaWMgZGlzcGxheSBsb2dpYyAoenlucW1wX2Rpc3AuYykgc3VjaCBhcyBibGVuZGluZywg
-Y3NjLCwsIGFuZCB0aGUNCj4gPiBEUCB0cmFuc21pdHRlciBsb2dpYyAoenlucW1wX2RwLmMpLg0K
-PiANCj4gSSByZWFkIHRocm91Z2ggaXQgYWxsICh3ZWxsIG1vc3RseSB0aGUgZHJtIHJlbGV2YW50
-IGJpdHMsIG5vdCB5b3VyIGJhY2tlbmQNCj4gY29kZSkgYW5kIGxvb2tzIGZhaXJseSByZXNvbmFi
-bGUuIEZldyBtaW5vciBjbGVuYXVwcyBhbmQgY29kZSByZW1vdmFscw0KPiB0YmguDQo+IA0KPiBX
-cnQgbWVyZ2luZy9tYWludGlhbmluZywgZG8geW91IHdhbnQgdG8gbWFpbnRhaW4gaXQgYXMgcGFy
-dCBvZiB0aGUNCj4gZHJtLW1pc2Mgc21hbGwgZHJpdmVycyBncm91cD8gSGlnaGx5IHJlY29tbWVu
-ZGVkIGltby4gU2VlDQo+IA0KPiBodHRwczovLzAxLm9yZy9saW51eGdyYXBoaWNzL2dmeC1kb2Nz
-L21haW50YWluZXItdG9vbHMvZHJtLQ0KPiBtaXNjLmh0bWwjc21hbGwtZHJpdmVycw0KPiANCj4g
-Zm9yIGRldGFpbHMuIElkZWFsbHkgd2UnZCBuZWVkIDIgeGlsaW54IG1haW50YWluZXJzIHRvIGJl
-IGFibGUgdG8gcHVzaA0KPiBwYXRjaGVzICYgY3Jvc3MtcmV2aWV3IHN0dWZmLg0KDQpJIGRvbid0
-IGhhdmUgYW55IHByZWZlcmVuY2Ugb24gaG93IHRvIG1haW50YWluLCBzbyBJJ2xsIGZvbGxvdyB5
-b3VyIHN1Z2dlc3Rpb24uIE9uZSB0aGluZyB0aGF0IG1heSBiZSB3b3J0aCBhIG5vdGUgaXMgdGhh
-dCB0aGVyZSBpcyBzaXphYmxlIGFtb3VudCBvZiBkZXZlbG9wbWVudCB3aXRoaW4gWGlsaW54LCBh
-bmQgdGhvc2Ugd2lsbCBjb21lIGluIG5lYXIgZnV0dXJlIChjb25zaWRlcmluZyB3aGF0IGNhbiBi
-ZSBkb25lIHdpdGggRlBHQSA6LSkpLiBJJ2xsIGxvb2sgZm9yIHRoZSAybmQgcmV2aWV3ZXIsIGFu
-ZCBzcGVjaWZ5IHRoYXQgaW4gdGhlIG5leHQgcGF0Y2ggaWYgZm91bmQuDQoNClRoYW5rcywNCi1o
-eXVuDQoNCj4gLURhbmllbA0KPiANCj4gPg0KPiA+IFRoYW5rcywNCj4gPiAtaHl1bg0KPiA+DQo+
-ID4gSHl1biBLd29uICgxMCk6DQo+ID4gICBkdC1iaW5kaW5nczogZGlzcGxheTogeGxueDogQWRk
-IFhpbGlueCBrbXMgYmluZGluZ3MNCj4gPiAgIGRybTogeGxueDogQWRkIHhsbnggY3J0YyBvZiBY
-aWxpbnggRFJNIEtNUw0KPiA+ICAgZHJtOiB4bG54OiBBZGQgeGxueCBmYiBvZiBYaWxpbnggRFJN
-IEtNUw0KPiA+ICAgZHJtOiB4bG54OiBBZGQgeGxueCBnZW0gb2YgWGlsaW54IERSTSBLTVMNCj4g
-PiAgIGRybTogeGxueDogWGlsaW54IERSTSBLTVMgZHJpdmVyDQo+ID4gICBkdC1iaW5kaW5nczog
-ZGlzcGxheTogeGxueDogQWRkIFp5bnFNUCBEUCBzdWJzeXN0ZW0gYmluZGluZ3MNCj4gPiAgIGRy
-bTogeGxueDogRFJNIEtNUyBkcml2ZXIgZm9yIFhpbGlueCBaeW5xTVAgRFAgc3Vic3lzdGVtIGRp
-c3BsYXkNCj4gPiAgIGRybTogeGxueDogRFJNIEtNUyBkcml2ZXIgZm9yIFhpbGlueCBaeW5xTVAg
-RGlzcGxheVBvcnQNCj4gPiAgIGRybTogeGxueDogWnlucU1QIERQIHN1YnN5c3RlbSBEUk0gS01T
-IGRyaXZlcg0KPiA+ICAgZHJtOiB4bG54OiB6eW5xbXA6IEFkZCBkZWJ1Z2ZzDQo+ID4NCj4gPiAg
-Li4uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS94bG54L3hsbngsa21zLnR4dCAgfCAgIDIw
-ICsNCj4gPiAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkveGxueC94bG54LHp5bnFtcC1kcHN1Yi50eHQg
-ICAgfCAgIDk0ICsNCj4gPiAgTUFJTlRBSU5FUlMgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgfCAgICA4ICsNCj4gPiAgZHJpdmVycy9ncHUvZHJtL0tjb25maWcgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgfCAgICAyICsNCj4gPiAgZHJpdmVycy9ncHUvZHJtL01ha2Vm
-aWxlICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgICAxICsNCj4gPiAgZHJpdmVycy9ncHUv
-ZHJtL3hsbngvS2NvbmZpZyAgICAgICAgICAgICAgICAgICAgICAgfCAgIDQ0ICsNCj4gPiAgZHJp
-dmVycy9ncHUvZHJtL3hsbngvTWFrZWZpbGUgICAgICAgICAgICAgICAgICAgICAgfCAgICA1ICsN
-Cj4gPiAgZHJpdmVycy9ncHUvZHJtL3hsbngveGxueF9jcnRjLmMgICAgICAgICAgICAgICAgICAg
-fCAgMTk1ICsrDQo+ID4gIGRyaXZlcnMvZ3B1L2RybS94bG54L3hsbnhfY3J0Yy5oICAgICAgICAg
-ICAgICAgICAgIHwgICA3MCArDQo+ID4gIGRyaXZlcnMvZ3B1L2RybS94bG54L3hsbnhfZHJ2LmMg
-ICAgICAgICAgICAgICAgICAgIHwgIDQzNiArKysNCj4gPiAgZHJpdmVycy9ncHUvZHJtL3hsbngv
-eGxueF9kcnYuaCAgICAgICAgICAgICAgICAgICAgfCAgIDIyICsNCj4gPiAgZHJpdmVycy9ncHUv
-ZHJtL3hsbngveGxueF9mYi5jICAgICAgICAgICAgICAgICAgICAgfCAgNDY4ICsrKw0KPiA+ICBk
-cml2ZXJzL2dwdS9kcm0veGxueC94bG54X2ZiLmggICAgICAgICAgICAgICAgICAgICB8ICAgMzAg
-Kw0KPiA+ICBkcml2ZXJzL2dwdS9kcm0veGxueC94bG54X2dlbS5jICAgICAgICAgICAgICAgICAg
-ICB8ICAgMzkgKw0KPiA+ICBkcml2ZXJzL2dwdS9kcm0veGxueC94bG54X2dlbS5oICAgICAgICAg
-ICAgICAgICAgICB8ICAgMTggKw0KPiA+ICBkcml2ZXJzL2dwdS9kcm0veGxueC96eW5xbXBfZGlz
-cC5jICAgICAgICAgICAgICAgICB8IDMyNjENCj4gKysrKysrKysrKysrKysrKysrKysNCj4gPiAg
-ZHJpdmVycy9ncHUvZHJtL3hsbngvenlucW1wX2Rpc3AuaCAgICAgICAgICAgICAgICAgfCAgIDI4
-ICsNCj4gPiAgZHJpdmVycy9ncHUvZHJtL3hsbngvenlucW1wX2RwLmMgICAgICAgICAgICAgICAg
-ICAgfCAyMTY4ICsrKysrKysrKysrKysNCj4gPiAgZHJpdmVycy9ncHUvZHJtL3hsbngvenlucW1w
-X2RwLmggICAgICAgICAgICAgICAgICAgfCAgIDI5ICsNCj4gPiAgZHJpdmVycy9ncHUvZHJtL3hs
-bngvenlucW1wX2Rwc3ViLmMgICAgICAgICAgICAgICAgfCAgMTQxICsNCj4gPiAgZHJpdmVycy9n
-cHUvZHJtL3hsbngvenlucW1wX2Rwc3ViLmggICAgICAgICAgICAgICAgfCAgIDE5ICsNCj4gPiAg
-MjEgZmlsZXMgY2hhbmdlZCwgNzA5OCBpbnNlcnRpb25zKCspDQo+ID4gIGNyZWF0ZSBtb2RlIDEw
-MDY0NA0KPiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS94bG54L3hs
-bngsa21zLnR4dA0KPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQNCj4gRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkveGxueC94bG54LHp5bnFtcC1kcHN1Yi50eHQNCj4gPiAg
-Y3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS94bG54L0tjb25maWcNCj4gPiAgY3Jl
-YXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS94bG54L01ha2VmaWxlDQo+ID4gIGNyZWF0
-ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0veGxueC94bG54X2NydGMuYw0KPiA+ICBjcmVh
-dGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3hsbngveGxueF9jcnRjLmgNCj4gPiAgY3Jl
-YXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS94bG54L3hsbnhfZHJ2LmMNCj4gPiAgY3Jl
-YXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS94bG54L3hsbnhfZHJ2LmgNCj4gPiAgY3Jl
-YXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS94bG54L3hsbnhfZmIuYw0KPiA+ICBjcmVh
-dGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3hsbngveGxueF9mYi5oDQo+ID4gIGNyZWF0
-ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0veGxueC94bG54X2dlbS5jDQo+ID4gIGNyZWF0
-ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0veGxueC94bG54X2dlbS5oDQo+ID4gIGNyZWF0
-ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0veGxueC96eW5xbXBfZGlzcC5jDQo+ID4gIGNy
-ZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0veGxueC96eW5xbXBfZGlzcC5oDQo+ID4g
-IGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0veGxueC96eW5xbXBfZHAuYw0KPiA+
-ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3hsbngvenlucW1wX2RwLmgNCj4g
-PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS94bG54L3p5bnFtcF9kcHN1Yi5j
-DQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0veGxueC96eW5xbXBfZHBz
-dWIuaA0KPiA+DQo+ID4gLS0NCj4gPiAyLjcuNA0KPiA+DQo+ID4gX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18NCj4gPiBkcmktZGV2ZWwgbWFpbGluZyBsaXN0
-DQo+ID4gZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZw0KPiA+IGh0dHBzOi8vbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsDQo+IA0KPiAtLQ0KPiBE
-YW5pZWwgVmV0dGVyDQo+IFNvZnR3YXJlIEVuZ2luZWVyLCBJbnRlbCBDb3Jwb3JhdGlvbg0KPiBo
-dHRwOi8vYmxvZy5mZndsbC5jaA0K
+HI Kevin
+ These are the UART DT updates for the Meson-AXG platform.
+
+ The patch 1 is a general fix.
+Other patches are about adding clock & pinctrl info, then using them.
+Last patch enable UART_A which connect to a BT module on the S400 board.
+
+Note: 
+This series depend on previous UART_AO clock switch patch[1]
+also, these patch request clocks, so they need the
+tag:meson-clk-for-v4.16-2 from clk-meson's tree in order to compile.
+
+Changes since v2 at [3]:
+  -- add Jerome's Reviewed-by to patch 1
+  -- adjust commit message, drop snip of code
+  -- drop extra blank line
+
+Changes since v1 at [2]:
+  -- fix address range for all platform
+  -- squash patch 1, 3 (drop compatible & add clock)
+  -- fix typo in pinctrl info
+  -- add Jerome's Ack
+
+[3]
+ http://lkml.kernel.org/r/20180106001044.108163-1-yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org
+
+[2]
+ http://lkml.kernel.org/r/20180105095621.196472-1-yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org
+
+[1] 
+ http://lkml.kernel.org/r/20171215141741.175985-1-yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org
+
+
+Yixun Lan (5):
+  ARM64: dts: meson: uart: fix address space range
+  ARM64: dts: meson-axg: uart: drop legacy compatible name from EE UART
+  ARM64: dts: meson-axg: uart: Add the pinctrl info description
+  ARM64: dts: meson-axg: complete the pinctrl info for UART_AO_A
+  ARM64: dts: meson-axg: enable the UART_A controller
+
+ arch/arm64/boot/dts/amlogic/meson-axg-s400.dts |   9 +++
+ arch/arm64/boot/dts/amlogic/meson-axg.dtsi     | 108 ++++++++++++++++++++++++-
+ arch/arm64/boot/dts/amlogic/meson-gx.dtsi      |  10 +--
+ 3 files changed, 118 insertions(+), 9 deletions(-)
+
+-- 
+2.15.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
