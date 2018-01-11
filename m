@@ -1,68 +1,103 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 0/3] ARM: mvebu: dts: updates to enable EDAC
-Date: Thu, 11 Jan 2018 10:14:22 +0100
-Message-ID: <87a7xk7o5t.fsf@free-electrons.com>
-References: <20180111015903.11322-1-chris.packham@alliedtelesis.co.nz>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH linux dev-4.10 0/6] Add support PECI and PECI hwmon drivers
+Date: Thu, 11 Jan 2018 10:17:56 +0100
+Message-ID: <CAK8P3a1xfo_p9Zi0BpP8cvXhkSrMynf=eQ=GkmJwDGf+Jb5O2g@mail.gmail.com>
+References: <20180109223126.13093-1-jae.hyun.yoo@linux.intel.com>
+ <20180110101755.GA5822@kroah.com>
+ <006c4a95-9299-bd17-6dec-52578e8461ae@linux.intel.com>
+ <20180110191703.GA20248@kroah.com>
+ <8997e43c-683e-418d-4e2b-1fe3fefe254e@linux.intel.com>
+ <20180110202740.GA27703@kroah.com>
+ <e81095ff-d491-9977-25e6-7ba6d28d5e72@linux.intel.com>
+ <20180111073038.GA3600@kroah.com>
+ <CACPK8Xe9Jti8S2px=QOcSMA2v+TZ4eGDGQND4qmBUBXeBpsBZQ@mail.gmail.com>
+ <20180111084128.GA16780@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180111015903.11322-1-chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org> (Chris
-        Packham's message of "Thu, 11 Jan 2018 14:59:00 +1300")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180111084128.GA16780@kroah.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: linux-hwmon@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>, Jean Delvare <jdelvare@suse.com>, linux-doc@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Jeremy Kerr <jk@ozlabs.org>, Jae Hyun Yoo <jae.hyun.yoo@intel.com>, Joel Stanley <joel@jms.id.au>, Guenter Roeck <linux@roeck-us.net>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Chris,
- 
- On jeu., janv. 11 2018, Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org> wrote:
-
-> I've split this off from my earlier series[1] this is just the dts changes that
-> will enable support for the EDAC series when it lands.
+On Thu, Jan 11, 2018 at 9:41 AM, Greg KH <gregkh@linuxfoundation.org> wrote:
+> On Thu, Jan 11, 2018 at 12:28:48AM -0800, Joel Stanley wrote:
+>> On Wed, Jan 10, 2018 at 11:30 PM, Greg KH <gregkh@linuxfoundation.org> wrote:
+>> > On Wed, Jan 10, 2018 at 01:46:34PM -0800, Jae Hyun Yoo wrote:
+>> >> Thanks for your pointing it out and I totally agree with you. Actually, we
+>> >> are preparing 4.13 update for now and an another update will be followed up.
+>> >> As I answered above, I'll rebase this patch set onto the latest kernel.org
+>> >> mainline. Sorry for my misunderstanding of upstream process.
+>> >
+>> > 4.13?  Why that kernel?  It too is obsolete and insecure and
+>> > unsupported.
+>>
+>> It contains support for our hardware that I have integrated from work
+>> in progress patches and upstream commits.
+>>
+>> The OpenBMC project, with myself as the kernel maintainer, have
+>> intentions to regularly move to upstream releases. This takes time and
+>> effort. This time and effort is balanced with submitting our drivers
+>> upstream.
 >
-> The Armada 38x as well as the 98dx3236 and similar switch chips with integrated
-> CPUs use the same SDRAM controller block as the Armada XP. The key difference
-> is the width of the DDR interface.
+> Of course, but please do not have your "users" use a kernel that is
+> known to have bugs and can not be supported.  That would not be good at
+> all, don't you think?
+
+I've been pretty happy with the progress in merging drivers upstream
+for OpenBMC. Of course things always take longer than planned,
+but they are getting there. Most servers today are probably running
+the aspeed vendor kernel based on linux-2.6.28.10, at least that's
+what my workstation runs (and no, I did not connect the BMC to my
+home network).
+
+The particular choices of mainline versions (4.10 and 4.13) may be
+unfortunate as they are both one off from a longterm release, but
+not being stuck on 2.6 is the important first step in order to upstream
+stuff.
+
+>> Another silicon vendor has recently joined the project and that brings
+>> an entire SoC that is not upstream. We have patches on the ARM that
+>> are under review for this SoC, with more drivers undergoing cleanup in
+>> order to submit them to the relevant maintainers.
 >
-> [1] - https://marc.info/?l=linux-kernel&m=151545124505964&w=2
+> Why are you merging all SoC trees together into one place?  That seems
+> like a nightmare to manage, especially with git.
 
-The series is looks good now. For patch 1 I still wait for that
-the "marvell,,ecc-enable" property was accepted before merging it.
+Why would anyone want to have multiple kernel trees just to run
+things on different SoCs? ;-)
 
-So I can either wait for that it was accepted before applying the series,
-or just applying patch 2 and 3 for now, as you want.
+It's just a collection of device drivers in different stages of getting
+upstreamed.
 
-Thanks,
-
-Gregory
-
-
+>> > And if you do have out-of-tree code, why not use a process that makes it
+>> > trivial to update the base kernel version so that you can keep up to
+>> > date very easily?  (hint, just using 'git' is not a good way to do
+>> > this...)
+>>
+>> We have a process that we've been developing under for the past few
+>> years. I find git to be a great tool for managing Linux kernel trees.
+>>
+>> What would you recommend for managing kernel trees?
 >
-> Changes in v2:
-> - update commit message
-> - add labels to dts
->
-> Chris Packham (3):
->   ARM: dts: armada-xp: enable L2 cache parity and ecc on db-xc3-24g4xg
->   ARM: dts: armada-xp: add label to sdram-controller node
->   ARM: dts: mvebu: add sdram controller node to Armada-38x
->
->  arch/arm/boot/dts/armada-38x.dtsi             | 5 +++++
->  arch/arm/boot/dts/armada-xp-98dx3236.dtsi     | 2 +-
->  arch/arm/boot/dts/armada-xp-db-xc3-24g4xg.dts | 5 +++++
->  arch/arm/boot/dts/armada-xp.dtsi              | 2 +-
->  4 files changed, 12 insertions(+), 2 deletions(-)
->
-> -- 
-> 2.15.1
->
+> quilt is best for a tree that you can not rebase (i.e. a public git
+> tree).  Otherwise you end up getting patches all mushed together and
+> hard to extract in any simple way.
 
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I'm ususally happy with having git with topic branches to make the
+rebasing easier. In many cases, you can just leave a topic branch
+for a particular subsystem unchanged between versions and just
+merge the latest version of those branches until the branch goes
+away after upstreaming.
+
+        Arnd
