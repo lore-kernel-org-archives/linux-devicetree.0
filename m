@@ -1,41 +1,114 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [linux, dev-4.10, 6/6] drivers/hwmon: Add a driver for a generic
- PECI hwmon
-Date: Thu, 11 Jan 2018 23:18:45 +0100
-Message-ID: <20180111221845.GA9278@lunn.ch>
-References: <20180109223126.13093-7-jae.hyun.yoo@linux.intel.com>
- <20180110214747.GA25248@roeck-us.net>
- <261ac28e-813c-a058-c81f-ad4e718d0233@linux.intel.com>
- <20180111214035.GA14748@roeck-us.net>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 5/6] iommu/arm-smmu: Add support for qcom,
+ smmu-v2 variant
+Date: Thu, 11 Jan 2018 16:23:04 -0600
+Message-ID: <20180111222304.js3c3vrx3u5j3hvj@rob-hp-laptop>
+References: <1515492109-753-1-git-send-email-vivek.gautam@codeaurora.org>
+ <1515492109-753-6-git-send-email-vivek.gautam@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20180111214035.GA14748-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: Jae Hyun Yoo <jae.hyun.yoo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jdelvare-IBi9RG/b67k@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andrew-zrmu5oMJ5Fs@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <1515492109-753-6-git-send-email-vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, len.brown-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-> > >>+static const struct of_device_id peci_of_table[] = {
-> > >>+	{ .compatible = "peci-hwmon", },
-> > >
-> > >This does not look like a reference to some piece of hardware.
-> > >
-> > 
-> > This driver provides generic PECI hwmon function to which controller has
-> > PECI HW such as Aspeed or Nuvoton BMC chip so it's not dependant on a
-> > specific hardware. Should I remove this or any suggestion?
-
-PECI seems to be an Intel thing. So at least it should be
-
- { .compatible = "intel,peci-hwmon", }
-
-assuming it is actually compatible with the Intel specification.
-
-	 Andrew
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gVHVlLCBKYW4gMDksIDIwMTggYXQgMDM6MzE6NDhQTSArMDUzMCwgVml2ZWsgR2F1dGFtIHdy
+b3RlOgo+IHFjb20sc21tdS12MiBpcyBhbiBhcm0sc21tdS12MiBpbXBsZW1lbnRhdGlvbiB3aXRo
+IHNwZWNpZmljCj4gY2xvY2sgYW5kIHBvd2VyIHJlcXVpcmVtZW50cy4gVGhpcyBzbW11IGNvcmUg
+aXMgdXNlZCB3aXRoCj4gbXVsdGlwbGUgbWFzdGVycyBvbiBtc204OTk2LCB2aXouIG1kc3MsIHZp
+ZGVvLCBldGMuCj4gQWRkIGJpbmRpbmdzIGZvciB0aGUgc2FtZS4KPiAKPiBTaWduZWQtb2ZmLWJ5
+OiBWaXZlayBHYXV0YW0gPHZpdmVrLmdhdXRhbUBjb2RlYXVyb3JhLm9yZz4KPiAtLS0KPiAKPiAg
+KiBNYWpvciBjaGFuZ2UgaW4gdGhpcyBwYXRjaCAtCj4gICAgQ2hhbmdlZCBjb21wYXRpYmxlIHN0
+cmluZyBmcm9tICdxY29tLG1zbTg5OTYtc21tdS12MicgdG8KPiAgICAncWNvbSxzbW11LXYyJyB0
+byByZWZsZWN0IHRoZSBJUCB2ZXJzaW9uIHJhdGhlciB0aGFuIHRoZQo+ICAgIHBsYXRmb3JtIG9u
+IHdoaWNoIGl0IGlzIHVzZWQuCgpUaGUgYnVncyBhbmQgaG93IHRoaW5ncyBhcmUgY29ubmVjdGVk
+IGFyZSBhbGwgdGhlIHNhbWU/IEknZCBzdWdnZXN0IHlvdSAKa2VlcCBib3RoIHN0cmluZ3MuCgo+
+ICAgIFRoZSBzYW1lIElQIGlzIHVzZWQgYWNyb3NzIG11bHRpcGxlIHBsYXRmb3JtcyBpbmNsdWRp
+bmcgbXNtODk5NiwKPiAgICBhbmQgc2RtODQ1IGV0Yy4KCkJ1dCBmb3Igb25seSAyIG9yIHNvIHBs
+YXRmb3JtcyBhIGZhbGxiYWNrIGlzIG5vdCByZWFsbHkgd29ydGggaXQuIFlvdSdsbCAKcHJvYmFi
+bHkgYmUgb24gU01NVXYzIGJlZm9yZSB0b28gbG9uZy4uLgoKPiAKPiAgLi4uL2RldmljZXRyZWUv
+YmluZGluZ3MvaW9tbXUvYXJtLHNtbXUudHh0ICAgICAgICAgfCAzNSArKysrKysrKysrKysrKysr
+KysrKysrCj4gIGRyaXZlcnMvaW9tbXUvYXJtLXNtbXUuYyAgICAgICAgICAgICAgICAgICAgICAg
+ICAgIHwgMTMgKysrKysrKysKPiAgMiBmaWxlcyBjaGFuZ2VkLCA0OCBpbnNlcnRpb25zKCspCj4g
+Cj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pb21tdS9h
+cm0sc21tdS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaW9tbXUvYXJt
+LHNtbXUudHh0Cj4gaW5kZXggOGE2ZmZjZTEyYWY1Li5lNDk1MTI4OGM4N2MgMTAwNjQ0Cj4gLS0t
+IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lvbW11L2FybSxzbW11LnR4dAo+
+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pb21tdS9hcm0sc21tdS50
+eHQKPiBAQCAtMTcsNiArMTcsNyBAQCBjb25kaXRpb25zLgo+ICAgICAgICAgICAgICAgICAgICAg
+ICAgICAiYXJtLG1tdS00MDEiCj4gICAgICAgICAgICAgICAgICAgICAgICAgICJhcm0sbW11LTUw
+MCIKPiAgICAgICAgICAgICAgICAgICAgICAgICAgImNhdml1bSxzbW11LXYyIgo+ICsgICAgICAg
+ICAgICAgICAgICAgICAgICAicWNvbSxzbW11LXYyIgo+ICAKPiAgICAgICAgICAgICAgICAgICAg
+ZGVwZW5kaW5nIG9uIHRoZSBwYXJ0aWN1bGFyIGltcGxlbWVudGF0aW9uIGFuZC9vciB0aGUKPiAg
+ICAgICAgICAgICAgICAgICAgdmVyc2lvbiBvZiB0aGUgYXJjaGl0ZWN0dXJlIGltcGxlbWVudGVk
+Lgo+IEBAIC03MSw2ICs3MiwyMyBAQCBjb25kaXRpb25zLgo+ICAgICAgICAgICAgICAgICAgICBv
+ciB1c2luZyBzdHJlYW0gbWF0Y2hpbmcgd2l0aCAjaW9tbXUtY2VsbHMgPSA8Mj4sIGFuZAo+ICAg
+ICAgICAgICAgICAgICAgICBtYXkgYmUgaWdub3JlZCBpZiBwcmVzZW50IGluIHN1Y2ggY2FzZXMu
+Cj4gIAo+ICstIGNsb2NrLW5hbWVzOiAgICBTaG91bGQgYmUgImJ1cyIsIGFuZCAiaWZhY2UiIGZv
+ciAicWNvbSxzbW11LXYyIgo+ICsgICAgICAgICAgICAgICAgICBpbXBsZW1lbnRhdGlvbi4KPiAr
+Cj4gKyAgICAgICAgICAgICAgICAgICJidXMiIGNsb2NrIGZvciAicWNvbSxzbW11LXYyIiBpcyBy
+ZXF1aXJlZCBmb3IgZG93bnN0cmVhbQo+ICsgICAgICAgICAgICAgICAgICBidXMgYWNjZXNzIGFu
+ZCBmb3IgdGhlIHNtbXUgcHR3Lgo+ICsKPiArICAgICAgICAgICAgICAgICAgImlmYWNlIiBjbG9j
+ayBpcyByZXF1aXJlZCB0byBhY2Nlc3Mgc21tdSdzIHJlZ2lzdGVycyB0aHJvdWdoCj4gKyAgICAg
+ICAgICAgICAgICAgIHRoZSBUQ1UncyBwcm9ncmFtbWluZyBpbnRlcmZhY2UuCj4gKwo+ICstIGNs
+b2NrczogICAgICAgICBQaGFuZGxlcyBmb3IgcmVzcGVjdGl2ZSBjbG9ja3MgZGVzY3JpYmVkIGJ5
+IGNsb2NrLW5hbWVzLgo+ICsKPiArLSBwb3dlci1kb21haW5zOiAgUGhhbmRsZXMgdG8gU01NVSdz
+IHBvd2VyIGRvbWFpbiBzcGVjaWZpZXIuIFRoaXMgaXMKPiArICAgICAgICAgICAgICAgICAgcmVx
+dWlyZWQgZXZlbiBpZiBTTU1VIGJlbG9uZ3MgdG8gdGhlIG1hc3RlcidzIHBvd2VyCj4gKyAgICAg
+ICAgICAgICAgICAgIGRvbWFpbiwgYXMgdGhlIFNNTVUgd2lsbCBoYXZlIHRvIGJlIGVuYWJsZWQg
+YW5kCj4gKyAgICAgICAgICAgICAgICAgIGFjY2Vzc2VkIGJlZm9yZSBtYXN0ZXIgZ2V0cyBlbmFi
+bGVkIGFuZCBsaW5rZWQgdG8gaXRzCj4gKyAgICAgICAgICAgICAgICAgIFNNTVUuCj4gKwo+ICAq
+KiBEZXByZWNhdGVkIHByb3BlcnRpZXM6Cj4gIAo+ICAtIG1tdS1tYXN0ZXJzIChkZXByZWNhdGVk
+IGluIGZhdm91ciBvZiB0aGUgZ2VuZXJpYyAiaW9tbXVzIiBiaW5kaW5nKSA6Cj4gQEAgLTEzNywz
+ICsxNTUsMjAgQEAgY29uZGl0aW9ucy4KPiAgICAgICAgICAgICAgICAgIGlvbW11LW1hcCA9IDww
+ICZzbW11MyAwIDB4NDAwPjsKPiAgICAgICAgICAgICAgICAgIC4uLgo+ICAgICAgICAgIH07Cj4g
+Kwo+ICsJLyogUWNvbSdzIGFybSxzbW11LXYyIGltcGxlbWVudGF0aW9uICovCj4gKwlzbW11NDog
+aW9tbXUgewo+ICsJCWNvbXBhdGlibGUgPSAicWNvbSxzbW11LXYyIjsKPiArCQlyZWcgPSA8MHhk
+MDAwMDAgMHgxMDAwMD47Cj4gKwo+ICsJCSNnbG9iYWwtaW50ZXJydXB0cyA9IDwxPjsKPiArCQlp
+bnRlcnJ1cHRzID0gPEdJQ19TUEkgNzMgSVJRX1RZUEVfTEVWRUxfSElHSD4sCj4gKwkJCSAgICAg
+PEdJQ19TUEkgMzIwIElSUV9UWVBFX0xFVkVMX0hJR0g+LAo+ICsJCQkgICAgIDxHSUNfU1BJIDMy
+MSBJUlFfVFlQRV9MRVZFTF9ISUdIPjsKPiArCQkjaW9tbXUtY2VsbHMgPSA8MT47Cj4gKwkJcG93
+ZXItZG9tYWlucyA9IDwmbW1jYyBNRFNTX0dEU0M+Owo+ICsKPiArCQljbG9ja3MgPSA8Jm1tY2Mg
+U01NVV9NRFBfQVhJX0NMSz4sCj4gKwkJCSA8Jm1tY2MgU01NVV9NRFBfQUhCX0NMSz47Cj4gKwkJ
+Y2xvY2stbmFtZXMgPSAiYnVzIiwgImlmYWNlIjsKPiArCX07Cj4gZGlmZiAtLWdpdCBhL2RyaXZl
+cnMvaW9tbXUvYXJtLXNtbXUuYyBiL2RyaXZlcnMvaW9tbXUvYXJtLXNtbXUuYwo+IGluZGV4IDMz
+YmJjZmVkYjg5Ni4uMmFkZTIxNGM0MWJjIDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvaW9tbXUvYXJt
+LXNtbXUuYwo+ICsrKyBiL2RyaXZlcnMvaW9tbXUvYXJtLXNtbXUuYwo+IEBAIC0xMTksNiArMTE5
+LDcgQEAgZW51bSBhcm1fc21tdV9pbXBsZW1lbnRhdGlvbiB7Cj4gIAlHRU5FUklDX1NNTVUsCj4g
+IAlBUk1fTU1VNTAwLAo+ICAJQ0FWSVVNX1NNTVVWMiwKPiArCVFDT01fU01NVVYyLAo+ICB9Owo+
+ICAKPiAgc3RydWN0IGFybV9zbW11X3MyY3Igewo+IEBAIC0xOTcxLDYgKzE5NzIsMTcgQEAgc3Ry
+dWN0IGFybV9zbW11X21hdGNoX2RhdGEgewo+ICBBUk1fU01NVV9NQVRDSF9EQVRBKGFybV9tbXU1
+MDAsIEFSTV9TTU1VX1YyLCBBUk1fTU1VNTAwKTsKPiAgQVJNX1NNTVVfTUFUQ0hfREFUQShjYXZp
+dW1fc21tdXYyLCBBUk1fU01NVV9WMiwgQ0FWSVVNX1NNTVVWMik7Cj4gIAo+ICtzdGF0aWMgY29u
+c3QgY2hhciAqIGNvbnN0IHFjb21fc21tdXYyX2Nsa3NbXSA9IHsKPiArCSJidXMiLCAiaWZhY2Ui
+LAo+ICt9Owo+ICsKPiArc3RhdGljIGNvbnN0IHN0cnVjdCBhcm1fc21tdV9tYXRjaF9kYXRhIHFj
+b21fc21tdXYyID0gewo+ICsJLnZlcnNpb24gPSBBUk1fU01NVV9WMiwKPiArCS5tb2RlbCA9IFFD
+T01fU01NVVYyLAo+ICsJLmNsa3MgPSBxY29tX3NtbXV2Ml9jbGtzLAo+ICsJLm51bV9jbGtzID0g
+QVJSQVlfU0laRShxY29tX3NtbXV2Ml9jbGtzKSwKPiArfTsKPiArCj4gIHN0YXRpYyBjb25zdCBz
+dHJ1Y3Qgb2ZfZGV2aWNlX2lkIGFybV9zbW11X29mX21hdGNoW10gPSB7Cj4gIAl7IC5jb21wYXRp
+YmxlID0gImFybSxzbW11LXYxIiwgLmRhdGEgPSAmc21tdV9nZW5lcmljX3YxIH0sCj4gIAl7IC5j
+b21wYXRpYmxlID0gImFybSxzbW11LXYyIiwgLmRhdGEgPSAmc21tdV9nZW5lcmljX3YyIH0sCj4g
+QEAgLTE5NzgsNiArMTk5MCw3IEBAIHN0cnVjdCBhcm1fc21tdV9tYXRjaF9kYXRhIHsKPiAgCXsg
+LmNvbXBhdGlibGUgPSAiYXJtLG1tdS00MDEiLCAuZGF0YSA9ICZhcm1fbW11NDAxIH0sCj4gIAl7
+IC5jb21wYXRpYmxlID0gImFybSxtbXUtNTAwIiwgLmRhdGEgPSAmYXJtX21tdTUwMCB9LAo+ICAJ
+eyAuY29tcGF0aWJsZSA9ICJjYXZpdW0sc21tdS12MiIsIC5kYXRhID0gJmNhdml1bV9zbW11djIg
+fSwKPiArCXsgLmNvbXBhdGlibGUgPSAicWNvbSxzbW11LXYyIiwgLmRhdGEgPSAmcWNvbV9zbW11
+djIgfSwKPiAgCXsgfSwKPiAgfTsKPiAgTU9EVUxFX0RFVklDRV9UQUJMRShvZiwgYXJtX3NtbXVf
+b2ZfbWF0Y2gpOwo+IC0tIAo+IFFVQUxDT01NIElORElBLCBvbiBiZWhhbGYgb2YgUXVhbGNvbW0g
+SW5ub3ZhdGlvbiBDZW50ZXIsIEluYy4gaXMgYSBtZW1iZXIKPiBvZiBDb2RlIEF1cm9yYSBGb3J1
+bSwgaG9zdGVkIGJ5IFRoZSBMaW51eCBGb3VuZGF0aW9uCj4gCl9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxpc3QKRnJlZWRy
+ZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
+YWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVubwo=
