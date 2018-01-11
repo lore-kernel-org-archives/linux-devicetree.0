@@ -1,96 +1,97 @@
-From: Hyun Kwon <hyunk-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCH 01/10] dt-bindings: display: xlnx: Add Xilinx kms bindings
-Date: Thu, 11 Jan 2018 19:22:45 +0000
-Message-ID: <BY1PR0201MB1000625C8BC6D0E704689E69D6160@BY1PR0201MB1000.namprd02.prod.outlook.com>
-References: <1515117959-18068-1-git-send-email-hyun.kwon@xilinx.com>
- <1515117959-18068-2-git-send-email-hyun.kwon@xilinx.com>
- <20180109040011.crwkn5j76cmdfvfm@rob-hp-laptop>
- <BY1PR0201MB1000969ECDC38A62F68B7238D6160@BY1PR0201MB1000.namprd02.prod.outlook.com>
- <CAL_JsqJ_84qg=oJb=HzwgdP9T8osczNT-Eo+u5wjJfT3B8gAQQ@mail.gmail.com>
+From: Aaro Koskinen <aaro.koskinen@iki.fi>
+Subject: Re: [PATCH v5 00/16] OMAP2+ OneNAND driver update
+Date: Thu, 11 Jan 2018 21:29:31 +0200
+Message-ID: <20180111192931.vwnpvj2wtgrvkhbe@darkstar.musicnaut.iki.fi>
+References: <20171115162306.2o2w2yrf7wucroxd@lenoch>
+ <20171130111840.41c92d34@bbrezillon>
+ <20171130160936.GO28152@atomide.com>
+ <434bd733-0ba2-6e75-9de5-017eef905fd2@ti.com>
+ <20180109130812.GA338@lenoch>
+ <20180109210114.s66rpdg2jjdps5bc@darkstar.musicnaut.iki.fi>
+ <20180110092058.GA25351@lenoch>
+ <20180110173519.xyug4egltni4f3qi@darkstar.musicnaut.iki.fi>
+ <20180110211325.GA1938@lenoch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqJ_84qg=oJb=HzwgdP9T8osczNT-Eo+u5wjJfT3B8gAQQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20180110211325.GA1938@lenoch>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Ladislav Michl <ladis@linux-mips.org>
+Cc: Boris Brezillon <boris.brezillon@free-electrons.com>, Rob Herring <robh@kernel.org>, Tony Lindgren <tony@atomide.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Kyungmin Park <kyungmin.park@samsung.com>, linux-mtd@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Roger Quadros <rogerq@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFJvYiBIZXJy
-aW5nIFttYWlsdG86cm9iaEBrZXJuZWwub3JnXQ0KPiBTZW50OiBUaHVyc2RheSwgSmFudWFyeSAx
-MSwgMjAxOCA2OjQzIEFNDQo+IFRvOiBIeXVuIEt3b24gPGh5dW5rQHhpbGlueC5jb20+DQo+IENj
-OiBkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVs
-Lm9yZzsgTWljaGFsDQo+IFNpbWVrIDxtaWNoYWwuc2ltZWtAeGlsaW54LmNvbT4NCj4gU3ViamVj
-dDogUmU6IFtQQVRDSCAwMS8xMF0gZHQtYmluZGluZ3M6IGRpc3BsYXk6IHhsbng6IEFkZCBYaWxp
-bngga21zDQo+IGJpbmRpbmdzDQo+IA0KPiBPbiBXZWQsIEphbiAxMCwgMjAxOCBhdCA4OjA0IFBN
-LCBIeXVuIEt3b24gPGh5dW5rQHhpbGlueC5jb20+IHdyb3RlOg0KPiA+IEhpIFJvYiwNCj4gPg0K
-PiA+IFRoYW5rcyBmb3IgdGhlIGZlZWRiYWNrLg0KPiA+DQo+ID4+IC0tLS0tT3JpZ2luYWwgTWVz
-c2FnZS0tLS0tDQo+ID4+IEZyb206IFJvYiBIZXJyaW5nIFttYWlsdG86cm9iaEBrZXJuZWwub3Jn
-XQ0KPiA+PiBTZW50OiBNb25kYXksIEphbnVhcnkgMDgsIDIwMTggODowMCBQTQ0KPiA+PiBUbzog
-SHl1biBLd29uIDxoeXVua0B4aWxpbnguY29tPg0KPiA+PiBDYzogZHJpLWRldmVsQGxpc3RzLmZy
-ZWVkZXNrdG9wLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IE1pY2hhbA0KPiA+PiBT
-aW1layA8bWljaGFsLnNpbWVrQHhpbGlueC5jb20+DQo+ID4+IFN1YmplY3Q6IFJlOiBbUEFUQ0gg
-MDEvMTBdIGR0LWJpbmRpbmdzOiBkaXNwbGF5OiB4bG54OiBBZGQgWGlsaW54IGttcw0KPiA+PiBi
-aW5kaW5ncw0KPiA+Pg0KPiA+PiBPbiBUaHUsIEphbiAwNCwgMjAxOCBhdCAwNjowNTo1MFBNIC0w
-ODAwLCBIeXVuIEt3b24gd3JvdGU6DQo+ID4+ID4gVGhlIGR0IGJpbmRpbmcgZm9yIFhpbGlueCBE
-Uk0gS01TIGRyaXZlci4NCj4gPj4NCj4gPj4gQmluZGluZ3MgYXJlIGZvciBoL3csIG5vdCBkcml2
-ZXJzLg0KPiA+DQo+ID4gSSdsbCByZXBocmFzZSB0aGlzLg0KPiA+DQo+ID4+DQo+ID4+ID4NCj4g
-Pj4gPiBTaWduZWQtb2ZmLWJ5OiBIeXVuIEt3b24gPGh5dW4ua3dvbkB4aWxpbnguY29tPg0KPiA+
-PiA+IC0tLQ0KPiA+PiA+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3hsbngveGxu
-eCxrbXMudHh0ICAgIHwgMjANCj4gPj4gKysrKysrKysrKysrKysrKysrKysNCj4gPj4gPiAgMSBm
-aWxlIGNoYW5nZWQsIDIwIGluc2VydGlvbnMoKykNCj4gPj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0
-DQo+ID4+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3hsbngveGxu
-eCxrbXMudHh0DQo+ID4+ID4NCj4gPj4gPiBkaWZmIC0tZ2l0DQo+IGEvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkveGxueC94bG54LGttcy50eHQNCj4gPj4gYi9Eb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS94bG54L3hsbngsa21zLnR4dA0K
-PiA+PiA+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+ID4+ID4gaW5kZXggMDAwMDAwMC4uOGRjZDU1
-Mg0KPiA+PiA+IC0tLSAvZGV2L251bGwNCj4gPj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvZGlzcGxheS94bG54L3hsbngsa21zLnR4dA0KPiA+PiA+IEBAIC0wLDAg
-KzEsMjAgQEANCj4gPj4gPiArWGlsaW54IEtNUyBQaXBlbGluZQ0KPiA+PiA+ICstLS0tLS0tLS0t
-LS0tLS0tLS0tDQo+ID4+ID4gKw0KPiA+PiA+ICtYaWxpbnggZGlzcGxheSBwaXBlbGluZXMgY2Fu
-IGJlIGRlc2lnbmVkIHdpdGggaGFyZGVuZWQgdmlkZW8gSVBzIGFuZA0KPiBzb2Z0DQo+ID4+IHZp
-ZGVvDQo+ID4+ID4gK0lQcyBpbiBwcm9ncmFtbWFibGUgbG9naWMuIFRoaXMgS01TIG1vZHVsZSBw
-cm92aWRlcyB0aGUgY29tbW9uDQo+ID4+IGZ1bmN0aW9uYWxpdHkNCj4gPj4gPiArb2YgaW5kaXZp
-ZHVhbCBzdWJkZXZpY2UgZHJpdmVycywgYW5kIGdsdWUgbG9naWNzIGJldHdlZW4gdGhlbS4NCj4g
-Pj4gPiArDQo+ID4+ID4gK1JlcXVpcmVkIHByb3BlcnRpZXM6DQo+ID4+ID4gKw0KPiA+PiA+ICst
-IGNvbXBhdGlibGU6IE11c3QgYmUgInhsbngsa21zIi4NCj4gPg0KPiA+IEknbGwgYWxzbyByZXBo
-cmFzZSB0aGUgZGVzY3JpcHRpb24gYW5kIHJlbmFtZSB0aGlzIHRvIHhsbngsZGlzcGxheS4NCj4g
-Pg0KPiA+PiA+ICsNCj4gPj4gPiArLSBwb3J0czogcGhhbmRsZXMgZm9yIENSVEMgcG9ydHMsIHVz
-aW5nIHRoZSBEVCBiaW5kaW5ncyBkZWZpbmVkIGluDQo+ID4+ID4gKyAgRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL2dyYXBoLnR4dC4NCj4gPj4NCj4gPj4gVGhpcyB1c2Ugb2YgcG9y
-dHMgaXMgbm90IHBhcnQgb2YgdGhlIGdyYXBoIGJpbmRpbmcuDQo+ID4NCj4gPiBJJ2xsIGFkZCBt
-b3JlIGRldGFpbHMgaW4gdGhlIGRlc2NyaXB0aW9uLg0KPiA+DQo+ID4+DQo+ID4+ID4gKw0KPiA+
-PiA+ICtFeGFtcGxlOg0KPiA+PiA+ICsNCj4gPj4gPiArICAgeGxueF9kcm06IHhsbnhfZHJtIHsN
-Cj4gPj4gPiArICAgICAgICAgICBjb21wYXRpYmxlID0gInhsbngsa21zIjsNCj4gPj4NCj4gPj4g
-ZHJtIGFuZCBrbXMgYXJlIExpbnV4aXNtcy4NCj4gPg0KPiA+IEkgYWdyZWUuIEknbGwgcmVtb3Zl
-IGxpbnV4IHN1YnN5c3RlbSBzcGVjaWZpYyB0ZXJtcy4NCj4gPg0KPiA+Pg0KPiA+PiBXaHkgZG8g
-eW91IG5lZWQgdGhpcyBub2RlPw0KPiA+DQo+ID4gVGhpcyBub2RlIGlzIHVzZWQgdG8gcmVwcmVz
-ZW50IGEgZGlzcGxheSBwaXBlbGluZSBhcyBhIHNpbmdsZSBlbnRpdHksIHdoaWNoDQo+IGNhbiBj
-b25zaXN0IG9mIG11bHRpcGxlIGNvbXBvbmVudHMgLyBJUHMuIEknbGwgZWxhYm9yYXRlIG1vcmUg
-cGVyIHlvdXINCj4gc3VnZ2VzdGlvbi4NCj4gDQo+IFlvdSBnZW5lcmFsbHkgZG9uJ3QgbmVlZCB0
-aGF0LiBKdXN0IGhhdmUgdGhlIERSTSBkcml2ZXIgbWF0Y2ggd2l0aCB0aGUNCj4gZmlyc3QgYmxv
-Y2sgaW4gdGhlIGRpc3BsYXkgcGlwZWxpbmUuIFRoZW4gdXNlIHRoZSBPRiBncmFwaCB0byBjb25u
-ZWN0DQo+IHRvIHRoZSBvdGhlciBjb21wb25lbnRzIGluIHRoZSBwaXBlbGluZS4gSXQgd291bGQg
-aGVscCB0byBoYXZlIGEgYmxvY2sNCj4gZGlhZ3JhbSBzaG93aW5nIHRoZSBkYXRhIHBpcGVsaW5l
-cyBhbmQgaC93IGJsb2Nrcy4NCj4gDQoNClNvbWUgZXhhbXBsZXMgYXJlIGFzIGZvbGxvd2luZy4g
-SW4gc2ltcGxlIGNhc2UsIGEgcGlwZWxpbmUgaXMgbGluZWFyIHdpdGggbXVsdGlwbGUgYmxvY2tz
-Og0KDQpaeW5xTVAgRGlzcGxheVBvcnQgcGlwZWxpbmU6DQoNCglaeW5xTVAgRE1BIC0+IFp5bnFN
-UCBEaXNwbGF5IGNvbnRyb2xsZXIgLT4gWnlucU1QIERQIGVuY29kZXINCg0KRlBHQSBkaXNwbGF5
-IHBpcGVsaW5lIHdoZXJlIGVhY2ggYmxvY2sgY29tZXMgYXMgYSBzZXBhcmF0ZSBkZXZpY2U6DQoN
-CglGUEdBIERNQSAtPiBGUEdBIG1peGVyIC0+IEZQR0EgSERNSSBlbmNvZGVyDQoNCkl0IGdldHMg
-bW9yZSBpbnRlcmVzdGluZyBhcyB0aG9zZSBjYW4gYmUgbWl4ZWQ6DQoNCglaeW5xTVAgRE1BIC0+
-IFp5bnFNUCBEaXNwbGF5IGNvbnRyb2xsZXIgLT4gWnlucU1QIERQIGVuY29kZXINCgkJICAgICAg
-ICAgICAgfA0KCUZQQUcgRE1BIC0+DQpvcg0KDQoJWnlucU1QIERNQSAtPiBaeW5xTVAgRGlzcGxh
-eSBjb250cm9sbGVyIC0+IFp5bnFNUCBEUCBlbmNvZGVyDQoJCQkJCQkgICAgICAgICB8DQoJCQkJ
-CQkgICAgICAgICAtPiBGUEdBIEhETUkgZW5jb2Rlcg0KCQkgICAgICAgICAgICANCk9yIGV2ZW4s
-DQoNCgkJCVp5bnFNUCBETUEgLT4gWnlucU1QIERpc3BsYXkgY29udHJvbGxlciAtPiBaeW5xTVAg
-RFAgZW5jb2Rlcg0KCQkJCSAgICAgICAgICAgIHwJCQkgICAgICAgICAgfA0KCUZQQUcgRE1BIC0+
-IEZQR0EgbWl4ZXIgLT4JCQkJICAgICAgICAgIC0+IEZQR0EgSERNSSBlbmNvZGVyDQoNClRoaXMg
-bm9kZSBpcyByZXByZXNlbnRhdGlvbiBvZiBzdWNoIHZhcmlhdGlvbnMgYXMgYSBzaW5nbGUgcGlw
-ZWxpbmUgZGV2aWNlLg0KDQpUaGFua3MsDQotaHl1bg0KDQo+IFJvYg0K
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hi,
+
+On Wed, Jan 10, 2018 at 10:13:25PM +0100, Ladislav Michl wrote:
+> On Wed, Jan 10, 2018 at 07:35:19PM +0200, Aaro Koskinen wrote:
+> > On Wed, Jan 10, 2018 at 10:20:58AM +0100, Ladislav Michl wrote:
+> > > On Tue, Jan 09, 2018 at 11:01:14PM +0200, Aaro Koskinen wrote:
+> > > > On Tue, Jan 09, 2018 at 02:08:12PM +0100, Ladislav Michl wrote:
+> > > > > Merge window is really close now and patches seems still to be untested on
+> > > > > n8x0. So unless someone is going to test it soon, I'll pick used N800 on
+> > > > > ebay :-/
+> > > > 
+> > > > Today I tried to test them on Nokia N810, and I get:
+> > > > 
+> > > > [    0.174804] omap-gpmc 6800a000.gpmc: GPMC revision 2.0
+> > > > [    0.174865] gpmc_mem_init: disabling cs 0 mapped at 0x0-0x1000000
+> > > > [    0.177459] omap-gpmc 6800a000.gpmc: /ocp/gpmc@6800a000/onenand@0,0 has no 'bank-width' property
+> > > > [    0.177612] omap-gpmc 6800a000.gpmc: failed to probe DT child 'onenand': -22
+> > > > 
+> > > > With plain v4.15-rc7+ it probes fine.
+> > > 
+> > > Thank you for testing. As stated in cover letter, you need also
+> > > https://patchwork.kernel.org/patch/10043259/
+> > > which can be also found in Roger's branch
+> > > https://github.com/rogerq/linux/commits/for-v4.16/gpmc-omap-immutable
+> > > (see previous replies in this thread and also discussion about OneNAND
+> > > DT node)
+> > 
+> > I applied it, and now get:
+> > 
+> > [    0.174987] omap-gpmc 6800a000.gpmc: GPMC revision 2.0
+> > [    0.175048] gpmc_mem_init: disabling cs 0 mapped at 0x0-0x1000000
+> > [    0.177703] omap-gpmc 6800a000.gpmc: Incompatible OneNAND node: missing compatible
+> > [    0.177764] omap-gpmc 6800a000.gpmc: failed to probe DT child 'onenand': -22
+> 
+> As expected without reading discussion about OneNAND DT node :)
+> 
+> In short, this version expects "ti,omap2-onenand" compatible.
+
+Right. I didn't realize by bootloader was passing the DTB from an old
+kernel.
+
+So after fixing my boot I got the patches working N800 and N810: I was
+able to read and write on old JFFS2 file systems without any issues. So
+you can add for the series:
+
+Tested-by: Aaro Koskinen <aaro.koskinen@iki.fi>
+
+> In earlier version of this patchset there was fixup present, so driver
+> worked even without compatible. Later on (17 Oct 2017 11:46:51 +0300)
+> Roger objected (https://www.spinics.net/lists/linux-omap/msg139576.html):
+> "I don't want to fixup broken DTs like this as they will go silently without
+> being fixed. Let's instead just error out after the dev_warn(). This will
+> force us to fix all DT nodes."
+> So fixup was removed. I know N900 support is under heavy development
+> in mainline, but if n8x0 is considered finished and stable, we should
+> reintroduce fixup. Thoughts?
+
+N8x0 support is also "under development", and we are fine with updating
+and always using latest in-tree DTs.
+
+A.
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
