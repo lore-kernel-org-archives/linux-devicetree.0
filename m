@@ -1,55 +1,44 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 8/9] clocksource: Add a new timer-ingenic driver
-Date: Thu, 11 Jan 2018 08:53:22 -0600
-Message-ID: <CAL_Jsq+StZS1+qTd9CG1X2_3ay5onMgEmYG9MRUVWs-4K4-EZA@mail.gmail.com>
-References: <20180101143344.2099-1-paul@crapouillou.net> <20180110224838.16711-1-paul@crapouillou.net>
- <20180110224838.16711-8-paul@crapouillou.net>
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v5 03/20] firmware: arm_scmi: add basic driver
+ infrastructure for SCMI
+Date: Thu, 11 Jan 2018 14:56:12 +0000
+Message-ID: <63af0db6-4d78-aa86-cf96-1ad33a5ed604@arm.com>
+References: <1514904162-11201-1-git-send-email-sudeep.holla@arm.com>
+ <1514904162-11201-4-git-send-email-sudeep.holla@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180110224838.16711-8-paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
+In-Reply-To: <1514904162-11201-4-git-send-email-sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
-Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: ALKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Roy Franz <roy.franz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Harb Abdulhamid <harba-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Alexey Klimov <klimov.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ryan Harkin <Ryan.Harkin-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 10, 2018 at 4:48 PM, Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org> wrote:
-> This driver will use the TCU (Timer Counter Unit) present on the Ingenic
-> JZ47xx SoCs to provide the kernel with a clocksource and timers.
->
-> Signed-off-by: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
-> ---
->  drivers/clocksource/Kconfig         |   8 ++
->  drivers/clocksource/Makefile        |   1 +
->  drivers/clocksource/timer-ingenic.c | 258 ++++++++++++++++++++++++++++++++++++
->  3 files changed, 267 insertions(+)
->  create mode 100644 drivers/clocksource/timer-ingenic.c
->
->  v2: Use SPDX identifier for the license
->  v3: - Move documentation to its own patch
->      - Search the devicetree for PWM clients, and use all the TCU
->            channels that won't be used for PWM
 
-[...]
 
-> +static int __init ingenic_tcu_init(struct device_node *np)
-> +{
-> +       unsigned long available_channels = GENMASK(NUM_CHANNELS - 1, 0);
-> +       struct device_node *node;
-> +       struct ingenic_tcu *tcu;
-> +       unsigned int i, channel;
-> +       int err;
-> +       u32 val;
-> +
-> +       for_each_node_with_property(node, "pwms") {
-> +               err = of_property_read_u32_index(node, "pwms", 1, &val);
+On 02/01/18 14:42, Sudeep Holla wrote:
+> The SCMI is intended to allow OSPM to manage various functions that are
+> provided by the hardware platform it is running on, including power and
+> performance functions. SCMI provides two levels of abstraction, protocols
+> and transports. Protocols define individual groups of system control and
+> management messages. A protocol specification describes the messages
+> that it supports. Transports describe the method by which protocol
+> messages are communicated between agents and the platform.
+> 
+> This patch adds basic infrastructure to manage the message allocation,
+> initialisation, packing/unpacking and shared memory management.
+> 
 
-This is the right idea, but a bit fragile. Perhaps its good enough for
-your platform, but it would fail if you have another PWM provider like
-the gpio-pwm binding or the cell size is not 1 (BTW, I thought the PWM
-binding defined 3 cells typically).
+Any chance you could review patches 3-14 ? All the drivers (15-20) are
+already acked by the maintainer. I know it's late for v4.16, I want it
+to be ready for v4.17 ASAP. It's on the list without much progress for
+few months now :(, hence the push. Sorry for the nag.
 
-Rob
+-- 
+Regards,
+Sudeep
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
