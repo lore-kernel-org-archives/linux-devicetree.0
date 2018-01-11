@@ -1,27 +1,40 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 4/6] dt-bindings: tegra: Add documentation for
- nvidia,tegra194-pmc
-Date: Thu, 11 Jan 2018 15:46:56 -0600
-Message-ID: <20180111214656.r25lyso42p62zb5b@rob-hp-laptop>
-References: <1515387278-29777-1-git-send-email-mperttunen@nvidia.com>
- <1515387278-29777-5-git-send-email-mperttunen@nvidia.com>
+From: David Lechner <david@lechnology.com>
+Subject: Re: [PATCH v5 17/44] dt-bindings: clock: Add bindings for DA8XX
+ CFGCHIP gate clocks
+Date: Thu, 11 Jan 2018 15:51:45 -0600
+Message-ID: <fa5f1bff-42e7-0c1e-5f35-58493336ee74@lechnology.com>
+References: <1515377863-20358-1-git-send-email-david@lechnology.com>
+ <1515377863-20358-18-git-send-email-david@lechnology.com>
+ <20180111214516.quplp3kwwfrzocfp@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1515387278-29777-5-git-send-email-mperttunen@nvidia.com>
+In-Reply-To: <20180111214516.quplp3kwwfrzocfp@rob-hp-laptop>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mikko Perttunen <mperttunen@nvidia.com>
-Cc: thierry.reding@gmail.com, jonathanh@nvidia.com, mark.rutland@arm.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 08, 2018 at 06:54:36AM +0200, Mikko Perttunen wrote:
-> The Tegra194 power management controller has one additional register
-> aperture to be specified in the device tree node.
+On 01/11/2018 03:45 PM, Rob Herring wrote:
+> On Sun, Jan 07, 2018 at 08:17:16PM -0600, David Lechner wrote:
+>> This adds a new binding for the gate clocks present in the CFGCHIP syscon
+>> registers in TI DA8XX SoCs. There are actually other gate clocks in this
+>> block that could be added in the future, but TBCLK is currently the only
+>> one being used.
 > 
-> Signed-off-by: Mikko Perttunen <mperttunen@nvidia.com>
-> ---
->  Documentation/devicetree/bindings/arm/tegra/nvidia,tegra186-pmc.txt | 2 ++
->  1 file changed, 2 insertions(+)
+> Like how many? 2 more?, then fine. 20 more, then perhaps cfgchip should
+> be the clock provider.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Like, one more. Same goes for the mux clock. The USB PHY clocks are also
+part of the CFGCHIP.
+
+All of these clocks are randomly spread out, so I didn't really see a logical
+way to make a single clock provider with #clock-cells = <1>.
+
+> 
+> In any case, I'd prefer to see all the cfgchip clocks documented in one
+> doc.
+
+I will do that.
