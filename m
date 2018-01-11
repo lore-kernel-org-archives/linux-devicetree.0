@@ -1,159 +1,55 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 0/7] Marvell NAND controller rework with ->exec_op()
-Date: Thu, 11 Jan 2018 12:27:51 +0100
-Message-ID: <20180111122751.4bd74366@bbrezillon>
-References: <20180109103637.23798-1-miquel.raynal@free-electrons.com>
+From: hao_zhang <hao5781286-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v1 0/4] pwm support for allwinner sun8i R40/V40/T3 SOCs.
+Date: Thu, 11 Jan 2018 19:31:00 +0800
+Message-ID: <20180111113100.GA21386@arx-s1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180109103637.23798-1-miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Disposition: inline
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-mtd-IAPFreCvJWMP3drIcvDWNA@public.gmane.org
+To: thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hao5781286-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue,  9 Jan 2018 11:36:30 +0100
-Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+This patchset add pwm support for allwinner sun8i R40/V40/T3 SOCs.
 
-> Hi,
-> 
-> After the addition of the NAND framework ->exec_op() interface (see [1]
-> for the series preparing it and [2] for the last version of the
-> core-side implementation of ->exec_op() itself), this series replaces
-> the current Marvell NAND controller driver pxa3xx_nand.c with a rework
-> called marvell_nand.c.
-> 
-> Aside the fact that it drops the big state machine, improves the overall
-> speed and implements raw accesses, it is the first driver-side
-> implementation of the ->exec_op() interface and may be used as reference
-> for latter reworks of the same type.
-> 
-> One may find more detail about why a completely new driver is needed in
-> the commit log of:
-> 
->     "mtd: nand: add reworked Marvell NAND controller driver"
-> 
-> Device tree NAND node definition for all platforms referring to the
-> Marvell driver using the new bindings have already been accepted by the
-> MVEBU DT maintainers and will be merged after the driver. They are more
-> hierarchical and fit the real organization of the hardware, by having
-> NAND partitions that are part of NAND chip nodes, themselves part of the
-> NAND controller node.
-> 
-> These changes have been tested on:
->    - PXA3xx platform with a CM-X300 board (2kiB page NAND, 1b/512B
->      strength, Hamming ECC engine) [32 bits]
->    - Armada 385 DB AP (4kiB page NAND, 4b/512B, BCH ECC engine) [32 bits]
->    - Armada 398 DB (4kiB page NAND, 8b/512B, BCH ECC engine using a layout
->      with a last chunk different than the others) [32 bits]
->    - Armada 7040 DB and Armada 8040 DB (4kiB page NAND, 4b/512B, BCH ECC
->      engine) [64 bits]
->    - Triax dvb-tc board (2kiB page NAND, 4b/512B, BCH ECC engine) [32 bits]
-> 
-> This version is known not to be stable yet with a Zylonite based setup but
-> otherwise looks good for Marvell EBU platforms.
+Beause of my mistake, previous patch set from v4.
+this patch set i resend it from v1 and fix some error.
 
-So, here is the plan: since the driver has been tested on various mvebu
-platforms and is known to work fine on these platforms, I'd like to
-queue the driver and the patch modifying mvebu defconfigs (patches 1 to
-4) for 4.16.
-I'll leave other patches for 4.17, which means I'd like remaining bugs
-to be fixed during the 4.16 release cycle so that we can eventually get
-rid of the old driver. That's really important to me that we don't keep
-both drivers around for too long, because my previous experience showed
-that, when you have 2 drivers for the same HW, people don't switch to
-the new one until they're forced to do it.
+PATCH LOG:
+[v4,1/4] dt-bindings: pwm: binding allwinner sun8i R40/V40/T3.
+https://patchwork.kernel.org/patch/10110177/
+[v4,2/4] ARM: PWM: add allwinner sun8i R40/V40/T3 pwm support.
+https://patchwork.kernel.org/patch/10110185/
+[v4,3/4] ARM: dts: add pwm node for r40.
+https://patchwork.kernel.org/patch/10110191/
 
-Robert, are you fine with this approach? What about the tests you were
-doing? Did you make any progress? Did you find other issues?
+Fixed:
+    1.change readl/writel to regmap.
+    2.undo the previous polarity, do clk_disable_unprepare()
+      and unlock spinlock while error return.
 
-> 
-> For people who would like to test it easily, a branch ready to be tested
-> is available at [3]. It is based on nand/next and has all the changes
-> brought by the previously mentionned series as well as this one.
-> 
-> Thank you,
-> Miquèl
-> 
-> 
-> [1] https://www.spinics.net/lists/arm-kernel/msg619633.html
-> [2] http://lists.infradead.org/pipermail/linux-mtd/2017-December/077965.html
-> [3] https://github.com/miquelraynal/linux/tree/marvell/nand-next/nfc
-> 
-> 
-> Changes since v2:
->   - Added a patch to create the nand-rb property in the Documentation
->   - Rewording in the Documentation according to Rob's comments
->   - Moved from marvell,rb to nand-rb property in the code
->   - Disociated using this driver with Marvell EBU platforms than using
->     it with PXA ones
->   - Fixed the handling of 16-bit buses
->   - Fixed SPDX comment style
->   - Reorganized registers offsets/bit fields definitions as requested
->   - Moved to Kernel doc
->   - Changed the logic in ->select_chip() to use a prepared value of NDCR
->     only instead of recalculating it
->   - Fixed the presence of the SPARE_EN bit, reworked a bit the
->     hmg_do_read/write() helpers
->   - Fixed the OOB layouts that were unusable (all spare data first, then
->     all ECC bytes)
->   - Additional check on mtd->writesize when using NFCv1 (all sizes not
->     supported)
->   - Various typos/rewording
-> 
-> Changes since v1:
->   - Rewording
->   - Fixed BCH ->read/write_page() hooks for 2kiB pages NAND chips
->   - Removed license text, used SPDX tag instead
->   - Removed read_page_data()
->   - Enhanced the DT bindings document with the label property and the
->     deprecated bindings.
->   - Simplified the read_chunk() helper (OOB always read).
->   - Simplified the ->bch_read_page() hook by removing the addition raw
->     read to get ECC bytes.
->   - Fixed the ->correct() function that did not check for bitflips in
->     ECC bytes in erased pages.
-> 
-> 
-> Miquel Raynal (7):
->   dt-bindings: mtd: document new nand-rb property
->   dt-bindings: mtd: add Marvell NAND controller documentation
->   mtd: nand: add reworked Marvell NAND controller driver
->   mtd: nand: use reworked NAND controller driver with Marvell EBU SoCs
->   mtd: nand: use Marvell reworked NAND controller driver with all
->     platforms
->   dt-bindings: mtd: remove pxa3xx NAND controller documentation
->   mtd: nand: remove useless fields from pxa3xx NAND platform data
-> 
->  .../devicetree/bindings/mtd/marvell-nand.txt       |  123 +
->  Documentation/devicetree/bindings/mtd/nand.txt     |    1 +
->  .../devicetree/bindings/mtd/pxa3xx-nand.txt        |   50 -
->  arch/arm/configs/cm_x300_defconfig                 |    2 +-
->  arch/arm/configs/mvebu_v7_defconfig                |    2 +-
->  arch/arm/configs/pxa3xx_defconfig                  |    3 +-
->  arch/arm/configs/pxa_defconfig                     |    2 +-
->  arch/arm/configs/raumfeld_defconfig                |    2 +-
->  arch/arm/mach-mmp/ttc_dkb.c                        |    4 +-
->  arch/arm/mach-pxa/cm-x300.c                        |    8 +-
->  arch/arm/mach-pxa/colibri-pxa3xx.c                 |    8 +-
->  arch/arm/mach-pxa/colibri.h                        |    2 +-
->  arch/arm/mach-pxa/littleton.c                      |   10 +-
->  arch/arm/mach-pxa/mxm8x10.c                        |   10 +-
->  arch/arm/mach-pxa/raumfeld.c                       |    6 +-
->  arch/arm/mach-pxa/zylonite.c                       |   10 +-
->  arch/arm64/configs/defconfig                       |    2 +-
->  drivers/mtd/nand/Kconfig                           |   18 +-
->  drivers/mtd/nand/Makefile                          |    2 +-
->  drivers/mtd/nand/marvell_nand.c                    | 2896 ++++++++++++++++++++
->  drivers/mtd/nand/pxa3xx_nand.c                     | 2104 --------------
->  include/linux/platform_data/mtd-nand-pxa3xx.h      |   43 +-
->  22 files changed, 3072 insertions(+), 2236 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/mtd/marvell-nand.txt
->  delete mode 100644 Documentation/devicetree/bindings/mtd/pxa3xx-nand.txt
->  create mode 100644 drivers/mtd/nand/marvell_nand.c
->  delete mode 100644 drivers/mtd/nand/pxa3xx_nand.c
-> 
+Regards,
+Hao Zhang
+
+hao_zhang (4):
+  dt-bindings: pwm: binding allwinner sun8i R40/V40/T3.
+  ARM: PWM: add allwinner sun8i R40/V40/T3 pwm support.
+  ARM: dts: add pwm pins for r40.
+  ARM: dts: add pwm node for r40.
+
+ .../devicetree/bindings/pwm/pwm-sun8i.txt          |  18 +
+ arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts  |   6 +
+ arch/arm/boot/dts/sun8i-r40.dtsi                   |  13 +
+ drivers/pwm/Kconfig                                |  10 +
+ drivers/pwm/Makefile                               |   1 +
+ drivers/pwm/pwm-sun8i-r40.c                        | 394 +++++++++++++++++++++
+ 6 files changed, 442 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/pwm-sun8i.txt
+ create mode 100644 drivers/pwm/pwm-sun8i-r40.c
+
+-- 
+2.7.4
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
