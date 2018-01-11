@@ -1,110 +1,105 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v3 6/9] irqchip: Add the ingenic-tcu-intc driver
-Date: Thu, 11 Jan 2018 17:25:45 +0100
-Message-ID: <1515687945.2170.1@smtp.crapouillou.net>
-References: <20180101143344.2099-1-paul@crapouillou.net>
-        <20180110224838.16711-1-paul@crapouillou.net>
-        <20180110224838.16711-6-paul@crapouillou.net>
-        <58349291-93cd-f803-52a9-f88120ace4dc@arm.com>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH 2/3] dt-bindings: pinctrl: Add a ngpios-ranges property
+Date: Thu, 11 Jan 2018 16:33:50 +0000
+Message-ID: <CACxGe6vA652LCosMc+AsQ2Gb_mgiApx+Gxu9judXnO_p3AFcsw@mail.gmail.com>
+References: <20180110015848.11480-1-sboyd@codeaurora.org> <20180110015848.11480-3-sboyd@codeaurora.org>
+ <CACRpkdaN6vmV4L4U76DvD5BN+j1RYCQakTysA+GGPdT8Chc-iw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <58349291-93cd-f803-52a9-f88120ace4dc@arm.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Daniel Lezcano <daniel.lezcano@linaro.org>, Lee Jones <lee.jones@linaro.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdaN6vmV4L4U76DvD5BN+j1RYCQakTysA+GGPdT8Chc-iw@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, Timur Tabi <timur@codeaurora.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, linux-gpio@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Jan 10, 2018 at 1:37 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
+> On Wed, Jan 10, 2018 at 2:58 AM, Stephen Boyd <sboyd@codeaurora.org> wrote:
+>
+>> Some qcom platforms make some GPIOs or pins unavailable for use
+>> by non-secure operating systems, and thus reading or writing the
+>> registers for those pins will cause access control issues.
+>> Introduce a DT property to describe the set of GPIOs that are
+>> available for use so that higher level OSes are able to know what
+>> pins to avoid reading/writing.
 
-Hi Marc,
+What level of access control is implemented here? Is there access
+control for each GPIO individually, or is it done by banks of GPIOs?
+Just asking to make sure I understand the problem domain.
 
->>  +static int __init ingenic_tcu_intc_of_init(struct device_node 
->> *node,
->>  +	struct device_node *parent)
->>  +{
->>  +	struct irq_domain *domain;
->>  +	struct irq_chip_generic *gc;
->>  +	struct irq_chip_type *ct;
->>  +	int err, i, num_parent_irqs;
->>  +	unsigned int parent_irqs[3];
-> 
-> 3 parent interrupts? Really? How do you pick one? Also, given the 
-> useage
-> model below, "int" is the wrong type. Probably should be u32.
+>>
+>> Cc: <devicetree@vger.kernel.org>
+>> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
+>
+> I like the idea, let's check what we think about the details regarding
+> naming and semantics, I need feedback from some DT people
+> in particular.
+>
+> Paging in Grant on this as he might have some input.
+>
+>> I stuck this inside msm8996, but maybe it can go somewhere more generic?
+>
+> Yeah just put it in Documentation/devicetree/bindings/gpio/gpio.txt
+> Everyone and its dog doing GPIO reservations "from another world"
+> will need to use this.
+>
+>> +- ngpios-ranges:
+>> +       Usage: optional
+>> +       Value type: <prop-encoded-array>
+>> +       Definition: Tuples of GPIO ranges (base, size) indicating
+>> +                   GPIOs available for use.
+>> +
+>>  Please refer to ../gpio/gpio.txt and ../interrupt-controller/interrupts.txt for
+>>  a general description of GPIO and interrupt bindings.
+>
+> I like the tuples syntax. That's fine. It's like gpio-ranges we have
+> already to map between pin controllers and GPIO.
+>
+> I don't think we can reuse gpio-ranges because that is
+> exclusively for pin control ATM, it would be fine if the ranges
+> were for a specific device, like pin control does, like:
+>
+> gpio-ranges = <&secure_world_thing 0 20 10>;
+>
+> But you definately would need a node to tie it to, so that the
+> driver for that node can specify that it's gonna take the
+> GPIOs.
+>
+> But I think the semantics should be the inverse. That you
+> point out "holes" with the lines we *can't* use.
+>
+> We already support a generic property "ngpios" that says how
+> many of the GPIOs (counted from zero) that can be used,
+> so if those should be able to use this as a generic property it
+> is better with the inverse semantics and say that the
+> "reserved-gpio-ranges", "secureworld-gpio-ranges"
+> (or whatever we decide to call it) takes precedence over
+> ngpios so we don't end up in ambigous places.
 
-See below.
+Heh, I just went down the same thought process on the naming before I
+read the above. Yes I agree. The property name should have something
+like "reserved" in it. I vote for "gpio-reserved-ranges" because it
+puts the binding owner (gpio) at the front of the name, it indicates
+that the list is unavailable GPIOs, and that the format is a set of
+ranges.
 
->>  +	struct regmap *map;
->>  +
->>  +	num_parent_irqs = of_property_count_elems_of_size(
->>  +			node, "interrupts", 4);
-> 
-> Nit: on a single line, as here is nothing that hurts my eyes more than
-> reading something like(
-> this). Also, 4 is better expressed as sizeof(u32).
+The fiddly bit is it assumes the GPIOs are described by a single
+number. It works fine as long as the GPIO controllers can use a single
+cell to describe a gpio number (instead of having #gpio-cells = 3 with
+the first cell being bank, the second being number in bank, and the
+third being flags).
 
-That will make checkpatch.pl unhappy :(
+>
+> Then, will it be possible to put the parsing, handling and
+> disablement of these ranges into drivers/gpio/gpiolib-of.c
+> where we handle the ranges today, or do we need to
+> do it in the individual drivers?
 
->>  +	if (num_parent_irqs < 0 || num_parent_irqs > 
->> ARRAY_SIZE(parent_irqs))
->>  +		return -EINVAL;
->>  +
->>  +	map = syscon_node_to_regmap(node->parent);
->>  +	if (IS_ERR(map))
->>  +		return PTR_ERR(map);
->>  +
->>  +	domain = irq_domain_add_linear(node, 32, &irq_generic_chip_ops, 
->> NULL);
->>  +	if (!domain)
->>  +		return -ENOMEM;
->>  +
->>  +	err = irq_alloc_domain_generic_chips(domain, 32, 1, "TCU",
->>  +			handle_level_irq, 0, IRQ_NOPROBE | IRQ_LEVEL, 0);
->>  +	if (err)
->>  +		goto out_domain_remove;
->>  +
->>  +	gc = irq_get_domain_generic_chip(domain, 0);
->>  +	ct = gc->chip_types;
->>  +
->>  +	gc->wake_enabled = IRQ_MSK(32);
->>  +	gc->private = map;
->>  +
->>  +	ct->regs.disable = TCU_REG_TMSR;
->>  +	ct->regs.enable = TCU_REG_TMCR;
->>  +	ct->regs.ack = TCU_REG_TFCR;
->>  +	ct->chip.irq_unmask = ingenic_tcu_gc_unmask_enable_reg;
->>  +	ct->chip.irq_mask = ingenic_tcu_gc_mask_disable_reg;
->>  +	ct->chip.irq_mask_ack = ingenic_tcu_gc_mask_disable_reg_and_ack;
->>  +	ct->chip.flags = IRQCHIP_MASK_ON_SUSPEND | IRQCHIP_SKIP_SET_WAKE;
->>  +
->>  +	/* Mask all IRQs by default */
->>  +	regmap_write(map, TCU_REG_TMSR, IRQ_MSK(32));
->>  +
->>  +	for (i = 0; i < num_parent_irqs; i++) {
->>  +		parent_irqs[i] = irq_of_parse_and_map(node, i);
->>  +		if (!parent_irqs[i]) {
->>  +			err = -EINVAL;
->>  +			goto out_unmap_irqs;
->>  +		}
->>  +
->>  +		irq_set_chained_handler_and_data(parent_irqs[i],
->>  +				ingenic_tcu_intc_cascade, domain);
->>  +	}
-> 
-> I don't get the multiple parent irq at all. How are the source 
-> interrupt
-> routed to the various cascades?
+I certainly would prefer parsing this in common code, and not in
+individual drivers, but again it becomes hard for any driver using
+multiple cells to describe the local GPIO number. I think the guidance
+here needs to be that the property is relevant when the internal GPIO
+number representation fits within a uint32, which realistically should
+never be a problem.
 
-On JZ4740, channels 0 and 1 have their own interrupt, and channels 2-7 
-share
-one interrupt line.
-On JZ4770 and JZ4780, the OST (OS timer) channel has its own interrupt,
-channel 5 has its own interrupt, and channels 0-4 and 6-7 share one
-interrupt line.
-
-To keep things simple, we register the same interrupt handler for the 
-three
-parent interrupts.
-
--Paul
-
+g.
