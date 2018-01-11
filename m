@@ -1,119 +1,62 @@
-From: Andre Przywara <andre.przywara@arm.com>
-Subject: Re: [linux-sunxi] [PATCH 1/7] pinctrl: sunxi: add support for pin
- controllers without bus gate
-Date: Thu, 11 Jan 2018 11:48:40 +0000
-Message-ID: <ef82983f-6f91-46c2-1f67-7d4efc10c905@arm.com>
-References: <20180106042326.46519-1-icenowy@aosc.io>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH v2 07/12] drm/sun4i: Add has_channel_0 TCON quirk
+Date: Thu, 11 Jan 2018 13:18:15 +0100
+Message-ID: <20180111121815.lzhfy7n7uppamznj@flea.lan>
+References: <20180110192512.19684-1-jernej.skrabec@siol.net>
+ <20180110192512.19684-8-jernej.skrabec@siol.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20180106042326.46519-1-icenowy@aosc.io>
-Content-Language: en-GB
-Sender: linux-gpio-owner@vger.kernel.org
-To: icenowy@aosc.io, Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, linux-sunxi@googlegroups.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="zok6ncilkcjhhzzp"
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180110192512.19684-8-jernej.skrabec@siol.net>
+Sender: linux-clk-owner@vger.kernel.org
+To: Jernej Skrabec <jernej.skrabec@siol.net>
+Cc: airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org, architt@codeaurora.org, a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com, mturquette@baylibre.com, sboyd@codeaurora.org, Jose.Abreu@synopsys.com, narmstrong@baylibre.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-another take to avoid this patch at all, I just remembered this from an
-IRC discussion before:
+--zok6ncilkcjhhzzp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 06/01/18 04:23, Icenowy Zheng wrote:
-> The Allwinner H6 pin controllers (both the main one and the CPUs one)
-> have no bus gate clocks.
+On Wed, Jan 10, 2018 at 08:25:07PM +0100, Jernej Skrabec wrote:
+> Some TCONs on newer SoCs doesn't support channel 0, since they are meant
+> to be used only with TV or HDMI encoder.
+>=20
+> Prepare support for them with adding has_channel_0 quirk.
+>=20
+> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
 
-I don't think this is true. The pin controller *needs* an APB clock,
-it's just not gate-able or not exposed or documented.
-The "system bus tree" on page 90 in the manual shows that the "GPIO"
-block is located on the APB1 bus.
-So can't we just reference this apb clock directly? That would be much
-cleaner, "more" correct and require less changes: "The best patch is no
-patch":
+Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com>
 
-	clocks = <&ccu APB1>, <&osc24M>, <&osc32k>;
-	/* or whatever this APB clock is actually called. */
-	clock-names = "apb", "hosc", "losc";
+Thanks!
+Maxime
 
-Cheers,
-Andre.
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 
-> 
-> Add support for this kind of pin controllers.
-> 
-> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-> ---
->  drivers/pinctrl/sunxi/pinctrl-sunxi.c | 30 ++++++++++++++++++++----------
->  drivers/pinctrl/sunxi/pinctrl-sunxi.h |  1 +
->  2 files changed, 21 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-> index 4b6cb25bc796..68cd505679d9 100644
-> --- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-> +++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-> @@ -1182,7 +1182,12 @@ static int sunxi_pinctrl_setup_debounce(struct sunxi_pinctrl *pctl,
->  	unsigned int hosc_div, losc_div;
->  	struct clk *hosc, *losc;
->  	u8 div, src;
-> -	int i, ret;
-> +	int i, ret, clk_count;
-> +
-> +	if (pctl->desc->without_bus_gate)
-> +		clk_count = 2;
-> +	else
-> +		clk_count = 3;
->  
->  	/* Deal with old DTs that didn't have the oscillators */
->  	if (of_count_phandle_with_args(node, "clocks", "#clock-cells") != 3)
-> @@ -1360,15 +1365,19 @@ int sunxi_pinctrl_init_with_variant(struct platform_device *pdev,
->  			goto gpiochip_error;
->  	}
->  
-> -	clk = devm_clk_get(&pdev->dev, NULL);
-> -	if (IS_ERR(clk)) {
-> -		ret = PTR_ERR(clk);
-> -		goto gpiochip_error;
-> -	}
-> +	if (!desc->without_bus_gate) {
-> +		clk = devm_clk_get(&pdev->dev, NULL);
-> +		if (IS_ERR(clk)) {
-> +			ret = PTR_ERR(clk);
-> +			goto gpiochip_error;
-> +		}
->  
-> -	ret = clk_prepare_enable(clk);
-> -	if (ret)
-> -		goto gpiochip_error;
-> +		ret = clk_prepare_enable(clk);
-> +		if (ret)
-> +			goto gpiochip_error;
-> +	} else {
-> +		clk = NULL;
-> +	}
->  
->  	pctl->irq = devm_kcalloc(&pdev->dev,
->  				 pctl->desc->irq_banks,
-> @@ -1425,7 +1434,8 @@ int sunxi_pinctrl_init_with_variant(struct platform_device *pdev,
->  	return 0;
->  
->  clk_error:
-> -	clk_disable_unprepare(clk);
-> +	if (clk)
-> +		clk_disable_unprepare(clk);
->  gpiochip_error:
->  	gpiochip_remove(pctl->chip);
->  	return ret;
-> diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.h b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
-> index 11b128f54ed2..ccb6230f0bb5 100644
-> --- a/drivers/pinctrl/sunxi/pinctrl-sunxi.h
-> +++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
-> @@ -113,6 +113,7 @@ struct sunxi_pinctrl_desc {
->  	unsigned			irq_bank_base;
->  	bool				irq_read_needs_mux;
->  	bool				disable_strict_mode;
-> +	bool				without_bus_gate;
->  };
->  
->  struct sunxi_pinctrl_function {
-> 
+--zok6ncilkcjhhzzp
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlpXVgYACgkQ0rTAlCFN
+r3T1HBAAhx3piBiWrfsjuBWDTSYsq/ELGiToYoMKJZK7poKdjb/Ikps83FKbFYEF
+KK7f/63s8ScjDBAxvCOoPO3nIVsIRfAmiqlcsaLzNbwkcdMF/oo6YHKi00GqETGf
+W1+8MhaEVuW/UWJG73oVsBJIQ8Mp5ertfZIeDpvWw/s70SlRHSNiaOfryMwx4OM0
+3M+ZcI9PK04AKT6V8pJ5/hPqsE0G85q/uDlBod+KtZ2NCosgPin48RLx38qjmRF3
+OAfc+iz3KwwpxxfXPNlkKAzWyTmmaPFYL8JSb0nqSXLIhwAdhcDCDB/RgBcUFbUa
+2HjrS2m3K/X397ngQCs7VsABBmYZlQBGFQ2xhgfw0ZRj7TdrkApG1uJhjGrjvXgm
+zAa9ocVcVDaDj9X43dpMFBZJWILQ3FbaPJl+nOgQHmq+Kven0pFuksKU4yhvEMRs
+k13kSi0c7WdxnHltoPz71QtmszrOLmXQ0zV0AsHRrp9Zwpwt1jo4nCWOisVShxM9
+xAOFYGD/rs3j2FnJ3WU4ubijf/OKl2zHfebF9GOIaJZ0JJ9sfzBVxud3ogUMsUwn
+QzbM6gzl7x235mOnWXfPWvzct54UXVOB+JboRXPIy+JS8+xSWIv67spSzn6Nnuhb
+MyHc74rHZ64hJ04UakLuHDFf1lKC+UHqj+9ouUwIHGvuY9hvW2o=
+=4PAM
+-----END PGP SIGNATURE-----
+
+--zok6ncilkcjhhzzp--
