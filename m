@@ -1,167 +1,36 @@
-From: Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>
-Subject: Re: [PATCH 00/10] Xilinx ZynqMP DisplayPort subsystem DRM KMS driver
-Date: Thu, 11 Jan 2018 09:07:38 +0100
-Message-ID: <20180111080738.GC13066@phenom.ffwll.local>
-References: <1515117959-18068-1-git-send-email-hyun.kwon@xilinx.com>
- <20180109095649.GK26573@phenom.ffwll.local>
- <BY1PR0201MB10002CAFCC860052538BA14DD6160@BY1PR0201MB1000.namprd02.prod.outlook.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH] ARM: dts: s5pv210: add interrupt-parent for ohci
+Date: Thu, 11 Jan 2018 09:09:11 +0100
+Message-ID: <CAJKOXPfhQOBg5z3rXHqH7-rA+S_ggTeu=OxHEYm7NG=NDy-8qQ@mail.gmail.com>
+References: <20180110161045.4052684-1-arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <BY1PR0201MB10002CAFCC860052538BA14DD6160-QYJsKn8jqXK8fGmG9BO4UxrHTHEw16jenBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hyun Kwon <hyunk-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20180110161045.4052684-1-arnd@arndb.de>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Kukjin Kim <kgene@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Guenter Roeck <linux@roeck-us.net>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 11, 2018 at 02:07:08AM +0000, Hyun Kwon wrote:
-> Hi Daniel,
-> 
-> > -----Original Message-----
-> > From: Daniel Vetter [mailto:daniel.vetter-/w4YWyX8dFk@public.gmane.org] On Behalf Of Daniel
-> > Vetter
-> > Sent: Tuesday, January 09, 2018 1:57 AM
-> > To: Hyun Kwon <hyunk-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> > Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Michal
-> > Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> > Subject: Re: [PATCH 00/10] Xilinx ZynqMP DisplayPort subsystem DRM
-> > KMS driver
-> > 
-> > On Thu, Jan 04, 2018 at 06:05:49PM -0800, Hyun Kwon wrote:
-> > > Hi,
-> > >
-> > > This patchset adds the DRM KMS driver for Xilinx ZynqMP DisplayPort
-> > > subsystem. The Xilinx ZynqMP SoC has a hardened full display pipeline
-> > > which supports blending of up to 2 planes, and the encoder is
-> > > DisplayPort v1.2 compatible.
-> > >
-> > > This series mainly includes 2 sets: Xilinx DRM KMS (patch 1/10 - 5/10)
-> > > and ZynqMP DP subsystem drivers (patch 6/10 - 10/10).
-> > >
-> > > The Xilinx DRM KMS is intended as a common layer shared across other
-> > > (upcoming) Xilinx sub-drivers. It helps sub-drivers for both hardened as
-> > > well as soft IPs interoperate together.
-> > >
-> > > ZynqMP DP subsystem driver is a sub-driver that implements
-> > corresponding
-> > > drm objects (crtc, plane, encoder, connector,,,) for ZynqMP SoC display
-> > > pipeline. The entire pipeline is mainly partitioned into 2 blocks:
-> > > generic display logic (zynqmp_disp.c) such as blending, csc,,, and the
-> > > DP transmitter logic (zynqmp_dp.c).
-> > 
-> > I read through it all (well mostly the drm relevant bits, not your backend
-> > code) and looks fairly resonable. Few minor clenaups and code removals
-> > tbh.
-> > 
-> > Wrt merging/maintianing, do you want to maintain it as part of the
-> > drm-misc small drivers group? Highly recommended imo. See
-> > 
-> > https://01.org/linuxgraphics/gfx-docs/maintainer-tools/drm-
-> > misc.html#small-drivers
-> > 
-> > for details. Ideally we'd need 2 xilinx maintainers to be able to push
-> > patches & cross-review stuff.
-> 
-> I don't have any preference on how to maintain, so I'll follow your
-> suggestion. One thing that may be worth a note is that there is sizable
-> amount of development within Xilinx, and those will come in near future
-> (considering what can be done with FPGA :-)). I'll look for the 2nd
-> reviewer, and specify that in the next patch if found.
+On Wed, Jan 10, 2018 at 5:10 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+> The ohci-hcd node has an interrupt number but no interrupt-parent,
+> leading to a warning with current dtc versions:
+>
+> arch/arm/boot/dts/s5pv210-aquila.dtb: Warning (interrupts_property): Missing interrupt-parent for /soc/ohci@ec300000
+> arch/arm/boot/dts/s5pv210-goni.dtb: Warning (interrupts_property): Missing interrupt-parent for /soc/ohci@ec300000
+> arch/arm/boot/dts/s5pv210-smdkc110.dtb: Warning (interrupts_property): Missing interrupt-parent for /soc/ohci@ec300000
+> arch/arm/boot/dts/s5pv210-smdkv210.dtb: Warning (interrupts_property): Missing interrupt-parent for /soc/ohci@ec300000
+> arch/arm/boot/dts/s5pv210-torbreck.dtb: Warning (interrupts_property): Missing interrupt-parent for /soc/ohci@ec300000
+>
+> As seen from the related exynos dts files, the ohci and ehci controllers
+> always share one interrupt number, and the number is the same here as
+> well, so setting the same interrupt-parent is the reasonable solution
+> here.
 
-If the xilinx activity gets too much we can always split things up again.
-But if it's just the occasional burst (around a new product for example),
-then drm-misc has ample of bandwidth to absorb that.
+Your patch is correct. However my last pull request still waits and it
+is quite late in this release cycle so I will apply it for v4.17 after
+this merge window. On the other hand you can take it directly (in that
+case: Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>).
 
-And yes the idea is very much that all regular contributors would have
-commit rights too. All to reduce friction and make it easier to
-contribute.
--Daniel
-
-> 
-> Thanks,
-> -hyun
-> 
-> > -Daniel
-> > 
-> > >
-> > > Thanks,
-> > > -hyun
-> > >
-> > > Hyun Kwon (10):
-> > >   dt-bindings: display: xlnx: Add Xilinx kms bindings
-> > >   drm: xlnx: Add xlnx crtc of Xilinx DRM KMS
-> > >   drm: xlnx: Add xlnx fb of Xilinx DRM KMS
-> > >   drm: xlnx: Add xlnx gem of Xilinx DRM KMS
-> > >   drm: xlnx: Xilinx DRM KMS driver
-> > >   dt-bindings: display: xlnx: Add ZynqMP DP subsystem bindings
-> > >   drm: xlnx: DRM KMS driver for Xilinx ZynqMP DP subsystem display
-> > >   drm: xlnx: DRM KMS driver for Xilinx ZynqMP DisplayPort
-> > >   drm: xlnx: ZynqMP DP subsystem DRM KMS driver
-> > >   drm: xlnx: zynqmp: Add debugfs
-> > >
-> > >  .../devicetree/bindings/display/xlnx/xlnx,kms.txt  |   20 +
-> > >  .../bindings/display/xlnx/xlnx,zynqmp-dpsub.txt    |   94 +
-> > >  MAINTAINERS                                        |    8 +
-> > >  drivers/gpu/drm/Kconfig                            |    2 +
-> > >  drivers/gpu/drm/Makefile                           |    1 +
-> > >  drivers/gpu/drm/xlnx/Kconfig                       |   44 +
-> > >  drivers/gpu/drm/xlnx/Makefile                      |    5 +
-> > >  drivers/gpu/drm/xlnx/xlnx_crtc.c                   |  195 ++
-> > >  drivers/gpu/drm/xlnx/xlnx_crtc.h                   |   70 +
-> > >  drivers/gpu/drm/xlnx/xlnx_drv.c                    |  436 +++
-> > >  drivers/gpu/drm/xlnx/xlnx_drv.h                    |   22 +
-> > >  drivers/gpu/drm/xlnx/xlnx_fb.c                     |  468 +++
-> > >  drivers/gpu/drm/xlnx/xlnx_fb.h                     |   30 +
-> > >  drivers/gpu/drm/xlnx/xlnx_gem.c                    |   39 +
-> > >  drivers/gpu/drm/xlnx/xlnx_gem.h                    |   18 +
-> > >  drivers/gpu/drm/xlnx/zynqmp_disp.c                 | 3261
-> > ++++++++++++++++++++
-> > >  drivers/gpu/drm/xlnx/zynqmp_disp.h                 |   28 +
-> > >  drivers/gpu/drm/xlnx/zynqmp_dp.c                   | 2168 +++++++++++++
-> > >  drivers/gpu/drm/xlnx/zynqmp_dp.h                   |   29 +
-> > >  drivers/gpu/drm/xlnx/zynqmp_dpsub.c                |  141 +
-> > >  drivers/gpu/drm/xlnx/zynqmp_dpsub.h                |   19 +
-> > >  21 files changed, 7098 insertions(+)
-> > >  create mode 100644
-> > Documentation/devicetree/bindings/display/xlnx/xlnx,kms.txt
-> > >  create mode 100644
-> > Documentation/devicetree/bindings/display/xlnx/xlnx,zynqmp-dpsub.txt
-> > >  create mode 100644 drivers/gpu/drm/xlnx/Kconfig
-> > >  create mode 100644 drivers/gpu/drm/xlnx/Makefile
-> > >  create mode 100644 drivers/gpu/drm/xlnx/xlnx_crtc.c
-> > >  create mode 100644 drivers/gpu/drm/xlnx/xlnx_crtc.h
-> > >  create mode 100644 drivers/gpu/drm/xlnx/xlnx_drv.c
-> > >  create mode 100644 drivers/gpu/drm/xlnx/xlnx_drv.h
-> > >  create mode 100644 drivers/gpu/drm/xlnx/xlnx_fb.c
-> > >  create mode 100644 drivers/gpu/drm/xlnx/xlnx_fb.h
-> > >  create mode 100644 drivers/gpu/drm/xlnx/xlnx_gem.c
-> > >  create mode 100644 drivers/gpu/drm/xlnx/xlnx_gem.h
-> > >  create mode 100644 drivers/gpu/drm/xlnx/zynqmp_disp.c
-> > >  create mode 100644 drivers/gpu/drm/xlnx/zynqmp_disp.h
-> > >  create mode 100644 drivers/gpu/drm/xlnx/zynqmp_dp.c
-> > >  create mode 100644 drivers/gpu/drm/xlnx/zynqmp_dp.h
-> > >  create mode 100644 drivers/gpu/drm/xlnx/zynqmp_dpsub.c
-> > >  create mode 100644 drivers/gpu/drm/xlnx/zynqmp_dpsub.h
-> > >
-> > > --
-> > > 2.7.4
-> > >
-> > > _______________________________________________
-> > > dri-devel mailing list
-> > > dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-> > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
-> > 
-> > --
-> > Daniel Vetter
-> > Software Engineer, Intel Corporation
-> > http://blog.ffwll.ch
-
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Krzysztof
