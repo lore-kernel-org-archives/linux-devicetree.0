@@ -1,78 +1,149 @@
-From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: Re: [PATCH V5 0/7] Add loadable kernel module and power management
- support
-Date: Thu, 11 Jan 2018 11:45:46 +0530
-Message-ID: <a33a045c-0384-64fc-5ae5-1a150081d262@nvidia.com>
-References: <1515489577-2197-1-git-send-email-mmaddireddy@nvidia.com>
- <20180110171521.GA26960@e107981-ln.cambridge.arm.com>
+From: Shunqian Zheng <zhengsq@rock-chips.com>
+Subject: Re: [PATCH v5 2/4] media: ov5695: add support for OV5695 sensor
+Date: Thu, 11 Jan 2018 14:21:17 +0800
+Message-ID: <2ab51b3f-0c37-6c3d-6b2e-c7e767275380@rock-chips.com>
+References: <1515549967-5302-1-git-send-email-zhengsq@rock-chips.com>
+ <1515549967-5302-3-git-send-email-zhengsq@rock-chips.com>
+ <20180110090836.GB6834@w540>
+Reply-To: zhengsq@rock-chips.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20180110171521.GA26960@e107981-ln.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20180110090836.GB6834@w540>
 Content-Language: en-US
-Sender: linux-pm-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: thierry.reding@gmail.com, bhelgaas@google.com, cyndis@kapsi.fi, jonathanh@nvidia.com, robh+dt@kernel.org, frowand.list@gmail.com, rjw@rjwysocki.net, tglx@linutronix.de, vidyas@nvidia.com, kthota@nvidia.com, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-pm@vger.kernel.org
+Sender: linux-media-owner@vger.kernel.org
+To: jacopo mondi <jacopo@jmondi.org>
+Cc: mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, ddl@rock-chips.com, tfiga@chromium.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Jacopo,
 
 
-On 10-Jan-18 10:45 PM, Lorenzo Pieralisi wrote:
-> On Tue, Jan 09, 2018 at 02:49:30PM +0530, Manikanta Maddireddy wrote:
->> This series of patches adds loadable kernel module and power management
->> support to Tegra PCIe host controller driver. irq_set_msi_desc() and
->> tegra_cpuidle_pcie_irqs_in_use() symbols will be taken care in next
->> set of patches.
+On 2018年01月10日 17:08, jacopo mondi wrote:
+> Hello Shunqian,
+>
+> On Wed, Jan 10, 2018 at 10:06:05AM +0800, Shunqian Zheng wrote:
+>
+> [snip]
+>
+>> +static int __ov5695_start_stream(struct ov5695 *ov5695)
+>> +{
+>> +	int ret;
+>> +
+>> +	ret = ov5695_write_array(ov5695->client, ov5695_global_regs);
+>> +	if (ret)
+>> +		return ret;
+>> +	ret = ov5695_write_array(ov5695->client, ov5695->cur_mode->reg_list);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	/* In case these controls are set before streaming */
+>> +	ret = __v4l2_ctrl_handler_setup(&ov5695->ctrl_handler);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	return ov5695_write_reg(ov5695->client, OV5695_REG_CTRL_MODE,
+>> +				OV5695_REG_VALUE_08BIT, OV5695_MODE_STREAMING);
+>> +}
+>> +
+>> +static int __ov5695_stop_stream(struct ov5695 *ov5695)
+>> +{
+>> +	return ov5695_write_reg(ov5695->client, OV5695_REG_CTRL_MODE,
+>> +				OV5695_REG_VALUE_08BIT, OV5695_MODE_SW_STANDBY);
+>> +}
+>> +
+>> +static int ov5695_s_stream(struct v4l2_subdev *sd, int on)
+>> +{
+>> +	struct ov5695 *ov5695 = to_ov5695(sd);
+>> +	struct i2c_client *client = ov5695->client;
+>> +	int ret = 0;
+>> +
+>> +	mutex_lock(&ov5695->mutex);
+>> +	on = !!on;
+>> +	if (on == ov5695->streaming)
+>> +		goto unlock_and_return;
+>> +
+>> +	if (on) {
+>> +		ret = pm_runtime_get_sync(&client->dev);
+>> +		if (ret < 0) {
+>> +			pm_runtime_put_noidle(&client->dev);
+>> +			goto unlock_and_return;
+>> +		}
+>> +
+>> +		ret = __ov5695_start_stream(ov5695);
+>> +		if (ret) {
+>> +			v4l2_err(sd, "start stream failed while write regs\n");
+>> +			pm_runtime_put(&client->dev);
+>> +			goto unlock_and_return;
+>> +		}
+>> +	} else {
+>> +		__ov5695_stop_stream(ov5695);
+>> +		ret = pm_runtime_put(&client->dev);
+> I would return the result of __ov5695_stop_stream() instead of
+> pm_runtime_put().
+>
+> I know I asked for this, but if the first s_stream(0) fails, the
+> sensor may not have been stopped but the interface will be put in
+> "streaming = 0" state, preventing a second s_stream(0) to be issued
+> because of your check "on == ov5695->streaming" a few lines above.
+>
+> I can't tell how bad this is. Imho is acceptable but I would like to
+> hear someone else opinion here :)
+How about not checking the return values of s_stream(0) branch?
+It seems not much this driver can do if pm_runtime_put() fails.
+>
+>> +	}
+>> +
+>> +	ov5695->streaming = on;
+>> +
+>> +unlock_and_return:
+>> +	mutex_unlock(&ov5695->mutex);
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +
+> [snip]
+>
+>> +static const struct of_device_id ov5695_of_match[] = {
+>> +	{ .compatible = "ovti,ov5695" },
+>> +	{},
+>> +};
+> If you don't list CONFIG_OF as a dependecy for this driver (which you
+> should not imho), please guard this with:
+>
+> #if IS_ENABLED(CONFIG_OF)
+>
+> #endif
+>
+>> +
+>> +static struct i2c_driver ov5695_i2c_driver = {
+>> +	.driver = {
+>> +		.name = "ov5695",
+>> +		.owner = THIS_MODULE,
+>> +		.pm = &ov5695_pm_ops,
+>> +		.of_match_table = ov5695_of_match
+>> +	},
+>> +	.probe		= &ov5695_probe,
+>> +	.remove		= &ov5695_remove,
+>> +};
+>> +
+>> +module_i2c_driver(ov5695_i2c_driver);
+>> +
+>> +MODULE_DESCRIPTION("OmniVision ov5695 sensor driver");
+>> +MODULE_LICENSE("GPL v2");
+> As you've fixed my comments on v1, and with the above bits addressed:
+>
+> Reviewed-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Thank you very much~
+Shunqian
+>
+> Thanks
+>     j
+>
+>> --
+>> 1.9.1
 >>
->> These patches are tested on Jetson TK1, TX1 and TX2 platforms, following
->> are the verification details.
->> 	- Multiple module insert & remove
->> 	- PCIe device functionality after module insert
->> 	- Free clock, resets, regulators, powergate, iomem and interrupt
->> 	resources after module remove
->> 	- PCIe device functionality after resume from RAM
->>
->> V2: PM QoS fix is dropped in V2 from this series because the fix is
->> incorporated in latest 'commit 0759e80b84e3 ("PM / QoS: Fix device resume
->> latency framework")'. Update commit message of few patches in V2.
->>
->> V3: Patches to export irq_set_msi_desc() and tegra_cpuidle_pcie_irqs_in_use()
->> are dropped based on review comments. These symbols will be addressed in next
->> series. Took care of few other review comments.
->>
->> V4: Dropped pci_find_host_bridge() export patch and added new patch to use
->> bus->sysdata for private data.
->>
->> V5: Decouple from https://patchwork.ozlabs.org/patch/832053/ and rebase
->> on top of linux-next
->>
->> Manikanta Maddireddy (7):
->>   of: Export of_pci_range_to_resource()
->>   PCI: tegra: Use bus->sysdata to store and get host private data
->>   PCI: tegra: Remove PCI_REASSIGN_ALL_BUS flag for Tegra PCIe
->>   PCI: tegra: Free resources on probe failure
->>   PCI: tegra: Add loadable kernel module support
->>   PCI: tegra: Broadcast PME_Turn_Off message before link goes to L2
->>   PCI: tegra: Add power management support
->>
->>  drivers/of/address.c         |   1 +
->>  drivers/pci/host/Kconfig     |   2 +-
->>  drivers/pci/host/pci-tegra.c | 333 ++++++++++++++++++++++++++++++++-----------
->>  3 files changed, 253 insertions(+), 83 deletions(-)
-> 
-> Can I ask you please to rebase this series against my pci/tegra branch ?
-> 
-> Thanks,
-> Lorenzo
-> 
-Hi Lorenzo,
-
-I rebased this series on lpieralisi/pci/tegra and published V6.
-V5 patch https://patchwork.ozlabs.org/patch/857318/ cherry-pick is failing,
-because of missing change "7153884c088a ("PCI: Remove PCI_REASSIGN_ALL_RSRC use on arm and arm64")"
-in lpieralisi/pci/tegra branch. This information might come in
-handy when doing remote branch merge of 'lorenzo/pci/tegra' into next
-
-Thanks,
-Manikanta
+>
+>
