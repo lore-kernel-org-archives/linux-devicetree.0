@@ -1,224 +1,62 @@
-From: Jeffy Chen <jeffy.chen@rock-chips.com>
-Subject: [PATCH 1/9] iommu/of: Drop early initialisation hooks
-Date: Thu, 11 Jan 2018 16:22:21 +0800
-Message-ID: <20180111082229.24011-2-jeffy.chen@rock-chips.com>
-References: <20180111082229.24011-1-jeffy.chen@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180111082229.24011-1-jeffy.chen@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: jcliang@chromium.org, robin.murphy@arm.com, tfiga@chromium.org, Jeffy Chen <jeffy.chen@rock-chips.com>, Marek Szyprowski <m.szyprowski@samsung.com>, linux-samsung-soc@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, iommu@lists.linux-foundation.org, Frank Rowand <frowand.list@gmail.com>, Krzysztof Kozlowski <krzk@kernel.org>, Rob Clark <robdclark@gmail.com>, Will Deacon <will.deacon@arm.com>, Joerg Roedel <joro@8bytes.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+From: Hugues FRUCHET <hugues.fruchet-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH v5 0/5] Add OV5640 parallel interface and RGB565/YUYV
+ support
+Date: Thu, 11 Jan 2018 08:25:41 +0000
+Message-ID: <40f2e25e-3662-fce9-549b-360bbafad623@st.com>
+References: <1514973452-10464-1-git-send-email-hugues.fruchet@st.com>
+ <20180108153811.5xrvbaekm6nxtoa6@flea>
+ <3010811e-ed37-4489-6a9f-6cc835f41575@st.com>
+ <20180110153724.l77zpdgxfbzkznuf@flea>
+ <2089de18-1f7f-6d6e-7aee-9dc424bca335@st.com>
+ <20180110222508.4x5kimanevttmqis@valkosipuli.retiisi.org.uk>
+ <6661b493-5f2a-b201-390d-e3452e6873a0@st.com>
+ <20180111081912.curkvpguof6ul555@valkosipuli.retiisi.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180111081912.curkvpguof6ul555-S+BSfZ9RZZmRSg0ZkenSGLdO1Tsj/99ntUK59QYPAWc@public.gmane.org>
+Content-Language: en-US
+Content-ID: <E67145C52CE1684BB72CB3F244915739-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-With the probe-deferral mechanism, early initialisation hooks are no
-longer needed.
-
-Suggested-by: Robin Murphy <robin.murphy@arm.com>
-Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
----
-
- drivers/iommu/arm-smmu-v3.c  |  2 +-
- drivers/iommu/arm-smmu.c     | 12 ++++++------
- drivers/iommu/exynos-iommu.c |  2 +-
- drivers/iommu/ipmmu-vmsa.c   | 17 ++---------------
- drivers/iommu/msm_iommu.c    | 24 +++++++-----------------
- drivers/iommu/of_iommu.c     | 16 ----------------
- drivers/iommu/qcom_iommu.c   |  2 +-
- include/linux/of_iommu.h     |  6 ++----
- 8 files changed, 20 insertions(+), 61 deletions(-)
-
-diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-index 744592d330ca..3f2f1fc68b52 100644
---- a/drivers/iommu/arm-smmu-v3.c
-+++ b/drivers/iommu/arm-smmu-v3.c
-@@ -2971,7 +2971,7 @@ static struct platform_driver arm_smmu_driver = {
- };
- module_platform_driver(arm_smmu_driver);
- 
--IOMMU_OF_DECLARE(arm_smmuv3, "arm,smmu-v3", NULL);
-+IOMMU_OF_DECLARE(arm_smmuv3, "arm,smmu-v3");
- 
- MODULE_DESCRIPTION("IOMMU API for ARM architected SMMUv3 implementations");
- MODULE_AUTHOR("Will Deacon <will.deacon@arm.com>");
-diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-index 78d4c6b8f1ba..69e7c60792a8 100644
---- a/drivers/iommu/arm-smmu.c
-+++ b/drivers/iommu/arm-smmu.c
-@@ -2211,12 +2211,12 @@ static struct platform_driver arm_smmu_driver = {
- };
- module_platform_driver(arm_smmu_driver);
- 
--IOMMU_OF_DECLARE(arm_smmuv1, "arm,smmu-v1", NULL);
--IOMMU_OF_DECLARE(arm_smmuv2, "arm,smmu-v2", NULL);
--IOMMU_OF_DECLARE(arm_mmu400, "arm,mmu-400", NULL);
--IOMMU_OF_DECLARE(arm_mmu401, "arm,mmu-401", NULL);
--IOMMU_OF_DECLARE(arm_mmu500, "arm,mmu-500", NULL);
--IOMMU_OF_DECLARE(cavium_smmuv2, "cavium,smmu-v2", NULL);
-+IOMMU_OF_DECLARE(arm_smmuv1, "arm,smmu-v1");
-+IOMMU_OF_DECLARE(arm_smmuv2, "arm,smmu-v2");
-+IOMMU_OF_DECLARE(arm_mmu400, "arm,mmu-400");
-+IOMMU_OF_DECLARE(arm_mmu401, "arm,mmu-401");
-+IOMMU_OF_DECLARE(arm_mmu500, "arm,mmu-500");
-+IOMMU_OF_DECLARE(cavium_smmuv2, "cavium,smmu-v2");
- 
- MODULE_DESCRIPTION("IOMMU API for ARM architected SMMU implementations");
- MODULE_AUTHOR("Will Deacon <will.deacon@arm.com>");
-diff --git a/drivers/iommu/exynos-iommu.c b/drivers/iommu/exynos-iommu.c
-index 79c45650f8de..1c7f926fad0e 100644
---- a/drivers/iommu/exynos-iommu.c
-+++ b/drivers/iommu/exynos-iommu.c
-@@ -1394,4 +1394,4 @@ static int __init exynos_iommu_init(void)
- }
- core_initcall(exynos_iommu_init);
- 
--IOMMU_OF_DECLARE(exynos_iommu_of, "samsung,exynos-sysmmu", NULL);
-+IOMMU_OF_DECLARE(exynos_iommu_of, "samsung,exynos-sysmmu");
-diff --git a/drivers/iommu/ipmmu-vmsa.c b/drivers/iommu/ipmmu-vmsa.c
-index 8dce3a9de9d8..07b711bb4b16 100644
---- a/drivers/iommu/ipmmu-vmsa.c
-+++ b/drivers/iommu/ipmmu-vmsa.c
-@@ -1081,12 +1081,8 @@ static struct platform_driver ipmmu_driver = {
- 
- static int __init ipmmu_init(void)
- {
--	static bool setup_done;
- 	int ret;
- 
--	if (setup_done)
--		return 0;
--
- 	ret = platform_driver_register(&ipmmu_driver);
- 	if (ret < 0)
- 		return ret;
-@@ -1096,7 +1092,6 @@ static int __init ipmmu_init(void)
- 		bus_set_iommu(&platform_bus_type, &ipmmu_ops);
- #endif
- 
--	setup_done = true;
- 	return 0;
- }
- 
-@@ -1109,16 +1104,8 @@ subsys_initcall(ipmmu_init);
- module_exit(ipmmu_exit);
- 
- #ifdef CONFIG_IOMMU_DMA
--static int __init ipmmu_vmsa_iommu_of_setup(struct device_node *np)
--{
--	ipmmu_init();
--	return 0;
--}
--
--IOMMU_OF_DECLARE(ipmmu_vmsa_iommu_of, "renesas,ipmmu-vmsa",
--		 ipmmu_vmsa_iommu_of_setup);
--IOMMU_OF_DECLARE(ipmmu_r8a7795_iommu_of, "renesas,ipmmu-r8a7795",
--		 ipmmu_vmsa_iommu_of_setup);
-+IOMMU_OF_DECLARE(ipmmu_vmsa_iommu_of, "renesas,ipmmu-vmsa");
-+IOMMU_OF_DECLARE(ipmmu_r8a7795_iommu_of, "renesas,ipmmu-r8a7795");
- #endif
- 
- MODULE_DESCRIPTION("IOMMU API for Renesas VMSA-compatible IPMMU");
-diff --git a/drivers/iommu/msm_iommu.c b/drivers/iommu/msm_iommu.c
-index 04f4d51ffacb..a41d4251b0a9 100644
---- a/drivers/iommu/msm_iommu.c
-+++ b/drivers/iommu/msm_iommu.c
-@@ -856,7 +856,7 @@ static struct platform_driver msm_iommu_driver = {
- 	.remove		= msm_iommu_remove,
- };
- 
--static int __init msm_iommu_driver_init(void)
-+static int __init msm_iommu_init(void)
- {
- 	int ret;
- 
-@@ -864,30 +864,20 @@ static int __init msm_iommu_driver_init(void)
- 	if (ret != 0)
- 		pr_err("Failed to register IOMMU driver\n");
- 
-+	bus_set_iommu(&platform_bus_type, &msm_iommu_ops);
-+
- 	return ret;
- }
- 
--static void __exit msm_iommu_driver_exit(void)
-+static void __exit msm_iommu_exit(void)
- {
- 	platform_driver_unregister(&msm_iommu_driver);
- }
- 
--subsys_initcall(msm_iommu_driver_init);
--module_exit(msm_iommu_driver_exit);
--
--static int __init msm_iommu_init(void)
--{
--	bus_set_iommu(&platform_bus_type, &msm_iommu_ops);
--	return 0;
--}
--
--static int __init msm_iommu_of_setup(struct device_node *np)
--{
--	msm_iommu_init();
--	return 0;
--}
-+subsys_initcall(msm_iommu_init);
-+module_exit(msm_iommu_exit);
- 
--IOMMU_OF_DECLARE(msm_iommu_of, "qcom,apq8064-iommu", msm_iommu_of_setup);
-+IOMMU_OF_DECLARE(msm_iommu_of, "qcom,apq8064-iommu");
- 
- MODULE_LICENSE("GPL v2");
- MODULE_AUTHOR("Stepan Moskovchenko <stepanm@codeaurora.org>");
-diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
-index 50947ebb6d17..5c36a8b7656a 100644
---- a/drivers/iommu/of_iommu.c
-+++ b/drivers/iommu/of_iommu.c
-@@ -231,19 +231,3 @@ const struct iommu_ops *of_iommu_configure(struct device *dev,
- 
- 	return ops;
- }
--
--static int __init of_iommu_init(void)
--{
--	struct device_node *np;
--	const struct of_device_id *match, *matches = &__iommu_of_table;
--
--	for_each_matching_node_and_match(np, matches, &match) {
--		const of_iommu_init_fn init_fn = match->data;
--
--		if (init_fn && init_fn(np))
--			pr_err("Failed to initialise IOMMU %pOF\n", np);
--	}
--
--	return 0;
--}
--postcore_initcall_sync(of_iommu_init);
-diff --git a/drivers/iommu/qcom_iommu.c b/drivers/iommu/qcom_iommu.c
-index e07f02d00c68..65b9c99707f8 100644
---- a/drivers/iommu/qcom_iommu.c
-+++ b/drivers/iommu/qcom_iommu.c
-@@ -947,7 +947,7 @@ static void __exit qcom_iommu_exit(void)
- module_init(qcom_iommu_init);
- module_exit(qcom_iommu_exit);
- 
--IOMMU_OF_DECLARE(qcom_iommu_dev, "qcom,msm-iommu-v1", NULL);
-+IOMMU_OF_DECLARE(qcom_iommu_dev, "qcom,msm-iommu-v1");
- 
- MODULE_DESCRIPTION("IOMMU API for QCOM IOMMU v1 implementations");
- MODULE_LICENSE("GPL v2");
-diff --git a/include/linux/of_iommu.h b/include/linux/of_iommu.h
-index cddfaff4d0b7..ae03752e8e3a 100644
---- a/include/linux/of_iommu.h
-+++ b/include/linux/of_iommu.h
-@@ -34,9 +34,7 @@ static inline const struct iommu_ops *of_iommu_configure(struct device *dev,
- 
- extern struct of_device_id __iommu_of_table;
- 
--typedef int (*of_iommu_init_fn)(struct device_node *);
--
--#define IOMMU_OF_DECLARE(name, compat, fn) \
--	_OF_DECLARE(iommu, name, compat, fn, of_iommu_init_fn)
-+#define IOMMU_OF_DECLARE(name, compat) \
-+	OF_DECLARE_1(iommu, name, compat, NULL)
- 
- #endif /* __OF_IOMMU_H */
--- 
-2.11.0
+T24gMDEvMTEvMjAxOCAwOToxOSBBTSwgU2FrYXJpIEFpbHVzIHdyb3RlOg0KPiBPbiBUaHUsIEph
+biAxMSwgMjAxOCBhdCAwODoxMjoxMUFNICswMDAwLCBIdWd1ZXMgRlJVQ0hFVCB3cm90ZToNCj4+
+IEhpIFNha2FyaSwNCj4+DQo+PiBPbiAwMS8xMC8yMDE4IDExOjI1IFBNLCBTYWthcmkgQWlsdXMg
+d3JvdGU6DQo+Pj4gSGkgSHVndWVzLA0KPj4+DQo+Pj4gT24gV2VkLCBKYW4gMTAsIDIwMTggYXQg
+MDM6NTE6MDdQTSArMDAwMCwgSHVndWVzIEZSVUNIRVQgd3JvdGU6DQo+Pj4+IEdvb2QgbmV3cyBN
+YXhpbWUgIQ0KPj4+Pg0KPj4+PiBIYXZlIHlvdSBzZWVuIHRoYXQgeW91IGNhbiBhZGFwdCB0aGUg
+cG9sYXJpdGllcyB0aHJvdWdoIGRldmljZXRyZWUgPw0KPj4+Pg0KPj4+PiArICAgICAgICAgICAg
+ICAgICAgICAgICAvKiBQYXJhbGxlbCBidXMgZW5kcG9pbnQgKi8NCj4+Pj4gKyAgICAgICAgICAg
+ICAgICAgICAgICAgb3Y1NjQwX3RvX3BhcmFsbGVsOiBlbmRwb2ludCB7DQo+Pj4+IFsuLi5dDQo+
+Pj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgaHN5bmMtYWN0aXZlID0gPDA+Ow0K
+Pj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHZzeW5jLWFjdGl2ZSA9IDwwPjsN
+Cj4+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBwY2xrLXNhbXBsZSA9IDwxPjsN
+Cj4+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgfTsNCj4+Pj4NCj4+Pj4gRG9pbmcgc28geW91
+IGNhbiBhZGFwdCB0byB5b3VyIFNvQy9ib2FyZCBzZXR1cCBlYXNpbHkuDQo+Pj4+DQo+Pj4+IElm
+IHlvdSBkb24ndCBwdXQgdGhvc2UgbGluZXMgaW4gZGV2aWNldHJlZSwgdGhlIG92NTY0MCBkZWZh
+dWx0IGluaXQNCj4+Pj4gc2VxdWVuY2UgaXMgdXNlZCB3aGljaCBzZXQgdGhlIHBvbGFyaXR5IGFz
+IGRlZmluZWQgaW4gYmVsb3cgY29tbWVudDoNCj4+Pj4gb3Y1NjQwX3NldF9zdHJlYW1fZHZwKCkN
+Cj4+Pj4gWy4uLl0NCj4+Pj4gKyAgICAgICAgKiBDb250cm9sIGxpbmVzIHBvbGFyaXR5IGNhbiBi
+ZSBjb25maWd1cmVkIHRocm91Z2gNCj4+Pj4gKyAgICAgICAgKiBkZXZpY2V0cmVlIGVuZHBvaW50
+IGNvbnRyb2wgbGluZXMgcHJvcGVydGllcy4NCj4+Pj4gKyAgICAgICAgKiBJZiBubyBlbmRwb2lu
+dCBjb250cm9sIGxpbmVzIHByb3BlcnRpZXMgYXJlIHNldCwNCj4+Pj4gKyAgICAgICAgKiBwb2xh
+cml0eSB3aWxsIGJlIGFzIGJlbG93Og0KPj4+PiArICAgICAgICAqIC0gVlNZTkM6ICAgICBhY3Rp
+dmUgaGlnaA0KPj4+PiArICAgICAgICAqIC0gSFJFRjogICAgICBhY3RpdmUgbG93DQo+Pj4+ICsg
+ICAgICAgICogLSBQQ0xLOiAgICAgIGFjdGl2ZSBsb3cNCj4+Pj4gKyAgICAgICAgKi8NCj4+Pj4g
+Wy4uLl0NCj4+Pg0KPj4+IFRoZSBwcm9wZXJ0aWVzIGFyZSBhdCB0aGUgbW9tZW50IGRvY3VtZW50
+ZWQgYXMgbWFuZGF0b3J5IGluIERUIGJpbmRpbmcNCj4+PiBkb2N1bWVudGF0aW9uLg0KPj4+DQo+
+PiBvZiBjb3Vyc2UsIGl0IHdhcyBqdXN0IHRvIGFzayBNYXhpbWUgdG8gY2hlY2sgdGhlIGRldmlj
+ZXRyZWUgb24gaXRzDQo+PiBzaWRlLCB0aGUgc3ltcHRvbSBvYnNlcnZlZCBieSBNYXhpbWUgd2l0
+aCBoc3luYy92c3luYyBpbnZlcnNlZCBpcyB0aGUNCj4+IHNhbWUgdGhhbiB0aGUgb25lIG9ic2Vy
+dmVkIGlmIHdlIHN0aWNrIHRvIGp1c3QgZGVmYXVsdCBpbml0IHNlcXVlbmNlLg0KPiANCj4gSSB3
+b25kZXIgaWYgdGhlIGRyaXZlciBzaG91bGQgYmUgY2hhbmdlZCB0byByZXF1aXJlIGhzeW5jIGFu
+ZCB2c3luYy4gVGhlc2UNCj4gc2lnbmFscyB3b24ndCBiZSB0aGVyZSBhdCBhbGwgaW4gQnQuNjU2
+IG1vZGUuDQo+IA0KSSB3aWxsIHJldmlzaXQgdGhpcyB3aGVuIHB1c2hpbmcgQnQuNjU2IG1vZGUu
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
