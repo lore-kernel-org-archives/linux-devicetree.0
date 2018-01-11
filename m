@@ -1,59 +1,91 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v5 2/2] media: V3s: Add support for
- Allwinner CSI.
-Date: Thu, 11 Jan 2018 14:28:44 +0100
-Message-ID: <20180111132844.mok7upqjycpx3bqm@flea.lan>
-References: <1515639966-35902-1-git-send-email-yong.deng@magewell.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH] phy: work around 'phys' references to usb-phy devices
+Date: Thu, 11 Jan 2018 19:00:43 +0530
+Message-ID: <6dd37865-9c71-29f9-16b4-26e51e6b1c70@ti.com>
+References: <20180108130116.80148-1-arnd@arndb.de>
+ <aa02104b-d80d-8b12-4403-b5cedc23f03a@ti.com>
+ <CAK8P3a0F4sK=ou8HXmSktq+0S22juYaCaY48RStDKwk8QGgviQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="qi6zmi32vlsocdks"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBGGN3XJAKGQEEZIQLFY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <1515639966-35902-1-git-send-email-yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
-Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rick Chang <rick.chang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, megous@mego
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAK8P3a0F4sK=ou8HXmSktq+0S22juYaCaY48RStDKwk8QGgviQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "# 3.4.x" <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andrzej Pietrasiewicz <andrzej.p-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Arnd,
 
---qi6zmi32vlsocdks
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-
-Hi Yong,
-
-On Thu, Jan 11, 2018 at 11:06:06AM +0800, Yong Deng wrote:
-> Allwinner V3s SoC features two CSI module. CSI0 is used for MIPI CSI-2
-> interface and CSI1 is used for parallel interface. This is not
-> documented in datasheet but by test and guess.
+On Thursday 11 January 2018 02:27 AM, Arnd Bergmann wrote:
+> On Mon, Jan 8, 2018 at 7:32 PM, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> wrote:
+>> Hi Arnd,
+>>
+>> On Monday 08 January 2018 06:31 PM, Arnd Bergmann wrote:
+>>> Stefan Wahren reports a problem with a warning fix that was merged
+>>> for v4.15: we had lots of device nodes with a 'phys' property pointing
+>>> to a device node that is not compliant with the binding documented in
+>>> Documentation/devicetree/bindings/phy/phy-bindings.txt
+>>>
+>>> This generally works because USB HCD drivers that support both the generic
+>>> phy subsystem and the older usb-phy subsystem ignore most errors from
+>>> phy_get() and related calls and then use the usb-phy driver instead.
+>>>
+>>> However, usb_add_hcd() (along with the respective functions in dwc2 and
+>>> dwc3) propagate the EPROBE_DEFER return code so we can try again whenever
+>>> the driver gets loaded. In case the driver is written for the usb-phy
+>>> subsystem (like usb-generic-phy aka usb-nop-xceiv), we will never load
+>>> a generic-phy driver for it, and keep failing here.
+>>>
+>>> There is only a small number of remaining usb-phy drivers that support
+>>> device tree, so this adds a workaround by providing a full list of the
+>>> potentially affected drivers, and always failing the probe with -ENODEV
+>>> here, which is the same behavior that we used to get with incorrect
+>>> device tree files. Since we generally want older kernels to also want
+>>> to work with the fixed devicetree files, it would be good to backport
+>>> the patch into stable kernels as well (3.13+ are possibly affected).
+>>> Reverting back to the DTS sources that work would in theory fix USB
+>>> support for now, but in the long run we'd run into the same problem
+>>> again when the drivers get ported from usb-phy to generic-phy.
+>>>
+>>> Fixes: 014d6da6cb25 ("ARM: dts: bcm283x: Fix DTC warnings about missing phy-cells")
+>>> Link: https://marc.info/?l=linux-usb&m=151518314314753&w=2
+>>> Cc: stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>>> Cc: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+>>> Cc: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>>> Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+>>> ---
+>>> This obviously needs to be tested, I wrote this up as a reply to
+>>> Stefan's bug report. I'm fairly sure that I covered all usb-phy
+>>> driver strings here. My goal is to have a fix merged into 4.15
+>>> rather than reverting all the DT fixes.
+>>
+>> Shouldn't the fix be in phy consumer drivers to not return error if it's able
+>> to find the phy either using usb-phy or generic phy?
 > 
-> This patch implement a v4l2 framework driver for it.
+> Stefan has posted a patch to that effect now, but I fear that might be
+> a little fragile, in particular this short before the release with the
+> regression
+> in place.
 > 
-> Currently, the driver only support the parallel interface. MIPI-CSI2,
-> ISP's support are not included in this patch.
+> The main problem is that we'd have to change the generic
+> usb_add_hcd() function in addition to dwc2 and dwc3 to ignore
+> -EPROBE_DEFER from phy_get() whenever usb_get_phy_dev()
+> has already succeeded.
 > 
-> Signed-off-by: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
+> If there is any HCD that relies on usb_add_hcd() to get both the
+> usb_phy and the phy structures, and it may need to defer probing
+> when the latter one isn't ready yet, that fix would break another
+> driver.
 
-I've needed this patch in order to fix a NULL pointer dereference:
-http://code.bulix.org/oz6gmb-257359?raw
+hmm.. IMO the better thing right now would be to revert the dt patch which adds
+#phy-cells.
+We have to see if there are better fixes in order to add #phy-cells warning fix
+in stable tree.
 
-This is needed because while it's ok to have a NULL pointer to
-v4l2_subdev_pad_config when you call the subdev set_fmt with
-V4L2_SUBDEV_FORMAT_ACTIVE, it's not with V4L2_SUBDEV_FORMAT_TRY, and
-sensors will assume taht it's a valid pointer.
-
-Otherwise,
-Tested-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---qi6zmi32vlsocdks--
+Thanks
+Kishon
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
