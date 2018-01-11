@@ -1,46 +1,122 @@
-From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH linux dev-4.10 0/6] Add support PECI and PECI hwmon
- drivers
-Date: Thu, 11 Jan 2018 10:59:23 +0100
-Message-ID: <20180111095923.GA29233@kroah.com>
-References: <20180109223126.13093-1-jae.hyun.yoo@linux.intel.com>
- <20180110101755.GA5822@kroah.com>
- <006c4a95-9299-bd17-6dec-52578e8461ae@linux.intel.com>
- <20180110191703.GA20248@kroah.com>
- <8997e43c-683e-418d-4e2b-1fe3fefe254e@linux.intel.com>
- <20180110202740.GA27703@kroah.com>
- <e81095ff-d491-9977-25e6-7ba6d28d5e72@linux.intel.com>
- <20180111073038.GA3600@kroah.com>
- <1515661011.31850.27.camel@au1.ibm.com>
+From: Andre Przywara <andre.przywara@arm.com>
+Subject: Re: [linux-sunxi] [PATCH 1/7] pinctrl: sunxi: add support for pin
+ controllers without bus gate
+Date: Thu, 11 Jan 2018 10:08:19 +0000
+Message-ID: <2ca1ee96-8dc6-c80b-ae11-45895d6a8484@arm.com>
+References: <20180106042326.46519-1-icenowy@aosc.io>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1515661011.31850.27.camel-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Benjamin Herrenschmidt <benh-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>
-Cc: Jae Hyun Yoo <jae.hyun.yoo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, andrew-zrmu5oMJ5Fs@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, jdelvare-IBi9RG/b67k@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jae Hyun Yoo <jae.hyun.yoo-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180106042326.46519-1-icenowy@aosc.io>
+Content-Language: en-GB
+Sender: linux-kernel-owner@vger.kernel.org
+To: icenowy@aosc.io, Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 11, 2018 at 07:56:51PM +1100, Benjamin Herrenschmidt wrote:
-> On Thu, 2018-01-11 at 08:30 +0100, Greg KH wrote:
-> > 4.13?  Why that kernel?  It too is obsolete and insecure and
-> > unsupported.
+Hi,
+
+On 06/01/18 04:23, Icenowy Zheng wrote:
+> The Allwinner H6 pin controllers (both the main one and the CPUs one)
+> have no bus gate clocks.
 > 
-> Haha, it's n-1. come on :-)
+> Add support for this kind of pin controllers.
+> 
+> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> ---
+>  drivers/pinctrl/sunxi/pinctrl-sunxi.c | 30 ++++++++++++++++++++----------
+>  drivers/pinctrl/sunxi/pinctrl-sunxi.h |  1 +
+>  2 files changed, 21 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+> index 4b6cb25bc796..68cd505679d9 100644
+> --- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+> +++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+> @@ -1182,7 +1182,12 @@ static int sunxi_pinctrl_setup_debounce(struct sunxi_pinctrl *pctl,
+>  	unsigned int hosc_div, losc_div;
+>  	struct clk *hosc, *losc;
+>  	u8 div, src;
+> -	int i, ret;
+> +	int i, ret, clk_count;
+> +
+> +	if (pctl->desc->without_bus_gate)
+> +		clk_count = 2;
+> +	else
+> +		clk_count = 3;
+>  
+>  	/* Deal with old DTs that didn't have the oscillators */
+>  	if (of_count_phandle_with_args(node, "clocks", "#clock-cells") != 3)
+> @@ -1360,15 +1365,19 @@ int sunxi_pinctrl_init_with_variant(struct platform_device *pdev,
+>  			goto gpiochip_error;
+>  	}
+>  
+> -	clk = devm_clk_get(&pdev->dev, NULL);
+> -	if (IS_ERR(clk)) {
+> -		ret = PTR_ERR(clk);
+> -		goto gpiochip_error;
+> -	}
+> +	if (!desc->without_bus_gate) {
 
-And, if you use it in a device, it's still totally unsupported and
-insecure.  Seriously, does no one actually pay attention to the patches
-I merge in the stable trees anymore?
+Do we really need explicit support for that case?
+Can't we have something that works automatically?
 
-Anyway, your other comments are good, glad to see work is progressing
-well, and yes it's better than a 2.6.y based kernel, but really, that's
-a low bar...
+if (node has clock-names property)		(A)
+	use clocks as enumerated and named there
+else if (node has one clock reference)		(B)
+	use this as gate clock, no debounce support
+else if (node has no clock property at all)	(C)
+	no gate clock needed, no debounce support
 
-thanks,
+On top of that we should add the clock-names property to all DTs, even
+for those with only a "apb" clock. Shouldn't hurt existing kernels.
+Possibly even add debounce support for those on the way, if applicable.
 
-greg k-h
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+So we would just support case (B) and (C) for legacy reasons.
+
+Does that make sense?
+
+Cheers,
+Andre.
+
+> +		clk = devm_clk_get(&pdev->dev, NULL);
+> +		if (IS_ERR(clk)) {
+> +			ret = PTR_ERR(clk);
+> +			goto gpiochip_error;
+> +		}
+>  
+> -	ret = clk_prepare_enable(clk);
+> -	if (ret)
+> -		goto gpiochip_error;
+> +		ret = clk_prepare_enable(clk);
+> +		if (ret)
+> +			goto gpiochip_error;
+> +	} else {
+> +		clk = NULL;
+> +	}
+>  
+>  	pctl->irq = devm_kcalloc(&pdev->dev,
+>  				 pctl->desc->irq_banks,
+> @@ -1425,7 +1434,8 @@ int sunxi_pinctrl_init_with_variant(struct platform_device *pdev,
+>  	return 0;
+>  
+>  clk_error:
+> -	clk_disable_unprepare(clk);
+> +	if (clk)
+> +		clk_disable_unprepare(clk);
+>  gpiochip_error:
+>  	gpiochip_remove(pctl->chip);
+>  	return ret;
+> diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.h b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
+> index 11b128f54ed2..ccb6230f0bb5 100644
+> --- a/drivers/pinctrl/sunxi/pinctrl-sunxi.h
+> +++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
+> @@ -113,6 +113,7 @@ struct sunxi_pinctrl_desc {
+>  	unsigned			irq_bank_base;
+>  	bool				irq_read_needs_mux;
+>  	bool				disable_strict_mode;
+> +	bool				without_bus_gate;
+>  };
+>  
+>  struct sunxi_pinctrl_function {
+> 
