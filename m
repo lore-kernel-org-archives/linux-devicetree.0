@@ -1,43 +1,52 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] media: ov9650: add device tree binding
-Date: Thu, 11 Jan 2018 14:40:22 -0600
-Message-ID: <20180111204022.rhcttpptc4id6fk6@rob-hp-laptop>
-References: <1515344064-23156-1-git-send-email-akinobu.mita@gmail.com>
- <1515344064-23156-3-git-send-email-akinobu.mita@gmail.com>
+From: Jae Hyun Yoo <jae.hyun.yoo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH linux dev-4.10 3/6] drivers/misc: Add driver for Aspeed
+ PECI and generic PECI headers
+Date: Thu, 11 Jan 2018 12:42:57 -0800
+Message-ID: <7a038bd0-b2e0-2261-deea-f37a3e1810ba@linux.intel.com>
+References: <20180109223126.13093-1-jae.hyun.yoo@linux.intel.com>
+ <20180109223126.13093-4-jae.hyun.yoo@linux.intel.com>
+ <1515661583.31850.34.camel@kernel.crashing.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1515344064-23156-3-git-send-email-akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1515661583.31850.34.camel-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jacopo Mondi <jacopo-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>, "H . Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>
+To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, andrew-zrmu5oMJ5Fs@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, jdelvare-IBi9RG/b67k@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 08, 2018 at 01:54:24AM +0900, Akinobu Mita wrote:
-> Now the ov9650 driver supports device tree probing.  So this adds a
-> device tree binding documentation.
+On 1/11/2018 1:06 AM, Benjamin Herrenschmidt wrote:
+> On Tue, 2018-01-09 at 14:31 -0800, Jae Hyun Yoo wrote:
+>> +struct peci_rd_ia_msr_msg {
+>> +       unsigned char target;
+>> +       unsigned char thread_id;
+>> +       unsigned short address;
+>> +       unsigned long value;
+>> +};
 > 
-> Cc: Jacopo Mondi <jacopo-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-> Cc: H. Nikolaus Schaller <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-> Cc: Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>
-> Cc: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-> Cc: Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>
-> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
-> * Changelog v2
-> - Split binding documentation, suggested by Rob Herring and Jacopo Mondi
-> - Improve the wording for compatible property in the binding documentation,
->   suggested by Jacopo Mondi
-> - Improve the description for the device node in the binding documentation,
->   suggested by Sakari Ailus
+> Those types are representing messages on the wire ?
 > 
->  .../devicetree/bindings/media/i2c/ov9650.txt       | 36 ++++++++++++++++++++++
->  1 file changed, 36 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov9650.txt
+> In that case those types aren't suitable. For example "long" will have
+> a different size and alignment for 32 and 64-bit userspace. There are
+> size-explicit userspace types available.
+> 
+> Also I didn't see any endianness annotations in there. Is that expected
+> ? IE are those wire format packets ?
+> 
+> Cheers,
+> Ben.
+> 
 
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Only the 'peci_xfer_msg' struct is representing messages on the wire. 
+All userspace messages which is using other struct definitions will be 
+copied into the 'peci_xfer_msg' for each member variable in driver, but 
+anyway, type definitions of each member variable should be fixed as you 
+said. Will fix it.
+
+Thanks,
+Jae
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
