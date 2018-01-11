@@ -1,48 +1,32 @@
-From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH] ARM64: dts: meson-axg: add RMII pins for ethernet
- controller
-Date: Thu, 11 Jan 2018 10:33:27 +0100
-Message-ID: <593cbb66-7040-b27d-5109-702fb43dc18e@baylibre.com>
-References: <20180111030411.197054-1-yixun.lan@amlogic.com>
- <1515659863.5048.112.camel@baylibre.com>
- <2fa28259-cce9-37fc-3bcd-6017a35a052a@amlogic.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 0/7] Initial Allwinner H6 support
+Date: Thu, 11 Jan 2018 10:36:39 +0100
+Message-ID: <CACRpkdY3xY-7-YTCS=QmRQ3hmXiJZ_2M=ZhJRTTMx7XNfXRRSw@mail.gmail.com>
+References: <20180106041813.46256-1-icenowy@aosc.io>
+Reply-To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2fa28259-cce9-37fc-3bcd-6017a35a052a-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDE6RCFOWIARBKHA3TJAKGQECWUCPNA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180106041813.46256-1-icenowy-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/01/2018 10:11, Yixun Lan wrote:
-> Hi Jerome：
-> 
-> On 01/11/18 16:37, Jerome Brunet wrote:
->> On Thu, 2018-01-11 at 11:04 +0800, Yixun Lan wrote:
->>> Comparing to RGMII interface, the RMII interface require few pins.
->>> So it's worth describing them here.
->>>
->>> Signed-off-by: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
->>
->> The only axg platform we have upstream is the s400 and is using rgmii.
->> May I ask how this was tested ?
->>
-> It's true that S400 using RGMII interface.
-> 
-> but, we have customer using RTL8201FR-VB/VD which is a RMII PHY,
-> 
-> This is actually tested with the 'eth_rmii_x_pins' group.
-> 
-> Yixun
-> 
+On Sat, Jan 6, 2018 at 5:18 AM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
 
-I pushed the same for GXBB,
+> This patchset adds initial support for the Allwinner H6 SoC.
 
-Acked-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Can I apply the pin control patches without the clock patches?
+
+Also waiting for Maxime and/or Chen-Yu to provide some review
+before merging this.
+
+Yours,
+Linus Walleij
