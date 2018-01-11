@@ -1,42 +1,67 @@
-From: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH v2 1/3] ARM: dts: armada-xp: enable L2 cache parity and ecc on db-xc3-24g4xg
-Date: Thu, 11 Jan 2018 14:59:01 +1300
-Message-ID: <20180111015903.11322-2-chris.packham@alliedtelesis.co.nz>
-References: <20180111015903.11322-1-chris.packham@alliedtelesis.co.nz>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180111015903.11322-1-chris.packham@alliedtelesis.co.nz>
-Sender: linux-kernel-owner@vger.kernel.org
-To: gregory.clement@free-electrons.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, andrew@lunn.ch
-Cc: jason@lakedaemon.net, sebastian.hesselbarth@gmail.com, linux@armlinux.org.uk, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Chris Packham <chris.packham@alliedtelesis.co.nz>, Mark Rutland <mark.rutland@arm.com>
+From: Hyun Kwon <hyunk-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: RE: [PATCH 01/10] dt-bindings: display: xlnx: Add Xilinx kms bindings
+Date: Thu, 11 Jan 2018 02:04:28 +0000
+Message-ID: <BY1PR0201MB1000969ECDC38A62F68B7238D6160@BY1PR0201MB1000.namprd02.prod.outlook.com>
+References: <1515117959-18068-1-git-send-email-hyun.kwon@xilinx.com>
+ <1515117959-18068-2-git-send-email-hyun.kwon@xilinx.com>
+ <20180109040011.crwkn5j76cmdfvfm@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180109040011.crwkn5j76cmdfvfm@rob-hp-laptop>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Enable L2 cache parity and ECC on the db-xc3-24g4xg board so that cache
-operations are protected and errors can be flagged to the EDAC
-subsystem.
-
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
----
-Changes in v2:
-- Update commit message
-
- arch/arm/boot/dts/armada-xp-db-xc3-24g4xg.dts | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/arch/arm/boot/dts/armada-xp-db-xc3-24g4xg.dts b/arch/arm/boot/dts/armada-xp-db-xc3-24g4xg.dts
-index 06fce35d7491..00ca489fc788 100644
---- a/arch/arm/boot/dts/armada-xp-db-xc3-24g4xg.dts
-+++ b/arch/arm/boot/dts/armada-xp-db-xc3-24g4xg.dts
-@@ -70,6 +70,11 @@
- 	};
- };
- 
-+&L2 {
-+	arm,parity-enable;
-+	marvell,ecc-enable;
-+};
-+
- &devbus_bootcs {
- 	status = "okay";
- 
--- 
-2.15.1
+SGkgUm9iLA0KDQpUaGFua3MgZm9yIHRoZSBmZWVkYmFjay4NCg0KPiAtLS0tLU9yaWdpbmFsIE1l
+c3NhZ2UtLS0tLQ0KPiBGcm9tOiBSb2IgSGVycmluZyBbbWFpbHRvOnJvYmhAa2VybmVsLm9yZ10N
+Cj4gU2VudDogTW9uZGF5LCBKYW51YXJ5IDA4LCAyMDE4IDg6MDAgUE0NCj4gVG86IEh5dW4gS3dv
+biA8aHl1bmtAeGlsaW54LmNvbT4NCj4gQ2M6IGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5v
+cmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBNaWNoYWwNCj4gU2ltZWsgPG1pY2hhbC5z
+aW1la0B4aWxpbnguY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIDAxLzEwXSBkdC1iaW5kaW5n
+czogZGlzcGxheTogeGxueDogQWRkIFhpbGlueCBrbXMNCj4gYmluZGluZ3MNCj4gDQo+IE9uIFRo
+dSwgSmFuIDA0LCAyMDE4IGF0IDA2OjA1OjUwUE0gLTA4MDAsIEh5dW4gS3dvbiB3cm90ZToNCj4g
+PiBUaGUgZHQgYmluZGluZyBmb3IgWGlsaW54IERSTSBLTVMgZHJpdmVyLg0KPiANCj4gQmluZGlu
+Z3MgYXJlIGZvciBoL3csIG5vdCBkcml2ZXJzLg0KDQpJJ2xsIHJlcGhyYXNlIHRoaXMuDQoNCj4g
+DQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBIeXVuIEt3b24gPGh5dW4ua3dvbkB4aWxpbnguY29t
+Pg0KPiA+IC0tLQ0KPiA+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3hsbngveGxu
+eCxrbXMudHh0ICAgIHwgMjANCj4gKysrKysrKysrKysrKysrKysrKysNCj4gPiAgMSBmaWxlIGNo
+YW5nZWQsIDIwIGluc2VydGlvbnMoKykNCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0DQo+IERvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3hsbngveGxueCxrbXMudHh0DQo+
+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
+c3BsYXkveGxueC94bG54LGttcy50eHQNCj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvZGlzcGxheS94bG54L3hsbngsa21zLnR4dA0KPiA+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0
+DQo+ID4gaW5kZXggMDAwMDAwMC4uOGRjZDU1Mg0KPiA+IC0tLSAvZGV2L251bGwNCj4gPiArKysg
+Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS94bG54L3hsbngsa21z
+LnR4dA0KPiA+IEBAIC0wLDAgKzEsMjAgQEANCj4gPiArWGlsaW54IEtNUyBQaXBlbGluZQ0KPiA+
+ICstLS0tLS0tLS0tLS0tLS0tLS0tDQo+ID4gKw0KPiA+ICtYaWxpbnggZGlzcGxheSBwaXBlbGlu
+ZXMgY2FuIGJlIGRlc2lnbmVkIHdpdGggaGFyZGVuZWQgdmlkZW8gSVBzIGFuZCBzb2Z0DQo+IHZp
+ZGVvDQo+ID4gK0lQcyBpbiBwcm9ncmFtbWFibGUgbG9naWMuIFRoaXMgS01TIG1vZHVsZSBwcm92
+aWRlcyB0aGUgY29tbW9uDQo+IGZ1bmN0aW9uYWxpdHkNCj4gPiArb2YgaW5kaXZpZHVhbCBzdWJk
+ZXZpY2UgZHJpdmVycywgYW5kIGdsdWUgbG9naWNzIGJldHdlZW4gdGhlbS4NCj4gPiArDQo+ID4g
+K1JlcXVpcmVkIHByb3BlcnRpZXM6DQo+ID4gKw0KPiA+ICstIGNvbXBhdGlibGU6IE11c3QgYmUg
+Inhsbngsa21zIi4NCg0KSSdsbCBhbHNvIHJlcGhyYXNlIHRoZSBkZXNjcmlwdGlvbiBhbmQgcmVu
+YW1lIHRoaXMgdG8geGxueCxkaXNwbGF5Lg0KDQo+ID4gKw0KPiA+ICstIHBvcnRzOiBwaGFuZGxl
+cyBmb3IgQ1JUQyBwb3J0cywgdXNpbmcgdGhlIERUIGJpbmRpbmdzIGRlZmluZWQgaW4NCj4gPiAr
+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZ3JhcGgudHh0Lg0KPiANCj4gVGhp
+cyB1c2Ugb2YgcG9ydHMgaXMgbm90IHBhcnQgb2YgdGhlIGdyYXBoIGJpbmRpbmcuDQoNCkknbGwg
+YWRkIG1vcmUgZGV0YWlscyBpbiB0aGUgZGVzY3JpcHRpb24uDQoNCj4gDQo+ID4gKw0KPiA+ICtF
+eGFtcGxlOg0KPiA+ICsNCj4gPiArCXhsbnhfZHJtOiB4bG54X2RybSB7DQo+ID4gKwkJY29tcGF0
+aWJsZSA9ICJ4bG54LGttcyI7DQo+IA0KPiBkcm0gYW5kIGttcyBhcmUgTGludXhpc21zLg0KDQpJ
+IGFncmVlLiBJJ2xsIHJlbW92ZSBsaW51eCBzdWJzeXN0ZW0gc3BlY2lmaWMgdGVybXMuDQoNCj4g
+DQo+IFdoeSBkbyB5b3UgbmVlZCB0aGlzIG5vZGU/DQoNClRoaXMgbm9kZSBpcyB1c2VkIHRvIHJl
+cHJlc2VudCBhIGRpc3BsYXkgcGlwZWxpbmUgYXMgYSBzaW5nbGUgZW50aXR5LCB3aGljaCBjYW4g
+Y29uc2lzdCBvZiBtdWx0aXBsZSBjb21wb25lbnRzIC8gSVBzLiBJJ2xsIGVsYWJvcmF0ZSBtb3Jl
+IHBlciB5b3VyIHN1Z2dlc3Rpb24uDQoNClRoYW5rcywNCi1oeXVuDQoNCj4gDQo+ID4gKwkJcG9y
+dHMgPSA8JmNydGNfcG9ydD47DQo+ID4gKwl9Ow0KPiA+IC0tDQo+ID4gMi43LjQNCj4gPg0KPiA+
+IC0tDQo+ID4gVG8gdW5zdWJzY3JpYmUgZnJvbSB0aGlzIGxpc3Q6IHNlbmQgdGhlIGxpbmUgInVu
+c3Vic2NyaWJlIGRldmljZXRyZWUiIGluDQo+ID4gdGhlIGJvZHkgb2YgYSBtZXNzYWdlIHRvIG1h
+am9yZG9tb0B2Z2VyLmtlcm5lbC5vcmcNCj4gPiBNb3JlIG1ham9yZG9tbyBpbmZvIGF0ICBodHRw
+Oi8vdmdlci5rZXJuZWwub3JnL21ham9yZG9tby1pbmZvLmh0bWwNCg==
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
