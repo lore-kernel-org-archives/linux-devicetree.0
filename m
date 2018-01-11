@@ -1,40 +1,43 @@
-From: David Lechner <david@lechnology.com>
-Subject: Re: [PATCH v5 17/44] dt-bindings: clock: Add bindings for DA8XX
- CFGCHIP gate clocks
-Date: Thu, 11 Jan 2018 15:51:45 -0600
-Message-ID: <fa5f1bff-42e7-0c1e-5f35-58493336ee74@lechnology.com>
-References: <1515377863-20358-1-git-send-email-david@lechnology.com>
- <1515377863-20358-18-git-send-email-david@lechnology.com>
- <20180111214516.quplp3kwwfrzocfp@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180111214516.quplp3kwwfrzocfp@rob-hp-laptop>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org
+From: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Subject: [PATCH] ARM: dts: sun8i: acivate SPI on Orange Pi R1
+Date: Thu, 11 Jan 2018 22:53:55 +0100
+Message-ID: <20180111215355.22182-1-hauke@hauke-m.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org
+Cc: icenowy-h8G6r0blFSE@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/11/2018 03:45 PM, Rob Herring wrote:
-> On Sun, Jan 07, 2018 at 08:17:16PM -0600, David Lechner wrote:
->> This adds a new binding for the gate clocks present in the CFGCHIP syscon
->> registers in TI DA8XX SoCs. There are actually other gate clocks in this
->> block that could be added in the future, but TBCLK is currently the only
->> one being used.
-> 
-> Like how many? 2 more?, then fine. 20 more, then perhaps cfgchip should
-> be the clock provider.
+This board has a SPI flash, activate it also in device tree by default.
 
-Like, one more. Same goes for the mux clock. The USB PHY clocks are also
-part of the CFGCHIP.
+Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+---
+ arch/arm/boot/dts/sun8i-h2-plus-orangepi-r1.dts | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-All of these clocks are randomly spread out, so I didn't really see a logical
-way to make a single clock provider with #clock-cells = <1>.
+diff --git a/arch/arm/boot/dts/sun8i-h2-plus-orangepi-r1.dts b/arch/arm/boot/dts/sun8i-h2-plus-orangepi-r1.dts
+index 112f09c67d67..3356f4210d45 100644
+--- a/arch/arm/boot/dts/sun8i-h2-plus-orangepi-r1.dts
++++ b/arch/arm/boot/dts/sun8i-h2-plus-orangepi-r1.dts
+@@ -68,6 +68,14 @@
+ 	};
+ };
+ 
++&spi0 {
++	status = "okay";
++
++	flash@0 {
++		compatible = "mxicy,mx25l12805d", "jedec,spi-nor";
++	};
++};
++
+ &ohci1 {
+ 	/*
+ 	 * RTL8152B USB-Ethernet adapter is connected to USB1,
+-- 
+2.11.0
 
-> 
-> In any case, I'd prefer to see all the cfgchip clocks documented in one
-> doc.
-
-I will do that.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
