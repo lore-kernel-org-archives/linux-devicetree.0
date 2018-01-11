@@ -1,87 +1,150 @@
-From: "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 1/6] base: power: runtime: Export
-	pm_runtime_get/put_suppliers
-Date: Thu, 11 Jan 2018 23:53:11 +0100
-Message-ID: <CAJZ5v0h-+r3_xxjkgavza8SLAKSnUsXCRqn7PHxSVpeVnCkwHA@mail.gmail.com>
-References: <1515492109-753-1-git-send-email-vivek.gautam@codeaurora.org>
-	<1515492109-753-2-git-send-email-vivek.gautam@codeaurora.org>
+From: Jae Hyun Yoo <jae.hyun.yoo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [linux, dev-4.10, 6/6] drivers/hwmon: Add a driver for a generic
+ PECI hwmon
+Date: Thu, 11 Jan 2018 15:03:50 -0800
+Message-ID: <7c9ba56d-bd1a-c9cb-8986-4f749ae55edb@linux.intel.com>
+References: <20180109223126.13093-7-jae.hyun.yoo@linux.intel.com>
+ <20180110214747.GA25248@roeck-us.net>
+ <261ac28e-813c-a058-c81f-ad4e718d0233@linux.intel.com>
+ <20180111214035.GA14748@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <1515492109-753-2-git-send-email-vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Len Brown <len.brown-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux PM <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:AMD IOMMU (AMD-VI)" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180111214035.GA14748-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, andrew-zrmu5oMJ5Fs@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, jdelvare-IBi9RG/b67k@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 9, 2018 at 11:01 AM, Vivek Gautam
-<vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
-> The device link allows the pm framework to tie the supplier and
-> consumer. So, whenever the consumer is powered-on the supplier
-> is powered-on first.
->
-> There are however cases in which the consumer wants to power-on
-> the supplier, but not itself.
-> E.g., A Graphics or multimedia driver wants to power-on the SMMU
-> to unmap a buffer and finish the TLB operations without powering
-> on itself. Some of these unmap requests are coming from the
-> user space when the controller itself is not powered-up, and it
-> can be huge penalty in terms of power and latency to power-up
-> the graphics/mm controllers.
-> There can be an argument that the supplier should handle this case
-> on its own and there should not be a need for the consumer to
-> power-on the supplier. But as discussed on the thread [1] about
-> ARM-SMMU runtime pm, we don't want to introduce runtime pm calls
-> in atomic path in arm_smmu_unmap.
->
-> [1] https://patchwork.kernel.org/patch/9827825/
->
-> Signed-off-by: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+On 1/11/2018 1:40 PM, Guenter Roeck wrote:
+> On Thu, Jan 11, 2018 at 11:47:01AM -0800, Jae Hyun Yoo wrote:
+>> On 1/10/2018 1:47 PM, Guenter Roeck wrote:
+>>> On Tue, Jan 09, 2018 at 02:31:26PM -0800, Jae Hyun Yoo wrote:
+>>>> This commit adds driver implementation for a generic PECI hwmon.
+>>>>
+>>>> Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+> 
+> [ ... ]
+> 
+>>>> +
+>>>> +	if (priv->temp.tcontrol.valid &&
+>>>> +	    time_before(jiffies, priv->temp.tcontrol.last_updated +
+>>>> +				 UPDATE_INTERVAL_MIN))
+>>>> +		return 0;
+>>>> +
+>>>
+>>> Is the delay necessary ? Otherwise I would suggest to drop it.
+>>> It adds a lot of complexity to the driver. Also, if the user polls
+>>> values more often, that is presumably on purpose.
+>>>
+>>
+>> I was intended to reduce traffic on PECI bus because it's low speed single
+>> wired bus, and temperature values don't change frequently because the value
+>> is sampled and averaged in CPU itself. I'll keep this.
+>>
+> Then please try to move the common code into a single function.
+> 
 
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+That makes sense. I'll move the common code into a single function.
 
-Please feel free to route this along with the rest of the series.
+> [ ... ]
+> 
+>>>> +
+>>>> +	rc = of_property_read_u32(np, "cpu-id", &priv->cpu_id);
+>>>
+>>> What entity determines cpu-id ?
+>>>
+>>
+>> CPU ID numbering is determined by hardware SOCKET_ID strap pins. In this
+>> driver implementation, cpu-id is being used as CPU client indexing.
+>>
+> Seems to me the necessary information to identify a given CPU should
+> be provided by the PECI core. Also, there are already "cpu" nodes
+> in devicetree which, if I recall correctly, may include information
+> such as CPU Ids.
+> 
 
-Thanks!
+This driver is implemented to support only BMC (Baseboard Management 
+Controllers) chipset which is running on a separated linux kernel from a 
+host server system. Through a PECI connection between them, this driver 
+collects the host server system's CPU and DIMM temperature information 
+which is running on a separated OS. That could be a linux, a Windows OS 
+or any other OSes. I mean, there is no shared devicetree data between 
+them so it is why the 'cpu_id' was added into dt configuration of this 
+driver.
 
-> ---
->
->  * This is v2 of the patch [1]. Adding it to this patch series.
->    [1] https://patchwork.kernel.org/patch/10102447/
->
->  drivers/base/power/runtime.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/drivers/base/power/runtime.c b/drivers/base/power/runtime.c
-> index 6e89b51ea3d9..06a2a88fe866 100644
-> --- a/drivers/base/power/runtime.c
-> +++ b/drivers/base/power/runtime.c
-> @@ -1579,6 +1579,7 @@ void pm_runtime_get_suppliers(struct device *dev)
->
->         device_links_read_unlock(idx);
->  }
-> +EXPORT_SYMBOL_GPL(pm_runtime_get_suppliers);
->
->  /**
->   * pm_runtime_put_suppliers - Drop references to supplier devices.
-> @@ -1597,6 +1598,7 @@ void pm_runtime_put_suppliers(struct device *dev)
->
->         device_links_read_unlock(idx);
->  }
-> +EXPORT_SYMBOL_GPL(pm_runtime_put_suppliers);
->
->  void pm_runtime_new_link(struct device *dev)
->  {
-> --
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
->
+Using quite limited hardware connections such as PECI, KSC, eSPI and 
+SMBus, the BMC manages the host server and this hwmon is one of features 
+of BMC.
+
+>>>> +	if (rc || priv->cpu_id >= CPU_ID_MAX) {
+>>>> +		dev_err(dev, "Invalid cpu-id configuration\n");
+>>>> +		return rc;
+>>>> +	}
+>>>> +
+>>>> +	rc = of_property_read_u32(np, "dimm-nums", &priv->dimm_nums);
+>>>
+>>> This is an odd devicetree attribute. Normally the number of DIMMs
+>>> is dynamic. Isn't there a means to get all that information dynamically
+>>> instead of having to set it through devicetree ? What if someone adds
+>>> or removes a DIMM ? Who updates the devicetree ?
+>>>
+>>
+>> It means the number of DIMM slots each CPU has, doesn't mean the number of
+>> currently installed DIMM components. If a DIMM is inserted a slot, CPU
+>> reports its actual temperature but on empty slot, CPU reports 0 instead of
+>> reporting an error so it is the reason why this driver enumerates all DIMM
+>> slots' attribute.
+>>
+> And there is no other means to get the number of DIMM slots per CPU ?
+> It just seems to be that this is the wrong location to provide such
+> information.
+> 
+
+This devicetree attribute will be configured at runtime using dt overlay 
+based on the host server's hardware configuration which will be parsed 
+and managed by a userspace BMC service.
+
+> [ ... ]
+> 
+>>>> +
+>>>> +static const struct of_device_id peci_of_table[] = {
+>>>> +	{ .compatible = "peci-hwmon", },
+>>>
+>>> This does not look like a reference to some piece of hardware.
+>>>
+>>
+>> This driver provides generic PECI hwmon function to which controller has
+>> PECI HW such as Aspeed or Nuvoton BMC chip so it's not dependant on a
+>> specific hardware. Should I remove this or any suggestion?
+>>
+> 
+> I don't really know enough about the system to make a recommendation.
+> It seems to me that the PECI core should identify which functionality
+> it supports and instantiate the necessary driver(s). Maybe there should
+> be sub-nodes to the peci node with relevant information. Those sub-nodes
+> should specify the supported functionality in more detail, though -
+> such as indicating the supported CPU and/or DIMM sensors.
+> 
+> Guenter
+> 
+
+As I explained above, BMC and host server are running on separated OSes 
+so this driver cannot be (actually, doesn't need to be) directly 
+associated with other kernel modules in the BMC side OS for identifying 
+the host server system's functionality. My thought is, this driver will 
+use PECI only for identifying the host server's CPU and DIMM information 
+and the userspace BMC service could deliver any additional host server 
+information thru dt overlay if needed before the BMC service initiates 
+this driver at runtime.
+
+Thanks a lot,
+
+Jae
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
