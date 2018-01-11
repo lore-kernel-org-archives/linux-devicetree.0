@@ -1,77 +1,53 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] media: dt-bindings: Add OF properties to ov7670
-Date: Thu, 11 Jan 2018 08:45:35 -0600
-Message-ID: <CAL_Jsq+zNEzkV0M715so=RxfTmgNrD8D=VxcBHk+Cw8xMiQ7NQ@mail.gmail.com>
-References: <1515059553-10219-1-git-send-email-jacopo+renesas@jmondi.org>
- <1515059553-10219-3-git-send-email-jacopo+renesas@jmondi.org>
- <20180109033555.vgofzbnpx37iqaon@rob-hp-laptop> <20180109080111.GD25666@w540>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 8/9] clocksource: Add a new timer-ingenic driver
+Date: Thu, 11 Jan 2018 08:53:22 -0600
+Message-ID: <CAL_Jsq+StZS1+qTd9CG1X2_3ay5onMgEmYG9MRUVWs-4K4-EZA@mail.gmail.com>
+References: <20180101143344.2099-1-paul@crapouillou.net> <20180110224838.16711-1-paul@crapouillou.net>
+ <20180110224838.16711-8-paul@crapouillou.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180109080111.GD25666@w540>
+In-Reply-To: <20180110224838.16711-8-paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jacopo mondi <jacopo-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-Cc: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
+Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 9, 2018 at 2:01 AM, jacopo mondi <jacopo-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org> wrote:
-> Hi Rob,
->    thanks for comments
+On Wed, Jan 10, 2018 at 4:48 PM, Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org> wrote:
+> This driver will use the TCU (Timer Counter Unit) present on the Ingenic
+> JZ47xx SoCs to provide the kernel with a clocksource and timers.
 >
-> On Mon, Jan 08, 2018 at 09:35:55PM -0600, Rob Herring wrote:
->> On Thu, Jan 04, 2018 at 10:52:33AM +0100, Jacopo Mondi wrote:
->> > Describe newly introduced OF properties for ov7670 image sensor.
->> > The driver supports two standard properties to configure synchronism
->> > signals polarities and two custom properties already supported as
->> > platform data options by the driver.
->>
->> Missing S-o-b.
->>
+> Signed-off-by: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
+> ---
+>  drivers/clocksource/Kconfig         |   8 ++
+>  drivers/clocksource/Makefile        |   1 +
+>  drivers/clocksource/timer-ingenic.c | 258 ++++++++++++++++++++++++++++++++++++
+>  3 files changed, 267 insertions(+)
+>  create mode 100644 drivers/clocksource/timer-ingenic.c
 >
-> Ups, that was trivial, sorry about that
->
->> > ---
->> >  Documentation/devicetree/bindings/media/i2c/ov7670.txt | 14 ++++++++++++++
->> >  1 file changed, 14 insertions(+)
->> >
->> > diff --git a/Documentation/devicetree/bindings/media/i2c/ov7670.txt b/Documentation/devicetree/bindings/media/i2c/ov7670.txt
->> > index 826b656..57ded18 100644
->> > --- a/Documentation/devicetree/bindings/media/i2c/ov7670.txt
->> > +++ b/Documentation/devicetree/bindings/media/i2c/ov7670.txt
->> > @@ -9,11 +9,22 @@ Required Properties:
->> >  - clocks: reference to the xclk input clock.
->> >  - clock-names: should be "xclk".
->> >
->> > +The following properties, as defined by video interfaces OF bindings
->> > +"Documentation/devicetree/bindings/media/video-interfaces.txt" are supported:
->> > +
->> > +- hsync-active: active state of the HSYNC signal, 0/1 for LOW/HIGH respectively.
->> > +- vsync-active: active state of the VSYNC signal, 0/1 for LOW/HIGH respectively.
->>
->> Don't these go in the endpoint? Not sure offhand.
->>
->
-> Yes they do. I will list them as "Optional endpoint properties", and
->
->> > +
->> > +Default is high active state for both vsync and hsync signals.
->> > +
->> >  Optional Properties:
->> >  - reset-gpios: reference to the GPIO connected to the resetb pin, if any.
->> >    Active is low.
->> >  - powerdown-gpios: reference to the GPIO connected to the pwdn pin, if any.
->> >    Active is high.
->> > +- ov7670,pll-bypass: set to 1 to bypass PLL for pixel clock generation.
->>
->> Boolean instead?
->>
->
-> Do we have booleans? I had a look at device tree specs and grep for
-> "true"/"false" in arch/arm*/boot/dts, and didn't find that much.
-> Seems like they're actually strings, am I wrong?
+>  v2: Use SPDX identifier for the license
+>  v3: - Move documentation to its own patch
+>      - Search the devicetree for PWM clients, and use all the TCU
+>            channels that won't be used for PWM
 
-Properties with no value are boolean. Present is true, absent is
-false. "foo = <0>" is also treated as true, but not recommended.
+[...]
+
+> +static int __init ingenic_tcu_init(struct device_node *np)
+> +{
+> +       unsigned long available_channels = GENMASK(NUM_CHANNELS - 1, 0);
+> +       struct device_node *node;
+> +       struct ingenic_tcu *tcu;
+> +       unsigned int i, channel;
+> +       int err;
+> +       u32 val;
+> +
+> +       for_each_node_with_property(node, "pwms") {
+> +               err = of_property_read_u32_index(node, "pwms", 1, &val);
+
+This is the right idea, but a bit fragile. Perhaps its good enough for
+your platform, but it would fail if you have another PWM provider like
+the gpio-pwm binding or the cell size is not 1 (BTW, I thought the PWM
+binding defined 3 cells typically).
 
 Rob
 --
