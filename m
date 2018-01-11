@@ -1,57 +1,36 @@
-From: Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
-Subject: [PATCH v2 2/3] ARM: dts: armada-xp: add label to sdram-controller node
-Date: Thu, 11 Jan 2018 14:59:02 +1300
-Message-ID: <20180111015903.11322-3-chris.packham@alliedtelesis.co.nz>
-References: <20180111015903.11322-1-chris.packham@alliedtelesis.co.nz>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180111015903.11322-1-chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org
-Cc: jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+From: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH v2 0/3] ARM: mvebu: dts: updates to enable EDAC
+Date: Thu, 11 Jan 2018 14:59:00 +1300
+Message-ID: <20180111015903.11322-1-chris.packham@alliedtelesis.co.nz>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: gregory.clement@free-electrons.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, andrew@lunn.ch
+Cc: jason@lakedaemon.net, sebastian.hesselbarth@gmail.com, linux@armlinux.org.uk, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Chris Packham <chris.packham@alliedtelesis.co.nz>
 List-Id: devicetree@vger.kernel.org
 
-Add the label "sdramc" to the sdram-controller nodes for the Armada-XP
-and 98dx3236 SoCs.
+I've split this off from my earlier series[1] this is just the dts changes that
+will enable support for the EDAC series when it lands.
 
-Signed-off-by: Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
----
+The Armada 38x as well as the 98dx3236 and similar switch chips with integrated
+CPUs use the same SDRAM controller block as the Armada XP. The key difference
+is the width of the DDR interface.
+
+[1] - https://marc.info/?l=linux-kernel&m=151545124505964&w=2
+
 Changes in v2:
-- New
+- update commit message
+- add labels to dts
 
- arch/arm/boot/dts/armada-xp-98dx3236.dtsi | 2 +-
- arch/arm/boot/dts/armada-xp.dtsi          | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+Chris Packham (3):
+  ARM: dts: armada-xp: enable L2 cache parity and ecc on db-xc3-24g4xg
+  ARM: dts: armada-xp: add label to sdram-controller node
+  ARM: dts: mvebu: add sdram controller node to Armada-38x
 
-diff --git a/arch/arm/boot/dts/armada-xp-98dx3236.dtsi b/arch/arm/boot/dts/armada-xp-98dx3236.dtsi
-index bdd4c7a45fbf..fe54e9d7cc90 100644
---- a/arch/arm/boot/dts/armada-xp-98dx3236.dtsi
-+++ b/arch/arm/boot/dts/armada-xp-98dx3236.dtsi
-@@ -127,7 +127,7 @@
- 		};
- 
- 		internal-regs {
--			sdramc@1400 {
-+			sdramc: sdramc@1400 {
- 				compatible = "marvell,armada-xp-sdram-controller";
- 				reg = <0x1400 0x500>;
- 			};
-diff --git a/arch/arm/boot/dts/armada-xp.dtsi b/arch/arm/boot/dts/armada-xp.dtsi
-index fa1e881266ac..3bb6e5e59fcc 100644
---- a/arch/arm/boot/dts/armada-xp.dtsi
-+++ b/arch/arm/boot/dts/armada-xp.dtsi
-@@ -73,7 +73,7 @@
- 		};
- 
- 		internal-regs {
--			sdramc@1400 {
-+			sdramc: sdramc@1400 {
- 				compatible = "marvell,armada-xp-sdram-controller";
- 				reg = <0x1400 0x500>;
- 			};
+ arch/arm/boot/dts/armada-38x.dtsi             | 5 +++++
+ arch/arm/boot/dts/armada-xp-98dx3236.dtsi     | 2 +-
+ arch/arm/boot/dts/armada-xp-db-xc3-24g4xg.dts | 5 +++++
+ arch/arm/boot/dts/armada-xp.dtsi              | 2 +-
+ 4 files changed, 12 insertions(+), 2 deletions(-)
+
 -- 
 2.15.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
