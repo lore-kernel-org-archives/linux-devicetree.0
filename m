@@ -1,32 +1,63 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v7 7/8] dt-bindings: can: m_can: Document new can
- transceiver binding
-Date: Thu, 11 Jan 2018 14:20:01 -0600
-Message-ID: <CAL_JsqJs2Xi=LX3A=AYzBiOy3OPZCP0KRi=uHwiMK45fAGtODQ@mail.gmail.com>
-References: <1515581725-29242-1-git-send-email-faiz_abbas@ti.com> <1515581725-29242-8-git-send-email-faiz_abbas@ti.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 3/7] pinctrl: sunxi: add support for the Allwinner H6
+ main pin controller
+Date: Thu, 11 Jan 2018 14:24:23 -0600
+Message-ID: <20180111202423.xslkd7nbejkqvoz6@rob-hp-laptop>
+References: <20180106042326.46519-1-icenowy@aosc.io>
+ <20180106042326.46519-3-icenowy@aosc.io>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1515581725-29242-8-git-send-email-faiz_abbas@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Faiz Abbas <faiz_abbas@ti.com>
-Cc: Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, linux-can@vger.kernel.org, netdev <netdev@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>, "Franklin S Cooper Jr." <fcooper@ti.com>, Wenyou Yang <Wenyou.Yang@microchip.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, linux-omap <linux-omap@vger.kernel.org>, Dong Aisheng <b29396@freescale.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180106042326.46519-3-icenowy@aosc.io>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Icenowy Zheng <icenowy@aosc.io>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Linus Walleij <linus.walleij@linaro.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 10, 2018 at 4:55 AM, Faiz Abbas <faiz_abbas@ti.com> wrote:
-> From: Franklin S Cooper Jr <fcooper@ti.com>
->
-> Add information regarding can-transceiver binding. This is especially
-> important for MCAN since the IP allows CAN FD mode to run significantly
-> faster than what most transceivers are capable of.
->
-> Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
-> Signed-off-by: Sekhar Nori <nsekhar@ti.com>
-> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+On Sat, Jan 06, 2018 at 12:23:22PM +0800, Icenowy Zheng wrote:
+> The Allwinner H6 SoC has two pin controllers, one main controller
+> (called CPUX-PORT in user manual) and one controller in CPUs power
+> domain (called CPUS-PORT in user manual).
+> 
+> This commit introduces support for the main pin controller on H6.
+> 
+> The pin bank A and B are not wired out and hidden from the SoC's
+> documents, however it's shown that the "ATE" (an AC200 chip
+> co-packaged with the H6 die) is connected to the main SoC die via these
+> pin banks. The information about these banks is just copied from the BSP
+> pinctrl driver, but re-formatted to fit the mainline pinctrl driver
+> format.
+> 
+> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
 > ---
->  Documentation/devicetree/bindings/net/can/m_can.txt | 9 +++++++++
->  1 file changed, 9 insertions(+)
+>  .../bindings/pinctrl/allwinner,sunxi-pinctrl.txt   |   4 +-
+>  drivers/pinctrl/sunxi/Kconfig                      |   4 +
+>  drivers/pinctrl/sunxi/Makefile                     |   1 +
+>  drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c          | 679 +++++++++++++++++++++
+>  4 files changed, 687 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt
+> index 09789fdfa749..4523e658b9f2 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt
+> +++ b/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt
+> @@ -27,6 +27,7 @@ Required properties:
+>    "allwinner,sun50i-a64-pinctrl"
+>    "allwinner,sun50i-a64-r-pinctrl"
+>    "allwinner,sun50i-h5-pinctrl"
+> +  "allwinner,sun50i-h6-pinctrl"
+>    "nextthing,gr8-pinctrl"
+>  
+>  - reg: Should contain the register physical address and length for the
+> @@ -39,7 +40,8 @@ Required properties:
+>  
+>  Note: For backward compatibility reasons, the hosc and losc clocks are only
+>  required if you need to use the optional input-debounce property. Any new
+> -device tree should set them.
+> +device tree should set them. For the pin controllers on Allwinner H6 SoC,
+> +there's no APB bus gate, and the "apb" clock should be omitted.
 
-Why did you drop my ack from v6?
+This should be with the clocks prop definition.
 
 Rob
