@@ -1,109 +1,214 @@
-From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH linux dev-4.10 0/6] Add support PECI and PECI hwmon
- drivers
-Date: Thu, 11 Jan 2018 09:41:28 +0100
-Message-ID: <20180111084128.GA16780@kroah.com>
-References: <20180109223126.13093-1-jae.hyun.yoo@linux.intel.com>
- <20180110101755.GA5822@kroah.com>
- <006c4a95-9299-bd17-6dec-52578e8461ae@linux.intel.com>
- <20180110191703.GA20248@kroah.com>
- <8997e43c-683e-418d-4e2b-1fe3fefe254e@linux.intel.com>
- <20180110202740.GA27703@kroah.com>
- <e81095ff-d491-9977-25e6-7ba6d28d5e72@linux.intel.com>
- <20180111073038.GA3600@kroah.com>
- <CACPK8Xe9Jti8S2px=QOcSMA2v+TZ4eGDGQND4qmBUBXeBpsBZQ@mail.gmail.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
+Subject: Re: [RFC PATCH 09/12] mmc: sdhci: Use software timer when timeout
+ greater than hardware capablility
+Date: Thu, 11 Jan 2018 10:46:06 +0200
+Message-ID: <2a41ba31-07e5-027a-de30-495f69d71a88@intel.com>
+References: <20171214130941.26666-1-kishon@ti.com>
+ <20171214130941.26666-10-kishon@ti.com>
+ <74170f0a-329a-2c66-7ad4-a1fedb9747df@intel.com>
+ <2da01441-84d0-0d96-610d-2f9a3055ccc7@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CACPK8Xe9Jti8S2px=QOcSMA2v+TZ4eGDGQND4qmBUBXeBpsBZQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Cc: Jae Hyun Yoo <jae.hyun.yoo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, OpenBMC Maillist <openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Jae Hyun Yoo <jae.hyun.yoo-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <2da01441-84d0-0d96-610d-2f9a3055ccc7@ti.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>, Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, nsekhar@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 11, 2018 at 12:28:48AM -0800, Joel Stanley wrote:
-> On Wed, Jan 10, 2018 at 11:30 PM, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org> wrote:
-> > On Wed, Jan 10, 2018 at 01:46:34PM -0800, Jae Hyun Yoo wrote:
-> >> Thanks for your pointing it out and I totally agree with you. Actually, we
-> >> are preparing 4.13 update for now and an another update will be followed up.
-> >> As I answered above, I'll rebase this patch set onto the latest kernel.org
-> >> mainline. Sorry for my misunderstanding of upstream process.
-> >
-> > 4.13?  Why that kernel?  It too is obsolete and insecure and
-> > unsupported.
+On 04/01/18 14:59, Kishon Vijay Abraham I wrote:
+> Hi Adrian,
 > 
-> It contains support for our hardware that I have integrated from work
-> in progress patches and upstream commits.
+> On Wednesday 20 December 2017 07:41 PM, Adrian Hunter wrote:
+>> On 14/12/17 15:09, Kishon Vijay Abraham I wrote:
+>>> Errata i834 in AM572x Sitara Processors Silicon Revision 2.0, 1.1
+>>> (SPRZ429K July 2014–Revised March 2017 [1]) mentions
+>>> Under high speed HS200 and SDR104 modes, the functional clock for MMC
+>>> modules will reach up to 192 MHz. At this frequency, the maximum obtainable
+>>> timeout (DTO = 0xE) through MMC host controller is (1/192MHz)*2^27 = 700ms.
+>>> Commands taking longer than 700ms may be affected by this small window
+>>> frame. Workaround for this errata is use a software timer instead of
+>>> hardware timer to provide the delay requested by the upper layer.
+>>>
+>>> While this errata is specific to AM572x, it is applicable to all sdhci
+>>> based controllers when a particular request require timeout greater
+>>> than hardware capability.
+>>
+>> It doesn't work for our controllers.  Even if the data timeout interrupt is
+>> disabled, it seems like the timeout still "happens" in some fashion - after
+>> which the host controller starts misbehaving.
 > 
-> The OpenBMC project, with myself as the kernel maintainer, have
-> intentions to regularly move to upstream releases. This takes time and
-> effort. This time and effort is balanced with submitting our drivers
-> upstream.
+> even if the data timeout doesn't get disabled, count = 0xE is still present. So
+> ideally this shouldn't break any existing platforms no?
 
-Of course, but please do not have your "users" use a kernel that is
-known to have bugs and can not be supported.  That would not be good at
-all, don't you think?
+I don't want to hide this kind of variation in the hardware behaviour.
 
-> > What keeps you all from just always tracking the latest tree from Linus?
+>>
+>> So you will need to add a quirk.
+>>
+>>>
+>>> Re-use the software timer already implemented in sdhci to program the
+>>> correct timeout value and also disable the hardware timeout when
+>>> the required timeout is greater than hardware capabiltiy in order to
+>>> avoid spurious timeout interrupts.
+>>>
+>>> This patch is based on the earlier patch implemented for omap_hsmmc [2]
+>>>
+>>> [1] -> http://www.ti.com/lit/er/sprz429k/sprz429k.pdf
+>>> [2] -> https://patchwork.kernel.org/patch/9791449/
+>>>
+>>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>>> ---
+>>>  drivers/mmc/host/sdhci.c | 41 +++++++++++++++++++++++++++++++++++++++--
+>>>  drivers/mmc/host/sdhci.h | 11 +++++++++++
+>>>  2 files changed, 50 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+>>> index e9290a3439d5..d0655e1d2cc7 100644
+>>> --- a/drivers/mmc/host/sdhci.c
+>>> +++ b/drivers/mmc/host/sdhci.c
+>>> @@ -673,6 +673,27 @@ static void sdhci_adma_table_post(struct sdhci_host *host,
+>>>  	}
+>>>  }
+>>>  
+>>> +static void sdhci_calc_sw_timeout(struct sdhci_host *host,
+>>> +				  struct mmc_command *cmd,
+>>> +				  unsigned int target_timeout)
+>>> +{
+>>> +	struct mmc_host *mmc = host->mmc;
+>>> +	struct mmc_ios *ios = &mmc->ios;
+>>> +	struct mmc_data *data = cmd->data;
+>>> +	unsigned long long transfer_time;
+>>> +
+>>> +	if (data) {
+>>> +		transfer_time = MMC_BLOCK_TRANSFER_TIME_MS(data->blksz,
+>>> +							   ios->bus_width,
+>>> +							   ios->clock);
+>>
+>> If it has a value, actual_clock is better than ios->clock.
 > 
-> Linus' tree does not contain all of the drivers required to boot
-> systems. Many of them are still under review on lkml, and others still
-> require rewrite from the vendor tree.
-
-Merging vendor trees into your tree has got to be a complicated mess.
-Why try to keep it all together in one place?
-
-And who is responsible for getting the vendor code upstream?  The
-individual drivers?  Individual driver submissions should be quite easy,
-what is preventing them from getting merged?
-
-> > What is in your tree that is not upstream that requires you to have a
-> > kernel tree at all?
+> okay.
+>>
+>>> +		/* calculate timeout for the entire data */
+>>> +		host->data_timeout = (data->blocks * (target_timeout +
+>>> +						      transfer_time));
+>>> +	} else if (cmd->flags & MMC_RSP_BUSY) {
+>>> +		host->data_timeout = cmd->busy_timeout * MSEC_PER_SEC;
+>>
+>> Doesn't need MSEC_PER_SEC multiplier.
 > 
-> We have PECI, video compression, crypto, USB CDC, DRM (graphics),
-> serial GPIO, LPC mailbox for the ASPEED SoC.
-
-What "USB CDC" do you have that is not upstream?  I'll pick on this one
-specifically as I don't think I've seen any patches recently submitted
-for that driver at all.  Am I just missing them?
-
-The other ones should also all be easy to get merged, with maybe the
-exception of the drm stuff due to the speed that subsystem moves at.
-But even there, the community is very helpful in getting stuff upstream,
-have you asked for help?
-
-> Another silicon vendor has recently joined the project and that brings
-> an entire SoC that is not upstream. We have patches on the ARM that
-> are under review for this SoC, with more drivers undergoing cleanup in
-> order to submit them to the relevant maintainers.
-
-Why are you merging all SoC trees together into one place?  That seems
-like a nightmare to manage, especially with git.
-
-> > And if you do have out-of-tree code, why not use a process that makes it
-> > trivial to update the base kernel version so that you can keep up to
-> > date very easily?  (hint, just using 'git' is not a good way to do
-> > this...)
+> right.
+>>
+>>> +	}
+>>> +}
+>>> +
+>>>  static u8 sdhci_calc_timeout(struct sdhci_host *host, struct mmc_command *cmd)
+>>>  {
+>>>  	u8 count;
+>>> @@ -732,8 +753,12 @@ static u8 sdhci_calc_timeout(struct sdhci_host *host, struct mmc_command *cmd)
+>>>  	}
+>>>  
+>>>  	if (count >= 0xF) {
+>>> -		DBG("Too large timeout 0x%x requested for CMD%d!\n",
+>>> -		    count, cmd->opcode);
+>>> +		DBG("Too large timeout.. using SW timeout for CMD%d!\n",
+>>> +		    cmd->opcode);
+>>> +		sdhci_calc_sw_timeout(host, cmd, target_timeout);
+>>> +		host->ier &= ~SDHCI_INT_DATA_TIMEOUT;
+>>> +		sdhci_writel(host, host->ier, SDHCI_INT_ENABLE);
+>>> +		sdhci_writel(host, host->ier, SDHCI_SIGNAL_ENABLE);
+>>>  		count = 0xE;
+>>>  	}
+>>>  
+>>> @@ -1198,6 +1223,14 @@ static void sdhci_finish_command(struct sdhci_host *host)
+>>>  {
+>>>  	struct mmc_command *cmd = host->cmd;
+>>>  
+>>> +	if (host->data_timeout) {
+>>> +		unsigned long timeout;
+>>> +
+>>> +		timeout = jiffies +
+>>> +			  msecs_to_jiffies(host->data_timeout);
+>>> +		sdhci_mod_timer(host, host->cmd->mrq, timeout);
+>>
+>> cmd could be the sbc or a stop cmd or a command during transfer, so this
+>> needs more logic.
 > 
-> We have a process that we've been developing under for the past few
-> years. I find git to be a great tool for managing Linux kernel trees.
+> host->data_timeout gets set only for data commands or commands with busy
+> timeout. But I guess for commands during data transfer, host->data_timeout
+> might still be set?
 > 
-> What would you recommend for managing kernel trees?
+> Checking sdhci_data_line_cmd(mrq->cmd) in addition to host->data_timeout should
+> take care of all cases right?
 
-quilt is best for a tree that you can not rebase (i.e. a public git
-tree).  Otherwise you end up getting patches all mushed together and
-hard to extract in any simple way.
+I suggest you make the timeout calculation allow for the commands as well
+and then reorder sdhci_mod_timer() to be called after sdhci_prepare_data()
+and make sdhci_mod_timer() do the right thing.
 
-Take a clue from the distros that have been managing kernels for decades
-and deal with an updated kernel all the time easily.
-
-Good luck, it sounds like you will need it :)
-
-thanks,
-
-greg k-h
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>
+>>> +	}
+>>> +
+>>>  	host->cmd = NULL;
+>>>  
+>>>  	if (cmd->flags & MMC_RSP_PRESENT) {
+>>> @@ -2341,6 +2374,10 @@ static bool sdhci_request_done(struct sdhci_host *host)
+>>>  		return true;
+>>>  	}
+>>>  
+>>> +	host->data_timeout = 0;
+>>> +	host->ier |= SDHCI_INT_DATA_TIMEOUT;
+>>> +	sdhci_writel(host, host->ier, SDHCI_INT_ENABLE);
+>>> +	sdhci_writel(host, host->ier, SDHCI_SIGNAL_ENABLE);
+>>
+>> sdhci can have 2 requests in progress to allow for commands to be sent while
+>> a data transfer is in progress, so this is not necessarily the data transfer
+>> request that is done.  Also we want to avoid unnecessary register writes.
+>>
+> 
+> okay.. got it.
+>>>  	sdhci_del_timer(host, mrq);
+>>>  
+>>>  	/*
+>>> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
+>>> index 54bc444c317f..e6e0278bea1a 100644
+>>> --- a/drivers/mmc/host/sdhci.h
+>>> +++ b/drivers/mmc/host/sdhci.h
+>>> @@ -332,6 +332,15 @@ struct sdhci_adma2_64_desc {
+>>>  /* Allow for a a command request and a data request at the same time */
+>>>  #define SDHCI_MAX_MRQS		2
+>>>  
+>>> +/*
+>>> + * Time taken for transferring one block. It is multiplied by a constant
+>>> + * factor '2' to account for any errors
+>>> + */
+>>> +#define MMC_BLOCK_TRANSFER_TIME_MS(blksz, bus_width, freq)		\
+>>> +				   ((unsigned long long)		\
+>>> +				   (2 * (((blksz) * MSEC_PER_SEC *	\
+>>> +				   (8 / (bus_width))) / (freq))))
+>>
+>> I don't think the macro helps make the code more readable.  Might just as
+>> well write a nice function to calculate the entire data request timeout.
+> 
+> okay.
+>>
+>>> +
+>>>  enum sdhci_cookie {
+>>>  	COOKIE_UNMAPPED,
+>>>  	COOKIE_PRE_MAPPED,	/* mapped by sdhci_pre_req() */
+>>> @@ -546,6 +555,8 @@ struct sdhci_host {
+>>>  	/* Host SDMA buffer boundary. */
+>>>  	u32			sdma_boundary;
+>>>  
+>>> +	unsigned long long	data_timeout;
+>>
+>> msecs_to_jiffies() will truncate to 'unsigned int' anyway, so this might as
+>> well be 'unsigned int'.
+>>
+> 
+> okay.
+> 
+> Thanks
+> Kishon
+> 
