@@ -1,81 +1,110 @@
-From: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
-Subject: Re: [PATCH v3 8/9] clocksource: Add a new timer-ingenic driver
-Date: Thu, 11 Jan 2018 17:16:41 +0100
-Message-ID: <1515687401.2170.0@smtp.crapouillou.net>
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v3 6/9] irqchip: Add the ingenic-tcu-intc driver
+Date: Thu, 11 Jan 2018 17:25:45 +0100
+Message-ID: <1515687945.2170.1@smtp.crapouillou.net>
 References: <20180101143344.2099-1-paul@crapouillou.net>
         <20180110224838.16711-1-paul@crapouillou.net>
-        <20180110224838.16711-8-paul@crapouillou.net>
-        <CAL_Jsq+StZS1+qTd9CG1X2_3ay5onMgEmYG9MRUVWs-4K4-EZA@mail.gmail.com>
+        <20180110224838.16711-6-paul@crapouillou.net>
+        <58349291-93cd-f803-52a9-f88120ace4dc@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_Jsq+StZS1+qTd9CG1X2_3ay5onMgEmYG9MRUVWs-4K4-EZA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <58349291-93cd-f803-52a9-f88120ace4dc@arm.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Daniel Lezcano <daniel.lezcano@linaro.org>, Lee Jones <lee.jones@linaro.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
 
-Le jeu. 11 janv. 2018 =E0 15:53, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> a=20
-=E9crit :
-> On Wed, Jan 10, 2018 at 4:48 PM, Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>=20
-> wrote:
->>  This driver will use the TCU (Timer Counter Unit) present on the=20
->> Ingenic
->>  JZ47xx SoCs to provide the kernel with a clocksource and timers.
->>=20
->>  Signed-off-by: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
->>  ---
->>   drivers/clocksource/Kconfig         |   8 ++
->>   drivers/clocksource/Makefile        |   1 +
->>   drivers/clocksource/timer-ingenic.c | 258=20
->> ++++++++++++++++++++++++++++++++++++
->>   3 files changed, 267 insertions(+)
->>   create mode 100644 drivers/clocksource/timer-ingenic.c
->>=20
->>   v2: Use SPDX identifier for the license
->>   v3: - Move documentation to its own patch
->>       - Search the devicetree for PWM clients, and use all the TCU
->>             channels that won't be used for PWM
->=20
-> [...]
->=20
->>  +static int __init ingenic_tcu_init(struct device_node *np)
+Hi Marc,
+
+>>  +static int __init ingenic_tcu_intc_of_init(struct device_node 
+>> *node,
+>>  +	struct device_node *parent)
 >>  +{
->>  +       unsigned long available_channels =3D GENMASK(NUM_CHANNELS -=20
->> 1, 0);
->>  +       struct device_node *node;
->>  +       struct ingenic_tcu *tcu;
->>  +       unsigned int i, channel;
->>  +       int err;
->>  +       u32 val;
+>>  +	struct irq_domain *domain;
+>>  +	struct irq_chip_generic *gc;
+>>  +	struct irq_chip_type *ct;
+>>  +	int err, i, num_parent_irqs;
+>>  +	unsigned int parent_irqs[3];
+> 
+> 3 parent interrupts? Really? How do you pick one? Also, given the 
+> useage
+> model below, "int" is the wrong type. Probably should be u32.
+
+See below.
+
+>>  +	struct regmap *map;
 >>  +
->>  +       for_each_node_with_property(node, "pwms") {
->>  +               err =3D of_property_read_u32_index(node, "pwms", 1,=20
->> &val);
->=20
-> This is the right idea, but a bit fragile. Perhaps its good enough for
-> your platform, but it would fail if you have another PWM provider like
-> the gpio-pwm binding or the cell size is not 1 (BTW, I thought the PWM
-> binding defined 3 cells typically).
+>>  +	num_parent_irqs = of_property_count_elems_of_size(
+>>  +			node, "interrupts", 4);
+> 
+> Nit: on a single line, as here is nothing that hurts my eyes more than
+> reading something like(
+> this). Also, 4 is better expressed as sizeof(u32).
 
-Index 1 is always the channel number of the PWM, it works fine with=20
-3-cells
-PWM bindings, that's what I tested it with.
+That will make checkpatch.pl unhappy :(
 
-Ok, would it be enough to check that "the PWM clients we detect are=20
-connected
-to the PWM driver whose parent is also our parent" (since both drivers=20
-are in
-the same syscon/simple-mfd node)?
+>>  +	if (num_parent_irqs < 0 || num_parent_irqs > 
+>> ARRAY_SIZE(parent_irqs))
+>>  +		return -EINVAL;
+>>  +
+>>  +	map = syscon_node_to_regmap(node->parent);
+>>  +	if (IS_ERR(map))
+>>  +		return PTR_ERR(map);
+>>  +
+>>  +	domain = irq_domain_add_linear(node, 32, &irq_generic_chip_ops, 
+>> NULL);
+>>  +	if (!domain)
+>>  +		return -ENOMEM;
+>>  +
+>>  +	err = irq_alloc_domain_generic_chips(domain, 32, 1, "TCU",
+>>  +			handle_level_irq, 0, IRQ_NOPROBE | IRQ_LEVEL, 0);
+>>  +	if (err)
+>>  +		goto out_domain_remove;
+>>  +
+>>  +	gc = irq_get_domain_generic_chip(domain, 0);
+>>  +	ct = gc->chip_types;
+>>  +
+>>  +	gc->wake_enabled = IRQ_MSK(32);
+>>  +	gc->private = map;
+>>  +
+>>  +	ct->regs.disable = TCU_REG_TMSR;
+>>  +	ct->regs.enable = TCU_REG_TMCR;
+>>  +	ct->regs.ack = TCU_REG_TFCR;
+>>  +	ct->chip.irq_unmask = ingenic_tcu_gc_unmask_enable_reg;
+>>  +	ct->chip.irq_mask = ingenic_tcu_gc_mask_disable_reg;
+>>  +	ct->chip.irq_mask_ack = ingenic_tcu_gc_mask_disable_reg_and_ack;
+>>  +	ct->chip.flags = IRQCHIP_MASK_ON_SUSPEND | IRQCHIP_SKIP_SET_WAKE;
+>>  +
+>>  +	/* Mask all IRQs by default */
+>>  +	regmap_write(map, TCU_REG_TMSR, IRQ_MSK(32));
+>>  +
+>>  +	for (i = 0; i < num_parent_irqs; i++) {
+>>  +		parent_irqs[i] = irq_of_parse_and_map(node, i);
+>>  +		if (!parent_irqs[i]) {
+>>  +			err = -EINVAL;
+>>  +			goto out_unmap_irqs;
+>>  +		}
+>>  +
+>>  +		irq_set_chained_handler_and_data(parent_irqs[i],
+>>  +				ingenic_tcu_intc_cascade, domain);
+>>  +	}
+> 
+> I don't get the multiple parent irq at all. How are the source 
+> interrupt
+> routed to the various cascades?
 
-Thanks,
+On JZ4740, channels 0 and 1 have their own interrupt, and channels 2-7 
+share
+one interrupt line.
+On JZ4770 and JZ4780, the OST (OS timer) channel has its own interrupt,
+channel 5 has its own interrupt, and channels 0-4 and 6-7 share one
+interrupt line.
+
+To keep things simple, we register the same interrupt handler for the 
+three
+parent interrupts.
+
 -Paul
-=
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
