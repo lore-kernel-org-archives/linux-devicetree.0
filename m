@@ -1,81 +1,56 @@
-From: Yong <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v5 0/5] Add OV5640 parallel interface and RGB565/YUYV
- support
-Date: Thu, 11 Jan 2018 09:15:08 +0800
-Message-ID: <20180111091508.a0c9f630c6b4ef80178694fb@magewell.com>
-References: <1514973452-10464-1-git-send-email-hugues.fruchet@st.com>
-        <20180108153811.5xrvbaekm6nxtoa6@flea>
-        <3010811e-ed37-4489-6a9f-6cc835f41575@st.com>
-        <20180110153724.l77zpdgxfbzkznuf@flea>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+From: Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+Subject: [PATCH v2 2/3] ARM: dts: armada-xp: add label to sdram-controller node
+Date: Thu, 11 Jan 2018 14:59:02 +1300
+Message-ID: <20180111015903.11322-3-chris.packham@alliedtelesis.co.nz>
+References: <20180111015903.11322-1-chris.packham@alliedtelesis.co.nz>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180110153724.l77zpdgxfbzkznuf@flea>
+In-Reply-To: <20180111015903.11322-1-chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Hugues FRUCHET <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org
+Cc: jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Maxime,
+Add the label "sdramc" to the sdram-controller nodes for the Armada-XP
+and 98dx3236 SoCs.
 
-On Wed, 10 Jan 2018 16:37:24 +0100
-Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+Signed-off-by: Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+---
+Changes in v2:
+- New
 
-> Hi Hugues,
-> 
-> On Mon, Jan 08, 2018 at 05:13:39PM +0000, Hugues FRUCHET wrote:
-> > I'm using a ST board with OV5640 wired in parallel bus output in order 
-> > to interface to my STM32 DCMI parallel interface.
-> > Perhaps could you describe your setup so I could help on understanding 
-> > the problem on your side. From my past experience with this sensor 
-> > module, you can first check hsync/vsync polarities, the datasheet is 
-> > buggy on VSYNC polarity as documented in patch 4/5.
-> 
-> It turns out that it was indeed a polarity issue.
-> 
-> It looks like that in order to operate properly, I need to setup the
-> opposite polarity on HSYNC and VSYNC on the interface. I looked at the
-> signals under a scope, and VSYNC is obviously inversed as you
-> described. HSYNC, I'm not so sure since the HBLANK period seems very
-> long, almost a line.
-> 
-> Since VSYNC at least looks correct, I'd be inclined to think that the
-> polarity is inversed on at least the SoC I'm using it on.
-> 
-> Yong, did you test the V3S CSI driver with a parallel interface? With
-> what sensor driver? Have you found some polarities issues like this?
+ arch/arm/boot/dts/armada-xp-98dx3236.dtsi | 2 +-
+ arch/arm/boot/dts/armada-xp.dtsi          | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-Did you try it with Allwinner SoCs?
+diff --git a/arch/arm/boot/dts/armada-xp-98dx3236.dtsi b/arch/arm/boot/dts/armada-xp-98dx3236.dtsi
+index bdd4c7a45fbf..fe54e9d7cc90 100644
+--- a/arch/arm/boot/dts/armada-xp-98dx3236.dtsi
++++ b/arch/arm/boot/dts/armada-xp-98dx3236.dtsi
+@@ -127,7 +127,7 @@
+ 		};
+ 
+ 		internal-regs {
+-			sdramc@1400 {
++			sdramc: sdramc@1400 {
+ 				compatible = "marvell,armada-xp-sdram-controller";
+ 				reg = <0x1400 0x500>;
+ 			};
+diff --git a/arch/arm/boot/dts/armada-xp.dtsi b/arch/arm/boot/dts/armada-xp.dtsi
+index fa1e881266ac..3bb6e5e59fcc 100644
+--- a/arch/arm/boot/dts/armada-xp.dtsi
++++ b/arch/arm/boot/dts/armada-xp.dtsi
+@@ -73,7 +73,7 @@
+ 		};
+ 
+ 		internal-regs {
+-			sdramc@1400 {
++			sdramc: sdramc@1400 {
+ 				compatible = "marvell,armada-xp-sdram-controller";
+ 				reg = <0x1400 0x500>;
+ 			};
+-- 
+2.15.1
 
-No. I only tested with a BT1120 signal generated by FPGA or ADV7611. HSYNC
-and VSYNC are not used.
-
-For V3s CSI driver, I will add the following to dt-bindings:
-Endpoint node properties for CSI1
----------------------------------
-
-- remote-endpoint      : (required) a phandle to the bus receiver's endpoint
-                          node
-- bus-width:           : (required) must be 8, 10, 12 or 16
-- pclk-sample          : (optional) (default: sample on falling edge)
-- hsync-active         : (only required for parallel)
-- vsync-active         : (only required for parallel)
-
-You could try diffrent hsync-active/vsync-active values here.
-
-> 
-> Thanks!
-> Maxime
-> 
-> -- 
-> Maxime Ripard, Free Electrons
-> Embedded Linux and Kernel engineering
-> http://free-electrons.com
-
-
-Thanks,
-Yong
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
