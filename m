@@ -1,62 +1,67 @@
-From: Hugues FRUCHET <hugues.fruchet-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH v5 0/5] Add OV5640 parallel interface and RGB565/YUYV
- support
-Date: Thu, 11 Jan 2018 08:25:41 +0000
-Message-ID: <40f2e25e-3662-fce9-549b-360bbafad623@st.com>
-References: <1514973452-10464-1-git-send-email-hugues.fruchet@st.com>
- <20180108153811.5xrvbaekm6nxtoa6@flea>
- <3010811e-ed37-4489-6a9f-6cc835f41575@st.com>
- <20180110153724.l77zpdgxfbzkznuf@flea>
- <2089de18-1f7f-6d6e-7aee-9dc424bca335@st.com>
- <20180110222508.4x5kimanevttmqis@valkosipuli.retiisi.org.uk>
- <6661b493-5f2a-b201-390d-e3452e6873a0@st.com>
- <20180111081912.curkvpguof6ul555@valkosipuli.retiisi.org.uk>
+From: Joel Stanley <joel@jms.id.au>
+Subject: Re: [PATCH linux dev-4.10 0/6] Add support PECI and PECI hwmon drivers
+Date: Thu, 11 Jan 2018 00:28:48 -0800
+Message-ID: <CACPK8Xe9Jti8S2px=QOcSMA2v+TZ4eGDGQND4qmBUBXeBpsBZQ@mail.gmail.com>
+References: <20180109223126.13093-1-jae.hyun.yoo@linux.intel.com>
+ <20180110101755.GA5822@kroah.com> <006c4a95-9299-bd17-6dec-52578e8461ae@linux.intel.com>
+ <20180110191703.GA20248@kroah.com> <8997e43c-683e-418d-4e2b-1fe3fefe254e@linux.intel.com>
+ <20180110202740.GA27703@kroah.com> <e81095ff-d491-9977-25e6-7ba6d28d5e72@linux.intel.com>
+ <20180111073038.GA3600@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180111081912.curkvpguof6ul555-S+BSfZ9RZZmRSg0ZkenSGLdO1Tsj/99ntUK59QYPAWc@public.gmane.org>
-Content-Language: en-US
-Content-ID: <E67145C52CE1684BB72CB3F244915739-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180111073038.GA3600@kroah.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>, Andrew Jeffery <andrew@aj.id.au>, Arnd Bergmann <arnd@arndb.de>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, linux-hwmon@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Jae Hyun Yoo <jae.hyun.yoo@intel.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Jeremy Kerr <jk@ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMDEvMTEvMjAxOCAwOToxOSBBTSwgU2FrYXJpIEFpbHVzIHdyb3RlOg0KPiBPbiBUaHUsIEph
-biAxMSwgMjAxOCBhdCAwODoxMjoxMUFNICswMDAwLCBIdWd1ZXMgRlJVQ0hFVCB3cm90ZToNCj4+
-IEhpIFNha2FyaSwNCj4+DQo+PiBPbiAwMS8xMC8yMDE4IDExOjI1IFBNLCBTYWthcmkgQWlsdXMg
-d3JvdGU6DQo+Pj4gSGkgSHVndWVzLA0KPj4+DQo+Pj4gT24gV2VkLCBKYW4gMTAsIDIwMTggYXQg
-MDM6NTE6MDdQTSArMDAwMCwgSHVndWVzIEZSVUNIRVQgd3JvdGU6DQo+Pj4+IEdvb2QgbmV3cyBN
-YXhpbWUgIQ0KPj4+Pg0KPj4+PiBIYXZlIHlvdSBzZWVuIHRoYXQgeW91IGNhbiBhZGFwdCB0aGUg
-cG9sYXJpdGllcyB0aHJvdWdoIGRldmljZXRyZWUgPw0KPj4+Pg0KPj4+PiArICAgICAgICAgICAg
-ICAgICAgICAgICAvKiBQYXJhbGxlbCBidXMgZW5kcG9pbnQgKi8NCj4+Pj4gKyAgICAgICAgICAg
-ICAgICAgICAgICAgb3Y1NjQwX3RvX3BhcmFsbGVsOiBlbmRwb2ludCB7DQo+Pj4+IFsuLi5dDQo+
-Pj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgaHN5bmMtYWN0aXZlID0gPDA+Ow0K
-Pj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHZzeW5jLWFjdGl2ZSA9IDwwPjsN
-Cj4+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBwY2xrLXNhbXBsZSA9IDwxPjsN
-Cj4+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgfTsNCj4+Pj4NCj4+Pj4gRG9pbmcgc28geW91
-IGNhbiBhZGFwdCB0byB5b3VyIFNvQy9ib2FyZCBzZXR1cCBlYXNpbHkuDQo+Pj4+DQo+Pj4+IElm
-IHlvdSBkb24ndCBwdXQgdGhvc2UgbGluZXMgaW4gZGV2aWNldHJlZSwgdGhlIG92NTY0MCBkZWZh
-dWx0IGluaXQNCj4+Pj4gc2VxdWVuY2UgaXMgdXNlZCB3aGljaCBzZXQgdGhlIHBvbGFyaXR5IGFz
-IGRlZmluZWQgaW4gYmVsb3cgY29tbWVudDoNCj4+Pj4gb3Y1NjQwX3NldF9zdHJlYW1fZHZwKCkN
-Cj4+Pj4gWy4uLl0NCj4+Pj4gKyAgICAgICAgKiBDb250cm9sIGxpbmVzIHBvbGFyaXR5IGNhbiBi
-ZSBjb25maWd1cmVkIHRocm91Z2gNCj4+Pj4gKyAgICAgICAgKiBkZXZpY2V0cmVlIGVuZHBvaW50
-IGNvbnRyb2wgbGluZXMgcHJvcGVydGllcy4NCj4+Pj4gKyAgICAgICAgKiBJZiBubyBlbmRwb2lu
-dCBjb250cm9sIGxpbmVzIHByb3BlcnRpZXMgYXJlIHNldCwNCj4+Pj4gKyAgICAgICAgKiBwb2xh
-cml0eSB3aWxsIGJlIGFzIGJlbG93Og0KPj4+PiArICAgICAgICAqIC0gVlNZTkM6ICAgICBhY3Rp
-dmUgaGlnaA0KPj4+PiArICAgICAgICAqIC0gSFJFRjogICAgICBhY3RpdmUgbG93DQo+Pj4+ICsg
-ICAgICAgICogLSBQQ0xLOiAgICAgIGFjdGl2ZSBsb3cNCj4+Pj4gKyAgICAgICAgKi8NCj4+Pj4g
-Wy4uLl0NCj4+Pg0KPj4+IFRoZSBwcm9wZXJ0aWVzIGFyZSBhdCB0aGUgbW9tZW50IGRvY3VtZW50
-ZWQgYXMgbWFuZGF0b3J5IGluIERUIGJpbmRpbmcNCj4+PiBkb2N1bWVudGF0aW9uLg0KPj4+DQo+
-PiBvZiBjb3Vyc2UsIGl0IHdhcyBqdXN0IHRvIGFzayBNYXhpbWUgdG8gY2hlY2sgdGhlIGRldmlj
-ZXRyZWUgb24gaXRzDQo+PiBzaWRlLCB0aGUgc3ltcHRvbSBvYnNlcnZlZCBieSBNYXhpbWUgd2l0
-aCBoc3luYy92c3luYyBpbnZlcnNlZCBpcyB0aGUNCj4+IHNhbWUgdGhhbiB0aGUgb25lIG9ic2Vy
-dmVkIGlmIHdlIHN0aWNrIHRvIGp1c3QgZGVmYXVsdCBpbml0IHNlcXVlbmNlLg0KPiANCj4gSSB3
-b25kZXIgaWYgdGhlIGRyaXZlciBzaG91bGQgYmUgY2hhbmdlZCB0byByZXF1aXJlIGhzeW5jIGFu
-ZCB2c3luYy4gVGhlc2UNCj4gc2lnbmFscyB3b24ndCBiZSB0aGVyZSBhdCBhbGwgaW4gQnQuNjU2
-IG1vZGUuDQo+IA0KSSB3aWxsIHJldmlzaXQgdGhpcyB3aGVuIHB1c2hpbmcgQnQuNjU2IG1vZGUu
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Wed, Jan 10, 2018 at 11:30 PM, Greg KH <gregkh@linuxfoundation.org> wrote:
+> On Wed, Jan 10, 2018 at 01:46:34PM -0800, Jae Hyun Yoo wrote:
+>> Thanks for your pointing it out and I totally agree with you. Actually, we
+>> are preparing 4.13 update for now and an another update will be followed up.
+>> As I answered above, I'll rebase this patch set onto the latest kernel.org
+>> mainline. Sorry for my misunderstanding of upstream process.
+>
+> 4.13?  Why that kernel?  It too is obsolete and insecure and
+> unsupported.
+
+It contains support for our hardware that I have integrated from work
+in progress patches and upstream commits.
+
+The OpenBMC project, with myself as the kernel maintainer, have
+intentions to regularly move to upstream releases. This takes time and
+effort. This time and effort is balanced with submitting our drivers
+upstream.
+
+> What keeps you all from just always tracking the latest tree from Linus?
+
+Linus' tree does not contain all of the drivers required to boot
+systems. Many of them are still under review on lkml, and others still
+require rewrite from the vendor tree.
+
+> What is in your tree that is not upstream that requires you to have a
+> kernel tree at all?
+
+We have PECI, video compression, crypto, USB CDC, DRM (graphics),
+serial GPIO, LPC mailbox for the ASPEED SoC.
+
+Another silicon vendor has recently joined the project and that brings
+an entire SoC that is not upstream. We have patches on the ARM that
+are under review for this SoC, with more drivers undergoing cleanup in
+order to submit them to the relevant maintainers.
+
+>
+> And if you do have out-of-tree code, why not use a process that makes it
+> trivial to update the base kernel version so that you can keep up to
+> date very easily?  (hint, just using 'git' is not a good way to do
+> this...)
+
+We have a process that we've been developing under for the past few
+years. I find git to be a great tool for managing Linux kernel trees.
+
+What would you recommend for managing kernel trees?
+
+Cheers,
+
+Joel
