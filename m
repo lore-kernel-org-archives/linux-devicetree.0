@@ -1,129 +1,177 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+From: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
 Subject: Re: [PATCH 1/7] pinctrl: sunxi: add support for pin
  controllers without bus gate
-Date: Thu, 11 Jan 2018 11:41:00 +0100
-Message-ID: <20180111104100.j5rwitma3wgtdivm@flea.lan>
+Date: Thu, 11 Jan 2018 10:41:39 +0000
+Message-ID: <7c3b4294-117a-c293-03d4-a35a823a796e@arm.com>
 References: <20180106042326.46519-1-icenowy@aosc.io>
  <2ca1ee96-8dc6-c80b-ae11-45895d6a8484@arm.com>
- <CAGb2v64E-XOHVJG0Q-uZeCAdxF37QSVCDfiYmqtv7ydvseQwrw@mail.gmail.com>
- <ba83f00d-c1e5-6f6a-84df-04169860c7eb@arm.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+ <08CB03C2-1253-4072-B8AC-D3F1253C8A85@aosc.io>
+Reply-To: andre.przywara-5wv7dgnIgG8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="7drrvdoa2nxa6d2m"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBSH63TJAKGQEJ5YHMYI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDNZNK75ZIKRBWP63TJAKGQE43X64UA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <ba83f00d-c1e5-6f6a-84df-04169860c7eb-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <08CB03C2-1253-4072-B8AC-D3F1253C8A85-h8G6r0blFSE@public.gmane.org>
+Content-Language: en-GB
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
 List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---7drrvdoa2nxa6d2m
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
+On 11/01/18 10:15, Icenowy Zheng wrote:
+>=20
+>=20
+> =E4=BA=8E 2018=E5=B9=B41=E6=9C=8811=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=88=
+6:08:19, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org> =E5=86=99=E5=88=B0:
+>> Hi,
+>>
+>> On 06/01/18 04:23, Icenowy Zheng wrote:
+>>> The Allwinner H6 pin controllers (both the main one and the CPUs one)
+>>> have no bus gate clocks.
+>>>
+>>> Add support for this kind of pin controllers.
+>>>
+>>> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+>>> ---
+>>>  drivers/pinctrl/sunxi/pinctrl-sunxi.c | 30
+>> ++++++++++++++++++++----------
+>>>  drivers/pinctrl/sunxi/pinctrl-sunxi.h |  1 +
+>>>  2 files changed, 21 insertions(+), 10 deletions(-)
+>>>
+>>> diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+>> b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+>>> index 4b6cb25bc796..68cd505679d9 100644
+>>> --- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+>>> +++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+>>> @@ -1182,7 +1182,12 @@ static int sunxi_pinctrl_setup_debounce(struct
+>> sunxi_pinctrl *pctl,
+>>>  	unsigned int hosc_div, losc_div;
+>>>  	struct clk *hosc, *losc;
+>>>  	u8 div, src;
+>>> -	int i, ret;
+>>> +	int i, ret, clk_count;
+>>> +
+>>> +	if (pctl->desc->without_bus_gate)
+>>> +		clk_count =3D 2;
+>>> +	else
+>>> +		clk_count =3D 3;
+>>> =20
+>>>  	/* Deal with old DTs that didn't have the oscillators */
+>>>  	if (of_count_phandle_with_args(node, "clocks", "#clock-cells") !=3D
+>> 3)
 
-On Thu, Jan 11, 2018 at 10:23:52AM +0000, Andre Przywara wrote:
-> Hi,
-> 
-> On 11/01/18 10:14, Chen-Yu Tsai wrote:
-> > On Thu, Jan 11, 2018 at 6:08 PM, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org> wrote:
-> >> Hi,
-> >>
-> >> On 06/01/18 04:23, Icenowy Zheng wrote:
-> >>> The Allwinner H6 pin controllers (both the main one and the CPUs one)
-> >>> have no bus gate clocks.
-> >>>
-> >>> Add support for this kind of pin controllers.
-> >>>
-> >>> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-> >>> ---
-> >>>  drivers/pinctrl/sunxi/pinctrl-sunxi.c | 30 ++++++++++++++++++++----------
-> >>>  drivers/pinctrl/sunxi/pinctrl-sunxi.h |  1 +
-> >>>  2 files changed, 21 insertions(+), 10 deletions(-)
-> >>>
-> >>> diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-> >>> index 4b6cb25bc796..68cd505679d9 100644
-> >>> --- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-> >>> +++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-> >>> @@ -1182,7 +1182,12 @@ static int sunxi_pinctrl_setup_debounce(struct sunxi_pinctrl *pctl,
-> >>>       unsigned int hosc_div, losc_div;
-> >>>       struct clk *hosc, *losc;
-> >>>       u8 div, src;
-> >>> -     int i, ret;
-> >>> +     int i, ret, clk_count;
-> >>> +
-> >>> +     if (pctl->desc->without_bus_gate)
-> >>> +             clk_count = 2;
-> >>> +     else
-> >>> +             clk_count = 3;
-> >>>
-> >>>       /* Deal with old DTs that didn't have the oscillators */
-> >>>       if (of_count_phandle_with_args(node, "clocks", "#clock-cells") != 3)
-> >>> @@ -1360,15 +1365,19 @@ int sunxi_pinctrl_init_with_variant(struct platform_device *pdev,
-> >>>                       goto gpiochip_error;
-> >>>       }
-> >>>
-> >>> -     clk = devm_clk_get(&pdev->dev, NULL);
-> >>> -     if (IS_ERR(clk)) {
-> >>> -             ret = PTR_ERR(clk);
-> >>> -             goto gpiochip_error;
-> >>> -     }
-> >>> +     if (!desc->without_bus_gate) {
-> >>
-> >> Do we really need explicit support for that case?
-> >> Can't we have something that works automatically?
-> >>
-> >> if (node has clock-names property)              (A)
-> >>         use clocks as enumerated and named there
-> > 
-> > You still need to know if the hardware has a bus gate or not.
-> > If it's missing, and it's disabled, you end up with unusable
-> > hardware.
-> 
-> Yes. So what? If you have a broken DT, it will not work. Just don't do
-> it. I don't understand why we want to defend against this case.
+Just spotted: I guess you wanted to compare against that computed value
+here?
+But I wonder if we can get rid of this check at all? Don't we rely on
+clock-names and input-debounce anyway? So we will bail out later anyway
+if the DT does not have those?
+Why do we need this check then?
 
-This is not the point, but rather: if we have a way to detect easily
-that the device tree is missing a property that is missing in our
-binding, why shouldn't we do it?
+>>> @@ -1360,15 +1365,19 @@ int sunxi_pinctrl_init_with_variant(struct
+>> platform_device *pdev,
+>>>  			goto gpiochip_error;
+>>>  	}
+>>> =20
+>>> -	clk =3D devm_clk_get(&pdev->dev, NULL);
+>>> -	if (IS_ERR(clk)) {
+>>> -		ret =3D PTR_ERR(clk);
+>>> -		goto gpiochip_error;
+>>> -	}
+>>> +	if (!desc->without_bus_gate) {
+>>
+>> Do we really need explicit support for that case?
+>> Can't we have something that works automatically?
+>=20
+> It can be a sanity check. When a SoC comes with bus gate
+> support but no apb is provided, there's something wrong.
+>=20
+>>
+>> if (node has clock-names property)		(A)
+>> 	use clocks as enumerated and named there
+>> else if (node has one clock reference)		(B)
+>> 	use this as gate clock, no debounce support
+>> else if (node has no clock property at all)	(C)
+>> 	no gate clock needed, no debounce support
+>=20
+> This should not happen in practice, as no gate clock is implemented
+> after debounce.
 
-We're already doing it for reg and interrupts for example, why not for
-the clocks?
+But still you seem to somewhat support it with your changes above - by
+bailing out if there aren't two clocks.
+This kind of explicitly checking for a certain number of clocks sounds
+not very robust and future proof to me, hence the suggestion to get rid
+of it.
 
-> > Unless you are fully trusting the device tree to be correct.
-> 
-> Sorry, but what else do we trust?
-> 
-> > IMHO that makes for hard to find bugs during SoC bringup.
-> 
-> I am not sure if that is really an issue. I would expect people
-> doing SoC bringup to be able to cope with those kinds of problems.
+Cheers,
+Andre.
 
-Riiiight, because it worked so well in the past. We definitely didn't
-overlooked some clocks used for debouncing in this particular driver,
-or some to get the timekeeping right in the RTC.
+>>
+>> On top of that we should add the clock-names property to all DTs, even
+>> for those with only a "apb" clock. Shouldn't hurt existing kernels.
+>> Possibly even add debounce support for those on the way, if applicable.
+>>
+>> So we would just support case (B) and (C) for legacy reasons.
+>>
+>> Does that make sense?
+>>
+>> Cheers,
+>> Andre.
+>>
+>>> +		clk =3D devm_clk_get(&pdev->dev, NULL);
+>>> +		if (IS_ERR(clk)) {
+>>> +			ret =3D PTR_ERR(clk);
+>>> +			goto gpiochip_error;
+>>> +		}
+>>> =20
+>>> -	ret =3D clk_prepare_enable(clk);
+>>> -	if (ret)
+>>> -		goto gpiochip_error;
+>>> +		ret =3D clk_prepare_enable(clk);
+>>> +		if (ret)
+>>> +			goto gpiochip_error;
+>>> +	} else {
+>>> +		clk =3D NULL;
+>>> +	}
+>>> =20
+>>>  	pctl->irq =3D devm_kcalloc(&pdev->dev,
+>>>  				 pctl->desc->irq_banks,
+>>> @@ -1425,7 +1434,8 @@ int sunxi_pinctrl_init_with_variant(struct
+>> platform_device *pdev,
+>>>  	return 0;
+>>> =20
+>>>  clk_error:
+>>> -	clk_disable_unprepare(clk);
+>>> +	if (clk)
+>>> +		clk_disable_unprepare(clk);
+>>>  gpiochip_error:
+>>>  	gpiochip_remove(pctl->chip);
+>>>  	return ret;
+>>> diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.h
+>> b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
+>>> index 11b128f54ed2..ccb6230f0bb5 100644
+>>> --- a/drivers/pinctrl/sunxi/pinctrl-sunxi.h
+>>> +++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
+>>> @@ -113,6 +113,7 @@ struct sunxi_pinctrl_desc {
+>>>  	unsigned			irq_bank_base;
+>>>  	bool				irq_read_needs_mux;
+>>>  	bool				disable_strict_mode;
+>>> +	bool				without_bus_gate;
+>>>  };
+>>> =20
+>>>  struct sunxi_pinctrl_function {
+>>>
 
-The argument that "anyone who codes in the kernel should just know
-better" doesn't work, on multiple levels. Because anyone that actually
-knows better can make a mistake or overlook some feature (because you
-didn't have your morning coffee yet, or because it was undocumented)
-and because you just make someone that doesn't feel bad.
-
-So, yes, we cannot not trust the device tree. But if we have a way to
-detect simple mistakes in the binding, we should also do it.
-
-Maxime
-
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---7drrvdoa2nxa6d2m--
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
