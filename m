@@ -1,73 +1,50 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH V5 3/7] PCI: tegra: Remove PCI_REASSIGN_ALL_BUS flag for
- Tegra PCIe
-Date: Thu, 11 Jan 2018 13:49:25 +0000
-Message-ID: <20180111134925.GA10168@red-moon>
-References: <1515489577-2197-1-git-send-email-mmaddireddy@nvidia.com>
- <1515489577-2197-4-git-send-email-mmaddireddy@nvidia.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v7 2/2] mfd: syscon: Add hardware spinlock support
+Date: Thu, 11 Jan 2018 15:27:54 +0100
+Message-ID: <CAK8P3a1SzecTF4-RbcwFpQ5fgH8t6aLLqD+OC0BizeOVdcLs6Q@mail.gmail.com>
+References: <29fa88f883dae4c1f8a3acb2656cbd7c5a539d40.1514180039.git.baolin.wang@linaro.org>
+ <a878ad35d9f38c58d34dac0b331dca029b61a9b8.1514180039.git.baolin.wang@linaro.org>
+ <20180102153620.hhrbov2g5torajim@dell> <CAMz4kuKZjnMZYm59PBa8anfW6pcbgBh-_FDA-3ZKurLXmO6wSA@mail.gmail.com>
+ <20180111130833.gtspwn2pv6eozstk@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1515489577-2197-4-git-send-email-mmaddireddy@nvidia.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Manikanta Maddireddy <mmaddireddy@nvidia.com>, bhelgaas@google.com
-Cc: thierry.reding@gmail.com, cyndis@kapsi.fi, jonathanh@nvidia.com, robh+dt@kernel.org, frowand.list@gmail.com, rjw@rjwysocki.net, tglx@linutronix.de, vidyas@nvidia.com, kthota@nvidia.com, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180111130833.gtspwn2pv6eozstk@dell>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Bjorn,
+On Thu, Jan 11, 2018 at 2:08 PM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Thu, 11 Jan 2018, Baolin Wang wrote:
+>
+>> Hi Arnd,
+>>
+>> On 2 January 2018 at 23:36, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> > Arnd,
+>> >
+>> >> Some system control registers need hardware spinlock to synchronize
+>> >> between the multiple subsystems, so we should add hardware spinlock
+>> >> support for syscon.
+>> >>
+>> >> Signed-off-by: Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> >> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> >
+>> > ... did you sign off on this in the end?
+>> >
+>>
+>> Could you apply this patch if there are no other issue? Thanks.
+>
+> Arnd is the expert in this area.
+>
+> Ideally I'd like his Ack before applying the patch.
 
-On Tue, Jan 09, 2018 at 02:49:33PM +0530, Manikanta Maddireddy wrote:
-> Primary, secondary and subordinate default bus numbers are 0 in Tegra and
-> it is expecting SW to program these numbers in configration space.
-> 
-> pci_scan_bridge_extend() function programs these numbers in configuration
-> space if secondary & subordinate bus numbers are 0 or PCI_REASSIGN_ALL_BUS
-> flag is set. Since secondary & subordinate default bus numbers are 0,
-> PCI_REASSIGN_ALL_BUS flag can be removed for Tegra PCIe.
-> 
-> Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-> Acked-by: Thierry Reding <treding@nvidia.com>
+Reviewed-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 
-Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Sorry for missing the latest version, this looks good to me.
 
-Would you mind applying this patch (NB: it is the patch in the v5
-version - this patch - not the one in v6 that is a rebased version):
-
-https://patchwork.ozlabs.org/patch/857318/
-
-to your pci/resource branch please (there is a dependency) ?
-
-This would allow me to apply the rest of the patches in the series
-that I consider mergeable independently of your tree branches, to
-simplify the dependency.
-
-Thanks !
-Lorenzo
-
-> ---
-> V3:
-> * new patch in V3
-> V4:
-> * no change in this patch
-> V5:
-> * no change in this patch
-> 
->  drivers/pci/host/pci-tegra.c | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/drivers/pci/host/pci-tegra.c b/drivers/pci/host/pci-tegra.c
-> index d790a26ad87e..e4b47ebc91fe 100644
-> --- a/drivers/pci/host/pci-tegra.c
-> +++ b/drivers/pci/host/pci-tegra.c
-> @@ -2293,7 +2293,6 @@ static int tegra_pcie_probe(struct platform_device *pdev)
->  
->  	tegra_pcie_enable_ports(pcie);
->  
-> -	pci_add_flags(PCI_REASSIGN_ALL_BUS);
->  	host->busnr = pcie->busn.start;
->  	host->dev.parent = &pdev->dev;
->  	host->ops = &tegra_pcie_ops;
-> -- 
-> 2.1.4
-> 
+     Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
