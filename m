@@ -1,73 +1,59 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH linux dev-4.10 6/6] drivers/hwmon: Add a driver for a
- generic PECI hwmon
-Date: Thu, 11 Jan 2018 14:22:48 +0100
-Message-ID: <CAK8P3a0xyQQeyDdj8UEMgdGK13jisvo5rOkGbi-wWYZA5QFSMQ@mail.gmail.com>
-References: <20180109223126.13093-1-jae.hyun.yoo@linux.intel.com>
- <20180109223126.13093-7-jae.hyun.yoo@linux.intel.com> <CAK8P3a31+9HGQ=fQby5Zi1RZ671hKraZP_2ggLTMX3qvOiTx0w@mail.gmail.com>
- <bdc0375d-c379-6c2e-b350-76741afe151d@linux.intel.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v5 2/2] media: V3s: Add support for
+ Allwinner CSI.
+Date: Thu, 11 Jan 2018 14:28:44 +0100
+Message-ID: <20180111132844.mok7upqjycpx3bqm@flea.lan>
+References: <1515639966-35902-1-git-send-email-yong.deng@magewell.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <bdc0375d-c379-6c2e-b350-76741afe151d@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Cc: Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, gregkh <gregkh@linuxfoundation.org>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org, DTML <devicetree@vger.kernel.org>, linux-hwmon@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="qi6zmi32vlsocdks"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBGGN3XJAKGQEEZIQLFY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <1515639966-35902-1-git-send-email-yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
+Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rick Chang <rick.chang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, megous@mego
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 11, 2018 at 12:45 AM, Jae Hyun Yoo
-<jae.hyun.yoo@linux.intel.com> wrote:
-> On 1/10/2018 4:29 AM, Arnd Bergmann wrote:
->>
->> On Tue, Jan 9, 2018 at 11:31 PM, Jae Hyun Yoo
->> <jae.hyun.yoo@linux.intel.com> wrote:
->>>
->>> This commit adds driver implementation for a generic PECI hwmon.
->>>
->>> Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
->>
->>
->>> +static int xfer_peci_msg(int cmd, void *pmsg)
->>> +{
->>> +       int rc;
->>> +
->>> +       mutex_lock(&peci_hwmon_lock);
->>> +       rc = peci_ioctl(NULL, cmd, (unsigned long)pmsg);
->>> +       mutex_unlock(&peci_hwmon_lock);
->>> +
->>> +       return rc;
->>> +}
->>
->>
->> I said earlier that peci_ioctl() looked unused, that was obviously
->> wrong, but what you have here
->> is not a proper way to abstract a bus.
->>
->> Maybe this can be done more like an i2c bus: make the peci controller
->> a bus device
->> and register all known target/index pairs as devices with the peci bus
->> type, and have
->> them probed from DT. The driver can then bind to each of those
->> individually.
->> Not sure if that is getting to granular at that point, I'd have to
->> understand better
->> how it is expected to get used, and what the variances are between
->> implementations.
->>
->
-> Thanks for sharing your opinion. In fact, this was also suggested by openbmc
-> community so I should consider of redesigning it. I'm currently thinking
-> about adding a new PECI device class as an abstract layer and any BMC
-> chipset specific driver could be attached to the PECI class driver. Then,
-> each CPU client could be registered as an individual device as you
-> suggested. Will consider your suggestion.
 
-Another idea might be to pretend that PECI was I2C. We already have a few
-drivers for hardware that is not I2C but whose software interface looks
-similar enough that it just works. No idea if that is the case for PECI, but
-xfer_peci_msg might be close enough to i2c_xfer to make it work. If you
-are able to do that, then the PECI controller would just register itself
-as an i2c controller and it can be accessed using /dev/i2c from user space
-or a high-level i2c_driver.
+--qi6zmi32vlsocdks
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-      Arnd
+Hi Yong,
+
+On Thu, Jan 11, 2018 at 11:06:06AM +0800, Yong Deng wrote:
+> Allwinner V3s SoC features two CSI module. CSI0 is used for MIPI CSI-2
+> interface and CSI1 is used for parallel interface. This is not
+> documented in datasheet but by test and guess.
+> 
+> This patch implement a v4l2 framework driver for it.
+> 
+> Currently, the driver only support the parallel interface. MIPI-CSI2,
+> ISP's support are not included in this patch.
+> 
+> Signed-off-by: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
+
+I've needed this patch in order to fix a NULL pointer dereference:
+http://code.bulix.org/oz6gmb-257359?raw
+
+This is needed because while it's ok to have a NULL pointer to
+v4l2_subdev_pad_config when you call the subdev set_fmt with
+V4L2_SUBDEV_FORMAT_ACTIVE, it's not with V4L2_SUBDEV_FORMAT_TRY, and
+sensors will assume taht it's a valid pointer.
+
+Otherwise,
+Tested-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--qi6zmi32vlsocdks--
