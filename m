@@ -1,44 +1,40 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [PATCH linux dev-4.10 3/6] drivers/misc: Add driver for Aspeed
- PECI and generic PECI headers
-Date: Thu, 11 Jan 2018 20:06:23 +1100
-Message-ID: <1515661583.31850.34.camel@kernel.crashing.org>
-References: <20180109223126.13093-1-jae.hyun.yoo@linux.intel.com>
- <20180109223126.13093-4-jae.hyun.yoo@linux.intel.com>
+From: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] ARM64: dts: meson-axg: add RMII pins for ethernet
+ controller
+Date: Thu, 11 Jan 2018 17:11:39 +0800
+Message-ID: <2fa28259-cce9-37fc-3bcd-6017a35a052a@amlogic.com>
+References: <20180111030411.197054-1-yixun.lan@amlogic.com>
+ <1515659863.5048.112.camel@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180109223126.13093-4-jae.hyun.yoo@linux.intel.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>, joel@jms.id.au, andrew@aj.id.au, arnd@arndb.de, gregkh@linuxfoundation.org, jdelvare@suse.com, linux@roeck-us.net
-Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1515659863.5048.112.camel-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2018-01-09 at 14:31 -0800, Jae Hyun Yoo wrote:
-> +struct peci_rd_ia_msr_msg {
-> +       unsigned char target;
-> +       unsigned char thread_id;
-> +       unsigned short address;
-> +       unsigned long value;
-> +};
+Hi Jerome：
 
-Those types are representing messages on the wire ?
+On 01/11/18 16:37, Jerome Brunet wrote:
+> On Thu, 2018-01-11 at 11:04 +0800, Yixun Lan wrote:
+>> Comparing to RGMII interface, the RMII interface require few pins.
+>> So it's worth describing them here.
+>>
+>> Signed-off-by: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
+> 
+> The only axg platform we have upstream is the s400 and is using rgmii.
+> May I ask how this was tested ?
+> 
+It's true that S400 using RGMII interface.
 
-In that case those types aren't suitable. For example "long" will have
-a different size and alignment for 32 and 64-bit userspace. There are
-size-explicit userspace types available.
+but, we have customer using RTL8201FR-VB/VD which is a RMII PHY,
 
-Also I didn't see any endianness annotations in there. Is that expected
-? IE are those wire format packets ?
+This is actually tested with the 'eth_rmii_x_pins' group.
 
-Cheers,
-Ben.
+Yixun
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
