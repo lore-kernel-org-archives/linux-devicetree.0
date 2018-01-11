@@ -1,67 +1,62 @@
-From: JeffyChen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH 1/9] iommu/of: Drop early initialisation hooks
-Date: Thu, 11 Jan 2018 19:14:38 +0800
-Message-ID: <5A57471E.7020304@rock-chips.com>
-References: <20180111082229.24011-1-jeffy.chen@rock-chips.com>
-	<CGME20180111082537epcas3p274f6bfeb31f10742e8129dc0c877745e@epcas3p2.samsung.com>
-	<20180111082229.24011-2-jeffy.chen@rock-chips.com>
-	<60fdd375-ca74-0fea-c598-39a68b9e7735@samsung.com>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v2 0/2] media: ov7670: Implement mbus configuration
+Date: Thu, 11 Jan 2018 13:19:47 +0200
+Message-ID: <20180111111946.4ucvgkkhucdgnwyb@valkosipuli.retiisi.org.uk>
+References: <1515059553-10219-1-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <60fdd375-ca74-0fea-c598-39a68b9e7735-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1515059553-10219-1-git-send-email-jacopo+renesas@jmondi.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: corbet@lwn.net, mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Marek,
+Hi Jacopo,
 
-Thanks for your reply.
+On Thu, Jan 04, 2018 at 10:52:31AM +0100, Jacopo Mondi wrote:
+> Hello,
+>    this series adds mbus configuration properties to ov7670 sensor driver.
+> 
+> I have sent v1 a few days ago and forgot to cc device tree people. Doing it
+> now with bindings description and implementation split in 2 separate patches.
+> 
+> I have fixed Sakari's comment on v1, and I'm sending v2 out with support for
+> "pll-bypass" custom property as it was in v1. If we decide it is not worth
+> to make an OF property out of it, I will drop it in v3. Technically it is not
+> even an mbus configuration option, so I'm fine dropping it eventually.
+> 
+> Thanks
+>   j
+> 
+> v1->v2:
+> - Split bindings description and implementation
+> - Addressed Sakari's comments on v1
+> - Check for return values of register writes in set_fmt()
+> - TODO: decide if "pll-bypass" should be an OF property.
 
-On 01/11/2018 05:40 PM, Marek Szyprowski wrote:
-> Hi Jeffy,
->
-> On 2018-01-11 09:22, Jeffy Chen wrote:
->> With the probe-deferral mechanism, early initialisation hooks are no
->> longer needed.
->>
->> Suggested-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
->> Signed-off-by: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->> ---
->>
->>   drivers/iommu/arm-smmu-v3.c  |  2 +-
->>   drivers/iommu/arm-smmu.c     | 12 ++++++------
->>   drivers/iommu/exynos-iommu.c |  2 +-
->
-> For Exynos IOMMU:
-> Acked-by: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->
-> IPMMU and MSM IOMMU are no longer multi-platform safe after this patch.
-> It breaks them in the same way as my commit 928055a01b3f ("iommu/exynos:
-> Remove custom platform device registration code") broke Exynos IOMMU.
->
-> You need a similar fix for them:
-> https://www.spinics.net/lists/arm-kernel/msg627648.html
+The register lists in the sensor driver likely assume certain external clock
+frequency, and the pll-bypass bit can be used to avoid dividing this
+frequency by four.
 
-hmmm, right, i did saw this fix in the rockchip iommu driver too.
+As the driver should be aware of the actual clock frequency as well as the
+desired clock frequency, it should be possible for the driver to determine
+whether to divide the external clock frequency by four or not.
 
-and there're also some other iommu drivers put bus_set_iommu in their 
-probe() to avoid that.
+> 
+> Jacopo Mondi (2):
+>   v4l2: i2c: ov7670: Implement OF mbus configuration
+>   media: dt-bindings: Add OF properties to ov7670
+> 
+>  .../devicetree/bindings/media/i2c/ov7670.txt       |  14 +++
+>  drivers/media/i2c/ov7670.c                         | 124 ++++++++++++++++++---
+>  2 files changed, 124 insertions(+), 14 deletions(-)
+> 
+> --
+> 2.7.4
+> 
 
-maybe we can do it in the iommu framework?
-
-for example:
-1/ add a bus type member to struct iommu_device
-2/ and a iommu_device_set_bus()
-3/ do the bus_set_iommu stuff in iommu_device_register()
-4/ undo bus_set_iommu in iommu_device_unregister()
+-- 
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi
