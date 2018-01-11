@@ -1,63 +1,66 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 08/12] drm/sun4i: Add support for A83T second TCON
-Date: Thu, 11 Jan 2018 13:18:39 +0100
-Message-ID: <20180111121839.z2barh5shgfrfs3x@flea.lan>
-References: <20180110192512.19684-1-jernej.skrabec@siol.net>
- <20180110192512.19684-9-jernej.skrabec@siol.net>
+From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 1/9] iommu/of: Drop early initialisation hooks
+Date: Thu, 11 Jan 2018 12:24:11 +0000
+Message-ID: <faeccc75-79e9-ddb6-446d-88ab63fe4e1f@arm.com>
+References: <20180111082229.24011-1-jeffy.chen@rock-chips.com>
+	<CGME20180111082537epcas3p274f6bfeb31f10742e8129dc0c877745e@epcas3p2.samsung.com>
+	<20180111082229.24011-2-jeffy.chen@rock-chips.com>
+	<60fdd375-ca74-0fea-c598-39a68b9e7735@samsung.com>
+	<5A57471E.7020304@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="yqyk7qmeenbq4if2"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20180110192512.19684-9-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Cc: airlied-cv59FeDIM0c@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <5A57471E.7020304-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Language: en-GB
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: JeffyChen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
---yqyk7qmeenbq4if2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Jan 10, 2018 at 08:25:08PM +0100, Jernej Skrabec wrote:
-> This TCON is connected to HDMI encoder.
->=20
-> Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-
-Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-
-Thanks!
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---yqyk7qmeenbq4if2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlpXVh4ACgkQ0rTAlCFN
-r3QWjg/9ERz2Z9SgOodVXhoBLT/K/URDsT4+bjBTzc5OvkXQSWK+QB4P2KhEGWsg
-8uDy38AdMEghM3g63yOttC11glw0RBUCfTxPN4Ccu9n1hi4CkTaHqfFM/ZyurRri
-NIa2+mwhIaiOlPHAozjrldH/ous7rLgcwDLoSE8DTuKw9kfm0dmVLB/mxTYk+2fK
-vgQfbKeZRKIKfpPS43f/YEzUqm0/w8HuV5UnWPy42vfPUlwJIv38/Z/TdoVAoDSz
-DKu47MX/DwqLKBvKbadbuSuUY/v5xeoBKQh1ToFbfA9eT5ws89Kz8WMerp5vnRMy
-5ojJlQb1t1OnMlIUUlbhENjlJM7SKBtYGE3kZ8O6ezBSsiJR8/HPtnbrgHuGOpf3
-4YwOg30iIOb5xhvwCFqQGTQ64d1Kw12U3dpJLpdnSyHoBN2nU1FXv9CWMls8faf4
-5tkP+0DxIDymyst8vgPutQBKEwj+8u49q7PvZKk0+0ityKdhgAVtTqrUrZyEacQ1
-FD8NJkyqTCGweHBY6zhHGepuZjehLmFzHDUJ6v6cah/dc9HaRxRWF0sKVCXHNmS6
-YqT66rKAHpGX52uDVseLKlqkxUyctYxSU5h/4hm+7AKzc02M0ZOTleQ9dG18TUX0
-gvbM5Cyw8VVpqKYPA0kPrh1rRcQsoM4B4bIYoODdo/mRlkcgfj4=
-=k3vJ
------END PGP SIGNATURE-----
-
---yqyk7qmeenbq4if2--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgSmVmZnksCgpPbiAxMS8wMS8xOCAxMToxNCwgSmVmZnlDaGVuIHdyb3RlOgo+IEhpIE1hcmVr
+LAo+IAo+IFRoYW5rcyBmb3IgeW91ciByZXBseS4KPiAKPiBPbiAwMS8xMS8yMDE4IDA1OjQwIFBN
+LCBNYXJlayBTenlwcm93c2tpIHdyb3RlOgo+PiBIaSBKZWZmeSwKPj4KPj4gT24gMjAxOC0wMS0x
+MSAwOToyMiwgSmVmZnkgQ2hlbiB3cm90ZToKPj4+IFdpdGggdGhlIHByb2JlLWRlZmVycmFsIG1l
+Y2hhbmlzbSwgZWFybHkgaW5pdGlhbGlzYXRpb24gaG9va3MgYXJlIG5vCj4+PiBsb25nZXIgbmVl
+ZGVkLgo+Pj4KPj4+IFN1Z2dlc3RlZC1ieTogUm9iaW4gTXVycGh5IDxyb2Jpbi5tdXJwaHlAYXJt
+LmNvbT4KCkluIGZhY3QsIHNob3J0bHkgYWZ0ZXIgSSBzYWlkIHRoYXQgSSBoYWQgYSAiaG93IGhh
+cmQgY2FuIGl0IGJlPyIgbW9tZW50IAphbmQgdG9vayBhIGNyYWNrIGF0IGl0IG15c2VsZiAtIHNv
+cnJ5LCBJIHNob3VsZCBwcm9iYWJseSBoYXZlIGNjJ2QgeW91IApvbiB0aGF0IHNlcmllc1sxXS4K
+Cj4+PiBTaWduZWQtb2ZmLWJ5OiBKZWZmeSBDaGVuIDxqZWZmeS5jaGVuQHJvY2stY2hpcHMuY29t
+Pgo+Pj4gLS0tCj4+Pgo+Pj4gwqAgZHJpdmVycy9pb21tdS9hcm0tc21tdS12My5jwqAgfMKgIDIg
+Ky0KPj4+IMKgIGRyaXZlcnMvaW9tbXUvYXJtLXNtbXUuY8KgwqDCoMKgIHwgMTIgKysrKysrLS0t
+LS0tCj4+PiDCoCBkcml2ZXJzL2lvbW11L2V4eW5vcy1pb21tdS5jIHzCoCAyICstCj4+Cj4+IEZv
+ciBFeHlub3MgSU9NTVU6Cj4+IEFja2VkLWJ5OiBNYXJlayBTenlwcm93c2tpIDxtLnN6eXByb3dz
+a2lAc2Ftc3VuZy5jb20+Cj4+Cj4+IElQTU1VIGFuZCBNU00gSU9NTVUgYXJlIG5vIGxvbmdlciBt
+dWx0aS1wbGF0Zm9ybSBzYWZlIGFmdGVyIHRoaXMgcGF0Y2guCj4+IEl0IGJyZWFrcyB0aGVtIGlu
+IHRoZSBzYW1lIHdheSBhcyBteSBjb21taXQgOTI4MDU1YTAxYjNmICgiaW9tbXUvZXh5bm9zOgo+
+PiBSZW1vdmUgY3VzdG9tIHBsYXRmb3JtIGRldmljZSByZWdpc3RyYXRpb24gY29kZSIpIGJyb2tl
+IEV4eW5vcyBJT01NVS4KPj4KPj4gWW91IG5lZWQgYSBzaW1pbGFyIGZpeCBmb3IgdGhlbToKPj4g
+aHR0cHM6Ly93d3cuc3Bpbmljcy5uZXQvbGlzdHMvYXJtLWtlcm5lbC9tc2c2Mjc2NDguaHRtbAo+
+IAo+IGhtbW0sIHJpZ2h0LCBpIGRpZCBzYXcgdGhpcyBmaXggaW4gdGhlIHJvY2tjaGlwIGlvbW11
+IGRyaXZlciB0b28uCj4gCj4gYW5kIHRoZXJlJ3JlIGFsc28gc29tZSBvdGhlciBpb21tdSBkcml2
+ZXJzIHB1dCBidXNfc2V0X2lvbW11IGluIHRoZWlyIAo+IHByb2JlKCkgdG8gYXZvaWQgdGhhdC4K
+PiAKPiBtYXliZSB3ZSBjYW4gZG8gaXQgaW4gdGhlIGlvbW11IGZyYW1ld29yaz8KPiAKPiBmb3Ig
+ZXhhbXBsZToKPiAxLyBhZGQgYSBidXMgdHlwZSBtZW1iZXIgdG8gc3RydWN0IGlvbW11X2Rldmlj
+ZQo+IDIvIGFuZCBhIGlvbW11X2RldmljZV9zZXRfYnVzKCkKPiAzLyBkbyB0aGUgYnVzX3NldF9p
+b21tdSBzdHVmZiBpbiBpb21tdV9kZXZpY2VfcmVnaXN0ZXIoKQo+IDQvIHVuZG8gYnVzX3NldF9p
+b21tdSBpbiBpb21tdV9kZXZpY2VfdW5yZWdpc3RlcigpCgpVbHRpbWF0ZWx5IHdlJ2QgbGlrZSB0
+byBnZXQgcmlkIG9mIHRoZSBidXMgcmVsYXRpb25zaGlwIGFsdG9nZXRoZXIsIHNvIEkgCmRvbid0
+IHRoaW5rIGl0J3MgcmVhbGx5IHdvcnRoIGFkZGluZyBtb3JlIGluZnJhc3RydWN0dXJlIGFyb3Vu
+ZCBpdC4gCkhhdmluZyBvZi1pb21tdS1iYXNlZCBkcml2ZXJzIHNldCBidXMgb3BzIGF0IHByb2Jl
+IHRpbWUsIGFuZCBvdGhlcnMgCmNvbmRpdGlvbmFsbHkgZnJvbSBhbiBpbml0Y2FsbCwgaXMgcHJl
+dHR5IGNsZWFuIGFuZCBzaW1wbGUsIHNvIEknZCAKcmF0aGVyIHN0aWNrIHdpdGggdGhhdCBhcHBy
+b2FjaCBmb3Igbm93LgoKUm9iaW4uCgpbMV0gCmh0dHBzOi8vbGlzdHMubGludXhmb3VuZGF0aW9u
+Lm9yZy9waXBlcm1haWwvaW9tbXUvMjAxOC1KYW51YXJ5LzAyNTM5NS5odG1sCl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmlvbW11IG1haWxpbmcgbGlzdApp
+b21tdUBsaXN0cy5saW51eC1mb3VuZGF0aW9uLm9yZwpodHRwczovL2xpc3RzLmxpbnV4Zm91bmRh
+dGlvbi5vcmcvbWFpbG1hbi9saXN0aW5mby9pb21tdQ==
