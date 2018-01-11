@@ -1,38 +1,83 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 2/3] dt-bindings: usb: renesas_usbhs: Add support for
- RZ/A1
-Date: Thu, 11 Jan 2018 15:58:15 -0600
-Message-ID: <20180111215815.xqvtdjnbgvzoyx3g@rob-hp-laptop>
-References: <20180108123055.64890-1-chris.brandt@renesas.com>
- <20180108123055.64890-3-chris.brandt@renesas.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 02/16] dt-bindings: iio: adc: add binding for X-Powers
+ AXP PMICs ADC
+Date: Thu, 11 Jan 2018 16:07:36 -0600
+Message-ID: <20180111220736.xkcen5cr5cexihle@rob-hp-laptop>
+References: <cover.1e46d70f7931be8154b450a2fcdf066450a1aa6f.1515486346.git-series.quentin.schulz@free-electrons.com>
+ <bef3ba5e4a2c47f13fa9ba8e6fb0267b7bb15026.1515486346.git-series.quentin.schulz@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180108123055.64890-3-chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <bef3ba5e4a2c47f13fa9ba8e6fb0267b7bb15026.1515486346.git-series.quentin.schulz@free-electrons.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Quentin Schulz <quentin.schulz@free-electrons.com>
+Cc: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, mark.rutland@arm.com, wens@csie.org, sre@kernel.org, linux@armlinux.org.uk, maxime.ripard@free-electrons.com, lee.jones@linaro.org, linux-iio@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, thomas.petazzoni@free-electrons.com, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 08, 2018 at 07:30:54AM -0500, Chris Brandt wrote:
-> Document support for RZ/A1 SoCs
+On Tue, Jan 09, 2018 at 10:33:33AM +0100, Quentin Schulz wrote:
+> X-Powers PMICs have several ADC channels that can be used for different
+> purposes, e.g. PMIC internal temperature, battery voltage or AC current.
 > 
-> Signed-off-by: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+> This is the documentation for AXP209, AXP221/223 ADC bindings.
+> 
+> Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
 > ---
-> v4:
->  * Re-added "renesas,usbhs-r7s72100"
-> v3:
->  * Removed "renesas,usbhs-r7s72100"
-> v2:
->  * Added Reviewed-by
-> ---
->  Documentation/devicetree/bindings/usb/renesas_usbhs.txt | 2 ++
->  1 file changed, 2 insertions(+)
+>  Documentation/devicetree/bindings/iio/adc/axp20x_adc.txt | 39 +++++++++-
+>  1 file changed, 39 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/axp20x_adc.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/axp20x_adc.txt b/Documentation/devicetree/bindings/iio/adc/axp20x_adc.txt
+> new file mode 100644
+> index 0000000..ed6d04e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/adc/axp20x_adc.txt
+> @@ -0,0 +1,39 @@
+> +* X-Powers AXP ADC bindings
+> +
+> +Required properties:
+> +  - compatible: should be one of:
+> +    - "x-powers,axp20x-adc",
+> +    - "x-powers,axp22x-adc",
+> +  - #io-channel-cells: should be 1,
+> +
+> +Example:
+> +
+> +&axp22x {
+> +	axp_adc: axp-adc {
 
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+adc {
+
+With that,
+
+Reviewed-by: Rob Herring <robh@kernel.org>
+
+> +		compatible = "x-powers,axp22x-adc";
+> +		#io-channel-cells = <1>;
+> +	};
+> +};
+> +
+> +ADC channels and their indexes per variant:
+> +
+> +AXP209
+> +------
+> + 0 | acin_v
+> + 1 | acin_i
+> + 2 | vbus_v
+> + 3 | vbus_i
+> + 4 | pmic_temp
+> + 5 | gpio0_v
+> + 6 | gpio1_v
+> + 7 | ipsout_v
+> + 8 | batt_v
+> + 9 | batt_chrg_i
+> +10 | batt_dischrg_i
+> +
+> +AXP22x
+> +------
+> + 0 | pmic_temp
+> + 1 | batt_v
+> + 2 | batt_chrg_i
+> + 3 | batt_dischrg_i
+> -- 
+> git-series 0.9.1
