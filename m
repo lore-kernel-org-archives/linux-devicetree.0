@@ -1,52 +1,36 @@
-From: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v3 5/5] ARM64: dts: meson-axg: enable the UART_A controller
-Date: Thu, 11 Jan 2018 10:34:01 +0800
-Message-ID: <20180111023401.125658-6-yixun.lan@amlogic.com>
-References: <20180111023401.125658-1-yixun.lan@amlogic.com>
+From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Subject: Re: [PATCH v5 01/44] dt-bindings: clock: Add new bindings for TI
+ Davinci PLL clocks
+Date: Wed, 10 Jan 2018 20:50:25 -0600
+Message-ID: <fd162516-cddc-e857-ce60-2cd89303971e@lechnology.com>
+References: <1515377863-20358-1-git-send-email-david@lechnology.com>
+ <1515377863-20358-2-git-send-email-david@lechnology.com>
+ <ebd677dc-44a4-5053-2509-e3ee948ccf98@ti.com>
+ <22409e49-5c14-4068-b137-7535afaf90d7@lechnology.com>
+ <0f90b5f7-f21e-5f81-1154-9a815bbb786d@ti.com>
+ <ba7fa842-cfc5-6f6f-f9bf-09c74ab08ec2@lechnology.com>
+ <5aacc350-6236-2e4f-35bb-a681fc9d47e7@ti.com>
+ <CAHCN7x+ZYezmEU_0mF=6_gF14DZxKnuDp1Cx=aC2=eN_QLNdJQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180111023401.125658-1-yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <CAHCN7x+ZYezmEU_0mF=6_gF14DZxKnuDp1Cx=aC2=eN_QLNdJQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Adam Ford <aford173-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The UART_A is connected to a BT module on the S400 board.
+On 01/10/2018 04:24 PM, Adam Ford wrote:
+> 
+> I am available tomorrow to build and test patches against the
+> da850-evm.  I just need to know which version(s) to test.
 
-Acked-by: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Signed-off-by: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
----
- arch/arm64/boot/dts/amlogic/meson-axg-s400.dts | 7 +++++++
- 1 file changed, 7 insertions(+)
+Great. As per the cover letter:
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-index 9c1b78028ccb..d56894dbb209 100644
---- a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-@@ -14,6 +14,7 @@
- 
- 	aliases {
- 		serial0 = &uart_AO;
-+		serial1 = &uart_A;
- 	};
- };
- 
-@@ -24,6 +25,12 @@
- 	pinctrl-names = "default";
- };
- 
-+&uart_A {
-+	status = "okay";
-+	pinctrl-0 = <&uart_a_pins>;
-+	pinctrl-names = "default";
-+};
-+
- &uart_AO {
- 	status = "okay";
- 	pinctrl-0 = <&uart_ao_a_pins>;
--- 
-2.15.1
+You can find a working branch with everything included in the "common-clk-v5"
+branch of https://github.com/dlech/ev3dev-kernel.git.
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
