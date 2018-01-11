@@ -1,98 +1,203 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH 2/3] drm: rcar-du: add model field to struct
- rcar_du_device_info
-Date: Thu, 11 Jan 2018 19:54:34 +0300
-Message-ID: <20180111170059.858419764@cogentembedded.com>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH 1/3] drm: rcar-du: lvds: refactor LVDS startup
+Date: Thu, 11 Jan 2018 19:54:33 +0300
+Message-ID: <20180111170055.878913975@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline;
- filename=drm-rcar-du-add-model-field-to-struct-rcar_du_device_info.patch
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Content-Type: text/plain; charset=ISO-8859-15
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline; filename=drm-rcar-du-lvds-refactor-LVDS-startup.patch
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SW4gb3JkZXIgdG8gYWRkIHRoZSBSLUNhciBWM00gKFI4QTc3OTcwKSBzdXBwb3J0IHRvIHRoZSBE
-VSBkcml2ZXIgd2UnZCBuZWVkCnRvIGtlZXAgIHRyYWNrICBub3Qgb25seSAgb2YgdGhlIFNvQyBn
-ZW5lcmF0aW9uIGJ1dCBhbHNvIG9mIHRoZSBleGFjdCBtb2RlbAooZm9yIHRoZSBMVkRTIGVuY29k
-ZXIgc3VwcG9ydCkuICBUaGVyZWZvcmUgYWRkIHRoZSAnbW9kZWwnICBmaWVsZCAgdG8gdGhlCidz
-dHJ1Y3QgcmNhcl9kdV9kZXZpY2VfaW5mbycgYW5kIGluaXRpYWxpemUgaXQgYWNjb3JkaW5nbHkg
-IGZvciB0aGUgYWxyZWFkeQpzdXBwb3J0ZWQgU29Dcy4KClNpZ25lZC1vZmYtYnk6IFNlcmdlaSBT
-aHR5bHlvdiA8c2VyZ2VpLnNodHlseW92QGNvZ2VudGVtYmVkZGVkLmNvbT4KCi0tLQogZHJpdmVy
-cy9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV9kcnYuYyB8ICAgIDkgKysrKysrKysrCiBkcml2ZXJz
-L2dwdS9kcm0vcmNhci1kdS9yY2FyX2R1X2Rydi5oIHwgICAxNCArKysrKysrKysrKysrKwogMiBm
-aWxlcyBjaGFuZ2VkLCAyMyBpbnNlcnRpb25zKCspCgpJbmRleDogbGludXgvZHJpdmVycy9ncHUv
-ZHJtL3JjYXItZHUvcmNhcl9kdV9kcnYuYwo9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09Ci0tLSBsaW51eC5vcmlnL2RyaXZl
-cnMvZ3B1L2RybS9yY2FyLWR1L3JjYXJfZHVfZHJ2LmMKKysrIGxpbnV4L2RyaXZlcnMvZ3B1L2Ry
-bS9yY2FyLWR1L3JjYXJfZHVfZHJ2LmMKQEAgLTM3LDYgKzM3LDcgQEAKIAogc3RhdGljIGNvbnN0
-IHN0cnVjdCByY2FyX2R1X2RldmljZV9pbmZvIHJ6ZzFfZHVfcjhhNzc0M19pbmZvID0gewogCS5n
-ZW4gPSAyLAorCS5tb2RlbCA9IFI4QTc3NDMsCiAJLmZlYXR1cmVzID0gUkNBUl9EVV9GRUFUVVJF
-X0NSVENfSVJRX0NMT0NLCiAJCSAgfCBSQ0FSX0RVX0ZFQVRVUkVfRVhUX0NUUkxfUkVHUywKIAku
-bnVtX2NydGNzID0gMiwKQEAgLTU4LDYgKzU5LDcgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCByY2Fy
-X2R1X2RldmljZV9pbmZvCiAKIHN0YXRpYyBjb25zdCBzdHJ1Y3QgcmNhcl9kdV9kZXZpY2VfaW5m
-byByemcxX2R1X3I4YTc3NDVfaW5mbyA9IHsKIAkuZ2VuID0gMiwKKwkubW9kZWwgPSBSOEE3NzQ1
-LAogCS5mZWF0dXJlcyA9IFJDQVJfRFVfRkVBVFVSRV9DUlRDX0lSUV9DTE9DSwogCQkgIHwgUkNB
-Ul9EVV9GRUFUVVJFX0VYVF9DVFJMX1JFR1MsCiAJLm51bV9jcnRjcyA9IDIsCkBAIC03OSw2ICs4
-MSw3IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgcmNhcl9kdV9kZXZpY2VfaW5mbwogCiBzdGF0aWMg
-Y29uc3Qgc3RydWN0IHJjYXJfZHVfZGV2aWNlX2luZm8gcmNhcl9kdV9yOGE3Nzc5X2luZm8gPSB7
-CiAJLmdlbiA9IDIsCisJLm1vZGVsID0gUjhBNzc3OSwKIAkuZmVhdHVyZXMgPSAwLAogCS5udW1f
-Y3J0Y3MgPSAyLAogCS5yb3V0ZXMgPSB7CkBAIC0xMDAsNiArMTAzLDcgQEAgc3RhdGljIGNvbnN0
-IHN0cnVjdCByY2FyX2R1X2RldmljZV9pbmZvCiAKIHN0YXRpYyBjb25zdCBzdHJ1Y3QgcmNhcl9k
-dV9kZXZpY2VfaW5mbyByY2FyX2R1X3I4YTc3OTBfaW5mbyA9IHsKIAkuZ2VuID0gMiwKKwkubW9k
-ZWwgPSBSOEE3NzkwLAogCS5mZWF0dXJlcyA9IFJDQVJfRFVfRkVBVFVSRV9DUlRDX0lSUV9DTE9D
-SwogCQkgIHwgUkNBUl9EVV9GRUFUVVJFX0VYVF9DVFJMX1JFR1MsCiAJLnF1aXJrcyA9IFJDQVJf
-RFVfUVVJUktfQUxJR05fMTI4QiB8IFJDQVJfRFVfUVVJUktfTFZEU19MQU5FUywKQEAgLTEyOCw2
-ICsxMzIsNyBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IHJjYXJfZHVfZGV2aWNlX2luZm8KIC8qIE0y
-LVcgKHI4YTc3OTEpIGFuZCBNMi1OIChyOGE3NzkzKSBhcmUgaWRlbnRpY2FsICovCiBzdGF0aWMg
-Y29uc3Qgc3RydWN0IHJjYXJfZHVfZGV2aWNlX2luZm8gcmNhcl9kdV9yOGE3NzkxX2luZm8gPSB7
-CiAJLmdlbiA9IDIsCisJLm1vZGVsID0gUjhBNzc5MSwKIAkuZmVhdHVyZXMgPSBSQ0FSX0RVX0ZF
-QVRVUkVfQ1JUQ19JUlFfQ0xPQ0sKIAkJICB8IFJDQVJfRFVfRkVBVFVSRV9FWFRfQ1RSTF9SRUdT
-LAogCS5udW1fY3J0Y3MgPSAyLApAQCAtMTUwLDYgKzE1NSw3IEBAIHN0YXRpYyBjb25zdCBzdHJ1
-Y3QgcmNhcl9kdV9kZXZpY2VfaW5mbwogCiBzdGF0aWMgY29uc3Qgc3RydWN0IHJjYXJfZHVfZGV2
-aWNlX2luZm8gcmNhcl9kdV9yOGE3NzkyX2luZm8gPSB7CiAJLmdlbiA9IDIsCisJLm1vZGVsID0g
-UjhBNzc5MiwKIAkuZmVhdHVyZXMgPSBSQ0FSX0RVX0ZFQVRVUkVfQ1JUQ19JUlFfQ0xPQ0sKIAkJ
-ICB8IFJDQVJfRFVfRkVBVFVSRV9FWFRfQ1RSTF9SRUdTLAogCS5udW1fY3J0Y3MgPSAyLApAQCAt
-MTY5LDYgKzE3NSw3IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgcmNhcl9kdV9kZXZpY2VfaW5mbwog
-CiBzdGF0aWMgY29uc3Qgc3RydWN0IHJjYXJfZHVfZGV2aWNlX2luZm8gcmNhcl9kdV9yOGE3Nzk0
-X2luZm8gPSB7CiAJLmdlbiA9IDIsCisJLm1vZGVsID0gUjhBNzc5NCwKIAkuZmVhdHVyZXMgPSBS
-Q0FSX0RVX0ZFQVRVUkVfQ1JUQ19JUlFfQ0xPQ0sKIAkJICB8IFJDQVJfRFVfRkVBVFVSRV9FWFRf
-Q1RSTF9SRUdTLAogCS5udW1fY3J0Y3MgPSAyLApAQCAtMTkxLDYgKzE5OCw3IEBAIHN0YXRpYyBj
-b25zdCBzdHJ1Y3QgcmNhcl9kdV9kZXZpY2VfaW5mbwogCiBzdGF0aWMgY29uc3Qgc3RydWN0IHJj
-YXJfZHVfZGV2aWNlX2luZm8gcmNhcl9kdV9yOGE3Nzk1X2luZm8gPSB7CiAJLmdlbiA9IDMsCisJ
-Lm1vZGVsID0gUjhBNzc5NSwKIAkuZmVhdHVyZXMgPSBSQ0FSX0RVX0ZFQVRVUkVfQ1JUQ19JUlFf
-Q0xPQ0sKIAkJICB8IFJDQVJfRFVfRkVBVFVSRV9FWFRfQ1RSTF9SRUdTCiAJCSAgfCBSQ0FSX0RV
-X0ZFQVRVUkVfVlNQMV9TT1VSQ0UsCkBAIC0yMjMsNiArMjMxLDcgQEAgc3RhdGljIGNvbnN0IHN0
-cnVjdCByY2FyX2R1X2RldmljZV9pbmZvCiAKIHN0YXRpYyBjb25zdCBzdHJ1Y3QgcmNhcl9kdV9k
-ZXZpY2VfaW5mbyByY2FyX2R1X3I4YTc3OTZfaW5mbyA9IHsKIAkuZ2VuID0gMywKKwkubW9kZWwg
-PSBSOEE3Nzk2LAogCS5mZWF0dXJlcyA9IFJDQVJfRFVfRkVBVFVSRV9DUlRDX0lSUV9DTE9DSwog
-CQkgIHwgUkNBUl9EVV9GRUFUVVJFX0VYVF9DVFJMX1JFR1MKIAkJICB8IFJDQVJfRFVfRkVBVFVS
-RV9WU1AxX1NPVVJDRSwKSW5kZXg6IGxpbnV4L2RyaXZlcnMvZ3B1L2RybS9yY2FyLWR1L3JjYXJf
-ZHVfZHJ2LmgKPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09PT09PQotLS0gbGludXgub3JpZy9kcml2ZXJzL2dwdS9kcm0vcmNhci1k
-dS9yY2FyX2R1X2Rydi5oCisrKyBsaW51eC9kcml2ZXJzL2dwdS9kcm0vcmNhci1kdS9yY2FyX2R1
-X2Rydi5oCkBAIC00OSw5ICs0OSwyMiBAQCBzdHJ1Y3QgcmNhcl9kdV9vdXRwdXRfcm91dGluZyB7
-CiAJdW5zaWduZWQgaW50IHBvcnQ7CiB9OwogCitlbnVtIHJjYXJfZHVfbW9kZWwgeworCVI4QTc3
-NDMsCisJUjhBNzc0NSwKKwlSOEE3Nzc5LAorCVI4QTc3OTAsCisJUjhBNzc5MSwKKwlSOEE3Nzky
-LAorCVI4QTc3OTQsCisJUjhBNzc5NSwKKwlSOEE3Nzk2LAorfTsKKwogLyoKICAqIHN0cnVjdCBy
-Y2FyX2R1X2RldmljZV9pbmZvIC0gRFUgbW9kZWwtc3BlY2lmaWMgaW5mb3JtYXRpb24KICAqIEBn
-ZW46IGRldmljZSBnZW5lcmF0aW9uICgyIG9yIDMpCisgKiBAbW9kZWw6IGRldmljZSBtb2RlbAog
-ICogQGZlYXR1cmVzOiBkZXZpY2UgZmVhdHVyZXMgKFJDQVJfRFVfRkVBVFVSRV8qKQogICogQHF1
-aXJrczogZGV2aWNlIHF1aXJrcyAoUkNBUl9EVV9RVUlSS18qKQogICogQG51bV9jcnRjczogdG90
-YWwgbnVtYmVyIG9mIENSVENzCkBAIC02MCw2ICs3Myw3IEBAIHN0cnVjdCByY2FyX2R1X291dHB1
-dF9yb3V0aW5nIHsKICAqLwogc3RydWN0IHJjYXJfZHVfZGV2aWNlX2luZm8gewogCXVuc2lnbmVk
-IGludCBnZW47CisJZW51bSByY2FyX2R1X21vZGVsIG1vZGVsOwogCXVuc2lnbmVkIGludCBmZWF0
-dXJlczsKIAl1bnNpZ25lZCBpbnQgcXVpcmtzOwogCXVuc2lnbmVkIGludCBudW1fY3J0Y3M7Cgpf
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwg
-bWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0
-cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+After the recent correction of the R-Car gen3 LVDCR1 value, already similar
+enough at their  ends rcar_du_lvdsenc_start_gen{2|3}() started asking for a
+merge and it's becoming actually necessary with the addition the R-Car V3M
+(R8A77970) support -- this  gen3 SoC  has gen2-like LVDPLLCR layout.
+
+BTW, such a merge saves 72 bytes of the object code with AArch64 gcc 4.8.5.
+
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+
+---
+ drivers/gpu/drm/rcar-du/rcar_du_lvdsenc.c |  132 ++++++++++++------------------
+ 1 file changed, 54 insertions(+), 78 deletions(-)
+
+Index: linux/drivers/gpu/drm/rcar-du/rcar_du_lvdsenc.c
+===================================================================
+--- linux.orig/drivers/gpu/drm/rcar-du/rcar_du_lvdsenc.c
++++ linux/drivers/gpu/drm/rcar-du/rcar_du_lvdsenc.c
+@@ -39,98 +39,41 @@ static void rcar_lvds_write(struct rcar_
+ 	iowrite32(data, lvds->mmio + reg);
+ }
+ 
+-static void rcar_du_lvdsenc_start_gen2(struct rcar_du_lvdsenc *lvds,
+-				       struct rcar_du_crtc *rcrtc)
++static u32 rcar_lvds_gen2_lvdpllcr(unsigned int freq)
+ {
+-	const struct drm_display_mode *mode = &rcrtc->crtc.mode;
+-	unsigned int freq = mode->clock;
+-	u32 lvdcr0;
+-	u32 pllcr;
++	u32 lvdpllcr;
+ 
+-	/* PLL clock configuration */
+ 	if (freq < 39000)
+-		pllcr = LVDPLLCR_CEEN | LVDPLLCR_COSEL | LVDPLLCR_PLLDLYCNT_38M;
++		lvdpllcr = LVDPLLCR_PLLDLYCNT_38M;
+ 	else if (freq < 61000)
+-		pllcr = LVDPLLCR_CEEN | LVDPLLCR_COSEL | LVDPLLCR_PLLDLYCNT_60M;
++		lvdpllcr = LVDPLLCR_PLLDLYCNT_60M;
+ 	else if (freq < 121000)
+-		pllcr = LVDPLLCR_CEEN | LVDPLLCR_COSEL | LVDPLLCR_PLLDLYCNT_121M;
++		lvdpllcr = LVDPLLCR_PLLDLYCNT_121M;
+ 	else
+-		pllcr = LVDPLLCR_PLLDLYCNT_150M;
+-
+-	rcar_lvds_write(lvds, LVDPLLCR, pllcr);
+-
+-	/*
+-	 * Select the input, hardcode mode 0, enable LVDS operation and turn
+-	 * bias circuitry on.
+-	 */
+-	lvdcr0 = (lvds->mode << LVDCR0_LVMD_SHIFT) | LVDCR0_BEN | LVDCR0_LVEN;
+-	if (rcrtc->index == 2)
+-		lvdcr0 |= LVDCR0_DUSEL;
+-	rcar_lvds_write(lvds, LVDCR0, lvdcr0);
++		return LVDPLLCR_PLLDLYCNT_150M;
+ 
+-	/* Turn all the channels on. */
+-	rcar_lvds_write(lvds, LVDCR1,
+-			LVDCR1_CHSTBY(3) | LVDCR1_CHSTBY(2) |
+-			LVDCR1_CHSTBY(1) | LVDCR1_CHSTBY(0) | LVDCR1_CLKSTBY);
+-
+-	/*
+-	 * Turn the PLL on, wait for the startup delay, and turn the output
+-	 * on.
+-	 */
+-	lvdcr0 |= LVDCR0_PLLON;
+-	rcar_lvds_write(lvds, LVDCR0, lvdcr0);
+-
+-	usleep_range(100, 150);
+-
+-	lvdcr0 |= LVDCR0_LVRES;
+-	rcar_lvds_write(lvds, LVDCR0, lvdcr0);
++	return lvdpllcr | LVDPLLCR_CEEN | LVDPLLCR_COSEL;
+ }
+ 
+-static void rcar_du_lvdsenc_start_gen3(struct rcar_du_lvdsenc *lvds,
+-				       struct rcar_du_crtc *rcrtc)
++static u32 rcar_lvds_gen3_lvdpllcr(unsigned int freq)
+ {
+-	const struct drm_display_mode *mode = &rcrtc->crtc.mode;
+-	unsigned int freq = mode->clock;
+-	u32 lvdcr0;
+-	u32 pllcr;
+-
+-	/* PLL clock configuration */
+ 	if (freq < 42000)
+-		pllcr = LVDPLLCR_PLLDIVCNT_42M;
++		return LVDPLLCR_PLLDIVCNT_42M;
+ 	else if (freq < 85000)
+-		pllcr = LVDPLLCR_PLLDIVCNT_85M;
++		return LVDPLLCR_PLLDIVCNT_85M;
+ 	else if (freq < 128000)
+-		pllcr = LVDPLLCR_PLLDIVCNT_128M;
+-	else
+-		pllcr = LVDPLLCR_PLLDIVCNT_148M;
+-
+-	rcar_lvds_write(lvds, LVDPLLCR, pllcr);
+-
+-	/* Turn all the channels on. */
+-	rcar_lvds_write(lvds, LVDCR1,
+-			LVDCR1_CHSTBY(3) | LVDCR1_CHSTBY(2) |
+-			LVDCR1_CHSTBY(1) | LVDCR1_CHSTBY(0) | LVDCR1_CLKSTBY);
+-
+-	/*
+-	 * Turn the PLL on, set it to LVDS normal mode, wait for the startup
+-	 * delay and turn the output on.
+-	 */
+-	lvdcr0 = (lvds->mode << LVDCR0_LVMD_SHIFT) | LVDCR0_PLLON;
+-	rcar_lvds_write(lvds, LVDCR0, lvdcr0);
+-
+-	lvdcr0 |= LVDCR0_PWD;
+-	rcar_lvds_write(lvds, LVDCR0, lvdcr0);
++		return LVDPLLCR_PLLDIVCNT_128M;
+ 
+-	usleep_range(100, 150);
+-
+-	lvdcr0 |= LVDCR0_LVRES;
+-	rcar_lvds_write(lvds, LVDCR0, lvdcr0);
++	return LVDPLLCR_PLLDIVCNT_148M;
+ }
+ 
+ static int rcar_du_lvdsenc_start(struct rcar_du_lvdsenc *lvds,
+ 				 struct rcar_du_crtc *rcrtc)
+ {
+-	u32 lvdhcr;
++	u32 lvdhcr, lvdpllcr, lvdcr0 = lvds->mode << LVDCR0_LVMD_SHIFT;
++	const struct drm_display_mode *mode = &rcrtc->crtc.mode;
++	unsigned int gen = lvds->dev->info->gen;
++	unsigned int freq = mode->clock;
+ 	int ret;
+ 
+ 	if (lvds->enabled)
+@@ -158,14 +101,47 @@ static int rcar_du_lvdsenc_start(struct
+ 	else
+ 		lvdhcr = LVDCHCR_CHSEL_CH(0, 0) | LVDCHCR_CHSEL_CH(1, 1)
+ 		       | LVDCHCR_CHSEL_CH(2, 2) | LVDCHCR_CHSEL_CH(3, 3);
+-
+ 	rcar_lvds_write(lvds, LVDCHCR, lvdhcr);
+ 
+-	/* Perform generation-specific initialization. */
+-	if (lvds->dev->info->gen < 3)
+-		rcar_du_lvdsenc_start_gen2(lvds, rcrtc);
++	/* PLL clock configuration */
++	if (gen < 3)
++		lvdpllcr = rcar_lvds_gen2_lvdpllcr(freq);
+ 	else
+-		rcar_du_lvdsenc_start_gen3(lvds, rcrtc);
++		lvdpllcr = rcar_lvds_gen3_lvdpllcr(freq);
++	rcar_lvds_write(lvds, LVDPLLCR,	lvdpllcr);
++
++	if (gen < 3) {
++		/*
++		 * Select the input, enable LVDS operation, and turn
++		 * the bias circuitry on.
++		 */
++		lvdcr0 |= LVDCR0_BEN | LVDCR0_LVEN;
++		if (rcrtc->index == 2)
++			lvdcr0 |= LVDCR0_DUSEL;
++		rcar_lvds_write(lvds, LVDCR0, lvdcr0);
++	}
++
++	/* Turn all the channels on. */
++	rcar_lvds_write(lvds, LVDCR1,
++			LVDCR1_CHSTBY(3) | LVDCR1_CHSTBY(2) |
++			LVDCR1_CHSTBY(1) | LVDCR1_CHSTBY(0) | LVDCR1_CLKSTBY);
++
++	/* Turn the PLL on. */
++	lvdcr0 |= LVDCR0_PLLON;
++	rcar_lvds_write(lvds, LVDCR0, lvdcr0);
++
++	if (gen > 2) {
++		/* Turn on the LVDS normal mode. */
++		lvdcr0 |= LVDCR0_PWD;
++		rcar_lvds_write(lvds, LVDCR0, lvdcr0);
++	}
++
++	/* Wait for the startup delay. */
++	usleep_range(100, 150);
++
++	/* Turn the output on. */
++	lvdcr0 |= LVDCR0_LVRES;
++	rcar_lvds_write(lvds, LVDCR0, lvdcr0);
+ 
+ 	lvds->enabled = true;
+ 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
