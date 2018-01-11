@@ -1,50 +1,92 @@
-From: Hugues FRUCHET <hugues.fruchet@st.com>
-Subject: Re: [PATCH v5 0/5] Add OV5640 parallel interface and RGB565/YUYV
- support
-Date: Thu, 11 Jan 2018 08:12:11 +0000
-Message-ID: <6661b493-5f2a-b201-390d-e3452e6873a0@st.com>
-References: <1514973452-10464-1-git-send-email-hugues.fruchet@st.com>
- <20180108153811.5xrvbaekm6nxtoa6@flea>
- <3010811e-ed37-4489-6a9f-6cc835f41575@st.com>
- <20180110153724.l77zpdgxfbzkznuf@flea>
- <2089de18-1f7f-6d6e-7aee-9dc424bca335@st.com>
- <20180110222508.4x5kimanevttmqis@valkosipuli.retiisi.org.uk>
+From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 00/10] Xilinx ZynqMP DisplayPort subsystem DRM KMS driver
+Date: Thu, 11 Jan 2018 09:16:08 +0100
+Message-ID: <1f0a0f73-4027-15c1-0dc8-7233d3ebe42a@xilinx.com>
+References: <1515117959-18068-1-git-send-email-hyun.kwon@xilinx.com>
+ <20180109095649.GK26573@phenom.ffwll.local>
+ <BY1PR0201MB10002CAFCC860052538BA14DD6160@BY1PR0201MB1000.namprd02.prod.outlook.com>
+ <20180111080738.GC13066@phenom.ffwll.local>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20180110222508.4x5kimanevttmqis@valkosipuli.retiisi.org.uk>
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180111080738.GC13066-dv86pmgwkMBes7Z6vYuT8azUEOm+Xw19@public.gmane.org>
 Content-Language: en-US
-Content-ID: <68291FD387E4D64286C641DCC30DDD75@st.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Yong Deng <yong.deng@magewell.com>, Steve Longerbeam <slongerbeam@gmail.com>, Hans Verkuil <hverkuil@xs4all.nl>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Hyun Kwon <hyunk-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgU2FrYXJpLA0KDQpPbiAwMS8xMC8yMDE4IDExOjI1IFBNLCBTYWthcmkgQWlsdXMgd3JvdGU6
-DQo+IEhpIEh1Z3VlcywNCj4gDQo+IE9uIFdlZCwgSmFuIDEwLCAyMDE4IGF0IDAzOjUxOjA3UE0g
-KzAwMDAsIEh1Z3VlcyBGUlVDSEVUIHdyb3RlOg0KPj4gR29vZCBuZXdzIE1heGltZSAhDQo+Pg0K
-Pj4gSGF2ZSB5b3Ugc2VlbiB0aGF0IHlvdSBjYW4gYWRhcHQgdGhlIHBvbGFyaXRpZXMgdGhyb3Vn
-aCBkZXZpY2V0cmVlID8NCj4+DQo+PiArICAgICAgICAgICAgICAgICAgICAgICAvKiBQYXJhbGxl
-bCBidXMgZW5kcG9pbnQgKi8NCj4+ICsgICAgICAgICAgICAgICAgICAgICAgIG92NTY0MF90b19w
-YXJhbGxlbDogZW5kcG9pbnQgew0KPj4gWy4uLl0NCj4+ICsgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgaHN5bmMtYWN0aXZlID0gPDA+Ow0KPj4gKyAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICB2c3luYy1hY3RpdmUgPSA8MD47DQo+PiArICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIHBjbGstc2FtcGxlID0gPDE+Ow0KPj4gKyAgICAgICAgICAgICAgICAgICAgICAgfTsN
-Cj4+DQo+PiBEb2luZyBzbyB5b3UgY2FuIGFkYXB0IHRvIHlvdXIgU29DL2JvYXJkIHNldHVwIGVh
-c2lseS4NCj4+DQo+PiBJZiB5b3UgZG9uJ3QgcHV0IHRob3NlIGxpbmVzIGluIGRldmljZXRyZWUs
-IHRoZSBvdjU2NDAgZGVmYXVsdCBpbml0DQo+PiBzZXF1ZW5jZSBpcyB1c2VkIHdoaWNoIHNldCB0
-aGUgcG9sYXJpdHkgYXMgZGVmaW5lZCBpbiBiZWxvdyBjb21tZW50Og0KPj4gb3Y1NjQwX3NldF9z
-dHJlYW1fZHZwKCkNCj4+IFsuLi5dDQo+PiArICAgICAgICAqIENvbnRyb2wgbGluZXMgcG9sYXJp
-dHkgY2FuIGJlIGNvbmZpZ3VyZWQgdGhyb3VnaA0KPj4gKyAgICAgICAgKiBkZXZpY2V0cmVlIGVu
-ZHBvaW50IGNvbnRyb2wgbGluZXMgcHJvcGVydGllcy4NCj4+ICsgICAgICAgICogSWYgbm8gZW5k
-cG9pbnQgY29udHJvbCBsaW5lcyBwcm9wZXJ0aWVzIGFyZSBzZXQsDQo+PiArICAgICAgICAqIHBv
-bGFyaXR5IHdpbGwgYmUgYXMgYmVsb3c6DQo+PiArICAgICAgICAqIC0gVlNZTkM6ICAgICBhY3Rp
-dmUgaGlnaA0KPj4gKyAgICAgICAgKiAtIEhSRUY6ICAgICAgYWN0aXZlIGxvdw0KPj4gKyAgICAg
-ICAgKiAtIFBDTEs6ICAgICAgYWN0aXZlIGxvdw0KPj4gKyAgICAgICAgKi8NCj4+IFsuLi5dDQo+
-IA0KPiBUaGUgcHJvcGVydGllcyBhcmUgYXQgdGhlIG1vbWVudCBkb2N1bWVudGVkIGFzIG1hbmRh
-dG9yeSBpbiBEVCBiaW5kaW5nDQo+IGRvY3VtZW50YXRpb24uDQo+IA0Kb2YgY291cnNlLCBpdCB3
-YXMganVzdCB0byBhc2sgTWF4aW1lIHRvIGNoZWNrIHRoZSBkZXZpY2V0cmVlIG9uIGl0cyANCnNp
-ZGUsIHRoZSBzeW1wdG9tIG9ic2VydmVkIGJ5IE1heGltZSB3aXRoIGhzeW5jL3ZzeW5jIGludmVy
-c2VkIGlzIHRoZSANCnNhbWUgdGhhbiB0aGUgb25lIG9ic2VydmVkIGlmIHdlIHN0aWNrIHRvIGp1
-c3QgZGVmYXVsdCBpbml0IHNlcXVlbmNlLg0KDQpCUiwNCkh1Z3Vlcy4=
+On 11.1.2018 09:07, Daniel Vetter wrote:
+> On Thu, Jan 11, 2018 at 02:07:08AM +0000, Hyun Kwon wrote:
+>> Hi Daniel,
+>>
+>>> -----Original Message-----
+>>> From: Daniel Vetter [mailto:daniel.vetter-/w4YWyX8dFk@public.gmane.org] On Behalf Of Daniel
+>>> Vetter
+>>> Sent: Tuesday, January 09, 2018 1:57 AM
+>>> To: Hyun Kwon <hyunk-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+>>> Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Michal
+>>> Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+>>> Subject: Re: [PATCH 00/10] Xilinx ZynqMP DisplayPort subsystem DRM
+>>> KMS driver
+>>>
+>>> On Thu, Jan 04, 2018 at 06:05:49PM -0800, Hyun Kwon wrote:
+>>>> Hi,
+>>>>
+>>>> This patchset adds the DRM KMS driver for Xilinx ZynqMP DisplayPort
+>>>> subsystem. The Xilinx ZynqMP SoC has a hardened full display pipeline
+>>>> which supports blending of up to 2 planes, and the encoder is
+>>>> DisplayPort v1.2 compatible.
+>>>>
+>>>> This series mainly includes 2 sets: Xilinx DRM KMS (patch 1/10 - 5/10)
+>>>> and ZynqMP DP subsystem drivers (patch 6/10 - 10/10).
+>>>>
+>>>> The Xilinx DRM KMS is intended as a common layer shared across other
+>>>> (upcoming) Xilinx sub-drivers. It helps sub-drivers for both hardened as
+>>>> well as soft IPs interoperate together.
+>>>>
+>>>> ZynqMP DP subsystem driver is a sub-driver that implements
+>>> corresponding
+>>>> drm objects (crtc, plane, encoder, connector,,,) for ZynqMP SoC display
+>>>> pipeline. The entire pipeline is mainly partitioned into 2 blocks:
+>>>> generic display logic (zynqmp_disp.c) such as blending, csc,,, and the
+>>>> DP transmitter logic (zynqmp_dp.c).
+>>>
+>>> I read through it all (well mostly the drm relevant bits, not your backend
+>>> code) and looks fairly resonable. Few minor clenaups and code removals
+>>> tbh.
+>>>
+>>> Wrt merging/maintianing, do you want to maintain it as part of the
+>>> drm-misc small drivers group? Highly recommended imo. See
+>>>
+>>> https://01.org/linuxgraphics/gfx-docs/maintainer-tools/drm-
+>>> misc.html#small-drivers
+>>>
+>>> for details. Ideally we'd need 2 xilinx maintainers to be able to push
+>>> patches & cross-review stuff.
+>>
+>> I don't have any preference on how to maintain, so I'll follow your
+>> suggestion. One thing that may be worth a note is that there is sizable
+>> amount of development within Xilinx, and those will come in near future
+>> (considering what can be done with FPGA :-)). I'll look for the 2nd
+>> reviewer, and specify that in the next patch if found.
+> 
+> If the xilinx activity gets too much we can always split things up again.
+> But if it's just the occasional burst (around a new product for example),
+> then drm-misc has ample of bandwidth to absorb that.
+> 
+> And yes the idea is very much that all regular contributors would have
+> commit rights too. All to reduce friction and make it easier to
+> contribute.
+
+Right now I think it is visible that everything needs to be reviewed
+properly to make sure that we are doing these stuff properly.
+This topic can be refreshed in future but I don't think we are there yet.
+
+Thanks,
+Michal
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
