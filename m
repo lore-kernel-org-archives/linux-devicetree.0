@@ -1,35 +1,32 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH v2 07/12] drm/sun4i: Add has_channel_0 TCON quirk
-Date: Thu, 11 Jan 2018 13:18:15 +0100
-Message-ID: <20180111121815.lzhfy7n7uppamznj@flea.lan>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 08/12] drm/sun4i: Add support for A83T second TCON
+Date: Thu, 11 Jan 2018 13:18:39 +0100
+Message-ID: <20180111121839.z2barh5shgfrfs3x@flea.lan>
 References: <20180110192512.19684-1-jernej.skrabec@siol.net>
- <20180110192512.19684-8-jernej.skrabec@siol.net>
+ <20180110192512.19684-9-jernej.skrabec@siol.net>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="zok6ncilkcjhhzzp"
-Return-path: <linux-clk-owner@vger.kernel.org>
+        protocol="application/pgp-signature"; boundary="yqyk7qmeenbq4if2"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20180110192512.19684-8-jernej.skrabec@siol.net>
-Sender: linux-clk-owner@vger.kernel.org
-To: Jernej Skrabec <jernej.skrabec@siol.net>
-Cc: airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org, architt@codeaurora.org, a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com, mturquette@baylibre.com, sboyd@codeaurora.org, Jose.Abreu@synopsys.com, narmstrong@baylibre.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-sunxi@googlegroups.com
+In-Reply-To: <20180110192512.19684-9-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Cc: airlied-cv59FeDIM0c@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---zok6ncilkcjhhzzp
+--yqyk7qmeenbq4if2
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jan 10, 2018 at 08:25:07PM +0100, Jernej Skrabec wrote:
-> Some TCONs on newer SoCs doesn't support channel 0, since they are meant
-> to be used only with TV or HDMI encoder.
+On Wed, Jan 10, 2018 at 08:25:08PM +0100, Jernej Skrabec wrote:
+> This TCON is connected to HDMI encoder.
 >=20
-> Prepare support for them with adding has_channel_0 quirk.
->=20
-> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 
-Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
 Thanks!
 Maxime
@@ -39,24 +36,28 @@ Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
 
---zok6ncilkcjhhzzp
+--yqyk7qmeenbq4if2
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlpXVgYACgkQ0rTAlCFN
-r3T1HBAAhx3piBiWrfsjuBWDTSYsq/ELGiToYoMKJZK7poKdjb/Ikps83FKbFYEF
-KK7f/63s8ScjDBAxvCOoPO3nIVsIRfAmiqlcsaLzNbwkcdMF/oo6YHKi00GqETGf
-W1+8MhaEVuW/UWJG73oVsBJIQ8Mp5ertfZIeDpvWw/s70SlRHSNiaOfryMwx4OM0
-3M+ZcI9PK04AKT6V8pJ5/hPqsE0G85q/uDlBod+KtZ2NCosgPin48RLx38qjmRF3
-OAfc+iz3KwwpxxfXPNlkKAzWyTmmaPFYL8JSb0nqSXLIhwAdhcDCDB/RgBcUFbUa
-2HjrS2m3K/X397ngQCs7VsABBmYZlQBGFQ2xhgfw0ZRj7TdrkApG1uJhjGrjvXgm
-zAa9ocVcVDaDj9X43dpMFBZJWILQ3FbaPJl+nOgQHmq+Kven0pFuksKU4yhvEMRs
-k13kSi0c7WdxnHltoPz71QtmszrOLmXQ0zV0AsHRrp9Zwpwt1jo4nCWOisVShxM9
-xAOFYGD/rs3j2FnJ3WU4ubijf/OKl2zHfebF9GOIaJZ0JJ9sfzBVxud3ogUMsUwn
-QzbM6gzl7x235mOnWXfPWvzct54UXVOB+JboRXPIy+JS8+xSWIv67spSzn6Nnuhb
-MyHc74rHZ64hJ04UakLuHDFf1lKC+UHqj+9ouUwIHGvuY9hvW2o=
-=4PAM
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlpXVh4ACgkQ0rTAlCFN
+r3QWjg/9ERz2Z9SgOodVXhoBLT/K/URDsT4+bjBTzc5OvkXQSWK+QB4P2KhEGWsg
+8uDy38AdMEghM3g63yOttC11glw0RBUCfTxPN4Ccu9n1hi4CkTaHqfFM/ZyurRri
+NIa2+mwhIaiOlPHAozjrldH/ous7rLgcwDLoSE8DTuKw9kfm0dmVLB/mxTYk+2fK
+vgQfbKeZRKIKfpPS43f/YEzUqm0/w8HuV5UnWPy42vfPUlwJIv38/Z/TdoVAoDSz
+DKu47MX/DwqLKBvKbadbuSuUY/v5xeoBKQh1ToFbfA9eT5ws89Kz8WMerp5vnRMy
+5ojJlQb1t1OnMlIUUlbhENjlJM7SKBtYGE3kZ8O6ezBSsiJR8/HPtnbrgHuGOpf3
+4YwOg30iIOb5xhvwCFqQGTQ64d1Kw12U3dpJLpdnSyHoBN2nU1FXv9CWMls8faf4
+5tkP+0DxIDymyst8vgPutQBKEwj+8u49q7PvZKk0+0ityKdhgAVtTqrUrZyEacQ1
+FD8NJkyqTCGweHBY6zhHGepuZjehLmFzHDUJ6v6cah/dc9HaRxRWF0sKVCXHNmS6
+YqT66rKAHpGX52uDVseLKlqkxUyctYxSU5h/4hm+7AKzc02M0ZOTleQ9dG18TUX0
+gvbM5Cyw8VVpqKYPA0kPrh1rRcQsoM4B4bIYoODdo/mRlkcgfj4=
+=k3vJ
 -----END PGP SIGNATURE-----
 
---zok6ncilkcjhhzzp--
+--yqyk7qmeenbq4if2--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
