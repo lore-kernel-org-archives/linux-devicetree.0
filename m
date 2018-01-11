@@ -1,2181 +1,625 @@
-From: Yong Deng <yong.deng@magewell.com>
-Subject: [PATCH v5 2/2] media: V3s: Add support for Allwinner CSI.
-Date: Thu, 11 Jan 2018 11:06:06 +0800
-Message-ID: <1515639966-35902-1-git-send-email-yong.deng@magewell.com>
+From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 3/9] soc: samsung: pmu: Add the PMU data of exynos5433
+ to support low-power state
+Date: Thu, 11 Jan 2018 14:39:54 +0900
+Message-ID: <5A56F8AA.2000106@samsung.com>
+References: <CGME20180109075905epcas1p321b8898a0d45287d63364e1aa768fdab@epcas1p3.samsung.com>
+        <1515484746-10656-1-git-send-email-cw00.choi@samsung.com>
+        <1515484746-10656-4-git-send-email-cw00.choi@samsung.com>
+        <CAJKOXPf027Nz4CsNt4i1yuiQVMtZpv8ncrbgP1D-y4YM8kn30A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Randy Dunlap <rdunlap@infradead.org>, Hans Verkuil <hans.verkuil@cisco.com>, Stanimir Varbanov <stanimir.varbanov@linaro.org>, Hugues Fruchet <hugues.fruchet@st.com>, Yannick Fertre <yannick.fertre@st.com>, Philipp Zabel <p.zabel@pengutronix.de>, Arnd Bergmann <arnd@arndb.de>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Rick Chang <rick.chang@mediatek.com>, linux-media@vger.kernel.org, devicetree@vger.ker
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <CAJKOXPf027Nz4CsNt4i1yuiQVMtZpv8ncrbgP1D-y4YM8kn30A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, chanwoo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonghwa Lee <jonghwa3.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Allwinner V3s SoC features two CSI module. CSI0 is used for MIPI CSI-2
-interface and CSI1 is used for parallel interface. This is not
-documented in datasheet but by test and guess.
+On 2018년 01월 09일 21:23, Krzysztof Kozlowski wrote:
+> On Tue, Jan 9, 2018 at 8:59 AM, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+>> This patch adds the PMU (Power Management Unit) data of exynos5433 SoC
+>> in order to support the various power modes. Each power mode has
+>> the different value for reducing the power-consumption.
+>>
+>> Signed-off-by: Jonghwa Lee <jonghwa3.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> Signed-off-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> ---
+>>  arch/arm/mach-exynos/common.h               |   2 -
+>>  drivers/soc/samsung/Makefile                |   3 +-
+>>  drivers/soc/samsung/exynos-pmu.c            |   1 +
+>>  drivers/soc/samsung/exynos-pmu.h            |   2 +
+>>  drivers/soc/samsung/exynos5433-pmu.c        | 286 ++++++++++++++++++++++++++++
+>>  include/linux/soc/samsung/exynos-regs-pmu.h | 148 ++++++++++++++
+>>  6 files changed, 439 insertions(+), 3 deletions(-)
+>>  create mode 100644 drivers/soc/samsung/exynos5433-pmu.c
+>>
+>> diff --git a/arch/arm/mach-exynos/common.h b/arch/arm/mach-exynos/common.h
+>> index 098f84a149a3..afbc143a3d5d 100644
+>> --- a/arch/arm/mach-exynos/common.h
+>> +++ b/arch/arm/mach-exynos/common.h
+>> @@ -125,8 +125,6 @@ enum {
+>>  void exynos_set_boot_flag(unsigned int cpu, unsigned int mode);
+>>  void exynos_clear_boot_flag(unsigned int cpu, unsigned int mode);
+>>
+>> -extern u32 exynos_get_eint_wake_mask(void);
+>> -
+> 
+> This does not look good. Does it compile without warnings on ARMv7 platforms?
 
-This patch implement a v4l2 framework driver for it.
+I'll try to consolidate suspend-related code. I'll rework.
 
-Currently, the driver only support the parallel interface. MIPI-CSI2,
-ISP's support are not included in this patch.
+> 
+>>  #ifdef CONFIG_PM_SLEEP
+>>  extern void __init exynos_pm_init(void);
+>>  #else
+>> diff --git a/drivers/soc/samsung/Makefile b/drivers/soc/samsung/Makefile
+>> index 29f294baac6e..d2e637339a45 100644
+>> --- a/drivers/soc/samsung/Makefile
+>> +++ b/drivers/soc/samsung/Makefile
+>> @@ -2,5 +2,6 @@
+>>  obj-$(CONFIG_EXYNOS_PMU)       += exynos-pmu.o
+>>
+>>  obj-$(CONFIG_EXYNOS_PMU_ARM_DRIVERS)   += exynos3250-pmu.o exynos4-pmu.o \
+>> -                                       exynos5250-pmu.o exynos5420-pmu.o
+>> +                                       exynos5250-pmu.o exynos5420-pmu.o \
+>> +                                       exynos5433-pmu.o
+>>  obj-$(CONFIG_EXYNOS_PM_DOMAINS) += pm_domains.o
+>> diff --git a/drivers/soc/samsung/exynos-pmu.c b/drivers/soc/samsung/exynos-pmu.c
+>> index cfc9de518344..7112d7b2749b 100644
+>> --- a/drivers/soc/samsung/exynos-pmu.c
+>> +++ b/drivers/soc/samsung/exynos-pmu.c
+>> @@ -97,6 +97,7 @@ void exynos_sys_powerup_conf(enum sys_powerdown mode)
+>>                 .data = exynos_pmu_data_arm_ptr(exynos5420_pmu_data),
+>>         }, {
+>>                 .compatible = "samsung,exynos5433-pmu",
+>> +               .data = exynos_pmu_data_arm_ptr(exynos5433_pmu_data),
+>>         },
+>>         { /*sentinel*/ },
+>>  };
+>> diff --git a/drivers/soc/samsung/exynos-pmu.h b/drivers/soc/samsung/exynos-pmu.h
+>> index efbaf8929252..895c786a2f4c 100644
+>> --- a/drivers/soc/samsung/exynos-pmu.h
+>> +++ b/drivers/soc/samsung/exynos-pmu.h
+>> @@ -28,6 +28,7 @@ struct exynos_pmu_data {
+>>  };
+>>
+>>  extern void __iomem *pmu_base_addr;
+>> +extern u32 exynos_get_eint_wake_mask(void);
+>>
+>>  #ifdef CONFIG_EXYNOS_PMU_ARM_DRIVERS
+>>  /* list of all exported SoC specific data */
+>> @@ -36,6 +37,7 @@ struct exynos_pmu_data {
+>>  extern const struct exynos_pmu_data exynos4412_pmu_data;
+>>  extern const struct exynos_pmu_data exynos5250_pmu_data;
+>>  extern const struct exynos_pmu_data exynos5420_pmu_data;
+>> +extern const struct exynos_pmu_data exynos5433_pmu_data;
+>>  #endif
+>>
+>>  extern void pmu_raw_writel(u32 val, u32 offset);
+>> diff --git a/drivers/soc/samsung/exynos5433-pmu.c b/drivers/soc/samsung/exynos5433-pmu.c
+>> new file mode 100644
+>> index 000000000000..2571e61522f0
+>> --- /dev/null
+>> +++ b/drivers/soc/samsung/exynos5433-pmu.c
+>> @@ -0,0 +1,286 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +//
+>> +// Copyright (c) 2018 Samsung Electronics Co., Ltd.
+>> +// Copyright (c) Jonghwa Lee <jonghwa3.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> +// Copyright (c) Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> 
+> Did you want to add here authorship notice or personal copyrights?
 
-Signed-off-by: Yong Deng <yong.deng@magewell.com>
----
- MAINTAINERS                                        |   8 +
- drivers/media/platform/Kconfig                     |   1 +
- drivers/media/platform/Makefile                    |   2 +
- drivers/media/platform/sunxi/sun6i-csi/Kconfig     |   9 +
- drivers/media/platform/sunxi/sun6i-csi/Makefile    |   3 +
- drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c | 908 +++++++++++++++++++++
- drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.h | 143 ++++
- .../media/platform/sunxi/sun6i-csi/sun6i_csi_reg.h | 196 +++++
- .../media/platform/sunxi/sun6i-csi/sun6i_video.c   | 741 +++++++++++++++++
- .../media/platform/sunxi/sun6i-csi/sun6i_video.h   |  53 ++
- 10 files changed, 2064 insertions(+)
- create mode 100644 drivers/media/platform/sunxi/sun6i-csi/Kconfig
- create mode 100644 drivers/media/platform/sunxi/sun6i-csi/Makefile
- create mode 100644 drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
- create mode 100644 drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.h
- create mode 100644 drivers/media/platform/sunxi/sun6i-csi/sun6i_csi_reg.h
- create mode 100644 drivers/media/platform/sunxi/sun6i-csi/sun6i_video.c
- create mode 100644 drivers/media/platform/sunxi/sun6i-csi/sun6i_video.h
+Remove personal info.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 9501403..b792fe5 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3783,6 +3783,14 @@ M:	Jaya Kumar <jayakumar.alsa@gmail.com>
- S:	Maintained
- F:	sound/pci/cs5535audio/
- 
-+CSI DRIVERS FOR ALLWINNER V3s
-+M:	Yong Deng <yong.deng@magewell.com>
-+L:	linux-media@vger.kernel.org
-+T:	git git://linuxtv.org/media_tree.git
-+S:	Maintained
-+F:	drivers/media/platform/sunxi/sun6i-csi/
-+F:	Documentation/devicetree/bindings/media/sun6i-csi.txt
-+
- CW1200 WLAN driver
- M:	Solomon Peachy <pizza@shaftnet.org>
- S:	Maintained
-diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
-index fd0c998..41017e3 100644
---- a/drivers/media/platform/Kconfig
-+++ b/drivers/media/platform/Kconfig
-@@ -150,6 +150,7 @@ source "drivers/media/platform/am437x/Kconfig"
- source "drivers/media/platform/xilinx/Kconfig"
- source "drivers/media/platform/rcar-vin/Kconfig"
- source "drivers/media/platform/atmel/Kconfig"
-+source "drivers/media/platform/sunxi/sun6i-csi/Kconfig"
- 
- config VIDEO_TI_CAL
- 	tristate "TI CAL (Camera Adaptation Layer) driver"
-diff --git a/drivers/media/platform/Makefile b/drivers/media/platform/Makefile
-index 003b0bb..e6e9ce7 100644
---- a/drivers/media/platform/Makefile
-+++ b/drivers/media/platform/Makefile
-@@ -97,3 +97,5 @@ obj-$(CONFIG_VIDEO_QCOM_CAMSS)		+= qcom/camss-8x16/
- obj-$(CONFIG_VIDEO_QCOM_VENUS)		+= qcom/venus/
- 
- obj-y					+= meson/
-+
-+obj-$(CONFIG_VIDEO_SUN6I_CSI)		+= sunxi/sun6i-csi/
-diff --git a/drivers/media/platform/sunxi/sun6i-csi/Kconfig b/drivers/media/platform/sunxi/sun6i-csi/Kconfig
-new file mode 100644
-index 0000000..314188a
---- /dev/null
-+++ b/drivers/media/platform/sunxi/sun6i-csi/Kconfig
-@@ -0,0 +1,9 @@
-+config VIDEO_SUN6I_CSI
-+	tristate "Allwinner V3s Camera Sensor Interface driver"
-+	depends on VIDEO_V4L2 && COMMON_CLK && VIDEO_V4L2_SUBDEV_API && HAS_DMA
-+	depends on ARCH_SUNXI || COMPILE_TEST
-+	select VIDEOBUF2_DMA_CONTIG
-+	select REGMAP_MMIO
-+	select V4L2_FWNODE
-+	---help---
-+	   Support for the Allwinner Camera Sensor Interface Controller on V3s.
-diff --git a/drivers/media/platform/sunxi/sun6i-csi/Makefile b/drivers/media/platform/sunxi/sun6i-csi/Makefile
-new file mode 100644
-index 0000000..213cb6b
---- /dev/null
-+++ b/drivers/media/platform/sunxi/sun6i-csi/Makefile
-@@ -0,0 +1,3 @@
-+sun6i-csi-y += sun6i_video.o sun6i_csi.o
-+
-+obj-$(CONFIG_VIDEO_SUN6I_CSI) += sun6i-csi.o
-diff --git a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
-new file mode 100644
-index 0000000..9c341f0
---- /dev/null
-+++ b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
-@@ -0,0 +1,908 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2011-2018 Magewell Electronics Co., Ltd. (Nanjing)
-+ * All rights reserved.
-+ * Author: Yong Deng <yong.deng@magewell.com>
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/err.h>
-+#include <linux/fs.h>
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <linux/ioctl.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/regmap.h>
-+#include <linux/reset.h>
-+#include <linux/sched.h>
-+#include <linux/sizes.h>
-+#include <linux/slab.h>
-+
-+#include "sun6i_csi.h"
-+#include "sun6i_csi_reg.h"
-+
-+#define MODULE_NAME	"sun6i-csi"
-+
-+struct sun6i_csi_dev {
-+	struct sun6i_csi		csi;
-+	struct device			*dev;
-+
-+	struct regmap			*regmap;
-+	struct clk			*clk_mod;
-+	struct clk			*clk_ram;
-+	struct reset_control		*rstc_bus;
-+
-+	int				planar_offset[3];
-+};
-+
-+static const u32 supported_pixformats[] = {
-+	V4L2_PIX_FMT_SBGGR8,
-+	V4L2_PIX_FMT_SGBRG8,
-+	V4L2_PIX_FMT_SGRBG8,
-+	V4L2_PIX_FMT_SRGGB8,
-+	V4L2_PIX_FMT_SBGGR10,
-+	V4L2_PIX_FMT_SGBRG10,
-+	V4L2_PIX_FMT_SGRBG10,
-+	V4L2_PIX_FMT_SRGGB10,
-+	V4L2_PIX_FMT_SBGGR12,
-+	V4L2_PIX_FMT_SGBRG12,
-+	V4L2_PIX_FMT_SGRBG12,
-+	V4L2_PIX_FMT_SRGGB12,
-+	V4L2_PIX_FMT_YUYV,
-+	V4L2_PIX_FMT_YVYU,
-+	V4L2_PIX_FMT_UYVY,
-+	V4L2_PIX_FMT_VYUY,
-+	V4L2_PIX_FMT_HM12,
-+	V4L2_PIX_FMT_NV12,
-+	V4L2_PIX_FMT_NV21,
-+	V4L2_PIX_FMT_YUV420,
-+	V4L2_PIX_FMT_YVU420,
-+	V4L2_PIX_FMT_NV16,
-+	V4L2_PIX_FMT_NV61,
-+	V4L2_PIX_FMT_YUV422P,
-+};
-+
-+static inline struct sun6i_csi_dev *sun6i_csi_to_dev(struct sun6i_csi *csi)
-+{
-+	return container_of(csi, struct sun6i_csi_dev, csi);
-+}
-+
-+int sun6i_csi_get_supported_pixformats(struct sun6i_csi *csi,
-+				       const u32 **pixformats)
-+{
-+	if (pixformats != NULL)
-+		*pixformats = supported_pixformats;
-+
-+	return ARRAY_SIZE(supported_pixformats);
-+}
-+
-+/* TODO add 10&12 bit YUV, RGB support */
-+bool sun6i_csi_is_format_support(struct sun6i_csi *csi,
-+				 u32 pixformat, u32 mbus_code)
-+{
-+	struct sun6i_csi_dev *sdev = sun6i_csi_to_dev(csi);
-+
-+	/*
-+	 * Some video receivers have the ability to be compatible with
-+	 * 8bit and 16bit bus width.
-+	 * Identify the media bus format from device tree.
-+	 */
-+	if ((sdev->csi.v4l2_ep.bus_type == V4L2_MBUS_PARALLEL
-+	      || sdev->csi.v4l2_ep.bus_type == V4L2_MBUS_BT656)
-+	     && sdev->csi.v4l2_ep.bus.parallel.bus_width == 16) {
-+		switch (pixformat) {
-+		case V4L2_PIX_FMT_HM12:
-+		case V4L2_PIX_FMT_NV12:
-+		case V4L2_PIX_FMT_NV21:
-+		case V4L2_PIX_FMT_NV16:
-+		case V4L2_PIX_FMT_NV61:
-+		case V4L2_PIX_FMT_YUV420:
-+		case V4L2_PIX_FMT_YVU420:
-+		case V4L2_PIX_FMT_YUV422P:
-+			switch (mbus_code) {
-+			case MEDIA_BUS_FMT_UYVY8_1X16:
-+			case MEDIA_BUS_FMT_VYUY8_1X16:
-+			case MEDIA_BUS_FMT_YUYV8_1X16:
-+			case MEDIA_BUS_FMT_YVYU8_1X16:
-+				return true;
-+			default:
-+				dev_warn(sdev->dev,
-+					 "Unsupported mbus code: 0x%x\n",
-+					 mbus_code);
-+				break;
-+			}
-+			break;
-+		default:
-+			dev_warn(sdev->dev, "Unsupported pixformat: 0x%x\n",
-+				 pixformat);
-+			break;
-+		}
-+		return false;
-+	}
-+
-+	switch (pixformat) {
-+	case V4L2_PIX_FMT_SBGGR8:
-+		return (mbus_code == MEDIA_BUS_FMT_SBGGR8_1X8);
-+	case V4L2_PIX_FMT_SGBRG8:
-+		return (mbus_code == MEDIA_BUS_FMT_SGBRG8_1X8);
-+	case V4L2_PIX_FMT_SGRBG8:
-+		return (mbus_code == MEDIA_BUS_FMT_SGRBG8_1X8);
-+	case V4L2_PIX_FMT_SRGGB8:
-+		return (mbus_code == MEDIA_BUS_FMT_SRGGB8_1X8);
-+	case V4L2_PIX_FMT_SBGGR10:
-+		return (mbus_code == MEDIA_BUS_FMT_SBGGR10_1X10);
-+	case V4L2_PIX_FMT_SGBRG10:
-+		return (mbus_code == MEDIA_BUS_FMT_SGBRG10_1X10);
-+	case V4L2_PIX_FMT_SGRBG10:
-+		return (mbus_code == MEDIA_BUS_FMT_SGRBG10_1X10);
-+	case V4L2_PIX_FMT_SRGGB10:
-+		return (mbus_code == MEDIA_BUS_FMT_SRGGB10_1X10);
-+	case V4L2_PIX_FMT_SBGGR12:
-+		return (mbus_code == MEDIA_BUS_FMT_SBGGR12_1X12);
-+	case V4L2_PIX_FMT_SGBRG12:
-+		return (mbus_code == MEDIA_BUS_FMT_SGBRG12_1X12);
-+	case V4L2_PIX_FMT_SGRBG12:
-+		return (mbus_code == MEDIA_BUS_FMT_SGRBG12_1X12);
-+	case V4L2_PIX_FMT_SRGGB12:
-+		return (mbus_code == MEDIA_BUS_FMT_SRGGB12_1X12);
-+
-+	case V4L2_PIX_FMT_YUYV:
-+		return (mbus_code == MEDIA_BUS_FMT_YUYV8_2X8);
-+	case V4L2_PIX_FMT_YVYU:
-+		return (mbus_code == MEDIA_BUS_FMT_YVYU8_2X8);
-+	case V4L2_PIX_FMT_UYVY:
-+		return (mbus_code == MEDIA_BUS_FMT_UYVY8_2X8);
-+	case V4L2_PIX_FMT_VYUY:
-+		return (mbus_code == MEDIA_BUS_FMT_VYUY8_2X8);
-+
-+	case V4L2_PIX_FMT_HM12:
-+	case V4L2_PIX_FMT_NV12:
-+	case V4L2_PIX_FMT_NV21:
-+	case V4L2_PIX_FMT_NV16:
-+	case V4L2_PIX_FMT_NV61:
-+	case V4L2_PIX_FMT_YUV420:
-+	case V4L2_PIX_FMT_YVU420:
-+	case V4L2_PIX_FMT_YUV422P:
-+		switch (mbus_code) {
-+		case MEDIA_BUS_FMT_UYVY8_2X8:
-+		case MEDIA_BUS_FMT_VYUY8_2X8:
-+		case MEDIA_BUS_FMT_YUYV8_2X8:
-+		case MEDIA_BUS_FMT_YVYU8_2X8:
-+			return true;
-+		default:
-+			dev_warn(sdev->dev, "Unsupported mbus code: 0x%x\n",
-+				 mbus_code);
-+			break;
-+		}
-+		break;
-+	default:
-+		dev_warn(sdev->dev, "Unsupported pixformat: 0x%x\n", pixformat);
-+		break;
-+	}
-+
-+	return false;
-+}
-+
-+int sun6i_csi_set_power(struct sun6i_csi *csi, bool enable)
-+{
-+	struct sun6i_csi_dev *sdev = sun6i_csi_to_dev(csi);
-+	struct regmap *regmap = sdev->regmap;
-+	int ret;
-+
-+	if (!enable) {
-+		regmap_update_bits(regmap, CSI_EN_REG, CSI_EN_CSI_EN, 0);
-+
-+		clk_disable_unprepare(sdev->clk_ram);
-+		clk_disable_unprepare(sdev->clk_mod);
-+		reset_control_assert(sdev->rstc_bus);
-+		return 0;
-+	}
-+
-+	ret = clk_prepare_enable(sdev->clk_mod);
-+	if (ret) {
-+		dev_err(sdev->dev, "Enable csi clk err %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = clk_prepare_enable(sdev->clk_ram);
-+	if (ret) {
-+		dev_err(sdev->dev, "Enable clk_dram_csi clk err %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = reset_control_deassert(sdev->rstc_bus);
-+	if (ret) {
-+		dev_err(sdev->dev, "reset err %d\n", ret);
-+		return ret;
-+	}
-+
-+	regmap_update_bits(regmap, CSI_EN_REG, CSI_EN_CSI_EN, CSI_EN_CSI_EN);
-+
-+	return 0;
-+}
-+
-+static enum csi_input_fmt get_csi_input_format(u32 mbus_code, u32 pixformat)
-+{
-+	/* bayer */
-+	if ((mbus_code & 0xF000) == 0x3000)
-+		return CSI_INPUT_FORMAT_RAW;
-+
-+	switch (pixformat) {
-+	case V4L2_PIX_FMT_YUYV:
-+	case V4L2_PIX_FMT_YVYU:
-+	case V4L2_PIX_FMT_UYVY:
-+	case V4L2_PIX_FMT_VYUY:
-+		return CSI_INPUT_FORMAT_RAW;
-+	default:
-+		break;
-+	}
-+
-+	/* not support YUV420 input format yet */
-+	pr_debug("Select YUV422 as default input format of CSI.\n");
-+	return CSI_INPUT_FORMAT_YUV422;
-+}
-+
-+static enum csi_output_fmt get_csi_output_format(u32 pixformat, u32 field)
-+{
-+	bool buf_interlaced = false;
-+
-+	if (field == V4L2_FIELD_INTERLACED
-+	    || field == V4L2_FIELD_INTERLACED_TB
-+	    || field == V4L2_FIELD_INTERLACED_BT)
-+		buf_interlaced = true;
-+
-+	switch (pixformat) {
-+	case V4L2_PIX_FMT_SBGGR8:
-+	case V4L2_PIX_FMT_SGBRG8:
-+	case V4L2_PIX_FMT_SGRBG8:
-+	case V4L2_PIX_FMT_SRGGB8:
-+		return buf_interlaced ? CSI_FRAME_RAW_8 : CSI_FIELD_RAW_8;
-+	case V4L2_PIX_FMT_SBGGR10:
-+	case V4L2_PIX_FMT_SGBRG10:
-+	case V4L2_PIX_FMT_SGRBG10:
-+	case V4L2_PIX_FMT_SRGGB10:
-+		return buf_interlaced ? CSI_FRAME_RAW_10 : CSI_FIELD_RAW_10;
-+	case V4L2_PIX_FMT_SBGGR12:
-+	case V4L2_PIX_FMT_SGBRG12:
-+	case V4L2_PIX_FMT_SGRBG12:
-+	case V4L2_PIX_FMT_SRGGB12:
-+		return buf_interlaced ? CSI_FRAME_RAW_12 : CSI_FIELD_RAW_12;
-+
-+	case V4L2_PIX_FMT_YUYV:
-+	case V4L2_PIX_FMT_YVYU:
-+	case V4L2_PIX_FMT_UYVY:
-+	case V4L2_PIX_FMT_VYUY:
-+		return buf_interlaced ? CSI_FRAME_RAW_8 : CSI_FIELD_RAW_8;
-+
-+	case V4L2_PIX_FMT_HM12:
-+		return buf_interlaced ? CSI_FRAME_MB_YUV420 :
-+					CSI_FIELD_MB_YUV420;
-+	case V4L2_PIX_FMT_NV12:
-+	case V4L2_PIX_FMT_NV21:
-+		return buf_interlaced ? CSI_FRAME_UV_CB_YUV420 :
-+					CSI_FIELD_UV_CB_YUV420;
-+	case V4L2_PIX_FMT_YUV420:
-+	case V4L2_PIX_FMT_YVU420:
-+		return buf_interlaced ? CSI_FRAME_PLANAR_YUV420 :
-+					CSI_FIELD_PLANAR_YUV420;
-+	case V4L2_PIX_FMT_NV16:
-+	case V4L2_PIX_FMT_NV61:
-+		return buf_interlaced ? CSI_FRAME_UV_CB_YUV422 :
-+					CSI_FIELD_UV_CB_YUV422;
-+	case V4L2_PIX_FMT_YUV422P:
-+		return buf_interlaced ? CSI_FRAME_PLANAR_YUV422 :
-+					CSI_FIELD_PLANAR_YUV422;
-+	default:
-+		WARN(1, "Unsupported pixformat: 0x%x\n", pixformat);
-+		break;
-+	}
-+
-+	return CSI_FIELD_RAW_8;
-+}
-+
-+static enum csi_input_seq get_csi_input_seq(u32 mbus_code, u32 pixformat)
-+{
-+
-+	switch (pixformat) {
-+	case V4L2_PIX_FMT_HM12:
-+	case V4L2_PIX_FMT_NV12:
-+	case V4L2_PIX_FMT_NV16:
-+	case V4L2_PIX_FMT_YUV420:
-+	case V4L2_PIX_FMT_YUV422P:
-+		switch (mbus_code) {
-+		case MEDIA_BUS_FMT_UYVY8_2X8:
-+		case MEDIA_BUS_FMT_UYVY8_1X16:
-+			return CSI_INPUT_SEQ_UYVY;
-+		case MEDIA_BUS_FMT_VYUY8_2X8:
-+		case MEDIA_BUS_FMT_VYUY8_1X16:
-+			return CSI_INPUT_SEQ_VYUY;
-+		case MEDIA_BUS_FMT_YUYV8_2X8:
-+		case MEDIA_BUS_FMT_YUYV8_1X16:
-+			return CSI_INPUT_SEQ_YUYV;
-+		case MEDIA_BUS_FMT_YVYU8_1X16:
-+		case MEDIA_BUS_FMT_YVYU8_2X8:
-+			return CSI_INPUT_SEQ_YVYU;
-+		default:
-+			WARN(1, "Unsupported mbus code: 0x%x\n", mbus_code);
-+			break;
-+		}
-+		break;
-+	case V4L2_PIX_FMT_NV21:
-+	case V4L2_PIX_FMT_NV61:
-+	case V4L2_PIX_FMT_YVU420:
-+		switch (mbus_code) {
-+		case MEDIA_BUS_FMT_UYVY8_2X8:
-+		case MEDIA_BUS_FMT_UYVY8_1X16:
-+			return CSI_INPUT_SEQ_VYUY;
-+		case MEDIA_BUS_FMT_VYUY8_2X8:
-+		case MEDIA_BUS_FMT_VYUY8_1X16:
-+			return CSI_INPUT_SEQ_UYVY;
-+		case MEDIA_BUS_FMT_YUYV8_2X8:
-+		case MEDIA_BUS_FMT_YUYV8_1X16:
-+			return CSI_INPUT_SEQ_YVYU;
-+		case MEDIA_BUS_FMT_YVYU8_1X16:
-+		case MEDIA_BUS_FMT_YVYU8_2X8:
-+			return CSI_INPUT_SEQ_YUYV;
-+		default:
-+			WARN(1, "Unsupported mbus code: 0x%x\n", mbus_code);
-+			break;
-+		}
-+		break;
-+	default:
-+		WARN(1, "Unsupported pixformat: 0x%x\n", pixformat);
-+		break;
-+	}
-+
-+	return CSI_INPUT_SEQ_YUYV;
-+}
-+
-+static void sun6i_csi_setup_bus(struct sun6i_csi_dev *sdev)
-+{
-+	struct v4l2_fwnode_endpoint *endpoint = &sdev->csi.v4l2_ep;
-+	unsigned char bus_width;
-+	u32 flags;
-+	u32 cfg;
-+
-+	bus_width = endpoint->bus.parallel.bus_width;
-+
-+	regmap_read(sdev->regmap, CSI_IF_CFG_REG, &cfg);
-+
-+	cfg &= ~(CSI_IF_CFG_CSI_IF_MASK | CSI_IF_CFG_MIPI_IF_MASK |
-+		 CSI_IF_CFG_IF_DATA_WIDTH_MASK |
-+		 CSI_IF_CFG_CLK_POL_MASK | CSI_IF_CFG_VREF_POL_MASK |
-+		 CSI_IF_CFG_HREF_POL_MASK | CSI_IF_CFG_FIELD_MASK);
-+
-+	switch (endpoint->bus_type) {
-+	case V4L2_MBUS_PARALLEL:
-+		cfg |= CSI_IF_CFG_MIPI_IF_CSI;
-+
-+		flags = endpoint->bus.parallel.flags;
-+
-+		cfg |= (bus_width == 16) ? CSI_IF_CFG_CSI_IF_YUV422_16BIT :
-+					   CSI_IF_CFG_CSI_IF_YUV422_INTLV;
-+
-+		if (flags & V4L2_MBUS_FIELD_EVEN_LOW)
-+			cfg |= CSI_IF_CFG_FIELD_POSITIVE;
-+
-+		if (flags & V4L2_MBUS_VSYNC_ACTIVE_HIGH)
-+			cfg |= CSI_IF_CFG_VREF_POL_POSITIVE;
-+		if (flags & V4L2_MBUS_HSYNC_ACTIVE_HIGH)
-+			cfg |= CSI_IF_CFG_HREF_POL_POSITIVE;
-+
-+		if (flags & V4L2_MBUS_PCLK_SAMPLE_FALLING)
-+			cfg |= CSI_IF_CFG_CLK_POL_FALLING_EDGE;
-+		break;
-+	case V4L2_MBUS_BT656:
-+		cfg |= CSI_IF_CFG_MIPI_IF_CSI;
-+
-+		flags = endpoint->bus.parallel.flags;
-+
-+		cfg |= (bus_width == 16) ? CSI_IF_CFG_CSI_IF_BT1120 :
-+					   CSI_IF_CFG_CSI_IF_BT656;
-+
-+		if (flags & V4L2_MBUS_FIELD_EVEN_LOW)
-+			cfg |= CSI_IF_CFG_FIELD_POSITIVE;
-+
-+		if (flags & V4L2_MBUS_PCLK_SAMPLE_FALLING)
-+			cfg |= CSI_IF_CFG_CLK_POL_FALLING_EDGE;
-+		break;
-+	default:
-+		dev_warn(sdev->dev, "Unsupported bus type: %d\n",
-+			 endpoint->bus_type);
-+		break;
-+	}
-+
-+	switch (bus_width) {
-+	case 8:
-+		cfg |= CSI_IF_CFG_IF_DATA_WIDTH_8BIT;
-+		break;
-+	case 10:
-+		cfg |= CSI_IF_CFG_IF_DATA_WIDTH_10BIT;
-+		break;
-+	case 12:
-+		cfg |= CSI_IF_CFG_IF_DATA_WIDTH_12BIT;
-+		break;
-+	case 16: /* No need to configure DATA_WIDTH for 16bit */
-+		break;
-+	default:
-+		dev_warn(sdev->dev, "Unsupported bus width: %d\n", bus_width);
-+		break;
-+	}
-+
-+	regmap_write(sdev->regmap, CSI_IF_CFG_REG, cfg);
-+}
-+
-+static void sun6i_csi_set_format(struct sun6i_csi_dev *sdev)
-+{
-+	struct sun6i_csi *csi = &sdev->csi;
-+	u32 cfg;
-+	u32 val;
-+
-+	regmap_read(sdev->regmap, CSI_CH_CFG_REG, &cfg);
-+
-+	cfg &= ~(CSI_CH_CFG_INPUT_FMT_MASK |
-+		 CSI_CH_CFG_OUTPUT_FMT_MASK | CSI_CH_CFG_VFLIP_EN |
-+		 CSI_CH_CFG_HFLIP_EN | CSI_CH_CFG_FIELD_SEL_MASK |
-+		 CSI_CH_CFG_INPUT_SEQ_MASK);
-+
-+	val = get_csi_input_format(csi->config.code, csi->config.pixelformat);
-+	cfg |= CSI_CH_CFG_INPUT_FMT(val);
-+
-+	val = get_csi_output_format(csi->config.pixelformat, csi->config.field);
-+	cfg |= CSI_CH_CFG_OUTPUT_FMT(val);
-+
-+	val = get_csi_input_seq(csi->config.code, csi->config.pixelformat);
-+	cfg |= CSI_CH_CFG_INPUT_SEQ(val);
-+
-+	if (csi->config.field == V4L2_FIELD_TOP)
-+		cfg |= CSI_CH_CFG_FIELD_SEL_FIELD0;
-+	else if (csi->config.field == V4L2_FIELD_BOTTOM)
-+		cfg |= CSI_CH_CFG_FIELD_SEL_FIELD1;
-+	else
-+		cfg |= CSI_CH_CFG_FIELD_SEL_BOTH;
-+
-+	regmap_write(sdev->regmap, CSI_CH_CFG_REG, cfg);
-+}
-+
-+static void sun6i_csi_set_window(struct sun6i_csi_dev *sdev)
-+{
-+	struct sun6i_csi_config *config = &sdev->csi.config;
-+	u32 bytesperline_y;
-+	u32 bytesperline_c;
-+	int *planar_offset = sdev->planar_offset;
-+	u32 width = config->width;
-+	u32 height = config->height;
-+	u32 hor_len = width;
-+
-+	switch (config->pixelformat) {
-+	case V4L2_PIX_FMT_YUYV:
-+	case V4L2_PIX_FMT_YVYU:
-+	case V4L2_PIX_FMT_UYVY:
-+	case V4L2_PIX_FMT_VYUY:
-+		dev_dbg(sdev->dev,
-+			"Horizontal length should be 2 times of width for packed YUV formats!\n");
-+		hor_len = width * 2;
-+		break;
-+	default:
-+		break;
-+	}
-+
-+	regmap_write(sdev->regmap, CSI_CH_HSIZE_REG,
-+		     CSI_CH_HSIZE_HOR_LEN(hor_len) |
-+		     CSI_CH_HSIZE_HOR_START(0));
-+	regmap_write(sdev->regmap, CSI_CH_VSIZE_REG,
-+		     CSI_CH_VSIZE_VER_LEN(height) |
-+		     CSI_CH_VSIZE_VER_START(0));
-+
-+	planar_offset[0] = 0;
-+	switch (config->pixelformat) {
-+	case V4L2_PIX_FMT_HM12:
-+	case V4L2_PIX_FMT_NV12:
-+	case V4L2_PIX_FMT_NV21:
-+	case V4L2_PIX_FMT_NV16:
-+	case V4L2_PIX_FMT_NV61:
-+		bytesperline_y = width;
-+		bytesperline_c = width;
-+		planar_offset[1] = bytesperline_y * height;
-+		planar_offset[2] = -1;
-+		break;
-+	case V4L2_PIX_FMT_YUV420:
-+	case V4L2_PIX_FMT_YVU420:
-+		bytesperline_y = width;
-+		bytesperline_c = width / 2;
-+		planar_offset[1] = bytesperline_y * height;
-+		planar_offset[2] = planar_offset[1] +
-+				bytesperline_c * height / 2;
-+		break;
-+	case V4L2_PIX_FMT_YUV422P:
-+		bytesperline_y = width;
-+		bytesperline_c = width / 2;
-+		planar_offset[1] = bytesperline_y * height;
-+		planar_offset[2] = planar_offset[1] +
-+				bytesperline_c * height;
-+		break;
-+	default: /* raw */
-+		dev_dbg(sdev->dev,
-+			"Calculating pixelformat(0x%x)'s bytesperline as a packed format\n",
-+			config->pixelformat);
-+		bytesperline_y = (sun6i_csi_get_bpp(config->pixelformat) *
-+				  config->width) / 8;
-+		bytesperline_c = 0;
-+		planar_offset[1] = -1;
-+		planar_offset[2] = -1;
-+		break;
-+	}
-+
-+	regmap_write(sdev->regmap, CSI_CH_BUF_LEN_REG,
-+		     CSI_CH_BUF_LEN_BUF_LEN_C(bytesperline_c) |
-+		     CSI_CH_BUF_LEN_BUF_LEN_Y(bytesperline_y));
-+}
-+
-+int sun6i_csi_update_config(struct sun6i_csi *csi,
-+			    struct sun6i_csi_config *config)
-+{
-+	struct sun6i_csi_dev *sdev = sun6i_csi_to_dev(csi);
-+
-+	if (config == NULL)
-+		return -EINVAL;
-+
-+	memcpy(&csi->config, config, sizeof(csi->config));
-+
-+	sun6i_csi_setup_bus(sdev);
-+	sun6i_csi_set_format(sdev);
-+	sun6i_csi_set_window(sdev);
-+
-+	return 0;
-+}
-+
-+void sun6i_csi_update_buf_addr(struct sun6i_csi *csi, dma_addr_t addr)
-+{
-+	struct sun6i_csi_dev *sdev = sun6i_csi_to_dev(csi);
-+	/* transform physical address to bus address */
-+	dma_addr_t bus_addr = addr - PHYS_OFFSET;
-+
-+	regmap_write(sdev->regmap, CSI_CH_F0_BUFA_REG,
-+		     (bus_addr + sdev->planar_offset[0]) >> 2);
-+	if (sdev->planar_offset[1] != -1)
-+		regmap_write(sdev->regmap, CSI_CH_F1_BUFA_REG,
-+			     (bus_addr + sdev->planar_offset[1]) >> 2);
-+	if (sdev->planar_offset[2] != -1)
-+		regmap_write(sdev->regmap, CSI_CH_F2_BUFA_REG,
-+			     (bus_addr + sdev->planar_offset[2]) >> 2);
-+}
-+
-+void sun6i_csi_set_stream(struct sun6i_csi *csi, bool enable)
-+{
-+	struct sun6i_csi_dev *sdev = sun6i_csi_to_dev(csi);
-+	struct regmap *regmap = sdev->regmap;
-+
-+	if (!enable) {
-+		regmap_update_bits(regmap, CSI_CAP_REG, CSI_CAP_CH0_VCAP_ON, 0);
-+		regmap_write(regmap, CSI_CH_INT_EN_REG, 0);
-+		return;
-+	}
-+
-+	regmap_write(regmap, CSI_CH_INT_STA_REG, 0xFF);
-+	regmap_write(regmap, CSI_CH_INT_EN_REG,
-+		     CSI_CH_INT_EN_HB_OF_INT_EN |
-+		     CSI_CH_INT_EN_FIFO2_OF_INT_EN |
-+		     CSI_CH_INT_EN_FIFO1_OF_INT_EN |
-+		     CSI_CH_INT_EN_FIFO0_OF_INT_EN |
-+		     CSI_CH_INT_EN_FD_INT_EN |
-+		     CSI_CH_INT_EN_CD_INT_EN);
-+
-+	regmap_update_bits(regmap, CSI_CAP_REG, CSI_CAP_CH0_VCAP_ON,
-+			   CSI_CAP_CH0_VCAP_ON);
-+}
-+
-+/* -----------------------------------------------------------------------------
-+ * Media Controller and V4L2
-+ */
-+static int sun6i_csi_link_entity(struct sun6i_csi *csi,
-+				 struct media_entity *entity)
-+{
-+	struct media_entity *sink;
-+	struct media_pad *sink_pad;
-+	int ret;
-+	int i;
-+
-+	if (!entity->num_pads) {
-+		dev_err(csi->dev, "%s: invalid entity\n", entity->name);
-+		return -EINVAL;
-+	}
-+
-+	for (i = 0; i < entity->num_pads; i++) {
-+		if (entity->pads[i].flags & MEDIA_PAD_FL_SOURCE)
-+			break;
-+	}
-+
-+	if (i == entity->num_pads) {
-+		dev_err(csi->dev, "%s: no source pad in external entity %s\n",
-+			__func__, entity->name);
-+		return -EINVAL;
-+	}
-+
-+	sink = &csi->video.vdev.entity;
-+	sink_pad = &csi->video.pad;
-+
-+	dev_dbg(csi->dev, "creating %s:%u -> %s:%u link\n",
-+		entity->name, i, sink->name, sink_pad->index);
-+	ret = media_create_pad_link(entity, i, sink, sink_pad->index,
-+				    MEDIA_LNK_FL_ENABLED);
-+	if (ret < 0) {
-+		dev_err(csi->dev, "failed to create %s:%u -> %s:%u link\n",
-+			entity->name, i, sink->name, sink_pad->index);
-+		return ret;
-+	}
-+
-+	return media_entity_call(sink, link_setup, sink_pad, &entity->pads[i],
-+				 MEDIA_LNK_FL_ENABLED);
-+}
-+
-+static int sun6i_subdev_notify_complete(struct v4l2_async_notifier *notifier)
-+{
-+	struct sun6i_csi *csi = container_of(notifier, struct sun6i_csi,
-+					     notifier);
-+	struct v4l2_device *v4l2_dev = &csi->v4l2_dev;
-+	struct v4l2_subdev *sd;
-+	int ret;
-+
-+	dev_dbg(csi->dev, "notify complete, all subdevs registered\n");
-+
-+	if (notifier->num_subdevs != 1)
-+		return -EINVAL;
-+
-+	sd = list_first_entry(&v4l2_dev->subdevs, struct v4l2_subdev, list);
-+	if (sd == NULL)
-+		return -EINVAL;
-+
-+	ret = sun6i_csi_link_entity(csi, &sd->entity);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = v4l2_device_register_subdev_nodes(&csi->v4l2_dev);
-+	if (ret < 0)
-+		return ret;
-+
-+	return media_device_register(&csi->media_dev);
-+}
-+
-+static const struct v4l2_async_notifier_operations sun6i_csi_async_ops = {
-+	.complete = sun6i_subdev_notify_complete,
-+};
-+
-+static int sun6i_csi_fwnode_parse(struct device *dev,
-+				  struct v4l2_fwnode_endpoint *vep,
-+				  struct v4l2_async_subdev *asd)
-+{
-+	struct sun6i_csi *csi = dev_get_drvdata(dev);
-+
-+	if (vep->base.port || vep->base.id) {
-+		dev_warn(dev, "Only support a single port with one endpoint\n");
-+		return -ENOTCONN;
-+	}
-+
-+	switch (vep->bus_type) {
-+	case V4L2_MBUS_PARALLEL:
-+	case V4L2_MBUS_BT656:
-+		csi->v4l2_ep = *vep;
-+		return 0;
-+	default:
-+		dev_err(dev, "Unsupported media bus type\n");
-+		return -ENOTCONN;
-+	}
-+}
-+
-+static void sun6i_csi_v4l2_cleanup(struct sun6i_csi *csi)
-+{
-+	v4l2_async_notifier_cleanup(&csi->notifier);
-+	v4l2_async_notifier_unregister(&csi->notifier);
-+	sun6i_video_cleanup(&csi->video);
-+	v4l2_device_unregister(&csi->v4l2_dev);
-+	media_device_unregister(&csi->media_dev);
-+	media_device_cleanup(&csi->media_dev);
-+}
-+
-+static int sun6i_csi_v4l2_init(struct sun6i_csi *csi)
-+{
-+	int ret;
-+
-+	csi->media_dev.dev = csi->dev;
-+	strlcpy(csi->media_dev.model, "Allwinner Video Capture Device",
-+		sizeof(csi->media_dev.model));
-+	csi->media_dev.hw_revision = 0;
-+
-+	media_device_init(&csi->media_dev);
-+
-+	csi->v4l2_dev.mdev = &csi->media_dev;
-+	ret = v4l2_device_register(csi->dev, &csi->v4l2_dev);
-+	if (ret) {
-+		dev_err(csi->dev, "V4L2 device registration failed (%d)\n",
-+			ret);
-+		goto clean_media;
-+	}
-+
-+	ret = sun6i_video_init(&csi->video, csi, "sun6i-csi");
-+	if (ret)
-+		goto unreg_v4l2;
-+
-+	ret = v4l2_async_notifier_parse_fwnode_endpoints(
-+		csi->dev, &csi->notifier, sizeof(struct v4l2_async_subdev),
-+		sun6i_csi_fwnode_parse);
-+	if (ret)
-+		goto clean_video;
-+
-+	csi->notifier.ops = &sun6i_csi_async_ops;
-+
-+	ret = v4l2_async_notifier_register(&csi->v4l2_dev, &csi->notifier);
-+	if (ret) {
-+		dev_err(csi->dev, "notifier registration failed\n");
-+		goto clean_notifier;
-+	}
-+
-+	return 0;
-+
-+clean_notifier:
-+	v4l2_async_notifier_cleanup(&csi->notifier);
-+clean_video:
-+	sun6i_video_cleanup(&csi->video);
-+unreg_v4l2:
-+	v4l2_device_unregister(&csi->v4l2_dev);
-+clean_media:
-+	media_device_cleanup(&csi->media_dev);
-+
-+	return ret;
-+}
-+
-+/* -----------------------------------------------------------------------------
-+ * Resources and IRQ
-+ */
-+static irqreturn_t sun6i_csi_isr(int irq, void *dev_id)
-+{
-+	struct sun6i_csi_dev *sdev = (struct sun6i_csi_dev *)dev_id;
-+	struct regmap *regmap = sdev->regmap;
-+	u32 status;
-+
-+	regmap_read(regmap, CSI_CH_INT_STA_REG, &status);
-+
-+	if (!(status & 0xFF))
-+		return IRQ_NONE;
-+
-+	if ((status & CSI_CH_INT_STA_FIFO0_OF_PD) ||
-+	    (status & CSI_CH_INT_STA_FIFO1_OF_PD) ||
-+	    (status & CSI_CH_INT_STA_FIFO2_OF_PD) ||
-+	    (status & CSI_CH_INT_STA_HB_OF_PD)) {
-+		regmap_write(regmap, CSI_CH_INT_STA_REG, status);
-+		regmap_update_bits(regmap, CSI_EN_REG, CSI_EN_CSI_EN, 0);
-+		regmap_update_bits(regmap, CSI_EN_REG, CSI_EN_CSI_EN,
-+				   CSI_EN_CSI_EN);
-+		return IRQ_HANDLED;
-+	}
-+
-+	if (status & CSI_CH_INT_STA_FD_PD)
-+		sun6i_video_frame_done(&sdev->csi.video);
-+
-+	regmap_write(regmap, CSI_CH_INT_STA_REG, status);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static const struct regmap_config sun6i_csi_regmap_config = {
-+	.reg_bits       = 32,
-+	.reg_stride     = 4,
-+	.val_bits       = 32,
-+	.max_register	= 0x1000,
-+};
-+
-+static int sun6i_csi_resource_request(struct sun6i_csi_dev *sdev,
-+				      struct platform_device *pdev)
-+{
-+	struct resource *res;
-+	void __iomem *io_base;
-+	int ret;
-+	int irq;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	io_base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(io_base))
-+		return PTR_ERR(io_base);
-+
-+	sdev->regmap = devm_regmap_init_mmio_clk(&pdev->dev, "bus", io_base,
-+					    &sun6i_csi_regmap_config);
-+	if (IS_ERR(sdev->regmap)) {
-+		dev_err(&pdev->dev, "Failed to init register map\n");
-+		return PTR_ERR(sdev->regmap);
-+	}
-+
-+	sdev->clk_mod = devm_clk_get(&pdev->dev, "mod");
-+	if (IS_ERR(sdev->clk_mod)) {
-+		dev_err(&pdev->dev, "Unable to acquire csi clock\n");
-+		return PTR_ERR(sdev->clk_mod);
-+	}
-+
-+	sdev->clk_ram = devm_clk_get(&pdev->dev, "ram");
-+	if (IS_ERR(sdev->clk_ram)) {
-+		dev_err(&pdev->dev, "Unable to acquire dram-csi clock\n");
-+		return PTR_ERR(sdev->clk_ram);
-+	}
-+
-+	sdev->rstc_bus = devm_reset_control_get_shared(&pdev->dev, NULL);
-+	if (IS_ERR(sdev->rstc_bus)) {
-+		dev_err(&pdev->dev, "Cannot get reset controller\n");
-+		return PTR_ERR(sdev->rstc_bus);
-+	}
-+
-+	irq = platform_get_irq(pdev, 0);
-+	if (irq < 0) {
-+		dev_err(&pdev->dev, "No csi IRQ specified\n");
-+		ret = -ENXIO;
-+		return ret;
-+	}
-+
-+	ret = devm_request_irq(&pdev->dev, irq, sun6i_csi_isr, 0, MODULE_NAME,
-+			       sdev);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Cannot request csi IRQ\n");
-+		return ret;
-+	}
-+	return 0;
-+}
-+
-+static int sun6i_csi_probe(struct platform_device *pdev)
-+{
-+	struct sun6i_csi_dev *sdev;
-+	int ret;
-+
-+	sdev = devm_kzalloc(&pdev->dev, sizeof(*sdev), GFP_KERNEL);
-+	if (!sdev)
-+		return -ENOMEM;
-+
-+	sdev->dev = &pdev->dev;
-+
-+	ret = sun6i_csi_resource_request(sdev, pdev);
-+	if (ret)
-+		return ret;
-+
-+	platform_set_drvdata(pdev, sdev);
-+
-+	sdev->csi.dev = &pdev->dev;
-+	ret = sun6i_csi_v4l2_init(&sdev->csi);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static int sun6i_csi_remove(struct platform_device *pdev)
-+{
-+	struct sun6i_csi_dev *sdev = platform_get_drvdata(pdev);
-+
-+	sun6i_csi_v4l2_cleanup(&sdev->csi);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id sun6i_csi_of_match[] = {
-+	{ .compatible = "allwinner,sun8i-v3s-csi", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, sun6i_csi_of_match);
-+
-+static struct platform_driver sun6i_csi_platform_driver = {
-+	.probe = sun6i_csi_probe,
-+	.remove = sun6i_csi_remove,
-+	.driver = {
-+		.name = MODULE_NAME,
-+		.of_match_table = of_match_ptr(sun6i_csi_of_match),
-+	},
-+};
-+module_platform_driver(sun6i_csi_platform_driver);
-+
-+MODULE_DESCRIPTION("Allwinner V3s Camera Sensor Interface driver");
-+MODULE_AUTHOR("Yong Deng <yong.deng@magewell.com>");
-+MODULE_LICENSE("GPL");
-diff --git a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.h b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.h
-new file mode 100644
-index 0000000..c1a1e3a
---- /dev/null
-+++ b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.h
-@@ -0,0 +1,143 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2011-2018 Magewell Electronics Co., Ltd. (Nanjing)
-+ * All rights reserved.
-+ * Author: Yong Deng <yong.deng@magewell.com>
-+ */
-+
-+#ifndef __SUN6I_CSI_H__
-+#define __SUN6I_CSI_H__
-+
-+#include <media/v4l2-device.h>
-+#include <media/v4l2-fwnode.h>
-+
-+#include "sun6i_video.h"
-+
-+struct sun6i_csi;
-+
-+/**
-+ * struct sun6i_csi_config - configs for sun6i csi
-+ * @pixelformat: v4l2 pixel format (V4L2_PIX_FMT_*)
-+ * @code:	media bus format code (MEDIA_BUS_FMT_*)
-+ * @field:	used interlacing type (enum v4l2_field)
-+ * @width:	frame width
-+ * @height:	frame height
-+ */
-+struct sun6i_csi_config {
-+	u32		pixelformat;
-+	u32		code;
-+	u32		field;
-+	u32		width;
-+	u32		height;
-+};
-+
-+struct sun6i_csi {
-+	struct device			*dev;
-+	struct v4l2_device		v4l2_dev;
-+	struct media_device		media_dev;
-+
-+	struct v4l2_async_notifier	notifier;
-+
-+	/* video port settings */
-+	struct v4l2_fwnode_endpoint	v4l2_ep;
-+
-+	struct sun6i_csi_config		config;
-+
-+	struct sun6i_video		video;
-+};
-+
-+/**
-+ * sun6i_csi_get_supported_pixformats() - get csi supported pixformats
-+ * @csi:	pointer to the csi
-+ * @pixformats:	supported pixformats return from csi
-+ *
-+ * @return the count of pixformats or error(< 0)
-+ */
-+int sun6i_csi_get_supported_pixformats(struct sun6i_csi *csi,
-+				       const u32 **pixformats);
-+
-+/**
-+ * sun6i_csi_is_format_support() - check if the format supported by csi
-+ * @csi:	pointer to the csi
-+ * @pixformat:	v4l2 pixel format (V4L2_PIX_FMT_*)
-+ * @mbus_code:	media bus format code (MEDIA_BUS_FMT_*)
-+ */
-+bool sun6i_csi_is_format_support(struct sun6i_csi *csi, u32 pixformat,
-+				 u32 mbus_code);
-+
-+/**
-+ * sun6i_csi_set_power() - power on/off the csi
-+ * @csi:	pointer to the csi
-+ * @enable:	on/off
-+ */
-+int sun6i_csi_set_power(struct sun6i_csi *csi, bool enable);
-+
-+/**
-+ * sun6i_csi_update_config() - update the csi register setttings
-+ * @csi:	pointer to the csi
-+ * @config:	see struct sun6i_csi_config
-+ */
-+int sun6i_csi_update_config(struct sun6i_csi *csi,
-+			    struct sun6i_csi_config *config);
-+
-+/**
-+ * sun6i_csi_update_buf_addr() - update the csi frame buffer address
-+ * @csi:	pointer to the csi
-+ * @addr:	frame buffer's physical address
-+ */
-+void sun6i_csi_update_buf_addr(struct sun6i_csi *csi, dma_addr_t addr);
-+
-+/**
-+ * sun6i_csi_set_stream() - start/stop csi streaming
-+ * @csi:	pointer to the csi
-+ * @enable:	start/stop
-+ */
-+void sun6i_csi_set_stream(struct sun6i_csi *csi, bool enable);
-+
-+/* get bpp form v4l2 pixformat */
-+static inline int sun6i_csi_get_bpp(unsigned int pixformat)
-+{
-+	switch (pixformat) {
-+	case V4L2_PIX_FMT_SBGGR8:
-+	case V4L2_PIX_FMT_SGBRG8:
-+	case V4L2_PIX_FMT_SGRBG8:
-+	case V4L2_PIX_FMT_SRGGB8:
-+		return 8;
-+	case V4L2_PIX_FMT_SBGGR10:
-+	case V4L2_PIX_FMT_SGBRG10:
-+	case V4L2_PIX_FMT_SGRBG10:
-+	case V4L2_PIX_FMT_SRGGB10:
-+		return 10;
-+	case V4L2_PIX_FMT_SBGGR12:
-+	case V4L2_PIX_FMT_SGBRG12:
-+	case V4L2_PIX_FMT_SGRBG12:
-+	case V4L2_PIX_FMT_SRGGB12:
-+	case V4L2_PIX_FMT_HM12:
-+	case V4L2_PIX_FMT_NV12:
-+	case V4L2_PIX_FMT_NV21:
-+	case V4L2_PIX_FMT_YUV420:
-+	case V4L2_PIX_FMT_YVU420:
-+		return 12;
-+	case V4L2_PIX_FMT_YUYV:
-+	case V4L2_PIX_FMT_YVYU:
-+	case V4L2_PIX_FMT_UYVY:
-+	case V4L2_PIX_FMT_VYUY:
-+	case V4L2_PIX_FMT_NV16:
-+	case V4L2_PIX_FMT_NV61:
-+	case V4L2_PIX_FMT_YUV422P:
-+		return 16;
-+	case V4L2_PIX_FMT_RGB24:
-+	case V4L2_PIX_FMT_BGR24:
-+		return 24;
-+	case V4L2_PIX_FMT_RGB32:
-+	case V4L2_PIX_FMT_BGR32:
-+		return 32;
-+	default:
-+		WARN(1, "Unsupported pixformat: 0x%x\n", pixformat);
-+		break;
-+	}
-+
-+	return 0;
-+}
-+
-+#endif /* __SUN6I_CSI_H__ */
-diff --git a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi_reg.h b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi_reg.h
-new file mode 100644
-index 0000000..b55b21f
---- /dev/null
-+++ b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi_reg.h
-@@ -0,0 +1,196 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2011-2018 Magewell Electronics Co., Ltd. (Nanjing)
-+ * All rights reserved.
-+ * Author: Yong Deng <yong.deng@magewell.com>
-+ */
-+
-+#ifndef __SUN6I_CSI_REG_H__
-+#define __SUN6I_CSI_REG_H__
-+
-+#include <linux/kernel.h>
-+
-+#define CSI_EN_REG			0x0
-+#define CSI_EN_VER_EN				BIT(30)
-+#define CSI_EN_CSI_EN				BIT(0)
-+
-+#define CSI_IF_CFG_REG			0x4
-+#define CSI_IF_CFG_SRC_TYPE_MASK		BIT(21)
-+#define CSI_IF_CFG_SRC_TYPE_PROGRESSED		((0 << 21) & CSI_IF_CFG_SRC_TYPE_MASK)
-+#define CSI_IF_CFG_SRC_TYPE_INTERLACED		((1 << 21) & CSI_IF_CFG_SRC_TYPE_MASK)
-+#define CSI_IF_CFG_FPS_DS_EN			BIT(20)
-+#define CSI_IF_CFG_FIELD_MASK			BIT(19)
-+#define CSI_IF_CFG_FIELD_NEGATIVE		((0 << 19) & CSI_IF_CFG_FIELD_MASK)
-+#define CSI_IF_CFG_FIELD_POSITIVE		((1 << 19) & CSI_IF_CFG_FIELD_MASK)
-+#define CSI_IF_CFG_VREF_POL_MASK		BIT(18)
-+#define CSI_IF_CFG_VREF_POL_NEGATIVE		((0 << 18) & CSI_IF_CFG_VREF_POL_MASK)
-+#define CSI_IF_CFG_VREF_POL_POSITIVE		((1 << 18) & CSI_IF_CFG_VREF_POL_MASK)
-+#define CSI_IF_CFG_HREF_POL_MASK		BIT(17)
-+#define CSI_IF_CFG_HREF_POL_NEGATIVE		((0 << 17) & CSI_IF_CFG_HREF_POL_MASK)
-+#define CSI_IF_CFG_HREF_POL_POSITIVE		((1 << 17) & CSI_IF_CFG_HREF_POL_MASK)
-+#define CSI_IF_CFG_CLK_POL_MASK			BIT(16)
-+#define CSI_IF_CFG_CLK_POL_RISING_EDGE		((0 << 16) & CSI_IF_CFG_CLK_POL_MASK)
-+#define CSI_IF_CFG_CLK_POL_FALLING_EDGE		((1 << 16) & CSI_IF_CFG_CLK_POL_MASK)
-+#define CSI_IF_CFG_IF_DATA_WIDTH_MASK		GENMASK(10, 8)
-+#define CSI_IF_CFG_IF_DATA_WIDTH_8BIT		((0 << 8) & CSI_IF_CFG_IF_DATA_WIDTH_MASK)
-+#define CSI_IF_CFG_IF_DATA_WIDTH_10BIT		((1 << 8) & CSI_IF_CFG_IF_DATA_WIDTH_MASK)
-+#define CSI_IF_CFG_IF_DATA_WIDTH_12BIT		((2 << 8) & CSI_IF_CFG_IF_DATA_WIDTH_MASK)
-+#define CSI_IF_CFG_MIPI_IF_MASK			BIT(7)
-+#define CSI_IF_CFG_MIPI_IF_CSI			(0 << 7)
-+#define CSI_IF_CFG_MIPI_IF_MIPI			(1 << 7)
-+#define CSI_IF_CFG_CSI_IF_MASK			GENMASK(4, 0)
-+#define CSI_IF_CFG_CSI_IF_YUV422_INTLV		((0 << 0) & CSI_IF_CFG_CSI_IF_MASK)
-+#define CSI_IF_CFG_CSI_IF_YUV422_16BIT		((1 << 0) & CSI_IF_CFG_CSI_IF_MASK)
-+#define CSI_IF_CFG_CSI_IF_BT656			((4 << 0) & CSI_IF_CFG_CSI_IF_MASK)
-+#define CSI_IF_CFG_CSI_IF_BT1120		((5 << 0) & CSI_IF_CFG_CSI_IF_MASK)
-+
-+#define CSI_CAP_REG			0x8
-+#define CSI_CAP_CH0_CAP_MASK_MASK		GENMASK(5, 2)
-+#define CSI_CAP_CH0_CAP_MASK(count)		((count << 2) & CSI_CAP_CH0_CAP_MASK_MASK)
-+#define CSI_CAP_CH0_VCAP_ON			BIT(1)
-+#define CSI_CAP_CH0_SCAP_ON			BIT(0)
-+
-+#define CSI_SYNC_CNT_REG		0xc
-+#define CSI_FIFO_THRS_REG		0x10
-+#define CSI_BT656_HEAD_CFG_REG		0x14
-+#define CSI_PTN_LEN_REG			0x30
-+#define CSI_PTN_ADDR_REG		0x34
-+#define CSI_VER_REG			0x3c
-+
-+#define CSI_CH_CFG_REG			0x44
-+#define CSI_CH_CFG_INPUT_FMT_MASK		GENMASK(23, 20)
-+#define CSI_CH_CFG_INPUT_FMT(fmt)		((fmt << 20) & CSI_CH_CFG_INPUT_FMT_MASK)
-+#define CSI_CH_CFG_OUTPUT_FMT_MASK		GENMASK(19, 16)
-+#define CSI_CH_CFG_OUTPUT_FMT(fmt)		((fmt << 16) & CSI_CH_CFG_OUTPUT_FMT_MASK)
-+#define CSI_CH_CFG_VFLIP_EN			BIT(13)
-+#define CSI_CH_CFG_HFLIP_EN			BIT(12)
-+#define CSI_CH_CFG_FIELD_SEL_MASK		GENMASK(11, 10)
-+#define CSI_CH_CFG_FIELD_SEL_FIELD0		((0 << 10) & CSI_CH_CFG_FIELD_SEL_MASK)
-+#define CSI_CH_CFG_FIELD_SEL_FIELD1		((1 << 10) & CSI_CH_CFG_FIELD_SEL_MASK)
-+#define CSI_CH_CFG_FIELD_SEL_BOTH		((2 << 10) & CSI_CH_CFG_FIELD_SEL_MASK)
-+#define CSI_CH_CFG_INPUT_SEQ_MASK		GENMASK(9, 8)
-+#define CSI_CH_CFG_INPUT_SEQ(seq)		((seq << 8) & CSI_CH_CFG_INPUT_SEQ_MASK)
-+
-+#define CSI_CH_SCALE_REG		0x4c
-+#define CSI_CH_SCALE_QUART_EN			BIT(0)
-+
-+#define CSI_CH_F0_BUFA_REG		0x50
-+
-+#define CSI_CH_F1_BUFA_REG		0x58
-+
-+#define CSI_CH_F2_BUFA_REG		0x60
-+
-+#define CSI_CH_STA_REG			0x6c
-+#define CSI_CH_STA_FIELD_STA_MASK		BIT(2)
-+#define CSI_CH_STA_FIELD_STA_FIELD0		((0 << 2) & CSI_CH_STA_FIELD_STA_MASK)
-+#define CSI_CH_STA_FIELD_STA_FIELD1		((1 << 2) & CSI_CH_STA_FIELD_STA_MASK)
-+#define CSI_CH_STA_VCAP_STA			BIT(1)
-+#define CSI_CH_STA_SCAP_STA			BIT(0)
-+
-+#define CSI_CH_INT_EN_REG		0x70
-+#define CSI_CH_INT_EN_VS_INT_EN			BIT(7)
-+#define CSI_CH_INT_EN_HB_OF_INT_EN		BIT(6)
-+#define CSI_CH_INT_EN_MUL_ERR_INT_EN		BIT(5)
-+#define CSI_CH_INT_EN_FIFO2_OF_INT_EN		BIT(4)
-+#define CSI_CH_INT_EN_FIFO1_OF_INT_EN		BIT(3)
-+#define CSI_CH_INT_EN_FIFO0_OF_INT_EN		BIT(2)
-+#define CSI_CH_INT_EN_FD_INT_EN			BIT(1)
-+#define CSI_CH_INT_EN_CD_INT_EN			BIT(0)
-+
-+#define CSI_CH_INT_STA_REG		0x74
-+#define CSI_CH_INT_STA_VS_PD			BIT(7)
-+#define CSI_CH_INT_STA_HB_OF_PD			BIT(6)
-+#define CSI_CH_INT_STA_MUL_ERR_PD		BIT(5)
-+#define CSI_CH_INT_STA_FIFO2_OF_PD		BIT(4)
-+#define CSI_CH_INT_STA_FIFO1_OF_PD		BIT(3)
-+#define CSI_CH_INT_STA_FIFO0_OF_PD		BIT(2)
-+#define CSI_CH_INT_STA_FD_PD			BIT(1)
-+#define CSI_CH_INT_STA_CD_PD			BIT(0)
-+
-+#define CSI_CH_FLD1_VSIZE_REG		0x78
-+
-+#define CSI_CH_HSIZE_REG		0x80
-+#define CSI_CH_HSIZE_HOR_LEN_MASK		GENMASK(28, 16)
-+#define CSI_CH_HSIZE_HOR_LEN(len)		((len << 16) & CSI_CH_HSIZE_HOR_LEN_MASK)
-+#define CSI_CH_HSIZE_HOR_START_MASK		GENMASK(12, 0)
-+#define CSI_CH_HSIZE_HOR_START(start)		((start << 0) & CSI_CH_HSIZE_HOR_START_MASK)
-+
-+#define CSI_CH_VSIZE_REG		0x84
-+#define CSI_CH_VSIZE_VER_LEN_MASK		GENMASK(28, 16)
-+#define CSI_CH_VSIZE_VER_LEN(len)		((len << 16) & CSI_CH_VSIZE_VER_LEN_MASK)
-+#define CSI_CH_VSIZE_VER_START_MASK		GENMASK(12, 0)
-+#define CSI_CH_VSIZE_VER_START(start)		((start << 0) & CSI_CH_VSIZE_VER_START_MASK)
-+
-+#define CSI_CH_BUF_LEN_REG		0x88
-+#define CSI_CH_BUF_LEN_BUF_LEN_C_MASK		GENMASK(29, 16)
-+#define CSI_CH_BUF_LEN_BUF_LEN_C(len)		((len << 16) & CSI_CH_BUF_LEN_BUF_LEN_C_MASK)
-+#define CSI_CH_BUF_LEN_BUF_LEN_Y_MASK		GENMASK(13, 0)
-+#define CSI_CH_BUF_LEN_BUF_LEN_Y(len)		((len << 0) & CSI_CH_BUF_LEN_BUF_LEN_Y_MASK)
-+
-+#define CSI_CH_FLIP_SIZE_REG		0x8c
-+#define CSI_CH_FLIP_SIZE_VER_LEN_MASK		GENMASK(28, 16)
-+#define CSI_CH_FLIP_SIZE_VER_LEN(len)		((len << 16) & CSI_CH_FLIP_SIZE_VER_LEN_MASK)
-+#define CSI_CH_FLIP_SIZE_VALID_LEN_MASK		GENMASK(12, 0)
-+#define CSI_CH_FLIP_SIZE_VALID_LEN(len)		((len << 0) & CSI_CH_FLIP_SIZE_VALID_LEN_MASK)
-+
-+#define CSI_CH_FRM_CLK_CNT_REG		0x90
-+#define CSI_CH_ACC_ITNL_CLK_CNT_REG	0x94
-+#define CSI_CH_FIFO_STAT_REG		0x98
-+#define CSI_CH_PCLK_STAT_REG		0x9c
-+
-+/*
-+ * csi input data format
-+ */
-+enum csi_input_fmt {
-+	CSI_INPUT_FORMAT_RAW		= 0,
-+	CSI_INPUT_FORMAT_YUV422		= 3,
-+	CSI_INPUT_FORMAT_YUV420		= 4,
-+};
-+
-+/*
-+ * csi output data format
-+ */
-+enum csi_output_fmt {
-+	/* only when input format is RAW */
-+	CSI_FIELD_RAW_8			= 0,
-+	CSI_FIELD_RAW_10		= 1,
-+	CSI_FIELD_RAW_12		= 2,
-+	CSI_FIELD_RGB565		= 4,
-+	CSI_FIELD_RGB888		= 5,
-+	CSI_FIELD_PRGB888		= 6,
-+	CSI_FRAME_RAW_8			= 8,
-+	CSI_FRAME_RAW_10		= 9,
-+	CSI_FRAME_RAW_12		= 10,
-+	CSI_FRAME_RGB565		= 12,
-+	CSI_FRAME_RGB888		= 13,
-+	CSI_FRAME_PRGB888		= 14,
-+
-+	/* only when input format is YUV422 */
-+	CSI_FIELD_PLANAR_YUV422		= 0,
-+	CSI_FIELD_PLANAR_YUV420		= 1,
-+	CSI_FRAME_PLANAR_YUV420		= 2,
-+	CSI_FRAME_PLANAR_YUV422		= 3,
-+	CSI_FIELD_UV_CB_YUV422		= 4,
-+	CSI_FIELD_UV_CB_YUV420		= 5,
-+	CSI_FRAME_UV_CB_YUV420		= 6,
-+	CSI_FRAME_UV_CB_YUV422		= 7,
-+	CSI_FIELD_MB_YUV422		= 8,
-+	CSI_FIELD_MB_YUV420		= 9,
-+	CSI_FRAME_MB_YUV420		= 10,
-+	CSI_FRAME_MB_YUV422		= 11,
-+	CSI_FIELD_UV_CB_YUV422_10	= 12,
-+	CSI_FIELD_UV_CB_YUV420_10	= 13,
-+};
-+
-+/*
-+ * csi YUV input data sequence
-+ */
-+enum csi_input_seq {
-+	/* only when input format is YUV422 */
-+	CSI_INPUT_SEQ_YUYV = 0,
-+	CSI_INPUT_SEQ_YVYU,
-+	CSI_INPUT_SEQ_UYVY,
-+	CSI_INPUT_SEQ_VYUY,
-+};
-+
-+#endif /* __SUN6I_CSI_REG_H__ */
-diff --git a/drivers/media/platform/sunxi/sun6i-csi/sun6i_video.c b/drivers/media/platform/sunxi/sun6i-csi/sun6i_video.c
-new file mode 100644
-index 0000000..a8885d2
---- /dev/null
-+++ b/drivers/media/platform/sunxi/sun6i-csi/sun6i_video.c
-@@ -0,0 +1,741 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2011-2018 Magewell Electronics Co., Ltd. (Nanjing)
-+ * All rights reserved.
-+ * Author: Yong Deng <yong.deng@magewell.com>
-+ */
-+
-+#include <linux/of.h>
-+
-+#include <media/v4l2-device.h>
-+#include <media/v4l2-ioctl.h>
-+#include <media/v4l2-mc.h>
-+#include <media/videobuf2-dma-contig.h>
-+#include <media/videobuf2-v4l2.h>
-+
-+#include "sun6i_csi.h"
-+#include "sun6i_video.h"
-+
-+struct sun6i_csi_buffer {
-+	struct vb2_v4l2_buffer		vb;
-+	struct list_head		list;
-+
-+	dma_addr_t			dma_addr;
-+	bool				queued_to_csi;
-+};
-+
-+static struct sun6i_csi_format *
-+find_format_by_pixformat(struct sun6i_video *video, unsigned int pixformat)
-+{
-+	unsigned int num_formats = video->num_formats;
-+	struct sun6i_csi_format *fmt;
-+	unsigned int i;
-+
-+	for (i = 0; i < num_formats; i++) {
-+		fmt = &video->formats[i];
-+		if (fmt->pixformat == pixformat)
-+			return fmt;
-+	}
-+
-+	return NULL;
-+}
-+
-+static struct v4l2_subdev *
-+sun6i_video_remote_subdev(struct sun6i_video *video, u32 *pad)
-+{
-+	struct media_pad *remote;
-+
-+	remote = media_entity_remote_pad(&video->pad);
-+
-+	if (!remote || !is_media_entity_v4l2_subdev(remote->entity))
-+		return NULL;
-+
-+	if (pad)
-+		*pad = remote->index;
-+
-+	return media_entity_to_v4l2_subdev(remote->entity);
-+}
-+
-+static int sun6i_video_queue_setup(struct vb2_queue *vq,
-+				 unsigned int *nbuffers, unsigned int *nplanes,
-+				 unsigned int sizes[],
-+				 struct device *alloc_devs[])
-+{
-+	struct sun6i_video *video = vb2_get_drv_priv(vq);
-+	unsigned int size = video->fmt.fmt.pix.sizeimage;
-+
-+	if (*nplanes)
-+		return sizes[0] < size ? -EINVAL : 0;
-+
-+	*nplanes = 1;
-+	sizes[0] = size;
-+
-+	return 0;
-+}
-+
-+static int sun6i_video_buffer_prepare(struct vb2_buffer *vb)
-+{
-+	struct vb2_v4l2_buffer *vbuf = to_vb2_v4l2_buffer(vb);
-+	struct sun6i_csi_buffer *buf =
-+			container_of(vbuf, struct sun6i_csi_buffer, vb);
-+	struct sun6i_video *video = vb2_get_drv_priv(vb->vb2_queue);
-+	unsigned long size = video->fmt.fmt.pix.sizeimage;
-+
-+	if (vb2_plane_size(vb, 0) < size) {
-+		v4l2_err(video->vdev.v4l2_dev, "buffer too small (%lu < %lu)\n",
-+			 vb2_plane_size(vb, 0), size);
-+		return -EINVAL;
-+	}
-+
-+	vb2_set_plane_payload(vb, 0, size);
-+
-+	buf->dma_addr = vb2_dma_contig_plane_dma_addr(vb, 0);
-+
-+	vbuf->field = video->fmt.fmt.pix.field;
-+
-+	return 0;
-+}
-+
-+static int sun6i_pipeline_set_stream(struct sun6i_video *video, bool enable)
-+{
-+	struct media_entity *entity;
-+	struct media_pad *pad;
-+	struct v4l2_subdev *subdev;
-+	int ret;
-+
-+	entity = &video->vdev.entity;
-+	while (1) {
-+		pad = &entity->pads[0];
-+		if (!(pad->flags & MEDIA_PAD_FL_SINK))
-+			break;
-+
-+		pad = media_entity_remote_pad(pad);
-+		if (!pad || !is_media_entity_v4l2_subdev(pad->entity))
-+			break;
-+
-+		entity = pad->entity;
-+		subdev = media_entity_to_v4l2_subdev(entity);
-+
-+		ret = v4l2_subdev_call(subdev, video, s_stream, enable);
-+		if (enable && ret < 0 && ret != -ENOIOCTLCMD)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int sun6i_video_start_streaming(struct vb2_queue *vq, unsigned int count)
-+{
-+	struct sun6i_video *video = vb2_get_drv_priv(vq);
-+	struct sun6i_csi_buffer *buf;
-+	struct sun6i_csi_buffer *next_buf;
-+	struct sun6i_csi_config config;
-+	unsigned long flags;
-+	int ret;
-+
-+	video->sequence = 0;
-+
-+	ret = media_pipeline_start(&video->vdev.entity, &video->vdev.pipe);
-+	if (ret < 0)
-+		goto clear_dma_queue;
-+
-+	config.pixelformat = video->fmt.fmt.pix.pixelformat;
-+	config.code = video->current_fmt->mbus_code;
-+	config.field = video->fmt.fmt.pix.field;
-+	config.width = video->fmt.fmt.pix.width;
-+	config.height = video->fmt.fmt.pix.height;
-+
-+	ret = sun6i_csi_update_config(video->csi, &config);
-+	if (ret < 0)
-+		goto stop_media_pipeline;
-+
-+	spin_lock_irqsave(&video->dma_queue_lock, flags);
-+
-+	buf = list_first_entry(&video->dma_queue,
-+			       struct sun6i_csi_buffer, list);
-+	buf->queued_to_csi = true;
-+	sun6i_csi_update_buf_addr(video->csi, buf->dma_addr);
-+
-+	sun6i_csi_set_stream(video->csi, true);
-+
-+	/*
-+	 * CSI will lookup the next dma buffer for next frame before the
-+	 * the current frame done IRQ triggered. This is not documented
-+	 * but reported by Ondřej Jirman.
-+	 * The BSP code has workaround for this too. It skip to mark the
-+	 * first buffer as frame done for VB2 and pass the second buffer
-+	 * to CSI in the first frame done ISR call. Then in second frame
-+	 * done ISR call, it mark the first buffer as frame done for VB2
-+	 * and pass the third buffer to CSI. And so on. The bad thing is
-+	 * that the first buffer will be written twice and the first frame
-+	 * is dropped even the queued buffer is sufficient.
-+	 * So, I make some improvement here. Pass the next buffer to CSI
-+	 * just follow starting the CSI. In this case, the first frame
-+	 * will be stored in first buffer, second frame in second buffer.
-+	 * This method is used to avoid dropping the first frame, it
-+	 * would also drop frame when lacking of queued buffer.
-+	 */
-+	next_buf = list_next_entry(buf, list);
-+	next_buf->queued_to_csi = true;
-+	sun6i_csi_update_buf_addr(video->csi, next_buf->dma_addr);
-+
-+	spin_unlock_irqrestore(&video->dma_queue_lock, flags);
-+
-+	ret = sun6i_pipeline_set_stream(video, true);
-+	if (ret < 0)
-+		goto stop_csi_stream;
-+
-+	return 0;
-+
-+stop_csi_stream:
-+	sun6i_csi_set_stream(video->csi, false);
-+stop_media_pipeline:
-+	media_pipeline_stop(&video->vdev.entity);
-+clear_dma_queue:
-+	spin_lock_irqsave(&video->dma_queue_lock, flags);
-+	list_for_each_entry(buf, &video->dma_queue, list)
-+		vb2_buffer_done(&buf->vb.vb2_buf, VB2_BUF_STATE_QUEUED);
-+	INIT_LIST_HEAD(&video->dma_queue);
-+	spin_unlock_irqrestore(&video->dma_queue_lock, flags);
-+
-+	return ret;
-+}
-+
-+static void sun6i_video_stop_streaming(struct vb2_queue *vq)
-+{
-+	struct sun6i_video *video = vb2_get_drv_priv(vq);
-+	unsigned long flags;
-+	struct sun6i_csi_buffer *buf;
-+
-+	sun6i_pipeline_set_stream(video, false);
-+
-+	sun6i_csi_set_stream(video->csi, false);
-+
-+	media_pipeline_stop(&video->vdev.entity);
-+
-+	/* Release all active buffers */
-+	spin_lock_irqsave(&video->dma_queue_lock, flags);
-+	list_for_each_entry(buf, &video->dma_queue, list)
-+		vb2_buffer_done(&buf->vb.vb2_buf, VB2_BUF_STATE_ERROR);
-+	INIT_LIST_HEAD(&video->dma_queue);
-+	spin_unlock_irqrestore(&video->dma_queue_lock, flags);
-+}
-+
-+static void sun6i_video_buffer_queue(struct vb2_buffer *vb)
-+{
-+	struct vb2_v4l2_buffer *vbuf = to_vb2_v4l2_buffer(vb);
-+	struct sun6i_csi_buffer *buf =
-+			container_of(vbuf, struct sun6i_csi_buffer, vb);
-+	struct sun6i_video *video = vb2_get_drv_priv(vb->vb2_queue);
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&video->dma_queue_lock, flags);
-+	buf->queued_to_csi = false;
-+	list_add_tail(&buf->list, &video->dma_queue);
-+	spin_unlock_irqrestore(&video->dma_queue_lock, flags);
-+}
-+
-+void sun6i_video_frame_done(struct sun6i_video *video)
-+{
-+	struct sun6i_csi_buffer *buf;
-+	struct sun6i_csi_buffer *next_buf;
-+	struct vb2_v4l2_buffer *vbuf;
-+
-+	spin_lock(&video->dma_queue_lock);
-+
-+	buf = list_first_entry(&video->dma_queue,
-+			       struct sun6i_csi_buffer, list);
-+	if (list_is_last(&buf->list, &video->dma_queue)) {
-+		dev_dbg(video->csi->dev, "Frame droped!\n");
-+		goto unlock;
-+	}
-+
-+	next_buf = list_next_entry(buf, list);
-+	/* If a new buffer (#next_buf) had not been queued to CSI, the old
-+	 * buffer (#buf) is still holding by CSI for storing the next
-+	 * frame. So, we queue a new buffer (#next_buf) to CSI then wait
-+	 * for next ISR call.
-+	 */
-+	if (!next_buf->queued_to_csi) {
-+		next_buf->queued_to_csi = true;
-+		sun6i_csi_update_buf_addr(video->csi, next_buf->dma_addr);
-+		dev_dbg(video->csi->dev, "Frame droped!\n");
-+		goto unlock;
-+	}
-+
-+	list_del(&buf->list);
-+	vbuf = &buf->vb;
-+	vbuf->vb2_buf.timestamp = ktime_get_ns();
-+	vbuf->sequence = video->sequence;
-+	vb2_buffer_done(&vbuf->vb2_buf, VB2_BUF_STATE_DONE);
-+
-+	/* Prepare buffer for next frame but one.  */
-+	if (!list_is_last(&next_buf->list, &video->dma_queue)) {
-+		next_buf = list_next_entry(next_buf, list);
-+		next_buf->queued_to_csi = true;
-+		sun6i_csi_update_buf_addr(video->csi, next_buf->dma_addr);
-+	} else {
-+		dev_dbg(video->csi->dev, "Next frame will be dropped!\n");
-+	}
-+
-+unlock:
-+	video->sequence++;
-+	spin_unlock(&video->dma_queue_lock);
-+}
-+
-+static struct vb2_ops sun6i_csi_vb2_ops = {
-+	.queue_setup		= sun6i_video_queue_setup,
-+	.wait_prepare		= vb2_ops_wait_prepare,
-+	.wait_finish		= vb2_ops_wait_finish,
-+	.buf_prepare		= sun6i_video_buffer_prepare,
-+	.start_streaming	= sun6i_video_start_streaming,
-+	.stop_streaming		= sun6i_video_stop_streaming,
-+	.buf_queue		= sun6i_video_buffer_queue,
-+};
-+
-+static int vidioc_querycap(struct file *file, void *priv,
-+				struct v4l2_capability *cap)
-+{
-+	struct sun6i_video *video = video_drvdata(file);
-+
-+	strlcpy(cap->driver, "sun6i-video", sizeof(cap->driver));
-+	strlcpy(cap->card, video->vdev.name, sizeof(cap->card));
-+	snprintf(cap->bus_info, sizeof(cap->bus_info), "platform:%s",
-+		 video->csi->dev->of_node->name);
-+
-+	return 0;
-+}
-+
-+static int vidioc_enum_fmt_vid_cap(struct file *file, void *priv,
-+				   struct v4l2_fmtdesc *f)
-+{
-+	struct sun6i_video *video = video_drvdata(file);
-+	u32 index = f->index;
-+
-+	if (index >= video->num_formats)
-+		return -EINVAL;
-+
-+	f->pixelformat = video->formats[index].pixformat;
-+
-+	return 0;
-+}
-+
-+static int vidioc_g_fmt_vid_cap(struct file *file, void *priv,
-+				struct v4l2_format *fmt)
-+{
-+	struct sun6i_video *video = video_drvdata(file);
-+
-+	*fmt = video->fmt;
-+
-+	return 0;
-+}
-+
-+static int sun6i_video_try_fmt(struct sun6i_video *video, struct v4l2_format *f,
-+			       struct sun6i_csi_format **current_fmt)
-+{
-+	struct sun6i_csi_format *csi_fmt;
-+	struct v4l2_pix_format *pixfmt = &f->fmt.pix;
-+	struct v4l2_subdev_format format;
-+	struct v4l2_subdev *subdev;
-+	u32 pad;
-+	int ret;
-+
-+	subdev = sun6i_video_remote_subdev(video, &pad);
-+	if (subdev == NULL)
-+		return -ENXIO;
-+
-+	csi_fmt = find_format_by_pixformat(video, pixfmt->pixelformat);
-+	if (csi_fmt == NULL) {
-+		if (video->num_formats > 0) {
-+			csi_fmt = &video->formats[0];
-+			pixfmt->pixelformat = csi_fmt->pixformat;
-+		} else
-+			return -EINVAL;
-+	}
-+
-+	format.pad = pad;
-+	format.which = V4L2_SUBDEV_FORMAT_TRY;
-+	v4l2_fill_mbus_format(&format.format, pixfmt, csi_fmt->mbus_code);
-+	ret = v4l2_subdev_call(subdev, pad, get_fmt, NULL, &format);
-+	if (ret)
-+		return ret;
-+
-+	v4l2_fill_pix_format(pixfmt, &format.format);
-+
-+	pixfmt->bytesperline = (pixfmt->width * csi_fmt->bpp) >> 3;
-+	pixfmt->sizeimage = (pixfmt->width * csi_fmt->bpp * pixfmt->height) / 8;
-+
-+	if (current_fmt)
-+		*current_fmt = csi_fmt;
-+
-+	return 0;
-+}
-+
-+static int sun6i_video_set_fmt(struct sun6i_video *video, struct v4l2_format *f)
-+{
-+	struct v4l2_subdev_format format;
-+	struct sun6i_csi_format *current_fmt;
-+	struct v4l2_subdev *subdev;
-+	u32 pad;
-+	int ret;
-+
-+	subdev = sun6i_video_remote_subdev(video, &pad);
-+	if (subdev == NULL)
-+		return -ENXIO;
-+
-+	ret = sun6i_video_try_fmt(video, f, &current_fmt);
-+	if (ret)
-+		return ret;
-+
-+	format.which = V4L2_SUBDEV_FORMAT_ACTIVE;
-+	v4l2_fill_mbus_format(&format.format, &f->fmt.pix,
-+			      current_fmt->mbus_code);
-+	ret = v4l2_subdev_call(subdev, pad, set_fmt, NULL, &format);
-+	if (ret < 0)
-+		return ret;
-+
-+	video->fmt = *f;
-+	video->current_fmt = current_fmt;
-+
-+	return 0;
-+}
-+
-+static int vidioc_s_fmt_vid_cap(struct file *file, void *priv,
-+				struct v4l2_format *f)
-+{
-+	struct sun6i_video *video = video_drvdata(file);
-+
-+	if (vb2_is_busy(&video->vb2_vidq))
-+		return -EBUSY;
-+
-+	return sun6i_video_set_fmt(video, f);
-+}
-+
-+static int vidioc_try_fmt_vid_cap(struct file *file, void *priv,
-+				  struct v4l2_format *f)
-+{
-+	struct sun6i_video *video = video_drvdata(file);
-+
-+	return sun6i_video_try_fmt(video, f, NULL);
-+}
-+
-+static int vidioc_enum_input(struct file *file, void *fh,
-+			 struct v4l2_input *inp)
-+{
-+	struct sun6i_video *video = video_drvdata(file);
-+	struct v4l2_subdev *subdev;
-+	u32 pad;
-+	int ret;
-+
-+	if (inp->index != 0)
-+		return -EINVAL;
-+
-+	subdev = sun6i_video_remote_subdev(video, &pad);
-+	if (subdev == NULL)
-+		return -ENXIO;
-+
-+	ret = v4l2_subdev_call(subdev, video, g_input_status, &inp->status);
-+	if (ret < 0 && ret != -ENOIOCTLCMD && ret != -ENODEV)
-+		return ret;
-+
-+	inp->type = V4L2_INPUT_TYPE_CAMERA;
-+
-+	inp->capabilities = 0;
-+	inp->std = 0;
-+	if (v4l2_subdev_has_op(subdev, pad, dv_timings_cap))
-+		inp->capabilities = V4L2_IN_CAP_DV_TIMINGS;
-+
-+	strlcpy(inp->name, subdev->name, sizeof(inp->name));
-+
-+	return 0;
-+}
-+
-+static int vidioc_g_input(struct file *file, void *fh, unsigned int *i)
-+{
-+	*i = 0;
-+
-+	return 0;
-+}
-+
-+static int vidioc_s_input(struct file *file, void *fh, unsigned int i)
-+{
-+	if (i != 0)
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
-+static const struct v4l2_ioctl_ops sun6i_video_ioctl_ops = {
-+	.vidioc_querycap		= vidioc_querycap,
-+	.vidioc_enum_fmt_vid_cap	= vidioc_enum_fmt_vid_cap,
-+	.vidioc_g_fmt_vid_cap		= vidioc_g_fmt_vid_cap,
-+	.vidioc_s_fmt_vid_cap		= vidioc_s_fmt_vid_cap,
-+	.vidioc_try_fmt_vid_cap		= vidioc_try_fmt_vid_cap,
-+
-+	.vidioc_enum_input		= vidioc_enum_input,
-+	.vidioc_s_input			= vidioc_s_input,
-+	.vidioc_g_input			= vidioc_g_input,
-+
-+	.vidioc_reqbufs			= vb2_ioctl_reqbufs,
-+	.vidioc_querybuf		= vb2_ioctl_querybuf,
-+	.vidioc_qbuf			= vb2_ioctl_qbuf,
-+	.vidioc_expbuf			= vb2_ioctl_expbuf,
-+	.vidioc_dqbuf			= vb2_ioctl_dqbuf,
-+	.vidioc_create_bufs		= vb2_ioctl_create_bufs,
-+	.vidioc_prepare_buf		= vb2_ioctl_prepare_buf,
-+	.vidioc_streamon		= vb2_ioctl_streamon,
-+	.vidioc_streamoff		= vb2_ioctl_streamoff,
-+};
-+
-+/* -----------------------------------------------------------------------------
-+ * V4L2 file operations
-+ */
-+static int sun6i_video_open(struct file *file)
-+{
-+	struct sun6i_video *video = video_drvdata(file);
-+	int ret;
-+
-+	if (mutex_lock_interruptible(&video->lock))
-+		return -ERESTARTSYS;
-+
-+	ret = v4l2_fh_open(file);
-+	if (ret < 0)
-+		goto unlock;
-+
-+	ret = v4l2_pipeline_pm_use(&video->vdev.entity, 1);
-+	if (ret < 0)
-+		goto fh_release;
-+
-+	/* check if already powered */
-+	if (!v4l2_fh_is_singular_file(file))
-+		goto unlock;
-+
-+	ret = sun6i_csi_set_power(video->csi, true);
-+	if (ret < 0)
-+		goto fh_release;
-+
-+	mutex_unlock(&video->lock);
-+	return 0;
-+
-+fh_release:
-+	v4l2_fh_release(file);
-+unlock:
-+	mutex_unlock(&video->lock);
-+	return ret;
-+}
-+
-+static int sun6i_video_close(struct file *file)
-+{
-+	struct sun6i_video *video = video_drvdata(file);
-+	bool last_fh;
-+
-+	mutex_lock(&video->lock);
-+
-+	last_fh = v4l2_fh_is_singular_file(file);
-+
-+	_vb2_fop_release(file, NULL);
-+
-+	v4l2_pipeline_pm_use(&video->vdev.entity, 0);
-+
-+	if (last_fh)
-+		sun6i_csi_set_power(video->csi, false);
-+
-+	mutex_unlock(&video->lock);
-+
-+	return 0;
-+}
-+
-+static const struct v4l2_file_operations sun6i_video_fops = {
-+	.owner		= THIS_MODULE,
-+	.open		= sun6i_video_open,
-+	.release	= sun6i_video_close,
-+	.unlocked_ioctl	= video_ioctl2,
-+	.mmap		= vb2_fop_mmap,
-+	.poll		= vb2_fop_poll
-+};
-+
-+/* -----------------------------------------------------------------------------
-+ * Media Operations
-+ */
-+static int sun6i_video_formats_init(struct sun6i_video *video)
-+{
-+	struct v4l2_subdev_mbus_code_enum mbus_code = { 0 };
-+	struct sun6i_csi *csi = video->csi;
-+	struct v4l2_format format;
-+	struct v4l2_subdev *subdev;
-+	u32 pad;
-+	const u32 *pixformats;
-+	int pixformat_count = 0;
-+	u32 subdev_codes[32]; /* subdev format codes, 32 should be enough */
-+	int codes_count = 0;
-+	int num_fmts = 0;
-+	int i, j;
-+
-+	subdev = sun6i_video_remote_subdev(video, &pad);
-+	if (subdev == NULL)
-+		return -ENXIO;
-+
-+	/* Get supported pixformats of CSI */
-+	pixformat_count = sun6i_csi_get_supported_pixformats(csi, &pixformats);
-+	if (pixformat_count <= 0)
-+		return -ENXIO;
-+
-+	/* Get subdev formats codes */
-+	mbus_code.pad = pad;
-+	mbus_code.which = V4L2_SUBDEV_FORMAT_ACTIVE;
-+	while (!v4l2_subdev_call(subdev, pad, enum_mbus_code, NULL,
-+				 &mbus_code)) {
-+		if (codes_count >= ARRAY_SIZE(subdev_codes)) {
-+			dev_warn(video->csi->dev,
-+				 "subdev_codes array is full!\n");
-+			break;
-+		}
-+		subdev_codes[codes_count] = mbus_code.code;
-+		codes_count++;
-+		mbus_code.index++;
-+	}
-+
-+	if (!codes_count)
-+		return -ENXIO;
-+
-+	/* Get supported formats count */
-+	for (i = 0; i < codes_count; i++) {
-+		for (j = 0; j < pixformat_count; j++) {
-+			if (!sun6i_csi_is_format_support(csi, pixformats[j],
-+					subdev_codes[i])) {
-+				continue;
-+			}
-+			num_fmts++;
-+		}
-+	}
-+
-+	if (!num_fmts)
-+		return -ENXIO;
-+
-+	video->num_formats = num_fmts;
-+	video->formats = devm_kcalloc(video->csi->dev, num_fmts,
-+			sizeof(struct sun6i_csi_format), GFP_KERNEL);
-+	if (!video->formats)
-+		return -ENOMEM;
-+
-+	/* Get supported formats */
-+	num_fmts = 0;
-+	for (i = 0; i < codes_count; i++) {
-+		for (j = 0; j < pixformat_count; j++) {
-+			if (!sun6i_csi_is_format_support(csi, pixformats[j],
-+					subdev_codes[i])) {
-+				continue;
-+			}
-+
-+			video->formats[num_fmts].pixformat = pixformats[j];
-+			video->formats[num_fmts].mbus_code = subdev_codes[i];
-+			video->formats[num_fmts].bpp =
-+					sun6i_csi_get_bpp(pixformats[j]);
-+			num_fmts++;
-+		}
-+	}
-+
-+	/* setup default format */
-+	format.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
-+	format.fmt.pix.width = 1280;
-+	format.fmt.pix.height = 720;
-+	format.fmt.pix.pixelformat = video->formats[0].pixformat;
-+	sun6i_video_set_fmt(video, &format);
-+
-+	return 0;
-+}
-+
-+static int sun6i_video_link_setup(struct media_entity *entity,
-+				  const struct media_pad *local,
-+				  const struct media_pad *remote, u32 flags)
-+{
-+	struct video_device *vdev = media_entity_to_video_device(entity);
-+	struct sun6i_video *video = video_get_drvdata(vdev);
-+
-+	if (WARN_ON(video == NULL))
-+		return 0;
-+
-+	return sun6i_video_formats_init(video);
-+}
-+
-+static const struct media_entity_operations sun6i_video_media_ops = {
-+	.link_setup = sun6i_video_link_setup,
-+};
-+
-+int sun6i_video_init(struct sun6i_video *video, struct sun6i_csi *csi,
-+		     const char *name)
-+{
-+	struct video_device *vdev = &video->vdev;
-+	struct vb2_queue *vidq = &video->vb2_vidq;
-+	int ret;
-+
-+	video->csi = csi;
-+
-+	/* Initialize the media entity... */
-+	video->pad.flags = MEDIA_PAD_FL_SINK | MEDIA_PAD_FL_MUST_CONNECT;
-+	vdev->entity.ops = &sun6i_video_media_ops;
-+	ret = media_entity_pads_init(&vdev->entity, 1, &video->pad);
-+	if (ret < 0)
-+		return ret;
-+
-+	mutex_init(&video->lock);
-+
-+	INIT_LIST_HEAD(&video->dma_queue);
-+	spin_lock_init(&video->dma_queue_lock);
-+
-+	video->sequence = 0;
-+	video->num_formats = 0;
-+
-+	/* Initialize videobuf2 queue */
-+	vidq->type			= V4L2_BUF_TYPE_VIDEO_CAPTURE;
-+	vidq->io_modes			= VB2_MMAP | VB2_DMABUF;
-+	vidq->drv_priv			= video;
-+	vidq->buf_struct_size		= sizeof(struct sun6i_csi_buffer);
-+	vidq->ops			= &sun6i_csi_vb2_ops;
-+	vidq->mem_ops			= &vb2_dma_contig_memops;
-+	vidq->timestamp_flags		= V4L2_BUF_FLAG_TIMESTAMP_MONOTONIC;
-+	vidq->lock			= &video->lock;
-+	/* Make sure non-dropped frame */
-+	vidq->min_buffers_needed	= 3;
-+	vidq->dev			= csi->dev;
-+
-+	ret = vb2_queue_init(vidq);
-+	if (ret) {
-+		v4l2_err(&csi->v4l2_dev, "vb2_queue_init failed: %d\n", ret);
-+		goto error;
-+	}
-+
-+	/* Register video device */
-+	strlcpy(vdev->name, name, sizeof(vdev->name));
-+	vdev->release		= video_device_release_empty;
-+	vdev->fops		= &sun6i_video_fops;
-+	vdev->ioctl_ops		= &sun6i_video_ioctl_ops;
-+	vdev->vfl_type		= VFL_TYPE_GRABBER;
-+	vdev->vfl_dir		= VFL_DIR_RX;
-+	vdev->v4l2_dev		= &csi->v4l2_dev;
-+	vdev->queue		= vidq;
-+	vdev->lock		= &video->lock;
-+	vdev->device_caps	= V4L2_CAP_STREAMING | V4L2_CAP_VIDEO_CAPTURE;
-+	video_set_drvdata(vdev, video);
-+
-+	ret = video_register_device(vdev, VFL_TYPE_GRABBER, -1);
-+	if (ret < 0) {
-+		v4l2_err(&csi->v4l2_dev,
-+			 "video_register_device failed: %d\n", ret);
-+		goto error;
-+	}
-+
-+	return 0;
-+
-+error:
-+	sun6i_video_cleanup(video);
-+	return ret;
-+}
-+
-+void sun6i_video_cleanup(struct sun6i_video *video)
-+{
-+	if (video_is_registered(&video->vdev))
-+		video_unregister_device(&video->vdev);
-+
-+	media_entity_cleanup(&video->vdev.entity);
-+}
-diff --git a/drivers/media/platform/sunxi/sun6i-csi/sun6i_video.h b/drivers/media/platform/sunxi/sun6i-csi/sun6i_video.h
-new file mode 100644
-index 0000000..9e7171b
---- /dev/null
-+++ b/drivers/media/platform/sunxi/sun6i-csi/sun6i_video.h
-@@ -0,0 +1,53 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2011-2018 Magewell Electronics Co., Ltd. (Nanjing)
-+ * All rights reserved.
-+ * Author: Yong Deng <yong.deng@magewell.com>
-+ */
-+
-+#ifndef __SUN6I_VIDEO_H__
-+#define __SUN6I_VIDEO_H__
-+
-+#include <media/v4l2-dev.h>
-+#include <media/videobuf2-core.h>
-+
-+/*
-+ * struct sun6i_csi_format - CSI media bus format information
-+ * @pixformat: V4l2 pixformat for this format
-+ * @mbus_code: V4L2 media bus format code.
-+ * @bpp: Bytes per pixel (when stored in memory)
-+ */
-+struct sun6i_csi_format {
-+	u32				pixformat;
-+	u32				mbus_code;
-+	u8				bpp;
-+};
-+
-+struct sun6i_csi;
-+
-+struct sun6i_video {
-+	struct video_device		vdev;
-+	struct media_pad		pad;
-+	struct sun6i_csi		*csi;
-+
-+	struct mutex			lock;
-+
-+	struct vb2_queue		vb2_vidq;
-+	spinlock_t			dma_queue_lock;
-+	struct list_head		dma_queue;
-+
-+	unsigned int			sequence;
-+
-+	struct sun6i_csi_format		*formats;
-+	unsigned int			num_formats;
-+	struct sun6i_csi_format		*current_fmt;
-+	struct v4l2_format		fmt;
-+};
-+
-+int sun6i_video_init(struct sun6i_video *video, struct sun6i_csi *csi,
-+		     const char *name);
-+void sun6i_video_cleanup(struct sun6i_video *video);
-+
-+void sun6i_video_frame_done(struct sun6i_video *video);
-+
-+#endif /* __SUN6I_VIDEO_H__ */
+> 
+>> +//
+>> +// EXYNOS5433 - CPU PMU (Power Management Unit) support
+>> +
+>> +#include <linux/soc/samsung/exynos-regs-pmu.h>
+>> +#include <linux/soc/samsung/exynos-pmu.h>
+>> +
+>> +#include "exynos-pmu.h"
+>> +
+>> +static struct exynos_pmu_conf exynos5433_pmu_config[] = {
+> 
+> This should be also const.
+
+OK.
+
+> 
+>> +       /* { .offset = address, .val = { AFTR, LPA, SLEEP } } */
+>> +       { EXYNOS5433_ATLAS_CPU0_SYS_PWR_REG,                    { 0x0, 0x0, 0x8 } },
+>> +       { EXYNOS5433_DIS_IRQ_ATLAS_CPU0_CENTRAL_SYS_PWR_REG,    { 0x0, 0x0, 0x0 } },
+>> +       { EXYNOS5433_ATLAS_CPU1_SYS_PWR_REG,                    { 0x0, 0x0, 0x8 } },
+>> +       { EXYNOS5433_DIS_IRQ_ATLAS_CPU1_CENTRAL_SYS_PWR_REG,    { 0x0, 0x0, 0x0 } },
+>> +       { EXYNOS5433_ATLAS_CPU2_SYS_PWR_REG,                    { 0x0, 0x0, 0x8 } },
+>> +       { EXYNOS5433_DIS_IRQ_ATLAS_CPU2_CENTRAL_SYS_PWR_REG,    { 0x0, 0x0, 0x0 } },
+>> +       { EXYNOS5433_ATLAS_CPU3_SYS_PWR_REG,                    { 0x0, 0x0, 0x8 } },
+>> +       { EXYNOS5433_DIS_IRQ_ATLAS_CPU3_CENTRAL_SYS_PWR_REG,    { 0x0, 0x0, 0x0 } },
+>> +       { EXYNOS5433_APOLLO_CPU0_SYS_PWR_REG,                   { 0x0, 0x0, 0x8 } },
+>> +       { EXYNOS5433_DIS_IRQ_APOLLO_CPU0_CENTRAL_SYS_PWR_REG,   { 0x0, 0x0, 0x0 } },
+>> +       { EXYNOS5433_APOLLO_CPU1_SYS_PWR_REG,                   { 0x0, 0x0, 0x8 } },
+>> +       { EXYNOS5433_DIS_IRQ_APOLLO_CPU1_CENTRAL_SYS_PWR_REG,   { 0x0, 0x0, 0x0 } },
+>> +       { EXYNOS5433_APOLLO_CPU2_SYS_PWR_REG,                   { 0x0, 0x0, 0x8 } },
+>> +       { EXYNOS5433_DIS_IRQ_APOLLO_CPU2_CENTRAL_SYS_PWR_REG,   { 0x0, 0x0, 0x0 } },
+>> +       { EXYNOS5433_APOLLO_CPU3_SYS_PWR_REG,                   { 0x0, 0x0, 0x8 } },
+>> +       { EXYNOS5433_DIS_IRQ_APOLLO_CPU3_CENTRAL_SYS_PWR_REG,   { 0x0, 0x0, 0x0 } },
+>> +       { EXYNOS5433_ATLAS_NONCPU_SYS_PWR_REG,                  { 0x0, 0x0, 0x8 } },
+>> +       { EXYNOS5433_APOLLO_NONCPU_SYS_PWR_REG,                 { 0x0, 0x0, 0x8 } },
+>> +       { EXYNOS5433_A5IS_SYS_PWR_REG,                          { 0x0, 0x0, 0x0 } },
+>> +       { EXYNOS5433_DIS_IRQ_A5IS_LOCAL_SYS_PWR_REG,            { 0x0, 0x0, 0x0 } },
+>> +       { EXYNOS5433_DIS_IRQ_A5IS_CENTRAL_SYS_PWR_REG,          { 0x0, 0x0, 0x0 } },
+>> +       { EXYNOS5433_ATLAS_L2_SYS_PWR_REG,                      { 0x0, 0x0, 0x7 } },
+>> +       { EXYNOS5433_APOLLO_L2_SYS_PWR_REG,                     { 0x0, 0x0, 0x7 } },
+>> +       { EXYNOS5433_CLKSTOP_CMU_TOP_SYS_PWR_REG,               { 0x1, 0x0, 0x0 } },
+>> +       { EXYNOS5433_CLKRUN_CMU_TOP_SYS_PWR_REG,                { 0x1, 0x0, 0x0 } },
+>> +       { EXYNOS5433_RESET_CMU_TOP_SYS_PWR_REG,                 { 0x1, 0x0, 0x0 } },
+>> +       { EXYNOS5433_RESET_CPUCLKSTOP_SYS_PWR_REG,              { 0x1, 0x1, 0x0 } },
+>> +       { EXYNOS5433_CLKSTOP_CMU_MIF_SYS_PWR_REG,               { 0x1, 0x0, 0x0 } },
+>> +       { EXYNOS5433_CLKRUN_CMU_MIF_SYS_PWR_REG,                { 0x1, 0x1, 0x0 } },
+>> +       { EXYNOS5433_RESET_CMU_MIF_SYS_PWR_REG,                 { 0x1, 0x0, 0x0 } },
+>> +       { EXYNOS5433_DDRPHY_DLLLOCK_SYS_PWR_REG,                { 0x1, 0x1, 0x1 } },
+>> +       { EXYNOS5433_DISABLE_PLL_CMU_TOP_SYS_PWR_REG,           { 0x1, 0x0, 0x0 } },
+>> +       { EXYNOS5433_DISABLE_PLL_AUD_PLL_SYS_PWR_REG,           { 0x1, 0x1, 0x0 } },
+>> +       { EXYNOS5433_DISABLE_PLL_CMU_MIF_SYS_PWR_REG,           { 0x1, 0x0, 0x0 } },
+>> +       { EXYNOS5433_TOP_BUS_SYS_PWR_REG,                       { 0x7, 0x0, 0x0 } },
+>> +       { EXYNOS5433_TOP_RETENTION_SYS_PWR_REG,                 { 0x1, 0x0, 0x1 } },
+>> +       { EXYNOS5433_TOP_PWR_SYS_PWR_REG,                       { 0x3, 0x0, 0x3 } },
+>> +       { EXYNOS5433_TOP_BUS_MIF_SYS_PWR_REG,                   { 0x7, 0x0, 0x0 } },
+>> +       { EXYNOS5433_TOP_RETENTION_MIF_SYS_PWR_REG,             { 0x1, 0x0, 0x1 } },
+>> +       { EXYNOS5433_TOP_PWR_MIF_SYS_PWR_REG,                   { 0x3, 0x0, 0x3 } },
+>> +       { EXYNOS5433_LOGIC_RESET_SYS_PWR_REG,                   { 0x1, 0x0, 0x0 } },
+>> +       { EXYNOS5433_OSCCLK_GATE_SYS_PWR_REG,                   { 0x1, 0x0, 0x1 } },
+>> +       { EXYNOS5433_SLEEP_RESET_SYS_PWR_REG,                   { 0x1, 0x1, 0x0 } },
+>> +       { EXYNOS5433_LOGIC_RESET_MIF_SYS_PWR_REG,               { 0x1, 0x0, 0x0 } },
+>> +       { EXYNOS5433_OSCCLK_GATE_MIF_SYS_PWR_REG,               { 0x1, 0x0, 0x1 } },
+>> +       { EXYNOS5433_SLEEP_RESET_MIF_SYS_PWR_REG,               { 0x1, 0x1, 0x0 } },
+>> +       { EXYNOS5433_MEMORY_TOP_SYS_PWR_REG,                    { 0x3, 0x0, 0x0 } },
+>> +       { EXYNOS5433_PAD_RETENTION_LPDDR3_SYS_PWR_REG,          { 0x1, 0x0, 0x0 } },
+>> +       { EXYNOS5433_PAD_RETENTION_JTAG_SYS_PWR_REG,            { 0x1, 0x0, 0x0 } },
+>> +       { EXYNOS5433_PAD_RETENTION_TOP_SYS_PWR_REG,             { 0x1, 0x0, 0x0 } },
+>> +       { EXYNOS5433_PAD_RETENTION_UART_SYS_PWR_REG,            { 0x1, 0x0, 0x0 } },
+>> +       { EXYNOS5433_PAD_RETENTION_EBIA_SYS_PWR_REG,            { 0x1, 0x0, 0x0 } },
+>> +       { EXYNOS5433_PAD_RETENTION_EBIB_SYS_PWR_REG,            { 0x1, 0x0, 0x0 } },
+>> +       { EXYNOS5433_PAD_RETENTION_SPI_SYS_PWR_REG,             { 0x1, 0x0, 0x0 } },
+>> +       { EXYNOS5433_PAD_RETENTION_MIF_SYS_PWR_REG,             { 0x1, 0x0, 0x0 } },
+>> +       { EXYNOS5433_PAD_ISOLATION_SYS_PWR_REG,                 { 0x1, 0x0, 0x1 } },
+>> +       { EXYNOS5433_PAD_RETENTION_USBXTI_SYS_PWR_REG,          { 0x1, 0x0, 0x0 } },
+>> +       { EXYNOS5433_PAD_RETENTION_BOOTLDO_SYS_PWR_REG,         { 0x1, 0x0, 0x0 } },
+>> +       { EXYNOS5433_PAD_ISOLATION_MIF_SYS_PWR_REG,             { 0x1, 0x0, 0x1 } },
+>> +       { EXYNOS5433_PAD_RETENTION_FSYSGENIO_SYS_PWR_REG,       { 0x1, 0x0, 0x0 } },
+>> +       { EXYNOS5433_PAD_ALV_SEL_SYS_PWR_REG,                   { 0x1, 0x0, 0x0 } },
+>> +       { EXYNOS5433_XXTI_SYS_PWR_REG,                          { 0x1, 0x1, 0x0 } },
+>> +       { EXYNOS5433_XXTI26_SYS_PWR_REG,                        { 0x1, 0x0, 0x0 } },
+>> +       { EXYNOS5433_EXT_REGULATOR_SYS_PWR_REG,                 { 0x1, 0x1, 0x0 } },
+>> +       { EXYNOS5433_GPIO_MODE_SYS_PWR_REG,                     { 0x1, 0x0, 0x0 } },
+>> +       { EXYNOS5433_GPIO_MODE_FSYS0_SYS_PWR_REG,               { 0x1, 0x0, 0x0 } },
+>> +       { EXYNOS5433_GPIO_MODE_MIF_SYS_PWR_REG,                 { 0x1, 0x0, 0x0 } },
+>> +       { EXYNOS5433_GPIO_MODE_AUD_SYS_PWR_REG,                 { 0x1, 0x1, 0x0 } },
+>> +       { EXYNOS5433_GSCL_SYS_PWR_REG,                          { 0xF, 0x0, 0x0 } },
+>> +       { EXYNOS5433_CAM0_SYS_PWR_REG,                          { 0xF, 0x0, 0x0 } },
+>> +       { EXYNOS5433_MSCL_SYS_PWR_REG,                          { 0xF, 0x0, 0x0 } },
+>> +       { EXYNOS5433_G3D_SYS_PWR_REG,                           { 0xF, 0x0, 0x0 } },
+>> +       { EXYNOS5433_DISP_SYS_PWR_REG,                          { 0xF, 0x0, 0x0 } },
+>> +       { EXYNOS5433_CAM1_SYS_PWR_REG,                          { 0xF, 0x0, 0x0 } },
+>> +       { EXYNOS5433_AUD_SYS_PWR_REG,                           { 0xF, 0xF, 0x0 } },
+>> +       { EXYNOS5433_FSYS_SYS_PWR_REG,                          { 0xF, 0x0, 0x0 } },
+>> +       { EXYNOS5433_BUS2_SYS_PWR_REG,                          { 0xF, 0x0, 0x0 } },
+>> +       { EXYNOS5433_G2D_SYS_PWR_REG,                           { 0xF, 0x0, 0x0 } },
+>> +       { EXYNOS5433_ISP0_SYS_PWR_REG,                          { 0xF, 0x0, 0x0 } },
+>> +       { EXYNOS5433_MFC_SYS_PWR_REG,                           { 0xF, 0x0, 0x0 } },
+>> +       { EXYNOS5433_HEVC_SYS_PWR_REG,                          { 0xF, 0x0, 0x0 } },
+>> +       { EXYNOS5433_RESET_SLEEP_FSYS_SYS_PWR_REG,              { 0x1, 0x1, 0x0 } },
+>> +       { EXYNOS5433_RESET_SLEEP_BUS2_SYS_PWR_REG,              { 0x1, 0x1, 0x0 } },
+>> +       { PMU_TABLE_END, },
+>> +};
+>> +
+>> +static unsigned int const exynos5433_list_feed[] = {
+>> +       EXYNOS5433_ATLAS_NONCPU_OPTION,
+>> +       EXYNOS5433_APOLLO_NONCPU_OPTION,
+>> +       EXYNOS5433_TOP_PWR_OPTION,
+>> +       EXYNOS5433_TOP_PWR_MIF_OPTION,
+>> +       EXYNOS5433_AUD_OPTION,
+>> +       EXYNOS5433_CAM0_OPTION,
+>> +       EXYNOS5433_DISP_OPTION,
+>> +       EXYNOS5433_G2D_OPTION,
+>> +       EXYNOS5433_G3D_OPTION,
+>> +       EXYNOS5433_HEVC_OPTION,
+>> +       EXYNOS5433_MSCL_OPTION,
+>> +       EXYNOS5433_MFC_OPTION,
+>> +       EXYNOS5433_GSCL_OPTION,
+>> +       EXYNOS5433_FSYS_OPTION,
+>> +       EXYNOS5433_ISP_OPTION,
+>> +       EXYNOS5433_BUS2_OPTION,
+>> +};
+>> +
+>> +static unsigned int const exynos5433_list_pad_retention[] = {
+>> +       EXYNOS5433_PAD_RETENTION_LPDDR3_OPTION,
+>> +       EXYNOS5433_PAD_RETENTION_AUD_OPTION,
+>> +       EXYNOS5433_PAD_RETENTION_MMC2_OPTION,
+>> +       EXYNOS5433_PAD_RETENTION_TOP_OPTION,
+>> +       EXYNOS5433_PAD_RETENTION_UART_OPTION,
+>> +       EXYNOS5433_PAD_RETENTION_MMC0_OPTION,
+>> +       EXYNOS5433_PAD_RETENTION_MMC1_OPTION,
+>> +       EXYNOS5433_PAD_RETENTION_EBIA_OPTION,
+>> +       EXYNOS5433_PAD_RETENTION_EBIB_OPTION,
+>> +       EXYNOS5433_PAD_RETENTION_SPI_OPTION,
+>> +       EXYNOS5433_PAD_RETENTION_MIF_OPTION,
+>> +       EXYNOS5433_PAD_RETENTION_USBXTI_OPTION,
+>> +       EXYNOS5433_PAD_RETENTION_BOOTLDO_OPTION,
+>> +       EXYNOS5433_PAD_RETENTION_UFS_OPTION,
+>> +       EXYNOS5433_PAD_RETENTION_FSYSGENIO_OPTION,
+> 
+> Looks like conflicting with existing
+> drivers/pinctrl/samsung/pinctrl-exynos-arm64.c... and probably this
+> should be part of pinctrl driver's suspend/resume paths.
+
+OK. I'll remove it from this driver and then I'll handle PAD_RETENTION on pinctrl driver.
+
+> 
+>> +};
+>> +
+>> +static void exynos5433_set_wakeupmask(enum sys_powerdown mode)
+>> +{
+>> +       u32 intmask = 0;
+>> +
+>> +       pmu_raw_writel(exynos_get_eint_wake_mask(),
+>> +                                       EXYNOS5433_EINT_WAKEUP_MASK);
+>> +
+>> +       /* Disable WAKEUP event monitor */
+>> +       intmask = pmu_raw_readl(EXYNOS5433_WAKEUP_MASK);
+>> +       intmask &= ~(1 << 31);
+> 
+> This should have a define. Maybe it is an already defined field like
+> S5P_CORE_AUTOWAKEUP_EN or S5P_PS_HOLD_EN?
+
+[31] bit of WAKEUP_MASK is the reserved bit on TRM.
+But, when I checked it on released code from Samsung,
+it is used to disable the wakeup event monitoring circuit.
+I'll define it for readability.
+
+> 
+>> +       pmu_raw_writel(intmask, EXYNOS5433_WAKEUP_MASK);
+>> +
+>> +       pmu_raw_writel(0xFFFF0000, EXYNOS5433_WAKEUP_MASK2);
+>> +       pmu_raw_writel(0xFFFF0000, EXYNOS5433_WAKEUP_MASK3);
+> 
+> Both need explaining what you are masking, preferably by appropriate
+> comment and maybe also define for raw constants.
+
+Initialize the reset value to EXYNOS5433_WAKEUP_MASK2/MASK3 which have
+the 0xffff000 as the reset value on Exynos5433's TRM. I'll add the comment.
+
+> 
+>> +}
+>> +
+>> +static void exynos5433_pmu_central_seq(bool enable)
+>> +{
+>> +       unsigned int tmp;
+>> +
+>> +       tmp = pmu_raw_readl(EXYNOS5433_CENTRAL_SEQ_CONFIGURATION);
+>> +       if (enable)
+>> +               tmp &= ~EXYNOS5433_CENTRALSEQ_PWR_CFG;
+>> +       else
+>> +               tmp |= EXYNOS5433_CENTRALSEQ_PWR_CFG;
+>> +       pmu_raw_writel(tmp, EXYNOS5433_CENTRAL_SEQ_CONFIGURATION);
+>> +
+>> +       tmp = pmu_raw_readl(EXYNOS5433_CENTRAL_SEQ_MIF_CONFIGURATION);
+>> +       if (enable)
+>> +               tmp &= ~EXYNOS5433_CENTRALSEQ_PWR_CFG;
+>> +       else
+>> +               tmp |= EXYNOS5433_CENTRALSEQ_PWR_CFG;
+>> +       pmu_raw_writel(tmp, EXYNOS5433_CENTRAL_SEQ_MIF_CONFIGURATION);
+>> +}
+>> +
+>> +static void exynos5433_pmu_pad_retention_release(void)
+>> +{
+>> +       unsigned int tmp;
+>> +       int i;
+> 
+> unsigned int i
+
+OK.
+
+> 
+>> +
+>> +       for (i = 0 ; i < ARRAY_SIZE(exynos5433_list_pad_retention) ; i++) {
+>> +               tmp = pmu_raw_readl(exynos5433_list_pad_retention[i]);
+>> +               tmp |= EXYNOS5433_INITIATE_WAKEUP_FROM_LOWPOWER;
+>> +               pmu_raw_writel(tmp, exynos5433_list_pad_retention[i]);
+>> +       }
+>> +}
+>> +
+>> +static void exynos5433_pmu_init(void)
+>> +{
+>> +       unsigned int tmp;
+>> +       int i, cluster, cpu;
+> 
+> unsigned int i
+
+OK.
+
+> 
+>> +
+>> +       /* Enable non retention flip-flop reset for wakeup */
+>> +       tmp = pmu_raw_readl(EXYNOS5433_PMU_SPARE0);
+>> +       tmp |= EXYNOS5433_EN_NONRET_RESET;
+>> +       pmu_raw_writel(tmp, EXYNOS5433_PMU_SPARE0);
+> 
+> This is spare register. Who is using it? Firmware? Please add its
+> usage also in Documentation/arm/Samsung/Bootloader-interface.txt.
+
+Unfortunately, when I checked the bootloader for the PMU_SPARE0 register,
+the bootloader doesn't read/write for PMU_SPARE0. I fount this code
+on code released by Samsung. The document doesn't include the detailed role.
+
+> 
+>> +
+>> +        /* Enable only SC_FEEDBACK for the register list */
+>> +       for (i = 0 ; i < ARRAY_SIZE(exynos5433_list_feed) ; i++) {
+>> +               tmp = pmu_raw_readl(exynos5433_list_feed[i]);
+>> +               tmp &= ~EXYNOS5_USE_SC_COUNTER;
+>> +               tmp |= EXYNOS5_USE_SC_FEEDBACK;
+>> +               pmu_raw_writel(tmp, exynos5433_list_feed[i]);
+>> +       }
+>> +
+>> +       /*
+>> +        * Disable automatic L2 flush, Disable L2 retention and
+>> +        * Enable STANDBYWFIL2, ACE/ACP
+>> +        */
+>> +       for (cluster = 0; cluster < 2; cluster++) {
+>> +               tmp = pmu_raw_readl(EXYNOS5433_ATLAS_L2_OPTION + (cluster * 0x20));
+> 
+> I would prefer to follow the convention for similar registers for cores, like:
+> EXYNOS_ARM_CORE_CONFIGURATION
+> EXYNOS_ARM_CORE_STATUS
+> 
+> This moves the offset into the header, along to other register offsets.
+
+OK.
+
+> 
+>> +               tmp &= ~(EXYNOS5433_USE_AUTO_L2FLUSHREQ | EXYNOS5433_USE_RETENTION);
+>> +
+>> +               if (cluster == 0) {
+>> +                       tmp |= (EXYNOS5433_USE_STANDBYWFIL2 |
+>> +                               EXYNOS5433_USE_DEACTIVATE_ACE |
+>> +                               EXYNOS5433_USE_DEACTIVATE_ACP);
+>> +               }
+>> +               pmu_raw_writel(tmp, EXYNOS5433_ATLAS_L2_OPTION + (cluster * 0x20));
+>> +       }
+>> +
+>> +       /*
+>> +        * Enable both SC_COUNTER and SC_FEEDBACK for the CPUs
+>> +        * Use STANDBYWFI and SMPEN to indicate that core is ready to enter
+>> +        * low power mode
+>> +        */
+>> +       for (cpu = 0; cpu < 8; cpu++) {
+>> +               tmp = pmu_raw_readl(EXYNOS5433_CPU_OPTION(cpu));
+>> +               tmp |= (EXYNOS5_USE_SC_FEEDBACK | EXYNOS5_USE_SC_COUNTER);
+>> +               tmp |= EXYNOS5433_USE_SMPEN;
+>> +               tmp |= EXYNOS5433_USE_STANDBYWFI;
+>> +               tmp &= ~EXYNOS5433_USE_STANDBYWFE;
+>> +               pmu_raw_writel(tmp, EXYNOS5433_CPU_OPTION(cpu));
+>> +
+>> +               tmp = pmu_raw_readl(EXYNOS5433_CPU_DURATION(cpu));
+>> +               tmp |= EXYNOS5433_DUR_WAIT_RESET;
+>> +               tmp &= ~EXYNOS5433_DUR_SCALL;
+>> +               tmp |= EXYNOS5433_DUR_SCALL_VALUE;
+>> +               pmu_raw_writel(tmp, EXYNOS5433_CPU_DURATION(cpu));
+>> +       }
+>> +
+>> +       /* Skip atlas block power-off during automatic power down sequence */
+>> +       tmp = pmu_raw_readl(EXYNOS5433_ATLAS_CPUSEQUENCER_OPTION);
+>> +       tmp |= EXYNOS5433_SKIP_BLK_PWR_DOWN;
+>> +       pmu_raw_writel(tmp, EXYNOS5433_ATLAS_CPUSEQUENCER_OPTION);
+>> +
+>> +       /* Limit in-rush current during local power up of cores */
+>> +       tmp = pmu_raw_readl(EXYNOS5433_UP_SCHEDULER);
+>> +       tmp |= EXYNOS5433_ENABLE_ATLAS_CPU;
+>> +       pmu_raw_writel(tmp, EXYNOS5433_UP_SCHEDULER);
+>> +}
+>> +
+>> +static void exynos5433_powerdown_conf(enum sys_powerdown mode)
+>> +{
+>> +       switch (mode) {
+>> +       case SYS_SLEEP:
+>> +               exynos5433_set_wakeupmask(mode);
+>> +               exynos5433_pmu_central_seq(true);
+>> +               break;
+>> +       default:
+>> +               break;
+>> +       };
+>> +}
+>> +
+>> +static void exynos5433_powerup_conf(enum sys_powerdown mode)
+>> +{
+>> +       unsigned int wakeup;
+>> +
+>> +       switch (mode) {
+>> +       case SYS_SLEEP:
+>> +               wakeup = pmu_raw_readl(EXYNOS5433_CENTRAL_SEQ_CONFIGURATION);
+>> +               wakeup &= EXYNOS5433_CENTRALSEQ_PWR_CFG;
+>> +               if (wakeup)
+>> +                       exynos5433_pmu_pad_retention_release();
+>> +               else
+>> +                       exynos5433_pmu_central_seq(false);
+> 
+> I do not understand what you want to achieve here. Re-suspend?
+
+The powerup_conf is unneeded anymore. So, I'll remove the powerup_conf.
+Because 
+- pad_retention should be handled in pinctrl driver according to your comment.
+- exynos5433_pmu_central_seq(false) set the high for SYS_PWR_CFG field
+of CENTRAL_SEQ_CONFIGURATION. But, When system-level low-power mode,
+SYS_PWR_CFG field of CENTRAL_SEQ_CONFIGURATION register is automatically
+cleared to high. So, exynos5433_pmu_central_seq(false) call is unneeded.
+
+> 
+>> +               break;
+>> +       default:
+>> +               break;
+>> +       };
+>> +}
+>> +
+>> +const struct exynos_pmu_data exynos5433_pmu_data = {
+>> +       .pmu_config             = exynos5433_pmu_config,
+>> +       .pmu_init               = exynos5433_pmu_init,
+>> +       .powerdown_conf         = exynos5433_powerdown_conf,
+>> +       .powerup_conf           = exynos5433_powerup_conf,
+>> +};
+>> diff --git a/include/linux/soc/samsung/exynos-regs-pmu.h b/include/linux/soc/samsung/exynos-regs-pmu.h
+>> index bebdde5dccd6..93a52d133ba1 100644
+>> --- a/include/linux/soc/samsung/exynos-regs-pmu.h
+>> +++ b/include/linux/soc/samsung/exynos-regs-pmu.h
+>> @@ -645,7 +645,110 @@
+>>                                          | EXYNOS5420_KFC_USE_STANDBY_WFI3)
+>>
+>>  /* For EXYNOS5433 */
+>> +#define EXYNOS5433_UP_SCHEDULER                                        (0x0120)
+>> +#define EXYNOS5433_CENTRAL_SEQ_CONFIGURATION                   (0x0200)
+>> +#define EXYNOS5433_CENTRAL_SEQ_MIF_CONFIGURATION               (0x0240)
+>> +#define EXYNOS5433_EINT_WAKEUP_MASK                            (0x060C)
+>> +#define EXYNOS5433_WAKEUP_MASK                                 (0x0610)
+>> +#define EXYNOS5433_WAKEUP_MASK2                                        (0x0614)
+>> +#define EXYNOS5433_WAKEUP_MASK3                                        (0x0618)
+>> +#define EXYNOS5433_EINT_WAKEUP_MASK1                           (0x062C)
+>>  #define EXYNOS5433_USBHOST30_PHY_CONTROL                       (0x0728)
+>> +#define EXYNOS5433_PMU_SPARE0                                  (0x0900)
+>> +#define EXYNOS5433_ATLAS_CPU0_SYS_PWR_REG                      (0x1000)
+>> +#define EXYNOS5433_DIS_IRQ_ATLAS_CPU0_CENTRAL_SYS_PWR_REG      (0x1008)
+>> +#define EXYNOS5433_ATLAS_CPU1_SYS_PWR_REG                      (0x1010)
+>> +#define EXYNOS5433_DIS_IRQ_ATLAS_CPU1_CENTRAL_SYS_PWR_REG      (0x1018)
+>> +#define EXYNOS5433_ATLAS_CPU2_SYS_PWR_REG                      (0x1020)
+>> +#define EXYNOS5433_DIS_IRQ_ATLAS_CPU2_CENTRAL_SYS_PWR_REG      (0x1028)
+>> +#define EXYNOS5433_ATLAS_CPU3_SYS_PWR_REG                      (0x1030)
+>> +#define EXYNOS5433_DIS_IRQ_ATLAS_CPU3_CENTRAL_SYS_PWR_REG      (0x1038)
+>> +#define EXYNOS5433_APOLLO_CPU0_SYS_PWR_REG                     (0x1040)
+>> +#define EXYNOS5433_DIS_IRQ_APOLLO_CPU0_CENTRAL_SYS_PWR_REG     (0x1048)
+>> +#define EXYNOS5433_APOLLO_CPU1_SYS_PWR_REG                     (0x1050)
+>> +#define EXYNOS5433_DIS_IRQ_APOLLO_CPU1_CENTRAL_SYS_PWR_REG     (0x1058)
+>> +#define EXYNOS5433_APOLLO_CPU2_SYS_PWR_REG                     (0x1060)
+>> +#define EXYNOS5433_DIS_IRQ_APOLLO_CPU2_CENTRAL_SYS_PWR_REG     (0x1068)
+>> +#define EXYNOS5433_APOLLO_CPU3_SYS_PWR_REG                     (0x1070)
+>> +#define EXYNOS5433_DIS_IRQ_APOLLO_CPU3_CENTRAL_SYS_PWR_REG     (0x1078)
+>> +#define EXYNOS5433_ATLAS_NONCPU_SYS_PWR_REG                    (0x1080)
+>> +#define EXYNOS5433_ATLAS_L2_SYS_PWR_REG                                (0x10C0)
+>> +#define EXYNOS5433_APOLLO_L2_SYS_PWR_REG                       (0x10C4)
+>> +#define EXYNOS5433_APOLLO_NONCPU_SYS_PWR_REG                   (0x1084)
+>> +#define EXYNOS5433_A5IS_SYS_PWR_REG                            (0x10B0)
+>> +#define EXYNOS5433_DIS_IRQ_A5IS_LOCAL_SYS_PWR_REG              (0x10B4)
+>> +#define EXYNOS5433_DIS_IRQ_A5IS_CENTRAL_SYS_PWR_REG            (0x10B8)
+>> +#define EXYNOS5433_CLKSTOP_CMU_TOP_SYS_PWR_REG                 (0x1100)
+>> +#define EXYNOS5433_CLKRUN_CMU_TOP_SYS_PWR_REG                  (0x1104)
+>> +#define EXYNOS5433_RESET_CMU_TOP_SYS_PWR_REG                   (0x110C)
+>> +#define EXYNOS5433_RESET_CPUCLKSTOP_SYS_PWR_REG                        (0x111C)
+>> +#define EXYNOS5433_CLKSTOP_CMU_MIF_SYS_PWR_REG                 (0x1120)
+>> +#define EXYNOS5433_CLKRUN_CMU_MIF_SYS_PWR_REG                  (0x1124)
+>> +#define EXYNOS5433_RESET_CMU_MIF_SYS_PWR_REG                   (0x112C)
+>> +#define EXYNOS5433_DDRPHY_DLLLOCK_SYS_PWR_REG                  (0x1138)
+>> +#define EXYNOS5433_DISABLE_PLL_CMU_TOP_SYS_PWR_REG             (0x1140)
+>> +#define EXYNOS5433_DISABLE_PLL_AUD_PLL_SYS_PWR_REG             (0x1144)
+>> +#define EXYNOS5433_DISABLE_PLL_CMU_MIF_SYS_PWR_REG             (0x1160)
+>> +#define EXYNOS5433_TOP_BUS_SYS_PWR_REG                         (0x1180)
+>> +#define EXYNOS5433_TOP_RETENTION_SYS_PWR_REG                   (0x1184)
+>> +#define EXYNOS5433_TOP_PWR_SYS_PWR_REG                         (0x1188)
+>> +#define EXYNOS5433_TOP_BUS_MIF_SYS_PWR_REG                     (0x1190)
+>> +#define EXYNOS5433_TOP_RETENTION_MIF_SYS_PWR_REG               (0x1194)
+>> +#define EXYNOS5433_TOP_PWR_MIF_SYS_PWR_REG                     (0x1198)
+>> +#define EXYNOS5433_LOGIC_RESET_SYS_PWR_REG                     (0x11A0)
+>> +#define EXYNOS5433_OSCCLK_GATE_SYS_PWR_REG                     (0x11A4)
+>> +#define EXYNOS5433_SLEEP_RESET_SYS_PWR_REG                     (0x11A8)
+>> +#define EXYNOS5433_LOGIC_RESET_MIF_SYS_PWR_REG                 (0x11B0)
+>> +#define EXYNOS5433_OSCCLK_GATE_MIF_SYS_PWR_REG                 (0x11B4)
+>> +#define EXYNOS5433_SLEEP_RESET_MIF_SYS_PWR_REG                 (0x11B8)
+>> +#define EXYNOS5433_MEMORY_TOP_SYS_PWR_REG                      (0x11C0)
+>> +#define EXYNOS5433_PAD_RETENTION_LPDDR3_SYS_PWR_REG            (0x1200)
+>> +#define EXYNOS5433_PAD_RETENTION_JTAG_SYS_PWR_REG              (0x1208)
+>> +#define EXYNOS5433_PAD_RETENTION_TOP_SYS_PWR_REG               (0x1220)
+>> +#define EXYNOS5433_PAD_RETENTION_UART_SYS_PWR_REG              (0x1224)
+>> +#define EXYNOS5433_PAD_RETENTION_EBIA_SYS_PWR_REG              (0x1230)
+>> +#define EXYNOS5433_PAD_RETENTION_EBIB_SYS_PWR_REG              (0x1234)
+>> +#define EXYNOS5433_PAD_RETENTION_SPI_SYS_PWR_REG               (0x1238)
+>> +#define EXYNOS5433_PAD_RETENTION_MIF_SYS_PWR_REG               (0x123C)
+>> +#define EXYNOS5433_PAD_ISOLATION_SYS_PWR_REG                   (0x1240)
+>> +#define EXYNOS5433_PAD_RETENTION_USBXTI_SYS_PWR_REG            (0x1244)
+>> +#define EXYNOS5433_PAD_RETENTION_BOOTLDO_SYS_PWR_REG           (0x1248)
+>> +#define EXYNOS5433_PAD_ISOLATION_MIF_SYS_PWR_REG               (0x1250)
+>> +#define EXYNOS5433_PAD_RETENTION_FSYSGENIO_SYS_PWR_REG         (0x1254)
+>> +#define EXYNOS5433_PAD_ALV_SEL_SYS_PWR_REG                     (0x1260)
+>> +#define EXYNOS5433_XXTI_SYS_PWR_REG                            (0x1284)
+>> +#define EXYNOS5433_XXTI26_SYS_PWR_REG                          (0x1288)
+>> +#define EXYNOS5433_EXT_REGULATOR_SYS_PWR_REG                   (0x12C0)
+>> +#define EXYNOS5433_GPIO_MODE_SYS_PWR_REG                       (0x1300)
+>> +#define EXYNOS5433_GPIO_MODE_FSYS0_SYS_PWR_REG                 (0x1304)
+>> +#define EXYNOS5433_GPIO_MODE_MIF_SYS_PWR_REG                   (0x1320)
+>> +#define EXYNOS5433_GPIO_MODE_AUD_SYS_PWR_REG                   (0x1340)
+>> +#define EXYNOS5433_GSCL_SYS_PWR_REG                            (0x1400)
+>> +#define EXYNOS5433_CAM0_SYS_PWR_REG                            (0x1404)
+>> +#define EXYNOS5433_MSCL_SYS_PWR_REG                            (0x1408)
+>> +#define EXYNOS5433_G3D_SYS_PWR_REG                             (0x140C)
+>> +#define EXYNOS5433_DISP_SYS_PWR_REG                            (0x1410)
+>> +#define EXYNOS5433_CAM1_SYS_PWR_REG                            (0x1414)
+>> +#define EXYNOS5433_AUD_SYS_PWR_REG                             (0x1418)
+>> +#define EXYNOS5433_FSYS_SYS_PWR_REG                            (0x141C)
+>> +#define EXYNOS5433_BUS2_SYS_PWR_REG                            (0x1420)
+>> +#define EXYNOS5433_G2D_SYS_PWR_REG                             (0x1424)
+>> +#define EXYNOS5433_ISP0_SYS_PWR_REG                            (0x1428)
+>> +#define EXYNOS5433_MFC_SYS_PWR_REG                             (0x1430)
+>> +#define EXYNOS5433_HEVC_SYS_PWR_REG                            (0x1438)
+>> +#define EXYNOS5433_RESET_SLEEP_FSYS_SYS_PWR_REG                        (0x15DC)
+>> +#define EXYNOS5433_RESET_SLEEP_BUS2_SYS_PWR_REG                        (0x15E0)
+>> +#define EXYNOS5433_ATLAS_CPU0_OPTION                           (0x2008)
+>> +#define EXYNOS5433_CPU_OPTION(_nr)                             (EXYNOS5433_ATLAS_CPU0_OPTION + (_nr) * 0x80)
+>> +#define EXYNOS5433_ATLAS_CPU0_DURATION0                                (0x2010)
+>> +#define EXYNOS5433_CPU_DURATION(_nr)                           (EXYNOS5433_ATLAS_CPU0_DURATION0 + (_nr) * 0x80)
+>> +#define EXYNOS5433_ATLAS_NONCPU_OPTION                         (0x2408)
+>> +#define EXYNOS5433_APOLLO_NONCPU_OPTION                                (0x2428)
+>> +#define EXYNOS5433_ATLAS_CPUSEQUENCER_OPTION                   (0x2488)
+>> +#define EXYNOS5433_ATLAS_L2_OPTION                             (0x2608)
+>> +#define EXYNOS5433_TOP_PWR_MIF_OPTION                          (0x2CC8)
+>> +#define EXYNOS5433_TOP_PWR_OPTION                              (0x2C48)
+>> +#define EXYNOS5433_PAD_RETENTION_LPDDR3_OPTION                 (0x3008)
+>>  #define EXYNOS5433_PAD_RETENTION_AUD_OPTION                    (0x3028)
+>>  #define EXYNOS5433_PAD_RETENTION_MMC2_OPTION                   (0x30C8)
+>>  #define EXYNOS5433_PAD_RETENTION_TOP_OPTION                    (0x3108)
+>> @@ -660,5 +763,50 @@
+>>  #define EXYNOS5433_PAD_RETENTION_BOOTLDO_OPTION                        (0x3248)
+>>  #define EXYNOS5433_PAD_RETENTION_UFS_OPTION                    (0x3268)
+>>  #define EXYNOS5433_PAD_RETENTION_FSYSGENIO_OPTION              (0x32A8)
+>> +#define EXYNOS5433_PS_HOLD_CONTROL                             (0x330C)
+>> +#define EXYNOS5433_GSCL_OPTION                                 (0x4008)
+>> +#define EXYNOS5433_CAM0_OPTION                                 (0x4028)
+>> +#define EXYNOS5433_MSCL_OPTION                                 (0x4048)
+>> +#define EXYNOS5433_G3D_OPTION                                  (0x4068)
+>> +#define EXYNOS5433_DISP_OPTION                                 (0x4088)
+>> +#define EXYNOS5433_AUD_OPTION                                  (0x40C8)
+>> +#define EXYNOS5433_FSYS_OPTION                                 (0x40E8)
+>> +#define EXYNOS5433_BUS2_OPTION                                 (0x4108)
+>> +#define EXYNOS5433_G2D_OPTION                                  (0x4128)
+>> +#define EXYNOS5433_ISP_OPTION                                  (0x4148)
+>> +#define EXYNOS5433_MFC_OPTION                                  (0x4188)
+>> +#define EXYNOS5433_HEVC_OPTION                                 (0x41C8)
+>> +
+>> +/* EXYNOS5433_PMU_SPARE0 */
+>> +#define EXYNOS5433_EN_NONRET_RESET                             (1 << 0)
+> 
+> Use BIT(0) here and in other places.
+
+OK.
+
+[snip]
+
+Thanks for the review.
+
 -- 
-1.8.3.1
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
