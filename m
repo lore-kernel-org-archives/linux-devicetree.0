@@ -1,16 +1,16 @@
 From: Shunqian Zheng <zhengsq@rock-chips.com>
-Subject: Re: [PATCH v5 2/4] media: ov5695: add support for OV5695 sensor
-Date: Thu, 11 Jan 2018 14:21:17 +0800
-Message-ID: <2ab51b3f-0c37-6c3d-6b2e-c7e767275380@rock-chips.com>
+Subject: Re: [PATCH v5 1/4] dt-bindings: media: Add bindings for OV5695
+Date: Thu, 11 Jan 2018 14:44:33 +0800
+Message-ID: <807c4307-0617-788e-7129-039b33ce99d5@rock-chips.com>
 References: <1515549967-5302-1-git-send-email-zhengsq@rock-chips.com>
- <1515549967-5302-3-git-send-email-zhengsq@rock-chips.com>
- <20180110090836.GB6834@w540>
+ <1515549967-5302-2-git-send-email-zhengsq@rock-chips.com>
+ <20180110092010.GC6834@w540>
 Reply-To: zhengsq@rock-chips.com
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20180110090836.GB6834@w540>
+In-Reply-To: <20180110092010.GC6834@w540>
 Content-Language: en-US
 Sender: linux-media-owner@vger.kernel.org
 To: jacopo mondi <jacopo@jmondi.org>
@@ -20,130 +20,67 @@ List-Id: devicetree@vger.kernel.org
 Hi Jacopo,
 
 
-On 2018年01月10日 17:08, jacopo mondi wrote:
-> Hello Shunqian,
+On 2018年01月10日 17:20, jacopo mondi wrote:
+> Hi Shunqian,
 >
-> On Wed, Jan 10, 2018 at 10:06:05AM +0800, Shunqian Zheng wrote:
+> On Wed, Jan 10, 2018 at 10:06:04AM +0800, Shunqian Zheng wrote:
+>> Add device tree binding documentation for the OV5695 sensor.
+>>
+>> Signed-off-by: Shunqian Zheng <zhengsq@rock-chips.com>
+>> ---
+>>   .../devicetree/bindings/media/i2c/ov5695.txt       | 41 ++++++++++++++++++++++
+>>   1 file changed, 41 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5695.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/media/i2c/ov5695.txt b/Documentation/devicetree/bindings/media/i2c/ov5695.txt
+>> new file mode 100644
+>> index 0000000..2f2f698
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/media/i2c/ov5695.txt
+>> @@ -0,0 +1,41 @@
+>> +* Omnivision OV5695 MIPI CSI-2 sensor
+>> +
+>> +Required Properties:
+>> +- compatible: shall be "ovti,ov5695"
+>> +- clocks: reference to the xvclk input clock
+>> +- clock-names: shall be "xvclk"
+>> +- avdd-supply: Analog voltage supply, 2.8 volts
+>> +- dovdd-supply: Digital I/O voltage supply, 1.8 volts
+>> +- dvdd-supply: Digital core voltage supply, 1.2 volts
+>> +- reset-gpios: Low active reset gpio
+>> +
+>> +The device node shall contain one 'port' child node with an
+>> +'endpoint' subnode for its digital output video port,
+>> +in accordance with the video interface bindings defined in
+>> +Documentation/devicetree/bindings/media/video-interfaces.txt.
+>> +The endpoint optional property 'data-lanes' shall be "<1 2>".
+> What happens if the property is not present? What's the default?
+I think it depends on how the video receiver deal with, 'data-lanes' is 
+optional as described in video-interfaces.txt,
+but if somehow it used in DT, the value "<1 2>" is the right one.
 >
-> [snip]
+> I would:
 >
->> +static int __ov5695_start_stream(struct ov5695 *ov5695)
->> +{
->> +	int ret;
->> +
->> +	ret = ov5695_write_array(ov5695->client, ov5695_global_regs);
->> +	if (ret)
->> +		return ret;
->> +	ret = ov5695_write_array(ov5695->client, ov5695->cur_mode->reg_list);
->> +	if (ret)
->> +		return ret;
->> +
->> +	/* In case these controls are set before streaming */
->> +	ret = __v4l2_ctrl_handler_setup(&ov5695->ctrl_handler);
->> +	if (ret)
->> +		return ret;
->> +
->> +	return ov5695_write_reg(ov5695->client, OV5695_REG_CTRL_MODE,
->> +				OV5695_REG_VALUE_08BIT, OV5695_MODE_STREAMING);
->> +}
->> +
->> +static int __ov5695_stop_stream(struct ov5695 *ov5695)
->> +{
->> +	return ov5695_write_reg(ov5695->client, OV5695_REG_CTRL_MODE,
->> +				OV5695_REG_VALUE_08BIT, OV5695_MODE_SW_STANDBY);
->> +}
->> +
->> +static int ov5695_s_stream(struct v4l2_subdev *sd, int on)
->> +{
->> +	struct ov5695 *ov5695 = to_ov5695(sd);
->> +	struct i2c_client *client = ov5695->client;
->> +	int ret = 0;
->> +
->> +	mutex_lock(&ov5695->mutex);
->> +	on = !!on;
->> +	if (on == ov5695->streaming)
->> +		goto unlock_and_return;
->> +
->> +	if (on) {
->> +		ret = pm_runtime_get_sync(&client->dev);
->> +		if (ret < 0) {
->> +			pm_runtime_put_noidle(&client->dev);
->> +			goto unlock_and_return;
->> +		}
->> +
->> +		ret = __ov5695_start_stream(ov5695);
->> +		if (ret) {
->> +			v4l2_err(sd, "start stream failed while write regs\n");
->> +			pm_runtime_put(&client->dev);
->> +			goto unlock_and_return;
->> +		}
->> +	} else {
->> +		__ov5695_stop_stream(ov5695);
->> +		ret = pm_runtime_put(&client->dev);
-> I would return the result of __ov5695_stop_stream() instead of
-> pm_runtime_put().
+> Required Properties:
+> - compatible: ..
+> ....
 >
-> I know I asked for this, but if the first s_stream(0) fails, the
-> sensor may not have been stopped but the interface will be put in
-> "streaming = 0" state, preventing a second s_stream(0) to be issued
-> because of your check "on == ov5695->streaming" a few lines above.
->
-> I can't tell how bad this is. Imho is acceptable but I would like to
-> hear someone else opinion here :)
-How about not checking the return values of s_stream(0) branch?
-It seems not much this driver can do if pm_runtime_put() fails.
->
->> +	}
->> +
->> +	ov5695->streaming = on;
->> +
->> +unlock_and_return:
->> +	mutex_unlock(&ov5695->mutex);
->> +
->> +	return ret;
->> +}
->> +
->> +
-> [snip]
->
->> +static const struct of_device_id ov5695_of_match[] = {
->> +	{ .compatible = "ovti,ov5695" },
->> +	{},
->> +};
-> If you don't list CONFIG_OF as a dependecy for this driver (which you
-> should not imho), please guard this with:
->
-> #if IS_ENABLED(CONFIG_OF)
->
-> #endif
+> Option Endpoint Properties:
+> - data-lanes: ...
 >
 >> +
->> +static struct i2c_driver ov5695_i2c_driver = {
->> +	.driver = {
->> +		.name = "ov5695",
->> +		.owner = THIS_MODULE,
->> +		.pm = &ov5695_pm_ops,
->> +		.of_match_table = ov5695_of_match
->> +	},
->> +	.probe		= &ov5695_probe,
->> +	.remove		= &ov5695_remove,
->> +};
->> +
->> +module_i2c_driver(ov5695_i2c_driver);
->> +
->> +MODULE_DESCRIPTION("OmniVision ov5695 sensor driver");
->> +MODULE_LICENSE("GPL v2");
-> As you've fixed my comments on v1, and with the above bits addressed:
+>> +Example:
+>> +&i2c7 {
+>> +	camera-sensor: ov5695@36 {
+> You have inverted the label with the node name which should be generic
 >
-> Reviewed-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Thank you very much~
-Shunqian
+>          ov5695: camera@36 {
 >
+>
+>          }
 > Thanks
 >     j
->
->> --
->> 1.9.1
->>
+Thank you very much~
+Shunqian
 >
 >
