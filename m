@@ -1,60 +1,84 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 5/7] clk: sunxi-ng: add support for the Allwinner H6 CCU
-Date: Thu, 11 Jan 2018 14:27:07 -0600
-Message-ID: <20180111202707.wqvwaxxekazlbkc4@rob-hp-laptop>
-References: <20180106044918.47513-1-icenowy@aosc.io>
+Subject: Re: [PATCH] arm64: dts: rockchip: add roc-rk3328-cc board
+Date: Thu, 11 Jan 2018 14:30:33 -0600
+Message-ID: <20180111203033.mnap7tijbfsvr5pa@rob-hp-laptop>
+References: <20180106094538.15568-1-djw@t-chip.com.cn>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20180106044918.47513-1-icenowy-h8G6r0blFSE@public.gmane.org>
+In-Reply-To: <20180106094538.15568-1-djw-Efosm3t9Qi2Pt1CcHtbs0g@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+To: djw-Efosm3t9Qi2Pt1CcHtbs0g@public.gmane.org
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Levin Du <zslevin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jan 06, 2018 at 12:49:16PM +0800, Icenowy Zheng wrote:
-> The Allwinner H6 SoC has a CCU which has been largely rearranged.
+On Sat, Jan 06, 2018 at 05:45:38PM +0800, djw-Efosm3t9Qi2Pt1CcHtbs0g@public.gmane.org wrote:
+> From: Levin Du <djw-Efosm3t9Qi2Pt1CcHtbs0g@public.gmane.org>
 > 
-> Add support for it in the sunxi-ng CCU framework.
+> The roc-rk3328-cc is a credit card size single board computer using the
+> Rockchip RK3328 Quad-Core ARM Cortex A53 64-Bit Processor and supporting
+> up to 2GB 2133MHz LPDDR4 memory. It provides eMMC module socket, MicroSD
+> Card slot, USB 2.0/3.0, Gigabit Ethernet, HDMI/CVBS, Infrared Receiver,
+> SPDIF/I2S, and SPI/I2C/UART/PWM interfaces.
 > 
-> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> The devicetree currently supports basic peripherals.
+> 
+> Signed-off-by: Levin Du <djw-Efosm3t9Qi2Pt1CcHtbs0g@public.gmane.org>
 > ---
->  .../devicetree/bindings/clock/sunxi-ccu.txt        |    1 +
->  drivers/clk/sunxi-ng/Kconfig                       |    5 +
->  drivers/clk/sunxi-ng/Makefile                      |    1 +
->  drivers/clk/sunxi-ng/ccu-sun50i-h6.c               | 1206 ++++++++++++++++++++
->  drivers/clk/sunxi-ng/ccu-sun50i-h6.h               |   63 +
->  include/dt-bindings/clock/sun50i-h6-ccu.h          |  159 +++
->  include/dt-bindings/reset/sun50i-h6-ccu.h          |  110 ++
->  7 files changed, 1545 insertions(+)
->  create mode 100644 drivers/clk/sunxi-ng/ccu-sun50i-h6.c
->  create mode 100644 drivers/clk/sunxi-ng/ccu-sun50i-h6.h
->  create mode 100644 include/dt-bindings/clock/sun50i-h6-ccu.h
->  create mode 100644 include/dt-bindings/reset/sun50i-h6-ccu.h
-
-[...] 
-
-> diff --git a/include/dt-bindings/clock/sun50i-h6-ccu.h b/include/dt-bindings/clock/sun50i-h6-ccu.h
+>  Documentation/devicetree/bindings/arm/rockchip.txt |   4 +
+>  arch/arm64/boot/dts/rockchip/Makefile              |   1 +
+>  arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts     | 313 +++++++++++++++++++++
+>  3 files changed, 318 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/rockchip.txt b/Documentation/devicetree/bindings/arm/rockchip.txt
+> index 326d24b..0f76a62 100644
+> --- a/Documentation/devicetree/bindings/arm/rockchip.txt
+> +++ b/Documentation/devicetree/bindings/arm/rockchip.txt
+> @@ -50,6 +50,10 @@ Rockchip platforms device tree bindings
+>      Required root node properties:
+>        - compatible = "firefly,firefly-rk3399", "rockchip,rk3399";
+>  
+> +- Firefly roc-rk3328-cc board:
+> +    Required root node properties:
+> +      - compatible = "firefly,roc-rk3328-cc", "rockchip,rk3328";
+> +
+>  - ChipSPARK PopMetal-RK3288 board:
+>      Required root node properties:
+>        - compatible = "chipspark,popmetal-rk3288", "rockchip,rk3288";
+> diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
+> index ce2701e..cf14b86 100644
+> --- a/arch/arm64/boot/dts/rockchip/Makefile
+> +++ b/arch/arm64/boot/dts/rockchip/Makefile
+> @@ -1,6 +1,7 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-evb.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-rock64.dtb
+> +dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-roc-cc.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3368-evb-act8846.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3368-geekbox.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3368-orion-r68-meta.dtb
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts b/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
 > new file mode 100644
-> index 000000000000..a2d534d917bb
+> index 0000000..2134baf
 > --- /dev/null
-> +++ b/include/dt-bindings/clock/sun50i-h6-ccu.h
-> @@ -0,0 +1,159 @@
+> +++ b/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
+> @@ -0,0 +1,313 @@
 > +/*
-> + * Copyright (C) 2017 Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> + * Copyright (c) 2017 T-Chip Intelligent Technology Co., Ltd
 > + *
 > + * This file is dual-licensed: you can use it either under the terms
 > + * of the GPL or the X11 license, at your option. Note that this dual
 > + * licensing only applies to this file, and not this project as a
 > + * whole.
 > + *
-> + *  a) This file is free software; you can redistribute it and/or
+> + *  a) This library is free software; you can redistribute it and/or
 > + *     modify it under the terms of the GNU General Public License as
 > + *     published by the Free Software Foundation; either version 2 of the
 > + *     License, or (at your option) any later version.
 > + *
-> + *     This file is distributed in the hope that it will be useful,
+> + *     This library is distributed in the hope that it will be useful,
 > + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
 > + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 > + *     GNU General Public License for more details.
@@ -81,249 +105,294 @@ On Sat, Jan 06, 2018 at 12:49:16PM +0800, Icenowy Zheng wrote:
 > + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 > + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 > + *     OTHER DEALINGS IN THE SOFTWARE.
-
-Use SPDX license tag instead.
-
 > + */
-> +
-> +#ifndef _DT_BINDINGS_CLK_SUN50I_H6_H_
-> +#define _DT_BINDINGS_CLK_SUN50I_H6_H_
-> +
-> +#define CLK_PLL_PERIPH0		3
-> +
-> +#define CLK_CPUX		21
-> +
-> +#define CLK_DE			29
-> +#define CLK_BUS_DE		30
-> +#define CLK_DEINTERLACE		31
-> +#define CLK_BUS_DEINTERLACE	32
-> +#define CLK_GPU			33
-> +#define CLK_BUS_GPU		34
-> +#define CLK_CE			35
-> +#define CLK_BUS_CE		36
-> +#define CLK_VE			37
-> +#define CLK_BUS_VE		38
-> +#define CLK_EMCE		39
-> +#define CLK_BUS_EMCE		40
-> +#define CLK_VP9			41
-> +#define CLK_BUS_VP9		42
-> +#define CLK_BUS_DMA		43
-> +#define CLK_BUS_MSGBOX		44
-> +#define CLK_BUS_SPINLOCK	45
-> +#define CLK_BUS_HSTIMER		46
-> +#define CLK_AVS			47
-> +#define CLK_BUS_DBG		48
-> +#define CLK_BUS_PSI		49
-> +#define CLK_BUS_PWM		50
-> +#define CLK_BUS_IOMMU		51
-> +
-> +#define CLK_MBUS_DMA		53
-> +#define CLK_MBUS_VE		54
-> +#define CLK_MBUS_CE		55
-> +#define CLK_MBUS_TS		56
-> +#define CLK_MBUS_NAND		57
-> +#define CLK_MBUS_CSI		58
-> +#define CLK_MBUS_DEINTERLACE	59
-> +
-> +#define CLK_NAND0		61
-> +#define CLK_NAND1		62
-> +#define CLK_BUS_NAND		63
-> +#define CLK_MMC0		64
-> +#define CLK_MMC1		65
-> +#define CLK_MMC2		66
-> +#define CLK_BUS_MMC0		67
-> +#define CLK_BUS_MMC1		68
-> +#define CLK_BUS_MMC2		69
-> +#define CLK_BUS_UART0		70
-> +#define CLK_BUS_UART1		71
-> +#define CLK_BUS_UART2		72
-> +#define CLK_BUS_UART3		73
-> +#define CLK_BUS_I2C0		74
-> +#define CLK_BUS_I2C1		75
-> +#define CLK_BUS_I2C2		76
-> +#define CLK_BUS_I2C3		77
-> +#define CLK_BUS_SCR0		78
-> +#define CLK_BUS_SCR1		79
-> +#define CLK_SPI0		80
-> +#define CLK_SPI1		81
-> +#define CLK_BUS_SPI0		82
-> +#define CLK_BUS_SPI1		83
-> +#define CLK_BUS_EMAC		84
-> +#define CLK_TS			85
-> +#define CLK_BUS_TS		86
-> +#define CLK_IR_TX		87
-> +#define CLK_BUS_IR_TX		88
-> +#define CLK_BUS_THS		89
-> +#define CLK_I2S3		90
-> +#define CLK_I2S0		91
-> +#define CLK_I2S1		92
-> +#define CLK_I2S2		93
-> +#define CLK_BUS_I2S0		94
-> +#define CLK_BUS_I2S1		95
-> +#define CLK_BUS_I2S2		96
-> +#define CLK_BUS_I2S3		97
-> +#define CLK_SPDIF		98
-> +#define CLK_BUS_SPDIF		99
-> +#define CLK_DMIC		100
-> +#define CLK_BUS_DMIC		101
-> +#define CLK_AUDIO_HUB		102
-> +#define CLK_BUS_AUDIO_HUB	103
-> +#define CLK_USB_OHCI0		104
-> +#define CLK_USB_PHY0		105
-> +#define CLK_USB_PHY1		106
-> +#define CLK_USB_OHCI3		107
-> +#define CLK_USB_PHY3		108
-> +#define CLK_USB_HSIC_12M	109
-> +#define CLK_USB_HSIC		110
-> +#define CLK_BUS_OHCI0		111
-> +#define CLK_BUS_OHCI3		112
-> +#define CLK_BUS_EHCI0		113
-> +#define CLK_BUS_XHCI		114
-> +#define CLK_BUS_EHCI3		115
-> +#define CLK_BUS_OTG		116
-> +#define CLK_PCIE_REF_100M	117
-> +#define CLK_PCIE_REF		118
-> +#define CLK_PCIE_REF_OUT	119
-> +#define CLK_PCIE_MAXI		120
-> +#define CLK_PCIE_AUX		121
-> +#define CLK_BUS_PCIE		122
-> +#define CLK_HDMI		123
-> +#define CLK_HDMI_CEC		124
-> +#define CLK_BUS_HDMI		125
-> +#define CLK_BUS_TCON_TOP	126
-> +#define CLK_TCON_LCD0		127
-> +#define CLK_BUS_TCON_LCD0	128
-> +#define CLK_TCON_TV0		129
-> +#define CLK_BUS_TCON_TV0	130
-> +#define CLK_CSI_CCI		131
-> +#define CLK_CSI_TOP		132
-> +#define CLK_CSI_MCLK		133
-> +#define CLK_BUS_CSI		134
-> +#define CLK_HDCP		135
-> +#define CLK_BUS_HDCP		136
-> +
-> +#endif /* _DT_BINDINGS_CLK_SUN50I_H6_H_ */
-> diff --git a/include/dt-bindings/reset/sun50i-h6-ccu.h b/include/dt-bindings/reset/sun50i-h6-ccu.h
-> new file mode 100644
-> index 000000000000..d40ae3bf418f
-> --- /dev/null
-> +++ b/include/dt-bindings/reset/sun50i-h6-ccu.h
-> @@ -0,0 +1,110 @@
-> +/*
-> + * Copyright (C) 2017 Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-> + *
-> + * This file is dual-licensed: you can use it either under the terms
-> + * of the GPL or the X11 license, at your option. Note that this dual
-> + * licensing only applies to this file, and not this project as a
-> + * whole.
-> + *
-> + *  a) This file is free software; you can redistribute it and/or
-> + *     modify it under the terms of the GNU General Public License as
-> + *     published by the Free Software Foundation; either version 2 of the
-> + *     License, or (at your option) any later version.
-> + *
-> + *     This file is distributed in the hope that it will be useful,
-> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + *     GNU General Public License for more details.
-> + *
-> + * Or, alternatively,
-> + *
-> + *  b) Permission is hereby granted, free of charge, to any person
-> + *     obtaining a copy of this software and associated documentation
-> + *     files (the "Software"), to deal in the Software without
-> + *     restriction, including without limitation the rights to use,
-> + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> + *     sell copies of the Software, and to permit persons to whom the
-> + *     Software is furnished to do so, subject to the following
-> + *     conditions:
-> + *
-> + *     The above copyright notice and this permission notice shall be
-> + *     included in all copies or substantial portions of the Software.
-> + *
-> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> + *     OTHER DEALINGS IN THE SOFTWARE.
 
-Use SPDX license tag instead.
+Use SPDX license tag.
 
-> + */
 > +
-> +#ifndef _DT_BINDINGS_RESET_SUN50I_H6_H_
-> +#define _DT_BINDINGS_RESET_SUN50I_H6_H_
+> +/dts-v1/;
+> +#include "rk3328.dtsi"
 > +
-> +#define RST_MBUS		0
-> +#define RST_BUS_DE		1
-> +#define RST_BUS_DEINTERLACE	2
-> +#define RST_BUS_GPU		3
-> +#define RST_BUS_CE		4
-> +#define RST_BUS_VE		5
-> +#define RST_BUS_EMCE		6
-> +#define RST_BUS_VP9		7
-> +#define RST_BUS_DMA		8
-> +#define RST_BUS_MSGBOX		9
-> +#define RST_BUS_SPINLOCK	10
-> +#define RST_BUS_HSTIMER		11
-> +#define RST_BUS_DBG		12
-> +#define RST_BUS_PSI		13
-> +#define RST_BUS_PWM		14
-> +#define RST_BUS_IOMMU		15
-> +#define RST_BUS_DRAM		16
-> +#define RST_BUS_NAND		17
-> +#define RST_BUS_MMC0		18
-> +#define RST_BUS_MMC1		19
-> +#define RST_BUS_MMC2		20
-> +#define RST_BUS_UART0		21
-> +#define RST_BUS_UART1		22
-> +#define RST_BUS_UART2		23
-> +#define RST_BUS_UART3		24
-> +#define RST_BUS_I2C0		25
-> +#define RST_BUS_I2C1		26
-> +#define RST_BUS_I2C2		27
-> +#define RST_BUS_I2C3		28
-> +#define RST_BUS_SCR0		29
-> +#define RST_BUS_SCR1		30
-> +#define RST_BUS_SPI0		31
-> +#define RST_BUS_SPI1		32
-> +#define RST_BUS_EMAC		33
-> +#define RST_BUS_TS		34
-> +#define RST_BUS_IR_TX		35
-> +#define RST_BUS_THS		36
-> +#define RST_BUS_I2S0		37
-> +#define RST_BUS_I2S1		38
-> +#define RST_BUS_I2S2		39
-> +#define RST_BUS_I2S3		40
-> +#define RST_BUS_SPDIF		41
-> +#define RST_BUS_DMIC		42
-> +#define RST_BUS_AUDIO_HUB	43
-> +#define RST_USB_PHY0		44
-> +#define RST_USB_PHY1		45
-> +#define RST_USB_PHY3		46
-> +#define RST_USB_HSIC		47
-> +#define RST_BUS_OHCI0		48
-> +#define RST_BUS_OHCI3		49
-> +#define RST_BUS_EHCI0		50
-> +#define RST_BUS_XHCI		51
-> +#define RST_BUS_EHCI3		52
-> +#define RST_BUS_OTG		53
-> +#define RST_BUS_PCIE		54
-> +#define RST_PCIE_POWERUP	55
-> +#define RST_BUS_HDMI		56
-> +#define RST_BUS_HDMI_SUB	57
-> +#define RST_BUS_TCON_TOP	58
-> +#define RST_BUS_TCON_LCD0	59
-> +#define RST_BUS_TCON_TV0	60
-> +#define RST_BUS_CSI		61
-> +#define RST_BUS_HDCP		62
+> +/ {
+> +	model = "Firefly roc-rk3328-cc";
+> +	compatible = "firefly,roc-rk3328-cc", "rockchip,rk3328";
 > +
-> +#endif /* _DT_BINDINGS_RESET_SUN50I_H6_H_ */
+> +	chosen {
+> +		stdout-path = "serial2:1500000n8";
+
+Just checking, 1.5Mbps for console?
+
+> +	};
+> +
+> +	gmac_clkin: external-gmac-clock {
+> +		compatible = "fixed-clock";
+> +		clock-frequency = <125000000>;
+> +		clock-output-names = "gmac_clkin";
+> +		#clock-cells = <0>;
+> +	};
+> +
+> +	dc_12v: dc-12v {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "dc_12v";
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		regulator-min-microvolt = <12000000>;
+> +		regulator-max-microvolt = <12000000>;
+> +	};
+> +
+> +	vcc_sd: sdmmc-regulator {
+> +		compatible = "regulator-fixed";
+> +		gpio = <&gpio0 30 GPIO_ACTIVE_LOW>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&sdmmc0m1_gpio>;
+> +		regulator-name = "vcc_sd";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		vin-supply = <&vcc_io>;
+> +	};
+> +
+> +	vcc_host1_5v: vcc_otg_5v: vcc-host1-5v-regulator {
+> +		compatible = "regulator-fixed";
+> +		enable-active-high;
+> +		gpio = <&gpio1 RK_PD2 GPIO_ACTIVE_HIGH>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&usb20_host_drv>;
+> +		regulator-name = "vcc_host1_5v";
+> +		regulator-always-on;
+> +		vin-supply = <&vcc_sys>;
+> +	};
+> +
+> +	vcc_sys: vcc-sys {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vcc_sys";
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		regulator-min-microvolt = <5000000>;
+> +		regulator-max-microvolt = <5000000>;
+> +		vin-supply = <&dc_12v>;
+> +	};
+> +
+> +	vcc_phy: vcc-phy-regulator {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vcc_phy";
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +	};
+> +};
+> +
+> +&cpu0 {
+> +	cpu-supply = <&vdd_arm>;
+> +};
+> +
+> +&emmc {
+> +	bus-width = <8>;
+> +	cap-mmc-highspeed;
+> +	non-removable;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&emmc_clk &emmc_cmd &emmc_bus8>;
+> +	status = "okay";
+> +};
+> +
+> +&gmac2io {
+> +	assigned-clocks = <&cru SCLK_MAC2IO>, <&cru SCLK_MAC2IO_EXT>;
+> +	assigned-clock-parents = <&gmac_clkin>, <&gmac_clkin>;
+> +	clock_in_out = "input";
+> +	phy-supply = <&vcc_phy>;
+> +	phy-mode = "rgmii";
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&rgmiim1_pins>;
+> +	snps,reset-gpio = <&gpio1 RK_PC2 GPIO_ACTIVE_LOW>;
+> +	snps,reset-active-low;
+> +	snps,reset-delays-us = <0 10000 50000>;
+> +	tx_delay = <0x25>;
+> +	rx_delay = <0x11>;
+> +	status = "okay";
+> +};
+> +
+> +&i2c1 {
+> +	status = "okay";
+> +
+> +	rk805: rk805@18 {
+
+pmic@18
+
+> +		compatible = "rockchip,rk805";
+> +		reg = <0x18>;
+> +		interrupt-parent = <&gpio1>;
+> +		interrupts = <24 IRQ_TYPE_LEVEL_LOW>;
+> +		#clock-cells = <1>;
+> +		clock-output-names = "xin32k", "rk805-clkout2";
+> +		gpio-controller;
+> +		#gpio-cells = <2>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pmic_int_l>;
+> +		rockchip,system-power-controller;
+> +		wakeup-source;
+> +
+> +		vcc1-supply = <&vcc_sys>;
+> +		vcc2-supply = <&vcc_sys>;
+> +		vcc3-supply = <&vcc_sys>;
+> +		vcc4-supply = <&vcc_sys>;
+> +		vcc5-supply = <&vcc_io>;
+> +		vcc6-supply = <&vcc_io>;
+> +
+> +		regulators {
+> +			vdd_logic: DCDC_REG1 {
+
+Don't use '_' in node names.
+
+> +				regulator-name = "vdd_logic";
+> +				regulator-min-microvolt = <712500>;
+> +				regulator-max-microvolt = <1450000>;
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-state-mem {
+> +					regulator-on-in-suspend;
+> +					regulator-suspend-microvolt = <1000000>;
+> +				};
+> +			};
+> +
+> +			vdd_arm: DCDC_REG2 {
+> +				regulator-name = "vdd_arm";
+> +				regulator-min-microvolt = <712500>;
+> +				regulator-max-microvolt = <1450000>;
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-state-mem {
+> +					regulator-on-in-suspend;
+> +					regulator-suspend-microvolt = <950000>;
+> +				};
+> +			};
+> +
+> +			vcc_ddr: DCDC_REG3 {
+> +				regulator-name = "vcc_ddr";
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-state-mem {
+> +					regulator-on-in-suspend;
+> +				};
+> +			};
+> +
+> +			vcc_io: DCDC_REG4 {
+> +				regulator-name = "vcc_io";
+> +				regulator-min-microvolt = <3300000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-state-mem {
+> +					regulator-on-in-suspend;
+> +					regulator-suspend-microvolt = <3300000>;
+> +				};
+> +			};
+> +
+> +			vcc_18: LDO_REG1 {
+> +				regulator-name = "vcc_18";
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <1800000>;
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-state-mem {
+> +					regulator-on-in-suspend;
+> +					regulator-suspend-microvolt = <1800000>;
+> +				};
+> +			};
+> +
+> +			vcc18_emmc: LDO_REG2 {
+> +				regulator-name = "vcc18_emmc";
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <1800000>;
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-state-mem {
+> +					regulator-on-in-suspend;
+> +					regulator-suspend-microvolt = <1800000>;
+> +				};
+> +			};
+> +
+> +			vdd_10: LDO_REG3 {
+> +				regulator-name = "vdd_10";
+> +				regulator-min-microvolt = <1000000>;
+> +				regulator-max-microvolt = <1000000>;
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-state-mem {
+> +					regulator-on-in-suspend;
+> +					regulator-suspend-microvolt = <1000000>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +&pinctrl {
+> +	pmic {
+> +		pmic_int_l: pmic-int-l {
+> +			rockchip,pins = <1 RK_PD0 RK_FUNC_GPIO &pcfg_pull_up>;
+> +		};
+> +	};
+> +
+> +	usb2 {
+> +		usb20_host_drv: usb20-host-drv {
+> +			rockchip,pins = <1 RK_PD2 RK_FUNC_GPIO &pcfg_pull_none>;
+> +		};
+> +	};
+> +};
+> +
+> +&sdmmc {
+> +	bus-width = <4>;
+> +	cap-mmc-highspeed;
+> +	cap-sd-highspeed;
+> +	disable-wp;
+> +	max-frequency = <150000000>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&sdmmc0_clk &sdmmc0_cmd &sdmmc0_dectn &sdmmc0_bus4>;
+> +	vmmc-supply = <&vcc_sd>;
+> +	status = "okay";
+> +};
+> +
+> +&tsadc {
+> +	status = "okay";
+> +};
+> +
+> +&uart2 {
+> +	status = "okay";
+> +};
+> +
+> +&u2phy {
+> +	status = "okay";
+> +};
+> +
+> +&u2phy_host {
+> +	status = "okay";
+> +};
+> +
+> +&u2phy_otg {
+> +	status = "okay";
+> +};
+> +
+> +&usb20_otg {
+> +	status = "okay";
+> +};
+> +
+> +&usb_host0_ehci {
+> +	status = "okay";
+> +};
+> +
+> +&usb_host0_ohci {
+> +	status = "okay";
+> +};
+> +
+> +&usbdrd3 {
+> +	status = "okay";
+> +};
+> +
+> +&usbdrd_dwc3 {
+> +	dr_mode = "host";
+> +	status = "okay";
+> +};
 > -- 
-> 2.14.2
+> 2.9.2
+> 
 > 
 > --
 > To unsubscribe from this list: send the line "unsubscribe devicetree" in
