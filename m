@@ -1,99 +1,57 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH] phy: work around 'phys' references to usb-phy devices
-Date: Thu, 11 Jan 2018 16:20:53 +0100
-Message-ID: <CAK8P3a0NSGCR8=MzHAPqyhWMsUWAxJjtstYo8gszKcXUCaupgg@mail.gmail.com>
-References: <20180108130116.80148-1-arnd@arndb.de> <aa02104b-d80d-8b12-4403-b5cedc23f03a@ti.com>
- <CAK8P3a0F4sK=ou8HXmSktq+0S22juYaCaY48RStDKwk8QGgviQ@mail.gmail.com> <6dd37865-9c71-29f9-16b4-26e51e6b1c70@ti.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v7 2/2] mfd: syscon: Add hardware spinlock support
+Date: Thu, 11 Jan 2018 15:22:19 +0000
+Message-ID: <20180111152219.yzit67dzdshi3cxs@dell>
+References: <29fa88f883dae4c1f8a3acb2656cbd7c5a539d40.1514180039.git.baolin.wang@linaro.org>
+ <a878ad35d9f38c58d34dac0b331dca029b61a9b8.1514180039.git.baolin.wang@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <6dd37865-9c71-29f9-16b4-26e51e6b1c70-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "# 3.4.x" <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andrzej Pietrasiewicz <andrzej.p-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <a878ad35d9f38c58d34dac0b331dca029b61a9b8.1514180039.git.baolin.wang@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Baolin Wang <baolin.wang@linaro.org>
+Cc: arnd@arndb.de, robh+dt@kernel.org, mark.rutland@arm.com, broonie@kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 11, 2018 at 2:30 PM, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> wrote:
-> On Thursday 11 January 2018 02:27 AM, Arnd Bergmann wrote:
->> On Mon, Jan 8, 2018 at 7:32 PM, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> wrote:
->>> On Monday 08 January 2018 06:31 PM, Arnd Bergmann wrote:
->>>> Stefan Wahren reports a problem with a warning fix that was merged
->>>> ---
->>>> This obviously needs to be tested, I wrote this up as a reply to
->>>> Stefan's bug report. I'm fairly sure that I covered all usb-phy
->>>> driver strings here. My goal is to have a fix merged into 4.15
->>>> rather than reverting all the DT fixes.
->>>
->>> Shouldn't the fix be in phy consumer drivers to not return error if it's able
->>> to find the phy either using usb-phy or generic phy?
->>
->> Stefan has posted a patch to that effect now, but I fear that might be
->> a little fragile, in particular this short before the release with the
->> regression
->> in place.
->>
->> The main problem is that we'd have to change the generic
->> usb_add_hcd() function in addition to dwc2 and dwc3 to ignore
->> -EPROBE_DEFER from phy_get() whenever usb_get_phy_dev()
->> has already succeeded.
->>
->> If there is any HCD that relies on usb_add_hcd() to get both the
->> usb_phy and the phy structures, and it may need to defer probing
->> when the latter one isn't ready yet, that fix would break another
->> driver.
->
-> hmm.. IMO the better thing right now would be to revert the dt patch which adds
-> #phy-cells.
-> We have to see if there are better fixes in order to add #phy-cells warning fix
-> in stable tree.
+On Mon, 25 Dec 2017, Baolin Wang wrote:
 
-Let's see which patches that would be, I think this is the full list of
-nodes that got an extra #phy-cells:
+> Some system control registers need hardware spinlock to synchronize
+> between the multiple subsystems, so we should add hardware spinlock
+> support for syscon.
+> 
+> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+> Acked-by: Rob Herring <robh@kernel.org>
+> ---
+> Changes since v6:
+>  - Treat hwlock id 0 as valid for regmap.
+> 
+> Changes since v5:
+>  - Fix the case that hwspinlock is not enabled.
+> 
+> Changes since v4:
+>  - Add one exapmle to show how to add hwlock.
+>  - Fix the coding style issue.
+> 
+> Changes since v3:
+>  - Add error handling for of_hwspin_lock_get_id()
+> 
+> Changes since v2:
+>  - Add acked tag from Rob.
+> 
+> Changes since v1:
+>  - Remove timeout configuration.
+>  - Modify the binding file to add hwlocks.
+> ---
+>  Documentation/devicetree/bindings/mfd/syscon.txt |    8 ++++++++
+>  drivers/mfd/syscon.c                             |   19 +++++++++++++++++++
+>  2 files changed, 27 insertions(+)
 
-c22fe696157d ARM: dts: Fix dm814x missing phy-cells property
-f0e11ff8ff65 ARM: dts: am33xx: Add missing #phy-cells to ti,am335x-usb-phy
-c5bbf358b790 arm: dts: nspire: Add missing #phy-cells to usb-nop-xceiv
-44e5dced2ef6 arm: dts: marvell: Add missing #phy-cells to usb-nop-xceiv
-014d6da6cb25 ARM: dts: bcm283x: Fix DTC warnings about missing phy-cells
-f568f6f554b8 ARM: dts: omap: Add missing #phy-cells to usb-nop-xceiv
+Applied, thanks.
 
-plus a couple in linux-next:
-
-d745d5f277bf ARM: dts: imx51-zii-rdu1: Add missing #phy-cells to usb-nop-xceiv
-915fbe59cbf2 ARM: dts: imx: Add missing #phy-cells to usb-nop-xceiv
-
-It's a lot of patches to revert, and I guess it would get us back to hundreds
-of warnings in an allmodconfig build, so I'd first try to come up with
-ways to prove that at least some of them can stay.
-
-Almost all the warnings are about "usb-nop-xceiv" phys, the only exceptions
-I could find are the OMAP ones (the first two patches), which use
-"ti,am335x-usb-phy" and are referenced from a "ti,musb-am33xx". That
-particular driver is not affected by the bug, so we can leave that in.
-
-To deal with all the "usb-nop-xceiv"  references including the one that
-Stefan reported, we could use a much simpler version of my earlier
-patch, do you think this is any better?
-
-Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-
-diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
-index b4964b067aec..f056d8fb3921 100644
---- a/drivers/phy/phy-core.c
-+++ b/drivers/phy/phy-core.c
-@@ -410,6 +410,10 @@ static struct phy *_of_phy_get(struct device_node
-*np, int index)
-        if (ret)
-                return ERR_PTR(-ENODEV);
-
-+       /* This phy type handled by the usb-phy subsystem for now */
-+       if (of_device_is_compatible("usb-nop-xceiv"))
-+               return ERR_PTR(-ENODEV);
-+
-        mutex_lock(&phy_provider_mutex);
-        phy_provider = of_phy_provider_lookup(args.np);
-        if (IS_ERR(phy_provider) || !try_module_get(phy_provider->owner)) {
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Lee Jones
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
