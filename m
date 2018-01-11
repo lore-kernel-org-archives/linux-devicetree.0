@@ -1,99 +1,75 @@
-From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Subject: Re: [PATCH v5 01/44] dt-bindings: clock: Add new bindings for TI
- Davinci PLL clocks
-Date: Thu, 11 Jan 2018 14:04:43 -0600
-Message-ID: <a79184c5-3e28-bbac-0783-992615d49fae@lechnology.com>
-References: <1515377863-20358-1-git-send-email-david@lechnology.com>
- <1515377863-20358-2-git-send-email-david@lechnology.com>
- <ebd677dc-44a4-5053-2509-e3ee948ccf98@ti.com>
- <22409e49-5c14-4068-b137-7535afaf90d7@lechnology.com>
- <0f90b5f7-f21e-5f81-1154-9a815bbb786d@ti.com>
- <ba7fa842-cfc5-6f6f-f9bf-09c74ab08ec2@lechnology.com>
- <5aacc350-6236-2e4f-35bb-a681fc9d47e7@ti.com>
- <CAHCN7x+ZYezmEU_0mF=6_gF14DZxKnuDp1Cx=aC2=eN_QLNdJQ@mail.gmail.com>
- <fd162516-cddc-e857-ce60-2cd89303971e@lechnology.com>
- <CAHCN7xKORFriQ2Gjx85OsCUzHO-mavCQXLOzh5D3n4kEG=i-Yg@mail.gmail.com>
- <40501635-6f5b-20c9-f8bc-d17e26b58426@lechnology.com>
- <CAHCN7xL=h_g6HK2ey82r_w5qRbXg9+68Og+84YUYuePsjYd-Vg@mail.gmail.com>
- <f20267f2-be4c-e031-1c5f-76490164c60d@lechnology.com>
- <CAHCN7x+G5pxOeD7TahqiQUePEu1Z4Hyinkjq_bcSM+Hz36xoSg@mail.gmail.com>
+From: Chris Packham <Chris.Packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+Subject: Re: [PATCH v2 0/3] ARM: mvebu: dts: updates to enable EDAC
+Date: Thu, 11 Jan 2018 20:06:01 +0000
+Message-ID: <d2460bc23c4d4ff2adbd05821e86aea9@svr-chch-ex1.atlnz.lc>
+References: <20180111015903.11322-1-chris.packham@alliedtelesis.co.nz>
+ <87a7xk7o5t.fsf@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAHCN7x+G5pxOeD7TahqiQUePEu1Z4Hyinkjq_bcSM+Hz36xoSg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Adam Ford <aford173-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "andrew-g2DYL2Zd6BY@public.gmane.org" <andrew-g2DYL2Zd6BY@public.gmane.org>, "jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org" <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org" <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/11/2018 12:50 PM, Adam Ford wrote:
-> On Thu, Jan 11, 2018 at 12:29 PM, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org> wrote:
->> If removing the "clk_ignore_unused" option causes the board to not boot,
->> then we still have problems that need to be fixed, so please also test
->> without this option.
-> 
-> Without this option, it still does not boot.  Without device tree it
-> hangs after:
-> 
-> [snip]
-> 
-> NET: Registered protocol family 17
-> Loading compiled-in X.509 certificates
-> console [netcon0] enabled
-> netconsole: network logging started
-> davinci_emac davinci_emac.1: using random MAC addr: 5e:38:1a:1f:4f:77
-> mmc0: host does not support reading read-only switch, assuming write-enable
-> hctosys: unable to open rtc device (rtc0)
-> mmc0: new high speed SDHC card at address b368
-> 
-> 
-> With device tree it hangs after:
-> 
-> [snip]
-> mmc0: host does not support reading read-only switch, assuming write-enable
-> mmc0: new high speed SDHC card at address b368
-> mmcblk0: mmc0:b368 00000 3.75 GiB
->   mmcblk0: p1 p2
-> pca953x 0-0020: 0-0020 supply vcc not found, using dummy regulator
-> pca953x 0-0020: failed reading register
-> pca953x: probe of 0-0020 failed with error -121
-> console [netcon0] enabled
-> netconsole: network logging started
-> davinci_emac 1e20000.ethernet: incompatible machine/device type for
-> reading mac address
-> hctosys: unable to open rtc device (rtc0)
-> 
-> 
-
-Please try this change:
-
-diff --git a/drivers/clk/davinci/psc-da850.c b/drivers/clk/davinci/psc-da850.c
-index 3fd6b49..a526cc2 100644
---- a/drivers/clk/davinci/psc-da850.c
-+++ b/drivers/clk/davinci/psc-da850.c
-@@ -17,7 +17,7 @@ static const struct davinci_psc_clk_info da850_psc0_info[] __initconst = {
-  	LPSC(0, 0, tpcc0, pll0_sysclk2, LPSC_ALWAYS_ENABLED),
-  	LPSC(1, 0, tptc0, pll0_sysclk2, LPSC_ALWAYS_ENABLED),
-  	LPSC(2, 0, tptc1, pll0_sysclk2, LPSC_ALWAYS_ENABLED),
--	LPSC(3, 0, aemif, pll0_sysclk3, 0),
-+	LPSC(3, 0, aemif, pll0_sysclk3, LPSC_ALWAYS_ENABLED),
-  	LPSC(4, 0, spi0, pll0_sysclk2, 0),
-  	LPSC(5, 0, mmcsd0, pll0_sysclk2, 0),
-  	LPSC(6, 0, aintc, pll0_sysclk4, LPSC_ALWAYS_ENABLED),
-
-
-
-If that does not work, try adding LPSC_ALWAYS_ENABLED to all of the clocks
-in this file and then eliminate them one by one until you find which one is
-preventing boot.
-
-If it still does not boot, there is a similar DIVCLK_ALWAYS_ENABLED flag in
-drivers/clk/davinci/pll-da850.c that you can repeat the exercise with. Add
-DIVCLK_ALWAYS_ENABLED to all of the clocks there and then eliminate it one
-by one until you find the clock that is causing the problem.
-
+On 11/01/18 22:14, Gregory CLEMENT wrote:=0A=
+> Hi Chris,=0A=
+>   =0A=
+>   On jeu., janv. 11 2018, Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE1db9wn+61SL@public.gmane.org=
+z> wrote:=0A=
+> =0A=
+>> I've split this off from my earlier series[1] this is just the dts chang=
+es that=0A=
+>> will enable support for the EDAC series when it lands.=0A=
+>>=0A=
+>> The Armada 38x as well as the 98dx3236 and similar switch chips with int=
+egrated=0A=
+>> CPUs use the same SDRAM controller block as the Armada XP. The key diffe=
+rence=0A=
+>> is the width of the DDR interface.=0A=
+>>=0A=
+>> [1] - https://marc.info/?l=3Dlinux-kernel&m=3D151545124505964&w=3D2=0A=
+> =0A=
+> The series is looks good now. For patch 1 I still wait for that=0A=
+> the "marvell,,ecc-enable" property was accepted before merging it.=0A=
+> =0A=
+> So I can either wait for that it was accepted before applying the series,=
+=0A=
+> or just applying patch 2 and 3 for now, as you want.=0A=
+=0A=
+I'm happy either way. If it's easier for you to keep the 3 patches =0A=
+together that's fine by me.=0A=
+=0A=
+> =0A=
+> Thanks,=0A=
+> =0A=
+> Gregory=0A=
+> =0A=
+> =0A=
+>>=0A=
+>> Changes in v2:=0A=
+>> - update commit message=0A=
+>> - add labels to dts=0A=
+>>=0A=
+>> Chris Packham (3):=0A=
+>>    ARM: dts: armada-xp: enable L2 cache parity and ecc on db-xc3-24g4xg=
+=0A=
+>>    ARM: dts: armada-xp: add label to sdram-controller node=0A=
+>>    ARM: dts: mvebu: add sdram controller node to Armada-38x=0A=
+>>=0A=
+>>   arch/arm/boot/dts/armada-38x.dtsi             | 5 +++++=0A=
+>>   arch/arm/boot/dts/armada-xp-98dx3236.dtsi     | 2 +-=0A=
+>>   arch/arm/boot/dts/armada-xp-db-xc3-24g4xg.dts | 5 +++++=0A=
+>>   arch/arm/boot/dts/armada-xp.dtsi              | 2 +-=0A=
+>>   4 files changed, 12 insertions(+), 2 deletions(-)=0A=
+>>=0A=
+>> -- =0A=
+>> 2.15.1=0A=
+>>=0A=
+> =0A=
+=0A=
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
