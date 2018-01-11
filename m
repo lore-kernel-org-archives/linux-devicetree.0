@@ -1,105 +1,31 @@
-From: Grant Likely <grant.likely@secretlab.ca>
+From: Timur Tabi <timur@codeaurora.org>
 Subject: Re: [PATCH 2/3] dt-bindings: pinctrl: Add a ngpios-ranges property
-Date: Thu, 11 Jan 2018 16:33:50 +0000
-Message-ID: <CACxGe6vA652LCosMc+AsQ2Gb_mgiApx+Gxu9judXnO_p3AFcsw@mail.gmail.com>
-References: <20180110015848.11480-1-sboyd@codeaurora.org> <20180110015848.11480-3-sboyd@codeaurora.org>
+Date: Thu, 11 Jan 2018 10:36:38 -0600
+Message-ID: <73078b7c-c3dd-0927-a82a-fb9369f5b576@codeaurora.org>
+References: <20180110015848.11480-1-sboyd@codeaurora.org>
+ <20180110015848.11480-3-sboyd@codeaurora.org>
  <CACRpkdaN6vmV4L4U76DvD5BN+j1RYCQakTysA+GGPdT8Chc-iw@mail.gmail.com>
+ <CACxGe6vA652LCosMc+AsQ2Gb_mgiApx+Gxu9judXnO_p3AFcsw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdaN6vmV4L4U76DvD5BN+j1RYCQakTysA+GGPdT8Chc-iw@mail.gmail.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, Timur Tabi <timur@codeaurora.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, linux-gpio@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACxGe6vA652LCosMc+AsQ2Gb_mgiApx+Gxu9judXnO_p3AFcsw@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-gpio-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>, Linus Walleij <linus.walleij@linaro.org>
+Cc: Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, linux-gpio@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 10, 2018 at 1:37 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Wed, Jan 10, 2018 at 2:58 AM, Stephen Boyd <sboyd@codeaurora.org> wrote:
->
->> Some qcom platforms make some GPIOs or pins unavailable for use
->> by non-secure operating systems, and thus reading or writing the
->> registers for those pins will cause access control issues.
->> Introduce a DT property to describe the set of GPIOs that are
->> available for use so that higher level OSes are able to know what
->> pins to avoid reading/writing.
+On 01/11/2018 10:33 AM, Grant Likely wrote:
+> What level of access control is implemented here? Is there access
+> control for each GPIO individually, or is it done by banks of GPIOs?
+> Just asking to make sure I understand the problem domain.
 
-What level of access control is implemented here? Is there access
-control for each GPIO individually, or is it done by banks of GPIOs?
-Just asking to make sure I understand the problem domain.
+On our ACPI system, it's specific GPIOs.  Each GPIO is in its own 64k 
+page, which is what allows us to block specific ones.
 
->>
->> Cc: <devicetree@vger.kernel.org>
->> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
->
-> I like the idea, let's check what we think about the details regarding
-> naming and semantics, I need feedback from some DT people
-> in particular.
->
-> Paging in Grant on this as he might have some input.
->
->> I stuck this inside msm8996, but maybe it can go somewhere more generic?
->
-> Yeah just put it in Documentation/devicetree/bindings/gpio/gpio.txt
-> Everyone and its dog doing GPIO reservations "from another world"
-> will need to use this.
->
->> +- ngpios-ranges:
->> +       Usage: optional
->> +       Value type: <prop-encoded-array>
->> +       Definition: Tuples of GPIO ranges (base, size) indicating
->> +                   GPIOs available for use.
->> +
->>  Please refer to ../gpio/gpio.txt and ../interrupt-controller/interrupts.txt for
->>  a general description of GPIO and interrupt bindings.
->
-> I like the tuples syntax. That's fine. It's like gpio-ranges we have
-> already to map between pin controllers and GPIO.
->
-> I don't think we can reuse gpio-ranges because that is
-> exclusively for pin control ATM, it would be fine if the ranges
-> were for a specific device, like pin control does, like:
->
-> gpio-ranges = <&secure_world_thing 0 20 10>;
->
-> But you definately would need a node to tie it to, so that the
-> driver for that node can specify that it's gonna take the
-> GPIOs.
->
-> But I think the semantics should be the inverse. That you
-> point out "holes" with the lines we *can't* use.
->
-> We already support a generic property "ngpios" that says how
-> many of the GPIOs (counted from zero) that can be used,
-> so if those should be able to use this as a generic property it
-> is better with the inverse semantics and say that the
-> "reserved-gpio-ranges", "secureworld-gpio-ranges"
-> (or whatever we decide to call it) takes precedence over
-> ngpios so we don't end up in ambigous places.
-
-Heh, I just went down the same thought process on the naming before I
-read the above. Yes I agree. The property name should have something
-like "reserved" in it. I vote for "gpio-reserved-ranges" because it
-puts the binding owner (gpio) at the front of the name, it indicates
-that the list is unavailable GPIOs, and that the format is a set of
-ranges.
-
-The fiddly bit is it assumes the GPIOs are described by a single
-number. It works fine as long as the GPIO controllers can use a single
-cell to describe a gpio number (instead of having #gpio-cells = 3 with
-the first cell being bank, the second being number in bank, and the
-third being flags).
-
->
-> Then, will it be possible to put the parsing, handling and
-> disablement of these ranges into drivers/gpio/gpiolib-of.c
-> where we handle the ranges today, or do we need to
-> do it in the individual drivers?
-
-I certainly would prefer parsing this in common code, and not in
-individual drivers, but again it becomes hard for any driver using
-multiple cells to describe the local GPIO number. I think the guidance
-here needs to be that the property is relevant when the internal GPIO
-number representation fits within a uint32, which realistically should
-never be a problem.
-
-g.
+-- 
+Qualcomm Datacenter Technologies, Inc. as an affiliate of Qualcomm
+Technologies, Inc.  Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
