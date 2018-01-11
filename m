@@ -1,150 +1,82 @@
-From: Jae Hyun Yoo <jae.hyun.yoo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [linux, dev-4.10, 6/6] drivers/hwmon: Add a driver for a generic
- PECI hwmon
-Date: Thu, 11 Jan 2018 15:03:50 -0800
-Message-ID: <7c9ba56d-bd1a-c9cb-8986-4f749ae55edb@linux.intel.com>
-References: <20180109223126.13093-7-jae.hyun.yoo@linux.intel.com>
- <20180110214747.GA25248@roeck-us.net>
- <261ac28e-813c-a058-c81f-ad4e718d0233@linux.intel.com>
- <20180111214035.GA14748@roeck-us.net>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v4 3/9] v4l: platform: Add Renesas CEU driver
+Date: Fri, 12 Jan 2018 01:12:59 +0200
+Message-ID: <4595365.GB5AfDQQ8V@avalon>
+References: <1515515131-13760-1-git-send-email-jacopo+renesas@jmondi.org> <1515515131-13760-4-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180111214035.GA14748-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, andrew-zrmu5oMJ5Fs@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, jdelvare-IBi9RG/b67k@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1515515131-13760-4-git-send-email-jacopo+renesas@jmondi.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: magnus.damm@gmail.com, geert@glider.be, mchehab@kernel.org, hverkuil@xs4all.nl, festevam@gmail.com, sakari.ailus@iki.fi, robh+dt@kernel.org, mark.rutland@arm.com, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 1/11/2018 1:40 PM, Guenter Roeck wrote:
-> On Thu, Jan 11, 2018 at 11:47:01AM -0800, Jae Hyun Yoo wrote:
->> On 1/10/2018 1:47 PM, Guenter Roeck wrote:
->>> On Tue, Jan 09, 2018 at 02:31:26PM -0800, Jae Hyun Yoo wrote:
->>>> This commit adds driver implementation for a generic PECI hwmon.
->>>>
->>>> Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+On Tuesday, 9 January 2018 18:25:25 EET Jacopo Mondi wrote:
+> Add driver for Renesas Capture Engine Unit (CEU).
 > 
-> [ ... ]
+> The CEU interface supports capturing 'data' (YUV422) and 'images'
+> (NV[12|21|16|61]).
 > 
->>>> +
->>>> +	if (priv->temp.tcontrol.valid &&
->>>> +	    time_before(jiffies, priv->temp.tcontrol.last_updated +
->>>> +				 UPDATE_INTERVAL_MIN))
->>>> +		return 0;
->>>> +
->>>
->>> Is the delay necessary ? Otherwise I would suggest to drop it.
->>> It adds a lot of complexity to the driver. Also, if the user polls
->>> values more often, that is presumably on purpose.
->>>
->>
->> I was intended to reduce traffic on PECI bus because it's low speed single
->> wired bus, and temperature values don't change frequently because the value
->> is sampled and averaged in CPU itself. I'll keep this.
->>
-> Then please try to move the common code into a single function.
+> This driver aims to replace the soc_camera-based sh_mobile_ceu one.
 > 
-
-That makes sense. I'll move the common code into a single function.
-
-> [ ... ]
+> Tested with ov7670 camera sensor, providing YUYV_2X8 data on Renesas RZ
+> platform GR-Peach.
 > 
->>>> +
->>>> +	rc = of_property_read_u32(np, "cpu-id", &priv->cpu_id);
->>>
->>> What entity determines cpu-id ?
->>>
->>
->> CPU ID numbering is determined by hardware SOCKET_ID strap pins. In this
->> driver implementation, cpu-id is being used as CPU client indexing.
->>
-> Seems to me the necessary information to identify a given CPU should
-> be provided by the PECI core. Also, there are already "cpu" nodes
-> in devicetree which, if I recall correctly, may include information
-> such as CPU Ids.
+> Tested with ov7725 camera sensor on SH4 platform Migo-R.
 > 
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> ---
+>  drivers/media/platform/Kconfig       |    9 +
+>  drivers/media/platform/Makefile      |    1 +
+>  drivers/media/platform/renesas-ceu.c | 1648
+> ++++++++++++++++++++++++++++++++++ 3 files changed, 1658 insertions(+)
+>  create mode 100644 drivers/media/platform/renesas-ceu.c
 
-This driver is implemented to support only BMC (Baseboard Management 
-Controllers) chipset which is running on a separated linux kernel from a 
-host server system. Through a PECI connection between them, this driver 
-collects the host server system's CPU and DIMM temperature information 
-which is running on a separated OS. That could be a linux, a Windows OS 
-or any other OSes. I mean, there is no shared devicetree data between 
-them so it is why the 'cpu_id' was added into dt configuration of this 
-driver.
+[snip]
 
-Using quite limited hardware connections such as PECI, KSC, eSPI and 
-SMBus, the BMC manages the host server and this hwmon is one of features 
-of BMC.
+> diff --git a/drivers/media/platform/renesas-ceu.c
+> b/drivers/media/platform/renesas-ceu.c new file mode 100644
+> index 0000000..d261704
+> --- /dev/null
+> +++ b/drivers/media/platform/renesas-ceu.c
+> @@ -0,0 +1,1648 @@
+> +// SPDX-License-Identifier: GPL-2.0
 
->>>> +	if (rc || priv->cpu_id >= CPU_ID_MAX) {
->>>> +		dev_err(dev, "Invalid cpu-id configuration\n");
->>>> +		return rc;
->>>> +	}
->>>> +
->>>> +	rc = of_property_read_u32(np, "dimm-nums", &priv->dimm_nums);
->>>
->>> This is an odd devicetree attribute. Normally the number of DIMMs
->>> is dynamic. Isn't there a means to get all that information dynamically
->>> instead of having to set it through devicetree ? What if someone adds
->>> or removes a DIMM ? Who updates the devicetree ?
->>>
->>
->> It means the number of DIMM slots each CPU has, doesn't mean the number of
->> currently installed DIMM components. If a DIMM is inserted a slot, CPU
->> reports its actual temperature but on empty slot, CPU reports 0 instead of
->> reporting an error so it is the reason why this driver enumerates all DIMM
->> slots' attribute.
->>
-> And there is no other means to get the number of DIMM slots per CPU ?
-> It just seems to be that this is the wrong location to provide such
-> information.
-> 
+It was recently brought to my attention that SPDX headers should use either 
+GPL-2.0-only or GPL-2.0-or-later, no the ambiguous GPL-2.0. Could you please 
+update all patches in this series ?
 
-This devicetree attribute will be configured at runtime using dt overlay 
-based on the host server's hardware configuration which will be parsed 
-and managed by a userspace BMC service.
+[snip]
 
-> [ ... ]
-> 
->>>> +
->>>> +static const struct of_device_id peci_of_table[] = {
->>>> +	{ .compatible = "peci-hwmon", },
->>>
->>> This does not look like a reference to some piece of hardware.
->>>
->>
->> This driver provides generic PECI hwmon function to which controller has
->> PECI HW such as Aspeed or Nuvoton BMC chip so it's not dependant on a
->> specific hardware. Should I remove this or any suggestion?
->>
-> 
-> I don't really know enough about the system to make a recommendation.
-> It seems to me that the PECI core should identify which functionality
-> it supports and instantiate the necessary driver(s). Maybe there should
-> be sub-nodes to the peci node with relevant information. Those sub-nodes
-> should specify the supported functionality in more detail, though -
-> such as indicating the supported CPU and/or DIMM sensors.
-> 
-> Guenter
-> 
+> +/*
+> + * struct ceu_data - Platform specific CEU data
+> + * @irq_mask: CETCR mask with all interrupt sources enabled. The mask
+> differs
+> + *	      between SH4 and RZ platforms.
+> + */
+> +struct ceu_data {
+> +	const u32 irq_mask;
+> +};
+> +
+> +const struct ceu_data ceu_data_rz = {
+> +	.irq_mask = CEU_CETCR_ALL_IRQS_RZ,
+> +};
+> +
+> +const struct ceu_data ceu_data_sh4 = {
+> +	.irq_mask = CEU_CETCR_ALL_IRQS_SH4,
+> +};
 
-As I explained above, BMC and host server are running on separated OSes 
-so this driver cannot be (actually, doesn't need to be) directly 
-associated with other kernel modules in the BMC side OS for identifying 
-the host server system's functionality. My thought is, this driver will 
-use PECI only for identifying the host server's CPU and DIMM information 
-and the userspace BMC service could deliver any additional host server 
-information thru dt overlay if needed before the BMC service initiates 
-this driver at runtime.
+I meant static and not const in my last review (as in static const struct 
+ceu_data ...). Adding a const keyword in front of the u32 irq_mask field 
+definition isn't very useful.
 
-Thanks a lot,
+With that fixed,
 
-Jae
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Regards,
+
+Laurent Pinchart
