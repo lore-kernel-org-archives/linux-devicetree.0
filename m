@@ -1,166 +1,96 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH V7 1/2] mtd: partitions: add of_match_table parser
- matching
-Date: Thu, 11 Jan 2018 10:04:38 +0100
-Message-ID: <20180111100438.281db30a@bbrezillon>
-References: <20180103105543.17897-1-zajec5@gmail.com>
-        <20180104070534.16248-1-zajec5@gmail.com>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 2/3] ARM: dts: mvebu: add sdram controller node to Armada-38x
+Date: Thu, 11 Jan 2018 10:06:37 +0100
+Message-ID: <87efmw7oiq.fsf@free-electrons.com>
+References: <20180108223158.21930-1-chris.packham@alliedtelesis.co.nz>
+        <20180108223158.21930-3-chris.packham@alliedtelesis.co.nz>
+        <87tvvu6ro6.fsf@free-electrons.com>
+        <5aa9a523e86e4607a14265790d105168@svr-chch-ex1.atlnz.lc>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180104070534.16248-1-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <5aa9a523e86e4607a14265790d105168-5g7mGxlPNYb6GjIOKuZY+ItlCAj8ZROq@public.gmane.org> (Chris
+        Packham's message of "Wed, 10 Jan 2018 20:19:30 +0000")
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Chris Packham <Chris.Packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+Cc: "jlu@pengutronix.de" <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux@armlinux.org.uk" <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "bp@alien8.de" <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-edac@vger.kernel.org" <linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel@vger.kernel.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu,  4 Jan 2018 08:05:33 +0100
-Rafał Miłecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+Hi Chris,
+ 
+ On mer., janv. 10 2018, Chris Packham <Chris.Packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org> wrote:
 
-> From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> 
-> Partition parsers can now provide an of_match_table to enable
-> flash<-->parser matching via device tree as documented in the
-> mtd/partition.txt.
-> 
-> It works by looking for a matching parser for every string in the
-> "compatibility" property (starting with the most specific one).
-> 
-> This support is currently limited to built-in parsers as it uses
-> request_module() and friends. This should be sufficient for most cases
-> though as compiling parsers as modules isn't a common choice.
-> 
+> On 10/01/18 21:31, Gregory CLEMENT wrote:
+>> Hi Chris,
+>>   
+>>   On mar., janv. 09 2018, Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org> wrote:
+>> 
+>>> The Armada-38x uses an SDRAM controller that is compatible with the
+>>> Armada-XP. The key difference is the width of the bus (XP is 64/32, 38x
+>>> is 32/16). The SDRAM controller registers are the same between the two
+>>> SoCs.
+>>>
+>>> Signed-off-by: Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+>>> ---
+>>>   arch/arm/boot/dts/armada-38x.dtsi | 5 +++++
+>>>   1 file changed, 5 insertions(+)
+>>>
+>>> diff --git a/arch/arm/boot/dts/armada-38x.dtsi b/arch/arm/boot/dts/armada-38x.dtsi
+>>> index 00ff549d4e39..6d34c5ec178f 100644
+>>> --- a/arch/arm/boot/dts/armada-38x.dtsi
+>>> +++ b/arch/arm/boot/dts/armada-38x.dtsi
+>>> @@ -138,6 +138,11 @@
+>>>   			#size-cells = <1>;
+>>>   			ranges = <0 MBUS_ID(0xf0, 0x01) 0 0x100000>;
+>>>   
+>>> +			sdramc@1400 {
+>> 
+>> Could you add a label? Thanks to this it would be possible to
+>> enable/disable it at board level in a esay way.
+>> 
+>
+> Sure. Any suggestions for a name better than "sdramc:"?
 
-Applied both patches.
+For me sdramc: is fine.
+
+>
+> It's probably worth adding the same label to armada-xp.dtsi and 
+> armada-xp-98dx3236.dtsi.
+
+Right.
+
+>
+>>> +				compatible = "marvell,armada-xp-sdram-controller";
+>>> +				reg = <0x1400 0x500>;
+>> 
+>> What about adding status = "disabled" ?
+>> 
+>> Thanks to this we can enable it at board level only if we really want
+>> it, it would avoid nasty regression on boards that don't need it, if an
+>> issue occurs. Unless you are sure that it is completely safe to enable
+>> it for everyone.
+>
+> The EDAC driver (which is default n) will not probe the device if ECC 
+> has not been enabled so that should be safe.
+
+OK in this case no need to disable it by default.
 
 Thanks,
 
-Boris
+Gregory
 
-> Signed-off-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
-> ---
-> This is based on Brian's patches:
-> [RFC PATCH 4/7] mtd: add of_match_mtd_parser() and of_mtd_match_mtd_parser() helpers
-> [RFC PATCH 6/7] RFC: mtd: partitions: enable of_match_table matching
-> 
-> V1: Put helpers in mtdpart.c instead of drivers/of/of_mtd.c
->     Merge helpers into a single of_mtd_match_mtd_parser
-> V3: Add a simple comment to note we will need the best match in the future
-> V4: Rework new functions to pick parser with the best match
->     Move new code in parse_mtd_partitions up so it has precedence over flash
->     driver defaults and MTD defaults
-> V5: Rework matching code to start checking with the most specific string in the
->     "compatibility" property.
-> V6: Initialize "ret" variable in mtd_part_get_parser_by_cp to NULL
-> V7: Rename function "mtd_part_get_parser_by_cp" to use "_compatible_"
->     Rename "cp" variable to "compat"
->     Drop unneeded if (np) check from the parse_mtd_partitions
-> ---
->  drivers/mtd/mtdpart.c          | 59 ++++++++++++++++++++++++++++++++++++++++++
->  include/linux/mtd/partitions.h |  1 +
->  2 files changed, 60 insertions(+)
-> 
-> diff --git a/drivers/mtd/mtdpart.c b/drivers/mtd/mtdpart.c
-> index be088bccd593..76e12fb81563 100644
-> --- a/drivers/mtd/mtdpart.c
-> +++ b/drivers/mtd/mtdpart.c
-> @@ -30,6 +30,7 @@
->  #include <linux/mtd/mtd.h>
->  #include <linux/mtd/partitions.h>
->  #include <linux/err.h>
-> +#include <linux/of.h>
->  
->  #include "mtdcore.h"
->  
-> @@ -880,6 +881,45 @@ static int mtd_part_do_parse(struct mtd_part_parser *parser,
->  }
->  
->  /**
-> + * mtd_part_get_compatible_parser - find MTD parser by a compatible string
-> + *
-> + * @compat: compatible string describing partitions in a device tree
-> + *
-> + * MTD parsers can specify supported partitions by providing a table of
-> + * compatibility strings. This function finds a parser that advertises support
-> + * for a passed value of "compatible".
-> + */
-> +static struct mtd_part_parser *mtd_part_get_compatible_parser(const char *compat)
-> +{
-> +	struct mtd_part_parser *p, *ret = NULL;
-> +
-> +	spin_lock(&part_parser_lock);
-> +
-> +	list_for_each_entry(p, &part_parsers, list) {
-> +		const struct of_device_id *matches;
-> +
-> +		matches = p->of_match_table;
-> +		if (!matches)
-> +			continue;
-> +
-> +		for (; matches->compatible[0]; matches++) {
-> +			if (!strcmp(matches->compatible, compat) &&
-> +			    try_module_get(p->owner)) {
-> +				ret = p;
-> +				break;
-> +			}
-> +		}
-> +
-> +		if (ret)
-> +			break;
-> +	}
-> +
-> +	spin_unlock(&part_parser_lock);
-> +
-> +	return ret;
-> +}
-> +
-> +/**
->   * parse_mtd_partitions - parse MTD partitions
->   * @master: the master partition (describes whole MTD device)
->   * @types: names of partition parsers to try or %NULL
-> @@ -905,8 +945,27 @@ int parse_mtd_partitions(struct mtd_info *master, const char *const *types,
->  			 struct mtd_part_parser_data *data)
->  {
->  	struct mtd_part_parser *parser;
-> +	struct device_node *np;
-> +	struct property *prop;
-> +	const char *compat;
->  	int ret, err = 0;
->  
-> +	np = of_get_child_by_name(mtd_get_of_node(master), "partitions");
-> +	of_property_for_each_string(np, "compatible", prop, compat) {
-> +		parser = mtd_part_get_compatible_parser(compat);
-> +		if (!parser)
-> +			continue;
-> +		ret = mtd_part_do_parse(parser, master, pparts, data);
-> +		if (ret > 0) {
-> +			of_node_put(np);
-> +			return 0;
-> +		}
-> +		mtd_part_parser_put(parser);
-> +		if (ret < 0 && !err)
-> +			err = ret;
-> +	}
-> +	of_node_put(np);
-> +
->  	if (!types)
->  		types = default_mtd_part_types;
->  
-> diff --git a/include/linux/mtd/partitions.h b/include/linux/mtd/partitions.h
-> index c4beb70dacbd..11cb0c50cd84 100644
-> --- a/include/linux/mtd/partitions.h
-> +++ b/include/linux/mtd/partitions.h
-> @@ -77,6 +77,7 @@ struct mtd_part_parser {
->  	struct list_head list;
->  	struct module *owner;
->  	const char *name;
-> +	const struct of_device_id *of_match_table;
->  	int (*parse_fn)(struct mtd_info *, const struct mtd_partition **,
->  			struct mtd_part_parser_data *);
->  	void (*cleanup)(const struct mtd_partition *pparts, int nr_parts);
+>
+> Other than the EDAC driver the only other code that looks at this is in 
+> arch/arm/mach-mvebu/pm.c and it almost seems like an omission that this 
+> code is not active on armada-38x. The armada-38x platforms I have access 
+> to don't use suspend/resume so I can't verify this.
+>
 
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
