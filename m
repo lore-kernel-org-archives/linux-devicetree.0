@@ -1,78 +1,99 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH RFC 4/7] i2c: Add device tree bindings for GENI I2C Controller
-Date: Thu, 11 Jan 2018 09:19:28 -0600
-Message-ID: <CAL_Jsq+2w280okNbUxVqzm2oXWRc81RnMwBaM6utXqg_+fvMkg@mail.gmail.com>
-References: <1514392046-30602-1-git-send-email-kramasub@codeaurora.org>
- <1514392046-30602-5-git-send-email-kramasub@codeaurora.org>
- <20180102155149.f2wzjvdhoi6cne4x@rob-hp-laptop> <1d741169-e6e6-1896-d8d4-4f580f5d497d@codeaurora.org>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH] phy: work around 'phys' references to usb-phy devices
+Date: Thu, 11 Jan 2018 16:20:53 +0100
+Message-ID: <CAK8P3a0NSGCR8=MzHAPqyhWMsUWAxJjtstYo8gszKcXUCaupgg@mail.gmail.com>
+References: <20180108130116.80148-1-arnd@arndb.de> <aa02104b-d80d-8b12-4403-b5cedc23f03a@ti.com>
+ <CAK8P3a0F4sK=ou8HXmSktq+0S22juYaCaY48RStDKwk8QGgviQ@mail.gmail.com> <6dd37865-9c71-29f9-16b4-26e51e6b1c70@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1d741169-e6e6-1896-d8d4-4f580f5d497d@codeaurora.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Karthik Ramasubramanian <kramasub@codeaurora.org>
-Cc: linux-arm-msm <linux-arm-msm@vger.kernel.org>, Linux I2C <linux-i2c@vger.kernel.org>, linux-serial@vger.kernel.org, linux-doc@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Corbet <corbet@lwn.net>, Wolfram Sang <wsa@the-dreams.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Sagar Dharia <sdharia@codeaurora.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <6dd37865-9c71-29f9-16b4-26e51e6b1c70-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "# 3.4.x" <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andrzej Pietrasiewicz <andrzej.p-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 8, 2018 at 6:33 PM, Karthik Ramasubramanian
-<kramasub@codeaurora.org> wrote:
->
->
-> On 1/2/2018 8:51 AM, Rob Herring wrote:
->>
->> On Wed, Dec 27, 2017 at 09:27:23AM -0700, Karthikeyan Ramasubramanian
->> wrote:
+On Thu, Jan 11, 2018 at 2:30 PM, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> wrote:
+> On Thursday 11 January 2018 02:27 AM, Arnd Bergmann wrote:
+>> On Mon, Jan 8, 2018 at 7:32 PM, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> wrote:
+>>> On Monday 08 January 2018 06:31 PM, Arnd Bergmann wrote:
+>>>> Stefan Wahren reports a problem with a warning fix that was merged
+>>>> ---
+>>>> This obviously needs to be tested, I wrote this up as a reply to
+>>>> Stefan's bug report. I'm fairly sure that I covered all usb-phy
+>>>> driver strings here. My goal is to have a fix merged into 4.15
+>>>> rather than reverting all the DT fixes.
 >>>
->>> Add device tree binding support for I2C Controller in GENI based
->>> QUP Wrapper.
->>>
->>> Signed-off-by: Sagar Dharia <sdharia@codeaurora.org>
->>> Signed-off-by: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>
->>> ---
->>>   .../devicetree/bindings/i2c/i2c-qcom-geni.txt      | 39
->>> ++++++++++++++++++++++
->>>   1 file changed, 39 insertions(+)
->>>   create mode 100644
->>> Documentation/devicetree/bindings/i2c/i2c-qcom-geni.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/i2c/i2c-qcom-geni.txt
->>> b/Documentation/devicetree/bindings/i2c/i2c-qcom-geni.txt
->>> new file mode 100644
->>> index 0000000..d2fa9ce
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/i2c/i2c-qcom-geni.txt
->>> @@ -0,0 +1,39 @@
->>> +Qualcomm Technologies Inc. GENI based I2C Controller driver
->>> +
->>> +Required properties:
->>> + - compatible: Should be:
->>> +   * "qcom,i2c-geni.
+>>> Shouldn't the fix be in phy consumer drivers to not return error if it's able
+>>> to find the phy either using usb-phy or generic phy?
 >>
+>> Stefan has posted a patch to that effect now, but I fear that might be
+>> a little fragile, in particular this short before the release with the
+>> regression
+>> in place.
 >>
->> Only 1 version?
+>> The main problem is that we'd have to change the generic
+>> usb_add_hcd() function in addition to dwc2 and dwc3 to ignore
+>> -EPROBE_DEFER from phy_get() whenever usb_get_phy_dev()
+>> has already succeeded.
+>>
+>> If there is any HCD that relies on usb_add_hcd() to get both the
+>> usb_phy and the phy structures, and it may need to defer probing
+>> when the latter one isn't ready yet, that fix would break another
+>> driver.
 >
-> The Serial Engine used by I2C protocol has the same version as the QUP h/w
-> version. The QUP Wrapper driver exposes an interface function to get the h/w
-> version so that I2C controller driver can support version-specific
-> operations, if any.
->>
->>
->>> + - reg: Should contain QUP register address and length.
->>> + - interrupts: Should contain I2C interrupt.
->>> + - clocks: Serial engine core clock, and AHB clocks needed by the
->>> device.
->>
->>
->> Are there really clocks for a firmware based device or these are just
->> clocks in the parent serial engine?
->
-> The clocks are required to derive the protocol clock. The clocks are also
-> required by the Serial Engine to access the System Memory during DMA mode of
-> operation.
+> hmm.. IMO the better thing right now would be to revert the dt patch which adds
+> #phy-cells.
+> We have to see if there are better fixes in order to add #phy-cells warning fix
+> in stable tree.
 
-You can get the QUP core (or Serial engine?) node and then get its
-clocks if you need to know the frequency. Put the clocks in DT in the
-h/w block they belong to. If you don't really have an I2C clock in the
-h/w, don't put one in the DT.
+Let's see which patches that would be, I think this is the full list of
+nodes that got an extra #phy-cells:
 
-Rob
+c22fe696157d ARM: dts: Fix dm814x missing phy-cells property
+f0e11ff8ff65 ARM: dts: am33xx: Add missing #phy-cells to ti,am335x-usb-phy
+c5bbf358b790 arm: dts: nspire: Add missing #phy-cells to usb-nop-xceiv
+44e5dced2ef6 arm: dts: marvell: Add missing #phy-cells to usb-nop-xceiv
+014d6da6cb25 ARM: dts: bcm283x: Fix DTC warnings about missing phy-cells
+f568f6f554b8 ARM: dts: omap: Add missing #phy-cells to usb-nop-xceiv
+
+plus a couple in linux-next:
+
+d745d5f277bf ARM: dts: imx51-zii-rdu1: Add missing #phy-cells to usb-nop-xceiv
+915fbe59cbf2 ARM: dts: imx: Add missing #phy-cells to usb-nop-xceiv
+
+It's a lot of patches to revert, and I guess it would get us back to hundreds
+of warnings in an allmodconfig build, so I'd first try to come up with
+ways to prove that at least some of them can stay.
+
+Almost all the warnings are about "usb-nop-xceiv" phys, the only exceptions
+I could find are the OMAP ones (the first two patches), which use
+"ti,am335x-usb-phy" and are referenced from a "ti,musb-am33xx". That
+particular driver is not affected by the bug, so we can leave that in.
+
+To deal with all the "usb-nop-xceiv"  references including the one that
+Stefan reported, we could use a much simpler version of my earlier
+patch, do you think this is any better?
+
+Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+
+diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
+index b4964b067aec..f056d8fb3921 100644
+--- a/drivers/phy/phy-core.c
++++ b/drivers/phy/phy-core.c
+@@ -410,6 +410,10 @@ static struct phy *_of_phy_get(struct device_node
+*np, int index)
+        if (ret)
+                return ERR_PTR(-ENODEV);
+
++       /* This phy type handled by the usb-phy subsystem for now */
++       if (of_device_is_compatible("usb-nop-xceiv"))
++               return ERR_PTR(-ENODEV);
++
+        mutex_lock(&phy_provider_mutex);
+        phy_provider = of_phy_provider_lookup(args.np);
+        if (IS_ERR(phy_provider) || !try_module_get(phy_provider->owner)) {
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
