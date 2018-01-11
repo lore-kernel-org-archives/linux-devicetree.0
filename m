@@ -1,7 +1,7 @@
 From: Yixun Lan <yixun.lan@amlogic.com>
-Subject: [PATCH v3 2/5] ARM64: dts: meson-axg: uart: drop legacy compatible name from EE UART
-Date: Thu, 11 Jan 2018 10:33:58 +0800
-Message-ID: <20180111023401.125658-3-yixun.lan@amlogic.com>
+Subject: [PATCH v3 4/5] ARM64: dts: meson-axg: complete the pinctrl info for UART_AO_A
+Date: Thu, 11 Jan 2018 10:34:00 +0800
+Message-ID: <20180111023401.125658-5-yixun.lan@amlogic.com>
 References: <20180111023401.125658-1-yixun.lan@amlogic.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,46 +12,27 @@ To: Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org
 Cc: Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Carlo Caione <carlo@caione.org>, Yixun Lan <yixun.lan@amlogic.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-When update the clock info for the UART controller in the EE domain,
-the driver explicitly require 'pclk' in order to work properly.
-
-With current logic of the code, the driver will go for the legacy clock probe
-routine if it find current compatible string match to 'amlogic,meson-uart',
-which result in not requesting the 'pclk' clock, thus break the driver in the end.
+Explictly request the pinctrl info for the UART_AO_A controller,
+otherwise we may need to rely on bootloader for the initialization.
 
 Acked-by: Jerome Brunet <jbrunet@baylibre.com>
 Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/amlogic/meson-axg-s400.dts | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-index 70c776ef7aa7..644d0f9eaf8c 100644
---- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-@@ -164,17 +164,21 @@
- 			};
+diff --git a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
+index 447b98d30921..9c1b78028ccb 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
+@@ -26,6 +26,8 @@
  
- 			uart_A: serial@24000 {
--				compatible = "amlogic,meson-gx-uart", "amlogic,meson-uart";
-+				compatible = "amlogic,meson-gx-uart";
- 				reg = <0x0 0x24000 0x0 0x18>;
- 				interrupts = <GIC_SPI 26 IRQ_TYPE_EDGE_RISING>;
- 				status = "disabled";
-+				clocks = <&xtal>, <&clkc CLKID_UART0>, <&xtal>;
-+				clock-names = "xtal", "pclk", "baud";
- 			};
+ &uart_AO {
+ 	status = "okay";
++	pinctrl-0 = <&uart_ao_a_pins>;
++	pinctrl-names = "default";
+ };
  
- 			uart_B: serial@23000 {
--				compatible = "amlogic,meson-gx-uart", "amlogic,meson-uart";
-+				compatible = "amlogic,meson-gx-uart";
- 				reg = <0x0 0x23000 0x0 0x18>;
- 				interrupts = <GIC_SPI 75 IRQ_TYPE_EDGE_RISING>;
- 				status = "disabled";
-+				clocks = <&xtal>, <&clkc CLKID_UART1>, <&xtal>;
-+				clock-names = "xtal", "pclk", "baud";
- 			};
- 		};
- 
+ &ir {
 -- 
 2.15.1
