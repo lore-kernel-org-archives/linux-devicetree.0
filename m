@@ -1,90 +1,31 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH] phy: work around 'phys' references to usb-phy devices
-Date: Thu, 11 Jan 2018 19:00:43 +0530
-Message-ID: <6dd37865-9c71-29f9-16b4-26e51e6b1c70@ti.com>
-References: <20180108130116.80148-1-arnd@arndb.de>
- <aa02104b-d80d-8b12-4403-b5cedc23f03a@ti.com>
- <CAK8P3a0F4sK=ou8HXmSktq+0S22juYaCaY48RStDKwk8QGgviQ@mail.gmail.com>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/3] arm: spear600: Add missing interrupt-parent of rtc
+Date: Thu, 11 Jan 2018 07:47:07 -0600
+Message-ID: <CAL_JsqJT+987J89+SqZEgC6C=ioGwLHKrRWxPSFKHV7UN5JewA@mail.gmail.com>
+References: <a062d9ed0d3365b578156a780202fa533e725374.1515650104.git.viresh.kumar@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAK8P3a0F4sK=ou8HXmSktq+0S22juYaCaY48RStDKwk8QGgviQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <a062d9ed0d3365b578156a780202fa533e725374.1515650104.git.viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "# 3.4.x" <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andrzej Pietrasiewicz <andrzej.p-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+On Wed, Jan 10, 2018 at 11:58 PM, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> The interrupt-parent of rtc was missing, add it.
+>
+> Fixes: 8113ba917dfa ("ARM: SPEAr: DT: Update device nodes")
+> Cc: stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org # v3.8+
+> Reported-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> Signed-off-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/spear600.dtsi | 1 +
+>  1 file changed, 1 insertion(+)
 
-On Thursday 11 January 2018 02:27 AM, Arnd Bergmann wrote:
-> On Mon, Jan 8, 2018 at 7:32 PM, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> wrote:
->> Hi Arnd,
->>
->> On Monday 08 January 2018 06:31 PM, Arnd Bergmann wrote:
->>> Stefan Wahren reports a problem with a warning fix that was merged
->>> for v4.15: we had lots of device nodes with a 'phys' property pointing
->>> to a device node that is not compliant with the binding documented in
->>> Documentation/devicetree/bindings/phy/phy-bindings.txt
->>>
->>> This generally works because USB HCD drivers that support both the generic
->>> phy subsystem and the older usb-phy subsystem ignore most errors from
->>> phy_get() and related calls and then use the usb-phy driver instead.
->>>
->>> However, usb_add_hcd() (along with the respective functions in dwc2 and
->>> dwc3) propagate the EPROBE_DEFER return code so we can try again whenever
->>> the driver gets loaded. In case the driver is written for the usb-phy
->>> subsystem (like usb-generic-phy aka usb-nop-xceiv), we will never load
->>> a generic-phy driver for it, and keep failing here.
->>>
->>> There is only a small number of remaining usb-phy drivers that support
->>> device tree, so this adds a workaround by providing a full list of the
->>> potentially affected drivers, and always failing the probe with -ENODEV
->>> here, which is the same behavior that we used to get with incorrect
->>> device tree files. Since we generally want older kernels to also want
->>> to work with the fixed devicetree files, it would be good to backport
->>> the patch into stable kernels as well (3.13+ are possibly affected).
->>> Reverting back to the DTS sources that work would in theory fix USB
->>> support for now, but in the long run we'd run into the same problem
->>> again when the drivers get ported from usb-phy to generic-phy.
->>>
->>> Fixes: 014d6da6cb25 ("ARM: dts: bcm283x: Fix DTC warnings about missing phy-cells")
->>> Link: https://marc.info/?l=linux-usb&m=151518314314753&w=2
->>> Cc: stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->>> Cc: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
->>> Cc: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>> Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
->>> ---
->>> This obviously needs to be tested, I wrote this up as a reply to
->>> Stefan's bug report. I'm fairly sure that I covered all usb-phy
->>> driver strings here. My goal is to have a fix merged into 4.15
->>> rather than reverting all the DT fixes.
->>
->> Shouldn't the fix be in phy consumer drivers to not return error if it's able
->> to find the phy either using usb-phy or generic phy?
-> 
-> Stefan has posted a patch to that effect now, but I fear that might be
-> a little fragile, in particular this short before the release with the
-> regression
-> in place.
-> 
-> The main problem is that we'd have to change the generic
-> usb_add_hcd() function in addition to dwc2 and dwc3 to ignore
-> -EPROBE_DEFER from phy_get() whenever usb_get_phy_dev()
-> has already succeeded.
-> 
-> If there is any HCD that relies on usb_add_hcd() to get both the
-> usb_phy and the phy structures, and it may need to defer probing
-> when the latter one isn't ready yet, that fix would break another
-> driver.
+For all three patches:
 
-hmm.. IMO the better thing right now would be to revert the dt patch which adds
-#phy-cells.
-We have to see if there are better fixes in order to add #phy-cells warning fix
-in stable tree.
-
-Thanks
-Kishon
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
