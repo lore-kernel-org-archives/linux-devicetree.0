@@ -1,82 +1,297 @@
-From: Benjamin Herrenschmidt <benh@au1.ibm.com>
-Subject: Re: [PATCH linux dev-4.10 0/6] Add support PECI and PECI hwmon
- drivers
-Date: Thu, 11 Jan 2018 19:56:51 +1100
-Message-ID: <1515661011.31850.27.camel@au1.ibm.com>
-References: <20180109223126.13093-1-jae.hyun.yoo@linux.intel.com>
-         <20180110101755.GA5822@kroah.com>
-         <006c4a95-9299-bd17-6dec-52578e8461ae@linux.intel.com>
-         <20180110191703.GA20248@kroah.com>
-         <8997e43c-683e-418d-4e2b-1fe3fefe254e@linux.intel.com>
-         <20180110202740.GA27703@kroah.com>
-         <e81095ff-d491-9977-25e6-7ba6d28d5e72@linux.intel.com>
-         <20180111073038.GA3600@kroah.com>
-Reply-To: benh@au1.ibm.com
+From: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
+Subject: Re: [PATCH 2/2] iio: ad5272: Add support for Analog Devices digital
+ potentiometers
+Date: Thu, 11 Jan 2018 17:00:31 +0800
+Message-ID: <17f90f57-e1a1-3c5e-4044-fc6673ff1cff@electromag.com.au>
+References: <1515565051-72535-1-git-send-email-preid@electromag.com.au>
+ <1515565051-72535-3-git-send-email-preid@electromag.com.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-hwmon-owner@vger.kernel.org>
-In-Reply-To: <20180111073038.GA3600@kroah.com>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: Greg KH <gregkh@linuxfoundation.org>, Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Cc: joel@jms.id.au, andrew@aj.id.au, arnd@arndb.de, jdelvare@suse.com, linux@roeck-us.net, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-arm-kernel@lists.infradead.org, openbmc@lists.ozlabs.org, Jae Hyun Yoo <jae.hyun.yoo@intel.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1515565051-72535-3-git-send-email-preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
+Content-Language: en-AU
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Michael.Hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2018-01-11 at 08:30 +0100, Greg KH wrote:
-> 4.13?  Why that kernel?  It too is obsolete and insecure and
-> unsupported.
-
-Haha, it's n-1. come on :-)
-
-
-> What keeps you all from just always tracking the latest tree from Linus?
-> What is in your tree that is not upstream that requires you to have a
-> kernel tree at all?
-
-There are a couple of ARM based SoC families for which we are in the
-process of rewriting all the driver in upstreamable form. This takes
-time.
-
-To respond to your other email about the USB CDC, it's mine, I haven't
-resubmited it yet because it had a dependency on some the aspeed clk
-driver to function properly (so is unusable without it) and it took 2
-kernel versions to get that clk stuff upstream for a number of reasons.
-
-So it's all getting upstream and eventually there will be (we hope) no
-"OpenBMC" kernel, it's just a way for us to get functional code with
-non-upstream-quality (read: vendor) drivers until we are one rewriting
-& upstreaming them all.
-
-> And if you do have out-of-tree code, why not use a process that makes it
-> trivial to update the base kernel version so that you can keep up to
-> date very easily?  (hint, just using 'git' is not a good way to do
-> this...)
-
-Joel and I both find git perfectly fine for that. I've not touched
-quilt in eons and frankly don't regret it ;-)
-
-That said, Jae should definitely submit a driver against upstream, not
-against some random OpenBMC tree.
-
-Jae, for example when I submitted the original USB stuff back then, I
-did it from a local upstream based branch (with just a few hacks to
-work around the lack of the clk stuff).
-
-I will rebase it in the next few days to upstream merged with Stephen's
-clk tree to get the finally merged clk stuff, verify it works, and
-submit patches against upstream.
-
-There should be no mention of dev-4.10 or 4.13 on lkml or other
-upstream submission lists. Development work should happen upstream
-*first* and eventually be backported to our older kernels while they
-exist (hopefully I prefer if we are more aggressive at forward porting
-the crappy drivers so we can keep our tree more up to date but that's a
-different discussion).
-
-Cheers,
-Ben.
-
-> thanks,
+On 10/01/2018 14:17, Phil Reid wrote:
+> Add implementation for Analog Devices AD5272 and AD5274 digital
+> potentiometer devices.
 > 
-> greg k-h
+> Signed-off-by: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
+> ---
+>   drivers/iio/potentiometer/Kconfig  |  10 ++
+>   drivers/iio/potentiometer/Makefile |   1 +
+>   drivers/iio/potentiometer/ad5272.c | 219 +++++++++++++++++++++++++++++++++++++
+>   3 files changed, 230 insertions(+)
+>   create mode 100644 drivers/iio/potentiometer/ad5272.c
+> 
+> diff --git a/drivers/iio/potentiometer/Kconfig b/drivers/iio/potentiometer/Kconfig
+> index 8bf2825..0b04063 100644
+> --- a/drivers/iio/potentiometer/Kconfig
+> +++ b/drivers/iio/potentiometer/Kconfig
+> @@ -5,6 +5,16 @@
+>   
+>   menu "Digital potentiometers"
+>   
+> +config AD5272
+> +	tristate "Analog Devices AD5272 Digital Potentiometer driver"
+> +	depends on I2C
+> +	help
+> +	  Say yes here to build support for the Analog Devices AD5272
+> +	  digital potentiometer chip.
+> +
+> +	  To compile this driver as a module, choose M here: the
+> +	  module will be called ad5272.
+> +
+>   config DS1803
+>   	tristate "Maxim Integrated DS1803 Digital Potentiometer driver"
+>   	depends on I2C
+> diff --git a/drivers/iio/potentiometer/Makefile b/drivers/iio/potentiometer/Makefile
+> index 2260d40..498bbb8 100644
+> --- a/drivers/iio/potentiometer/Makefile
+> +++ b/drivers/iio/potentiometer/Makefile
+> @@ -3,6 +3,7 @@
+>   #
+>   
+>   # When adding new entries keep the list in alphabetical order
+> +obj-$(CONFIG_AD5272) += ad5272.o
+>   obj-$(CONFIG_DS1803) += ds1803.o
+>   obj-$(CONFIG_MAX5481) += max5481.o
+>   obj-$(CONFIG_MAX5487) += max5487.o
+> diff --git a/drivers/iio/potentiometer/ad5272.c b/drivers/iio/potentiometer/ad5272.c
+> new file mode 100644
+> index 0000000..b9208c2
+> --- /dev/null
+> +++ b/drivers/iio/potentiometer/ad5272.c
+> @@ -0,0 +1,219 @@
+> +/*
+> + * Analog Devices AD5372 digital potentiometer driver
+> + * Copyright (C) 2018 Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
+> + *
+> + * Datasheet: http://www.analog.com/media/en/technical-documentation/data-sheets/AD5272_5274.pdf
+> + *
+> + * DEVID	#Wipers	#Positions	Resistor Opts (kOhm)	i2c address
+> + * ad5272	1	1024		20, 50, 100		01011xx
+> + * ad5274	1	256		20, 100			01011xx
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms of the GNU General Public License version 2 as published by
+> + * the Free Software Foundation.
+> + */
+> +
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/i2c.h>
+> +#include <linux/iio/iio.h>
+> +#include <linux/module.h>
+> +
+> +#define  AD5272_RDAC_WR  1
+> +#define  AD5272_RDAC_RD  2
+> +#define  AD5272_CTL      7
+> +
+> +#define  AD5272_RDAC_WR_EN  BIT(1)
+> +
+> +struct ad5272_cfg {
+> +	int max_pos;
+> +	int kohms;
+> +	int shift;
+> +};
+> +
+> +enum ad5272_type {
+> +	AD5272_020,
+> +	AD5272_050,
+> +	AD5272_100,
+> +	AD5274_020,
+> +	AD5274_100,
+> +};
+> +
+> +static const struct ad5272_cfg ad5272_cfg[] = {
+> +	/* on-semiconductor parts */
+> +	[AD5272_020] = { .max_pos = 1024, .kohms = 20 },
+> +	[AD5272_050] = { .max_pos = 1024, .kohms = 50 },
+> +	[AD5272_100] = { .max_pos = 1024, .kohms = 100 },
+> +	[AD5274_020] = { .max_pos = 256,  .kohms = 20,  .shift = 2 },
+> +	[AD5274_100] = { .max_pos = 256,  .kohms = 100, .shift = 2 },
+> +};
+> +
+> +struct ad5272_data {
+> +	struct i2c_client       *client;
+> +	struct mutex            lock;
+> +	const struct ad5272_cfg *cfg;
+> +};
+> +
+> +static const struct iio_chan_spec ad5272_channel = {
+> +	.type = IIO_RESISTANCE,
+> +	.output = 1,
+> +	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
+> +	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),
+> +};
+> +
+> +static int ad5272_write(struct ad5272_data *data, int reg, int val)
+> +{
+> +	u8 buf[2];
+> +	int ret;
+> +
+> +	buf[0] = ((reg & 0xf) << 2) | ((val >> 8) & 0x3);
+> +	buf[1] = (u8)val;
+> +
+> +	mutex_lock(&data->lock);
+> +	ret = i2c_master_send(data->client, buf, 2);
+> +	mutex_unlock(&data->lock);
+> +	return ret < 0 ? ret : 0;
+> +}
+> +
+> +static int ad5272_read(struct ad5272_data *data, int reg, int *val)
+> +{
+> +	u8 buf[2];
+> +	int ret;
+> +
+> +	buf[0] = (reg & 0xf) << 2;
+> +	buf[1] = 0;
+> +
+> +	mutex_lock(&data->lock);
+> +	ret = i2c_master_send(data->client, buf, 2);
+> +	if (ret < 0)
+> +		goto error;
+> +
+> +	ret = i2c_master_recv(data->client, buf, 2);
+> +	if (ret < 0)
+> +		goto error;
+> +
+> +	*val = ((buf[0] & 0x3) << 8) | buf[1];
+> +	ret = 0;
+> +error:
+> +	mutex_unlock(&data->lock);
+> +	return ret;
+> +}
+> +
+> +static int ad5272_read_raw(struct iio_dev *indio_dev,
+> +			   struct iio_chan_spec const *chan,
+> +			   int *val, int *val2, long mask)
+> +{
+> +	struct ad5272_data *data = iio_priv(indio_dev);
+> +	int ret;
+> +
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_RAW: {
+> +		ret = ad5272_read(data, AD5272_RDAC_RD, val);
+> +		*val = *val >> data->cfg->shift;
+> +		return ret ? ret : IIO_VAL_INT;
+> +	}
+> +	case IIO_CHAN_INFO_SCALE:
+> +		*val = 1000 * data->cfg->kohms;
+> +		*val2 = data->cfg->max_pos;
+> +		return IIO_VAL_FRACTIONAL;
+> +	}
+> +
+> +	return -EINVAL;
+> +}
+> +
+> +static int ad5272_write_raw(struct iio_dev *indio_dev,
+> +			    struct iio_chan_spec const *chan,
+> +			    int val, int val2, long mask)
+> +{
+> +	struct ad5272_data *data = iio_priv(indio_dev);
+> +
+> +	if (mask != IIO_CHAN_INFO_RAW)
+> +		return -EINVAL;
+> +
+> +	if (val >= data->cfg->max_pos || val < 0)
+> +		return -EINVAL;
+> +
+> +	val = val << data->cfg->shift;
+> +
+> +	return ad5272_write(data, AD5272_RDAC_WR, val);
+> +}
+> +
+> +static const struct iio_info ad5272_info = {
+> +	.read_raw = ad5272_read_raw,
+> +	.write_raw = ad5272_write_raw,
+> +	.driver_module = THIS_MODULE,
+> +};
+> +
+> +static int ad5272_probe(struct i2c_client *client,
+> +			const struct i2c_device_id *id)
+> +{
+> +	struct device *dev = &client->dev;
+> +	struct gpio_desc *reset_gpio;
+> +	struct iio_dev *indio_dev;
+> +	struct ad5272_data *data;
+> +	int ret;
+> +
+> +	reset_gpio = devm_gpiod_get_optional(&client->dev, "reset",
+> +		GPIOD_OUT_LOW);
+Reset line to the chip is active low, so I guess I should really be setting it to GPIOD_OUT_HIGH.
+Instead of having the DT define it as active-low?
+I'm not sure what makes the most sense.
 
+> +	if (IS_ERR(reset_gpio))
+> +		return PTR_ERR(reset_gpio);
+> +
+> +	indio_dev = devm_iio_device_alloc(dev, sizeof(*data));
+> +	if (!indio_dev)
+> +		return -ENOMEM;
+> +
+> +	i2c_set_clientdata(client, indio_dev);
+> +
+> +	data = iio_priv(indio_dev);
+> +	data->client = client;
+> +	mutex_init(&data->lock);
+> +	data->cfg = &ad5272_cfg[id->driver_data];
+> +
+> +	ret = ad5272_write(data, AD5272_CTL, AD5272_RDAC_WR_EN);
+> +	if (ret < 0)
+> +		return -ENODEV;
+> +
+> +	indio_dev->dev.parent = dev;
+> +	indio_dev->info = &ad5272_info;
+> +	indio_dev->channels = &ad5272_channel;
+> +	indio_dev->num_channels = 1;
+> +	indio_dev->name = client->name;
+> +
+> +	return devm_iio_device_register(dev, indio_dev);
+> +}
+> +
+> +#if defined(CONFIG_OF)
+> +static const struct of_device_id ad5272_dt_ids[] = {
+> +	{ .compatible = "adi,ad5272-020", .data = &ad5272_cfg[AD5272_020] },
+> +	{ .compatible = "adi,ad5272-050", .data = &ad5272_cfg[AD5272_050] },
+> +	{ .compatible = "adi,ad5272-100", .data = &ad5272_cfg[AD5272_100] },
+> +	{ .compatible = "adi,ad5274-020", .data = &ad5272_cfg[AD5274_020] },
+> +	{ .compatible = "adi,ad5274-100", .data = &ad5272_cfg[AD5274_100] },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, ad5272_dt_ids);
+> +#endif /* CONFIG_OF */
+> +
+> +static const struct i2c_device_id ad5272_id[] = {
+> +	{ "ad5272-020", AD5272_020 },
+> +	{ "ad5272-050", AD5272_050 },
+> +	{ "ad5272-100", AD5272_100 },
+> +	{ "ad5274-020", AD5274_020 },
+> +	{ "ad5274-100", AD5274_100 },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(i2c, ad5272_id);
+> +
+> +static struct i2c_driver ad5272_driver = {
+> +	.driver = {
+> +		.name	= "ad5272",
+> +		.of_match_table = of_match_ptr(ad5272_dt_ids),
+> +	},
+> +	.probe		= ad5272_probe,
+> +	.id_table	= ad5272_id,
+> +};
+> +
+> +module_i2c_driver(ad5272_driver);
+> +
+> +MODULE_AUTHOR("Phil Reid <preid-TeWIRZsGUAnP+dxuUfoltA@public.gmane.org>");
+> +MODULE_DESCRIPTION("AD5272 digital potentiometer");
+> +MODULE_LICENSE("GPL v2");
+> 
+
+
+-- 
+Regards
+Phil Reid
