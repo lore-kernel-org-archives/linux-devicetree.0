@@ -1,245 +1,96 @@
-From: Adam Ford <aford173@gmail.com>
-Subject: Re: [PATCH v5 01/44] dt-bindings: clock: Add new bindings for TI
- Davinci PLL clocks
-Date: Thu, 11 Jan 2018 12:50:42 -0600
-Message-ID: <CAHCN7x+G5pxOeD7TahqiQUePEu1Z4Hyinkjq_bcSM+Hz36xoSg@mail.gmail.com>
-References: <1515377863-20358-1-git-send-email-david@lechnology.com>
- <1515377863-20358-2-git-send-email-david@lechnology.com> <ebd677dc-44a4-5053-2509-e3ee948ccf98@ti.com>
- <22409e49-5c14-4068-b137-7535afaf90d7@lechnology.com> <0f90b5f7-f21e-5f81-1154-9a815bbb786d@ti.com>
- <ba7fa842-cfc5-6f6f-f9bf-09c74ab08ec2@lechnology.com> <5aacc350-6236-2e4f-35bb-a681fc9d47e7@ti.com>
- <CAHCN7x+ZYezmEU_0mF=6_gF14DZxKnuDp1Cx=aC2=eN_QLNdJQ@mail.gmail.com>
- <fd162516-cddc-e857-ce60-2cd89303971e@lechnology.com> <CAHCN7xKORFriQ2Gjx85OsCUzHO-mavCQXLOzh5D3n4kEG=i-Yg@mail.gmail.com>
- <40501635-6f5b-20c9-f8bc-d17e26b58426@lechnology.com> <CAHCN7xL=h_g6HK2ey82r_w5qRbXg9+68Og+84YUYuePsjYd-Vg@mail.gmail.com>
- <f20267f2-be4c-e031-1c5f-76490164c60d@lechnology.com>
+From: Hyun Kwon <hyunk-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: RE: [PATCH 01/10] dt-bindings: display: xlnx: Add Xilinx kms bindings
+Date: Thu, 11 Jan 2018 19:22:45 +0000
+Message-ID: <BY1PR0201MB1000625C8BC6D0E704689E69D6160@BY1PR0201MB1000.namprd02.prod.outlook.com>
+References: <1515117959-18068-1-git-send-email-hyun.kwon@xilinx.com>
+ <1515117959-18068-2-git-send-email-hyun.kwon@xilinx.com>
+ <20180109040011.crwkn5j76cmdfvfm@rob-hp-laptop>
+ <BY1PR0201MB1000969ECDC38A62F68B7238D6160@BY1PR0201MB1000.namprd02.prod.outlook.com>
+ <CAL_JsqJ_84qg=oJb=HzwgdP9T8osczNT-Eo+u5wjJfT3B8gAQQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <f20267f2-be4c-e031-1c5f-76490164c60d@lechnology.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: David Lechner <david@lechnology.com>
-Cc: Sekhar Nori <nsekhar@ti.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqJ_84qg=oJb=HzwgdP9T8osczNT-Eo+u5wjJfT3B8gAQQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 11, 2018 at 12:29 PM, David Lechner <david@lechnology.com> wrote:
-> On 01/11/2018 12:09 PM, Adam Ford wrote:
->>
->> On Thu, Jan 11, 2018 at 11:22 AM, David Lechner <david@lechnology.com>
->> wrote:
->>>
->>> On 01/11/2018 06:45 AM, Adam Ford wrote:
->>>>
->>>>
->>>> On Wed, Jan 10, 2018 at 8:50 PM, David Lechner <david@lechnology.com>
->>>> wrote:
->>>>>
->>>>>
->>>>> On 01/10/2018 04:24 PM, Adam Ford wrote:
->>>>>>
->>>>>>
->>>>>>
->>>>>>
->>>>>> I am available tomorrow to build and test patches against the
->>>>>> da850-evm.  I just need to know which version(s) to test.
->>>>>
->>>>>
->>>>>
->>>>>
->>>>> Great. As per the cover letter:
->>>>>
->>>>> You can find a working branch with everything included in the
->>>>> "common-clk-v5"
->>>>> branch of https://github.com/dlech/ev3dev-kernel.git.
->>>>
->>>>
->>>>
->>>> I wasn't sure if things had changed after some of the dialog about the
->>>> bindings and device tree.
->>>
->>>
->>>
->>> Not yet. ;-)
->>>
->>>>
->>>> Here is my log with DEBUG_LL and CONFIG_EARLY_PRINTK set :
->>>>
->>>> Starting kernel ...
->>>>
->>>> Uncompressing Linux... done, booting the kernel.
->>>> Booting Linux on physical CPU 0x0
->>>> Linux version 4.15.0-rc4-g8564e0f (aford@ubuntu16) (gcc version 7.2.0
->>>> (Buildroot 2017.11.1-00021-g7b43660)) #2 PREEMPT Thu Jan 11 06:35:29
->>>> CST 2018
->>>> CPU: ARM926EJ-S [41069265] revision 5 (ARMv5TEJ), cr=0005317f
->>>> CPU: VIVT data cache, VIVT instruction cache
->>>> OF: fdt: Machine model: DA850/AM1808/OMAP-L138 EVM
->>>
->>>
->>>
->>> OK, using device tree...
->>
->>
->> Sorry, I thought I was supposed to. I retested using the board file,
->> but it also resulted in a hang.
->
->
-> This was just intended as a note to self. But we do need to test both.
-> Let's stick with the device tree boot first.
->
->>
->>>
->>>
->> [snip]
->>>
->>>
->>>
->>> If you are getting to this point, you probably don't need DEBUG_LL.
->>> It looks like "earlyprint" is not being passed to the command line
->>> anyway, so CONFIG_EARLY_PRINTK is not actually doing anything.
->>>
->>>> brd: module loaded
->>>> libphy: Fixed MDIO Bus: probed
->>>> davinci_mdio 1e24000.mdio: failed to get device clock
->>>> davinci_mdio: probe of 1e24000.mdio failed with error -2
->>>
->>>
->>>
->>> It looks like this needs a clock-names property in the device tree.
->>> Please make this change and try again:
->>>
->>> diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
->>> index 08a9817..fd3e316 100644
->>> --- a/arch/arm/boot/dts/da850.dtsi
->>> +++ b/arch/arm/boot/dts/da850.dtsi
->>> @@ -713,6 +713,7 @@
->>>                          #size-cells = <0>;
->>>                          reg = <0x224000 0x1000>;
->>>                          clocks = <&psc1 5>;
->>> +                       clock-names = "fck";
->>>                          status = "disabled";
->>>                  };
->>>                  eth0: ethernet@220000 {
->>>
->>>
->> [snip]
->>
->> I added your copy-names entry to my device tree and we get a login prompt.
->> :-)
->
->
-> OK, great! It sounds like device tree is working after this change. I guess
-> we can move on to non-device-tree.
->
->
->>
->>> I'm not sure why there is an error here. I'm using I2C0 on my board,
->>> so I am fairly confident that it is not a problem introduced by this
->>> series.
->>>
->>>> console [netcon0] enabled
->>>> netconsole: network logging started
->>>> davinci_emac 1e20000.ethernet: incompatible machine/device type for
->>>> reading mac address
->>>> hctosys: unable to open rtc device (rtc0)
->>>>
->>>
->>> What is normally the next line after this in a working boot?
->>>
->>> Also please try passing "clk_ignore_unused" to the kernel command line.
->>
->>
->> Here is the log.  There seems to be some garbled characters that don't
->> seem to appear.  I'm going to double check those against the stock
->> kernel.
->>
->>
-
-[snip]
-
->
->
-> If removing the "clk_ignore_unused" option causes the board to not boot,
-> then we still have problems that need to be fixed, so please also test
-> without this option.
-
-Without this option, it still does not boot.  Without device tree it
-hangs after:
-
-[snip]
-
-NET: Registered protocol family 17
-Loading compiled-in X.509 certificates
-console [netcon0] enabled
-netconsole: network logging started
-davinci_emac davinci_emac.1: using random MAC addr: 5e:38:1a:1f:4f:77
-mmc0: host does not support reading read-only switch, assuming write-enable
-hctosys: unable to open rtc device (rtc0)
-mmc0: new high speed SDHC card at address b368
-
-
-With device tree it hangs after:
-
-[snip]
-mmc0: host does not support reading read-only switch, assuming write-enable
-mmc0: new high speed SDHC card at address b368
-mmcblk0: mmc0:b368 00000 3.75 GiB
- mmcblk0: p1 p2
-pca953x 0-0020: 0-0020 supply vcc not found, using dummy regulator
-pca953x 0-0020: failed reading register
-pca953x: probe of 0-0020 failed with error -121
-console [netcon0] enabled
-netconsole: network logging started
-davinci_emac 1e20000.ethernet: incompatible machine/device type for
-reading mac address
-hctosys: unable to open rtc device (rtc0)
-
-
->
->> vbat: disabling
->> EXT4-fs (mmcblk0p2): mounted filesystem with ordered data mode. Opts:
->> (null)
->> VFS: Mounted root (ext4 filesystem) on device 179:2.
->> devtmpfs: mounted
->> Freeing unused kernel memory: 232K
->> This architecture does not have kernel memory protection.
->> EXT4-fs (mmcblk0p2): re-mounted. Opts: data=ordered
->> Starting logging: OK
->> Initializing random number generator... done.
->> Starting network: OK
->>
->> Welcome to Buildroot
->> buildroot login:
->>
->>
->>>
->>
->> However, I get a reboot failure:
->>
->> umount: devtmpfs busy - remounted read-only
->> EXT4-fs (mmcblk0p2): re-mounted. Opts: (null)
->> The system is going down NOW!
->> Sent SIGTERM to all processes
->> Sent SIGKILL to all processes
->> Requesting system reboot
->>
->> reboot: Restarting system
->> Reboot failed -- System halted
->>
->> I'll run more tests on a stock kernel to look at the reboot failure
->> and the uart noise.
->>
->> adam
->>
->
-> The reboot failure probably has to do with the watchdog patches that
-> are dependencies of this series.
->
->
-> Also, see the cover letter about how to avoid garbled output. Either
-> disable low level debugging or disable switching the parent of the
-> async3 clock.
-
-Disabling the low-level debugging eliminated the garbage.
-
-If/when you have more to me to test, feel free to e-mail me. I am
-available today and tomorrow to test.
->
+SGkgUm9iLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFJvYiBIZXJy
+aW5nIFttYWlsdG86cm9iaEBrZXJuZWwub3JnXQ0KPiBTZW50OiBUaHVyc2RheSwgSmFudWFyeSAx
+MSwgMjAxOCA2OjQzIEFNDQo+IFRvOiBIeXVuIEt3b24gPGh5dW5rQHhpbGlueC5jb20+DQo+IENj
+OiBkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVs
+Lm9yZzsgTWljaGFsDQo+IFNpbWVrIDxtaWNoYWwuc2ltZWtAeGlsaW54LmNvbT4NCj4gU3ViamVj
+dDogUmU6IFtQQVRDSCAwMS8xMF0gZHQtYmluZGluZ3M6IGRpc3BsYXk6IHhsbng6IEFkZCBYaWxp
+bngga21zDQo+IGJpbmRpbmdzDQo+IA0KPiBPbiBXZWQsIEphbiAxMCwgMjAxOCBhdCA4OjA0IFBN
+LCBIeXVuIEt3b24gPGh5dW5rQHhpbGlueC5jb20+IHdyb3RlOg0KPiA+IEhpIFJvYiwNCj4gPg0K
+PiA+IFRoYW5rcyBmb3IgdGhlIGZlZWRiYWNrLg0KPiA+DQo+ID4+IC0tLS0tT3JpZ2luYWwgTWVz
+c2FnZS0tLS0tDQo+ID4+IEZyb206IFJvYiBIZXJyaW5nIFttYWlsdG86cm9iaEBrZXJuZWwub3Jn
+XQ0KPiA+PiBTZW50OiBNb25kYXksIEphbnVhcnkgMDgsIDIwMTggODowMCBQTQ0KPiA+PiBUbzog
+SHl1biBLd29uIDxoeXVua0B4aWxpbnguY29tPg0KPiA+PiBDYzogZHJpLWRldmVsQGxpc3RzLmZy
+ZWVkZXNrdG9wLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IE1pY2hhbA0KPiA+PiBT
+aW1layA8bWljaGFsLnNpbWVrQHhpbGlueC5jb20+DQo+ID4+IFN1YmplY3Q6IFJlOiBbUEFUQ0gg
+MDEvMTBdIGR0LWJpbmRpbmdzOiBkaXNwbGF5OiB4bG54OiBBZGQgWGlsaW54IGttcw0KPiA+PiBi
+aW5kaW5ncw0KPiA+Pg0KPiA+PiBPbiBUaHUsIEphbiAwNCwgMjAxOCBhdCAwNjowNTo1MFBNIC0w
+ODAwLCBIeXVuIEt3b24gd3JvdGU6DQo+ID4+ID4gVGhlIGR0IGJpbmRpbmcgZm9yIFhpbGlueCBE
+Uk0gS01TIGRyaXZlci4NCj4gPj4NCj4gPj4gQmluZGluZ3MgYXJlIGZvciBoL3csIG5vdCBkcml2
+ZXJzLg0KPiA+DQo+ID4gSSdsbCByZXBocmFzZSB0aGlzLg0KPiA+DQo+ID4+DQo+ID4+ID4NCj4g
+Pj4gPiBTaWduZWQtb2ZmLWJ5OiBIeXVuIEt3b24gPGh5dW4ua3dvbkB4aWxpbnguY29tPg0KPiA+
+PiA+IC0tLQ0KPiA+PiA+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3hsbngveGxu
+eCxrbXMudHh0ICAgIHwgMjANCj4gPj4gKysrKysrKysrKysrKysrKysrKysNCj4gPj4gPiAgMSBm
+aWxlIGNoYW5nZWQsIDIwIGluc2VydGlvbnMoKykNCj4gPj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0
+DQo+ID4+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3hsbngveGxu
+eCxrbXMudHh0DQo+ID4+ID4NCj4gPj4gPiBkaWZmIC0tZ2l0DQo+IGEvRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkveGxueC94bG54LGttcy50eHQNCj4gPj4gYi9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS94bG54L3hsbngsa21zLnR4dA0K
+PiA+PiA+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+ID4+ID4gaW5kZXggMDAwMDAwMC4uOGRjZDU1
+Mg0KPiA+PiA+IC0tLSAvZGV2L251bGwNCj4gPj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvZGlzcGxheS94bG54L3hsbngsa21zLnR4dA0KPiA+PiA+IEBAIC0wLDAg
+KzEsMjAgQEANCj4gPj4gPiArWGlsaW54IEtNUyBQaXBlbGluZQ0KPiA+PiA+ICstLS0tLS0tLS0t
+LS0tLS0tLS0tDQo+ID4+ID4gKw0KPiA+PiA+ICtYaWxpbnggZGlzcGxheSBwaXBlbGluZXMgY2Fu
+IGJlIGRlc2lnbmVkIHdpdGggaGFyZGVuZWQgdmlkZW8gSVBzIGFuZA0KPiBzb2Z0DQo+ID4+IHZp
+ZGVvDQo+ID4+ID4gK0lQcyBpbiBwcm9ncmFtbWFibGUgbG9naWMuIFRoaXMgS01TIG1vZHVsZSBw
+cm92aWRlcyB0aGUgY29tbW9uDQo+ID4+IGZ1bmN0aW9uYWxpdHkNCj4gPj4gPiArb2YgaW5kaXZp
+ZHVhbCBzdWJkZXZpY2UgZHJpdmVycywgYW5kIGdsdWUgbG9naWNzIGJldHdlZW4gdGhlbS4NCj4g
+Pj4gPiArDQo+ID4+ID4gK1JlcXVpcmVkIHByb3BlcnRpZXM6DQo+ID4+ID4gKw0KPiA+PiA+ICst
+IGNvbXBhdGlibGU6IE11c3QgYmUgInhsbngsa21zIi4NCj4gPg0KPiA+IEknbGwgYWxzbyByZXBo
+cmFzZSB0aGUgZGVzY3JpcHRpb24gYW5kIHJlbmFtZSB0aGlzIHRvIHhsbngsZGlzcGxheS4NCj4g
+Pg0KPiA+PiA+ICsNCj4gPj4gPiArLSBwb3J0czogcGhhbmRsZXMgZm9yIENSVEMgcG9ydHMsIHVz
+aW5nIHRoZSBEVCBiaW5kaW5ncyBkZWZpbmVkIGluDQo+ID4+ID4gKyAgRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL2dyYXBoLnR4dC4NCj4gPj4NCj4gPj4gVGhpcyB1c2Ugb2YgcG9y
+dHMgaXMgbm90IHBhcnQgb2YgdGhlIGdyYXBoIGJpbmRpbmcuDQo+ID4NCj4gPiBJJ2xsIGFkZCBt
+b3JlIGRldGFpbHMgaW4gdGhlIGRlc2NyaXB0aW9uLg0KPiA+DQo+ID4+DQo+ID4+ID4gKw0KPiA+
+PiA+ICtFeGFtcGxlOg0KPiA+PiA+ICsNCj4gPj4gPiArICAgeGxueF9kcm06IHhsbnhfZHJtIHsN
+Cj4gPj4gPiArICAgICAgICAgICBjb21wYXRpYmxlID0gInhsbngsa21zIjsNCj4gPj4NCj4gPj4g
+ZHJtIGFuZCBrbXMgYXJlIExpbnV4aXNtcy4NCj4gPg0KPiA+IEkgYWdyZWUuIEknbGwgcmVtb3Zl
+IGxpbnV4IHN1YnN5c3RlbSBzcGVjaWZpYyB0ZXJtcy4NCj4gPg0KPiA+Pg0KPiA+PiBXaHkgZG8g
+eW91IG5lZWQgdGhpcyBub2RlPw0KPiA+DQo+ID4gVGhpcyBub2RlIGlzIHVzZWQgdG8gcmVwcmVz
+ZW50IGEgZGlzcGxheSBwaXBlbGluZSBhcyBhIHNpbmdsZSBlbnRpdHksIHdoaWNoDQo+IGNhbiBj
+b25zaXN0IG9mIG11bHRpcGxlIGNvbXBvbmVudHMgLyBJUHMuIEknbGwgZWxhYm9yYXRlIG1vcmUg
+cGVyIHlvdXINCj4gc3VnZ2VzdGlvbi4NCj4gDQo+IFlvdSBnZW5lcmFsbHkgZG9uJ3QgbmVlZCB0
+aGF0LiBKdXN0IGhhdmUgdGhlIERSTSBkcml2ZXIgbWF0Y2ggd2l0aCB0aGUNCj4gZmlyc3QgYmxv
+Y2sgaW4gdGhlIGRpc3BsYXkgcGlwZWxpbmUuIFRoZW4gdXNlIHRoZSBPRiBncmFwaCB0byBjb25u
+ZWN0DQo+IHRvIHRoZSBvdGhlciBjb21wb25lbnRzIGluIHRoZSBwaXBlbGluZS4gSXQgd291bGQg
+aGVscCB0byBoYXZlIGEgYmxvY2sNCj4gZGlhZ3JhbSBzaG93aW5nIHRoZSBkYXRhIHBpcGVsaW5l
+cyBhbmQgaC93IGJsb2Nrcy4NCj4gDQoNClNvbWUgZXhhbXBsZXMgYXJlIGFzIGZvbGxvd2luZy4g
+SW4gc2ltcGxlIGNhc2UsIGEgcGlwZWxpbmUgaXMgbGluZWFyIHdpdGggbXVsdGlwbGUgYmxvY2tz
+Og0KDQpaeW5xTVAgRGlzcGxheVBvcnQgcGlwZWxpbmU6DQoNCglaeW5xTVAgRE1BIC0+IFp5bnFN
+UCBEaXNwbGF5IGNvbnRyb2xsZXIgLT4gWnlucU1QIERQIGVuY29kZXINCg0KRlBHQSBkaXNwbGF5
+IHBpcGVsaW5lIHdoZXJlIGVhY2ggYmxvY2sgY29tZXMgYXMgYSBzZXBhcmF0ZSBkZXZpY2U6DQoN
+CglGUEdBIERNQSAtPiBGUEdBIG1peGVyIC0+IEZQR0EgSERNSSBlbmNvZGVyDQoNCkl0IGdldHMg
+bW9yZSBpbnRlcmVzdGluZyBhcyB0aG9zZSBjYW4gYmUgbWl4ZWQ6DQoNCglaeW5xTVAgRE1BIC0+
+IFp5bnFNUCBEaXNwbGF5IGNvbnRyb2xsZXIgLT4gWnlucU1QIERQIGVuY29kZXINCgkJICAgICAg
+ICAgICAgfA0KCUZQQUcgRE1BIC0+DQpvcg0KDQoJWnlucU1QIERNQSAtPiBaeW5xTVAgRGlzcGxh
+eSBjb250cm9sbGVyIC0+IFp5bnFNUCBEUCBlbmNvZGVyDQoJCQkJCQkgICAgICAgICB8DQoJCQkJ
+CQkgICAgICAgICAtPiBGUEdBIEhETUkgZW5jb2Rlcg0KCQkgICAgICAgICAgICANCk9yIGV2ZW4s
+DQoNCgkJCVp5bnFNUCBETUEgLT4gWnlucU1QIERpc3BsYXkgY29udHJvbGxlciAtPiBaeW5xTVAg
+RFAgZW5jb2Rlcg0KCQkJCSAgICAgICAgICAgIHwJCQkgICAgICAgICAgfA0KCUZQQUcgRE1BIC0+
+IEZQR0EgbWl4ZXIgLT4JCQkJICAgICAgICAgIC0+IEZQR0EgSERNSSBlbmNvZGVyDQoNClRoaXMg
+bm9kZSBpcyByZXByZXNlbnRhdGlvbiBvZiBzdWNoIHZhcmlhdGlvbnMgYXMgYSBzaW5nbGUgcGlw
+ZWxpbmUgZGV2aWNlLg0KDQpUaGFua3MsDQotaHl1bg0KDQo+IFJvYg0K
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
