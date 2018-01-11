@@ -1,86 +1,93 @@
-From: Shunqian Zheng <zhengsq@rock-chips.com>
-Subject: Re: [PATCH v5 1/4] dt-bindings: media: Add bindings for OV5695
-Date: Thu, 11 Jan 2018 14:44:33 +0800
-Message-ID: <807c4307-0617-788e-7129-039b33ce99d5@rock-chips.com>
-References: <1515549967-5302-1-git-send-email-zhengsq@rock-chips.com>
- <1515549967-5302-2-git-send-email-zhengsq@rock-chips.com>
- <20180110092010.GC6834@w540>
-Reply-To: zhengsq@rock-chips.com
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH linux dev-4.10 0/6] Add support PECI and PECI hwmon
+ drivers
+Date: Thu, 11 Jan 2018 08:30:38 +0100
+Message-ID: <20180111073038.GA3600@kroah.com>
+References: <20180109223126.13093-1-jae.hyun.yoo@linux.intel.com>
+ <20180110101755.GA5822@kroah.com>
+ <006c4a95-9299-bd17-6dec-52578e8461ae@linux.intel.com>
+ <20180110191703.GA20248@kroah.com>
+ <8997e43c-683e-418d-4e2b-1fe3fefe254e@linux.intel.com>
+ <20180110202740.GA27703@kroah.com>
+ <e81095ff-d491-9977-25e6-7ba6d28d5e72@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20180110092010.GC6834@w540>
-Content-Language: en-US
-Sender: linux-media-owner@vger.kernel.org
-To: jacopo mondi <jacopo@jmondi.org>
-Cc: mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, ddl@rock-chips.com, tfiga@chromium.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <e81095ff-d491-9977-25e6-7ba6d28d5e72@linux.intel.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+Cc: joel@jms.id.au, andrew@aj.id.au, arnd@arndb.de, jdelvare@suse.com, linux@roeck-us.net, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-arm-kernel@lists.infradead.org, openbmc@lists.ozlabs.org, Jae Hyun Yoo <jae.hyun.yoo@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacopo,
+On Wed, Jan 10, 2018 at 01:46:34PM -0800, Jae Hyun Yoo wrote:
+> On 1/10/2018 12:27 PM, Greg KH wrote:
+> > On Wed, Jan 10, 2018 at 11:30:05AM -0800, Jae Hyun Yoo wrote:
+> > > On 1/10/2018 11:17 AM, Greg KH wrote:
+> > > > On Wed, Jan 10, 2018 at 11:14:34AM -0800, Jae Hyun Yoo wrote:
+> > > > > On 1/10/2018 2:17 AM, Greg KH wrote:
+> > > > > > On Tue, Jan 09, 2018 at 02:31:20PM -0800, Jae Hyun Yoo wrote:
+> > > > > > > From: Jae Hyun Yoo <jae.hyun.yoo@intel.com>
+> > > > > > > 
+> > > > > > > Hello,
+> > > > > > > 
+> > > > > > > This patch set provides support for PECI of AST2400/2500 which can give us PECI
+> > > > > > > functionalities such as temperature monitoring, platform manageability,
+> > > > > > > processor diagnostics and failure analysis. Also provides generic peci.h and
+> > > > > > > peci_ioctl.h headers to provide compatibility to peci drivers that can be
+> > > > > > > implemented later e.g. Nuvoton's BMC SoC family.
+> > > > > > 
+> > > > > > What is the "dev-4.10" in the subject for?  4.10 is really old and
+> > > > > > obsolete :(
+> > > > > > 
+> > > > > > thanks,
+> > > > > > 
+> > > > > > greg k-h
+> > > > > > 
+> > > > > 
+> > > > > I made this patch set on top of the v4.10 which OpenBmc project is currently
+> > > > > using. I'll rebase this patch set onto the current kernel.org mainline.
+> > > > 
+> > > > What is "OpenBmc", and why are they using an obsolete and insecure
+> > > > kernel for their project?  That seems like a very foolish thing to do...
+> > > > 
+> > > > thanks,
+> > > > 
+> > > > greg k-h
+> > > > 
+> > > 
+> > > OpenBmc is an open source project to create a highly extensible framework
+> > > for BMC (Board Management Controller) software for data-center computer
+> > > systems:
+> > > https://github.com/openbmc
+> > > 
+> > > Its current mainline is v4.10 but it is being kept upgrading so it will be
+> > > upgraded to the latest stable or long-term version soon.
+> > 
+> > Why hasn't it been updated in the year since 4.10 was released?  That's
+> > a _very_ long time to be running on a totally insecure kernel, and no
+> > new development should ever be done on old kernels, that's even crazier
+> > (as we can't go back in time and accept patches for new features to old
+> > releases...)
+> > 
+> 
+> Thanks for your pointing it out and I totally agree with you. Actually, we
+> are preparing 4.13 update for now and an another update will be followed up.
+> As I answered above, I'll rebase this patch set onto the latest kernel.org
+> mainline. Sorry for my misunderstanding of upstream process.
 
+4.13?  Why that kernel?  It too is obsolete and insecure and
+unsupported.
 
-On 2018年01月10日 17:20, jacopo mondi wrote:
-> Hi Shunqian,
->
-> On Wed, Jan 10, 2018 at 10:06:04AM +0800, Shunqian Zheng wrote:
->> Add device tree binding documentation for the OV5695 sensor.
->>
->> Signed-off-by: Shunqian Zheng <zhengsq@rock-chips.com>
->> ---
->>   .../devicetree/bindings/media/i2c/ov5695.txt       | 41 ++++++++++++++++++++++
->>   1 file changed, 41 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5695.txt
->>
->> diff --git a/Documentation/devicetree/bindings/media/i2c/ov5695.txt b/Documentation/devicetree/bindings/media/i2c/ov5695.txt
->> new file mode 100644
->> index 0000000..2f2f698
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/media/i2c/ov5695.txt
->> @@ -0,0 +1,41 @@
->> +* Omnivision OV5695 MIPI CSI-2 sensor
->> +
->> +Required Properties:
->> +- compatible: shall be "ovti,ov5695"
->> +- clocks: reference to the xvclk input clock
->> +- clock-names: shall be "xvclk"
->> +- avdd-supply: Analog voltage supply, 2.8 volts
->> +- dovdd-supply: Digital I/O voltage supply, 1.8 volts
->> +- dvdd-supply: Digital core voltage supply, 1.2 volts
->> +- reset-gpios: Low active reset gpio
->> +
->> +The device node shall contain one 'port' child node with an
->> +'endpoint' subnode for its digital output video port,
->> +in accordance with the video interface bindings defined in
->> +Documentation/devicetree/bindings/media/video-interfaces.txt.
->> +The endpoint optional property 'data-lanes' shall be "<1 2>".
-> What happens if the property is not present? What's the default?
-I think it depends on how the video receiver deal with, 'data-lanes' is 
-optional as described in video-interfaces.txt,
-but if somehow it used in DT, the value "<1 2>" is the right one.
->
-> I would:
->
-> Required Properties:
-> - compatible: ..
-> ....
->
-> Option Endpoint Properties:
-> - data-lanes: ...
->
->> +
->> +Example:
->> +&i2c7 {
->> +	camera-sensor: ov5695@36 {
-> You have inverted the label with the node name which should be generic
->
->          ov5695: camera@36 {
->
->
->          }
-> Thanks
->     j
-Thank you very much~
-Shunqian
->
->
+What keeps you all from just always tracking the latest tree from Linus?
+What is in your tree that is not upstream that requires you to have a
+kernel tree at all?
+
+And if you do have out-of-tree code, why not use a process that makes it
+trivial to update the base kernel version so that you can keep up to
+date very easily?  (hint, just using 'git' is not a good way to do
+this...)
+
+thanks,
+
+greg k-h
