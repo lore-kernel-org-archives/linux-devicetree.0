@@ -1,110 +1,143 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 Subject: Re: [PATCH 3/3] drm: rcar-du: add R8A77970 support
-Date: Fri, 12 Jan 2018 16:30:48 +0200
-Message-ID: <3450878.q2PSDvCyDk@avalon>
+Date: Fri, 12 Jan 2018 17:38:49 +0300
+Message-ID: <5a80800e-e38f-9239-0b54-ae6649da1ba7@cogentembedded.com>
 References: <20180111170103.676775968@cogentembedded.com>
  <8239904.rdcckmYW4i@avalon>
  <78c33176-39b7-6bd9-e307-2b28c0b28f04@cogentembedded.com>
+ <3450878.q2PSDvCyDk@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <78c33176-39b7-6bd9-e307-2b28c0b28f04@cogentembedded.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <3450878.q2PSDvCyDk@avalon>
+Content-Language: en-MW
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgU2VyZ2VpLAoKT24gRnJpZGF5LCAxMiBKYW51YXJ5IDIwMTggMTE6MjM6MDAgRUVUIFNlcmdl
-aSBTaHR5bHlvdiB3cm90ZToKPiBPbiAxLzEyLzIwMTggNDoxMyBBTSwgTGF1cmVudCBQaW5jaGFy
-dCB3cm90ZToKPiA+PiBBZGQgc3VwcG9ydCBmb3IgdGhlIFItQ2FyICBWM00gIChSOEE3Nzk3MCkg
-U29DIHRvIHRoZSBEVSBkcml2ZXIgKHRoaXMgU29DCj4gPj4gaGFzIG9ubHkgIDEgZGlzcGxheSBw
-b3J0KS4gTm90ZSB0aGF0IHRoZXJlIGFyZSBzb21lIGRpZmZlcmVuY2VzICB3aXRoIHRoZQo+ID4+
-IG90aGVyIFItQ2FyIGdlbjMgU29DcyBpbiB0aGUgTFZEUyBlbmNvZGVyIHBhcnQsIGUuZy4gTFZE
-UExMQ1IgaGFzIHRoZQo+ID4+IHNhbWUgbGF5b3V0ICBhcyAgb24gdGhlIFItQ2FyIGdlbjIgU29D
-cy4uLgo+ID4+IAo+ID4+IFNpZ25lZC1vZmYtYnk6IFNlcmdlaSBTaHR5bHlvdiA8c2VyZ2VpLnNo
-dHlseW92QGNvZ2VudGVtYmVkZGVkLmNvbT4KPiA+IAo+ID4gQ291bGQgeW91IHBsZWFzZSByZWJh
-c2UgdGhpcyBzZXJpZXMgb24gdG9wIG9mIHRoZSBMVkRTIHJld29yayBwb3N0ZWQgYXMKPiA+ICJb
-UEFUQ0ggMDAvMTBdIFItQ2FyIERVOiBDb252ZXJ0IExWRFMgY29kZSB0byBicmlkZ2UgZHJpdmVy
-IiAoaHR0cHM6Ly8KPiA+IHd3dy5zcGluaWNzLm5ldC9saXN0cy9kcmktZGV2ZWwvbXNnMTYxOTMx
-Lmh0bWwpID8gSXQgc2hvdWxkIG1ha2UgaXQgZWFzaWVyCj4gPiB0byBpbXBsZW1lbnQgc3VwcG9y
-dCBmb3IgVjNNLiBQbGVhc2UgdGhlbiBzcGxpdCB0aGUgRFUgYW5kIExWRFMgZHJpdmVycwo+ID4g
-Y2hhbmdlcyBpbiB0d28gcGF0Y2hlcy4KPiA+IAo+ID4+IC0tLQo+ID4+IAo+ID4+ICAgRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcmVuZXNhcyxkdS50eHQgfCAgICAx
-Cj4gPiAKPiA+IFBsZWFzZSBzcGxpdCB0aGUgRFQgYmluZGluZ3MgY2hhbmdlcyB0byBhIHNlcGFy
-YXRlIHBhdGNoLgo+IAo+ICAgICBJIGRvbid0IGxpa2UgcHV0dGluZyBhIG9uZS1saW5lIGNobmFn
-ZSBpbnRvIGEgc2VwYXJhdGUgYmluZGluZ3MgcGF0Y2guLi4KPiA+PiAgIGRyaXZlcnMvZ3B1L2Ry
-bS9yY2FyLWR1L3JjYXJfZHVfZHJ2LmMgICAgICAgICAgICAgICAgICAgIHwgICAyMyArKysrKysr
-Cj4gPj4gICBkcml2ZXJzL2dwdS9kcm0vcmNhci1kdS9yY2FyX2R1X2Rydi5oICAgICAgICAgICAg
-ICAgICAgICB8ICAgIDEKPiA+PiAgIGRyaXZlcnMvZ3B1L2RybS9yY2FyLWR1L3JjYXJfZHVfZ3Jv
-dXAuYyAgICAgICAgICAgICAgICAgIHwgICAxMCArKystLS0KPiA+PiAgIGRyaXZlcnMvZ3B1L2Ry
-bS9yY2FyLWR1L3JjYXJfZHVfbHZkc2VuYy5jICAgICAgICAgICAgICAgIHwgICAyMCArKysrLS0t
-Cj4gPj4gICA1IGZpbGVzIGNoYW5nZWQsIDQ1IGluc2VydGlvbnMoKyksIDEwIGRlbGV0aW9ucygt
-KQoKW3NuaXBdCgo+ID4+IEluZGV4OiBsaW51eC9kcml2ZXJzL2dwdS9kcm0vcmNhci1kdS9yY2Fy
-X2R1X2dyb3VwLmMKPiA+PiA9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09Cj4gPj4gLS0tIGxpbnV4Lm9yaWcvZHJpdmVycy9n
-cHUvZHJtL3JjYXItZHUvcmNhcl9kdV9ncm91cC5jCj4gPj4gKysrIGxpbnV4L2RyaXZlcnMvZ3B1
-L2RybS9yY2FyLWR1L3JjYXJfZHVfZ3JvdXAuYwo+ID4+IEBAIC0xMzMsMTAgKzEzMywxMiBAQCBz
-dGF0aWMgdm9pZCByY2FyX2R1X2dyb3VwX3NldHVwKHN0cnVjdCByCj4gPj4gCj4gPj4gICAJcmNh
-cl9kdV9ncm91cF93cml0ZShyZ3JwLCBET1JDUiwgRE9SQ1JfUEcxRF9EUzEgfCBET1JDUl9EUFJT
-KTsKPiA+PiAgIAkKPiA+PiAgIAkvKiBBcHBseSBwbGFuZXMgdG8gQ1JUQ3MgYXNzb2NpYXRpb24u
-ICovCj4gPj4gCj4gPj4gLQltdXRleF9sb2NrKCZyZ3JwLT5sb2NrKTsKPiA+PiAtCXJjYXJfZHVf
-Z3JvdXBfd3JpdGUocmdycCwgRFBUU1IsIChyZ3JwLT5kcHRzcl9wbGFuZXMgPDwgMTYpIHwKPiA+
-PiAtCQkJICAgIHJncnAtPmRwdHNyX3BsYW5lcyk7Cj4gPj4gLQltdXRleF91bmxvY2soJnJncnAt
-PmxvY2spOwo+ID4+ICsJaWYgKHJjZHUtPmluZm8tPm51bV9jcnRjcyA+IDEpIHsKPiA+PiArCQlt
-dXRleF9sb2NrKCZyZ3JwLT5sb2NrKTsKPiA+PiArCQlyY2FyX2R1X2dyb3VwX3dyaXRlKHJncnAs
-IERQVFNSLCAocmdycC0+ZHB0c3JfcGxhbmVzIDw8IDE2KSB8Cj4gPj4gKwkJCQkgICAgcmdycC0+
-ZHB0c3JfcGxhbmVzKTsKPiA+PiArCQltdXRleF91bmxvY2soJnJncnAtPmxvY2spOwo+ID4+ICsJ
-fQo+ID4gCj4gPiBTaG91bGRuJ3QgeW91IHNraXAgd3JpdGluZyB0byB0aGUgRFBUU1IgcmVnaXN0
-ZXIgaWYgdGhlcmUncyBhIHNpbmdsZSBEUFRTUgo+ID4gaW4gdGhlIGdyb3VwID8gVGhhdCB3b3Vs
-ZCB0aGVuIGFwcGx5IHRvIE0zLVcgYXMgd2VsbCwgd2hpY2ggZG9lc24ndCBoYXZlCj4gPiB0aGUg
-RFBUU1IyIHJlZ2lzdGVyLiBJJ2Qgc3BsaXQgdGhpcyBjaGFuZ2UgdG8gYSBzZXBhcmF0ZSBwYXRj
-aC4KPiAKPiBPSywgSSBndWVzcyB5b3Uga25vdyB0aGlzIHN0dWZmIGJldHRlciAtLSBJIGRpZG4n
-dCBrbm93IERQVFNSMiBpcyB1c2VkCj4gYXQgYWxsLi4uIDotKQoKU2hvdWxkIEkgc2VuZCBhIHBh
-dGNoIGZvciB0aGlzIGFzIHdlbGwgPwoKPiBbLi4uXQo+IAo+ID4+IEluZGV4OiBsaW51eC9kcml2
-ZXJzL2dwdS9kcm0vcmNhci1kdS9yY2FyX2R1X2x2ZHNlbmMuYwo+ID4+ID09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0KPiA+
-PiAtLS0gbGludXgub3JpZy9kcml2ZXJzL2dwdS9kcm0vcmNhci1kdS9yY2FyX2R1X2x2ZHNlbmMu
-Ywo+ID4+ICsrKyBsaW51eC9kcml2ZXJzL2dwdS9kcm0vcmNhci1kdS9yY2FyX2R1X2x2ZHNlbmMu
-Ywo+IAo+IFsuLi5dCj4gCj4gPj4gQEAgLTE3NywxNCArMTg1LDE0IEBAIGludCByY2FyX2R1X2x2
-ZHNlbmNfZW5hYmxlKHN0cnVjdCByY2FyX2QKPiA+PiAgIHZvaWQgcmNhcl9kdV9sdmRzZW5jX2F0
-b21pY19jaGVjayhzdHJ1Y3QgcmNhcl9kdV9sdmRzZW5jICpsdmRzLAo+ID4+ICAgCQkJCSAgc3Ry
-dWN0IGRybV9kaXNwbGF5X21vZGUgKm1vZGUpCj4gPj4gICB7Cj4gPj4gLQlzdHJ1Y3QgcmNhcl9k
-dV9kZXZpY2UgKnJjZHUgPSBsdmRzLT5kZXY7Cj4gPj4gKwljb25zdCBzdHJ1Y3QgcmNhcl9kdV9k
-ZXZpY2VfaW5mbyAqaW5mbyA9IGx2ZHMtPmRldi0+aW5mbzsKPiA+PiAKPiA+PiAgIC8qCj4gPj4g
-ICAgKiBUaGUgaW50ZXJuYWwgTFZEUyBlbmNvZGVyIGhhcyBhIHJlc3RyaWN0ZWQgY2xvY2sgZnJl
-cXVlbmN5Cj4gPj4gICAJIG9wZXJhdGluZwo+ID4+IC0JICogcmFuZ2UgKDMwTUh6IHRvIDE1ME1I
-eiBvbiBHZW4yLCAyNS4xNzVNSHogdG8gMTQ4LjVNSHogb24gR2VuMykuCj4gPj4gQ2xhbXAKPiA+
-PiAtCSAqIHRoZSBjbG9jayBhY2NvcmRpbmdseS4KPiA+PiArCSAqIHJhbmdlICgzME1IeiB0byAx
-NTBNSHogb24gR2VuMiBhbmQgUi1DYXIgVjNNLCAyNS4xNzVNSHogdG8gMTQ4LjVNSHoKPiA+PiAr
-CSAqIG9uIEdlbjMpLiBDbGFtcCB0aGUgY2xvY2sgYWNjb3JkaW5nbHkuCj4gPj4gIAkgKi8KPiA+
-PiAtCWlmIChyY2R1LT5pbmZvLT5nZW4gPCAzKQo+ID4+ICsJaWYgKGluZm8tPmdlbiA8IDMgfHwg
-aW5mby0+bW9kZWwgPT0gUjhBNzc5NzApCj4gPj4gICAJCW1vZGUtPmNsb2NrID0gY2xhbXAobW9k
-ZS0+Y2xvY2ssIDMwMDAwLCAxNTAwMDApOwo+ID4gCj4gPiBBY2NvcmRpbmcgdG8gdGhlIGRhdGFz
-aGVldCB0aGUgZnJlcXVlbmN5IHJhbmdlIGZvciBWM00gaXMgdGhlIHNhbWUgYXMgZm9yCj4gPiB0
-aGUgSDMgYW5kIE0zIFNvQ3MuCj4gCj4gICAgIEluZGVlZCEgSSB0aG91Z2h0IGl0J3MgZGV0ZXJt
-aW5lZCBieSB0aGUgTFZEUExMQ1IgbGF5b3V0IGJ1dCBpdCdzIG5vdC4uLgo+IAo+ID4gVGhlIHJh
-bmdlIHNlZW1zIHRvIGhhdmUgY2hhbmdlZCBzdGFydGluZyBpbiBkYXRhc2hlZXQgdmVyc2lvbgo+
-ID4gMC41Mi4gSSB3b3VsZCBmaXggdGhlIHJhbmdlIGluIGEgc2VwYXJhdGUgcGF0Y2ggZmlyc3Qu
-Cj4gCj4gICAgIFllcy4KPiAKPiA+IElmIHlvdSB3YW50IEkgY2FuIHNlbmQgcGF0Y2hlcyB0byBm
-aXggdGhpcyBpc3N1ZQo+IAo+ICAgICBZZXMsIHBsZWFzZS4gWW91IGNsZWFybHkga25vdyBhYm91
-dCBEVSBtb3JlIHRoYW4gbWUuIDotKQoKSSd2ZSBwcmVwYXJlZCBhIHBhdGNoLCBJJ20gdGVzdGlu
-ZyBpdCBub3cgYW5kIEknbGwgdGhlbiBzZW5kIGl0LgoKPiA+IGFuZCB0aGUgcHJldmlvdXMgb25l
-LCBvciB5b3UgY2FuIHdyaXRlIHRoZW0gYW5kIGluY2x1ZGUgdGhlbSBpbiB2Mi4gTGV0IG1lCj4g
-PiBrbm93IHdoYXQgeW91J2QgcHJlZmVyLgo+ID4gCj4gPj4gICAJZWxzZQo+ID4+ICAgCQltb2Rl
-LT5jbG9jayA9IGNsYW1wKG1vZGUtPmNsb2NrLCAyNTE3NSwgMTQ4NTAwKTsKPiAKPiAgICAgVGhl
-IGxvd2VyIGJvdW5kIGRvY3VtZW50ZWQgb24gZ2VuMyBpcyAzMSBNSHogaW5kZWVkLi4uCgpBbmQg
-SSBqdXN0IGZvdW5kIG91dCB0aGF0IHRoZSBsYXRlc3QgdmVyc2lvbnMgb2YgdGhlIEdlbjIgZGF0
-YXNoZWV0cyBhbHNvIApkb2N1bWVudCB0aGUgMzEgTUh6IC0gMTQ4LjUgTUh6IHJhbmdlLiBUaGlz
-IHdpbGwgc2ltcGxpZnkgdGhlIGNvZGUuCgotLSAKUmVnYXJkcywKCkxhdXJlbnQgUGluY2hhcnQK
-Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZl
-bCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xp
-c3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On 01/12/2018 05:30 PM, Laurent Pinchart wrote:
+
+>>>> Add support for the R-Car  V3M  (R8A77970) SoC to the DU driver (this SoC
+>>>> has only  1 display port). Note that there are some differences  with the
+>>>> other R-Car gen3 SoCs in the LVDS encoder part, e.g. LVDPLLCR has the
+>>>> same layout  as  on the R-Car gen2 SoCs...
+>>>>
+>>>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+>>>
+>>> Could you please rebase this series on top of the LVDS rework posted as
+>>> "[PATCH 00/10] R-Car DU: Convert LVDS code to bridge driver" (https://
+>>> www.spinics.net/lists/dri-devel/msg161931.html) ? It should make it easier
+>>> to implement support for V3M. Please then split the DU and LVDS drivers
+>>> changes in two patches.
+>>>
+>>>> ---
+>>>>
+>>>>    Documentation/devicetree/bindings/display/renesas,du.txt |    1
+>>>
+>>> Please split the DT bindings changes to a separate patch.
+>>
+>>      I don't like putting a one-line chnage into a separate bindings patch...
+
+[...]
+>>>> Index: linux/drivers/gpu/drm/rcar-du/rcar_du_group.c
+>>>> ===================================================================
+>>>> --- linux.orig/drivers/gpu/drm/rcar-du/rcar_du_group.c
+>>>> +++ linux/drivers/gpu/drm/rcar-du/rcar_du_group.c
+>>>> @@ -133,10 +133,12 @@ static void rcar_du_group_setup(struct r
+>>>>
+>>>>    	rcar_du_group_write(rgrp, DORCR, DORCR_PG1D_DS1 | DORCR_DPRS);
+>>>>    	
+>>>>    	/* Apply planes to CRTCs association. */
+>>>>
+>>>> -	mutex_lock(&rgrp->lock);
+>>>> -	rcar_du_group_write(rgrp, DPTSR, (rgrp->dptsr_planes << 16) |
+>>>> -			    rgrp->dptsr_planes);
+>>>> -	mutex_unlock(&rgrp->lock);
+>>>> +	if (rcdu->info->num_crtcs > 1) {
+>>>> +		mutex_lock(&rgrp->lock);
+>>>> +		rcar_du_group_write(rgrp, DPTSR, (rgrp->dptsr_planes << 16) |
+>>>> +				    rgrp->dptsr_planes);
+>>>> +		mutex_unlock(&rgrp->lock);
+>>>> +	}
+>>>
+>>> Shouldn't you skip writing to the DPTSR register if there's a single DPTSR
+>>> in the group ? That would then apply to M3-W as well, which doesn't have
+>>> the DPTSR2 register. I'd split this change to a separate patch.
+>>
+>> OK, I guess you know this stuff better -- I didn't know DPTSR2 is used
+>> at all... :-)
+> 
+> Should I send a patch for this as well ?
+
+    I thought that was a "previous" issue you meant? Please fix this too, if 
+it's not too much trouble. :-)
+
+>> [...]
+>>
+>>>> Index: linux/drivers/gpu/drm/rcar-du/rcar_du_lvdsenc.c
+>>>> ===================================================================
+>>>> --- linux.orig/drivers/gpu/drm/rcar-du/rcar_du_lvdsenc.c
+>>>> +++ linux/drivers/gpu/drm/rcar-du/rcar_du_lvdsenc.c
+>>
+>> [...]
+>>
+>>>> @@ -177,14 +185,14 @@ int rcar_du_lvdsenc_enable(struct rcar_d
+>>>>    void rcar_du_lvdsenc_atomic_check(struct rcar_du_lvdsenc *lvds,
+>>>>    				  struct drm_display_mode *mode)
+>>>>    {
+>>>> -	struct rcar_du_device *rcdu = lvds->dev;
+>>>> +	const struct rcar_du_device_info *info = lvds->dev->info;
+>>>>
+>>>>    /*
+>>>>     * The internal LVDS encoder has a restricted clock frequency
+>>>>    	 operating
+>>>> -	 * range (30MHz to 150MHz on Gen2, 25.175MHz to 148.5MHz on Gen3).
+>>>> Clamp
+>>>> -	 * the clock accordingly.
+>>>> +	 * range (30MHz to 150MHz on Gen2 and R-Car V3M, 25.175MHz to 148.5MHz
+>>>> +	 * on Gen3). Clamp the clock accordingly.
+>>>>   	 */
+>>>> -	if (rcdu->info->gen < 3)
+>>>> +	if (info->gen < 3 || info->model == R8A77970)
+>>>>    		mode->clock = clamp(mode->clock, 30000, 150000);
+>>>
+>>> According to the datasheet the frequency range for V3M is the same as for
+>>> the H3 and M3 SoCs.
+>>
+>>      Indeed! I thought it's determined by the LVDPLLCR layout but it's not...
+>>
+>>> The range seems to have changed starting in datasheet version
+>>> 0.52. I would fix the range in a separate patch first.
+>>
+>>      Yes.
+>>
+>>> If you want I can send patches to fix this issue
+>>
+>>      Yes, please. You clearly know about DU more than me. :-)
+> 
+> I've prepared a patch, I'm testing it now and I'll then send it.
+> 
+>>> and the previous one, or you can write them and include them in v2. Let me
+
+    Here you're talking about the previous issue -- I figured it was about 
+DPTSR...
+
+>>> know what you'd prefer.
+>>>
+>>>>    	else
+>>>>    		mode->clock = clamp(mode->clock, 25175, 148500);
+>>
+>>      The lower bound documented on gen3 is 31 MHz indeed...
+> 
+> And I just found out that the latest versions of the Gen2 datasheets also
+> document the 31 MHz - 148.5 MHz range. This will simplify the code.
+
+    Indeed! Thanks for looking. :-)
+
+MBR, Sergei
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
