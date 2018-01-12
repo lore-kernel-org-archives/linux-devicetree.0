@@ -1,193 +1,110 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH v2 04/12] drm/bridge/synopsys: dw-hdmi:
- Export some PHY related functions
-Date: Sat, 13 Jan 2018 01:04:52 +0200
-Message-ID: <9134913.0WHrC6jaSo@avalon>
-References: <20180110192512.19684-1-jernej.skrabec@siol.net> <20180110192512.19684-5-jernej.skrabec@siol.net>
-Reply-To: laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDKM3GOS4YHBBFH64TJAKGQEQK4HFHY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180110192512.19684-5-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Cc: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Subject: [PATCH v2 00/12] R-Car DU: Convert LVDS code to bridge driver
+Date: Sat, 13 Jan 2018 01:14:18 +0200
+Message-ID: <20180112231430.26943-1-laurent.pinchart+renesas@ideasonboard.com>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: dri-devel@lists.freedesktop.org
+Cc: linux-renesas-soc@vger.kernel.org, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jernej,
+Hello,
 
-Thank you for th epatch.
+This patch series addresses a design mistake that dates back from the initial
+DU support. Support for the LVDS encoders, which are IP cores separate from
+the DU, was bundled in the DU driver. Worse, both the DU and LVDS were
+described through a single DT node.
 
-On Wednesday, 10 January 2018 21:25:04 EET Jernej Skrabec wrote:
-> Parts of PHY code could be useful also for custom PHYs. For example,
-> Allwinner A83T has custom PHY which is probably Synopsys gen2 PHY
-> with few additional memory mapped registers, so most of the Synopsys PHY
-> related code could be reused.
-> 
-> Functions exported here are actually not specific to Synopsys PHYs but
-> to DWC HDMI controller PHY interface. This means that even if the PHY is
-> completely custom, i.e. not designed by Synopsys, exported functions can
-> be useful.
-> 
-> Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-> ---
->  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 44 ++++++++++++++++++++--------
->  include/drm/bridge/dw_hdmi.h              | 11 ++++++++
->  2 files changed, 41 insertions(+), 14 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c index
-> 7ca14d7325b5..7d80f4b56683 100644
-> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> @@ -1037,19 +1037,21 @@ static void dw_hdmi_phy_enable_svsret(struct dw_hdmi
-> *hdmi, u8 enable) HDMI_PHY_CONF0_SVSRET_MASK);
->  }
-> 
-> -static void dw_hdmi_phy_gen2_pddq(struct dw_hdmi *hdmi, u8 enable)
-> +void dw_hdmi_phy_gen2_pddq(struct dw_hdmi *hdmi, u8 enable)
->  {
->  	hdmi_mask_writeb(hdmi, enable, HDMI_PHY_CONF0,
->  			 HDMI_PHY_CONF0_GEN2_PDDQ_OFFSET,
->  			 HDMI_PHY_CONF0_GEN2_PDDQ_MASK);
->  }
-> +EXPORT_SYMBOL_GPL(dw_hdmi_phy_gen2_pddq);
-> 
-> -static void dw_hdmi_phy_gen2_txpwron(struct dw_hdmi *hdmi, u8 enable)
-> +void dw_hdmi_phy_gen2_txpwron(struct dw_hdmi *hdmi, u8 enable)
->  {
->  	hdmi_mask_writeb(hdmi, enable, HDMI_PHY_CONF0,
->  			 HDMI_PHY_CONF0_GEN2_TXPWRON_OFFSET,
->  			 HDMI_PHY_CONF0_GEN2_TXPWRON_MASK);
->  }
-> +EXPORT_SYMBOL_GPL(dw_hdmi_phy_gen2_txpwron);
-> 
->  static void dw_hdmi_phy_sel_data_en_pol(struct dw_hdmi *hdmi, u8 enable)
->  {
-> @@ -1065,6 +1067,22 @@ static void dw_hdmi_phy_sel_interface_control(struct
-> dw_hdmi *hdmi, u8 enable) HDMI_PHY_CONF0_SELDIPIF_MASK);
->  }
-> 
-> +void dw_hdmi_phy_reset(struct dw_hdmi *hdmi)
-> +{
-> +	/* PHY reset. The reset signal is active high on Gen2 PHYs. */
-> +	hdmi_writeb(hdmi, HDMI_MC_PHYRSTZ_PHYRSTZ, HDMI_MC_PHYRSTZ);
-> +	hdmi_writeb(hdmi, 0, HDMI_MC_PHYRSTZ);
-> +}
-> +EXPORT_SYMBOL_GPL(dw_hdmi_phy_reset);
-> +
-> +void dw_hdmi_phy_i2c_set_addr(struct dw_hdmi *hdmi, u8 address)
-> +{
-> +	hdmi_phy_test_clear(hdmi, 1);
-> +	hdmi_writeb(hdmi, address, HDMI_PHY_I2CM_SLAVE_ADDR);
-> +	hdmi_phy_test_clear(hdmi, 0);
-> +}
-> +EXPORT_SYMBOL_GPL(dw_hdmi_phy_i2c_set_addr);
-> +
->  static void dw_hdmi_phy_power_off(struct dw_hdmi *hdmi)
->  {
->  	const struct dw_hdmi_phy_data *phy = hdmi->phy.data;
-> @@ -1203,16 +1221,11 @@ static int hdmi_phy_configure(struct dw_hdmi *hdmi)
->  	if (phy->has_svsret)
->  		dw_hdmi_phy_enable_svsret(hdmi, 1);
-> 
-> -	/* PHY reset. The reset signal is active high on Gen2 PHYs. */
-> -	hdmi_writeb(hdmi, HDMI_MC_PHYRSTZ_PHYRSTZ, HDMI_MC_PHYRSTZ);
-> -	hdmi_writeb(hdmi, 0, HDMI_MC_PHYRSTZ);
-> +	dw_hdmi_phy_reset(hdmi);
-> 
->  	hdmi_writeb(hdmi, HDMI_MC_HEACPHY_RST_ASSERT, HDMI_MC_HEACPHY_RST);
-> 
-> -	hdmi_phy_test_clear(hdmi, 1);
-> -	hdmi_writeb(hdmi, HDMI_PHY_I2CM_SLAVE_ADDR_PHY_GEN2,
-> -		    HDMI_PHY_I2CM_SLAVE_ADDR);
-> -	hdmi_phy_test_clear(hdmi, 0);
-> +	dw_hdmi_phy_i2c_set_addr(hdmi, HDMI_PHY_I2CM_SLAVE_ADDR_PHY_GEN2);
-> 
->  	/* Write to the PHY as configured by the platform */
->  	if (pdata->configure_phy)
-> @@ -1251,15 +1264,16 @@ static void dw_hdmi_phy_disable(struct dw_hdmi
-> *hdmi, void *data) dw_hdmi_phy_power_off(hdmi);
->  }
-> 
-> -static enum drm_connector_status dw_hdmi_phy_read_hpd(struct dw_hdmi *hdmi,
-> -						      void *data)
-> +enum drm_connector_status dw_hdmi_phy_read_hpd(struct dw_hdmi *hdmi,
-> +					       void *data)
->  {
->  	return hdmi_readb(hdmi, HDMI_PHY_STAT0) & HDMI_PHY_HPD ?
->  		connector_status_connected : connector_status_disconnected;
->  }
-> +EXPORT_SYMBOL_GPL(dw_hdmi_phy_read_hpd);
-> 
-> -static void dw_hdmi_phy_update_hpd(struct dw_hdmi *hdmi, void *data,
-> -				   bool force, bool disabled, bool rxsense)
-> +void dw_hdmi_phy_update_hpd(struct dw_hdmi *hdmi, void *data,
-> +			    bool force, bool disabled, bool rxsense)
->  {
->  	u8 old_mask = hdmi->phy_mask;
-> 
-> @@ -1271,8 +1285,9 @@ static void dw_hdmi_phy_update_hpd(struct dw_hdmi
-> *hdmi, void *data, if (old_mask != hdmi->phy_mask)
->  		hdmi_writeb(hdmi, hdmi->phy_mask, HDMI_PHY_MASK0);
->  }
-> +EXPORT_SYMBOL_GPL(dw_hdmi_phy_update_hpd);
-> 
-> -static void dw_hdmi_phy_setup_hpd(struct dw_hdmi *hdmi, void *data)
-> +void dw_hdmi_phy_setup_hpd(struct dw_hdmi *hdmi, void *data)
->  {
->  	/*
->  	 * Configure the PHY RX SENSE and HPD interrupts polarities and clear
-> @@ -1291,6 +1306,7 @@ static void dw_hdmi_phy_setup_hpd(struct dw_hdmi
-> *hdmi, void *data) hdmi_writeb(hdmi, ~(HDMI_IH_PHY_STAT0_HPD |
-> HDMI_IH_PHY_STAT0_RX_SENSE), HDMI_IH_MUTE_PHY_STAT0);
->  }
-> +EXPORT_SYMBOL_GPL(dw_hdmi_phy_setup_hpd);
-> 
->  static const struct dw_hdmi_phy_ops dw_hdmi_synopsys_phy_ops = {
->  	.init = dw_hdmi_phy_init,
-> diff --git a/include/drm/bridge/dw_hdmi.h b/include/drm/bridge/dw_hdmi.h
-> index 182f83283e24..4a35e5065f6f 100644
-> --- a/include/drm/bridge/dw_hdmi.h
-> +++ b/include/drm/bridge/dw_hdmi.h
-> @@ -157,7 +157,18 @@ void dw_hdmi_audio_enable(struct dw_hdmi *hdmi);
->  void dw_hdmi_audio_disable(struct dw_hdmi *hdmi);
-> 
->  /* PHY configuration */
-> +void dw_hdmi_phy_i2c_set_addr(struct dw_hdmi *hdmi, u8 address);
->  void dw_hdmi_phy_i2c_write(struct dw_hdmi *hdmi, unsigned short data,
->  			   unsigned char addr);
-> 
-> +enum drm_connector_status dw_hdmi_phy_read_hpd(struct dw_hdmi *hdmi,
-> +					       void *data);
-> +void dw_hdmi_phy_update_hpd(struct dw_hdmi *hdmi, void *data,
-> +			    bool force, bool disabled, bool rxsense);
-> +void dw_hdmi_phy_setup_hpd(struct dw_hdmi *hdmi, void *data);
-> +
-> +void dw_hdmi_phy_gen2_pddq(struct dw_hdmi *hdmi, u8 enable);
-> +void dw_hdmi_phy_gen2_txpwron(struct dw_hdmi *hdmi, u8 enable);
-> +void dw_hdmi_phy_reset(struct dw_hdmi *hdmi);
+To fix the, patches 01/12 and 02/12 define new DT bindings for the LVDS
+encoders, and deprecate their description inside the DU bindings. To retain
+backward compatibility with existing DT, patch 03/12 then patches the device
+tree at runtime to convert the legacy bindings to the new ones.
 
-Nitpicking, could you move these last three functions between the I2C and HPD 
-functions ? They are, as the I2C functions, related to controlling the 
-interface between the HDMI controller and the PHY (the internal I2C bus and 
-direct signals), so it would make sense to group them together.
+With the DT side addressed, patch 04/12 then converts the LVDS support code to
+a separate bridge driver. After a small fix to the Porter board device tree in
+patch 05/12, patches 06/12 to 12/12 then update all the device tree sources to
+the new DU and LVDS encoders bindings.
 
-With that fixed,
+I decided to go for live DT patching in patch 03/12 because implementing
+support for both the legacy and new bindings in the driver would have been
+very intrusive, and prevented further cleanups. I'm in a way both proud and 
+ashamed of that patch that I would call a neat and dirty hack. It was fun to
+write perhaps in a similar way that one would enjoy researching and developing
+proof-of-concepts for security holes: they're good and bad at the same time.
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Anyway, with this philosophical considerations aside, there were a few
+shortcomings in the OF API that I worked around with local code in the driver.
+If anyone is interested in performing similar live DT patching I think we
+could move some of the code to the OF core. For instance I was surprised
+to not find a device node lookup by path function that would start at a
+given node instead of the root of the live device tree, and had to write
+rcar_du_of_find_node_by_path(). Utility functions to add or modify properties
+or to rename nodes could similarly be added.
 
-Regarding HPD I think we could refactor the code in a cleaner why that 
-wouldn't require the three functions to be exported, but that shouldn't block 
-this patch series, it can always be done later.
+Compared to v1, this series update the r8a7792 and r8a7794 device tree sources
+and incorporate review feedback as described by the changelogs of individual
+patches.
 
->  #endif /* __IMX_HDMI_H__ */
+Laurent Pinchart (12):
+  dt-bindings: display: renesas: Add R-Car LVDS encoder DT bindings
+  dt-bindings: display: renesas: Deprecate LVDS support in the DU
+    bindings
+  drm: rcar-du: Fix legacy DT to create LVDS encoder nodes
+  drm: rcar-du: Convert LVDS encoder code to bridge driver
+  ARM: dts: porter: Fix HDMI output routing
+  ARM: dts: r8a7790: Convert to new LVDS DT bindings
+  ARM: dts: r8a7791: Convert to new LVDS DT bindings
+  ARM: dts: r8a7792: Convert to new DU DT bindings
+  ARM: dts: r8a7793: Convert to new LVDS DT bindings
+  ARM: dts: r8a7794: Convert to new DU DT bindings
+  arm64: dts: renesas: r8a7795: Convert to new LVDS DT bindings
+  arm64: dts: renesas: r8a7796: Convert to new LVDS DT bindings
+
+ .../bindings/display/bridge/renesas,lvds.txt       |  56 +++
+ .../devicetree/bindings/display/renesas,du.txt     |  31 +-
+ MAINTAINERS                                        |   1 +
+ arch/arm/boot/dts/r8a7790-lager.dts                |  22 +-
+ arch/arm/boot/dts/r8a7790.dtsi                     |  60 ++-
+ arch/arm/boot/dts/r8a7791-koelsch.dts              |  10 +-
+ arch/arm/boot/dts/r8a7791-porter.dts               |  18 +-
+ arch/arm/boot/dts/r8a7791.dtsi                     |  34 +-
+ arch/arm/boot/dts/r8a7792.dtsi                     |   1 -
+ arch/arm/boot/dts/r8a7793-gose.dts                 |  10 +-
+ arch/arm/boot/dts/r8a7793.dtsi                     |  34 +-
+ arch/arm/boot/dts/r8a7794.dtsi                     |   1 -
+ .../boot/dts/renesas/r8a7795-es1-salvator-x.dts    |   3 +-
+ arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dts     |   3 +-
+ arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts |   3 +-
+ .../arm64/boot/dts/renesas/r8a7795-salvator-xs.dts |   3 +-
+ arch/arm64/boot/dts/renesas/r8a7795.dtsi           |  34 +-
+ arch/arm64/boot/dts/renesas/r8a7796-m3ulcb.dts     |   3 +-
+ arch/arm64/boot/dts/renesas/r8a7796-salvator-x.dts |   3 +-
+ arch/arm64/boot/dts/renesas/r8a7796.dtsi           |  34 +-
+ drivers/gpu/drm/rcar-du/Kconfig                    |   6 +-
+ drivers/gpu/drm/rcar-du/Makefile                   |   6 +-
+ drivers/gpu/drm/rcar-du/rcar_du_drv.c              |  21 +-
+ drivers/gpu/drm/rcar-du/rcar_du_drv.h              |   5 -
+ drivers/gpu/drm/rcar-du/rcar_du_encoder.c          | 175 +------
+ drivers/gpu/drm/rcar-du/rcar_du_encoder.h          |  12 -
+ drivers/gpu/drm/rcar-du/rcar_du_kms.c              |  14 +-
+ drivers/gpu/drm/rcar-du/rcar_du_lvdscon.c          |  93 ----
+ drivers/gpu/drm/rcar-du/rcar_du_lvdscon.h          |  24 -
+ drivers/gpu/drm/rcar-du/rcar_du_lvdsenc.c          | 264 ----------
+ drivers/gpu/drm/rcar-du/rcar_du_lvdsenc.h          |  64 ---
+ drivers/gpu/drm/rcar-du/rcar_du_of.c               | 451 +++++++++++++++++
+ drivers/gpu/drm/rcar-du/rcar_du_of.h               |  16 +
+ drivers/gpu/drm/rcar-du/rcar_du_of_lvds.dts        |  82 ++++
+ drivers/gpu/drm/rcar-du/rcar_lvds.c                | 546 +++++++++++++++++++++
+ 35 files changed, 1421 insertions(+), 722 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt
+ delete mode 100644 drivers/gpu/drm/rcar-du/rcar_du_lvdscon.c
+ delete mode 100644 drivers/gpu/drm/rcar-du/rcar_du_lvdscon.h
+ delete mode 100644 drivers/gpu/drm/rcar-du/rcar_du_lvdsenc.c
+ delete mode 100644 drivers/gpu/drm/rcar-du/rcar_du_lvdsenc.h
+ create mode 100644 drivers/gpu/drm/rcar-du/rcar_du_of.c
+ create mode 100644 drivers/gpu/drm/rcar-du/rcar_du_of.h
+ create mode 100644 drivers/gpu/drm/rcar-du/rcar_du_of_lvds.dts
+ create mode 100644 drivers/gpu/drm/rcar-du/rcar_lvds.c
 
 -- 
 Regards,
