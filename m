@@ -1,99 +1,44 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v5 06/20] firmware: arm_scmi: add initial support for
- performance protocol
-Date: Fri, 12 Jan 2018 15:41:57 +0000
-Message-ID: <8f9853e7-ef8a-2bee-0760-7659aa919f8c@arm.com>
-References: <1514904162-11201-1-git-send-email-sudeep.holla@arm.com>
- <1514904162-11201-7-git-send-email-sudeep.holla@arm.com>
- <CALW4P+L-YJRNZ_qv1SohM7vCWekBf+KKZos7FuZE0Tu1Yh8i-g@mail.gmail.com>
+From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Subject: Re: [PATCH v5 02/44] clk: davinci: New driver for davinci PLL clocks
+Date: Fri, 12 Jan 2018 09:48:31 -0600
+Message-ID: <c5cea4a3-0e52-d9ce-339b-b3dcd1be5a42@lechnology.com>
+References: <1515377863-20358-1-git-send-email-david@lechnology.com>
+ <1515377863-20358-3-git-send-email-david@lechnology.com>
+ <7fc8bd35-0416-216d-8e1e-53a0ec6e8790@ti.com>
+ <01fbde0e-36a0-2b19-e385-e63bc4a3ae4a@lechnology.com>
+ <CAHCN7xK44_zv27xe5yxL8Efey=VC-nypK6hY6VWqsoLqnKe04g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CALW4P+L-YJRNZ_qv1SohM7vCWekBf+KKZos7FuZE0Tu1Yh8i-g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <CAHCN7xK44_zv27xe5yxL8Efey=VC-nypK6hY6VWqsoLqnKe04g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexey Klimov <klimov.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, ALKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Roy Franz <roy.franz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Harb Abdulhamid <harba-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Ryan Harkin <Ryan.Harkin-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Adam Ford <aford173-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 12/01/18 14:55, Alexey Klimov wrote:
-> On Tue, Jan 2, 2018 at 2:42 PM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
->> The performance protocol is intended for the performance management of
->> group(s) of device(s) that run in the same performance domain. It
->> includes even the CPUs. A performance domain is defined by a set of
->> devices that always have to run at the same performance level.
->> For example, a set of CPUs that share a voltage domain, and have a
->> common frequency control, is said to be in the same performance domain.
+On 01/12/2018 09:30 AM, Adam Ford wrote:
+> On Fri, Jan 12, 2018 at 9:25 AM, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org> wrote:
 >>
->> The commands in this protocol provide functionality to describe the
->> protocol version, describe various attribute flags, set and get the
->> performance level of a domain. It also supports discovery of the list
->> of performance levels supported by a performance domain, and the
->> properties of each performance level.
+>> Yes, I noticed that I missed this after I submitted this series. And I
+>> will have to rework things to coordinate with the PLL as mentioned above.
 >>
->> This patch adds basic support for the performance protocol.
->>
->> Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
->> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
->> ---
->>  drivers/firmware/arm_scmi/Makefile |   2 +-
->>  drivers/firmware/arm_scmi/common.h |   1 +
->>  drivers/firmware/arm_scmi/perf.c   | 527 +++++++++++++++++++++++++++++++++++++
->>  include/linux/scmi_protocol.h      |  34 +++
->>  4 files changed, 563 insertions(+), 1 deletion(-)
+>> FYI, I do have cpufreq-dt working, although the LEGO EV3 has a fixed 1.2V
+>> regulator, so I am limited in what I can test. Basically, I can only switch
 > 
-> [...]
+> I can test the cpufreq-dt.  Are there additional patches or are they
+> part of the same git repo I have been testing?
+> 
+> The DA850 I have may not run all the way to highest speed, but I'll
+> see what I can find.  I think I had a few at one point, but I don't
+> think it was part of Logic PD's standard product lineup.
 > 
 
-[..]
+There are some extra patches I have not submitted yet. However, based on the
+other comments here, I don't have things implemented correctly, so you probably
+want to wait to test until I get that straightened out anyway.
 
->> +
->> +static int scmi_perf_limits_notify_enable(const struct scmi_handle *handle,
->> +                                         u32 domain, bool enable)
->> +{
->> +       return __scmi_perf_notify_enable(handle, PERF_NOTIFY_LIMITS,
->> +                                        domain, enable);
->> +}
->> +
->> +static int scmi_perf_level_notify_enable(const struct scmi_handle *handle,
->> +                                        u32 domain, bool enable)
->> +{
->> +       return __scmi_perf_notify_enable(handle, PERF_NOTIFY_LEVEL,
->> +                                        domain, enable);
->> +}
->> +
-> 
-> Do you have any support to correctly handle notifications without
-> errors/warnings?
-
-Good catch.
-
-> It looks like this two functions are accessible to some user through
-> perf_ops. But are you sure that notifications will be correctly
-> handled by transport, mailbox framework and scmi protocol?
-> 
-
-Indeed, it slipeed through the cracks. I have some rudimentary notifier
-support with I have not put it as part of this series due to lack of
-firmware to test.
-
-> The reason I ask is that it looks like it's better to return
-> -EOPNOTSUPP or -ENODEV, maybe -EINVAL here.
-
-I agree, will change it.
-
-> When you add notifications support you can allow these operations when
-> it's safe to do it.
-> 
-
-Yes, sounds like that's good plan.
-
--- 
-Regards,
-Sudeep
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
