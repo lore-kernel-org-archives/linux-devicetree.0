@@ -1,82 +1,76 @@
 From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Subject: [PATCH 02/10] dt-bindings: display: renesas: Deprecate LVDS support in the DU bindings
-Date: Fri, 12 Jan 2018 02:58:50 +0200
-Message-ID: <20180112005858.26472-3-laurent.pinchart+renesas@ideasonboard.com>
+Subject: [PATCH 01/10] dt-bindings: display: renesas: Add R-Car LVDS encoder
+ DT bindings
+Date: Fri, 12 Jan 2018 02:58:49 +0200
+Message-ID: <20180112005858.26472-2-laurent.pinchart+renesas@ideasonboard.com>
 References: <20180112005858.26472-1-laurent.pinchart+renesas@ideasonboard.com>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 In-Reply-To: <20180112005858.26472-1-laurent.pinchart+renesas@ideasonboard.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: dri-devel@lists.freedesktop.org
-Cc: linux-renesas-soc@vger.kernel.org, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, devicetree@vger.kernel.org
+Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 List-Id: devicetree@vger.kernel.org
 
-The internal LVDS encoders now have their own DT bindings, representing
-them as part of the DU is deprecated.
-
-Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
----
- .../devicetree/bindings/display/renesas,du.txt     | 26 +++++++++-------------
- 1 file changed, 11 insertions(+), 15 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/display/renesas,du.txt b/Documentation/devicetree/bindings/display/renesas,du.txt
-index cd48aba3bc8c..8f6e0e118e3e 100644
---- a/Documentation/devicetree/bindings/display/renesas,du.txt
-+++ b/Documentation/devicetree/bindings/display/renesas,du.txt
-@@ -17,9 +17,7 @@ Required Properties:
-   - reg: A list of base address and length of each memory resource, one for
-     each entry in the reg-names property.
-   - reg-names: Name of the memory resources. The DU requires one memory
--    resource for the DU core (named "du") and one memory resource for each
--    LVDS encoder (named "lvds.x" with "x" being the LVDS controller numerical
--    index).
-+    resource for the DU core (named "du").
- 
-   - interrupt-parent: phandle of the parent interrupt controller.
-   - interrupts: Interrupt specifiers for the DU interrupts.
-@@ -29,14 +27,13 @@ Required Properties:
-   - clock-names: Name of the clocks. This property is model-dependent.
-     - R8A7779 uses a single functional clock. The clock doesn't need to be
-       named.
--    - All other DU instances use one functional clock per channel and one
--      clock per LVDS encoder (if available). The functional clocks must be
--      named "du.x" with "x" being the channel numerical index. The LVDS clocks
--      must be named "lvds.x" with "x" being the LVDS encoder numerical index.
--    - In addition to the functional and encoder clocks, all DU versions also
--      support externally supplied pixel clocks. Those clocks are optional.
--      When supplied they must be named "dclkin.x" with "x" being the input
--      clock numerical index.
-+    - All other DU instances use one functional clock per channel The
-+      functional clocks must be named "du.x" with "x" being the channel
-+      numerical index.
-+    - In addition to the functional clocks, all DU versions also support
-+      externally supplied pixel clocks. Those clocks are optional. When
-+      supplied they must be named "dclkin.x" with "x" being the input clock
-+      numerical index.
- 
-   - vsps: A list of phandle and channel index tuples to the VSPs that handle
-     the memory interfaces for the DU channels. The phandle identifies the VSP
-@@ -71,7 +68,7 @@ Example: R8A7795 (R-Car H3) ES2.0 DU
- 		compatible = "renesas,du-r8a7795";
- 		reg = <0 0xfeb00000 0 0x80000>,
- 		      <0 0xfeb90000 0 0x14>;
--		reg-names = "du", "lvds.0";
-+		reg-names = "du";
- 		interrupts = <GIC_SPI 256 IRQ_TYPE_LEVEL_HIGH>,
- 			     <GIC_SPI 268 IRQ_TYPE_LEVEL_HIGH>,
- 			     <GIC_SPI 269 IRQ_TYPE_LEVEL_HIGH>,
-@@ -79,9 +76,8 @@ Example: R8A7795 (R-Car H3) ES2.0 DU
- 		clocks = <&cpg CPG_MOD 724>,
- 			 <&cpg CPG_MOD 723>,
- 			 <&cpg CPG_MOD 722>,
--			 <&cpg CPG_MOD 721>,
--			 <&cpg CPG_MOD 727>;
--		clock-names = "du.0", "du.1", "du.2", "du.3", "lvds.0";
-+			 <&cpg CPG_MOD 721>;
-+		clock-names = "du.0", "du.1", "du.2", "du.3";
- 		vsps = <&vspd0 0>, <&vspd1 0>, <&vspd2 0>, <&vspd0 1>;
- 
- 		ports {
--- 
-Regards,
-
-Laurent Pinchart
+VGhlIFJlbmVzYXMgUi1DYXIgR2VuMiBhbmQgR2VuMyBTb0NzIGhhdmUgaW50ZXJuYWwgTFZEUyBl
+bmNvZGVycy4gQWRkCmNvcnJlc3BvbmRpbmcgZGV2aWNlIHRyZWUgYmluZGluZ3MuCgpTaWduZWQt
+b2ZmLWJ5OiBMYXVyZW50IFBpbmNoYXJ0IDxsYXVyZW50LnBpbmNoYXJ0K3JlbmVzYXNAaWRlYXNv
+bmJvYXJkLmNvbT4KLS0tCiAuLi4vYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvcmVuZXNhcyxsdmRz
+LnR4dCAgICAgICB8IDU0ICsrKysrKysrKysrKysrKysrKysrKysKIE1BSU5UQUlORVJTICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDEgKwogMiBmaWxlcyBjaGFuZ2Vk
+LCA1NSBpbnNlcnRpb25zKCspCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3JlbmVzYXMsbHZkcy50eHQKCmRpZmYgLS1n
+aXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvcmVu
+ZXNhcyxsdmRzLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
+L2JyaWRnZS9yZW5lc2FzLGx2ZHMudHh0Cm5ldyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4IDAwMDAw
+MDAwMDAwMC4uNDU5YzU2ODIyZWRhCi0tLSAvZGV2L251bGwKKysrIGIvRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3JlbmVzYXMsbHZkcy50eHQKQEAgLTAs
+MCArMSw1NCBAQAorUmVuZXNhcyBSLUNhciBMVkRTIEVuY29kZXIKKz09PT09PT09PT09PT09PT09
+PT09PT09PT09CisKK1RoZXNlIERUIGJpbmRpbmdzIGRlc2NyaWJlIHRoZSBMVkRTIGVuY29kZXIg
+ZW1iZWRkZWQgaW4gdGhlIFJlbmVzYXMgUi1DYXIgR2VuMgorYW5kIEdlbjMgU29Dcy4KKworUmVx
+dWlyZWQgcHJvcGVydGllczoKKworLSBjb21wYXRpYmxlIDogU2hhbGwgY29udGFpbiBvbmUgb2YK
+KyAgLSAicmVuZXNhcyxsdmRzLXI4YTc3NDMiIGZvciBSOEE3NzkwIChSLUNhciBSWi9HMU0pIGNv
+bXBhdGlibGUgTFZEUyBlbmNvZGVycworICAtICJyZW5lc2FzLGx2ZHMtcjhhNzc5MCIgZm9yIFI4
+QTc3OTAgKFItQ2FyIEgyKSBjb21wYXRpYmxlIExWRFMgZW5jb2RlcnMKKyAgLSAicmVuZXNhcyxs
+dmRzLXI4YTc3OTEiIGZvciBSOEE3NzkxIChSLUNhciBNMi1XKSBjb21wYXRpYmxlIExWRFMgZW5j
+b2RlcnMKKyAgLSAicmVuZXNhcyxsdmRzLXI4YTc3OTMiIGZvciBSOEE3NzkxIChSLUNhciBNMi1O
+KSBjb21wYXRpYmxlIExWRFMgZW5jb2RlcnMKKyAgLSAicmVuZXNhcyxsdmRzLXI4YTc3OTUiIGZv
+ciBSOEE3Nzk1IChSLUNhciBIMykgY29tcGF0aWJsZSBMVkRTIGVuY29kZXJzCisgIC0gInJlbmVz
+YXMsbHZkcy1yOGE3Nzk2IiBmb3IgUjhBNzc5NiAoUi1DYXIgTTMtVykgY29tcGF0aWJsZSBMVkRT
+IGVuY29kZXJzCisKKy0gcmVnOiBCYXNlIGFkZHJlc3MgYW5kIGxlbmd0aCBmb3IgdGhlIG1lbW9y
+eS1tYXBwZWQgcmVnaXN0ZXJzCistIGNsb2NrczogQSBwaGFuZGxlICsgY2xvY2stc3BlY2lmaWVy
+IHBhaXIgZm9yIHRoZSBmdW5jdGlvbmFsIGNsb2NrCisKK1JlcXVpcmVzIG5vZGVzOgorCitUaGUg
+TFZEUyBlbmNvZGVyIGhhcyB0d28gdmlkZW8gcG9ydHMuIFRoZWlyIGNvbm5lY3Rpb25zIGFyZSBt
+b2RlbGxlZCB1c2luZyB0aGUKK09GIGdyYXBoIGJpbmRpbmdzIHNwZWNpZmllZCBpbiBEb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZ3JhcGgudHh0LgorCistIFZpZGVvIHBvcnQgMCBj
+b3JyZXNwb25kcyB0byB0aGUgcGFyYWxsZWwgaW5wdXQKKy0gVmlkZW8gcG9ydCAxIGNvcnJlc3Bv
+bmRzIHRvIHRoZSBMVkRTIG91dHB1dAorCitFYWNoIHBvcnQgc2hhbGwgaGF2ZSBhIHNpbmdsZSBl
+bmRwb2ludC4KKworCitFeGFtcGxlOgorCisJbHZkczA6IGx2ZHNAZmViOTAwMDAgeworCQljb21w
+YXRpYmxlID0gInJlbmVzYXMsbHZkcy1yOGE3NzkwIjsKKwkJcmVnID0gPDAgMHhmZWI5MDAwMCAw
+IDB4MWM+OworCQljbG9ja3MgPSA8JmNwZyBDUEdfTU9EIDcyNj47CisKKwkJcG9ydHMgeworCQkJ
+I2FkZHJlc3MtY2VsbHMgPSA8MT47CisJCQkjc2l6ZS1jZWxscyA9IDwwPjsKKworCQkJcG9ydEAw
+IHsKKwkJCQlyZWcgPSA8MD47CisJCQkJbHZkczBfaW46IGVuZHBvaW50IHsKKwkJCQkJcmVtb3Rl
+LWVuZHBvaW50ID0gPCZkdV9vdXRfbHZkczA+OworCQkJCX07CisJCQl9OworCQkJcG9ydEAxIHsK
+KwkJCQlyZWcgPSA8MT47CisJCQkJbHZkczBfb3V0OiBlbmRwb2ludCB7CisJCQkJfTsKKwkJCX07
+CisJCX07CisJfTsKZGlmZiAtLWdpdCBhL01BSU5UQUlORVJTIGIvTUFJTlRBSU5FUlMKaW5kZXgg
+NDBhZWE4NThjN2VhLi41NjA5YTdmNWFjNGQgMTAwNjQ0Ci0tLSBhL01BSU5UQUlORVJTCisrKyBi
+L01BSU5UQUlORVJTCkBAIC00NzI1LDYgKzQ3MjUsNyBAQCBGOglkcml2ZXJzL2dwdS9kcm0vcmNh
+ci1kdS8KIEY6CWRyaXZlcnMvZ3B1L2RybS9zaG1vYmlsZS8KIEY6CWluY2x1ZGUvbGludXgvcGxh
+dGZvcm1fZGF0YS9zaG1vYl9kcm0uaAogRjoJRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2Rpc3BsYXkvYnJpZGdlL3JlbmVzYXMsZHctaGRtaS50eHQKK0Y6CURvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9yZW5lc2FzLGx2ZHMudHh0CiBGOglE
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yZW5lc2FzLGR1LnR4dAog
+CiBEUk0gRFJJVkVSUyBGT1IgUk9DS0NISVAKLS0gClJlZ2FyZHMsCgpMYXVyZW50IFBpbmNoYXJ0
+CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2
+ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9s
+aXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
