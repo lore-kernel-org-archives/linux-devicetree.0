@@ -1,62 +1,70 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 1/3] arm: spear600: Add missing interrupt-parent of rtc
-Date: Fri, 12 Jan 2018 09:56:40 +0100
-Message-ID: <CAK8P3a2SO4=YKBE3L_AKsyfNe77YR7a8F=dvbS=ic03=6NK8MA@mail.gmail.com>
-References: <a062d9ed0d3365b578156a780202fa533e725374.1515650104.git.viresh.kumar@linaro.org>
- <20180112020711.6gp2pnsxxjzelidq@localhost> <20180112032223.GK3626@vireshk-i7>
- <CAOesGMggU73asY1SEUDD_BsWcrGYR___o8e5omjziOPEwJgqBQ@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v4 3/9] v4l: platform: Add Renesas CEU driver
+Date: Fri, 12 Jan 2018 10:01:18 +0100
+Message-ID: <CAMuHMdVCa=mXBLjUpqUgg90=Yqj0_r0cmB5UsOYJvdxw3HSsmw@mail.gmail.com>
+References: <1515515131-13760-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1515515131-13760-4-git-send-email-jacopo+renesas@jmondi.org> <4595365.GB5AfDQQ8V@avalon>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOesGMggU73asY1SEUDD_BsWcrGYR___o8e5omjziOPEwJgqBQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, ARM-SoC Maintainers <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux ARM Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, gregkh <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <4595365.GB5AfDQQ8V@avalon>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, Magnus Damm <magnus.damm@gmail.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Fabio Estevam <festevam@gmail.com>, Sakari Ailus <sakari.ailus@iki.fi>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 12, 2018 at 4:23 AM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
-> On Thu, Jan 11, 2018 at 7:22 PM, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->> On 11-01-18, 18:07, Olof Johansson wrote:
->>> On Thu, Jan 11, 2018 at 11:28:51AM +0530, Viresh Kumar wrote:
->>> > The interrupt-parent of rtc was missing, add it.
->>> >
->>> > Fixes: 8113ba917dfa ("ARM: SPEAr: DT: Update device nodes")
->>> > Cc: stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org # v3.8+
->>> > Reported-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
->>> > Signed-off-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>>
->>> Applied to next/dt. Is stable really needed on this? It's been broken since
->>> pretty much forever, and nobody has complained... :)
+Hi Laurent,
+
+On Fri, Jan 12, 2018 at 12:12 AM, Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+> On Tuesday, 9 January 2018 18:25:25 EET Jacopo Mondi wrote:
+>> Add driver for Renesas Capture Engine Unit (CEU).
 >>
->> Not sure. Just thought it may be useful for someone somewhere :)
+>> The CEU interface supports capturing 'data' (YUV422) and 'images'
+>> (NV[12|21|16|61]).
+>>
+>> This driver aims to replace the soc_camera-based sh_mobile_ceu one.
+>>
+>> Tested with ov7670 camera sensor, providing YUYV_2X8 data on Renesas RZ
+>> platform GR-Peach.
+>>
+>> Tested with ov7725 camera sensor on SH4 platform Migo-R.
+>>
+>> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+>> ---
+>>  drivers/media/platform/Kconfig       |    9 +
+>>  drivers/media/platform/Makefile      |    1 +
+>>  drivers/media/platform/renesas-ceu.c | 1648
+>> ++++++++++++++++++++++++++++++++++ 3 files changed, 1658 insertions(+)
+>>  create mode 100644 drivers/media/platform/renesas-ceu.c
 >
-> Ok. Left the tags there, but didn't merge into fixes since we're late
-> in -rc and this didn't seem critical at this time.
+> [snip]
+>
+>> diff --git a/drivers/media/platform/renesas-ceu.c
+>> b/drivers/media/platform/renesas-ceu.c new file mode 100644
+>> index 0000000..d261704
+>> --- /dev/null
+>> +++ b/drivers/media/platform/renesas-ceu.c
+>> @@ -0,0 +1,1648 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>
+> It was recently brought to my attention that SPDX headers should use either
+> GPL-2.0-only or GPL-2.0-or-later, no the ambiguous GPL-2.0. Could you please
+> update all patches in this series ?
 
-My plan was to have these in the fixes branch in the hope of making
-it to a clean build for 4.15 after all, they fix warnings that got introduced
-by the updated dtc checks in 4.15-rc1.
+IMHO it's a bit premature to do that.
+As long as Documentation/process/license-rules.rst isn't updated, I wouldn't
+follow this change.
 
-We are getting fairly close, but it seems we still miss a few, so we
-might as well give up at this point. The remaining fixes should be easy
-to backport into v4.15.y if we decide to do it, of further back even.
-For v4.14 and before, the in-kernel copy of dtc won't warn, but mainline
-dtc will.
+See also https://www.spinics.net/lists/linux-xfs/msg14536.html
 
-Greg, let me know your thoughts on this for the upcoming 4.15.y
-release. We had hundreds of dtc warnings in 4.15-rc1, many of them
-about important bugs, now we're down to a couple of warnings
-for platforms we don't care about much, and I expect the last of
-these fixes to land in 4.16-rc1 or maybe -rc2. Shall we backport
-them all to get a clean 4.15.y release?
+Gr{oetje,eeting}s,
 
-Note: there was at least one dtc warning fix that caused a serious
-regression in code that relied on a device probe to fail because of
-an invalid node (a fix is still in the works for 4.15), though generally
-the fixes are really harmless and can only make things better.
+                        Geert
 
-      Arnd
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
