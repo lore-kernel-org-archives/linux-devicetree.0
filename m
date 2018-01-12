@@ -1,207 +1,211 @@
-From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH v3 2/2] v4l2: i2c: ov7670: Implement OF mbus configuration
-Date: Fri, 12 Jan 2018 18:56:48 +0100
-Message-ID: <1515779808-21420-3-git-send-email-jacopo+renesas@jmondi.org>
-References: <1515779808-21420-1-git-send-email-jacopo+renesas@jmondi.org>
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1515779808-21420-1-git-send-email-jacopo+renesas@jmondi.org>
-Sender: linux-media-owner@vger.kernel.org
-To: corbet@lwn.net, mchehab@kernel.org, sakari.ailus@iki.fi, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [PATCH v5 3/5] misc serdev: Add w2sg0004 (gps receiver) power
+ control driver
+Date: Fri, 12 Jan 2018 18:59:59 +0100
+Message-ID: <E7ECBBB8-2E88-4F04-AFC3-659332E84CF6@goldelico.com>
+References: <cover.1512114576.git.hns@goldelico.com>
+ <5494ad34b39a6c62601e3747440268dfb3be7d5a.1512114576.git.hns@goldelico.com>
+ <20171222124427.GI3374@localhost>
+ <91850CC3-B280-4701-9D07-96AFF3A79A6F@goldelico.com>
+ <90F9A8E4-035A-4A9E-8AAB-757491D63E69@goldelico.com>
+ <20180112153903.GB5992@localhost>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180112153903.GB5992@localhost>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Johan Hovold <johan@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, Arnd Bergmann <arnd@arndb.de>, Tony Lindgren <tony@atomide.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kernel@pyra-handheld.com, Russell King <linux@armlinux.org.uk>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Andreas Kemnade <andreas@kemnade.info>, Thierry Reding <treding@nvidia.com>, =?utf-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Jonathan Cameron <jic23@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-ov7670 driver supports two optional properties supplied through platform
-data, but currently does not support any standard video interface
-property.
+Hi Johan,
 
-Add support through OF parsing for 2 generic properties (vsync and hsync
-polarities) and for one custom property already supported through
-platform data to suppress pixel clock output during horizontal
-blanking.
+> Am 12.01.2018 um 16:39 schrieb Johan Hovold <johan@kernel.org>:
+> 
+>> Let's restart this discussion and focus on the main roadblock (others
+>> are minor details which can be sorted out later).
+>> 
+>> If it feels like a hack, the key issue seems to me to be the choice of
+>> the API to present the GPS data to user space. Right?
+> 
+> Or even more fundamentally, does this belong in the kernel at all?
 
-While at there, check return value of register writes in set_fmt
-function and rationalize spacings.
+Yes, that can be questioned of course. It was questioned and discussed
+several times and I thought the answer was a clear yes. But let's reiterate.
 
-Signal polarities and pixel clock blanking verified through scope and
-image capture.
+> 
+> Also it seems at least part of your specific problem is that you have
+> failed to wire up the WAKEUP pin of the W2SG0004/84 properly,
 
-Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
----
- drivers/media/i2c/ov7670.c | 102 ++++++++++++++++++++++++++++++++++++++-------
- 1 file changed, 88 insertions(+), 14 deletions(-)
+The w2sg0004 has no wakeup pin. At least I can't find one in the data sheet.
 
-diff --git a/drivers/media/i2c/ov7670.c b/drivers/media/i2c/ov7670.c
-index 950a0ac..ad5f9e9 100644
---- a/drivers/media/i2c/ov7670.c
-+++ b/drivers/media/i2c/ov7670.c
-@@ -21,6 +21,7 @@
- #include <linux/gpio/consumer.h>
- #include <media/v4l2-device.h>
- #include <media/v4l2-ctrls.h>
-+#include <media/v4l2-fwnode.h>
- #include <media/v4l2-mediabus.h>
- #include <media/v4l2-image-sizes.h>
- #include <media/i2c/ov7670.h>
-@@ -237,6 +238,7 @@ struct ov7670_info {
- 	struct clk *clk;
- 	struct gpio_desc *resetb_gpio;
- 	struct gpio_desc *pwdn_gpio;
-+	unsigned int mbus_config;	/* Media bus configuration flags */
- 	int min_width;			/* Filter out smaller sizes */
- 	int min_height;			/* Filter out smaller sizes */
- 	int clock_speed;		/* External clock speed (MHz) */
-@@ -995,7 +997,7 @@ static int ov7670_set_fmt(struct v4l2_subdev *sd,
- #ifdef CONFIG_VIDEO_V4L2_SUBDEV_API
- 	struct v4l2_mbus_framefmt *mbus_fmt;
- #endif
--	unsigned char com7;
-+	unsigned char com7, com10 = 0;
- 	int ret;
- 
- 	if (format->pad)
-@@ -1015,7 +1017,6 @@ static int ov7670_set_fmt(struct v4l2_subdev *sd,
- 	}
- 
- 	ret = ov7670_try_fmt_internal(sd, &format->format, &ovfmt, &wsize);
--
- 	if (ret)
- 		return ret;
- 	/*
-@@ -1026,16 +1027,41 @@ static int ov7670_set_fmt(struct v4l2_subdev *sd,
- 	 */
- 	com7 = ovfmt->regs[0].value;
- 	com7 |= wsize->com7_bit;
--	ov7670_write(sd, REG_COM7, com7);
-+	ret = ov7670_write(sd, REG_COM7, com7);
-+	if (ret)
-+		return ret;
-+
-+	/*
-+	 * Configure the media bus through COM10 register
-+	 */
-+	if (info->mbus_config & V4L2_MBUS_VSYNC_ACTIVE_LOW)
-+		com10 |= COM10_VS_NEG;
-+	if (info->mbus_config & V4L2_MBUS_HSYNC_ACTIVE_LOW)
-+		com10 |= COM10_HREF_REV;
-+	if (info->pclk_hb_disable)
-+		com10 |= COM10_PCLK_HB;
-+	ret = ov7670_write(sd, REG_COM10, com10);
-+	if (ret)
-+		return ret;
-+
- 	/*
- 	 * Now write the rest of the array.  Also store start/stops
- 	 */
--	ov7670_write_array(sd, ovfmt->regs + 1);
--	ov7670_set_hw(sd, wsize->hstart, wsize->hstop, wsize->vstart,
--			wsize->vstop);
--	ret = 0;
--	if (wsize->regs)
-+	ret = ov7670_write_array(sd, ovfmt->regs + 1);
-+	if (ret)
-+		return ret;
-+
-+	ret = ov7670_set_hw(sd, wsize->hstart, wsize->hstop, wsize->vstart,
-+			    wsize->vstop);
-+	if (ret)
-+		return ret;
-+
-+	if (wsize->regs) {
- 		ret = ov7670_write_array(sd, wsize->regs);
-+		if (ret)
-+			return ret;
-+	}
-+
- 	info->fmt = ovfmt;
- 
- 	/*
-@@ -1048,8 +1074,10 @@ static int ov7670_set_fmt(struct v4l2_subdev *sd,
- 	 * to write it unconditionally, and that will make the frame
- 	 * rate persistent too.
- 	 */
--	if (ret == 0)
--		ret = ov7670_write(sd, REG_CLKRC, info->clkrc);
-+	ret = ov7670_write(sd, REG_CLKRC, info->clkrc);
-+	if (ret)
-+		return ret;
-+
- 	return 0;
- }
- 
-@@ -1658,6 +1686,49 @@ static int ov7670_init_gpio(struct i2c_client *client, struct ov7670_info *info)
- 	return 0;
- }
- 
-+/*
-+ * ov7670_parse_dt() - Parse device tree to collect mbus configuration
-+ *			properties
-+ */
-+static int ov7670_parse_dt(struct device *dev,
-+			   struct ov7670_info *info)
-+{
-+	struct fwnode_handle *fwnode = dev_fwnode(dev);
-+	struct v4l2_fwnode_endpoint bus_cfg;
-+	struct fwnode_handle *ep;
-+	int ret;
-+
-+	if (!fwnode)
-+		return -EINVAL;
-+
-+	info->pclk_hb_disable = false;
-+	if (fwnode_property_present(fwnode, "ov7670,pclk-hb-disable"))
-+		info->pclk_hb_disable = true;
-+
-+	ep = fwnode_graph_get_next_endpoint(fwnode, NULL);
-+	if (!ep) {
-+		fwnode_handle_put(fwnode);
-+		return -EINVAL;
-+	}
-+
-+	ret = v4l2_fwnode_endpoint_parse(ep, &bus_cfg);
-+	if (ret)
-+		goto error_put_fwnodes;
-+
-+	if (bus_cfg.bus_type != V4L2_MBUS_PARALLEL) {
-+		dev_err(dev, "Unsupported media bus type\n");
-+		ret = -EINVAL;
-+		goto error_put_fwnodes;
-+	}
-+	info->mbus_config = bus_cfg.bus.parallel.flags;
-+
-+error_put_fwnodes:
-+	fwnode_handle_put(ep);
-+	fwnode_handle_put(fwnode);
-+
-+	return ret;
-+}
-+
- static int ov7670_probe(struct i2c_client *client,
- 			const struct i2c_device_id *id)
- {
-@@ -1678,7 +1749,13 @@ static int ov7670_probe(struct i2c_client *client,
- #endif
- 
- 	info->clock_speed = 30; /* default: a guess */
--	if (client->dev.platform_data) {
-+
-+	if (dev_fwnode(&client->dev)) {
-+		ret = ov7670_parse_dt(&client->dev, info);
-+		if (ret)
-+			return ret;
-+
-+	} else if (client->dev.platform_data) {
- 		struct ov7670_config *config = client->dev.platform_data;
- 
- 		/*
-@@ -1745,9 +1822,6 @@ static int ov7670_probe(struct i2c_client *client,
- 	tpf.denominator = 30;
- 	info->devtype->set_framerate(sd, &tpf);
- 
--	if (info->pclk_hb_disable)
--		ov7670_write(sd, REG_COM10, COM10_PCLK_HB);
--
- 	v4l2_ctrl_handler_init(&info->hdl, 10);
- 	v4l2_ctrl_new_std(&info->hdl, &ov7670_ctrl_ops,
- 			V4L2_CID_BRIGHTNESS, 0, 255, 1, 128);
--- 
-2.7.4
+The two pins you refer to from the 0084 data sheet are called BootSelect0/1
+in the 0004 and have a different function.
+
+To be clear, we did not fail to wire it up. We did the design before the
+0084 was announced and available. We just had to swap in the 0084 into
+existing PCBs during production because the 0004 became EOL. Otherwise
+we would probably still use the 0004 without WAKEUP output.
+
+To make it worse, we have no documentation for an individual board if
+an 0004 or 0084 chip is installed and there is no means how a software
+can find out which one it is talking to (especially before properly
+powering on). Therefore we can not even provide two different device
+trees or drivers or whatever, unless we ask people to open their device
+and look on the chip. Quite crazy wrt. user-friendlyness of software
+installation in 2018...
+
+Therefore, a driver must be capable to handle both chips in the same way,
+with minimalistic assumptions, even if the 0084 could provide a direct
+signal to make it easier than using serdev to monitor the data stream.
+
+>  which then
+> forces you to look at the data stream to determine the power state of
+> the chip. Judging from a quick look at the GTA04 schematics it seems
+> you've even connected the WAKEUP output to the 1V8_OUT output?!
+
+No. You failed to see that this is an optional 0R, which is not installed.
+The 0R on pin 7 (BootSelect1) to GND was removed when we did switch from
+0004 to 0084. Pin 6 (BootSelect0/WAKEUP) was never connected.
+
+> The kernel is probably not the place to be working around issues like
+> that,
+
+You appear to assume this our only motivation is to make a workaround for
+a hardware design flaw but that isn't.
+
+The purpose of the driver is to provide power management for the GPS
+subsystem which happens to be based on a chip with limited functionality.
+
+And the serdev thing is the solution, not the requirement...
+
+> even if serdev at least allows for such hacks to be fairly
+> isolated in drivers (unlike some of the earlier proposals touching core
+> code).
+
+Please tell me why there are so many hacks for hardware issues in certain
+drivers. Any why those are good and this one (if it is one at all) is not.
+
+Some picks random fgrep -iR hack drivers
+
+drivers/char/random.c: * Hack to deal with crazy userspace progams when they are all trying
+drivers/clk/meson/meson8b.c:	 * a new clk_hw, and this hack will no longer work. Releasing the ccr
+drivers/clk/samsung/clk-exynos3250.c:	/* HACK: fin_pll hardcoded to xusbxti until detection is implemented. */
+drivers/gpu/drm/amd/amdkfd/kfd_events.c:	 * This hack is wrong, but nobody is likely to notice.
+drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c:		 * HACK: IGT tests expect that each plane can only have one
+drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c:	/* It's a hack for s3 since in 4.9 kernel filter out cursor buffer
+drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c:		/* TODO This hack should go away */
+drivers/gpu/drm/amd/display/dc/core/dc_link.c:	/* A hack to avoid failing any modes for EDID override feature on
+
+What I can learn from your discussion is that it might be considerable
+to add an optional gpio for the 0084 WAKEUP and add some logic to
+support users who have or will have that pin connected.
+
+But even then we would need a driver to handle this gpio and issue
+an on/off impulse on the other to switch states. It would be a different
+driver (variant - maybe some CONFIG option or handled by code), but not
+"no driver".
+
+> 
+>> I see three reasonable options how this presentation can be done:
+>> 
+>> 1. char device
+>> 2. tty device
+>> 3. some new gps interface API (similar to network, bluetooth interfaces)
+>> 4. no driver and use the UART tty directly
+>> 
+>> Pros and cons:
+> 
+>> 4. no driver and use UART directly
+>> + a non-solution seems to be attractive
+>> - must turn on/off chip by gpio hacks from user-space
+> 
+> I'm not sure that would amount to more of hack then doing it in the
+> kernel would.
+
+It might not be big effort in the user-space code/scripts.
+
+But much effort to convince all the plethora of user-space client maintainers
+to integrate something. And have them roll out. And have distributions take it.
+And have users upgrade to it. 5 years later...
+
+Do you think it is easier to convince them than you? They usually assume a
+power management issue should be solved by the kernel driver.
+
+That is what Andreas did remark as motivation: provide a solution
+for *existing* user spaces.
+
+> 
+>> - can not guarantee (!) to power off the chip if the last user-space
+>> process using it is killed (which is essential for power-management of
+>> a handheld, battery operated device)
+> 
+> That depends on how you implement things (extending gpsd, wrapper
+> script, pty daemon, ...).
+
+No. You can of course cover all standard cases but there is one fundamental
+issue which is IMHO a problem of any user-space implementation:
+
+	How can you guarantee that the chip is powered off if no
+	user-space process is using it or if the last process doing
+	this is killed by *whatever* reason?
+
+E.g. after a kill -9. Or if someone deinstalls gpsd or whatever and assumes
+(and wants a guarantee) that GPS is now turned off and never turned on drawing
+precious milliamps from the battery for no use.
+
+As it is well known, a user-space process can't protect itself against kill -9.
+Or has this recently been changed and I am not aware of?
+
+This is the fundamental reason why we need a kernel driver to provide
+reliable, repeatable and trustable power management of this chip.
+
+It is equally fundamental as a hard disk should spin down after the last
+file is closed. Even if this process ends by a kill -9.
+
+A second almost equally fundamental aspect to be considered is how you want
+to automatically and reliably turn off the chip by pure user-space code when
+entering suspend.
+
+> 
+> 
+>> I would clearly prefer 3 over 2 over 1 over 4.
+>> 
+>> So do you see a chance that the kernel core team provides something useable
+>> (not perfect) for variant 3 in reasonable time (let's say 3-6 months)?
+> 
+> No, I'm afraid not. At least not if we're talking about a framework
+> that would replace gpsd.
+
+This confirms my assumption that there is nothing really good to expect
+soon to implement a driver for variant 3.
+
+> 
+>> If not, I want to suggest to accept the second-best choice 2. for now and we
+>> will update the driver as soon as 3. appears. IMHO it would be a good test case
+>> for a new subsystem.
+> 
+> Getting the interface right from the start is quite important, as
+> otherwise we may end up having to support a superseded one for a long
+> time.
+
+This seems to contradict your argument that user-space can very easily
+adapt to everything. If the latter were true there would be no need to
+keep old interfaces supported for a long time.
+
+So can you agree to that a battery powered portable device must have
+reliable and trustable power management? And if it provable can't be
+implemented in user-space (a single counter example suffices) it must
+be a kernel driver?
+
+BR,
+Nikolaus
