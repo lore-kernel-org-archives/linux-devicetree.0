@@ -1,143 +1,58 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 3/3] drm: rcar-du: add R8A77970 support
-Date: Fri, 12 Jan 2018 17:38:49 +0300
-Message-ID: <5a80800e-e38f-9239-0b54-ae6649da1ba7@cogentembedded.com>
-References: <20180111170103.676775968@cogentembedded.com>
- <8239904.rdcckmYW4i@avalon>
- <78c33176-39b7-6bd9-e307-2b28c0b28f04@cogentembedded.com>
- <3450878.q2PSDvCyDk@avalon>
+From: Johan Hovold <johan@kernel.org>
+Subject: Re: [Letux-kernel] [PATCH v5 3/5] misc serdev: Add w2sg0004 (gps
+ receiver) power control driver
+Date: Fri, 12 Jan 2018 15:46:47 +0100
+Message-ID: <20180112144647.GA5992@localhost>
+References: <cover.1512114576.git.hns@goldelico.com>
+ <5494ad34b39a6c62601e3747440268dfb3be7d5a.1512114576.git.hns@goldelico.com>
+ <20171222124427.GI3374@localhost>
+ <20180109184347.28ba0a6e@aktux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3450878.q2PSDvCyDk@avalon>
-Content-Language: en-MW
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180109184347.28ba0a6e@aktux>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andreas Kemnade <andreas@kemnade.info>
+Cc: Johan Hovold <johan@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, Jonathan Cameron <jic23@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Tony Lindgren <tony@atomide.com>, "H. Nikolaus Schaller" <hns@goldelico.com>, kernel@pyra-handheld.com, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Thierry Reding <treding@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Kevin Hilman <khilman@baylibre.com>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-omap@vger.kernel.org, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/12/2018 05:30 PM, Laurent Pinchart wrote:
-
->>>> Add support for the R-Car  V3M  (R8A77970) SoC to the DU driver (this SoC
->>>> has only  1 display port). Note that there are some differences  with the
->>>> other R-Car gen3 SoCs in the LVDS encoder part, e.g. LVDPLLCR has the
->>>> same layout  as  on the R-Car gen2 SoCs...
->>>>
->>>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
->>>
->>> Could you please rebase this series on top of the LVDS rework posted as
->>> "[PATCH 00/10] R-Car DU: Convert LVDS code to bridge driver" (https://
->>> www.spinics.net/lists/dri-devel/msg161931.html) ? It should make it easier
->>> to implement support for V3M. Please then split the DU and LVDS drivers
->>> changes in two patches.
->>>
->>>> ---
->>>>
->>>>    Documentation/devicetree/bindings/display/renesas,du.txt |    1
->>>
->>> Please split the DT bindings changes to a separate patch.
->>
->>      I don't like putting a one-line chnage into a separate bindings patch...
-
-[...]
->>>> Index: linux/drivers/gpu/drm/rcar-du/rcar_du_group.c
->>>> ===================================================================
->>>> --- linux.orig/drivers/gpu/drm/rcar-du/rcar_du_group.c
->>>> +++ linux/drivers/gpu/drm/rcar-du/rcar_du_group.c
->>>> @@ -133,10 +133,12 @@ static void rcar_du_group_setup(struct r
->>>>
->>>>    	rcar_du_group_write(rgrp, DORCR, DORCR_PG1D_DS1 | DORCR_DPRS);
->>>>    	
->>>>    	/* Apply planes to CRTCs association. */
->>>>
->>>> -	mutex_lock(&rgrp->lock);
->>>> -	rcar_du_group_write(rgrp, DPTSR, (rgrp->dptsr_planes << 16) |
->>>> -			    rgrp->dptsr_planes);
->>>> -	mutex_unlock(&rgrp->lock);
->>>> +	if (rcdu->info->num_crtcs > 1) {
->>>> +		mutex_lock(&rgrp->lock);
->>>> +		rcar_du_group_write(rgrp, DPTSR, (rgrp->dptsr_planes << 16) |
->>>> +				    rgrp->dptsr_planes);
->>>> +		mutex_unlock(&rgrp->lock);
->>>> +	}
->>>
->>> Shouldn't you skip writing to the DPTSR register if there's a single DPTSR
->>> in the group ? That would then apply to M3-W as well, which doesn't have
->>> the DPTSR2 register. I'd split this change to a separate patch.
->>
->> OK, I guess you know this stuff better -- I didn't know DPTSR2 is used
->> at all... :-)
+On Tue, Jan 09, 2018 at 06:43:47PM +0100, Andreas Kemnade wrote:
+> On Fri, 22 Dec 2017 13:44:27 +0100
+> Johan Hovold <johan@kernel.org> wrote:
 > 
-> Should I send a patch for this as well ?
+> [...]
+> > I'd suggest reiterating the problem you're trying to solve and
+> > enumerating the previously discussed potential solutions in order to
+> > find a proper abstraction level for this (before getting lost in
+> > implementation details).
+> > 
+> The main point here is in short words: Having a device powered on or off
+> when the uart it is attached to, is used or not used anymore,
+> so the already available userspace applications do not need to be changed.
 
-    I thought that was a "previous" issue you meant? Please fix this too, if 
-it's not too much trouble. :-)
+So we'd end up with something in-between a kernel driver and a
+user-space solution. What about devices that need to be (partially)
+powered also when the port isn't open? A pure user-space solution would
+be able to handle all variants.
 
->> [...]
->>
->>>> Index: linux/drivers/gpu/drm/rcar-du/rcar_du_lvdsenc.c
->>>> ===================================================================
->>>> --- linux.orig/drivers/gpu/drm/rcar-du/rcar_du_lvdsenc.c
->>>> +++ linux/drivers/gpu/drm/rcar-du/rcar_du_lvdsenc.c
->>
->> [...]
->>
->>>> @@ -177,14 +185,14 @@ int rcar_du_lvdsenc_enable(struct rcar_d
->>>>    void rcar_du_lvdsenc_atomic_check(struct rcar_du_lvdsenc *lvds,
->>>>    				  struct drm_display_mode *mode)
->>>>    {
->>>> -	struct rcar_du_device *rcdu = lvds->dev;
->>>> +	const struct rcar_du_device_info *info = lvds->dev->info;
->>>>
->>>>    /*
->>>>     * The internal LVDS encoder has a restricted clock frequency
->>>>    	 operating
->>>> -	 * range (30MHz to 150MHz on Gen2, 25.175MHz to 148.5MHz on Gen3).
->>>> Clamp
->>>> -	 * the clock accordingly.
->>>> +	 * range (30MHz to 150MHz on Gen2 and R-Car V3M, 25.175MHz to 148.5MHz
->>>> +	 * on Gen3). Clamp the clock accordingly.
->>>>   	 */
->>>> -	if (rcdu->info->gen < 3)
->>>> +	if (info->gen < 3 || info->model == R8A77970)
->>>>    		mode->clock = clamp(mode->clock, 30000, 150000);
->>>
->>> According to the datasheet the frequency range for V3M is the same as for
->>> the H3 and M3 SoCs.
->>
->>      Indeed! I thought it's determined by the LVDPLLCR layout but it's not...
->>
->>> The range seems to have changed starting in datasheet version
->>> 0.52. I would fix the range in a separate patch first.
->>
->>      Yes.
->>
->>> If you want I can send patches to fix this issue
->>
->>      Yes, please. You clearly know about DU more than me. :-)
-> 
-> I've prepared a patch, I'm testing it now and I'll then send it.
-> 
->>> and the previous one, or you can write them and include them in v2. Let me
+> I digged out a bit around:
+> alternative aproaches were:
+> adding hooks to the uart/tty layer:
+> https://marc.info/?l=linux-kernel&m=143333222014616&w=2
+> https://marc.info/?l=devicetree&m=143130955414580&w=2
 
-    Here you're talking about the previous issue -- I figured it was about 
-DPTSR...
+Thanks for the pointers, I remember those threads...
 
->>> know what you'd prefer.
->>>
->>>>    	else
->>>>    		mode->clock = clamp(mode->clock, 25175, 148500);
->>
->>      The lower bound documented on gen3 is 31 MHz indeed...
-> 
-> And I just found out that the latest versions of the Gen2 datasheets also
-> document the 31 MHz - 148.5 MHz range. This will simplify the code.
+> I do not find it right now in my archive:
+> adding a virtual gpio for dtr to the omap_serial driver.
+> The driver behind the virtual io would then handle pm. One reason it was
+> rejected was that the devicetree should only contain real hardware and
+> not virtual stuff.
 
-    Indeed! Thanks for looking. :-)
+Oh, yeah, I think something like that made it in briefly before getting
+reverted again.
 
-MBR, Sergei
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I'll respond to Nikolaus mail as well.
+
+Johan
