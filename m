@@ -1,92 +1,51 @@
 From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH 01/10] dt-bindings: display: renesas: Add R-Car LVDS
- encoder DT bindings
-Date: Fri, 12 Jan 2018 18:13:06 +0300
-Message-ID: <81a9462b-6aaa-52c7-f741-e504c14838e9@cogentembedded.com>
+Subject: Re: [PATCH 02/10] dt-bindings: display: renesas: Deprecate LVDS
+ support in the DU bindings
+Date: Fri, 12 Jan 2018 18:14:33 +0300
+Message-ID: <7e7432fb-770e-d426-dfc1-1518975acd4e@cogentembedded.com>
 References: <20180112005858.26472-1-laurent.pinchart+renesas@ideasonboard.com>
- <20180112005858.26472-2-laurent.pinchart+renesas@ideasonboard.com>
+ <20180112005858.26472-3-laurent.pinchart+renesas@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20180112005858.26472-2-laurent.pinchart+renesas@ideasonboard.com>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180112005858.26472-3-laurent.pinchart+renesas@ideasonboard.com>
 Content-Language: en-MW
-Sender: linux-renesas-soc-owner@vger.kernel.org
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, dri-devel@lists.freedesktop.org
 Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello!
-
-On 01/12/2018 03:58 AM, Laurent Pinchart wrote:
-
-> The Renesas R-Car Gen2 and Gen3 SoCs have internal LVDS encoders. Add
-> corresponding device tree bindings.
-> 
-> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-> ---
->   .../bindings/display/bridge/renesas,lvds.txt       | 54 ++++++++++++++++++++++
->   MAINTAINERS                                        |  1 +
->   2 files changed, 55 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt b/Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt
-> new file mode 100644
-> index 000000000000..459c56822eda
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt
-> @@ -0,0 +1,54 @@
-> +Renesas R-Car LVDS Encoder
-> +==========================
-> +
-> +These DT bindings describe the LVDS encoder embedded in the Renesas R-Car Gen2
-> +and Gen3 SoCs.
-> +
-> +Required properties:
-> +
-> +- compatible : Shall contain one of
-> +  - "renesas,lvds-r8a7743" for R8A7790 (R-Car RZ/G1M) compatible LVDS encoders
-> +  - "renesas,lvds-r8a7790" for R8A7790 (R-Car H2) compatible LVDS encoders
-> +  - "renesas,lvds-r8a7791" for R8A7791 (R-Car M2-W) compatible LVDS encoders
-> +  - "renesas,lvds-r8a7793" for R8A7791 (R-Car M2-N) compatible LVDS encoders
-> +  - "renesas,lvds-r8a7795" for R8A7795 (R-Car H3) compatible LVDS encoders
-> +  - "renesas,lvds-r8a7796" for R8A7796 (R-Car M3-W) compatible LVDS encoders
-> +
-> +- reg: Base address and length for the memory-mapped registers
-> +- clocks: A phandle + clock-specifier pair for the functional clock
-> +
-> +Requires nodes:
-> +
-> +The LVDS encoder has two video ports. Their connections are modelled using the
-> +OF graph bindings specified in Documentation/devicetree/bindings/graph.txt.
-> +
-> +- Video port 0 corresponds to the parallel input
-
-    s/parallel/RGB/, perhaps?
-
-> +- Video port 1 corresponds to the LVDS output
-> +
-> +Each port shall have a single endpoint.
-> +
-> +
-> +Example:
-> +
-> +	lvds0: lvds@feb90000 {
-> +		compatible = "renesas,lvds-r8a7790";
-> +		reg = <0 0xfeb90000 0 0x1c>;
-> +		clocks = <&cpg CPG_MOD 726>;
-> +
-> +		ports {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			port@0 {
-> +				reg = <0>;
-> +				lvds0_in: endpoint {
-> +					remote-endpoint = <&du_out_lvds0>;
-
-    Err, that "du_out_lvds0" label no longer reflects reality, no?
-
-[...]
-
-MBR, Sergei
+SGVsbG8hCgpPbiAwMS8xMi8yMDE4IDAzOjU4IEFNLCBMYXVyZW50IFBpbmNoYXJ0IHdyb3RlOgoK
+PiBUaGUgaW50ZXJuYWwgTFZEUyBlbmNvZGVycyBub3cgaGF2ZSB0aGVpciBvd24gRFQgYmluZGlu
+Z3MsIHJlcHJlc2VudGluZwo+IHRoZW0gYXMgcGFydCBvZiB0aGUgRFUgaXMgZGVwcmVjYXRlZC4K
+PiAKPiBTaWduZWQtb2ZmLWJ5OiBMYXVyZW50IFBpbmNoYXJ0IDxsYXVyZW50LnBpbmNoYXJ0K3Jl
+bmVzYXNAaWRlYXNvbmJvYXJkLmNvbT4KPiAtLS0KPiAgIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L2Rpc3BsYXkvcmVuZXNhcyxkdS50eHQgICAgIHwgMjYgKysrKysrKysrLS0tLS0tLS0tLS0tLQo+
+ICAgMSBmaWxlIGNoYW5nZWQsIDExIGluc2VydGlvbnMoKyksIDE1IGRlbGV0aW9ucygtKQo+IAo+
+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9y
+ZW5lc2FzLGR1LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
+L3JlbmVzYXMsZHUudHh0Cj4gaW5kZXggY2Q0OGFiYTNiYzhjLi44ZjZlMGUxMThlM2UgMTAwNjQ0
+Cj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcmVuZXNh
+cyxkdS50eHQKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
+eS9yZW5lc2FzLGR1LnR4dAo+IEBAIC0xNyw5ICsxNyw3IEBAIFJlcXVpcmVkIFByb3BlcnRpZXM6
+Cj4gICAgIC0gcmVnOiBBIGxpc3Qgb2YgYmFzZSBhZGRyZXNzIGFuZCBsZW5ndGggb2YgZWFjaCBt
+ZW1vcnkgcmVzb3VyY2UsIG9uZSBmb3IKPiAgICAgICBlYWNoIGVudHJ5IGluIHRoZSByZWctbmFt
+ZXMgcHJvcGVydHkuCj4gICAgIC0gcmVnLW5hbWVzOiBOYW1lIG9mIHRoZSBtZW1vcnkgcmVzb3Vy
+Y2VzLiBUaGUgRFUgcmVxdWlyZXMgb25lIG1lbW9yeQo+IC0gICAgcmVzb3VyY2UgZm9yIHRoZSBE
+VSBjb3JlIChuYW1lZCAiZHUiKSBhbmQgb25lIG1lbW9yeSByZXNvdXJjZSBmb3IgZWFjaAo+IC0g
+ICAgTFZEUyBlbmNvZGVyIChuYW1lZCAibHZkcy54IiB3aXRoICJ4IiBiZWluZyB0aGUgTFZEUyBj
+b250cm9sbGVyIG51bWVyaWNhbAo+IC0gICAgaW5kZXgpLgo+ICsgICAgcmVzb3VyY2UgZm9yIHRo
+ZSBEVSBjb3JlIChuYW1lZCAiZHUiKS4KCiAgICBDb3VsZCB3ZSBnZXQgcmlkIG9mIHRoaXMgcHJv
+cCBhbHRvZ2V0aGVyPwoKWy4uLl0KCk1CUiwgU2VyZ2VpCl9fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVs
+QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWls
+bWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
