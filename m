@@ -1,146 +1,42 @@
-From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Subject: [PATCH 1/2 v2] ARM: dts: Add Aspeed SoC USB controllers to
- device-tree
-Date: Fri, 12 Jan 2018 17:21:04 +1100
-Message-ID: <1515738064.31850.100.camel@kernel.crashing.org>
+From: Faiz Abbas <faiz_abbas@ti.com>
+Subject: Re: [PATCH v7 7/8] dt-bindings: can: m_can: Document new can
+ transceiver binding
+Date: Fri, 12 Jan 2018 11:54:49 +0530
+Message-ID: <1e4ef9d8-4d81-e3d8-4a1e-e497877bbd1b@ti.com>
+References: <1515581725-29242-1-git-send-email-faiz_abbas@ti.com>
+ <1515581725-29242-8-git-send-email-faiz_abbas@ti.com>
+ <CAL_JsqJs2Xi=LX3A=AYzBiOy3OPZCP0KRi=uHwiMK45fAGtODQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Joel Stanley <joel.stanley-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqJs2Xi=LX3A=AYzBiOy3OPZCP0KRi=uHwiMK45fAGtODQ@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, linux-can@vger.kernel.org, netdev <netdev@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>, "Franklin S Cooper Jr." <fcooper@ti.com>, Wenyou Yang <Wenyou.Yang@microchip.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, linux-omap <linux-omap@vger.kernel.org>, Dong Aisheng <b29396@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-This adds the USB controllers to the DT template of the
-AST24xx and AST25xx SoCs.
+Hi Rob,
 
-This patch doesn't enable them by default on any board specific
-.dts yet. This will be done when we have the necessary clock/reset
-and pinmux support. In the meantime though, this will work if
-u-boot configures things properly.
+On Friday 12 January 2018 01:50 AM, Rob Herring wrote:
+> On Wed, Jan 10, 2018 at 4:55 AM, Faiz Abbas <faiz_abbas@ti.com> wrote:
+>> From: Franklin S Cooper Jr <fcooper@ti.com>
+>>
+>> Add information regarding can-transceiver binding. This is especially
+>> important for MCAN since the IP allows CAN FD mode to run significantly
+>> faster than what most transceivers are capable of.
+>>
+>> Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
+>> Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+>> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+>> ---
+>>  Documentation/devicetree/bindings/net/can/m_can.txt | 9 +++++++++
+>>  1 file changed, 9 insertions(+)
+> 
+> Why did you drop my ack from v6?
 
-For the AST2400 I only added pinmux definition for port 1
-which is dual USB1/USB2. There are additional USB1 only ports
-that might require more work but I don't have HW to test at
-hand so I'm leaving that to whoever cares.
+Sorry, I missed it. Will make sure its there in future versions.
 
-Signed-off-by: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
----
-
-v2: Previous patch was missing actually adding the nodes
-    (which was an old patch in my tree I had forgotten to
-    merge).
-
- arch/arm/boot/dts/aspeed-g4.dtsi | 27 +++++++++++++++++++++++++++
- arch/arm/boot/dts/aspeed-g5.dtsi | 40 ++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 67 insertions(+)
-
-diff --git a/arch/arm/boot/dts/aspeed-g4.dtsi b/arch/arm/boot/dts/aspeed-g4.dtsi
-index b0d8431a3700..e55f2ad5de59 100644
---- a/arch/arm/boot/dts/aspeed-g4.dtsi
-+++ b/arch/arm/boot/dts/aspeed-g4.dtsi
-@@ -103,6 +103,23 @@
- 			status = "disabled";
- 		};
- 
-+		ehci0: usb@1e6a1000 {
-+			compatible = "aspeed,ast2400-ehci", "generic-ehci";
-+			reg = <0x1e6a1000 0x100>;
-+			interrupts = <5>;
-+			clocks = <&syscon ASPEED_CLK_GATE_USBPORT1CLK>;
-+			status = "disabled";
-+		};
-+
-+		uhci: usb@1e6b0000 {
-+			compatible = "aspeed,ast2400-uhci", "generic-uhci";
-+			reg = <0x1e6b0000 0x100>;
-+			interrupts = <14>;
-+			#ports = <3>;
-+			clocks = <&syscon ASPEED_CLK_GATE_USBUHCICLK>;
-+			status = "disabled";
-+		};
-+
- 		apb {
- 			compatible = "simple-bus";
- 			#address-cells = <1>;
-@@ -1227,6 +1244,16 @@
- 		groups = "USBCKI";
- 	};
- 
-+	pinctrl_usb2h_default: usb2h_default {
-+		function = "USB2H1";
-+		groups = "USB2H1";
-+	};
-+
-+	pinctrl_usb2d_default: usb2d_default {
-+		function = "USB2D1";
-+		groups = "USB2D1";
-+	};
-+
- 	pinctrl_vgabios_rom_default: vgabios_rom_default {
- 		function = "VGABIOS_ROM";
- 		groups = "VGABIOS_ROM";
-diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
-index 40de3b66c33f..655258edee24 100644
---- a/arch/arm/boot/dts/aspeed-g5.dtsi
-+++ b/arch/arm/boot/dts/aspeed-g5.dtsi
-@@ -138,6 +138,31 @@
- 			status = "disabled";
- 		};
- 
-+		ehci0: usb@1e6a1000 {
-+			compatible = "aspeed,ast2500-ehci", "generic-ehci";
-+			reg = <0x1e6a1000 0x100>;
-+			interrupts = <5>;
-+			clocks = <&syscon ASPEED_CLK_GATE_USBPORT1CLK>;
-+			status = "disabled";
-+		};
-+
-+		ehci1: usb@1e6a3000 {
-+			compatible = "aspeed,ast2500-ehci", "generic-ehci";
-+			reg = <0x1e6a3000 0x100>;
-+			interrupts = <13>;
-+			clocks = <&syscon ASPEED_CLK_GATE_USBPORT2CLK>;
-+			status = "disabled";
-+		};
-+
-+		uhci: usb@1e6b0000 {
-+			compatible = "aspeed,ast2500-uhci", "generic-uhci";
-+			reg = <0x1e6b0000 0x100>;
-+			interrupts = <14>;
-+			#ports = <2>;
-+			clocks = <&syscon ASPEED_CLK_GATE_USBUHCICLK>;
-+			status = "disabled";
-+		};
-+
- 		apb {
- 			compatible = "simple-bus";
- 			#address-cells = <1>;
-@@ -1358,6 +1383,21 @@
- 		groups = "USBCKI";
- 	};
- 
-+	pinctrl_usb2ah_default: usb2ah_default {
-+		function = "USB2AH";
-+		groups = "USB2AH";
-+	};
-+
-+	pinctrl_usb11bhid_default: usb11bhid_default {
-+		function = "USB11BHID";
-+		groups = "USB11BHID";
-+	};
-+
-+	pinctrl_usb2bh_default: usb2bh_default {
-+		function = "USB2BH";
-+		groups = "USB2BH";
-+	};
-+
- 	pinctrl_vgabiosrom_default: vgabiosrom_default {
- 		function = "VGABIOSROM";
- 		groups = "VGABIOSROM";
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Faiz
