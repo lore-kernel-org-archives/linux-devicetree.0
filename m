@@ -1,179 +1,561 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 3/3] drm: rcar-du: add R8A77970 support
-Date: Fri, 12 Jan 2018 12:23:00 +0300
-Message-ID: <78c33176-39b7-6bd9-e307-2b28c0b28f04@cogentembedded.com>
-References: <20180111170103.676775968@cogentembedded.com>
- <8239904.rdcckmYW4i@avalon>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH v5 02/44] clk: davinci: New driver for davinci PLL clocks
+Date: Fri, 12 Jan 2018 14:51:54 +0530
+Message-ID: <7fc8bd35-0416-216d-8e1e-53a0ec6e8790@ti.com>
+References: <1515377863-20358-1-git-send-email-david@lechnology.com>
+ <1515377863-20358-3-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <8239904.rdcckmYW4i@avalon>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1515377863-20358-3-git-send-email-david@lechnology.com>
 Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: David Lechner <david@lechnology.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Adam Ford <aford173@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 1/12/2018 4:13 AM, Laurent Pinchart wrote:
-
->> Add support for the R-Car  V3M  (R8A77970) SoC to the DU driver (this SoC
->> has only  1 display port). Note that there are some differences  with the
->> other R-Car gen3 SoCs in the LVDS encoder part, e.g. LVDPLLCR has the same
->> layout  as  on the R-Car gen2 SoCs...
->>
->> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+On Monday 08 January 2018 07:47 AM, David Lechner wrote:
+> This adds a new driver for mach-davinci PLL clocks. This is porting the
+> code from arch/arm/mach-davinci/clock.c to the common clock framework.
+> Additionally, it adds device tree support for these clocks.
 > 
-> Could you please rebase this series on top of the LVDS rework posted as
-> "[PATCH 00/10] R-Car DU: Convert LVDS code to bridge driver" (https://
-> www.spinics.net/lists/dri-devel/msg161931.html) ? It should make it easier to
-> implement support for V3M. Please then split the DU and LVDS drivers changes
-> in two patches.
+> The ifeq ($(CONFIG_COMMON_CLK), y) in the Makefile is needed to prevent
+> compile errors until the clock code in arch/arm/mach-davinci is removed.
 > 
->> ---
->>   Documentation/devicetree/bindings/display/renesas,du.txt |    1
+> Note: although there are similar clocks for TI Keystone we are not able
+> to share the code for a few reasons. The keystone clocks are device tree
+> only and use legacy one-node-per-clock bindings. Also the register
+> layouts are a bit different, which would add even more if/else mess
+> to the keystone clocks. And the keystone PLL driver doesn't support
+> setting clock rates.
 > 
-> Please split the DT bindings changes to a separate patch.
-
-    I don't like putting a one-line chnage into a separate bindings patch...
-
->>   drivers/gpu/drm/rcar-du/rcar_du_drv.c                    |   23 +++++++++++
->>   drivers/gpu/drm/rcar-du/rcar_du_drv.h                    |    1
->>   drivers/gpu/drm/rcar-du/rcar_du_group.c                  |   10 +++---
->>   drivers/gpu/drm/rcar-du/rcar_du_lvdsenc.c                |   20 +++++++----
->>   5 files changed, 45 insertions(+), 10 deletions(-)
->>
->> Index: linux/Documentation/devicetree/bindings/display/renesas,du.txt
->> ===================================================================
->> --- linux.orig/Documentation/devicetree/bindings/display/renesas,du.txt
->> +++ linux/Documentation/devicetree/bindings/display/renesas,du.txt
->> @@ -13,6 +13,7 @@ Required Properties:
->>       - "renesas,du-r8a7794" for R8A7794 (R-Car E2) compatible DU
->>       - "renesas,du-r8a7795" for R8A7795 (R-Car H3) compatible DU
->>       - "renesas,du-r8a7796" for R8A7796 (R-Car M3-W) compatible DU
->> +    - "renesas,du-r8a77970" for R8A77970 (R-Car V3M) compatible DU
->>
->>     - reg: A list of base address and length of each memory resource, one for
->> each entry in the reg-names property.
+> Signed-off-by: David Lechner <david@lechnology.com>
+> ---
+>  MAINTAINERS                  |   6 +
+>  drivers/clk/Makefile         |   1 +
+>  drivers/clk/davinci/Makefile |   5 +
+>  drivers/clk/davinci/pll.c    | 564 +++++++++++++++++++++++++++++++++++++++++++
+>  drivers/clk/davinci/pll.h    |  61 +++++
+>  5 files changed, 637 insertions(+)
+>  create mode 100644 drivers/clk/davinci/Makefile
+>  create mode 100644 drivers/clk/davinci/pll.c
+>  create mode 100644 drivers/clk/davinci/pll.h
 > 
-> You also need to update the ports table further down in this file.
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index a6e86e2..1db0cf0 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -13554,6 +13554,12 @@ F:	arch/arm/mach-davinci/
+>  F:	drivers/i2c/busses/i2c-davinci.c
+>  F:	arch/arm/boot/dts/da850*
+>  
+> +TI DAVINCI SERIES CLOCK DRIVER
+> +M:	David Lechner <david@lechnology.com>
 
-    ... but this one seems to justify dpoing it that way. :-)
+Please also add:
 
->> Index: linux/drivers/gpu/drm/rcar-du/rcar_du_drv.c
->> ===================================================================
->> --- linux.orig/drivers/gpu/drm/rcar-du/rcar_du_drv.c
->> +++ linux/drivers/gpu/drm/rcar-du/rcar_du_drv.c
->> @@ -258,6 +258,28 @@ static const struct rcar_du_device_info
->>   	.dpll_ch =  BIT(1),
->>   };
->>
->> +static const struct rcar_du_device_info rcar_du_r8a77970_info = {
->> +	.gen = 3,
->> +	.model = R8A77970,
->> +	.features = RCAR_DU_FEATURE_CRTC_IRQ_CLOCK
->> +		  | RCAR_DU_FEATURE_EXT_CTRL_REGS
->> +		  | RCAR_DU_FEATURE_VSP1_SOURCE,
->> +	.num_crtcs = 1,
->> +	.routes = {
->> +		/* R8A77970 has one RGB output and one LVDS output. */
->> +		[RCAR_DU_OUTPUT_DPAD0] = {
->> +			.possible_crtcs = BIT(0),
->> +			.port = 1,
->> +		},
->> +		[RCAR_DU_OUTPUT_LVDS0] = {
->> +			.possible_crtcs = BIT(0),
->> +			.port = 0,
->> +		},
-> 
-> All the other SoCs have DPAD0 as port 0. Unless there's a specific need for a
-> different implementation with V3M I'd keep the same order.
+R: Sekhar Nori <nsekhar@ti.com>
 
-    I'll look into this..
+> +S:	Maintained
+> +F:	Documentation/devicetree/bindings/clock/ti/davinci/
+> +F:	drivers/clk/davinci/
+> +
+>  TI DAVINCI SERIES GPIO DRIVER
+>  M:	Keerthy <j-keerthy@ti.com>
+>  L:	linux-gpio@vger.kernel.org
+> diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
+> index f7f761b..c865fd0 100644
+> --- a/drivers/clk/Makefile
+> +++ b/drivers/clk/Makefile
+> @@ -60,6 +60,7 @@ obj-$(CONFIG_ARCH_ARTPEC)		+= axis/
+>  obj-$(CONFIG_ARC_PLAT_AXS10X)		+= axs10x/
+>  obj-y					+= bcm/
+>  obj-$(CONFIG_ARCH_BERLIN)		+= berlin/
+> +obj-$(CONFIG_ARCH_DAVINCI)		+= davinci/
+>  obj-$(CONFIG_H8300)			+= h8300/
+>  obj-$(CONFIG_ARCH_HISI)			+= hisilicon/
+>  obj-y					+= imgtec/
+> diff --git a/drivers/clk/davinci/Makefile b/drivers/clk/davinci/Makefile
+> new file mode 100644
+> index 0000000..d9673bd
+> --- /dev/null
+> +++ b/drivers/clk/davinci/Makefile
+> @@ -0,0 +1,5 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +
+> +ifeq ($(CONFIG_COMMON_CLK), y)
+> +obj-y += pll.o
+> +endif
+> diff --git a/drivers/clk/davinci/pll.c b/drivers/clk/davinci/pll.c
+> new file mode 100644
+> index 0000000..46f9c18
+> --- /dev/null
+> +++ b/drivers/clk/davinci/pll.c
+> @@ -0,0 +1,564 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * PLL clock driver for TI Davinci SoCs
+> + *
+> + * Copyright (C) 2017 David Lechner <david@lechnology.com>
+> + *
+> + * Based on drivers/clk/keystone/pll.c
+> + * Copyright (C) 2013 Texas Instruments Inc.
+> + *	Murali Karicheri <m-karicheri2@ti.com>
+> + *	Santosh Shilimkar <santosh.shilimkar@ti.com>
+> + *
+> + * And on arch/arm/mach-davinci/clock.c
+> + * Copyright (C) 2006-2007 Texas Instruments.
+> + * Copyright (C) 2008-2009 Deep Root Systems, LLC
+> + */
+> +
+> +#include <linux/clk-provider.h>
+> +#include <linux/delay.h>
+> +#include <linux/err.h>
+> +#include <linux/io.h>
+> +#include <linux/kernel.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of.h>
+> +#include <linux/slab.h>
+> +
+> +#include "pll.h"
+> +
+> +#define REVID		0x000
+> +#define PLLCTL		0x100
+> +#define OCSEL		0x104
+> +#define PLLSECCTL	0x108
+> +#define PLLM		0x110
+> +#define PREDIV		0x114
+> +#define PLLDIV1		0x118
+> +#define PLLDIV2		0x11c
+> +#define PLLDIV3		0x120
+> +#define OSCDIV		0x124
+> +#define POSTDIV		0x128
+> +#define BPDIV		0x12c
+> +#define PLLCMD		0x138
+> +#define PLLSTAT		0x13c
+> +#define ALNCTL		0x140
+> +#define DCHANGE		0x144
+> +#define CKEN		0x148
+> +#define CKSTAT		0x14c
+> +#define SYSTAT		0x150
+> +#define PLLDIV4		0x160
+> +#define PLLDIV5		0x164
+> +#define PLLDIV6		0x168
+> +#define PLLDIV7		0x16c
+> +#define PLLDIV8		0x170
+> +#define PLLDIV9		0x174
+> +
+> +#define PLLCTL_PLLEN	BIT(0)
+> +#define PLLCTL_PLLPWRDN	BIT(1)
+> +#define PLLCTL_PLLRST	BIT(3)
+> +#define PLLCTL_PLLDIS	BIT(4)
+> +#define PLLCTL_PLLENSRC	BIT(5)
+> +#define PLLCTL_CLKMODE	BIT(8)
+> +
+> +#define PLLM_MASK		0x1f
+> +#define PREDIV_RATIO_MASK	0x1f
 
->> +	},
->> +	.num_lvds = 1,
->> +	.dpll_ch  = BIT(1),
-> 
-> This doesn't seem to be correct, there's no DPLL in V3M.
+May be use the mode modern GENMASK()?
 
-    Indeed, thanks!
+> +#define PREDIV_PREDEN		BIT(15)
+> +#define PLLDIV_RATIO_WIDTH	5
+> +#define PLLDIV_ENABLE_SHIFT	15
+> +#define OSCDIV_RATIO_WIDTH	5
+> +#define POSTDIV_RATIO_MASK	0x1f
+> +#define POSTDIV_POSTDEN		BIT(15)
+> +#define BPDIV_RATIO_SHIFT	0
+> +#define BPDIV_RATIO_WIDTH	5
+> +#define CKEN_OBSCLK_SHIFT	1
+> +#define CKEN_AUXEN_SHIFT	0
+> +
+> +/*
+> + * OMAP-L138 system reference guide recommends a wait for 4 OSCIN/CLKIN
+> + * cycles to ensure that the PLLC has switched to bypass mode. Delay of 1us
+> + * ensures we are good for all > 4MHz OSCIN/CLKIN inputs. Typically the input
+> + * is ~25MHz. Units are micro seconds.
+> + */
+> +#define PLL_BYPASS_TIME		1
+> +/* From OMAP-L138 datasheet table 6-4. Units are micro seconds */
+
+An empty line before the comment make it easier to read.
+
+> +#define PLL_RESET_TIME		1
+> +/*
+> + * From OMAP-L138 datasheet table 6-4; assuming prediv = 1, sqrt(pllm) = 4
+> + * Units are micro seconds.
+> + */
+> +#define PLL_LOCK_TIME		20
+> +
+> +/**
+> + * struct davinci_pll_clk - Main PLL clock
+> + * @hw: clk_hw for the pll
+> + * @base: Base memory address
+> + * @parent_rate: Saved parent rate used by some child clocks
+
+You don't have parent_rate in the structure below.
+
+> + */
+> +struct davinci_pll_clk {
+> +	struct clk_hw hw;
+> +	void __iomem *base;
+> +};
+> +
+> +#define to_davinci_pll_clk(_hw) container_of((_hw), struct davinci_pll_clk, hw)
+> +
+> +static unsigned long davinci_pll_clk_recalc(struct clk_hw *hw,
+> +					    unsigned long parent_rate)
+> +{
+> +	struct davinci_pll_clk *pll = to_davinci_pll_clk(hw);
+> +	unsigned long rate = parent_rate;
+> +	u32 prediv, mult, postdiv;
+> +
+> +	prediv = readl(pll->base + PREDIV) & PREDIV_RATIO_MASK;
+> +	mult = readl(pll->base + PLLM) & PLLM_MASK;
+> +	postdiv = readl(pll->base + POSTDIV) & POSTDIV_RATIO_MASK;
+
+Shouldn't we check if the pre and post dividers are enabled before using
+them?
+
+> +
+> +	rate /= prediv + 1;
+> +	rate *= mult + 1;
+> +	rate /= postdiv + 1;
+> +
+> +	return rate;
+> +}
+> +
+> +/**
+> + * davinci_pll_get_best_rate - Calculate PLL output closest to a given rate
+> + * @rate: The target rate
+> + * @parent_rate: The PLL input clock rate
+> + * @mult: Pointer to hold the multiplier value (optional)
+> + * @postdiv: Pointer to hold the postdiv value (optional)
+> + *
+> + * Returns: The closest rate less than or equal to @rate that the PLL can
+> + * generate. @mult and @postdiv will contain the values required to generate
+> + * that rate.
+> + */
+> +static long davinci_pll_get_best_rate(u32 rate, u32 parent_rate, u32 *mult,
+> +				      u32 *postdiv)
+> +{
+> +	u32 r, m, d;
+> +	u32 best_rate = 0;
+> +	u32 best_mult = 0;
+> +	u32 best_postdiv = 0;
+> +
+> +	for (d = 1; d <= 4; d++) {> +		for (m = min(32U, rate * d / parent_rate); m > 0; m--) {
+> +			r = parent_rate * m / d;
+> +
+> +			if (r < best_rate)
+> +				break;
+> +
+> +			if (r > best_rate && r <= rate) {
+> +				best_rate = r;
+> +				best_mult = m;
+> +				best_postdiv = d;
+> +			}
+> +
+> +			if (best_rate == rate)
+> +				goto out;
+> +		}
+> +	}
+> +
+> +out:
+> +	if (mult)
+> +		*mult = best_mult;
+> +	if (postdiv)
+> +		*postdiv = best_postdiv;
+> +
+> +	return best_rate;
+> +}
+
+PLL output on DA850 must never be below 300MHz or above 600MHz (see
+datasheet table "Allowed PLL Operating Conditions"). Does this take care
+of that? Thats one of the main reasons I recall I went with some
+specific values of prediv, pllm and post div in
+arch/arm/mach-davinci/da850.c
+
+> +
+> +static long davinci_pll_round_rate(struct clk_hw *hw, unsigned long rate,
+> +				   unsigned long *parent_rate)
+> +{
+> +	return davinci_pll_get_best_rate(rate, *parent_rate, NULL, NULL);
+> +}
+> +
+> +/**
+> + * __davinci_pll_set_rate - set the output rate of a given PLL.
+> + *
+> + * Note: Currently tested to work with OMAP-L138 only.
+> + *
+> + * @pll: pll whose rate needs to be changed.
+> + * @prediv: The pre divider value. Passing 0 disables the pre-divider.
+> + * @pllm: The multiplier value. Passing 0 leads to multiply-by-one.
+> + * @postdiv: The post divider value. Passing 0 disables the post-divider.
+> + */
+> +static void __davinci_pll_set_rate(struct davinci_pll_clk *pll, u32 prediv,
+> +				   u32 mult, u32 postdiv)
+> +{
+> +	u32 ctrl, locktime;
+> +
+> +	/*
+> +	 * PLL lock time required per OMAP-L138 datasheet is
+> +	 * (2000 * prediv)/sqrt(pllm) OSCIN cycles. We approximate sqrt(pllm)
+> +	 * as 4 and OSCIN cycle as 25 MHz.
+> +	 */
+> +	if (prediv) {
+> +		locktime = ((2000 * prediv) / 100);
+> +		prediv = (prediv - 1) | PREDIV_PREDEN;
+> +	} else {
+> +		locktime = PLL_LOCK_TIME;
+> +	}
+
+Empty line here will be nice.
+
+> +	if (postdiv)
+> +		postdiv = (postdiv - 1) | POSTDIV_POSTDEN;
+> +	if (mult)
+> +		mult = mult - 1;
+> +
+> +	ctrl = readl(pll->base + PLLCTL);
+> +
+> +	/* Switch the PLL to bypass mode */
+> +	ctrl &= ~(PLLCTL_PLLENSRC | PLLCTL_PLLEN);
+> +	writel(ctrl, pll->base + PLLCTL);
+> +
+> +	udelay(PLL_BYPASS_TIME);
+> +
+> +	/* Reset and enable PLL */
+> +	ctrl &= ~(PLLCTL_PLLRST | PLLCTL_PLLDIS);
+> +	writel(ctrl, pll->base + PLLCTL);
+> +
+> +	writel(prediv, pll->base + PREDIV);
+> +	writel(mult, pll->base + PLLM);
+> +	writel(postdiv, pll->base + POSTDIV);
+> +
+> +	udelay(PLL_RESET_TIME);
+> +
+> +	/* Bring PLL out of reset */
+> +	ctrl |= PLLCTL_PLLRST;
+> +	writel(ctrl, pll->base + PLLCTL);
+> +
+> +	udelay(locktime);
+> +
+> +	/* Remove PLL from bypass mode */
+> +	ctrl |= PLLCTL_PLLEN;
+> +	writel(ctrl, pll->base + PLLCTL);
+> +}
 
 [...]
->> Index: linux/drivers/gpu/drm/rcar-du/rcar_du_group.c
->> ===================================================================
->> --- linux.orig/drivers/gpu/drm/rcar-du/rcar_du_group.c
->> +++ linux/drivers/gpu/drm/rcar-du/rcar_du_group.c
->> @@ -133,10 +133,12 @@ static void rcar_du_group_setup(struct r
->>   	rcar_du_group_write(rgrp, DORCR, DORCR_PG1D_DS1 | DORCR_DPRS);
->>
->>   	/* Apply planes to CRTCs association. */
->> -	mutex_lock(&rgrp->lock);
->> -	rcar_du_group_write(rgrp, DPTSR, (rgrp->dptsr_planes << 16) |
->> -			    rgrp->dptsr_planes);
->> -	mutex_unlock(&rgrp->lock);
->> +	if (rcdu->info->num_crtcs > 1) {
->> +		mutex_lock(&rgrp->lock);
->> +		rcar_du_group_write(rgrp, DPTSR, (rgrp->dptsr_planes << 16) |
->> +				    rgrp->dptsr_planes);
->> +		mutex_unlock(&rgrp->lock);
->> +	}
-> 
-> Shouldn't you skip writing to the DPTSR register if there's a single DPTSR in
-> the group ? That would then apply to M3-W as well, which doesn't have the
-> DPTSR2 register. I'd split this change to a separate patch.
 
-    OK, I guess you know this stuff better -- I didn't know DPTSR2 is used at 
-all... :-)
+> +/**
+> + * davinci_pll_obs_clk_register - Register oscillator divider clock (OBSCLK)
+> + * @name: The clock name
+> + * @parent_names: The parent clock names
+> + * @num_parents: The number of paren clocks
+> + * @base: The PLL memory region
+> + * @table: A table of values cooresponding to the parent clocks (see OCSEL
+> + *         register in SRM for values)
+> + */
+> +struct clk *davinci_pll_obs_clk_register(const char *name,
+> +					 const char * const *parent_names,
+> +					 u8 num_parents,
+> +					 void __iomem *base,
+> +					 u32 *table)
+> +{
+> +	struct clk_mux *mux;
+> +	struct clk_gate *gate;
+> +	struct clk_divider *divider;
+> +	struct clk *clk;
+> +
+> +	mux = kzalloc(sizeof(*mux), GFP_KERNEL);
+> +	if (!mux)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	mux->reg = base + OCSEL;
+> +	mux->table = table;
+> +
+> +	gate = kzalloc(sizeof(*gate), GFP_KERNEL);
+> +	if (!gate) {
+> +		kfree(mux);
+> +		return ERR_PTR(-ENOMEM);
+> +	}
+> +
+> +	gate->reg = base + CKEN;
+> +	gate->bit_idx = CKEN_OBSCLK_SHIFT;
+> +
+> +	divider = kzalloc(sizeof(*divider), GFP_KERNEL);
+> +	if (!divider) {
+> +		kfree(gate);
+> +		kfree(mux);
+> +		return ERR_PTR(-ENOMEM);
+> +	}
+> +
+> +	divider->reg = base + OSCDIV;
+> +	divider->width = OSCDIV_RATIO_WIDTH;
 
-[...]
->> Index: linux/drivers/gpu/drm/rcar-du/rcar_du_lvdsenc.c
->> ===================================================================
->> --- linux.orig/drivers/gpu/drm/rcar-du/rcar_du_lvdsenc.c
->> +++ linux/drivers/gpu/drm/rcar-du/rcar_du_lvdsenc.c
-[...]
->> @@ -177,14 +185,14 @@ int rcar_du_lvdsenc_enable(struct rcar_d
->>   void rcar_du_lvdsenc_atomic_check(struct rcar_du_lvdsenc *lvds,
->>   				  struct drm_display_mode *mode)
->>   {
->> -	struct rcar_du_device *rcdu = lvds->dev;
->> +	const struct rcar_du_device_info *info = lvds->dev->info;
->>
->>   	/*
->>   	 * The internal LVDS encoder has a restricted clock frequency operating
->> -	 * range (30MHz to 150MHz on Gen2, 25.175MHz to 148.5MHz on Gen3). Clamp
->> -	 * the clock accordingly.
->> +	 * range (30MHz to 150MHz on Gen2 and R-Car V3M, 25.175MHz to 148.5MHz
->> +	 * on Gen3). Clamp the clock accordingly.
->>   	 */
->> -	if (rcdu->info->gen < 3)
->> +	if (info->gen < 3 || info->model == R8A77970)
->>   		mode->clock = clamp(mode->clock, 30000, 150000);
-> 
-> According to the datasheet the frequency range for V3M is the same as for the
-> H3 and M3 SoCs.
+can you write OD1EN of OSCDIV here? I guess the reset default is 1 so
+you didnt need to do that. But not doing exposes us to settings that
+bootloader left us in.
 
-    Indeed! I thought it's determined by the LVDPLLCR layout but it's not...
+> +
+> +	clk = clk_register_composite(NULL, name, parent_names, num_parents,
+> +				     &mux->hw, &clk_mux_ops,
+> +				     &divider->hw, &clk_divider_ops,
+> +				     &gate->hw, &clk_gate_ops, 0);
+> +	if (IS_ERR(clk)) {
+> +		kfree(divider);
+> +		kfree(gate);
+> +		kfree(mux);
+> +	}
+> +
+> +	return clk;
+> +}
+> +
+> +struct clk *
+> +davinci_pll_divclk_register(const struct davinci_pll_divclk_info *info,
+> +			    void __iomem *base)
+> +{
+> +	const struct clk_ops *divider_ops = &clk_divider_ops;
 
-> The range seems to have changed starting in datasheet version
-> 0.52. I would fix the range in a separate patch first.
+setting the sysclk divider requires GOSTAT handling apart from setting
+the divider value. So I think .set_rate ops above wont work. Other ops
+can be used, I guess. So we need a private structure here.
 
-    Yes.
+Can you port over davinci_set_sysclk_rate() too? I understand you cannot
+test it due to lack of cpufreq support in DT, but I can help testing there.
 
-> If you want I can send patches to fix this issue
+Or leave .set_rate NULL and it can be added later.
 
-    Yes, please. You clearly know about DU more than me. :-)
+> +	struct clk_gate *gate;
+> +	struct clk_divider *divider;
+> +	struct clk *clk;
+> +	u32 reg;
+> +	u32 flags = 0;
+> +
+> +	/* PLLDIVn registers are not entirely consecutive */
+> +	if (info->id < 4)
+> +		reg = PLLDIV1 + 4 * (info->id - 1);
+> +	else
+> +		reg = PLLDIV4 + 4 * (info->id - 4);
+> +
+> +	gate = kzalloc(sizeof(*gate), GFP_KERNEL);
+> +	if (!gate)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	gate->reg = base + reg;
+> +	gate->bit_idx = PLLDIV_ENABLE_SHIFT;
+> +
+> +	divider = kzalloc(sizeof(*divider), GFP_KERNEL);
+> +	if (!divider) {
+> +		kfree(gate);
+> +		return ERR_PTR(-ENOMEM);
+> +	}
+> +
+> +	divider->reg = base + reg;
+> +	divider->width = PLLDIV_RATIO_WIDTH;
+> +	divider->flags = 0;
+> +
+> +	if (info->flags & DIVCLK_FIXED_DIV) {
+> +		flags |= CLK_DIVIDER_READ_ONLY;
+> +		divider_ops = &clk_divider_ro_ops;
+> +	}
+> +
+> +	/* Only the ARM clock can change the parent PLL rate */
+> +	if (info->flags & DIVCLK_ARM_RATE)
+> +		flags |= CLK_SET_RATE_PARENT;
+> +
+> +	if (info->flags & DIVCLK_ALWAYS_ENABLED)
+> +		flags |= CLK_IS_CRITICAL;
+> +
+> +	clk = clk_register_composite(NULL, info->name, &info->parent_name, 1,
+> +				     NULL, NULL, &divider->hw, divider_ops,
+> +				     &gate->hw, &clk_gate_ops, flags);
+> +	if (IS_ERR(clk)) {
+> +		kfree(divider);
+> +		kfree(gate);
+> +	}
+> +
+> +	return clk;
+> +}
+> +
+> +#ifdef CONFIG_OF
+> +#define MAX_NAME_SIZE 20
+> +
+> +void of_davinci_pll_init(struct device_node *node, const char *name,
+> +			 const struct davinci_pll_divclk_info *info,
+> +			 u8 max_divclk_id)
+> +{
+> +	struct device_node *child;
+> +	const char *parent_name;
+> +	void __iomem *base;
+> +	struct clk *clk;
+> +
+> +	base = of_iomap(node, 0);
+> +	if (!base) {
+> +		pr_err("%s: ioremap failed\n", __func__);
+> +		return;
+> +	}
+> +
+> +	parent_name = of_clk_get_parent_name(node, 0);
+> +
+> +	clk = davinci_pll_clk_register(name, parent_name, base);
+> +	if (IS_ERR(clk)) {
+> +		pr_err("%s: failed to register %s (%ld)\n", __func__, name,
+> +		       PTR_ERR(clk));
 
-> and the previous one, or you
-> can write them and include them in v2. Let me know what you'd prefer.
-> 
->>   	else
->>   		mode->clock = clamp(mode->clock, 25175, 148500);
+You can probably avoid these line breaks by adding on top of the file
 
-    The lower bound documented on gen3 is 31 MHz indeed...
+#define pr_fmt(fmt) "%s: " fmt "\n", __func__
 
-MBR, Sergei
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +		return;
+> +	}
+> +
+> +	child = of_get_child_by_name(node, "sysclk");
+> +	if (child && of_device_is_available(child)) {
+> +		struct clk_onecell_data *clk_data;
+> +
+> +		clk_data = clk_alloc_onecell_data(max_divclk_id + 1);
+> +		if (!clk_data) {
+> +			pr_err("%s: out of memory\n", __func__);
+> +			return;
+> +		}
+> +
+> +		for (; info->name; info++) {
+> +			clk = davinci_pll_divclk_register(info, base);
+> +			if (IS_ERR(clk))
+> +				pr_warn("%s: failed to register %s (%ld)\n",
+> +					__func__, info->name, PTR_ERR(clk));
+> +			else
+> +				clk_data->clks[info->id] = clk;
+> +		}
+> +		of_clk_add_provider(child, of_clk_src_onecell_get, clk_data);
+> +	}
+> +	of_node_put(child);
+> +
+> +	child = of_get_child_by_name(node, "auxclk");
+> +	if (child && of_device_is_available(child)) {
+> +		char child_name[MAX_NAME_SIZE];
+> +
+> +		snprintf(child_name, MAX_NAME_SIZE, "%s_aux_clk", name);
+> +
+> +		clk = davinci_pll_aux_clk_register(child_name, parent_name, base);
+> +		if (IS_ERR(clk))
+> +			pr_warn("%s: failed to register %s (%ld)\n", __func__,
+> +				child_name, PTR_ERR(clk));
+> +		else
+> +			of_clk_add_provider(child, of_clk_src_simple_get, clk);
+> +	}
+
+davinci_pll_obs_clk_register() should also be handled here?
+
+Thanks,
+Sekhar
