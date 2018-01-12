@@ -1,34 +1,76 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v4 1/9] dt-bindings: media: Add Renesas CEU bindings
-Date: Fri, 12 Jan 2018 07:48:22 +0100
-Message-ID: <20180112064821.aj2yfcvt4p5co7pc@verge.net.au>
-References: <1515515131-13760-1-git-send-email-jacopo+renesas@jmondi.org>
- <1515515131-13760-2-git-send-email-jacopo+renesas@jmondi.org>
- <3717276.fcpQzKB3PM@avalon>
+From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: [PATCH] dts: ARM: Add Aspeed virtual hub to SoC templates
+Date: Fri, 12 Jan 2018 17:51:58 +1100
+Message-ID: <1515739918.31850.102.camel@kernel.crashing.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <3717276.fcpQzKB3PM@avalon>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, magnus.damm@gmail.com, geert@glider.be, mchehab@kernel.org, hverkuil@xs4all.nl, festevam@gmail.com, sakari.ailus@iki.fi, robh+dt@kernel.org, mark.rutland@arm.com, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Joel Stanley <joel.stanley-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 12, 2018 at 12:50:41AM +0200, Laurent Pinchart wrote:
-> Hi Jacopo,
-> 
-> Thank you for the patch.
-> 
-> On Tuesday, 9 January 2018 18:25:23 EET Jacopo Mondi wrote:
-> > Add bindings documentation for Renesas Capture Engine Unit (CEU).
-> > 
-> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> 
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+We don't yet enable it in any of the boards
 
-Hi,
+Signed-off-by: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+---
+ arch/arm/boot/dts/aspeed-g4.dtsi |  8 ++++++++
+ arch/arm/boot/dts/aspeed-g5.dtsi | 13 +++++++++++++
+ 2 files changed, 21 insertions(+)
 
-I see that these bindings have now been reviewed. What is their (likely)
-path to upstream from here? I'd like to accept the related DTS changes
-once there is a clear path for the bindings to land in upstream.
+diff --git a/arch/arm/boot/dts/aspeed-g4.dtsi b/arch/arm/boot/dts/aspeed-g4.dtsi
+index e55f2ad5de59..743b79014d3d 100644
+--- a/arch/arm/boot/dts/aspeed-g4.dtsi
++++ b/arch/arm/boot/dts/aspeed-g4.dtsi
+@@ -120,6 +120,14 @@
+ 			status = "disabled";
+ 		};
+ 
++		vhub: usb-vhub@1e6a0000 {
++			compatible = "aspeed,ast2400-usb-vhub";
++			reg = <0x1e6a0000 0x300>;
++			interrupts = <5>;
++			clocks = <&syscon ASPEED_CLK_GATE_USBPORT1CLK>;
++			status = "disabled";
++		};
++
+ 		apb {
+ 			compatible = "simple-bus";
+ 			#address-cells = <1>;
+diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
+index 655258edee24..e50d7f3e18a0 100644
+--- a/arch/arm/boot/dts/aspeed-g5.dtsi
++++ b/arch/arm/boot/dts/aspeed-g5.dtsi
+@@ -163,6 +163,14 @@
+ 			status = "disabled";
+ 		};
+ 
++		vhub: usb-vhub@1e6a0000 {
++			compatible = "aspeed,ast2500-usb-vhub";
++			reg = <0x1e6a0000 0x300>;
++			interrupts = <5>;
++			clocks = <&syscon ASPEED_CLK_GATE_USBPORT1CLK>;
++			status = "disabled";
++		};
++
+ 		apb {
+ 			compatible = "simple-bus";
+ 			#address-cells = <1>;
+@@ -1388,6 +1396,11 @@
+ 		groups = "USB2AH";
+ 	};
+ 
++	pinctrl_usb2ad_default: usb2ad_default {
++		function = "USB2AD";
++		groups = "USB2AD";
++	};
++
+ 	pinctrl_usb11bhid_default: usb11bhid_default {
+ 		function = "USB11BHID";
+ 		groups = "USB11BHID";
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
