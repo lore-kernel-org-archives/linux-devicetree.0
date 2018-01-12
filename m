@@ -1,35 +1,41 @@
-From: Shunqian Zheng <zhengsq@rock-chips.com>
-Subject: Re: [PATCH v4 5/5] [media] MAINTAINERS: add entries for OV2685/OV5695
- sensor drivers
-Date: Fri, 12 Jan 2018 09:52:13 +0800
-Message-ID: <7e73473b-1c72-2fcd-4c55-e2c6c87550f6@rock-chips.com>
-References: <1515509304-15941-1-git-send-email-zhengsq@rock-chips.com>
- <1515509304-15941-6-git-send-email-zhengsq@rock-chips.com>
- <20180109223337.7ep3fip7lrqds5m4@valkosipuli.retiisi.org.uk>
-Reply-To: zhengsq@rock-chips.com
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH] arm64: dts: socfpga: add missing interrupt-parent
+Date: Thu, 11 Jan 2018 17:56:25 -0800
+Message-ID: <20180112015625.t7zmxmhlz4pzt4m3@localhost>
+References: <20180110210431.2330267-1-arnd@arndb.de>
+ <e3a44268-88f2-3dbd-a992-f9484a82d826@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20180109223337.7ep3fip7lrqds5m4@valkosipuli.retiisi.org.uk>
-Content-Language: en-US
-Sender: linux-media-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, ddl@rock-chips.com, tfiga@chromium.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <e3a44268-88f2-3dbd-a992-f9484a82d826@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dinh Nguyen <dinguyen@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, arm@kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Alan Tull <atull@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sakari,
+On Thu, Jan 11, 2018 at 08:35:58AM -0600, Dinh Nguyen wrote:
+> 
+> 
+> On 01/10/2018 03:04 PM, Arnd Bergmann wrote:
+> > The PMU node has no working interrupt, as shown by this dtc warning:
+> > 
+> > arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dtb: Warning (interrupts_property): Missing interrupt-parent for /pmu
+> > 
+> > This adds an interrupt-parent property so we can correct parse
+> > that interrupt number.
+> > 
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> > ---
+> > If this looks ok, I'd apply it directly to the fixes branch
+> > for 4.15, as the warning is one that was introduced in this
+> > release.
+> 
+> Acked-by: Dinh Nguyen <dinguyen@kernel.org>
+> 
+> Yes, please feel free to apply it. And thanks alot!
+
+Applied.
 
 
-On 2018年01月10日 06:33, Sakari Ailus wrote:
-> On Tue, Jan 09, 2018 at 10:48:24PM +0800, Shunqian Zheng wrote:
->> Add maintainer entries for the OV2685 and OV5695 V4L2 sensor drivers.
->>
->> Signed-off-by: Shunqian Zheng <zhengsq@rock-chips.com>
-> Same patch with the driver, please.
->
-> Other than that seems good to me.
-Does that mean I can add your Reviewed-by in the new patches?
-
-Thank you very much~
->
+-Olof
