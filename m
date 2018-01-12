@@ -1,94 +1,105 @@
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: RE: [PATCH 01/10] dt-bindings: display: renesas: Add R-Car LVDS
- encoder DT bindings
-Date: Fri, 12 Jan 2018 14:00:31 +0000
-Message-ID: <TY1PR06MB0895E1818ED2399A0402827FC0170@TY1PR06MB0895.apcprd06.prod.outlook.com>
-References: <20180112005858.26472-1-laurent.pinchart+renesas@ideasonboard.com>
- <20180112005858.26472-2-laurent.pinchart+renesas@ideasonboard.com>
- <KL1PR06MB170210E1BF374BF5FC05531CB8170@KL1PR06MB1702.apcprd06.prod.outlook.com>
- <5799121.8LYuhfmPRz@avalon>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+From: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Subject: [PATCH v5 0/9] Renesas Capture Engine Unit (CEU) V4L2 driver
+Date: Fri, 12 Jan 2018 15:04:00 +0100
+Message-ID: <1515765849-10345-1-git-send-email-jacopo+renesas@jmondi.org>
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <5799121.8LYuhfmPRz@avalon>
-Content-Language: en-US
 Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Biju Das <biju.das@bp.renesas.com>
-Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: laurent.pinchart@ideasonboard.com, magnus.damm@gmail.com, geert@glider.be, mchehab@kernel.org, hverkuil@xs4all.nl, festevam@gmail.com, sakari.ailus@iki.fi, robh+dt@kernel.org, mark.rutland@arm.com, pombredanne@nexb.com
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
+Hello,
+   (hopefully) last round for CEU driver.
 
-> Subject: Re: [PATCH 01/10] dt-bindings: display: renesas: Add R-Car LVDS =
-encoder DT bindings
->
-> Hi Biju,
->
-> On Friday, 12 January 2018 14:59:53 EET Biju Das wrote:
-> > Hi,
-> >
-> > > Subject: [PATCH 01/10] dt-bindings: display: renesas: Add R-Car LVDS
-> > > encoder DT bindings
-> > >
-> > > The Renesas R-Car Gen2 and Gen3 SoCs have internal LVDS encoders. Add
-> > > corresponding device tree bindings.
-> > >
-> > > Signed-off-by: Laurent Pinchart
-> > > <laurent.pinchart+renesas@ideasonboard.com>
-> > > ---
-> > >
-> > >  .../bindings/display/bridge/renesas,lvds.txt       | 54 ++++++++++++=
-+++++
-> > >  MAINTAINERS                                        |  1 +
-> > >  2 files changed, 55 insertions(+)
-> > >  create mode 100644
-> > >
-> > > Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt
-> > >
-> > > diff --git
-> > > a/Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt
-> > > b/Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt n=
-ew
-> > > file mode 100644
-> > > index 000000000000..459c56822eda
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/display/bridge/renesas,lvds.t=
-xt
-> > > @@ -0,0 +1,54 @@
-> > > +Renesas R-Car LVDS Encoder
-> > > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D
-> > > +
-> > > +These DT bindings describe the LVDS encoder embedded in the Renesas
-> > > +R-Car Gen2 and Gen3 SoCs.
-> > > +
-> > > +Required properties:
-> > > +
-> > > +- compatible : Shall contain one of
-> > > +  - "renesas,lvds-r8a7743" for R8A7790 (R-Car RZ/G1M) compatible LVD=
-S
+Changelog is quite thin, I have updated CEU driver MODULE_LICENSE to match
+SPDX identifier, added Rob's and Laurent's Reviewed-by tags to bindings, and
+made variables of "struct ceu_data" type static in the driver.
 
-The following also needs polishing for v2:
-"(R-Car RZ/G1M)" -> "(RZ/G1M)"
+All of the patches are now Reviewed/Acked. Time to have this series included?
 
-Thanks,
-Fab
+Thanks
+   j
 
-> > > +encoders
-> >
-> > Typo. It should be R8A7743 .
->
-> Oops. Will fix in v2.
->
-> --
-> Regards,
->
-> Laurent Pinchart
+v4->v5:
+- Added Rob's and Laurent's Reviewed-by tag to DT bindings
+- Change CEU driver module license to "GPL v2" to match SPDX identifier as
+  suggested by Philippe Ombredanne
+- Make struct ceu_data static as suggested by Laurent and add his
+  Reviewed-by to CEU driver.
 
+v3->v4:
+- Drop generic fallback compatible string "renesas,ceu"
+- Addressed Laurent's comments on [3/9]
+  - Fix error messages on irq get/request
+  - Do not leak ceudev if irq_get fails
+  - Make irq_mask a const field
 
+v2->v3:
+- Improved DT bindings removing standard properties (pinctrl- ones and
+  remote-endpoint) not specific to this driver and improved description of
+  compatible strings
+- Remove ov772x's xlkc_rate property and set clock rate in Migo-R board file
+- Made 'xclk' clock private to ov772x driver in Migo-R board file
+- Change 'rstb' GPIO active output level and changed ov772x and tw9910 drivers
+  accordingly as suggested by Fabio
+- Minor changes in CEU driver to address Laurent's comments
+- Moved Migo-R setup patch to the end of the series to silence 0-day bot
+- Renamed tw9910 clock to 'xti' as per video decoder manual
+- Changed all SPDX identifiers to GPL-2.0 from previous GPL-2.0+
 
+v1->v2:
+ - DT
+ -- Addressed Geert's comments and added clocks for CEU to mstp6 clock source
+ -- Specified supported generic video iterfaces properties in dt-bindings and
+    simplified example
 
-Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, B=
-uckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered=
- No. 04586709.
+ - CEU driver
+ -- Re-worked interrupt handler, interrupt management, reset(*) and capture
+    start operation
+ -- Re-worked querycap/enum_input/enum_frameintervals to fix some
+    v4l2_compliance failures
+ -- Removed soc_camera legacy operations g/s_mbus_format
+ -- Update to new notifier implementation
+ -- Fixed several comments from Hans, Laurent and Sakari
+
+ - Migo-R
+ -- Register clocks and gpios for sensor drivers in Migo-R setup
+ -- Updated sensors (tw9910 and ov772x) drivers headers and drivers to close
+    remarks from Hans and Laurent:
+ --- Removed platform callbacks and handle clocks and gpios from sensor drivers
+ --- Remove g/s_mbus_config operations
+
+Jacopo Mondi (9):
+  dt-bindings: media: Add Renesas CEU bindings
+  include: media: Add Renesas CEU driver interface
+  v4l: platform: Add Renesas CEU driver
+  ARM: dts: r7s72100: Add Capture Engine Unit (CEU)
+  v4l: i2c: Copy ov772x soc_camera sensor driver
+  media: i2c: ov772x: Remove soc_camera dependencies
+  v4l: i2c: Copy tw9910 soc_camera sensor driver
+  media: i2c: tw9910: Remove soc_camera dependencies
+  arch: sh: migor: Use new renesas-ceu camera driver
+
+ .../devicetree/bindings/media/renesas,ceu.txt      |   81 +
+ arch/arm/boot/dts/r7s72100.dtsi                    |   15 +-
+ arch/sh/boards/mach-migor/setup.c                  |  225 ++-
+ arch/sh/kernel/cpu/sh4a/clock-sh7722.c             |    2 +-
+ drivers/media/i2c/Kconfig                          |   20 +
+ drivers/media/i2c/Makefile                         |    2 +
+ drivers/media/i2c/ov772x.c                         | 1181 ++++++++++++++
+ drivers/media/i2c/tw9910.c                         | 1039 ++++++++++++
+ drivers/media/platform/Kconfig                     |    9 +
+ drivers/media/platform/Makefile                    |    1 +
+ drivers/media/platform/renesas-ceu.c               | 1648 ++++++++++++++++++++
+ include/media/drv-intf/renesas-ceu.h               |   26 +
+ include/media/i2c/ov772x.h                         |    6 +-
+ include/media/i2c/tw9910.h                         |    9 +
+ 14 files changed, 4133 insertions(+), 131 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/renesas,ceu.txt
+ create mode 100644 drivers/media/i2c/ov772x.c
+ create mode 100644 drivers/media/i2c/tw9910.c
+ create mode 100644 drivers/media/platform/renesas-ceu.c
+ create mode 100644 include/media/drv-intf/renesas-ceu.h
+
+--
+2.7.4
