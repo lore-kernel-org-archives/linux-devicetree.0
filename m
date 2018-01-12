@@ -1,615 +1,103 @@
 From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Subject: [PATCH 03/10] drm: rcar-du: Fix legacy DT to create LVDS encoder nodes
-Date: Fri, 12 Jan 2018 02:58:51 +0200
-Message-ID: <20180112005858.26472-4-laurent.pinchart+renesas@ideasonboard.com>
-References: <20180112005858.26472-1-laurent.pinchart+renesas@ideasonboard.com>
+Subject: [PATCH 00/10] R-Car DU: Convert LVDS code to bridge driver
+Date: Fri, 12 Jan 2018 02:58:48 +0200
+Message-ID: <20180112005858.26472-1-laurent.pinchart+renesas@ideasonboard.com>
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20180112005858.26472-1-laurent.pinchart+renesas@ideasonboard.com>
 Sender: linux-renesas-soc-owner@vger.kernel.org
 To: dri-devel@lists.freedesktop.org
 Cc: linux-renesas-soc@vger.kernel.org, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The internal LVDS encoders now have their own DT bindings. Before
-switching the driver infrastructure to those new bindings, implement
-backward-compatibility through live DT patching.
+Hello,
 
-Patching is disabled and will be enabled along with support for the new
-DT bindings in the DU driver.
+This patch series addresses a design mistake that dates back from the initial
+DU support. Support for the LVDS encoders, which are IP cores separate from
+the DU, was bundled in the DU driver. Worse, both the DU and LVDS were
+described through a single DT node.
 
-Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
----
- drivers/gpu/drm/rcar-du/Kconfig             |   1 +
- drivers/gpu/drm/rcar-du/Makefile            |   2 +
- drivers/gpu/drm/rcar-du/rcar_du_of.c        | 440 ++++++++++++++++++++++++++++
- drivers/gpu/drm/rcar-du/rcar_du_of.h        |  16 +
- drivers/gpu/drm/rcar-du/rcar_du_of_lvds.dts |  82 ++++++
- 5 files changed, 541 insertions(+)
+To fix the, patches 01/10 and 02/10 define new DT bindings for the LVDS
+encoders, and deprecate their description inside the DU bindings. To retain
+backward compatibility with existing DT, patch 03/10 then patches the device
+tree at runtime to convert the legacy bindings to the new ones.
+
+With the DT side addressed, patch 04/10 then converts the LVDS support code to
+a separate bridge driver. After a small fix to the Porter board device tree in
+patch 05/10, patches 06/10 to 10/10 then update all the device tree sources to
+the new LVDS encoders bindings.
+
+I decided to go for live DT patching in patch 03/10 because implementing
+support for both the legacy and new bindings in the driver would have been
+very intrusive, and prevented further cleanups. I'm in a way both proud and 
+ashamed of that patch that I would call a neat and dirty hack. It was fun to
+write perhaps in a similar way that one would enjoy researching and developing
+proof-of-concepts for security holes: they're good and bad at the same time.
+
+Anyway, with this philosophical considerations aside, there were a few
+shortcomings in the OF API that I worked around with local code in the driver.
+If anyone is interested in performing similar live DT patching I think we
+could move some of the code to the OF core. For instance I was surprised
+to not find a device node lookup by path function that would start at a
+given node instead of the root of the live device tree, and had to write
+rcar_du_of_find_node_by_path(). Utility functions to add or modify properties
+or to rename nodes could similarly be added.
+
+Laurent Pinchart (10):
+  dt-bindings: display: renesas: Add R-Car LVDS encoder DT bindings
+  dt-bindings: display: renesas: Deprecate LVDS support in the DU
+    bindings
+  drm: rcar-du: Fix legacy DT to create LVDS encoder nodes
+  drm: rcar-du: Convert LVDS encoder code to bridge driver
+  ARM: dts: porter: Fix HDMI output routing
+  ARM: dts: r8a7790: Convert to new LVDS DT bindings
+  ARM: dts: r8a7791: Convert to new LVDS DT bindings
+  ARM: dts: r8a7793: Convert to new LVDS DT bindings
+  arm64: dts: renesas: r8a7795: Convert to new LVDS DT bindings
+  arm64: dts: renesas: r8a7796: Convert to new LVDS DT bindings
+
+ .../bindings/display/bridge/renesas,lvds.txt       |  54 ++
+ .../devicetree/bindings/display/renesas,du.txt     |  26 +-
+ MAINTAINERS                                        |   1 +
+ arch/arm/boot/dts/r8a7790-lager.dts                |  22 +-
+ arch/arm/boot/dts/r8a7790.dtsi                     |  61 ++-
+ arch/arm/boot/dts/r8a7791-koelsch.dts              |  10 +-
+ arch/arm/boot/dts/r8a7791-porter.dts               |  18 +-
+ arch/arm/boot/dts/r8a7791.dtsi                     |  35 +-
+ arch/arm/boot/dts/r8a7793-gose.dts                 |  10 +-
+ arch/arm/boot/dts/r8a7793.dtsi                     |  35 +-
+ .../boot/dts/renesas/r8a7795-es1-salvator-x.dts    |   3 +-
+ arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dts     |   3 +-
+ arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts |   3 +-
+ .../arm64/boot/dts/renesas/r8a7795-salvator-xs.dts |   3 +-
+ arch/arm64/boot/dts/renesas/r8a7795.dtsi           |  35 +-
+ arch/arm64/boot/dts/renesas/r8a7796-m3ulcb.dts     |   3 +-
+ arch/arm64/boot/dts/renesas/r8a7796-salvator-x.dts |   3 +-
+ arch/arm64/boot/dts/renesas/r8a7796.dtsi           |  35 +-
+ drivers/gpu/drm/rcar-du/Kconfig                    |   5 +-
+ drivers/gpu/drm/rcar-du/Makefile                   |   6 +-
+ drivers/gpu/drm/rcar-du/rcar_du_drv.c              |  21 +-
+ drivers/gpu/drm/rcar-du/rcar_du_drv.h              |   5 -
+ drivers/gpu/drm/rcar-du/rcar_du_encoder.c          | 175 +------
+ drivers/gpu/drm/rcar-du/rcar_du_encoder.h          |  12 -
+ drivers/gpu/drm/rcar-du/rcar_du_kms.c              |  14 +-
+ drivers/gpu/drm/rcar-du/rcar_du_lvdscon.c          |  93 ----
+ drivers/gpu/drm/rcar-du/rcar_du_lvdscon.h          |  24 -
+ drivers/gpu/drm/rcar-du/rcar_du_lvdsenc.c          | 270 ----------
+ drivers/gpu/drm/rcar-du/rcar_du_lvdsenc.h          |  64 ---
+ drivers/gpu/drm/rcar-du/rcar_du_of.c               | 440 ++++++++++++++++
+ drivers/gpu/drm/rcar-du/rcar_du_of.h               |  16 +
+ drivers/gpu/drm/rcar-du/rcar_du_of_lvds.dts        |  82 +++
+ drivers/gpu/drm/rcar-du/rcar_lvds.c                | 554 +++++++++++++++++++++
+ 33 files changed, 1420 insertions(+), 721 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt
+ delete mode 100644 drivers/gpu/drm/rcar-du/rcar_du_lvdscon.c
+ delete mode 100644 drivers/gpu/drm/rcar-du/rcar_du_lvdscon.h
+ delete mode 100644 drivers/gpu/drm/rcar-du/rcar_du_lvdsenc.c
+ delete mode 100644 drivers/gpu/drm/rcar-du/rcar_du_lvdsenc.h
  create mode 100644 drivers/gpu/drm/rcar-du/rcar_du_of.c
  create mode 100644 drivers/gpu/drm/rcar-du/rcar_du_of.h
  create mode 100644 drivers/gpu/drm/rcar-du/rcar_du_of_lvds.dts
+ create mode 100644 drivers/gpu/drm/rcar-du/rcar_lvds.c
 
-diff --git a/drivers/gpu/drm/rcar-du/Kconfig b/drivers/gpu/drm/rcar-du/Kconfig
-index 8a50dab19e5c..e3193ebd3ced 100644
---- a/drivers/gpu/drm/rcar-du/Kconfig
-+++ b/drivers/gpu/drm/rcar-du/Kconfig
-@@ -22,6 +22,7 @@ config DRM_RCAR_LVDS
- 	bool "R-Car DU LVDS Encoder Support"
- 	depends on DRM_RCAR_DU
- 	select DRM_PANEL
-+	select OF_OVERLAY
- 	help
- 	  Enable support for the R-Car Display Unit embedded LVDS encoders.
- 
-diff --git a/drivers/gpu/drm/rcar-du/Makefile b/drivers/gpu/drm/rcar-du/Makefile
-index 0cf5c11030e8..0cf457bef1f2 100644
---- a/drivers/gpu/drm/rcar-du/Makefile
-+++ b/drivers/gpu/drm/rcar-du/Makefile
-@@ -5,6 +5,8 @@ rcar-du-drm-y := rcar_du_crtc.o \
- 		 rcar_du_group.o \
- 		 rcar_du_kms.o \
- 		 rcar_du_lvdscon.o \
-+		 rcar_du_of.o \
-+		 rcar_du_of_lvds.dtb.o \
- 		 rcar_du_plane.o
- 
- rcar-du-drm-$(CONFIG_DRM_RCAR_LVDS)	+= rcar_du_lvdsenc.o
-diff --git a/drivers/gpu/drm/rcar-du/rcar_du_of.c b/drivers/gpu/drm/rcar-du/rcar_du_of.c
-new file mode 100644
-index 000000000000..c2726e29bd59
---- /dev/null
-+++ b/drivers/gpu/drm/rcar-du/rcar_du_of.c
-@@ -0,0 +1,440 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * rcar_du_of.c - Legacy DT bindings compatibility
-+ *
-+ * Copyright (C) 2018 Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-+ *
-+ * Based on work from Jyri Sarha <jsarha@ti.com>
-+ * Copyright (C) 2015 Texas Instruments
-+ */
-+
-+#include <linux/init.h>
-+#include <linux/kernel.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/of_fdt.h>
-+#include <linux/of_graph.h>
-+#include <linux/slab.h>
-+
-+#include "rcar_du_crtc.h"
-+#include "rcar_du_drv.h"
-+
-+extern u8 __dtb_rcar_du_of_lvds_begin[];
-+extern u8 __dtb_rcar_du_of_lvds_end[];
-+
-+struct rcar_du_of_overlay {
-+	struct device_node *np;
-+	void *data;
-+	void *mem;
-+};
-+
-+static void __init rcar_du_of_free_overlay(struct rcar_du_of_overlay *overlay)
-+{
-+	of_node_put(overlay->np);
-+	kfree(overlay->data);
-+	kfree(overlay->mem);
-+}
-+
-+static int __init rcar_du_of_get_overlay(struct rcar_du_of_overlay *overlay,
-+					 u8 *begin, u8 *end)
-+{
-+	const size_t size = end - begin;
-+
-+	memset(overlay, 0, sizeof(*overlay));
-+
-+	if (!size)
-+		return -EINVAL;
-+
-+	overlay->data = kmemdup(begin, size, GFP_KERNEL);
-+	if (!overlay->data)
-+		return -ENOMEM;
-+
-+	overlay->mem = of_fdt_unflatten_tree(overlay->data, NULL, &overlay->np);
-+	if (!overlay->mem) {
-+		rcar_du_of_free_overlay(overlay);
-+		return -ENOMEM;
-+	}
-+
-+	return 0;
-+}
-+
-+static struct device_node __init *
-+rcar_du_of_find_node_by_path(struct device_node *parent, const char *path)
-+{
-+	parent = of_node_get(parent);
-+	if (!parent)
-+		return NULL;
-+
-+	while (parent && *path == '/') {
-+		struct device_node *child = NULL;
-+		struct device_node *node;
-+		const char *next;
-+		size_t len;
-+
-+		/* Skip the initial '/' delimiter and find the next one. */
-+		path++;
-+		next = strchrnul(path, '/');
-+		len = next - path;
-+		if (!len)
-+			goto error;
-+
-+		for_each_child_of_node(parent, node) {
-+			const char *name = kbasename(node->full_name);
-+
-+			if (strncmp(path, name, len) == 0 &&
-+			    strlen(name) == len) {
-+				child = node;
-+				break;
-+			}
-+		}
-+
-+		if (!child)
-+			goto error;
-+
-+		of_node_put(parent);
-+		parent = child;
-+		path = next;
-+	}
-+
-+	return parent;
-+
-+error:
-+	of_node_put(parent);
-+	return NULL;
-+}
-+
-+static int __init rcar_du_of_add_property(struct device_node *np,
-+					  const char *name, const void *value,
-+					  size_t length)
-+{
-+	struct property *prop;
-+
-+	prop = kzalloc(sizeof(*prop), GFP_KERNEL);
-+	if (!prop)
-+		return -ENOMEM;
-+
-+	prop->name = kstrdup(name, GFP_KERNEL);
-+	prop->value = kmemdup(value, length, GFP_KERNEL);
-+	prop->length = length;
-+
-+	if (!prop->name || !prop->value) {
-+		kfree(prop->name);
-+		kfree(prop->value);
-+		kfree(prop);
-+		return -ENOMEM;
-+	}
-+
-+	of_property_set_flag(prop, OF_DYNAMIC);
-+
-+	prop->next = np->properties;
-+	np->properties = prop;
-+
-+	return 0;
-+}
-+
-+/* Free properties allocated dynamically by rcar_du_of_add_property(). */
-+static void __init rcar_du_of_free_properties(struct device_node *np)
-+{
-+	while (np->properties) {
-+		struct property *prop = np->properties;
-+
-+		np->properties = prop->next;
-+
-+		if (OF_IS_DYNAMIC(prop)) {
-+			kfree(prop->name);
-+			kfree(prop->value);
-+			kfree(prop);
-+		}
-+	}
-+}
-+
-+static int __init rcar_du_of_update_target_path(struct device_node *du,
-+						struct device_node *remote,
-+						struct device_node *np)
-+{
-+	struct device_node *target = NULL;
-+	struct property **prev;
-+	struct property *prop;
-+	char *path;
-+	int ret;
-+
-+	for (prop = np->properties, prev = &prop; prop != NULL;
-+	     prev = &prop->next, prop = prop->next) {
-+		if (of_prop_cmp(prop->name, "target-path"))
-+			continue;
-+
-+		if (!of_prop_cmp(prop->value, "soc")) {
-+			target = of_get_parent(du);
-+			break;
-+		}
-+		if (!of_prop_cmp(prop->value, "du")) {
-+			target = of_node_get(du);
-+			break;
-+		}
-+		if (!of_prop_cmp(prop->value, "lvds-sink")) {
-+			target = of_graph_get_port_parent(remote);
-+			break;
-+		}
-+
-+		return -EINVAL;
-+	}
-+
-+	if (!target)
-+		return -EINVAL;
-+
-+	path = kasprintf(GFP_KERNEL, "%pOF", target);
-+	of_node_put(target);
-+	if (!path)
-+		return -ENOMEM;
-+
-+	/*
-+	 * Remove the existing target-path property that has not been
-+	 * dynamically allocated and replace it with a new dynamic one to
-+	 * ensure that the value will be properly freed.
-+	 */
-+	*prev = prop->next;
-+	ret = rcar_du_of_add_property(np, "target-path", path,
-+				      strlen(path) + 1);
-+	if (ret < 0) {
-+		kfree(path);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static void __init rcar_du_of_lvds_patch_one(struct device_node *du,
-+					     unsigned int port_id,
-+					     const struct resource *res,
-+					     const __be32 *reg,
-+					     const struct of_phandle_args *clkspec,
-+					     struct device_node *local,
-+					     struct device_node *remote)
-+{
-+	struct rcar_du_of_overlay overlay;
-+	struct device_node *du_port, *du_port_fixup;
-+	struct device_node *lvds_endpoints[2];
-+	struct device_node *lvds;
-+	struct device_node *fragment;
-+	struct property *prop;
-+	const char *compatible;
-+	const char *soc_suffix;
-+	unsigned int psize;
-+	unsigned int i;
-+	__be32 value[4];
-+	char name[23];
-+	int ovcs_id;
-+	int ret;
-+
-+	/* Skip if the LVDS node already exists. */
-+	sprintf(name, "lvds@%llx", (u64)res->start);
-+	lvds = of_get_child_by_name(du->parent, name);
-+	if (lvds) {
-+		of_node_put(lvds);
-+		return;
-+	}
-+
-+	/* Parse the overlay. */
-+	ret = rcar_du_of_get_overlay(&overlay, __dtb_rcar_du_of_lvds_begin,
-+				     __dtb_rcar_du_of_lvds_end);
-+	if (ret < 0)
-+		return;
-+
-+	/*
-+	 * Patch the LVDS and DU port nodes names and the associated fixup
-+	 * entries.
-+	 */
-+	lvds = rcar_du_of_find_node_by_path(overlay.np,
-+		"/fragment@0/__overlay__/lvds");
-+	lvds_endpoints[0] = rcar_du_of_find_node_by_path(overlay.np,
-+		"/fragment@0/__overlay__/lvds/ports/port@0/endpoint");
-+	lvds_endpoints[1] = rcar_du_of_find_node_by_path(overlay.np,
-+		"/fragment@0/__overlay__/lvds/ports/port@1/endpoint");
-+	du_port = rcar_du_of_find_node_by_path(overlay.np,
-+		"/fragment@1/__overlay__/ports/port@0");
-+	du_port_fixup = rcar_du_of_find_node_by_path(overlay.np,
-+		"/__local_fixups__/fragment@1/__overlay__/ports/port@0");
-+	if (!lvds || !lvds_endpoints[0] || !lvds_endpoints[1] ||
-+	    !du_port || !du_port_fixup)
-+		goto out_put_nodes;
-+
-+	lvds->full_name = kstrdup(name, GFP_KERNEL);
-+
-+	sprintf(name, "port@%u", port_id);
-+	du_port->full_name = kstrdup(name, GFP_KERNEL);
-+	du_port_fixup->full_name = kstrdup(name, GFP_KERNEL);
-+
-+	if (!lvds->full_name || !du_port->full_name ||
-+	    !du_port_fixup->full_name)
-+		goto out_free_names;
-+
-+	/* Patch the target paths in all fragments. */
-+	for_each_child_of_node(overlay.np, fragment) {
-+		if (strncmp("fragment@", of_node_full_name(fragment), 9))
-+			continue;
-+
-+		ret = rcar_du_of_update_target_path(du, remote, fragment);
-+		if (ret < 0) {
-+			of_node_put(fragment);
-+			goto out_free_properties;
-+		}
-+	}
-+
-+	/*
-+	 * Create a compatible string for the LVDS node using the SoC model
-+	 * from the DU node.
-+	 */
-+	ret = of_property_read_string(du, "compatible", &compatible);
-+	if (ret < 0)
-+		goto out_free_properties;
-+
-+	soc_suffix = strchr(compatible, '-');
-+	if (!soc_suffix || strlen(soc_suffix) > 10)
-+		goto out_free_properties;
-+
-+	psize = sprintf(name, "renesas,lvds%s", soc_suffix) + 1;
-+	ret = rcar_du_of_add_property(lvds, "compatible", name, psize);
-+	if (ret < 0)
-+		goto out_free_properties;
-+
-+	/* Copy the LVDS reg and clocks properties from the DU node. */
-+	psize = (of_n_addr_cells(du) + of_n_size_cells(du)) * 4;
-+	ret = rcar_du_of_add_property(lvds, "reg", reg, psize);
-+	if (ret < 0)
-+		goto out_free_properties;
-+
-+	if (clkspec->args_count >= ARRAY_SIZE(value) - 1)
-+		goto out_free_properties;
-+
-+	value[0] = cpu_to_be32(clkspec->np->phandle);
-+	for (i = 0; i < clkspec->args_count; ++i)
-+		value[i + 1] = cpu_to_be32(clkspec->args[i]);
-+
-+	psize = (clkspec->args_count + 1) * 4;
-+	ret = rcar_du_of_add_property(lvds, "clocks", value, psize);
-+	if (ret < 0)
-+		goto out_free_properties;
-+
-+	/*
-+	 * Insert the node in the OF graph: patch the LVDS ports remote-endpoint
-+	 * properties to point to the endpoints of the sibling nodes in the
-+	 * graph.
-+	 */
-+	prop = of_find_property(lvds_endpoints[0], "remote-endpoint", NULL);
-+	if (!prop)
-+		goto out_free_properties;
-+
-+	*(__be32 *)prop->value = cpu_to_be32(local->phandle);
-+
-+	prop = of_find_property(lvds_endpoints[1], "remote-endpoint", NULL);
-+	if (!prop)
-+		goto out_free_properties;
-+
-+	*(__be32 *)prop->value = cpu_to_be32(remote->phandle);
-+
-+	/* Apply the overlay, this will resolve phandles. */
-+	ovcs_id = 0;
-+	ret = of_overlay_apply(overlay.np, &ovcs_id);
-+
-+	/* We're done, free all allocated memory. */
-+out_free_properties:
-+	rcar_du_of_free_properties(lvds);
-+	rcar_du_of_free_properties(du_port);
-+	rcar_du_of_free_properties(du_port_fixup);
-+out_free_names:
-+	kfree(lvds->full_name);
-+	kfree(du_port->full_name);
-+	kfree(du_port_fixup->full_name);
-+out_put_nodes:
-+	of_node_put(lvds);
-+	of_node_put(lvds_endpoints[0]);
-+	of_node_put(lvds_endpoints[1]);
-+	of_node_put(du_port);
-+	of_node_put(du_port_fixup);
-+
-+	rcar_du_of_free_overlay(&overlay);
-+}
-+
-+static void __init rcar_du_of_lvds_patch(const struct of_device_id *of_ids)
-+{
-+	const struct rcar_du_device_info *info;
-+	const struct of_device_id *match;
-+	struct device_node *du;
-+	unsigned int i;
-+	int ret;
-+
-+	/* Get the DU node and exit if not present or disabled. */
-+	du = of_find_matching_node_and_match(NULL, of_ids, &match);
-+	if (!du || !of_device_is_available(du))
-+		goto done;
-+
-+	info = match->data;
-+
-+	/* Patch every LVDS encoder. */
-+	for (i = 0; i < info->num_lvds; ++i) {
-+		struct of_phandle_args clkspec;
-+		struct device_node *local, *remote;
-+		struct resource res;
-+		unsigned int port_id;
-+		const __be32 *reg;
-+		char name[7];
-+		int index;
-+
-+		/*
-+		 * Retrieve the register specifier, the clock specifier and the
-+		 * local and remote endpoints of the LVDS link.
-+		 */
-+		sprintf(name, "lvds.%u", i);
-+		index = of_property_match_string(du, "reg-names", name);
-+		if (index < 0)
-+			continue;
-+
-+		reg = of_get_address(du, index, NULL, NULL);
-+		if (!reg)
-+			continue;
-+
-+		ret = of_address_to_resource(du, index, &res);
-+		if (ret < 0)
-+			continue;
-+
-+		index = of_property_match_string(du, "clock-names", name);
-+		if (index < 0)
-+			continue;
-+
-+		ret = of_parse_phandle_with_args(du, "clocks", "#clock-cells",
-+						 index, &clkspec);
-+		if (ret < 0)
-+			continue;
-+
-+		port_id = info->routes[RCAR_DU_OUTPUT_LVDS0 + i].port;
-+
-+		local = of_graph_get_endpoint_by_regs(du, port_id, 0);
-+		if (!local) {
-+			of_node_put(clkspec.np);
-+			continue;
-+		}
-+
-+		remote = of_graph_get_remote_endpoint(local);
-+		if (!remote) {
-+			of_node_put(local);
-+			of_node_put(clkspec.np);
-+			continue;
-+		}
-+
-+		/* Patch the LVDS encoder. */
-+		rcar_du_of_lvds_patch_one(du, port_id, &res, reg, &clkspec,
-+					  local, remote);
-+
-+		of_node_put(clkspec.np);
-+		of_node_put(remote);
-+		of_node_put(local);
-+	}
-+
-+done:
-+	of_node_put(du);
-+}
-+
-+void __init rcar_du_of_init(const struct of_device_id *of_ids)
-+{
-+	rcar_du_of_lvds_patch(of_ids);
-+}
-diff --git a/drivers/gpu/drm/rcar-du/rcar_du_of.h b/drivers/gpu/drm/rcar-du/rcar_du_of.h
-new file mode 100644
-index 000000000000..d96bb80df4c2
---- /dev/null
-+++ b/drivers/gpu/drm/rcar-du/rcar_du_of.h
-@@ -0,0 +1,16 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * rcar_du_of.h - Legacy DT bindings compatibility
-+ *
-+ * Copyright (C) 2018 Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-+ */
-+#ifndef __RCAR_DU_OF_H__
-+#define __RCAR_DU_OF_H__
-+
-+#include <linux/init.h>
-+
-+struct of_device_id;
-+
-+void __init rcar_du_of_init(const struct of_device_id *of_ids);
-+
-+#endif /* __RCAR_DU_OF_H__ */
-diff --git a/drivers/gpu/drm/rcar-du/rcar_du_of_lvds.dts b/drivers/gpu/drm/rcar-du/rcar_du_of_lvds.dts
-new file mode 100644
-index 000000000000..89ababf15768
---- /dev/null
-+++ b/drivers/gpu/drm/rcar-du/rcar_du_of_lvds.dts
-@@ -0,0 +1,82 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * rcar_du_of_lvds.dts - Legacy LVDS DT bindings conversion
-+ *
-+ * Copyright (C) 2018 Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-+ *
-+ * Based on work from Jyri Sarha <jsarha@ti.com>
-+ * Copyright (C) 2015 Texas Instruments
-+ */
-+
-+/*
-+ * The target-paths, lvds node name, DU port number and LVDS remote endpoints
-+ * will be patched dynamically at runtime.
-+ */
-+
-+/dts-v1/;
-+/ {
-+	fragment@0 {
-+		target-path = "soc";
-+		__overlay__ {
-+			lvds {
-+				ports {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+
-+					port@0 {
-+						reg = <0>;
-+						lvds_input: endpoint {
-+							remote-endpoint = <0>;
-+						};
-+					};
-+
-+					port@1 {
-+						reg = <1>;
-+						lvds_output: endpoint {
-+							remote-endpoint = <0>;
-+						};
-+					};
-+				};
-+			};
-+		};
-+	};
-+
-+	fragment@1 {
-+		target-path = "du";
-+		__overlay__ {
-+			ports {
-+				port@0 {
-+					endpoint {
-+						remote-endpoint = <&lvds_input>;
-+					};
-+				};
-+			};
-+		};
-+	};
-+
-+	fragment@2 {
-+		target-path = "lvds-sink";
-+		__overlay__ {
-+			remote-endpoint = <&lvds_output>;
-+		};
-+	};
-+
-+	__local_fixups__ {
-+		fragment@1 {
-+			__overlay__ {
-+				ports {
-+					port@0 {
-+						endpoint {
-+							remote-endpoint	= <0>;
-+						};
-+					};
-+				};
-+			};
-+		};
-+		fragment@2 {
-+			__overlay__ {
-+				remote-endpoint	= <0>;
-+			};
-+		};
-+	};
-+};
 -- 
 Regards,
 
