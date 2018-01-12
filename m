@@ -1,41 +1,38 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH] arm64: dts: socfpga: add missing interrupt-parent
-Date: Thu, 11 Jan 2018 17:56:25 -0800
-Message-ID: <20180112015625.t7zmxmhlz4pzt4m3@localhost>
-References: <20180110210431.2330267-1-arnd@arndb.de>
- <e3a44268-88f2-3dbd-a992-f9484a82d826@kernel.org>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [PATCH 3/3] arm: spear13xx: Fix spics gpio controller's warning
+Date: Thu, 11 Jan 2018 18:07:46 -0800
+Message-ID: <20180112020746.bbprwgp5cgevwjyq@localhost>
+References: <a062d9ed0d3365b578156a780202fa533e725374.1515650104.git.viresh.kumar@linaro.org>
+ <9d8521e3990be6789f1ed3d5757b57c65483117b.1515650104.git.viresh.kumar@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <e3a44268-88f2-3dbd-a992-f9484a82d826@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dinh Nguyen <dinguyen@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, arm@kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Alan Tull <atull@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <9d8521e3990be6789f1ed3d5757b57c65483117b.1515650104.git.viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: arnd-r2nGTMty4D4@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 11, 2018 at 08:35:58AM -0600, Dinh Nguyen wrote:
+On Thu, Jan 11, 2018 at 11:28:53AM +0530, Viresh Kumar wrote:
+> This fixes the following warning by also sending the flags argument for
+> gpio controllers:
 > 
+> Property 'cs-gpios', cell 6 is not a phandle reference in
+> /ahb/apb/spi@e0100000
 > 
-> On 01/10/2018 03:04 PM, Arnd Bergmann wrote:
-> > The PMU node has no working interrupt, as shown by this dtc warning:
-> > 
-> > arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dtb: Warning (interrupts_property): Missing interrupt-parent for /pmu
-> > 
-> > This adds an interrupt-parent property so we can correct parse
-> > that interrupt number.
-> > 
-> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> > ---
-> > If this looks ok, I'd apply it directly to the fixes branch
-> > for 4.15, as the warning is one that was introduced in this
-> > release.
-> 
-> Acked-by: Dinh Nguyen <dinguyen@kernel.org>
-> 
-> Yes, please feel free to apply it. And thanks alot!
+> Fixes: 8113ba917dfa ("ARM: SPEAr: DT: Update device nodes")
+> Cc: stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org # v3.8+
+> Reported-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> Signed-off-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
 
-Applied.
+
+Applied to next/dt.
 
 
 -Olof
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
