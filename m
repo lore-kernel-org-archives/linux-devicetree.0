@@ -1,26 +1,57 @@
 From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Subject: [PATCH 0/2] Add reboot modes for LEGO MINDSTORMS EV3
-Date: Thu, 11 Jan 2018 20:21:23 -0600
-Message-ID: <1515723685-19286-1-git-send-email-david@lechnology.com>
+Subject: [PATCH 1/2] ARM: dts: da850-lego-ev3: Add node for reboot modes
+Date: Thu, 11 Jan 2018 20:21:24 -0600
+Message-ID: <1515723685-19286-2-git-send-email-david@lechnology.com>
+References: <1515723685-19286-1-git-send-email-david@lechnology.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1515723685-19286-1-git-send-email-david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 Cc: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This series adds a new device tree node to declare a special memory
-address that is used by the I2C bootloader on LEGO MINDSTORMS EV3
-to boot into a special firmware update mode and enables the required
-module to use it.
+This adds a new node for reboot modes on LEGO MINDSTORMS EV3. The EV3's
+bootloader looks for a magic number in the ARM local RAM and if found,
+it will boot into a special firmware update mode where the flash memory
+can be written via USB.
 
-David Lechner (2):
-  ARM: dts: da850-lego-ev3: Add node for reboot modes
-  ARM: davinci_all_defconfig: enable SYSCON_REBOOT_MODE
+This has been testing working using the command:
 
- arch/arm/boot/dts/da850-lego-ev3.dts   | 17 +++++++++++++++++
- arch/arm/configs/davinci_all_defconfig |  1 +
- 2 files changed, 18 insertions(+)
+    # systemctl reboot loader
 
+Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+---
+ arch/arm/boot/dts/da850-lego-ev3.dts | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+
+diff --git a/arch/arm/boot/dts/da850-lego-ev3.dts b/arch/arm/boot/dts/da850-lego-ev3.dts
+index e4bbf48..1cb2ff1 100644
+--- a/arch/arm/boot/dts/da850-lego-ev3.dts
++++ b/arch/arm/boot/dts/da850-lego-ev3.dts
+@@ -212,6 +212,23 @@
+ 		compatible = "gpio-backlight";
+ 		gpios = <&gpio 44 GPIO_ACTIVE_HIGH>;
+ 	};
++
++	/* ARM local RAM */
++	memory@ffff0000 {
++		compatible = "syscon", "simple-mfd";
++		reg = <0xffff0000 0x2000>; /* 8k */
++
++		/*
++		 * The I2C bootloader looks for this magic value to either
++		 * boot normally or boot into a firmware update mode.
++		 */
++		reboot-mode {
++			compatible = "syscon-reboot-mode";
++			offset = <0x1ffc>;
++			mode-normal = <0x00000000>;
++			mode-loader = <0x5555aaaa>;
++		};
++	};
+ };
+ 
+ &cpu {
 -- 
 2.7.4
 
