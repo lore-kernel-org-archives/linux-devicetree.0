@@ -1,33 +1,34 @@
-From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Subject: [PATCH v2 0/2] Add reboot modes for LEGO MINDSTORMS EV3
-Date: Thu, 11 Jan 2018 20:29:49 -0600
-Message-ID: <1515724191-30499-1-git-send-email-david@lechnology.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: David Lechner <david@lechnology.com>
+Subject: [PATCH v2 2/2] ARM: davinci_all_defconfig: enable SYSCON_REBOOT_MODE
+Date: Thu, 11 Jan 2018 20:29:51 -0600
+Message-ID: <1515724191-30499-3-git-send-email-david@lechnology.com>
+References: <1515724191-30499-1-git-send-email-david@lechnology.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1515724191-30499-1-git-send-email-david@lechnology.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: David Lechner <david@lechnology.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This series adds a new device tree node to declare a special memory
-address that is used by the I2C bootloader on LEGO MINDSTORMS EV3
-to boot into a special firmware update mode and enables the required
-module to use it.
+This enables SYSCON_REBOOT_MODE as a module. This is used by LEGO
+MINDSTORMS EV3 to reboot into a special firmware update mode.
 
-v2 changes:
-* rebase on linux-davinci/master
+Signed-off-by: David Lechner <david@lechnology.com>
+---
+ arch/arm/configs/davinci_all_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-David Lechner (2):
-  ARM: dts: da850-lego-ev3: Add node for reboot modes
-  ARM: davinci_all_defconfig: enable SYSCON_REBOOT_MODE
-
- arch/arm/boot/dts/da850-lego-ev3.dts   | 17 +++++++++++++++++
- arch/arm/configs/davinci_all_defconfig |  1 +
- 2 files changed, 18 insertions(+)
-
+diff --git a/arch/arm/configs/davinci_all_defconfig b/arch/arm/configs/davinci_all_defconfig
+index 026154c..bcb70c2 100644
+--- a/arch/arm/configs/davinci_all_defconfig
++++ b/arch/arm/configs/davinci_all_defconfig
+@@ -126,6 +126,7 @@ CONFIG_GPIO_PCA953X=y
+ CONFIG_GPIO_PCA953X_IRQ=y
+ CONFIG_POWER_RESET=y
+ CONFIG_POWER_RESET_GPIO=y
++CONFIG_SYSCON_REBOOT_MODE=m
+ CONFIG_BATTERY_LEGO_EV3=m
+ CONFIG_WATCHDOG=y
+ CONFIG_DAVINCI_WATCHDOG=m
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
