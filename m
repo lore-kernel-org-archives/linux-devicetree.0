@@ -1,69 +1,73 @@
-From: Chunyan Zhang <zhang.chunyan@linaro.org>
-Subject: [PATCH v3 0/5] Add regulator suspend and resume support
-Date: Fri, 12 Jan 2018 18:23:49 +0800
-Message-ID: <1515752629-16262-1-git-send-email-zhang.chunyan@linaro.org>
-References: <1515752305-15907-1-git-send-email-zhang.chunyan@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1515752305-15907-1-git-send-email-zhang.chunyan@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Chunyan Zhang <zhang.lyra@gmail.com>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH v4 3/9] v4l: platform: Add Renesas CEU driver
+Date: Fri, 12 Jan 2018 12:35:42 +0200
+Message-ID: <6661804.aHnDt5XQHf@avalon>
+References: <1515515131-13760-1-git-send-email-jacopo+renesas@jmondi.org> <4595365.GB5AfDQQ8V@avalon> <CAMuHMdVCa=mXBLjUpqUgg90=Yqj0_r0cmB5UsOYJvdxw3HSsmw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMuHMdVCa=mXBLjUpqUgg90=Yqj0_r0cmB5UsOYJvdxw3HSsmw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Some systems need to set regulators to specific states when they enter low
-power modes, especially around CPUs.
+Hi Geert,
 
-Currently the regulator driver, for suspend and resume features, provides
-two functions which are exported for being called directly by any modules
-or subsystems when they thought the regulator should be entering into
-suspend states.
+On Friday, 12 January 2018 11:01:18 EET Geert Uytterhoeven wrote:
+> On Fri, Jan 12, 2018 at 12:12 AM, Laurent Pinchart wrote:
+> > On Tuesday, 9 January 2018 18:25:25 EET Jacopo Mondi wrote:
+> >> Add driver for Renesas Capture Engine Unit (CEU).
+> >> 
+> >> The CEU interface supports capturing 'data' (YUV422) and 'images'
+> >> (NV[12|21|16|61]).
+> >> 
+> >> This driver aims to replace the soc_camera-based sh_mobile_ceu one.
+> >> 
+> >> Tested with ov7670 camera sensor, providing YUYV_2X8 data on Renesas RZ
+> >> platform GR-Peach.
+> >> 
+> >> Tested with ov7725 camera sensor on SH4 platform Migo-R.
+> >> 
+> >> Signed-off-by: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+> >> ---
+> >> 
+> >>  drivers/media/platform/Kconfig       |    9 +
+> >>  drivers/media/platform/Makefile      |    1 +
+> >>  drivers/media/platform/renesas-ceu.c | 1648 ++++++++++++++++++++++++++++
+> >>  3 files changed, 1658 insertions(+)
+> >> 
+> >>  create mode 100644 drivers/media/platform/renesas-ceu.c
+> > 
+> > [snip]
+> > 
+> >> diff --git a/drivers/media/platform/renesas-ceu.c
+> >> b/drivers/media/platform/renesas-ceu.c new file mode 100644
+> >> index 0000000..d261704
+> >> --- /dev/null
+> >> +++ b/drivers/media/platform/renesas-ceu.c
+> >> @@ -0,0 +1,1648 @@
+> >> +// SPDX-License-Identifier: GPL-2.0
+> > 
+> > It was recently brought to my attention that SPDX headers should use
+> > either GPL-2.0-only or GPL-2.0-or-later, no the ambiguous GPL-2.0. Could
+> > you please update all patches in this series ?
+> 
+> IMHO it's a bit premature to do that.
+> As long as Documentation/process/license-rules.rst isn't updated, I wouldn't
+> follow this change.
+> 
+> See also https://www.spinics.net/lists/linux-xfs/msg14536.html
 
-This patchset adds hooks to PM suspend core and provides suspend/resume
-callback functions to regulator device, for those who can be switched
-off or set low voltage in suspend states only need to implement the
-callback functions in the driver, and set the right configurations for
-suspend states via device tree and the APIs which regulator core
-driver provides.
-
-Those drivers who use the old interfaces - i.e. regulator_suspend_prepare()
-and regulator_suspend_finish() should stop using that, since we leave these
-two functions empty and plan to remove them one day in the future.
-
-Any comments would be greatly appreciated.
-
-Thanks,
-Chunyan
-
-Changes from V1: (https://lkml.org/lkml/2017/12/21/9)
-* Rephrased the commit message of patch 0001;
-* Declared the property 'regulator-suspend-microvolt' deperated and documented
-  the way recommended;
-* Revised of_regulator.c, use suspend_state::min_uV as default suspend
-  voltage if the property 'regulator-suspend-microvolt' is not used.
-
-Changes from V2: (https://lkml.org/lkml/2018/1/4/75)
-* Correct the typo;
-* Removed redundant comments;
-* Export regulator_suspend_enable/disable(), don't call these two functions in
-  regulator_set_suspend_voltage() instead;
-* Checking if rstate->min_uV == rstate->max_uV instead of checking the flag when
-  setting the suspend voltage.
-
-Chunyan Zhang (5):
-  bindings: regulator: added support for suspend states
-  regulator: make regulator voltage be an array to support more states
-  drivers: regulator: leave one item to record whether regulator is
-    enabled
-  drivers: regulator: empty the old suspend functions
-  regulator: add PM suspend and resume hooks
-
- .../devicetree/bindings/regulator/regulator.txt    |  15 +-
- drivers/regulator/core.c                           | 336 ++++++++++++++-------
- drivers/regulator/internal.h                       |  18 +-
- drivers/regulator/of_regulator.c                   |  20 +-
- include/linux/regulator/driver.h                   |   2 +
- include/linux/regulator/machine.h                  |  37 ++-
- 6 files changed, 302 insertions(+), 126 deletions(-)
+Thank you for bringing this to my attention. I agree with you.
 
 -- 
-2.7.4
+Regards,
+
+Laurent Pinchart
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
