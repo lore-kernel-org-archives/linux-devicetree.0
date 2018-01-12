@@ -1,237 +1,227 @@
-From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/2] dma: xilinx: dpdma: Add the Xilinx DisplayPort DMA
- engine driver
-Date: Fri, 12 Jan 2018 19:43:56 +0530
-Message-ID: <20180112141355.GO18649@localhost>
-References: <1515204848-3493-1-git-send-email-hyun.kwon@xilinx.com>
- <1515204848-3493-2-git-send-email-hyun.kwon@xilinx.com>
+From: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] media: ov9650: support device tree probing
+Date: Fri, 12 Jan 2018 15:14:07 +0100
+Message-ID: <02ea7734-fa64-7a3a-1eaf-7944bbe6caa4@samsung.com>
+References: <1515344064-23156-1-git-send-email-akinobu.mita@gmail.com>
+        <1515344064-23156-2-git-send-email-akinobu.mita@gmail.com>
+        <CGME20180112141412epcas2p1e00472715d601bc52dcef6d850d5f13c@epcas2p1.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1515204848-3493-2-git-send-email-hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+In-reply-to: <1515344064-23156-2-git-send-email-akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-language: en-GB
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hyun Kwon <hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Tejas Upadhyay <tejasu-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+To: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Jacopo Mondi <jacopo-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>, "H . Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 05, 2018 at 06:14:08PM -0800, Hyun Kwon wrote:
-> The ZynqMP includes the DisplayPort subsystem with own DMA engine
-> called DPDMA. The DPDMA IP comes with 6 individual channels
-> (4 for display, 2 for audio). This driver implements DMAENGINE API
-> which can be used for audio (ALSA) and display (DRM) drivers.
+On 01/07/2018 05:54 PM, Akinobu Mita wrote:
+> The ov9650 driver currently only supports legacy platform data probe.
+> This change adds device tree probing.
 
-The subsystem name is dmaengine.
-
-> Signed-off-by: Hyun Kwon <hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Tejas Upadhyay <tejasu-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
->  MAINTAINERS                       |    7 +
->  drivers/dma/Kconfig               |   19 +
->  drivers/dma/xilinx/Makefile       |    1 +
->  drivers/dma/xilinx/xilinx_dpdma.c | 2309 +++++++++++++++++++++++++++++++++++++
 
-That is a very long file for review! Pls split it up to reasonable logical
-chunks
+>  drivers/media/i2c/ov9650.c | 130 ++++++++++++++++++++++++++++++++-------------
+>  1 file changed, 92 insertions(+), 38 deletions(-)
+> 
+> diff --git a/drivers/media/i2c/ov9650.c b/drivers/media/i2c/ov9650.c
+> index 69433e1..99a3eab 100644
+> --- a/drivers/media/i2c/ov9650.c
+> +++ b/drivers/media/i2c/ov9650.c
 
-> +config XILINX_DPDMA_DEBUG_FS
-> +        bool "Xilinx DPDMA debugfs"
-> +        depends on DEBUG_FS && XILINX_DPDMA
-> +        help
-> +          Enable the debugfs code for DPDMA driver. The debugfs code
-> +          enables debugging or testing related features. It exposes some
-> +          low level controls to the user space to help testing automation,
-> +          as well as can enable additional diagnostic or statistical
-> +          information.
+> -static void __ov965x_set_power(struct ov965x *ov965x, int on)
+> +static int __ov965x_set_power(struct ov965x *ov965x, int on)
+>  {
+>  	if (on) {
+> -		ov965x_gpio_set(ov965x->gpios[GPIO_PWDN], 0);
+> -		ov965x_gpio_set(ov965x->gpios[GPIO_RST], 0);
+> +		int ret = clk_prepare_enable(ov965x->clk);
 
-why should this be a compile option
+It seems you rely on the fact clk_prepare_enable() is a nop when passed
+argument is NULL, which happens in non-DT case.
 
-> + * Xilinx ZynqMP DPDMA Engine driver
-> + *
-> + *  Copyright (C) 2015 - 2018 Xilinx, Inc.
-> + *
-> + *  Author: Hyun Woo Kwon <hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> + *
-> + * SPDX-License-Identifier: GPL-2.0
-
-this should be first line in file with c99 style,
-
-// SPDX-License-Identifier: GPL-2.0
-
-> + */
+> +		if (ret)
+> +			return ret;
 > +
-> +#include <linux/bitops.h>
-> +#include <linux/clk.h>
-> +#include <linux/debugfs.h>
-> +#include <linux/delay.h>
-> +#include <linux/device.h>
-> +#include <linux/dmaengine.h>
-> +#include <linux/dmapool.h>
-> +#include <linux/gfp.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/irqreturn.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_dma.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/sched.h>
-> +#include <linux/slab.h>
-> +#include <linux/spinlock.h>
-> +#include <linux/types.h>
-> +#include <linux/uaccess.h>
-> +#include <linux/wait.h>
-
-do you need all these headers?
-
+> +		gpiod_set_value_cansleep(ov965x->gpios[GPIO_PWDN], 0);
+> +		gpiod_set_value_cansleep(ov965x->gpios[GPIO_RST], 0);
+>  		msleep(25);
+>  	} else {
+> -		ov965x_gpio_set(ov965x->gpios[GPIO_RST], 1);
+> -		ov965x_gpio_set(ov965x->gpios[GPIO_PWDN], 1);
+> +		gpiod_set_value_cansleep(ov965x->gpios[GPIO_RST], 1);
+> +		gpiod_set_value_cansleep(ov965x->gpios[GPIO_PWDN], 1);
 > +
-> +#include "../dmaengine.h"
+> +		clk_disable_unprepare(ov965x->clk);
+>  	}
+>  
+>  	ov965x->streaming = 0;
 > +
-> +/* DPDMA registers */
-> +#define XILINX_DPDMA_ERR_CTRL				0x0
-> +#define XILINX_DPDMA_ISR				0x4
-> +#define XILINX_DPDMA_IMR				0x8
-> +#define XILINX_DPDMA_IEN				0xc
-> +#define XILINX_DPDMA_IDS				0x10
-> +#define XILINX_DPDMA_INTR_DESC_DONE_MASK		(0x3f << 0)
+> +	return 0;
+>  }
 
-GENMASK() for this and others
-
-> +#define XILINX_DPDMA_INTR_DESC_DONE_SHIFT		0
-
-you can define a common shift using ffs
-
-> + * struct xilinx_dpdma_hw_desc - DPDMA hardware descriptor
-> + * @control: control configuration field
-> + * @desc_id: descriptor ID
-> + * @xfer_size: transfer size
-> + * @hsize_stride: horizontal size and stride
-> + * @timestamp_lsb: LSB of time stamp
-> + * @timestamp_msb: MSB of time stamp
-> + * @addr_ext: upper 16 bit of 48 bit address (next_desc and src_addr)
-> + * @next_desc: next descriptor 32 bit address
-> + * @src_addr: payload source address (lower 32 bit of 1st 4KB page)
-> + * @addr_ext_23: upper 16 bit of 48 bit address (src_addr2 and src_addr3)
-> + * @addr_ext_45: upper 16 bit of 48 bit address (src_addr4 and src_addr5)
-> + * @src_addr2: payload source address (lower 32 bit of 2nd 4KB page)
-> + * @src_addr3: payload source address (lower 32 bit of 3rd 4KB page)
-> + * @src_addr4: payload source address (lower 32 bit of 4th 4KB page)
-> + * @src_addr5: payload source address (lower 32 bit of 5th 4KB page)
-
-what does it mean (lower 32 bit of Nth 4KB page)
-
-> +struct xilinx_dpdma_sw_desc {
-> +	struct xilinx_dpdma_hw_desc hw;
-> +	struct list_head node;
-> +	dma_addr_t phys;
-
-dma_addr_t is not a physical addr
-
-> +struct xilinx_dpdma_device {
-> +	struct dma_device common;
-> +	void __iomem *reg;
-> +	struct device *dev;
+> @@ -1408,16 +1414,17 @@ static const struct v4l2_subdev_ops ov965x_subdev_ops = {
+>  /*
+>   * Reset and power down GPIOs configuration
+>   */
+> -static int ov965x_configure_gpios(struct ov965x *ov965x,
+> -				  const struct ov9650_platform_data *pdata)
+> +static int ov965x_configure_gpios_pdata(struct ov965x *ov965x,
+> +				const struct ov9650_platform_data *pdata)
+>  {
+>  	int ret, i;
+> +	int gpios[NUM_GPIOS];
+>  
+> -	ov965x->gpios[GPIO_PWDN] = pdata->gpio_pwdn;
+> -	ov965x->gpios[GPIO_RST]  = pdata->gpio_reset;
+> +	gpios[GPIO_PWDN] = pdata->gpio_pwdn;
+> +	gpios[GPIO_RST]  = pdata->gpio_reset;
+>  
+>  	for (i = 0; i < ARRAY_SIZE(ov965x->gpios); i++) {
+> -		int gpio = ov965x->gpios[i];
+> +		int gpio = gpios[i];
+>  
+>  		if (!gpio_is_valid(gpio))
+>  			continue;
+> @@ -1427,9 +1434,30 @@ static int ov965x_configure_gpios(struct ov965x *ov965x,
+>  			return ret;
+>  		v4l2_dbg(1, debug, &ov965x->sd, "set gpio %d to 1\n", gpio);
+>  
+> -		gpio_set_value(gpio, 1);
+> +		gpio_set_value_cansleep(gpio, 1);
+>  		gpio_export(gpio, 0);
+> -		ov965x->gpios[i] = gpio;
+> +		ov965x->gpios[i] = gpio_to_desc(gpio);
+> +	}
 > +
-> +	struct clk *axi_clk;
-> +	struct xilinx_dpdma_chan *chan[XILINX_DPDMA_NUM_CHAN];
+> +	return 0;
+> +}
 > +
-> +	bool ext_addr;
-> +	void (*desc_addr)(struct xilinx_dpdma_sw_desc *sw_desc,
-> +			  struct xilinx_dpdma_sw_desc *prev,
-> +			  dma_addr_t dma_addr[], unsigned int num_src_addr);
-> +};
-> +
-> +#ifdef CONFIG_XILINX_DPDMA_DEBUG_FS
-
-this can be CONFIG_DEBUGFS, also am skipping this part to focus on driver.
-Pls split this to a separate patch
-
-> +static int xilinx_dpdma_config(struct dma_chan *dchan,
-> +			       struct dma_slave_config *config)
+> +static int ov965x_configure_gpios(struct ov965x *ov965x)
 > +{
-> +	if (config->direction != DMA_MEM_TO_DEV)
+> +	struct device *dev = &ov965x->client->dev;
+> +
+> +	ov965x->gpios[GPIO_PWDN] = devm_gpiod_get_optional(dev, "powerdown",
+> +							GPIOD_OUT_HIGH);
+> +	if (IS_ERR(ov965x->gpios[GPIO_PWDN])) {
+> +		dev_info(dev, "can't get %s GPIO\n", "powerdown");
+> +		return PTR_ERR(ov965x->gpios[GPIO_PWDN]);
+> +	}
+> +
+> +	ov965x->gpios[GPIO_RST] = devm_gpiod_get_optional(dev, "reset",
+> +							GPIOD_OUT_HIGH);
+> +	if (IS_ERR(ov965x->gpios[GPIO_RST])) {
+> +		dev_info(dev, "can't get %s GPIO\n", "reset");
+> +		return PTR_ERR(ov965x->gpios[GPIO_RST]);
+>  	}
+>  
+>  	return 0;
+> @@ -1443,7 +1471,10 @@ static int ov965x_detect_sensor(struct v4l2_subdev *sd)
+>  	int ret;
+>  
+>  	mutex_lock(&ov965x->lock);
+> -	__ov965x_set_power(ov965x, 1);
+> +	ret = __ov965x_set_power(ov965x, 1);
+> +	if (ret)
+> +		goto out;
+> +
+>  	msleep(25);
+>  
+>  	/* Check sensor revision */
+> @@ -1463,6 +1494,7 @@ static int ov965x_detect_sensor(struct v4l2_subdev *sd)
+>  			ret = -ENODEV;
+>  		}
+>  	}
+> +out:
+>  	mutex_unlock(&ov965x->lock);
+>  
+>  	return ret;
+> @@ -1476,23 +1508,39 @@ static int ov965x_probe(struct i2c_client *client,
+>  	struct ov965x *ov965x;
+>  	int ret;
+>  
+> -	if (!pdata) {
+> -		dev_err(&client->dev, "platform data not specified\n");
+> -		return -EINVAL;
+> -	}
+> -
+> -	if (pdata->mclk_frequency == 0) {
+> -		dev_err(&client->dev, "MCLK frequency not specified\n");
+> -		return -EINVAL;
+> -	}
+> -
+>  	ov965x = devm_kzalloc(&client->dev, sizeof(*ov965x), GFP_KERNEL);
+>  	if (!ov965x)
+>  		return -ENOMEM;
+>  
+> -	mutex_init(&ov965x->lock);
+
+I would leave mutex initialization as first thing after the private data
+structure allocation, is there a need to move it further?
+
+>  	ov965x->client = client;
+> -	ov965x->mclk_frequency = pdata->mclk_frequency;
+> +
+> +	if (pdata) {
+> +		if (pdata->mclk_frequency == 0) {
+> +			dev_err(&client->dev, "MCLK frequency not specified\n");
+> +			return -EINVAL;
+> +		}
+> +		ov965x->mclk_frequency = pdata->mclk_frequency;
+> +
+> +		ret = ov965x_configure_gpios_pdata(ov965x, pdata);
+> +		if (ret < 0)
+> +			return ret;
+> +	} else if (dev_fwnode(&client->dev)) {
+> +		ov965x->clk = devm_clk_get(&ov965x->client->dev, NULL);
+> +		if (IS_ERR(ov965x->clk))
+> +			return PTR_ERR(ov965x->clk);
+> +		ov965x->mclk_frequency = clk_get_rate(ov965x->clk);
+> +
+> +		ret = ov965x_configure_gpios(ov965x);
+> +		if (ret < 0)
+> +			return ret;
+> +	} else {
+> +		dev_err(&client->dev,
+> +			"Neither platform data nor device property specified\n");
+> +
 > +		return -EINVAL;
+> +	}
+> +
+> +	mutex_init(&ov965x->lock);
+>  
+>  	sd = &ov965x->sd;
+>  	v4l2_i2c_subdev_init(sd, client, &ov965x_subdev_ops);
+> @@ -1502,10 +1550,6 @@ static int ov965x_probe(struct i2c_client *client,
+>  	sd->flags |= V4L2_SUBDEV_FL_HAS_DEVNODE |
+>  		     V4L2_SUBDEV_FL_HAS_EVENTS;
+>  
+> -	ret = ov965x_configure_gpios(ov965x, pdata);
+> -	if (ret < 0)
+> -		goto err_mutex;
+> -
+>  	ov965x->pad.flags = MEDIA_PAD_FL_SOURCE;
+>  	sd->entity.function = MEDIA_ENT_F_CAM_SENSOR;
+>  	ret = media_entity_pads_init(&sd->entity, 1, &ov965x->pad);
+> @@ -1561,9 +1605,19 @@ static const struct i2c_device_id ov965x_id[] = {
+>  };
+>  MODULE_DEVICE_TABLE(i2c, ov965x_id);
+>  
+> +#if IS_ENABLED(CONFIG_OF)
 
-?? Why are the config values not used, how else do you configure the
-channel?
+Is there any advantage in using IS_ENABLED() rather than just
+#ifdef CONFIG_OF ? of_match_ptr() is defined with just #idef CONFIG_OF/
+#else/#endif. I would use simply #ifdef CONFIG_OF here.
 
-> +
-> +	return 0;
-> +}
-> +
-> +static int xilinx_dpdma_pause(struct dma_chan *dchan)
-> +{
-> +	xilinx_dpdma_chan_pause(to_xilinx_chan(dchan));
-> +
-> +	return 0;
-> +}
-> +
-> +static int xilinx_dpdma_resume(struct dma_chan *dchan)
-> +{
-> +	xilinx_dpdma_chan_unpause(to_xilinx_chan(dchan));
-> +
-> +	return 0;
-> +}
-> +
-> +static int xilinx_dpdma_terminate_all(struct dma_chan *dchan)
-> +{
-> +	return xilinx_dpdma_chan_terminate_all(to_xilinx_chan(dchan));
-> +}
-> +
-> +static void xilinx_dpdma_synchronize(struct dma_chan *dchan)
-> +{
-> +	xilinx_dpdma_chan_synchronize(to_xilinx_chan(dchan));
-> +}
+Otherwise looks good.
 
-why have these wrappers which do not do anything?
-
-> +
-> +	chan->reg = xdev->reg + XILINX_DPDMA_CH_BASE + XILINX_DPDMA_CH_OFFSET *
-> +		    chan->id;
-> +	chan->status = IDLE;
-> +
-> +	spin_lock_init(&chan->lock);
-> +	INIT_LIST_HEAD(&chan->done_list);
-> +	init_waitqueue_head(&chan->wait_to_stop);
-> +
-> +	tasklet_init(&chan->done_task, xilinx_dpdma_chan_done_task,
-> +		     (unsigned long)chan);
-> +	tasklet_init(&chan->err_task, xilinx_dpdma_chan_err_task,
-> +		     (unsigned long)chan);
-
-Have you checked the vchan code, i dont see that used. It will help you in
-descriptor management and reduce code from driver
-
-> +static int xilinx_dpdma_remove(struct platform_device *pdev)
-> +{
-> +	struct xilinx_dpdma_device *xdev;
-> +	unsigned int i;
-> +
-> +	xdev = platform_get_drvdata(pdev);
-> +
-> +	xilinx_dpdma_disable_intr(xdev);
-> +	of_dma_controller_free(pdev->dev.of_node);
-> +	dma_async_device_unregister(&xdev->common);
-> +	clk_disable_unprepare(xdev->axi_clk);
-> +
-> +	for (i = 0; i < XILINX_DPDMA_NUM_CHAN; i++)
-> +		if (xdev->chan[i])
-> +			xilinx_dpdma_chan_remove(xdev->chan[i]);
-
-At this point your irq is still enabled and can fire, and can schedule
-tasklet.. Are you sure you are okay with that?
-
-> +MODULE_AUTHOR("Xilinx, Inc.");
-> +MODULE_DESCRIPTION("Xilinx DPDMA driver");
-> +MODULE_LICENSE("GPL v2");
-
-No MODULE_ALIAS()?
-
-I haven't reviewed in details though as it is too large patch. Pls use vchan
-and split things up for better review.
+Reviewed-by: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 
 -- 
-~Vinod
+Regards,
+Sylwester
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
