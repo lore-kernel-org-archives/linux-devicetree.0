@@ -1,79 +1,162 @@
-Return-Path: <SRS0=zkT/=EY=mediatek.com=argus.lin@kernel.org>
-From: <argus.lin@mediatek.com>
-Subject: [PATCH v2 1/5] dt-bindings: pwrap: mediatek: add pwrap support for MT6797
-Date: Mon, 29 Jan 2018 17:09:40 +0800
-Message-ID: <20180129090944.28687-1-argus.lin@mediatek.com>
+Return-Path: <SRS0=lT+O=EH=rock-chips.com=zhengsq@kernel.org>
+Reply-To: zhengsq@rock-chips.com
+Subject: Re: [PATCH v2 3/4] media: ov2685: add support for OV2685 sensor
+References: <1514534905-21393-1-git-send-email-zhengsq@rock-chips.com>
+ <1514534905-21393-3-git-send-email-zhengsq@rock-chips.com>
+ <20180103114324.za6bmg2rxuygawi4@valkosipuli.retiisi.org.uk>
+From: Shunqian Zheng <zhengsq@rock-chips.com>
+Message-ID: <8f60a7f8-8471-85e8-70d3-520701edc092@rock-chips.com>
+Date: Fri, 12 Jan 2018 10:30:57 +0800
 MIME-Version: 1.0
-Content-Type: multipart/related;
-	boundary="__=_Part_Boundary_007_2000567102.1219323059"
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
-Cc: Chenglin Xu <chenglin.xu@mediatek.com>, argus.lin@mediatek.com, Sean Wang <sean.wang@mediatek.com>, wsd_upstream@mediatek.com, henryc.chen@mediatek.com, flora.fu@mediatek.com, Chen Zhong <chen.zhong@mediatek.com>, Christophe Jaillet <christophe.jaillet@wanadoo.fr>, "shailendra . v" <shailendra.v@samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+In-Reply-To: <20180103114324.za6bmg2rxuygawi4@valkosipuli.retiisi.org.uk>
+Content-Type: multipart/alternative;
+ boundary="------------8B0D3626B05EE637EE2CE4A6"
+Content-Language: en-US
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, ddl@rock-chips.com, tfiga@chromium.org
 List-ID: <devicetree@vger.kernel.org>
 
---__=_Part_Boundary_007_2000567102.1219323059
-Content-Transfer-Encoding: base64
-Content-Type: multipart/alternative;
-	boundary="__=_Part_Boundary_008_1805762784.1062986029"
+This is a multi-part message in MIME format.
+--------------8B0D3626B05EE637EE2CE4A6
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
---__=_Part_Boundary_008_1805762784.1062986029
-Content-Type: text/html
-Content-Transfer-Encoding: base64
+Hi Sakari,
 
-PHByZT4NCkZyb206IEFyZ3VzIExpbiAmbHQ7YXJndXMubGluQG1lZGlhdGVrLmNvbSZndDsNCg0K
-V2UgYWRkIHB3cmFwIHN1cHBvcnQgZm9yIE1UNjc5NyBTb0NzLg0KDQpTaWduZWQtb2ZmLWJ5OiBB
-cmd1cyBMaW4gJmx0O2FyZ3VzLmxpbkBtZWRpYXRlay5jb20mZ3Q7DQotLS0NCiBEb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc29jL21lZGlhdGVrL3B3cmFwLnR4dCB8IDEgKw0KIDEg
-ZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKQ0KDQpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvYy9tZWRpYXRlay9wd3JhcC50eHQgYi9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc29jL21lZGlhdGVrL3B3cmFwLnR4dA0KaW5kZXggYmY4
-MGUzZjk2ZjhjLi5mOTk4N2MzMGYwZDUgMTAwNjQ0DQotLS0gYS9Eb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3Mvc29jL21lZGlhdGVrL3B3cmFwLnR4dA0KKysrIGIvRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvYy9tZWRpYXRlay9wd3JhcC50eHQNCkBAIC0xOSw2ICsx
-OSw3IEBAIElQIFBhaXJpbmcNCiBSZXF1aXJlZCBwcm9wZXJ0aWVzIGluIHB3cmFwIGRldmljZSBu
-b2RlLg0KIC0gY29tcGF0aWJsZToNCiAJJnF1b3Q7bWVkaWF0ZWssbXQyNzAxLXB3cmFwJnF1b3Q7
-IGZvciBNVDI3MDEvNzYyMyBTb0NzDQorCSZxdW90O21lZGlhdGVrLG10Njc5Ny1wd3JhcCZxdW90
-OyBmb3IgTVQ2Nzk3IFNvQ3MNCiAJJnF1b3Q7bWVkaWF0ZWssbXQ3NjIyLXB3cmFwJnF1b3Q7IGZv
-ciBNVDc2MjIgU29Dcw0KIAkmcXVvdDttZWRpYXRlayxtdDgxMzUtcHdyYXAmcXVvdDsgZm9yIE1U
-ODEzNSBTb0NzDQogCSZxdW90O21lZGlhdGVrLG10ODE3My1wd3JhcCZxdW90OyBmb3IgTVQ4MTcz
-IFNvQ3MNCi0tIA0KMi4xMi41DQoNCjwvcHJlPjwhLS10eXBlOnRleHQtLT48IS0tey0tPjxwcmU+
-KioqKioqKioqKioqKiBFbWFpbCBDb25maWRlbnRpYWxpdHkgTm90aWNlDQogKioqKioqKioqKioq
-KioqKioqKioNClRoZSBpbmZvcm1hdGlvbiBjb250YWluZWQgaW4gdGhpcyBlLW1haWwgbWVzc2Fn
-ZSAoaW5jbHVkaW5nIGFueSANCmF0dGFjaG1lbnRzKSBtYXkgYmUgY29uZmlkZW50aWFsLCBwcm9w
-cmlldGFyeSwgcHJpdmlsZWdlZCwgb3Igb3RoZXJ3aXNlDQpleGVtcHQgZnJvbSBkaXNjbG9zdXJl
-IHVuZGVyIGFwcGxpY2FibGUgbGF3cy4gSXQgaXMgaW50ZW5kZWQgdG8gYmUgDQpjb252ZXllZCBv
-bmx5IHRvIHRoZSBkZXNpZ25hdGVkIHJlY2lwaWVudChzKS4gQW55IHVzZSwgZGlzc2VtaW5hdGlv
-biwgDQpkaXN0cmlidXRpb24sIHByaW50aW5nLCByZXRhaW5pbmcgb3IgY29weWluZyBvZiB0aGlz
-IGUtbWFpbCAoaW5jbHVkaW5nIGl0cyANCmF0dGFjaG1lbnRzKSBieSB1bmludGVuZGVkIHJlY2lw
-aWVudChzKSBpcyBzdHJpY3RseSBwcm9oaWJpdGVkIGFuZCBtYXkgDQpiZSB1bmxhd2Z1bC4gSWYg
-eW91IGFyZSBub3QgYW4gaW50ZW5kZWQgcmVjaXBpZW50IG9mIHRoaXMgZS1tYWlsLCBvciBiZWxp
-ZXZlDQogDQp0aGF0IHlvdSBoYXZlIHJlY2VpdmVkIHRoaXMgZS1tYWlsIGluIGVycm9yLCBwbGVh
-c2Ugbm90aWZ5IHRoZSBzZW5kZXIgDQppbW1lZGlhdGVseSAoYnkgcmVwbHlpbmcgdG8gdGhpcyBl
-LW1haWwpLCBkZWxldGUgYW55IGFuZCBhbGwgY29waWVzIG9mIA0KdGhpcyBlLW1haWwgKGluY2x1
-ZGluZyBhbnkgYXR0YWNobWVudHMpIGZyb20geW91ciBzeXN0ZW0sIGFuZCBkbyBub3QNCmRpc2Ns
-b3NlIHRoZSBjb250ZW50IG9mIHRoaXMgZS1tYWlsIHRvIGFueSBvdGhlciBwZXJzb24uIFRoYW5r
-DQogeW91ITwvcHJlPjwhLS19LS0+
 
---__=_Part_Boundary_008_1805762784.1062986029
-Content-Type: text/plain
-Content-Transfer-Encoding: base64
+On 2018年01月03日 19:43, Sakari Ailus wrote:
+>> +static int ov2685_s_stream(struct v4l2_subdev *sd, int on)
+>> +{
+>> +	struct ov2685 *ov2685 = to_ov2685(sd);
+>> +	struct i2c_client *client = ov2685->client;
+>> +	int ret = 0;
+>> +
+>> +	mutex_lock(&ov2685->mutex);
+>> +
+>> +	on = !!on;
+>> +	if (on == ov2685->streaming)
+>> +		goto unlock_and_return;
+>> +
+>> +	if (on) {
+>> +		/* In case these controls are set before streaming */
+>> +		ov2685_set_exposure(ov2685, ov2685->exposure->val);
+>> +		ov2685_set_gain(ov2685, ov2685->anal_gain->val);
+>> +		ov2685_set_vts(ov2685, ov2685->vblank->val);
+>> +		ov2685_enable_test_pattern(ov2685, ov2685->test_pattern->val);
+> You should use __v4l2_ctrl_handler_setup() here. Or put that to the
+> driver's runtime_resume function. That actually might be better.
+The v3 put __v4l2_ctrl_handler_setup() to the runtime_resume callback. But
+ov2685_s_stream()
+    -> pm_runtime_get_sync()
+        -> ov2685_runtime_resume()
+             -> __v4l2_ctrl_handler_setup()
+                 -> pm_runtime_get_if_in_use(), always <= 0 because 
+dev->power.runtime_status != RPM_ACTIVE.
 
-RnJvbTogQXJndXMgTGluIDxhcmd1cy5saW5AbWVkaWF0ZWsuY29tPg0KDQpXZSBhZGQgcHdyYXAg
-c3VwcG9ydCBmb3IgTVQ2Nzk3IFNvQ3MuDQoNClNpZ25lZC1vZmYtYnk6IEFyZ3VzIExpbiA8YXJn
-dXMubGluQG1lZGlhdGVrLmNvbT4NCi0tLQ0KIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9zb2MvbWVkaWF0ZWsvcHdyYXAudHh0IHwgMSArDQogMSBmaWxlIGNoYW5nZWQsIDEgaW5z
-ZXJ0aW9uKCspDQoNCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3Mvc29jL21lZGlhdGVrL3B3cmFwLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9zb2MvbWVkaWF0ZWsvcHdyYXAudHh0DQppbmRleCBiZjgwZTNmOTZmOGMuLmY5OTg3YzMw
-ZjBkNSAxMDA2NDQNCi0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zb2Mv
-bWVkaWF0ZWsvcHdyYXAudHh0DQorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3Mvc29jL21lZGlhdGVrL3B3cmFwLnR4dA0KQEAgLTE5LDYgKzE5LDcgQEAgSVAgUGFpcmluZw0K
-IFJlcXVpcmVkIHByb3BlcnRpZXMgaW4gcHdyYXAgZGV2aWNlIG5vZGUuDQogLSBjb21wYXRpYmxl
-Og0KIAkibWVkaWF0ZWssbXQyNzAxLXB3cmFwIiBmb3IgTVQyNzAxLzc2MjMgU29Dcw0KKwkibWVk
-aWF0ZWssbXQ2Nzk3LXB3cmFwIiBmb3IgTVQ2Nzk3IFNvQ3MNCiAJIm1lZGlhdGVrLG10NzYyMi1w
-d3JhcCIgZm9yIE1UNzYyMiBTb0NzDQogCSJtZWRpYXRlayxtdDgxMzUtcHdyYXAiIGZvciBNVDgx
-MzUgU29Dcw0KIAkibWVkaWF0ZWssbXQ4MTczLXB3cmFwIiBmb3IgTVQ4MTczIFNvQ3MNCi0tIA0K
-Mi4xMi41DQo=
+Seems like  __v4l2_ctrl_handler_setup() has to be in ov2685_s_stream().
 
---__=_Part_Boundary_008_1805762784.1062986029--
+Thanks
+>> +
+>> +		ret = ov2685_write_reg(client, REG_SC_CTRL_MODE,
+>> +				OV2685_REG_VALUE_08BIT, SC_CTRL_MODE_STREAMING);
+>> +		if (ret)
+>> +			goto unlock_and_return;
+>> +	} else {
+>> +		ret = ov2685_write_reg(client, REG_SC_CTRL_MODE,
+>> +				OV2685_REG_VALUE_08BIT, SC_CTRL_MODE_STANDBY);
+>> +		if (ret)
+>> +			goto unlock_and_return;
+>> +	}
+>> +
+>> +	ov2685->streaming = on;
+>> +
+>> +unlock_and_return:
+>> +	mutex_unlock(&ov2685->mutex);
+>> +	return ret;
+>> +}
 
---__=_Part_Boundary_007_2000567102.1219323059--
+
+--------------8B0D3626B05EE637EE2CE4A6
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  </head>
+  <body text="#000000" bgcolor="#FFFFFF">
+    <p>Hi Sakari,</p>
+    <br>
+    <div class="moz-cite-prefix">On 2018年01月03日 19:43, Sakari Ailus
+      wrote:<br>
+    </div>
+    <blockquote type="cite"
+      cite="mid:20180103114324.za6bmg2rxuygawi4@valkosipuli.retiisi.org.uk">
+      <blockquote type="cite" style="color: #000000;">
+        <pre wrap="">+static int ov2685_s_stream(struct v4l2_subdev *sd, int on)
++{
++	struct ov2685 *ov2685 = to_ov2685(sd);
++	struct i2c_client *client = ov2685-&gt;client;
++	int ret = 0;
++
++	mutex_lock(&amp;ov2685-&gt;mutex);
++
++	on = !!on;
++	if (on == ov2685-&gt;streaming)
++		goto unlock_and_return;
++
++	if (on) {
++		/* In case these controls are set before streaming */
++		ov2685_set_exposure(ov2685, ov2685-&gt;exposure-&gt;val);
++		ov2685_set_gain(ov2685, ov2685-&gt;anal_gain-&gt;val);
++		ov2685_set_vts(ov2685, ov2685-&gt;vblank-&gt;val);
++		ov2685_enable_test_pattern(ov2685, ov2685-&gt;test_pattern-&gt;val);
+</pre>
+      </blockquote>
+      <pre wrap="">You should use __v4l2_ctrl_handler_setup() here. Or put that to the
+driver's runtime_resume function. That actually might be better.
+</pre>
+    </blockquote>
+    The v3 put __v4l2_ctrl_handler_setup() to the runtime_resume
+    callback. But <br>
+    ov2685_s_stream()<br>
+       -&gt; pm_runtime_get_sync()<br>
+           -&gt; ov2685_runtime_resume()<br>
+                -&gt; __v4l2_ctrl_handler_setup()<br>
+                    -&gt; pm_runtime_get_if_in_use(), always &lt;= 0
+    because dev-&gt;power.runtime_status != RPM_ACTIVE.<br>
+    <br>
+    Seems like  __v4l2_ctrl_handler_setup() has to be in
+    ov2685_s_stream().<br>
+    <br>
+    Thanks<br>
+    <blockquote type="cite"
+      cite="mid:20180103114324.za6bmg2rxuygawi4@valkosipuli.retiisi.org.uk">
+      <pre wrap="">
+</pre>
+      <blockquote type="cite" style="color: #000000;">
+        <pre wrap="">+
++		ret = ov2685_write_reg(client, REG_SC_CTRL_MODE,
++				OV2685_REG_VALUE_08BIT, SC_CTRL_MODE_STREAMING);
++		if (ret)
++			goto unlock_and_return;
++	} else {
++		ret = ov2685_write_reg(client, REG_SC_CTRL_MODE,
++				OV2685_REG_VALUE_08BIT, SC_CTRL_MODE_STANDBY);
++		if (ret)
++			goto unlock_and_return;
++	}
++
++	ov2685-&gt;streaming = on;
++
++unlock_and_return:
++	mutex_unlock(&amp;ov2685-&gt;mutex);
++	return ret;
++}</pre>
+      </blockquote>
+    </blockquote>
+    <br>
+  </body>
+</html>
+
+--------------8B0D3626B05EE637EE2CE4A6--
