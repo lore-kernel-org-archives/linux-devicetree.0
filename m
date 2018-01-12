@@ -1,95 +1,70 @@
-From: William Wu <william.wu@rock-chips.com>
-Subject: [PATCH 3/3] phy: rockchip-typec: reset USB3 controller before initializing PHY
-Date: Fri, 12 Jan 2018 18:08:24 +0800
-Message-ID: <1515751704-13213-4-git-send-email-william.wu@rock-chips.com>
+From: William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH 1/3] dt-bindings: phy: phy-rockchip-typec: add usb3 otg reset
+Date: Fri, 12 Jan 2018 18:08:22 +0800
+Message-ID: <1515751704-13213-2-git-send-email-william.wu@rock-chips.com>
 References: <1515751704-13213-1-git-send-email-william.wu@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1515751704-13213-1-git-send-email-william.wu@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: kishon@ti.com
-Cc: robh+dt@kernel.org, heiko@sntech.de, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, frank.wang@rock-chips.com, huangtao@rock-chips.com, dianders@google.com, briannorris@google.com, groeck@google.com, daniel.meng@rock-chips.com, John.Youn@synopsys.com, william.wu@rock-chips.com, lin.huang@rock-chips.com
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1515751704-13213-1-git-send-email-william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: kishon-l0cyMroinI0@public.gmane.org
+Cc: huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, groeck-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, lin.huang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, briannorris-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, daniel.meng-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-According to the RK3399 TRM, for Type-C USB start-up sequence,
-we need to hold the whole USB 3.0 OTG controller in reset state
-to keep the PIPE power state in P2 while initializing PHY. This
-is because when initialize the Type-C PHY for USB3, we need to
-configure the PHY and PMA for the selected mode of operation,
-and wait for the PMA and PIPE ready, if the USB3 OTG controller
-isn't in P2 state, it may cause waiting timeout.
+This patch adds USB3 OTG reset property for rk3399 Type-C PHY
+to hold the USB3 controller in reset state.
 
-Without this patch, waiting for the PMA and PIPE ready timeout
-issue easily happens when we shutdown the Logic on RK3399 and
-do the suspend/resume stress test.
-
-Signed-off-by: William Wu <william.wu@rock-chips.com>
+Signed-off-by: William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 ---
- drivers/phy/rockchip/phy-rockchip-typec.c | 22 ++++++++++++++++++++--
- 1 file changed, 20 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/phy/rockchip/phy-rockchip-typec.c b/drivers/phy/rockchip/phy-rockchip-typec.c
-index ee85fa0..68a5840 100644
---- a/drivers/phy/rockchip/phy-rockchip-typec.c
-+++ b/drivers/phy/rockchip/phy-rockchip-typec.c
-@@ -372,6 +372,7 @@ struct rockchip_typec_phy {
- 	struct reset_control *uphy_rst;
- 	struct reset_control *pipe_rst;
- 	struct reset_control *tcphy_rst;
-+	struct reset_control *otg_rst;
- 	struct rockchip_usb3phy_port_cfg port_cfgs;
- 	/* mutex to protect access to individual PHYs */
- 	struct mutex lock;
-@@ -841,10 +842,16 @@ static int rockchip_usb3_phy_power_on(struct phy *phy)
- 	if (tcphy->mode == new_mode)
- 		goto unlock_ret;
+diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt b/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
+index 6ea867e..db2902e 100644
+--- a/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
++++ b/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
+@@ -13,7 +13,7 @@ Required properties:
+  - assigned-clock-rates : the phy core clk frequency, shall be: 50000000
+  - resets : a list of phandle + reset specifier pairs
+  - reset-names : string reset name, must be:
+-		 "uphy", "uphy-pipe", "uphy-tcphy"
++		 "uphy", "uphy-pipe", "uphy-tcphy", "usb3-otg"
+  - extcon : extcon specifier for the Power Delivery
  
-+	ret = reset_control_assert(tcphy->otg_rst);
-+	if (ret < 0) {
-+		dev_err(tcphy->dev, "failed to assert otg reset: %d\n", ret);
-+		goto unlock_ret;
-+	}
-+
- 	if (tcphy->mode == MODE_DISCONNECT) {
- 		ret = tcphy_phy_init(tcphy, new_mode);
- 		if (ret)
--			goto unlock_ret;
-+			goto unlock_deassert;
- 	}
- 
- 	/* wait TCPHY for pipe ready */
-@@ -852,7 +859,7 @@ static int rockchip_usb3_phy_power_on(struct phy *phy)
- 		regmap_read(tcphy->grf_regs, reg->offset, &val);
- 		if (!(val & BIT(reg->enable_bit))) {
- 			tcphy->mode |= new_mode & (MODE_DFP_USB | MODE_UFP_USB);
--			goto unlock_ret;
-+			goto unlock_deassert;
- 		}
- 		usleep_range(10, 20);
- 	}
-@@ -862,6 +869,11 @@ static int rockchip_usb3_phy_power_on(struct phy *phy)
- 
- 	ret = -ETIMEDOUT;
- 
-+unlock_deassert:
-+	ret = reset_control_deassert(tcphy->otg_rst);
-+	if (ret < 0)
-+		dev_err(tcphy->dev, "failed to deassert otg reset: %d\n", ret);
-+
- unlock_ret:
- 	mutex_unlock(&tcphy->lock);
- 	return ret;
-@@ -1066,6 +1078,12 @@ static int tcphy_parse_dt(struct rockchip_typec_phy *tcphy,
- 		return PTR_ERR(tcphy->tcphy_rst);
- 	}
- 
-+	tcphy->otg_rst = devm_reset_control_get(dev, "usb3-otg");
-+	if (IS_ERR(tcphy->otg_rst)) {
-+		dev_err(dev, "no otg_rst reset control found\n");
-+		return PTR_ERR(tcphy->otg_rst);
-+	}
-+
- 	return 0;
- }
- 
+ Note, there are 2 type-c phys for RK3399, and they are almost identical, except
+@@ -56,8 +56,9 @@ Example:
+ 		assigned-clock-rates = <50000000>;
+ 		resets = <&cru SRST_UPHY0>,
+ 			 <&cru SRST_UPHY0_PIPE_L00>,
+-			 <&cru SRST_P_UPHY0_TCPHY>;
+-		reset-names = "uphy", "uphy-pipe", "uphy-tcphy";
++			 <&cru SRST_P_UPHY0_TCPHY>,
++			 <&cru SRST_A_USB3_OTG0>;
++		reset-names = "uphy", "uphy-pipe", "uphy-tcphy", "usb3-otg";
+ 		rockchip,typec-conn-dir = <0xe580 0 16>;
+ 		rockchip,usb3tousb2-en = <0xe580 3 19>;
+ 		rockchip,external-psm = <0xe588 14 30>;
+@@ -84,8 +85,9 @@ Example:
+ 		assigned-clock-rates = <50000000>;
+ 		resets = <&cru SRST_UPHY1>,
+ 			 <&cru SRST_UPHY1_PIPE_L00>,
+-			 <&cru SRST_P_UPHY1_TCPHY>;
+-		reset-names = "uphy", "uphy-pipe", "uphy-tcphy";
++			 <&cru SRST_P_UPHY1_TCPHY>,
++			 <&cru SRST_A_USB3_OTG1>;
++		reset-names = "uphy", "uphy-pipe", "uphy-tcphy", "usb3-otg";
+ 		rockchip,typec-conn-dir = <0xe58c 0 16>;
+ 		rockchip,usb3tousb2-en = <0xe58c 3 19>;
+ 		rockchip,external-psm = <0xe594 14 30>;
 -- 
 2.0.0
