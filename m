@@ -1,71 +1,178 @@
-From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: [PATCH v2] arm64: allwinner: a64: orangepi-zero-plus2: add usb otg
-Date: Fri, 12 Jan 2018 14:39:04 +0530
-Message-ID: <1515748144-25204-1-git-send-email-jagan@amarulasolutions.com>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 3/3] drm: rcar-du: add R8A77970 support
+Date: Fri, 12 Jan 2018 12:23:00 +0300
+Message-ID: <78c33176-39b7-6bd9-e307-2b28c0b28f04@cogentembedded.com>
+References: <20180111170103.676775968@cogentembedded.com>
+ <8239904.rdcckmYW4i@avalon>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <8239904.rdcckmYW4i@avalon>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add usb otg support for orangepi-zero-plus2 board:
-- Add usb_otg node with dr_mode as 'otg'
-- USB0-IDDET connected to PA21
-- VBUS connected through DCIN which always on
+On 1/12/2018 4:13 AM, Laurent Pinchart wrote:
 
-Tested mass storage function.
+>> Add support for the R-Car  V3M  (R8A77970) SoC to the DU driver (this SoC
+>> has only  1 display port). Note that there are some differences  with the
+>> other R-Car gen3 SoCs in the LVDS encoder part, e.g. LVDPLLCR has the same
+>> layout  as  on the R-Car gen2 SoCs...
+>>
+>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+> 
+> Could you please rebase this series on top of the LVDS rework posted as
+> "[PATCH 00/10] R-Car DU: Convert LVDS code to bridge driver" (https://
+> www.spinics.net/lists/dri-devel/msg161931.html) ? It should make it easier to
+> implement support for V3M. Please then split the DU and LVDS drivers changes
+> in two patches.
+> 
+>> ---
+>>   Documentation/devicetree/bindings/display/renesas,du.txt |    1
+> 
+> Please split the DT bindings changes to a separate patch.
 
-Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
----
-Changes for v2:
-- Change dr_mode to peripheral
+    I don't like putting a one-line chnage into a separate bindings patch...
 
- .../dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts    | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+>>   drivers/gpu/drm/rcar-du/rcar_du_drv.c                    |   23 +++++++++++
+>>   drivers/gpu/drm/rcar-du/rcar_du_drv.h                    |    1
+>>   drivers/gpu/drm/rcar-du/rcar_du_group.c                  |   10 +++---
+>>   drivers/gpu/drm/rcar-du/rcar_du_lvdsenc.c                |   20 +++++++----
+>>   5 files changed, 45 insertions(+), 10 deletions(-)
+>>
+>> Index: linux/Documentation/devicetree/bindings/display/renesas,du.txt
+>> ===================================================================
+>> --- linux.orig/Documentation/devicetree/bindings/display/renesas,du.txt
+>> +++ linux/Documentation/devicetree/bindings/display/renesas,du.txt
+>> @@ -13,6 +13,7 @@ Required Properties:
+>>       - "renesas,du-r8a7794" for R8A7794 (R-Car E2) compatible DU
+>>       - "renesas,du-r8a7795" for R8A7795 (R-Car H3) compatible DU
+>>       - "renesas,du-r8a7796" for R8A7796 (R-Car M3-W) compatible DU
+>> +    - "renesas,du-r8a77970" for R8A77970 (R-Car V3M) compatible DU
+>>
+>>     - reg: A list of base address and length of each memory resource, one for
+>> each entry in the reg-names property.
+> 
+> You also need to update the ports table further down in this file.
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
-index af43533..6511190 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
-@@ -73,6 +73,10 @@
- 	};
- };
- 
-+&ehci0 {
-+	status = "okay";
-+};
-+
- &mmc0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc0_pins_a>;
-@@ -111,6 +115,10 @@
- 	status = "okay";
- };
- 
-+&ohci0 {
-+	status = "okay";
-+};
-+
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_pins_a>;
-@@ -122,3 +130,13 @@
- 	pinctrl-0 = <&uart1_pins>, <&uart1_rts_cts_pins>;
- 	status = "okay";
- };
-+
-+&usb_otg {
-+	dr_mode = "peripheral";
-+	status = "okay";
-+};
-+
-+&usbphy {
-+	usb0_id_det-gpios = <&pio 0 21 GPIO_ACTIVE_HIGH>; /* PA21 */
-+	status = "okay";
-+};
--- 
-2.7.4
+    ... but this one seems to justify dpoing it that way. :-)
 
+>> Index: linux/drivers/gpu/drm/rcar-du/rcar_du_drv.c
+>> ===================================================================
+>> --- linux.orig/drivers/gpu/drm/rcar-du/rcar_du_drv.c
+>> +++ linux/drivers/gpu/drm/rcar-du/rcar_du_drv.c
+>> @@ -258,6 +258,28 @@ static const struct rcar_du_device_info
+>>   	.dpll_ch =  BIT(1),
+>>   };
+>>
+>> +static const struct rcar_du_device_info rcar_du_r8a77970_info = {
+>> +	.gen = 3,
+>> +	.model = R8A77970,
+>> +	.features = RCAR_DU_FEATURE_CRTC_IRQ_CLOCK
+>> +		  | RCAR_DU_FEATURE_EXT_CTRL_REGS
+>> +		  | RCAR_DU_FEATURE_VSP1_SOURCE,
+>> +	.num_crtcs = 1,
+>> +	.routes = {
+>> +		/* R8A77970 has one RGB output and one LVDS output. */
+>> +		[RCAR_DU_OUTPUT_DPAD0] = {
+>> +			.possible_crtcs = BIT(0),
+>> +			.port = 1,
+>> +		},
+>> +		[RCAR_DU_OUTPUT_LVDS0] = {
+>> +			.possible_crtcs = BIT(0),
+>> +			.port = 0,
+>> +		},
+> 
+> All the other SoCs have DPAD0 as port 0. Unless there's a specific need for a
+> different implementation with V3M I'd keep the same order.
+
+    I'll look into this..
+
+>> +	},
+>> +	.num_lvds = 1,
+>> +	.dpll_ch  = BIT(1),
+> 
+> This doesn't seem to be correct, there's no DPLL in V3M.
+
+    Indeed, thanks!
+
+[...]
+>> Index: linux/drivers/gpu/drm/rcar-du/rcar_du_group.c
+>> ===================================================================
+>> --- linux.orig/drivers/gpu/drm/rcar-du/rcar_du_group.c
+>> +++ linux/drivers/gpu/drm/rcar-du/rcar_du_group.c
+>> @@ -133,10 +133,12 @@ static void rcar_du_group_setup(struct r
+>>   	rcar_du_group_write(rgrp, DORCR, DORCR_PG1D_DS1 | DORCR_DPRS);
+>>
+>>   	/* Apply planes to CRTCs association. */
+>> -	mutex_lock(&rgrp->lock);
+>> -	rcar_du_group_write(rgrp, DPTSR, (rgrp->dptsr_planes << 16) |
+>> -			    rgrp->dptsr_planes);
+>> -	mutex_unlock(&rgrp->lock);
+>> +	if (rcdu->info->num_crtcs > 1) {
+>> +		mutex_lock(&rgrp->lock);
+>> +		rcar_du_group_write(rgrp, DPTSR, (rgrp->dptsr_planes << 16) |
+>> +				    rgrp->dptsr_planes);
+>> +		mutex_unlock(&rgrp->lock);
+>> +	}
+> 
+> Shouldn't you skip writing to the DPTSR register if there's a single DPTSR in
+> the group ? That would then apply to M3-W as well, which doesn't have the
+> DPTSR2 register. I'd split this change to a separate patch.
+
+    OK, I guess you know this stuff better -- I didn't know DPTSR2 is used at 
+all... :-)
+
+[...]
+>> Index: linux/drivers/gpu/drm/rcar-du/rcar_du_lvdsenc.c
+>> ===================================================================
+>> --- linux.orig/drivers/gpu/drm/rcar-du/rcar_du_lvdsenc.c
+>> +++ linux/drivers/gpu/drm/rcar-du/rcar_du_lvdsenc.c
+[...]
+>> @@ -177,14 +185,14 @@ int rcar_du_lvdsenc_enable(struct rcar_d
+>>   void rcar_du_lvdsenc_atomic_check(struct rcar_du_lvdsenc *lvds,
+>>   				  struct drm_display_mode *mode)
+>>   {
+>> -	struct rcar_du_device *rcdu = lvds->dev;
+>> +	const struct rcar_du_device_info *info = lvds->dev->info;
+>>
+>>   	/*
+>>   	 * The internal LVDS encoder has a restricted clock frequency operating
+>> -	 * range (30MHz to 150MHz on Gen2, 25.175MHz to 148.5MHz on Gen3). Clamp
+>> -	 * the clock accordingly.
+>> +	 * range (30MHz to 150MHz on Gen2 and R-Car V3M, 25.175MHz to 148.5MHz
+>> +	 * on Gen3). Clamp the clock accordingly.
+>>   	 */
+>> -	if (rcdu->info->gen < 3)
+>> +	if (info->gen < 3 || info->model == R8A77970)
+>>   		mode->clock = clamp(mode->clock, 30000, 150000);
+> 
+> According to the datasheet the frequency range for V3M is the same as for the
+> H3 and M3 SoCs.
+
+    Indeed! I thought it's determined by the LVDPLLCR layout but it's not...
+
+> The range seems to have changed starting in datasheet version
+> 0.52. I would fix the range in a separate patch first.
+
+    Yes.
+
+> If you want I can send patches to fix this issue
+
+    Yes, please. You clearly know about DU more than me. :-)
+
+> and the previous one, or you
+> can write them and include them in v2. Let me know what you'd prefer.
+> 
+>>   	else
+>>   		mode->clock = clamp(mode->clock, 25175, 148500);
+
+    The lower bound documented on gen3 is 31 MHz indeed...
+
+MBR, Sergei
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
