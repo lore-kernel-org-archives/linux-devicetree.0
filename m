@@ -1,95 +1,91 @@
-From: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 1/4 v7] drm/bridge: Add bindings for TI THS8134
-Date: Fri, 12 Jan 2018 14:53:23 +0530
-Message-ID: <f87b763b-9716-de31-dde1-43ec1600a5ae@codeaurora.org>
-References: <20180112074854.9560-1-linus.walleij@linaro.org>
+From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 1/2] dt-bindings: mtd: document Broadcom's BCM47xx partitions
+Date: Fri, 12 Jan 2018 10:33:53 +0100
+Message-ID: <20180112093354.17593-1-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180112074854.9560-1-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Laurent Pinchart <Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 
+Broadcom based home router devices use partitions which have to be
+discovered in a specific non-standard way. As there is no partition
+table this commit adds and describes a new custom binding.
 
-On 01/12/2018 01:18 PM, Linus Walleij wrote:
-> This adds device tree bindings for the Texas Instruments
-> THS8134, THS8134A and THS8134B VGA DACs by extending and
-> renaming the existing bindings for THS8135.
-> 
-> These DACs are used for the VGA outputs on the ARM reference
-> designs such as Integrator, Versatile and RealView.
+Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+---
+ .../devicetree/bindings/mtd/partition.txt          | 46 +++++++++++++++++++++-
+ 1 file changed, 44 insertions(+), 2 deletions(-)
 
-queued to drm-misc-next.
-
-Thanks,
-Archit
-
-> 
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Reviewed-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
-> ChangeLog v6->v7:
-> - No changes, just resending with the series.
-> ChangeLog v5->v6:
-> - Fix the more-to-less specific compatible strings.
-> - Fix some speling.
-> - Collect Laurent's review tag.
-> ChangeLog v2->v5:
-> - Dropped the "ti,ths813x" as it turns out we need precise info
->    about the sub-variant anyways as they all very in timings.
-> - Refine the THS8134 variants, it turns out ths8134, ths8134a
->    and ths8134b are three different variants of ths8134.
-> ChangeLog v1->v2:
-> - Introduce specific-to-general compatible string:
->    compatible = "ti,ths8134a", "ti,ths813x";
->    so drivers can handle the whole family the same way.
-> - Collected Rob's ACK.
-> ---
->   .../display/bridge/{ti,ths8135.txt => ti,ths813x.txt}       | 13 +++++++++----
->   1 file changed, 9 insertions(+), 4 deletions(-)
->   rename Documentation/devicetree/bindings/display/bridge/{ti,ths8135.txt => ti,ths813x.txt} (69%)
-> 
-> diff --git a/Documentation/devicetree/bindings/display/bridge/ti,ths8135.txt b/Documentation/devicetree/bindings/display/bridge/ti,ths813x.txt
-> similarity index 69%
-> rename from Documentation/devicetree/bindings/display/bridge/ti,ths8135.txt
-> rename to Documentation/devicetree/bindings/display/bridge/ti,ths813x.txt
-> index 6ec1a880ac18..df3d7c1ac09e 100644
-> --- a/Documentation/devicetree/bindings/display/bridge/ti,ths8135.txt
-> +++ b/Documentation/devicetree/bindings/display/bridge/ti,ths813x.txt
-> @@ -1,11 +1,16 @@
-> -THS8135 Video DAC
-> ------------------
-> +THS8134 and THS8135 Video DAC
-> +-----------------------------
->   
-> -This is the binding for Texas Instruments THS8135 Video DAC bridge.
-> +This is the binding for Texas Instruments THS8134, THS8134A, THS8134B and
-> +THS8135 Video DAC bridges.
->   
->   Required properties:
->   
-> -- compatible: Must be "ti,ths8135"
-> +- compatible: Must be one of
-> +  "ti,ths8134"
-> +  "ti,ths8134a," "ti,ths8134"
-> +  "ti,ths8134b", "ti,ths8134"
-> +  "ti,ths8135"
->   
->   Required nodes:
->   
-> 
-
+diff --git a/Documentation/devicetree/bindings/mtd/partition.txt b/Documentation/devicetree/bindings/mtd/partition.txt
+index 36f3b769a626..b201d497b618 100644
+--- a/Documentation/devicetree/bindings/mtd/partition.txt
++++ b/Documentation/devicetree/bindings/mtd/partition.txt
+@@ -14,8 +14,6 @@ method is used for a given flash device. To describe the method there should be
+ a subnode of the flash device that is named 'partitions'. It must have a
+ 'compatible' property, which is used to identify the method to use.
+ 
+-We currently only document a binding for fixed layouts.
+-
+ 
+ Fixed Partitions
+ ================
+@@ -109,3 +107,47 @@ flash@2 {
+ 		};
+ 	};
+ };
++
++
++Broadcom BCM47xx Partitions
++===========================
++
++Broadcom is one of hardware manufacturers providing SoCs (BCM47xx) used in
++home routers. Their BCM947xx boards using CFE bootloader have several partitions
++without any on-flash partition table. On some devices their sizes and/or
++meanings can also vary so fixed partitioning can't be used.
++
++Discovering partitions on these devices is possible thanks to having a special
++header and/or magic signature at the beginning of each of them. They are also
++block aligned which is important for determinig a size.
++
++Most of partitions use ASCII text based magic for determining a type. More
++complex partitions (like TRX with its HDR0 magic) may include extra header
++containing some details, including a length.
++
++A list of supported partitions includes:
++1) Bootloader with Broadcom's CFE (Common Firmware Environment)
++2) NVRAM with configuration/calibration data
++3) Device manufacturer's data with some default values (e.g. SSIDs)
++4) TRX firmware container which can hold up to 4 subpartitions
++5) Backup TRX firmware used after failed upgrade
++
++As mentioned earlier, role of some partitions may depend on extra configuration.
++For example both: main firmware and backup firmware use the same TRX format with
++the same header. To distinguish currently used firmware a CFE's environment
++variable "bootpartition" is used.
++
++
++Devices using Broadcom partitions described above should should have flash node
++with a subnode named "partitions" using following properties:
++
++Required properties:
++- compatible : (required) must be "brcm,bcm947xx-cfe-partitions"
++
++Example:
++
++flash@0 {
++	partitions {
++		compatible = "brcm,bcm947xx-cfe-partitions";
++	};
++};
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.11.0
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
