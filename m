@@ -1,47 +1,86 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 Subject: Re: [PATCH 1/3] arm: spear600: Add missing interrupt-parent of rtc
-Date: Fri, 12 Jan 2018 13:57:58 -0800
-Message-ID: <CAOesGMiHeitS_j9r0DsPf3k1jVJT9_z-bHyrhbB7fQ__LjjaqA@mail.gmail.com>
+Date: Fri, 12 Jan 2018 23:05:33 +0100
+Message-ID: <CAK8P3a3MZX-ZsxX9h1-8kVQhn9hqY=c8L1+=e3uTfjEjBCYuPg@mail.gmail.com>
 References: <a062d9ed0d3365b578156a780202fa533e725374.1515650104.git.viresh.kumar@linaro.org>
  <20180112020711.6gp2pnsxxjzelidq@localhost> <20180112032223.GK3626@vireshk-i7>
  <CAOesGMggU73asY1SEUDD_BsWcrGYR___o8e5omjziOPEwJgqBQ@mail.gmail.com>
  <CAK8P3a2SO4=YKBE3L_AKsyfNe77YR7a8F=dvbS=ic03=6NK8MA@mail.gmail.com>
  <CAOesGMgcf9FovbzhPkKnrG4ETRFP3dsSJnTYNfp1wECMFeFOGA@mail.gmail.com>
  <CAL_JsqJVWLazDRB1me2OubqqMhdsqsR+cLSHR+K0OY3dZHcE-w@mail.gmail.com>
- <CAOesGMiyfpRyoe4dxQeNMF5invysVBEy+J5OwUhuop=JyAvZoQ@mail.gmail.com> <CAK8P3a3KTz0sOSbO9+sAY1Sv95hZF4Yg1qMzOaXPAZ_1pOgGpg@mail.gmail.com>
+ <CAOesGMiyfpRyoe4dxQeNMF5invysVBEy+J5OwUhuop=JyAvZoQ@mail.gmail.com>
+ <CAK8P3a3KTz0sOSbO9+sAY1Sv95hZF4Yg1qMzOaXPAZ_1pOgGpg@mail.gmail.com> <CAOesGMiHeitS_j9r0DsPf3k1jVJT9_z-bHyrhbB7fQ__LjjaqA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAK8P3a3KTz0sOSbO9+sAY1Sv95hZF4Yg1qMzOaXPAZ_1pOgGpg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <CAOesGMiHeitS_j9r0DsPf3k1jVJT9_z-bHyrhbB7fQ__LjjaqA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, ARM-SoC Maintainers <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux ARM Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, gregkh <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, ARM-SoC Maintainers <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux ARM Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, gregkh <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 12, 2018 at 1:53 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Fri, Jan 12, 2018 at 10:50 PM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
->> On Fri, Jan 12, 2018 at 12:45 PM, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->>> On Fri, Jan 12, 2018 at 12:23 PM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
->>> I have more dtc checks in the works (nothing for 4.16 :) ). I'd like
->>> the process to work better. I'm not going to fix all the warnings. I
->>> don't think Arnd should either. Turning them off by default hasn't
->>> worked great either. For some, I'm not sure we can ever get to warning
->>> free, but I'd like new stuff to have warnings enabled and no one
->>> builds with W=1. We could put together tooling to just show new
->>> warnings, but someone has to run it and enforce it. I could stick dtc
->>> updates into linux-next for multiple cycles before sending to Linus.
+On Fri, Jan 12, 2018 at 10:57 PM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
+> On Fri, Jan 12, 2018 at 1:53 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+>> On Fri, Jan 12, 2018 at 10:50 PM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
+>>> On Fri, Jan 12, 2018 at 12:45 PM, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>>>> On Fri, Jan 12, 2018 at 12:23 PM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
+>>>> I have more dtc checks in the works (nothing for 4.16 :) ). I'd like
+>>>> the process to work better. I'm not going to fix all the warnings. I
+>>>> don't think Arnd should either. Turning them off by default hasn't
+>>>> worked great either. For some, I'm not sure we can ever get to warning
+>>>> free, but I'd like new stuff to have warnings enabled and no one
+>>>> builds with W=1. We could put together tooling to just show new
+>>>> warnings, but someone has to run it and enforce it. I could stick dtc
+>>>> updates into linux-next for multiple cycles before sending to Linus.
+>>>
+>>> I'll split up and report DT warnings separate from compiler, seems
+>>> like a reasonable approach.
 >>
->> I'll split up and report DT warnings separate from compiler, seems
->> like a reasonable approach.
+>> Maybe also report any other output from the build process as another
+>> category. When things build fine, we should see no output at all.
 >
-> Maybe also report any other output from the build process as another
-> category. When things build fine, we should see no output at all.
+> Yep, true.
+>
+> Right now there's mostly DTC warnings and missing MODULE_LICENSE().
 
-Yep, true.
+I've sent patches for all the remaining MODULE_LICENSE warnings earlier
+this week, and we should now have patches for almost all the dtc
+warnings in flight. This is what I still see on my randconfig builder
+with linux-next + arm-soc/for-next + patches I sent:
 
-Right now there's mostly DTC warnings and missing MODULE_LICENSE().
+     arch/arm/boot/dts/spear1310-evb.dtb: Warning (gpios_property):
+Missing property '#gpio-cells' in node /interrupt-controller@ec801000
+or bad phandle (referred from /ahb/apb/spi@e0100000:cs-gpios[6])
+     arch/arm/boot/dts/spear1310-evb.dtb: Warning (gpios_property):
+Property 'cs-gpios', cell 6 is not a phandle reference in
+/ahb/apb/spi@e0100000
+     arch/arm/boot/dts/spear1340-evb.dtb: Warning (dmas_property):
+Missing property '#dma-cells' in node /interrupt-controller@ec801000
+or bad phandle (referred from /ahb/apb/serial@b4100000:dmas[4])
+     arch/arm/boot/dts/spear1340-evb.dtb: Warning (dmas_property):
+Property 'dmas', cell 4 is not a phandle reference in
+/ahb/apb/serial@b4100000
+     arch/arm/boot/dts/spear600-evb.dtb: Warning
+(interrupts_property): Missing interrupt-parent for
+/ahb/apb/rtc@fc900000
+     arch/arm/boot/dts/ste-nomadik-nhk15.dtb: Warning
+(interrupts_property): Missing interrupt-parent for
+/amba/clcd@10120000
+     arch/arm/boot/dts/ste-nomadik-s8815.dtb: Warning
+(interrupts_property): Missing interrupt-parent for
+/amba/clcd@10120000
 
--Olof
+Not sure why the spear warnings are still there, maybe Viresh missed those
+or you missed one of his patches?
+
+I hope Linus Walleij can find out what the right interrupt-parent
+should be on the
+nomadik machine, that is otherwise the last remaining warning. Apparently the
+clcd driver doesn't actually need its interrupt, so we could decide to
+just comment
+out that line if we don't know which controller it's connected to.
+
+       Arnd
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
