@@ -1,115 +1,71 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v5 0/5] Add OV5640 parallel interface and RGB565/YUYV
- support
-Date: Fri, 12 Jan 2018 10:04:42 +0100
-Message-ID: <20180112090442.o3uxxavtpev5ckhs@flea.lan>
-References: <1514973452-10464-1-git-send-email-hugues.fruchet@st.com>
- <20180108153811.5xrvbaekm6nxtoa6@flea>
- <3010811e-ed37-4489-6a9f-6cc835f41575@st.com>
- <20180110153724.l77zpdgxfbzkznuf@flea>
- <20180111091508.a0c9f630c6b4ef80178694fb@magewell.com>
- <20180111124018.azdzjeitjsyenmra@flea.lan>
- <20180112101839.cc13571a099d64eea2ac6e3a@magewell.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="bpckhexrypbisyfg"
+From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Subject: [PATCH v2] arm64: allwinner: a64: orangepi-zero-plus2: add usb otg
+Date: Fri, 12 Jan 2018 14:39:04 +0530
+Message-ID: <1515748144-25204-1-git-send-email-jagan@amarulasolutions.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20180112101839.cc13571a099d64eea2ac6e3a-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yong <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
-Cc: Hugues FRUCHET <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Add usb otg support for orangepi-zero-plus2 board:
+- Add usb_otg node with dr_mode as 'otg'
+- USB0-IDDET connected to PA21
+- VBUS connected through DCIN which always on
 
---bpckhexrypbisyfg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Tested mass storage function.
 
-Hi,
+Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+---
+Changes for v2:
+- Change dr_mode to peripheral
 
-On Fri, Jan 12, 2018 at 10:18:39AM +0800, Yong wrote:
-> > On Thu, Jan 11, 2018 at 09:15:08AM +0800, Yong wrote:
-> > > > On Mon, Jan 08, 2018 at 05:13:39PM +0000, Hugues FRUCHET wrote:
-> > > > > I'm using a ST board with OV5640 wired in parallel bus output in =
-order=20
-> > > > > to interface to my STM32 DCMI parallel interface.
-> > > > > Perhaps could you describe your setup so I could help on understa=
-nding=20
-> > > > > the problem on your side. From my past experience with this senso=
-r=20
-> > > > > module, you can first check hsync/vsync polarities, the datasheet=
- is=20
-> > > > > buggy on VSYNC polarity as documented in patch 4/5.
-> > > >=20
-> > > > It turns out that it was indeed a polarity issue.
-> > > >=20
-> > > > It looks like that in order to operate properly, I need to setup the
-> > > > opposite polarity on HSYNC and VSYNC on the interface. I looked at =
-the
-> > > > signals under a scope, and VSYNC is obviously inversed as you
-> > > > described. HSYNC, I'm not so sure since the HBLANK period seems very
-> > > > long, almost a line.
-> > > >=20
-> > > > Since VSYNC at least looks correct, I'd be inclined to think that t=
-he
-> > > > polarity is inversed on at least the SoC I'm using it on.
-> > > >=20
-> > > > Yong, did you test the V3S CSI driver with a parallel interface? Wi=
-th
-> > > > what sensor driver? Have you found some polarities issues like this?
-> > >=20
-> > > Did you try it with Allwinner SoCs?
-> >=20
-> > Yes, on an H3. Looking at all the Allwinner datasheet I could get my
-> > hands on, they are all documented in the same way. However, I really
-> > start to wonder whether the polarity shouldn't be reversed.
-> >=20
-> > At least the fact that VSYNC is clearly active low on the
-> > oscilloscope, while I have to set it active high in the controller
-> > seems like a strong hint :)
->=20
-> The BSP code of Allwinner also treat V4L2_MBUS_VSYNC_ACTIVE_HIGH as
-> they documented 'positive'.
-> Maybe there need some more tests to confirm if the datasheet and BSP
-> code are both wrong.
+ .../dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts    | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-Indeed, and at the same time they do the same on the ov5640 driver
-they have.
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
+index af43533..6511190 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
+@@ -73,6 +73,10 @@
+ 	};
+ };
+ 
++&ehci0 {
++	status = "okay";
++};
++
+ &mmc0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&mmc0_pins_a>;
+@@ -111,6 +115,10 @@
+ 	status = "okay";
+ };
+ 
++&ohci0 {
++	status = "okay";
++};
++
+ &uart0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart0_pins_a>;
+@@ -122,3 +130,13 @@
+ 	pinctrl-0 = <&uart1_pins>, <&uart1_rts_cts_pins>;
+ 	status = "okay";
+ };
++
++&usb_otg {
++	dr_mode = "peripheral";
++	status = "okay";
++};
++
++&usbphy {
++	usb0_id_det-gpios = <&pio 0 21 GPIO_ACTIVE_HIGH>; /* PA21 */
++	status = "okay";
++};
+-- 
+2.7.4
 
-I really think they are in a situation where they report that both the
-interface and the sensor are active high, while they are actually
-active low, but since both sides still use the same polarity it works.
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---bpckhexrypbisyfg
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlpYeikACgkQ0rTAlCFN
-r3TkTQ/+K8ZkxLBJlbJpmDe/IllM5ONMX1d2fP2gk7UzgrlYFxS2/ScbBnHp4MqC
-Vb+/5ty+0yp/UwO0GhJjD8v5REYDId5e4bdBG3X/LFwuqqJgw459z+dURJxu/i81
-HVDA8rEg+rxL8W222X4Z3Vj5jiaEcJIH9nhyLNizoZ00N1JnxXZEIlE+BEEvFYIO
-OQiki5awx0SioWr9DuSuF37FTr+JX8Zt/QtOFRWMnxPI4cYjmiwCJCmEVSODJmxh
-d5RoykQaJEYMHJ3jowad/Ho619VP7rgwU1o4FltBF7ngev7w5f+XXOYlHxwYqNIM
-4S8A8Pv3gBW6YmEgw9ddufvUZwf6Ssias8SN/Va489qjIG1Ix+/tCuTEeIuBQcRW
-zxVlfT4BNuu+Bwvg45I+KXdPtuw6K6bhRPNPUoMPRRguYCa4/SqmxYw0qXxeWd79
-4vk7VNN3HmOWugLqw6dnynim7quEJmXHmVCy+RLimZjcFlb9xpiAT310WwF+A6zI
-sFEvgmXDe9EO+HAnHEtKqmYr8Lz5Y9qoClmThZwuu5dtfQ3XHATWb7LAyEy4BjIg
-YP51x1nc6EqzuRWlBlhB7CAJybCOc8x9ivIX8u0j+GIYGsyvhFQFG80+AfBUKSz5
-8G8ebIXJJcWvtA0M7aVgf2rZsvakJo3kTOXAnkaWdAYerZ8t70A=
-=N6Ne
------END PGP SIGNATURE-----
-
---bpckhexrypbisyfg--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
