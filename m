@@ -1,142 +1,108 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH net-next 1/2 v11] net: ethernet: Add DT bindings for the Gemini ethernet
-Date: Fri, 12 Jan 2018 22:34:23 +0100
-Message-ID: <20180112213424.16442-1-linus.walleij@linaro.org>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [PATCH 1/3] arm: spear600: Add missing interrupt-parent of rtc
+Date: Fri, 12 Jan 2018 13:50:13 -0800
+Message-ID: <CAOesGMiyfpRyoe4dxQeNMF5invysVBEy+J5OwUhuop=JyAvZoQ@mail.gmail.com>
+References: <a062d9ed0d3365b578156a780202fa533e725374.1515650104.git.viresh.kumar@linaro.org>
+ <20180112020711.6gp2pnsxxjzelidq@localhost> <20180112032223.GK3626@vireshk-i7>
+ <CAOesGMggU73asY1SEUDD_BsWcrGYR___o8e5omjziOPEwJgqBQ@mail.gmail.com>
+ <CAK8P3a2SO4=YKBE3L_AKsyfNe77YR7a8F=dvbS=ic03=6NK8MA@mail.gmail.com>
+ <CAOesGMgcf9FovbzhPkKnrG4ETRFP3dsSJnTYNfp1wECMFeFOGA@mail.gmail.com> <CAL_JsqJVWLazDRB1me2OubqqMhdsqsR+cLSHR+K0OY3dZHcE-w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqJVWLazDRB1me2OubqqMhdsqsR+cLSHR+K0OY3dZHcE-w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux-CoA6ZxLDdyEEUmgCuDUIdw@public.gmane.org>
-Cc: Janos Laube <janos.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paulius Zaleckas <paulius.zaleckas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Hans Ulli Kroll <ulli.kroll-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tobias Waldvogel <tobias.waldvogel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, ARM-SoC Maintainers <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux ARM Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, gregkh <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds the device tree bindings for the Gemini ethernet
-controller. It is pretty straight-forward, using standard
-bindings and modelling the two child ports as child devices
-under the parent ethernet controller device.
+On Fri, Jan 12, 2018 at 12:45 PM, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Fri, Jan 12, 2018 at 12:23 PM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
+>> On Fri, Jan 12, 2018 at 12:56 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+>>> On Fri, Jan 12, 2018 at 4:23 AM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
+>>>> On Thu, Jan 11, 2018 at 7:22 PM, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>>>>> On 11-01-18, 18:07, Olof Johansson wrote:
+>>>>>> On Thu, Jan 11, 2018 at 11:28:51AM +0530, Viresh Kumar wrote:
+>>>>>> > The interrupt-parent of rtc was missing, add it.
+>>>>>> >
+>>>>>> > Fixes: 8113ba917dfa ("ARM: SPEAr: DT: Update device nodes")
+>>>>>> > Cc: stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org # v3.8+
+>>>>>> > Reported-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+>>>>>> > Signed-off-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>>>>>
+>>>>>> Applied to next/dt. Is stable really needed on this? It's been broken since
+>>>>>> pretty much forever, and nobody has complained... :)
+>>>>>
+>>>>> Not sure. Just thought it may be useful for someone somewhere :)
+>>>>
+>>>> Ok. Left the tags there, but didn't merge into fixes since we're late
+>>>> in -rc and this didn't seem critical at this time.
+>>>
+>>> My plan was to have these in the fixes branch in the hope of making
+>>> it to a clean build for 4.15 after all, they fix warnings that got introduced
+>>> by the updated dtc checks in 4.15-rc1.
+>>>
+>>> We are getting fairly close, but it seems we still miss a few, so we
+>>> might as well give up at this point. The remaining fixes should be easy
+>>> to backport into v4.15.y if we decide to do it, of further back even.
+>>> For v4.14 and before, the in-kernel copy of dtc won't warn, but mainline
+>>> dtc will.
+>>>
+>>> Greg, let me know your thoughts on this for the upcoming 4.15.y
+>>> release. We had hundreds of dtc warnings in 4.15-rc1, many of them
+>>> about important bugs, now we're down to a couple of warnings
+>>> for platforms we don't care about much, and I expect the last of
+>>> these fixes to land in 4.16-rc1 or maybe -rc2. Shall we backport
+>>> them all to get a clean 4.15.y release?
+>>
+>> I think it makes more sense to disable the warnings than to backport a
+>> bunch of warning fixes this late. The code is working, has worked for
+>> a long time it's just that Rob enabled the warnings by default. We can
+>> keep them enabled for 4.16.
+>
+> In some cases "working" was what's in the DT is unused by the kernel
+> because the DT is broken. That's why this round was not off by
+> default.
+>
+> It looks to me to be somewhere less than 5 fixes remaining (BTW, why
+> is there no arm32 allmodconfig build on kernelci.org? That or
+> allyesconfig are the only ways to build all dtbs). It would also be an
+> exception to the the stable process because that patch would not be in
+> Linus' tree.
 
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Tobias Waldvogel <tobias.waldvogel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Michał Mirosław <mirq-linux-CoA6ZxLDdyEEUmgCuDUIdw@public.gmane.org>
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
-ChangeLog v10->v11:
-- Resend with the driver.
-ChangeLog v9->v10:
-- Resend with the driver.
-ChangeLog v8->v9:
-- Collect Rob's ACK.
-ChangeLog v7->v8:
-- Use ethernet-port@0 and ethernet-port@1 with unit names
-  and following OF graph requirements.
----
- .../bindings/net/cortina,gemini-ethernet.txt       | 92 ++++++++++++++++++++++
- 1 file changed, 92 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/cortina,gemini-ethernet.txt
+I build them but my script that analyses for warnings only looks for
+the gcc "warning:" output. Need to do grep -i to catch them.
 
-diff --git a/Documentation/devicetree/bindings/net/cortina,gemini-ethernet.txt b/Documentation/devicetree/bindings/net/cortina,gemini-ethernet.txt
-new file mode 100644
-index 000000000000..6c559981d110
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/cortina,gemini-ethernet.txt
-@@ -0,0 +1,92 @@
-+Cortina Systems Gemini Ethernet Controller
-+==========================================
-+
-+This ethernet controller is found in the Gemini SoC family:
-+StorLink SL3512 and SL3516, also known as Cortina Systems
-+CS3512 and CS3516.
-+
-+Required properties:
-+- compatible: must be "cortina,gemini-ethernet"
-+- reg: must contain the global registers and the V-bit and A-bit
-+  memory areas, in total three register sets.
-+- syscon: a phandle to the system controller
-+- #address-cells: must be specified, must be <1>
-+- #size-cells: must be specified, must be <1>
-+- ranges: should be state like this giving a 1:1 address translation
-+  for the subnodes
-+
-+The subnodes represents the two ethernet ports in this device.
-+They are not independent of each other since they share resources
-+in the parent node, and are thus children.
-+
-+Required subnodes:
-+- port0: contains the resources for ethernet port 0
-+- port1: contains the resources for ethernet port 1
-+
-+Required subnode properties:
-+- compatible: must be "cortina,gemini-ethernet-port"
-+- reg: must contain two register areas: the DMA/TOE memory and
-+  the GMAC memory area of the port
-+- interrupts: should contain the interrupt line of the port.
-+  this is nominally a level interrupt active high.
-+- resets: this must provide an SoC-integrated reset line for
-+  the port.
-+- clocks: this should contain a handle to the PCLK clock for
-+  clocking the silicon in this port
-+- clock-names: must be "PCLK"
-+
-+Optional subnode properties:
-+- phy-mode: see ethernet.txt
-+- phy-handle: see ethernet.txt
-+
-+Example:
-+
-+mdio-bus {
-+	(...)
-+	phy0: ethernet-phy@1 {
-+		reg = <1>;
-+		device_type = "ethernet-phy";
-+	};
-+	phy1: ethernet-phy@3 {
-+		reg = <3>;
-+		device_type = "ethernet-phy";
-+	};
-+};
-+
-+
-+ethernet@60000000 {
-+	compatible = "cortina,gemini-ethernet";
-+	reg = <0x60000000 0x4000>, /* Global registers, queue */
-+	      <0x60004000 0x2000>, /* V-bit */
-+	      <0x60006000 0x2000>; /* A-bit */
-+	syscon = <&syscon>;
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	ranges;
-+
-+	gmac0: ethernet-port@0 {
-+		compatible = "cortina,gemini-ethernet-port";
-+		reg = <0x60008000 0x2000>, /* Port 0 DMA/TOE */
-+		      <0x6000a000 0x2000>; /* Port 0 GMAC */
-+		interrupt-parent = <&intcon>;
-+		interrupts = <1 IRQ_TYPE_LEVEL_HIGH>;
-+		resets = <&syscon GEMINI_RESET_GMAC0>;
-+		clocks = <&syscon GEMINI_CLK_GATE_GMAC0>;
-+		clock-names = "PCLK";
-+		phy-mode = "rgmii";
-+		phy-handle = <&phy0>;
-+	};
-+
-+	gmac1: ethernet-port@1 {
-+		compatible = "cortina,gemini-ethernet-port";
-+		reg = <0x6000c000 0x2000>, /* Port 1 DMA/TOE */
-+		      <0x6000e000 0x2000>; /* Port 1 GMAC */
-+		interrupt-parent = <&intcon>;
-+		interrupts = <2 IRQ_TYPE_LEVEL_HIGH>;
-+		resets = <&syscon GEMINI_RESET_GMAC1>;
-+		clocks = <&syscon GEMINI_CLK_GATE_GMAC1>;
-+		clock-names = "PCLK";
-+		phy-mode = "rgmii";
-+		phy-handle = <&phy1>;
-+	};
-+};
--- 
-2.14.3
+FWIW, logs are here:
 
+http://arm-soc.lixom.net/buildlogs/mainline/v4.15-rc7-200-gc92a9a4/buildall.arm.allmodconfig.log.passed
+
+>>> Note: there was at least one dtc warning fix that caused a serious
+>>> regression in code that relied on a device probe to fail because of
+>>> an invalid node (a fix is still in the works for 4.15), though generally
+>>> the fixes are really harmless and can only make things better.
+>>
+>> Exactly why picking up warning fixes this late is probably not a great idea.
+>
+> Applying them now for 4.15 would be late, but tagging them as fixes in
+> 4.16 would not be late (other than the normal problem that things get
+> applied to stable before sufficient testing in master).
+>
+>
+> I have more dtc checks in the works (nothing for 4.16 :) ). I'd like
+> the process to work better. I'm not going to fix all the warnings. I
+> don't think Arnd should either. Turning them off by default hasn't
+> worked great either. For some, I'm not sure we can ever get to warning
+> free, but I'd like new stuff to have warnings enabled and no one
+> builds with W=1. We could put together tooling to just show new
+> warnings, but someone has to run it and enforce it. I could stick dtc
+> updates into linux-next for multiple cycles before sending to Linus.
+
+I'll split up and report DT warnings separate from compiler, seems
+like a reasonable approach.
+
+
+-Olof
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
