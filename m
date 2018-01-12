@@ -1,112 +1,31 @@
-From: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: [PATCH v2 01/12] dt-bindings: display: renesas: Add R-Car LVDS encoder DT bindings
-Date: Sat, 13 Jan 2018 01:14:19 +0200
-Message-ID: <20180112231430.26943-2-laurent.pinchart+renesas@ideasonboard.com>
-References: <20180112231430.26943-1-laurent.pinchart+renesas@ideasonboard.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: n900: Add aliases for lcd and tvout displays
+Date: Fri, 12 Jan 2018 15:34:54 -0800
+Message-ID: <20180112233454.GI4821@atomide.com>
+References: <1514931434-13192-1-git-send-email-ivo.g.dimitrov.75@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180112231430.26943-1-laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1514931434-13192-1-git-send-email-ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ivaylo Dimitrov <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The Renesas R-Car Gen2 and Gen3 SoCs have internal LVDS encoders. Add
-corresponding device tree bindings.
+* Ivaylo Dimitrov <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [180102 14:20]:
+> When both lcd and tv are enabled, the order in which they will be probed is
+> unknown, so it might happen (and it happens in reality) that tv is
+> configured as display0 and lcd as display1, which results in nothing
+> displayed on lcd, as display1 is disabled by default.
+> 
+> Fix that by providing correct aliases for lcd and tv
 
-Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
----
-Changes since v1:
+Applying into omap-for-v4.16/dt-clk thanks.
 
-- Move the SoC name before the IP name in compatible strings
-- Rename parallel input to parallel RGB input
-- Fixed "renesas,r8a7743-lvds" description
-- Document the resets property
-- Fixed typo
----
- .../bindings/display/bridge/renesas,lvds.txt       | 56 ++++++++++++++++++++++
- MAINTAINERS                                        |  1 +
- 2 files changed, 57 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt
-
-diff --git a/Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt b/Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt
-new file mode 100644
-index 000000000000..2b19ce51ec07
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt
-@@ -0,0 +1,56 @@
-+Renesas R-Car LVDS Encoder
-+==========================
-+
-+These DT bindings describe the LVDS encoder embedded in the Renesas R-Car
-+Gen2, R-Car Gen3 and RZ/G SoCs.
-+
-+Required properties:
-+
-+- compatible : Shall contain one of
-+  - "renesas,r8a7743-lvds" for R8A7743 (RZ/G1M) compatible LVDS encoders
-+  - "renesas,r8a7790-lvds" for R8A7790 (R-Car H2) compatible LVDS encoders
-+  - "renesas,r8a7791-lvds" for R8A7791 (R-Car M2-W) compatible LVDS encoders
-+  - "renesas,r8a7793-lvds" for R8A7791 (R-Car M2-N) compatible LVDS encoders
-+  - "renesas,r8a7795-lvds" for R8A7795 (R-Car H3) compatible LVDS encoders
-+  - "renesas,r8a7796-lvds" for R8A7796 (R-Car M3-W) compatible LVDS encoders
-+
-+- reg: Base address and length for the memory-mapped registers
-+- clocks: A phandle + clock-specifier pair for the functional clock
-+- resets: A phandle + reset specifier for the module reset
-+
-+Required nodes:
-+
-+The LVDS encoder has two video ports. Their connections are modelled using the
-+OF graph bindings specified in Documentation/devicetree/bindings/graph.txt.
-+
-+- Video port 0 corresponds to the parallel RGB input
-+- Video port 1 corresponds to the LVDS output
-+
-+Each port shall have a single endpoint.
-+
-+
-+Example:
-+
-+	lvds0: lvds@feb90000 {
-+		compatible = "renesas,r8a7790-lvds";
-+		reg = <0 0xfeb90000 0 0x1c>;
-+		clocks = <&cpg CPG_MOD 726>;
-+		resets = <&cpg 726>;
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+				lvds0_in: endpoint {
-+					remote-endpoint = <&du_out_lvds0>;
-+				};
-+			};
-+			port@1 {
-+				reg = <1>;
-+				lvds0_out: endpoint {
-+				};
-+			};
-+		};
-+	};
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 40aea858c7ea..5609a7f5ac4d 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -4725,6 +4725,7 @@ F:	drivers/gpu/drm/rcar-du/
- F:	drivers/gpu/drm/shmobile/
- F:	include/linux/platform_data/shmob_drm.h
- F:	Documentation/devicetree/bindings/display/bridge/renesas,dw-hdmi.txt
-+F:	Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt
- F:	Documentation/devicetree/bindings/display/renesas,du.txt
- 
- DRM DRIVERS FOR ROCKCHIP
--- 
 Regards,
 
-Laurent Pinchart
-
+Tony
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
