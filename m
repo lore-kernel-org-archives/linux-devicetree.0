@@ -1,33 +1,62 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [PATCH 1/3] arm: spear600: Add missing interrupt-parent of rtc
-Date: Thu, 11 Jan 2018 18:07:11 -0800
-Message-ID: <20180112020711.6gp2pnsxxjzelidq@localhost>
-References: <a062d9ed0d3365b578156a780202fa533e725374.1515650104.git.viresh.kumar@linaro.org>
+From: Brian Norris <briannorris@chromium.org>
+Subject: Re: [PATCH 2/3] ARM: tegra: paz00: drop nonstandard
+ 'backlight-boot-off'
+Date: Thu, 11 Jan 2018 18:18:02 -0800
+Message-ID: <20180112021801.GA243980@google.com>
+References: <20180106004757.8239-1-briannorris@chromium.org>
+ <20180106004757.8239-2-briannorris@chromium.org>
+ <27065017.X8cFkIFnZg@fb07-iapwap2>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <a062d9ed0d3365b578156a780202fa533e725374.1515650104.git.viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: arnd-r2nGTMty4D4@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <27065017.X8cFkIFnZg@fb07-iapwap2>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marc Dietrich <marvin24@gmx.de>
+Cc: Heiko Stuebner <heiko@sntech.de>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, Lin Huang <hl@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 11, 2018 at 11:28:51AM +0530, Viresh Kumar wrote:
-> The interrupt-parent of rtc was missing, add it.
+On Wed, Jan 10, 2018 at 12:31:31PM +0100, Marc Dietrich wrote:
+> Hi,
 > 
-> Fixes: 8113ba917dfa ("ARM: SPEAr: DT: Update device nodes")
-> Cc: stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org # v3.8+
-> Reported-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-> Signed-off-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Am Samstag, 6. Januar 2018, 01:47:56 CET schrieb Brian Norris:
+> > This was used out-of-tree as a hack for resolving issues where some
+> > systems expect the backlight to turn on automatically at boot, while
+> > others expect to manage the backlight status via a DRM/panel driver.
+> > Those issues have since been fixed upstream in pwm_bl.c without device
+> > tree hacks, and so this un-documented property should no longer be
+> > useful.
+> > 
+> > Signed-off-by: Brian Norris <briannorris@chromium.org>
+> 
+> seems to work again. Thanks!
 
-Applied to next/dt. Is stable really needed on this? It's been broken since
-pretty much forever, and nobody has complained... :)
+BTW, I guess I could have put this in the commit message, but the
+problem that this out-of-tree property was trying to resolve was fixed
+by this (and some other related patches):
 
+d1b812945750 backlight: pwm_bl: Check the PWM state for initial backlight power state
 
--Olof
+Brian
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Reviewed-by: Marc Dietrich <marvin24@gmx.de>
+> 
+> > ---
+> >  arch/arm/boot/dts/tegra20-paz00.dts | 2 --
+> >  1 file changed, 2 deletions(-)
+> > 
+> > diff --git a/arch/arm/boot/dts/tegra20-paz00.dts
+> > b/arch/arm/boot/dts/tegra20-paz00.dts index 30436969adc0..12c63b23ed5e
+> > 100644
+> > --- a/arch/arm/boot/dts/tegra20-paz00.dts
+> > +++ b/arch/arm/boot/dts/tegra20-paz00.dts
+> > @@ -504,8 +504,6 @@
+> > 
+> >  		brightness-levels = <0 16 32 48 64 80 96 112 128 144 160 176 192 208 224
+> > 240 255>; default-brightness-level = <10>;
+> > -
+> > -		backlight-boot-off;
+> >  	};
+> > 
+> >  	clocks {
+> 
