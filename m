@@ -1,43 +1,154 @@
-From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Subject: Re: [PATCH v5 02/44] clk: davinci: New driver for davinci PLL clocks
-Date: Fri, 12 Jan 2018 09:48:31 -0600
-Message-ID: <c5cea4a3-0e52-d9ce-339b-b3dcd1be5a42@lechnology.com>
-References: <1515377863-20358-1-git-send-email-david@lechnology.com>
- <1515377863-20358-3-git-send-email-david@lechnology.com>
- <7fc8bd35-0416-216d-8e1e-53a0ec6e8790@ti.com>
- <01fbde0e-36a0-2b19-e385-e63bc4a3ae4a@lechnology.com>
- <CAHCN7xK44_zv27xe5yxL8Efey=VC-nypK6hY6VWqsoLqnKe04g@mail.gmail.com>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3 0/7] Marvell NAND controller rework with ->exec_op()
+Date: Fri, 12 Jan 2018 16:55:21 +0100
+Message-ID: <20180112165521.28d17a20@bbrezillon>
+References: <20180109103637.23798-1-miquel.raynal@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAHCN7xK44_zv27xe5yxL8Efey=VC-nypK6hY6VWqsoLqnKe04g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <20180109103637.23798-1-miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Adam Ford <aford173-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia>
 List-Id: devicetree@vger.kernel.org
 
-On 01/12/2018 09:30 AM, Adam Ford wrote:
-> On Fri, Jan 12, 2018 at 9:25 AM, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org> wrote:
->>
->> Yes, I noticed that I missed this after I submitted this series. And I
->> will have to rework things to coordinate with the PLL as mentioned above.
->>
->> FYI, I do have cpufreq-dt working, although the LEGO EV3 has a fixed 1.2V
->> regulator, so I am limited in what I can test. Basically, I can only switch
-> 
-> I can test the cpufreq-dt.  Are there additional patches or are they
-> part of the same git repo I have been testing?
-> 
-> The DA850 I have may not run all the way to highest speed, but I'll
-> see what I can find.  I think I had a few at one point, but I don't
-> think it was part of Logic PD's standard product lineup.
-> 
+On Tue,  9 Jan 2018 11:36:30 +0100
+Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
 
-There are some extra patches I have not submitted yet. However, based on the
-other comments here, I don't have things implemented correctly, so you probably
-want to wait to test until I get that straightened out anyway.
+> Hi,
+> 
+> After the addition of the NAND framework ->exec_op() interface (see [1]
+> for the series preparing it and [2] for the last version of the
+> core-side implementation of ->exec_op() itself), this series replaces
+> the current Marvell NAND controller driver pxa3xx_nand.c with a rework
+> called marvell_nand.c.
+> 
+> Aside the fact that it drops the big state machine, improves the overall
+> speed and implements raw accesses, it is the first driver-side
+> implementation of the ->exec_op() interface and may be used as reference
+> for latter reworks of the same type.
+> 
+> One may find more detail about why a completely new driver is needed in
+> the commit log of:
+> 
+>     "mtd: nand: add reworked Marvell NAND controller driver"
+> 
+> Device tree NAND node definition for all platforms referring to the
+> Marvell driver using the new bindings have already been accepted by the
+> MVEBU DT maintainers and will be merged after the driver. They are more
+> hierarchical and fit the real organization of the hardware, by having
+> NAND partitions that are part of NAND chip nodes, themselves part of the
+> NAND controller node.
+> 
+> These changes have been tested on:
+>    - PXA3xx platform with a CM-X300 board (2kiB page NAND, 1b/512B
+>      strength, Hamming ECC engine) [32 bits]
+>    - Armada 385 DB AP (4kiB page NAND, 4b/512B, BCH ECC engine) [32 bits]
+>    - Armada 398 DB (4kiB page NAND, 8b/512B, BCH ECC engine using a layout
+>      with a last chunk different than the others) [32 bits]
+>    - Armada 7040 DB and Armada 8040 DB (4kiB page NAND, 4b/512B, BCH ECC
+>      engine) [64 bits]
+>    - Triax dvb-tc board (2kiB page NAND, 4b/512B, BCH ECC engine) [32 bits]
+> 
+> This version is known not to be stable yet with a Zylonite based setup but
+> otherwise looks good for Marvell EBU platforms.
+> 
+> For people who would like to test it easily, a branch ready to be tested
+> is available at [3]. It is based on nand/next and has all the changes
+> brought by the previously mentionned series as well as this one.
+> 
+> Thank you,
+> Miquèl
+> 
+> 
+> [1] https://www.spinics.net/lists/arm-kernel/msg619633.html
+> [2] http://lists.infradead.org/pipermail/linux-mtd/2017-December/077965.html
+> [3] https://github.com/miquelraynal/linux/tree/marvell/nand-next/nfc
+> 
+> 
+> Changes since v2:
+>   - Added a patch to create the nand-rb property in the Documentation
+>   - Rewording in the Documentation according to Rob's comments
+>   - Moved from marvell,rb to nand-rb property in the code
+>   - Disociated using this driver with Marvell EBU platforms than using
+>     it with PXA ones
+>   - Fixed the handling of 16-bit buses
+>   - Fixed SPDX comment style
+>   - Reorganized registers offsets/bit fields definitions as requested
+>   - Moved to Kernel doc
+>   - Changed the logic in ->select_chip() to use a prepared value of NDCR
+>     only instead of recalculating it
+>   - Fixed the presence of the SPARE_EN bit, reworked a bit the
+>     hmg_do_read/write() helpers
+>   - Fixed the OOB layouts that were unusable (all spare data first, then
+>     all ECC bytes)
+>   - Additional check on mtd->writesize when using NFCv1 (all sizes not
+>     supported)
+>   - Various typos/rewording
+> 
+> Changes since v1:
+>   - Rewording
+>   - Fixed BCH ->read/write_page() hooks for 2kiB pages NAND chips
+>   - Removed license text, used SPDX tag instead
+>   - Removed read_page_data()
+>   - Enhanced the DT bindings document with the label property and the
+>     deprecated bindings.
+>   - Simplified the read_chunk() helper (OOB always read).
+>   - Simplified the ->bch_read_page() hook by removing the addition raw
+>     read to get ECC bytes.
+>   - Fixed the ->correct() function that did not check for bitflips in
+>     ECC bytes in erased pages.
+> 
+> 
+> Miquel Raynal (7):
+>   dt-bindings: mtd: document new nand-rb property
+>   dt-bindings: mtd: add Marvell NAND controller documentation
+>   mtd: nand: add reworked Marvell NAND controller driver
+>   mtd: nand: use reworked NAND controller driver with Marvell EBU SoCs
+
+Applied patches 1 to 4.
+
+Can you please send a patch to add a new entry in MAINTAINERS for this
+driver?
+
+Thanks,
+
+Boris
+
+>   mtd: nand: use Marvell reworked NAND controller driver with all
+>     platforms
+>   dt-bindings: mtd: remove pxa3xx NAND controller documentation
+>   mtd: nand: remove useless fields from pxa3xx NAND platform data
+> 
+>  .../devicetree/bindings/mtd/marvell-nand.txt       |  123 +
+>  Documentation/devicetree/bindings/mtd/nand.txt     |    1 +
+>  .../devicetree/bindings/mtd/pxa3xx-nand.txt        |   50 -
+>  arch/arm/configs/cm_x300_defconfig                 |    2 +-
+>  arch/arm/configs/mvebu_v7_defconfig                |    2 +-
+>  arch/arm/configs/pxa3xx_defconfig                  |    3 +-
+>  arch/arm/configs/pxa_defconfig                     |    2 +-
+>  arch/arm/configs/raumfeld_defconfig                |    2 +-
+>  arch/arm/mach-mmp/ttc_dkb.c                        |    4 +-
+>  arch/arm/mach-pxa/cm-x300.c                        |    8 +-
+>  arch/arm/mach-pxa/colibri-pxa3xx.c                 |    8 +-
+>  arch/arm/mach-pxa/colibri.h                        |    2 +-
+>  arch/arm/mach-pxa/littleton.c                      |   10 +-
+>  arch/arm/mach-pxa/mxm8x10.c                        |   10 +-
+>  arch/arm/mach-pxa/raumfeld.c                       |    6 +-
+>  arch/arm/mach-pxa/zylonite.c                       |   10 +-
+>  arch/arm64/configs/defconfig                       |    2 +-
+>  drivers/mtd/nand/Kconfig                           |   18 +-
+>  drivers/mtd/nand/Makefile                          |    2 +-
+>  drivers/mtd/nand/marvell_nand.c                    | 2896 ++++++++++++++++++++
+>  drivers/mtd/nand/pxa3xx_nand.c                     | 2104 --------------
+>  include/linux/platform_data/mtd-nand-pxa3xx.h      |   43 +-
+>  22 files changed, 3072 insertions(+), 2236 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/marvell-nand.txt
+>  delete mode 100644 Documentation/devicetree/bindings/mtd/pxa3xx-nand.txt
+>  create mode 100644 drivers/mtd/nand/marvell_nand.c
+>  delete mode 100644 drivers/mtd/nand/pxa3xx_nand.c
+> 
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
