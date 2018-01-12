@@ -1,62 +1,102 @@
-From: Brian Norris <briannorris@chromium.org>
-Subject: Re: [PATCH 2/3] ARM: tegra: paz00: drop nonstandard
- 'backlight-boot-off'
-Date: Thu, 11 Jan 2018 18:18:02 -0800
-Message-ID: <20180112021801.GA243980@google.com>
-References: <20180106004757.8239-1-briannorris@chromium.org>
- <20180106004757.8239-2-briannorris@chromium.org>
- <27065017.X8cFkIFnZg@fb07-iapwap2>
+From: Yong <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v5 0/5] Add OV5640 parallel interface and RGB565/YUYV
+ support
+Date: Fri, 12 Jan 2018 10:18:39 +0800
+Message-ID: <20180112101839.cc13571a099d64eea2ac6e3a@magewell.com>
+References: <1514973452-10464-1-git-send-email-hugues.fruchet@st.com>
+        <20180108153811.5xrvbaekm6nxtoa6@flea>
+        <3010811e-ed37-4489-6a9f-6cc835f41575@st.com>
+        <20180110153724.l77zpdgxfbzkznuf@flea>
+        <20180111091508.a0c9f630c6b4ef80178694fb@magewell.com>
+        <20180111124018.azdzjeitjsyenmra@flea.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <27065017.X8cFkIFnZg@fb07-iapwap2>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Dietrich <marvin24@gmx.de>
-Cc: Heiko Stuebner <heiko@sntech.de>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, Lin Huang <hl@rock-chips.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180111124018.azdzjeitjsyenmra-ZC1Zs529Oq4@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Hugues FRUCHET <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 10, 2018 at 12:31:31PM +0100, Marc Dietrich wrote:
-> Hi,
-> 
-> Am Samstag, 6. Januar 2018, 01:47:56 CET schrieb Brian Norris:
-> > This was used out-of-tree as a hack for resolving issues where some
-> > systems expect the backlight to turn on automatically at boot, while
-> > others expect to manage the backlight status via a DRM/panel driver.
-> > Those issues have since been fixed upstream in pwm_bl.c without device
-> > tree hacks, and so this un-documented property should no longer be
-> > useful.
-> > 
-> > Signed-off-by: Brian Norris <briannorris@chromium.org>
-> 
-> seems to work again. Thanks!
+Hi Maxime,
 
-BTW, I guess I could have put this in the commit message, but the
-problem that this out-of-tree property was trying to resolve was fixed
-by this (and some other related patches):
+On Thu, 11 Jan 2018 13:40:18 +0100
+Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
 
-d1b812945750 backlight: pwm_bl: Check the PWM state for initial backlight power state
-
-Brian
-
-> Reviewed-by: Marc Dietrich <marvin24@gmx.de>
+> Hi Yong,
 > 
-> > ---
-> >  arch/arm/boot/dts/tegra20-paz00.dts | 2 --
-> >  1 file changed, 2 deletions(-)
+> On Thu, Jan 11, 2018 at 09:15:08AM +0800, Yong wrote:
+> > > On Mon, Jan 08, 2018 at 05:13:39PM +0000, Hugues FRUCHET wrote:
+> > > > I'm using a ST board with OV5640 wired in parallel bus output in order 
+> > > > to interface to my STM32 DCMI parallel interface.
+> > > > Perhaps could you describe your setup so I could help on understanding 
+> > > > the problem on your side. From my past experience with this sensor 
+> > > > module, you can first check hsync/vsync polarities, the datasheet is 
+> > > > buggy on VSYNC polarity as documented in patch 4/5.
+> > > 
+> > > It turns out that it was indeed a polarity issue.
+> > > 
+> > > It looks like that in order to operate properly, I need to setup the
+> > > opposite polarity on HSYNC and VSYNC on the interface. I looked at the
+> > > signals under a scope, and VSYNC is obviously inversed as you
+> > > described. HSYNC, I'm not so sure since the HBLANK period seems very
+> > > long, almost a line.
+> > > 
+> > > Since VSYNC at least looks correct, I'd be inclined to think that the
+> > > polarity is inversed on at least the SoC I'm using it on.
+> > > 
+> > > Yong, did you test the V3S CSI driver with a parallel interface? With
+> > > what sensor driver? Have you found some polarities issues like this?
 > > 
-> > diff --git a/arch/arm/boot/dts/tegra20-paz00.dts
-> > b/arch/arm/boot/dts/tegra20-paz00.dts index 30436969adc0..12c63b23ed5e
-> > 100644
-> > --- a/arch/arm/boot/dts/tegra20-paz00.dts
-> > +++ b/arch/arm/boot/dts/tegra20-paz00.dts
-> > @@ -504,8 +504,6 @@
-> > 
-> >  		brightness-levels = <0 16 32 48 64 80 96 112 128 144 160 176 192 208 224
-> > 240 255>; default-brightness-level = <10>;
-> > -
-> > -		backlight-boot-off;
-> >  	};
-> > 
-> >  	clocks {
+> > Did you try it with Allwinner SoCs?
 > 
+> Yes, on an H3. Looking at all the Allwinner datasheet I could get my
+> hands on, they are all documented in the same way. However, I really
+> start to wonder whether the polarity shouldn't be reversed.
+> 
+> At least the fact that VSYNC is clearly active low on the
+> oscilloscope, while I have to set it active high in the controller
+> seems like a strong hint :)
+
+The BSP code of Allwinner also treat V4L2_MBUS_VSYNC_ACTIVE_HIGH as
+they documented 'positive'.
+Maybe there need some more tests to confirm if the datasheet and BSP
+code are both wrong.
+
+> 
+> > No. I only tested with a BT1120 signal generated by FPGA or ADV7611. HSYNC
+> > and VSYNC are not used.
+> 
+> Ok, that's good to know :)
+> 
+> > For V3s CSI driver, I will add the following to dt-bindings:
+> > Endpoint node properties for CSI1
+> > ---------------------------------
+> > 
+> > - remote-endpoint      : (required) a phandle to the bus receiver's endpoint
+> >                           node
+> > - bus-width:           : (required) must be 8, 10, 12 or 16
+> > - pclk-sample          : (optional) (default: sample on falling edge)
+> > - hsync-active         : (only required for parallel)
+> > - vsync-active         : (only required for parallel)
+> > 
+> > You could try diffrent hsync-active/vsync-active values here.
+> 
+> I did already, and the only combination that works is the one that is
+> the inversed polarity on HSYNC and VSYNC than what the sensor setup.
+> 
+> Maxime
+> 
+> -- 
+> Maxime Ripard, Free Electrons
+> Embedded Linux and Kernel engineering
+> http://free-electrons.com
+
+
+Thanks,
+Yong
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
