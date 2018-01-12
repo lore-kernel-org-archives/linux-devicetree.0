@@ -1,91 +1,196 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH v2 0/3] ARM: mvebu: dts: updates to enable EDAC
-Date: Fri, 12 Jan 2018 16:25:51 +0100
-Message-ID: <87shbb5cao.fsf@free-electrons.com>
-References: <20180111015903.11322-1-chris.packham@alliedtelesis.co.nz>
-        <87a7xk7o5t.fsf@free-electrons.com>
-        <d2460bc23c4d4ff2adbd05821e86aea9@svr-chch-ex1.atlnz.lc>
+From: Adam Ford <aford173-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v5 02/44] clk: davinci: New driver for davinci PLL clocks
+Date: Fri, 12 Jan 2018 09:30:37 -0600
+Message-ID: <CAHCN7xK44_zv27xe5yxL8Efey=VC-nypK6hY6VWqsoLqnKe04g@mail.gmail.com>
+References: <1515377863-20358-1-git-send-email-david@lechnology.com>
+ <1515377863-20358-3-git-send-email-david@lechnology.com> <7fc8bd35-0416-216d-8e1e-53a0ec6e8790@ti.com>
+ <01fbde0e-36a0-2b19-e385-e63bc4a3ae4a@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d2460bc23c4d4ff2adbd05821e86aea9@svr-chch-ex1.atlnz.lc> (Chris
-        Packham's message of "Thu, 11 Jan 2018 20:06:01 +0000")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-Cc: "andrew@lunn.ch" <andrew@lunn.ch>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "sebastian.hesselbarth@gmail.com" <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <01fbde0e-36a0-2b19-e385-e63bc4a3ae4a-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Cc: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Chris,
- 
- On jeu., janv. 11 2018, Chris Packham <Chris.Packham@alliedtelesis.co.nz> wrote:
-
-> On 11/01/18 22:14, Gregory CLEMENT wrote:
->> Hi Chris,
->>   
->>   On jeu., janv. 11 2018, Chris Packham <chris.packham@alliedtelesis.co.nz> wrote:
->> 
->>> I've split this off from my earlier series[1] this is just the dts changes that
->>> will enable support for the EDAC series when it lands.
+On Fri, Jan 12, 2018 at 9:25 AM, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org> wrote:
+> On 01/12/2018 03:21 AM, Sekhar Nori wrote:
+>>
+>> On Monday 08 January 2018 07:47 AM, David Lechner wrote:
 >>>
->>> The Armada 38x as well as the 98dx3236 and similar switch chips with integrated
->>> CPUs use the same SDRAM controller block as the Armada XP. The key difference
->>> is the width of the DDR interface.
+>>> This adds a new driver for mach-davinci PLL clocks. This is porting the
+>>> code from arch/arm/mach-davinci/clock.c to the common clock framework.
+>>> Additionally, it adds device tree support for these clocks.
 >>>
->>> [1] - https://marc.info/?l=linux-kernel&m=151545124505964&w=2
->> 
->> The series is looks good now. For patch 1 I still wait for that
->> the "marvell,,ecc-enable" property was accepted before merging it.
->> 
->> So I can either wait for that it was accepted before applying the series,
->> or just applying patch 2 and 3 for now, as you want.
->
-> I'm happy either way. If it's easier for you to keep the 3 patches 
-> together that's fine by me.
-
-So I will apply all of them in the same time.
-
-
-Thanks,
-
-Gregory
-
-
->
->> 
->> Thanks,
->> 
->> Gregory
->> 
->> 
+>>> The ifeq ($(CONFIG_COMMON_CLK), y) in the Makefile is needed to prevent
+>>> compile errors until the clock code in arch/arm/mach-davinci is removed.
 >>>
->>> Changes in v2:
->>> - update commit message
->>> - add labels to dts
+>>> Note: although there are similar clocks for TI Keystone we are not able
+>>> to share the code for a few reasons. The keystone clocks are device tree
+>>> only and use legacy one-node-per-clock bindings. Also the register
+>>> layouts are a bit different, which would add even more if/else mess
+>>> to the keystone clocks. And the keystone PLL driver doesn't support
+>>> setting clock rates.
 >>>
->>> Chris Packham (3):
->>>    ARM: dts: armada-xp: enable L2 cache parity and ecc on db-xc3-24g4xg
->>>    ARM: dts: armada-xp: add label to sdram-controller node
->>>    ARM: dts: mvebu: add sdram controller node to Armada-38x
->>>
->>>   arch/arm/boot/dts/armada-38x.dtsi             | 5 +++++
->>>   arch/arm/boot/dts/armada-xp-98dx3236.dtsi     | 2 +-
->>>   arch/arm/boot/dts/armada-xp-db-xc3-24g4xg.dts | 5 +++++
->>>   arch/arm/boot/dts/armada-xp.dtsi              | 2 +-
->>>   4 files changed, 12 insertions(+), 2 deletions(-)
->>>
->>> -- 
->>> 2.15.1
->>>
->> 
+>>> Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+>>> ---
 >
 >
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>>> +
+>>> +#define PLLM_MASK              0x1f
+>>> +#define PREDIV_RATIO_MASK      0x1f
+>>
+>>
+>> May be use the mode modern GENMASK()?
+>
+>
+> I haven't seen that one before. Thanks.
+>
+> ...
+>
+>>> +static unsigned long davinci_pll_clk_recalc(struct clk_hw *hw,
+>>> +                                           unsigned long parent_rate)
+>>> +{
+>>> +       struct davinci_pll_clk *pll = to_davinci_pll_clk(hw);
+>>> +       unsigned long rate = parent_rate;
+>>> +       u32 prediv, mult, postdiv;
+>>> +
+>>> +       prediv = readl(pll->base + PREDIV) & PREDIV_RATIO_MASK;
+>>> +       mult = readl(pll->base + PLLM) & PLLM_MASK;
+>>> +       postdiv = readl(pll->base + POSTDIV) & POSTDIV_RATIO_MASK;
+>>
+>>
+>> Shouldn't we check if the pre and post dividers are enabled before using
+>> them?
+>
+>
+> Indeed.
+>
+>>
+>>> +
+>>> +       rate /= prediv + 1;
+>>> +       rate *= mult + 1;
+>>> +       rate /= postdiv + 1;
+>>> +
+>>> +       return rate;
+>>> +}
+>>> +
+>
+>
+> ...
+>
+>>
+>> PLL output on DA850 must never be below 300MHz or above 600MHz (see
+>> datasheet table "Allowed PLL Operating Conditions"). Does this take care
+>> of that? Thats one of the main reasons I recall I went with some
+>> specific values of prediv, pllm and post div in
+>> arch/arm/mach-davinci/da850.c
+>
+>
+> Apparently, I missed this requirement. It looks like I am going to have to
+> rework things so that there is some coordination between the PLL and the
+> PLLDIV clocks in order to get the < 300MHz operating points.
+>
+> ...
+>
+>>> +
+>>> +       divider->reg = base + OSCDIV;
+>>> +       divider->width = OSCDIV_RATIO_WIDTH;
+>>
+>>
+>> can you write OD1EN of OSCDIV here? I guess the reset default is 1 so
+>> you didnt need to do that. But not doing exposes us to settings that
+>> bootloader left us in.
+>>
+>
+> It looks like I am going to have to make a custom implementation for parts
+> of this clock anyway, so I will probably just make new enable/disable
+> callbacks that set both OSCDIV_OD1EN and CKEN_OBSCLK.
+>
+>
+>>> +
+>>> +       clk = clk_register_composite(NULL, name, parent_names,
+>>> num_parents,
+>>> +                                    &mux->hw, &clk_mux_ops,
+>>> +                                    &divider->hw, &clk_divider_ops,
+>>> +                                    &gate->hw, &clk_gate_ops, 0);
+>>> +       if (IS_ERR(clk)) {
+>>> +               kfree(divider);
+>>> +               kfree(gate);
+>>> +               kfree(mux);
+>>> +       }
+>>> +
+>>> +       return clk;
+>>> +}
+>>> +
+>>> +struct clk *
+>>> +davinci_pll_divclk_register(const struct davinci_pll_divclk_info *info,
+>>> +                           void __iomem *base)
+>>> +{
+>>> +       const struct clk_ops *divider_ops = &clk_divider_ops;
+>>
+>>
+>> setting the sysclk divider requires GOSTAT handling apart from setting
+>> the divider value. So I think .set_rate ops above wont work. Other ops
+>> can be used, I guess. So we need a private structure here.
+>>
+>> Can you port over davinci_set_sysclk_rate() too? I understand you cannot
+>> test it due to lack of cpufreq support in DT, but I can help testing
+>> there.
+>>
+>> Or leave .set_rate NULL and it can be added later.
+>
+>
+> Yes, I noticed that I missed this after I submitted this series. And I
+> will have to rework things to coordinate with the PLL as mentioned above.
+>
+> FYI, I do have cpufreq-dt working, although the LEGO EV3 has a fixed 1.2V
+> regulator, so I am limited in what I can test. Basically, I can only switch
 
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+I can test the cpufreq-dt.  Are there additional patches or are they
+part of the same git repo I have been testing?
+
+The DA850 I have may not run all the way to highest speed, but I'll
+see what I can find.  I think I had a few at one point, but I don't
+think it was part of Logic PD's standard product lineup.
+
+adam
+
+> between 300MHz and 375MHz according to the datasheets. The chip is
+> technically
+> the 456MHz version. What would happen if I ran it faster or slower with the
+> wrong voltage?
+>
+> ...
+>
+>>> +
+>>> +       child = of_get_child_by_name(node, "auxclk");
+>>> +       if (child && of_device_is_available(child)) {
+>>> +               char child_name[MAX_NAME_SIZE];
+>>> +
+>>> +               snprintf(child_name, MAX_NAME_SIZE, "%s_aux_clk", name);
+>>> +
+>>> +               clk = davinci_pll_aux_clk_register(child_name,
+>>> parent_name, base);
+>>> +               if (IS_ERR(clk))
+>>> +                       pr_warn("%s: failed to register %s (%ld)\n",
+>>> __func__,
+>>> +                               child_name, PTR_ERR(clk));
+>>> +               else
+>>> +                       of_clk_add_provider(child, of_clk_src_simple_get,
+>>> clk);
+>>> +       }
+>>
+>>
+>> davinci_pll_obs_clk_register() should also be handled here?
+>
+>
+> I omitted it because no one is using it (same reason I left it out of the
+> device tree bindings). We can certainly add it, though.
+>
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
