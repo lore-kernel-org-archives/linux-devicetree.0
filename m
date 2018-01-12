@@ -1,452 +1,92 @@
-From: Alexey Klimov <klimov.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v5 06/20] firmware: arm_scmi: add initial support for
- performance protocol
-Date: Fri, 12 Jan 2018 14:55:02 +0000
-Message-ID: <CALW4P+L-YJRNZ_qv1SohM7vCWekBf+KKZos7FuZE0Tu1Yh8i-g@mail.gmail.com>
-References: <1514904162-11201-1-git-send-email-sudeep.holla@arm.com> <1514904162-11201-7-git-send-email-sudeep.holla@arm.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 01/10] dt-bindings: display: renesas: Add R-Car LVDS
+ encoder DT bindings
+Date: Fri, 12 Jan 2018 18:13:06 +0300
+Message-ID: <81a9462b-6aaa-52c7-f741-e504c14838e9@cogentembedded.com>
+References: <20180112005858.26472-1-laurent.pinchart+renesas@ideasonboard.com>
+ <20180112005858.26472-2-laurent.pinchart+renesas@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1514904162-11201-7-git-send-email-sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Cc: ALKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Roy Franz <roy.franz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Harb Abdulhamid <harba-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Ryan Harkin <Ryan.Harkin-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20180112005858.26472-2-laurent.pinchart+renesas@ideasonboard.com>
+Content-Language: en-MW
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, dri-devel@lists.freedesktop.org
+Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 2, 2018 at 2:42 PM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
-> The performance protocol is intended for the performance management of
-> group(s) of device(s) that run in the same performance domain. It
-> includes even the CPUs. A performance domain is defined by a set of
-> devices that always have to run at the same performance level.
-> For example, a set of CPUs that share a voltage domain, and have a
-> common frequency control, is said to be in the same performance domain.
->
-> The commands in this protocol provide functionality to describe the
-> protocol version, describe various attribute flags, set and get the
-> performance level of a domain. It also supports discovery of the list
-> of performance levels supported by a performance domain, and the
-> properties of each performance level.
->
-> This patch adds basic support for the performance protocol.
->
-> Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Hello!
+
+On 01/12/2018 03:58 AM, Laurent Pinchart wrote:
+
+> The Renesas R-Car Gen2 and Gen3 SoCs have internal LVDS encoders. Add
+> corresponding device tree bindings.
+> 
+> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 > ---
->  drivers/firmware/arm_scmi/Makefile |   2 +-
->  drivers/firmware/arm_scmi/common.h |   1 +
->  drivers/firmware/arm_scmi/perf.c   | 527 +++++++++++++++++++++++++++++++++++++
->  include/linux/scmi_protocol.h      |  34 +++
->  4 files changed, 563 insertions(+), 1 deletion(-)
+>   .../bindings/display/bridge/renesas,lvds.txt       | 54 ++++++++++++++++++++++
+>   MAINTAINERS                                        |  1 +
+>   2 files changed, 55 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt b/Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt
+> new file mode 100644
+> index 000000000000..459c56822eda
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt
+> @@ -0,0 +1,54 @@
+> +Renesas R-Car LVDS Encoder
+> +==========================
+> +
+> +These DT bindings describe the LVDS encoder embedded in the Renesas R-Car Gen2
+> +and Gen3 SoCs.
+> +
+> +Required properties:
+> +
+> +- compatible : Shall contain one of
+> +  - "renesas,lvds-r8a7743" for R8A7790 (R-Car RZ/G1M) compatible LVDS encoders
+> +  - "renesas,lvds-r8a7790" for R8A7790 (R-Car H2) compatible LVDS encoders
+> +  - "renesas,lvds-r8a7791" for R8A7791 (R-Car M2-W) compatible LVDS encoders
+> +  - "renesas,lvds-r8a7793" for R8A7791 (R-Car M2-N) compatible LVDS encoders
+> +  - "renesas,lvds-r8a7795" for R8A7795 (R-Car H3) compatible LVDS encoders
+> +  - "renesas,lvds-r8a7796" for R8A7796 (R-Car M3-W) compatible LVDS encoders
+> +
+> +- reg: Base address and length for the memory-mapped registers
+> +- clocks: A phandle + clock-specifier pair for the functional clock
+> +
+> +Requires nodes:
+> +
+> +The LVDS encoder has two video ports. Their connections are modelled using the
+> +OF graph bindings specified in Documentation/devicetree/bindings/graph.txt.
+> +
+> +- Video port 0 corresponds to the parallel input
+
+    s/parallel/RGB/, perhaps?
+
+> +- Video port 1 corresponds to the LVDS output
+> +
+> +Each port shall have a single endpoint.
+> +
+> +
+> +Example:
+> +
+> +	lvds0: lvds@feb90000 {
+> +		compatible = "renesas,lvds-r8a7790";
+> +		reg = <0 0xfeb90000 0 0x1c>;
+> +		clocks = <&cpg CPG_MOD 726>;
+> +
+> +		ports {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			port@0 {
+> +				reg = <0>;
+> +				lvds0_in: endpoint {
+> +					remote-endpoint = <&du_out_lvds0>;
+
+    Err, that "du_out_lvds0" label no longer reflects reality, no?
 
 [...]
 
-> diff --git a/drivers/firmware/arm_scmi/perf.c b/drivers/firmware/arm_scmi/perf.c
-> new file mode 100644
-> index 000000000000..a1f5cf136748
-> --- /dev/null
-> +++ b/drivers/firmware/arm_scmi/perf.c
-> @@ -0,0 +1,527 @@
-> +/*
-> + * System Control and Management Interface (SCMI) Performance Protocol
-> + *
-> + * Copyright (C) 2017 ARM Ltd.
-> + *
-> + * This program is free software; you can redistribute it and/or modify it
-> + * under the terms and conditions of the GNU General Public License,
-> + * version 2, as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope it will be useful, but WITHOUT
-> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-> + * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-> + * more details.
-> + *
-> + * You should have received a copy of the GNU General Public License along
-> + * with this program. If not, see <http://www.gnu.org/licenses/>.
-> + */
-> +
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pm_opp.h>
-> +#include <linux/sort.h>
-> +
-> +#include "common.h"
-> +
-> +enum scmi_performance_protocol_cmd {
-> +       PERF_DOMAIN_ATTRIBUTES = 0x3,
-> +       PERF_DESCRIBE_LEVELS = 0x4,
-> +       PERF_LIMITS_SET = 0x5,
-> +       PERF_LIMITS_GET = 0x6,
-> +       PERF_LEVEL_SET = 0x7,
-> +       PERF_LEVEL_GET = 0x8,
-> +       PERF_NOTIFY_LIMITS = 0x9,
-> +       PERF_NOTIFY_LEVEL = 0xa,
-> +};
-> +
-> +struct scmi_opp {
-> +       u32 perf;
-> +       u32 power;
-> +       u32 trans_latency_us;
-> +};
-> +
-> +struct scmi_msg_resp_perf_attributes {
-> +       __le16 num_domains;
-> +       __le16 flags;
-> +#define POWER_SCALE_IN_MILLIWATT(x)    ((x) & BIT(0))
-> +       __le32 stats_addr_low;
-> +       __le32 stats_addr_high;
-> +       __le32 stats_size;
-> +};
-> +
-> +struct scmi_msg_resp_perf_domain_attributes {
-> +       __le32 flags;
-> +#define SUPPORTS_SET_LIMITS(x)         ((x) & BIT(31))
-> +#define SUPPORTS_SET_PERF_LVL(x)       ((x) & BIT(30))
-> +#define SUPPORTS_PERF_LIMIT_NOTIFY(x)  ((x) & BIT(29))
-> +#define SUPPORTS_PERF_LEVEL_NOTIFY(x)  ((x) & BIT(28))
-> +       __le32 rate_limit_us;
-> +       __le32 sustained_freq_khz;
-> +       __le32 sustained_perf_level;
-> +           u8 name[SCMI_MAX_STR_SIZE];
-> +};
-> +
-> +struct scmi_msg_perf_describe_levels {
-> +       __le32 domain;
-> +       __le32 level_index;
-> +};
-> +
-> +struct scmi_perf_set_limits {
-> +       __le32 domain;
-> +       __le32 max_level;
-> +       __le32 min_level;
-> +};
-> +
-> +struct scmi_perf_get_limits {
-> +       __le32 max_level;
-> +       __le32 min_level;
-> +};
-> +
-> +struct scmi_perf_set_level {
-> +       __le32 domain;
-> +       __le32 level;
-> +};
-> +
-> +struct scmi_perf_notify_level_or_limits {
-> +       __le32 domain;
-> +       __le32 notify_enable;
-> +};
-> +
-> +struct scmi_msg_resp_perf_describe_levels {
-> +       __le16 num_returned;
-> +       __le16 num_remaining;
-> +       struct {
-> +               __le32 perf_val;
-> +               __le32 power;
-> +               __le16 transition_latency_us;
-> +               __le16 reserved;
-> +       } opp[0];
-> +};
-> +
-> +struct perf_dom_info {
-> +       bool set_limits;
-> +       bool set_perf;
-> +       bool perf_limit_notify;
-> +       bool perf_level_notify;
-> +       u32 opp_count;
-> +       u32 sustained_freq_khz;
-> +       u32 sustained_perf_level;
-> +       u32 mult_factor;
-> +       char name[SCMI_MAX_STR_SIZE];
-> +       struct scmi_opp opp[MAX_OPPS];
-> +};
-> +
-> +struct scmi_perf_info {
-> +       int num_domains;
-> +       bool power_scale_mw;
-> +       u64 stats_addr;
-> +       u32 stats_size;
-> +       struct perf_dom_info *dom_info;
-> +};
-> +
-> +static int scmi_perf_attributes_get(const struct scmi_handle *handle,
-> +                                   struct scmi_perf_info *pi)
-> +{
-> +       int ret;
-> +       struct scmi_xfer *t;
-> +       struct scmi_msg_resp_perf_attributes *attr;
-> +
-> +       ret = scmi_one_xfer_init(handle, PROTOCOL_ATTRIBUTES,
-> +                                SCMI_PROTOCOL_PERF, 0, sizeof(*attr), &t);
-> +       if (ret)
-> +               return ret;
-> +
-> +       attr = t->rx.buf;
-> +
-> +       ret = scmi_do_xfer(handle, t);
-> +       if (!ret) {
-> +               u16 flags = le16_to_cpu(attr->flags);
-> +
-> +               pi->num_domains = le16_to_cpu(attr->num_domains);
-> +               pi->power_scale_mw = POWER_SCALE_IN_MILLIWATT(flags);
-> +               pi->stats_addr = le32_to_cpu(attr->stats_addr_low) |
-> +                               (u64)le32_to_cpu(attr->stats_addr_high) << 32;
-> +               pi->stats_size = le32_to_cpu(attr->stats_size);
-> +       }
-> +
-> +       scmi_one_xfer_put(handle, t);
-> +       return ret;
-> +}
-> +
-> +static int
-> +scmi_perf_domain_attributes_get(const struct scmi_handle *handle, u32 domain,
-> +                               struct perf_dom_info *dom_info)
-> +{
-> +       int ret;
-> +       struct scmi_xfer *t;
-> +       struct scmi_msg_resp_perf_domain_attributes *attr;
-> +
-> +       ret = scmi_one_xfer_init(handle, PERF_DOMAIN_ATTRIBUTES,
-> +                                SCMI_PROTOCOL_PERF, sizeof(domain),
-> +                                sizeof(*attr), &t);
-> +       if (ret)
-> +               return ret;
-> +
-> +       *(__le32 *)t->tx.buf = cpu_to_le32(domain);
-> +       attr = t->rx.buf;
-> +
-> +       ret = scmi_do_xfer(handle, t);
-> +       if (!ret) {
-> +               u32 flags = le32_to_cpu(attr->flags);
-> +
-> +               dom_info->set_limits = SUPPORTS_SET_LIMITS(flags);
-> +               dom_info->set_perf = SUPPORTS_SET_PERF_LVL(flags);
-> +               dom_info->perf_limit_notify = SUPPORTS_PERF_LIMIT_NOTIFY(flags);
-> +               dom_info->perf_level_notify = SUPPORTS_PERF_LEVEL_NOTIFY(flags);
-> +               dom_info->sustained_freq_khz =
-> +                                       le32_to_cpu(attr->sustained_freq_khz);
-> +               dom_info->sustained_perf_level =
-> +                                       le32_to_cpu(attr->sustained_perf_level);
-> +               dom_info->mult_factor = (dom_info->sustained_freq_khz * 1000) /
-> +                                       dom_info->sustained_perf_level;
-> +               memcpy(dom_info->name, attr->name, SCMI_MAX_STR_SIZE);
-> +       }
-> +
-> +       scmi_one_xfer_put(handle, t);
-> +       return ret;
-> +}
-> +
-> +static int opp_cmp_func(const void *opp1, const void *opp2)
-> +{
-> +       const struct scmi_opp *t1 = opp1, *t2 = opp2;
-> +
-> +       return t1->perf - t2->perf;
-> +}
-> +
-> +static int
-> +scmi_perf_describe_levels_get(const struct scmi_handle *handle, u32 domain,
-> +                             struct perf_dom_info *perf_dom)
-> +{
-> +       int ret, cnt;
-> +       u32 tot_opp_cnt = 0;
-> +       u16 num_returned, num_remaining;
-> +       struct scmi_xfer *t;
-> +       struct scmi_opp *opp;
-> +       struct scmi_msg_perf_describe_levels *dom_info;
-> +       struct scmi_msg_resp_perf_describe_levels *level_info;
-> +
-> +       ret = scmi_one_xfer_init(handle, PERF_DESCRIBE_LEVELS,
-> +                                SCMI_PROTOCOL_PERF, sizeof(*dom_info), 0, &t);
-> +       if (ret)
-> +               return ret;
-> +
-> +       dom_info = t->tx.buf;
-> +       level_info = t->rx.buf;
-> +
-> +       do {
-> +               dom_info->domain = cpu_to_le32(domain);
-> +               /* Set the number of OPPs to be skipped/already read */
-> +               dom_info->level_index = cpu_to_le32(tot_opp_cnt);
-> +
-> +               ret = scmi_do_xfer(handle, t);
-> +               if (ret)
-> +                       break;
-> +
-> +               num_returned = le16_to_cpu(level_info->num_returned);
-> +               num_remaining = le16_to_cpu(level_info->num_remaining);
-> +               if (tot_opp_cnt + num_returned > MAX_OPPS) {
-> +                       dev_err(handle->dev, "No. of OPPs exceeded MAX_OPPS");
-> +                       break;
-> +               }
-> +
-> +               opp = &perf_dom->opp[tot_opp_cnt];
-> +               for (cnt = 0; cnt < num_returned; cnt++, opp++) {
-> +                       opp->perf = le32_to_cpu(level_info->opp[cnt].perf_val);
-> +                       opp->power = le32_to_cpu(level_info->opp[cnt].power);
-> +                       opp->trans_latency_us = le16_to_cpu(
-> +                               level_info->opp[cnt].transition_latency_us);
-> +
-> +                       dev_dbg(handle->dev, "Level %d Power %d Latency %dus\n",
-> +                               opp->perf, opp->power, opp->trans_latency_us);
-> +               }
-> +
-> +               tot_opp_cnt += num_returned;
-> +               /*
-> +                * check for both returned and remaining to avoid infinite
-> +                * loop due to buggy firmware
-> +                */
-> +       } while (num_returned && num_remaining);
-> +
-> +       perf_dom->opp_count = tot_opp_cnt;
-> +       scmi_one_xfer_put(handle, t);
-> +
-> +       sort(perf_dom->opp, tot_opp_cnt, sizeof(*opp), opp_cmp_func, NULL);
-> +       return ret;
-> +}
-> +
-> +static int scmi_perf_limits_set(const struct scmi_handle *handle, u32 domain,
-> +                               u32 max_perf, u32 min_perf)
-> +{
-> +       int ret;
-> +       struct scmi_xfer *t;
-> +       struct scmi_perf_set_limits *limits;
-> +
-> +       ret = scmi_one_xfer_init(handle, PERF_LIMITS_SET, SCMI_PROTOCOL_PERF,
-> +                                sizeof(*limits), 0, &t);
-> +       if (ret)
-> +               return ret;
-> +
-> +       limits = t->tx.buf;
-> +       limits->domain = cpu_to_le32(domain);
-> +       limits->max_level = cpu_to_le32(max_perf);
-> +       limits->min_level = cpu_to_le32(min_perf);
-> +
-> +       ret = scmi_do_xfer(handle, t);
-> +
-> +       scmi_one_xfer_put(handle, t);
-> +       return ret;
-> +}
-> +
-> +static int scmi_perf_limits_get(const struct scmi_handle *handle, u32 domain,
-> +                               u32 *max_perf, u32 *min_perf)
-> +{
-> +       int ret;
-> +       struct scmi_xfer *t;
-> +       struct scmi_perf_get_limits *limits;
-> +
-> +       ret = scmi_one_xfer_init(handle, PERF_LIMITS_GET, SCMI_PROTOCOL_PERF,
-> +                                sizeof(__le32), 0, &t);
-> +       if (ret)
-> +               return ret;
-> +
-> +       *(__le32 *)t->tx.buf = cpu_to_le32(domain);
-> +
-> +       ret = scmi_do_xfer(handle, t);
-> +       if (!ret) {
-> +               limits = t->rx.buf;
-> +
-> +               *max_perf = le32_to_cpu(limits->max_level);
-> +               *min_perf = le32_to_cpu(limits->min_level);
-> +       }
-> +
-> +       scmi_one_xfer_put(handle, t);
-> +       return ret;
-> +}
-> +
-> +static int
-> +scmi_perf_level_set(const struct scmi_handle *handle, u32 domain, u32 level)
-> +{
-> +       int ret;
-> +       struct scmi_xfer *t;
-> +       struct scmi_perf_set_level *lvl;
-> +
-> +       ret = scmi_one_xfer_init(handle, PERF_LEVEL_SET, SCMI_PROTOCOL_PERF,
-> +                                sizeof(*lvl), 0, &t);
-> +       if (ret)
-> +               return ret;
-> +
-> +       lvl = t->tx.buf;
-> +       lvl->domain = cpu_to_le32(domain);
-> +       lvl->level = cpu_to_le32(level);
-> +
-> +       ret = scmi_do_xfer(handle, t);
-> +
-> +       scmi_one_xfer_put(handle, t);
-> +       return ret;
-> +}
-> +
-> +static int
-> +scmi_perf_level_get(const struct scmi_handle *handle, u32 domain, u32 *level)
-> +{
-> +       int ret;
-> +       struct scmi_xfer *t;
-> +
-> +       ret = scmi_one_xfer_init(handle, PERF_LEVEL_GET, SCMI_PROTOCOL_PERF,
-> +                                sizeof(u32), sizeof(u32), &t);
-> +       if (ret)
-> +               return ret;
-> +
-> +       *(__le32 *)t->tx.buf = cpu_to_le32(domain);
-> +
-> +       ret = scmi_do_xfer(handle, t);
-> +       if (!ret)
-> +               *level = le32_to_cpu(*(__le32 *)t->rx.buf);
-> +
-> +       scmi_one_xfer_put(handle, t);
-> +       return ret;
-> +}
-> +
-> +static int __scmi_perf_notify_enable(const struct scmi_handle *handle, u32 cmd,
-> +                                    u32 domain, bool enable)
-> +{
-> +       int ret;
-> +       struct scmi_xfer *t;
-> +       struct scmi_perf_notify_level_or_limits *notify;
-> +
-> +       ret = scmi_one_xfer_init(handle, cmd, SCMI_PROTOCOL_PERF,
-> +                                sizeof(*notify), 0, &t);
-> +       if (ret)
-> +               return ret;
-> +
-> +       notify = t->tx.buf;
-> +       notify->domain = cpu_to_le32(domain);
-> +       notify->notify_enable = cpu_to_le32(enable & BIT(0));
-> +
-> +       ret = scmi_do_xfer(handle, t);
-> +
-> +       scmi_one_xfer_put(handle, t);
-> +       return ret;
-> +}
-> +
-> +static int scmi_perf_limits_notify_enable(const struct scmi_handle *handle,
-> +                                         u32 domain, bool enable)
-> +{
-> +       return __scmi_perf_notify_enable(handle, PERF_NOTIFY_LIMITS,
-> +                                        domain, enable);
-> +}
-> +
-> +static int scmi_perf_level_notify_enable(const struct scmi_handle *handle,
-> +                                        u32 domain, bool enable)
-> +{
-> +       return __scmi_perf_notify_enable(handle, PERF_NOTIFY_LEVEL,
-> +                                        domain, enable);
-> +}
-> +
-
-Do you have any support to correctly handle notifications without
-errors/warnings?
-It looks like this two functions are accessible to some user through
-perf_ops. But are you sure that notifications will be correctly
-handled by transport, mailbox framework and scmi protocol?
-
-The reason I ask is that it looks like it's better to return
--EOPNOTSUPP or -ENODEV, maybe -EINVAL here.
-When you add notifications support you can allow these operations when
-it's safe to do it.
-
-[..]
-
-Best regards,
-Alexey Klimov
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+MBR, Sergei
