@@ -1,7 +1,7 @@
 From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Subject: [PATCH 1/2] dts: ARM: Aspeed-g5: Add missing USB clock and pinmux
-Date: Fri, 12 Jan 2018 17:02:01 +1100
-Message-ID: <1515736921.31850.92.camel@kernel.crashing.org>
+Subject: [PATCH 2/2] dts: ARM: Aspeed: Enable USB ports on eval board
+Date: Fri, 12 Jan 2018 17:02:08 +1100
+Message-ID: <1515736928.31850.93.camel@kernel.crashing.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
@@ -11,67 +11,41 @@ To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Joel Stanley <joel.stanley-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds the clock and pinmux default references to
-the Aspeed G5 SoC base device-tree for USB. The clk and
-pinmux drivers already know about these.
+This enables both USB ports as host with EHCI and UHCI
+attached to them.
 
 Signed-off-by: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
 ---
- arch/arm/boot/dts/aspeed-g5.dtsi | 18 ++++++++++++++++++
+ arch/arm/boot/dts/aspeed-ast2500-evb.dts | 18 ++++++++++++++++++
  1 file changed, 18 insertions(+)
 
-diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
-index 8b3986a941f5..3c5c9b952ba8 100644
---- a/arch/arm/boot/dts/aspeed-g5.dtsi
-+++ b/arch/arm/boot/dts/aspeed-g5.dtsi
-@@ -142,6 +142,7 @@
- 			compatible = "aspeed,ast2500-ehci", "generic-ehci";
- 			reg = <0x1e6a1000 0x100>;
- 			interrupts = <5>;
-+			clocks = <&syscon ASPEED_CLK_GATE_USBPORT1CLK>;
- 			status = "disabled";
- 		};
- 
-@@ -149,6 +150,7 @@
- 			compatible = "aspeed,ast2500-ehci", "generic-ehci";
- 			reg = <0x1e6a3000 0x100>;
- 			interrupts = <13>;
-+			clocks = <&syscon ASPEED_CLK_GATE_USBPORT2CLK>;
- 			status = "disabled";
- 		};
- 
-@@ -157,6 +159,7 @@
- 			reg = <0x1e6b0000 0x100>;
- 			interrupts = <14>;
- 			#ports = <2>;
-+			clocks = <&syscon ASPEED_CLK_GATE_USBUHCICLK>;
- 			status = "disabled";
- 		};
- 
-@@ -1387,6 +1390,21 @@
- 		groups = "USBCKI";
+diff --git a/arch/arm/boot/dts/aspeed-ast2500-evb.dts b/arch/arm/boot/dts/aspeed-ast2500-evb.dts
+index 6946c8610c4c..0c3f14d05046 100644
+--- a/arch/arm/boot/dts/aspeed-ast2500-evb.dts
++++ b/arch/arm/boot/dts/aspeed-ast2500-evb.dts
+@@ -80,3 +80,21 @@
+ 		reg = <0x4d>;
  	};
- 
-+	pinctrl_usb2ah_default: usb2ah_default {
-+		function = "USB2AH";
-+		groups = "USB2AH";
-+	};
+ };
 +
-+	pinctrl_usb11bhid_default: usb11bhid_default {
-+		function = "USB11BHID";
-+		groups = "USB11BHID";
-+	};
++&ehci0 {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usb2ah_default>;
++};
 +
-+	pinctrl_usb2bh_default: usb2bh_default {
-+		function = "USB2BH";
-+		groups = "USB2BH";
-+	};
++&ehci1 {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usb2bh_default>;
++};
 +
- 	pinctrl_vgabiosrom_default: vgabiosrom_default {
- 		function = "VGABIOSROM";
- 		groups = "VGABIOSROM";
--- 
-2.14.3
++&uhci {
++	status = "okay";
++
++	/* No pinctrl, this follows the above EHCI settings */
++};
+
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
