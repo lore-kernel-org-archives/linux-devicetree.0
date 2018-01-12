@@ -1,118 +1,110 @@
 From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v5 0/9] Renesas Capture Engine Unit (CEU) V4L2 driver
-Date: Fri, 12 Jan 2018 16:27:50 +0200
-Message-ID: <3051373.PoZynrBGJV@avalon>
-References: <1515765849-10345-1-git-send-email-jacopo+renesas@jmondi.org>
+Subject: Re: [PATCH 3/3] drm: rcar-du: add R8A77970 support
+Date: Fri, 12 Jan 2018 16:30:48 +0200
+Message-ID: <3450878.q2PSDvCyDk@avalon>
+References: <20180111170103.676775968@cogentembedded.com>
+ <8239904.rdcckmYW4i@avalon>
+ <78c33176-39b7-6bd9-e307-2b28c0b28f04@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1515765849-10345-1-git-send-email-jacopo+renesas@jmondi.org>
-Sender: linux-sh-owner@vger.kernel.org
-To: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc: magnus.damm@gmail.com, geert@glider.be, mchehab@kernel.org, hverkuil@xs4all.nl, festevam@gmail.com, sakari.ailus@iki.fi, robh+dt@kernel.org, mark.rutland@arm.com, pombredanne@nexb.com, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <78c33176-39b7-6bd9-e307-2b28c0b28f04@cogentembedded.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacopo,
-
-On Friday, 12 January 2018 16:04:00 EET Jacopo Mondi wrote:
-> Hello,
->    (hopefully) last round for CEU driver.
-> 
-> Changelog is quite thin, I have updated CEU driver MODULE_LICENSE to match
-> SPDX identifier, added Rob's and Laurent's Reviewed-by tags to bindings, and
-> made variables of "struct ceu_data" type static in the driver.
-> 
-> All of the patches are now Reviewed/Acked. Time to have this series
-> included?
-
-Yes please !
-
-Hans, could you pick this up ?
-
-> v4->v5:
-> - Added Rob's and Laurent's Reviewed-by tag to DT bindings
-> - Change CEU driver module license to "GPL v2" to match SPDX identifier as
->   suggested by Philippe Ombredanne
-> - Make struct ceu_data static as suggested by Laurent and add his
->   Reviewed-by to CEU driver.
-> 
-> v3->v4:
-> - Drop generic fallback compatible string "renesas,ceu"
-> - Addressed Laurent's comments on [3/9]
->   - Fix error messages on irq get/request
->   - Do not leak ceudev if irq_get fails
->   - Make irq_mask a const field
-> 
-> v2->v3:
-> - Improved DT bindings removing standard properties (pinctrl- ones and
->   remote-endpoint) not specific to this driver and improved description of
->   compatible strings
-> - Remove ov772x's xlkc_rate property and set clock rate in Migo-R board file
-> - Made 'xclk' clock private to ov772x driver in Migo-R board file
-> - Change 'rstb' GPIO active output level and changed ov772x and tw9910
-> drivers accordingly as suggested by Fabio
-> - Minor changes in CEU driver to address Laurent's comments
-> - Moved Migo-R setup patch to the end of the series to silence 0-day bot
-> - Renamed tw9910 clock to 'xti' as per video decoder manual
-> - Changed all SPDX identifiers to GPL-2.0 from previous GPL-2.0+
-> 
-> v1->v2:
->  - DT
->  -- Addressed Geert's comments and added clocks for CEU to mstp6 clock
-> source -- Specified supported generic video iterfaces properties in
-> dt-bindings and simplified example
-> 
->  - CEU driver
->  -- Re-worked interrupt handler, interrupt management, reset(*) and capture
->     start operation
->  -- Re-worked querycap/enum_input/enum_frameintervals to fix some
->     v4l2_compliance failures
->  -- Removed soc_camera legacy operations g/s_mbus_format
->  -- Update to new notifier implementation
->  -- Fixed several comments from Hans, Laurent and Sakari
-> 
->  - Migo-R
->  -- Register clocks and gpios for sensor drivers in Migo-R setup
->  -- Updated sensors (tw9910 and ov772x) drivers headers and drivers to close
-> remarks from Hans and Laurent:
->  --- Removed platform callbacks and handle clocks and gpios from sensor
-> drivers --- Remove g/s_mbus_config operations
-> 
-> Jacopo Mondi (9):
->   dt-bindings: media: Add Renesas CEU bindings
->   include: media: Add Renesas CEU driver interface
->   v4l: platform: Add Renesas CEU driver
->   ARM: dts: r7s72100: Add Capture Engine Unit (CEU)
->   v4l: i2c: Copy ov772x soc_camera sensor driver
->   media: i2c: ov772x: Remove soc_camera dependencies
->   v4l: i2c: Copy tw9910 soc_camera sensor driver
->   media: i2c: tw9910: Remove soc_camera dependencies
->   arch: sh: migor: Use new renesas-ceu camera driver
-> 
->  .../devicetree/bindings/media/renesas,ceu.txt      |   81 +
->  arch/arm/boot/dts/r7s72100.dtsi                    |   15 +-
->  arch/sh/boards/mach-migor/setup.c                  |  225 ++-
->  arch/sh/kernel/cpu/sh4a/clock-sh7722.c             |    2 +-
->  drivers/media/i2c/Kconfig                          |   20 +
->  drivers/media/i2c/Makefile                         |    2 +
->  drivers/media/i2c/ov772x.c                         | 1181 ++++++++++++++
->  drivers/media/i2c/tw9910.c                         | 1039 ++++++++++++
->  drivers/media/platform/Kconfig                     |    9 +
->  drivers/media/platform/Makefile                    |    1 +
->  drivers/media/platform/renesas-ceu.c               | 1648 +++++++++++++++++
->  include/media/drv-intf/renesas-ceu.h               |   26 +
->  include/media/i2c/ov772x.h                         |    6 +-
->  include/media/i2c/tw9910.h                         |    9 +
->  14 files changed, 4133 insertions(+), 131 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/media/renesas,ceu.txt
->  create mode 100644 drivers/media/i2c/ov772x.c
->  create mode 100644 drivers/media/i2c/tw9910.c
->  create mode 100644 drivers/media/platform/renesas-ceu.c
->  create mode 100644 include/media/drv-intf/renesas-ceu.h
-
--- 
-Regards,
-
-Laurent Pinchart
-
+SGkgU2VyZ2VpLAoKT24gRnJpZGF5LCAxMiBKYW51YXJ5IDIwMTggMTE6MjM6MDAgRUVUIFNlcmdl
+aSBTaHR5bHlvdiB3cm90ZToKPiBPbiAxLzEyLzIwMTggNDoxMyBBTSwgTGF1cmVudCBQaW5jaGFy
+dCB3cm90ZToKPiA+PiBBZGQgc3VwcG9ydCBmb3IgdGhlIFItQ2FyICBWM00gIChSOEE3Nzk3MCkg
+U29DIHRvIHRoZSBEVSBkcml2ZXIgKHRoaXMgU29DCj4gPj4gaGFzIG9ubHkgIDEgZGlzcGxheSBw
+b3J0KS4gTm90ZSB0aGF0IHRoZXJlIGFyZSBzb21lIGRpZmZlcmVuY2VzICB3aXRoIHRoZQo+ID4+
+IG90aGVyIFItQ2FyIGdlbjMgU29DcyBpbiB0aGUgTFZEUyBlbmNvZGVyIHBhcnQsIGUuZy4gTFZE
+UExMQ1IgaGFzIHRoZQo+ID4+IHNhbWUgbGF5b3V0ICBhcyAgb24gdGhlIFItQ2FyIGdlbjIgU29D
+cy4uLgo+ID4+IAo+ID4+IFNpZ25lZC1vZmYtYnk6IFNlcmdlaSBTaHR5bHlvdiA8c2VyZ2VpLnNo
+dHlseW92QGNvZ2VudGVtYmVkZGVkLmNvbT4KPiA+IAo+ID4gQ291bGQgeW91IHBsZWFzZSByZWJh
+c2UgdGhpcyBzZXJpZXMgb24gdG9wIG9mIHRoZSBMVkRTIHJld29yayBwb3N0ZWQgYXMKPiA+ICJb
+UEFUQ0ggMDAvMTBdIFItQ2FyIERVOiBDb252ZXJ0IExWRFMgY29kZSB0byBicmlkZ2UgZHJpdmVy
+IiAoaHR0cHM6Ly8KPiA+IHd3dy5zcGluaWNzLm5ldC9saXN0cy9kcmktZGV2ZWwvbXNnMTYxOTMx
+Lmh0bWwpID8gSXQgc2hvdWxkIG1ha2UgaXQgZWFzaWVyCj4gPiB0byBpbXBsZW1lbnQgc3VwcG9y
+dCBmb3IgVjNNLiBQbGVhc2UgdGhlbiBzcGxpdCB0aGUgRFUgYW5kIExWRFMgZHJpdmVycwo+ID4g
+Y2hhbmdlcyBpbiB0d28gcGF0Y2hlcy4KPiA+IAo+ID4+IC0tLQo+ID4+IAo+ID4+ICAgRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcmVuZXNhcyxkdS50eHQgfCAgICAx
+Cj4gPiAKPiA+IFBsZWFzZSBzcGxpdCB0aGUgRFQgYmluZGluZ3MgY2hhbmdlcyB0byBhIHNlcGFy
+YXRlIHBhdGNoLgo+IAo+ICAgICBJIGRvbid0IGxpa2UgcHV0dGluZyBhIG9uZS1saW5lIGNobmFn
+ZSBpbnRvIGEgc2VwYXJhdGUgYmluZGluZ3MgcGF0Y2guLi4KPiA+PiAgIGRyaXZlcnMvZ3B1L2Ry
+bS9yY2FyLWR1L3JjYXJfZHVfZHJ2LmMgICAgICAgICAgICAgICAgICAgIHwgICAyMyArKysrKysr
+Cj4gPj4gICBkcml2ZXJzL2dwdS9kcm0vcmNhci1kdS9yY2FyX2R1X2Rydi5oICAgICAgICAgICAg
+ICAgICAgICB8ICAgIDEKPiA+PiAgIGRyaXZlcnMvZ3B1L2RybS9yY2FyLWR1L3JjYXJfZHVfZ3Jv
+dXAuYyAgICAgICAgICAgICAgICAgIHwgICAxMCArKystLS0KPiA+PiAgIGRyaXZlcnMvZ3B1L2Ry
+bS9yY2FyLWR1L3JjYXJfZHVfbHZkc2VuYy5jICAgICAgICAgICAgICAgIHwgICAyMCArKysrLS0t
+Cj4gPj4gICA1IGZpbGVzIGNoYW5nZWQsIDQ1IGluc2VydGlvbnMoKyksIDEwIGRlbGV0aW9ucygt
+KQoKW3NuaXBdCgo+ID4+IEluZGV4OiBsaW51eC9kcml2ZXJzL2dwdS9kcm0vcmNhci1kdS9yY2Fy
+X2R1X2dyb3VwLmMKPiA+PiA9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09Cj4gPj4gLS0tIGxpbnV4Lm9yaWcvZHJpdmVycy9n
+cHUvZHJtL3JjYXItZHUvcmNhcl9kdV9ncm91cC5jCj4gPj4gKysrIGxpbnV4L2RyaXZlcnMvZ3B1
+L2RybS9yY2FyLWR1L3JjYXJfZHVfZ3JvdXAuYwo+ID4+IEBAIC0xMzMsMTAgKzEzMywxMiBAQCBz
+dGF0aWMgdm9pZCByY2FyX2R1X2dyb3VwX3NldHVwKHN0cnVjdCByCj4gPj4gCj4gPj4gICAJcmNh
+cl9kdV9ncm91cF93cml0ZShyZ3JwLCBET1JDUiwgRE9SQ1JfUEcxRF9EUzEgfCBET1JDUl9EUFJT
+KTsKPiA+PiAgIAkKPiA+PiAgIAkvKiBBcHBseSBwbGFuZXMgdG8gQ1JUQ3MgYXNzb2NpYXRpb24u
+ICovCj4gPj4gCj4gPj4gLQltdXRleF9sb2NrKCZyZ3JwLT5sb2NrKTsKPiA+PiAtCXJjYXJfZHVf
+Z3JvdXBfd3JpdGUocmdycCwgRFBUU1IsIChyZ3JwLT5kcHRzcl9wbGFuZXMgPDwgMTYpIHwKPiA+
+PiAtCQkJICAgIHJncnAtPmRwdHNyX3BsYW5lcyk7Cj4gPj4gLQltdXRleF91bmxvY2soJnJncnAt
+PmxvY2spOwo+ID4+ICsJaWYgKHJjZHUtPmluZm8tPm51bV9jcnRjcyA+IDEpIHsKPiA+PiArCQlt
+dXRleF9sb2NrKCZyZ3JwLT5sb2NrKTsKPiA+PiArCQlyY2FyX2R1X2dyb3VwX3dyaXRlKHJncnAs
+IERQVFNSLCAocmdycC0+ZHB0c3JfcGxhbmVzIDw8IDE2KSB8Cj4gPj4gKwkJCQkgICAgcmdycC0+
+ZHB0c3JfcGxhbmVzKTsKPiA+PiArCQltdXRleF91bmxvY2soJnJncnAtPmxvY2spOwo+ID4+ICsJ
+fQo+ID4gCj4gPiBTaG91bGRuJ3QgeW91IHNraXAgd3JpdGluZyB0byB0aGUgRFBUU1IgcmVnaXN0
+ZXIgaWYgdGhlcmUncyBhIHNpbmdsZSBEUFRTUgo+ID4gaW4gdGhlIGdyb3VwID8gVGhhdCB3b3Vs
+ZCB0aGVuIGFwcGx5IHRvIE0zLVcgYXMgd2VsbCwgd2hpY2ggZG9lc24ndCBoYXZlCj4gPiB0aGUg
+RFBUU1IyIHJlZ2lzdGVyLiBJJ2Qgc3BsaXQgdGhpcyBjaGFuZ2UgdG8gYSBzZXBhcmF0ZSBwYXRj
+aC4KPiAKPiBPSywgSSBndWVzcyB5b3Uga25vdyB0aGlzIHN0dWZmIGJldHRlciAtLSBJIGRpZG4n
+dCBrbm93IERQVFNSMiBpcyB1c2VkCj4gYXQgYWxsLi4uIDotKQoKU2hvdWxkIEkgc2VuZCBhIHBh
+dGNoIGZvciB0aGlzIGFzIHdlbGwgPwoKPiBbLi4uXQo+IAo+ID4+IEluZGV4OiBsaW51eC9kcml2
+ZXJzL2dwdS9kcm0vcmNhci1kdS9yY2FyX2R1X2x2ZHNlbmMuYwo+ID4+ID09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0KPiA+
+PiAtLS0gbGludXgub3JpZy9kcml2ZXJzL2dwdS9kcm0vcmNhci1kdS9yY2FyX2R1X2x2ZHNlbmMu
+Ywo+ID4+ICsrKyBsaW51eC9kcml2ZXJzL2dwdS9kcm0vcmNhci1kdS9yY2FyX2R1X2x2ZHNlbmMu
+Ywo+IAo+IFsuLi5dCj4gCj4gPj4gQEAgLTE3NywxNCArMTg1LDE0IEBAIGludCByY2FyX2R1X2x2
+ZHNlbmNfZW5hYmxlKHN0cnVjdCByY2FyX2QKPiA+PiAgIHZvaWQgcmNhcl9kdV9sdmRzZW5jX2F0
+b21pY19jaGVjayhzdHJ1Y3QgcmNhcl9kdV9sdmRzZW5jICpsdmRzLAo+ID4+ICAgCQkJCSAgc3Ry
+dWN0IGRybV9kaXNwbGF5X21vZGUgKm1vZGUpCj4gPj4gICB7Cj4gPj4gLQlzdHJ1Y3QgcmNhcl9k
+dV9kZXZpY2UgKnJjZHUgPSBsdmRzLT5kZXY7Cj4gPj4gKwljb25zdCBzdHJ1Y3QgcmNhcl9kdV9k
+ZXZpY2VfaW5mbyAqaW5mbyA9IGx2ZHMtPmRldi0+aW5mbzsKPiA+PiAKPiA+PiAgIC8qCj4gPj4g
+ICAgKiBUaGUgaW50ZXJuYWwgTFZEUyBlbmNvZGVyIGhhcyBhIHJlc3RyaWN0ZWQgY2xvY2sgZnJl
+cXVlbmN5Cj4gPj4gICAJIG9wZXJhdGluZwo+ID4+IC0JICogcmFuZ2UgKDMwTUh6IHRvIDE1ME1I
+eiBvbiBHZW4yLCAyNS4xNzVNSHogdG8gMTQ4LjVNSHogb24gR2VuMykuCj4gPj4gQ2xhbXAKPiA+
+PiAtCSAqIHRoZSBjbG9jayBhY2NvcmRpbmdseS4KPiA+PiArCSAqIHJhbmdlICgzME1IeiB0byAx
+NTBNSHogb24gR2VuMiBhbmQgUi1DYXIgVjNNLCAyNS4xNzVNSHogdG8gMTQ4LjVNSHoKPiA+PiAr
+CSAqIG9uIEdlbjMpLiBDbGFtcCB0aGUgY2xvY2sgYWNjb3JkaW5nbHkuCj4gPj4gIAkgKi8KPiA+
+PiAtCWlmIChyY2R1LT5pbmZvLT5nZW4gPCAzKQo+ID4+ICsJaWYgKGluZm8tPmdlbiA8IDMgfHwg
+aW5mby0+bW9kZWwgPT0gUjhBNzc5NzApCj4gPj4gICAJCW1vZGUtPmNsb2NrID0gY2xhbXAobW9k
+ZS0+Y2xvY2ssIDMwMDAwLCAxNTAwMDApOwo+ID4gCj4gPiBBY2NvcmRpbmcgdG8gdGhlIGRhdGFz
+aGVldCB0aGUgZnJlcXVlbmN5IHJhbmdlIGZvciBWM00gaXMgdGhlIHNhbWUgYXMgZm9yCj4gPiB0
+aGUgSDMgYW5kIE0zIFNvQ3MuCj4gCj4gICAgIEluZGVlZCEgSSB0aG91Z2h0IGl0J3MgZGV0ZXJt
+aW5lZCBieSB0aGUgTFZEUExMQ1IgbGF5b3V0IGJ1dCBpdCdzIG5vdC4uLgo+IAo+ID4gVGhlIHJh
+bmdlIHNlZW1zIHRvIGhhdmUgY2hhbmdlZCBzdGFydGluZyBpbiBkYXRhc2hlZXQgdmVyc2lvbgo+
+ID4gMC41Mi4gSSB3b3VsZCBmaXggdGhlIHJhbmdlIGluIGEgc2VwYXJhdGUgcGF0Y2ggZmlyc3Qu
+Cj4gCj4gICAgIFllcy4KPiAKPiA+IElmIHlvdSB3YW50IEkgY2FuIHNlbmQgcGF0Y2hlcyB0byBm
+aXggdGhpcyBpc3N1ZQo+IAo+ICAgICBZZXMsIHBsZWFzZS4gWW91IGNsZWFybHkga25vdyBhYm91
+dCBEVSBtb3JlIHRoYW4gbWUuIDotKQoKSSd2ZSBwcmVwYXJlZCBhIHBhdGNoLCBJJ20gdGVzdGlu
+ZyBpdCBub3cgYW5kIEknbGwgdGhlbiBzZW5kIGl0LgoKPiA+IGFuZCB0aGUgcHJldmlvdXMgb25l
+LCBvciB5b3UgY2FuIHdyaXRlIHRoZW0gYW5kIGluY2x1ZGUgdGhlbSBpbiB2Mi4gTGV0IG1lCj4g
+PiBrbm93IHdoYXQgeW91J2QgcHJlZmVyLgo+ID4gCj4gPj4gICAJZWxzZQo+ID4+ICAgCQltb2Rl
+LT5jbG9jayA9IGNsYW1wKG1vZGUtPmNsb2NrLCAyNTE3NSwgMTQ4NTAwKTsKPiAKPiAgICAgVGhl
+IGxvd2VyIGJvdW5kIGRvY3VtZW50ZWQgb24gZ2VuMyBpcyAzMSBNSHogaW5kZWVkLi4uCgpBbmQg
+SSBqdXN0IGZvdW5kIG91dCB0aGF0IHRoZSBsYXRlc3QgdmVyc2lvbnMgb2YgdGhlIEdlbjIgZGF0
+YXNoZWV0cyBhbHNvIApkb2N1bWVudCB0aGUgMzEgTUh6IC0gMTQ4LjUgTUh6IHJhbmdlLiBUaGlz
+IHdpbGwgc2ltcGxpZnkgdGhlIGNvZGUuCgotLSAKUmVnYXJkcywKCkxhdXJlbnQgUGluY2hhcnQK
+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZl
+bCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xp
+c3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
