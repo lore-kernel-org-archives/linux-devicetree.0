@@ -1,81 +1,43 @@
-From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH 1/2] dts: ARM: Aspeed-g5: Add missing USB clock and
- pinmux
-Date: Fri, 12 Jan 2018 18:28:22 +1100
-Message-ID: <1515742102.31850.105.camel@kernel.crashing.org>
-References: <1515736921.31850.92.camel@kernel.crashing.org>
+From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Subject: Re: [PATCH v4 5/5] [media] MAINTAINERS: add entries for
+ OV2685/OV5695 sensor drivers
+Date: Fri, 12 Jan 2018 09:30:08 +0200
+Message-ID: <20180112073008.t4ia4kts5w2ybpao@valkosipuli.retiisi.org.uk>
+References: <1515509304-15941-1-git-send-email-zhengsq@rock-chips.com>
+ <1515509304-15941-6-git-send-email-zhengsq@rock-chips.com>
+ <20180109223337.7ep3fip7lrqds5m4@valkosipuli.retiisi.org.uk>
+ <7e73473b-1c72-2fcd-4c55-e2c6c87550f6@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1515736921.31850.92.camel-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <7e73473b-1c72-2fcd-4c55-e2c6c87550f6-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Joel Stanley <joel.stanley-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>
+To: Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ddl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2018-01-12 at 17:02 +1100, Benjamin Herrenschmidt wrote:
-> This adds the clock and pinmux default references to
-> the Aspeed G5 SoC base device-tree for USB. The clk and
-> pinmux drivers already know about these.
-
-Drop this. It depends on a patch you don't have. I'll send a v2
-
-> Signed-off-by: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-> ---
->  arch/arm/boot/dts/aspeed-g5.dtsi | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
+On Fri, Jan 12, 2018 at 09:52:13AM +0800, Shunqian Zheng wrote:
+> Hi Sakari,
 > 
-> diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
-> index 8b3986a941f5..3c5c9b952ba8 100644
-> --- a/arch/arm/boot/dts/aspeed-g5.dtsi
-> +++ b/arch/arm/boot/dts/aspeed-g5.dtsi
-> @@ -142,6 +142,7 @@
->  			compatible = "aspeed,ast2500-ehci", "generic-ehci";
->  			reg = <0x1e6a1000 0x100>;
->  			interrupts = <5>;
-> +			clocks = <&syscon ASPEED_CLK_GATE_USBPORT1CLK>;
->  			status = "disabled";
->  		};
->  
-> @@ -149,6 +150,7 @@
->  			compatible = "aspeed,ast2500-ehci", "generic-ehci";
->  			reg = <0x1e6a3000 0x100>;
->  			interrupts = <13>;
-> +			clocks = <&syscon ASPEED_CLK_GATE_USBPORT2CLK>;
->  			status = "disabled";
->  		};
->  
-> @@ -157,6 +159,7 @@
->  			reg = <0x1e6b0000 0x100>;
->  			interrupts = <14>;
->  			#ports = <2>;
-> +			clocks = <&syscon ASPEED_CLK_GATE_USBUHCICLK>;
->  			status = "disabled";
->  		};
->  
-> @@ -1387,6 +1390,21 @@
->  		groups = "USBCKI";
->  	};
->  
-> +	pinctrl_usb2ah_default: usb2ah_default {
-> +		function = "USB2AH";
-> +		groups = "USB2AH";
-> +	};
-> +
-> +	pinctrl_usb11bhid_default: usb11bhid_default {
-> +		function = "USB11BHID";
-> +		groups = "USB11BHID";
-> +	};
-> +
-> +	pinctrl_usb2bh_default: usb2bh_default {
-> +		function = "USB2BH";
-> +		groups = "USB2BH";
-> +	};
-> +
->  	pinctrl_vgabiosrom_default: vgabiosrom_default {
->  		function = "VGABIOSROM";
->  		groups = "VGABIOSROM";
+> 
+> On 2018年01月10日 06:33, Sakari Ailus wrote:
+> > On Tue, Jan 09, 2018 at 10:48:24PM +0800, Shunqian Zheng wrote:
+> > > Add maintainer entries for the OV2685 and OV5695 V4L2 sensor drivers.
+> > > 
+> > > Signed-off-by: Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> > Same patch with the driver, please.
+> > 
+> > Other than that seems good to me.
+> Does that mean I can add your Reviewed-by in the new patches?
+
+Presumably you'll have one patch less in v5. I'll still check the rest of
+the patches.
+
+-- 
+Sakari Ailus
+e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
