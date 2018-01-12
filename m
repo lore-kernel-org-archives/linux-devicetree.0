@@ -1,68 +1,72 @@
-From: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH v4 5/8] ARM: l2x0: add marvell,ecc-enable property for aurora
-Date: Fri, 12 Jan 2018 14:27:52 +1300
-Message-ID: <20180112012755.20495-6-chris.packham@alliedtelesis.co.nz>
-References: <20180112012755.20495-1-chris.packham@alliedtelesis.co.nz>
+From: Yong <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
+Subject: Re: Re: [PATCH v5 2/2] media: V3s: Add support for
+ Allwinner CSI.
+Date: Fri, 12 Jan 2018 09:51:14 +0800
+Message-ID: <20180112095114.b2414fe44cff7bf7cf6f8822@magewell.com>
+References: <1515639966-35902-1-git-send-email-yong.deng@magewell.com>
+	<20180111132844.mok7upqjycpx3bqm@flea.lan>
+Reply-To: yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180112012755.20495-1-chris.packham@alliedtelesis.co.nz>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux@armlinux.org.uk, bp@alien8.de, jlu@pengutronix.de
-Cc: thomas.petazzoni@free-electrons.com, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Chris Packham <chris.packham@alliedtelesis.co.nz>, kernel@pengutronix.de, gregory.clement@free-electrons.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBD2JNYHK4MEBBHNJ4DJAKGQETV6MC6I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180111132844.mok7upqjycpx3bqm-ZC1Zs529Oq4@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rick Chang <rick.chang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, megous-5qf/QAjKc81hl2p70BpVqQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The aurora cache on the Marvell Armada-XP SoC supports ECC protection
-for the L2 data arrays. Add a "marvell,ecc-enable" device tree property
-which can be used to enable this.
+Hi Maxime,
 
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-[jlu@pengutronix.de: use aurora specific define AURORA_ACR_ECC_EN]
-Signed-off-by: Jan Luebbe <jlu@pengutronix.de>
----
- Documentation/devicetree/bindings/arm/l2c2x0.txt | 2 ++
- arch/arm/mm/cache-l2x0.c                         | 7 +++++++
- 2 files changed, 9 insertions(+)
+On Thu, 11 Jan 2018 14:28:44 +0100
+Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
 
-diff --git a/Documentation/devicetree/bindings/arm/l2c2x0.txt b/Documentation/devicetree/bindings/arm/l2c2x0.txt
-index fbe6cb21f4cf..15a84f0ba9f1 100644
---- a/Documentation/devicetree/bindings/arm/l2c2x0.txt
-+++ b/Documentation/devicetree/bindings/arm/l2c2x0.txt
-@@ -76,6 +76,8 @@ Optional properties:
-   specified to indicate that such transforms are precluded.
- - arm,parity-enable : enable parity checking on the L2 cache (L220 or PL310).
- - arm,parity-disable : disable parity checking on the L2 cache (L220 or PL310).
-+- marvell,ecc-enable : enable ECC protection on the L2 cache
-+- marvell,ecc-disable : disable ECC protection on the L2 cache
- - arm,outer-sync-disable : disable the outer sync operation on the L2 cache.
-   Some core tiles, especially ARM PB11MPCore have a faulty L220 cache that
-   will randomly hang unless outer sync operations are disabled.
-diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
-index b70bee74750d..644f786e4fa9 100644
---- a/arch/arm/mm/cache-l2x0.c
-+++ b/arch/arm/mm/cache-l2x0.c
-@@ -1505,6 +1505,13 @@ static void __init aurora_of_parse(const struct device_node *np,
- 		mask |= AURORA_ACR_FORCE_WRITE_POLICY_MASK;
- 	}
- 
-+	if (of_property_read_bool(np, "marvell,ecc-enable")) {
-+		mask |= AURORA_ACR_ECC_EN;
-+		val |= AURORA_ACR_ECC_EN;
-+	} else if (of_property_read_bool(np, "marvell,ecc-disable")) {
-+		mask |= AURORA_ACR_ECC_EN;
-+	}
-+
- 	if (of_property_read_bool(np, "arm,parity-enable")) {
- 		mask |= AURORA_ACR_PARITY_EN;
- 		val |= AURORA_ACR_PARITY_EN;
--- 
-2.15.1
+> Hi Yong,
+> 
+> On Thu, Jan 11, 2018 at 11:06:06AM +0800, Yong Deng wrote:
+> > Allwinner V3s SoC features two CSI module. CSI0 is used for MIPI CSI-2
+> > interface and CSI1 is used for parallel interface. This is not
+> > documented in datasheet but by test and guess.
+> > 
+> > This patch implement a v4l2 framework driver for it.
+> > 
+> > Currently, the driver only support the parallel interface. MIPI-CSI2,
+> > ISP's support are not included in this patch.
+> > 
+> > Signed-off-by: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
+> 
+> I've needed this patch in order to fix a NULL pointer dereference:
+> http://code.bulix.org/oz6gmb-257359?raw
+> 
+> This is needed because while it's ok to have a NULL pointer to
+> v4l2_subdev_pad_config when you call the subdev set_fmt with
+> V4L2_SUBDEV_FORMAT_ACTIVE, it's not with V4L2_SUBDEV_FORMAT_TRY, and
+> sensors will assume taht it's a valid pointer.
+> 
+> Otherwise,
+> Tested-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+
+I revisit some code of subdevs and you are right.
+
+Squash your patch into my driver patch and add your Tested-by in
+commit. Is it right?
+
+> 
+> -- 
+> Maxime Ripard, Free Electrons
+> Embedded Linux and Kernel engineering
+> http://free-electrons.com
+> 
+> -- 
+> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+> For more options, visit https://groups.google.com/d/optout.
+
+
+Thanks,
+Yong
