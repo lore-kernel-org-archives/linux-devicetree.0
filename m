@@ -1,87 +1,195 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 1/3] arm: spear600: Add missing interrupt-parent of rtc
-Date: Fri, 12 Jan 2018 23:05:33 +0100
-Message-ID: <CAK8P3a3MZX-ZsxX9h1-8kVQhn9hqY=c8L1+=e3uTfjEjBCYuPg@mail.gmail.com>
-References: <a062d9ed0d3365b578156a780202fa533e725374.1515650104.git.viresh.kumar@linaro.org>
- <20180112020711.6gp2pnsxxjzelidq@localhost> <20180112032223.GK3626@vireshk-i7>
- <CAOesGMggU73asY1SEUDD_BsWcrGYR___o8e5omjziOPEwJgqBQ@mail.gmail.com>
- <CAK8P3a2SO4=YKBE3L_AKsyfNe77YR7a8F=dvbS=ic03=6NK8MA@mail.gmail.com>
- <CAOesGMgcf9FovbzhPkKnrG4ETRFP3dsSJnTYNfp1wECMFeFOGA@mail.gmail.com>
- <CAL_JsqJVWLazDRB1me2OubqqMhdsqsR+cLSHR+K0OY3dZHcE-w@mail.gmail.com>
- <CAOesGMiyfpRyoe4dxQeNMF5invysVBEy+J5OwUhuop=JyAvZoQ@mail.gmail.com>
- <CAK8P3a3KTz0sOSbO9+sAY1Sv95hZF4Yg1qMzOaXPAZ_1pOgGpg@mail.gmail.com> <CAOesGMiHeitS_j9r0DsPf3k1jVJT9_z-bHyrhbB7fQ__LjjaqA@mail.gmail.com>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH v2 04/12] drm/bridge/synopsys: dw-hdmi:
+ Export some PHY related functions
+Date: Sat, 13 Jan 2018 01:04:52 +0200
+Message-ID: <9134913.0WHrC6jaSo@avalon>
+References: <20180110192512.19684-1-jernej.skrabec@siol.net> <20180110192512.19684-5-jernej.skrabec@siol.net>
+Reply-To: laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOesGMiHeitS_j9r0DsPf3k1jVJT9_z-bHyrhbB7fQ__LjjaqA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, ARM-SoC Maintainers <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux ARM Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, gregkh <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Return-path: <linux-sunxi+bncBDKM3GOS4YHBBFH64TJAKGQEQK4HFHY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180110192512.19684-5-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Cc: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 12, 2018 at 10:57 PM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
-> On Fri, Jan 12, 2018 at 1:53 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
->> On Fri, Jan 12, 2018 at 10:50 PM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
->>> On Fri, Jan 12, 2018 at 12:45 PM, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->>>> On Fri, Jan 12, 2018 at 12:23 PM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
->>>> I have more dtc checks in the works (nothing for 4.16 :) ). I'd like
->>>> the process to work better. I'm not going to fix all the warnings. I
->>>> don't think Arnd should either. Turning them off by default hasn't
->>>> worked great either. For some, I'm not sure we can ever get to warning
->>>> free, but I'd like new stuff to have warnings enabled and no one
->>>> builds with W=1. We could put together tooling to just show new
->>>> warnings, but someone has to run it and enforce it. I could stick dtc
->>>> updates into linux-next for multiple cycles before sending to Linus.
->>>
->>> I'll split up and report DT warnings separate from compiler, seems
->>> like a reasonable approach.
->>
->> Maybe also report any other output from the build process as another
->> category. When things build fine, we should see no output at all.
->
-> Yep, true.
->
-> Right now there's mostly DTC warnings and missing MODULE_LICENSE().
+Hi Jernej,
 
-I've sent patches for all the remaining MODULE_LICENSE warnings earlier
-this week, and we should now have patches for almost all the dtc
-warnings in flight. This is what I still see on my randconfig builder
-with linux-next + arm-soc/for-next + patches I sent:
+Thank you for th epatch.
 
-     arch/arm/boot/dts/spear1310-evb.dtb: Warning (gpios_property):
-Missing property '#gpio-cells' in node /interrupt-controller@ec801000
-or bad phandle (referred from /ahb/apb/spi@e0100000:cs-gpios[6])
-     arch/arm/boot/dts/spear1310-evb.dtb: Warning (gpios_property):
-Property 'cs-gpios', cell 6 is not a phandle reference in
-/ahb/apb/spi@e0100000
-     arch/arm/boot/dts/spear1340-evb.dtb: Warning (dmas_property):
-Missing property '#dma-cells' in node /interrupt-controller@ec801000
-or bad phandle (referred from /ahb/apb/serial@b4100000:dmas[4])
-     arch/arm/boot/dts/spear1340-evb.dtb: Warning (dmas_property):
-Property 'dmas', cell 4 is not a phandle reference in
-/ahb/apb/serial@b4100000
-     arch/arm/boot/dts/spear600-evb.dtb: Warning
-(interrupts_property): Missing interrupt-parent for
-/ahb/apb/rtc@fc900000
-     arch/arm/boot/dts/ste-nomadik-nhk15.dtb: Warning
-(interrupts_property): Missing interrupt-parent for
-/amba/clcd@10120000
-     arch/arm/boot/dts/ste-nomadik-s8815.dtb: Warning
-(interrupts_property): Missing interrupt-parent for
-/amba/clcd@10120000
+On Wednesday, 10 January 2018 21:25:04 EET Jernej Skrabec wrote:
+> Parts of PHY code could be useful also for custom PHYs. For example,
+> Allwinner A83T has custom PHY which is probably Synopsys gen2 PHY
+> with few additional memory mapped registers, so most of the Synopsys PHY
+> related code could be reused.
+> 
+> Functions exported here are actually not specific to Synopsys PHYs but
+> to DWC HDMI controller PHY interface. This means that even if the PHY is
+> completely custom, i.e. not designed by Synopsys, exported functions can
+> be useful.
+> 
+> Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+> ---
+>  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 44 ++++++++++++++++++++--------
+>  include/drm/bridge/dw_hdmi.h              | 11 ++++++++
+>  2 files changed, 41 insertions(+), 14 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c index
+> 7ca14d7325b5..7d80f4b56683 100644
+> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> @@ -1037,19 +1037,21 @@ static void dw_hdmi_phy_enable_svsret(struct dw_hdmi
+> *hdmi, u8 enable) HDMI_PHY_CONF0_SVSRET_MASK);
+>  }
+> 
+> -static void dw_hdmi_phy_gen2_pddq(struct dw_hdmi *hdmi, u8 enable)
+> +void dw_hdmi_phy_gen2_pddq(struct dw_hdmi *hdmi, u8 enable)
+>  {
+>  	hdmi_mask_writeb(hdmi, enable, HDMI_PHY_CONF0,
+>  			 HDMI_PHY_CONF0_GEN2_PDDQ_OFFSET,
+>  			 HDMI_PHY_CONF0_GEN2_PDDQ_MASK);
+>  }
+> +EXPORT_SYMBOL_GPL(dw_hdmi_phy_gen2_pddq);
+> 
+> -static void dw_hdmi_phy_gen2_txpwron(struct dw_hdmi *hdmi, u8 enable)
+> +void dw_hdmi_phy_gen2_txpwron(struct dw_hdmi *hdmi, u8 enable)
+>  {
+>  	hdmi_mask_writeb(hdmi, enable, HDMI_PHY_CONF0,
+>  			 HDMI_PHY_CONF0_GEN2_TXPWRON_OFFSET,
+>  			 HDMI_PHY_CONF0_GEN2_TXPWRON_MASK);
+>  }
+> +EXPORT_SYMBOL_GPL(dw_hdmi_phy_gen2_txpwron);
+> 
+>  static void dw_hdmi_phy_sel_data_en_pol(struct dw_hdmi *hdmi, u8 enable)
+>  {
+> @@ -1065,6 +1067,22 @@ static void dw_hdmi_phy_sel_interface_control(struct
+> dw_hdmi *hdmi, u8 enable) HDMI_PHY_CONF0_SELDIPIF_MASK);
+>  }
+> 
+> +void dw_hdmi_phy_reset(struct dw_hdmi *hdmi)
+> +{
+> +	/* PHY reset. The reset signal is active high on Gen2 PHYs. */
+> +	hdmi_writeb(hdmi, HDMI_MC_PHYRSTZ_PHYRSTZ, HDMI_MC_PHYRSTZ);
+> +	hdmi_writeb(hdmi, 0, HDMI_MC_PHYRSTZ);
+> +}
+> +EXPORT_SYMBOL_GPL(dw_hdmi_phy_reset);
+> +
+> +void dw_hdmi_phy_i2c_set_addr(struct dw_hdmi *hdmi, u8 address)
+> +{
+> +	hdmi_phy_test_clear(hdmi, 1);
+> +	hdmi_writeb(hdmi, address, HDMI_PHY_I2CM_SLAVE_ADDR);
+> +	hdmi_phy_test_clear(hdmi, 0);
+> +}
+> +EXPORT_SYMBOL_GPL(dw_hdmi_phy_i2c_set_addr);
+> +
+>  static void dw_hdmi_phy_power_off(struct dw_hdmi *hdmi)
+>  {
+>  	const struct dw_hdmi_phy_data *phy = hdmi->phy.data;
+> @@ -1203,16 +1221,11 @@ static int hdmi_phy_configure(struct dw_hdmi *hdmi)
+>  	if (phy->has_svsret)
+>  		dw_hdmi_phy_enable_svsret(hdmi, 1);
+> 
+> -	/* PHY reset. The reset signal is active high on Gen2 PHYs. */
+> -	hdmi_writeb(hdmi, HDMI_MC_PHYRSTZ_PHYRSTZ, HDMI_MC_PHYRSTZ);
+> -	hdmi_writeb(hdmi, 0, HDMI_MC_PHYRSTZ);
+> +	dw_hdmi_phy_reset(hdmi);
+> 
+>  	hdmi_writeb(hdmi, HDMI_MC_HEACPHY_RST_ASSERT, HDMI_MC_HEACPHY_RST);
+> 
+> -	hdmi_phy_test_clear(hdmi, 1);
+> -	hdmi_writeb(hdmi, HDMI_PHY_I2CM_SLAVE_ADDR_PHY_GEN2,
+> -		    HDMI_PHY_I2CM_SLAVE_ADDR);
+> -	hdmi_phy_test_clear(hdmi, 0);
+> +	dw_hdmi_phy_i2c_set_addr(hdmi, HDMI_PHY_I2CM_SLAVE_ADDR_PHY_GEN2);
+> 
+>  	/* Write to the PHY as configured by the platform */
+>  	if (pdata->configure_phy)
+> @@ -1251,15 +1264,16 @@ static void dw_hdmi_phy_disable(struct dw_hdmi
+> *hdmi, void *data) dw_hdmi_phy_power_off(hdmi);
+>  }
+> 
+> -static enum drm_connector_status dw_hdmi_phy_read_hpd(struct dw_hdmi *hdmi,
+> -						      void *data)
+> +enum drm_connector_status dw_hdmi_phy_read_hpd(struct dw_hdmi *hdmi,
+> +					       void *data)
+>  {
+>  	return hdmi_readb(hdmi, HDMI_PHY_STAT0) & HDMI_PHY_HPD ?
+>  		connector_status_connected : connector_status_disconnected;
+>  }
+> +EXPORT_SYMBOL_GPL(dw_hdmi_phy_read_hpd);
+> 
+> -static void dw_hdmi_phy_update_hpd(struct dw_hdmi *hdmi, void *data,
+> -				   bool force, bool disabled, bool rxsense)
+> +void dw_hdmi_phy_update_hpd(struct dw_hdmi *hdmi, void *data,
+> +			    bool force, bool disabled, bool rxsense)
+>  {
+>  	u8 old_mask = hdmi->phy_mask;
+> 
+> @@ -1271,8 +1285,9 @@ static void dw_hdmi_phy_update_hpd(struct dw_hdmi
+> *hdmi, void *data, if (old_mask != hdmi->phy_mask)
+>  		hdmi_writeb(hdmi, hdmi->phy_mask, HDMI_PHY_MASK0);
+>  }
+> +EXPORT_SYMBOL_GPL(dw_hdmi_phy_update_hpd);
+> 
+> -static void dw_hdmi_phy_setup_hpd(struct dw_hdmi *hdmi, void *data)
+> +void dw_hdmi_phy_setup_hpd(struct dw_hdmi *hdmi, void *data)
+>  {
+>  	/*
+>  	 * Configure the PHY RX SENSE and HPD interrupts polarities and clear
+> @@ -1291,6 +1306,7 @@ static void dw_hdmi_phy_setup_hpd(struct dw_hdmi
+> *hdmi, void *data) hdmi_writeb(hdmi, ~(HDMI_IH_PHY_STAT0_HPD |
+> HDMI_IH_PHY_STAT0_RX_SENSE), HDMI_IH_MUTE_PHY_STAT0);
+>  }
+> +EXPORT_SYMBOL_GPL(dw_hdmi_phy_setup_hpd);
+> 
+>  static const struct dw_hdmi_phy_ops dw_hdmi_synopsys_phy_ops = {
+>  	.init = dw_hdmi_phy_init,
+> diff --git a/include/drm/bridge/dw_hdmi.h b/include/drm/bridge/dw_hdmi.h
+> index 182f83283e24..4a35e5065f6f 100644
+> --- a/include/drm/bridge/dw_hdmi.h
+> +++ b/include/drm/bridge/dw_hdmi.h
+> @@ -157,7 +157,18 @@ void dw_hdmi_audio_enable(struct dw_hdmi *hdmi);
+>  void dw_hdmi_audio_disable(struct dw_hdmi *hdmi);
+> 
+>  /* PHY configuration */
+> +void dw_hdmi_phy_i2c_set_addr(struct dw_hdmi *hdmi, u8 address);
+>  void dw_hdmi_phy_i2c_write(struct dw_hdmi *hdmi, unsigned short data,
+>  			   unsigned char addr);
+> 
+> +enum drm_connector_status dw_hdmi_phy_read_hpd(struct dw_hdmi *hdmi,
+> +					       void *data);
+> +void dw_hdmi_phy_update_hpd(struct dw_hdmi *hdmi, void *data,
+> +			    bool force, bool disabled, bool rxsense);
+> +void dw_hdmi_phy_setup_hpd(struct dw_hdmi *hdmi, void *data);
+> +
+> +void dw_hdmi_phy_gen2_pddq(struct dw_hdmi *hdmi, u8 enable);
+> +void dw_hdmi_phy_gen2_txpwron(struct dw_hdmi *hdmi, u8 enable);
+> +void dw_hdmi_phy_reset(struct dw_hdmi *hdmi);
 
-Not sure why the spear warnings are still there, maybe Viresh missed those
-or you missed one of his patches?
+Nitpicking, could you move these last three functions between the I2C and HPD 
+functions ? They are, as the I2C functions, related to controlling the 
+interface between the HDMI controller and the PHY (the internal I2C bus and 
+direct signals), so it would make sense to group them together.
 
-I hope Linus Walleij can find out what the right interrupt-parent
-should be on the
-nomadik machine, that is otherwise the last remaining warning. Apparently the
-clcd driver doesn't actually need its interrupt, so we could decide to
-just comment
-out that line if we don't know which controller it's connected to.
+With that fixed,
 
-       Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Reviewed-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+
+Regarding HPD I think we could refactor the code in a cleaner why that 
+wouldn't require the three functions to be exported, but that shouldn't block 
+this patch series, it can always be done later.
+
+>  #endif /* __IMX_HDMI_H__ */
+
+-- 
+Regards,
+
+Laurent Pinchart
