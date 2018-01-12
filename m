@@ -1,51 +1,162 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH 02/10] dt-bindings: display: renesas: Deprecate LVDS
- support in the DU bindings
-Date: Fri, 12 Jan 2018 18:14:33 +0300
-Message-ID: <7e7432fb-770e-d426-dfc1-1518975acd4e@cogentembedded.com>
-References: <20180112005858.26472-1-laurent.pinchart+renesas@ideasonboard.com>
- <20180112005858.26472-3-laurent.pinchart+renesas@ideasonboard.com>
+From: David Lechner <david@lechnology.com>
+Subject: Re: [PATCH v5 02/44] clk: davinci: New driver for davinci PLL clocks
+Date: Fri, 12 Jan 2018 09:25:12 -0600
+Message-ID: <01fbde0e-36a0-2b19-e385-e63bc4a3ae4a@lechnology.com>
+References: <1515377863-20358-1-git-send-email-david@lechnology.com>
+ <1515377863-20358-3-git-send-email-david@lechnology.com>
+ <7fc8bd35-0416-216d-8e1e-53a0ec6e8790@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180112005858.26472-3-laurent.pinchart+renesas@ideasonboard.com>
-Content-Language: en-MW
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, dri-devel@lists.freedesktop.org
-Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <7fc8bd35-0416-216d-8e1e-53a0ec6e8790@ti.com>
+Content-Language: en-US
+Sender: linux-clk-owner@vger.kernel.org
+To: Sekhar Nori <nsekhar@ti.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8hCgpPbiAwMS8xMi8yMDE4IDAzOjU4IEFNLCBMYXVyZW50IFBpbmNoYXJ0IHdyb3RlOgoK
-PiBUaGUgaW50ZXJuYWwgTFZEUyBlbmNvZGVycyBub3cgaGF2ZSB0aGVpciBvd24gRFQgYmluZGlu
-Z3MsIHJlcHJlc2VudGluZwo+IHRoZW0gYXMgcGFydCBvZiB0aGUgRFUgaXMgZGVwcmVjYXRlZC4K
-PiAKPiBTaWduZWQtb2ZmLWJ5OiBMYXVyZW50IFBpbmNoYXJ0IDxsYXVyZW50LnBpbmNoYXJ0K3Jl
-bmVzYXNAaWRlYXNvbmJvYXJkLmNvbT4KPiAtLS0KPiAgIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L2Rpc3BsYXkvcmVuZXNhcyxkdS50eHQgICAgIHwgMjYgKysrKysrKysrLS0tLS0tLS0tLS0tLQo+
-ICAgMSBmaWxlIGNoYW5nZWQsIDExIGluc2VydGlvbnMoKyksIDE1IGRlbGV0aW9ucygtKQo+IAo+
-IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9y
-ZW5lc2FzLGR1LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
-L3JlbmVzYXMsZHUudHh0Cj4gaW5kZXggY2Q0OGFiYTNiYzhjLi44ZjZlMGUxMThlM2UgMTAwNjQ0
-Cj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcmVuZXNh
-cyxkdS50eHQKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
-eS9yZW5lc2FzLGR1LnR4dAo+IEBAIC0xNyw5ICsxNyw3IEBAIFJlcXVpcmVkIFByb3BlcnRpZXM6
-Cj4gICAgIC0gcmVnOiBBIGxpc3Qgb2YgYmFzZSBhZGRyZXNzIGFuZCBsZW5ndGggb2YgZWFjaCBt
-ZW1vcnkgcmVzb3VyY2UsIG9uZSBmb3IKPiAgICAgICBlYWNoIGVudHJ5IGluIHRoZSByZWctbmFt
-ZXMgcHJvcGVydHkuCj4gICAgIC0gcmVnLW5hbWVzOiBOYW1lIG9mIHRoZSBtZW1vcnkgcmVzb3Vy
-Y2VzLiBUaGUgRFUgcmVxdWlyZXMgb25lIG1lbW9yeQo+IC0gICAgcmVzb3VyY2UgZm9yIHRoZSBE
-VSBjb3JlIChuYW1lZCAiZHUiKSBhbmQgb25lIG1lbW9yeSByZXNvdXJjZSBmb3IgZWFjaAo+IC0g
-ICAgTFZEUyBlbmNvZGVyIChuYW1lZCAibHZkcy54IiB3aXRoICJ4IiBiZWluZyB0aGUgTFZEUyBj
-b250cm9sbGVyIG51bWVyaWNhbAo+IC0gICAgaW5kZXgpLgo+ICsgICAgcmVzb3VyY2UgZm9yIHRo
-ZSBEVSBjb3JlIChuYW1lZCAiZHUiKS4KCiAgICBDb3VsZCB3ZSBnZXQgcmlkIG9mIHRoaXMgcHJv
-cCBhbHRvZ2V0aGVyPwoKWy4uLl0KCk1CUiwgU2VyZ2VpCl9fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVs
-QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWls
-bWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On 01/12/2018 03:21 AM, Sekhar Nori wrote:
+> On Monday 08 January 2018 07:47 AM, David Lechner wrote:
+>> This adds a new driver for mach-davinci PLL clocks. This is porting the
+>> code from arch/arm/mach-davinci/clock.c to the common clock framework.
+>> Additionally, it adds device tree support for these clocks.
+>>
+>> The ifeq ($(CONFIG_COMMON_CLK), y) in the Makefile is needed to prevent
+>> compile errors until the clock code in arch/arm/mach-davinci is removed.
+>>
+>> Note: although there are similar clocks for TI Keystone we are not able
+>> to share the code for a few reasons. The keystone clocks are device tree
+>> only and use legacy one-node-per-clock bindings. Also the register
+>> layouts are a bit different, which would add even more if/else mess
+>> to the keystone clocks. And the keystone PLL driver doesn't support
+>> setting clock rates.
+>>
+>> Signed-off-by: David Lechner <david@lechnology.com>
+>> ---
+
+>> +
+>> +#define PLLM_MASK		0x1f
+>> +#define PREDIV_RATIO_MASK	0x1f
+> 
+> May be use the mode modern GENMASK()?
+
+I haven't seen that one before. Thanks.
+
+...
+
+>> +static unsigned long davinci_pll_clk_recalc(struct clk_hw *hw,
+>> +					    unsigned long parent_rate)
+>> +{
+>> +	struct davinci_pll_clk *pll = to_davinci_pll_clk(hw);
+>> +	unsigned long rate = parent_rate;
+>> +	u32 prediv, mult, postdiv;
+>> +
+>> +	prediv = readl(pll->base + PREDIV) & PREDIV_RATIO_MASK;
+>> +	mult = readl(pll->base + PLLM) & PLLM_MASK;
+>> +	postdiv = readl(pll->base + POSTDIV) & POSTDIV_RATIO_MASK;
+> 
+> Shouldn't we check if the pre and post dividers are enabled before using
+> them?
+
+Indeed.
+
+> 
+>> +
+>> +	rate /= prediv + 1;
+>> +	rate *= mult + 1;
+>> +	rate /= postdiv + 1;
+>> +
+>> +	return rate;
+>> +}
+>> +
+
+...
+
+> 
+> PLL output on DA850 must never be below 300MHz or above 600MHz (see
+> datasheet table "Allowed PLL Operating Conditions"). Does this take care
+> of that? Thats one of the main reasons I recall I went with some
+> specific values of prediv, pllm and post div in
+> arch/arm/mach-davinci/da850.c
+
+Apparently, I missed this requirement. It looks like I am going to have to
+rework things so that there is some coordination between the PLL and the
+PLLDIV clocks in order to get the < 300MHz operating points.
+
+...
+
+>> +
+>> +	divider->reg = base + OSCDIV;
+>> +	divider->width = OSCDIV_RATIO_WIDTH;
+> 
+> can you write OD1EN of OSCDIV here? I guess the reset default is 1 so
+> you didnt need to do that. But not doing exposes us to settings that
+> bootloader left us in.
+> 
+
+It looks like I am going to have to make a custom implementation for parts
+of this clock anyway, so I will probably just make new enable/disable
+callbacks that set both OSCDIV_OD1EN and CKEN_OBSCLK.
+
+>> +
+>> +	clk = clk_register_composite(NULL, name, parent_names, num_parents,
+>> +				     &mux->hw, &clk_mux_ops,
+>> +				     &divider->hw, &clk_divider_ops,
+>> +				     &gate->hw, &clk_gate_ops, 0);
+>> +	if (IS_ERR(clk)) {
+>> +		kfree(divider);
+>> +		kfree(gate);
+>> +		kfree(mux);
+>> +	}
+>> +
+>> +	return clk;
+>> +}
+>> +
+>> +struct clk *
+>> +davinci_pll_divclk_register(const struct davinci_pll_divclk_info *info,
+>> +			    void __iomem *base)
+>> +{
+>> +	const struct clk_ops *divider_ops = &clk_divider_ops;
+> 
+> setting the sysclk divider requires GOSTAT handling apart from setting
+> the divider value. So I think .set_rate ops above wont work. Other ops
+> can be used, I guess. So we need a private structure here.
+> 
+> Can you port over davinci_set_sysclk_rate() too? I understand you cannot
+> test it due to lack of cpufreq support in DT, but I can help testing there.
+> 
+> Or leave .set_rate NULL and it can be added later.
+
+Yes, I noticed that I missed this after I submitted this series. And I
+will have to rework things to coordinate with the PLL as mentioned above.
+
+FYI, I do have cpufreq-dt working, although the LEGO EV3 has a fixed 1.2V
+regulator, so I am limited in what I can test. Basically, I can only switch
+between 300MHz and 375MHz according to the datasheets. The chip is technically
+the 456MHz version. What would happen if I ran it faster or slower with the
+wrong voltage?
+
+...
+
+>> +
+>> +	child = of_get_child_by_name(node, "auxclk");
+>> +	if (child && of_device_is_available(child)) {
+>> +		char child_name[MAX_NAME_SIZE];
+>> +
+>> +		snprintf(child_name, MAX_NAME_SIZE, "%s_aux_clk", name);
+>> +
+>> +		clk = davinci_pll_aux_clk_register(child_name, parent_name, base);
+>> +		if (IS_ERR(clk))
+>> +			pr_warn("%s: failed to register %s (%ld)\n", __func__,
+>> +				child_name, PTR_ERR(clk));
+>> +		else
+>> +			of_clk_add_provider(child, of_clk_src_simple_get, clk);
+>> +	}
+> 
+> davinci_pll_obs_clk_register() should also be handled here?
+
+I omitted it because no one is using it (same reason I left it out of the
+device tree bindings). We can certainly add it, though.
+
+
