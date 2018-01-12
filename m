@@ -1,105 +1,44 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH] phy: work around 'phys' references to usb-nop-xceiv
- devices
-Date: Fri, 12 Jan 2018 18:37:13 +0100 (CET)
-Message-ID: <971903888.21300.1515778633323@email.1und1.de>
-References: <20180112101223.3661181-1-arnd@arndb.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180112101223.3661181-1-arnd@arndb.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>
-Cc: Vitaly Andrianov <vitalya@ti.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Felipe Balbi <balbi@kernel.org>, John Youn <johnyoun@synopsys.com>, Dinh Nguyen <dinguyen@kernel.org>, linux-kernel@vger.kernel.org, stable@vger.kernel.org, Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, linux-rpi-kernel@lists.infradead.org, Andrzej Pietrasiewicz <andrzej.p@samsung.com>, Javier Martinez Canillas <javier@dowhile0.org>, Fabio Estevam <fabio.estevam@nxp.com>, linux-arm-kernel@lists.infradead.org
+From: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Subject: [PATCH v3 0/2] media: ov7670: Implement mbus configuration
+Date: Fri, 12 Jan 2018 18:56:46 +0100
+Message-ID: <1515779808-21420-1-git-send-email-jacopo+renesas@jmondi.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: corbet@lwn.net, mchehab@kernel.org, sakari.ailus@iki.fi, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-[add some potential testers]
+Hello,
+   round 3 for this series.
 
-> Arnd Bergmann <arnd@arndb.de> hat am 12. Januar 2018 um 11:12 geschrieben:
-> 
-> 
-> Stefan Wahren reports a problem with a warning fix that was merged
-> for v4.15: we had lots of device nodes with a 'phys' property pointing
-> to a device node that is not compliant with the binding documented in
-> Documentation/devicetree/bindings/phy/phy-bindings.txt
-> 
-> This generally works because USB HCD drivers that support both the generic
-> phy subsystem and the older usb-phy subsystem ignore most errors from
-> phy_get() and related calls and then use the usb-phy driver instead.
-> 
-> However, it turns out that making the usb-nop-xceiv device compatible with
-> the generic-phy binding changes the phy_get() return code from -EINVAL to
-> -EPROBE_DEFER, and the dwc2 usb controller driver for bcm2835 now returns
-> -EPROBE_DEFER from its probe function rather than ignoring the failure,
-> breaking all USB support on raspberry-pi when CONFIG_GENERIC_PHY is
-> enabled. The same code is used in the dwc3 driver and the usb_add_hcd()
-> function, so a reasonable assumption would be that many other platforms
-> are affected as well.
-> 
-> I have reviewed all the related patches and concluded that "usb-nop-xceiv"
-> is the only USB phy that is affected by the change, and since it is by far
-> the most commonly referenced phy, all the other USB phy drivers appear
-> to be used in ways that are are either safe in DT (they don't use the
-> 'phys' property), or in the driver (they already ignore -EPROBE_DEFER
-> from generic-phy when usb-phy is available).
-> 
-> To work around the problem, this adds a special case to _of_phy_get()
-> so we ignore any PHY node that is compatible with "usb-nop-xceiv",
-> as we know that this can never load no matter how much we defer. In the
-> future, we might implement a generic-phy driver for "usb-nop-xceiv"
-> and then remove this workaround.
-> 
-> Since we generally want older kernels to also want to work with the
-> fixed devicetree files, it would be good to backport the patch into
-> stable kernels as well (3.13+ are possibly affected), even though they
-> don't contain any of the patches that may have caused regressions.
-> 
-> Fixes: 014d6da6cb25 ARM: dts: bcm283x: Fix DTC warnings about missing phy-cells
-> Fixes: c5bbf358b790 arm: dts: nspire: Add missing #phy-cells to usb-nop-xceiv
-> Fixes: 44e5dced2ef6 arm: dts: marvell: Add missing #phy-cells to usb-nop-xceiv
-> Fixes: f568f6f554b8 ARM: dts: omap: Add missing #phy-cells to usb-nop-xceiv
-> Fixes: d745d5f277bf ARM: dts: imx51-zii-rdu1: Add missing #phy-cells to usb-nop-xceiv
-> Fixes: 915fbe59cbf2 ARM: dts: imx: Add missing #phy-cells to usb-nop-xceiv
-> Link: https://marc.info/?l=linux-usb&m=151518314314753&w=2
-> Link: https://patchwork.kernel.org/patch/10158145/
-> Cc: stable@vger.kernel.org
-> Cc: Stefan Wahren <stefan.wahren@i2se.com>
-> Cc: Felipe Balbi <balbi@kernel.org>
-> Cc: Eric Anholt <eric@anholt.net>
-> Tested-by: Hans Verkuil <hans.verkuil@cisco.com>
-> Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+I have now removed 'pll-bypass' property as suggested by Sakari, and
+restructured bindings description to list hsync and vsync properties as
+required.
 
-Tested-by: Stefan Wahren <stefan.wahren@i2se.com>
+Changelog reported below.
 
-> ---
->  drivers/phy/phy-core.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
-> index b4964b067aec..8f6e8e28996d 100644
-> --- a/drivers/phy/phy-core.c
-> +++ b/drivers/phy/phy-core.c
-> @@ -410,6 +410,10 @@ static struct phy *_of_phy_get(struct device_node *np, int index)
->  	if (ret)
->  		return ERR_PTR(-ENODEV);
->  
-> +	/* This phy type handled by the usb-phy subsystem for now */
-> +	if (of_device_is_compatible(args.np, "usb-nop-xceiv"))
-> +		return ERR_PTR(-ENODEV);
-> +
->  	mutex_lock(&phy_provider_mutex);
->  	phy_provider = of_phy_provider_lookup(args.np);
->  	if (IS_ERR(phy_provider) || !try_module_get(phy_provider->owner)) {
-> -- 
-> 2.9.0
->
+Thanks
+   j
+
+v2->v3:
+- Drop 'pll-bypass' property
+- Make 'plck-hb-disable' a boolean optional property
+- List 'hsync' and 'vsync' polarities as required endpoint properties
+- Restructured 'ov7670_parse_dt()' function to reflect the above changes
+
+v1->v2:
+- Split bindings description and implementation
+- Addressed Sakari's comments on v1
+- Check for return values of register writes in set_fmt()
+- TODO: decide if "pll-bypass" should be an OF property.
+
+Jacopo Mondi (2):
+  media: dt-bindings: Add OF properties to ov7670
+  v4l2: i2c: ov7670: Implement OF mbus configuration
+
+ .../devicetree/bindings/media/i2c/ov7670.txt       |  18 +++-
+ drivers/media/i2c/ov7670.c                         | 102 ++++++++++++++++++---
+ 2 files changed, 104 insertions(+), 16 deletions(-)
+
+--
+2.7.4
