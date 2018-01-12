@@ -1,34 +1,62 @@
-From: Claudiu Beznea <claudiu.beznea@microchip.com>
-Subject: [PATCH v2 14/16] pwm: add push-pull mode
-Date: Fri, 12 Jan 2018 16:23:01 +0200
-Message-ID: <1515766983-15151-15-git-send-email-claudiu.beznea@microchip.com>
-References: <1515766983-15151-1-git-send-email-claudiu.beznea@microchip.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 01/10] dt-bindings: display: renesas: Add R-Car LVDS
+ encoder DT bindings
+Date: Fri, 12 Jan 2018 16:25:35 +0200
+Message-ID: <5566024.kqZ0uEBjNE@avalon>
+References: <20180112005858.26472-1-laurent.pinchart+renesas@ideasonboard.com>
+ <5799121.8LYuhfmPRz@avalon>
+ <TY1PR06MB0895E1818ED2399A0402827FC0170@TY1PR06MB0895.apcprd06.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1515766983-15151-1-git-send-email-claudiu.beznea@microchip.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, daniel@zonque.org, haojian.zhuang@gmail.com, robert.jarzmik@free.fr, corbet@lwn.net, nicolas.ferre@microchip.com, alexandre.belloni@free-electrons.com
-Cc: linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-rpi-kernel@lists.infradead.org, devicetree@vger.kernel.org, Claudiu Beznea <claudiu.beznea@microchip.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <TY1PR06MB0895E1818ED2399A0402827FC0170@TY1PR06MB0895.apcprd06.prod.outlook.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Biju Das <biju.das@bp.renesas.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add macro for push-pull mode to be used in DT.
-
-Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
----
- include/dt-bindings/pwm/pwm.h | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/include/dt-bindings/pwm/pwm.h b/include/dt-bindings/pwm/pwm.h
-index b8617431f8ec..c6365807c30d 100644
---- a/include/dt-bindings/pwm/pwm.h
-+++ b/include/dt-bindings/pwm/pwm.h
-@@ -14,5 +14,6 @@
- 
- #define PWM_DTMODE_NORMAL			(1 << 0)
- #define PWM_DTMODE_COMPLEMENTARY		(1 << 1)
-+#define PWM_DTMODE_PUSH_PULL			(1 << 2)
- 
- #endif
--- 
-2.7.4
+SGkgRmFicml6aW8sCgpPbiBGcmlkYXksIDEyIEphbnVhcnkgMjAxOCAxNjowMDozMSBFRVQgRmFi
+cml6aW8gQ2FzdHJvIHdyb3RlOgo+IEhpIExhdXJlbnQsCj4gCj4gPiBTdWJqZWN0OiBSZTogW1BB
+VENIIDAxLzEwXSBkdC1iaW5kaW5nczogZGlzcGxheTogcmVuZXNhczogQWRkIFItQ2FyIExWRFMK
+PiA+IGVuY29kZXIgRFQgYmluZGluZ3MKPiA+IE9uIEZyaWRheSwgMTIgSmFudWFyeSAyMDE4IDE0
+OjU5OjUzIEVFVCBCaWp1IERhcyB3cm90ZToKPiA+PiBIaSwKPiA+PiAKPiA+Pj4gU3ViamVjdDog
+W1BBVENIIDAxLzEwXSBkdC1iaW5kaW5nczogZGlzcGxheTogcmVuZXNhczogQWRkIFItQ2FyIExW
+RFMKPiA+Pj4gZW5jb2RlciBEVCBiaW5kaW5ncwo+ID4+PiAKPiA+Pj4gVGhlIFJlbmVzYXMgUi1D
+YXIgR2VuMiBhbmQgR2VuMyBTb0NzIGhhdmUgaW50ZXJuYWwgTFZEUyBlbmNvZGVycy4gQWRkCj4g
+Pj4+IGNvcnJlc3BvbmRpbmcgZGV2aWNlIHRyZWUgYmluZGluZ3MuCj4gPj4+IAo+ID4+PiBTaWdu
+ZWQtb2ZmLWJ5OiBMYXVyZW50IFBpbmNoYXJ0Cj4gPj4+IDxsYXVyZW50LnBpbmNoYXJ0K3JlbmVz
+YXNAaWRlYXNvbmJvYXJkLmNvbT4KPiA+Pj4gLS0tCj4gPj4+IAo+ID4+PiAgLi4uL2JpbmRpbmdz
+L2Rpc3BsYXkvYnJpZGdlL3JlbmVzYXMsbHZkcy50eHQgICAgICAgfCA1NCArKysrKysrKysrKysr
+KysKPiA+Pj4gIE1BSU5UQUlORVJTICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgIHwgIDEgKwo+ID4+PiAgMiBmaWxlcyBjaGFuZ2VkLCA1NSBpbnNlcnRpb25zKCspCj4gPj4+
+ICBjcmVhdGUgbW9kZSAxMDA2NDQKPiA+Pj4gCj4gPj4+IERvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9yZW5lc2FzLGx2ZHMudHh0Cj4gPj4+IAo+ID4+PiBk
+aWZmIC0tZ2l0Cj4gPj4+IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
+YXkvYnJpZGdlL3JlbmVzYXMsbHZkcy50eHQKPiA+Pj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvcmVuZXNhcyxsdmRzLnR4dAo+ID4+PiBuZXcKPiA+
+Pj4gZmlsZSBtb2RlIDEwMDY0NAo+ID4+PiBpbmRleCAwMDAwMDAwMDAwMDAuLjQ1OWM1NjgyMmVk
+YQo+ID4+PiAtLS0gL2Rldi9udWxsCj4gPj4+ICsrKwo+ID4+PiBiL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9yZW5lc2FzLGx2ZHMudHh0Cj4gPj4+IEBA
+IC0wLDAgKzEsNTQgQEAKPiA+Pj4gK1JlbmVzYXMgUi1DYXIgTFZEUyBFbmNvZGVyCj4gPj4+ICs9
+PT09PT09PT09PT09PT09PT09PT09PT09PQo+ID4+PiArCj4gPj4+ICtUaGVzZSBEVCBiaW5kaW5n
+cyBkZXNjcmliZSB0aGUgTFZEUyBlbmNvZGVyIGVtYmVkZGVkIGluIHRoZSBSZW5lc2FzCj4gPj4+
+ICtSLUNhciBHZW4yIGFuZCBHZW4zIFNvQ3MuCj4gPj4+ICsKPiA+Pj4gK1JlcXVpcmVkIHByb3Bl
+cnRpZXM6Cj4gPj4+ICsKPiA+Pj4gKy0gY29tcGF0aWJsZSA6IFNoYWxsIGNvbnRhaW4gb25lIG9m
+Cj4gPj4+ICsgIC0gInJlbmVzYXMsbHZkcy1yOGE3NzQzIiBmb3IgUjhBNzc5MCAoUi1DYXIgUlov
+RzFNKSBjb21wYXRpYmxlIExWRFMKPiAKPiBUaGUgZm9sbG93aW5nIGFsc28gbmVlZHMgcG9saXNo
+aW5nIGZvciB2MjoKPiAiKFItQ2FyIFJaL0cxTSkiIC0+ICIoUlovRzFNKSIKCkknbGwgZml4IGl0
+IHRvby4KCj4gPj4+ICtlbmNvZGVycwo+ID4+IAo+ID4+IFR5cG8uIEl0IHNob3VsZCBiZSBSOEE3
+NzQzIC4KPiA+IAo+ID4gT29wcy4gV2lsbCBmaXggaW4gdjIuCgotLSAKUmVnYXJkcywKCkxhdXJl
+bnQgUGluY2hhcnQKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
+ZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZl
+bAo=
