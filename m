@@ -1,117 +1,115 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "mfd: syscon: Add hardware spinlock support" to the regmap tree
-Date: Fri, 12 Jan 2018 20:01:46 +0000
-Message-ID: <E1ea5WM-0008W2-8v@debutante>
-References: <a878ad35d9f38c58d34dac0b331dca029b61a9b8.1514180039.git.baolin.wang@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <a878ad35d9f38c58d34dac0b331dca029b61a9b8.1514180039.git.baolin.wang@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: Rob Herring <robh@kernel.org>, Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>lee.jones@linaro.org, arnd@arndb.de, robh+dt@kernel.org, mark.rutland@arm.combroonie@kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, baolin.wang@linaro.orglinux-kernel@vger.kernel.org
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH 01/10] dt-bindings: display: renesas: Add R-Car LVDS encoder DT bindings
+Date: Fri, 12 Jan 2018 22:34:52 +0200
+Message-ID: <16302407.sBbAbgG5LB@avalon>
+References: <20180112005858.26472-1-laurent.pinchart+renesas@ideasonboard.com> <20180112005858.26472-2-laurent.pinchart+renesas@ideasonboard.com> <81a9462b-6aaa-52c7-f741-e504c14838e9@cogentembedded.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <81a9462b-6aaa-52c7-f741-e504c14838e9-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The patch
+Hi Sergei,
 
-   mfd: syscon: Add hardware spinlock support
+On Friday, 12 January 2018 17:13:06 EET Sergei Shtylyov wrote:
+> On 01/12/2018 03:58 AM, Laurent Pinchart wrote:
+> > The Renesas R-Car Gen2 and Gen3 SoCs have internal LVDS encoders. Add
+> > corresponding device tree bindings.
+> > 
+> > Signed-off-by: Laurent Pinchart
+> > <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+> > ---
+> > 
+> >  .../bindings/display/bridge/renesas,lvds.txt       | 54 +++++++++++++++++
+> >  MAINTAINERS                                        |  1 +
+> >   2 files changed, 55 insertions(+)
+> >   create mode 100644
+> >   Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt> 
+> > diff --git
+> > a/Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt
+> > b/Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt new
+> > file mode 100644
+> > index 000000000000..459c56822eda
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt
+> > @@ -0,0 +1,54 @@
+> > +Renesas R-Car LVDS Encoder
+> > +==========================
+> > +
+> > +These DT bindings describe the LVDS encoder embedded in the Renesas R-Car
+> > Gen2
+> > +and Gen3 SoCs.
+> > +
+> > +Required properties:
+> > +
+> > +- compatible : Shall contain one of
+> > +  - "renesas,lvds-r8a7743" for R8A7790 (R-Car RZ/G1M) compatible LVDS
+> > encoders
+> > +  - "renesas,lvds-r8a7790" for R8A7790 (R-Car H2) compatible LVDS
+> > encoders
+> > +  - "renesas,lvds-r8a7791" for R8A7791 (R-Car M2-W) compatible LVDS
+> > encoders
+> > +  - "renesas,lvds-r8a7793" for R8A7791 (R-Car M2-N) compatible LVDS
+> > encoders
+> > +  - "renesas,lvds-r8a7795" for R8A7795 (R-Car H3) compatible LVDS
+> > encoders
+> > +  - "renesas,lvds-r8a7796" for R8A7796 (R-Car M3-W) compatible LVDS
+> > encoders
+> > +
+> > +- reg: Base address and length for the memory-mapped registers
+> > +- clocks: A phandle + clock-specifier pair for the functional clock
+> > +
+> > +Requires nodes:
+> > +
+> > +The LVDS encoder has two video ports. Their connections are modelled
+> > using the
+> > +OF graph bindings specified in Documentation/devicetree/bindings/
+> > graph.txt.
+> > +
+> > +- Video port 0 corresponds to the parallel input
+> 
+> s/parallel/RGB/, perhaps?
 
-has been applied to the regmap tree at
+Strictly speaking the LVDS output also carries RGB. I'll replace "parallel" 
+with "parallel RGB".
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git 
+> > +- Video port 1 corresponds to the LVDS output
+> > +
+> > +Each port shall have a single endpoint.
+> > +
+> > +
+> > +Example:
+> > +
+> > +	lvds0: lvds@feb90000 {
+> > +		compatible = "renesas,lvds-r8a7790";
+> > +		reg = <0 0xfeb90000 0 0x1c>;
+> > +		clocks = <&cpg CPG_MOD 726>;
+> > +
+> > +		ports {
+> > +			#address-cells = <1>;
+> > +			#size-cells = <0>;
+> > +
+> > +			port@0 {
+> > +				reg = <0>;
+> > +				lvds0_in: endpoint {
+> > +					remote-endpoint = <&du_out_lvds0>;
+> 
+> Err, that "du_out_lvds0" label no longer reflects reality, no?
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+Well, it's the output of the DU connected to LVDS encoder 0, so I think the 
+name still makes sense. If you can think of a better name feel free to propose 
+one, otherwise I'll keep this one.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From 3bafc09e779710abaa7b836fe3bbeeeab7754c2b Mon Sep 17 00:00:00 2001
-From: Baolin Wang <baolin.wang@linaro.org>
-Date: Mon, 25 Dec 2017 14:37:10 +0800
-Subject: [PATCH] mfd: syscon: Add hardware spinlock support
-
-Some system control registers need hardware spinlock to synchronize
-between the multiple subsystems, so we should add hardware spinlock
-support for syscon.
-
-Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-Acked-by: Rob Herring <robh@kernel.org>
-Acked-by: Lee Jones <lee.jones@linaro.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- Documentation/devicetree/bindings/mfd/syscon.txt |  8 ++++++++
- drivers/mfd/syscon.c                             | 19 +++++++++++++++++++
- 2 files changed, 27 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/mfd/syscon.txt b/Documentation/devicetree/bindings/mfd/syscon.txt
-index 8b92d4576c42..25d9e9c2fd53 100644
---- a/Documentation/devicetree/bindings/mfd/syscon.txt
-+++ b/Documentation/devicetree/bindings/mfd/syscon.txt
-@@ -16,9 +16,17 @@ Required properties:
- Optional property:
- - reg-io-width: the size (in bytes) of the IO accesses that should be
-   performed on the device.
-+- hwlocks: reference to a phandle of a hardware spinlock provider node.
- 
- Examples:
- gpr: iomuxc-gpr@20e0000 {
- 	compatible = "fsl,imx6q-iomuxc-gpr", "syscon";
- 	reg = <0x020e0000 0x38>;
-+	hwlocks = <&hwlock1 1>;
-+};
-+
-+hwlock1: hwspinlock@40500000 {
-+	...
-+	reg = <0x40500000 0x1000>;
-+	#hwlock-cells = <1>;
- };
-diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
-index b93fe4c4957a..7eaa40bc703f 100644
---- a/drivers/mfd/syscon.c
-+++ b/drivers/mfd/syscon.c
-@@ -13,6 +13,7 @@
-  */
- 
- #include <linux/err.h>
-+#include <linux/hwspinlock.h>
- #include <linux/io.h>
- #include <linux/module.h>
- #include <linux/list.h>
-@@ -87,6 +88,24 @@ static struct syscon *of_syscon_register(struct device_node *np)
- 	if (ret)
- 		reg_io_width = 4;
- 
-+	ret = of_hwspin_lock_get_id(np, 0);
-+	if (ret > 0 || (IS_ENABLED(CONFIG_HWSPINLOCK) && ret == 0)) {
-+		syscon_config.use_hwlock = true;
-+		syscon_config.hwlock_id = ret;
-+		syscon_config.hwlock_mode = HWLOCK_IRQSTATE;
-+	} else if (ret < 0) {
-+		switch (ret) {
-+		case -ENOENT:
-+			/* Ignore missing hwlock, it's optional. */
-+			break;
-+		default:
-+			pr_err("Failed to retrieve valid hwlock: %d\n", ret);
-+			/* fall-through */
-+		case -EPROBE_DEFER:
-+			goto err_regmap;
-+		}
-+	}
-+
- 	syscon_config.reg_stride = reg_io_width;
- 	syscon_config.val_bits = reg_io_width * 8;
- 	syscon_config.max_register = resource_size(&res) - reg_io_width;
 -- 
-2.15.1
+Regards,
+
+Laurent Pinchart
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
