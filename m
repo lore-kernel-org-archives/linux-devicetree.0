@@ -1,55 +1,144 @@
-From: Chunyan Zhang <zhang.chunyan@linaro.org>
-Subject: [PATCH v3 1/5] bindings: regulator: added support for suspend states
-Date: Fri, 12 Jan 2018 18:18:21 +0800
-Message-ID: <1515752305-15907-2-git-send-email-zhang.chunyan@linaro.org>
+From: Chunyan Zhang <zhang.chunyan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v3 4/5] drivers: regulator: empty the old suspend functions
+Date: Fri, 12 Jan 2018 18:18:24 +0800
+Message-ID: <1515752305-15907-5-git-send-email-zhang.chunyan@linaro.org>
 References: <1515752305-15907-1-git-send-email-zhang.chunyan@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1515752305-15907-1-git-send-email-zhang.chunyan@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Chunyan Zhang <zhang.lyra@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1515752305-15907-1-git-send-email-zhang.chunyan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Chunyan Zhang <zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Some systems need to set regulators to specific states when they enter
-low power modes, especially around CPUs. There are many of these modes
-depending on the particular runtime state.
+Regualtor suspend/resume functions should only be called by PM suspend
+core via registering dev_pm_ops, and regulator devices should implement
+the callback functions.  Thus, any regulator consumer shouldn't call
+the regulator suspend/resume functions directly.
 
-Currently the regulator consumers are not granted permission to change
-suspend state of regulator devices, the constraints are configured at
-startup.  In order to allow changes in a vlotage range, we need to add
-new properties for voltage range and a flag to give permission to
-change the suspend voltage and suspend on/off in suspend mode.
+In order to avoid compile errors, two empty functions with the same name
+still be left for the time being.
 
-Signed-off-by: Chunyan Zhang <zhang.chunyan@linaro.org>
+Signed-off-by: Chunyan Zhang <zhang.chunyan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- Documentation/devicetree/bindings/regulator/regulator.txt | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+ drivers/regulator/core.c          | 74 ---------------------------------------
+ include/linux/regulator/machine.h |  5 ++-
+ 2 files changed, 2 insertions(+), 77 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/regulator/regulator.txt b/Documentation/devicetree/bindings/regulator/regulator.txt
-index 378f6dc..532e286 100644
---- a/Documentation/devicetree/bindings/regulator/regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/regulator.txt
-@@ -42,8 +42,19 @@ Optional properties:
- - regulator-state-[mem/disk] node has following common properties:
- 	- regulator-on-in-suspend: regulator should be on in suspend state.
- 	- regulator-off-in-suspend: regulator should be off in suspend state.
--	- regulator-suspend-microvolt: regulator should be set to this voltage
--	  in suspend.
-+	- regulator-suspend-min-microvolt: minimum voltage may be set in
-+	  suspend state.
-+	- regulator-suspend-max-microvolt: maximum voltage may be set in
-+	  suspend state.
-+	- regulator-suspend-microvolt: the default voltage which regulator
-+	  would be set in suspend. The voltage for suspend also can be
-+	  adjusted among {regulator-suspend-min-microvolt,
-+	  regulator-suspend-max-microvolt} by calling
-+	  regulator_set_suspend_voltage(). This property is now deprecated,
-+	  setting voltage for suspend mode via API the regulator driver
-+	  provides is recommended.
-+	- regulator-changeable-in-suspend: whether the default voltage and
-+	  the regulator on/off in suspend can be changed in runtime.
- 	- regulator-mode: operating mode in the given suspend state.
- 	  The set of possible operating modes depends on the capabilities of
- 	  every hardware so the valid modes are documented on each regulator
+diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
+index 5ea80e9..080c233 100644
+--- a/drivers/regulator/core.c
++++ b/drivers/regulator/core.c
+@@ -4179,80 +4179,6 @@ void regulator_unregister(struct regulator_dev *rdev)
+ }
+ EXPORT_SYMBOL_GPL(regulator_unregister);
+ 
+-static int _regulator_suspend_prepare(struct device *dev, void *data)
+-{
+-	struct regulator_dev *rdev = dev_to_rdev(dev);
+-	const suspend_state_t *state = data;
+-	int ret;
+-
+-	mutex_lock(&rdev->mutex);
+-	ret = suspend_prepare(rdev, *state);
+-	mutex_unlock(&rdev->mutex);
+-
+-	return ret;
+-}
+-
+-/**
+- * regulator_suspend_prepare - prepare regulators for system wide suspend
+- * @state: system suspend state
+- *
+- * Configure each regulator with it's suspend operating parameters for state.
+- * This will usually be called by machine suspend code prior to supending.
+- */
+-int regulator_suspend_prepare(suspend_state_t state)
+-{
+-	/* ON is handled by regulator active state */
+-	if (state == PM_SUSPEND_ON)
+-		return -EINVAL;
+-
+-	return class_for_each_device(&regulator_class, NULL, &state,
+-				     _regulator_suspend_prepare);
+-}
+-EXPORT_SYMBOL_GPL(regulator_suspend_prepare);
+-
+-static int _regulator_suspend_finish(struct device *dev, void *data)
+-{
+-	struct regulator_dev *rdev = dev_to_rdev(dev);
+-	int ret;
+-
+-	mutex_lock(&rdev->mutex);
+-	if (rdev->use_count > 0  || rdev->constraints->always_on) {
+-		if (!_regulator_is_enabled(rdev)) {
+-			ret = _regulator_do_enable(rdev);
+-			if (ret)
+-				dev_err(dev,
+-					"Failed to resume regulator %d\n",
+-					ret);
+-		}
+-	} else {
+-		if (!have_full_constraints())
+-			goto unlock;
+-		if (!_regulator_is_enabled(rdev))
+-			goto unlock;
+-
+-		ret = _regulator_do_disable(rdev);
+-		if (ret)
+-			dev_err(dev, "Failed to suspend regulator %d\n", ret);
+-	}
+-unlock:
+-	mutex_unlock(&rdev->mutex);
+-
+-	/* Keep processing regulators in spite of any errors */
+-	return 0;
+-}
+-
+-/**
+- * regulator_suspend_finish - resume regulators from system wide suspend
+- *
+- * Turn on regulators that might be turned off by regulator_suspend_prepare
+- * and that should be turned on according to the regulators properties.
+- */
+-int regulator_suspend_finish(void)
+-{
+-	return class_for_each_device(&regulator_class, NULL, NULL,
+-				     _regulator_suspend_finish);
+-}
+-EXPORT_SYMBOL_GPL(regulator_suspend_finish);
+ 
+ /**
+  * regulator_has_full_constraints - the system has fully specified constraints
+diff --git a/include/linux/regulator/machine.h b/include/linux/regulator/machine.h
+index ce89c55..c4a56df 100644
+--- a/include/linux/regulator/machine.h
++++ b/include/linux/regulator/machine.h
+@@ -236,12 +236,12 @@ struct regulator_init_data {
+ 
+ #ifdef CONFIG_REGULATOR
+ void regulator_has_full_constraints(void);
+-int regulator_suspend_prepare(suspend_state_t state);
+-int regulator_suspend_finish(void);
+ #else
+ static inline void regulator_has_full_constraints(void)
+ {
+ }
++#endif
++
+ static inline int regulator_suspend_prepare(suspend_state_t state)
+ {
+ 	return 0;
+@@ -250,6 +250,5 @@ static inline int regulator_suspend_finish(void)
+ {
+ 	return 0;
+ }
+-#endif
+ 
+ #endif
 -- 
 2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
