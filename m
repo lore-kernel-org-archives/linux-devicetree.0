@@ -1,98 +1,143 @@
-From: Karthik Ramasubramanian <kramasub@codeaurora.org>
-Subject: Re: [PATCH RFC 4/7] i2c: Add device tree bindings for GENI I2C
- Controller
-Date: Fri, 12 Jan 2018 14:35:37 -0700
-Message-ID: <b34e59e5-9961-99fd-e2b7-0208f6daf017@codeaurora.org>
-References: <1514392046-30602-1-git-send-email-kramasub@codeaurora.org>
- <1514392046-30602-5-git-send-email-kramasub@codeaurora.org>
- <20180102155149.f2wzjvdhoi6cne4x@rob-hp-laptop>
- <1d741169-e6e6-1896-d8d4-4f580f5d497d@codeaurora.org>
- <CAL_Jsq+2w280okNbUxVqzm2oXWRc81RnMwBaM6utXqg_+fvMkg@mail.gmail.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH net-next 1/2 v11] net: ethernet: Add DT bindings for the Gemini ethernet
+Date: Fri, 12 Jan 2018 22:34:23 +0100
+Message-ID: <20180112213424.16442-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+2w280okNbUxVqzm2oXWRc81RnMwBaM6utXqg_+fvMkg@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-doc-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: linux-arm-msm <linux-arm-msm@vger.kernel.org>, Linux I2C <linux-i2c@vger.kernel.org>, linux-serial@vger.kernel.org, linux-doc@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Corbet <corbet@lwn.net>, Wolfram Sang <wsa@the-dreams.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Sagar Dharia <sdharia@codeaurora.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux-CoA6ZxLDdyEEUmgCuDUIdw@public.gmane.org>
+Cc: Janos Laube <janos.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paulius Zaleckas <paulius.zaleckas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Hans Ulli Kroll <ulli.kroll-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tobias Waldvogel <tobias.waldvogel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+This adds the device tree bindings for the Gemini ethernet
+controller. It is pretty straight-forward, using standard
+bindings and modelling the two child ports as child devices
+under the parent ethernet controller device.
 
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Tobias Waldvogel <tobias.waldvogel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Michał Mirosław <mirq-linux-CoA6ZxLDdyEEUmgCuDUIdw@public.gmane.org>
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ChangeLog v10->v11:
+- Resend with the driver.
+ChangeLog v9->v10:
+- Resend with the driver.
+ChangeLog v8->v9:
+- Collect Rob's ACK.
+ChangeLog v7->v8:
+- Use ethernet-port@0 and ethernet-port@1 with unit names
+  and following OF graph requirements.
+---
+ .../bindings/net/cortina,gemini-ethernet.txt       | 92 ++++++++++++++++++++++
+ 1 file changed, 92 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/cortina,gemini-ethernet.txt
 
-On 1/11/2018 8:19 AM, Rob Herring wrote:
-> On Mon, Jan 8, 2018 at 6:33 PM, Karthik Ramasubramanian
-> <kramasub@codeaurora.org> wrote:
->>
->>
->> On 1/2/2018 8:51 AM, Rob Herring wrote:
->>>
->>> On Wed, Dec 27, 2017 at 09:27:23AM -0700, Karthikeyan Ramasubramanian
->>> wrote:
->>>>
->>>> Add device tree binding support for I2C Controller in GENI based
->>>> QUP Wrapper.
->>>>
->>>> Signed-off-by: Sagar Dharia <sdharia@codeaurora.org>
->>>> Signed-off-by: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>
->>>> ---
->>>>    .../devicetree/bindings/i2c/i2c-qcom-geni.txt      | 39
->>>> ++++++++++++++++++++++
->>>>    1 file changed, 39 insertions(+)
->>>>    create mode 100644
->>>> Documentation/devicetree/bindings/i2c/i2c-qcom-geni.txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/i2c/i2c-qcom-geni.txt
->>>> b/Documentation/devicetree/bindings/i2c/i2c-qcom-geni.txt
->>>> new file mode 100644
->>>> index 0000000..d2fa9ce
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/i2c/i2c-qcom-geni.txt
->>>> @@ -0,0 +1,39 @@
->>>> +Qualcomm Technologies Inc. GENI based I2C Controller driver
->>>> +
->>>> +Required properties:
->>>> + - compatible: Should be:
->>>> +   * "qcom,i2c-geni.
->>>
->>>
->>> Only 1 version?
->>
->> The Serial Engine used by I2C protocol has the same version as the QUP h/w
->> version. The QUP Wrapper driver exposes an interface function to get the h/w
->> version so that I2C controller driver can support version-specific
->> operations, if any.
->>>
->>>
->>>> + - reg: Should contain QUP register address and length.
->>>> + - interrupts: Should contain I2C interrupt.
->>>> + - clocks: Serial engine core clock, and AHB clocks needed by the
->>>> device.
->>>
->>>
->>> Are there really clocks for a firmware based device or these are just
->>> clocks in the parent serial engine?
->>
->> The clocks are required to derive the protocol clock. The clocks are also
->> required by the Serial Engine to access the System Memory during DMA mode of
->> operation.
-> 
-> You can get the QUP core (or Serial engine?) node and then get its
-> clocks if you need to know the frequency. Put the clocks in DT in the
-> h/w block they belong to. If you don't really have an I2C clock in the
-> h/w, don't put one in the DT.
-> 
-The clocks that are used to access the System Memory are common to all 
-the Serial Engines in the QUP Wrapper. I will move those clock 
-definitions to the QUP core node. The clock that is used to derive the 
-protocol clock is Serial Engine specific. Since the serial engine DT 
-node is synonymous with the protocol with which it is programmed, I am 
-defining that clock in the child node i.e. protocol controller block.
-> Rob
-> 
-Regards,
-Karthik.
+diff --git a/Documentation/devicetree/bindings/net/cortina,gemini-ethernet.txt b/Documentation/devicetree/bindings/net/cortina,gemini-ethernet.txt
+new file mode 100644
+index 000000000000..6c559981d110
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/cortina,gemini-ethernet.txt
+@@ -0,0 +1,92 @@
++Cortina Systems Gemini Ethernet Controller
++==========================================
++
++This ethernet controller is found in the Gemini SoC family:
++StorLink SL3512 and SL3516, also known as Cortina Systems
++CS3512 and CS3516.
++
++Required properties:
++- compatible: must be "cortina,gemini-ethernet"
++- reg: must contain the global registers and the V-bit and A-bit
++  memory areas, in total three register sets.
++- syscon: a phandle to the system controller
++- #address-cells: must be specified, must be <1>
++- #size-cells: must be specified, must be <1>
++- ranges: should be state like this giving a 1:1 address translation
++  for the subnodes
++
++The subnodes represents the two ethernet ports in this device.
++They are not independent of each other since they share resources
++in the parent node, and are thus children.
++
++Required subnodes:
++- port0: contains the resources for ethernet port 0
++- port1: contains the resources for ethernet port 1
++
++Required subnode properties:
++- compatible: must be "cortina,gemini-ethernet-port"
++- reg: must contain two register areas: the DMA/TOE memory and
++  the GMAC memory area of the port
++- interrupts: should contain the interrupt line of the port.
++  this is nominally a level interrupt active high.
++- resets: this must provide an SoC-integrated reset line for
++  the port.
++- clocks: this should contain a handle to the PCLK clock for
++  clocking the silicon in this port
++- clock-names: must be "PCLK"
++
++Optional subnode properties:
++- phy-mode: see ethernet.txt
++- phy-handle: see ethernet.txt
++
++Example:
++
++mdio-bus {
++	(...)
++	phy0: ethernet-phy@1 {
++		reg = <1>;
++		device_type = "ethernet-phy";
++	};
++	phy1: ethernet-phy@3 {
++		reg = <3>;
++		device_type = "ethernet-phy";
++	};
++};
++
++
++ethernet@60000000 {
++	compatible = "cortina,gemini-ethernet";
++	reg = <0x60000000 0x4000>, /* Global registers, queue */
++	      <0x60004000 0x2000>, /* V-bit */
++	      <0x60006000 0x2000>; /* A-bit */
++	syscon = <&syscon>;
++	#address-cells = <1>;
++	#size-cells = <1>;
++	ranges;
++
++	gmac0: ethernet-port@0 {
++		compatible = "cortina,gemini-ethernet-port";
++		reg = <0x60008000 0x2000>, /* Port 0 DMA/TOE */
++		      <0x6000a000 0x2000>; /* Port 0 GMAC */
++		interrupt-parent = <&intcon>;
++		interrupts = <1 IRQ_TYPE_LEVEL_HIGH>;
++		resets = <&syscon GEMINI_RESET_GMAC0>;
++		clocks = <&syscon GEMINI_CLK_GATE_GMAC0>;
++		clock-names = "PCLK";
++		phy-mode = "rgmii";
++		phy-handle = <&phy0>;
++	};
++
++	gmac1: ethernet-port@1 {
++		compatible = "cortina,gemini-ethernet-port";
++		reg = <0x6000c000 0x2000>, /* Port 1 DMA/TOE */
++		      <0x6000e000 0x2000>; /* Port 1 GMAC */
++		interrupt-parent = <&intcon>;
++		interrupts = <2 IRQ_TYPE_LEVEL_HIGH>;
++		resets = <&syscon GEMINI_RESET_GMAC1>;
++		clocks = <&syscon GEMINI_CLK_GATE_GMAC1>;
++		clock-names = "PCLK";
++		phy-mode = "rgmii";
++		phy-handle = <&phy1>;
++	};
++};
 -- 
-Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.14.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
