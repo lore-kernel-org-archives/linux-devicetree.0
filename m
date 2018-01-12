@@ -1,40 +1,47 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH 02/10] dt-bindings: display: renesas: Deprecate LVDS support in the DU bindings
-Date: Fri, 12 Jan 2018 12:44:45 +0200
-Message-ID: <2018729.fSqyra5bAZ@avalon>
-References: <20180112005858.26472-1-laurent.pinchart+renesas@ideasonboard.com> <20180112005858.26472-3-laurent.pinchart+renesas@ideasonboard.com> <CAMuHMdXYJmh8ssSRt8u75fTv5gyrpcoPKAuCT=BaF1Eu27CaiQ@mail.gmail.com>
+From: Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/4] backlight: pwm_bl: compute brightness of LED
+ linearly to human eye.
+Date: Fri, 12 Jan 2018 11:50:52 +0000
+Message-ID: <20180112115052.GB3642@birch.example.com>
+References: <20180110223046.17696-1-enric.balletbo@collabora.com>
+ <20180110223046.17696-4-enric.balletbo@collabora.com>
+ <CAFqH_50zs+TMZaRNegxYPQOcysvwm9EY5iB8DqNeGYN+QaJP6Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMuHMdXYJmh8ssSRt8u75fTv5gyrpcoPKAuCT=BaF1Eu27CaiQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAFqH_50zs+TMZaRNegxYPQOcysvwm9EY5iB8DqNeGYN+QaJP6Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, DRI Development <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Enric Balletbo Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Doug Anderson <dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Brian Norris <briannorris-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Guenter Roeck <groeck-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandru Stan <amstan-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
-
-On Friday, 12 January 2018 11:49:28 EET Geert Uytterhoeven wrote:
-> On Fri, Jan 12, 2018 at 1:58 AM, Laurent Pinchart wrote:
-> > The internal LVDS encoders now have their own DT bindings, representing
-> > them as part of the DU is deprecated.
-> > 
-> > Signed-off-by: Laurent Pinchart
-> > <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+On Fri, Jan 12, 2018 at 11:14:54AM +0100, Enric Balletbo Serra wrote:
+> > @@ -441,6 +544,26 @@ static int pwm_backlight_probe(struct platform_device *pdev)
+> >
+> >         dev_dbg(&pdev->dev, "got pwm for backlight\n");
+> >
+> > +       if (!data->levels) {
+> > +               /* Get the PWM period (in nanoseconds) */
+> > +               pwm_get_state(pb->pwm, &state);
+> > +
+> > +               ret = pwm_backlight_brightness_default(&pdev->dev, data,
+> > +                                                      state.period);
+> > +               if (ret < 0) {
+> > +                       dev_err(&pdev->dev,
+> > +                               "failed to setup default brightness table\n");
+> > +                       goto err_alloc;
+> > +               }
+> > +       }
+> > +
+> > +       for (i = 0; i <= data->max_brightness; i++)
 > 
-> FWIW, you're not really deprecating the LVDS part, but removing it
-> completely. Do you want to keep a reference instead?
+> Oops, horrible and unjustifiable mistake, missing { here :/
 
-I don't think we should keep a reference as it would only confuse DT authors. 
-The information is kept in the git history. I can rewrite the commit message, 
-but I consider this as deprecating the legacy bindings.
+Well, at least you found it rather than us :-)
 
--- 
-Regards,
 
-Laurent Pinchart
-
+Daniel.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
