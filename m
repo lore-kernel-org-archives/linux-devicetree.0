@@ -1,30 +1,30 @@
-From: Justice Thomson <8967400-sh/6fXdz2Rs@public.gmane.org>
-Subject: Good day,
-Date: Fri, 12 Jan 2018 19:46:01 +0100 (CET)
-Message-ID: <18434160.3203521515782761057.JavaMail.defaultUser@defaultHost>
-Reply-To: justicethomson10-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH 13/14] clk: stm32: Add clk entry for SDMMC2 on stm32F769
+Date: Fri, 12 Jan 2018 10:52:44 -0800
+Message-ID: <20180112185244.GQ28313@codeaurora.org>
+References: <1515759368-16946-1-git-send-email-patrice.chotard@st.com>
+ <1515759368-16946-14-git-send-email-patrice.chotard@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain;charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1515759368-16946-14-git-send-email-patrice.chotard@st.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: patrice.chotard@st.com
+Cc: Russell King <linux@armlinux.org.uk>, Ulf Hansson <ulf.hansson@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre Torgue <alexandre.torgue@st.com>, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The Truth Is Bitter.
-Do you want to continue spending your money on endless request of 
-one document or the other after which you pay to obtain it, another p
-roblem comes up which means  money. You are always at the giving
- end with the hope of getting something; at the end it is another 
-demand because of a small problem which will be the last.
-The only solution is to end this transaction the way you started it. 
-You have spent enough, let us wire the funds out to you and destroy 
-every document and i run away with my family. 
-This can be finished in less than five bank working days.
-For more details contact me urgently.
-Thanks Justice Thomson.
+On 01/12, patrice.chotard@st.com wrote:
+> From: Patrice Chotard <patrice.chotard@st.com>
+> 
+> STM32F769 has 2 SDMMC port, add clock entry for the second one.
+> 
+> Signed-off-by: Alexandre TORGUE <alexandre.torgue@st.com>
+> Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
+> ---
 
+Acked-by: Stephen Boyd <sboyd@codeaurora.org>
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
