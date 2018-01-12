@@ -1,49 +1,73 @@
-From: <patrice.chotard@st.com>
-Subject: [PATCH 06/14] ARM: dts: stm32: Add SDIO controller for stm32f429
-Date: Fri, 12 Jan 2018 13:16:00 +0100
-Message-ID: <1515759368-16946-7-git-send-email-patrice.chotard@st.com>
-References: <1515759368-16946-1-git-send-email-patrice.chotard@st.com>
+From: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Subject: RE: [PATCH 01/10] dt-bindings: display: renesas: Add R-Car LVDS
+ encoder DT bindings
+Date: Fri, 12 Jan 2018 12:59:53 +0000
+Message-ID: <KL1PR06MB170210E1BF374BF5FC05531CB8170@KL1PR06MB1702.apcprd06.prod.outlook.com>
+References: <20180112005858.26472-1-laurent.pinchart+renesas@ideasonboard.com>
+ <20180112005858.26472-2-laurent.pinchart+renesas@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1515759368-16946-1-git-send-email-patrice.chotard@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King <linux@armlinux.org.uk>, Ulf Hansson <ulf.hansson@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre Torgue <alexandre.torgue@st.com>
-Cc: linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Patrice Chotard <patrice.chotard@st.com>, Andrea Merello <andrea.merello@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180112005858.26472-2-laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Cc: "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Patrice Chotard <patrice.chotard@st.com>
+Hi,
 
-stm32f429 embeds ARM_PL180 sdi IP, adds SDIO controller
-node to allow MMC support.
+> Subject: [PATCH 01/10] dt-bindings: display: renesas: Add R-Car LVDS enco=
+der
+> DT bindings
+>
+> The Renesas R-Car Gen2 and Gen3 SoCs have internal LVDS encoders. Add
+> corresponding device tree bindings.
+>
+> Signed-off-by: Laurent Pinchart
+> <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+> ---
+>  .../bindings/display/bridge/renesas,lvds.txt       | 54
+> ++++++++++++++++++++++
+>  MAINTAINERS                                        |  1 +
+>  2 files changed, 55 insertions(+)
+>  create mode 100644
+> Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt
+>
+> diff --git a/Documentation/devicetree/bindings/display/bridge/renesas,lvd=
+s.txt
+> b/Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt
+> new file mode 100644
+> index 000000000000..459c56822eda
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt
+> @@ -0,0 +1,54 @@
+> +Renesas R-Car LVDS Encoder
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D
+> +
+> +These DT bindings describe the LVDS encoder embedded in the Renesas
+> +R-Car Gen2 and Gen3 SoCs.
+> +
+> +Required properties:
+> +
+> +- compatible : Shall contain one of
+> +  - "renesas,lvds-r8a7743" for R8A7790 (R-Car RZ/G1M) compatible LVDS
+> +encoders
 
-Signed-off-by: Andrea Merello <andrea.merello@gmail.com>
-Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
----
- arch/arm/boot/dts/stm32f429.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+Typo. It should be R8A7743 .
 
-diff --git a/arch/arm/boot/dts/stm32f429.dtsi b/arch/arm/boot/dts/stm32f429.dtsi
-index 10099df..ede77e0 100644
---- a/arch/arm/boot/dts/stm32f429.dtsi
-+++ b/arch/arm/boot/dts/stm32f429.dtsi
-@@ -511,6 +511,17 @@
- 			};
- 		};
- 
-+		sdio: sdio@40012c00 {
-+			compatible = "arm,pl180", "arm,primecell";
-+			arm,primecell-periphid = <0x00880180>;
-+			reg = <0x40012c00 0x400>;
-+			clocks = <&rcc 0 STM32F4_APB2_CLOCK(SDIO)>;
-+			clock-names = "apb_pclk";
-+			interrupts = <49>;
-+			max-frequency = <48000000>;
-+			status = "disabled";
-+		};
-+
- 		syscfg: system-config@40013800 {
- 			compatible = "syscon";
- 			reg = <0x40013800 0x400>;
--- 
-1.9.1
+Regards,
+Biju
+
+
+
+
+Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, B=
+uckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered=
+ No. 04586709.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
