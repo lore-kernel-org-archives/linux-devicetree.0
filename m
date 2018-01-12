@@ -1,43 +1,78 @@
-From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Subject: Re: [PATCH v4 5/5] [media] MAINTAINERS: add entries for
- OV2685/OV5695 sensor drivers
-Date: Fri, 12 Jan 2018 09:30:08 +0200
-Message-ID: <20180112073008.t4ia4kts5w2ybpao@valkosipuli.retiisi.org.uk>
-References: <1515509304-15941-1-git-send-email-zhengsq@rock-chips.com>
- <1515509304-15941-6-git-send-email-zhengsq@rock-chips.com>
- <20180109223337.7ep3fip7lrqds5m4@valkosipuli.retiisi.org.uk>
- <7e73473b-1c72-2fcd-4c55-e2c6c87550f6@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 1/4 v7] drm/bridge: Add bindings for TI THS8134
+Date: Fri, 12 Jan 2018 08:48:51 +0100
+Message-ID: <20180112074854.9560-1-linus.walleij@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <7e73473b-1c72-2fcd-4c55-e2c6c87550f6-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ddl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
+To: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Laurent Pinchart <Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 12, 2018 at 09:52:13AM +0800, Shunqian Zheng wrote:
-> Hi Sakari,
-> 
-> 
-> On 2018年01月10日 06:33, Sakari Ailus wrote:
-> > On Tue, Jan 09, 2018 at 10:48:24PM +0800, Shunqian Zheng wrote:
-> > > Add maintainer entries for the OV2685 and OV5695 V4L2 sensor drivers.
-> > > 
-> > > Signed-off-by: Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> > Same patch with the driver, please.
-> > 
-> > Other than that seems good to me.
-> Does that mean I can add your Reviewed-by in the new patches?
+This adds device tree bindings for the Texas Instruments
+THS8134, THS8134A and THS8134B VGA DACs by extending and
+renaming the existing bindings for THS8135.
 
-Presumably you'll have one patch less in v5. I'll still check the rest of
-the patches.
+These DACs are used for the VGA outputs on the ARM reference
+designs such as Integrator, Versatile and RealView.
 
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Reviewed-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ChangeLog v6->v7:
+- No changes, just resending with the series.
+ChangeLog v5->v6:
+- Fix the more-to-less specific compatible strings.
+- Fix some speling.
+- Collect Laurent's review tag.
+ChangeLog v2->v5:
+- Dropped the "ti,ths813x" as it turns out we need precise info
+  about the sub-variant anyways as they all very in timings.
+- Refine the THS8134 variants, it turns out ths8134, ths8134a
+  and ths8134b are three different variants of ths8134.
+ChangeLog v1->v2:
+- Introduce specific-to-general compatible string:
+  compatible = "ti,ths8134a", "ti,ths813x";
+  so drivers can handle the whole family the same way.
+- Collected Rob's ACK.
+---
+ .../display/bridge/{ti,ths8135.txt => ti,ths813x.txt}       | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
+ rename Documentation/devicetree/bindings/display/bridge/{ti,ths8135.txt => ti,ths813x.txt} (69%)
+
+diff --git a/Documentation/devicetree/bindings/display/bridge/ti,ths8135.txt b/Documentation/devicetree/bindings/display/bridge/ti,ths813x.txt
+similarity index 69%
+rename from Documentation/devicetree/bindings/display/bridge/ti,ths8135.txt
+rename to Documentation/devicetree/bindings/display/bridge/ti,ths813x.txt
+index 6ec1a880ac18..df3d7c1ac09e 100644
+--- a/Documentation/devicetree/bindings/display/bridge/ti,ths8135.txt
++++ b/Documentation/devicetree/bindings/display/bridge/ti,ths813x.txt
+@@ -1,11 +1,16 @@
+-THS8135 Video DAC
+------------------
++THS8134 and THS8135 Video DAC
++-----------------------------
+ 
+-This is the binding for Texas Instruments THS8135 Video DAC bridge.
++This is the binding for Texas Instruments THS8134, THS8134A, THS8134B and
++THS8135 Video DAC bridges.
+ 
+ Required properties:
+ 
+-- compatible: Must be "ti,ths8135"
++- compatible: Must be one of
++  "ti,ths8134"
++  "ti,ths8134a," "ti,ths8134"
++  "ti,ths8134b", "ti,ths8134"
++  "ti,ths8135"
+ 
+ Required nodes:
+ 
 -- 
-Sakari Ailus
-e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org
+2.14.3
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
