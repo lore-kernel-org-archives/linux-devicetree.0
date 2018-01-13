@@ -1,86 +1,69 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH V8 3/3] OPP: Allow "opp-hz" and "opp-microvolt" to
- contain magic values
-Date: Fri, 12 Jan 2018 16:46:42 -0800
-Message-ID: <20180113004642.GT28313@codeaurora.org>
-References: <20171226202955.32j7gzonrixtwdpt@rob-hp-laptop>
- <20171227085645.GF8312@vireshk-i7>
- <CAL_JsqJzMfNhHK=6Wt4dzBRS9BVGMZ-f7uk3OnUupudTfwuyUA@mail.gmail.com>
- <20171228043725.GB8652@vireshk-i7>
- <20171229003253.GD7997@codeaurora.org>
- <20171229045854.GE8652@vireshk-i7>
- <20180105221954.GC21040@codeaurora.org>
- <20180108041643.GC4003@vireshk-i7>
- <20180110025454.GG21040@codeaurora.org>
- <20180110053726.GA3626@vireshk-i7>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180110053726.GA3626@vireshk-i7>
-Sender: linux-pm-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Rob Herring <robh@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Kevin Hilman <khilman@kernel.org>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Rafael Wysocki <rjw@rjwysocki.net>, linux-pm@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, Sudeep Holla <sudeep.holla@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>
+Subject: [PATCH v2 0/7] Introduce GENI SE Controller Driver
+Date: Fri, 12 Jan 2018 18:05:40 -0700
+Message-ID: <1515805547-22816-1-git-send-email-kramasub@codeaurora.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: corbet@lwn.net, andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, wsa@the-dreams.de, gregkh@linuxfoundation.org
+Cc: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>, linux-doc@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-serial@vger.kernel.org, jslaby@suse.com
 List-Id: devicetree@vger.kernel.org
 
-On 01/10, Viresh Kumar wrote:
-> On 09-01-18, 18:54, Stephen Boyd wrote:
-> > My read of Kevin's comments lead me to think he's saying that a
-> > generic 'domain-performance-state' property is worse than putting
-> > the numbers directly inside of the opp table with a comment above
-> > it. Now that's all fine, but now that we have required-opps
-> > binding we sort of have the domain-performance-state property
-> > again, but it's a phandle instead of a raw state number.
-> > 
-> > So we have
-> > 
-> > 	required-opps = <&perf_state>;
-> > 
-> > but what was proposed before was
-> > 
-> > 	domain-performance-state = <1>;
-> > 
-> > or Kevin's 
-> > 
-> > 	opp-table = <100000 1>;
-> 
-> His concern was also on what will we do if "frequency" or other OPP
-> properties aren't known tomorrow by the kernel but the firmware? In
-> Qcom case, its just the voltage (corner) today, but it can very well
-> be other properties tomorrow. Are we going to add more platform
-> specific bindings then ?
+Generic Interface (GENI) firmware based Qualcomm Universal Peripheral (QUP)
+Wrapper is a next generation programmable module for supporting a wide
+range of serial interfaces like UART, SPI, I2C, I3C, etc. A single QUP
+module can provide upto 8 Serial Interfaces using its internal Serial
+Engines (SE). The protocol supported by each interface is determined by
+the firmware loaded to the Serial Engine.
 
-Yes, we would add more bindings.
+This patch series introduces GENI SE Driver to manage the GENI based QUP
+Wrapper and the common aspects of all SEs inside the QUP Wrapper. This
+patch series also introduces the UART and I2C Controller drivers to
+drive the SEs that are programmed with the respective protocols.
 
-> And this is the main reason why I have been
-> aligned towards using something like this patch.
+[v2]
+ * Updated device tree bindings to describe the hardware
+ * Updated SE DT node as child node of QUP Wrapper DT node
+ * Moved common AHB clocks to QUP Wrapper DT node
+ * Use the standard "clock-frequency" I2C property
+ * Update compatible field in UART Controller to reflect hardware manual
+ * Addressed other device tree binding specific comments from Rob Herring
 
-Once we exceed the number of properties that can fit into the
-existing voltage and frequency properties we'll only be able to
-make it work by adding a platform specific property. That's one
-concern, but it's a future concern so it's not a real problem
-yet.
+Karthikeyan Ramasubramanian (7):
+  qcom-geni-se: Add QCOM GENI SE Driver summary
+  dt-bindings: soc: qcom: Add device tree binding for GENI SE
+  soc: qcom: Add GENI based QUP Wrapper driver
+  dt-bindings: i2c: Add device tree bindings for GENI I2C Controller
+  i2c: i2c-qcom-geni: Add bus driver for the Qualcomm GENI I2C
+    controller
+  dt-bindings: serial: Add bindings for GENI based UART Controller
+  tty: serial: msm_geni_serial: Add serial driver support for GENI based
+    QUP
 
-If you can clearly describe in the commit text why we shouldn't
-use platform specific properties it would be helpful.
-
-> 
-> If we drop the magic-values idea and hence this patch, then we can
-> either add a "domain-performance-state" property, which will only be
-> used by the power domains or leave it for the platforms to add
-> something like "qcom,corner".
-> 
-> All we are doing here is putting a voltage (corner) value, unknown to
-> the kernel, in a new property instead of "opp-microvolt". But the
-> above question still remains, what about other properties that may
-> need magic values in future.
-> 
-> Honestly speaking, I am not sure what's the right thing to do here. I
-> will do whatever you and Rob incline for.
-> 
-
-Hopefully Rob and Kevin can reply here.
+ .../devicetree/bindings/i2c/i2c-qcom-geni.txt      |   35 +
+ .../devicetree/bindings/serial/qcom,geni-uart.txt  |   29 +
+ .../devicetree/bindings/soc/qcom/qcom,geni-se.txt  |   66 +
+ Documentation/qcom-geni-se.txt                     |   56 +
+ drivers/i2c/busses/Kconfig                         |   10 +
+ drivers/i2c/busses/Makefile                        |    1 +
+ drivers/i2c/busses/i2c-qcom-geni.c                 |  656 +++++++++
+ drivers/soc/qcom/Kconfig                           |    8 +
+ drivers/soc/qcom/Makefile                          |    1 +
+ drivers/soc/qcom/qcom-geni-se.c                    | 1016 ++++++++++++++
+ drivers/tty/serial/Kconfig                         |   10 +
+ drivers/tty/serial/Makefile                        |    1 +
+ drivers/tty/serial/qcom_geni_serial.c              | 1414 ++++++++++++++++++++
+ include/linux/qcom-geni-se.h                       |  807 +++++++++++
+ 14 files changed, 4110 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-qcom-geni.txt
+ create mode 100644 Documentation/devicetree/bindings/serial/qcom,geni-uart.txt
+ create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
+ create mode 100644 Documentation/qcom-geni-se.txt
+ create mode 100644 drivers/i2c/busses/i2c-qcom-geni.c
+ create mode 100644 drivers/soc/qcom/qcom-geni-se.c
+ create mode 100644 drivers/tty/serial/qcom_geni_serial.c
+ create mode 100644 include/linux/qcom-geni-se.h
 
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
+
