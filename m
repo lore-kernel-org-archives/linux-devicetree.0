@@ -1,249 +1,253 @@
-From: Hyun Kwon <hyun.kwon@xilinx.com>
-Subject: [PATCH v2 7/8] drm: xlnx: zynqmp_disp: Add drm properties
-Date: Fri, 12 Jan 2018 18:03:27 -0800
-Message-ID: <1515809008-14518-7-git-send-email-hyun.kwon@xilinx.com>
+From: Hyun Kwon <hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v2 8/8] drm: xlnx: zynqmp_dp: Add drm properties
+Date: Fri, 12 Jan 2018 18:03:28 -0800
+Message-ID: <1515809008-14518-8-git-send-email-hyun.kwon@xilinx.com>
 References: <1515809008-14518-1-git-send-email-hyun.kwon@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1515809008-14518-1-git-send-email-hyun.kwon@xilinx.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc: Michal Simek <michal.simek@xilinx.com>, Hyun Kwon <hyun.kwon@xilinx.com>, Daniel Vetter <daniel.vetter@ffwll.ch>
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1515809008-14518-1-git-send-email-hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Vetter <daniel.vetter-/w4YWyX8dFk@public.gmane.org>, Hyun Kwon <hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-QWRkIGRybSBwcm9wZXJ0aWVzIGZvciBnbG9iYWwgYWxwaGEsIG91dHB1dCBjb2xvciwgYmFja2dy
-b3VuZCBjb2xvciwKYW5kIHRlc3QgcGF0dGVybiBnZW5lcmF0aW9uLgoKU2lnbmVkLW9mZi1ieTog
-SHl1biBLd29uIDxoeXVuLmt3b25AeGlsaW54LmNvbT4KLS0tCnYyCi0gU3BsaXQgZnJvbSB0aGUg
-b3JpZ2luYWwgcGF0Y2gKLSBTb21lIHByb3BzIGFyZSBpbXBvcnRhbnQgZmVhdHVyZSB0byBiZSBp
-bmNsdWRlZAotLS0KLS0tCiBkcml2ZXJzL2dwdS9kcm0veGxueC96eW5xbXBfZGlzcC5jIHwgMTkz
-ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKy0KIDEgZmlsZSBjaGFuZ2VkLCAx
-OTIgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1
-L2RybS94bG54L3p5bnFtcF9kaXNwLmMgYi9kcml2ZXJzL2dwdS9kcm0veGxueC96eW5xbXBfZGlz
-cC5jCmluZGV4IDRjYTlkYjMuLjMzMDg3NjQgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS94
-bG54L3p5bnFtcF9kaXNwLmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL3hsbngvenlucW1wX2Rpc3Au
-YwpAQCAtNDEzLDEyICs0MTMsMTkgQEAgc3RydWN0IHp5bnFtcF9kaXNwX2F1ZCB7CiAgKiBAYXZf
-YnVmOiBBViBidWZmZXIgbWFuYWdlciBibG9jawogICogQGF1ZDpBdWRpbyBibG9jawogICogQGxh
-eWVyczogbGF5ZXJzCisgKiBAZ19hbHBoYV9wcm9wOiBnbG9iYWwgYWxwaGEgcHJvcGVydHkKICAq
-IEBhbHBoYTogY3VycmVudCBnbG9iYWwgYWxwaGEgdmFsdWUKKyAqIEBnX2FscGhhX2VuX3Byb3A6
-IHRoZSBnbG9iYWwgYWxwaGEgZW5hYmxlIHByb3BlcnR5CiAgKiBAYWxwaGFfZW46IGZsYWcgaWYg
-dGhlIGdsb2JhbCBhbHBoYSBpcyBlbmFibGVkCisgKiBAY29sb3JfcHJvcDogb3V0cHV0IGNvbG9y
-IGZvcm1hdCBwcm9wZXJ0eQogICogQGNvbG9yOiBjdXJyZW50IG91dHB1dCBjb2xvciB2YWx1ZQor
-ICogQGJnX2MwX3Byb3A6IDFzdCBjb21wb25lbnQgb2YgYmFja2dyb3VuZCBjb2xvciBwcm9wZXJ0
-eQogICogQGJnX2MwOiBjdXJyZW50IHZhbHVlIG9mIDFzdCBiYWNrZ3JvdW5kIGNvbG9yIGNvbXBv
-bmVudAorICogQGJnX2MxX3Byb3A6IDJuZCBjb21wb25lbnQgb2YgYmFja2dyb3VuZCBjb2xvciBw
-cm9wZXJ0eQogICogQGJnX2MxOiBjdXJyZW50IHZhbHVlIG9mIDJuZCBiYWNrZ3JvdW5kIGNvbG9y
-IGNvbXBvbmVudAorICogQGJnX2MyX3Byb3A6IDNyZCBjb21wb25lbnQgb2YgYmFja2dyb3VuZCBj
-b2xvciBwcm9wZXJ0eQogICogQGJnX2MyOiBjdXJyZW50IHZhbHVlIG9mIDNyZCBiYWNrZ3JvdW5k
-IGNvbG9yIGNvbXBvbmVudAorICogQHRwZ19wcm9wOiBUZXN0IFBhdHRlcm4gR2VuZXJhdGlvbiBt
-b2RlIHByb3BlcnR5CiAgKiBAdHBnX29uOiBjdXJyZW50IFRQRyBtb2RlIHN0YXRlCiAgKiBAZXZl
-bnQ6IHBlbmRpbmcgdmJsYW5rIGV2ZW50IHJlcXVlc3QKICAqIEBfcHNfcGNsazogUGl4ZWwgY2xv
-Y2sgZnJvbSBQUwpAQCAtNDQyLDEyICs0NDksMTkgQEAgc3RydWN0IHp5bnFtcF9kaXNwIHsKICAg
-ICAgICBzdHJ1Y3QgenlucW1wX2Rpc3BfYXZfYnVmIGF2X2J1ZjsKICAgICAgICBzdHJ1Y3Qgenlu
-cW1wX2Rpc3BfYXVkIGF1ZDsKICAgICAgICBzdHJ1Y3QgenlucW1wX2Rpc3BfbGF5ZXIgbGF5ZXJz
-W1pZTlFNUF9ESVNQX05VTV9MQVlFUlNdOworICAgICAgIHN0cnVjdCBkcm1fcHJvcGVydHkgKmdf
-YWxwaGFfcHJvcDsKICAgICAgICB1MzIgYWxwaGE7CisgICAgICAgc3RydWN0IGRybV9wcm9wZXJ0
-eSAqZ19hbHBoYV9lbl9wcm9wOwogICAgICAgIGJvb2wgYWxwaGFfZW47CisgICAgICAgc3RydWN0
-IGRybV9wcm9wZXJ0eSAqY29sb3JfcHJvcDsKICAgICAgICB1bnNpZ25lZCBpbnQgY29sb3I7Cisg
-ICAgICAgc3RydWN0IGRybV9wcm9wZXJ0eSAqYmdfYzBfcHJvcDsKICAgICAgICB1MzIgYmdfYzA7
-CisgICAgICAgc3RydWN0IGRybV9wcm9wZXJ0eSAqYmdfYzFfcHJvcDsKICAgICAgICB1MzIgYmdf
-YzE7CisgICAgICAgc3RydWN0IGRybV9wcm9wZXJ0eSAqYmdfYzJfcHJvcDsKICAgICAgICB1MzIg
-YmdfYzI7CisgICAgICAgc3RydWN0IGRybV9wcm9wZXJ0eSAqdHBnX3Byb3A7CiAgICAgICAgYm9v
-bCB0cGdfb247CiAgICAgICAgc3RydWN0IGRybV9wZW5kaW5nX3ZibGFua19ldmVudCAqZXZlbnQ7
-CiAgICAgICAgLyogRG9uJ3Qgb3BlcmF0ZSBkaXJlY3RseSBvbiBfcHNfICovCkBAIC0xNjIxLDYg
-KzE2MzUsMjEgQEAgc3RhdGljIGludCB6eW5xbXBfZGlzcF9sYXllcl9zZXRfdHBnKHN0cnVjdCB6
-eW5xbXBfZGlzcCAqZGlzcCwKIH0KCiAvKioKKyAqIHp5bnFtcF9kaXNwX2dldF90cGcgLSBHZXQg
-dGhlIFRQRyBtb2RlIHN0YXR1cworICogQGRpc3A6IERpc3BsYXkgc3Vic3lzdGVtCisgKiBAbGF5
-ZXI6IFZpZGVvIGxheWVyCisgKgorICogUmV0dXJuIGlmIHRoZSBUUEcgaXMgZW5hYmxlZCBvciBu
-b3QuCisgKgorICogUmV0dXJuOiB0cnVlIGlmIFRQRyBpcyBvbiwgb3RoZXJ3aXNlIGZhbHNlCisg
-Ki8KK3N0YXRpYyBib29sIHp5bnFtcF9kaXNwX2xheWVyX2dldF90cGcoc3RydWN0IHp5bnFtcF9k
-aXNwICpkaXNwLAorICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0cnVjdCB6
-eW5xbXBfZGlzcF9sYXllciAqbGF5ZXIpCit7CisgICAgICAgcmV0dXJuIGRpc3AtPnRwZ19vbjsK
-K30KKworLyoqCiAgKiB6eW5xbXBfZGlzcF9nZXRfZm10IC0gR2V0IHRoZSBzdXBwb3J0ZWQgRFJN
-IGZvcm1hdHMgb2YgdGhlIGxheWVyCiAgKiBAZGlzcDogRGlzcGxheSBzdWJzeXN0ZW0KICAqIEBs
-YXllcjogbGF5ZXIgdG8gZ2V0IHRoZSBmb3JtYXRzCkBAIC0xODc5LDcgKzE5MDgsNyBAQCBzdGF0
-aWMgaW50IHp5bnFtcF9kaXNwX2xheWVyX2NyZWF0ZShzdHJ1Y3QgenlucW1wX2Rpc3AgKmRpc3Ap
-CiAgKi8KCiAvKgotICogT3V0cHV0IGZvcm1hdCBlbnVtZXJhdGlvbgorICogT3V0cHV0IGZvcm1h
-dCBlbnVtZXJhdGlvbi4KICAqIFRoZSBJRCBzaG91bGQgYmUgYWxpZ25lZCB3aXRoIGJsZW5kX291
-dHB1dF9mbXRzLgogICogVGhlIHN0cmluZyBzaG91bGQgYmUgYWxpZ25lZCB3aXRoIGhvdyB6eW5x
-bXBfZHBfc2V0X2NvbG9yKCkgZGVjb2Rlcy4KICAqLwpAQCAtMTkzNyw2ICsxOTY2LDE5IEBAIHN0
-YXRpYyB2b2lkIHp5bnFtcF9kaXNwX3NldF9hbHBoYShzdHJ1Y3QgenlucW1wX2Rpc3AgKmRpc3As
-IHUzMiBhbHBoYSkKIH0KCiAvKioKKyAqIHp5bnFtcF9kaXNwX2dldF9hbHBoYSAtIEdldCB0aGUg
-YWxwaGEgdmFsdWUKKyAqIEBkaXNwOiBEaXNwbGF5IHN1YnN5c3RlbQorICoKKyAqIEdldCB0aGUg
-YWxwaGEgdmFsdWUgZm9yIGJsZW5kaW5nLgorICoKKyAqIFJldHVybjogY3VycmVudCBhbHBoYSB2
-YWx1ZS4KKyAqLworc3RhdGljIHUzMiB6eW5xbXBfZGlzcF9nZXRfYWxwaGEoc3RydWN0IHp5bnFt
-cF9kaXNwICpkaXNwKQoreworICAgICAgIHJldHVybiBkaXNwLT5hbHBoYTsKK30KKworLyoqCiAg
-KiB6eW5xbXBfZGlzcF9zZXRfZ19hbHBoYSAtIEVuYWJsZS9kaXNhYmxlIHRoZSBnbG9iYWwgYWxw
-aGEgYmxlbmRpbmcKICAqIEBkaXNwOiBEaXNwbGF5IHN1YnN5c3RlbQogICogQGVuYWJsZTogZmxh
-ZyB0byBlbmFibGUgb3IgZGlzYWJsZSBhbHBoYSBibGVuZGluZwpAQCAtMTk1MCw2ICsxOTkyLDE5
-IEBAIHN0YXRpYyB2b2lkIHp5bnFtcF9kaXNwX3NldF9nX2FscGhhKHN0cnVjdCB6eW5xbXBfZGlz
-cCAqZGlzcCwgYm9vbCBlbmFibGUpCiB9CgogLyoqCisgKiB6eW5xbXBfZGlzcF9nZXRfZ19hbHBo
-YSAtIEdldCB0aGUgZ2xvYmFsIGFscGhhIHN0YXR1cworICogQGRpc3A6IERpc3BsYXkgc3Vic3lz
-dGVtCisgKgorICogR2V0IHRoZSBnbG9iYWwgYWxwaGEgc3RhdHVlLgorICoKKyAqIFJldHVybjog
-dHJ1ZSBpZiBnbG9iYWwgYWxwaGEgaXMgZW5hYmxlZCwgb3IgZmFsc2UuCisgKi8KK3N0YXRpYyBi
-b29sIHp5bnFtcF9kaXNwX2dldF9nX2FscGhhKHN0cnVjdCB6eW5xbXBfZGlzcCAqZGlzcCkKK3sK
-KyAgICAgICByZXR1cm4gZGlzcC0+YWxwaGFfZW47Cit9CisKKy8qKgogICogenlucW1wX2Rpc3Bf
-ZW5hYmxlIC0gRW5hYmxlIHRoZSBEaXNwbGF5IHN1YnN5c3RlbQogICogQGRpc3A6IERpc3BsYXkg
-c3Vic3lzdGVtCiAgKgpAQCAtMjE3Miw5ICsyMjI3LDU0IEBAIHN0YXRpYyB2b2lkIHp5bnFtcF9k
-aXNwX3BsYW5lX2Rlc3Ryb3koc3RydWN0IGRybV9wbGFuZSAqcGxhbmUpCiAgICAgICAgZHJtX3Bs
-YW5lX2NsZWFudXAocGxhbmUpOwogfQoKK3N0YXRpYyBpbnQKK3p5bnFtcF9kaXNwX3BsYW5lX2F0
-b21pY19zZXRfcHJvcGVydHkoc3RydWN0IGRybV9wbGFuZSAqcGxhbmUsCisgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgc3RydWN0IGRybV9wbGFuZV9zdGF0ZSAqc3RhdGUsCisg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc3RydWN0IGRybV9wcm9wZXJ0eSAq
-cHJvcGVydHksIHU2NCB2YWwpCit7CisgICAgICAgc3RydWN0IHp5bnFtcF9kaXNwX2xheWVyICps
-YXllciA9IHBsYW5lX3RvX2xheWVyKHBsYW5lKTsKKyAgICAgICBzdHJ1Y3QgenlucW1wX2Rpc3Ag
-KmRpc3AgPSBsYXllci0+ZGlzcDsKKyAgICAgICBpbnQgcmV0ID0gMDsKKworICAgICAgIGlmIChw
-cm9wZXJ0eSA9PSBkaXNwLT5nX2FscGhhX3Byb3ApCisgICAgICAgICAgICAgICB6eW5xbXBfZGlz
-cF9zZXRfYWxwaGEoZGlzcCwgdmFsKTsKKyAgICAgICBlbHNlIGlmIChwcm9wZXJ0eSA9PSBkaXNw
-LT5nX2FscGhhX2VuX3Byb3ApCisgICAgICAgICAgICAgICB6eW5xbXBfZGlzcF9zZXRfZ19hbHBo
-YShkaXNwLCB2YWwpOworICAgICAgIGVsc2UgaWYgKHByb3BlcnR5ID09IGRpc3AtPnRwZ19wcm9w
-KQorICAgICAgICAgICAgICAgcmV0ID0genlucW1wX2Rpc3BfbGF5ZXJfc2V0X3RwZyhkaXNwLCBs
-YXllciwgdmFsKTsKKyAgICAgICBlbHNlCisgICAgICAgICAgICAgICByZXR1cm4gLUVJTlZBTDsK
-KworICAgICAgIHJldHVybiByZXQ7Cit9CisKK3N0YXRpYyBpbnQKK3p5bnFtcF9kaXNwX3BsYW5l
-X2F0b21pY19nZXRfcHJvcGVydHkoc3RydWN0IGRybV9wbGFuZSAqcGxhbmUsCisgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgY29uc3Qgc3RydWN0IGRybV9wbGFuZV9zdGF0ZSAq
-c3RhdGUsCisgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc3RydWN0IGRybV9w
-cm9wZXJ0eSAqcHJvcGVydHksCisgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-dWludDY0X3QgKnZhbCkKK3sKKyAgICAgICBzdHJ1Y3QgenlucW1wX2Rpc3BfbGF5ZXIgKmxheWVy
-ID0gcGxhbmVfdG9fbGF5ZXIocGxhbmUpOworICAgICAgIHN0cnVjdCB6eW5xbXBfZGlzcCAqZGlz
-cCA9IGxheWVyLT5kaXNwOworICAgICAgIGludCByZXQgPSAwOworCisgICAgICAgaWYgKHByb3Bl
-cnR5ID09IGRpc3AtPmdfYWxwaGFfcHJvcCkKKyAgICAgICAgICAgICAgICp2YWwgPSB6eW5xbXBf
-ZGlzcF9nZXRfYWxwaGEoZGlzcCk7CisgICAgICAgZWxzZSBpZiAocHJvcGVydHkgPT0gZGlzcC0+
-Z19hbHBoYV9lbl9wcm9wKQorICAgICAgICAgICAgICAgKnZhbCA9IHp5bnFtcF9kaXNwX2dldF9n
-X2FscGhhKGRpc3ApOworICAgICAgIGVsc2UgaWYgKHByb3BlcnR5ID09IGRpc3AtPnRwZ19wcm9w
-KQorICAgICAgICAgICAgICAgKnZhbCA9IHp5bnFtcF9kaXNwX2xheWVyX2dldF90cGcoZGlzcCwg
-bGF5ZXIpOworICAgICAgIGVsc2UKKyAgICAgICAgICAgICAgIHJldHVybiAtRUlOVkFMOworCisg
-ICAgICAgcmV0dXJuIHJldDsKK30KKwogc3RhdGljIHN0cnVjdCBkcm1fcGxhbmVfZnVuY3Mgenlu
-cW1wX2Rpc3BfcGxhbmVfZnVuY3MgPSB7CiAgICAgICAgLnVwZGF0ZV9wbGFuZSAgICAgICAgICAg
-PSBkcm1fYXRvbWljX2hlbHBlcl91cGRhdGVfcGxhbmUsCiAgICAgICAgLmRpc2FibGVfcGxhbmUg
-ICAgICAgICAgPSBkcm1fYXRvbWljX2hlbHBlcl9kaXNhYmxlX3BsYW5lLAorICAgICAgIC5hdG9t
-aWNfc2V0X3Byb3BlcnR5ICAgID0genlucW1wX2Rpc3BfcGxhbmVfYXRvbWljX3NldF9wcm9wZXJ0
-eSwKKyAgICAgICAuYXRvbWljX2dldF9wcm9wZXJ0eSAgICA9IHp5bnFtcF9kaXNwX3BsYW5lX2F0
-b21pY19nZXRfcHJvcGVydHksCiAgICAgICAgLmRlc3Ryb3kgICAgICAgICAgICAgICAgPSB6eW5x
-bXBfZGlzcF9wbGFuZV9kZXN0cm95LAogICAgICAgIC5yZXNldCAgICAgICAgICAgICAgICAgID0g
-ZHJtX2F0b21pY19oZWxwZXJfcGxhbmVfcmVzZXQsCiAgICAgICAgLmF0b21pY19kdXBsaWNhdGVf
-c3RhdGUgPSBkcm1fYXRvbWljX2hlbHBlcl9wbGFuZV9kdXBsaWNhdGVfc3RhdGUsCkBAIC0yMjQx
-LDYgKzIzNDEsMTggQEAgc3RhdGljIGludCB6eW5xbXBfZGlzcF9jcmVhdGVfcGxhbmUoc3RydWN0
-IHp5bnFtcF9kaXNwICpkaXNwKQogICAgICAgICAgICAgICAgdHlwZSA9IERSTV9QTEFORV9UWVBF
-X1BSSU1BUlk7CiAgICAgICAgfQoKKyAgICAgICAvKiBBdHRhY2ggcHJvcGVydGllcyB0byBlYWNo
-IGxheWVycyAqLworICAgICAgIGRybV9vYmplY3RfYXR0YWNoX3Byb3BlcnR5KCZsYXllci0+cGxh
-bmUuYmFzZSwgZGlzcC0+Z19hbHBoYV9wcm9wLAorICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIFpZTlFNUF9ESVNQX1ZfQkxFTkRfU0VUX0dMT0JBTF9BTFBIQV9NQVgpOworICAgICAg
-IGRpc3AtPmFscGhhID0gWllOUU1QX0RJU1BfVl9CTEVORF9TRVRfR0xPQkFMX0FMUEhBX01BWDsK
-KyAgICAgICAvKiBFbmFibGUgdGhlIGdsb2JhbCBhbHBoYSBhcyBkZWZhdWx0ICovCisgICAgICAg
-ZHJtX29iamVjdF9hdHRhY2hfcHJvcGVydHkoJmxheWVyLT5wbGFuZS5iYXNlLCBkaXNwLT5nX2Fs
-cGhhX2VuX3Byb3AsCisgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdHJ1ZSk7Cisg
-ICAgICAgZGlzcC0+YWxwaGFfZW4gPSB0cnVlOworCisgICAgICAgbGF5ZXIgPSAmZGlzcC0+bGF5
-ZXJzW1pZTlFNUF9ESVNQX0xBWUVSX1ZJRF07CisgICAgICAgZHJtX29iamVjdF9hdHRhY2hfcHJv
-cGVydHkoJmxheWVyLT5wbGFuZS5iYXNlLCBkaXNwLT50cGdfcHJvcCwgZmFsc2UpOworCiAgICAg
-ICAgcmV0dXJuIHJldDsKCiBlcnJfcGxhbmU6CkBAIC0yNDI5LDEwICsyNTQxLDYwIEBAIHN0YXRp
-YyB2b2lkIHp5bnFtcF9kaXNwX2NydGNfZGVzdHJveShzdHJ1Y3QgZHJtX2NydGMgKmNydGMpCiAg
-ICAgICAgZHJtX2NydGNfY2xlYW51cChjcnRjKTsKIH0KCitzdGF0aWMgaW50Cit6eW5xbXBfZGlz
-cF9jcnRjX2F0b21pY19zZXRfcHJvcGVydHkoc3RydWN0IGRybV9jcnRjICpjcnRjLAorICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc3RydWN0IGRybV9jcnRjX3N0YXRlICpzdGF0
-ZSwKKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0cnVjdCBkcm1fcHJvcGVy
-dHkgKnByb3BlcnR5LAorICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdWludDY0
-X3QgdmFsKQoreworICAgICAgIHN0cnVjdCB6eW5xbXBfZGlzcCAqZGlzcCA9IGNydGNfdG9fZGlz
-cChjcnRjKTsKKworICAgICAgIC8qCisgICAgICAgICogQ1JUQyBwcm9wIHZhbHVlcyBhcmUganVz
-dCBzdG9yZWQgaGVyZSBhbmQgYXBwbGllZCB3aGVuIENSVEMgZ2V0cworICAgICAgICAqIGVuYWJs
-ZWQKKyAgICAgICAgKi8KKyAgICAgICBpZiAocHJvcGVydHkgPT0gZGlzcC0+Y29sb3JfcHJvcCkK
-KyAgICAgICAgICAgICAgIGRpc3AtPmNvbG9yID0gdmFsOworICAgICAgIGVsc2UgaWYgKHByb3Bl
-cnR5ID09IGRpc3AtPmJnX2MwX3Byb3ApCisgICAgICAgICAgICAgICBkaXNwLT5iZ19jMCA9IHZh
-bDsKKyAgICAgICBlbHNlIGlmIChwcm9wZXJ0eSA9PSBkaXNwLT5iZ19jMV9wcm9wKQorICAgICAg
-ICAgICAgICAgZGlzcC0+YmdfYzEgPSB2YWw7CisgICAgICAgZWxzZSBpZiAocHJvcGVydHkgPT0g
-ZGlzcC0+YmdfYzJfcHJvcCkKKyAgICAgICAgICAgICAgIGRpc3AtPmJnX2MyID0gdmFsOworICAg
-ICAgIGVsc2UKKyAgICAgICAgICAgICAgIHJldHVybiAtRUlOVkFMOworCisgICAgICAgcmV0dXJu
-IDA7Cit9CisKK3N0YXRpYyBpbnQKK3p5bnFtcF9kaXNwX2NydGNfYXRvbWljX2dldF9wcm9wZXJ0
-eShzdHJ1Y3QgZHJtX2NydGMgKmNydGMsCisgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICBjb25zdCBzdHJ1Y3QgZHJtX2NydGNfc3RhdGUgKnN0YXRlLAorICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgc3RydWN0IGRybV9wcm9wZXJ0eSAqcHJvcGVydHksCisgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB1aW50NjRfdCAqdmFsKQoreworICAgICAg
-IHN0cnVjdCB6eW5xbXBfZGlzcCAqZGlzcCA9IGNydGNfdG9fZGlzcChjcnRjKTsKKworICAgICAg
-IGlmIChwcm9wZXJ0eSA9PSBkaXNwLT5jb2xvcl9wcm9wKQorICAgICAgICAgICAgICAgKnZhbCA9
-IGRpc3AtPmNvbG9yOworICAgICAgIGVsc2UgaWYgKHByb3BlcnR5ID09IGRpc3AtPmJnX2MwX3By
-b3ApCisgICAgICAgICAgICAgICAqdmFsID0gZGlzcC0+YmdfYzA7CisgICAgICAgZWxzZSBpZiAo
-cHJvcGVydHkgPT0gZGlzcC0+YmdfYzFfcHJvcCkKKyAgICAgICAgICAgICAgICp2YWwgPSBkaXNw
-LT5iZ19jMTsKKyAgICAgICBlbHNlIGlmIChwcm9wZXJ0eSA9PSBkaXNwLT5iZ19jMl9wcm9wKQor
-ICAgICAgICAgICAgICAgKnZhbCA9IGRpc3AtPmJnX2MyOworICAgICAgIGVsc2UKKyAgICAgICAg
-ICAgICAgIHJldHVybiAtRUlOVkFMOworCisgICAgICAgcmV0dXJuIDA7Cit9CisKIHN0YXRpYyBz
-dHJ1Y3QgZHJtX2NydGNfZnVuY3MgenlucW1wX2Rpc3BfY3J0Y19mdW5jcyA9IHsKICAgICAgICAu
-ZGVzdHJveSAgICAgICAgICAgICAgICA9IHp5bnFtcF9kaXNwX2NydGNfZGVzdHJveSwKICAgICAg
-ICAuc2V0X2NvbmZpZyAgICAgICAgICAgICA9IGRybV9hdG9taWNfaGVscGVyX3NldF9jb25maWcs
-CiAgICAgICAgLnBhZ2VfZmxpcCAgICAgICAgICAgICAgPSBkcm1fYXRvbWljX2hlbHBlcl9wYWdl
-X2ZsaXAsCisgICAgICAgLmF0b21pY19zZXRfcHJvcGVydHkgICAgPSB6eW5xbXBfZGlzcF9jcnRj
-X2F0b21pY19zZXRfcHJvcGVydHksCisgICAgICAgLmF0b21pY19nZXRfcHJvcGVydHkgICAgPSB6
-eW5xbXBfZGlzcF9jcnRjX2F0b21pY19nZXRfcHJvcGVydHksCiAgICAgICAgLnJlc2V0ICAgICAg
-ICAgICAgICAgICAgPSBkcm1fYXRvbWljX2hlbHBlcl9jcnRjX3Jlc2V0LAogICAgICAgIC5hdG9t
-aWNfZHVwbGljYXRlX3N0YXRlID0gZHJtX2F0b21pY19oZWxwZXJfY3J0Y19kdXBsaWNhdGVfc3Rh
-dGUsCiAgICAgICAgLmF0b21pY19kZXN0cm95X3N0YXRlICAgPSBkcm1fYXRvbWljX2hlbHBlcl9j
-cnRjX2Rlc3Ryb3lfc3RhdGUsCkBAIC0yNDQxLDEyICsyNjAzLDE4IEBAIHN0YXRpYyBzdHJ1Y3Qg
-ZHJtX2NydGNfZnVuY3MgenlucW1wX2Rpc3BfY3J0Y19mdW5jcyA9IHsKIHN0YXRpYyB2b2lkIHp5
-bnFtcF9kaXNwX2NyZWF0ZV9jcnRjKHN0cnVjdCB6eW5xbXBfZGlzcCAqZGlzcCkKIHsKICAgICAg
-ICBzdHJ1Y3QgZHJtX3BsYW5lICpwbGFuZSA9ICZkaXNwLT5sYXllcnNbWllOUU1QX0RJU1BfTEFZ
-RVJfR0ZYXS5wbGFuZTsKKyAgICAgICBzdHJ1Y3QgZHJtX21vZGVfb2JqZWN0ICpvYmogPSAmZGlz
-cC0+eGxueF9jcnRjLmNydGMuYmFzZTsKICAgICAgICBpbnQgcmV0OwoKICAgICAgICByZXQgPSBk
-cm1fY3J0Y19pbml0X3dpdGhfcGxhbmVzKGRpc3AtPmRybSwgJmRpc3AtPnhsbnhfY3J0Yy5jcnRj
-LCBwbGFuZSwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIE5VTEwsICZ6
-eW5xbXBfZGlzcF9jcnRjX2Z1bmNzLCBOVUxMKTsKICAgICAgICBkcm1fY3J0Y19oZWxwZXJfYWRk
-KCZkaXNwLT54bG54X2NydGMuY3J0YywKICAgICAgICAgICAgICAgICAgICAgICAgICAgICZ6eW5x
-bXBfZGlzcF9jcnRjX2hlbHBlcl9mdW5jcyk7CisgICAgICAgZHJtX29iamVjdF9hdHRhY2hfcHJv
-cGVydHkob2JqLCBkaXNwLT5jb2xvcl9wcm9wLCAwKTsKKyAgICAgICB6eW5xbXBfZHBfc2V0X2Nv
-bG9yKGRpc3AtPmRwc3ViLT5kcCwgenlucW1wX2Rpc3BfY29sb3JfZW51bVswXS5uYW1lKTsKKyAg
-ICAgICBkcm1fb2JqZWN0X2F0dGFjaF9wcm9wZXJ0eShvYmosIGRpc3AtPmJnX2MwX3Byb3AsIDAp
-OworICAgICAgIGRybV9vYmplY3RfYXR0YWNoX3Byb3BlcnR5KG9iaiwgZGlzcC0+YmdfYzFfcHJv
-cCwgMCk7CisgICAgICAgZHJtX29iamVjdF9hdHRhY2hfcHJvcGVydHkob2JqLCBkaXNwLT5iZ19j
-Ml9wcm9wLCAwKTsKCiAgICAgICAgZGlzcC0+eGxueF9jcnRjLmVuYWJsZV92YmxhbmsgPSAmenlu
-cW1wX2Rpc3BfZW5hYmxlX3ZibGFuazsKICAgICAgICBkaXNwLT54bG54X2NydGMuZGlzYWJsZV92
-YmxhbmsgPSAmenlucW1wX2Rpc3BfZGlzYWJsZV92Ymxhbms7CkBAIC0yNDgyLDEwICsyNjUwLDI3
-IEBAIGludCB6eW5xbXBfZGlzcF9iaW5kKHN0cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0IGRldmlj
-ZSAqbWFzdGVyLCB2b2lkICpkYXRhKQogICAgICAgIHN0cnVjdCB6eW5xbXBfZHBzdWIgKmRwc3Vi
-ID0gZGV2X2dldF9kcnZkYXRhKGRldik7CiAgICAgICAgc3RydWN0IHp5bnFtcF9kaXNwICpkaXNw
-ID0gZHBzdWItPmRpc3A7CiAgICAgICAgc3RydWN0IGRybV9kZXZpY2UgKmRybSA9IGRhdGE7Cisg
-ICAgICAgaW50IG51bTsKKyAgICAgICB1NjQgbWF4OwogICAgICAgIGludCByZXQ7CgogICAgICAg
-IGRpc3AtPmRybSA9IGRybTsKCisgICAgICAgbWF4ID0gWllOUU1QX0RJU1BfVl9CTEVORF9TRVRf
-R0xPQkFMX0FMUEhBX01BWDsKKyAgICAgICBkaXNwLT5nX2FscGhhX3Byb3AgPSBkcm1fcHJvcGVy
-dHlfY3JlYXRlX3JhbmdlKGRybSwgMCwgImFscGhhIiwgMCwgbWF4KTsKKyAgICAgICBkaXNwLT5n
-X2FscGhhX2VuX3Byb3AgPSBkcm1fcHJvcGVydHlfY3JlYXRlX2Jvb2woZHJtLCAwLAorICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAiZ19hbHBo
-YV9lbiIpOworICAgICAgIG51bSA9IEFSUkFZX1NJWkUoenlucW1wX2Rpc3BfY29sb3JfZW51bSk7
-CisgICAgICAgZGlzcC0+Y29sb3JfcHJvcCA9IGRybV9wcm9wZXJ0eV9jcmVhdGVfZW51bShkcm0s
-IDAsCisgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAi
-b3V0cHV0X2NvbG9yIiwKKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIHp5bnFtcF9kaXNwX2NvbG9yX2VudW0sCisgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICBudW0pOworICAgICAgIG1heCA9IFpZTlFNUF9E
-SVNQX1ZfQkxFTkRfQkdfTUFYOworICAgICAgIGRpc3AtPmJnX2MwX3Byb3AgPSBkcm1fcHJvcGVy
-dHlfY3JlYXRlX3JhbmdlKGRybSwgMCwgImJnX2MwIiwgMCwgbWF4KTsKKyAgICAgICBkaXNwLT5i
-Z19jMV9wcm9wID0gZHJtX3Byb3BlcnR5X2NyZWF0ZV9yYW5nZShkcm0sIDAsICJiZ19jMSIsIDAs
-IG1heCk7CisgICAgICAgZGlzcC0+YmdfYzJfcHJvcCA9IGRybV9wcm9wZXJ0eV9jcmVhdGVfcmFu
-Z2UoZHJtLCAwLCAiYmdfYzIiLCAwLCBtYXgpOworICAgICAgIGRpc3AtPnRwZ19wcm9wID0gZHJt
-X3Byb3BlcnR5X2NyZWF0ZV9ib29sKGRybSwgMCwgInRwZyIpOworCiAgICAgICAgcmV0ID0genlu
-cW1wX2Rpc3BfY3JlYXRlX3BsYW5lKGRpc3ApOwogICAgICAgIGlmIChyZXQpCiAgICAgICAgICAg
-ICAgICByZXR1cm4gcmV0OwpAQCAtMjUwMiw2ICsyNjg3LDEyIEBAIHZvaWQgenlucW1wX2Rpc3Bf
-dW5iaW5kKHN0cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0IGRldmljZSAqbWFzdGVyLCB2b2lkICpk
-YXRhKQoKICAgICAgICB6eW5xbXBfZGlzcF9kZXN0cm95X2NydGMoZGlzcCk7CiAgICAgICAgenlu
-cW1wX2Rpc3BfZGVzdHJveV9wbGFuZShkaXNwKTsKKyAgICAgICBkcm1fcHJvcGVydHlfZGVzdHJv
-eShkaXNwLT5kcm0sIGRpc3AtPmJnX2MyX3Byb3ApOworICAgICAgIGRybV9wcm9wZXJ0eV9kZXN0
-cm95KGRpc3AtPmRybSwgZGlzcC0+YmdfYzFfcHJvcCk7CisgICAgICAgZHJtX3Byb3BlcnR5X2Rl
-c3Ryb3koZGlzcC0+ZHJtLCBkaXNwLT5iZ19jMF9wcm9wKTsKKyAgICAgICBkcm1fcHJvcGVydHlf
-ZGVzdHJveShkaXNwLT5kcm0sIGRpc3AtPmNvbG9yX3Byb3ApOworICAgICAgIGRybV9wcm9wZXJ0
-eV9kZXN0cm95KGRpc3AtPmRybSwgZGlzcC0+Z19hbHBoYV9lbl9wcm9wKTsKKyAgICAgICBkcm1f
-cHJvcGVydHlfZGVzdHJveShkaXNwLT5kcm0sIGRpc3AtPmdfYWxwaGFfcHJvcCk7CiB9CgogLyoK
-LS0KMi43LjQKClRoaXMgZW1haWwgYW5kIGFueSBhdHRhY2htZW50cyBhcmUgaW50ZW5kZWQgZm9y
-IHRoZSBzb2xlIHVzZSBvZiB0aGUgbmFtZWQgcmVjaXBpZW50KHMpIGFuZCBjb250YWluKHMpIGNv
-bmZpZGVudGlhbCBpbmZvcm1hdGlvbiB0aGF0IG1heSBiZSBwcm9wcmlldGFyeSwgcHJpdmlsZWdl
-ZCBvciBjb3B5cmlnaHRlZCB1bmRlciBhcHBsaWNhYmxlIGxhdy4gSWYgeW91IGFyZSBub3QgdGhl
-IGludGVuZGVkIHJlY2lwaWVudCwgZG8gbm90IHJlYWQsIGNvcHksIG9yIGZvcndhcmQgdGhpcyBl
-bWFpbCBtZXNzYWdlIG9yIGFueSBhdHRhY2htZW50cy4gRGVsZXRlIHRoaXMgZW1haWwgbWVzc2Fn
-ZSBhbmQgYW55IGF0dGFjaG1lbnRzIGltbWVkaWF0ZWx5LgpfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZl
-bEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFp
-bG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Add drm properties for DisplayPort synchronous mode and bpc
+configurations.
+
+Signed-off-by: Hyun Kwon <hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+---
+v2
+- Split from the original patch
+---
+---
+ drivers/gpu/drm/xlnx/zynqmp_dp.c | 116 +++++++++++++++++++++++++++++++++++=
++++-
+ 1 file changed, 114 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/gpu/drm/xlnx/zynqmp_dp.c b/drivers/gpu/drm/xlnx/zynqmp=
+_dp.c
+index 9c9f4df..e1e8237 100644
+--- a/drivers/gpu/drm/xlnx/zynqmp_dp.c
++++ b/drivers/gpu/drm/xlnx/zynqmp_dp.c
+@@ -302,6 +302,8 @@ struct zynqmp_dp_config {
+  * struct zynqmp_dp - Xilinx DisplayPort core
+  * @encoder: the drm encoder structure
+  * @connector: the drm connector structure
++ * @sync_prop: synchronous mode property
++ * @bpc_prop: bpc mode property
+  * @dev: device structure
+  * @dpsub: Display subsystem
+  * @drm: DRM core
+@@ -323,6 +325,8 @@ struct zynqmp_dp_config {
+ struct zynqmp_dp {
+        struct drm_encoder encoder;
+        struct drm_connector connector;
++       struct drm_property *sync_prop;
++       struct drm_property *bpc_prop;
+        struct device *dev;
+        struct zynqmp_dpsub *dpsub;
+        struct drm_device *drm;
+@@ -1116,6 +1120,37 @@ static void zynqmp_dp_update_misc(struct zynqmp_dp *=
+dp)
+ }
+
+ /**
++ * zynqmp_dp_set_sync_mode - Set the sync mode bit in the software misc st=
+ate
++ * @dp: DisplayPort IP core structure
++ * @mode: flag if the sync mode should be on or off
++ *
++ * Set the bit in software misc state. To apply to hardware,
++ * zynqmp_dp_update_misc() should be called.
++ */
++static void zynqmp_dp_set_sync_mode(struct zynqmp_dp *dp, bool mode)
++{
++       struct zynqmp_dp_config *config =3D &dp->config;
++
++       if (mode)
++               config->misc0 |=3D ZYNQMP_DP_TX_MAIN_STREAM_MISC0_SYNC;
++       else
++               config->misc0 &=3D ~ZYNQMP_DP_TX_MAIN_STREAM_MISC0_SYNC;
++}
++
++/**
++ * zynqmp_dp_get_sync_mode - Get the sync mode state
++ * @dp: DisplayPort IP core structure
++ *
++ * Return: true if the sync mode is on, or false
++ */
++static bool zynqmp_dp_get_sync_mode(struct zynqmp_dp *dp)
++{
++       struct zynqmp_dp_config *config =3D &dp->config;
++
++       return !!(config->misc0 & ZYNQMP_DP_TX_MAIN_STREAM_MISC0_SYNC);
++}
++
++/**
+  * zynqmp_dp_set_bpc - Set bpc value in software misc state
+  * @dp: DisplayPort IP core structure
+  * @bpc: bits per component
+@@ -1165,6 +1200,17 @@ static u8 zynqmp_dp_set_bpc(struct zynqmp_dp *dp, u8=
+ bpc)
+ }
+
+ /**
++ * zynqmp_dp_get_bpc - Set bpc value from software state
++ * @dp: DisplayPort IP core structure
++ *
++ * Return: current bpc value
++ */
++static u8 zynqmp_dp_get_bpc(struct zynqmp_dp *dp)
++{
++       return dp->config.bpc;
++}
++
++/**
+  * zynqmp_dp_encoder_mode_set_transfer_unit - Set the transfer unit values
+  * @dp: DisplayPort IP core structure
+  * @mode: requested display mode
+@@ -1368,6 +1414,51 @@ static void zynqmp_dp_connector_destroy(struct drm_c=
+onnector *connector)
+        drm_connector_cleanup(connector);
+ }
+
++static int
++zynqmp_dp_connector_atomic_set_property(struct drm_connector *connector,
++                                       struct drm_connector_state *state,
++                                       struct drm_property *property,
++                                       uint64_t val)
++{
++       struct zynqmp_dp *dp =3D connector_to_dp(connector);
++       int ret;
++
++       if (property =3D=3D dp->sync_prop) {
++               zynqmp_dp_set_sync_mode(dp, val);
++       } else if (property =3D=3D dp->bpc_prop) {
++               u8 bpc;
++
++               bpc =3D zynqmp_dp_set_bpc(dp, val);
++               if (bpc) {
++                       drm_object_property_set_value(&connector->base,
++                                                     property, bpc);
++                       ret =3D -EINVAL;
++               }
++       } else {
++               return -EINVAL;
++       }
++
++       return 0;
++}
++
++static int
++zynqmp_dp_connector_atomic_get_property(struct drm_connector *connector,
++                                       const struct drm_connector_state *s=
+tate,
++                                       struct drm_property *property,
++                                       uint64_t *val)
++{
++       struct zynqmp_dp *dp =3D connector_to_dp(connector);
++
++       if (property =3D=3D dp->sync_prop)
++               *val =3D zynqmp_dp_get_sync_mode(dp);
++       else if (property =3D=3D dp->bpc_prop)
++               *val =3D  zynqmp_dp_get_bpc(dp);
++       else
++               return -EINVAL;
++
++       return 0;
++}
++
+ static const struct drm_connector_funcs zynqmp_dp_connector_funcs =3D {
+        .detect                 =3D zynqmp_dp_connector_detect,
+        .fill_modes             =3D drm_helper_probe_single_connector_modes=
+,
+@@ -1375,6 +1466,8 @@ static const struct drm_connector_funcs zynqmp_dp_con=
+nector_funcs =3D {
+        .atomic_duplicate_state =3D drm_atomic_helper_connector_duplicate_s=
+tate,
+        .atomic_destroy_state   =3D drm_atomic_helper_connector_destroy_sta=
+te,
+        .reset                  =3D drm_atomic_helper_connector_reset,
++       .atomic_set_property    =3D zynqmp_dp_connector_atomic_set_property=
+,
++       .atomic_get_property    =3D zynqmp_dp_connector_atomic_get_property=
+,
+ };
+
+ static struct drm_connector_helper_funcs zynqmp_dp_connector_helper_funcs =
+=3D {
+@@ -1520,6 +1613,13 @@ static void zynqmp_dp_hpd_work_func(struct work_stru=
+ct *work)
+                drm_helper_hpd_irq_event(dp->drm);
+ }
+
++static struct drm_prop_enum_list zynqmp_dp_bpc_enum[] =3D {
++       { 6, "6BPC" },
++       { 8, "8BPC" },
++       { 10, "10BPC" },
++       { 12, "12BPC" },
++};
++
+ int zynqmp_dp_bind(struct device *dev, struct device *master, void *data)
+ {
+        struct zynqmp_dpsub *dpsub =3D dev_get_drvdata(dev);
+@@ -1556,21 +1656,31 @@ int zynqmp_dp_bind(struct device *dev, struct devic=
+e *master, void *data)
+        connector->dpms =3D DRM_MODE_DPMS_OFF;
+
+        dp->drm =3D drm;
++       dp->sync_prop =3D drm_property_create_bool(drm, 0, "sync");
++       dp->bpc_prop =3D drm_property_create_enum(drm, 0, "bpc",
++                                               zynqmp_dp_bpc_enum,
++                                               ARRAY_SIZE(zynqmp_dp_bpc_en=
+um));
++
+        dp->config.misc0 &=3D ~ZYNQMP_DP_TX_MAIN_STREAM_MISC0_SYNC;
++       drm_object_attach_property(&connector->base, dp->sync_prop, false);
+        ret =3D zynqmp_dp_set_bpc(dp, 8);
++       drm_object_attach_property(&connector->base, dp->bpc_prop,
++                                  ret ? ret : 8);
+        zynqmp_dp_update_bpp(dp);
+
+        /* This enables interrupts, so should be called after DRM init */
+        ret =3D zynqmp_dp_init_aux(dp);
+        if (ret) {
+                dev_err(dp->dev, "failed to initialize DP aux");
+-               goto error_connector;
++               goto error_prop;
+        }
+        INIT_DELAYED_WORK(&dp->hpd_work, zynqmp_dp_hpd_work_func);
+
+        return 0;
+
+-error_connector:
++error_prop:
++       drm_property_destroy(dp->drm, dp->bpc_prop);
++       drm_property_destroy(dp->drm, dp->sync_prop);
+        zynqmp_dp_connector_destroy(&dp->connector);
+ error_encoder:
+        drm_encoder_cleanup(&dp->encoder);
+@@ -1585,6 +1695,8 @@ void zynqmp_dp_unbind(struct device *dev, struct devi=
+ce *master, void *data)
+        cancel_delayed_work_sync(&dp->hpd_work);
+        disable_irq(dp->irq);
+        zynqmp_dp_exit_aux(dp);
++       drm_property_destroy(dp->drm, dp->bpc_prop);
++       drm_property_destroy(dp->drm, dp->sync_prop);
+        zynqmp_dp_connector_destroy(&dp->connector);
+        drm_encoder_cleanup(&dp->encoder);
+ }
+--
+2.7.4
+
+This email and any attachments are intended for the sole use of the named r=
+ecipient(s) and contain(s) confidential information that may be proprietary=
+, privileged or copyrighted under applicable law. If you are not the intend=
+ed recipient, do not read, copy, or forward this email message or any attac=
+hments. Delete this email message and any attachments immediately.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
