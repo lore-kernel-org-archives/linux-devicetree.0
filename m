@@ -1,7 +1,7 @@
 From: Hyun Kwon <hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v2 3/8] dt-bindings: display: xlnx: Add ZynqMP DP subsystem bindings
-Date: Fri, 12 Jan 2018 18:03:23 -0800
-Message-ID: <1515809008-14518-3-git-send-email-hyun.kwon@xilinx.com>
+Subject: [PATCH v2 6/8] drm: xlnx: ZynqMP DP subsystem DRM KMS driver
+Date: Fri, 12 Jan 2018 18:03:26 -0800
+Message-ID: <1515809008-14518-6-git-send-email-hyun.kwon@xilinx.com>
 References: <1515809008-14518-1-git-send-email-hyun.kwon@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -13,138 +13,244 @@ To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79u
 Cc: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Vetter <daniel.vetter-/w4YWyX8dFk@public.gmane.org>, Hyun Kwon <hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This add a dt binding for ZynqMP DP subsystem.
+This is a wrapper around the ZynqMP Display and DisplayPort drivers.
 
 Signed-off-by: Hyun Kwon <hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 ---
-v2
-- Group multiple ports under 'ports'
-- Replace linux specific terms with generic hardware descriptions
+- Change the SPDX identifier format
 ---
 ---
- .../bindings/display/xlnx/xlnx,zynqmp-dpsub.txt    | 98 ++++++++++++++++++=
+ drivers/gpu/drm/xlnx/Kconfig        |  11 +++
+ drivers/gpu/drm/xlnx/Makefile       |   3 +
+ drivers/gpu/drm/xlnx/zynqmp_dpsub.c | 149 ++++++++++++++++++++++++++++++++=
 ++++
- 1 file changed, 98 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/xlnx/xlnx,zyn=
-qmp-dpsub.txt
+ drivers/gpu/drm/xlnx/zynqmp_dpsub.h |  27 +++++++
+ 4 files changed, 190 insertions(+)
+ create mode 100644 drivers/gpu/drm/xlnx/zynqmp_dpsub.c
+ create mode 100644 drivers/gpu/drm/xlnx/zynqmp_dpsub.h
 
-diff --git a/Documentation/devicetree/bindings/display/xlnx/xlnx,zynqmp-dps=
-ub.txt b/Documentation/devicetree/bindings/display/xlnx/xlnx,zynqmp-dpsub.t=
-xt
+diff --git a/drivers/gpu/drm/xlnx/Kconfig b/drivers/gpu/drm/xlnx/Kconfig
+index 19fd7cd..7c5529c 100644
+--- a/drivers/gpu/drm/xlnx/Kconfig
++++ b/drivers/gpu/drm/xlnx/Kconfig
+@@ -10,3 +10,14 @@ config DRM_XLNX
+          display pipeline using Xilinx IPs in FPGA. This module
+          provides the kernel mode setting functionalities
+          for Xilinx display drivers.
++
++config DRM_ZYNQMP_DPSUB
++       tristate "ZynqMP DP Subsystem Driver"
++       depends on ARCH_ZYNQMP && OF && DRM_XLNX && COMMON_CLK
++       select DMA_ENGINE
++       select GENERIC_PHY
++       help
++         DRM KMS driver for ZynqMP DP Subsystem controller. Choose
++         this option if you have a Xilinx ZynqMP SoC with DisplayPort
++         subsystem. The driver provides the kernel mode setting
++         functionlaities for ZynqMP DP subsystem.
+diff --git a/drivers/gpu/drm/xlnx/Makefile b/drivers/gpu/drm/xlnx/Makefile
+index c60a281..064a05a 100644
+--- a/drivers/gpu/drm/xlnx/Makefile
++++ b/drivers/gpu/drm/xlnx/Makefile
+@@ -1,2 +1,5 @@
+ xlnx_drm-objs +=3D xlnx_crtc.o xlnx_drv.o xlnx_fb.o xlnx_gem.o
+ obj-$(CONFIG_DRM_XLNX) +=3D xlnx_drm.o
++
++zynqmp-dpsub-objs +=3D zynqmp_disp.o zynqmp_dpsub.o zynqmp_dp.o
++obj-$(CONFIG_DRM_ZYNQMP_DPSUB) +=3D zynqmp-dpsub.o
+diff --git a/drivers/gpu/drm/xlnx/zynqmp_dpsub.c b/drivers/gpu/drm/xlnx/zyn=
+qmp_dpsub.c
 new file mode 100644
-index 0000000..dbcbde5
+index 0000000..517b492
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/display/xlnx/xlnx,zynqmp-dpsub.txt
-@@ -0,0 +1,98 @@
-+Xilinx ZynqMP DisplayPort subsystem
-+-----------------------------------
++++ b/drivers/gpu/drm/xlnx/zynqmp_dpsub.c
+@@ -0,0 +1,149 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * ZynqMP DP Subsystem Driver
++ *
++ *  Copyright (C) 2017 - 2018 Xilinx, Inc.
++ *
++ *  Author: Hyun Woo Kwon <hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
++ *
++ * This software is licensed under the terms of the GNU General Public
++ * License version 2, as published by the Free Software Foundation, and
++ * may be copied, distributed, and modified under those terms.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
 +
-+Required properties:
++#include <linux/component.h>
++#include <linux/module.h>
++#include <linux/of_platform.h>
++#include <linux/platform_device.h>
++#include <linux/pm_runtime.h>
 +
-+- compatible: Must be "xlnx,zynqmp-dpsub-1.7".
++#include "zynqmp_disp.h"
++#include "zynqmp_dp.h"
++#include "zynqmp_dpsub.h"
 +
-+- reg: Physical base address and length of the registers set for the devic=
-e.
-+- reg-names: Must be "dp", "blend", "av_buf", and "aud" to map logical reg=
-ister
-+  partitions.
++static int
++zynqmp_dpsub_bind(struct device *dev, struct device *master, void *data)
++{
++       int ret;
 +
-+- interrupts: Interrupt number.
-+- interrupts-parent: phandle for interrupt controller.
++       ret =3D zynqmp_disp_bind(dev, master, data);
++       if (ret)
++               return ret;
 +
-+- clocks: phandles for axi, audio, non-live video, and live video clocks.
-+  axi clock is required. Audio clock is optional. If not present, audio wi=
-ll
-+  be disabled. One of non-live or live video clock should be present.
-+- clock-names: The identification strings are required. "aclk" for axi clo=
-ck.
-+  "dp_aud_clk" for audio clock. "dp_vtc_pixel_clk_in" for non-live video c=
-lock.
-+  "dp_live_video_in_clk" for live video clock (clock from programmable log=
-ic).
++       /* zynqmp_disp should bind first, so zynqmp_dp encoder can find crt=
+c */
++       ret =3D zynqmp_dp_bind(dev, master, data);
++       if (ret)
++               return ret;
 +
-+- phys: phandles for phy specifier.
-+- phy-names: The identifier strings. "dp-phy" followed by index.
++       return 0;
++}
 +
-+- power-domains: phandle for the corresponding power domain
++static void
++zynqmp_dpsub_unbind(struct device *dev, struct device *master, void *data)
++{
++       zynqmp_dp_unbind(dev, master, data);
++       zynqmp_disp_unbind(dev, master, data);
++}
 +
-+- ports: There are 2 logical blocks in the IP: display controller and
-+  DisplayPort encoder. Each block can be used / connected independently wi=
-th
-+  external device, hence ports for each block are required using DT bindin=
-gs
-+  defined in Documentation/devicetree/bindings/graph.txt. Refer to
-+  ./xlnx,display.txt for how topology for entire pipeline is described.
-+
-+- vid-layer, gfx-layer: Required to represent available layers
-+
-+Required layer properties
-+
-+- dmas: phandles for DMA channels as defined in
-+  Documentation/devicetree/bindings/dma/dma.txt.
-+- dma-names: The identifier strings are required. "graphics0" for graphics
-+  layer. "video" followed by index for video layer
-+
-+Optional child node
-+
-+- The driver populates any child device node in this node. This can be use=
-d,
-+  for example, to populate the sound device from the DisplayPort subsystem
-+  driver.
-+
-+Example:
-+       zynqmp_dpsub: zynqmp_dpsub@fd4a0000 {
-+               compatible =3D "xlnx,zynqmp-dpsub-1.7";
-+               reg =3D <0x0 0xfd4a0000 0x0 0x1000>,
-+                     <0x0 0xfd4aa000 0x0 0x1000>,
-+                     <0x0 0xfd4ab000 0x0 0x1000>,
-+                     <0x0 0xfd4ac000 0x0 0x1000>;
-+               reg-names =3D "dp", "blend", "av_buf", "aud";
-+               interrupts =3D <0 119 4>;
-+               interrupt-parent =3D <&gic>;
-+
-+               clock-names =3D "dp_apb_clk", "dp_aud_clk", "dp_live_video_=
-in_clk";
-+               clocks =3D <&dp_aclk>, <&clkc 17>, <&si570_1>;
-+
-+               phys =3D <&lane1>, <&lane0>;
-+               phy-names =3D "dp-phy0", "dp-phy1";
-+
-+               power-domains =3D <&pd_dp>;
-+
-+               vid-layer {
-+                       dma-names =3D "vid0", "vid1", "vid2";
-+                       dmas =3D <&xlnx_dpdma 0>,
-+                              <&xlnx_dpdma 1>,
-+                              <&xlnx_dpdma 2>;
-+               };
-+
-+               gfx-layer {
-+                       dma-names =3D "gfx0";
-+                       dmas =3D <&xlnx_dpdma 3>;
-+               };
-+
-+               ports {
-+                       #address-cells =3D <1>;
-+                       #size-cells =3D <0>;
-+
-+                       display_port: port@0 {
-+                               reg =3D <0>;
-+                               display_port: endpoint {
-+                                       remote-endpoint =3D <&dp_port>;
-+                               };
-+                       };
-+                       port@1 {
-+                               reg =3D <1>;
-+                               dp_port: endpoint {
-+                                       remote-endpoint =3D <&display_port>=
-;
-+                               };
-+                       };
-+               }
-+       };
++static const struct component_ops zynqmp_dpsub_component_ops =3D {
++       .bind   =3D zynqmp_dpsub_bind,
++       .unbind =3D zynqmp_dpsub_unbind,
 +};
 +
++static int zynqmp_dpsub_probe(struct platform_device *pdev)
++{
++       struct zynqmp_dpsub *dpsub;
++       int ret;
++
++       dpsub =3D devm_kzalloc(&pdev->dev, sizeof(*dpsub), GFP_KERNEL);
++       if (!dpsub)
++               return -ENOMEM;
++
++       /* Sub-driver will access dpsub from drvdata */
++       platform_set_drvdata(pdev, dpsub);
++       pm_runtime_enable(&pdev->dev);
++
++       /*
++        * DP should be probed first so that the zynqmp_disp can set the ou=
+tput
++        * format accordingly.
++        */
++       ret =3D zynqmp_dp_probe(pdev);
++       if (ret)
++               goto err_pm;
++
++       ret =3D zynqmp_disp_probe(pdev);
++       if (ret)
++               goto err_dp;
++
++       ret =3D component_add(&pdev->dev, &zynqmp_dpsub_component_ops);
++       if (ret)
++               goto err_disp;
++
++       /* Populate the sound child nodes */
++       ret =3D of_platform_populate(pdev->dev.of_node, NULL, NULL, &pdev->=
+dev);
++       if (ret) {
++               dev_err(&pdev->dev, "failed to populate child nodes\n");
++               goto err_component;
++       }
++
++       dev_info(&pdev->dev, "ZynqMP DisplayPort Subsystem driver probed");
++
++       return 0;
++
++err_component:
++       component_del(&pdev->dev, &zynqmp_dpsub_component_ops);
++err_disp:
++       zynqmp_disp_remove(pdev);
++err_dp:
++       zynqmp_dp_remove(pdev);
++err_pm:
++       pm_runtime_disable(&pdev->dev);
++       return ret;
++}
++
++static int zynqmp_dpsub_remove(struct platform_device *pdev)
++{
++       int err, ret =3D 0;
++
++       of_platform_depopulate(&pdev->dev);
++       component_del(&pdev->dev, &zynqmp_dpsub_component_ops);
++
++       err =3D zynqmp_disp_remove(pdev);
++       if (err)
++               ret =3D -EIO;
++
++       err =3D zynqmp_dp_remove(pdev);
++       if (err)
++               ret =3D -EIO;
++
++       pm_runtime_disable(&pdev->dev);
++
++       return err;
++}
++
++static const struct of_device_id zynqmp_dpsub_of_match[] =3D {
++       { .compatible =3D "xlnx,zynqmp-dpsub-1.7", },
++       { /* end of table */ },
++};
++MODULE_DEVICE_TABLE(of, zynqmp_dpsub_of_match);
++
++static struct platform_driver zynqmp_dpsub_driver =3D {
++       .probe                  =3D zynqmp_dpsub_probe,
++       .remove                 =3D zynqmp_dpsub_remove,
++       .driver                 =3D {
++               .owner          =3D THIS_MODULE,
++               .name           =3D "zynqmp-display",
++               .of_match_table =3D zynqmp_dpsub_of_match,
++       },
++};
++
++module_platform_driver(zynqmp_dpsub_driver);
++
++MODULE_AUTHOR("Xilinx, Inc.");
++MODULE_DESCRIPTION("ZynqMP DP Subsystem Driver");
++MODULE_LICENSE("GPL v2");
+diff --git a/drivers/gpu/drm/xlnx/zynqmp_dpsub.h b/drivers/gpu/drm/xlnx/zyn=
+qmp_dpsub.h
+new file mode 100644
+index 0000000..2c1455f
+--- /dev/null
++++ b/drivers/gpu/drm/xlnx/zynqmp_dpsub.h
+@@ -0,0 +1,27 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * ZynqMP DPSUB Subsystem Driver
++ *
++ *  Copyright (C) 2017 - 2018 Xilinx, Inc.
++ *
++ *  Author: Hyun Woo Kwon <hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
++ *
++ * This software is licensed under the terms of the GNU General Public
++ * License version 2, as published by the Free Software Foundation, and
++ * may be copied, distributed, and modified under those terms.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#ifndef _ZYNQMP_DPSUB_H_
++#define _ZYNQMP_DPSUB_H_
++
++struct zynqmp_dpsub {
++       struct zynqmp_dp *dp;
++       struct zynqmp_disp *disp;
++};
++
++#endif /* _ZYNQMP_DPSUB_H_ */
 --
 2.7.4
 
