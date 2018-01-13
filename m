@@ -1,39 +1,25 @@
-From: David Lechner <david@lechnology.com>
-Subject: Re: [PATCH v5 02/44] clk: davinci: New driver for davinci PLL clocks
-Date: Fri, 12 Jan 2018 20:13:41 -0600
-Message-ID: <d8171267-dc49-e573-ca69-c2b77b44a119@lechnology.com>
-References: <1515377863-20358-1-git-send-email-david@lechnology.com>
- <1515377863-20358-3-git-send-email-david@lechnology.com>
- <7fc8bd35-0416-216d-8e1e-53a0ec6e8790@ti.com>
+From: Aniccet Ibrahim <7768611-sh/6fXdz2Rs@public.gmane.org>
+Subject: I Am Intereted In You.
+Date: Sat, 13 Jan 2018 08:11:41 +0100 (CET)
+Message-ID: <20988468.3211961515827501491.JavaMail.defaultUser@defaultHost>
+Reply-To: aniccet100-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain;charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <7fc8bd35-0416-216d-8e1e-53a0ec6e8790@ti.com>
-Content-Language: en-US
-Sender: linux-clk-owner@vger.kernel.org
-To: Sekhar Nori <nsekhar@ti.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/12/2018 03:21 AM, Sekhar Nori wrote:
-> On Monday 08 January 2018 07:47 AM, David Lechner wrote:
->> +static unsigned long davinci_pll_clk_recalc(struct clk_hw *hw,
->> +					    unsigned long parent_rate)
->> +{
->> +	struct davinci_pll_clk *pll = to_davinci_pll_clk(hw);
->> +	unsigned long rate = parent_rate;
->> +	u32 prediv, mult, postdiv;
->> +
->> +	prediv = readl(pll->base + PREDIV) & PREDIV_RATIO_MASK;
->> +	mult = readl(pll->base + PLLM) & PLLM_MASK;
->> +	postdiv = readl(pll->base + POSTDIV) & POSTDIV_RATIO_MASK;
-> 
-> Shouldn't we check if the pre and post dividers are enabled before using
-> them?
+Greeting to you and how is your family? sorry for my way of approach to 
+you, it  is because i do not have choice. I am Aniccet Ibrahim From 
+Ivory Coast. My story is  connected to the fight with the Republican 
+Forces. I have a business proposals for you. If your interested i want 
+you to reply me with your private telephone number i will give you more 
+details about myself. i shall be waiting for your reply soon.
 
-I dug into this and the answer is no. The enable bit acts like a gate, not
-a bypass, so it does not affect the rate calculation.
-
-
-
+My regards
+Miss Aniccet Ibrahim
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
