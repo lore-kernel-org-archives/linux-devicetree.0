@@ -1,53 +1,61 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/3] arm: spear600: Add missing interrupt-parent of rtc
-Date: Sun, 14 Jan 2018 12:20:03 +0100
-Message-ID: <CACRpkdag317LU2_3H-PPV_0xoX2RDLxBX5r4a3jpbn9LTvhkcA@mail.gmail.com>
-References: <a062d9ed0d3365b578156a780202fa533e725374.1515650104.git.viresh.kumar@linaro.org>
- <20180112020711.6gp2pnsxxjzelidq@localhost> <20180112032223.GK3626@vireshk-i7>
- <CAOesGMggU73asY1SEUDD_BsWcrGYR___o8e5omjziOPEwJgqBQ@mail.gmail.com>
- <CAK8P3a2SO4=YKBE3L_AKsyfNe77YR7a8F=dvbS=ic03=6NK8MA@mail.gmail.com>
- <CAOesGMgcf9FovbzhPkKnrG4ETRFP3dsSJnTYNfp1wECMFeFOGA@mail.gmail.com>
- <CAL_JsqJVWLazDRB1me2OubqqMhdsqsR+cLSHR+K0OY3dZHcE-w@mail.gmail.com>
- <CAOesGMiyfpRyoe4dxQeNMF5invysVBEy+J5OwUhuop=JyAvZoQ@mail.gmail.com>
- <CAK8P3a3KTz0sOSbO9+sAY1Sv95hZF4Yg1qMzOaXPAZ_1pOgGpg@mail.gmail.com>
- <CAOesGMiHeitS_j9r0DsPf3k1jVJT9_z-bHyrhbB7fQ__LjjaqA@mail.gmail.com> <CAK8P3a3MZX-ZsxX9h1-8kVQhn9hqY=c8L1+=e3uTfjEjBCYuPg@mail.gmail.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v6 11/16] firmware: arm_sdei: Add support for CPU and
+ system power states
+Date: Sun, 14 Jan 2018 12:20:37 +0000
+Message-ID: <20180114122037.GA18073@red-moon>
+References: <20180108153818.22743-1-james.morse@arm.com>
+ <20180108153818.22743-12-james.morse@arm.com>
+ <20180108172226.GC2530@red-moon>
+ <20180113120031.5m6eykwzqnioyb33@armageddon.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAK8P3a3MZX-ZsxX9h1-8kVQhn9hqY=c8L1+=e3uTfjEjBCYuPg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, ARM-SoC Maintainers <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux ARM Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, gregkh <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <kvmarm-bounces@lists.cs.columbia.edu>
+Content-Disposition: inline
+In-Reply-To: <20180113120031.5m6eykwzqnioyb33@armageddon.cambridge.arm.com>
+List-Unsubscribe: <https://lists.cs.columbia.edu/mailman/options/kvmarm>,
+ <mailto:kvmarm-request@lists.cs.columbia.edu?subject=unsubscribe>
+List-Archive: <https://lists.cs.columbia.edu/pipermail/kvmarm>
+List-Post: <mailto:kvmarm@lists.cs.columbia.edu>
+List-Help: <mailto:kvmarm-request@lists.cs.columbia.edu?subject=help>
+List-Subscribe: <https://lists.cs.columbia.edu/mailman/listinfo/kvmarm>,
+ <mailto:kvmarm-request@lists.cs.columbia.edu?subject=subscribe>
+Errors-To: kvmarm-bounces@lists.cs.columbia.edu
+Sender: kvmarm-bounces@lists.cs.columbia.edu
+To: Catalin Marinas <catalin.marinas@arm.com>
+Cc: devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Heyi Guo <guoheyi@huawei.com>, kvmarm@lists.cs.columbia.edu, Loc Ho <lho@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 12, 2018 at 11:05 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+On Sat, Jan 13, 2018 at 12:00:31PM +0000, Catalin Marinas wrote:
+> On Mon, Jan 08, 2018 at 05:22:26PM +0000, Lorenzo Pieralisi wrote:
+> > On Mon, Jan 08, 2018 at 03:38:13PM +0000, James Morse wrote:
+> > 
+> > [...]
+> > 
+> > > +/* When entering idle, mask/unmask events for this cpu */
+> > 
+> > Just mentioning (since I know you know), this notifier is called also
+> > through syscore_ops so it is not just idle (CPUidle or Suspend-to-idle).
+> > 
+> > > +static int sdei_pm_notifier(struct notifier_block *nb, unsigned long action,
+> > > +			    void *data)
+> > > +{
+> > > +	int rv;
+> > > +
+> > > +	switch (action) {
+> > > +	case CPU_PM_ENTER:
+> > > +		rv = sdei_mask_local_cpu();
+> > > +		break;
+> > > +	case CPU_PM_EXIT:
+> > > +		rv = sdei_unmask_local_cpu();
+> > 
+> > You should handle CPU_PM_ENTER_FAILED here for correctness,
+> > in case the notifier chain fails.
+> 
+> So, just to confirm, the CPU_PM_ENTER_FAILED case goes together with
+> CPU_PM_EXIT so that we unmask the SDE again for the CPU.
 
->      arch/arm/boot/dts/ste-nomadik-nhk15.dtb: Warning
-> (interrupts_property): Missing interrupt-parent for
-> /amba/clcd@10120000
->      arch/arm/boot/dts/ste-nomadik-s8815.dtb: Warning
-> (interrupts_property): Missing interrupt-parent for
-> /amba/clcd@10120000
-(...)
-> I hope Linus Walleij can find out what the right interrupt-parent
-> should be on the
-> nomadik machine, that is otherwise the last remaining warning.
+Yes, that's correct (I do not think that's a problem with current
+mainline but that ought to be handled correctly anyway).
 
-OK I will look into it.
-
-> Apparently the
-> clcd driver doesn't actually need its interrupt, so we could decide to
-> just comment
-> out that line if we don't know which controller it's connected to.
-
-I am migrating it to the new DRM driver which uses the IRQ to
-sync screen output to avoid tearing so it would be unfortunate.
-
-I will look into it.
-
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Lorenzo
