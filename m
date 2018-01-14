@@ -1,61 +1,95 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH v6 11/16] firmware: arm_sdei: Add support for CPU and
- system power states
-Date: Sun, 14 Jan 2018 12:20:37 +0000
-Message-ID: <20180114122037.GA18073@red-moon>
-References: <20180108153818.22743-1-james.morse@arm.com>
- <20180108153818.22743-12-james.morse@arm.com>
- <20180108172226.GC2530@red-moon>
- <20180113120031.5m6eykwzqnioyb33@armageddon.cambridge.arm.com>
+From: Jonathan Cameron <jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>
+Subject: Re: [PATCH 1/3] staging: iio: adc: ad7192: fix external frequency
+ setting
+Date: Sun, 14 Jan 2018 12:37:45 +0000
+Message-ID: <20180114123745.7a1180ca@archlinux>
+References: <20180110112956.23931-1-alexandru.ardelean@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <kvmarm-bounces@lists.cs.columbia.edu>
-Content-Disposition: inline
-In-Reply-To: <20180113120031.5m6eykwzqnioyb33@armageddon.cambridge.arm.com>
-List-Unsubscribe: <https://lists.cs.columbia.edu/mailman/options/kvmarm>,
- <mailto:kvmarm-request@lists.cs.columbia.edu?subject=unsubscribe>
-List-Archive: <https://lists.cs.columbia.edu/pipermail/kvmarm>
-List-Post: <mailto:kvmarm@lists.cs.columbia.edu>
-List-Help: <mailto:kvmarm-request@lists.cs.columbia.edu?subject=help>
-List-Subscribe: <https://lists.cs.columbia.edu/mailman/listinfo/kvmarm>,
- <mailto:kvmarm-request@lists.cs.columbia.edu?subject=subscribe>
-Errors-To: kvmarm-bounces@lists.cs.columbia.edu
-Sender: kvmarm-bounces@lists.cs.columbia.edu
-To: Catalin Marinas <catalin.marinas@arm.com>
-Cc: devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Heyi Guo <guoheyi@huawei.com>, kvmarm@lists.cs.columbia.edu, Loc Ho <lho@apm.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180110112956.23931-1-alexandru.ardelean-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: alexandru.ardelean-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jan 13, 2018 at 12:00:31PM +0000, Catalin Marinas wrote:
-> On Mon, Jan 08, 2018 at 05:22:26PM +0000, Lorenzo Pieralisi wrote:
-> > On Mon, Jan 08, 2018 at 03:38:13PM +0000, James Morse wrote:
-> > 
-> > [...]
-> > 
-> > > +/* When entering idle, mask/unmask events for this cpu */
-> > 
-> > Just mentioning (since I know you know), this notifier is called also
-> > through syscore_ops so it is not just idle (CPUidle or Suspend-to-idle).
-> > 
-> > > +static int sdei_pm_notifier(struct notifier_block *nb, unsigned long action,
-> > > +			    void *data)
-> > > +{
-> > > +	int rv;
-> > > +
-> > > +	switch (action) {
-> > > +	case CPU_PM_ENTER:
-> > > +		rv = sdei_mask_local_cpu();
-> > > +		break;
-> > > +	case CPU_PM_EXIT:
-> > > +		rv = sdei_unmask_local_cpu();
-> > 
-> > You should handle CPU_PM_ENTER_FAILED here for correctness,
-> > in case the notifier chain fails.
+On Wed, 10 Jan 2018 13:29:54 +0200
+<alexandru.ardelean-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org> wrote:
+
+> From: Alexandru Ardelean <alexandru.ardelean-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
 > 
-> So, just to confirm, the CPU_PM_ENTER_FAILED case goes together with
-> CPU_PM_EXIT so that we unmask the SDE again for the CPU.
+> According to the datasheet:
+> * 0 - external crystal, connected from pin MCLK1 to MCLK2
 
-Yes, that's correct (I do not think that's a problem with current
-mainline but that ought to be handled correctly anyway).
+What frequency of crystal?  My quick read of the datasheet
+implies this may be flexible.  Possibly as flexible as
+the clock option...
 
-Lorenzo
+
+> * 1 - external clock, applied to MCLK2 pin
+> * 2 - internal 4.92 Mhz clock; pin MCLK2 is tristated
+> * 3 - internal 4.92 Mhz clock; internal clock is available on MCLK2
+> 
+> Which means that the external clock value only has sense
+> for value 1 (AD7192_CLK_EXT_MCLK2).
+> 
+> Also added range validation for the external frequency
+> setting, which the datasheet mentions that it's
+> between 2.4576 and 5.12 Mhz.
+> 
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
+> ---
+>  drivers/staging/iio/adc/ad7192.c | 22 +++++++++++++++-------
+>  1 file changed, 15 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/staging/iio/adc/ad7192.c b/drivers/staging/iio/adc/ad7192.c
+> index 7f204013d6d4..7bc04101d133 100644
+> --- a/drivers/staging/iio/adc/ad7192.c
+> +++ b/drivers/staging/iio/adc/ad7192.c
+> @@ -141,6 +141,8 @@
+>  #define AD7192_GPOCON_P1DAT	BIT(1) /* P1 state */
+>  #define AD7192_GPOCON_P0DAT	BIT(0) /* P0 state */
+>  
+> +#define AD7192_EXT_FREQ_MHZ_MIN	2457600
+> +#define AD7192_EXT_FREQ_MHZ_MAX	5120000
+>  #define AD7192_INT_FREQ_MHZ	4915200
+>  
+>  /* NOTE:
+> @@ -217,6 +219,12 @@ static int ad7192_calibrate_all(struct ad7192_state *st)
+>  				ARRAY_SIZE(ad7192_calib_arr));
+>  }
+>  
+> +static inline bool ad7192_valid_external_frequency(u32 freq)
+> +{
+> +	return (freq >= AD7192_EXT_FREQ_MHZ_MIN &&
+> +		freq <= AD7192_EXT_FREQ_MHZ_MAX);
+> +}
+> +
+>  static int ad7192_setup(struct ad7192_state *st,
+>  			const struct ad7192_platform_data *pdata)
+>  {
+> @@ -245,16 +253,16 @@ static int ad7192_setup(struct ad7192_state *st,
+>  
+>  	switch (pdata->clock_source_sel) {
+>  	case AD7192_CLK_EXT_MCLK1_2:
+> -	case AD7192_CLK_EXT_MCLK2:
+> -		st->mclk = AD7192_INT_FREQ_MHZ;
+> -		break;
+>  	case AD7192_CLK_INT:
+>  	case AD7192_CLK_INT_CO:
+> -		if (pdata->ext_clk_hz)
+> -			st->mclk = pdata->ext_clk_hz;
+> -		else
+> -			st->mclk = AD7192_INT_FREQ_MHZ;
+> +		st->mclk = AD7192_INT_FREQ_MHZ;
+>  		break;
+> +	case AD7192_CLK_EXT_MCLK2:
+> +		if (ad7192_valid_external_frequency(pdata->clock_source_sel)) {
+> +			st->mclk = pdata->clock_source_sel;
+> +			break;
+> +		}
+> +		/* FALLTHROUGH */
+>  	default:
+>  		ret = -EINVAL;
+>  		goto out;
