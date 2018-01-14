@@ -1,34 +1,74 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH 1/3] ARM: dts: rockchip: drop veyron's nonstandard 'backlight-boot-off'
-Date: Sat, 13 Jan 2018 19:49:30 +0100
-Message-ID: <3929059.IgKPAvtPnp@phil>
-References: <20180106004757.8239-1-briannorris@chromium.org>
+From: Baruch Siach <baruch@tkos.co.il>
+Subject: Re: [PATCH v2 3/4] gpio: raspberrypi-exp: Driver for RPi3 GPIO
+ expander via mailbox service
+Date: Sun, 14 Jan 2018 08:08:40 +0200
+Message-ID: <20180114060840.ychhndc7ukulrbpe@sapphire.tkos.co.il>
+References: <cover.1515698418.git.baruch@tkos.co.il>
+ <35b07d1aae959c357d671f5530311320d0f10cc8.1515698418.git.baruch@tkos.co.il>
+ <1313448378.43279.1515839595810@email.1und1.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180106004757.8239-1-briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lin Huang <hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1313448378.43279.1515839595810@email.1und1.de>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Stefan Wahren <stefan.wahren@i2se.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Eric Anholt <eric@anholt.net>, Dave Stevenson <dave.stevenson@raspberrypi.org>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, Michael Zoran <mzoran@crowfest.net>, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, 5. Januar 2018, 16:47:55 CET schrieb Brian Norris:
-> This was used out-of-tree as a hack for resolving issues where some
-> systems expect the backlight to turn on automatically at boot, while
-> others expect to manage the backlight status via a DRM/panel driver.
-> Those issues have since been fixed upstream in pwm_bl.c without device
-> tree hacks, and so this un-documented property should no longer be
-> useful.
+Hi Stefan,
+
+Thanks for reviewing. Please find below a few questions.
+
+On Sat, Jan 13, 2018 at 11:33:15AM +0100, Stefan Wahren wrote: 
+> > +	default RASPBERRYPI_FIRMWARE
+> > +	depends on OF_GPIO && RASPBERRYPI_FIRMWARE && \
+> > +		(ARCH_BCM2835 || COMPILE_TEST)
 > 
-> Signed-off-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> Since this is default on RASPBERRYPI_FIRMWARE, we could remove it from the dependencies.
 
-applied (for 4.17 though)
+This driver does not work when RASPBERRYPI_FIRMWARE is not enabled. So the 
+driver should not be selectable, regardless of its default enable/disable 
+state.
 
+> > +	help
+> > +	  Turn on GPIO support for the expander on Raspberry Pi 3 boards, using
+> > +	  the firmware mailbox to communicate with VideoCore on BCM283x chips.
+> > +
 
-Thanks
-Heiko
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[...]
+
+> > --- /dev/null
+> > +++ b/drivers/gpio/gpio-raspberrypi-exp.c
+> > @@ -0,0 +1,258 @@
+> > +// SPDX-License-Identifier: GPL-2.0+
+> > +/*
+> > + *  Raspberry Pi 3 expander GPIO driver
+> > + *
+> > + *  Uses the firmware mailbox service to communicate with the
+> > + *  GPIO expander on the VPU.
+> > + *
+> > + *  Copyright (C) 2017 Raspberry Pi Trading Ltd.
+> 
+> 2018?
+
+Why? Raspberry Pi Trading Ltd added no code to this driver in 2018.
+
+[...]
+
+> > +static struct platform_driver rpi_exp_gpio_driver = {
+> > +	.driver	= {
+> > +		.name		= MODULE_NAME,
+> > +		.owner		= THIS_MODULE,
+> 
+> Please drop this, too.
+
+Why? Recent GPIO drivers include this line. I have seen no commits removing 
+.owner from GPIO drivers in mainline or in current development tree.
+
+baruch
+
+-- 
+     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
+=}------------------------------------------------ooO--U--Ooo------------{=
+   - baruch@tkos.co.il - tel: +972.2.679.5364, http://www.tkos.co.il -
