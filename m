@@ -1,46 +1,109 @@
-From: Hao Zhang <hao5781286@gmail.com>
-Subject: Re: [PATCH v1 3/4] ARM: dts: add pwm pins for r40.
-Date: Sun, 14 Jan 2018 15:07:46 +0800
-Message-ID: <CAJeuY7-FeiEtSkg=udnEx_==3SS=dinyk7fKqhLwdXcKE3510g@mail.gmail.com>
-References: <20180111113323.GA21976@arx-s1> <20180111124701.g52kjm3hozn72je5@flea.lan>
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: Re: [PATCH v2 3/4] gpio: raspberrypi-exp: Driver for RPi3 GPIO
+ expander via mailbox service
+Date: Sun, 14 Jan 2018 11:42:57 +0100 (CET)
+Message-ID: <683751625.49637.1515926577491@email.1und1.de>
+References: <cover.1515698418.git.baruch@tkos.co.il>
+ <35b07d1aae959c357d671f5530311320d0f10cc8.1515698418.git.baruch@tkos.co.il>
+ <1313448378.43279.1515839595810@email.1und1.de>
+ <20180114060840.ychhndc7ukulrbpe@sapphire.tkos.co.il>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20180111124701.g52kjm3hozn72je5@flea.lan>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, robh+dt@kernel.org, Mark Rutland <mark.rutland@arm.com>, linux@armlinux.org.uk, Chen-Yu Tsai <wens@csie.org>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, open list <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/Allwinner sunXi SoC support" <linux-arm-kernel@lists.infradead.org>, linux-pwm@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180114060840.ychhndc7ukulrbpe-MwjkAAnuF3khR1HGirfZ1z4kX+cae0hd@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Dave Stevenson <dave.stevenson-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Zoran <mzoran-O+n0w2l5AFbk1uMJSBkQmQ@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-2018-01-11 20:47 GMT+08:00 Maxime Ripard <maxime.ripard@free-electrons.com>:
-> Hi,
->
-> On Thu, Jan 11, 2018 at 07:33:23PM +0800, hao_zhang wrote:
->> This patch add pwm pins for r40.
->>
->> Signed-off-by: hao_zhang <hao5781286@gmail.com>
->
-> You should order your patches differently. We try to be as bisectable
-> as possible, and if we just apply this patch the DT will not compile
-> anymore.
->
-> Your patch 4 should come before this one.
->
+Hi Baruch,
 
-Do you mean that the order of patch be applied is from the first to
-the last in the patch set ?
-because you apply the last patch first also break the DT compile...
+> Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org> hat am 14. Januar 2018 um 07:08 geschrieben:
+> 
+> 
+> Hi Stefan,
+> 
+> Thanks for reviewing. Please find below a few questions.
+> 
+> On Sat, Jan 13, 2018 at 11:33:15AM +0100, Stefan Wahren wrote: 
+> > > +	default RASPBERRYPI_FIRMWARE
+> > > +	depends on OF_GPIO && RASPBERRYPI_FIRMWARE && \
+> > > +		(ARCH_BCM2835 || COMPILE_TEST)
+> > 
+> > Since this is default on RASPBERRYPI_FIRMWARE, we could remove it from the dependencies.
+> 
+> This driver does not work when RASPBERRYPI_FIRMWARE is not enabled. So the 
+> driver should not be selectable, regardless of its default enable/disable 
+> state.
 
-Thinks :)
-Hao Zhang
+I know. My idea was to increase build test coverage. Nevertheless the more common style would be:
 
-> Your commit title and log doesn't seem to match the content of the
-> patch either.
->
-> Thanks!
-> Maxime
->
-> --
-> Maxime Ripard, Free Electrons
-> Embedded Linux and Kernel engineering
-> http://free-electrons.com
+depends on ARCH_BCM2835 || COMPILE_TEST
+depends on OF_GPIO && RASPBERRYPI_FIRMWARE
+
+> 
+> > > +	help
+> > > +	  Turn on GPIO support for the expander on Raspberry Pi 3 boards, using
+> > > +	  the firmware mailbox to communicate with VideoCore on BCM283x chips.
+> > > +
+> 
+> [...]
+> 
+> > > --- /dev/null
+> > > +++ b/drivers/gpio/gpio-raspberrypi-exp.c
+> > > @@ -0,0 +1,258 @@
+> > > +// SPDX-License-Identifier: GPL-2.0+
+> > > +/*
+> > > + *  Raspberry Pi 3 expander GPIO driver
+> > > + *
+> > > + *  Uses the firmware mailbox service to communicate with the
+> > > + *  GPIO expander on the VPU.
+> > > + *
+> > > + *  Copyright (C) 2017 Raspberry Pi Trading Ltd.
+> > 
+> > 2018?
+> 
+> Why? Raspberry Pi Trading Ltd added no code to this driver in 2018.
+
+Sure. Don't you want to add your copyright?
+
+> 
+> [...]
+> 
+> > > +static struct platform_driver rpi_exp_gpio_driver = {
+> > > +	.driver	= {
+> > > +		.name		= MODULE_NAME,
+> > > +		.owner		= THIS_MODULE,
+> > 
+> > Please drop this, too.
+> 
+> Why? Recent GPIO drivers include this line.
+
+I don't know which driver your are referring to, but platform driver doesn't need this.
+
+Please grep for all platform_driver in gpio and you won't see any setting of ownership. I'm not speaking about the gpiochip.
+
+Btw my replies to #2 and #4 got blocked, should i try to resend it to you.
+
+Thanks
+Stefan
+
+> I have seen no commits removing 
+> .owner from GPIO drivers in mainline or in current development tree.
+> 
+> baruch
+> 
+> -- 
+>      http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
+> =}------------------------------------------------ooO--U--Ooo------------{=
+>    - baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org - tel: +972.2.679.5364, http://www.tkos.co.il -
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
