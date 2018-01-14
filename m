@@ -1,95 +1,147 @@
 From: Jonathan Cameron <jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>
-Subject: Re: [PATCH 1/3] staging: iio: adc: ad7192: fix external frequency
- setting
-Date: Sun, 14 Jan 2018 12:37:45 +0000
-Message-ID: <20180114123745.7a1180ca@archlinux>
+Subject: Re: [PATCH 3/3] staging: iio: docs: add ad7192 doc to detail dt
+ usage
+Date: Sun, 14 Jan 2018 12:56:04 +0000
+Message-ID: <20180114125604.24a3876d@archlinux>
 References: <20180110112956.23931-1-alexandru.ardelean@analog.com>
+        <20180110112956.23931-3-alexandru.ardelean@analog.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180110112956.23931-1-alexandru.ardelean-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <20180110112956.23931-3-alexandru.ardelean-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
 Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: alexandru.ardelean-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 10 Jan 2018 13:29:54 +0200
+On Wed, 10 Jan 2018 13:29:56 +0200
 <alexandru.ardelean-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org> wrote:
 
 > From: Alexandru Ardelean <alexandru.ardelean-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
 > 
-> According to the datasheet:
-> * 0 - external crystal, connected from pin MCLK1 to MCLK2
-
-What frequency of crystal?  My quick read of the datasheet
-implies this may be flexible.  Possibly as flexible as
-the clock option...
-
-
-> * 1 - external clock, applied to MCLK2 pin
-> * 2 - internal 4.92 Mhz clock; pin MCLK2 is tristated
-> * 3 - internal 4.92 Mhz clock; internal clock is available on MCLK2
-> 
-> Which means that the external clock value only has sense
-> for value 1 (AD7192_CLK_EXT_MCLK2).
-> 
-> Also added range validation for the external frequency
-> setting, which the datasheet mentions that it's
-> between 2.4576 and 5.12 Mhz.
+> Document the device-tree bindings of the "ad7192" driver.
+> Added datasheet references for supported devices,
+> explanation for each property supported by the driver,
+> and an example.
 > 
 > Signed-off-by: Alexandru Ardelean <alexandru.ardelean-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
 > ---
->  drivers/staging/iio/adc/ad7192.c | 22 +++++++++++++++-------
->  1 file changed, 15 insertions(+), 7 deletions(-)
+>  .../staging/iio/Documentation/adc/adi,ad7192.txt   | 71 ++++++++++++++++++++++
+>  1 file changed, 71 insertions(+)
+>  create mode 100644 drivers/staging/iio/Documentation/adc/adi,ad7192.txt
 > 
-> diff --git a/drivers/staging/iio/adc/ad7192.c b/drivers/staging/iio/adc/ad7192.c
-> index 7f204013d6d4..7bc04101d133 100644
-> --- a/drivers/staging/iio/adc/ad7192.c
-> +++ b/drivers/staging/iio/adc/ad7192.c
-> @@ -141,6 +141,8 @@
->  #define AD7192_GPOCON_P1DAT	BIT(1) /* P1 state */
->  #define AD7192_GPOCON_P0DAT	BIT(0) /* P0 state */
->  
-> +#define AD7192_EXT_FREQ_MHZ_MIN	2457600
-> +#define AD7192_EXT_FREQ_MHZ_MAX	5120000
->  #define AD7192_INT_FREQ_MHZ	4915200
->  
->  /* NOTE:
-> @@ -217,6 +219,12 @@ static int ad7192_calibrate_all(struct ad7192_state *st)
->  				ARRAY_SIZE(ad7192_calib_arr));
->  }
->  
-> +static inline bool ad7192_valid_external_frequency(u32 freq)
-> +{
-> +	return (freq >= AD7192_EXT_FREQ_MHZ_MIN &&
-> +		freq <= AD7192_EXT_FREQ_MHZ_MAX);
-> +}
+> diff --git a/drivers/staging/iio/Documentation/adc/adi,ad7192.txt b/drivers/staging/iio/Documentation/adc/adi,ad7192.txt
+> new file mode 100644
+> index 000000000000..1f8f769a003f
+> --- /dev/null
+> +++ b/drivers/staging/iio/Documentation/adc/adi,ad7192.txt
+> @@ -0,0 +1,71 @@
+> +Analog Devices AD719x ADC Driver
 > +
->  static int ad7192_setup(struct ad7192_state *st,
->  			const struct ad7192_platform_data *pdata)
->  {
-> @@ -245,16 +253,16 @@ static int ad7192_setup(struct ad7192_state *st,
->  
->  	switch (pdata->clock_source_sel) {
->  	case AD7192_CLK_EXT_MCLK1_2:
-> -	case AD7192_CLK_EXT_MCLK2:
-> -		st->mclk = AD7192_INT_FREQ_MHZ;
-> -		break;
->  	case AD7192_CLK_INT:
->  	case AD7192_CLK_INT_CO:
-> -		if (pdata->ext_clk_hz)
-> -			st->mclk = pdata->ext_clk_hz;
-> -		else
-> -			st->mclk = AD7192_INT_FREQ_MHZ;
-> +		st->mclk = AD7192_INT_FREQ_MHZ;
->  		break;
-> +	case AD7192_CLK_EXT_MCLK2:
-> +		if (ad7192_valid_external_frequency(pdata->clock_source_sel)) {
-> +			st->mclk = pdata->clock_source_sel;
-> +			break;
-> +		}
-> +		/* FALLTHROUGH */
->  	default:
->  		ret = -EINVAL;
->  		goto out;
+> +Reference:
+> +[1] http://www.analog.com/en/products/analog-to-digital-converters/ad7190.html
+> +[2] http://www.analog.com/en/products/analog-to-digital-converters/ad7192.html
+> +[3] http://www.analog.com/en/products/analog-to-digital-converters/ad7193.html
+> +[4] http://www.analog.com/en/products/analog-to-digital-converters/ad7195.html
+> +
+> +Required properties:
+> +  - compatible: Should be "adi,ad7190", "adi,ad7192", "adi,ad7193"
+> +  or "adi,ad7195"
+> +  - reg: SPI chip select number for the device
+> +  - spi-cpol, spi-cpha: Controller support only mode 3, so both spi-cpol
+> +  and spi-cpha should be present
+> +  - spi-max-frequency: Definition as per
+> +  see: Documentation/devicetree/bindings/spi/spi-bus.txt
+> +  - interrupt-parent: phandle to the parent interrupt controller
+> +  see: Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+> +  - interrupts: IRQ line for the ADC
+> +  see: Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+> +
+> +Recommended properties:
+> +  - adi,clock-source-select: sets the clock source to be used; values are
+> +   * 0 - external crystal, connected from pin MCLK1 to MCLK2
+> +   * 1 - external clock, applied to MCLK2 pin
+> +   * 2 - internal 4.92 Mhz clock; pin MCLK2 is tristated (default)
+> +   * 3 - internal 4.92 Mhz clock; internal clock is available on MCLK2
+
+For the external clock there are standard bindings
+Documentation/devicetree/bindings/clock/clock-bindings.txt
+If one is specified assume it should be used.
+
+For the crystal a quick grep suggests that clocknames are used in somecases
+at least to distinguish between osc and xtal.
+
+Final pair probably need a specific devicetree binding like
+adi,clockout or something...  (not thought much on that name!)
+
+
+> +  - adi,external-clock-Hz: if "adi,clock-source-select" is value '1',
+> +  this value should be specified to the ADC
+> +  - avdd-supply: Analog Supply Voltage, 4.75V to 5.25V. AVDD is
+> +  independent of DVDD
+> +  - dvdd-supply: Digital Supply Voltage, 2.7V to 5.25V. DVDD
+> +  is independent of AVDD
+
+Regulators not values + add a cross reference to the regulator docs.
+I would make this required rather than optional.  Easy to supply
+fixed regs in devicetree if it makes sense and will simplify
+things in the long run if we know they are awlays there.
+
+
+> +
+> +Optional properties:
+> +  - adi,refin2-pins-enable: select external reference to be applied
+> +  to P1,REFIN2(+) & P0,REFIN2(-) pins instead of REFIN1(+) & REFIN1(-);
+> +  not available for "ad7195"
+> +  - adi,rejection-60-Hz-enable: enables simultaneous 50/60 Hz rejection
+> +  - adi,chop-enable: enable chop to minimize ADC offset and offset drift
+> +  - adi,buffer-enable: enables the buffer on the analog inputs
+> +  - adi,burnout-currents-enable: when selected, the 500 nA current sources
+> +  in the signal path are enabled; can be enabled only when buffer is active
+> +  and chop is disabled
+
+These are an oddity.  I'm unclear on whether you would ever have them on
+all the time.  Sounds like detection hardware that you'd run in an initial
+self test to check your transducer isn't blown.
+
+
+> +  - adi,sinc3-filter-enable: enables the SINC3 filter; if unset
+> +  the SINC4 digital filter is used after the modulator
+
+so this is a selection between two filters.  Good if the naming implies this..
+
+> +  - adi,unipolar-enable: when this is set voltage ranges must be unipolar
+> +  (e.g 0 to 5V) versus bipolar voltage ranges (e.g. -5V to 5V)
+That isn't close to what I'm reading from the datasheet.
+
+"A bipolar input range does not
+imply that the part can tolerate negative voltages with respect to
+system AGND. "
+
+This is about using a second input as the differential negative vs using
+the common reference input...
+
+> +
+> +Example:
+> +ad7190@0 {
+> +	compatible = "adi,ad7190";
+> +	reg = <0>;
+> +	spi-max-frequency = <1000000>;
+> +	spi-cpol;
+> +	spi-cpha;
+> +
+> +	#interrupt-cells = <2>;
+> +	interrupts = <25 0x2>;
+> +	interrupt-parent = <&gpio>;
+> +	avdd-supply = <&adc_avdd>;
+> +
+> +	adi,clock-source-select = /bits/ 8 <0>;
+> +
+> +	adi,refin2-pins-enable;
+> +	adi,rejection-60-Hz-enable;
+> +	adi,buffer-enable;
+> +	adi,burnout-currents-enable;
+> +	adi,sinc3-filter-enable;
+> +	adi,unipolar-enable;
+> +};
