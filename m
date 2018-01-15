@@ -1,50 +1,77 @@
-From: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Subject: [PATCHv2 0/5] GEHC Bx50 Switch Support
-Date: Mon, 15 Jan 2018 13:15:03 +0100
-Message-ID: <20180115121508.14544-1-sebastian.reichel@collabora.co.uk>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Vivien Didelot <vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
-Cc: Ian Ray <ian.ray-JJi787mZWgc@public.gmane.org>, Nandor Han <nandor.han-JJi787mZWgc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+Subject: [PATCHv2 1/5] net: dsa: Support internal phy on 'cpu' port
+Date: Mon, 15 Jan 2018 13:15:04 +0100
+Message-ID: <20180115121508.14544-2-sebastian.reichel@collabora.co.uk>
+References: <20180115121508.14544-1-sebastian.reichel@collabora.co.uk>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180115121508.14544-1-sebastian.reichel@collabora.co.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>, Vivien Didelot <vivien.didelot@savoirfairelinux.com>, Florian Fainelli <f.fainelli@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>
+Cc: Ian Ray <ian.ray@ge.com>, Nandor Han <nandor.han@ge.com>, Rob Herring <robh+dt@kernel.org>, "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sebastian Reichel <sebastian.reichel@collabora.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+This adds support for enabling the internal PHY for a 'cpu' port.
+It has been tested on GE B850v3,  B650v3 and B450v3, which have a
+built-in MV88E6240 switch connected to a PCIe based network card.
+Without this patch the link does not come up and no traffic can be
+routed through the switch.
 
-This adds support for the internal switch found in GE Healthcare
-B450v3, B650v3 and B850v3. All devices use a GPIO bitbanged MDIO
-bus to communicate with the switch and a PCIe based network card
-for exchanging network data. The cpu network data link requires,
-that the switch's internal phy interface is enabled, so support
-for that is added by the first patch in this series.
+The PHY interface, that is being used on the above test systems is
+part of the MV88E6240 and since mv88e6xxx driver resets the chip
+during probe, it is definitely disabled without this patch.
 
-The patch series is based on v4.15-rc8.
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+---
+ net/dsa/port.c | 23 +++++++++++++++++++----
+ 1 file changed, 19 insertions(+), 4 deletions(-)
 
-Changes since PATCHv1:
- * Use 'marvell,mv88e6085' instead of introducing compatible
-   string for mv88e6240.
- * Fix indention of DT nodes
- * Only enable 'cpu' phy, if explicitly set to "internal".
-
--- Sebastian
-
-Sebastian Reichel (5):
-  net: dsa: Support internal phy on 'cpu' port
-  ARM: dts: imx6q-bx50v3: Add internal switch
-  ARM: dts: imx6q-b850v3: Add switch port configuration
-  ARM: dts: imx6q-b650v3: Add switch port configuration
-  ARM: dts: imx6q-b450v3: Add switch port configuration
-
- arch/arm/boot/dts/imx6q-b450v3.dts  | 48 +++++++++++++++++++++++++
- arch/arm/boot/dts/imx6q-b650v3.dts  | 48 +++++++++++++++++++++++++
- arch/arm/boot/dts/imx6q-b850v3.dts  | 71 +++++++++++++++++++++++++++++++++++++
- arch/arm/boot/dts/imx6q-bx50v3.dtsi | 37 +++++++++++++++++++
- net/dsa/port.c                      | 23 +++++++++---
- 5 files changed, 223 insertions(+), 4 deletions(-)
-
+diff --git a/net/dsa/port.c b/net/dsa/port.c
+index bb4be2679904..33ea0d73350d 100644
+--- a/net/dsa/port.c
++++ b/net/dsa/port.c
+@@ -282,6 +282,10 @@ int dsa_port_fixed_link_register_of(struct dsa_port *dp)
+ 	int mode;
+ 	int err;
+ 
++	mode = of_get_phy_mode(dn);
++	if (mode < 0)
++		mode = PHY_INTERFACE_MODE_NA;
++
+ 	if (of_phy_is_fixed_link(dn)) {
+ 		err = of_phy_register_fixed_link(dn);
+ 		if (err) {
+@@ -292,10 +296,6 @@ int dsa_port_fixed_link_register_of(struct dsa_port *dp)
+ 		}
+ 
+ 		phydev = of_phy_find_device(dn);
+-
+-		mode = of_get_phy_mode(dn);
+-		if (mode < 0)
+-			mode = PHY_INTERFACE_MODE_NA;
+ 		phydev->interface = mode;
+ 
+ 		genphy_config_init(phydev);
+@@ -305,6 +305,21 @@ int dsa_port_fixed_link_register_of(struct dsa_port *dp)
+ 			ds->ops->adjust_link(ds, port, phydev);
+ 
+ 		put_device(&phydev->mdio.dev);
++	} else if (mode == PHY_INTERFACE_MODE_INTERNAL) {
++		phydev = mdiobus_get_phy(ds->slave_mii_bus, port);
++		if (!phydev) {
++			dev_err(ds->dev, "port %d has no internal phy!", port);
++			return -ENODEV;
++		}
++
++		genphy_config_init(phydev);
++		genphy_resume(phydev);
++		genphy_read_status(phydev);
++
++		if (ds->ops->adjust_link)
++			ds->ops->adjust_link(ds, port, phydev);
++
++		dev_dbg(ds->dev, "enabled port's phy: %s", phydev_name(phydev));
+ 	}
+ 
+ 	return 0;
 -- 
 2.15.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
