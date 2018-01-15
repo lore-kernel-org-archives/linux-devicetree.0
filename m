@@ -1,51 +1,63 @@
 From: =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-Subject: [PATCH 0/6] Nintendo Wii GPIO driver
-Date: Mon, 15 Jan 2018 04:13:55 +0100
-Message-ID: <20180115031401.19577-1-j.neuschaefer@gmx.net>
+Subject: [PATCH 2/6] powerpc: wii: Explicitly configure GPIO owner for poweroff pin
+Date: Mon, 15 Jan 2018 04:13:57 +0100
+Message-ID: <20180115031401.19577-3-j.neuschaefer@gmx.net>
+References: <20180115031401.19577-1-j.neuschaefer@gmx.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20180115031401.19577-1-j.neuschaefer@gmx.net>
 Sender: linux-gpio-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
-Cc: linuxppc-dev@lists.ozlabs.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+Cc: linuxppc-dev@lists.ozlabs.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>
 List-Id: devicetree@vger.kernel.org
 
-This series adds a driver for the GPIO controller used in the Nintendo
-Wii game console.
+The Hollywood chipset's GPIO controller has two sets of registers: One
+for access by the PowerPC CPU, and one for access by the ARM coprocessor
+(but both are accessible from the PPC because the memory firewall
+(AHBPROT) is usually disabled when booting Linux, today).
 
-The driver itself, and the related devicetree work should be pretty
-uncontroversial, but due to the system architecture of the Wii, I also
-had to extend an old resource allocation hack to kernel/resource.c: On
-the Wii, there are two separate RAM ranges, with MMIO right in the
-middle, but AFAIK, Linux on PPC32 doesn't support discontiguous memory
-properly. So the hack is to allocate one big RAM range with a hole
-(marked as reserved memory) for MMIO in the middle.
+The wii_power_off function currently assumes that the poweroff GPIO pin
+is configured for use via the ARM side, but the upcoming GPIO driver
+configures all pins for use via the PPC side, breaking poweroff.
 
-Because this series touches different subsystems (GPIO, DT, core
-resource management), I guess it should be picked up patch-by-patch by
-the different maintainers.
+Configure the owner register explicitly in wii_power_off to make
+wii_power_off work with and without the new GPIO driver.
 
-Jonathan Neuschäfer (6):
-  resource: Extend the PPC32 reserved memory hack
-  powerpc: wii: Explicitly configure GPIO owner for poweroff pin
-  gpio: Add GPIO driver for Nintendo Wii
-  dt-bindings: gpio: Add binding for Wii GPIO controller
-  powerpc: wii.dts: Add ngpios property
-  powerpc: wii.dts: Add GPIO line names
+I think the Wii can be switched to the generic gpio-poweroff driver,
+after the GPIO driver is merged.
 
- .../bindings/gpio/nintendo,hollywood-gpio.txt      |  27 +++
- .../devicetree/bindings/powerpc/nintendo/wii.txt   |   9 +-
- arch/powerpc/boot/dts/wii.dts                      |   9 +
- arch/powerpc/platforms/embedded6xx/wii.c           |   7 +
- drivers/gpio/Kconfig                               |   8 +
- drivers/gpio/Makefile                              |   1 +
- drivers/gpio/gpio-hlwd.c                           | 183 +++++++++++++++++++++
- kernel/resource.c                                  |  21 ++-
- 8 files changed, 256 insertions(+), 9 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/gpio/nintendo,hollywood-gpio.txt
- create mode 100644 drivers/gpio/gpio-hlwd.c
+Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
+---
+ arch/powerpc/platforms/embedded6xx/wii.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
+diff --git a/arch/powerpc/platforms/embedded6xx/wii.c b/arch/powerpc/platforms/embedded6xx/wii.c
+index 79a1fe54ebc9..6e6db1e16d71 100644
+--- a/arch/powerpc/platforms/embedded6xx/wii.c
++++ b/arch/powerpc/platforms/embedded6xx/wii.c
+@@ -45,6 +45,7 @@
+ #define HW_GPIO_BASE(idx)	(idx * 0x20)
+ #define HW_GPIO_OUT(idx)	(HW_GPIO_BASE(idx) + 0)
+ #define HW_GPIO_DIR(idx)	(HW_GPIO_BASE(idx) + 4)
++#define HW_GPIO_OWNER		(HW_GPIO_BASE(1) + 0x1c)
+ 
+ #define HW_GPIO_SHUTDOWN	(1<<1)
+ #define HW_GPIO_SLOT_LED	(1<<5)
+@@ -177,6 +178,12 @@ static void wii_power_off(void)
+ 	local_irq_disable();
+ 
+ 	if (hw_gpio) {
++		/*
++		 * set the owner of the shutdown pin to ARM, because it is
++		 * accessed through the registers for the ARM, below
++		 */
++		clrbits32(hw_gpio + HW_GPIO_OWNER, HW_GPIO_SHUTDOWN);
++
+ 		/* make sure that the poweroff GPIO is configured as output */
+ 		setbits32(hw_gpio + HW_GPIO_DIR(1), HW_GPIO_SHUTDOWN);
+ 
 -- 
 2.15.1
 
