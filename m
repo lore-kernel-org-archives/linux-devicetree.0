@@ -1,42 +1,44 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [PATCH 1/2 v2] ARM: dts: Add Aspeed SoC USB controllers to
- device-tree
-Date: Tue, 16 Jan 2018 08:56:55 +1100
-Message-ID: <1516053415.31850.137.camel@kernel.crashing.org>
-References: <1515738064.31850.100.camel@kernel.crashing.org>
- <1516031982.5522.3.camel@aj.id.au>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCHv3 1/5] net: dsa: Support internal phy on 'cpu' port
+Date: Mon, 15 Jan 2018 23:57:18 +0100
+Message-ID: <20180115225718.GA4927@lunn.ch>
+References: <20180115193722.10241-1-sebastian.reichel@collabora.co.uk>
+ <20180115193722.10241-2-sebastian.reichel@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1516031982.5522.3.camel@aj.id.au>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andrew Jeffery <andrew@aj.id.au>, devicetree@vger.kernel.org
-Cc: Joel Stanley <joel.stanley@au1.ibm.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180115193722.10241-2-sebastian.reichel@collabora.co.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+Cc: Vivien Didelot <vivien.didelot@savoirfairelinux.com>, Florian Fainelli <f.fainelli@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Ian Ray <ian.ray@ge.com>, Nandor Han <nandor.han@ge.com>, Rob Herring <robh+dt@kernel.org>, "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2018-01-15 at 09:59 -0600, Andrew Jeffery wrote:
-> > +             uhci: usb@1e6b0000 {
-> > +                     compatible = "aspeed,ast2400-uhci", "generic-uhci";
-> > +                     reg = <0x1e6b0000 0x100>;
-> > +                     interrupts = <14>;
-> > +                     #ports = <3>;
-> 
-> I tried to find the documentation for the #ports property, but it seems
-> to not exist. Couldn't find any users either, but maybe I didn't look
-> broadly enough. It is tested for in drivers/usb/host/uhci-platform.c
-> though, so I guess it's functional.
+>  int dsa_port_fixed_link_register_of(struct dsa_port *dp)
+>  {
+>  	struct device_node *dn = dp->dn;
+> @@ -305,6 +354,10 @@ int dsa_port_fixed_link_register_of(struct dsa_port *dp)
+>  			ds->ops->adjust_link(ds, port, phydev);
+>  
+>  		put_device(&phydev->mdio.dev);
+> +	} else {
+> +		err = dsa_port_setup_phy_of(dp, true);
+> +		if (err)
+> +			return err;
 
-I added it to uhci-platform back when that was merged but forgot to
-update the binding. I'll send a separate patch for that.
+Hi Sebastian
 
-Cheers,
-Ben.
+First off, i tend to agree with Florian. I'm not sure how reliable
+this is. There is normally a state machine moving the PHY between
+different states. But in order to do that, i think you need a netdev.
+Have you tried multiple down/up of the other MAC/PHY? Does it always
+work?
+
+But, at the moment, we don't have much better.
+
+What i don't like is having this code inside
+dsa_port_fixed_link_register_of(). This has nothing to do with a fixed
+link. Please export functions from port.c and call them directly from
+dsa_port_setup() and dsa_port_teardown().
+
+	 Andrew
