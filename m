@@ -1,119 +1,100 @@
 From: Jim Quinlan <jim2101024@gmail.com>
-Subject: [PATCH v4 7/8] MIPS: BMIPS: Add PCI bindings for 7425, 7435
-Date: Mon, 15 Jan 2018 18:28:44 -0500
-Message-ID: <1516058925-46522-8-git-send-email-jim2101024@gmail.com>
+Subject: [PATCH v4 2/8] dt-bindings: pci: Add DT docs for Brcmstb PCIe device
+Date: Mon, 15 Jan 2018 18:28:39 -0500
+Message-ID: <1516058925-46522-3-git-send-email-jim2101024@gmail.com>
 References: <1516058925-46522-1-git-send-email-jim2101024@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1516058925-46522-1-git-send-email-jim2101024@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Brian Norris <computersforpeace@gmail.com>, Russell King <rmk+kernel@armlinux.org.uk>, Robin Murphy <robin.murphy@arm.com>, Christoph Hellwig <hch@lst.de>, Florian Fainelli <f.fainelli@gmail.com>, Jonas Gorski <jonas.gorski@gmail.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: linux-pci@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Gregory Fong <gregory.0xf0@gmail.com>, Kevin Cernekee <cernekee@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mips@linux-mips.org, Ralf Baechle <ralf@linux-mips.org>, Jim Quinlan <jim2101024@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-mips@linux-mips.org, linux-pci@vger.kernel.org, Kevin Cernekee <cernekee@gmail.com>, Ralf Baechle <ralf@linux-mips.org>, Jim Quinlan <jim2101024@gmail.com>, bcm-kernel-feedback-list@broadcom.com, Gregory Fong <gregory.0xf0@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Adds the PCIe nodes for the Broadcom STB PCIe root complex.
+The DT bindings description of the Brcmstb PCIe device is described.  This
+node can be used by almost all Broadcom settop box chips, using
+ARM, ARM64, or MIPS CPU architectures.
 
 Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
 ---
- arch/mips/boot/dts/brcm/bcm7425.dtsi     | 26 ++++++++++++++++++++++++++
- arch/mips/boot/dts/brcm/bcm7435.dtsi     | 27 +++++++++++++++++++++++++++
- arch/mips/boot/dts/brcm/bcm97425svmb.dts |  4 ++++
- arch/mips/boot/dts/brcm/bcm97435svmb.dts |  4 ++++
- 4 files changed, 61 insertions(+)
+ .../devicetree/bindings/pci/brcmstb-pcie.txt       | 59 ++++++++++++++++++++++
+ 1 file changed, 59 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/brcmstb-pcie.txt
 
-diff --git a/arch/mips/boot/dts/brcm/bcm7425.dtsi b/arch/mips/boot/dts/brcm/bcm7425.dtsi
-index e4fb9b6..02168d0 100644
---- a/arch/mips/boot/dts/brcm/bcm7425.dtsi
-+++ b/arch/mips/boot/dts/brcm/bcm7425.dtsi
-@@ -495,4 +495,30 @@
- 			status = "disabled";
- 		};
- 	};
+diff --git a/Documentation/devicetree/bindings/pci/brcmstb-pcie.txt b/Documentation/devicetree/bindings/pci/brcmstb-pcie.txt
+new file mode 100644
+index 0000000..a1a9ad5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pci/brcmstb-pcie.txt
+@@ -0,0 +1,59 @@
++Brcmstb PCIe Host Controller Device Tree Bindings
 +
-+	pcie: pcie@10410000 {
-+		reg = <0x10410000 0x830c>;
-+		compatible = "brcm,bcm7425-pcie";
-+		interrupts = <37>, <37>;
-+		interrupt-names = "pcie", "msi";
-+		interrupt-parent = <&periph_intc>;
++Required Properties:
++- compatible
++  "brcm,bcm7425-pcie" -- for 7425 family MIPS-based SOCs.
++  "brcm,bcm7435-pcie" -- for 7435 family MIPS-based SOCs.
++  "brcm,bcm7445-pcie" -- for 7445 and later ARM based SOCs (not including
++      the 7278).
++  "brcm,bcm7278-pcie"  -- for 7278 family ARM-based SOCs.
++
++- reg -- the register start address and length for the PCIe reg block.
++- interrupts -- two interrupts are specified; the first interrupt is for
++     the PCI host controller and the second is for MSI if the built-in
++     MSI controller is to be used.
++- interrupt-names -- names of the interrupts (above): "pcie" and "msi".
++- #address-cells -- set to <3>.
++- #size-cells -- set to <2>.
++- #interrupt-cells: set to <1>.
++- interrupt-map-mask and interrupt-map, standard PCI properties to define the
++     mapping of the PCIe interface to interrupt numbers.
++- ranges: ranges for the PCI memory and I/O regions.
++- linux,pci-domain -- should be unique per host controller.
++
++Optional Properties:
++- clocks -- phandle of pcie clock.
++- clock-names -- set to "sw_pcie" if clocks is used.
++- dma-ranges -- Specifies the inbound memory mapping regions when
++     an "identity map" is not possible.
++- msi-controller -- this property is typically specified to have the
++     PCIe controller use its internal MSI controller.
++- msi-parent -- set to use an external MSI interrupt controller.
++- brcm,enable-ssc -- (boolean) indicates usage of spread-spectrum clocking.
++- max-link-speed --  (integer) indicates desired generation of link:
++     1 => 2.5 Gbps (gen1), 2 => 5.0 Gbps (gen2), 3 => 8.0 Gbps (gen3).
++
++Example Node:
++
++pcie0: pcie@f0460000 {
++		reg = <0x0 0xf0460000 0x0 0x9310>;
++		interrupts = <0x0 0x0 0x4>;
++		compatible = "brcm,bcm7445-pcie";
 +		#address-cells = <3>;
 +		#size-cells = <2>;
-+		linux,pci-domain = <0>;
-+		brcm,enable-ssc;
-+		bus-range = <0x00 0xff>;
-+		msi-controller;
++		ranges = <0x02000000 0x00000000 0x00000000 0x00000000 0xc0000000 0x00000000 0x08000000
++			  0x02000000 0x00000000 0x08000000 0x00000000 0xc8000000 0x00000000 0x08000000>;
 +		#interrupt-cells = <1>;
-+		/* 4x128mb windows */
-+		ranges = <0x2000000 0x0 0xd0000000 0xd0000000 0 0x08000000>,
-+			 <0x2000000 0x0 0xd8000000 0xd8000000 0 0x08000000>,
-+			 <0x2000000 0x0 0xe0000000 0xe0000000 0 0x08000000>,
-+			 <0x2000000 0x0 0xe8000000 0xe8000000 0 0x08000000>;
 +		interrupt-map-mask = <0 0 0 7>;
-+		interrupt-map = <0 0 0 1 &periph_intc 33
-+				 0 0 0 2 &periph_intc 34
-+				 0 0 0 3 &periph_intc 35
-+				 0 0 0 4 &periph_intc 36>;
-+	};
-+
- };
-diff --git a/arch/mips/boot/dts/brcm/bcm7435.dtsi b/arch/mips/boot/dts/brcm/bcm7435.dtsi
-index 1484e89..84881224 100644
---- a/arch/mips/boot/dts/brcm/bcm7435.dtsi
-+++ b/arch/mips/boot/dts/brcm/bcm7435.dtsi
-@@ -510,4 +510,31 @@
- 			status = "disabled";
- 		};
- 	};
-+
-+	pcie: pcie@10410000 {
-+		reg = <0x10410000 0x930c>;
-+		interrupts = <0x27>, <0x27>;
-+		interrupt-names = "pcie", "msi";
-+		interrupt-parent = <&periph_intc>;
-+		compatible = "brcm,bcm7435-pcie";
-+		#address-cells = <3>;
-+		#size-cells = <2>;
++		interrupt-map = <0 0 0 1 &intc 0 47 3
++				 0 0 0 2 &intc 0 48 3
++				 0 0 0 3 &intc 0 49 3
++				 0 0 0 4 &intc 0 50 3>;
++		clocks = <&sw_pcie0>;
++		clock-names = "sw_pcie";
++		msi-parent = <&pcie0>;  /* use PCIe's internal MSI controller */
++		msi-controller;         /* use PCIe's internal MSI controller */
++		brcm,ssc;
++		max-link-speed = <1>;
 +		linux,pci-domain = <0>;
-+		brcm,enable-ssc;
-+		bus-range = <0x00 0xff>;
-+		msi-controller;
-+		#interrupt-cells = <1>;
-+		/* 4x128mb windows */
-+		ranges = <0x2000000 0x0 0xd0000000 0xd0000000 0 0x08000000>,
-+			 <0x2000000 0x0 0xd8000000 0xd8000000 0 0x08000000>,
-+			 <0x2000000 0x0 0xe0000000 0xe0000000 0 0x08000000>,
-+			 <0x2000000 0x0 0xe8000000 0xe8000000 0 0x08000000>;
-+		interrupt-map-mask = <0 0 0 7>;
-+		interrupt-map = <0 0 0 1 &periph_intc 35
-+				 0 0 0 2 &periph_intc 36
-+				 0 0 0 3 &periph_intc 37
-+				 0 0 0 4 &periph_intc 38>;
-+		status = "disabled";
 +	};
-+
- };
-diff --git a/arch/mips/boot/dts/brcm/bcm97425svmb.dts b/arch/mips/boot/dts/brcm/bcm97425svmb.dts
-index ce762c7..a958e56 100644
---- a/arch/mips/boot/dts/brcm/bcm97425svmb.dts
-+++ b/arch/mips/boot/dts/brcm/bcm97425svmb.dts
-@@ -144,3 +144,7 @@
- &mspi {
- 	status = "okay";
- };
-+
-+&pcie {
-+	status = "okay";
-+};
-diff --git a/arch/mips/boot/dts/brcm/bcm97435svmb.dts b/arch/mips/boot/dts/brcm/bcm97435svmb.dts
-index d4dd31a..f41791e 100644
---- a/arch/mips/boot/dts/brcm/bcm97435svmb.dts
-+++ b/arch/mips/boot/dts/brcm/bcm97435svmb.dts
-@@ -120,3 +120,7 @@
- &mspi {
- 	status = "okay";
- };
-+
-+&pcie {
-+	status = "okay";
-+};
 -- 
 1.9.0.138.g2de3478
