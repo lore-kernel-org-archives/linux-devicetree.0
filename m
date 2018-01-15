@@ -1,96 +1,49 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH v2 04/12] drm/bridge/synopsys: dw-hdmi: Export some PHY
- related functions
-Date: Mon, 15 Jan 2018 16:13:22 +0100
-Message-ID: <3ea0c21c-0ab4-651e-3779-abdc71dcb599@baylibre.com>
-References: <20180110192512.19684-1-jernej.skrabec@siol.net>
- <20180110192512.19684-5-jernej.skrabec@siol.net>
- <2850049.ORu4oj41BJ@jernej-laptop>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCHv2 1/3] dt-bindings: spi: Add DT bindings for Synquacer
+Date: Mon, 15 Jan 2018 09:15:23 -0600
+Message-ID: <CAL_JsqKM2OhdhFZfd_fhBkYiFE9Fdr38Xn7TKorwJo_-+f9xUg@mail.gmail.com>
+References: <1516021530-19236-1-git-send-email-jassisinghbrar@gmail.com> <1516021559-19327-1-git-send-email-jassisinghbrar@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <2850049.ORu4oj41BJ@jernej-laptop>
-Content-Language: en-US
-Sender: linux-clk-owner@vger.kernel.org
-To: =?UTF-8?Q?Jernej_=c5=a0krabec?= <jernej.skrabec@siol.net>
-Cc: maxime.ripard@free-electrons.com, airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org, architt@codeaurora.org, a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com, mturquette@baylibre.com, sboyd@codeaurora.org, Jose.Abreu@synopsys.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-sunxi@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1516021559-19327-1-git-send-email-jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, tpiepho-cgc2CodaaHDQT0dZR+AlfA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Masami Hiramatsu <masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/01/2018 21:42, Jernej Škrabec wrote:
-> Hi all,
-> 
-> Dne sreda, 10. januar 2018 ob 20:25:04 CET je Jernej Skrabec napisal(a):
->> Parts of PHY code could be useful also for custom PHYs. For example,
->> Allwinner A83T has custom PHY which is probably Synopsys gen2 PHY
->> with few additional memory mapped registers, so most of the Synopsys PHY
->> related code could be reused.
->>
->> Functions exported here are actually not specific to Synopsys PHYs but
->> to DWC HDMI controller PHY interface. This means that even if the PHY is
->> completely custom, i.e. not designed by Synopsys, exported functions can
->> be useful.
->>
->> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
->> ---
->>  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 44
->> +++++++++++++++++++++---------- include/drm/bridge/dw_hdmi.h              |
->> 11 ++++++++
->>  2 files changed, 41 insertions(+), 14 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
->> b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c index
->> 7ca14d7325b5..7d80f4b56683 100644
->> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
->> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
->> @@ -1037,19 +1037,21 @@ static void dw_hdmi_phy_enable_svsret(struct dw_hdmi
->> *hdmi, u8 enable) HDMI_PHY_CONF0_SVSRET_MASK);
->>  }
->>
->> -static void dw_hdmi_phy_gen2_pddq(struct dw_hdmi *hdmi, u8 enable)
->> +void dw_hdmi_phy_gen2_pddq(struct dw_hdmi *hdmi, u8 enable)
->>  {
->>  	hdmi_mask_writeb(hdmi, enable, HDMI_PHY_CONF0,
->>  			 HDMI_PHY_CONF0_GEN2_PDDQ_OFFSET,
->>  			 HDMI_PHY_CONF0_GEN2_PDDQ_MASK);
->>  }
->> +EXPORT_SYMBOL_GPL(dw_hdmi_phy_gen2_pddq);
->>
->> -static void dw_hdmi_phy_gen2_txpwron(struct dw_hdmi *hdmi, u8 enable)
->> +void dw_hdmi_phy_gen2_txpwron(struct dw_hdmi *hdmi, u8 enable)
->>  {
->>  	hdmi_mask_writeb(hdmi, enable, HDMI_PHY_CONF0,
->>  			 HDMI_PHY_CONF0_GEN2_TXPWRON_OFFSET,
->>  			 HDMI_PHY_CONF0_GEN2_TXPWRON_MASK);
->>  }
->> +EXPORT_SYMBOL_GPL(dw_hdmi_phy_gen2_txpwron);
->>
->>  static void dw_hdmi_phy_sel_data_en_pol(struct dw_hdmi *hdmi, u8 enable)
->>  {
->> @@ -1065,6 +1067,22 @@ static void dw_hdmi_phy_sel_interface_control(struct
->> dw_hdmi *hdmi, u8 enable) HDMI_PHY_CONF0_SELDIPIF_MASK);
->>  }
->>
->> +void dw_hdmi_phy_reset(struct dw_hdmi *hdmi)
->> +{
->> +	/* PHY reset. The reset signal is active high on Gen2 PHYs. */
->> +	hdmi_writeb(hdmi, HDMI_MC_PHYRSTZ_PHYRSTZ, HDMI_MC_PHYRSTZ);
->> +	hdmi_writeb(hdmi, 0, HDMI_MC_PHYRSTZ);
->> +}
->> +EXPORT_SYMBOL_GPL(dw_hdmi_phy_reset);
-> 
-> I just noticed that meson dw hdmi driver uses function with the same name, 
-> which break compilation. Is it ok if I rename meson specific reset to 
-> meson_dw_hdmi_phy_reset()?
+On Mon, Jan 15, 2018 at 7:05 AM,  <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> From: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>
+> This patch adds documentation for Device-Tree bindings for the
+> Socionext Synquacer spi driver.
+>
+> Signed-off-by: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  .../devicetree/bindings/spi/spi-synquacer.txt      | 24 ++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/spi/spi-synquacer.txt
+>
+> diff --git a/Documentation/devicetree/bindings/spi/spi-synquacer.txt b/Documentation/devicetree/bindings/spi/spi-synquacer.txt
+> new file mode 100644
+> index 0000000..d013cfd
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/spi/spi-synquacer.txt
+> @@ -0,0 +1,24 @@
+> +* Socionext Synquacer HS-SPI bindings
+> +
+> +Required Properties:
+> +- compatible: should be "socionext,synquacer-spi"
+> +- reg: physical base address of the controller and length of memory mapped
+> +       region.
+> +- clocks: Must contain an entry for rate source clock(s).
+> +- clock-names: Shall be "iHCLK" or "iPCLK". iHCLK is preferred over iPCLK
 
-Hi Jernej,
+Huh? The clock binding should reflect all clocks connected to a block,
+not a selection of which one you want to use.
 
-Yes,
-
-Neil
-
-> 
-> Best regards,
-> Jernej
-> 
-[...]
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
