@@ -1,51 +1,132 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 01/10] dt-bindings: display: renesas: Add R-Car LVDS encoder DT bindings
-Date: Mon, 15 Jan 2018 10:26:56 +0200
-Message-ID: <2172881.iFUds2YuFP@avalon>
-References: <20180112005858.26472-1-laurent.pinchart+renesas@ideasonboard.com> <2213619.LpHAiGQTjv@avalon> <CAMuHMdViUyCEW0PwF-ZK_zyMUatRwqJttJiC8n2JYzgvePMgtA@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH v1 4/4] ARM: dts: add pwm node for r40.
+Date: Mon, 15 Jan 2018 09:38:13 +0100
+Message-ID: <20180115083813.ad2yqdwnd2nskbhs@flea.lan>
+References: <20180111113412.GA22008@arx-s1>
+ <20180111124752.2ljspnaclwgz2s62@flea.lan>
+ <CAJeuY78QLOYZUUS7ghakqqpdzigdvpdHCsw+6onkUCjgZMqTzA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdViUyCEW0PwF-ZK_zyMUatRwqJttJiC8n2JYzgvePMgtA@mail.gmail.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Simon Horman <horms@verge.net.au>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, DRI Development <dri-devel@lists.freedesktop.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, devicetree@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="xi5fxeg7t5tmwzps"
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAJeuY78QLOYZUUS7ghakqqpdzigdvpdHCsw+6onkUCjgZMqTzA@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Hao Zhang <hao5781286@gmail.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, robh+dt@kernel.org, Mark Rutland <mark.rutland@arm.com>, linux@armlinux.org.uk, Chen-Yu Tsai <wens@csie.org>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, open list <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/Allwinner sunXi SoC support" <linux-arm-kernel@lists.infradead.org>, linux-pwm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
 
-On Monday, 15 January 2018 10:05:59 EET Geert Uytterhoeven wrote:
-> On Mon, Jan 15, 2018 at 7:59 AM, Laurent Pinchart wrote:
-> > On Monday, 15 January 2018 08:55:29 EET Simon Horman wrote:
-> >> On Fri, Jan 12, 2018 at 03:29:48PM +0200, Laurent Pinchart wrote:
-> >>> On Friday, 12 January 2018 12:13:18 EET Geert Uytterhoeven wrote:
-> >>>> As this is a new binding, please use "renesas,<soc>-lvds".
-> >>> 
-> >>> I've recently been thinking that we made the wrong choice, <ip>-<soc>
-> >>> would be better in my opinion as it aligns with <ip>-<version>, but
-> >>> it's too late to change that, so I'll change the order here.
-> >> 
-> >> My recollection is that in the beginning we had a bit of a mixture but
-> >> leaned towards <ip>-<soc>, which made sense in my opinion. However, after
-> >> some discussion it was agreed that the best-practice for upstream was to
-> >> use <soc>-<ip>. Unless that situation has changed lets stock with using
-> >> <soc>-<ip> for new bindings.
-> > 
-> > Sure, that was my plan, and it seems I failed to explain it clearly. I too
-> > believe that <ip>-<soc> would be better, but as we have standardized on
-> > <soc>- <ip> and as there's no strong reason to reconsider that decision
-> > at the moment, the next version of this patch will use <soc>-<ip>. It was
-> > a mistake in v1, not an attempt to change what we had agreed on.
-> 
-> Note that I believe you have to consider the full tuple
-> "<vendor>,<soc>-<ip>" to see the light: <soc> is more closely tied to
-> <vendor>, than <ip> is.
+--xi5fxeg7t5tmwzps
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I suppose there are pros and cons for both options :-) I see <soc> more as a 
-version qualifier.
+Hi,
 
--- 
-Regards,
+On Sun, Jan 14, 2018 at 02:43:39PM +0800, Hao Zhang wrote:
+> 2018-01-11 20:47 GMT+08:00 Maxime Ripard <maxime.ripard@free-electrons.co=
+m>:
+> > On Thu, Jan 11, 2018 at 07:34:12PM +0800, hao_zhang wrote:
+> >> This patch add pwm node for r40.
+> >>
+> >> Signed-off-by: hao_zhang <hao5781286@gmail.com>
+> >> ---
+> >>  arch/arm/boot/dts/sun8i-r40.dtsi | 13 +++++++++++++
+> >>  1 file changed, 13 insertions(+)
+> >>
+> >> diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi b/arch/arm/boot/dts/sun8=
+i-r40.dtsi
+> >> index 173dcc1..84c963c 100644
+> >> --- a/arch/arm/boot/dts/sun8i-r40.dtsi
+> >> +++ b/arch/arm/boot/dts/sun8i-r40.dtsi
+> >> @@ -295,6 +295,11 @@
+> >>                               bias-pull-up;
+> >>                       };
+> >>
+> >> +                     pwm_pins: pwm-pins {
+> >> +                             pins =3D "PB2", "PB3";
+> >> +                             function =3D "pwm";
+> >> +                     };
+> >> +
+> >
+> > Is it the only combination of pins that is usable?
+> >
+> > If so, you can add the pinctrl-0 property directly in the pwm nodes.
+> >
+>=20
+> There are 8 channel pwm of R40/V40/T3, the pins that can be configed
+> to pwm are: PB2, PB3, PI20, PI21, PB20, PB21, PB9, PB10
 
-Laurent Pinchart
+And a single controller, or several of them?
+
+> PB2, PB3 can be configed on bananapi-m2-ultra and on my T3 board,
+> but the other pins is not exist on the board or some pin is confilct
+> with other functions, so i just add PB2, PB3. but i think split it
+> is better, just like this :
+>=20
+> pwm0_pin: pwm0-pin {
+>     pins =3D "PB2";
+>     function =3D "pwm";
+> };
+>=20
+> pwm1_pin: pwm1-pin {
+>     pins =3D "PB3";
+>     function =3D "pwm";
+> };
+
+Yep, that would be better. If it's just a matter of channels, maybe we
+can even name them pwm-ch0-pin and pwm-ch1-pin? That would be more
+explicit.
+
+> the node of pwm2~7 should also be added here?
+
+If there's no users, no.
+
+> On sun8i-r40-bananapi-m2-ultra.dts:
+> because of the special customize board, i think just add pinctrl-0 =3D <&=
+pwm0_pin>
+> (PB3 I just use to test pwm channel 1)for bananapi-m2-ultra board is enou=
+gh.
+>=20
+> &pwm {
+>     pinctrl-names =3D "default";
+>     pinctrl-0 =3D <&pwm0_pin>;
+>     status =3D "okay";
+> };
+
+It depends if that PWM is used as a PWM all the time (for example to
+drive a backlight for a panel tied to the board), or if it's exported
+through one of the generic pin headers, please leave it populated but
+disabled (with a comment that it is exported on one of the pin of the
+headers)
+
+Thanks!
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--xi5fxeg7t5tmwzps
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlpcaHQACgkQ0rTAlCFN
+r3Rw7A/9F7tvgat5QMbBVrzzAXuXFFWLRykj15WPc/JeuLlwkLXLjcfpe/XPeQ7J
+N8VvN+UXd8xtb9fHFbZVLO9j0lJ7UGRbdTNUUgWfzCBFGAyEjop4LjVns6Pcu263
+LorGoG6vf+ZNlKVG5BD58OjOg5IPFQK8XfpYKVfqqWK0dvkMxUbK7teQguq8PHun
+X5FazfI06aBzNriv9fscyupVz6mxUOiqGeNgKzx9/1jp1M2qGqU2bLnd+5ilC1Uw
+y5TdYWT3cr312hT9F28wxiu8acEOBmEm7E34x8xOihCpaaRYVIDcnwv1UC+68/hD
+bAs0jmLfi+ft07tcNYiYM53WNV5zAVCFM+WKxOfOtBk9fSTkcIH4Cz5RYLHD7llk
+nK45dUXS2ydErgbRu8r0jLqhYDhMqUU5hd6PB3+PpKiBXelOOEm4zug2OCPe4lx9
+yktZ3bqF7ZNBdqWj9YrfMaaKBZX06ild6zhyCkH1gplZzO2LfrGTn1G+i3BDbBoa
+iZUzDimQiLttQlEVMeu86dCNYeA+zKZumLVNBB6pLC3ndowgasMz7tn3Jslumazq
+u4HobJhDNGG7yhlZhc4E5qYPISZNmNva8XN5dGp5hQXGszek3cAn2BppK6IwsuOH
+aFnrJ4wf3k7eO+Dln4L2MIVIDOsRZ2mbptXy9or5DOl6XZBiXcA=
+=JObA
+-----END PGP SIGNATURE-----
+
+--xi5fxeg7t5tmwzps--
