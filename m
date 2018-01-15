@@ -1,140 +1,53 @@
-From: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
-Subject: [PATCH v7 02/17] mfd: madera: Add DT bindings for Cirrus Logic Madera codecs
-Date: Mon, 15 Jan 2018 12:41:50 +0000
-Message-ID: <20180115124205.29042-3-rf@opensource.wolfsonmicro.com>
-References: <20180115124205.29042-1-rf@opensource.wolfsonmicro.com>
+From: Greentime Hu <green.hu@gmail.com>
+Subject: Re: [PATCH v6 02/36] openrisc: add ioremap_nocache declaration before
+ include asm-generic/io.h and sync ioremap prototype with it.
+Date: Mon, 15 Jan 2018 21:28:55 +0800
+Message-ID: <CAEbi=3cSRMQm7wKS80Bd5brnBHpct9oRM1DgtyPPd_XPRgnZww@mail.gmail.com>
+References: <cover.1515766253.git.green.hu@gmail.com> <3e5ba33674a883b56e20b35ea9ae34990ea838c8.1515766253.git.green.hu@gmail.com>
+ <20180115130728.GG13019@lianli.shorne-pla.net>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180115124205.29042-1-rf@opensource.wolfsonmicro.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: lee.jones@linaro.org, broonie@kernel.org, linus.walleij@linaro.org, gnurou@gmail.com, robh+dt@kernel.org, tglx@linutronix.de, jason@lakedaemon.net
-Cc: alsa-devel@alsa-project.org, patches@opensource.wolfsonmicro.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <20180115130728.GG13019@lianli.shorne-pla.net>
+Sender: linux-arch-owner@vger.kernel.org
+To: Stafford Horne <shorne@gmail.com>
+Cc: Greentime <greentime@andestech.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, linux-arch <linux-arch@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, netdev <netdev@vger.kernel.org>, Vincent Chen <deanbo422@gmail.com>, DTML <devicetree@vger.kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, David Howells <dhowells@redhat.com>, Will Deacon <will.deacon@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-serial@vger.kernel.org, Geert Uytterhoeven <geert.uytterhoeven@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Greg KH <greg@kroah.com>
 List-Id: devicetree@vger.kernel.org
 
-Specification of the bindings for the parent MFD driver component
-of the Cirrus Logic Madera codec drivers.
+2018-01-15 21:07 GMT+08:00 Stafford Horne <shorne@gmail.com>:
+> On Mon, Jan 15, 2018 at 01:53:10PM +0800, Greentime Hu wrote:
+>> From: Greentime Hu <greentime@andestech.com>
+>>
+>> It will be built failed if commit id: d25ea659 is selected. This patch can fix this
+>> build error.
+>
+> Hello,
+>
+> As I mentioned last time, can you you change this to not mention the commit id?
+> The ID will probably change when this is actually committed.  You might want to
+> do something like:
+>
+>  1. Move this commit before the ioremap_nocache change.  This is because we want
+>  each commit to result in a buildable kernel.
+>
+>  2. The text here and other changes could read:
+>
+>  A future commit for the nds32 architecture bootstrap ("asm-generic/io.h: move
+>  ioremap_nocache/ioremap_uc/ioremap_wc/ioremap_wt out of ifndef CONFIG_MMU")
+>  will move the ioremap_nocache out of the CONFIG_MMU ifdef.  This means that
+>  in order to suppress re-definition errors we need to setup #define's before
+>  importing asm-generic/io.h.
+>
+>  Also, the change adds a prototype for ioremap where size is size_t so fix that
+>  as well.
+>
+> I hope that helps. But for the change:
+>
+> Acked-by: Stafford Horne <shorne@gmail.com>
+>
 
-Note that although the interrupt controller and GPIO are child
-drivers their required bindings are trivial, mandatory, and exist
-within the parent MFD node so are documented here.
+Hi, Stafford:
 
-Signed-off-by: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
-Acked-by: Rob Herring <robh@kernel.org>
-Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
-
----
- Documentation/devicetree/bindings/mfd/madera.txt | 102 +++++++++++++++++++++++
- 1 file changed, 102 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/madera.txt
-
-diff --git a/Documentation/devicetree/bindings/mfd/madera.txt b/Documentation/devicetree/bindings/mfd/madera.txt
-new file mode 100644
-index 000000000000..db3266088386
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/madera.txt
-@@ -0,0 +1,102 @@
-+Cirrus Logic Madera class audio codecs Multi-Functional Device
-+
-+These devices are audio SoCs with extensive digital capabilities and a range
-+of analogue I/O.
-+
-+See also the child driver bindings in:
-+bindings/pinctrl/cirrus,madera-pinctrl.txt
-+bindings/regulator/arizona-regulator.txt
-+bindings/sound/madera.txt
-+
-+Required properties:
-+
-+  - compatible : One of the following chip-specific strings:
-+        "cirrus,cs47l35"
-+        "cirrus,cs47l85"
-+        "cirrus,cs47l90"
-+        "cirrus,cs47l91"
-+        "cirrus,wm1840"
-+
-+  - reg : I2C slave address when connected using I2C, chip select number when
-+    using SPI.
-+
-+  - DCVDD-supply : Power supply for the device as defined in
-+    bindings/regulator/regulator.txt
-+    Mandatory on CS47L35, CS47L90, CS47L91
-+    Optional on CS47L85, WM1840
-+
-+  - AVDD-supply, DBVDD1-supply, DBVDD2-supply, CPVDD1-supply, CPVDD2-supply :
-+    Power supplies for the device
-+
-+  - DBVDD3-supply, DBVDD4-supply : Power supplies for the device
-+    (CS47L85, CS47L90, CS47L91, WM1840)
-+
-+  - SPKVDDL-supply, SPKVDDR-supply : Power supplies for the device
-+    (CS47L85, WM1840)
-+
-+  - SPKVDD-supply : Power supply for the device
-+    (CS47L35)
-+
-+  - interrupt-controller : Indicates that this device is an interrupt controller
-+
-+  - #interrupt-cells: the number of cells to describe an IRQ, must be 2.
-+    The first cell is the IRQ number.
-+    The second cell is the flags, encoded as the trigger masks from
-+    bindings/interrupt-controller/interrupts.txt
-+
-+  - gpio-controller : Indicates this device is a GPIO controller.
-+
-+  - #gpio-cells : Must be 2. The first cell is the pin number. The second cell
-+    is reserved for future use and must be zero
-+
-+  - interrupt-parent : The parent interrupt controller.
-+
-+  - interrupts : The interrupt line the /IRQ signal for the device is
-+    connected to.
-+
-+Optional properties:
-+
-+  - MICVDD-supply : Power supply, only need to be specified if
-+    powered externally
-+
-+  - reset-gpios : One entry specifying the GPIO controlling /RESET.
-+    As defined in bindings/gpio.txt.
-+    Although optional, it is strongly recommended to use a hardware reset
-+
-+  - MICBIASx : Initial data for the MICBIAS regulators, as covered in
-+    Documentation/devicetree/bindings/regulator/regulator.txt.
-+    One for each MICBIAS generator (MICBIAS1, MICBIAS2, ...)
-+    (all codecs)
-+
-+    One for each output pin (MICBIAS1A, MIBCIAS1B, MICBIAS2A, ...)
-+    (all except CS47L85, WM1840)
-+
-+    The following following additional property is supported for the generator
-+    nodes:
-+      - cirrus,ext-cap : Set to 1 if the MICBIAS has external decoupling
-+        capacitors attached.
-+
-+Optional child nodes:
-+    micvdd : Node containing initialization data for the micvdd regulator
-+    See bindings/regulator/arizona-regulator.txt
-+
-+    ldo1 : Node containing initialization data for the LDO1 regulator
-+    See bindings/regulator/arizona-regulator.txt
-+    (cs47l85, wm1840)
-+
-+Example:
-+
-+cs47l85@0 {
-+	compatible = "cirrus,cs47l85";
-+	reg = <0>;
-+
-+	reset-gpios = <&gpio 0>;
-+
-+	interrupt-controller;
-+	#interrupt-cells = <2>;
-+	interrupts = <&host_irq1>;
-+	interrupt-parent = <&gic>;
-+
-+	gpio-controller;
-+	#gpio-cells = <2>;
-+};
--- 
-2.11.0
+Thanks for the feedback.
+I will move this commit before the ioremap_nocache change and use
+these commit messages.
