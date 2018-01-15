@@ -1,110 +1,54 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: Re: [PATCH v2] arm64: allwinner: a64:
- orangepi-zero-plus2: add usb otg
-Date: Mon, 15 Jan 2018 16:05:07 +0800
-Message-ID: <8080607.cgOBd57Bn1@ice-x220i>
-References: <1515748144-25204-1-git-send-email-jagan@amarulasolutions.com> <20180115080139.k2vrczo3hnvdt3df@flea.lan>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 01/10] dt-bindings: display: renesas: Add R-Car LVDS
+ encoder DT bindings
+Date: Mon, 15 Jan 2018 09:05:59 +0100
+Message-ID: <CAMuHMdViUyCEW0PwF-ZK_zyMUatRwqJttJiC8n2JYzgvePMgtA@mail.gmail.com>
+References: <20180112005858.26472-1-laurent.pinchart+renesas@ideasonboard.com>
+ <1560461.HFdK8RZ078@avalon> <20180115065528.cfelrll6dm6ggf4e@verge.net.au> <2213619.LpHAiGQTjv@avalon>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBPOB6HJAKGQEQEQR7PQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180115080139.k2vrczo3hnvdt3df-ZC1Zs529Oq4@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <2213619.LpHAiGQTjv@avalon>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Simon Horman <horms@verge.net.au>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, DRI Development <dri-devel@lists.freedesktop.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-=E5=9C=A8 2018=E5=B9=B41=E6=9C=8815=E6=97=A5=E6=98=9F=E6=9C=9F=E4=B8=80 CST=
- =E4=B8=8B=E5=8D=884:01:39=EF=BC=8CMaxime Ripard =E5=86=99=E9=81=93=EF=BC=
-=9A
-> Hi,
->=20
-> On Fri, Jan 12, 2018 at 02:39:04PM +0530, Jagan Teki wrote:
-> > Add usb otg support for orangepi-zero-plus2 board:
-> > - Add usb_otg node with dr_mode as 'otg'
-> > - USB0-IDDET connected to PA21
-> > - VBUS connected through DCIN which always on
-> >=20
-> > Tested mass storage function.
-> >=20
-> > Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-> > ---
-> > Changes for v2:
-> > - Change dr_mode to peripheral
-> >=20
-> >  .../dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts    | 18
-> >  ++++++++++++++++++ 1 file changed, 18 insertions(+)
-> >=20
-> > diff --git
-> > a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
-> > b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts index
-> > af43533..6511190 100644
-> > --- a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
-> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
-> > @@ -73,6 +73,10 @@
-> >=20
-> >  	};
-> > =20
-> >  };
-> >=20
-> > +&ehci0 {
-> > +	status =3D "okay";
-> > +};
-> > +
-> >=20
-> >  &mmc0 {
-> > =20
-> >  	pinctrl-names =3D "default";
-> >  	pinctrl-0 =3D <&mmc0_pins_a>;
-> >=20
-> > @@ -111,6 +115,10 @@
-> >=20
-> >  	status =3D "okay";
-> > =20
-> >  };
-> >=20
-> > +&ohci0 {
-> > +	status =3D "okay";
-> > +};
-> > +
-> >=20
-> >  &uart0 {
-> > =20
-> >  	pinctrl-names =3D "default";
-> >  	pinctrl-0 =3D <&uart0_pins_a>;
-> >=20
-> > @@ -122,3 +130,13 @@
-> >=20
-> >  	pinctrl-0 =3D <&uart1_pins>, <&uart1_rts_cts_pins>;
-> >  	status =3D "okay";
-> > =20
-> >  };
-> >=20
-> > +
-> > +&usb_otg {
-> > +	dr_mode =3D "peripheral";
->=20
-> If VBUS is always on, this can only operate safely in host mode, not
-> peripheral.
+Hi Laurent,
 
-I think this kind of device is designed to directly drain power from the ho=
-st=20
-in peripheral mode.
+On Mon, Jan 15, 2018 at 7:59 AM, Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+> On Monday, 15 January 2018 08:55:29 EET Simon Horman wrote:
+>> On Fri, Jan 12, 2018 at 03:29:48PM +0200, Laurent Pinchart wrote:
+>> > On Friday, 12 January 2018 12:13:18 EET Geert Uytterhoeven wrote:
+>> >> As this is a new binding, please use "renesas,<soc>-lvds".
+>> >
+>> > I've recently been thinking that we made the wrong choice, <ip>-<soc>
+>> > would be better in my opinion as it aligns with <ip>-<version>, but it's
+>> > too late to change that, so I'll change the order here.
+>>
+>> My recollection is that in the beginning we had a bit of a mixture but
+>> leaned towards <ip>-<soc>, which made sense in my opinion. However, after
+>> some discussion it was agreed that the best-practice for upstream was to
+>> use <soc>-<ip>. Unless that situation has changed lets stock with using
+>> <soc>-<ip> for new bindings.
+>
+> Sure, that was my plan, and it seems I failed to explain it clearly. I too
+> believe that <ip>-<soc> would be better, but as we have standardized on <soc>-
+> <ip> and as there's no strong reason to reconsider that decision at the
+> moment, the next version of this patch will use <soc>-<ip>. It was a mistake
+> in v1, not an attempt to change what we had agreed on.
 
->=20
-> Maxime
+Note that I believe you have to consider the full tuple "<vendor>,<soc>-<ip>"
+to see the light: <soc> is more closely tied to <vendor>, than <ip> is.
 
+Gr{oetje,eeting}s,
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
