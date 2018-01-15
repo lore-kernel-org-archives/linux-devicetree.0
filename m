@@ -1,114 +1,104 @@
-From: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v3 12/16] power: supply: axp20x_battery: add
- support for AXP813
-Date: Mon, 15 Jan 2018 11:33:46 +0100
-Message-ID: <42b2e555083abbab43e48362175dc9c2eeeedf3c.1516012352.git-series.quentin.schulz@free-electrons.com>
-References: <cover.2e5329bf5475a5160e613a4eb1e1377c662ce56e.1516012352.git-series.quentin.schulz@free-electrons.com>
-Reply-To: quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Hao Zhang <hao5781286@gmail.com>
+Subject: Re: [PATCH v1 4/4] ARM: dts: add pwm node for r40.
+Date: Mon, 15 Jan 2018 19:19:04 +0800
+Message-ID: <CAJeuY799nhZazzRb8JRf6juvWs158pj2LAHpfQ78d-mtO73Y=Q@mail.gmail.com>
+References: <20180111113412.GA22008@arx-s1> <20180111124752.2ljspnaclwgz2s62@flea.lan>
+ <CAJeuY78QLOYZUUS7ghakqqpdzigdvpdHCsw+6onkUCjgZMqTzA@mail.gmail.com> <20180115083813.ad2yqdwnd2nskbhs@flea.lan>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCLZXSNY5IDBBX4H6LJAKGQE2NICDPA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <cover.2e5329bf5475a5160e613a4eb1e1377c662ce56e.1516012352.git-series.quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-In-Reply-To: <cover.2e5329bf5475a5160e613a4eb1e1377c662ce56e.1516012352.git-series.quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-References: <cover.2e5329bf5475a5160e613a4eb1e1377c662ce56e.1516012352.git-series.quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20180115083813.ad2yqdwnd2nskbhs@flea.lan>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, robh+dt@kernel.org, Mark Rutland <mark.rutland@arm.com>, linux@armlinux.org.uk, Chen-Yu Tsai <wens@csie.org>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, open list <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/Allwinner sunXi SoC support" <linux-arm-kernel@lists.infradead.org>, linux-pwm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The X-Powers AXP813 PMIC has got some slight differences from
-AXP20X/AXP22X PMICs:
- - the maximum voltage supplied by the PMIC is 4.35 instead of 4.36/4.24
- for AXP20X/AXP22X,
- - the constant charge current formula is different,
+2018-01-15 16:38 GMT+08:00 Maxime Ripard <maxime.ripard@free-electrons.com>:
+> Hi,
+>
+> On Sun, Jan 14, 2018 at 02:43:39PM +0800, Hao Zhang wrote:
+>> 2018-01-11 20:47 GMT+08:00 Maxime Ripard <maxime.ripard@free-electrons.com>:
+>> > On Thu, Jan 11, 2018 at 07:34:12PM +0800, hao_zhang wrote:
+>> >> This patch add pwm node for r40.
+>> >>
+>> >> Signed-off-by: hao_zhang <hao5781286@gmail.com>
+>> >> ---
+>> >>  arch/arm/boot/dts/sun8i-r40.dtsi | 13 +++++++++++++
+>> >>  1 file changed, 13 insertions(+)
+>> >>
+>> >> diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi b/arch/arm/boot/dts/sun8i-r40.dtsi
+>> >> index 173dcc1..84c963c 100644
+>> >> --- a/arch/arm/boot/dts/sun8i-r40.dtsi
+>> >> +++ b/arch/arm/boot/dts/sun8i-r40.dtsi
+>> >> @@ -295,6 +295,11 @@
+>> >>                               bias-pull-up;
+>> >>                       };
+>> >>
+>> >> +                     pwm_pins: pwm-pins {
+>> >> +                             pins = "PB2", "PB3";
+>> >> +                             function = "pwm";
+>> >> +                     };
+>> >> +
+>> >
+>> > Is it the only combination of pins that is usable?
+>> >
+>> > If so, you can add the pinctrl-0 property directly in the pwm nodes.
+>> >
+>>
+>> There are 8 channel pwm of R40/V40/T3, the pins that can be configed
+>> to pwm are: PB2, PB3, PI20, PI21, PB20, PB21, PB9, PB10
+>
+> And a single controller, or several of them?
 
-It also has a bit to tell whether the battery percentage returned by the
-PMIC is valid.
+Single controller with 8 channels pwm output.
 
-Signed-off-by: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- drivers/power/supply/axp20x_battery.c | 42 ++++++++++++++++++++++++++++-
- 1 file changed, 42 insertions(+)
+>
+>> PB2, PB3 can be configed on bananapi-m2-ultra and on my T3 board,
+>> but the other pins is not exist on the board or some pin is confilct
+>> with other functions, so i just add PB2, PB3. but i think split it
+>> is better, just like this :
+>>
+>> pwm0_pin: pwm0-pin {
+>>     pins = "PB2";
+>>     function = "pwm";
+>> };
+>>
+>> pwm1_pin: pwm1-pin {
+>>     pins = "PB3";
+>>     function = "pwm";
+>> };
+>
+> Yep, that would be better. If it's just a matter of channels, maybe we
+> can even name them pwm-ch0-pin and pwm-ch1-pin? That would be more
+> explicit.
+>
 
-diff --git a/drivers/power/supply/axp20x_battery.c b/drivers/power/supply/axp20x_battery.c
-index d73c78f..e75fa90 100644
---- a/drivers/power/supply/axp20x_battery.c
-+++ b/drivers/power/supply/axp20x_battery.c
-@@ -49,6 +49,8 @@
- #define AXP22X_CHRG_CTRL1_TGT_4_22V	(1 << 5)
- #define AXP22X_CHRG_CTRL1_TGT_4_24V	(3 << 5)
- 
-+#define AXP813_CHRG_CTRL1_TGT_4_35V	(3 << 5)
-+
- #define AXP20X_CHRG_CTRL1_TGT_CURR	GENMASK(3, 0)
- 
- #define AXP20X_V_OFF_MASK		GENMASK(2, 0)
-@@ -133,6 +135,35 @@ static int axp22x_battery_get_max_voltage(struct axp20x_batt_ps *axp20x_batt,
- 	return 0;
- }
- 
-+static int axp813_battery_get_max_voltage(struct axp20x_batt_ps *axp20x_batt,
-+					  int *val)
-+{
-+	int ret, reg;
-+
-+	ret = regmap_read(axp20x_batt->regmap, AXP20X_CHRG_CTRL1, &reg);
-+	if (ret)
-+		return ret;
-+
-+	switch (reg & AXP20X_CHRG_CTRL1_TGT_VOLT) {
-+	case AXP20X_CHRG_CTRL1_TGT_4_1V:
-+		*val = 4100000;
-+		break;
-+	case AXP20X_CHRG_CTRL1_TGT_4_15V:
-+		*val = 4150000;
-+		break;
-+	case AXP20X_CHRG_CTRL1_TGT_4_2V:
-+		*val = 4200000;
-+		break;
-+	case AXP813_CHRG_CTRL1_TGT_4_35V:
-+		*val = 4350000;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
- static int axp20x_get_constant_charge_current(struct axp20x_batt_ps *axp,
- 					      int *val)
- {
-@@ -491,6 +522,14 @@ struct axp_data axp221_data = {
- 	.set_max_voltage = axp22x_battery_set_max_voltage,
- };
- 
-+struct axp_data axp813_data = {
-+	.ccc_scale = 200000,
-+	.ccc_offset = 200000,
-+	.has_fg_valid = true,
-+	.get_max_voltage = axp813_battery_get_max_voltage,
-+	.set_max_voltage = axp20x_battery_set_max_voltage,
-+};
-+
- static const struct of_device_id axp20x_battery_ps_id[] = {
- 	{
- 		.compatible = "x-powers,axp209-battery-power-supply",
-@@ -498,6 +537,9 @@ static const struct of_device_id axp20x_battery_ps_id[] = {
- 	}, {
- 		.compatible = "x-powers,axp221-battery-power-supply",
- 		.data = (void *)&axp221_data,
-+	}, {
-+		.compatible = "x-powers,axp813-battery-power-supply",
-+		.data = (void *)&axp813_data,
- 	}, { /* sentinel */ },
- };
- MODULE_DEVICE_TABLE(of, axp20x_battery_ps_id);
--- 
-git-series 0.9.1
+Agree
+
+>> the node of pwm2~7 should also be added here?
+>
+> If there's no users, no.
+>
+>> On sun8i-r40-bananapi-m2-ultra.dts:
+>> because of the special customize board, i think just add pinctrl-0 = <&pwm0_pin>
+>> (PB3 I just use to test pwm channel 1)for bananapi-m2-ultra board is enough.
+>>
+>> &pwm {
+>>     pinctrl-names = "default";
+>>     pinctrl-0 = <&pwm0_pin>;
+>>     status = "okay";
+>> };
+>
+> It depends if that PWM is used as a PWM all the time (for example to
+> drive a backlight for a panel tied to the board), or if it's exported
+> through one of the generic pin headers, please leave it populated but
+> disabled (with a comment that it is exported on one of the pin of the
+> headers)
+>
+> Thanks!
+> Maxime
+>
+> --
+> Maxime Ripard, Free Electrons
+> Embedded Linux and Kernel engineering
+> http://free-electrons.com
