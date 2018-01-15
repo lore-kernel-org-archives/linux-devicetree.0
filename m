@@ -1,43 +1,42 @@
-From: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 0/8] ARM: sun9i: SMP and CPU hotplug support
-Date: Mon, 15 Jan 2018 16:00:45 -0500 (EST)
-Message-ID: <nycvar.YSQ.7.76.1801151502050.13881@knanqh.ubzr>
-References: <20180115071450.18355-1-wens@csie.org>
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: Re: [PATCH 1/2 v2] ARM: dts: Add Aspeed SoC USB controllers to
+ device-tree
+Date: Tue, 16 Jan 2018 08:56:55 +1100
+Message-ID: <1516053415.31850.137.camel@kernel.crashing.org>
+References: <1515738064.31850.100.camel@kernel.crashing.org>
+ <1516031982.5522.3.camel@aj.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180115071450.18355-1-wens-jdAy2FN1RRM@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1516031982.5522.3.camel@aj.id.au>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Andrew Jeffery <andrew@aj.id.au>, devicetree@vger.kernel.org
+Cc: Joel Stanley <joel.stanley@au1.ibm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 15 Jan 2018, Chen-Yu Tsai wrote:
+On Mon, 2018-01-15 at 09:59 -0600, Andrew Jeffery wrote:
+> > +             uhci: usb@1e6b0000 {
+> > +                     compatible = "aspeed,ast2400-uhci", "generic-uhci";
+> > +                     reg = <0x1e6b0000 0x100>;
+> > +                     interrupts = <14>;
+> > +                     #ports = <3>;
+> 
+> I tried to find the documentation for the #ports property, but it seems
+> to not exist. Couldn't find any users either, but maybe I didn't look
+> broadly enough. It is tested for in drivers/usb/host/uhci-platform.c
+> though, so I guess it's functional.
 
-> Changes since v2:
->   - Do away with the MCPM framework, directly implement smp_ops
->   - Some debug messages were clarified
->   - New ARCH_SUNXI_MCPM Kconfig symbol for this feature
+I added it to uhci-platform back when that was merged but forgot to
+update the binding. I'll send a separate patch for that.
 
-You should use ARCH_SUNXI_SMP instead to avoid confusion with the actual 
-MCPM code. Ditto for function names as Dave mentioned.
-
-For the ARM to Thumb switch you could add something like this at the 
-beginning of your entry code:
-
-#ifdef CONFIG_THUMB2_KERNEL
-	.arm
-	mov	ip, #1
-	bx	ip
-	.thumb
-#endif
-	[your code follows here]
-
-And make sure that code is word aligned.
-
-
-Nicolas
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Cheers,
+Ben.
