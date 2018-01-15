@@ -1,51 +1,43 @@
-From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: dts: rename oxnas dts files
-Date: Mon, 15 Jan 2018 15:54:31 +0100
-Message-ID: <05179c69-5878-f8ec-76f1-00de21e1b75d@baylibre.com>
-References: <20180113173553.GA30727@makrotopia.org>
- <CAK8P3a1NUww8pGWr=gvxSDk4p7Emoq9NJyGfs8N86bU_sqgnpQ@mail.gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 2/7] ARM: dts: STi: Add gpio polarity for "hdmi,hpd-gpio" property
+Date: Mon, 15 Jan 2018 15:59:12 +0100
+Message-ID: <CAK8P3a3thPTMgcMRT0jqwoOidhxXndWCP0tYpUsPhMTW7DvgCA@mail.gmail.com>
+References: <1515572469-19276-1-git-send-email-patrice.chotard@st.com> <1515572469-19276-3-git-send-email-patrice.chotard@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAK8P3a1NUww8pGWr=gvxSDk4p7Emoq9NJyGfs8N86bU_sqgnpQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Daniel Golle <daniel-g5gK2j5usbvCyp4qypjU+w@public.gmane.org>
-Cc: DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, arm-soc <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1515572469-19276-3-git-send-email-patrice.chotard@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Patrice Chotard <patrice.chotard@st.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, arm-soc <arm@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 15/01/2018 15:45, Arnd Bergmann wrote:
-> On Sat, Jan 13, 2018 at 6:35 PM, Daniel Golle <daniel-g5gK2j5usbvCyp4qypjU+w@public.gmane.org> wrote:
->> Other platforms' device-tree files start with a platform prefix, such as
->> sun7i-a20-*.dts or at91-*.dts.
->> This naming scheme turns out to be handy when using multi-platform build
->> systems such as OpenWrt.
->> Prepend oxnas files with their platform prefix to comply with the naming
->> scheme already used for most other platforms.
->>
->> Signed-off-by: Daniel Golle <daniel-g5gK2j5usbvCyp4qypjU+w@public.gmane.org>
-> 
-> There are few changes to oxnas in general, and Neil doesn't appear to be around
-> to ask at the moment.
-> I assume he doesn't mind me picking it up into next/dt directly.
-> 
-> Merged now, thanks,
-> 
->         Arnd
-> 
+On Wed, Jan 10, 2018 at 9:21 AM,  <patrice.chotard@st.com> wrote:
+> From: Patrice Chotard <patrice.chotard@st.com>
+>
+> The GPIO polarity is missing in the hdmi,hpd-gpio property, this
+> fixes the following DT warnings:
+>
+> arch/arm/boot/dts/stih410-b2120.dtb: Warning (gpios_property): hdmi,hpd-gpio property
+> size (8) too small for cell size 2 in /soc/sti-display-subsystem/sti-hdmi@8d04000
+>
+> arch/arm/boot/dts/stih407-b2120.dtb: Warning (gpios_property): hdmi,hpd-gpio property
+> size (8) too small for cell size 2 in /soc/sti-display-subsystem/sti-hdmi@8d04000
+>
+> arch/arm/boot/dts/stih410-b2260.dtb: Warning (gpios_property): hdmi,hpd-gpio property
+> size (8) too small for cell size 2 in /soc/sti-display-subsystem/sti-hdmi@8d04000
+>
+> Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
 
+Olof has picked up a number of other dtc warning fixes into next/dt,
+so I ended up
+adding this to the same place rather than our fixes branch, but added
+a Cc:stable
+tag. We now have just one warning left in arm-soc, and I think Linus
+Walleij will
+send a patch for that soon.
 
-Hi Daniel,
+Please send a pull request for the remaining commits from the STi
+series, thanks!
 
-Thanks for pushing this change, these a low-priority supported devices, OK to rename them.
-
-(I must no forget to changes my test scripts, or I will get a huge headache)
-
-Arnd, thanks for taking this directly.
-
-Neil
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+      Arnd
