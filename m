@@ -1,50 +1,93 @@
 From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Subject: [PATCHv3 0/5] GEHC Bx50 Switch Support
-Date: Mon, 15 Jan 2018 20:37:17 +0100
-Message-ID: <20180115193722.10241-1-sebastian.reichel@collabora.co.uk>
+Subject: [PATCHv3 4/5] ARM: dts: imx6q-b650v3: Add switch port configuration
+Date: Mon, 15 Jan 2018 20:37:21 +0100
+Message-ID: <20180115193722.10241-5-sebastian.reichel@collabora.co.uk>
+References: <20180115193722.10241-1-sebastian.reichel@collabora.co.uk>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180115193722.10241-1-sebastian.reichel@collabora.co.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Andrew Lunn <andrew@lunn.ch>, Vivien Didelot <vivien.didelot@savoirfairelinux.com>, Florian Fainelli <f.fainelli@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>
 Cc: Ian Ray <ian.ray@ge.com>, Nandor Han <nandor.han@ge.com>, Rob Herring <robh+dt@kernel.org>, "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sebastian Reichel <sebastian.reichel@collabora.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+This adds support for the Marvell switch and names the network
+ports according to the labels, that can be found next to the
+connectors. The switch is connected to the host system using a
+PCI based network card.
 
-This adds support for the internal switch found in GE Healthcare
-B450v3, B650v3 and B850v3. All devices use a GPIO bitbanged MDIO
-bus to communicate with the switch and a PCIe based network card
-for exchanging network data. The cpu network data link requires,
-that the switch's internal phy interface is enabled, so support
-for that is added by the first patch in this series.
+The PCI bus configuration has been written using the following
+information:
 
-The patch series is based on v4.15-rc8.
+root@b650v3# lspci -tv
+-[0000:00]---00.0-[01]----00.0  Intel Corporation I210 Gigabit Network Connection
+root@b650v3# lspci -nn
+00:00.0 PCI bridge [0604]: Synopsys, Inc. Device [16c3:abcd] (rev 01)
+01:00.0 Ethernet controller [0200]: Intel Corporation I210 Gigabit Network Connection [8086:1533] (rev 03)
 
-Changes since PATCHv2:
- * Add phy nodes to switch in bx50.dtsi and reference them
-   from switch ports
- * Enable cpu-port's phy based on 'phy-handle' instead of
-   'phy-mode'
-Changes since PATCHv1:
- * Use 'marvell,mv88e6085' instead of introducing compatible
-   string for mv88e6240.
- * Fix indention of DT nodes
- * Only enable 'cpu' phy, if explicitly set to "internal".
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+---
+ arch/arm/boot/dts/imx6q-b650v3.dts | 52 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 52 insertions(+)
 
--- Sebastian
-
-Sebastian Reichel (5):
-  net: dsa: Support internal phy on 'cpu' port
-  ARM: dts: imx6q-bx50v3: Add internal switch
-  ARM: dts: imx6q-b850v3: Add switch port configuration
-  ARM: dts: imx6q-b650v3: Add switch port configuration
-  ARM: dts: imx6q-b450v3: Add switch port configuration
-
- arch/arm/boot/dts/imx6q-b450v3.dts  | 52 +++++++++++++++++++++++++
- arch/arm/boot/dts/imx6q-b650v3.dts  | 52 +++++++++++++++++++++++++
- arch/arm/boot/dts/imx6q-b850v3.dts  | 75 +++++++++++++++++++++++++++++++++++++
- arch/arm/boot/dts/imx6q-bx50v3.dtsi | 62 ++++++++++++++++++++++++++++++
- net/dsa/port.c                      | 55 +++++++++++++++++++++++++++
- 5 files changed, 296 insertions(+)
-
+diff --git a/arch/arm/boot/dts/imx6q-b650v3.dts b/arch/arm/boot/dts/imx6q-b650v3.dts
+index 7f9f176901d4..5650a9b11091 100644
+--- a/arch/arm/boot/dts/imx6q-b650v3.dts
++++ b/arch/arm/boot/dts/imx6q-b650v3.dts
+@@ -111,3 +111,55 @@
+ 	fsl,tx-cal-45-dp-ohms = <55>;
+ 	fsl,tx-d-cal = <100>;
+ };
++
++&pci_root {
++	/* Intel Corporation I210 Gigabit Network Connection */
++	switch_nic: ethernet@3,0 {
++		compatible = "pci8086,1533";
++		reg = <0x00010000 0 0 0 0>;
++	};
++};
++
++&switch_ports {
++	port@0 {
++		reg = <0>;
++		label = "enacq";
++		phy-handle = <&switchphy0>;
++	};
++
++	port@1 {
++		reg = <1>;
++		label = "eneport1";
++		phy-handle = <&switchphy1>;
++	};
++
++	port@2 {
++		reg = <2>;
++		label = "enix";
++		phy-handle = <&switchphy2>;
++	};
++
++	port@3 {
++		reg = <3>;
++		label = "enid";
++		phy-handle = <&switchphy3>;
++	};
++
++	port@4 {
++		reg = <4>;
++		label = "cpu";
++		ethernet = <&switch_nic>;
++		phy-handle = <&switchphy4>;
++	};
++
++	port@5 {
++		reg = <5>;
++		label = "enembc";
++
++		/* connected to Ethernet MAC of AT91RM9200 in MII mode */
++		fixed-link {
++			speed = <100>;
++			full-duplex;
++		};
++	};
++};
 -- 
 2.15.1
