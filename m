@@ -1,7 +1,8 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v3 7/8] ARM: sun9i: mcpm: Support cpu0 hotplug
-Date: Mon, 15 Jan 2018 15:14:49 +0800
-Message-ID: <20180115071450.18355-8-wens@csie.org>
+Subject: [PATCH v3 5/8] ARM: sun9i: mcpm: Support CPU/cluster
+ power down and hotplugging for cpu1~7
+Date: Mon, 15 Jan 2018 15:14:47 +0800
+Message-ID: <20180115071450.18355-6-wens@csie.org>
 References: <20180115071450.18355-1-wens@csie.org>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
@@ -19,159 +20,251 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The BROM has a branch that checks if the primary core is hotplugging.
-If the magic flag is set, execution jumps to the address set in the
-software entry register. (Secondary cores always branch to the that
-address.)
+This patch adds common code used to power down all cores and clusters.
+The code was previously based on the MCPM framework. It has now been
+adapted to hook into struct smp_operations directly, but the code
+structure still shows signs of prior work.
 
-This patch sets the flags that makes BROM jump execution on the
-primary core (cpu0) to the SMP software entry code when the core is
-powered back up. After it is re-integrated into the system, the flag
-is cleared.
-
-A custom .cpu_can_disable callback that returns true for all cpus,
-so that cpu0 can really be brought down.
+The primary core (cpu0) requires setting flags to have the BROM bounce
+execution to the SMP software entry code. This is done in a subsequent
+patch to keep the changes cleanly separated. By default the ARM SMP code
+blocks cpu0 from being turned off, so splitting this out is safe.
 
 Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 ---
- arch/arm/mach-sunxi/mcpm.c | 59 +++++++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 56 insertions(+), 3 deletions(-)
+ arch/arm/mach-sunxi/mcpm.c | 190 ++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 189 insertions(+), 1 deletion(-)
 
 diff --git a/arch/arm/mach-sunxi/mcpm.c b/arch/arm/mach-sunxi/mcpm.c
-index 740343a2156e..9ea8a4aa4f1d 100644
+index 7c77bb3b367a..740343a2156e 100644
 --- a/arch/arm/mach-sunxi/mcpm.c
 +++ b/arch/arm/mach-sunxi/mcpm.c
-@@ -64,8 +64,12 @@
- #define PRCM_PWR_SWITCH_REG(c, cpu)	(0x140 + 0x10 * (c) + 0x4 * (cpu))
- #define PRCM_CPU_SOFT_ENTRY_REG		0x164
+@@ -14,6 +14,8 @@
+ #include <linux/cpu_pm.h>
+ #include <linux/delay.h>
+ #include <linux/io.h>
++#include <linux/iopoll.h>
++#include <linux/irqchip/arm-gic.h>
+ #include <linux/of.h>
+ #include <linux/of_address.h>
+ #include <linux/of_device.h>
+@@ -29,6 +31,9 @@
+ #define SUNXI_CPUS_PER_CLUSTER		4
+ #define SUNXI_NR_CLUSTERS		2
  
-+#define CPU0_SUPPORT_HOTPLUG_MAGIC0	0xFA50392F
-+#define CPU0_SUPPORT_HOTPLUG_MAGIC1	0x790DCA3A
++#define POLL_USEC	100
++#define TIMEOUT_USEC	100000
 +
- static void __iomem *cpucfg_base;
- static void __iomem *prcm_base;
-+static void __iomem *sram_b_smp_base;
- 
- static bool sunxi_core_is_cortex_a15(unsigned int core, unsigned int cluster)
- {
-@@ -124,6 +128,17 @@ static int sunxi_cpu_power_switch_set(unsigned int cpu, unsigned int cluster,
- 	return 0;
- }
- 
-+static void sunxi_cpu0_hotplug_support_set(bool enable)
-+{
-+	if (enable) {
-+		writel(CPU0_SUPPORT_HOTPLUG_MAGIC0, sram_b_smp_base);
-+		writel(CPU0_SUPPORT_HOTPLUG_MAGIC1, sram_b_smp_base + 0x4);
-+	} else {
-+		writel(0x0, sram_b_smp_base);
-+		writel(0x0, sram_b_smp_base + 0x4);
-+	}
-+}
-+
- static int sunxi_cpu_powerup(unsigned int cpu, unsigned int cluster)
+ #define CPUCFG_CX_CTRL_REG0(c)		(0x10 * (c))
+ #define CPUCFG_CX_CTRL_REG0_L1_RST_DISABLE(n)	BIT(n)
+ #define CPUCFG_CX_CTRL_REG0_L1_RST_DISABLE_ALL	0xf
+@@ -36,6 +41,9 @@
+ #define CPUCFG_CX_CTRL_REG0_L2_RST_DISABLE_A15	BIT(0)
+ #define CPUCFG_CX_CTRL_REG1(c)		(0x10 * (c) + 0x4)
+ #define CPUCFG_CX_CTRL_REG1_ACINACTM	BIT(0)
++#define CPUCFG_CX_STATUS(c)		(0x30 + 0x4 * (c))
++#define CPUCFG_CX_STATUS_STANDBYWFI(n)	BIT(16 + (n))
++#define CPUCFG_CX_STATUS_STANDBYWFIL2	BIT(0)
+ #define CPUCFG_CX_RST_CTRL(c)		(0x80 + 0x4 * (c))
+ #define CPUCFG_CX_RST_CTRL_DBG_SOC_RST	BIT(24)
+ #define CPUCFG_CX_RST_CTRL_ETM_RST(n)	BIT(20 + (n))
+@@ -120,7 +128,7 @@ static int sunxi_cpu_powerup(unsigned int cpu, unsigned int cluster)
  {
  	u32 reg;
-@@ -132,6 +147,10 @@ static int sunxi_cpu_powerup(unsigned int cpu, unsigned int cluster)
+ 
+-	pr_debug("%s: cpu %u cluster %u\n", __func__, cpu, cluster);
++	pr_debug("%s: cluster %u cpu %u\n", __func__, cluster, cpu);
  	if (cpu >= SUNXI_CPUS_PER_CLUSTER || cluster >= SUNXI_NR_CLUSTERS)
  		return -EINVAL;
  
-+	/* Set hotplug support magic flags for cpu0 */
-+	if (cluster == 0 && cpu == 0)
-+		sunxi_cpu0_hotplug_support_set(true);
-+
- 	/* assert processor power-on reset */
- 	reg = readl(prcm_base + PRCM_CPU_PO_RST_CTRL(cluster));
- 	reg &= ~PRCM_CPU_PO_RST_CTRL_CORE(cpu);
-@@ -360,6 +379,13 @@ static bool sunxi_mcpm_cluster_is_down(unsigned int cluster)
- 	return true;
+@@ -388,8 +396,188 @@ static int sunxi_mcpm_boot_secondary(unsigned int l_cpu, struct task_struct *idl
+ 	return 0;
  }
  
-+static void sunxi_mcpm_secondary_init(unsigned int cpu)
++#ifdef CONFIG_HOTPLUG_CPU
++static void sunxi_cluster_cache_disable(void)
 +{
-+	/* Clear hotplug support magic flags for cpu0 */
-+	if (cpu == 0)
-+		sunxi_cpu0_hotplug_support_set(false);
++	unsigned int cluster = MPIDR_AFFINITY_LEVEL(read_cpuid_mpidr(), 1);
++	u32 reg;
++
++	pr_debug("%s: cluster %u\n", __func__, cluster);
++
++	sunxi_cluster_cache_disable_without_axi();
++
++	/* last man standing, assert ACINACTM */
++	reg = readl(cpucfg_base + CPUCFG_CX_CTRL_REG1(cluster));
++	reg |= CPUCFG_CX_CTRL_REG1_ACINACTM;
++	writel(reg, cpucfg_base + CPUCFG_CX_CTRL_REG1(cluster));
 +}
 +
- static int sunxi_mcpm_boot_secondary(unsigned int l_cpu, struct task_struct *idle)
- {
- 	unsigned int mpidr, cpu, cluster;
-@@ -570,13 +596,19 @@ static int sunxi_mcpm_cpu_kill(unsigned int l_cpu)
- 	return !ret;
- }
- 
-+static bool sunxi_mcpm_cpu_can_disable(unsigned int __unused)
++static void sunxi_mcpm_cpu_die(unsigned int l_cpu)
 +{
-+	return true;
++	unsigned int mpidr, cpu, cluster;
++	bool last_man;
++
++	mpidr = cpu_logical_map(l_cpu);
++	cpu = MPIDR_AFFINITY_LEVEL(mpidr, 0);
++	cluster = MPIDR_AFFINITY_LEVEL(mpidr, 1);
++	pr_debug("%s: cluster %u cpu %u\n", __func__, cluster, cpu);
++
++	spin_lock(&boot_lock);
++	sunxi_mcpm_cpu_table[cluster][cpu]--;
++	if (sunxi_mcpm_cpu_table[cluster][cpu] == 1) {
++		/* A power_up request went ahead of us. */
++		pr_debug("%s: aborting due to a power up request\n",
++			 __func__);
++		spin_unlock(&boot_lock);
++		return;
++	} else if (sunxi_mcpm_cpu_table[cluster][cpu] > 1) {
++		pr_err("Cluster %d CPU%d boots multiple times\n",
++		       cluster, cpu);
++		BUG();
++	}
++
++	last_man = sunxi_mcpm_cluster_is_down(cluster);
++	spin_unlock(&boot_lock);
++
++	gic_cpu_if_down(0);
++	if (last_man)
++		sunxi_cluster_cache_disable();
++	else
++		v7_exit_coherency_flush(louis);
++
++	for (;;)
++		wfi();
 +}
- #endif
- 
++
++static int sunxi_cpu_powerdown(unsigned int cpu, unsigned int cluster)
++{
++	u32 reg;
++
++	pr_debug("%s: cluster %u cpu %u\n", __func__, cluster, cpu);
++	if (cpu >= SUNXI_CPUS_PER_CLUSTER || cluster >= SUNXI_NR_CLUSTERS)
++		return -EINVAL;
++
++	/* gate processor power */
++	reg = readl(prcm_base + PRCM_PWROFF_GATING_REG(cluster));
++	reg |= PRCM_PWROFF_GATING_REG_CORE(cpu);
++	writel(reg, prcm_base + PRCM_PWROFF_GATING_REG(cluster));
++	udelay(20);
++
++	/* close power switch */
++	sunxi_cpu_power_switch_set(cpu, cluster, false);
++
++	return 0;
++}
++
++static int sunxi_cluster_powerdown(unsigned int cluster)
++{
++	u32 reg;
++
++	pr_debug("%s: cluster %u\n", __func__, cluster);
++	if (cluster >= SUNXI_NR_CLUSTERS)
++		return -EINVAL;
++
++	/* assert cluster resets or system will hang */
++	pr_debug("%s: assert cluster reset\n", __func__);
++	reg = readl(cpucfg_base + CPUCFG_CX_RST_CTRL(cluster));
++	reg &= ~CPUCFG_CX_RST_CTRL_DBG_SOC_RST;
++	reg &= ~CPUCFG_CX_RST_CTRL_H_RST;
++	reg &= ~CPUCFG_CX_RST_CTRL_L2_RST;
++	writel(reg, cpucfg_base + CPUCFG_CX_RST_CTRL(cluster));
++
++	/* gate cluster power */
++	pr_debug("%s: gate cluster power\n", __func__);
++	reg = readl(prcm_base + PRCM_PWROFF_GATING_REG(cluster));
++	reg |= PRCM_PWROFF_GATING_REG_CLUSTER;
++	writel(reg, prcm_base + PRCM_PWROFF_GATING_REG(cluster));
++	udelay(20);
++
++	return 0;
++}
++
++static int sunxi_mcpm_cpu_kill(unsigned int l_cpu)
++{
++	unsigned int mpidr, cpu, cluster;
++	unsigned int tries, count;
++	int ret = 0;
++	u32 reg;
++
++	mpidr = cpu_logical_map(l_cpu);
++	cpu = MPIDR_AFFINITY_LEVEL(mpidr, 0);
++	cluster = MPIDR_AFFINITY_LEVEL(mpidr, 1);
++
++	/* This should never happen */
++	if (WARN_ON(cluster >= SUNXI_NR_CLUSTERS ||
++		    cpu >= SUNXI_CPUS_PER_CLUSTER))
++		return 0;
++
++	/* wait for CPU core to die and enter WFI */
++	count = TIMEOUT_USEC / POLL_USEC;
++	spin_lock_irq(&boot_lock);
++	for (tries = 0; tries < count; tries++) {
++		spin_unlock_irq(&boot_lock);
++		usleep_range(POLL_USEC / 2, POLL_USEC);
++		spin_lock_irq(&boot_lock);
++
++		/*
++		 * If the user turns off a bunch of cores at the same
++		 * time, the kernel might call cpu_kill before some of
++		 * them are ready. This is because boot_lock serializes
++		 * both cpu_die and cpu_kill callbacks. Either one could
++		 * run first. We should wait for cpu_die to complete.
++		 */
++		if (sunxi_mcpm_cpu_table[cluster][cpu])
++			continue;
++
++		reg = readl(cpucfg_base + CPUCFG_CX_STATUS(cluster));
++		if (reg & CPUCFG_CX_STATUS_STANDBYWFI(cpu))
++			break;
++	}
++
++	if (tries >= count) {
++		ret = ETIMEDOUT;
++		goto out;
++	}
++
++	/* power down CPU core */
++	sunxi_cpu_powerdown(cpu, cluster);
++
++	if (!sunxi_mcpm_cluster_is_down(cluster))
++		goto out;
++
++	/* wait for cluster L2 WFI */
++	ret = readl_poll_timeout(cpucfg_base + CPUCFG_CX_STATUS(cluster), reg,
++				 reg & CPUCFG_CX_STATUS_STANDBYWFIL2,
++				 POLL_USEC, TIMEOUT_USEC);
++	if (ret) {
++		/*
++		 * Ignore timeout on the cluster. Leaving the cluster on
++		 * will not affect system execution, just use a bit more
++		 * power. But returning an error here will only confuse
++		 * the user as the CPU has already been shutdown.
++		 */
++		ret = 0;
++		goto out;
++	}
++
++	/* Power down cluster */
++	sunxi_cluster_powerdown(cluster);
++
++out:
++	spin_unlock_irq(&boot_lock);
++	pr_debug("%s: cluster %u cpu %u powerdown: %d\n",
++		 __func__, cluster, cpu, ret);
++	return !ret;
++}
++
++#endif
++
  static const struct smp_operations sunxi_mcpm_smp_ops __initconst = {
-+	.smp_secondary_init	= sunxi_mcpm_secondary_init,
  	.smp_boot_secondary	= sunxi_mcpm_boot_secondary,
- #ifdef CONFIG_HOTPLUG_CPU
- 	.cpu_die		= sunxi_mcpm_cpu_die,
- 	.cpu_kill		= sunxi_mcpm_cpu_kill,
-+	.cpu_can_disable	= sunxi_mcpm_cpu_can_disable,
- #endif
++#ifdef CONFIG_HOTPLUG_CPU
++	.cpu_die		= sunxi_mcpm_cpu_die,
++	.cpu_kill		= sunxi_mcpm_cpu_kill,
++#endif
  };
  
-@@ -652,7 +684,7 @@ static int __init sunxi_mcpm_lookback(void)
- 
- static int __init sunxi_mcpm_init(void)
- {
--	struct device_node *cpucfg_node, *node;
-+	struct device_node *cpucfg_node, *sram_node, *node;
- 	struct resource res;
- 	int ret;
- 
-@@ -700,16 +732,31 @@ static int __init sunxi_mcpm_init(void)
- 		goto err_put_cpucfg_node;
- 	}
- 
-+	sram_node = of_find_compatible_node(NULL, NULL,
-+					    "allwinner,sun9i-a80-smp-sram");
-+	if (!sram_node) {
-+		ret = -ENODEV;
-+		goto err_unmap_release_cpucfg;
-+	}
-+
-+	sram_b_smp_base = of_io_request_and_map(sram_node, 0, "sunxi-mcpm");
-+	if (IS_ERR(sram_b_smp_base)) {
-+		ret = PTR_ERR(sram_b_smp_base);
-+		pr_err("%s: failed to map secure SRAM\n", __func__);
-+		goto err_put_sram_node;
-+	}
-+
- 	/* Configure CCI-400 for boot cluster */
- 	ret = sunxi_mcpm_lookback();
- 	if (ret) {
- 		pr_err("%s: failed to configure boot cluster: %d\n",
- 		       __func__, ret);
--		goto err_unmap_release_cpucfg;
-+		goto err_unmap_release_secure_sram;
- 	}
- 
--	/* We don't need the CPUCFG device node anymore */
-+	/* We don't need the CPUCFG and SRAM device nodes anymore */
- 	of_node_put(cpucfg_node);
-+	of_node_put(sram_node);
- 
- 	/* Set the hardware entry point address */
- 	writel(__pa_symbol(sunxi_mcpm_secondary_startup),
-@@ -722,6 +769,12 @@ static int __init sunxi_mcpm_init(void)
- 
- 	return 0;
- 
-+err_unmap_release_secure_sram:
-+	iounmap(sram_b_smp_base);
-+	of_address_to_resource(sram_node, 0, &res);
-+	release_mem_region(res.start, resource_size(&res));
-+err_put_sram_node:
-+	of_node_put(sram_node);
- err_unmap_release_cpucfg:
- 	iounmap(cpucfg_base);
- 	of_address_to_resource(cpucfg_node, 0, &res);
+ static bool __init sunxi_mcpm_cpu_table_init(void)
 -- 
 2.15.1
