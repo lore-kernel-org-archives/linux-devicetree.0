@@ -1,104 +1,241 @@
-From: Hao Zhang <hao5781286@gmail.com>
-Subject: Re: [PATCH v1 4/4] ARM: dts: add pwm node for r40.
-Date: Mon, 15 Jan 2018 19:19:04 +0800
-Message-ID: <CAJeuY799nhZazzRb8JRf6juvWs158pj2LAHpfQ78d-mtO73Y=Q@mail.gmail.com>
-References: <20180111113412.GA22008@arx-s1> <20180111124752.2ljspnaclwgz2s62@flea.lan>
- <CAJeuY78QLOYZUUS7ghakqqpdzigdvpdHCsw+6onkUCjgZMqTzA@mail.gmail.com> <20180115083813.ad2yqdwnd2nskbhs@flea.lan>
+From: Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v3 1/8] ARM: sun9i: Support SMP bring-up on A80
+Date: Mon, 15 Jan 2018 12:04:43 +0000
+Message-ID: <20180115120440.GT22781@e103592.cambridge.arm.com>
+References: <20180115071450.18355-1-wens@csie.org>
+ <20180115071450.18355-2-wens@csie.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20180115083813.ad2yqdwnd2nskbhs@flea.lan>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, robh+dt@kernel.org, Mark Rutland <mark.rutland@arm.com>, linux@armlinux.org.uk, Chen-Yu Tsai <wens@csie.org>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, open list <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/Allwinner sunXi SoC support" <linux-arm-kernel@lists.infradead.org>, linux-pwm@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20180115071450.18355-2-wens-jdAy2FN1RRM@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-2018-01-15 16:38 GMT+08:00 Maxime Ripard <maxime.ripard@free-electrons.com>:
-> Hi,
->
-> On Sun, Jan 14, 2018 at 02:43:39PM +0800, Hao Zhang wrote:
->> 2018-01-11 20:47 GMT+08:00 Maxime Ripard <maxime.ripard@free-electrons.com>:
->> > On Thu, Jan 11, 2018 at 07:34:12PM +0800, hao_zhang wrote:
->> >> This patch add pwm node for r40.
->> >>
->> >> Signed-off-by: hao_zhang <hao5781286@gmail.com>
->> >> ---
->> >>  arch/arm/boot/dts/sun8i-r40.dtsi | 13 +++++++++++++
->> >>  1 file changed, 13 insertions(+)
->> >>
->> >> diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi b/arch/arm/boot/dts/sun8i-r40.dtsi
->> >> index 173dcc1..84c963c 100644
->> >> --- a/arch/arm/boot/dts/sun8i-r40.dtsi
->> >> +++ b/arch/arm/boot/dts/sun8i-r40.dtsi
->> >> @@ -295,6 +295,11 @@
->> >>                               bias-pull-up;
->> >>                       };
->> >>
->> >> +                     pwm_pins: pwm-pins {
->> >> +                             pins = "PB2", "PB3";
->> >> +                             function = "pwm";
->> >> +                     };
->> >> +
->> >
->> > Is it the only combination of pins that is usable?
->> >
->> > If so, you can add the pinctrl-0 property directly in the pwm nodes.
->> >
->>
->> There are 8 channel pwm of R40/V40/T3, the pins that can be configed
->> to pwm are: PB2, PB3, PI20, PI21, PB20, PB21, PB9, PB10
->
-> And a single controller, or several of them?
+On Mon, Jan 15, 2018 at 07:14:43AM +0000, Chen-Yu Tsai wrote:
+> The A80 is a big.LITTLE SoC with 1 cluster of 4 Cortex-A7s and
+> 1 cluster of 4 Cortex-A15s.
+> 
+> This patch adds support to bring up the second cluster and thus all
+> cores using custom platform SMP code. Core/cluster power down has not
+> been implemented, thus CPU hotplugging is not supported.
+> 
+> This is limited to !THUMB2_KERNEL for now. The entry code must be built
+> as ARM machine code, and it does not switch modes. Further work was
+> done to move the assembly code to a separate file and add the proper
+> mode statements and mode switching instructions. However initial tests
+> failed to boot properly with Thumb-2.
+> 
+> Parts of the trampoline and re-entry code for the boot cpu was adapted
+> from the MCPM framework.
+> 
+> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> ---
+>  arch/arm/mach-sunxi/Kconfig  |   7 +
+>  arch/arm/mach-sunxi/Makefile |   1 +
+>  arch/arm/mach-sunxi/mcpm.c   | 548 +++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 556 insertions(+)
+>  create mode 100644 arch/arm/mach-sunxi/mcpm.c
+> 
+> diff --git a/arch/arm/mach-sunxi/Kconfig b/arch/arm/mach-sunxi/Kconfig
+> index 58153cdf025b..b53e37d170e6 100644
+> --- a/arch/arm/mach-sunxi/Kconfig
+> +++ b/arch/arm/mach-sunxi/Kconfig
+> @@ -48,4 +48,11 @@ config MACH_SUN9I
+>  	default ARCH_SUNXI
+>  	select ARM_GIC
+>  
+> +config ARCH_SUNXI_MCPM
+> +	bool
+> +	depends on SMP && !THUMB2_KERNEL
+> +	default MACH_SUN9I
+> +	select ARM_CCI400_PORT_CTRL
+> +	select ARM_CPU_SUSPEND
+> +
 
-Single controller with 8 channels pwm output.
+If this no longer uses MCPM, you should get rid of "mcpm" from all the
+names, comments etc. -- it's just confusing otherwise.
 
->
->> PB2, PB3 can be configed on bananapi-m2-ultra and on my T3 board,
->> but the other pins is not exist on the board or some pin is confilct
->> with other functions, so i just add PB2, PB3. but i think split it
->> is better, just like this :
->>
->> pwm0_pin: pwm0-pin {
->>     pins = "PB2";
->>     function = "pwm";
->> };
->>
->> pwm1_pin: pwm1-pin {
->>     pins = "PB3";
->>     function = "pwm";
->> };
->
-> Yep, that would be better. If it's just a matter of channels, maybe we
-> can even name them pwm-ch0-pin and pwm-ch1-pin? That would be more
-> explicit.
->
+>  endif
+> diff --git a/arch/arm/mach-sunxi/Makefile b/arch/arm/mach-sunxi/Makefile
+> index 27b168f121a1..cacd1afa8137 100644
+> --- a/arch/arm/mach-sunxi/Makefile
+> +++ b/arch/arm/mach-sunxi/Makefile
+> @@ -1,2 +1,3 @@
+>  obj-$(CONFIG_ARCH_SUNXI) += sunxi.o
+> +obj-$(CONFIG_ARCH_SUNXI_MCPM) += mcpm.o
+>  obj-$(CONFIG_SMP) += platsmp.o
+> diff --git a/arch/arm/mach-sunxi/mcpm.c b/arch/arm/mach-sunxi/mcpm.c
+> new file mode 100644
+> index 000000000000..7c77bb3b367a
+> --- /dev/null
+> +++ b/arch/arm/mach-sunxi/mcpm.c
 
-Agree
+[...]
 
->> the node of pwm2~7 should also be added here?
->
-> If there's no users, no.
->
->> On sun8i-r40-bananapi-m2-ultra.dts:
->> because of the special customize board, i think just add pinctrl-0 = <&pwm0_pin>
->> (PB3 I just use to test pwm channel 1)for bananapi-m2-ultra board is enough.
->>
->> &pwm {
->>     pinctrl-names = "default";
->>     pinctrl-0 = <&pwm0_pin>;
->>     status = "okay";
->> };
->
-> It depends if that PWM is used as a PWM all the time (for example to
-> drive a backlight for a panel tied to the board), or if it's exported
-> through one of the generic pin headers, please leave it populated but
-> disabled (with a comment that it is exported on one of the pin of the
-> headers)
->
-> Thanks!
-> Maxime
->
-> --
-> Maxime Ripard, Free Electrons
-> Embedded Linux and Kernel engineering
-> http://free-electrons.com
+> +static int sunxi_mcpm_cpu_table[SUNXI_NR_CLUSTERS][SUNXI_CPUS_PER_CLUSTER];
+> +static int sunxi_mcpm_first_comer;
+> +
+> +/*
+> + * Enable cluster-level coherency, in preparation for turning on the MMU.
+> + *
+> + * Also enable regional clock gating and L2 data latency settings for
+> + * Cortex-A15. These settings are from the vendor kernel.
+> + */
+> +static void __naked sunxi_mcpm_cluster_cache_enable(void)
+> +{
+> +	asm volatile (
+> +		"mrc	p15, 0, r1, c0, c0, 0\n"
+> +		"movw	r2, #" __stringify(ARM_CPU_PART_MASK & 0xffff) "\n"
+> +		"movt	r2, #" __stringify(ARM_CPU_PART_MASK >> 16) "\n"
+> +		"and	r1, r1, r2\n"
+> +		"movw	r2, #" __stringify(ARM_CPU_PART_CORTEX_A15 & 0xffff) "\n"
+> +		"movt	r2, #" __stringify(ARM_CPU_PART_CORTEX_A15 >> 16) "\n"
+> +		"cmp	r1, r2\n"
+> +		"bne	not_a15\n"
+> +
+> +		/* The following is Cortex-A15 specific */
+> +
+> +		/* ACTLR2: Enable CPU regional clock gates */
+> +		"mrc p15, 1, r1, c15, c0, 4\n"
+> +		"orr r1, r1, #(0x1<<31)\n"
+> +		"mcr p15, 1, r1, c15, c0, 4\n"
+> +
+> +		/* L2ACTLR */
+> +		"mrc p15, 1, r1, c15, c0, 0\n"
+> +		/* Enable L2, GIC, and Timer regional clock gates */
+> +		"orr r1, r1, #(0x1<<26)\n"
+> +		/* Disable clean/evict from being pushed to external */
+> +		"orr r1, r1, #(0x1<<3)\n"
+> +		"mcr p15, 1, r1, c15, c0, 0\n"
+> +
+> +		/* L2CTRL: L2 data RAM latency */
+> +		"mrc p15, 1, r1, c9, c0, 2\n"
+> +		"bic r1, r1, #(0x7<<0)\n"
+> +		"orr r1, r1, #(0x3<<0)\n"
+> +		"mcr p15, 1, r1, c9, c0, 2\n"
+> +
+> +		/* End of Cortex-A15 specific setup */
+> +		"not_a15:\n"
+> +
+> +		/* Get value of sunxi_mcpm_first_comer */
+> +		"adr	r1, first\n"
+> +		"ldr	r0, [r1]\n"
+> +		"ldr	r0, [r1, r0]\n"
+> +
+> +		/* Skip cci_enable_port_for_self if not first comer */
+> +		"cmp	r0, #0\n"
+> +		"bxeq	lr\n"
+> +		"b	cci_enable_port_for_self\n"
+
+For Thumb, you need a ".align 2" here.
+
+I've never understood why gas doesn't implicitly align .word on arches
+that care about data alignment, but it doesn't...
+
+Since the MMU isn't on yet, you may get alignment faults if the .word
+is misaligned in the assembled code.
+
+> +
+> +		"first: .word sunxi_mcpm_first_comer - .\n"
+> +	);
+> +}
+
+[...]
+
+> +static int __init sunxi_mcpm_init(void)
+> +{
+> +	struct device_node *cpucfg_node, *node;
+> +	struct resource res;
+> +	int ret;
+> +
+> +	if (!of_machine_is_compatible("allwinner,sun9i-a80"))
+> +		return -ENODEV;
+> +
+> +	if (!sunxi_mcpm_cpu_table_init())
+> +		return -EINVAL;
+> +
+> +	if (!cci_probed()) {
+> +		pr_err("%s: CCI-400 not available\n", __func__);
+> +		return -ENODEV;
+> +	}
+> +
+> +	node = of_find_compatible_node(NULL, NULL, "allwinner,sun9i-a80-prcm");
+> +	if (!node) {
+> +		pr_err("%s: PRCM not available\n", __func__);
+> +		return -ENODEV;
+> +	}
+> +
+> +	/*
+> +	 * Unfortunately we can not request the I/O region for the PRCM.
+> +	 * It is shared with the PRCM clock.
+> +	 */
+> +	prcm_base = of_iomap(node, 0);
+> +	of_node_put(node);
+> +	if (!prcm_base) {
+> +		pr_err("%s: failed to map PRCM registers\n", __func__);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	cpucfg_node = of_find_compatible_node(NULL, NULL,
+> +					      "allwinner,sun9i-a80-cpucfg");
+> +	if (!cpucfg_node) {
+> +		ret = -ENODEV;
+> +		pr_err("%s: CPUCFG not available\n", __func__);
+> +		goto err_unmap_prcm;
+> +	}
+> +
+> +	cpucfg_base = of_io_request_and_map(cpucfg_node, 0, "sunxi-mcpm");
+> +	if (IS_ERR(cpucfg_base)) {
+> +		ret = PTR_ERR(cpucfg_base);
+> +		pr_err("%s: failed to map CPUCFG registers: %d\n",
+> +		       __func__, ret);
+> +		goto err_put_cpucfg_node;
+> +	}
+> +
+> +	/* Configure CCI-400 for boot cluster */
+> +	ret = sunxi_mcpm_lookback();
+> +	if (ret) {
+> +		pr_err("%s: failed to configure boot cluster: %d\n",
+> +		       __func__, ret);
+> +		goto err_unmap_release_cpucfg;
+> +	}
+> +
+> +	/* We don't need the CPUCFG device node anymore */
+> +	of_node_put(cpucfg_node);
+> +
+> +	/* Set the hardware entry point address */
+> +	writel(__pa_symbol(sunxi_mcpm_secondary_startup),
+> +	       prcm_base + PRCM_CPU_SOFT_ENTRY_REG);
+
+It's possible the firmware / boot ROM doesn't know how to branch
+correctly to a Thumb symbol here.  This is often missed in firmware
+implementations (or deliberately omitted, since it easy to work
+around in the OS).
+
+Things you could try:
+
+1) Add CFLAGS_mcpm.o += -marm
+(to see whether building just this file as ARM fixes it).
+
+2) Split sunxi_mcpm_secondary_startup out into a separate asm file
+and build just that as ARM, so that the entry point from the firmware
+is ARM.
+
+If both work, the firmware can't branch directly to Thumb and so you
+need to keep the secondary entry point as ARM code.
+
+If (1) works but (2) doesn't, then there must be somthing else in this
+file that is Thumb-incompatible, but I don't see it so far.
+
+
+[...]
+
+Cheers
+---Dave
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
