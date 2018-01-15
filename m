@@ -1,96 +1,50 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2 03/12] drm: rcar-du: Fix legacy DT to create LVDS
- encoder nodes
-Date: Mon, 15 Jan 2018 21:22:08 +0200
-Message-ID: <1891263.xKRehmHzfM@avalon>
-References: <20180112231430.26943-1-laurent.pinchart+renesas@ideasonboard.com>
- <CAL_JsqK9yWE2nLX3AbSx-U6zAyE3fkYnURBY+r6KkJCogU5_sA@mail.gmail.com>
- <fd59ff16-f29f-1b10-aa2a-347c6c905689@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <fd59ff16-f29f-1b10-aa2a-347c6c905689@gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>
+From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+Subject: [PATCHv3 0/5] GEHC Bx50 Switch Support
+Date: Mon, 15 Jan 2018 20:37:17 +0100
+Message-ID: <20180115193722.10241-1-sebastian.reichel@collabora.co.uk>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>, Vivien Didelot <vivien.didelot@savoirfairelinux.com>, Florian Fainelli <f.fainelli@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>
+Cc: Ian Ray <ian.ray@ge.com>, Nandor Han <nandor.han@ge.com>, Rob Herring <robh+dt@kernel.org>, "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sebastian Reichel <sebastian.reichel@collabora.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-SGkgRnJhbmssCgpPbiBNb25kYXksIDE1IEphbnVhcnkgMjAxOCAyMToxMjo0NCBFRVQgRnJhbmsg
-Um93YW5kIHdyb3RlOgo+IE9uIDAxLzE1LzE4IDA5OjA5LCBSb2IgSGVycmluZyB3cm90ZToKPiA+
-ICtGcmFuawo+ID4gCj4gPiBPbiBGcmksIEphbiAxMiwgMjAxOCBhdCA1OjE0IFBNLCBMYXVyZW50
-IFBpbmNoYXJ0IHdyb3RlOgo+ID4+IFRoZSBpbnRlcm5hbCBMVkRTIGVuY29kZXJzIG5vdyBoYXZl
-IHRoZWlyIG93biBEVCBiaW5kaW5ncy4gQmVmb3JlCj4gPj4gc3dpdGNoaW5nIHRoZSBkcml2ZXIg
-aW5mcmFzdHJ1Y3R1cmUgdG8gdGhvc2UgbmV3IGJpbmRpbmdzLCBpbXBsZW1lbnQKPiA+PiBiYWNr
-d2FyZC1jb21wYXRpYmlsaXR5IHRocm91Z2ggbGl2ZSBEVCBwYXRjaGluZy4KPiA+IAo+ID4gVWho
-LCB3ZSBqdXN0IGdvdCByaWQgb2YgVEkncyBwYXRjaGluZyBhbmQgbm93IGFkZGluZyB0aGlzIG9u
-ZS4gSSBndWVzcwo+IAo+IFBsZWFzZSBuby4gIFdoYXQgd2UganVzdCBnb3QgcmlkIG9mIHdhcyBt
-YWtpbmcgaXQgZGlmZmljdWx0IGZvciBtZSB0bwo+IG1ha2UgY2hhbmdlcyB0byB0aGUgb3Zlcmxh
-eSBpbmZyYXN0cnVjdHVyZS4gIFRoZXJlIGFyZSBpc3N1ZXMgd2l0aAo+IG92ZXJsYXlzIHRoYXQg
-bmVlZCB0byBiZSBmaXhlZCBiZWZvcmUgb3ZlcmxheXMgYmVjb21lIHJlYWxseSB1c2FibGUuCj4g
-SSBhbSBhYm91dCB0byBwcm9wb3NlIHRoZSBuZXh0IGNoYW5nZSwgd2hpY2ggaW52b2x2ZXMgcmVt
-b3ZpbmcgYQo+IGNodW5rIG9mIGNvZGUgdGhhdCBJIHdpbGwgbm90IGJlIGFibGUgdG8gcmVtb3Zl
-IGlmIHRoaXMgcGF0Y2ggaXMKPiBhY2NlcHRlZCAodGhlIHByb3Bvc2FsIGlzIGF3YWl0aW5nIG1l
-IGNvbGxlY3Rpbmcgc29tZSBkYXRhIGFib3V0Cj4gdGhlIGltcGFjdCBvZiB0aGUgY2hhbmdlLCB3
-aGljaCBJIGV4cGVjdCB0byBjb21wbGV0ZSB0aGlzIHdlZWspLgo+IAo+IENhbiB5b3UgcGxlYXNl
-IGhhbmRsZSBib3RoIHRoZSBvbGQgYW5kIG5ldyBiaW5kaW5ncyB0aHJvdWdoIGRyaXZlcgo+IGNv
-ZGUgaW5zdGVhZD8KCkkgY291bGQsIGJ1dCBpdCB3b3VsZCBiZSBwb2ludGxlc3MuIFRoZSBwb2lu
-dCBoZXJlIGlzIHRvIGFsbG93IGNsZWFudXBzIGluIHRoZSAKZHJpdmVyLiBUaGUgTFZEUyBlbmNv
-ZGVyIGhhbmRsaW5nIGNvZGUgaXMgdmVyeSBpbnRydXNpdmUgaW4gaXRzIGN1cnJlbnQgZm9ybSAK
-YW5kIEkgbmVlZCB0byBnZXQgcmlkIG9mIGl0LiBUaGVyZSB3b3VsZCBiZSB6ZXJvIHBvaW50IGlu
-IG1vdmluZyB0byB0aGUgbmV3IAppbmZyYXN0cnVjdHVyZSwgYXMgdGhlIG1haW4gcG9pbnQgaXMg
-dG8gZ2V0IHJpZCBvZiB0aGUgb2xkIGNvZGUgd2hpY2ggcHJldmVudHMgCm1vdmluZyBmb3J3YXJk
-LiBBcyBhIGNvbnNlcXVlbmNlIHRoYXQgd291bGQgYmxvY2sgbmV3IGJvYXJkcyBmcm9tIHJlY2Vp
-dmluZyAKcHJvcGVyIHVwc3RyZWFtIHN1cHBvcnQuIEFuIGVhc3kgb3B0aW9uIGlzIHRvIGJyZWFr
-IGJhY2t3YXJkIGNvbXBhdGliaWxpdHkuIApJJ20gcGVyc29uYWxseSBmaW5lIHdpdGggdGhhdCwg
-YnV0IEkgYXNzdW1lIG90aGVyIHBlb3BsZSB3b3VsZCBjb21wbGFpbiA6LSkKCkkgY2FuLCBvbiB0
-aGUgb3RoZXIgaGFuZCwgd29yayB3aXRoIHlvdSB0byBzZWUgaG93IGxpdmUgRFQgcGF0Y2hpbmcg
-Y291bGQgYmUgCmltcGxlbWVudGVkIGluIHRoaXMgZHJpdmVyIHdpdGhvdXQgYmxvY2tpbmcgeW91
-ciBjb2RlLiBXaGVuIGRldmVsb3BpbmcgdGhpcyAKcGF0Y2ggc2VyaWVzIEkgc3RhcnQgYnkgcGF0
-Y2hpbmcgdGhlIGRldmljZSB0cmVlIG1hbnVhbGx5IHdpdGhvdXQgcmVseWluZyBvbiAKb3Zlcmxh
-eXMgYXQgYWxsLCBidXQgZ290IGJsb2NrZWQgYnkgdGhlIGZhY3QgdGhhdCBJIG5lZWQgdG8gYWxs
-b2NhdGUgcGhhbmRsZXMgCmZvciBuZXcgbm9kZXMgSSBjcmVhdGUuIElmIHRoZXJlIHdhcyBhbiBB
-UEkgdG8gYWxsb2NhdGUgYW4gdW51c2VkIHBoYW5kbGUgSSAKY291bGQgYXZvaWQgdXNpbmcgdGhl
-IG92ZXJsYXkgaW5mcmFzdHJ1Y3R1cmUgYXQgYWxsLiBPciB0aGVyZSBjb3VsZCBiZSBvdGhlciAK
-b3B0aW9ucyBJJ20gbm90IHRoaW5raW5nIG9mIGFzIEkgZG9uJ3Qga25vdyB3aGF0IHRoZSBjaGFu
-Z2VzIHlvdSdyZSB3b3JraW5nIG9uIAphcmUuIENhbiB3ZSB3b3JrIG9uIHRoaXMgdG9nZXRoZXIg
-dG8gZmluZCBhIHNvbHV0aW9uIHRoYXQgd291bGQgc3VpdCB1cyBib3RoID8KCj4gPiBpdCdzIG5l
-Y2Vzc2FyeSwgYnV0IEknZCBsaWtlIHRvIGtub3cgaG93IGxvbmcgd2UgbmVlZCB0byBrZWVwIHRo
-aXM/Cj4gPiAKPiA+IEhvdyBtYW55IG92ZXJsYXlzIHdvdWxkIHlvdSBuZWVkIGlmIGV2ZXJ5dGhp
-bmcgaXMgc3RhdGljIChpLmUuCj4gPiByZW1vdmluZyBhbGwgeW91ciBmaXh1cCBjb2RlKT8KPiA+
-IAo+ID4+IFBhdGNoaW5nIGlzIGRpc2FibGVkIGFuZCB3aWxsIGJlIGVuYWJsZWQgYWxvbmcgd2l0
-aCBzdXBwb3J0IGZvciB0aGUgbmV3Cj4gPj4gRFQgYmluZGluZ3MgaW4gdGhlIERVIGRyaXZlci4K
-PiA+PiAKPiA+PiBTaWduZWQtb2ZmLWJ5OiBMYXVyZW50IFBpbmNoYXJ0Cj4gPj4gPGxhdXJlbnQu
-cGluY2hhcnQrcmVuZXNhc0BpZGVhc29uYm9hcmQuY29tPgo+ID4+IC0tLQo+ID4+IENoYW5nZXMg
-c2luY2UgdjE6Cj4gPj4gCj4gPj4gLSBTZWxlY3QgT0ZfRkxBVFRSRUUKPiA+PiAtIENvbXBpbGUg
-TFZEUyBEVCBiaW5kaW5ncyBwYXRjaCBjb2RlIHdoZW4gRFJNX1JDQVJfTFZEUyBpcyBzZWxlY3Rl
-ZAo+ID4+IC0gVXBkYXRlIHRoZSBTUERYIGhlYWRlcnMgdG8gdXNlIEdQTC0yLjAgaW5zdGVhZCBv
-ZiBHUEwtMi4wLW9ubHkKPiA+PiAtIFR1cm4gX19kdGJfcmNhcl9kdV9vZl9sdmRzXyhiZWdpbnxl
-bmQpIGZyb20gdTggdG8gY2hhcgo+ID4+IC0gUGFzcyB2b2lkIGJlZ2luIGFuZCBlbmQgcG9pbnRl
-cnMgdG8gcmNhcl9kdV9vZl9nZXRfb3ZlcmxheSgpCj4gPj4gLSBVc2Ugb2ZfZ2V0X3BhcmVudCgp
-IGluc3RlYWQgb2YgYWNjZXNzaW5nIHRoZSBwYXJlbnQgcG9pbnRlciBkaXJlY3RseQo+ID4+IC0g
-RmluZCB0aGUgTFZEUyBlbmRwb2ludHMgbm9kZXMgYmFzZWQgb24gdGhlIExWRFMgbm9kZSBpbnN0
-ZWFkIG9mIHRoZQo+ID4+ICAgcm9vdCBvZiB0aGUgb3ZlcmxheQo+ID4+IC0gVXBkYXRlIHRvIHRo
-ZSA8c29jPi1sdmRzIGNvbXBhdGlibGUgc3RyaW5nIGZvcm1hdAo+ID4+IC0tLQo+ID4+IAo+ID4+
-ICBkcml2ZXJzL2dwdS9kcm0vcmNhci1kdS9LY29uZmlnICAgICAgICAgICAgIHwgICAyICsKPiA+
-PiAgZHJpdmVycy9ncHUvZHJtL3JjYXItZHUvTWFrZWZpbGUgICAgICAgICAgICB8ICAgMyArLQo+
-ID4+ICBkcml2ZXJzL2dwdS9kcm0vcmNhci1kdS9yY2FyX2R1X29mLmMgICAgICAgIHwgNDUxICsr
-KysrKysrKysrKysrKysrKysrKysKPiA+PiAgZHJpdmVycy9ncHUvZHJtL3JjYXItZHUvcmNhcl9k
-dV9vZi5oICAgICAgICB8ICAxNiArCj4gPj4gIGRyaXZlcnMvZ3B1L2RybS9yY2FyLWR1L3JjYXJf
-ZHVfb2ZfbHZkcy5kdHMgfCAgODIgKysrKysKPiA+PiAgNSBmaWxlcyBjaGFuZ2VkLCA1NTMgaW5z
-ZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQo+ID4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVy
-cy9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV9vZi5jCj4gPj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBk
-cml2ZXJzL2dwdS9kcm0vcmNhci1kdS9yY2FyX2R1X29mLmgKPiA+PiAgY3JlYXRlIG1vZGUgMTAw
-NjQ0IGRyaXZlcnMvZ3B1L2RybS9yY2FyLWR1L3JjYXJfZHVfb2ZfbHZkcy5kdHMKCltzbmlwXQoK
-LS0gClJlZ2FyZHMsCgpMYXVyZW50IFBpbmNoYXJ0CgpfX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBs
-aXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1h
-bi9saXN0aW5mby9kcmktZGV2ZWwK
+Hi,
+
+This adds support for the internal switch found in GE Healthcare
+B450v3, B650v3 and B850v3. All devices use a GPIO bitbanged MDIO
+bus to communicate with the switch and a PCIe based network card
+for exchanging network data. The cpu network data link requires,
+that the switch's internal phy interface is enabled, so support
+for that is added by the first patch in this series.
+
+The patch series is based on v4.15-rc8.
+
+Changes since PATCHv2:
+ * Add phy nodes to switch in bx50.dtsi and reference them
+   from switch ports
+ * Enable cpu-port's phy based on 'phy-handle' instead of
+   'phy-mode'
+Changes since PATCHv1:
+ * Use 'marvell,mv88e6085' instead of introducing compatible
+   string for mv88e6240.
+ * Fix indention of DT nodes
+ * Only enable 'cpu' phy, if explicitly set to "internal".
+
+-- Sebastian
+
+Sebastian Reichel (5):
+  net: dsa: Support internal phy on 'cpu' port
+  ARM: dts: imx6q-bx50v3: Add internal switch
+  ARM: dts: imx6q-b850v3: Add switch port configuration
+  ARM: dts: imx6q-b650v3: Add switch port configuration
+  ARM: dts: imx6q-b450v3: Add switch port configuration
+
+ arch/arm/boot/dts/imx6q-b450v3.dts  | 52 +++++++++++++++++++++++++
+ arch/arm/boot/dts/imx6q-b650v3.dts  | 52 +++++++++++++++++++++++++
+ arch/arm/boot/dts/imx6q-b850v3.dts  | 75 +++++++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/imx6q-bx50v3.dtsi | 62 ++++++++++++++++++++++++++++++
+ net/dsa/port.c                      | 55 +++++++++++++++++++++++++++
+ 5 files changed, 296 insertions(+)
+
+-- 
+2.15.1
