@@ -1,167 +1,138 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v7 12/17] gpio: madera: Support Cirrus Logic Madera class codecs
-Date: Mon, 15 Jan 2018 21:44:41 +0200
-Message-ID: <CAHp75VcS6y53oOogr5s2rygo6aOn0keijE=n23Ja=eOYETUsug@mail.gmail.com>
-References: <20180115124205.29042-1-rf@opensource.wolfsonmicro.com> <20180115124205.29042-13-rf@opensource.wolfsonmicro.com>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 03/12] drm: rcar-du: Fix legacy DT to create LVDS
+ encoder nodes
+Date: Mon, 15 Jan 2018 12:12:33 -0800
+Message-ID: <444f1b6b-fa57-da7c-08fd-51b28cdb5fff@gmail.com>
+References: <20180112231430.26943-1-laurent.pinchart+renesas@ideasonboard.com>
+ <CAL_JsqK9yWE2nLX3AbSx-U6zAyE3fkYnURBY+r6KkJCogU5_sA@mail.gmail.com>
+ <fd59ff16-f29f-1b10-aa2a-347c6c905689@gmail.com> <1891263.xKRehmHzfM@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180115124205.29042-13-rf@opensource.wolfsonmicro.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, ALSA Development Mailing List <alsa-devel@alsa-project.org>, patches@opensource.wolfsonmicro.com, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1891263.xKRehmHzfM@avalon>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 15, 2018 at 2:42 PM, Richard Fitzgerald
-<rf@opensource.wolfsonmicro.com> wrote:
-> This adds support for the GPIOs on Cirrus Logic Madera class codecs.
-> Any pins not used for special functions (see the pinctrl driver) can be
-> used as general single-bit input or output lines. The number of available
-> GPIOs varies between codecs.
+On 01/15/18 11:22, Laurent Pinchart wrote:
+> Hi Frank,
+> 
+> On Monday, 15 January 2018 21:12:44 EET Frank Rowand wrote:
+>> On 01/15/18 09:09, Rob Herring wrote:
+>>> +Frank
+>>>
+>>> On Fri, Jan 12, 2018 at 5:14 PM, Laurent Pinchart wrote:
+>>>> The internal LVDS encoders now have their own DT bindings. Before
+>>>> switching the driver infrastructure to those new bindings, implement
+>>>> backward-compatibility through live DT patching.
+>>>
+>>> Uhh, we just got rid of TI's patching and now adding this one. I guess
+>>
 
-> +config GPIO_MADERA
-> +       bool "Cirrus Logic Madera class codecs"
+Let me first answer the question that you ask later.  You ask "Can we work on
+this together to find a solution that would suit us both ?"
 
-Not module?
-
-> +/*
-> + * GPIO support for Cirrus Logic Madera codecs
-> + *
-> + * Copyright 2015-2017 Cirrus Logic
-
-SPDX ?
-
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +
-> +#include <linux/device.h>
-> +#include <linux/gpio.h>
-> +#include <linux/kernel.h>
-
-> +#include <linux/module.h>
-
-?!?! Same to the MODULE_*() macros and Co.
-
-> +static int madera_gpio_get_direction(struct gpio_chip *chip,
-> +                                    unsigned int offset)
-> +{
-
-> +       ret = regmap_read(madera->regmap,
-
-> +                         MADERA_GPIO1_CTRL_2 + (2 * offset), &val);
-
-Redundant parens here and everywhere. * has higher priority and noone
-I'm pretty sure can think other way.
-
-> +       if (ret < 0)
-> +               return ret;
-> +
-> +       return (val & MADERA_GP1_DIR_MASK) >> MADERA_GP1_DIR_SHIFT;
-
-!! missed ?
-
-> +}
-
-> +static int madera_gpio_direction_out(struct gpio_chip *chip,
-> +                                    unsigned int offset, int value)
-> +{
-> +       struct madera_gpio *madera_gpio = gpiochip_get_data(chip);
-> +       struct madera *madera = madera_gpio->madera;
-> +       unsigned int regval;
-> +       int ret;
-> +
-> +       if (value)
-> +               regval = MADERA_GP1_LVL;
-> +       else
-> +               regval = 0;
-
-Perhaps
-
-regval = value ? ... : 0;
-
-?
-
-> +       if (value)
-> +               regval = MADERA_GP1_LVL;
-> +       else
-> +               regval = 0;
-
-Ditto.
-
-> +static int madera_gpio_probe(struct platform_device *pdev)
-> +{
-> +       struct madera *madera = dev_get_drvdata(pdev->dev.parent);
-> +       struct madera_pdata *pdata = dev_get_platdata(madera->dev);
-> +       struct madera_gpio *madera_gpio;
-> +       int ret;
-
-> +       madera_gpio->madera = madera;
-> +       madera_gpio->gpio_chip = template_chip;
-> +       madera_gpio->gpio_chip.parent = &pdev->dev;
-> +
-
-> +       if (IS_ENABLED(CONFIG_OF_GPIO))
-> +               madera_gpio->gpio_chip.of_node = madera->dev->of_node;
-
-Isn't it done in GPIO core?
-
-> +       if (pdata && pdata->gpio_base)
-> +               madera_gpio->gpio_chip.base = pdata->gpio_base;
-
-platform data in modern driver? Hmm...
-
-> +       else
-> +               madera_gpio->gpio_chip.base = -1;
+My answer to that is emphatically YES.  I will definitely work with you to
+try to find a good solution.
 
 
-> +
-> +       ret = devm_gpiochip_add_data(&pdev->dev, &madera_gpio->gpio_chip,
-> +                                    madera_gpio);
-> +       if (ret < 0) {
-> +               dev_err(&pdev->dev, "Could not register gpiochip, %d\n", ret);
-> +               return ret;
-> +       }
-> +
-> +       ret = gpiochip_add_pin_range(&madera_gpio->gpio_chip, "madera-pinctrl",
-> +                                    0, 0, madera_gpio->gpio_chip.ngpio);
-> +       if (ret) {
-> +               dev_warn(&pdev->dev, "Failed to add pin range (%d)\n", ret);
-> +               return ret;
-> +       }
+>> Please no.  What we just got rid of was making it difficult for me to
+>> make changes to the overlay infrastructure.  There are issues with
+>> overlays that need to be fixed before overlays become really usable.
+>> I am about to propose the next change, which involves removing a
+>> chunk of code that I will not be able to remove if this patch is
+>> accepted (the proposal is awaiting me collecting some data about
+>> the impact of the change, which I expect to complete this week).
 
-Consider if your messages above indeed make value. Hint: device core
-prints a warning if ->probe() fails.
+I should have thought just a little bit more before I hit send.  The
+situation is even worse than I wrote.  One of the next steps (in
+addition to what I wrote about above) is to change the overlay apply
+function to accept a flattened device tree (FDT), not an expanded
+device tree.  In this changed model, the unflattened overlay is
+not available to be modified before it is applied.
+
+It is important for the devicetree infrastructure to have ownership
+of the FDT that is used to create the unflattened tree.  (Notice
+that in the proposed patch, rcar_du_of_get_overlay() follows the
+TI example of doing a kmemdup of the blob (FDT), then uses the
+copy for the unflatten.  The kmemdup() in this case is to create
+a persistent copy of the FDT.)  The driver having ownership of
+this copy, and having the ability to free it is one of the many
+problems with the current overlay implementation.
+
+>>
+>> Can you please handle both the old and new bindings through driver
+>> code instead?
+> 
+> I could, but it would be pointless. The point here is to allow cleanups in the 
+> driver. The LVDS encoder handling code is very intrusive in its current form 
+> and I need to get rid of it. There would be zero point in moving to the new 
+> infrastructure, as the main point is to get rid of the old code which prevents 
+> moving forward. As a consequence that would block new boards from receiving 
+> proper upstream support. An easy option is to break backward compatibility. 
+> I'm personally fine with that, but I assume other people would complain :-)
+> 
+> I can, on the other hand, work with you to see how live DT patching could be 
+> implemented in this driver without blocking your code. When developing this 
+> patch series I start by patching the device tree manually without relying on 
+> overlays at all, but got blocked by the fact that I need to allocate phandles 
+> for new nodes I create. If there was an API to allocate an unused phandle I 
+> could avoid using the overlay infrastructure at all. Or there could be other 
+
+It seems reasonable to provide a way to autogenerate a phandle (if requested)
+by the devicetree code that creates a new node.  Were you using a function
+from drivers/of/dynamic.c to create the node?
 
 
-> +static struct platform_driver madera_gpio_driver = {
-> +       .driver.name    = "madera-gpio",
+> options I'm not thinking of as I don't know what the changes you're working on 
+> are. Can we work on this together to find a solution that would suit us both ?
 
-Please, do in more portable way, i.e.
- .driver = {
-   .name = "...",
- },
+Again, yes, I would be glad to work with you on this.
 
-> +       .driver.owner   = THIS_MODULE,
+-Frank
 
-Is this still needed? I suppose below macro does it for ya.
+> 
+>>> it's necessary, but I'd like to know how long we need to keep this?
+>>>
+>>> How many overlays would you need if everything is static (i.e.
+>>> removing all your fixup code)?
+>>>
+>>>> Patching is disabled and will be enabled along with support for the new
+>>>> DT bindings in the DU driver.
+>>>>
+>>>> Signed-off-by: Laurent Pinchart
+>>>> <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+>>>> ---
+>>>> Changes since v1:
+>>>>
+>>>> - Select OF_FLATTREE
+>>>> - Compile LVDS DT bindings patch code when DRM_RCAR_LVDS is selected
+>>>> - Update the SPDX headers to use GPL-2.0 instead of GPL-2.0-only
+>>>> - Turn __dtb_rcar_du_of_lvds_(begin|end) from u8 to char
+>>>> - Pass void begin and end pointers to rcar_du_of_get_overlay()
+>>>> - Use of_get_parent() instead of accessing the parent pointer directly
+>>>> - Find the LVDS endpoints nodes based on the LVDS node instead of the
+>>>>   root of the overlay
+>>>> - Update to the <soc>-lvds compatible string format
+>>>> ---
+>>>>
+>>>>  drivers/gpu/drm/rcar-du/Kconfig             |   2 +
+>>>>  drivers/gpu/drm/rcar-du/Makefile            |   3 +-
+>>>>  drivers/gpu/drm/rcar-du/rcar_du_of.c        | 451 ++++++++++++++++++++++
+>>>>  drivers/gpu/drm/rcar-du/rcar_du_of.h        |  16 +
+>>>>  drivers/gpu/drm/rcar-du/rcar_du_of_lvds.dts |  82 +++++
+>>>>  5 files changed, 553 insertions(+), 1 deletion(-)
+>>>>  create mode 100644 drivers/gpu/drm/rcar-du/rcar_du_of.c
+>>>>  create mode 100644 drivers/gpu/drm/rcar-du/rcar_du_of.h
+>>>>  create mode 100644 drivers/gpu/drm/rcar-du/rcar_du_of_lvds.dts
+> 
+> [snip]
+> 
 
-> +       .probe          = madera_gpio_probe,
-> +};
-> +
-> +module_platform_driver(madera_gpio_driver);
-> +
-
-> +MODULE_DESCRIPTION("GPIO interface for Madera codecs");
-> +MODULE_AUTHOR("Nariman Poushin <nariman@opensource.wolfsonmicro.com>");
-> +MODULE_AUTHOR("Richard Fitzgerald <rf@opensource.wolfsonmicro.com>");
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_ALIAS("platform:madera-gpio");
-
-See above
-
--- 
-With Best Regards,
-Andy Shevchenko
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
