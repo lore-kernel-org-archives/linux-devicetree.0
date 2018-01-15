@@ -1,54 +1,54 @@
-From: Patrice CHOTARD <patrice.chotard@st.com>
-Subject: Re: [PATCH 04/14] mmc: mmci: Add STM32 variant
-Date: Mon, 15 Jan 2018 17:17:54 +0000
-Message-ID: <ce14077b-2b8b-f8a7-2107-78b1d9dcab27@st.com>
-References: <1515759368-16946-1-git-send-email-patrice.chotard@st.com>
- <1515759368-16946-5-git-send-email-patrice.chotard@st.com>
- <CACRpkdYVDpmEmrF=Zk1zX8RCRnPDieTgPuCen6KQ4ttFpAm+Yg@mail.gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 5/6] arm64: tegra: Add Tegra194 chip device tree
+Date: Mon, 15 Jan 2018 11:21:24 -0600
+Message-ID: <CAL_JsqLH8FJ+ppFrtxS7ja-Apkj=RfDcDoFOtNPsnbb6+Pgp-w@mail.gmail.com>
+References: <1515387278-29777-1-git-send-email-mperttunen@nvidia.com>
+ <1515387278-29777-6-git-send-email-mperttunen@nvidia.com> <20180111215638.f5vxykb2vvxeypmk@rob-hp-laptop>
+ <7085e085-134c-27cf-6ee7-ae691e63d454@kapsi.fi>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdYVDpmEmrF=Zk1zX8RCRnPDieTgPuCen6KQ4ttFpAm+Yg@mail.gmail.com>
-Content-Language: en-US
-Content-ID: <0BC9CC904D336B4FA1E3C89687C1D689@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Russell King <linux@armlinux.org.uk>, Ulf Hansson <ulf.hansson@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre TORGUE <alexandre.torgue@st.com>, linux-mmc <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Andrea Merello <andrea.merello@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <7085e085-134c-27cf-6ee7-ae691e63d454-/1wQRMveznE@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mikko Perttunen <cyndis-/1wQRMveznE@public.gmane.org>
+Cc: Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, talho-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTGludXMNCg0KT24gMDEvMTUvMjAxOCAwMjoxMyBBTSwgTGludXMgV2FsbGVpaiB3cm90ZToN
-Cj4gT24gRnJpLCBKYW4gMTIsIDIwMTggYXQgMToxNSBQTSwgIDxwYXRyaWNlLmNob3RhcmRAc3Qu
-Y29tPiB3cm90ZToNCj4gDQo+PiBGcm9tOiBQYXRyaWNlIENob3RhcmQgPHBhdHJpY2UuY2hvdGFy
-ZEBzdC5jb20+DQo+Pg0KPj4gU1RNMzJGNCBhbmQgU1RNMzJGNyBNQ1VzIGhhcyBhIFNESU8gY29u
-dHJvbGxlciB0aGF0IGxvb2tzIGxpa2UNCj4+IGFuIEFSTSBwbDgxMC4NCj4gDQo+IFBMMTgwIHlv
-dSBtZWFuLiBVbGYgY2FuIGZpeCB3aGlsZSBhcHBseWluZy4NCg0KSSBuZWVkIHRvIHNlbmQgYSB2
-MiwgaSB3aWxsIGZpeCBpdC4NCg0KPiANCj4+IFRoaXMgcGF0Y2ggYWRkcyB0aGUgU1RNMzIgdmFy
-aWFudCBzbyB0aGF0IG1tY2kgZHJpdmVyIHN1cHBvcnRzIGl0Lg0KPj4NCj4+IFNpZ25lZC1vZmYt
-Ynk6IEFuZHJlYSBNZXJlbGxvIDxhbmRyZWEubWVyZWxsb0BnbWFpbC5jb20+DQo+PiBTaWduZWQt
-b2ZmLWJ5OiBQYXRyaWNlIENob3RhcmQgPHBhdHJpY2UuY2hvdGFyZEBzdC5jb20+DQo+IA0KPiAo
-Li4uKQ0KPj4gK3N0YXRpYyBzdHJ1Y3QgdmFyaWFudF9kYXRhIHZhcmlhbnRfc3RtMzIgPSB7DQo+
-PiArICAgICAgIC5maWZvc2l6ZSAgICAgICAgICAgICAgID0gMzIgKiA0LA0KPj4gKyAgICAgICAu
-Zmlmb2hhbGZzaXplICAgICAgICAgICA9IDggKiA0LA0KPj4gKyAgICAgICAuY2xrcmVnICAgICAg
-ICAgICAgICAgICA9IE1DSV9DTEtfRU5BQkxFLA0KPj4gKyAgICAgICAuY2xrcmVnX2VuYWJsZSAg
-ICAgICAgICA9IE1DSV9TVF9VWDUwMF9IV0ZDRU4sDQo+IA0KPiBJZiB0aGUgYXNpYyBkZXNpZ25l
-ZCBkZXJpdmVkIHRoaXMgZnJvbSB1eDUwMCBJIGd1ZXNzIGl0IGlzIHByb3Blci4NCj4gDQo+PiAr
-ICAgICAgIC5jbGtyZWdfOGJpdF9idXNfZW5hYmxlID0gTUNJX1NUXzhCSVRfQlVTLA0KPj4gKyAg
-ICAgICAuY2xrcmVnX25lZ19lZGdlX2VuYWJsZSA9IE1DSV9TVF9VWDUwMF9ORUdfRURHRSwNCj4+
-ICsgICAgICAgLmRhdGFsZW5ndGhfYml0cyAgICAgICAgPSAyNCwNCj4+ICsgICAgICAgLmRhdGFj
-dHJsX21hc2tfc2RpbyAgICAgPSBNQ0lfRFBTTV9TVF9TRElPRU4sDQo+PiArICAgICAgIC5zdF9z
-ZGlvICAgICAgICAgICAgICAgID0gdHJ1ZSwNCj4gDQo+IERpZCB5b3UgdGVzdCBTRElPPyBJIHRo
-aW5rIHdlIGxhY2sgZmVhdHVyZXMgZm9yIHRoYXQuDQoNCm5vLCB0aGUgYm9hcmQgYWNjZXB0IG9u
-bHkgbWljcm8gU0QgY2FyZCwgc28gb25seSBNTUMgbW9kZSBjYW4gYmUgdGVzdGVkLg0KDQo+IA0K
-Pj4gKyAgICAgICB7DQo+PiArICAgICAgICAgICAgICAgLmlkICAgICA9IDB4MDA4ODAxODAsDQo+
-PiArICAgICAgICAgICAgICAgLm1hc2sgICA9IDB4MDBmZmZmZmYsDQo+PiArICAgICAgICAgICAg
-ICAgLmRhdGEgICA9ICZ2YXJpYW50X3N0bTMyLA0KPj4gKyAgICAgICB9LA0KPiANCj4gU2luY2Ug
-dXg1MDAgd2FzIDQ4MDE4MCBJIHdvbmRlciB3aGF0IHZhcmlhbnRzIDUsNiw3IGFyZS4uLg0KDQpX
-aGF0IGlzIHRoZSBydWxlIHRvIGRlZmluZSB0aGUgaWQgPyBmb3IgU1QgTWljcm8gdmFyaWFudHMg
-d2UgZ290IHRoZSANCmxpc3QgYmVsb3cgOg0KCS5pZCAgICAgPSAweDAwMTgwMTgwLCAgdTMwMA0K
-CS5pZCAgICAgPSAweDEwMTgwMTgwLCAgbm9tYWRpaw0KCS5pZCAgICAgPSAweDAwMjgwMTgwLCAg
-bm9tYWRpaw0KCS5pZCAgICAgPSAweDAwNDgwMTgwLCAgdXg1MDANCgkuaWQgICAgID0gMHgxMDQ4
-MDE4MCwgIHV4NTAwdjINCgkuaWQgICAgID0gMHgwMDg4MDE4MCwgIHZhcmlhbnRfc3RtMzINCg0K
-SSBzaW1wbHkgdXBkYXRlIHRoZSBzaXh0aCBkaWdpdCBmb3Igc3RtMzIgdmFyaWFudC4NCg0KDQpQ
-YXRyaWNlDQoNCj4gDQo+IFJldmlld2VkLWJ5OiBMaW51cyBXYWxsZWlqIDxsaW51cy53YWxsZWlq
-QGxpbmFyby5vcmc+DQo+IA0KPiBZb3VycywNCj4gTGludXMgV2FsbGVpag0KPiA=
+On Fri, Jan 12, 2018 at 1:22 AM, Mikko Perttunen <cyndis-/1wQRMveznE@public.gmane.org> wrote:
+> On 11.01.2018 23:56, Rob Herring wrote:
+>>
+>> On Mon, Jan 08, 2018 at 06:54:37AM +0200, Mikko Perttunen wrote:
+>>>
+>>> Add the chip-level device tree, including binding headers, for the
+>>> NVIDIA Tegra194 "Xavier" system-on-chip. Only a small subset of devices
+>>> are initially available, enough to boot to UART console.
+>>>
+>>> Signed-off-by: Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>>> ---
+
+>>> +       interrupt-parent = <&gic>;
+>>> +       #address-cells = <2>;
+>>> +       #size-cells = <2>;
+>>> +
+>>> +       uarta: serial@3100000 {
+>>
+>>
+>> These should all be under a bus node. Tegra failed to do this at the
+>> start and we're still copy-n-pasting this mistake.
+>>
+>> Then you probably don't need 2 address and size cells for all the
+>> peripherals.
+>
+>
+> So I should create one big simple-bus node and put everything with an
+> address apart from /memory (and maybe /sysram) inside it?
+
+Yes. Though you can have multiple buses if that makes sense. Things
+like fixed clocks, gpio-leds, etc. (typically board level) that don't
+have any bus should stay at the top level.
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
