@@ -1,7 +1,7 @@
 From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Subject: [PATCHv2 5/5] ARM: dts: imx6q-b450v3: Add switch port configuration
-Date: Mon, 15 Jan 2018 13:15:08 +0100
-Message-ID: <20180115121508.14544-6-sebastian.reichel@collabora.co.uk>
+Subject: [PATCHv2 4/5] ARM: dts: imx6q-b650v3: Add switch port configuration
+Date: Mon, 15 Jan 2018 13:15:07 +0100
+Message-ID: <20180115121508.14544-5-sebastian.reichel@collabora.co.uk>
 References: <20180115121508.14544-1-sebastian.reichel@collabora.co.uk>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180115121508.14544-1-sebastian.reichel@collabora.co.uk>
@@ -18,24 +18,24 @@ PCI based network card.
 The PCI bus configuration has been written using the following
 information:
 
-root@b450v3# lspci -tv
+root@b650v3# lspci -tv
 -[0000:00]---00.0-[01]----00.0  Intel Corporation I210 Gigabit Network Connection
-root@b450v3# lspci -nn
+root@b650v3# lspci -nn
 00:00.0 PCI bridge [0604]: Synopsys, Inc. Device [16c3:abcd] (rev 01)
 01:00.0 Ethernet controller [0200]: Intel Corporation I210 Gigabit Network Connection [8086:1533] (rev 03)
 
 Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
 ---
- arch/arm/boot/dts/imx6q-b450v3.dts | 48 ++++++++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/imx6q-b650v3.dts | 48 ++++++++++++++++++++++++++++++++++++++
  1 file changed, 48 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx6q-b450v3.dts b/arch/arm/boot/dts/imx6q-b450v3.dts
-index 404a93d9596b..e0bb646e2de7 100644
---- a/arch/arm/boot/dts/imx6q-b450v3.dts
-+++ b/arch/arm/boot/dts/imx6q-b450v3.dts
-@@ -112,3 +112,51 @@
-                 line-name = "PCA9539-P07";
-         };
+diff --git a/arch/arm/boot/dts/imx6q-b650v3.dts b/arch/arm/boot/dts/imx6q-b650v3.dts
+index 7f9f176901d4..91b5b5157655 100644
+--- a/arch/arm/boot/dts/imx6q-b650v3.dts
++++ b/arch/arm/boot/dts/imx6q-b650v3.dts
+@@ -111,3 +111,51 @@
+ 	fsl,tx-cal-45-dp-ohms = <55>;
+ 	fsl,tx-d-cal = <100>;
  };
 +
 +&pci_root {
