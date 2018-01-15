@@ -1,53 +1,80 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH] ARM: dts: nomadik: add interrupt-parent for clcd
-Date: Mon, 15 Jan 2018 17:37:08 +0100
-Message-ID: <20180115163719.1736753-1-arnd@arndb.de>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/4] ASoC: codecs: tas5720: add TAS5722 specific volume
+ control
+Date: Mon, 15 Jan 2018 16:41:34 +0000
+Message-ID: <20180115164134.GA12018@sirena.org.uk>
+References: <20171211190157.12371-1-afd@ti.com>
+ <20171211190157.12371-3-afd@ti.com>
+ <20171212120121.GH16323@sirena.org.uk>
+ <ada57df8-66c0-0692-9250-422ef37cce95@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: arm@kernel.org, Linus Walleij <linus.walleij@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, stable@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Nq2Wo0NMKNjxTN9z"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <ada57df8-66c0-0692-9250-422ef37cce95-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The clcd device is lacking an interrupt-parent property, which makes
-the interrupt unusable and shows up as a warning with the latest
-dtc version:
 
-arch/arm/boot/dts/ste-nomadik-s8815.dtb: Warning (interrupts_property): Missing interrupt-parent for /amba/clcd@10120000
-arch/arm/boot/dts/ste-nomadik-nhk15.dtb: Warning (interrupts_property): Missing interrupt-parent for /amba/clcd@10120000
+--Nq2Wo0NMKNjxTN9z
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I looked up the old board files and found that this interrupt has
-the same irqchip as all the other on-chip device, it just needs one
-extra line.
+On Mon, Jan 15, 2018 at 08:50:09AM -0600, Andrew F. Davis wrote:
+> On 12/12/2017 06:01 AM, Mark Brown wrote:
+> > On Mon, Dec 11, 2017 at 01:01:56PM -0600, Andrew F. Davis wrote:
 
-Fixes: 17470b7da11c ("ARM: dts: add the CLCD LCD display to the NHK15")
-Cc: stable@vger.kernel.org
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- arch/arm/boot/dts/ste-nomadik-stn8815.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+> >> The TAS5722 supports modifying volume in 0.25dB steps (as opposed to 0=
+=2E5dB
+> >> steps on the TAS5720). Introduce a custom mixer control that allows ta=
+king
+> >> advantage of this finer output volume granularity.
 
-diff --git a/arch/arm/boot/dts/ste-nomadik-stn8815.dtsi b/arch/arm/boot/dts/ste-nomadik-stn8815.dtsi
-index 68aab50a73ab..733678b75b88 100644
---- a/arch/arm/boot/dts/ste-nomadik-stn8815.dtsi
-+++ b/arch/arm/boot/dts/ste-nomadik-stn8815.dtsi
-@@ -750,6 +750,7 @@
- 			reg = <0x10120000 0x1000>;
- 			interrupt-names = "combined";
- 			interrupts = <14>;
-+			interrupt-parent = <&vica>;
- 			clocks = <&clcdclk>, <&hclkclcd>;
- 			clock-names = "clcdclk", "apb_pclk";
- 			status = "disabled";
--- 
-2.9.0
+> > Don't do this, it's just making things more complicated.  Instead do
+> > what other drivers do and register different sets of controls depending
+> > on which part you're working with.  The normal thing is to have a big
+> > table for all the shared controls that are the same on all variants then
+> > register additional tables during probe with those that vary for the
+> > individul devices.
+
+> That is what we are doing here, the reason for the custom mixer control
+> is that the controlled bits span two registers in a odd way that is not
+> supported by the standard handlers.
+
+That's not clear from the commit message, it sounds like you're
+introducing an an extra control rather than replacing the one that's
+currently there. =20
+
+> > As ever all volume controls should end in Volume (like the immediately
+> > adjacent control does).
+
+> This was done so this table exactly matches the existing table. If you
+> would like me to change this then I can, and can do it for the other
+> table as well, up to you.
+
+Of course fixes for bugs in existing code are welcome.
+
+--Nq2Wo0NMKNjxTN9z
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlpc2b0ACgkQJNaLcl1U
+h9A+Tgf+J9b/7AVInlfTZZU5+zvRCdfwNvt08QHYvXnOhC6Qwy7yJ3T+M3qvxbFM
+HKmLTUL1HZ6C1CYkpj43zoj7dUyQeh4uPtl51LGEnYdaY1GJnYMCKx6CW4VkLftH
+JCLpEZ+dArp5F3Kziqe5Y2OYZZ41Rt1rk8DHWik92b37FAWPUdz6IbajHtQRFHMt
+e2u5l9dqV5beBRLgflT2PESynGCdj9a6P5WigjaUFFRXU60Yr3X8pboIoT7BqNvs
+aAq01uSE4/Neqf4eg89Yj7cbewTKFKxsVwxPeQau42qmOhpIr+rJxjHiBenk6c8v
+yeIj0Y71O5nShQ2ckvZU6rXrufcTBQ==
+=f9pb
+-----END PGP SIGNATURE-----
+
+--Nq2Wo0NMKNjxTN9z--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
