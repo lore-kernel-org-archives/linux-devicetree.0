@@ -1,101 +1,35 @@
-From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Subject: [PATCHv3 2/5] ARM: dts: imx6q-bx50v3: Add internal switch
-Date: Mon, 15 Jan 2018 20:37:19 +0100
-Message-ID: <20180115193722.10241-3-sebastian.reichel@collabora.co.uk>
-References: <20180115193722.10241-1-sebastian.reichel@collabora.co.uk>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180115193722.10241-1-sebastian.reichel@collabora.co.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>, Vivien Didelot <vivien.didelot@savoirfairelinux.com>, Florian Fainelli <f.fainelli@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>
-Cc: Ian Ray <ian.ray@ge.com>, Nandor Han <nandor.han@ge.com>, Rob Herring <robh+dt@kernel.org>, "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Subject: Re: [PATCH net-next 1/2 v11] net: ethernet: Add DT bindings for
+ the Gemini ethernet
+Date: Mon, 15 Jan 2018 14:40:23 -0500 (EST)
+Message-ID: <20180115.144023.747027495666540365.davem@davemloft.net>
+References: <20180112213424.16442-1-linus.walleij@linaro.org>
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=euc-kr
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180112213424.16442-1-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mirq-linux-CoA6ZxLDdyEEUmgCuDUIdw@public.gmane.org, janos.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, paulius.zaleckas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ulli.kroll-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tobias.waldvogel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-B850v3, B650v3 and B450v3 all have a GPIO bit banged MDIO bus to
-communicate with a Marvell switch. On all devices the switch is
-connected to a PCI based network card, which needs to be referenced
-by DT, so this also adds the common PCI root node.
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Date: Fri, 12 Jan 2018 22:34:23 +0100
 
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
----
- arch/arm/boot/dts/imx6q-bx50v3.dtsi | 62 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 62 insertions(+)
+> This adds the device tree bindings for the Gemini ethernet
+> controller. It is pretty straight-forward, using standard
+> bindings and modelling the two child ports as child devices
+> under the parent ethernet controller device.
+> 
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: Tobias Waldvogel <tobias.waldvogel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: Micha©© Miros©©aw <mirq-linux-CoA6ZxLDdyEEUmgCuDUIdw@public.gmane.org>
+> Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-diff --git a/arch/arm/boot/dts/imx6q-bx50v3.dtsi b/arch/arm/boot/dts/imx6q-bx50v3.dtsi
-index 0808dffc9a48..09b13ac967ec 100644
---- a/arch/arm/boot/dts/imx6q-bx50v3.dtsi
-+++ b/arch/arm/boot/dts/imx6q-bx50v3.dtsi
-@@ -99,6 +99,56 @@
- 		mux-int-port = <1>;
- 		mux-ext-port = <4>;
- 	};
-+
-+	aliases {
-+		mdio-gpio0 = &mdio0;
-+	};
-+
-+	mdio0: mdio-gpio {
-+		compatible = "virtual,mdio-gpio";
-+		gpios = <&gpio2 5 GPIO_ACTIVE_HIGH>, /* mdc */
-+			<&gpio2 7 GPIO_ACTIVE_HIGH>; /* mdio */
-+
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		switch@0 {
-+			compatible = "marvell,mv88e6085"; /* 88e6240*/
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0>;
-+
-+			switch_ports: ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+			};
-+
-+			mdio {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				switchphy0: switchphy@0 {
-+					reg = <0>;
-+				};
-+
-+				switchphy1: switchphy@1 {
-+					reg = <1>;
-+				};
-+
-+				switchphy2: switchphy@2 {
-+					reg = <2>;
-+				};
-+
-+				switchphy3: switchphy@3 {
-+					reg = <3>;
-+				};
-+
-+				switchphy4: switchphy@4 {
-+					reg = <4>;
-+				};
-+			};
-+		};
-+	};
- };
- 
- &ecspi5 {
-@@ -337,3 +387,15 @@
- 		tcxo-clock-frequency = <26000000>;
- 	};
- };
-+
-+&pcie {
-+	/* Synopsys, Inc. Device */
-+	pci_root: root@0,0 {
-+		compatible = "pci16c3,abcd";
-+		reg = <0x00000000 0 0 0 0>;
-+
-+		#address-cells = <3>;
-+		#size-cells = <2>;
-+		#interrupt-cells = <1>;
-+	};
-+};
--- 
-2.15.1
+Applied.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
