@@ -1,49 +1,162 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv2 1/3] dt-bindings: spi: Add DT bindings for Synquacer
-Date: Mon, 15 Jan 2018 09:15:23 -0600
-Message-ID: <CAL_JsqKM2OhdhFZfd_fhBkYiFE9Fdr38Xn7TKorwJo_-+f9xUg@mail.gmail.com>
-References: <1516021530-19236-1-git-send-email-jassisinghbrar@gmail.com> <1516021559-19327-1-git-send-email-jassisinghbrar@gmail.com>
+From: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Subject: Re: [PATCH 1/2 v2] ARM: dts: Add Aspeed SoC USB controllers to device-tree
+Date: Mon, 15 Jan 2018 07:33:05 -0800
+Message-ID: <CACPK8XcWVDYhK9wFWKXzghV+H3nYH0xTyzTpUds4acKtcpty4g@mail.gmail.com>
+References: <1515738064.31850.100.camel@kernel.crashing.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1516021559-19327-1-git-send-email-jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, tpiepho-cgc2CodaaHDQT0dZR+AlfA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Masami Hiramatsu <masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1515738064.31850.100.camel-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Cc: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Joel Stanley <joel.stanley-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-aspeed-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 15, 2018 at 7:05 AM,  <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> From: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+On Thu, Jan 11, 2018 at 10:21 PM, Benjamin Herrenschmidt
+<benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org> wrote:
+> This adds the USB controllers to the DT template of the
+> AST24xx and AST25xx SoCs.
 >
-> This patch adds documentation for Device-Tree bindings for the
-> Socionext Synquacer spi driver.
+> This patch doesn't enable them by default on any board specific
+> .dts yet. This will be done when we have the necessary clock/reset
+> and pinmux support. In the meantime though, this will work if
+> u-boot configures things properly.
 >
-> Signed-off-by: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> For the AST2400 I only added pinmux definition for port 1
+> which is dual USB1/USB2. There are additional USB1 only ports
+> that might require more work but I don't have HW to test at
+> hand so I'm leaving that to whoever cares.
+>
+> Signed-off-by: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+
+Andrew, can you check the pinmux stuff for us please?
+
+The other parts look good.
+
+Cheers,
+
+Joel
+
 > ---
->  .../devicetree/bindings/spi/spi-synquacer.txt      | 24 ++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/spi/spi-synquacer.txt
 >
-> diff --git a/Documentation/devicetree/bindings/spi/spi-synquacer.txt b/Documentation/devicetree/bindings/spi/spi-synquacer.txt
-> new file mode 100644
-> index 0000000..d013cfd
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/spi/spi-synquacer.txt
-> @@ -0,0 +1,24 @@
-> +* Socionext Synquacer HS-SPI bindings
+> v2: Previous patch was missing actually adding the nodes
+>     (which was an old patch in my tree I had forgotten to
+>     merge).
+>
+>  arch/arm/boot/dts/aspeed-g4.dtsi | 27 +++++++++++++++++++++++++++
+>  arch/arm/boot/dts/aspeed-g5.dtsi | 40 ++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 67 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/aspeed-g4.dtsi b/arch/arm/boot/dts/aspeed-g4.dtsi
+> index b0d8431a3700..e55f2ad5de59 100644
+> --- a/arch/arm/boot/dts/aspeed-g4.dtsi
+> +++ b/arch/arm/boot/dts/aspeed-g4.dtsi
+> @@ -103,6 +103,23 @@
+>                         status = "disabled";
+>                 };
+>
+> +               ehci0: usb@1e6a1000 {
+> +                       compatible = "aspeed,ast2400-ehci", "generic-ehci";
+> +                       reg = <0x1e6a1000 0x100>;
+> +                       interrupts = <5>;
+> +                       clocks = <&syscon ASPEED_CLK_GATE_USBPORT1CLK>;
+> +                       status = "disabled";
+> +               };
 > +
-> +Required Properties:
-> +- compatible: should be "socionext,synquacer-spi"
-> +- reg: physical base address of the controller and length of memory mapped
-> +       region.
-> +- clocks: Must contain an entry for rate source clock(s).
-> +- clock-names: Shall be "iHCLK" or "iPCLK". iHCLK is preferred over iPCLK
-
-Huh? The clock binding should reflect all clocks connected to a block,
-not a selection of which one you want to use.
-
-Rob
+> +               uhci: usb@1e6b0000 {
+> +                       compatible = "aspeed,ast2400-uhci", "generic-uhci";
+> +                       reg = <0x1e6b0000 0x100>;
+> +                       interrupts = <14>;
+> +                       #ports = <3>;
+> +                       clocks = <&syscon ASPEED_CLK_GATE_USBUHCICLK>;
+> +                       status = "disabled";
+> +               };
+> +
+>                 apb {
+>                         compatible = "simple-bus";
+>                         #address-cells = <1>;
+> @@ -1227,6 +1244,16 @@
+>                 groups = "USBCKI";
+>         };
+>
+> +       pinctrl_usb2h_default: usb2h_default {
+> +               function = "USB2H1";
+> +               groups = "USB2H1";
+> +       };
+> +
+> +       pinctrl_usb2d_default: usb2d_default {
+> +               function = "USB2D1";
+> +               groups = "USB2D1";
+> +       };
+> +
+>         pinctrl_vgabios_rom_default: vgabios_rom_default {
+>                 function = "VGABIOS_ROM";
+>                 groups = "VGABIOS_ROM";
+> diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
+> index 40de3b66c33f..655258edee24 100644
+> --- a/arch/arm/boot/dts/aspeed-g5.dtsi
+> +++ b/arch/arm/boot/dts/aspeed-g5.dtsi
+> @@ -138,6 +138,31 @@
+>                         status = "disabled";
+>                 };
+>
+> +               ehci0: usb@1e6a1000 {
+> +                       compatible = "aspeed,ast2500-ehci", "generic-ehci";
+> +                       reg = <0x1e6a1000 0x100>;
+> +                       interrupts = <5>;
+> +                       clocks = <&syscon ASPEED_CLK_GATE_USBPORT1CLK>;
+> +                       status = "disabled";
+> +               };
+> +
+> +               ehci1: usb@1e6a3000 {
+> +                       compatible = "aspeed,ast2500-ehci", "generic-ehci";
+> +                       reg = <0x1e6a3000 0x100>;
+> +                       interrupts = <13>;
+> +                       clocks = <&syscon ASPEED_CLK_GATE_USBPORT2CLK>;
+> +                       status = "disabled";
+> +               };
+> +
+> +               uhci: usb@1e6b0000 {
+> +                       compatible = "aspeed,ast2500-uhci", "generic-uhci";
+> +                       reg = <0x1e6b0000 0x100>;
+> +                       interrupts = <14>;
+> +                       #ports = <2>;
+> +                       clocks = <&syscon ASPEED_CLK_GATE_USBUHCICLK>;
+> +                       status = "disabled";
+> +               };
+> +
+>                 apb {
+>                         compatible = "simple-bus";
+>                         #address-cells = <1>;
+> @@ -1358,6 +1383,21 @@
+>                 groups = "USBCKI";
+>         };
+>
+> +       pinctrl_usb2ah_default: usb2ah_default {
+> +               function = "USB2AH";
+> +               groups = "USB2AH";
+> +       };
+> +
+> +       pinctrl_usb11bhid_default: usb11bhid_default {
+> +               function = "USB11BHID";
+> +               groups = "USB11BHID";
+> +       };
+> +
+> +       pinctrl_usb2bh_default: usb2bh_default {
+> +               function = "USB2BH";
+> +               groups = "USB2BH";
+> +       };
+> +
+>         pinctrl_vgabiosrom_default: vgabiosrom_default {
+>                 function = "VGABIOSROM";
+>                 groups = "VGABIOSROM";
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
