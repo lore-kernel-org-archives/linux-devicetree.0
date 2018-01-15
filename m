@@ -1,35 +1,48 @@
 From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Subject: [PATCH] ARM: dts: imx53: Add touchscreen reset line
-Date: Mon, 15 Jan 2018 15:24:52 +0100
-Message-ID: <20180115142452.31278-1-sebastian.reichel@collabora.co.uk>
+Subject: [PATCH] ARM: dts: imx53: use PMIC's TSI pins in adc mode
+Date: Mon, 15 Jan 2018 15:28:20 +0100
+Message-ID: <20180115142820.31729-1-sebastian.reichel@collabora.co.uk>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Martyn Welch <martyn.welch@collabora.co.uk>, Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sebastian Reichel <sebastian.reichel@collabora.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-From: Martyn Welch <martyn.welch@collabora.co.uk>
+PPD uses the PMIC's TSI pins in general purpose ADC mode.
 
-Utilise new support in Atmel MaxTouch driver to drive the
-touchscreen controllers reset line correctly.
-
-Signed-off-by: Martyn Welch <martyn.welch@collabora.co.uk>
 Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
 ---
- arch/arm/boot/dts/imx53-ppd.dts | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/imx53-ppd.dts | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
 diff --git a/arch/arm/boot/dts/imx53-ppd.dts b/arch/arm/boot/dts/imx53-ppd.dts
-index cce959438a79..123297da43a7 100644
+index 123297da43a7..80224fa995f9 100644
 --- a/arch/arm/boot/dts/imx53-ppd.dts
 +++ b/arch/arm/boot/dts/imx53-ppd.dts
-@@ -525,6 +525,7 @@
+@@ -132,6 +132,14 @@
+ 		enable-active-high;
+ 	};
  
- 	touchscreen@4b {
- 		compatible = "atmel,maxtouch";
-+		reset-gpio = <&gpio5 19 GPIO_ACTIVE_HIGH>;
- 		reg = <0x4b>;
- 		interrupt-parent = <&gpio5>;
- 		interrupts = <4 0x8>;
++	reg_tsiref: tsiref {
++		compatible = "regulator-fixed";
++		regulator-name = "tsiref";
++		regulator-min-microvolt = <2500000>;
++		regulator-max-microvolt = <2500000>;
++		regulator-always-on;
++	};
++
+ 	pwm_bl: backlight {
+ 		compatible = "pwm-backlight";
+ 		pwms = <&pwm2 0 50000>;
+@@ -295,6 +303,9 @@
+ 		interrupts = <12 0x8>;
+ 		spi-max-frequency = <1000000>;
+ 
++		dlg,tsi-as-adc;
++		tsiref-supply = <&reg_tsiref>;
++
+ 		regulators {
+ 			buck1_reg: buck1 {
+ 				regulator-name = "BUCKCORE";
 -- 
 2.15.1
