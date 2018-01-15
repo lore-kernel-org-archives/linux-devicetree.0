@@ -1,42 +1,41 @@
 From: "Hean-Loong, Ong" <hean.loong.ong@intel.com>
-Subject: [PATCHv<8> 0/3] Intel FPGA Video and Image Processing Suite
-Date: Mon, 15 Jan 2018 18:21:38 +0800
-Message-ID: <1516011701-2748-1-git-send-email-hean.loong.ong@intel.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Subject: [PATCHv<8> 2/3] ARM:socfpga-defconfig Intel FPGA Video and Image
+ Processing Suite
+Date: Mon, 15 Jan 2018 18:21:40 +0800
+Message-ID: <1516011701-2748-3-git-send-email-hean.loong.ong@intel.com>
+References: <1516011701-2748-1-git-send-email-hean.loong.ong@intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1516011701-2748-1-git-send-email-hean.loong.ong@intel.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: Rob Herring <robh+dt@kernel.org>, Dinh Nguyen <dinguyen@kernel.org>, Daniel Vetter <daniel.vetter@intel.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, hean.loong.ong@intel.com, Ong@vger.kernel.org
+Cc: devicetree@vger.kernel.org, hean.loong.ong@intel.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Ong@freedesktop.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Ong, Hean Loong <hean.loong.ong@intel.com>
-
-The FPGA FrameBuffer Soft IP could be seen  as the GPU and the DRM driver patch here is allocating memory for information to be streamed from the ARM/Linux to the display port.
-Basically the driver just wraps the information such as the pixels to be drawn by the FPGA FrameBuffer 2.
-
-The piece of hardware in discussion is the SoC FPGA where Linux runs on the ARM chip and the FGPA is driven by its NIOS soft core with its own proprietary firmware.
-
-For example the application from the ARM Linux would have to write information on the /dev/fb0 with the information stored in the SDRAM to be fetched by the FPGA framebuffer IP and displayed on the Display Port Monitor.
-
-Ong Hean Loong (3):
-  ARM:dt-bindings:display Intel FPGA Video and Image Processing Suite
-  ARM:socfpga-defconfig Intel FPGA Video and Image Processing Suite
-  ARM:drm ivip Intel FPGA Video and Image Processing Suite
-
- .../devicetree/bindings/display/altr,vip-fb2.txt   |  112 +++++++++++
- arch/arm/configs/socfpga_defconfig                 |    5 +
- drivers/gpu/drm/Kconfig                            |    2 +
- drivers/gpu/drm/Makefile                           |    1 +
- drivers/gpu/drm/ivip/Kconfig                       |   14 ++
- drivers/gpu/drm/ivip/Makefile                      |    9 +
- drivers/gpu/drm/ivip/intel_vip_conn.c              |   96 ++++++++++
- drivers/gpu/drm/ivip/intel_vip_core.c              |  162 ++++++++++++++++
- drivers/gpu/drm/ivip/intel_vip_drv.h               |   52 ++++++
- drivers/gpu/drm/ivip/intel_vip_of.c                |  193 ++++++++++++++++++++
- 10 files changed, 646 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/display/altr,vip-fb2.txt
- create mode 100644 drivers/gpu/drm/ivip/Kconfig
- create mode 100644 drivers/gpu/drm/ivip/Makefile
- create mode 100644 drivers/gpu/drm/ivip/intel_vip_conn.c
- create mode 100644 drivers/gpu/drm/ivip/intel_vip_core.c
- create mode 100644 drivers/gpu/drm/ivip/intel_vip_drv.h
- create mode 100644 drivers/gpu/drm/ivip/intel_vip_of.c
+RnJvbTogT25nIEhlYW4gTG9vbmcgPGhlYW4ubG9vbmcub25nQGludGVsLmNvbT4KCkludGVsIEZQ
+R0EgVmlkZW8gYW5kIEltYWdlIFByb2Nlc3NpbmcgU3VpdGUgRnJhbWUgQnVmZmVyIElJCmRyaXZl
+ciBjb25maWcgZm9yIEFycmlhIDEwIGRldmtpdCBhbmQgaXRzIHZhcmlhbnRzCgpTaWduZWQtb2Zm
+LWJ5OiBPbmcsIEhlYW4gTG9vbmcgPGhlYW4ubG9vbmcub25nQGludGVsLmNvbT4KLS0tCiBhcmNo
+L2FybS9jb25maWdzL3NvY2ZwZ2FfZGVmY29uZmlnIHwgICAgNSArKysrKwogMSBmaWxlcyBjaGFu
+Z2VkLCA1IGluc2VydGlvbnMoKyksIDAgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvYXJjaC9h
+cm0vY29uZmlncy9zb2NmcGdhX2RlZmNvbmZpZyBiL2FyY2gvYXJtL2NvbmZpZ3Mvc29jZnBnYV9k
+ZWZjb25maWcKaW5kZXggMjYyMGNlNy4uZDdkZWVlOCAxMDA2NDQKLS0tIGEvYXJjaC9hcm0vY29u
+Zmlncy9zb2NmcGdhX2RlZmNvbmZpZworKysgYi9hcmNoL2FybS9jb25maWdzL3NvY2ZwZ2FfZGVm
+Y29uZmlnCkBAIC0xMTEsNiArMTExLDExIEBAIENPTkZJR19NRkRfQUxURVJBX0ExMFNSPXkKIENP
+TkZJR19NRkRfU1RNUEU9eQogQ09ORklHX1JFR1VMQVRPUj15CiBDT05GSUdfUkVHVUxBVE9SX0ZJ
+WEVEX1ZPTFRBR0U9eQorQ09ORklHX0RSTT1tCitDT05GSUdfRFJNX0lWSVA9bQorQ09ORklHX0RS
+TV9JVklQX09GPW0KK0NPTkZJR19GQj15CitDT05GSUdfRkJfU0lNUExFPXkKIENPTkZJR19VU0I9
+eQogQ09ORklHX1VTQl9TVE9SQUdFPXkKIENPTkZJR19VU0JfRFdDMj15Ci0tIAoxLjcuMQoKX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1h
+aWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMu
+ZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
