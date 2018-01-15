@@ -1,50 +1,47 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 00/10] R-Car DU: Convert LVDS code to bridge driver
-Date: Mon, 15 Jan 2018 09:00:59 +0200
-Message-ID: <1910701.B4GqNP9ovV@avalon>
-References: <20180112005858.26472-1-laurent.pinchart+renesas@ideasonboard.com> <2317358.st5FeEE5QH@avalon> <20180115065747.hx5kvhurk3x5f3jz@verge.net.au>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20180115065747.hx5kvhurk3x5f3jz@verge.net.au>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, DRI Development <dri-devel@lists.freedesktop.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, devicetree@vger.kernel.org
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH v3 3/8] ARM: dts: sun9i: Add CPUCFG device node for A80 dtsi
+Date: Mon, 15 Jan 2018 15:14:45 +0800
+Message-ID: <20180115071450.18355-4-wens@csie.org>
+References: <20180115071450.18355-1-wens@csie.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180115071450.18355-1-wens-jdAy2FN1RRM@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon,
+CPUCFG is a collection of registers that are mapped to the SoC's signals
+from each individual processor core and associated peripherals, such as
+resets for processors, L1/L2 cache and other things.
 
-On Monday, 15 January 2018 08:57:48 EET Simon Horman wrote:
-> On Fri, Jan 12, 2018 at 03:48:25PM +0200, Laurent Pinchart wrote:
-> > On Friday, 12 January 2018 11:47:03 EET Geert Uytterhoeven wrote:
-> >> On Fri, Jan 12, 2018 at 1:58 AM, Laurent Pinchart wrote:
-> >>> This patch series addresses a design mistake that dates back from the
-> >>> initial DU support. Support for the LVDS encoders, which are IP cores
-> >>> separate from the DU, was bundled in the DU driver. Worse, both the DU
-> >>> and LVDS were described through a single DT node.
-> >>> 
-> >>> To fix the, patches 01/10 and 02/10 define new DT bindings for the
-> >>> LVDS encoders, and deprecate their description inside the DU bindings.
-> >>> To retain backward compatibility with existing DT, patch 03/10 then
-> >>> patches the device tree at runtime to convert the legacy bindings to the
-> >>> new ones.
-> >> 
-> >> Looks like we will have to postpone the R-Car Gen2 Modern DT flag day
-> >> again by a few kernel releases?
-> > 
-> > Why so ? We don't have to drop support for all legacy DT bindings at the
-> > same time, do we ? We can switch to the new-style clock bindings on Gen2
-> > already, and drop the legacy LVDS bindings later.
-> 
-> To clarify, after this patchset.
-> * Old DTs work with old and new kernels.
-> * New DTs require new kernels.
+These registers are used for SMP bringup and CPU hotplugging.
 
-That's correct. I've tested old DTs with new kernels successfully on Lager, 
-Salvator-X (both H3 ES1.x and M3-W) and Salvator-XS.
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ arch/arm/boot/dts/sun9i-a80.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
+diff --git a/arch/arm/boot/dts/sun9i-a80.dtsi b/arch/arm/boot/dts/sun9i-a80.dtsi
+index 85fb800af8ab..85ecb4d64cfd 100644
+--- a/arch/arm/boot/dts/sun9i-a80.dtsi
++++ b/arch/arm/boot/dts/sun9i-a80.dtsi
+@@ -363,6 +363,11 @@
+ 			#reset-cells = <1>;
+ 		};
+ 
++		cpucfg@1700000 {
++			compatible = "allwinner,sun9i-a80-cpucfg";
++			reg = <0x01700000 0x100>;
++		};
++
+ 		mmc0: mmc@1c0f000 {
+ 			compatible = "allwinner,sun9i-a80-mmc";
+ 			reg = <0x01c0f000 0x1000>;
 -- 
-Regards,
+2.15.1
 
-Laurent Pinchart
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
