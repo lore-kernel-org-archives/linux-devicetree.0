@@ -1,107 +1,51 @@
-From: Richard Zhu <hongxing.zhu@nxp.com>
-Subject: RE: [PATCH v3] PCI: imx6: Add PHY reference clock source support
-Date: Mon, 15 Jan 2018 02:19:39 +0000
-Message-ID: <AM5PR0402MB2850EE5537495B0960501D178CEB0@AM5PR0402MB2850.eurprd04.prod.outlook.com>
-References: <CAOMZO5AFC9dxhsQjmRrDA7Z3KMkEemryKOBmQhXm19NXKxHkKQ@mail.gmail.com>
- <1515073977-10153-1-git-send-email-ilya@compulab.co.il>
- <1515408232.12538.7.camel@pengutronix.de>
- <498e20c0-7b86-0f86-7555-64a012b85b9e@compulab.co.il>
+From: =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+Subject: [PATCH 0/6] Nintendo Wii GPIO driver
+Date: Mon, 15 Jan 2018 04:13:55 +0100
+Message-ID: <20180115031401.19577-1-j.neuschaefer@gmx.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <498e20c0-7b86-0f86-7555-64a012b85b9e@compulab.co.il>
-Content-Language: en-US
-Sender: linux-pci-owner@vger.kernel.org
-To: Ilya Ledvich <ilya@compulab.co.il>, Lucas Stach <l.stach@pengutronix.de>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: linuxppc-dev@lists.ozlabs.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9tOiBJbHlhIExlZHZpY2ggW21haWx0
-bzppbHlhQGNvbXB1bGFiLmNvLmlsXSANClNlbnQ6IDIwMTjlubQx5pyIMTDml6UgMjE6NDQNClRv
-OiBMdWNhcyBTdGFjaCA8bC5zdGFjaEBwZW5ndXRyb25peC5kZT47IFJpY2hhcmQgWmh1IDxob25n
-eGluZy56aHVAbnhwLmNvbT4NCkNjOiBCam9ybiBIZWxnYWFzIDxiaGVsZ2Fhc0Bnb29nbGUuY29t
-PjsgUm9iIEhlcnJpbmcgPHJvYmgrZHRAa2VybmVsLm9yZz47IGxpbnV4LXBjaUB2Z2VyLmtlcm5l
-bC5vcmc7IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgbGludXgta2VybmVs
-QHZnZXIua2VybmVsLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcNClN1YmplY3Q6IFJl
-OiBbUEFUQ0ggdjNdIFBDSTogaW14NjogQWRkIFBIWSByZWZlcmVuY2UgY2xvY2sgc291cmNlIHN1
-cHBvcnQNCg0KSGkgTHVjYXMsDQoNCk9uIDAxLzA4LzIwMTggMTI6NDMgUE0sIEx1Y2FzIFN0YWNo
-IHdyb3RlOg0KPiBBbSBEb25uZXJzdGFnLCBkZW4gMDQuMDEuMjAxOCwgMTU6NTIgKzAyMDAgc2No
-cmllYiBJbHlhIExlZHZpY2g6DQo+PiBpLk1YN0QgdmFyaWFudCBvZiB0aGUgSVAgY2FuIHVzZSBl
-aXRoZXIgQ3J5c3RhbCBPc2NpbGxhdG9yIGlucHV0IG9yIA0KPj4gaW50ZXJuYWwgY2xvY2sgaW5w
-dXQgYXMgYSBSZWZlcmVuY2UgQ2xvY2sgaW5wdXQgZm9yIFBDSWUgUEhZLg0KPj4gQWRkIHN1cHBv
-cnQgZm9yIGFuIG9wdGlvbmFsIHByb3BlcnR5ICdmc2wscGNpZS1waHktcmVmY2xrLWludGVybmFs
-Jy4NCj4+IElmIHByZXNlbnQgdGhlbiBhbiBpbnRlcm5hbCBjbG9jayBpbnB1dCBpcyB1c2VkIGFz
-IFBDSWUgUEhZIHJlZmVyZW5jZSANCj4+IGNsb2NrIHNvdXJjZS4gQnkgZGVmYXVsdCBhbiBleHRl
-cm5hbCBvc2NpbGxhdG9yIGlucHV0IGlzIHN0aWxsIHVzZWQuDQo+Pg0KPj4gVmVyaWZpZWQgb24g
-Q29tcHVsYWIgU0JDLWlNWDcgU2luZ2xlIEJvYXJkIENvbXB1dGVyLg0KPiANCj4gU29ycnkgdG8g
-Z2V0IGluIGxhdGUgaGVyZSwgYnV0IEkgd291bGQgcmF0aGVyIGhhdmUgdGhlIGV4dGVybmFsIGNs
-b2NrIA0KPiBpbnB1dCBtb2RlbGVkIGFzIGEgcmVhbCBjbG9jayBhbmQgb25seSB1c2UgdGhlIGlu
-dGVybmFsIGNsb2NrIGlmIHRoYXQgDQo+IGlzbid0IHByZXNlbnQuDQo+IA0KDQpJIHRyaWVkIHRv
-IGZvbGxvdyB0aGUgbG9naWMgZGVzY3JpYmVkIGluIHRoZSBpTVg3IFRSTSwgd2hlcmUgZXh0ZXJu
-YWwgb3NjaWxsYXRvciBpcyBhIGRlZmF1bHQgb3B0aW9uLiBBZGRpdGlvbmFsbHksIHRoZSBleHRl
-cm5hbCBjbG9jayBpbnB1dCBtb2RlbCB5b3UndmUgc3VnZ2VzdGVkLCByZXF1aXJlcyBhZGRpdGlv
-bmFsIGNoYW5nZXMgaW4gdGhlIGlNWDcgU2FicmVTRCBib2FyZCAoYW5kIHByb2JhYmx5IG90aGVy
-IGJvYXJkcyB3aGljaCB1c2UgYW4gZXh0ZXJuYWwgaW5wdXQgdG9vKSBkZXZpY2V0cmVlIGZpbGVz
-Lg0KW1JpY2hhcmRdIE1heWJlIEx1Y2FzIHdhbnQgdG8gaGF2ZSB0aGUgaW50ZXJuYWwgUExMIGNs
-b2NrIG1vZGUgYXMgdGhlIGlNWCBQQ0lFIGRlZmF1bHQgcmVmZXJlbmNlIGNsb2NrLiBBbmQgbWFy
-ayB0aGUgZXh0ZXJuYWwgT1NDIGNsb2NrIGlucHV0IG1vZGUgZXhwbGljaXRseSwgYW5kIGRvY3Vt
-ZW50ZWQgaW4gdGhlIERUIGJpbmRpbmcgZG9jdW1lbnQuDQoNCj4gQXJlIHlvdSBldmVuIHN1cmUg
-dGhhdCB0aGUgaS5NWDcgY2xvY2sgeW91IG1lbnRpb24gaXNuJ3QgdGhlIGFscmVhZHkgDQo+IGRv
-Y3VtZW50ZWQgInBjaWVfYnVzIiBjbG9jaz8gVGhpcyBvbmUgaXMgYWxzbyBhbGxvd2VkIHRvIGJl
-IHNvdXJjZWQgDQo+IGV4dGVybmFsbHkgb24gdGhlIGkuTVg2Lg0KDQpUbyB0aGUgYmVzdCBvZiBt
-eSB1bmRlcnN0YW5kaW5nIGl0J3Mgbm90IHRoZSBwY2llX2J1cyBjbG9jaywgYnV0IEknbSBhYnNv
-bHV0ZWx5IHN1cmUuIENvdWxkIGFueWJvZHkgZnJvbSB0aGUgQlNQIHRlYW0gZ3V5cyBlbGFib3Jh
-dGUgb24gdGhpcyBpc3N1ZT8gVGhhbmtzIGEgbG90IQ0KQmVzdCByZWdhcmRzLA0KW1JpY2hhcmRd
-IGlNWCBQQ0lFIGlzIGludGVncmF0ZWQgb24gdGhlIEFYSSBidXMgaW4gdGhlIFNPQyBpbnRlcm5h
-bGx5Lg0KVGhlICJwY2llX2J1c+KAnCBjbG9jayBtYXJrZWQgYXMgdGhlIGNsb2NrIHByb3ZpZGVk
-IGJ5IHRoZSBSQywgYW5kIHVzZWQgYnkgdGhlIEVQIGluIHRoZSBpTVg2IHBsYXRmb3Jtcy4NCk9u
-IGlNWDYgcGxhdGZvcm1zLCB0aGUgaW50ZXJuYWwgUExMIGlzIG91dHB1dCBmcm9tIExWRFMxIE4v
-UCBwYWQsIGFuZCB1c2VkIGJ5IEVQIGluIHRoZSBIVyByZWZlcmVuY2UgZGVzaWducy4NCiAgICAg
-ICAgICAgICAgICAgICAgICAgIGNsb2NrcyA9IDwmY2xrcyBJTVg2UURMX0NMS19QQ0lFX0FYST4s
-DQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8JmNsa3MgSU1YNlFETF9DTEtfTFZE
-UzFfR0FURT4sDQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8JmNsa3MgSU1YNlFE
-TF9DTEtfUENJRV9SRUZfMTI1TT47DQogICAgICAgICAgICAgICAgICAgICAgICBjbG9jay1uYW1l
-cyA9ICJwY2llIiwgInBjaWVfYnVzIiwgInBjaWVfcGh5IjsNCg0KSWx5YS4NCg0KPj4gLS0tDQo+
-PiBjaGFuZ2VzIHNpbmNlIFYyOg0KPj4gCWFkZCBhIHZlbmRvciBwcmVmaXggJ2ZzbCcgdG8gYSBu
-ZXcgcHJvcGVydHkNCj4+DQo+PiAgwqBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-cGNpL2ZzbCxpbXg2cS1wY2llLnR4dCB8IDUgKysrKysNCj4+ICDCoGRyaXZlcnMvcGNpL2R3Yy9w
-Y2ktaW14Ni5jwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqB8IDgNCj4+ICsrKysrKystDQo+PiAgwqAyIGZpbGVzIGNoYW5nZWQsIDEy
-IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkNCj4+DQo+PiBkaWZmIC0tZ2l0IGEvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9mc2wsaW14NnEtcGNpZS50eHQNCj4+IGIv
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9mc2wsaW14NnEtcGNpZS50eHQN
-Cj4+IGluZGV4IDdiMWU0OGIuLjE1OTFhNmEgMTAwNjQ0DQo+PiAtLS0gYS9Eb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3MvcGNpL2ZzbCxpbXg2cS1wY2llLnR4dA0KPj4gKysrIGIvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9mc2wsaW14NnEtcGNpZS50eHQNCj4+
-IEBAIC01MCw2ICs1MCwxMSBAQCBBZGRpdGlvbmFsIHJlcXVpcmVkIHByb3BlcnRpZXMgZm9yIGlt
-eDdkLXBjaWU6DQo+PiAgwqAJwqDCoMKgwqDCoMKgwqAtICJwY2llcGh5Ig0KPj4gIMKgCcKgwqDC
-oMKgwqDCoMKgLSAiYXBwcyINCj4+ICAgDQo+PiArQWRkaXRpb25hbCBvcHRpb25hbCBwcm9wZXJ0
-aWVzIGZvciBpbXg3ZC1wY2llOg0KPj4gKy0gZnNsLHBjaWUtcGh5LXJlZmNsay1pbnRlcm5hbDog
-SWYgcHJlc2VudCB0aGVuIGFuIGludGVybmFsIFBMTA0KPj4gaW5wdXQgaXMgdXNlZA0KPj4gK8Kg
-wqBhcyBQQ0llIFBIWSByZWZlcmVuY2UgY2xvY2sgc291cmNlLiBCeSBkZWZhdWx0IGFuIGV4dGVy
-bmFsDQo+PiBvc2NpbGxhdG9yIGlucHV0DQo+PiArwqDCoGlzIHVzZWQuDQo+PiArDQo+PiAgwqBF
-eGFtcGxlOg0KPj4gICANCj4+ICDCoAlwY2llQDB4MDEwMDAwMDAgew0KPj4gZGlmZiAtLWdpdCBh
-L2RyaXZlcnMvcGNpL2R3Yy9wY2ktaW14Ni5jIGIvZHJpdmVycy9wY2kvZHdjL3BjaS1pbXg2LmMg
-DQo+PiBpbmRleCBiNzM0ODM1Li4zNjgxMmQzIDEwMDY0NA0KPj4gLS0tIGEvZHJpdmVycy9wY2kv
-ZHdjL3BjaS1pbXg2LmMNCj4+ICsrKyBiL2RyaXZlcnMvcGNpL2R3Yy9wY2ktaW14Ni5jDQo+PiBA
-QCAtNjEsNiArNjEsNyBAQCBzdHJ1Y3QgaW14Nl9wY2llIHsNCj4+ICDCoAl1MzIJCQl0eF9zd2lu
-Z19sb3c7DQo+PiAgwqAJaW50CQkJbGlua19nZW47DQo+PiAgwqAJc3RydWN0IHJlZ3VsYXRvcgkq
-dnBjaWU7DQo+PiArCWJvb2wJCQlwY2llcGh5X3JlZmNsa19zZWw7DQo+PiAgwqB9Ow0KPj4gICAN
-Cj4+ICDCoC8qIFBhcmFtZXRlcnMgZm9yIHRoZSB3YWl0aW5nIGZvciBQQ0llIFBIWSBQTEwgdG8g
-bG9jayBvbiBpLk1YNyAqLyANCj4+IEBAIC00NzQsNyArNDc1LDkgQEAgc3RhdGljIHZvaWQgaW14
-Nl9wY2llX2luaXRfcGh5KHN0cnVjdCBpbXg2X3BjaWUNCj4+ICppbXg2X3BjaWUpDQo+PiAgwqAJ
-c3dpdGNoIChpbXg2X3BjaWUtPnZhcmlhbnQpIHsNCj4+ICDCoAljYXNlIElNWDdEOg0KPj4gIMKg
-CQlyZWdtYXBfdXBkYXRlX2JpdHMoaW14Nl9wY2llLT5pb211eGNfZ3ByLA0KPj4gSU9NVVhDX0dQ
-UjEyLA0KPj4gLQkJCQnCoMKgwqBJTVg3RF9HUFIxMl9QQ0lFX1BIWV9SRUZDTEtfU0VMLA0KPj4g
-MCk7DQo+PiArCQkJCcKgwqDCoElNWDdEX0dQUjEyX1BDSUVfUEhZX1JFRkNMS19TRUwsDQo+PiAr
-CQkJCcKgwqDCoGlteDZfcGNpZS0+cGNpZXBoeV9yZWZjbGtfc2VsID8NCj4+ICsJCQkJwqDCoMKg
-SU1YN0RfR1BSMTJfUENJRV9QSFlfUkVGQ0xLX1NFTCA6DQo+PiAwKTsNCj4+ICDCoAkJYnJlYWs7
-DQo+PiAgwqAJY2FzZSBJTVg2U1g6DQo+PiAgwqAJCXJlZ21hcF91cGRhdGVfYml0cyhpbXg2X3Bj
-aWUtPmlvbXV4Y19ncHIsDQo+PiBJT01VWENfR1BSMTIsDQo+PiBAQCAtODQwLDYgKzg0Myw5IEBA
-IHN0YXRpYyBpbnQgaW14Nl9wY2llX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UNCj4+ICpw
-ZGV2KQ0KPj4gIMKgCQlpbXg2X3BjaWUtPnZwY2llID0gTlVMTDsNCj4+ICDCoAl9DQo+PiAgIA0K
-Pj4gKwlpbXg2X3BjaWUtPnBjaWVwaHlfcmVmY2xrX3NlbCA9DQo+PiArCQlvZl9wcm9wZXJ0eV9y
-ZWFkX2Jvb2wobm9kZSwgImZzbCxwY2llLXBoeS1yZWZjbGstDQo+PiBpbnRlcm5hbCIpOw0KPj4g
-Kw0KPj4gIMKgCXBsYXRmb3JtX3NldF9kcnZkYXRhKHBkZXYsIGlteDZfcGNpZSk7DQo+PiAgIA0K
-Pj4gIMKgCXJldCA9IGlteDZfYWRkX3BjaWVfcG9ydChpbXg2X3BjaWUsIHBkZXYpOw0K
+This series adds a driver for the GPIO controller used in the Nintendo
+Wii game console.
+
+The driver itself, and the related devicetree work should be pretty
+uncontroversial, but due to the system architecture of the Wii, I also
+had to extend an old resource allocation hack to kernel/resource.c: On
+the Wii, there are two separate RAM ranges, with MMIO right in the
+middle, but AFAIK, Linux on PPC32 doesn't support discontiguous memory
+properly. So the hack is to allocate one big RAM range with a hole
+(marked as reserved memory) for MMIO in the middle.
+
+Because this series touches different subsystems (GPIO, DT, core
+resource management), I guess it should be picked up patch-by-patch by
+the different maintainers.
+
+Jonathan Neuschäfer (6):
+  resource: Extend the PPC32 reserved memory hack
+  powerpc: wii: Explicitly configure GPIO owner for poweroff pin
+  gpio: Add GPIO driver for Nintendo Wii
+  dt-bindings: gpio: Add binding for Wii GPIO controller
+  powerpc: wii.dts: Add ngpios property
+  powerpc: wii.dts: Add GPIO line names
+
+ .../bindings/gpio/nintendo,hollywood-gpio.txt      |  27 +++
+ .../devicetree/bindings/powerpc/nintendo/wii.txt   |   9 +-
+ arch/powerpc/boot/dts/wii.dts                      |   9 +
+ arch/powerpc/platforms/embedded6xx/wii.c           |   7 +
+ drivers/gpio/Kconfig                               |   8 +
+ drivers/gpio/Makefile                              |   1 +
+ drivers/gpio/gpio-hlwd.c                           | 183 +++++++++++++++++++++
+ kernel/resource.c                                  |  21 ++-
+ 8 files changed, 256 insertions(+), 9 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/nintendo,hollywood-gpio.txt
+ create mode 100644 drivers/gpio/gpio-hlwd.c
+
+-- 
+2.15.1
+
