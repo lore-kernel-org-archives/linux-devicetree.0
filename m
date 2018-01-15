@@ -1,161 +1,138 @@
-From: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Subject: Re: [PATCH 1/2 v2] ARM: dts: Add Aspeed SoC USB controllers to device-tree
-Date: Mon, 15 Jan 2018 07:33:05 -0800
-Message-ID: <CACPK8XcWVDYhK9wFWKXzghV+H3nYH0xTyzTpUds4acKtcpty4g@mail.gmail.com>
-References: <1515738064.31850.100.camel@kernel.crashing.org>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2] arm64: allwinner: a64: orangepi-zero-plus2: add usb
+ otg
+Date: Mon, 15 Jan 2018 16:33:54 +0100
+Message-ID: <20180115153354.4anukmnd64yj3oec@flea.lan>
+References: <1515748144-25204-1-git-send-email-jagan@amarulasolutions.com>
+ <20180115080139.k2vrczo3hnvdt3df@flea.lan>
+ <8080607.cgOBd57Bn1@ice-x220i>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="7eigv6wzmtueo4cb"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1515738064.31850.100.camel-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <8080607.cgOBd57Bn1@ice-x220i>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Cc: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Joel Stanley <joel.stanley-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-aspeed-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 11, 2018 at 10:21 PM, Benjamin Herrenschmidt
-<benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org> wrote:
-> This adds the USB controllers to the DT template of the
-> AST24xx and AST25xx SoCs.
->
-> This patch doesn't enable them by default on any board specific
-> .dts yet. This will be done when we have the necessary clock/reset
-> and pinmux support. In the meantime though, this will work if
-> u-boot configures things properly.
->
-> For the AST2400 I only added pinmux definition for port 1
-> which is dual USB1/USB2. There are additional USB1 only ports
-> that might require more work but I don't have HW to test at
-> hand so I'm leaving that to whoever cares.
->
-> Signed-off-by: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
 
-Andrew, can you check the pinmux stuff for us please?
+--7eigv6wzmtueo4cb
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The other parts look good.
+On Mon, Jan 15, 2018 at 04:05:07PM +0800, Icenowy Zheng wrote:
+> =E5=9C=A8 2018=E5=B9=B41=E6=9C=8815=E6=97=A5=E6=98=9F=E6=9C=9F=E4=B8=80 C=
+ST =E4=B8=8B=E5=8D=884:01:39=EF=BC=8CMaxime Ripard =E5=86=99=E9=81=93=EF=BC=
+=9A
+> > Hi,
+> >=20
+> > On Fri, Jan 12, 2018 at 02:39:04PM +0530, Jagan Teki wrote:
+> > > Add usb otg support for orangepi-zero-plus2 board:
+> > > - Add usb_otg node with dr_mode as 'otg'
+> > > - USB0-IDDET connected to PA21
+> > > - VBUS connected through DCIN which always on
+> > >=20
+> > > Tested mass storage function.
+> > >=20
+> > > Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> > > ---
+> > > Changes for v2:
+> > > - Change dr_mode to peripheral
+> > >=20
+> > >  .../dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts    | 18
+> > >  ++++++++++++++++++ 1 file changed, 18 insertions(+)
+> > >=20
+> > > diff --git
+> > > a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
+> > > b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts ind=
+ex
+> > > af43533..6511190 100644
+> > > --- a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
+> > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
+> > > @@ -73,6 +73,10 @@
+> > >=20
+> > >  	};
+> > > =20
+> > >  };
+> > >=20
+> > > +&ehci0 {
+> > > +	status =3D "okay";
+> > > +};
+> > > +
+> > >=20
+> > >  &mmc0 {
+> > > =20
+> > >  	pinctrl-names =3D "default";
+> > >  	pinctrl-0 =3D <&mmc0_pins_a>;
+> > >=20
+> > > @@ -111,6 +115,10 @@
+> > >=20
+> > >  	status =3D "okay";
+> > > =20
+> > >  };
+> > >=20
+> > > +&ohci0 {
+> > > +	status =3D "okay";
+> > > +};
+> > > +
+> > >=20
+> > >  &uart0 {
+> > > =20
+> > >  	pinctrl-names =3D "default";
+> > >  	pinctrl-0 =3D <&uart0_pins_a>;
+> > >=20
+> > > @@ -122,3 +130,13 @@
+> > >=20
+> > >  	pinctrl-0 =3D <&uart1_pins>, <&uart1_rts_cts_pins>;
+> > >  	status =3D "okay";
+> > > =20
+> > >  };
+> > >=20
+> > > +
+> > > +&usb_otg {
+> > > +	dr_mode =3D "peripheral";
+> >=20
+> > If VBUS is always on, this can only operate safely in host mode, not
+> > peripheral.
+>=20
+> I think this kind of device is designed to directly drain power from the =
+host=20
+> in peripheral mode.
 
-Cheers,
+Then the commit log has it backwards, VBUS is not connected through
+DCIN, DCIN is VBUS.
 
-Joel
+Maxime
 
-> ---
->
-> v2: Previous patch was missing actually adding the nodes
->     (which was an old patch in my tree I had forgotten to
->     merge).
->
->  arch/arm/boot/dts/aspeed-g4.dtsi | 27 +++++++++++++++++++++++++++
->  arch/arm/boot/dts/aspeed-g5.dtsi | 40 ++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 67 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/aspeed-g4.dtsi b/arch/arm/boot/dts/aspeed-g4.dtsi
-> index b0d8431a3700..e55f2ad5de59 100644
-> --- a/arch/arm/boot/dts/aspeed-g4.dtsi
-> +++ b/arch/arm/boot/dts/aspeed-g4.dtsi
-> @@ -103,6 +103,23 @@
->                         status = "disabled";
->                 };
->
-> +               ehci0: usb@1e6a1000 {
-> +                       compatible = "aspeed,ast2400-ehci", "generic-ehci";
-> +                       reg = <0x1e6a1000 0x100>;
-> +                       interrupts = <5>;
-> +                       clocks = <&syscon ASPEED_CLK_GATE_USBPORT1CLK>;
-> +                       status = "disabled";
-> +               };
-> +
-> +               uhci: usb@1e6b0000 {
-> +                       compatible = "aspeed,ast2400-uhci", "generic-uhci";
-> +                       reg = <0x1e6b0000 0x100>;
-> +                       interrupts = <14>;
-> +                       #ports = <3>;
-> +                       clocks = <&syscon ASPEED_CLK_GATE_USBUHCICLK>;
-> +                       status = "disabled";
-> +               };
-> +
->                 apb {
->                         compatible = "simple-bus";
->                         #address-cells = <1>;
-> @@ -1227,6 +1244,16 @@
->                 groups = "USBCKI";
->         };
->
-> +       pinctrl_usb2h_default: usb2h_default {
-> +               function = "USB2H1";
-> +               groups = "USB2H1";
-> +       };
-> +
-> +       pinctrl_usb2d_default: usb2d_default {
-> +               function = "USB2D1";
-> +               groups = "USB2D1";
-> +       };
-> +
->         pinctrl_vgabios_rom_default: vgabios_rom_default {
->                 function = "VGABIOS_ROM";
->                 groups = "VGABIOS_ROM";
-> diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
-> index 40de3b66c33f..655258edee24 100644
-> --- a/arch/arm/boot/dts/aspeed-g5.dtsi
-> +++ b/arch/arm/boot/dts/aspeed-g5.dtsi
-> @@ -138,6 +138,31 @@
->                         status = "disabled";
->                 };
->
-> +               ehci0: usb@1e6a1000 {
-> +                       compatible = "aspeed,ast2500-ehci", "generic-ehci";
-> +                       reg = <0x1e6a1000 0x100>;
-> +                       interrupts = <5>;
-> +                       clocks = <&syscon ASPEED_CLK_GATE_USBPORT1CLK>;
-> +                       status = "disabled";
-> +               };
-> +
-> +               ehci1: usb@1e6a3000 {
-> +                       compatible = "aspeed,ast2500-ehci", "generic-ehci";
-> +                       reg = <0x1e6a3000 0x100>;
-> +                       interrupts = <13>;
-> +                       clocks = <&syscon ASPEED_CLK_GATE_USBPORT2CLK>;
-> +                       status = "disabled";
-> +               };
-> +
-> +               uhci: usb@1e6b0000 {
-> +                       compatible = "aspeed,ast2500-uhci", "generic-uhci";
-> +                       reg = <0x1e6b0000 0x100>;
-> +                       interrupts = <14>;
-> +                       #ports = <2>;
-> +                       clocks = <&syscon ASPEED_CLK_GATE_USBUHCICLK>;
-> +                       status = "disabled";
-> +               };
-> +
->                 apb {
->                         compatible = "simple-bus";
->                         #address-cells = <1>;
-> @@ -1358,6 +1383,21 @@
->                 groups = "USBCKI";
->         };
->
-> +       pinctrl_usb2ah_default: usb2ah_default {
-> +               function = "USB2AH";
-> +               groups = "USB2AH";
-> +       };
-> +
-> +       pinctrl_usb11bhid_default: usb11bhid_default {
-> +               function = "USB11BHID";
-> +               groups = "USB11BHID";
-> +       };
-> +
-> +       pinctrl_usb2bh_default: usb2bh_default {
-> +               function = "USB2BH";
-> +               groups = "USB2BH";
-> +       };
-> +
->         pinctrl_vgabiosrom_default: vgabiosrom_default {
->                 function = "VGABIOSROM";
->                 groups = "VGABIOSROM";
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--7eigv6wzmtueo4cb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlpcyeEACgkQ0rTAlCFN
+r3TCbw//YVByVs3Ep8eZEocDMbsvr93PqF6zDz4AqPsDgHmiELinc5AnNFfA/JnC
+jg5KVNpTUGZksbXP8y1Q282Wmlip+yfZdFzfDDuBunP/eScg4blG2IrVkyGpWxa7
+3Mdr9sWJ+OdzUKZ4b8D4QFvUyp+Ihf2LLmPFUazhl7zvrc5C2d83KLv1TSZtUbXo
+oBwMRaWu5pMSbu2ZRD0gi9vXGKjJD2YzGZedrdAN72jfcLjlqbQUuOb2nyByVdPv
+9ZJbJ6ig4FgiFqP1A1VR36ZqRD7wia/zjliXwbBm5R2F/mW5A4vBOTZzXAg/tOs8
+7vHUNEyxFU3HWope6X+qUyRHtn4mhD1REoVAyESOs1V8zMFJqWhH4hsPn8CNCZGs
+e0H13OaDMvLtbmX94q+HvOi8zG4W1Guq0a5rF1A91IZnzNlV7zM1Iwm2rfWU2coS
+B3Fz9lShZIdt7bmnoQ3NoGW5nA0lwrdFd8UFS1SvTMQ1OJRW43tbkFFxM5md0N5f
+1Uyi4+ejZloDwSAk/pUB3EB/rLJ8KVnv6ivRG7IXHNgbReBOw7EGmRxUy+k36R//
+Lko7+f//sbw46O0SPPv2gLuVdX9Ss+8Is+2tm6wGqclnf6NnYmHnKyO1c3yxiY9U
+f1QKFZf/d8GJVnmtM6A+IFup2uxl95KB5JYTTWXnGSg8gHuV4+w=
+=9QKT
+-----END PGP SIGNATURE-----
+
+--7eigv6wzmtueo4cb--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
