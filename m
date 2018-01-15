@@ -1,54 +1,130 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCHv2 1/5] net: dsa: Support internal phy on 'cpu' port
-Date: Mon, 15 Jan 2018 16:38:42 +0100
-Message-ID: <20180115153842.GF21450@lunn.ch>
-References: <20180115121508.14544-1-sebastian.reichel@collabora.co.uk>
- <20180115121508.14544-2-sebastian.reichel@collabora.co.uk>
+From: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: Fix missing "device_type" in Aspeed memory nodes
+Date: Mon, 15 Jan 2018 07:43:34 -0800
+Message-ID: <CACPK8XfFQeskqDDKr3+0iTmC6X4vLdvLq9dfYukb_b4tYN7Kew@mail.gmail.com>
+References: <1515732971.31850.87.camel@kernel.crashing.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20180115121508.14544-2-sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+In-Reply-To: <1515732971.31850.87.camel-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Cc: Vivien Didelot <vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Ian Ray <ian.ray-JJi787mZWgc@public.gmane.org>, Nandor Han <nandor.han-JJi787mZWgc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Cc: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Joel Stanley <joel.stanley-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 15, 2018 at 01:15:04PM +0100, Sebastian Reichel wrote:
-> This adds support for enabling the internal PHY for a 'cpu' port.
-> It has been tested on GE B850v3,  B650v3 and B450v3, which have a
-> built-in MV88E6240 switch connected to a PCIe based network card.
-> Without this patch the link does not come up and no traffic can be
-> routed through the switch.
-> 
-> The PHY interface, that is being used on the above test systems is
-> part of the MV88E6240 and since mv88e6xxx driver resets the chip
-> during probe, it is definitely disabled without this patch.
-> 
-> Signed-off-by: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+On Thu, Jan 11, 2018 at 8:56 PM, Benjamin Herrenschmidt
+<benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org> wrote:
+> When Joel removed skeleton.dtsi, the Aspeed boards lost their
+> "device_type" property in the memory node. Since a number of
+> these still use old bootloaders that won't patch it properly,
+> booting breaks as a result.
+>
+> This adds the property back to the individual nodes.
+>
+> Signed-off-by: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+> ---
+>
+> Should we just have a skeleton in the g4 and g5 dtsi with just
+> that property instead ?
 
-Hi Sebastian
+I like this option better. That way future boards don't need to
+remember to add this. Can you send a v2 please?
 
-I was not very happy about the original implementation. This is a bit
-better, but i still think it needs improvement. The enum
-PHY_INTERFACE_MODE_INTERNAL means the PHY is connected to the MAC
-using something other than traditional MII. We don't use this for any
-other of the PHYs inside the Marvell switch, or for any other vendors
-switch which has internal PHYs, since they are connected by MII.
+Thanks for the patch. I assume I missed this as I normally use a
+device tree aware boot where u-boot populates the memory node for us.
 
-You also make the assumption that the PHY for the CPU port actually is
-internal. It does not need to be. It could be an external PHY.
+Cheers,
 
-The key thing here is to know there is a PHY for the CPU port. The
-standard way to represent that is to have a phy-handle. That
-phy-handle also tells you which PHY it is, without making any
-assumptions.
+Joel
 
-Please can you re-write this patch to look for a phy-handle in the cpu
-node.
-
-Thanks
-	Andrew
+> ---
+>  arch/arm/boot/dts/aspeed-ast2500-evb.dts         | 1 +
+>  arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts    | 1 +
+>  arch/arm/boot/dts/aspeed-bmc-opp-romulus.dts     | 1 +
+>  arch/arm/boot/dts/aspeed-bmc-opp-witherspoon.dts | 1 +
+>  arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts       | 1 +
+>  arch/arm/boot/dts/aspeed-bmc-quanta-q71l.dts     | 1 +
+>  6 files changed, 6 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/aspeed-ast2500-evb.dts b/arch/arm/boot/dts/aspeed-ast2500-evb.dts
+> index ede11c597673..0c3f14d05046 100644
+> --- a/arch/arm/boot/dts/aspeed-ast2500-evb.dts
+> +++ b/arch/arm/boot/dts/aspeed-ast2500-evb.dts
+> @@ -17,6 +17,7 @@
+>         };
+>
+>         memory@80000000 {
+> +               device_type = "memory";
+>                 reg = <0x80000000 0x20000000>;
+>         };
+>  };
+> diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts b/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts
+> index 4379d09a261f..9d18cce971be 100644
+> --- a/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts
+> +++ b/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts
+> @@ -13,6 +13,7 @@
+>         };
+>
+>         memory@40000000 {
+> +               device_type = "memory";
+>                 reg = <0x40000000 0x20000000>;
+>         };
+>
+> diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-romulus.dts b/arch/arm/boot/dts/aspeed-bmc-opp-romulus.dts
+> index 623b6ab42021..cd06d5738782 100644
+> --- a/arch/arm/boot/dts/aspeed-bmc-opp-romulus.dts
+> +++ b/arch/arm/boot/dts/aspeed-bmc-opp-romulus.dts
+> @@ -13,6 +13,7 @@
+>         };
+>
+>         memory@80000000 {
+> +               device_type = "memory";
+>                 reg = <0x80000000 0x20000000>;
+>         };
+>
+> diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-witherspoon.dts b/arch/arm/boot/dts/aspeed-bmc-opp-witherspoon.dts
+> index 5f9049d2c4c3..b64553a083b0 100644
+> --- a/arch/arm/boot/dts/aspeed-bmc-opp-witherspoon.dts
+> +++ b/arch/arm/boot/dts/aspeed-bmc-opp-witherspoon.dts
+> @@ -14,6 +14,7 @@
+>         };
+>
+>         memory@80000000 {
+> +               device_type = "memory";
+>                 reg = <0x80000000 0x20000000>;
+>         };
+>
+> diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts b/arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts
+> index c881484a85cf..f3f5b3279e52 100644
+> --- a/arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts
+> +++ b/arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts
+> @@ -13,6 +13,7 @@
+>         };
+>
+>         memory@80000000 {
+> +               device_type = "memory";
+>                 reg = <0x80000000 0x40000000>;
+>         };
+>
+> diff --git a/arch/arm/boot/dts/aspeed-bmc-quanta-q71l.dts b/arch/arm/boot/dts/aspeed-bmc-quanta-q71l.dts
+> index 76aa6ea1f988..ca7a4ae9ed08 100644
+> --- a/arch/arm/boot/dts/aspeed-bmc-quanta-q71l.dts
+> +++ b/arch/arm/boot/dts/aspeed-bmc-quanta-q71l.dts
+> @@ -13,6 +13,7 @@
+>         };
+>
+>         memory@40000000 {
+> +               device_type = "memory";
+>                 reg = <0x40000000 0x8000000>;
+>         };
+>
+>
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
