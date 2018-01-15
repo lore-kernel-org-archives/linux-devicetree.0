@@ -1,590 +1,208 @@
-From: Jim Quinlan <jim2101024@gmail.com>
-Subject: [PATCH v4 4/8] PCI: brcmstb: Add dma-range mapping for inbound traffic
-Date: Mon, 15 Jan 2018 18:28:41 -0500
-Message-ID: <1516058925-46522-5-git-send-email-jim2101024@gmail.com>
-References: <1516058925-46522-1-git-send-email-jim2101024@gmail.com>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 03/12] drm: rcar-du: Fix legacy DT to create LVDS
+ encoder nodes
+Date: Mon, 15 Jan 2018 15:46:26 -0800
+Message-ID: <71c9aaea-a721-6cec-5b7f-f14f7e21d191@gmail.com>
+References: <20180112231430.26943-1-laurent.pinchart+renesas@ideasonboard.com>
+ <1891263.xKRehmHzfM@avalon> <444f1b6b-fa57-da7c-08fd-51b28cdb5fff@gmail.com>
+ <1552581.gP2TZVN6Sh@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1516058925-46522-1-git-send-email-jim2101024@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Brian Norris <computersforpeace@gmail.com>, Russell King <rmk+kernel@armlinux.org.uk>, Robin Murphy <robin.murphy@arm.com>, Christoph Hellwig <hch@lst.de>, Florian Fainelli <f.fainelli@gmail.com>, Jonas Gorski <jonas.gorski@gmail.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-mips@linux-mips.org, linux-pci@vger.kernel.org, Kevin Cernekee <cernekee@gmail.com>, Ralf Baechle <ralf@linux-mips.org>, Jim Quinlan <jim2101024@gmail.com>, bcm-kernel-feedback-list@broadcom.com, Gregory Fong <gregory.0xf0@gmail.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1552581.gP2TZVN6Sh@avalon>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The Broadcom STB PCIe host controller is intimately related to the
-memory subsystem.  This close relationship adds complexity to how cpu
-system memory is mapped to PCIe memory.  Ideally, this mapping is an
-identity mapping, or an identity mapping off by a constant.  Not so in
-this case.
+On 01/15/18 12:29, Laurent Pinchart wrote:
+> Hi Frank,
+> 
+> On Monday, 15 January 2018 22:12:33 EET Frank Rowand wrote:
+>> On 01/15/18 11:22, Laurent Pinchart wrote:
+>>> On Monday, 15 January 2018 21:12:44 EET Frank Rowand wrote:
+>>>> On 01/15/18 09:09, Rob Herring wrote:
+>>>>> +Frank
+>>>>>
+>>>>> On Fri, Jan 12, 2018 at 5:14 PM, Laurent Pinchart wrote:
+>>>>>> The internal LVDS encoders now have their own DT bindings. Before
+>>>>>> switching the driver infrastructure to those new bindings, implement
+>>>>>> backward-compatibility through live DT patching.
+>>>>>
+>>>>> Uhh, we just got rid of TI's patching and now adding this one. I guess
+>>
+>> Let me first answer the question that you ask later.  You ask "Can we work
+>> on this together to find a solution that would suit us both ?"
+>>
+>> My answer to that is emphatically YES.  I will definitely work with you to
+>> try to find a good solution.
+> 
+> \o/
+> 
+>>>> Please no.  What we just got rid of was making it difficult for me to
+>>>> make changes to the overlay infrastructure.  There are issues with
+>>>> overlays that need to be fixed before overlays become really usable.
+>>>> I am about to propose the next change, which involves removing a
+>>>> chunk of code that I will not be able to remove if this patch is
+>>>> accepted (the proposal is awaiting me collecting some data about
+>>>> the impact of the change, which I expect to complete this week).
+>>
+>> I should have thought just a little bit more before I hit send.  The
+>> situation is even worse than I wrote.  One of the next steps (in
+>> addition to what I wrote about above) is to change the overlay apply
+>> function to accept a flattened device tree (FDT), not an expanded
+>> device tree.  In this changed model, the unflattened overlay is
+>> not available to be modified before it is applied.
+> 
+> That makes sense if we consider overlays to be immutable objects that we apply 
+> without offering a way to modify them. I won't challenge that API decision, as 
+> my use of an overlay here is a bit of a hack indeed.
+> 
+>> It is important for the devicetree infrastructure to have ownership
+>> of the FDT that is used to create the unflattened tree.  (Notice
+>> that in the proposed patch, rcar_du_of_get_overlay() follows the
+>> TI example of doing a kmemdup of the blob (FDT), then uses the
+>> copy for the unflatten.  The kmemdup() in this case is to create
+>> a persistent copy of the FDT.)  The driver having ownership of
+>> this copy, and having the ability to free it is one of the many
+>> problems with the current overlay implementation.
+> 
+> Yes, that's something I've identified as well. Lots of work has been done to 
+> clean up the OF core and we're clearly not done yet. I'm happy to see all the 
+> improvements you're working on.
+> 
+>>>> Can you please handle both the old and new bindings through driver
+>>>> code instead?
+>>>
+>>> I could, but it would be pointless. The point here is to allow cleanups in
+>>> the driver. The LVDS encoder handling code is very intrusive in its
+>>> current form and I need to get rid of it. There would be zero point in
+>>> moving to the new infrastructure, as the main point is to get rid of the
+>>> old code which prevents moving forward. As a consequence that would block
+>>> new boards from receiving proper upstream support. An easy option is to
+>>> break backward compatibility. I'm personally fine with that, but I assume
+>>> other people would complain :-)
+>>>
+>>> I can, on the other hand, work with you to see how live DT patching could
+>>> be implemented in this driver without blocking your code. When developing
+>>> this patch series I start by patching the device tree manually without
+>>> relying on overlays at all, but got blocked by the fact that I need to
+>>> allocate phandles for new nodes I create. If there was an API to allocate
+>>> an unused phandle I could avoid using the overlay infrastructure at all.
+>>> Or there could be other
+>>
+>> It seems reasonable to provide a way to autogenerate a phandle (if
+>> requested) by the devicetree code that creates a new node.  Were you using
+>> a function from drivers/of/dynamic.c to create the node?
+> 
+> Not to allocate the node, no. I allocated the device_node structure manually 
+> with kzalloc(), and inserted it in the device tree with of_attach_node(). Is 
+> that the right approach ? I haven't been able to test the code as I stopped 
+> when I realized I couldn't allocate phandles.
+> 
+>>> options I'm not thinking of as I don't know what the changes you're
+>>> working on are. Can we work on this together to find a solution that
+>>> would suit us both ?
+>>
+>> Again, yes, I would be glad to work with you on this.
+> 
+> How would you like to proceed ? I can try the manual approach again but need 
+> information about how I could cleanly implement phandle allocation. I will 
+> likely then run into other issues for which I might need help.
 
-Consider the Broadcom reference board BCM97445LCC_4X8 which has 6 GB
-of system memory.  Here is how the PCIe controller maps the
-system memory to PCIe memory:
+Here are my first thoughts, based on 4.15-rc7:
 
-  memc0-a@[        0....3fffffff] <=> pci@[        0....3fffffff]
-  memc0-b@[100000000...13fffffff] <=> pci@[ 40000000....7fffffff]
-  memc1-a@[ 40000000....7fffffff] <=> pci@[ 80000000....bfffffff]
-  memc1-b@[300000000...33fffffff] <=> pci@[ c0000000....ffffffff]
-  memc2-a@[ 80000000....bfffffff] <=> pci@[100000000...13fffffff]
-  memc2-b@[c00000000...c3fffffff] <=> pci@[140000000...17fffffff]
+Question to Rob and Frank: should of_attach_node() be called directly, or
+should it be called indirectly by creating a change set that adds the node?
 
-Although there are some "gaps" that can be added between the
-individual mappings by software, the permutation of memory regions for
-the most part is fixed by HW.  The solution of having something close
-to an identity mapping is not possible.
+Frank's off the cuff answer (but would like to think more about it): since
+the driver is modifying its own devicetree data, and thus no other entity
+needs to be notified about the changes, there is no need to add the complexity
+of using a change set.
 
-The idea behind this HW design is that the same PCIe module can
-act as an RC or EP, and if it acts as an EP it concatenates all
-of system memory into a BAR so anything can be accessed.  Unfortunately,
-when the PCIe block is in the role of an RC it also presents this
-"BAR" to downstream PCIe devices, rather than offering an identity map
-between its system memory and PCIe space.
+The following is how of_attach_node() could be modified to dynamically create
+a phandle on request.
 
-Suppose that an endpoint driver allocs some DMA memory.  Suppose this
-memory is located at 0x6000_0000, which is in the middle of memc1-a.
-The driver wants a dma_addr_t value that it can pass on to the EP to
-use.  Without doing any custom mapping, the EP will use this value for
-DMA: the driver will get a dma_addr_t equal to 0x6000_0000.  But this
-won't work; the device needs a dma_addr_t that reflects the PCIe space
-address, namely 0xa000_0000.
 
-So, essentially the solution to this problem must modify the
-dma_addr_t returned by the DMA routines routines.  There are two
-ways (I know of) of doing this:
+of_attach_node()
 
-(a) overriding/redefining the dma_to_phys() and phys_to_dma() calls
-that are used by the dma_ops routines.  This is the approach of
+   Add parameter: int create_phandle
 
-	arch/mips/cavium-octeon/dma-octeon.c
+   of_attach_node(): pass create_phandle to __of_attach_node().
 
-In ARM and ARM64 these two routines are defiend in asm/dma-mapping.h
-as static inline functions.
+   Modify existing callers of of_attach_node(): use value of 0 (zero)
+   for create_phandle.
 
-(b) Subscribe to a notifier that notifies when a device is added to a
-bus.  When this happens, set_dma_ops() can be called for the device.
-This method is mentioned in:
+   rcar caller of of_attach_node(): use value of 1 for create_phandle.
 
-    http://lxr.free-electrons.com/source/drivers/of/platform.c?v=3.16#L152
 
-where it says as a comment
+__of_attach_node()
 
-    "In case if platform code need to use own special DMA
-    configuration, it can use Platform bus notifier and
-    handle BUS_NOTIFY_ADD_DEVICE event to fix up DMA
-    configuration."
+   Add parameter: int create_phandle
 
-Solution (b) is what this commit does.  It uses its own set of
-dma_ops which are wrappers around the arch_dma_ops.  The
-wrappers translate the dma addresses before/after invoking
-the arch_dma_ops, as appropriate.
+   if (create_phandle)
+      - protect creating value of new phandle and inserting the node with 
+        of_overlay_mutex_lock() / of_overlay_mutex_unlock()
+      - if phandle does not exist, then phandle = live_tree_max_phandle() + 1
 
-Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
----
- drivers/pci/host/pcie-brcmstb.c | 420 +++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 411 insertions(+), 9 deletions(-)
+   Notice that there will not actually be a phandle property created for the
+   node.  Instead the phandle value will only exist in the struct device_node.
+   We are trying to move in this direction for all phandles, but have not yet
+   gotten there.
 
-diff --git a/drivers/pci/host/pcie-brcmstb.c b/drivers/pci/host/pcie-brcmstb.c
-index fd15ab1..049f0db 100644
---- a/drivers/pci/host/pcie-brcmstb.c
-+++ b/drivers/pci/host/pcie-brcmstb.c
-@@ -4,6 +4,7 @@
- #include <linux/clk.h>
- #include <linux/compiler.h>
- #include <linux/delay.h>
-+#include <linux/dma-mapping.h>
- #include <linux/init.h>
- #include <linux/interrupt.h>
- #include <linux/io.h>
-@@ -318,11 +319,307 @@ static void __iomem *brcm_pcie_map_conf(struct pci_bus *bus, unsigned int devfn,
- 	((val & ~reg##_##field##_MASK) | \
- 	 (reg##_##field##_MASK & (field_val << reg##_##field##_SHIFT)))
- 
-+static const struct dma_map_ops *arch_dma_ops;
-+static const struct dma_map_ops *brcm_dma_ops_ptr;
-+static struct of_pci_range *dma_ranges;
-+static int num_dma_ranges;
-+
- static phys_addr_t scb_size[BRCM_MAX_SCB];
- static int num_memc;
- static int num_pcie;
- static DEFINE_MUTEX(brcm_pcie_lock);
- 
-+static dma_addr_t brcm_to_pci(dma_addr_t addr)
-+{
-+	struct of_pci_range *p;
-+
-+	if (!num_dma_ranges)
-+		return addr;
-+
-+	for (p = dma_ranges; p < &dma_ranges[num_dma_ranges]; p++)
-+		if (addr >= p->cpu_addr && addr < (p->cpu_addr + p->size))
-+			return addr - p->cpu_addr + p->pci_addr;
-+
-+	return addr;
-+}
-+
-+static dma_addr_t brcm_to_cpu(dma_addr_t addr)
-+{
-+	struct of_pci_range *p;
-+
-+	if (!num_dma_ranges)
-+		return addr;
-+
-+	for (p = dma_ranges; p < &dma_ranges[num_dma_ranges]; p++)
-+		if (addr >= p->pci_addr && addr < (p->pci_addr + p->size))
-+			return addr - p->pci_addr + p->cpu_addr;
-+
-+	return addr;
-+}
-+
-+static void *brcm_alloc(struct device *dev, size_t size, dma_addr_t *handle,
-+			gfp_t gfp, unsigned long attrs)
-+{
-+	void *ret;
-+
-+	ret = arch_dma_ops->alloc(dev, size, handle, gfp, attrs);
-+	if (ret)
-+		*handle = brcm_to_pci(*handle);
-+	return ret;
-+}
-+
-+static void brcm_free(struct device *dev, size_t size, void *cpu_addr,
-+		      dma_addr_t handle, unsigned long attrs)
-+{
-+	handle = brcm_to_cpu(handle);
-+	arch_dma_ops->free(dev, size, cpu_addr, handle, attrs);
-+}
-+
-+static int brcm_mmap(struct device *dev, struct vm_area_struct *vma,
-+		     void *cpu_addr, dma_addr_t dma_addr, size_t size,
-+		     unsigned long attrs)
-+{
-+	dma_addr = brcm_to_cpu(dma_addr);
-+	return arch_dma_ops->mmap(dev, vma, cpu_addr, dma_addr, size, attrs);
-+}
-+
-+static int brcm_get_sgtable(struct device *dev, struct sg_table *sgt,
-+			    void *cpu_addr, dma_addr_t handle, size_t size,
-+			    unsigned long attrs)
-+{
-+	handle = brcm_to_cpu(handle);
-+	return arch_dma_ops->get_sgtable(dev, sgt, cpu_addr, handle, size,
-+				       attrs);
-+}
-+
-+static dma_addr_t brcm_map_page(struct device *dev, struct page *page,
-+				unsigned long offset, size_t size,
-+				enum dma_data_direction dir,
-+				unsigned long attrs)
-+{
-+	return brcm_to_pci(arch_dma_ops->map_page(dev, page, offset, size,
-+						  dir, attrs));
-+}
-+
-+static void brcm_unmap_page(struct device *dev, dma_addr_t handle,
-+			    size_t size, enum dma_data_direction dir,
-+			    unsigned long attrs)
-+{
-+	handle = brcm_to_cpu(handle);
-+	arch_dma_ops->unmap_page(dev, handle, size, dir, attrs);
-+}
-+
-+static int brcm_map_sg(struct device *dev, struct scatterlist *sgl,
-+		       int nents, enum dma_data_direction dir,
-+		       unsigned long attrs)
-+{
-+	int i, j;
-+	struct scatterlist *sg;
-+
-+	for_each_sg(sgl, sg, nents, i) {
-+#ifdef CONFIG_NEED_SG_DMA_LENGTH
-+		sg->dma_length = sg->length;
-+#endif
-+		sg->dma_address =
-+			brcm_dma_ops_ptr->map_page(dev, sg_page(sg), sg->offset,
-+						   sg->length, dir, attrs);
-+		if (dma_mapping_error(dev, sg->dma_address))
-+			goto bad_mapping;
-+	}
-+	return nents;
-+
-+bad_mapping:
-+	for_each_sg(sgl, sg, i, j)
-+		brcm_dma_ops_ptr->unmap_page(dev, sg_dma_address(sg),
-+					     sg_dma_len(sg), dir, attrs);
-+	return 0;
-+}
-+
-+static void brcm_unmap_sg(struct device *dev,
-+			  struct scatterlist *sgl, int nents,
-+			  enum dma_data_direction dir,
-+			  unsigned long attrs)
-+{
-+	int i;
-+	struct scatterlist *sg;
-+
-+	for_each_sg(sgl, sg, nents, i)
-+		brcm_dma_ops_ptr->unmap_page(dev, sg_dma_address(sg),
-+					     sg_dma_len(sg), dir, attrs);
-+}
-+
-+static void brcm_sync_single_for_cpu(struct device *dev,
-+				     dma_addr_t handle, size_t size,
-+				     enum dma_data_direction dir)
-+{
-+	handle = brcm_to_cpu(handle);
-+	arch_dma_ops->sync_single_for_cpu(dev, handle, size, dir);
-+}
-+
-+static void brcm_sync_single_for_device(struct device *dev,
-+					dma_addr_t handle, size_t size,
-+					enum dma_data_direction dir)
-+{
-+	handle = brcm_to_cpu(handle);
-+	arch_dma_ops->sync_single_for_device(dev, handle, size, dir);
-+}
-+
-+static dma_addr_t brcm_map_resource(struct device *dev, phys_addr_t phys,
-+				    size_t size,
-+				    enum dma_data_direction dir,
-+				    unsigned long attrs)
-+{
-+	if (arch_dma_ops->map_resource)
-+		return brcm_to_pci(arch_dma_ops->map_resource
-+				   (dev, phys, size, dir, attrs));
-+	return brcm_to_pci((dma_addr_t)phys);
-+}
-+
-+static void brcm_unmap_resource(struct device *dev, dma_addr_t handle,
-+				size_t size, enum dma_data_direction dir,
-+				unsigned long attrs)
-+{
-+	if (arch_dma_ops->unmap_resource)
-+		arch_dma_ops->unmap_resource(dev, brcm_to_cpu(handle), size,
-+					     dir, attrs);
-+}
-+
-+void brcm_sync_sg_for_cpu(struct device *dev, struct scatterlist *sgl,
-+			  int nents, enum dma_data_direction dir)
-+{
-+	struct scatterlist *sg;
-+	int i;
-+
-+	for_each_sg(sgl, sg, nents, i)
-+		brcm_dma_ops_ptr->sync_single_for_cpu(dev, sg_dma_address(sg),
-+						      sg->length, dir);
-+}
-+
-+void brcm_sync_sg_for_device(struct device *dev, struct scatterlist *sgl,
-+			     int nents, enum dma_data_direction dir)
-+{
-+	struct scatterlist *sg;
-+	int i;
-+
-+	for_each_sg(sgl, sg, nents, i)
-+		brcm_dma_ops_ptr->sync_single_for_device(dev,
-+							 sg_dma_address(sg),
-+							 sg->length, dir);
-+}
-+
-+static int brcm_mapping_error(struct device *dev, dma_addr_t dma_addr)
-+{
-+	return arch_dma_ops->mapping_error(dev, dma_addr);
-+}
-+
-+static int brcm_dma_supported(struct device *dev, u64 mask)
-+{
-+	if (num_dma_ranges) {
-+		/*
-+		 * It is our translated addresses that the EP will "see", so
-+		 * we check all of the ranges for the largest possible value.
-+		 */
-+		int i;
-+
-+		for (i = 0; i < num_dma_ranges; i++)
-+			if (dma_ranges[i].pci_addr + dma_ranges[i].size - 1
-+			    > mask)
-+				return 0;
-+		return 1;
-+	}
-+
-+	return arch_dma_ops->dma_supported(dev, mask);
-+}
-+
-+#ifdef ARCH_HAS_DMA_GET_REQUIRED_MASK
-+u64 brcm_get_required_mask)(struct device *dev)
-+{
-+	return arch_dma_ops->get_required_mask(dev);
-+}
-+#endif
-+
-+static const struct dma_map_ops brcm_dma_ops = {
-+	.alloc			= brcm_alloc,
-+	.free			= brcm_free,
-+	.mmap			= brcm_mmap,
-+	.get_sgtable		= brcm_get_sgtable,
-+	.map_page		= brcm_map_page,
-+	.unmap_page		= brcm_unmap_page,
-+	.map_sg			= brcm_map_sg,
-+	.unmap_sg		= brcm_unmap_sg,
-+	.map_resource		= brcm_map_resource,
-+	.unmap_resource		= brcm_unmap_resource,
-+	.sync_single_for_cpu	= brcm_sync_single_for_cpu,
-+	.sync_single_for_device	= brcm_sync_single_for_device,
-+	.sync_sg_for_cpu	= brcm_sync_sg_for_cpu,
-+	.sync_sg_for_device	= brcm_sync_sg_for_device,
-+	.mapping_error		= brcm_mapping_error,
-+	.dma_supported		= brcm_dma_supported,
-+#ifdef ARCH_HAS_DMA_GET_REQUIRED_MASK
-+	.get_required_mask	= brcm_get_required_mask,
-+#endif
-+};
-+
-+static void brcm_set_dma_ops(struct device *dev)
-+{
-+	int ret;
-+
-+	if (IS_ENABLED(CONFIG_ARM64)) {
-+		/*
-+		 * We are going to invoke get_dma_ops().  That
-+		 * function, at this point in time, invokes
-+		 * get_arch_dma_ops(), and for ARM64 that function
-+		 * returns a pointer to dummy_dma_ops.  So then we'd
-+		 * like to call arch_setup_dma_ops(), but that isn't
-+		 * exported.  Instead, we call of_dma_configure(),
-+		 * which is exported, and this calls
-+		 * arch_setup_dma_ops().  Once we do this the call to
-+		 * get_dma_ops() will work properly because
-+		 * dev->dma_ops will be set.
-+		 */
-+		ret = of_dma_configure(dev, dev->of_node);
-+		if (ret) {
-+			dev_err(dev, "of_dma_configure() failed: %d\n", ret);
-+			return;
-+		}
-+	}
-+
-+	arch_dma_ops = get_dma_ops(dev);
-+	if (!arch_dma_ops) {
-+		dev_err(dev, "failed to get arch_dma_ops\n");
-+		return;
-+	}
-+
-+	set_dma_ops(dev, &brcm_dma_ops);
-+}
-+
-+static int brcmstb_platform_notifier(struct notifier_block *nb,
-+				     unsigned long event, void *__dev)
-+{
-+	struct device *dev = __dev;
-+
-+	brcm_dma_ops_ptr = &brcm_dma_ops;
-+	if (event != BUS_NOTIFY_ADD_DEVICE)
-+		return NOTIFY_DONE;
-+
-+	brcm_set_dma_ops(dev);
-+	return NOTIFY_OK;
-+}
-+
-+static struct notifier_block brcmstb_platform_nb = {
-+	.notifier_call = brcmstb_platform_notifier,
-+};
-+
-+static int brcm_register_notifier(void)
-+{
-+	return bus_register_notifier(&pci_bus_type, &brcmstb_platform_nb);
-+}
-+
-+static int brcm_unregister_notifier(void)
-+{
-+	return bus_unregister_notifier(&pci_bus_type, &brcmstb_platform_nb);
-+}
-+
- static u32 rd_fld(void __iomem *p, u32 mask, int shift)
- {
- 	return (bcm_readl(p) & mask) >> shift;
-@@ -596,9 +893,71 @@ static inline void brcm_pcie_perst_set(struct brcm_pcie *pcie,
- 		WR_FLD_RB(pcie->base, PCIE_MISC_PCIE_CTRL, PCIE_PERSTB, !val);
- }
- 
-+static int pci_dma_range_parser_init(struct of_pci_range_parser *parser,
-+				     struct device_node *node)
-+{
-+	const int na = 3, ns = 2;
-+	int rlen;
-+
-+	parser->node = node;
-+	parser->pna = of_n_addr_cells(node);
-+	parser->np = parser->pna + na + ns;
-+
-+	parser->range = of_get_property(node, "dma-ranges", &rlen);
-+	if (!parser->range)
-+		return -ENOENT;
-+
-+	parser->end = parser->range + rlen / sizeof(__be32);
-+
-+	return 0;
-+}
-+
-+static int brcm_pcie_parse_map_dma_ranges(struct brcm_pcie *pcie)
-+{
-+	int i;
-+	struct of_pci_range_parser parser;
-+	struct device_node *dn = pcie->dn;
-+
-+	/*
-+	 * Parse dma-ranges property if present.  If there are multiple
-+	 * PCIe controllers, we only have to parse from one of them since
-+	 * the others will have an identical mapping.
-+	 */
-+	if (!pci_dma_range_parser_init(&parser, dn)) {
-+		unsigned int max_ranges
-+			= (parser.end - parser.range) / parser.np;
-+
-+		dma_ranges = kcalloc(max_ranges, sizeof(struct of_pci_range),
-+				     GFP_KERNEL);
-+		if (!dma_ranges)
-+			return -ENOMEM;
-+
-+		for (i = 0; of_pci_range_parser_one(&parser, dma_ranges + i);
-+		     i++)
-+			num_dma_ranges++;
-+	}
-+
-+	for (i = 0, num_memc = 0; i < BRCM_MAX_SCB; i++) {
-+		u64 size = brcmstb_memory_memc_size(i);
-+
-+		if (size == (u64)-1) {
-+			dev_err(pcie->dev, "cannot get memc%d size", i);
-+			return -EINVAL;
-+		} else if (size) {
-+			scb_size[i] = roundup_pow_of_two_64(size);
-+			num_memc++;
-+		} else {
-+			break;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- static int brcm_pcie_add_controller(struct brcm_pcie *pcie)
- {
- 	int i, ret = 0;
-+	struct device *dev = pcie->dev;
- 
- 	mutex_lock(&brcm_pcie_lock);
- 	if (num_pcie > 0) {
-@@ -606,12 +965,21 @@ static int brcm_pcie_add_controller(struct brcm_pcie *pcie)
- 		goto done;
- 	}
- 
-+	ret = brcm_register_notifier();
-+	if (ret) {
-+		dev_err(dev, "failed to register pci bus notifier\n");
-+		goto done;
-+	}
-+	ret = brcm_pcie_parse_map_dma_ranges(pcie);
-+	if (ret)
-+		goto done;
-+
- 	/* Determine num_memc and their sizes */
- 	for (i = 0, num_memc = 0; i < BRCM_MAX_SCB; i++) {
- 		u64 size = brcmstb_memory_memc_size(i);
- 
- 		if (size == (u64)-1) {
--			dev_err(pcie->dev, "cannot get memc%d size\n", i);
-+			dev_err(dev, "cannot get memc%d size\n", i);
- 			ret = -EINVAL;
- 			goto done;
- 		} else if (size) {
-@@ -635,8 +1003,16 @@ static int brcm_pcie_add_controller(struct brcm_pcie *pcie)
- static void brcm_pcie_remove_controller(struct brcm_pcie *pcie)
- {
- 	mutex_lock(&brcm_pcie_lock);
--	if (--num_pcie == 0)
--		num_memc = 0;
-+	if (--num_pcie > 0)
-+		goto out;
-+
-+	if (brcm_unregister_notifier())
-+		dev_err(pcie->dev, "failed to unregister pci bus notifier\n");
-+	kfree(dma_ranges);
-+	dma_ranges = NULL;
-+	num_dma_ranges = 0;
-+	num_memc = 0;
-+out:
- 	mutex_unlock(&brcm_pcie_lock);
- }
- 
-@@ -756,6 +1132,38 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
- 	 */
- 	rc_bar2_offset = 0;
- 
-+	if (dma_ranges) {
-+		/*
-+		 * The best-case scenario is to place the inbound
-+		 * region in the first 4GB of pci-space, as some
-+		 * legacy devices can only address 32bits.
-+		 * We would also like to put the MSI under 4GB
-+		 * as well, since some devices require a 32bit
-+		 * MSI target address.
-+		 */
-+		if (total_mem_size <= 0xc0000000ULL &&
-+		    rc_bar2_size <= 0x100000000ULL) {
-+			rc_bar2_offset = 0;
-+		} else {
-+			/*
-+			 * The system memory is 4GB or larger so we
-+			 * cannot start the inbound region at location
-+			 * 0 (since we have to allow some space for
-+			 * outbound memory @ 3GB).  So instead we
-+			 * start it at the 1x multiple of its size
-+			 */
-+			rc_bar2_offset = rc_bar2_size;
-+		}
-+
-+	} else {
-+		/*
-+		 * Set simple configuration based on memory sizes
-+		 * only.  We always start the viewport at address 0,
-+		 * and set the MSI target address accordingly.
-+		 */
-+		rc_bar2_offset = 0;
-+	}
-+
- 	tmp = lower_32_bits(rc_bar2_offset);
- 	tmp = INSERT_FIELD(tmp, PCIE_MISC_RC_BAR2_CONFIG_LO, SIZE,
- 			   encode_ibar_size(rc_bar2_size));
-@@ -966,7 +1374,6 @@ static int brcm_pcie_probe(struct platform_device *pdev)
- 	struct brcm_pcie *pcie;
- 	struct resource *res;
- 	void __iomem *base;
--	u32 tmp;
- 	struct pci_host_bridge *bridge;
- 	struct pci_bus *child;
- 
-@@ -983,11 +1390,6 @@ static int brcm_pcie_probe(struct platform_device *pdev)
- 		return -EINVAL;
- 	}
- 
--	if (of_property_read_u32(dn, "dma-ranges", &tmp) == 0) {
--		dev_err(&pdev->dev, "cannot yet handle dma-ranges\n");
--		return -EINVAL;
--	}
--
- 	data = of_id->data;
- 	pcie->reg_offsets = data->offsets;
- 	pcie->reg_field_info = data->reg_field_info;
--- 
-1.9.0.138.g2de3478
+   Modify existing callers of __of_attach_node(): use value of 0 (zero)
+   for create_phandle.
+
+   (If a change set is used to add the node instead of calling
+   of_attach_node(), then the change set code would have to be modified to
+   expose the create_phandle parameter to of_changeset_attach_node() and
+   related code.)
+
+-Frank
+
+> 
+>>>>> it's necessary, but I'd like to know how long we need to keep this?
+>>>>>
+>>>>> How many overlays would you need if everything is static (i.e.
+>>>>> removing all your fixup code)?
+>>>>>
+>>>>>> Patching is disabled and will be enabled along with support for the new
+>>>>>> DT bindings in the DU driver.
+>>>>>>
+>>>>>> Signed-off-by: Laurent Pinchart
+>>>>>> <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+>>>>>> ---
+>>>>>> Changes since v1:
+>>>>>>
+>>>>>> - Select OF_FLATTREE
+>>>>>> - Compile LVDS DT bindings patch code when DRM_RCAR_LVDS is selected
+>>>>>> - Update the SPDX headers to use GPL-2.0 instead of GPL-2.0-only
+>>>>>> - Turn __dtb_rcar_du_of_lvds_(begin|end) from u8 to char
+>>>>>> - Pass void begin and end pointers to rcar_du_of_get_overlay()
+>>>>>> - Use of_get_parent() instead of accessing the parent pointer directly
+>>>>>> - Find the LVDS endpoints nodes based on the LVDS node instead of the
+>>>>>>
+>>>>>>   root of the overlay
+>>>>>>
+>>>>>> - Update to the <soc>-lvds compatible string format
+>>>>>> ---
+>>>>>>
+>>>>>>  drivers/gpu/drm/rcar-du/Kconfig             |   2 +
+>>>>>>  drivers/gpu/drm/rcar-du/Makefile            |   3 +-
+>>>>>>  drivers/gpu/drm/rcar-du/rcar_du_of.c        | 451 ++++++++++++++++++++
+>>>>>>  drivers/gpu/drm/rcar-du/rcar_du_of.h        |  16 +
+>>>>>>  drivers/gpu/drm/rcar-du/rcar_du_of_lvds.dts |  82 +++++
+>>>>>>  5 files changed, 553 insertions(+), 1 deletion(-)
+>>>>>>  create mode 100644 drivers/gpu/drm/rcar-du/rcar_du_of.c
+>>>>>>  create mode 100644 drivers/gpu/drm/rcar-du/rcar_du_of.h
+>>>>>>  create mode 100644 drivers/gpu/drm/rcar-du/rcar_du_of_lvds.dts
+>>>
+>>> [snip]
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
