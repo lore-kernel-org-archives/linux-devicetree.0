@@ -1,131 +1,56 @@
-From: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: Fix missing "device_type" in Aspeed memory nodes
-Date: Mon, 15 Jan 2018 07:43:34 -0800
-Message-ID: <CACPK8XfFQeskqDDKr3+0iTmC6X4vLdvLq9dfYukb_b4tYN7Kew@mail.gmail.com>
-References: <1515732971.31850.87.camel@kernel.crashing.org>
+From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCHv2 1/3] dt-bindings: spi: Add DT bindings for Synquacer
+Date: Mon, 15 Jan 2018 21:23:42 +0530
+Message-ID: <CABb+yY3HEX6qMWxmirMnbwe3P5NwmUHGcuYypo-UzbUyUOi5UQ@mail.gmail.com>
+References: <1516021530-19236-1-git-send-email-jassisinghbrar@gmail.com>
+ <1516021559-19327-1-git-send-email-jassisinghbrar@gmail.com> <CAL_JsqKM2OhdhFZfd_fhBkYiFE9Fdr38Xn7TKorwJo_-+f9xUg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1515732971.31850.87.camel-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Cc: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Joel Stanley <joel.stanley-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqKM2OhdhFZfd_fhBkYiFE9Fdr38Xn7TKorwJo_-+f9xUg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, tpiepho-cgc2CodaaHDQT0dZR+AlfA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Masami Hiramatsu <masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 11, 2018 at 8:56 PM, Benjamin Herrenschmidt
-<benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org> wrote:
-> When Joel removed skeleton.dtsi, the Aspeed boards lost their
-> "device_type" property in the memory node. Since a number of
-> these still use old bootloaders that won't patch it properly,
-> booting breaks as a result.
+On Mon, Jan 15, 2018 at 8:45 PM, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Mon, Jan 15, 2018 at 7:05 AM,  <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> From: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>
+>> This patch adds documentation for Device-Tree bindings for the
+>> Socionext Synquacer spi driver.
+>>
+>> Signed-off-by: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/spi/spi-synquacer.txt      | 24 ++++++++++++++++++++++
+>>  1 file changed, 24 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/spi/spi-synquacer.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/spi/spi-synquacer.txt b/Documentation/devicetree/bindings/spi/spi-synquacer.txt
+>> new file mode 100644
+>> index 0000000..d013cfd
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/spi/spi-synquacer.txt
+>> @@ -0,0 +1,24 @@
+>> +* Socionext Synquacer HS-SPI bindings
+>> +
+>> +Required Properties:
+>> +- compatible: should be "socionext,synquacer-spi"
+>> +- reg: physical base address of the controller and length of memory mapped
+>> +       region.
+>> +- clocks: Must contain an entry for rate source clock(s).
+>> +- clock-names: Shall be "iHCLK" or "iPCLK". iHCLK is preferred over iPCLK
 >
-> This adds the property back to the individual nodes.
+> Huh? The clock binding should reflect all clocks connected to a block,
+> not a selection of which one you want to use.
 >
-> Signed-off-by: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-> ---
->
-> Should we just have a skeleton in the g4 and g5 dtsi with just
-> that property instead ?
+Both the clocks are internal to the block and derived from the same source.
+Instead of defining a new "use-ipclk" property, the driver uses the
+clock-names to choose the appropriate divider.
+I am open to any better option.
 
-I like this option better. That way future boards don't need to
-remember to add this. Can you send a v2 please?
-
-Thanks for the patch. I assume I missed this as I normally use a
-device tree aware boot where u-boot populates the memory node for us.
-
-Cheers,
-
-Joel
-
-> ---
->  arch/arm/boot/dts/aspeed-ast2500-evb.dts         | 1 +
->  arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts    | 1 +
->  arch/arm/boot/dts/aspeed-bmc-opp-romulus.dts     | 1 +
->  arch/arm/boot/dts/aspeed-bmc-opp-witherspoon.dts | 1 +
->  arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts       | 1 +
->  arch/arm/boot/dts/aspeed-bmc-quanta-q71l.dts     | 1 +
->  6 files changed, 6 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/aspeed-ast2500-evb.dts b/arch/arm/boot/dts/aspeed-ast2500-evb.dts
-> index ede11c597673..0c3f14d05046 100644
-> --- a/arch/arm/boot/dts/aspeed-ast2500-evb.dts
-> +++ b/arch/arm/boot/dts/aspeed-ast2500-evb.dts
-> @@ -17,6 +17,7 @@
->         };
->
->         memory@80000000 {
-> +               device_type = "memory";
->                 reg = <0x80000000 0x20000000>;
->         };
->  };
-> diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts b/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts
-> index 4379d09a261f..9d18cce971be 100644
-> --- a/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts
-> +++ b/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts
-> @@ -13,6 +13,7 @@
->         };
->
->         memory@40000000 {
-> +               device_type = "memory";
->                 reg = <0x40000000 0x20000000>;
->         };
->
-> diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-romulus.dts b/arch/arm/boot/dts/aspeed-bmc-opp-romulus.dts
-> index 623b6ab42021..cd06d5738782 100644
-> --- a/arch/arm/boot/dts/aspeed-bmc-opp-romulus.dts
-> +++ b/arch/arm/boot/dts/aspeed-bmc-opp-romulus.dts
-> @@ -13,6 +13,7 @@
->         };
->
->         memory@80000000 {
-> +               device_type = "memory";
->                 reg = <0x80000000 0x20000000>;
->         };
->
-> diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-witherspoon.dts b/arch/arm/boot/dts/aspeed-bmc-opp-witherspoon.dts
-> index 5f9049d2c4c3..b64553a083b0 100644
-> --- a/arch/arm/boot/dts/aspeed-bmc-opp-witherspoon.dts
-> +++ b/arch/arm/boot/dts/aspeed-bmc-opp-witherspoon.dts
-> @@ -14,6 +14,7 @@
->         };
->
->         memory@80000000 {
-> +               device_type = "memory";
->                 reg = <0x80000000 0x20000000>;
->         };
->
-> diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts b/arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts
-> index c881484a85cf..f3f5b3279e52 100644
-> --- a/arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts
-> +++ b/arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts
-> @@ -13,6 +13,7 @@
->         };
->
->         memory@80000000 {
-> +               device_type = "memory";
->                 reg = <0x80000000 0x40000000>;
->         };
->
-> diff --git a/arch/arm/boot/dts/aspeed-bmc-quanta-q71l.dts b/arch/arm/boot/dts/aspeed-bmc-quanta-q71l.dts
-> index 76aa6ea1f988..ca7a4ae9ed08 100644
-> --- a/arch/arm/boot/dts/aspeed-bmc-quanta-q71l.dts
-> +++ b/arch/arm/boot/dts/aspeed-bmc-quanta-q71l.dts
-> @@ -13,6 +13,7 @@
->         };
->
->         memory@40000000 {
-> +               device_type = "memory";
->                 reg = <0x40000000 0x8000000>;
->         };
->
->
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Thanks
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
