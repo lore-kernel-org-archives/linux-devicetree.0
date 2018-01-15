@@ -1,89 +1,56 @@
-From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Subject: [PATCHv2 4/5] ARM: dts: imx6q-b650v3: Add switch port configuration
-Date: Mon, 15 Jan 2018 13:15:07 +0100
-Message-ID: <20180115121508.14544-5-sebastian.reichel@collabora.co.uk>
-References: <20180115121508.14544-1-sebastian.reichel@collabora.co.uk>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180115121508.14544-1-sebastian.reichel@collabora.co.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>, Vivien Didelot <vivien.didelot@savoirfairelinux.com>, Florian Fainelli <f.fainelli@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>
-Cc: Ian Ray <ian.ray@ge.com>, Nandor Han <nandor.han@ge.com>, Rob Herring <robh+dt@kernel.org>, "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH 02/14] mmc: mmci: Don't pretend all variants to have
+ MCI_STARBITERR flag
+Date: Mon, 15 Jan 2018 13:32:14 +0100
+Message-ID: <CAPDyKFpqENchQs7c1BSJnorTgidbwHFAHByHJU3t9TV6uHurxA@mail.gmail.com>
+References: <1515759368-16946-1-git-send-email-patrice.chotard@st.com> <1515759368-16946-3-git-send-email-patrice.chotard@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1515759368-16946-3-git-send-email-patrice.chotard@st.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Patrice CHOTARD <patrice.chotard@st.com>
+Cc: Russell King <linux@armlinux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre Torgue <alexandre.torgue@st.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Andrea Merello <andrea.merello@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This adds support for the Marvell switch and names the network
-ports according to the labels, that can be found next to the
-connectors. The switch is connected to the host system using a
-PCI based network card.
+On 12 January 2018 at 13:15,  <patrice.chotard@st.com> wrote:
+> From: Patrice Chotard <patrice.chotard@st.com>
+>
+> This patch prepares for supporting the STM32 variant that
+> has no such bit in the status register.
+>
+> Signed-off-by: Andrea Merello <andrea.merello@gmail.com>
+> Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
+> ---
+>  drivers/mmc/host/mmci.c | 16 ++++++++++++++--
+>  1 file changed, 14 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
+> index 3125dc0..7e56f85 100644
+> --- a/drivers/mmc/host/mmci.c
+> +++ b/drivers/mmc/host/mmci.c
+> @@ -83,6 +83,8 @@
+>   * @qcom_dml: enables qcom specific dma glue for dma transfers.
+>   * @reversed_irq_handling: handle data irq before cmd irq.
+>   * @mmcimask1: true if variant have a MMCIMASK1 register.
+> + * @start_err: true is the variant has STARTBITERR bit inside MMCISTATUS
+> + *            register.
+>   */
+>  struct variant_data {
+>         unsigned int            clkreg;
+> @@ -113,6 +115,7 @@ struct variant_data {
+>         bool                    qcom_dml;
+>         bool                    reversed_irq_handling;
+>         bool                    mmcimask1;
+> +       bool                    start_err;
 
-The PCI bus configuration has been written using the following
-information:
+To be consistent with how we implement support for similar variant
+variations, I would prefer to have this being a u32. Something along
+the lines of how the "busy_detect_flag" is being used.
 
-root@b650v3# lspci -tv
--[0000:00]---00.0-[01]----00.0  Intel Corporation I210 Gigabit Network Connection
-root@b650v3# lspci -nn
-00:00.0 PCI bridge [0604]: Synopsys, Inc. Device [16c3:abcd] (rev 01)
-01:00.0 Ethernet controller [0200]: Intel Corporation I210 Gigabit Network Connection [8086:1533] (rev 03)
+Otherwise this looks good to me.
 
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
----
- arch/arm/boot/dts/imx6q-b650v3.dts | 48 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 48 insertions(+)
+[...]
 
-diff --git a/arch/arm/boot/dts/imx6q-b650v3.dts b/arch/arm/boot/dts/imx6q-b650v3.dts
-index 7f9f176901d4..91b5b5157655 100644
---- a/arch/arm/boot/dts/imx6q-b650v3.dts
-+++ b/arch/arm/boot/dts/imx6q-b650v3.dts
-@@ -111,3 +111,51 @@
- 	fsl,tx-cal-45-dp-ohms = <55>;
- 	fsl,tx-d-cal = <100>;
- };
-+
-+&pci_root {
-+	/* Intel Corporation I210 Gigabit Network Connection */
-+	switch_nic: ethernet@3,0 {
-+		compatible = "pci8086,1533";
-+		reg = <0x00010000 0 0 0 0>;
-+	};
-+};
-+
-+&switch_ports {
-+	port@0 {
-+		reg = <0>;
-+		label = "enacq";
-+	};
-+
-+	port@1 {
-+		reg = <1>;
-+		label = "eneport1";
-+	};
-+
-+	port@2 {
-+		reg = <2>;
-+		label = "enix";
-+	};
-+
-+	port@3 {
-+		reg = <3>;
-+		label = "enid";
-+	};
-+
-+	port@4 {
-+		reg = <4>;
-+		label = "cpu";
-+		phy-mode = "internal";
-+		ethernet = <&switch_nic>;
-+	};
-+
-+	port@5 {
-+		reg = <5>;
-+		label = "enembc";
-+
-+		/* connected to Ethernet MAC of AT91RM9200 in MII mode */
-+		fixed-link {
-+			speed = <100>;
-+			full-duplex;
-+		};
-+	};
-+};
--- 
-2.15.1
+Kind regards
+Uffe
