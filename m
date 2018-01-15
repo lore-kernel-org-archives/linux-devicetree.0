@@ -1,61 +1,54 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv2 1/3] dt-bindings: spi: Add DT bindings for Synquacer
-Date: Mon, 15 Jan 2018 11:17:07 -0600
-Message-ID: <CAL_JsqK16GXU0WQ2Ft2-_dHOH_y08inMjF8vHE4mhK0Zo9=JMg@mail.gmail.com>
-References: <1516021530-19236-1-git-send-email-jassisinghbrar@gmail.com>
- <1516021559-19327-1-git-send-email-jassisinghbrar@gmail.com>
- <CAL_JsqKM2OhdhFZfd_fhBkYiFE9Fdr38Xn7TKorwJo_-+f9xUg@mail.gmail.com> <CABb+yY3HEX6qMWxmirMnbwe3P5NwmUHGcuYypo-UzbUyUOi5UQ@mail.gmail.com>
+From: Patrice CHOTARD <patrice.chotard@st.com>
+Subject: Re: [PATCH 04/14] mmc: mmci: Add STM32 variant
+Date: Mon, 15 Jan 2018 17:17:54 +0000
+Message-ID: <ce14077b-2b8b-f8a7-2107-78b1d9dcab27@st.com>
+References: <1515759368-16946-1-git-send-email-patrice.chotard@st.com>
+ <1515759368-16946-5-git-send-email-patrice.chotard@st.com>
+ <CACRpkdYVDpmEmrF=Zk1zX8RCRnPDieTgPuCen6KQ4ttFpAm+Yg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CABb+yY3HEX6qMWxmirMnbwe3P5NwmUHGcuYypo-UzbUyUOi5UQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, tpiepho-cgc2CodaaHDQT0dZR+AlfA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Masami Hiramatsu <masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdYVDpmEmrF=Zk1zX8RCRnPDieTgPuCen6KQ4ttFpAm+Yg@mail.gmail.com>
+Content-Language: en-US
+Content-ID: <0BC9CC904D336B4FA1E3C89687C1D689@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Russell King <linux@armlinux.org.uk>, Ulf Hansson <ulf.hansson@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre TORGUE <alexandre.torgue@st.com>, linux-mmc <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Andrea Merello <andrea.merello@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 15, 2018 at 9:53 AM, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Mon, Jan 15, 2018 at 8:45 PM, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->> On Mon, Jan 15, 2018 at 7:05 AM,  <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>> From: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>>
->>> This patch adds documentation for Device-Tree bindings for the
->>> Socionext Synquacer spi driver.
->>>
->>> Signed-off-by: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>> ---
->>>  .../devicetree/bindings/spi/spi-synquacer.txt      | 24 ++++++++++++++++++++++
->>>  1 file changed, 24 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/spi/spi-synquacer.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/spi/spi-synquacer.txt b/Documentation/devicetree/bindings/spi/spi-synquacer.txt
->>> new file mode 100644
->>> index 0000000..d013cfd
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/spi/spi-synquacer.txt
->>> @@ -0,0 +1,24 @@
->>> +* Socionext Synquacer HS-SPI bindings
->>> +
->>> +Required Properties:
->>> +- compatible: should be "socionext,synquacer-spi"
->>> +- reg: physical base address of the controller and length of memory mapped
->>> +       region.
->>> +- clocks: Must contain an entry for rate source clock(s).
->>> +- clock-names: Shall be "iHCLK" or "iPCLK". iHCLK is preferred over iPCLK
->>
->> Huh? The clock binding should reflect all clocks connected to a block,
->> not a selection of which one you want to use.
->>
-> Both the clocks are internal to the block and derived from the same source.
-> Instead of defining a new "use-ipclk" property, the driver uses the
-> clock-names to choose the appropriate divider.
-> I am open to any better option.
-
-If one is preferred, then why not always use it? Or how does one
-decide which clock to use?
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgTGludXMNCg0KT24gMDEvMTUvMjAxOCAwMjoxMyBBTSwgTGludXMgV2FsbGVpaiB3cm90ZToN
+Cj4gT24gRnJpLCBKYW4gMTIsIDIwMTggYXQgMToxNSBQTSwgIDxwYXRyaWNlLmNob3RhcmRAc3Qu
+Y29tPiB3cm90ZToNCj4gDQo+PiBGcm9tOiBQYXRyaWNlIENob3RhcmQgPHBhdHJpY2UuY2hvdGFy
+ZEBzdC5jb20+DQo+Pg0KPj4gU1RNMzJGNCBhbmQgU1RNMzJGNyBNQ1VzIGhhcyBhIFNESU8gY29u
+dHJvbGxlciB0aGF0IGxvb2tzIGxpa2UNCj4+IGFuIEFSTSBwbDgxMC4NCj4gDQo+IFBMMTgwIHlv
+dSBtZWFuLiBVbGYgY2FuIGZpeCB3aGlsZSBhcHBseWluZy4NCg0KSSBuZWVkIHRvIHNlbmQgYSB2
+MiwgaSB3aWxsIGZpeCBpdC4NCg0KPiANCj4+IFRoaXMgcGF0Y2ggYWRkcyB0aGUgU1RNMzIgdmFy
+aWFudCBzbyB0aGF0IG1tY2kgZHJpdmVyIHN1cHBvcnRzIGl0Lg0KPj4NCj4+IFNpZ25lZC1vZmYt
+Ynk6IEFuZHJlYSBNZXJlbGxvIDxhbmRyZWEubWVyZWxsb0BnbWFpbC5jb20+DQo+PiBTaWduZWQt
+b2ZmLWJ5OiBQYXRyaWNlIENob3RhcmQgPHBhdHJpY2UuY2hvdGFyZEBzdC5jb20+DQo+IA0KPiAo
+Li4uKQ0KPj4gK3N0YXRpYyBzdHJ1Y3QgdmFyaWFudF9kYXRhIHZhcmlhbnRfc3RtMzIgPSB7DQo+
+PiArICAgICAgIC5maWZvc2l6ZSAgICAgICAgICAgICAgID0gMzIgKiA0LA0KPj4gKyAgICAgICAu
+Zmlmb2hhbGZzaXplICAgICAgICAgICA9IDggKiA0LA0KPj4gKyAgICAgICAuY2xrcmVnICAgICAg
+ICAgICAgICAgICA9IE1DSV9DTEtfRU5BQkxFLA0KPj4gKyAgICAgICAuY2xrcmVnX2VuYWJsZSAg
+ICAgICAgICA9IE1DSV9TVF9VWDUwMF9IV0ZDRU4sDQo+IA0KPiBJZiB0aGUgYXNpYyBkZXNpZ25l
+ZCBkZXJpdmVkIHRoaXMgZnJvbSB1eDUwMCBJIGd1ZXNzIGl0IGlzIHByb3Blci4NCj4gDQo+PiAr
+ICAgICAgIC5jbGtyZWdfOGJpdF9idXNfZW5hYmxlID0gTUNJX1NUXzhCSVRfQlVTLA0KPj4gKyAg
+ICAgICAuY2xrcmVnX25lZ19lZGdlX2VuYWJsZSA9IE1DSV9TVF9VWDUwMF9ORUdfRURHRSwNCj4+
+ICsgICAgICAgLmRhdGFsZW5ndGhfYml0cyAgICAgICAgPSAyNCwNCj4+ICsgICAgICAgLmRhdGFj
+dHJsX21hc2tfc2RpbyAgICAgPSBNQ0lfRFBTTV9TVF9TRElPRU4sDQo+PiArICAgICAgIC5zdF9z
+ZGlvICAgICAgICAgICAgICAgID0gdHJ1ZSwNCj4gDQo+IERpZCB5b3UgdGVzdCBTRElPPyBJIHRo
+aW5rIHdlIGxhY2sgZmVhdHVyZXMgZm9yIHRoYXQuDQoNCm5vLCB0aGUgYm9hcmQgYWNjZXB0IG9u
+bHkgbWljcm8gU0QgY2FyZCwgc28gb25seSBNTUMgbW9kZSBjYW4gYmUgdGVzdGVkLg0KDQo+IA0K
+Pj4gKyAgICAgICB7DQo+PiArICAgICAgICAgICAgICAgLmlkICAgICA9IDB4MDA4ODAxODAsDQo+
+PiArICAgICAgICAgICAgICAgLm1hc2sgICA9IDB4MDBmZmZmZmYsDQo+PiArICAgICAgICAgICAg
+ICAgLmRhdGEgICA9ICZ2YXJpYW50X3N0bTMyLA0KPj4gKyAgICAgICB9LA0KPiANCj4gU2luY2Ug
+dXg1MDAgd2FzIDQ4MDE4MCBJIHdvbmRlciB3aGF0IHZhcmlhbnRzIDUsNiw3IGFyZS4uLg0KDQpX
+aGF0IGlzIHRoZSBydWxlIHRvIGRlZmluZSB0aGUgaWQgPyBmb3IgU1QgTWljcm8gdmFyaWFudHMg
+d2UgZ290IHRoZSANCmxpc3QgYmVsb3cgOg0KCS5pZCAgICAgPSAweDAwMTgwMTgwLCAgdTMwMA0K
+CS5pZCAgICAgPSAweDEwMTgwMTgwLCAgbm9tYWRpaw0KCS5pZCAgICAgPSAweDAwMjgwMTgwLCAg
+bm9tYWRpaw0KCS5pZCAgICAgPSAweDAwNDgwMTgwLCAgdXg1MDANCgkuaWQgICAgID0gMHgxMDQ4
+MDE4MCwgIHV4NTAwdjINCgkuaWQgICAgID0gMHgwMDg4MDE4MCwgIHZhcmlhbnRfc3RtMzINCg0K
+SSBzaW1wbHkgdXBkYXRlIHRoZSBzaXh0aCBkaWdpdCBmb3Igc3RtMzIgdmFyaWFudC4NCg0KDQpQ
+YXRyaWNlDQoNCj4gDQo+IFJldmlld2VkLWJ5OiBMaW51cyBXYWxsZWlqIDxsaW51cy53YWxsZWlq
+QGxpbmFyby5vcmc+DQo+IA0KPiBZb3VycywNCj4gTGludXMgV2FsbGVpag0KPiA=
