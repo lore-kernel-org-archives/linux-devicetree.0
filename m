@@ -1,35 +1,59 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: dts: rename oxnas dts files
-Date: Mon, 15 Jan 2018 15:45:24 +0100
-Message-ID: <CAK8P3a1NUww8pGWr=gvxSDk4p7Emoq9NJyGfs8N86bU_sqgnpQ@mail.gmail.com>
-References: <20180113173553.GA30727@makrotopia.org>
+From: "Andrew F. Davis" <afd@ti.com>
+Subject: Re: [PATCH 3/4] ASoC: codecs: tas5720: add TAS5722
+ specific volume control
+Date: Mon, 15 Jan 2018 08:50:09 -0600
+Message-ID: <ada57df8-66c0-0692-9250-422ef37cce95@ti.com>
+References: <20171211190157.12371-1-afd@ti.com>
+ <20171211190157.12371-3-afd@ti.com> <20171212120121.GH16323@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180113173553.GA30727-g5gK2j5usbvCyp4qypjU+w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Golle <daniel-g5gK2j5usbvCyp4qypjU+w@public.gmane.org>
-Cc: DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, arm-soc <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20171212120121.GH16323@sirena.org.uk>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jan 13, 2018 at 6:35 PM, Daniel Golle <daniel-g5gK2j5usbvCyp4qypjU+w@public.gmane.org> wrote:
-> Other platforms' device-tree files start with a platform prefix, such as
-> sun7i-a20-*.dts or at91-*.dts.
-> This naming scheme turns out to be handy when using multi-platform build
-> systems such as OpenWrt.
-> Prepend oxnas files with their platform prefix to comply with the naming
-> scheme already used for most other platforms.
->
-> Signed-off-by: Daniel Golle <daniel-g5gK2j5usbvCyp4qypjU+w@public.gmane.org>
+On 12/12/2017 06:01 AM, Mark Brown wrote:
+> On Mon, Dec 11, 2017 at 01:01:56PM -0600, Andrew F. Davis wrote:
+> 
+>> The TAS5722 supports modifying volume in 0.25dB steps (as opposed to 0.5dB
+>> steps on the TAS5720). Introduce a custom mixer control that allows taking
+>> advantage of this finer output volume granularity.
+> 
+> Don't do this, it's just making things more complicated.  Instead do
+> what other drivers do and register different sets of controls depending
+> on which part you're working with.  The normal thing is to have a big
+> table for all the shared controls that are the same on all variants then
+> register additional tables during probe with those that vary for the
+> individul devices.
+> 
 
-There are few changes to oxnas in general, and Neil doesn't appear to be around
-to ask at the moment.
-I assume he doesn't mind me picking it up into next/dt directly.
+That is what we are doing here, the reason for the custom mixer control
+is that the controlled bits span two registers in a odd way that is not
+supported by the standard handlers.
 
-Merged now, thanks,
+>>  static const struct snd_kcontrol_new tas5720_snd_controls[] = {
+>>  	SOC_SINGLE_TLV("Speaker Driver Playback Volume",
+>> -		       TAS5720_VOLUME_CTRL_REG, 0, 0xff, 0, dac_tlv),
+>> +		       TAS5720_VOLUME_CTRL_REG, 0, 0xff, 0, tas5720_dac_tlv),
+>> +	SOC_SINGLE_TLV("Speaker Driver Analog Gain", TAS5720_ANALOG_CTRL_REG,
+>> +		       TAS5720_ANALOG_GAIN_SHIFT, 3, 0, dac_analog_tlv),
+> 
+> As ever all volume controls should end in Volume (like the immediately
+> adjacent control does).
+> 
 
-        Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This was done so this table exactly matches the existing table. If you
+would like me to change this then I can, and can do it for the other
+table as well, up to you.
