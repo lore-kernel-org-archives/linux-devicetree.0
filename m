@@ -1,142 +1,60 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v3 2/8] ARM: dts: sun9i: Add CCI-400 device
- nodes for A80
-Date: Mon, 15 Jan 2018 15:14:44 +0800
-Message-ID: <20180115071450.18355-3-wens@csie.org>
-References: <20180115071450.18355-1-wens@csie.org>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: sun8i: acivate SPI on Orange Pi R1
+Date: Mon, 15 Jan 2018 08:29:05 +0100
+Message-ID: <20180115072905.n277ofbx7loyujtm@flea.lan>
+References: <20180111215355.22182-1-hauke@hauke-m.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBB4NJ6HJAKGQEJV3U3FY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180115071450.18355-1-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="fcns2md75alpnikl"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20180111215355.22182-1-hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Cc: wens-jdAy2FN1RRM@public.gmane.org, icenowy-h8G6r0blFSE@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The A80 includes an ARM CCI-400 interconnect to support multi-cluster
-CPU caches.
 
-Also add the maximum clock frequency for the CPUs, as listed in the
-A80 Optimus Board FEX file.
+--fcns2md75alpnikl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- arch/arm/boot/dts/sun9i-a80.dtsi | 46 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 46 insertions(+)
+On Thu, Jan 11, 2018 at 10:53:55PM +0100, Hauke Mehrtens wrote:
+> This board has a SPI flash, activate it also in device tree by default.
+>=20
+> Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
 
-diff --git a/arch/arm/boot/dts/sun9i-a80.dtsi b/arch/arm/boot/dts/sun9i-a80.dtsi
-index 90eac0b2a193..85fb800af8ab 100644
---- a/arch/arm/boot/dts/sun9i-a80.dtsi
-+++ b/arch/arm/boot/dts/sun9i-a80.dtsi
-@@ -63,48 +63,64 @@
- 		cpu0: cpu@0 {
- 			compatible = "arm,cortex-a7";
- 			device_type = "cpu";
-+			cci-control-port = <&cci_control0>;
-+			clock-frequency = <12000000>;
- 			reg = <0x0>;
- 		};
- 
- 		cpu1: cpu@1 {
- 			compatible = "arm,cortex-a7";
- 			device_type = "cpu";
-+			cci-control-port = <&cci_control0>;
-+			clock-frequency = <12000000>;
- 			reg = <0x1>;
- 		};
- 
- 		cpu2: cpu@2 {
- 			compatible = "arm,cortex-a7";
- 			device_type = "cpu";
-+			cci-control-port = <&cci_control0>;
-+			clock-frequency = <12000000>;
- 			reg = <0x2>;
- 		};
- 
- 		cpu3: cpu@3 {
- 			compatible = "arm,cortex-a7";
- 			device_type = "cpu";
-+			cci-control-port = <&cci_control0>;
-+			clock-frequency = <12000000>;
- 			reg = <0x3>;
- 		};
- 
- 		cpu4: cpu@100 {
- 			compatible = "arm,cortex-a15";
- 			device_type = "cpu";
-+			cci-control-port = <&cci_control1>;
-+			clock-frequency = <18000000>;
- 			reg = <0x100>;
- 		};
- 
- 		cpu5: cpu@101 {
- 			compatible = "arm,cortex-a15";
- 			device_type = "cpu";
-+			cci-control-port = <&cci_control1>;
-+			clock-frequency = <18000000>;
- 			reg = <0x101>;
- 		};
- 
- 		cpu6: cpu@102 {
- 			compatible = "arm,cortex-a15";
- 			device_type = "cpu";
-+			cci-control-port = <&cci_control1>;
-+			clock-frequency = <18000000>;
- 			reg = <0x102>;
- 		};
- 
- 		cpu7: cpu@103 {
- 			compatible = "arm,cortex-a15";
- 			device_type = "cpu";
-+			cci-control-port = <&cci_control1>;
-+			clock-frequency = <18000000>;
- 			reg = <0x103>;
- 		};
- 	};
-@@ -431,6 +447,36 @@
- 			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
- 		};
- 
-+		cci: cci@1c90000 {
-+			compatible = "arm,cci-400";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			reg = <0x01c90000 0x1000>;
-+			ranges = <0x0 0x01c90000 0x10000>;
-+
-+			cci_control0: slave-if@4000 {
-+				compatible = "arm,cci-400-ctrl-if";
-+				interface-type = "ace";
-+				reg = <0x4000 0x1000>;
-+			};
-+
-+			cci_control1: slave-if@5000 {
-+				compatible = "arm,cci-400-ctrl-if";
-+				interface-type = "ace";
-+				reg = <0x5000 0x1000>;
-+			};
-+
-+			pmu@9000 {
-+				 compatible = "arm,cci-400-pmu,r1";
-+				 reg = <0x9000 0x5000>;
-+				 interrupts = <GIC_SPI 134 IRQ_TYPE_LEVEL_HIGH>,
-+					      <GIC_SPI 134 IRQ_TYPE_LEVEL_HIGH>,
-+					      <GIC_SPI 134 IRQ_TYPE_LEVEL_HIGH>,
-+					      <GIC_SPI 134 IRQ_TYPE_LEVEL_HIGH>,
-+					      <GIC_SPI 134 IRQ_TYPE_LEVEL_HIGH>;
-+			};
-+		};
-+
- 		de_clocks: clock@3000000 {
- 			compatible = "allwinner,sun9i-a80-de-clks";
- 			reg = <0x03000000 0x30>;
--- 
-2.15.1
+Fixed the typo in the commit title and queued for 4.17, thanks!
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--fcns2md75alpnikl
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlpcWEAACgkQ0rTAlCFN
+r3Talg//ULH8KbrxJEiVM/yDTDuedmMUxXmP1V/llnioEZauJWvo87kI6l+Cr6Ve
+t6g1egiobgyJrJ49BV9r6z9sd+RP4FRTJ5YcEezx4UnyKaQL9xKO4B2eBQeDv4fR
+8QGAO7UXJn3xpn+1S+ysKVL8P5mBlguwhmerIZBiVD7skx1GkNI0A3Skl7r1yYBs
+V9+F9fBPJ5JWo7yb86N7eb1Vofg+b/sEICwZLzC0y2nrjFvlUbA3cShzVHI9xrRf
+e4CEkLTHQnA370DwtX0Jc22AIh3ylqn3757QFczX2uEZAo0V1+OBktqWM7RLLd3D
+UsbgOQh5/R4sBx00sOOdIOeoapyy861lK4TMhm2tL0PHdwI1n+/qRiFrtzOU+kfR
+fDQAfYW2RJzybUzNS8jjT6585lD3vbE7QATGRhVPi26r0lh6gLkYH+SGfUoybMdx
+zgmuVYhXLsyb8EYtHXxXoWjbxY7DNncqFAyBPQTBLveRQ8dCspuvrZt3MKVywCDN
+1dEiUST0jtBF4mAoDdVQ2dnOUHXpRnPd7Lg4T3w0jQcw+Wwp6tf+0CDqO21I22Gp
+1jY75CkcntB8iA5/vDdKcbMqzi2MV8t0Q72OU7u5zkN9XBe0OqO0Er/tSXEsduyR
+kvil9fnTf/Llc/RGWlAp93HM2xxGwoQ5pGkuRTGpu50+q/lPE40=
+=eYiV
+-----END PGP SIGNATURE-----
+
+--fcns2md75alpnikl--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
