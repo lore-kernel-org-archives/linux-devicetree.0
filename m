@@ -1,240 +1,49 @@
-From: Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v3 1/8] ARM: sun9i: Support SMP bring-up on A80
-Date: Mon, 15 Jan 2018 12:04:43 +0000
-Message-ID: <20180115120440.GT22781@e103592.cambridge.arm.com>
-References: <20180115071450.18355-1-wens@csie.org>
- <20180115071450.18355-2-wens@csie.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Subject: [PATCHv2 0/5] GEHC Bx50 Switch Support
+Date: Mon, 15 Jan 2018 13:15:03 +0100
+Message-ID: <20180115121508.14544-1-sebastian.reichel@collabora.co.uk>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20180115071450.18355-2-wens-jdAy2FN1RRM@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Vivien Didelot <vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+Cc: Ian Ray <ian.ray-JJi787mZWgc@public.gmane.org>, Nandor Han <nandor.han-JJi787mZWgc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 15, 2018 at 07:14:43AM +0000, Chen-Yu Tsai wrote:
-> The A80 is a big.LITTLE SoC with 1 cluster of 4 Cortex-A7s and
-> 1 cluster of 4 Cortex-A15s.
-> 
-> This patch adds support to bring up the second cluster and thus all
-> cores using custom platform SMP code. Core/cluster power down has not
-> been implemented, thus CPU hotplugging is not supported.
-> 
-> This is limited to !THUMB2_KERNEL for now. The entry code must be built
-> as ARM machine code, and it does not switch modes. Further work was
-> done to move the assembly code to a separate file and add the proper
-> mode statements and mode switching instructions. However initial tests
-> failed to boot properly with Thumb-2.
-> 
-> Parts of the trampoline and re-entry code for the boot cpu was adapted
-> from the MCPM framework.
-> 
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> ---
->  arch/arm/mach-sunxi/Kconfig  |   7 +
->  arch/arm/mach-sunxi/Makefile |   1 +
->  arch/arm/mach-sunxi/mcpm.c   | 548 +++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 556 insertions(+)
->  create mode 100644 arch/arm/mach-sunxi/mcpm.c
-> 
-> diff --git a/arch/arm/mach-sunxi/Kconfig b/arch/arm/mach-sunxi/Kconfig
-> index 58153cdf025b..b53e37d170e6 100644
-> --- a/arch/arm/mach-sunxi/Kconfig
-> +++ b/arch/arm/mach-sunxi/Kconfig
-> @@ -48,4 +48,11 @@ config MACH_SUN9I
->  	default ARCH_SUNXI
->  	select ARM_GIC
->  
-> +config ARCH_SUNXI_MCPM
-> +	bool
-> +	depends on SMP && !THUMB2_KERNEL
-> +	default MACH_SUN9I
-> +	select ARM_CCI400_PORT_CTRL
-> +	select ARM_CPU_SUSPEND
-> +
+Hi,
 
-If this no longer uses MCPM, you should get rid of "mcpm" from all the
-names, comments etc. -- it's just confusing otherwise.
+This adds support for the internal switch found in GE Healthcare
+B450v3, B650v3 and B850v3. All devices use a GPIO bitbanged MDIO
+bus to communicate with the switch and a PCIe based network card
+for exchanging network data. The cpu network data link requires,
+that the switch's internal phy interface is enabled, so support
+for that is added by the first patch in this series.
 
->  endif
-> diff --git a/arch/arm/mach-sunxi/Makefile b/arch/arm/mach-sunxi/Makefile
-> index 27b168f121a1..cacd1afa8137 100644
-> --- a/arch/arm/mach-sunxi/Makefile
-> +++ b/arch/arm/mach-sunxi/Makefile
-> @@ -1,2 +1,3 @@
->  obj-$(CONFIG_ARCH_SUNXI) += sunxi.o
-> +obj-$(CONFIG_ARCH_SUNXI_MCPM) += mcpm.o
->  obj-$(CONFIG_SMP) += platsmp.o
-> diff --git a/arch/arm/mach-sunxi/mcpm.c b/arch/arm/mach-sunxi/mcpm.c
-> new file mode 100644
-> index 000000000000..7c77bb3b367a
-> --- /dev/null
-> +++ b/arch/arm/mach-sunxi/mcpm.c
+The patch series is based on v4.15-rc8.
 
-[...]
+Changes since PATCHv1:
+ * Use 'marvell,mv88e6085' instead of introducing compatible
+   string for mv88e6240.
+ * Fix indention of DT nodes
+ * Only enable 'cpu' phy, if explicitly set to "internal".
 
-> +static int sunxi_mcpm_cpu_table[SUNXI_NR_CLUSTERS][SUNXI_CPUS_PER_CLUSTER];
-> +static int sunxi_mcpm_first_comer;
-> +
-> +/*
-> + * Enable cluster-level coherency, in preparation for turning on the MMU.
-> + *
-> + * Also enable regional clock gating and L2 data latency settings for
-> + * Cortex-A15. These settings are from the vendor kernel.
-> + */
-> +static void __naked sunxi_mcpm_cluster_cache_enable(void)
-> +{
-> +	asm volatile (
-> +		"mrc	p15, 0, r1, c0, c0, 0\n"
-> +		"movw	r2, #" __stringify(ARM_CPU_PART_MASK & 0xffff) "\n"
-> +		"movt	r2, #" __stringify(ARM_CPU_PART_MASK >> 16) "\n"
-> +		"and	r1, r1, r2\n"
-> +		"movw	r2, #" __stringify(ARM_CPU_PART_CORTEX_A15 & 0xffff) "\n"
-> +		"movt	r2, #" __stringify(ARM_CPU_PART_CORTEX_A15 >> 16) "\n"
-> +		"cmp	r1, r2\n"
-> +		"bne	not_a15\n"
-> +
-> +		/* The following is Cortex-A15 specific */
-> +
-> +		/* ACTLR2: Enable CPU regional clock gates */
-> +		"mrc p15, 1, r1, c15, c0, 4\n"
-> +		"orr r1, r1, #(0x1<<31)\n"
-> +		"mcr p15, 1, r1, c15, c0, 4\n"
-> +
-> +		/* L2ACTLR */
-> +		"mrc p15, 1, r1, c15, c0, 0\n"
-> +		/* Enable L2, GIC, and Timer regional clock gates */
-> +		"orr r1, r1, #(0x1<<26)\n"
-> +		/* Disable clean/evict from being pushed to external */
-> +		"orr r1, r1, #(0x1<<3)\n"
-> +		"mcr p15, 1, r1, c15, c0, 0\n"
-> +
-> +		/* L2CTRL: L2 data RAM latency */
-> +		"mrc p15, 1, r1, c9, c0, 2\n"
-> +		"bic r1, r1, #(0x7<<0)\n"
-> +		"orr r1, r1, #(0x3<<0)\n"
-> +		"mcr p15, 1, r1, c9, c0, 2\n"
-> +
-> +		/* End of Cortex-A15 specific setup */
-> +		"not_a15:\n"
-> +
-> +		/* Get value of sunxi_mcpm_first_comer */
-> +		"adr	r1, first\n"
-> +		"ldr	r0, [r1]\n"
-> +		"ldr	r0, [r1, r0]\n"
-> +
-> +		/* Skip cci_enable_port_for_self if not first comer */
-> +		"cmp	r0, #0\n"
-> +		"bxeq	lr\n"
-> +		"b	cci_enable_port_for_self\n"
+-- Sebastian
 
-For Thumb, you need a ".align 2" here.
+Sebastian Reichel (5):
+  net: dsa: Support internal phy on 'cpu' port
+  ARM: dts: imx6q-bx50v3: Add internal switch
+  ARM: dts: imx6q-b850v3: Add switch port configuration
+  ARM: dts: imx6q-b650v3: Add switch port configuration
+  ARM: dts: imx6q-b450v3: Add switch port configuration
 
-I've never understood why gas doesn't implicitly align .word on arches
-that care about data alignment, but it doesn't...
+ arch/arm/boot/dts/imx6q-b450v3.dts  | 48 +++++++++++++++++++++++++
+ arch/arm/boot/dts/imx6q-b650v3.dts  | 48 +++++++++++++++++++++++++
+ arch/arm/boot/dts/imx6q-b850v3.dts  | 71 +++++++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/imx6q-bx50v3.dtsi | 37 +++++++++++++++++++
+ net/dsa/port.c                      | 23 +++++++++---
+ 5 files changed, 223 insertions(+), 4 deletions(-)
 
-Since the MMU isn't on yet, you may get alignment faults if the .word
-is misaligned in the assembled code.
+-- 
+2.15.1
 
-> +
-> +		"first: .word sunxi_mcpm_first_comer - .\n"
-> +	);
-> +}
-
-[...]
-
-> +static int __init sunxi_mcpm_init(void)
-> +{
-> +	struct device_node *cpucfg_node, *node;
-> +	struct resource res;
-> +	int ret;
-> +
-> +	if (!of_machine_is_compatible("allwinner,sun9i-a80"))
-> +		return -ENODEV;
-> +
-> +	if (!sunxi_mcpm_cpu_table_init())
-> +		return -EINVAL;
-> +
-> +	if (!cci_probed()) {
-> +		pr_err("%s: CCI-400 not available\n", __func__);
-> +		return -ENODEV;
-> +	}
-> +
-> +	node = of_find_compatible_node(NULL, NULL, "allwinner,sun9i-a80-prcm");
-> +	if (!node) {
-> +		pr_err("%s: PRCM not available\n", __func__);
-> +		return -ENODEV;
-> +	}
-> +
-> +	/*
-> +	 * Unfortunately we can not request the I/O region for the PRCM.
-> +	 * It is shared with the PRCM clock.
-> +	 */
-> +	prcm_base = of_iomap(node, 0);
-> +	of_node_put(node);
-> +	if (!prcm_base) {
-> +		pr_err("%s: failed to map PRCM registers\n", __func__);
-> +		return -ENOMEM;
-> +	}
-> +
-> +	cpucfg_node = of_find_compatible_node(NULL, NULL,
-> +					      "allwinner,sun9i-a80-cpucfg");
-> +	if (!cpucfg_node) {
-> +		ret = -ENODEV;
-> +		pr_err("%s: CPUCFG not available\n", __func__);
-> +		goto err_unmap_prcm;
-> +	}
-> +
-> +	cpucfg_base = of_io_request_and_map(cpucfg_node, 0, "sunxi-mcpm");
-> +	if (IS_ERR(cpucfg_base)) {
-> +		ret = PTR_ERR(cpucfg_base);
-> +		pr_err("%s: failed to map CPUCFG registers: %d\n",
-> +		       __func__, ret);
-> +		goto err_put_cpucfg_node;
-> +	}
-> +
-> +	/* Configure CCI-400 for boot cluster */
-> +	ret = sunxi_mcpm_lookback();
-> +	if (ret) {
-> +		pr_err("%s: failed to configure boot cluster: %d\n",
-> +		       __func__, ret);
-> +		goto err_unmap_release_cpucfg;
-> +	}
-> +
-> +	/* We don't need the CPUCFG device node anymore */
-> +	of_node_put(cpucfg_node);
-> +
-> +	/* Set the hardware entry point address */
-> +	writel(__pa_symbol(sunxi_mcpm_secondary_startup),
-> +	       prcm_base + PRCM_CPU_SOFT_ENTRY_REG);
-
-It's possible the firmware / boot ROM doesn't know how to branch
-correctly to a Thumb symbol here.  This is often missed in firmware
-implementations (or deliberately omitted, since it easy to work
-around in the OS).
-
-Things you could try:
-
-1) Add CFLAGS_mcpm.o += -marm
-(to see whether building just this file as ARM fixes it).
-
-2) Split sunxi_mcpm_secondary_startup out into a separate asm file
-and build just that as ARM, so that the entry point from the firmware
-is ARM.
-
-If both work, the firmware can't branch directly to Thumb and so you
-need to keep the secondary entry point as ARM code.
-
-If (1) works but (2) doesn't, then there must be somthing else in this
-file that is Thumb-incompatible, but I don't see it so far.
-
-
-[...]
-
-Cheers
----Dave
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
