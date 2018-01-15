@@ -1,45 +1,49 @@
-From: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Subject: [PATCH] ARM: dts: imx6q-bx50v3: Enable secure-reg-access
-Date: Mon, 15 Jan 2018 17:07:22 +0100
-Message-ID: <20180115160722.17206-1-sebastian.reichel@collabora.co.uk>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 1/3] arm: spear600: Add missing interrupt-parent of rtc
+Date: Mon, 15 Jan 2018 17:34:01 +0100
+Message-ID: <CAK8P3a1x0GQ1ocd8=b8CGFf5maU=kB4QiPYYzyqq_9wXaO2t=A@mail.gmail.com>
+References: <a062d9ed0d3365b578156a780202fa533e725374.1515650104.git.viresh.kumar@linaro.org>
+ <20180112020711.6gp2pnsxxjzelidq@localhost> <20180112032223.GK3626@vireshk-i7>
+ <CAOesGMggU73asY1SEUDD_BsWcrGYR___o8e5omjziOPEwJgqBQ@mail.gmail.com>
+ <CAK8P3a2SO4=YKBE3L_AKsyfNe77YR7a8F=dvbS=ic03=6NK8MA@mail.gmail.com>
+ <CAOesGMgcf9FovbzhPkKnrG4ETRFP3dsSJnTYNfp1wECMFeFOGA@mail.gmail.com>
+ <CAL_JsqJVWLazDRB1me2OubqqMhdsqsR+cLSHR+K0OY3dZHcE-w@mail.gmail.com>
+ <CAOesGMiyfpRyoe4dxQeNMF5invysVBEy+J5OwUhuop=JyAvZoQ@mail.gmail.com>
+ <CAK8P3a3KTz0sOSbO9+sAY1Sv95hZF4Yg1qMzOaXPAZ_1pOgGpg@mail.gmail.com>
+ <CAOesGMiHeitS_j9r0DsPf3k1jVJT9_z-bHyrhbB7fQ__LjjaqA@mail.gmail.com>
+ <CAK8P3a3MZX-ZsxX9h1-8kVQhn9hqY=c8L1+=e3uTfjEjBCYuPg@mail.gmail.com> <CACRpkdag317LU2_3H-PPV_0xoX2RDLxBX5r4a3jpbn9LTvhkcA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACRpkdag317LU2_3H-PPV_0xoX2RDLxBX5r4a3jpbn9LTvhkcA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
-Cc: Ian Ray <ian.ray-JJi787mZWgc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, ARM-SoC Maintainers <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux ARM Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, gregkh <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Peter Senna Tschudin <peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+On Sun, Jan 14, 2018 at 12:20 PM, Linus Walleij
+<linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Fri, Jan 12, 2018 at 11:05 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+>
+>>      arch/arm/boot/dts/ste-nomadik-nhk15.dtb: Warning
+>> (interrupts_property): Missing interrupt-parent for
+>> /amba/clcd@10120000
+>>      arch/arm/boot/dts/ste-nomadik-s8815.dtb: Warning
+>> (interrupts_property): Missing interrupt-parent for
+>> /amba/clcd@10120000
+> (...)
+>> I hope Linus Walleij can find out what the right interrupt-parent
+>> should be on the
+>> nomadik machine, that is otherwise the last remaining warning.
+>
+> OK I will look into it.
 
-Add secure-reg-access on device tree include file for Bx50 devices
-to enable PMU and hardware counters for perf.
+I took another look myself now since this was the last remaining
+dtc warning in linux-next. The answer was easy enough to find
+in the git history for the board files: all the on-chip devices are
+connected to the same VIC instance. I'll send the patch.
 
-Signed-off-by: Peter Senna Tschudin <peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Signed-off-by: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
----
- arch/arm/boot/dts/imx6q-bx50v3.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/arch/arm/boot/dts/imx6q-bx50v3.dtsi b/arch/arm/boot/dts/imx6q-bx50v3.dtsi
-index 86cfd4481e72..ccaaee83e2fa 100644
---- a/arch/arm/boot/dts/imx6q-bx50v3.dtsi
-+++ b/arch/arm/boot/dts/imx6q-bx50v3.dtsi
-@@ -43,6 +43,13 @@
- #include "imx6q-ba16.dtsi"
- 
- / {
-+	soc {
-+		pmu {
-+			compatible = "arm,cortex-a9-pmu";
-+			secure-reg-access;
-+		};
-+	};
-+
- 	clocks {
- 		mclk: clock@0 {
- 			compatible = "fixed-clock";
--- 
-2.15.1
-
+       Arnd
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
