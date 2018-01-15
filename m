@@ -1,44 +1,51 @@
-From: "Andrew F. Davis" <afd@ti.com>
-Subject: Re: [PATCH 4/4] ASoC: codecs: tas5720: add TAS5722 TDM
- slot width setting support
-Date: Mon, 15 Jan 2018 08:50:38 -0600
-Message-ID: <5111739c-df33-6a75-5ccf-2a2dc79f015d@ti.com>
-References: <20171211190157.12371-1-afd@ti.com>
- <20171211190157.12371-4-afd@ti.com> <20171212120232.GI16323@sirena.org.uk>
+From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: dts: rename oxnas dts files
+Date: Mon, 15 Jan 2018 15:54:31 +0100
+Message-ID: <05179c69-5878-f8ec-76f1-00de21e1b75d@baylibre.com>
+References: <20180113173553.GA30727@makrotopia.org>
+ <CAK8P3a1NUww8pGWr=gvxSDk4p7Emoq9NJyGfs8N86bU_sqgnpQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20171212120232.GI16323@sirena.org.uk>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAK8P3a1NUww8pGWr=gvxSDk4p7Emoq9NJyGfs8N86bU_sqgnpQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Content-Language: en-US
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Daniel Golle <daniel-g5gK2j5usbvCyp4qypjU+w@public.gmane.org>
+Cc: DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, arm-soc <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/12/2017 06:02 AM, Mark Brown wrote:
-> On Mon, Dec 11, 2017 at 01:01:57PM -0600, Andrew F. Davis wrote:
+On 15/01/2018 15:45, Arnd Bergmann wrote:
+> On Sat, Jan 13, 2018 at 6:35 PM, Daniel Golle <daniel-g5gK2j5usbvCyp4qypjU+w@public.gmane.org> wrote:
+>> Other platforms' device-tree files start with a platform prefix, such as
+>> sun7i-a20-*.dts or at91-*.dts.
+>> This naming scheme turns out to be handy when using multi-platform build
+>> systems such as OpenWrt.
+>> Prepend oxnas files with their platform prefix to comply with the naming
+>> scheme already used for most other platforms.
+>>
+>> Signed-off-by: Daniel Golle <daniel-g5gK2j5usbvCyp4qypjU+w@public.gmane.org>
 > 
->> +	/* Configure TDM slot width. This is only applicable to TAS5722. */
->> +	if (tas5720->devtype == TAS5722) {
->> +		ret = snd_soc_update_bits(codec, TAS5722_DIGITAL_CTRL2_REG,
->> +					  TAS5722_TDM_SLOT_16B,
->> +					  slot_width == 16 ?
->> +					  TAS5722_TDM_SLOT_16B : 0);
->> +		if (ret < 0)
->> +			goto error_snd_soc_update_bits;
->> +	}
+> There are few changes to oxnas in general, and Neil doesn't appear to be around
+> to ask at the moment.
+> I assume he doesn't mind me picking it up into next/dt directly.
 > 
-> Use a switch statement, that way additional variants can be handled more
-> sensibly.
+> Merged now, thanks,
+> 
+>         Arnd
 > 
 
-Will fix.
+
+Hi Daniel,
+
+Thanks for pushing this change, these a low-priority supported devices, OK to rename them.
+
+(I must no forget to changes my test scripts, or I will get a huge headache)
+
+Arnd, thanks for taking this directly.
+
+Neil
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
