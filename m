@@ -1,131 +1,141 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 03/12] drm: rcar-du: Fix legacy DT to create LVDS
- encoder nodes
-Date: Tue, 16 Jan 2018 08:35:26 -0600
-Message-ID: <CAL_JsqKD_VKMrfi42hZ3eHPAMWBwryV0g_cXDUeyaKfPP99LmA@mail.gmail.com>
-References: <20180112231430.26943-1-laurent.pinchart+renesas@ideasonboard.com>
- <1891263.xKRehmHzfM@avalon> <444f1b6b-fa57-da7c-08fd-51b28cdb5fff@gmail.com>
- <1552581.gP2TZVN6Sh@avalon> <71c9aaea-a721-6cec-5b7f-f14f7e21d191@gmail.com>
+From: Ludovic Barre <ludovic.Barre@st.com>
+Subject: [PATCH v5 2/7] ARM: stm32: prepare stm32 family to welcome armv7 architecture
+Date: Tue, 16 Jan 2018 15:56:15 +0100
+Message-ID: <1516114580-2424-3-git-send-email-ludovic.Barre@st.com>
+References: <1516114580-2424-1-git-send-email-ludovic.Barre@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <71c9aaea-a721-6cec-5b7f-f14f7e21d191@gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, dri-devel <dri-devel@lists.freedesktop.org>, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1516114580-2424-1-git-send-email-ludovic.Barre@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Gerald Baeza <gerald.baeza@st.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Ludovic Barre <ludovic.barre@st.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBKYW4gMTUsIDIwMTggYXQgNTo0NiBQTSwgRnJhbmsgUm93YW5kIDxmcm93YW5kLmxp
-c3RAZ21haWwuY29tPiB3cm90ZToKPiBPbiAwMS8xNS8xOCAxMjoyOSwgTGF1cmVudCBQaW5jaGFy
-dCB3cm90ZToKPj4gSGkgRnJhbmssCj4+Cj4+IE9uIE1vbmRheSwgMTUgSmFudWFyeSAyMDE4IDIy
-OjEyOjMzIEVFVCBGcmFuayBSb3dhbmQgd3JvdGU6Cj4+PiBPbiAwMS8xNS8xOCAxMToyMiwgTGF1
-cmVudCBQaW5jaGFydCB3cm90ZToKPj4+PiBPbiBNb25kYXksIDE1IEphbnVhcnkgMjAxOCAyMTox
-Mjo0NCBFRVQgRnJhbmsgUm93YW5kIHdyb3RlOgo+Pj4+PiBPbiAwMS8xNS8xOCAwOTowOSwgUm9i
-IEhlcnJpbmcgd3JvdGU6Cj4+Pj4+PiArRnJhbmsKPj4+Pj4+Cj4+Pj4+PiBPbiBGcmksIEphbiAx
-MiwgMjAxOCBhdCA1OjE0IFBNLCBMYXVyZW50IFBpbmNoYXJ0IHdyb3RlOgo+Pj4+Pj4+IFRoZSBp
-bnRlcm5hbCBMVkRTIGVuY29kZXJzIG5vdyBoYXZlIHRoZWlyIG93biBEVCBiaW5kaW5ncy4gQmVm
-b3JlCj4+Pj4+Pj4gc3dpdGNoaW5nIHRoZSBkcml2ZXIgaW5mcmFzdHJ1Y3R1cmUgdG8gdGhvc2Ug
-bmV3IGJpbmRpbmdzLCBpbXBsZW1lbnQKPj4+Pj4+PiBiYWNrd2FyZC1jb21wYXRpYmlsaXR5IHRo
-cm91Z2ggbGl2ZSBEVCBwYXRjaGluZy4KPj4+Pj4+Cj4+Pj4+PiBVaGgsIHdlIGp1c3QgZ290IHJp
-ZCBvZiBUSSdzIHBhdGNoaW5nIGFuZCBub3cgYWRkaW5nIHRoaXMgb25lLiBJIGd1ZXNzCj4+Pgo+
-Pj4gTGV0IG1lIGZpcnN0IGFuc3dlciB0aGUgcXVlc3Rpb24gdGhhdCB5b3UgYXNrIGxhdGVyLiAg
-WW91IGFzayAiQ2FuIHdlIHdvcmsKPj4+IG9uIHRoaXMgdG9nZXRoZXIgdG8gZmluZCBhIHNvbHV0
-aW9uIHRoYXQgd291bGQgc3VpdCB1cyBib3RoID8iCj4+Pgo+Pj4gTXkgYW5zd2VyIHRvIHRoYXQg
-aXMgZW1waGF0aWNhbGx5IFlFUy4gIEkgd2lsbCBkZWZpbml0ZWx5IHdvcmsgd2l0aCB5b3UgdG8K
-Pj4+IHRyeSB0byBmaW5kIGEgZ29vZCBzb2x1dGlvbi4KPj4KPj4gXG8vCj4+Cj4+Pj4+IFBsZWFz
-ZSBuby4gIFdoYXQgd2UganVzdCBnb3QgcmlkIG9mIHdhcyBtYWtpbmcgaXQgZGlmZmljdWx0IGZv
-ciBtZSB0bwo+Pj4+PiBtYWtlIGNoYW5nZXMgdG8gdGhlIG92ZXJsYXkgaW5mcmFzdHJ1Y3R1cmUu
-ICBUaGVyZSBhcmUgaXNzdWVzIHdpdGgKPj4+Pj4gb3ZlcmxheXMgdGhhdCBuZWVkIHRvIGJlIGZp
-eGVkIGJlZm9yZSBvdmVybGF5cyBiZWNvbWUgcmVhbGx5IHVzYWJsZS4KPj4+Pj4gSSBhbSBhYm91
-dCB0byBwcm9wb3NlIHRoZSBuZXh0IGNoYW5nZSwgd2hpY2ggaW52b2x2ZXMgcmVtb3ZpbmcgYQo+
-Pj4+PiBjaHVuayBvZiBjb2RlIHRoYXQgSSB3aWxsIG5vdCBiZSBhYmxlIHRvIHJlbW92ZSBpZiB0
-aGlzIHBhdGNoIGlzCj4+Pj4+IGFjY2VwdGVkICh0aGUgcHJvcG9zYWwgaXMgYXdhaXRpbmcgbWUg
-Y29sbGVjdGluZyBzb21lIGRhdGEgYWJvdXQKPj4+Pj4gdGhlIGltcGFjdCBvZiB0aGUgY2hhbmdl
-LCB3aGljaCBJIGV4cGVjdCB0byBjb21wbGV0ZSB0aGlzIHdlZWspLgo+Pj4KPj4+IEkgc2hvdWxk
-IGhhdmUgdGhvdWdodCBqdXN0IGEgbGl0dGxlIGJpdCBtb3JlIGJlZm9yZSBJIGhpdCBzZW5kLiAg
-VGhlCj4+PiBzaXR1YXRpb24gaXMgZXZlbiB3b3JzZSB0aGFuIEkgd3JvdGUuICBPbmUgb2YgdGhl
-IG5leHQgc3RlcHMgKGluCj4+PiBhZGRpdGlvbiB0byB3aGF0IEkgd3JvdGUgYWJvdXQgYWJvdmUp
-IGlzIHRvIGNoYW5nZSB0aGUgb3ZlcmxheSBhcHBseQo+Pj4gZnVuY3Rpb24gdG8gYWNjZXB0IGEg
-ZmxhdHRlbmVkIGRldmljZSB0cmVlIChGRFQpLCBub3QgYW4gZXhwYW5kZWQKPj4+IGRldmljZSB0
-cmVlLiAgSW4gdGhpcyBjaGFuZ2VkIG1vZGVsLCB0aGUgdW5mbGF0dGVuZWQgb3ZlcmxheSBpcwo+
-Pj4gbm90IGF2YWlsYWJsZSB0byBiZSBtb2RpZmllZCBiZWZvcmUgaXQgaXMgYXBwbGllZC4KPj4K
-Pj4gVGhhdCBtYWtlcyBzZW5zZSBpZiB3ZSBjb25zaWRlciBvdmVybGF5cyB0byBiZSBpbW11dGFi
-bGUgb2JqZWN0cyB0aGF0IHdlIGFwcGx5Cj4+IHdpdGhvdXQgb2ZmZXJpbmcgYSB3YXkgdG8gbW9k
-aWZ5IHRoZW0uIEkgd29uJ3QgY2hhbGxlbmdlIHRoYXQgQVBJIGRlY2lzaW9uLCBhcwo+PiBteSB1
-c2Ugb2YgYW4gb3ZlcmxheSBoZXJlIGlzIGEgYml0IG9mIGEgaGFjayBpbmRlZWQuCj4+Cj4+PiBJ
-dCBpcyBpbXBvcnRhbnQgZm9yIHRoZSBkZXZpY2V0cmVlIGluZnJhc3RydWN0dXJlIHRvIGhhdmUg
-b3duZXJzaGlwCj4+PiBvZiB0aGUgRkRUIHRoYXQgaXMgdXNlZCB0byBjcmVhdGUgdGhlIHVuZmxh
-dHRlbmVkIHRyZWUuICAoTm90aWNlCj4+PiB0aGF0IGluIHRoZSBwcm9wb3NlZCBwYXRjaCwgcmNh
-cl9kdV9vZl9nZXRfb3ZlcmxheSgpIGZvbGxvd3MgdGhlCj4+PiBUSSBleGFtcGxlIG9mIGRvaW5n
-IGEga21lbWR1cCBvZiB0aGUgYmxvYiAoRkRUKSwgdGhlbiB1c2VzIHRoZQo+Pj4gY29weSBmb3Ig
-dGhlIHVuZmxhdHRlbi4gIFRoZSBrbWVtZHVwKCkgaW4gdGhpcyBjYXNlIGlzIHRvIGNyZWF0ZQo+
-Pj4gYSBwZXJzaXN0ZW50IGNvcHkgb2YgdGhlIEZEVC4pICBUaGUgZHJpdmVyIGhhdmluZyBvd25l
-cnNoaXAgb2YKPj4+IHRoaXMgY29weSwgYW5kIGhhdmluZyB0aGUgYWJpbGl0eSB0byBmcmVlIGl0
-IGlzIG9uZSBvZiB0aGUgbWFueQo+Pj4gcHJvYmxlbXMgd2l0aCB0aGUgY3VycmVudCBvdmVybGF5
-IGltcGxlbWVudGF0aW9uLgo+Pgo+PiBZZXMsIHRoYXQncyBzb21ldGhpbmcgSSd2ZSBpZGVudGlm
-aWVkIGFzIHdlbGwuIExvdHMgb2Ygd29yayBoYXMgYmVlbiBkb25lIHRvCj4+IGNsZWFuIHVwIHRo
-ZSBPRiBjb3JlIGFuZCB3ZSdyZSBjbGVhcmx5IG5vdCBkb25lIHlldC4gSSdtIGhhcHB5IHRvIHNl
-ZSBhbGwgdGhlCj4+IGltcHJvdmVtZW50cyB5b3UncmUgd29ya2luZyBvbi4KPj4KPj4+Pj4gQ2Fu
-IHlvdSBwbGVhc2UgaGFuZGxlIGJvdGggdGhlIG9sZCBhbmQgbmV3IGJpbmRpbmdzIHRocm91Z2gg
-ZHJpdmVyCj4+Pj4+IGNvZGUgaW5zdGVhZD8KPj4+Pgo+Pj4+IEkgY291bGQsIGJ1dCBpdCB3b3Vs
-ZCBiZSBwb2ludGxlc3MuIFRoZSBwb2ludCBoZXJlIGlzIHRvIGFsbG93IGNsZWFudXBzIGluCj4+
-Pj4gdGhlIGRyaXZlci4gVGhlIExWRFMgZW5jb2RlciBoYW5kbGluZyBjb2RlIGlzIHZlcnkgaW50
-cnVzaXZlIGluIGl0cwo+Pj4+IGN1cnJlbnQgZm9ybSBhbmQgSSBuZWVkIHRvIGdldCByaWQgb2Yg
-aXQuIFRoZXJlIHdvdWxkIGJlIHplcm8gcG9pbnQgaW4KPj4+PiBtb3ZpbmcgdG8gdGhlIG5ldyBp
-bmZyYXN0cnVjdHVyZSwgYXMgdGhlIG1haW4gcG9pbnQgaXMgdG8gZ2V0IHJpZCBvZiB0aGUKPj4+
-PiBvbGQgY29kZSB3aGljaCBwcmV2ZW50cyBtb3ZpbmcgZm9yd2FyZC4gQXMgYSBjb25zZXF1ZW5j
-ZSB0aGF0IHdvdWxkIGJsb2NrCj4+Pj4gbmV3IGJvYXJkcyBmcm9tIHJlY2VpdmluZyBwcm9wZXIg
-dXBzdHJlYW0gc3VwcG9ydC4gQW4gZWFzeSBvcHRpb24gaXMgdG8KPj4+PiBicmVhayBiYWNrd2Fy
-ZCBjb21wYXRpYmlsaXR5LiBJJ20gcGVyc29uYWxseSBmaW5lIHdpdGggdGhhdCwgYnV0IEkgYXNz
-dW1lCj4+Pj4gb3RoZXIgcGVvcGxlIHdvdWxkIGNvbXBsYWluIDotKQo+Pj4+Cj4+Pj4gSSBjYW4s
-IG9uIHRoZSBvdGhlciBoYW5kLCB3b3JrIHdpdGggeW91IHRvIHNlZSBob3cgbGl2ZSBEVCBwYXRj
-aGluZyBjb3VsZAo+Pj4+IGJlIGltcGxlbWVudGVkIGluIHRoaXMgZHJpdmVyIHdpdGhvdXQgYmxv
-Y2tpbmcgeW91ciBjb2RlLiBXaGVuIGRldmVsb3BpbmcKPj4+PiB0aGlzIHBhdGNoIHNlcmllcyBJ
-IHN0YXJ0IGJ5IHBhdGNoaW5nIHRoZSBkZXZpY2UgdHJlZSBtYW51YWxseSB3aXRob3V0Cj4+Pj4g
-cmVseWluZyBvbiBvdmVybGF5cyBhdCBhbGwsIGJ1dCBnb3QgYmxvY2tlZCBieSB0aGUgZmFjdCB0
-aGF0IEkgbmVlZCB0bwo+Pj4+IGFsbG9jYXRlIHBoYW5kbGVzIGZvciBuZXcgbm9kZXMgSSBjcmVh
-dGUuIElmIHRoZXJlIHdhcyBhbiBBUEkgdG8gYWxsb2NhdGUKPj4+PiBhbiB1bnVzZWQgcGhhbmRs
-ZSBJIGNvdWxkIGF2b2lkIHVzaW5nIHRoZSBvdmVybGF5IGluZnJhc3RydWN0dXJlIGF0IGFsbC4K
-Pj4+PiBPciB0aGVyZSBjb3VsZCBiZSBvdGhlcgo+Pj4KPj4+IEl0IHNlZW1zIHJlYXNvbmFibGUg
-dG8gcHJvdmlkZSBhIHdheSB0byBhdXRvZ2VuZXJhdGUgYSBwaGFuZGxlIChpZgo+Pj4gcmVxdWVz
-dGVkKSBieSB0aGUgZGV2aWNldHJlZSBjb2RlIHRoYXQgY3JlYXRlcyBhIG5ldyBub2RlLiAgV2Vy
-ZSB5b3UgdXNpbmcKPj4+IGEgZnVuY3Rpb24gZnJvbSBkcml2ZXJzL29mL2R5bmFtaWMuYyB0byBj
-cmVhdGUgdGhlIG5vZGU/Cj4+Cj4+IE5vdCB0byBhbGxvY2F0ZSB0aGUgbm9kZSwgbm8uIEkgYWxs
-b2NhdGVkIHRoZSBkZXZpY2Vfbm9kZSBzdHJ1Y3R1cmUgbWFudWFsbHkKPj4gd2l0aCBremFsbG9j
-KCksIGFuZCBpbnNlcnRlZCBpdCBpbiB0aGUgZGV2aWNlIHRyZWUgd2l0aCBvZl9hdHRhY2hfbm9k
-ZSgpLiBJcwo+PiB0aGF0IHRoZSByaWdodCBhcHByb2FjaCA/IEkgaGF2ZW4ndCBiZWVuIGFibGUg
-dG8gdGVzdCB0aGUgY29kZSBhcyBJIHN0b3BwZWQKPj4gd2hlbiBJIHJlYWxpemVkIEkgY291bGRu
-J3QgYWxsb2NhdGUgcGhhbmRsZXMuCj4+Cj4+Pj4gb3B0aW9ucyBJJ20gbm90IHRoaW5raW5nIG9m
-IGFzIEkgZG9uJ3Qga25vdyB3aGF0IHRoZSBjaGFuZ2VzIHlvdSdyZQo+Pj4+IHdvcmtpbmcgb24g
-YXJlLiBDYW4gd2Ugd29yayBvbiB0aGlzIHRvZ2V0aGVyIHRvIGZpbmQgYSBzb2x1dGlvbiB0aGF0
-Cj4+Pj4gd291bGQgc3VpdCB1cyBib3RoID8KPj4+Cj4+PiBBZ2FpbiwgeWVzLCBJIHdvdWxkIGJl
-IGdsYWQgdG8gd29yayB3aXRoIHlvdSBvbiB0aGlzLgo+Pgo+PiBIb3cgd291bGQgeW91IGxpa2Ug
-dG8gcHJvY2VlZCA/IEkgY2FuIHRyeSB0aGUgbWFudWFsIGFwcHJvYWNoIGFnYWluIGJ1dCBuZWVk
-Cj4+IGluZm9ybWF0aW9uIGFib3V0IGhvdyBJIGNvdWxkIGNsZWFubHkgaW1wbGVtZW50IHBoYW5k
-bGUgYWxsb2NhdGlvbi4gSSB3aWxsCj4+IGxpa2VseSB0aGVuIHJ1biBpbnRvIG90aGVyIGlzc3Vl
-cyBmb3Igd2hpY2ggSSBtaWdodCBuZWVkIGhlbHAuCj4KPiBIZXJlIGFyZSBteSBmaXJzdCB0aG91
-Z2h0cywgYmFzZWQgb24gNC4xNS1yYzc6Cj4KPiBRdWVzdGlvbiB0byBSb2IgYW5kIEZyYW5rOiBz
-aG91bGQgb2ZfYXR0YWNoX25vZGUoKSBiZSBjYWxsZWQgZGlyZWN0bHksIG9yCj4gc2hvdWxkIGl0
-IGJlIGNhbGxlZCBpbmRpcmVjdGx5IGJ5IGNyZWF0aW5nIGEgY2hhbmdlIHNldCB0aGF0IGFkZHMg
-dGhlIG5vZGU/Cj4KPiBGcmFuaydzIG9mZiB0aGUgY3VmZiBhbnN3ZXIgKGJ1dCB3b3VsZCBsaWtl
-IHRvIHRoaW5rIG1vcmUgYWJvdXQgaXQpOiBzaW5jZQo+IHRoZSBkcml2ZXIgaXMgbW9kaWZ5aW5n
-IGl0cyBvd24gZGV2aWNldHJlZSBkYXRhLCBhbmQgdGh1cyBubyBvdGhlciBlbnRpdHkKPiBuZWVk
-cyB0byBiZSBub3RpZmllZCBhYm91dCB0aGUgY2hhbmdlcywgdGhlcmUgaXMgbm8gbmVlZCB0byBh
-ZGQgdGhlIGNvbXBsZXhpdHkKPiBvZiB1c2luZyBhIGNoYW5nZSBzZXQuCgpUaGVyZSdzIGV4YWN0
-bHkgMiB1c2VycyBvdXRzaWRlIG9mIHRoZSBEVCBjb3JlLiBUaGF0J3MgZ2VuZXJhbGx5IGEKc2ln
-biBvZiBhbiBBUEkgSSdkIGxpa2UgdG8gbWFrZSBwcml2YXRlLgoKPiBUaGUgZm9sbG93aW5nIGlz
-IGhvdyBvZl9hdHRhY2hfbm9kZSgpIGNvdWxkIGJlIG1vZGlmaWVkIHRvIGR5bmFtaWNhbGx5IGNy
-ZWF0ZQo+IGEgcGhhbmRsZSBvbiByZXF1ZXN0LgoKSG93IHdvdWxkIHRoaXMgd29yayBmb3IgYWxs
-IHRoZSBwaGFuZGxlIHJlZmVyZW5jZXMgdGhhdCBuZWVkIHRvIGJlIGZpeGVkIHVwPwoKUm9iCl9f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBt
-YWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3Rz
-LmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+From: Ludovic Barre <ludovic.barre@st.com>
+
+This patch prepares the STM32 machine for the integration of Cortex-A
+based microprocessor (MPU), on top of the existing Cortex-M
+microcontroller family (MCU). Since both MCUs and MPUs are sharing
+common hardware blocks we can keep using ARCH_STM32 flag for most of
+them. If a hardware block is specific to one family we can use either
+ARM_SINGLE_ARMV7M or ARCH_MULTI_V7 flag.
+
+Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+---
+ Documentation/arm/stm32/overview.rst | 15 +++++++++------
+ arch/arm/mach-stm32/Kconfig          | 27 +++++++++++++++------------
+ arch/arm/mach-stm32/board-dt.c       |  4 +---
+ 3 files changed, 25 insertions(+), 21 deletions(-)
+
+diff --git a/Documentation/arm/stm32/overview.rst b/Documentation/arm/stm32/overview.rst
+index 6be6059..85cfc84 100644
+--- a/Documentation/arm/stm32/overview.rst
++++ b/Documentation/arm/stm32/overview.rst
+@@ -5,16 +5,17 @@ STM32 ARM Linux Overview
+ Introduction
+ ------------
+ 
+-The STMicroelectronics family of Cortex-M based MCUs are supported by the
+-'STM32' platform of ARM Linux. Currently only the STM32F429 (Cortex-M4)
+-and STM32F746 (Cortex-M7) are supported.
++The STMicroelectronics STM32 family of Cortex-A microprocessors (MPUs) and
++Cortex-M microcontrollers (MCUs) are supported by the 'STM32' platform of
++ARM Linux.
+ 
+ Configuration
+ -------------
+ 
+-A generic configuration is provided for STM32 family, and can be used as the
+-default by
++For MCUs, use the provided default configuration:
+         make stm32_defconfig
++For MPUs, use multi_v7 configuration:
++        make multi_v7_defconfig
+ 
+ Layout
+ ------
+@@ -28,4 +29,6 @@ Device Trees.
+ 
+ :Authors:
+ 
+-Maxime Coquelin <mcoquelin.stm32@gmail.com>
++- Maxime Coquelin <mcoquelin.stm32@gmail.com>
++- Ludovic Barre <ludovic.barre@st.com>
++- Gerald Baeza <gerald.baeza@st.com>
+diff --git a/arch/arm/mach-stm32/Kconfig b/arch/arm/mach-stm32/Kconfig
+index 0d1889b..fb4b8b8 100644
+--- a/arch/arm/mach-stm32/Kconfig
++++ b/arch/arm/mach-stm32/Kconfig
+@@ -1,8 +1,7 @@
+-config ARCH_STM32
+-	bool "STMicrolectronics STM32"
+-	depends on ARM_SINGLE_ARMV7M
++menuconfig ARCH_STM32
++	bool "STMicroelectronics STM32 family" if ARM_SINGLE_ARMV7M || ARCH_MULTI_V7
++	select ARMV7M_SYSTICK if ARM_SINGLE_ARMV7M
+ 	select ARCH_HAS_RESET_CONTROLLER
+-	select ARMV7M_SYSTICK
+ 	select CLKSRC_STM32
+ 	select PINCTRL
+ 	select RESET_CONTROLLER
+@@ -10,22 +9,26 @@ config ARCH_STM32
+ 	help
+ 	  Support for STMicroelectronics STM32 processors.
+ 
++if ARCH_STM32
++
++if ARM_SINGLE_ARMV7M
++
+ config MACH_STM32F429
+-	bool "STMicrolectronics STM32F429"
+-	depends on ARCH_STM32
++	bool "STMicroelectronics STM32F429"
+ 	default y
+ 
+ config MACH_STM32F469
+-	bool "STMicrolectronics STM32F469"
+-	depends on ARCH_STM32
++	bool "STMicroelectronics STM32F469"
+ 	default y
+ 
+ config MACH_STM32F746
+-	bool "STMicrolectronics STM32F746"
+-	depends on ARCH_STM32
++	bool "STMicroelectronics STM32F746"
+ 	default y
+ 
+ config MACH_STM32H743
+-	bool "STMicrolectronics STM32H743"
+-	depends on ARCH_STM32
++	bool "STMicroelectronics STM32H743"
+ 	default y
++
++endif # ARMv7-M
++
++endif
+diff --git a/arch/arm/mach-stm32/board-dt.c b/arch/arm/mach-stm32/board-dt.c
+index e918686..4a258eb 100644
+--- a/arch/arm/mach-stm32/board-dt.c
++++ b/arch/arm/mach-stm32/board-dt.c
+@@ -1,11 +1,10 @@
++// SPDX-License-Identifier: GPL-2.0
+ /*
+  * Copyright (C) Maxime Coquelin 2015
+  * Author:  Maxime Coquelin <mcoquelin.stm32@gmail.com>
+- * License terms:  GNU General Public License (GPL), version 2
+  */
+ 
+ #include <linux/kernel.h>
+-#include <asm/v7m.h>
+ #include <asm/mach/arch.h>
+ 
+ static const char *const stm32_compat[] __initconst = {
+@@ -18,5 +17,4 @@ static const char *const stm32_compat[] __initconst = {
+ 
+ DT_MACHINE_START(STM32DT, "STM32 (Device Tree Support)")
+ 	.dt_compat = stm32_compat,
+-	.restart = armv7m_restart,
+ MACHINE_END
+-- 
+2.7.4
