@@ -1,40 +1,40 @@
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH 2/4] dt-bindings: at24: add compatible for nxp,se97b
-Date: Tue, 16 Jan 2018 18:26:56 +0100
-Message-ID: <CAMRc=MeSD3Zi=APcntepjmk3M85WxreAxG5OmzveawyZ_touzQ@mail.gmail.com>
-References: <20180116160618.27859-1-peda@axentia.se> <20180116160618.27859-3-peda@axentia.se>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <20180116160618.27859-3-peda@axentia.se>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Russell King <linux@armlinux.org.uk>, linux-i2c <linux-i2c@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org
+From: srinivas.kandagatla@linaro.org
+Subject: [PATCH 0/4] dmaengine: qcom: bam_dma: fixes for remotely controlled bam
+Date: Tue, 16 Jan 2018 19:02:32 +0000
+Message-ID: <20180116190236.14558-1-srinivas.kandagatla@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vinod Koul <vinod.koul@intel.com>, Andy Gross <andy.gross@linaro.org>, dmaengine@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, David Brown <david.brown@linaro.org>, Dan Williams <dan.j.williams@intel.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, yanhe@quicinc.com, ramkri@qti.qualcomm.com, sdharia@quicinc.com, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-2018-01-16 17:06 GMT+01:00 Peter Rosin <peda@axentia.se>:
-> The datasheet talks about the chip being an spd, but the chip is writable
-> so atmel,24c02 is more appropriate as fallback.
->
-> Signed-off-by: Peter Rosin <peda@axentia.se>
-> ---
->  Documentation/devicetree/bindings/eeprom/at24.txt | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/Documentation/devicetree/bindings/eeprom/at24.txt b/Documentation/devicetree/bindings/eeprom/at24.txt
-> index abfae1beca2b..edf9247613f6 100644
-> --- a/Documentation/devicetree/bindings/eeprom/at24.txt
-> +++ b/Documentation/devicetree/bindings/eeprom/at24.txt
-> @@ -46,6 +46,7 @@ Required properties:
->                  Some vendors use different model names for chips which are just
->                  variants of the above. Known such exceptions are listed below:
->
-> +                "nxp,se97b" - the fallback is "atmel,24c02",
->                  "renesas,r1ex24002" - the fallback is "atmel,24c02"
->
->    - reg: The I2C address of the EEPROM.
-> --
-> 2.11.0
->
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
-Acked-by: Bartosz Golaszewski <brgl@bgdev.pl>
+Hi Andy,
+
+I did hit few issues while trying out SLIMBus BAM on DB820c, this BAM instance
+is remotely controlled and powered up after ADSP is booted using QMI commands.
+
+Firstly some of the master registers are written even when the BAM is remotely
+controlled, and secondly reading registers when bam is not ready yet.
+
+These 4 patches address these issues, there are few more issues like doing PM
+in simillar usecase, these will be addressed soon.
+
+Thanks,
+Srini
+
+Srinivas Kandagatla (4):
+  dmaengine: qcom: bam_dma: make bam clk optional
+  dmaengine: qcom: bam_dma: add num-channels binding for remotely
+    controlled
+  dmaengine: qcom: bam_dma: do not write to global regs in remote mode
+  dmaengine: qcom: bam_dma: Add num-ees dt binding for remotely
+    controlled
+
+ .../devicetree/bindings/dma/qcom_bam_dma.txt       |  4 ++
+ drivers/dma/qcom/bam_dma.c                         | 56 +++++++++++++++-------
+ 2 files changed, 43 insertions(+), 17 deletions(-)
+
+-- 
+2.15.1
