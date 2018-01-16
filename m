@@ -1,174 +1,96 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v5 11/44] clk: davinci: Add platform information for TI
- DA830 PSC
-Date: Tue, 16 Jan 2018 19:08:59 +0530
-Message-ID: <91fe16dc-907e-6dbb-c8db-c27561132093@ti.com>
-References: <1515377863-20358-1-git-send-email-david@lechnology.com>
- <1515377863-20358-12-git-send-email-david@lechnology.com>
+From: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v8 3/5] can: m_can: Move allocation of net device to probe
+Date: Tue, 16 Jan 2018 15:00:25 +0100
+Message-ID: <1dcb2038-cc6d-44e5-fe51-e43041b1fe5f@pengutronix.de>
+References: <1516102634-6771-1-git-send-email-faiz_abbas@ti.com>
+ <1516102634-6771-4-git-send-email-faiz_abbas@ti.com>
+ <caa11848-3c69-1229-e4b8-09e51cebe739@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+ protocol="application/pgp-signature";
+ boundary="n61MLG9MW0N4Qg60qaYOVa0GuRCAnzRkg"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1515377863-20358-12-git-send-email-david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <caa11848-3c69-1229-e4b8-09e51cebe739-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Adam Ford <aford173-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Faiz Abbas <faiz_abbas-l0cyMroinI0@public.gmane.org>, wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, fcooper-l0cyMroinI0@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Wenyou.Yang-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 08 January 2018 07:47 AM, David Lechner wrote:
-> This adds platform-specific declarations for the PSC clocks on TI DA830/
-> OMAP-L137/AM17XX SoCs.
-> 
-> Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-> ---
->  drivers/clk/davinci/Makefile    |  1 +
->  drivers/clk/davinci/psc-da830.c | 96 +++++++++++++++++++++++++++++++++++++++++
->  include/linux/clk/davinci.h     |  2 +
->  3 files changed, 99 insertions(+)
->  create mode 100644 drivers/clk/davinci/psc-da830.c
-> 
-> diff --git a/drivers/clk/davinci/Makefile b/drivers/clk/davinci/Makefile
-> index cd1bf2c..fb14c8c 100644
-> --- a/drivers/clk/davinci/Makefile
-> +++ b/drivers/clk/davinci/Makefile
-> @@ -10,4 +10,5 @@ obj-$(CONFIG_ARCH_DAVINCI_DM644x)	+= pll-dm644x.o
->  obj-$(CONFIG_ARCH_DAVINCI_DM646x)	+= pll-dm646x.o
->  
->  obj-y += psc.o
-> +obj-$(CONFIG_ARCH_DAVINCI_DA830)	+= psc-da830.o
->  endif
-> diff --git a/drivers/clk/davinci/psc-da830.c b/drivers/clk/davinci/psc-da830.c
-> new file mode 100644
-> index 0000000..193b08f
-> --- /dev/null
-> +++ b/drivers/clk/davinci/psc-da830.c
-> @@ -0,0 +1,96 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * PSC clock descriptions for TI DA830/OMAP-L137/AM17XX
-> + *
-> + * Copyright (C) 2017 David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-> + */
-> +
-> +#include <linux/clk-provider.h>
-> +#include <linux/clkdev.h>
-> +#include <linux/init.h>
-> +#include <linux/types.h>
-> +
-> +#include "psc.h"
-> +
-> +static const struct davinci_psc_clk_info da830_psc0_info[] __initconst = {
-> +	LPSC(0, 0, tpcc, pll0_sysclk2, LPSC_ALWAYS_ENABLED),
-> +	LPSC(1, 0, tptc0, pll0_sysclk2, LPSC_ALWAYS_ENABLED),
-> +	LPSC(2, 0, tptc1, pll0_sysclk2, LPSC_ALWAYS_ENABLED),
-> +	LPSC(3, 0, aemif, pll0_sysclk3, LPSC_ALWAYS_ENABLED),
-> +	LPSC(4, 0, spi0, pll0_sysclk2, 0),
-> +	LPSC(5, 0, mmcsd, pll0_sysclk2, 0),
-> +	LPSC(6, 0, aintc, pll0_sysclk4, LPSC_ALWAYS_ENABLED),
-> +	LPSC(7, 0, arm_rom, pll0_sysclk2, LPSC_ALWAYS_ENABLED),
-> +	LPSC(8, 0, secu_mgr, pll0_sysclk4, LPSC_ALWAYS_ENABLED),
-> +	LPSC(9, 0, uart0, pll0_sysclk2, 0),
-> +	LPSC(10, 0, scr0_ss, pll0_sysclk2, LPSC_ALWAYS_ENABLED),
-> +	LPSC(11, 0, scr1_ss, pll0_sysclk2, LPSC_ALWAYS_ENABLED),
-> +	LPSC(12, 0, scr2_ss, pll0_sysclk2, LPSC_ALWAYS_ENABLED),
-> +	LPSC(13, 0, dmax, pll0_sysclk2, LPSC_ALWAYS_ENABLED),
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--n61MLG9MW0N4Qg60qaYOVa0GuRCAnzRkg
+Content-Type: multipart/mixed; boundary="eKhm3KutavnApDCimxe8BCvzsjJ3n29ig";
+ protected-headers="v1"
+From: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+To: Faiz Abbas <faiz_abbas-l0cyMroinI0@public.gmane.org>, wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org,
+ mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org,
+ devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org,
+ fcooper-l0cyMroinI0@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Wenyou.Yang-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org,
+ sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org,
+ b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org
+Message-ID: <1dcb2038-cc6d-44e5-fe51-e43041b1fe5f-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v8 3/5] can: m_can: Move allocation of net device to probe
+References: <1516102634-6771-1-git-send-email-faiz_abbas-l0cyMroinI0@public.gmane.org>
+ <1516102634-6771-4-git-send-email-faiz_abbas-l0cyMroinI0@public.gmane.org>
+ <caa11848-3c69-1229-e4b8-09e51cebe739-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <caa11848-3c69-1229-e4b8-09e51cebe739-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-pruss is better (I know the name is coming from existing code).
+--eKhm3KutavnApDCimxe8BCvzsjJ3n29ig
+Content-Type: text/plain; charset=utf-8
+Content-Language: de-DE
+Content-Transfer-Encoding: quoted-printable
 
-> +	LPSC(14, 0, arm, pll0_sysclk6, LPSC_ALWAYS_ENABLED),
+On 01/16/2018 02:03 PM, Marc Kleine-Budde wrote:
+>> diff --git a/drivers/net/can/m_can/m_can.c b/drivers/net/can/m_can/m_c=
+an.c
+>> index 893edbb..ebb74de 100644
+>> --- a/drivers/net/can/m_can/m_can.c
+>> +++ b/drivers/net/can/m_can/m_can.c
+>> @@ -1207,25 +1207,20 @@ static bool m_can_niso_supported(const struct =
+m_can_priv *priv)
+>>  	return !niso_timeout;
+>>  }
+>> =20
+>> -static struct net_device *alloc_m_can_dev(struct platform_device *pde=
+v,
+>> -					  void __iomem *addr, u32 tx_fifo_size)
+>> +static int setup_m_can_dev(struct platform_device *pdev, struct net_d=
+evice *dev,
+>> +			   void __iomem *addr)
+>=20
+> Renamed to m_can_dev_setup() for consistent namespace.
 
-This is LPSC 15 which controls DSP too. But its missing from existing
-code. Not sure why. Probably a note for future. For now okay with
-ignoring it.
+And removed free_m_can_dev(), by calling free_candev() directly.
 
-> +	{ }
-> +};
+Marc
 
-Tables like these are much easier to parse if columns are spaced using a
-tab.
+--=20
+Pengutronix e.K.                  | Marc Kleine-Budde           |
+Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
 
-> +
-> +static const struct davinci_psc_clk_info da830_psc1_info[] __initconst = {
-> +	LPSC(1, 0, usb0, pll0_sysclk2, 0),
-> +	LPSC(2, 0, usb1, pll0_sysclk4, 0),
-> +	LPSC(3, 0, gpio, pll0_sysclk4, 0),
 
-There is LPSC 4 controlling UHPI. Again, lets ignore for now.
+--eKhm3KutavnApDCimxe8BCvzsjJ3n29ig--
 
-> +	LPSC(5, 0, emac, pll0_sysclk4, 0),
-> +	LPSC(6, 0, emif3, pll0_sysclk5, LPSC_ALWAYS_ENABLED),
-> +	LPSC(7, 0, mcasp0, pll0_sysclk2, 0),
-> +	LPSC(8, 0, mcasp1, pll0_sysclk2, 0),
-> +	LPSC(9, 0, mcasp2, pll0_sysclk2, 0),
-> +	LPSC(10, 0, spi1, pll0_sysclk2, 0),
-> +	LPSC(11, 0, i2c1, pll0_sysclk4, 0),
-> +	LPSC(12, 0, uart1, pll0_sysclk2, 0),
-> +	LPSC(13, 0, uart2, pll0_sysclk2, 0),
-> +	LPSC(16, 0, lcdc, pll0_sysclk2, 0),
-> +	LPSC(17, 0, pwm, pll0_sysclk2, 0),
-> +	LPSC(20, 0, ecap, pll0_sysclk2, 0),
-> +	LPSC(21, 0, eqep, pll0_sysclk2, 0),
-> +	{ }
-> +};
-> +
-> +void __init da830_psc_clk_init(void __iomem *psc0, void __iomem *psc1)
-> +{
-> +	struct clk_onecell_data *clk_data;
-> +
-> +	clk_data = davinci_psc_register_clocks(psc0, da830_psc0_info, 16);
-> +	if (!clk_data)
-> +		return;
-> +
-> +	clk_register_clkdev(clk_data->clks[4], NULL, "spi_davinci.0");
-> +	clk_register_clkdev(clk_data->clks[5], NULL, "da830-mmc.0");
-> +	clk_register_clkdev(clk_data->clks[9], NULL, "serial8250.0");
-> +	clk_register_clkdev(clk_data->clks[14], "arm", NULL);
-> +
-> +	clk_free_onecell_data(clk_data);
-> +
-> +	clk_data = davinci_psc_register_clocks(psc1, da830_psc1_info, 32);
-> +	if (!clk_data)
-> +		return;
-> +
-> +	clk_register_clkdev(clk_data->clks[1], NULL, "musb-da8xx");
-> +	clk_register_clkdev(clk_data->clks[1], NULL, "cppi41-dmaengine");
-> +	clk_register_clkdev(clk_data->clks[2], NULL, "ohci-da8xx");
-> +	clk_register_clkdev(clk_data->clks[3], "gpio", NULL);
+--n61MLG9MW0N4Qg60qaYOVa0GuRCAnzRkg
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
-This is pretty bad (and no fault of yours) - having a con_id but no
-device name. Can you please make a pre-series which passes NULL con_id
-in gpio-davinci.c?
+-----BEGIN PGP SIGNATURE-----
 
-> +	clk_register_clkdev(clk_data->clks[5], NULL, "davinci_emac.1");
-> +	clk_register_clkdev(clk_data->clks[5], "fck", "davinci_mdio.0");
-> +	clk_register_clkdev(clk_data->clks[7], NULL, "davinci-mcasp.0");
-> +	clk_register_clkdev(clk_data->clks[8], NULL, "davinci-mcasp.1");
-> +	clk_register_clkdev(clk_data->clks[9], NULL, "davinci-mcasp.2");
-> +	clk_register_clkdev(clk_data->clks[10], NULL, "spi_davinci.1");
-> +	clk_register_clkdev(clk_data->clks[11], NULL, "i2c_davinci.2");
-> +	clk_register_clkdev(clk_data->clks[12], NULL, "serial8250.1");
-> +	clk_register_clkdev(clk_data->clks[13], NULL, "serial8250.2");
-> +	clk_register_clkdev(clk_data->clks[16], "fck", "da8xx_lcdc.0");
-> +	clk_register_clkdev(clk_data->clks[17], "fck", "ehrpwm.0");
-> +	clk_register_clkdev(clk_data->clks[17], "fck", "ehrpwm.1");
-> +	clk_register_clkdev(clk_data->clks[20], "fck", "ecap.0");
-> +	clk_register_clkdev(clk_data->clks[20], "fck", "ecap.1");
-> +	clk_register_clkdev(clk_data->clks[20], "fck", "ecap.2");
-> +	clk_register_clkdev(clk_data->clks[21], NULL, "eqep.0");
-> +	clk_register_clkdev(clk_data->clks[21], NULL, "eqep.1");
+iQEzBAEBCgAdFiEE4bay/IylYqM/npjQHv7KIOw4HPYFAlpeBXkACgkQHv7KIOw4
+HPZJuwf/Z1tL2ijIV92dXMyr5IJMB6yPrb7ZbmcDxR2QBi1blKG/M8aDm9kvsHQs
+a53i7popXcyD4K9sH5FxL91L1AcGdGdAx0t04XpZizCK4FsWrNt1mGPB4Ir7YftZ
+ynJOZmCFEWUpvyJeB2S9r/EattQK3w/QbYHKYGl3KyV/uFt1fFDskptJDcGc1YA9
+dgWjWCbaQgeLzbADwnaUD8tPNBEcsBeAnrHI4E+J6c0n5jC42fIvwR+MArer5qrx
+ZbUN26xdf027Vd26cM7Q9Hz0lMxfydKCgnTW5q0tTLJ6IqZBv9uuBiz7C9/ALqIl
+fBhRT2XjFC/tH/uPi8hZs1ra4xUrZA==
+=d7NX
+-----END PGP SIGNATURE-----
 
-This is going to be very difficult to audit for mistakes. How do you
-feel about adding the con_id and dev_id to davinci_psc_clk_info[] so
-they can be initialized as part of a single static table? And then here
-you go over the table looking for non-NULL con_id/dev_id to call
-clk_register_clkdev()?
-
-I am guessing you did not take that route because the DT path does not
-need those. But still, I think that will be much less error prone.
-
-Thanks,
-Sekhar
+--n61MLG9MW0N4Qg60qaYOVa0GuRCAnzRkg--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
