@@ -1,43 +1,58 @@
 From: Sekhar Nori <nsekhar@ti.com>
 Subject: Re: [PATCH v5 02/44] clk: davinci: New driver for davinci PLL clocks
-Date: Tue, 16 Jan 2018 12:02:47 +0530
-Message-ID: <f0a09394-aa44-4a0a-5d5d-ac0d9f8bcb4e@ti.com>
+Date: Tue, 16 Jan 2018 12:18:19 +0530
+Message-ID: <7620b3a1-8806-2e39-4b08-b21064160e06@ti.com>
 References: <1515377863-20358-1-git-send-email-david@lechnology.com>
  <1515377863-20358-3-git-send-email-david@lechnology.com>
  <7fc8bd35-0416-216d-8e1e-53a0ec6e8790@ti.com>
- <d8171267-dc49-e573-ca69-c2b77b44a119@lechnology.com>
+ <01fbde0e-36a0-2b19-e385-e63bc4a3ae4a@lechnology.com>
+ <eb2b1a63-9c7c-aeca-170f-d38642442438@ti.com>
+ <4a32c52f-4335-52c0-fa63-625a449b00b5@lechnology.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d8171267-dc49-e573-ca69-c2b77b44a119@lechnology.com>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <4a32c52f-4335-52c0-fa63-625a449b00b5@lechnology.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-clk-owner@vger.kernel.org
 To: David Lechner <david@lechnology.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Saturday 13 January 2018 07:43 AM, David Lechner wrote:
-> On 01/12/2018 03:21 AM, Sekhar Nori wrote:
->> On Monday 08 January 2018 07:47 AM, David Lechner wrote:
->>> +static unsigned long davinci_pll_clk_recalc(struct clk_hw *hw,
->>> +                        unsigned long parent_rate)
->>> +{
->>> +    struct davinci_pll_clk *pll = to_davinci_pll_clk(hw);
->>> +    unsigned long rate = parent_rate;
->>> +    u32 prediv, mult, postdiv;
->>> +
->>> +    prediv = readl(pll->base + PREDIV) & PREDIV_RATIO_MASK;
->>> +    mult = readl(pll->base + PLLM) & PLLM_MASK;
->>> +    postdiv = readl(pll->base + POSTDIV) & POSTDIV_RATIO_MASK;
+On Saturday 13 January 2018 06:41 AM, David Lechner wrote:
+> On 01/12/2018 10:18 AM, Sekhar Nori wrote:
+>> On Friday 12 January 2018 08:55 PM, David Lechner wrote:
+>>>>
+>>>> PLL output on DA850 must never be below 300MHz or above 600MHz (see
+>>>> datasheet table "Allowed PLL Operating Conditions"). Does this take
+>>>> care
+>>>> of that? Thats one of the main reasons I recall I went with some
+>>>> specific values of prediv, pllm and post div in
+>>>> arch/arm/mach-davinci/da850.c
+>>>
+>>> Apparently, I missed this requirement. It looks like I am going to
+>>> have to
+>>> rework things so that there is some coordination between the PLL and the
+>>> PLLDIV clocks in order to get the < 300MHz operating points.
 >>
->> Shouldn't we check if the pre and post dividers are enabled before using
->> them?
+>> Just to make sure we are on the same page. The datasheet
+>> constraint is 600 >= PLLOUT >= 300. PLLOUT is output of POSTDIV.
 > 
-> I dug into this and the answer is no. The enable bit acts like a gate, not
-> a bypass, so it does not affect the rate calculation.
+> Hmm... I am on a different page. It looks to me like PLLOUT is the output
+> of PLLM, not POSTDIV. The datasheet says nothing at all and the TRM does
+> not say it explicitly, but footnote 2 on the table "System PLLC Output
+> Clocks", for example, makes it pretty clear.
 
-Alright, thanks for checking this.
+You are right. There is also this note in "Device clock generation" of
+TRM which makes this clear.
 
-Regards,
+"
+The PLLOUT stage in PLLC0 and PLLC1 is capable of providing frequencies
+greater than what the SYSCLK dividers can handle. The POSTDIV stage
+should be programmed to keep the input to the SYSCLK dividers within
+operating limits. See the device datasheet for the maximum operating
+frequencies.
+"
+
+Thanks,
 Sekhar
