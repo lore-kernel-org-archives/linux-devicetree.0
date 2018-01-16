@@ -1,58 +1,110 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH v5 02/44] clk: davinci: New driver for davinci PLL clocks
-Date: Tue, 16 Jan 2018 12:18:19 +0530
-Message-ID: <7620b3a1-8806-2e39-4b08-b21064160e06@ti.com>
-References: <1515377863-20358-1-git-send-email-david@lechnology.com>
- <1515377863-20358-3-git-send-email-david@lechnology.com>
- <7fc8bd35-0416-216d-8e1e-53a0ec6e8790@ti.com>
- <01fbde0e-36a0-2b19-e385-e63bc4a3ae4a@lechnology.com>
- <eb2b1a63-9c7c-aeca-170f-d38642442438@ti.com>
- <4a32c52f-4335-52c0-fa63-625a449b00b5@lechnology.com>
+From: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH] reset: ti-rstctrl: use the reset-simple driver
+Date: Tue, 16 Jan 2018 08:50:52 +0200
+Message-ID: <77e146f7-4431-8ce6-6299-330f052bebe0@ti.com>
+References: <20180116011159.1386-1-tony@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <4a32c52f-4335-52c0-fa63-625a449b00b5@lechnology.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180116011159.1386-1-tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 Content-Language: en-US
-Sender: linux-clk-owner@vger.kernel.org
-To: David Lechner <david@lechnology.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paul Parsons <lost.distance-/E1597aS9LQAvxtiuMwx3w@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Nishant Menon <nm-l0cyMroinI0@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Saturday 13 January 2018 06:41 AM, David Lechner wrote:
-> On 01/12/2018 10:18 AM, Sekhar Nori wrote:
->> On Friday 12 January 2018 08:55 PM, David Lechner wrote:
->>>>
->>>> PLL output on DA850 must never be below 300MHz or above 600MHz (see
->>>> datasheet table "Allowed PLL Operating Conditions"). Does this take
->>>> care
->>>> of that? Thats one of the main reasons I recall I went with some
->>>> specific values of prediv, pllm and post div in
->>>> arch/arm/mach-davinci/da850.c
->>>
->>> Apparently, I missed this requirement. It looks like I am going to
->>> have to
->>> rework things so that there is some coordination between the PLL and the
->>> PLLDIV clocks in order to get the < 300MHz operating points.
->>
->> Just to make sure we are on the same page. The datasheet
->> constraint is 600 >= PLLOUT >= 300. PLLOUT is output of POSTDIV.
+On 16/01/18 03:11, Tony Lindgren wrote:
+> We can support the RSTCTRL reset registers on many TI SoCs with
+> reset-simple.
 > 
-> Hmm... I am on a different page. It looks to me like PLLOUT is the output
-> of PLLM, not POSTDIV. The datasheet says nothing at all and the TRM does
-> not say it explicitly, but footnote 2 on the table "System PLLC Output
-> Clocks", for example, makes it pretty clear.
+> Cc: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Cc: Nishant Menon <nm-l0cyMroinI0@public.gmane.org>
+> Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+> Cc: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
+> Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+> ---
+> 
+> That's all there is to it :) Naturally this can wait for v4.17
+> if necessary.
 
-You are right. There is also this note in "Device clock generation" of
-TRM which makes this clear.
+Thats pretty neat. :)
 
-"
-The PLLOUT stage in PLLC0 and PLLC1 is capable of providing frequencies
-greater than what the SYSCLK dividers can handle. The POSTDIV stage
-should be programmed to keep the input to the SYSCLK dividers within
-operating limits. See the device datasheet for the maximum operating
-frequencies.
-"
+-Tero
 
-Thanks,
-Sekhar
+> 
+> ---
+>   .../devicetree/bindings/reset/ti-rstctrl.txt       | 29 ++++++++++++++++++++++
+>   drivers/reset/Kconfig                              |  2 +-
+>   drivers/reset/reset-simple.c                       |  1 +
+>   3 files changed, 31 insertions(+), 1 deletion(-)
+>   create mode 100644 Documentation/devicetree/bindings/reset/ti-rstctrl.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/reset/ti-rstctrl.txt b/Documentation/devicetree/bindings/reset/ti-rstctrl.txt
+> new file mode 100644
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/reset/ti-rstctrl.txt
+> @@ -0,0 +1,29 @@
+> +TI RSTCTRL Reset Controller
+> +
+> +Required properties:
+> +- compatible : "ti,rstctrl"
+> +- reg : Should contain 1 register ranges(address and length)
+> +- #reset-cells: 1
+> +
+> +Example:
+> +
+> +	prcm: prcm@200000 {
+> +		compatible = "ti,am3-prcm", "simple-bus";
+> +		reg = <0x200000 0x4000>;
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges = <0 0x200000 0x4000>;
+> +
+> +		prm_gfx: prm@1100 {
+> +			compatible = "simple-bus";
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			ranges = <0 0x1100 0x100>;
+> +
+> +			gfx_rstctrl: rstctrl@4 {
+> +				reg = <0x4 0x4>;
+> +				#reset-cells = <1>;
+> +				compatible = "ti,rstctrl";
+> +			};
+> +		};
+> +	};
+> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
+> --- a/drivers/reset/Kconfig
+> +++ b/drivers/reset/Kconfig
+> @@ -83,7 +83,7 @@ config RESET_PISTACHIO
+>   
+>   config RESET_SIMPLE
+>   	bool "Simple Reset Controller Driver" if COMPILE_TEST
+> -	default ARCH_SOCFPGA || ARCH_STM32 || ARCH_STRATIX10 || ARCH_SUNXI || ARCH_ZX
+> +	default ARCH_OMAP2PLUS || ARCH_SOCFPGA || ARCH_STM32 || ARCH_STRATIX10 || ARCH_SUNXI || ARCH_ZX
+>   	help
+>   	  This enables a simple reset controller driver for reset lines that
+>   	  that can be asserted and deasserted by toggling bits in a contiguous,
+> diff --git a/drivers/reset/reset-simple.c b/drivers/reset/reset-simple.c
+> --- a/drivers/reset/reset-simple.c
+> +++ b/drivers/reset/reset-simple.c
+> @@ -123,6 +123,7 @@ static const struct of_device_id reset_simple_dt_ids[] = {
+>   	{ .compatible = "st,stm32-rcc", },
+>   	{ .compatible = "allwinner,sun6i-a31-clock-reset",
+>   		.data = &reset_simple_active_low },
+> +	{ .compatible = "ti,rstctrl", },
+>   	{ .compatible = "zte,zx296718-reset",
+>   		.data = &reset_simple_active_low },
+>   	{ /* sentinel */ },
+> 
+
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
