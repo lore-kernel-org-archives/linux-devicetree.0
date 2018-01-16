@@ -1,163 +1,159 @@
-From: Hyun Kwon <hyun.kwon@xilinx.com>
-Subject: [PATCH v3 8/8] drm: xlnx: zynqmp_dp: Add drm properties
-Date: Mon, 15 Jan 2018 17:57:11 -0800
-Message-ID: <1516067831-11382-8-git-send-email-hyun.kwon@xilinx.com>
+From: Hyun Kwon <hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v3 3/8] dt-bindings: display: xlnx: Add ZynqMP DP subsystem bindings
+Date: Mon, 15 Jan 2018 17:57:06 -0800
+Message-ID: <1516067831-11382-3-git-send-email-hyun.kwon@xilinx.com>
 References: <1516067831-11382-1-git-send-email-hyun.kwon@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1516067831-11382-1-git-send-email-hyun.kwon@xilinx.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Michal Simek <michal.simek@xilinx.com>, Hyun Kwon <hyun.kwon@xilinx.com>, Daniel Vetter <daniel.vetter@ffwll.ch>
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1516067831-11382-1-git-send-email-hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Vetter <daniel.vetter-/w4YWyX8dFk@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Hyun Kwon <hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-QWRkIGRybSBwcm9wZXJ0aWVzIGZvciBEaXNwbGF5UG9ydCBzeW5jaHJvbm91cyBtb2RlIGFuZCBi
-cGMKY29uZmlndXJhdGlvbnMuCgpTaWduZWQtb2ZmLWJ5OiBIeXVuIEt3b24gPGh5dW4ua3dvbkB4
-aWxpbnguY29tPgotLS0KdjIKLSBTcGxpdCBmcm9tIHRoZSBvcmlnaW5hbCBwYXRjaAotLS0KLS0t
-CiBkcml2ZXJzL2dwdS9kcm0veGxueC96eW5xbXBfZHAuYyB8IDExNiArKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKy0KIDEgZmlsZSBjaGFuZ2VkLCAxMTQgaW5zZXJ0aW9ucygr
-KSwgMiBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0veGxueC96eW5x
-bXBfZHAuYyBiL2RyaXZlcnMvZ3B1L2RybS94bG54L3p5bnFtcF9kcC5jCmluZGV4IDljOWY0ZGYu
-LmUxZTgyMzcgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS94bG54L3p5bnFtcF9kcC5jCisr
-KyBiL2RyaXZlcnMvZ3B1L2RybS94bG54L3p5bnFtcF9kcC5jCkBAIC0zMDIsNiArMzAyLDggQEAg
-c3RydWN0IHp5bnFtcF9kcF9jb25maWcgewogICogc3RydWN0IHp5bnFtcF9kcCAtIFhpbGlueCBE
-aXNwbGF5UG9ydCBjb3JlCiAgKiBAZW5jb2RlcjogdGhlIGRybSBlbmNvZGVyIHN0cnVjdHVyZQog
-ICogQGNvbm5lY3RvcjogdGhlIGRybSBjb25uZWN0b3Igc3RydWN0dXJlCisgKiBAc3luY19wcm9w
-OiBzeW5jaHJvbm91cyBtb2RlIHByb3BlcnR5CisgKiBAYnBjX3Byb3A6IGJwYyBtb2RlIHByb3Bl
-cnR5CiAgKiBAZGV2OiBkZXZpY2Ugc3RydWN0dXJlCiAgKiBAZHBzdWI6IERpc3BsYXkgc3Vic3lz
-dGVtCiAgKiBAZHJtOiBEUk0gY29yZQpAQCAtMzIzLDYgKzMyNSw4IEBAIHN0cnVjdCB6eW5xbXBf
-ZHBfY29uZmlnIHsKIHN0cnVjdCB6eW5xbXBfZHAgewogICAgICAgIHN0cnVjdCBkcm1fZW5jb2Rl
-ciBlbmNvZGVyOwogICAgICAgIHN0cnVjdCBkcm1fY29ubmVjdG9yIGNvbm5lY3RvcjsKKyAgICAg
-ICBzdHJ1Y3QgZHJtX3Byb3BlcnR5ICpzeW5jX3Byb3A7CisgICAgICAgc3RydWN0IGRybV9wcm9w
-ZXJ0eSAqYnBjX3Byb3A7CiAgICAgICAgc3RydWN0IGRldmljZSAqZGV2OwogICAgICAgIHN0cnVj
-dCB6eW5xbXBfZHBzdWIgKmRwc3ViOwogICAgICAgIHN0cnVjdCBkcm1fZGV2aWNlICpkcm07CkBA
-IC0xMTE2LDYgKzExMjAsMzcgQEAgc3RhdGljIHZvaWQgenlucW1wX2RwX3VwZGF0ZV9taXNjKHN0
-cnVjdCB6eW5xbXBfZHAgKmRwKQogfQoKIC8qKgorICogenlucW1wX2RwX3NldF9zeW5jX21vZGUg
-LSBTZXQgdGhlIHN5bmMgbW9kZSBiaXQgaW4gdGhlIHNvZnR3YXJlIG1pc2Mgc3RhdGUKKyAqIEBk
-cDogRGlzcGxheVBvcnQgSVAgY29yZSBzdHJ1Y3R1cmUKKyAqIEBtb2RlOiBmbGFnIGlmIHRoZSBz
-eW5jIG1vZGUgc2hvdWxkIGJlIG9uIG9yIG9mZgorICoKKyAqIFNldCB0aGUgYml0IGluIHNvZnR3
-YXJlIG1pc2Mgc3RhdGUuIFRvIGFwcGx5IHRvIGhhcmR3YXJlLAorICogenlucW1wX2RwX3VwZGF0
-ZV9taXNjKCkgc2hvdWxkIGJlIGNhbGxlZC4KKyAqLworc3RhdGljIHZvaWQgenlucW1wX2RwX3Nl
-dF9zeW5jX21vZGUoc3RydWN0IHp5bnFtcF9kcCAqZHAsIGJvb2wgbW9kZSkKK3sKKyAgICAgICBz
-dHJ1Y3QgenlucW1wX2RwX2NvbmZpZyAqY29uZmlnID0gJmRwLT5jb25maWc7CisKKyAgICAgICBp
-ZiAobW9kZSkKKyAgICAgICAgICAgICAgIGNvbmZpZy0+bWlzYzAgfD0gWllOUU1QX0RQX1RYX01B
-SU5fU1RSRUFNX01JU0MwX1NZTkM7CisgICAgICAgZWxzZQorICAgICAgICAgICAgICAgY29uZmln
-LT5taXNjMCAmPSB+WllOUU1QX0RQX1RYX01BSU5fU1RSRUFNX01JU0MwX1NZTkM7Cit9CisKKy8q
-KgorICogenlucW1wX2RwX2dldF9zeW5jX21vZGUgLSBHZXQgdGhlIHN5bmMgbW9kZSBzdGF0ZQor
-ICogQGRwOiBEaXNwbGF5UG9ydCBJUCBjb3JlIHN0cnVjdHVyZQorICoKKyAqIFJldHVybjogdHJ1
-ZSBpZiB0aGUgc3luYyBtb2RlIGlzIG9uLCBvciBmYWxzZQorICovCitzdGF0aWMgYm9vbCB6eW5x
-bXBfZHBfZ2V0X3N5bmNfbW9kZShzdHJ1Y3QgenlucW1wX2RwICpkcCkKK3sKKyAgICAgICBzdHJ1
-Y3QgenlucW1wX2RwX2NvbmZpZyAqY29uZmlnID0gJmRwLT5jb25maWc7CisKKyAgICAgICByZXR1
-cm4gISEoY29uZmlnLT5taXNjMCAmIFpZTlFNUF9EUF9UWF9NQUlOX1NUUkVBTV9NSVNDMF9TWU5D
-KTsKK30KKworLyoqCiAgKiB6eW5xbXBfZHBfc2V0X2JwYyAtIFNldCBicGMgdmFsdWUgaW4gc29m
-dHdhcmUgbWlzYyBzdGF0ZQogICogQGRwOiBEaXNwbGF5UG9ydCBJUCBjb3JlIHN0cnVjdHVyZQog
-ICogQGJwYzogYml0cyBwZXIgY29tcG9uZW50CkBAIC0xMTY1LDYgKzEyMDAsMTcgQEAgc3RhdGlj
-IHU4IHp5bnFtcF9kcF9zZXRfYnBjKHN0cnVjdCB6eW5xbXBfZHAgKmRwLCB1OCBicGMpCiB9Cgog
-LyoqCisgKiB6eW5xbXBfZHBfZ2V0X2JwYyAtIFNldCBicGMgdmFsdWUgZnJvbSBzb2Z0d2FyZSBz
-dGF0ZQorICogQGRwOiBEaXNwbGF5UG9ydCBJUCBjb3JlIHN0cnVjdHVyZQorICoKKyAqIFJldHVy
-bjogY3VycmVudCBicGMgdmFsdWUKKyAqLworc3RhdGljIHU4IHp5bnFtcF9kcF9nZXRfYnBjKHN0
-cnVjdCB6eW5xbXBfZHAgKmRwKQoreworICAgICAgIHJldHVybiBkcC0+Y29uZmlnLmJwYzsKK30K
-KworLyoqCiAgKiB6eW5xbXBfZHBfZW5jb2Rlcl9tb2RlX3NldF90cmFuc2Zlcl91bml0IC0gU2V0
-IHRoZSB0cmFuc2ZlciB1bml0IHZhbHVlcwogICogQGRwOiBEaXNwbGF5UG9ydCBJUCBjb3JlIHN0
-cnVjdHVyZQogICogQG1vZGU6IHJlcXVlc3RlZCBkaXNwbGF5IG1vZGUKQEAgLTEzNjgsNiArMTQx
-NCw1MSBAQCBzdGF0aWMgdm9pZCB6eW5xbXBfZHBfY29ubmVjdG9yX2Rlc3Ryb3koc3RydWN0IGRy
-bV9jb25uZWN0b3IgKmNvbm5lY3RvcikKICAgICAgICBkcm1fY29ubmVjdG9yX2NsZWFudXAoY29u
-bmVjdG9yKTsKIH0KCitzdGF0aWMgaW50Cit6eW5xbXBfZHBfY29ubmVjdG9yX2F0b21pY19zZXRf
-cHJvcGVydHkoc3RydWN0IGRybV9jb25uZWN0b3IgKmNvbm5lY3RvciwKKyAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgIHN0cnVjdCBkcm1fY29ubmVjdG9yX3N0YXRlICpzdGF0
-ZSwKKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0cnVjdCBkcm1fcHJv
-cGVydHkgKnByb3BlcnR5LAorICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-dWludDY0X3QgdmFsKQoreworICAgICAgIHN0cnVjdCB6eW5xbXBfZHAgKmRwID0gY29ubmVjdG9y
-X3RvX2RwKGNvbm5lY3Rvcik7CisgICAgICAgaW50IHJldDsKKworICAgICAgIGlmIChwcm9wZXJ0
-eSA9PSBkcC0+c3luY19wcm9wKSB7CisgICAgICAgICAgICAgICB6eW5xbXBfZHBfc2V0X3N5bmNf
-bW9kZShkcCwgdmFsKTsKKyAgICAgICB9IGVsc2UgaWYgKHByb3BlcnR5ID09IGRwLT5icGNfcHJv
-cCkgeworICAgICAgICAgICAgICAgdTggYnBjOworCisgICAgICAgICAgICAgICBicGMgPSB6eW5x
-bXBfZHBfc2V0X2JwYyhkcCwgdmFsKTsKKyAgICAgICAgICAgICAgIGlmIChicGMpIHsKKyAgICAg
-ICAgICAgICAgICAgICAgICAgZHJtX29iamVjdF9wcm9wZXJ0eV9zZXRfdmFsdWUoJmNvbm5lY3Rv
-ci0+YmFzZSwKKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgcHJvcGVydHksIGJwYyk7CisgICAgICAgICAgICAgICAgICAgICAgIHJldCA9IC1FSU5W
-QUw7CisgICAgICAgICAgICAgICB9CisgICAgICAgfSBlbHNlIHsKKyAgICAgICAgICAgICAgIHJl
-dHVybiAtRUlOVkFMOworICAgICAgIH0KKworICAgICAgIHJldHVybiAwOworfQorCitzdGF0aWMg
-aW50Cit6eW5xbXBfZHBfY29ubmVjdG9yX2F0b21pY19nZXRfcHJvcGVydHkoc3RydWN0IGRybV9j
-b25uZWN0b3IgKmNvbm5lY3RvciwKKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgIGNvbnN0IHN0cnVjdCBkcm1fY29ubmVjdG9yX3N0YXRlICpzdGF0ZSwKKyAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0cnVjdCBkcm1fcHJvcGVydHkgKnByb3BlcnR5
-LAorICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdWludDY0X3QgKnZhbCkK
-K3sKKyAgICAgICBzdHJ1Y3QgenlucW1wX2RwICpkcCA9IGNvbm5lY3Rvcl90b19kcChjb25uZWN0
-b3IpOworCisgICAgICAgaWYgKHByb3BlcnR5ID09IGRwLT5zeW5jX3Byb3ApCisgICAgICAgICAg
-ICAgICAqdmFsID0genlucW1wX2RwX2dldF9zeW5jX21vZGUoZHApOworICAgICAgIGVsc2UgaWYg
-KHByb3BlcnR5ID09IGRwLT5icGNfcHJvcCkKKyAgICAgICAgICAgICAgICp2YWwgPSAgenlucW1w
-X2RwX2dldF9icGMoZHApOworICAgICAgIGVsc2UKKyAgICAgICAgICAgICAgIHJldHVybiAtRUlO
-VkFMOworCisgICAgICAgcmV0dXJuIDA7Cit9CisKIHN0YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX2Nv
-bm5lY3Rvcl9mdW5jcyB6eW5xbXBfZHBfY29ubmVjdG9yX2Z1bmNzID0gewogICAgICAgIC5kZXRl
-Y3QgICAgICAgICAgICAgICAgID0genlucW1wX2RwX2Nvbm5lY3Rvcl9kZXRlY3QsCiAgICAgICAg
-LmZpbGxfbW9kZXMgICAgICAgICAgICAgPSBkcm1faGVscGVyX3Byb2JlX3NpbmdsZV9jb25uZWN0
-b3JfbW9kZXMsCkBAIC0xMzc1LDYgKzE0NjYsOCBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IGRybV9j
-b25uZWN0b3JfZnVuY3MgenlucW1wX2RwX2Nvbm5lY3Rvcl9mdW5jcyA9IHsKICAgICAgICAuYXRv
-bWljX2R1cGxpY2F0ZV9zdGF0ZSA9IGRybV9hdG9taWNfaGVscGVyX2Nvbm5lY3Rvcl9kdXBsaWNh
-dGVfc3RhdGUsCiAgICAgICAgLmF0b21pY19kZXN0cm95X3N0YXRlICAgPSBkcm1fYXRvbWljX2hl
-bHBlcl9jb25uZWN0b3JfZGVzdHJveV9zdGF0ZSwKICAgICAgICAucmVzZXQgICAgICAgICAgICAg
-ICAgICA9IGRybV9hdG9taWNfaGVscGVyX2Nvbm5lY3Rvcl9yZXNldCwKKyAgICAgICAuYXRvbWlj
-X3NldF9wcm9wZXJ0eSAgICA9IHp5bnFtcF9kcF9jb25uZWN0b3JfYXRvbWljX3NldF9wcm9wZXJ0
-eSwKKyAgICAgICAuYXRvbWljX2dldF9wcm9wZXJ0eSAgICA9IHp5bnFtcF9kcF9jb25uZWN0b3Jf
-YXRvbWljX2dldF9wcm9wZXJ0eSwKIH07Cgogc3RhdGljIHN0cnVjdCBkcm1fY29ubmVjdG9yX2hl
-bHBlcl9mdW5jcyB6eW5xbXBfZHBfY29ubmVjdG9yX2hlbHBlcl9mdW5jcyA9IHsKQEAgLTE1MjAs
-NiArMTYxMywxMyBAQCBzdGF0aWMgdm9pZCB6eW5xbXBfZHBfaHBkX3dvcmtfZnVuYyhzdHJ1Y3Qg
-d29ya19zdHJ1Y3QgKndvcmspCiAgICAgICAgICAgICAgICBkcm1faGVscGVyX2hwZF9pcnFfZXZl
-bnQoZHAtPmRybSk7CiB9Cgorc3RhdGljIHN0cnVjdCBkcm1fcHJvcF9lbnVtX2xpc3QgenlucW1w
-X2RwX2JwY19lbnVtW10gPSB7CisgICAgICAgeyA2LCAiNkJQQyIgfSwKKyAgICAgICB7IDgsICI4
-QlBDIiB9LAorICAgICAgIHsgMTAsICIxMEJQQyIgfSwKKyAgICAgICB7IDEyLCAiMTJCUEMiIH0s
-Cit9OworCiBpbnQgenlucW1wX2RwX2JpbmQoc3RydWN0IGRldmljZSAqZGV2LCBzdHJ1Y3QgZGV2
-aWNlICptYXN0ZXIsIHZvaWQgKmRhdGEpCiB7CiAgICAgICAgc3RydWN0IHp5bnFtcF9kcHN1YiAq
-ZHBzdWIgPSBkZXZfZ2V0X2RydmRhdGEoZGV2KTsKQEAgLTE1NTYsMjEgKzE2NTYsMzEgQEAgaW50
-IHp5bnFtcF9kcF9iaW5kKHN0cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0IGRldmljZSAqbWFzdGVy
-LCB2b2lkICpkYXRhKQogICAgICAgIGNvbm5lY3Rvci0+ZHBtcyA9IERSTV9NT0RFX0RQTVNfT0ZG
-OwoKICAgICAgICBkcC0+ZHJtID0gZHJtOworICAgICAgIGRwLT5zeW5jX3Byb3AgPSBkcm1fcHJv
-cGVydHlfY3JlYXRlX2Jvb2woZHJtLCAwLCAic3luYyIpOworICAgICAgIGRwLT5icGNfcHJvcCA9
-IGRybV9wcm9wZXJ0eV9jcmVhdGVfZW51bShkcm0sIDAsICJicGMiLAorICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB6eW5xbXBfZHBfYnBjX2VudW0sCisgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIEFSUkFZX1NJWkUoenlu
-cW1wX2RwX2JwY19lbnVtKSk7CisKICAgICAgICBkcC0+Y29uZmlnLm1pc2MwICY9IH5aWU5RTVBf
-RFBfVFhfTUFJTl9TVFJFQU1fTUlTQzBfU1lOQzsKKyAgICAgICBkcm1fb2JqZWN0X2F0dGFjaF9w
-cm9wZXJ0eSgmY29ubmVjdG9yLT5iYXNlLCBkcC0+c3luY19wcm9wLCBmYWxzZSk7CiAgICAgICAg
-cmV0ID0genlucW1wX2RwX3NldF9icGMoZHAsIDgpOworICAgICAgIGRybV9vYmplY3RfYXR0YWNo
-X3Byb3BlcnR5KCZjb25uZWN0b3ItPmJhc2UsIGRwLT5icGNfcHJvcCwKKyAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICByZXQgPyByZXQgOiA4KTsKICAgICAgICB6eW5xbXBfZHBfdXBk
-YXRlX2JwcChkcCk7CgogICAgICAgIC8qIFRoaXMgZW5hYmxlcyBpbnRlcnJ1cHRzLCBzbyBzaG91
-bGQgYmUgY2FsbGVkIGFmdGVyIERSTSBpbml0ICovCiAgICAgICAgcmV0ID0genlucW1wX2RwX2lu
-aXRfYXV4KGRwKTsKICAgICAgICBpZiAocmV0KSB7CiAgICAgICAgICAgICAgICBkZXZfZXJyKGRw
-LT5kZXYsICJmYWlsZWQgdG8gaW5pdGlhbGl6ZSBEUCBhdXgiKTsKLSAgICAgICAgICAgICAgIGdv
-dG8gZXJyb3JfY29ubmVjdG9yOworICAgICAgICAgICAgICAgZ290byBlcnJvcl9wcm9wOwogICAg
-ICAgIH0KICAgICAgICBJTklUX0RFTEFZRURfV09SSygmZHAtPmhwZF93b3JrLCB6eW5xbXBfZHBf
-aHBkX3dvcmtfZnVuYyk7CgogICAgICAgIHJldHVybiAwOwoKLWVycm9yX2Nvbm5lY3RvcjoKK2Vy
-cm9yX3Byb3A6CisgICAgICAgZHJtX3Byb3BlcnR5X2Rlc3Ryb3koZHAtPmRybSwgZHAtPmJwY19w
-cm9wKTsKKyAgICAgICBkcm1fcHJvcGVydHlfZGVzdHJveShkcC0+ZHJtLCBkcC0+c3luY19wcm9w
-KTsKICAgICAgICB6eW5xbXBfZHBfY29ubmVjdG9yX2Rlc3Ryb3koJmRwLT5jb25uZWN0b3IpOwog
-ZXJyb3JfZW5jb2RlcjoKICAgICAgICBkcm1fZW5jb2Rlcl9jbGVhbnVwKCZkcC0+ZW5jb2Rlcik7
-CkBAIC0xNTg1LDYgKzE2OTUsOCBAQCB2b2lkIHp5bnFtcF9kcF91bmJpbmQoc3RydWN0IGRldmlj
-ZSAqZGV2LCBzdHJ1Y3QgZGV2aWNlICptYXN0ZXIsIHZvaWQgKmRhdGEpCiAgICAgICAgY2FuY2Vs
-X2RlbGF5ZWRfd29ya19zeW5jKCZkcC0+aHBkX3dvcmspOwogICAgICAgIGRpc2FibGVfaXJxKGRw
-LT5pcnEpOwogICAgICAgIHp5bnFtcF9kcF9leGl0X2F1eChkcCk7CisgICAgICAgZHJtX3Byb3Bl
-cnR5X2Rlc3Ryb3koZHAtPmRybSwgZHAtPmJwY19wcm9wKTsKKyAgICAgICBkcm1fcHJvcGVydHlf
-ZGVzdHJveShkcC0+ZHJtLCBkcC0+c3luY19wcm9wKTsKICAgICAgICB6eW5xbXBfZHBfY29ubmVj
-dG9yX2Rlc3Ryb3koJmRwLT5jb25uZWN0b3IpOwogICAgICAgIGRybV9lbmNvZGVyX2NsZWFudXAo
-JmRwLT5lbmNvZGVyKTsKIH0KLS0KMi43LjQKClRoaXMgZW1haWwgYW5kIGFueSBhdHRhY2htZW50
-cyBhcmUgaW50ZW5kZWQgZm9yIHRoZSBzb2xlIHVzZSBvZiB0aGUgbmFtZWQgcmVjaXBpZW50KHMp
-IGFuZCBjb250YWluKHMpIGNvbmZpZGVudGlhbCBpbmZvcm1hdGlvbiB0aGF0IG1heSBiZSBwcm9w
-cmlldGFyeSwgcHJpdmlsZWdlZCBvciBjb3B5cmlnaHRlZCB1bmRlciBhcHBsaWNhYmxlIGxhdy4g
-SWYgeW91IGFyZSBub3QgdGhlIGludGVuZGVkIHJlY2lwaWVudCwgZG8gbm90IHJlYWQsIGNvcHks
-IG9yIGZvcndhcmQgdGhpcyBlbWFpbCBtZXNzYWdlIG9yIGFueSBhdHRhY2htZW50cy4gRGVsZXRl
-IHRoaXMgZW1haWwgbWVzc2FnZSBhbmQgYW55IGF0dGFjaG1lbnRzIGltbWVkaWF0ZWx5LgpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
-bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5m
-cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+This add a dt binding for ZynqMP DP subsystem.
+
+Signed-off-by: Hyun Kwon <hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+---
+v2
+- Group multiple ports under 'ports'
+- Replace linux specific terms with generic hardware descriptions
+---
+---
+ .../bindings/display/xlnx/xlnx,zynqmp-dpsub.txt    | 98 ++++++++++++++++++=
+++++
+ 1 file changed, 98 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/xlnx/xlnx,zyn=
+qmp-dpsub.txt
+
+diff --git a/Documentation/devicetree/bindings/display/xlnx/xlnx,zynqmp-dps=
+ub.txt b/Documentation/devicetree/bindings/display/xlnx/xlnx,zynqmp-dpsub.t=
+xt
+new file mode 100644
+index 0000000..dbcbde5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/xlnx/xlnx,zynqmp-dpsub.txt
+@@ -0,0 +1,98 @@
++Xilinx ZynqMP DisplayPort subsystem
++-----------------------------------
++
++Required properties:
++
++- compatible: Must be "xlnx,zynqmp-dpsub-1.7".
++
++- reg: Physical base address and length of the registers set for the devic=
+e.
++- reg-names: Must be "dp", "blend", "av_buf", and "aud" to map logical reg=
+ister
++  partitions.
++
++- interrupts: Interrupt number.
++- interrupts-parent: phandle for interrupt controller.
++
++- clocks: phandles for axi, audio, non-live video, and live video clocks.
++  axi clock is required. Audio clock is optional. If not present, audio wi=
+ll
++  be disabled. One of non-live or live video clock should be present.
++- clock-names: The identification strings are required. "aclk" for axi clo=
+ck.
++  "dp_aud_clk" for audio clock. "dp_vtc_pixel_clk_in" for non-live video c=
+lock.
++  "dp_live_video_in_clk" for live video clock (clock from programmable log=
+ic).
++
++- phys: phandles for phy specifier.
++- phy-names: The identifier strings. "dp-phy" followed by index.
++
++- power-domains: phandle for the corresponding power domain
++
++- ports: There are 2 logical blocks in the IP: display controller and
++  DisplayPort encoder. Each block can be used / connected independently wi=
+th
++  external device, hence ports for each block are required using DT bindin=
+gs
++  defined in Documentation/devicetree/bindings/graph.txt. Refer to
++  ./xlnx,display.txt for how topology for entire pipeline is described.
++
++- vid-layer, gfx-layer: Required to represent available layers
++
++Required layer properties
++
++- dmas: phandles for DMA channels as defined in
++  Documentation/devicetree/bindings/dma/dma.txt.
++- dma-names: The identifier strings are required. "graphics0" for graphics
++  layer. "video" followed by index for video layer
++
++Optional child node
++
++- The driver populates any child device node in this node. This can be use=
+d,
++  for example, to populate the sound device from the DisplayPort subsystem
++  driver.
++
++Example:
++       zynqmp_dpsub: zynqmp_dpsub@fd4a0000 {
++               compatible =3D "xlnx,zynqmp-dpsub-1.7";
++               reg =3D <0x0 0xfd4a0000 0x0 0x1000>,
++                     <0x0 0xfd4aa000 0x0 0x1000>,
++                     <0x0 0xfd4ab000 0x0 0x1000>,
++                     <0x0 0xfd4ac000 0x0 0x1000>;
++               reg-names =3D "dp", "blend", "av_buf", "aud";
++               interrupts =3D <0 119 4>;
++               interrupt-parent =3D <&gic>;
++
++               clock-names =3D "dp_apb_clk", "dp_aud_clk", "dp_live_video_=
+in_clk";
++               clocks =3D <&dp_aclk>, <&clkc 17>, <&si570_1>;
++
++               phys =3D <&lane1>, <&lane0>;
++               phy-names =3D "dp-phy0", "dp-phy1";
++
++               power-domains =3D <&pd_dp>;
++
++               vid-layer {
++                       dma-names =3D "vid0", "vid1", "vid2";
++                       dmas =3D <&xlnx_dpdma 0>,
++                              <&xlnx_dpdma 1>,
++                              <&xlnx_dpdma 2>;
++               };
++
++               gfx-layer {
++                       dma-names =3D "gfx0";
++                       dmas =3D <&xlnx_dpdma 3>;
++               };
++
++               ports {
++                       #address-cells =3D <1>;
++                       #size-cells =3D <0>;
++
++                       display_port: port@0 {
++                               reg =3D <0>;
++                               display_port: endpoint {
++                                       remote-endpoint =3D <&dp_port>;
++                               };
++                       };
++                       port@1 {
++                               reg =3D <1>;
++                               dp_port: endpoint {
++                                       remote-endpoint =3D <&display_port>=
+;
++                               };
++                       };
++               }
++       };
++};
++
+--
+2.7.4
+
+This email and any attachments are intended for the sole use of the named r=
+ecipient(s) and contain(s) confidential information that may be proprietary=
+, privileged or copyrighted under applicable law. If you are not the intend=
+ed recipient, do not read, copy, or forward this email message or any attac=
+hments. Delete this email message and any attachments immediately.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
