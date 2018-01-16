@@ -1,25 +1,25 @@
 From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v5 1/9] dt-bindings: media: Add Renesas CEU bindings
-Date: Tue, 16 Jan 2018 10:49:36 +0100
-Message-ID: <b053414f-3861-50ad-c672-68977a9f4cd4@xs4all.nl>
+Subject: Re: [PATCH v5 4/9] ARM: dts: r7s72100: Add Capture Engine Unit (CEU)
+Date: Tue, 16 Jan 2018 10:50:05 +0100
+Message-ID: <f8f597b6-c58f-3457-c524-2f02715d6473@xs4all.nl>
 References: <1515765849-10345-1-git-send-email-jacopo+renesas@jmondi.org>
- <1515765849-10345-2-git-send-email-jacopo+renesas@jmondi.org>
+ <1515765849-10345-5-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1515765849-10345-2-git-send-email-jacopo+renesas@jmondi.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1515765849-10345-5-git-send-email-jacopo+renesas@jmondi.org>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-sh-owner@vger.kernel.org
 To: Jacopo Mondi <jacopo+renesas@jmondi.org>, laurent.pinchart@ideasonboard.com, magnus.damm@gmail.com, geert@glider.be, mchehab@kernel.org, festevam@gmail.com, sakari.ailus@iki.fi, robh+dt@kernel.org, mark.rutland@arm.com, pombredanne@nexb.com
 Cc: linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 On 01/12/2018 03:04 PM, Jacopo Mondi wrote:
-> Add bindings documentation for Renesas Capture Engine Unit (CEU).
+> Add Capture Engine Unit (CEU) node to device tree.
 > 
 > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
 Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
@@ -29,95 +29,39 @@ Regards,
         Hans
 
 > ---
->  .../devicetree/bindings/media/renesas,ceu.txt      | 81 ++++++++++++++++++++++
->  1 file changed, 81 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/renesas,ceu.txt
+>  arch/arm/boot/dts/r7s72100.dtsi | 15 ++++++++++++---
+>  1 file changed, 12 insertions(+), 3 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/media/renesas,ceu.txt b/Documentation/devicetree/bindings/media/renesas,ceu.txt
-> new file mode 100644
-> index 0000000..590ee27
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/renesas,ceu.txt
-> @@ -0,0 +1,81 @@
-> +Renesas Capture Engine Unit (CEU)
-> +----------------------------------------------
+> diff --git a/arch/arm/boot/dts/r7s72100.dtsi b/arch/arm/boot/dts/r7s72100.dtsi
+> index ab9645a..5fe62f9 100644
+> --- a/arch/arm/boot/dts/r7s72100.dtsi
+> +++ b/arch/arm/boot/dts/r7s72100.dtsi
+> @@ -135,9 +135,9 @@
+>  			#clock-cells = <1>;
+>  			compatible = "renesas,r7s72100-mstp-clocks", "renesas,cpg-mstp-clocks";
+>  			reg = <0xfcfe042c 4>;
+> -			clocks = <&p0_clk>;
+> -			clock-indices = <R7S72100_CLK_RTC>;
+> -			clock-output-names = "rtc";
+> +			clocks = <&b_clk>, <&p0_clk>;
+> +			clock-indices = <R7S72100_CLK_CEU R7S72100_CLK_RTC>;
+> +			clock-output-names = "ceu", "rtc";
+>  		};
+>  
+>  		mstp7_clks: mstp7_clks@fcfe0430 {
+> @@ -667,4 +667,13 @@
+>  		power-domains = <&cpg_clocks>;
+>  		status = "disabled";
+>  	};
 > +
-> +The Capture Engine Unit is the image capture interface found in the Renesas
-> +SH Mobile and RZ SoCs.
-> +
-> +The interface supports a single parallel input with data bus width of 8 or 16
-> +bits.
-> +
-> +Required properties:
-> +- compatible: Shall be "renesas,r7s72100-ceu" for CEU units found in RZ/A1-H
-> +  and RZ/A1-M SoCs.
-> +- reg: Registers address base and size.
-> +- interrupts: The interrupt specifier.
-> +
-> +The CEU supports a single parallel input and should contain a single 'port'
-> +subnode with a single 'endpoint'. Connection to input devices are modeled
-> +according to the video interfaces OF bindings specified in:
-> +Documentation/devicetree/bindings/media/video-interfaces.txt
-> +
-> +Optional endpoint properties applicable to parallel input bus described in
-> +the above mentioned "video-interfaces.txt" file are supported.
-> +
-> +- hsync-active: Active state of the HSYNC signal, 0/1 for LOW/HIGH respectively.
-> +  If property is not present, default is active high.
-> +- vsync-active: Active state of the VSYNC signal, 0/1 for LOW/HIGH respectively.
-> +  If property is not present, default is active high.
-> +
-> +Example:
-> +
-> +The example describes the connection between the Capture Engine Unit and an
-> +OV7670 image sensor connected to i2c1 interface.
-> +
-> +ceu: ceu@e8210000 {
-> +	reg = <0xe8210000 0x209c>;
-> +	compatible = "renesas,r7s72100-ceu";
-> +	interrupts = <GIC_SPI 332 IRQ_TYPE_LEVEL_HIGH>;
-> +
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&vio_pins>;
-> +
-> +	status = "okay";
-> +
-> +	port {
-> +		ceu_in: endpoint {
-> +			remote-endpoint = <&ov7670_out>;
-> +
-> +			hsync-active = <1>;
-> +			vsync-active = <0>;
-> +		};
+> +	ceu: ceu@e8210000 {
+> +		reg = <0xe8210000 0x3000>;
+> +		compatible = "renesas,r7s72100-ceu";
+> +		interrupts = <GIC_SPI 332 IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks = <&mstp6_clks R7S72100_CLK_CEU>;
+> +		power-domains = <&cpg_clocks>;
+> +		status = "disabled";
 > +	};
-> +};
-> +
-> +i2c1: i2c@fcfee400 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&i2c1_pins>;
-> +
-> +	status = "okay";
-> +
-> +	clock-frequency = <100000>;
-> +
-> +	ov7670: camera@21 {
-> +		compatible = "ovti,ov7670";
-> +		reg = <0x21>;
-> +
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&vio_pins>;
-> +
-> +		reset-gpios = <&port3 11 GPIO_ACTIVE_LOW>;
-> +		powerdown-gpios = <&port3 12 GPIO_ACTIVE_HIGH>;
-> +
-> +		port {
-> +			ov7670_out: endpoint {
-> +				remote-endpoint = <&ceu_in>;
-> +
-> +				hsync-active = <1>;
-> +				vsync-active = <0>;
-> +			};
-> +		};
-> +	};
-> +};
+>  };
 > 
+
