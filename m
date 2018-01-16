@@ -1,92 +1,64 @@
-From: Baruch Siach <baruch@tkos.co.il>
-Subject: [PATCH v3 1/4] ARM: bcm2835: sync firmware properties with downstream
-Date: Tue, 16 Jan 2018 14:45:07 +0200
-Message-ID: <061d2f80ebcd7e983411ef3b243229eff0b13186.1516105893.git.baruch@tkos.co.il>
-References: <cover.1516105893.git.baruch@tkos.co.il>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <cover.1516105893.git.baruch@tkos.co.il>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Dave Stevenson <dave.stevenson@raspberrypi.org>, Eric Anholt <eric@anholt.net>, Stefan Wahren <stefan.wahren@i2se.com>, Linus Walleij <linus.walleij@linaro.org>
-Cc: devicetree@vger.kernel.org, Baruch Siach <baruch@tkos.co.il>, linux-gpio@vger.kernel.org, Michael Zoran <mzoran@crowfest.net>, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: [PATCH 3/8] dt-bindings: mfd: stm32-timers: add support for dmas
+Date: Tue, 16 Jan 2018 13:43:46 +0100
+Message-ID: <1516106631-18722-4-git-send-email-fabrice.gasnier@st.com>
+References: <1516106631-18722-1-git-send-email-fabrice.gasnier@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1516106631-18722-1-git-send-email-fabrice.gasnier@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: lee.jones@linaro.org, thierry.reding@gmail.com, robh+dt@kernel.org, alexandre.torgue@st.com, benjamin.gaignard@linaro.org
+Cc: mark.rutland@arm.com, linux@armlinux.org.uk, mcoquelin.stm32@gmail.com, fabrice.gasnier@st.com, benjamin.gaignard@st.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add latest firmware property tags from the latest Raspberry Pi downstream
-kernel. This is needed for the GPIO tags, so we can control the GPIO
-multiplexor lines.
+Add support for DMAs to STM32 timers. STM32 Timers can support up to 7
+dma requests: up to 4 channels, update, compare and trigger.
+DMAs may be used to transfer data from pwm capture for instance.
+DMA support is made optional, PWM capture support is also an option.
+This is much more wise system-wide to avoid shortage on DMA request
+lines as there's significant amount of timer instances that can
+request up to 7 channels.
 
-Acked-by: Stefan Wahren <stefan.wahren@i2se.com>
-Signed-off-by: Baruch Siach <baruch@tkos.co.il>
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
 ---
-v3: Add Stefan's ack
+ .../devicetree/bindings/mfd/stm32-timers.txt         | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-v2: No change
----
- include/soc/bcm2835/raspberrypi-firmware.h | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
-
-diff --git a/include/soc/bcm2835/raspberrypi-firmware.h b/include/soc/bcm2835/raspberrypi-firmware.h
-index cb979ad90401..50df5b28d2c9 100644
---- a/include/soc/bcm2835/raspberrypi-firmware.h
-+++ b/include/soc/bcm2835/raspberrypi-firmware.h
-@@ -63,6 +63,7 @@ enum rpi_firmware_property_tag {
- 	RPI_FIRMWARE_GET_MIN_VOLTAGE =                        0x00030008,
- 	RPI_FIRMWARE_GET_TURBO =                              0x00030009,
- 	RPI_FIRMWARE_GET_MAX_TEMPERATURE =                    0x0003000a,
-+	RPI_FIRMWARE_GET_STC =                                0x0003000b,
- 	RPI_FIRMWARE_ALLOCATE_MEMORY =                        0x0003000c,
- 	RPI_FIRMWARE_LOCK_MEMORY =                            0x0003000d,
- 	RPI_FIRMWARE_UNLOCK_MEMORY =                          0x0003000e,
-@@ -72,12 +73,22 @@ enum rpi_firmware_property_tag {
- 	RPI_FIRMWARE_SET_ENABLE_QPU =                         0x00030012,
- 	RPI_FIRMWARE_GET_DISPMANX_RESOURCE_MEM_HANDLE =       0x00030014,
- 	RPI_FIRMWARE_GET_EDID_BLOCK =                         0x00030020,
-+	RPI_FIRMWARE_GET_CUSTOMER_OTP =                       0x00030021,
- 	RPI_FIRMWARE_GET_DOMAIN_STATE =                       0x00030030,
- 	RPI_FIRMWARE_SET_CLOCK_STATE =                        0x00038001,
- 	RPI_FIRMWARE_SET_CLOCK_RATE =                         0x00038002,
- 	RPI_FIRMWARE_SET_VOLTAGE =                            0x00038003,
- 	RPI_FIRMWARE_SET_TURBO =                              0x00038009,
-+	RPI_FIRMWARE_SET_CUSTOMER_OTP =                       0x00038021,
- 	RPI_FIRMWARE_SET_DOMAIN_STATE =                       0x00038030,
-+	RPI_FIRMWARE_GET_GPIO_STATE =                         0x00030041,
-+	RPI_FIRMWARE_SET_GPIO_STATE =                         0x00038041,
-+	RPI_FIRMWARE_SET_SDHOST_CLOCK =                       0x00038042,
-+	RPI_FIRMWARE_GET_GPIO_CONFIG =                        0x00030043,
-+	RPI_FIRMWARE_SET_GPIO_CONFIG =                        0x00038043,
-+	RPI_FIRMWARE_GET_PERIPH_REG =                         0x00030045,
-+	RPI_FIRMWARE_SET_PERIPH_REG =                         0x00038045,
+diff --git a/Documentation/devicetree/bindings/mfd/stm32-timers.txt b/Documentation/devicetree/bindings/mfd/stm32-timers.txt
+index 1db6e00..0e900b5 100644
+--- a/Documentation/devicetree/bindings/mfd/stm32-timers.txt
++++ b/Documentation/devicetree/bindings/mfd/stm32-timers.txt
+@@ -19,6 +19,11 @@ Required parameters:
+ Optional parameters:
+ - resets:		Phandle to the parent reset controller.
+ 			See ../reset/st,stm32-rcc.txt
++- dmas:			List of phandle to dma channels that can be used for
++			this timer instance. There may be up to 7 dma channels.
++- dma-names:		List of dma names. Must match 'dmas' property. Valid
++			names are: "ch1", "ch2", "ch3", "ch4", "up", "trig",
++			"com".
+ 
+ Optional subnodes:
+ - pwm:			See ../pwm/pwm-stm32.txt
+@@ -44,3 +49,18 @@ Example:
+ 			reg = <0>;
+ 		};
+ 	};
 +
- 
- 	/* Dispmanx TAGS */
- 	RPI_FIRMWARE_FRAMEBUFFER_ALLOCATE =                   0x00040001,
-@@ -91,6 +102,8 @@ enum rpi_firmware_property_tag {
- 	RPI_FIRMWARE_FRAMEBUFFER_GET_VIRTUAL_OFFSET =         0x00040009,
- 	RPI_FIRMWARE_FRAMEBUFFER_GET_OVERSCAN =               0x0004000a,
- 	RPI_FIRMWARE_FRAMEBUFFER_GET_PALETTE =                0x0004000b,
-+	RPI_FIRMWARE_FRAMEBUFFER_GET_TOUCHBUF =               0x0004000f,
-+	RPI_FIRMWARE_FRAMEBUFFER_GET_GPIOVIRTBUF =            0x00040010,
- 	RPI_FIRMWARE_FRAMEBUFFER_RELEASE =                    0x00048001,
- 	RPI_FIRMWARE_FRAMEBUFFER_TEST_PHYSICAL_WIDTH_HEIGHT = 0x00044003,
- 	RPI_FIRMWARE_FRAMEBUFFER_TEST_VIRTUAL_WIDTH_HEIGHT =  0x00044004,
-@@ -100,6 +113,7 @@ enum rpi_firmware_property_tag {
- 	RPI_FIRMWARE_FRAMEBUFFER_TEST_VIRTUAL_OFFSET =        0x00044009,
- 	RPI_FIRMWARE_FRAMEBUFFER_TEST_OVERSCAN =              0x0004400a,
- 	RPI_FIRMWARE_FRAMEBUFFER_TEST_PALETTE =               0x0004400b,
-+	RPI_FIRMWARE_FRAMEBUFFER_TEST_VSYNC =                 0x0004400e,
- 	RPI_FIRMWARE_FRAMEBUFFER_SET_PHYSICAL_WIDTH_HEIGHT =  0x00048003,
- 	RPI_FIRMWARE_FRAMEBUFFER_SET_VIRTUAL_WIDTH_HEIGHT =   0x00048004,
- 	RPI_FIRMWARE_FRAMEBUFFER_SET_DEPTH =                  0x00048005,
-@@ -108,6 +122,10 @@ enum rpi_firmware_property_tag {
- 	RPI_FIRMWARE_FRAMEBUFFER_SET_VIRTUAL_OFFSET =         0x00048009,
- 	RPI_FIRMWARE_FRAMEBUFFER_SET_OVERSCAN =               0x0004800a,
- 	RPI_FIRMWARE_FRAMEBUFFER_SET_PALETTE =                0x0004800b,
-+	RPI_FIRMWARE_FRAMEBUFFER_SET_TOUCHBUF =               0x0004801f,
-+	RPI_FIRMWARE_FRAMEBUFFER_SET_GPIOVIRTBUF =            0x00048020,
-+	RPI_FIRMWARE_FRAMEBUFFER_SET_VSYNC =                  0x0004800e,
-+	RPI_FIRMWARE_FRAMEBUFFER_SET_BACKLIGHT =              0x0004800f,
- 
- 	RPI_FIRMWARE_VCHIQ_INIT =                             0x00048010,
- 
++Example with all dmas:
++	timer@40010000 {
++		...
++		dmas = <&dmamux1 11 0x400 0x0>,
++		       <&dmamux1 12 0x400 0x0>,
++		       <&dmamux1 13 0x400 0x0>,
++		       <&dmamux1 14 0x400 0x0>,
++		       <&dmamux1 15 0x400 0x0>,
++		       <&dmamux1 16 0x400 0x0>,
++		       <&dmamux1 17 0x400 0x0>;
++		dma-names = "ch1", "ch2", "ch3", "ch4", "up", "trig", "com";
++		...
++		child nodes...
++	};
 -- 
-2.15.1
-
+1.9.1
