@@ -1,36 +1,61 @@
-From: Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: stratix10: fix SPI settings
-Date: Tue, 16 Jan 2018 13:08:32 -0600
-Message-ID: <65aba740-3132-622f-f71c-e13874ba8a17@kernel.org>
-References: <1513806251-20273-1-git-send-email-thor.thayer@linux.intel.com>
+From: Sagar Dharia <sdharia@codeaurora.org>
+Subject: Re: [PATCH 1/4] dmaengine: qcom: bam_dma: make bam clk optional
+Date: Tue, 16 Jan 2018 12:38:49 -0700
+Message-ID: <c82b1815-7ca1-19f8-1585-25e6e51541cb@codeaurora.org>
+References: <20180116190236.14558-1-srinivas.kandagatla@linaro.org>
+ <20180116190236.14558-2-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1513806251-20273-1-git-send-email-thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20180116190236.14558-2-srinivas.kandagatla@linaro.org>
 Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: srinivas.kandagatla@linaro.org, Vinod Koul <vinod.koul@intel.com>, Andy Gross <andy.gross@linaro.org>, dmaengine@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, David Brown <david.brown@linaro.org>, Dan Williams <dan.j.williams@intel.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, yanhe@quicinc.com, ramkri@qti.qualcomm.com, sdharia@quicinc.com
 List-Id: devicetree@vger.kernel.org
 
 
-
-On 12/20/2017 03:44 PM, thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org wrote:
-> From: Thor Thayer <thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-> 
-> Correct the SPI Master node settings.
-> 
-> Signed-off-by: Thor Thayer <thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+On 1/16/2018 12:02 PM, srinivas.kandagatla@linaro.org wrote:
+> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>
+> When BAM is remotely controlled it does not sound correct to control
+> its clk on Linux side. Make it optional, so that its not madatory
+> for remote controlled BAM instances.
+>
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 > ---
->  arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
-> 
+>   drivers/dma/qcom/bam_dma.c | 15 ++++++++-------
+>   1 file changed, 8 insertions(+), 7 deletions(-)
+>
+> diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
+> index 03c4eb3fd314..78e488e8f96d 100644
+> --- a/drivers/dma/qcom/bam_dma.c
+> +++ b/drivers/dma/qcom/bam_dma.c
+> @@ -1180,13 +1180,14 @@ static int bam_dma_probe(struct platform_device *pdev)
+>   						"qcom,controlled-remotely");
+>   
+>   	bdev->bamclk = devm_clk_get(bdev->dev, "bam_clk");
+> -	if (IS_ERR(bdev->bamclk))
+> -		return PTR_ERR(bdev->bamclk);
+> -
+> -	ret = clk_prepare_enable(bdev->bamclk);
+> -	if (ret) {
+> -		dev_err(bdev->dev, "failed to prepare/enable clock\n");
+> -		return ret;
+> +	if (IS_ERR(bdev->bamclk)) {
+> +		bdev->bamclk = NULL;
+> +	} else {
+> +		ret = clk_prepare_enable(bdev->bamclk);
+> +		if (ret) {
+> +			dev_err(bdev->dev, "failed to prepare/enable clock\n");
+> +			return ret;
+> +		}
+I believe you can also keep pm_runtime disabled if BAM is remotely 
+controlled.
 
-Applied, thanks!
-
-Dinh
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks
+Sagar
+>   	}
+>   
+>   	ret = bam_init(bdev);
