@@ -1,77 +1,30 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v7 12/17] gpio: madera: Support Cirrus Logic Madera class codecs
-Date: Tue, 16 Jan 2018 10:27:03 +0100
-Message-ID: <CACRpkdY4pNO6-oPJrJ2x_vai__9Dn1JDsRX2YJBNb6CJboK4Sw@mail.gmail.com>
-References: <20180115124205.29042-1-rf@opensource.wolfsonmicro.com> <20180115124205.29042-13-rf@opensource.wolfsonmicro.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 4/6] dt-bindings: gpio: Add binding for Wii GPIO controller
+Date: Tue, 16 Jan 2018 10:28:45 +0100
+Message-ID: <CACRpkda1RJxUMdp_Ac+E0EZ1g+Dw5oGouPMJjT43KrieDFmpAQ@mail.gmail.com>
+References: <20180115031401.19577-1-j.neuschaefer@gmx.net> <20180115031401.19577-5-j.neuschaefer@gmx.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20180115124205.29042-13-rf@opensource.wolfsonmicro.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." <alsa-devel@alsa-project.org>, "open list:WOLFSON MICROELECTRONICS DRIVERS" <patches@opensource.wolfsonmicro.com>, linux-gpio@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180115031401.19577-5-j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org list" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 15, 2018 at 1:42 PM, Richard Fitzgerald
-<rf@opensource.wolfsonmicro.com> wrote:
+On Mon, Jan 15, 2018 at 4:13 AM, Jonathan Neusch=C3=A4fer
+<j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org> wrote:
 
-> This adds support for the GPIOs on Cirrus Logic Madera class codecs.
-> Any pins not used for special functions (see the pinctrl driver) can be
-> used as general single-bit input or output lines. The number of available
-> GPIOs varies between codecs.
->
-> Signed-off-by: Nariman Poushin <nariman@opensource.wolfsonmicro.com>
-> Signed-off-by: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
-> Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+maybe some small blurb here?
 
-I see Andy found more problems so fix those too..
+> Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org>
 
-> +#include <linux/device.h>
-> +#include <linux/gpio.h>
-
-Only
-#include <linux/gpio/driver.h>
-
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-
-Not for bool drivers, right, as Andy pointed out.
-
-> +static struct gpio_chip template_chip = {
-
-Why is this named "template"?
-
-There is nothing template about it, it is what you use.
-
-If you keep it like this, name it madera_chip or something.
-
-> +       .label                  = "madera",
-> +       .owner                  = THIS_MODULE,
-> +       .request                = gpiochip_generic_request,
-> +       .free                   = gpiochip_generic_free,
-> +       .get_direction          = madera_gpio_get_direction,
-> +       .direction_input        = madera_gpio_direction_in,
-> +       .get                    = madera_gpio_get,
-> +       .direction_output       = madera_gpio_direction_out,
-> +       .set                    = madera_gpio_set,
-> +       .set_config             = gpiochip_generic_config,
-
-Pretty cool! Have you tested this with e.g. open drain or debounce?
-
-> +       ret = gpiochip_add_pin_range(&madera_gpio->gpio_chip, "madera-pinctrl",
-> +                                    0, 0, madera_gpio->gpio_chip.ngpio);
-
-Are you using device tree for this?
-
-In that case add the range in the device tree instead.
-
-The gpiolib will pick that up for you by default and you don't even need
-this code. See
-git grep 'gpio-ranges' arch/arm/boot/dts
-
-If you're also using this with platform data or ACPI or whatever, then
-this is fine.
+It looks good, very standard bindings.
 
 Yours,
 Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
