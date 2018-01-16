@@ -1,84 +1,99 @@
-From: David Lechner <david@lechnology.com>
-Subject: Re: [PATCH v5 10/44] clk: davinci: New driver for davinci PSC clocks
-Date: Tue, 16 Jan 2018 10:51:45 -0600
-Message-ID: <83f3d207-9645-cbdf-d6cf-b6e6a8458abe@lechnology.com>
-References: <1515377863-20358-1-git-send-email-david@lechnology.com>
- <1515377863-20358-11-git-send-email-david@lechnology.com>
- <e0a9af55-a8b1-c359-fe88-d038648e02f1@ti.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 03/12] drm: rcar-du: Fix legacy DT to create LVDS
+ encoder nodes
+Date: Tue, 16 Jan 2018 10:54:00 -0600
+Message-ID: <CAL_Jsq+4X17Q+wva0R6sPHY02TJ5+E5vE8Y98+DB5VF2MdFy0g@mail.gmail.com>
+References: <20180112231430.26943-1-laurent.pinchart+renesas@ideasonboard.com>
+ <71c9aaea-a721-6cec-5b7f-f14f7e21d191@gmail.com>
+ <CAL_JsqKD_VKMrfi42hZ3eHPAMWBwryV0g_cXDUeyaKfPP99LmA@mail.gmail.com>
+ <2356342.Lly4sZCK6s@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <e0a9af55-a8b1-c359-fe88-d038648e02f1@ti.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sekhar Nori <nsekhar@ti.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <2356342.Lly4sZCK6s@avalon>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, dri-devel <dri-devel@lists.freedesktop.org>, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 01/16/2018 05:03 AM, Sekhar Nori wrote:
-> On Monday 08 January 2018 07:47 AM, David Lechner wrote:
->> This adds a new driver for mach-davinci PSC clocks. This is porting the
->> code from arch/arm/mach-davinci/psc.c to the common clock framework and
->> is converting it to use regmap to simplify the code. Additionally, it adds
->> device tree support for these clocks.
->>
->> Note: although there are similar clocks for TI Keystone we are not able
->> to share the code for a few reasons. The keystone clocks are device tree
->> only and use legacy one-node-per-clock bindings. Also the keystone driver
->> makes the assumption that there is only one PSC per SoC and uses global
->> variables, but here we have two controllers per SoC.
->>
->> Signed-off-by: David Lechner <david@lechnology.com>
->> ---
-
->> +static void psc_config(struct davinci_psc_clk *psc,
->> +		       enum davinci_psc_state next_state)
->> +{
->> +	u32 epcpr, pdstat, mdstat, mdctl, ptstat;
->> +
->> +	mdctl = next_state;
->> +	if (psc->flags & LPSC_FORCE)
->> +		mdctl |= MDCTL_FORCE;
->> +	regmap_write_bits(psc->regmap, MDCTL(psc->lpsc), MDSTAT_STATE_MASK,
->> +			  mdctl);
-> 
-> Wont this ignore the MDCTL_FORCE bit since MDSTAT_STATE_MASK does not
-> cover that?
-> 
->> +
->> +	regmap_read(psc->regmap, PDSTAT(psc->pd), &pdstat);
->> +	if ((pdstat & PDSTAT_STATE_MASK) == 0) {
->> +		regmap_write_bits(psc->regmap, PDSTAT(psc->pd),
->> +				  PDSTAT_STATE_MASK, PDCTL_NEXT);
-> 
-> Shouldn't this be a write to PDCTL register?
-> 
-
-Looks like I have some mistakes here. Thank you.
-
-...
-
->> +static struct clk *davinci_psc_clk_register(const char *name,
->> +					    const char *parent_name,
->> +					    struct regmap *regmap,
->> +					    u32 lpsc, u32 pd, u32 flags)
->> +{
->> +	struct clk_init_data init;
->> +	struct davinci_psc_clk *psc;
->> +	struct clk *clk;
->> +
->> +	psc = kzalloc(sizeof(*psc), GFP_KERNEL);
->> +	if (!psc)
->> +		return ERR_PTR(-ENOMEM);
->> +
->> +	init.name = name;
->> +	init.ops = &davinci_psc_clk_ops;
->> +	init.parent_names = (parent_name ? &parent_name : NULL);
->> +	init.num_parents = (parent_name ? 1 : 0);
->> +	init.flags = CLK_SET_RATE_PARENT;
-> 
-> Is this needed since PSC does not cause any rate change?
-
-Yes, because one of the PSCs is the ARM clock and for cpufreq, we
-need to propagate the rate change up the chain to SYSCLK6.
+T24gVHVlLCBKYW4gMTYsIDIwMTggYXQgMTA6MzIgQU0sIExhdXJlbnQgUGluY2hhcnQKPGxhdXJl
+bnQucGluY2hhcnRAaWRlYXNvbmJvYXJkLmNvbT4gd3JvdGU6Cj4gSGkgUm9iLAo+Cj4gT24gVHVl
+c2RheSwgMTYgSmFudWFyeSAyMDE4IDE2OjM1OjI2IEVFVCBSb2IgSGVycmluZyB3cm90ZToKPj4g
+T24gTW9uLCBKYW4gMTUsIDIwMTggYXQgNTo0NiBQTSwgRnJhbmsgUm93YW5kIHdyb3RlOgo+PiA+
+IE9uIDAxLzE1LzE4IDEyOjI5LCBMYXVyZW50IFBpbmNoYXJ0IHdyb3RlOgo+PiA+PiBPbiBNb25k
+YXksIDE1IEphbnVhcnkgMjAxOCAyMjoxMjozMyBFRVQgRnJhbmsgUm93YW5kIHdyb3RlOgo+PiA+
+Pj4gT24gMDEvMTUvMTggMTE6MjIsIExhdXJlbnQgUGluY2hhcnQgd3JvdGU6Cj4+ID4+Pj4gT24g
+TW9uZGF5LCAxNSBKYW51YXJ5IDIwMTggMjE6MTI6NDQgRUVUIEZyYW5rIFJvd2FuZCB3cm90ZToK
+Pj4gPj4+Pj4gT24gMDEvMTUvMTggMDk6MDksIFJvYiBIZXJyaW5nIHdyb3RlOgo+PiA+Pj4+Pj4g
+T24gRnJpLCBKYW4gMTIsIDIwMTggYXQgNToxNCBQTSwgTGF1cmVudCBQaW5jaGFydCB3cm90ZToK
+Pj4gPj4+Pj4+PiBUaGUgaW50ZXJuYWwgTFZEUyBlbmNvZGVycyBub3cgaGF2ZSB0aGVpciBvd24g
+RFQgYmluZGluZ3MuIEJlZm9yZQo+PiA+Pj4+Pj4+IHN3aXRjaGluZyB0aGUgZHJpdmVyIGluZnJh
+c3RydWN0dXJlIHRvIHRob3NlIG5ldyBiaW5kaW5ncywgaW1wbGVtZW50Cj4+ID4+Pj4+Pj4gYmFj
+a3dhcmQtY29tcGF0aWJpbGl0eSB0aHJvdWdoIGxpdmUgRFQgcGF0Y2hpbmcuCgpbLi4uXQoKPj4g
+Pj4gSG93IHdvdWxkIHlvdSBsaWtlIHRvIHByb2NlZWQgPyBJIGNhbiB0cnkgdGhlIG1hbnVhbCBh
+cHByb2FjaCBhZ2FpbiBidXQKPj4gPj4gbmVlZCBpbmZvcm1hdGlvbiBhYm91dCBob3cgSSBjb3Vs
+ZCBjbGVhbmx5IGltcGxlbWVudCBwaGFuZGxlIGFsbG9jYXRpb24uCj4+ID4+IEkgd2lsbCBsaWtl
+bHkgdGhlbiBydW4gaW50byBvdGhlciBpc3N1ZXMgZm9yIHdoaWNoIEkgbWlnaHQgbmVlZCBoZWxw
+Lgo+PiA+Cj4+ID4gSGVyZSBhcmUgbXkgZmlyc3QgdGhvdWdodHMsIGJhc2VkIG9uIDQuMTUtcmM3
+Ogo+PiA+Cj4+ID4gUXVlc3Rpb24gdG8gUm9iIGFuZCBGcmFuazogc2hvdWxkIG9mX2F0dGFjaF9u
+b2RlKCkgYmUgY2FsbGVkIGRpcmVjdGx5LCBvcgo+PiA+IHNob3VsZCBpdCBiZSBjYWxsZWQgaW5k
+aXJlY3RseSBieSBjcmVhdGluZyBhIGNoYW5nZSBzZXQgdGhhdCBhZGRzIHRoZQo+PiA+IG5vZGU/
+Cj4+ID4KPj4gPiBGcmFuaydzIG9mZiB0aGUgY3VmZiBhbnN3ZXIgKGJ1dCB3b3VsZCBsaWtlIHRv
+IHRoaW5rIG1vcmUgYWJvdXQgaXQpOiBzaW5jZQo+PiA+IHRoZSBkcml2ZXIgaXMgbW9kaWZ5aW5n
+IGl0cyBvd24gZGV2aWNldHJlZSBkYXRhLCBhbmQgdGh1cyBubyBvdGhlciBlbnRpdHkKPj4gPiBu
+ZWVkcyB0byBiZSBub3RpZmllZCBhYm91dCB0aGUgY2hhbmdlcywgdGhlcmUgaXMgbm8gbmVlZCB0
+byBhZGQgdGhlCj4+ID4gY29tcGxleGl0eSBvZiB1c2luZyBhIGNoYW5nZSBzZXQuCj4+Cj4+IFRo
+ZXJlJ3MgZXhhY3RseSAyIHVzZXJzIG91dHNpZGUgb2YgdGhlIERUIGNvcmUuIFRoYXQncyBnZW5l
+cmFsbHkgYQo+PiBzaWduIG9mIGFuIEFQSSBJJ2QgbGlrZSB0byBtYWtlIHByaXZhdGUuCj4+Cj4+
+ID4gVGhlIGZvbGxvd2luZyBpcyBob3cgb2ZfYXR0YWNoX25vZGUoKSBjb3VsZCBiZSBtb2RpZmll
+ZCB0byBkeW5hbWljYWxseQo+PiA+IGNyZWF0ZSBhIHBoYW5kbGUgb24gcmVxdWVzdC4KPj4KPj4g
+SG93IHdvdWxkIHRoaXMgd29yayBmb3IgYWxsIHRoZSBwaGFuZGxlIHJlZmVyZW5jZXMgdGhhdCBu
+ZWVkIHRvIGJlIGZpeGVkIHVwPwo+Cj4gQXMgSSBrbm93IHdoaWNoIHByb3BlcnRpZXMgY29udGFp
+biBhIHBoYW5kbGUgdGhhdCBuZWVkcyB0byBiZSBmaXhlZCB1cCwgbXkKPiBwbGFuIGlzIHRvIHVw
+ZGF0ZSB0aG9zZSBwcm9wZXJ0aWVzIG1hbnVhbGx5IHdpdGggdGhlIHZhbHVlIG9mIHRoZSBuZXds
+eQo+IGFsbG9jYXRlZCBwaGFuZGxlLgoKVGhhdCBzb3VuZHMgbGlrZSBtb3JlIGxvdyBsZXZlbCwg
+aW50ZXJuYWwgZGV0YWlsIG11Y2tpbmcgd2l0aCB0aGFuCnRoaXMgY3VycmVudCBwYXRjaC4KCj4g
+V2hhdCBJIG5lZWQgaGVyZSBpcyB0aGUgYWJpbGl0eSB0byBpbnNlcnQgdGhlIGZvbGxvd2luZyBz
+dHJ1Y3R1cmUgaW4gdGhlCj4gZGV2aWNlIHRyZWU6Cj4KPiAgICAgICAgIGx2ZHNAZmViOTAwMDAg
+ewo+ICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAicmVuZXNhcyxyOGE3Nzk2LWx2ZHMiOyAo
+KikKPiAgICAgICAgICAgICAgICByZWcgPSA8MCAweGZlYjkwMDAwIDAgMHgxND47ICgqKQo+ICAg
+ICAgICAgICAgICAgIGNsb2NrcyA9IDwmY3BnIENQR19NT0QgNzI3PjsgKCopCgpJJ20gc3RpbGwg
+b2YgdGhlIG9waW5pb24gdGhhdCBhbGwgb2YgdGhpcyBzaG91bGQgYmUgaW4gYSBwZXIgU29DIG92
+ZXJsYXkuCgo+Cj4gICAgICAgICAgICAgICAgcG9ydHMgewo+ICAgICAgICAgICAgICAgICAgICAg
+ICAgICNhZGRyZXNzLWNlbGxzID0gPDE+Owo+ICAgICAgICAgICAgICAgICAgICAgICAgICNzaXpl
+LWNlbGxzID0gPDA+Owo+Cj4gICAgICAgICAgICAgICAgICAgICAgICAgcG9ydEAwIHsKPiAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDwwPjsKPiAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIGx2ZHMwX2luOiBlbmRwb2ludCB7Cj4gICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIHJlbW90ZS1lbmRwb2ludCA9IDwmZHVfb3V0X2x2ZHMwPjsg
+KCopCj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9Owo+ICAgICAgICAgICAgICAg
+ICAgICAgICAgIH07Cj4gICAgICAgICAgICAgICAgICAgICAgICAgcG9ydEAxIHsKPiAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDwxPjsKPiAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgIGx2ZHMwX291dDogZW5kcG9pbnQgewo+ICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICByZW1vdGUtZW5kcG9pbnQgPSA8JnBhbmVsX2luPjsgKCopCgpU
+aGVuIGRvIHRoZSBmaXh1cCBvZiBqdXN0IHRoZSByZW1vdGUtZW5kcG9pbnQgcHJvcGVydGllcy4g
+V2hpbGUgaXQKd291bGQgYmUgbmljZSB0byBzYXkgb3ZlcmxheXMgYXJlIGNvbXBsZXRlbHkgc3Rh
+dGljLCBJJ20gZ3Vlc3NpbmcKdGhhdCdzIG5vdCBnb2luZyB0byBiZSB0aGUgY2FzZS4gQWZ0ZXIg
+YWxsLCB3ZSBwcmV0dHkgbXVjaCBoYXZlCm92ZXJsYXlzIGJlY2F1c2UgRFQgYmVpbmcgc3RhdGlj
+IGhhcyBsaW1pdGF0aW9ucy4KCj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9Owo+
+ICAgICAgICAgICAgICAgICAgICAgICAgIH07Cj4gICAgICAgICAgICAgICAgIH07Cj4gICAgICAg
+ICB9Owo+Cj4gd2l0aCB0aGUgbm9kZSB1bml0IGFkZHJlc3MgYW5kIGFsbCBwcm9wZXJ0aWVzIG1h
+cmtlZCB3aXRoIGEgKCopIGNvbXB1dGVkIGF0Cj4gcnVudGltZSBiYXNlZCBvbiBpbmZvcm1hdGlv
+biBleHRyYWN0IGZyb20gdGhlIGRldmljZSB0cmVlLiBBZGRpdGlvbmFsbHkgSSBuZWVkCj4gcGhh
+bmRsZXMgZm9yIHRoZSBsdmRzMF9pbiBhbmQgbHZkczBfb3V0IG5vZGVzLCBhbmQgc2V0IHRoZSB2
+YWx1ZSBvZiB0d28KPiBwcm9wZXJ0aWVzIGluIHRoZSB0cmVlIHdpdGggdGhvc2UgcGhhbmRsZXMu
+Cj4KPiBJJ3ZlIHVzZWQgb3ZlcmxheXMgYXMgdGhhdCB3YXMgdGhlIG9ubHkgd2F5IEkgZm91bmQg
+dG8gYWxsb2NhdGUgcGhhbmRsZXMsIGJ1dAo+IGFueSBvdGhlciBBUEkgd2lsbCB3b3JrIGZvciBt
+ZSBhcyB3ZWxsLgoKSSBkb24ndCB0aGluayBkcml2ZXJzIG11Y2tpbmcgd2l0aCBwaGFuZGxlcyBk
+aXJlY3RseSB0byBhdm9pZCBhbm90aGVyCm92ZXJsYXkgdXNlciBpcyBhbiBpbXByb3ZlbWVudC4K
+ClJvYgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmkt
+ZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6
+Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
