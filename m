@@ -1,118 +1,189 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH v5 6/9] media: i2c: ov772x: Remove soc_camera dependencies
-Date: Tue, 16 Jan 2018 13:45:47 +0200
-Message-ID: <3160666.n1yGRyzbCt@avalon>
-References: <1515765849-10345-1-git-send-email-jacopo+renesas@jmondi.org> <1515765849-10345-7-git-send-email-jacopo+renesas@jmondi.org> <d0249577-ebd5-aa4d-b017-c11fae9c612a@xs4all.nl>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v5 3/9] v4l: platform: Add Renesas CEU driver
+Date: Tue, 16 Jan 2018 13:53:11 +0200
+Message-ID: <2652648.B6TWr8Lan7@avalon>
+References: <1515765849-10345-1-git-send-email-jacopo+renesas@jmondi.org> <1515765849-10345-4-git-send-email-jacopo+renesas@jmondi.org> <ba0540cd-c0b9-31a3-4bc8-7f32e4d85cf5@xs4all.nl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <d0249577-ebd5-aa4d-b017-c11fae9c612a-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Cc: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, geert-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sakari.ailus-X3B1VOXEql0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pombredanne-od1rfyK75/E@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <ba0540cd-c0b9-31a3-4bc8-7f32e4d85cf5@xs4all.nl>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, magnus.damm@gmail.com, geert@glider.be, mchehab@kernel.org, festevam@gmail.com, sakari.ailus@iki.fi, robh+dt@kernel.org, mark.rutland@arm.com, pombredanne@nexb.com, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 Hi Hans,
 
-On Tuesday, 16 January 2018 12:08:17 EET Hans Verkuil wrote:
+On Tuesday, 16 January 2018 11:46:42 EET Hans Verkuil wrote:
+> Hi Jacopo,
+> 
+> Sorry for the late review, but here is finally is.
+> 
+> BTW, can you provide the v4l2-compliance output (ideally with the -f option)
+> in the cover letter for v6?
+> 
 > On 01/12/2018 03:04 PM, Jacopo Mondi wrote:
-> > Remove soc_camera framework dependencies from ov772x sensor driver.
-> > - Handle clock and gpios
-> > - Register async subdevice
-> > - Remove soc_camera specific g/s_mbus_config operations
-> > - Change image format colorspace from JPEG to SRGB as the two use the
+> > Add driver for Renesas Capture Engine Unit (CEU).
 > > 
-> >   same colorspace information but JPEG makes assumptions on color
-> >   components quantization that do not apply to the sensor
+> > The CEU interface supports capturing 'data' (YUV422) and 'images'
+> > (NV[12|21|16|61]).
 > > 
-> > - Remove sizes crop from get_selection as driver can't scale
-> > - Add kernel doc to driver interface header file
-> > - Adjust build system
+> > This driver aims to replace the soc_camera-based sh_mobile_ceu one.
 > > 
-> > This commit does not remove the original soc_camera based driver as long
-> > as other platforms depends on soc_camera-based CEU driver.
+> > Tested with ov7670 camera sensor, providing YUYV_2X8 data on Renesas RZ
+> > platform GR-Peach.
 > > 
-> > Signed-off-by: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-> > Reviewed-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+> > Tested with ov7725 camera sensor on SH4 platform Migo-R.
+> > 
+> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 > > ---
 > > 
-> >  drivers/media/i2c/Kconfig  |  11 +++
-> >  drivers/media/i2c/Makefile |   1 +
-> >  drivers/media/i2c/ov772x.c | 177 ++++++++++++++++++++++++++++------------
-> >  include/media/i2c/ov772x.h |   6 +-
-> >  4 files changed, 133 insertions(+), 62 deletions(-)
+> >  drivers/media/platform/Kconfig       |    9 +
+> >  drivers/media/platform/Makefile      |    1 +
+> >  drivers/media/platform/renesas-ceu.c | 1648 +++++++++++++++++++++++++++++
+> >  3 files changed, 1658 insertions(+)
+> >  create mode 100644 drivers/media/platform/renesas-ceu.c
 
 [snip]
 
-> > diff --git a/drivers/media/i2c/ov772x.c b/drivers/media/i2c/ov772x.c
-> > index 8063835..df2516c 100644
-> > --- a/drivers/media/i2c/ov772x.c
-> > +++ b/drivers/media/i2c/ov772x.c
+> > diff --git a/drivers/media/platform/renesas-ceu.c
+> > b/drivers/media/platform/renesas-ceu.c new file mode 100644
+> > index 0000000..ccca838
+> > --- /dev/null
+> > +++ b/drivers/media/platform/renesas-ceu.c
 
 [snip]
 
-> > @@ -1038,12 +1074,11 @@ static int ov772x_probe(struct i2c_client *client,
-> >  			const struct i2c_device_id *did)
-> >  {
-> >  	struct ov772x_priv	*priv;
-> > -	struct soc_camera_subdev_desc *ssdd = soc_camera_i2c_to_desc(client);
-> > -	struct i2c_adapter	*adapter = to_i2c_adapter(client->dev.parent);
-> > +	struct i2c_adapter	*adapter = client->adapter;
-> >  	int			ret;
-> > 
-> > -	if (!ssdd || !ssdd->drv_priv) {
-> > -		dev_err(&client->dev, "OV772X: missing platform data!\n");
-> > +	if (!client->dev.platform_data) {
-> > +		dev_err(&client->dev, "Missing OV7725 platform data\n");
+> > +static int ceu_s_input(struct file *file, void *priv, unsigned int i)
+> > +{
+> > +	struct ceu_device *ceudev = video_drvdata(file);
+> > +	struct ceu_subdev *ceu_sd_old;
+> > +	int ret;
+> > +
 > 
-> Nitpick: I'd prefer lowercase in this string: ov7725. It also should be
-> ov772x.
+> Add a check:
+> 
+> 	if (i == ceudev->sd_index)
+> 		return 0;
+> 
+> I.e. if the new input == the old input, then that's fine regardless of the
+> streaming state.
 
-Agreed.
+On a side note this is the kind of checks that the core should handle, but 
+that's out of scope for this patch.
 
-> >  		return -EINVAL;
-> >  	
-> >  	}
+> > +	if (vb2_is_streaming(&ceudev->vb2_vq))
+> > +		return -EBUSY;
+> > +
+> > +	if (i >= ceudev->num_sd)
+> > +		return -EINVAL;
+> 
+> Move this up as the first test.
+> 
+> > +
+> > +	ceu_sd_old = ceudev->sd;
+> > +	ceudev->sd = &ceudev->subdevs[i];
+> > +
+> > +	/* Make sure we can generate output image formats. */
+> > +	ret = ceu_init_formats(ceudev);
+> > +	if (ret) {
+> > +		ceudev->sd = ceu_sd_old;
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	/* now that we're sure we can use the sensor, power off the old one. */
+> > +	v4l2_subdev_call(ceu_sd_old->v4l2_sd, core, s_power, 0);
+> > +	v4l2_subdev_call(ceudev->sd->v4l2_sd, core, s_power, 1);
+> > +
+> > +	ceudev->sd_index = i;
+> > +
+> > +	return 0;
+> > +}
 
 [snip]
 
-> > @@ -1119,6 +1176,6 @@ static struct i2c_driver ov772x_i2c_driver = {
-> > 
-> >  module_i2c_driver(ov772x_i2c_driver);
-> > 
-> > -MODULE_DESCRIPTION("SoC Camera driver for ov772x");
-> > +MODULE_DESCRIPTION("V4L2 driver for OV772x image sensor");
+> > +
+> > +static int ceu_notify_complete(struct v4l2_async_notifier *notifier)
+> > +{
+> > +	struct v4l2_device *v4l2_dev = notifier->v4l2_dev;
+> > +	struct ceu_device *ceudev = v4l2_to_ceu(v4l2_dev);
+> > +	struct video_device *vdev = &ceudev->vdev;
+> > +	struct vb2_queue *q = &ceudev->vb2_vq;
+> > +	struct v4l2_subdev *v4l2_sd;
+> > +	int ret;
+> > +
+> > +	/* Initialize vb2 queue. */
+> > +	q->type			= V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE;
+> > +	q->io_modes		= VB2_MMAP | VB2_USERPTR | VB2_DMABUF;
 > 
-> Ditto: lower case ov772x.
-
-I'd keep that uppercase. The usual practice (unless I'm mistaken) is to use 
-uppercase for chip names and lowercase for driver names. The description 
-clearly refers to the chip, so uppercase seems better to me.
-
-> >  MODULE_AUTHOR("Kuninori Morimoto");
-> >  MODULE_LICENSE("GPL v2");
+> Don't include VB2_USERPTR. It shouldn't be used with dma_contig.
 > 
-> Hmm, shouldn't there be a struct of_device_id as well? So this can be
-> used in the device tree?
-> 
-> I see this sensor was only tested with a non-dt platform. Is it possible
-> to test this sensor with the GR-Peach platform (which I gather uses the
-> device tree)?
-> 
-> Making this driver DT compliant can be done as a follow-up patch.
+> You also added a read() fop (vb2_fop_read), so either add VB2_READ here
+> or remove the read fop.
 
-I think it's a good idea, but I'd prefer having that in a separate patch. We 
-will also need DT bindings, it's a bit out of scope for this series.
+Agreed. I'd drop both VB2_USERPTR and vb2_fop_read().
 
-Jacopo, you can keep my ack after addressing Hans' comments.
+> > +	q->drv_priv		= ceudev;
+> > +	q->ops			= &ceu_vb2_ops;
+> > +	q->mem_ops		= &vb2_dma_contig_memops;
+> > +	q->buf_struct_size	= sizeof(struct ceu_buffer);
+> > +	q->timestamp_flags	= V4L2_BUF_FLAG_TIMESTAMP_MONOTONIC;
+> > +	q->lock			= &ceudev->mlock;
+> > +	q->dev			= ceudev->v4l2_dev.dev;
+> > +
+> > +	ret = vb2_queue_init(q);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	/*
+> > +	 * Make sure at least one sensor is primary and use it to initialize
+> > +	 * ceu formats.
+> > +	 */
+> > +	if (!ceudev->sd) {
+> > +		ceudev->sd = &ceudev->subdevs[0];
+> > +		ceudev->sd_index = 0;
+> > +	}
+> > +
+> > +	v4l2_sd = ceudev->sd->v4l2_sd;
+> > +
+> > +	ret = ceu_init_formats(ceudev);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	ret = ceu_set_default_fmt(ceudev);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	/* Register the video device. */
+> > +	strncpy(vdev->name, DRIVER_NAME, strlen(DRIVER_NAME));
+> > +	vdev->v4l2_dev		= v4l2_dev;
+> > +	vdev->lock		= &ceudev->mlock;
+> > +	vdev->queue		= &ceudev->vb2_vq;
+> > +	vdev->ctrl_handler	= v4l2_sd->ctrl_handler;
+> > +	vdev->fops		= &ceu_fops;
+> > +	vdev->ioctl_ops		= &ceu_ioctl_ops;
+> > +	vdev->release		= ceu_vdev_release;
+> > +	vdev->device_caps	= V4L2_CAP_VIDEO_CAPTURE_MPLANE |
+> > +				  V4L2_CAP_STREAMING;
+> > +	video_set_drvdata(vdev, ceudev);
+> > +
+> > +	ret = video_register_device(vdev, VFL_TYPE_GRABBER, -1);
+> > +	if (ret < 0) {
+> > +		v4l2_err(vdev->v4l2_dev,
+> > +			 "video_register_device failed: %d\n", ret);
+> > +		return ret;
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+
+[snip]
+
+You can keep my ack after addressing Hans' comments.
 
 -- 
 Regards,
 
 Laurent Pinchart
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
