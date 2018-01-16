@@ -1,297 +1,175 @@
-From: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v2 08/13] iommu/rockchip: Control clocks needed to access the
-	IOMMU
-Date: Tue, 16 Jan 2018 21:25:35 +0800
-Message-ID: <20180116132540.18939-9-jeffy.chen@rock-chips.com>
-References: <20180116132540.18939-1-jeffy.chen@rock-chips.com>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v5 11/44] clk: davinci: Add platform information for TI
+ DA830 PSC
+Date: Tue, 16 Jan 2018 19:08:59 +0530
+Message-ID: <91fe16dc-907e-6dbb-c8db-c27561132093@ti.com>
+References: <1515377863-20358-1-git-send-email-david@lechnology.com>
+ <1515377863-20358-12-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20180116132540.18939-1-jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1515377863-20358-12-git-send-email-david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Adam Ford <aford173-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+On Monday 08 January 2018 07:47 AM, David Lechner wrote:
+> This adds platform-specific declarations for the PSC clocks on TI DA830/
+> OMAP-L137/AM17XX SoCs.
+> 
+> Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+> ---
+>  drivers/clk/davinci/Makefile    |  1 +
+>  drivers/clk/davinci/psc-da830.c | 96 +++++++++++++++++++++++++++++++++++++++++
+>  include/linux/clk/davinci.h     |  2 +
+>  3 files changed, 99 insertions(+)
+>  create mode 100644 drivers/clk/davinci/psc-da830.c
+> 
+> diff --git a/drivers/clk/davinci/Makefile b/drivers/clk/davinci/Makefile
+> index cd1bf2c..fb14c8c 100644
+> --- a/drivers/clk/davinci/Makefile
+> +++ b/drivers/clk/davinci/Makefile
+> @@ -10,4 +10,5 @@ obj-$(CONFIG_ARCH_DAVINCI_DM644x)	+= pll-dm644x.o
+>  obj-$(CONFIG_ARCH_DAVINCI_DM646x)	+= pll-dm646x.o
+>  
+>  obj-y += psc.o
+> +obj-$(CONFIG_ARCH_DAVINCI_DA830)	+= psc-da830.o
+>  endif
+> diff --git a/drivers/clk/davinci/psc-da830.c b/drivers/clk/davinci/psc-da830.c
+> new file mode 100644
+> index 0000000..193b08f
+> --- /dev/null
+> +++ b/drivers/clk/davinci/psc-da830.c
+> @@ -0,0 +1,96 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * PSC clock descriptions for TI DA830/OMAP-L137/AM17XX
+> + *
+> + * Copyright (C) 2017 David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+> + */
+> +
+> +#include <linux/clk-provider.h>
+> +#include <linux/clkdev.h>
+> +#include <linux/init.h>
+> +#include <linux/types.h>
+> +
+> +#include "psc.h"
+> +
+> +static const struct davinci_psc_clk_info da830_psc0_info[] __initconst = {
+> +	LPSC(0, 0, tpcc, pll0_sysclk2, LPSC_ALWAYS_ENABLED),
+> +	LPSC(1, 0, tptc0, pll0_sysclk2, LPSC_ALWAYS_ENABLED),
+> +	LPSC(2, 0, tptc1, pll0_sysclk2, LPSC_ALWAYS_ENABLED),
+> +	LPSC(3, 0, aemif, pll0_sysclk3, LPSC_ALWAYS_ENABLED),
+> +	LPSC(4, 0, spi0, pll0_sysclk2, 0),
+> +	LPSC(5, 0, mmcsd, pll0_sysclk2, 0),
+> +	LPSC(6, 0, aintc, pll0_sysclk4, LPSC_ALWAYS_ENABLED),
+> +	LPSC(7, 0, arm_rom, pll0_sysclk2, LPSC_ALWAYS_ENABLED),
+> +	LPSC(8, 0, secu_mgr, pll0_sysclk4, LPSC_ALWAYS_ENABLED),
+> +	LPSC(9, 0, uart0, pll0_sysclk2, 0),
+> +	LPSC(10, 0, scr0_ss, pll0_sysclk2, LPSC_ALWAYS_ENABLED),
+> +	LPSC(11, 0, scr1_ss, pll0_sysclk2, LPSC_ALWAYS_ENABLED),
+> +	LPSC(12, 0, scr2_ss, pll0_sysclk2, LPSC_ALWAYS_ENABLED),
+> +	LPSC(13, 0, dmax, pll0_sysclk2, LPSC_ALWAYS_ENABLED),
 
-Current code relies on master driver enabling necessary clocks before
-IOMMU is accessed, however there are cases when the IOMMU should be
-accessed while the master is not running yet, for example allocating
-V4L2 videobuf2 buffers, which is done by the VB2 framework using DMA
-mapping API and doesn't engage the master driver at all.
+pruss is better (I know the name is coming from existing code).
 
-This patch fixes the problem by letting clocks needed for IOMMU
-operation to be listed in Device Tree and making the driver enable them
-for the time of accessing the hardware.
+> +	LPSC(14, 0, arm, pll0_sysclk6, LPSC_ALWAYS_ENABLED),
 
-Signed-off-by: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Signed-off-by: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
----
+This is LPSC 15 which controls DSP too. But its missing from existing
+code. Not sure why. Probably a note for future. For now okay with
+ignoring it.
 
-Changes in v2: None
+> +	{ }
+> +};
 
- .../devicetree/bindings/iommu/rockchip,iommu.txt   |   8 ++
- drivers/iommu/rockchip-iommu.c                     | 115 +++++++++++++++++++--
- 2 files changed, 117 insertions(+), 6 deletions(-)
+Tables like these are much easier to parse if columns are spaced using a
+tab.
 
-diff --git a/Documentation/devicetree/bindings/iommu/rockchip,iommu.txt b/Documentation/devicetree/bindings/iommu/rockchip,iommu.txt
-index 2098f7732264..33dd853359fa 100644
---- a/Documentation/devicetree/bindings/iommu/rockchip,iommu.txt
-+++ b/Documentation/devicetree/bindings/iommu/rockchip,iommu.txt
-@@ -14,6 +14,13 @@ Required properties:
-                     "single-master" device, and needs no additional information
-                     to associate with its master device.  See:
-                     Documentation/devicetree/bindings/iommu/iommu.txt
-+Optional properties:
-+- clocks : A list of master clocks requires for the IOMMU to be accessible
-+           by the host CPU. The number of clocks depends on the master
-+           block and might as well be zero. See [1] for generic clock
-+           bindings description.
-+
-+[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
- 
- Optional properties:
- - rockchip,disable-mmu-reset : Don't use the mmu reset operation.
-@@ -27,5 +34,6 @@ Example:
- 		reg = <0xff940300 0x100>;
- 		interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
- 		interrupt-names = "vopl_mmu";
-+		clocks = <&cru ACLK_VOP1>, <&cru DCLK_VOP1>, <&cru HCLK_VOP1>;
- 		#iommu-cells = <0>;
- 	};
-diff --git a/drivers/iommu/rockchip-iommu.c b/drivers/iommu/rockchip-iommu.c
-index 52c6ff8602d8..a7442d59ca43 100644
---- a/drivers/iommu/rockchip-iommu.c
-+++ b/drivers/iommu/rockchip-iommu.c
-@@ -4,6 +4,7 @@
-  * published by the Free Software Foundation.
-  */
- 
-+#include <linux/clk.h>
- #include <linux/compiler.h>
- #include <linux/delay.h>
- #include <linux/device.h>
-@@ -90,6 +91,8 @@ struct rk_iommu {
- 	struct device *dev;
- 	void __iomem **bases;
- 	int num_mmu;
-+	struct clk **clocks;
-+	int num_clocks;
- 	int *irq;
- 	bool reset_disabled;
- 	struct iommu_device iommu;
-@@ -445,6 +448,83 @@ static int rk_iommu_force_reset(struct rk_iommu *iommu)
- 	return 0;
- }
- 
-+static void rk_iommu_put_clocks(struct rk_iommu *iommu)
-+{
-+	int i;
-+
-+	for (i = 0; i < iommu->num_clocks; ++i) {
-+		clk_unprepare(iommu->clocks[i]);
-+		clk_put(iommu->clocks[i]);
-+	}
-+}
-+
-+static int rk_iommu_get_clocks(struct rk_iommu *iommu)
-+{
-+	struct device_node *np = iommu->dev->of_node;
-+	int ret;
-+	int i;
-+
-+	ret = of_count_phandle_with_args(np, "clocks", "#clock-cells");
-+	if (ret == -ENOENT)
-+		return 0;
-+	else if (ret < 0)
-+		return ret;
-+
-+	iommu->num_clocks = ret;
-+	iommu->clocks = devm_kcalloc(iommu->dev, iommu->num_clocks,
-+				     sizeof(*iommu->clocks), GFP_KERNEL);
-+	if (!iommu->clocks)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < iommu->num_clocks; ++i) {
-+		iommu->clocks[i] = of_clk_get(np, i);
-+		if (IS_ERR(iommu->clocks[i])) {
-+			iommu->num_clocks = i;
-+			goto err_clk_put;
-+		}
-+		ret = clk_prepare(iommu->clocks[i]);
-+		if (ret) {
-+			clk_put(iommu->clocks[i]);
-+			iommu->num_clocks = i;
-+			goto err_clk_put;
-+		}
-+	}
-+
-+	return 0;
-+
-+err_clk_put:
-+	rk_iommu_put_clocks(iommu);
-+
-+	return ret;
-+}
-+
-+static int rk_iommu_enable_clocks(struct rk_iommu *iommu)
-+{
-+	int i, ret;
-+
-+	for (i = 0; i < iommu->num_clocks; ++i) {
-+		ret = clk_enable(iommu->clocks[i]);
-+		if (ret)
-+			goto err_disable;
-+	}
-+
-+	return 0;
-+
-+err_disable:
-+	for (--i; i >= 0; --i)
-+		clk_disable(iommu->clocks[i]);
-+
-+	return ret;
-+}
-+
-+static void rk_iommu_disable_clocks(struct rk_iommu *iommu)
-+{
-+	int i;
-+
-+	for (i = 0; i < iommu->num_clocks; ++i)
-+		clk_disable(iommu->clocks[i]);
-+}
-+
- static void log_iova(struct rk_iommu *iommu, int index, dma_addr_t iova)
- {
- 	void __iomem *base = iommu->bases[index];
-@@ -501,6 +581,8 @@ static irqreturn_t rk_iommu_irq(int irq, void *dev_id)
- 	irqreturn_t ret = IRQ_NONE;
- 	int i;
- 
-+	WARN_ON(rk_iommu_enable_clocks(iommu));
-+
- 	for (i = 0; i < iommu->num_mmu; i++) {
- 		int_status = rk_iommu_read(iommu->bases[i], RK_MMU_INT_STATUS);
- 		if (int_status == 0)
-@@ -547,6 +629,8 @@ static irqreturn_t rk_iommu_irq(int irq, void *dev_id)
- 		rk_iommu_write(iommu->bases[i], RK_MMU_INT_CLEAR, int_status);
- 	}
- 
-+	rk_iommu_disable_clocks(iommu);
-+
- 	return ret;
- }
- 
-@@ -589,7 +673,9 @@ static void rk_iommu_zap_iova(struct rk_iommu_domain *rk_domain,
- 	list_for_each(pos, &rk_domain->iommus) {
- 		struct rk_iommu *iommu;
- 		iommu = list_entry(pos, struct rk_iommu, node);
-+		rk_iommu_enable_clocks(iommu);
- 		rk_iommu_zap_lines(iommu, iova, size);
-+		rk_iommu_disable_clocks(iommu);
- 	}
- 	spin_unlock_irqrestore(&rk_domain->iommus_lock, flags);
- }
-@@ -818,10 +904,14 @@ static int rk_iommu_attach_device(struct iommu_domain *domain,
- 	if (!iommu)
- 		return 0;
- 
--	ret = rk_iommu_enable_stall(iommu);
-+	ret = rk_iommu_enable_clocks(iommu);
- 	if (ret)
- 		return ret;
- 
-+	ret = rk_iommu_enable_stall(iommu);
-+	if (ret)
-+		goto err_disable_clocks;
-+
- 	ret = rk_iommu_force_reset(iommu);
- 	if (ret)
- 		goto err_disable_stall;
-@@ -846,11 +936,14 @@ static int rk_iommu_attach_device(struct iommu_domain *domain,
- 	dev_dbg(dev, "Attached to iommu domain\n");
- 
- 	rk_iommu_disable_stall(iommu);
-+	rk_iommu_disable_clocks(iommu);
- 
- 	return 0;
- 
- err_disable_stall:
- 	rk_iommu_disable_stall(iommu);
-+err_disable_clocks:
-+	rk_iommu_disable_clocks(iommu);
- 
- 	return ret;
- }
-@@ -873,6 +966,7 @@ static void rk_iommu_detach_device(struct iommu_domain *domain,
- 	spin_unlock_irqrestore(&rk_domain->iommus_lock, flags);
- 
- 	/* Ignore error while disabling, just keep going */
-+	WARN_ON(rk_iommu_enable_clocks(iommu));
- 	rk_iommu_enable_stall(iommu);
- 	rk_iommu_disable_paging(iommu);
- 	for (i = 0; i < iommu->num_mmu; i++) {
-@@ -880,6 +974,7 @@ static void rk_iommu_detach_device(struct iommu_domain *domain,
- 		rk_iommu_write(iommu->bases[i], RK_MMU_DTE_ADDR, 0);
- 	}
- 	rk_iommu_disable_stall(iommu);
-+	rk_iommu_disable_clocks(iommu);
- 
- 	iommu->domain = NULL;
- 
-@@ -1171,23 +1266,30 @@ static int rk_iommu_probe(struct platform_device *pdev)
- 			return err;
- 	}
- 
-+	err = rk_iommu_get_clocks(iommu);
-+	if (err)
-+		return err;
-+
- 	iommu->reset_disabled = device_property_read_bool(dev,
- 					"rockchip,disable-mmu-reset");
- 
- 	err = iommu_device_sysfs_add(&iommu->iommu, dev, NULL, dev_name(dev));
- 	if (err)
--		return err;
-+		goto err_put_clocks;
- 
- 	iommu_device_set_ops(&iommu->iommu, &rk_iommu_ops);
- 	err = iommu_device_register(&iommu->iommu);
--	if (err) {
--		iommu_device_sysfs_remove(&iommu->iommu);
--		return err;
--	}
-+	if (err)
-+		goto err_remove_sysfs;
- 
- 	bus_set_iommu(&platform_bus_type, &rk_iommu_ops);
- 
- 	return 0;
-+err_remove_sysfs:
-+	iommu_device_sysfs_remove(&iommu->iommu);
-+err_put_clocks:
-+	rk_iommu_put_clocks(iommu);
-+	return err;
- }
- 
- static int rk_iommu_remove(struct platform_device *pdev)
-@@ -1196,6 +1298,7 @@ static int rk_iommu_remove(struct platform_device *pdev)
- 
- 	iommu_device_unregister(&iommu->iommu);
- 	iommu_device_sysfs_remove(&iommu->iommu);
-+	rk_iommu_put_clocks(iommu);
- 
- 	return 0;
- }
--- 
-2.11.0
+> +
+> +static const struct davinci_psc_clk_info da830_psc1_info[] __initconst = {
+> +	LPSC(1, 0, usb0, pll0_sysclk2, 0),
+> +	LPSC(2, 0, usb1, pll0_sysclk4, 0),
+> +	LPSC(3, 0, gpio, pll0_sysclk4, 0),
+
+There is LPSC 4 controlling UHPI. Again, lets ignore for now.
+
+> +	LPSC(5, 0, emac, pll0_sysclk4, 0),
+> +	LPSC(6, 0, emif3, pll0_sysclk5, LPSC_ALWAYS_ENABLED),
+> +	LPSC(7, 0, mcasp0, pll0_sysclk2, 0),
+> +	LPSC(8, 0, mcasp1, pll0_sysclk2, 0),
+> +	LPSC(9, 0, mcasp2, pll0_sysclk2, 0),
+> +	LPSC(10, 0, spi1, pll0_sysclk2, 0),
+> +	LPSC(11, 0, i2c1, pll0_sysclk4, 0),
+> +	LPSC(12, 0, uart1, pll0_sysclk2, 0),
+> +	LPSC(13, 0, uart2, pll0_sysclk2, 0),
+> +	LPSC(16, 0, lcdc, pll0_sysclk2, 0),
+> +	LPSC(17, 0, pwm, pll0_sysclk2, 0),
+> +	LPSC(20, 0, ecap, pll0_sysclk2, 0),
+> +	LPSC(21, 0, eqep, pll0_sysclk2, 0),
+> +	{ }
+> +};
+> +
+> +void __init da830_psc_clk_init(void __iomem *psc0, void __iomem *psc1)
+> +{
+> +	struct clk_onecell_data *clk_data;
+> +
+> +	clk_data = davinci_psc_register_clocks(psc0, da830_psc0_info, 16);
+> +	if (!clk_data)
+> +		return;
+> +
+> +	clk_register_clkdev(clk_data->clks[4], NULL, "spi_davinci.0");
+> +	clk_register_clkdev(clk_data->clks[5], NULL, "da830-mmc.0");
+> +	clk_register_clkdev(clk_data->clks[9], NULL, "serial8250.0");
+> +	clk_register_clkdev(clk_data->clks[14], "arm", NULL);
+> +
+> +	clk_free_onecell_data(clk_data);
+> +
+> +	clk_data = davinci_psc_register_clocks(psc1, da830_psc1_info, 32);
+> +	if (!clk_data)
+> +		return;
+> +
+> +	clk_register_clkdev(clk_data->clks[1], NULL, "musb-da8xx");
+> +	clk_register_clkdev(clk_data->clks[1], NULL, "cppi41-dmaengine");
+> +	clk_register_clkdev(clk_data->clks[2], NULL, "ohci-da8xx");
+> +	clk_register_clkdev(clk_data->clks[3], "gpio", NULL);
+
+This is pretty bad (and no fault of yours) - having a con_id but no
+device name. Can you please make a pre-series which passes NULL con_id
+in gpio-davinci.c?
+
+> +	clk_register_clkdev(clk_data->clks[5], NULL, "davinci_emac.1");
+> +	clk_register_clkdev(clk_data->clks[5], "fck", "davinci_mdio.0");
+> +	clk_register_clkdev(clk_data->clks[7], NULL, "davinci-mcasp.0");
+> +	clk_register_clkdev(clk_data->clks[8], NULL, "davinci-mcasp.1");
+> +	clk_register_clkdev(clk_data->clks[9], NULL, "davinci-mcasp.2");
+> +	clk_register_clkdev(clk_data->clks[10], NULL, "spi_davinci.1");
+> +	clk_register_clkdev(clk_data->clks[11], NULL, "i2c_davinci.2");
+> +	clk_register_clkdev(clk_data->clks[12], NULL, "serial8250.1");
+> +	clk_register_clkdev(clk_data->clks[13], NULL, "serial8250.2");
+> +	clk_register_clkdev(clk_data->clks[16], "fck", "da8xx_lcdc.0");
+> +	clk_register_clkdev(clk_data->clks[17], "fck", "ehrpwm.0");
+> +	clk_register_clkdev(clk_data->clks[17], "fck", "ehrpwm.1");
+> +	clk_register_clkdev(clk_data->clks[20], "fck", "ecap.0");
+> +	clk_register_clkdev(clk_data->clks[20], "fck", "ecap.1");
+> +	clk_register_clkdev(clk_data->clks[20], "fck", "ecap.2");
+> +	clk_register_clkdev(clk_data->clks[21], NULL, "eqep.0");
+> +	clk_register_clkdev(clk_data->clks[21], NULL, "eqep.1");
+
+This is going to be very difficult to audit for mistakes. How do you
+feel about adding the con_id and dev_id to davinci_psc_clk_info[] so
+they can be initialized as part of a single static table? And then here
+you go over the table looking for non-NULL con_id/dev_id to call
+clk_register_clkdev()?
+
+I am guessing you did not take that route because the DT path does not
+need those. But still, I think that will be much less error prone.
+
+Thanks,
+Sekhar
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
