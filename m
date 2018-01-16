@@ -1,205 +1,625 @@
-From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Subject: Re: [PATCH v5 11/44] clk: davinci: Add platform information for TI
- DA830 PSC
-Date: Tue, 16 Jan 2018 11:16:37 -0600
-Message-ID: <4dd36ca7-e41d-58d8-ec8c-787978307943@lechnology.com>
-References: <1515377863-20358-1-git-send-email-david@lechnology.com>
- <1515377863-20358-12-git-send-email-david@lechnology.com>
- <91fe16dc-907e-6dbb-c8db-c27561132093@ti.com>
+From: jacopo mondi <jacopo@jmondi.org>
+Subject: Re: [PATCH v5 3/9] v4l: platform: Add Renesas CEU driver
+Date: Tue, 16 Jan 2018 18:18:56 +0100
+Message-ID: <20180116171856.GD24926@w540>
+References: <1515765849-10345-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1515765849-10345-4-git-send-email-jacopo+renesas@jmondi.org>
+ <ba0540cd-c0b9-31a3-4bc8-7f32e4d85cf5@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <91fe16dc-907e-6dbb-c8db-c27561132093-l0cyMroinI0@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Adam Ford <aford173-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <ba0540cd-c0b9-31a3-4bc8-7f32e4d85cf5@xs4all.nl>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, laurent.pinchart@ideasonboard.com, magnus.damm@gmail.com, geert@glider.be, mchehab@kernel.org, festevam@gmail.com, sakari.ailus@iki.fi, robh+dt@kernel.org, mark.rutland@arm.com, pombredanne@nexb.com, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/16/2018 07:38 AM, Sekhar Nori wrote:
-> On Monday 08 January 2018 07:47 AM, David Lechner wrote:
->> This adds platform-specific declarations for the PSC clocks on TI DA830/
->> OMAP-L137/AM17XX SoCs.
->>
->> Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
->> ---
->>   drivers/clk/davinci/Makefile    |  1 +
->>   drivers/clk/davinci/psc-da830.c | 96 +++++++++++++++++++++++++++++++++++++++++
->>   include/linux/clk/davinci.h     |  2 +
->>   3 files changed, 99 insertions(+)
->>   create mode 100644 drivers/clk/davinci/psc-da830.c
->>
->> diff --git a/drivers/clk/davinci/Makefile b/drivers/clk/davinci/Makefile
->> index cd1bf2c..fb14c8c 100644
->> --- a/drivers/clk/davinci/Makefile
->> +++ b/drivers/clk/davinci/Makefile
->> @@ -10,4 +10,5 @@ obj-$(CONFIG_ARCH_DAVINCI_DM644x)	+= pll-dm644x.o
->>   obj-$(CONFIG_ARCH_DAVINCI_DM646x)	+= pll-dm646x.o
->>   
->>   obj-y += psc.o
->> +obj-$(CONFIG_ARCH_DAVINCI_DA830)	+= psc-da830.o
->>   endif
->> diff --git a/drivers/clk/davinci/psc-da830.c b/drivers/clk/davinci/psc-da830.c
->> new file mode 100644
->> index 0000000..193b08f
->> --- /dev/null
->> +++ b/drivers/clk/davinci/psc-da830.c
->> @@ -0,0 +1,96 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * PSC clock descriptions for TI DA830/OMAP-L137/AM17XX
->> + *
->> + * Copyright (C) 2017 David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
->> + */
->> +
->> +#include <linux/clk-provider.h>
->> +#include <linux/clkdev.h>
->> +#include <linux/init.h>
->> +#include <linux/types.h>
->> +
->> +#include "psc.h"
->> +
->> +static const struct davinci_psc_clk_info da830_psc0_info[] __initconst = {
->> +	LPSC(0, 0, tpcc, pll0_sysclk2, LPSC_ALWAYS_ENABLED),
->> +	LPSC(1, 0, tptc0, pll0_sysclk2, LPSC_ALWAYS_ENABLED),
->> +	LPSC(2, 0, tptc1, pll0_sysclk2, LPSC_ALWAYS_ENABLED),
->> +	LPSC(3, 0, aemif, pll0_sysclk3, LPSC_ALWAYS_ENABLED),
->> +	LPSC(4, 0, spi0, pll0_sysclk2, 0),
->> +	LPSC(5, 0, mmcsd, pll0_sysclk2, 0),
->> +	LPSC(6, 0, aintc, pll0_sysclk4, LPSC_ALWAYS_ENABLED),
->> +	LPSC(7, 0, arm_rom, pll0_sysclk2, LPSC_ALWAYS_ENABLED),
->> +	LPSC(8, 0, secu_mgr, pll0_sysclk4, LPSC_ALWAYS_ENABLED),
->> +	LPSC(9, 0, uart0, pll0_sysclk2, 0),
->> +	LPSC(10, 0, scr0_ss, pll0_sysclk2, LPSC_ALWAYS_ENABLED),
->> +	LPSC(11, 0, scr1_ss, pll0_sysclk2, LPSC_ALWAYS_ENABLED),
->> +	LPSC(12, 0, scr2_ss, pll0_sysclk2, LPSC_ALWAYS_ENABLED),
->> +	LPSC(13, 0, dmax, pll0_sysclk2, LPSC_ALWAYS_ENABLED),
-> 
-> pruss is better (I know the name is coming from existing code).
-> 
->> +	LPSC(14, 0, arm, pll0_sysclk6, LPSC_ALWAYS_ENABLED),
-> 
-> This is LPSC 15 which controls DSP too. But its missing from existing
-> code. Not sure why. Probably a note for future. For now okay with
-> ignoring it.
-> 
->> +	{ }
->> +};
-> 
-> Tables like these are much easier to parse if columns are spaced using a
-> tab.
-> 
+Hi Hans,
 
-Tabs make the lines over 80 columns. How about spaces instead?
+On Tue, Jan 16, 2018 at 10:46:42AM +0100, Hans Verkuil wrote:
+> Hi Jacopo,
+>
+> Sorry for the late review, but here is finally is.
+>
+> BTW, can you provide the v4l2-compliance output (ideally with the -f option)
+> in the cover letter for v6?
 
+Sure, it was attacched to v3 I guess, since then it has not changed.
+I will include that in v6 cover letter.
 
->> +
->> +static const struct davinci_psc_clk_info da830_psc1_info[] __initconst = {
->> +	LPSC(1, 0, usb0, pll0_sysclk2, 0),
->> +	LPSC(2, 0, usb1, pll0_sysclk4, 0),
->> +	LPSC(3, 0, gpio, pll0_sysclk4, 0),
-> 
-> There is LPSC 4 controlling UHPI. Again, lets ignore for now.
-> 
->> +	LPSC(5, 0, emac, pll0_sysclk4, 0),
->> +	LPSC(6, 0, emif3, pll0_sysclk5, LPSC_ALWAYS_ENABLED),
->> +	LPSC(7, 0, mcasp0, pll0_sysclk2, 0),
->> +	LPSC(8, 0, mcasp1, pll0_sysclk2, 0),
->> +	LPSC(9, 0, mcasp2, pll0_sysclk2, 0),
->> +	LPSC(10, 0, spi1, pll0_sysclk2, 0),
->> +	LPSC(11, 0, i2c1, pll0_sysclk4, 0),
->> +	LPSC(12, 0, uart1, pll0_sysclk2, 0),
->> +	LPSC(13, 0, uart2, pll0_sysclk2, 0),
->> +	LPSC(16, 0, lcdc, pll0_sysclk2, 0),
->> +	LPSC(17, 0, pwm, pll0_sysclk2, 0),
->> +	LPSC(20, 0, ecap, pll0_sysclk2, 0),
->> +	LPSC(21, 0, eqep, pll0_sysclk2, 0),
->> +	{ }
->> +};
->> +
->> +void __init da830_psc_clk_init(void __iomem *psc0, void __iomem *psc1)
->> +{
->> +	struct clk_onecell_data *clk_data;
->> +
->> +	clk_data = davinci_psc_register_clocks(psc0, da830_psc0_info, 16);
->> +	if (!clk_data)
->> +		return;
->> +
->> +	clk_register_clkdev(clk_data->clks[4], NULL, "spi_davinci.0");
->> +	clk_register_clkdev(clk_data->clks[5], NULL, "da830-mmc.0");
->> +	clk_register_clkdev(clk_data->clks[9], NULL, "serial8250.0");
->> +	clk_register_clkdev(clk_data->clks[14], "arm", NULL);
->> +
->> +	clk_free_onecell_data(clk_data);
->> +
->> +	clk_data = davinci_psc_register_clocks(psc1, da830_psc1_info, 32);
->> +	if (!clk_data)
->> +		return;
->> +
->> +	clk_register_clkdev(clk_data->clks[1], NULL, "musb-da8xx");
->> +	clk_register_clkdev(clk_data->clks[1], NULL, "cppi41-dmaengine");
->> +	clk_register_clkdev(clk_data->clks[2], NULL, "ohci-da8xx");
->> +	clk_register_clkdev(clk_data->clks[3], "gpio", NULL);
-> 
-> This is pretty bad (and no fault of yours) - having a con_id but no
-> device name. Can you please make a pre-series which passes NULL con_id
-> in gpio-davinci.c?
+> On 01/12/2018 03:04 PM, Jacopo Mondi wrote:
+> > Add driver for Renesas Capture Engine Unit (CEU).
+> >
+> > The CEU interface supports capturing 'data' (YUV422) and 'images'
+> > (NV[12|21|16|61]).
+> >
+> > This driver aims to replace the soc_camera-based sh_mobile_ceu one.
+> >
+> > Tested with ov7670 camera sensor, providing YUYV_2X8 data on Renesas RZ
+> > platform GR-Peach.
+> >
+> > Tested with ov7725 camera sensor on SH4 platform Migo-R.
+> >
+> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > ---
+> >  drivers/media/platform/Kconfig       |    9 +
+> >  drivers/media/platform/Makefile      |    1 +
+> >  drivers/media/platform/renesas-ceu.c | 1648 ++++++++++++++++++++++++++++++++++
+> >  3 files changed, 1658 insertions(+)
+> >  create mode 100644 drivers/media/platform/renesas-ceu.c
+> >
+> > diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
+> > index fd0c998..fe7bd26 100644
+> > --- a/drivers/media/platform/Kconfig
+> > +++ b/drivers/media/platform/Kconfig
+> > @@ -144,6 +144,15 @@ config VIDEO_STM32_DCMI
+> >  	  To compile this driver as a module, choose M here: the module
+> >  	  will be called stm32-dcmi.
+> >
+> > +config VIDEO_RENESAS_CEU
+> > +	tristate "Renesas Capture Engine Unit (CEU) driver"
+> > +	depends on VIDEO_DEV && VIDEO_V4L2 && HAS_DMA
+> > +	depends on ARCH_SHMOBILE || ARCH_R7S72100 || COMPILE_TEST
+> > +	select VIDEOBUF2_DMA_CONTIG
+> > +	select V4L2_FWNODE
+> > +	---help---
+> > +	  This is a v4l2 driver for the Renesas CEU Interface
+> > +
+> >  source "drivers/media/platform/soc_camera/Kconfig"
+> >  source "drivers/media/platform/exynos4-is/Kconfig"
+> >  source "drivers/media/platform/am437x/Kconfig"
+> > diff --git a/drivers/media/platform/Makefile b/drivers/media/platform/Makefile
+> > index 003b0bb..6580a6b 100644
+> > --- a/drivers/media/platform/Makefile
+> > +++ b/drivers/media/platform/Makefile
+> > @@ -62,6 +62,7 @@ obj-$(CONFIG_VIDEO_SH_VOU)		+= sh_vou.o
+> >  obj-$(CONFIG_SOC_CAMERA)		+= soc_camera/
+> >
+> >  obj-$(CONFIG_VIDEO_RCAR_DRIF)		+= rcar_drif.o
+> > +obj-$(CONFIG_VIDEO_RENESAS_CEU)		+= renesas-ceu.o
+> >  obj-$(CONFIG_VIDEO_RENESAS_FCP) 	+= rcar-fcp.o
+> >  obj-$(CONFIG_VIDEO_RENESAS_FDP1)	+= rcar_fdp1.o
+> >  obj-$(CONFIG_VIDEO_RENESAS_JPU) 	+= rcar_jpu.o
+> > diff --git a/drivers/media/platform/renesas-ceu.c b/drivers/media/platform/renesas-ceu.c
+> > new file mode 100644
+> > index 0000000..ccca838
+> > --- /dev/null
+> > +++ b/drivers/media/platform/renesas-ceu.c
+>
+> <snip>
+>
+> > +/*
+> > + * ceu_vb2_setup() - is called to check whether the driver can accept the
+> > + *		     requested number of buffers and to fill in plane sizes
+> > + *		     for the current frame format, if required.
+> > + */
+> > +static int ceu_vb2_setup(struct vb2_queue *vq, unsigned int *count,
+> > +			 unsigned int *num_planes, unsigned int sizes[],
+> > +			 struct device *alloc_devs[])
+> > +{
+> > +	struct ceu_device *ceudev = vb2_get_drv_priv(vq);
+> > +	struct v4l2_pix_format_mplane *pix = &ceudev->v4l2_pix;
+> > +	unsigned int i;
+> > +
+> > +	if (!*count)
+> > +		*count = 2;
+>
+> Don't do this. Instead set the min_buffers_needed field to 2 in the vb2_queue
+> struct.
+>
 
-I'll give it a try. This is complicated by the fact that the con_id has
-made it's way into the device tree bindings. However, I think we can
-safely deprecate clock-names = "gpio" in the device tree bindings since
-we can make the driver ignore that property to preserve backwards
-compatibility.
+I guess setting min_buffers_needed makes this check not required. Will
+drop.
 
-> 
->> +	clk_register_clkdev(clk_data->clks[5], NULL, "davinci_emac.1");
->> +	clk_register_clkdev(clk_data->clks[5], "fck", "davinci_mdio.0");
->> +	clk_register_clkdev(clk_data->clks[7], NULL, "davinci-mcasp.0");
->> +	clk_register_clkdev(clk_data->clks[8], NULL, "davinci-mcasp.1");
->> +	clk_register_clkdev(clk_data->clks[9], NULL, "davinci-mcasp.2");
->> +	clk_register_clkdev(clk_data->clks[10], NULL, "spi_davinci.1");
->> +	clk_register_clkdev(clk_data->clks[11], NULL, "i2c_davinci.2");
->> +	clk_register_clkdev(clk_data->clks[12], NULL, "serial8250.1");
->> +	clk_register_clkdev(clk_data->clks[13], NULL, "serial8250.2");
->> +	clk_register_clkdev(clk_data->clks[16], "fck", "da8xx_lcdc.0");
->> +	clk_register_clkdev(clk_data->clks[17], "fck", "ehrpwm.0");
->> +	clk_register_clkdev(clk_data->clks[17], "fck", "ehrpwm.1");
->> +	clk_register_clkdev(clk_data->clks[20], "fck", "ecap.0");
->> +	clk_register_clkdev(clk_data->clks[20], "fck", "ecap.1");
->> +	clk_register_clkdev(clk_data->clks[20], "fck", "ecap.2");
->> +	clk_register_clkdev(clk_data->clks[21], NULL, "eqep.0");
->> +	clk_register_clkdev(clk_data->clks[21], NULL, "eqep.1");
-> 
-> This is going to be very difficult to audit for mistakes. How do you
-> feel about adding the con_id and dev_id to davinci_psc_clk_info[] so
-> they can be initialized as part of a single static table? And then here
-> you go over the table looking for non-NULL con_id/dev_id to call
-> clk_register_clkdev()?
-> 
-> I am guessing you did not take that route because the DT path does not
-> need those. But still, I think that will be much less error prone.
+> > +
+> > +	/* num_planes is set: just check plane sizes. */
+> > +	if (*num_planes) {
+> > +		for (i = 0; i < pix->num_planes; i++)
+> > +			if (sizes[i] < pix->plane_fmt[i].sizeimage)
+> > +				return -EINVAL;
+> > +
+> > +		return 0;
+> > +	}
+> > +
+> > +	/* num_planes not set: called from REQBUFS, just set plane sizes. */
+> > +	*num_planes = pix->num_planes;
+> > +	for (i = 0; i < pix->num_planes; i++)
+> > +		sizes[i] = pix->plane_fmt[i].sizeimage;
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static void ceu_vb2_queue(struct vb2_buffer *vb)
+> > +{
+> > +	struct ceu_device *ceudev = vb2_get_drv_priv(vb->vb2_queue);
+> > +	struct vb2_v4l2_buffer *vbuf = to_vb2_v4l2_buffer(vb);
+> > +	struct v4l2_pix_format_mplane *pix = &ceudev->v4l2_pix;
+> > +	struct ceu_buffer *buf = vb2_to_ceu(vbuf);
+> > +	unsigned long irqflags;
+> > +	unsigned int i;
+> > +
+> > +	for (i = 0; i < pix->num_planes; i++) {
+> > +		if (vb2_plane_size(vb, i) < pix->plane_fmt[i].sizeimage) {
+> > +			vb2_buffer_done(vb, VB2_BUF_STATE_ERROR);
+> > +			return;
+> > +		}
+> > +
+> > +		vb2_set_plane_payload(vb, i, pix->plane_fmt[i].sizeimage);
+>
+> This is not the right vb2 op for this test, this belongs in the buf_prepare
+> op. There you can just return an error and you don't need to call buffer_done.
+>
 
-I wasn't really happy with this either, but I haven't come up with
-anything better. The reason I think this is good enough is that the
-array index is the LPSC number, so it is not actually that hard to
-audit. You can use the clock declarations above (or the datasheet/
-TRM) to know exactly which clock you are dealing with by matching
-the array index. I considered using macros instead of the numbers,
-but then lines are over 80 columns and it gets hard to read with
-wrapped lines.
+Actually, most (all?) of the mainline drivers also set plane payload
+in buf_prepare(). I will move the whole block to that function and
+just add the buffer to the capture list here.
 
-Any other solution will be much more verbose and require helper
-functions for looping through the clocks. I'm thinking that I would
-define a list of con_id, dev_id pairs for each clock, so that would
-be 15 extra static arrays here.
+> > +
+> > +static int ceu_g_fmt_vid_cap(struct file *file, void *priv,
+> > +			     struct v4l2_format *f)
+> > +{
+> > +	struct ceu_device *ceudev = video_drvdata(file);
+> > +
+> > +	f->type	= V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE;
+>
+> This is already filled in, no need to set type again.
+>
+> > +	f->fmt.pix_mp = ceudev->v4l2_pix;
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int ceu_enum_input(struct file *file, void *priv,
+> > +			  struct v4l2_input *inp)
+> > +{
+> > +	struct ceu_device *ceudev = video_drvdata(file);
+> > +	struct ceu_subdev *ceusd;
+> > +
+> > +	if (inp->index >= ceudev->num_sd)
+> > +		return -EINVAL;
+> > +
+> > +	ceusd = &ceudev->subdevs[inp->index];
+> > +
+> > +	inp->type = V4L2_INPUT_TYPE_CAMERA;
+> > +	inp->std = 0;
+> > +	snprintf(inp->name, sizeof(inp->name), "Camera%u: %s",
+> > +		 inp->index, ceusd->v4l2_sd->name);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int ceu_g_input(struct file *file, void *priv, unsigned int *i)
+> > +{
+> > +	struct ceu_device *ceudev = video_drvdata(file);
+> > +
+> > +	*i = ceudev->sd_index;
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int ceu_s_input(struct file *file, void *priv, unsigned int i)
+> > +{
+> > +	struct ceu_device *ceudev = video_drvdata(file);
+> > +	struct ceu_subdev *ceu_sd_old;
+> > +	int ret;
+> > +
+>
+> Add a check:
+>
+> 	if (i == ceudev->sd_index)
+> 		return 0;
+>
+> I.e. if the new input == the old input, then that's fine regardless of the
+> streaming state.
+>
+> > +	if (vb2_is_streaming(&ceudev->vb2_vq))
+> > +		return -EBUSY;
+> > +
+> > +	if (i >= ceudev->num_sd)
+> > +		return -EINVAL;
+>
+> Move this up as the first test.
+>
+> > +
+> > +	ceu_sd_old = ceudev->sd;
+> > +	ceudev->sd = &ceudev->subdevs[i];
+> > +
+> > +	/* Make sure we can generate output image formats. */
+> > +	ret = ceu_init_formats(ceudev);
+> > +	if (ret) {
+> > +		ceudev->sd = ceu_sd_old;
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	/* now that we're sure we can use the sensor, power off the old one. */
+> > +	v4l2_subdev_call(ceu_sd_old->v4l2_sd, core, s_power, 0);
+> > +	v4l2_subdev_call(ceudev->sd->v4l2_sd, core, s_power, 1);
+> > +
+> > +	ceudev->sd_index = i;
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int ceu_g_parm(struct file *file, void *fh, struct v4l2_streamparm *a)
+> > +{
+> > +	struct ceu_device *ceudev = video_drvdata(file);
+> > +
+> > +	if (a->type != V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE)
+> > +		return -EINVAL;
+> > +
+> > +	return v4l2_subdev_call(ceudev->sd->v4l2_sd, video, g_parm, a);
+> > +}
+> > +
+> > +
+> > +static int ceu_notify_complete(struct v4l2_async_notifier *notifier)
+> > +{
+> > +	struct v4l2_device *v4l2_dev = notifier->v4l2_dev;
+> > +	struct ceu_device *ceudev = v4l2_to_ceu(v4l2_dev);
+> > +	struct video_device *vdev = &ceudev->vdev;
+> > +	struct vb2_queue *q = &ceudev->vb2_vq;
+> > +	struct v4l2_subdev *v4l2_sd;
+> > +	int ret;
+> > +
+> > +	/* Initialize vb2 queue. */
+> > +	q->type			= V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE;
+> > +	q->io_modes		= VB2_MMAP | VB2_USERPTR | VB2_DMABUF;
+>
+> Don't include VB2_USERPTR. It shouldn't be used with dma_contig.
+>
+> You also added a read() fop (vb2_fop_read), so either add VB2_READ here
+> or remove the read fop.
 
-I'll think about it a little more, but for now, I would like to push
-for just calling this "good enough" and leave it as-is.
+As also suggested by Laurent, I'll drop fop_read and remove
+VB2_USERPTR from the supported io_modes.
 
+Thanks
+   j
 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+> > +	q->drv_priv		= ceudev;
+> > +	q->ops			= &ceu_vb2_ops;
+> > +	q->mem_ops		= &vb2_dma_contig_memops;
+> > +	q->buf_struct_size	= sizeof(struct ceu_buffer);
+> > +	q->timestamp_flags	= V4L2_BUF_FLAG_TIMESTAMP_MONOTONIC;
+> > +	q->lock			= &ceudev->mlock;
+> > +	q->dev			= ceudev->v4l2_dev.dev;
+> > +
+> > +	ret = vb2_queue_init(q);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	/*
+> > +	 * Make sure at least one sensor is primary and use it to initialize
+> > +	 * ceu formats.
+> > +	 */
+> > +	if (!ceudev->sd) {
+> > +		ceudev->sd = &ceudev->subdevs[0];
+> > +		ceudev->sd_index = 0;
+> > +	}
+> > +
+> > +	v4l2_sd = ceudev->sd->v4l2_sd;
+> > +
+> > +	ret = ceu_init_formats(ceudev);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	ret = ceu_set_default_fmt(ceudev);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	/* Register the video device. */
+> > +	strncpy(vdev->name, DRIVER_NAME, strlen(DRIVER_NAME));
+> > +	vdev->v4l2_dev		= v4l2_dev;
+> > +	vdev->lock		= &ceudev->mlock;
+> > +	vdev->queue		= &ceudev->vb2_vq;
+> > +	vdev->ctrl_handler	= v4l2_sd->ctrl_handler;
+> > +	vdev->fops		= &ceu_fops;
+> > +	vdev->ioctl_ops		= &ceu_ioctl_ops;
+> > +	vdev->release		= ceu_vdev_release;
+> > +	vdev->device_caps	= V4L2_CAP_VIDEO_CAPTURE_MPLANE |
+> > +				  V4L2_CAP_STREAMING;
+> > +	video_set_drvdata(vdev, ceudev);
+> > +
+> > +	ret = video_register_device(vdev, VFL_TYPE_GRABBER, -1);
+> > +	if (ret < 0) {
+> > +		v4l2_err(vdev->v4l2_dev,
+> > +			 "video_register_device failed: %d\n", ret);
+> > +		return ret;
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static const struct v4l2_async_notifier_operations ceu_notify_ops = {
+> > +	.bound		= ceu_notify_bound,
+> > +	.complete	= ceu_notify_complete,
+> > +};
+> > +
+> > +/*
+> > + * ceu_init_async_subdevs() - Initialize CEU subdevices and async_subdevs in
+> > + *			      ceu device. Both DT and platform data parsing use
+> > + *			      this routine.
+> > + *
+> > + * Returns 0 for success, -ENOMEM for failure.
+> > + */
+> > +static int ceu_init_async_subdevs(struct ceu_device *ceudev, unsigned int n_sd)
+> > +{
+> > +	/* Reserve memory for 'n_sd' ceu_subdev descriptors. */
+> > +	ceudev->subdevs = devm_kcalloc(ceudev->dev, n_sd,
+> > +				       sizeof(*ceudev->subdevs), GFP_KERNEL);
+> > +	if (!ceudev->subdevs)
+> > +		return -ENOMEM;
+> > +
+> > +	/*
+> > +	 * Reserve memory for 'n_sd' pointers to async_subdevices.
+> > +	 * ceudev->asds members will point to &ceu_subdev.asd
+> > +	 */
+> > +	ceudev->asds = devm_kcalloc(ceudev->dev, n_sd,
+> > +				    sizeof(*ceudev->asds), GFP_KERNEL);
+> > +	if (!ceudev->asds)
+> > +		return -ENOMEM;
+> > +
+> > +	ceudev->sd = NULL;
+> > +	ceudev->sd_index = 0;
+> > +	ceudev->num_sd = 0;
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +/*
+> > + * ceu_parse_platform_data() - Initialize async_subdevices using platform
+> > + *			       device provided data.
+> > + */
+> > +static int ceu_parse_platform_data(struct ceu_device *ceudev,
+> > +				   const struct ceu_platform_data *pdata)
+> > +{
+> > +	const struct ceu_async_subdev *async_sd;
+> > +	struct ceu_subdev *ceu_sd;
+> > +	unsigned int i;
+> > +	int ret;
+> > +
+> > +	if (pdata->num_subdevs == 0)
+> > +		return -ENODEV;
+> > +
+> > +	ret = ceu_init_async_subdevs(ceudev, pdata->num_subdevs);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	for (i = 0; i < pdata->num_subdevs; i++) {
+> > +		/* Setup the ceu subdevice and the async subdevice. */
+> > +		async_sd = &pdata->subdevs[i];
+> > +		ceu_sd = &ceudev->subdevs[i];
+> > +
+> > +		INIT_LIST_HEAD(&ceu_sd->asd.list);
+> > +
+> > +		ceu_sd->mbus_flags	= async_sd->flags;
+> > +		ceu_sd->asd.match_type	= V4L2_ASYNC_MATCH_I2C;
+> > +		ceu_sd->asd.match.i2c.adapter_id = async_sd->i2c_adapter_id;
+> > +		ceu_sd->asd.match.i2c.address = async_sd->i2c_address;
+> > +
+> > +		ceudev->asds[i] = &ceu_sd->asd;
+> > +	}
+> > +
+> > +	return pdata->num_subdevs;
+> > +}
+> > +
+> > +/*
+> > + * ceu_parse_dt() - Initialize async_subdevs parsing device tree graph.
+> > + */
+> > +static int ceu_parse_dt(struct ceu_device *ceudev)
+> > +{
+> > +	struct device_node *of = ceudev->dev->of_node;
+> > +	struct v4l2_fwnode_endpoint fw_ep;
+> > +	struct ceu_subdev *ceu_sd;
+> > +	struct device_node *ep;
+> > +	unsigned int i;
+> > +	int num_ep;
+> > +	int ret;
+> > +
+> > +	num_ep = of_graph_get_endpoint_count(of);
+> > +	if (!num_ep)
+> > +		return -ENODEV;
+> > +
+> > +	ret = ceu_init_async_subdevs(ceudev, num_ep);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	for (i = 0; i < num_ep; i++) {
+> > +		ep = of_graph_get_endpoint_by_regs(of, 0, i);
+> > +		if (!ep) {
+> > +			dev_err(ceudev->dev,
+> > +				"No subdevice connected on endpoint %u.\n", i);
+> > +			ret = -ENODEV;
+> > +			goto error_put_node;
+> > +		}
+> > +
+> > +		ret = v4l2_fwnode_endpoint_parse(of_fwnode_handle(ep), &fw_ep);
+> > +		if (ret) {
+> > +			dev_err(ceudev->dev,
+> > +				"Unable to parse endpoint #%u.\n", i);
+> > +			goto error_put_node;
+> > +		}
+> > +
+> > +		if (fw_ep.bus_type != V4L2_MBUS_PARALLEL) {
+> > +			dev_err(ceudev->dev,
+> > +				"Only parallel input supported.\n");
+> > +			ret = -EINVAL;
+> > +			goto error_put_node;
+> > +		}
+> > +
+> > +		/* Setup the ceu subdevice and the async subdevice. */
+> > +		ceu_sd = &ceudev->subdevs[i];
+> > +		INIT_LIST_HEAD(&ceu_sd->asd.list);
+> > +
+> > +		ceu_sd->mbus_flags = fw_ep.bus.parallel.flags;
+> > +		ceu_sd->asd.match_type = V4L2_ASYNC_MATCH_FWNODE;
+> > +		ceu_sd->asd.match.fwnode.fwnode =
+> > +			fwnode_graph_get_remote_port_parent(
+> > +					of_fwnode_handle(ep));
+> > +
+> > +		ceudev->asds[i] = &ceu_sd->asd;
+> > +		of_node_put(ep);
+> > +	}
+> > +
+> > +	return num_ep;
+> > +
+> > +error_put_node:
+> > +	of_node_put(ep);
+> > +	return ret;
+> > +}
+> > +
+> > +/*
+> > + * struct ceu_data - Platform specific CEU data
+> > + * @irq_mask: CETCR mask with all interrupt sources enabled. The mask differs
+> > + *	      between SH4 and RZ platforms.
+> > + */
+> > +struct ceu_data {
+> > +	u32 irq_mask;
+> > +};
+> > +
+> > +static const struct ceu_data ceu_data_rz = {
+> > +	.irq_mask = CEU_CETCR_ALL_IRQS_RZ,
+> > +};
+> > +
+> > +static const struct ceu_data ceu_data_sh4 = {
+> > +	.irq_mask = CEU_CETCR_ALL_IRQS_SH4,
+> > +};
+> > +
+> > +#if IS_ENABLED(CONFIG_OF)
+> > +static const struct of_device_id ceu_of_match[] = {
+> > +	{ .compatible = "renesas,r7s72100-ceu", .data = &ceu_data_rz },
+> > +	{ }
+> > +};
+> > +MODULE_DEVICE_TABLE(of, ceu_of_match);
+> > +#endif
+> > +
+> > +static int ceu_probe(struct platform_device *pdev)
+> > +{
+> > +	struct device *dev = &pdev->dev;
+> > +	const struct ceu_data *ceu_data;
+> > +	struct ceu_device *ceudev;
+> > +	struct resource *res;
+> > +	unsigned int irq;
+> > +	int num_subdevs;
+> > +	int ret;
+> > +
+> > +	ceudev = kzalloc(sizeof(*ceudev), GFP_KERNEL);
+> > +	if (!ceudev)
+> > +		return -ENOMEM;
+> > +
+> > +	platform_set_drvdata(pdev, ceudev);
+> > +	ceudev->dev = dev;
+> > +
+> > +	INIT_LIST_HEAD(&ceudev->capture);
+> > +	spin_lock_init(&ceudev->lock);
+> > +	mutex_init(&ceudev->mlock);
+> > +
+> > +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > +	ceudev->base = devm_ioremap_resource(dev, res);
+> > +	if (IS_ERR(ceudev->base))
+> > +		goto error_free_ceudev;
+> > +
+> > +	ret = platform_get_irq(pdev, 0);
+> > +	if (ret < 0) {
+> > +		dev_err(dev, "Failed to get irq: %d\n", ret);
+> > +		goto error_free_ceudev;
+> > +	}
+> > +	irq = ret;
+> > +
+> > +	ret = devm_request_irq(dev, irq, ceu_irq,
+> > +			       0, dev_name(dev), ceudev);
+> > +	if (ret) {
+> > +		dev_err(&pdev->dev, "Unable to request CEU interrupt.\n");
+> > +		goto error_free_ceudev;
+> > +	}
+> > +
+> > +	pm_runtime_enable(dev);
+> > +
+> > +	ret = v4l2_device_register(dev, &ceudev->v4l2_dev);
+> > +	if (ret)
+> > +		goto error_pm_disable;
+> > +
+> > +	if (IS_ENABLED(CONFIG_OF) && dev->of_node) {
+> > +		ceu_data = of_match_device(ceu_of_match, dev)->data;
+> > +		num_subdevs = ceu_parse_dt(ceudev);
+> > +	} else if (dev->platform_data) {
+> > +		/* Assume SH4 if booting with platform data. */
+> > +		ceu_data = &ceu_data_sh4;
+> > +		num_subdevs = ceu_parse_platform_data(ceudev,
+> > +						      dev->platform_data);
+> > +	} else {
+> > +		num_subdevs = -EINVAL;
+> > +	}
+> > +
+> > +	if (num_subdevs < 0) {
+> > +		ret = num_subdevs;
+> > +		goto error_v4l2_unregister;
+> > +	}
+> > +	ceudev->irq_mask = ceu_data->irq_mask;
+> > +
+> > +	ceudev->notifier.v4l2_dev	= &ceudev->v4l2_dev;
+> > +	ceudev->notifier.subdevs	= ceudev->asds;
+> > +	ceudev->notifier.num_subdevs	= num_subdevs;
+> > +	ceudev->notifier.ops		= &ceu_notify_ops;
+> > +	ret = v4l2_async_notifier_register(&ceudev->v4l2_dev,
+> > +					   &ceudev->notifier);
+> > +	if (ret)
+> > +		goto error_v4l2_unregister;
+> > +
+> > +	dev_info(dev, "Renesas Capture Engine Unit %s\n", dev_name(dev));
+> > +
+> > +	return 0;
+> > +
+> > +error_v4l2_unregister:
+> > +	v4l2_device_unregister(&ceudev->v4l2_dev);
+> > +error_pm_disable:
+> > +	pm_runtime_disable(dev);
+> > +error_free_ceudev:
+> > +	kfree(ceudev);
+> > +
+> > +	return ret;
+> > +}
+> > +
+> > +static int ceu_remove(struct platform_device *pdev)
+> > +{
+> > +	struct ceu_device *ceudev = platform_get_drvdata(pdev);
+> > +
+> > +	pm_runtime_disable(ceudev->dev);
+> > +
+> > +	v4l2_async_notifier_unregister(&ceudev->notifier);
+> > +
+> > +	v4l2_device_unregister(&ceudev->v4l2_dev);
+> > +
+> > +	video_unregister_device(&ceudev->vdev);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static const struct dev_pm_ops ceu_pm_ops = {
+> > +	SET_RUNTIME_PM_OPS(ceu_runtime_suspend,
+> > +			   ceu_runtime_resume,
+> > +			   NULL)
+> > +};
+> > +
+> > +static struct platform_driver ceu_driver = {
+> > +	.driver		= {
+> > +		.name	= DRIVER_NAME,
+> > +		.pm	= &ceu_pm_ops,
+> > +		.of_match_table = of_match_ptr(ceu_of_match),
+> > +	},
+> > +	.probe		= ceu_probe,
+> > +	.remove		= ceu_remove,
+> > +};
+> > +
+> > +module_platform_driver(ceu_driver);
+> > +
+> > +MODULE_DESCRIPTION("Renesas CEU camera driver");
+> > +MODULE_AUTHOR("Jacopo Mondi <jacopo+renesas@jmondi.org>");
+> > +MODULE_LICENSE("GPL v2");
+> >
+>
+> Regards,
+>
+> 	Hans
