@@ -1,54 +1,54 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: [PATCH v3 2/8] dt-bindings: power: reset: Document ocelot-reset binding
-Date: Tue, 16 Jan 2018 11:12:34 +0100
-Message-ID: <20180116101240.5393-3-alexandre.belloni@free-electrons.com>
-References: <20180116101240.5393-1-alexandre.belloni@free-electrons.com>
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <20180116101240.5393-1-alexandre.belloni@free-electrons.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: James Hogan <jhogan@kernel.org>, Ralf Baechle <ralf@linux-mips.org>
-Cc: linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org
+From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+Subject: [PATCHv4 0/5] GEHC Bx50 Switch Support
+Date: Tue, 16 Jan 2018 11:19:53 +0100
+Message-ID: <20180116101958.19711-1-sebastian.reichel@collabora.co.uk>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>, Vivien Didelot <vivien.didelot@savoirfairelinux.com>, Florian Fainelli <f.fainelli@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>
+Cc: Ian Ray <ian.ray@ge.com>, Nandor Han <nandor.han@ge.com>, Rob Herring <robh+dt@kernel.org>, "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sebastian Reichel <sebastian.reichel@collabora.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-Add binding documentation for the Microsemi Ocelot reset block.
+Hi,
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org
-Cc: Sebastian Reichel <sre@kernel.org>
-Cc: linux-pm@vger.kernel.org
-Signed-off-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
----
- .../devicetree/bindings/power/reset/ocelot-reset.txt       | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power/reset/ocelot-reset.txt
+This adds support for the internal switch found in GE Healthcare
+B450v3, B650v3 and B850v3. All devices use a GPIO bitbanged MDIO
+bus to communicate with the switch and a PCIe based network card
+for exchanging network data. The cpu network data link requires,
+that the switch's internal phy interface is enabled, so support
+for that is added by the first patch in this series.
 
-diff --git a/Documentation/devicetree/bindings/power/reset/ocelot-reset.txt b/Documentation/devicetree/bindings/power/reset/ocelot-reset.txt
-new file mode 100644
-index 000000000000..1b4213eb3473
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/reset/ocelot-reset.txt
-@@ -0,0 +1,14 @@
-+Microsemi Ocelot reset controller
-+
-+The DEVCPU_GCB:CHIP_REGS have a SOFT_RST register that can be used to reset the
-+SoC MIPS core.
-+
-+Required Properties:
-+ - compatible: "mscc,ocelot-chip-reset"
-+
-+Example:
-+	reset@1070008 {
-+		compatible = "mscc,ocelot-chip-reset";
-+		reg = <0x1070008 0x4>;
-+	};
-+
+The patch series is based on v4.15-rc8.
+
+Changes since PATCHv3:
+ * Enable the phy in dsa_port_setup() instead of abusing the
+   fixed link setup function
+Changes since PATCHv2:
+ * Add phy nodes to switch in bx50.dtsi and reference them
+   from switch ports
+ * Enable cpu-port's phy based on 'phy-handle' instead of 'phy-mode'
+Changes since PATCHv1:
+ * Use 'marvell,mv88e6085' instead of introducing compatible
+   string for mv88e6240.
+ * Fix indention of DT nodes
+ * Only enable 'cpu' phy, if explicitly set to "internal".
+
+-- Sebastian
+
+Sebastian Reichel (5):
+  net: dsa: Support internal phy on 'cpu' port
+  ARM: dts: imx6q-bx50v3: Add internal switch
+  ARM: dts: imx6q-b850v3: Add switch port configuration
+  ARM: dts: imx6q-b650v3: Add switch port configuration
+  ARM: dts: imx6q-b450v3: Add switch port configuration
+
+ arch/arm/boot/dts/imx6q-b450v3.dts  | 52 +++++++++++++++++++++++++
+ arch/arm/boot/dts/imx6q-b650v3.dts  | 52 +++++++++++++++++++++++++
+ arch/arm/boot/dts/imx6q-b850v3.dts  | 75 +++++++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/imx6q-bx50v3.dtsi | 62 ++++++++++++++++++++++++++++++
+ net/dsa/dsa2.c                      | 25 ++++++++++---
+ net/dsa/dsa_priv.h                  |  1 +
+ net/dsa/port.c                      | 49 ++++++++++++++++++++++++
+ 7 files changed, 310 insertions(+), 6 deletions(-)
+
 -- 
 2.15.1
