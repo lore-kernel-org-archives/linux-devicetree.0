@@ -1,77 +1,37 @@
-From: Oleksandr Shamray <oleksandrs@mellanox.com>
-Subject: [patch v17 4/4] Documentation: jtag: Add ABI documentation
-Date: Tue, 16 Jan 2018 09:18:59 +0200
-Message-ID: <1516087139-7510-5-git-send-email-oleksandrs@mellanox.com>
-References: <1516087139-7510-1-git-send-email-oleksandrs@mellanox.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH] ARM: dts: nomadik: add interrupt-parent for clcd
+Date: Tue, 16 Jan 2018 08:29:17 +0100
+Message-ID: <CACRpkdYCu57Y0KZGt9c7iM6nwe7qCxK+PcPC5God-rnOoHFt4Q@mail.gmail.com>
+References: <20180115163719.1736753-1-arnd@arndb.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1516087139-7510-1-git-send-email-oleksandrs@mellanox.com>
+In-Reply-To: <20180115163719.1736753-1-arnd@arndb.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: gregkh@linuxfoundation.org, arnd@arndb.de
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, openbmc@lists.ozlabs.org, joel@jms.id.au, jiri@resnulli.us, tklauser@distanz.ch, linux-serial@vger.kernel.org, vadimp@mellanox.com, system-sw-low-level@mellanox.com, robh+dt@kernel.org, openocd-devel-owner@lists.sourceforge.net, linux-api@vger.kernel.org, davem@davemloft.net, mchehab@kernel.org, Oleksandr Shamray <oleksandrs@mellanox.com>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: arm-soc <arm@kernel.org>, stable <stable@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Added document that describe the ABI for JTAG class drivrer
+On Mon, Jan 15, 2018 at 5:37 PM, Arnd Bergmann <arnd@arndb.de> wrote:
 
-Signed-off-by: Oleksandr Shamray <oleksandrs@mellanox.com>
-Acked-by: Arnd Bergmann <arnd@arndb.de>
----
-v16->v17
-v15->v16
-v14->v15
-v13->v14
-v12->v13
-v11->v12
-Tobias Klauser <tklauser@distanz.ch>
-- rename /Documentation/ABI/testing/jatg-dev -> jtag-dev
-- Typo: s/interfase/interface
-v10->v11
-v9->v10
-Fixes added by Oleksandr:
-- change jtag-cdev to jtag-dev in documentation
-- update Kernel Version and Date in jtag-dev documentation;
-v8->v9
-v7->v8
-v6->v7
-Comments pointed by Pavel Machek <pavel@ucw.cz>
-- Added jtag-cdev documentation to Documentation/ABI/testing folder
----
- Documentation/ABI/testing/jtag-dev |   27 +++++++++++++++++++++++++++
- 1 files changed, 27 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/ABI/testing/jtag-dev
+> The clcd device is lacking an interrupt-parent property, which makes
+> the interrupt unusable and shows up as a warning with the latest
+> dtc version:
+>
+> arch/arm/boot/dts/ste-nomadik-s8815.dtb: Warning (interrupts_property): Missing interrupt-parent for /amba/clcd@10120000
+> arch/arm/boot/dts/ste-nomadik-nhk15.dtb: Warning (interrupts_property): Missing interrupt-parent for /amba/clcd@10120000
+>
+> I looked up the old board files and found that this interrupt has
+> the same irqchip as all the other on-chip device, it just needs one
+> extra line.
+>
+> Fixes: 17470b7da11c ("ARM: dts: add the CLCD LCD display to the NHK15")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-diff --git a/Documentation/ABI/testing/jtag-dev b/Documentation/ABI/testing/jtag-dev
-new file mode 100644
-index 0000000..cea9552
---- /dev/null
-+++ b/Documentation/ABI/testing/jtag-dev
-@@ -0,0 +1,27 @@
-+What:		/dev/jtag[0-9]+
-+Date:		October 2017
-+KernelVersion:	4.17
-+Contact:	oleksandrs@mellanox.com
-+Description:
-+		The misc device files /dev/jtag* are the interface
-+		between JTAG master interface and userspace.
-+
-+		The ioctl(2)-based ABI is defined and documented in
-+		[include/uapi]<linux/jtag.h>.
-+
-+		The following file operations are supported:
-+
-+		open(2)
-+		The argument flag currently support only one access
-+		mode O_RDWR.
-+
-+		ioctl(2)
-+		Initiate various actions.
-+		See the inline documentation in [include/uapi]<linux/jtag.h>
-+		for descriptions of all ioctls.
-+
-+		close(2)
-+		Stops and free up the I/O contexts that was associated
-+		with the file descriptor.
-+
-+Users:		TBD
-\ No newline at end of file
--- 
-1.7.1
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+Sorry for not getting to fixing this myself quickly enough.
+
+Yours,
+Linus Walleij
