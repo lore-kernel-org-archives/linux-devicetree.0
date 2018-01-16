@@ -1,50 +1,37 @@
 From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH v5 04/44] clk: davinci: Add platform information for TI
- DA850 PLL
-Date: Tue, 16 Jan 2018 14:07:07 +0530
-Message-ID: <f9c0c0c5-ca81-ec0c-358d-f45299250f42@ti.com>
+Subject: Re: [PATCH v5 05/44] clk: davinci: Add platform information for TI
+ DM355 PLL
+Date: Tue, 16 Jan 2018 14:08:09 +0530
+Message-ID: <b480aeaa-f643-b329-8564-c7cf187102d9@ti.com>
 References: <1515377863-20358-1-git-send-email-david@lechnology.com>
- <1515377863-20358-5-git-send-email-david@lechnology.com>
+ <1515377863-20358-6-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1515377863-20358-5-git-send-email-david@lechnology.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1515377863-20358-6-git-send-email-david@lechnology.com>
 Content-Language: en-US
-Sender: linux-clk-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: David Lechner <david@lechnology.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Adam Ford <aford173@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
 On Monday 08 January 2018 07:47 AM, David Lechner wrote:
-> +void __init da850_pll_clk_init(void __iomem *pll0, void __iomem *pll1)
-> +{
-> +	const struct davinci_pll_divclk_info *info;
-> +
-> +	davinci_pll_clk_register("pll0", "ref_clk", pll0);
+> This adds platform-specific declarations for the PLL clocks on TI
+> DaVinci 355 based systems.
 
-I think this will be more readable with empty lines between these
-function calls. So here ..
+DM355
 
-> +	davinci_pll_aux_clk_register("pll0_aux_clk", "ref_clk", pll0);
-
-.. here
-
-> +	for (info = da850_pll0_divclk_info; info->name; info++)
-> +		davinci_pll_divclk_register(info, pll0);
-> +
-> +	davinci_pll_clk_register("pll1", "ref_clk", pll1);
-
-.. and here.
-
-> +	for (info = da850_pll1_divclk_info; info->name; info++)
-> +		davinci_pll_divclk_register(info, pll1);
-
-I see that you have included empty line only when changing the PLL, but
-I feel its more readable with the additional spacing suggested.
-
-Same comment for other patches too with similar function implemented.
-With that minor comment:
+> 
+> Signed-off-by: David Lechner <david@lechnology.com>
 
 Reviewed-by: Sekhar Nori <nsekhar@ti.com>
 
