@@ -1,48 +1,57 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 04/14] mmc: mmci: Add STM32 variant
-Date: Tue, 16 Jan 2018 08:38:33 +0100
-Message-ID: <CACRpkdY88umqVBcFNy7Z6vgHztRr7MbAjh-AWz0nYgFXoOwCLQ@mail.gmail.com>
-References: <1515759368-16946-1-git-send-email-patrice.chotard@st.com>
- <1515759368-16946-5-git-send-email-patrice.chotard@st.com>
- <CACRpkdYVDpmEmrF=Zk1zX8RCRnPDieTgPuCen6KQ4ttFpAm+Yg@mail.gmail.com> <ce14077b-2b8b-f8a7-2107-78b1d9dcab27@st.com>
+From: Andi Shyti <andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2] Input: mms114 - drop platform data and use generic
+ APIs
+Date: Tue, 16 Jan 2018 16:56:11 +0900
+Message-ID: <20180116075611.GC30945@gangnam.samsung>
+References: <CGME20180113020518epcas1p3987c04ac42714710204aca5a800a4f5b@epcas1p3.samsung.com>
+        <20180113020456.12391-1-simon@lineageos.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <ce14077b-2b8b-f8a7-2107-78b1d9dcab27-qxv4g6HH51o@public.gmane.org>
+Content-disposition: inline
+In-reply-to: <20180113020456.12391-1-simon-WP75azK+jQYgsBAKwltoeQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Patrice CHOTARD <patrice.chotard-qxv4g6HH51o@public.gmane.org>
-Cc: Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andrea Merello <andrea.merello-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Simon Shields <simon-WP75azK+jQYgsBAKwltoeQ@public.gmane.org>
+Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 15, 2018 at 6:17 PM, Patrice CHOTARD <patrice.chotard-qxv4g6HH51o@public.gmane.org> wrote:
+Hi Simon,
 
->>> +       {
->>> +               .id     = 0x00880180,
->>> +               .mask   = 0x00ffffff,
->>> +               .data   = &variant_stm32,
->>> +       },
->>
->> Since ux500 was 480180 I wonder what variants 5,6,7 are...
->
-> What is the rule to define the id ?
+On Sat, Jan 13, 2018 at 01:04:56PM +1100, Simon Shields wrote:
+> The MMS114 platform data has no in-tree users, so drop it,
+> and make the driver depend on CONFIG_OF.
+> 
+> Switch to using the standard touchscreen properties via
+> touchscreen_parse_properties(), and move the old DT parsing code
+> to use device_property_*() APIs.
+> 
+> Finally, use touchscreen_report_pos to report x/y coordinates
+> and drop the custom x/y inversion code.
+> 
+> Signed-off-by: Simon Shields <simon-WP75azK+jQYgsBAKwltoeQ@public.gmane.org>
+> ---
+>  .../bindings/input/touchscreen/mms114.txt          |  29 ++--
+>  drivers/input/touchscreen/Kconfig                  |   1 +
+>  drivers/input/touchscreen/mms114.c                 | 152 +++++++++------------
+>  include/linux/platform_data/mms114.h               |  24 ----
+>  4 files changed, 83 insertions(+), 123 deletions(-)
+>  delete mode 100644 include/linux/platform_data/mms114.h
+> 
 
-These four bits mean "revision".
+The patch looks good, but you would also need to update the dtsi
+files in this same patch:
 
-The number comes from hardware, so the ST ASIC department
-has some person who is responsible for revising the VHDL or
-Verilog code that this hardware is compiled from, and that person
-is bumping the version.
+./arch/arm/boot/dts/exynos4412-trats2.dts
+./arch/arm/boot/dts/exynos4210-trats.dts
 
-Theoretically it is a "company function" or something bureaucratic
-like that updating the hardware so I guess it could be several
-people following procedure who have updated this number in the
-hardware over the years.
+and Cc the Samsung-soc mailing list.
 
-But I bet it is a single person in Grenoble who has been doing
-the MMC/SD block since it appeared.
+For now it's a nack because the touchscreen would not work
+anymore with the trats boards.
 
-Yours,
-Linus Walleij
+One more thing, you forgot Rob's ACK.
+
+Andi
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
