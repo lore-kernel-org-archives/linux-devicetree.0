@@ -1,410 +1,125 @@
-From: Ludovic Barre <ludovic.Barre@st.com>
-Subject: [PATCH v5 6/7] ARM: dts: stm32: add stm32mp157c initial support
-Date: Tue, 16 Jan 2018 15:56:19 +0100
-Message-ID: <1516114580-2424-7-git-send-email-ludovic.Barre@st.com>
-References: <1516114580-2424-1-git-send-email-ludovic.Barre@st.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] reset: ti-rstctrl: use the reset-simple driver
+Date: Tue, 16 Jan 2018 07:03:14 -0800
+Message-ID: <20180116150314.GC4042@atomide.com>
+References: <20180116011159.1386-1-tony@atomide.com>
+ <1516095054.9022.1.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1516114580-2424-1-git-send-email-ludovic.Barre@st.com>
+Content-Disposition: inline
+In-Reply-To: <1516095054.9022.1.camel@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Gerald Baeza <gerald.baeza@st.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Ludovic Barre <ludovic.barre@st.com>
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Philipp Zabel <philipp.zabel@gmail.com>, Paul Parsons <lost.distance@yahoo.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, Dave Gerlach <d-gerlach@ti.com>, Mark Rutland <mark.rutland@arm.com>, Nishant Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Suman Anna <s-anna@ti.com>, Tero Kristo <t-kristo@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Ludovic Barre <ludovic.barre@st.com>
+Hi,
 
-Add stm32mp157c initial support with:
--Dual Cortex-A7
--Arm psci, timer, gic
--Pinctrl
--Uart
+* Philipp Zabel <p.zabel@pengutronix.de> [180116 09:52]:
+> On Mon, 2018-01-15 at 17:11 -0800, Tony Lindgren wrote:
+> > +Example:
+> > +
+> > +	prcm: prcm@200000 {
+> > +		compatible = "ti,am3-prcm", "simple-bus";
+> > +		reg = <0x200000 0x4000>;
+> > +		#address-cells = <1>;
+> > +		#size-cells = <1>;
+> > +		ranges = <0 0x200000 0x4000>;
+> > +
+> > +		prm_gfx: prm@1100 {
+> > +			compatible = "simple-bus";
+> > +			#address-cells = <1>;
+> > +			#size-cells = <1>;
+> > +			ranges = <0 0x1100 0x100>;
+> > +
+> > +			gfx_rstctrl: rstctrl@4 {
+>    			,->
+> > +			|	reg = <0x4 0x4>;
+> > +			|	#reset-cells = <1>;
+> > +			`--	compatible = "ti,rstctrl";
+> 
+> Looks good to me. Can I move the compatible property when applying?
 
-Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+Oops, here's a better version. I also left out the "prcm" part as
+at some point that should have just ranges instead of both reg and
+ranges that it currently has.
+
+Regards,
+
+Tony
+
+8< -----------------------
+>From tony Mon Sep 17 00:00:00 2001
+From: Tony Lindgren <tony@atomide.com>
+Date: Mon, 15 Jan 2018 15:25:54 -0800
+Subject: [PATCHv2] reset: ti-rstctrl: use the reset-simple driver
+
+We can support the RSTCTRL reset registers on many TI SoCs with
+reset-simple.
+
+Cc: Dave Gerlach <d-gerlach@ti.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Nishant Menon <nm@ti.com>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Suman Anna <s-anna@ti.com>
+Cc: Tero Kristo <t-kristo@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 ---
- arch/arm/boot/dts/stm32mp157-pinctrl.dtsi | 172 ++++++++++++++++++++++++++
- arch/arm/boot/dts/stm32mp157c.dtsi        | 194 ++++++++++++++++++++++++++++++
- 2 files changed, 366 insertions(+)
- create mode 100644 arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
- create mode 100644 arch/arm/boot/dts/stm32mp157c.dtsi
+ .../devicetree/bindings/reset/ti-rstctrl.txt         | 20 ++++++++++++++++++++
+ drivers/reset/Kconfig                                |  2 +-
+ drivers/reset/reset-simple.c                         |  1 +
+ 3 files changed, 22 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/reset/ti-rstctrl.txt
 
-diff --git a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
+diff --git a/Documentation/devicetree/bindings/reset/ti-rstctrl.txt b/Documentation/devicetree/bindings/reset/ti-rstctrl.txt
 new file mode 100644
-index 0000000..440276a
 --- /dev/null
-+++ b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
-@@ -0,0 +1,172 @@
-+/* SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause) */
-+/*
-+ * Copyright (C) STMicroelectronics 2017 - All Rights Reserved
-+ * Author: Ludovic Barre <ludovic.barre@st.com> for STMicroelectronics.
-+ */
-+#include <dt-bindings/pinctrl/stm32-pinfunc.h>
++++ b/Documentation/devicetree/bindings/reset/ti-rstctrl.txt
+@@ -0,0 +1,20 @@
++TI RSTCTRL Reset Controller
 +
-+/ {
-+	soc {
-+		pinctrl: pin-controller {
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			compatible = "st,stm32mp157-pinctrl";
-+			ranges = <0 0x50002000 0xa400>;
-+			pins-are-numbered;
++Required properties:
++- compatible : "ti,rstctrl"
++- reg : Should contain 1 register ranges(address and length)
++- #reset-cells: 1
 +
-+			gpioa: gpio@50002000 {
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+				reg = <0x0 0x400>;
-+				clocks = <&clk_pll3_p>;
-+				st,bank-name = "GPIOA";
-+				ngpios = <16>;
-+				gpio-ranges = <&pinctrl 0 0 16>;
-+			};
-+
-+			gpiob: gpio@50003000 {
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+				reg = <0x1000 0x400>;
-+				clocks = <&clk_pll3_p>;
-+				st,bank-name = "GPIOB";
-+				ngpios = <16>;
-+				gpio-ranges = <&pinctrl 0 16 16>;
-+			};
-+
-+			gpioc: gpio@50004000 {
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+				reg = <0x2000 0x400>;
-+				clocks = <&clk_pll3_p>;
-+				st,bank-name = "GPIOC";
-+				ngpios = <16>;
-+				gpio-ranges = <&pinctrl 0 32 16>;
-+			};
-+
-+			gpiod: gpio@50005000 {
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+				reg = <0x3000 0x400>;
-+				clocks = <&clk_pll3_p>;
-+				st,bank-name = "GPIOD";
-+				ngpios = <16>;
-+				gpio-ranges = <&pinctrl 0 48 16>;
-+			};
-+
-+			gpioe: gpio@50006000 {
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+				reg = <0x4000 0x400>;
-+				clocks = <&clk_pll3_p>;
-+				st,bank-name = "GPIOE";
-+				ngpios = <16>;
-+				gpio-ranges = <&pinctrl 0 64 16>;
-+			};
-+
-+			gpiof: gpio@50007000 {
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+				reg = <0x5000 0x400>;
-+				clocks = <&clk_pll3_p>;
-+				st,bank-name = "GPIOF";
-+				ngpios = <16>;
-+				gpio-ranges = <&pinctrl 0 80 16>;
-+			};
-+
-+			gpiog: gpio@50008000 {
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+				reg = <0x6000 0x400>;
-+				clocks = <&clk_pll3_p>;
-+				st,bank-name = "GPIOG";
-+				ngpios = <16>;
-+				gpio-ranges = <&pinctrl 0 96 16>;
-+			};
-+
-+			gpioh: gpio@50009000 {
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+				reg = <0x7000 0x400>;
-+				clocks = <&clk_pll3_p>;
-+				st,bank-name = "GPIOH";
-+				ngpios = <16>;
-+				gpio-ranges = <&pinctrl 0 112 16>;
-+			};
-+
-+			gpioi: gpio@5000a000 {
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+				reg = <0x8000 0x400>;
-+				clocks = <&clk_pll3_p>;
-+				st,bank-name = "GPIOI";
-+				ngpios = <16>;
-+				gpio-ranges = <&pinctrl 0 128 16>;
-+			};
-+
-+			gpioj: gpio@5000b000 {
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+				reg = <0x9000 0x400>;
-+				clocks = <&clk_pll3_p>;
-+				st,bank-name = "GPIOJ";
-+				ngpios = <16>;
-+				gpio-ranges = <&pinctrl 0 144 16>;
-+			};
-+
-+			gpiok: gpio@5000c000 {
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+				reg = <0xa000 0x400>;
-+				clocks = <&clk_pll3_p>;
-+				st,bank-name = "GPIOK";
-+				ngpios = <8>;
-+				gpio-ranges = <&pinctrl 0 160 8>;
-+			};
-+		};
-+
-+		pinctrl_z: pin-controller-z {
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			compatible = "st,stm32mp157-z-pinctrl";
-+			ranges = <0 0x54004000 0x400>;
-+			pins-are-numbered;
-+			status = "disabled";
-+
-+			gpioz: gpio@54004000 {
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+				reg = <0 0x400>;
-+				clocks = <&clk_pll2_p>;
-+				st,bank-name = "GPIOZ";
-+				st,bank-ioport = <11>;
-+				ngpios = <8>;
-+				gpio-ranges = <&pinctrl_z 0 400 8>;
-+			};
-+		};
-+	};
-+};
-diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
-new file mode 100644
-index 0000000..3db88f1
---- /dev/null
-+++ b/arch/arm/boot/dts/stm32mp157c.dtsi
-@@ -0,0 +1,194 @@
-+/* SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause) */
-+/*
-+ * Copyright (C) STMicroelectronics 2017 - All Rights Reserved
-+ * Author: Ludovic Barre <ludovic.barre@st.com> for STMicroelectronics.
-+ */
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+/ {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu0: cpu@0 {
-+			compatible = "arm,cortex-a7";
-+			device_type = "cpu";
-+			reg = <0>;
-+		};
-+
-+		cpu1: cpu@1 {
-+			compatible = "arm,cortex-a7";
-+			device_type = "cpu";
-+			reg = <1>;
-+		};
-+	};
-+
-+	psci {
-+		compatible = "arm,psci";
-+		method = "smc";
-+		cpu_off = <0x84000002>;
-+		cpu_on = <0x84000003>;
-+	};
-+
-+	aliases {
-+		gpio0 = &gpioa;
-+		gpio1 = &gpiob;
-+		gpio2 = &gpioc;
-+		gpio3 = &gpiod;
-+		gpio4 = &gpioe;
-+		gpio5 = &gpiof;
-+		gpio6 = &gpiog;
-+		gpio7 = &gpioh;
-+		gpio8 = &gpioi;
-+		gpio9 = &gpioj;
-+		gpio10 = &gpiok;
-+	};
-+
-+	intc: interrupt-controller@a0021000 {
-+		compatible = "arm,cortex-a7-gic";
-+		#interrupt-cells = <3>;
-+		interrupt-controller;
-+		reg = <0xa0021000 0x1000>,
-+		      <0xa0022000 0x2000>;
-+	};
-+
-+	timer {
-+		compatible = "arm,armv7-timer";
-+		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
-+		interrupt-parent = <&intc>;
-+	};
-+
-+	clocks {
-+		clk_hse: clk-hse {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <24000000>;
-+		};
-+
-+		clk_pll_per: clk-pll-per {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <64000000>;
-+		};
-+
-+		clk_hsi: clk-hsi {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <64000000>;
-+		};
-+
-+		clk_lse: clk-lse {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <32768>;
-+		};
-+
-+		clk_lsi: clk-lsi {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <32000>;
-+		};
-+
-+		clk_csi: clk-csi {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <4000000>;
-+		};
-+
-+		clk_pclk1: clk-pclk1 {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <86000000>;
-+		};
-+
-+		clk_pll3_p: clk-pll3_p {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <172000000>;
-+		};
-+
-+		clk_pll2_p: clk-pll2_p {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <264000000>;
-+		};
-+	};
-+
-+	soc {
++Example:
++	prm_gfx: prm@1100 {
 +		compatible = "simple-bus";
 +		#address-cells = <1>;
 +		#size-cells = <1>;
-+		interrupt-parent = <&intc>;
-+		ranges;
++		ranges = <0 0x1100 0x100>;
 +
-+		usart2: serial@4000e000 {
-+			compatible = "st,stm32h7-uart";
-+			reg = <0x4000e000 0x400>;
-+			interrupts = <GIC_SPI 38 IRQ_TYPE_NONE>;
-+			clocks = <&clk_pclk1>;
-+			status = "disabled";
-+		};
-+
-+		usart3: serial@4000f000 {
-+			compatible = "st,stm32h7-uart";
-+			reg = <0x4000f000 0x400>;
-+			interrupts = <GIC_SPI 39 IRQ_TYPE_NONE>;
-+			clocks = <&clk_pclk1>;
-+			status = "disabled";
-+		};
-+
-+		uart4: serial@40010000 {
-+			compatible = "st,stm32h7-uart";
-+			reg = <0x40010000 0x400>;
-+			interrupts = <GIC_SPI 52 IRQ_TYPE_NONE>;
-+			clocks = <&clk_pclk1>;
-+			status = "disabled";
-+		};
-+
-+		uart5: serial@40011000 {
-+			compatible = "st,stm32h7-uart";
-+			reg = <0x40011000 0x400>;
-+			interrupts = <GIC_SPI 53 IRQ_TYPE_NONE>;
-+			clocks = <&clk_pclk1>;
-+			status = "disabled";
-+		};
-+
-+		uart7: serial@40018000 {
-+			compatible = "st,stm32h7-uart";
-+			reg = <0x40018000 0x400>;
-+			interrupts = <GIC_SPI 82 IRQ_TYPE_NONE>;
-+			clocks = <&clk_pclk1>;
-+			status = "disabled";
-+		};
-+
-+		uart8: serial@40019000 {
-+			compatible = "st,stm32h7-uart";
-+			reg = <0x40019000 0x400>;
-+			interrupts = <GIC_SPI 83 IRQ_TYPE_NONE>;
-+			clocks = <&clk_pclk1>;
-+			status = "disabled";
-+		};
-+
-+		usart6: serial@44003000 {
-+			compatible = "st,stm32h7-uart";
-+			reg = <0x44003000 0x400>;
-+			interrupts = <GIC_SPI 71 IRQ_TYPE_NONE>;
-+			clocks = <&clk_pclk1>;
-+			status = "disabled";
-+		};
-+
-+		usart1: serial@5c000000 {
-+			compatible = "st,stm32h7-uart";
-+			reg = <0x5c000000 0x400>;
-+			interrupts = <GIC_SPI 37 IRQ_TYPE_NONE>;
-+			clocks = <&clk_pclk1>;
-+			status = "disabled";
++		gfx_rstctrl: rstctrl@4 {
++			compatible = "ti,rstctrl";
++			reg = <0x4 0x4>;
++			#reset-cells = <1>;
 +		};
 +	};
-+};
+diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
+--- a/drivers/reset/Kconfig
++++ b/drivers/reset/Kconfig
+@@ -83,7 +83,7 @@ config RESET_PISTACHIO
+ 
+ config RESET_SIMPLE
+ 	bool "Simple Reset Controller Driver" if COMPILE_TEST
+-	default ARCH_SOCFPGA || ARCH_STM32 || ARCH_STRATIX10 || ARCH_SUNXI || ARCH_ZX
++	default ARCH_OMAP2PLUS || ARCH_SOCFPGA || ARCH_STM32 || ARCH_STRATIX10 || ARCH_SUNXI || ARCH_ZX
+ 	help
+ 	  This enables a simple reset controller driver for reset lines that
+ 	  that can be asserted and deasserted by toggling bits in a contiguous,
+diff --git a/drivers/reset/reset-simple.c b/drivers/reset/reset-simple.c
+--- a/drivers/reset/reset-simple.c
++++ b/drivers/reset/reset-simple.c
+@@ -123,6 +123,7 @@ static const struct of_device_id reset_simple_dt_ids[] = {
+ 	{ .compatible = "st,stm32-rcc", },
+ 	{ .compatible = "allwinner,sun6i-a31-clock-reset",
+ 		.data = &reset_simple_active_low },
++	{ .compatible = "ti,rstctrl", },
+ 	{ .compatible = "zte,zx296718-reset",
+ 		.data = &reset_simple_active_low },
+ 	{ /* sentinel */ },
 -- 
-2.7.4
+2.15.0
