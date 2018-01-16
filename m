@@ -1,7 +1,7 @@
 From: srinivas.kandagatla@linaro.org
-Subject: [PATCH 1/4] dmaengine: qcom: bam_dma: make bam clk optional
-Date: Tue, 16 Jan 2018 19:02:33 +0000
-Message-ID: <20180116190236.14558-2-srinivas.kandagatla@linaro.org>
+Subject: [PATCH 4/4] dmaengine: qcom: bam_dma: Add num-ees dt binding for remotely controlled
+Date: Tue, 16 Jan 2018 19:02:36 +0000
+Message-ID: <20180116190236.14558-5-srinivas.kandagatla@linaro.org>
 References: <20180116190236.14558-1-srinivas.kandagatla@linaro.org>
 Return-path: <linux-arm-msm-owner@vger.kernel.org>
 In-Reply-To: <20180116190236.14558-1-srinivas.kandagatla@linaro.org>
@@ -12,40 +12,74 @@ List-Id: devicetree@vger.kernel.org
 
 From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
-When BAM is remotely controlled it does not sound correct to control
-its clk on Linux side. Make it optional, so that its not madatory
-for remote controlled BAM instances.
+When Linux is master of BAM, it can directly read registers to know number
+of supported execution enviroments, however when its remotely controlled
+reading these registers would trigger a crash if the BAM is not yet
+intialized/powered up on the remote side.
+
+This patch adds new binding num-ees to specify supported number of
+Execution Environments when BAM is remotely controlled.
 
 Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- drivers/dma/qcom/bam_dma.c | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
+ Documentation/devicetree/bindings/dma/qcom_bam_dma.txt |  2 ++
+ drivers/dma/qcom/bam_dma.c                             | 15 ++++++++++++---
+ 2 files changed, 14 insertions(+), 3 deletions(-)
 
+diff --git a/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt b/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
+index aa6822cbb230..f0d10c2b393e 100644
+--- a/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
++++ b/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
+@@ -17,6 +17,8 @@ Required properties:
+   remote proccessor i.e. execution environment.
+ - num-channels : optional, indicates supported number of DMA channels in a
+   remotely controlled bam.
++- num-ees : optional, indicates supported number of Execution Environments in a
++  remotely controlled bam.
+ 
+ Example:
+ 
 diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
-index 03c4eb3fd314..78e488e8f96d 100644
+index bbbb755d7549..7a8727271d60 100644
 --- a/drivers/dma/qcom/bam_dma.c
 +++ b/drivers/dma/qcom/bam_dma.c
-@@ -1180,13 +1180,14 @@ static int bam_dma_probe(struct platform_device *pdev)
- 						"qcom,controlled-remotely");
+@@ -387,6 +387,7 @@ struct bam_device {
+ 	struct device_dma_parameters dma_parms;
+ 	struct bam_chan *channels;
+ 	u32 num_channels;
++	u32 num_ees;
  
- 	bdev->bamclk = devm_clk_get(bdev->dev, "bam_clk");
--	if (IS_ERR(bdev->bamclk))
--		return PTR_ERR(bdev->bamclk);
--
--	ret = clk_prepare_enable(bdev->bamclk);
--	if (ret) {
--		dev_err(bdev->dev, "failed to prepare/enable clock\n");
--		return ret;
-+	if (IS_ERR(bdev->bamclk)) {
-+		bdev->bamclk = NULL;
-+	} else {
-+		ret = clk_prepare_enable(bdev->bamclk);
-+		if (ret) {
-+			dev_err(bdev->dev, "failed to prepare/enable clock\n");
-+			return ret;
-+		}
+ 	/* execution environment ID, from DT */
+ 	u32 ee;
+@@ -1079,11 +1080,14 @@ static int bam_init(struct bam_device *bdev)
+ 	u32 val;
+ 
+ 	/* read revision and configuration information */
+-	val = readl_relaxed(bam_addr(bdev, 0, BAM_REVISION)) >> NUM_EES_SHIFT;
+-	val &= NUM_EES_MASK;
++	if (!bdev->num_ees) {
++		val = readl_relaxed(bam_addr(bdev, 0, BAM_REVISION)) >> NUM_EES_SHIFT;
++		val &= NUM_EES_MASK;
++		bdev->num_ees = val;
++	}
+ 
+ 	/* check that configured EE is within range */
+-	if (bdev->ee >= val)
++	if (bdev->ee >= bdev->num_ees)
+ 		return -EINVAL;
+ 
+ 	if (!bdev->num_channels) {
+@@ -1189,6 +1193,11 @@ static int bam_dma_probe(struct platform_device *pdev)
+ 					   &bdev->num_channels);
+ 		if (ret)
+ 			dev_err(bdev->dev, "num-channels unspecified in dt\n");
++
++		ret = of_property_read_u32(pdev->dev.of_node, "num-ees",
++					   &bdev->num_ees);
++		if (ret)
++			dev_err(bdev->dev, "num-ees unspecified in dt\n");
  	}
  
- 	ret = bam_init(bdev);
+ 	bdev->bamclk = devm_clk_get(bdev->dev, "bam_clk");
 -- 
 2.15.1
