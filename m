@@ -1,58 +1,47 @@
-From: Baruch Siach <baruch@tkos.co.il>
-Subject: [PATCH v3 0/4] gpio: driver for the RPi3 GPIO expander
-Date: Tue, 16 Jan 2018 14:45:06 +0200
-Message-ID: <cover.1516105893.git.baruch@tkos.co.il>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Dave Stevenson <dave.stevenson@raspberrypi.org>, Eric Anholt <eric@anholt.net>, Stefan Wahren <stefan.wahren@i2se.com>, Linus Walleij <linus.walleij@linaro.org>
-Cc: devicetree@vger.kernel.org, Baruch Siach <baruch@tkos.co.il>, linux-gpio@vger.kernel.org, Michael Zoran <mzoran@crowfest.net>, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: [PATCH 8/8] ARM: dts: stm32: Enable pwm3 input capture on
+ stm32f429i-eval
+Date: Tue, 16 Jan 2018 13:43:51 +0100
+Message-ID: <1516106631-18722-9-git-send-email-fabrice.gasnier@st.com>
+References: <1516106631-18722-1-git-send-email-fabrice.gasnier@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1516106631-18722-1-git-send-email-fabrice.gasnier@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: lee.jones@linaro.org, thierry.reding@gmail.com, robh+dt@kernel.org, alexandre.torgue@st.com, benjamin.gaignard@linaro.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, benjamin.gaignard@st.com, linux-pwm@vger.kernel.org, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, mcoquelin.stm32@gmail.com, fabrice.gasnier@st.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The Raspberry Pi 3 has a GPIO expander that controls, among others, the 
-activity LED, and the camera connector GPIOs. The GPIO expander on an I2C bus 
-that is not directly controlled from the ARM core. The VC4 firmware controls 
-the I2C bus, and allows the ARM core to set/get GPIO settings over its mailbox 
-interface.
+Enable pwm3 input capture on stm32f429i-eval, by using DMA.
 
-This series adds support for the RPi3 expander.
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+---
+ arch/arm/boot/dts/stm32429i-eval.dts | 3 +++
+ 1 file changed, 3 insertions(+)
 
-The driver is ported from the downstream kernel at 
-https://github.com/raspberrypi/linux/, branch rpi-4.9.y.
-
-Changes in v3:
-
-  * Kconfig tweaks
-  * Check rpi_exp_gpio_get_polarity() return value
-  * Redundant header removal
-  * Redundant platform_set_drvdata() call removal
-  * Small coding style changes
-
-Changes in v2:
-
-  * Driver renamed to gpio-raspberrypi-exp
-  * Compatible string renamed to "raspberrypi,firmware-gpio"
-  * Firmware error check
-  * Smaller tweaks listed in individual patches
-
-Baruch Siach (3):
-  ARM: bcm2835: sync firmware properties with downstream
-  dt-bindings: gpio: add raspberry pi GPIO expander binding
-  ARM: dts: bcm2837-rpi-3-b: add GPIO expander
-
-Dave Stevenson (1):
-  gpio: raspberrypi-exp: Driver for RPi3 GPIO expander via mailbox
-    service
-
- .../bindings/gpio/raspberrypi,firmware-gpio.txt    |  24 ++
- arch/arm/boot/dts/bcm2837-rpi-3-b.dts              |  16 ++
- drivers/gpio/Kconfig                               |   9 +
- drivers/gpio/Makefile                              |   1 +
- drivers/gpio/gpio-raspberrypi-exp.c                | 253 +++++++++++++++++++++
- include/soc/bcm2835/raspberrypi-firmware.h         |  18 ++
- 6 files changed, 321 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/raspberrypi,firmware-gpio.txt
- create mode 100644 drivers/gpio/gpio-raspberrypi-exp.c
-
+diff --git a/arch/arm/boot/dts/stm32429i-eval.dts b/arch/arm/boot/dts/stm32429i-eval.dts
+index 293ecb9..d5498dd 100644
+--- a/arch/arm/boot/dts/stm32429i-eval.dts
++++ b/arch/arm/boot/dts/stm32429i-eval.dts
+@@ -271,6 +271,9 @@
+ &timers3 {
+ 	status = "okay";
+ 
++	/* Enable PWM input capture by using dma */
++	dmas = <&dma1 4 5 0x400 0x0>;
++	dma-names = "ch1";
+ 	pwm {
+ 		pinctrl-0 = <&pwm3_pins>;
+ 		pinctrl-names = "default";
 -- 
-2.15.1
-
+1.9.1
