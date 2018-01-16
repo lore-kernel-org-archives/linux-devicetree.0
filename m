@@ -1,42 +1,39 @@
-From: Faiz Abbas <faiz_abbas@ti.com>
-Subject: Re: [PATCH v7 4/8] can: m_can: Move allocation of net device to probe
-Date: Tue, 16 Jan 2018 14:33:08 +0530
-Message-ID: <811c146c-7269-fb70-30bb-f60159473f02@ti.com>
-References: <1515581725-29242-1-git-send-email-faiz_abbas@ti.com>
- <1515581725-29242-5-git-send-email-faiz_abbas@ti.com>
- <480602fa-db66-d5c3-056c-e61e5d0f2afa@pengutronix.de>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH v5 08/44] clk: davinci: Add platform information for TI
+ DM646x PLL
+Date: Tue, 16 Jan 2018 14:31:43 +0530
+Message-ID: <51b68de7-9202-a23f-00e7-c654ddce661f@ti.com>
+References: <1515377863-20358-1-git-send-email-david@lechnology.com>
+ <1515377863-20358-9-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <480602fa-db66-d5c3-056c-e61e5d0f2afa@pengutronix.de>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1515377863-20358-9-git-send-email-david@lechnology.com>
 Content-Language: en-US
-Sender: linux-can-owner@vger.kernel.org
-To: Marc Kleine-Budde <mkl@pengutronix.de>, wg@grandegger.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-can@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, nsekhar@ti.com, fcooper@ti.com, robh@kernel.org, Wenyou.Yang@microchip.com, sergei.shtylyov@cogentembedded.com, linux-omap@vger.kernel.org, b29396@freescale.com
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: David Lechner <david@lechnology.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Adam Ford <aford173@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Monday 08 January 2018 07:47 AM, David Lechner wrote:
+> This adds platform-specific declarations for the PLL clocks on TI
+> DaVinci 646x based systems.
+> 
+> Signed-off-by: David Lechner <david@lechnology.com>
 
-On Monday 15 January 2018 07:22 PM, Marc Kleine-Budde wrote:
-> On 01/10/2018 11:55 AM, Faiz Abbas wrote:
->> With the version no longer required to allocate the net device, it can
->> be moved to probe and the alloc_m_can_dev() function can be simplified.
->>
->> Therefore, move the allocation of net device to probe and change
->> alloc_m_can_dev() to setup_m_can_dev().
-> 
-> The error handling is broken with this patch,
-> 
-> Have a look at the switch (priv->version) in setup_m_can_dev(), you free
-> the m_can_dev in case of error, but exit with -EINVAL in the beginning
-> of the function. setup_m_can_dev() should not free if it doesn't allocate.
-> 
-> The error handling in m_can_plat_probe() is broken, too. If
-> pm_runtime_get_sync(&pdev->dev) fails, you don't free the candev.
-> 
+Some minor comments I gave on other patches apply here too. Apart from
+those:
 
-Will fix.
+Reviewed-by: Sekhar Nori <nsekhar@ti.com>
 
 Thanks,
-Faiz
+Sekhar
