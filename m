@@ -1,10 +1,12 @@
 From: Ludovic Barre <ludovic.Barre-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH v4 0/7] ARM: stm32: add initial STM32MPU support
-Date: Tue, 16 Jan 2018 15:12:14 +0100
-Message-ID: <1516111941-12635-1-git-send-email-ludovic.Barre@st.com>
+Subject: [PATCH v4 1/7] Documentation: arm: stm32: move to rst format
+Date: Tue, 16 Jan 2018 15:12:15 +0100
+Message-ID: <1516111941-12635-2-git-send-email-ludovic.Barre@st.com>
+References: <1516111941-12635-1-git-send-email-ludovic.Barre@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1516111941-12635-1-git-send-email-ludovic.Barre-qxv4g6HH51o@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 Cc: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Gerald Baeza <gerald.baeza-qxv4g6HH51o@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
@@ -12,59 +14,20 @@ List-Id: devicetree@vger.kernel.org
 
 From: Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
 
-This patch series extends the existing STM32 microcontrollers (MCUs)
-family to microprocessors (MPUs). The MPU platform (based on
-Arm Cortex-A) is a continuation of the MCU one (based on Arm
-Cortex-M) in that it shares a wide number of hardware blocks.
+This patch rewrites stm32 documentation to rst
+(ReStructuredText) format.
 
-change v4:
--Add all available uarts in stm32mp157c
--Move uart aliases to board files
-
-change v3:
--Remove bootargs
--Remove armv7m_restart and Share stm32_compat for mcu/mpu
--Modify stm32 kconfig with Arnd template
--Remove patch below (Linus W: Patch applied)
- devicetree: bindings: Document supported STM32 SoC family
- pinctrl: stm32: Add STM32MP157 MPU support
-
-change V2:
--Add stm32 documentation in this serie to avoid merge conflict
-thread: "https://patchwork.kernel.org/patch/10102573/";
--Split bindings (stm32.txt) to separate patches.
--Remove ARCH_STM32_MCU/MPU flags
--Adopt rst format for Documentation/arm/stm32 files
--s/STMicrolectronics/STMicroelectronics/g
-
-Ludovic Barre (7):
-  Documentation: arm: stm32: move to rst format
-  ARM: stm32: prepare stm32 family to welcome armv7 architecture
-  dt-bindings: stm32: add support of STM32MP157
-  ARM: stm32: add initial support for STM32MP157
-  ARM: configs: multi_v7: add stm32 support
-  ARM: dts: stm32: add stm32mp157c initial support
-  ARM: dts: stm32: add initial support of stm32mp157c eval board
-
- Documentation/arm/stm32/overview.rst            |  34 +++++
- Documentation/arm/stm32/overview.txt            |  33 ----
- Documentation/arm/stm32/stm32f429-overview.rst  |  26 ++++
- Documentation/arm/stm32/stm32f429-overview.txt  |  22 ---
- Documentation/arm/stm32/stm32f746-overview.rst  |  33 ++++
- Documentation/arm/stm32/stm32f746-overview.txt  |  34 -----
- Documentation/arm/stm32/stm32h743-overview.rst  |  34 +++++
- Documentation/arm/stm32/stm32h743-overview.txt  |  30 ----
- Documentation/arm/stm32/stm32mp157-overview.rst |  19 +++
- Documentation/devicetree/bindings/arm/stm32.txt |   1 +
- arch/arm/boot/dts/Makefile                      |   6 +-
- arch/arm/boot/dts/stm32mp157-pinctrl.dtsi       | 185 ++++++++++++++++++++++
- arch/arm/boot/dts/stm32mp157c-ed1.dts           |  32 ++++
- arch/arm/boot/dts/stm32mp157c-ev1.dts           |  21 +++
- arch/arm/boot/dts/stm32mp157c.dtsi              | 194 ++++++++++++++++++++++++
- arch/arm/configs/multi_v7_defconfig             |   3 +
- arch/arm/mach-stm32/Kconfig                     |  38 +++--
- arch/arm/mach-stm32/board-dt.c                  |   5 +-
- 18 files changed, 614 insertions(+), 136 deletions(-)
+Signed-off-by: Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
+---
+ Documentation/arm/stm32/overview.rst           | 31 +++++++++++++++++++++++
+ Documentation/arm/stm32/overview.txt           | 33 -------------------------
+ Documentation/arm/stm32/stm32f429-overview.rst | 26 ++++++++++++++++++++
+ Documentation/arm/stm32/stm32f429-overview.txt | 22 -----------------
+ Documentation/arm/stm32/stm32f746-overview.rst | 33 +++++++++++++++++++++++++
+ Documentation/arm/stm32/stm32f746-overview.txt | 34 --------------------------
+ Documentation/arm/stm32/stm32h743-overview.rst | 34 ++++++++++++++++++++++++++
+ Documentation/arm/stm32/stm32h743-overview.txt | 30 -----------------------
+ 8 files changed, 124 insertions(+), 119 deletions(-)
  create mode 100644 Documentation/arm/stm32/overview.rst
  delete mode 100644 Documentation/arm/stm32/overview.txt
  create mode 100644 Documentation/arm/stm32/stm32f429-overview.rst
@@ -73,12 +36,298 @@ Ludovic Barre (7):
  delete mode 100644 Documentation/arm/stm32/stm32f746-overview.txt
  create mode 100644 Documentation/arm/stm32/stm32h743-overview.rst
  delete mode 100644 Documentation/arm/stm32/stm32h743-overview.txt
- create mode 100644 Documentation/arm/stm32/stm32mp157-overview.rst
- create mode 100644 arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
- create mode 100644 arch/arm/boot/dts/stm32mp157c-ed1.dts
- create mode 100644 arch/arm/boot/dts/stm32mp157c-ev1.dts
- create mode 100644 arch/arm/boot/dts/stm32mp157c.dtsi
 
+diff --git a/Documentation/arm/stm32/overview.rst b/Documentation/arm/stm32/overview.rst
+new file mode 100644
+index 0000000..6be6059
+--- /dev/null
++++ b/Documentation/arm/stm32/overview.rst
+@@ -0,0 +1,31 @@
++========================
++STM32 ARM Linux Overview
++========================
++
++Introduction
++------------
++
++The STMicroelectronics family of Cortex-M based MCUs are supported by the
++'STM32' platform of ARM Linux. Currently only the STM32F429 (Cortex-M4)
++and STM32F746 (Cortex-M7) are supported.
++
++Configuration
++-------------
++
++A generic configuration is provided for STM32 family, and can be used as the
++default by
++        make stm32_defconfig
++
++Layout
++------
++
++All the files for multiple machine families are located in the platform code
++contained in arch/arm/mach-stm32
++
++There is a generic board board-dt.c in the mach folder which support
++Flattened Device Tree, which means, it works with any compatible board with
++Device Trees.
++
++:Authors:
++
++Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+diff --git a/Documentation/arm/stm32/overview.txt b/Documentation/arm/stm32/overview.txt
+deleted file mode 100644
+index a03b035..0000000
+--- a/Documentation/arm/stm32/overview.txt
++++ /dev/null
+@@ -1,33 +0,0 @@
+-			STM32 ARM Linux Overview
+-			========================
+-
+-Introduction
+-------------
+-
+-  The STMicroelectronics family of Cortex-M based MCUs are supported by the
+-  'STM32' platform of ARM Linux. Currently only the STM32F429 (Cortex-M4)
+-  and STM32F746 (Cortex-M7) are supported.
+-
+-
+-Configuration
+--------------
+-
+-  A generic configuration is provided for STM32 family, and can be used as the
+-  default by
+-	make stm32_defconfig
+-
+-Layout
+-------
+-
+-  All the files for multiple machine families are located in the platform code
+-  contained in arch/arm/mach-stm32
+-
+-  There is a generic board board-dt.c in the mach folder which support
+-  Flattened Device Tree, which means, it works with any compatible board with
+-  Device Trees.
+-
+-
+-Document Author
+----------------
+-
+-  Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+diff --git a/Documentation/arm/stm32/stm32f429-overview.rst b/Documentation/arm/stm32/stm32f429-overview.rst
+new file mode 100644
+index 0000000..18feda9
+--- /dev/null
++++ b/Documentation/arm/stm32/stm32f429-overview.rst
+@@ -0,0 +1,26 @@
++STM32F429 Overview
++==================
++
++Introduction
++------------
++
++The STM32F429 is a Cortex-M4 MCU aimed at various applications.
++It features:
++
++- ARM Cortex-M4 up to 180MHz with FPU
++- 2MB internal Flash Memory
++- External memory support through FMC controller (PSRAM, SDRAM, NOR, NAND)
++- I2C, SPI, SAI, CAN, USB OTG, Ethernet controllers
++- LCD controller & Camera interface
++- Cryptographic processor
++
++Resources
++---------
++
++Datasheet and reference manual are publicly available on ST website (STM32F429_).
++
++.. _STM32F429: http://www.st.com/web/en/catalog/mmc/FM141/SC1169/SS1577/LN1806?ecmp=stm32f429-439_pron_pr-ces2014_nov2013
++
++:Authors:
++
++Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+diff --git a/Documentation/arm/stm32/stm32f429-overview.txt b/Documentation/arm/stm32/stm32f429-overview.txt
+deleted file mode 100644
+index 5206822..0000000
+--- a/Documentation/arm/stm32/stm32f429-overview.txt
++++ /dev/null
+@@ -1,22 +0,0 @@
+-			STM32F429 Overview
+-			==================
+-
+-  Introduction
+-  ------------
+-	The STM32F429 is a Cortex-M4 MCU aimed at various applications.
+-	It features:
+-	- ARM Cortex-M4 up to 180MHz with FPU
+-	- 2MB internal Flash Memory
+-	- External memory support through FMC controller (PSRAM, SDRAM, NOR, NAND)
+-	- I2C, SPI, SAI, CAN, USB OTG, Ethernet controllers
+-	- LCD controller & Camera interface
+-	- Cryptographic processor
+-
+-  Resources
+-  ---------
+-	Datasheet and reference manual are publicly available on ST website:
+-	- http://www.st.com/web/en/catalog/mmc/FM141/SC1169/SS1577/LN1806?ecmp=stm32f429-439_pron_pr-ces2014_nov2013
+-
+-  Document Author
+-  ---------------
+-	Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+diff --git a/Documentation/arm/stm32/stm32f746-overview.rst b/Documentation/arm/stm32/stm32f746-overview.rst
+new file mode 100644
+index 0000000..b5f4b6c
+--- /dev/null
++++ b/Documentation/arm/stm32/stm32f746-overview.rst
+@@ -0,0 +1,33 @@
++STM32F746 Overview
++==================
++
++Introduction
++------------
++
++The STM32F746 is a Cortex-M7 MCU aimed at various applications.
++It features:
++
++- Cortex-M7 core running up to @216MHz
++- 1MB internal flash, 320KBytes internal RAM (+4KB of backup SRAM)
++- FMC controller to connect SDRAM, NOR and NAND memories
++- Dual mode QSPI
++- SD/MMC/SDIO support
++- Ethernet controller
++- USB OTFG FS & HS controllers
++- I2C, SPI, CAN busses support
++- Several 16 & 32 bits general purpose timers
++- Serial Audio interface
++- LCD controller
++- HDMI-CEC
++- SPDIFRX
++
++Resources
++---------
++
++Datasheet and reference manual are publicly available on ST website (STM32F746_).
++
++.. _STM32F746: http://www.st.com/content/st_com/en/products/microcontrollers/stm32-32-bit-arm-cortex-mcus/stm32f7-series/stm32f7x6/stm32f746ng.html
++
++:Authors:
++
++Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+diff --git a/Documentation/arm/stm32/stm32f746-overview.txt b/Documentation/arm/stm32/stm32f746-overview.txt
+deleted file mode 100644
+index cffd2b1c..0000000
+--- a/Documentation/arm/stm32/stm32f746-overview.txt
++++ /dev/null
+@@ -1,34 +0,0 @@
+-			STM32F746 Overview
+-			==================
+-
+-  Introduction
+-  ------------
+-	The STM32F746 is a Cortex-M7 MCU aimed at various applications.
+-	It features:
+-	- Cortex-M7 core running up to @216MHz
+-	- 1MB internal flash, 320KBytes internal RAM (+4KB of backup SRAM)
+-	- FMC controller to connect SDRAM, NOR and NAND memories
+-	- Dual mode QSPI
+-	- SD/MMC/SDIO support
+-	- Ethernet controller
+-	- USB OTFG FS & HS controllers
+-	- I2C, SPI, CAN busses support
+-	- Several 16 & 32 bits general purpose timers
+-	- Serial Audio interface
+-	- LCD controller
+-	- HDMI-CEC
+-	- SPDIFRX
+-
+-  Resources
+-  ---------
+-	Datasheet and reference manual are publicly available on ST website:
+-	- http://www.st.com/content/st_com/en/products/microcontrollers/stm32-32-bit-arm-cortex-mcus/stm32f7-series/stm32f7x6/stm32f746ng.html
+-
+-  Document Author
+-  ---------------
+-	Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+-
+-
+-
+-
+-
+diff --git a/Documentation/arm/stm32/stm32h743-overview.rst b/Documentation/arm/stm32/stm32h743-overview.rst
+new file mode 100644
+index 0000000..3458dc0
+--- /dev/null
++++ b/Documentation/arm/stm32/stm32h743-overview.rst
+@@ -0,0 +1,34 @@
++STM32H743 Overview
++==================
++
++Introduction
++------------
++
++The STM32H743 is a Cortex-M7 MCU aimed at various applications.
++It features:
++
++- Cortex-M7 core running up to @400MHz
++- 2MB internal flash, 1MBytes internal RAM
++- FMC controller to connect SDRAM, NOR and NAND memories
++- Dual mode QSPI
++- SD/MMC/SDIO support
++- Ethernet controller
++- USB OTFG FS & HS controllers
++- I2C, SPI, CAN busses support
++- Several 16 & 32 bits general purpose timers
++- Serial Audio interface
++- LCD controller
++- HDMI-CEC
++- SPDIFRX
++- DFSDM
++
++Resources
++---------
++
++Datasheet and reference manual are publicly available on ST website (STM32H743_).
++
++.. _STM32H743: http://www.st.com/en/microcontrollers/stm32h7x3.html?querycriteria=productId=LN2033
++
++:Authors:
++
++Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+diff --git a/Documentation/arm/stm32/stm32h743-overview.txt b/Documentation/arm/stm32/stm32h743-overview.txt
+deleted file mode 100644
+index 3031cba..0000000
+--- a/Documentation/arm/stm32/stm32h743-overview.txt
++++ /dev/null
+@@ -1,30 +0,0 @@
+-			STM32H743 Overview
+-			==================
+-
+-  Introduction
+-  ------------
+-	The STM32H743 is a Cortex-M7 MCU aimed at various applications.
+-	It features:
+-	- Cortex-M7 core running up to @400MHz
+-	- 2MB internal flash, 1MBytes internal RAM
+-	- FMC controller to connect SDRAM, NOR and NAND memories
+-	- Dual mode QSPI
+-	- SD/MMC/SDIO support
+-	- Ethernet controller
+-	- USB OTFG FS & HS controllers
+-	- I2C, SPI, CAN busses support
+-	- Several 16 & 32 bits general purpose timers
+-	- Serial Audio interface
+-	- LCD controller
+-	- HDMI-CEC
+-	- SPDIFRX
+-	- DFSDM
+-
+-  Resources
+-  ---------
+-	Datasheet and reference manual are publicly available on ST website:
+-	- http://www.st.com/en/microcontrollers/stm32h7x3.html?querycriteria=productId=LN2033
+-
+-  Document Author
+-  ---------------
+-	Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
 -- 
 2.7.4
 
