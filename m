@@ -1,238 +1,112 @@
-From: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v6 0/9] Renesas Capture Engine Unit (CEU) V4L2 driver
-Date: Tue, 16 Jan 2018 22:44:52 +0100
-Message-ID: <1516139101-7835-1-git-send-email-jacopo+renesas@jmondi.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, geert-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sakari.ailus-X3B1VOXEql0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pombredanne-od1rfyK75/E@public.gmane.org
-Cc: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Subject: [PATCH v6 1/9] dt-bindings: media: Add Renesas CEU bindings
+Date: Tue, 16 Jan 2018 22:44:53 +0100
+Message-ID: <1516139101-7835-2-git-send-email-jacopo+renesas@jmondi.org>
+References: <1516139101-7835-1-git-send-email-jacopo+renesas@jmondi.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1516139101-7835-1-git-send-email-jacopo+renesas@jmondi.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: laurent.pinchart@ideasonboard.com, magnus.damm@gmail.com, geert@glider.be, hverkuil@xs4all.nl, mchehab@kernel.org, festevam@gmail.com, sakari.ailus@iki.fi, robh+dt@kernel.org, mark.rutland@arm.com, pombredanne@nexb.com
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
-   new version of CEU after Hans' review.
+Add bindings documentation for Renesas Capture Engine Unit (CEU).
 
-Added his Acked-by to most patches and closed review comments.
-Running v4l2-compliance, I noticed a new failure introduced by the way I now
-calculate the plane sizes in set/try_fmt.
-
-This is the function used to update per-plane bytesperline and sizeimage:
-
-static void ceu_update_plane_sizes(struct v4l2_plane_pix_format *plane,
-				   unsigned int bpl, unsigned int szimage)
-{
-	if (plane->bytesperline < bpl)
-		plane->bytesperline = bpl;
-	if (plane->sizeimage < szimage)
-		plane->sizeimage = szimage;
-}
-
-I'm seeing a failure as v4l2-compliance requires buffers with both bytesperline
-and sizeimage set to MAX_INT . Hans, is this expected from v4l2-compliance?
-How should I handle this, if that has to be handled by the single drivers?
-
-Apart from that, here it is the output of v4l2-compliance, with the last tests
-failing due to the above stated reason, and two errors in try/set format due to
-the fact the driver is not setting ycbcr encoding after it receives an invalid
-format. I would set those, but I'm not sure what it the correct value and not
-all mainline drivers do that.
-
--------------------------------------------------------------------------------
-v4l2-compliance SHA   : 1d3c611dee82090d9456730e24af368b51dcb4a9
-
-Driver Info:
-	Driver name   : renesas-ceu
-	Card type     : Renesas CEU e8210000.ceu
-	Bus info      : platform:renesas-ceu-e8210000.c
-	Driver version: 4.14.0
-	Capabilities  : 0x84201000
-		Video Capture Multiplanar
-		Streaming
-		Extended Pix Format
-		Device Capabilities
-	Device Caps   : 0x04201000
-		Video Capture Multiplanar
-		Streaming
-		Extended Pix Format
-
-Compliance test for device /dev/video0 (not using libv4l2):
-
-Required ioctls:
-	test VIDIOC_QUERYCAP: OK
-
-Allow for multiple opens:
-	test second video open: OK
-	test VIDIOC_QUERYCAP: OK
-	test VIDIOC_G/S_PRIORITY: OK
-	test for unlimited opens: OK
-
-Debug ioctls:
-	test VIDIOC_DBG_G/S_REGISTER: OK
-	test VIDIOC_LOG_STATUS: OK (Not Supported)
-
-Input ioctls:
-	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
-	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
-	test VIDIOC_ENUMAUDIO: OK (Not Supported)
-	test VIDIOC_G/S/ENUMINPUT: OK
-	test VIDIOC_G/S_AUDIO: OK (Not Supported)
-	Inputs: 1 Audio Inputs: 0 Tuners: 0
-
-Output ioctls:
-	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
-	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
-	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
-	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
-	Outputs: 0 Audio Outputs: 0 Modulators: 0
-
-Input/Output configuration ioctls:
-	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
-	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
-	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
-	test VIDIOC_G/S_EDID: OK (Not Supported)
-
-Test input 0:
-
-	Control ioctls:
-		test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
-		test VIDIOC_QUERYCTRL: OK
-		test VIDIOC_G/S_CTRL: OK
-		test VIDIOC_G/S/TRY_EXT_CTRLS: OK
-		fail: v4l2-test-controls.cpp(782): subscribe event for control 'User Controls' failed
-		test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: FAIL
-		test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
-		Standard Controls: 12 Private Controls: 0
-
-	Format ioctls:
-		test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
-		fail: v4l2-test-formats.cpp(1162): ret && node->has_frmintervals
-		test VIDIOC_G/S_PARM: FAIL
-		test VIDIOC_G_FBUF: OK (Not Supported)
-		test VIDIOC_G_FMT: OK
-		fail: v4l2-test-formats.cpp(335): ycbcr_enc >= 0xff
-		fail: v4l2-test-formats.cpp(451): testColorspace(pix_mp.pixelformat, pix_mp.colorspace, pix_mp.ycbcr_enc, pix_mp.quantization)
-		fail: v4l2-test-formats.cpp(736): Video Capture Multiplanar is valid, but TRY_FMT failed to return a format
-		test VIDIOC_TRY_FMT: FAIL
-		fail: v4l2-test-formats.cpp(335): ycbcr_enc >= 0xff
-		fail: v4l2-test-formats.cpp(451): testColorspace(pix_mp.pixelformat, pix_mp.colorspace, pix_mp.ycbcr_enc, pix_mp.quantization)
-		fail: v4l2-test-formats.cpp(996): Video Capture Multiplanar is valid, but no S_FMT was implemented
-		test VIDIOC_S_FMT: FAIL
-		test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
-		test Cropping: OK (Not Supported)
-		test Composing: OK (Not Supported)
-		test Scaling: OK (Not Supported)
-
-	Codec ioctls:
-		test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
-		test VIDIOC_G_ENC_INDEX: OK (Not Supported)
-		test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
-
-	Buffer ioctls:
-		test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
-		test VIDIOC_EXPBUF: OK
-
-Test input 0:
-
-
-Total: 43, Succeeded: 39, Failed: 4, Warnings: 0
--------------------------------------------------------------------------------
-
-Thanks
-   j
-
-v5->v6:
-- Add Hans' Acked-by to most patches
-- Fix a bad change in ov772x get_selection
-- Add .buf_prepare callack to CEU and verify plane sizes there
-- Remove VB2_USERPTR from supported io_modes in CEU driver
-- Remove read() fops in CEU driver
-
-v4->v5:
-- Added Rob's and Laurent's Reviewed-by tag to DT bindings
-- Change CEU driver module license to "GPL v2" to match SPDX identifier as
-  suggested by Philippe Ombredanne
-- Make struct ceu_data static as suggested by Laurent and add his
-  Reviewed-by to CEU driver.
-
-v3->v4:
-- Drop generic fallback compatible string "renesas,ceu"
-- Addressed Laurent's comments on [3/9]
-  - Fix error messages on irq get/request
-  - Do not leak ceudev if irq_get fails
-  - Make irq_mask a const field
-
-v2->v3:
-- Improved DT bindings removing standard properties (pinctrl- ones and
-  remote-endpoint) not specific to this driver and improved description of
-  compatible strings
-- Remove ov772x's xlkc_rate property and set clock rate in Migo-R board file
-- Made 'xclk' clock private to ov772x driver in Migo-R board file
-- Change 'rstb' GPIO active output level and changed ov772x and tw9910 drivers
-  accordingly as suggested by Fabio
-- Minor changes in CEU driver to address Laurent's comments
-- Moved Migo-R setup patch to the end of the series to silence 0-day bot
-- Renamed tw9910 clock to 'xti' as per video decoder manual
-- Changed all SPDX identifiers to GPL-2.0 from previous GPL-2.0+
-
-v1->v2:
- - DT
- -- Addressed Geert's comments and added clocks for CEU to mstp6 clock source
- -- Specified supported generic video iterfaces properties in dt-bindings and
-    simplified example
-
- - CEU driver
- -- Re-worked interrupt handler, interrupt management, reset(*) and capture
-    start operation
- -- Re-worked querycap/enum_input/enum_frameintervals to fix some
-    v4l2_compliance failures
- -- Removed soc_camera legacy operations g/s_mbus_format
- -- Update to new notifier implementation
- -- Fixed several comments from Hans, Laurent and Sakari
-
- - Migo-R
- -- Register clocks and gpios for sensor drivers in Migo-R setup
- -- Updated sensors (tw9910 and ov772x) drivers headers and drivers to close
-    remarks from Hans and Laurent:
- --- Removed platform callbacks and handle clocks and gpios from sensor drivers
- --- Remove g/s_mbus_config operations
-
-Jacopo Mondi (9):
-  dt-bindings: media: Add Renesas CEU bindings
-  include: media: Add Renesas CEU driver interface
-  v4l: platform: Add Renesas CEU driver
-  ARM: dts: r7s72100: Add Capture Engine Unit (CEU)
-  v4l: i2c: Copy ov772x soc_camera sensor driver
-  media: i2c: ov772x: Remove soc_camera dependencies
-  v4l: i2c: Copy tw9910 soc_camera sensor driver
-  media: i2c: tw9910: Remove soc_camera dependencies
-  arch: sh: migor: Use new renesas-ceu camera driver
-
- .../devicetree/bindings/media/renesas,ceu.txt      |   81 +
- arch/arm/boot/dts/r7s72100.dtsi                    |   15 +-
- arch/sh/boards/mach-migor/setup.c                  |  225 ++-
- arch/sh/kernel/cpu/sh4a/clock-sh7722.c             |    2 +-
- drivers/media/i2c/Kconfig                          |   20 +
- drivers/media/i2c/Makefile                         |    2 +
- drivers/media/i2c/ov772x.c                         | 1183 ++++++++++++++
- drivers/media/i2c/tw9910.c                         | 1039 ++++++++++++
- drivers/media/platform/Kconfig                     |    9 +
- drivers/media/platform/Makefile                    |    1 +
- drivers/media/platform/renesas-ceu.c               | 1659 ++++++++++++++++++++
- include/media/drv-intf/renesas-ceu.h               |   26 +
- include/media/i2c/ov772x.h                         |    6 +-
- include/media/i2c/tw9910.h                         |    9 +
- 14 files changed, 4146 insertions(+), 131 deletions(-)
+Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
+---
+ .../devicetree/bindings/media/renesas,ceu.txt      | 81 ++++++++++++++++++++++
+ 1 file changed, 81 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/media/renesas,ceu.txt
- create mode 100644 drivers/media/i2c/ov772x.c
- create mode 100644 drivers/media/i2c/tw9910.c
- create mode 100644 drivers/media/platform/renesas-ceu.c
- create mode 100644 include/media/drv-intf/renesas-ceu.h
 
---
+diff --git a/Documentation/devicetree/bindings/media/renesas,ceu.txt b/Documentation/devicetree/bindings/media/renesas,ceu.txt
+new file mode 100644
+index 0000000..590ee27
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/renesas,ceu.txt
+@@ -0,0 +1,81 @@
++Renesas Capture Engine Unit (CEU)
++----------------------------------------------
++
++The Capture Engine Unit is the image capture interface found in the Renesas
++SH Mobile and RZ SoCs.
++
++The interface supports a single parallel input with data bus width of 8 or 16
++bits.
++
++Required properties:
++- compatible: Shall be "renesas,r7s72100-ceu" for CEU units found in RZ/A1-H
++  and RZ/A1-M SoCs.
++- reg: Registers address base and size.
++- interrupts: The interrupt specifier.
++
++The CEU supports a single parallel input and should contain a single 'port'
++subnode with a single 'endpoint'. Connection to input devices are modeled
++according to the video interfaces OF bindings specified in:
++Documentation/devicetree/bindings/media/video-interfaces.txt
++
++Optional endpoint properties applicable to parallel input bus described in
++the above mentioned "video-interfaces.txt" file are supported.
++
++- hsync-active: Active state of the HSYNC signal, 0/1 for LOW/HIGH respectively.
++  If property is not present, default is active high.
++- vsync-active: Active state of the VSYNC signal, 0/1 for LOW/HIGH respectively.
++  If property is not present, default is active high.
++
++Example:
++
++The example describes the connection between the Capture Engine Unit and an
++OV7670 image sensor connected to i2c1 interface.
++
++ceu: ceu@e8210000 {
++	reg = <0xe8210000 0x209c>;
++	compatible = "renesas,r7s72100-ceu";
++	interrupts = <GIC_SPI 332 IRQ_TYPE_LEVEL_HIGH>;
++
++	pinctrl-names = "default";
++	pinctrl-0 = <&vio_pins>;
++
++	status = "okay";
++
++	port {
++		ceu_in: endpoint {
++			remote-endpoint = <&ov7670_out>;
++
++			hsync-active = <1>;
++			vsync-active = <0>;
++		};
++	};
++};
++
++i2c1: i2c@fcfee400 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c1_pins>;
++
++	status = "okay";
++
++	clock-frequency = <100000>;
++
++	ov7670: camera@21 {
++		compatible = "ovti,ov7670";
++		reg = <0x21>;
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&vio_pins>;
++
++		reset-gpios = <&port3 11 GPIO_ACTIVE_LOW>;
++		powerdown-gpios = <&port3 12 GPIO_ACTIVE_HIGH>;
++
++		port {
++			ov7670_out: endpoint {
++				remote-endpoint = <&ceu_in>;
++
++				hsync-active = <1>;
++				vsync-active = <0>;
++			};
++		};
++	};
++};
+-- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
