@@ -1,60 +1,56 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [PATCH v2 1/4] ARM: bcm2835: sync firmware properties with
- downstream
-Date: Tue, 16 Jan 2018 13:01:00 +0100
-Message-ID: <632b9d56-78cf-1e8e-8cd2-30edd2de70c0@i2se.com>
-References: <cover.1515698418.git.baruch@tkos.co.il>
- <e68675d54955c754ebe8ffc2491585fde5b396bc.1515698418.git.baruch@tkos.co.il>
- <1991337128.42939.1515837465503@email.1und1.de>
- <CACRpkdZ_g3-jR-7pOnS9MwpHprfEz8acB9SWcMLyoOVcB0iLvA@mail.gmail.com>
- <20180116104904.fsebsozoa4xysbz7@tarshish>
+From: Adam Ford <aford173@gmail.com>
+Subject: Re: [PATCH v5 01/44] dt-bindings: clock: Add new bindings for TI
+ Davinci PLL clocks
+Date: Tue, 16 Jan 2018 06:21:22 -0600
+Message-ID: <CAHCN7x+zowPn-c7X37=r2V96zVfFj3WGBO4cS5w-R6VGU=FUqw@mail.gmail.com>
+References: <1515377863-20358-1-git-send-email-david@lechnology.com>
+ <ebd677dc-44a4-5053-2509-e3ee948ccf98@ti.com> <22409e49-5c14-4068-b137-7535afaf90d7@lechnology.com>
+ <0f90b5f7-f21e-5f81-1154-9a815bbb786d@ti.com> <ba7fa842-cfc5-6f6f-f9bf-09c74ab08ec2@lechnology.com>
+ <5aacc350-6236-2e4f-35bb-a681fc9d47e7@ti.com> <CAHCN7x+ZYezmEU_0mF=6_gF14DZxKnuDp1Cx=aC2=eN_QLNdJQ@mail.gmail.com>
+ <fd162516-cddc-e857-ce60-2cd89303971e@lechnology.com> <CAHCN7xKORFriQ2Gjx85OsCUzHO-mavCQXLOzh5D3n4kEG=i-Yg@mail.gmail.com>
+ <40501635-6f5b-20c9-f8bc-d17e26b58426@lechnology.com> <CAHCN7xL=h_g6HK2ey82r_w5qRbXg9+68Og+84YUYuePsjYd-Vg@mail.gmail.com>
+ <f20267f2-be4c-e031-1c5f-76490164c60d@lechnology.com> <CAHCN7x+G5pxOeD7TahqiQUePEu1Z4Hyinkjq_bcSM+Hz36xoSg@mail.gmail.com>
+ <a79184c5-3e28-bbac-0783-992615d49fae@lechnology.com> <CAHCN7x+EtQs6NHAYbVga7vU1U+qQLqOxdf+1MW6HewaT+ZF_Xg@mail.gmail.com>
+ <5832fd62-16aa-e167-7e52-2ce493e33cdc@lechnology.com> <CAHCN7xKV+Rwep3WiY2aS49iLu+oiZmjtUN2QK+E=hVkqdSPwhw@mail.gmail.com>
+ <8184c7b5-5f82-5590-9caf-fd038e1d07ac@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180116104904.fsebsozoa4xysbz7@tarshish>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Michael Zoran <mzoran-O+n0w2l5AFbk1uMJSBkQmQ@public.gmane.org>, linux-rpi-kernel <linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Dave Stevenson <dave.stevenson-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <8184c7b5-5f82-5590-9caf-fd038e1d07ac@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sekhar Nori <nsekhar@ti.com>
+Cc: David Lechner <david@lechnology.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Baruch,
-
-Am 16.01.2018 um 11:49 schrieb Baruch Siach:
-> Hi Linus,
+On Tue, Jan 16, 2018 at 5:22 AM, Sekhar Nori <nsekhar@ti.com> wrote:
+> Hi Adam, David,
 >
-> On Tue, Jan 16, 2018 at 10:57:32AM +0100, Linus Walleij wrote:
->> On Sat, Jan 13, 2018 at 10:57 AM, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> wrote:
->>>> Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org> hat am 11. Januar 2018 um 20:44 geschrieben:
->>>>
->>>> Add latest firmware property tags from the latest Raspberry Pi downstream
->>>> kernel. This is needed for the GPIO tags, so we can control the GPIO
->>>> multiplexor lines.
->>>>
->>>> Signed-off-by: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
->>> Acked-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
->>>
->>> Maybe this is obvious, but patch #3 depends on this change so no cherry-picking allowed.
->> I will save this for after the merge window as it feels now.
+> On Friday 12 January 2018 03:04 AM, Adam Ford wrote:
+>> Thanks for clarifying.  I was able to make it work with the following patch:
 >>
->> But as far as I have the right ACKs I can put it in the GPIO tree.
->>
->> Baruch: can you resend the series with all ACKs and push me
->> to apply it all in the GPIO tree if you're fine with this approach?
-> I plan to send another revision of this series later today to address Stefan's
-> comments on this one. Once Stefan and/or Eric ack the entire series, I'm fine
-> with you taking it through the GPIO tree if it is OK with the BCM2835
-> maintainers.
+>> diff --git a/drivers/clk/davinci/psc-da850.c b/drivers/clk/davinci/psc-da850.c
+>> index 3b4583d..a76b8682 100644
+>> --- a/drivers/clk/davinci/psc-da850.c
+>> +++ b/drivers/clk/davinci/psc-da850.c
+>> @@ -25,7 +25,7 @@ static const struct davinci_psc_clk_info
+>> da850_psc0_info[] __initconst = {
+>>         LPSC(9, 0, uart0, pll0_sysclk2, 0),
+>>         LPSC(13, 0, pruss, pll0_sysclk2, 0),
+>>         LPSC(14, 0, arm, pll0_sysclk6, LPSC_ALWAYS_ENABLED),
+>> -       LPSC(15, 1, dsp, pll0_sysclk1, LPSC_FORCE | LPSC_LOCAL_RESET),
+>> +       LPSC(15, 1, dsp, pll0_sysclk1, LPSC_FORCE | LPSC_LOCAL_RESET |
+>> LPSC_ALWAYS_ENABLED),
 >
-> baruch
+> Keeping the DSP clock always enabled was not needed earlier AFAICS, so
+> this needs to be investigated.
+
+I was testing the DA850-evm and found it was required or the DA850
+wouldn't boot.  I don't know enough of why to explain it.  I went
+through all the clocks as suggested by David, and this one-line patch
+fixed the hanging problem I had.  Without it the AM1808 board I have
+won't boot.
+
+adam
 >
-
-we also need an ACK from the devicetree maintainers. So please send a 
-copy of the binding patch V3 to Rob Herring and Marc Rutland.
-
-Thanks
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Thanks,
+> Sekhar
