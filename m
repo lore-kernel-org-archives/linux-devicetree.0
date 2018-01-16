@@ -1,29 +1,27 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH v5 14/44] clk: davinci: Add platform information for TI
- DM365 PSC
-Date: Tue, 16 Jan 2018 19:46:03 +0530
-Message-ID: <082041b1-3d22-210e-bc8e-b4b2b5021bc3@ti.com>
-References: <1515377863-20358-1-git-send-email-david@lechnology.com>
- <1515377863-20358-15-git-send-email-david@lechnology.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v4 7/7] ARM: dts: stm32: add initial support of
+ stm32mp157c eval board
+Date: Tue, 16 Jan 2018 15:25:03 +0100
+Message-ID: <CAK8P3a1AeEY+avU0pKMuVmT=jroYdnJ_eYBvTi5687fzKJHBXQ@mail.gmail.com>
+References: <1516111941-12635-1-git-send-email-ludovic.Barre@st.com> <1516111941-12635-8-git-send-email-ludovic.Barre@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1515377863-20358-15-git-send-email-david@lechnology.com>
-Content-Language: en-US
-Sender: linux-clk-owner@vger.kernel.org
-To: David Lechner <david@lechnology.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1516111941-12635-8-git-send-email-ludovic.Barre@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ludovic Barre <ludovic.Barre@st.com>
+Cc: Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Gerald Baeza <gerald.baeza@st.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 08 January 2018 07:47 AM, David Lechner wrote:
-> This adds platform-specific declarations for the PSC clocks on TI
-> DaVinci 365 based systems.
-> 
-> Signed-off-by: David Lechner <david@lechnology.com>
+On Tue, Jan 16, 2018 at 3:12 PM, Ludovic Barre <ludovic.Barre@st.com> wrote:
 
-Apart from some comments on other patches that apply to this too, I have
-no new comments.
+> +
+> +       aliases {
+> +               serial3 = &uart4;
+> +       };
 
-Thanks,
-Sekhar
+Why 'serial3' ? If you have multiple UARTS on this board, just list
+all of them, otherwise
+start with 'serial0'.
+
+       Arnd
