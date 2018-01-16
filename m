@@ -1,53 +1,36 @@
-From: srinivas.kandagatla@linaro.org
-Subject: [PATCH 3/4] dmaengine: qcom: bam_dma: do not write to global regs in remote mode
-Date: Tue, 16 Jan 2018 19:02:35 +0000
-Message-ID: <20180116190236.14558-4-srinivas.kandagatla@linaro.org>
-References: <20180116190236.14558-1-srinivas.kandagatla@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180116190236.14558-1-srinivas.kandagatla@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>, Andy Gross <andy.gross@linaro.org>, dmaengine@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, David Brown <david.brown@linaro.org>, Dan Williams <dan.j.williams@intel.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, yanhe@quicinc.com, ramkri@qti.qualcomm.com, sdharia@quicinc.com, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+From: Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: stratix10: fix SPI settings
+Date: Tue, 16 Jan 2018 13:08:32 -0600
+Message-ID: <65aba740-3132-622f-f71c-e13874ba8a17@kernel.org>
+References: <1513806251-20273-1-git-send-email-thor.thayer@linux.intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1513806251-20273-1-git-send-email-thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
-BAM_DESC_CNT_TRSHLD register is global register, which can only be written
-when BAM is in master mode, So check the mode of operation before writing it.
 
-Without this check SOC's xPU would catch such access and crash the system.
-First noticed on DB820c while testing SLIMBus BAM.
+On 12/20/2017 03:44 PM, thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org wrote:
+> From: Thor Thayer <thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+> 
+> Correct the SPI Master node settings.
+> 
+> Signed-off-by: Thor Thayer <thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+> ---
+>  arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+> 
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
- drivers/dma/qcom/bam_dma.c | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+Applied, thanks!
 
-diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
-index 523bd178047a..bbbb755d7549 100644
---- a/drivers/dma/qcom/bam_dma.c
-+++ b/drivers/dma/qcom/bam_dma.c
-@@ -905,12 +905,15 @@ static void bam_apply_new_config(struct bam_chan *bchan,
- 	struct bam_device *bdev = bchan->bdev;
- 	u32 maxburst;
- 
--	if (dir == DMA_DEV_TO_MEM)
--		maxburst = bchan->slave.src_maxburst;
--	else
--		maxburst = bchan->slave.dst_maxburst;
--
--	writel_relaxed(maxburst, bam_addr(bdev, 0, BAM_DESC_CNT_TRSHLD));
-+	if (!bdev->controlled_remotely) {
-+		if (dir == DMA_DEV_TO_MEM)
-+			maxburst = bchan->slave.src_maxburst;
-+		else
-+			maxburst = bchan->slave.dst_maxburst;
-+
-+		writel_relaxed(maxburst,
-+			       bam_addr(bdev, 0, BAM_DESC_CNT_TRSHLD));
-+	}
- 
- 	bchan->reconfigure = 0;
- }
--- 
-2.15.1
+Dinh
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
