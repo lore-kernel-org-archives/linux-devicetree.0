@@ -1,40 +1,85 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v5 9/9] arch: sh: migor: Use new renesas-ceu camera driver
-Date: Tue, 16 Jan 2018 11:11:38 +0100
-Message-ID: <1c6f7b57-2d0c-50c2-add9-386fe1308adc@xs4all.nl>
-References: <1515765849-10345-1-git-send-email-jacopo+renesas@jmondi.org>
- <1515765849-10345-10-git-send-email-jacopo+renesas@jmondi.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1515765849-10345-10-git-send-email-jacopo+renesas@jmondi.org>
-Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Jacopo Mondi <jacopo+renesas@jmondi.org>, laurent.pinchart@ideasonboard.com, magnus.damm@gmail.com, geert@glider.be, mchehab@kernel.org, festevam@gmail.com, sakari.ailus@iki.fi, robh+dt@kernel.org, mark.rutland@arm.com, pombredanne@nexb.com
-Cc: linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v3 0/8] MIPS: add support for the Microsemi MIPS SoCs
+Date: Tue, 16 Jan 2018 11:12:32 +0100
+Message-ID: <20180116101240.5393-1-alexandre.belloni@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: James Hogan <jhogan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
+Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/12/2018 03:04 PM, Jacopo Mondi wrote:
-> Migo-R platform uses sh_mobile_ceu camera driver, which is now being
-> replaced by a proper V4L2 camera driver named 'renesas-ceu'.
-> 
-> Move Migo-R platform to use the v4l2 renesas-ceu camera driver
-> interface and get rid of soc_camera defined components used to register
-> sensor drivers and of platform specific enable/disable routines.
-> 
-> Register clock source and GPIOs for sensor drivers, so they can use
-> clock and gpio APIs.
-> 
-> Also, memory for CEU video buffers is now reserved with membocks APIs,
-> and need to be declared as dma_coherent during machine initialization to
-> remove that architecture specific part from CEU driver.
-> 
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Hi,
 
-Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
+This patch series adds initial support for the Microsemi MIPS SoCs. It
+is currently focusing on the Microsemi Ocelot (VSC7513, VSC7514).
 
-Regards,
+It also adds support for the reset controller.
 
-        Hans
+This produces a kernel that can boot to the console.
+
+This is a single series for reference but the reset driver can be taken
+separately.
+
+Changes in v3:
+ - removed the pinctrl driver as it has already been taken
+ - removed the irqchip driver as the bindings have been acked and will not
+   change
+ - changed the reset controller bindings following Rob's review
+
+Changes in v2:
+ - removed the wildcard in MAINAINERS
+ - corrected the Cc list
+ - added proper documentation for both syscons
+ - removed the mscc,cpucontrol property
+ - updated the ranges property in the ocelot dtsi
+
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+
+Alexandre Belloni (8):
+  dt-bindings: mips: Add bindings for Microsemi SoCs
+  dt-bindings: power: reset: Document ocelot-reset binding
+  power: reset: Add a driver for the Microsemi Ocelot reset
+  MIPS: mscc: Add initial support for Microsemi MIPS SoCs
+  MIPS: mscc: add ocelot dtsi
+  MIPS: mscc: add ocelot PCB123 device tree
+  MIPS: defconfigs: add a defconfig for Microsemi SoCs
+  MAINTAINERS: Add entry for Microsemi MIPS SoCs
+
+ Documentation/devicetree/bindings/mips/mscc.txt    |  44 +++++++++
+ .../bindings/power/reset/ocelot-reset.txt          |  14 +++
+ MAINTAINERS                                        |   7 ++
+ arch/mips/Kbuild.platforms                         |   1 +
+ arch/mips/Kconfig                                  |  24 +++++
+ arch/mips/boot/dts/Makefile                        |   1 +
+ arch/mips/boot/dts/mscc/Makefile                   |   6 ++
+ arch/mips/boot/dts/mscc/ocelot.dtsi                | 110 +++++++++++++++++++++
+ arch/mips/boot/dts/mscc/ocelot_pcb123.dts          |  27 +++++
+ arch/mips/configs/mscc_defconfig                   |  84 ++++++++++++++++
+ arch/mips/mscc/Makefile                            |  11 +++
+ arch/mips/mscc/Platform                            |  12 +++
+ arch/mips/mscc/setup.c                             | 106 ++++++++++++++++++++
+ drivers/power/reset/Kconfig                        |   7 ++
+ drivers/power/reset/Makefile                       |   1 +
+ drivers/power/reset/ocelot-reset.c                 |  88 +++++++++++++++++
+ 16 files changed, 543 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mips/mscc.txt
+ create mode 100644 Documentation/devicetree/bindings/power/reset/ocelot-reset.txt
+ create mode 100644 arch/mips/boot/dts/mscc/Makefile
+ create mode 100644 arch/mips/boot/dts/mscc/ocelot.dtsi
+ create mode 100644 arch/mips/boot/dts/mscc/ocelot_pcb123.dts
+ create mode 100644 arch/mips/configs/mscc_defconfig
+ create mode 100644 arch/mips/mscc/Makefile
+ create mode 100644 arch/mips/mscc/Platform
+ create mode 100644 arch/mips/mscc/setup.c
+ create mode 100644 drivers/power/reset/ocelot-reset.c
+
+-- 
+2.15.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
