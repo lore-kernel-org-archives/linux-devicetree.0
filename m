@@ -1,49 +1,92 @@
-From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Subject: [PATCH] dts-bindings: usb-uhci: Document newly added properties
-Date: Tue, 16 Jan 2018 11:06:15 +1100
-Message-ID: <1516061175.31850.140.camel@kernel.crashing.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Tony Lindgren <tony@atomide.com>
+Subject: [PATCH] reset: ti-rstctrl: use the reset-simple driver
+Date: Mon, 15 Jan 2018 17:11:59 -0800
+Message-ID: <20180116011159.1386-1-tony@atomide.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philipp Zabel <philipp.zabel@gmail.com>, Paul Parsons <lost.distance@yahoo.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, Dave Gerlach <d-gerlach@ti.com>, Mark Rutland <mark.rutland@arm.com>, Nishant Menon <nm@ti.com>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Suman Anna <s-anna@ti.com>, Tero Kristo <t-kristo@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Commit 4642d34a439f80e16af0d56ed6258a33abae257a
-"usb/uhci: Add support for Aspeed BMC SoCs" added
-support for a new #ports property, along with
-Aspeed specific compatible strings. This adds
-documentation for them.
+We can support the RSTCTRL reset registers on many TI SoCs with
+reset-simple.
 
-Signed-off-by: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Cc: Dave Gerlach <d-gerlach@ti.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Nishant Menon <nm@ti.com>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Suman Anna <s-anna@ti.com>
+Cc: Tero Kristo <t-kristo@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 ---
- Documentation/devicetree/bindings/usb/usb-uhci.txt | 6 ++++++
- 1 file changed, 6 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/usb/usb-uhci.txt b/Documentation/devicetree/bindings/usb/usb-uhci.txt
-index 298133416c97..c1153eb38a9a 100644
---- a/Documentation/devicetree/bindings/usb/usb-uhci.txt
-+++ b/Documentation/devicetree/bindings/usb/usb-uhci.txt
-@@ -3,8 +3,14 @@ Generic Platform UHCI Controller
- 
- Required properties:
- - compatible : "generic-uhci" (deprecated: "platform-uhci")
-+  supports additional Aspeed specific workarounds by also
-+  including the "aspeed,ast2400-uhci" or "aspeed,ast2500-uhci"
-+  string.
- - reg : Should contain 1 register ranges(address and length)
- - interrupts : UHCI controller interrupt
-+- #ports: (optional) 1 cell, number of ports (overrides
-+  auto-detection which is needed among others on some Aspeed
-+  parts).
- 
- Example:
- 
+That's all there is to it :) Naturally this can wait for v4.17
+if necessary.
 
+---
+ .../devicetree/bindings/reset/ti-rstctrl.txt       | 29 ++++++++++++++++++++++
+ drivers/reset/Kconfig                              |  2 +-
+ drivers/reset/reset-simple.c                       |  1 +
+ 3 files changed, 31 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/reset/ti-rstctrl.txt
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/reset/ti-rstctrl.txt b/Documentation/devicetree/bindings/reset/ti-rstctrl.txt
+new file mode 100644
+--- /dev/null
++++ b/Documentation/devicetree/bindings/reset/ti-rstctrl.txt
+@@ -0,0 +1,29 @@
++TI RSTCTRL Reset Controller
++
++Required properties:
++- compatible : "ti,rstctrl"
++- reg : Should contain 1 register ranges(address and length)
++- #reset-cells: 1
++
++Example:
++
++	prcm: prcm@200000 {
++		compatible = "ti,am3-prcm", "simple-bus";
++		reg = <0x200000 0x4000>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0x200000 0x4000>;
++
++		prm_gfx: prm@1100 {
++			compatible = "simple-bus";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges = <0 0x1100 0x100>;
++
++			gfx_rstctrl: rstctrl@4 {
++				reg = <0x4 0x4>;
++				#reset-cells = <1>;
++				compatible = "ti,rstctrl";
++			};
++		};
++	};
+diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
+--- a/drivers/reset/Kconfig
++++ b/drivers/reset/Kconfig
+@@ -83,7 +83,7 @@ config RESET_PISTACHIO
+ 
+ config RESET_SIMPLE
+ 	bool "Simple Reset Controller Driver" if COMPILE_TEST
+-	default ARCH_SOCFPGA || ARCH_STM32 || ARCH_STRATIX10 || ARCH_SUNXI || ARCH_ZX
++	default ARCH_OMAP2PLUS || ARCH_SOCFPGA || ARCH_STM32 || ARCH_STRATIX10 || ARCH_SUNXI || ARCH_ZX
+ 	help
+ 	  This enables a simple reset controller driver for reset lines that
+ 	  that can be asserted and deasserted by toggling bits in a contiguous,
+diff --git a/drivers/reset/reset-simple.c b/drivers/reset/reset-simple.c
+--- a/drivers/reset/reset-simple.c
++++ b/drivers/reset/reset-simple.c
+@@ -123,6 +123,7 @@ static const struct of_device_id reset_simple_dt_ids[] = {
+ 	{ .compatible = "st,stm32-rcc", },
+ 	{ .compatible = "allwinner,sun6i-a31-clock-reset",
+ 		.data = &reset_simple_active_low },
++	{ .compatible = "ti,rstctrl", },
+ 	{ .compatible = "zte,zx296718-reset",
+ 		.data = &reset_simple_active_low },
+ 	{ /* sentinel */ },
+-- 
+2.15.0
