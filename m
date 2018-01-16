@@ -1,70 +1,60 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v5 2/9] include: media: Add Renesas CEU driver interface
-Date: Tue, 16 Jan 2018 10:49:04 +0100
-Message-ID: <a082eb73-f409-0332-ac95-050bd6749404@xs4all.nl>
-References: <1515765849-10345-1-git-send-email-jacopo+renesas@jmondi.org>
- <1515765849-10345-3-git-send-email-jacopo+renesas@jmondi.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1515765849-10345-3-git-send-email-jacopo+renesas@jmondi.org>
-Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Jacopo Mondi <jacopo+renesas@jmondi.org>, laurent.pinchart@ideasonboard.com, magnus.damm@gmail.com, geert@glider.be, mchehab@kernel.org, festevam@gmail.com, sakari.ailus@iki.fi, robh+dt@kernel.org, mark.rutland@arm.com, pombredanne@nexb.com
-Cc: linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
+Subject: [PATCH v2 1/2] dt-bindings: ad5272: Add bindings for Analog Devices digital potentiometers
+Date: Tue, 16 Jan 2018 17:48:59 +0800
+Message-ID: <1516096140-88161-2-git-send-email-preid@electromag.com.au>
+References: <1516096140-88161-1-git-send-email-preid@electromag.com.au>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1516096140-88161-1-git-send-email-preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Michael.Hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org, preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alexandru.ardelean-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/12/2018 03:04 PM, Jacopo Mondi wrote:
-> Add renesas-ceu header file.
-> 
-> Do not remove the existing sh_mobile_ceu.h one as long as the original
-> driver does not go away.
-> 
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Add binding documentation for Analog Devices AD5272 and AD5274 digital
+potentiometer devices.
 
-Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
+Signed-off-by: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
+---
+ .../bindings/iio/potentiometer/ad5272.txt          | 27 ++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/potentiometer/ad5272.txt
 
-Regards,
+diff --git a/Documentation/devicetree/bindings/iio/potentiometer/ad5272.txt b/Documentation/devicetree/bindings/iio/potentiometer/ad5272.txt
+new file mode 100644
+index 0000000..dde4c67
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/potentiometer/ad5272.txt
+@@ -0,0 +1,27 @@
++* Analog Devices AD5272 digital potentiometer driver
++
++The node for this driver must be a child node of a I2C controller, hence
++all mandatory properties for your controller must be specified. See directory:
++
++        Documentation/devicetree/bindings/i2c
++
++for more details.
++
++Required properties:
++	- compatible:  	Must be one of the following, depending on the model:
++			adi,ad5272-020
++			adi,ad5272-050
++			adi,ad5272-100
++			adi,ad5274-020
++			adi,ad5274-100
++
++Optional properties:
++ - reset-gpios: GPIO specification for the RESET input. This is an
++		active low signal to the PCA953x.
++
++Example:
++ad5272: ad5272@2f {
++	reg = <0x2F>;
++	compatible = "adi,ad5272-020";
++	reset-gpios = <&gpio3 6 GPIO_ACTIVE_LOW>;
++};
+-- 
+1.8.3.1
 
-        Hans
-
-> ---
->  include/media/drv-intf/renesas-ceu.h | 26 ++++++++++++++++++++++++++
->  1 file changed, 26 insertions(+)
->  create mode 100644 include/media/drv-intf/renesas-ceu.h
-> 
-> diff --git a/include/media/drv-intf/renesas-ceu.h b/include/media/drv-intf/renesas-ceu.h
-> new file mode 100644
-> index 0000000..52841d1
-> --- /dev/null
-> +++ b/include/media/drv-intf/renesas-ceu.h
-> @@ -0,0 +1,26 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * renesas-ceu.h - Renesas CEU driver interface
-> + *
-> + * Copyright 2017-2018 Jacopo Mondi <jacopo+renesas@jmondi.org>
-> + */
-> +
-> +#ifndef __MEDIA_DRV_INTF_RENESAS_CEU_H__
-> +#define __MEDIA_DRV_INTF_RENESAS_CEU_H__
-> +
-> +#define CEU_MAX_SUBDEVS		2
-> +
-> +struct ceu_async_subdev {
-> +	unsigned long flags;
-> +	unsigned char bus_width;
-> +	unsigned char bus_shift;
-> +	unsigned int i2c_adapter_id;
-> +	unsigned int i2c_address;
-> +};
-> +
-> +struct ceu_platform_data {
-> +	unsigned int num_subdevs;
-> +	struct ceu_async_subdev subdevs[CEU_MAX_SUBDEVS];
-> +};
-> +
-> +#endif /* ___MEDIA_DRV_INTF_RENESAS_CEU_H__ */
-> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
