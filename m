@@ -1,125 +1,52 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH] reset: ti-rstctrl: use the reset-simple driver
-Date: Tue, 16 Jan 2018 07:03:14 -0800
-Message-ID: <20180116150314.GC4042@atomide.com>
-References: <20180116011159.1386-1-tony@atomide.com>
- <1516095054.9022.1.camel@pengutronix.de>
+From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v3 6/6] PCI: cadence: Add host driver for Cadence PCIe
+ controller
+Date: Tue, 16 Jan 2018 15:09:31 +0000
+Message-ID: <20180116150931.GA17237@red-moon>
+References: <cover.1515621150.git.cyrille.pitchen@free-electrons.com>
+ <990730f5c1156b3bb15f56fa877719941f219016.1515621150.git.cyrille.pitchen@free-electrons.com>
+ <e3d88d5b-e770-d2e5-20b2-62551d5f4f8f@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1516095054.9022.1.camel@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Philipp Zabel <philipp.zabel@gmail.com>, Paul Parsons <lost.distance@yahoo.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, Dave Gerlach <d-gerlach@ti.com>, Mark Rutland <mark.rutland@arm.com>, Nishant Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Suman Anna <s-anna@ti.com>, Tero Kristo <t-kristo@ti.com>
+In-Reply-To: <e3d88d5b-e770-d2e5-20b2-62551d5f4f8f-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: Cyrille Pitchen <cyrille.pitchen-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, stelford-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, dgary-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, kgopi-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, eandrews-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, sureshp-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Tue, Jan 16, 2018 at 04:46:12PM +0530, Kishon Vijay Abraham I wrote:
 
-* Philipp Zabel <p.zabel@pengutronix.de> [180116 09:52]:
-> On Mon, 2018-01-15 at 17:11 -0800, Tony Lindgren wrote:
-> > +Example:
-> > +
-> > +	prcm: prcm@200000 {
-> > +		compatible = "ti,am3-prcm", "simple-bus";
-> > +		reg = <0x200000 0x4000>;
-> > +		#address-cells = <1>;
-> > +		#size-cells = <1>;
-> > +		ranges = <0 0x200000 0x4000>;
-> > +
-> > +		prm_gfx: prm@1100 {
-> > +			compatible = "simple-bus";
-> > +			#address-cells = <1>;
-> > +			#size-cells = <1>;
-> > +			ranges = <0 0x1100 0x100>;
-> > +
-> > +			gfx_rstctrl: rstctrl@4 {
->    			,->
-> > +			|	reg = <0x4 0x4>;
-> > +			|	#reset-cells = <1>;
-> > +			`--	compatible = "ti,rstctrl";
+[...]
+
+> > +static struct platform_driver cdns_pcie_host_driver = {
+> > +	.driver = {
+> > +		.name = "cdns-pcie-host",
+> > +		.of_match_table = cdns_pcie_host_of_match,
+> > +	},
+> > +	.probe = cdns_pcie_host_probe,
+> > +};
 > 
-> Looks good to me. Can I move the compatible property when applying?
+> In the case of DWC, designware core is modeled as a library which has
+> API's to be invoked by various platform specific glue drivers.
+> 
+> But with the cadence approach we'll have two separate drivers: the
+> cadence core driver and the platform specific glue drivers. Is this
+> approach chosen for a specific reason?
 
-Oops, here's a better version. I also left out the "prcm" part as
-at some point that should have just ranges instead of both reg and
-ranges that it currently has.
+That's a fair point but I do not think that's a concern at the moment.
 
-Regards,
+If/when other platform drivers are built around the generic IP we just
+have to refactor this driver and turn into a core library + a PCI host
+bridge driver like dwc does, at the moment I do not necessarily see the
+reason for splitting them.
 
-Tony
+Cyrille ?
 
-8< -----------------------
->From tony Mon Sep 17 00:00:00 2001
-From: Tony Lindgren <tony@atomide.com>
-Date: Mon, 15 Jan 2018 15:25:54 -0800
-Subject: [PATCHv2] reset: ti-rstctrl: use the reset-simple driver
-
-We can support the RSTCTRL reset registers on many TI SoCs with
-reset-simple.
-
-Cc: Dave Gerlach <d-gerlach@ti.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Nishant Menon <nm@ti.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Suman Anna <s-anna@ti.com>
-Cc: Tero Kristo <t-kristo@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
----
- .../devicetree/bindings/reset/ti-rstctrl.txt         | 20 ++++++++++++++++++++
- drivers/reset/Kconfig                                |  2 +-
- drivers/reset/reset-simple.c                         |  1 +
- 3 files changed, 22 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/reset/ti-rstctrl.txt
-
-diff --git a/Documentation/devicetree/bindings/reset/ti-rstctrl.txt b/Documentation/devicetree/bindings/reset/ti-rstctrl.txt
-new file mode 100644
---- /dev/null
-+++ b/Documentation/devicetree/bindings/reset/ti-rstctrl.txt
-@@ -0,0 +1,20 @@
-+TI RSTCTRL Reset Controller
-+
-+Required properties:
-+- compatible : "ti,rstctrl"
-+- reg : Should contain 1 register ranges(address and length)
-+- #reset-cells: 1
-+
-+Example:
-+	prm_gfx: prm@1100 {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0 0x1100 0x100>;
-+
-+		gfx_rstctrl: rstctrl@4 {
-+			compatible = "ti,rstctrl";
-+			reg = <0x4 0x4>;
-+			#reset-cells = <1>;
-+		};
-+	};
-diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
---- a/drivers/reset/Kconfig
-+++ b/drivers/reset/Kconfig
-@@ -83,7 +83,7 @@ config RESET_PISTACHIO
- 
- config RESET_SIMPLE
- 	bool "Simple Reset Controller Driver" if COMPILE_TEST
--	default ARCH_SOCFPGA || ARCH_STM32 || ARCH_STRATIX10 || ARCH_SUNXI || ARCH_ZX
-+	default ARCH_OMAP2PLUS || ARCH_SOCFPGA || ARCH_STM32 || ARCH_STRATIX10 || ARCH_SUNXI || ARCH_ZX
- 	help
- 	  This enables a simple reset controller driver for reset lines that
- 	  that can be asserted and deasserted by toggling bits in a contiguous,
-diff --git a/drivers/reset/reset-simple.c b/drivers/reset/reset-simple.c
---- a/drivers/reset/reset-simple.c
-+++ b/drivers/reset/reset-simple.c
-@@ -123,6 +123,7 @@ static const struct of_device_id reset_simple_dt_ids[] = {
- 	{ .compatible = "st,stm32-rcc", },
- 	{ .compatible = "allwinner,sun6i-a31-clock-reset",
- 		.data = &reset_simple_active_low },
-+	{ .compatible = "ti,rstctrl", },
- 	{ .compatible = "zte,zx296718-reset",
- 		.data = &reset_simple_active_low },
- 	{ /* sentinel */ },
--- 
-2.15.0
+Thanks,
+Lorenzo
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
