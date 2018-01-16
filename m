@@ -1,67 +1,109 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v5 4/9] ARM: dts: r7s72100: Add Capture Engine Unit (CEU)
-Date: Tue, 16 Jan 2018 10:50:05 +0100
-Message-ID: <f8f597b6-c58f-3457-c524-2f02715d6473@xs4all.nl>
-References: <1515765849-10345-1-git-send-email-jacopo+renesas@jmondi.org>
- <1515765849-10345-5-git-send-email-jacopo+renesas@jmondi.org>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH] reset: ti-rstctrl: use the reset-simple driver
+Date: Tue, 16 Jan 2018 10:30:54 +0100
+Message-ID: <1516095054.9022.1.camel@pengutronix.de>
+References: <20180116011159.1386-1-tony@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1515765849-10345-5-git-send-email-jacopo+renesas@jmondi.org>
-Content-Language: en-US
-Sender: linux-sh-owner@vger.kernel.org
-To: Jacopo Mondi <jacopo+renesas@jmondi.org>, laurent.pinchart@ideasonboard.com, magnus.damm@gmail.com, geert@glider.be, mchehab@kernel.org, festevam@gmail.com, sakari.ailus@iki.fi, robh+dt@kernel.org, mark.rutland@arm.com, pombredanne@nexb.com
-Cc: linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180116011159.1386-1-tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paul Parsons <lost.distance-/E1597aS9LQAvxtiuMwx3w@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Nishant Menon <nm-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/12/2018 03:04 PM, Jacopo Mondi wrote:
-> Add Capture Engine Unit (CEU) node to device tree.
+Hi Tony,
+
+On Mon, 2018-01-15 at 17:11 -0800, Tony Lindgren wrote:
+> We can support the RSTCTRL reset registers on many TI SoCs with
+> reset-simple.
 > 
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
-
-Regards,
-
-        Hans
-
+> Cc: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Cc: Nishant Menon <nm-l0cyMroinI0@public.gmane.org>
+> Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+> Cc: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
+> Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 > ---
->  arch/arm/boot/dts/r7s72100.dtsi | 15 ++++++++++++---
->  1 file changed, 12 insertions(+), 3 deletions(-)
 > 
-> diff --git a/arch/arm/boot/dts/r7s72100.dtsi b/arch/arm/boot/dts/r7s72100.dtsi
-> index ab9645a..5fe62f9 100644
-> --- a/arch/arm/boot/dts/r7s72100.dtsi
-> +++ b/arch/arm/boot/dts/r7s72100.dtsi
-> @@ -135,9 +135,9 @@
->  			#clock-cells = <1>;
->  			compatible = "renesas,r7s72100-mstp-clocks", "renesas,cpg-mstp-clocks";
->  			reg = <0xfcfe042c 4>;
-> -			clocks = <&p0_clk>;
-> -			clock-indices = <R7S72100_CLK_RTC>;
-> -			clock-output-names = "rtc";
-> +			clocks = <&b_clk>, <&p0_clk>;
-> +			clock-indices = <R7S72100_CLK_CEU R7S72100_CLK_RTC>;
-> +			clock-output-names = "ceu", "rtc";
->  		};
->  
->  		mstp7_clks: mstp7_clks@fcfe0430 {
-> @@ -667,4 +667,13 @@
->  		power-domains = <&cpg_clocks>;
->  		status = "disabled";
->  	};
+> That's all there is to it :) Naturally this can wait for v4.17
+> if necessary.
+> 
+> ---
+>  .../devicetree/bindings/reset/ti-rstctrl.txt       | 29 ++++++++++++++++++++++
+>  drivers/reset/Kconfig                              |  2 +-
+>  drivers/reset/reset-simple.c                       |  1 +
+>  3 files changed, 31 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/reset/ti-rstctrl.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/reset/ti-rstctrl.txt b/Documentation/devicetree/bindings/reset/ti-rstctrl.txt
+> new file mode 100644
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/reset/ti-rstctrl.txt
+> @@ -0,0 +1,29 @@
+> +TI RSTCTRL Reset Controller
 > +
-> +	ceu: ceu@e8210000 {
-> +		reg = <0xe8210000 0x3000>;
-> +		compatible = "renesas,r7s72100-ceu";
-> +		interrupts = <GIC_SPI 332 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&mstp6_clks R7S72100_CLK_CEU>;
-> +		power-domains = <&cpg_clocks>;
-> +		status = "disabled";
-> +	};
->  };
-> 
+> +Required properties:
+> +- compatible : "ti,rstctrl"
+> +- reg : Should contain 1 register ranges(address and length)
+> +- #reset-cells: 1
+> +
+> +Example:
+> +
+> +	prcm: prcm@200000 {
+> +		compatible = "ti,am3-prcm", "simple-bus";
+> +		reg = <0x200000 0x4000>;
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges = <0 0x200000 0x4000>;
+> +
+> +		prm_gfx: prm@1100 {
+> +			compatible = "simple-bus";
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			ranges = <0 0x1100 0x100>;
+> +
+> +			gfx_rstctrl: rstctrl@4 {
+   			,->
+> +			|	reg = <0x4 0x4>;
+> +			|	#reset-cells = <1>;
+> +			`--	compatible = "ti,rstctrl";
 
+Looks good to me. Can I move the compatible property when applying?
+
+> +			};
+> +		};
+> +	};
+> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
+> --- a/drivers/reset/Kconfig
+> +++ b/drivers/reset/Kconfig
+> @@ -83,7 +83,7 @@ config RESET_PISTACHIO
+>  
+>  config RESET_SIMPLE
+>  	bool "Simple Reset Controller Driver" if COMPILE_TEST
+> -	default ARCH_SOCFPGA || ARCH_STM32 || ARCH_STRATIX10 || ARCH_SUNXI || ARCH_ZX
+> +	default ARCH_OMAP2PLUS || ARCH_SOCFPGA || ARCH_STM32 || ARCH_STRATIX10 || ARCH_SUNXI || ARCH_ZX
+>  	help
+>  	  This enables a simple reset controller driver for reset lines that
+>  	  that can be asserted and deasserted by toggling bits in a contiguous,
+> diff --git a/drivers/reset/reset-simple.c b/drivers/reset/reset-simple.c
+> --- a/drivers/reset/reset-simple.c
+> +++ b/drivers/reset/reset-simple.c
+> @@ -123,6 +123,7 @@ static const struct of_device_id reset_simple_dt_ids[] = {
+>  	{ .compatible = "st,stm32-rcc", },
+>  	{ .compatible = "allwinner,sun6i-a31-clock-reset",
+>  		.data = &reset_simple_active_low },
+> +	{ .compatible = "ti,rstctrl", },
+>  	{ .compatible = "zte,zx296718-reset",
+>  		.data = &reset_simple_active_low },
+>  	{ /* sentinel */ },
+
+regards
+Philipp
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
