@@ -1,55 +1,35 @@
 From: Ludovic Barre <ludovic.Barre@st.com>
-Subject: [PATCH v5 5/7] ARM: configs: multi_v7: add stm32 support
-Date: Tue, 16 Jan 2018 15:56:18 +0100
-Message-ID: <1516114580-2424-6-git-send-email-ludovic.Barre@st.com>
+Subject: [PATCH v5 3/7] dt-bindings: stm32: add support of STM32MP157
+Date: Tue, 16 Jan 2018 15:56:16 +0100
+Message-ID: <1516114580-2424-4-git-send-email-ludovic.Barre@st.com>
 References: <1516114580-2424-1-git-send-email-ludovic.Barre@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1516114580-2424-1-git-send-email-ludovic.Barre@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>
-Cc: devicetree@vger.kernel.org, Alexandre Torgue <alexandre.torgue@st.com>, linux-kernel@vger.kernel.org, Ludovic Barre <ludovic.barre@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Gerald Baeza <gerald.baeza@st.com>, linux-arm-kernel@lists.infradead.org
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Gerald Baeza <gerald.baeza@st.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Ludovic Barre <ludovic.barre@st.com>
 List-Id: devicetree@vger.kernel.org
 
 From: Ludovic Barre <ludovic.barre@st.com>
 
-This patch adds stm32 support to multi_v7_defconfig
+This patch adds STM32MP157 SoC bindings.
 
 Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- arch/arm/configs/multi_v7_defconfig | 3 +++
- 1 file changed, 3 insertions(+)
+ Documentation/devicetree/bindings/arm/stm32.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
-index 11e648a..a0163e7 100644
---- a/arch/arm/configs/multi_v7_defconfig
-+++ b/arch/arm/configs/multi_v7_defconfig
-@@ -77,6 +77,7 @@ CONFIG_ARCH_SPEAR13XX=y
- CONFIG_MACH_SPEAR1310=y
- CONFIG_MACH_SPEAR1340=y
- CONFIG_ARCH_STI=y
-+CONFIG_ARCH_STM32=y
- CONFIG_ARCH_EXYNOS=y
- CONFIG_EXYNOS5420_MCPM=y
- CONFIG_ARCH_RENESAS=y
-@@ -324,6 +325,8 @@ CONFIG_SERIAL_CONEXANT_DIGICOLOR=y
- CONFIG_SERIAL_CONEXANT_DIGICOLOR_CONSOLE=y
- CONFIG_SERIAL_ST_ASC=y
- CONFIG_SERIAL_ST_ASC_CONSOLE=y
-+CONFIG_SERIAL_STM32=y
-+CONFIG_SERIAL_STM32_CONSOLE=y
- CONFIG_VIRTIO_CONSOLE=y
- CONFIG_HW_RANDOM=y
- CONFIG_HW_RANDOM_ST=y
+diff --git a/Documentation/devicetree/bindings/arm/stm32.txt b/Documentation/devicetree/bindings/arm/stm32.txt
+index 05762b0..6808ed9 100644
+--- a/Documentation/devicetree/bindings/arm/stm32.txt
++++ b/Documentation/devicetree/bindings/arm/stm32.txt
+@@ -7,3 +7,4 @@ using one of the following compatible strings:
+   st,stm32f469
+   st,stm32f746
+   st,stm32h743
++  st,stm32mp157
 -- 
 2.7.4
