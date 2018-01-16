@@ -1,94 +1,95 @@
 From: Ludovic Barre <ludovic.Barre@st.com>
-Subject: [PATCH v5 4/7] ARM: stm32: add initial support for STM32MP157
-Date: Tue, 16 Jan 2018 15:56:17 +0100
-Message-ID: <1516114580-2424-5-git-send-email-ludovic.Barre@st.com>
-References: <1516114580-2424-1-git-send-email-ludovic.Barre@st.com>
+Subject: [PATCH v5 0/7] ARM: stm32: add initial STM32MPU support
+Date: Tue, 16 Jan 2018 15:56:13 +0100
+Message-ID: <1516114580-2424-1-git-send-email-ludovic.Barre@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1516114580-2424-1-git-send-email-ludovic.Barre@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Gerald Baeza <gerald.baeza@st.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Ludovic Barre <ludovic.barre@st.com>
+Cc: devicetree@vger.kernel.org, Alexandre Torgue <alexandre.torgue@st.com>, linux-kernel@vger.kernel.org, Ludovic Barre <ludovic.barre@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Gerald Baeza <gerald.baeza@st.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 From: Ludovic Barre <ludovic.barre@st.com>
 
-This patch adds initial support of STM32MP157 microprocessor (MPU)
-based on Arm Cortex-A7. New Cortex-A infrastructure (gic, timer,...)
-are selected if ARCH_MULTI_V7 is defined.
+This patch series extends the existing STM32 microcontrollers (MCUs)
+family to microprocessors (MPUs). The MPU platform (based on
+Arm Cortex-A) is a continuation of the MCU one (based on Arm
+Cortex-M) in that it shares a wide number of hardware blocks.
 
-Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
----
- Documentation/arm/stm32/stm32mp157-overview.rst | 19 +++++++++++++++++++
- arch/arm/mach-stm32/Kconfig                     | 11 +++++++++++
- arch/arm/mach-stm32/board-dt.c                  |  1 +
- 3 files changed, 31 insertions(+)
+change v5:
+-fix serial3 aliases by serial0
+ 
+change v4:
+-Add all available uarts in stm32mp157c
+-Move uart aliases to board files
+
+change v3:
+-Remove bootargs
+-Remove armv7m_restart and Share stm32_compat for mcu/mpu
+-Modify stm32 kconfig with Arnd template
+-Remove patch below (Linus W: Patch applied)
+ devicetree: bindings: Document supported STM32 SoC family
+ pinctrl: stm32: Add STM32MP157 MPU support
+
+change V2:
+-Add stm32 documentation in this serie to avoid merge conflict
+thread: "https://patchwork.kernel.org/patch/10102573/";
+-Split bindings (stm32.txt) to separate patches.
+-Remove ARCH_STM32_MCU/MPU flags
+-Adopt rst format for Documentation/arm/stm32 files
+-s/STMicrolectronics/STMicroelectronics/g
+
+Ludovic Barre (7):
+  Documentation: arm: stm32: move to rst format
+  ARM: stm32: prepare stm32 family to welcome armv7 architecture
+  dt-bindings: stm32: add support of STM32MP157
+  ARM: stm32: add initial support for STM32MP157
+  ARM: configs: multi_v7: add stm32 support
+  ARM: dts: stm32: add stm32mp157c initial support
+  ARM: dts: stm32: add initial support of stm32mp157c eval board
+
+ Documentation/arm/stm32/overview.rst            |  34 +++++
+ Documentation/arm/stm32/overview.txt            |  33 ----
+ Documentation/arm/stm32/stm32f429-overview.rst  |  26 ++++
+ Documentation/arm/stm32/stm32f429-overview.txt  |  22 ---
+ Documentation/arm/stm32/stm32f746-overview.rst  |  33 ++++
+ Documentation/arm/stm32/stm32f746-overview.txt  |  34 -----
+ Documentation/arm/stm32/stm32h743-overview.rst  |  34 +++++
+ Documentation/arm/stm32/stm32h743-overview.txt  |  30 ----
+ Documentation/arm/stm32/stm32mp157-overview.rst |  19 +++
+ Documentation/devicetree/bindings/arm/stm32.txt |   1 +
+ arch/arm/boot/dts/Makefile                      |   6 +-
+ arch/arm/boot/dts/stm32mp157-pinctrl.dtsi       | 185 ++++++++++++++++++++++
+ arch/arm/boot/dts/stm32mp157c-ed1.dts           |  32 ++++
+ arch/arm/boot/dts/stm32mp157c-ev1.dts           |  21 +++
+ arch/arm/boot/dts/stm32mp157c.dtsi              | 194 ++++++++++++++++++++++++
+ arch/arm/configs/multi_v7_defconfig             |   3 +
+ arch/arm/mach-stm32/Kconfig                     |  38 +++--
+ arch/arm/mach-stm32/board-dt.c                  |   5 +-
+ 18 files changed, 614 insertions(+), 136 deletions(-)
+ create mode 100644 Documentation/arm/stm32/overview.rst
+ delete mode 100644 Documentation/arm/stm32/overview.txt
+ create mode 100644 Documentation/arm/stm32/stm32f429-overview.rst
+ delete mode 100644 Documentation/arm/stm32/stm32f429-overview.txt
+ create mode 100644 Documentation/arm/stm32/stm32f746-overview.rst
+ delete mode 100644 Documentation/arm/stm32/stm32f746-overview.txt
+ create mode 100644 Documentation/arm/stm32/stm32h743-overview.rst
+ delete mode 100644 Documentation/arm/stm32/stm32h743-overview.txt
  create mode 100644 Documentation/arm/stm32/stm32mp157-overview.rst
+ create mode 100644 arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
+ create mode 100644 arch/arm/boot/dts/stm32mp157c-ed1.dts
+ create mode 100644 arch/arm/boot/dts/stm32mp157c-ev1.dts
+ create mode 100644 arch/arm/boot/dts/stm32mp157c.dtsi
 
-diff --git a/Documentation/arm/stm32/stm32mp157-overview.rst b/Documentation/arm/stm32/stm32mp157-overview.rst
-new file mode 100644
-index 0000000..62e176d
---- /dev/null
-+++ b/Documentation/arm/stm32/stm32mp157-overview.rst
-@@ -0,0 +1,19 @@
-+STM32MP157 Overview
-+===================
-+
-+Introduction
-+------------
-+
-+The STM32MP157 is a Cortex-A MPU aimed at various applications.
-+It features:
-+
-+- Dual core Cortex-A7 application core
-+- 2D/3D image composition with GPU
-+- Standard memories interface support
-+- Standard connectivity, widely inherited from the STM32 MCU family
-+- Comprehensive security support
-+
-+:Authors:
-+
-+- Ludovic Barre <ludovic.barre@st.com>
-+- Gerald Baeza <gerald.baeza@st.com>
-diff --git a/arch/arm/mach-stm32/Kconfig b/arch/arm/mach-stm32/Kconfig
-index fb4b8b8..6b65df1 100644
---- a/arch/arm/mach-stm32/Kconfig
-+++ b/arch/arm/mach-stm32/Kconfig
-@@ -1,6 +1,9 @@
- menuconfig ARCH_STM32
- 	bool "STMicroelectronics STM32 family" if ARM_SINGLE_ARMV7M || ARCH_MULTI_V7
- 	select ARMV7M_SYSTICK if ARM_SINGLE_ARMV7M
-+	select HAVE_ARM_ARCH_TIMER if ARCH_MULTI_V7
-+	select ARM_GIC if ARCH_MULTI_V7
-+	select ARM_PSCI if ARCH_MULTI_V7
- 	select ARCH_HAS_RESET_CONTROLLER
- 	select CLKSRC_STM32
- 	select PINCTRL
-@@ -31,4 +34,12 @@ config MACH_STM32H743
- 
- endif # ARMv7-M
- 
-+if ARCH_MULTI_V7
-+
-+config MACH_STM32MP157
-+	bool "STMicroelectronics STM32MP157"
-+	default y
-+
-+endif # ARMv7-A
-+
- endif
-diff --git a/arch/arm/mach-stm32/board-dt.c b/arch/arm/mach-stm32/board-dt.c
-index 4a258eb..d4e58ea 100644
---- a/arch/arm/mach-stm32/board-dt.c
-+++ b/arch/arm/mach-stm32/board-dt.c
-@@ -12,6 +12,7 @@ static const char *const stm32_compat[] __initconst = {
- 	"st,stm32f469",
- 	"st,stm32f746",
- 	"st,stm32h743",
-+	"st,stm32mp157",
- 	NULL
- };
- 
 -- 
 2.7.4
