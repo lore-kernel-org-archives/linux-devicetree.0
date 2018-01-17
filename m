@@ -1,186 +1,112 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v4 3/4] ARM: dts: add Samsung's exynos4412-based midas
- boards
-Date: Wed, 17 Jan 2018 20:31:22 +0100
-Message-ID: <20180117193122.olbfycmuyps5usur@kozik-lap>
-References: <20180117125845.3954-1-simon@lineageos.org>
- <20180117125845.3954-4-simon@lineageos.org>
+From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Subject: Re: [PATCH V3 1/2] dt-bindings: bcm283x: Fix register ranges of bcm2835-i2s
+Date: Wed, 17 Jan 2018 11:37:03 -0800
+Message-ID: <87a7xcmg4g.fsf@anholt.net>
+References: <1512818795-1441-1-git-send-email-stefan.wahren@i2se.com> <1512818795-1441-2-git-send-email-stefan.wahren@i2se.com> <47138b75-1d6a-1692-636b-e37a87d68842@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180117125845.3954-4-simon@lineageos.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Simon Shields <simon@lineageos.org>
-Cc: linux-samsung-soc@vger.kernel.org, Rob Herring <robh@kernel.org>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>, =?utf-8?Q?Bart=C5=82omiej_=C5=BBo=C5=82nierkiewicz?= <b.zolnierkie@samsung.com>
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha512; protocol="application/pgp-signature"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <47138b75-1d6a-1692-636b-e37a87d68842-eS4NqCHxEME@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org, Matthias Reichl <hias-vtPv7MOkFPkAvxtiuMwx3w@public.gmane.org>, phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org
+Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 17, 2018 at 11:58:44PM +1100, Simon Shields wrote:
-> "midas" is the codename for a family of smartphones released by Samsung
-> Mobile. It includes the Galaxy S3 (GT-I9300/I9305) and the Galaxy
-> Note 2 (GT-N7100/N7105). The boards largely have the same peripherals:
-> the main differences are touchscreen, display panel and cellular modem.
-> 
-> Signed-off-by: Simon Shields <simon@lineageos.org>
-> ---
->  arch/arm/boot/dts/Makefile             |  3 ++
->  arch/arm/boot/dts/exynos4412-i9300.dts | 22 +++++++++++++
->  arch/arm/boot/dts/exynos4412-i9305.dts | 20 ++++++++++++
->  arch/arm/boot/dts/exynos4412-n710x.dts | 59 ++++++++++++++++++++++++++++++++++
->  4 files changed, 104 insertions(+)
->  create mode 100644 arch/arm/boot/dts/exynos4412-i9300.dts
->  create mode 100644 arch/arm/boot/dts/exynos4412-i9305.dts
->  create mode 100644 arch/arm/boot/dts/exynos4412-n710x.dts
-> 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 66e28af289da..955ef9df1b6b 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -163,7 +163,10 @@ dtb-$(CONFIG_ARCH_EXYNOS4) += \
->  	exynos4210-smdkv310.dtb \
->  	exynos4210-trats.dtb \
->  	exynos4210-universal_c210.dtb \
-> +	exynos4412-i9300.dtb \
-> +	exynos4412-i9305.dtb \
->  	exynos4412-itop-elite.dtb \
-> +	exynos4412-n710x.dtb \
->  	exynos4412-odroidu3.dtb \
->  	exynos4412-odroidx.dtb \
->  	exynos4412-odroidx2.dtb \
-> diff --git a/arch/arm/boot/dts/exynos4412-i9300.dts b/arch/arm/boot/dts/exynos4412-i9300.dts
-> new file mode 100644
-> index 000000000000..f8125a945f8d
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/exynos4412-i9300.dts
-> @@ -0,0 +1,22 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Samsung's Exynos4412 based M0 (GT-I9300) board device tree source
-> + *
-> + * Copyright (c) 2013 Samsung Electronics Co., Ltd.
-> + *		http://www.samsung.com
-> + */
-> +
-> +/dts-v1/;
-> +#include "exynos4412-galaxy-s3.dtsi"
-> +
-> +/ {
-> +	model = "Samsung Galaxy S3 (GT-I9300) based on Exynos4412";
-> +	compatible = "samsung,i9300", "samsung,midas", "samsung,exynos4412", "samsung,exynos4";
-> +
-> +	/* bootargs are passed in by bootloader */
-> +
-> +	memory@40000000 {
-> +		device_type = "memory";
-> +		reg =  <0x40000000 0x40000000>;
-> +	};
-> +};
-> diff --git a/arch/arm/boot/dts/exynos4412-i9305.dts b/arch/arm/boot/dts/exynos4412-i9305.dts
-> new file mode 100644
-> index 000000000000..54a2a55dbf70
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/exynos4412-i9305.dts
-> @@ -0,0 +1,20 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/dts-v1/;
-> +#include "exynos4412-galaxy-s3.dtsi"
-> +
-> +/ {
-> +	model = "Samsung Galaxy S3 (GT-I9305) based on Exynos4412";
-> +	compatible = "samsung,i9305", "samsung,midas", "samsung,exynos4412", "samsung,exynos4";
-> +
-> +	/* bootargs are passed in by bootloader */
-> +
-> +	memory@40000000 {
-> +		device_type = "memory";
-> +		reg =  <0x40000000 0x80000000>;
-> +	};
-> +};
-> +
-> +&i2c0_bus {
-> +	/* SCL and SDA pins are swapped */
-> +	samsung,pins = "gpd1-1", "gpd1-0";
-> +};
-> diff --git a/arch/arm/boot/dts/exynos4412-n710x.dts b/arch/arm/boot/dts/exynos4412-n710x.dts
-> new file mode 100644
-> index 000000000000..b64aa9b61763
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/exynos4412-n710x.dts
-> @@ -0,0 +1,59 @@
-> +// SPDX-License-Identifier: GPL-2.0
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Here, and in other files in this patchset you can add your own
-copyrights/authorship if you wish. If you do not wish, there is no
-problem from my side.
+Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> writes:
 
-> +/dts-v1/;
-> +#include "exynos4412-midas.dtsi"
-> +
-> +/ {
-> +	compatible = "samsung,n710x", "samsung,midas", "samsung,exynos4412", "samsung,exynos4";
-> +	model = "Samsung Galaxy Note 2 (GT-N7100, GT-N7105) based on Exynos4412";
-> +
-> +	memory@40000000 {
-> +		device_type = "memory";
-> +		reg =  <0x40000000 0x80000000>;
-> +	};
-> +
-> +	/* bootargs are passed in by bootloader */
-> +
-> +	regulators {
-> +		cam_vdda_reg: voltage-regulator-9 {
-> +			compatible = "regulator-fixed";
-> +			regulator-name = "CAM_SENSOR_CORE_1.2V";
-> +			regulator-min-microvolt = <1200000>;
-> +			regulator-max-microvolt = <1200000>;
-> +			gpio = <&gpm4 1 GPIO_ACTIVE_HIGH>;
-> +			enable-active-high;
-> +		};
-> +	};
-> +};
-> +
-> +&buck9_reg {
-> +	maxim,ena-gpios = <&gpm1 0 GPIO_ACTIVE_HIGH>;
-> +	status = "okay";
+> Am 09.12.2017 um 12:26 schrieb Stefan Wahren:
+>> Since 517e7a1537a ("ASoC: bcm2835: move to use the clock framework")
+>> the bcm2835-i2s requires a clock as DT property. Unfortunately
+>> the necessary DT change has never been applied. While we are at it
+>> also fix the first PCM register range to cover the PCM_GRAY register.
+>>
+>> This patch only fixes the affected dt-bindings.
+>>
+>> Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+>> Reviewed-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+>> ---
+>>   Documentation/devicetree/bindings/dma/brcm,bcm2835-dma.txt   | 4 ++--
+>>   Documentation/devicetree/bindings/sound/brcm,bcm2835-i2s.txt | 9 ++++-=
+----
+>>   2 files changed, 6 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/dma/brcm,bcm2835-dma.txt =
+b/Documentation/devicetree/bindings/dma/brcm,bcm2835-dma.txt
+>> index baf9b34..b6a8cc0 100644
+>> --- a/Documentation/devicetree/bindings/dma/brcm,bcm2835-dma.txt
+>> +++ b/Documentation/devicetree/bindings/dma/brcm,bcm2835-dma.txt
+>> @@ -74,8 +74,8 @@ Example:
+>>=20=20=20
+>>   bcm2835_i2s: i2s@7e203000 {
+>>   	compatible =3D "brcm,bcm2835-i2s";
+>> -	reg =3D <	0x7e203000 0x20>,
+>> -	      < 0x7e101098 0x02>;
+>> +	reg =3D <	0x7e203000 0x24>;
+>> +	clocks =3D <&clocks BCM2835_CLOCK_PCM>;
+>>=20=20=20
+>>   	dmas =3D <&dma 2>,
+>>   	       <&dma 3>;
+>> diff --git a/Documentation/devicetree/bindings/sound/brcm,bcm2835-i2s.tx=
+t b/Documentation/devicetree/bindings/sound/brcm,bcm2835-i2s.txt
+>> index 65783de..7bb0362 100644
+>> --- a/Documentation/devicetree/bindings/sound/brcm,bcm2835-i2s.txt
+>> +++ b/Documentation/devicetree/bindings/sound/brcm,bcm2835-i2s.txt
+>> @@ -2,9 +2,8 @@
+>>=20=20=20
+>>   Required properties:
+>>   - compatible: "brcm,bcm2835-i2s"
+>> -- reg: A list of base address and size entries:
+>> -	* The first entry should cover the PCM registers
+>> -	* The second entry should cover the PCM clock registers
+>> +- reg: Should contain PCM registers location and length.
+>> +- clocks: the (PCM) clock to use
+>>   - dmas: List of DMA controller phandle and DMA request line ordered pa=
+irs.
+>>   - dma-names: Identifier string for each DMA request line in the dmas p=
+roperty.
+>>     These strings correspond 1:1 with the ordered pairs in dmas.
+>> @@ -16,8 +15,8 @@ Example:
+>>=20=20=20
+>>   bcm2835_i2s: i2s@7e203000 {
+>>   	compatible =3D "brcm,bcm2835-i2s";
+>> -	reg =3D <0x7e203000 0x20>,
+>> -	      <0x7e101098 0x02>;
+>> +	reg =3D <0x7e203000 0x24>;
+>> +	clocks =3D <&clocks BCM2835_CLOCK_PCM>;
+>>=20=20=20
+>>   	dmas =3D <&dma 2>,
+>>   	       <&dma 3>;
+>
+> gentle ping ...
 
-Without status.
+Still looking for a DT ack, here.
 
-> +};
-> +
-> +&cam_af_reg {
-> +	gpio = <&gpm1 1 GPIO_ACTIVE_HIGH>;
-> +	status = "okay";
-> +};
-> +
-> +&cam_io_reg {
-> +	gpio = <&gpm0 7 GPIO_ACTIVE_HIGH>;
-> +	status = "okay";
-> +};
-> +
-> +&ldo13_reg {
-> +	regulator-name = "VCC_1.8V_LCD";
-> +	regulator-always-on;
-> +};
-> +
-> +&ldo25_reg {
-> +	regulator-name = "VCI_3.0V_LCD";
-> +	regulator-min-microvolt = <3000000>;
-> +	regulator-max-microvolt = <3000000>;
-> +	status = "okay";
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Without status.
+-----BEGIN PGP SIGNATURE-----
 
-Best regards,
-Krzysztof
-
-
-> +};
-> +
-> +&s5c73m3 {
-> +	standby-gpios = <&gpm0 6 GPIO_ACTIVE_LOW>;   /* ISP_STANDBY */
-> +	vdda-supply = <&cam_vdda_reg>;
-> +	status = "okay";
-> +};
-> -- 
-> 2.15.1
-> 
+iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlpfpeAACgkQtdYpNtH8
+nugr2w//fvHDUrGTYOKrxPgEtkmEpIYI5Rj3FyGJ8+Ryict7Yr15Kfy/SUCAfb5X
+bA5grq9DfMH9K0BrZk88EocF3Slr4sMMfO0+efWFPrkEJEJHdKi3td+4vEJVeaKL
+oEtTwSscMtp+TGZRUaUxufnNTnvqq17aTUaxVGkXC6cDCNxWleEuQ4kQdP6ZmWWQ
+fXrX1F+l2ieLtiWIh1XJYBCUE/2fqA5EbNNa8Vq1WYn/2ieiYZlfFpfOiDPBBTLX
+ZggdrawhsO0eJyzoVFGzOgfzo/r8xuXhZcWI+fvKp681qVFC8WKCY7Bhoyxsn/5I
+J2p4PBjReYoaqPM3/5fNcnyp+fdrbPhNlBb8gcJOAJLB/I0xzrY0nmFFfZnA+JHY
+qkO3ymKFWtU63/eqAt7H6zKqX2uhrt1WwnChbjoanJboig5YYrSY51GKjHLL0ZJf
+wHuswTlT1fuZZzvZgqQ/f1S+c7dB8r1Jl72ZD8dVqSQG7IPX958mUQamPZkP2dz7
+IbQbzXJtJBD6Ijn49ICxWddzQO7dNvMfDB8eAHfUAEPhumpBN0/LF+qdfpOzsoQi
+UM2v7/v7ng2qf7jgMa/g7gssW7wYlRmnJXK9SuZY1YcPy4Vh0YS3chRWle48ijmo
+iw0bNFz94TQsQXbjYqU7E3Xf+xvLDm3ffTZELH2sad09QoMxhsY=
+=j7T8
+-----END PGP SIGNATURE-----
+--=-=-=--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
