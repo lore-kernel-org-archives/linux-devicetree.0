@@ -1,129 +1,60 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH v6 1/9] dt-bindings: media: Add Renesas CEU bindings
-Date: Wed, 17 Jan 2018 09:59:59 +0200
-Message-ID: <20180117075958.ggnk4cmmkdah2am6@valkosipuli.retiisi.org.uk>
-References: <1516139101-7835-1-git-send-email-jacopo+renesas@jmondi.org>
- <1516139101-7835-2-git-send-email-jacopo+renesas@jmondi.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH v5 0/3] Add support for Hi3660 mailbox driver
+Date: Wed, 17 Jan 2018 16:00:57 +0800
+Message-ID: <1516176060-8947-1-git-send-email-leo.yan@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1516139101-7835-2-git-send-email-jacopo+renesas@jmondi.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc: laurent.pinchart@ideasonboard.com, magnus.damm@gmail.com, geert@glider.be, hverkuil@xs4all.nl, mchehab@kernel.org, festevam@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, pombredanne@nexb.com, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Jassi Brar <jassisinghbrar@gmail.com>, Leo Yan <leo.yan@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Kaihua Zhong <zhongkaihua@huawei.com>, Guodong Xu <guodong.xu@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacopo,
+Hi3660 mailbox controller is used to send message within multiple
+processors, MCU, HIFI, etc. This patch series is to implement an
+initial version for Hi3660 mailbox driver with "automatic
+acknowledge" mode.
 
-On Tue, Jan 16, 2018 at 10:44:53PM +0100, Jacopo Mondi wrote:
-> Add bindings documentation for Renesas Capture Engine Unit (CEU).
-> 
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
-> ---
->  .../devicetree/bindings/media/renesas,ceu.txt      | 81 ++++++++++++++++++++++
->  1 file changed, 81 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/renesas,ceu.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/media/renesas,ceu.txt b/Documentation/devicetree/bindings/media/renesas,ceu.txt
-> new file mode 100644
-> index 0000000..590ee27
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/renesas,ceu.txt
-> @@ -0,0 +1,81 @@
-> +Renesas Capture Engine Unit (CEU)
-> +----------------------------------------------
-> +
-> +The Capture Engine Unit is the image capture interface found in the Renesas
-> +SH Mobile and RZ SoCs.
-> +
-> +The interface supports a single parallel input with data bus width of 8 or 16
-> +bits.
-> +
-> +Required properties:
-> +- compatible: Shall be "renesas,r7s72100-ceu" for CEU units found in RZ/A1-H
-> +  and RZ/A1-M SoCs.
-> +- reg: Registers address base and size.
-> +- interrupts: The interrupt specifier.
-> +
-> +The CEU supports a single parallel input and should contain a single 'port'
-> +subnode with a single 'endpoint'. Connection to input devices are modeled
-> +according to the video interfaces OF bindings specified in:
-> +Documentation/devicetree/bindings/media/video-interfaces.txt
-> +
-> +Optional endpoint properties applicable to parallel input bus described in
-> +the above mentioned "video-interfaces.txt" file are supported.
-> +
-> +- hsync-active: Active state of the HSYNC signal, 0/1 for LOW/HIGH respectively.
-> +  If property is not present, default is active high.
-> +- vsync-active: Active state of the VSYNC signal, 0/1 for LOW/HIGH respectively.
-> +  If property is not present, default is active high.
+The patch set have been verified with Hi3660 stub clock driver, so
+we can send message to MCU to execute CPU frequency scaling. This is
+tested on 96boards Hikey960.
 
-Does the hardware support Bt.656? If it does, you need to tell the
-difference between the parallel interface with default sync polarity and
-Bt.656 interfaces. With the above it's ambiguous.
+Changes from v4:
+* According to Jassi suggestion, refactored mailbox driver and removed
+  "inline" for function declaration;
 
-> +
-> +Example:
-> +
-> +The example describes the connection between the Capture Engine Unit and an
-> +OV7670 image sensor connected to i2c1 interface.
-> +
-> +ceu: ceu@e8210000 {
-> +	reg = <0xe8210000 0x209c>;
-> +	compatible = "renesas,r7s72100-ceu";
-> +	interrupts = <GIC_SPI 332 IRQ_TYPE_LEVEL_HIGH>;
-> +
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&vio_pins>;
-> +
-> +	status = "okay";
-> +
-> +	port {
-> +		ceu_in: endpoint {
-> +			remote-endpoint = <&ov7670_out>;
-> +
-> +			hsync-active = <1>;
-> +			vsync-active = <0>;
-> +		};
-> +	};
-> +};
-> +
-> +i2c1: i2c@fcfee400 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&i2c1_pins>;
-> +
-> +	status = "okay";
-> +
-> +	clock-frequency = <100000>;
-> +
-> +	ov7670: camera@21 {
-> +		compatible = "ovti,ov7670";
-> +		reg = <0x21>;
-> +
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&vio_pins>;
-> +
-> +		reset-gpios = <&port3 11 GPIO_ACTIVE_LOW>;
-> +		powerdown-gpios = <&port3 12 GPIO_ACTIVE_HIGH>;
-> +
-> +		port {
-> +			ov7670_out: endpoint {
-> +				remote-endpoint = <&ceu_in>;
-> +
-> +				hsync-active = <1>;
-> +				vsync-active = <0>;
-> +			};
-> +		};
-> +	};
-> +};
-> -- 
-> 2.7.4
-> 
+Changes from v3:
+* According to Jassi suggestion, refined structure name to
+  "struct hi3660_chan_info";
+* According to Jassi suggestion, moved channel 'lock'+'acquire'
+  operations into .startup();
+
+Changes from v2:
+* According to Mark Rutland suggestions, removed sev()/wfe() from
+  driver, the system has no two masters sharing the same channel for
+  data transferring so we don't need these instructions;
+* Refined DT binding and doc according to Rob suggestions;
+* Refined driver according to Julien suggestions;
+
+Changes from v1:
+* Added cover letter to track the changelog;
+* Added document for DT binding;
+* Refactored and simplized mailbox driver with "automatic ack" mode;
+* Refined commit logs for patches;
+
+
+Kaihua Zhong (2):
+  mailbox: Add support for Hi3660 mailbox
+  dts: arm64: Add mailbox binding for hi3660
+
+Leo Yan (1):
+  dt-bindings: mailbox: Introduce Hi3660 controller binding
+
+ .../bindings/mailbox/hisilicon,hi3660-mailbox.txt  |  51 ++++
+ arch/arm64/boot/dts/hisilicon/hi3660.dtsi          |   8 +
+ drivers/mailbox/Kconfig                            |   8 +
+ drivers/mailbox/Makefile                           |   2 +
+ drivers/mailbox/hi3660-mailbox.c                   | 316 +++++++++++++++++++++
+ 5 files changed, 385 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/hisilicon,hi3660-mailbox.txt
+ create mode 100644 drivers/mailbox/hi3660-mailbox.c
 
 -- 
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi
+1.9.1
