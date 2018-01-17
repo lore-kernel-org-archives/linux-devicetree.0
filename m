@@ -1,142 +1,158 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v4 2/8] ARM: dts: sun9i: Add CCI-400 device
- nodes for A80
-Date: Wed, 17 Jan 2018 16:46:48 +0800
-Message-ID: <20180117084654.8234-3-wens@csie.org>
-References: <20180117084654.8234-1-wens@csie.org>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v6 1/9] dt-bindings: media: Add Renesas CEU bindings
+Date: Wed, 17 Jan 2018 10:55:22 +0200
+Message-ID: <20180117085522.kfgt6re2rfq4qeun@valkosipuli.retiisi.org.uk>
+References: <1516139101-7835-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1516139101-7835-2-git-send-email-jacopo+renesas@jmondi.org>
+ <20180117075958.ggnk4cmmkdah2am6@valkosipuli.retiisi.org.uk>
+ <20180117083553.GF24926@w540>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBAU37TJAKGQEU7FPJBQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180117084654.8234-1-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180117083553.GF24926@w540>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: jacopo mondi <jacopo@jmondi.org>
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, laurent.pinchart@ideasonboard.com, magnus.damm@gmail.com, geert@glider.be, hverkuil@xs4all.nl, mchehab@kernel.org, festevam@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, pombredanne@nexb.com, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The A80 includes an ARM CCI-400 interconnect to support multi-cluster
-CPU caches.
+On Wed, Jan 17, 2018 at 09:35:53AM +0100, jacopo mondi wrote:
+> Hi Sakari,
+>     it's the second series this week where I fail to handle BT.656
+> properly, sorry about this :)
 
-Also add the maximum clock frequency for the CPUs, as listed in the
-A80 Optimus Board FEX file.
+No worries. I guess I forgot your reply. If the hardware doesn't support
+Bt.656 then the current definition is fine.
 
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- arch/arm/boot/dts/sun9i-a80.dtsi | 46 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 46 insertions(+)
+Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 
-diff --git a/arch/arm/boot/dts/sun9i-a80.dtsi b/arch/arm/boot/dts/sun9i-a80.dtsi
-index 90eac0b2a193..85fb800af8ab 100644
---- a/arch/arm/boot/dts/sun9i-a80.dtsi
-+++ b/arch/arm/boot/dts/sun9i-a80.dtsi
-@@ -63,48 +63,64 @@
- 		cpu0: cpu@0 {
- 			compatible = "arm,cortex-a7";
- 			device_type = "cpu";
-+			cci-control-port = <&cci_control0>;
-+			clock-frequency = <12000000>;
- 			reg = <0x0>;
- 		};
- 
- 		cpu1: cpu@1 {
- 			compatible = "arm,cortex-a7";
- 			device_type = "cpu";
-+			cci-control-port = <&cci_control0>;
-+			clock-frequency = <12000000>;
- 			reg = <0x1>;
- 		};
- 
- 		cpu2: cpu@2 {
- 			compatible = "arm,cortex-a7";
- 			device_type = "cpu";
-+			cci-control-port = <&cci_control0>;
-+			clock-frequency = <12000000>;
- 			reg = <0x2>;
- 		};
- 
- 		cpu3: cpu@3 {
- 			compatible = "arm,cortex-a7";
- 			device_type = "cpu";
-+			cci-control-port = <&cci_control0>;
-+			clock-frequency = <12000000>;
- 			reg = <0x3>;
- 		};
- 
- 		cpu4: cpu@100 {
- 			compatible = "arm,cortex-a15";
- 			device_type = "cpu";
-+			cci-control-port = <&cci_control1>;
-+			clock-frequency = <18000000>;
- 			reg = <0x100>;
- 		};
- 
- 		cpu5: cpu@101 {
- 			compatible = "arm,cortex-a15";
- 			device_type = "cpu";
-+			cci-control-port = <&cci_control1>;
-+			clock-frequency = <18000000>;
- 			reg = <0x101>;
- 		};
- 
- 		cpu6: cpu@102 {
- 			compatible = "arm,cortex-a15";
- 			device_type = "cpu";
-+			cci-control-port = <&cci_control1>;
-+			clock-frequency = <18000000>;
- 			reg = <0x102>;
- 		};
- 
- 		cpu7: cpu@103 {
- 			compatible = "arm,cortex-a15";
- 			device_type = "cpu";
-+			cci-control-port = <&cci_control1>;
-+			clock-frequency = <18000000>;
- 			reg = <0x103>;
- 		};
- 	};
-@@ -431,6 +447,36 @@
- 			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
- 		};
- 
-+		cci: cci@1c90000 {
-+			compatible = "arm,cci-400";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			reg = <0x01c90000 0x1000>;
-+			ranges = <0x0 0x01c90000 0x10000>;
-+
-+			cci_control0: slave-if@4000 {
-+				compatible = "arm,cci-400-ctrl-if";
-+				interface-type = "ace";
-+				reg = <0x4000 0x1000>;
-+			};
-+
-+			cci_control1: slave-if@5000 {
-+				compatible = "arm,cci-400-ctrl-if";
-+				interface-type = "ace";
-+				reg = <0x5000 0x1000>;
-+			};
-+
-+			pmu@9000 {
-+				 compatible = "arm,cci-400-pmu,r1";
-+				 reg = <0x9000 0x5000>;
-+				 interrupts = <GIC_SPI 134 IRQ_TYPE_LEVEL_HIGH>,
-+					      <GIC_SPI 134 IRQ_TYPE_LEVEL_HIGH>,
-+					      <GIC_SPI 134 IRQ_TYPE_LEVEL_HIGH>,
-+					      <GIC_SPI 134 IRQ_TYPE_LEVEL_HIGH>,
-+					      <GIC_SPI 134 IRQ_TYPE_LEVEL_HIGH>;
-+			};
-+		};
-+
- 		de_clocks: clock@3000000 {
- 			compatible = "allwinner,sun9i-a80-de-clks";
- 			reg = <0x03000000 0x30>;
+> 
+> On Wed, Jan 17, 2018 at 09:59:59AM +0200, Sakari Ailus wrote:
+> > Hi Jacopo,
+> >
+> > On Tue, Jan 16, 2018 at 10:44:53PM +0100, Jacopo Mondi wrote:
+> > > Add bindings documentation for Renesas Capture Engine Unit (CEU).
+> > >
+> > > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> > > Reviewed-by: Rob Herring <robh@kernel.org>
+> > > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > > Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
+> > > ---
+> > >  .../devicetree/bindings/media/renesas,ceu.txt      | 81 ++++++++++++++++++++++
+> > >  1 file changed, 81 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/media/renesas,ceu.txt
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/media/renesas,ceu.txt b/Documentation/devicetree/bindings/media/renesas,ceu.txt
+> > > new file mode 100644
+> > > index 0000000..590ee27
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/media/renesas,ceu.txt
+> > > @@ -0,0 +1,81 @@
+> > > +Renesas Capture Engine Unit (CEU)
+> > > +----------------------------------------------
+> > > +
+> > > +The Capture Engine Unit is the image capture interface found in the Renesas
+> > > +SH Mobile and RZ SoCs.
+> > > +
+> > > +The interface supports a single parallel input with data bus width of 8 or 16
+> > > +bits.
+> > > +
+> > > +Required properties:
+> > > +- compatible: Shall be "renesas,r7s72100-ceu" for CEU units found in RZ/A1-H
+> > > +  and RZ/A1-M SoCs.
+> > > +- reg: Registers address base and size.
+> > > +- interrupts: The interrupt specifier.
+> > > +
+> > > +The CEU supports a single parallel input and should contain a single 'port'
+> > > +subnode with a single 'endpoint'. Connection to input devices are modeled
+> > > +according to the video interfaces OF bindings specified in:
+> > > +Documentation/devicetree/bindings/media/video-interfaces.txt
+> > > +
+> > > +Optional endpoint properties applicable to parallel input bus described in
+> > > +the above mentioned "video-interfaces.txt" file are supported.
+> > > +
+> > > +- hsync-active: Active state of the HSYNC signal, 0/1 for LOW/HIGH respectively.
+> > > +  If property is not present, default is active high.
+> > > +- vsync-active: Active state of the VSYNC signal, 0/1 for LOW/HIGH respectively.
+> > > +  If property is not present, default is active high.
+> >
+> > Does the hardware support Bt.656? If it does, you need to tell the
+> > difference between the parallel interface with default sync polarity and
+> > Bt.656 interfaces. With the above it's ambiguous.
+> 
+> No, it does not support BT.656.
+> 
+> I'm listing them as -required- endpoint properties. If they are not
+> specified the drivers fails during probe:
+> 
+>         renesas-ceu e8210000.ceu: Only parallel input supported.
+> 
+> Thanks
+>    j
+> 
+> >
+> > > +
+> > > +Example:
+> > > +
+> > > +The example describes the connection between the Capture Engine Unit and an
+> > > +OV7670 image sensor connected to i2c1 interface.
+> > > +
+> > > +ceu: ceu@e8210000 {
+> > > +	reg = <0xe8210000 0x209c>;
+> > > +	compatible = "renesas,r7s72100-ceu";
+> > > +	interrupts = <GIC_SPI 332 IRQ_TYPE_LEVEL_HIGH>;
+> > > +
+> > > +	pinctrl-names = "default";
+> > > +	pinctrl-0 = <&vio_pins>;
+> > > +
+> > > +	status = "okay";
+> > > +
+> > > +	port {
+> > > +		ceu_in: endpoint {
+> > > +			remote-endpoint = <&ov7670_out>;
+> > > +
+> > > +			hsync-active = <1>;
+> > > +			vsync-active = <0>;
+> > > +		};
+> > > +	};
+> > > +};
+> > > +
+> > > +i2c1: i2c@fcfee400 {
+> > > +	pinctrl-names = "default";
+> > > +	pinctrl-0 = <&i2c1_pins>;
+> > > +
+> > > +	status = "okay";
+> > > +
+> > > +	clock-frequency = <100000>;
+> > > +
+> > > +	ov7670: camera@21 {
+> > > +		compatible = "ovti,ov7670";
+> > > +		reg = <0x21>;
+> > > +
+> > > +		pinctrl-names = "default";
+> > > +		pinctrl-0 = <&vio_pins>;
+> > > +
+> > > +		reset-gpios = <&port3 11 GPIO_ACTIVE_LOW>;
+> > > +		powerdown-gpios = <&port3 12 GPIO_ACTIVE_HIGH>;
+> > > +
+> > > +		port {
+> > > +			ov7670_out: endpoint {
+> > > +				remote-endpoint = <&ceu_in>;
+> > > +
+> > > +				hsync-active = <1>;
+> > > +				vsync-active = <0>;
+> > > +			};
+> > > +		};
+> > > +	};
+> > > +};
+> > > --
+> > > 2.7.4
+> > >
+> >
+> > --
+> > Sakari Ailus
+> > e-mail: sakari.ailus@iki.fi
+
 -- 
-2.15.1
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi
