@@ -1,13 +1,13 @@
 From: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Subject: [PATCH v3 12/12] ARM: dts: sun8i: a83t: Enable HDMI on
- BananaPi M3
-Date: Wed, 17 Jan 2018 21:14:21 +0100
-Message-ID: <20180117201421.25954-13-jernej.skrabec@siol.net>
+Subject: [PATCH v3 09/12] drm/sun4i: Add support for A83T second
+ DE2 mixer
+Date: Wed, 17 Jan 2018 21:14:18 +0100
+Message-ID: <20180117201421.25954-10-jernej.skrabec@siol.net>
 References: <20180117201421.25954-1-jernej.skrabec@siol.net>
 Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDQNBWPU7YERBSW573JAKGQEB5IJMJI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDQNBWPU7YERBQ6573JAKGQE23CKVOQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20180117201421.25954-1-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,62 +20,42 @@ To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, airlied-cv5
 Cc: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, jernej.skrabec-gGgVlfcn5nU@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-BananaPi M3 includes HDMI connector, so add support for it.
+It supports 1 VI and 1 UI plane and HW scaling on both planes.
 
+Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 ---
- arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+ drivers/gpu/drm/sun4i/sun8i_mixer.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts b/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts
-index 6550bf0e594b..00e47423cd07 100644
---- a/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts
-+++ b/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts
-@@ -60,6 +60,17 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
-+	connector {
-+		compatible = "hdmi-connector";
-+		type = "a";
-+
-+		port {
-+			hdmi_con_in: endpoint {
-+				remote-endpoint = <&hdmi_out_con>;
-+			};
-+		};
-+	};
-+
- 	reg_usb1_vbus: reg-usb1-vbus {
- 		compatible = "regulator-fixed";
- 		regulator-name = "usb1-vbus";
-@@ -82,6 +93,10 @@
- 	};
+diff --git a/drivers/gpu/drm/sun4i/sun8i_mixer.c b/drivers/gpu/drm/sun4i/sun8i_mixer.c
+index 2cbb2de6d39c..9b0256d31a61 100644
+--- a/drivers/gpu/drm/sun4i/sun8i_mixer.c
++++ b/drivers/gpu/drm/sun4i/sun8i_mixer.c
+@@ -485,6 +485,13 @@ static const struct sun8i_mixer_cfg sun8i_a83t_mixer0_cfg = {
+ 	.vi_num		= 1,
  };
  
-+&de {
-+	status = "okay";
++static const struct sun8i_mixer_cfg sun8i_a83t_mixer1_cfg = {
++	.ccsc		= 1,
++	.scaler_mask	= 0x3,
++	.ui_num		= 1,
++	.vi_num		= 1,
 +};
 +
- &ehci0 {
- 	/* Terminus Tech FE 1.1s 4-port USB 2.0 hub here */
- 	status = "okay";
-@@ -100,6 +115,16 @@
- 	status = "okay";
- };
- 
-+&hdmi {
-+	status = "okay";
-+};
-+
-+&hdmi_out {
-+	hdmi_out_con: endpoint {
-+		remote-endpoint = <&hdmi_con_in>;
-+	};
-+};
-+
- &mdio {
- 	rgmii_phy: ethernet-phy@1 {
- 		compatible = "ethernet-phy-ieee802.3-c22";
+ static const struct sun8i_mixer_cfg sun8i_v3s_mixer_cfg = {
+ 	.vi_num = 2,
+ 	.ui_num = 1,
+@@ -498,6 +505,10 @@ static const struct of_device_id sun8i_mixer_of_table[] = {
+ 		.compatible = "allwinner,sun8i-a83t-de2-mixer-0",
+ 		.data = &sun8i_a83t_mixer0_cfg,
+ 	},
++	{
++		.compatible = "allwinner,sun8i-a83t-de2-mixer-1",
++		.data = &sun8i_a83t_mixer1_cfg,
++	},
+ 	{
+ 		.compatible = "allwinner,sun8i-v3s-de2-mixer",
+ 		.data = &sun8i_v3s_mixer_cfg,
 -- 
 2.15.1
