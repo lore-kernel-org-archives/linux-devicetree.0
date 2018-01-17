@@ -1,13 +1,13 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v4 6/8] dt-bindings: ARM: sunxi: Document A80
- SoC secure SRAM usage by SMP hotplug
-Date: Wed, 17 Jan 2018 16:46:52 +0800
-Message-ID: <20180117084654.8234-7-wens@csie.org>
+Subject: [PATCH v4 2/8] ARM: dts: sun9i: Add CCI-400 device
+ nodes for A80
+Date: Wed, 17 Jan 2018 16:46:48 +0800
+Message-ID: <20180117084654.8234-3-wens@csie.org>
 References: <20180117084654.8234-1-wens@csie.org>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBBE37TJAKGQEPK2PNIY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBAU37TJAKGQEU7FPJBQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20180117084654.8234-1-wens-jdAy2FN1RRM@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,70 +20,123 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On the Allwinner A80 SoC the BROM supports hotplugging the primary core
-(cpu0) by checking two 32bit values at a specific location within the
-secure SRAM block. This region needs to be reserved and accessible to
-the SMP code.
+The A80 includes an ARM CCI-400 interconnect to support multi-cluster
+CPU caches.
 
-Document its usage.
+Also add the maximum clock frequency for the CPUs, as listed in the
+A80 Optimus Board FEX file.
 
 Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- .../devicetree/bindings/arm/sunxi/smp-sram.txt     | 44 ++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/sunxi/smp-sram.txt
+ arch/arm/boot/dts/sun9i-a80.dtsi | 46 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 46 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/sunxi/smp-sram.txt b/Documentation/devicetree/bindings/arm/sunxi/smp-sram.txt
-new file mode 100644
-index 000000000000..082e6a9382d3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/sunxi/smp-sram.txt
-@@ -0,0 +1,44 @@
-+Allwinner SRAM for smp bringup:
-+------------------------------------------------
+diff --git a/arch/arm/boot/dts/sun9i-a80.dtsi b/arch/arm/boot/dts/sun9i-a80.dtsi
+index 90eac0b2a193..85fb800af8ab 100644
+--- a/arch/arm/boot/dts/sun9i-a80.dtsi
++++ b/arch/arm/boot/dts/sun9i-a80.dtsi
+@@ -63,48 +63,64 @@
+ 		cpu0: cpu@0 {
+ 			compatible = "arm,cortex-a7";
+ 			device_type = "cpu";
++			cci-control-port = <&cci_control0>;
++			clock-frequency = <12000000>;
+ 			reg = <0x0>;
+ 		};
+ 
+ 		cpu1: cpu@1 {
+ 			compatible = "arm,cortex-a7";
+ 			device_type = "cpu";
++			cci-control-port = <&cci_control0>;
++			clock-frequency = <12000000>;
+ 			reg = <0x1>;
+ 		};
+ 
+ 		cpu2: cpu@2 {
+ 			compatible = "arm,cortex-a7";
+ 			device_type = "cpu";
++			cci-control-port = <&cci_control0>;
++			clock-frequency = <12000000>;
+ 			reg = <0x2>;
+ 		};
+ 
+ 		cpu3: cpu@3 {
+ 			compatible = "arm,cortex-a7";
+ 			device_type = "cpu";
++			cci-control-port = <&cci_control0>;
++			clock-frequency = <12000000>;
+ 			reg = <0x3>;
+ 		};
+ 
+ 		cpu4: cpu@100 {
+ 			compatible = "arm,cortex-a15";
+ 			device_type = "cpu";
++			cci-control-port = <&cci_control1>;
++			clock-frequency = <18000000>;
+ 			reg = <0x100>;
+ 		};
+ 
+ 		cpu5: cpu@101 {
+ 			compatible = "arm,cortex-a15";
+ 			device_type = "cpu";
++			cci-control-port = <&cci_control1>;
++			clock-frequency = <18000000>;
+ 			reg = <0x101>;
+ 		};
+ 
+ 		cpu6: cpu@102 {
+ 			compatible = "arm,cortex-a15";
+ 			device_type = "cpu";
++			cci-control-port = <&cci_control1>;
++			clock-frequency = <18000000>;
+ 			reg = <0x102>;
+ 		};
+ 
+ 		cpu7: cpu@103 {
+ 			compatible = "arm,cortex-a15";
+ 			device_type = "cpu";
++			cci-control-port = <&cci_control1>;
++			clock-frequency = <18000000>;
+ 			reg = <0x103>;
+ 		};
+ 	};
+@@ -431,6 +447,36 @@
+ 			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
+ 		};
+ 
++		cci: cci@1c90000 {
++			compatible = "arm,cci-400";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			reg = <0x01c90000 0x1000>;
++			ranges = <0x0 0x01c90000 0x10000>;
 +
-+Allwinner's A80 SoC uses part of the secure sram for hotplugging of the
-+primary core (cpu0). Once the core gets powered up it checks if a magic
-+value is set at a specific location. If it is then the BROM will jump
-+to the software entry address, instead of executing a standard boot.
++			cci_control0: slave-if@4000 {
++				compatible = "arm,cci-400-ctrl-if";
++				interface-type = "ace";
++				reg = <0x4000 0x1000>;
++			};
 +
-+Therefore a reserved section sub-node has to be added to the mmio-sram
-+declaration.
++			cci_control1: slave-if@5000 {
++				compatible = "arm,cci-400-ctrl-if";
++				interface-type = "ace";
++				reg = <0x5000 0x1000>;
++			};
 +
-+Note that this is separate from the Allwinner SRAM controller found in
-+../../sram/sunxi-sram.txt. This SRAM is secure only and not mappable to
-+any device.
-+
-+Also there are no "secure-only" properties. The implementation should
-+check if this SRAM is usable first.
-+
-+Required sub-node properties:
-+- compatible : depending on the SoC this should be one of:
-+		"allwinner,sun9i-a80-smp-sram"
-+
-+The rest of the properties should follow the generic mmio-sram discription
-+found in ../../misc/sram.txt
-+
-+Example:
-+
-+	sram_b: sram@20000 {
-+		/* 256 KiB secure SRAM at 0x20000 */
-+		compatible = "mmio-sram";
-+		reg = <0x00020000 0x40000>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0 0x00020000 0x40000>;
-+
-+		smp-sram@1000 {
-+			/*
-+			 * This is checked by BROM to determine if
-+			 * cpu0 should jump to SMP entry vector
-+			 */
-+			compatible = "allwinner,sun9i-a80-smp-sram";
-+			reg = <0x1000 0x8>;
++			pmu@9000 {
++				 compatible = "arm,cci-400-pmu,r1";
++				 reg = <0x9000 0x5000>;
++				 interrupts = <GIC_SPI 134 IRQ_TYPE_LEVEL_HIGH>,
++					      <GIC_SPI 134 IRQ_TYPE_LEVEL_HIGH>,
++					      <GIC_SPI 134 IRQ_TYPE_LEVEL_HIGH>,
++					      <GIC_SPI 134 IRQ_TYPE_LEVEL_HIGH>,
++					      <GIC_SPI 134 IRQ_TYPE_LEVEL_HIGH>;
++			};
 +		};
-+	};
++
+ 		de_clocks: clock@3000000 {
+ 			compatible = "allwinner,sun9i-a80-de-clks";
+ 			reg = <0x03000000 0x30>;
 -- 
 2.15.1
