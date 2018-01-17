@@ -1,66 +1,30 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH 0/4] dmaengine: qcom: bam_dma: fixes for remotely
- controlled bam
-Date: Wed, 17 Jan 2018 10:55:34 +0000
-Message-ID: <d40a9ecb-c620-034a-8e88-e9254bb95305@linaro.org>
-References: <20180116190236.14558-1-srinivas.kandagatla@linaro.org>
- <20180117101835.GM18649@localhost>
+From: Tobias Klauser <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>
+Subject: Re: [PATCH 5/7] nios2: remove arch specific
+ early_init_dt_alloc_memory_arch
+Date: Wed, 17 Jan 2018 12:00:02 +0100
+Message-ID: <20180117105958.GB19044@distanz.ch>
+References: <20180105232054.27394-1-robh@kernel.org>
+ <20180105232054.27394-6-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180117101835.GM18649@localhost>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: Andy Gross <andy.gross@linaro.org>, dmaengine@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, David Brown <david.brown@linaro.org>, Dan Williams <dan.j.williams@intel.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, yanhe@quicinc.com, ramkri@qti.qualcomm.com, sdharia@quicinc.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20180105232054.27394-6-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ley Foon Tan <lftan-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, nios2-dev-g9ZBwUv/Ih/yUk5EbOjzuce+I+R0W71w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 17/01/18 10:18, Vinod Koul wrote:
-> On Tue, Jan 16, 2018 at 07:02:32PM +0000, srinivas.kandagatla@linaro.org wrote:
->> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->>
->> Hi Andy,
->>
->> I did hit few issues while trying out SLIMBus BAM on DB820c, this BAM instance
->> is remotely controlled and powered up after ADSP is booted using QMI commands.
+On 2018-01-06 at 00:20:52 +0100, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> Now that the DT core code handles bootmem arches, we can remove the nios2
+> specific early_init_dt_alloc_memory_arch function.
 > 
-> What do you mean by "remotely controlled" in this series?
+> Cc: Ley Foon Tan <lftan-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+> Cc: nios2-dev-g9ZBwUv/Ih/yUk5EbOjzuce+I+R0W71w@public.gmane.org
+> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-DMA controller is controlled by the remote processor, which is a DSP in 
-this case.
-Linux side is in remote mode in this setup, this can setup transfer 
-descriptors and start/stop a transfer. But all the 
-initialization/powerup part will be done in the remote processor.
-
---srini
-
-> 
->>
->> Firstly some of the master registers are written even when the BAM is remotely
->> controlled, and secondly reading registers when bam is not ready yet.
->>
->> These 4 patches address these issues, there are few more issues like doing PM
->> in simillar usecase, these will be addressed soon.
->>
->> Thanks,
->> Srini
->>
->> Srinivas Kandagatla (4):
->>    dmaengine: qcom: bam_dma: make bam clk optional
->>    dmaengine: qcom: bam_dma: add num-channels binding for remotely
->>      controlled
->>    dmaengine: qcom: bam_dma: do not write to global regs in remote mode
->>    dmaengine: qcom: bam_dma: Add num-ees dt binding for remotely
->>      controlled
->>
->>   .../devicetree/bindings/dma/qcom_bam_dma.txt       |  4 ++
->>   drivers/dma/qcom/bam_dma.c                         | 56 +++++++++++++++-------
->>   2 files changed, 43 insertions(+), 17 deletions(-)
->>
->> -- 
->> 2.15.1
->>
-> 
+Reviewed-by: Tobias Klauser <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
