@@ -1,29 +1,47 @@
-From: Brian Norris <briannorris@chromium.org>
-Subject: Re: [PATCH v2 01/16] drivers: pwm: core: use a single of xlate
- function
-Date: Wed, 17 Jan 2018 15:14:19 -0800
-Message-ID: <20180117231357.GC112833@google.com>
-References: <1515766983-15151-1-git-send-email-claudiu.beznea@microchip.com>
- <1515766983-15151-2-git-send-email-claudiu.beznea@microchip.com>
- <20180112183512.GB102880@google.com>
- <6441df76-fb4a-ce00-1019-f7ff9143b75e@microchip.com>
- <CAHp75VcaFDEQ1cBzeU2eBj_vf19ok6EWLC07SOTQLRH8BQSbzA@mail.gmail.com>
- <9a130c0b-572d-be0b-8ac7-596714208d41@microchip.com>
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH 0/3] PCI: move DT PCI functions to PCI core
+Date: Wed, 17 Jan 2018 17:33:57 -0600
+Message-ID: <20180117233357.GB53542@bhelgaas-glaptop.roam.corp.google.com>
+References: <20180104211215.11344-1-robh@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pwm-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <9a130c0b-572d-be0b-8ac7-596714208d41@microchip.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Claudiu Beznea <Claudiu.Beznea@microchip.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, Jonathan Corbet <corbet@lwn.net>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, linux-pwm@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, linux-amlogic@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-rpi-kernel@lists.infradead.org, devicetree <devicetree@vger.kernel.org>
+In-Reply-To: <20180104211215.11344-1-robh@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Frank Rowand <frowand.list@gmail.com>, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 16, 2018 at 10:24:59AM +0200, Claudiu Beznea wrote:
-> Please explain me further. From this I understand, as a general rule,
-> that the device tree binaries from, e.g. 3 years ago, should be
-> compatible with, e.g. the current version of kernel?
+On Thu, Jan 04, 2018 at 03:12:12PM -0600, Rob Herring wrote:
+> Most subsystem specific functions have been moved into the respective
+> subsystems. Only PCI and networking remain. This series moves most of the
+> PCI related code to drivers/pci/of.c. Some bus address functions for PCI
+> remain in of/address.c because we don't have infrastructure to split up
+> the per bus helper functions.
+> 
+> I expect Bjorn to take this series, so PPC maintainers please ack.
 
-Yes.
+I plan to merge this for v4.16, so PPC maintainers, this is your
+chance to speak up :)
 
-https://www.kernel.org/doc/Documentation/devicetree/bindings/ABI.txt
+> Rob Herring (3):
+>   PCI: move OF related PCI functions into PCI core
+>   powerpc/pci: use of_irq_parse_and_map_pci helper
+>   PCI: make of_irq_parse_pci static
+> 
+>  arch/arm/mach-mvebu/Kconfig      |   1 -
+>  arch/powerpc/kernel/pci-common.c |   8 +-
+>  drivers/of/Kconfig               |  16 --
+>  drivers/of/Makefile              |   2 -
+>  drivers/of/address.c             |   8 +-
+>  drivers/of/of_pci.c              | 384 -----------------------------
+>  drivers/of/of_pci_irq.c          | 131 ----------
+>  drivers/pci/of.c                 | 505 +++++++++++++++++++++++++++++++++++++++
+>  include/linux/of_pci.h           |   8 +-
+>  9 files changed, 510 insertions(+), 553 deletions(-)
+>  delete mode 100644 drivers/of/of_pci.c
+>  delete mode 100644 drivers/of/of_pci_irq.c
+> 
+> --
+> 2.14.1
