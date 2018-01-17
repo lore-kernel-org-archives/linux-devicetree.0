@@ -1,7 +1,7 @@
 From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 1/6] arm64: zynqmp: Use zynqmp specific compatible string for macb
-Date: Wed, 17 Jan 2018 16:29:45 +0100
-Message-ID: <cbeb93b54ae16677901f1cb5f3063b65aeea5793.1516202975.git.michal.simek@xilinx.com>
+Subject: [PATCH 2/6] arm64: zynqmp: Fix alignment in dts files
+Date: Wed, 17 Jan 2018 16:29:46 +0100
+Message-ID: <b80ef4af56de3bd47bb6d45ba91b4150965506cd.1516202975.git.michal.simek@xilinx.com>
 References: <cover.1516202975.git.michal.simek@xilinx.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <cover.1516202975.git.michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
@@ -9,61 +9,50 @@ In-Reply-To: <cover.1516202975.git.michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gm
 References: <cover.1516202975.git.michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: devicetree-u79uwXL29TaqPxH82wqD4g@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Naga Sureshkumar Relli <naga.sureshkumar.relli-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org, "Edgar E. Iglesias" <edgar.iglesias-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Shubhrajyoti Datta <shubhrajyoti.datta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bharat Kumar Gogada <bharat.kumar.gogada-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stefan Krsmanovic <stefan.krsmanovic-XdEHnvbJQ9jQT0dZR+AlfA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Naga Sureshkumar Relli <naga.sureshkumar.relli-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, P L Sai Krishna <lakshmi.sai.krishna.potthuri-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Shubhrajyoti Datta <shubhrajyoti.datta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Kedareswara rao Appana <appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Anurag Kumar Vulisha <anurag.kumar.vulisha-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Bharat Kumar Gogada <bharat.kumar.gogada-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alistair Francis <alistair.francis-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Stefan Krsmanovic <stefan.krsmanovic-XdEHnvbJQ9jQT0dZR+AlfA@public.gmane.org>, "Edgar E. Iglesias" <edgar.iglesias-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The patch
-"devicetree: Add compatible string for Zynq Ultrascale+ MPSoC"
-(commit <988d6f07fc0a29e392035ba56e3bcfaf7b397d95>)
-introduced specific compatible string for ZynqMP which should be used
-first.
+Trivial changes.
 
 Signed-off-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 ---
 
- arch/arm64/boot/dts/xilinx/zynqmp.dtsi | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts | 2 +-
+ arch/arm64/boot/dts/xilinx/zynqmp.dtsi      | 8 ++++----
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
+diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts b/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts
+index bf552674a834..fe7c48b6fa78 100644
+--- a/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts
++++ b/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts
+@@ -47,7 +47,7 @@
+ 	status = "okay";
+ 	phy-handle = <&phy0>;
+ 	phy-mode = "rgmii-id";
+-	phy0: phy@0{
++	phy0: phy@0 {
+ 		reg = <0>;
+ 		max-speed = <100>;
+ 	};
 diff --git a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-index 7665fbddff28..0da98007753b 100644
+index 0da98007753b..9ca4d1f83b51 100644
 --- a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
 +++ b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-@@ -355,7 +355,7 @@
- 		};
- 
- 		gem0: ethernet@ff0b0000 {
--			compatible = "cdns,gem";
-+			compatible = "cdns,zynqmp-gem", "cdns,gem";
- 			status = "disabled";
+@@ -439,10 +439,10 @@
+ 			device_type = "pci";
  			interrupt-parent = <&gic>;
- 			interrupts = <0 57 4>, <0 57 4>;
-@@ -366,7 +366,7 @@
- 		};
- 
- 		gem1: ethernet@ff0c0000 {
--			compatible = "cdns,gem";
-+			compatible = "cdns,zynqmp-gem", "cdns,gem";
- 			status = "disabled";
- 			interrupt-parent = <&gic>;
- 			interrupts = <0 59 4>, <0 59 4>;
-@@ -377,7 +377,7 @@
- 		};
- 
- 		gem2: ethernet@ff0d0000 {
--			compatible = "cdns,gem";
-+			compatible = "cdns,zynqmp-gem", "cdns,gem";
- 			status = "disabled";
- 			interrupt-parent = <&gic>;
- 			interrupts = <0 61 4>, <0 61 4>;
-@@ -388,7 +388,7 @@
- 		};
- 
- 		gem3: ethernet@ff0e0000 {
--			compatible = "cdns,gem";
-+			compatible = "cdns,zynqmp-gem", "cdns,gem";
- 			status = "disabled";
- 			interrupt-parent = <&gic>;
- 			interrupts = <0 63 4>, <0 63 4>;
+ 			interrupts = <0 118 4>,
+-				    <0 117 4>,
+-				    <0 116 4>,
+-				    <0 115 4>,	/* MSI_1 [63...32] */
+-				    <0 114 4>;	/* MSI_0 [31...0] */
++				     <0 117 4>,
++				     <0 116 4>,
++				     <0 115 4>,	/* MSI_1 [63...32] */
++				     <0 114 4>;	/* MSI_0 [31...0] */
+ 			interrupt-names = "misc", "dummy", "intx",
+ 					  "msi1", "msi0";
+ 			msi-parent = <&pcie>;
 -- 
 1.9.1
 
