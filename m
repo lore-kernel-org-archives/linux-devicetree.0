@@ -1,12 +1,12 @@
 From: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Subject: [PATCH v3 07/12] drm/sun4i: Add has_channel_0 TCON quirk
-Date: Wed, 17 Jan 2018 21:14:16 +0100
-Message-ID: <20180117201421.25954-8-jernej.skrabec@siol.net>
+Subject: [PATCH v3 10/12] drm/sun4i: Implement A83T HDMI driver
+Date: Wed, 17 Jan 2018 21:14:19 +0100
+Message-ID: <20180117201421.25954-11-jernej.skrabec@siol.net>
 References: <20180117201421.25954-1-jernej.skrabec@siol.net>
 Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDQNBWPU7YERBPW573JAKGQEV76GY2Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDQNBWPU7YERBR6573JAKGQEKB3WVQA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20180117201421.25954-1-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -19,165 +19,610 @@ To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, airlied-cv5
 Cc: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, jernej.skrabec-gGgVlfcn5nU@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Some TCONs on newer SoCs doesn't support channel 0, since they are meant
-to be used only with TV or HDMI encoder.
+A83T has DW HDMI IP block with a custom PHY similar to Synopsys gen2
+HDMI PHY.
 
-Prepare support for them with adding has_channel_0 quirk.
+Only video output was tested, while HW also supports audio and CEC.
+Support for them will be added later.
 
-Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 ---
- drivers/gpu/drm/sun4i/sun4i_tcon.c | 41 +++++++++++++++++++++++++++-----------
- drivers/gpu/drm/sun4i/sun4i_tcon.h |  1 +
- 2 files changed, 30 insertions(+), 12 deletions(-)
+ drivers/gpu/drm/sun4i/Kconfig          |   9 +
+ drivers/gpu/drm/sun4i/Makefile         |   4 +
+ drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c  | 181 ++++++++++++++++++++
+ drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h  |  46 +++++
+ drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c | 302 +++++++++++++++++++++++++++++++++
+ 5 files changed, 542 insertions(+)
+ create mode 100644 drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
+ create mode 100644 drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
+ create mode 100644 drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c
 
-diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-index b78fed809992..0815c528d08e 100644
---- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
-+++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-@@ -84,6 +84,7 @@ static void sun4i_tcon_channel_set_status(struct sun4i_tcon *tcon, int channel,
+diff --git a/drivers/gpu/drm/sun4i/Kconfig b/drivers/gpu/drm/sun4i/Kconfig
+index 882d85db9053..7327da3bc94f 100644
+--- a/drivers/gpu/drm/sun4i/Kconfig
++++ b/drivers/gpu/drm/sun4i/Kconfig
+@@ -40,6 +40,15 @@ config DRM_SUN4I_BACKEND
+ 	  do some alpha blending and feed graphics to TCON. If M is
+ 	  selected the module will be called sun4i-backend.
  
- 	switch (channel) {
- 	case 0:
-+		WARN_ON(!tcon->quirks->has_channel_0);
- 		regmap_update_bits(tcon->regs, SUN4I_TCON0_CTL_REG,
- 				   SUN4I_TCON0_CTL_TCON_ENABLE,
- 				   enabled ? SUN4I_TCON0_CTL_TCON_ENABLE : 0);
-@@ -276,6 +277,8 @@ static void sun4i_tcon0_mode_set_lvds(struct sun4i_tcon *tcon,
- 	u8 clk_delay;
- 	u32 reg, val = 0;
- 
-+	WARN_ON(!tcon->quirks->has_channel_0);
++config DRM_SUN8I_DW_HDMI
++	tristate "Support for Allwinner version of DesignWare HDMI"
++	depends on DRM_SUN4I
++	select DRM_DW_HDMI
++	help
++	  Choose this option if you have an Allwinner SoC with the
++	  DesignWare HDMI controller with custom HDMI PHY. If M is
++	  selected the module will be called sun8i_dw_hdmi.
 +
- 	tcon->dclk_min_div = 7;
- 	tcon->dclk_max_div = 7;
- 	sun4i_tcon0_mode_set_common(tcon, mode);
-@@ -344,6 +347,8 @@ static void sun4i_tcon0_mode_set_rgb(struct sun4i_tcon *tcon,
- 	u8 clk_delay;
- 	u32 val = 0;
+ config DRM_SUN8I_MIXER
+ 	tristate "Support for Allwinner Display Engine 2.0 Mixer"
+ 	default MACH_SUN8I
+diff --git a/drivers/gpu/drm/sun4i/Makefile b/drivers/gpu/drm/sun4i/Makefile
+index 2b37a6abbb1d..a7c47d9aa64d 100644
+--- a/drivers/gpu/drm/sun4i/Makefile
++++ b/drivers/gpu/drm/sun4i/Makefile
+@@ -9,6 +9,9 @@ sun4i-drm-hdmi-y		+= sun4i_hdmi_enc.o
+ sun4i-drm-hdmi-y		+= sun4i_hdmi_i2c.o
+ sun4i-drm-hdmi-y		+= sun4i_hdmi_tmds_clk.o
  
-+	WARN_ON(!tcon->quirks->has_channel_0);
++sun8i-drm-hdmi-y		+= sun8i_dw_hdmi.o
++sun8i-drm-hdmi-y		+= sun8i_hdmi_phy.o
 +
- 	tcon->dclk_min_div = 6;
- 	tcon->dclk_max_div = 127;
- 	sun4i_tcon0_mode_set_common(tcon, mode);
-@@ -570,10 +575,12 @@ static int sun4i_tcon_init_clocks(struct device *dev,
- 	}
- 	clk_prepare_enable(tcon->clk);
+ sun8i-mixer-y			+= sun8i_mixer.o sun8i_ui_layer.o \
+ 				   sun8i_vi_layer.o sun8i_ui_scaler.o \
+ 				   sun8i_vi_scaler.o sun8i_csc.o
+@@ -26,4 +29,5 @@ obj-$(CONFIG_DRM_SUN4I)		+= sun6i_drc.o
  
--	tcon->sclk0 = devm_clk_get(dev, "tcon-ch0");
--	if (IS_ERR(tcon->sclk0)) {
--		dev_err(dev, "Couldn't get the TCON channel 0 clock\n");
--		return PTR_ERR(tcon->sclk0);
-+	if (tcon->quirks->has_channel_0) {
-+		tcon->sclk0 = devm_clk_get(dev, "tcon-ch0");
-+		if (IS_ERR(tcon->sclk0)) {
-+			dev_err(dev, "Couldn't get the TCON channel 0 clock\n");
-+			return PTR_ERR(tcon->sclk0);
-+		}
- 	}
- 
- 	if (tcon->quirks->has_channel_1) {
-@@ -930,10 +937,12 @@ static int sun4i_tcon_bind(struct device *dev, struct device *master,
- 		goto err_free_clocks;
- 	}
- 
--	ret = sun4i_dclk_create(dev, tcon);
--	if (ret) {
--		dev_err(dev, "Couldn't create our TCON dot clock\n");
--		goto err_free_clocks;
-+	if (tcon->quirks->has_channel_0) {
-+		ret = sun4i_dclk_create(dev, tcon);
-+		if (ret) {
-+			dev_err(dev, "Couldn't create our TCON dot clock\n");
-+			goto err_free_clocks;
-+		}
- 	}
- 
- 	ret = sun4i_tcon_init_irq(dev, tcon);
-@@ -991,7 +1000,8 @@ static int sun4i_tcon_bind(struct device *dev, struct device *master,
- 	return 0;
- 
- err_free_dotclock:
--	sun4i_dclk_free(tcon);
-+	if (tcon->quirks->has_channel_0)
-+		sun4i_dclk_free(tcon);
- err_free_clocks:
- 	sun4i_tcon_free_clocks(tcon);
- err_assert_reset:
-@@ -1005,7 +1015,8 @@ static void sun4i_tcon_unbind(struct device *dev, struct device *master,
- 	struct sun4i_tcon *tcon = dev_get_drvdata(dev);
- 
- 	list_del(&tcon->list);
--	sun4i_dclk_free(tcon);
-+	if (tcon->quirks->has_channel_0)
-+		sun4i_dclk_free(tcon);
- 	sun4i_tcon_free_clocks(tcon);
- }
- 
-@@ -1102,16 +1113,19 @@ static int sun6i_tcon_set_mux(struct sun4i_tcon *tcon,
- }
- 
- static const struct sun4i_tcon_quirks sun4i_a10_quirks = {
-+	.has_channel_0		= true,
- 	.has_channel_1		= true,
- 	.set_mux		= sun4i_a10_tcon_set_mux,
- };
- 
- static const struct sun4i_tcon_quirks sun5i_a13_quirks = {
-+	.has_channel_0		= true,
- 	.has_channel_1		= true,
- 	.set_mux		= sun5i_a13_tcon_set_mux,
- };
- 
- static const struct sun4i_tcon_quirks sun6i_a31_quirks = {
-+	.has_channel_0		= true,
- 	.has_channel_1		= true,
- 	.has_lvds_alt		= true,
- 	.needs_de_be_mux	= true,
-@@ -1119,26 +1133,29 @@ static const struct sun4i_tcon_quirks sun6i_a31_quirks = {
- };
- 
- static const struct sun4i_tcon_quirks sun6i_a31s_quirks = {
-+	.has_channel_0		= true,
- 	.has_channel_1		= true,
- 	.needs_de_be_mux	= true,
- };
- 
- static const struct sun4i_tcon_quirks sun7i_a20_quirks = {
-+	.has_channel_0		= true,
- 	.has_channel_1		= true,
- 	/* Same display pipeline structure as A10 */
- 	.set_mux		= sun4i_a10_tcon_set_mux,
- };
- 
- static const struct sun4i_tcon_quirks sun8i_a33_quirks = {
-+	.has_channel_0		= true,
- 	.has_lvds_alt		= true,
- };
- 
- static const struct sun4i_tcon_quirks sun8i_a83t_lcd_quirks = {
--	/* nothing is supported */
-+	.has_channel_0		= true,
- };
- 
- static const struct sun4i_tcon_quirks sun8i_v3s_quirks = {
--	/* nothing is supported */
-+	.has_channel_0		= true,
- };
- 
- /* sun4i_drv uses this list to check if a device node is a TCON */
-diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.h b/drivers/gpu/drm/sun4i/sun4i_tcon.h
-index b761c7b823c5..78d55e7cd2b3 100644
---- a/drivers/gpu/drm/sun4i/sun4i_tcon.h
-+++ b/drivers/gpu/drm/sun4i/sun4i_tcon.h
-@@ -172,6 +172,7 @@
- struct sun4i_tcon;
- 
- struct sun4i_tcon_quirks {
-+	bool	has_channel_0;	/* a83t does not have channel 0 on second TCON */
- 	bool	has_channel_1;	/* a33 does not have channel 1 */
- 	bool	has_lvds_alt;	/* Does the LVDS clock have a parent other than the TCON clock? */
- 	bool	needs_de_be_mux; /* sun6i needs mux to select backend */
+ obj-$(CONFIG_DRM_SUN4I_BACKEND)	+= sun4i-backend.o
+ obj-$(CONFIG_DRM_SUN4I_HDMI)	+= sun4i-drm-hdmi.o
++obj-$(CONFIG_DRM_SUN8I_DW_HDMI)	+= sun8i-drm-hdmi.o
+ obj-$(CONFIG_DRM_SUN8I_MIXER)	+= sun8i-mixer.o
+diff --git a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
+new file mode 100644
+index 000000000000..12b73ced9517
+--- /dev/null
++++ b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
+@@ -0,0 +1,181 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * Copyright (c) 2018 Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
++ */
++
++#include <linux/component.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++
++#include <drm/drm_of.h>
++#include <drm/drmP.h>
++#include <drm/drm_crtc_helper.h>
++
++#include "sun8i_dw_hdmi.h"
++
++static void sun8i_dw_hdmi_encoder_mode_set(struct drm_encoder *encoder,
++					   struct drm_display_mode *mode,
++					   struct drm_display_mode *adj_mode)
++{
++	struct sun8i_dw_hdmi *hdmi = encoder_to_sun8i_dw_hdmi(encoder);
++
++	sun8i_hdmi_phy_update_clock(hdmi->phy, mode->crtc_clock * 1000);
++}
++
++static const struct drm_encoder_helper_funcs
++sun8i_dw_hdmi_encoder_helper_funcs = {
++	.mode_set = sun8i_dw_hdmi_encoder_mode_set,
++};
++
++static const struct drm_encoder_funcs sun8i_dw_hdmi_encoder_funcs = {
++	.destroy = drm_encoder_cleanup,
++};
++
++static enum drm_mode_status
++sun8i_dw_hdmi_mode_valid(struct drm_connector *connector,
++			 const struct drm_display_mode *mode)
++{
++	if (mode->clock > 297000)
++		return MODE_CLOCK_HIGH;
++
++	return MODE_OK;
++}
++
++static int sun8i_dw_hdmi_bind(struct device *dev, struct device *master,
++			      void *data)
++{
++	struct platform_device *pdev = to_platform_device(dev);
++	struct dw_hdmi_plat_data *plat_data;
++	struct drm_device *drm = data;
++	struct device_node *phy_node;
++	struct drm_encoder *encoder;
++	struct sun8i_dw_hdmi *hdmi;
++	int ret;
++
++	if (!pdev->dev.of_node)
++		return -ENODEV;
++
++	hdmi = devm_kzalloc(&pdev->dev, sizeof(*hdmi), GFP_KERNEL);
++	if (!hdmi)
++		return -ENOMEM;
++
++	plat_data = &hdmi->plat_data;
++	hdmi->dev = &pdev->dev;
++	encoder = &hdmi->encoder;
++
++	encoder->possible_crtcs = drm_of_find_possible_crtcs(drm, dev->of_node);
++	/*
++	 * If we failed to find the CRTC(s) which this encoder is
++	 * supposed to be connected to, it's because the CRTC has
++	 * not been registered yet.  Defer probing, and hope that
++	 * the required CRTC is added later.
++	 */
++	if (encoder->possible_crtcs == 0)
++		return -EPROBE_DEFER;
++
++	hdmi->rst_ctrl = devm_reset_control_get(dev, "ctrl");
++	if (IS_ERR(hdmi->rst_ctrl)) {
++		dev_err(dev, "Could not get ctrl reset control\n");
++		return PTR_ERR(hdmi->rst_ctrl);
++	}
++
++	ret = reset_control_deassert(hdmi->rst_ctrl);
++	if (ret) {
++		dev_err(dev, "Could not deassert ctrl reset control\n");
++		return ret;
++	}
++
++	phy_node = of_parse_phandle(dev->of_node, "phys", 0);
++	if (!phy_node) {
++		dev_err(dev, "Can't found PHY phandle\n");
++		goto err_assert_ctrl_reset;
++	}
++
++	ret = sun8i_hdmi_phy_probe(hdmi, phy_node);
++	of_node_put(phy_node);
++	if (ret) {
++		dev_err(dev, "Couldn't get the HDMI PHY\n");
++		goto err_assert_ctrl_reset;
++	}
++
++	drm_encoder_helper_add(encoder, &sun8i_dw_hdmi_encoder_helper_funcs);
++	drm_encoder_init(drm, encoder, &sun8i_dw_hdmi_encoder_funcs,
++			 DRM_MODE_ENCODER_TMDS, NULL);
++
++	sun8i_hdmi_phy_init(hdmi->phy);
++
++	plat_data->mode_valid = &sun8i_dw_hdmi_mode_valid;
++	plat_data->phy_ops = sun8i_hdmi_phy_get_ops();
++	plat_data->phy_name = "sun8i_dw_hdmi_phy";
++	plat_data->phy_data = hdmi->phy;
++
++	platform_set_drvdata(pdev, hdmi);
++
++	hdmi->hdmi = dw_hdmi_bind(pdev, encoder, plat_data);
++
++	/*
++	 * If dw_hdmi_bind() fails we'll never call dw_hdmi_unbind(),
++	 * which would have called the encoder cleanup.  Do it manually.
++	 */
++	if (IS_ERR(hdmi->hdmi)) {
++		ret = PTR_ERR(hdmi->hdmi);
++		goto cleanup_encoder;
++	}
++
++	return 0;
++
++cleanup_encoder:
++	drm_encoder_cleanup(encoder);
++	sun8i_hdmi_phy_remove(hdmi);
++err_assert_ctrl_reset:
++	reset_control_assert(hdmi->rst_ctrl);
++
++	return ret;
++}
++
++static void sun8i_dw_hdmi_unbind(struct device *dev, struct device *master,
++				 void *data)
++{
++	struct sun8i_dw_hdmi *hdmi = dev_get_drvdata(dev);
++
++	dw_hdmi_unbind(hdmi->hdmi);
++	sun8i_hdmi_phy_remove(hdmi);
++	reset_control_assert(hdmi->rst_ctrl);
++}
++
++static const struct component_ops sun8i_dw_hdmi_ops = {
++	.bind	= sun8i_dw_hdmi_bind,
++	.unbind	= sun8i_dw_hdmi_unbind,
++};
++
++static int sun8i_dw_hdmi_probe(struct platform_device *pdev)
++{
++	return component_add(&pdev->dev, &sun8i_dw_hdmi_ops);
++}
++
++static int sun8i_dw_hdmi_remove(struct platform_device *pdev)
++{
++	component_del(&pdev->dev, &sun8i_dw_hdmi_ops);
++
++	return 0;
++}
++
++static const struct of_device_id sun8i_dw_hdmi_dt_ids[] = {
++	{ .compatible = "allwinner,sun8i-a83t-dw-hdmi" },
++	{ /* sentinel */ },
++};
++MODULE_DEVICE_TABLE(of, sun8i_dw_hdmi_dt_ids);
++
++struct platform_driver sun8i_dw_hdmi_pltfm_driver = {
++	.probe  = sun8i_dw_hdmi_probe,
++	.remove = sun8i_dw_hdmi_remove,
++	.driver = {
++		.name = "sun8i-dw-hdmi",
++		.of_match_table = sun8i_dw_hdmi_dt_ids,
++	},
++};
++module_platform_driver(sun8i_dw_hdmi_pltfm_driver);
++
++MODULE_AUTHOR("Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>");
++MODULE_DESCRIPTION("Allwinner DW HDMI bridge");
++MODULE_LICENSE("GPL");
+diff --git a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
+new file mode 100644
+index 000000000000..007abab1ba29
+--- /dev/null
++++ b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
+@@ -0,0 +1,46 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * Copyright (C) 2018 Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
++ */
++
++#ifndef _SUN8I_DW_HDMI_H_
++#define _SUN8I_DW_HDMI_H_
++
++#include <drm/bridge/dw_hdmi.h>
++#include <drm/drm_encoder.h>
++#include <linux/clk.h>
++#include <linux/regmap.h>
++#include <linux/reset.h>
++
++struct sun8i_hdmi_phy {
++	struct clk		*clk_bus;
++	struct clk		*clk_mod;
++	struct clk		*clk_tmds;
++	struct regmap		*regs;
++	struct reset_control	*rst_phy;
++};
++
++struct sun8i_dw_hdmi {
++	struct device			*dev;
++	struct dw_hdmi			*hdmi;
++	struct drm_encoder		encoder;
++	struct sun8i_hdmi_phy		*phy;
++	struct dw_hdmi_plat_data	plat_data;
++	struct reset_control		*rst_ctrl;
++};
++
++static inline struct sun8i_dw_hdmi *
++encoder_to_sun8i_dw_hdmi(struct drm_encoder *encoder)
++{
++	return container_of(encoder, struct sun8i_dw_hdmi, encoder);
++}
++
++int sun8i_hdmi_phy_probe(struct sun8i_dw_hdmi *hdmi, struct device_node *node);
++void sun8i_hdmi_phy_remove(struct sun8i_dw_hdmi *hdmi);
++
++void sun8i_hdmi_phy_init(struct sun8i_hdmi_phy *phy);
++const struct dw_hdmi_phy_ops *sun8i_hdmi_phy_get_ops(void);
++void sun8i_hdmi_phy_update_clock(struct sun8i_hdmi_phy *phy,
++				 unsigned long rate);
++
++#endif /* _SUN8I_DW_HDMI_H_ */
+diff --git a/drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c b/drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c
+new file mode 100644
+index 000000000000..2555e488c5c5
+--- /dev/null
++++ b/drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c
+@@ -0,0 +1,302 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * Copyright (c) 2018 Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
++ */
++
++#include <linux/of_address.h>
++
++#include "sun8i_dw_hdmi.h"
++
++#define SUN8I_HDMI_PHY_DBG_CTRL_REG	0x0000
++#define SUN8I_HDMI_PHY_DBG_CTRL_PX_LOCK		BIT(0)
++#define SUN8I_HDMI_PHY_DBG_CTRL_POL_MASK	GENMASK(15, 8)
++#define SUN8I_HDMI_PHY_DBG_CTRL_POL(val)	(val << 8)
++#define SUN8I_HDMI_PHY_DBG_CTRL_ADDR_MASK	GENMASK(23, 16)
++#define SUN8I_HDMI_PHY_DBG_CTRL_ADDR(addr)	(addr << 16)
++
++#define SUN8I_HDMI_PHY_REXT_CTRL_REG	0x0004
++#define SUN8I_HDMI_PHY_REXT_CTRL_REXT_EN	BIT(31)
++
++#define SUN8I_HDMI_PHY_READ_EN_REG	0x0010
++#define SUN8I_HDMI_PHY_READ_EN_MAGIC		0x54524545
++
++#define SUN8I_HDMI_PHY_UNSCRAMBLE_REG	0x0014
++#define SUN8I_HDMI_PHY_UNSCRAMBLE_MAGIC		0x42494E47
++
++/*
++ * Address can be actually any value. Here is set to same value as
++ * it is set in BSP driver.
++ */
++#define I2C_ADDR	0x69
++
++static int sun8i_hdmi_phy_config(struct dw_hdmi *hdmi, void *data,
++				 struct drm_display_mode *mode)
++{
++	struct sun8i_hdmi_phy *phy = (struct sun8i_hdmi_phy *)data;
++	u32 val = 0;
++	int ret;
++
++	ret = clk_enable(phy->clk_tmds);
++	if (ret)
++		return ret;
++
++	if ((mode->flags & DRM_MODE_FLAG_NHSYNC) &&
++	    (mode->flags & DRM_MODE_FLAG_NHSYNC)) {
++		val = 0x03;
++	}
++
++	regmap_update_bits(phy->regs, SUN8I_HDMI_PHY_DBG_CTRL_REG,
++			   SUN8I_HDMI_PHY_DBG_CTRL_POL_MASK,
++			   SUN8I_HDMI_PHY_DBG_CTRL_POL(val));
++
++	regmap_update_bits(phy->regs, SUN8I_HDMI_PHY_REXT_CTRL_REG,
++			   SUN8I_HDMI_PHY_REXT_CTRL_REXT_EN,
++			   SUN8I_HDMI_PHY_REXT_CTRL_REXT_EN);
++
++	/* power down */
++	dw_hdmi_phy_gen2_txpwron(hdmi, 0);
++	dw_hdmi_phy_gen2_pddq(hdmi, 1);
++
++	dw_hdmi_phy_reset(hdmi);
++
++	dw_hdmi_phy_gen2_pddq(hdmi, 0);
++
++	dw_hdmi_phy_i2c_set_addr(hdmi, I2C_ADDR);
++
++	/*
++	 * Values are taken from BSP HDMI driver. Although AW didn't
++	 * release any documentation, explanation of this values can
++	 * be found in i.MX 6Dual/6Quad Reference Manual.
++	 */
++	if (mode->crtc_clock <= 27000) {
++		dw_hdmi_phy_i2c_write(hdmi, 0x01e0, 0x06);
++		dw_hdmi_phy_i2c_write(hdmi, 0x0000, 0x15);
++		dw_hdmi_phy_i2c_write(hdmi, 0x08da, 0x10);
++		dw_hdmi_phy_i2c_write(hdmi, 0x0007, 0x19);
++		dw_hdmi_phy_i2c_write(hdmi, 0x0318, 0x0e);
++		dw_hdmi_phy_i2c_write(hdmi, 0x8009, 0x09);
++	} else if (mode->crtc_clock <= 74250) {
++		dw_hdmi_phy_i2c_write(hdmi, 0x0540, 0x06);
++		dw_hdmi_phy_i2c_write(hdmi, 0x0005, 0x15);
++		dw_hdmi_phy_i2c_write(hdmi, 0x0000, 0x10);
++		dw_hdmi_phy_i2c_write(hdmi, 0x0007, 0x19);
++		dw_hdmi_phy_i2c_write(hdmi, 0x02b5, 0x0e);
++		dw_hdmi_phy_i2c_write(hdmi, 0x8009, 0x09);
++	} else if (mode->crtc_clock <= 148500) {
++		dw_hdmi_phy_i2c_write(hdmi, 0x04a0, 0x06);
++		dw_hdmi_phy_i2c_write(hdmi, 0x000a, 0x15);
++		dw_hdmi_phy_i2c_write(hdmi, 0x0000, 0x10);
++		dw_hdmi_phy_i2c_write(hdmi, 0x0002, 0x19);
++		dw_hdmi_phy_i2c_write(hdmi, 0x0021, 0x0e);
++		dw_hdmi_phy_i2c_write(hdmi, 0x8029, 0x09);
++	} else {
++		dw_hdmi_phy_i2c_write(hdmi, 0x0000, 0x06);
++		dw_hdmi_phy_i2c_write(hdmi, 0x000f, 0x15);
++		dw_hdmi_phy_i2c_write(hdmi, 0x0000, 0x10);
++		dw_hdmi_phy_i2c_write(hdmi, 0x0002, 0x19);
++		dw_hdmi_phy_i2c_write(hdmi, 0x0000, 0x0e);
++		dw_hdmi_phy_i2c_write(hdmi, 0x802b, 0x09);
++	}
++
++	dw_hdmi_phy_i2c_write(hdmi, 0x0000, 0x1e);
++	dw_hdmi_phy_i2c_write(hdmi, 0x0000, 0x13);
++	dw_hdmi_phy_i2c_write(hdmi, 0x0000, 0x17);
++
++	dw_hdmi_phy_gen2_txpwron(hdmi, 1);
++
++	return 0;
++};
++
++static void sun8i_hdmi_phy_disable(struct dw_hdmi *hdmi, void *data)
++{
++	struct sun8i_hdmi_phy *phy = (struct sun8i_hdmi_phy *)data;
++
++	dw_hdmi_phy_gen2_txpwron(hdmi, 0);
++	dw_hdmi_phy_gen2_pddq(hdmi, 1);
++
++	regmap_update_bits(phy->regs, SUN8I_HDMI_PHY_REXT_CTRL_REG,
++			   SUN8I_HDMI_PHY_REXT_CTRL_REXT_EN, 0);
++
++	clk_disable(phy->clk_tmds);
++}
++
++static const struct dw_hdmi_phy_ops sun8i_hdmi_phy_ops = {
++	.init = &sun8i_hdmi_phy_config,
++	.disable = &sun8i_hdmi_phy_disable,
++	.read_hpd = &dw_hdmi_phy_read_hpd,
++	.update_hpd = &dw_hdmi_phy_update_hpd,
++	.setup_hpd = &dw_hdmi_phy_setup_hpd,
++};
++
++void sun8i_hdmi_phy_init(struct sun8i_hdmi_phy *phy)
++{
++	/* enable read access to HDMI controller */
++	regmap_write(phy->regs, SUN8I_HDMI_PHY_READ_EN_REG,
++		     SUN8I_HDMI_PHY_READ_EN_MAGIC);
++
++	/* unscramble register offsets */
++	regmap_write(phy->regs, SUN8I_HDMI_PHY_UNSCRAMBLE_REG,
++		     SUN8I_HDMI_PHY_UNSCRAMBLE_MAGIC);
++
++	regmap_update_bits(phy->regs, SUN8I_HDMI_PHY_DBG_CTRL_REG,
++			   SUN8I_HDMI_PHY_DBG_CTRL_PX_LOCK,
++			   SUN8I_HDMI_PHY_DBG_CTRL_PX_LOCK);
++
++	/*
++	 * Set PHY I2C address. It must match to the address set by
++	 * dw_hdmi_phy_set_slave_addr().
++	 */
++	regmap_update_bits(phy->regs, SUN8I_HDMI_PHY_DBG_CTRL_REG,
++			   SUN8I_HDMI_PHY_DBG_CTRL_ADDR_MASK,
++			   SUN8I_HDMI_PHY_DBG_CTRL_ADDR(I2C_ADDR));
++}
++
++const struct dw_hdmi_phy_ops *sun8i_hdmi_phy_get_ops(void)
++{
++	return &sun8i_hdmi_phy_ops;
++}
++
++void sun8i_hdmi_phy_update_clock(struct sun8i_hdmi_phy *phy,
++				 unsigned long rate)
++{
++	clk_set_rate(phy->clk_tmds, rate);
++}
++
++static struct regmap_config sun8i_hdmi_phy_regmap_config = {
++	.reg_bits	= 32,
++	.val_bits	= 32,
++	.reg_stride	= 4,
++	.max_register	= SUN8I_HDMI_PHY_UNSCRAMBLE_REG,
++	.name		= "phy"
++};
++
++static const struct of_device_id sun8i_hdmi_phy_of_table[] = {
++	{ .compatible = "allwinner,sun8i-a83t-hdmi-phy" },
++	{ /* sentinel */ }
++};
++
++int sun8i_hdmi_phy_probe(struct sun8i_dw_hdmi *hdmi, struct device_node *node)
++{
++	struct device *dev = hdmi->dev;
++	struct sun8i_hdmi_phy *phy;
++	struct resource res;
++	void __iomem *regs;
++	int ret;
++
++	if (!of_match_node(sun8i_hdmi_phy_of_table, node)) {
++		dev_err(dev, "Incompatible HDMI PHY\n");
++		return -EINVAL;
++	}
++
++	phy = devm_kzalloc(dev, sizeof(*phy), GFP_KERNEL);
++	if (!phy)
++		return -ENOMEM;
++
++	ret = of_address_to_resource(node, 0, &res);
++	if (ret) {
++		dev_err(dev, "phy: Couldn't get our resources\n");
++		return ret;
++	}
++
++	regs = devm_ioremap_resource(dev, &res);
++	if (IS_ERR(regs)) {
++		dev_err(dev, "Couldn't map the HDMI PHY registers\n");
++		return PTR_ERR(regs);
++	}
++
++	phy->regs = devm_regmap_init_mmio(dev, regs,
++					  &sun8i_hdmi_phy_regmap_config);
++	if (IS_ERR(phy->regs)) {
++		dev_err(dev, "Couldn't create the HDMI PHY regmap\n");
++		return PTR_ERR(phy->regs);
++	}
++
++	phy->clk_bus = of_clk_get_by_name(node, "bus");
++	if (IS_ERR(phy->clk_bus)) {
++		dev_err(dev, "Could not get bus clock\n");
++		return PTR_ERR(phy->clk_bus);
++	}
++
++	phy->clk_mod = of_clk_get_by_name(node, "mod");
++	if (IS_ERR(phy->clk_mod)) {
++		dev_err(dev, "Could not get mod clock\n");
++		ret = PTR_ERR(phy->clk_mod);
++		goto err_put_clk_bus;
++	}
++
++	phy->clk_tmds = of_clk_get_by_name(node, "tmds");
++	if (IS_ERR(phy->clk_tmds)) {
++		dev_err(dev, "Could not get tmds clock\n");
++		ret = PTR_ERR(phy->clk_tmds);
++		goto err_put_clk_mod;
++	}
++
++	phy->rst_phy = of_reset_control_get_shared(node, "phy");
++	if (IS_ERR(phy->rst_phy)) {
++		dev_err(dev, "Could not get phy reset control\n");
++		ret = PTR_ERR(phy->rst_phy);
++		goto err_put_clk_tmds;
++	}
++
++	ret = reset_control_deassert(phy->rst_phy);
++	if (ret) {
++		dev_err(dev, "Cannot deassert phy reset control: %d\n", ret);
++		goto err_put_rst_phy;
++	}
++
++	ret = clk_prepare_enable(phy->clk_bus);
++	if (ret) {
++		dev_err(dev, "Cannot enable bus clock: %d\n", ret);
++		goto err_deassert_rst_phy;
++	}
++
++	ret = clk_prepare_enable(phy->clk_mod);
++	if (ret) {
++		dev_err(dev, "Cannot enable mod clock: %d\n", ret);
++		goto err_disable_clk_bus;
++	}
++
++	ret = clk_prepare(phy->clk_tmds);
++	if (ret) {
++		dev_err(dev, "Cannot prepare tmds clock: %d\n", ret);
++		goto err_disable_clk_mod;
++	}
++
++	hdmi->phy = phy;
++
++	return 0;
++
++err_disable_clk_mod:
++	clk_disable_unprepare(phy->clk_mod);
++err_disable_clk_bus:
++	clk_disable_unprepare(phy->clk_bus);
++err_deassert_rst_phy:
++	reset_control_assert(phy->rst_phy);
++err_put_rst_phy:
++	reset_control_put(phy->rst_phy);
++err_put_clk_tmds:
++	clk_put(phy->clk_tmds);
++err_put_clk_mod:
++	clk_put(phy->clk_mod);
++err_put_clk_bus:
++	clk_put(phy->clk_bus);
++
++	return ret;
++}
++
++void sun8i_hdmi_phy_remove(struct sun8i_dw_hdmi *hdmi)
++{
++	struct sun8i_hdmi_phy *phy = hdmi->phy;
++
++	clk_unprepare(phy->clk_tmds);
++	clk_disable_unprepare(phy->clk_mod);
++	clk_disable_unprepare(phy->clk_bus);
++
++	reset_control_assert(phy->rst_phy);
++
++	reset_control_put(phy->rst_phy);
++
++	clk_put(phy->clk_tmds);
++	clk_put(phy->clk_mod);
++	clk_put(phy->clk_bus);
++}
 -- 
 2.15.1
