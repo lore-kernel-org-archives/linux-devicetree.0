@@ -1,65 +1,77 @@
 From: Michal Simek <michal.simek@xilinx.com>
-Subject: [PATCH 2/5] arm: zynq: Add support for Xilinx zc770 xm010 dc1 board
-Date: Wed, 17 Jan 2018 15:41:10 +0100
-Message-ID: <925c5e76e33d87988f43ccf624e88d976d15651d.1516200065.git.michal.simek@xilinx.com>
+Subject: [PATCH 1/5] arm: zynq: Add Xilinx cc108 board
+Date: Wed, 17 Jan 2018 15:41:09 +0100
+Message-ID: <2dd39101153bb1985180c856f17bd60ca79d620f.1516200065.git.michal.simek@xilinx.com>
 References: <cover.1516200065.git.michal.simek@xilinx.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <cover.1516200065.git.michal.simek@xilinx.com>
 In-Reply-To: <cover.1516200065.git.michal.simek@xilinx.com>
 References: <cover.1516200065.git.michal.simek@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: devicetree@vger.kernel.org
-Cc: monstr@monstr.eu, Steffen Trumtrar <s.trumtrar@pengutronix.de>, linux-kernel@vger.kernel.org, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Rob Herring <robherring2@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Josh Cartwright <josh.cartwright@ni.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Josh Cartwright <josh.cartwright@ni.com>, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, monstr@monstr.eu, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Rob Herring <robherring2@gmail.com>, Russell King <linux@armlinux.org.uk>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-zc770 is based board which is extended by FMC/DC cards for SoC
-validation. FMCs/DCs are supposed to cover all SoC configurations.
-FMC/DC contains ethernet port, can, i2c, sd, qspi, spi, uart and usb.
+The board contains 7z010 with 512MB memory, ethernet, qspi, uart, usbs
+and sd. But board is not supporting booting from sd card.
 
 Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 ---
 
- arch/arm/boot/dts/Makefile             |  1 +
- arch/arm/boot/dts/zynq-zc770-xm010.dts | 92 ++++++++++++++++++++++++++++++++++
- 2 files changed, 93 insertions(+)
- create mode 100644 arch/arm/boot/dts/zynq-zc770-xm010.dts
+ arch/arm/boot/dts/Makefile       |  1 +
+ arch/arm/boot/dts/zynq-cc108.dts | 75 ++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 76 insertions(+)
+ create mode 100644 arch/arm/boot/dts/zynq-cc108.dts
 
 diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 679cd258bc1f..fa62546ebfb3 100644
+index d0381e9caf21..679cd258bc1f 100644
 --- a/arch/arm/boot/dts/Makefile
 +++ b/arch/arm/boot/dts/Makefile
-@@ -1041,6 +1041,7 @@ dtb-$(CONFIG_ARCH_ZYNQ) += \
+@@ -1036,6 +1036,7 @@ dtb-$(CONFIG_ARCH_VT8500) += \
+ 	wm8750-apc8750.dtb \
+ 	wm8850-w70v2.dtb
+ dtb-$(CONFIG_ARCH_ZYNQ) += \
++	zynq-cc108.dtb \
+ 	zynq-microzed.dtb \
  	zynq-parallella.dtb \
  	zynq-zc702.dtb \
- 	zynq-zc706.dtb \
-+	zynq-zc770-xm010.dtb \
- 	zynq-zed.dtb \
- 	zynq-zybo.dtb
- dtb-$(CONFIG_MACH_ARMADA_370) += \
-diff --git a/arch/arm/boot/dts/zynq-zc770-xm010.dts b/arch/arm/boot/dts/zynq-zc770-xm010.dts
+diff --git a/arch/arm/boot/dts/zynq-cc108.dts b/arch/arm/boot/dts/zynq-cc108.dts
 new file mode 100644
-index 000000000000..b1cfb4ede434
+index 000000000000..1a0f631c1d8d
 --- /dev/null
-+++ b/arch/arm/boot/dts/zynq-zc770-xm010.dts
-@@ -0,0 +1,92 @@
++++ b/arch/arm/boot/dts/zynq-cc108.dts
+@@ -0,0 +1,75 @@
 +// SPDX-License-Identifier: GPL-2.0+
 +/*
-+ * Xilinx ZC770 XM010 board DTS
++ * Xilinx CC108 board DTS
 + *
-+ * Copyright (C) 2013-2018 Xilinx, Inc.
++ * (C) Copyright 2007-2018 Xilinx, Inc.
++ * (C) Copyright 2007-2013 Michal Simek
++ * (C) Copyright 2007-2012 PetaLogix Qld Pty Ltd
++ *
++ * Michal SIMEK <monstr@monstr.eu>
 + */
 +/dts-v1/;
-+#include "zynq-7000.dtsi"
++/include/ "zynq-7000.dtsi"
 +
 +/ {
-+	compatible = "xlnx,zynq-zc770-xm010", "xlnx,zynq-7000";
++	compatible = "xlnx,zynq-cc108", "xlnx,zynq-7000";
 +	model = "Xilinx Zynq";
 +
 +	aliases {
 +		ethernet0 = &gem0;
-+		i2c0 = &i2c0;
-+		serial0 = &uart1;
-+		spi1 = &spi1;
++		serial0 = &uart0;
 +	};
 +
 +	chosen {
@@ -69,17 +81,18 @@ index 000000000000..b1cfb4ede434
 +
 +	memory@0 {
 +		device_type = "memory";
-+		reg = <0x0 0x40000000>;
++		reg = <0x0 0x20000000>;
 +	};
 +
 +	usb_phy0: phy0 {
 +		compatible = "usb-nop-xceiv";
 +		#phy-cells = <0>;
 +	};
-+};
 +
-+&can0 {
-+	status = "okay";
++	usb_phy1: phy1 {
++		compatible = "usb-nop-xceiv";
++		#phy-cells = <0>;
++	};
 +};
 +
 +&gem0 {
@@ -87,45 +100,19 @@ index 000000000000..b1cfb4ede434
 +	phy-mode = "rgmii-id";
 +	phy-handle = <&ethernet_phy>;
 +
-+	ethernet_phy: ethernet-phy@7 {
-+		reg = <7>;
++	ethernet_phy: ethernet-phy@1 {
++		reg = <1>;
 +		device_type = "ethernet-phy";
 +	};
 +};
 +
-+&i2c0 {
++&sdhci1 {
 +	status = "okay";
-+	clock-frequency = <400000>;
-+
-+	eeprom: eeprom@52 {
-+		compatible = "atmel,24c02";
-+		reg = <0x52>;
-+	};
-+
++	broken-cd ;
++	wp-inverted ;
 +};
 +
-+&sdhci0 {
-+	status = "okay";
-+};
-+
-+&spi1 {
-+	status = "okay";
-+	num-cs = <4>;
-+	is-decoded-cs = <0>;
-+	flash@0 {
-+		compatible = "sst25wf080", "jedec,spi-nor";
-+		reg = <1>;
-+		spi-max-frequency = <1000000>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		partition@test {
-+			label = "spi-flash";
-+			reg = <0x0 0x100000>;
-+		};
-+	};
-+};
-+
-+&uart1 {
++&uart0 {
 +	status = "okay";
 +};
 +
@@ -133,6 +120,12 @@ index 000000000000..b1cfb4ede434
 +	status = "okay";
 +	dr_mode = "host";
 +	usb-phy = <&usb_phy0>;
++};
++
++&usb1 {
++	status = "okay";
++	dr_mode = "host";
++	usb-phy = <&usb_phy1>;
 +};
 -- 
 1.9.1
