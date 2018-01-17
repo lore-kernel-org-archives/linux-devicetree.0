@@ -1,157 +1,179 @@
-From: Julia Cartwright <juliac@eso.teric.us>
-Subject: Re: [patch v17 1/4] drivers: jtag: Add JTAG core driver
-Date: Wed, 17 Jan 2018 13:14:41 -0600
-Message-ID: <20180117191441.GE2818@kryptos.localdomain>
-References: <1516087139-7510-1-git-send-email-oleksandrs@mellanox.com>
- <1516087139-7510-2-git-send-email-oleksandrs@mellanox.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v4 2/4] ARM: dts: split trats2 DTS in preparation for
+ midas boards
+Date: Wed, 17 Jan 2018 20:27:21 +0100
+Message-ID: <20180117192721.nxr3463gj2qyyrwr@kozik-lap>
+References: <20180117125845.3954-1-simon@lineageos.org>
+ <20180117125845.3954-3-simon@lineageos.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1516087139-7510-2-git-send-email-oleksandrs@mellanox.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Oleksandr Shamray <oleksandrs@mellanox.com>
-Cc: gregkh@linuxfoundation.org, arnd@arndb.de, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, openbmc@lists.ozlabs.org, joel@jms.id.au, jiri@resnulli.us, tklauser@distanz.ch, linux-serial@vger.kernel.org, vadimp@mellanox.com, system-sw-low-level@mellanox.com, robh+dt@kernel.org, openocd-devel-owner@lists.sourceforge.net, linux-api@vger.kernel.org, davem@davemloft.net, mchehab@kernel.org, Jiri Pirko <jiri@mellanox.com>
+In-Reply-To: <20180117125845.3954-3-simon@lineageos.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Simon Shields <simon@lineageos.org>
+Cc: linux-samsung-soc@vger.kernel.org, Rob Herring <robh@kernel.org>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>, =?utf-8?Q?Bart=C5=82omiej_=C5=BBo=C5=82nierkiewicz?= <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello Oleksandr-
-
-On Tue, Jan 16, 2018 at 09:18:56AM +0200, Oleksandr Shamray wrote:
-[..]
-> v16->v17
-> Comments pointed by Julia Cartwright <juliac@eso.teric.us>
-
-More review feedback below:
-
-[..]
-> +++ b/drivers/jtag/jtag.c
-[..]
-> +static long jtag_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
-> +{
-> +	struct jtag *jtag = file->private_data;
-> +	struct jtag_run_test_idle idle;
-> +	struct jtag_xfer xfer;
-> +	u8 *xfer_data;
-> +	u32 data_size;
-> +	u32 value;
-> +	int err;
-> +
-> +	if (!arg)
-> +		return -EINVAL;
-> +
-> +	switch (cmd) {
-> +	case JTAG_GIOCFREQ:
-> +		if (!jtag->ops->freq_get)
-> +			err = -EOPNOTSUPP;
-
-Did you mean:
-
-			return -EOPNOTSUPP;
-
-?
-
-> +
-> +		err = jtag->ops->freq_get(jtag, &value);
-
-Otherwise you're check was worthless, you'll call NULL here.
-
-Also, w.r.t. the set of ops which are required to be implemented: this
-isn't the right place to do the check.
-
-Instead, do it in jtag_alloc():
-
-	struct jtag *jtag_alloc(size_t priv_size, const struct jtag_ops *ops)
-	{
-		struct jtag *jtag;
-
-		if (!ops->freq_get || !ops->xfer || ...) /* fixup condition */
-			return NULL;
-
-		jtag = kzalloc(sizeof(*jtag) + priv_size, GFP_KERNEL);
-		if (!jtag)
-			return NULL;
-
-		jtag->ops = ops;
-		return jtag;
-	}
-	EXPORT_SYMBOL_GPL(jtag_alloc);
-
-[..]
-> +	case JTAG_IOCXFER:
-[..]
-> +		data_size = DIV_ROUND_UP(xfer.length, BITS_PER_BYTE);
-> +		xfer_data = memdup_user(u64_to_user_ptr(xfer.tdio), data_size);
-> +
-> +		if (!xfer_data)
-
-memdup_user() doesn't return NULL on error.  You need to check for
-IS_ERR(xfer_data).
-
-> +			return -EFAULT;
-> +
-> +		err = jtag->ops->xfer(jtag, &xfer, xfer_data);
-> +		if (err) {
-> +			kfree(xfer_data);
-> +			return -EFAULT;
-> +		}
-> +
-> +		err = copy_to_user(u64_to_user_ptr(xfer.tdio),
-> +				   (void *)(xfer_data), data_size);
-> +
-> +		if (err) {
-> +			kfree(xfer_data);
-> +			return -EFAULT;
-> +		}
-> +
-> +		kfree(xfer_data);
-
-Move the kfree() above the if (err).
-
-> +		if (copy_to_user((void *)arg, &xfer, sizeof(struct jtag_xfer)))
-> +			return -EFAULT;
-> +		break;
-> +
-> +	case JTAG_GIOCSTATUS:
-> +		if (!jtag->ops->status_get)
-> +			return -EOPNOTSUPP;
-> +
-> +		err = jtag->ops->status_get(jtag, &value);
-> +		if (err)
-> +			break;
-> +
-> +		err = put_user(value, (__u32 *)arg);
-> +		if (err)
-> +			err = -EFAULT;
-
-put_user() returns -EFAULT on failure, so this shouldn't be necessary.
-
-[..]
+On Wed, Jan 17, 2018 at 11:58:43PM +1100, Simon Shields wrote:
+> The midas boards share a lot with trats2. Split the common parts
+> out of trats2 into a common midas dtsi and a common "galaxy s3" dts.
+> 
+> Signed-off-by: Simon Shields <simon@lineageos.org>
+> ---
+>  arch/arm/boot/dts/exynos4412-galaxy-s3.dtsi        |  141 ++
+>  ...exynos4412-trats2.dts => exynos4412-midas.dtsi} |  119 +-
+>  arch/arm/boot/dts/exynos4412-trats2.dts            | 1441 +-------------------
+>  3 files changed, 174 insertions(+), 1527 deletions(-)
+>  create mode 100644 arch/arm/boot/dts/exynos4412-galaxy-s3.dtsi
+>  copy arch/arm/boot/dts/{exynos4412-trats2.dts => exynos4412-midas.dtsi} (91%)
+>  rewrite arch/arm/boot/dts/exynos4412-trats2.dts (98%)
+> 
+> diff --git a/arch/arm/boot/dts/exynos4412-galaxy-s3.dtsi b/arch/arm/boot/dts/exynos4412-galaxy-s3.dtsi
+> new file mode 100644
+> index 000000000000..b87ea2176978
 > --- /dev/null
-> +++ b/include/uapi/linux/jtag.h
-[..]
-> +/**
-> + * struct jtag_xfer - jtag xfer:
+> +++ b/arch/arm/boot/dts/exynos4412-galaxy-s3.dtsi
+> @@ -0,0 +1,141 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Samsung's Exynos4412 based Galaxy S3 board device tree source
 > + *
-> + * @type: transfer type
-> + * @direction: xfer direction
-> + * @length: xfer bits len
-> + * @tdio : xfer data array
-> + * @endir: xfer end state
-> + *
-> + * Structure represents interface to JTAG device for jtag sdr xfer
-> + * execution.
+> + * Copyright (c) 2013 Samsung Electronics Co., Ltd.
+> + *		http://www.samsung.com
 > + */
-> +struct jtag_xfer {
-> +	__u8	type;
-> +	__u8	direction;
-> +	__u8	endstate;
-
-Just to be as unambiguous as possible, considering this is ABI, I would
-suggest explicitly putting a padding byte here.
-
-> +	__u32	length;
-> +	__u64	tdio;
+> +
+> +/dts-v1/;
+> +#include "exynos4412-midas.dtsi"
+> +
+> +/ {
+> +	aliases {
+> +		i2c9 = &i2c_ak8975;
+> +		i2c10 = &i2c_cm36651;
+> +	};
+> +
+> +	regulators {
+> +		lcd_vdd3_reg: voltage-regulator-2 {
+> +			compatible = "regulator-fixed";
+> +			regulator-name = "LCD_VDD_2.2V";
+> +			regulator-min-microvolt = <2200000>;
+> +			regulator-max-microvolt = <2200000>;
+> +			gpio = <&gpc0 1 GPIO_ACTIVE_HIGH>;
+> +			enable-active-high;
+> +		};
+> +
+> +		ps_als_reg: voltage-regulator-5 {
+> +			compatible = "regulator-fixed";
+> +			regulator-name = "LED_A_3.0V";
+> +			regulator-min-microvolt = <3000000>;
+> +			regulator-max-microvolt = <3000000>;
+> +			gpio = <&gpj0 5 GPIO_ACTIVE_HIGH>;
+> +			enable-active-high;
+> +		};
+> +	};
+> +
+> +	i2c_ak8975: i2c-gpio-0 {
+> +		compatible = "i2c-gpio";
+> +		gpios = <&gpy2 4 GPIO_ACTIVE_HIGH>, <&gpy2 5 GPIO_ACTIVE_HIGH>;
+> +		i2c-gpio,delay-us = <2>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		status = "okay";
+> +
+> +		ak8975@c {
+> +			compatible = "asahi-kasei,ak8975";
+> +			reg = <0x0c>;
+> +			gpios = <&gpj0 7 GPIO_ACTIVE_HIGH>;
+> +		};
+> +	};
+> +
+> +	i2c_cm36651: i2c-gpio-2 {
+> +		compatible = "i2c-gpio";
+> +		gpios = <&gpf0 0 GPIO_ACTIVE_LOW>, <&gpf0 1 GPIO_ACTIVE_LOW>;
+> +		i2c-gpio,delay-us = <2>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		cm36651@18 {
+> +			compatible = "capella,cm36651";
+> +			reg = <0x18>;
+> +			interrupt-parent = <&gpx0>;
+> +			interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
+> +			vled-supply = <&ps_als_reg>;
+> +		};
+> +	};
 > +};
+> +
+> +&buck9_reg {
+> +	maxim,ena-gpios = <&gpm0 3 GPIO_ACTIVE_HIGH>;
+> +};
+> +
+> +&cam_af_reg {
+> +	gpio = <&gpm0 4 GPIO_ACTIVE_HIGH>;
+> +	status = "okay";
+> +};
+> +
+> +&cam_io_reg {
+> +	gpio = <&gpm0 2 GPIO_ACTIVE_HIGH>;
+> +	status = "okay";
+> +};
+> +
+> +&dsi_0 {
+> +	status = "okay";
+> +
+> +	panel@0 {
+> +		compatible = "samsung,s6e8aa0";
+> +		reg = <0>;
+> +		vdd3-supply = <&lcd_vdd3_reg>;
+> +		vci-supply = <&ldo25_reg>;
+> +		reset-gpios = <&gpf2 1 GPIO_ACTIVE_HIGH>;
+> +		power-on-delay= <50>;
+> +		reset-delay = <100>;
+> +		init-delay = <100>;
+> +		flip-horizontal;
+> +		flip-vertical;
+> +		panel-width-mm = <58>;
+> +		panel-height-mm = <103>;
+> +
+> +		display-timings {
+> +			timing-0 {
+> +				clock-frequency = <57153600>;
+> +				hactive = <720>;
+> +				vactive = <1280>;
+> +				hfront-porch = <5>;
+> +				hback-porch = <5>;
+> +				hsync-len = <5>;
+> +				vfront-porch = <13>;
+> +				vback-porch = <1>;
+> +				vsync-len = <2>;
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +&i2c_3 {
+> +	mms114-touchscreen@48 {
+> +		compatible = "melfas,mms114";
+> +		reg = <0x48>;
+> +		interrupt-parent = <&gpm2>;
+> +		interrupts = <3 IRQ_TYPE_EDGE_FALLING>;
+> +		x-size = <720>;
+> +		y-size = <1280>;
+> +		avdd-supply = <&ldo23_reg>;
+> +		vdd-supply = <&ldo24_reg>;
+> +	};
+> +};
+> +
+> +&ldo25_reg {
+> +	regulator-name = "LCD_VCC_3.3V";
+> +	regulator-min-microvolt = <2800000>;
+> +	regulator-max-microvolt = <2800000>;
+> +	status = "okay";
 
-Thanks,
-   Julia
+The pmic regulator should not have status okay. It is not disabled.
+
+Rest looks good, thanks for resubmit!
+
+
+Best regards,
+Krzysztof
