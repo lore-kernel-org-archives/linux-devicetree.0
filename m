@@ -1,92 +1,75 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v2 6/7] dt-bindings: serial: Add bindings for GENI based
- UART Controller
-Date: Tue, 16 Jan 2018 22:35:06 -0800
-Message-ID: <20180117063506.GD6620@minitux>
-References: <1515805547-22816-1-git-send-email-kramasub@codeaurora.org>
- <1515805547-22816-7-git-send-email-kramasub@codeaurora.org>
+From: "Ardelean, Alexandru" <alexandru.Ardelean-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 1/3] staging: iio: adc: ad7192: fix external frequency
+ setting
+Date: Wed, 17 Jan 2018 07:45:35 +0000
+Message-ID: <1516175133.4383.3.camel@analog.com>
+References: <20180110112956.23931-1-alexandru.ardelean@analog.com>
+         <20180114123745.7a1180ca@archlinux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1515805547-22816-7-git-send-email-kramasub@codeaurora.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>
-Cc: corbet@lwn.net, andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, wsa@the-dreams.de, gregkh@linuxfoundation.org, linux-doc@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-serial@vger.kernel.org, jslaby@suse.com, Girish Mahadevan <girishm@codeaurora.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180114123745.7a1180ca@archlinux>
+Content-Language: en-US
+Content-ID: <B84ABFB4DDA6994D82DCAB9E49EE50B6-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org" <jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>
+Cc: "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Hennerich, Michael" <Michael.Hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri 12 Jan 17:05 PST 2018, Karthikeyan Ramasubramanian wrote:
-
-> Add device tree binding support for GENI based UART Controller in the
-> QUP Wrapper.
-> 
-> Signed-off-by: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>
-> Signed-off-by: Girish Mahadevan <girishm@codeaurora.org>
-> ---
->  .../devicetree/bindings/serial/qcom,geni-uart.txt  | 29 ++++++++++++++++++++++
->  .../devicetree/bindings/soc/qcom/qcom,geni-se.txt  | 13 ++++++++++
->  2 files changed, 42 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/serial/qcom,geni-uart.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/serial/qcom,geni-uart.txt b/Documentation/devicetree/bindings/serial/qcom,geni-uart.txt
-> new file mode 100644
-> index 0000000..e7b9e24
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/serial/qcom,geni-uart.txt
-> @@ -0,0 +1,29 @@
-> +Qualcomm Technologies Inc. GENI Serial Engine based UART Controller
-> +
-> +The Generic Interface (GENI) Serial Engine based UART controller supports
-> +console use-cases and is supported only by GENI based Qualcomm Universal
-> +Peripheral (QUP) cores.
-> +
-> +Required properties:
-> +- compatible: should contain "qcom,geni-debug-uart".
-
-Why is this uart a _debug_ uart? Is there a separate binding for the
-geni-uart?
-
-I like that your naming here matches my suggestion with qcom,geni-i2c.
-
-> +- reg: Should contain UART register location and length.
-> +- reg-names: Should contain "se-phys".
-
-No need to specify reg-names for a single reg.
-
-> +- interrupts: Should contain UART core interrupts.
-> +- clock-names: Should contain "se-clk".
-
-Omit the "clk"
-
-> +- clocks: clocks needed for UART, includes the core clock.
-
-Be more specific.
-
-> +- pinctrl-names/pinctrl-0/1: The GPIOs assigned to this core. The names
-> +  Should be "active" and "sleep" for the pin confuguration when core is active
-> +  or when entering sleep state.
-
-Omit pinctrl information.
-
-> +
-> +Example:
-> +uart0: qcom,serial@a88000 {
-
-Don't use qcom, in node name. This should be named "serial".
-
-> +	compatible = "qcom,geni-debug-uart";
-> +	reg = <0xa88000 0x7000>;
-> +	reg-names = "se-phys";
-> +	interrupts = <0 355 0>;
-
-<GIC_SPI 355 IRQ_TYPE_LEVEL_HIGH>
-
-> +	clock-names = "se-clk";
-> +	clocks = <&clock_gcc GCC_QUPV3_WRAP0_S0_CLK>;
-> +	pinctrl-names = "default", "sleep";
-> +	pinctrl-0 = <&qup_1_uart_3_active>;
-> +	pinctrl-1 = <&qup_1_uart_3_sleep>;
-> +};
-
-Regards,
-Bjorn
+T24gU3VuLCAyMDE4LTAxLTE0IGF0IDEyOjM3ICswMDAwLCBKb25hdGhhbiBDYW1lcm9uIHdyb3Rl
+Og0KPiBPbiBXZWQsIDEwIEphbiAyMDE4IDEzOjI5OjU0ICswMjAwDQo+IDxhbGV4YW5kcnUuYXJk
+ZWxlYW5AYW5hbG9nLmNvbT4gd3JvdGU6DQo+IA0KPiA+IEZyb206IEFsZXhhbmRydSBBcmRlbGVh
+biA8YWxleGFuZHJ1LmFyZGVsZWFuQGFuYWxvZy5jb20+DQo+ID4gDQo+ID4gQWNjb3JkaW5nIHRv
+IHRoZSBkYXRhc2hlZXQ6DQo+ID4gKiAwIC0gZXh0ZXJuYWwgY3J5c3RhbCwgY29ubmVjdGVkIGZy
+b20gcGluIE1DTEsxIHRvIE1DTEsyDQo+IA0KPiBXaGF0IGZyZXF1ZW5jeSBvZiBjcnlzdGFsPyAg
+TXkgcXVpY2sgcmVhZCBvZiB0aGUgZGF0YXNoZWV0DQo+IGltcGxpZXMgdGhpcyBtYXkgYmUgZmxl
+eGlibGUuICBQb3NzaWJseSBhcyBmbGV4aWJsZSBhcw0KPiB0aGUgY2xvY2sgb3B0aW9uLi4uDQoN
+CkkgdGhpbmsgeW91J3JlIHJpZ2h0IGFib3V0IHRoaXMuDQpXaWxsIHJlLXZpc2l0IHRoaXMuDQoN
+CklzIGl0IG9rIGlmIEkgcmUtc3BpbiB0aGlzIGFzIGEgc3RhbmRhbG9uZSBwYXRjaCA/DQoNClNp
+bmNlIEknbSBuZXcgYXJvdW5kIGhlcmUsIG1heWJlIGl0IHdvdWxkIHByb2JhYmx5IGJlIGdvb2Qg
+dG8gdHJ5IHRvDQpzZW5kIG9uZSBwYXRjaCBhdCBhIHRpbWUgYW5kIHJlc29sdmUgc3luY2hyb25p
+emF0aW9uIFtiZXR3ZWVuIHdoYXQgSQ0KZGVsaXZlciB2cyByZWNvbW1lbmRlZCB3YXlzIG9mIGRv
+aW5nIHRoaW5nc10uDQoNCj4gDQo+IA0KPiA+ICogMSAtIGV4dGVybmFsIGNsb2NrLCBhcHBsaWVk
+IHRvIE1DTEsyIHBpbg0KPiA+ICogMiAtIGludGVybmFsIDQuOTIgTWh6IGNsb2NrOyBwaW4gTUNM
+SzIgaXMgdHJpc3RhdGVkDQo+ID4gKiAzIC0gaW50ZXJuYWwgNC45MiBNaHogY2xvY2s7IGludGVy
+bmFsIGNsb2NrIGlzIGF2YWlsYWJsZSBvbiBNQ0xLMg0KPiA+IA0KPiA+IFdoaWNoIG1lYW5zIHRo
+YXQgdGhlIGV4dGVybmFsIGNsb2NrIHZhbHVlIG9ubHkgaGFzIHNlbnNlDQo+ID4gZm9yIHZhbHVl
+IDEgKEFENzE5Ml9DTEtfRVhUX01DTEsyKS4NCj4gPiANCj4gPiBBbHNvIGFkZGVkIHJhbmdlIHZh
+bGlkYXRpb24gZm9yIHRoZSBleHRlcm5hbCBmcmVxdWVuY3kNCj4gPiBzZXR0aW5nLCB3aGljaCB0
+aGUgZGF0YXNoZWV0IG1lbnRpb25zIHRoYXQgaXQncw0KPiA+IGJldHdlZW4gMi40NTc2IGFuZCA1
+LjEyIE1oei4NCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBBbGV4YW5kcnUgQXJkZWxlYW4gPGFs
+ZXhhbmRydS5hcmRlbGVhbkBhbmFsb2cuY29tPg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL3N0YWdp
+bmcvaWlvL2FkYy9hZDcxOTIuYyB8IDIyICsrKysrKysrKysrKysrKy0tLS0tLS0NCj4gPiAgMSBm
+aWxlIGNoYW5nZWQsIDE1IGluc2VydGlvbnMoKyksIDcgZGVsZXRpb25zKC0pDQo+ID4gDQo+ID4g
+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvc3RhZ2luZy9paW8vYWRjL2FkNzE5Mi5jDQo+ID4gYi9kcml2
+ZXJzL3N0YWdpbmcvaWlvL2FkYy9hZDcxOTIuYw0KPiA+IGluZGV4IDdmMjA0MDEzZDZkNC4uN2Jj
+MDQxMDFkMTMzIDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvc3RhZ2luZy9paW8vYWRjL2FkNzE5
+Mi5jDQo+ID4gKysrIGIvZHJpdmVycy9zdGFnaW5nL2lpby9hZGMvYWQ3MTkyLmMNCj4gPiBAQCAt
+MTQxLDYgKzE0MSw4IEBADQo+ID4gICNkZWZpbmUgQUQ3MTkyX0dQT0NPTl9QMURBVAlCSVQoMSkg
+LyogUDEgc3RhdGUgKi8NCj4gPiAgI2RlZmluZSBBRDcxOTJfR1BPQ09OX1AwREFUCUJJVCgwKSAv
+KiBQMCBzdGF0ZSAqLw0KPiA+ICANCj4gPiArI2RlZmluZSBBRDcxOTJfRVhUX0ZSRVFfTUhaX01J
+TgkyNDU3NjAwDQo+ID4gKyNkZWZpbmUgQUQ3MTkyX0VYVF9GUkVRX01IWl9NQVgJNTEyMDAwMA0K
+PiA+ICAjZGVmaW5lIEFENzE5Ml9JTlRfRlJFUV9NSFoJNDkxNTIwMA0KPiA+ICANCj4gPiAgLyog
+Tk9URToNCj4gPiBAQCAtMjE3LDYgKzIxOSwxMiBAQCBzdGF0aWMgaW50IGFkNzE5Ml9jYWxpYnJh
+dGVfYWxsKHN0cnVjdA0KPiA+IGFkNzE5Ml9zdGF0ZSAqc3QpDQo+ID4gIAkJCQlBUlJBWV9TSVpF
+KGFkNzE5Ml9jYWxpYl9hcnIpKTsNCj4gPiAgfQ0KPiA+ICANCj4gPiArc3RhdGljIGlubGluZSBi
+b29sIGFkNzE5Ml92YWxpZF9leHRlcm5hbF9mcmVxdWVuY3kodTMyIGZyZXEpDQo+ID4gK3sNCj4g
+PiArCXJldHVybiAoZnJlcSA+PSBBRDcxOTJfRVhUX0ZSRVFfTUhaX01JTiAmJg0KPiA+ICsJCWZy
+ZXEgPD0gQUQ3MTkyX0VYVF9GUkVRX01IWl9NQVgpOw0KPiA+ICt9DQo+ID4gKw0KPiA+ICBzdGF0
+aWMgaW50IGFkNzE5Ml9zZXR1cChzdHJ1Y3QgYWQ3MTkyX3N0YXRlICpzdCwNCj4gPiAgCQkJY29u
+c3Qgc3RydWN0IGFkNzE5Ml9wbGF0Zm9ybV9kYXRhICpwZGF0YSkNCj4gPiAgew0KPiA+IEBAIC0y
+NDUsMTYgKzI1MywxNiBAQCBzdGF0aWMgaW50IGFkNzE5Ml9zZXR1cChzdHJ1Y3QgYWQ3MTkyX3N0
+YXRlDQo+ID4gKnN0LA0KPiA+ICANCj4gPiAgCXN3aXRjaCAocGRhdGEtPmNsb2NrX3NvdXJjZV9z
+ZWwpIHsNCj4gPiAgCWNhc2UgQUQ3MTkyX0NMS19FWFRfTUNMSzFfMjoNCj4gPiAtCWNhc2UgQUQ3
+MTkyX0NMS19FWFRfTUNMSzI6DQo+ID4gLQkJc3QtPm1jbGsgPSBBRDcxOTJfSU5UX0ZSRVFfTUha
+Ow0KPiA+IC0JCWJyZWFrOw0KPiA+ICAJY2FzZSBBRDcxOTJfQ0xLX0lOVDoNCj4gPiAgCWNhc2Ug
+QUQ3MTkyX0NMS19JTlRfQ086DQo+ID4gLQkJaWYgKHBkYXRhLT5leHRfY2xrX2h6KQ0KPiA+IC0J
+CQlzdC0+bWNsayA9IHBkYXRhLT5leHRfY2xrX2h6Ow0KPiA+IC0JCWVsc2UNCj4gPiAtCQkJc3Qt
+Pm1jbGsgPSBBRDcxOTJfSU5UX0ZSRVFfTUhaOw0KPiA+ICsJCXN0LT5tY2xrID0gQUQ3MTkyX0lO
+VF9GUkVRX01IWjsNCj4gPiAgCQlicmVhazsNCj4gPiArCWNhc2UgQUQ3MTkyX0NMS19FWFRfTUNM
+SzI6DQo+ID4gKwkJaWYgKGFkNzE5Ml92YWxpZF9leHRlcm5hbF9mcmVxdWVuY3kocGRhdGEtDQo+
+ID4gPmNsb2NrX3NvdXJjZV9zZWwpKSB7DQo+ID4gKwkJCXN0LT5tY2xrID0gcGRhdGEtPmNsb2Nr
+X3NvdXJjZV9zZWw7DQo+ID4gKwkJCWJyZWFrOw0KPiA+ICsJCX0NCj4gPiArCQkvKiBGQUxMVEhS
+T1VHSCAqLw0KPiA+ICAJZGVmYXVsdDoNCj4gPiAgCQlyZXQgPSAtRUlOVkFMOw0KPiA+ICAJCWdv
+dG8gb3V0Ow0KPiANCj4g
