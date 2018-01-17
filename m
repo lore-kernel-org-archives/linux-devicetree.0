@@ -1,66 +1,69 @@
-From: Archit Taneja <architt@codeaurora.org>
-Subject: [PATCH 7/7] dt-bindings: display: msm/dsi: Add updates for SDM845
-Date: Wed, 17 Jan 2018 15:04:48 +0530
-Message-ID: <20180117093448.4102-8-architt@codeaurora.org>
-References: <20180117093448.4102-1-architt@codeaurora.org>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 4/4] ARM: dts: bcm2837-rpi-3-b: add GPIO expander
+Date: Wed, 17 Jan 2018 10:39:06 +0100
+Message-ID: <CACRpkdZTrRUB+AVt6Ccpd_F1SQAX5fnk5c6xB9sisfO18DUZ_Q@mail.gmail.com>
+References: <cover.1516105893.git.baruch@tkos.co.il> <8ba2147dc08bb50a65b49ca2142f7710e1635d20.1516105893.git.baruch@tkos.co.il>
+ <6c07ab6a-a2c6-284e-6205-58d2512d0256@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180117093448.4102-1-architt@codeaurora.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: robdclark@gmail.com
-Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, latkinso@codeaurora.org, dri-devel@lists.freedesktop.org, sibis@codeaurora.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <6c07ab6a-a2c6-284e-6205-58d2512d0256-eS4NqCHxEME@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Cc: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>, Dave Stevenson <dave.stevenson-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Zoran <mzoran-O+n0w2l5AFbk1uMJSBkQmQ@public.gmane.org>, linux-rpi-kernel <linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-U0RNODQ1IHVzZXMgYSBuZXdlciByZXZpc2lvbiAodjIuMCspIG9mIHRoZSA2RyBEU0kgY29udHJv
-bGxlci4gVGhpcwpyZXZpc2lvbiBoYXMgYW5vdGhlciBjbG9jayBpbnB1dCBhdCB0aGUgYmxvY2sg
-Ym91bmRhcnkgY2FsbGVkIHRoZSBieXRlCmludGVyZmFjZSBjbG9jay4gU3BlY2lmeSB0aGlzIG5l
-dyBjbG9jayBpbiB0aGUgYmluZGluZy4KCkEgMTBubSBEU0kgUEhZIGlzIHVzZWQgYWxvbmcgd2l0
-aCB0aGUgY29udHJvbGxlci4gQWRkIGEgY29tcGF0aWJsZQpzdHJpbmcgZm9yIGl0IGFuZCBzcGVj
-aWZ5IGl0cyBiYXNlIGFkZHJlc3MvcmVndWxhdG9yIHN1cHBseSBuZWVkcy4KCkNjOiBSb2IgSGVy
-cmluZyA8cm9iaEBrZXJuZWwub3JnPgpDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcKU2ln
-bmVkLW9mZi1ieTogQXJjaGl0IFRhbmVqYSA8YXJjaGl0dEBjb2RlYXVyb3JhLm9yZz4KLS0tCiBE
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tc20vZHNpLnR4dCB8IDcg
-KysrKysrLQogMSBmaWxlIGNoYW5nZWQsIDYgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQoK
-ZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21z
-bS9kc2kudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNt
-L2RzaS50eHQKaW5kZXggMjZhMTc5NmI3MTQ1Li41MThlOWNkZjBkNGIgMTAwNjQ0Ci0tLSBhL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21zbS9kc2kudHh0CisrKyBi
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21zbS9kc2kudHh0CkBA
-IC0yMCw2ICsyMCw4IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6CiAgICogImNvcmUiCiAgIEZvciBE
-U0l2Miwgd2UgbmVlZCBhbiBhZGRpdGlvbmFsIGNsb2NrOgogICAgKiAic3JjIgorICBGb3IgRFNJ
-NkcgdjIuMCBvbndhcmRzLCB3ZSBuZWVkIGFsc28gbmVlZCB0aGUgY2xvY2s6CisgICAqICJieXRl
-X2ludGYiCiAtIGFzc2lnbmVkLWNsb2NrczogUGFyZW50cyBvZiAiYnl0ZSIgYW5kICJwaXhlbCIg
-Zm9yIHRoZSBnaXZlbiBwbGF0Zm9ybS4KIC0gYXNzaWduZWQtY2xvY2stcGFyZW50czogVGhlIEJ5
-dGUgY2xvY2sgYW5kIFBpeGVsIGNsb2NrIFBMTCBvdXRwdXRzIHByb3ZpZGVkCiAgIGJ5IGEgRFNJ
-IFBIWSBibG9jay4gU2VlIFsxXSBmb3IgZGV0YWlscyBvbiBjbG9jayBiaW5kaW5ncy4KQEAgLTg3
-LDYgKzg5LDcgQEAgUmVxdWlyZWQgcHJvcGVydGllczoKICAgKiAicWNvbSxkc2ktcGh5LTIwbm0i
-CiAgICogInFjb20sZHNpLXBoeS0yOG5tLTg5NjAiCiAgICogInFjb20sZHNpLXBoeS0xNG5tIgor
-ICAqICJxY29tLGRzaS1waHktMTBubSIKIC0gcmVnOiBQaHlzaWNhbCBiYXNlIGFkZHJlc3MgYW5k
-IGxlbmd0aCBvZiB0aGUgcmVnaXN0ZXJzIG9mIFBMTCwgUEhZLiBTb21lCiAgIHJldmlzaW9ucyBy
-ZXF1aXJlIHRoZSBQSFkgcmVndWxhdG9yIGJhc2UgYWRkcmVzcywgd2hlcmVhcyBvdGhlcnMgcmVx
-dWlyZSB0aGUKICAgUEhZIGxhbmUgYmFzZSBhZGRyZXNzLiBTZWUgYmVsb3cgZm9yIGVhY2ggUEhZ
-IHJldmlzaW9uLgpAQCAtOTUsNyArOTgsNyBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOgogICAqICJk
-c2lfcGxsIgogICAqICJkc2lfcGh5IgogICAqICJkc2lfcGh5X3JlZ3VsYXRvciIKLSAgRm9yIERT
-SSAxNG5tIFBIWToKKyAgRm9yIERTSSAxNG5tIGFuZCAxMG5tIFBIWXM6CiAgICogImRzaV9wbGwi
-CiAgICogImRzaV9waHkiCiAgICogImRzaV9waHlfbGFuZSIKQEAgLTExMiw2ICsxMTUsOCBAQCBS
-ZXF1aXJlZCBwcm9wZXJ0aWVzOgogLSB2Y2NhLXN1cHBseTogcGhhbmRsZSB0byB2Y2NhIHJlZ3Vs
-YXRvciBkZXZpY2Ugbm9kZQogICBGb3IgMTRubSBQSFk6CiAtIHZjY2Etc3VwcGx5OiBwaGFuZGxl
-IHRvIHZjY2EgcmVndWxhdG9yIGRldmljZSBub2RlCisgIEZvciAxMG5tIFBIWToKKy0gdmRkcy1z
-dXBwbHk6IHBoYW5kbGUgdG8gdmRkcyByZWd1bGF0b3IgZGV2aWNlIG5vZGUKIAogT3B0aW9uYWwg
-cHJvcGVydGllczoKIC0gcWNvbSxkc2ktcGh5LXJlZ3VsYXRvci1sZG8tbW9kZTogQm9vbGVhbiB2
-YWx1ZSBpbmRpY2F0aW5nIGlmIHRoZSBMRE8gbW9kZSBQSFkKLS0gClRoZSBRdWFsY29tbSBJbm5v
-dmF0aW9uIENlbnRlciwgSW5jLiBpcyBhIG1lbWJlciBvZiB0aGUgQ29kZSBBdXJvcmEgRm9ydW0s
-Cmhvc3RlZCBieSBUaGUgTGludXggRm91bmRhdGlvbgoKX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxA
-bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxt
-YW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Wed, Jan 17, 2018 at 9:30 AM, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> wrote:
+
+> Hi Linus,
+> hi Eric,
+>
+>
+> Am 16.01.2018 um 13:45 schrieb Baruch Siach:
+>>
+>> Add a description of the RPi3 GPIO expander that the VC4 firmware
+>> controls.
+>>
+>> Signed-off-by: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+>> ---
+>> v3:
+>>    * List GPIO names one per line.
+>>
+>> v2:
+>>    * Move GPIO expander node out of the soc container
+>>    * Rename compatible string
+>>    * Add gpio-line-names property
+>> ---
+>>   arch/arm/boot/dts/bcm2837-rpi-3-b.dts | 16 ++++++++++++++++
+>>   1 file changed, 16 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
+>> b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
+>> index b44b3b5af00d..8cd93425ffe3 100644
+>> --- a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
+>> +++ b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
+>> @@ -23,6 +23,22 @@
+>>                         gpios = <&gpio 47 0>;
+>>                 };
+>>         };
+>
+>
+> i noticed that this patch conflicts with my patch ("ARM: dts: bcm283x: Use
+> GPIO polarity defines consistently") in linux-next.
+>
+> How should we proceed?
+
+All DTS patches shall be merged through ARM SoC so the conflict should
+be resolved by whoever sends the pull requests to ARM SoC before
+sending the pull request.
+
+I think these patches will be for the next kernel anyways, unless Torvalds
+think we should have an -rc9 this time (because of all the meltdowns and
+spectres etc you know).
+
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
