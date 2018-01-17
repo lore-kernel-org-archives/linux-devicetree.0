@@ -1,232 +1,115 @@
-From: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
-Subject: Re: [PATCH v2 1/2] nvmem: add driver for JZ4780 efuse
-Date: Wed, 17 Jan 2018 23:01:57 +0530
-Message-ID: <CANc+2y4nBcVPUjTiXXDDUD_qph0zHAmr-SDCt74C8gCZdNQ4Fw@mail.gmail.com>
-References: <20171228212954.2922-1-malat@debian.org> <20171228212954.2922-2-malat@debian.org>
- <20180103200211.u56tqesyumsofoff@rob-hp-laptop> <CANc+2y5Y9fYh5V5OG_o+-92-uLYew7yNObLGTYPhGyx2eExywA@mail.gmail.com>
- <CAL_JsqJHHPJY0Yg+kmMbjZVsq=VVC0dPgtvXoN+sxL9gjBtMLA@mail.gmail.com>
+From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Subject: Re: [PATCH v5 11/44] clk: davinci: Add platform information for TI
+ DA830 PSC
+Date: Wed, 17 Jan 2018 11:32:31 -0600
+Message-ID: <72abb187-1c84-f307-d4f8-be5403787bac@lechnology.com>
+References: <1515377863-20358-1-git-send-email-david@lechnology.com>
+ <1515377863-20358-12-git-send-email-david@lechnology.com>
+ <91fe16dc-907e-6dbb-c8db-c27561132093@ti.com>
+ <4dd36ca7-e41d-58d8-ec8c-787978307943@lechnology.com>
+ <86581de6-a982-7a7b-9a83-22c869417211@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJHHPJY0Yg+kmMbjZVsq=VVC0dPgtvXoN+sxL9gjBtMLA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mathieu Malaterre <malat@debian.org>, Marcin Nowakowski <marcin.nowakowski@mips.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Zubair.Kakakhel@mips.com, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, open list <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-MIPS <linux-mips@linux-mips.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <86581de6-a982-7a7b-9a83-22c869417211-l0cyMroinI0@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Adam Ford <aford173-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On 11 January 2018 at 20:38, Rob Herring <robh@kernel.org> wrote:
-> On Sat, Jan 6, 2018 at 6:43 AM, PrasannaKumar Muralidharan
-> <prasannatsmkumar@gmail.com> wrote:
->> Hi Rob,
->>
->> On 4 January 2018 at 01:32, Rob Herring <robh@kernel.org> wrote:
->>> On Thu, Dec 28, 2017 at 10:29:52PM +0100, Mathieu Malaterre wrote:
->>>> From: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
->>>>
->>>> This patch brings support for the JZ4780 efuse. Currently it only expose
->>>> a read only access to the entire 8K bits efuse memory.
->>>>
->>>> Tested-by: Mathieu Malaterre <malat@debian.org>
->>>> Signed-off-by: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
->>>> Signed-off-by: Mathieu Malaterre <malat@debian.org>
->>>> ---
->>>>  .../ABI/testing/sysfs-driver-jz4780-efuse          |  16 ++
->>>>  .../bindings/nvmem/ingenic,jz4780-efuse.txt        |  17 ++
+On 01/17/2018 06:18 AM, Sekhar Nori wrote:
+> On Tuesday 16 January 2018 10:46 PM, David Lechner wrote:
+> 
+>>>> +static const struct davinci_psc_clk_info da830_psc0_info[]
+>>>> __initconst = {
+>>>> +    LPSC(0, 0, tpcc, pll0_sysclk2, LPSC_ALWAYS_ENABLED),
+>>>> +    LPSC(1, 0, tptc0, pll0_sysclk2, LPSC_ALWAYS_ENABLED),
+>>>> +    LPSC(2, 0, tptc1, pll0_sysclk2, LPSC_ALWAYS_ENABLED),
+>>>> +    LPSC(3, 0, aemif, pll0_sysclk3, LPSC_ALWAYS_ENABLED),
+>>>> +    LPSC(4, 0, spi0, pll0_sysclk2, 0),
+>>>> +    LPSC(5, 0, mmcsd, pll0_sysclk2, 0),
+>>>> +    LPSC(6, 0, aintc, pll0_sysclk4, LPSC_ALWAYS_ENABLED),
+>>>> +    LPSC(7, 0, arm_rom, pll0_sysclk2, LPSC_ALWAYS_ENABLED),
+>>>> +    LPSC(8, 0, secu_mgr, pll0_sysclk4, LPSC_ALWAYS_ENABLED),
+>>>> +    LPSC(9, 0, uart0, pll0_sysclk2, 0),
+>>>> +    LPSC(10, 0, scr0_ss, pll0_sysclk2, LPSC_ALWAYS_ENABLED),
+>>>> +    LPSC(11, 0, scr1_ss, pll0_sysclk2, LPSC_ALWAYS_ENABLED),
+>>>> +    LPSC(12, 0, scr2_ss, pll0_sysclk2, LPSC_ALWAYS_ENABLED),
+>>>> +    LPSC(13, 0, dmax, pll0_sysclk2, LPSC_ALWAYS_ENABLED),
 >>>
->>> Please split bindings to separate patch.
+>>> pruss is better (I know the name is coming from existing code).
 >>>
->>>>  MAINTAINERS                                        |   5 +
->>>>  arch/mips/boot/dts/ingenic/jz4780.dtsi             |  40 ++-
+>>>> +    LPSC(14, 0, arm, pll0_sysclk6, LPSC_ALWAYS_ENABLED),
 >>>
->>> dts files should also be separate.
+>>> This is LPSC 15 which controls DSP too. But its missing from existing
+>>> code. Not sure why. Probably a note for future. For now okay with
+>>> ignoring it.
 >>>
->>>>  drivers/nvmem/Kconfig                              |  10 +
->>>>  drivers/nvmem/Makefile                             |   2 +
->>>>  drivers/nvmem/jz4780-efuse.c                       | 305 +++++++++++++++++++++
->>>>  7 files changed, 383 insertions(+), 12 deletions(-)
->>>>  create mode 100644 Documentation/ABI/testing/sysfs-driver-jz4780-efuse
->>>>  create mode 100644 Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.txt
->>>>  create mode 100644 drivers/nvmem/jz4780-efuse.c
->>>>
->>>> diff --git a/Documentation/ABI/testing/sysfs-driver-jz4780-efuse b/Documentation/ABI/testing/sysfs-driver-jz4780-efuse
->>>> new file mode 100644
->>>> index 000000000000..bb6f5d6ceea0
->>>> --- /dev/null
->>>> +++ b/Documentation/ABI/testing/sysfs-driver-jz4780-efuse
->>>> @@ -0,0 +1,16 @@
->>>> +What:                /sys/devices/*/<our-device>/nvmem
->>>> +Date:                December 2017
->>>> +Contact:     PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
->>>> +Description: read-only access to the efuse on the Ingenic JZ4780 SoC
->>>> +             The SoC has a one time programmable 8K efuse that is
->>>> +             split into segments. The driver supports read only.
->>>> +             The segments are
->>>> +             0x000   64 bit Random Number
->>>> +             0x008  128 bit Ingenic Chip ID
->>>> +             0x018  128 bit Customer ID
->>>> +             0x028 3520 bit Reserved
->>>> +             0x1E0    8 bit Protect Segment
->>>> +             0x1E1 2296 bit HDMI Key
->>>> +             0x300 2048 bit Security boot key
->>>
->>> Why do these need to be exposed to userspace?
->>>
->>> sysfs is 1 value per file and this is lots of different things.
->>>
->>> We already have ways to feed random data (entropy) to the system. And we
->>> have a way to expose SoC ID info to userspace (socdev).
->>
->> Currently ingenic chip id is not used anywhere. The vendor BSP exposed
->> only chip id and customer id. Should we do the same? Please provide
->> your suggestion.
->
-> No. Don't create an ABI if you don't really need it.
->
->>
->>>> +Users:               any user space application which wants to read the Chip
->>>> +             and Customer ID
->>>> diff --git a/Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.txt b/Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.txt
->>>> new file mode 100644
->>>> index 000000000000..cd6d67ec22fc
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.txt
->>>> @@ -0,0 +1,17 @@
->>>> +Ingenic JZ EFUSE driver bindings
->>>> +
->>>> +Required properties:
->>>> +- "compatible"               Must be set to "ingenic,jz4780-efuse"
->>>> +- "reg"                      Register location and length
->>>> +- "clocks"           Handle for the ahb clock for the efuse.
->>>> +- "clock-names"              Must be "bus_clk"
->>>> +
->>>> +Example:
->>>> +
->>>> +efuse: efuse@134100d0 {
->>>> +     compatible = "ingenic,jz4780-efuse";
->>>> +     reg = <0x134100D0 0xFF>;
->>>> +
->>>> +     clocks = <&cgu JZ4780_CLK_AHB2>;
->>>> +     clock-names = "bus_clk";
+>>>> +    { }
 >>>> +};
->>>> diff --git a/MAINTAINERS b/MAINTAINERS
->>>> index a6e86e20761e..7a050c20c533 100644
->>>> --- a/MAINTAINERS
->>>> +++ b/MAINTAINERS
->>>> @@ -6902,6 +6902,11 @@ M:     Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
->>>>  S:   Maintained
->>>>  F:   drivers/dma/dma-jz4780.c
->>>>
->>>> +INGENIC JZ4780 EFUSE Driver
->>>> +M:   PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
->>>> +S:   Maintained
->>>> +F:   drivers/nvmem/jz4780-efuse.c
 >>>
->>> Binding file?
->>
->> Sorry, missed it. Will add it.
->>
->>>> +
->>>>  INGENIC JZ4780 NAND DRIVER
->>>>  M:   Harvey Hunt <harveyhuntnexus@gmail.com>
->>>>  L:   linux-mtd@lists.infradead.org
->>>> diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi b/arch/mips/boot/dts/ingenic/jz4780.dtsi
->>>> index 9b5794667aee..3fb9d916a2ea 100644
->>>> --- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
->>>> +++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
->>>> @@ -224,21 +224,37 @@
->>>>               reg = <0x10002000 0x100>;
->>>>       };
->>>>
->>>> -     nemc: nemc@13410000 {
->>>> -             compatible = "ingenic,jz4780-nemc";
->>>> -             reg = <0x13410000 0x10000>;
->>>> -             #address-cells = <2>;
->>>> +
->>>> +     ahb2: ahb2 {
->>>> +             compatible = "simple-bus";
+>>> Tables like these are much easier to parse if columns are spaced using a
+>>> tab.
 >>>
->>> This is an unrelated change and should be its own patch.
 >>
->> The efuse register address range is a subset of address range of nemc.
->> So decided to make nemc and efuse as nodes with parent node ahb2. This
->> is required for efuse driver to work. I am not able to understand what
->> you mean by unrelated change. Can you please explain it?
->>
->>>> +             #address-cells = <1>;
->>>>               #size-cells = <1>;
->>>> -             ranges = <1 0 0x1b000000 0x1000000
->>>> -                       2 0 0x1a000000 0x1000000
->>>> -                       3 0 0x19000000 0x1000000
->>>> -                       4 0 0x18000000 0x1000000
->>>> -                       5 0 0x17000000 0x1000000
->>>> -                       6 0 0x16000000 0x1000000>;
->>>> +             ranges = <>;
+>> Tabs make the lines over 80 columns. How about spaces instead?
+> 
+> That works for me. I guess checkpatch will complain, but hopefully
+> maintainers will agree on the exception.
+> 
+>>>> +void __init da830_psc_clk_init(void __iomem *psc0, void __iomem *psc1)
+>>>> +{
+>>>> +    struct clk_onecell_data *clk_data;
 >>>> +
->>>> +             nemc: nemc@13410000 {
->>>> +                     compatible = "ingenic,jz4780-nemc";
->>>> +                     reg = <0x13410000 0x10000>;
->>>> +                     #address-cells = <2>;
->>>> +                     #size-cells = <1>;
->>>> +                     ranges = <1 0 0x1b000000 0x1000000
->>>> +                               2 0 0x1a000000 0x1000000
->>>> +                               3 0 0x19000000 0x1000000
->>>> +                               4 0 0x18000000 0x1000000
->>>> +                               5 0 0x17000000 0x1000000
->>>> +                               6 0 0x16000000 0x1000000>;
+>>>> +    clk_data = davinci_psc_register_clocks(psc0, da830_psc0_info, 16);
+>>>> +    if (!clk_data)
+>>>> +        return;
 >>>> +
->>>> +                     clocks = <&cgu JZ4780_CLK_NEMC>;
+>>>> +    clk_register_clkdev(clk_data->clks[4], NULL, "spi_davinci.0");
+>>>> +    clk_register_clkdev(clk_data->clks[5], NULL, "da830-mmc.0");
+>>>> +    clk_register_clkdev(clk_data->clks[9], NULL, "serial8250.0");
+>>>> +    clk_register_clkdev(clk_data->clks[14], "arm", NULL);
 >>>> +
->>>> +                     status = "disabled";
->>>> +             };
->>>>
->>>> -             clocks = <&cgu JZ4780_CLK_NEMC>;
->>>> +             efuse: efuse@134100d0 {
->>>> +                     compatible = "ingenic,jz4780-efuse";
->>>> +                     reg = <0x134100d0 0xff>;
+>>>> +    clk_free_onecell_data(clk_data);
+>>>> +
+>>>> +    clk_data = davinci_psc_register_clocks(psc1, da830_psc1_info, 32);
+>>>> +    if (!clk_data)
+>>>> +        return;
+>>>> +
+>>>> +    clk_register_clkdev(clk_data->clks[1], NULL, "musb-da8xx");
+>>>> +    clk_register_clkdev(clk_data->clks[1], NULL, "cppi41-dmaengine");
+>>>> +    clk_register_clkdev(clk_data->clks[2], NULL, "ohci-da8xx");
+>>>> +    clk_register_clkdev(clk_data->clks[3], "gpio", NULL);
 >>>
->>> You are creating an overlapping region here with nemc above. Don't do
->>> that.
+>>> This is pretty bad (and no fault of yours) - having a con_id but no
+>>> device name. Can you please make a pre-series which passes NULL con_id
+>>> in gpio-davinci.c?
 >>
->> Should "reg = <0x13410000 0x10000>;" be used instead?
->
-> No, that still overlaps with nemc. What's in registers 0x00-0xcf and
-> 0x1d0-0xffff? Either get rid of this node altogether and make the
-> driver for nemc also instantiate the efuse driver (DT is not the only
-> way to instantiate drivers), or create sub-nodes under nemc for each
-> distinct h/w block in the 13410000-13420000 address space.
+>> I'll give it a try. This is complicated by the fact that the con_id has
+>> made it's way into the device tree bindings. However, I think we can
+>> safely deprecate clock-names = "gpio" in the device tree bindings since
+>> we can make the driver ignore that property to preserve backwards
+>> compatibility.
 
-My idea was not to change nemc driver.
+Agreed.
 
-By "create sub-nodes under nemc" do you mean something like below?
-nemc: nemc@13410000 {
-                     compatible = "ingenic,jz4780-nemc";
-                     reg = <0x13410000 0x10000>;
-                     <...>
-                     status = "disabled";
+> I don't think this breaks DT-backward compatibility. Passing a NULL
+> con_id in driver should find the clock for that device even if DT entry
+> has clock-names present. As far as I can read clk_find().
+> 
+> The less intrusive alternate is to add the GPIO device name in the table
+> here, while keeping the con_id and keeping the driver untouched. The
+> advantage of that is lesser number of dependent patches for this series
+> to go in.
+> 
+> Later once CCF conversion has been there in the kernel for one full
+> release and no regressions, these other clean-ups can be done.
 
-                     efuse: efuse@134101d0 {
-                                          compatible = "ingenic,jz4780-efuse";
-                                          reg = <0x134100d0 0xff>;
-                     }
-}
+I like this approach.
 
-Will this instantiate efuse driver? I do not know how to do that with
-sub-node. I will explore more on this.
-
-> Or a third option is make nemc reg:
->
-> reg = <0x13410000 0xd0>, <0x134101d0 0xfe30>;
->
-> But I suspect that is wrong and you probably have some other function in there.
->
-> Rob
-
-If the efuse block were to use a different base register address (that
-does not overlap with nemc register range) in future SoC how the node
-should be? Using nemc to instantiate efuse won't be the best choice if
-that happens.
-
-Thanks,
-PrasannaKumar
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
