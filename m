@@ -1,75 +1,129 @@
-From: "Ardelean, Alexandru" <alexandru.Ardelean-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 1/3] staging: iio: adc: ad7192: fix external frequency
- setting
-Date: Wed, 17 Jan 2018 07:45:35 +0000
-Message-ID: <1516175133.4383.3.camel@analog.com>
-References: <20180110112956.23931-1-alexandru.ardelean@analog.com>
-         <20180114123745.7a1180ca@archlinux>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v6 1/9] dt-bindings: media: Add Renesas CEU bindings
+Date: Wed, 17 Jan 2018 09:59:59 +0200
+Message-ID: <20180117075958.ggnk4cmmkdah2am6@valkosipuli.retiisi.org.uk>
+References: <1516139101-7835-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1516139101-7835-2-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180114123745.7a1180ca@archlinux>
-Content-Language: en-US
-Content-ID: <B84ABFB4DDA6994D82DCAB9E49EE50B6-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org" <jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>
-Cc: "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Hennerich, Michael" <Michael.Hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1516139101-7835-2-git-send-email-jacopo+renesas@jmondi.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: laurent.pinchart@ideasonboard.com, magnus.damm@gmail.com, geert@glider.be, hverkuil@xs4all.nl, mchehab@kernel.org, festevam@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, pombredanne@nexb.com, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gU3VuLCAyMDE4LTAxLTE0IGF0IDEyOjM3ICswMDAwLCBKb25hdGhhbiBDYW1lcm9uIHdyb3Rl
-Og0KPiBPbiBXZWQsIDEwIEphbiAyMDE4IDEzOjI5OjU0ICswMjAwDQo+IDxhbGV4YW5kcnUuYXJk
-ZWxlYW5AYW5hbG9nLmNvbT4gd3JvdGU6DQo+IA0KPiA+IEZyb206IEFsZXhhbmRydSBBcmRlbGVh
-biA8YWxleGFuZHJ1LmFyZGVsZWFuQGFuYWxvZy5jb20+DQo+ID4gDQo+ID4gQWNjb3JkaW5nIHRv
-IHRoZSBkYXRhc2hlZXQ6DQo+ID4gKiAwIC0gZXh0ZXJuYWwgY3J5c3RhbCwgY29ubmVjdGVkIGZy
-b20gcGluIE1DTEsxIHRvIE1DTEsyDQo+IA0KPiBXaGF0IGZyZXF1ZW5jeSBvZiBjcnlzdGFsPyAg
-TXkgcXVpY2sgcmVhZCBvZiB0aGUgZGF0YXNoZWV0DQo+IGltcGxpZXMgdGhpcyBtYXkgYmUgZmxl
-eGlibGUuICBQb3NzaWJseSBhcyBmbGV4aWJsZSBhcw0KPiB0aGUgY2xvY2sgb3B0aW9uLi4uDQoN
-CkkgdGhpbmsgeW91J3JlIHJpZ2h0IGFib3V0IHRoaXMuDQpXaWxsIHJlLXZpc2l0IHRoaXMuDQoN
-CklzIGl0IG9rIGlmIEkgcmUtc3BpbiB0aGlzIGFzIGEgc3RhbmRhbG9uZSBwYXRjaCA/DQoNClNp
-bmNlIEknbSBuZXcgYXJvdW5kIGhlcmUsIG1heWJlIGl0IHdvdWxkIHByb2JhYmx5IGJlIGdvb2Qg
-dG8gdHJ5IHRvDQpzZW5kIG9uZSBwYXRjaCBhdCBhIHRpbWUgYW5kIHJlc29sdmUgc3luY2hyb25p
-emF0aW9uIFtiZXR3ZWVuIHdoYXQgSQ0KZGVsaXZlciB2cyByZWNvbW1lbmRlZCB3YXlzIG9mIGRv
-aW5nIHRoaW5nc10uDQoNCj4gDQo+IA0KPiA+ICogMSAtIGV4dGVybmFsIGNsb2NrLCBhcHBsaWVk
-IHRvIE1DTEsyIHBpbg0KPiA+ICogMiAtIGludGVybmFsIDQuOTIgTWh6IGNsb2NrOyBwaW4gTUNM
-SzIgaXMgdHJpc3RhdGVkDQo+ID4gKiAzIC0gaW50ZXJuYWwgNC45MiBNaHogY2xvY2s7IGludGVy
-bmFsIGNsb2NrIGlzIGF2YWlsYWJsZSBvbiBNQ0xLMg0KPiA+IA0KPiA+IFdoaWNoIG1lYW5zIHRo
-YXQgdGhlIGV4dGVybmFsIGNsb2NrIHZhbHVlIG9ubHkgaGFzIHNlbnNlDQo+ID4gZm9yIHZhbHVl
-IDEgKEFENzE5Ml9DTEtfRVhUX01DTEsyKS4NCj4gPiANCj4gPiBBbHNvIGFkZGVkIHJhbmdlIHZh
-bGlkYXRpb24gZm9yIHRoZSBleHRlcm5hbCBmcmVxdWVuY3kNCj4gPiBzZXR0aW5nLCB3aGljaCB0
-aGUgZGF0YXNoZWV0IG1lbnRpb25zIHRoYXQgaXQncw0KPiA+IGJldHdlZW4gMi40NTc2IGFuZCA1
-LjEyIE1oei4NCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBBbGV4YW5kcnUgQXJkZWxlYW4gPGFs
-ZXhhbmRydS5hcmRlbGVhbkBhbmFsb2cuY29tPg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL3N0YWdp
-bmcvaWlvL2FkYy9hZDcxOTIuYyB8IDIyICsrKysrKysrKysrKysrKy0tLS0tLS0NCj4gPiAgMSBm
-aWxlIGNoYW5nZWQsIDE1IGluc2VydGlvbnMoKyksIDcgZGVsZXRpb25zKC0pDQo+ID4gDQo+ID4g
-ZGlmZiAtLWdpdCBhL2RyaXZlcnMvc3RhZ2luZy9paW8vYWRjL2FkNzE5Mi5jDQo+ID4gYi9kcml2
-ZXJzL3N0YWdpbmcvaWlvL2FkYy9hZDcxOTIuYw0KPiA+IGluZGV4IDdmMjA0MDEzZDZkNC4uN2Jj
-MDQxMDFkMTMzIDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvc3RhZ2luZy9paW8vYWRjL2FkNzE5
-Mi5jDQo+ID4gKysrIGIvZHJpdmVycy9zdGFnaW5nL2lpby9hZGMvYWQ3MTkyLmMNCj4gPiBAQCAt
-MTQxLDYgKzE0MSw4IEBADQo+ID4gICNkZWZpbmUgQUQ3MTkyX0dQT0NPTl9QMURBVAlCSVQoMSkg
-LyogUDEgc3RhdGUgKi8NCj4gPiAgI2RlZmluZSBBRDcxOTJfR1BPQ09OX1AwREFUCUJJVCgwKSAv
-KiBQMCBzdGF0ZSAqLw0KPiA+ICANCj4gPiArI2RlZmluZSBBRDcxOTJfRVhUX0ZSRVFfTUhaX01J
-TgkyNDU3NjAwDQo+ID4gKyNkZWZpbmUgQUQ3MTkyX0VYVF9GUkVRX01IWl9NQVgJNTEyMDAwMA0K
-PiA+ICAjZGVmaW5lIEFENzE5Ml9JTlRfRlJFUV9NSFoJNDkxNTIwMA0KPiA+ICANCj4gPiAgLyog
-Tk9URToNCj4gPiBAQCAtMjE3LDYgKzIxOSwxMiBAQCBzdGF0aWMgaW50IGFkNzE5Ml9jYWxpYnJh
-dGVfYWxsKHN0cnVjdA0KPiA+IGFkNzE5Ml9zdGF0ZSAqc3QpDQo+ID4gIAkJCQlBUlJBWV9TSVpF
-KGFkNzE5Ml9jYWxpYl9hcnIpKTsNCj4gPiAgfQ0KPiA+ICANCj4gPiArc3RhdGljIGlubGluZSBi
-b29sIGFkNzE5Ml92YWxpZF9leHRlcm5hbF9mcmVxdWVuY3kodTMyIGZyZXEpDQo+ID4gK3sNCj4g
-PiArCXJldHVybiAoZnJlcSA+PSBBRDcxOTJfRVhUX0ZSRVFfTUhaX01JTiAmJg0KPiA+ICsJCWZy
-ZXEgPD0gQUQ3MTkyX0VYVF9GUkVRX01IWl9NQVgpOw0KPiA+ICt9DQo+ID4gKw0KPiA+ICBzdGF0
-aWMgaW50IGFkNzE5Ml9zZXR1cChzdHJ1Y3QgYWQ3MTkyX3N0YXRlICpzdCwNCj4gPiAgCQkJY29u
-c3Qgc3RydWN0IGFkNzE5Ml9wbGF0Zm9ybV9kYXRhICpwZGF0YSkNCj4gPiAgew0KPiA+IEBAIC0y
-NDUsMTYgKzI1MywxNiBAQCBzdGF0aWMgaW50IGFkNzE5Ml9zZXR1cChzdHJ1Y3QgYWQ3MTkyX3N0
-YXRlDQo+ID4gKnN0LA0KPiA+ICANCj4gPiAgCXN3aXRjaCAocGRhdGEtPmNsb2NrX3NvdXJjZV9z
-ZWwpIHsNCj4gPiAgCWNhc2UgQUQ3MTkyX0NMS19FWFRfTUNMSzFfMjoNCj4gPiAtCWNhc2UgQUQ3
-MTkyX0NMS19FWFRfTUNMSzI6DQo+ID4gLQkJc3QtPm1jbGsgPSBBRDcxOTJfSU5UX0ZSRVFfTUha
-Ow0KPiA+IC0JCWJyZWFrOw0KPiA+ICAJY2FzZSBBRDcxOTJfQ0xLX0lOVDoNCj4gPiAgCWNhc2Ug
-QUQ3MTkyX0NMS19JTlRfQ086DQo+ID4gLQkJaWYgKHBkYXRhLT5leHRfY2xrX2h6KQ0KPiA+IC0J
-CQlzdC0+bWNsayA9IHBkYXRhLT5leHRfY2xrX2h6Ow0KPiA+IC0JCWVsc2UNCj4gPiAtCQkJc3Qt
-Pm1jbGsgPSBBRDcxOTJfSU5UX0ZSRVFfTUhaOw0KPiA+ICsJCXN0LT5tY2xrID0gQUQ3MTkyX0lO
-VF9GUkVRX01IWjsNCj4gPiAgCQlicmVhazsNCj4gPiArCWNhc2UgQUQ3MTkyX0NMS19FWFRfTUNM
-SzI6DQo+ID4gKwkJaWYgKGFkNzE5Ml92YWxpZF9leHRlcm5hbF9mcmVxdWVuY3kocGRhdGEtDQo+
-ID4gPmNsb2NrX3NvdXJjZV9zZWwpKSB7DQo+ID4gKwkJCXN0LT5tY2xrID0gcGRhdGEtPmNsb2Nr
-X3NvdXJjZV9zZWw7DQo+ID4gKwkJCWJyZWFrOw0KPiA+ICsJCX0NCj4gPiArCQkvKiBGQUxMVEhS
-T1VHSCAqLw0KPiA+ICAJZGVmYXVsdDoNCj4gPiAgCQlyZXQgPSAtRUlOVkFMOw0KPiA+ICAJCWdv
-dG8gb3V0Ow0KPiANCj4g
+Hi Jacopo,
+
+On Tue, Jan 16, 2018 at 10:44:53PM +0100, Jacopo Mondi wrote:
+> Add bindings documentation for Renesas Capture Engine Unit (CEU).
+> 
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
+> ---
+>  .../devicetree/bindings/media/renesas,ceu.txt      | 81 ++++++++++++++++++++++
+>  1 file changed, 81 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/renesas,ceu.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/renesas,ceu.txt b/Documentation/devicetree/bindings/media/renesas,ceu.txt
+> new file mode 100644
+> index 0000000..590ee27
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/renesas,ceu.txt
+> @@ -0,0 +1,81 @@
+> +Renesas Capture Engine Unit (CEU)
+> +----------------------------------------------
+> +
+> +The Capture Engine Unit is the image capture interface found in the Renesas
+> +SH Mobile and RZ SoCs.
+> +
+> +The interface supports a single parallel input with data bus width of 8 or 16
+> +bits.
+> +
+> +Required properties:
+> +- compatible: Shall be "renesas,r7s72100-ceu" for CEU units found in RZ/A1-H
+> +  and RZ/A1-M SoCs.
+> +- reg: Registers address base and size.
+> +- interrupts: The interrupt specifier.
+> +
+> +The CEU supports a single parallel input and should contain a single 'port'
+> +subnode with a single 'endpoint'. Connection to input devices are modeled
+> +according to the video interfaces OF bindings specified in:
+> +Documentation/devicetree/bindings/media/video-interfaces.txt
+> +
+> +Optional endpoint properties applicable to parallel input bus described in
+> +the above mentioned "video-interfaces.txt" file are supported.
+> +
+> +- hsync-active: Active state of the HSYNC signal, 0/1 for LOW/HIGH respectively.
+> +  If property is not present, default is active high.
+> +- vsync-active: Active state of the VSYNC signal, 0/1 for LOW/HIGH respectively.
+> +  If property is not present, default is active high.
+
+Does the hardware support Bt.656? If it does, you need to tell the
+difference between the parallel interface with default sync polarity and
+Bt.656 interfaces. With the above it's ambiguous.
+
+> +
+> +Example:
+> +
+> +The example describes the connection between the Capture Engine Unit and an
+> +OV7670 image sensor connected to i2c1 interface.
+> +
+> +ceu: ceu@e8210000 {
+> +	reg = <0xe8210000 0x209c>;
+> +	compatible = "renesas,r7s72100-ceu";
+> +	interrupts = <GIC_SPI 332 IRQ_TYPE_LEVEL_HIGH>;
+> +
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&vio_pins>;
+> +
+> +	status = "okay";
+> +
+> +	port {
+> +		ceu_in: endpoint {
+> +			remote-endpoint = <&ov7670_out>;
+> +
+> +			hsync-active = <1>;
+> +			vsync-active = <0>;
+> +		};
+> +	};
+> +};
+> +
+> +i2c1: i2c@fcfee400 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&i2c1_pins>;
+> +
+> +	status = "okay";
+> +
+> +	clock-frequency = <100000>;
+> +
+> +	ov7670: camera@21 {
+> +		compatible = "ovti,ov7670";
+> +		reg = <0x21>;
+> +
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&vio_pins>;
+> +
+> +		reset-gpios = <&port3 11 GPIO_ACTIVE_LOW>;
+> +		powerdown-gpios = <&port3 12 GPIO_ACTIVE_HIGH>;
+> +
+> +		port {
+> +			ov7670_out: endpoint {
+> +				remote-endpoint = <&ceu_in>;
+> +
+> +				hsync-active = <1>;
+> +				vsync-active = <0>;
+> +			};
+> +		};
+> +	};
+> +};
+> -- 
+> 2.7.4
+> 
+
+-- 
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi
