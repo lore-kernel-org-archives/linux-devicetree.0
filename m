@@ -1,66 +1,87 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv2 1/3] dt-bindings: spi: Add DT bindings for Synquacer
-Date: Wed, 17 Jan 2018 11:18:18 +0000
-Message-ID: <20180117111817.GA9775@sirena.org.uk>
-References: <1516021530-19236-1-git-send-email-jassisinghbrar@gmail.com>
- <1516021559-19327-1-git-send-email-jassisinghbrar@gmail.com>
- <CAL_JsqKM2OhdhFZfd_fhBkYiFE9Fdr38Xn7TKorwJo_-+f9xUg@mail.gmail.com>
- <CABb+yY3HEX6qMWxmirMnbwe3P5NwmUHGcuYypo-UzbUyUOi5UQ@mail.gmail.com>
- <CAL_JsqK16GXU0WQ2Ft2-_dHOH_y08inMjF8vHE4mhK0Zo9=JMg@mail.gmail.com>
- <CABb+yY1f=NwB_UmGAogTj2AgA5stk5zic39HJgTSJcv1rdcQVw@mail.gmail.com>
- <1516132926.25398.98.camel@impinj.com>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH v5 12/44] clk: davinci: Add platform information for TI
+ DA850 PSC
+Date: Wed, 17 Jan 2018 17:27:17 +0530
+Message-ID: <bb1f446e-5900-7e73-c1b7-955662a9541b@ti.com>
+References: <1515377863-20358-1-git-send-email-david@lechnology.com>
+ <1515377863-20358-13-git-send-email-david@lechnology.com>
+ <8d09dba6-9b1d-e06e-8730-256b8a4320db@ti.com>
+ <b6baa17e-1239-c209-9eca-52e5da73e921@lechnology.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="sm4nu43k4a2Rpi4c"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1516132926.25398.98.camel-cgc2CodaaHDQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Trent Piepho <tpiepho-cgc2CodaaHDQT0dZR+AlfA@public.gmane.org>
-Cc: "jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <b6baa17e-1239-c209-9eca-52e5da73e921@lechnology.com>
+Content-Language: en-US
+Sender: linux-clk-owner@vger.kernel.org
+To: David Lechner <david@lechnology.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Tuesday 16 January 2018 10:51 PM, David Lechner wrote:
+> On 01/16/2018 08:00 AM, Sekhar Nori wrote:
+>> On Monday 08 January 2018 07:47 AM, David Lechner wrote:
+>>> +void __init da850_psc_clk_init(void __iomem *psc0, void __iomem *psc1)
+>>> +{
+>>> +    struct clk_onecell_data *clk_data;
+>>> +
+>>> +    clk_data = davinci_psc_register_clocks(psc0, da850_psc0_info, 16);
+>>> +    if (!clk_data)
+>>> +        return;
+>>> +
+>>> +    clk_register_clkdev(clk_data->clks[3], NULL, "ti-aemif");
+>>> +    clk_register_clkdev(clk_data->clks[3], "aemif", "davinci-nand.0");
+>>> +    clk_register_clkdev(clk_data->clks[4], NULL, "spi_davinci.0");
+>>> +    clk_register_clkdev(clk_data->clks[5], NULL, "da830-mmc.0");
+>>> +    clk_register_clkdev(clk_data->clks[9], NULL, "serial8250.0");
+>>> +    clk_register_clkdev(clk_data->clks[14], "arm", NULL);
+>>> +    clk_register_clkdev(clk_data->clks[15], NULL, "davinci-rproc.0");
+>>> +
+>>> +    clk_free_onecell_data(clk_data);
+>>> +
+>>> +    clk_data = davinci_psc_register_clocks(psc1, da850_psc1_info, 32);
+>>> +    if (!clk_data)
+>>> +        return;
+>>> +
+>>> +    clk_register_clkdev(clk_data->clks[1], "usb20_psc_clk", NULL);
+>>
+>> Is this con_id really needed now? Searching for "usb20_psc_clk" in your
+>> tree results in only this one hit.
+> 
+> Yes, this is left over from previous attempts.
+> 
+>>
+>>> +    clk_register_clkdev(clk_data->clks[1], NULL, "musb-da8xx");
+>>> +    clk_register_clkdev(clk_data->clks[1], NULL, "cppi41-dmaengine");
+>>
+>> I guess multiple dev_id matches like these are another hurdle in moving
+>> them to davinci_psc_clk_info[] table? If its too cumbersome to keep
+>> multiple entries in the table, they can be handled as an exception at
+>> the end of processing the table? Still they are not the norm so I hope
+>> the normal case will still benefit.
+> 
+> Right, as I mentioned in the reply to the previous patch, instead of
+> assigning a con_id and dev_id to each clock, we would need to assign
+> an array with a list of clocks. I think that would work better than
+> trying to handle the extras as an exception since there, on average,
+> about 5 per SoC.
 
---sm4nu43k4a2Rpi4c
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Okay, are you going to try this to see how it looks? It looks like
+samsung (clk-s3c2410.c) and tegra (clk-tegra20.c) use such tables
+(although both use separate tables mapping just the gate number to
+con_id/dev_id).
 
-On Tue, Jan 16, 2018 at 08:02:06PM +0000, Trent Piepho wrote:
-> On Tue, 2018-01-16 at 08:59 +0530, Jassi Brar wrote:
+Others like u8540_clk.c and clk-mmp2.c have multiple calls in code to
+clk_register_clkdev() like you have, but they keep them right after the
+gate clock registration which makes it easy to see the mapping.
 
-> > Now the idea dawns that DT provide both clocks and the driver select
-> > from the mux looking at speed requirements of the slave at runtime.
+clk-imx35.c has multiple clk_register_clkdev() calls, but uses an enum
+for the gates so its easy to see the mapping. This approach looks fine
+to me as well.
 
-> add this feature at some point.  It might be simpler to just prefer
-> HCLK if both are there.  The idea being that the DT should describe the
-> hardware rather than tell the driver what to do.
+So looks like there is a whole gamut of ways people have approached
+this. But I do think we need to change the scheme you have currently
+since it is difficult to review and audit (believe me on this one :))
 
-Or only try one if the other fails to give something.
-
-> Speed can be changed on a xfer by xfer basis on a single message to a
-> single slave.  Trying to switch clocks during a message, if it requires
-> resetting the whole block, sounds rather difficult.
-
-In practice that's so vanishingly rare it's probably not worth worrying
-about.
-
---sm4nu43k4a2Rpi4c
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlpfMPYACgkQJNaLcl1U
-h9DSUwf/SdBrUaeth5vl+Qfv4FvOgy5ve5YQ0ERiVasepBBLKNNNCai3h5+ixMZj
-b5zOcXrZGq8mehJ3ii2zkBwuU713NTo2cbYT0ejgy9veN979X0bljs29SK0eAVoQ
-RUYeHEKpmWPclK7mKApD/3Ah32jFSOG80RHvLlEmTge2S0nJ4NItJMlweW6T8hQd
-J/m5IG1jHWldL+2d7fy8u542fqbMLkg8S/mRoO5Y5DX9YdLDbUOeAblozGaRr0/L
-wmLz/ONNGTEi0ohfab1lzDeYSUQN74t4pySJFi2IXNBkxne9qv6rbHr8ZsKp0Zrc
-B2ghj96ZUBVNtfMLQTr1KLLfkj0VNw==
-=3Fe4
------END PGP SIGNATURE-----
-
---sm4nu43k4a2Rpi4c--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Sekhar
