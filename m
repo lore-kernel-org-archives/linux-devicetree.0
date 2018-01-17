@@ -1,127 +1,157 @@
-From: David Lechner <david@lechnology.com>
-Subject: Re: [PATCH v5 12/44] clk: davinci: Add platform information for TI
- DA850 PSC
-Date: Wed, 17 Jan 2018 13:08:34 -0600
-Message-ID: <7b33c9a1-468c-15e6-2899-be334b4f3807@lechnology.com>
-References: <1515377863-20358-1-git-send-email-david@lechnology.com>
- <1515377863-20358-13-git-send-email-david@lechnology.com>
- <8d09dba6-9b1d-e06e-8730-256b8a4320db@ti.com>
- <b6baa17e-1239-c209-9eca-52e5da73e921@lechnology.com>
- <bb1f446e-5900-7e73-c1b7-955662a9541b@ti.com>
+From: Julia Cartwright <juliac@eso.teric.us>
+Subject: Re: [patch v17 1/4] drivers: jtag: Add JTAG core driver
+Date: Wed, 17 Jan 2018 13:14:41 -0600
+Message-ID: <20180117191441.GE2818@kryptos.localdomain>
+References: <1516087139-7510-1-git-send-email-oleksandrs@mellanox.com>
+ <1516087139-7510-2-git-send-email-oleksandrs@mellanox.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <bb1f446e-5900-7e73-c1b7-955662a9541b@ti.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1516087139-7510-2-git-send-email-oleksandrs@mellanox.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sekhar Nori <nsekhar@ti.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org
+To: Oleksandr Shamray <oleksandrs@mellanox.com>
+Cc: gregkh@linuxfoundation.org, arnd@arndb.de, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, openbmc@lists.ozlabs.org, joel@jms.id.au, jiri@resnulli.us, tklauser@distanz.ch, linux-serial@vger.kernel.org, vadimp@mellanox.com, system-sw-low-level@mellanox.com, robh+dt@kernel.org, openocd-devel-owner@lists.sourceforge.net, linux-api@vger.kernel.org, davem@davemloft.net, mchehab@kernel.org, Jiri Pirko <jiri@mellanox.com>
 List-Id: devicetree@vger.kernel.org
 
-On 01/17/2018 05:57 AM, Sekhar Nori wrote:
-> On Tuesday 16 January 2018 10:51 PM, David Lechner wrote:
->> On 01/16/2018 08:00 AM, Sekhar Nori wrote:
->>> On Monday 08 January 2018 07:47 AM, David Lechner wrote:
->>>> +void __init da850_psc_clk_init(void __iomem *psc0, void __iomem *psc1)
->>>> +{
->>>> +    struct clk_onecell_data *clk_data;
->>>> +
->>>> +    clk_data = davinci_psc_register_clocks(psc0, da850_psc0_info, 16);
->>>> +    if (!clk_data)
->>>> +        return;
->>>> +
->>>> +    clk_register_clkdev(clk_data->clks[3], NULL, "ti-aemif");
->>>> +    clk_register_clkdev(clk_data->clks[3], "aemif", "davinci-nand.0");
->>>> +    clk_register_clkdev(clk_data->clks[4], NULL, "spi_davinci.0");
->>>> +    clk_register_clkdev(clk_data->clks[5], NULL, "da830-mmc.0");
->>>> +    clk_register_clkdev(clk_data->clks[9], NULL, "serial8250.0");
->>>> +    clk_register_clkdev(clk_data->clks[14], "arm", NULL);
->>>> +    clk_register_clkdev(clk_data->clks[15], NULL, "davinci-rproc.0");
->>>> +
->>>> +    clk_free_onecell_data(clk_data);
->>>> +
->>>> +    clk_data = davinci_psc_register_clocks(psc1, da850_psc1_info, 32);
->>>> +    if (!clk_data)
->>>> +        return;
->>>> +
->>>> +    clk_register_clkdev(clk_data->clks[1], "usb20_psc_clk", NULL);
->>>
->>> Is this con_id really needed now? Searching for "usb20_psc_clk" in your
->>> tree results in only this one hit.
->>
->> Yes, this is left over from previous attempts.
->>
->>>
->>>> +    clk_register_clkdev(clk_data->clks[1], NULL, "musb-da8xx");
->>>> +    clk_register_clkdev(clk_data->clks[1], NULL, "cppi41-dmaengine");
->>>
->>> I guess multiple dev_id matches like these are another hurdle in moving
->>> them to davinci_psc_clk_info[] table? If its too cumbersome to keep
->>> multiple entries in the table, they can be handled as an exception at
->>> the end of processing the table? Still they are not the norm so I hope
->>> the normal case will still benefit.
->>
->> Right, as I mentioned in the reply to the previous patch, instead of
->> assigning a con_id and dev_id to each clock, we would need to assign
->> an array with a list of clocks. I think that would work better than
->> trying to handle the extras as an exception since there, on average,
->> about 5 per SoC.
-> 
-> Okay, are you going to try this to see how it looks?
+Hello Oleksandr-
 
-It is looking like this:
+On Tue, Jan 16, 2018 at 09:18:56AM +0200, Oleksandr Shamray wrote:
+[..]
+> v16->v17
+> Comments pointed by Julia Cartwright <juliac@eso.teric.us>
 
+More review feedback below:
 
-static const struct davinci_psc_clkdev_info emfia_clkdev[] __initconst = {
-	LPSC_CLKDEV(NULL,	"ti-aemif"),
-	LPSC_CLKDEV("aemif",	"davinci-nand.0"),
-	{ }
-};
+[..]
+> +++ b/drivers/jtag/jtag.c
+[..]
+> +static long jtag_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+> +{
+> +	struct jtag *jtag = file->private_data;
+> +	struct jtag_run_test_idle idle;
+> +	struct jtag_xfer xfer;
+> +	u8 *xfer_data;
+> +	u32 data_size;
+> +	u32 value;
+> +	int err;
+> +
+> +	if (!arg)
+> +		return -EINVAL;
+> +
+> +	switch (cmd) {
+> +	case JTAG_GIOCFREQ:
+> +		if (!jtag->ops->freq_get)
+> +			err = -EOPNOTSUPP;
 
-static const struct davinci_psc_clkdev_info spi0_clkdev[] __initconst = {
-	LPSC_CLKDEV(NULL,	"spi_davinci.0"),
-	{ }
-};
+Did you mean:
 
-static const struct davinci_psc_clkdev_info mmcsd0_clkdev[] __initconst = {
-	LPSC_CLKDEV(NULL,	"da830-mmc.0"),
-	{ }
-};
+			return -EOPNOTSUPP;
 
-static const struct davinci_psc_clkdev_info uart0_clkdev[] __initconst = {
-	LPSC_CLKDEV(NULL,	"serial8250.0"),
-	{ }
-};
+?
 
-static const struct davinci_psc_clkdev_info arm_clkdev[] __initconst = {
-	/*
-	 * REVISIT: cpufreq-davinci should be modified to use dev_id and drop
-	 * use of con_id.
-	 */
-	LPSC_CLKDEV("arm",	NULL),
-	{ }
-};
+> +
+> +		err = jtag->ops->freq_get(jtag, &value);
 
-static const struct davinci_psc_clkdev_info dsp_clkdev[] __initconst = {
-	LPSC_CLKDEV(NULL,	"davinci-rproc.0"),
-	{ }
-};
+Otherwise you're check was worthless, you'll call NULL here.
 
-static const struct davinci_psc_clk_info da850_psc0_info[] __initconst = {
-	LPSC(0,  0, tpcc0,   pll0_sysclk2, NULL,          LPSC_ALWAYS_ENABLED),
-	LPSC(1,  0, tptc0,   pll0_sysclk2, NULL,          LPSC_ALWAYS_ENABLED),
-	LPSC(2,  0, tptc1,   pll0_sysclk2, NULL,          LPSC_ALWAYS_ENABLED),
-	LPSC(3,  0, emifa,   async1,       emfia_clkdev,  0),
-	LPSC(4,  0, spi0,    pll0_sysclk2, spi0_clkdev,   0),
-	LPSC(5,  0, mmcsd0,  pll0_sysclk2, mmcsd0_clkdev, 0),
-	LPSC(6,  0, aintc,   pll0_sysclk4, NULL,          LPSC_ALWAYS_ENABLED),
-	LPSC(7,  0, arm_rom, pll0_sysclk2, NULL,          LPSC_ALWAYS_ENABLED),
-	LPSC(9,  0, uart0,   pll0_sysclk2, uart0_clkdev,  0),
-	LPSC(13, 0, pruss,   pll0_sysclk2, NULL,          0),
-	LPSC(14, 0, arm,     pll0_sysclk6, arm_clkdev,    LPSC_ALWAYS_ENABLED |
-							  LPSC_ARM_RATE),
-	LPSC(15, 1, dsp,     pll0_sysclk1, dsp_clkdev,    LPSC_FORCE |
-							  LPSC_LOCAL_RESET),
-	{ }
-};
+Also, w.r.t. the set of ops which are required to be implemented: this
+isn't the right place to do the check.
+
+Instead, do it in jtag_alloc():
+
+	struct jtag *jtag_alloc(size_t priv_size, const struct jtag_ops *ops)
+	{
+		struct jtag *jtag;
+
+		if (!ops->freq_get || !ops->xfer || ...) /* fixup condition */
+			return NULL;
+
+		jtag = kzalloc(sizeof(*jtag) + priv_size, GFP_KERNEL);
+		if (!jtag)
+			return NULL;
+
+		jtag->ops = ops;
+		return jtag;
+	}
+	EXPORT_SYMBOL_GPL(jtag_alloc);
+
+[..]
+> +	case JTAG_IOCXFER:
+[..]
+> +		data_size = DIV_ROUND_UP(xfer.length, BITS_PER_BYTE);
+> +		xfer_data = memdup_user(u64_to_user_ptr(xfer.tdio), data_size);
+> +
+> +		if (!xfer_data)
+
+memdup_user() doesn't return NULL on error.  You need to check for
+IS_ERR(xfer_data).
+
+> +			return -EFAULT;
+> +
+> +		err = jtag->ops->xfer(jtag, &xfer, xfer_data);
+> +		if (err) {
+> +			kfree(xfer_data);
+> +			return -EFAULT;
+> +		}
+> +
+> +		err = copy_to_user(u64_to_user_ptr(xfer.tdio),
+> +				   (void *)(xfer_data), data_size);
+> +
+> +		if (err) {
+> +			kfree(xfer_data);
+> +			return -EFAULT;
+> +		}
+> +
+> +		kfree(xfer_data);
+
+Move the kfree() above the if (err).
+
+> +		if (copy_to_user((void *)arg, &xfer, sizeof(struct jtag_xfer)))
+> +			return -EFAULT;
+> +		break;
+> +
+> +	case JTAG_GIOCSTATUS:
+> +		if (!jtag->ops->status_get)
+> +			return -EOPNOTSUPP;
+> +
+> +		err = jtag->ops->status_get(jtag, &value);
+> +		if (err)
+> +			break;
+> +
+> +		err = put_user(value, (__u32 *)arg);
+> +		if (err)
+> +			err = -EFAULT;
+
+put_user() returns -EFAULT on failure, so this shouldn't be necessary.
+
+[..]
+> --- /dev/null
+> +++ b/include/uapi/linux/jtag.h
+[..]
+> +/**
+> + * struct jtag_xfer - jtag xfer:
+> + *
+> + * @type: transfer type
+> + * @direction: xfer direction
+> + * @length: xfer bits len
+> + * @tdio : xfer data array
+> + * @endir: xfer end state
+> + *
+> + * Structure represents interface to JTAG device for jtag sdr xfer
+> + * execution.
+> + */
+> +struct jtag_xfer {
+> +	__u8	type;
+> +	__u8	direction;
+> +	__u8	endstate;
+
+Just to be as unambiguous as possible, considering this is ABI, I would
+suggest explicitly putting a padding byte here.
+
+> +	__u32	length;
+> +	__u64	tdio;
+> +};
+
+Thanks,
+   Julia
