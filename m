@@ -1,7 +1,7 @@
 From: Michal Simek <michal.simek@xilinx.com>
-Subject: [PATCH 3/5] arm: zynq: Add support for Xilinx zc770 xm011 dc2 board
-Date: Wed, 17 Jan 2018 15:41:11 +0100
-Message-ID: <dc23ca00689cac1c6df99a6b0cd17c74ca5e21c0.1516200065.git.michal.simek@xilinx.com>
+Subject: [PATCH 5/5]  arm: zynq: Add support for Xilinx zc770 xm013 dc4 board
+Date: Wed, 17 Jan 2018 15:41:13 +0100
+Message-ID: <3be3cd00b710827da46817693748eb6bcee00f82.1516200065.git.michal.simek@xilinx.com>
 References: <cover.1516200065.git.michal.simek@xilinx.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1516200065.git.michal.simek@xilinx.com>
@@ -9,56 +9,57 @@ In-Reply-To: <cover.1516200065.git.michal.simek@xilinx.com>
 References: <cover.1516200065.git.michal.simek@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: devicetree@vger.kernel.org
-Cc: monstr@monstr.eu, Steffen Trumtrar <s.trumtrar@pengutronix.de>, linux-kernel@vger.kernel.org, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Rob Herring <robherring2@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Josh Cartwright <josh.cartwright@ni.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 zc770 is based board which is extended by FMC/DC cards for SoC
 validation. FMCs/DCs are supposed to cover all SoC configurations.
-FMC/DC contains can, i2c, nand uart, spi and usb.
+FMC/DC contains can, ethernet, i2c, qspi, spi and uart.
 
 Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 ---
 
  arch/arm/boot/dts/Makefile             |  1 +
- arch/arm/boot/dts/zynq-zc770-xm011.dts | 64 ++++++++++++++++++++++++++++++++++
- 2 files changed, 65 insertions(+)
- create mode 100644 arch/arm/boot/dts/zynq-zc770-xm011.dts
+ arch/arm/boot/dts/zynq-zc770-xm013.dts | 78 ++++++++++++++++++++++++++++++++++
+ 2 files changed, 79 insertions(+)
+ create mode 100644 arch/arm/boot/dts/zynq-zc770-xm013.dts
 
 diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index fa62546ebfb3..7ed36eef2de0 100644
+index 6bd4b9a29511..44be37afa544 100644
 --- a/arch/arm/boot/dts/Makefile
 +++ b/arch/arm/boot/dts/Makefile
-@@ -1042,6 +1042,7 @@ dtb-$(CONFIG_ARCH_ZYNQ) += \
- 	zynq-zc702.dtb \
- 	zynq-zc706.dtb \
+@@ -1044,6 +1044,7 @@ dtb-$(CONFIG_ARCH_ZYNQ) += \
  	zynq-zc770-xm010.dtb \
-+	zynq-zc770-xm011.dtb \
+ 	zynq-zc770-xm011.dtb \
+ 	zynq-zc770-xm012.dtb \
++	zynq-zc770-xm013.dtb \
  	zynq-zed.dtb \
  	zynq-zybo.dtb
  dtb-$(CONFIG_MACH_ARMADA_370) += \
-diff --git a/arch/arm/boot/dts/zynq-zc770-xm011.dts b/arch/arm/boot/dts/zynq-zc770-xm011.dts
+diff --git a/arch/arm/boot/dts/zynq-zc770-xm013.dts b/arch/arm/boot/dts/zynq-zc770-xm013.dts
 new file mode 100644
-index 000000000000..b78883cee96a
+index 000000000000..ad3e1d108a9b
 --- /dev/null
-+++ b/arch/arm/boot/dts/zynq-zc770-xm011.dts
-@@ -0,0 +1,64 @@
++++ b/arch/arm/boot/dts/zynq-zc770-xm013.dts
+@@ -0,0 +1,78 @@
 +// SPDX-License-Identifier: GPL-2.0+
 +/*
 + * Xilinx ZC770 XM013 board DTS
 + *
-+ * Copyright (C) 2013-2018 Xilinx, Inc.
++ * Copyright (C) 2013 Xilinx, Inc.
 + */
 +/dts-v1/;
 +#include "zynq-7000.dtsi"
 +
 +/ {
-+	compatible = "xlnx,zynq-zc770-xm011", "xlnx,zynq-7000";
++	compatible = "xlnx,zynq-zc770-xm013", "xlnx,zynq-7000";
 +	model = "Xilinx Zynq";
 +
 +	aliases {
++		ethernet0 = &gem1;
 +		i2c0 = &i2c1;
-+		serial0 = &uart1;
-+		spi0 = &spi0;
++		serial0 = &uart0;
++		spi1 = &spi0;
 +	};
 +
 +	chosen {
@@ -70,24 +71,34 @@ index 000000000000..b78883cee96a
 +		device_type = "memory";
 +		reg = <0x0 0x40000000>;
 +	};
-+
-+	usb_phy1: phy1 {
-+		compatible = "usb-nop-xceiv";
-+		#phy-cells = <0>;
-+	};
 +};
 +
-+&can0 {
++&can1 {
 +	status = "okay";
++};
++
++&gem1 {
++	status = "okay";
++	phy-mode = "rgmii-id";
++	phy-handle = <&ethernet_phy>;
++
++	ethernet_phy: ethernet-phy@7 {
++		reg = <7>;
++		device_type = "ethernet-phy";
++	};
 +};
 +
 +&i2c1 {
 +	status = "okay";
 +	clock-frequency = <400000>;
 +
-+	eeprom: eeprom@52 {
-+		compatible = "atmel,24c02";
-+		reg = <0x52>;
++	si570: clock-generator@55 {
++		#clock-cells = <0>;
++		compatible = "silabs,si570";
++		temperature-stability = <50>;
++		reg = <0x55>;
++		factory-fout = <156250000>;
++		clock-frequency = <148500000>;
 +	};
 +};
 +
@@ -95,16 +106,19 @@ index 000000000000..b78883cee96a
 +	status = "okay";
 +	num-cs = <4>;
 +	is-decoded-cs = <0>;
++	eeprom: at25@0 {
++		at25,byte-len = <8192>;
++		at25,addr-mode = <2>;
++		at25,page-size = <32>;
++
++		compatible = "atmel,at25";
++		reg = <2>;
++		spi-max-frequency = <1000000>;
++	};
 +};
 +
-+&uart1 {
++&uart0 {
 +	status = "okay";
-+};
-+
-+&usb1 {
-+	status = "okay";
-+	dr_mode = "host";
-+	usb-phy = <&usb_phy1>;
 +};
 -- 
 1.9.1
