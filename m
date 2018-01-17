@@ -1,8 +1,8 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v4 3/8] ARM: dts: sun9i: Add CPUCFG device node
- for A80 dtsi
-Date: Wed, 17 Jan 2018 16:46:49 +0800
-Message-ID: <20180117084654.8234-4-wens@csie.org>
+Subject: [PATCH v4 8/8] ARM: dts: sun9i: Add secure SRAM node
+ used for SMP hotplug
+Date: Wed, 17 Jan 2018 16:46:54 +0800
+Message-ID: <20180117084654.8234-9-wens@csie.org>
 References: <20180117084654.8234-1-wens@csie.org>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
@@ -20,33 +20,45 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-CPUCFG is a collection of registers that are mapped to the SoC's signals
-from each individual processor core and associated peripherals, such as
-resets for processors, L1/L2 cache and other things.
-
-These registers are used for SMP bringup and CPU hotplugging.
+The A80 stores some magic flags in a portion of the secure SRAM. The
+BROM jumps directly to the software entry point set by the SMP code
+if the flags are set. This is required for CPU0 hotplugging.
 
 Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- arch/arm/boot/dts/sun9i-a80.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/arm/boot/dts/sun9i-a80.dtsi | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
 diff --git a/arch/arm/boot/dts/sun9i-a80.dtsi b/arch/arm/boot/dts/sun9i-a80.dtsi
-index 85fb800af8ab..85ecb4d64cfd 100644
+index bf4d40e8359f..b1c86b76ac3c 100644
 --- a/arch/arm/boot/dts/sun9i-a80.dtsi
 +++ b/arch/arm/boot/dts/sun9i-a80.dtsi
-@@ -363,6 +363,11 @@
- 			#reset-cells = <1>;
- 		};
+@@ -250,6 +250,25 @@
+ 		 */
+ 		ranges = <0 0 0 0x20000000>;
  
-+		cpucfg@1700000 {
-+			compatible = "allwinner,sun9i-a80-cpucfg";
-+			reg = <0x01700000 0x100>;
++		sram_b: sram@20000 {
++			/* 256 KiB secure SRAM at 0x20000 */
++			compatible = "mmio-sram";
++			reg = <0x00020000 0x40000>;
++
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges = <0 0x00020000 0x40000>;
++
++			smp-sram@1000 {
++				/*
++				 * This is checked by BROM to determine if
++				 * cpu0 should jump to SMP entry vector
++				 */
++				compatible = "allwinner,sun9i-a80-smp-sram";
++				reg = <0x1000 0x8>;
++			};
 +		};
 +
- 		mmc0: mmc@1c0f000 {
- 			compatible = "allwinner,sun9i-a80-mmc";
- 			reg = <0x01c0f000 0x1000>;
+ 		ehci0: usb@a00000 {
+ 			compatible = "allwinner,sun9i-a80-ehci", "generic-ehci";
+ 			reg = <0x00a00000 0x100>;
 -- 
 2.15.1
