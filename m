@@ -1,146 +1,177 @@
-From: jacopo mondi <jacopo@jmondi.org>
-Subject: Re: [PATCH v6 1/9] dt-bindings: media: Add Renesas CEU bindings
-Date: Wed, 17 Jan 2018 09:35:53 +0100
-Message-ID: <20180117083553.GF24926@w540>
-References: <1516139101-7835-1-git-send-email-jacopo+renesas@jmondi.org>
- <1516139101-7835-2-git-send-email-jacopo+renesas@jmondi.org>
- <20180117075958.ggnk4cmmkdah2am6@valkosipuli.retiisi.org.uk>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH v4 7/8] ARM: sun9i: smp: Support cpu0 hotplug
+Date: Wed, 17 Jan 2018 16:46:53 +0800
+Message-ID: <20180117084654.8234-8-wens@csie.org>
+References: <20180117084654.8234-1-wens@csie.org>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180117075958.ggnk4cmmkdah2am6@valkosipuli.retiisi.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, laurent.pinchart@ideasonboard.com, magnus.damm@gmail.com, geert@glider.be, hverkuil@xs4all.nl, mchehab@kernel.org, festevam@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, pombredanne@nexb.com, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBBE37TJAKGQEPK2PNIY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180117084654.8234-1-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sakari,
-    it's the second series this week where I fail to handle BT.656
-properly, sorry about this :)
+The BROM has a branch that checks if the primary core is hotplugging.
+If the magic flag is set, execution jumps to the address set in the
+software entry register. (Secondary cores always branch to the that
+address.)
 
-On Wed, Jan 17, 2018 at 09:59:59AM +0200, Sakari Ailus wrote:
-> Hi Jacopo,
->
-> On Tue, Jan 16, 2018 at 10:44:53PM +0100, Jacopo Mondi wrote:
-> > Add bindings documentation for Renesas Capture Engine Unit (CEU).
-> >
-> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> > Reviewed-by: Rob Herring <robh@kernel.org>
-> > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
-> > ---
-> >  .../devicetree/bindings/media/renesas,ceu.txt      | 81 ++++++++++++++++++++++
-> >  1 file changed, 81 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/media/renesas,ceu.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/media/renesas,ceu.txt b/Documentation/devicetree/bindings/media/renesas,ceu.txt
-> > new file mode 100644
-> > index 0000000..590ee27
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/media/renesas,ceu.txt
-> > @@ -0,0 +1,81 @@
-> > +Renesas Capture Engine Unit (CEU)
-> > +----------------------------------------------
-> > +
-> > +The Capture Engine Unit is the image capture interface found in the Renesas
-> > +SH Mobile and RZ SoCs.
-> > +
-> > +The interface supports a single parallel input with data bus width of 8 or 16
-> > +bits.
-> > +
-> > +Required properties:
-> > +- compatible: Shall be "renesas,r7s72100-ceu" for CEU units found in RZ/A1-H
-> > +  and RZ/A1-M SoCs.
-> > +- reg: Registers address base and size.
-> > +- interrupts: The interrupt specifier.
-> > +
-> > +The CEU supports a single parallel input and should contain a single 'port'
-> > +subnode with a single 'endpoint'. Connection to input devices are modeled
-> > +according to the video interfaces OF bindings specified in:
-> > +Documentation/devicetree/bindings/media/video-interfaces.txt
-> > +
-> > +Optional endpoint properties applicable to parallel input bus described in
-> > +the above mentioned "video-interfaces.txt" file are supported.
-> > +
-> > +- hsync-active: Active state of the HSYNC signal, 0/1 for LOW/HIGH respectively.
-> > +  If property is not present, default is active high.
-> > +- vsync-active: Active state of the VSYNC signal, 0/1 for LOW/HIGH respectively.
-> > +  If property is not present, default is active high.
->
-> Does the hardware support Bt.656? If it does, you need to tell the
-> difference between the parallel interface with default sync polarity and
-> Bt.656 interfaces. With the above it's ambiguous.
+This patch sets the flags that makes BROM jump execution on the
+primary core (cpu0) to the SMP software entry code when the core is
+powered back up. After it is re-integrated into the system, the flag
+is cleared.
 
-No, it does not support BT.656.
+A custom .cpu_can_disable callback that returns true for all cpus,
+so that cpu0 can really be brought down.
 
-I'm listing them as -required- endpoint properties. If they are not
-specified the drivers fails during probe:
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+---
+ arch/arm/mach-sunxi/mc_smp.c | 59 +++++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 56 insertions(+), 3 deletions(-)
 
-        renesas-ceu e8210000.ceu: Only parallel input supported.
-
-Thanks
-   j
-
->
-> > +
-> > +Example:
-> > +
-> > +The example describes the connection between the Capture Engine Unit and an
-> > +OV7670 image sensor connected to i2c1 interface.
-> > +
-> > +ceu: ceu@e8210000 {
-> > +	reg = <0xe8210000 0x209c>;
-> > +	compatible = "renesas,r7s72100-ceu";
-> > +	interrupts = <GIC_SPI 332 IRQ_TYPE_LEVEL_HIGH>;
-> > +
-> > +	pinctrl-names = "default";
-> > +	pinctrl-0 = <&vio_pins>;
-> > +
-> > +	status = "okay";
-> > +
-> > +	port {
-> > +		ceu_in: endpoint {
-> > +			remote-endpoint = <&ov7670_out>;
-> > +
-> > +			hsync-active = <1>;
-> > +			vsync-active = <0>;
-> > +		};
-> > +	};
-> > +};
-> > +
-> > +i2c1: i2c@fcfee400 {
-> > +	pinctrl-names = "default";
-> > +	pinctrl-0 = <&i2c1_pins>;
-> > +
-> > +	status = "okay";
-> > +
-> > +	clock-frequency = <100000>;
-> > +
-> > +	ov7670: camera@21 {
-> > +		compatible = "ovti,ov7670";
-> > +		reg = <0x21>;
-> > +
-> > +		pinctrl-names = "default";
-> > +		pinctrl-0 = <&vio_pins>;
-> > +
-> > +		reset-gpios = <&port3 11 GPIO_ACTIVE_LOW>;
-> > +		powerdown-gpios = <&port3 12 GPIO_ACTIVE_HIGH>;
-> > +
-> > +		port {
-> > +			ov7670_out: endpoint {
-> > +				remote-endpoint = <&ceu_in>;
-> > +
-> > +				hsync-active = <1>;
-> > +				vsync-active = <0>;
-> > +			};
-> > +		};
-> > +	};
-> > +};
-> > --
-> > 2.7.4
-> >
->
-> --
-> Sakari Ailus
-> e-mail: sakari.ailus@iki.fi
+diff --git a/arch/arm/mach-sunxi/mc_smp.c b/arch/arm/mach-sunxi/mc_smp.c
+index fc0acfa07f74..11e46c6efb90 100644
+--- a/arch/arm/mach-sunxi/mc_smp.c
++++ b/arch/arm/mach-sunxi/mc_smp.c
+@@ -65,8 +65,12 @@
+ #define PRCM_PWR_SWITCH_REG(c, cpu)	(0x140 + 0x10 * (c) + 0x4 * (cpu))
+ #define PRCM_CPU_SOFT_ENTRY_REG		0x164
+ 
++#define CPU0_SUPPORT_HOTPLUG_MAGIC0	0xFA50392F
++#define CPU0_SUPPORT_HOTPLUG_MAGIC1	0x790DCA3A
++
+ static void __iomem *cpucfg_base;
+ static void __iomem *prcm_base;
++static void __iomem *sram_b_smp_base;
+ 
+ static bool sunxi_core_is_cortex_a15(unsigned int core, unsigned int cluster)
+ {
+@@ -125,6 +129,17 @@ static int sunxi_cpu_power_switch_set(unsigned int cpu, unsigned int cluster,
+ 	return 0;
+ }
+ 
++static void sunxi_cpu0_hotplug_support_set(bool enable)
++{
++	if (enable) {
++		writel(CPU0_SUPPORT_HOTPLUG_MAGIC0, sram_b_smp_base);
++		writel(CPU0_SUPPORT_HOTPLUG_MAGIC1, sram_b_smp_base + 0x4);
++	} else {
++		writel(0x0, sram_b_smp_base);
++		writel(0x0, sram_b_smp_base + 0x4);
++	}
++}
++
+ static int sunxi_cpu_powerup(unsigned int cpu, unsigned int cluster)
+ {
+ 	u32 reg;
+@@ -133,6 +148,10 @@ static int sunxi_cpu_powerup(unsigned int cpu, unsigned int cluster)
+ 	if (cpu >= SUNXI_CPUS_PER_CLUSTER || cluster >= SUNXI_NR_CLUSTERS)
+ 		return -EINVAL;
+ 
++	/* Set hotplug support magic flags for cpu0 */
++	if (cluster == 0 && cpu == 0)
++		sunxi_cpu0_hotplug_support_set(true);
++
+ 	/* assert processor power-on reset */
+ 	reg = readl(prcm_base + PRCM_CPU_PO_RST_CTRL(cluster));
+ 	reg &= ~PRCM_CPU_PO_RST_CTRL_CORE(cpu);
+@@ -362,6 +381,13 @@ static bool sunxi_mc_smp_cluster_is_down(unsigned int cluster)
+ 	return true;
+ }
+ 
++static void sunxi_mc_smp_secondary_init(unsigned int cpu)
++{
++	/* Clear hotplug support magic flags for cpu0 */
++	if (cpu == 0)
++		sunxi_cpu0_hotplug_support_set(false);
++}
++
+ static int sunxi_mc_smp_boot_secondary(unsigned int l_cpu, struct task_struct *idle)
+ {
+ 	unsigned int mpidr, cpu, cluster;
+@@ -572,13 +598,19 @@ static int sunxi_mc_smp_cpu_kill(unsigned int l_cpu)
+ 	return !ret;
+ }
+ 
++static bool sunxi_mc_smp_cpu_can_disable(unsigned int __unused)
++{
++	return true;
++}
+ #endif
+ 
+ static const struct smp_operations sunxi_mc_smp_smp_ops __initconst = {
++	.smp_secondary_init	= sunxi_mc_smp_secondary_init,
+ 	.smp_boot_secondary	= sunxi_mc_smp_boot_secondary,
+ #ifdef CONFIG_HOTPLUG_CPU
+ 	.cpu_die		= sunxi_mc_smp_cpu_die,
+ 	.cpu_kill		= sunxi_mc_smp_cpu_kill,
++	.cpu_can_disable	= sunxi_mc_smp_cpu_can_disable,
+ #endif
+ };
+ 
+@@ -654,7 +686,7 @@ static int __init sunxi_mc_smp_lookback(void)
+ 
+ static int __init sunxi_mc_smp_init(void)
+ {
+-	struct device_node *cpucfg_node, *node;
++	struct device_node *cpucfg_node, *sram_node, *node;
+ 	struct resource res;
+ 	int ret;
+ 
+@@ -702,16 +734,31 @@ static int __init sunxi_mc_smp_init(void)
+ 		goto err_put_cpucfg_node;
+ 	}
+ 
++	sram_node = of_find_compatible_node(NULL, NULL,
++					    "allwinner,sun9i-a80-smp-sram");
++	if (!sram_node) {
++		ret = -ENODEV;
++		goto err_unmap_release_cpucfg;
++	}
++
++	sram_b_smp_base = of_io_request_and_map(sram_node, 0, "sunxi-mc-smp");
++	if (IS_ERR(sram_b_smp_base)) {
++		ret = PTR_ERR(sram_b_smp_base);
++		pr_err("%s: failed to map secure SRAM\n", __func__);
++		goto err_put_sram_node;
++	}
++
+ 	/* Configure CCI-400 for boot cluster */
+ 	ret = sunxi_mc_smp_lookback();
+ 	if (ret) {
+ 		pr_err("%s: failed to configure boot cluster: %d\n",
+ 		       __func__, ret);
+-		goto err_unmap_release_cpucfg;
++		goto err_unmap_release_secure_sram;
+ 	}
+ 
+-	/* We don't need the CPUCFG device node anymore */
++	/* We don't need the CPUCFG and SRAM device nodes anymore */
+ 	of_node_put(cpucfg_node);
++	of_node_put(sram_node);
+ 
+ 	/* Set the hardware entry point address */
+ 	writel(__pa_symbol(sunxi_mc_smp_secondary_startup),
+@@ -724,6 +771,12 @@ static int __init sunxi_mc_smp_init(void)
+ 
+ 	return 0;
+ 
++err_unmap_release_secure_sram:
++	iounmap(sram_b_smp_base);
++	of_address_to_resource(sram_node, 0, &res);
++	release_mem_region(res.start, resource_size(&res));
++err_put_sram_node:
++	of_node_put(sram_node);
+ err_unmap_release_cpucfg:
+ 	iounmap(cpucfg_base);
+ 	of_address_to_resource(cpucfg_node, 0, &res);
+-- 
+2.15.1
