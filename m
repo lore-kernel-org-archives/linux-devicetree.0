@@ -1,62 +1,110 @@
-From: James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v6 11/16] firmware: arm_sdei: Add support for CPU and
- system power states
-Date: Wed, 17 Jan 2018 12:01:08 +0000
-Message-ID: <5A5F3B04.6070403@arm.com>
-References: <20180108153818.22743-1-james.morse@arm.com> <20180108153818.22743-12-james.morse@arm.com> <20180108172226.GC2530@red-moon> <20180113120031.5m6eykwzqnioyb33@armageddon.cambridge.arm.com> <20180114122037.GA18073@red-moon>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v5 11/44] clk: davinci: Add platform information for TI
+ DA830 PSC
+Date: Wed, 17 Jan 2018 17:48:36 +0530
+Message-ID: <86581de6-a982-7a7b-9a83-22c869417211@ti.com>
+References: <1515377863-20358-1-git-send-email-david@lechnology.com>
+ <1515377863-20358-12-git-send-email-david@lechnology.com>
+ <91fe16dc-907e-6dbb-c8db-c27561132093@ti.com>
+ <4dd36ca7-e41d-58d8-ec8c-787978307943@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180114122037.GA18073@red-moon>
+In-Reply-To: <4dd36ca7-e41d-58d8-ec8c-787978307943-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Christoffer Dall <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Heyi Guo <guoheyi-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, kvmarm-FPEHb7Xf0XXUo1n7N8X6UoWGPAHP3yOg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+To: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Adam Ford <aford173-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Lorenzo, Catalin,
+On Tuesday 16 January 2018 10:46 PM, David Lechner wrote:
 
-On 14/01/18 12:20, Lorenzo Pieralisi wrote:
-> On Sat, Jan 13, 2018 at 12:00:31PM +0000, Catalin Marinas wrote:
->> On Mon, Jan 08, 2018 at 05:22:26PM +0000, Lorenzo Pieralisi wrote:
->>> On Mon, Jan 08, 2018 at 03:38:13PM +0000, James Morse wrote:
->>>> +/* When entering idle, mask/unmask events for this cpu */
->>>
->>> Just mentioning (since I know you know), this notifier is called also
->>> through syscore_ops so it is not just idle (CPUidle or Suspend-to-idle).
->>>
->>>> +static int sdei_pm_notifier(struct notifier_block *nb, unsigned long action,
->>>> +			    void *data)
->>>> +{
->>>> +	int rv;
->>>> +
->>>> +	switch (action) {
->>>> +	case CPU_PM_ENTER:
->>>> +		rv = sdei_mask_local_cpu();
->>>> +		break;
->>>> +	case CPU_PM_EXIT:
->>>> +		rv = sdei_unmask_local_cpu();
->>>
->>> You should handle CPU_PM_ENTER_FAILED here for correctness,
->>> in case the notifier chain fails.
-
-(not seen this before, I mirrored what KVM does here ... which may have the same
-bug)
-
-
->> So, just to confirm, the CPU_PM_ENTER_FAILED case goes together with
->> CPU_PM_EXIT so that we unmask the SDE again for the CPU.
+>>> +static const struct davinci_psc_clk_info da830_psc0_info[]
+>>> __initconst = {
+>>> +    LPSC(0, 0, tpcc, pll0_sysclk2, LPSC_ALWAYS_ENABLED),
+>>> +    LPSC(1, 0, tptc0, pll0_sysclk2, LPSC_ALWAYS_ENABLED),
+>>> +    LPSC(2, 0, tptc1, pll0_sysclk2, LPSC_ALWAYS_ENABLED),
+>>> +    LPSC(3, 0, aemif, pll0_sysclk3, LPSC_ALWAYS_ENABLED),
+>>> +    LPSC(4, 0, spi0, pll0_sysclk2, 0),
+>>> +    LPSC(5, 0, mmcsd, pll0_sysclk2, 0),
+>>> +    LPSC(6, 0, aintc, pll0_sysclk4, LPSC_ALWAYS_ENABLED),
+>>> +    LPSC(7, 0, arm_rom, pll0_sysclk2, LPSC_ALWAYS_ENABLED),
+>>> +    LPSC(8, 0, secu_mgr, pll0_sysclk4, LPSC_ALWAYS_ENABLED),
+>>> +    LPSC(9, 0, uart0, pll0_sysclk2, 0),
+>>> +    LPSC(10, 0, scr0_ss, pll0_sysclk2, LPSC_ALWAYS_ENABLED),
+>>> +    LPSC(11, 0, scr1_ss, pll0_sysclk2, LPSC_ALWAYS_ENABLED),
+>>> +    LPSC(12, 0, scr2_ss, pll0_sysclk2, LPSC_ALWAYS_ENABLED),
+>>> +    LPSC(13, 0, dmax, pll0_sysclk2, LPSC_ALWAYS_ENABLED),
+>>
+>> pruss is better (I know the name is coming from existing code).
+>>
+>>> +    LPSC(14, 0, arm, pll0_sysclk6, LPSC_ALWAYS_ENABLED),
+>>
+>> This is LPSC 15 which controls DSP too. But its missing from existing
+>> code. Not sure why. Probably a note for future. For now okay with
+>> ignoring it.
+>>
+>>> +    { }
+>>> +};
+>>
+>> Tables like these are much easier to parse if columns are spaced using a
+>> tab.
+>>
 > 
-> Yes, that's correct (I do not think that's a problem with current
-> mainline but that ought to be handled correctly anyway).
+> Tabs make the lines over 80 columns. How about spaces instead?
 
-I'll send a fix..,
-... oh wait Catalin already did this.
+That works for me. I guess checkpatch will complain, but hopefully
+maintainers will agree on the exception.
 
+>>> +void __init da830_psc_clk_init(void __iomem *psc0, void __iomem *psc1)
+>>> +{
+>>> +    struct clk_onecell_data *clk_data;
+>>> +
+>>> +    clk_data = davinci_psc_register_clocks(psc0, da830_psc0_info, 16);
+>>> +    if (!clk_data)
+>>> +        return;
+>>> +
+>>> +    clk_register_clkdev(clk_data->clks[4], NULL, "spi_davinci.0");
+>>> +    clk_register_clkdev(clk_data->clks[5], NULL, "da830-mmc.0");
+>>> +    clk_register_clkdev(clk_data->clks[9], NULL, "serial8250.0");
+>>> +    clk_register_clkdev(clk_data->clks[14], "arm", NULL);
+>>> +
+>>> +    clk_free_onecell_data(clk_data);
+>>> +
+>>> +    clk_data = davinci_psc_register_clocks(psc1, da830_psc1_info, 32);
+>>> +    if (!clk_data)
+>>> +        return;
+>>> +
+>>> +    clk_register_clkdev(clk_data->clks[1], NULL, "musb-da8xx");
+>>> +    clk_register_clkdev(clk_data->clks[1], NULL, "cppi41-dmaengine");
+>>> +    clk_register_clkdev(clk_data->clks[2], NULL, "ohci-da8xx");
+>>> +    clk_register_clkdev(clk_data->clks[3], "gpio", NULL);
+>>
+>> This is pretty bad (and no fault of yours) - having a con_id but no
+>> device name. Can you please make a pre-series which passes NULL con_id
+>> in gpio-davinci.c?
+> 
+> I'll give it a try. This is complicated by the fact that the con_id has
+> made it's way into the device tree bindings. However, I think we can
+> safely deprecate clock-names = "gpio" in the device tree bindings since
+> we can make the driver ignore that property to preserve backwards
+> compatibility.
 
-Thanks!
+I don't think this breaks DT-backward compatibility. Passing a NULL
+con_id in driver should find the clock for that device even if DT entry
+has clock-names present. As far as I can read clk_find().
 
-James
+The less intrusive alternate is to add the GPIO device name in the table
+here, while keeping the con_id and keeping the driver untouched. The
+advantage of that is lesser number of dependent patches for this series
+to go in.
+
+Later once CCF conversion has been there in the kernel for one full
+release and no regressions, these other clean-ups can be done.
+
+Thanks,
+Sekhar
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
