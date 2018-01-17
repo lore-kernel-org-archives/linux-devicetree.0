@@ -1,14 +1,12 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v4 7/8] ARM: sun9i: smp: Support cpu0 hotplug
-Date: Wed, 17 Jan 2018 16:46:53 +0800
-Message-ID: <20180117084654.8234-8-wens@csie.org>
-References: <20180117084654.8234-1-wens@csie.org>
+Subject: [PATCH v4 0/8] ARM: sun9i: SMP and CPU hotplug support
+Date: Wed, 17 Jan 2018 16:46:46 +0800
+Message-ID: <20180117084654.8234-1-wens@csie.org>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBBE37TJAKGQEPK2PNIY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBAU37TJAKGQEU7FPJBQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180117084654.8234-1-wens-jdAy2FN1RRM@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -19,159 +17,87 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The BROM has a branch that checks if the primary core is hotplugging.
-If the magic flag is set, execution jumps to the address set in the
-software entry register. (Secondary cores always branch to the that
-address.)
+This is v4 of my sun9i SMP/hotplug support series which was started
+over two years ago [1]. We've tried to implement PSCI for both the A80
+and A83T. Results were not promising. The issue is that these two chips
+have a broken security extensions implementation. If a specific bit is
+not burned in its e-fuse, most if not all security protections don't
+work [2]. Even worse, non-secure access to the GIC become secure. This
+requires a crazy workaround in the GIC driver which probably doesn't work
+in all cases [3].
 
-This patch sets the flags that makes BROM jump execution on the
-primary core (cpu0) to the SMP software entry code when the core is
-powered back up. After it is re-integrated into the system, the flag
-is cleared.
+Version 3 completely did away with the MCPM framework, instead just
+implementing a set of smp_ops. Most of the code from the previous
+version was reused, so the structure still has some traces of MCPM.
+As our hardware has CCI-400, we still need some sort of MMU/cache
+disabled trampoline code to enable cache coherency. Code for this
+was adapted from the MCPM framework. This and the entry code are done
+in inline assembly. Most of the other sunxi-specific code is derived
+from Allwinner code and documentation, with some references to the
+other MCPM implementations, as well as the Cortex's Technical Reference
+Manuals for the power sequencing stuff.
 
-A custom .cpu_can_disable callback that returns true for all cpus,
-so that cpu0 can really be brought down.
+In version 4, all traces of MCPM have been removed, except in the
+comments for atttributing code sources. Thumb2 mode is also fixed.
+It failed due to an unaligned word access.
 
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
----
- arch/arm/mach-sunxi/mc_smp.c | 59 +++++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 56 insertions(+), 3 deletions(-)
+Hope we can get this version merged. A83T SMP support will be built on
+it.
 
-diff --git a/arch/arm/mach-sunxi/mc_smp.c b/arch/arm/mach-sunxi/mc_smp.c
-index fc0acfa07f74..11e46c6efb90 100644
---- a/arch/arm/mach-sunxi/mc_smp.c
-+++ b/arch/arm/mach-sunxi/mc_smp.c
-@@ -65,8 +65,12 @@
- #define PRCM_PWR_SWITCH_REG(c, cpu)	(0x140 + 0x10 * (c) + 0x4 * (cpu))
- #define PRCM_CPU_SOFT_ENTRY_REG		0x164
- 
-+#define CPU0_SUPPORT_HOTPLUG_MAGIC0	0xFA50392F
-+#define CPU0_SUPPORT_HOTPLUG_MAGIC1	0x790DCA3A
-+
- static void __iomem *cpucfg_base;
- static void __iomem *prcm_base;
-+static void __iomem *sram_b_smp_base;
- 
- static bool sunxi_core_is_cortex_a15(unsigned int core, unsigned int cluster)
- {
-@@ -125,6 +129,17 @@ static int sunxi_cpu_power_switch_set(unsigned int cpu, unsigned int cluster,
- 	return 0;
- }
- 
-+static void sunxi_cpu0_hotplug_support_set(bool enable)
-+{
-+	if (enable) {
-+		writel(CPU0_SUPPORT_HOTPLUG_MAGIC0, sram_b_smp_base);
-+		writel(CPU0_SUPPORT_HOTPLUG_MAGIC1, sram_b_smp_base + 0x4);
-+	} else {
-+		writel(0x0, sram_b_smp_base);
-+		writel(0x0, sram_b_smp_base + 0x4);
-+	}
-+}
-+
- static int sunxi_cpu_powerup(unsigned int cpu, unsigned int cluster)
- {
- 	u32 reg;
-@@ -133,6 +148,10 @@ static int sunxi_cpu_powerup(unsigned int cpu, unsigned int cluster)
- 	if (cpu >= SUNXI_CPUS_PER_CLUSTER || cluster >= SUNXI_NR_CLUSTERS)
- 		return -EINVAL;
- 
-+	/* Set hotplug support magic flags for cpu0 */
-+	if (cluster == 0 && cpu == 0)
-+		sunxi_cpu0_hotplug_support_set(true);
-+
- 	/* assert processor power-on reset */
- 	reg = readl(prcm_base + PRCM_CPU_PO_RST_CTRL(cluster));
- 	reg &= ~PRCM_CPU_PO_RST_CTRL_CORE(cpu);
-@@ -362,6 +381,13 @@ static bool sunxi_mc_smp_cluster_is_down(unsigned int cluster)
- 	return true;
- }
- 
-+static void sunxi_mc_smp_secondary_init(unsigned int cpu)
-+{
-+	/* Clear hotplug support magic flags for cpu0 */
-+	if (cpu == 0)
-+		sunxi_cpu0_hotplug_support_set(false);
-+}
-+
- static int sunxi_mc_smp_boot_secondary(unsigned int l_cpu, struct task_struct *idle)
- {
- 	unsigned int mpidr, cpu, cluster;
-@@ -572,13 +598,19 @@ static int sunxi_mc_smp_cpu_kill(unsigned int l_cpu)
- 	return !ret;
- }
- 
-+static bool sunxi_mc_smp_cpu_can_disable(unsigned int __unused)
-+{
-+	return true;
-+}
- #endif
- 
- static const struct smp_operations sunxi_mc_smp_smp_ops __initconst = {
-+	.smp_secondary_init	= sunxi_mc_smp_secondary_init,
- 	.smp_boot_secondary	= sunxi_mc_smp_boot_secondary,
- #ifdef CONFIG_HOTPLUG_CPU
- 	.cpu_die		= sunxi_mc_smp_cpu_die,
- 	.cpu_kill		= sunxi_mc_smp_cpu_kill,
-+	.cpu_can_disable	= sunxi_mc_smp_cpu_can_disable,
- #endif
- };
- 
-@@ -654,7 +686,7 @@ static int __init sunxi_mc_smp_lookback(void)
- 
- static int __init sunxi_mc_smp_init(void)
- {
--	struct device_node *cpucfg_node, *node;
-+	struct device_node *cpucfg_node, *sram_node, *node;
- 	struct resource res;
- 	int ret;
- 
-@@ -702,16 +734,31 @@ static int __init sunxi_mc_smp_init(void)
- 		goto err_put_cpucfg_node;
- 	}
- 
-+	sram_node = of_find_compatible_node(NULL, NULL,
-+					    "allwinner,sun9i-a80-smp-sram");
-+	if (!sram_node) {
-+		ret = -ENODEV;
-+		goto err_unmap_release_cpucfg;
-+	}
-+
-+	sram_b_smp_base = of_io_request_and_map(sram_node, 0, "sunxi-mc-smp");
-+	if (IS_ERR(sram_b_smp_base)) {
-+		ret = PTR_ERR(sram_b_smp_base);
-+		pr_err("%s: failed to map secure SRAM\n", __func__);
-+		goto err_put_sram_node;
-+	}
-+
- 	/* Configure CCI-400 for boot cluster */
- 	ret = sunxi_mc_smp_lookback();
- 	if (ret) {
- 		pr_err("%s: failed to configure boot cluster: %d\n",
- 		       __func__, ret);
--		goto err_unmap_release_cpucfg;
-+		goto err_unmap_release_secure_sram;
- 	}
- 
--	/* We don't need the CPUCFG device node anymore */
-+	/* We don't need the CPUCFG and SRAM device nodes anymore */
- 	of_node_put(cpucfg_node);
-+	of_node_put(sram_node);
- 
- 	/* Set the hardware entry point address */
- 	writel(__pa_symbol(sunxi_mc_smp_secondary_startup),
-@@ -724,6 +771,12 @@ static int __init sunxi_mc_smp_init(void)
- 
- 	return 0;
- 
-+err_unmap_release_secure_sram:
-+	iounmap(sram_b_smp_base);
-+	of_address_to_resource(sram_node, 0, &res);
-+	release_mem_region(res.start, resource_size(&res));
-+err_put_sram_node:
-+	of_node_put(sram_node);
- err_unmap_release_cpucfg:
- 	iounmap(cpucfg_base);
- 	of_address_to_resource(cpucfg_node, 0, &res);
+Regards
+ChenYu
+
+Changes since v3:
+  - Renamed all "MCPM" occurrences to "MC_SMP", as the MCPM framework
+    is no longer used
+  - Thumb2 mode fixed
+
+Changes since v2:
+  - Do away with the MCPM framework, directly implement smp_ops
+  - Some debug messages were clarified
+  - New ARCH_SUNXI_MCPM Kconfig symbol for this feature
+
+Changes since v1:
+
+  - Leading zeroes for device node addresses removed
+  - Added device tree binding for SMP SRAM
+  - Simplified Kconfig options
+  - Switched to SPDX license identifier
+  - Map CPU to device tree node and check compatible to see if it's
+    Cortex-A15 or Cortex-A7
+  - Fix incorrect CPUCFG cluster status macro that prevented cluster
+    0 L2 cache WFI detection
+  - Fixed reversed bit for turning off cluster
+  - Put cluster in reset before turning off power (or it hangs)
+  - Added dedicated workqueue for turning off power to cpus and clusters
+  - Request CPUCFG and SRAM MMIO ranges
+  - Some comments fixed or added
+  - Some debug messages added
+
+[1] http://www.spinics.net/lists/arm-kernel/msg418350.html
+[2] https://lists.denx.de/pipermail/u-boot/2017-June/294637.html
+[3] https://github.com/wens/linux/commit/c48654c1f737116e7a7660183c8c74fa91970528
+
+Chen-Yu Tsai (8):
+  ARM: sun9i: Support SMP bring-up on A80
+  ARM: dts: sun9i: Add CCI-400 device nodes for A80
+  ARM: dts: sun9i: Add CPUCFG device node for A80 dtsi
+  ARM: dts: sun9i: Add PRCM device node for the A80 dtsi
+  ARM: sun9i: smp: Support CPU/cluster power down and hotplugging for
+    cpu1~7
+  dt-bindings: ARM: sunxi: Document A80 SoC secure SRAM usage by SMP
+    hotplug
+  ARM: sun9i: smp: Support cpu0 hotplug
+  ARM: dts: sun9i: Add secure SRAM node used for SMP hotplug
+
+ .../devicetree/bindings/arm/sunxi/smp-sram.txt     |  44 ++
+ arch/arm/boot/dts/sun9i-a80.dtsi                   |  75 ++
+ arch/arm/mach-sunxi/Kconfig                        |   7 +
+ arch/arm/mach-sunxi/Makefile                       |   1 +
+ arch/arm/mach-sunxi/mc_smp.c                       | 791 +++++++++++++++++++++
+ 5 files changed, 918 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/sunxi/smp-sram.txt
+ create mode 100644 arch/arm/mach-sunxi/mc_smp.c
+
 -- 
 2.15.1
