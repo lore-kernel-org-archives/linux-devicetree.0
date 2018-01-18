@@ -1,7 +1,7 @@
 From: <Yasunari.Takiguchi-7U/KSKJipcs@public.gmane.org>
-Subject: [PATCH v5 10/12] [media] cxd2880: Add DVB-T2 control functions for the driver
-Date: Thu, 18 Jan 2018 17:55:32 +0900
-Message-ID: <20180118085532.21738-1-Yasunari.Takiguchi@sony.com>
+Subject: [PATCH v5 11/12] [media] cxd2880: Add DVB-T2 monitor functions
+Date: Thu, 18 Jan 2018 17:57:01 +0900
+Message-ID: <20180118085701.21831-1-Yasunari.Takiguchi@sony.com>
 References: <20180118084016.20689-1-Yasunari.Takiguchi@sony.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,8 +14,8 @@ List-Id: devicetree@vger.kernel.org
 
 From: Yasunari Takiguchi <Yasunari.Takiguchi-7U/KSKJipcs@public.gmane.org>
 
-Provide definitions, interfaces and functions needed for DVB-T2
-of the Sony CXD2880 DVB-T2/T tuner + demodulator driver.
+Provide monitor functions (DVB-T2)
+for the Sony CXD2880 DVB-T2/T tuner + demodulator driver.
 
 Signed-off-by: Yasunari Takiguchi <Yasunari.Takiguchi-7U/KSKJipcs@public.gmane.org>
 Signed-off-by: Masayuki Yamamoto <Masayuki.Yamamoto-7U/KSKJipcs@public.gmane.org>
@@ -28,1631 +28,92 @@ Signed-off-by: Satoshi Watanabe <Satoshi.C.Watanabe-7U/KSKJipcs@public.gmane.org
 [Change list]
 Changes in V5
    Using SPDX-License-Identifier
-   drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd_dvbt2.c
+   drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd_dvbt2_mon.c
       -removed unnecessary if()        
       -modified return error code
       -removed unnecessary parentheses 
+      -modified for "Lines should not end with a '(' "
+      -removed unnecessary functions
+   drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd_dvbt2_mon.h
+      -removed unnecessary functions
 
 Changes in V4
-   drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd_dvbt2.c
+   #drivers/media/dvb-frontends/cxd2880/cxd2880_integ_dvbt2.c
+      -cxd2880_integ_dvbt2.c file was removed from V4.
+   #drivers/media/dvb-frontends/cxd2880/cxd2880_integ_dvbt2.h
+      -cxd2880_integ_dvbt2.h file was removed from V4.
+   drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd_dvbt2_mon.c
       -removed unnecessary initialization at variable declaration
       -removed unnecessary brace {}
-      -modified how to write consecutive registers
+      -changed position of static const (to top part of the file)
 
 Changes in V3
-   drivers/media/dvb-frontends/cxd2880/cxd2880_dvbt2.h
+   drivers/media/dvb-frontends/cxd2880/cxd2880_integ_dvbt2.c
+      -changed CXD2880_SLEEP to usleep_range
+      -replaced cxd2880_atomic_set to atomic_set
+      -modified return code
+      -modified coding style of if()  
+   drivers/media/dvb-frontends/cxd2880/cxd2880_integ_dvbt2.h
+      -modified return code
       -changed hexadecimal code to lower case. 
-   drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd_dvbt2.c
+   drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd_dvbt2_mon.c
+      -removed unnecessary cast
+      -changed cxd2880_math_log to intlog10
       -modified return code
       -modified coding style of if() 
       -changed hexadecimal code to lower case. 
-   drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd_dvbt2.h
+   drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd_dvbt2_mon.h
       -modified return code
 
- .../media/dvb-frontends/cxd2880/cxd2880_dvbt2.h    |  385 +++++++
- .../dvb-frontends/cxd2880/cxd2880_tnrdmd_dvbt2.c   | 1217 ++++++++++++++++++++
- .../dvb-frontends/cxd2880/cxd2880_tnrdmd_dvbt2.h   |   65 ++
- 3 files changed, 1667 insertions(+)
- create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_dvbt2.h
- create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd_dvbt2.c
- create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd_dvbt2.h
+ .../cxd2880/cxd2880_tnrdmd_dvbt2_mon.c             | 1878 ++++++++++++++++++++
+ .../cxd2880/cxd2880_tnrdmd_dvbt2_mon.h             |  135 ++
+ 2 files changed, 2013 insertions(+)
+ create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd_dvbt2_mon.c
+ create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd_dvbt2_mon.h
 
-diff --git a/drivers/media/dvb-frontends/cxd2880/cxd2880_dvbt2.h b/drivers/media/dvb-frontends/cxd2880/cxd2880_dvbt2.h
+diff --git a/drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd_dvbt2_mon.c b/drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd_dvbt2_mon.c
 new file mode 100644
-index 000000000000..191047b158fe
+index 000000000000..5296cbbca8bd
 --- /dev/null
-+++ b/drivers/media/dvb-frontends/cxd2880/cxd2880_dvbt2.h
-@@ -0,0 +1,385 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * cxd2880_dvbt2.h
-+ * Sony CXD2880 DVB-T2/T tuner + demodulator driver
-+ * DVB-T2 related definitions
-+ *
-+ * Copyright (C) 2016, 2017, 2018 Sony Semiconductor Solutions Corporation
-+ */
-+
-+#ifndef CXD2880_DVBT2_H
-+#define CXD2880_DVBT2_H
-+
-+#include "cxd2880_common.h"
-+
-+enum cxd2880_dvbt2_profile {
-+	CXD2880_DVBT2_PROFILE_BASE,
-+	CXD2880_DVBT2_PROFILE_LITE,
-+	CXD2880_DVBT2_PROFILE_ANY
-+};
-+
-+enum cxd2880_dvbt2_version {
-+	CXD2880_DVBT2_V111,
-+	CXD2880_DVBT2_V121,
-+	CXD2880_DVBT2_V131
-+};
-+
-+enum cxd2880_dvbt2_s1 {
-+	CXD2880_DVBT2_S1_BASE_SISO = 0x00,
-+	CXD2880_DVBT2_S1_BASE_MISO = 0x01,
-+	CXD2880_DVBT2_S1_NON_DVBT2 = 0x02,
-+	CXD2880_DVBT2_S1_LITE_SISO = 0x03,
-+	CXD2880_DVBT2_S1_LITE_MISO = 0x04,
-+	CXD2880_DVBT2_S1_RSVD3 = 0x05,
-+	CXD2880_DVBT2_S1_RSVD4 = 0x06,
-+	CXD2880_DVBT2_S1_RSVD5 = 0x07,
-+	CXD2880_DVBT2_S1_UNKNOWN = 0xff
-+};
-+
-+enum cxd2880_dvbt2_base_s2 {
-+	CXD2880_DVBT2_BASE_S2_M2K_G_ANY = 0x00,
-+	CXD2880_DVBT2_BASE_S2_M8K_G_DVBT = 0x01,
-+	CXD2880_DVBT2_BASE_S2_M4K_G_ANY = 0x02,
-+	CXD2880_DVBT2_BASE_S2_M1K_G_ANY = 0x03,
-+	CXD2880_DVBT2_BASE_S2_M16K_G_ANY = 0x04,
-+	CXD2880_DVBT2_BASE_S2_M32K_G_DVBT = 0x05,
-+	CXD2880_DVBT2_BASE_S2_M8K_G_DVBT2 = 0x06,
-+	CXD2880_DVBT2_BASE_S2_M32K_G_DVBT2 = 0x07,
-+	CXD2880_DVBT2_BASE_S2_UNKNOWN = 0xff
-+};
-+
-+enum cxd2880_dvbt2_lite_s2 {
-+	CXD2880_DVBT2_LITE_S2_M2K_G_ANY = 0x00,
-+	CXD2880_DVBT2_LITE_S2_M8K_G_DVBT = 0x01,
-+	CXD2880_DVBT2_LITE_S2_M4K_G_ANY = 0x02,
-+	CXD2880_DVBT2_LITE_S2_M16K_G_DVBT2 = 0x03,
-+	CXD2880_DVBT2_LITE_S2_M16K_G_DVBT = 0x04,
-+	CXD2880_DVBT2_LITE_S2_RSVD1 = 0x05,
-+	CXD2880_DVBT2_LITE_S2_M8K_G_DVBT2 = 0x06,
-+	CXD2880_DVBT2_LITE_S2_RSVD2 = 0x07,
-+	CXD2880_DVBT2_LITE_S2_UNKNOWN = 0xff
-+};
-+
-+enum cxd2880_dvbt2_guard {
-+	CXD2880_DVBT2_G1_32 = 0x00,
-+	CXD2880_DVBT2_G1_16 = 0x01,
-+	CXD2880_DVBT2_G1_8 = 0x02,
-+	CXD2880_DVBT2_G1_4 = 0x03,
-+	CXD2880_DVBT2_G1_128 = 0x04,
-+	CXD2880_DVBT2_G19_128 = 0x05,
-+	CXD2880_DVBT2_G19_256 = 0x06,
-+	CXD2880_DVBT2_G_RSVD1 = 0x07,
-+	CXD2880_DVBT2_G_UNKNOWN = 0xff
-+};
-+
-+enum cxd2880_dvbt2_mode {
-+	CXD2880_DVBT2_M2K = 0x00,
-+	CXD2880_DVBT2_M8K = 0x01,
-+	CXD2880_DVBT2_M4K = 0x02,
-+	CXD2880_DVBT2_M1K = 0x03,
-+	CXD2880_DVBT2_M16K = 0x04,
-+	CXD2880_DVBT2_M32K = 0x05,
-+	CXD2880_DVBT2_M_RSVD1 = 0x06,
-+	CXD2880_DVBT2_M_RSVD2 = 0x07
-+};
-+
-+enum cxd2880_dvbt2_bw {
-+	CXD2880_DVBT2_BW_8 = 0x00,
-+	CXD2880_DVBT2_BW_7 = 0x01,
-+	CXD2880_DVBT2_BW_6 = 0x02,
-+	CXD2880_DVBT2_BW_5 = 0x03,
-+	CXD2880_DVBT2_BW_10 = 0x04,
-+	CXD2880_DVBT2_BW_1_7 = 0x05,
-+	CXD2880_DVBT2_BW_RSVD1 = 0x06,
-+	CXD2880_DVBT2_BW_RSVD2 = 0x07,
-+	CXD2880_DVBT2_BW_RSVD3 = 0x08,
-+	CXD2880_DVBT2_BW_RSVD4 = 0x09,
-+	CXD2880_DVBT2_BW_RSVD5 = 0x0a,
-+	CXD2880_DVBT2_BW_RSVD6 = 0x0b,
-+	CXD2880_DVBT2_BW_RSVD7 = 0x0c,
-+	CXD2880_DVBT2_BW_RSVD8 = 0x0d,
-+	CXD2880_DVBT2_BW_RSVD9 = 0x0e,
-+	CXD2880_DVBT2_BW_RSVD10 = 0x0f,
-+	CXD2880_DVBT2_BW_UNKNOWN = 0xff
-+};
-+
-+enum cxd2880_dvbt2_l1pre_type {
-+	CXD2880_DVBT2_L1PRE_TYPE_TS = 0x00,
-+	CXD2880_DVBT2_L1PRE_TYPE_GS = 0x01,
-+	CXD2880_DVBT2_L1PRE_TYPE_TS_GS = 0x02,
-+	CXD2880_DVBT2_L1PRE_TYPE_RESERVED = 0x03,
-+	CXD2880_DVBT2_L1PRE_TYPE_UNKNOWN = 0xff
-+};
-+
-+enum cxd2880_dvbt2_papr {
-+	CXD2880_DVBT2_PAPR_0 = 0x00,
-+	CXD2880_DVBT2_PAPR_1 = 0x01,
-+	CXD2880_DVBT2_PAPR_2 = 0x02,
-+	CXD2880_DVBT2_PAPR_3 = 0x03,
-+	CXD2880_DVBT2_PAPR_RSVD1 = 0x04,
-+	CXD2880_DVBT2_PAPR_RSVD2 = 0x05,
-+	CXD2880_DVBT2_PAPR_RSVD3 = 0x06,
-+	CXD2880_DVBT2_PAPR_RSVD4 = 0x07,
-+	CXD2880_DVBT2_PAPR_RSVD5 = 0x08,
-+	CXD2880_DVBT2_PAPR_RSVD6 = 0x09,
-+	CXD2880_DVBT2_PAPR_RSVD7 = 0x0a,
-+	CXD2880_DVBT2_PAPR_RSVD8 = 0x0b,
-+	CXD2880_DVBT2_PAPR_RSVD9 = 0x0c,
-+	CXD2880_DVBT2_PAPR_RSVD10 = 0x0d,
-+	CXD2880_DVBT2_PAPR_RSVD11 = 0x0e,
-+	CXD2880_DVBT2_PAPR_RSVD12 = 0x0f,
-+	CXD2880_DVBT2_PAPR_UNKNOWN = 0xff
-+};
-+
-+enum cxd2880_dvbt2_l1post_constell {
-+	CXD2880_DVBT2_L1POST_BPSK = 0x00,
-+	CXD2880_DVBT2_L1POST_QPSK = 0x01,
-+	CXD2880_DVBT2_L1POST_QAM16 = 0x02,
-+	CXD2880_DVBT2_L1POST_QAM64 = 0x03,
-+	CXD2880_DVBT2_L1POST_C_RSVD1 = 0x04,
-+	CXD2880_DVBT2_L1POST_C_RSVD2 = 0x05,
-+	CXD2880_DVBT2_L1POST_C_RSVD3 = 0x06,
-+	CXD2880_DVBT2_L1POST_C_RSVD4 = 0x07,
-+	CXD2880_DVBT2_L1POST_C_RSVD5 = 0x08,
-+	CXD2880_DVBT2_L1POST_C_RSVD6 = 0x09,
-+	CXD2880_DVBT2_L1POST_C_RSVD7 = 0x0a,
-+	CXD2880_DVBT2_L1POST_C_RSVD8 = 0x0b,
-+	CXD2880_DVBT2_L1POST_C_RSVD9 = 0x0c,
-+	CXD2880_DVBT2_L1POST_C_RSVD10 = 0x0d,
-+	CXD2880_DVBT2_L1POST_C_RSVD11 = 0x0e,
-+	CXD2880_DVBT2_L1POST_C_RSVD12 = 0x0f,
-+	CXD2880_DVBT2_L1POST_CONSTELL_UNKNOWN = 0xff
-+};
-+
-+enum cxd2880_dvbt2_l1post_cr {
-+	CXD2880_DVBT2_L1POST_R1_2 = 0x00,
-+	CXD2880_DVBT2_L1POST_R_RSVD1 = 0x01,
-+	CXD2880_DVBT2_L1POST_R_RSVD2 = 0x02,
-+	CXD2880_DVBT2_L1POST_R_RSVD3 = 0x03,
-+	CXD2880_DVBT2_L1POST_R_UNKNOWN = 0xff
-+};
-+
-+enum cxd2880_dvbt2_l1post_fec_type {
-+	CXD2880_DVBT2_L1POST_FEC_LDPC16K = 0x00,
-+	CXD2880_DVBT2_L1POST_FEC_RSVD1 = 0x01,
-+	CXD2880_DVBT2_L1POST_FEC_RSVD2 = 0x02,
-+	CXD2880_DVBT2_L1POST_FEC_RSVD3 = 0x03,
-+	CXD2880_DVBT2_L1POST_FEC_UNKNOWN = 0xff
-+};
-+
-+enum cxd2880_dvbt2_pp {
-+	CXD2880_DVBT2_PP1 = 0x00,
-+	CXD2880_DVBT2_PP2 = 0x01,
-+	CXD2880_DVBT2_PP3 = 0x02,
-+	CXD2880_DVBT2_PP4 = 0x03,
-+	CXD2880_DVBT2_PP5 = 0x04,
-+	CXD2880_DVBT2_PP6 = 0x05,
-+	CXD2880_DVBT2_PP7 = 0x06,
-+	CXD2880_DVBT2_PP8 = 0x07,
-+	CXD2880_DVBT2_PP_RSVD1 = 0x08,
-+	CXD2880_DVBT2_PP_RSVD2 = 0x09,
-+	CXD2880_DVBT2_PP_RSVD3 = 0x0a,
-+	CXD2880_DVBT2_PP_RSVD4 = 0x0b,
-+	CXD2880_DVBT2_PP_RSVD5 = 0x0c,
-+	CXD2880_DVBT2_PP_RSVD6 = 0x0d,
-+	CXD2880_DVBT2_PP_RSVD7 = 0x0e,
-+	CXD2880_DVBT2_PP_RSVD8 = 0x0f,
-+	CXD2880_DVBT2_PP_UNKNOWN = 0xff
-+};
-+
-+enum cxd2880_dvbt2_plp_code_rate {
-+	CXD2880_DVBT2_R1_2 = 0x00,
-+	CXD2880_DVBT2_R3_5 = 0x01,
-+	CXD2880_DVBT2_R2_3 = 0x02,
-+	CXD2880_DVBT2_R3_4 = 0x03,
-+	CXD2880_DVBT2_R4_5 = 0x04,
-+	CXD2880_DVBT2_R5_6 = 0x05,
-+	CXD2880_DVBT2_R1_3 = 0x06,
-+	CXD2880_DVBT2_R2_5 = 0x07,
-+	CXD2880_DVBT2_PLP_CR_UNKNOWN = 0xff
-+};
-+
-+enum cxd2880_dvbt2_plp_constell {
-+	CXD2880_DVBT2_QPSK = 0x00,
-+	CXD2880_DVBT2_QAM16 = 0x01,
-+	CXD2880_DVBT2_QAM64 = 0x02,
-+	CXD2880_DVBT2_QAM256 = 0x03,
-+	CXD2880_DVBT2_CON_RSVD1 = 0x04,
-+	CXD2880_DVBT2_CON_RSVD2 = 0x05,
-+	CXD2880_DVBT2_CON_RSVD3 = 0x06,
-+	CXD2880_DVBT2_CON_RSVD4 = 0x07,
-+	CXD2880_DVBT2_CONSTELL_UNKNOWN = 0xff
-+};
-+
-+enum cxd2880_dvbt2_plp_type {
-+	CXD2880_DVBT2_PLP_TYPE_COMMON = 0x00,
-+	CXD2880_DVBT2_PLP_TYPE_DATA1 = 0x01,
-+	CXD2880_DVBT2_PLP_TYPE_DATA2 = 0x02,
-+	CXD2880_DVBT2_PLP_TYPE_RSVD1 = 0x03,
-+	CXD2880_DVBT2_PLP_TYPE_RSVD2 = 0x04,
-+	CXD2880_DVBT2_PLP_TYPE_RSVD3 = 0x05,
-+	CXD2880_DVBT2_PLP_TYPE_RSVD4 = 0x06,
-+	CXD2880_DVBT2_PLP_TYPE_RSVD5 = 0x07,
-+	CXD2880_DVBT2_PLP_TYPE_UNKNOWN = 0xff
-+};
-+
-+enum cxd2880_dvbt2_plp_payload {
-+	CXD2880_DVBT2_PLP_PAYLOAD_GFPS = 0x00,
-+	CXD2880_DVBT2_PLP_PAYLOAD_GCS = 0x01,
-+	CXD2880_DVBT2_PLP_PAYLOAD_GSE = 0x02,
-+	CXD2880_DVBT2_PLP_PAYLOAD_TS = 0x03,
-+	CXD2880_DVBT2_PLP_PAYLOAD_RSVD1 = 0x04,
-+	CXD2880_DVBT2_PLP_PAYLOAD_RSVD2 = 0x05,
-+	CXD2880_DVBT2_PLP_PAYLOAD_RSVD3 = 0x06,
-+	CXD2880_DVBT2_PLP_PAYLOAD_RSVD4 = 0x07,
-+	CXD2880_DVBT2_PLP_PAYLOAD_RSVD5 = 0x08,
-+	CXD2880_DVBT2_PLP_PAYLOAD_RSVD6 = 0x09,
-+	CXD2880_DVBT2_PLP_PAYLOAD_RSVD7 = 0x0a,
-+	CXD2880_DVBT2_PLP_PAYLOAD_RSVD8 = 0x0b,
-+	CXD2880_DVBT2_PLP_PAYLOAD_RSVD9 = 0x0c,
-+	CXD2880_DVBT2_PLP_PAYLOAD_RSVD10 = 0x0d,
-+	CXD2880_DVBT2_PLP_PAYLOAD_RSVD11 = 0x0e,
-+	CXD2880_DVBT2_PLP_PAYLOAD_RSVD12 = 0x0f,
-+	CXD2880_DVBT2_PLP_PAYLOAD_RSVD13 = 0x10,
-+	CXD2880_DVBT2_PLP_PAYLOAD_RSVD14 = 0x11,
-+	CXD2880_DVBT2_PLP_PAYLOAD_RSVD15 = 0x12,
-+	CXD2880_DVBT2_PLP_PAYLOAD_RSVD16 = 0x13,
-+	CXD2880_DVBT2_PLP_PAYLOAD_RSVD17 = 0x14,
-+	CXD2880_DVBT2_PLP_PAYLOAD_RSVD18 = 0x15,
-+	CXD2880_DVBT2_PLP_PAYLOAD_RSVD19 = 0x16,
-+	CXD2880_DVBT2_PLP_PAYLOAD_RSVD20 = 0x17,
-+	CXD2880_DVBT2_PLP_PAYLOAD_RSVD21 = 0x18,
-+	CXD2880_DVBT2_PLP_PAYLOAD_RSVD22 = 0x19,
-+	CXD2880_DVBT2_PLP_PAYLOAD_RSVD23 = 0x1a,
-+	CXD2880_DVBT2_PLP_PAYLOAD_RSVD24 = 0x1b,
-+	CXD2880_DVBT2_PLP_PAYLOAD_RSVD25 = 0x1c,
-+	CXD2880_DVBT2_PLP_PAYLOAD_RSVD26 = 0x1d,
-+	CXD2880_DVBT2_PLP_PAYLOAD_RSVD27 = 0x1e,
-+	CXD2880_DVBT2_PLP_PAYLOAD_RSVD28 = 0x1f,
-+	CXD2880_DVBT2_PLP_PAYLOAD_UNKNOWN = 0xff
-+};
-+
-+enum cxd2880_dvbt2_plp_fec {
-+	CXD2880_DVBT2_FEC_LDPC_16K = 0x00,
-+	CXD2880_DVBT2_FEC_LDPC_64K = 0x01,
-+	CXD2880_DVBT2_FEC_RSVD1 = 0x02,
-+	CXD2880_DVBT2_FEC_RSVD2 = 0x03,
-+	CXD2880_DVBT2_FEC_UNKNOWN = 0xff
-+};
-+
-+enum cxd2880_dvbt2_plp_mode {
-+	CXD2880_DVBT2_PLP_MODE_NOTSPECIFIED = 0x00,
-+	CXD2880_DVBT2_PLP_MODE_NM = 0x01,
-+	CXD2880_DVBT2_PLP_MODE_HEM = 0x02,
-+	CXD2880_DVBT2_PLP_MODE_RESERVED = 0x03,
-+	CXD2880_DVBT2_PLP_MODE_UNKNOWN = 0xff
-+};
-+
-+enum cxd2880_dvbt2_plp_btype {
-+	CXD2880_DVBT2_PLP_COMMON,
-+	CXD2880_DVBT2_PLP_DATA
-+};
-+
-+enum cxd2880_dvbt2_stream {
-+	CXD2880_DVBT2_STREAM_GENERIC_PACKETIZED = 0x00,
-+	CXD2880_DVBT2_STREAM_GENERIC_CONTINUOUS = 0x01,
-+	CXD2880_DVBT2_STREAM_GENERIC_ENCAPSULATED = 0x02,
-+	CXD2880_DVBT2_STREAM_TRANSPORT = 0x03,
-+	CXD2880_DVBT2_STREAM_UNKNOWN = 0xff
-+};
-+
-+struct cxd2880_dvbt2_l1pre {
-+	enum cxd2880_dvbt2_l1pre_type type;
-+	u8 bw_ext;
-+	enum cxd2880_dvbt2_s1 s1;
-+	u8 s2;
-+	u8 mixed;
-+	enum cxd2880_dvbt2_mode fft_mode;
-+	u8 l1_rep;
-+	enum cxd2880_dvbt2_guard gi;
-+	enum cxd2880_dvbt2_papr papr;
-+	enum cxd2880_dvbt2_l1post_constell mod;
-+	enum cxd2880_dvbt2_l1post_cr cr;
-+	enum cxd2880_dvbt2_l1post_fec_type fec;
-+	u32 l1_post_size;
-+	u32 l1_post_info_size;
-+	enum cxd2880_dvbt2_pp pp;
-+	u8 tx_id_availability;
-+	u16 cell_id;
-+	u16 network_id;
-+	u16 sys_id;
-+	u8 num_frames;
-+	u16 num_symbols;
-+	u8 regen;
-+	u8 post_ext;
-+	u8 num_rf_freqs;
-+	u8 rf_idx;
-+	enum cxd2880_dvbt2_version t2_version;
-+	u8 l1_post_scrambled;
-+	u8 t2_base_lite;
-+	u32 crc32;
-+};
-+
-+struct cxd2880_dvbt2_plp {
-+	u8 id;
-+	enum cxd2880_dvbt2_plp_type type;
-+	enum cxd2880_dvbt2_plp_payload payload;
-+	u8 ff;
-+	u8 first_rf_idx;
-+	u8 first_frm_idx;
-+	u8 group_id;
-+	enum cxd2880_dvbt2_plp_constell constell;
-+	enum cxd2880_dvbt2_plp_code_rate plp_cr;
-+	u8 rot;
-+	enum cxd2880_dvbt2_plp_fec fec;
-+	u16 num_blocks_max;
-+	u8 frm_int;
-+	u8 til_len;
-+	u8 til_type;
-+	u8 in_band_a_flag;
-+	u8 in_band_b_flag;
-+	u16 rsvd;
-+	enum cxd2880_dvbt2_plp_mode plp_mode;
-+	u8 static_flag;
-+	u8 static_padding_flag;
-+};
-+
-+struct cxd2880_dvbt2_l1post {
-+	u16 sub_slices_per_frame;
-+	u8 num_plps;
-+	u8 num_aux;
-+	u8 aux_cfg_rfu;
-+	u8 rf_idx;
-+	u32 freq;
-+	u8 fef_type;
-+	u32 fef_length;
-+	u8 fef_intvl;
-+};
-+
-+struct cxd2880_dvbt2_ofdm {
-+	u8 mixed;
-+	u8 is_miso;
-+	enum cxd2880_dvbt2_mode mode;
-+	enum cxd2880_dvbt2_guard gi;
-+	enum cxd2880_dvbt2_pp pp;
-+	u8 bw_ext;
-+	enum cxd2880_dvbt2_papr papr;
-+	u16 num_symbols;
-+};
-+
-+struct cxd2880_dvbt2_bbheader {
-+	enum cxd2880_dvbt2_stream stream_input;
-+	u8 is_single_input_stream;
-+	u8 is_constant_coding_modulation;
-+	u8 issy_indicator;
-+	u8 null_packet_deletion;
-+	u8 ext;
-+	u8 input_stream_identifier;
-+	u16 user_packet_length;
-+	u16 data_field_length;
-+	u8 sync_byte;
-+	u32 issy;
-+	enum cxd2880_dvbt2_plp_mode plp_mode;
-+};
-+
-+#endif
-diff --git a/drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd_dvbt2.c b/drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd_dvbt2.c
-new file mode 100644
-index 000000000000..81903102b12f
---- /dev/null
-+++ b/drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd_dvbt2.c
-@@ -0,0 +1,1217 @@
++++ b/drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd_dvbt2_mon.c
+@@ -0,0 +1,1878 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * cxd2880_tnrdmd_dvbt2.c
++ * cxd2880_tnrdmd_dvbt2_mon.c
 + * Sony CXD2880 DVB-T2/T tuner + demodulator driver
-+ * control functions for DVB-T2
++ * DVB-T2 monitor functions
 + *
 + * Copyright (C) 2016, 2017, 2018 Sony Semiconductor Solutions Corporation
 + */
 +
-+#include "dvb_frontend.h"
-+
++#include "cxd2880_tnrdmd_mon.h"
 +#include "cxd2880_tnrdmd_dvbt2.h"
 +#include "cxd2880_tnrdmd_dvbt2_mon.h"
 +
-+static const struct cxd2880_reg_value tune_dmd_setting_seq1[] = {
-+	{0x00, 0x00}, {0x31, 0x02},
++#include "dvb_math.h"
++
++static const int ref_dbm_1000[4][8] = {
++	{-96000, -95000, -94000, -93000, -92000, -92000, -98000, -97000},
++	{-91000, -89000, -88000, -87000, -86000, -86000, -93000, -92000},
++	{-86000, -85000, -83000, -82000, -81000, -80000, -89000, -88000},
++	{-82000, -80000, -78000, -76000, -75000, -74000, -86000, -84000},
 +};
 +
-+static const struct cxd2880_reg_value tune_dmd_setting_seq2[] = {
-+	{0x00, 0x04}, {0x5d, 0x0b},
-+};
-+
-+static int x_tune_dvbt2_demod_setting(struct cxd2880_tnrdmd
-+				      *tnr_dmd,
-+				      enum cxd2880_dtv_bandwidth
-+				      bandwidth,
-+				      enum cxd2880_tnrdmd_clockmode
-+				      clk_mode)
++int cxd2880_tnrdmd_dvbt2_mon_sync_stat(struct cxd2880_tnrdmd
++				       *tnr_dmd, u8 *sync_stat,
++				       u8 *ts_lock_stat,
++				       u8 *unlock_detected)
 +{
-+	static const u8 tsif_settings[2] = { 0x01, 0x01 };
-+	static const u8 init_settings[14] = {
-+		0x07, 0x06, 0x01, 0xf0,	0x00, 0x00, 0x04, 0xb0, 0x00, 0x00,
-+		0x09, 0x9c, 0x0e, 0x4c
-+	};
-+	static const u8 clk_mode_settings_a1[9] = {
-+		0x52, 0x49, 0x2c, 0x51,	0x51, 0x3d, 0x15, 0x29, 0x0c
-+	};
-+
-+	static const u8 clk_mode_settings_b1[9] = {
-+		0x5d, 0x55, 0x32, 0x5c,	0x5c, 0x45, 0x17, 0x2e, 0x0d
-+	};
-+
-+	static const u8 clk_mode_settings_c1[9] = {
-+		0x60, 0x00, 0x34, 0x5e,	0x5e, 0x47, 0x18, 0x2f, 0x0e
-+	};
-+
-+	static const u8 clk_mode_settings_a2[13] = {
-+		0x04, 0xe7, 0x94, 0x92,	0x09, 0xcf, 0x7e, 0xd0, 0x49,
-+		0xcd, 0xcd, 0x1f, 0x5b
-+	};
-+
-+	static const u8 clk_mode_settings_b2[13] = {
-+		0x05, 0x90, 0x27, 0x55,	0x0b, 0x20, 0x8f, 0xd6, 0xea,
-+		0xc8, 0xc8, 0x23, 0x91
-+	};
-+
-+	static const u8 clk_mode_settings_c2[13] = {
-+		0x05, 0xb8, 0xd8, 0x00,	0x0b, 0x72, 0x93, 0xf3, 0x00,
-+		0xcd, 0xcd, 0x24, 0x95
-+	};
-+
-+	static const u8 clk_mode_settings_a3[5] = {
-+		0x0b, 0x6a, 0xc9, 0x03, 0x33
-+	};
-+	static const u8 clk_mode_settings_b3[5] = {
-+		0x01, 0x02, 0xe4, 0x03, 0x39
-+	};
-+	static const u8 clk_mode_settings_c3[5] = {
-+		0x01, 0x02, 0xeb, 0x03, 0x3b
-+	};
-+
-+	static const u8 gtdofst[2] = { 0x3f, 0xff };
-+
-+	static const u8 bw8_gtdofst_a[2] = { 0x19, 0xd2 };
-+	static const u8 bw8_nomi_ac[6] = { 0x15, 0x00, 0x00, 0x00, 0x00, 0x00 };
-+	static const u8 bw8_nomi_b[6] = { 0x14, 0x6a, 0xaa, 0xaa, 0xab, 0x00 };
-+	static const u8 bw8_sst_a[2] = { 0x06, 0x2a };
-+	static const u8 bw8_sst_b[2] = { 0x06, 0x29 };
-+	static const u8 bw8_sst_c[2] = { 0x06, 0x28 };
-+	static const u8 bw8_mrc_a[9] = {
-+		0x28, 0x00, 0x50, 0x00, 0x60, 0x00, 0x00, 0x90, 0x00
-+	};
-+	static const u8 bw8_mrc_b[9] = {
-+		0x2d, 0x5e, 0x5a, 0xbd, 0x6c, 0xe3, 0x00, 0xa3, 0x55
-+	};
-+	static const u8 bw8_mrc_c[9] = {
-+		0x2e, 0xaa, 0x5d, 0x55, 0x70, 0x00, 0x00, 0xa8, 0x00
-+	};
-+
-+	static const u8 bw7_nomi_ac[6] = { 0x18, 0x00, 0x00, 0x00, 0x00, 0x00 };
-+	static const u8 bw7_nomi_b[6] = { 0x17, 0x55, 0x55, 0x55, 0x55, 0x00 };
-+	static const u8 bw7_sst_a[2] = { 0x06, 0x23 };
-+	static const u8 bw7_sst_b[2] = { 0x06, 0x22 };
-+	static const u8 bw7_sst_c[2] = { 0x06, 0x21 };
-+	static const u8 bw7_mrc_a[9] = {
-+		0x2d, 0xb6, 0x5b, 0x6d,	0x6d, 0xb6, 0x00, 0xa4, 0x92
-+	};
-+	static const u8 bw7_mrc_b[9] = {
-+		0x33, 0xda, 0x67, 0xb4,	0x7c, 0x71, 0x00, 0xba, 0xaa
-+	};
-+	static const u8 bw7_mrc_c[9] = {
-+		0x35, 0x55, 0x6a, 0xaa,	0x80, 0x00, 0x00, 0xc0, 0x00
-+	};
-+
-+	static const u8 bw6_nomi_ac[6] = { 0x1c, 0x00, 0x00, 0x00, 0x00, 0x00 };
-+	static const u8 bw6_nomi_b[6] = { 0x1b, 0x38, 0xe3, 0x8e, 0x39, 0x00 };
-+	static const u8 bw6_sst_a[2] = { 0x06, 0x1c };
-+	static const u8 bw6_sst_b[2] = { 0x06, 0x1b };
-+	static const u8 bw6_sst_c[2] = { 0x06, 0x1a };
-+	static const u8 bw6_mrc_a[9] = {
-+		0x35, 0x55, 0x6a, 0xaa, 0x80, 0x00, 0x00, 0xc0, 0x00
-+	};
-+	static const u8 bw6_mrc_b[9] = {
-+		0x3c, 0x7e, 0x78, 0xfc,	0x91, 0x2f, 0x00, 0xd9, 0xc7
-+	};
-+	static const u8 bw6_mrc_c[9] = {
-+		0x3e, 0x38, 0x7c, 0x71,	0x95, 0x55, 0x00, 0xdf, 0xff
-+	};
-+
-+	static const u8 bw5_nomi_ac[6] = { 0x21, 0x99, 0x99, 0x99, 0x9a, 0x00 };
-+	static const u8 bw5_nomi_b[6] = { 0x20, 0xaa, 0xaa, 0xaa, 0xab, 0x00 };
-+	static const u8 bw5_sst_a[2] = { 0x06, 0x15 };
-+	static const u8 bw5_sst_b[2] = { 0x06, 0x15 };
-+	static const u8 bw5_sst_c[2] = { 0x06, 0x14 };
-+	static const u8 bw5_mrc_a[9] = {
-+		0x40, 0x00, 0x6a, 0xaa, 0x80, 0x00, 0x00, 0xe6, 0x66
-+	};
-+	static const u8 bw5_mrc_b[9] = {
-+		0x48, 0x97, 0x78, 0xfc, 0x91, 0x2f, 0x01, 0x05, 0x55
-+	};
-+	static const u8 bw5_mrc_c[9] = {
-+		0x4a, 0xaa, 0x7c, 0x71, 0x95, 0x55, 0x01, 0x0c, 0xcc
-+	};
-+
-+	static const u8 bw1_7_nomi_a[6] = {
-+		0x68, 0x0f, 0xa2, 0x32, 0xcf, 0x03
-+	};
-+	static const u8 bw1_7_nomi_c[6] = {
-+		0x68, 0x0f, 0xa2, 0x32, 0xcf, 0x03
-+	};
-+	static const u8 bw1_7_nomi_b[6] = {
-+		0x65, 0x2b, 0xa4, 0xcd, 0xd8, 0x03
-+	};
-+	static const u8 bw1_7_sst_a[2] = { 0x06, 0x0c };
-+	static const u8 bw1_7_sst_b[2] = { 0x06, 0x0c };
-+	static const u8 bw1_7_sst_c[2] = { 0x06, 0x0b };
-+	static const u8 bw1_7_mrc_a[9] = {
-+		0x40, 0x00, 0x6a, 0xaa,	0x80, 0x00, 0x02, 0xc9, 0x8f
-+	};
-+	static const u8 bw1_7_mrc_b[9] = {
-+		0x48, 0x97, 0x78, 0xfc, 0x91, 0x2f, 0x03, 0x29, 0x5d
-+	};
-+	static const u8 bw1_7_mrc_c[9] = {
-+		0x4a, 0xaa, 0x7c, 0x71,	0x95, 0x55, 0x03, 0x40, 0x7d
-+	};
-+
-+	const u8 *data = NULL;
-+	const u8 *data2 = NULL;
-+	const u8 *data3 = NULL;
-+	int ret;
-+
-+	if (!tnr_dmd)
-+		return -EINVAL;
-+
-+	ret = cxd2880_io_write_multi_regs(tnr_dmd->io,
-+					  CXD2880_IO_TGT_SYS,
-+					  tune_dmd_setting_seq1,
-+					  ARRAY_SIZE(tune_dmd_setting_seq1));
-+	if (ret)
-+		return ret;
-+
-+	ret = cxd2880_io_write_multi_regs(tnr_dmd->io,
-+					  CXD2880_IO_TGT_DMD,
-+					  tune_dmd_setting_seq2,
-+					  ARRAY_SIZE(tune_dmd_setting_seq2));
-+	if (ret)
-+		return ret;
-+
-+	if (tnr_dmd->diver_mode != CXD2880_TNRDMD_DIVERMODE_SUB) {
-+		ret = tnr_dmd->io->write_reg(tnr_dmd->io,
-+					     CXD2880_IO_TGT_DMD,
-+					     0x00, 0x00);
-+		if (ret)
-+			return ret;
-+
-+		ret = tnr_dmd->io->write_regs(tnr_dmd->io,
-+					      CXD2880_IO_TGT_DMD,
-+					      0xce, tsif_settings, 2);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	ret = tnr_dmd->io->write_reg(tnr_dmd->io,
-+				     CXD2880_IO_TGT_DMD,
-+				     0x00, 0x20);
-+	if (ret)
-+		return ret;
-+
-+	ret = tnr_dmd->io->write_reg(tnr_dmd->io,
-+				     CXD2880_IO_TGT_DMD,
-+				     0x8a, init_settings[0]);
-+	if (ret)
-+		return ret;
-+
-+	ret = tnr_dmd->io->write_reg(tnr_dmd->io,
-+				     CXD2880_IO_TGT_DMD,
-+				     0x90, init_settings[1]);
-+	if (ret)
-+		return ret;
-+
-+	ret = tnr_dmd->io->write_reg(tnr_dmd->io,
-+				     CXD2880_IO_TGT_DMD,
-+				     0x00, 0x25);
-+	if (ret)
-+		return ret;
-+
-+	ret = tnr_dmd->io->write_regs(tnr_dmd->io,
-+				      CXD2880_IO_TGT_DMD,
-+				      0xf0, &init_settings[2], 2);
-+	if (ret)
-+		return ret;
-+
-+	ret = tnr_dmd->io->write_reg(tnr_dmd->io,
-+				     CXD2880_IO_TGT_DMD,
-+				     0x00, 0x2a);
-+	if (ret)
-+		return ret;
-+
-+	ret = tnr_dmd->io->write_reg(tnr_dmd->io,
-+				     CXD2880_IO_TGT_DMD,
-+				     0xdc, init_settings[4]);
-+	if (ret)
-+		return ret;
-+
-+	ret = tnr_dmd->io->write_reg(tnr_dmd->io,
-+				     CXD2880_IO_TGT_DMD,
-+				     0xde, init_settings[5]);
-+	if (ret)
-+		return ret;
-+
-+	ret = tnr_dmd->io->write_reg(tnr_dmd->io,
-+				     CXD2880_IO_TGT_DMD,
-+				     0x00, 0x2d);
-+	if (ret)
-+		return ret;
-+
-+	ret = tnr_dmd->io->write_regs(tnr_dmd->io,
-+				      CXD2880_IO_TGT_DMD,
-+				      0x73, &init_settings[6], 4);
-+	if (ret)
-+		return ret;
-+
-+	ret = tnr_dmd->io->write_regs(tnr_dmd->io,
-+				      CXD2880_IO_TGT_DMD,
-+				      0x8f, &init_settings[10], 4);
-+	if (ret)
-+		return ret;
-+
-+	switch (clk_mode) {
-+	case CXD2880_TNRDMD_CLOCKMODE_A:
-+		data = clk_mode_settings_a1;
-+		data2 = clk_mode_settings_a2;
-+		data3 = clk_mode_settings_a3;
-+		break;
-+	case CXD2880_TNRDMD_CLOCKMODE_B:
-+		data = clk_mode_settings_b1;
-+		data2 = clk_mode_settings_b2;
-+		data3 = clk_mode_settings_b3;
-+		break;
-+	case CXD2880_TNRDMD_CLOCKMODE_C:
-+		data = clk_mode_settings_c1;
-+		data2 = clk_mode_settings_c2;
-+		data3 = clk_mode_settings_c3;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	ret = tnr_dmd->io->write_reg(tnr_dmd->io,
-+				     CXD2880_IO_TGT_DMD,
-+				     0x00, 0x04);
-+	if (ret)
-+		return ret;
-+
-+	ret = tnr_dmd->io->write_regs(tnr_dmd->io,
-+				      CXD2880_IO_TGT_DMD,
-+				      0x1d, &data[0], 3);
-+	if (ret)
-+		return ret;
-+
-+	ret = tnr_dmd->io->write_reg(tnr_dmd->io,
-+				     CXD2880_IO_TGT_DMD,
-+				     0x22, data[3]);
-+	if (ret)
-+		return ret;
-+
-+	ret = tnr_dmd->io->write_reg(tnr_dmd->io,
-+				     CXD2880_IO_TGT_DMD,
-+				     0x24, data[4]);
-+	if (ret)
-+		return ret;
-+
-+	ret = tnr_dmd->io->write_reg(tnr_dmd->io,
-+				     CXD2880_IO_TGT_DMD,
-+				     0x26, data[5]);
-+	if (ret)
-+		return ret;
-+
-+	ret = tnr_dmd->io->write_regs(tnr_dmd->io,
-+				      CXD2880_IO_TGT_DMD,
-+				      0x29, &data[6], 2);
-+	if (ret)
-+		return ret;
-+
-+	ret = tnr_dmd->io->write_reg(tnr_dmd->io,
-+				     CXD2880_IO_TGT_DMD,
-+				     0x2d, data[8]);
-+	if (ret)
-+		return ret;
-+
-+	if (tnr_dmd->diver_mode != CXD2880_TNRDMD_DIVERMODE_SUB) {
-+		ret = tnr_dmd->io->write_regs(tnr_dmd->io,
-+					      CXD2880_IO_TGT_DMD,
-+					      0x2e, &data2[0], 6);
-+		if (ret)
-+			return ret;
-+
-+		ret = tnr_dmd->io->write_regs(tnr_dmd->io,
-+					      CXD2880_IO_TGT_DMD,
-+					      0x35, &data2[6], 7);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	ret = tnr_dmd->io->write_regs(tnr_dmd->io,
-+				      CXD2880_IO_TGT_DMD,
-+				      0x3c, &data3[0], 2);
-+	if (ret)
-+		return ret;
-+
-+	ret = tnr_dmd->io->write_regs(tnr_dmd->io,
-+				      CXD2880_IO_TGT_DMD,
-+				      0x56, &data3[2], 3);
-+	if (ret)
-+		return ret;
-+
-+	switch (bandwidth) {
-+	case CXD2880_DTV_BW_8_MHZ:
-+		switch (clk_mode) {
-+		case CXD2880_TNRDMD_CLOCKMODE_A:
-+		case CXD2880_TNRDMD_CLOCKMODE_C:
-+			data = bw8_nomi_ac;
-+			break;
-+		case CXD2880_TNRDMD_CLOCKMODE_B:
-+			data = bw8_nomi_b;
-+			break;
-+		default:
-+			return -EINVAL;
-+		}
-+
-+		ret = tnr_dmd->io->write_regs(tnr_dmd->io,
-+					      CXD2880_IO_TGT_DMD,
-+					      0x10, data, 6);
-+		if (ret)
-+			return ret;
-+
-+		ret = tnr_dmd->io->write_reg(tnr_dmd->io,
-+					     CXD2880_IO_TGT_DMD,
-+					     0x4a, 0x00);
-+		if (ret)
-+			return ret;
-+
-+		switch (clk_mode) {
-+		case CXD2880_TNRDMD_CLOCKMODE_A:
-+			data = bw8_gtdofst_a;
-+			break;
-+		case CXD2880_TNRDMD_CLOCKMODE_B:
-+		case CXD2880_TNRDMD_CLOCKMODE_C:
-+			data = gtdofst;
-+			break;
-+		default:
-+			return -EINVAL;
-+		}
-+
-+		ret = tnr_dmd->io->write_regs(tnr_dmd->io,
-+					      CXD2880_IO_TGT_DMD,
-+					      0x19, data, 2);
-+		if (ret)
-+			return ret;
-+
-+		switch (clk_mode) {
-+		case CXD2880_TNRDMD_CLOCKMODE_A:
-+			data = bw8_sst_a;
-+			break;
-+		case CXD2880_TNRDMD_CLOCKMODE_B:
-+			data = bw8_sst_b;
-+			break;
-+		case CXD2880_TNRDMD_CLOCKMODE_C:
-+			data = bw8_sst_c;
-+			break;
-+		default:
-+			return -EINVAL;
-+		}
-+
-+		ret = tnr_dmd->io->write_regs(tnr_dmd->io,
-+					      CXD2880_IO_TGT_DMD,
-+					      0x1b, data, 2);
-+		if (ret)
-+			return ret;
-+
-+		if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_MAIN) {
-+			switch (clk_mode) {
-+			case CXD2880_TNRDMD_CLOCKMODE_A:
-+				data = bw8_mrc_a;
-+				break;
-+			case CXD2880_TNRDMD_CLOCKMODE_B:
-+				data = bw8_mrc_b;
-+				break;
-+			case CXD2880_TNRDMD_CLOCKMODE_C:
-+				data = bw8_mrc_c;
-+				break;
-+			default:
-+				return -EINVAL;
-+			}
-+
-+			ret = tnr_dmd->io->write_regs(tnr_dmd->io,
-+						      CXD2880_IO_TGT_DMD,
-+						      0x4b, data, 9);
-+			if (ret)
-+				return ret;
-+		}
-+		break;
-+
-+	case CXD2880_DTV_BW_7_MHZ:
-+		switch (clk_mode) {
-+		case CXD2880_TNRDMD_CLOCKMODE_A:
-+		case CXD2880_TNRDMD_CLOCKMODE_C:
-+			data = bw7_nomi_ac;
-+			break;
-+		case CXD2880_TNRDMD_CLOCKMODE_B:
-+			data = bw7_nomi_b;
-+			break;
-+		default:
-+			return -EINVAL;
-+		}
-+
-+		ret = tnr_dmd->io->write_regs(tnr_dmd->io,
-+					      CXD2880_IO_TGT_DMD,
-+					      0x10, data, 6);
-+		if (ret)
-+			return ret;
-+
-+		ret = tnr_dmd->io->write_reg(tnr_dmd->io,
-+					     CXD2880_IO_TGT_DMD,
-+					     0x4a, 0x02);
-+		if (ret)
-+			return ret;
-+
-+		ret = tnr_dmd->io->write_regs(tnr_dmd->io,
-+					      CXD2880_IO_TGT_DMD,
-+					      0x19, gtdofst, 2);
-+		if (ret)
-+			return ret;
-+
-+		switch (clk_mode) {
-+		case CXD2880_TNRDMD_CLOCKMODE_A:
-+			data = bw7_sst_a;
-+			break;
-+		case CXD2880_TNRDMD_CLOCKMODE_B:
-+			data = bw7_sst_b;
-+			break;
-+		case CXD2880_TNRDMD_CLOCKMODE_C:
-+			data = bw7_sst_c;
-+			break;
-+		default:
-+			return -EINVAL;
-+		}
-+
-+		ret = tnr_dmd->io->write_regs(tnr_dmd->io,
-+					      CXD2880_IO_TGT_DMD,
-+					      0x1b, data, 2);
-+		if (ret)
-+			return ret;
-+
-+		if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_MAIN) {
-+			switch (clk_mode) {
-+			case CXD2880_TNRDMD_CLOCKMODE_A:
-+				data = bw7_mrc_a;
-+				break;
-+			case CXD2880_TNRDMD_CLOCKMODE_B:
-+				data = bw7_mrc_b;
-+				break;
-+			case CXD2880_TNRDMD_CLOCKMODE_C:
-+				data = bw7_mrc_c;
-+				break;
-+			default:
-+				return -EINVAL;
-+			}
-+
-+			ret = tnr_dmd->io->write_regs(tnr_dmd->io,
-+						      CXD2880_IO_TGT_DMD,
-+						      0x4b, data, 9);
-+			if (ret)
-+				return ret;
-+		}
-+		break;
-+
-+	case CXD2880_DTV_BW_6_MHZ:
-+		switch (clk_mode) {
-+		case CXD2880_TNRDMD_CLOCKMODE_A:
-+		case CXD2880_TNRDMD_CLOCKMODE_C:
-+			data = bw6_nomi_ac;
-+			break;
-+		case CXD2880_TNRDMD_CLOCKMODE_B:
-+			data = bw6_nomi_b;
-+			break;
-+		default:
-+			return -EINVAL;
-+		}
-+
-+		ret = tnr_dmd->io->write_regs(tnr_dmd->io,
-+					      CXD2880_IO_TGT_DMD,
-+					      0x10, data, 6);
-+		if (ret)
-+			return ret;
-+
-+		ret = tnr_dmd->io->write_reg(tnr_dmd->io,
-+					     CXD2880_IO_TGT_DMD,
-+					     0x4a, 0x04);
-+		if (ret)
-+			return ret;
-+
-+		ret = tnr_dmd->io->write_regs(tnr_dmd->io,
-+					      CXD2880_IO_TGT_DMD,
-+					      0x19, gtdofst, 2);
-+		if (ret)
-+			return ret;
-+
-+		switch (clk_mode) {
-+		case CXD2880_TNRDMD_CLOCKMODE_A:
-+			data = bw6_sst_a;
-+			break;
-+		case CXD2880_TNRDMD_CLOCKMODE_B:
-+			data = bw6_sst_b;
-+			break;
-+		case CXD2880_TNRDMD_CLOCKMODE_C:
-+			data = bw6_sst_c;
-+			break;
-+		default:
-+			return -EINVAL;
-+		}
-+
-+		ret = tnr_dmd->io->write_regs(tnr_dmd->io,
-+					      CXD2880_IO_TGT_DMD,
-+					      0x1b, data, 2);
-+		if (ret)
-+			return ret;
-+
-+		if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_MAIN) {
-+			switch (clk_mode) {
-+			case CXD2880_TNRDMD_CLOCKMODE_A:
-+				data = bw6_mrc_a;
-+				break;
-+			case CXD2880_TNRDMD_CLOCKMODE_B:
-+				data = bw6_mrc_b;
-+				break;
-+			case CXD2880_TNRDMD_CLOCKMODE_C:
-+				data = bw6_mrc_c;
-+				break;
-+			default:
-+				return -EINVAL;
-+			}
-+
-+			ret = tnr_dmd->io->write_regs(tnr_dmd->io,
-+						      CXD2880_IO_TGT_DMD,
-+						      0x4b, data, 9);
-+			if (ret)
-+				return ret;
-+		}
-+		break;
-+
-+	case CXD2880_DTV_BW_5_MHZ:
-+		switch (clk_mode) {
-+		case CXD2880_TNRDMD_CLOCKMODE_A:
-+		case CXD2880_TNRDMD_CLOCKMODE_C:
-+			data = bw5_nomi_ac;
-+			break;
-+		case CXD2880_TNRDMD_CLOCKMODE_B:
-+			data = bw5_nomi_b;
-+			break;
-+		default:
-+			return -EINVAL;
-+		}
-+
-+		ret = tnr_dmd->io->write_regs(tnr_dmd->io,
-+					      CXD2880_IO_TGT_DMD,
-+					      0x10, data, 6);
-+		if (ret)
-+			return ret;
-+
-+		ret = tnr_dmd->io->write_reg(tnr_dmd->io,
-+					     CXD2880_IO_TGT_DMD,
-+					     0x4a, 0x06);
-+		if (ret)
-+			return ret;
-+
-+		ret = tnr_dmd->io->write_regs(tnr_dmd->io,
-+					      CXD2880_IO_TGT_DMD,
-+					      0x19, gtdofst, 2);
-+		if (ret)
-+			return ret;
-+
-+		switch (clk_mode) {
-+		case CXD2880_TNRDMD_CLOCKMODE_A:
-+			data = bw5_sst_a;
-+			break;
-+		case CXD2880_TNRDMD_CLOCKMODE_B:
-+			data = bw5_sst_b;
-+			break;
-+		case CXD2880_TNRDMD_CLOCKMODE_C:
-+			data = bw5_sst_c;
-+			break;
-+		default:
-+			return -EINVAL;
-+		}
-+
-+		ret = tnr_dmd->io->write_regs(tnr_dmd->io,
-+					      CXD2880_IO_TGT_DMD,
-+					      0x1b, data, 2);
-+		if (ret)
-+			return ret;
-+
-+		if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_MAIN) {
-+			switch (clk_mode) {
-+			case CXD2880_TNRDMD_CLOCKMODE_A:
-+				data = bw5_mrc_a;
-+				break;
-+			case CXD2880_TNRDMD_CLOCKMODE_B:
-+				data = bw5_mrc_b;
-+				break;
-+			case CXD2880_TNRDMD_CLOCKMODE_C:
-+				data = bw5_mrc_c;
-+				break;
-+			default:
-+				return -EINVAL;
-+			}
-+
-+			ret = tnr_dmd->io->write_regs(tnr_dmd->io,
-+						      CXD2880_IO_TGT_DMD,
-+						      0x4b, data, 9);
-+			if (ret)
-+				return ret;
-+		}
-+		break;
-+
-+	case CXD2880_DTV_BW_1_7_MHZ:
-+
-+		switch (clk_mode) {
-+		case CXD2880_TNRDMD_CLOCKMODE_A:
-+			data = bw1_7_nomi_a;
-+			break;
-+		case CXD2880_TNRDMD_CLOCKMODE_C:
-+			data = bw1_7_nomi_c;
-+			break;
-+		case CXD2880_TNRDMD_CLOCKMODE_B:
-+			data = bw1_7_nomi_b;
-+			break;
-+		default:
-+			return -EINVAL;
-+		}
-+
-+		ret = tnr_dmd->io->write_regs(tnr_dmd->io,
-+					      CXD2880_IO_TGT_DMD,
-+					      0x10, data, 6);
-+		if (ret)
-+			return ret;
-+
-+		ret = tnr_dmd->io->write_reg(tnr_dmd->io,
-+					     CXD2880_IO_TGT_DMD,
-+					     0x4a, 0x03);
-+		if (ret)
-+			return ret;
-+
-+		ret = tnr_dmd->io->write_regs(tnr_dmd->io,
-+					      CXD2880_IO_TGT_DMD,
-+					      0x19, gtdofst, 2);
-+		if (ret)
-+			return ret;
-+
-+		switch (clk_mode) {
-+		case CXD2880_TNRDMD_CLOCKMODE_A:
-+			data = bw1_7_sst_a;
-+			break;
-+		case CXD2880_TNRDMD_CLOCKMODE_B:
-+			data = bw1_7_sst_b;
-+			break;
-+		case CXD2880_TNRDMD_CLOCKMODE_C:
-+			data = bw1_7_sst_c;
-+			break;
-+		default:
-+			return -EINVAL;
-+		}
-+
-+		ret = tnr_dmd->io->write_regs(tnr_dmd->io,
-+					      CXD2880_IO_TGT_DMD,
-+					      0x1b, data, 2);
-+		if (ret)
-+			return ret;
-+
-+		if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_MAIN) {
-+			switch (clk_mode) {
-+			case CXD2880_TNRDMD_CLOCKMODE_A:
-+				data = bw1_7_mrc_a;
-+				break;
-+			case CXD2880_TNRDMD_CLOCKMODE_B:
-+				data = bw1_7_mrc_b;
-+				break;
-+			case CXD2880_TNRDMD_CLOCKMODE_C:
-+				data = bw1_7_mrc_c;
-+				break;
-+			default:
-+				return -EINVAL;
-+			}
-+
-+			ret = tnr_dmd->io->write_regs(tnr_dmd->io,
-+						      CXD2880_IO_TGT_DMD,
-+						      0x4b, data, 9);
-+			if (ret)
-+				return ret;
-+		}
-+		break;
-+
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	ret = tnr_dmd->io->write_reg(tnr_dmd->io,
-+				     CXD2880_IO_TGT_DMD,
-+				     0x00, 0x00);
-+	if (ret)
-+		return ret;
-+
-+	return tnr_dmd->io->write_reg(tnr_dmd->io,
-+				      CXD2880_IO_TGT_DMD,
-+				      0xfd, 0x01);
-+}
-+
-+static int x_sleep_dvbt2_demod_setting(struct cxd2880_tnrdmd
-+				       *tnr_dmd)
-+{
-+	static const u8 difint_clip[] = {
-+		0, 1, 0, 2, 0, 4, 0, 8, 0, 16, 0, 32
-+	};
-+	int ret = 0;
-+
-+	if (!tnr_dmd)
-+		return -EINVAL;
-+
-+	if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_MAIN) {
-+		ret = tnr_dmd->io->write_reg(tnr_dmd->io,
-+					     CXD2880_IO_TGT_DMD,
-+					     0x00, 0x1d);
-+		if (ret)
-+			return ret;
-+
-+		ret = tnr_dmd->io->write_regs(tnr_dmd->io,
-+					      CXD2880_IO_TGT_DMD,
-+					      0x47, difint_clip, 12);
-+	}
-+
-+	return ret;
-+}
-+
-+static int dvbt2_set_profile(struct cxd2880_tnrdmd *tnr_dmd,
-+			     enum cxd2880_dvbt2_profile profile)
-+{
-+	u8 t2_mode_tune_mode = 0;
-+	u8 seq_not2_dtime = 0;
-+	u8 dtime1 = 0;
-+	u8 dtime2 = 0;
-+	int ret;
-+
-+	if (!tnr_dmd)
-+		return -EINVAL;
-+
-+	switch (tnr_dmd->clk_mode) {
-+	case CXD2880_TNRDMD_CLOCKMODE_A:
-+		dtime1 = 0x27;
-+		dtime2 = 0x0c;
-+		break;
-+	case CXD2880_TNRDMD_CLOCKMODE_B:
-+		dtime1 = 0x2c;
-+		dtime2 = 0x0d;
-+		break;
-+	case CXD2880_TNRDMD_CLOCKMODE_C:
-+		dtime1 = 0x2e;
-+		dtime2 = 0x0e;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	switch (profile) {
-+	case CXD2880_DVBT2_PROFILE_BASE:
-+		t2_mode_tune_mode = 0x01;
-+		seq_not2_dtime = dtime2;
-+		break;
-+
-+	case CXD2880_DVBT2_PROFILE_LITE:
-+		t2_mode_tune_mode = 0x05;
-+		seq_not2_dtime = dtime1;
-+		break;
-+
-+	case CXD2880_DVBT2_PROFILE_ANY:
-+		t2_mode_tune_mode = 0x00;
-+		seq_not2_dtime = dtime1;
-+		break;
-+
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	ret = tnr_dmd->io->write_reg(tnr_dmd->io,
-+				     CXD2880_IO_TGT_DMD,
-+				     0x00, 0x2e);
-+	if (ret)
-+		return ret;
-+
-+	ret = tnr_dmd->io->write_reg(tnr_dmd->io,
-+				     CXD2880_IO_TGT_DMD,
-+				     0x10, t2_mode_tune_mode);
-+	if (ret)
-+		return ret;
-+
-+	ret = tnr_dmd->io->write_reg(tnr_dmd->io,
-+				     CXD2880_IO_TGT_DMD,
-+				     0x00, 0x04);
-+	if (ret)
-+		return ret;
-+
-+	return tnr_dmd->io->write_reg(tnr_dmd->io,
-+				      CXD2880_IO_TGT_DMD,
-+				      0x2c, seq_not2_dtime);
-+}
-+
-+int cxd2880_tnrdmd_dvbt2_tune1(struct cxd2880_tnrdmd *tnr_dmd,
-+			       struct cxd2880_dvbt2_tune_param
-+			       *tune_param)
-+{
-+	int ret;
-+
-+	if (!tnr_dmd || !tune_param)
-+		return -EINVAL;
-+
-+	if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_SUB)
-+		return -EINVAL;
-+
-+	if (tnr_dmd->state != CXD2880_TNRDMD_STATE_SLEEP &&
-+	    tnr_dmd->state != CXD2880_TNRDMD_STATE_ACTIVE)
-+		return -EINVAL;
-+
-+	if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_MAIN &&
-+	    tune_param->profile == CXD2880_DVBT2_PROFILE_ANY)
-+		return -ENOTTY;
-+
-+	ret =
-+	    cxd2880_tnrdmd_common_tune_setting1(tnr_dmd, CXD2880_DTV_SYS_DVBT2,
-+						tune_param->center_freq_khz,
-+						tune_param->bandwidth, 0, 0);
-+	if (ret)
-+		return ret;
-+
-+	ret =
-+	    x_tune_dvbt2_demod_setting(tnr_dmd, tune_param->bandwidth,
-+				       tnr_dmd->clk_mode);
-+	if (ret)
-+		return ret;
-+
-+	if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_MAIN) {
-+		ret =
-+		    x_tune_dvbt2_demod_setting(tnr_dmd->diver_sub,
-+					       tune_param->bandwidth,
-+					       tnr_dmd->diver_sub->clk_mode);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	ret = dvbt2_set_profile(tnr_dmd, tune_param->profile);
-+	if (ret)
-+		return ret;
-+
-+	if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_MAIN) {
-+		ret =
-+		    dvbt2_set_profile(tnr_dmd->diver_sub, tune_param->profile);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	if (tune_param->data_plp_id == CXD2880_DVBT2_TUNE_PARAM_PLPID_AUTO)
-+		ret = cxd2880_tnrdmd_dvbt2_set_plp_cfg(tnr_dmd, 1, 0);
-+	else
-+		ret =
-+		    cxd2880_tnrdmd_dvbt2_set_plp_cfg(tnr_dmd, 0,
-+					     (u8)(tune_param->data_plp_id));
-+
-+	return ret;
-+}
-+
-+int cxd2880_tnrdmd_dvbt2_tune2(struct cxd2880_tnrdmd *tnr_dmd,
-+			       struct cxd2880_dvbt2_tune_param
-+			       *tune_param)
-+{
-+	u8 en_fef_intmtnt_ctrl = 1;
-+	int ret;
-+
-+	if (!tnr_dmd || !tune_param)
-+		return -EINVAL;
-+
-+	if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_SUB)
-+		return -EINVAL;
-+
-+	if (tnr_dmd->state != CXD2880_TNRDMD_STATE_SLEEP &&
-+	    tnr_dmd->state != CXD2880_TNRDMD_STATE_ACTIVE)
-+		return -EINVAL;
-+
-+	switch (tune_param->profile) {
-+	case CXD2880_DVBT2_PROFILE_BASE:
-+		en_fef_intmtnt_ctrl = tnr_dmd->en_fef_intmtnt_base;
-+		break;
-+	case CXD2880_DVBT2_PROFILE_LITE:
-+		en_fef_intmtnt_ctrl = tnr_dmd->en_fef_intmtnt_lite;
-+		break;
-+	case CXD2880_DVBT2_PROFILE_ANY:
-+		if (tnr_dmd->en_fef_intmtnt_base &&
-+		    tnr_dmd->en_fef_intmtnt_lite)
-+			en_fef_intmtnt_ctrl = 1;
-+		else
-+			en_fef_intmtnt_ctrl = 0;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	ret =
-+	    cxd2880_tnrdmd_common_tune_setting2(tnr_dmd,
-+						CXD2880_DTV_SYS_DVBT2,
-+						en_fef_intmtnt_ctrl);
-+	if (ret)
-+		return ret;
-+
-+	tnr_dmd->state = CXD2880_TNRDMD_STATE_ACTIVE;
-+	tnr_dmd->frequency_khz = tune_param->center_freq_khz;
-+	tnr_dmd->sys = CXD2880_DTV_SYS_DVBT2;
-+	tnr_dmd->bandwidth = tune_param->bandwidth;
-+
-+	if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_MAIN) {
-+		tnr_dmd->diver_sub->state = CXD2880_TNRDMD_STATE_ACTIVE;
-+		tnr_dmd->diver_sub->frequency_khz = tune_param->center_freq_khz;
-+		tnr_dmd->diver_sub->sys = CXD2880_DTV_SYS_DVBT2;
-+		tnr_dmd->diver_sub->bandwidth = tune_param->bandwidth;
-+	}
-+
-+	return 0;
-+}
-+
-+int cxd2880_tnrdmd_dvbt2_sleep_setting(struct cxd2880_tnrdmd
-+				       *tnr_dmd)
-+{
-+	int ret;
-+
-+	if (!tnr_dmd)
-+		return -EINVAL;
-+
-+	if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_SUB)
-+		return -EINVAL;
-+
-+	if (tnr_dmd->state != CXD2880_TNRDMD_STATE_SLEEP &&
-+	    tnr_dmd->state != CXD2880_TNRDMD_STATE_ACTIVE)
-+		return -EINVAL;
-+
-+	ret = x_sleep_dvbt2_demod_setting(tnr_dmd);
-+	if (ret)
-+		return ret;
-+
-+	if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_MAIN)
-+		ret = x_sleep_dvbt2_demod_setting(tnr_dmd->diver_sub);
-+
-+	return ret;
-+}
-+
-+int cxd2880_tnrdmd_dvbt2_check_demod_lock(struct cxd2880_tnrdmd
-+					  *tnr_dmd,
-+					  enum
-+					  cxd2880_tnrdmd_lock_result
-+					  *lock)
-+{
-+	int ret;
-+
-+	u8 sync_stat = 0;
-+	u8 ts_lock = 0;
-+	u8 unlock_detected = 0;
-+	u8 unlock_detected_sub = 0;
-+
-+	if (!tnr_dmd || !lock)
-+		return -EINVAL;
-+
-+	if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_SUB)
-+		return -EINVAL;
-+
-+	if (tnr_dmd->state != CXD2880_TNRDMD_STATE_ACTIVE)
-+		return -EINVAL;
-+
-+	ret =
-+	    cxd2880_tnrdmd_dvbt2_mon_sync_stat(tnr_dmd, &sync_stat, &ts_lock,
-+					       &unlock_detected);
-+	if (ret)
-+		return ret;
-+
-+	if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_SINGLE) {
-+		if (sync_stat == 6)
-+			*lock = CXD2880_TNRDMD_LOCK_RESULT_LOCKED;
-+		else if (unlock_detected)
-+			*lock = CXD2880_TNRDMD_LOCK_RESULT_UNLOCKED;
-+		else
-+			*lock = CXD2880_TNRDMD_LOCK_RESULT_NOTDETECT;
-+
-+		return ret;
-+	}
-+
-+	if (sync_stat == 6) {
-+		*lock = CXD2880_TNRDMD_LOCK_RESULT_LOCKED;
-+		return ret;
-+	}
-+
-+	ret =
-+	    cxd2880_tnrdmd_dvbt2_mon_sync_stat_sub(tnr_dmd, &sync_stat,
-+						   &unlock_detected_sub);
-+	if (ret)
-+		return ret;
-+
-+	if (sync_stat == 6)
-+		*lock = CXD2880_TNRDMD_LOCK_RESULT_LOCKED;
-+	else if (unlock_detected && unlock_detected_sub)
-+		*lock = CXD2880_TNRDMD_LOCK_RESULT_UNLOCKED;
-+	else
-+		*lock = CXD2880_TNRDMD_LOCK_RESULT_NOTDETECT;
-+
-+	return ret;
-+}
-+
-+int cxd2880_tnrdmd_dvbt2_check_ts_lock(struct cxd2880_tnrdmd
-+				       *tnr_dmd,
-+				       enum
-+				       cxd2880_tnrdmd_lock_result
-+				       *lock)
-+{
-+	int ret;
-+
-+	u8 sync_stat = 0;
-+	u8 ts_lock = 0;
-+	u8 unlock_detected = 0;
-+	u8 unlock_detected_sub = 0;
-+
-+	if (!tnr_dmd || !lock)
-+		return -EINVAL;
-+
-+	if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_SUB)
-+		return -EINVAL;
-+
-+	if (tnr_dmd->state != CXD2880_TNRDMD_STATE_ACTIVE)
-+		return -EINVAL;
-+
-+	ret =
-+	    cxd2880_tnrdmd_dvbt2_mon_sync_stat(tnr_dmd, &sync_stat, &ts_lock,
-+					       &unlock_detected);
-+	if (ret)
-+		return ret;
-+
-+	if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_SINGLE) {
-+		if (ts_lock)
-+			*lock = CXD2880_TNRDMD_LOCK_RESULT_LOCKED;
-+		else if (unlock_detected)
-+			*lock = CXD2880_TNRDMD_LOCK_RESULT_UNLOCKED;
-+		else
-+			*lock = CXD2880_TNRDMD_LOCK_RESULT_NOTDETECT;
-+
-+		return ret;
-+	}
-+
-+	if (ts_lock) {
-+		*lock = CXD2880_TNRDMD_LOCK_RESULT_LOCKED;
-+		return ret;
-+	} else if (!unlock_detected) {
-+		*lock = CXD2880_TNRDMD_LOCK_RESULT_NOTDETECT;
-+		return ret;
-+	}
-+
-+	ret =
-+	    cxd2880_tnrdmd_dvbt2_mon_sync_stat_sub(tnr_dmd, &sync_stat,
-+						   &unlock_detected_sub);
-+	if (ret)
-+		return ret;
-+
-+	if (unlock_detected && unlock_detected_sub)
-+		*lock = CXD2880_TNRDMD_LOCK_RESULT_UNLOCKED;
-+	else
-+		*lock = CXD2880_TNRDMD_LOCK_RESULT_NOTDETECT;
-+
-+	return ret;
-+}
-+
-+int cxd2880_tnrdmd_dvbt2_set_plp_cfg(struct cxd2880_tnrdmd
-+				     *tnr_dmd, u8 auto_plp,
-+				     u8 plp_id)
-+{
-+	int ret;
-+
-+	if (!tnr_dmd)
-+		return -EINVAL;
-+
-+	if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_SUB)
-+		return -EINVAL;
-+
-+	if (tnr_dmd->state != CXD2880_TNRDMD_STATE_SLEEP &&
-+	    tnr_dmd->state != CXD2880_TNRDMD_STATE_ACTIVE)
-+		return -EINVAL;
-+
-+	ret = tnr_dmd->io->write_reg(tnr_dmd->io,
-+				     CXD2880_IO_TGT_DMD,
-+				     0x00, 0x23);
-+	if (ret)
-+		return ret;
-+
-+	if (!auto_plp) {
-+		ret = tnr_dmd->io->write_reg(tnr_dmd->io,
-+					     CXD2880_IO_TGT_DMD,
-+					     0xaf, plp_id);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return tnr_dmd->io->write_reg(tnr_dmd->io,
-+				      CXD2880_IO_TGT_DMD,
-+				      0xad, auto_plp ? 0x00 : 0x01);
-+}
-+
-+int cxd2880_tnrdmd_dvbt2_diver_fef_setting(struct cxd2880_tnrdmd
-+					   *tnr_dmd)
-+{
-+	struct cxd2880_dvbt2_ofdm ofdm;
-+	static const u8 data[] = { 0, 8, 0, 16, 0, 32, 0, 64, 0, 128, 1, 0};
-+	int ret;
-+
-+	if (!tnr_dmd)
-+		return -EINVAL;
-+
-+	if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_SUB)
-+		return -EINVAL;
-+
-+	if (tnr_dmd->state != CXD2880_TNRDMD_STATE_ACTIVE)
-+		return -EINVAL;
-+
-+	if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_SINGLE)
-+		return 0;
-+
-+	ret = cxd2880_tnrdmd_dvbt2_mon_ofdm(tnr_dmd, &ofdm);
-+	if (ret)
-+		return ret;
-+
-+	if (!ofdm.mixed)
-+		return 0;
-+
-+	ret = tnr_dmd->io->write_reg(tnr_dmd->io,
-+				     CXD2880_IO_TGT_DMD,
-+				     0x00, 0x1d);
-+	if (ret)
-+		return ret;
-+
-+	return tnr_dmd->io->write_regs(tnr_dmd->io,
-+				       CXD2880_IO_TGT_DMD,
-+				       0x47, data, 12);
-+}
-+
-+int cxd2880_tnrdmd_dvbt2_check_l1post_valid(struct cxd2880_tnrdmd
-+					    *tnr_dmd,
-+					    u8 *l1_post_valid)
-+{
-+	int ret;
-+
 +	u8 data;
++	int ret;
 +
-+	if (!tnr_dmd || !l1_post_valid)
++	if (!tnr_dmd || !sync_stat || !ts_lock_stat || !unlock_detected)
 +		return -EINVAL;
 +
-+	if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_SUB)
++	if (tnr_dmd->state != CXD2880_TNRDMD_STATE_ACTIVE)
 +		return -EINVAL;
 +
-+	if (tnr_dmd->state != CXD2880_TNRDMD_STATE_SLEEP &&
-+	    tnr_dmd->state != CXD2880_TNRDMD_STATE_ACTIVE)
++	if (tnr_dmd->sys != CXD2880_DTV_SYS_DVBT2)
 +		return -EINVAL;
 +
 +	ret = tnr_dmd->io->write_reg(tnr_dmd->io,
@@ -1663,83 +124,1976 @@ index 000000000000..81903102b12f
 +
 +	ret = tnr_dmd->io->read_regs(tnr_dmd->io,
 +				     CXD2880_IO_TGT_DMD,
-+				     0x86, &data, 1);
++				     0x10, &data, sizeof(data));
 +	if (ret)
 +		return ret;
 +
-+	*l1_post_valid = data & 0x01;
++	*sync_stat = data & 0x07;
++	*ts_lock_stat = ((data & 0x20) ? 1 : 0);
++	*unlock_detected = ((data & 0x10) ? 1 : 0);
++
++	if (*sync_stat == 0x07)
++		return -EAGAIN;
++
++	return 0;
++}
++
++int cxd2880_tnrdmd_dvbt2_mon_sync_stat_sub(struct cxd2880_tnrdmd
++					   *tnr_dmd,
++					   u8 *sync_stat,
++					   u8 *unlock_detected)
++{
++	u8 ts_lock_stat = 0;
++
++	if (!tnr_dmd || !sync_stat || !unlock_detected)
++		return -EINVAL;
++
++	if (tnr_dmd->diver_mode != CXD2880_TNRDMD_DIVERMODE_MAIN)
++		return -EINVAL;
++
++	return cxd2880_tnrdmd_dvbt2_mon_sync_stat(tnr_dmd->diver_sub,
++						  sync_stat,
++						  &ts_lock_stat,
++						  unlock_detected);
++}
++
++int cxd2880_tnrdmd_dvbt2_mon_carrier_offset(struct cxd2880_tnrdmd
++					    *tnr_dmd, int *offset)
++{
++	u8 data[4];
++	u32 ctl_val = 0;
++	u8 sync_state = 0;
++	u8 ts_lock = 0;
++	u8 unlock_detected = 0;
++	int ret;
++
++	if (!tnr_dmd || !offset)
++		return -EINVAL;
++
++	if (tnr_dmd->state != CXD2880_TNRDMD_STATE_ACTIVE)
++		return -EINVAL;
++
++	if (tnr_dmd->sys != CXD2880_DTV_SYS_DVBT2)
++		return -EINVAL;
++
++	ret = slvt_freeze_reg(tnr_dmd);
++	if (ret)
++		return ret;
++
++	ret =
++	    cxd2880_tnrdmd_dvbt2_mon_sync_stat(tnr_dmd, &sync_state,
++					       &ts_lock,
++					       &unlock_detected);
++	if (ret) {
++		slvt_unfreeze_reg(tnr_dmd);
++		return ret;
++	}
++
++	if (sync_state != 6) {
++		slvt_unfreeze_reg(tnr_dmd);
++		return -EAGAIN;
++	}
++
++	ret = tnr_dmd->io->write_reg(tnr_dmd->io,
++				     CXD2880_IO_TGT_DMD,
++				     0x00, 0x0b);
++	if (ret) {
++		slvt_unfreeze_reg(tnr_dmd);
++		return ret;
++	}
++
++	ret = tnr_dmd->io->read_regs(tnr_dmd->io,
++				     CXD2880_IO_TGT_DMD,
++				     0x30, data, sizeof(data));
++	if (ret) {
++		slvt_unfreeze_reg(tnr_dmd);
++		return ret;
++	}
++
++	slvt_unfreeze_reg(tnr_dmd);
++
++	ctl_val =
++	    ((data[0] & 0x0f) << 24) | (data[1] << 16) | (data[2] << 8)
++	    | (data[3]);
++	*offset = cxd2880_convert2s_complement(ctl_val, 28);
++
++	switch (tnr_dmd->bandwidth) {
++	case CXD2880_DTV_BW_1_7_MHZ:
++		*offset = -1 * ((*offset) / 582);
++		break;
++	case CXD2880_DTV_BW_5_MHZ:
++	case CXD2880_DTV_BW_6_MHZ:
++	case CXD2880_DTV_BW_7_MHZ:
++	case CXD2880_DTV_BW_8_MHZ:
++		*offset = -1 * ((*offset) * tnr_dmd->bandwidth / 940);
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
++int cxd2880_tnrdmd_dvbt2_mon_carrier_offset_sub(struct
++						cxd2880_tnrdmd
++						*tnr_dmd,
++						int *offset)
++{
++	if (!tnr_dmd || !offset)
++		return -EINVAL;
++
++	if (tnr_dmd->diver_mode != CXD2880_TNRDMD_DIVERMODE_MAIN)
++		return -EINVAL;
++
++	return cxd2880_tnrdmd_dvbt2_mon_carrier_offset(tnr_dmd->diver_sub,
++						       offset);
++}
++
++int cxd2880_tnrdmd_dvbt2_mon_l1_pre(struct cxd2880_tnrdmd *tnr_dmd,
++				    struct cxd2880_dvbt2_l1pre
++				    *l1_pre)
++{
++	u8 data[37];
++	u8 sync_state = 0;
++	u8 ts_lock = 0;
++	u8 unlock_detected = 0;
++	u8 version = 0;
++	enum cxd2880_dvbt2_profile profile;
++	int ret;
++
++	if (!tnr_dmd || !l1_pre)
++		return -EINVAL;
++
++	if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_SUB)
++		return -EINVAL;
++
++	if (tnr_dmd->state != CXD2880_TNRDMD_STATE_ACTIVE)
++		return -EINVAL;
++
++	if (tnr_dmd->sys != CXD2880_DTV_SYS_DVBT2)
++		return -EINVAL;
++
++	ret = slvt_freeze_reg(tnr_dmd);
++	if (ret)
++		return ret;
++
++	ret =
++	    cxd2880_tnrdmd_dvbt2_mon_sync_stat(tnr_dmd, &sync_state,
++					       &ts_lock,
++					       &unlock_detected);
++	if (ret) {
++		slvt_unfreeze_reg(tnr_dmd);
++		return ret;
++	}
++
++	if (sync_state < 5) {
++		if (tnr_dmd->diver_mode ==
++		    CXD2880_TNRDMD_DIVERMODE_MAIN) {
++			ret =
++			    cxd2880_tnrdmd_dvbt2_mon_sync_stat_sub
++			    (tnr_dmd, &sync_state, &unlock_detected);
++			if (ret) {
++				slvt_unfreeze_reg(tnr_dmd);
++				return ret;
++			}
++
++			if (sync_state < 5) {
++				slvt_unfreeze_reg(tnr_dmd);
++				return -EAGAIN;
++			}
++		} else {
++			slvt_unfreeze_reg(tnr_dmd);
++			return -EAGAIN;
++		}
++	}
++
++	ret = cxd2880_tnrdmd_dvbt2_mon_profile(tnr_dmd, &profile);
++	if (ret) {
++		slvt_unfreeze_reg(tnr_dmd);
++		return ret;
++	}
++
++	ret = tnr_dmd->io->write_reg(tnr_dmd->io,
++				     CXD2880_IO_TGT_DMD,
++				     0x00, 0x0b);
++	if (ret) {
++		slvt_unfreeze_reg(tnr_dmd);
++		return ret;
++	}
++
++	ret = tnr_dmd->io->read_regs(tnr_dmd->io,
++				     CXD2880_IO_TGT_DMD,
++				     0x61, data, sizeof(data));
++	if (ret) {
++		slvt_unfreeze_reg(tnr_dmd);
++		return ret;
++	}
++	slvt_unfreeze_reg(tnr_dmd);
++
++	l1_pre->type = (enum cxd2880_dvbt2_l1pre_type)data[0];
++	l1_pre->bw_ext = data[1] & 0x01;
++	l1_pre->s1 = (enum cxd2880_dvbt2_s1)(data[2] & 0x07);
++	l1_pre->s2 = data[3] & 0x0f;
++	l1_pre->l1_rep = data[4] & 0x01;
++	l1_pre->gi = (enum cxd2880_dvbt2_guard)(data[5] & 0x07);
++	l1_pre->papr = (enum cxd2880_dvbt2_papr)(data[6] & 0x0f);
++	l1_pre->mod =
++	    (enum cxd2880_dvbt2_l1post_constell)(data[7] & 0x0f);
++	l1_pre->cr = (enum cxd2880_dvbt2_l1post_cr)(data[8] & 0x03);
++	l1_pre->fec =
++	    (enum cxd2880_dvbt2_l1post_fec_type)(data[9] & 0x03);
++	l1_pre->l1_post_size = (data[10] & 0x03) << 16;
++	l1_pre->l1_post_size |= (data[11]) << 8;
++	l1_pre->l1_post_size |= (data[12]);
++	l1_pre->l1_post_info_size = (data[13] & 0x03) << 16;
++	l1_pre->l1_post_info_size |= (data[14]) << 8;
++	l1_pre->l1_post_info_size |= (data[15]);
++	l1_pre->pp = (enum cxd2880_dvbt2_pp)(data[16] & 0x0f);
++	l1_pre->tx_id_availability = data[17];
++	l1_pre->cell_id = (data[18] << 8);
++	l1_pre->cell_id |= (data[19]);
++	l1_pre->network_id = (data[20] << 8);
++	l1_pre->network_id |= (data[21]);
++	l1_pre->sys_id = (data[22] << 8);
++	l1_pre->sys_id |= (data[23]);
++	l1_pre->num_frames = data[24];
++	l1_pre->num_symbols = (data[25] & 0x0f) << 8;
++	l1_pre->num_symbols |= data[26];
++	l1_pre->regen = data[27] & 0x07;
++	l1_pre->post_ext = data[28] & 0x01;
++	l1_pre->num_rf_freqs = data[29] & 0x07;
++	l1_pre->rf_idx = data[30] & 0x07;
++	version = (data[31] & 0x03) << 2;
++	version |= (data[32] & 0xc0) >> 6;
++	l1_pre->t2_version = (enum cxd2880_dvbt2_version)version;
++	l1_pre->l1_post_scrambled = (data[32] & 0x20) >> 5;
++	l1_pre->t2_base_lite = (data[32] & 0x10) >> 4;
++	l1_pre->crc32 = (data[33] << 24);
++	l1_pre->crc32 |= (data[34] << 16);
++	l1_pre->crc32 |= (data[35] << 8);
++	l1_pre->crc32 |= data[36];
++
++	if (profile == CXD2880_DVBT2_PROFILE_BASE) {
++		switch ((l1_pre->s2 >> 1)) {
++		case CXD2880_DVBT2_BASE_S2_M1K_G_ANY:
++			l1_pre->fft_mode = CXD2880_DVBT2_M1K;
++			break;
++		case CXD2880_DVBT2_BASE_S2_M2K_G_ANY:
++			l1_pre->fft_mode = CXD2880_DVBT2_M2K;
++			break;
++		case CXD2880_DVBT2_BASE_S2_M4K_G_ANY:
++			l1_pre->fft_mode = CXD2880_DVBT2_M4K;
++			break;
++		case CXD2880_DVBT2_BASE_S2_M8K_G_DVBT:
++		case CXD2880_DVBT2_BASE_S2_M8K_G_DVBT2:
++			l1_pre->fft_mode = CXD2880_DVBT2_M8K;
++			break;
++		case CXD2880_DVBT2_BASE_S2_M16K_G_ANY:
++			l1_pre->fft_mode = CXD2880_DVBT2_M16K;
++			break;
++		case CXD2880_DVBT2_BASE_S2_M32K_G_DVBT:
++		case CXD2880_DVBT2_BASE_S2_M32K_G_DVBT2:
++			l1_pre->fft_mode = CXD2880_DVBT2_M32K;
++			break;
++		default:
++			return -EAGAIN;
++		}
++	} else if (profile == CXD2880_DVBT2_PROFILE_LITE) {
++		switch ((l1_pre->s2 >> 1)) {
++		case CXD2880_DVBT2_LITE_S2_M2K_G_ANY:
++			l1_pre->fft_mode = CXD2880_DVBT2_M2K;
++			break;
++		case CXD2880_DVBT2_LITE_S2_M4K_G_ANY:
++			l1_pre->fft_mode = CXD2880_DVBT2_M4K;
++			break;
++		case CXD2880_DVBT2_LITE_S2_M8K_G_DVBT:
++		case CXD2880_DVBT2_LITE_S2_M8K_G_DVBT2:
++			l1_pre->fft_mode = CXD2880_DVBT2_M8K;
++			break;
++		case CXD2880_DVBT2_LITE_S2_M16K_G_DVBT:
++		case CXD2880_DVBT2_LITE_S2_M16K_G_DVBT2:
++			l1_pre->fft_mode = CXD2880_DVBT2_M16K;
++			break;
++		default:
++			return -EAGAIN;
++		}
++	} else {
++		return -EAGAIN;
++	}
++
++	l1_pre->mixed = l1_pre->s2 & 0x01;
 +
 +	return ret;
 +}
-diff --git a/drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd_dvbt2.h b/drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd_dvbt2.h
++
++int cxd2880_tnrdmd_dvbt2_mon_version(struct cxd2880_tnrdmd
++				     *tnr_dmd,
++				     enum cxd2880_dvbt2_version
++				     *ver)
++{
++	u8 data[2];
++	u8 sync_state = 0;
++	u8 ts_lock = 0;
++	u8 unlock_detected = 0;
++	u8 version = 0;
++	int ret;
++
++	if (!tnr_dmd || !ver)
++		return -EINVAL;
++
++	if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_SUB)
++		return -EINVAL;
++
++	if (tnr_dmd->state != CXD2880_TNRDMD_STATE_ACTIVE)
++		return -EINVAL;
++
++	if (tnr_dmd->sys != CXD2880_DTV_SYS_DVBT2)
++		return -EINVAL;
++
++	ret = slvt_freeze_reg(tnr_dmd);
++	if (ret)
++		return ret;
++
++	ret =
++	    cxd2880_tnrdmd_dvbt2_mon_sync_stat(tnr_dmd, &sync_state,
++					       &ts_lock,
++					       &unlock_detected);
++	if (ret) {
++		slvt_unfreeze_reg(tnr_dmd);
++		return ret;
++	}
++
++	if (sync_state < 5) {
++		if (tnr_dmd->diver_mode ==
++		    CXD2880_TNRDMD_DIVERMODE_MAIN) {
++			ret =
++			    cxd2880_tnrdmd_dvbt2_mon_sync_stat_sub
++			    (tnr_dmd, &sync_state, &unlock_detected);
++			if (ret) {
++				slvt_unfreeze_reg(tnr_dmd);
++				return ret;
++			}
++
++			if (sync_state < 5) {
++				slvt_unfreeze_reg(tnr_dmd);
++				return -EAGAIN;
++			}
++		} else {
++			slvt_unfreeze_reg(tnr_dmd);
++			return -EAGAIN;
++		}
++	}
++
++	ret = tnr_dmd->io->write_reg(tnr_dmd->io,
++				     CXD2880_IO_TGT_DMD,
++				     0x00, 0x0b);
++	if (ret) {
++		slvt_unfreeze_reg(tnr_dmd);
++		return ret;
++	}
++
++	ret = tnr_dmd->io->read_regs(tnr_dmd->io,
++				     CXD2880_IO_TGT_DMD,
++				     0x80, data, sizeof(data));
++	if (ret) {
++		slvt_unfreeze_reg(tnr_dmd);
++		return ret;
++	}
++
++	slvt_unfreeze_reg(tnr_dmd);
++
++	version = ((data[0] & 0x03) << 2);
++	version |= ((data[1] & 0xc0) >> 6);
++	*ver = (enum cxd2880_dvbt2_version)version;
++
++	return ret;
++}
++
++int cxd2880_tnrdmd_dvbt2_mon_ofdm(struct cxd2880_tnrdmd *tnr_dmd,
++				  struct cxd2880_dvbt2_ofdm *ofdm)
++{
++	u8 data[5];
++	u8 sync_state = 0;
++	u8 ts_lock = 0;
++	u8 unlock_detected = 0;
++	int ret;
++
++	if (!tnr_dmd || !ofdm)
++		return -EINVAL;
++
++	if (tnr_dmd->state != CXD2880_TNRDMD_STATE_ACTIVE)
++		return -EINVAL;
++
++	if (tnr_dmd->sys != CXD2880_DTV_SYS_DVBT2)
++		return -EINVAL;
++
++	ret = slvt_freeze_reg(tnr_dmd);
++	if (ret)
++		return ret;
++
++	ret =
++	    cxd2880_tnrdmd_dvbt2_mon_sync_stat(tnr_dmd, &sync_state,
++					       &ts_lock,
++					       &unlock_detected);
++	if (ret) {
++		slvt_unfreeze_reg(tnr_dmd);
++		return ret;
++	}
++
++	if (sync_state != 6) {
++		slvt_unfreeze_reg(tnr_dmd);
++
++		ret = -EAGAIN;
++
++		if (tnr_dmd->diver_mode ==
++		    CXD2880_TNRDMD_DIVERMODE_MAIN)
++			ret =
++			    cxd2880_tnrdmd_dvbt2_mon_ofdm(tnr_dmd->diver_sub,
++							  ofdm);
++
++		return ret;
++	}
++
++	ret = tnr_dmd->io->write_reg(tnr_dmd->io,
++				     CXD2880_IO_TGT_DMD,
++				     0x00, 0x0b);
++	if (ret) {
++		slvt_unfreeze_reg(tnr_dmd);
++		return ret;
++	}
++
++	ret = tnr_dmd->io->read_regs(tnr_dmd->io,
++				     CXD2880_IO_TGT_DMD,
++				     0x1d, data, sizeof(data));
++	if (ret) {
++		slvt_unfreeze_reg(tnr_dmd);
++		return ret;
++	}
++
++	slvt_unfreeze_reg(tnr_dmd);
++
++	ofdm->mixed = ((data[0] & 0x20) ? 1 : 0);
++	ofdm->is_miso = ((data[0] & 0x10) >> 4);
++	ofdm->mode = (enum cxd2880_dvbt2_mode)(data[0] & 0x07);
++	ofdm->gi = (enum cxd2880_dvbt2_guard)((data[1] & 0x70) >> 4);
++	ofdm->pp = (enum cxd2880_dvbt2_pp)(data[1] & 0x07);
++	ofdm->bw_ext = (data[2] & 0x10) >> 4;
++	ofdm->papr = (enum cxd2880_dvbt2_papr)(data[2] & 0x0f);
++	ofdm->num_symbols = (data[3] << 8) | data[4];
++
++	return 0;
++}
++
++int cxd2880_tnrdmd_dvbt2_mon_data_plps(struct cxd2880_tnrdmd
++				       *tnr_dmd, u8 *plp_ids,
++				       u8 *num_plps)
++{
++	u8 l1_post_ok = 0;
++	int ret;
++
++	if (!tnr_dmd || !num_plps)
++		return -EINVAL;
++
++	if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_SUB)
++		return -EINVAL;
++
++	if (tnr_dmd->state != CXD2880_TNRDMD_STATE_ACTIVE)
++		return -EINVAL;
++
++	if (tnr_dmd->sys != CXD2880_DTV_SYS_DVBT2)
++		return -EINVAL;
++
++	ret = tnr_dmd->io->write_reg(tnr_dmd->io,
++				     CXD2880_IO_TGT_DMD,
++				     0x00, 0x0b);
++	if (ret)
++		return ret;
++
++	ret = slvt_freeze_reg(tnr_dmd);
++	if (ret)
++		return ret;
++
++	ret = tnr_dmd->io->read_regs(tnr_dmd->io,
++				     CXD2880_IO_TGT_DMD,
++				     0x86, &l1_post_ok, 1);
++	if (ret) {
++		slvt_unfreeze_reg(tnr_dmd);
++		return ret;
++	}
++
++	if (!(l1_post_ok & 0x01)) {
++		slvt_unfreeze_reg(tnr_dmd);
++		return -EAGAIN;
++	}
++
++	ret = tnr_dmd->io->read_regs(tnr_dmd->io,
++				     CXD2880_IO_TGT_DMD,
++				     0xc1, num_plps, 1);
++	if (ret) {
++		slvt_unfreeze_reg(tnr_dmd);
++		return ret;
++	}
++
++	if (*num_plps == 0) {
++		slvt_unfreeze_reg(tnr_dmd);
++		return -EINVAL;
++	}
++
++	if (!plp_ids) {
++		slvt_unfreeze_reg(tnr_dmd);
++		return 0;
++	}
++
++	ret = tnr_dmd->io->read_regs(tnr_dmd->io,
++				     CXD2880_IO_TGT_DMD,
++				     0xc2,
++				     plp_ids,
++				     ((*num_plps > 62) ?
++				     62 : *num_plps));
++	if (ret) {
++		slvt_unfreeze_reg(tnr_dmd);
++		return ret;
++	}
++
++	if (*num_plps > 62) {
++		ret = tnr_dmd->io->write_reg(tnr_dmd->io,
++					     CXD2880_IO_TGT_DMD,
++					     0x00, 0x0c);
++		if (ret) {
++			slvt_unfreeze_reg(tnr_dmd);
++			return ret;
++		}
++
++		ret = tnr_dmd->io->read_regs(tnr_dmd->io,
++					     CXD2880_IO_TGT_DMD,
++					     0x10, plp_ids + 62,
++					     *num_plps - 62);
++		if (ret) {
++			slvt_unfreeze_reg(tnr_dmd);
++			return ret;
++		}
++	}
++
++	slvt_unfreeze_reg(tnr_dmd);
++
++	return 0;
++}
++
++int cxd2880_tnrdmd_dvbt2_mon_active_plp(struct cxd2880_tnrdmd
++					*tnr_dmd,
++					enum
++					cxd2880_dvbt2_plp_btype
++					type,
++					struct cxd2880_dvbt2_plp
++					*plp_info)
++{
++	u8 data[20];
++	u8 addr = 0;
++	u8 index = 0;
++	u8 l1_post_ok = 0;
++	int ret;
++
++	if (!tnr_dmd || !plp_info)
++		return -EINVAL;
++
++	if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_SUB)
++		return -EINVAL;
++
++	if (tnr_dmd->state != CXD2880_TNRDMD_STATE_ACTIVE)
++		return -EINVAL;
++
++	if (tnr_dmd->sys != CXD2880_DTV_SYS_DVBT2)
++		return -EINVAL;
++
++	ret = slvt_freeze_reg(tnr_dmd);
++	if (ret)
++		return ret;
++
++	ret = tnr_dmd->io->write_reg(tnr_dmd->io,
++				     CXD2880_IO_TGT_DMD,
++				     0x00, 0x0b);
++	if (ret) {
++		slvt_unfreeze_reg(tnr_dmd);
++		return ret;
++	}
++
++	ret = tnr_dmd->io->read_regs(tnr_dmd->io,
++				     CXD2880_IO_TGT_DMD,
++				     0x86, &l1_post_ok, 1);
++	if (ret) {
++		slvt_unfreeze_reg(tnr_dmd);
++		return ret;
++	}
++
++	if (!l1_post_ok) {
++		slvt_unfreeze_reg(tnr_dmd);
++		return -EAGAIN;
++	}
++
++	if (type == CXD2880_DVBT2_PLP_COMMON)
++		addr = 0xa9;
++	else
++		addr = 0x96;
++
++	ret = tnr_dmd->io->read_regs(tnr_dmd->io,
++				     CXD2880_IO_TGT_DMD,
++				     addr, data, sizeof(data));
++	if (ret) {
++		slvt_unfreeze_reg(tnr_dmd);
++		return ret;
++	}
++
++	slvt_unfreeze_reg(tnr_dmd);
++
++	if (type == CXD2880_DVBT2_PLP_COMMON && !data[13])
++		return -EAGAIN;
++
++	plp_info->id = data[index++];
++	plp_info->type =
++	    (enum cxd2880_dvbt2_plp_type)(data[index++] & 0x07);
++	plp_info->payload =
++	    (enum cxd2880_dvbt2_plp_payload)(data[index++] & 0x1f);
++	plp_info->ff = data[index++] & 0x01;
++	plp_info->first_rf_idx = data[index++] & 0x07;
++	plp_info->first_frm_idx = data[index++];
++	plp_info->group_id = data[index++];
++	plp_info->plp_cr =
++	    (enum cxd2880_dvbt2_plp_code_rate)(data[index++] & 0x07);
++	plp_info->constell =
++	    (enum cxd2880_dvbt2_plp_constell)(data[index++] & 0x07);
++	plp_info->rot = data[index++] & 0x01;
++	plp_info->fec =
++	    (enum cxd2880_dvbt2_plp_fec)(data[index++] & 0x03);
++	plp_info->num_blocks_max = (data[index++] & 0x03) << 8;
++	plp_info->num_blocks_max |= data[index++];
++	plp_info->frm_int = data[index++];
++	plp_info->til_len = data[index++];
++	plp_info->til_type = data[index++] & 0x01;
++
++	plp_info->in_band_a_flag = data[index++] & 0x01;
++	plp_info->rsvd = data[index++] << 8;
++	plp_info->rsvd |= data[index++];
++
++	plp_info->in_band_b_flag =
++	    (plp_info->rsvd & 0x8000) >> 15;
++	plp_info->plp_mode =
++	    (enum cxd2880_dvbt2_plp_mode)((plp_info->rsvd & 0x000c) >> 2);
++	plp_info->static_flag = (plp_info->rsvd & 0x0002) >> 1;
++	plp_info->static_padding_flag = plp_info->rsvd & 0x0001;
++	plp_info->rsvd = (plp_info->rsvd & 0x7ff0) >> 4;
++
++	return 0;
++}
++
++int cxd2880_tnrdmd_dvbt2_mon_data_plp_error(struct cxd2880_tnrdmd
++					    *tnr_dmd,
++					    u8 *plp_error)
++{
++	u8 data;
++	int ret;
++
++	if (!tnr_dmd || !plp_error)
++		return -EINVAL;
++
++	if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_SUB)
++		return -EINVAL;
++
++	if (tnr_dmd->state != CXD2880_TNRDMD_STATE_ACTIVE)
++		return -EINVAL;
++
++	if (tnr_dmd->sys != CXD2880_DTV_SYS_DVBT2)
++		return -EINVAL;
++
++	ret = slvt_freeze_reg(tnr_dmd);
++	if (ret)
++		return ret;
++
++	ret = tnr_dmd->io->write_reg(tnr_dmd->io,
++				     CXD2880_IO_TGT_DMD,
++				     0x00, 0x0b);
++	if (ret) {
++		slvt_unfreeze_reg(tnr_dmd);
++		return ret;
++	}
++
++	ret = tnr_dmd->io->read_regs(tnr_dmd->io,
++				     CXD2880_IO_TGT_DMD,
++				     0x86, &data, 1);
++	if (ret) {
++		slvt_unfreeze_reg(tnr_dmd);
++		return ret;
++	}
++
++	if ((data & 0x01) == 0x00) {
++		slvt_unfreeze_reg(tnr_dmd);
++		return -EAGAIN;
++	}
++
++	ret = tnr_dmd->io->read_regs(tnr_dmd->io,
++				     CXD2880_IO_TGT_DMD,
++				     0xc0, &data, 1);
++	if (ret) {
++		slvt_unfreeze_reg(tnr_dmd);
++		return ret;
++	}
++
++	slvt_unfreeze_reg(tnr_dmd);
++
++	*plp_error = data & 0x01;
++
++	return 0;
++}
++
++int cxd2880_tnrdmd_dvbt2_mon_l1_change(struct cxd2880_tnrdmd
++				       *tnr_dmd, u8 *l1_change)
++{
++	u8 data;
++	u8 sync_state = 0;
++	u8 ts_lock = 0;
++	u8 unlock_detected = 0;
++	int ret;
++
++	if (!tnr_dmd || !l1_change)
++		return -EINVAL;
++
++	if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_SUB)
++		return -EINVAL;
++
++	if (tnr_dmd->state != CXD2880_TNRDMD_STATE_ACTIVE)
++		return -EINVAL;
++
++	if (tnr_dmd->sys != CXD2880_DTV_SYS_DVBT2)
++		return -EINVAL;
++
++	ret = slvt_freeze_reg(tnr_dmd);
++	if (ret)
++		return ret;
++
++	ret =
++	    cxd2880_tnrdmd_dvbt2_mon_sync_stat(tnr_dmd, &sync_state,
++					       &ts_lock,
++					       &unlock_detected);
++	if (ret) {
++		slvt_unfreeze_reg(tnr_dmd);
++		return ret;
++	}
++
++	if (sync_state < 5) {
++		if (tnr_dmd->diver_mode ==
++		    CXD2880_TNRDMD_DIVERMODE_MAIN) {
++			ret =
++			    cxd2880_tnrdmd_dvbt2_mon_sync_stat_sub
++			    (tnr_dmd, &sync_state, &unlock_detected);
++			if (ret) {
++				slvt_unfreeze_reg(tnr_dmd);
++				return ret;
++			}
++
++			if (sync_state < 5) {
++				slvt_unfreeze_reg(tnr_dmd);
++				return -EAGAIN;
++			}
++		} else {
++			slvt_unfreeze_reg(tnr_dmd);
++			return -EAGAIN;
++		}
++	}
++
++	ret = tnr_dmd->io->write_reg(tnr_dmd->io,
++				     CXD2880_IO_TGT_DMD,
++				     0x00, 0x0b);
++	if (ret) {
++		slvt_unfreeze_reg(tnr_dmd);
++		return ret;
++	}
++
++	ret = tnr_dmd->io->read_regs(tnr_dmd->io,
++				     CXD2880_IO_TGT_DMD,
++				     0x5f, &data, sizeof(data));
++	if (ret) {
++		slvt_unfreeze_reg(tnr_dmd);
++		return ret;
++	}
++
++	*l1_change = data & 0x01;
++	if (*l1_change) {
++		ret = tnr_dmd->io->write_reg(tnr_dmd->io,
++					     CXD2880_IO_TGT_DMD,
++					     0x00, 0x22);
++		if (ret) {
++			slvt_unfreeze_reg(tnr_dmd);
++			return ret;
++		}
++
++		ret = tnr_dmd->io->write_reg(tnr_dmd->io,
++					     CXD2880_IO_TGT_DMD,
++					     0x16, 0x01);
++		if (ret) {
++			slvt_unfreeze_reg(tnr_dmd);
++			return ret;
++		}
++	}
++	slvt_unfreeze_reg(tnr_dmd);
++
++	return 0;
++}
++
++int cxd2880_tnrdmd_dvbt2_mon_l1_post(struct cxd2880_tnrdmd
++				     *tnr_dmd,
++				     struct cxd2880_dvbt2_l1post
++				     *l1_post)
++{
++	u8 data[16];
++	int ret;
++
++	if (!tnr_dmd || !l1_post)
++		return -EINVAL;
++
++	if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_SUB)
++		return -EINVAL;
++
++	if (tnr_dmd->state != CXD2880_TNRDMD_STATE_ACTIVE)
++		return -EINVAL;
++
++	if (tnr_dmd->sys != CXD2880_DTV_SYS_DVBT2)
++		return -EINVAL;
++
++	ret = tnr_dmd->io->write_reg(tnr_dmd->io,
++				     CXD2880_IO_TGT_DMD,
++				     0x00, 0x0b);
++	if (ret)
++		return ret;
++
++	ret = tnr_dmd->io->read_regs(tnr_dmd->io,
++				     CXD2880_IO_TGT_DMD,
++				     0x86, data, sizeof(data));
++	if (ret)
++		return ret;
++
++	if (!(data[0] & 0x01))
++		return -EAGAIN;
++
++	l1_post->sub_slices_per_frame = (data[1] & 0x7f) << 8;
++	l1_post->sub_slices_per_frame |= data[2];
++	l1_post->num_plps = data[3];
++	l1_post->num_aux = data[4] & 0x0f;
++	l1_post->aux_cfg_rfu = data[5];
++	l1_post->rf_idx = data[6] & 0x07;
++	l1_post->freq = data[7] << 24;
++	l1_post->freq |= data[8] << 16;
++	l1_post->freq |= data[9] << 8;
++	l1_post->freq |= data[10];
++	l1_post->fef_type = data[11] & 0x0f;
++	l1_post->fef_length = data[12] << 16;
++	l1_post->fef_length |= data[13] << 8;
++	l1_post->fef_length |= data[14];
++	l1_post->fef_intvl = data[15];
++
++	return 0;
++}
++
++int cxd2880_tnrdmd_dvbt2_mon_bbheader(struct cxd2880_tnrdmd
++				      *tnr_dmd,
++				      enum cxd2880_dvbt2_plp_btype
++				      type,
++				      struct cxd2880_dvbt2_bbheader
++				      *bbheader)
++{
++	u8 sync_state = 0;
++	u8 ts_lock = 0;
++	u8 unlock_detected = 0;
++	u8 data[14];
++	u8 addr = 0;
++	int ret;
++
++	if (!tnr_dmd || !bbheader)
++		return -EINVAL;
++
++	if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_SUB)
++		return -EINVAL;
++
++	if (tnr_dmd->state != CXD2880_TNRDMD_STATE_ACTIVE)
++		return -EINVAL;
++
++	if (tnr_dmd->sys != CXD2880_DTV_SYS_DVBT2)
++		return -EINVAL;
++
++	ret = slvt_freeze_reg(tnr_dmd);
++	if (ret)
++		return ret;
++
++	ret =
++	    cxd2880_tnrdmd_dvbt2_mon_sync_stat(tnr_dmd, &sync_state,
++						       &ts_lock,
++						       &unlock_detected);
++	if (ret) {
++		slvt_unfreeze_reg(tnr_dmd);
++		return ret;
++	}
++
++	if (!ts_lock) {
++		slvt_unfreeze_reg(tnr_dmd);
++		return -EAGAIN;
++	}
++
++	ret = tnr_dmd->io->write_reg(tnr_dmd->io,
++				     CXD2880_IO_TGT_DMD,
++				     0x00, 0x0b);
++	if (ret) {
++		slvt_unfreeze_reg(tnr_dmd);
++		return ret;
++	}
++
++	if (type == CXD2880_DVBT2_PLP_COMMON) {
++		u8 l1_post_ok;
++		u8 data;
++
++		ret = tnr_dmd->io->read_regs(tnr_dmd->io,
++					     CXD2880_IO_TGT_DMD,
++					     0x86, &l1_post_ok, 1);
++		if (ret) {
++			slvt_unfreeze_reg(tnr_dmd);
++			return ret;
++		}
++
++		if (!(l1_post_ok & 0x01)) {
++			slvt_unfreeze_reg(tnr_dmd);
++			return -EAGAIN;
++		}
++
++		ret = tnr_dmd->io->read_regs(tnr_dmd->io,
++					     CXD2880_IO_TGT_DMD,
++					     0xb6, &data, 1);
++		if (ret) {
++			slvt_unfreeze_reg(tnr_dmd);
++			return ret;
++		}
++
++		if (data == 0) {
++			slvt_unfreeze_reg(tnr_dmd);
++			return -EAGAIN;
++		}
++	}
++
++	if (type == CXD2880_DVBT2_PLP_COMMON)
++		addr = 0x51;
++	else
++		addr = 0x42;
++
++	ret = tnr_dmd->io->read_regs(tnr_dmd->io,
++				     CXD2880_IO_TGT_DMD,
++				     addr, data, sizeof(data));
++	if (ret) {
++		slvt_unfreeze_reg(tnr_dmd);
++		return ret;
++	}
++
++	slvt_unfreeze_reg(tnr_dmd);
++
++	bbheader->stream_input =
++	    (enum cxd2880_dvbt2_stream)((data[0] >> 6) & 0x03);
++	bbheader->is_single_input_stream = (data[0] >> 5) & 0x01;
++	bbheader->is_constant_coding_modulation =
++	    (data[0] >> 4) & 0x01;
++	bbheader->issy_indicator = (data[0] >> 3) & 0x01;
++	bbheader->null_packet_deletion = (data[0] >> 2) & 0x01;
++	bbheader->ext = data[0] & 0x03;
++
++	bbheader->input_stream_identifier = data[1];
++	bbheader->plp_mode =
++	    (data[3] & 0x01) ? CXD2880_DVBT2_PLP_MODE_HEM :
++	    CXD2880_DVBT2_PLP_MODE_NM;
++	bbheader->data_field_length = (data[4] << 8) | data[5];
++
++	if (bbheader->plp_mode == CXD2880_DVBT2_PLP_MODE_NM) {
++		bbheader->user_packet_length =
++		    (data[6] << 8) | data[7];
++		bbheader->sync_byte = data[8];
++		bbheader->issy = 0;
++	} else {
++		bbheader->user_packet_length = 0;
++		bbheader->sync_byte = 0;
++		bbheader->issy =
++		    (data[11] << 16) | (data[12] << 8) | data[13];
++	}
++
++	return 0;
++}
++
++int cxd2880_tnrdmd_dvbt2_mon_in_bandb_ts_rate(struct cxd2880_tnrdmd
++					      *tnr_dmd,
++					      enum
++					      cxd2880_dvbt2_plp_btype
++					      type,
++					      u32 *ts_rate_bps)
++{
++	u8 sync_state = 0;
++	u8 ts_lock = 0;
++	u8 unlock_detected = 0;
++	u8 l1_post_ok = 0;
++	u8 data[4];
++	u8 addr = 0;
++
++	int ret;
++
++	if (!tnr_dmd || !ts_rate_bps)
++		return -EINVAL;
++
++	if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_SUB)
++		return -EINVAL;
++
++	if (tnr_dmd->state != CXD2880_TNRDMD_STATE_ACTIVE)
++		return -EINVAL;
++
++	if (tnr_dmd->sys != CXD2880_DTV_SYS_DVBT2)
++		return -EINVAL;
++
++	ret = slvt_freeze_reg(tnr_dmd);
++	if (ret)
++		return ret;
++
++	ret =
++	    cxd2880_tnrdmd_dvbt2_mon_sync_stat(tnr_dmd, &sync_state,
++					       &ts_lock,
++					       &unlock_detected);
++	if (ret) {
++		slvt_unfreeze_reg(tnr_dmd);
++		return ret;
++	}
++
++	if (!ts_lock) {
++		slvt_unfreeze_reg(tnr_dmd);
++		return -EAGAIN;
++	}
++
++	ret = tnr_dmd->io->write_reg(tnr_dmd->io,
++				     CXD2880_IO_TGT_DMD,
++				     0x00, 0x0b);
++	if (ret) {
++		slvt_unfreeze_reg(tnr_dmd);
++		return ret;
++	}
++
++	ret = tnr_dmd->io->read_regs(tnr_dmd->io,
++				     CXD2880_IO_TGT_DMD,
++				     0x86, &l1_post_ok, 1);
++	if (ret) {
++		slvt_unfreeze_reg(tnr_dmd);
++		return ret;
++	}
++
++	if (!(l1_post_ok & 0x01)) {
++		slvt_unfreeze_reg(tnr_dmd);
++		return -EAGAIN;
++	}
++
++	if (type == CXD2880_DVBT2_PLP_COMMON)
++		addr = 0xba;
++	else
++		addr = 0xa7;
++
++	ret = tnr_dmd->io->read_regs(tnr_dmd->io,
++				     CXD2880_IO_TGT_DMD,
++				     addr, &data[0], 1);
++	if (ret) {
++		slvt_unfreeze_reg(tnr_dmd);
++		return ret;
++	}
++
++	if ((data[0] & 0x80) == 0x00) {
++		slvt_unfreeze_reg(tnr_dmd);
++		return -EAGAIN;
++	}
++
++	ret = tnr_dmd->io->write_reg(tnr_dmd->io,
++				     CXD2880_IO_TGT_DMD,
++				     0x00, 0x25);
++	if (ret) {
++		slvt_unfreeze_reg(tnr_dmd);
++		return ret;
++	}
++
++	if (type == CXD2880_DVBT2_PLP_COMMON)
++		addr = 0xa6;
++	else
++		addr = 0xaa;
++
++	ret = tnr_dmd->io->read_regs(tnr_dmd->io,
++				     CXD2880_IO_TGT_DMD,
++				     addr, &data[0], 4);
++	if (ret) {
++		slvt_unfreeze_reg(tnr_dmd);
++		return ret;
++	}
++
++	*ts_rate_bps = ((data[0] & 0x07) << 24) | (data[1] << 16) |
++		       (data[2] << 8) | data[3];
++
++	return 0;
++}
++
++int cxd2880_tnrdmd_dvbt2_mon_spectrum_sense(struct cxd2880_tnrdmd
++					    *tnr_dmd,
++					    enum
++					    cxd2880_tnrdmd_spectrum_sense
++					    *sense)
++{
++	u8 sync_state = 0;
++	u8 ts_lock = 0;
++	u8 early_unlock = 0;
++	u8 data = 0;
++	int ret;
++
++	if (!tnr_dmd || !sense)
++		return -EINVAL;
++
++	if (tnr_dmd->state != CXD2880_TNRDMD_STATE_ACTIVE)
++		return -EINVAL;
++
++	if (tnr_dmd->sys != CXD2880_DTV_SYS_DVBT2)
++		return -EINVAL;
++
++	ret = slvt_freeze_reg(tnr_dmd);
++	if (ret)
++		return ret;
++
++	ret =
++	    cxd2880_tnrdmd_dvbt2_mon_sync_stat(tnr_dmd, &sync_state, &ts_lock,
++					       &early_unlock);
++	if (ret) {
++		slvt_unfreeze_reg(tnr_dmd);
++		return ret;
++	}
++
++	if (sync_state != 6) {
++		slvt_unfreeze_reg(tnr_dmd);
++
++		ret = -EAGAIN;
++
++		if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_MAIN)
++			ret =
++			    cxd2880_tnrdmd_dvbt2_mon_spectrum_sense(tnr_dmd->diver_sub,
++								    sense);
++
++		return ret;
++	}
++
++	ret = tnr_dmd->io->write_reg(tnr_dmd->io,
++				     CXD2880_IO_TGT_DMD,
++				     0x00, 0x0b);
++	if (ret) {
++		slvt_unfreeze_reg(tnr_dmd);
++		return ret;
++	}
++
++	ret = tnr_dmd->io->read_regs(tnr_dmd->io,
++				     CXD2880_IO_TGT_DMD,
++				     0x2f, &data, sizeof(data));
++	if (ret) {
++		slvt_unfreeze_reg(tnr_dmd);
++		return ret;
++	}
++
++	slvt_unfreeze_reg(tnr_dmd);
++
++	*sense =
++	    (data & 0x01) ? CXD2880_TNRDMD_SPECTRUM_INV :
++	    CXD2880_TNRDMD_SPECTRUM_NORMAL;
++
++	return 0;
++}
++
++static int dvbt2_read_snr_reg(struct cxd2880_tnrdmd *tnr_dmd,
++			      u16 *reg_value)
++{
++	u8 sync_state = 0;
++	u8 ts_lock = 0;
++	u8 unlock_detected = 0;
++	u8 data[2];
++	int ret;
++
++	if (!tnr_dmd || !reg_value)
++		return -EINVAL;
++
++	ret = slvt_freeze_reg(tnr_dmd);
++	if (ret)
++		return ret;
++
++	ret =
++	    cxd2880_tnrdmd_dvbt2_mon_sync_stat(tnr_dmd, &sync_state,
++					       &ts_lock,
++					       &unlock_detected);
++	if (ret) {
++		slvt_unfreeze_reg(tnr_dmd);
++		return ret;
++	}
++
++	if (sync_state != 6) {
++		slvt_unfreeze_reg(tnr_dmd);
++		return -EAGAIN;
++	}
++
++	ret = tnr_dmd->io->write_reg(tnr_dmd->io,
++				     CXD2880_IO_TGT_DMD,
++				     0x00, 0x0b);
++	if (ret) {
++		slvt_unfreeze_reg(tnr_dmd);
++		return ret;
++	}
++
++	ret = tnr_dmd->io->read_regs(tnr_dmd->io,
++				     CXD2880_IO_TGT_DMD,
++				     0x13, data, sizeof(data));
++	if (ret) {
++		slvt_unfreeze_reg(tnr_dmd);
++		return ret;
++	}
++
++	slvt_unfreeze_reg(tnr_dmd);
++
++	*reg_value = (data[0] << 8) | data[1];
++
++	return ret;
++}
++
++static int dvbt2_calc_snr(struct cxd2880_tnrdmd *tnr_dmd,
++			  u32 reg_value, int *snr)
++{
++	if (!tnr_dmd || !snr)
++		return -EINVAL;
++
++	if (reg_value == 0)
++		return -EAGAIN;
++
++	if (reg_value > 10876)
++		reg_value = 10876;
++
++	*snr = intlog10(reg_value) - intlog10(12600 - reg_value);
++	*snr = (*snr + 839) / 1678 + 32000;
++
++	return 0;
++}
++
++int cxd2880_tnrdmd_dvbt2_mon_snr(struct cxd2880_tnrdmd *tnr_dmd,
++				 int *snr)
++{
++	u16 reg_value = 0;
++	int ret;
++
++	if (!tnr_dmd || !snr)
++		return -EINVAL;
++
++	*snr = -1000 * 1000;
++
++	if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_SUB)
++		return -EINVAL;
++
++	if (tnr_dmd->state != CXD2880_TNRDMD_STATE_ACTIVE)
++		return -EINVAL;
++
++	if (tnr_dmd->sys != CXD2880_DTV_SYS_DVBT2)
++		return -EINVAL;
++
++	if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_SINGLE) {
++		ret = dvbt2_read_snr_reg(tnr_dmd, &reg_value);
++		if (ret)
++			return ret;
++
++		ret = dvbt2_calc_snr(tnr_dmd, reg_value, snr);
++	} else {
++		int snr_main = 0;
++		int snr_sub = 0;
++
++		ret =
++		    cxd2880_tnrdmd_dvbt2_mon_snr_diver(tnr_dmd, snr, &snr_main,
++						       &snr_sub);
++	}
++
++	return ret;
++}
++
++int cxd2880_tnrdmd_dvbt2_mon_snr_diver(struct cxd2880_tnrdmd
++				       *tnr_dmd, int *snr,
++				       int *snr_main, int *snr_sub)
++{
++	u16 reg_value = 0;
++	u32 reg_value_sum = 0;
++	int ret;
++
++	if (!tnr_dmd || !snr || !snr_main || !snr_sub)
++		return -EINVAL;
++
++	*snr = -1000 * 1000;
++	*snr_main = -1000 * 1000;
++	*snr_sub = -1000 * 1000;
++
++	if (tnr_dmd->diver_mode != CXD2880_TNRDMD_DIVERMODE_MAIN)
++		return -EINVAL;
++
++	if (tnr_dmd->state != CXD2880_TNRDMD_STATE_ACTIVE)
++		return -EINVAL;
++
++	if (tnr_dmd->sys != CXD2880_DTV_SYS_DVBT2)
++		return -EINVAL;
++
++	ret = dvbt2_read_snr_reg(tnr_dmd, &reg_value);
++	if (!ret) {
++		ret = dvbt2_calc_snr(tnr_dmd, reg_value, snr_main);
++		if (ret)
++			reg_value = 0;
++	} else if (ret == -EAGAIN) {
++		reg_value = 0;
++	} else {
++		return ret;
++	}
++
++	reg_value_sum += reg_value;
++
++	ret = dvbt2_read_snr_reg(tnr_dmd->diver_sub, &reg_value);
++	if (!ret) {
++		ret = dvbt2_calc_snr(tnr_dmd->diver_sub, reg_value, snr_sub);
++		if (ret)
++			reg_value = 0;
++	} else if (ret == -EAGAIN) {
++		reg_value = 0;
++	} else {
++		return ret;
++	}
++
++	reg_value_sum += reg_value;
++
++	return dvbt2_calc_snr(tnr_dmd, reg_value_sum, snr);
++}
++
++int cxd2880_tnrdmd_dvbt2_mon_packet_error_number(struct
++						 cxd2880_tnrdmd
++						 *tnr_dmd,
++						 u32 *pen)
++{
++	int ret;
++	u8 data[3];
++
++	if (!tnr_dmd || !pen)
++		return -EINVAL;
++
++	if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_SUB)
++		return -EINVAL;
++
++	if (tnr_dmd->state != CXD2880_TNRDMD_STATE_ACTIVE)
++		return -EINVAL;
++
++	if (tnr_dmd->sys != CXD2880_DTV_SYS_DVBT2)
++		return -EINVAL;
++
++	ret = tnr_dmd->io->write_reg(tnr_dmd->io,
++				     CXD2880_IO_TGT_DMD,
++				     0x00, 0x0b);
++	if (ret)
++		return ret;
++
++	ret = tnr_dmd->io->read_regs(tnr_dmd->io,
++				     CXD2880_IO_TGT_DMD,
++				     0x39, data, sizeof(data));
++	if (ret)
++		return ret;
++
++	if (!(data[0] & 0x01))
++		return -EAGAIN;
++
++	*pen = ((data[1] << 8) | data[2]);
++
++	return ret;
++}
++
++int cxd2880_tnrdmd_dvbt2_mon_sampling_offset(struct cxd2880_tnrdmd
++					     *tnr_dmd, int *ppm)
++{
++	u8 ctl_val_reg[5];
++	u8 nominal_rate_reg[5];
++	u32 trl_ctl_val = 0;
++	u32 trcg_nominal_rate = 0;
++	int num;
++	int den;
++	int ret;
++	u8 sync_state = 0;
++	u8 ts_lock = 0;
++	u8 unlock_detected = 0;
++	s8 diff_upper = 0;
++
++	if (!tnr_dmd || !ppm)
++		return -EINVAL;
++
++	if (tnr_dmd->state != CXD2880_TNRDMD_STATE_ACTIVE)
++		return -EINVAL;
++
++	if (tnr_dmd->sys != CXD2880_DTV_SYS_DVBT2)
++		return -EINVAL;
++
++	ret = slvt_freeze_reg(tnr_dmd);
++	if (ret)
++		return ret;
++
++	ret =
++	    cxd2880_tnrdmd_dvbt2_mon_sync_stat(tnr_dmd, &sync_state,
++					       &ts_lock,
++					       &unlock_detected);
++	if (ret) {
++		slvt_unfreeze_reg(tnr_dmd);
++		return ret;
++	}
++
++	if (sync_state != 6) {
++		slvt_unfreeze_reg(tnr_dmd);
++		return -EAGAIN;
++	}
++
++	ret = tnr_dmd->io->write_reg(tnr_dmd->io,
++				     CXD2880_IO_TGT_DMD,
++				     0x00, 0x0b);
++	if (ret) {
++		slvt_unfreeze_reg(tnr_dmd);
++		return ret;
++	}
++
++	ret = tnr_dmd->io->read_regs(tnr_dmd->io,
++				     CXD2880_IO_TGT_DMD,
++				     0x34, ctl_val_reg,
++				     sizeof(ctl_val_reg));
++	if (ret) {
++		slvt_unfreeze_reg(tnr_dmd);
++		return ret;
++	}
++
++	ret = tnr_dmd->io->write_reg(tnr_dmd->io,
++				     CXD2880_IO_TGT_DMD,
++				     0x00, 0x04);
++	if (ret) {
++		slvt_unfreeze_reg(tnr_dmd);
++		return ret;
++	}
++
++	ret = tnr_dmd->io->read_regs(tnr_dmd->io,
++				     CXD2880_IO_TGT_DMD,
++				     0x10, nominal_rate_reg,
++				     sizeof(nominal_rate_reg));
++	if (ret) {
++		slvt_unfreeze_reg(tnr_dmd);
++		return ret;
++	}
++
++	slvt_unfreeze_reg(tnr_dmd);
++
++	diff_upper =
++	    (ctl_val_reg[0] & 0x7f) - (nominal_rate_reg[0] & 0x7f);
++
++	if (diff_upper < -1 || diff_upper > 1)
++		return -EAGAIN;
++
++	trl_ctl_val = ctl_val_reg[1] << 24;
++	trl_ctl_val |= ctl_val_reg[2] << 16;
++	trl_ctl_val |= ctl_val_reg[3] << 8;
++	trl_ctl_val |= ctl_val_reg[4];
++
++	trcg_nominal_rate = nominal_rate_reg[1] << 24;
++	trcg_nominal_rate |= nominal_rate_reg[2] << 16;
++	trcg_nominal_rate |= nominal_rate_reg[3] << 8;
++	trcg_nominal_rate |= nominal_rate_reg[4];
++
++	trl_ctl_val >>= 1;
++	trcg_nominal_rate >>= 1;
++
++	if (diff_upper == 1)
++		num =
++		    (int)((trl_ctl_val + 0x80000000u) -
++			  trcg_nominal_rate);
++	else if (diff_upper == -1)
++		num =
++		    -(int)((trcg_nominal_rate + 0x80000000u) -
++			   trl_ctl_val);
++	else
++		num = (int)(trl_ctl_val - trcg_nominal_rate);
++
++	den = (nominal_rate_reg[0] & 0x7f) << 24;
++	den |= nominal_rate_reg[1] << 16;
++	den |= nominal_rate_reg[2] << 8;
++	den |= nominal_rate_reg[3];
++	den = (den + (390625 / 2)) / 390625;
++
++	den >>= 1;
++
++	if (num >= 0)
++		*ppm = (num + (den / 2)) / den;
++	else
++		*ppm = (num - (den / 2)) / den;
++
++	return 0;
++}
++
++int cxd2880_tnrdmd_dvbt2_mon_sampling_offset_sub(struct
++						 cxd2880_tnrdmd
++						 *tnr_dmd,
++						 int *ppm)
++{
++	if (!tnr_dmd || !ppm)
++		return -EINVAL;
++
++	if (tnr_dmd->diver_mode != CXD2880_TNRDMD_DIVERMODE_MAIN)
++		return -EINVAL;
++
++	return cxd2880_tnrdmd_dvbt2_mon_sampling_offset(tnr_dmd->diver_sub,
++							ppm);
++}
++
++int cxd2880_tnrdmd_dvbt2_mon_qam(struct cxd2880_tnrdmd *tnr_dmd,
++				 enum cxd2880_dvbt2_plp_btype type,
++				 enum cxd2880_dvbt2_plp_constell *qam)
++{
++	u8 data;
++	u8 l1_post_ok = 0;
++	int ret;
++
++	if (!tnr_dmd || !qam)
++		return -EINVAL;
++
++	if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_SUB)
++		return -EINVAL;
++
++	if (tnr_dmd->state != CXD2880_TNRDMD_STATE_ACTIVE)
++		return -EINVAL;
++
++	if (tnr_dmd->sys != CXD2880_DTV_SYS_DVBT2)
++		return -EINVAL;
++
++	ret = slvt_freeze_reg(tnr_dmd);
++	if (ret)
++		return ret;
++
++	ret = tnr_dmd->io->write_reg(tnr_dmd->io,
++				     CXD2880_IO_TGT_DMD,
++				     0x00, 0x0b);
++	if (ret) {
++		slvt_unfreeze_reg(tnr_dmd);
++		return ret;
++	}
++
++	ret = tnr_dmd->io->read_regs(tnr_dmd->io,
++				     CXD2880_IO_TGT_DMD,
++				     0x86, &l1_post_ok, 1);
++	if (ret) {
++		slvt_unfreeze_reg(tnr_dmd);
++		return ret;
++	}
++
++	if (!(l1_post_ok & 0x01)) {
++		slvt_unfreeze_reg(tnr_dmd);
++		return -EAGAIN;
++	}
++
++	if (type == CXD2880_DVBT2_PLP_COMMON) {
++		ret = tnr_dmd->io->read_regs(tnr_dmd->io,
++					     CXD2880_IO_TGT_DMD,
++					     0xb6, &data, 1);
++		if (ret) {
++			slvt_unfreeze_reg(tnr_dmd);
++			return ret;
++		}
++
++		if (data == 0) {
++			slvt_unfreeze_reg(tnr_dmd);
++			return -EAGAIN;
++		}
++
++		ret = tnr_dmd->io->read_regs(tnr_dmd->io,
++					     CXD2880_IO_TGT_DMD,
++					     0xb1, &data, 1);
++		if (ret) {
++			slvt_unfreeze_reg(tnr_dmd);
++			return ret;
++		}
++	} else {
++		ret = tnr_dmd->io->read_regs(tnr_dmd->io,
++					     CXD2880_IO_TGT_DMD,
++					     0x9e, &data, 1);
++		if (ret) {
++			slvt_unfreeze_reg(tnr_dmd);
++			return ret;
++		}
++	}
++
++	slvt_unfreeze_reg(tnr_dmd);
++
++	*qam = (enum cxd2880_dvbt2_plp_constell)(data & 0x07);
++
++	return ret;
++}
++
++int cxd2880_tnrdmd_dvbt2_mon_code_rate(struct cxd2880_tnrdmd
++				       *tnr_dmd,
++				       enum cxd2880_dvbt2_plp_btype
++				       type,
++				       enum
++				       cxd2880_dvbt2_plp_code_rate
++				       *code_rate)
++{
++	u8 data;
++	u8 l1_post_ok = 0;
++	int ret;
++
++	if (!tnr_dmd || !code_rate)
++		return -EINVAL;
++
++	if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_SUB)
++		return -EINVAL;
++
++	if (tnr_dmd->state != CXD2880_TNRDMD_STATE_ACTIVE)
++		return -EINVAL;
++
++	if (tnr_dmd->sys != CXD2880_DTV_SYS_DVBT2)
++		return -EINVAL;
++
++	ret = slvt_freeze_reg(tnr_dmd);
++	if (ret)
++		return ret;
++
++	ret = tnr_dmd->io->write_reg(tnr_dmd->io,
++				     CXD2880_IO_TGT_DMD,
++				     0x00, 0x0b);
++	if (ret) {
++		slvt_unfreeze_reg(tnr_dmd);
++		return ret;
++	}
++
++	ret = tnr_dmd->io->read_regs(tnr_dmd->io,
++				     CXD2880_IO_TGT_DMD,
++				     0x86, &l1_post_ok, 1);
++	if (ret) {
++		slvt_unfreeze_reg(tnr_dmd);
++		return ret;
++	}
++
++	if (!(l1_post_ok & 0x01)) {
++		slvt_unfreeze_reg(tnr_dmd);
++		return -EAGAIN;
++	}
++
++	if (type == CXD2880_DVBT2_PLP_COMMON) {
++		ret = tnr_dmd->io->read_regs(tnr_dmd->io,
++					     CXD2880_IO_TGT_DMD,
++					     0xb6, &data, 1);
++		if (ret) {
++			slvt_unfreeze_reg(tnr_dmd);
++			return ret;
++		}
++
++		if (data == 0) {
++			slvt_unfreeze_reg(tnr_dmd);
++			return -EAGAIN;
++		}
++
++		ret = tnr_dmd->io->read_regs(tnr_dmd->io,
++					     CXD2880_IO_TGT_DMD,
++					     0xb0, &data, 1);
++		if (ret) {
++			slvt_unfreeze_reg(tnr_dmd);
++			return ret;
++		}
++	} else {
++		ret = tnr_dmd->io->read_regs(tnr_dmd->io,
++					     CXD2880_IO_TGT_DMD,
++					     0x9d, &data, 1);
++		if (ret) {
++			slvt_unfreeze_reg(tnr_dmd);
++			return ret;
++		}
++	}
++
++	slvt_unfreeze_reg(tnr_dmd);
++
++	*code_rate = (enum cxd2880_dvbt2_plp_code_rate)(data & 0x07);
++
++	return ret;
++}
++
++int cxd2880_tnrdmd_dvbt2_mon_profile(struct cxd2880_tnrdmd
++				     *tnr_dmd,
++				     enum cxd2880_dvbt2_profile
++				     *profile)
++{
++	u8 data;
++	int ret;
++
++	if (!tnr_dmd || !profile)
++		return -EINVAL;
++
++	if (tnr_dmd->state != CXD2880_TNRDMD_STATE_ACTIVE)
++		return -EINVAL;
++
++	if (tnr_dmd->sys != CXD2880_DTV_SYS_DVBT2)
++		return -EINVAL;
++
++	ret = tnr_dmd->io->write_reg(tnr_dmd->io,
++				     CXD2880_IO_TGT_DMD,
++				     0x00, 0x0b);
++	if (ret)
++		return ret;
++
++	ret = tnr_dmd->io->read_regs(tnr_dmd->io,
++				     CXD2880_IO_TGT_DMD,
++				     0x22, &data, sizeof(data));
++	if (ret)
++		return ret;
++
++	if (data & 0x02) {
++		if (data & 0x01)
++			*profile = CXD2880_DVBT2_PROFILE_LITE;
++		else
++			*profile = CXD2880_DVBT2_PROFILE_BASE;
++	} else {
++		ret = -EAGAIN;
++		if (tnr_dmd->diver_mode ==
++		    CXD2880_TNRDMD_DIVERMODE_MAIN)
++			ret =
++			    cxd2880_tnrdmd_dvbt2_mon_profile(tnr_dmd->diver_sub,
++							     profile);
++
++		return ret;
++	}
++
++	return 0;
++}
++
++static int dvbt2_calc_ssi(struct cxd2880_tnrdmd *tnr_dmd,
++			  int rf_lvl, u8 *ssi)
++{
++	enum cxd2880_dvbt2_plp_constell qam;
++	enum cxd2880_dvbt2_plp_code_rate code_rate;
++	int prel;
++	int temp_ssi = 0;
++	int ret;
++
++	if (!tnr_dmd || !ssi)
++		return -EINVAL;
++
++	ret =
++	    cxd2880_tnrdmd_dvbt2_mon_qam(tnr_dmd, CXD2880_DVBT2_PLP_DATA, &qam);
++	if (ret)
++		return ret;
++
++	ret =
++	    cxd2880_tnrdmd_dvbt2_mon_code_rate(tnr_dmd, CXD2880_DVBT2_PLP_DATA,
++					       &code_rate);
++	if (ret)
++		return ret;
++
++	if (code_rate > CXD2880_DVBT2_R2_5 || qam > CXD2880_DVBT2_QAM256)
++		return -EINVAL;
++
++	prel = rf_lvl - ref_dbm_1000[qam][code_rate];
++
++	if (prel < -15000)
++		temp_ssi = 0;
++	else if (prel < 0)
++		temp_ssi = ((2 * (prel + 15000)) + 1500) / 3000;
++	else if (prel < 20000)
++		temp_ssi = (((4 * prel) + 500) / 1000) + 10;
++	else if (prel < 35000)
++		temp_ssi = (((2 * (prel - 20000)) + 1500) / 3000) + 90;
++	else
++		temp_ssi = 100;
++
++	*ssi = (temp_ssi > 100) ? 100 : (u8)temp_ssi;
++
++	return ret;
++}
++
++int cxd2880_tnrdmd_dvbt2_mon_ssi(struct cxd2880_tnrdmd *tnr_dmd,
++				 u8 *ssi)
++{
++	int rf_lvl = 0;
++	int ret;
++
++	if (!tnr_dmd || !ssi)
++		return -EINVAL;
++
++	if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_SUB)
++		return -EINVAL;
++
++	if (tnr_dmd->state != CXD2880_TNRDMD_STATE_ACTIVE)
++		return -EINVAL;
++
++	if (tnr_dmd->sys != CXD2880_DTV_SYS_DVBT2)
++		return -EINVAL;
++
++	ret = cxd2880_tnrdmd_mon_rf_lvl(tnr_dmd, &rf_lvl);
++	if (ret)
++		return ret;
++
++	return dvbt2_calc_ssi(tnr_dmd, rf_lvl, ssi);
++}
++
++int cxd2880_tnrdmd_dvbt2_mon_ssi_sub(struct cxd2880_tnrdmd
++				     *tnr_dmd, u8 *ssi)
++{
++	int rf_lvl = 0;
++	int ret;
++
++	if (!tnr_dmd || !ssi)
++		return -EINVAL;
++
++	if (tnr_dmd->diver_mode != CXD2880_TNRDMD_DIVERMODE_MAIN)
++		return -EINVAL;
++
++	if (tnr_dmd->state != CXD2880_TNRDMD_STATE_ACTIVE)
++		return -EINVAL;
++
++	if (tnr_dmd->sys != CXD2880_DTV_SYS_DVBT2)
++		return -EINVAL;
++
++	ret = cxd2880_tnrdmd_mon_rf_lvl(tnr_dmd->diver_sub, &rf_lvl);
++	if (ret)
++		return ret;
++
++	return dvbt2_calc_ssi(tnr_dmd, rf_lvl, ssi);
++}
+diff --git a/drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd_dvbt2_mon.h b/drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd_dvbt2_mon.h
 new file mode 100644
-index 000000000000..7108e3540093
+index 000000000000..5b7adaceff22
 --- /dev/null
-+++ b/drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd_dvbt2.h
-@@ -0,0 +1,65 @@
++++ b/drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd_dvbt2_mon.h
+@@ -0,0 +1,135 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +/*
-+ * cxd2880_tnrdmd_dvbt2.h
++ * cxd2880_tnrdmd_dvbt2_mon.h
 + * Sony CXD2880 DVB-T2/T tuner + demodulator driver
-+ * control interface for DVB-T2
++ * DVB-T2 monitor interface
 + *
 + * Copyright (C) 2016, 2017, 2018 Sony Semiconductor Solutions Corporation
 + */
 +
-+#ifndef CXD2880_TNRDMD_DVBT2_H
-+#define CXD2880_TNRDMD_DVBT2_H
++#ifndef CXD2880_TNRDMD_DVBT2_MON_H
++#define CXD2880_TNRDMD_DVBT2_MON_H
 +
-+#include "cxd2880_common.h"
 +#include "cxd2880_tnrdmd.h"
++#include "cxd2880_dvbt2.h"
 +
-+enum cxd2880_tnrdmd_dvbt2_tune_info {
-+	CXD2880_TNRDMD_DVBT2_TUNE_INFO_OK,
-+	CXD2880_TNRDMD_DVBT2_TUNE_INFO_INVALID_PLP_ID
-+};
++int cxd2880_tnrdmd_dvbt2_mon_sync_stat(struct cxd2880_tnrdmd
++				       *tnr_dmd, u8 *sync_stat,
++				       u8 *ts_lock_stat,
++				       u8 *unlock_detected);
 +
-+struct cxd2880_dvbt2_tune_param {
-+	u32 center_freq_khz;
-+	enum cxd2880_dtv_bandwidth bandwidth;
-+	u16 data_plp_id;
-+	enum cxd2880_dvbt2_profile profile;
-+	enum cxd2880_tnrdmd_dvbt2_tune_info tune_info;
-+};
++int cxd2880_tnrdmd_dvbt2_mon_sync_stat_sub(struct cxd2880_tnrdmd
++					   *tnr_dmd,
++					   u8 *sync_stat,
++					   u8 *unlock_detected);
 +
-+#define CXD2880_DVBT2_TUNE_PARAM_PLPID_AUTO  0xffff
++int cxd2880_tnrdmd_dvbt2_mon_carrier_offset(struct cxd2880_tnrdmd
++					    *tnr_dmd, int *offset);
 +
-+int cxd2880_tnrdmd_dvbt2_tune1(struct cxd2880_tnrdmd *tnr_dmd,
-+			       struct cxd2880_dvbt2_tune_param
-+			       *tune_param);
++int cxd2880_tnrdmd_dvbt2_mon_carrier_offset_sub(struct
++						cxd2880_tnrdmd
++						*tnr_dmd,
++						int *offset);
 +
-+int cxd2880_tnrdmd_dvbt2_tune2(struct cxd2880_tnrdmd *tnr_dmd,
-+			       struct cxd2880_dvbt2_tune_param
-+			       *tune_param);
++int cxd2880_tnrdmd_dvbt2_mon_l1_pre(struct cxd2880_tnrdmd *tnr_dmd,
++				    struct cxd2880_dvbt2_l1pre
++				    *l1_pre);
 +
-+int cxd2880_tnrdmd_dvbt2_sleep_setting(struct cxd2880_tnrdmd
-+				       *tnr_dmd);
++int cxd2880_tnrdmd_dvbt2_mon_version(struct cxd2880_tnrdmd
++				     *tnr_dmd,
++				     enum cxd2880_dvbt2_version
++				     *ver);
 +
-+int cxd2880_tnrdmd_dvbt2_check_demod_lock(struct cxd2880_tnrdmd
-+					  *tnr_dmd,
-+					  enum
-+					  cxd2880_tnrdmd_lock_result
-+					  *lock);
++int cxd2880_tnrdmd_dvbt2_mon_ofdm(struct cxd2880_tnrdmd *tnr_dmd,
++				  struct cxd2880_dvbt2_ofdm *ofdm);
 +
-+int cxd2880_tnrdmd_dvbt2_check_ts_lock(struct cxd2880_tnrdmd
-+				       *tnr_dmd,
-+				       enum
-+				       cxd2880_tnrdmd_lock_result
-+				       *lock);
++int cxd2880_tnrdmd_dvbt2_mon_data_plps(struct cxd2880_tnrdmd
++				       *tnr_dmd, u8 *plp_ids,
++				       u8 *num_plps);
 +
-+int cxd2880_tnrdmd_dvbt2_set_plp_cfg(struct cxd2880_tnrdmd
-+				     *tnr_dmd, u8 auto_plp,
-+				     u8 plp_id);
++int cxd2880_tnrdmd_dvbt2_mon_active_plp(struct cxd2880_tnrdmd
++					*tnr_dmd,
++					enum
++					cxd2880_dvbt2_plp_btype
++					type,
++					struct cxd2880_dvbt2_plp
++					*plp_info);
 +
-+int cxd2880_tnrdmd_dvbt2_diver_fef_setting(struct cxd2880_tnrdmd
-+					   *tnr_dmd);
-+
-+int cxd2880_tnrdmd_dvbt2_check_l1post_valid(struct cxd2880_tnrdmd
++int cxd2880_tnrdmd_dvbt2_mon_data_plp_error(struct cxd2880_tnrdmd
 +					    *tnr_dmd,
-+					    u8 *l1_post_valid);
++					    u8 *plp_error);
++
++int cxd2880_tnrdmd_dvbt2_mon_l1_change(struct cxd2880_tnrdmd
++				       *tnr_dmd, u8 *l1_change);
++
++int cxd2880_tnrdmd_dvbt2_mon_l1_post(struct cxd2880_tnrdmd
++				     *tnr_dmd,
++				     struct cxd2880_dvbt2_l1post
++				     *l1_post);
++
++int cxd2880_tnrdmd_dvbt2_mon_bbheader(struct cxd2880_tnrdmd
++				      *tnr_dmd,
++				      enum cxd2880_dvbt2_plp_btype
++				      type,
++				      struct cxd2880_dvbt2_bbheader
++				      *bbheader);
++
++int cxd2880_tnrdmd_dvbt2_mon_in_bandb_ts_rate(struct cxd2880_tnrdmd
++					      *tnr_dmd,
++					      enum
++					      cxd2880_dvbt2_plp_btype
++					      type,
++					      u32 *ts_rate_bps);
++
++int cxd2880_tnrdmd_dvbt2_mon_spectrum_sense(struct cxd2880_tnrdmd
++					    *tnr_dmd,
++					    enum
++					    cxd2880_tnrdmd_spectrum_sense
++					    *sense);
++
++int cxd2880_tnrdmd_dvbt2_mon_snr(struct cxd2880_tnrdmd *tnr_dmd,
++				 int *snr);
++
++int cxd2880_tnrdmd_dvbt2_mon_snr_diver(struct cxd2880_tnrdmd
++				       *tnr_dmd, int *snr,
++				       int *snr_main,
++				       int *snr_sub);
++
++int cxd2880_tnrdmd_dvbt2_mon_packet_error_number(struct
++						 cxd2880_tnrdmd
++						 *tnr_dmd,
++						 u32 *pen);
++
++int cxd2880_tnrdmd_dvbt2_mon_sampling_offset(struct cxd2880_tnrdmd
++					     *tnr_dmd, int *ppm);
++
++int cxd2880_tnrdmd_dvbt2_mon_sampling_offset_sub(struct
++						 cxd2880_tnrdmd
++						 *tnr_dmd,
++						 int *ppm);
++
++int cxd2880_tnrdmd_dvbt2_mon_qam(struct cxd2880_tnrdmd *tnr_dmd,
++				 enum cxd2880_dvbt2_plp_btype type,
++				 enum cxd2880_dvbt2_plp_constell
++				 *qam);
++
++int cxd2880_tnrdmd_dvbt2_mon_code_rate(struct cxd2880_tnrdmd
++				       *tnr_dmd,
++				       enum cxd2880_dvbt2_plp_btype
++				       type,
++				       enum
++				       cxd2880_dvbt2_plp_code_rate
++				       *code_rate);
++
++int cxd2880_tnrdmd_dvbt2_mon_profile(struct cxd2880_tnrdmd
++				     *tnr_dmd,
++				     enum cxd2880_dvbt2_profile
++				     *profile);
++
++int cxd2880_tnrdmd_dvbt2_mon_ssi(struct cxd2880_tnrdmd *tnr_dmd,
++				 u8 *ssi);
++
++int cxd2880_tnrdmd_dvbt2_mon_ssi_sub(struct cxd2880_tnrdmd
++				     *tnr_dmd, u8 *ssi);
 +
 +#endif
 -- 
