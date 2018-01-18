@@ -1,85 +1,80 @@
 From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Subject: Re: [patch v15 4/4] Documentation: jtag: Add ABI documentation
-Date: Thu, 18 Jan 2018 22:27:21 +0100
-Message-ID: <20180118212720.GA17196@amd>
-References: <1514202808-29747-1-git-send-email-oleksandrs@mellanox.com>
- <1514202808-29747-5-git-send-email-oleksandrs@mellanox.com>
+Subject: Re: [PATCH] Nokia N9: add support for up/down keys in the dts
+Date: Thu, 18 Jan 2018 23:03:48 +0100
+Message-ID: <20180118220348.GD17196@amd>
+References: <20180102125948.GA20051@amd>
+ <20180102194236.ahrhkvnefre2l6gf@earth.universe>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="mP3DRpeJDSE+ciuQ"
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+        protocol="application/pgp-signature"; boundary="zS7rBR6csb6tI2e1"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1514202808-29747-5-git-send-email-oleksandrs-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Oleksandr Shamray <oleksandrs-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
-Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, jiri-rHqAuBHg3fBzbRFIqnYvSA@public.gmane.org, tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, vadimp-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org, system-sw-low-level-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, openocd-devel-owner-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+In-Reply-To: <20180102194236.ahrhkvnefre2l6gf-SfvFxonMDyemK9LvCR3Hrw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, aaro.koskinen-X3B1VOXEql0@public.gmane.org, ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, patrikbachan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, serge-A9i7LUbDfNHQT0dZR+AlfA@public.gmane.org, abcloriens-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, clayton-fehKsxFhGzZIf6P1QZMOBw@public.gmane.org, martijn-28JJ9oSIdodmR6Xm/wNWPw@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Filip =?utf-8?Q?Matijevi=C4=87?= <filip.matijevic.pz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---mP3DRpeJDSE+ciuQ
+--zS7rBR6csb6tI2e1
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon 2017-12-25 13:53:28, Oleksandr Shamray wrote:
-> Added document that describe the ABI for JTAG class drivrer
+On Tue 2018-01-02 20:42:36, Sebastian Reichel wrote:
+> Hi,
 >=20
-> Signed-off-by: Oleksandr Shamray <oleksandrs-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
-> Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-> ---
-> v14->v15
-> v13->v14
-> v12->v13
-> v11->v12
-> Tobias Klauser <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>
-> - rename /Documentation/ABI/testing/jatg-dev -> jtag-dev
-> - Typo: s/interfase/interface
-> v10->v11
-> v9->v10
-> Fixes added by Oleksandr:
-> - change jtag-cdev to jtag-dev in documentation
-> - update Kernel Version and Date in jtag-dev documentation;
-> v8->v9
-> v7->v8
-> v6->v7
-> Comments pointed by Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-> - Added jtag-cdev documentation to Documentation/ABI/testing folder
-> ---
->  Documentation/ABI/testing/jtag-dev |   27 +++++++++++++++++++++++++++
->  1 files changed, 27 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/ABI/testing/jtag-dev
+> On Tue, Jan 02, 2018 at 01:59:48PM +0100, Pavel Machek wrote:
+> >=20
+> > This adds support for volume up/down keys in the dts.
+> >=20
+> > Signed-off-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
 >=20
-> diff --git a/Documentation/ABI/testing/jtag-dev b/Documentation/ABI/testi=
-ng/jtag-dev
-> new file mode 100644
-> index 0000000..cab867d
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/jtag-dev
-> @@ -0,0 +1,27 @@
-> +What:		/dev/jtag[0-9]+
-> +Date:		October 2017
-> +KernelVersion:	4.15
-> +Contact:	oleksandrs-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org
-> +Description:
-> +		The misc device files /dev/jtag* are the interface
-> +		between JTAG master interface and userspace.
-> +
-> +		The ioctl(2)-based ABI is defined and documented in
-> +		[include/uapi]<linux/jtag.h>.
-> +
-> +		The following file operations are supported:
-> +
-> +		open(2)
-> +		The argument flag currently support only one access
-> +		mode O_RDWR.
-> +
-> +		ioctl(2)
-> +		Initiate various actions.
-> +		See the inline documentation in [include/uapi]<linux/jtag.h>
-> +		for descriptions of all ioctls.
+> Reviewed-by: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
 
-Sorry, can we have real docs? I tried to decipher it from jtag.h, but
-its not easy. We should have API docs...
+Tony, ping? Can I get you to apply this one?
+
+[PATCHv2] nokia N9: Add support for magnetometer
+
+should be good to go, too...
+									Pavel
+								=09
+
+> > diff --git a/arch/arm/boot/dts/omap3-n9.dts b/arch/arm/boot/dts/omap3-n=
+9.dts
+> > index 39e35f8..57a6679 100644
+> > --- a/arch/arm/boot/dts/omap3-n9.dts
+> > +++ b/arch/arm/boot/dts/omap3-n9.dts
+> > @@ -11,9 +11,10 @@
+> >  /dts-v1/;
+> > =20
+> >  #include "omap3-n950-n9.dtsi"
+> > +#include <dt-bindings/input/input.h>
+> > =20
+> >  / {
+> >  	model =3D "Nokia N9";
+> >  	compatible =3D "nokia,omap3-n9", "ti,omap36xx", "ti,omap3";
+> >  };
+> > =20
+> > @@ -72,3 +133,9 @@
+> >  	st,max-limit-y =3D <46>;
+> >  	st,max-limit-z =3D <46>;
+> >  };
+> > +
+> > +&twl_keypad {
+> > +	linux,keymap =3D < MATRIX_KEY(6, 8, KEY_VOLUMEUP)
+> > +			 MATRIX_KEY(7, 8, KEY_VOLUMEDOWN)
+> > +			 >;
+> > +};
+> >=20
+> >=20
+> > --=20
+> > (english) http://www.livejournal.com/~pavelmachek
+> > (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses=
+/blog.html
+>=20
+>=20
+
 
 
 --=20
@@ -87,16 +82,20 @@ its not easy. We should have API docs...
 (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
 g.html
 
---mP3DRpeJDSE+ciuQ
+--zS7rBR6csb6tI2e1
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iEYEARECAAYFAlphETgACgkQMOfwapXb+vIdlgCgmALuEMnT/Z0QjMoTW0PROYpU
-cvsAoKjf0/vYF2UTD7vKwoJE1m/4b9Im
-=AJrt
+iEYEARECAAYFAlphGcQACgkQMOfwapXb+vLmFwCfQPDusoIGZ7kx83h9RXdprszs
+hQMAoKFR8TnZwJOgF2T1dGuaDLKjsAtp
+=QyHD
 -----END PGP SIGNATURE-----
 
---mP3DRpeJDSE+ciuQ--
+--zS7rBR6csb6tI2e1--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
