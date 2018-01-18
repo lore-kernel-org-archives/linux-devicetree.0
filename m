@@ -1,163 +1,143 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v5 2/2] dt-bindings: drm/bridge: Document Cadence DSI bridge bindings
-Date: Thu, 18 Jan 2018 14:43:09 +0100
-Message-ID: <20180118134309.13123-2-boris.brezillon@free-electrons.com>
-References: <20180118134309.13123-1-boris.brezillon@free-electrons.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180118134309.13123-1-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Cc: Richard Sproul <sproul-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Simon Hatliff <hatliff-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Suresh Punnoose <sureshp-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Alan Douglas <adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, "Menon, Nishanth" <nm-l0cyMroinI0@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [PATCH v5 3/5] misc serdev: Add w2sg0004 (gps receiver) power
+ control driver
+Date: Thu, 18 Jan 2018 14:43:03 +0100
+Message-ID: <8B2641B8-E86B-425C-9E79-E9C41E4E623C@goldelico.com>
+References: <cover.1512114576.git.hns@goldelico.com>
+ <5494ad34b39a6c62601e3747440268dfb3be7d5a.1512114576.git.hns@goldelico.com>
+ <20171222124427.GI3374@localhost>
+ <91850CC3-B280-4701-9D07-96AFF3A79A6F@goldelico.com>
+ <90F9A8E4-035A-4A9E-8AAB-757491D63E69@goldelico.com>
+ <20180112153903.GB5992@localhost>
+ <E7ECBBB8-2E88-4F04-AFC3-659332E84CF6@goldelico.com>
+ <20180118061314.GG3286@localhost>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180118061314.GG3286@localhost>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Johan Hovold <johan@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, Jonathan Cameron <jic23@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Tony Lindgren <tony@atomide.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Russell King <linux@armlinux.org.uk>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Thierry Reding <treding@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Kevin Hilman <khilman@baylibre.com>, =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, kernel@pyra-handheld.com, Andreas Kemnade <andreas@kemnade.info>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, =?utf-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Document the bindings used for the Cadence DSI bridge.
+Hi Johan,
 
-Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
-Changes in v5:
-- Add optional reset line for the peripheral/APB logic
+> Am 18.01.2018 um 07:13 schrieb Johan Hovold <johan@kernel.org>:
+> 
+> Hacks are never good, but sometimes needed. But we should try to keep
+> them contained in drivers rather than allow them to spread to core code,
+> was what I was trying to say above.
 
-Changes in v4:
-- Rename DSI clks (suggested by Tomi)
-- Drop the IP version in the compatible since it can be extracted from
-  a register (suggested by Andrzej)
+Well, aren't we talking here about a well isolated driver? And not about
+core code?
 
-Changes in v3:
-- Fix clock names in the example
-- Document how to represent DSI devices that are controller through
-  an external bus like I2C or SPI
+Core code already provides everything to build a driver for this chip
+to make us happy with.
 
-Changes in v2:
-- None
----
- .../bindings/display/bridge/cdns,dsi.txt           | 113 +++++++++++++++++++++
- 1 file changed, 113 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/bridge/cdns,dsi.txt
+It is just not yet providing a generic gps interface API to make everybody
+happy with.
 
-diff --git a/Documentation/devicetree/bindings/display/bridge/cdns,dsi.txt b/Documentation/devicetree/bindings/display/bridge/cdns,dsi.txt
-new file mode 100644
-index 000000000000..785141e302c7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/bridge/cdns,dsi.txt
-@@ -0,0 +1,113 @@
-+Cadence DSI bridge
-+==================
-+
-+The Cadence DSI bridge is a DPI to DSI bridge supporting up to 4 DSI lanes.
-+
-+Required properties:
-+- compatible: should be set to "cdns,dsi".
-+- reg: physical base address and length of the controller's registers.
-+- interrupts: interrupt line connected to the DSI bridge.
-+- clocks: DSI bridge clocks.
-+- clock-names: must contain "dsi_p_clk" and "dsi_sys_clk".
-+- phys: phandle link to the MIPI D-PHY controller.
-+- phy-names: must contain "dphy".
-+- #address-cells: must be set to 1.
-+- #size-cells: must be set to 0.
-+
-+Optional properties:
-+- resets: DSI reset lines.
-+- reset-names: can contain "dsi_p_rst".
-+
-+Required subnodes:
-+- ports: Ports as described in Documentation/devicetree/bindings/graph.txt.
-+  2 ports are available:
-+  * port 0: this port is only needed if some of your DSI devices are
-+	    controlled through  an external bus like I2C or SPI. Can have at
-+	    most 4 endpoints. The endpoint number is directly encoding the
-+	    DSI virtual channel used by this device.
-+  * port 1: represents the DPI input.
-+  Other ports will be added later to support the new kind of inputs.
-+
-+- one subnode per DSI device connected on the DSI bus. Each DSI device should
-+  contain a reg property encoding its virtual channel.
-+
-+Example:
-+
-+	dsi0: dsi@fd0c0000 {
-+		compatible = "cdns,dsi-1.3.1";
-+		reg = <0x0 0xfd0c0000 0x0 0x1000>;
-+		clocks = <&pclk>, <&sysclk>;
-+		clock-names = "dsi_p_clk", "dsi_sys_clk";
-+		interrupts = <1>;
-+		phys = <&dphy1>;
-+		phy-names = "dphy";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@1 {
-+				reg = <1>;
-+				dsi0_dpi_input: endpoint {
-+					remote-endpoint = <&xxx_dpi_output>;
-+				};
-+			};
-+		};
-+
-+		panel: dsi-dev@0 {
-+			compatible = "<vendor,panel>";
-+			reg = <0>;
-+		};
-+	};
-+
-+or
-+
-+	dsi0: dsi@fd0c0000 {
-+		compatible = "cdns,dsi";
-+		reg = <0x0 0xfd0c0000 0x0 0x1000>;
-+		clocks = <&pclk>, <&sysclk>;
-+		clock-names = "dsi_p_clk", "dsi_sys_clk";
-+		interrupts = <1>;
-+		phys = <&dphy1>;
-+		phy-names = "dphy";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				dsi0_output: endpoint@0 {
-+					reg = <0>;
-+					remote-endpoint = <&dsi_panel_input>;
-+				};
-+			};
-+
-+			port@1 {
-+				reg = <1>;
-+				dsi0_dpi_input: endpoint {
-+					remote-endpoint = <&xxx_dpi_output>;
-+				};
-+			};
-+		};
-+	};
-+
-+	i2c@xxx {
-+		panel: panel@59 {
-+			compatible = "<vendor,panel>";
-+			reg = <0x59>;
-+
-+			port {
-+				dsi_panel_input: endpoint {
-+					remote-endpoint = <&dsi0_output>;
-+				};
-+			};
-+		};
-+	};
--- 
-2.11.0
+>> That is what Andreas did remark as motivation: provide a solution
+>> for *existing* user spaces.
+> 
+> I understand that this is what you want, but that in itself is not a
+> sufficient reason to put something in the kernel.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Agreed, but it is a secondary (but still strong) motivation, not the primary one.
+
+> 
+>>>> - can not guarantee (!) to power off the chip if the last user-space
+>>>> process using it is killed (which is essential for power-management of
+>>>> a handheld, battery operated device)
+>>> 
+>>> That depends on how you implement things (extending gpsd, wrapper
+>>> script, pty daemon, ...).
+>> 
+>> No. You can of course cover all standard cases but there is one fundamental
+>> issue which is IMHO a problem of any user-space implementation:
+>> 
+>> 	How can you guarantee that the chip is powered off if no
+>> 	user-space process is using it or if the last process doing
+>> 	this is killed by *whatever* reason?
+>> 
+>> E.g. after a kill -9. Or if someone deinstalls gpsd or whatever and assumes
+>> (and wants a guarantee) that GPS is now turned off and never turned on drawing
+>> precious milliamps from the battery for no use.
+> 
+> Have something run at init to put the device in a low power state.
+
+This does *not* solve the issue how to *guarantee* that it becomes
+powered off if the number of user-space processes goes down to zero
+*after* init.
+
+Please consider that a portable device is rarely booted but might be
+operated over several days with many suspend cycles. And people may
+still expect that the power consumer "GPS" is turned off if their
+personal user-space setup simply kills gpsd.
+
+> 
+>> As it is well known, a user-space process can't protect itself against kill -9.
+>> Or has this recently been changed and I am not aware of?
+>> 
+>> This is the fundamental reason why we need a kernel driver to provide
+>> reliable, repeatable and trustable power management of this chip.
+>> 
+>> It is equally fundamental as a hard disk should spin down after the last
+>> file is closed. Even if this process ends by a kill -9.
+
+Please advise how we should solve this fundamental problem in user-space.
+
+>> 
+>> This seems to contradict your argument that user-space can very easily
+>> adapt to everything. If the latter were true there would be no need to
+>> keep old interfaces supported for a long time.
+> 
+> You probably know that we try hard never to change an interface that
+> would break user space, and that's why we need to get it right.
+
+Yes, I know and agree that it is very important (and difficult to achieve).
+
+But it seems that there are different opinions of what "right" is...
+
+You seem to focus on the "right" API only (where we agree that the "right"
+API does not exist and likely will never come or at least in the near future).
+
+But for us the whole combination of kernel + user-space must behave "right"
+(and use a function split that allows to optimally achieve this goal).
+
+> 
+>> So can you agree to that a battery powered portable device must have
+>> reliable and trustable power management? And if it provable can't be
+>> implemented in user-space (a single counter example suffices) it must
+>> be a kernel driver?
+> 
+> Having a kernel driver would make things easier for user space, sure,
+> but again, that's not a sufficient reason to merge just any kernel
+> implementation.
+
+It is not about "easier" for anyone. Neither for you nor for me. For us
+it would be much easier not to have to run this never-ending discussion
+over and over...
+
+It is about making it technically fully "reliable". And not 99% as per
+quick and dirty user-space hacks.
+
+It is so easy to invent scenarios in user-space to make the device practically
+unusable by unnoticed draining a full battery within less than a day when
+not perfectly turning off the chip power.
+
+So if a kernel driver can better protect users against this situation for
+a portable device with this chip, why shouldn't it do with a handful LOC?
+What requirement is more important than this?
+
+BR and thanks,
+Nikolaus
