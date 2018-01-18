@@ -1,31 +1,95 @@
-From: JeffyChen <jeffy.chen@rock-chips.com>
-Subject: Re: [PATCH v4 08/13] iommu/rockchip: Control clocks needed to access
- the IOMMU
-Date: Thu, 18 Jan 2018 22:25:05 +0800
-Message-ID: <5A60AE41.2050101@rock-chips.com>
-References: <20180118115251.5542-1-jeffy.chen@rock-chips.com> <20180118115251.5542-9-jeffy.chen@rock-chips.com> <c188e6a9-744c-d984-545c-408607f35cc9@arm.com>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH 1/1] ARM: dts: sunxi: Add Olimex A20-SOM204-EVB board
+Date: Thu, 18 Jan 2018 22:28:49 +0800
+Message-ID: <CAGb2v66U9ziFhU5n6haTA3LGNX7BavmfXiiCmvebtqaMxcN0-w@mail.gmail.com>
+References: <1515747666-6597-1-git-send-email-stefan@olimex.com>
+ <20180115095031.pzsgrp3tdmemotrs@flea.lan> <1b9667a4-75de-4ece-069d-7ec33b7e2f8d@olimex.com>
+ <20180118100745.y62adzvfnrzqkagd@flea.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <c188e6a9-744c-d984-545c-408607f35cc9@arm.com>
+In-Reply-To: <20180118100745.y62adzvfnrzqkagd@flea.lan>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Robin Murphy <robin.murphy@arm.com>, linux-kernel@vger.kernel.org, tfiga@chromium.org
-Cc: jcliang@chromium.org, xxm@rock-chips.com, devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, iommu@lists.linux-foundation.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Joerg Roedel <joro@8bytes.org>, linux-arm-kernel@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Stefan Mavrodiev <stefan@olimex.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Robin,
-
-On 01/18/2018 08:27 PM, Robin Murphy wrote:
+On Thu, Jan 18, 2018 at 6:07 PM, Maxime Ripard
+<maxime.ripard@free-electrons.com> wrote:
+> Hi!
+>
+> On Mon, Jan 15, 2018 at 12:07:34PM +0200, Stefan Mavrodiev wrote:
+>> > > +/dts-v1/;
+>> > > +#include "sun7i-a20.dtsi"
+>> > > +#include "sunxi-common-regulators.dtsi"
+>> > > +
+>> > > +
+>> > > +#include <dt-bindings/gpio/gpio.h>
+>> > > +#include <dt-bindings/interrupt-controller/irq.h>
+>> > > +#include <dt-bindings/pwm/pwm.h>
+>> > > +
+>> > > +/ {
+>> > > + model = "Olimex A20-SOM204-EVB";
+>> > > + compatible = "olimex,a20-olimex-som204-evb", "allwinner,sun7i-a20";
+>> > > +
+>> > > + aliases {
+>> > > +         serial0 = &uart0;
+>> > > +         serial1 = &uart4;
+>> > > +         serial2 = &uart7;
+>> > > +         spi0 = &spi1;
+>> > > +         spi1 = &spi2;
+>> > > +         ethernet1 = &rtl8723bs;
+>> >
+>> > ethernet1? if there's a single network interface, it should be
+>> > ethernet0.
 >>
+>> I think this will conflict the gmac alias defined in sun7i-a20.dtsi:
+>>
+>> aliases {
+>>     ethernet0 = &gmac;
+>> };
 >
-> Is it worth using the clk_bulk_*() APIs for this? At a glance, most of
-> the code being added here appears to duplicate what those functions
-> already do (but I'm no clk API expert, for sure).
-right, i think it's doable, the clk_bulk APIs are very helpful. i think 
-we didn't use that is because this patch were wrote for the chromeos 4.4 
-kernel, which doesn't have clk_bulk yet:)
+> We have that? That's bad, but you're right :)
+>
+>> > > +         stat {
+>> > > +                 label = "a20-som204:green:stat";
+>> > > +                 gpios = <&pio 8 0 GPIO_ACTIVE_HIGH>;
+>> > > +                 default-state = "on";
+>> > > +         };
+>> > > +
+>> > > +         led1 {
+>> > > +                 label = "a20-som204-evb:green:led1";
+>> > > +                 gpios = <&pio 8 10 GPIO_ACTIVE_HIGH>;
+>> > > +                 default-state = "on";
+>> > > +         };
+>> > > +
+>> > > +         led2 {
+>> > > +                 label = "a20-som204-evb:yellow:led2";
+>> > > +                 gpios = <&pio 8 11 GPIO_ACTIVE_HIGH>;
+>> > > +                 default-state = "on";
+>> > > +         };
+>> >
+>> > You don't have the same prefix between stat and led1/led2. I'm fine
+>> > with both, but you should be consistent :)
+>>
+>> STAT led is on the SOM204 module, while led1/2 on the EVB. Thats why
+>> they have different prefix.
+>
+> Still, the user and the system will see it as a single board, and the
+> documentation states that it should be the board name. I'm not quite
+> sure what a good rule would be here. Have you looked at how other
+> boards dealt with it? Chen-Yu, any opinion on this?
 
-will do it in the next version, thanks.
->
-> Robin.
+Follow the bindings, I guess? I don't think we (sunxi) have dealt
+with modules that have LEDs or anything that needs to be named after
+the board.
+
+On a related topic, I don't know if you (Stefan / Olimex) want to split
+this into a .dtsi file for the SoM, and a .dts file for the EVB. It might
+help your customers? I've tried it previously, and it helps in some ways
+when you're matching the files to the schematics. But it is confusing
+when you want the big picture. On the other hand, this is not going to
+help with supporting different modules on the same baseboard, as the
+routing, peripherals and labels likely won't match up. Just my two cents.
+
+ChenYu
