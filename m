@@ -1,41 +1,46 @@
-From: Ludovic Desroches <ludovic.desroches@microchip.com>
-Subject: [PATCH] ARM: dts: at91: sama5d4: fix pinctrl compatible string
-Date: Thu, 18 Jan 2018 15:38:47 +0100
-Message-ID: <20180118143847.15309-1-ludovic.desroches@microchip.com>
+From: <gabriel.fernandez@st.com>
+Subject: [PATCH 1/2] clk: stm32: END_PRIMARY_CLK should be declare after CLK_SYSCLK
+Date: Thu, 18 Jan 2018 15:49:39 +0100
+Message-ID: <1516286980-8603-2-git-send-email-gabriel.fernandez@st.com>
+References: <1516286980-8603-1-git-send-email-gabriel.fernandez@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc: nicolas.ferre@microchip.com, alexandre.belloni@free-electrons.com, linux-kernel@vger.kernel.org, Santiago Esteban <Santiago.Esteban@microchip.com>, Ludovic Desroches <ludovic.desroches@microchip.com>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1516286980-8603-1-git-send-email-gabriel.fernandez@st.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Nicolas Pitre <nico@linaro.org>, daniel.thompson@linaro.org, philippe.cornu@st.com
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, gabriel.fernandez.st@gmail.com, gabriel.fernandez@st.com
 List-Id: devicetree@vger.kernel.org
 
-From: Santiago Esteban <Santiago.Esteban@microchip.com>
+From: Gabriel Fernandez <gabriel.fernandez@st.com>
 
-The compatible string is incorrect. Add atmel,sama5d3-pinctrl since
-it's the appropriate compatible string. Remove the
-atmel,at91rm9200-pinctrl compatible string, this fallback is
-useless, there are too many changes.
+Update of END_PRIMARY_CLK was missed, it should be after CLK_SYSCLK
+hsi and sysclk are overwritten by gpioa and gpiob.
 
-Signed-off-by: Santiago Esteban <Santiago.Esteban@microchip.com>
-Signed-off-by: Ludovic Desroches <ludovic.desroches@microchip.com>
-Cc: stable@vger.kernel.org #v3.18
+Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
 ---
- arch/arm/boot/dts/sama5d4.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/dt-bindings/clock/stm32fx-clock.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sama5d4.dtsi b/arch/arm/boot/dts/sama5d4.dtsi
-index 373b3621b536..c7105096c623 100644
---- a/arch/arm/boot/dts/sama5d4.dtsi
-+++ b/arch/arm/boot/dts/sama5d4.dtsi
-@@ -1379,7 +1379,7 @@
- 			pinctrl@fc06a000 {
- 				#address-cells = <1>;
- 				#size-cells = <1>;
--				compatible = "atmel,at91sam9x5-pinctrl", "atmel,at91rm9200-pinctrl", "simple-bus";
-+				compatible = "atmel,sama5d3-pinctrl", "atmel,at91sam9x5-pinctrl", "simple-bus";
- 				ranges = <0xfc068000 0xfc068000 0x100
- 					  0xfc06a000 0xfc06a000 0x4000>;
- 				/* WARNING: revisit as pin spec has changed */
+diff --git a/include/dt-bindings/clock/stm32fx-clock.h b/include/dt-bindings/clock/stm32fx-clock.h
+index 49bb3c2..4d523b0 100644
+--- a/include/dt-bindings/clock/stm32fx-clock.h
++++ b/include/dt-bindings/clock/stm32fx-clock.h
+@@ -33,11 +33,11 @@
+ #define CLK_SAI2		11
+ #define CLK_I2SQ_PDIV		12
+ #define CLK_SAIQ_PDIV		13
+-
+-#define END_PRIMARY_CLK		14
+-
+ #define CLK_HSI			14
+ #define CLK_SYSCLK		15
++
++#define END_PRIMARY_CLK		16
++
+ #define CLK_HDMI_CEC		16
+ #define CLK_SPDIF		17
+ #define CLK_USART1		18
 -- 
-2.12.2
+1.9.1
+
