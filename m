@@ -1,58 +1,94 @@
 From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] kbuild: fix W= option checks for extra DTC warnings
-Date: Thu, 18 Jan 2018 10:25:54 +0100
-Message-ID: <CAK8P3a04vu=C4Aop1WpT7KnB_yP2J1wK5oJv9QiubiSxr0-ykw@mail.gmail.com>
-References: <1516246306-12851-1-git-send-email-yamada.masahiro@socionext.com>
+Subject: Re: [PATCH v6 00/36] Andes(nds32) Linux Kernel Port
+Date: Thu, 18 Jan 2018 10:49:48 +0100
+Message-ID: <CAK8P3a2y3vtmtPLTsty6VEvK5oWG0yhfrXCea+vY9HqJQot8pA@mail.gmail.com>
+References: <cover.1515766253.git.green.hu@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kbuild-owner@vger.kernel.org>
-In-Reply-To: <1516246306-12851-1-git-send-email-yamada.masahiro@socionext.com>
-Sender: linux-kbuild-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, DTML <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>, Sam Ravnborg <sam@ravnborg.org>, Michal Marek <michal.lkml@markovi.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1515766253.git.green.hu@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Greentime Hu <green.hu@gmail.com>
+Cc: Greentime <greentime@andestech.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Networking <netdev@vger.kernel.org>, Vincent Chen <deanbo422@gmail.com>, DTML <devicetree@vger.kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, David Howells <dhowells@redhat.com>, Will Deacon <will.deacon@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-serial@vger.kernel.org, Geert Uytterhoeven <geert.uytterhoeven@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Greg KH <greg@kroah.com>, Guo Ren <ren_guo@c-sky.co>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 18, 2018 at 4:31 AM, Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
-> Kbuild supports 3 levels of extra warnings, and multiple levels can
-> be combined, like W=12, W=123.  It was added by commit a6de553da01c
-> ("kbuild: Allow to combine multiple W= levels").
+On Mon, Jan 15, 2018 at 6:53 AM, Greentime Hu <green.hu@gmail.com> wrote:
+> This is the 6th version patchset to add the Linux kernel port for Andes(nds32)
+> processors. Almost all of the feedbacks from v5 patchseries has been addressed.
+> Thanks to everyone who provided feedback on the previous version.
 >
-> From the log of commit 8654cb8d0371 ("dtc: update warning settings
-> for new bus and node/property name checks"), I assume:
 >
->  - unit_address_vs_reg, simple_bus_reg, etc. belong to level 1
->  - node_name_chars_strict, property_name_chars_strict belong to level 2
+> This patchset adds core architecture support to Linux for Andestech's
+> N13, N15, D15, N10, D10 processor cores.
 >
-> However, the level 1 warnings are displayed by any argument to W=.
-> On the other hand, the level 2 warnings are displayed by W=2, but
-> not by W=12, or W=123.
+> Based on the 16/32-bit AndeStar RISC-like architecture, we designed the
+> configurable AndesCore series of embedded processor families. AndesCores
+> range from highly performance-efficient small-footprint cores for
+> microcontrollers and deeply-embedded applications to 1GHz+ cores running
+> Linux, covering general-purpose N-series cores for a wide range of computing
+> need, DSP-capable D-series cores for digital signal control,
+> instruction-extensible E-series cores for application-specific acceleration,
+> and secure S-series cores for best protection of the most valuable.
 >
-> Use $(findstring ...) like scripts/Makefile.extrawarn.
+> The patches are based on v4.14-rc8, and can also be found in the
+> following git tree:
+>   https://github.com/andestech/linux.git nds32-4.14-rc8-v6
 >
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> The build script and toolchain repositories are able to be found here:
+>   https://github.com/andestech/build_script.git
+>
+> Freely available instruction set and architecture overview documents can
+> be found on the following page:
+>   http://www.andestech.com/product.php?cls=9
+>
+>
+> Vincent Ren-Wei Chen and I will maintain this port. Thanks to everyone who
+> helped us and contributed to it. :) Any feedback is welcome.
 
-Good catch!
+Hi Greentime,
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+I think it's time to move this to the next step towards inclusion, as you appear
+to have addressed all major issues, and only smaller details remain.
 
-> Side Notes for possible additional works:
->
->  [1] I implemented DTC extra warnings differently in U-Boot:
->
->     https://github.com/u-boot/u-boot/blob/v2018.01/scripts/Makefile.extrawarn#L64
->
->     Better to collect extra warning stuff into scripts/Makefile.extrawarn ?
->
->  [2] KBUILD_ENABLE_EXTRA_GCC_CHECKS is getting a historical misnomer
->      because we use it for Clang and DTC too.
->
->      Better to rename?  (keeping backward-compatibility for a while)?
+This is what I'd suggest for moving forward:
 
-I'd suggest we leave it for now, I still plan to eventually do my
-large rework of
-the way we handle extra warning levels, likely that will result in
-Makefile.extrawarn
-being completely replaced.
+- split the patches into two branches in git: one 'next' branch for
+everything that
+  is ready to get merged in one pull request that you send to Linus, including
+  drivers that you have received an Ack for from the respective subsystem
+  maintainers, and one 'testing' branch for anything that is either
+not quite ready
+  or that you expect to get merged through someone else's tree (e.g.
+  most device drivers). The 'testing' branch can merge in the 'next' branch
+  or get rebased on it frequently.
 
-       Arnd
+- Ask reviewers to send 'Acked-by' or 'Reviewed-by' tags for the patches they
+  are happy with, or to complain if they still see any major issues that
+  should prevent the series from going in. I'll go through the submission once
+  more myself and Ack any patches that I have actually reviewed.
+
+- Decide what base to use for the 'next' branch, rebase it on that release one
+  more time and then plan to never rebase it again. This will be the branch
+  to send to linux-next and to Linus Torvalds. Given the current timing of the
+  merge window, I would suggest to base it on top of v4.16-rc1 once that
+  gets released, and then send it for inclusion in 4.17. Any changes you do
+  in the meantime would be added on top of the original set.
+
+- Ask Stephen Rothwell to include your 'next' branch in linux-next.
+  (if you base on 4.16-rc1, wait until that is out).
+
+- Submit any remaining driver patches that you do not have an 'Ack' for to
+  the respective subsystem maintainers for inclusion in their trees.
+
+- Upload a gpg key (4096 bits) for your greentime@andestech.com address
+  to the keyservers, and arrange to have that signed by other kernel
+  developers. You will need to sign git tags for pull requests with your
+  key, and the key itself should be signed for this to work best.
+
+- Once you have at least three signatures on your gpg key, apply for
+  an account on kernel.org and move your git tree there,
+  see https://www.kernel.org/category/faq.html. Alternatively,
+  host the git tree on a web-facing git server from andestech.com
+  (github works initially, but has a couple of shortcomings).
+
+         Arnd
