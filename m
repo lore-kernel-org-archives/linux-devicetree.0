@@ -1,7 +1,7 @@
 From: houlong wei <houlong.wei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v20 2/4] mailbox: mediatek: Add Mediatek CMDQ driver
-Date: Thu, 18 Jan 2018 11:42:54 +0800
-Message-ID: <1516246974.13759.13.camel@mhfsdcap03>
+Subject: Re: FW: [PATCH v20 2/4] mailbox: mediatek: Add Mediatek CMDQ driver
+Date: Thu, 18 Jan 2018 12:30:20 +0800
+Message-ID: <1516249820.13759.18.camel@mhfsdcap03>
 References: <1483499169-16329-1-git-send-email-hs.liao@mediatek.com>
          <1483499169-16329-3-git-send-email-hs.liao@mediatek.com>
          <CABb+yY23TUB8NpmpiO=cCmVFAVJMqKPfGgX14j+_Yj7tJvMOuQ@mail.gmail.com>
@@ -21,8 +21,12 @@ Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1515400735.21044.35.camel@mhfsdcap03>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "; Matthias Brugger" <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "; Daniel Kurtz" <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "; Sascha Hauer" <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "; Devicetree List" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "; Linux Kernel Mailing List" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "; Sascha Hauer" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "; Philipp Zabel" <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "; Nicolas Boichat" <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Cawa Cheng <cawa.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Bibby Hsieh <Bibby.Hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, YT Shen <Yt.Shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Daoyuan Huang <Daoyuan.Huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Damon Chu <Damon.Chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Josh-YC Liu <Josh-YC.Liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Glory Hung <glory.hung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "; Matthias Brugger" <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "; Daniel Kurtz" <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "; Sascha Hauer" <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "; Devicetree List" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "; Linux Kernel Mailing List" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org;
+        linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; srv_heupstream" <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "; Sascha Hauer" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "; Philipp Zabel" <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "; Nicolas Boichat" <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "; CK Hu =?UTF-8?Q?=28=E8=83=A1=E4=BF=8A=E5=85=89=29?=" <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "; Cawa Cheng =?UTF-8?Q?=28=E9=84=AD=E6=9B=84=E7=A6=A7=29?=" <cawa.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, ; Bibby Hsieh =?UTF-8?Q?=28=E8=AC=9D=E6=BF=9F=E9=81=A0=29?=
 List-Id: devicetree@vger.kernel.org
+
+Sorry to send the mail again because I missed some mail lists by
+mistake.
 
 Hi Jassi,
 
@@ -58,13 +62,13 @@ On Mon, 2018-01-08 at 16:38 +0800, houlong wei wrote:
 > 
 > 
 > > -----Original Message-----
-> > From: Horng-Shyang Liao [mailto:hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org]
+> > From: Horng-Shyang Liao [mailto:hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org] 
 > > Sent: Thursday, February 23, 2017 8:48 PM
 > > To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > > Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>; Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>; Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>; Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>; Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>; Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>; Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>; Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>; Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>; CK Hu (胡俊光) <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>; Cawa Cheng (鄭曄禧) <cawa.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>; Bibby Hsieh (謝濟遠) <Bibby.Hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>; YT Shen (沈岳霆) <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>; Daoyuan Huang (黃道原) <Daoyuan.Huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>; Damon Chu (朱峻賢) <damon.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>; Josh-Y
  C Liu (劉育誠) <Josh-YC.Liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>; Glory Hung (洪智瑋) <glory.hung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>; Jiaguang Zhang (张加广) <Jiaguang.Zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>; Dennis-YC Hsieh (謝宇哲) <Dennis-YC.Hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>; Monica Wang (王孟婷) <monica.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>; Houlong Wei (魏厚龙) <houlong.wei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>; Hs Liao (廖宏祥) <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 > > Subject: Re: [PATCH v20 2/4] mailbox: mediatek: Add Mediatek CMDQ driver
-> >
+> > 
 > > On Thu, 2017-02-23 at 09:40 +0530, Jassi Brar wrote:
 > > > On Wed, Feb 22, 2017 at 8:42 AM, Horng-Shyang Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
 > > > > On Thu, 2017-02-16 at 21:02 +0530, Jassi Brar wrote:
@@ -78,7 +82,7 @@ On Mon, 2018-01-08 at 16:38 +0800, houlong wei wrote:
 > > > >> >> > On Thu, 2017-01-26 at 10:08 +0530, Jassi Brar wrote:
 > > > >> >> >> On Wed, Jan 4, 2017 at 8:36 AM, HS Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
 > > > >> >> >>
-> > > >> >> >> > diff --git a/drivers/mailbox/mtk-cmdq-mailbox.c
+> > > >> >> >> > diff --git a/drivers/mailbox/mtk-cmdq-mailbox.c 
 > > > >> >> >> > b/drivers/mailbox/mtk-cmdq-mailbox.c
 > > > >> >> >> > new file mode 100644
 > > > >> >> >> > index 0000000..747bcd3
@@ -87,7 +91,7 @@ On Mon, 2018-01-08 at 16:38 +0800, houlong wei wrote:
 > > > >> >> >>
 > > > >> >> >> ...
 > > > >> >> >>
-> > > >> >> >> > +static void cmdq_task_exec(struct cmdq_pkt *pkt, struct
+> > > >> >> >> > +static void cmdq_task_exec(struct cmdq_pkt *pkt, struct 
 > > > >> >> >> > +cmdq_thread *thread) {
 > > > >> >> >> > +       struct cmdq *cmdq;
 > > > >> >> >> > +       struct cmdq_task *task;
@@ -102,12 +106,12 @@ On Mon, 2018-01-08 at 16:38 +0800, houlong wei wrote:
 > > > >> >> >> > +       task->cmdq = cmdq;
 > > > >> >> >> > +       INIT_LIST_HEAD(&task->list_entry);
 > > > >> >> >> > +       task->pa_base = dma_map_single(cmdq->mbox.dev, pkt->va_base,
-> > > >> >> >> > +                                      pkt->cmd_buf_size,
+> > > >> >> >> > +                                      pkt->cmd_buf_size, 
 > > > >> >> >> > + DMA_TO_DEVICE);
 > > > >> >> >> >
-> > > >> >> >> You seem to parse the requests and responses, that should
+> > > >> >> >> You seem to parse the requests and responses, that should 
 > > > >> >> >> ideally be done in client driver.
-> > > >> >> >> Also, we are here in atomic context, can you move it in
+> > > >> >> >> Also, we are here in atomic context, can you move it in 
 > > > >> >> >> client driver (before the spin_lock)?
 > > > >> >> >> Maybe by adding a new 'pa_base' member as well in 'cmdq_pkt'.
 > > > >> >> >
@@ -115,11 +119,11 @@ On Mon, 2018-01-08 at 16:38 +0800, houlong wei wrote:
 > > > >> >
 > > > >> > I agree with moving dma_map_single out from spin_lock.
 > > > >> >
-> > > >> > However, mailbox clients cannot map virtual memory to mailbox
+> > > >> > However, mailbox clients cannot map virtual memory to mailbox 
 > > > >> > controller's device for DMA.
 > > > >> >
-> > > >> If DMA is a resource used by MBox to transfer data, then yes the
-> > > >> mapping needs to be done in the Mbox controller driver. To map
+> > > >> If DMA is a resource used by MBox to transfer data, then yes the 
+> > > >> mapping needs to be done in the Mbox controller driver. To map 
 > > > >> memory outside of spinlock, you could schedule a tasklet in send_data() ?
 > > > >
 > > > > Hi Jassi,
@@ -129,24 +133,23 @@ On Mon, 2018-01-08 at 16:38 +0800, houlong wei wrote:
 > > > >
 > > > > Quote from Linux Device Drivers 3rd edition ch7.
 > > > > "void tasklet_schedule(struct tasklet_struct *t);
-> > > >   Schedule the tasklet for execution. If a tasklet is scheduled
+> > > >   Schedule the tasklet for execution. If a tasklet is scheduled 
 > > > > again before it has a chance to run, it runs only once...."
 > > > >
 > > > Not sure what bothers you.
-> > > If you only add requests to a list, protected by some spinlock, during
-> > > send_datam you could always iterate over (submit) requests in the
+> > > If you only add requests to a list, protected by some spinlock, during 
+> > > send_datam you could always iterate over (submit) requests in the 
 > > > order you queued them.
-> >
+> > 
 > > Hi Jassi,
-> >
+> > 
 > > OK. I will do it.
-> >
+> > 
 > > Thanks,
 > > HS
-> >
-> >
-> >
-> 
+> > 
+> > 
+> > 
 > 
 
 
