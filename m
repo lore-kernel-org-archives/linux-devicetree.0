@@ -1,73 +1,44 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: [PATCH v2 2/3] ARM: dts: at91: nattis: add lvds-encoder
-Date: Thu, 18 Jan 2018 12:46:15 +0100
-Message-ID: <20180118114616.6639-3-peda@axentia.se>
-References: <20180118114616.6639-1-peda@axentia.se>
+From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Subject: [PATCH v2 0/3] Device tree fixes for Axentia TSE-850 and Nattis
+Date: Thu, 18 Jan 2018 12:46:13 +0100
+Message-ID: <20180118114616.6639-1-peda@axentia.se>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180118114616.6639-1-peda@axentia.se>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Peter Rosin <peda@axentia.se>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The lvds encoder chip was omitted by oversight. Add it.
+Hi!
 
-Fixes: 0e4323899973 ("ARM: dts: at91: add devicetree for the Axentia Nattis with Natte power")
-Signed-off-by: Peter Rosin <peda@axentia.se>
----
- arch/arm/boot/dts/at91-nattis-2-natte-2.dts | 31 ++++++++++++++++++++++++++---
- 1 file changed, 28 insertions(+), 3 deletions(-)
+Here's a series that is of the "documentation" kind. It fixes things
+that don't really need fixing, but the fixes are correct none-the-less
+and should prevent possible confusion.
 
-diff --git a/arch/arm/boot/dts/at91-nattis-2-natte-2.dts b/arch/arm/boot/dts/at91-nattis-2-natte-2.dts
-index 03683c1b4240..7cedd3ddf0bd 100644
---- a/arch/arm/boot/dts/at91-nattis-2-natte-2.dts
-+++ b/arch/arm/boot/dts/at91-nattis-2-natte-2.dts
-@@ -109,7 +109,32 @@
- 
- 		port {
- 			panel_input: endpoint {
--				remote-endpoint = <&hlcdc_panel_output>;
-+				remote-endpoint = <&lvds_encoder_output>;
-+			};
-+		};
-+	};
-+
-+	lvds-encoder {
-+		compatible = "lvds-encoder";
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+
-+				lvds_encoder_input: endpoint {
-+					remote-endpoint = <&hlcdc_output>;
-+				};
-+			};
-+
-+			port@1 {
-+				reg = <1>;
-+
-+				lvds_encoder_output: endpoint {
-+					remote-endpoint = <&panel_input>;
-+				};
- 			};
- 		};
- 	};
-@@ -176,8 +201,8 @@
- 			     &pinctrl_lcd_hipow0>;
- 
- 		port@0 {
--			hlcdc_panel_output: endpoint {
--				remote-endpoint = <&panel_input>;
-+			hlcdc_output: endpoint {
-+				remote-endpoint = <&lvds_encoder_input>;
- 			};
- 		};
- 	};
+Changes since v1:
+
+- One more fix added to patch 1/3. The size of the rootfs partition
+  should be 504MB, as the flash is 512MB total.
+
+Sorry for the noise.
+
+Cheers,
+Peter
+
+Peter Rosin (3):
+  ARM: dts: at91: nattis: use up-to-date mtd partitions
+  ARM: dts: at91: nattis: add lvds-encoder
+  ARM: dts: at91: tse850: make the sound dai cell count explicit
+
+ arch/arm/boot/dts/at91-nattis-2-natte-2.dts | 58 ++++++++++++++++++++++-------
+ arch/arm/boot/dts/at91-tse850-3.dts         |  1 +
+ 2 files changed, 45 insertions(+), 14 deletions(-)
+
 -- 
 2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
