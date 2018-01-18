@@ -1,157 +1,149 @@
-From: houlong wei <houlong.wei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: FW: [PATCH v20 2/4] mailbox: mediatek: Add Mediatek CMDQ driver
-Date: Thu, 18 Jan 2018 12:30:20 +0800
-Message-ID: <1516249820.13759.18.camel@mhfsdcap03>
-References: <1483499169-16329-1-git-send-email-hs.liao@mediatek.com>
-         <1483499169-16329-3-git-send-email-hs.liao@mediatek.com>
-         <CABb+yY23TUB8NpmpiO=cCmVFAVJMqKPfGgX14j+_Yj7tJvMOuQ@mail.gmail.com>
-         <1485419833.990.1.camel@mtksdaap41>
-         <CABb+yY13VaFpYz6EExvAXLpAqEWDJ4R50WG0DYbXO6iCESbA5A@mail.gmail.com>
-         <1486359476.11424.33.camel@mtksdaap41>
-         <CABb+yY0jCGqnrMLkkTNoEmLX4jDstWh7-UYhDyKjV-gFOnxpsg@mail.gmail.com>
-         <1487733150.15869.11.camel@mtksdaap41>
-         <CABb+yY2dzcR4fYvrSQK5jemwUSkYVJ8aWEmiE6wstw-Yyqy7bw@mail.gmail.com>
-         <1487854104.17813.1.camel@mtksdaap41>
-         <497f8e4ef7ae4c8a9b7b4ab259801306@mtkmbs01n1.mediatek.inc>
-         <1515400735.21044.35.camel@mhfsdcap03>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+From: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [RFC v2 1/2] dt-bindings: mipi-dsi: Add info about peripherals with non-DSI control bus
+Date: Thu, 18 Jan 2018 10:23:54 +0530
+Message-ID: <20180118045355.8858-2-architt@codeaurora.org>
+References: <20171205103356.9917-1-architt@codeaurora.org>
+ <20180118045355.8858-1-architt@codeaurora.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1515400735.21044.35.camel@mhfsdcap03>
+In-Reply-To: <20180118045355.8858-1-architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "; Matthias Brugger" <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "; Daniel Kurtz" <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "; Sascha Hauer" <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "; Devicetree List" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "; Linux Kernel Mailing List" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org;
-        linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; srv_heupstream" <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "; Sascha Hauer" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "; Philipp Zabel" <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "; Nicolas Boichat" <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "; CK Hu =?UTF-8?Q?=28=E8=83=A1=E4=BF=8A=E5=85=89=29?=" <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "; Cawa Cheng =?UTF-8?Q?=28=E9=84=AD=E6=9B=84=E7=A6=A7=29?=" <cawa.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, ; Bibby Hsieh =?UTF-8?Q?=28=E8=AC=9D=E6=BF=9F=E9=81=A0=29?=
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: tomi.valkeinen-l0cyMroinI0@public.gmane.org, eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org, philippe.cornu-qxv4g6HH51o@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nickey.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Sorry to send the mail again because I missed some mail lists by
-mistake.
+Add a section that describes dt-bindings for peripherals that support
+MIPI DSI, but have a different bus as the primary control bus, or no
+control bus at all. Add an example for a peripheral with a non-DSI
+control bus.
 
-Hi Jassi,
+Signed-off-by: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+---
+v2:
+- Mentioned what to do if peripheral has no control bus
+- Drop unit-address and #*-cells where applicable.
 
-We prefer to use method (1) to move dma_map_single() outside of
-spin_lock. Do you have any comment about this?
+ .../devicetree/bindings/display/mipi-dsi-bus.txt   | 71 +++++++++++++++++++---
+ 1 file changed, 64 insertions(+), 7 deletions(-)
 
-Thanks,
-Houlong
-
-On Mon, 2018-01-08 at 16:38 +0800, houlong wei wrote:
-> Hi Jassi,
-> 
-> Sorry for reply so late.
-> According to previous discussion, there are two methods to move
-> dma_map_single() outside of spin_lock.
-> (1) put in mtk-cmdq-helper.c, as described by HS on 2017-02-09.
->   > I think a trade-off solution is to put in mtk-cmdq-helper.c.
->   > Although it is a mailbox client, it is not a CMDQ client.
->   > We can include mailbox_controller.h in mtk-cmdq-helper.c (instead of
-> mtk-cmdq.h), and then map dma at cmdq_pkt_flush_async before
-> mbox_send_message.
-> 
->   > pkt->pa_base = dma_map_single(client->chan->mbox->dev, pkt->va_base,
->   >                              pkt->cmd_buf_size, DMA_TO_DEVICE);
-> (2) schedule a tasklet in send_data().
-> 
-> After internal discussion with HS and other experts, now we prefer
-> method (1).
-> How do you think about it?
-> 
-> Thanks
-> Houlong
-> 
-> 
-> > -----Original Message-----
-> > From: Horng-Shyang Liao [mailto:hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org] 
-> > Sent: Thursday, February 23, 2017 8:48 PM
-> > To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>; Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>; Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>; Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>; Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>; Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>; Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>; Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>; Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>; CK Hu (胡俊光) <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>; Cawa Cheng (鄭曄禧) <cawa.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>; Bibby Hsieh (謝濟遠) <Bibby.Hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>; YT Shen (沈岳霆) <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>; Daoyuan Huang (黃道原) <Daoyuan.Huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>; Damon Chu (朱峻賢) <damon.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>; Josh-Y
- C Liu (劉育誠) <Josh-YC.Liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>; Glory Hung (洪智瑋) <glory.hung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>; Jiaguang Zhang (张加广) <Jiaguang.Zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>; Dennis-YC Hsieh (謝宇哲) <Dennis-YC.Hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>; Monica Wang (王孟婷) <monica.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>; Houlong Wei (魏厚龙) <houlong.wei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>; Hs Liao (廖宏祥) <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > Subject: Re: [PATCH v20 2/4] mailbox: mediatek: Add Mediatek CMDQ driver
-> > 
-> > On Thu, 2017-02-23 at 09:40 +0530, Jassi Brar wrote:
-> > > On Wed, Feb 22, 2017 at 8:42 AM, Horng-Shyang Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> > > > On Thu, 2017-02-16 at 21:02 +0530, Jassi Brar wrote:
-> > > >> On Mon, Feb 6, 2017 at 11:07 AM, Horng-Shyang Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> > > >> > Hi Jassi,
-> > > >> >
-> > > >> > On Wed, 2017-02-01 at 10:52 +0530, Jassi Brar wrote:
-> > > >> >> On Thu, Jan 26, 2017 at 2:07 PM, Horng-Shyang Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> > > >> >> > Hi Jassi,
-> > > >> >> >
-> > > >> >> > On Thu, 2017-01-26 at 10:08 +0530, Jassi Brar wrote:
-> > > >> >> >> On Wed, Jan 4, 2017 at 8:36 AM, HS Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> > > >> >> >>
-> > > >> >> >> > diff --git a/drivers/mailbox/mtk-cmdq-mailbox.c 
-> > > >> >> >> > b/drivers/mailbox/mtk-cmdq-mailbox.c
-> > > >> >> >> > new file mode 100644
-> > > >> >> >> > index 0000000..747bcd3
-> > > >> >> >> > --- /dev/null
-> > > >> >> >> > +++ b/drivers/mailbox/mtk-cmdq-mailbox.c
-> > > >> >> >>
-> > > >> >> >> ...
-> > > >> >> >>
-> > > >> >> >> > +static void cmdq_task_exec(struct cmdq_pkt *pkt, struct 
-> > > >> >> >> > +cmdq_thread *thread) {
-> > > >> >> >> > +       struct cmdq *cmdq;
-> > > >> >> >> > +       struct cmdq_task *task;
-> > > >> >> >> > +       unsigned long curr_pa, end_pa;
-> > > >> >> >> > +
-> > > >> >> >> > +       cmdq = dev_get_drvdata(thread->chan->mbox->dev);
-> > > >> >> >> > +
-> > > >> >> >> > +       /* Client should not flush new tasks if suspended. */
-> > > >> >> >> > +       WARN_ON(cmdq->suspended);
-> > > >> >> >> > +
-> > > >> >> >> > +       task = kzalloc(sizeof(*task), GFP_ATOMIC);
-> > > >> >> >> > +       task->cmdq = cmdq;
-> > > >> >> >> > +       INIT_LIST_HEAD(&task->list_entry);
-> > > >> >> >> > +       task->pa_base = dma_map_single(cmdq->mbox.dev, pkt->va_base,
-> > > >> >> >> > +                                      pkt->cmd_buf_size, 
-> > > >> >> >> > + DMA_TO_DEVICE);
-> > > >> >> >> >
-> > > >> >> >> You seem to parse the requests and responses, that should 
-> > > >> >> >> ideally be done in client driver.
-> > > >> >> >> Also, we are here in atomic context, can you move it in 
-> > > >> >> >> client driver (before the spin_lock)?
-> > > >> >> >> Maybe by adding a new 'pa_base' member as well in 'cmdq_pkt'.
-> > > >> >> >
-> > > >> >> > will do
-> > > >> >
-> > > >> > I agree with moving dma_map_single out from spin_lock.
-> > > >> >
-> > > >> > However, mailbox clients cannot map virtual memory to mailbox 
-> > > >> > controller's device for DMA.
-> > > >> >
-> > > >> If DMA is a resource used by MBox to transfer data, then yes the 
-> > > >> mapping needs to be done in the Mbox controller driver. To map 
-> > > >> memory outside of spinlock, you could schedule a tasklet in send_data() ?
-> > > >
-> > > > Hi Jassi,
-> > > >
-> > > > For CMDQ, the order of CMDQ tasks should be guaranteed.
-> > > > However, it seems tasklet cannot ensure this requirement.
-> > > >
-> > > > Quote from Linux Device Drivers 3rd edition ch7.
-> > > > "void tasklet_schedule(struct tasklet_struct *t);
-> > > >   Schedule the tasklet for execution. If a tasklet is scheduled 
-> > > > again before it has a chance to run, it runs only once...."
-> > > >
-> > > Not sure what bothers you.
-> > > If you only add requests to a list, protected by some spinlock, during 
-> > > send_datam you could always iterate over (submit) requests in the 
-> > > order you queued them.
-> > 
-> > Hi Jassi,
-> > 
-> > OK. I will do it.
-> > 
-> > Thanks,
-> > HS
-> > 
-> > 
-> > 
-> 
-
+diff --git a/Documentation/devicetree/bindings/display/mipi-dsi-bus.txt b/Documentation/devicetree/bindings/display/mipi-dsi-bus.txt
+index 973c27273772..94fb72cb916f 100644
+--- a/Documentation/devicetree/bindings/display/mipi-dsi-bus.txt
++++ b/Documentation/devicetree/bindings/display/mipi-dsi-bus.txt
+@@ -16,7 +16,7 @@ The following assumes that only a single peripheral is connected to a DSI
+ host. Experience shows that this is true for the large majority of setups.
+ 
+ DSI host
+---------
++========
+ 
+ In addition to the standard properties and those defined by the parent bus of
+ a DSI host, the following properties apply to a node representing a DSI host.
+@@ -30,11 +30,16 @@ Required properties:
+   different value here. See below.
+ 
+ DSI peripheral
+---------------
++==============
+ 
+-Peripherals are represented as child nodes of the DSI host's node. Properties
+-described here apply to all DSI peripherals, but individual bindings may want
+-to define additional, device-specific properties.
++Peripherals with DSI as control bus, or no control bus
++------------------------------------------------------
++
++Peripherals with the DSI bus as the primary control bus, or peripherals with
++no control bus but use the DSI bus to transmit pixel data are represented
++as child nodes of the DSI host's node. Properties described here apply to all
++DSI peripherals, but individual bindings may want to define additional,
++device-specific properties.
+ 
+ Required properties:
+ - reg: The virtual channel number of a DSI peripheral. Must be in the range
+@@ -49,9 +54,25 @@ case two alternative representations can be chosen:
+   property is the number of the first virtual channel and the second cell is
+   the number of consecutive virtual channels.
+ 
+-Example
+--------
++Peripherals with a different control bus
++----------------------------------------
++
++There are peripherals that have I2C/SPI (or some other non-DSI bus) as the
++primary control bus, but are also connected to a DSI bus (mostly for the data
++path). Connections between such peripherals and a DSI host can be represented
++using the graph bindings [1], [2].
++
++[1] Documentation/devicetree/bindings/graph.txt
++[2] Documentation/devicetree/bindings/media/video-interfaces.txt
+ 
++Examples
++========
++- (1), (2) and (3) are examples of a DSI host and peripheral on the DSI bus
++  with different virtual channel configurations.
++- (4) is an example of a peripheral on a I2C control bus connected with to
++  a DSI host using of-graph bindings.
++
++1)
+ 	dsi-host {
+ 		...
+ 
+@@ -67,6 +88,7 @@ Example
+ 		...
+ 	};
+ 
++2)
+ 	dsi-host {
+ 		...
+ 
+@@ -82,6 +104,7 @@ Example
+ 		...
+ 	};
+ 
++3)
+ 	dsi-host {
+ 		...
+ 
+@@ -96,3 +119,37 @@ Example
+ 
+ 		...
+ 	};
++
++4)
++	i2c-host {
++		...
++
++		dsi-bridge@35 {
++			compatible = "...";
++			reg = <0x35>;
++
++			ports {
++				...
++
++				port {
++					bridge_mipi_in: endpoint {
++						remote-endpoint = <&host_mipi_out>;
++					};
++				};
++			};
++		};
++	};
++
++	dsi-host {
++		...
++
++		ports {
++			...
++
++			port {
++				host_mipi_out: endpoint {
++					remote-endpoint = <&bridge_mipi_in>;
++				};
++			};
++		};
++	};
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+hosted by The Linux Foundation
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
