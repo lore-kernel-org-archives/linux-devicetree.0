@@ -1,68 +1,63 @@
-From: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v4 00/13] iommu/rockchip: Use OF_IOMMU
-Date: Thu, 18 Jan 2018 19:52:38 +0800
-Message-ID: <20180118115251.5542-1-jeffy.chen@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+From: Jeffy Chen <jeffy.chen@rock-chips.com>
+Subject: [PATCH v4 07/13] ARM: dts: rockchip: add clocks in vop iommu nodes
+Date: Thu, 18 Jan 2018 19:52:45 +0800
+Message-ID: <20180118115251.5542-8-jeffy.chen@rock-chips.com>
+References: <20180118115251.5542-1-jeffy.chen@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180118115251.5542-1-jeffy.chen@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: jcliang@chromium.org, robin.murphy@arm.com, xxm@rock-chips.com, tfiga@chromium.org, Jeffy Chen <jeffy.chen@rock-chips.com>, devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Add clocks in vop iommu nodes, since we are going to control clocks in
+rockchip iommu driver.
 
-This series fixes some issues in rockchip iommu driver, and add of_iommu
-support in it.
+Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
+---
 
-Changes in v4:
-Rewrite commit message.
+Changes in v4: None
+Changes in v3: None
+Changes in v2: None
 
-Changes in v3:
-Also remove remove() and module_exit() as Tomasz suggested.
-Loop platform_get_irq() as Robin suggested.
-Add struct rk_iommudata.
-Squash iommu/rockchip: Use iommu_group_get_for_dev() for add_device
-Only call startup() and shutdown() when iommu attached.
-Remove pm_mutex.
-Check runtime PM disabled.
-Check pm_runtime in rk_iommu_irq().
-Remove rk_iommudata->domain.
+ arch/arm/boot/dts/rk3036.dtsi | 2 ++
+ arch/arm/boot/dts/rk3288.dtsi | 4 ++++
+ 2 files changed, 6 insertions(+)
 
-Changes in v2:
-Move irq request to probe(in patch[0])
-Move bus_set_iommu() to rk_iommu_probe().
-
-Jeffy Chen (9):
-  iommu/rockchip: Prohibit unbind and remove
-  iommu/rockchip: Fix error handling in probe
-  iommu/rockchip: Request irqs in rk_iommu_probe()
-  ARM: dts: rockchip: add clocks in vop iommu nodes
-  iommu/rockchip: Use IOMMU device for dma mapping operations
-  iommu/rockchip: Use OF_IOMMU to attach devices automatically
-  iommu/rockchip: Fix error handling in init
-  iommu/rockchip: Add runtime PM support
-  iommu/rockchip: Support sharing IOMMU between masters
-
-Tomasz Figa (4):
-  iommu/rockchip: Fix error handling in attach
-  iommu/rockchip: Use iopoll helpers to wait for hardware
-  iommu/rockchip: Fix TLB flush of secondary IOMMUs
-  iommu/rockchip: Control clocks needed to access the IOMMU
-
- .../devicetree/bindings/iommu/rockchip,iommu.txt   |   8 +
- arch/arm/boot/dts/rk3036.dtsi                      |   2 +
- arch/arm/boot/dts/rk3288.dtsi                      |   4 +
- drivers/iommu/rockchip-iommu.c                     | 653 ++++++++++++---------
- 4 files changed, 386 insertions(+), 281 deletions(-)
-
+diff --git a/arch/arm/boot/dts/rk3036.dtsi b/arch/arm/boot/dts/rk3036.dtsi
+index 3b704cfed69a..95b0ebc7a40f 100644
+--- a/arch/arm/boot/dts/rk3036.dtsi
++++ b/arch/arm/boot/dts/rk3036.dtsi
+@@ -197,6 +197,8 @@
+ 		reg = <0x10118300 0x100>;
+ 		interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>;
+ 		interrupt-names = "vop_mmu";
++		clocks = <&cru ACLK_LCDC>, <&cru SCLK_LCDC>, <&cru HCLK_LCDC>;
++		clock-names = "aclk_vop", "dclk_vop", "hclk_vop";
+ 		#iommu-cells = <0>;
+ 		status = "disabled";
+ 	};
+diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+index 6102e4e7f35c..5132dd887297 100644
+--- a/arch/arm/boot/dts/rk3288.dtsi
++++ b/arch/arm/boot/dts/rk3288.dtsi
+@@ -1026,6 +1026,8 @@
+ 		reg = <0x0 0xff930300 0x0 0x100>;
+ 		interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
+ 		interrupt-names = "vopb_mmu";
++		clocks = <&cru ACLK_VOP0>, <&cru DCLK_VOP0>, <&cru HCLK_VOP0>;
++		clock-names = "aclk_vop", "dclk_vop", "hclk_vop";
+ 		power-domains = <&power RK3288_PD_VIO>;
+ 		#iommu-cells = <0>;
+ 		status = "disabled";
+@@ -1074,6 +1076,8 @@
+ 		reg = <0x0 0xff940300 0x0 0x100>;
+ 		interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
+ 		interrupt-names = "vopl_mmu";
++		clocks = <&cru ACLK_VOP1>, <&cru DCLK_VOP1>, <&cru HCLK_VOP1>;
++		clock-names = "aclk_vop", "dclk_vop", "hclk_vop";
+ 		power-domains = <&power RK3288_PD_VIO>;
+ 		#iommu-cells = <0>;
+ 		status = "disabled";
 -- 
 2.11.0
