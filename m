@@ -1,59 +1,44 @@
-From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
-Subject: Re: [PATCH v3 02/12] clk: sunxi-ng: Change formula for NKMP PLLs
-Date: Thu, 18 Jan 2018 17:17:45 +0100
-Message-ID: <4724479.MCcHYbe7Bl@jernej-laptop>
-References: <20180117201421.25954-1-jernej.skrabec@siol.net> <20180117201421.25954-3-jernej.skrabec@siol.net> <20180118105841.73rwj3he2exd7pno@flea.lan>
+From: Philippe CORNU <philippe.cornu-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH 1/2] clk: stm32: END_PRIMARY_CLK should be declare after
+ CLK_SYSCLK
+Date: Thu, 18 Jan 2018 16:37:15 +0000
+Message-ID: <1dd9d895-016f-f74b-ec9d-8e02959a561d@st.com>
+References: <1516286980-8603-1-git-send-email-gabriel.fernandez@st.com>
+ <1516286980-8603-2-git-send-email-gabriel.fernandez@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180118105841.73rwj3he2exd7pno@flea.lan>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org, architt@codeaurora.org, a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com, mturquette@baylibre.com, sboyd@codeaurora.org, Jose.Abreu@synopsys.com, narmstrong@baylibre.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-sunxi@googlegroups.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1516286980-8603-2-git-send-email-gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
+Content-Language: en-US
+Content-ID: <CC0669C3178EB94FA3912DC808011AEF-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "gabriel.fernandez.st-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <gabriel.fernandez.st-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-Dne četrtek, 18. januar 2018 ob 11:58:41 CET je Maxime Ripard napisal(a):
-> Hi,
-> 
-> On Wed, Jan 17, 2018 at 09:14:11PM +0100, Jernej Skrabec wrote:
-> > This commit changes formula from this:
-> > 
-> > Freq = (parent_freq * N * K) / (M * P)
-> > 
-> > to this:
-> > 
-> > Freq = (parent_freq / M) * N * K / P
-> > 
-> > This improves situation when N is in the range 1-255. PLL parent clock
-> > is almost always 24 MHz, which means that for N >= 180 original formula
-> > overflows and result becomes useless. Situation can be improved if M is
-> > used as predivider as it can be seen in the second formula. That way at
-> > least M > 1 is considered, but it still leaves small gap for wrong result
-> > when M = 1 and N >= 180.
-> > 
-> > Using M as predivider shouldn't cause any issue, because it is in range
-> > 1-4 at most, so there is no or only minimal rounding error.
-> > 
-> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> 
-> I'd really prefer to stick to the formula documented and that we've
-> used so far. NKMP clocks are most notably used for the CPU PLLs and
-> I've debugged way too many cpufreq bugs already :)
-> 
-> What about using long long types for the parent * n * k result?
-
-Yes, using long long is the best possible solution and covers all cases 
-whereas this patch does not.
-
-I thought that do_div() would cause a lot of overhead, but I noticed that it's 
-not big if both numbers fit in 32 bit, which in our case is true most of the 
-time.
-
-I will make a helper function for calculating rate, since using long long 
-needs more than one line of code.
-
-Best regards,
-Jernej
+SGkgR2FicmllbCwNCg0KVGVzdGVkIHN1Y2Nlc3NmdWxseSBvbiBmNDY5IGRpc2NvIGJvYXJkLg0K
+DQpUZXN0ZWQtYnk6IFBoaWxpcHBlIENvcm51IDxwaGlsaXBwZS5jb3JudUBzdC5jb20+DQoNCk1h
+bnkgdGhhbmtzLA0KUGhpbGlwcGUgOi0pDQoNCk9uIDAxLzE4LzIwMTggMDM6NDkgUE0sIGdhYnJp
+ZWwuZmVybmFuZGV6QHN0LmNvbSB3cm90ZToNCj4gRnJvbTogR2FicmllbCBGZXJuYW5kZXogPGdh
+YnJpZWwuZmVybmFuZGV6QHN0LmNvbT4NCj4gDQo+IFVwZGF0ZSBvZiBFTkRfUFJJTUFSWV9DTEsg
+d2FzIG1pc3NlZCwgaXQgc2hvdWxkIGJlIGFmdGVyIENMS19TWVNDTEsNCj4gaHNpIGFuZCBzeXNj
+bGsgYXJlIG92ZXJ3cml0dGVuIGJ5IGdwaW9hIGFuZCBncGlvYi4NCj4gDQo+IFNpZ25lZC1vZmYt
+Ynk6IEdhYnJpZWwgRmVybmFuZGV6IDxnYWJyaWVsLmZlcm5hbmRlekBzdC5jb20+DQo+IC0tLQ0K
+PiAgIGluY2x1ZGUvZHQtYmluZGluZ3MvY2xvY2svc3RtMzJmeC1jbG9jay5oIHwgNiArKystLS0N
+Cj4gICAxIGZpbGUgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQ0KPiAN
+Cj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvZHQtYmluZGluZ3MvY2xvY2svc3RtMzJmeC1jbG9jay5o
+IGIvaW5jbHVkZS9kdC1iaW5kaW5ncy9jbG9jay9zdG0zMmZ4LWNsb2NrLmgNCj4gaW5kZXggNDli
+YjNjMi4uNGQ1MjNiMCAxMDA2NDQNCj4gLS0tIGEvaW5jbHVkZS9kdC1iaW5kaW5ncy9jbG9jay9z
+dG0zMmZ4LWNsb2NrLmgNCj4gKysrIGIvaW5jbHVkZS9kdC1iaW5kaW5ncy9jbG9jay9zdG0zMmZ4
+LWNsb2NrLmgNCj4gQEAgLTMzLDExICszMywxMSBAQA0KPiAgICNkZWZpbmUgQ0xLX1NBSTIJCTEx
+DQo+ICAgI2RlZmluZSBDTEtfSTJTUV9QRElWCQkxMg0KPiAgICNkZWZpbmUgQ0xLX1NBSVFfUERJ
+VgkJMTMNCj4gLQ0KPiAtI2RlZmluZSBFTkRfUFJJTUFSWV9DTEsJCTE0DQo+IC0NCj4gICAjZGVm
+aW5lIENMS19IU0kJCQkxNA0KPiAgICNkZWZpbmUgQ0xLX1NZU0NMSwkJMTUNCj4gKw0KPiArI2Rl
+ZmluZSBFTkRfUFJJTUFSWV9DTEsJCTE2DQo+ICsNCj4gICAjZGVmaW5lIENMS19IRE1JX0NFQwkJ
+MTYNCj4gICAjZGVmaW5lIENMS19TUERJRgkJMTcNCj4gICAjZGVmaW5lIENMS19VU0FSVDEJCTE4
+DQo+IA==
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
