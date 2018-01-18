@@ -1,31 +1,57 @@
-From: Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>
-Subject: Re: [PATCH v4 4/8] PCI: brcmstb: Add dma-range mapping for inbound
-        traffic
-Date: Thu, 18 Jan 2018 08:31:23 +0100
-Message-ID: <20180118073123.GA15766@lst.de>
-References: <1516058925-46522-1-git-send-email-jim2101024@gmail.com> <1516058925-46522-5-git-send-email-jim2101024@gmail.com> <CAL_JsqKpWNJXNpKS5qC99N0+H_P37DcRE-rN9HFwT5tVmRFCNw@mail.gmail.com>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH v5 11/44] clk: davinci: Add platform information for TI
+ DA830 PSC
+Date: Thu, 18 Jan 2018 13:23:08 +0530
+Message-ID: <9be7d712-33ae-3e5b-beeb-a14faa51e777@ti.com>
+References: <1515377863-20358-1-git-send-email-david@lechnology.com>
+ <1515377863-20358-12-git-send-email-david@lechnology.com>
+ <91fe16dc-907e-6dbb-c8db-c27561132093@ti.com>
+ <4dd36ca7-e41d-58d8-ec8c-787978307943@lechnology.com>
+ <86581de6-a982-7a7b-9a83-22c869417211@ti.com>
+ <72abb187-1c84-f307-d4f8-be5403787bac@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqKpWNJXNpKS5qC99N0+H_P37DcRE-rN9HFwT5tVmRFCNw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Jim Quinlan <jim2101024-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-MIPS <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ralf Baechle <ralf@linux-mips.>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <72abb187-1c84-f307-d4f8-be5403787bac@lechnology.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Lechner <david@lechnology.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 17, 2018 at 08:15:33PM -0600, Rob Herring wrote:
-> > (a) overriding/redefining the dma_to_phys() and phys_to_dma() calls
-> > that are used by the dma_ops routines.  This is the approach of
-> >
-> >         arch/mips/cavium-octeon/dma-octeon.c
+On Wednesday 17 January 2018 11:02 PM, David Lechner wrote:
+>>>>> +    clk_register_clkdev(clk_data->clks[3], "gpio", NULL);
+>>>>
+>>>> This is pretty bad (and no fault of yours) - having a con_id but no
+>>>> device name. Can you please make a pre-series which passes NULL con_id
+>>>> in gpio-davinci.c?
+>>>
+>>> I'll give it a try. This is complicated by the fact that the con_id has
+>>> made it's way into the device tree bindings. However, I think we can
+>>> safely deprecate clock-names = "gpio" in the device tree bindings since
+>>> we can make the driver ignore that property to preserve backwards
+>>> compatibility.
 > 
-> MIPS is rarely an example to follow. :)
+> Agreed.
+> 
+>> I don't think this breaks DT-backward compatibility. Passing a NULL
+>> con_id in driver should find the clock for that device even if DT entry
+>> has clock-names present. As far as I can read clk_find().
+>>
+>> The less intrusive alternate is to add the GPIO device name in the table
+>> here, while keeping the con_id and keeping the driver untouched. The
+>> advantage of that is lesser number of dependent patches for this series
+>> to go in.
+>>
+>> Later once CCF conversion has been there in the kernel for one full
+>> release and no regressions, these other clean-ups can be done.
+> 
+> I like this approach.
 
-But in this case it actually is the example to follow as told previously.
+One downside is that we will have to have clock-names = "gpio" in da850
+device-tree too. Since its already present in keystone already, I don't
+think adding one more is such a big issue.
 
-NAK again for these chained dma ops that only create problems.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Sekhar
