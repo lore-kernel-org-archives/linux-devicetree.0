@@ -1,88 +1,43 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v4 4/8] PCI: brcmstb: Add dma-range mapping for inbound traffic
-Date: Wed, 17 Jan 2018 20:15:33 -0600
-Message-ID: <CAL_JsqKpWNJXNpKS5qC99N0+H_P37DcRE-rN9HFwT5tVmRFCNw@mail.gmail.com>
-References: <1516058925-46522-1-git-send-email-jim2101024@gmail.com> <1516058925-46522-5-git-send-email-jim2101024@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1516058925-46522-5-git-send-email-jim2101024@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jim Quinlan <jim2101024@gmail.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Brian Norris <computersforpeace@gmail.com>, Russell King <rmk+kernel@armlinux.org.uk>, Robin Murphy <robin.murphy@arm.com>, Christoph Hellwig <hch@lst.de>, Florian Fainelli <f.fainelli@gmail.com>, Jonas Gorski <jonas.gorski@gmail.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-MIPS <linux-mips@linux-mips.org>, linux-pci@vger.kernel.org, Kevin Cernekee <cernekee@gmail.com>, Ralf Baechle <ralf@linux-mips.org>, bcm-kernel-feedback-list@broad
+From: henryzhang62-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Subject: [PATCH v4] ARM: dts: bcm283x: Fix pin function of JTAG pins
+Date: Wed, 17 Jan 2018 18:41:33 -0800
+Message-ID: <1516243293-25010-1-git-send-email-henryzhang62@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, stefan.wahren-eS4NqCHxEME@public.gmane.org, Henry Zhang <henryzhang62-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 15, 2018 at 5:28 PM, Jim Quinlan <jim2101024@gmail.com> wrote:
-> The Broadcom STB PCIe host controller is intimately related to the
-> memory subsystem.  This close relationship adds complexity to how cpu
-> system memory is mapped to PCIe memory.  Ideally, this mapping is an
-> identity mapping, or an identity mapping off by a constant.  Not so in
-> this case.
->
-> Consider the Broadcom reference board BCM97445LCC_4X8 which has 6 GB
-> of system memory.  Here is how the PCIe controller maps the
-> system memory to PCIe memory:
->
->   memc0-a@[        0....3fffffff] <=> pci@[        0....3fffffff]
->   memc0-b@[100000000...13fffffff] <=> pci@[ 40000000....7fffffff]
->   memc1-a@[ 40000000....7fffffff] <=> pci@[ 80000000....bfffffff]
->   memc1-b@[300000000...33fffffff] <=> pci@[ c0000000....ffffffff]
->   memc2-a@[ 80000000....bfffffff] <=> pci@[100000000...13fffffff]
->   memc2-b@[c00000000...c3fffffff] <=> pci@[140000000...17fffffff]
->
-> Although there are some "gaps" that can be added between the
-> individual mappings by software, the permutation of memory regions for
-> the most part is fixed by HW.  The solution of having something close
-> to an identity mapping is not possible.
->
-> The idea behind this HW design is that the same PCIe module can
-> act as an RC or EP, and if it acts as an EP it concatenates all
-> of system memory into a BAR so anything can be accessed.  Unfortunately,
-> when the PCIe block is in the role of an RC it also presents this
-> "BAR" to downstream PCIe devices, rather than offering an identity map
-> between its system memory and PCIe space.
->
-> Suppose that an endpoint driver allocs some DMA memory.  Suppose this
-> memory is located at 0x6000_0000, which is in the middle of memc1-a.
-> The driver wants a dma_addr_t value that it can pass on to the EP to
-> use.  Without doing any custom mapping, the EP will use this value for
-> DMA: the driver will get a dma_addr_t equal to 0x6000_0000.  But this
-> won't work; the device needs a dma_addr_t that reflects the PCIe space
-> address, namely 0xa000_0000.
->
-> So, essentially the solution to this problem must modify the
-> dma_addr_t returned by the DMA routines routines.  There are two
-> ways (I know of) of doing this:
->
-> (a) overriding/redefining the dma_to_phys() and phys_to_dma() calls
-> that are used by the dma_ops routines.  This is the approach of
->
->         arch/mips/cavium-octeon/dma-octeon.c
+From: Henry Zhang <henryzhang62-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-MIPS is rarely an example to follow. :)
+BCM2835 ARM Peripherals doc shows gpio pins 4, 5, 6, 12 and 13
+carry altenate function, ALT5 for ARM JTAG
 
-> In ARM and ARM64 these two routines are defiend in asm/dma-mapping.h
-> as static inline functions.
->
-> (b) Subscribe to a notifier that notifies when a device is added to a
-> bus.  When this happens, set_dma_ops() can be called for the device.
-> This method is mentioned in:
->
->     http://lxr.free-electrons.com/source/drivers/of/platform.c?v=3.16#L152
+Fixes: 21ff843931b2 ("ARM: dts: bcm283x: Define standard pinctrl groups in the gpio node.")
 
-Why refer to an external website when you can just refer to the source
-of the project this patch applies to directly.
+Signed-off-by: Henry Zhang <henryzhang62-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Acked-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+---
+ arch/arm/boot/dts/bcm283x.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> where it says as a comment
->
->     "In case if platform code need to use own special DMA
->     configuration, it can use Platform bus notifier and
->     handle BUS_NOTIFY_ADD_DEVICE event to fix up DMA
->     configuration."
+diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
+index dcde93c..64971e4 100644
+--- a/arch/arm/boot/dts/bcm283x.dtsi
++++ b/arch/arm/boot/dts/bcm283x.dtsi
+@@ -251,7 +251,7 @@
+ 
+ 			jtag_gpio4: jtag_gpio4 {
+ 				brcm,pins = <4 5 6 12 13>;
+-				brcm,function = <BCM2835_FSEL_ALT4>;
++				brcm,function = <BCM2835_FSEL_ALT5>;
+ 			};
+ 			jtag_gpio22: jtag_gpio22 {
+ 				brcm,pins = <22 23 24 25 26 27>;
+-- 
+2.7.4
 
-In the current tree, this comment is in drivers/of/device.c.
-
-> Solution (b) is what this commit does.  It uses its own set of
-> dma_ops which are wrappers around the arch_dma_ops.  The
-> wrappers translate the dma addresses before/after invoking
-> the arch_dma_ops, as appropriate.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
