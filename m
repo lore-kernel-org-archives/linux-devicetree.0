@@ -1,95 +1,69 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH 1/1] ARM: dts: sunxi: Add Olimex A20-SOM204-EVB board
-Date: Thu, 18 Jan 2018 22:28:49 +0800
-Message-ID: <CAGb2v66U9ziFhU5n6haTA3LGNX7BavmfXiiCmvebtqaMxcN0-w@mail.gmail.com>
-References: <1515747666-6597-1-git-send-email-stefan@olimex.com>
- <20180115095031.pzsgrp3tdmemotrs@flea.lan> <1b9667a4-75de-4ece-069d-7ec33b7e2f8d@olimex.com>
- <20180118100745.y62adzvfnrzqkagd@flea.lan>
+From: <patrice.chotard@st.com>
+Subject: [PATCH v3 10/14] ARM: dts: stm32: Enable SDIO controller on stm32429i-eval board
+Date: Thu, 18 Jan 2018 15:34:26 +0100
+Message-ID: <1516286070-24927-11-git-send-email-patrice.chotard@st.com>
+References: <1516286070-24927-1-git-send-email-patrice.chotard@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180118100745.y62adzvfnrzqkagd@flea.lan>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Stefan Mavrodiev <stefan@olimex.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>
+Content-Type: text/plain
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1516286070-24927-1-git-send-email-patrice.chotard@st.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Russell King <linux@armlinux.org.uk>, Ulf Hansson <ulf.hansson@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre Torgue <alexandre.torgue@st.com>
+Cc: linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Patrice Chotard <patrice.chotard@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 18, 2018 at 6:07 PM, Maxime Ripard
-<maxime.ripard@free-electrons.com> wrote:
-> Hi!
->
-> On Mon, Jan 15, 2018 at 12:07:34PM +0200, Stefan Mavrodiev wrote:
->> > > +/dts-v1/;
->> > > +#include "sun7i-a20.dtsi"
->> > > +#include "sunxi-common-regulators.dtsi"
->> > > +
->> > > +
->> > > +#include <dt-bindings/gpio/gpio.h>
->> > > +#include <dt-bindings/interrupt-controller/irq.h>
->> > > +#include <dt-bindings/pwm/pwm.h>
->> > > +
->> > > +/ {
->> > > + model = "Olimex A20-SOM204-EVB";
->> > > + compatible = "olimex,a20-olimex-som204-evb", "allwinner,sun7i-a20";
->> > > +
->> > > + aliases {
->> > > +         serial0 = &uart0;
->> > > +         serial1 = &uart4;
->> > > +         serial2 = &uart7;
->> > > +         spi0 = &spi1;
->> > > +         spi1 = &spi2;
->> > > +         ethernet1 = &rtl8723bs;
->> >
->> > ethernet1? if there's a single network interface, it should be
->> > ethernet0.
->>
->> I think this will conflict the gmac alias defined in sun7i-a20.dtsi:
->>
->> aliases {
->>     ethernet0 = &gmac;
->> };
->
-> We have that? That's bad, but you're right :)
->
->> > > +         stat {
->> > > +                 label = "a20-som204:green:stat";
->> > > +                 gpios = <&pio 8 0 GPIO_ACTIVE_HIGH>;
->> > > +                 default-state = "on";
->> > > +         };
->> > > +
->> > > +         led1 {
->> > > +                 label = "a20-som204-evb:green:led1";
->> > > +                 gpios = <&pio 8 10 GPIO_ACTIVE_HIGH>;
->> > > +                 default-state = "on";
->> > > +         };
->> > > +
->> > > +         led2 {
->> > > +                 label = "a20-som204-evb:yellow:led2";
->> > > +                 gpios = <&pio 8 11 GPIO_ACTIVE_HIGH>;
->> > > +                 default-state = "on";
->> > > +         };
->> >
->> > You don't have the same prefix between stat and led1/led2. I'm fine
->> > with both, but you should be consistent :)
->>
->> STAT led is on the SOM204 module, while led1/2 on the EVB. Thats why
->> they have different prefix.
->
-> Still, the user and the system will see it as a single board, and the
-> documentation states that it should be the board name. I'm not quite
-> sure what a good rule would be here. Have you looked at how other
-> boards dealt with it? Chen-Yu, any opinion on this?
+From: Patrice Chotard <patrice.chotard@st.com>
 
-Follow the bindings, I guess? I don't think we (sunxi) have dealt
-with modules that have LEDs or anything that needs to be named after
-the board.
+This patch adds SDIO related DT nodes for stm32429i-eval board.
 
-On a related topic, I don't know if you (Stefan / Olimex) want to split
-this into a .dtsi file for the SoM, and a .dts file for the EVB. It might
-help your customers? I've tried it previously, and it helps in some ways
-when you're matching the files to the schematics. But it is confusing
-when you want the big picture. On the other hand, this is not going to
-help with supporting different modules on the same baseboard, as the
-routing, peripherals and labels likely won't match up. Just my two cents.
+Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
+---
 
-ChenYu
+v3: _ none
+
+v2: _ none
+
+
+ arch/arm/boot/dts/stm32429i-eval.dts | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+
+diff --git a/arch/arm/boot/dts/stm32429i-eval.dts b/arch/arm/boot/dts/stm32429i-eval.dts
+index 1e3d4c6..6a5c701 100644
+--- a/arch/arm/boot/dts/stm32429i-eval.dts
++++ b/arch/arm/boot/dts/stm32429i-eval.dts
+@@ -144,6 +144,13 @@
+ 			};
+ 		};
+ 	};
++
++	mmc_vcard: mmc_vcard {
++		compatible = "regulator-fixed";
++		regulator-name = "mmc_vcard";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++	};
+ };
+ 
+ &adc {
+@@ -254,6 +261,18 @@
+ 	status = "okay";
+ };
+ 
++&sdio {
++	status = "okay";
++	vmmc-supply = <&mmc_vcard>;
++	cd-gpios = <&stmpegpio 15 GPIO_ACTIVE_HIGH>;
++	cd-inverted;
++	pinctrl-names = "default", "opendrain";
++	pinctrl-0 = <&sdio_pins>;
++	pinctrl-1 = <&sdio_pins_od>;
++	bus-width = <4>;
++	max-frequency = <12500000>;
++};
++
+ &timers1 {
+ 	status = "okay";
+ 
+-- 
+1.9.1
+
