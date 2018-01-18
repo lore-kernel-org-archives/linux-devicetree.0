@@ -1,101 +1,86 @@
-From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Subject: Re: [PATCH] Nokia N9: add support for up/down keys in the dts
-Date: Thu, 18 Jan 2018 23:03:48 +0100
-Message-ID: <20180118220348.GD17196@amd>
-References: <20180102125948.GA20051@amd>
- <20180102194236.ahrhkvnefre2l6gf@earth.universe>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v3 1/2] media: dt-bindings: Add OF properties to ov7670
+Date: Fri, 19 Jan 2018 00:23:54 +0200
+Message-ID: <20180118222354.wk74rl4x4ay4gnzc@valkosipuli.retiisi.org.uk>
+References: <1515779808-21420-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1515779808-21420-2-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="zS7rBR6csb6tI2e1"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180102194236.ahrhkvnefre2l6gf-SfvFxonMDyemK9LvCR3Hrw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, aaro.koskinen-X3B1VOXEql0@public.gmane.org, ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, patrikbachan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, serge-A9i7LUbDfNHQT0dZR+AlfA@public.gmane.org, abcloriens-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, clayton-fehKsxFhGzZIf6P1QZMOBw@public.gmane.org, martijn-28JJ9oSIdodmR6Xm/wNWPw@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Filip =?utf-8?Q?Matijevi=C4=87?= <filip.matijevic.pz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1515779808-21420-2-git-send-email-jacopo+renesas@jmondi.org>
+Sender: linux-media-owner@vger.kernel.org
+To: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: corbet@lwn.net, mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Jan 12, 2018 at 06:56:47PM +0100, Jacopo Mondi wrote:
+> Describe newly introduced OF properties for ov7670 image sensor.
+> The driver supports two standard properties to configure synchronism
+> signals polarities and one custom property already supported as
+> platform data options by the driver to suppress pixel clock during
+> horizontal blanking.
+> 
+> Re-phrase child nodes description while at there.
+> 
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> ---
+>  Documentation/devicetree/bindings/media/i2c/ov7670.txt | 18 ++++++++++++++++--
+>  1 file changed, 16 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/ov7670.txt b/Documentation/devicetree/bindings/media/i2c/ov7670.txt
+> index 826b656..7c89ea5 100644
+> --- a/Documentation/devicetree/bindings/media/i2c/ov7670.txt
+> +++ b/Documentation/devicetree/bindings/media/i2c/ov7670.txt
+> @@ -9,14 +9,23 @@ Required Properties:
+>  - clocks: reference to the xclk input clock.
+>  - clock-names: should be "xclk".
+>  
+> +Required Endpoint Properties:
+> +- hsync-active: active state of the HSYNC signal, 0/1 for LOW/HIGH respectively.
+> +  Default is active high.
+> +- vsync-active: active state of the VSYNC signal, 0/1 for LOW/HIGH respectively.
+> +  Default is active high.
 
---zS7rBR6csb6tI2e1
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+If the properties are required, you'll have no default value for them.
 
-On Tue 2018-01-02 20:42:36, Sebastian Reichel wrote:
-> Hi,
->=20
-> On Tue, Jan 02, 2018 at 01:59:48PM +0100, Pavel Machek wrote:
-> >=20
-> > This adds support for volume up/down keys in the dts.
-> >=20
-> > Signed-off-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
->=20
-> Reviewed-by: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Other than that, looks good to me.
 
-Tony, ping? Can I get you to apply this one?
+> +
+>  Optional Properties:
+>  - reset-gpios: reference to the GPIO connected to the resetb pin, if any.
+>    Active is low.
+>  - powerdown-gpios: reference to the GPIO connected to the pwdn pin, if any.
+>    Active is high.
+> +- ov7670,pclk-hb-disable: a boolean property to suppress pixel clock output
+> +  signal during horizontal blankings.
+>  
+> -The device node must contain one 'port' child node for its digital output
+> -video port, in accordance with the video interface bindings defined in
+> +The device node must contain one 'port' child node with one 'endpoint' child
+> +sub-node for its digital output video port, in accordance with the video
+> +interface bindings defined in:
+>  Documentation/devicetree/bindings/media/video-interfaces.txt.
+>  
+>  Example:
+> @@ -34,8 +43,13 @@ Example:
+>  			assigned-clocks = <&pck0>;
+>  			assigned-clock-rates = <25000000>;
+>  
+> +			ov7670,pclk-hb-disable;
+> +
+>  			port {
+>  				ov7670_0: endpoint {
+> +					hsync-active = <0>;
+> +					vsync-active = <0>;
+> +
+>  					remote-endpoint = <&isi_0>;
+>  				};
+>  			};
+> -- 
+> 2.7.4
+> 
 
-[PATCHv2] nokia N9: Add support for magnetometer
-
-should be good to go, too...
-									Pavel
-								=09
-
-> > diff --git a/arch/arm/boot/dts/omap3-n9.dts b/arch/arm/boot/dts/omap3-n=
-9.dts
-> > index 39e35f8..57a6679 100644
-> > --- a/arch/arm/boot/dts/omap3-n9.dts
-> > +++ b/arch/arm/boot/dts/omap3-n9.dts
-> > @@ -11,9 +11,10 @@
-> >  /dts-v1/;
-> > =20
-> >  #include "omap3-n950-n9.dtsi"
-> > +#include <dt-bindings/input/input.h>
-> > =20
-> >  / {
-> >  	model =3D "Nokia N9";
-> >  	compatible =3D "nokia,omap3-n9", "ti,omap36xx", "ti,omap3";
-> >  };
-> > =20
-> > @@ -72,3 +133,9 @@
-> >  	st,max-limit-y =3D <46>;
-> >  	st,max-limit-z =3D <46>;
-> >  };
-> > +
-> > +&twl_keypad {
-> > +	linux,keymap =3D < MATRIX_KEY(6, 8, KEY_VOLUMEUP)
-> > +			 MATRIX_KEY(7, 8, KEY_VOLUMEDOWN)
-> > +			 >;
-> > +};
-> >=20
-> >=20
-> > --=20
-> > (english) http://www.livejournal.com/~pavelmachek
-> > (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses=
-/blog.html
->=20
->=20
-
-
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---zS7rBR6csb6tI2e1
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlphGcQACgkQMOfwapXb+vLmFwCfQPDusoIGZ7kx83h9RXdprszs
-hQMAoKFR8TnZwJOgF2T1dGuaDLKjsAtp
-=QyHD
------END PGP SIGNATURE-----
-
---zS7rBR6csb6tI2e1--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi
