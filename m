@@ -1,51 +1,60 @@
-From: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 0/3] PCI: move DT PCI functions to PCI core
-Date: Wed, 17 Jan 2018 17:55:55 -0600
-Message-ID: <20180117235555.GC53542@bhelgaas-glaptop.roam.corp.google.com>
-References: <20180104211215.11344-1-robh@kernel.org>
+From: Thinh Nguyen <Thinh.Nguyen-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v3 00/15] usb: dwc3: Add new updates for DWC_usb31
+Date: Wed, 17 Jan 2018 17:51:43 -0800
+Message-ID: <cover.1516239813.git.thinhn@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20180104211215.11344-1-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thinh Nguyen <Thinh.Nguyen-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Vamsi Krishna Samavedam <vskrishn-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Li Jun <jun.li-3arQi8VN3Tc@public.gmane.org>, "Gustavo A. R. Silva" <garsilva-L1vi/lXTdts+Va1GwOuvDg@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>
+Cc: John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 04, 2018 at 03:12:12PM -0600, Rob Herring wrote:
-> Most subsystem specific functions have been moved into the respective
-> subsystems. Only PCI and networking remain. This series moves most of the
-> PCI related code to drivers/pci/of.c. Some bus address functions for PCI
-> remain in of/address.c because we don't have infrastructure to split up
-> the per bus helper functions.
-> 
-> I expect Bjorn to take this series, so PPC maintainers please ack.
-> 
-> Rob
-> 
-> Rob Herring (3):
->   PCI: move OF related PCI functions into PCI core
->   powerpc/pci: use of_irq_parse_and_map_pci helper
->   PCI: make of_irq_parse_pci static
-> 
->  arch/arm/mach-mvebu/Kconfig      |   1 -
->  arch/powerpc/kernel/pci-common.c |   8 +-
->  drivers/of/Kconfig               |  16 --
->  drivers/of/Makefile              |   2 -
->  drivers/of/address.c             |   8 +-
->  drivers/of/of_pci.c              | 384 -----------------------------
->  drivers/of/of_pci_irq.c          | 131 ----------
->  drivers/pci/of.c                 | 505 +++++++++++++++++++++++++++++++++++++++
->  include/linux/of_pci.h           |   8 +-
->  9 files changed, 510 insertions(+), 553 deletions(-)
->  delete mode 100644 drivers/of/of_pci.c
->  delete mode 100644 drivers/of/of_pci_irq.c
+This patch series adds new updates and some fixes for DWC_usb31.
 
-Applied to pci/dt-resources for v4.16, thanks!
+Changes in v3:
+ - Add "usb: dwc3: Check controller type before setting speed" to series
 
-I'll update this if necessary if PPC maintainers comment.
+Changes in v2:
+ - Add another patch to the series to increase mass_storage max_speed
+ - Separate "usb: dwc3: ep0: Reset TRB counter for ep0 IN" from series
+ - Separate "usb: dwc3: gadget: Set maxpacket size for ep0 IN" from series
+ - Use msleep() instead of mdelay() for SoftReset PHY sync delay
+ - Rename new USB31 macros from DWC3_USB31_* to DWC31_*
+ - Rename device properties and replace '_' with '-'
+ - Minor fixes in the commit messages
+
+
+Thinh Nguyen (15):
+  usb: dwc3: Add SoftReset PHY synchonization delay
+  usb: core: urb: Check SSP isoc ep comp descriptor
+  usb: dwc3: Update DWC_usb31 GTXFIFOSIZ reg fields
+  usb: dwc3: Check IP revision for GTXFIFOSIZ
+  usb: dwc3: Add DWC_usb31 GRXTHRCFG bit fields
+  usb: dwc3: gadget: Check IP revision for GRXTHRCFG
+  usb: dwc3: Add DWC_usb31 GTXTHRCFG reg fields
+  usb: dwc3: Make TX/RX threshold configurable
+  usb: dwc3: Check for ESS TX/RX threshold config
+  usb: dwc3: Dump LSP and BMU debug info
+  usb: dwc3: Track DWC_usb31 VERSIONTYPE
+  usb: dwc3: Add disabling of start_transfer failure quirk
+  usb: dwc3: Add workaround for isoc start transfer failure
+  usb: dwc3: Check controller type before setting speed
+  usb: gadget: mass_storage: Set max_speed to SSP
+
+ Documentation/devicetree/bindings/usb/dwc3.txt |   7 +
+ drivers/usb/core/urb.c                         |   8 +
+ drivers/usb/dwc3/core.c                        |  72 ++++++++-
+ drivers/usb/dwc3/core.h                        |  53 +++++++
+ drivers/usb/dwc3/debugfs.c                     |   5 +
+ drivers/usb/dwc3/gadget.c                      | 205 ++++++++++++++++++++++++-
+ drivers/usb/gadget/legacy/mass_storage.c       |   2 +-
+ 7 files changed, 342 insertions(+), 10 deletions(-)
+
+-- 
+2.11.0
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
