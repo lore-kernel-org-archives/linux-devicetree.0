@@ -1,92 +1,88 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH v3 11/16] mmc: tmio: deprecate "toshiba,mmc-wrprotect-disable"
- DT property
-Date: Thu, 18 Jan 2018 10:58:36 +0900
-Message-ID: <CAK7LNAQUJw-fjuJO68Kvskn8BRYW3rZj4YMtbo-Oxfv7c=6Ggg@mail.gmail.com>
-References: <1516206496-16612-1-git-send-email-yamada.masahiro@socionext.com> <1516206496-16612-12-git-send-email-yamada.masahiro@socionext.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v4 4/8] PCI: brcmstb: Add dma-range mapping for inbound traffic
+Date: Wed, 17 Jan 2018 20:15:33 -0600
+Message-ID: <CAL_JsqKpWNJXNpKS5qC99N0+H_P37DcRE-rN9HFwT5tVmRFCNw@mail.gmail.com>
+References: <1516058925-46522-1-git-send-email-jim2101024@gmail.com> <1516058925-46522-5-git-send-email-jim2101024@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1516206496-16612-12-git-send-email-yamada.masahiro@socionext.com>
+In-Reply-To: <1516058925-46522-5-git-send-email-jim2101024@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-mmc <linux-mmc@vger.kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: Ulf Magnusson <ulfalizer@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Simon Horman <horms+renesas@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ulf Hansson <ulf.hansson@linaro.org>
+To: Jim Quinlan <jim2101024@gmail.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Brian Norris <computersforpeace@gmail.com>, Russell King <rmk+kernel@armlinux.org.uk>, Robin Murphy <robin.murphy@arm.com>, Christoph Hellwig <hch@lst.de>, Florian Fainelli <f.fainelli@gmail.com>, Jonas Gorski <jonas.gorski@gmail.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-MIPS <linux-mips@linux-mips.org>, linux-pci@vger.kernel.org, Kevin Cernekee <cernekee@gmail.com>, Ralf Baechle <ralf@linux-mips.org>, bcm-kernel-feedback-list@broad
 List-Id: devicetree@vger.kernel.org
 
-2018-01-18 1:28 GMT+09:00 Masahiro Yamada <yamada.masahiro@socionext.com>:
-> This property is equivalent to "disable-wp" defined in
-> Documentation/devicetree/bindings/mmc/tmio_mmc.txt
+On Mon, Jan 15, 2018 at 5:28 PM, Jim Quinlan <jim2101024@gmail.com> wrote:
+> The Broadcom STB PCIe host controller is intimately related to the
+> memory subsystem.  This close relationship adds complexity to how cpu
+> system memory is mapped to PCIe memory.  Ideally, this mapping is an
+> identity mapping, or an identity mapping off by a constant.  Not so in
+> this case.
+>
+> Consider the Broadcom reference board BCM97445LCC_4X8 which has 6 GB
+> of system memory.  Here is how the PCIe controller maps the
+> system memory to PCIe memory:
+>
+>   memc0-a@[        0....3fffffff] <=> pci@[        0....3fffffff]
+>   memc0-b@[100000000...13fffffff] <=> pci@[ 40000000....7fffffff]
+>   memc1-a@[ 40000000....7fffffff] <=> pci@[ 80000000....bfffffff]
+>   memc1-b@[300000000...33fffffff] <=> pci@[ c0000000....ffffffff]
+>   memc2-a@[ 80000000....bfffffff] <=> pci@[100000000...13fffffff]
+>   memc2-b@[c00000000...c3fffffff] <=> pci@[140000000...17fffffff]
+>
+> Although there are some "gaps" that can be added between the
+> individual mappings by software, the permutation of memory regions for
+> the most part is fixed by HW.  The solution of having something close
+> to an identity mapping is not possible.
+>
+> The idea behind this HW design is that the same PCIe module can
+> act as an RC or EP, and if it acts as an EP it concatenates all
+> of system memory into a BAR so anything can be accessed.  Unfortunately,
+> when the PCIe block is in the role of an RC it also presents this
+> "BAR" to downstream PCIe devices, rather than offering an identity map
+> between its system memory and PCIe space.
+>
+> Suppose that an endpoint driver allocs some DMA memory.  Suppose this
+> memory is located at 0x6000_0000, which is in the middle of memc1-a.
+> The driver wants a dma_addr_t value that it can pass on to the EP to
+> use.  Without doing any custom mapping, the EP will use this value for
+> DMA: the driver will get a dma_addr_t equal to 0x6000_0000.  But this
+> won't work; the device needs a dma_addr_t that reflects the PCIe space
+> address, namely 0xa000_0000.
+>
+> So, essentially the solution to this problem must modify the
+> dma_addr_t returned by the DMA routines routines.  There are two
+> ways (I know of) of doing this:
+>
+> (a) overriding/redefining the dma_to_phys() and phys_to_dma() calls
+> that are used by the dma_ops routines.  This is the approach of
+>
+>         arch/mips/cavium-octeon/dma-octeon.c
 
-This is mistake.
+MIPS is rarely an example to follow. :)
 
-"disable-wp" is defined in
+> In ARM and ARM64 these two routines are defiend in asm/dma-mapping.h
+> as static inline functions.
+>
+> (b) Subscribe to a notifier that notifies when a device is added to a
+> bus.  When this happens, set_dma_ops() can be called for the device.
+> This method is mentioned in:
+>
+>     http://lxr.free-electrons.com/source/drivers/of/platform.c?v=3.16#L152
 
-Documentation/devicetree/bindings/mmc/mmc.txt
+Why refer to an external website when you can just refer to the source
+of the project this patch applies to directly.
 
+> where it says as a comment
+>
+>     "In case if platform code need to use own special DMA
+>     configuration, it can use Platform bus notifier and
+>     handle BUS_NOTIFY_ADD_DEVICE event to fix up DMA
+>     configuration."
 
+In the current tree, this comment is in drivers/of/device.c.
 
-
-> The TMIO MMC core calls mmc_of_parse(), and it sets
-> MMC_CAP2_NO_WRITE_PROTECT if "disable-wp" property is present.
->
-> We do not need a vendor-specific property to do the same thing.
->
-> Let's remove the description from the dt-binding to prevent new boards
-> from using it.
->
-> I am keeping the driver code for existing DT files, but added
-> comments that this is deprecated.
->
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
->
-> Changes in v3:
->   - newly added
->
-> Changes in v2: None
->
->  Documentation/devicetree/bindings/mmc/tmio_mmc.txt | 1 -
->  drivers/mmc/host/tmio_mmc_core.c                   | 5 +++++
->  2 files changed, 5 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/devicetree/bindings/mmc/tmio_mmc.txt b/Documentation/devicetree/bindings/mmc/tmio_mmc.txt
-> index 3c67624..cb7d40e 100644
-> --- a/Documentation/devicetree/bindings/mmc/tmio_mmc.txt
-> +++ b/Documentation/devicetree/bindings/mmc/tmio_mmc.txt
-> @@ -49,7 +49,6 @@ Required properties:
->           2: R7S72100
->
->  Optional properties:
-> -- toshiba,mmc-wrprotect-disable: write-protect detection is unavailable
->  - pinctrl-names: should be "default", "state_uhs"
->  - pinctrl-0: should contain default/high speed pin ctrl
->  - pinctrl-1: should contain uhs mode pin ctrl
-> diff --git a/drivers/mmc/host/tmio_mmc_core.c b/drivers/mmc/host/tmio_mmc_core.c
-> index 7ad3433c..f30ac69 100644
-> --- a/drivers/mmc/host/tmio_mmc_core.c
-> +++ b/drivers/mmc/host/tmio_mmc_core.c
-> @@ -1134,6 +1134,11 @@ static void tmio_mmc_of_parse(struct platform_device *pdev,
->         if (!np)
->                 return;
->
-> +       /*
-> +        * DEPRECATED:
-> +        * For new platforms, please use "disable-wp" instead of
-> +        * "toshiba,mmc-wrprotect-disable"
-> +        */
->         if (of_get_property(np, "toshiba,mmc-wrprotect-disable", NULL))
->                 mmc->caps2 |= MMC_CAP2_NO_WRITE_PROTECT;
->  }
-> --
-> 2.7.4
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+> Solution (b) is what this commit does.  It uses its own set of
+> dma_ops which are wrappers around the arch_dma_ops.  The
+> wrappers translate the dma addresses before/after invoking
+> the arch_dma_ops, as appropriate.
