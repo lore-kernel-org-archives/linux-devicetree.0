@@ -1,81 +1,156 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH] kbuild: fix W= option checks for extra DTC warnings
-Date: Thu, 18 Jan 2018 12:31:46 +0900
-Message-ID: <1516246306-12851-1-git-send-email-yamada.masahiro@socionext.com>
+From: houlong wei <houlong.wei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v20 2/4] mailbox: mediatek: Add Mediatek CMDQ driver
+Date: Thu, 18 Jan 2018 11:42:54 +0800
+Message-ID: <1516246974.13759.13.camel@mhfsdcap03>
+References: <1483499169-16329-1-git-send-email-hs.liao@mediatek.com>
+         <1483499169-16329-3-git-send-email-hs.liao@mediatek.com>
+         <CABb+yY23TUB8NpmpiO=cCmVFAVJMqKPfGgX14j+_Yj7tJvMOuQ@mail.gmail.com>
+         <1485419833.990.1.camel@mtksdaap41>
+         <CABb+yY13VaFpYz6EExvAXLpAqEWDJ4R50WG0DYbXO6iCESbA5A@mail.gmail.com>
+         <1486359476.11424.33.camel@mtksdaap41>
+         <CABb+yY0jCGqnrMLkkTNoEmLX4jDstWh7-UYhDyKjV-gFOnxpsg@mail.gmail.com>
+         <1487733150.15869.11.camel@mtksdaap41>
+         <CABb+yY2dzcR4fYvrSQK5jemwUSkYVJ8aWEmiE6wstw-Yyqy7bw@mail.gmail.com>
+         <1487854104.17813.1.camel@mtksdaap41>
+         <497f8e4ef7ae4c8a9b7b4ab259801306@mtkmbs01n1.mediatek.inc>
+         <1515400735.21044.35.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-kbuild@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Michal Marek <michal.lkml@markovi.net>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, Sam Ravnborg <sam@ravnborg.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1515400735.21044.35.camel@mhfsdcap03>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "; Matthias Brugger" <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "; Daniel Kurtz" <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "; Sascha Hauer" <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "; Devicetree List" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "; Linux Kernel Mailing List" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "; Sascha Hauer" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "; Philipp Zabel" <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "; Nicolas Boichat" <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Cawa Cheng <cawa.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Bibby Hsieh <Bibby.Hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, YT Shen <Yt.Shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Daoyuan Huang <Daoyuan.Huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Damon Chu <Damon.Chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Josh-YC Liu <Josh-YC.Liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Glory Hung <glory.hung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Kbuild supports 3 levels of extra warnings, and multiple levels can
-be combined, like W=12, W=123.  It was added by commit a6de553da01c
-("kbuild: Allow to combine multiple W= levels").
+Hi Jassi,
 
->From the log of commit 8654cb8d0371 ("dtc: update warning settings
-for new bus and node/property name checks"), I assume:
+We prefer to use method (1) to move dma_map_single() outside of
+spin_lock. Do you have any comment about this?
 
- - unit_address_vs_reg, simple_bus_reg, etc. belong to level 1
- - node_name_chars_strict, property_name_chars_strict belong to level 2
+Thanks,
+Houlong
 
-However, the level 1 warnings are displayed by any argument to W=.
-On the other hand, the level 2 warnings are displayed by W=2, but
-not by W=12, or W=123.
+On Mon, 2018-01-08 at 16:38 +0800, houlong wei wrote:
+> Hi Jassi,
+> 
+> Sorry for reply so late.
+> According to previous discussion, there are two methods to move
+> dma_map_single() outside of spin_lock.
+> (1) put in mtk-cmdq-helper.c, as described by HS on 2017-02-09.
+>   > I think a trade-off solution is to put in mtk-cmdq-helper.c.
+>   > Although it is a mailbox client, it is not a CMDQ client.
+>   > We can include mailbox_controller.h in mtk-cmdq-helper.c (instead of
+> mtk-cmdq.h), and then map dma at cmdq_pkt_flush_async before
+> mbox_send_message.
+> 
+>   > pkt->pa_base = dma_map_single(client->chan->mbox->dev, pkt->va_base,
+>   >                              pkt->cmd_buf_size, DMA_TO_DEVICE);
+> (2) schedule a tasklet in send_data().
+> 
+> After internal discussion with HS and other experts, now we prefer
+> method (1).
+> How do you think about it?
+> 
+> Thanks
+> Houlong
+> 
+> 
+> > -----Original Message-----
+> > From: Horng-Shyang Liao [mailto:hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org]
+> > Sent: Thursday, February 23, 2017 8:48 PM
+> > To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>; Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>; Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>; Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>; Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>; Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>; Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>; Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>; Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>; CK Hu (胡俊光) <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>; Cawa Cheng (鄭曄禧) <cawa.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>; Bibby Hsieh (謝濟遠) <Bibby.Hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>; YT Shen (沈岳霆) <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>; Daoyuan Huang (黃道原) <Daoyuan.Huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>; Damon Chu (朱峻賢) <damon.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>; Josh-Y
+ C Liu (劉育誠) <Josh-YC.Liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>; Glory Hung (洪智瑋) <glory.hung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>; Jiaguang Zhang (张加广) <Jiaguang.Zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>; Dennis-YC Hsieh (謝宇哲) <Dennis-YC.Hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>; Monica Wang (王孟婷) <monica.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>; Houlong Wei (魏厚龙) <houlong.wei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>; Hs Liao (廖宏祥) <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > Subject: Re: [PATCH v20 2/4] mailbox: mediatek: Add Mediatek CMDQ driver
+> >
+> > On Thu, 2017-02-23 at 09:40 +0530, Jassi Brar wrote:
+> > > On Wed, Feb 22, 2017 at 8:42 AM, Horng-Shyang Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> > > > On Thu, 2017-02-16 at 21:02 +0530, Jassi Brar wrote:
+> > > >> On Mon, Feb 6, 2017 at 11:07 AM, Horng-Shyang Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> > > >> > Hi Jassi,
+> > > >> >
+> > > >> > On Wed, 2017-02-01 at 10:52 +0530, Jassi Brar wrote:
+> > > >> >> On Thu, Jan 26, 2017 at 2:07 PM, Horng-Shyang Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> > > >> >> > Hi Jassi,
+> > > >> >> >
+> > > >> >> > On Thu, 2017-01-26 at 10:08 +0530, Jassi Brar wrote:
+> > > >> >> >> On Wed, Jan 4, 2017 at 8:36 AM, HS Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> > > >> >> >>
+> > > >> >> >> > diff --git a/drivers/mailbox/mtk-cmdq-mailbox.c
+> > > >> >> >> > b/drivers/mailbox/mtk-cmdq-mailbox.c
+> > > >> >> >> > new file mode 100644
+> > > >> >> >> > index 0000000..747bcd3
+> > > >> >> >> > --- /dev/null
+> > > >> >> >> > +++ b/drivers/mailbox/mtk-cmdq-mailbox.c
+> > > >> >> >>
+> > > >> >> >> ...
+> > > >> >> >>
+> > > >> >> >> > +static void cmdq_task_exec(struct cmdq_pkt *pkt, struct
+> > > >> >> >> > +cmdq_thread *thread) {
+> > > >> >> >> > +       struct cmdq *cmdq;
+> > > >> >> >> > +       struct cmdq_task *task;
+> > > >> >> >> > +       unsigned long curr_pa, end_pa;
+> > > >> >> >> > +
+> > > >> >> >> > +       cmdq = dev_get_drvdata(thread->chan->mbox->dev);
+> > > >> >> >> > +
+> > > >> >> >> > +       /* Client should not flush new tasks if suspended. */
+> > > >> >> >> > +       WARN_ON(cmdq->suspended);
+> > > >> >> >> > +
+> > > >> >> >> > +       task = kzalloc(sizeof(*task), GFP_ATOMIC);
+> > > >> >> >> > +       task->cmdq = cmdq;
+> > > >> >> >> > +       INIT_LIST_HEAD(&task->list_entry);
+> > > >> >> >> > +       task->pa_base = dma_map_single(cmdq->mbox.dev, pkt->va_base,
+> > > >> >> >> > +                                      pkt->cmd_buf_size,
+> > > >> >> >> > + DMA_TO_DEVICE);
+> > > >> >> >> >
+> > > >> >> >> You seem to parse the requests and responses, that should
+> > > >> >> >> ideally be done in client driver.
+> > > >> >> >> Also, we are here in atomic context, can you move it in
+> > > >> >> >> client driver (before the spin_lock)?
+> > > >> >> >> Maybe by adding a new 'pa_base' member as well in 'cmdq_pkt'.
+> > > >> >> >
+> > > >> >> > will do
+> > > >> >
+> > > >> > I agree with moving dma_map_single out from spin_lock.
+> > > >> >
+> > > >> > However, mailbox clients cannot map virtual memory to mailbox
+> > > >> > controller's device for DMA.
+> > > >> >
+> > > >> If DMA is a resource used by MBox to transfer data, then yes the
+> > > >> mapping needs to be done in the Mbox controller driver. To map
+> > > >> memory outside of spinlock, you could schedule a tasklet in send_data() ?
+> > > >
+> > > > Hi Jassi,
+> > > >
+> > > > For CMDQ, the order of CMDQ tasks should be guaranteed.
+> > > > However, it seems tasklet cannot ensure this requirement.
+> > > >
+> > > > Quote from Linux Device Drivers 3rd edition ch7.
+> > > > "void tasklet_schedule(struct tasklet_struct *t);
+> > > >   Schedule the tasklet for execution. If a tasklet is scheduled
+> > > > again before it has a chance to run, it runs only once...."
+> > > >
+> > > Not sure what bothers you.
+> > > If you only add requests to a list, protected by some spinlock, during
+> > > send_datam you could always iterate over (submit) requests in the
+> > > order you queued them.
+> >
+> > Hi Jassi,
+> >
+> > OK. I will do it.
+> >
+> > Thanks,
+> > HS
+> >
+> >
+> >
+> 
+> 
 
-Use $(findstring ...) like scripts/Makefile.extrawarn.
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
-
-Side Notes for possible additional works:
-
- [1] I implemented DTC extra warnings differently in U-Boot:
-
-    https://github.com/u-boot/u-boot/blob/v2018.01/scripts/Makefile.extrawarn#L64
-
-    Better to collect extra warning stuff into scripts/Makefile.extrawarn ?
-
- [2] KBUILD_ENABLE_EXTRA_GCC_CHECKS is getting a historical misnomer
-     because we use it for Clang and DTC too.
-
-     Better to rename?  (keeping backward-compatibility for a while)?
-
-
- scripts/Makefile.lib | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-index 1ca4dcd..7dee1da 100644
---- a/scripts/Makefile.lib
-+++ b/scripts/Makefile.lib
-@@ -264,7 +264,7 @@ cmd_gzip = (cat $(filter-out FORCE,$^) | gzip -n -f -9 > $@) || \
- DTC ?= $(objtree)/scripts/dtc/dtc
- 
- # Disable noisy checks by default
--ifeq ($(KBUILD_ENABLE_EXTRA_GCC_CHECKS),)
-+ifeq ($(findstring 1,$(KBUILD_ENABLE_EXTRA_GCC_CHECKS)),)
- DTC_FLAGS += -Wno-unit_address_vs_reg \
- 	-Wno-simple_bus_reg \
- 	-Wno-unit_address_format \
-@@ -273,7 +273,7 @@ DTC_FLAGS += -Wno-unit_address_vs_reg \
- 	-Wno-pci_device_reg
- endif
- 
--ifeq ($(KBUILD_ENABLE_EXTRA_GCC_CHECKS),2)
-+ifneq ($(findstring 2,$(KBUILD_ENABLE_EXTRA_GCC_CHECKS)),)
- DTC_FLAGS += -Wnode_name_chars_strict \
- 	-Wproperty_name_chars_strict
- endif
--- 
-2.7.4
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
