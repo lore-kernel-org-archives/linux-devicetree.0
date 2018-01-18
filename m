@@ -1,31 +1,101 @@
-From: <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH 0/2] Add dsi clock for stm32f469 board
-Date: Thu, 18 Jan 2018 15:49:38 +0100
-Message-ID: <1516286980-8603-1-git-send-email-gabriel.fernandez@st.com>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [RFC v2 1/2] dt-bindings: mipi-dsi: Add info about peripherals
+ with non-DSI control bus
+Date: Thu, 18 Jan 2018 15:55:04 +0100
+Message-ID: <20180118155504.3718a80b@bbrezillon>
+References: <20171205103356.9917-1-architt@codeaurora.org>
+ <20180118045355.8858-1-architt@codeaurora.org>
+ <20180118045355.8858-2-architt@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, philippe.cornu-qxv4g6HH51o@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gabriel.fernandez.st-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, gabriel.fernandez-qxv4g6HH51o@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180118045355.8858-2-architt@codeaurora.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Archit Taneja <architt@codeaurora.org>
+Cc: devicetree@vger.kernel.org, tomi.valkeinen@ti.com, dri-devel@lists.freedesktop.org, briannorris@chromium.org, philippe.cornu@st.com, robh+dt@kernel.org, nickey.yang@rock-chips.com, thierry.reding@gmail.com, laurent.pinchart@ideasonboard.com, linux-arm-msm@vger.kernel.org, maxime.ripard@free-electrons.com
 List-Id: devicetree@vger.kernel.org
 
-From: Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
-
-This patch-set adds the dsi clock for stm32f469 board.
-
-Gabriel Fernandez (2):
-  clk: stm32: END_PRIMARY_CLK should be declare after CLK_SYSCLK
-  clk: stm32: Add DSI clock for STM32F469 Board
-
- drivers/clk/clk-stm32f4.c                 | 11 ++++++++++-
- include/dt-bindings/clock/stm32fx-clock.h |  7 ++++---
- 2 files changed, 14 insertions(+), 4 deletions(-)
-
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gVGh1LCAxOCBKYW4gMjAxOCAxMDoyMzo1NCArMDUzMApBcmNoaXQgVGFuZWphIDxhcmNoaXR0
+QGNvZGVhdXJvcmEub3JnPiB3cm90ZToKCj4gQWRkIGEgc2VjdGlvbiB0aGF0IGRlc2NyaWJlcyBk
+dC1iaW5kaW5ncyBmb3IgcGVyaXBoZXJhbHMgdGhhdCBzdXBwb3J0Cj4gTUlQSSBEU0ksIGJ1dCBo
+YXZlIGEgZGlmZmVyZW50IGJ1cyBhcyB0aGUgcHJpbWFyeSBjb250cm9sIGJ1cywgb3Igbm8KPiBj
+b250cm9sIGJ1cyBhdCBhbGwuIEFkZCBhbiBleGFtcGxlIGZvciBhIHBlcmlwaGVyYWwgd2l0aCBh
+IG5vbi1EU0kKPiBjb250cm9sIGJ1cy4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBBcmNoaXQgVGFuZWph
+IDxhcmNoaXR0QGNvZGVhdXJvcmEub3JnPgoKUmV2aWV3ZWQtYnk6IEJvcmlzIEJyZXppbGxvbiA8
+Ym9yaXMuYnJlemlsbG9uQGZyZWUtZWxlY3Ryb25zLmNvbT4KClRoYW5rcyBmb3IgdGhpcyBjbGFy
+aWZpY2F0aW9uLgoKQm9yaXMKCj4gLS0tCj4gdjI6Cj4gLSBNZW50aW9uZWQgd2hhdCB0byBkbyBp
+ZiBwZXJpcGhlcmFsIGhhcyBubyBjb250cm9sIGJ1cwo+IC0gRHJvcCB1bml0LWFkZHJlc3MgYW5k
+ICMqLWNlbGxzIHdoZXJlIGFwcGxpY2FibGUuCj4gCj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L2Rpc3BsYXkvbWlwaS1kc2ktYnVzLnR4dCAgIHwgNzEgKysrKysrKysrKysrKysrKysrKy0tLQo+
+ICAxIGZpbGUgY2hhbmdlZCwgNjQgaW5zZXJ0aW9ucygrKSwgNyBkZWxldGlvbnMoLSkKPiAKPiBk
+aWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbWlw
+aS1kc2ktYnVzLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
+L21pcGktZHNpLWJ1cy50eHQKPiBpbmRleCA5NzNjMjcyNzM3NzIuLjk0ZmI3MmNiOTE2ZiAxMDA2
+NDQKPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9taXBp
+LWRzaS1idXMudHh0Cj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
+c3BsYXkvbWlwaS1kc2ktYnVzLnR4dAo+IEBAIC0xNiw3ICsxNiw3IEBAIFRoZSBmb2xsb3dpbmcg
+YXNzdW1lcyB0aGF0IG9ubHkgYSBzaW5nbGUgcGVyaXBoZXJhbCBpcyBjb25uZWN0ZWQgdG8gYSBE
+U0kKPiAgaG9zdC4gRXhwZXJpZW5jZSBzaG93cyB0aGF0IHRoaXMgaXMgdHJ1ZSBmb3IgdGhlIGxh
+cmdlIG1ham9yaXR5IG9mIHNldHVwcy4KPiAgCj4gIERTSSBob3N0Cj4gLS0tLS0tLS0tCj4gKz09
+PT09PT09Cj4gIAo+ICBJbiBhZGRpdGlvbiB0byB0aGUgc3RhbmRhcmQgcHJvcGVydGllcyBhbmQg
+dGhvc2UgZGVmaW5lZCBieSB0aGUgcGFyZW50IGJ1cyBvZgo+ICBhIERTSSBob3N0LCB0aGUgZm9s
+bG93aW5nIHByb3BlcnRpZXMgYXBwbHkgdG8gYSBub2RlIHJlcHJlc2VudGluZyBhIERTSSBob3N0
+Lgo+IEBAIC0zMCwxMSArMzAsMTYgQEAgUmVxdWlyZWQgcHJvcGVydGllczoKPiAgICBkaWZmZXJl
+bnQgdmFsdWUgaGVyZS4gU2VlIGJlbG93Lgo+ICAKPiAgRFNJIHBlcmlwaGVyYWwKPiAtLS0tLS0t
+LS0tLS0tLS0KPiArPT09PT09PT09PT09PT0KPiAgCj4gLVBlcmlwaGVyYWxzIGFyZSByZXByZXNl
+bnRlZCBhcyBjaGlsZCBub2RlcyBvZiB0aGUgRFNJIGhvc3QncyBub2RlLiBQcm9wZXJ0aWVzCj4g
+LWRlc2NyaWJlZCBoZXJlIGFwcGx5IHRvIGFsbCBEU0kgcGVyaXBoZXJhbHMsIGJ1dCBpbmRpdmlk
+dWFsIGJpbmRpbmdzIG1heSB3YW50Cj4gLXRvIGRlZmluZSBhZGRpdGlvbmFsLCBkZXZpY2Utc3Bl
+Y2lmaWMgcHJvcGVydGllcy4KPiArUGVyaXBoZXJhbHMgd2l0aCBEU0kgYXMgY29udHJvbCBidXMs
+IG9yIG5vIGNvbnRyb2wgYnVzCj4gKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLQo+ICsKPiArUGVyaXBoZXJhbHMgd2l0aCB0aGUgRFNJIGJ1cyBh
+cyB0aGUgcHJpbWFyeSBjb250cm9sIGJ1cywgb3IgcGVyaXBoZXJhbHMgd2l0aAo+ICtubyBjb250
+cm9sIGJ1cyBidXQgdXNlIHRoZSBEU0kgYnVzIHRvIHRyYW5zbWl0IHBpeGVsIGRhdGEgYXJlIHJl
+cHJlc2VudGVkCj4gK2FzIGNoaWxkIG5vZGVzIG9mIHRoZSBEU0kgaG9zdCdzIG5vZGUuIFByb3Bl
+cnRpZXMgZGVzY3JpYmVkIGhlcmUgYXBwbHkgdG8gYWxsCj4gK0RTSSBwZXJpcGhlcmFscywgYnV0
+IGluZGl2aWR1YWwgYmluZGluZ3MgbWF5IHdhbnQgdG8gZGVmaW5lIGFkZGl0aW9uYWwsCj4gK2Rl
+dmljZS1zcGVjaWZpYyBwcm9wZXJ0aWVzLgo+ICAKPiAgUmVxdWlyZWQgcHJvcGVydGllczoKPiAg
+LSByZWc6IFRoZSB2aXJ0dWFsIGNoYW5uZWwgbnVtYmVyIG9mIGEgRFNJIHBlcmlwaGVyYWwuIE11
+c3QgYmUgaW4gdGhlIHJhbmdlCj4gQEAgLTQ5LDkgKzU0LDI1IEBAIGNhc2UgdHdvIGFsdGVybmF0
+aXZlIHJlcHJlc2VudGF0aW9ucyBjYW4gYmUgY2hvc2VuOgo+ICAgIHByb3BlcnR5IGlzIHRoZSBu
+dW1iZXIgb2YgdGhlIGZpcnN0IHZpcnR1YWwgY2hhbm5lbCBhbmQgdGhlIHNlY29uZCBjZWxsIGlz
+Cj4gICAgdGhlIG51bWJlciBvZiBjb25zZWN1dGl2ZSB2aXJ0dWFsIGNoYW5uZWxzLgo+ICAKPiAt
+RXhhbXBsZQo+IC0tLS0tLS0tCj4gK1BlcmlwaGVyYWxzIHdpdGggYSBkaWZmZXJlbnQgY29udHJv
+bCBidXMKPiArLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQo+ICsKPiAr
+VGhlcmUgYXJlIHBlcmlwaGVyYWxzIHRoYXQgaGF2ZSBJMkMvU1BJIChvciBzb21lIG90aGVyIG5v
+bi1EU0kgYnVzKSBhcyB0aGUKPiArcHJpbWFyeSBjb250cm9sIGJ1cywgYnV0IGFyZSBhbHNvIGNv
+bm5lY3RlZCB0byBhIERTSSBidXMgKG1vc3RseSBmb3IgdGhlIGRhdGEKPiArcGF0aCkuIENvbm5l
+Y3Rpb25zIGJldHdlZW4gc3VjaCBwZXJpcGhlcmFscyBhbmQgYSBEU0kgaG9zdCBjYW4gYmUgcmVw
+cmVzZW50ZWQKPiArdXNpbmcgdGhlIGdyYXBoIGJpbmRpbmdzIFsxXSwgWzJdLgo+ICsKPiArWzFd
+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncmFwaC50eHQKPiArWzJdIERvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS92aWRlby1pbnRlcmZhY2VzLnR4dAo+
+ICAKPiArRXhhbXBsZXMKPiArPT09PT09PT0KPiArLSAoMSksICgyKSBhbmQgKDMpIGFyZSBleGFt
+cGxlcyBvZiBhIERTSSBob3N0IGFuZCBwZXJpcGhlcmFsIG9uIHRoZSBEU0kgYnVzCj4gKyAgd2l0
+aCBkaWZmZXJlbnQgdmlydHVhbCBjaGFubmVsIGNvbmZpZ3VyYXRpb25zLgo+ICstICg0KSBpcyBh
+biBleGFtcGxlIG9mIGEgcGVyaXBoZXJhbCBvbiBhIEkyQyBjb250cm9sIGJ1cyBjb25uZWN0ZWQg
+d2l0aCB0bwo+ICsgIGEgRFNJIGhvc3QgdXNpbmcgb2YtZ3JhcGggYmluZGluZ3MuCj4gKwo+ICsx
+KQo+ICAJZHNpLWhvc3Qgewo+ICAJCS4uLgo+ICAKPiBAQCAtNjcsNiArODgsNyBAQCBFeGFtcGxl
+Cj4gIAkJLi4uCj4gIAl9Owo+ICAKPiArMikKPiAgCWRzaS1ob3N0IHsKPiAgCQkuLi4KPiAgCj4g
+QEAgLTgyLDYgKzEwNCw3IEBAIEV4YW1wbGUKPiAgCQkuLi4KPiAgCX07Cj4gIAo+ICszKQo+ICAJ
+ZHNpLWhvc3Qgewo+ICAJCS4uLgo+ICAKPiBAQCAtOTYsMyArMTE5LDM3IEBAIEV4YW1wbGUKPiAg
+Cj4gIAkJLi4uCj4gIAl9Owo+ICsKPiArNCkKPiArCWkyYy1ob3N0IHsKPiArCQkuLi4KPiArCj4g
+KwkJZHNpLWJyaWRnZUAzNSB7Cj4gKwkJCWNvbXBhdGlibGUgPSAiLi4uIjsKPiArCQkJcmVnID0g
+PDB4MzU+Owo+ICsKPiArCQkJcG9ydHMgewo+ICsJCQkJLi4uCj4gKwo+ICsJCQkJcG9ydCB7Cj4g
+KwkJCQkJYnJpZGdlX21pcGlfaW46IGVuZHBvaW50IHsKPiArCQkJCQkJcmVtb3RlLWVuZHBvaW50
+ID0gPCZob3N0X21pcGlfb3V0PjsKPiArCQkJCQl9Owo+ICsJCQkJfTsKPiArCQkJfTsKPiArCQl9
+Owo+ICsJfTsKPiArCj4gKwlkc2ktaG9zdCB7Cj4gKwkJLi4uCj4gKwo+ICsJCXBvcnRzIHsKPiAr
+CQkJLi4uCj4gKwo+ICsJCQlwb3J0IHsKPiArCQkJCWhvc3RfbWlwaV9vdXQ6IGVuZHBvaW50IHsK
+PiArCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmJyaWRnZV9taXBpX2luPjsKPiArCQkJCX07Cj4g
+KwkJCX07Cj4gKwkJfTsKPiArCX07CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVl
+ZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5m
+by9kcmktZGV2ZWwK
