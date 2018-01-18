@@ -1,55 +1,73 @@
-From: Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH] arm64: dts: hisi: add hns-dsaf cpld control for the hip07 SoC
-Date: Thu, 18 Jan 2018 20:31:37 +0800
-Message-ID: <1516278697-244377-1-git-send-email-tanhuazhong@huawei.com>
+From: Peter Rosin <peda@axentia.se>
+Subject: [PATCH v2 2/3] ARM: dts: at91: nattis: add lvds-encoder
+Date: Thu, 18 Jan 2018 12:46:15 +0100
+Message-ID: <20180118114616.6639-3-peda@axentia.se>
+References: <20180118114616.6639-1-peda@axentia.se>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180118114616.6639-1-peda@axentia.se>
 Sender: linux-kernel-owner@vger.kernel.org
-To: xuwei5@hisilicon.com
-Cc: linuxarm@huawei.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Peter Rosin <peda@axentia.se>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add cpld-syscon node to support the cpld control for hns-dsaf
-on the hip07 SoC.
+The lvds encoder chip was omitted by oversight. Add it.
 
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Fixes: 0e4323899973 ("ARM: dts: at91: add devicetree for the Axentia Nattis with Natte power")
+Signed-off-by: Peter Rosin <peda@axentia.se>
 ---
- arch/arm64/boot/dts/hisilicon/hip07.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/arm/boot/dts/at91-nattis-2-natte-2.dts | 31 ++++++++++++++++++++++++++---
+ 1 file changed, 28 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hip07.dtsi b/arch/arm64/boot/dts/hisilicon/hip07.dtsi
-index 2c01a21..4bd6416 100644
---- a/arch/arm64/boot/dts/hisilicon/hip07.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hip07.dtsi
-@@ -1127,6 +1127,12 @@
- 			reg = <0x0 0xc0000000 0x0 0x10000>;
- 		};
+diff --git a/arch/arm/boot/dts/at91-nattis-2-natte-2.dts b/arch/arm/boot/dts/at91-nattis-2-natte-2.dts
+index 03683c1b4240..7cedd3ddf0bd 100644
+--- a/arch/arm/boot/dts/at91-nattis-2-natte-2.dts
++++ b/arch/arm/boot/dts/at91-nattis-2-natte-2.dts
+@@ -109,7 +109,32 @@
  
-+		dsa_cpld: dsa_cpld@78000010 {
-+			compatible = "syscon";
-+			reg = <0x0 0x78000010 0x0 0x100>;
-+			reg-io-width = <2>;
+ 		port {
+ 			panel_input: endpoint {
+-				remote-endpoint = <&hlcdc_panel_output>;
++				remote-endpoint = <&lvds_encoder_output>;
++			};
 +		};
++	};
 +
- 		pcie_subctl: pcie_subctl@a0000000 {
- 			compatible = "hisilicon,pcie-sas-subctrl", "syscon";
- 			reg = <0x0 0xa0000000 0x0 0x10000>;
-@@ -1258,6 +1264,7 @@
- 			port@0 {
- 				reg = <0>;
- 				serdes-syscon = <&serdes_ctrl>;
-+				cpld-syscon = <&dsa_cpld 0x0>;
- 				port-rst-offset = <0>;
- 				port-mode-offset = <0>;
- 				mc-mac-mask = [ff f0 00 00 00 00];
-@@ -1267,6 +1274,7 @@
- 			port@1 {
- 				reg = <1>;
- 				serdes-syscon= <&serdes_ctrl>;
-+				cpld-syscon = <&dsa_cpld 0x4>;
- 				port-rst-offset = <1>;
- 				port-mode-offset = <1>;
- 				mc-mac-mask = [ff f0 00 00 00 00];
++	lvds-encoder {
++		compatible = "lvds-encoder";
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
++				reg = <0>;
++
++				lvds_encoder_input: endpoint {
++					remote-endpoint = <&hlcdc_output>;
++				};
++			};
++
++			port@1 {
++				reg = <1>;
++
++				lvds_encoder_output: endpoint {
++					remote-endpoint = <&panel_input>;
++				};
+ 			};
+ 		};
+ 	};
+@@ -176,8 +201,8 @@
+ 			     &pinctrl_lcd_hipow0>;
+ 
+ 		port@0 {
+-			hlcdc_panel_output: endpoint {
+-				remote-endpoint = <&panel_input>;
++			hlcdc_output: endpoint {
++				remote-endpoint = <&lvds_encoder_input>;
+ 			};
+ 		};
+ 	};
 -- 
-1.9.1
+2.11.0
