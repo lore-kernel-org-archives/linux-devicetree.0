@@ -1,83 +1,58 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH v5 20/44] dt-bindings: clock: Add bindings for TI DA8XX
- USB PHY clocks
-Date: Fri, 19 Jan 2018 11:47:07 +0530
-Message-ID: <458ac21d-a995-1c52-792e-563d81ba1e33@ti.com>
-References: <1515377863-20358-1-git-send-email-david@lechnology.com>
- <1515377863-20358-21-git-send-email-david@lechnology.com>
- <33f0feba-adee-e365-54d5-16fe3d49302d@ti.com>
- <1acdc3cf-f08b-3476-e656-5dc25103e86d@lechnology.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH v2 2/2] drm: rcar-du: add R8A77970 support
+Date: Fri, 19 Jan 2018 00:05:59 +0300
+Message-ID: <20180118211027.375081728__9970.41229061342$1516342933$gmane$org@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1acdc3cf-f08b-3476-e656-5dc25103e86d@lechnology.com>
-Content-Language: en-US
-Sender: linux-clk-owner@vger.kernel.org
-To: David Lechner <david@lechnology.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline; filename=drm-rcar-du-add-R8A77970-support-v2.patch
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 19 January 2018 12:30 AM, David Lechner wrote:
-> On 01/18/2018 06:10 AM, Sekhar Nori wrote:
->> On Monday 08 January 2018 07:47 AM, David Lechner wrote:
->>> This adds a new binding for TI DA8XX USB PHY clocks. These clocks are
->>> part
->>> of a syscon register called CFGCHIP3.
->>
->> CFGCHIP2
->>
->>>
->>> Signed-off-by: David Lechner <david@lechnology.com>
->>
->>> +Examples:
->>> +
->>> +    cfgchip: syscon@1417c {
->>> +        compatible = "ti,da830-cfgchip", "syscon", "simple-mfd";
->>> +        reg = <0x1417c 0x14>;
->>> +
->>> +        usb0_phy_clk: usb0-phy-clock {
->>> +            compatible = "ti,da830-usb0-phy-clock";
->>> +            #clock-cells = <0>;
->>> +            clocks = <&usb_refclkin>, <&pll0_aux_clk>, <&psc1 1>;
->>> +            clock-names = "usb_refclkin", "auxclk", "usb0_lpsc";
->>> +            clock-output-names = "usb0_phy_clk";
->>
->> Probably call this "usb0_phy" to match with the input name used for
->> usb1_phy_clk?
-> 
-> I was planning on just dropping clock-output-names altogether actually
-> since they don't really do anything useful.
-> 
-> Also, I was considering sending a series to change the con_id for the
-> PHY clocks.
-> 
-> My current revision of the device tree bindings is looking like this:
-> 
->     usb_phy: usb-phy {
->         compatible = "ti,da830-usb-phy";
->         #phy-cells = <1>;
->         clocks = <&usb_phy_clk 0>, <&usb_phy_clk 1>;
->         clock-names = "usb20_phy", "usb11_phy";
->         status = "disabled";
->     };
->     usb_phy_clk: usb-phy-clocks {
->         compatible = "ti,da830-usb-phy-clocks";
->         #clock-cells = <1>;
->         clocks = <&psc1 1>, <&usb_refclkin>, <&pll0_auxclk>;
->         clock-names = "fck", "usb_refclkin", "auxclk";
->     };
-> 
-> The clock-names = "usb20_phy", "usb11_phy" comes from the existing con_ids
-> in the PHY driver's clk_get()s.
-> 
-> However, in device tree, we are usually referring to the USB devices as
-> usb0 and usb1 instead of usb20 and usb11, respectively. Figure 6-2 "USB
-> Clocking Diagram" in spruh82c.pdf (AM1808 TRM) calls these clocks "CLK48"
-> and "CLK48MHz from USB 2.0 PHY", so I was thinking of changing the con_ids
-> (and therefore also clock-names) to "usb0_clk48" and "usb1_clk48".
-
-This is fine with me.
-
-Thanks,
-Sekhar
+QWRkIHN1cHBvcnQgZm9yIHRoZSBSLUNhciBWM00gKFI4QTc3OTcwKSBTb0MgdG8gdGhlIFItQ2Fy
+IERVIGRyaXZlci4KClNpZ25lZC1vZmYtYnk6IFNlcmdlaSBTaHR5bHlvdiA8c2VyZ2VpLnNodHls
+eW92QGNvZ2VudGVtYmVkZGVkLmNvbT4KCi0tLQpDaGFuZ2VzIGluIHZlcnNpb24gMjoKLSByZW1v
+dmVkICB0aGUgJ21vZGVsJyBhbmQgJ2RwbGxfY2gnIGZpZWxkIGluaXRpYWxpemVyczsKLSBmaXhl
+ZCB1cCB0aGUgRFUgcG9ydCBudW1iZXJzOwotIHNwbGl0IHRoZSBEVSBiaW5kaW5ncyBhbmQgdGhl
+IExWRFMgZHJpdmVyIHVwZGF0ZXMgaW50byBhIHNlcGFyYXRlIHBhdGNoZXM7Ci0gcmVtb3ZlZCAg
+dGhlIGNoZWNrIGJlZm9yZSB0aGUgRFBUU1Igd3JpdGUgKHRvIGJlIGRvbmUgaW4gYSBzZXBhcmF0
+ZSBwYXRjaCkuCgogZHJpdmVycy9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV9kcnYuYyB8ICAgMjEg
+KysrKysrKysrKysrKysrKysrKysrCiAxIGZpbGUgY2hhbmdlZCwgMjEgaW5zZXJ0aW9ucygrKQoK
+SW5kZXg6IGxpbnV4L2RyaXZlcnMvZ3B1L2RybS9yY2FyLWR1L3JjYXJfZHVfZHJ2LmMKPT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PQotLS0gbGludXgub3JpZy9kcml2ZXJzL2dwdS9kcm0vcmNhci1kdS9yY2FyX2R1X2Rydi5j
+CisrKyBsaW51eC9kcml2ZXJzL2dwdS9kcm0vcmNhci1kdS9yY2FyX2R1X2Rydi5jCkBAIC0yNDks
+NiArMjQ5LDI2IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgcmNhcl9kdV9kZXZpY2VfaW5mbwogCS5k
+cGxsX2NoID0gIEJJVCgxKSwKIH07CiAKK3N0YXRpYyBjb25zdCBzdHJ1Y3QgcmNhcl9kdV9kZXZp
+Y2VfaW5mbyByY2FyX2R1X3I4YTc3OTcwX2luZm8gPSB7CisJLmdlbiA9IDMsCisJLmZlYXR1cmVz
+ID0gUkNBUl9EVV9GRUFUVVJFX0NSVENfSVJRX0NMT0NLCisJCSAgfCBSQ0FSX0RVX0ZFQVRVUkVf
+RVhUX0NUUkxfUkVHUworCQkgIHwgUkNBUl9EVV9GRUFUVVJFX1ZTUDFfU09VUkNFLAorCS5udW1f
+Y3J0Y3MgPSAxLAorCS5yb3V0ZXMgPSB7CisJCS8qIFI4QTc3OTcwIGhhcyBvbmUgUkdCIG91dHB1
+dCBhbmQgb25lIExWRFMgb3V0cHV0LiAqLworCQlbUkNBUl9EVV9PVVRQVVRfRFBBRDBdID0gewor
+CQkJLnBvc3NpYmxlX2NydGNzID0gQklUKDApLAorCQkJLnBvcnQgPSAwLAorCQl9LAorCQlbUkNB
+Ul9EVV9PVVRQVVRfTFZEUzBdID0geworCQkJLnBvc3NpYmxlX2NydGNzID0gQklUKDApLAorCQkJ
+LnBvcnQgPSAxLAorCQl9LAorCX0sCisJLm51bV9sdmRzID0gMSwKK307CisKIHN0YXRpYyBjb25z
+dCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIHJjYXJfZHVfb2ZfdGFibGVbXSA9IHsKIAl7IC5jb21wYXRp
+YmxlID0gInJlbmVzYXMsZHUtcjhhNzc0MyIsIC5kYXRhID0gJnJ6ZzFfZHVfcjhhNzc0M19pbmZv
+IH0sCiAJeyAuY29tcGF0aWJsZSA9ICJyZW5lc2FzLGR1LXI4YTc3NDUiLCAuZGF0YSA9ICZyemcx
+X2R1X3I4YTc3NDVfaW5mbyB9LApAQCAtMjYwLDYgKzI4MCw3IEBAIHN0YXRpYyBjb25zdCBzdHJ1
+Y3Qgb2ZfZGV2aWNlX2lkIHJjYXJfZHUKIAl7IC5jb21wYXRpYmxlID0gInJlbmVzYXMsZHUtcjhh
+Nzc5NCIsIC5kYXRhID0gJnJjYXJfZHVfcjhhNzc5NF9pbmZvIH0sCiAJeyAuY29tcGF0aWJsZSA9
+ICJyZW5lc2FzLGR1LXI4YTc3OTUiLCAuZGF0YSA9ICZyY2FyX2R1X3I4YTc3OTVfaW5mbyB9LAog
+CXsgLmNvbXBhdGlibGUgPSAicmVuZXNhcyxkdS1yOGE3Nzk2IiwgLmRhdGEgPSAmcmNhcl9kdV9y
+OGE3Nzk2X2luZm8gfSwKKwl7IC5jb21wYXRpYmxlID0gInJlbmVzYXMsZHUtcjhhNzc5NzAiLCAu
+ZGF0YSA9ICZyY2FyX2R1X3I4YTc3OTcwX2luZm8gfSwKIAl7IH0KIH07CiAKCl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxp
+c3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
+dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
