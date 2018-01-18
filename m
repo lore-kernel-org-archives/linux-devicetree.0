@@ -1,56 +1,91 @@
-From: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Subject: Re: [PATCH] dts-bindings: usb-uhci: Document newly added properties
-Date: Thu, 18 Jan 2018 14:15:19 -0600
-Message-ID: <CACPK8XfgWAr_gi9AAsE1qPbG93pE-gAVVQFSPE1h8YB2p4C4+w@mail.gmail.com>
-References: <1516061175.31850.140.camel@kernel.crashing.org>
+From: Eric Anholt <eric@anholt.net>
+Subject: Re: [PATCH v2 1/4] ARM: bcm2835: sync firmware properties with downstream
+Date: Thu, 18 Jan 2018 12:50:55 -0800
+Message-ID: <87vafy7uxc.fsf@anholt.net>
+References: <cover.1515698418.git.baruch@tkos.co.il> <e68675d54955c754ebe8ffc2491585fde5b396bc.1515698418.git.baruch@tkos.co.il> <1991337128.42939.1515837465503@email.1und1.de> <CACRpkdZ_g3-jR-7pOnS9MwpHprfEz8acB9SWcMLyoOVcB0iLvA@mail.gmail.com> <20180116104904.fsebsozoa4xysbz7@tarshish> <632b9d56-78cf-1e8e-8cd2-30edd2de70c0@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1516061175.31850.140.camel-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Cc: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha512; protocol="application/pgp-signature"
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <632b9d56-78cf-1e8e-8cd2-30edd2de70c0@i2se.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Stefan Wahren <stefan.wahren@i2se.com>, Baruch Siach <baruch@tkos.co.il>, Linus Walleij <linus.walleij@linaro.org>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-gpio@vger.kernel.org, Michael Zoran <mzoran@crowfest.net>, linux-rpi-kernel <linux-rpi-kernel@lists.infradead.org>, Dave Stevenson <dave.stevenson@raspberrypi.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 15, 2018 at 6:06 PM, Benjamin Herrenschmidt
-<benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org> wrote:
-> Commit 4642d34a439f80e16af0d56ed6258a33abae257a
-> "usb/uhci: Add support for Aspeed BMC SoCs" added
-> support for a new #ports property, along with
-> Aspeed specific compatible strings. This adds
-> documentation for them.
->
-> Signed-off-by: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Acked-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Stefan Wahren <stefan.wahren@i2se.com> writes:
 
+> Hi Baruch,
+>
+> Am 16.01.2018 um 11:49 schrieb Baruch Siach:
+>> Hi Linus,
+>>
+>> On Tue, Jan 16, 2018 at 10:57:32AM +0100, Linus Walleij wrote:
+>>> On Sat, Jan 13, 2018 at 10:57 AM, Stefan Wahren <stefan.wahren@i2se.com=
+> wrote:
+>>>>> Baruch Siach <baruch@tkos.co.il> hat am 11. Januar 2018 um 20:44 gesc=
+hrieben:
+>>>>>
+>>>>> Add latest firmware property tags from the latest Raspberry Pi downst=
+ream
+>>>>> kernel. This is needed for the GPIO tags, so we can control the GPIO
+>>>>> multiplexor lines.
+>>>>>
+>>>>> Signed-off-by: Baruch Siach <baruch@tkos.co.il>
+>>>> Acked-by: Stefan Wahren <stefan.wahren@i2se.com>
+>>>>
+>>>> Maybe this is obvious, but patch #3 depends on this change so no cherr=
+y-picking allowed.
+>>> I will save this for after the merge window as it feels now.
+>>>
+>>> But as far as I have the right ACKs I can put it in the GPIO tree.
+>>>
+>>> Baruch: can you resend the series with all ACKs and push me
+>>> to apply it all in the GPIO tree if you're fine with this approach?
+>> I plan to send another revision of this series later today to address St=
+efan's
+>> comments on this one. Once Stefan and/or Eric ack the entire series, I'm=
+ fine
+>> with you taking it through the GPIO tree if it is OK with the BCM2835
+>> maintainers.
+>>
+>> baruch
+>>
+>
+> we also need an ACK from the devicetree maintainers. So please send a=20
+> copy of the binding patch V3 to Rob Herring and Marc Rutland.
 
-> ---
->  Documentation/devicetree/bindings/usb/usb-uhci.txt | 6 ++++++
->  1 file changed, 6 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/usb/usb-uhci.txt b/Documentation/devicetree/bindings/usb/usb-uhci.txt
-> index 298133416c97..c1153eb38a9a 100644
-> --- a/Documentation/devicetree/bindings/usb/usb-uhci.txt
-> +++ b/Documentation/devicetree/bindings/usb/usb-uhci.txt
-> @@ -3,8 +3,14 @@ Generic Platform UHCI Controller
->
->  Required properties:
->  - compatible : "generic-uhci" (deprecated: "platform-uhci")
-> +  supports additional Aspeed specific workarounds by also
-> +  including the "aspeed,ast2400-uhci" or "aspeed,ast2500-uhci"
-> +  string.
->  - reg : Should contain 1 register ranges(address and length)
->  - interrupts : UHCI controller interrupt
-> +- #ports: (optional) 1 cell, number of ports (overrides
-> +  auto-detection which is needed among others on some Aspeed
-> +  parts).
->
->  Example:
->
->
->
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I'll be happy to see patch 1-3 go through the GPIO tree, and we'd take
+#4 in the 2835 tree.  The only risk I see is if we need patch 1 for some
+other change in this cycle -- seems unlikely, but if Linus applied the
+series starting from a rc1 tag and merged it in, then we'll also be able
+to merge that patch over to any other branch we need without duplicating
+it in git history.
+
+Once you get this resent with the DT folks Cced, hopefully it'll be
+pretty quick.
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlphCK8ACgkQtdYpNtH8
+nujiIQ/+MkwB2hhq6MgcF3fVDYX5DkmVUuCrKnsfc0bB0FQDwbhQqpVmnyscf/NT
+P/qbosACB+UIRrsgIqAnD0rWXmo7mv3TDOnYfYNxZUbd8XGjIDQe3yYBY2T5txxw
+rRE5Q6PMkgAfkZsucLYrH82GBuhTEAs40oZoSoxiniAGxNOUZd682nixZFvTadrE
+VwjpwHdxp2Wdhsna0cdEZZ0M++GBEwSHpgu/DIBM8PPfuETCx2+JifwNA8Xddhi8
+36mdgagqqKm9uvaqNBXIDbh4OZn0+y/xRrdKjRqynWeCHDpWPQIRR/MdhRhZRNUF
+TsdnM0Y2Q2GPpPqPbg9MTsqXqz5q6boLdIo+zhArB9FDGPnBjRVxdb+83whlw9Cq
+QR9wAJIgXUxPsTp56acXik7A7N3kai2sz0WvDDuMZNG7x82Hew2y8NcRKXP3/KXO
+Rp2rROBxNvTwKj2LeRy3boeaXSIUsXL9FhYnFS+P+TDMOhzxb2E2q7yxc22g2fga
+dgH/7IbyvzgWWYoeYLOAIjt6WlRTkcHi1Syi+6xvwRzZRzcvmuUs8iQZryMtOyrz
+AEnG3NlEbMb45DtqUqdVlfie6MyD6OQ1cbDzxIJOWjt+oer3TgkNgSYAqIKDiVXO
+D8CFDTXKgNckbBth2F1YPvqwe1jkWpzkPBwhFejNUYtJ72oeagY=
+=PVvU
+-----END PGP SIGNATURE-----
+--=-=-=--
