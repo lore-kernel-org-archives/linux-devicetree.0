@@ -1,85 +1,31 @@
-From: <gabriel.fernandez@st.com>
-Subject: [PATCH 2/2] clk: stm32: Add DSI clock for STM32F469 Board
-Date: Thu, 18 Jan 2018 15:49:40 +0100
-Message-ID: <1516286980-8603-3-git-send-email-gabriel.fernandez@st.com>
-References: <1516286980-8603-1-git-send-email-gabriel.fernandez@st.com>
+From: <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
+Subject: [PATCH 0/2] Add dsi clock for stm32f469 board
+Date: Thu, 18 Jan 2018 15:49:38 +0100
+Message-ID: <1516286980-8603-1-git-send-email-gabriel.fernandez@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1516286980-8603-1-git-send-email-gabriel.fernandez@st.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Nicolas Pitre <nico@linaro.org>, daniel.thompson@linaro.org, philippe.cornu@st.com
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, gabriel.fernandez.st@gmail.com, gabriel.fernandez@st.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, philippe.cornu-qxv4g6HH51o@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gabriel.fernandez.st-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, gabriel.fernandez-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Gabriel Fernandez <gabriel.fernandez@st.com>
+From: Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
 
-This patch adds DSI clock for STM32F469 board
+This patch-set adds the dsi clock for stm32f469 board.
 
-Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
----
+Gabriel Fernandez (2):
+  clk: stm32: END_PRIMARY_CLK should be declare after CLK_SYSCLK
+  clk: stm32: Add DSI clock for STM32F469 Board
+
  drivers/clk/clk-stm32f4.c                 | 11 ++++++++++-
- include/dt-bindings/clock/stm32fx-clock.h |  3 ++-
- 2 files changed, 12 insertions(+), 2 deletions(-)
+ include/dt-bindings/clock/stm32fx-clock.h |  7 ++++---
+ 2 files changed, 14 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/clk/clk-stm32f4.c b/drivers/clk/clk-stm32f4.c
-index da44f8d..3c28798 100644
---- a/drivers/clk/clk-stm32f4.c
-+++ b/drivers/clk/clk-stm32f4.c
-@@ -521,7 +521,7 @@ struct stm32f4_pll_data {
- };
- 
- static const struct stm32f4_pll_data stm32f469_pll[MAX_PLL_DIV] = {
--	{ PLL,	   50, { "pll",	     "pll-q",    NULL	    } },
-+	{ PLL,	   50, { "pll",	     "pll-q",    "pll-r"    } },
- 	{ PLL_I2S, 50, { "plli2s-p", "plli2s-q", "plli2s-r" } },
- 	{ PLL_SAI, 50, { "pllsai-p", "pllsai-q", "pllsai-r" } },
- };
-@@ -1047,6 +1047,8 @@ static struct clk_hw *stm32_register_cclk(struct device *dev, const char *name,
- 	"no-clock", "lse", "lsi", "hse-rtc"
- };
- 
-+static const char *dsi_parent[2] = { NULL, "pll-r" };
-+
- static const char *lcd_parent[1] = { "pllsai-r-div" };
- 
- static const char *i2s_parents[2] = { "plli2s-r", NULL };
-@@ -1156,6 +1158,12 @@ struct stm32f4_clk_data {
- 		NO_GATE, 0,
- 		0
- 	},
-+	{
-+		CLK_F469_DSI, "dsi", dsi_parent, ARRAY_SIZE(dsi_parent),
-+		STM32F4_RCC_DCKCFGR, 29, 1,
-+		STM32F4_RCC_APB2ENR, 27,
-+		CLK_SET_RATE_PARENT | CLK_SET_RATE_NO_REPARENT
-+	},
- };
- 
- static const struct stm32_aux_clk stm32f746_aux_clk[] = {
-@@ -1450,6 +1458,7 @@ static void __init stm32f4_rcc_init(struct device_node *np)
- 	stm32f4_gate_map = data->gates_map;
- 
- 	hse_clk = of_clk_get_parent_name(np, 0);
-+	dsi_parent[0] = hse_clk;
- 
- 	i2s_in_clk = of_clk_get_parent_name(np, 1);
- 
-diff --git a/include/dt-bindings/clock/stm32fx-clock.h b/include/dt-bindings/clock/stm32fx-clock.h
-index 4d523b0..58d8b51 100644
---- a/include/dt-bindings/clock/stm32fx-clock.h
-+++ b/include/dt-bindings/clock/stm32fx-clock.h
-@@ -35,8 +35,9 @@
- #define CLK_SAIQ_PDIV		13
- #define CLK_HSI			14
- #define CLK_SYSCLK		15
-+#define CLK_F469_DSI		16
- 
--#define END_PRIMARY_CLK		16
-+#define END_PRIMARY_CLK		17
- 
- #define CLK_HDMI_CEC		16
- #define CLK_SPDIF		17
 -- 
 1.9.1
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
