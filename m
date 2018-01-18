@@ -1,118 +1,157 @@
-From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v3 05/12] drm/bridge/synopsys: dw-hdmi: don't clobber
- drvdata
-Date: Thu, 18 Jan 2018 14:04:08 +0100
-Message-ID: <91cd3ffd-e5cc-8149-2c57-6f93da55a0e4@baylibre.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH v3 04/12] drm/bridge/synopsys: dw-hdmi: Export some PHY
+ related functions
+Date: Thu, 18 Jan 2018 14:05:18 +0100
+Message-ID: <e04fa67d-3779-dcc1-5a37-77aecbe2139c@baylibre.com>
 References: <20180117201421.25954-1-jernej.skrabec@siol.net>
- <20180117201421.25954-6-jernej.skrabec@siol.net>
+ <20180117201421.25954-5-jernej.skrabec@siol.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180117201421.25954-6-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180117201421.25954-5-jernej.skrabec@siol.net>
 Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org
-Cc: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, hjc-TNX95d0MmH7DzftRWevZcw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jernej Skrabec <jernej.skrabec@siol.net>, maxime.ripard@free-electrons.com, airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org, architt@codeaurora.org, a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com
+Cc: Jose.Abreu@synopsys.com, devicetree@vger.kernel.org, mturquette@baylibre.com, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-sunxi@googlegroups.com, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 17/01/2018 21:14, Jernej Skrabec wrote:
-> dw_hdmi shouldn't set drvdata since some drivers might need to store
-> it's own data there. Rework dw_hdmi in a way to return struct dw_hdmi
-> instead to store it in drvdata. This way drivers are responsible to
-> store and pass structure when needed.
-> 
-> Idea was taken from the following commit:
-> 8242ecbd597d ("drm/bridge/synopsys: stop clobbering drvdata")
-> 
-> Cc: p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
-> Cc: narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
-> Cc: Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org
-> Cc: hjc-TNX95d0MmH7DzftRWevZcw@public.gmane.org
-> Cc: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
-> Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-> ---
->  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c   | 31 ++++++++++++-----------------
->  drivers/gpu/drm/imx/dw_hdmi-imx.c           | 13 +++++++++---
->  drivers/gpu/drm/meson/meson_dw_hdmi.c       | 14 +++++++++----
->  drivers/gpu/drm/rcar-du/rcar_dw_hdmi.c      | 12 +++++++++--
->  drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c | 13 +++++++++---
->  include/drm/bridge/dw_hdmi.h                | 13 ++++++------
->  6 files changed, 60 insertions(+), 36 deletions(-)
-> 
-
-[...]
-> diff --git a/drivers/gpu/drm/meson/meson_dw_hdmi.c b/drivers/gpu/drm/meson/meson_dw_hdmi.c
-> index e8c3ef8a94ce..d49af17310c9 100644
-> --- a/drivers/gpu/drm/meson/meson_dw_hdmi.c
-> +++ b/drivers/gpu/drm/meson/meson_dw_hdmi.c
-> @@ -140,6 +140,7 @@ struct meson_dw_hdmi {
->  	struct clk *venci_clk;
->  	struct regulator *hdmi_supply;
->  	u32 irq_stat;
-> +	struct dw_hdmi *hdmi;
->  };
->  #define encoder_to_meson_dw_hdmi(x) \
->  	container_of(x, struct meson_dw_hdmi, encoder)
-> @@ -878,9 +879,12 @@ static int meson_dw_hdmi_bind(struct device *dev, struct device *master,
->  	dw_plat_data->input_bus_format = MEDIA_BUS_FMT_YUV8_1X24;
->  	dw_plat_data->input_bus_encoding = V4L2_YCBCR_ENC_709;
->  
-> -	ret = dw_hdmi_bind(pdev, encoder, &meson_dw_hdmi->dw_plat_data);
-> -	if (ret)
-> -		return ret;
-> +	platform_set_drvdata(pdev, meson_dw_hdmi);
-> +
-> +	meson_dw_hdmi->hdmi = dw_hdmi_bind(pdev, encoder,
-> +					   &meson_dw_hdmi->dw_plat_data);
-> +	if (IS_ERR(meson_dw_hdmi->hdmi))
-> +		return PTR_ERR(meson_dw_hdmi->hdmi);
->  
->  	DRM_DEBUG_DRIVER("HDMI controller initialized\n");
->  
-> @@ -890,7 +894,9 @@ static int meson_dw_hdmi_bind(struct device *dev, struct device *master,
->  static void meson_dw_hdmi_unbind(struct device *dev, struct device *master,
->  				   void *data)
->  {
-> -	dw_hdmi_unbind(dev);
-> +	struct meson_dw_hdmi *meson_dw_hdmi = dev_get_drvdata(dev);
-> +
-> +	dw_hdmi_unbind(meson_dw_hdmi->hdmi);
->  }
->  
->  static const struct component_ops meson_dw_hdmi_ops = {
-
-[..]
-
-> diff --git a/include/drm/bridge/dw_hdmi.h b/include/drm/bridge/dw_hdmi.h
-> index f3f3f0e1b2d3..dd2a8cf7d20b 100644
-> --- a/include/drm/bridge/dw_hdmi.h
-> +++ b/include/drm/bridge/dw_hdmi.h
-> @@ -143,12 +143,13 @@ struct dw_hdmi_plat_data {
->  			     unsigned long mpixelclock);
->  };
->  
-> -int dw_hdmi_probe(struct platform_device *pdev,
-> -		  const struct dw_hdmi_plat_data *plat_data);
-> -void dw_hdmi_remove(struct platform_device *pdev);
-> -void dw_hdmi_unbind(struct device *dev);
-> -int dw_hdmi_bind(struct platform_device *pdev, struct drm_encoder *encoder,
-> -		 const struct dw_hdmi_plat_data *plat_data);
-> +struct dw_hdmi *dw_hdmi_probe(struct platform_device *pdev,
-> +			      const struct dw_hdmi_plat_data *plat_data);
-> +void dw_hdmi_remove(struct dw_hdmi *hdmi);
-> +void dw_hdmi_unbind(struct dw_hdmi *hdmi);
-> +struct dw_hdmi *dw_hdmi_bind(struct platform_device *pdev,
-> +			     struct drm_encoder *encoder,
-> +			     const struct dw_hdmi_plat_data *plat_data);
->  
->  void dw_hdmi_setup_rx_sense(struct device *dev, bool hpd, bool rx_sense);
->  
-> 
-
-For meson-drm and dw-hdmi bridge changes :
-Acked-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gMTcvMDEvMjAxOCAyMToxNCwgSmVybmVqIFNrcmFiZWMgd3JvdGU6Cj4gUGFydHMgb2YgUEhZ
+IGNvZGUgY291bGQgYmUgdXNlZnVsIGFsc28gZm9yIGN1c3RvbSBQSFlzLiBGb3IgZXhhbXBsZSwK
+PiBBbGx3aW5uZXIgQTgzVCBoYXMgY3VzdG9tIFBIWSB3aGljaCBpcyBwcm9iYWJseSBTeW5vcHN5
+cyBnZW4yIFBIWQo+IHdpdGggZmV3IGFkZGl0aW9uYWwgbWVtb3J5IG1hcHBlZCByZWdpc3RlcnMs
+IHNvIG1vc3Qgb2YgdGhlIFN5bm9wc3lzIFBIWQo+IHJlbGF0ZWQgY29kZSBjb3VsZCBiZSByZXVz
+ZWQuCj4gCj4gRnVuY3Rpb25zIGV4cG9ydGVkIGhlcmUgYXJlIGFjdHVhbGx5IG5vdCBzcGVjaWZp
+YyB0byBTeW5vcHN5cyBQSFlzIGJ1dAo+IHRvIERXQyBIRE1JIGNvbnRyb2xsZXIgUEhZIGludGVy
+ZmFjZS4gVGhpcyBtZWFucyB0aGF0IGV2ZW4gaWYgdGhlIFBIWSBpcwo+IGNvbXBsZXRlbHkgY3Vz
+dG9tLCBpLmUuIG5vdCBkZXNpZ25lZCBieSBTeW5vcHN5cywgZXhwb3J0ZWQgZnVuY3Rpb25zIGNh
+bgo+IGJlIHVzZWZ1bC4KPiAKPiBSZXZpZXdlZC1ieTogTGF1cmVudCBQaW5jaGFydCA8bGF1cmVu
+dC5waW5jaGFydEBpZGVhc29uYm9hcmQuY29tPgo+IFNpZ25lZC1vZmYtYnk6IEplcm5laiBTa3Jh
+YmVjIDxqZXJuZWouc2tyYWJlY0BzaW9sLm5ldD4KPiAtLS0KPiAgZHJpdmVycy9ncHUvZHJtL2Jy
+aWRnZS9zeW5vcHN5cy9kdy1oZG1pLmMgfCA0NCArKysrKysrKysrKysrKysrKysrKystLS0tLS0t
+LS0tCj4gIGRyaXZlcnMvZ3B1L2RybS9tZXNvbi9tZXNvbl9kd19oZG1pLmMgICAgIHwgIDggKysr
+LS0tCj4gIGluY2x1ZGUvZHJtL2JyaWRnZS9kd19oZG1pLmggICAgICAgICAgICAgIHwgMTEgKysr
+KysrKysKPiAgMyBmaWxlcyBjaGFuZ2VkLCA0NSBpbnNlcnRpb25zKCspLCAxOCBkZWxldGlvbnMo
+LSkKPiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9zeW5vcHN5cy9kdy1o
+ZG1pLmMgYi9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3N5bm9wc3lzL2R3LWhkbWkuYwo+IGluZGV4
+IDdjYTE0ZDczMjViNS4uN2Q4MGY0YjU2NjgzIDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2Ry
+bS9icmlkZ2Uvc3lub3BzeXMvZHctaGRtaS5jCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2JyaWRn
+ZS9zeW5vcHN5cy9kdy1oZG1pLmMKPiBAQCAtMTAzNywxOSArMTAzNywyMSBAQCBzdGF0aWMgdm9p
+ZCBkd19oZG1pX3BoeV9lbmFibGVfc3ZzcmV0KHN0cnVjdCBkd19oZG1pICpoZG1pLCB1OCBlbmFi
+bGUpCj4gIAkJCSBIRE1JX1BIWV9DT05GMF9TVlNSRVRfTUFTSyk7Cj4gIH0KPiAgCj4gLXN0YXRp
+YyB2b2lkIGR3X2hkbWlfcGh5X2dlbjJfcGRkcShzdHJ1Y3QgZHdfaGRtaSAqaGRtaSwgdTggZW5h
+YmxlKQo+ICt2b2lkIGR3X2hkbWlfcGh5X2dlbjJfcGRkcShzdHJ1Y3QgZHdfaGRtaSAqaGRtaSwg
+dTggZW5hYmxlKQo+ICB7Cj4gIAloZG1pX21hc2tfd3JpdGViKGhkbWksIGVuYWJsZSwgSERNSV9Q
+SFlfQ09ORjAsCj4gIAkJCSBIRE1JX1BIWV9DT05GMF9HRU4yX1BERFFfT0ZGU0VULAo+ICAJCQkg
+SERNSV9QSFlfQ09ORjBfR0VOMl9QRERRX01BU0spOwo+ICB9Cj4gK0VYUE9SVF9TWU1CT0xfR1BM
+KGR3X2hkbWlfcGh5X2dlbjJfcGRkcSk7Cj4gIAo+IC1zdGF0aWMgdm9pZCBkd19oZG1pX3BoeV9n
+ZW4yX3R4cHdyb24oc3RydWN0IGR3X2hkbWkgKmhkbWksIHU4IGVuYWJsZSkKPiArdm9pZCBkd19o
+ZG1pX3BoeV9nZW4yX3R4cHdyb24oc3RydWN0IGR3X2hkbWkgKmhkbWksIHU4IGVuYWJsZSkKPiAg
+ewo+ICAJaGRtaV9tYXNrX3dyaXRlYihoZG1pLCBlbmFibGUsIEhETUlfUEhZX0NPTkYwLAo+ICAJ
+CQkgSERNSV9QSFlfQ09ORjBfR0VOMl9UWFBXUk9OX09GRlNFVCwKPiAgCQkJIEhETUlfUEhZX0NP
+TkYwX0dFTjJfVFhQV1JPTl9NQVNLKTsKPiAgfQo+ICtFWFBPUlRfU1lNQk9MX0dQTChkd19oZG1p
+X3BoeV9nZW4yX3R4cHdyb24pOwo+ICAKPiAgc3RhdGljIHZvaWQgZHdfaGRtaV9waHlfc2VsX2Rh
+dGFfZW5fcG9sKHN0cnVjdCBkd19oZG1pICpoZG1pLCB1OCBlbmFibGUpCj4gIHsKPiBAQCAtMTA2
+NSw2ICsxMDY3LDIyIEBAIHN0YXRpYyB2b2lkIGR3X2hkbWlfcGh5X3NlbF9pbnRlcmZhY2VfY29u
+dHJvbChzdHJ1Y3QgZHdfaGRtaSAqaGRtaSwgdTggZW5hYmxlKQo+ICAJCQkgSERNSV9QSFlfQ09O
+RjBfU0VMRElQSUZfTUFTSyk7Cj4gIH0KPiAgCj4gK3ZvaWQgZHdfaGRtaV9waHlfcmVzZXQoc3Ry
+dWN0IGR3X2hkbWkgKmhkbWkpCj4gK3sKPiArCS8qIFBIWSByZXNldC4gVGhlIHJlc2V0IHNpZ25h
+bCBpcyBhY3RpdmUgaGlnaCBvbiBHZW4yIFBIWXMuICovCj4gKwloZG1pX3dyaXRlYihoZG1pLCBI
+RE1JX01DX1BIWVJTVFpfUEhZUlNUWiwgSERNSV9NQ19QSFlSU1RaKTsKPiArCWhkbWlfd3JpdGVi
+KGhkbWksIDAsIEhETUlfTUNfUEhZUlNUWik7Cj4gK30KPiArRVhQT1JUX1NZTUJPTF9HUEwoZHdf
+aGRtaV9waHlfcmVzZXQpOwo+ICsKPiArdm9pZCBkd19oZG1pX3BoeV9pMmNfc2V0X2FkZHIoc3Ry
+dWN0IGR3X2hkbWkgKmhkbWksIHU4IGFkZHJlc3MpCj4gK3sKPiArCWhkbWlfcGh5X3Rlc3RfY2xl
+YXIoaGRtaSwgMSk7Cj4gKwloZG1pX3dyaXRlYihoZG1pLCBhZGRyZXNzLCBIRE1JX1BIWV9JMkNN
+X1NMQVZFX0FERFIpOwo+ICsJaGRtaV9waHlfdGVzdF9jbGVhcihoZG1pLCAwKTsKPiArfQo+ICtF
+WFBPUlRfU1lNQk9MX0dQTChkd19oZG1pX3BoeV9pMmNfc2V0X2FkZHIpOwo+ICsKPiAgc3RhdGlj
+IHZvaWQgZHdfaGRtaV9waHlfcG93ZXJfb2ZmKHN0cnVjdCBkd19oZG1pICpoZG1pKQo+ICB7Cj4g
+IAljb25zdCBzdHJ1Y3QgZHdfaGRtaV9waHlfZGF0YSAqcGh5ID0gaGRtaS0+cGh5LmRhdGE7Cj4g
+QEAgLTEyMDMsMTYgKzEyMjEsMTEgQEAgc3RhdGljIGludCBoZG1pX3BoeV9jb25maWd1cmUoc3Ry
+dWN0IGR3X2hkbWkgKmhkbWkpCj4gIAlpZiAocGh5LT5oYXNfc3ZzcmV0KQo+ICAJCWR3X2hkbWlf
+cGh5X2VuYWJsZV9zdnNyZXQoaGRtaSwgMSk7Cj4gIAo+IC0JLyogUEhZIHJlc2V0LiBUaGUgcmVz
+ZXQgc2lnbmFsIGlzIGFjdGl2ZSBoaWdoIG9uIEdlbjIgUEhZcy4gKi8KPiAtCWhkbWlfd3JpdGVi
+KGhkbWksIEhETUlfTUNfUEhZUlNUWl9QSFlSU1RaLCBIRE1JX01DX1BIWVJTVFopOwo+IC0JaGRt
+aV93cml0ZWIoaGRtaSwgMCwgSERNSV9NQ19QSFlSU1RaKTsKPiArCWR3X2hkbWlfcGh5X3Jlc2V0
+KGhkbWkpOwo+ICAKPiAgCWhkbWlfd3JpdGViKGhkbWksIEhETUlfTUNfSEVBQ1BIWV9SU1RfQVNT
+RVJULCBIRE1JX01DX0hFQUNQSFlfUlNUKTsKPiAgCj4gLQloZG1pX3BoeV90ZXN0X2NsZWFyKGhk
+bWksIDEpOwo+IC0JaGRtaV93cml0ZWIoaGRtaSwgSERNSV9QSFlfSTJDTV9TTEFWRV9BRERSX1BI
+WV9HRU4yLAo+IC0JCSAgICBIRE1JX1BIWV9JMkNNX1NMQVZFX0FERFIpOwo+IC0JaGRtaV9waHlf
+dGVzdF9jbGVhcihoZG1pLCAwKTsKPiArCWR3X2hkbWlfcGh5X2kyY19zZXRfYWRkcihoZG1pLCBI
+RE1JX1BIWV9JMkNNX1NMQVZFX0FERFJfUEhZX0dFTjIpOwo+ICAKPiAgCS8qIFdyaXRlIHRvIHRo
+ZSBQSFkgYXMgY29uZmlndXJlZCBieSB0aGUgcGxhdGZvcm0gKi8KPiAgCWlmIChwZGF0YS0+Y29u
+ZmlndXJlX3BoeSkKPiBAQCAtMTI1MSwxNSArMTI2NCwxNiBAQCBzdGF0aWMgdm9pZCBkd19oZG1p
+X3BoeV9kaXNhYmxlKHN0cnVjdCBkd19oZG1pICpoZG1pLCB2b2lkICpkYXRhKQo+ICAJZHdfaGRt
+aV9waHlfcG93ZXJfb2ZmKGhkbWkpOwo+ICB9Cj4gIAo+IC1zdGF0aWMgZW51bSBkcm1fY29ubmVj
+dG9yX3N0YXR1cyBkd19oZG1pX3BoeV9yZWFkX2hwZChzdHJ1Y3QgZHdfaGRtaSAqaGRtaSwKPiAt
+CQkJCQkJICAgICAgdm9pZCAqZGF0YSkKPiArZW51bSBkcm1fY29ubmVjdG9yX3N0YXR1cyBkd19o
+ZG1pX3BoeV9yZWFkX2hwZChzdHJ1Y3QgZHdfaGRtaSAqaGRtaSwKPiArCQkJCQkgICAgICAgdm9p
+ZCAqZGF0YSkKPiAgewo+ICAJcmV0dXJuIGhkbWlfcmVhZGIoaGRtaSwgSERNSV9QSFlfU1RBVDAp
+ICYgSERNSV9QSFlfSFBEID8KPiAgCQljb25uZWN0b3Jfc3RhdHVzX2Nvbm5lY3RlZCA6IGNvbm5l
+Y3Rvcl9zdGF0dXNfZGlzY29ubmVjdGVkOwo+ICB9Cj4gK0VYUE9SVF9TWU1CT0xfR1BMKGR3X2hk
+bWlfcGh5X3JlYWRfaHBkKTsKPiAgCj4gLXN0YXRpYyB2b2lkIGR3X2hkbWlfcGh5X3VwZGF0ZV9o
+cGQoc3RydWN0IGR3X2hkbWkgKmhkbWksIHZvaWQgKmRhdGEsCj4gLQkJCQkgICBib29sIGZvcmNl
+LCBib29sIGRpc2FibGVkLCBib29sIHJ4c2Vuc2UpCj4gK3ZvaWQgZHdfaGRtaV9waHlfdXBkYXRl
+X2hwZChzdHJ1Y3QgZHdfaGRtaSAqaGRtaSwgdm9pZCAqZGF0YSwKPiArCQkJICAgIGJvb2wgZm9y
+Y2UsIGJvb2wgZGlzYWJsZWQsIGJvb2wgcnhzZW5zZSkKPiAgewo+ICAJdTggb2xkX21hc2sgPSBo
+ZG1pLT5waHlfbWFzazsKPiAgCj4gQEAgLTEyNzEsOCArMTI4NSw5IEBAIHN0YXRpYyB2b2lkIGR3
+X2hkbWlfcGh5X3VwZGF0ZV9ocGQoc3RydWN0IGR3X2hkbWkgKmhkbWksIHZvaWQgKmRhdGEsCj4g
+IAlpZiAob2xkX21hc2sgIT0gaGRtaS0+cGh5X21hc2spCj4gIAkJaGRtaV93cml0ZWIoaGRtaSwg
+aGRtaS0+cGh5X21hc2ssIEhETUlfUEhZX01BU0swKTsKPiAgfQo+ICtFWFBPUlRfU1lNQk9MX0dQ
+TChkd19oZG1pX3BoeV91cGRhdGVfaHBkKTsKPiAgCj4gLXN0YXRpYyB2b2lkIGR3X2hkbWlfcGh5
+X3NldHVwX2hwZChzdHJ1Y3QgZHdfaGRtaSAqaGRtaSwgdm9pZCAqZGF0YSkKPiArdm9pZCBkd19o
+ZG1pX3BoeV9zZXR1cF9ocGQoc3RydWN0IGR3X2hkbWkgKmhkbWksIHZvaWQgKmRhdGEpCj4gIHsK
+PiAgCS8qCj4gIAkgKiBDb25maWd1cmUgdGhlIFBIWSBSWCBTRU5TRSBhbmQgSFBEIGludGVycnVw
+dHMgcG9sYXJpdGllcyBhbmQgY2xlYXIKPiBAQCAtMTI5MSw2ICsxMzA2LDcgQEAgc3RhdGljIHZv
+aWQgZHdfaGRtaV9waHlfc2V0dXBfaHBkKHN0cnVjdCBkd19oZG1pICpoZG1pLCB2b2lkICpkYXRh
+KQo+ICAJaGRtaV93cml0ZWIoaGRtaSwgfihIRE1JX0lIX1BIWV9TVEFUMF9IUEQgfCBIRE1JX0lI
+X1BIWV9TVEFUMF9SWF9TRU5TRSksCj4gIAkJICAgIEhETUlfSUhfTVVURV9QSFlfU1RBVDApOwo+
+ICB9Cj4gK0VYUE9SVF9TWU1CT0xfR1BMKGR3X2hkbWlfcGh5X3NldHVwX2hwZCk7Cj4gIAo+ICBz
+dGF0aWMgY29uc3Qgc3RydWN0IGR3X2hkbWlfcGh5X29wcyBkd19oZG1pX3N5bm9wc3lzX3BoeV9v
+cHMgPSB7Cj4gIAkuaW5pdCA9IGR3X2hkbWlfcGh5X2luaXQsCj4gZGlmZiAtLWdpdCBhL2RyaXZl
+cnMvZ3B1L2RybS9tZXNvbi9tZXNvbl9kd19oZG1pLmMgYi9kcml2ZXJzL2dwdS9kcm0vbWVzb24v
+bWVzb25fZHdfaGRtaS5jCj4gaW5kZXggMTdkZTNhZmQ5OGY2Li5lOGMzZWY4YTk0Y2UgMTAwNjQ0
+Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL21lc29uL21lc29uX2R3X2hkbWkuYwo+ICsrKyBiL2Ry
+aXZlcnMvZ3B1L2RybS9tZXNvbi9tZXNvbl9kd19oZG1pLmMKPiBAQCAtMzAyLDcgKzMwMiw3IEBA
+IHN0YXRpYyB2b2lkIG1lc29uX2hkbWlfcGh5X3NldHVwX21vZGUoc3RydWN0IG1lc29uX2R3X2hk
+bWkgKmR3X2hkbWksCj4gIAl9Cj4gIH0KPiAgCj4gLXN0YXRpYyBpbmxpbmUgdm9pZCBkd19oZG1p
+X3BoeV9yZXNldChzdHJ1Y3QgbWVzb25fZHdfaGRtaSAqZHdfaGRtaSkKPiArc3RhdGljIGlubGlu
+ZSB2b2lkIG1lc29uX2R3X2hkbWlfcGh5X3Jlc2V0KHN0cnVjdCBtZXNvbl9kd19oZG1pICpkd19o
+ZG1pKQo+ICB7Cj4gIAlzdHJ1Y3QgbWVzb25fZHJtICpwcml2ID0gZHdfaGRtaS0+cHJpdjsKPiAg
+Cj4gQEAgLTQwOSw5ICs0MDksOSBAQCBzdGF0aWMgaW50IGR3X2hkbWlfcGh5X2luaXQoc3RydWN0
+IGR3X2hkbWkgKmhkbWksIHZvaWQgKmRhdGEsCj4gIAltc2xlZXAoMTAwKTsKPiAgCj4gIAkvKiBS
+ZXNldCBQSFkgMyB0aW1lcyBpbiBhIHJvdyAqLwo+IC0JZHdfaGRtaV9waHlfcmVzZXQoZHdfaGRt
+aSk7Cj4gLQlkd19oZG1pX3BoeV9yZXNldChkd19oZG1pKTsKPiAtCWR3X2hkbWlfcGh5X3Jlc2V0
+KGR3X2hkbWkpOwo+ICsJbWVzb25fZHdfaGRtaV9waHlfcmVzZXQoZHdfaGRtaSk7Cj4gKwltZXNv
+bl9kd19oZG1pX3BoeV9yZXNldChkd19oZG1pKTsKPiArCW1lc29uX2R3X2hkbWlfcGh5X3Jlc2V0
+KGR3X2hkbWkpOwo+ICAKPiAgCS8qIFRlbXBvcmFyeSBEaXNhYmxlIFZFTkMgdmlkZW8gc3RyZWFt
+ICovCj4gIAlpZiAocHJpdi0+dmVuYy5oZG1pX3VzZV9lbmNpKQo+IGRpZmYgLS1naXQgYS9pbmNs
+dWRlL2RybS9icmlkZ2UvZHdfaGRtaS5oIGIvaW5jbHVkZS9kcm0vYnJpZGdlL2R3X2hkbWkuaAo+
+IGluZGV4IDE4MmY4MzI4M2UyNC4uZjNmM2YwZTFiMmQzIDEwMDY0NAo+IC0tLSBhL2luY2x1ZGUv
+ZHJtL2JyaWRnZS9kd19oZG1pLmgKPiArKysgYi9pbmNsdWRlL2RybS9icmlkZ2UvZHdfaGRtaS5o
+Cj4gQEAgLTE1Nyw3ICsxNTcsMTggQEAgdm9pZCBkd19oZG1pX2F1ZGlvX2VuYWJsZShzdHJ1Y3Qg
+ZHdfaGRtaSAqaGRtaSk7Cj4gIHZvaWQgZHdfaGRtaV9hdWRpb19kaXNhYmxlKHN0cnVjdCBkd19o
+ZG1pICpoZG1pKTsKPiAgCj4gIC8qIFBIWSBjb25maWd1cmF0aW9uICovCj4gK3ZvaWQgZHdfaGRt
+aV9waHlfaTJjX3NldF9hZGRyKHN0cnVjdCBkd19oZG1pICpoZG1pLCB1OCBhZGRyZXNzKTsKPiAg
+dm9pZCBkd19oZG1pX3BoeV9pMmNfd3JpdGUoc3RydWN0IGR3X2hkbWkgKmhkbWksIHVuc2lnbmVk
+IHNob3J0IGRhdGEsCj4gIAkJCSAgIHVuc2lnbmVkIGNoYXIgYWRkcik7Cj4gIAo+ICt2b2lkIGR3
+X2hkbWlfcGh5X2dlbjJfcGRkcShzdHJ1Y3QgZHdfaGRtaSAqaGRtaSwgdTggZW5hYmxlKTsKPiAr
+dm9pZCBkd19oZG1pX3BoeV9nZW4yX3R4cHdyb24oc3RydWN0IGR3X2hkbWkgKmhkbWksIHU4IGVu
+YWJsZSk7Cj4gK3ZvaWQgZHdfaGRtaV9waHlfcmVzZXQoc3RydWN0IGR3X2hkbWkgKmhkbWkpOwo+
+ICsKPiArZW51bSBkcm1fY29ubmVjdG9yX3N0YXR1cyBkd19oZG1pX3BoeV9yZWFkX2hwZChzdHJ1
+Y3QgZHdfaGRtaSAqaGRtaSwKPiArCQkJCQkgICAgICAgdm9pZCAqZGF0YSk7Cj4gK3ZvaWQgZHdf
+aGRtaV9waHlfdXBkYXRlX2hwZChzdHJ1Y3QgZHdfaGRtaSAqaGRtaSwgdm9pZCAqZGF0YSwKPiAr
+CQkJICAgIGJvb2wgZm9yY2UsIGJvb2wgZGlzYWJsZWQsIGJvb2wgcnhzZW5zZSk7Cj4gK3ZvaWQg
+ZHdfaGRtaV9waHlfc2V0dXBfaHBkKHN0cnVjdCBkd19oZG1pICpoZG1pLCB2b2lkICpkYXRhKTsK
+PiArCj4gICNlbmRpZiAvKiBfX0lNWF9IRE1JX0hfXyAqLwo+IAoKUmV2aWV3ZWQtYnk6IE5laWwg
+QXJtc3Ryb25nIDxuYXJtc3Ryb25nQGJheWxpYnJlLmNvbT4KX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2
+ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21h
+aWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
