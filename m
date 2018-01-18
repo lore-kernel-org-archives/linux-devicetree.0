@@ -1,28 +1,26 @@
 From: Cyrille Pitchen <cyrille.pitchen-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Subject: Re: [PATCH v3 6/6] PCI: cadence: Add host driver for Cadence PCIe
  controller
-Date: Fri, 19 Jan 2018 00:13:21 +0100
-Message-ID: <1ef0257c-8f74-b45f-f890-f4dec5d28cf7@free-electrons.com>
+Date: Fri, 19 Jan 2018 00:23:39 +0100
+Message-ID: <652f7f35-cdf6-5205-6e96-24ea2988fbb8@free-electrons.com>
 References: <cover.1515621150.git.cyrille.pitchen@free-electrons.com>
  <990730f5c1156b3bb15f56fa877719941f219016.1515621150.git.cyrille.pitchen@free-electrons.com>
- <e3d88d5b-e770-d2e5-20b2-62551d5f4f8f@ti.com>
+ <20180116160733.GA3644@e107981-ln.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <e3d88d5b-e770-d2e5-20b2-62551d5f4f8f-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <20180116160733.GA3644-4tUPXFaYRHv6sAKXYmQ0tx/iLCjYCKR+VpNB7YpNyf8@public.gmane.org>
 Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, stelford-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, dgary-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, kgopi-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, eandrews-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, sureshp-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Cc: bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, stelford-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, dgary-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, kgopi-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, eandrews-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, sureshp-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Kishon,
+Hi Lorenzo
 
-Le 16/01/2018 à 12:16, Kishon Vijay Abraham I a écrit :
-> Hi Cyrille,
-> 
-> On Thursday 11 January 2018 04:17 AM, Cyrille Pitchen wrote:
+Le 16/01/2018 Ã  17:07, Lorenzo Pieralisi a Ã©critÂ :
+> On Wed, Jan 10, 2018 at 11:47:35PM +0100, Cyrille Pitchen wrote:
 >> This patch adds support to the Cadence PCIe controller in host mode.
 >>
 >> Signed-off-by: Cyrille Pitchen <cyrille.pitchen-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
@@ -35,453 +33,268 @@ Le 16/01/2018 à 12:16, Kishon Vijay Abraham I a écrit :
 >>  drivers/pci/cadence/pcie-cadence-host.c | 336 ++++++++++++++++++++++++++++++++
 >>  drivers/pci/cadence/pcie-cadence.c      |  68 +++++++
 >>  drivers/pci/cadence/pcie-cadence.h      | 196 +++++++++++++++++++
->>  8 files changed, 628 insertions(+)
->>  create mode 100644 drivers/pci/cadence/Kconfig
->>  create mode 100644 drivers/pci/cadence/Makefile
->>  create mode 100644 drivers/pci/cadence/pcie-cadence-host.c
->>  create mode 100644 drivers/pci/cadence/pcie-cadence.c
->>  create mode 100644 drivers/pci/cadence/pcie-cadence.h
->>
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index 13945646b95d..cc24c74a946e 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -10402,6 +10402,13 @@ S:	Maintained
->>  F:	Documentation/devicetree/bindings/pci/pci-armada8k.txt
->>  F:	drivers/pci/dwc/pcie-armada8k.c
->>  
->> +PCI DRIVER FOR CADENCE PCIE IP
->> +M:	Alan Douglas <adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>
->> +L:	linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> +S:	Maintained
->> +F:	Documentation/devicetree/bindings/pci/cdns,*.txt
->> +F:	drivers/pci/cadence/pcie-cadence*
+> 
+> [...]
+> 
+>> +void cdns_pcie_reset_outbound_region(struct cdns_pcie *pcie, u32 r)
+>> +{
+>> +	cdns_pcie_writel(pcie, CDNS_PCIE_AT_OB_REGION_PCI_ADDR0(r), 0);
+>> +	cdns_pcie_writel(pcie, CDNS_PCIE_AT_OB_REGION_PCI_ADDR1(r), 0);
 >> +
->>  PCI DRIVER FOR FREESCALE LAYERSCAPE
->>  M:	Minghuan Lian <minghuan.Lian-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->>  M:	Mingkai Hu <mingkai.hu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
->> index 7eeb969ab86a..dee90cc1dcaf 100644
->> --- a/drivers/pci/Kconfig
->> +++ b/drivers/pci/Kconfig
->> @@ -136,6 +136,7 @@ config PCI_HYPERV
->>            PCI devices from a PCI backend to support PCI driver domains.
->>  
->>  source "drivers/pci/hotplug/Kconfig"
->> +source "drivers/pci/cadence/Kconfig"
->>  source "drivers/pci/dwc/Kconfig"
->>  source "drivers/pci/host/Kconfig"
->>  source "drivers/pci/endpoint/Kconfig"
->> diff --git a/drivers/pci/Makefile b/drivers/pci/Makefile
->> index ddb5aa6640d7..941970936840 100644
->> --- a/drivers/pci/Makefile
->> +++ b/drivers/pci/Makefile
->> @@ -56,5 +56,6 @@ obj-y += switch/
->>  obj-$(CONFIG_PCI_ENDPOINT)	+= endpoint/
->>  
->>  # Endpoint library must be initialized before its users
->> +obj-$(CONFIG_PCIE_CADENCE)	+= cadence/
->>  # pcie-hisi.o quirks are needed even without CONFIG_PCIE_DW
->>  obj-y				+= dwc/
->> diff --git a/drivers/pci/cadence/Kconfig b/drivers/pci/cadence/Kconfig
+>> +	cdns_pcie_writel(pcie, CDNS_PCIE_AT_OB_REGION_DESC0(r), 0);
+>> +	cdns_pcie_writel(pcie, CDNS_PCIE_AT_OB_REGION_DESC1(r), 0);
+>> +
+>> +	cdns_pcie_writel(pcie, CDNS_PCIE_AT_OB_REGION_CPU_ADDR0(r), 0);
+>> +	cdns_pcie_writel(pcie, CDNS_PCIE_AT_OB_REGION_CPU_ADDR1(r), 0);
+>> +}
+> 
+> Unused function, please remove it.
+
+done in v4.
+
+> 
+>> diff --git a/drivers/pci/cadence/pcie-cadence.h b/drivers/pci/cadence/pcie-cadence.h
 >> new file mode 100644
->> index 000000000000..0123d384a628
+>> index 000000000000..3a15b4016352
 >> --- /dev/null
->> +++ b/drivers/pci/cadence/Kconfig
->> @@ -0,0 +1,16 @@
->> +menu "Cadence PCIe controllers support"
->> +
->> +config PCIE_CADENCE
->> +	bool
->> +
->> +config PCIE_CADENCE_HOST
->> +	bool "Cadence PCIe host controller"
->> +	depends on OF
->> +	select IRQ_DOMAIN
->> +	select PCIE_CADENCE
->> +	help
->> +	  Say Y here if you want to support the Cadence PCIe controller in host
->> +	  mode. This PCIe controller may be embedded into many different vendors
->> +	  SoCs.
->> +
->> +endmenu
->> diff --git a/drivers/pci/cadence/Makefile b/drivers/pci/cadence/Makefile
->> new file mode 100644
->> index 000000000000..589601a8ff89
->> --- /dev/null
->> +++ b/drivers/pci/cadence/Makefile
->> @@ -0,0 +1,3 @@
->> +# SPDX-License-Identifier: GPL-2.0
->> +obj-$(CONFIG_PCIE_CADENCE) += pcie-cadence.o
->> +obj-$(CONFIG_PCIE_CADENCE_HOST) += pcie-cadence-host.o
->> diff --git a/drivers/pci/cadence/pcie-cadence-host.c b/drivers/pci/cadence/pcie-cadence-host.c
->> new file mode 100644
->> index 000000000000..26caf8963e3c
->> --- /dev/null
->> +++ b/drivers/pci/cadence/pcie-cadence-host.c
->> @@ -0,0 +1,336 @@
+>> +++ b/drivers/pci/cadence/pcie-cadence.h
+>> @@ -0,0 +1,196 @@
 >> +// SPDX-License-Identifier: GPL-2.0
 >> +// Copyright (c) 2017 Cadence
->> +// Cadence PCIe host controller driver.
+>> +// Cadence PCIe controller driver.
 >> +// Author: Cyrille Pitchen <cyrille.pitchen-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 >> +
->> +#include <linux/kernel.h>
->> +#include <linux/of_address.h>
->> +#include <linux/of_pci.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/pm_runtime.h>
+>> +#ifndef _PCIE_CADENCE_H
+>> +#define _PCIE_CADENCE_H
 >> +
->> +#include "pcie-cadence.h"
+>> +#include <linux/kernel.h>
+>> +#include <linux/pci.h>
+>> +
+>> +/*
+>> + * Local Management Registers
+>> + */
+>> +#define CDNS_PCIE_LM_BASE	0x00100000
+>> +
+>> +/* Vendor ID Register */
+>> +#define CDNS_PCIE_LM_ID		(CDNS_PCIE_LM_BASE + 0x0044)
+>> +#define  CDNS_PCIE_LM_ID_VENDOR_MASK	GENMASK(15, 0)
+>> +#define  CDNS_PCIE_LM_ID_VENDOR_SHIFT	0
+>> +#define  CDNS_PCIE_LM_ID_VENDOR(vid) \
+>> +	(((vid) << CDNS_PCIE_LM_ID_VENDOR_SHIFT) & CDNS_PCIE_LM_ID_VENDOR_MASK)
+>> +#define  CDNS_PCIE_LM_ID_SUBSYS_MASK	GENMASK(31, 16)
+>> +#define  CDNS_PCIE_LM_ID_SUBSYS_SHIFT	16
+>> +#define  CDNS_PCIE_LM_ID_SUBSYS(sub) \
+>> +	(((sub) << CDNS_PCIE_LM_ID_SUBSYS_SHIFT) & CDNS_PCIE_LM_ID_SUBSYS_MASK)
+>> +
+>> +/* Root Port Requestor ID Register */
+>> +#define CDNS_PCIE_LM_RP_RID	(CDNS_PCIE_LM_BASE + 0x0228)
+>> +#define  CDNS_PCIE_LM_RP_RID_MASK	GENMASK(15, 0)
+>> +#define  CDNS_PCIE_LM_RP_RID_SHIFT	0
+>> +#define  CDNS_PCIE_LM_RP_RID_(rid) \
+>> +	(((rid) << CDNS_PCIE_LM_RP_RID_SHIFT) & CDNS_PCIE_LM_RP_RID_MASK)
+>> +
+>> +/* Root Complex BAR Configuration Register */
+>> +#define CDNS_PCIE_LM_RC_BAR_CFG	(CDNS_PCIE_LM_BASE + 0x0300)
+>> +#define  CDNS_PCIE_LM_RC_BAR_CFG_BAR0_APERTURE_MASK	GENMASK(5, 0)
+>> +#define  CDNS_PCIE_LM_RC_BAR_CFG_BAR0_APERTURE(a) \
+>> +	(((a) << 0) & CDNS_PCIE_LM_RC_BAR_CFG_BAR0_APERTURE_MASK)
+>> +#define  CDNS_PCIE_LM_RC_BAR_CFG_BAR0_CTRL_MASK		GENMASK(8, 6)
+>> +#define  CDNS_PCIE_LM_RC_BAR_CFG_BAR0_CTRL(c) \
+>> +	(((c) << 6) & CDNS_PCIE_LM_RC_BAR_CFG_BAR0_CTRL_MASK)
+>> +#define  CDNS_PCIE_LM_RC_BAR_CFG_BAR1_APERTURE_MASK	GENMASK(13, 9)
+>> +#define  CDNS_PCIE_LM_RC_BAR_CFG_BAR1_APERTURE(a) \
+>> +	(((a) << 9) & CDNS_PCIE_LM_RC_BAR_CFG_BAR1_APERTURE_MASK)
+>> +#define  CDNS_PCIE_LM_RC_BAR_CFG_BAR1_CTRL_MASK		GENMASK(16, 14)
+>> +#define  CDNS_PCIE_LM_RC_BAR_CFG_BAR1_CTRL(c) \
+>> +	(((c) << 14) & CDNS_PCIE_LM_RC_BAR_CFG_BAR1_CTRL_MASK)
+>> +#define  CDNS_PCIE_LM_RC_BAR_CFG_PREFETCH_MEM_ENABLE	BIT(17)
+>> +#define  CDNS_PCIE_LM_RC_BAR_CFG_PREFETCH_MEM_32BITS	0
+>> +#define  CDNS_PCIE_LM_RC_BAR_CFG_PREFETCH_MEM_64BITS	BIT(18)
+>> +#define  CDNS_PCIE_LM_RC_BAR_CFG_IO_ENABLE		BIT(19)
+>> +#define  CDNS_PCIE_LM_RC_BAR_CFG_IO_16BITS		0
+>> +#define  CDNS_PCIE_LM_RC_BAR_CFG_IO_32BITS		BIT(20)
+>> +#define  CDNS_PCIE_LM_RC_BAR_CFG_CHECK_ENABLE		BIT(31)
+>> +
+>> +/* BAR control values applicable to both Endpoint Function and Root Complex */
+>> +#define  CDNS_PCIE_LM_BAR_CFG_CTRL_DISABLED		0x0
+>> +#define  CDNS_PCIE_LM_BAR_CFG_CTRL_IO_32BITS		0x1
+>> +#define  CDNS_PCIE_LM_BAR_CFG_CTRL_MEM_32BITS		0x4
+>> +#define  CDNS_PCIE_LM_BAR_CFG_CTRL_PREFETCH_MEM_32BITS	0x5
+>> +#define  CDNS_PCIE_LM_BAR_CFG_CTRL_MEM_64BITS		0x6
+>> +#define  CDNS_PCIE_LM_BAR_CFG_CTRL_PREFETCH_MEM_64BITS	0x7
+>> +
+>> +
+>> +/*
+>> + * Root Port Registers (PCI configuration space for the root port function)
+>> + */
+>> +#define CDNS_PCIE_RP_BASE	0x00200000
+>> +
+>> +
+>> +/*
+>> + * Address Translation Registers
+>> + */
+>> +#define CDNS_PCIE_AT_BASE	0x00400000
+>> +
+>> +/* Region r Outbound AXI to PCIe Address Translation Register 0 */
+>> +#define CDNS_PCIE_AT_OB_REGION_PCI_ADDR0(r) \
+>> +	(CDNS_PCIE_AT_BASE + 0x0000 + ((r) & 0x1f) * 0x0020)
+>> +#define  CDNS_PCIE_AT_OB_REGION_PCI_ADDR0_NBITS_MASK	GENMASK(5, 0)
+>> +#define  CDNS_PCIE_AT_OB_REGION_PCI_ADDR0_NBITS(nbits) \
+>> +	(((nbits) - 1) & CDNS_PCIE_AT_OB_REGION_PCI_ADDR0_NBITS_MASK)
+>> +#define  CDNS_PCIE_AT_OB_REGION_PCI_ADDR0_DEVFN_MASK	GENMASK(19, 12)
+>> +#define  CDNS_PCIE_AT_OB_REGION_PCI_ADDR0_DEVFN(devfn) \
+>> +	(((devfn) << 12) & CDNS_PCIE_AT_OB_REGION_PCI_ADDR0_DEVFN_MASK)
+>> +#define  CDNS_PCIE_AT_OB_REGION_PCI_ADDR0_BUS_MASK	GENMASK(27, 20)
+>> +#define  CDNS_PCIE_AT_OB_REGION_PCI_ADDR0_BUS(bus) \
+>> +	(((bus) << 20) & CDNS_PCIE_AT_OB_REGION_PCI_ADDR0_BUS_MASK)
+>> +
+>> +/* Region r Outbound AXI to PCIe Address Translation Register 1 */
+>> +#define CDNS_PCIE_AT_OB_REGION_PCI_ADDR1(r) \
+>> +	(CDNS_PCIE_AT_BASE + 0x0004 + ((r) & 0x1f) * 0x0020)
+>> +
+>> +/* Region r Outbound PCIe Descriptor Register 0 */
+>> +#define CDNS_PCIE_AT_OB_REGION_DESC0(r) \
+>> +	(CDNS_PCIE_AT_BASE + 0x0008 + ((r) & 0x1f) * 0x0020)
+>> +#define  CDNS_PCIE_AT_OB_REGION_DESC0_TYPE_MASK		GENMASK(3, 0)
+>> +#define  CDNS_PCIE_AT_OB_REGION_DESC0_TYPE_MEM		0x2
+>> +#define  CDNS_PCIE_AT_OB_REGION_DESC0_TYPE_IO		0x6
+>> +#define  CDNS_PCIE_AT_OB_REGION_DESC0_TYPE_CONF_TYPE0	0xa
+>> +#define  CDNS_PCIE_AT_OB_REGION_DESC0_TYPE_CONF_TYPE1	0xb
+>> +#define  CDNS_PCIE_AT_OB_REGION_DESC0_TYPE_NORMAL_MSG	0xc
+>> +#define  CDNS_PCIE_AT_OB_REGION_DESC0_TYPE_VENDOR_MSG	0xd
+>> +/* Bit 23 MUST be set in RC mode. */
+>> +#define  CDNS_PCIE_AT_OB_REGION_DESC0_HARDCODED_RID	BIT(23)
+>> +#define  CDNS_PCIE_AT_OB_REGION_DESC0_DEVFN_MASK	GENMASK(31, 24)
+>> +#define  CDNS_PCIE_AT_OB_REGION_DESC0_DEVFN(devfn) \
+>> +	(((devfn) << 24) & CDNS_PCIE_AT_OB_REGION_DESC0_DEVFN_MASK)
+>> +
+>> +/* Region r Outbound PCIe Descriptor Register 1 */
+>> +#define CDNS_PCIE_AT_OB_REGION_DESC1(r)	\
+>> +	(CDNS_PCIE_AT_BASE + 0x000c + ((r) & 0x1f) * 0x0020)
+>> +#define  CDNS_PCIE_AT_OB_REGION_DESC1_BUS_MASK	GENMASK(7, 0)
+>> +#define  CDNS_PCIE_AT_OB_REGION_DESC1_BUS(bus) \
+>> +	((bus) & CDNS_PCIE_AT_OB_REGION_DESC1_BUS_MASK)
+>> +
+>> +/* Region r AXI Region Base Address Register 0 */
+>> +#define CDNS_PCIE_AT_OB_REGION_CPU_ADDR0(r) \
+>> +	(CDNS_PCIE_AT_BASE + 0x0018 + ((r) & 0x1f) * 0x0020)
+>> +#define  CDNS_PCIE_AT_OB_REGION_CPU_ADDR0_NBITS_MASK	GENMASK(5, 0)
+>> +#define  CDNS_PCIE_AT_OB_REGION_CPU_ADDR0_NBITS(nbits) \
+>> +	(((nbits) - 1) & CDNS_PCIE_AT_OB_REGION_CPU_ADDR0_NBITS_MASK)
+>> +
+>> +/* Region r AXI Region Base Address Register 1 */
+>> +#define CDNS_PCIE_AT_OB_REGION_CPU_ADDR1(r) \
+>> +	(CDNS_PCIE_AT_BASE + 0x001c + ((r) & 0x1f) * 0x0020)
+>> +
+>> +/* Root Port BAR Inbound PCIe to AXI Address Translation Register */
+>> +#define CDNS_PCIE_AT_IB_RP_BAR_ADDR0(bar) \
+>> +	(CDNS_PCIE_AT_BASE + 0x0800 + (bar) * 0x0008)
+>> +#define  CDNS_PCIE_AT_IB_RP_BAR_ADDR0_NBITS_MASK	GENMASK(5, 0)
+>> +#define  CDNS_PCIE_AT_IB_RP_BAR_ADDR0_NBITS(nbits) \
+>> +	(((nbits) - 1) & CDNS_PCIE_AT_IB_RP_BAR_ADDR0_NBITS_MASK)
+>> +#define CDNS_PCIE_AT_IB_RP_BAR_ADDR1(bar) \
+>> +	(CDNS_PCIE_AT_BASE + 0x0804 + (bar) * 0x0008)
+>> +
+>> +enum cdns_pcie_rp_bar {
+>> +	RP_BAR0,
+>> +	RP_BAR1,
+>> +	RP_NO_BAR
+>> +};
 >> +
 >> +/**
->> + * struct cdns_pcie_rc - private data for this PCIe Root Complex driver
->> + * @pcie: Cadence PCIe controller
->> + * @dev: pointer to PCIe device
->> + * @cfg_res: start/end offsets in the physical system memory to map PCI
->> + *           configuration space accesses
->> + * @bus_range: first/last buses behind the PCIe host controller
->> + * @cfg_base: IO mapped window to access the PCI configuration space of a
->> + *            single function at a time
->> + * @max_regions: maximum number of regions supported by the hardware
->> + * @no_bar_nbits: Number of bits to keep for inbound (PCIe -> CPU) address
->> + *                translation (nbits sets into the "no BAR match" register)
->> + * @vendor_id: PCI vendor ID
->> + * @device_id: PCI device ID
+>> + * struct cdns_pcie - private data for Cadence PCIe controller drivers
+>> + * @reg_base: IO mapped register base
+>> + * @mem_res: start/end offsets in the physical system memory to map PCI accesses
+>> + * @is_rc: tell whether the PCIe controller mode is Root Complex or Endpoint.
+>> + * @bus: In Root Complex mode, the bus number
 >> + */
->> +struct cdns_pcie_rc {
->> +	struct cdns_pcie	pcie;
->> +	struct device		*dev;
->> +	struct resource		*cfg_res;
->> +	struct resource		*bus_range;
->> +	void __iomem		*cfg_base;
->> +	u32			max_regions;
->> +	u32			no_bar_nbits;
->> +	u16			vendor_id;
->> +	u16			device_id;
+>> +struct cdns_pcie {
+>> +	void __iomem		*reg_base;
+>> +	struct resource		*mem_res;
+>> +	bool			is_rc;
+>> +	u8			bus;
 >> +};
 >> +
->> +static void __iomem *cdns_pci_map_bus(struct pci_bus *bus, unsigned int devfn,
->> +				      int where)
+>> +/* Register access */
+>> +static inline void cdns_pcie_writeb(struct cdns_pcie *pcie, u32 reg, u8 value)
 >> +{
->> +	struct pci_host_bridge *bridge = pci_find_host_bridge(bus);
->> +	struct cdns_pcie_rc *rc = pci_host_bridge_priv(bridge);
->> +	struct cdns_pcie *pcie = &rc->pcie;
->> +	unsigned int busn = bus->number;
->> +	u32 addr0, desc0;
->> +
->> +	if (busn == rc->bus_range->start) {
->> +		/*
->> +		 * Only the root port (devfn == 0) is connected to this bus.
->> +		 * All other PCI devices are behind some bridge hence on another
->> +		 * bus.
->> +		 */
->> +		if (devfn)
->> +			return NULL;
->> +
->> +		return pcie->reg_base + (where & 0xfff);
->> +	}
->> +
->> +	/* Update Output registers for AXI region 0. */
->> +	addr0 = CDNS_PCIE_AT_OB_REGION_PCI_ADDR0_NBITS(12) |
->> +		CDNS_PCIE_AT_OB_REGION_PCI_ADDR0_DEVFN(devfn) |
->> +		CDNS_PCIE_AT_OB_REGION_PCI_ADDR0_BUS(busn);
->> +	cdns_pcie_writel(pcie, CDNS_PCIE_AT_OB_REGION_PCI_ADDR0(0), addr0);
->> +
->> +	/* Configuration Type 0 or Type 1 access. */
->> +	desc0 = CDNS_PCIE_AT_OB_REGION_DESC0_HARDCODED_RID |
->> +		CDNS_PCIE_AT_OB_REGION_DESC0_DEVFN(0);
->> +	/*
->> +	 * The bus number was already set once for all in desc1 by
->> +	 * cdns_pcie_host_init_address_translation().
->> +	 */
->> +	if (busn == rc->bus_range->start + 1)
->> +		desc0 |= CDNS_PCIE_AT_OB_REGION_DESC0_TYPE_CONF_TYPE0;
->> +	else
->> +		desc0 |= CDNS_PCIE_AT_OB_REGION_DESC0_TYPE_CONF_TYPE1;
->> +	cdns_pcie_writel(pcie, CDNS_PCIE_AT_OB_REGION_DESC0(0), desc0);
->> +
->> +	return rc->cfg_base + (where & 0xfff);
+>> +	writeb(value, pcie->reg_base + reg);
 >> +}
 >> +
->> +static struct pci_ops cdns_pcie_host_ops = {
->> +	.map_bus	= cdns_pci_map_bus,
->> +	.read		= pci_generic_config_read,
->> +	.write		= pci_generic_config_write,
->> +};
->> +
->> +static const struct of_device_id cdns_pcie_host_of_match[] = {
->> +	{ .compatible = "cdns,cdns-pcie-host" },
->> +
->> +	{ },
->> +};
->> +
->> +static int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
+>> +static inline void cdns_pcie_writew(struct cdns_pcie *pcie, u32 reg, u16 value)
 >> +{
->> +	struct cdns_pcie *pcie = &rc->pcie;
->> +	u32 value, ctrl;
->> +
->> +	/*
->> +	 * Set the root complex BAR configuration register:
->> +	 * - disable both BAR0 and BAR1.
->> +	 * - enable Prefetchable Memory Base and Limit registers in type 1
->> +	 *   config space (64 bits).
->> +	 * - enable IO Base and Limit registers in type 1 config
->> +	 *   space (32 bits).
->> +	 */
->> +	ctrl = CDNS_PCIE_LM_BAR_CFG_CTRL_DISABLED;
->> +	value = CDNS_PCIE_LM_RC_BAR_CFG_BAR0_CTRL(ctrl) |
->> +		CDNS_PCIE_LM_RC_BAR_CFG_BAR1_CTRL(ctrl) |
->> +		CDNS_PCIE_LM_RC_BAR_CFG_PREFETCH_MEM_ENABLE |
->> +		CDNS_PCIE_LM_RC_BAR_CFG_PREFETCH_MEM_64BITS |
->> +		CDNS_PCIE_LM_RC_BAR_CFG_IO_ENABLE |
->> +		CDNS_PCIE_LM_RC_BAR_CFG_IO_32BITS;
->> +	cdns_pcie_writel(pcie, CDNS_PCIE_LM_RC_BAR_CFG, value);
->> +
->> +	/* Set root port configuration space */
->> +	if (rc->vendor_id != 0xffff)
->> +		cdns_pcie_rp_writew(pcie, PCI_VENDOR_ID, rc->vendor_id);
->> +	if (rc->device_id != 0xffff)
->> +		cdns_pcie_rp_writew(pcie, PCI_DEVICE_ID, rc->device_id);
->> +
->> +	cdns_pcie_rp_writeb(pcie, PCI_CLASS_REVISION, 0);
->> +	cdns_pcie_rp_writeb(pcie, PCI_CLASS_PROG, 0);
->> +	cdns_pcie_rp_writew(pcie, PCI_CLASS_DEVICE, PCI_CLASS_BRIDGE_PCI);
->> +
->> +	return 0;
+>> +	writew(value, pcie->reg_base + reg);
 >> +}
 >> +
->> +static int cdns_pcie_host_init_address_translation(struct cdns_pcie_rc *rc)
+>> +static inline void cdns_pcie_writel(struct cdns_pcie *pcie, u32 reg, u32 value)
 >> +{
->> +	struct cdns_pcie *pcie = &rc->pcie;
->> +	struct resource *cfg_res = rc->cfg_res;
->> +	struct resource *mem_res = pcie->mem_res;
->> +	struct resource *bus_range = rc->bus_range;
->> +	struct device *dev = rc->dev;
->> +	struct device_node *np = dev->of_node;
->> +	struct of_pci_range_parser parser;
->> +	struct of_pci_range range;
->> +	u32 addr0, addr1, desc1;
->> +	u64 cpu_addr;
->> +	int r, err;
->> +
->> +	/*
->> +	 * Reserve region 0 for PCI configure space accesses:
->> +	 * OB_REGION_PCI_ADDR0 and OB_REGION_DESC0 are updated dynamically by
->> +	 * cdns_pci_map_bus(), other region registers are set here once for all.
->> +	 */
->> +	addr1 = 0; /* Should be programmed to zero. */
->> +	desc1 = CDNS_PCIE_AT_OB_REGION_DESC1_BUS(bus_range->start);
->> +	cdns_pcie_writel(pcie, CDNS_PCIE_AT_OB_REGION_PCI_ADDR1(0), addr1);
->> +	cdns_pcie_writel(pcie, CDNS_PCIE_AT_OB_REGION_DESC1(0), desc1);
->> +
->> +	cpu_addr = cfg_res->start - mem_res->start;
->> +	addr0 = CDNS_PCIE_AT_OB_REGION_CPU_ADDR0_NBITS(12) |
->> +		(lower_32_bits(cpu_addr) & GENMASK(31, 8));
->> +	addr1 = upper_32_bits(cpu_addr);
->> +	cdns_pcie_writel(pcie, CDNS_PCIE_AT_OB_REGION_CPU_ADDR0(0), addr0);
->> +	cdns_pcie_writel(pcie, CDNS_PCIE_AT_OB_REGION_CPU_ADDR1(0), addr1);
->> +
->> +	err = of_pci_range_parser_init(&parser, np);
->> +	if (err)
->> +		return err;
->> +
->> +	r = 1;
->> +	for_each_of_pci_range(&parser, &range) {
->> +		bool is_io;
->> +
->> +		if (r >= rc->max_regions)
->> +			break;
->> +
->> +		if ((range.flags & IORESOURCE_TYPE_BITS) == IORESOURCE_MEM)
->> +			is_io = false;
->> +		else if ((range.flags & IORESOURCE_TYPE_BITS) == IORESOURCE_IO)
->> +			is_io = true;
->> +		else
->> +			continue;
->> +
->> +		cdns_pcie_set_outbound_region(pcie, r, is_io,
->> +					      range.cpu_addr,
->> +					      range.pci_addr,
->> +					      range.size);
->> +		r++;
->> +	}
->> +
->> +	/*
->> +	 * Set Root Port no BAR match Inbound Translation registers:
->> +	 * needed for MSI and DMA.
->> +	 * Root Port BAR0 and BAR1 are disabled, hence no need to set their
->> +	 * inbound translation registers.
->> +	 */
->> +	addr0 = CDNS_PCIE_AT_IB_RP_BAR_ADDR0_NBITS(rc->no_bar_nbits);
->> +	addr1 = 0;
->> +	cdns_pcie_writel(pcie, CDNS_PCIE_AT_IB_RP_BAR_ADDR0(RP_NO_BAR), addr0);
->> +	cdns_pcie_writel(pcie, CDNS_PCIE_AT_IB_RP_BAR_ADDR1(RP_NO_BAR), addr1);
->> +
->> +	return 0;
+>> +	writel(value, pcie->reg_base + reg);
 >> +}
 >> +
->> +static int cdns_pcie_host_init(struct device *dev,
->> +			       struct list_head *resources,
->> +			       struct cdns_pcie_rc *rc)
+>> +static inline u32 cdns_pcie_readl(struct cdns_pcie *pcie, u32 reg)
 >> +{
->> +	struct resource *bus_range = NULL;
->> +	int err;
->> +
->> +	/* Parse our PCI ranges and request their resources */
->> +	err = pci_parse_request_of_pci_ranges(dev, resources, &bus_range);
->> +	if (err)
->> +		return err;
->> +
->> +	rc->bus_range = bus_range;
->> +	rc->pcie.bus = bus_range->start;
->> +
->> +	err = cdns_pcie_host_init_root_port(rc);
->> +	if (err)
->> +		goto err_out;
->> +
->> +	err = cdns_pcie_host_init_address_translation(rc);
->> +	if (err)
->> +		goto err_out;
->> +
->> +	return 0;
->> +
->> + err_out:
->> +	pci_free_resource_list(resources);
->> +	return err;
+>> +	return readl(pcie->reg_base + reg);
 >> +}
 >> +
->> +static int cdns_pcie_host_probe(struct platform_device *pdev)
+>> +/* Root Port register access */
+>> +static inline void cdns_pcie_rp_writeb(struct cdns_pcie *pcie,
+>> +				       u32 reg, u8 value)
 >> +{
->> +	const char *type;
->> +	struct device *dev = &pdev->dev;
->> +	struct device_node *np = dev->of_node;
->> +	struct pci_host_bridge *bridge;
->> +	struct list_head resources;
->> +	struct cdns_pcie_rc *rc;
->> +	struct cdns_pcie *pcie;
->> +	struct resource *res;
->> +	int ret;
->> +
->> +	bridge = devm_pci_alloc_host_bridge(dev, sizeof(*rc));
->> +	if (!bridge)
->> +		return -ENOMEM;
->> +
->> +	rc = pci_host_bridge_priv(bridge);
->> +	rc->dev = dev;
->> +
->> +	pcie = &rc->pcie;
->> +	pcie->is_rc = true;
->> +
->> +	rc->max_regions = 32;
->> +	of_property_read_u32(np, "cdns,max-outbound-regions", &rc->max_regions);
->> +
->> +	rc->no_bar_nbits = 32;
->> +	of_property_read_u32(np, "cdns,no-bar-match-nbits", &rc->no_bar_nbits);
->> +
->> +	rc->vendor_id = 0xffff;
->> +	of_property_read_u16(np, "vendor-id", &rc->vendor_id);
->> +
->> +	rc->device_id = 0xffff;
->> +	of_property_read_u16(np, "device-id", &rc->device_id);
->> +
->> +	type = of_get_property(np, "device_type", NULL);
->> +	if (!type || strcmp(type, "pci")) {
->> +		dev_err(dev, "invalid \"device_type\" %s\n", type);
->> +		return -EINVAL;
->> +	}
->> +
->> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "reg");
->> +	pcie->reg_base = devm_ioremap_resource(dev, res);
->> +	if (IS_ERR(pcie->reg_base)) {
->> +		dev_err(dev, "missing \"reg\"\n");
->> +		return PTR_ERR(pcie->reg_base);
->> +	}
->> +
->> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "cfg");
->> +	rc->cfg_base = devm_pci_remap_cfg_resource(dev, res);
->> +	if (IS_ERR(rc->cfg_base)) {
->> +		dev_err(dev, "missing \"cfg\"\n");
->> +		return PTR_ERR(rc->cfg_base);
->> +	}
->> +	rc->cfg_res = res;
->> +
->> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "mem");
->> +	if (!res) {
->> +		dev_err(dev, "missing \"mem\"\n");
->> +		return -EINVAL;
->> +	}
->> +	pcie->mem_res = res;
->> +
->> +	pm_runtime_enable(dev);
->> +	ret = pm_runtime_get_sync(dev);
->> +	if (ret < 0) {
->> +		dev_err(dev, "pm_runtime_get_sync() failed\n");
->> +		goto err_get_sync;
->> +	}
->> +
->> +	ret = cdns_pcie_host_init(dev, &resources, rc);
->> +	if (ret)
->> +		goto err_init;
->> +
->> +	list_splice_init(&resources, &bridge->windows);
->> +	bridge->dev.parent = dev;
->> +	bridge->busnr = pcie->bus;
->> +	bridge->ops = &cdns_pcie_host_ops;
->> +	bridge->map_irq = of_irq_parse_and_map_pci;
->> +	bridge->swizzle_irq = pci_common_swizzle;
->> +
->> +	ret = pci_host_probe(bridge);
->> +	if (ret < 0)
->> +		goto err_host_probe;
->> +
->> +	return 0;
->> +
->> + err_host_probe:
->> +	pci_free_resource_list(&resources);
->> +
->> + err_init:
->> +	pm_runtime_put_sync(dev);
->> +
->> + err_get_sync:
->> +	pm_runtime_disable(dev);
->> +
->> +	return ret;
+>> +	writeb(value, pcie->reg_base + CDNS_PCIE_RP_BASE + reg);
 >> +}
 >> +
->> +static struct platform_driver cdns_pcie_host_driver = {
->> +	.driver = {
->> +		.name = "cdns-pcie-host",
->> +		.of_match_table = cdns_pcie_host_of_match,
->> +	},
->> +	.probe = cdns_pcie_host_probe,
->> +};
+>> +static inline void cdns_pcie_rp_writew(struct cdns_pcie *pcie,
+>> +				       u32 reg, u16 value)
+>> +{
+>> +	writew(value, pcie->reg_base + CDNS_PCIE_RP_BASE + reg);
+>> +}
+>> +
+>> +void cdns_pcie_set_outbound_region(struct cdns_pcie *pcie, u32 r, bool is_io,
+>> +				   u64 cpu_addr, u64 pci_addr, size_t size);
+>> +
+>> +void cdns_pcie_reset_outbound_region(struct cdns_pcie *pcie, u32 r);
 > 
-> In the case of DWC, designware core is modeled as a library which has API's to
-> be invoked by various platform specific glue drivers.
+> Ditto. I understand it is hard to untangle code that was written with
+> both EP and host bridge support in mind but, as I state below every
+> patch has to make sense on its own.
+
+done in v4.
+
 > 
-> But with the cadence approach we'll have two separate drivers: the cadence core
-> driver and the platform specific glue drivers. Is this approach chosen for a
-> specific reason?
+>> +
+>> +#endif /* _PCIE_CADENCE_H */
+> 
+> Technically speaking, this 3-file (.c .h) split is not necessary and can
+> turn out unnecessary churn if we never merge the endpoint code -
+> actually you would not even need a special cadence directory, just a
+> host bridge driver file.
+> 
+> Bottom line, as you know: every patch has to be self contained.
+> 
+> It is already quite late -rc, I understand that changes this late
+> are error prone so I will accept that this file splitting is necessary
+> for "future" patches - if you manage to squash changes into a file I'd
+> appreciate though, it does not make sense to export functions that are
+> used in just one compilation unit (and some that are not used at all).
 
-I don't know yet how many chips will integrate the Cadence PCIe controller
-or what customizations would be required. I thought we may have a chance to
-handle all the variants with different 'compatible' DT values and their
-associated .data in the 'struct of_device_id', or maybe with some
-additional DT properties but still the single pcie-cadence-host.c file to
-drive all host flavors.
+Sorry, I didn't have time to squash the 3 files into a single one. I
+can do it in v5 if you think it's better. I plan to work on the endpoint
+driver with multi-functions this week-end, hence I hope I will be able
+to add this driver back in v5.
 
-Also I was thinking about regrouping all endpoint flavors in
-pcie-cadence-enpoint.c.
-
-I can't figure out yet whether it would be enough.
+I've just been sending v4 anyway so at least you will have former patch 3
+from v3 split into new patches 3 and 4 in v4 as you requested.
+So if you want to merge at least the new generic patches [1 - 4] for v4.16,
+they are available :)
 
 Best regards,
 
 Cyrille
 
+ 
 > 
-> Thanks
-> Kishon
+> Thanks,
+> Lorenzo
 > 
 
 
