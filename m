@@ -1,224 +1,88 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH v3 2/2] v4l2: i2c: ov7670: Implement OF mbus configuration
-Date: Fri, 19 Jan 2018 00:26:48 +0200
-Message-ID: <20180118222648.kfam634qyy4eu2ed@valkosipuli.retiisi.org.uk>
-References: <1515779808-21420-1-git-send-email-jacopo+renesas@jmondi.org>
- <1515779808-21420-3-git-send-email-jacopo+renesas@jmondi.org>
+From: James Hogan <james.hogan-8NJIiSa5LzA@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] dt-bindings: Document mti,mips-cpc binding
+Date: Thu, 18 Jan 2018 22:26:04 +0000
+Message-ID: <20180118222603.GG27409@jhogan-linux.mipstec.com>
+References: <1514385475-23921-1-git-send-email-aleksandar.markovic@rt-rk.com>
+ <1514385475-23921-2-git-send-email-aleksandar.markovic@rt-rk.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="f9lFb+Z4UT82L8vr"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1515779808-21420-3-git-send-email-jacopo+renesas@jmondi.org>
-Sender: linux-media-owner@vger.kernel.org
-To: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc: corbet@lwn.net, mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1514385475-23921-2-git-send-email-aleksandar.markovic-FblTVreYubkAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Aleksandar Markovic <aleksandar.markovic-FblTVreYubkAvxtiuMwx3w@public.gmane.org>
+Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Paul Burton <paul.burton-8NJIiSa5LzA@public.gmane.org>, Aleksandar Markovic <aleksandar.markovic-8NJIiSa5LzA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Douglas Leung <douglas.leung-8NJIiSa5LzA@public.gmane.org>, Goran Ferenc <goran.ferenc-8NJIiSa5LzA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Miodrag Dinic <miodrag.dinic-8NJIiSa5LzA@public.gmane.org>, Petar Jovanovic <petar.jovanovic-8NJIiSa5LzA@public.gmane.org>, Raghu Gandham <raghu.gandham-8NJIiSa5LzA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacopo,
+--f9lFb+Z4UT82L8vr
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jan 12, 2018 at 06:56:48PM +0100, Jacopo Mondi wrote:
-> ov7670 driver supports two optional properties supplied through platform
-> data, but currently does not support any standard video interface
-> property.
-> 
-> Add support through OF parsing for 2 generic properties (vsync and hsync
-> polarities) and for one custom property already supported through
-> platform data to suppress pixel clock output during horizontal
-> blanking.
-> 
-> While at there, check return value of register writes in set_fmt
-> function and rationalize spacings.
-> 
-> Signal polarities and pixel clock blanking verified through scope and
-> image capture.
-> 
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+On Wed, Dec 27, 2017 at 03:37:51PM +0100, Aleksandar Markovic wrote:
+> From: Paul Burton <paul.burton-8NJIiSa5LzA@public.gmane.org>
+>=20
+> Document a binding for the MIPS Cluster Power Controller (CPC) that
+> allows the device tree to specify where the CPC registers are located.
+>=20
+> Signed-off-by: Paul Burton <paul.burton-8NJIiSa5LzA@public.gmane.org>
+> Signed-off-by: Aleksandar Markovic <aleksandar.markovic-8NJIiSa5LzA@public.gmane.org>
 > ---
->  drivers/media/i2c/ov7670.c | 102 ++++++++++++++++++++++++++++++++++++++-------
->  1 file changed, 88 insertions(+), 14 deletions(-)
-> 
-> diff --git a/drivers/media/i2c/ov7670.c b/drivers/media/i2c/ov7670.c
-> index 950a0ac..ad5f9e9 100644
-> --- a/drivers/media/i2c/ov7670.c
-> +++ b/drivers/media/i2c/ov7670.c
-> @@ -21,6 +21,7 @@
->  #include <linux/gpio/consumer.h>
->  #include <media/v4l2-device.h>
->  #include <media/v4l2-ctrls.h>
-> +#include <media/v4l2-fwnode.h>
->  #include <media/v4l2-mediabus.h>
->  #include <media/v4l2-image-sizes.h>
->  #include <media/i2c/ov7670.h>
-> @@ -237,6 +238,7 @@ struct ov7670_info {
->  	struct clk *clk;
->  	struct gpio_desc *resetb_gpio;
->  	struct gpio_desc *pwdn_gpio;
-> +	unsigned int mbus_config;	/* Media bus configuration flags */
->  	int min_width;			/* Filter out smaller sizes */
->  	int min_height;			/* Filter out smaller sizes */
->  	int clock_speed;		/* External clock speed (MHz) */
-> @@ -995,7 +997,7 @@ static int ov7670_set_fmt(struct v4l2_subdev *sd,
->  #ifdef CONFIG_VIDEO_V4L2_SUBDEV_API
->  	struct v4l2_mbus_framefmt *mbus_fmt;
->  #endif
-> -	unsigned char com7;
-> +	unsigned char com7, com10 = 0;
->  	int ret;
->  
->  	if (format->pad)
-> @@ -1015,7 +1017,6 @@ static int ov7670_set_fmt(struct v4l2_subdev *sd,
->  	}
->  
->  	ret = ov7670_try_fmt_internal(sd, &format->format, &ovfmt, &wsize);
-> -
->  	if (ret)
->  		return ret;
->  	/*
-> @@ -1026,16 +1027,41 @@ static int ov7670_set_fmt(struct v4l2_subdev *sd,
->  	 */
->  	com7 = ovfmt->regs[0].value;
->  	com7 |= wsize->com7_bit;
-> -	ov7670_write(sd, REG_COM7, com7);
-> +	ret = ov7670_write(sd, REG_COM7, com7);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/*
-> +	 * Configure the media bus through COM10 register
-> +	 */
-> +	if (info->mbus_config & V4L2_MBUS_VSYNC_ACTIVE_LOW)
-> +		com10 |= COM10_VS_NEG;
-> +	if (info->mbus_config & V4L2_MBUS_HSYNC_ACTIVE_LOW)
-> +		com10 |= COM10_HREF_REV;
-> +	if (info->pclk_hb_disable)
-> +		com10 |= COM10_PCLK_HB;
-> +	ret = ov7670_write(sd, REG_COM10, com10);
-> +	if (ret)
-> +		return ret;
-> +
->  	/*
->  	 * Now write the rest of the array.  Also store start/stops
->  	 */
-> -	ov7670_write_array(sd, ovfmt->regs + 1);
-> -	ov7670_set_hw(sd, wsize->hstart, wsize->hstop, wsize->vstart,
-> -			wsize->vstop);
-> -	ret = 0;
-> -	if (wsize->regs)
-> +	ret = ov7670_write_array(sd, ovfmt->regs + 1);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = ov7670_set_hw(sd, wsize->hstart, wsize->hstop, wsize->vstart,
-> +			    wsize->vstop);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (wsize->regs) {
->  		ret = ov7670_write_array(sd, wsize->regs);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
->  	info->fmt = ovfmt;
->  
->  	/*
-> @@ -1048,8 +1074,10 @@ static int ov7670_set_fmt(struct v4l2_subdev *sd,
->  	 * to write it unconditionally, and that will make the frame
->  	 * rate persistent too.
->  	 */
-> -	if (ret == 0)
-> -		ret = ov7670_write(sd, REG_CLKRC, info->clkrc);
-> +	ret = ov7670_write(sd, REG_CLKRC, info->clkrc);
-> +	if (ret)
-> +		return ret;
-> +
->  	return 0;
->  }
->  
-> @@ -1658,6 +1686,49 @@ static int ov7670_init_gpio(struct i2c_client *client, struct ov7670_info *info)
->  	return 0;
->  }
->  
-> +/*
-> + * ov7670_parse_dt() - Parse device tree to collect mbus configuration
-> + *			properties
-> + */
-> +static int ov7670_parse_dt(struct device *dev,
-> +			   struct ov7670_info *info)
-> +{
-> +	struct fwnode_handle *fwnode = dev_fwnode(dev);
-> +	struct v4l2_fwnode_endpoint bus_cfg;
-> +	struct fwnode_handle *ep;
-> +	int ret;
-> +
-> +	if (!fwnode)
-> +		return -EINVAL;
-> +
-> +	info->pclk_hb_disable = false;
-> +	if (fwnode_property_present(fwnode, "ov7670,pclk-hb-disable"))
-> +		info->pclk_hb_disable = true;
-> +
-> +	ep = fwnode_graph_get_next_endpoint(fwnode, NULL);
-> +	if (!ep) {
-> +		fwnode_handle_put(fwnode);
+>  Documentation/devicetree/bindings/power/mti,mips-cpc.txt | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/mti,mips-cpc.=
+txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/power/mti,mips-cpc.txt b/D=
+ocumentation/devicetree/bindings/power/mti,mips-cpc.txt
+> new file mode 100644
 
-You haven't acquired a reference to fwnode, therefore you musn't put it.
+Is it worth adding to the MIPS GENERIC PLATFORM entry of MAINTAINERS,
+given that it directly benefits it?
 
-Looks fine otherwise.
+Cheers
+James
 
-> +		return -EINVAL;
-> +	}
+> index 0000000..c6b8251
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/mti,mips-cpc.txt
+> @@ -0,0 +1,8 @@
+> +Binding for MIPS Cluster Power Controller (CPC).
 > +
-> +	ret = v4l2_fwnode_endpoint_parse(ep, &bus_cfg);
-> +	if (ret)
-> +		goto error_put_fwnodes;
+> +This binding allows a system to specify where the CPC registers are
+> +located.
 > +
-> +	if (bus_cfg.bus_type != V4L2_MBUS_PARALLEL) {
-> +		dev_err(dev, "Unsupported media bus type\n");
-> +		ret = -EINVAL;
-> +		goto error_put_fwnodes;
-> +	}
-> +	info->mbus_config = bus_cfg.bus.parallel.flags;
-> +
-> +error_put_fwnodes:
-> +	fwnode_handle_put(ep);
-> +	fwnode_handle_put(fwnode);
-> +
-> +	return ret;
-> +}
-> +
->  static int ov7670_probe(struct i2c_client *client,
->  			const struct i2c_device_id *id)
->  {
-> @@ -1678,7 +1749,13 @@ static int ov7670_probe(struct i2c_client *client,
->  #endif
->  
->  	info->clock_speed = 30; /* default: a guess */
-> -	if (client->dev.platform_data) {
-> +
-> +	if (dev_fwnode(&client->dev)) {
-> +		ret = ov7670_parse_dt(&client->dev, info);
-> +		if (ret)
-> +			return ret;
-> +
-> +	} else if (client->dev.platform_data) {
->  		struct ov7670_config *config = client->dev.platform_data;
->  
->  		/*
-> @@ -1745,9 +1822,6 @@ static int ov7670_probe(struct i2c_client *client,
->  	tpf.denominator = 30;
->  	info->devtype->set_framerate(sd, &tpf);
->  
-> -	if (info->pclk_hb_disable)
-> -		ov7670_write(sd, REG_COM10, COM10_PCLK_HB);
-> -
->  	v4l2_ctrl_handler_init(&info->hdl, 10);
->  	v4l2_ctrl_new_std(&info->hdl, &ov7670_ctrl_ops,
->  			V4L2_CID_BRIGHTNESS, 0, 255, 1, 128);
-> -- 
+> +Required properties:
+> +compatible : Should be "mti,mips-cpc".
+> +regs: Should describe the address & size of the CPC register region.
+> --=20
 > 2.7.4
-> 
+>=20
 
--- 
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi
+--f9lFb+Z4UT82L8vr
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEd80NauSabkiESfLYbAtpk944dnoFAlphHvsACgkQbAtpk944
+dnosoRAApbUmU9krdm+eQh/ArkjZmYh/onFKo1q9QNghYNVom4vHzCF7hRQZCYcP
+6EJo6/x6JMyFwaM4/dTZ6NghInx2wrHGSbOMFbL8Il4LtlzXi2lmDoV0oX4P2SUD
++TEfbKUHoANRdq9eck8nM+heqsJkF/MZ++ykD/FUjRwkoKG9rgh7wwLaPtnHNCX1
+fY6qwTxboy1gKWOfBV9kMAM7sHzztRdDbPnlOVup1MSXShCOgzK1y2GSLIdRZyl3
+flTJUJojdv7OAzBKAZrqM8ldYqKLEiEkBR+APRH4OvnWHkcVtd0/iQ1ntGZVz1Hf
+3XNGZARH+K1JwIfmpy4ZbeSog5dn74KjSY0dhI5wgCisOP2MGuOxwnJ2hl+nbXYF
+Xa9YYbftxOw4+XiBCQPjT6euJemnXgo7pW4i7LWPk3caOic0IOlGQgQCUYZ3AHBy
+03iSOBFDCHhCQSLDWY2EMTA4b5JvI/tU8qAc2yGU51U3rTG6Q4uucGHrlIaMgApZ
+e9u/CFmCr0uxj9GL2enaejO44YlgG5B8Ql+94IDDCMa7D7slwcyVp5t+5Gko55fS
+mAcrKo1/0LdSoy24XxmWc730WZJBxcvteCFAgnsjiC5rr/bMmzqjpWAmM3f1D6eV
+vUk3q/D6KN9mIqfDJ19cvaurOsfS2gtULF3CC9uchu8iWaLFJds=
+=6/vD
+-----END PGP SIGNATURE-----
+
+--f9lFb+Z4UT82L8vr--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
