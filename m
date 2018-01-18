@@ -1,112 +1,92 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] nvmem: add driver for JZ4780 efuse
-Date: Wed, 17 Jan 2018 19:59:08 -0600
-Message-ID: <CAL_JsqJ9FQyOO_yaHjjMvwvL_CrWrZz7r4hom6n5hgdx0Z=RNw@mail.gmail.com>
-References: <20171228212954.2922-1-malat@debian.org> <20171228212954.2922-2-malat@debian.org>
- <20180103200211.u56tqesyumsofoff@rob-hp-laptop> <CANc+2y5Y9fYh5V5OG_o+-92-uLYew7yNObLGTYPhGyx2eExywA@mail.gmail.com>
- <CAL_JsqJHHPJY0Yg+kmMbjZVsq=VVC0dPgtvXoN+sxL9gjBtMLA@mail.gmail.com> <CANc+2y4nBcVPUjTiXXDDUD_qph0zHAmr-SDCt74C8gCZdNQ4Fw@mail.gmail.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH v3 11/16] mmc: tmio: deprecate "toshiba,mmc-wrprotect-disable"
+ DT property
+Date: Thu, 18 Jan 2018 10:58:36 +0900
+Message-ID: <CAK7LNAQUJw-fjuJO68Kvskn8BRYW3rZj4YMtbo-Oxfv7c=6Ggg@mail.gmail.com>
+References: <1516206496-16612-1-git-send-email-yamada.masahiro@socionext.com> <1516206496-16612-12-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CANc+2y4nBcVPUjTiXXDDUD_qph0zHAmr-SDCt74C8gCZdNQ4Fw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: PrasannaKumar Muralidharan <prasannatsmkumar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Marcin Nowakowski <marcin.nowakowski-8NJIiSa5LzA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Zubair.Kakakhel-8NJIiSa5LzA@public.gmane.org, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-MIPS <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1516206496-16612-12-git-send-email-yamada.masahiro@socionext.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-mmc <linux-mmc@vger.kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: Ulf Magnusson <ulfalizer@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Simon Horman <horms+renesas@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ulf Hansson <ulf.hansson@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 17, 2018 at 11:31 AM, PrasannaKumar Muralidharan
-<prasannatsmkumar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Hi Rob,
+2018-01-18 1:28 GMT+09:00 Masahiro Yamada <yamada.masahiro@socionext.com>:
+> This property is equivalent to "disable-wp" defined in
+> Documentation/devicetree/bindings/mmc/tmio_mmc.txt
+
+This is mistake.
+
+"disable-wp" is defined in
+
+Documentation/devicetree/bindings/mmc/mmc.txt
+
+
+
+
+> The TMIO MMC core calls mmc_of_parse(), and it sets
+> MMC_CAP2_NO_WRITE_PROTECT if "disable-wp" property is present.
 >
-> On 11 January 2018 at 20:38, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->> On Sat, Jan 6, 2018 at 6:43 AM, PrasannaKumar Muralidharan
->> <prasannatsmkumar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>> Hi Rob,
->>>
->>> On 4 January 2018 at 01:32, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->>>> On Thu, Dec 28, 2017 at 10:29:52PM +0100, Mathieu Malaterre wrote:
->>>>> From: PrasannaKumar Muralidharan <prasannatsmkumar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-
-[...]
-
->>>>> +             nemc: nemc@13410000 {
->>>>> +                     compatible = "ingenic,jz4780-nemc";
->>>>> +                     reg = <0x13410000 0x10000>;
->>>>> +                     #address-cells = <2>;
->>>>> +                     #size-cells = <1>;
->>>>> +                     ranges = <1 0 0x1b000000 0x1000000
->>>>> +                               2 0 0x1a000000 0x1000000
->>>>> +                               3 0 0x19000000 0x1000000
->>>>> +                               4 0 0x18000000 0x1000000
->>>>> +                               5 0 0x17000000 0x1000000
->>>>> +                               6 0 0x16000000 0x1000000>;
->>>>> +
->>>>> +                     clocks = <&cgu JZ4780_CLK_NEMC>;
->>>>> +
->>>>> +                     status = "disabled";
->>>>> +             };
->>>>>
->>>>> -             clocks = <&cgu JZ4780_CLK_NEMC>;
->>>>> +             efuse: efuse@134100d0 {
->>>>> +                     compatible = "ingenic,jz4780-efuse";
->>>>> +                     reg = <0x134100d0 0xff>;
->>>>
->>>> You are creating an overlapping region here with nemc above. Don't do
->>>> that.
->>>
->>> Should "reg = <0x13410000 0x10000>;" be used instead?
->>
->> No, that still overlaps with nemc. What's in registers 0x00-0xcf and
->> 0x1d0-0xffff? Either get rid of this node altogether and make the
->> driver for nemc also instantiate the efuse driver (DT is not the only
->> way to instantiate drivers), or create sub-nodes under nemc for each
->> distinct h/w block in the 13410000-13420000 address space.
+> We do not need a vendor-specific property to do the same thing.
 >
-> My idea was not to change nemc driver.
+> Let's remove the description from the dt-binding to prevent new boards
+> from using it.
 >
-> By "create sub-nodes under nemc" do you mean something like below?
-
-Yes.
-
-> nemc: nemc@13410000 {
->                      compatible = "ingenic,jz4780-nemc";
->                      reg = <0x13410000 0x10000>;
->                      <...>
->                      status = "disabled";
-
-Though having disabled here is strange. We'd normally ignore all the
-child nodes.
-
+> I am keeping the driver code for existing DT files, but added
+> comments that this is deprecated.
 >
->                      efuse: efuse@134101d0 {
->                                           compatible = "ingenic,jz4780-efuse";
->                                           reg = <0x134100d0 0xff>;
->                      }
-> }
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
 >
-> Will this instantiate efuse driver? I do not know how to do that with
-> sub-node. I will explore more on this.
-
-The nemc driver just needs to call of_platform_default_populate.
-
->> Or a third option is make nemc reg:
->>
->> reg = <0x13410000 0xd0>, <0x134101d0 0xfe30>;
->>
->> But I suspect that is wrong and you probably have some other function in there.
->>
->> Rob
+> Changes in v3:
+>   - newly added
 >
-> If the efuse block were to use a different base register address (that
-> does not overlap with nemc register range) in future SoC how the node
-> should be? Using nemc to instantiate efuse won't be the best choice if
-> that happens.
+> Changes in v2: None
+>
+>  Documentation/devicetree/bindings/mmc/tmio_mmc.txt | 1 -
+>  drivers/mmc/host/tmio_mmc_core.c                   | 5 +++++
+>  2 files changed, 5 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/mmc/tmio_mmc.txt b/Documentation/devicetree/bindings/mmc/tmio_mmc.txt
+> index 3c67624..cb7d40e 100644
+> --- a/Documentation/devicetree/bindings/mmc/tmio_mmc.txt
+> +++ b/Documentation/devicetree/bindings/mmc/tmio_mmc.txt
+> @@ -49,7 +49,6 @@ Required properties:
+>           2: R7S72100
+>
+>  Optional properties:
+> -- toshiba,mmc-wrprotect-disable: write-protect detection is unavailable
+>  - pinctrl-names: should be "default", "state_uhs"
+>  - pinctrl-0: should contain default/high speed pin ctrl
+>  - pinctrl-1: should contain uhs mode pin ctrl
+> diff --git a/drivers/mmc/host/tmio_mmc_core.c b/drivers/mmc/host/tmio_mmc_core.c
+> index 7ad3433c..f30ac69 100644
+> --- a/drivers/mmc/host/tmio_mmc_core.c
+> +++ b/drivers/mmc/host/tmio_mmc_core.c
+> @@ -1134,6 +1134,11 @@ static void tmio_mmc_of_parse(struct platform_device *pdev,
+>         if (!np)
+>                 return;
+>
+> +       /*
+> +        * DEPRECATED:
+> +        * For new platforms, please use "disable-wp" instead of
+> +        * "toshiba,mmc-wrprotect-disable"
+> +        */
+>         if (of_get_property(np, "toshiba,mmc-wrprotect-disable", NULL))
+>                 mmc->caps2 |= MMC_CAP2_NO_WRITE_PROTECT;
+>  }
+> --
+> 2.7.4
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
-Then you will have a different compatible for nemc (because it is
-different) and then the driver should skip the above step.
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+-- 
+Best Regards
+Masahiro Yamada
