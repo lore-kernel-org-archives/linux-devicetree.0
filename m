@@ -1,72 +1,78 @@
-From: Lina Iyer <ilina@codeaurora.org>
-Subject: [PATCH 2/2] dt-bindings: introduce Command DB for QCOM SoCs
-Date: Thu, 18 Jan 2018 15:28:02 -0700
-Message-ID: <20180118222802.18161-1-ilina@codeaurora.org>
-References: <20180118220833.16616-3-ilina@codeaurora.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20180118220833.16616-3-ilina@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: andy.gross@linaro.org, david.brown@linaro.org
-Cc: sboyd@codeaurora.org, rnayak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, msivasub@codeaurora.org, devicetree@vger.kernel.org
+From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Subject: Re: [PATCH v5 1/4] dt-bindings: media: Add bindings for OV5695
+Date: Fri, 19 Jan 2018 00:30:59 +0200
+Message-ID: <20180118223059.hzqlhs56cpfvff3w@valkosipuli.retiisi.org.uk>
+References: <1515549967-5302-1-git-send-email-zhengsq@rock-chips.com>
+ <1515549967-5302-2-git-send-email-zhengsq@rock-chips.com>
+ <20180110092010.GC6834@w540>
+ <807c4307-0617-788e-7129-039b33ce99d5@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <807c4307-0617-788e-7129-039b33ce99d5-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: jacopo mondi <jacopo-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ddl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Mahesh Sivasubramanian <msivasub@codeaurora.org>
+Hi Shunqian,
 
-Command DB provides information on shared resources like clocks,
-regulators etc., probed at boot by the remote subsytem and made
-available in shared memory.
+On Thu, Jan 11, 2018 at 02:44:33PM +0800, Shunqian Zheng wrote:
+> Hi Jacopo,
+> 
+> 
+> On 2018年01月10日 17:20, jacopo mondi wrote:
+> > Hi Shunqian,
+> > 
+> > On Wed, Jan 10, 2018 at 10:06:04AM +0800, Shunqian Zheng wrote:
+> > > Add device tree binding documentation for the OV5695 sensor.
+> > > 
+> > > Signed-off-by: Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> > > ---
+> > >   .../devicetree/bindings/media/i2c/ov5695.txt       | 41 ++++++++++++++++++++++
+> > >   1 file changed, 41 insertions(+)
+> > >   create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5695.txt
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/media/i2c/ov5695.txt b/Documentation/devicetree/bindings/media/i2c/ov5695.txt
+> > > new file mode 100644
+> > > index 0000000..2f2f698
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/media/i2c/ov5695.txt
+> > > @@ -0,0 +1,41 @@
+> > > +* Omnivision OV5695 MIPI CSI-2 sensor
+> > > +
+> > > +Required Properties:
+> > > +- compatible: shall be "ovti,ov5695"
+> > > +- clocks: reference to the xvclk input clock
+> > > +- clock-names: shall be "xvclk"
+> > > +- avdd-supply: Analog voltage supply, 2.8 volts
+> > > +- dovdd-supply: Digital I/O voltage supply, 1.8 volts
+> > > +- dvdd-supply: Digital core voltage supply, 1.2 volts
+> > > +- reset-gpios: Low active reset gpio
+> > > +
+> > > +The device node shall contain one 'port' child node with an
+> > > +'endpoint' subnode for its digital output video port,
+> > > +in accordance with the video interface bindings defined in
+> > > +Documentation/devicetree/bindings/media/video-interfaces.txt.
+> > > +The endpoint optional property 'data-lanes' shall be "<1 2>".
+> > What happens if the property is not present? What's the default?
+> I think it depends on how the video receiver deal with, 'data-lanes' is
+> optional as described in video-interfaces.txt,
+> but if somehow it used in DT, the value "<1 2>" is the right one.
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Mahesh Sivasubramanian <msivasub@codeaurora.org>
-Signed-off-by: Lina Iyer <ilina@codeaurora.org>
----
- .../devicetree/bindings/arm/msm/cmd-db.txt         | 37 ++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/msm/cmd-db.txt
+They're described as optional there as they may not be mandated for all
+devices --- they're only relevant for some.
 
-diff --git a/Documentation/devicetree/bindings/arm/msm/cmd-db.txt b/Documentation/devicetree/bindings/arm/msm/cmd-db.txt
-new file mode 100644
-index 000000000000..b56e3e3604d3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/msm/cmd-db.txt
-@@ -0,0 +1,37 @@
-+Command DB
-+---------
-+
-+Command DB is a database that provides a mapping between resource key and the
-+resource address for a system resource managed by a remote processor. The data
-+is stored in a shared memory region and is loaded by the remote processor.
-+
-+Some of the Qualcomm Technologies Inc SoC's have hardware accelerators for
-+controlling shared resources. Depending on the board configuration the shared
-+resource properties may change. These properties are dynamically probed by the
-+remote processor and made available in the shared memory.
-+
-+Command DB allows drivers to query resource parameters based on pre-determined
-+key strings.
-+
-+The devicetree representation of the command DB driver should be:
-+
-+PROPERTIES:
-+- compatible:
-+	Usage: required
-+	Value type: <string>
-+	Definition: Should be "qcom,cmd-db"
-+
-+- reg:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: First element is the base address of shared memory
-+		Second element is the size of the shared memory region
-+		Points to the dictionary address that houses the command DB
-+		start address and the size of the command DB region
-+
-+Example:
-+
-+	qcom,cmd-db@c3f000c {
-+		compatible = "qcom,cmd-db";
-+		reg = <0xc3f000c 0x8>;
-+	};
+The data-lanes property also specifies the number of lanes. I guess you
+could say two is default. The device can likely be configured to just use
+one, even if the driver doesn't support it.
+
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Sakari Ailus
+e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
