@@ -1,43 +1,81 @@
-From: henryzhang62-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: [PATCH v4] ARM: dts: bcm283x: Fix pin function of JTAG pins
-Date: Wed, 17 Jan 2018 18:41:33 -0800
-Message-ID: <1516243293-25010-1-git-send-email-henryzhang62@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, stefan.wahren-eS4NqCHxEME@public.gmane.org, Henry Zhang <henryzhang62-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [PATCH] kbuild: fix W= option checks for extra DTC warnings
+Date: Thu, 18 Jan 2018 12:31:46 +0900
+Message-ID: <1516246306-12851-1-git-send-email-yamada.masahiro@socionext.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-kbuild@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Michal Marek <michal.lkml@markovi.net>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, Sam Ravnborg <sam@ravnborg.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Henry Zhang <henryzhang62-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Kbuild supports 3 levels of extra warnings, and multiple levels can
+be combined, like W=12, W=123.  It was added by commit a6de553da01c
+("kbuild: Allow to combine multiple W= levels").
 
-BCM2835 ARM Peripherals doc shows gpio pins 4, 5, 6, 12 and 13
-carry altenate function, ALT5 for ARM JTAG
+>From the log of commit 8654cb8d0371 ("dtc: update warning settings
+for new bus and node/property name checks"), I assume:
 
-Fixes: 21ff843931b2 ("ARM: dts: bcm283x: Define standard pinctrl groups in the gpio node.")
+ - unit_address_vs_reg, simple_bus_reg, etc. belong to level 1
+ - node_name_chars_strict, property_name_chars_strict belong to level 2
 
-Signed-off-by: Henry Zhang <henryzhang62-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Acked-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+However, the level 1 warnings are displayed by any argument to W=.
+On the other hand, the level 2 warnings are displayed by W=2, but
+not by W=12, or W=123.
+
+Use $(findstring ...) like scripts/Makefile.extrawarn.
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
- arch/arm/boot/dts/bcm283x.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
-index dcde93c..64971e4 100644
---- a/arch/arm/boot/dts/bcm283x.dtsi
-+++ b/arch/arm/boot/dts/bcm283x.dtsi
-@@ -251,7 +251,7 @@
+Side Notes for possible additional works:
+
+ [1] I implemented DTC extra warnings differently in U-Boot:
+
+    https://github.com/u-boot/u-boot/blob/v2018.01/scripts/Makefile.extrawarn#L64
+
+    Better to collect extra warning stuff into scripts/Makefile.extrawarn ?
+
+ [2] KBUILD_ENABLE_EXTRA_GCC_CHECKS is getting a historical misnomer
+     because we use it for Clang and DTC too.
+
+     Better to rename?  (keeping backward-compatibility for a while)?
+
+
+ scripts/Makefile.lib | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+index 1ca4dcd..7dee1da 100644
+--- a/scripts/Makefile.lib
++++ b/scripts/Makefile.lib
+@@ -264,7 +264,7 @@ cmd_gzip = (cat $(filter-out FORCE,$^) | gzip -n -f -9 > $@) || \
+ DTC ?= $(objtree)/scripts/dtc/dtc
  
- 			jtag_gpio4: jtag_gpio4 {
- 				brcm,pins = <4 5 6 12 13>;
--				brcm,function = <BCM2835_FSEL_ALT4>;
-+				brcm,function = <BCM2835_FSEL_ALT5>;
- 			};
- 			jtag_gpio22: jtag_gpio22 {
- 				brcm,pins = <22 23 24 25 26 27>;
+ # Disable noisy checks by default
+-ifeq ($(KBUILD_ENABLE_EXTRA_GCC_CHECKS),)
++ifeq ($(findstring 1,$(KBUILD_ENABLE_EXTRA_GCC_CHECKS)),)
+ DTC_FLAGS += -Wno-unit_address_vs_reg \
+ 	-Wno-simple_bus_reg \
+ 	-Wno-unit_address_format \
+@@ -273,7 +273,7 @@ DTC_FLAGS += -Wno-unit_address_vs_reg \
+ 	-Wno-pci_device_reg
+ endif
+ 
+-ifeq ($(KBUILD_ENABLE_EXTRA_GCC_CHECKS),2)
++ifneq ($(findstring 2,$(KBUILD_ENABLE_EXTRA_GCC_CHECKS)),)
+ DTC_FLAGS += -Wnode_name_chars_strict \
+ 	-Wproperty_name_chars_strict
+ endif
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
