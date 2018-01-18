@@ -1,95 +1,149 @@
-From: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
-Subject: [PATCH v4 6/7] dt-bindings: PCI: cadence: Add DT bindings for Cadence PCIe host controller
-Date: Thu, 18 Jan 2018 23:52:51 +0100
-Message-ID: <17def7dd98a0be2d359bd10aafe4394f17dd113e.1516314953.git.cyrille.pitchen@free-electrons.com>
-References: <cover.1516314953.git.cyrille.pitchen@free-electrons.com>
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <cover.1516314953.git.cyrille.pitchen@free-electrons.com>
-In-Reply-To: <cover.1516314953.git.cyrille.pitchen@free-electrons.com>
-References: <cover.1516314953.git.cyrille.pitchen@free-electrons.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: bhelgaas@google.com, kishon@ti.com, lorenzo.pieralisi@arm.com, linux-pci@vger.kernel.org
-Cc: adouglas@cadence.com, stelford@cadence.com, dgary@cadence.com, kgopi@cadence.com, eandrews@cadence.com, thomas.petazzoni@free-electrons.com, sureshp@cadence.com, nsekhar@ti.com, linux-kernel@vger.kernel.org, robh@kernel.org, devicetree@vger.kernel.org, Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
+From: Cyrille Pitchen <cyrille.pitchen-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v4 0/7] PCI: Add support to the Cadence PCIe controller
+Date: Thu, 18 Jan 2018 23:52:45 +0100
+Message-ID: <cover.1516314953.git.cyrille.pitchen@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, stelford-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, dgary-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, kgopi-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, eandrews-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, sureshp-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Cyrille Pitchen <cyrille.pitchen-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Scott Telford <stelford@cadence.com>
+Hi all,
 
-This patch adds documentation for the DT bindings of the Cadence PCIe
-controller when configured in host (Root Complex) mode.
+this series of patches adds support to the Cadence PCIe controller.
+It was tested on a ARM64 platform emulated by a Palladium running the
+pci-next kernel.
 
-Signed-off-by: Scott Telford <stelford@cadence.com>
-Signed-off-by: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- .../bindings/pci/cdns,cdns-pcie-host.txt           | 60 ++++++++++++++++++++++
- 1 file changed, 60 insertions(+)
+The host mode was tested with some PCIe devices connected to the Palladium
+through a speed-bridge. Some of those devices were a USB host controller
+and a SATA controller. The PCIe host controller was also tested with a
+second controller configured in endpoint mode and connected back to back
+to the first controller.
+
+The EndPoint Controller (EPC) driver was removed only because I didn't
+have time to take all Kishon's comments into account. However, using a
+fixed patch based on patch 7 of the v2 series + another patch fixing
+the EPF device name chosen by pci_epf_make(), I was abled to probe
+both function 0 and function 1 of the of the 2nd Cadence PCIe controller
+configured in endpoint mode (new hardware design since v2 so function 1
+is now available).
+
+Currently I'm facing 2 issues, which I didn't have enough time to
+investigate and to fix yet:
+
+1 - when the vendor:device IDs are set to 104c:b500 for both functions,
+then I remove both devfn (echo 1 > /sys/bus/pci/devices/$BDF/remove)
+before scanning the PCI bus again (echo 1 > /sys/bus/pci/rescan),
+the PCI enumeration fails reporting that the PCI memory is exhausted.
+
+2 - when I set the vendor:device IDs to 104c:0100 for function 0 and
+104c:b500 and remove only function 1 before scanning the PCI bus again,
+I now pass the PCI enumeration. I also pass the 'pcitest -b <BAR>' test
+but I fail on the MSI test ('pcitest -m <MSI>').
+
+I'm still investigating on those issues.
+
+Best regards,
+
+Cyrille
+
+ChangeLog
+
+v3 -> v4:
+- split patch 3 from v3 into patches 3 and 4.
+- remove unused cdns_pcie_reset_outbound_region() from old patch 6
+  (new patch 7).
+- other patches are unchanged.
+
+v2 -> v3:
+
+- rebase on today's linux-pci/next (20180110) 
+
+patch1:
+- rework the commit message of patch 1 and add two new comments on why endpoint
+  library users must be linked after the endpoint library itself and why
+  the dwc rule uses obj-y instead of obj-$(CONFIG_PCIE_CONFIG_DW).
+- update patch 1 to add missing ifdef CONFIG_PCI / endif in
+  drivers/pci/dwc/Makefile around the obj-$(CONFIG_ARM64) += pcie-hisi.o rule,
+  like for the other obj-$(CONFIG_ARM64) rules in drivers/pci/host/Makefile.
+
+patch2: unchanged
+
+patch3:
+- update patch 3 so the bridge hooks/members initialization is left to the
+  host bridges probe routines.
+
+patch4: unchanged
+
+patch5:
+- collect 'Reviewed-by' tag from Rob Herring for the DT bindings.
+
+patch6:
+- remove explanation in the commit message on why obj-$(CONFIG_PCIE_CANDENCE) is
+  placed after obj-$(CONFIG_PCI_ENDPOINT) in drivers/pci/Makefile since a
+  comment on it has been added into patch1.
+- remove menuconfig PCI_CADENCE in drivers/pci/cadence/Kconfig to match
+  drivers/pci/dwc/Kconfig.
+- adapt patch6 to the changes done in patch3 for the pci_host_probe() function.
+
+v1 -> v2:
+- add new properties in the device-tree bindings: 'cdns,max-outbound-regions'
+  and 'cdns,no-bar-match-nbits'.
+- add a new patch to regroup all makefile rules in drivers/pci/Makefile, hence
+  cleaning drivers/Makefile up.
+- change the license text to use the recommanded format:
+  // SPDX-License-Identifier: GPL-2.0
+- add a new patch updating the API of the EPC library to add support to
+  multi-function devices.
+- add a 2 new patches to share more common code between host controller drivers
+- remove some useless tests
+- add more comments in both drivers.
+- fix DT bindings examples
+- remove useless init of the primary, secondary and sub-ordinate bus numbers in
+  the PCI configuration space of the root port.
+- remove cdns_pcie_ep_stop() function and rework cdns_pcie_ep_start() function
+
+Cyrille Pitchen (6):
+  PCI: Regroup all PCI related entries into drivers/pci/Makefile
+  PCI: OF: Add generic function to parse and allocate PCI resources
+  PCI: generic: fix missing call of pci_free_resource_list()
+  PCI: Add generic function to probe PCI host controllers
+  PCI: Add vendor ID for Cadence
+  PCI: cadence: Add host driver for Cadence PCIe controller
+
+Scott Telford (1):
+  dt-bindings: PCI: cadence: Add DT bindings for Cadence PCIe host
+    controller
+
+ .../bindings/pci/cdns,cdns-pcie-host.txt           |  60 ++++
+ MAINTAINERS                                        |   7 +
+ drivers/Makefile                                   |   5 +-
+ drivers/pci/Kconfig                                |   2 +
+ drivers/pci/Makefile                               |  14 +-
+ drivers/pci/cadence/Kconfig                        |  16 +
+ drivers/pci/cadence/Makefile                       |   3 +
+ drivers/pci/cadence/pcie-cadence-host.c            | 336 +++++++++++++++++++++
+ drivers/pci/cadence/pcie-cadence.c                 |  56 ++++
+ drivers/pci/cadence/pcie-cadence.h                 | 194 ++++++++++++
+ drivers/pci/dwc/Makefile                           |   2 +
+ drivers/pci/host/Makefile                          |   2 +
+ drivers/pci/host/pci-host-common.c                 |  72 +----
+ drivers/pci/of.c                                   |  51 ++++
+ drivers/pci/probe.c                                |  33 ++
+ include/linux/pci.h                                |  10 +
+ include/linux/pci_ids.h                            |   2 +
+ 17 files changed, 790 insertions(+), 75 deletions(-)
  create mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
+ create mode 100644 drivers/pci/cadence/Kconfig
+ create mode 100644 drivers/pci/cadence/Makefile
+ create mode 100644 drivers/pci/cadence/pcie-cadence-host.c
+ create mode 100644 drivers/pci/cadence/pcie-cadence.c
+ create mode 100644 drivers/pci/cadence/pcie-cadence.h
 
-diff --git a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
-new file mode 100644
-index 000000000000..20a33f38f69d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
-@@ -0,0 +1,60 @@
-+* Cadence PCIe host controller
-+
-+This PCIe controller inherits the base properties defined in
-+host-generic-pci.txt.
-+
-+Required properties:
-+- compatible: Should contain "cdns,cdns-pcie-host" to identify the IP used.
-+- reg: Should contain the controller register base address, PCIe configuration
-+  window base address, and AXI interface region base address respectively.
-+- reg-names: Must be "reg", "cfg" and "mem" respectively.
-+- #address-cells: Set to <3>
-+- #size-cells: Set to <2>
-+- device_type: Set to "pci"
-+- ranges: Ranges for the PCI memory and I/O regions
-+- #interrupt-cells: Set to <1>
-+- interrupt-map-mask and interrupt-map: Standard PCI properties to define the
-+  mapping of the PCIe interface to interrupt numbers.
-+
-+Optional properties:
-+- cdns,max-outbound-regions: Set to maximum number of outbound regions
-+  (default 32)
-+- cdns,no-bar-match-nbits: Set into the no BAR match register to configure the
-+  number of least significant bits kept during inbound (PCIe -> AXI) address
-+  translations (default 32)
-+- vendor-id: The PCI vendor ID (16 bits, default is design dependent)
-+- device-id: The PCI device ID (16 bits, default is design dependent)
-+
-+Example:
-+
-+pcie@fb000000 {
-+	compatible = "cdns,cdns-pcie-host";
-+	device_type = "pci";
-+	#address-cells = <3>;
-+	#size-cells = <2>;
-+	bus-range = <0x0 0xff>;
-+	linux,pci-domain = <0>;
-+	cdns,max-outbound-regions = <16>;
-+	cdns,no-bar-match-nbits = <32>;
-+	vendor-id = /bits/ 16 <0x17cd>;
-+	device-id = /bits/ 16 <0x0200>;
-+
-+	reg = <0x0 0xfb000000  0x0 0x01000000>,
-+	      <0x0 0x41000000  0x0 0x00001000>,
-+	      <0x0 0x40000000  0x0 0x04000000>;
-+	reg-names = "reg", "cfg", "mem";
-+
-+	ranges = <0x02000000 0x0 0x42000000  0x0 0x42000000  0x0 0x1000000>,
-+		 <0x01000000 0x0 0x43000000  0x0 0x43000000  0x0 0x0010000>;
-+
-+	#interrupt-cells = <0x1>;
-+
-+	interrupt-map = <0x0 0x0 0x0  0x1  &gic  0x0 0x0 0x0 14 0x1
-+			 0x0 0x0 0x0  0x2  &gic  0x0 0x0 0x0 15 0x1
-+			 0x0 0x0 0x0  0x3  &gic  0x0 0x0 0x0 16 0x1
-+			 0x0 0x0 0x0  0x4  &gic  0x0 0x0 0x0 17 0x1>;
-+
-+	interrupt-map-mask = <0x0 0x0 0x0  0x7>;
-+
-+	msi-parent = <&its_pci>;
-+};
 -- 
 2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
