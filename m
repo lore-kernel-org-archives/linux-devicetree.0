@@ -1,88 +1,72 @@
-From: James Hogan <james.hogan-8NJIiSa5LzA@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] dt-bindings: Document mti,mips-cpc binding
-Date: Thu, 18 Jan 2018 22:26:04 +0000
-Message-ID: <20180118222603.GG27409@jhogan-linux.mipstec.com>
-References: <1514385475-23921-1-git-send-email-aleksandar.markovic@rt-rk.com>
- <1514385475-23921-2-git-send-email-aleksandar.markovic@rt-rk.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="f9lFb+Z4UT82L8vr"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1514385475-23921-2-git-send-email-aleksandar.markovic-FblTVreYubkAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Aleksandar Markovic <aleksandar.markovic-FblTVreYubkAvxtiuMwx3w@public.gmane.org>
-Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Paul Burton <paul.burton-8NJIiSa5LzA@public.gmane.org>, Aleksandar Markovic <aleksandar.markovic-8NJIiSa5LzA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Douglas Leung <douglas.leung-8NJIiSa5LzA@public.gmane.org>, Goran Ferenc <goran.ferenc-8NJIiSa5LzA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Miodrag Dinic <miodrag.dinic-8NJIiSa5LzA@public.gmane.org>, Petar Jovanovic <petar.jovanovic-8NJIiSa5LzA@public.gmane.org>, Raghu Gandham <raghu.gandham-8NJIiSa5LzA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+From: Lina Iyer <ilina@codeaurora.org>
+Subject: [PATCH 2/2] dt-bindings: introduce Command DB for QCOM SoCs
+Date: Thu, 18 Jan 2018 15:28:02 -0700
+Message-ID: <20180118222802.18161-1-ilina@codeaurora.org>
+References: <20180118220833.16616-3-ilina@codeaurora.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20180118220833.16616-3-ilina@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: andy.gross@linaro.org, david.brown@linaro.org
+Cc: sboyd@codeaurora.org, rnayak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, msivasub@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---f9lFb+Z4UT82L8vr
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+From: Mahesh Sivasubramanian <msivasub@codeaurora.org>
 
-On Wed, Dec 27, 2017 at 03:37:51PM +0100, Aleksandar Markovic wrote:
-> From: Paul Burton <paul.burton-8NJIiSa5LzA@public.gmane.org>
->=20
-> Document a binding for the MIPS Cluster Power Controller (CPC) that
-> allows the device tree to specify where the CPC registers are located.
->=20
-> Signed-off-by: Paul Burton <paul.burton-8NJIiSa5LzA@public.gmane.org>
-> Signed-off-by: Aleksandar Markovic <aleksandar.markovic-8NJIiSa5LzA@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/power/mti,mips-cpc.txt | 8 ++++++++
->  1 file changed, 8 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/mti,mips-cpc.=
-txt
->=20
-> diff --git a/Documentation/devicetree/bindings/power/mti,mips-cpc.txt b/D=
-ocumentation/devicetree/bindings/power/mti,mips-cpc.txt
-> new file mode 100644
+Command DB provides information on shared resources like clocks,
+regulators etc., probed at boot by the remote subsytem and made
+available in shared memory.
 
-Is it worth adding to the MIPS GENERIC PLATFORM entry of MAINTAINERS,
-given that it directly benefits it?
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Mahesh Sivasubramanian <msivasub@codeaurora.org>
+Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+---
+ .../devicetree/bindings/arm/msm/cmd-db.txt         | 37 ++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/msm/cmd-db.txt
 
-Cheers
-James
-
-> index 0000000..c6b8251
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/mti,mips-cpc.txt
-> @@ -0,0 +1,8 @@
-> +Binding for MIPS Cluster Power Controller (CPC).
-> +
-> +This binding allows a system to specify where the CPC registers are
-> +located.
-> +
-> +Required properties:
-> +compatible : Should be "mti,mips-cpc".
-> +regs: Should describe the address & size of the CPC register region.
-> --=20
-> 2.7.4
->=20
-
---f9lFb+Z4UT82L8vr
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEd80NauSabkiESfLYbAtpk944dnoFAlphHvsACgkQbAtpk944
-dnosoRAApbUmU9krdm+eQh/ArkjZmYh/onFKo1q9QNghYNVom4vHzCF7hRQZCYcP
-6EJo6/x6JMyFwaM4/dTZ6NghInx2wrHGSbOMFbL8Il4LtlzXi2lmDoV0oX4P2SUD
-+TEfbKUHoANRdq9eck8nM+heqsJkF/MZ++ykD/FUjRwkoKG9rgh7wwLaPtnHNCX1
-fY6qwTxboy1gKWOfBV9kMAM7sHzztRdDbPnlOVup1MSXShCOgzK1y2GSLIdRZyl3
-flTJUJojdv7OAzBKAZrqM8ldYqKLEiEkBR+APRH4OvnWHkcVtd0/iQ1ntGZVz1Hf
-3XNGZARH+K1JwIfmpy4ZbeSog5dn74KjSY0dhI5wgCisOP2MGuOxwnJ2hl+nbXYF
-Xa9YYbftxOw4+XiBCQPjT6euJemnXgo7pW4i7LWPk3caOic0IOlGQgQCUYZ3AHBy
-03iSOBFDCHhCQSLDWY2EMTA4b5JvI/tU8qAc2yGU51U3rTG6Q4uucGHrlIaMgApZ
-e9u/CFmCr0uxj9GL2enaejO44YlgG5B8Ql+94IDDCMa7D7slwcyVp5t+5Gko55fS
-mAcrKo1/0LdSoy24XxmWc730WZJBxcvteCFAgnsjiC5rr/bMmzqjpWAmM3f1D6eV
-vUk3q/D6KN9mIqfDJ19cvaurOsfS2gtULF3CC9uchu8iWaLFJds=
-=6/vD
------END PGP SIGNATURE-----
-
---f9lFb+Z4UT82L8vr--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/arm/msm/cmd-db.txt b/Documentation/devicetree/bindings/arm/msm/cmd-db.txt
+new file mode 100644
+index 000000000000..b56e3e3604d3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/msm/cmd-db.txt
+@@ -0,0 +1,37 @@
++Command DB
++---------
++
++Command DB is a database that provides a mapping between resource key and the
++resource address for a system resource managed by a remote processor. The data
++is stored in a shared memory region and is loaded by the remote processor.
++
++Some of the Qualcomm Technologies Inc SoC's have hardware accelerators for
++controlling shared resources. Depending on the board configuration the shared
++resource properties may change. These properties are dynamically probed by the
++remote processor and made available in the shared memory.
++
++Command DB allows drivers to query resource parameters based on pre-determined
++key strings.
++
++The devicetree representation of the command DB driver should be:
++
++PROPERTIES:
++- compatible:
++	Usage: required
++	Value type: <string>
++	Definition: Should be "qcom,cmd-db"
++
++- reg:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: First element is the base address of shared memory
++		Second element is the size of the shared memory region
++		Points to the dictionary address that houses the command DB
++		start address and the size of the command DB region
++
++Example:
++
++	qcom,cmd-db@c3f000c {
++		compatible = "qcom,cmd-db";
++		reg = <0xc3f000c 0x8>;
++	};
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
