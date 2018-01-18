@@ -1,309 +1,425 @@
-From: <Yasunari.Takiguchi-7U/KSKJipcs@public.gmane.org>
-Subject: [PATCH v5 03/12] [media] cxd2880: Add common files for the driver
-Date: Thu, 18 Jan 2018 17:47:38 +0900
-Message-ID: <20180118084738.21058-1-Yasunari.Takiguchi@sony.com>
+From: <Yasunari.Takiguchi@sony.com>
+Subject: [PATCH v5 04/12] [media] cxd2880: Add spi device IO routines
+Date: Thu, 18 Jan 2018 17:48:58 +0900
+Message-ID: <20180118084858.21151-1-Yasunari.Takiguchi@sony.com>
 References: <20180118084016.20689-1-Yasunari.Takiguchi@sony.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180118084016.20689-1-Yasunari.Takiguchi-7U/KSKJipcs@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: tbird20d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Yasunari.Takiguchi-7U/KSKJipcs@public.gmane.org, Masayuki.Yamamoto-7U/KSKJipcs@public.gmane.org, Hideki.Nozawa-7U/KSKJipcs@public.gmane.org, Kota.Yonezawa-7U/KSKJipcs@public.gmane.org, Toshihiko.Matsumoto-7U/KSKJipcs@public.gmane.org, Satoshi.C.Watanabe-7U/KSKJipcs@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180118084016.20689-1-Yasunari.Takiguchi@sony.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-media@vger.kernel.org
+Cc: tbird20d@gmail.com, frowand.list@gmail.com, Yasunari.Takiguchi@sony.com, Masayuki.Yamamoto@sony.com, Hideki.Nozawa@sony.com, Kota.Yonezawa@sony.com, Toshihiko.Matsumoto@sony.com, Satoshi.C.Watanabe@sony.com
 List-Id: devicetree@vger.kernel.org
 
-From: Yasunari Takiguchi <Yasunari.Takiguchi-7U/KSKJipcs@public.gmane.org>
+From: Yasunari Takiguchi <Yasunari.Takiguchi@sony.com>
 
-These are common files for the driver for the
-Sony CXD2880 DVB-T2/T tuner + demodulator.
-These contains helper functions for the driver.
+Add functions for initializing, reading and writing to the SPI
+device for the Sony CXD2880 DVB-T2/T tuner + demodulator.
 
-Signed-off-by: Yasunari Takiguchi <Yasunari.Takiguchi-7U/KSKJipcs@public.gmane.org>
-Signed-off-by: Masayuki Yamamoto <Masayuki.Yamamoto-7U/KSKJipcs@public.gmane.org>
-Signed-off-by: Hideki Nozawa <Hideki.Nozawa-7U/KSKJipcs@public.gmane.org>
-Signed-off-by: Kota Yonezawa <Kota.Yonezawa-7U/KSKJipcs@public.gmane.org>
-Signed-off-by: Toshihiko Matsumoto <Toshihiko.Matsumoto-7U/KSKJipcs@public.gmane.org>
-Signed-off-by: Satoshi Watanabe <Satoshi.C.Watanabe-7U/KSKJipcs@public.gmane.org>
+Signed-off-by: Yasunari Takiguchi <Yasunari.Takiguchi@sony.com>
+Signed-off-by: Masayuki Yamamoto <Masayuki.Yamamoto@sony.com>
+Signed-off-by: Hideki Nozawa <Hideki.Nozawa@sony.com>
+Signed-off-by: Kota Yonezawa <Kota.Yonezawa@sony.com>
+Signed-off-by: Toshihiko Matsumoto <Toshihiko.Matsumoto@sony.com>
+Signed-off-by: Satoshi Watanabe <Satoshi.C.Watanabe@sony.com>
 ---
 
 [Change list]
 Changes in V5
    Using SPDX-License-Identifier
-   drivers/media/dvb-frontends/cxd2880/cxd2880_io.c
-      -modified return not to use ret parameter. 
-   drivers/media/dvb-frontends/cxd2880/cxd2880_common.c
+   drivers/media/dvb-frontends/cxd2880/cxd2880_devio_spi.c
+      -modified return error code
+      -removed unnecessary parentheses 
+   drivers/media/dvb-frontends/cxd2880/cxd2880_spi_device.c
       -removed unnecessary parentheses
-   drivers/media/dvb-frontends/cxd2880/cxd2880_common.h
-      -removed function proto type about cxd2880_stopwatch
-      -removed CXD2880_ARG_UNUSED
-   #drivers/media/dvb-frontends/cxd2880/cxd2880_stopwatch_port.c
-      -cxd2880_stopwatch_port.c file was removed from V5.
 
 Changes in V4
-   drivers/media/dvb-frontends/cxd2880/cxd2880_io.c
+   drivers/media/dvb-frontends/cxd2880/cxd2880_devio_spi.c
       -removed unnecessary initialization at variable declaration
-      -modified how to write consecutive registers
 
 Changes in V3
-   drivers/media/dvb-frontends/cxd2880/cxd2880.h
-      -no change
-   drivers/media/dvb-frontends/cxd2880/cxd2880_common.c
-      -changed MASKUPPER/MASKLOWER with GENMASK 
-   drivers/media/dvb-frontends/cxd2880/cxd2880_common.h
-      -removed definition NULL and SONY_SLEEP
-      -changed CXD2880_SLEEP to usleep_range
-      -changed cxd2880_atomic_set to atomic_set
-      -removed cxd2880_atomic struct and cxd2880_atomic_read
-      -changed stop-watch function
-      -modified return code
-   drivers/media/dvb-frontends/cxd2880/cxd2880_io.c
+   drivers/media/dvb-frontends/cxd2880/cxd2880_devio_spi.c
       -removed unnecessary cast
+      -changed cxd2880_memcpy to memcpy
       -modified return code
       -changed hexadecimal code to lower case. 
-   drivers/media/dvb-frontends/cxd2880/cxd2880_io.h
-      -modified return code 
-   drivers/media/dvb-frontends/cxd2880/cxd2880_stopwatch_port.c
-      -changed CXD2880_SLEEP to usleep_range
-      -changed stop-watch function
+   drivers/media/dvb-frontends/cxd2880/cxd2880_devio_spi.h
       -modified return code
-   #drivers/media/dvb-frontends/cxd2880/cxd2880_stdlib.h
-      -cxd2880_stdlib.h file was removed from V3.
+   drivers/media/dvb-frontends/cxd2880/cxd2880_spi.h
+      -modified return code
+   drivers/media/dvb-frontends/cxd2880/cxd2880_spi_device.c
+      -removed unnecessary cast
+      -modified return code
+   drivers/media/dvb-frontends/cxd2880/cxd2880_spi_device.h
+      -modified return code
 
- drivers/media/dvb-frontends/cxd2880/cxd2880.h      | 29 ++++++++++
- .../media/dvb-frontends/cxd2880/cxd2880_common.c   | 21 +++++++
- .../media/dvb-frontends/cxd2880/cxd2880_common.h   | 19 +++++++
- drivers/media/dvb-frontends/cxd2880/cxd2880_io.c   | 66 ++++++++++++++++++++++
- drivers/media/dvb-frontends/cxd2880/cxd2880_io.h   | 54 ++++++++++++++++++
- 5 files changed, 189 insertions(+)
- create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880.h
- create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_common.c
- create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_common.h
- create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_io.c
- create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_io.h
+ .../dvb-frontends/cxd2880/cxd2880_devio_spi.c      | 129 +++++++++++++++++++++
+ .../dvb-frontends/cxd2880/cxd2880_devio_spi.h      |  23 ++++
+ drivers/media/dvb-frontends/cxd2880/cxd2880_spi.h  |  34 ++++++
+ .../dvb-frontends/cxd2880/cxd2880_spi_device.c     | 113 ++++++++++++++++++
+ .../dvb-frontends/cxd2880/cxd2880_spi_device.h     |  26 +++++
+ 5 files changed, 325 insertions(+)
+ create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_devio_spi.c
+ create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_devio_spi.h
+ create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_spi.h
+ create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_spi_device.c
+ create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_spi_device.h
 
-diff --git a/drivers/media/dvb-frontends/cxd2880/cxd2880.h b/drivers/media/dvb-frontends/cxd2880/cxd2880.h
+diff --git a/drivers/media/dvb-frontends/cxd2880/cxd2880_devio_spi.c b/drivers/media/dvb-frontends/cxd2880/cxd2880_devio_spi.c
 new file mode 100644
-index 000000000000..4ea3510aab66
+index 000000000000..d2e37c95d748
 --- /dev/null
-+++ b/drivers/media/dvb-frontends/cxd2880/cxd2880.h
-@@ -0,0 +1,29 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * cxd2880.h
-+ * Sony CXD2880 DVB-T2/T tuner + demodulator driver public definitions
-+ *
-+ * Copyright (C) 2016, 2017, 2018 Sony Semiconductor Solutions Corporation
-+ */
-+
-+#ifndef CXD2880_H
-+#define CXD2880_H
-+
-+struct cxd2880_config {
-+	struct spi_device *spi;
-+	struct mutex *spi_mutex; /* For SPI access exclusive control */
-+};
-+
-+#if IS_REACHABLE(CONFIG_DVB_CXD2880)
-+extern struct dvb_frontend *cxd2880_attach(struct dvb_frontend *fe,
-+					struct cxd2880_config *cfg);
-+#else
-+static inline struct dvb_frontend *cxd2880_attach(struct dvb_frontend *fe,
-+					struct cxd2880_config *cfg)
-+{
-+	pr_warn("%s: driver disabled by Kconfig\n", __func__);
-+	return NULL;
-+}
-+#endif /* CONFIG_DVB_CXD2880 */
-+
-+#endif /* CXD2880_H */
-diff --git a/drivers/media/dvb-frontends/cxd2880/cxd2880_common.c b/drivers/media/dvb-frontends/cxd2880/cxd2880_common.c
-new file mode 100644
-index 000000000000..d6f5af6609c1
---- /dev/null
-+++ b/drivers/media/dvb-frontends/cxd2880/cxd2880_common.c
-@@ -0,0 +1,21 @@
++++ b/drivers/media/dvb-frontends/cxd2880/cxd2880_devio_spi.c
+@@ -0,0 +1,129 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * cxd2880_common.c
++ * cxd2880_devio_spi.c
 + * Sony CXD2880 DVB-T2/T tuner + demodulator driver
-+ * common functions
++ * I/O interface via SPI
 + *
 + * Copyright (C) 2016, 2017, 2018 Sony Semiconductor Solutions Corporation
 + */
++
++#include "cxd2880_devio_spi.h"
++
++#define BURST_WRITE_MAX 128
++
++static int cxd2880_io_spi_read_reg(struct cxd2880_io *io,
++				   enum cxd2880_io_tgt tgt,
++				   u8 sub_address, u8 *data,
++				   u32 size)
++{
++	int ret;
++	struct cxd2880_spi *spi = NULL;
++	u8 send_data[6];
++	u8 *read_data_top = data;
++
++	if (!io || !io->if_object || !data)
++		return -EINVAL;
++
++	if (sub_address + size > 0x100)
++		return -EINVAL;
++
++	spi = io->if_object;
++
++	if (tgt == CXD2880_IO_TGT_SYS)
++		send_data[0] = 0x0b;
++	else
++		send_data[0] = 0x0a;
++
++	send_data[3] = 0;
++	send_data[4] = 0;
++	send_data[5] = 0;
++
++	while (size > 0) {
++		send_data[1] = sub_address;
++		if (size > 255)
++			send_data[2] = 255;
++		else
++			send_data[2] = size;
++
++		ret =
++		    spi->write_read(spi, send_data, sizeof(send_data),
++				    read_data_top, send_data[2]);
++		if (ret)
++			return ret;
++
++		sub_address += send_data[2];
++		read_data_top += send_data[2];
++		size -= send_data[2];
++	}
++
++	return ret;
++}
++
++static int cxd2880_io_spi_write_reg(struct cxd2880_io *io,
++				    enum cxd2880_io_tgt tgt,
++				    u8 sub_address,
++				    const u8 *data, u32 size)
++{
++	int ret;
++	struct cxd2880_spi *spi = NULL;
++	u8 send_data[BURST_WRITE_MAX + 4];
++	const u8 *write_data_top = data;
++
++	if (!io || !io->if_object || !data)
++		return -EINVAL;
++
++	if (size > BURST_WRITE_MAX)
++		return -EINVAL;
++
++	if (sub_address + size > 0x100)
++		return -EINVAL;
++
++	spi = io->if_object;
++
++	if (tgt == CXD2880_IO_TGT_SYS)
++		send_data[0] = 0x0f;
++	else
++		send_data[0] = 0x0e;
++
++	while (size > 0) {
++		send_data[1] = sub_address;
++		if (size > 255)
++			send_data[2] = 255;
++		else
++			send_data[2] = size;
++
++		memcpy(&send_data[3], write_data_top, send_data[2]);
++
++		if (tgt == CXD2880_IO_TGT_SYS) {
++			send_data[3 + send_data[2]] = 0x00;
++			ret = spi->write(spi, send_data, send_data[2] + 4);
++		} else {
++			ret = spi->write(spi, send_data, send_data[2] + 3);
++		}
++		if (ret)
++			return ret;
++
++		sub_address += send_data[2];
++		write_data_top += send_data[2];
++		size -= send_data[2];
++	}
++
++	return ret;
++}
++
++int cxd2880_io_spi_create(struct cxd2880_io *io,
++			  struct cxd2880_spi *spi, u8 slave_select)
++{
++	if (!io || !spi)
++		return -EINVAL;
++
++	io->read_regs = cxd2880_io_spi_read_reg;
++	io->write_regs = cxd2880_io_spi_write_reg;
++	io->write_reg = cxd2880_io_common_write_one_reg;
++	io->if_object = spi;
++	io->i2c_address_sys = 0;
++	io->i2c_address_demod = 0;
++	io->slave_select = slave_select;
++
++	return 0;
++}
+diff --git a/drivers/media/dvb-frontends/cxd2880/cxd2880_devio_spi.h b/drivers/media/dvb-frontends/cxd2880/cxd2880_devio_spi.h
+new file mode 100644
+index 000000000000..27f7cb12fad4
+--- /dev/null
++++ b/drivers/media/dvb-frontends/cxd2880/cxd2880_devio_spi.h
+@@ -0,0 +1,23 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * cxd2880_devio_spi.h
++ * Sony CXD2880 DVB-T2/T tuner + demodulator driver
++ * I/O interface via SPI
++ *
++ * Copyright (C) 2016, 2017, 2018 Sony Semiconductor Solutions Corporation
++ */
++
++#ifndef CXD2880_DEVIO_SPI_H
++#define CXD2880_DEVIO_SPI_H
++
++#include "cxd2880_common.h"
++#include "cxd2880_io.h"
++#include "cxd2880_spi.h"
++
++#include "cxd2880_tnrdmd.h"
++
++int cxd2880_io_spi_create(struct cxd2880_io *io,
++			  struct cxd2880_spi *spi,
++			  u8 slave_select);
++
++#endif
+diff --git a/drivers/media/dvb-frontends/cxd2880/cxd2880_spi.h b/drivers/media/dvb-frontends/cxd2880/cxd2880_spi.h
+new file mode 100644
+index 000000000000..2be207461847
+--- /dev/null
++++ b/drivers/media/dvb-frontends/cxd2880/cxd2880_spi.h
+@@ -0,0 +1,34 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * cxd2880_spi.h
++ * Sony CXD2880 DVB-T2/T tuner + demodulator driver
++ * SPI access definitions
++ *
++ * Copyright (C) 2016, 2017, 2018 Sony Semiconductor Solutions Corporation
++ */
++
++#ifndef CXD2880_SPI_H
++#define CXD2880_SPI_H
 +
 +#include "cxd2880_common.h"
 +
-+int cxd2880_convert2s_complement(u32 value, u32 bitlen)
-+{
-+	if (!bitlen || bitlen >= 32)
-+		return (int)value;
++enum cxd2880_spi_mode {
++	CXD2880_SPI_MODE_0,
++	CXD2880_SPI_MODE_1,
++	CXD2880_SPI_MODE_2,
++	CXD2880_SPI_MODE_3
++};
 +
-+	if (value & (u32)(1 << (bitlen - 1)))
-+		return (int)(GENMASK(31, bitlen) | value);
-+	else
-+		return (int)(GENMASK(bitlen - 1, 0) & value);
-+}
-diff --git a/drivers/media/dvb-frontends/cxd2880/cxd2880_common.h b/drivers/media/dvb-frontends/cxd2880/cxd2880_common.h
-new file mode 100644
-index 000000000000..b05bce71ab35
---- /dev/null
-+++ b/drivers/media/dvb-frontends/cxd2880/cxd2880_common.h
-@@ -0,0 +1,19 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * cxd2880_common.h
-+ * Sony CXD2880 DVB-T2/T tuner + demodulator driver common definitions
-+ *
-+ * Copyright (C) 2016, 2017, 2018 Sony Semiconductor Solutions Corporation
-+ */
-+
-+#ifndef CXD2880_COMMON_H
-+#define CXD2880_COMMON_H
-+
-+#include <linux/types.h>
-+#include <linux/errno.h>
-+#include <linux/delay.h>
-+#include <linux/string.h>
-+
-+int cxd2880_convert2s_complement(u32 value, u32 bitlen);
++struct cxd2880_spi {
++	int (*read)(struct cxd2880_spi *spi, u8 *data,
++		    u32 size);
++	int (*write)(struct cxd2880_spi *spi, const u8 *data,
++		     u32 size);
++	int (*write_read)(struct cxd2880_spi *spi,
++			  const u8 *tx_data, u32 tx_size,
++			  u8 *rx_data, u32 rx_size);
++	u32 flags;
++	void *user;
++};
 +
 +#endif
-diff --git a/drivers/media/dvb-frontends/cxd2880/cxd2880_io.c b/drivers/media/dvb-frontends/cxd2880/cxd2880_io.c
+diff --git a/drivers/media/dvb-frontends/cxd2880/cxd2880_spi_device.c b/drivers/media/dvb-frontends/cxd2880/cxd2880_spi_device.c
 new file mode 100644
-index 000000000000..9d932bccfa6c
+index 000000000000..b8cbaa8d7aff
 --- /dev/null
-+++ b/drivers/media/dvb-frontends/cxd2880/cxd2880_io.c
-@@ -0,0 +1,66 @@
++++ b/drivers/media/dvb-frontends/cxd2880/cxd2880_spi_device.c
+@@ -0,0 +1,113 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * cxd2880_io.c
++ * cxd2880_spi_device.c
 + * Sony CXD2880 DVB-T2/T tuner + demodulator driver
-+ * register I/O interface functions
++ * SPI access functions
 + *
 + * Copyright (C) 2016, 2017, 2018 Sony Semiconductor Solutions Corporation
 + */
 +
-+#include "cxd2880_io.h"
++#include <linux/spi/spi.h>
 +
-+int cxd2880_io_common_write_one_reg(struct cxd2880_io *io,
-+				    enum cxd2880_io_tgt tgt,
-+				    u8 sub_address, u8 data)
++#include "cxd2880_spi_device.h"
++
++static int cxd2880_spi_device_write(struct cxd2880_spi *spi,
++				    const u8 *data, u32 size)
 +{
-+	if (!io)
++	struct cxd2880_spi_device *spi_device = NULL;
++	struct spi_message msg;
++	struct spi_transfer tx;
++	int result = 0;
++
++	if (!spi || !spi->user || !data || size == 0)
 +		return -EINVAL;
 +
-+	return io->write_regs(io, tgt, sub_address, &data, 1);
++	spi_device = spi->user;
++
++	memset(&tx, 0, sizeof(tx));
++	tx.tx_buf = data;
++	tx.len = size;
++
++	spi_message_init(&msg);
++	spi_message_add_tail(&tx, &msg);
++	result = spi_sync(spi_device->spi, &msg);
++
++	if (result < 0)
++		return -EIO;
++
++	return 0;
 +}
 +
-+int cxd2880_io_set_reg_bits(struct cxd2880_io *io,
-+			    enum cxd2880_io_tgt tgt,
-+			    u8 sub_address, u8 data, u8 mask)
++static int cxd2880_spi_device_write_read(struct cxd2880_spi *spi,
++					 const u8 *tx_data,
++					 u32 tx_size,
++					 u8 *rx_data,
++					 u32 rx_size)
 +{
-+	int ret;
++	struct cxd2880_spi_device *spi_device = NULL;
++	int result = 0;
 +
-+	if (!io)
++	if (!spi || !spi->user || !tx_data ||
++	    !tx_size || !rx_data || !rx_size)
 +		return -EINVAL;
 +
-+	if (mask == 0x00)
-+		return 0;
++	spi_device = spi->user;
 +
-+	if (mask != 0xff) {
-+		u8 rdata = 0x00;
++	result = spi_write_then_read(spi_device->spi, tx_data,
++				     tx_size, rx_data, rx_size);
++	if (result < 0)
++		return -EIO;
 +
-+		ret = io->read_regs(io, tgt, sub_address, &rdata, 1);
-+		if (ret)
-+			return ret;
++	return 0;
++}
 +
-+		data = (data & mask) | (rdata & (mask ^ 0xff));
++int
++cxd2880_spi_device_initialize(struct cxd2880_spi_device *spi_device,
++			      enum cxd2880_spi_mode mode,
++			      u32 speed_hz)
++{
++	int result = 0;
++	struct spi_device *spi = spi_device->spi;
++
++	switch (mode) {
++	case CXD2880_SPI_MODE_0:
++		spi->mode = SPI_MODE_0;
++		break;
++	case CXD2880_SPI_MODE_1:
++		spi->mode = SPI_MODE_1;
++		break;
++	case CXD2880_SPI_MODE_2:
++		spi->mode = SPI_MODE_2;
++		break;
++	case CXD2880_SPI_MODE_3:
++		spi->mode = SPI_MODE_3;
++		break;
++	default:
++		return -EINVAL;
 +	}
 +
-+	return io->write_reg(io, tgt, sub_address, data);
-+}
-+
-+int cxd2880_io_write_multi_regs(struct cxd2880_io *io,
-+			     enum cxd2880_io_tgt tgt,
-+			     const struct cxd2880_reg_value reg_value[],
-+			     u8 size)
-+{
-+	int ret;
-+	int i;
-+
-+	if (!io)
++	spi->max_speed_hz = speed_hz;
++	spi->bits_per_word = 8;
++	result = spi_setup(spi);
++	if (result != 0) {
++		pr_err("spi_setup failed %d\n", result);
 +		return -EINVAL;
-+
-+	for (i = 0; i < size ; i++) {
-+		ret = io->write_reg(io, tgt, reg_value[i].addr,
-+				    reg_value[i].value);
-+		if (ret)
-+			return ret;
 +	}
 +
 +	return 0;
 +}
-diff --git a/drivers/media/dvb-frontends/cxd2880/cxd2880_io.h b/drivers/media/dvb-frontends/cxd2880/cxd2880_io.h
++
++int cxd2880_spi_device_create_spi(struct cxd2880_spi *spi,
++				  struct cxd2880_spi_device *spi_device)
++{
++	if (!spi || !spi_device)
++		return -EINVAL;
++
++	spi->read = NULL;
++	spi->write = cxd2880_spi_device_write;
++	spi->write_read = cxd2880_spi_device_write_read;
++	spi->flags = 0;
++	spi->user = spi_device;
++
++	return 0;
++}
+diff --git a/drivers/media/dvb-frontends/cxd2880/cxd2880_spi_device.h b/drivers/media/dvb-frontends/cxd2880/cxd2880_spi_device.h
 new file mode 100644
-index 000000000000..ba550278881d
+index 000000000000..05e3a03de3a3
 --- /dev/null
-+++ b/drivers/media/dvb-frontends/cxd2880/cxd2880_io.h
-@@ -0,0 +1,54 @@
++++ b/drivers/media/dvb-frontends/cxd2880/cxd2880_spi_device.h
+@@ -0,0 +1,26 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +/*
-+ * cxd2880_io.h
++ * cxd2880_spi_device.h
 + * Sony CXD2880 DVB-T2/T tuner + demodulator driver
-+ * register I/O interface definitions
++ * SPI access interface
 + *
 + * Copyright (C) 2016, 2017, 2018 Sony Semiconductor Solutions Corporation
 + */
 +
-+#ifndef CXD2880_IO_H
-+#define CXD2880_IO_H
++#ifndef CXD2880_SPI_DEVICE_H
++#define CXD2880_SPI_DEVICE_H
 +
-+#include "cxd2880_common.h"
++#include "cxd2880_spi.h"
 +
-+enum cxd2880_io_tgt {
-+	CXD2880_IO_TGT_SYS,
-+	CXD2880_IO_TGT_DMD
++struct cxd2880_spi_device {
++	struct spi_device *spi;
 +};
 +
-+struct cxd2880_reg_value {
-+	u8 addr;
-+	u8 value;
-+};
++int cxd2880_spi_device_initialize(struct cxd2880_spi_device *spi_device,
++				  enum cxd2880_spi_mode mode,
++				  u32 speedHz);
 +
-+struct cxd2880_io {
-+	int (*read_regs)(struct cxd2880_io *io,
-+			 enum cxd2880_io_tgt tgt, u8 sub_address,
-+			 u8 *data, u32 size);
-+	int (*write_regs)(struct cxd2880_io *io,
-+			  enum cxd2880_io_tgt tgt, u8 sub_address,
-+			  const u8 *data, u32 size);
-+	int (*write_reg)(struct cxd2880_io *io,
-+			 enum cxd2880_io_tgt tgt, u8 sub_address,
-+			 u8 data);
-+	void *if_object;
-+	u8 i2c_address_sys;
-+	u8 i2c_address_demod;
-+	u8 slave_select;
-+	void *user;
-+};
++int cxd2880_spi_device_create_spi(struct cxd2880_spi *spi,
++				  struct cxd2880_spi_device *spi_device);
 +
-+int cxd2880_io_common_write_one_reg(struct cxd2880_io *io,
-+				    enum cxd2880_io_tgt tgt,
-+				    u8 sub_address, u8 data);
-+
-+int cxd2880_io_set_reg_bits(struct cxd2880_io *io,
-+			    enum cxd2880_io_tgt tgt,
-+			    u8 sub_address, u8 data, u8 mask);
-+
-+int cxd2880_io_write_multi_regs(struct cxd2880_io *io,
-+				enum cxd2880_io_tgt tgt,
-+				const struct cxd2880_reg_value reg_value[],
-+				u8 size);
-+#endif
++#endif /* CXD2880_SPI_DEVICE_H */
 -- 
 2.15.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
