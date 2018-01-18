@@ -1,132 +1,80 @@
-From: "Ardelean, Alexandru" <alexandru.Ardelean-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 3/3] staging: iio: docs: add ad7192 doc to detail dt
- usage
-Date: Thu, 18 Jan 2018 13:16:37 +0000
-Message-ID: <1516281396.2928.5.camel@analog.com>
-References: <20180110112956.23931-1-alexandru.ardelean@analog.com>
-         <20180110112956.23931-3-alexandru.ardelean@analog.com>
-         <20180114125604.24a3876d@archlinux>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [Patch v6 02/12] [media] s5p-mfc: Adding initial support for MFC
+ v10.10
+Date: Thu, 18 Jan 2018 14:19:09 +0100
+Message-ID: <332f1f0e-bfa9-4102-6c0d-28cf13eeeaad@xs4all.nl>
+References: <CGME20171208093637epcas1p217ea0e337333ebf6918bc0418753d2af@epcas1p2.samsung.com>
+ <1512724105-1778-1-git-send-email-smitha.t@samsung.com>
+ <1512724105-1778-3-git-send-email-smitha.t@samsung.com>
+ <CAOFm3uHyNt3k+_n3SvSP-BNFeEeu1CO6PpEbxs9JU0MxsHm=Jg@mail.gmail.com>
+ <1516278981.22129.12.camel@smitha-fedora>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180114125604.24a3876d@archlinux>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1516278981.22129.12.camel@smitha-fedora>
 Content-Language: en-US
-Content-ID: <7C1AA99A105BBE409083F6B3127217CB-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org" <jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>
-Cc: "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org" <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Hennerich, Michael" <Michael.Hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-media-owner@vger.kernel.org
+To: Smitha T Murthy <smitha.t@samsung.com>, Philippe Ombredanne <pombredanne@nexb.com>
+Cc: "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, kyungmin.park@samsung.com, kamil@wypas.org, jtp.park@samsung.com, a.hajda@samsung.com, Mauro Carvalho Chehab <mchehab@kernel.org>, pankaj.dubey@samsung.com, krzk@kernel.org, m.szyprowski@samsung.com, s.nawrocki@samsung.com, Rob Herring <robh+dt@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gU3VuLCAyMDE4LTAxLTE0IGF0IDEyOjU2ICswMDAwLCBKb25hdGhhbiBDYW1lcm9uIHdyb3Rl
-Og0KPiBPbiBXZWQsIDEwIEphbiAyMDE4IDEzOjI5OjU2ICswMjAwDQo+IDxhbGV4YW5kcnUuYXJk
-ZWxlYW5AYW5hbG9nLmNvbT4gd3JvdGU6DQo+IA0KPiA+IEZyb206IEFsZXhhbmRydSBBcmRlbGVh
-biA8YWxleGFuZHJ1LmFyZGVsZWFuQGFuYWxvZy5jb20+DQo+ID4gDQo+ID4gRG9jdW1lbnQgdGhl
-IGRldmljZS10cmVlIGJpbmRpbmdzIG9mIHRoZSAiYWQ3MTkyIiBkcml2ZXIuDQo+ID4gQWRkZWQg
-ZGF0YXNoZWV0IHJlZmVyZW5jZXMgZm9yIHN1cHBvcnRlZCBkZXZpY2VzLA0KPiA+IGV4cGxhbmF0
-aW9uIGZvciBlYWNoIHByb3BlcnR5IHN1cHBvcnRlZCBieSB0aGUgZHJpdmVyLA0KPiA+IGFuZCBh
-biBleGFtcGxlLg0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IEFsZXhhbmRydSBBcmRlbGVhbiA8
-YWxleGFuZHJ1LmFyZGVsZWFuQGFuYWxvZy5jb20+DQo+ID4gLS0tDQo+ID4gIC4uLi9zdGFnaW5n
-L2lpby9Eb2N1bWVudGF0aW9uL2FkYy9hZGksYWQ3MTkyLnR4dCAgIHwgNzENCj4gPiArKysrKysr
-KysrKysrKysrKysrKysrDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCA3MSBpbnNlcnRpb25zKCspDQo+
-ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NA0KPiA+IGRyaXZlcnMvc3RhZ2luZy9paW8vRG9jdW1lbnRh
-dGlvbi9hZGMvYWRpLGFkNzE5Mi50eHQNCj4gPiANCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9z
-dGFnaW5nL2lpby9Eb2N1bWVudGF0aW9uL2FkYy9hZGksYWQ3MTkyLnR4dA0KPiA+IGIvZHJpdmVy
-cy9zdGFnaW5nL2lpby9Eb2N1bWVudGF0aW9uL2FkYy9hZGksYWQ3MTkyLnR4dA0KPiA+IG5ldyBm
-aWxlIG1vZGUgMTAwNjQ0DQo+ID4gaW5kZXggMDAwMDAwMDAwMDAwLi4xZjhmNzY5YTAwM2YNCj4g
-PiAtLS0gL2Rldi9udWxsDQo+ID4gKysrIGIvZHJpdmVycy9zdGFnaW5nL2lpby9Eb2N1bWVudGF0
-aW9uL2FkYy9hZGksYWQ3MTkyLnR4dA0KPiA+IEBAIC0wLDAgKzEsNzEgQEANCj4gPiArQW5hbG9n
-IERldmljZXMgQUQ3MTl4IEFEQyBEcml2ZXINCj4gPiArDQo+ID4gK1JlZmVyZW5jZToNCj4gPiAr
-WzFdIGh0dHA6Ly93d3cuYW5hbG9nLmNvbS9lbi9wcm9kdWN0cy9hbmFsb2ctdG8tZGlnaXRhbC1j
-b252ZXJ0ZXJzDQo+ID4gL2FkNzE5MC5odG1sDQo+ID4gK1syXSBodHRwOi8vd3d3LmFuYWxvZy5j
-b20vZW4vcHJvZHVjdHMvYW5hbG9nLXRvLWRpZ2l0YWwtY29udmVydGVycw0KPiA+IC9hZDcxOTIu
-aHRtbA0KPiA+ICtbM10gaHR0cDovL3d3dy5hbmFsb2cuY29tL2VuL3Byb2R1Y3RzL2FuYWxvZy10
-by1kaWdpdGFsLWNvbnZlcnRlcnMNCj4gPiAvYWQ3MTkzLmh0bWwNCj4gPiArWzRdIGh0dHA6Ly93
-d3cuYW5hbG9nLmNvbS9lbi9wcm9kdWN0cy9hbmFsb2ctdG8tZGlnaXRhbC1jb252ZXJ0ZXJzDQo+
-ID4gL2FkNzE5NS5odG1sDQo+ID4gKw0KPiA+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiA+ICsg
-IC0gY29tcGF0aWJsZTogU2hvdWxkIGJlICJhZGksYWQ3MTkwIiwgImFkaSxhZDcxOTIiLCAiYWRp
-LGFkNzE5MyINCj4gPiArICBvciAiYWRpLGFkNzE5NSINCj4gPiArICAtIHJlZzogU1BJIGNoaXAg
-c2VsZWN0IG51bWJlciBmb3IgdGhlIGRldmljZQ0KPiA+ICsgIC0gc3BpLWNwb2wsIHNwaS1jcGhh
-OiBDb250cm9sbGVyIHN1cHBvcnQgb25seSBtb2RlIDMsIHNvIGJvdGgNCj4gPiBzcGktY3BvbA0K
-PiA+ICsgIGFuZCBzcGktY3BoYSBzaG91bGQgYmUgcHJlc2VudA0KPiA+ICsgIC0gc3BpLW1heC1m
-cmVxdWVuY3k6IERlZmluaXRpb24gYXMgcGVyDQo+ID4gKyAgc2VlOiBEb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3Mvc3BpL3NwaS1idXMudHh0DQo+ID4gKyAgLSBpbnRlcnJ1cHQtcGFy
-ZW50OiBwaGFuZGxlIHRvIHRoZSBwYXJlbnQgaW50ZXJydXB0IGNvbnRyb2xsZXINCj4gPiArICBz
-ZWU6IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pbnRlcnJ1cHQtDQo+ID4gY29u
-dHJvbGxlci9pbnRlcnJ1cHRzLnR4dA0KPiA+ICsgIC0gaW50ZXJydXB0czogSVJRIGxpbmUgZm9y
-IHRoZSBBREMNCj4gPiArICBzZWU6IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9p
-bnRlcnJ1cHQtDQo+ID4gY29udHJvbGxlci9pbnRlcnJ1cHRzLnR4dA0KPiA+ICsNCj4gPiArUmVj
-b21tZW5kZWQgcHJvcGVydGllczoNCj4gPiArICAtIGFkaSxjbG9jay1zb3VyY2Utc2VsZWN0OiBz
-ZXRzIHRoZSBjbG9jayBzb3VyY2UgdG8gYmUgdXNlZDsNCj4gPiB2YWx1ZXMgYXJlDQo+ID4gKyAg
-ICogMCAtIGV4dGVybmFsIGNyeXN0YWwsIGNvbm5lY3RlZCBmcm9tIHBpbiBNQ0xLMSB0byBNQ0xL
-Mg0KPiA+ICsgICAqIDEgLSBleHRlcm5hbCBjbG9jaywgYXBwbGllZCB0byBNQ0xLMiBwaW4NCj4g
-PiArICAgKiAyIC0gaW50ZXJuYWwgNC45MiBNaHogY2xvY2s7IHBpbiBNQ0xLMiBpcyB0cmlzdGF0
-ZWQgKGRlZmF1bHQpDQo+ID4gKyAgICogMyAtIGludGVybmFsIDQuOTIgTWh6IGNsb2NrOyBpbnRl
-cm5hbCBjbG9jayBpcyBhdmFpbGFibGUgb24NCj4gPiBNQ0xLMg0KPiANCj4gRm9yIHRoZSBleHRl
-cm5hbCBjbG9jayB0aGVyZSBhcmUgc3RhbmRhcmQgYmluZGluZ3MNCj4gRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL2Nsb2NrLWJpbmRpbmdzLnR4dA0KPiBJZiBvbmUgaXMg
-c3BlY2lmaWVkIGFzc3VtZSBpdCBzaG91bGQgYmUgdXNlZC4NCj4gDQo+IEZvciB0aGUgY3J5c3Rh
-bCBhIHF1aWNrIGdyZXAgc3VnZ2VzdHMgdGhhdCBjbG9ja25hbWVzIGFyZSB1c2VkIGluDQo+IHNv
-bWVjYXNlcw0KPiBhdCBsZWFzdCB0byBkaXN0aW5ndWlzaCBiZXR3ZWVuIG9zYyBhbmQgeHRhbC4N
-Cg0KYWNrDQp3aWxsIHVzZSBjbG9jayBiaW5kaW5ncw0KDQo+IA0KPiBGaW5hbCBwYWlyIHByb2Jh
-Ymx5IG5lZWQgYSBzcGVjaWZpYyBkZXZpY2V0cmVlIGJpbmRpbmcgbGlrZQ0KPiBhZGksY2xvY2tv
-dXQgb3Igc29tZXRoaW5nLi4uICAobm90IHRob3VnaHQgbXVjaCBvbiB0aGF0IG5hbWUhKQ0KPiAN
-Cj4gDQo+ID4gKyAgLSBhZGksZXh0ZXJuYWwtY2xvY2stSHo6IGlmICJhZGksY2xvY2stc291cmNl
-LXNlbGVjdCIgaXMgdmFsdWUNCj4gPiAnMScsDQo+ID4gKyAgdGhpcyB2YWx1ZSBzaG91bGQgYmUg
-c3BlY2lmaWVkIHRvIHRoZSBBREMNCj4gPiArICAtIGF2ZGQtc3VwcGx5OiBBbmFsb2cgU3VwcGx5
-IFZvbHRhZ2UsIDQuNzVWIHRvIDUuMjVWLiBBVkREIGlzDQo+ID4gKyAgaW5kZXBlbmRlbnQgb2Yg
-RFZERA0KPiA+ICsgIC0gZHZkZC1zdXBwbHk6IERpZ2l0YWwgU3VwcGx5IFZvbHRhZ2UsIDIuN1Yg
-dG8gNS4yNVYuIERWREQNCj4gPiArICBpcyBpbmRlcGVuZGVudCBvZiBBVkREDQo+IA0KPiBSZWd1
-bGF0b3JzIG5vdCB2YWx1ZXMgKyBhZGQgYSBjcm9zcyByZWZlcmVuY2UgdG8gdGhlIHJlZ3VsYXRv
-ciBkb2NzLg0KPiBJIHdvdWxkIG1ha2UgdGhpcyByZXF1aXJlZCByYXRoZXIgdGhhbiBvcHRpb25h
-bC4gIEVhc3kgdG8gc3VwcGx5DQo+IGZpeGVkIHJlZ3MgaW4gZGV2aWNldHJlZSBpZiBpdCBtYWtl
-cyBzZW5zZSBhbmQgd2lsbCBzaW1wbGlmeQ0KPiB0aGluZ3MgaW4gdGhlIGxvbmcgcnVuIGlmIHdl
-IGtub3cgdGhleSBhcmUgYXdsYXlzIHRoZXJlLg0KPiANCj4gDQoNCmFjaw0KDQo+ID4gKw0KPiA+
-ICtPcHRpb25hbCBwcm9wZXJ0aWVzOg0KPiA+ICsgIC0gYWRpLHJlZmluMi1waW5zLWVuYWJsZTog
-c2VsZWN0IGV4dGVybmFsIHJlZmVyZW5jZSB0byBiZQ0KPiA+IGFwcGxpZWQNCj4gPiArICB0byBQ
-MSxSRUZJTjIoKykgJiBQMCxSRUZJTjIoLSkgcGlucyBpbnN0ZWFkIG9mIFJFRklOMSgrKSAmDQo+
-ID4gUkVGSU4xKC0pOw0KPiA+ICsgIG5vdCBhdmFpbGFibGUgZm9yICJhZDcxOTUiDQo+ID4gKyAg
-LSBhZGkscmVqZWN0aW9uLTYwLUh6LWVuYWJsZTogZW5hYmxlcyBzaW11bHRhbmVvdXMgNTAvNjAg
-SHoNCj4gPiByZWplY3Rpb24NCj4gPiArICAtIGFkaSxjaG9wLWVuYWJsZTogZW5hYmxlIGNob3Ag
-dG8gbWluaW1pemUgQURDIG9mZnNldCBhbmQgb2Zmc2V0DQo+ID4gZHJpZnQNCj4gPiArICAtIGFk
-aSxidWZmZXItZW5hYmxlOiBlbmFibGVzIHRoZSBidWZmZXIgb24gdGhlIGFuYWxvZyBpbnB1dHMN
-Cj4gPiArICAtIGFkaSxidXJub3V0LWN1cnJlbnRzLWVuYWJsZTogd2hlbiBzZWxlY3RlZCwgdGhl
-IDUwMCBuQSBjdXJyZW50DQo+ID4gc291cmNlcw0KPiA+ICsgIGluIHRoZSBzaWduYWwgcGF0aCBh
-cmUgZW5hYmxlZDsgY2FuIGJlIGVuYWJsZWQgb25seSB3aGVuIGJ1ZmZlcg0KPiA+IGlzIGFjdGl2
-ZQ0KPiA+ICsgIGFuZCBjaG9wIGlzIGRpc2FibGVkDQo+IA0KPiBUaGVzZSBhcmUgYW4gb2RkaXR5
-LiAgSSdtIHVuY2xlYXIgb24gd2hldGhlciB5b3Ugd291bGQgZXZlciBoYXZlIHRoZW0NCj4gb24N
-Cj4gYWxsIHRoZSB0aW1lLiAgU291bmRzIGxpa2UgZGV0ZWN0aW9uIGhhcmR3YXJlIHRoYXQgeW91
-J2QgcnVuIGluIGFuDQo+IGluaXRpYWwNCj4gc2VsZiB0ZXN0IHRvIGNoZWNrIHlvdXIgdHJhbnNk
-dWNlciBpc24ndCBibG93bi4NCj4gDQoNCnRoZXkncmUgY2hpcC1zZXR0aW5ncyBkb25lIGF0IGlu
-aXQgdGltZQ0KdGhlIG5hbWVzIG1heSBuZWVkIHNvbWUgd29yaywgbWF5YmUgZXZlbiB0aGUgdHlw
-ZXMgOw0KaXQgY291bGQgYmUgdGhhdCB0aGVzZSBtYXkgZXZlbiB3b3JrIGF0IHJ1bnRpbWUsIGlu
-IHdoaWNoIGNhc2UsIGEgc3lzZnMNCmJpbmRpbmcgbWF5IGJlIG1vcmUgaW50ZXJlc3RpbmcNCmkn
-ZCBoYXZlIHRvIGludmVzdGlnYXRlIG1vcmUgaW4tZGVwdGgNCg0KPiANCj4gPiArICAtIGFkaSxz
-aW5jMy1maWx0ZXItZW5hYmxlOiBlbmFibGVzIHRoZSBTSU5DMyBmaWx0ZXI7IGlmIHVuc2V0DQo+
-ID4gKyAgdGhlIFNJTkM0IGRpZ2l0YWwgZmlsdGVyIGlzIHVzZWQgYWZ0ZXIgdGhlIG1vZHVsYXRv
-cg0KPiANCj4gc28gdGhpcyBpcyBhIHNlbGVjdGlvbiBiZXR3ZWVuIHR3byBmaWx0ZXJzLiAgR29v
-ZCBpZiB0aGUgbmFtaW5nDQo+IGltcGxpZXMgdGhpcy4uDQo+IA0KPiA+ICsgIC0gYWRpLHVuaXBv
-bGFyLWVuYWJsZTogd2hlbiB0aGlzIGlzIHNldCB2b2x0YWdlIHJhbmdlcyBtdXN0IGJlDQo+ID4g
-dW5pcG9sYXINCj4gPiArICAoZS5nIDAgdG8gNVYpIHZlcnN1cyBiaXBvbGFyIHZvbHRhZ2UgcmFu
-Z2VzIChlLmcuIC01ViB0byA1VikNCj4gDQo+IFRoYXQgaXNuJ3QgY2xvc2UgdG8gd2hhdCBJJ20g
-cmVhZGluZyBmcm9tIHRoZSBkYXRhc2hlZXQuDQo+IA0KPiAiQSBiaXBvbGFyIGlucHV0IHJhbmdl
-IGRvZXMgbm90DQo+IGltcGx5IHRoYXQgdGhlIHBhcnQgY2FuIHRvbGVyYXRlIG5lZ2F0aXZlIHZv
-bHRhZ2VzIHdpdGggcmVzcGVjdCB0bw0KPiBzeXN0ZW0gQUdORC4gIg0KPiANCj4gVGhpcyBpcyBh
-Ym91dCB1c2luZyBhIHNlY29uZCBpbnB1dCBhcyB0aGUgZGlmZmVyZW50aWFsIG5lZ2F0aXZlIHZz
-DQo+IHVzaW5nDQo+IHRoZSBjb21tb24gcmVmZXJlbmNlIGlucHV0Li4uDQoNCndpbGwgcmUtdmlz
-aXQNCmknbGwgYWRtaXQgdGhpcyBzdHVmZiBpcyBub3QgeWV0IG15IGZvcnRlLCBidXQgSSdsbCBt
-YWtlIGFuIGVmZm9ydCB0bw0KbGVhcm4NCg0KPiANCj4gPiArDQo+ID4gK0V4YW1wbGU6DQo+ID4g
-K2FkNzE5MEAwIHsNCj4gPiArCWNvbXBhdGlibGUgPSAiYWRpLGFkNzE5MCI7DQo+ID4gKwlyZWcg
-PSA8MD47DQo+ID4gKwlzcGktbWF4LWZyZXF1ZW5jeSA9IDwxMDAwMDAwPjsNCj4gPiArCXNwaS1j
-cG9sOw0KPiA+ICsJc3BpLWNwaGE7DQo+ID4gKw0KPiA+ICsJI2ludGVycnVwdC1jZWxscyA9IDwy
-PjsNCj4gPiArCWludGVycnVwdHMgPSA8MjUgMHgyPjsNCj4gPiArCWludGVycnVwdC1wYXJlbnQg
-PSA8JmdwaW8+Ow0KPiA+ICsJYXZkZC1zdXBwbHkgPSA8JmFkY19hdmRkPjsNCj4gPiArDQo+ID4g
-KwlhZGksY2xvY2stc291cmNlLXNlbGVjdCA9IC9iaXRzLyA4IDwwPjsNCj4gPiArDQo+ID4gKwlh
-ZGkscmVmaW4yLXBpbnMtZW5hYmxlOw0KPiA+ICsJYWRpLHJlamVjdGlvbi02MC1Iei1lbmFibGU7
-DQo+ID4gKwlhZGksYnVmZmVyLWVuYWJsZTsNCj4gPiArCWFkaSxidXJub3V0LWN1cnJlbnRzLWVu
-YWJsZTsNCj4gPiArCWFkaSxzaW5jMy1maWx0ZXItZW5hYmxlOw0KPiA+ICsJYWRpLHVuaXBvbGFy
-LWVuYWJsZTsNCj4gPiArfTsNCj4gDQo+IA==
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 01/18/18 13:36, Smitha T Murthy wrote:
+> On Fri, 2017-12-08 at 14:25 +0100, Philippe Ombredanne wrote:
+>> Smitha,
+>>
+>> On Fri, Dec 8, 2017 at 10:08 AM, Smitha T Murthy <smitha.t@samsung.com> wrote:
+>>> Adding the support for MFC v10.10, with new register file and
+>>> necessary hw control, decoder, encoder and structural changes.
+>>>
+>>> CC: Rob Herring <robh+dt@kernel.org>
+>>> CC: devicetree@vger.kernel.org
+>>> Signed-off-by: Smitha T Murthy <smitha.t@samsung.com>
+>>> Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
+>>> Acked-by: Rob Herring <robh@kernel.org>
+>> []
+>>> --- /dev/null
+>>> +++ b/drivers/media/platform/s5p-mfc/regs-mfc-v10.h
+>>> @@ -0,0 +1,36 @@
+>>> +/*
+>>> + * Register definition file for Samsung MFC V10.x Interface (FIMV) driver
+>>> + *
+>>> + * Copyright (c) 2017 Samsung Electronics Co., Ltd.
+>>> + *     http://www.samsung.com/
+>>> + *
+>>> + * This program is free software; you can redistribute it and/or modify
+>>> + * it under the terms of the GNU General Public License version 2 as
+>>> + * published by the Free Software Foundation.
+>>> + */
+>>
+>> Have you considered using the new SPDX ids instead of this fine legalese? e.g.:
+>>
+>> // SPDX-License-Identifier: GPL-2.0
+>>
+>> This is much shorter and neater (unless you are a legalese lover of
+>> course!)  Check also Thomas doc patches and Linus comments on why he
+>> prefers the C++ comment style for these.
+>>
+>> And even better could be this more compact form? I am a big fan of the
+>> C++ style comments for these (and so is Linus)
+>>
+>> // SPDX-License-Identifier: GPL-2.0
+>> // Copyright (c) 2017 Samsung Electronics Co., Ltd.
+>> // Register definition file for Samsung MFC V10.x Interface (FIMV) driver
+>>
+>> You can also read this fine article from a fellow Samsung colleague
+>> [1]. And if you ever consider doing this for all Samsung's past,
+>> present and future contributions, you will have my deep gratitude
+>>
+>> [1] https://blogs.s-osg.org/linux-kernel-license-practices-revisited-spdx/
+>>
+> Ok I will change to the SPDX license in the next patch series for the
+> v10 register file. Correspondingly for the MFC driver's files I will
+> update the license as a separate patch and submit.
+> 
+
+Ah, I forgot about this series. I'll try to review it tomorrow or Monday.
+
+Sorry about the delay,
+
+	Hans
