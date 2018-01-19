@@ -1,54 +1,67 @@
-From: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v4 07/13] ARM: dts: rockchip: add clocks in vop iommu nodes
-Date: Fri, 19 Jan 2018 12:23:11 +0900
-Message-ID: <CAAFQd5ACbV6Q2Jwze=hoG=13jSJKkYyDDs2HzvvdSK-RGK+w2g@mail.gmail.com>
-References: <20180118115251.5542-1-jeffy.chen@rock-chips.com> <20180118115251.5542-8-jeffy.chen@rock-chips.com>
+From: Sinan Kaya <okaya@codeaurora.org>
+Subject: Re: [RFCv2 PATCH 05/36] iommu/process: Bind and unbind process to and
+ from devices
+Date: Thu, 18 Jan 2018 23:52:03 -0500
+Message-ID: <0772e71e-4861-1e7b-f248-88aaba8bf2fc@codeaurora.org>
+References: <20171006133203.22803-1-jean-philippe.brucker@arm.com>
+ <20171006133203.22803-6-jean-philippe.brucker@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180118115251.5542-8-jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, simon xue <xxm-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Joerg
-        Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>," <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20171006133203.22803-6-jean-philippe.brucker@arm.com>
+Content-Language: en-US
+Sender: linux-pci-owner@vger.kernel.org
+To: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, iommu@lists.linux-foundation.org
+Cc: joro@8bytes.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, lorenzo.pieralisi@arm.com, hanjun.guo@linaro.org, sudeep.holla@arm.com, rjw@rjwysocki.net, lenb@kernel.org, robin.murphy@arm.com, bhelgaas@google.com, alex.williamson@redhat.com, tn@semihalf.com, liubo95@huawei.com, thunder.leizhen@huawei.com, xieyisheng1@huawei.com, gabriele.paoloni@huawei.com, nwatters@codeaurora.org, rfranz@cavium.com, dwmw2@infradead.org, jacob.jun.pan@linux.intel.com, yi.l.liu@intel.com, ashok.raj@intel.com, robdclark@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 18, 2018 at 8:52 PM, Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
-> Add clocks in vop iommu nodes, since we are going to control clocks in
-> rockchip iommu driver.
->
-> Signed-off-by: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> ---
->
-> Changes in v4: None
-> Changes in v3: None
-> Changes in v2: None
->
->  arch/arm/boot/dts/rk3036.dtsi | 2 ++
->  arch/arm/boot/dts/rk3288.dtsi | 4 ++++
->  2 files changed, 6 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/rk3036.dtsi b/arch/arm/boot/dts/rk3036.dtsi
-> index 3b704cfed69a..95b0ebc7a40f 100644
-> --- a/arch/arm/boot/dts/rk3036.dtsi
-> +++ b/arch/arm/boot/dts/rk3036.dtsi
-> @@ -197,6 +197,8 @@
->                 reg = <0x10118300 0x100>;
->                 interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>;
->                 interrupt-names = "vop_mmu";
-> +               clocks = <&cru ACLK_LCDC>, <&cru SCLK_LCDC>, <&cru HCLK_LCDC>;
-> +               clock-names = "aclk_vop", "dclk_vop", "hclk_vop";
+Hi Jean-Philippe,
 
-We should remove clock-names from IOMMU nodes. The Rockchip IOMMU
-bindings don't define clock names and only the clocks property should
-be given.
+On 10/6/2017 9:31 AM, Jean-Philippe Brucker wrote:
+>  /**
+> + * iommu_process_bind_device - Bind a process address space to a device
+> + * @dev: the device
+> + * @task: the process to bind
+> + * @pasid: valid address where the PASID will be stored
+> + * @flags: bond properties (IOMMU_PROCESS_BIND_*)
+> + *
+> + * Create a bond between device and task, allowing the device to access the
+> + * process address space using the returned PASID.
+> + *
+> + * On success, 0 is returned and @pasid contains a valid ID. Otherwise, an error
+> + * is returned.
+> + */
+> +int iommu_process_bind_device(struct device *dev, struct task_struct *task,
+> +			      int *pasid, int flags)
 
-Not even saying that the names currently listed are not good examples,
-they name SoC clock controller output, rather than device inputs.
+This API doesn't play nice with endpoint device drivers that have PASID limitations.
 
-Best regards,
-Tomasz
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The AMD driver seems to have PASID limitations per product that are not being
+advertised in the PCI capability.
+
+device_iommu_pasid_init()
+{
+        pasid_limit = min_t(unsigned int,
+                        (unsigned int)(1 << kfd->device_info->max_pasid_bits),
+                        iommu_info.max_pasids);
+        /*
+         * last pasid is used for kernel queues doorbells
+         * in the future the last pasid might be used for a kernel thread.
+         */
+        pasid_limit = min_t(unsigned int,
+                                pasid_limit,
+                                kfd->doorbell_process_limit - 1);
+}
+
+kfd->device_info->max_pasid_bits seems to contain per device limitations.
+
+Would you be willing to extend the API so that the requester can impose some limit
+on the PASID value that is getting allocated.
+
+Sinan
+
+-- 
+Sinan Kaya
+Qualcomm Datacenter Technologies, Inc. as an affiliate of Qualcomm Technologies, Inc.
+Qualcomm Technologies, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project.
