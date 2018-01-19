@@ -1,46 +1,66 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/3] dt-bindings: phy: phy-rockchip-typec: add usb3 otg
- reset
-Date: Fri, 19 Jan 2018 15:49:16 -0600
-Message-ID: <20180119214916.fegrzgcmbbdiesyz@rob-hp-laptop>
-References: <1515751704-13213-1-git-send-email-william.wu@rock-chips.com>
- <1515751704-13213-2-git-send-email-william.wu@rock-chips.com>
- <20180117220715.GA112833@google.com>
- <CAFqH_52KiHQzEeaX5rFN66pMqAuVVKeWJhxnS5L4hY4XiVG8mw@mail.gmail.com>
- <20180118174748.GA63108@google.com>
+Subject: Re: [PATCH v3 1/5] bindings: regulator: added support for suspend
+ states
+Date: Fri, 19 Jan 2018 16:11:08 -0600
+Message-ID: <20180119221108.nndgk3ln573n6zew@rob-hp-laptop>
+References: <1515752305-15907-1-git-send-email-zhang.chunyan@linaro.org>
+ <1515752305-15907-2-git-send-email-zhang.chunyan@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180118174748.GA63108@google.com>
+In-Reply-To: <1515752305-15907-2-git-send-email-zhang.chunyan@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Norris <briannorris@chromium.org>
-Cc: Enric Balletbo Serra <eballetbo@gmail.com>, William Wu <william.wu@rock-chips.com>, Kishon Vijay Abraham I <kishon@ti.com>, Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>, linux-kernel <linux-kernel@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Frank Wang <frank.wang@rock-chips.com>, huangtao@rock-chips.com, Doug Anderson <dianders@google.com>, Guenter Roeck <groeck@google.com>, daniel.meng@rock-chips.com, John.Youn@synopsys.com, lin.huang@rock-chips.com, Enric Balletbo i Serra <enric.balletbo@collabora.com>
+To: Chunyan Zhang <zhang.chunyan@linaro.org>
+Cc: Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Chunyan Zhang <zhang.lyra@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 18, 2018 at 09:47:50AM -0800, Brian Norris wrote:
-> On Thu, Jan 18, 2018 at 06:20:09PM +0100, Enric Balletbo Serra wrote:
-> > As Brian said commit 06c47e6286d5 'usb: dwc3: of-simple: Add support
-> > to get resets for the device' introduced the support to get the resets
-> > from dwc3-of-simple and the queued commit 'b7e63d95c14d arm64: dts:
-> > rockchip: add reset property for dwc3 controllers on rk3399' started
-> > using it. Without the latest I get errors like this doing bind/unbind
-> > tests.
-> > 
-> >    dwc3: probe of fe900000.dwc3 failed with error -110
-> > 
-> > I just tested these series on top of mainline, I reverted my patch
-> > because otherwise two drivers are requesting the same reset and fails,
-> > and I did some of the bind/unbind test. They just worked fine, and
-> > seems that this is right way, so this makes me think some questions.
+On Fri, Jan 12, 2018 at 06:18:21PM +0800, Chunyan Zhang wrote:
+> Some systems need to set regulators to specific states when they enter
+> low power modes, especially around CPUs. There are many of these modes
+> depending on the particular runtime state.
 > 
-> Actually, this was intended to coexist with DWC3 optionally controlling
-> the same reset. It was written before the reset framework was rewritten
-> to have shared and exclusive resets. Should this be rewritten to use
-> shared resets? We'd have to modify both dwc3 core and the PHY driver.
+> Currently the regulator consumers are not granted permission to change
+> suspend state of regulator devices, the constraints are configured at
+> startup.  In order to allow changes in a vlotage range, we need to add
+> new properties for voltage range and a flag to give permission to
+> change the suspend voltage and suspend on/off in suspend mode.
+> 
+> Signed-off-by: Chunyan Zhang <zhang.chunyan@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/regulator/regulator.txt | 15 +++++++++++++--
+>  1 file changed, 13 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/regulator/regulator.txt b/Documentation/devicetree/bindings/regulator/regulator.txt
+> index 378f6dc..532e286 100644
+> --- a/Documentation/devicetree/bindings/regulator/regulator.txt
+> +++ b/Documentation/devicetree/bindings/regulator/regulator.txt
+> @@ -42,8 +42,19 @@ Optional properties:
+>  - regulator-state-[mem/disk] node has following common properties:
+>  	- regulator-on-in-suspend: regulator should be on in suspend state.
+>  	- regulator-off-in-suspend: regulator should be off in suspend state.
+> -	- regulator-suspend-microvolt: regulator should be set to this voltage
+> -	  in suspend.
+> +	- regulator-suspend-min-microvolt: minimum voltage may be set in
+> +	  suspend state.
+> +	- regulator-suspend-max-microvolt: maximum voltage may be set in
+> +	  suspend state.
+> +	- regulator-suspend-microvolt: the default voltage which regulator
+> +	  would be set in suspend. The voltage for suspend also can be
+> +	  adjusted among {regulator-suspend-min-microvolt,
+> +	  regulator-suspend-max-microvolt} by calling
+> +	  regulator_set_suspend_voltage(). This property is now deprecated,
+> +	  setting voltage for suspend mode via API the regulator driver
+> +	  provides is recommended.
 
-Seems like abuse of DT to me. If you need to control the controller's 
-reset from the phy driver, then get the reset out of the controller 
-node. The phy node should describe the connections to the phy.
+Please reword. This is Linux implementation details that shouldn't be in 
+the binding.
 
-Rob
+> +	- regulator-changeable-in-suspend: whether the default voltage and
+> +	  the regulator on/off in suspend can be changed in runtime.
+>  	- regulator-mode: operating mode in the given suspend state.
+>  	  The set of possible operating modes depends on the capabilities of
+>  	  every hardware so the valid modes are documented on each regulator
+> -- 
+> 2.7.4
+> 
