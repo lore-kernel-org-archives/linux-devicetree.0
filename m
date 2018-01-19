@@ -1,67 +1,63 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 3/7] soc: qcom: Add GENI based QUP Wrapper driver
-Date: Fri, 19 Jan 2018 16:57:08 -0600
-Message-ID: <20180119225708.4mo6fiy5zyd6kscj@rob-hp-laptop>
-References: <1515805547-22816-1-git-send-email-kramasub@codeaurora.org>
- <1515805547-22816-4-git-send-email-kramasub@codeaurora.org>
- <20180117062002.GA6620@minitux>
- <29ed5b45-dd70-fb70-3aa4-4e1a0006d57e@codeaurora.org>
- <20180118165745.GE6620@minitux>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 4/6] dt-bindings: gpio: Add binding for Wii GPIO
+ controller
+Date: Fri, 19 Jan 2018 17:05:21 -0600
+Message-ID: <20180119230521.st5uon74fpi4jghc@rob-hp-laptop>
+References: <20180115031401.19577-1-j.neuschaefer@gmx.net>
+ <20180115031401.19577-5-j.neuschaefer@gmx.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20180118165745.GE6620@minitux>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Rajendra Nayak <rnayak@codeaurora.org>, Karthikeyan Ramasubramanian <kramasub@codeaurora.org>, corbet@lwn.net, andy.gross@linaro.org, david.brown@linaro.org, mark.rutland@arm.com, wsa@the-dreams.de, gregkh@linuxfoundation.org, linux-doc@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-serial@vger.kernel.org, jslaby@suse.com, Sagar Dharia <sdharia@codeaurora.org>, Girish Mahadevan <girishm@codeaurora.org>
+In-Reply-To: <20180115031401.19577-5-j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 18, 2018 at 08:57:45AM -0800, Bjorn Andersson wrote:
-> On Thu 18 Jan 01:13 PST 2018, Rajendra Nayak wrote:
+On Mon, Jan 15, 2018 at 04:13:59AM +0100, Jonathan Neuschäfer wrote:
+> Signed-off-by: Jonathan Neuschäfer <j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org>
+> ---
+>  .../bindings/gpio/nintendo,hollywood-gpio.txt      | 27 ++++++++++++++++++++++
+>  .../devicetree/bindings/powerpc/nintendo/wii.txt   |  9 +-------
+>  2 files changed, 28 insertions(+), 8 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/nintendo,hollywood-gpio.txt
 > 
-> > []..
-> > 
-> > >> diff --git a/drivers/soc/qcom/qcom-geni-se.c b/drivers/soc/qcom/qcom-geni-se.c
-> > >> new file mode 100644
-> > >> index 0000000..3f43582
-> > >> --- /dev/null
-> > >> +++ b/drivers/soc/qcom/qcom-geni-se.c
-> > >> @@ -0,0 +1,1016 @@
-> > >> +/*
-> > >> + * Copyright (c) 2017-2018, The Linux Foundation. All rights reserved.
-> > >> + *
-> > >> + * This program is free software; you can redistribute it and/or modify
-> > >> + * it under the terms of the GNU General Public License version 2 and
-> > >> + * only version 2 as published by the Free Software Foundation.
-> > >> + *
-> > >> + * This program is distributed in the hope that it will be useful,
-> > >> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> > >> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> > >> + * GNU General Public License for more details.
-> > >> + *
-> > >> + */
-> > > 
-> > > Please use SPDX style license header, i.e. this file should start with:
-> > > 
-> > > // SPDX-License-Identifier: GPL-2.0
-> > > /*
-> > >  * Copyright (c) 2017-2018, The Linux Foundation. All rights reserved.
-> > >  */
-> > 
-> > Looks like Mark Brown commented elsewhere [1] that we should use the C++
-> > commenting style even for the Linux Foundation copyright?
-> > 
-> > [1] https://marc.info/?l=linux-clk&m=151497978626135&w=2 
-> > 
-> 
-> While I can agree with Mark on the ugliness of the mixed commenting
-> style, this is the style that I found communicated and is what you find
-> in other files.
+> diff --git a/Documentation/devicetree/bindings/gpio/nintendo,hollywood-gpio.txt b/Documentation/devicetree/bindings/gpio/nintendo,hollywood-gpio.txt
+> new file mode 100644
+> index 000000000000..a97ce6b5b724
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpio/nintendo,hollywood-gpio.txt
+> @@ -0,0 +1,27 @@
+> +Nintendo Wii (Hollywood) GPIO controller
+> +
+> +Required properties:
+> +- compatible: "nintendo,hollywood-gpio
+> +- reg: Physical base address and length of the controller's registers.
+> +- gpio-controller: Marks the device node as a GPIO controller.
+> +- #gpio-cells: Should be <2>. The first cell is the pin number and the
+> +  second cell is used to specify optional parameters:
+> +   - bit 0 specifies polarity (0 for normal, 1 for inverted).
+> +
+> +Optional properties:
+> +- ngpios: see Documentation/devicetree/bindings/gpio/gpio.txt
+> +- interrupt-controller: Marks the device node as an interrupt controller.
+> +- #interrupt-cells: Should be two.
+> +- interrupts: Interrupt specifier for the controller's Broadway (PowerPC)
+> +  interrupt.
+> +- interrupt-parent: phandle of the parent interrupt controller.
+> +
+> +Example:
+> +
+> +	GPIO: gpio@0d8000c0 {
 
-Well, that's pretty new guidance. Moving target...
+Drop the leading 0.
 
-Given that Linus said '//' comments are the only thing C++ got right, I 
-expect to see more of them.
+With that,
 
-Rob
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
