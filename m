@@ -1,80 +1,30 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 5/9] doc: dt-bindings: Add doc for the Ingenic TCU
- timers driver
-Date: Fri, 19 Jan 2018 15:12:57 -0600
-Message-ID: <20180119211257.hl2g3awqg3lf7d5e@rob-hp-laptop>
-References: <20180101143344.2099-1-paul@crapouillou.net>
- <20180110224838.16711-1-paul@crapouillou.net>
- <20180110224838.16711-5-paul@crapouillou.net>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 1/2] dt-bindings: media: Add Allwinner V3s Camera
+ Sensor Interface (CSI)
+Date: Fri, 19 Jan 2018 15:14:09 -0600
+Message-ID: <20180119211409.ubysuyvhkmfotbdg@rob-hp-laptop>
+References: <1515639823-35782-1-git-send-email-yong.deng@magewell.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20180110224838.16711-5-paul@crapouillou.net>
-Sender: linux-clk-owner@vger.kernel.org
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Lee Jones <lee.jones@linaro.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1515639823-35782-1-git-send-email-yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org, Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rick Chang <rick.chang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Sa
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 10, 2018 at 11:48:34PM +0100, Paul Cercueil wrote:
-> Add documentation about how to properly use the Ingenic TCU
-> (Timer/Counter Unit) timers driver from devicetree.
+On Thu, Jan 11, 2018 at 11:03:43AM +0800, Yong Deng wrote:
+> Add binding documentation for Allwinner V3s CSI.
 > 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> Signed-off-by: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
 > ---
->  .../devicetree/bindings/timer/ingenic,tcu.txt      | 35 ++++++++++++++++++++++
->  1 file changed, 35 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/timer/ingenic,tcu.txt
-> 
->  v3: New patch in this series
+>  .../devicetree/bindings/media/sun6i-csi.txt        | 59 ++++++++++++++++++++++
+>  1 file changed, 59 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/sun6i-csi.txt
 
-Similar comments in this one.
-
-> 
-> diff --git a/Documentation/devicetree/bindings/timer/ingenic,tcu.txt b/Documentation/devicetree/bindings/timer/ingenic,tcu.txt
-> new file mode 100644
-> index 000000000000..dd76877efb8b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/timer/ingenic,tcu.txt
-> @@ -0,0 +1,35 @@
-> +Ingenic JZ47xx SoCs Timer/Counter Unit driver
-> +---------------------------------------------
-> +
-> +Required properties:
-> +
-> +- compatible : should be "ingenic,<socname>-tcu". Valid strings are:
-> +  * ingenic,jz4740-tcu
-> +  * ingenic,jz4770-tcu
-> +  * ingenic,jz4780-tcu
-> +- interrupt-parent : phandle of the TCU interrupt controller.
-> +- interrupts : Specifies the interrupts the controller is connected to.
-> +- clocks : List of phandle & clock specifiers for the TCU clocks.
-> +- clock-names : List of name strings for the TCU clocks.
-
-Need to be explicit with how many clocks and their order.
-
-> +
-> +Example:
-> +
-> +/ {
-> +	mfd@10002000 {
-> +		compatible = "ingenic,tcu", "simple-mfd", "syscon";
-> +		reg = <0x10002000 0x1000>;
-> +
-> +		tcu_timer: timer {
-> +			compatible = "ingenic,jz4740-tcu";
-> +			reg = <0x10002010 0xFF0>;
-> +
-> +			clocks = <&tcu 0>, <&tcu 1>, <&tcu 2>, <&tcu 3>,
-> +					 <&tcu 4>, <&tcu 5>, <&tcu 6>, <&tcu 7>;
-> +			clock-names = "timer0", "timer1", "timer2", "timer3",
-> +						  "timer4", "timer5", "timer6", "timer7";
-> +
-> +			interrupt-parent = <&tcu>;
-> +			interrupts = <0 1 2 3 4 5 6 7>;
-> +		};
-> +	};
-> +};
-> -- 
-> 2.11.0
-> 
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
