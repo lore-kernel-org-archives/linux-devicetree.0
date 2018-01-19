@@ -1,49 +1,29 @@
 From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 1/5] arm64: dts: renesass: r8a77970: add FCPVD support
-Date: Fri, 19 Jan 2018 22:42:34 +0300
-Message-ID: <20180119195428.902030429@cogentembedded.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
+Subject: [PATCH 0/5] Add R8A77970/V3MSK LVDS/HDMI support
+Date: Fri, 19 Jan 2018 22:42:33 +0300
+Message-ID: <20180119194233.615400015@cogentembedded.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline; filename=arm64-dts-renesas-r8a77970-add-FCPVD-support.patch
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Describe FCPVD0 in the R8A77970 device tree; it will be used by VSPD0 in
-the next patch...
+Hello!
 
-Based on the original (and large) patch by Daisuke Matsushita
-<daisuke.matsushita.ns-FCd8Q96Dh0JBDgjK7y7TUQ@public.gmane.org>.
+Here's the set of 5 patches against Simon Horman's 'renesas.git' repo's
+'renesas-devel-20180119-v4.15-rc8' tag. We're adding the R8A77970 FCPVD/VSPD/
+DU/LVDS device nodes and then describing the HDMI encoder connected to the LVDS
+output (we're omitting the LVDS decoder for now). These patches depend on
+the recent R8A77970 DU/LVDS and  on the R8A77970 PFC driver in order to work,
+and R8A77970 PFC DT patches support patch in order to apply/compile/...
 
-Signed-off-by: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+[1/5] arm64: dts: renesas: r8a77970: add FCPVD support
+[2/5] arm64: dts: renesas: r8a77970: add VSPD support
+[3/5] arm64: dts: renesas: r8a77970: add DU support
+[4/5] arm64: dts: renesas: r8a77970: add LVDS support
+[5/5] arm64: dts: renesas: v3msk: add DU/LVDS/HDMI support
 
----
- arch/arm64/boot/dts/renesas/r8a77970.dtsi |    8 ++++++++
- 1 file changed, 8 insertions(+)
-
-Index: renesas/arch/arm64/boot/dts/renesas/r8a77970.dtsi
-===================================================================
---- renesas.orig/arch/arm64/boot/dts/renesas/r8a77970.dtsi
-+++ renesas/arch/arm64/boot/dts/renesas/r8a77970.dtsi
-@@ -612,6 +612,14 @@
- 			#size-cells = <0>;
- 			status = "disabled";
- 		};
-+
-+		fcpvd0: fcp@fea27000 {
-+			compatible = "renesas,fcpv";
-+			reg = <0 0xfea27000 0 0x200>;
-+			clocks = <&cpg CPG_MOD 603>;
-+			power-domains = <&sysc R8A77970_PD_ALWAYS_ON>;
-+			resets = <&cpg 603>;
-+		};
- 	};
- 
- 	timer {
-
+WBR, Sergei
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
