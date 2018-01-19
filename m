@@ -1,43 +1,35 @@
-From: Kieran Bingham <kieran.bingham@ideasonboard.com>
-Subject: Re: [PATCH 0/2] Add R8A77970/Eagle I2C support
-Date: Fri, 19 Jan 2018 10:50:12 +0000
-Message-ID: <f08b6a05-4da0-eddc-3a16-67f505cfd8f5@ideasonboard.com>
-References: <20171116210629.732112911@cogentembedded.com>
- <20171120102407.v7pqrv7e4zmpwmdb@verge.net.au>
+From: Rasmus Villemoes <rasmus.villemoes-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: dts: ls1021a: add nodes for on-chip ram
+Date: Fri, 19 Jan 2018 11:53:28 +0100
+Message-ID: <439098cb-7342-39c4-1999-41573f4897b7@prevas.dk>
+References: <1513870698-31264-1-git-send-email-rasmus.villemoes@prevas.dk>
+ <1514994345-2471-1-git-send-email-rasmus.villemoes@prevas.dk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20171120102407.v7pqrv7e4zmpwmdb@verge.net.au>
-Content-Language: en-GB
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1514994345-2471-1-git-send-email-rasmus.villemoes-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sergei,
-
-On 20/11/17 10:24, Simon Horman wrote:
-> On Fri, Nov 17, 2017 at 12:06:29AM +0300, Sergei Shtylyov wrote:
->> Hello!
->>
->> Here's the set of 2 patches against Simon Horman's 'renesas.git' repo's
->> 'renesas-devel-20171113-v4.14' tag. We're adding the R8A77970 I2C nodes
->> and then describing the PCA9654 I/O expander connected to the I2C0 bus.
->> These patches depend on the R8A77970/Eagle PFC suport patchset in order
->> to apply/compile.
+On 2018-01-03 16:45, Rasmus Villemoes wrote:
+> Although the two nodes constitute one contiguous 128K region, still
+> describe them separately:
 > 
-> Given the dependency above I have marked these patches as deferred.
-> Please repost or otherwise ping me once the dependency has been
-> included in an RC release.
+> - That's how they are described in the reference manual: "Each OCRAM
+>   occupies a 64 KB of address region...", and the names ocram1 and
+>   ocram2 are also as used in the manual.
+> 
+> - The two areas are treated differently by the boot ROM code: OCRAM2 is
+>   zero-initialized, while, again quoting the RM, "software must perform
+>   the zero initialization of OCRAM1."
 
-And here too - My Eagle patches are dependant upon the I2C support on Eagle-V3M.
-
-Is this blocking issue resolved?
-(I think it is based on my ability to apply the patches cleanly to
-renesas-drivers-2018-01-09-v4.15-rc7)
+ping
 
 --
-Regards
-
-Kieran
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
