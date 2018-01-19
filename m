@@ -1,244 +1,104 @@
-From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 3/7] arm64: zynqmp: Add support for Xilinx zcu104-revA
-Date: Fri, 19 Jan 2018 13:55:42 +0100
-Message-ID: <b6f08c5d9605396c7ac0d3fa5cdaa9e1a42213e0.1516366474.git.michal.simek@xilinx.com>
-References: <cover.1516366474.git.michal.simek@xilinx.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1516366474.git.michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-In-Reply-To: <cover.1516366474.git.michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-References: <cover.1516366474.git.michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: okaya@codeaurora.org
+Subject: Re: [RFCv2 PATCH 05/36] iommu/process: Bind and unbind process to and
+ from devices
+Date: Fri, 19 Jan 2018 08:07:21 -0500
+Message-ID: <c0e39c5a69a6f612e11c6076be9c5d53@codeaurora.org>
+References: <20171006133203.22803-1-jean-philippe.brucker@arm.com>
+ <20171006133203.22803-6-jean-philippe.brucker@arm.com>
+ <0772e71e-4861-1e7b-f248-88aaba8bf2fc@codeaurora.org>
+ <e2753b59-2b9e-ffc6-a7b8-0ed23df38e10@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <e2753b59-2b9e-ffc6-a7b8-0ed23df38e10@arm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, iommu@lists.linux-foundation.org, joro@8bytes.org, robh+dt@kernel.org, Mark Rutland <Mark.Rutland@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, hanjun.guo@linaro.org, Sudeep Holla <Sudeep.Holla@arm.com>, rjw@rjwysocki.net, lenb@kernel.org, Robin Murphy <Robin.Murphy@arm.com>, bhelgaas@google.com, alex.williamson@redhat.com, tn@semihalf.com, liubo95@huawei.com, thunder.leizhen@huawei.com, xieyisheng1@huawei.com, gabriele.paoloni@huawei.com, nwatters@codeaurora.org, rfranz@cavium.com, dwmw2@infradead.org, jacob.jun.pan@linux.intel.com, yi.l.liu@intel.com, ashok.
 List-Id: devicetree@vger.kernel.org
 
-Xilinx zcu104 is another customer board. It is sort of zcu102 clone
-with some differences.
+On 2018-01-19 05:27, Jean-Philippe Brucker wrote:
+> Hi Sinan,
+> 
+> On 19/01/18 04:52, Sinan Kaya wrote:
+>> Hi Jean-Philippe,
+>> 
+>> On 10/6/2017 9:31 AM, Jean-Philippe Brucker wrote:
+>>>  /**
+>>> + * iommu_process_bind_device - Bind a process address space to a 
+>>> device
+>>> + * @dev: the device
+>>> + * @task: the process to bind
+>>> + * @pasid: valid address where the PASID will be stored
+>>> + * @flags: bond properties (IOMMU_PROCESS_BIND_*)
+>>> + *
+>>> + * Create a bond between device and task, allowing the device to 
+>>> access the
+>>> + * process address space using the returned PASID.
+>>> + *
+>>> + * On success, 0 is returned and @pasid contains a valid ID. 
+>>> Otherwise, an error
+>>> + * is returned.
+>>> + */
+>>> +int iommu_process_bind_device(struct device *dev, struct task_struct 
+>>> *task,
+>>> +			      int *pasid, int flags)
+>> 
+>> This API doesn't play nice with endpoint device drivers that have 
+>> PASID limitations.
+>> 
+>> The AMD driver seems to have PASID limitations per product that are 
+>> not being
+>> advertised in the PCI capability.
+>> 
+>> device_iommu_pasid_init()
+>> {
+>>         pasid_limit = min_t(unsigned int,
+>>                         (unsigned int)(1 << 
+>> kfd->device_info->max_pasid_bits),
+>>                         iommu_info.max_pasids);
+>>         /*
+>>          * last pasid is used for kernel queues doorbells
+>>          * in the future the last pasid might be used for a kernel 
+>> thread.
+>>          */
+>>         pasid_limit = min_t(unsigned int,
+>>                                 pasid_limit,
+>>                                 kfd->doorbell_process_limit - 1);
+>> }
+>> 
+>> kfd->device_info->max_pasid_bits seems to contain per device 
+>> limitations.
+>> 
+>> Would you be willing to extend the API so that the requester can 
+>> impose some limit
+>> on the PASID value that is getting allocated.
+> 
+> Good point. Following the feedback for this series, next version adds
+> another public function:
+> 
+> int iommu_sva_device_init(struct device *dev, int features);
+> 
+> that has to be called by the device driver before any bind(). The 
+> intent
+> is to let some IOMMU drivers initialize PASID tables and other features
+> lazily, only if the device driver actually intends to use them. Maybe I
+> could change this function to:
+> 
+> int iommu_sva_device_init(struct device *dev, int features, unsigned 
+> int
+> max_pasid);
+> 
+> @features is a bitmask telling what the device driver needs (PASID 
+> and/or
+> page faults). If features has IOMMU_SVA_FEAT_PASID set, then device 
+> driver
+> can set a max_pasid limit, that we'd store in our private device-iommu
+> data. If max_pasid is 0, then we'd use the PCI limit.
 
-Signed-off-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
----
+Yes, this should work.
 
- arch/arm64/boot/dts/xilinx/Makefile               |   1 +
- arch/arm64/boot/dts/xilinx/zynqmp-zcu104-revA.dts | 197 ++++++++++++++++++++++
- 2 files changed, 198 insertions(+)
- create mode 100644 arch/arm64/boot/dts/xilinx/zynqmp-zcu104-revA.dts
-
-diff --git a/arch/arm64/boot/dts/xilinx/Makefile b/arch/arm64/boot/dts/xilinx/Makefile
-index 24e3ce801304..1c039e59c7c3 100644
---- a/arch/arm64/boot/dts/xilinx/Makefile
-+++ b/arch/arm64/boot/dts/xilinx/Makefile
-@@ -4,3 +4,4 @@ dtb-$(CONFIG_ARCH_ZYNQMP) += zynqmp-zcu100-revC.dtb
- dtb-$(CONFIG_ARCH_ZYNQMP) += zynqmp-zcu102-revA.dtb
- dtb-$(CONFIG_ARCH_ZYNQMP) += zynqmp-zcu102-revB.dtb
- dtb-$(CONFIG_ARCH_ZYNQMP) += zynqmp-zcu102-rev1.0.dtb
-+dtb-$(CONFIG_ARCH_ZYNQMP) += zynqmp-zcu104-revA.dtb
-diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu104-revA.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zcu104-revA.dts
-new file mode 100644
-index 000000000000..705df191b2f0
---- /dev/null
-+++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu104-revA.dts
-@@ -0,0 +1,197 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * dts file for Xilinx ZynqMP ZCU104
-+ *
-+ * (C) Copyright 2017 - 2018, Xilinx, Inc.
-+ *
-+ * Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-+ */
-+
-+/dts-v1/;
-+
-+#include "zynqmp.dtsi"
-+#include "zynqmp-clk.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
-+
-+/ {
-+	model = "ZynqMP ZCU104 RevA";
-+	compatible = "xlnx,zynqmp-zcu104-revA", "xlnx,zynqmp-zcu104", "xlnx,zynqmp";
-+
-+	aliases {
-+		ethernet0 = &gem3;
-+		gpio0 = &gpio;
-+		i2c0 = &i2c1;
-+		mmc0 = &sdhci1;
-+		rtc0 = &rtc;
-+		serial0 = &uart0;
-+		serial1 = &uart1;
-+		serial2 = &dcc;
-+		usb0 = &usb0;
-+	};
-+
-+	chosen {
-+		bootargs = "earlycon";
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	memory@0 {
-+		device_type = "memory";
-+		reg = <0x0 0x0 0x0 0x80000000>;
-+	};
-+};
-+
-+&can1 {
-+	status = "okay";
-+};
-+
-+&dcc {
-+	status = "okay";
-+};
-+
-+&gem3 {
-+	status = "okay";
-+	phy-handle = <&phy0>;
-+	phy-mode = "rgmii-id";
-+	phy0: phy@c {
-+		reg = <0xc>;
-+		ti,rx-internal-delay = <0x8>;
-+		ti,tx-internal-delay = <0xa>;
-+		ti,fifo-depth = <0x1>;
-+	};
-+};
-+
-+&gpio {
-+	status = "okay";
-+};
-+
-+&i2c1 {
-+	status = "okay";
-+	clock-frequency = <400000>;
-+
-+	/* Another connection to this bus via PL i2c via PCA9306 - u45 */
-+	i2cswitch@74 { /* u34 */
-+		compatible = "nxp,pca9548";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <0x74>;
-+		i2c@0 { /* i2c mw 74 0 1 */
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0>;
-+			/*
-+			 * IIC_EEPROM 1kB memory which uses 256B blocks
-+			 * where every block has different address.
-+			 *    0 - 256B address 0x54
-+			 * 256B - 512B address 0x55
-+			 * 512B - 768B address 0x56
-+			 * 768B - 1024B address 0x57
-+			 */
-+			eeprom@54 { /* u23 */
-+				compatible = "atmel,24c08";
-+				reg = <0x54>;
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+			};
-+		};
-+
-+		i2c@1 { /* i2c mw 74 0 2 */
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <1>;
-+			clock_8t49n287: clock-generator@6c { /* 8T49N287 - u182 */
-+				reg = <0x6c>;
-+			};
-+		};
-+
-+		i2c@2 { /* i2c mw 74 0 4 */
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <2>;
-+			irps5401_43: irps54012@43 { /* IRPS5401 - u175 */
-+				reg = <0x43>;
-+			};
-+			irps5401_4d: irps54012@4d { /* IRPS5401 - u180 */
-+				reg = <0x4d>;
-+			};
-+		};
-+
-+		i2c@4 { /* i2c mw 74 0 8 */
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <4>;
-+			tca6416_u97: gpio@21 { /* enable it by i2c mw 21 6 0 */
-+				compatible = "ti,tca6416";
-+				reg = <0x21>;
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				/*
-+				 * IRQ not connected
-+				 * Lines:
-+				 * 0 - IRPS5401_ALERT_B
-+				 * 1 - HDMI_8T49N241_INT_ALM
-+				 * 2 - MAX6643_OT_B
-+				 * 3 - MAX6643_FANFAIL_B
-+				 * 5 - IIC_MUX_RESET_B
-+				 * 6 - GEM3_EXP_RESET_B
-+				 * 7 - FMC_LPC_PRSNT_M2C_B
-+				 * 4, 10 - 17 - not connected
-+				 */
-+			};
-+		};
-+
-+		i2c@5 { /* i2c mw 74 0 10 */ /* FMC_LPC */
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <5>;
-+		};
-+
-+		i2c@7 { /* i2c mw 74 0 14 */ /* DDR4_SODIMM */
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <7>;
-+		};
-+
-+		/* 3, 6 not connected */
-+	};
-+};
-+
-+&rtc {
-+	status = "okay";
-+};
-+
-+&sata {
-+	status = "okay";
-+	/* SATA OOB timing settings */
-+	ceva,p0-cominit-params = /bits/ 8 <0x18 0x40 0x18 0x28>;
-+	ceva,p0-comwake-params = /bits/ 8 <0x06 0x14 0x08 0x0E>;
-+	ceva,p0-burst-params = /bits/ 8 <0x13 0x08 0x4A 0x06>;
-+	ceva,p0-retry-params = /bits/ 16 <0x96A4 0x3FFC>;
-+	ceva,p1-cominit-params = /bits/ 8 <0x18 0x40 0x18 0x28>;
-+	ceva,p1-comwake-params = /bits/ 8 <0x06 0x14 0x08 0x0E>;
-+	ceva,p1-burst-params = /bits/ 8 <0x13 0x08 0x4A 0x06>;
-+	ceva,p1-retry-params = /bits/ 16 <0x96A4 0x3FFC>;
-+};
-+
-+/* SD1 with level shifter */
-+&sdhci1 {
-+	status = "okay";
-+	no-1-8-v;
-+	disable-wp;
-+};
-+
-+&uart0 {
-+	status = "okay";
-+};
-+
-+&uart1 {
-+	status = "okay";
-+};
-+
-+/* ULPI SMSC USB3320 */
-+&usb0 {
-+	status = "okay";
-+};
-+
-+&watchdog0 {
-+	status = "okay";
-+};
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> Thanks,
+> Jean
