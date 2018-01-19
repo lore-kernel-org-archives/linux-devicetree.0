@@ -1,41 +1,94 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: pinctrl: Add Qualcomm SDM845 TLMM
- binding
-Date: Fri, 19 Jan 2018 15:17:49 -0600
-Message-ID: <20180119211749.xc373t774kpjwg3y@rob-hp-laptop>
-References: <20180111060004.9333-1-bjorn.andersson@linaro.org>
+Subject: Re: [v3 3/6] dt-bindings: fsl-qdma: add device tree for qDMA driver
+Date: Fri, 19 Jan 2018 15:21:05 -0600
+Message-ID: <20180119212105.yvtreutv3b6oxitd@rob-hp-laptop>
+References: <20180111093215.12636-1-wen.he_1@nxp.com>
+ <20180111093215.12636-3-wen.he_1@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20180111060004.9333-1-bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <20180111093215.12636-3-wen.he_1-3arQi8VN3Tc@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wen He <wen.he_1-3arQi8VN3Tc@public.gmane.org>
+Cc: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, leoyang.li-3arQi8VN3Tc@public.gmane.org, jiafei.pan-3arQi8VN3Tc@public.gmane.org, jiaheng.fan-3arQi8VN3Tc@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 10, 2018 at 10:00:03PM -0800, Bjorn Andersson wrote:
-> This adds the DeviceTree binding for the Qualcomm SDM845 TLMM block.
+On Thu, Jan 11, 2018 at 05:32:12PM +0800, Wen He wrote:
+> add NXP Layerscape queue direct memory access controller(qDMA) support.
+> This module can be found on NXP QorIQ Layerscape Socs.
 > 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Wen He <wen.he_1-3arQi8VN3Tc@public.gmane.org>
 > ---
+> change in v3:
+> 	- no change
 > 
-> Changes since v1:
-> - Added qspi related functions
+> change in v2:
+> 	- Remove indentation
+> 	- Add "Should be" before 'fsl,ls1021a-qdma'
+> 	- Replace 'channels' by 'dma-channels'
+> 	- Replace 'qdma@8390000' by 'dma-controller@8390000'
 > 
->  .../bindings/pinctrl/qcom,sdm845-pinctrl.txt       | 176 +++++++++++++++++++++
->  1 file changed, 176 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
-
-> +Example:
+>  Documentation/devicetree/bindings/dma/fsl-qdma.txt |   40 ++++++++++++++++++++
+>  1 files changed, 40 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/dma/fsl-qdma.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/fsl-qdma.txt b/Documentation/devicetree/bindings/dma/fsl-qdma.txt
+> new file mode 100644
+> index 0000000..000472b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dma/fsl-qdma.txt
+> @@ -0,0 +1,40 @@
+> +* NXP Layerscape queue Direct Memory Access Controller(qDMA) Controller
 > +
-> +	tlmm: pinctrl@03400000 {
+> +The qDMA controller transfers blocks of data between one source and one or more
+> +destinations. The blocks of data transferred can be represented in memory as contiguous
+> +or non-contiguous using scatter/gather table(s). Channel virtualization is supported
+> +through enqueuing of DMA jobs to, or dequeuing DMA jobs from, different work
+> +queues.
+> +
+> +* qDMA Controller
+> +Required properties:
+> +- compatible : Should be "fsl,ls1021a-qdma" or "fsl,ls1043a-qdma", "fsl,ls1021a-qdma"
 
-Drop the leading 0.
+Please format exactly as I showed in v1.
 
-With that,
-
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> +- reg : Specifies base physical address(s) and size of the qDMA registers.
+> +	The region is qDMA control register's address and size.
+> +- interrupts : A list of interrupt-specifiers, one for each entry in
+> +	interrupt-names.
+> +- interrupt-names : Should contain:
+> +	"qdma-error" - the error interrupt
+> +	"qdma-queue" - the queue interrupt
+> +- dma-channels : Number of DMA channels supported by the controller
+> +- queues : Number of queues supported by driver
+> +
+> +Optional properties:
+> +- big-endian: If present registers and hardware scatter/gather descriptors
+> +	of the qDMA are implemented in big endian mode, otherwise in little
+> +	mode.
+> +
+> +
+> +Examples:
+> +
+> +	qdma: dma-controller@8390000 {
+> +		compatible = "fsl,ls1021a-qdma";
+> +		reg = <0x0 0x8398000 0x0 0x2000 /* Controller registers */
+> +		       0x0 0x839a000 0x0 0x2000>; /* Block registers */
+> +		interrupts = <GIC_SPI 185 IRQ_TYPE_LEVEL_HIGH>,
+> +				<GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>;
+> +		interrupt-names = "qdma-error", "qdma-queue";
+> +		dma-channels = <8>;
+> +		queues = <2>;
+> +		big-endian;
+> +	};
+> -- 
+> 1.7.1
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
