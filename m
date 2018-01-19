@@ -1,91 +1,80 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 2/7] dt-bindings: soc: qcom: Add device tree binding
- for GENI SE
-Date: Fri, 19 Jan 2018 16:53:32 -0600
-Message-ID: <20180119225332.2umo6mxqs3szfy6x@rob-hp-laptop>
-References: <1515805547-22816-1-git-send-email-kramasub@codeaurora.org>
- <1515805547-22816-3-git-send-email-kramasub@codeaurora.org>
- <20180117062558.GB6620@minitux>
+From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 00/10] ARM: dts: keystone*: Continued warnings cleanups
+Date: Fri, 19 Jan 2018 16:54:05 -0600
+Message-ID: <ecde90ae-7456-cadb-5ce4-6b63f4ed036a@ti.com>
+References: <20180104195701.4042-1-afd@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180117062558.GB6620@minitux>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>, corbet@lwn.net, andy.gross@linaro.org, david.brown@linaro.org, mark.rutland@arm.com, wsa@the-dreams.de, gregkh@linuxfoundation.org, linux-doc@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-serial@vger.kernel.org, jslaby@suse.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180104195701.4042-1-afd-l0cyMroinI0@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 16, 2018 at 10:25:58PM -0800, Bjorn Andersson wrote:
-> On Fri 12 Jan 17:05 PST 2018, Karthikeyan Ramasubramanian wrote:
+On 01/04/2018 01:56 PM, Andrew F. Davis wrote:
+> Hello all,
 > 
-> > Add device tree binding support for the QCOM GENI SE driver.
-> > 
-> > Signed-off-by: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>
+> Just a couple cleanups for DT warnings when compiling with W=1.
 > 
-> Better describe the entire GENI, with it's functions in the same
-> binding.
+> This clears up 51 more warnings when building keystone_defconfig.
 > 
-> > ---
-> >  .../devicetree/bindings/soc/qcom/qcom,geni-se.txt  | 34 ++++++++++++++++++++++
-> >  1 file changed, 34 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
-> > new file mode 100644
-> > index 0000000..66f8a16
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
-> > @@ -0,0 +1,34 @@
-> > +Qualcomm Technologies, Inc. GENI Serial Engine QUP Wrapper Controller
-> > +
-> > +Generic Interface (GENI) based Qualcomm Universal Peripheral (QUP) wrapper
-> > +is a programmable module for supporting a wide range of serial interfaces
-> > +like UART, SPI, I2C, I3C, etc. A single QUP module can provide upto 8 Serial
-> > +Interfaces, using its internal Serial Engines. The GENI Serial Engine QUP
-> > +Wrapper controller is modeled as a node with zero or more child nodes each
-> > +representing a serial engine.
-> > +
-> > +Required properties:
-> > +- compatible:		Must be "qcom,geni-se-qup".
-> > +- reg:			Must contain QUP register address and length.
-> > +- clock-names:		Must contain "m-ahb" and "s-ahb".
-> > +- clocks:		AHB clocks needed by the device.
-> > +
-> > +Required properties if child node exists:
-> > +- #address-cells: Must be 1
-> > +- #size-cells: Must be 1
+> Based on Santosh's "for_4.16/keystone-dts" branch.
 > 
-> But on a 64-bit system, shouldn't these be 2?
+> Thanks,
+> Andrew
+> 
+> Changes from v1:
+>  - Added to more patches from Suman
+>  - Reworded commit message to include "address space" distinction
 
-No, depends on the bus and ranges. It annoys me to no end that folks 
-needlessly use 2 cells when the perpheral address space and/or module 
-sizes don't exceed 4G. 
+Thanks, you still have left in the "and simply use get_resource() in
+the driver." part in the commit descriptions though, which is not right.
+Otherwise, the changes look good.
+
+
+>  - Added "ranges" property
+>  - Reordered #address/size-cells
+
+For the entire series,
+Tested-by: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+
+regards
+Suman
 
 > 
-> > +- ranges: Must be present
+> Andrew F. Davis (8):
+>   ARM: dts: keystone: Move keystone_irq to under device-state-control
+>   ARM: dts: keystone: Move reset-controller to under
+>     device-state-control
+>   ARM: dts: keystone-k2e: Move keystone_dsp_gpio to under
+>     device-state-control
+>   ARM: dts: keystone-k2l: Move keystone_dsp_gpio to under
+>     device-state-control
+>   ARM: dts: keystone-k2hk: Move keystone_dsp_gpio to under
+>     device-state-control
+>   ARM: dts: keystone-k2g: Move keystone_irq to under
+>     device-state-control
+>   ARM: dts: keystone-k2g: Move keystone_dsp_gpio to under
+>     device-state-control
+>   ARM: dts: keystone-k2g: Move usb-phy nodes out of soc0
+> 
+> Suman Anna (2):
+>   ARM: dts: keystone-k2g: Fix unit-address formatting for serial nodes
+>   ARM: dts: keystone-k2e-clocks: Fix missing unit address separator
+> 
+>  arch/arm/boot/dts/keystone-k2e-clocks.dtsi |   2 +-
+>  arch/arm/boot/dts/keystone-k2e.dtsi        |  13 ++--
+>  arch/arm/boot/dts/keystone-k2g.dtsi        |  69 +++++++++++--------
+>  arch/arm/boot/dts/keystone-k2hk.dtsi       | 104 ++++++++++++++++-------------
+>  arch/arm/boot/dts/keystone-k2l.dtsi        |  52 ++++++++-------
+>  arch/arm/boot/dts/keystone.dtsi            |  35 +++++-----
+>  6 files changed, 156 insertions(+), 119 deletions(-)
+> 
 
-And ideally with a value, but that's beyond the scope of the binding.
-
-> > +
-> > +Properties for children:
-> > +
-> > +A GENI based QUP wrapper controller node can contain 0 or more child nodes
-> > +representing serial devices.  These serial devices can be a QCOM UART, I2C
-> > +controller, spi controller, or some combination of aforementioned devices.
-> > +
-> > +Example:
-> > +	qup0: qcom,geniqup0@8c0000 {
-> 
-> I don't see a reason for this to be referenced, so skip the label. And
-> don't use qcom, in the node name; "geni" would be perfectly fine?
-> 
-> > +		compatible = "qcom,geni-se-qup";
-> > +		reg = <0x8c0000 0x6000>;
-> > +		clock-names = "m-ahb", "s-ahb";
-> > +		clocks = <&clock_gcc GCC_QUPV3_WRAP_0_M_AHB_CLK>,
-> > +			<&clock_gcc GCC_QUPV3_WRAP_0_S_AHB_CLK>;
-> > +	}
-> 
-> Regards,
-> Bjorn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
