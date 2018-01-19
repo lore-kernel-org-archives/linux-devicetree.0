@@ -1,105 +1,40 @@
-From: Philippe CORNU <philippe.cornu@st.com>
-Subject: Re: [RFC v2 1/2] dt-bindings: mipi-dsi: Add info about peripherals
- with non-DSI control bus
-Date: Fri, 19 Jan 2018 10:22:05 +0000
-Message-ID: <e85f9293-3111-5ab8-20d5-85710b1c3bfa@st.com>
-References: <20171205103356.9917-1-architt@codeaurora.org>
- <20180118045355.8858-1-architt@codeaurora.org>
- <20180118045355.8858-2-architt@codeaurora.org>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v6 6/9] media: i2c: ov772x: Remove soc_camera dependencies
+Date: Fri, 19 Jan 2018 11:24:36 +0100
+Message-ID: <d67c21e5-2488-977b-39d8-561048409209@xs4all.nl>
+References: <1516139101-7835-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1516139101-7835-7-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180118045355.8858-2-architt@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1516139101-7835-7-git-send-email-jacopo+renesas@jmondi.org>
 Content-Language: en-US
-Content-ID: <A3629542E6CD33459BC2B6A5F401D4BA@st.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Archit Taneja <architt@codeaurora.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "boris.brezillon@free-electrons.com" <boris.brezillon@free-electrons.com>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "briannorris@chromium.org" <briannorris@chromium.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "nickey.yang@rock-chips.com" <nickey.yang@rock-chips.com>, "tomi.valkeinen@ti.com" <tomi.valkeinen@ti.com>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, "maxime.ripard@free-electrons.com" <maxime.ripard@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jacopo Mondi <jacopo+renesas@jmondi.org>, laurent.pinchart@ideasonboard.com, magnus.damm@gmail.com, geert@glider.be, mchehab@kernel.org, festevam@gmail.com, sakari.ailus@iki.fi, robh+dt@kernel.org, mark.rutland@arm.com, pombredanne@nexb.com
+Cc: linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgQXJjaGl0LA0KDQpNYW55IHRoYW5rcyBmb3IgdGhpcyBkb2N1bWVudGF0aW9uIHVwZGF0ZS4N
-Cg0KUmV2aWV3ZWQtYnk6IFBoaWxpcHBlIENvcm51IDxwaGlsaXBwZS5jb3JudUBzdC5jb20+DQoN
-ClBoaWxpcHBlIDotKQ0KDQpPbiAwMS8xOC8yMDE4IDA1OjUzIEFNLCBBcmNoaXQgVGFuZWphIHdy
-b3RlOg0KPiBBZGQgYSBzZWN0aW9uIHRoYXQgZGVzY3JpYmVzIGR0LWJpbmRpbmdzIGZvciBwZXJp
-cGhlcmFscyB0aGF0IHN1cHBvcnQNCj4gTUlQSSBEU0ksIGJ1dCBoYXZlIGEgZGlmZmVyZW50IGJ1
-cyBhcyB0aGUgcHJpbWFyeSBjb250cm9sIGJ1cywgb3Igbm8NCj4gY29udHJvbCBidXMgYXQgYWxs
-LiBBZGQgYW4gZXhhbXBsZSBmb3IgYSBwZXJpcGhlcmFsIHdpdGggYSBub24tRFNJDQo+IGNvbnRy
-b2wgYnVzLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogQXJjaGl0IFRhbmVqYSA8YXJjaGl0dEBjb2Rl
-YXVyb3JhLm9yZz4NCj4gLS0tDQo+IHYyOg0KPiAtIE1lbnRpb25lZCB3aGF0IHRvIGRvIGlmIHBl
-cmlwaGVyYWwgaGFzIG5vIGNvbnRyb2wgYnVzDQo+IC0gRHJvcCB1bml0LWFkZHJlc3MgYW5kICMq
-LWNlbGxzIHdoZXJlIGFwcGxpY2FibGUuDQo+IA0KPiAgIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L2Rpc3BsYXkvbWlwaS1kc2ktYnVzLnR4dCAgIHwgNzEgKysrKysrKysrKysrKysrKysrKy0tLQ0K
-PiAgIDEgZmlsZSBjaGFuZ2VkLCA2NCBpbnNlcnRpb25zKCspLCA3IGRlbGV0aW9ucygtKQ0KPiAN
-Cj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
-L21pcGktZHNpLWJ1cy50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
-cGxheS9taXBpLWRzaS1idXMudHh0DQo+IGluZGV4IDk3M2MyNzI3Mzc3Mi4uOTRmYjcyY2I5MTZm
-IDEwMDY0NA0KPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
-eS9taXBpLWRzaS1idXMudHh0DQo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9kaXNwbGF5L21pcGktZHNpLWJ1cy50eHQNCj4gQEAgLTE2LDcgKzE2LDcgQEAgVGhlIGZv
-bGxvd2luZyBhc3N1bWVzIHRoYXQgb25seSBhIHNpbmdsZSBwZXJpcGhlcmFsIGlzIGNvbm5lY3Rl
-ZCB0byBhIERTSQ0KPiAgIGhvc3QuIEV4cGVyaWVuY2Ugc2hvd3MgdGhhdCB0aGlzIGlzIHRydWUg
-Zm9yIHRoZSBsYXJnZSBtYWpvcml0eSBvZiBzZXR1cHMuDQo+ICAgDQo+ICAgRFNJIGhvc3QNCj4g
-LS0tLS0tLS0tDQo+ICs9PT09PT09PQ0KPiAgIA0KPiAgIEluIGFkZGl0aW9uIHRvIHRoZSBzdGFu
-ZGFyZCBwcm9wZXJ0aWVzIGFuZCB0aG9zZSBkZWZpbmVkIGJ5IHRoZSBwYXJlbnQgYnVzIG9mDQo+
-ICAgYSBEU0kgaG9zdCwgdGhlIGZvbGxvd2luZyBwcm9wZXJ0aWVzIGFwcGx5IHRvIGEgbm9kZSBy
-ZXByZXNlbnRpbmcgYSBEU0kgaG9zdC4NCj4gQEAgLTMwLDExICszMCwxNiBAQCBSZXF1aXJlZCBw
-cm9wZXJ0aWVzOg0KPiAgICAgZGlmZmVyZW50IHZhbHVlIGhlcmUuIFNlZSBiZWxvdy4NCj4gICAN
-Cj4gICBEU0kgcGVyaXBoZXJhbA0KPiAtLS0tLS0tLS0tLS0tLS0NCj4gKz09PT09PT09PT09PT09
-DQo+ICAgDQo+IC1QZXJpcGhlcmFscyBhcmUgcmVwcmVzZW50ZWQgYXMgY2hpbGQgbm9kZXMgb2Yg
-dGhlIERTSSBob3N0J3Mgbm9kZS4gUHJvcGVydGllcw0KPiAtZGVzY3JpYmVkIGhlcmUgYXBwbHkg
-dG8gYWxsIERTSSBwZXJpcGhlcmFscywgYnV0IGluZGl2aWR1YWwgYmluZGluZ3MgbWF5IHdhbnQN
-Cj4gLXRvIGRlZmluZSBhZGRpdGlvbmFsLCBkZXZpY2Utc3BlY2lmaWMgcHJvcGVydGllcy4NCj4g
-K1BlcmlwaGVyYWxzIHdpdGggRFNJIGFzIGNvbnRyb2wgYnVzLCBvciBubyBjb250cm9sIGJ1cw0K
-PiArLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-DQo+ICsNCj4gK1BlcmlwaGVyYWxzIHdpdGggdGhlIERTSSBidXMgYXMgdGhlIHByaW1hcnkgY29u
-dHJvbCBidXMsIG9yIHBlcmlwaGVyYWxzIHdpdGgNCj4gK25vIGNvbnRyb2wgYnVzIGJ1dCB1c2Ug
-dGhlIERTSSBidXMgdG8gdHJhbnNtaXQgcGl4ZWwgZGF0YSBhcmUgcmVwcmVzZW50ZWQNCj4gK2Fz
-IGNoaWxkIG5vZGVzIG9mIHRoZSBEU0kgaG9zdCdzIG5vZGUuIFByb3BlcnRpZXMgZGVzY3JpYmVk
-IGhlcmUgYXBwbHkgdG8gYWxsDQo+ICtEU0kgcGVyaXBoZXJhbHMsIGJ1dCBpbmRpdmlkdWFsIGJp
-bmRpbmdzIG1heSB3YW50IHRvIGRlZmluZSBhZGRpdGlvbmFsLA0KPiArZGV2aWNlLXNwZWNpZmlj
-IHByb3BlcnRpZXMuDQo+ICAgDQo+ICAgUmVxdWlyZWQgcHJvcGVydGllczoNCj4gICAtIHJlZzog
-VGhlIHZpcnR1YWwgY2hhbm5lbCBudW1iZXIgb2YgYSBEU0kgcGVyaXBoZXJhbC4gTXVzdCBiZSBp
-biB0aGUgcmFuZ2UNCj4gQEAgLTQ5LDkgKzU0LDI1IEBAIGNhc2UgdHdvIGFsdGVybmF0aXZlIHJl
-cHJlc2VudGF0aW9ucyBjYW4gYmUgY2hvc2VuOg0KPiAgICAgcHJvcGVydHkgaXMgdGhlIG51bWJl
-ciBvZiB0aGUgZmlyc3QgdmlydHVhbCBjaGFubmVsIGFuZCB0aGUgc2Vjb25kIGNlbGwgaXMNCj4g
-ICAgIHRoZSBudW1iZXIgb2YgY29uc2VjdXRpdmUgdmlydHVhbCBjaGFubmVscy4NCj4gICANCj4g
-LUV4YW1wbGUNCj4gLS0tLS0tLS0NCj4gK1BlcmlwaGVyYWxzIHdpdGggYSBkaWZmZXJlbnQgY29u
-dHJvbCBidXMNCj4gKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4g
-Kw0KPiArVGhlcmUgYXJlIHBlcmlwaGVyYWxzIHRoYXQgaGF2ZSBJMkMvU1BJIChvciBzb21lIG90
-aGVyIG5vbi1EU0kgYnVzKSBhcyB0aGUNCj4gK3ByaW1hcnkgY29udHJvbCBidXMsIGJ1dCBhcmUg
-YWxzbyBjb25uZWN0ZWQgdG8gYSBEU0kgYnVzIChtb3N0bHkgZm9yIHRoZSBkYXRhDQo+ICtwYXRo
-KS4gQ29ubmVjdGlvbnMgYmV0d2VlbiBzdWNoIHBlcmlwaGVyYWxzIGFuZCBhIERTSSBob3N0IGNh
-biBiZSByZXByZXNlbnRlZA0KPiArdXNpbmcgdGhlIGdyYXBoIGJpbmRpbmdzIFsxXSwgWzJdLg0K
-PiArDQo+ICtbMV0gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dyYXBoLnR4dA0K
-PiArWzJdIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS92aWRlby1pbnRl
-cmZhY2VzLnR4dA0KPiAgIA0KPiArRXhhbXBsZXMNCj4gKz09PT09PT09DQo+ICstICgxKSwgKDIp
-IGFuZCAoMykgYXJlIGV4YW1wbGVzIG9mIGEgRFNJIGhvc3QgYW5kIHBlcmlwaGVyYWwgb24gdGhl
-IERTSSBidXMNCj4gKyAgd2l0aCBkaWZmZXJlbnQgdmlydHVhbCBjaGFubmVsIGNvbmZpZ3VyYXRp
-b25zLg0KPiArLSAoNCkgaXMgYW4gZXhhbXBsZSBvZiBhIHBlcmlwaGVyYWwgb24gYSBJMkMgY29u
-dHJvbCBidXMgY29ubmVjdGVkIHdpdGggdG8NCj4gKyAgYSBEU0kgaG9zdCB1c2luZyBvZi1ncmFw
-aCBiaW5kaW5ncy4NCj4gKw0KPiArMSkNCj4gICAJZHNpLWhvc3Qgew0KPiAgIAkJLi4uDQo+ICAg
-DQo+IEBAIC02Nyw2ICs4OCw3IEBAIEV4YW1wbGUNCj4gICAJCS4uLg0KPiAgIAl9Ow0KPiAgIA0K
-PiArMikNCj4gICAJZHNpLWhvc3Qgew0KPiAgIAkJLi4uDQo+ICAgDQo+IEBAIC04Miw2ICsxMDQs
-NyBAQCBFeGFtcGxlDQo+ICAgCQkuLi4NCj4gICAJfTsNCj4gICANCj4gKzMpDQo+ICAgCWRzaS1o
-b3N0IHsNCj4gICAJCS4uLg0KPiAgIA0KPiBAQCAtOTYsMyArMTE5LDM3IEBAIEV4YW1wbGUNCj4g
-ICANCj4gICAJCS4uLg0KPiAgIAl9Ow0KPiArDQo+ICs0KQ0KPiArCWkyYy1ob3N0IHsNCj4gKwkJ
-Li4uDQo+ICsNCj4gKwkJZHNpLWJyaWRnZUAzNSB7DQo+ICsJCQljb21wYXRpYmxlID0gIi4uLiI7
-DQo+ICsJCQlyZWcgPSA8MHgzNT47DQo+ICsNCj4gKwkJCXBvcnRzIHsNCj4gKwkJCQkuLi4NCj4g
-Kw0KPiArCQkJCXBvcnQgew0KPiArCQkJCQlicmlkZ2VfbWlwaV9pbjogZW5kcG9pbnQgew0KPiAr
-CQkJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZob3N0X21pcGlfb3V0PjsNCj4gKwkJCQkJfTsNCj4g
-KwkJCQl9Ow0KPiArCQkJfTsNCj4gKwkJfTsNCj4gKwl9Ow0KPiArDQo+ICsJZHNpLWhvc3Qgew0K
-PiArCQkuLi4NCj4gKw0KPiArCQlwb3J0cyB7DQo+ICsJCQkuLi4NCj4gKw0KPiArCQkJcG9ydCB7
-DQo+ICsJCQkJaG9zdF9taXBpX291dDogZW5kcG9pbnQgew0KPiArCQkJCQlyZW1vdGUtZW5kcG9p
-bnQgPSA8JmJyaWRnZV9taXBpX2luPjsNCj4gKwkJCQl9Ow0KPiArCQkJfTsNCj4gKwkJfTsNCj4g
-Kwl9Ow0KPiAKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-ZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0
-dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On 01/16/18 22:44, Jacopo Mondi wrote:
+> Remove soc_camera framework dependencies from ov772x sensor driver.
+> - Handle clock and gpios
+> - Register async subdevice
+> - Remove soc_camera specific g/s_mbus_config operations
+> - Change image format colorspace from JPEG to SRGB as the two use the
+>   same colorspace information but JPEG makes assumptions on color
+>   components quantization that do not apply to the sensor
+> - Remove sizes crop from get_selection as driver can't scale
+> - Add kernel doc to driver interface header file
+> - Adjust build system
+> 
+> This commit does not remove the original soc_camera based driver as long
+> as other platforms depends on soc_camera-based CEU driver.
+> 
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
+
+Regards,
+
+	Hans
