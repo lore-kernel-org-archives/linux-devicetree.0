@@ -1,169 +1,131 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v6 0/9] Renesas Capture Engine Unit (CEU) V4L2 driver
-Date: Fri, 19 Jan 2018 12:26:09 +0100
-Message-ID: <6fcd22c1-19a5-e0b7-2b00-961e1cd1ebaa@xs4all.nl>
-References: <1516139101-7835-1-git-send-email-jacopo+renesas@jmondi.org>
+From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH v6 0/6] iommu/arm-smmu: Add runtime pm/sleep support
+Date: Fri, 19 Jan 2018 17:13:37 +0530
+Message-ID: <1516362223-22946-1-git-send-email-vivek.gautam@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1516139101-7835-1-git-send-email-jacopo+renesas@jmondi.org>
-Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Jacopo Mondi <jacopo+renesas@jmondi.org>, laurent.pinchart@ideasonboard.com, magnus.damm@gmail.com, geert@glider.be, mchehab@kernel.org, festevam@gmail.com, sakari.ailus@iki.fi, robh+dt@kernel.org, mark.rutland@arm.com, pombredanne@nexb.com
-Cc: linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacopo,
+This series provides the support for turning on the arm-smmu's
+clocks/power domains using runtime pm. This is done using the
+recently introduced device links patches, which lets the smmu's
+runtime to follow the master's runtime pm, so the smmu remains
+powered only when the masters use it.
 
-On 01/16/18 22:44, Jacopo Mondi wrote:
-> Hello,
->    new version of CEU after Hans' review.
-> 
-> Added his Acked-by to most patches and closed review comments.
-> Running v4l2-compliance, I noticed a new failure introduced by the way I now
-> calculate the plane sizes in set/try_fmt.
-> 
-> This is the function used to update per-plane bytesperline and sizeimage:
-> 
-> static void ceu_update_plane_sizes(struct v4l2_plane_pix_format *plane,
-> 				   unsigned int bpl, unsigned int szimage)
-> {
-> 	if (plane->bytesperline < bpl)
-> 		plane->bytesperline = bpl;
-> 	if (plane->sizeimage < szimage)
-> 		plane->sizeimage = szimage;
-> }
-> 
-> I'm seeing a failure as v4l2-compliance requires buffers with both bytesperline
-> and sizeimage set to MAX_INT . Hans, is this expected from v4l2-compliance?
-> How should I handle this, if that has to be handled by the single drivers?
+It also adds support for Qcom's arm-smmu-v2 variant that
+has different clocks and power requirements.
 
-I commented on this in my review of patch 3/9.
+Took some reference from the exynos runtime patches [1].
 
-> 
-> Apart from that, here it is the output of v4l2-compliance, with the last tests
-> failing due to the above stated reason, and two errors in try/set format due to
-> the fact the driver is not setting ycbcr encoding after it receives an invalid
+After much discussion [3] over the use of pm_runtime_get/put() in
+.unmap op path for the arm-smmu, and after disussing over more than
+a couple of approaches to address this, we are putting forward the
+changes *without* using pm_runtime APIs in 'unmap'. Rather, letting
+the client device take the control of powering on/off the connected
+iommu through pm_runtime_get(put)_suppliers() APIs for the scnerios
+when the iommu power can't be directly controlled by clients through
+device links.
+Rafael has agreed to export the suppliers APIs [4].
 
-Which driver? The CEU driver or the sensor driver? I don't actually see where
-it fails.
+Hi Robin, Will,
+please consider reviewing this series.
 
-> format. I would set those, but I'm not sure what it the correct value and not
-> all mainline drivers do that.
+[V6]
+   * Added Ack given by Rafael to first patch in the series.
+   * Addressed Rob Herring's comment for adding soc specific compatible
+     string as well besides 'qcom,smmu-v2'.
 
-In any case, the default for ycbcr_enc, xfer_func and quantization is 0.
+[V5]
+   * Dropped runtime pm calls from "arm_smmu_unmap" op as discussed over
+     the list [3] for the last patch series.
+   * Added a patch to export pm_runtime_get/put_suppliers() APIs to the
+     series as agreed with Rafael [4].
+   * Added the related patch for msm drm iommu layer to use
+     pm_runtime_get/put_suppliers() APIs in msm_mmu_funcs.
+   * Dropped arm-mmu500 clock patch since that would break existing
+     platforms.
+   * Changed compatible 'qcom,msm8996-smmu-v2' to 'qcom,smmu-v2' to reflect
+     the IP version rather than the platform on which it is used.
+     The same IP is used across multiple platforms including msm8996,
+     and sdm845 etc.
+   * Using clock bulk APIs to handle the clocks available to the IP as
+     suggested by Stephen Boyd.
+   * The first patch in v4 version of the patch-series:
+     ("iommu/arm-smmu: Fix the error path in arm_smmu_add_device") has
+     already made it to mainline.
 
-> 
-> -------------------------------------------------------------------------------
-> v4l2-compliance SHA   : 1d3c611dee82090d9456730e24af368b51dcb4a9
+[V4]
+   * Reworked the clock handling part. We now take clock names as data
+     in the driver for supported compatible versions, and loop over them
+     to get, enable, and disable the clocks.
+   * Using qcom,msm8996 based compatibles for bindings instead of a generic
+     qcom compatible.
+   * Refactor MMU500 patch to just add the necessary clock names data and
+     corresponding bindings.
+   * Added the pm_runtime_get/put() calls in .unmap iommu op (fix added by
+     Stanimir on top of previous patch version.
+   * Added a patch to fix error path in arm_smmu_add_device()
+   * Removed patch 3/5 of V3 patch series that added qcom,smmu-v2 bindings.
 
-I can't find this SHA in the v4l-utils repo. You should always compile
-v4l2-compliance from the master branch.
+[V3]
+   * Reworked the patches to keep the clocks init/enabling function
+     separately for each compatible.
 
-Also test with 'v4l2-compliance -f': this tests streaming in all formats.
+   * Added clocks bindings for MMU40x/500.
 
-> 
-> Driver Info:
-> 	Driver name   : renesas-ceu
-> 	Card type     : Renesas CEU e8210000.ceu
-> 	Bus info      : platform:renesas-ceu-e8210000.c
-> 	Driver version: 4.14.0
-> 	Capabilities  : 0x84201000
-> 		Video Capture Multiplanar
-> 		Streaming
-> 		Extended Pix Format
-> 		Device Capabilities
-> 	Device Caps   : 0x04201000
-> 		Video Capture Multiplanar
-> 		Streaming
-> 		Extended Pix Format
-> 
-> Compliance test for device /dev/video0 (not using libv4l2):
-> 
-> Required ioctls:
-> 	test VIDIOC_QUERYCAP: OK
-> 
-> Allow for multiple opens:
-> 	test second video open: OK
-> 	test VIDIOC_QUERYCAP: OK
-> 	test VIDIOC_G/S_PRIORITY: OK
-> 	test for unlimited opens: OK
-> 
-> Debug ioctls:
-> 	test VIDIOC_DBG_G/S_REGISTER: OK
-> 	test VIDIOC_LOG_STATUS: OK (Not Supported)
-> 
-> Input ioctls:
-> 	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
-> 	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-> 	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
-> 	test VIDIOC_ENUMAUDIO: OK (Not Supported)
-> 	test VIDIOC_G/S/ENUMINPUT: OK
-> 	test VIDIOC_G/S_AUDIO: OK (Not Supported)
-> 	Inputs: 1 Audio Inputs: 0 Tuners: 0
-> 
-> Output ioctls:
-> 	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
-> 	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-> 	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
-> 	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
-> 	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
-> 	Outputs: 0 Audio Outputs: 0 Modulators: 0
-> 
-> Input/Output configuration ioctls:
-> 	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
-> 	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
-> 	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
-> 	test VIDIOC_G/S_EDID: OK (Not Supported)
-> 
-> Test input 0:
-> 
-> 	Control ioctls:
-> 		test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
-> 		test VIDIOC_QUERYCTRL: OK
-> 		test VIDIOC_G/S_CTRL: OK
-> 		test VIDIOC_G/S/TRY_EXT_CTRLS: OK
-> 		fail: v4l2-test-controls.cpp(782): subscribe event for control 'User Controls' failed
-> 		test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: FAIL
-> 		test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
-> 		Standard Controls: 12 Private Controls: 0
-> 
-> 	Format ioctls:
-> 		test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
-> 		fail: v4l2-test-formats.cpp(1162): ret && node->has_frmintervals
-> 		test VIDIOC_G/S_PARM: FAIL
-> 		test VIDIOC_G_FBUF: OK (Not Supported)
-> 		test VIDIOC_G_FMT: OK
-> 		fail: v4l2-test-formats.cpp(335): ycbcr_enc >= 0xff
-> 		fail: v4l2-test-formats.cpp(451): testColorspace(pix_mp.pixelformat, pix_mp.colorspace, pix_mp.ycbcr_enc, pix_mp.quantization)
-> 		fail: v4l2-test-formats.cpp(736): Video Capture Multiplanar is valid, but TRY_FMT failed to return a format
-> 		test VIDIOC_TRY_FMT: FAIL
-> 		fail: v4l2-test-formats.cpp(335): ycbcr_enc >= 0xff
-> 		fail: v4l2-test-formats.cpp(451): testColorspace(pix_mp.pixelformat, pix_mp.colorspace, pix_mp.ycbcr_enc, pix_mp.quantization)
-> 		fail: v4l2-test-formats.cpp(996): Video Capture Multiplanar is valid, but no S_FMT was implemented
-> 		test VIDIOC_S_FMT: FAIL
-> 		test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
-> 		test Cropping: OK (Not Supported)
-> 		test Composing: OK (Not Supported)
-> 		test Scaling: OK (Not Supported)
-> 
-> 	Codec ioctls:
-> 		test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
-> 		test VIDIOC_G_ENC_INDEX: OK (Not Supported)
-> 		test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
-> 
-> 	Buffer ioctls:
-> 		test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
-> 		test VIDIOC_EXPBUF: OK
-> 
-> Test input 0:
-> 
-> 
-> Total: 43, Succeeded: 39, Failed: 4, Warnings: 0
+   * Added a new compatible for qcom,smmu-v2 implementation and
+     the clock bindings for the same.
 
-'Failed' must be 0, otherwise I won't Ack this driver.
+   * Rebased on top of 4.11-rc1
 
-Regards,
+[V2]
+   * Split the patches little differently.
 
-	Hans
+   * Addressed comments.
+
+   * Removed the patch #4 [2] from previous post
+     for arm-smmu context save restore. Planning to
+     post this separately after reworking/addressing Robin's
+     feedback.
+
+   * Reversed the sequence to disable clocks than enabling.
+     This was required for those cases where the
+     clocks are populated in a dependent order from DT.
+
+[1] https://lkml.org/lkml/2016/10/20/70
+[2] https://patchwork.kernel.org/patch/9389717/
+[3] https://patchwork.kernel.org/patch/9827825/
+[4] https://patchwork.kernel.org/patch/10102445/
+
+Sricharan R (3):
+  iommu/arm-smmu: Add pm_runtime/sleep ops
+  iommu/arm-smmu: Invoke pm_runtime during probe, add/remove device
+  iommu/arm-smmu: Add the device_link between masters and smmu
+
+Vivek Gautam (3):
+  base: power: runtime: Export pm_runtime_get/put_suppliers
+  iommu/arm-smmu: Add support for qcom,smmu-v2 variant
+  drm/msm: iommu: Replace runtime calls with runtime suppliers
+
+ .../devicetree/bindings/iommu/arm,smmu.txt         |  43 +++++++
+ drivers/base/power/runtime.c                       |   2 +
+ drivers/gpu/drm/msm/msm_iommu.c                    |  16 +--
+ drivers/iommu/arm-smmu.c                           | 124 ++++++++++++++++++++-
+ 4 files changed, 171 insertions(+), 14 deletions(-)
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
