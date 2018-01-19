@@ -1,108 +1,92 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] reset: ti-rstctrl: use the reset-simple driver
-Date: Fri, 19 Jan 2018 13:33:10 -0800
-Message-ID: <20180119213310.GA4180@atomide.com>
-References: <20180116011159.1386-1-tony@atomide.com>
- <1516095054.9022.1.camel@pengutronix.de>
- <20180116150314.GC4042@atomide.com>
- <d32d9836-5edd-d43d-547b-f22384950f2c@ti.com>
- <20180116232243.GD4042@atomide.com>
- <10dab35c-9c79-5a77-0654-1e99621e4c0f@ti.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt-bindings: mtd: document Broadcom's BCM47xx
+ partitions
+Date: Fri, 19 Jan 2018 15:44:50 -0600
+Message-ID: <20180119214450.vhctphu5d4kagwkv@rob-hp-laptop>
+References: <20180112093354.17593-1-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <10dab35c-9c79-5a77-0654-1e99621e4c0f-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <20180112093354.17593-1-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paul Parsons <lost.distance-/E1597aS9LQAvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Nishant Menon <nm-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
+To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Suman Anna <s-anna-l0cyMroinI0@public.gmane.org> [180119 20:23]:
-> On 01/16/2018 05:22 PM, Tony Lindgren wrote:
-> > The RSTST registers mostly tell the device internal reset reason
-> > like watchdog reset for an accelerator. I'm not sure how the
-> > API for those would look like, do you have some ideas?
+On Fri, Jan 12, 2018 at 10:33:53AM +0100, Rafał Miłecki wrote:
+> From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 > 
-> There are multiple RSTST registers, each of which with different bits. .
-> The PRM_RSTST is the one where you can catch the reset reasons (along
-> with few others), but otherwise most of the other IP-specific RSTST
-> registers capture the local reset status. The RSTST behavior is somewhat
-> similar to how the softreset status is tracked on each IP's SYSC/SYSS
-> registers. It does tell the reset status for some software triggered
-> resets in RSTCTRL, and can have additional bits as well for some PRCM
-> triggered h/w resets (like RETention reset).
-
-Hmm so are you using these "additional" software status bits?
-
-If the other bits don't matter, and the RSTCTRL reset bit has
-a matching RSTST bit, then we could just read that bit back
-in reset_simple_status and have a separate compatible value
-for those like "ti,rstctrl-rstst".
-
-> > Hmm, aren't you currently just reading the RSTST registers
-> > directly for remoteproc etc?
+> Broadcom based home router devices use partitions which have to be
+> discovered in a specific non-standard way. As there is no partition
+> table this commit adds and describes a new custom binding.
 > 
-> Nope, all the PRCM related registers are hidden away underneath the
-> hwmod layer, so the only code that I use is pm_runtime_{get/put}_sync()
-> directly and omap_device_{assert/deassert}_reset() through pdata-quirks.
-> Take a look in drivers/iommu/omap-iommu.c and
-> arch/arm/mach-omap2/pdata-quirks.c (functional in mainline for OMAP4 and
-> OMAP5 DSP/IPU MMUs).
-
-OK, sorry I was thinking of the CLKCTRL IDLEST that are directly
-accessed :)
-
-> > And then we also have the CONTEXT register that tells if module
-> > context was lost during idle :) The API for that could simply be
-> > bool device_context_lost(struct device *dev) to describe that
-> > kind of reset. Or it could maybe also use reset_control_status()
-> > that returns -ECONNRESET? But then what resets the context lost
-> > state as we don't need to reset the device?
+> Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+> ---
+>  .../devicetree/bindings/mtd/partition.txt          | 46 +++++++++++++++++++++-
+>  1 file changed, 44 insertions(+), 2 deletions(-)
 > 
-> I am not sure why the CONTEXT register belongs to the same discussion as
-> the reset registers. In any case, I don't think any of the current code
-> relies on this (other than incrementing the debug counters).
+> diff --git a/Documentation/devicetree/bindings/mtd/partition.txt b/Documentation/devicetree/bindings/mtd/partition.txt
+> index 36f3b769a626..b201d497b618 100644
+> --- a/Documentation/devicetree/bindings/mtd/partition.txt
+> +++ b/Documentation/devicetree/bindings/mtd/partition.txt
+> @@ -14,8 +14,6 @@ method is used for a given flash device. To describe the method there should be
+>  a subnode of the flash device that is named 'partitions'. It must have a
+>  'compatible' property, which is used to identify the method to use.
+>  
+> -We currently only document a binding for fixed layouts.
+> -
+>  
+>  Fixed Partitions
+>  ================
+> @@ -109,3 +107,47 @@ flash@2 {
+>  		};
+>  	};
+>  };
+> +
+> +
+> +Broadcom BCM47xx Partitions
+> +===========================
+> +
+> +Broadcom is one of hardware manufacturers providing SoCs (BCM47xx) used in
+> +home routers. Their BCM947xx boards using CFE bootloader have several partitions
+> +without any on-flash partition table. On some devices their sizes and/or
+> +meanings can also vary so fixed partitioning can't be used.
+> +
+> +Discovering partitions on these devices is possible thanks to having a special
+> +header and/or magic signature at the beginning of each of them. They are also
+> +block aligned which is important for determinig a size.
+> +
+> +Most of partitions use ASCII text based magic for determining a type. More
+> +complex partitions (like TRX with its HDR0 magic) may include extra header
+> +containing some details, including a length.
+> +
+> +A list of supported partitions includes:
+> +1) Bootloader with Broadcom's CFE (Common Firmware Environment)
+> +2) NVRAM with configuration/calibration data
+> +3) Device manufacturer's data with some default values (e.g. SSIDs)
+> +4) TRX firmware container which can hold up to 4 subpartitions
+> +5) Backup TRX firmware used after failed upgrade
+> +
+> +As mentioned earlier, role of some partitions may depend on extra configuration.
+> +For example both: main firmware and backup firmware use the same TRX format with
+> +the same header. To distinguish currently used firmware a CFE's environment
+> +variable "bootpartition" is used.
+> +
+> +
+> +Devices using Broadcom partitions described above should should have flash node
+> +with a subnode named "partitions" using following properties:
+> +
+> +Required properties:
+> +- compatible : (required) must be "brcm,bcm947xx-cfe-partitions"
 
-Well they are in the same PRM instance, and behave the same way
-as RSTST :) They are like interrupt status registers where you can
-read the state and write to clear it. I wonder if we do really have
-a proper PRM interrupt for these too, Tero?
+So you can't discover you have CFE partitions, but you can discover 
+everything else like where partitions start? 
 
-> The OMAP IOMMU would be a better test given that there's no in-kernel
-> sgx module and we are not sure if the out-of-tree driver is functional
-> with these changes.
-> 
-> I have some unit-test code at
-> https://github.com/sumananna/omap-test-iommu.git
-> 
-> You would need to add a test node to DTS with reference to the MMU you
-> want to test.
+Why doesn't the kernel just probe for the partition table?
 
-OK let's do some tests on that, I'll take a look at doing a dts
-file over next few weeks.
-
-> If we are exposing all the other registers directly to client drivers,
-> then the client drivers can use the reset API directly. But if other
-> registers are hidden away underneath various frameworks, then we have
-> some sequencing issues.
-
-Right that needs to be checked. For ti-sysc driver we only need to
-care about the rests that are needed to read and configure the
-interconnect target module. The rest can be handled directly by
-the child device drivers hopefully.
-
-> Tero had done a series sometime back using notifiers to take care of
-> these sequencing steps, but that was deferred pending the other hwmod
-> cleanup. Last reference that touches it is here,
-> https://marc.info/?l=linux-omap&m=147279610902646&w=2
-
-Yeah the resets can all be device driver(s) now that we have the
-clkctrl clocks usable and should have ti-sysc usable for v4.17.
-
-Regards,
-
-Tony
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
