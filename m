@@ -1,92 +1,46 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v6 06/36] nds32: Kernel booting and initialization
-Date: Fri, 19 Jan 2018 17:41:45 +0100
-Message-ID: <CAK8P3a3UCrMbTn1JMOGKCSV4WRw9T9tU+pey1t6Fzitf2V0Bvw@mail.gmail.com>
-References: <cover.1515766253.git.green.hu@gmail.com> <5930d2df872116555cc553284b6c111dce29e298.1515766253.git.green.hu@gmail.com>
- <CAK8P3a143yQ72+QGZSxpiFc7p8Hb7PXuCybJBFoLRSBaZ2uw4g@mail.gmail.com> <CAEbi=3dJm=M-1UjUftb5qb0YOOsq92zzF86xeaVOhzULjvT3eA@mail.gmail.com>
+From: "UNO.ORG" <unorg-CVMx2zTcWgWZuzBka8ofvg@public.gmane.org>
+Subject: ( United Nations Compensation Unit )
+Date: Fri, 19 Jan 2018 16:54:54 -0000
+Message-ID: <49218.4924697087$1516381196@news.gmane.org>
+Reply-To: <sarahngene-VODAnDrebiQhBRoxNxXL8q17HARnMB29@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <CAEbi=3dJm=M-1UjUftb5qb0YOOsq92zzF86xeaVOhzULjvT3eA@mail.gmail.com>
-Sender: linux-arch-owner@vger.kernel.org
-To: Greentime Hu <green.hu@gmail.com>
-Cc: Greentime <greentime@andestech.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Networking <netdev@vger.kernel.org>, Vincent Chen <deanbo422@gmail.com>, DTML <devicetree@vger.kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, David Howells <dhowells@redhat.com>, Will Deacon <will.deacon@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-serial@vger.kernel.org, Geert Uytterhoeven <geert.uytterhoeven@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Greg KH <greg@kroah.com>, Guo Ren <ren_guo@c-sky.co>
+Content-Type: text/plain;
+        charset="_iso-2022-jp$ESC"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 19, 2018 at 5:34 PM, Greentime Hu <green.hu@gmail.com> wrote:
-> Hi, Arnd:
->
-> 2018-01-18 18:11 GMT+08:00 Arnd Bergmann <arnd@arndb.de>:
->> On Mon, Jan 15, 2018 at 6:53 AM, Greentime Hu <green.hu@gmail.com> wrote:
->>
->> I had not looked at this patch in enough detail earlier, sorry about
->> that. It should be
->> easy enough to fix though.
->>
->>> +#ifdef CONFIG_VGA_CONSOLE
->>> +struct screen_info screen_info;
->>> +#endif
->>
->> I would assume that you can't ever have a VGA console. Just drop all
->> the references
->> here and instead send a patch to the fbdev maintainer to add the dependency
->> at CONFIG_VGA_CONSOLE to prevent selecting it with nds32.
->
-> I found it can be built pass for now because we disable it in defconfig.
-> Should I send the patch in v7 series?
+United Nations Compensation Unit, Emergency Relief Coordinator, United Nations. 
 
-yes, I think that would be best.
 
->>> +
->>> +extern void __init early_init_devtree(void *params);
->>> +extern void __init early_trap_init(void);
->>
->> similarly, these are declared in include/linux/of_fdt.h
->>
->
-> early_trap_init is a nds32 function. I will move it to nds32.h
 
-Right, makes sense.
 
->>> +void calibrate_delay(void)
->>> +{
->>> +       const int *val;
->>> +       struct device_node *cpu = NULL;
->>> +       cpu = of_find_compatible_node(NULL, NULL, "andestech,nds32v3");
->>> +       val = of_get_property(cpu, "clock-frequency", NULL);
->>> +       if (!val || !*val)
->>> +               panic("no cpu 'clock-frequency' parameter in device tree");
->>> +       loops_per_jiffy = be32_to_cpup(val) / HZ;
->>> +       pr_cont("%lu.%02lu BogoMIPS (lpj=%lu)\n",
->>> +               loops_per_jiffy / (500000 / HZ),
->>> +               (loops_per_jiffy / (5000 / HZ)) % 100, loops_per_jiffy);
->>> +}
->>
->> This seems very odd to me: The 'clock-frequency' property in the
->> cpu node should refer to the actual frequency it is running at, but that
->> tends to be different from the bogomips as needed by the ndelay()
->> function. Can you explain what is going on here?
->>
->
-> This implementation is referenced from openrisc.
-> https://lkml.org/lkml/2017/11/17/228
+Congratulations Beneficiary,
 
-It's correct on openrisc, because that has a reliable cycle counter,
-and that gets used in its delay function:
 
-void __delay(unsigned long cycles)
-{
-        cycles_t start = get_cycles();
-        while ((get_cycles() - start) < cycles)
-                cpu_relax();
-}
 
-In my review comment that you cited, I assumed that nds32 had similar
-hardware.
 
-However, as you explained earlier, the nds32 architecture does not provide
-a cycle counter and the clocksource resolution is not high enough to
-be a good replacement, so you have to use the traditional delay
-calibration.
+We have been having a meeting for quit sometime now and we just came to a logical conclusion 72 hours ago in affiliation with the World Bank president. Your email was listed among those that are yet to receive their compensation payment. The United Nations in Affiliation with World Bank have agreed to compensate them with the sum of USD1,500, 000.00 (One Million Five Hundred Thousand United States Dollars) only.
 
-        Arnd
+
+For this reason, you are to receive your payment through a certified ATM MASTER CARD. Note, with this Master Card you can withdraw money from any part of the World without being disturbed or delay and please for no reason should you disclose your account information as your account information is not and can never be needed before you receive your card payment. All that is required of your now is to contact our 100% trust officials by the Name of Mrs. Sarah Ngene. Below is her contact information:
+
+
+Name: Mrs. Sarah Ngene
+Email: sarahngene-VODAnDrebiQhBRoxNxXL8q17HARnMB29@public.gmane.org
+Email: sarah.ngene-PkbjNfxxIARBDgjK7y7TUQ@public.gmane.org
+
+
+Please ensure that you follow the directives and instructions of Mrs. Sarah Ngene so that within 72 hours you would have received your card payment and your secret pin code issued directly to you for security reasons. We apologize on behalf of the United Nation Organization for any delay you might have encountered in receiving your fund in the past. Congratulations, and I look forward to hear from you as soon as you confirm your payment making the world a better place.
+
+
+Yours Faithfully,
+
+
+Stephen O'Brien
+Emergency Relief Coordinator, United Nations. 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
