@@ -1,135 +1,72 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v2 1/2] dt-bindings: media: Add Cadence MIPI-CSI2 TX Device Tree bindings
-Date: Fri, 19 Jan 2018 09:15:46 +0100
-Message-ID: <20180119081547.22312-2-maxime.ripard@free-electrons.com>
-References: <20180119081547.22312-1-maxime.ripard@free-electrons.com>
+From: Katsuhiro Suzuki <suzuki.katsuhiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Subject: [PATCH v2 0/9] add UniPhier audio system support
+Date: Fri, 19 Jan 2018 18:25:27 +0900
+Message-ID: <20180119092536.22501-1-suzuki.katsuhiro@socionext.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180119081547.22312-1-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Richard Sproul <sproul-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Alan Douglas <adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Steve Creaney <screaney-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>, nm-l0cyMroinI0@public.gmane.org, Simon Hatliff <hatliff-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Cc: Masami Hiramatsu <masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Katsuhiro Suzuki <suzuki.katsuhiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The Cadence MIPI-CSI2 TX controller is a CSI2 bridge that supports up to 4
-video streams and can output on up to 4 CSI-2 lanes, depending on the
-hardware implementation.
+This series adds support for Socionext audio system for
+UniPhier LD11/LD20 SoCs. This driver supports I2S output
+for Line-In, Line-Out and S/PDIF output.
 
-It can operate with an external D-PHY, an internal one or no D-PHY at all
-in some configurations.
+UniPhier AIO DAI driver provides sound devices such as I2S, S/PDIF.
+Since the AIO has mixed register map for those I/Os, it is hard to
+split register areas for each sound devices.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- .../devicetree/bindings/media/cdns,csi2tx.txt      | 98 ++++++++++++++++++++++
- 1 file changed, 98 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/cdns,csi2tx.txt
 
-diff --git a/Documentation/devicetree/bindings/media/cdns,csi2tx.txt b/Documentation/devicetree/bindings/media/cdns,csi2tx.txt
-new file mode 100644
-index 000000000000..acbbd625a75f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/cdns,csi2tx.txt
-@@ -0,0 +1,98 @@
-+Cadence MIPI-CSI2 TX controller
-+===============================
-+
-+The Cadence MIPI-CSI2 TX controller is a CSI-2 bridge supporting up to
-+4 CSI lanes in output, and up to 4 different pixel streams in input.
-+
-+Required properties:
-+  - compatible: must be set to "cdns,csi2tx"
-+  - reg: base address and size of the memory mapped region
-+  - clocks: phandles to the clocks driving the controller
-+  - clock-names: must contain:
-+    * esc_clk: escape mode clock
-+    * p_clk: register bank clock
-+    * pixel_if[0-3]_clk: pixel stream output clock, one for each stream
-+                         implemented in hardware, between 0 and 3
-+
-+Optional properties
-+  - phys: phandle to the D-PHY. If it is set, phy-names need to be set
-+  - phy-names: must contain dphy
-+
-+Required subnodes:
-+  - ports: A ports node with one port child node per device input and output
-+           port, in accordance with the video interface bindings defined in
-+           Documentation/devicetree/bindings/media/video-interfaces.txt. The
-+           port nodes numbered as follows.
-+
-+           Port Description
-+           -----------------------------
-+           0    CSI-2 output
-+           1    Stream 0 input
-+           2    Stream 1 input
-+           3    Stream 2 input
-+           4    Stream 3 input
-+
-+           The stream input port nodes are optional if they are not
-+           connected to anything at the hardware level or implemented
-+           in the design. Since there is only one endpoint per port,
-+           the endpoints are not numbered.
-+
-+Example:
-+
-+csi2tx: csi-bridge@0d0e1000 {
-+	compatible = "cdns,csi2tx";
-+	reg = <0x0d0e1000 0x1000>;
-+	clocks = <&byteclock>, <&byteclock>,
-+		 <&coreclock>, <&coreclock>,
-+		 <&coreclock>, <&coreclock>;
-+	clock-names = "p_clk", "esc_clk",
-+		      "pixel_if0_clk", "pixel_if1_clk",
-+		      "pixel_if2_clk", "pixel_if3_clk";
-+
-+	ports {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		port@0 {
-+			reg = <0>;
-+
-+			csi2tx_out: endpoint {
-+				remote-endpoint = <&remote_in>;
-+				clock-lanes = <0>;
-+				data-lanes = <1 2>;
-+			};
-+		};
-+
-+		port@1 {
-+			reg = <1>;
-+
-+			csi2tx_in_stream0: endpoint {
-+				remote-endpoint = <&stream0_out>;
-+			};
-+		};
-+
-+		port@2 {
-+			reg = <2>;
-+
-+			csi2tx_in_stream1: endpoint {
-+				remote-endpoint = <&stream1_out>;
-+			};
-+		};
-+
-+		port@3 {
-+			reg = <3>;
-+
-+			csi2tx_in_stream2: endpoint {
-+				remote-endpoint = <&stream2_out>;
-+			};
-+		};
-+
-+		port@4 {
-+			reg = <4>;
-+
-+			csi2tx_in_stream3: endpoint {
-+				remote-endpoint = <&stream3_out>;
-+			};
-+		};
-+	};
-+};
+Changes in v2:
+  - Add comments to aiodma_irq()
+  - Add members to struct uniphier_aio_sub and add methods
+    for compress audio
+  - Expose clocking to userspace
+  - Fix bad name 'srcport' to 'src'
+  - Split DMA, DAI patches from large one
+  - Validate parameters in hw_params()
+  - Add error checks
+  - Fix typo in error messages
+  - Change license comment style to C++ from C
+
+Katsuhiro Suzuki (9):
+  ASoC: uniphier: add DT bindings documentation for UniPhier AIO
+  ASoC: uniphier: add support for UniPhier AIO common driver
+  ASoC: uniphier: add support for UniPhier AIO DMA driver
+  ASoC: uniphier: add support for UniPhier AIO CPU DAI driver
+  ASoC: uniphier: add support for UniPhier AIO compress audio
+  ASoC: uniphier: add support for UniPhier LD11/LD20 AIO driver
+  arm64: dts: uniphier: add sound node for UniPhier
+  arm64: dts: uniphier: add speaker out for UniPhier LD11/LD20 boards
+  arm64: dts: uniphier: add compress audio out for UniPhier LD11/LD20
+
+ .../devicetree/bindings/sound/uniphier,aio.txt     |   36 +
+ .../boot/dts/socionext/uniphier-ld11-global.dts    |  120 +++
+ arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi   |   31 +
+ .../boot/dts/socionext/uniphier-ld20-global.dts    |  120 +++
+ arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi   |   35 +
+ sound/soc/uniphier/Kconfig                         |   22 +
+ sound/soc/uniphier/Makefile                        |    6 +
+ sound/soc/uniphier/aio-compress.c                  |  440 ++++++++
+ sound/soc/uniphier/aio-core.c                      | 1104 ++++++++++++++++++++
+ sound/soc/uniphier/aio-cpu.c                       |  570 ++++++++++
+ sound/soc/uniphier/aio-dma.c                       |  318 ++++++
+ sound/soc/uniphier/aio-ld11.c                      |  431 ++++++++
+ sound/soc/uniphier/aio-reg.h                       |  462 ++++++++
+ sound/soc/uniphier/aio.h                           |  355 +++++++
+ 14 files changed, 4050 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/uniphier,aio.txt
+ create mode 100644 sound/soc/uniphier/aio-compress.c
+ create mode 100644 sound/soc/uniphier/aio-core.c
+ create mode 100644 sound/soc/uniphier/aio-cpu.c
+ create mode 100644 sound/soc/uniphier/aio-dma.c
+ create mode 100644 sound/soc/uniphier/aio-ld11.c
+ create mode 100644 sound/soc/uniphier/aio-reg.h
+ create mode 100644 sound/soc/uniphier/aio.h
+
 -- 
-2.14.3
+2.15.0
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
