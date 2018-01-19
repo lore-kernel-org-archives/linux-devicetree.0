@@ -1,141 +1,89 @@
-From: Lina Iyer <ilina@codeaurora.org>
-Subject: Re: [PATCH 3/4] drivers: qcom: rpmh-rsc: log RPMH requests in FTRACE
-Date: Fri, 19 Jan 2018 07:35:01 +0000
-Message-ID: <20180119073501.GA26362@codeaurora.org>
-References: <20180119000157.7380-1-ilina@codeaurora.org>
- <20180119000157.7380-4-ilina@codeaurora.org>
- <20180118202607.3f40c238@gandalf.local.home>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180118202607.3f40c238@gandalf.local.home>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: andy.gross@linaro.org, david.brown@linaro.org, sboyd@codeaurora.org, rnayak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org
+From: kernel@martin.sperl.org
+Subject: [PATCH V2 0/3] Microchip mcp25xxfd can controller driver
+Date: Fri, 19 Jan 2018 07:41:37 +0000
+Message-ID: <20180119074140.25931-1-kernel@martin.sperl.org>
+Return-path: <linux-can-owner@vger.kernel.org>
+Sender: linux-can-owner@vger.kernel.org
+To: linux-can@vger.kernel.org, devicetree@vger.kernel.org, Wolfgang Grandegger <wg@grandegger.com>, Mark Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Martin Sperl <kernel@martin.sperl.org>, Marcel Birthelmer <Marcel.Birthelmer@microchip.com>, Sukkin Pang <skp@skpang.co.uk>, Gerhard Bertelsmann <info@gerhard-bertelsmann.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Steven,
+From: Martin Sperl <kernel@martin.sperl.org>
 
-On Thu, Jan 18 2018 at 01:26 +0000, Steven Rostedt wrote:
->
->I wasn't Cc'd on the rest of the patches and this wasn't Cc'd to LKML,
->and I'm not on any of the mailing lists that were Cc'd, I gotta just
->look at what I have here in this patch.
->
-I am so sorry. Will add LKML in the future.
+This patchset adds a driver for the mcp25xxfd CanFD controller.
+
+Most of the features of the controller are supported by this driver release.
+
+The controller includes a few features that the current core Can(FD)
+implementation does not support:
+* Transmit Bandwidth Sharing bits
+  - this waits for a configurable number of syncronization bits before
+    atempting to transmit the next frame - for the moment controllable
+    via a module parameter
+* SID11 with CanFD frames
+  - at this moment not supported by driver
+* 3 transmit attempts in addition to ONE_SHOT
+* transmitter delay compensation configurations
+* micro second exact transmission and reception timestamps
+  - used internally by driver
+* variable number of tx-fifos
+  - exposed via module parameter at this moment
+
+The driver has been heavily optimized so that it can handle
+a 100% utilized 1MHz Can-bus (with 11 bit can frames with DLC=0)
+even on less powerfull SOCs like the raspberry pi 1 without
+dropping frames due to driver/spi latencies (still dropps
+are observed in the can/network stack).
+
+To achive this the driver includes several code optimization
+Two of which prefers continuous long spi transfers over multiple
+small individual spi transfers of variable length.
+This is an optimization that would favour spi dma transfers instead
+of more expensive PIO in typical SPI controllers.
+Both of them can get explicitly enabled by the use of a module parameter.
+One of those is automatically used in the case of Can2.0 only bus
+configurations.
+
+Finer details of the implementation and rational is included with
+the driver code it self for future reference.
+
+The driver has also been tested for basic CanFD transfers with
+BRS up to 5.7Mhz data bitrates - the available transceiver did
+not allow for faster rates...
+
+The driver itself exposes lots of internal data/statistics via
+debugfs.
+
+The driver implements a lock-less design for transmissions
+making use instead of prepared spi messages submitted via spi_async
+for transmission in the start_xmit_start code without requireing
+an extra workqueue and the corresponding latencies.
+
+Note that there is an extra patch in the pipeline to implement pinctrl
+but this still shows some issues, so it is not included in this patchset.
+
+Changelog:
+  V1 -> V2: new more generic name based on feedback from microchip
+            cleanup of code (checkpatch)
+            address all feedback on code
+            handle (HW) systemerrors in a much better/reliable way
+            cleanup of dt custom properties removing (most) gpio related properties
+            implemented GPIOLIB support as per feedback
 
 
->On Thu, 18 Jan 2018 17:01:56 -0700
->Lina Iyer <ilina@codeaurora.org> wrote:
->
 
->> @@ -325,6 +328,8 @@ static irqreturn_t tcs_irq_handler(int irq, void *p)
->>  			}
->>  		}
->>
->> +		trace_rpmh_notify_irq(drv->name, m, resp->msg->payload[0].addr,
->> +						resp->err);
->
->Below, m came from resp->m, is it the same here?
->
-Yes, they will be the same.
+Martin Sperl (3):
+  dt-binding: can: mcp25xxfd: document device tree bindings
+  can: mcp25xxfd: Add Microchip mcp25xxfd CAN FD driver
+  can: mcp25xxfd: add gpiolib support for GPIO0/1 (aka. INT0/INT1)
 
->>  		write_tcs_reg(base, RSC_DRV_CMD_ENABLE, m, 0, 0);
->>  		write_tcs_reg(base, RSC_DRV_IRQ_CLEAR, 0, 0, BIT(m));
->>  		atomic_set(&drv->tcs_in_use[m], 0);
->> @@ -351,7 +356,8 @@ static void tcs_notify_tx_done(unsigned long data)
->>  	struct rsc_drv *drv = (struct rsc_drv *)data;
->>  	struct tcs_response *resp;
->>  	unsigned long flags;
->> -	int err;
->> +	int err, m;
->> +	struct tcs_mbox_msg *msg;
->>
->>  	do {
->>  		spin_lock_irqsave(&drv->drv_lock, flags);
->> @@ -364,7 +370,10 @@ static void tcs_notify_tx_done(unsigned long data)
->>  		list_del(&resp->list);
->>  		spin_unlock_irqrestore(&drv->drv_lock, flags);
->>  		err = resp->err;
->> +		m = resp->m;
->> +		msg = resp->msg;
->>  		free_response(resp);
->> +		trace_rpmh_notify(drv->name, m, msg->payload[0].addr, err);
->
->The reason I ask, is that this is causing more code to be executed
->even when tracing is off. What about passing in resp and assigning it
->within the tracepoint.
->
->	trace_rpmh_notify(drv->name, resp);
->
-The free_response(resp) will free the resp object and accessing resp->m
-is invalid after that.
+ .../bindings/net/can/microchip,mcp25xxfd.txt       |   31 +
+ drivers/net/can/spi/Kconfig                        |    6 +
+ drivers/net/can/spi/Makefile                       |    1 +
+ drivers/net/can/spi/mcp25xxfd.c                    | 4509 ++++++++++++++++++++
+ 4 files changed, 4547 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/can/microchip,mcp25xxfd.txt
+ create mode 100644 drivers/net/can/spi/mcp25xxfd.c
 
->That would keep extra code from being used within the normal code path
->and only executed in the tracepoint. Get rid of the m = resp->m,
->msg = resp->msg.
->
->Even if m is something different above, you can still just pass in:
->
->	trace_rpmh_notify(drv->name, m, resp);
->
->
->>  	} while (1);
->>  }
-May be I can just move the free_response() afer the
-trace_rpmh_notify().
-
->>
->> @@ -393,6 +402,8 @@ static void __tcs_buffer_write(struct rsc_drv *drv, int m, int n,
->>  		write_tcs_reg(base, RSC_DRV_CMD_MSGID, m, n + i, msgid);
->>  		write_tcs_reg(base, RSC_DRV_CMD_ADDR, m, n + i, cmd->addr);
->>  		write_tcs_reg(base, RSC_DRV_CMD_DATA, m, n + i, cmd->data);
->> +		trace_rpmh_send_msg(drv->name, m, n + i, msgid, cmd->addr,
->> +						cmd->data, cmd->complete);
->
->Here just pass in cmd. The less the parameters of a tracepoints, the
->more likely gcc wont leak code that would be executed when tracing is
->off.
->
-OK.
-
->> +#include <linux/tracepoint.h>
->> +
->> +DECLARE_EVENT_CLASS(rpmh_ack_recvd,
->> +
->> +	TP_PROTO(const char *s, int m, u32 addr, int errno),
->> +
->> +	TP_ARGS(s, m, addr, errno),
->
->Then we could just do:
->
->	TP_PROTO(const char *s, struct tcs_response *resp),
->
->	TP_ARGS(s, resp),
->
-Nice. Will use this.
-
->> +
->> +	TP_STRUCT__entry(
->> +		__field(const char *, name)
->> +		__field(int, m)
->> +		__field(u32, addr)
->> +		__field(int, errno)
->> +	),
->> +
->> +	TP_fast_assign(
->> +		__entry->name = s;
->> +		__entry->m = m;
->> +		__entry->addr = addr;
->> +		__entry->errno = errno;
->
->	__entry->m = resp->m;
->	__entry->addr = resp->msg->payload[0].addr;
->	__entry->errno = resp->err;
->
->-- Steve
->
-Thanks for the review.
-
--- Lina
+--
+2.11.0
