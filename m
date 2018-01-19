@@ -1,56 +1,56 @@
-From: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
-Subject: Re: [PATCH 0/3] PCI: move DT PCI functions to PCI core
-Date: Fri, 19 Jan 2018 22:16:59 +1100
-Message-ID: <87h8riayj8.fsf@concordia.ellerman.id.au>
-References: <20180104211215.11344-1-robh@kernel.org> <20180117235555.GC53542@bhelgaas-glaptop.roam.corp.google.com>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v6 6/9] media: i2c: ov772x: Remove soc_camera dependencies
+Date: Fri, 19 Jan 2018 13:19:18 +0200
+Message-ID: <20180119111917.76wosrokgracbdrz@valkosipuli.retiisi.org.uk>
+References: <1516139101-7835-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1516139101-7835-7-git-send-email-jacopo+renesas@jmondi.org>
+ <d67c21e5-2488-977b-39d8-561048409209@xs4all.nl>
+ <00f1dd19-6420-26ab-0529-a97f2b0de682@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180117235555.GC53542-1RhO1Y9PlrlHTL0Zs8A6p5iNqAH0jzoTYJqu5kTmcBRl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <00f1dd19-6420-26ab-0529-a97f2b0de682@xs4all.nl>
+Sender: linux-media-owner@vger.kernel.org
+To: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, laurent.pinchart@ideasonboard.com, magnus.damm@gmail.com, geert@glider.be, mchehab@kernel.org, festevam@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, pombredanne@nexb.com, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> writes:
+Hi Hans,
 
-> On Thu, Jan 04, 2018 at 03:12:12PM -0600, Rob Herring wrote:
->> Most subsystem specific functions have been moved into the respective
->> subsystems. Only PCI and networking remain. This series moves most of the
->> PCI related code to drivers/pci/of.c. Some bus address functions for PCI
->> remain in of/address.c because we don't have infrastructure to split up
->> the per bus helper functions.
->> 
->> I expect Bjorn to take this series, so PPC maintainers please ack.
->> 
->> Rob
->> 
->> Rob Herring (3):
->>   PCI: move OF related PCI functions into PCI core
->>   powerpc/pci: use of_irq_parse_and_map_pci helper
->>   PCI: make of_irq_parse_pci static
->> 
->>  arch/arm/mach-mvebu/Kconfig      |   1 -
->>  arch/powerpc/kernel/pci-common.c |   8 +-
->>  drivers/of/Kconfig               |  16 --
->>  drivers/of/Makefile              |   2 -
->>  drivers/of/address.c             |   8 +-
->>  drivers/of/of_pci.c              | 384 -----------------------------
->>  drivers/of/of_pci_irq.c          | 131 ----------
->>  drivers/pci/of.c                 | 505 +++++++++++++++++++++++++++++++++++++++
->>  include/linux/of_pci.h           |   8 +-
->>  9 files changed, 510 insertions(+), 553 deletions(-)
->>  delete mode 100644 drivers/of/of_pci.c
->>  delete mode 100644 drivers/of/of_pci_irq.c
->
-> Applied to pci/dt-resources for v4.16, thanks!
->
-> I'll update this if necessary if PPC maintainers comment.
+On Fri, Jan 19, 2018 at 11:47:33AM +0100, Hans Verkuil wrote:
+> On 01/19/18 11:24, Hans Verkuil wrote:
+> > On 01/16/18 22:44, Jacopo Mondi wrote:
+> >> Remove soc_camera framework dependencies from ov772x sensor driver.
+> >> - Handle clock and gpios
+> >> - Register async subdevice
+> >> - Remove soc_camera specific g/s_mbus_config operations
+> >> - Change image format colorspace from JPEG to SRGB as the two use the
+> >>   same colorspace information but JPEG makes assumptions on color
+> >>   components quantization that do not apply to the sensor
+> >> - Remove sizes crop from get_selection as driver can't scale
+> >> - Add kernel doc to driver interface header file
+> >> - Adjust build system
+> >>
+> >> This commit does not remove the original soc_camera based driver as long
+> >> as other platforms depends on soc_camera-based CEU driver.
+> >>
+> >> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> >> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > 
+> > Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
+> 
+> Un-acked.
+> 
+> I just noticed that this sensor driver has no enum_frame_interval and
+> g/s_parm support. How would a driver ever know the frame rate of the
+> sensor without that?
 
-Thanks. Seems fine, fingers crossed :)
+s/_parm/_frame_interval/ ?
 
-cheers
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+We should have wrappers for this or rather to convert g/s_parm users to
+g/s_frame_interval so drivers don't need to implement both.
+
+-- 
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi
