@@ -1,42 +1,127 @@
-From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH 3/3] dt-bindings: etnaviv: add slave interface clock
-Date: Fri, 19 Jan 2018 13:06:34 +0100
-Message-ID: <20180119120634.22856-3-l.stach@pengutronix.de>
-References: <20180119120634.22856-1-l.stach@pengutronix.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180119120634.22856-1-l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Christian Gmeiner <christian.gmeiner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux+etnaviv-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, etnaviv-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v6 3/9] v4l: platform: Add Renesas CEU driver
+Date: Fri, 19 Jan 2018 14:20:33 +0200
+Message-ID: <2529707.jzkV7c2yGz@avalon>
+References: <1516139101-7835-1-git-send-email-jacopo+renesas@jmondi.org> <1516139101-7835-4-git-send-email-jacopo+renesas@jmondi.org> <d056343b-46be-436a-e316-0a588a182eb9@xs4all.nl>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <d056343b-46be-436a-e316-0a588a182eb9@xs4all.nl>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, magnus.damm@gmail.com, geert@glider.be, mchehab@kernel.org, festevam@gmail.com, sakari.ailus@iki.fi, robh+dt@kernel.org, mark.rutland@arm.com, pombredanne@nexb.com, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Newer GPU cores added a new clock input, which allows to gate the slave (AHB)
-interface independently from other parts of the GPU. Add it to the supported
-clocks.
+Hi Hans,
 
-Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
- Documentation/devicetree/bindings/display/etnaviv/etnaviv-drm.txt | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+On Friday, 19 January 2018 13:20:19 EET Hans Verkuil wrote:
+> On 01/16/18 22:44, Jacopo Mondi wrote:
+> > Add driver for Renesas Capture Engine Unit (CEU).
+> > 
+> > The CEU interface supports capturing 'data' (YUV422) and 'images'
+> > (NV[12|21|16|61]).
+> > 
+> > This driver aims to replace the soc_camera-based sh_mobile_ceu one.
+> > 
+> > Tested with ov7670 camera sensor, providing YUYV_2X8 data on Renesas RZ
+> > platform GR-Peach.
+> > 
+> > Tested with ov7725 camera sensor on SH4 platform Migo-R.
+> > 
+> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > ---
+> > 
+> >  drivers/media/platform/Kconfig       |    9 +
+> >  drivers/media/platform/Makefile      |    1 +
+> >  drivers/media/platform/renesas-ceu.c | 1659 +++++++++++++++++++++++++++++
+> >  3 files changed, 1669 insertions(+)
+> >  create mode 100644 drivers/media/platform/renesas-ceu.c
 
-diff --git a/Documentation/devicetree/bindings/display/etnaviv/etnaviv-drm.txt b/Documentation/devicetree/bindings/display/etnaviv/etnaviv-drm.txt
-index f28aa5735f4f..5daee0a3da45 100644
---- a/Documentation/devicetree/bindings/display/etnaviv/etnaviv-drm.txt
-+++ b/Documentation/devicetree/bindings/display/etnaviv/etnaviv-drm.txt
-@@ -37,7 +37,8 @@ Optional properties:
- - clocks: should contain one clock for entry in clock-names
-   see Documentation/devicetree/bindings/clock/clock-bindings.txt
- - clock-names:
--   - "bus":    AXI/register clock
-+   - "bus":    AXI/master interface clock
-+   - "reg":    AHB/slave interface clock
-    - "core":   GPU core clock
-    - "shader": Shader clock (only if GPU has feature PIPE_3D)
- 
+[snip]
+
+> > diff --git a/drivers/media/platform/renesas-ceu.c
+> > b/drivers/media/platform/renesas-ceu.c new file mode 100644
+> > index 0000000..1b8f0ef
+> > --- /dev/null
+> > +++ b/drivers/media/platform/renesas-ceu.c
+
+[snip]
+
+> > +static void ceu_update_plane_sizes(struct v4l2_plane_pix_format *plane,
+> > +				   unsigned int bpl, unsigned int szimage)
+> > +{
+> > +	if (plane->bytesperline < bpl)
+> > +		plane->bytesperline = bpl;
+> > +	if (plane->sizeimage < szimage)
+> > +		plane->sizeimage = szimage;
+> 
+> As mentioned in your cover letter, you do need to check for invalid
+> bytesperline values. The v4l2-compliance test is to see what happens
+> when userspace gives insane values, so yes, drivers need to be able
+> to handle that.
+
+What limit would you set, what is an acceptable large value versus an invalid 
+large value ? I think we should have rules for this at the API level (or at 
+least, if not part of the API, rules that are consistent across drivers).
+
+> plane->sizeimage is set by the driver, so drop the 'if' before the
+> assignment.
+
+I don't think that's correct. Userspace should be able to control padding 
+lines at the end of the image, the same way it controls padding pixels at the 
+end of lines.
+
+> > +}
+
+[snip]
+
+> > +static const struct v4l2_ioctl_ops ceu_ioctl_ops = {
+> > +	.vidioc_querycap		= ceu_querycap,
+> > +
+> > +	.vidioc_enum_fmt_vid_cap_mplane	= ceu_enum_fmt_vid_cap,
+> > +	.vidioc_try_fmt_vid_cap_mplane	= ceu_try_fmt_vid_cap,
+> > +	.vidioc_s_fmt_vid_cap_mplane	= ceu_s_fmt_vid_cap,
+> > +	.vidioc_g_fmt_vid_cap_mplane	= ceu_g_fmt_vid_cap,
+> > +
+> > +	.vidioc_enum_input		= ceu_enum_input,
+> > +	.vidioc_g_input			= ceu_g_input,
+> > +	.vidioc_s_input			= ceu_s_input,
+> > +
+> > +	.vidioc_reqbufs			= vb2_ioctl_reqbufs,
+> > +	.vidioc_querybuf		= vb2_ioctl_querybuf,
+> > +	.vidioc_qbuf			= vb2_ioctl_qbuf,
+> > +	.vidioc_expbuf			= vb2_ioctl_expbuf,
+> > +	.vidioc_dqbuf			= vb2_ioctl_dqbuf,
+> > +	.vidioc_create_bufs		= vb2_ioctl_create_bufs,
+> > +	.vidioc_prepare_buf		= vb2_ioctl_prepare_buf,
+> > +	.vidioc_streamon		= vb2_ioctl_streamon,
+> > +	.vidioc_streamoff		= vb2_ioctl_streamoff,
+> > +
+> > +	.vidioc_g_parm			= ceu_g_parm,
+> > +	.vidioc_s_parm			= ceu_s_parm,
+> > +	.vidioc_enum_framesizes		= ceu_enum_framesizes,
+> > +	.vidioc_enum_frameintervals	= ceu_enum_frameintervals,
+> 
+> You're missing these ioctls:
+> 
+>         .vidioc_log_status              = v4l2_ctrl_log_status,
+
+Is log status mandatory ?
+
+>         .vidioc_subscribe_event         = v4l2_ctrl_subscribe_event,
+>         .vidioc_unsubscribe_event       = v4l2_event_unsubscribe,
+> 
+> These missing _event ops are the reason for this compliance failure:
+> 
+> fail: v4l2-test-controls.cpp(782): subscribe event for control 'User
+> Controls' failed
+> > +};
+
+[snip]
+
 -- 
-2.11.0
+Regards,
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Laurent Pinchart
