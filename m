@@ -1,101 +1,63 @@
-From: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH v5 0/7] ARM: stm32: add initial STM32MPU support
-Date: Fri, 19 Jan 2018 15:02:54 +0100
-Message-ID: <d93e6536-cdc3-b055-395e-a98915c1a875@st.com>
-References: <1516114580-2424-1-git-send-email-ludovic.Barre@st.com>
+From: Greentime Hu <green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v6 24/36] nds32: Loadable modules
+Date: Fri, 19 Jan 2018 22:26:57 +0800
+Message-ID: <CAEbi=3e8eUDsmX2DgixgM9P=oPu1b1-wvUDpiLGx4fbUPtCOuw@mail.gmail.com>
+References: <cover.1515766253.git.green.hu@gmail.com> <0a0789a3f776a5248ebc01706d502a3a9823cfac.1515766253.git.green.hu@gmail.com>
+ <CAK8P3a3pQSxM+gJ+dJsyeo5YnuOOyFYVoJdCVmnoHR0Numya5g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1516114580-2424-1-git-send-email-ludovic.Barre-qxv4g6HH51o@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <CAK8P3a3pQSxM+gJ+dJsyeo5YnuOOyFYVoJdCVmnoHR0Numya5g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ludovic Barre <ludovic.Barre-qxv4g6HH51o@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gerald Baeza <gerald.baeza-qxv4g6HH51o@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Greentime <greentime-MUIXKm3Oiri1Z/+hSey0Gg@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arch <linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Networking <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Vincent Chen <deanbo422-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Al Viro <viro-RmSDqhL/yNMiFSDQTTA3OLVCufUGDwFn@public.gmane.org>, David Howells <dhowells-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert.uytterhoeven-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Greg KH <greg-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>, Guo Ren <ren_guo-Y+KPrCd2zL4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ludovic
+2018-01-18 18:41 GMT+08:00 Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>:
+> On Mon, Jan 15, 2018 at 6:53 AM, Greentime Hu <green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> From: Greentime Hu <greentime-MUIXKm3Oiri1Z/+hSey0Gg@public.gmane.org>
+>>
+>> This patch adds support for loadable modules.
+>
+> One detail:
+>
+> You still seem to have both the ELF_REL and ELF_RELA based functions
+> implemented here, you should drop the unused ELF_REL version:
+>
+>> diff --git a/arch/nds32/kernel/module.c b/arch/nds32/kernel/module.c
+>> new file mode 100644
+>> index 0000000..714a6d6
+>> --- /dev/null
+>> +++ b/arch/nds32/kernel/module.c
+>> @@ -0,0 +1,286 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +// Copyright (C) 2005-2017 Andes Technology Corporation
+>> +
+>> +#include <linux/module.h>
+>> +#include <linux/elf.h>
+>> +#include <linux/vmalloc.h>
+>> +
+>> +#include <asm/pgtable.h>
+>
+> include <linux/moduleloader.h> to catch this.
+>
+>> +int
+>> +apply_relocate(Elf32_Shdr * sechdrs, const char *strtab,
+>> +              unsigned int symindex, unsigned int relsec,
+>> +              struct module *module)
+>> +{
+>> +       return 0;
+>> +}
+>
+> and drop this.
+>
+> With that change,
+>
+> Acked-by:  Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 
-On 01/16/2018 03:56 PM, Ludovic Barre wrote:
-> From: Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
-> 
-> This patch series extends the existing STM32 microcontrollers (MCUs)
-> family to microprocessors (MPUs). The MPU platform (based on
-> Arm Cortex-A) is a continuation of the MCU one (based on Arm
-> Cortex-M) in that it shares a wide number of hardware blocks.
-> 
+Hi, Arnd:
 
-If not other majors comments on the series I will apply it in my next 
-pull request (for v4.17).
-
-Regards
-Alex
-
-> change v5:
-> -fix serial3 aliases by serial0
->   
-> change v4:
-> -Add all available uarts in stm32mp157c
-> -Move uart aliases to board files
-> 
-> change v3:
-> -Remove bootargs
-> -Remove armv7m_restart and Share stm32_compat for mcu/mpu
-> -Modify stm32 kconfig with Arnd template
-> -Remove patch below (Linus W: Patch applied)
->   devicetree: bindings: Document supported STM32 SoC family
->   pinctrl: stm32: Add STM32MP157 MPU support
-> 
-> change V2:
-> -Add stm32 documentation in this serie to avoid merge conflict
-> thread: "https://patchwork.kernel.org/patch/10102573/";
-> -Split bindings (stm32.txt) to separate patches.
-> -Remove ARCH_STM32_MCU/MPU flags
-> -Adopt rst format for Documentation/arm/stm32 files
-> -s/STMicrolectronics/STMicroelectronics/g
-> 
-> Ludovic Barre (7):
->    Documentation: arm: stm32: move to rst format
->    ARM: stm32: prepare stm32 family to welcome armv7 architecture
->    dt-bindings: stm32: add support of STM32MP157
->    ARM: stm32: add initial support for STM32MP157
->    ARM: configs: multi_v7: add stm32 support
->    ARM: dts: stm32: add stm32mp157c initial support
->    ARM: dts: stm32: add initial support of stm32mp157c eval board
-> 
->   Documentation/arm/stm32/overview.rst            |  34 +++++
->   Documentation/arm/stm32/overview.txt            |  33 ----
->   Documentation/arm/stm32/stm32f429-overview.rst  |  26 ++++
->   Documentation/arm/stm32/stm32f429-overview.txt  |  22 ---
->   Documentation/arm/stm32/stm32f746-overview.rst  |  33 ++++
->   Documentation/arm/stm32/stm32f746-overview.txt  |  34 -----
->   Documentation/arm/stm32/stm32h743-overview.rst  |  34 +++++
->   Documentation/arm/stm32/stm32h743-overview.txt  |  30 ----
->   Documentation/arm/stm32/stm32mp157-overview.rst |  19 +++
->   Documentation/devicetree/bindings/arm/stm32.txt |   1 +
->   arch/arm/boot/dts/Makefile                      |   6 +-
->   arch/arm/boot/dts/stm32mp157-pinctrl.dtsi       | 185 ++++++++++++++++++++++
->   arch/arm/boot/dts/stm32mp157c-ed1.dts           |  32 ++++
->   arch/arm/boot/dts/stm32mp157c-ev1.dts           |  21 +++
->   arch/arm/boot/dts/stm32mp157c.dtsi              | 194 ++++++++++++++++++++++++
->   arch/arm/configs/multi_v7_defconfig             |   3 +
->   arch/arm/mach-stm32/Kconfig                     |  38 +++--
->   arch/arm/mach-stm32/board-dt.c                  |   5 +-
->   18 files changed, 614 insertions(+), 136 deletions(-)
->   create mode 100644 Documentation/arm/stm32/overview.rst
->   delete mode 100644 Documentation/arm/stm32/overview.txt
->   create mode 100644 Documentation/arm/stm32/stm32f429-overview.rst
->   delete mode 100644 Documentation/arm/stm32/stm32f429-overview.txt
->   create mode 100644 Documentation/arm/stm32/stm32f746-overview.rst
->   delete mode 100644 Documentation/arm/stm32/stm32f746-overview.txt
->   create mode 100644 Documentation/arm/stm32/stm32h743-overview.rst
->   delete mode 100644 Documentation/arm/stm32/stm32h743-overview.txt
->   create mode 100644 Documentation/arm/stm32/stm32mp157-overview.rst
->   create mode 100644 arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
->   create mode 100644 arch/arm/boot/dts/stm32mp157c-ed1.dts
->   create mode 100644 arch/arm/boot/dts/stm32mp157c-ev1.dts
->   create mode 100644 arch/arm/boot/dts/stm32mp157c.dtsi
-> 
+Thank you. I will include moduleloader.h and drop apply_relocate().
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
