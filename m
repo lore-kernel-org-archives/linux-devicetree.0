@@ -1,104 +1,112 @@
-From: okaya@codeaurora.org
-Subject: Re: [RFCv2 PATCH 05/36] iommu/process: Bind and unbind process to and
- from devices
-Date: Fri, 19 Jan 2018 08:07:21 -0500
-Message-ID: <c0e39c5a69a6f612e11c6076be9c5d53@codeaurora.org>
-References: <20171006133203.22803-1-jean-philippe.brucker@arm.com>
- <20171006133203.22803-6-jean-philippe.brucker@arm.com>
- <0772e71e-4861-1e7b-f248-88aaba8bf2fc@codeaurora.org>
- <e2753b59-2b9e-ffc6-a7b8-0ed23df38e10@arm.com>
+From: Stefan Mavrodiev <stefan-kyXcfZUBQGPQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 1/1] ARM: dts: sunxi: Add Olimex A20-SOM204-EVB board
+Date: Fri, 19 Jan 2018 15:27:28 +0200
+Message-ID: <548d57b7-4db1-a9ee-369e-9067f981162d@olimex.com>
+References: <1515747666-6597-1-git-send-email-stefan@olimex.com>
+ <20180115095031.pzsgrp3tdmemotrs@flea.lan>
+ <1b9667a4-75de-4ece-069d-7ec33b7e2f8d@olimex.com>
+ <20180118100745.y62adzvfnrzqkagd@flea.lan>
+ <CAGb2v66U9ziFhU5n6haTA3LGNX7BavmfXiiCmvebtqaMxcN0-w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <e2753b59-2b9e-ffc6-a7b8-0ed23df38e10@arm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, iommu@lists.linux-foundation.org, joro@8bytes.org, robh+dt@kernel.org, Mark Rutland <Mark.Rutland@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, hanjun.guo@linaro.org, Sudeep Holla <Sudeep.Holla@arm.com>, rjw@rjwysocki.net, lenb@kernel.org, Robin Murphy <Robin.Murphy@arm.com>, bhelgaas@google.com, alex.williamson@redhat.com, tn@semihalf.com, liubo95@huawei.com, thunder.leizhen@huawei.com, xieyisheng1@huawei.com, gabriele.paoloni@huawei.com, nwatters@codeaurora.org, rfranz@cavium.com, dwmw2@infradead.org, jacob.jun.pan@linux.intel.com, yi.l.liu@intel.com, ashok.
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAGb2v66U9ziFhU5n6haTA3LGNX7BavmfXiiCmvebtqaMxcN0-w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Stefan Mavrodiev <stefan-kyXcfZUBQGPQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM PORT" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2018-01-19 05:27, Jean-Philippe Brucker wrote:
-> Hi Sinan,
-> 
-> On 19/01/18 04:52, Sinan Kaya wrote:
->> Hi Jean-Philippe,
->> 
->> On 10/6/2017 9:31 AM, Jean-Philippe Brucker wrote:
->>>  /**
->>> + * iommu_process_bind_device - Bind a process address space to a 
->>> device
->>> + * @dev: the device
->>> + * @task: the process to bind
->>> + * @pasid: valid address where the PASID will be stored
->>> + * @flags: bond properties (IOMMU_PROCESS_BIND_*)
->>> + *
->>> + * Create a bond between device and task, allowing the device to 
->>> access the
->>> + * process address space using the returned PASID.
->>> + *
->>> + * On success, 0 is returned and @pasid contains a valid ID. 
->>> Otherwise, an error
->>> + * is returned.
->>> + */
->>> +int iommu_process_bind_device(struct device *dev, struct task_struct 
->>> *task,
->>> +			      int *pasid, int flags)
->> 
->> This API doesn't play nice with endpoint device drivers that have 
->> PASID limitations.
->> 
->> The AMD driver seems to have PASID limitations per product that are 
->> not being
->> advertised in the PCI capability.
->> 
->> device_iommu_pasid_init()
->> {
->>         pasid_limit = min_t(unsigned int,
->>                         (unsigned int)(1 << 
->> kfd->device_info->max_pasid_bits),
->>                         iommu_info.max_pasids);
->>         /*
->>          * last pasid is used for kernel queues doorbells
->>          * in the future the last pasid might be used for a kernel 
->> thread.
->>          */
->>         pasid_limit = min_t(unsigned int,
->>                                 pasid_limit,
->>                                 kfd->doorbell_process_limit - 1);
->> }
->> 
->> kfd->device_info->max_pasid_bits seems to contain per device 
->> limitations.
->> 
->> Would you be willing to extend the API so that the requester can 
->> impose some limit
->> on the PASID value that is getting allocated.
-> 
-> Good point. Following the feedback for this series, next version adds
-> another public function:
-> 
-> int iommu_sva_device_init(struct device *dev, int features);
-> 
-> that has to be called by the device driver before any bind(). The 
-> intent
-> is to let some IOMMU drivers initialize PASID tables and other features
-> lazily, only if the device driver actually intends to use them. Maybe I
-> could change this function to:
-> 
-> int iommu_sva_device_init(struct device *dev, int features, unsigned 
-> int
-> max_pasid);
-> 
-> @features is a bitmask telling what the device driver needs (PASID 
-> and/or
-> page faults). If features has IOMMU_SVA_FEAT_PASID set, then device 
-> driver
-> can set a max_pasid limit, that we'd store in our private device-iommu
-> data. If max_pasid is 0, then we'd use the PCI limit.
+On 01/18/2018 04:28 PM, Chen-Yu Tsai wrote:
+> On Thu, Jan 18, 2018 at 6:07 PM, Maxime Ripard
+> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+>> Hi!
+>>
+>> On Mon, Jan 15, 2018 at 12:07:34PM +0200, Stefan Mavrodiev wrote:
+>>>>> +/dts-v1/;
+>>>>> +#include "sun7i-a20.dtsi"
+>>>>> +#include "sunxi-common-regulators.dtsi"
+>>>>> +
+>>>>> +
+>>>>> +#include <dt-bindings/gpio/gpio.h>
+>>>>> +#include <dt-bindings/interrupt-controller/irq.h>
+>>>>> +#include <dt-bindings/pwm/pwm.h>
+>>>>> +
+>>>>> +/ {
+>>>>> + model = "Olimex A20-SOM204-EVB";
+>>>>> + compatible = "olimex,a20-olimex-som204-evb", "allwinner,sun7i-a20";
+>>>>> +
+>>>>> + aliases {
+>>>>> +         serial0 = &uart0;
+>>>>> +         serial1 = &uart4;
+>>>>> +         serial2 = &uart7;
+>>>>> +         spi0 = &spi1;
+>>>>> +         spi1 = &spi2;
+>>>>> +         ethernet1 = &rtl8723bs;
+>>>> ethernet1? if there's a single network interface, it should be
+>>>> ethernet0.
+>>> I think this will conflict the gmac alias defined in sun7i-a20.dtsi:
+>>>
+>>> aliases {
+>>>      ethernet0 = &gmac;
+>>> };
+>> We have that? That's bad, but you're right :)
+>>
+>>>>> +         stat {
+>>>>> +                 label = "a20-som204:green:stat";
+>>>>> +                 gpios = <&pio 8 0 GPIO_ACTIVE_HIGH>;
+>>>>> +                 default-state = "on";
+>>>>> +         };
+>>>>> +
+>>>>> +         led1 {
+>>>>> +                 label = "a20-som204-evb:green:led1";
+>>>>> +                 gpios = <&pio 8 10 GPIO_ACTIVE_HIGH>;
+>>>>> +                 default-state = "on";
+>>>>> +         };
+>>>>> +
+>>>>> +         led2 {
+>>>>> +                 label = "a20-som204-evb:yellow:led2";
+>>>>> +                 gpios = <&pio 8 11 GPIO_ACTIVE_HIGH>;
+>>>>> +                 default-state = "on";
+>>>>> +         };
+>>>> You don't have the same prefix between stat and led1/led2. I'm fine
+>>>> with both, but you should be consistent :)
+>>> STAT led is on the SOM204 module, while led1/2 on the EVB. Thats why
+>>> they have different prefix.
+>> Still, the user and the system will see it as a single board, and the
+>> documentation states that it should be the board name. I'm not quite
+>> sure what a good rule would be here. Have you looked at how other
+>> boards dealt with it? Chen-Yu, any opinion on this?
+> Follow the bindings, I guess? I don't think we (sunxi) have dealt
+> with modules that have LEDs or anything that needs to be named after
+> the board.
+>
+> On a related topic, I don't know if you (Stefan / Olimex) want to split
+> this into a .dtsi file for the SoM, and a .dts file for the EVB. It might
+> help your customers?
+I'm not sure this will be good ideal. We will have one EVB with all
+possible peripheries. On the other hand, we are planning 3-4 different
+SOM204 modules (A20, A64, RK....). I think this will make the dtsi 
+incompatible.
 
-Yes, this should work.
+Maybe if there is one dtsi for the base SOM204 module (one for each 
+arch) and
+multiple dts for boards with additional features. But this will generate 
+10-20
+dts files. I think this will be better handled using overlays in the uboot.
 
-> 
-> Thanks,
-> Jean
+About the leds, I'm ok to be named after full board name (a20-som204-evb).
+> I've tried it previously, and it helps in some ways
+> when you're matching the files to the schematics. But it is confusing
+> when you want the big picture. On the other hand, this is not going to
+> help with supporting different modules on the same baseboard, as the
+> routing, peripherals and labels likely won't match up. Just my two cents.
+>
+> ChenYu
+Regards,
+Stefan Mavrodiev
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
