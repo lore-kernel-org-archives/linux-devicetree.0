@@ -1,86 +1,49 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v5 0/2] media: v4l: Add support for the Cadence MIPI-CSI2 RX
-Date: Fri, 19 Jan 2018 09:13:55 +0100
-Message-ID: <20180119081357.20799-1-maxime.ripard@free-electrons.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Richard Sproul <sproul-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Alan Douglas <adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Steve Creaney <screaney-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>, nm-l0cyMroinI0@public.gmane.org, Simon Hatliff <hatliff-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+From: "'Kishon Vijay Abraham I' via linux-sunxi" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Subject: Re: [RESEND] phy: sun4i-usb: add support for R40 USB PHY
+Date: Fri, 19 Jan 2018 13:43:57 +0530
+Message-ID: <993f82ad-befe-05fb-351d-8fd31d8bc132@ti.com>
+References: <20180103084944.3145-1-icenowy@aosc.io>
+ <20180115150656.bibc4draok4i4oae@lemon.iwr.uni-heidelberg.de>
+ <CAGb2v64DuqTv49CfOMhovdikc9iUGCfLRSmJ+FEeF5ct+-YzEw@mail.gmail.com>
+Reply-To: kishon-l0cyMroinI0@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCOOP4VF5IDRBVORQ3JQKGQESVZXD7I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <CAGb2v64DuqTv49CfOMhovdikc9iUGCfLRSmJ+FEeF5ct+-YzEw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Hermann Lauer <Hermann.Lauer-hEciA7+sKtudPOQpRHQ53DeJuz7u0hKX@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 Hi,
 
-Here is the fifth attempt at supporting the MIPI-CSI2 RX block from
-Cadence.
+On Friday 19 January 2018 11:55 AM, Chen-Yu Tsai wrote:
+> Hi Kishon,
+> 
+> On Mon, Jan 15, 2018 at 11:06 PM, Hermann Lauer
+> <Hermann.Lauer-hEciA7+sKtudPOQpRHQ53DeJuz7u0hKX@public.gmane.org> wrote:
+>> On Wed, Jan 03, 2018 at 04:49:44PM +0800, Icenowy Zheng wrote:
+>>> Allwinner R40 features a USB PHY like the one in A64, but with 3 PHYs.
+>>>
+>>> Add support for it.
+>>>
+>>> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+>>> Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>>
+>> You may add
+>>
+>> Tested-by: Hermann.Lauer-hEciA7+sKtudPOQpRHQ53DeJuz7u0hKX@public.gmane.org
+> 
+> Gentle ping for this patch to be included in 4.16
 
-This IP block is able to receive CSI data over up to 4 lanes, and
-split it to over 4 streams. Those streams are basically the interfaces
-to the video grabbers that will perform the capture.
+Sent the pull request for 4.16 to Greg on Jan 2nd. So this can't be included in
+4.16. Sorry.
 
-It is able to map streams to both CSI datatypes and virtual channels,
-dynamically. This is unclear at this point what the right way to
-support it would be, so the driver only uses a static mapping between
-the virtual channels and streams, and ignores the data types.
-
-Let me know what you think!
-Maxime
-
-Changes from v4:
-  - Rebased on top of 4.15
-  - Fixed a lane mapping issue that prevented the CSI2-RX device to operate
-    properly.
-  - Reworded the output endpoints documentation in the binding
-
-Changes from v3:
-  - Removed stale printk
-  - Propagate start/stop functions error code to s_stream
-  - Renamed the DT bindings files
-  - Clarified the output ports wording in the DT binding doc
-  - Added a define for the maximum number of lanes
-  - Rebased on top of Sakari's serie
-  - Gathered tags based on the reviews
-
-Changes from v2:
-  - Added reference counting for the controller initialisation
-  - Fixed checkpatch warnings
-  - Moved the sensor initialisation after the DPHY configuration
-  - Renamed the sensor fields to source for consistency
-  - Defined some variables
-  - Renamed a few structures variables
-  - Added internal and external phy errors messages
-  - Reworked the binding slighty by making the external D-PHY optional
-  - Moved the notifier registration in the probe function
-  - Removed some clocks that are not system clocks
-  - Added clocks enabling where needed
-  - Added the code to remap the data lanes
-  - Changed the memory allocator for the non-devm function, and a
-    comment explaining why
-  - Reworked the binding wording
-
-Changes from v1:
-  - Amended the DT bindings as suggested by Rob
-  - Rebase on top of 4.13-rc1 and latest Niklas' serie iteration
-
-Maxime Ripard (2):
-  dt-bindings: media: Add Cadence MIPI-CSI2 RX Device Tree bindings
-  v4l: cadence: Add Cadence MIPI-CSI2 RX driver
-
- .../devicetree/bindings/media/cdns,csi2rx.txt      | 100 +++++
- drivers/media/platform/Kconfig                     |   1 +
- drivers/media/platform/Makefile                    |   2 +
- drivers/media/platform/cadence/Kconfig             |  12 +
- drivers/media/platform/cadence/Makefile            |   1 +
- drivers/media/platform/cadence/cdns-csi2rx.c       | 463 +++++++++++++++++++++
- 6 files changed, 579 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/cdns,csi2rx.txt
- create mode 100644 drivers/media/platform/cadence/Kconfig
- create mode 100644 drivers/media/platform/cadence/Makefile
- create mode 100644 drivers/media/platform/cadence/cdns-csi2rx.c
-
--- 
-2.14.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks
+Kishon
