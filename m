@@ -1,66 +1,52 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 1/5] bindings: regulator: added support for suspend
- states
-Date: Fri, 19 Jan 2018 16:11:08 -0600
-Message-ID: <20180119221108.nndgk3ln573n6zew@rob-hp-laptop>
-References: <1515752305-15907-1-git-send-email-zhang.chunyan@linaro.org>
- <1515752305-15907-2-git-send-email-zhang.chunyan@linaro.org>
+From: Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH v6 0/9] Renesas Capture Engine Unit (CEU) V4L2 driver
+Date: Fri, 19 Jan 2018 14:12:19 -0800
+Message-ID: <b26ef29e-0c26-6359-1205-735e6770eb10@infradead.org>
+References: <1516139101-7835-1-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1515752305-15907-2-git-send-email-zhang.chunyan@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chunyan Zhang <zhang.chunyan@linaro.org>
-Cc: Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Chunyan Zhang <zhang.lyra@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1516139101-7835-1-git-send-email-jacopo+renesas@jmondi.org>
+Content-Language: en-US
+Sender: linux-media-owner@vger.kernel.org
+To: Jacopo Mondi <jacopo+renesas@jmondi.org>, laurent.pinchart@ideasonboard.com, magnus.damm@gmail.com, geert@glider.be, hverkuil@xs4all.nl, mchehab@kernel.org, festevam@gmail.com, sakari.ailus@iki.fi, robh+dt@kernel.org, mark.rutland@arm.com, pombredanne@nexb.com
+Cc: linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 12, 2018 at 06:18:21PM +0800, Chunyan Zhang wrote:
-> Some systems need to set regulators to specific states when they enter
-> low power modes, especially around CPUs. There are many of these modes
-> depending on the particular runtime state.
+On 01/16/2018 01:44 PM, Jacopo Mondi wrote:
+> Hello,
+>    new version of CEU after Hans' review.
 > 
-> Currently the regulator consumers are not granted permission to change
-> suspend state of regulator devices, the constraints are configured at
-> startup.  In order to allow changes in a vlotage range, we need to add
-> new properties for voltage range and a flag to give permission to
-> change the suspend voltage and suspend on/off in suspend mode.
-> 
-> Signed-off-by: Chunyan Zhang <zhang.chunyan@linaro.org>
-> ---
->  Documentation/devicetree/bindings/regulator/regulator.txt | 15 +++++++++++++--
->  1 file changed, 13 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/regulator/regulator.txt b/Documentation/devicetree/bindings/regulator/regulator.txt
-> index 378f6dc..532e286 100644
-> --- a/Documentation/devicetree/bindings/regulator/regulator.txt
-> +++ b/Documentation/devicetree/bindings/regulator/regulator.txt
-> @@ -42,8 +42,19 @@ Optional properties:
->  - regulator-state-[mem/disk] node has following common properties:
->  	- regulator-on-in-suspend: regulator should be on in suspend state.
->  	- regulator-off-in-suspend: regulator should be off in suspend state.
-> -	- regulator-suspend-microvolt: regulator should be set to this voltage
-> -	  in suspend.
-> +	- regulator-suspend-min-microvolt: minimum voltage may be set in
-> +	  suspend state.
-> +	- regulator-suspend-max-microvolt: maximum voltage may be set in
-> +	  suspend state.
-> +	- regulator-suspend-microvolt: the default voltage which regulator
-> +	  would be set in suspend. The voltage for suspend also can be
-> +	  adjusted among {regulator-suspend-min-microvolt,
-> +	  regulator-suspend-max-microvolt} by calling
-> +	  regulator_set_suspend_voltage(). This property is now deprecated,
-> +	  setting voltage for suspend mode via API the regulator driver
-> +	  provides is recommended.
+> Added his Acked-by to most patches and closed review comments.
+> Running v4l2-compliance, I noticed a new failure introduced by the way I now
+> calculate the plane sizes in set/try_fmt.
 
-Please reword. This is Linux implementation details that shouldn't be in 
-the binding.
+I would expect that you have already seen this, but I get a build error
+in renesas-ceu.c.  Here is a small patch for it.
 
-> +	- regulator-changeable-in-suspend: whether the default voltage and
-> +	  the regulator on/off in suspend can be changed in runtime.
->  	- regulator-mode: operating mode in the given suspend state.
->  	  The set of possible operating modes depends on the capabilities of
->  	  every hardware so the valid modes are documented on each regulator
-> -- 
-> 2.7.4
-> 
+---
+From: Randy Dunlap <rdunlap@infradead.org>
+
+Fix build error (on x86 with COMPILE_TEST):
+
+../drivers/media/platform/renesas-ceu.c: In function 'ceu_parse_dt':
+../drivers/media/platform/renesas-ceu.c:1497:27: error: request for member 'fwnode' in something not a structure or union
+   ceu_sd->asd.match.fwnode.fwnode =
+
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+---
+ drivers/media/platform/renesas-ceu.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- linux-next-20180119.orig/drivers/media/platform/renesas-ceu.c
++++ linux-next-20180119/drivers/media/platform/renesas-ceu.c
+@@ -1494,7 +1494,7 @@ static int ceu_parse_dt(struct ceu_devic
+ 
+ 		ceu_sd->mbus_flags = fw_ep.bus.parallel.flags;
+ 		ceu_sd->asd.match_type = V4L2_ASYNC_MATCH_FWNODE;
+-		ceu_sd->asd.match.fwnode.fwnode =
++		ceu_sd->asd.match.fwnode =
+ 			fwnode_graph_get_remote_port_parent(
+ 					of_fwnode_handle(ep));
+ 
