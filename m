@@ -1,58 +1,41 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH v2 2/2] drm: rcar-du: add R8A77970 support
-Date: Fri, 19 Jan 2018 00:05:59 +0300
-Message-ID: <20180118211027.375081728__9970.41229061342$1516342933$gmane$org@cogentembedded.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [RESEND] phy: sun4i-usb: add support for R40 USB PHY
+Date: Fri, 19 Jan 2018 14:25:09 +0800
+Message-ID: <CAGb2v64DuqTv49CfOMhovdikc9iUGCfLRSmJ+FEeF5ct+-YzEw@mail.gmail.com>
+References: <20180103084944.3145-1-icenowy@aosc.io> <20180115150656.bibc4draok4i4oae@lemon.iwr.uni-heidelberg.de>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline; filename=drm-rcar-du-add-R8A77970-support-v2.patch
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBXE6Q3JQKGQEFJS5DBA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180115150656.bibc4draok4i4oae-/wZ4IcVS6hAdmw7VdWMmteH3J2bgQ+4lG9Ur7JDdleE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Hermann Lauer <Hermann.Lauer-hEciA7+sKtudPOQpRHQ53DeJuz7u0hKX@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-QWRkIHN1cHBvcnQgZm9yIHRoZSBSLUNhciBWM00gKFI4QTc3OTcwKSBTb0MgdG8gdGhlIFItQ2Fy
-IERVIGRyaXZlci4KClNpZ25lZC1vZmYtYnk6IFNlcmdlaSBTaHR5bHlvdiA8c2VyZ2VpLnNodHls
-eW92QGNvZ2VudGVtYmVkZGVkLmNvbT4KCi0tLQpDaGFuZ2VzIGluIHZlcnNpb24gMjoKLSByZW1v
-dmVkICB0aGUgJ21vZGVsJyBhbmQgJ2RwbGxfY2gnIGZpZWxkIGluaXRpYWxpemVyczsKLSBmaXhl
-ZCB1cCB0aGUgRFUgcG9ydCBudW1iZXJzOwotIHNwbGl0IHRoZSBEVSBiaW5kaW5ncyBhbmQgdGhl
-IExWRFMgZHJpdmVyIHVwZGF0ZXMgaW50byBhIHNlcGFyYXRlIHBhdGNoZXM7Ci0gcmVtb3ZlZCAg
-dGhlIGNoZWNrIGJlZm9yZSB0aGUgRFBUU1Igd3JpdGUgKHRvIGJlIGRvbmUgaW4gYSBzZXBhcmF0
-ZSBwYXRjaCkuCgogZHJpdmVycy9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV9kcnYuYyB8ICAgMjEg
-KysrKysrKysrKysrKysrKysrKysrCiAxIGZpbGUgY2hhbmdlZCwgMjEgaW5zZXJ0aW9ucygrKQoK
-SW5kZXg6IGxpbnV4L2RyaXZlcnMvZ3B1L2RybS9yY2FyLWR1L3JjYXJfZHVfZHJ2LmMKPT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PQotLS0gbGludXgub3JpZy9kcml2ZXJzL2dwdS9kcm0vcmNhci1kdS9yY2FyX2R1X2Rydi5j
-CisrKyBsaW51eC9kcml2ZXJzL2dwdS9kcm0vcmNhci1kdS9yY2FyX2R1X2Rydi5jCkBAIC0yNDks
-NiArMjQ5LDI2IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgcmNhcl9kdV9kZXZpY2VfaW5mbwogCS5k
-cGxsX2NoID0gIEJJVCgxKSwKIH07CiAKK3N0YXRpYyBjb25zdCBzdHJ1Y3QgcmNhcl9kdV9kZXZp
-Y2VfaW5mbyByY2FyX2R1X3I4YTc3OTcwX2luZm8gPSB7CisJLmdlbiA9IDMsCisJLmZlYXR1cmVz
-ID0gUkNBUl9EVV9GRUFUVVJFX0NSVENfSVJRX0NMT0NLCisJCSAgfCBSQ0FSX0RVX0ZFQVRVUkVf
-RVhUX0NUUkxfUkVHUworCQkgIHwgUkNBUl9EVV9GRUFUVVJFX1ZTUDFfU09VUkNFLAorCS5udW1f
-Y3J0Y3MgPSAxLAorCS5yb3V0ZXMgPSB7CisJCS8qIFI4QTc3OTcwIGhhcyBvbmUgUkdCIG91dHB1
-dCBhbmQgb25lIExWRFMgb3V0cHV0LiAqLworCQlbUkNBUl9EVV9PVVRQVVRfRFBBRDBdID0gewor
-CQkJLnBvc3NpYmxlX2NydGNzID0gQklUKDApLAorCQkJLnBvcnQgPSAwLAorCQl9LAorCQlbUkNB
-Ul9EVV9PVVRQVVRfTFZEUzBdID0geworCQkJLnBvc3NpYmxlX2NydGNzID0gQklUKDApLAorCQkJ
-LnBvcnQgPSAxLAorCQl9LAorCX0sCisJLm51bV9sdmRzID0gMSwKK307CisKIHN0YXRpYyBjb25z
-dCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIHJjYXJfZHVfb2ZfdGFibGVbXSA9IHsKIAl7IC5jb21wYXRp
-YmxlID0gInJlbmVzYXMsZHUtcjhhNzc0MyIsIC5kYXRhID0gJnJ6ZzFfZHVfcjhhNzc0M19pbmZv
-IH0sCiAJeyAuY29tcGF0aWJsZSA9ICJyZW5lc2FzLGR1LXI4YTc3NDUiLCAuZGF0YSA9ICZyemcx
-X2R1X3I4YTc3NDVfaW5mbyB9LApAQCAtMjYwLDYgKzI4MCw3IEBAIHN0YXRpYyBjb25zdCBzdHJ1
-Y3Qgb2ZfZGV2aWNlX2lkIHJjYXJfZHUKIAl7IC5jb21wYXRpYmxlID0gInJlbmVzYXMsZHUtcjhh
-Nzc5NCIsIC5kYXRhID0gJnJjYXJfZHVfcjhhNzc5NF9pbmZvIH0sCiAJeyAuY29tcGF0aWJsZSA9
-ICJyZW5lc2FzLGR1LXI4YTc3OTUiLCAuZGF0YSA9ICZyY2FyX2R1X3I4YTc3OTVfaW5mbyB9LAog
-CXsgLmNvbXBhdGlibGUgPSAicmVuZXNhcyxkdS1yOGE3Nzk2IiwgLmRhdGEgPSAmcmNhcl9kdV9y
-OGE3Nzk2X2luZm8gfSwKKwl7IC5jb21wYXRpYmxlID0gInJlbmVzYXMsZHUtcjhhNzc5NzAiLCAu
-ZGF0YSA9ICZyY2FyX2R1X3I4YTc3OTcwX2luZm8gfSwKIAl7IH0KIH07CiAKCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxp
-c3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
-dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Hi Kishon,
+
+On Mon, Jan 15, 2018 at 11:06 PM, Hermann Lauer
+<Hermann.Lauer-hEciA7+sKtudPOQpRHQ53DeJuz7u0hKX@public.gmane.org> wrote:
+> On Wed, Jan 03, 2018 at 04:49:44PM +0800, Icenowy Zheng wrote:
+>> Allwinner R40 features a USB PHY like the one in A64, but with 3 PHYs.
+>>
+>> Add support for it.
+>>
+>> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+>> Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>
+> You may add
+>
+> Tested-by: Hermann.Lauer-hEciA7+sKtudPOQpRHQ53DeJuz7u0hKX@public.gmane.org
+
+Gentle ping for this patch to be included in 4.16
+
+ChenYu
