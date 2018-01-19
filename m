@@ -1,145 +1,76 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v6 3/9] v4l: platform: Add Renesas CEU driver
-Date: Fri, 19 Jan 2018 13:25:39 +0100
-Message-ID: <4195ec6a-b99d-2fad-3898-9ce9c02fce00@xs4all.nl>
-References: <1516139101-7835-1-git-send-email-jacopo+renesas@jmondi.org>
- <1516139101-7835-4-git-send-email-jacopo+renesas@jmondi.org>
- <d056343b-46be-436a-e316-0a588a182eb9@xs4all.nl> <2529707.jzkV7c2yGz@avalon>
+From: Greentime Hu <green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v6 03/36] sparc: io: To use the define of
+ ioremap_[nocache|wc|wb] in asm-generic/io.h
+Date: Fri, 19 Jan 2018 20:50:50 +0800
+Message-ID: <CAEbi=3dR1wc3NY6aaUw+gzMUp_Z7Fk2E_eEfJq6J22DPaaMjkQ@mail.gmail.com>
+References: <cover.1515766253.git.green.hu@gmail.com> <790e05e9b9675b3f6ef41693a794d1f09795c151.1515766253.git.green.hu@gmail.com>
+ <CAK8P3a2qx5pZmE-=QM5Bwrsib4XcfVac7RQr-QMzEseQ_oBPEA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <2529707.jzkV7c2yGz@avalon>
-Content-Language: en-US
-Sender: linux-media-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, magnus.damm@gmail.com, geert@glider.be, mchehab@kernel.org, festevam@gmail.com, sakari.ailus@iki.fi, robh+dt@kernel.org, mark.rutland@arm.com, pombredanne@nexb.com, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAK8P3a2qx5pZmE-=QM5Bwrsib4XcfVac7RQr-QMzEseQ_oBPEA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Greentime <greentime-MUIXKm3Oiri1Z/+hSey0Gg@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arch <linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Networking <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Vincent Chen <deanbo422-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Al Viro <viro-RmSDqhL/yNMiFSDQTTA3OLVCufUGDwFn@public.gmane.org>, David Howells <dhowells-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert.uytterhoeven-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Greg KH <greg-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>, Guo Ren <ren_guo-Y+KPrCd2zL4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/19/18 13:20, Laurent Pinchart wrote:
-> Hi Hans,
-> 
-> On Friday, 19 January 2018 13:20:19 EET Hans Verkuil wrote:
->> On 01/16/18 22:44, Jacopo Mondi wrote:
->>> Add driver for Renesas Capture Engine Unit (CEU).
->>>
->>> The CEU interface supports capturing 'data' (YUV422) and 'images'
->>> (NV[12|21|16|61]).
->>>
->>> This driver aims to replace the soc_camera-based sh_mobile_ceu one.
->>>
->>> Tested with ov7670 camera sensor, providing YUYV_2X8 data on Renesas RZ
->>> platform GR-Peach.
->>>
->>> Tested with ov7725 camera sensor on SH4 platform Migo-R.
->>>
->>> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
->>> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
->>> ---
->>>
->>>  drivers/media/platform/Kconfig       |    9 +
->>>  drivers/media/platform/Makefile      |    1 +
->>>  drivers/media/platform/renesas-ceu.c | 1659 +++++++++++++++++++++++++++++
->>>  3 files changed, 1669 insertions(+)
->>>  create mode 100644 drivers/media/platform/renesas-ceu.c
-> 
-> [snip]
-> 
->>> diff --git a/drivers/media/platform/renesas-ceu.c
->>> b/drivers/media/platform/renesas-ceu.c new file mode 100644
->>> index 0000000..1b8f0ef
->>> --- /dev/null
->>> +++ b/drivers/media/platform/renesas-ceu.c
-> 
-> [snip]
-> 
->>> +static void ceu_update_plane_sizes(struct v4l2_plane_pix_format *plane,
->>> +				   unsigned int bpl, unsigned int szimage)
->>> +{
->>> +	if (plane->bytesperline < bpl)
->>> +		plane->bytesperline = bpl;
->>> +	if (plane->sizeimage < szimage)
->>> +		plane->sizeimage = szimage;
+2018-01-18 17:56 GMT+08:00 Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>:
+> On Mon, Jan 15, 2018 at 6:53 AM, Greentime Hu <green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> From: Greentime Hu <greentime-MUIXKm3Oiri1Z/+hSey0Gg@public.gmane.org>
 >>
->> As mentioned in your cover letter, you do need to check for invalid
->> bytesperline values. The v4l2-compliance test is to see what happens
->> when userspace gives insane values, so yes, drivers need to be able
->> to handle that.
-> 
-> What limit would you set, what is an acceptable large value versus an invalid 
-> large value ? I think we should have rules for this at the API level (or at 
-> least, if not part of the API, rules that are consistent across drivers).
-
-I would expect this to be the max of what the hardware can support. If
-that's really high, then this can be, say, 4 times the width.
-
-Note that there are very few drivers that can handle a user-specified
-stride.
-
->> plane->sizeimage is set by the driver, so drop the 'if' before the
->> assignment.
-> 
-> I don't think that's correct. Userspace should be able to control padding 
-> lines at the end of the image, the same way it controls padding pixels at the 
-> end of lines.
-
-If userspace wants larger buffers, then it should use VIDIOC_CREATE_BUFS.
-
-sizeimage is exclusively set by the driver, applications rely on that.
-
-> 
->>> +}
-> 
-> [snip]
-> 
->>> +static const struct v4l2_ioctl_ops ceu_ioctl_ops = {
->>> +	.vidioc_querycap		= ceu_querycap,
->>> +
->>> +	.vidioc_enum_fmt_vid_cap_mplane	= ceu_enum_fmt_vid_cap,
->>> +	.vidioc_try_fmt_vid_cap_mplane	= ceu_try_fmt_vid_cap,
->>> +	.vidioc_s_fmt_vid_cap_mplane	= ceu_s_fmt_vid_cap,
->>> +	.vidioc_g_fmt_vid_cap_mplane	= ceu_g_fmt_vid_cap,
->>> +
->>> +	.vidioc_enum_input		= ceu_enum_input,
->>> +	.vidioc_g_input			= ceu_g_input,
->>> +	.vidioc_s_input			= ceu_s_input,
->>> +
->>> +	.vidioc_reqbufs			= vb2_ioctl_reqbufs,
->>> +	.vidioc_querybuf		= vb2_ioctl_querybuf,
->>> +	.vidioc_qbuf			= vb2_ioctl_qbuf,
->>> +	.vidioc_expbuf			= vb2_ioctl_expbuf,
->>> +	.vidioc_dqbuf			= vb2_ioctl_dqbuf,
->>> +	.vidioc_create_bufs		= vb2_ioctl_create_bufs,
->>> +	.vidioc_prepare_buf		= vb2_ioctl_prepare_buf,
->>> +	.vidioc_streamon		= vb2_ioctl_streamon,
->>> +	.vidioc_streamoff		= vb2_ioctl_streamoff,
->>> +
->>> +	.vidioc_g_parm			= ceu_g_parm,
->>> +	.vidioc_s_parm			= ceu_s_parm,
->>> +	.vidioc_enum_framesizes		= ceu_enum_framesizes,
->>> +	.vidioc_enum_frameintervals	= ceu_enum_frameintervals,
+>> It will be built failed if commit id: d25ea659 is selected. This patch
+>> can fix this build error.
 >>
->> You're missing these ioctls:
->>
->>         .vidioc_log_status              = v4l2_ctrl_log_status,
-> 
-> Is log status mandatory ?
+>> Signed-off-by: Greentime Hu <greentime-MUIXKm3Oiri1Z/+hSey0Gg@public.gmane.org>
+>
+> The change is fine, but the reference to commit 'd25ea659' is not for
+> two reasons:
+>
+> - when you rebase the tree, you will get a different ID
+> - the recommended format for referring to another commit is to list it wi=
+th
+>   12 digits and the one-line summary like this:
+>
+>    commit d25ea659bc37 ("asm-generic/io.h: move
+>   ioremap_nocache/ioremap_uc/ioremap_wc/ioremap_=E2=80=A6")
+>
+> - Ideally you use a 'Fixes:' tag in the patch description.
+>
+> You can add these lines in your .gitconfig to help you here
+>
+> [alias]
+>         fixes =3D show --format=3D'Fixes: %h (\"%s\")' -s
+> [core]
+>         abbrev =3D 12
+>
+> That will give you a 'git fixes' command to output the Fixes: line
+> in the correct format for future bug fixes. For this particular change,
+> I would actually just merge the two patches into one patch that
+> then doesn't break anything in the first place.
+>
 
-No, but it doesn't hurt to add this one. It comes for free.
+Hi, Arnd:
 
-> 
->>         .vidioc_subscribe_event         = v4l2_ctrl_subscribe_event,
->>         .vidioc_unsubscribe_event       = v4l2_event_unsubscribe,
->>
->> These missing _event ops are the reason for this compliance failure:
->>
->> fail: v4l2-test-controls.cpp(782): subscribe event for control 'User
->> Controls' failed
->>> +};
-> 
-> [snip]
-> 
+Thank you for your comments and teaching me how to add these messages.
+I will update the commit messages and my .gitconfig.
 
-Regards,
+Since the commit id will be changed after rebasing, I will update the
+messages like this.
 
-	Hans
+sparc: io: To use the define of ioremap_[nocache|wc|wb] in asm-generic/io.h
+
+A commit for the nds32 architecture bootstrap("asm-generic/io.h: move
+ioremap_nocache/ioremap_uc/ioremap_wc/ioremap_wt out of ifndef CONFIG_MMU")
+will move the ioremap_nocache out of the CONFIG_MMU ifdef. This means that
+in order to suppress re-definition errors we need to remove the #define
+in io_32.h.
+
+Also, the change adds a prototype for ioremap where size is size_t and
+offset is phys_addr_t so fix that as well.
+
+Signed-off-by: Greentime Hu <greentime-MUIXKm3Oiri1Z/+hSey0Gg@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
