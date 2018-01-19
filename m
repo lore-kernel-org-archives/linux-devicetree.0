@@ -1,54 +1,53 @@
-From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Subject: Re: [PATCH v6 6/9] media: i2c: ov772x: Remove soc_camera dependencies
-Date: Fri, 19 Jan 2018 11:47:33 +0100
-Message-ID: <00f1dd19-6420-26ab-0529-a97f2b0de682@xs4all.nl>
-References: <1516139101-7835-1-git-send-email-jacopo+renesas@jmondi.org>
- <1516139101-7835-7-git-send-email-jacopo+renesas@jmondi.org>
- <d67c21e5-2488-977b-39d8-561048409209@xs4all.nl>
+From: Kieran Bingham <kieran.bingham@ideasonboard.com>
+Subject: Re: [PATCH 0/3] Add R8A77970/Eagle PFC support
+Date: Fri, 19 Jan 2018 10:48:06 +0000
+Message-ID: <049b0a0a-b1c2-73e6-c471-ca8342bba6ab@ideasonboard.com>
+References: <20171110200218.747996672@cogentembedded.com>
+ <20171113075303.zmkmq6bt3lfuttwu@verge.net.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <d67c21e5-2488-977b-39d8-561048409209-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, geert-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sakari.ailus-X3B1VOXEql0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pombredanne-od1rfyK75/E@public.gmane.org
-Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20171113075303.zmkmq6bt3lfuttwu@verge.net.au>
+Content-Language: en-GB
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/19/18 11:24, Hans Verkuil wrote:
-> On 01/16/18 22:44, Jacopo Mondi wrote:
->> Remove soc_camera framework dependencies from ov772x sensor driver.
->> - Handle clock and gpios
->> - Register async subdevice
->> - Remove soc_camera specific g/s_mbus_config operations
->> - Change image format colorspace from JPEG to SRGB as the two use the
->>   same colorspace information but JPEG makes assumptions on color
->>   components quantization that do not apply to the sensor
->> - Remove sizes crop from get_selection as driver can't scale
->> - Add kernel doc to driver interface header file
->> - Adjust build system
+Hi Sergei,
+
+On 13/11/17 07:53, Simon Horman wrote:
+> On Fri, Nov 10, 2017 at 11:02:18PM +0300, Sergei Shtylyov wrote:
+>> Hello!
 >>
->> This commit does not remove the original soc_camera based driver as long
->> as other platforms depends on soc_camera-based CEU driver.
+>> Here's the set of 3 patches against Simon Horman's 'renesas.git' repo's
+>> 'renesas-devel-20171110-v4.14-rc8' tag.  We're adding the R8A77970 PFC node
+>> and then describing the pins for SCIF0 and EtherAVB devices declared earlier.
+>> These patches depend on the R8A77970 PFC suport in order to work properly.
 >>
->> Signed-off-by: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
->> Reviewed-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+>> [1/3] arm64: dts: renesas: r8a77970: add PFC support
+>> [2/3] arm64: dts: renesas: eagle: add SCIF0 pins
+>> [3/3] arm64: dts: renesas: eagle: add EtherAVB pins
 > 
-> Acked-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+> Hi Sergei,
+> 
+> I have marked these patches as deferred pending acceptance of the PFC
+> driver. Please repost or otherwise ping me once that dependency has been
+> accepted.
 
-Un-acked.
+Has the dependency blocking this series been resolved yet ?
 
-I just noticed that this sensor driver has no enum_frame_interval and
-g/s_parm support. How would a driver ever know the frame rate of the
-sensor without that?
+(I have patches for the Eagle-V3M which are blocked waiting for the PFC support)
 
-This looks like a bug to me.
-
-Regards,
-
-	Hans
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards
+
+Kieran
+
+
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
