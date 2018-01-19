@@ -1,64 +1,50 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH 3/5] arm64: dts: renesas: r8a77970: add DU support
-Date: Fri, 19 Jan 2018 22:42:36 +0300
-Message-ID: <20180119195435.812317522@cogentembedded.com>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH 1/5] arm64: dts: renesass: r8a77970: add FCPVD support
+Date: Fri, 19 Jan 2018 22:42:34 +0300
+Message-ID: <20180119195428.902030429@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-15
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline; filename=arm64-dts-renesas-r8a77970-add-DU-support.patch
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Magnus Damm <magnus.damm@gmail.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline; filename=arm64-dts-renesas-r8a77970-add-FCPVD-support.patch
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Define the generic R8A77970 part of the DU device node.
+Describe FCPVD0 in the R8A77970 device tree; it will be used by VSPD0 in
+the next patch...
 
 Based on the original (and large) patch by Daisuke Matsushita
-<daisuke.matsushita.ns@hitachi.com>.
+<daisuke.matsushita.ns-FCd8Q96Dh0JBDgjK7y7TUQ@public.gmane.org>.
 
-Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Signed-off-by: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 
 ---
- arch/arm64/boot/dts/renesas/r8a77970.dtsi |   28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+ arch/arm64/boot/dts/renesas/r8a77970.dtsi |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
 Index: renesas/arch/arm64/boot/dts/renesas/r8a77970.dtsi
 ===================================================================
 --- renesas.orig/arch/arm64/boot/dts/renesas/r8a77970.dtsi
 +++ renesas/arch/arm64/boot/dts/renesas/r8a77970.dtsi
-@@ -630,6 +630,34 @@
- 			resets = <&cpg 623>;
- 			renesas,fcp = <&fcpvd0>;
+@@ -612,6 +612,14 @@
+ 			#size-cells = <0>;
+ 			status = "disabled";
  		};
 +
-+		du: display@feb00000 {
-+			compatible = "renesas,du-r8a77970";
-+			reg = <0 0xfeb00000 0 0x80000>;
-+			interrupts = <GIC_SPI 256 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 724>;
-+			clock-names = "du.0";
++		fcpvd0: fcp@fea27000 {
++			compatible = "renesas,fcpv";
++			reg = <0 0xfea27000 0 0x200>;
++			clocks = <&cpg CPG_MOD 603>;
 +			power-domains = <&sysc R8A77970_PD_ALWAYS_ON>;
-+			vsps = <&vspd0>;
-+			status = "disabled";
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@0 {
-+					reg = <0>;
-+					du_out_rgb: endpoint {
-+					};
-+				};
-+
-+				port@1 {
-+					reg = <1>;
-+					du_out_lvds: endpoint {
-+					};
-+				};
-+			};
++			resets = <&cpg 603>;
 +		};
  	};
  
  	timer {
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
