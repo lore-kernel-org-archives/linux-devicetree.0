@@ -1,34 +1,55 @@
-From: Rasmus Villemoes <rasmus.villemoes-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: dts: ls1021a: add nodes for on-chip ram
-Date: Fri, 19 Jan 2018 11:53:28 +0100
-Message-ID: <439098cb-7342-39c4-1999-41573f4897b7@prevas.dk>
-References: <1513870698-31264-1-git-send-email-rasmus.villemoes@prevas.dk>
- <1514994345-2471-1-git-send-email-rasmus.villemoes@prevas.dk>
+From: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
+Subject: Re: [PATCH 0/3] PCI: move DT PCI functions to PCI core
+Date: Fri, 19 Jan 2018 22:16:59 +1100
+Message-ID: <87h8riayj8.fsf@concordia.ellerman.id.au>
+References: <20180104211215.11344-1-robh@kernel.org> <20180117235555.GC53542@bhelgaas-glaptop.roam.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1514994345-2471-1-git-send-email-rasmus.villemoes-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <20180117235555.GC53542-1RhO1Y9PlrlHTL0Zs8A6p5iNqAH0jzoTYJqu5kTmcBRl57MIdRCFDg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2018-01-03 16:45, Rasmus Villemoes wrote:
-> Although the two nodes constitute one contiguous 128K region, still
-> describe them separately:
-> 
-> - That's how they are described in the reference manual: "Each OCRAM
->   occupies a 64 KB of address region...", and the names ocram1 and
->   ocram2 are also as used in the manual.
-> 
-> - The two areas are treated differently by the boot ROM code: OCRAM2 is
->   zero-initialized, while, again quoting the RM, "software must perform
->   the zero initialization of OCRAM1."
+Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> writes:
 
-ping
+> On Thu, Jan 04, 2018 at 03:12:12PM -0600, Rob Herring wrote:
+>> Most subsystem specific functions have been moved into the respective
+>> subsystems. Only PCI and networking remain. This series moves most of the
+>> PCI related code to drivers/pci/of.c. Some bus address functions for PCI
+>> remain in of/address.c because we don't have infrastructure to split up
+>> the per bus helper functions.
+>> 
+>> I expect Bjorn to take this series, so PPC maintainers please ack.
+>> 
+>> Rob
+>> 
+>> Rob Herring (3):
+>>   PCI: move OF related PCI functions into PCI core
+>>   powerpc/pci: use of_irq_parse_and_map_pci helper
+>>   PCI: make of_irq_parse_pci static
+>> 
+>>  arch/arm/mach-mvebu/Kconfig      |   1 -
+>>  arch/powerpc/kernel/pci-common.c |   8 +-
+>>  drivers/of/Kconfig               |  16 --
+>>  drivers/of/Makefile              |   2 -
+>>  drivers/of/address.c             |   8 +-
+>>  drivers/of/of_pci.c              | 384 -----------------------------
+>>  drivers/of/of_pci_irq.c          | 131 ----------
+>>  drivers/pci/of.c                 | 505 +++++++++++++++++++++++++++++++++++++++
+>>  include/linux/of_pci.h           |   8 +-
+>>  9 files changed, 510 insertions(+), 553 deletions(-)
+>>  delete mode 100644 drivers/of/of_pci.c
+>>  delete mode 100644 drivers/of/of_pci_irq.c
+>
+> Applied to pci/dt-resources for v4.16, thanks!
+>
+> I'll update this if necessary if PPC maintainers comment.
 
+Thanks. Seems fine, fingers crossed :)
+
+cheers
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
