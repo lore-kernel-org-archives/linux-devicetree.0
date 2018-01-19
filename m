@@ -1,75 +1,77 @@
-From: Greentime Hu <green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v6 03/36] sparc: io: To use the define of
- ioremap_[nocache|wc|wb] in asm-generic/io.h
-Date: Fri, 19 Jan 2018 20:50:50 +0800
-Message-ID: <CAEbi=3dR1wc3NY6aaUw+gzMUp_Z7Fk2E_eEfJq6J22DPaaMjkQ@mail.gmail.com>
-References: <cover.1515766253.git.green.hu@gmail.com> <790e05e9b9675b3f6ef41693a794d1f09795c151.1515766253.git.green.hu@gmail.com>
- <CAK8P3a2qx5pZmE-=QM5Bwrsib4XcfVac7RQr-QMzEseQ_oBPEA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 0/7] arm64: zynqmp: Add support for existing Xilinx ZynqMP based boards
+Date: Fri, 19 Jan 2018 13:55:39 +0100
+Message-ID: <cover.1516366474.git.michal.simek@xilinx.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAK8P3a2qx5pZmE-=QM5Bwrsib4XcfVac7RQr-QMzEseQ_oBPEA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Greentime <greentime-MUIXKm3Oiri1Z/+hSey0Gg@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arch <linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Networking <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Vincent Chen <deanbo422-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Al Viro <viro-RmSDqhL/yNMiFSDQTTA3OLVCufUGDwFn@public.gmane.org>, David Howells <dhowells-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert.uytterhoeven-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Greg KH <greg-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>, Guo Ren <ren_guo-Y+KPrCd2zL4@public.gmane.org>
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-2018-01-18 17:56 GMT+08:00 Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>:
-> On Mon, Jan 15, 2018 at 6:53 AM, Greentime Hu <green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> From: Greentime Hu <greentime-MUIXKm3Oiri1Z/+hSey0Gg@public.gmane.org>
->>
->> It will be built failed if commit id: d25ea659 is selected. This patch
->> can fix this build error.
->>
->> Signed-off-by: Greentime Hu <greentime-MUIXKm3Oiri1Z/+hSey0Gg@public.gmane.org>
->
-> The change is fine, but the reference to commit 'd25ea659' is not for
-> two reasons:
->
-> - when you rebase the tree, you will get a different ID
-> - the recommended format for referring to another commit is to list it wi=
-th
->   12 digits and the one-line summary like this:
->
->    commit d25ea659bc37 ("asm-generic/io.h: move
->   ioremap_nocache/ioremap_uc/ioremap_wc/ioremap_=E2=80=A6")
->
-> - Ideally you use a 'Fixes:' tag in the patch description.
->
-> You can add these lines in your .gitconfig to help you here
->
-> [alias]
->         fixes =3D show --format=3D'Fixes: %h (\"%s\")' -s
-> [core]
->         abbrev =3D 12
->
-> That will give you a 'git fixes' command to output the Fixes: line
-> in the correct format for future bug fixes. For this particular change,
-> I would actually just merge the two patches into one patch that
-> then doesn't break anything in the first place.
->
+Hi,
 
-Hi, Arnd:
+This patchset is adding all current existing Xilinx ZynqMP boards.
+zcu* boards are customer boards. zc1* are mainly Xilinx internal boards
+but some of them have been shared with customers. zc1751 is unique in
+this set because it is based board with FMC card for silicon/hard IP
+validation.
+All boards are using the same default clock configuration till clock
+driver is merged to mainline. Some boards also contain other components
+which are not described because mainline driver haven't been merged yet.
+For example nand, qspi, pinctrl and phy.
+Please let me know if you see any issue with these boards.
 
-Thank you for your comments and teaching me how to add these messages.
-I will update the commit messages and my .gitconfig.
+Thanks,
+Michal
 
-Since the commit id will be changed after rebasing, I will update the
-messages like this.
 
-sparc: io: To use the define of ioremap_[nocache|wc|wb] in asm-generic/io.h
+Michal Simek (7):
+  arm64: zynqmp: Add support for Xilinx zcu100-revC
+  arm64: zynqmp: Add support for Xilinx zcu102
+  arm64: zynqmp: Add support for Xilinx zcu104-revA
+  arm64: zynqmp: Add support for Xilinx zcu106-revA
+  arm64: zynqmp: Add support for Xilinx zcu111-revA
+  arm64: zynqmp: Add support for Xilinx zc12XX boards
+  arm64: zynqmp: Add support for Xilinx zc1751
 
-A commit for the nds32 architecture bootstrap("asm-generic/io.h: move
-ioremap_nocache/ioremap_uc/ioremap_wc/ioremap_wt out of ifndef CONFIG_MMU")
-will move the ioremap_nocache out of the CONFIG_MMU ifdef. This means that
-in order to suppress re-definition errors we need to remove the #define
-in io_32.h.
+ arch/arm64/boot/dts/xilinx/Makefile                |  15 +
+ arch/arm64/boot/dts/xilinx/zynqmp-clk.dtsi         | 213 ++++++++
+ arch/arm64/boot/dts/xilinx/zynqmp-zc1232-revA.dts  |  54 ++
+ arch/arm64/boot/dts/xilinx/zynqmp-zc1254-revA.dts  |  42 ++
+ arch/arm64/boot/dts/xilinx/zynqmp-zc1275-revA.dts  |  42 ++
+ .../boot/dts/xilinx/zynqmp-zc1751-xm015-dc1.dts    | 133 +++++
+ .../boot/dts/xilinx/zynqmp-zc1751-xm016-dc2.dts    | 170 +++++++
+ .../boot/dts/xilinx/zynqmp-zc1751-xm017-dc3.dts    | 153 ++++++
+ .../boot/dts/xilinx/zynqmp-zc1751-xm018-dc4.dts    | 181 +++++++
+ .../boot/dts/xilinx/zynqmp-zc1751-xm019-dc5.dts    | 126 +++++
+ arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts  | 298 +++++++++++
+ .../arm64/boot/dts/xilinx/zynqmp-zcu102-rev1.0.dts |  36 ++
+ arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts  | 556 +++++++++++++++++++++
+ arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revB.dts  |  42 ++
+ arch/arm64/boot/dts/xilinx/zynqmp-zcu104-revA.dts  | 197 ++++++++
+ arch/arm64/boot/dts/xilinx/zynqmp-zcu106-revA.dts  | 530 ++++++++++++++++++++
+ arch/arm64/boot/dts/xilinx/zynqmp-zcu111-revA.dts  | 446 +++++++++++++++++
+ 17 files changed, 3234 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/xilinx/zynqmp-clk.dtsi
+ create mode 100644 arch/arm64/boot/dts/xilinx/zynqmp-zc1232-revA.dts
+ create mode 100644 arch/arm64/boot/dts/xilinx/zynqmp-zc1254-revA.dts
+ create mode 100644 arch/arm64/boot/dts/xilinx/zynqmp-zc1275-revA.dts
+ create mode 100644 arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm015-dc1.dts
+ create mode 100644 arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm016-dc2.dts
+ create mode 100644 arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm017-dc3.dts
+ create mode 100644 arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm018-dc4.dts
+ create mode 100644 arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm019-dc5.dts
+ create mode 100644 arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts
+ create mode 100644 arch/arm64/boot/dts/xilinx/zynqmp-zcu102-rev1.0.dts
+ create mode 100644 arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts
+ create mode 100644 arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revB.dts
+ create mode 100644 arch/arm64/boot/dts/xilinx/zynqmp-zcu104-revA.dts
+ create mode 100644 arch/arm64/boot/dts/xilinx/zynqmp-zcu106-revA.dts
+ create mode 100644 arch/arm64/boot/dts/xilinx/zynqmp-zcu111-revA.dts
 
-Also, the change adds a prototype for ioremap where size is size_t and
-offset is phys_addr_t so fix that as well.
+-- 
+1.9.1
 
-Signed-off-by: Greentime Hu <greentime-MUIXKm3Oiri1Z/+hSey0Gg@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
