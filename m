@@ -1,59 +1,48 @@
-From: Aleksandar Markovic <Aleksandar.Markovic-8NJIiSa5LzA@public.gmane.org>
-Subject: RE: [PATCH v3 1/2] dt-bindings: Document mti,mips-cpc binding
-Date: Fri, 19 Jan 2018 15:07:48 +0000
-Message-ID: <BD3A5F1946F2E540A31AF2CE969BAEEE12393C77@MIPSMAIL01.mipstec.com>
-References: <1514385475-23921-1-git-send-email-aleksandar.markovic@rt-rk.com>
- <1514385475-23921-2-git-send-email-aleksandar.markovic@rt-rk.com>,<20180118222603.GG27409@jhogan-linux.mipstec.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH] phy: work around 'phys' references to usb-nop-xceiv devices
+Date: Fri, 19 Jan 2018 16:14:23 +0100
+Message-ID: <CAK8P3a2FEdhVXGHT3VE43LE9Rn-WNp+woasb9EwVAr8twVw2Dw@mail.gmail.com>
+References: <20180112101223.3661181-1-arnd@arndb.de> <CAL_JsqKi30aUiJUdjnen+sty_2horaTVs5LFaFJdxACsvEQpkg@mail.gmail.com>
+ <c38e54f7-4dbd-72dc-e1fb-9003435cbe0e@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180118222603.GG27409-4bYivNCBEGSP4qXr0kR+DFHK5/nzsB32@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <c38e54f7-4dbd-72dc-e1fb-9003435cbe0e-eS4NqCHxEME@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: James Hogan <James.Hogan-8NJIiSa5LzA@public.gmane.org>, Aleksandar Markovic <aleksandar.markovic-FblTVreYubkAvxtiuMwx3w@public.gmane.org>
-Cc: "linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org" <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Paul Burton <Paul.Burton-8NJIiSa5LzA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Douglas Leung <Douglas.Leung-8NJIiSa5LzA@public.gmane.org>, Goran Ferenc <Goran.Ferenc-8NJIiSa5LzA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Miodrag Dinic <Miodrag.Dinic-8NJIiSa5LzA@public.gmane.org>, Petar Jovanovic <Petar.Jovanovic-8NJIiSa5LzA@public.gmane.org>, Raghu Gandham <Raghu.Gandham-8NJIiSa5LzA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, stable <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, "moderated list:BROADCOM BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Andrzej Pietrasiewicz <andrzej.p-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> On Wed, Dec 27, 2017 at 03:37:51PM +0100, Aleksandar Markovic wrote:
-> > From: Paul Burton <paul.burton-8NJIiSa5LzA@public.gmane.org>
-> >
-> > Document a binding for the MIPS Cluster Power Controller (CPC) that
-> > allows the device tree to specify where the CPC registers are located.
-> >
-> > Signed-off-by: Paul Burton <paul.burton-8NJIiSa5LzA@public.gmane.org>
-> > Signed-off-by: Aleksandar Markovic <aleksandar.markovic-8NJIiSa5LzA@public.gmane.org>
-> > ---
-> >  Documentation/devicetree/bindings/power/mti,mips-cpc.txt | 8 ++++++++
-> >  1 file changed, 8 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/power/mti,mips-cpc.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/power/mti,mips-cpc.txt b/Documentation/devicetree/bindings/power/mti,mips-cpc.txt
-> > new file mode 100644
-> 
-> Is it worth adding to the MIPS GENERIC PLATFORM entry of MAINTAINERS,
-> given that it directly benefits it?
-> 
-> Cheers
-> James
+On Fri, Jan 19, 2018 at 11:35 AM, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> wrote:
+> Am 12.01.2018 um 20:54 schrieb Rob Herring:
+>> On Fri, Jan 12, 2018 at 4:12 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
 
-If nobody objects, in the v4 of this series, as a part of this particular patch, I am going to add the line:
+>>> ---
+>>> Hans tested the earlier version of this patch, I'd like one more
+>>> confirmation from Hans or Stefan (or anyone else) that this version
+>>> addresses the regression as well before this gets merged.
+>>>
+>>> Greg, can you pick this up into usb-linus for v4.15 once the fix
+>>> has been confirmed, or should I merge it through arm-soc?
+>>> ---
+>>>  drivers/phy/phy-core.c | 4 ++++
+>>>  1 file changed, 4 insertions(+)
+>> Thanks for fixing this.
+>>
+>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>>
+>> Rob
+>
+> ping ...
 
-F:       Documentation/devicetree/bindings/power/mti,mips-cpc.txt
+I ended up putting it into arm-soc/fixes. I assume that Greg missed it
+while he was
+busy getting the latest stable kernels out. I'll send a pull request
+to Linus and
+explain it there today.
 
-to the following segment in MAINTAINERS file:
-
-MIPS GENERIC PLATFORM
-M:      Paul Burton <paul.burton-8NJIiSa5LzA@public.gmane.org>
-L:      linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
-S:      Supported
-F:      arch/mips/generic/
-F:      arch/mips/tools/generic-board-config.sh
-
-v4 is planned to be sent by the end of the day.
-
-Thanks,
-Aleksandar--
+     Arnd
+--
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
