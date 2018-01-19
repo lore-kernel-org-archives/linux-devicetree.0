@@ -1,93 +1,44 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 2/8] drm: xlnx: Xilinx DRM KMS driver
-Date: Fri, 19 Jan 2018 17:33:51 -0600
-Message-ID: <20180119233351.sl46n5ftvoprp4rq@rob-hp-laptop>
-References: <1516067831-11382-1-git-send-email-hyun.kwon@xilinx.com>
- <1516067831-11382-2-git-send-email-hyun.kwon@xilinx.com>
- <20180117082028.GC2759@phenom.ffwll.local>
+From: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH -next] of: platform: fix OF node refcount leak
+Date: Fri, 19 Jan 2018 17:34:00 -0600
+Message-ID: <CAPBZ5QfuExQtM91wPCooiCoztoyt8ihXXWPccGi=_zca+eO5JA@mail.gmail.com>
+References: <1516272219-25359-1-git-send-email-sudeep.holla@arm.com> <fd9de06f-df7e-4114-8dda-0483c338b394@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20180117082028.GC2759@phenom.ffwll.local>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Daniel Vetter <daniel@ffwll.ch>
-Cc: devicetree@vger.kernel.org, Hyun Kwon <hyun.kwon@xilinx.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Michal Simek <michal.simek@xilinx.com>, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <fd9de06f-df7e-4114-8dda-0483c338b394-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Loys Ollivier <lollivier-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBKYW4gMTcsIDIwMTggYXQgMDk6MjA6MjhBTSArMDEwMCwgRGFuaWVsIFZldHRlciB3
-cm90ZToKPiBPbiBNb24sIEphbiAxNSwgMjAxOCBhdCAwNTo1NzowNVBNIC0wODAwLCBIeXVuIEt3
-b24gd3JvdGU6Cj4gPiBYaWxpbnggaGFzIHZhcmlvdXMgcGxhdGZvcm1zIGZvciBkaXNwbGF5LCB3
-aGVyZSB1c2VycyBjYW4gY3JlYXRlCj4gPiB1c2luZyBtdWx0aXBsZSBJUHMgaW4gdGhlIHByb2dy
-YW1tYWJsZSBGUEdBIGZhYnJpYywgb3Igd2hlcmUKPiA+IHNvbWUgaGFyZGVuZWQgcGllcGxpbmUg
-aXMgYXZhaWxhYmxlIG9uIHRoZSBjaGlwLiBGdXJ0aGVybW9yZSwKPiA+IGhhcmRlbmVkIHBpcGVs
-aW5lIGNhbiBhbHNvIGludGVyYWN0IHdpdGggc29mdCBsb2dpY3MgaW4gRlBHQS4KPiA+IAo+ID4g
-VGhlIFhpbGlueCBEUk0gS01TIGlzIHRvIGludGVncmF0ZSBtdWx0aXBsZSBzdWJkZXZpY2VzIGFu
-ZCB0byByZXByZXNlbnQKPiA+IHRoZSBlbnRpcmUgcGlwZWxpbmUgYXMgYSBzaW5nbGUgRFJNIGRl
-dmljZS4gVGhlIGRyaXZlciBpbmNsdWRlcyBoZWxwZXJzCj4gPiAoZXgsIGZyYW1lYnVmZmVyIGFu
-ZCBnZW0gaGVscGVycykgYW5kIGdsdWUgbG9naWNzIChleCwgY3J0YyBpbnRlcmZhY2UpLgo+ID4g
-Cj4gPiBTaWduZWQtb2ZmLWJ5OiBIeXVuIEt3b24gPGh5dW4ua3dvbkB4aWxpbnguY29tPgo+ID4g
-LS0tCj4gPiB2Mwo+ID4gLSBBZGQgTGF1cmVudCBhcyBhIG1haW50YWluZXIKPiA+IC0gRml4IG11
-bHRpcGxlLXJlZmVyZW5jZSBvbiBnZW0gb2JqZWN0cwo+ID4gdjIKPiA+IC0gQ2hhbmdlIHRoZSBT
-UERYIGlkZW50aWZpZXIgZm9ybWF0Cj4gPiAtIE1lcmdlIHBhdGNoZXMoY3J0YywgZ2VtLCBmYikg
-aW50byBzaW5nbGUgb25lCj4gPiB2MiBvZiB4bG54X2Rydgo+ID4gLSBSZW5hbWUga21zIHRvIGRp
-c3BsYXkgaW4geGxueF9kcnYKPiA+IC0gUmVwbGFjZSBzb21lIHhsbnggc3BlY2lmaWMgZmIgaGVs
-cGVyIHdpdGggY29tbW9uIGhlbHBlcnMgaW4geGxueF9kcnYKPiA+IC0gRG9uJ3Qgc2V0IHRoZSBj
-b21taXQgdGFpbCBjYWxsYmFjayBpbiB4bG54X2Rydgo+ID4gLSBTdXBwb3J0ICdwb3J0cycgZ3Jh
-cGggYmluZGluZyBpbiB4bG54X2Rydgo+ID4gdjIgb2YgeGxueF9mYgo+ID4gLSBSZW1vdmUgd3Jh
-cHBlcnMgaW4geGxueF9mYgo+ID4gLSBSZXBsYWNlIHNvbWUgZnVuY3Rpb25zIHdpdGggZHJtIGNv
-cmUgaGVscGVycyBpbiB4bG54X2ZiCj4gPiAtLS0KPiA+IC0tLQo+ID4gIE1BSU5UQUlORVJTICAg
-ICAgICAgICAgICAgICAgICAgIHwgICA5ICsKPiA+ICBkcml2ZXJzL2dwdS9kcm0vS2NvbmZpZyAg
-ICAgICAgICB8ICAgMiArCj4gPiAgZHJpdmVycy9ncHUvZHJtL01ha2VmaWxlICAgICAgICAgfCAg
-IDEgKwo+ID4gIGRyaXZlcnMvZ3B1L2RybS94bG54L0tjb25maWcgICAgIHwgIDEyICsrCj4gPiAg
-ZHJpdmVycy9ncHUvZHJtL3hsbngvTWFrZWZpbGUgICAgfCAgIDIgKwo+ID4gIGRyaXZlcnMvZ3B1
-L2RybS94bG54L3hsbnhfY3J0Yy5jIHwgMjAzICsrKysrKysrKysrKysrKysrKwo+ID4gIGRyaXZl
-cnMvZ3B1L2RybS94bG54L3hsbnhfY3J0Yy5oIHwgIDc4ICsrKysrKysKPiA+ICBkcml2ZXJzL2dw
-dS9kcm0veGxueC94bG54X2Rydi5jICB8IDQ0NyArKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysKPiA+ICBkcml2ZXJzL2dwdS9kcm0veGxueC94bG54X2Rydi5oICB8ICAzMCAr
-KysKPiA+ICBkcml2ZXJzL2dwdS9kcm0veGxueC94bG54X2ZiLmMgICB8IDI5OCArKysrKysrKysr
-KysrKysrKysrKysrKysrKwo+ID4gIGRyaXZlcnMvZ3B1L2RybS94bG54L3hsbnhfZmIuaCAgIHwg
-IDMzICsrKwo+ID4gIGRyaXZlcnMvZ3B1L2RybS94bG54L3hsbnhfZ2VtLmMgIHwgIDQ3ICsrKysK
-PiA+ICBkcml2ZXJzL2dwdS9kcm0veGxueC94bG54X2dlbS5oICB8ICAyNiArKysKPiA+ICAxMyBm
-aWxlcyBjaGFuZ2VkLCAxMTg4IGluc2VydGlvbnMoKykKPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQg
-ZHJpdmVycy9ncHUvZHJtL3hsbngvS2NvbmZpZwo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2
-ZXJzL2dwdS9kcm0veGxueC9NYWtlZmlsZQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJz
-L2dwdS9kcm0veGxueC94bG54X2NydGMuYwo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJz
-L2dwdS9kcm0veGxueC94bG54X2NydGMuaAo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJz
-L2dwdS9kcm0veGxueC94bG54X2Rydi5jCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMv
-Z3B1L2RybS94bG54L3hsbnhfZHJ2LmgKPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9n
-cHUvZHJtL3hsbngveGxueF9mYi5jCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1
-L2RybS94bG54L3hsbnhfZmIuaAo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9k
-cm0veGxueC94bG54X2dlbS5jCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2Ry
-bS94bG54L3hsbnhfZ2VtLmgKPiA+IAo+ID4gZGlmZiAtLWdpdCBhL01BSU5UQUlORVJTIGIvTUFJ
-TlRBSU5FUlMKPiA+IGluZGV4IDI4MTFhMjEuLmRjODQzNDYgMTAwNjQ0Cj4gPiAtLS0gYS9NQUlO
-VEFJTkVSUwo+ID4gKysrIGIvTUFJTlRBSU5FUlMKPiA+IEBAIC00NjgyLDYgKzQ2ODIsMTUgQEAg
-RjogICAgICAgZHJpdmVycy9ncHUvZHJtL2V0bmF2aXYvCj4gPiAgRjogICAgIGluY2x1ZGUvdWFw
-aS9kcm0vZXRuYXZpdl9kcm0uaAo+ID4gIEY6ICAgICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvZGlzcGxheS9ldG5hdml2Lwo+ID4gCj4gPiArRFJNIERSSVZFUlMgRk9SIFhJTElO
-WAo+ID4gK006ICAgICBIeXVuIEt3b24gPGh5dW4ua3dvbkB4aWxpbnguY29tPgo+ID4gK006ICAg
-ICBMYXVyZW50IFBpbmNoYXJ0IDxsYXVyZW50LnBpbmNoYXJ0QGlkZWFzb25ib2FyZC5jb20+Cj4g
-PiArTDogICAgIGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKPiA+ICtTOiAgICAgTWFp
-bnRhaW5lZAo+ID4gK0Y6ICAgICBkcml2ZXJzL2dwdS9kcm0veGxueC8KPiA+ICtGOiAgICAgRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkveGxueC8KPiA+ICtUOiAgICAg
-Z2l0IGdpdDovL2Fub25naXQuZnJlZWRlc2t0b3Aub3JnL2RybS9kcm0tbWlzYwo+IAo+IE9rLCBJ
-IHNjcm9sbGVkIHRocm91Z2ggdGhlIHBhdGNoZXMgYWdhaW4gYW5kIGJlc2lkZXMgdGhlIG9uZSBu
-aXQgZm9yIHRoZQo+IGVuYWJsZS9kaXNhYmxlX3ZibGFuayBjYWxsYmFjayBpdCBsb29rcyBhbGwg
-Z29vZC4gT24gcGF0Y2hlcyAyIGFuZCA0LTY6Cj4gCj4gQWNrZWQtYnk6IERhbmllbCBWZXR0ZXIg
-PGRhbmllbC52ZXR0ZXJAZmZ3bGwuY2g+Cj4gCj4gVGhlc2UgYXJlIHJlYWR5IGZvciBtZXJnaW5n
-LiBUaGUgMiBkdCBwYXRjaGVzIG5lZWQgYW4gYWNrIGZyb20gUm9iCj4gSGVycmluZy4gVGhlIGZp
-bmFsIDIgcGF0Y2hlcyB3aXRoIHRoZSBuZXcgcHJvcGVydGllcyBuZWVkIHRoZSB1c3VhbCB1YXBp
-Cj4gd29yayBhbmQgdXNlcnNwYWNlIGVuYWJsaW5nIHBlcgoKVGhlIGJpbmRpbmcgbmVlZHMgc29t
-ZSB3b3JrIHN0aWxsLgoKUm9iCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNr
-dG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Ry
-aS1kZXZlbAo=
+On 19 January 2018 at 09:37, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
+> Hi Andy,
+>
+> On 18/01/18 10:43, Sudeep Holla wrote:
+>> We need to call of_node_put() for device nodes obtained with
+>> of_find_node_by_path().
+>>
+>> Fixes: 3aa0582fdb82 ("of: platform: populate /firmware/ node from of_platform_default_populate_init()")
+>> Reported-by: Loys Ollivier <lollivier-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+>> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+>> ---
+>>  drivers/of/platform.c | 4 +++-
+>>  1 file changed, 3 insertions(+), 1 deletion(-)
+>>
+>
+> Can you pick up this with other fixes you would send after v4.16-rc1 or
+> do you prefer me to route through ARM-SoC directly ? Let me know.
+
+I can pick this up for fixes, no problem.  I can send it along right
+now if you like.  This is a pretty low risk patch.
+
+Regards,
+
+Andy
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
