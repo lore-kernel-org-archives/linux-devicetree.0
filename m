@@ -1,111 +1,101 @@
-From: Stefan Mavrodiev <stefan-kyXcfZUBQGPQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 1/1] ARM: dts: sunxi: Add Olimex A20-SOM204-EVB board
-Date: Fri, 19 Jan 2018 15:27:28 +0200
-Message-ID: <548d57b7-4db1-a9ee-369e-9067f981162d@olimex.com>
-References: <1515747666-6597-1-git-send-email-stefan@olimex.com>
- <20180115095031.pzsgrp3tdmemotrs@flea.lan>
- <1b9667a4-75de-4ece-069d-7ec33b7e2f8d@olimex.com>
- <20180118100745.y62adzvfnrzqkagd@flea.lan>
- <CAGb2v66U9ziFhU5n6haTA3LGNX7BavmfXiiCmvebtqaMxcN0-w@mail.gmail.com>
+From: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH v5 0/7] ARM: stm32: add initial STM32MPU support
+Date: Fri, 19 Jan 2018 15:02:54 +0100
+Message-ID: <d93e6536-cdc3-b055-395e-a98915c1a875@st.com>
+References: <1516114580-2424-1-git-send-email-ludovic.Barre@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAGb2v66U9ziFhU5n6haTA3LGNX7BavmfXiiCmvebtqaMxcN0-w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1516114580-2424-1-git-send-email-ludovic.Barre-qxv4g6HH51o@public.gmane.org>
 Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Stefan Mavrodiev <stefan-kyXcfZUBQGPQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM PORT" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Ludovic Barre <ludovic.Barre-qxv4g6HH51o@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gerald Baeza <gerald.baeza-qxv4g6HH51o@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/18/2018 04:28 PM, Chen-Yu Tsai wrote:
-> On Thu, Jan 18, 2018 at 6:07 PM, Maxime Ripard
-> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->> Hi!
->>
->> On Mon, Jan 15, 2018 at 12:07:34PM +0200, Stefan Mavrodiev wrote:
->>>>> +/dts-v1/;
->>>>> +#include "sun7i-a20.dtsi"
->>>>> +#include "sunxi-common-regulators.dtsi"
->>>>> +
->>>>> +
->>>>> +#include <dt-bindings/gpio/gpio.h>
->>>>> +#include <dt-bindings/interrupt-controller/irq.h>
->>>>> +#include <dt-bindings/pwm/pwm.h>
->>>>> +
->>>>> +/ {
->>>>> + model = "Olimex A20-SOM204-EVB";
->>>>> + compatible = "olimex,a20-olimex-som204-evb", "allwinner,sun7i-a20";
->>>>> +
->>>>> + aliases {
->>>>> +         serial0 = &uart0;
->>>>> +         serial1 = &uart4;
->>>>> +         serial2 = &uart7;
->>>>> +         spi0 = &spi1;
->>>>> +         spi1 = &spi2;
->>>>> +         ethernet1 = &rtl8723bs;
->>>> ethernet1? if there's a single network interface, it should be
->>>> ethernet0.
->>> I think this will conflict the gmac alias defined in sun7i-a20.dtsi:
->>>
->>> aliases {
->>>      ethernet0 = &gmac;
->>> };
->> We have that? That's bad, but you're right :)
->>
->>>>> +         stat {
->>>>> +                 label = "a20-som204:green:stat";
->>>>> +                 gpios = <&pio 8 0 GPIO_ACTIVE_HIGH>;
->>>>> +                 default-state = "on";
->>>>> +         };
->>>>> +
->>>>> +         led1 {
->>>>> +                 label = "a20-som204-evb:green:led1";
->>>>> +                 gpios = <&pio 8 10 GPIO_ACTIVE_HIGH>;
->>>>> +                 default-state = "on";
->>>>> +         };
->>>>> +
->>>>> +         led2 {
->>>>> +                 label = "a20-som204-evb:yellow:led2";
->>>>> +                 gpios = <&pio 8 11 GPIO_ACTIVE_HIGH>;
->>>>> +                 default-state = "on";
->>>>> +         };
->>>> You don't have the same prefix between stat and led1/led2. I'm fine
->>>> with both, but you should be consistent :)
->>> STAT led is on the SOM204 module, while led1/2 on the EVB. Thats why
->>> they have different prefix.
->> Still, the user and the system will see it as a single board, and the
->> documentation states that it should be the board name. I'm not quite
->> sure what a good rule would be here. Have you looked at how other
->> boards dealt with it? Chen-Yu, any opinion on this?
-> Follow the bindings, I guess? I don't think we (sunxi) have dealt
-> with modules that have LEDs or anything that needs to be named after
-> the board.
->
-> On a related topic, I don't know if you (Stefan / Olimex) want to split
-> this into a .dtsi file for the SoM, and a .dts file for the EVB. It might
-> help your customers?
-I'm not sure this will be good ideal. We will have one EVB with all
-possible peripheries. On the other hand, we are planning 3-4 different
-SOM204 modules (A20, A64, RK....). I think this will make the dtsi 
-incompatible.
+Hi Ludovic
 
-Maybe if there is one dtsi for the base SOM204 module (one for each 
-arch) and
-multiple dts for boards with additional features. But this will generate 
-10-20
-dts files. I think this will be better handled using overlays in the uboot.
+On 01/16/2018 03:56 PM, Ludovic Barre wrote:
+> From: Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
+> 
+> This patch series extends the existing STM32 microcontrollers (MCUs)
+> family to microprocessors (MPUs). The MPU platform (based on
+> Arm Cortex-A) is a continuation of the MCU one (based on Arm
+> Cortex-M) in that it shares a wide number of hardware blocks.
+> 
 
-About the leds, I'm ok to be named after full board name (a20-som204-evb).
-> I've tried it previously, and it helps in some ways
-> when you're matching the files to the schematics. But it is confusing
-> when you want the big picture. On the other hand, this is not going to
-> help with supporting different modules on the same baseboard, as the
-> routing, peripherals and labels likely won't match up. Just my two cents.
->
-> ChenYu
-Regards,
-Stefan Mavrodiev
+If not other majors comments on the series I will apply it in my next 
+pull request (for v4.17).
+
+Regards
+Alex
+
+> change v5:
+> -fix serial3 aliases by serial0
+>   
+> change v4:
+> -Add all available uarts in stm32mp157c
+> -Move uart aliases to board files
+> 
+> change v3:
+> -Remove bootargs
+> -Remove armv7m_restart and Share stm32_compat for mcu/mpu
+> -Modify stm32 kconfig with Arnd template
+> -Remove patch below (Linus W: Patch applied)
+>   devicetree: bindings: Document supported STM32 SoC family
+>   pinctrl: stm32: Add STM32MP157 MPU support
+> 
+> change V2:
+> -Add stm32 documentation in this serie to avoid merge conflict
+> thread: "https://patchwork.kernel.org/patch/10102573/";
+> -Split bindings (stm32.txt) to separate patches.
+> -Remove ARCH_STM32_MCU/MPU flags
+> -Adopt rst format for Documentation/arm/stm32 files
+> -s/STMicrolectronics/STMicroelectronics/g
+> 
+> Ludovic Barre (7):
+>    Documentation: arm: stm32: move to rst format
+>    ARM: stm32: prepare stm32 family to welcome armv7 architecture
+>    dt-bindings: stm32: add support of STM32MP157
+>    ARM: stm32: add initial support for STM32MP157
+>    ARM: configs: multi_v7: add stm32 support
+>    ARM: dts: stm32: add stm32mp157c initial support
+>    ARM: dts: stm32: add initial support of stm32mp157c eval board
+> 
+>   Documentation/arm/stm32/overview.rst            |  34 +++++
+>   Documentation/arm/stm32/overview.txt            |  33 ----
+>   Documentation/arm/stm32/stm32f429-overview.rst  |  26 ++++
+>   Documentation/arm/stm32/stm32f429-overview.txt  |  22 ---
+>   Documentation/arm/stm32/stm32f746-overview.rst  |  33 ++++
+>   Documentation/arm/stm32/stm32f746-overview.txt  |  34 -----
+>   Documentation/arm/stm32/stm32h743-overview.rst  |  34 +++++
+>   Documentation/arm/stm32/stm32h743-overview.txt  |  30 ----
+>   Documentation/arm/stm32/stm32mp157-overview.rst |  19 +++
+>   Documentation/devicetree/bindings/arm/stm32.txt |   1 +
+>   arch/arm/boot/dts/Makefile                      |   6 +-
+>   arch/arm/boot/dts/stm32mp157-pinctrl.dtsi       | 185 ++++++++++++++++++++++
+>   arch/arm/boot/dts/stm32mp157c-ed1.dts           |  32 ++++
+>   arch/arm/boot/dts/stm32mp157c-ev1.dts           |  21 +++
+>   arch/arm/boot/dts/stm32mp157c.dtsi              | 194 ++++++++++++++++++++++++
+>   arch/arm/configs/multi_v7_defconfig             |   3 +
+>   arch/arm/mach-stm32/Kconfig                     |  38 +++--
+>   arch/arm/mach-stm32/board-dt.c                  |   5 +-
+>   18 files changed, 614 insertions(+), 136 deletions(-)
+>   create mode 100644 Documentation/arm/stm32/overview.rst
+>   delete mode 100644 Documentation/arm/stm32/overview.txt
+>   create mode 100644 Documentation/arm/stm32/stm32f429-overview.rst
+>   delete mode 100644 Documentation/arm/stm32/stm32f429-overview.txt
+>   create mode 100644 Documentation/arm/stm32/stm32f746-overview.rst
+>   delete mode 100644 Documentation/arm/stm32/stm32f746-overview.txt
+>   create mode 100644 Documentation/arm/stm32/stm32h743-overview.rst
+>   delete mode 100644 Documentation/arm/stm32/stm32h743-overview.txt
+>   create mode 100644 Documentation/arm/stm32/stm32mp157-overview.rst
+>   create mode 100644 arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
+>   create mode 100644 arch/arm/boot/dts/stm32mp157c-ed1.dts
+>   create mode 100644 arch/arm/boot/dts/stm32mp157c-ev1.dts
+>   create mode 100644 arch/arm/boot/dts/stm32mp157c.dtsi
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
