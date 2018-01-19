@@ -1,107 +1,54 @@
-From: Philippe CORNU <philippe.cornu@st.com>
-Subject: Re: [RFC v2 2/2] dt-bindings: mipi-dsi: Add dual-channel DSI related
- info
-Date: Fri, 19 Jan 2018 10:41:58 +0000
-Message-ID: <8307e322-2f21-7685-df0e-2a2f1d791116@st.com>
-References: <20171205103356.9917-1-architt@codeaurora.org>
- <20180118045355.8858-1-architt@codeaurora.org>
- <20180118045355.8858-3-architt@codeaurora.org>
+From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Subject: Re: [PATCH v6 6/9] media: i2c: ov772x: Remove soc_camera dependencies
+Date: Fri, 19 Jan 2018 11:47:33 +0100
+Message-ID: <00f1dd19-6420-26ab-0529-a97f2b0de682@xs4all.nl>
+References: <1516139101-7835-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1516139101-7835-7-git-send-email-jacopo+renesas@jmondi.org>
+ <d67c21e5-2488-977b-39d8-561048409209@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180118045355.8858-3-architt@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <d67c21e5-2488-977b-39d8-561048409209-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
 Content-Language: en-US
-Content-ID: <DA5560B60DDA584099090160DEEB4917@st.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Archit Taneja <architt@codeaurora.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "boris.brezillon@free-electrons.com" <boris.brezillon@free-electrons.com>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "briannorris@chromium.org" <briannorris@chromium.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "nickey.yang@rock-chips.com" <nickey.yang@rock-chips.com>, "tomi.valkeinen@ti.com" <tomi.valkeinen@ti.com>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, "maxime.ripard@free-electrons.com" <maxime.ripard@free-electrons.com>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, geert-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sakari.ailus-X3B1VOXEql0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pombredanne-od1rfyK75/E@public.gmane.org
+Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgQXJjaGl0LA0KDQpNYW55IHRoYW5rcyBmb3IgdGhpcyBkb2N1bWVudGF0aW9uIGFkZC1vbi4N
-Cg0KSSB3b25kZXIgaWYgYW4gZXh0cmEgZXhhbXBsZSBvZiAiMiBEU0kgaG9zdHMgZHJpdmluZyBh
-IGR1YWwtY2hhbm5lbCBEU0kgDQpwZXJpcGhlcmFsIGNvbnRyb2xsZWQgYnkgdGhlIG1pcGkgYnVz
-IiBjb3VsZCBiZSB1c2VmdWw/IHdlbGwsIEkgYW0gbm90IA0KcmVhbGx5IGNvbnZpbmNlZCBpdCBp
-cyBuZWNlc3NhcnkgYW5kIG1heWJlIHRoaXMgZXh0cmEgZXhhbXBsZSBjb3VsZCBiZSANCmFkZGVk
-IGxhdGVyIHdoZW4gc29tZW9uZSB3aWxsIG1lZXQgdGhlIGNhc2UuLi4gYW5kIEkgc2hvdWxkIGhh
-dmUgc2VudCANCnRoaXMgY29tbWVudCBvbiB2MSAoc29ycnkgZm9yIHRoZSBkZWxheSkuDQoNClJl
-dmlld2VkLWJ5OiBQaGlsaXBwZSBDb3JudSA8cGhpbGlwcGUuY29ybnVAc3QuY29tPg0KDQpQaGls
-aXBwZSA6LSkNCg0KT24gMDEvMTgvMjAxOCAwNTo1MyBBTSwgQXJjaGl0IFRhbmVqYSB3cm90ZToN
-Cj4gQWRkIGJpbmRpbmcgaW5mbyBmb3IgcGVyaXBoZXJhbHMgdGhhdCBzdXBwb3J0IGR1YWwtY2hh
-bm5lbCBEU0kuIEFkZA0KPiBjb3JyZXNwb25kaW5nIG9wdGlvbmFsIGJpbmRpbmdzIGZvciBEU0kg
-aG9zdCBjb250cm9sbGVycyB0aGF0IG1heQ0KPiBiZSBjb25maWd1cmVkIGluIHRoaXMgbW9kZS4g
-QWRkIGFuIGV4YW1wbGUgb2YgYW4gSTJDIGNvbnRyb2xsZWQNCj4gZGV2aWNlIG9wZXJhdGluZyBp
-biBkdWFsLWNoYW5uZWwgRFNJIG1vZGUuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBBcmNoaXQgVGFu
-ZWphIDxhcmNoaXR0QGNvZGVhdXJvcmEub3JnPg0KPiAtLS0NCj4gdjI6DQo+IC0gU3BlY2lmeSB0
-aGF0IGNsb2NrLW1hc3RlciBpcyBhIGJvb2xlYW4gcHJvcGVydHkuDQo+IC0gRHJvcC9hZGQgdW5p
-dC1hZGRyZXNzIGFuZCAjKi1jZWxscyB3aGVyZSBhcHBsaWNhYmxlLg0KPiANCj4gICAuLi4vZGV2
-aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21pcGktZHNpLWJ1cy50eHQgICB8IDgwICsrKysrKysr
-KysrKysrKysrKysrKysNCj4gICAxIGZpbGUgY2hhbmdlZCwgODAgaW5zZXJ0aW9ucygrKQ0KPiAN
-Cj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
-L21pcGktZHNpLWJ1cy50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
-cGxheS9taXBpLWRzaS1idXMudHh0DQo+IGluZGV4IDk0ZmI3MmNiOTE2Zi4uN2EzYWJiZWRiM2Zh
-IDEwMDY0NA0KPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
-eS9taXBpLWRzaS1idXMudHh0DQo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9kaXNwbGF5L21pcGktZHNpLWJ1cy50eHQNCj4gQEAgLTI5LDYgKzI5LDEzIEBAIFJlcXVp
-cmVkIHByb3BlcnRpZXM6DQo+ICAgLSAjc2l6ZS1jZWxsczogU2hvdWxkIGJlIDAuIFRoZXJlIGFy
-ZSBjYXNlcyB3aGVyZSBpdCBtYWtlcyBzZW5zZSB0byB1c2UgYQ0KPiAgICAgZGlmZmVyZW50IHZh
-bHVlIGhlcmUuIFNlZSBiZWxvdy4NCj4gICANCj4gK09wdGlvbmFsIHByb3BlcnRpZXM6DQo+ICst
-IGNsb2NrLW1hc3RlcjogYm9vbGVhbi4gU2hvdWxkIGJlIGVuYWJsZWQgaWYgdGhlIGhvc3QgaXMg
-YmVpbmcgdXNlZCBpbg0KPiArICBjb25qdW5jdGlvbiB3aXRoIGFub3RoZXIgRFNJIGhvc3QgdG8g
-ZHJpdmUgdGhlIHNhbWUgcGVyaXBoZXJhbC4gSGFyZHdhcmUNCj4gKyAgc3VwcG9ydGluZyBzdWNo
-IGEgY29uZmlndXJhdGlvbiBnZW5lcmFsbHkgcmVxdWlyZXMgdGhlIGRhdGEgb24gYm90aCB0aGUg
-YnVzc2VzDQo+ICsgIHRvIGJlIGRyaXZlbiBieSB0aGUgc2FtZSBjbG9jay4gT25seSB0aGUgRFNJ
-IGhvc3QgaW5zdGFuY2UgY29udHJvbGxpbmcgdGhpcw0KPiArICBjbG9jayBzaG91bGQgY29udGFp
-biB0aGlzIHByb3BlcnR5Lg0KPiArDQo+ICAgRFNJIHBlcmlwaGVyYWwNCj4gICA9PT09PT09PT09
-PT09PQ0KPiAgIA0KPiBAQCAtNjIsNiArNjksMTYgQEAgcHJpbWFyeSBjb250cm9sIGJ1cywgYnV0
-IGFyZSBhbHNvIGNvbm5lY3RlZCB0byBhIERTSSBidXMgKG1vc3RseSBmb3IgdGhlIGRhdGENCj4g
-ICBwYXRoKS4gQ29ubmVjdGlvbnMgYmV0d2VlbiBzdWNoIHBlcmlwaGVyYWxzIGFuZCBhIERTSSBo
-b3N0IGNhbiBiZSByZXByZXNlbnRlZA0KPiAgIHVzaW5nIHRoZSBncmFwaCBiaW5kaW5ncyBbMV0s
-IFsyXS4NCj4gICANCj4gK1BlcmlwaGVyYWxzIHRoYXQgc3VwcG9ydCBkdWFsIGNoYW5uZWwgRFNJ
-DQo+ICstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiArDQo+ICtQ
-ZXJpcGhlcmFscyB3aXRoIGhpZ2hlciBiYW5kd2lkdGggcmVxdWlyZW1lbnRzIGNhbiBiZSBjb25u
-ZWN0ZWQgdG8gMiBEU0kNCj4gK2J1c3Nlcy4gRWFjaCBEU0kgYnVzL2NoYW5uZWwgZHJpdmVzIHNv
-bWUgcG9ydGlvbiBvZiB0aGUgcGl4ZWwgZGF0YSAoZ2VuZXJhbGx5DQo+ICtsZWZ0L3JpZ2h0IGhh
-bGYgb2YgZWFjaCBsaW5lIG9mIHRoZSBkaXNwbGF5LCBvciBldmVuL29kZCBsaW5lcyBvZiB0aGUg
-ZGlzcGxheSkuDQo+ICtUaGUgZ3JhcGggYmluZGluZ3Mgc2hvdWxkIGJlIHVzZWQgdG8gcmVwcmVz
-ZW50IHRoZSBtdWx0aXBsZSBEU0kgYnVzc2VzIHRoYXQgYXJlDQo+ICtjb25uZWN0ZWQgdG8gdGhp
-cyBwZXJpcGhlcmFsLiBFYWNoIERTSSBob3N0J3Mgb3V0cHV0IGVuZHBvaW50IGNhbiBiZSBsaW5r
-ZWQgdG8NCj4gK2FuIGlucHV0IGVuZHBvaW50IG9mIHRoZSBEU0kgcGVyaXBoZXJhbC4NCj4gKw0K
-PiAgIFsxXSBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZ3JhcGgudHh0DQo+ICAg
-WzJdIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS92aWRlby1pbnRlcmZh
-Y2VzLnR4dA0KPiAgIA0KPiBAQCAtNzEsNiArODgsOCBAQCBFeGFtcGxlcw0KPiAgICAgd2l0aCBk
-aWZmZXJlbnQgdmlydHVhbCBjaGFubmVsIGNvbmZpZ3VyYXRpb25zLg0KPiAgIC0gKDQpIGlzIGFu
-IGV4YW1wbGUgb2YgYSBwZXJpcGhlcmFsIG9uIGEgSTJDIGNvbnRyb2wgYnVzIGNvbm5lY3RlZCB3
-aXRoIHRvDQo+ICAgICBhIERTSSBob3N0IHVzaW5nIG9mLWdyYXBoIGJpbmRpbmdzLg0KPiArLSAo
-NSkgaXMgYW4gZXhhbXBsZSBvZiAyIERTSSBob3N0cyBkcml2aW5nIGEgZHVhbC1jaGFubmVsIERT
-SSBwZXJpcGhlcmFsLA0KPiArICB3aGljaCB1c2VzIEkyQyBhcyBpdHMgcHJpbWFyeSBjb250cm9s
-IGJ1cy4NCj4gICANCj4gICAxKQ0KPiAgIAlkc2ktaG9zdCB7DQo+IEBAIC0xNTMsMyArMTcyLDY0
-IEBAIEV4YW1wbGVzDQo+ICAgCQkJfTsNCj4gICAJCX07DQo+ICAgCX07DQo+ICsNCj4gKzUpDQo+
-ICsJaTJjLWhvc3Qgew0KPiArCQlkc2ktYnJpZGdlQDM1IHsNCj4gKwkJCWNvbXBhdGlibGUgPSAi
-Li4uIjsNCj4gKwkJCXJlZyA9IDwweDM1PjsNCj4gKw0KPiArCQkJcG9ydHMgew0KPiArCQkJCSNh
-ZGRyZXNzLWNlbGxzID0gPDE+Ow0KPiArCQkJCSNzaXplLWNlbGxzID0gPDA+Ow0KPiArDQo+ICsJ
-CQkJcG9ydEAwIHsNCj4gKwkJCQkJcmVnID0gPDA+Ow0KPiArCQkJCQlkc2kwX2luOiBlbmRwb2lu
-dCB7DQo+ICsJCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmRzaTBfb3V0PjsNCj4gKwkJCQkJfTsN
-Cj4gKwkJCQl9Ow0KPiArDQo+ICsJCQkJcG9ydEAxIHsNCj4gKwkJCQkJcmVnID0gPDE+Ow0KPiAr
-CQkJCQlkc2kxX2luOiBlbmRwb2ludCB7DQo+ICsJCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmRz
-aTFfb3V0PjsNCj4gKwkJCQkJfTsNCj4gKwkJCQl9Ow0KPiArCQkJfTsNCj4gKwkJfTsNCj4gKwl9
-Ow0KPiArDQo+ICsJZHNpMC1ob3N0IHsNCj4gKwkJLi4uDQo+ICsNCj4gKwkJLyoNCj4gKwkJICog
-dGhpcyBEU0kgaW5zdGFuY2UgZHJpdmVzIHRoZSBjbG9jayBmb3IgYm90aCB0aGUgaG9zdA0KPiAr
-CQkgKiBjb250cm9sbGVycw0KPiArCQkgKi8NCj4gKwkJY2xvY2stbWFzdGVyOw0KPiArDQo+ICsJ
-CXBvcnRzIHsNCj4gKwkJCS4uLg0KPiArDQo+ICsJCQlwb3J0IHsNCj4gKwkJCQlkc2kwX291dDog
-ZW5kcG9pbnQgew0KPiArCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmRzaTBfaW4+Ow0KPiArCQkJ
-CX07DQo+ICsJCQl9Ow0KPiArCQl9Ow0KPiArCX07DQo+ICsNCj4gKwlkc2kxLWhvc3Qgew0KPiAr
-CQkuLi4NCj4gKw0KPiArCQlwb3J0cyB7DQo+ICsJCQkuLi4NCj4gKw0KPiArCQkJcG9ydCB7DQo+
-ICsJCQkJZHNpMV9vdXQ6IGVuZHBvaW50IHsNCj4gKwkJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZk
-c2kxX2luPjsNCj4gKwkJCQl9Ow0KPiArCQkJfTsNCj4gKwkJfTsNCj4gKwl9Ow0KPiAKX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxp
-bmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On 01/19/18 11:24, Hans Verkuil wrote:
+> On 01/16/18 22:44, Jacopo Mondi wrote:
+>> Remove soc_camera framework dependencies from ov772x sensor driver.
+>> - Handle clock and gpios
+>> - Register async subdevice
+>> - Remove soc_camera specific g/s_mbus_config operations
+>> - Change image format colorspace from JPEG to SRGB as the two use the
+>>   same colorspace information but JPEG makes assumptions on color
+>>   components quantization that do not apply to the sensor
+>> - Remove sizes crop from get_selection as driver can't scale
+>> - Add kernel doc to driver interface header file
+>> - Adjust build system
+>>
+>> This commit does not remove the original soc_camera based driver as long
+>> as other platforms depends on soc_camera-based CEU driver.
+>>
+>> Signed-off-by: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+>> Reviewed-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+> 
+> Acked-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+
+Un-acked.
+
+I just noticed that this sensor driver has no enum_frame_interval and
+g/s_parm support. How would a driver ever know the frame rate of the
+sensor without that?
+
+This looks like a bug to me.
+
+Regards,
+
+	Hans
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
