@@ -1,80 +1,67 @@
-From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 00/10] ARM: dts: keystone*: Continued warnings cleanups
-Date: Fri, 19 Jan 2018 16:54:05 -0600
-Message-ID: <ecde90ae-7456-cadb-5ce4-6b63f4ed036a@ti.com>
-References: <20180104195701.4042-1-afd@ti.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 3/7] soc: qcom: Add GENI based QUP Wrapper driver
+Date: Fri, 19 Jan 2018 16:57:08 -0600
+Message-ID: <20180119225708.4mo6fiy5zyd6kscj@rob-hp-laptop>
+References: <1515805547-22816-1-git-send-email-kramasub@codeaurora.org>
+ <1515805547-22816-4-git-send-email-kramasub@codeaurora.org>
+ <20180117062002.GA6620@minitux>
+ <29ed5b45-dd70-fb70-3aa4-4e1a0006d57e@codeaurora.org>
+ <20180118165745.GE6620@minitux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180104195701.4042-1-afd-l0cyMroinI0@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180118165745.GE6620@minitux>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Rajendra Nayak <rnayak@codeaurora.org>, Karthikeyan Ramasubramanian <kramasub@codeaurora.org>, corbet@lwn.net, andy.gross@linaro.org, david.brown@linaro.org, mark.rutland@arm.com, wsa@the-dreams.de, gregkh@linuxfoundation.org, linux-doc@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-serial@vger.kernel.org, jslaby@suse.com, Sagar Dharia <sdharia@codeaurora.org>, Girish Mahadevan <girishm@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/04/2018 01:56 PM, Andrew F. Davis wrote:
-> Hello all,
+On Thu, Jan 18, 2018 at 08:57:45AM -0800, Bjorn Andersson wrote:
+> On Thu 18 Jan 01:13 PST 2018, Rajendra Nayak wrote:
 > 
-> Just a couple cleanups for DT warnings when compiling with W=1.
+> > []..
+> > 
+> > >> diff --git a/drivers/soc/qcom/qcom-geni-se.c b/drivers/soc/qcom/qcom-geni-se.c
+> > >> new file mode 100644
+> > >> index 0000000..3f43582
+> > >> --- /dev/null
+> > >> +++ b/drivers/soc/qcom/qcom-geni-se.c
+> > >> @@ -0,0 +1,1016 @@
+> > >> +/*
+> > >> + * Copyright (c) 2017-2018, The Linux Foundation. All rights reserved.
+> > >> + *
+> > >> + * This program is free software; you can redistribute it and/or modify
+> > >> + * it under the terms of the GNU General Public License version 2 and
+> > >> + * only version 2 as published by the Free Software Foundation.
+> > >> + *
+> > >> + * This program is distributed in the hope that it will be useful,
+> > >> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> > >> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> > >> + * GNU General Public License for more details.
+> > >> + *
+> > >> + */
+> > > 
+> > > Please use SPDX style license header, i.e. this file should start with:
+> > > 
+> > > // SPDX-License-Identifier: GPL-2.0
+> > > /*
+> > >  * Copyright (c) 2017-2018, The Linux Foundation. All rights reserved.
+> > >  */
+> > 
+> > Looks like Mark Brown commented elsewhere [1] that we should use the C++
+> > commenting style even for the Linux Foundation copyright?
+> > 
+> > [1] https://marc.info/?l=linux-clk&m=151497978626135&w=2 
+> > 
 > 
-> This clears up 51 more warnings when building keystone_defconfig.
-> 
-> Based on Santosh's "for_4.16/keystone-dts" branch.
-> 
-> Thanks,
-> Andrew
-> 
-> Changes from v1:
->  - Added to more patches from Suman
->  - Reworded commit message to include "address space" distinction
+> While I can agree with Mark on the ugliness of the mixed commenting
+> style, this is the style that I found communicated and is what you find
+> in other files.
 
-Thanks, you still have left in the "and simply use get_resource() in
-the driver." part in the commit descriptions though, which is not right.
-Otherwise, the changes look good.
+Well, that's pretty new guidance. Moving target...
 
+Given that Linus said '//' comments are the only thing C++ got right, I 
+expect to see more of them.
 
->  - Added "ranges" property
->  - Reordered #address/size-cells
-
-For the entire series,
-Tested-by: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-
-regards
-Suman
-
-> 
-> Andrew F. Davis (8):
->   ARM: dts: keystone: Move keystone_irq to under device-state-control
->   ARM: dts: keystone: Move reset-controller to under
->     device-state-control
->   ARM: dts: keystone-k2e: Move keystone_dsp_gpio to under
->     device-state-control
->   ARM: dts: keystone-k2l: Move keystone_dsp_gpio to under
->     device-state-control
->   ARM: dts: keystone-k2hk: Move keystone_dsp_gpio to under
->     device-state-control
->   ARM: dts: keystone-k2g: Move keystone_irq to under
->     device-state-control
->   ARM: dts: keystone-k2g: Move keystone_dsp_gpio to under
->     device-state-control
->   ARM: dts: keystone-k2g: Move usb-phy nodes out of soc0
-> 
-> Suman Anna (2):
->   ARM: dts: keystone-k2g: Fix unit-address formatting for serial nodes
->   ARM: dts: keystone-k2e-clocks: Fix missing unit address separator
-> 
->  arch/arm/boot/dts/keystone-k2e-clocks.dtsi |   2 +-
->  arch/arm/boot/dts/keystone-k2e.dtsi        |  13 ++--
->  arch/arm/boot/dts/keystone-k2g.dtsi        |  69 +++++++++++--------
->  arch/arm/boot/dts/keystone-k2hk.dtsi       | 104 ++++++++++++++++-------------
->  arch/arm/boot/dts/keystone-k2l.dtsi        |  52 ++++++++-------
->  arch/arm/boot/dts/keystone.dtsi            |  35 +++++-----
->  6 files changed, 156 insertions(+), 119 deletions(-)
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
