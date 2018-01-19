@@ -1,62 +1,177 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 4/6] dt-bindings: gpio: Add binding for Wii GPIO
- controller
-Date: Fri, 19 Jan 2018 17:05:21 -0600
-Message-ID: <20180119230521.st5uon74fpi4jghc@rob-hp-laptop>
-References: <20180115031401.19577-1-j.neuschaefer@gmx.net>
- <20180115031401.19577-5-j.neuschaefer@gmx.net>
+Subject: Re: [PATCHv<8> 1/3] ARM:dt-bindings:display Intel FPGA Video and
+ Image Processing Suite
+Date: Fri, 19 Jan 2018 17:11:28 -0600
+Message-ID: <20180119231128.vm4t3lkkjxw3zihj@rob-hp-laptop>
+References: <1516011701-2748-1-git-send-email-hean.loong.ong@intel.com>
+ <1516011701-2748-2-git-send-email-hean.loong.ong@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20180115031401.19577-5-j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org>
+In-Reply-To: <1516011701-2748-2-git-send-email-hean.loong.ong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
+To: "Hean-Loong, Ong" <hean.loong.ong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Ong@rob-hp-laptop
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 15, 2018 at 04:13:59AM +0100, Jonathan Neuschäfer wrote:
-> Signed-off-by: Jonathan Neuschäfer <j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org>
-> ---
->  .../bindings/gpio/nintendo,hollywood-gpio.txt      | 27 ++++++++++++++++++++++
->  .../devicetree/bindings/powerpc/nintendo/wii.txt   |  9 +-------
->  2 files changed, 28 insertions(+), 8 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/gpio/nintendo,hollywood-gpio.txt
+On Mon, Jan 15, 2018 at 06:21:39PM +0800, Hean-Loong, Ong wrote:
+> From: Ong, Hean Loong <hean.loong.ong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+
+"dt-bindings: display: ..."
+
 > 
-> diff --git a/Documentation/devicetree/bindings/gpio/nintendo,hollywood-gpio.txt b/Documentation/devicetree/bindings/gpio/nintendo,hollywood-gpio.txt
+> Device tree binding for Intel FPGA Video and Image Processing Suite. The binding involved would be generated from the Altera (Intel) Qsys system. The bindings would set the max width, max height, buts per pixel and memory port width. The device tree binding only supports the Intel
+> Arria10 devkit and its variants. Vendor name retained as altr.
+> 
+> V8:
+
+Version history goes below the '---' so it is not in the commit message.
+
+> *Add port to Display port decoder
+> 
+> V7:
+> *Fix OF graph for better description
+> *Add description for encoder
+> 
+> V6:
+> *Description have not describe DT device in general
+> 
+> V5:
+> *remove bindings for bits per symbol as it has only one value which is 8
+> 
+> V4:
+> *fix properties that does not describe the values
+> 
+> V3:
+> *OF graph not in accordance to graph.txt
+> 
+> V2:
+> *Remove Linux driver description
+> 
+> V1:
+> *Missing vendor prefix
+> 
+> Signed-off-by: Ong, Hean Loong <hean.loong.ong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+> ---
+>  .../devicetree/bindings/display/altr,vip-fb2.txt   |   99 ++++++++++++++++++++
+>  1 files changed, 99 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/display/altr,vip-fb2.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/display/altr,vip-fb2.txt b/Documentation/devicetree/bindings/display/altr,vip-fb2.txt
 > new file mode 100644
-> index 000000000000..a97ce6b5b724
+> index 0000000..4092804
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/nintendo,hollywood-gpio.txt
-> @@ -0,0 +1,27 @@
-> +Nintendo Wii (Hollywood) GPIO controller
+> +++ b/Documentation/devicetree/bindings/display/altr,vip-fb2.txt
+> @@ -0,0 +1,99 @@
+> +Intel Video and Image Processing(VIP) Frame Buffer II bindings
 > +
+> +Supported hardware: Intel FPGA SoC Arria10 and above with display port IP
+> +
+> +The Video Frame Buffer II in Video Image Processing (VIP) suite is an IP core
+> +that interfaces between system memory and Avalon-ST video ports. The IP core
+> +can be configured to support the memory reader (from memory to Avalon-ST)
+> +and/or memory writer (from Avalon-ST to memory) interfaces.
+> +
+> +More information the FPGA video IP component can be acquired from
+> +https://www.altera.com/content/dam/altera-www/global/en_US/pdfs\
+> +/literature/ug/ug_vip.pdf
+> +
+> +DT-Bindings:
+> +=============
 > +Required properties:
-> +- compatible: "nintendo,hollywood-gpio
-> +- reg: Physical base address and length of the controller's registers.
-> +- gpio-controller: Marks the device node as a GPIO controller.
-> +- #gpio-cells: Should be <2>. The first cell is the pin number and the
-> +  second cell is used to specify optional parameters:
-> +   - bit 0 specifies polarity (0 for normal, 1 for inverted).
+> +----------------------------
+> +- compatible: "altr,vip-frame-buffer-2.0"
+> +- reg: Physical base address and length of the framebuffer controller's
+> +	registers.
+> +- altr,max-width: The maximum width of the framebuffer in pixels.
+> +- altr,max-height: The maximum height of the framebuffer in pixels.
+> +- altr,mem-port-width = the bus width of the avalon master port
+> +	on the frame reader
 > +
-> +Optional properties:
-> +- ngpios: see Documentation/devicetree/bindings/gpio/gpio.txt
-> +- interrupt-controller: Marks the device node as an interrupt controller.
-> +- #interrupt-cells: Should be two.
-> +- interrupts: Interrupt specifier for the controller's Broadway (PowerPC)
-> +  interrupt.
-> +- interrupt-parent: phandle of the parent interrupt controller.
+> +Optional sub-nodes:
+> +- ports: The connection to the encoder
 > +
-> +Example:
+> +Optional properties
+> +----------------------------
+> +- compatible: "altr, display-port"
+
+spurious space         ^
+
+> +- reg: Physical base address and length of the display port controller's
+> +	registers
+> +- clocks: required clock handles for specified pairs in clock name
+> +- clock-names: required clock names. Contains:
+> +	- aux_clk: auxiliary clock,
+> +	- clk: 100 MHz output clock
+> +	- xcvr_mgmt_clk: transceiver management clock
 > +
-> +	GPIO: gpio@0d8000c0 {
+> +Optional sub-nodes:
+> +- ports: The connection to the controller
+> +
+> +Connections between the Frame Buffer II and other video IP cores in the system
+> +are modelled using the OF graph DT bindings. The Frame Buffer II node has up
+> +to two OF graph ports. When the memory writer interface is enabled, port 0
+> +maps to the Avalon-ST Input (din) port. When the memory reader interface is
+> +enabled, port 1 maps to the Avalon-ST Output (dout) port.
+> +
+> +The encoder is built into the FPGA HW design and therefore would not
+> +be accessible from the DDR.
+> +
+> +		Port 0				Port1
+> +---------------------------------------------------------
+> +ARRIA10 AVALON_ST (DIN)		AVALON_ST (DOUT)
+> +
+> +Required Properties Example:
+> +----------------------------
+> +
+> +framebuffer@100000280 {
+> +		compatible = "altr,vip-frame-buffer-2.0";
+> +		reg = <0x00000001 0x00000280 0x00000040>;
+> +		altr,max-width = <1280>;
+> +		altr,max-height = <720>;
+> +		altr,mem-port-width = <128>;
+> +
+> +		ports {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
 
-Drop the leading 0.
+Formatting is wrong here. Each level should be 1 tab.
 
-With that,
-
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> +
+> +			port@1 {
+> +				reg = <1>;
+> +					fb_output: endpoint {
+> +						remote-endpoint = <&dp_encoder_input>;
+> +					};
+> +			};
+> +		};
+> +};
+> +
+> +Optional Properties Example:
+> +This is not required unless there are needs to customize
+> +Display Port controller settings.
+> +
+> +displayport@100002000 {
+> +		compatible = "altr, display-port";
+> +		reg = <0x00000001 0x00002000 0x00000800>;
+> +		clocks = <&dp_0_clk_16 &dp_0_clk_100 &dp_0_clk_100>;
+> +		clock-names = "aux_clk", "clk", "xcvr_mgmt_clk";
+> +
+> +		ports {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			port@0 {
+> +				reg = <1>;
+> +					dp_input: endpoint {
+> +						remote-endpoint = <&dp_controller_input>;
+> +					};
+> +			};
+> +};
+> -- 
+> 1.7.1
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
