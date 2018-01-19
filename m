@@ -1,92 +1,107 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [PATCH] phy: work around 'phys' references to usb-nop-xceiv
- devices
-Date: Fri, 19 Jan 2018 11:35:17 +0100
-Message-ID: <c38e54f7-4dbd-72dc-e1fb-9003435cbe0e@i2se.com>
-References: <20180112101223.3661181-1-arnd@arndb.de>
- <CAL_JsqKi30aUiJUdjnen+sty_2horaTVs5LFaFJdxACsvEQpkg@mail.gmail.com>
+From: Philippe CORNU <philippe.cornu@st.com>
+Subject: Re: [RFC v2 2/2] dt-bindings: mipi-dsi: Add dual-channel DSI related
+ info
+Date: Fri, 19 Jan 2018 10:41:58 +0000
+Message-ID: <8307e322-2f21-7685-df0e-2a2f1d791116@st.com>
+References: <20171205103356.9917-1-architt@codeaurora.org>
+ <20180118045355.8858-1-architt@codeaurora.org>
+ <20180118045355.8858-3-architt@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqKi30aUiJUdjnen+sty_2horaTVs5LFaFJdxACsvEQpkg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: de-DE
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, stable <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, "moderated list:BROADCOM BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Andrzej Pietrasiewicz <andrzej.p-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180118045355.8858-3-architt@codeaurora.org>
+Content-Language: en-US
+Content-ID: <DA5560B60DDA584099090160DEEB4917@st.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Archit Taneja <architt@codeaurora.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "boris.brezillon@free-electrons.com" <boris.brezillon@free-electrons.com>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "briannorris@chromium.org" <briannorris@chromium.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "nickey.yang@rock-chips.com" <nickey.yang@rock-chips.com>, "tomi.valkeinen@ti.com" <tomi.valkeinen@ti.com>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, "maxime.ripard@free-electrons.com" <maxime.ripard@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-Am 12.01.2018 um 20:54 schrieb Rob Herring:
-> On Fri, Jan 12, 2018 at 4:12 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
->> Stefan Wahren reports a problem with a warning fix that was merged
->> for v4.15: we had lots of device nodes with a 'phys' property pointing
->> to a device node that is not compliant with the binding documented in
->> Documentation/devicetree/bindings/phy/phy-bindings.txt
->>
->> This generally works because USB HCD drivers that support both the generic
->> phy subsystem and the older usb-phy subsystem ignore most errors from
->> phy_get() and related calls and then use the usb-phy driver instead.
->>
->> However, it turns out that making the usb-nop-xceiv device compatible with
->> the generic-phy binding changes the phy_get() return code from -EINVAL to
->> -EPROBE_DEFER, and the dwc2 usb controller driver for bcm2835 now returns
->> -EPROBE_DEFER from its probe function rather than ignoring the failure,
->> breaking all USB support on raspberry-pi when CONFIG_GENERIC_PHY is
->> enabled. The same code is used in the dwc3 driver and the usb_add_hcd()
->> function, so a reasonable assumption would be that many other platforms
->> are affected as well.
->>
->> I have reviewed all the related patches and concluded that "usb-nop-xceiv"
->> is the only USB phy that is affected by the change, and since it is by far
->> the most commonly referenced phy, all the other USB phy drivers appear
->> to be used in ways that are are either safe in DT (they don't use the
->> 'phys' property), or in the driver (they already ignore -EPROBE_DEFER
->> from generic-phy when usb-phy is available).
->>
->> To work around the problem, this adds a special case to _of_phy_get()
->> so we ignore any PHY node that is compatible with "usb-nop-xceiv",
->> as we know that this can never load no matter how much we defer. In the
->> future, we might implement a generic-phy driver for "usb-nop-xceiv"
->> and then remove this workaround.
->>
->> Since we generally want older kernels to also want to work with the
->> fixed devicetree files, it would be good to backport the patch into
->> stable kernels as well (3.13+ are possibly affected), even though they
->> don't contain any of the patches that may have caused regressions.
->>
->> Fixes: 014d6da6cb25 ARM: dts: bcm283x: Fix DTC warnings about missing phy-cells
->> Fixes: c5bbf358b790 arm: dts: nspire: Add missing #phy-cells to usb-nop-xceiv
->> Fixes: 44e5dced2ef6 arm: dts: marvell: Add missing #phy-cells to usb-nop-xceiv
->> Fixes: f568f6f554b8 ARM: dts: omap: Add missing #phy-cells to usb-nop-xceiv
->> Fixes: d745d5f277bf ARM: dts: imx51-zii-rdu1: Add missing #phy-cells to usb-nop-xceiv
->> Fixes: 915fbe59cbf2 ARM: dts: imx: Add missing #phy-cells to usb-nop-xceiv
->> Link: https://marc.info/?l=linux-usb&m=151518314314753&w=2
->> Link: https://patchwork.kernel.org/patch/10158145/
->> Cc: stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> Cc: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
->> Cc: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> Cc: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
->> Tested-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
->> Acked-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
->> Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
->> ---
->> Hans tested the earlier version of this patch, I'd like one more
->> confirmation from Hans or Stefan (or anyone else) that this version
->> addresses the regression as well before this gets merged.
->>
->> Greg, can you pick this up into usb-linus for v4.15 once the fix
->> has been confirmed, or should I merge it through arm-soc?
->> ---
->>  drivers/phy/phy-core.c | 4 ++++
->>  1 file changed, 4 insertions(+)
-> Thanks for fixing this.
->
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->
-> Rob
-
-ping ...
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgQXJjaGl0LA0KDQpNYW55IHRoYW5rcyBmb3IgdGhpcyBkb2N1bWVudGF0aW9uIGFkZC1vbi4N
+Cg0KSSB3b25kZXIgaWYgYW4gZXh0cmEgZXhhbXBsZSBvZiAiMiBEU0kgaG9zdHMgZHJpdmluZyBh
+IGR1YWwtY2hhbm5lbCBEU0kgDQpwZXJpcGhlcmFsIGNvbnRyb2xsZWQgYnkgdGhlIG1pcGkgYnVz
+IiBjb3VsZCBiZSB1c2VmdWw/IHdlbGwsIEkgYW0gbm90IA0KcmVhbGx5IGNvbnZpbmNlZCBpdCBp
+cyBuZWNlc3NhcnkgYW5kIG1heWJlIHRoaXMgZXh0cmEgZXhhbXBsZSBjb3VsZCBiZSANCmFkZGVk
+IGxhdGVyIHdoZW4gc29tZW9uZSB3aWxsIG1lZXQgdGhlIGNhc2UuLi4gYW5kIEkgc2hvdWxkIGhh
+dmUgc2VudCANCnRoaXMgY29tbWVudCBvbiB2MSAoc29ycnkgZm9yIHRoZSBkZWxheSkuDQoNClJl
+dmlld2VkLWJ5OiBQaGlsaXBwZSBDb3JudSA8cGhpbGlwcGUuY29ybnVAc3QuY29tPg0KDQpQaGls
+aXBwZSA6LSkNCg0KT24gMDEvMTgvMjAxOCAwNTo1MyBBTSwgQXJjaGl0IFRhbmVqYSB3cm90ZToN
+Cj4gQWRkIGJpbmRpbmcgaW5mbyBmb3IgcGVyaXBoZXJhbHMgdGhhdCBzdXBwb3J0IGR1YWwtY2hh
+bm5lbCBEU0kuIEFkZA0KPiBjb3JyZXNwb25kaW5nIG9wdGlvbmFsIGJpbmRpbmdzIGZvciBEU0kg
+aG9zdCBjb250cm9sbGVycyB0aGF0IG1heQ0KPiBiZSBjb25maWd1cmVkIGluIHRoaXMgbW9kZS4g
+QWRkIGFuIGV4YW1wbGUgb2YgYW4gSTJDIGNvbnRyb2xsZWQNCj4gZGV2aWNlIG9wZXJhdGluZyBp
+biBkdWFsLWNoYW5uZWwgRFNJIG1vZGUuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBBcmNoaXQgVGFu
+ZWphIDxhcmNoaXR0QGNvZGVhdXJvcmEub3JnPg0KPiAtLS0NCj4gdjI6DQo+IC0gU3BlY2lmeSB0
+aGF0IGNsb2NrLW1hc3RlciBpcyBhIGJvb2xlYW4gcHJvcGVydHkuDQo+IC0gRHJvcC9hZGQgdW5p
+dC1hZGRyZXNzIGFuZCAjKi1jZWxscyB3aGVyZSBhcHBsaWNhYmxlLg0KPiANCj4gICAuLi4vZGV2
+aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21pcGktZHNpLWJ1cy50eHQgICB8IDgwICsrKysrKysr
+KysrKysrKysrKysrKysNCj4gICAxIGZpbGUgY2hhbmdlZCwgODAgaW5zZXJ0aW9ucygrKQ0KPiAN
+Cj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
+L21pcGktZHNpLWJ1cy50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
+cGxheS9taXBpLWRzaS1idXMudHh0DQo+IGluZGV4IDk0ZmI3MmNiOTE2Zi4uN2EzYWJiZWRiM2Zh
+IDEwMDY0NA0KPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
+eS9taXBpLWRzaS1idXMudHh0DQo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9kaXNwbGF5L21pcGktZHNpLWJ1cy50eHQNCj4gQEAgLTI5LDYgKzI5LDEzIEBAIFJlcXVp
+cmVkIHByb3BlcnRpZXM6DQo+ICAgLSAjc2l6ZS1jZWxsczogU2hvdWxkIGJlIDAuIFRoZXJlIGFy
+ZSBjYXNlcyB3aGVyZSBpdCBtYWtlcyBzZW5zZSB0byB1c2UgYQ0KPiAgICAgZGlmZmVyZW50IHZh
+bHVlIGhlcmUuIFNlZSBiZWxvdy4NCj4gICANCj4gK09wdGlvbmFsIHByb3BlcnRpZXM6DQo+ICst
+IGNsb2NrLW1hc3RlcjogYm9vbGVhbi4gU2hvdWxkIGJlIGVuYWJsZWQgaWYgdGhlIGhvc3QgaXMg
+YmVpbmcgdXNlZCBpbg0KPiArICBjb25qdW5jdGlvbiB3aXRoIGFub3RoZXIgRFNJIGhvc3QgdG8g
+ZHJpdmUgdGhlIHNhbWUgcGVyaXBoZXJhbC4gSGFyZHdhcmUNCj4gKyAgc3VwcG9ydGluZyBzdWNo
+IGEgY29uZmlndXJhdGlvbiBnZW5lcmFsbHkgcmVxdWlyZXMgdGhlIGRhdGEgb24gYm90aCB0aGUg
+YnVzc2VzDQo+ICsgIHRvIGJlIGRyaXZlbiBieSB0aGUgc2FtZSBjbG9jay4gT25seSB0aGUgRFNJ
+IGhvc3QgaW5zdGFuY2UgY29udHJvbGxpbmcgdGhpcw0KPiArICBjbG9jayBzaG91bGQgY29udGFp
+biB0aGlzIHByb3BlcnR5Lg0KPiArDQo+ICAgRFNJIHBlcmlwaGVyYWwNCj4gICA9PT09PT09PT09
+PT09PQ0KPiAgIA0KPiBAQCAtNjIsNiArNjksMTYgQEAgcHJpbWFyeSBjb250cm9sIGJ1cywgYnV0
+IGFyZSBhbHNvIGNvbm5lY3RlZCB0byBhIERTSSBidXMgKG1vc3RseSBmb3IgdGhlIGRhdGENCj4g
+ICBwYXRoKS4gQ29ubmVjdGlvbnMgYmV0d2VlbiBzdWNoIHBlcmlwaGVyYWxzIGFuZCBhIERTSSBo
+b3N0IGNhbiBiZSByZXByZXNlbnRlZA0KPiAgIHVzaW5nIHRoZSBncmFwaCBiaW5kaW5ncyBbMV0s
+IFsyXS4NCj4gICANCj4gK1BlcmlwaGVyYWxzIHRoYXQgc3VwcG9ydCBkdWFsIGNoYW5uZWwgRFNJ
+DQo+ICstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiArDQo+ICtQ
+ZXJpcGhlcmFscyB3aXRoIGhpZ2hlciBiYW5kd2lkdGggcmVxdWlyZW1lbnRzIGNhbiBiZSBjb25u
+ZWN0ZWQgdG8gMiBEU0kNCj4gK2J1c3Nlcy4gRWFjaCBEU0kgYnVzL2NoYW5uZWwgZHJpdmVzIHNv
+bWUgcG9ydGlvbiBvZiB0aGUgcGl4ZWwgZGF0YSAoZ2VuZXJhbGx5DQo+ICtsZWZ0L3JpZ2h0IGhh
+bGYgb2YgZWFjaCBsaW5lIG9mIHRoZSBkaXNwbGF5LCBvciBldmVuL29kZCBsaW5lcyBvZiB0aGUg
+ZGlzcGxheSkuDQo+ICtUaGUgZ3JhcGggYmluZGluZ3Mgc2hvdWxkIGJlIHVzZWQgdG8gcmVwcmVz
+ZW50IHRoZSBtdWx0aXBsZSBEU0kgYnVzc2VzIHRoYXQgYXJlDQo+ICtjb25uZWN0ZWQgdG8gdGhp
+cyBwZXJpcGhlcmFsLiBFYWNoIERTSSBob3N0J3Mgb3V0cHV0IGVuZHBvaW50IGNhbiBiZSBsaW5r
+ZWQgdG8NCj4gK2FuIGlucHV0IGVuZHBvaW50IG9mIHRoZSBEU0kgcGVyaXBoZXJhbC4NCj4gKw0K
+PiAgIFsxXSBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZ3JhcGgudHh0DQo+ICAg
+WzJdIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS92aWRlby1pbnRlcmZh
+Y2VzLnR4dA0KPiAgIA0KPiBAQCAtNzEsNiArODgsOCBAQCBFeGFtcGxlcw0KPiAgICAgd2l0aCBk
+aWZmZXJlbnQgdmlydHVhbCBjaGFubmVsIGNvbmZpZ3VyYXRpb25zLg0KPiAgIC0gKDQpIGlzIGFu
+IGV4YW1wbGUgb2YgYSBwZXJpcGhlcmFsIG9uIGEgSTJDIGNvbnRyb2wgYnVzIGNvbm5lY3RlZCB3
+aXRoIHRvDQo+ICAgICBhIERTSSBob3N0IHVzaW5nIG9mLWdyYXBoIGJpbmRpbmdzLg0KPiArLSAo
+NSkgaXMgYW4gZXhhbXBsZSBvZiAyIERTSSBob3N0cyBkcml2aW5nIGEgZHVhbC1jaGFubmVsIERT
+SSBwZXJpcGhlcmFsLA0KPiArICB3aGljaCB1c2VzIEkyQyBhcyBpdHMgcHJpbWFyeSBjb250cm9s
+IGJ1cy4NCj4gICANCj4gICAxKQ0KPiAgIAlkc2ktaG9zdCB7DQo+IEBAIC0xNTMsMyArMTcyLDY0
+IEBAIEV4YW1wbGVzDQo+ICAgCQkJfTsNCj4gICAJCX07DQo+ICAgCX07DQo+ICsNCj4gKzUpDQo+
+ICsJaTJjLWhvc3Qgew0KPiArCQlkc2ktYnJpZGdlQDM1IHsNCj4gKwkJCWNvbXBhdGlibGUgPSAi
+Li4uIjsNCj4gKwkJCXJlZyA9IDwweDM1PjsNCj4gKw0KPiArCQkJcG9ydHMgew0KPiArCQkJCSNh
+ZGRyZXNzLWNlbGxzID0gPDE+Ow0KPiArCQkJCSNzaXplLWNlbGxzID0gPDA+Ow0KPiArDQo+ICsJ
+CQkJcG9ydEAwIHsNCj4gKwkJCQkJcmVnID0gPDA+Ow0KPiArCQkJCQlkc2kwX2luOiBlbmRwb2lu
+dCB7DQo+ICsJCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmRzaTBfb3V0PjsNCj4gKwkJCQkJfTsN
+Cj4gKwkJCQl9Ow0KPiArDQo+ICsJCQkJcG9ydEAxIHsNCj4gKwkJCQkJcmVnID0gPDE+Ow0KPiAr
+CQkJCQlkc2kxX2luOiBlbmRwb2ludCB7DQo+ICsJCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmRz
+aTFfb3V0PjsNCj4gKwkJCQkJfTsNCj4gKwkJCQl9Ow0KPiArCQkJfTsNCj4gKwkJfTsNCj4gKwl9
+Ow0KPiArDQo+ICsJZHNpMC1ob3N0IHsNCj4gKwkJLi4uDQo+ICsNCj4gKwkJLyoNCj4gKwkJICog
+dGhpcyBEU0kgaW5zdGFuY2UgZHJpdmVzIHRoZSBjbG9jayBmb3IgYm90aCB0aGUgaG9zdA0KPiAr
+CQkgKiBjb250cm9sbGVycw0KPiArCQkgKi8NCj4gKwkJY2xvY2stbWFzdGVyOw0KPiArDQo+ICsJ
+CXBvcnRzIHsNCj4gKwkJCS4uLg0KPiArDQo+ICsJCQlwb3J0IHsNCj4gKwkJCQlkc2kwX291dDog
+ZW5kcG9pbnQgew0KPiArCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmRzaTBfaW4+Ow0KPiArCQkJ
+CX07DQo+ICsJCQl9Ow0KPiArCQl9Ow0KPiArCX07DQo+ICsNCj4gKwlkc2kxLWhvc3Qgew0KPiAr
+CQkuLi4NCj4gKw0KPiArCQlwb3J0cyB7DQo+ICsJCQkuLi4NCj4gKw0KPiArCQkJcG9ydCB7DQo+
+ICsJCQkJZHNpMV9vdXQ6IGVuZHBvaW50IHsNCj4gKwkJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZk
+c2kxX2luPjsNCj4gKwkJCQl9Ow0KPiArCQkJfTsNCj4gKwkJfTsNCj4gKwl9Ow0KPiAKX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxp
+bmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJl
+ZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
