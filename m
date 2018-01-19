@@ -1,307 +1,81 @@
-From: Cyrille Pitchen <cyrille.pitchen-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 6/6] PCI: cadence: Add host driver for Cadence PCIe
- controller
-Date: Fri, 19 Jan 2018 00:23:39 +0100
-Message-ID: <652f7f35-cdf6-5205-6e96-24ea2988fbb8@free-electrons.com>
-References: <cover.1515621150.git.cyrille.pitchen@free-electrons.com>
- <990730f5c1156b3bb15f56fa877719941f219016.1515621150.git.cyrille.pitchen@free-electrons.com>
- <20180116160733.GA3644@e107981-ln.cambridge.arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+From: Lina Iyer <ilina-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH 0/4] drivers/qcom: add RPMH communication support
+Date: Thu, 18 Jan 2018 17:01:53 -0700
+Message-ID: <20180119000157.7380-1-ilina@codeaurora.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180116160733.GA3644-4tUPXFaYRHv6sAKXYmQ0tx/iLCjYCKR+VpNB7YpNyf8@public.gmane.org>
-Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Cc: bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, stelford-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, dgary-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, kgopi-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, eandrews-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, sureshp-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lina Iyer <ilina-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lorenzo
+Hi,
 
-Le 16/01/2018 à 17:07, Lorenzo Pieralisi a écrit :
-> On Wed, Jan 10, 2018 at 11:47:35PM +0100, Cyrille Pitchen wrote:
->> This patch adds support to the Cadence PCIe controller in host mode.
->>
->> Signed-off-by: Cyrille Pitchen <cyrille.pitchen-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->> ---
->>  MAINTAINERS                             |   7 +
->>  drivers/pci/Kconfig                     |   1 +
->>  drivers/pci/Makefile                    |   1 +
->>  drivers/pci/cadence/Kconfig             |  16 ++
->>  drivers/pci/cadence/Makefile            |   3 +
->>  drivers/pci/cadence/pcie-cadence-host.c | 336 ++++++++++++++++++++++++++++++++
->>  drivers/pci/cadence/pcie-cadence.c      |  68 +++++++
->>  drivers/pci/cadence/pcie-cadence.h      | 196 +++++++++++++++++++
-> 
-> [...]
-> 
->> +void cdns_pcie_reset_outbound_region(struct cdns_pcie *pcie, u32 r)
->> +{
->> +	cdns_pcie_writel(pcie, CDNS_PCIE_AT_OB_REGION_PCI_ADDR0(r), 0);
->> +	cdns_pcie_writel(pcie, CDNS_PCIE_AT_OB_REGION_PCI_ADDR1(r), 0);
->> +
->> +	cdns_pcie_writel(pcie, CDNS_PCIE_AT_OB_REGION_DESC0(r), 0);
->> +	cdns_pcie_writel(pcie, CDNS_PCIE_AT_OB_REGION_DESC1(r), 0);
->> +
->> +	cdns_pcie_writel(pcie, CDNS_PCIE_AT_OB_REGION_CPU_ADDR0(r), 0);
->> +	cdns_pcie_writel(pcie, CDNS_PCIE_AT_OB_REGION_CPU_ADDR1(r), 0);
->> +}
-> 
-> Unused function, please remove it.
+This set of patches add the ability for platform drivers to make use of shared
+resources in newer Qualcomm SoCs like SDM845. Resources that are shared between
+different processors in a SoC are generally controlled by a dedicated remote
+processor. The remote processor (Resource Power Manager or RPM in previous QCOM
+SoCs) receives requests for resource state from other processors using the
+shared resource, aggregates the request and applies the result on the shared
+resource. SDM845 advances this concept and uses h/w (hardened I/P) blocks for
+aggregating requests and applying the result on the resource. The resources
+could be clocks, regulators or bandwidth requests for buses. This new
+architecture is called RPM-hardened or RPMH in short.
 
-done in v4.
+Since this communication mechanism is completely hardware driven without a
+processor intervention on the remote end, existing mechanisms like RPM-SMD are
+no longer useful. Also, there is no serialization of data or is data is written
+to a shared memory in this new format. The data used is different, unsigned 32
+bits are used for representing an address, data and header. Each resource's
+property is a unique u32 address and have pre-defined set of property specific
+valid values. A request that comprises of <header, addr, data> is sent by
+writing to a set of registers from Linux and transmitted to the remote slave
+through an internal bus. The remote end aggregates this request along with
+requests from other processors for the <addr> and applies the result.
 
-> 
->> diff --git a/drivers/pci/cadence/pcie-cadence.h b/drivers/pci/cadence/pcie-cadence.h
->> new file mode 100644
->> index 000000000000..3a15b4016352
->> --- /dev/null
->> +++ b/drivers/pci/cadence/pcie-cadence.h
->> @@ -0,0 +1,196 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +// Copyright (c) 2017 Cadence
->> +// Cadence PCIe controller driver.
->> +// Author: Cyrille Pitchen <cyrille.pitchen-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->> +
->> +#ifndef _PCIE_CADENCE_H
->> +#define _PCIE_CADENCE_H
->> +
->> +#include <linux/kernel.h>
->> +#include <linux/pci.h>
->> +
->> +/*
->> + * Local Management Registers
->> + */
->> +#define CDNS_PCIE_LM_BASE	0x00100000
->> +
->> +/* Vendor ID Register */
->> +#define CDNS_PCIE_LM_ID		(CDNS_PCIE_LM_BASE + 0x0044)
->> +#define  CDNS_PCIE_LM_ID_VENDOR_MASK	GENMASK(15, 0)
->> +#define  CDNS_PCIE_LM_ID_VENDOR_SHIFT	0
->> +#define  CDNS_PCIE_LM_ID_VENDOR(vid) \
->> +	(((vid) << CDNS_PCIE_LM_ID_VENDOR_SHIFT) & CDNS_PCIE_LM_ID_VENDOR_MASK)
->> +#define  CDNS_PCIE_LM_ID_SUBSYS_MASK	GENMASK(31, 16)
->> +#define  CDNS_PCIE_LM_ID_SUBSYS_SHIFT	16
->> +#define  CDNS_PCIE_LM_ID_SUBSYS(sub) \
->> +	(((sub) << CDNS_PCIE_LM_ID_SUBSYS_SHIFT) & CDNS_PCIE_LM_ID_SUBSYS_MASK)
->> +
->> +/* Root Port Requestor ID Register */
->> +#define CDNS_PCIE_LM_RP_RID	(CDNS_PCIE_LM_BASE + 0x0228)
->> +#define  CDNS_PCIE_LM_RP_RID_MASK	GENMASK(15, 0)
->> +#define  CDNS_PCIE_LM_RP_RID_SHIFT	0
->> +#define  CDNS_PCIE_LM_RP_RID_(rid) \
->> +	(((rid) << CDNS_PCIE_LM_RP_RID_SHIFT) & CDNS_PCIE_LM_RP_RID_MASK)
->> +
->> +/* Root Complex BAR Configuration Register */
->> +#define CDNS_PCIE_LM_RC_BAR_CFG	(CDNS_PCIE_LM_BASE + 0x0300)
->> +#define  CDNS_PCIE_LM_RC_BAR_CFG_BAR0_APERTURE_MASK	GENMASK(5, 0)
->> +#define  CDNS_PCIE_LM_RC_BAR_CFG_BAR0_APERTURE(a) \
->> +	(((a) << 0) & CDNS_PCIE_LM_RC_BAR_CFG_BAR0_APERTURE_MASK)
->> +#define  CDNS_PCIE_LM_RC_BAR_CFG_BAR0_CTRL_MASK		GENMASK(8, 6)
->> +#define  CDNS_PCIE_LM_RC_BAR_CFG_BAR0_CTRL(c) \
->> +	(((c) << 6) & CDNS_PCIE_LM_RC_BAR_CFG_BAR0_CTRL_MASK)
->> +#define  CDNS_PCIE_LM_RC_BAR_CFG_BAR1_APERTURE_MASK	GENMASK(13, 9)
->> +#define  CDNS_PCIE_LM_RC_BAR_CFG_BAR1_APERTURE(a) \
->> +	(((a) << 9) & CDNS_PCIE_LM_RC_BAR_CFG_BAR1_APERTURE_MASK)
->> +#define  CDNS_PCIE_LM_RC_BAR_CFG_BAR1_CTRL_MASK		GENMASK(16, 14)
->> +#define  CDNS_PCIE_LM_RC_BAR_CFG_BAR1_CTRL(c) \
->> +	(((c) << 14) & CDNS_PCIE_LM_RC_BAR_CFG_BAR1_CTRL_MASK)
->> +#define  CDNS_PCIE_LM_RC_BAR_CFG_PREFETCH_MEM_ENABLE	BIT(17)
->> +#define  CDNS_PCIE_LM_RC_BAR_CFG_PREFETCH_MEM_32BITS	0
->> +#define  CDNS_PCIE_LM_RC_BAR_CFG_PREFETCH_MEM_64BITS	BIT(18)
->> +#define  CDNS_PCIE_LM_RC_BAR_CFG_IO_ENABLE		BIT(19)
->> +#define  CDNS_PCIE_LM_RC_BAR_CFG_IO_16BITS		0
->> +#define  CDNS_PCIE_LM_RC_BAR_CFG_IO_32BITS		BIT(20)
->> +#define  CDNS_PCIE_LM_RC_BAR_CFG_CHECK_ENABLE		BIT(31)
->> +
->> +/* BAR control values applicable to both Endpoint Function and Root Complex */
->> +#define  CDNS_PCIE_LM_BAR_CFG_CTRL_DISABLED		0x0
->> +#define  CDNS_PCIE_LM_BAR_CFG_CTRL_IO_32BITS		0x1
->> +#define  CDNS_PCIE_LM_BAR_CFG_CTRL_MEM_32BITS		0x4
->> +#define  CDNS_PCIE_LM_BAR_CFG_CTRL_PREFETCH_MEM_32BITS	0x5
->> +#define  CDNS_PCIE_LM_BAR_CFG_CTRL_MEM_64BITS		0x6
->> +#define  CDNS_PCIE_LM_BAR_CFG_CTRL_PREFETCH_MEM_64BITS	0x7
->> +
->> +
->> +/*
->> + * Root Port Registers (PCI configuration space for the root port function)
->> + */
->> +#define CDNS_PCIE_RP_BASE	0x00200000
->> +
->> +
->> +/*
->> + * Address Translation Registers
->> + */
->> +#define CDNS_PCIE_AT_BASE	0x00400000
->> +
->> +/* Region r Outbound AXI to PCIe Address Translation Register 0 */
->> +#define CDNS_PCIE_AT_OB_REGION_PCI_ADDR0(r) \
->> +	(CDNS_PCIE_AT_BASE + 0x0000 + ((r) & 0x1f) * 0x0020)
->> +#define  CDNS_PCIE_AT_OB_REGION_PCI_ADDR0_NBITS_MASK	GENMASK(5, 0)
->> +#define  CDNS_PCIE_AT_OB_REGION_PCI_ADDR0_NBITS(nbits) \
->> +	(((nbits) - 1) & CDNS_PCIE_AT_OB_REGION_PCI_ADDR0_NBITS_MASK)
->> +#define  CDNS_PCIE_AT_OB_REGION_PCI_ADDR0_DEVFN_MASK	GENMASK(19, 12)
->> +#define  CDNS_PCIE_AT_OB_REGION_PCI_ADDR0_DEVFN(devfn) \
->> +	(((devfn) << 12) & CDNS_PCIE_AT_OB_REGION_PCI_ADDR0_DEVFN_MASK)
->> +#define  CDNS_PCIE_AT_OB_REGION_PCI_ADDR0_BUS_MASK	GENMASK(27, 20)
->> +#define  CDNS_PCIE_AT_OB_REGION_PCI_ADDR0_BUS(bus) \
->> +	(((bus) << 20) & CDNS_PCIE_AT_OB_REGION_PCI_ADDR0_BUS_MASK)
->> +
->> +/* Region r Outbound AXI to PCIe Address Translation Register 1 */
->> +#define CDNS_PCIE_AT_OB_REGION_PCI_ADDR1(r) \
->> +	(CDNS_PCIE_AT_BASE + 0x0004 + ((r) & 0x1f) * 0x0020)
->> +
->> +/* Region r Outbound PCIe Descriptor Register 0 */
->> +#define CDNS_PCIE_AT_OB_REGION_DESC0(r) \
->> +	(CDNS_PCIE_AT_BASE + 0x0008 + ((r) & 0x1f) * 0x0020)
->> +#define  CDNS_PCIE_AT_OB_REGION_DESC0_TYPE_MASK		GENMASK(3, 0)
->> +#define  CDNS_PCIE_AT_OB_REGION_DESC0_TYPE_MEM		0x2
->> +#define  CDNS_PCIE_AT_OB_REGION_DESC0_TYPE_IO		0x6
->> +#define  CDNS_PCIE_AT_OB_REGION_DESC0_TYPE_CONF_TYPE0	0xa
->> +#define  CDNS_PCIE_AT_OB_REGION_DESC0_TYPE_CONF_TYPE1	0xb
->> +#define  CDNS_PCIE_AT_OB_REGION_DESC0_TYPE_NORMAL_MSG	0xc
->> +#define  CDNS_PCIE_AT_OB_REGION_DESC0_TYPE_VENDOR_MSG	0xd
->> +/* Bit 23 MUST be set in RC mode. */
->> +#define  CDNS_PCIE_AT_OB_REGION_DESC0_HARDCODED_RID	BIT(23)
->> +#define  CDNS_PCIE_AT_OB_REGION_DESC0_DEVFN_MASK	GENMASK(31, 24)
->> +#define  CDNS_PCIE_AT_OB_REGION_DESC0_DEVFN(devfn) \
->> +	(((devfn) << 24) & CDNS_PCIE_AT_OB_REGION_DESC0_DEVFN_MASK)
->> +
->> +/* Region r Outbound PCIe Descriptor Register 1 */
->> +#define CDNS_PCIE_AT_OB_REGION_DESC1(r)	\
->> +	(CDNS_PCIE_AT_BASE + 0x000c + ((r) & 0x1f) * 0x0020)
->> +#define  CDNS_PCIE_AT_OB_REGION_DESC1_BUS_MASK	GENMASK(7, 0)
->> +#define  CDNS_PCIE_AT_OB_REGION_DESC1_BUS(bus) \
->> +	((bus) & CDNS_PCIE_AT_OB_REGION_DESC1_BUS_MASK)
->> +
->> +/* Region r AXI Region Base Address Register 0 */
->> +#define CDNS_PCIE_AT_OB_REGION_CPU_ADDR0(r) \
->> +	(CDNS_PCIE_AT_BASE + 0x0018 + ((r) & 0x1f) * 0x0020)
->> +#define  CDNS_PCIE_AT_OB_REGION_CPU_ADDR0_NBITS_MASK	GENMASK(5, 0)
->> +#define  CDNS_PCIE_AT_OB_REGION_CPU_ADDR0_NBITS(nbits) \
->> +	(((nbits) - 1) & CDNS_PCIE_AT_OB_REGION_CPU_ADDR0_NBITS_MASK)
->> +
->> +/* Region r AXI Region Base Address Register 1 */
->> +#define CDNS_PCIE_AT_OB_REGION_CPU_ADDR1(r) \
->> +	(CDNS_PCIE_AT_BASE + 0x001c + ((r) & 0x1f) * 0x0020)
->> +
->> +/* Root Port BAR Inbound PCIe to AXI Address Translation Register */
->> +#define CDNS_PCIE_AT_IB_RP_BAR_ADDR0(bar) \
->> +	(CDNS_PCIE_AT_BASE + 0x0800 + (bar) * 0x0008)
->> +#define  CDNS_PCIE_AT_IB_RP_BAR_ADDR0_NBITS_MASK	GENMASK(5, 0)
->> +#define  CDNS_PCIE_AT_IB_RP_BAR_ADDR0_NBITS(nbits) \
->> +	(((nbits) - 1) & CDNS_PCIE_AT_IB_RP_BAR_ADDR0_NBITS_MASK)
->> +#define CDNS_PCIE_AT_IB_RP_BAR_ADDR1(bar) \
->> +	(CDNS_PCIE_AT_BASE + 0x0804 + (bar) * 0x0008)
->> +
->> +enum cdns_pcie_rp_bar {
->> +	RP_BAR0,
->> +	RP_BAR1,
->> +	RP_NO_BAR
->> +};
->> +
->> +/**
->> + * struct cdns_pcie - private data for Cadence PCIe controller drivers
->> + * @reg_base: IO mapped register base
->> + * @mem_res: start/end offsets in the physical system memory to map PCI accesses
->> + * @is_rc: tell whether the PCIe controller mode is Root Complex or Endpoint.
->> + * @bus: In Root Complex mode, the bus number
->> + */
->> +struct cdns_pcie {
->> +	void __iomem		*reg_base;
->> +	struct resource		*mem_res;
->> +	bool			is_rc;
->> +	u8			bus;
->> +};
->> +
->> +/* Register access */
->> +static inline void cdns_pcie_writeb(struct cdns_pcie *pcie, u32 reg, u8 value)
->> +{
->> +	writeb(value, pcie->reg_base + reg);
->> +}
->> +
->> +static inline void cdns_pcie_writew(struct cdns_pcie *pcie, u32 reg, u16 value)
->> +{
->> +	writew(value, pcie->reg_base + reg);
->> +}
->> +
->> +static inline void cdns_pcie_writel(struct cdns_pcie *pcie, u32 reg, u32 value)
->> +{
->> +	writel(value, pcie->reg_base + reg);
->> +}
->> +
->> +static inline u32 cdns_pcie_readl(struct cdns_pcie *pcie, u32 reg)
->> +{
->> +	return readl(pcie->reg_base + reg);
->> +}
->> +
->> +/* Root Port register access */
->> +static inline void cdns_pcie_rp_writeb(struct cdns_pcie *pcie,
->> +				       u32 reg, u8 value)
->> +{
->> +	writeb(value, pcie->reg_base + CDNS_PCIE_RP_BASE + reg);
->> +}
->> +
->> +static inline void cdns_pcie_rp_writew(struct cdns_pcie *pcie,
->> +				       u32 reg, u16 value)
->> +{
->> +	writew(value, pcie->reg_base + CDNS_PCIE_RP_BASE + reg);
->> +}
->> +
->> +void cdns_pcie_set_outbound_region(struct cdns_pcie *pcie, u32 r, bool is_io,
->> +				   u64 cpu_addr, u64 pci_addr, size_t size);
->> +
->> +void cdns_pcie_reset_outbound_region(struct cdns_pcie *pcie, u32 r);
-> 
-> Ditto. I understand it is hard to untangle code that was written with
-> both EP and host bridge support in mind but, as I state below every
-> patch has to make sense on its own.
+The hardware block that houses this functionality is called Resource State
+Coordinator or RSC. Inside the RSC are set of slots for sending RPMH requests
+called Trigger Commands Sets (TCS). The set of patches are for writing the
+requests into these TCSes and sending them to hardened IP blocks.
 
-done in v4.
+The driver design is split into two components. The RSC driver housed in
+rpmh-rsc.c and the set of library functions in rpmh.c that frame the request and
+transmit it using the controller. This first set of patches allow a simple
+synchronous request to be made by the platform drivers. Future patches will add
+more functionality that cater to complex drivers and use cases.
 
-> 
->> +
->> +#endif /* _PCIE_CADENCE_H */
-> 
-> Technically speaking, this 3-file (.c .h) split is not necessary and can
-> turn out unnecessary churn if we never merge the endpoint code -
-> actually you would not even need a special cadence directory, just a
-> host bridge driver file.
-> 
-> Bottom line, as you know: every patch has to be self contained.
-> 
-> It is already quite late -rc, I understand that changes this late
-> are error prone so I will accept that this file splitting is necessary
-> for "future" patches - if you manage to squash changes into a file I'd
-> appreciate though, it does not make sense to export functions that are
-> used in just one compilation unit (and some that are not used at all).
+Thanks,
+Lina
 
-Sorry, I didn't have time to squash the 3 files into a single one. I
-can do it in v5 if you think it's better. I plan to work on the endpoint
-driver with multi-functions this week-end, hence I hope I will be able
-to add this driver back in v5.
+Lina Iyer (4):
+  drivers: qcom: rpmh-rsc: add RPMH controller for QCOM SoCs
+  dt-bindings: introduce RPMH RSC bindings for Qualcomm SoCs
+  drivers: qcom: rpmh-rsc: log RPMH requests in FTRACE
+  drivers: qcom: rpmh: add RPMH helper functions
 
-I've just been sending v4 anyway so at least you will have former patch 3
-from v3 split into new patches 3 and 4 in v4 as you requested.
-So if you want to merge at least the new generic patches [1 - 4] for v4.16,
-they are available :)
+ .../devicetree/bindings/arm/msm/rpmh-rsc.txt       | 134 ++++
+ drivers/soc/qcom/Kconfig                           |   7 +
+ drivers/soc/qcom/Makefile                          |   1 +
+ drivers/soc/qcom/rpmh-internal.h                   |  26 +
+ drivers/soc/qcom/rpmh-rsc.c                        | 686 +++++++++++++++++++++
+ drivers/soc/qcom/rpmh.c                            | 264 ++++++++
+ include/dt-bindings/soc/qcom,rpmh-rsc.h            |  16 +
+ include/soc/qcom/rpmh.h                            |  41 ++
+ include/soc/qcom/tcs.h                             |  38 ++
+ include/trace/events/rpmh.h                        |  89 +++
+ 10 files changed, 1302 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/msm/rpmh-rsc.txt
+ create mode 100644 drivers/soc/qcom/rpmh-internal.h
+ create mode 100644 drivers/soc/qcom/rpmh-rsc.c
+ create mode 100644 drivers/soc/qcom/rpmh.c
+ create mode 100644 include/dt-bindings/soc/qcom,rpmh-rsc.h
+ create mode 100644 include/soc/qcom/rpmh.h
+ create mode 100644 include/soc/qcom/tcs.h
+ create mode 100644 include/trace/events/rpmh.h
 
-Best regards,
+--
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
-Cyrille
-
- 
-> 
-> Thanks,
-> Lorenzo
-> 
-
-
--- 
-Cyrille Pitchen, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
