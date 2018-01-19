@@ -1,127 +1,69 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v6 3/9] v4l: platform: Add Renesas CEU driver
-Date: Fri, 19 Jan 2018 14:20:33 +0200
-Message-ID: <2529707.jzkV7c2yGz@avalon>
-References: <1516139101-7835-1-git-send-email-jacopo+renesas@jmondi.org> <1516139101-7835-4-git-send-email-jacopo+renesas@jmondi.org> <d056343b-46be-436a-e316-0a588a182eb9@xs4all.nl>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH v6 6/9] media: i2c: ov772x: Remove soc_camera dependencies
+Date: Fri, 19 Jan 2018 14:23:21 +0200
+Message-ID: <2694661.NEH0HeGgLD@avalon>
+References: <1516139101-7835-1-git-send-email-jacopo+renesas@jmondi.org> <00f1dd19-6420-26ab-0529-a97f2b0de682@xs4all.nl> <20180119111917.76wosrokgracbdrz@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <d056343b-46be-436a-e316-0a588a182eb9@xs4all.nl>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, magnus.damm@gmail.com, geert@glider.be, mchehab@kernel.org, festevam@gmail.com, sakari.ailus@iki.fi, robh+dt@kernel.org, mark.rutland@arm.com, pombredanne@nexb.com, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180119111917.76wosrokgracbdrz-S+BSfZ9RZZmRSg0ZkenSGLdO1Tsj/99ntUK59QYPAWc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Cc: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, geert-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pombredanne-od1rfyK75/E@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Hans,
+Hello,
 
-On Friday, 19 January 2018 13:20:19 EET Hans Verkuil wrote:
-> On 01/16/18 22:44, Jacopo Mondi wrote:
-> > Add driver for Renesas Capture Engine Unit (CEU).
+On Friday, 19 January 2018 13:19:18 EET Sakari Ailus wrote:
+> On Fri, Jan 19, 2018 at 11:47:33AM +0100, Hans Verkuil wrote:
+> > On 01/19/18 11:24, Hans Verkuil wrote:
+> >> On 01/16/18 22:44, Jacopo Mondi wrote:
+> >>> Remove soc_camera framework dependencies from ov772x sensor driver.
+> >>> - Handle clock and gpios
+> >>> - Register async subdevice
+> >>> - Remove soc_camera specific g/s_mbus_config operations
+> >>> - Change image format colorspace from JPEG to SRGB as the two use the
+> >>>   same colorspace information but JPEG makes assumptions on color
+> >>>   components quantization that do not apply to the sensor
+> >>> - Remove sizes crop from get_selection as driver can't scale
+> >>> - Add kernel doc to driver interface header file
+> >>> - Adjust build system
+> >>> 
+> >>> This commit does not remove the original soc_camera based driver as
+> >>> long as other platforms depends on soc_camera-based CEU driver.
+> >>> 
+> >>> Signed-off-by: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+> >>> Reviewed-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+> >> 
+> >> Acked-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 > > 
-> > The CEU interface supports capturing 'data' (YUV422) and 'images'
-> > (NV[12|21|16|61]).
+> > Un-acked.
 > > 
-> > This driver aims to replace the soc_camera-based sh_mobile_ceu one.
-> > 
-> > Tested with ov7670 camera sensor, providing YUYV_2X8 data on Renesas RZ
-> > platform GR-Peach.
-> > 
-> > Tested with ov7725 camera sensor on SH4 platform Migo-R.
-> > 
-> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > ---
-> > 
-> >  drivers/media/platform/Kconfig       |    9 +
-> >  drivers/media/platform/Makefile      |    1 +
-> >  drivers/media/platform/renesas-ceu.c | 1659 +++++++++++++++++++++++++++++
-> >  3 files changed, 1669 insertions(+)
-> >  create mode 100644 drivers/media/platform/renesas-ceu.c
-
-[snip]
-
-> > diff --git a/drivers/media/platform/renesas-ceu.c
-> > b/drivers/media/platform/renesas-ceu.c new file mode 100644
-> > index 0000000..1b8f0ef
-> > --- /dev/null
-> > +++ b/drivers/media/platform/renesas-ceu.c
-
-[snip]
-
-> > +static void ceu_update_plane_sizes(struct v4l2_plane_pix_format *plane,
-> > +				   unsigned int bpl, unsigned int szimage)
-> > +{
-> > +	if (plane->bytesperline < bpl)
-> > +		plane->bytesperline = bpl;
-> > +	if (plane->sizeimage < szimage)
-> > +		plane->sizeimage = szimage;
+> > I just noticed that this sensor driver has no enum_frame_interval and
+> > g/s_parm support. How would a driver ever know the frame rate of the
+> > sensor without that?
 > 
-> As mentioned in your cover letter, you do need to check for invalid
-> bytesperline values. The v4l2-compliance test is to see what happens
-> when userspace gives insane values, so yes, drivers need to be able
-> to handle that.
-
-What limit would you set, what is an acceptable large value versus an invalid 
-large value ? I think we should have rules for this at the API level (or at 
-least, if not part of the API, rules that are consistent across drivers).
-
-> plane->sizeimage is set by the driver, so drop the 'if' before the
-> assignment.
-
-I don't think that's correct. Userspace should be able to control padding 
-lines at the end of the image, the same way it controls padding pixels at the 
-end of lines.
-
-> > +}
-
-[snip]
-
-> > +static const struct v4l2_ioctl_ops ceu_ioctl_ops = {
-> > +	.vidioc_querycap		= ceu_querycap,
-> > +
-> > +	.vidioc_enum_fmt_vid_cap_mplane	= ceu_enum_fmt_vid_cap,
-> > +	.vidioc_try_fmt_vid_cap_mplane	= ceu_try_fmt_vid_cap,
-> > +	.vidioc_s_fmt_vid_cap_mplane	= ceu_s_fmt_vid_cap,
-> > +	.vidioc_g_fmt_vid_cap_mplane	= ceu_g_fmt_vid_cap,
-> > +
-> > +	.vidioc_enum_input		= ceu_enum_input,
-> > +	.vidioc_g_input			= ceu_g_input,
-> > +	.vidioc_s_input			= ceu_s_input,
-> > +
-> > +	.vidioc_reqbufs			= vb2_ioctl_reqbufs,
-> > +	.vidioc_querybuf		= vb2_ioctl_querybuf,
-> > +	.vidioc_qbuf			= vb2_ioctl_qbuf,
-> > +	.vidioc_expbuf			= vb2_ioctl_expbuf,
-> > +	.vidioc_dqbuf			= vb2_ioctl_dqbuf,
-> > +	.vidioc_create_bufs		= vb2_ioctl_create_bufs,
-> > +	.vidioc_prepare_buf		= vb2_ioctl_prepare_buf,
-> > +	.vidioc_streamon		= vb2_ioctl_streamon,
-> > +	.vidioc_streamoff		= vb2_ioctl_streamoff,
-> > +
-> > +	.vidioc_g_parm			= ceu_g_parm,
-> > +	.vidioc_s_parm			= ceu_s_parm,
-> > +	.vidioc_enum_framesizes		= ceu_enum_framesizes,
-> > +	.vidioc_enum_frameintervals	= ceu_enum_frameintervals,
+> s/_parm/_frame_interval/ ?
 > 
-> You're missing these ioctls:
-> 
->         .vidioc_log_status              = v4l2_ctrl_log_status,
+> We should have wrappers for this or rather to convert g/s_parm users to
+> g/s_frame_interval so drivers don't need to implement both.
 
-Is log status mandatory ?
+There are two ways to set the frame interval, either explicitly through the 
+s_frame_interval operation, or implicitly through control of the pixel clock, 
+horizontal blanking and vertical blanking (which in turn can be influenced by 
+the exposure time).
 
->         .vidioc_subscribe_event         = v4l2_ctrl_subscribe_event,
->         .vidioc_unsubscribe_event       = v4l2_event_unsubscribe,
-> 
-> These missing _event ops are the reason for this compliance failure:
-> 
-> fail: v4l2-test-controls.cpp(782): subscribe event for control 'User
-> Controls' failed
-> > +};
-
-[snip]
+Having two ways to perform the same operation seems sub-optimal to me, but I 
+could understand if they covered different use cases. As far as I know we 
+don't document the use cases for those methods. What's your opinion on that ?
 
 -- 
 Regards,
 
 Laurent Pinchart
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
