@@ -1,316 +1,227 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] iio: ad5272: Add support for Analog Devices
- digital potentiometers
-Date: Sat, 20 Jan 2018 17:12:41 +0000
-Message-ID: <20180120171241.7d36898d@archlinux>
-References: <1516160308-16937-1-git-send-email-preid@electromag.com.au>
-        <1516160308-16937-3-git-send-email-preid@electromag.com.au>
+From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Subject: =?UTF-8?q?=5BPATCH=20v6=2000/41=5D=20ARM=3A=20davinci=3A=20convert=20to=20common=20clock=20framework=E2=80=8B?=
+Date: Sat, 20 Jan 2018 11:13:39 -0600
+Message-ID: <1516468460-4908-1-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1516160308-16937-3-git-send-email-preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
-Cc: knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Michael.Hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alexandru.ardelean-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org
+To: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Adam Ford <aford173-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 17 Jan 2018 11:38:28 +0800
-Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org> wrote:
+This series converts mach-davinci to use the common clock framework.
 
-> Add implementation for Analog Devices AD5272 and AD5274 digital
-> potentiometer devices.
-> 
-> Signed-off-by: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
-A couple more minor comments.
+The series works like this, the first 19 patches create new clock drivers
+using the common clock framework. There are basically 3 groups of clocks -
+PLL, PSC and CFGCHIP (syscon). There are six different SoCs that each have
+unique init data, which is the reason for so many patches.
 
-Jonathan
+Then, starting with "ARM: da830: add new clock init using common clock",
+we get the mach code ready for the switch by adding the code needed for
+the new clock drivers and adding #ifndef CONFIG_COMMON_CLK around the
+legacy clocks so that we can switch easily between the old and the new.
 
-> ---
->  drivers/iio/potentiometer/Kconfig  |  10 ++
->  drivers/iio/potentiometer/Makefile |   1 +
->  drivers/iio/potentiometer/ad5272.c | 231 +++++++++++++++++++++++++++++++++++++
->  3 files changed, 242 insertions(+)
->  create mode 100644 drivers/iio/potentiometer/ad5272.c
-> 
-> diff --git a/drivers/iio/potentiometer/Kconfig b/drivers/iio/potentiometer/Kconfig
-> index 8bf2825..0b04063 100644
-> --- a/drivers/iio/potentiometer/Kconfig
-> +++ b/drivers/iio/potentiometer/Kconfig
-> @@ -5,6 +5,16 @@
->  
->  menu "Digital potentiometers"
->  
-> +config AD5272
-> +	tristate "Analog Devices AD5272 Digital Potentiometer driver"
-> +	depends on I2C
-> +	help
-> +	  Say yes here to build support for the Analog Devices AD5272
-> +	  digital potentiometer chip.
+"ARM: davinci: switch to common clock framework" actually flips the switch
+to start using the new clock drivers. Then the next 8 patches remove all
+of the old clock code.
 
-You need to list he compatible parts here so that people looking for
-the driver can find it.  Usually the short text states 'and similar'
-and the help text contains a list of parts.  AD5274 is missing here.
+The final three patches add device tree clock support to the one SoC that
+supports it.
 
-> +
-> +	  To compile this driver as a module, choose M here: the
-> +	  module will be called ad5272.
-> +
->  config DS1803
->  	tristate "Maxim Integrated DS1803 Digital Potentiometer driver"
->  	depends on I2C
-> diff --git a/drivers/iio/potentiometer/Makefile b/drivers/iio/potentiometer/Makefile
-> index 2260d40..498bbb8 100644
-> --- a/drivers/iio/potentiometer/Makefile
-> +++ b/drivers/iio/potentiometer/Makefile
-> @@ -3,6 +3,7 @@
->  #
->  
->  # When adding new entries keep the list in alphabetical order
-> +obj-$(CONFIG_AD5272) += ad5272.o
->  obj-$(CONFIG_DS1803) += ds1803.o
->  obj-$(CONFIG_MAX5481) += max5481.o
->  obj-$(CONFIG_MAX5487) += max5487.o
-> diff --git a/drivers/iio/potentiometer/ad5272.c b/drivers/iio/potentiometer/ad5272.c
-> new file mode 100644
-> index 0000000..b40f111
-> --- /dev/null
-> +++ b/drivers/iio/potentiometer/ad5272.c
-> @@ -0,0 +1,231 @@
-> +/*
-> + * Analog Devices AD5372 digital potentiometer driver
-> + * Copyright (C) 2018 Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
-> + *
-> + * Datasheet: http://www.analog.com/media/en/technical-documentation/data-sheets/AD5272_5274.pdf
-> + *
-> + * DEVID	#Wipers	#Positions	Resistor Opts (kOhm)	i2c address
-> + * ad5272	1	1024		20, 50, 100		01011xx
-> + * ad5274	1	256		20, 100			01011xx
-> + *
-> + * SPDX-License-Identifier: GPL-2.0+
-> + */
-> +
-> +#include <linux/delay.h>
-> +#include <linux/gpio/consumer.h>
-> +#include <linux/i2c.h>
-> +#include <linux/iio/iio.h>
-> +#include <linux/module.h>
-> +
-> +#define  AD5272_RDAC_WR  1
-> +#define  AD5272_RDAC_RD  2
-> +#define  AD5272_RESET    4
-> +#define  AD5272_CTL      7
-> +
-> +#define  AD5272_RDAC_WR_EN  BIT(1)
-> +
-> +struct ad5272_cfg {
-> +	int max_pos;
-> +	int kohms;
-> +	int shift;
-> +};
-> +
-> +enum ad5272_type {
-> +	AD5272_020,
-> +	AD5272_050,
-> +	AD5272_100,
-> +	AD5274_020,
-> +	AD5274_100,
-> +};
-> +
-> +static const struct ad5272_cfg ad5272_cfg[] = {
-> +	[AD5272_020] = { .max_pos = 1024, .kohms = 20 },
-> +	[AD5272_050] = { .max_pos = 1024, .kohms = 50 },
-> +	[AD5272_100] = { .max_pos = 1024, .kohms = 100 },
-> +	[AD5274_020] = { .max_pos = 256,  .kohms = 20,  .shift = 2 },
-> +	[AD5274_100] = { .max_pos = 256,  .kohms = 100, .shift = 2 },
-> +};
-> +
-> +struct ad5272_data {
-> +	struct i2c_client       *client;
-> +	struct mutex            lock;
-> +	const struct ad5272_cfg *cfg;
-> +	u8                      buf[2] ____cacheline_aligned;
-> +};
-> +
-> +static const struct iio_chan_spec ad5272_channel = {
-> +	.type = IIO_RESISTANCE,
-> +	.output = 1,
-> +	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
-> +	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),
-> +};
-> +
-> +static int ad5272_write(struct ad5272_data *data, int reg, int val)
-> +{
-> +	int ret;
-> +
-> +	data->buf[0] = (reg << 2) | ((val >> 8) & 0x3);
-> +	data->buf[1] = (u8)val;
-> +
-> +	mutex_lock(&data->lock);
-> +	ret = i2c_master_send(data->client, data->buf, sizeof(data->buf));
-> +	mutex_unlock(&data->lock);
-> +	return ret < 0 ? ret : 0;
-> +}
-> +
-> +static int ad5272_read(struct ad5272_data *data, int reg, int *val)
-> +{
-> +	int ret;
-> +
-> +	data->buf[0] = reg << 2;
-> +	data->buf[1] = 0;
-> +
-> +	mutex_lock(&data->lock);
-> +	ret = i2c_master_send(data->client, data->buf, sizeof(data->buf));
-> +	if (ret < 0)
-> +		goto error;
-> +
-> +	ret = i2c_master_recv(data->client, data->buf, sizeof(data->buf));
-> +	if (ret < 0)
-> +		goto error;
-> +
-> +	*val = ((data->buf[0] & 0x3) << 8) | data->buf[1];
-> +	ret = 0;
-> +error:
-> +	mutex_unlock(&data->lock);
-> +	return ret;
-> +}
-> +
-> +static int ad5272_read_raw(struct iio_dev *indio_dev,
-> +			   struct iio_chan_spec const *chan,
-> +			   int *val, int *val2, long mask)
-> +{
-> +	struct ad5272_data *data = iio_priv(indio_dev);
-> +	int ret;
-> +
-> +	switch (mask) {
-> +	case IIO_CHAN_INFO_RAW: {
-> +		ret = ad5272_read(data, AD5272_RDAC_RD, val);
-> +		*val = *val >> data->cfg->shift;
-> +		return ret ? ret : IIO_VAL_INT;
-> +	}
-> +	case IIO_CHAN_INFO_SCALE:
-> +		*val = 1000 * data->cfg->kohms;
-> +		*val2 = data->cfg->max_pos;
-> +		return IIO_VAL_FRACTIONAL;
-> +	}
-> +
-> +	return -EINVAL;
-> +}
-> +
-> +static int ad5272_write_raw(struct iio_dev *indio_dev,
-> +			    struct iio_chan_spec const *chan,
-> +			    int val, int val2, long mask)
-> +{
-> +	struct ad5272_data *data = iio_priv(indio_dev);
-> +
-> +	if (mask != IIO_CHAN_INFO_RAW)
-> +		return -EINVAL;
-> +
-> +	if (val >= data->cfg->max_pos || val < 0 || val2)
-> +		return -EINVAL;
-> +
-> +	return ad5272_write(data, AD5272_RDAC_WR, val << data->cfg->shift);
-> +}
-> +
-> +static const struct iio_info ad5272_info = {
-> +	.read_raw = ad5272_read_raw,
-> +	.write_raw = ad5272_write_raw,
-> +};
-> +
-> +static int ad5272_reset(struct ad5272_data *data)
-> +{
-> +	struct gpio_desc *reset_gpio;
-> +
-> +	reset_gpio = devm_gpiod_get_optional(&data->client->dev, "reset",
-> +		GPIOD_OUT_LOW);
-> +	if (IS_ERR(reset_gpio))
-> +		return PTR_ERR(reset_gpio);
-> +
-> +	if (reset_gpio) {
-> +		udelay(1);
-> +		gpiod_set_value(reset_gpio, 1);
-> +	} else {
-> +		ad5272_write(data, AD5272_RESET, 0);
-> +	}
-> +	usleep_range(1000, 2000);
-kernel coding conventions (and readability) put a blank line
-before return statements.
+v6 changes (also see individual patches for details):
+- All of the device tree bindings are changed
+- All of the clock drivers are changed significantly
+- Fixed issues brought up during review of v5
+- "ARM: davinci: move davinci_clk_init() to init_time" is removed from this
+  series and submitted separately
 
-> +	return 0;
-> +}
-> +
-> +static int ad5272_probe(struct i2c_client *client,
-> +			const struct i2c_device_id *id)
-> +{
-> +	struct device *dev = &client->dev;
-> +	struct iio_dev *indio_dev;
-> +	struct ad5272_data *data;
-> +	int ret;
-> +
-> +	indio_dev = devm_iio_device_alloc(dev, sizeof(*data));
-> +	if (!indio_dev)
-> +		return -ENOMEM;
-> +
-> +	i2c_set_clientdata(client, indio_dev);
-> +
-> +	data = iio_priv(indio_dev);
-> +	data->client = client;
-> +	mutex_init(&data->lock);
-> +	data->cfg = &ad5272_cfg[id->driver_data];
-> +
-> +	ret = ad5272_reset(data);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = ad5272_write(data, AD5272_CTL, AD5272_RDAC_WR_EN);
-> +	if (ret < 0)
-> +		return -ENODEV;
-> +
-> +	indio_dev->dev.parent = dev;
-> +	indio_dev->info = &ad5272_info;
-> +	indio_dev->channels = &ad5272_channel;
-> +	indio_dev->num_channels = 1;
-> +	indio_dev->name = client->name;
-> +
-> +	return devm_iio_device_register(dev, indio_dev);
-> +}
-> +
-> +#if defined(CONFIG_OF)
-> +static const struct of_device_id ad5272_dt_ids[] = {
-> +	{ .compatible = "adi,ad5272-020", .data = (void *)AD5272_020 },
-> +	{ .compatible = "adi,ad5272-050", .data = (void *)AD5272_050 },
-> +	{ .compatible = "adi,ad5272-100", .data = (void *)AD5272_100 },
-> +	{ .compatible = "adi,ad5274-020", .data = (void *)AD5274_020 },
-> +	{ .compatible = "adi,ad5274-100", .data = (void *)AD5274_100 },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, ad5272_dt_ids);
-> +#endif /* CONFIG_OF */
-> +
-> +static const struct i2c_device_id ad5272_id[] = {
-> +	{ "ad5272-020", AD5272_020 },
-> +	{ "ad5272-050", AD5272_050 },
-> +	{ "ad5272-100", AD5272_100 },
-> +	{ "ad5274-020", AD5274_020 },
-> +	{ "ad5274-100", AD5274_100 },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(i2c, ad5272_id);
-> +
-> +static struct i2c_driver ad5272_driver = {
-> +	.driver = {
-> +		.name	= "ad5272",
-> +		.of_match_table = of_match_ptr(ad5272_dt_ids),
-> +	},
-> +	.probe		= ad5272_probe,
-> +	.id_table	= ad5272_id,
-> +};
-> +
-> +module_i2c_driver(ad5272_driver);
-> +
-> +MODULE_AUTHOR("Phil Reid <preid-TeWIRZsGUAnP+dxuUfoltA@public.gmane.org>");
-> +MODULE_DESCRIPTION("AD5272 digital potentiometer");
-> +MODULE_LICENSE("GPL v2");
+v5 changes:
+- Basically, this is an entirely new series
+- Patches are broken up into bite-sized pieces
+- Converted PSC clock driver to use regmap
+- Restored "force" flag for certain DA850 clocks
+- Added device tree bindings
+- Moved more of the clock init to drivers/clk
+- Fixed frequency scaling (maybe*)
+
+* I have frequency scaling using cpufreq-dt, so I know the clocks are doing
+  what they need to do to make this work, but I haven't figured out how to
+  test davinci-cpufreq driver yet. (Patches to make cpufreq-dt work will be
+  sent separately after this series has landed.)
+
+Dependencies:
+
+This series applies on top of linux-davinci/master plus the following patches:
+- [1] "clk: fix reentrancy of clk_enable() on UP systems" (in clk-next)
+- [2] "clk: add helper functions for managing clk_onecell_data"
+- [3] "clk: divider: read-only divider can propagate rate change"
+- [4],[5],[6],[7],[8],[9] series "ARM: davinci: common clock prep work"
+
+You can find a working branch with everything included in the "common-clk-v6"
+branch of https://github.com/dlech/ev3dev-kernel.git.
+
+[1]: https://patchwork.kernel.org/patch/10145933/
+[2]: https://patchwork.kernel.org/patch/10145873/
+[3]: https://patchwork.kernel.org/patch/10146829/
+[4]: https://patchwork.kernel.org/patch/10176241/
+[5]: https://patchwork.kernel.org/patch/10176249/
+[6]: https://patchwork.kernel.org/patch/10176245/
+[7]: https://patchwork.kernel.org/patch/10176251/
+[8]: https://patchwork.kernel.org/patch/10176243/
+[9]: https://patchwork.kernel.org/patch/10176247/
+
+
+Testing/debugging for the uninitiated:
+
+I only have one device to test with, which is based on da850, so I will
+have to rely on others to do some testing here. Since we are dealing with
+clocks, if something isn't working, you most likely won't see output on
+the serial port. To figure out what is going on, you need to enable...
+
+	CONFIG_DEBUG_LL=y
+	CONFIG_EARLY_PRINTK=y
+
+and add "earlyprintk clk_ignore_unused" to the kernel command line options.
+You may need to select a different UART for this depending on your board. I
+think UART1 is the default in the kernel configuration.
+
+On da850 devices comment out the lines:
+
+	else
+		clk_set_parent(clk, parent->clk);
+
+in da850.c or, if using device tree, comment out the lines:
+
+	assigned-clocks = <&async3_clk>;
+	assigned-clock-parents = <&pll1_sysclk 2>;
+
+in da850.dtsi when doing earlyprintk, otherwise the UART1 and UART2 clock
+source will change during boot and cause garbled output after a point. 
+
+
+David Lechner (41):
+  dt-bindings: clock: Add new bindings for TI Davinci PLL clocks
+  clk: davinci: New driver for davinci PLL clocks
+  clk: davinci: Add platform information for TI DA830 PLL
+  clk: davinci: Add platform information for TI DA850 PLL
+  clk: davinci: Add platform information for TI DM355 PLL
+  clk: davinci: Add platform information for TI DM365 PLL
+  clk: davinci: Add platform information for TI DM644x PLL
+  clk: davinci: Add platform information for TI DM646x PLL
+  dt-bindings: clock: New bindings for TI Davinci PSC
+  clk: davinci: New driver for davinci PSC clocks
+  clk: davinci: Add platform information for TI DA830 PSC
+  clk: davinci: Add platform information for TI DA850 PSC
+  clk: davinci: Add platform information for TI DM355 PSC
+  clk: davinci: Add platform information for TI DM365 PSC
+  clk: davinci: Add platform information for TI DM644x PSC
+  clk: davinci: Add platform information for TI DM646x PSC
+  dt-bindings: clock: Add bindings for DA8XX CFGCHIP clocks
+  clk: davinci: New driver for TI DA8XX CFGCHIP clocks
+  clk: davinci: New driver for TI DA8XX USB PHY clocks
+  ARM: da830: add new clock init using common clock framework
+  ARM: da850: add new clock init using common clock framework
+  ARM: dm355: add new clock init using common clock framework
+  ARM: dm365: add new clock init using common clock framework
+  ARM: dm644x: add new clock init using common clock framework
+  ARM: dm646x: add new clock init using common clock framework
+  ARM: da8xx: add new USB PHY clock init using common clock framework
+  ARM: da8xx: add new sata_refclk init using common clock framework
+  ARM: davinci: remove CONFIG_DAVINCI_RESET_CLOCKS
+  ARM: davinci_all_defconfig: remove CONFIG_DAVINCI_RESET_CLOCKS
+  ARM: davinci: switch to common clock framework
+  ARM: da830: Remove legacy clock init
+  ARM: da850: Remove legacy clock init
+  ARM: dm355: Remove legacy clock init
+  ARM: dm365: Remove legacy clock init
+  ARM: dm644x: Remove legacy clock init
+  ARM: dm646x: Remove legacy clock init
+  ARM: da8xx: Remove legacy clock init
+  ARM: davinci: remove legacy clocks
+  ARM: davinci: add device tree support to timer
+  ARM: da8xx-dt: switch to device tree clocks
+  ARM: dts: da850: Add clocks
+
+ .../bindings/clock/ti/davinci/da8xx-cfgchip.txt    |  93 +++
+ .../devicetree/bindings/clock/ti/davinci/pll.txt   |  96 +++
+ .../devicetree/bindings/clock/ti/davinci/psc.txt   |  66 ++
+ MAINTAINERS                                        |   7 +
+ arch/arm/Kconfig                                   |   2 +-
+ arch/arm/boot/dts/da850.dtsi                       | 162 ++++
+ arch/arm/configs/davinci_all_defconfig             |   1 -
+ arch/arm/mach-davinci/Kconfig                      |  13 +-
+ arch/arm/mach-davinci/Makefile                     |   4 +-
+ arch/arm/mach-davinci/clock.c                      | 745 -------------------
+ arch/arm/mach-davinci/clock.h                      |  76 --
+ arch/arm/mach-davinci/common.c                     |   3 -
+ arch/arm/mach-davinci/da830.c                      | 440 +----------
+ arch/arm/mach-davinci/da850.c                      | 685 ++---------------
+ arch/arm/mach-davinci/da8xx-dt.c                   |  61 +-
+ arch/arm/mach-davinci/davinci.h                    |   4 +
+ arch/arm/mach-davinci/devices-da8xx.c              |  43 +-
+ arch/arm/mach-davinci/devices.c                    |   1 -
+ arch/arm/mach-davinci/dm355.c                      | 386 +---------
+ arch/arm/mach-davinci/dm365.c                      | 472 +-----------
+ arch/arm/mach-davinci/dm644x.c                     | 318 +-------
+ arch/arm/mach-davinci/dm646x.c                     | 353 +--------
+ arch/arm/mach-davinci/include/mach/clock.h         |   3 -
+ arch/arm/mach-davinci/include/mach/common.h        |   8 -
+ arch/arm/mach-davinci/psc.c                        | 137 ----
+ arch/arm/mach-davinci/psc.h                        |  12 -
+ arch/arm/mach-davinci/time.c                       |  19 +-
+ arch/arm/mach-davinci/usb-da8xx.c                  | 256 ++-----
+ drivers/clk/Makefile                               |   1 +
+ drivers/clk/davinci/Makefile                       |  22 +
+ drivers/clk/davinci/da8xx-cfgchip.c                | 305 ++++++++
+ drivers/clk/davinci/da8xx-usb-phy-clk.c            | 312 ++++++++
+ drivers/clk/davinci/pll-da830.c                    |  51 ++
+ drivers/clk/davinci/pll-da850.c                    | 163 +++++
+ drivers/clk/davinci/pll-dm355.c                    |  66 ++
+ drivers/clk/davinci/pll-dm365.c                    | 110 +++
+ drivers/clk/davinci/pll-dm644x.c                   |  67 ++
+ drivers/clk/davinci/pll-dm646x.c                   |  63 ++
+ drivers/clk/davinci/pll.c                          | 813 +++++++++++++++++++++
+ drivers/clk/davinci/pll.h                          | 118 +++
+ drivers/clk/davinci/psc-da830.c                    |  85 +++
+ drivers/clk/davinci/psc-da850.c                    | 109 +++
+ drivers/clk/davinci/psc-dm355.c                    |  74 ++
+ drivers/clk/davinci/psc-dm365.c                    |  79 ++
+ drivers/clk/davinci/psc-dm644x.c                   |  68 ++
+ drivers/clk/davinci/psc-dm646x.c                   |  62 ++
+ drivers/clk/davinci/psc.c                          | 298 ++++++++
+ drivers/clk/davinci/psc.h                          |  88 +++
+ include/linux/clk/davinci.h                        |  37 +
+ 49 files changed, 3683 insertions(+), 3774 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/ti/davinci/da8xx-cfgchip.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/ti/davinci/pll.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/ti/davinci/psc.txt
+ delete mode 100644 arch/arm/mach-davinci/clock.c
+ delete mode 100644 arch/arm/mach-davinci/psc.c
+ create mode 100644 drivers/clk/davinci/Makefile
+ create mode 100644 drivers/clk/davinci/da8xx-cfgchip.c
+ create mode 100644 drivers/clk/davinci/da8xx-usb-phy-clk.c
+ create mode 100644 drivers/clk/davinci/pll-da830.c
+ create mode 100644 drivers/clk/davinci/pll-da850.c
+ create mode 100644 drivers/clk/davinci/pll-dm355.c
+ create mode 100644 drivers/clk/davinci/pll-dm365.c
+ create mode 100644 drivers/clk/davinci/pll-dm644x.c
+ create mode 100644 drivers/clk/davinci/pll-dm646x.c
+ create mode 100644 drivers/clk/davinci/pll.c
+ create mode 100644 drivers/clk/davinci/pll.h
+ create mode 100644 drivers/clk/davinci/psc-da830.c
+ create mode 100644 drivers/clk/davinci/psc-da850.c
+ create mode 100644 drivers/clk/davinci/psc-dm355.c
+ create mode 100644 drivers/clk/davinci/psc-dm365.c
+ create mode 100644 drivers/clk/davinci/psc-dm644x.c
+ create mode 100644 drivers/clk/davinci/psc-dm646x.c
+ create mode 100644 drivers/clk/davinci/psc.c
+ create mode 100644 drivers/clk/davinci/psc.h
+ create mode 100644 include/linux/clk/davinci.h
+
+-- 
+2.7.4
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
