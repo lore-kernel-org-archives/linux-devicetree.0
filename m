@@ -1,88 +1,142 @@
-From: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC PATCH 2/9] ARM: sunxi: add Allwinner ARMv5 SoCs
-Date: Sat, 20 Jan 2018 14:22:06 +1100
-Message-ID: <CAGRGNgUj47nyf2dkgdk1bT2kO1p5oP8nk5LQ4EpCya2dfK=uMg@mail.gmail.com>
-References: <20180119231735.61504-1-icenowy@aosc.io> <20180119231735.61504-3-icenowy@aosc.io>
- <CAGRGNgUjvvzseAtUuiy5xCaZrLw2Jq4+A_dPXR9r_Xs-yYL1cw@mail.gmail.com> <76DC4CD7-4A07-40C7-80A8-1C2D177E8109@aosc.io>
-Reply-To: julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH 1/1] ARM: dts: sunxi: Add Olimex
+ A20-SOM204-EVB board
+Date: Sat, 20 Jan 2018 14:08:56 +0800
+Message-ID: <CAGb2v67BARS-kOH06DzkYH-_7h_18yrEpc0c_diXVvRxZPn_4Q@mail.gmail.com>
+References: <1515747666-6597-1-git-send-email-stefan@olimex.com>
+ <20180115095031.pzsgrp3tdmemotrs@flea.lan> <1b9667a4-75de-4ece-069d-7ec33b7e2f8d@olimex.com>
+ <20180118100745.y62adzvfnrzqkagd@flea.lan> <CAGb2v66U9ziFhU5n6haTA3LGNX7BavmfXiiCmvebtqaMxcN0-w@mail.gmail.com>
+ <548d57b7-4db1-a9ee-369e-9067f981162d@olimex.com>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDQIP76OUQLBB5HLRLJQKGQEVQS3LIY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBEF2RPJQKGQEZFKB5II-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <76DC4CD7-4A07-40C7-80A8-1C2D177E8109-h8G6r0blFSE@public.gmane.org>
+In-Reply-To: <548d57b7-4db1-a9ee-369e-9067f981162d-kyXcfZUBQGPQT0dZR+AlfA@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
 List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
-To: icenowy-h8G6r0blFSE@public.gmane.org
-Cc: "Mailing List, Arm" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "open list:COMMON CLK FRAMEWORK" <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Stefan Mavrodiev <stefan-kyXcfZUBQGPQT0dZR+AlfA@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM PORT" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Icenowy,
-
-On Sat, Jan 20, 2018 at 2:10 PM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
->
->
-> =E4=BA=8E 2018=E5=B9=B41=E6=9C=8820=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=88=
-11:06:40, Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> =E5=86=99=E5=88=B0:
->>Hi Icenowy,
+On Fri, Jan 19, 2018 at 9:27 PM, Stefan Mavrodiev <stefan-kyXcfZUBQGPQT0dZR+AlfA@public.gmane.org> wrote:
+> On 01/18/2018 04:28 PM, Chen-Yu Tsai wrote:
 >>
->>On Sat, Jan 20, 2018 at 10:17 AM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
->>wrote:
->>> Add option for Allwinner ARMv5 SoCs and a SoC suniv (which is a die
->>used
->>> for many new F-series products, including F1C100A, F1C100s, F1C200s,
->>> F1C500, F1C600).
+>> On Thu, Jan 18, 2018 at 6:07 PM, Maxime Ripard
+>> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
 >>>
->>> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
->>> ---
->>>  arch/arm/mach-sunxi/Kconfig    | 13 +++++++++++++
->>>  arch/arm/mach-sunxi/Makefile   |  1 +
->>>  arch/arm/mach-sunxi/sunxi_v5.c | 22 ++++++++++++++++++++++
->>>  3 files changed, 36 insertions(+)
->>>  create mode 100644 arch/arm/mach-sunxi/sunxi_v5.c
+>>> Hi!
 >>>
->>> diff --git a/arch/arm/mach-sunxi/Kconfig
->>b/arch/arm/mach-sunxi/Kconfig
->>> index 65509a35935f..78ac9ce70641 100644
->>> --- a/arch/arm/mach-sunxi/Kconfig
->>> +++ b/arch/arm/mach-sunxi/Kconfig
->>> @@ -59,3 +59,16 @@ config MACH_SUN9I
->>>         select ARM_GIC
+>>> On Mon, Jan 15, 2018 at 12:07:34PM +0200, Stefan Mavrodiev wrote:
+>>>>>>
+>>>>>> +/dts-v1/;
+>>>>>> +#include "sun7i-a20.dtsi"
+>>>>>> +#include "sunxi-common-regulators.dtsi"
+>>>>>> +
+>>>>>> +
+>>>>>> +#include <dt-bindings/gpio/gpio.h>
+>>>>>> +#include <dt-bindings/interrupt-controller/irq.h>
+>>>>>> +#include <dt-bindings/pwm/pwm.h>
+>>>>>> +
+>>>>>> +/ {
+>>>>>> + model = "Olimex A20-SOM204-EVB";
+>>>>>> + compatible = "olimex,a20-olimex-som204-evb", "allwinner,sun7i-a20";
+>>>>>> +
+>>>>>> + aliases {
+>>>>>> +         serial0 = &uart0;
+>>>>>> +         serial1 = &uart4;
+>>>>>> +         serial2 = &uart7;
+>>>>>> +         spi0 = &spi1;
+>>>>>> +         spi1 = &spi2;
+>>>>>> +         ethernet1 = &rtl8723bs;
+>>>>>
+>>>>> ethernet1? if there's a single network interface, it should be
+>>>>> ethernet0.
+>>>>
+>>>> I think this will conflict the gmac alias defined in sun7i-a20.dtsi:
+>>>>
+>>>> aliases {
+>>>>      ethernet0 = &gmac;
+>>>> };
 >>>
->>>  endif
->>> +
->>> +menuconfig ARCH_SUNXI_V5
->>> +       bool "Allwinner SoCs"
+>>> We have that? That's bad, but you're right :)
+>>>
+>>>>>> +         stat {
+>>>>>> +                 label = "a20-som204:green:stat";
+>>>>>> +                 gpios = <&pio 8 0 GPIO_ACTIVE_HIGH>;
+>>>>>> +                 default-state = "on";
+>>>>>> +         };
+>>>>>> +
+>>>>>> +         led1 {
+>>>>>> +                 label = "a20-som204-evb:green:led1";
+>>>>>> +                 gpios = <&pio 8 10 GPIO_ACTIVE_HIGH>;
+>>>>>> +                 default-state = "on";
+>>>>>> +         };
+>>>>>> +
+>>>>>> +         led2 {
+>>>>>> +                 label = "a20-som204-evb:yellow:led2";
+>>>>>> +                 gpios = <&pio 8 11 GPIO_ACTIVE_HIGH>;
+>>>>>> +                 default-state = "on";
+>>>>>> +         };
+>>>>>
+>>>>> You don't have the same prefix between stat and led1/led2. I'm fine
+>>>>> with both, but you should be consistent :)
+>>>>
+>>>> STAT led is on the SOM204 module, while led1/2 on the EVB. Thats why
+>>>> they have different prefix.
+>>>
+>>> Still, the user and the system will see it as a single board, and the
+>>> documentation states that it should be the board name. I'm not quite
+>>> sure what a good rule would be here. Have you looked at how other
+>>> boards dealt with it? Chen-Yu, any opinion on this?
 >>
->>That name seems a little too generic. Maybe "Allwinner ARMv5 SoCs"?
+>> Follow the bindings, I guess? I don't think we (sunxi) have dealt
+>> with modules that have LEDs or anything that needs to be named after
+>> the board.
+>>
+>> On a related topic, I don't know if you (Stefan / Olimex) want to split
+>> this into a .dtsi file for the SoM, and a .dts file for the EVB. It might
+>> help your customers?
 >
-> This is already required by armv5.
+> I'm not sure this will be good ideal. We will have one EVB with all
+> possible peripheries. On the other hand, we are planning 3-4 different
+> SOM204 modules (A20, A64, RK....). I think this will make the dtsi
+> incompatible.
+
+Yes. That was what I mentioned in the second half of my reply.
+
 >
-> Allwinner currently has only ARMv5,7,8 SoCs. ARMv8 is under
-> arm64 architecture, and ARMv5 and v7 cannot be selected at the same time.
+> Maybe if there is one dtsi for the base SOM204 module (one for each arch)
+> and
+> multiple dts for boards with additional features. But this will generate
+> 10-20
+> dts files. I think this will be better handled using overlays in the uboot.
 
-I'm going to try to back my way out of this hole by saying that they
-should be more descriptive anyway (and it'll give clueless kconfiggers
-a hint as to why they're not seeing their SoC listed)
+OK. I'm guessing there's the possibility that some pins or GPIOs get muxed
+to different functions depending on what base board is used? How would
+you list them, if you only had one .dts file, say for the EVB? Clearly
+the SoM cannot work by itself, so it probably doesn't get its own .dts
+file.
 
-However you're right, if both cannot be visible at the same time, then
-it really doesn't matter if they both have the same name.
+>
+> About the leds, I'm ok to be named after full board name (a20-som204-evb).
 
-Sorry for the noise,
+Cool.
 
---=20
-Julian Calaby
+ChenYu
 
-Email: julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Profile: http://www.google.com/profiles/julian.calaby/
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+>>
+>> I've tried it previously, and it helps in some ways
+>> when you're matching the files to the schematics. But it is confusing
+>> when you want the big picture. On the other hand, this is not going to
+>> help with supporting different modules on the same baseboard, as the
+>> routing, peripherals and labels likely won't match up. Just my two cents.
+>>
+>> ChenYu
+>
+> Regards,
+> Stefan Mavrodiev
