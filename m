@@ -1,123 +1,385 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH v3 6/9] irqchip: Add the ingenic-tcu-intc driver
-Date: Sat, 20 Jan 2018 13:06:49 +0000
-Message-ID: <20180120130649.7f326f75@why.wild-wind.fr.eu.org>
-References: <20180101143344.2099-1-paul@crapouillou.net>
-        <20180110224838.16711-1-paul@crapouillou.net>
-        <20180110224838.16711-6-paul@crapouillou.net>
-        <58349291-93cd-f803-52a9-f88120ace4dc@arm.com>
-        <1515687945.2170.1@smtp.crapouillou.net>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] iio: ad5272: Add support for Analog Devices digital
+ potentiometers
+Date: Sat, 20 Jan 2018 15:25:28 +0000
+Message-ID: <20180120152528.3b9836cf@archlinux>
+References: <1515565051-72535-1-git-send-email-preid@electromag.com.au>
+        <1515565051-72535-3-git-send-email-preid@electromag.com.au>
+        <20180114133953.2d2b7491@archlinux>
+        <7e5f624d-35a4-20a9-337d-8593542630f8@electromag.com.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1515687945.2170.1@smtp.crapouillou.net>
-Sender: linux-clk-owner@vger.kernel.org
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Daniel Lezcano <daniel.lezcano@linaro.org>, Lee Jones <lee.jones@linaro.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <7e5f624d-35a4-20a9-337d-8593542630f8-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
+Cc: knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Michael.Hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 11 Jan 2018 17:25:45 +0100
-Paul Cercueil <paul@crapouillou.net> wrote:
+On Mon, 15 Jan 2018 16:47:35 +0800
+Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org> wrote:
 
-> Hi Marc,
+> G'day Jonathan,
 > 
-> >>  +static int __init ingenic_tcu_intc_of_init(struct device_node 
-> >> *node,
-> >>  +	struct device_node *parent)
-> >>  +{
-> >>  +	struct irq_domain *domain;
-> >>  +	struct irq_chip_generic *gc;
-> >>  +	struct irq_chip_type *ct;
-> >>  +	int err, i, num_parent_irqs;
-> >>  +	unsigned int parent_irqs[3];  
+> On 14/01/2018 21:39, Jonathan Cameron wrote:
+> > On Wed, 10 Jan 2018 14:17:31 +0800
+> > Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org> wrote:
+> >   
+> >> Add implementation for Analog Devices AD5272 and AD5274 digital
+> >> potentiometer devices.
+> >>
+> >> Signed-off-by: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>  
 > > 
-> > 3 parent interrupts? Really? How do you pick one? Also, given the 
-> > useage
-> > model below, "int" is the wrong type. Probably should be u32.  
-> 
-> See below.
-> 
-> >>  +	struct regmap *map;
-> >>  +
-> >>  +	num_parent_irqs = of_property_count_elems_of_size(
-> >>  +			node, "interrupts", 4);  
+> > Hi Phil,
 > > 
-> > Nit: on a single line, as here is nothing that hurts my eyes more than
-> > reading something like(
-> > this). Also, 4 is better expressed as sizeof(u32).  
+> > A few minor comments inline, but looking pretty good.  
 > 
-> That will make checkpatch.pl unhappy :(
-
-And I don't care about checkpatch. I maintain the irqchip stuff, while
-checkpatch doesn't. Hence, I win.
-
+> Thanks for the review.
 > 
-> >>  +	if (num_parent_irqs < 0 || num_parent_irqs > 
-> >> ARRAY_SIZE(parent_irqs))
-> >>  +		return -EINVAL;
-> >>  +
-> >>  +	map = syscon_node_to_regmap(node->parent);
-> >>  +	if (IS_ERR(map))
-> >>  +		return PTR_ERR(map);
-> >>  +
-> >>  +	domain = irq_domain_add_linear(node, 32, &irq_generic_chip_ops, 
-> >> NULL);
-> >>  +	if (!domain)
-> >>  +		return -ENOMEM;
-> >>  +
-> >>  +	err = irq_alloc_domain_generic_chips(domain, 32, 1, "TCU",
-> >>  +			handle_level_irq, 0, IRQ_NOPROBE | IRQ_LEVEL, 0);
-> >>  +	if (err)
-> >>  +		goto out_domain_remove;
-> >>  +
-> >>  +	gc = irq_get_domain_generic_chip(domain, 0);
-> >>  +	ct = gc->chip_types;
-> >>  +
-> >>  +	gc->wake_enabled = IRQ_MSK(32);
-> >>  +	gc->private = map;
-> >>  +
-> >>  +	ct->regs.disable = TCU_REG_TMSR;
-> >>  +	ct->regs.enable = TCU_REG_TMCR;
-> >>  +	ct->regs.ack = TCU_REG_TFCR;
-> >>  +	ct->chip.irq_unmask = ingenic_tcu_gc_unmask_enable_reg;
-> >>  +	ct->chip.irq_mask = ingenic_tcu_gc_mask_disable_reg;
-> >>  +	ct->chip.irq_mask_ack = ingenic_tcu_gc_mask_disable_reg_and_ack;
-> >>  +	ct->chip.flags = IRQCHIP_MASK_ON_SUSPEND | IRQCHIP_SKIP_SET_WAKE;
-> >>  +
-> >>  +	/* Mask all IRQs by default */
-> >>  +	regmap_write(map, TCU_REG_TMSR, IRQ_MSK(32));
-> >>  +
-> >>  +	for (i = 0; i < num_parent_irqs; i++) {
-> >>  +		parent_irqs[i] = irq_of_parse_and_map(node, i);
-> >>  +		if (!parent_irqs[i]) {
-> >>  +			err = -EINVAL;
-> >>  +			goto out_unmap_irqs;
-> >>  +		}
-> >>  +
-> >>  +		irq_set_chained_handler_and_data(parent_irqs[i],
-> >>  +				ingenic_tcu_intc_cascade, domain);
-> >>  +	}  
 > > 
-> > I don't get the multiple parent irq at all. How are the source 
-> > interrupt routed to the various cascades?  
+> > Jonathan
+> >   
+> >> ---
+> >>   drivers/iio/potentiometer/Kconfig  |  10 ++
+> >>   drivers/iio/potentiometer/Makefile |   1 +
+> >>   drivers/iio/potentiometer/ad5272.c | 219 +++++++++++++++++++++++++++++++++++++
+> >>   3 files changed, 230 insertions(+)
+> >>   create mode 100644 drivers/iio/potentiometer/ad5272.c
+> >>
+> >> diff --git a/drivers/iio/potentiometer/Kconfig b/drivers/iio/potentiometer/Kconfig
+> >> index 8bf2825..0b04063 100644
+> >> --- a/drivers/iio/potentiometer/Kconfig
+> >> +++ b/drivers/iio/potentiometer/Kconfig
+> >> @@ -5,6 +5,16 @@
+> >>   
+> >>   menu "Digital potentiometers"
+> >>   
+> >> +config AD5272
+> >> +	tristate "Analog Devices AD5272 Digital Potentiometer driver"
+> >> +	depends on I2C
+> >> +	help
+> >> +	  Say yes here to build support for the Analog Devices AD5272
+> >> +	  digital potentiometer chip.
+> >> +
+> >> +	  To compile this driver as a module, choose M here: the
+> >> +	  module will be called ad5272.
+> >> +
+> >>   config DS1803
+> >>   	tristate "Maxim Integrated DS1803 Digital Potentiometer driver"
+> >>   	depends on I2C
+> >> diff --git a/drivers/iio/potentiometer/Makefile b/drivers/iio/potentiometer/Makefile
+> >> index 2260d40..498bbb8 100644
+> >> --- a/drivers/iio/potentiometer/Makefile
+> >> +++ b/drivers/iio/potentiometer/Makefile
+> >> @@ -3,6 +3,7 @@
+> >>   #
+> >>   
+> >>   # When adding new entries keep the list in alphabetical order
+> >> +obj-$(CONFIG_AD5272) += ad5272.o
+> >>   obj-$(CONFIG_DS1803) += ds1803.o
+> >>   obj-$(CONFIG_MAX5481) += max5481.o
+> >>   obj-$(CONFIG_MAX5487) += max5487.o
+> >> diff --git a/drivers/iio/potentiometer/ad5272.c b/drivers/iio/potentiometer/ad5272.c
+> >> new file mode 100644
+> >> index 0000000..b9208c2
+> >> --- /dev/null
+> >> +++ b/drivers/iio/potentiometer/ad5272.c
+> >> @@ -0,0 +1,219 @@
+> >> +/*
+> >> + * Analog Devices AD5372 digital potentiometer driver
+> >> + * Copyright (C) 2018 Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
+> >> + *
+> >> + * Datasheet: http://www.analog.com/media/en/technical-documentation/data-sheets/AD5272_5274.pdf
+> >> + *
+> >> + * DEVID	#Wipers	#Positions	Resistor Opts (kOhm)	i2c address
+> >> + * ad5272	1	1024		20, 50, 100		01011xx
+> >> + * ad5274	1	256		20, 100			01011xx
+> >> + *
+> >> + * This program is free software; you can redistribute it and/or modify it
+> >> + * under the terms of the GNU General Public License version 2 as published by
+> >> + * the Free Software Foundation.  
+> > 
+> > Could go all SPDX with the gpl part of this.  Personally I don't mind
+> > much but we'll probably end up converting it over soon anyway.
+> >   
+> >> + */
+> >> +
+> >> +#include <linux/gpio/consumer.h>
+> >> +#include <linux/i2c.h>
+> >> +#include <linux/iio/iio.h>
+> >> +#include <linux/module.h>
+> >> +
+> >> +#define  AD5272_RDAC_WR  1
+> >> +#define  AD5272_RDAC_RD  2
+> >> +#define  AD5272_CTL      7
+> >> +
+> >> +#define  AD5272_RDAC_WR_EN  BIT(1)
+> >> +
+> >> +struct ad5272_cfg {
+> >> +	int max_pos;
+> >> +	int kohms;
+> >> +	int shift;
+> >> +};
+> >> +
+> >> +enum ad5272_type {
+> >> +	AD5272_020,
+> >> +	AD5272_050,
+> >> +	AD5272_100,
+> >> +	AD5274_020,
+> >> +	AD5274_100,
+> >> +};
+> >> +
+> >> +static const struct ad5272_cfg ad5272_cfg[] = {
+> >> +	/* on-semiconductor parts */
+> >> +	[AD5272_020] = { .max_pos = 1024, .kohms = 20 },
+> >> +	[AD5272_050] = { .max_pos = 1024, .kohms = 50 },
+> >> +	[AD5272_100] = { .max_pos = 1024, .kohms = 100 },
+> >> +	[AD5274_020] = { .max_pos = 256,  .kohms = 20,  .shift = 2 },
+> >> +	[AD5274_100] = { .max_pos = 256,  .kohms = 100, .shift = 2 },
+> >> +};
+> >> +
+> >> +struct ad5272_data {
+> >> +	struct i2c_client       *client;
+> >> +	struct mutex            lock;
+> >> +	const struct ad5272_cfg *cfg;
+> >> +};
+> >> +
+> >> +static const struct iio_chan_spec ad5272_channel = {
+> >> +	.type = IIO_RESISTANCE,
+> >> +	.output = 1,
+> >> +	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
+> >> +	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),
+> >> +};
+> >> +
+> >> +static int ad5272_write(struct ad5272_data *data, int reg, int val)
+> >> +{
+> >> +	u8 buf[2];
+> >> +	int ret;
+> >> +
+> >> +	buf[0] = ((reg & 0xf) << 2) | ((val >> 8) & 0x3);
+> >> +	buf[1] = (u8)val;  
+> > 
+> > again, could do as buf[2]  = {...};  
+> ok
+> >   
+> >> +
+> >> +	mutex_lock(&data->lock);
+> >> +	ret = i2c_master_send(data->client, buf, 2);  
+> > 
+> > sizeof(buf) preferred.  
+> ok
+> >   
+> >> +	mutex_unlock(&data->lock);
+> >> +	return ret < 0 ? ret : 0;
+> >> +}
+> >> +
+> >> +static int ad5272_read(struct ad5272_data *data, int reg, int *val)
+> >> +{
+> >> +	u8 buf[2];  
+> > 
+> > Could assign value here for compactness.
+> > 	u8 buf[2] = {(reg & 0xf) << 2, 0) >
+> > It's a little paranoid to mask reg given you are controlling it entirely
+> > in the driver and anything of more than 4 bits is a bug anyway.  
+> ok
 > 
-> On JZ4740, channels 0 and 1 have their own interrupt, and channels
-> 2-7 share one interrupt line.
-> On JZ4770 and JZ4780, the OST (OS timer) channel has its own
-> interrupt, channel 5 has its own interrupt, and channels 0-4 and 6-7
-> share one interrupt line.
+> >> +	int ret;
+> >> +
+> >> +	buf[0] = (reg & 0xf) << 2;
+> >> +	buf[1] = 0;
+> >> +
+> >> +	mutex_lock(&data->lock);
+> >> +	ret = i2c_master_send(data->client, buf, 2);
+> >> +	if (ret < 0)
+> >> +		goto error;
+> >> +
+> >> +	ret = i2c_master_recv(data->client, buf, 2);
+> >> +	if (ret < 0)
+> >> +		goto error;
+> >> +
+> >> +	*val = ((buf[0] & 0x3) << 8) | buf[1];
+> >> +	ret = 0;
+> >> +error:
+> >> +	mutex_unlock(&data->lock);
+> >> +	return ret;
+> >> +}
+> >> +
+> >> +static int ad5272_read_raw(struct iio_dev *indio_dev,
+> >> +			   struct iio_chan_spec const *chan,
+> >> +			   int *val, int *val2, long mask)
+> >> +{
+> >> +	struct ad5272_data *data = iio_priv(indio_dev);
+> >> +	int ret;
+> >> +
+> >> +	switch (mask) {
+> >> +	case IIO_CHAN_INFO_RAW: {
+> >> +		ret = ad5272_read(data, AD5272_RDAC_RD, val);
+> >> +		*val = *val >> data->cfg->shift;
+> >> +		return ret ? ret : IIO_VAL_INT;
+> >> +	}
+> >> +	case IIO_CHAN_INFO_SCALE:
+> >> +		*val = 1000 * data->cfg->kohms;
+> >> +		*val2 = data->cfg->max_pos;
+> >> +		return IIO_VAL_FRACTIONAL;
+> >> +	}
+> >> +
+> >> +	return -EINVAL;
+> >> +}
+> >> +
+> >> +static int ad5272_write_raw(struct iio_dev *indio_dev,
+> >> +			    struct iio_chan_spec const *chan,
+> >> +			    int val, int val2, long mask)
+> >> +{
+> >> +	struct ad5272_data *data = iio_priv(indio_dev);
+> >> +
+> >> +	if (mask != IIO_CHAN_INFO_RAW)
+> >> +		return -EINVAL;
+> >> +
+> >> +	if (val >= data->cfg->max_pos || val < 0)
+> >> +		return -EINVAL;  
+> > 
+> > Also verify that val2 = 0 as otherwise the classic
+> > 1.999999 evaluates to 1 rather surprises users.  
+> yeap, that'd surprise me too.
+> 
+> >   
+> >> +
+> >> +	val = val << data->cfg->shift;  
+> > 
+> > I would role this into the next line.  
+> ok
+> 
+> > 
+> > 	return ad5272_write(data, AD5272_RDAC_WR, val << data->cfg->shift);  
+> >> +
+> >> +	return ad5272_write(data, AD5272_RDAC_WR, val);
+> >> +}
+> >> +
+> >> +static const struct iio_info ad5272_info = {
+> >> +	.read_raw = ad5272_read_raw,
+> >> +	.write_raw = ad5272_write_raw,
+> >> +	.driver_module = THIS_MODULE,  
+> > 
+> > .driver_module no longer exists so just drop this.
+> > We do the equivalent with some macro tricks to avoid having
+> > to have this same line in every driver.  
+> ok
+> 
+> >   
+> >> +};
+> >> +
+> >> +static int ad5272_probe(struct i2c_client *client,
+> >> +			const struct i2c_device_id *id)
+> >> +{
+> >> +	struct device *dev = &client->dev;
+> >> +	struct gpio_desc *reset_gpio;
+> >> +	struct iio_dev *indio_dev;
+> >> +	struct ad5272_data *data;
+> >> +	int ret;
+> >> +
+> >> +	reset_gpio = devm_gpiod_get_optional(&client->dev, "reset",
+> >> +		GPIOD_OUT_LOW);
+> >> +	if (IS_ERR(reset_gpio))
+> >> +		return PTR_ERR(reset_gpio);
+> >> +
+> >> +	indio_dev = devm_iio_device_alloc(dev, sizeof(*data));
+> >> +	if (!indio_dev)
+> >> +		return -ENOMEM;
+> >> +
+> >> +	i2c_set_clientdata(client, indio_dev);
+> >> +
+> >> +	data = iio_priv(indio_dev);
+> >> +	data->client = client;
+> >> +	mutex_init(&data->lock);
+> >> +	data->cfg = &ad5272_cfg[id->driver_data];  
+> > 
+> > Calling it cfg kind of implies config to me whereas this is
+> > chip type specific data.  
+> I just followed what seemed to be the existing convention for the iio/potentmeters.
+> ds1803, mcp4531, max5481
+> 
+> Happy to change.
+> 
+> >   
+> >> +
+> >> +	ret = ad5272_write(data, AD5272_CTL, AD5272_RDAC_WR_EN);
+> >> +	if (ret < 0)
+> >> +		return -ENODEV;
+> >> +
+> >> +	indio_dev->dev.parent = dev;
+> >> +	indio_dev->info = &ad5272_info;
+> >> +	indio_dev->channels = &ad5272_channel;
+> >> +	indio_dev->num_channels = 1;
+> >> +	indio_dev->name = client->name;
+> >> +
+> >> +	return devm_iio_device_register(dev, indio_dev);
+> >> +}
+> >> +
+> >> +#if defined(CONFIG_OF)
+> >> +static const struct of_device_id ad5272_dt_ids[] = {
+> >> +	{ .compatible = "adi,ad5272-020", .data = &ad5272_cfg[AD5272_020] },  
+> > 
+> > Why do this rather than stash the index in the data parameter and look up later
+> > (more consistent with the i2c_device_id table below)?  
+> 
+> Yeah I was a bit confused by this.
+> I was following how the ds1803.c driver was doing things.
+> To be honest I don't have a good grasp of how .data works here or how it gets referenced or if it's
+> even used...
+Good point - you aren't currently using it.
 
-What a mess. I suppose you get a shared status register to find out
-which channel has fired?
+This gets more interesting when i2c actually starts using the
+of tables for devicetree rather than the older i2c_device_id tables.
 
-> To keep things simple, we register the same interrupt handler for the 
-> three parent interrupts.
+The .data field is used for the same purpose as the indexes in
+the other table, but you have to explicitly request it
+with of_get_match_data
 
-Please add a comment to that effect, documenting the above HW blunder.
+Jonathan
+> 
+> 
+> >   
+> >> +	{ .compatible = "adi,ad5272-050", .data = &ad5272_cfg[AD5272_050] },
+> >> +	{ .compatible = "adi,ad5272-100", .data = &ad5272_cfg[AD5272_100] },
+> >> +	{ .compatible = "adi,ad5274-020", .data = &ad5272_cfg[AD5274_020] },
+> >> +	{ .compatible = "adi,ad5274-100", .data = &ad5272_cfg[AD5274_100] },
+> >> +	{}
+> >> +};
+> >> +MODULE_DEVICE_TABLE(of, ad5272_dt_ids);
+> >> +#endif /* CONFIG_OF */
+> >> +
+> >> +static const struct i2c_device_id ad5272_id[] = {
+> >> +	{ "ad5272-020", AD5272_020 },
+> >> +	{ "ad5272-050", AD5272_050 },
+> >> +	{ "ad5272-100", AD5272_100 },
+> >> +	{ "ad5274-020", AD5274_020 },
+> >> +	{ "ad5274-100", AD5274_100 },
+> >> +	{}
+> >> +};
+> >> +MODULE_DEVICE_TABLE(i2c, ad5272_id);
+> >> +
+> >> +static struct i2c_driver ad5272_driver = {
+> >> +	.driver = {
+> >> +		.name	= "ad5272",
+> >> +		.of_match_table = of_match_ptr(ad5272_dt_ids),
+> >> +	},
+> >> +	.probe		= ad5272_probe,
+> >> +	.id_table	= ad5272_id,
+> >> +};
+> >> +
+> >> +module_i2c_driver(ad5272_driver);
+> >> +
+> >> +MODULE_AUTHOR("Phil Reid <preid-TeWIRZsGUAnP+dxuUfoltA@public.gmane.org>");
+> >> +MODULE_DESCRIPTION("AD5272 digital potentiometer");
+> >> +MODULE_LICENSE("GPL v2");  
+> > 
+> > 
+> >   
+> 
+> 
 
-Thanks,
-
-	M.
--- 
-Without deviation from the norm, progress is not possible.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
