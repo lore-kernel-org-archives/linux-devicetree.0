@@ -1,153 +1,109 @@
 From: David Lechner <david@lechnology.com>
-Subject: [PATCH v6 11/41] clk: davinci: Add platform information for TI DA830
- PSC
-Date: Sat, 20 Jan 2018 11:13:50 -0600
-Message-ID: <1516468460-4908-12-git-send-email-david@lechnology.com>
+Subject: [PATCH v6 09/41] dt-bindings: clock: New bindings for TI Davinci PSC
+Date: Sat, 20 Jan 2018 11:13:48 -0600
+Message-ID: <1516468460-4908-10-git-send-email-david@lechnology.com>
 References: <1516468460-4908-1-git-send-email-david@lechnology.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
 In-Reply-To: <1516468460-4908-1-git-send-email-david@lechnology.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-clk-owner@vger.kernel.org
 To: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, David Lechner <david@lechnology.com>, Kevin Hilman <khilman@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Adam Ford <aford173@gmail.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org, David Lechner <david@lechnology.com>
 List-Id: devicetree@vger.kernel.org
 
-This adds platform-specific declarations for the PSC clocks on TI DA830/
-OMAP-L137/AM17XX SoCs.
+This adds a new binding for the Power Sleep Controller (PSC) for the
+mach-davinci family of processors.
+
+Note: Although TI Keystone has a very similar PSC, we are not using the
+existing bindings. Keystone is using a legacy one-node-per-clock binding
+(actually two nodes if you count the separate reset binding for the same
+IP block). Also, some davinci LPSCs have quirks that aren't handled by
+the keystone bindings, so we would be adding one compatible string per
+clock with quirks instead of just a new compatible string for each
+controller.
 
 Signed-off-by: David Lechner <david@lechnology.com>
 ---
 
 v6 changes:
-- change how clkdev lookups are declared
+- added clocks and clock-names properties
+- expanded examples
 
- drivers/clk/davinci/Makefile    |  1 +
- drivers/clk/davinci/psc-da830.c | 85 +++++++++++++++++++++++++++++++++++++++++
- include/linux/clk/davinci.h     |  2 +
- 3 files changed, 88 insertions(+)
- create mode 100644 drivers/clk/davinci/psc-da830.c
+ .../devicetree/bindings/clock/ti/davinci/psc.txt   | 66 ++++++++++++++++++++++
+ 1 file changed, 66 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/ti/davinci/psc.txt
 
-diff --git a/drivers/clk/davinci/Makefile b/drivers/clk/davinci/Makefile
-index cd1bf2c..fb14c8c 100644
---- a/drivers/clk/davinci/Makefile
-+++ b/drivers/clk/davinci/Makefile
-@@ -10,4 +10,5 @@ obj-$(CONFIG_ARCH_DAVINCI_DM644x)	+= pll-dm644x.o
- obj-$(CONFIG_ARCH_DAVINCI_DM646x)	+= pll-dm646x.o
- 
- obj-y += psc.o
-+obj-$(CONFIG_ARCH_DAVINCI_DA830)	+= psc-da830.o
- endif
-diff --git a/drivers/clk/davinci/psc-da830.c b/drivers/clk/davinci/psc-da830.c
+diff --git a/Documentation/devicetree/bindings/clock/ti/davinci/psc.txt b/Documentation/devicetree/bindings/clock/ti/davinci/psc.txt
 new file mode 100644
-index 0000000..df551fa
+index 0000000..0c2d2bd
 --- /dev/null
-+++ b/drivers/clk/davinci/psc-da830.c
-@@ -0,0 +1,85 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * PSC clock descriptions for TI DA830/OMAP-L137/AM17XX
-+ *
-+ * Copyright (C) 2018 David Lechner <david@lechnology.com>
-+ */
++++ b/Documentation/devicetree/bindings/clock/ti/davinci/psc.txt
+@@ -0,0 +1,66 @@
++Binding for TI DaVinci Power Sleep Controller (PSC)
 +
-+#include <linux/clk-provider.h>
-+#include <linux/clkdev.h>
-+#include <linux/init.h>
-+#include <linux/types.h>
++The PSC provides power management, clock gating and reset functionality. It is
++primarily used for clocking.
 +
-+#include "psc.h"
++Required properties:
++- compatible: shall be one of:
++	- "ti,da850-psc0" for PSC0 on DA850/OMAP-L138/AM18XX
++	- "ti,da850-psc1" for PSC1 on DA850/OMAP-L138/AM18XX
++- reg: physical base address and size of the controller's register area
++- #clock-cells: from common clock binding; shall be set to 1
++- clocks: phandles to clocks corresponding to the clock-names property
++- clock-names: list of parent clock names - depends on compatible value
++	- for "ti,da850-psc0", shall be "pll0_sysclk1", "pll0_sysclk2",
++	  "pll0_sysclk4", "pll0_sysclk6", "async1"
++	- for "ti,da850-psc1", shall be "pll0_sysclk2", "pll0_sysclk4", "async3"
 +
-+LPSC_CLKDEV1(spi0_clkdev,	NULL,	"spi_davinci.0");
-+LPSC_CLKDEV1(mmcsd_clkdev,	NULL,	"da830-mmc.0");
-+LPSC_CLKDEV1(uart0_clkdev,	NULL,	"serial8250.0");
++Optional properties:
++- #reset-cells: from reset binding; shall be set to 1 - only applicable when
++  at least one local domain provides a local reset.
 +
-+static const struct davinci_psc_clk_info da830_psc0_info[] __initconst = {
-+	LPSC(0,  0, tpcc,     pll0_sysclk2, NULL,         LPSC_ALWAYS_ENABLED),
-+	LPSC(1,  0, tptc0,    pll0_sysclk2, NULL,         LPSC_ALWAYS_ENABLED),
-+	LPSC(2,  0, tptc1,    pll0_sysclk2, NULL,         LPSC_ALWAYS_ENABLED),
-+	LPSC(3,  0, aemif,    pll0_sysclk3, NULL,         LPSC_ALWAYS_ENABLED),
-+	LPSC(4,  0, spi0,     pll0_sysclk2, spi0_clkdev,  0),
-+	LPSC(5,  0, mmcsd,    pll0_sysclk2, mmcsd_clkdev, 0),
-+	LPSC(6,  0, aintc,    pll0_sysclk4, NULL,         LPSC_ALWAYS_ENABLED),
-+	LPSC(7,  0, arm_rom,  pll0_sysclk2, NULL,         LPSC_ALWAYS_ENABLED),
-+	LPSC(8,  0, secu_mgr, pll0_sysclk4, NULL,         LPSC_ALWAYS_ENABLED),
-+	LPSC(9,  0, uart0,    pll0_sysclk2, uart0_clkdev, 0),
-+	LPSC(10, 0, scr0_ss,  pll0_sysclk2, NULL,         LPSC_ALWAYS_ENABLED),
-+	LPSC(11, 0, scr1_ss,  pll0_sysclk2, NULL,         LPSC_ALWAYS_ENABLED),
-+	LPSC(12, 0, scr2_ss,  pll0_sysclk2, NULL,         LPSC_ALWAYS_ENABLED),
-+	LPSC(13, 0, pruss,    pll0_sysclk2, NULL,         LPSC_ALWAYS_ENABLED),
-+	LPSC(14, 0, arm,      pll0_sysclk6, NULL,         LPSC_ALWAYS_ENABLED),
-+	{ }
-+};
++Consumers:
 +
-+LPSC_CLKDEV2(usb0_clkdev,	NULL,	"musb-da8xx",
-+				NULL,	"cppi41-dmaengine");
-+LPSC_CLKDEV1(usb1_clkdev,	NULL,	"ohci-da8xx");
-+/* REVISIT: gpio-davinci.c should be modified to drop con_id */
-+LPSC_CLKDEV1(gpio_clkdev,	"gpio",	NULL);
-+LPSC_CLKDEV2(emac_clkdev,	NULL,	"davinci_emac.1",
-+				"fck",	"davinci_mdio.0");
-+LPSC_CLKDEV1(mcasp0_clkdev,	NULL,	"davinci-mcasp.0");
-+LPSC_CLKDEV1(mcasp1_clkdev,	NULL,	"davinci-mcasp.1");
-+LPSC_CLKDEV1(mcasp2_clkdev,	NULL,	"davinci-mcasp.2");
-+LPSC_CLKDEV1(spi1_clkdev,	NULL,	"spi_davinci.1");
-+LPSC_CLKDEV1(i2c1_clkdev,	NULL,	"i2c_davinci.2");
-+LPSC_CLKDEV1(uart1_clkdev,	NULL,	"serial8250.1");
-+LPSC_CLKDEV1(uart2_clkdev,	NULL,	"serial8250.2");
-+LPSC_CLKDEV1(lcdc_clkdev,	"fck",	"da8xx_lcdc.0");
-+LPSC_CLKDEV2(pwm_clkdev,	"fck",	"ehrpwm.0",
-+				"fck",	"ehrpwm.1");
-+LPSC_CLKDEV3(ecap_clkdev,	"fck",	"ecap.0",
-+				"fck",	"ecap.1",
-+				"fck",	"ecap.2");
-+LPSC_CLKDEV2(eqep_clkdev,	NULL,	"eqep.0",
-+				NULL,	"eqep.1");
++	Clock and reset consumers shall use the local power domain module ID
++	(LPSC) as the index corresponding to the clock cell. Refer to the
++	device-specific	datasheet to find these numbers. NB: Most local domains
++	only provide a clock and not a reset.
 +
-+static const struct davinci_psc_clk_info da830_psc1_info[] __initconst = {
-+	LPSC(1,  0, usb0,   pll0_sysclk2, usb0_clkdev,   0),
-+	LPSC(2,  0, usb1,   pll0_sysclk4, usb1_clkdev,   0),
-+	LPSC(3,  0, gpio,   pll0_sysclk4, gpio_clkdev,   0),
-+	LPSC(5,  0, emac,   pll0_sysclk4, emac_clkdev,   0),
-+	LPSC(6,  0, emif3,  pll0_sysclk5, NULL,          LPSC_ALWAYS_ENABLED),
-+	LPSC(7,  0, mcasp0, pll0_sysclk2, mcasp0_clkdev, 0),
-+	LPSC(8,  0, mcasp1, pll0_sysclk2, mcasp1_clkdev, 0),
-+	LPSC(9,  0, mcasp2, pll0_sysclk2, mcasp2_clkdev, 0),
-+	LPSC(10, 0, spi1,   pll0_sysclk2, spi1_clkdev,   0),
-+	LPSC(11, 0, i2c1,   pll0_sysclk4, i2c1_clkdev,   0),
-+	LPSC(12, 0, uart1,  pll0_sysclk2, uart1_clkdev,  0),
-+	LPSC(13, 0, uart2,  pll0_sysclk2, uart2_clkdev,  0),
-+	LPSC(16, 0, lcdc,   pll0_sysclk2, lcdc_clkdev,   0),
-+	LPSC(17, 0, pwm,    pll0_sysclk2, pwm_clkdev,    0),
-+	LPSC(20, 0, ecap,   pll0_sysclk2, ecap_clkdev,   0),
-+	LPSC(21, 0, eqep,   pll0_sysclk2, eqep_clkdev,   0),
-+	{ }
-+};
++Examples:
 +
-+void __init da830_psc_clk_init(void __iomem *psc0, void __iomem *psc1)
-+{
-+	davinci_psc_register_clocks(da830_psc0_info, psc0);
-+	davinci_psc_register_clocks(da830_psc1_info, psc1);
-+}
-diff --git a/include/linux/clk/davinci.h b/include/linux/clk/davinci.h
-index d495de7..3ec8100 100644
---- a/include/linux/clk/davinci.h
-+++ b/include/linux/clk/davinci.h
-@@ -16,4 +16,6 @@ void dm365_pll_clk_init(void __iomem *pll1, void __iomem *pll2);
- void dm644x_pll_clk_init(void __iomem *pll1, void __iomem *pll2);
- void dm646x_pll_clk_init(void __iomem *pll1, void __iomem *pll2);
- 
-+void da830_psc_clk_init(void __iomem *psc0, void __iomem *psc1);
++	psc0: clock-controller@10000 {
++		compatible = "ti,da850-psc0";
++		reg = <0x10000 0x1000>;
++		#clock-cells = <1>;
++		#reset-cells = <1>;
++		clocks = <&pll0_sysclk 1>, <&pll0_sysclk 2>,
++			 <&pll0_sysclk 4>, <&pll0_sysclk 6>, <&async1_clk>;
++		clock_names = "pll0_sysclk1", "pll0_sysclk2",
++			      "pll0_sysclk4", "pll0_sysclk6", "async1";
++	};
++	psc1: clock-controller@227000 {
++		compatible = "ti,da850-psc1";
++		reg = <0x227000 0x1000>;
++		#clock-cells = <1>;
++		clocks = <&pll0_sysclk 2>, <&pll0_sysclk 4>, <&async3_clk>;
++		clock_names = "pll0_sysclk2", "pll0_sysclk4", "async3";
++	};
 +
- #endif /* __LINUX_CLK_DAVINCI_H__ */
++	/* consumer */
++	dsp: dsp@11800000 {
++		compatible = "ti,da850-dsp";
++		reg = <0x11800000 0x40000>,
++		      <0x11e00000 0x8000>,
++		      <0x11f00000 0x8000>,
++		      <0x01c14044 0x4>,
++		      <0x01c14174 0x8>;
++		reg-names = "l2sram", "l1pram", "l1dram", "host1cfg", "chipsig";
++		interrupt-parent = <&intc>;
++		interrupts = <28>;
++		clocks = <&psc0 15>;
++		resets = <&psc0 15>;
++	};
++
++Also see:
++- Documentation/devicetree/bindings/clock/clock-bindings.txt
++- Documentation/devicetree/bindings/reset/reset.txt
 -- 
 2.7.4
+
