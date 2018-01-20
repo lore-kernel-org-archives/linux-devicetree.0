@@ -1,7 +1,7 @@
 From: David Lechner <david@lechnology.com>
-Subject: [PATCH v6 13/41] clk: davinci: Add platform information for TI DM355 PSC
-Date: Sat, 20 Jan 2018 11:13:52 -0600
-Message-ID: <1516468460-4908-14-git-send-email-david@lechnology.com>
+Subject: [PATCH v6 27/41] ARM: da8xx: add new sata_refclk init using common clock framework
+Date: Sat, 20 Jan 2018 11:14:06 -0600
+Message-ID: <1516468460-4908-28-git-send-email-david@lechnology.com>
 References: <1516468460-4908-1-git-send-email-david@lechnology.com>
 Return-path: <linux-clk-owner@vger.kernel.org>
 In-Reply-To: <1516468460-4908-1-git-send-email-david@lechnology.com>
@@ -10,122 +10,95 @@ To: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@list
 Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org, David Lechner <david@lechnology.com>
 List-Id: devicetree@vger.kernel.org
 
-This adds platform-specific declarations for the PSC clocks on TI
-DM355 based systems.
+This adds the new SATA REFCLK clock init in mach-davinci/devices-da8xx.c
+using the new common clock framework drivers.
+
+The #ifdefs are needed to prevent compile errors until the entire
+ARCH_DAVINCI is converted.
+
+Also, the #includes are sorted since we are adding some here.
 
 Signed-off-by: David Lechner <david@lechnology.com>
 ---
 
 v6 changes:
-- change how clkdev lookups are declared
+- none (can you believe it?)
 
- drivers/clk/davinci/Makefile    |  1 +
- drivers/clk/davinci/psc-dm355.c | 74 +++++++++++++++++++++++++++++++++++++++++
- include/linux/clk/davinci.h     |  1 +
- 3 files changed, 76 insertions(+)
- create mode 100644 drivers/clk/davinci/psc-dm355.c
+ arch/arm/mach-davinci/devices-da8xx.c | 36 ++++++++++++++++++++++++++---------
+ 1 file changed, 27 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/clk/davinci/Makefile b/drivers/clk/davinci/Makefile
-index aef0390..e0da5c3 100644
---- a/drivers/clk/davinci/Makefile
-+++ b/drivers/clk/davinci/Makefile
-@@ -12,4 +12,5 @@ obj-$(CONFIG_ARCH_DAVINCI_DM646x)	+= pll-dm646x.o
- obj-y += psc.o
- obj-$(CONFIG_ARCH_DAVINCI_DA830)	+= psc-da830.o
- obj-$(CONFIG_ARCH_DAVINCI_DA850)	+= psc-da850.o
-+obj-$(CONFIG_ARCH_DAVINCI_DM355)	+= psc-dm355.o
- endif
-diff --git a/drivers/clk/davinci/psc-dm355.c b/drivers/clk/davinci/psc-dm355.c
-new file mode 100644
-index 0000000..1074be4
---- /dev/null
-+++ b/drivers/clk/davinci/psc-dm355.c
-@@ -0,0 +1,74 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * PSC clock descriptions for TI DaVinci DM355
-+ *
-+ * Copyright (C) 2018 David Lechner <david@lechnology.com>
-+ */
-+
+diff --git a/arch/arm/mach-davinci/devices-da8xx.c b/arch/arm/mach-davinci/devices-da8xx.c
+index 44cda0a..1a06b09 100644
+--- a/arch/arm/mach-davinci/devices-da8xx.c
++++ b/arch/arm/mach-davinci/devices-da8xx.c
+@@ -10,26 +10,31 @@
+  * the Free Software Foundation; either version 2 of the License, or
+  * (at your option) any later version.
+  */
++#include <linux/ahci_platform.h>
 +#include <linux/clk-provider.h>
++#include <linux/clk.h>
 +#include <linux/clkdev.h>
-+#include <linux/init.h>
-+#include <linux/types.h>
++#include <linux/dma-contiguous.h>
++#include <linux/dmaengine.h>
+ #include <linux/init.h>
+ #include <linux/mfd/syscon.h>
+ #include <linux/platform_device.h>
+-#include <linux/dma-contiguous.h>
+-#include <linux/serial_8250.h>
+-#include <linux/ahci_platform.h>
+-#include <linux/clk.h>
+ #include <linux/reboot.h>
+-#include <linux/dmaengine.h>
++#include <linux/serial_8250.h>
+ 
+-#include <mach/cputype.h>
+ #include <mach/common.h>
+-#include <mach/time.h>
++#include <mach/cputype.h>
+ #include <mach/da8xx.h>
+-#include <mach/clock.h>
++#include <mach/time.h>
 +
-+#include "psc.h"
-+
-+LPSC_CLKDEV1(vpss_master_clkdev,	"master",	"vpss");
-+LPSC_CLKDEV1(vpss_slave_clkdev,		"slave",	"vpss");
-+LPSC_CLKDEV1(spi1_clkdev,		NULL,		"spi_davinci.1");
-+LPSC_CLKDEV1(mmcsd1_clkdev,		NULL,		"dm6441-mmc.1");
-+LPSC_CLKDEV1(mcbsp1_clkdev,		NULL,		"davinci-mcbsp.1");
-+LPSC_CLKDEV1(usb_clkdev,		"usb",		NULL);
-+LPSC_CLKDEV1(spi2_clkdev,		NULL,		"spi_davinci.2");
-+LPSC_CLKDEV1(aemif_clkdev,		"aemif",	NULL);
-+LPSC_CLKDEV1(mmcsd0_clkdev,		NULL,		"dm6441-mmc.0");
-+LPSC_CLKDEV1(mcbsp0_clkdev,		NULL,		"davinci-mcbsp.0");
-+LPSC_CLKDEV1(i2c_clkdev,		NULL,		"i2c_davinci.1");
-+LPSC_CLKDEV1(uart0_clkdev,		NULL,		"serial8250.0");
-+LPSC_CLKDEV1(uart1_clkdev,		NULL,		"serial8250.1");
-+LPSC_CLKDEV1(uart2_clkdev,		NULL,		"serial8250.2");
-+LPSC_CLKDEV1(spi0_clkdev,		NULL,		"spi_davinci.0");
-+/* REVISIT: gpio-davinci.c should be modified to drop con_id */
-+LPSC_CLKDEV1(gpio_clkdev,		"gpio",		NULL);
-+LPSC_CLKDEV1(timer0_clkdev,		"timer0",	NULL);
-+LPSC_CLKDEV1(timer2_clkdev,		NULL,		"davinci-wdt");
-+LPSC_CLKDEV1(vpss_dac_clkdev,		"vpss_dac",	NULL);
-+
-+static const struct davinci_psc_clk_info dm355_psc_info[] __initconst = {
-+	LPSC(0,  0, vpss_master, pll1_sysclk4, vpss_master_clkdev, 0),
-+	LPSC(1,  0, vpss_slave,  pll1_sysclk4, vpss_slave_clkdev,  0),
-+	LPSC(5,  0, timer3,      pll1_auxclk,  NULL,               0),
-+	LPSC(6,  0, spi1,        pll1_sysclk2, spi1_clkdev,        0),
-+	LPSC(7,  0, mmcsd1,      pll1_sysclk2, mmcsd1_clkdev,      0),
-+	LPSC(8,  0, asp1,        pll1_sysclk2, NULL,               0),
-+	LPSC(9,  0, usb,         pll1_sysclk2, usb_clkdev,         0),
-+	LPSC(10, 0, pwm3,        pll1_auxclk,  NULL,               0),
-+	LPSC(11, 0, spi2,        pll1_sysclk2, spi2_clkdev,        0),
-+	LPSC(12, 0, rto,         pll1_auxclk,  NULL,               0),
-+	LPSC(14, 0, aemif,       pll1_sysclk2, aemif_clkdev,       0),
-+	LPSC(15, 0, mmcsd0,      pll1_sysclk2, mmcsd0_clkdev,      0),
-+	LPSC(17, 0, asp0,        pll1_sysclk2, NULL,               0),
-+	LPSC(18, 0, i2c,         pll1_auxclk,  i2c_clkdev,         0),
-+	LPSC(19, 0, uart0,       pll1_auxclk,  uart0_clkdev,       0),
-+	LPSC(20, 0, uart1,       pll1_auxclk,  uart1_clkdev,       0),
-+	LPSC(21, 0, uart2,       pll1_sysclk2, uart2_clkdev,       0),
-+	LPSC(22, 0, spi0,        pll1_sysclk2, spi0_clkdev,        0),
-+	LPSC(23, 0, pwm0,        pll1_auxclk,  NULL,               0),
-+	LPSC(24, 0, pwm1,        pll1_auxclk,  NULL,               0),
-+	LPSC(25, 0, pwm2,        pll1_auxclk,  NULL,               0),
-+	LPSC(26, 0, gpio,        pll1_sysclk2, gpio_clkdev,        0),
-+	LPSC(27, 0, timer0,      pll1_auxclk,  timer0_clkdev,      0),
-+	LPSC(28, 0, timer1,      pll1_auxclk,  NULL,               0),
-+	/* REVISIT: why can't this be disabled? */
-+	LPSC(29, 0, timer2,      pll1_auxclk,  timer2_clkdev,
-+	     LPSC_ALWAYS_ENABLED),
-+	LPSC(31, 0, arm,         pll1_sysclk1, NULL,
-+	     LPSC_ALWAYS_ENABLED),
-+	LPSC(40, 0, mjcp,        pll1_sysclk1, NULL,               0),
-+	LPSC(41, 0, vpss_dac,    pll1_sysclk3, vpss_dac_clkdev,    0),
-+	{ }
-+};
-+
-+void __init dm355_psc_clk_init(void __iomem *psc)
++#include "asp.h"
+ #include "cpuidle.h"
+ #include "sram.h"
+ 
++#ifndef CONFIG_COMMON_CLK
++#include <mach/clock.h>
+ #include "clock.h"
+-#include "asp.h"
++#endif
+ 
+ #define DA8XX_TPCC_BASE			0x01c00000
+ #define DA8XX_TPTC0_BASE		0x01c08000
+@@ -1041,6 +1046,7 @@ int __init da8xx_register_spi_bus(int instance, unsigned num_chipselect)
+ }
+ 
+ #ifdef CONFIG_ARCH_DAVINCI_DA850
++#ifndef CONFIG_COMMON_CLK
+ static struct clk sata_refclk = {
+ 	.name		= "sata_refclk",
+ 	.set_rate	= davinci_simple_set_rate,
+@@ -1062,6 +1068,18 @@ int __init da850_register_sata_refclk(int rate)
+ 
+ 	return 0;
+ }
++#else
++int __init da850_register_sata_refclk(int rate)
 +{
-+	davinci_psc_register_clocks(dm355_psc_info, psc);
++	struct clk *clk;
++
++	clk = clk_register_fixed_rate(NULL, "sata_refclk", NULL, 0, rate);
++	if (IS_ERR(clk))
++		return PTR_ERR(clk);
++
++	return clk_register_clkdev(clk, "refclk", "ahci_da850");
 +}
-diff --git a/include/linux/clk/davinci.h b/include/linux/clk/davinci.h
-index 3d8bdfa..dc09177 100644
---- a/include/linux/clk/davinci.h
-+++ b/include/linux/clk/davinci.h
-@@ -18,5 +18,6 @@ void dm646x_pll_clk_init(void __iomem *pll1, void __iomem *pll2);
++#endif
  
- void da830_psc_clk_init(void __iomem *psc0, void __iomem *psc1);
- void da850_psc_clk_init(void __iomem *psc0, void __iomem *psc1);
-+void dm355_psc_clk_init(void __iomem *psc);
- 
- #endif /* __LINUX_CLK_DAVINCI_H__ */
+ static struct resource da850_sata_resources[] = {
+ 	{
 -- 
 2.7.4
 
