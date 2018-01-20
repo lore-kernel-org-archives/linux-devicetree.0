@@ -1,71 +1,49 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sun9i: Enable USB support on Cubieboard4
-Date: Sat, 20 Jan 2018 14:12:04 +0800
-Message-ID: <CAGb2v66XNAHwAU1eosYjGKgYKkh9YiVEooE9e45RSVvPOvhYLg@mail.gmail.com>
-References: <20171216205809.5485-1-kettenis@openbsd.org>
+Subject: Re: [PATCH v4 3/3] arm64: allwinner: a64: bananapi-m64:
+ add usb otg
+Date: Sat, 20 Jan 2018 14:53:43 +0800
+Message-ID: <CAGb2v64zruX9DMc4-y_=rcoYO0XsgcjoQt2LGhmyKCKi+Xc10A@mail.gmail.com>
+References: <1515738618-3617-1-git-send-email-jagan@amarulasolutions.com> <1515738618-3617-3-git-send-email-jagan@amarulasolutions.com>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171216205809.5485-1-kettenis-7YlrpqBBQ3VAfugRpC6u6w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Mark Kettenis <kettenis-7YlrpqBBQ3VAfugRpC6u6w@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBDWPRPJQKGQEOZDGXTA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1515738618-3617-3-git-send-email-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Maxime,
-
-On Sun, Dec 17, 2017 at 4:58 AM, Mark Kettenis <kettenis-7YlrpqBBQ3VAfugRpC6u6w@public.gmane.org> wrote:
-> On the Cubieboard4 HCI0 is directly connected to a USB connector,
-> and HCI2 is connected to a USB hub on the board.  HCI1 is available
-> with HSIC throug 2 pins on the GPIO expansion header, but left
-> disabled just like on the Optimus board.
+On Fri, Jan 12, 2018 at 2:30 PM, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> wrote:
+> Add usb otg support for bananapi-m64 board,
+> - USB-ID connected with PH9
+> - USB-DRVVBUS controlled by N_VBUSEN pin from PMIC
 >
-> This patch also adds the VBUS regulators.
->
-> Signed-off-by: Mark Kettenis <kettenis-7YlrpqBBQ3VAfugRpC6u6w@public.gmane.org>
-
-Any thoughts on this patch?
-
-It's similar to what I sent a few years back:
-
-    https://patchwork.kernel.org/patch/6359461/
-
-ChenYu
-
+> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 > ---
->  arch/arm/boot/dts/sun9i-a80-cubieboard4.dts | 36 +++++++++++++++++++++++++++++
->  1 file changed, 36 insertions(+)
+> Changes for v4:
+> - rebase on master
+> - tested otg host mode.
+> Changes for v3:
+> - Move the position of reg_drivevbus as per binding documentation.
+> Changes for v2:
+> - add drvvbus regulator
+> - add N_VBUSEN pin
 >
-> diff --git a/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts b/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts
-> index 4024639aa005..e38623265695 100644
-> --- a/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts
-> +++ b/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts
-> @@ -74,6 +74,24 @@
->                 };
->         };
+>  .../boot/dts/allwinner/sun50i-a64-bananapi-m64.dts  | 21 +++++++++++++++++++++
+>  1 file changed, 21 insertions(+)
 >
-> +       reg_usb1_vbus: usb1-vbus {
-> +               compatible = "regulator-fixed";
-> +               regulator-name = "usb2-drvbus";
-> +               regulator-min-microvolt = <5000000>;
-> +               regulator-max-microvolt = <5000000>;
-> +               enable-active-high;
-> +               gpio = <&pio 7 15 GPIO_ACTIVE_HIGH>; /* PH15 */
-> +       };
-> +
-> +       reg_usb3_vbus: usb3-vbus {
-> +               compatible = "regulator-fixed";
-> +               regulator-name = "usb1-drvbus";
-> +               regulator-min-microvolt = <5000000>;
-> +               regulator-max-microvolt = <5000000>;
-> +               enable-active-high;
-> +               gpio = <&pio 7 14 GPIO_ACTIVE_HIGH>; /* PH14 */
-> +       };
-> +
->         wifi_pwrseq: wifi-pwrseq {
->                 compatible = "mmc-pwrseq-simple";
->                 clocks = <&ac100_rtc 1>;
-> @@ -83,6 +101,14 @@
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
+> index a697567..26e8534 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
+> @@ -86,6 +86,10 @@
 >         };
 >  };
 >
@@ -73,36 +51,59 @@ ChenYu
 > +       status = "okay";
 > +};
 > +
-> +&ehci2 {
-> +       status = "okay";
-> +};
-> +
->  &mmc0 {
->         pinctrl-names = "default";
->         pinctrl-0 = <&mmc0_pins>;
-> @@ -408,3 +434,13 @@
->         pinctrl-0 = <&uart0_ph_pins>;
+>  &ehci1 {
 >         status = "okay";
 >  };
-> +
-> +&usbphy1 {
-> +       phy-supply = <&reg_usb1_vbus>;
+> @@ -156,6 +160,10 @@
+>         status = "okay";
+>  };
+>
+> +&ohci0 {
 > +       status = "okay";
 > +};
 > +
-> +&usbphy3 {
-> +       phy-supply = <&reg_usb3_vbus>;
+>  &ohci1 {
+>         status = "okay";
+>  };
+> @@ -168,6 +176,7 @@
+>                 reg = <0x3a3>;
+>                 interrupt-parent = <&r_intc>;
+>                 interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
+> +               x-powers,drive-vbus-en; /* set N_VBUSEN as output pin */
+>         };
+>  };
+>
+> @@ -283,6 +292,11 @@
+>         regulator-name = "vcc-rtc";
+>  };
+>
+> +&reg_drivevbus {
+
+Please keep the nodes in alphabetical order. Otherwise,
+
+Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+
+> +       regulator-name = "usb0-vbus";
 > +       status = "okay";
 > +};
+> +
+>  &uart0 {
+>         pinctrl-names = "default";
+>         pinctrl-0 = <&uart0_pins_a>;
+> @@ -295,6 +309,13 @@
+>         status = "okay";
+>  };
+>
+> +&usb_otg {
+> +       dr_mode = "otg";
+> +       status = "okay";
+> +};
+> +
+>  &usbphy {
+> +       usb0_id_det-gpios = <&pio 7 9 GPIO_ACTIVE_HIGH>; /* PH9 */
+> +       usb0_vbus-supply = <&reg_drivevbus>;
+>         status = "okay";
+>  };
 > --
-> 2.15.1
+> 2.7.4
 >
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
