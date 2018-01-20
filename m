@@ -1,113 +1,67 @@
-From: Hyun Kwon <hyunk@xilinx.com>
-Subject: RE: [PATCH v3 1/8] dt-bindings: display: xlnx: Add bindings for
- Xilinx display pipeline
-Date: Sat, 20 Jan 2018 02:22:45 +0000
-Message-ID: <CY4PR02MB2488154AD0D5219511309B03D6EE0@CY4PR02MB2488.namprd02.prod.outlook.com>
-References: <1516067831-11382-1-git-send-email-hyun.kwon@xilinx.com>
- <20180119233256.mohpzhaaro7isueu@rob-hp-laptop>
+From: Julian Calaby <julian.calaby@gmail.com>
+Subject: Re: [linux-sunxi] [RFC PATCH 1/9] ARM: add CONFIG_ARCH_SUNXI_V7 for
+ differentiate ARMv5/v7 Allwinner SoCs
+Date: Sat, 20 Jan 2018 14:04:48 +1100
+Message-ID: <CAGRGNgU+CZg3TzwzqoGQ1jykGZ1D-=S-DEzE9vU4=1rdVcfgLA@mail.gmail.com>
+References: <20180119231735.61504-1-icenowy@aosc.io> <20180119231735.61504-2-icenowy@aosc.io>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180119233256.mohpzhaaro7isueu@rob-hp-laptop>
-Content-Language: en-US
-Content-ID: <40A644B0CBE4F24A8FC7A109A873E0E2@xilinx.onmicrosoft.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Michal Simek <michal.simek@xilinx.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Daniel Vetter <daniel.vetter@ffwll.ch>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20180119231735.61504-2-icenowy@aosc.io>
+Sender: linux-clk-owner@vger.kernel.org
+To: icenowy@aosc.io
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Russell King <linux@armlinux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Marc Zyngier <marc.zyngier@arm.com>, Linus Walleij <linus.walleij@linaro.org>, devicetree <devicetree@vger.kernel.org>, "Mailing List, Arm" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>, linux-gpio@vger.kernel.org, linux-sunxi <linux-sunxi@googlegroups.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLA0KDQpUaGFua3MgZm9yIHRoZSByZXZpZXcuDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNz
-YWdlLS0tLS0NCj4gRnJvbTogUm9iIEhlcnJpbmcgW21haWx0bzpyb2JoQGtlcm5lbC5vcmddDQo+
-IFNlbnQ6IEZyaWRheSwgSmFudWFyeSAxOSwgMjAxOCAzOjMzIFBNDQo+IFRvOiBIeXVuIEt3b24g
-PGh5dW5rQHhpbGlueC5jb20+DQo+IENjOiBkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
-OyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgTWljaGFsDQo+IFNpbWVrIDxtaWNoYWwuc2lt
-ZWtAeGlsaW54LmNvbT47IERhbmllbCBWZXR0ZXIgPGRhbmllbC52ZXR0ZXJAZmZ3bGwuY2g+Ow0K
-PiBMYXVyZW50IFBpbmNoYXJ0IDxsYXVyZW50LnBpbmNoYXJ0QGlkZWFzb25ib2FyZC5jb20+DQo+
-IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjMgMS84XSBkdC1iaW5kaW5nczogZGlzcGxheTogeGxueDog
-QWRkIGJpbmRpbmdzIGZvcg0KPiBYaWxpbnggZGlzcGxheSBwaXBlbGluZQ0KPiANCj4gT24gTW9u
-LCBKYW4gMTUsIDIwMTggYXQgMDU6NTc6MDRQTSAtMDgwMCwgSHl1biBLd29uIHdyb3RlOg0KPiA+
-IFRoZSBkdCBiaW5kaW5nIGZvciBYaWxpbnggZGlzcGxheSBwaXBlbGluZS4gVGhlIHBpcGVsaW5l
-IGNhbiBiZQ0KPiA+IGNvbXBvc2VkIHdpdGggbXVsdGlwbGUgYW5kIGRpZmZlcmVudCB0eXBlcyBv
-ZiBzdWItZGV2aWNlcy4gVGhpcyBub2RlDQo+ID4gaXMgdG8gcmVwcmVzZW50IHRoZSBlbnRpcmUg
-cGlwZWxpbmUgYXMgYSBzaW5nbGUgZW50aXR5Lg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogSHl1
-biBLd29uIDxoeXVuLmt3b25AeGlsaW54LmNvbT4NCj4gPiAtLS0NCj4gPiB2Mg0KPiA+IC0gUmVt
-b3ZlIGxpbnV4IHNwZWNpZmljIHRlcm1zDQo+ID4gLSBFbGFib3JhdGUgZGV0YWlscywgZXggcmVn
-YXJkaW5nIHBvcnQgYmluZGluZw0KPiA+IC0gUmVuYW1lIHhsbngsa21zIHRvIHhsbngsZGlzcGxh
-eQ0KPiA+IC0gUmVuYW1lIHRoZSBmaWxlIG5hbWUgdG8geGxueCxkaXNwbGF5LnR4dA0KPiA+IC0g
-QWRkIGV4YW1wbGVzIG9mIGhhcmR3YXJlIGJsb2Nrcw0KPiA+IC0tLQ0KPiA+IC0tLQ0KPiA+ICAu
-Li4vYmluZGluZ3MvZGlzcGxheS94bG54L3hsbngsZGlzcGxheS50eHQgICAgICAgICB8IDY4DQo+
-ICsrKysrKysrKysrKysrKysrKysrKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDY4IGluc2VydGlv
-bnMoKykNCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0DQo+IERvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9kaXNwbGF5L3hsbngveGxueCxkaXNwbGF5LnR4dA0KPiA+DQo+ID4gZGlmZiAt
-LWdpdA0KPiBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3hsbngv
-eGxueCxkaXNwbGF5LnR4dA0KPiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
-aXNwbGF5L3hsbngveGxueCxkaXNwbGF5LnR4dA0KPiA+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+
-ID4gaW5kZXggMDAwMDAwMC4uZmRlMWEzNQ0KPiA+IC0tLSAvZGV2L251bGwNCj4gPiArKysgYi9E
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS94bG54L3hsbngsZGlzcGxh
-eS50eHQNCj4gPiBAQCAtMCwwICsxLDY4IEBADQo+ID4gK1hpbGlueCBEaXNwbGF5IFBpcGVsaW5l
-DQo+ID4gKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQo+ID4gKw0KPiA+ICtYaWxpbnggZGlzcGxh
-eSBwaXBlbGluZSBjYW4gYmUgZGVzaWduZWQgd2l0aCB2YXJpb3VzIHR5cGVzIG9mIG11bHRpcGxl
-IElQczoNCj4gPiArSVBzIGhhcmRlbmVkIG9uIGNoaXAsIG9iIGJvYXJkIElQcywgYW5kIHNvZnQg
-SVBzIGluIHByb2dyYW1tYWJsZSBsb2dpYy4NCj4gDQo+IHMvb2IgYm9hcmQvb24tYm9hcmQvDQo+
-IA0KDQpXaWxsIGZpeCBpdC4NCg0KPiA+ICtXaGlsZSBlYWNoIGNvbXBvbmVudCB3b3VsZCBuZWVk
-IGl0cyBvd24gbm9kZSwgdGhpcyBub2RlIHJlcHJlc2VudHMNCj4gPiArYSB3aG9sZSBkaXNwbGF5
-IHBpcGVsaW5lIGFzIGEgc2luZ2xlIGVudGl0eSBieSBpbnRlZ3JhdGluZyBpbmRpdmlkdWFsDQo+
-IHN1YmRldmljZQ0KPiA+ICt3aXRoIGdsdWUgbG9naWNzLg0KPiA+ICsNCj4gPiArVGhlIGZvbGxv
-d2luZyBpbGx1c3RyYXRlcyBzb21lIGV4YW1wbGVzIG9mIHRvcG9sb2d5Og0KPiA+ICsNCj4gPiAr
-QSBsaW5lYXIgcGlwZWxpbmUgd2l0aCBtdWx0aXBsZSBibG9ja3M6DQo+ID4gKw0KPiA+ICsgICAg
-ICAgU29DIERNQSAtPiBTb0MgZGlzcGxheSBjb250cm9sbGVyIC0+IFNvQyBkaXNwbGF5IGVuYw0K
-PiA+ICtvciwNCj4gPiArICAgICAgIEZQR0EgRE1BIC0+IEZQR0EgZGlzcGxheSBjb250cm9sbGVy
-IC0+IEZQR0EgZGlzcGxheSBlbmMNCj4gPiArDQo+ID4gK0EgcGlwZWxpbmUgd2l0aCBicmFuY2hl
-czoNCj4gPiArDQo+ID4gKyAgICAgICBTb0MgRE1BIC0+IFNvQyBkaXNwbGF5IGNvbnRyb2xsZXIg
-LT4gU29DIGRpc3BsYXkgZW5jDQo+ID4gKyAgICAgICAgICAgICAgIHwNCj4gPiArICAgICAgIEZQ
-R0EgRE1BLT4NCj4gPiArb3IsDQo+ID4gKyAgICAgICBTb0MgRE1BIC0+IFNvQyBkaXNwbGF5IGNv
-bnRyb2xsZXIgLT4gU29DIGRpc3BsYXkgZW5jDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgfA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIC0+IEZQQUcgZGlzcGxheSBlbmMNCj4gDQo+IHMvRlBBRy9GUEdBLw0KPiANCg0K
-V2lsbCBmaXguDQoNCj4gPiArDQo+ID4gK29yLA0KPiA+ICsNCj4gPiArICAgICAgICAgICAgICAg
-ICAgICAgICBTb0MgRE1BIC0+IFNvQyBkaXNwbGF5IGNvbnRyb2xsZXIgLT4gU29DIGRpc3BsYXkg
-ZW5jDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgICAgICAgICAgICAg
-ICAgICAgICAgIHwNCj4gPiArICAgICAgIEZQR0EgZGlzcGxheSBjb250cm9sbGVyIC0+ICAgICAg
-ICAgICAgICAgICAgICAgICAgLT4gRlBHQSBkaXNwbGF5IGVuYw0KPiA+ICsNCj4gPiArUmVxdWly
-ZWQgcHJvcGVydGllczoNCj4gPiArDQo+ID4gKy0gY29tcGF0aWJsZTogTXVzdCBiZSAieGxueCxk
-aXNwbGF5Ii4NCj4gPiArDQo+ID4gKy0gcG9ydHM6IHBoYW5kbGVzIGZvciBwb3J0cyBvZiBkaXNw
-bGF5IGNvbnRyb2xsZXIgc3ViZGV2aWNlLg0KPiA+ICsgIEluIHRoZSBkaXNwbGF5IGNvbnRyb2xs
-ZXIgcG9ydCBub2RlcywgdG9wb2xvZ3kgZm9yIGVudGlyZSBwaXBlbGluZQ0KPiA+ICsgIHNob3Vs
-ZCBiZSBkZXNjcmliZWQgdXNpbmcgdGhlIERUIGJpbmRpbmdzIGRlZmluZWQgaW4NCj4gPiArICBE
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZ3JhcGgudHh0Lg0KPiA+ICsNCj4gPiAr
-RXhhbXBsZToNCj4gPiArDQo+ID4gKyAgICAgICB4bG54X2Rpc3BsYXkgew0KPiA+ICsgICAgICAg
-ICAgICAgICBjb21wYXRpYmxlID0gInhsbngsZGlzcGxheSI7DQo+ID4gKyAgICAgICAgICAgICAg
-IHBvcnRzID0gPCZkaXNwbGF5X2NvbnRyb2xsZXJfcG9ydD47DQo+IA0KPiBJIHN0aWxsIGRvbid0
-IHRoaW5rIHlvdSBuZWVkIHRoaXMgbm9kZS4gTWF0Y2ggdGhlIERSTSBkcml2ZXIgd2l0aCB0aGUN
-Cj4gZGlzcGxheSBjb250cm9sbGVyIG5vZGUuDQo+IA0KDQpXaXRoIHRoYXQgYXBwcm9hY2gsIGl0
-IGJlY29tZXMgdHJpY2t5IGFzIG11bHRpcGxlIGRldmljZXMgY2FuIGZvcm0gYSBzaW5nbGUNCkRS
-TSBkZXZpY2UgKHNpbmdsZSBwaXBlbGluZSkuIEZvciBleGFtcGxlLCB0aGUgU29DIGRpc3BsYXkg
-Y29udHJvbGxlciB3b3VsZA0KbWF0Y2ggdGhlIERSTSBkcml2ZXIgd2hlbiBpdCdzIHVzZWQgYWxv
-bmUuIFRoZXJlIGNhbiBiZSBhIHN0YW5kYWxvbmUgRlBHQQ0KZGlzcGxheSBjb250cm9sbGVyIHdo
-aWNoIHdpbGwgbWF0Y2ggdGhlIERSTSBkcml2ZXIuIEJ1dCB0aGVyZSBjYW4gYWxzbyBiZQ0KYSBk
-ZXNpZ24gd2hlcmUgYm90aCBjb250cm9sbGVycyBhcmUgY29ubmVjdGVkIHRvZ2V0aGVyIGFuZCBz
-aGFyZSBzb21lIGJsb2NrLA0KZXggRGlzcGxheVBvcnQgdHJhbnNtaXR0ZXIuIFRoZXJlIGl0J3Mg
-bm90IGNsZWFyIHdoaWNoIG9uZSB0byBtYXRjaA0KdGhlIERSTSBkcml2ZXIuIFRodXMgdGhpcyBs
-b2dpY2FsIG5vZGUgaGVscHMgdG8gcmVwcmVzZW50IGZyYWdtZW50ZWQgZGV2aWNlcw0KYXMgYSBz
-aW5nbGUgZGV2aWNlIGRpc3BsYXkgcGlwZWxpbmUuIElmIHRoaXMgaXMgbm90IGFjY2VwdGFibGUs
-IEknbGwgdHJ5IHRvDQpmaW5kIG90aGVyIG9wdGlvbnMuDQoNCj4gPiArICAgICAgIH07DQo+ID4g
-Kw0KPiA+ICsgICAgICAgZGlzcGxheV9jb250cm9sbGVyIHsNCj4gDQo+IGRpc3BsYXktY29udHJv
-bGxlckA/Pz8NCj4gDQo+IFBsZWFzZSBzaG93IGF0IGxlYXN0IHRoZSBjb21wYXRpYmxlIGFuZCBy
-ZWcgaW4gdGhlIGV4YW1wbGUuDQo+IA0KDQpTdXJlIHdpbGwgZG8uDQoNCj4gPiArICAgICAgICAg
-ICAgICAgLi4uDQo+ID4gKyAgICAgICAgICAgICAgIGRpc3BsYXlfY29udHJvbGxlcl9wb3J0OiBw
-b3J0QDAgew0KPiANCj4gVW5pdCBhZGRyZXNzIGlzIG5vdCBuZWVkZWQgaGVyZS4gSWYgeW91IGhh
-dmUgYSB1bml0IGFkZHJlc3MsIHRoZW4geW91DQo+IHNob3VsZCBoYXZlIGEgcmVnIHByb3BlcnR5
-IChhbmQgI3NpemUtY2VsbHMgYW5kICNhZGRyZXNzLWNlbGxzIGluIHRoZQ0KPiBwYXJlbnQpLg0K
-PiANCg0KV2lsbCBmaXguDQoNClRoYW5rcywNCi1oeXVuDQoNCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRl
-dmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Hi Icenowy,
+
+On Sat, Jan 20, 2018 at 10:17 AM, Icenowy Zheng <icenowy@aosc.io> wrote:
+> Allwinner also has some ARMv5 SoCs.
+>
+> In order to add support for them, add a CONFIG_ARCH_SUNXI_V7 option that
+> is selectable when ARMv7 is selceted, and make CONFIG_ARCH_SUNXI a
+> common bool config which is selected by both V7 and V5 sunxi option.
+>
+> The ARMv7 defconfigs are modified to have the new CONFIG_ARCH_SUNXI_V7
+> option.
+>
+> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> ---
+>  arch/arm/configs/multi_v7_defconfig |  2 +-
+>  arch/arm/configs/sunxi_defconfig    |  2 +-
+>  arch/arm/mach-sunxi/Kconfig         | 14 ++++++++++++--
+>  arch/arm/mach-sunxi/Makefile        |  2 +-
+>  4 files changed, 15 insertions(+), 5 deletions(-)
+>
+> diff --git a/arch/arm/mach-sunxi/Kconfig b/arch/arm/mach-sunxi/Kconfig
+> index 58153cdf025b..65509a35935f 100644
+> --- a/arch/arm/mach-sunxi/Kconfig
+> +++ b/arch/arm/mach-sunxi/Kconfig
+> @@ -1,6 +1,16 @@
+> -menuconfig ARCH_SUNXI
+> +config ARCH_SUNXI
+> +       bool
+> +       select ARCH_HAS_RESET_CONTROLLER
+> +       select CLKSRC_MMIO
+> +       select GENERIC_IRQ_CHIP
+> +       select GPIOLIB
+> +       select PINCTRL
+> +       select RESET_CONTROLLER
+> +
+> +menuconfig ARCH_SUNXI_V7
+>         bool "Allwinner SoCs"
+>         depends on ARCH_MULTI_V7
+> +       select ARCH_SUNXI
+>         select ARCH_HAS_RESET_CONTROLLER
+>         select CLKSRC_MMIO
+>         select GENERIC_IRQ_CHIP
+
+Shouldn't you remove all the common ARCH_SUNXI selects from ARCH_SUNXI_v7?
+
+Thanks,
+
+-- 
+Julian Calaby
+
+Email: julian.calaby@gmail.com
+Profile: http://www.google.com/profiles/julian.calaby/
