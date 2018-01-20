@@ -1,57 +1,58 @@
-From: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC PATCH 2/9] ARM: sunxi: add Allwinner ARMv5 SoCs
-Date: Sat, 20 Jan 2018 14:06:40 +1100
-Message-ID: <CAGRGNgUjvvzseAtUuiy5xCaZrLw2Jq4+A_dPXR9r_Xs-yYL1cw@mail.gmail.com>
-References: <20180119231735.61504-1-icenowy@aosc.io> <20180119231735.61504-3-icenowy@aosc.io>
-Reply-To: julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Icenowy Zheng <icenowy@aosc.io>
+Subject: Re: [linux-sunxi] [RFC PATCH 2/9] ARM: sunxi: add Allwinner ARMv5 SoCs
+Date: Sat, 20 Jan 2018 11:10:42 +0800
+Message-ID: <76DC4CD7-4A07-40C7-80A8-1C2D177E8109@aosc.io>
+References: <20180119231735.61504-1-icenowy@aosc.io> <20180119231735.61504-3-icenowy@aosc.io> <CAGRGNgUjvvzseAtUuiy5xCaZrLw2Jq4+A_dPXR9r_Xs-yYL1cw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDQIP76OUQLBBVXERLJQKGQEDZ2MHWQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180119231735.61504-3-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: icenowy-h8G6r0blFSE@public.gmane.org
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Mailing List, Arm" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:COMMON CLK FRAMEWORK" <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <CAGRGNgUjvvzseAtUuiy5xCaZrLw2Jq4+A_dPXR9r_Xs-yYL1cw@mail.gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Julian Calaby <julian.calaby@gmail.com>
+Cc: devicetree <devicetree@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>, Marc Zyngier <marc.zyngier@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Russell King <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-gpio@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>, "Mailing List, Arm" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Icenowy,
 
-On Sat, Jan 20, 2018 at 10:17 AM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
-> Add option for Allwinner ARMv5 SoCs and a SoC suniv (which is a die used
-> for many new F-series products, including F1C100A, F1C100s, F1C200s,
-> F1C500, F1C600).
+
+于 2018年1月20日 GMT+08:00 上午11:06:40, Julian Calaby <julian.calaby@gmail.com> 写到:
+>Hi Icenowy,
 >
-> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-> ---
->  arch/arm/mach-sunxi/Kconfig    | 13 +++++++++++++
->  arch/arm/mach-sunxi/Makefile   |  1 +
->  arch/arm/mach-sunxi/sunxi_v5.c | 22 ++++++++++++++++++++++
->  3 files changed, 36 insertions(+)
->  create mode 100644 arch/arm/mach-sunxi/sunxi_v5.c
+>On Sat, Jan 20, 2018 at 10:17 AM, Icenowy Zheng <icenowy@aosc.io>
+>wrote:
+>> Add option for Allwinner ARMv5 SoCs and a SoC suniv (which is a die
+>used
+>> for many new F-series products, including F1C100A, F1C100s, F1C200s,
+>> F1C500, F1C600).
+>>
+>> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+>> ---
+>>  arch/arm/mach-sunxi/Kconfig    | 13 +++++++++++++
+>>  arch/arm/mach-sunxi/Makefile   |  1 +
+>>  arch/arm/mach-sunxi/sunxi_v5.c | 22 ++++++++++++++++++++++
+>>  3 files changed, 36 insertions(+)
+>>  create mode 100644 arch/arm/mach-sunxi/sunxi_v5.c
+>>
+>> diff --git a/arch/arm/mach-sunxi/Kconfig
+>b/arch/arm/mach-sunxi/Kconfig
+>> index 65509a35935f..78ac9ce70641 100644
+>> --- a/arch/arm/mach-sunxi/Kconfig
+>> +++ b/arch/arm/mach-sunxi/Kconfig
+>> @@ -59,3 +59,16 @@ config MACH_SUN9I
+>>         select ARM_GIC
+>>
+>>  endif
+>> +
+>> +menuconfig ARCH_SUNXI_V5
+>> +       bool "Allwinner SoCs"
 >
-> diff --git a/arch/arm/mach-sunxi/Kconfig b/arch/arm/mach-sunxi/Kconfig
-> index 65509a35935f..78ac9ce70641 100644
-> --- a/arch/arm/mach-sunxi/Kconfig
-> +++ b/arch/arm/mach-sunxi/Kconfig
-> @@ -59,3 +59,16 @@ config MACH_SUN9I
->         select ARM_GIC
+>That name seems a little too generic. Maybe "Allwinner ARMv5 SoCs"?
+
+This is already required by armv5.
+
+Allwinner currently has only ARMv5,7,8 SoCs. ARMv8 is under
+arm64 architecture, and ARMv5 and v7 cannot be selected at the same time.
+
 >
->  endif
-> +
-> +menuconfig ARCH_SUNXI_V5
-> +       bool "Allwinner SoCs"
-
-That name seems a little too generic. Maybe "Allwinner ARMv5 SoCs"?
-
-Thanks,
-
--- 
-Julian Calaby
-
-Email: julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Profile: http://www.google.com/profiles/julian.calaby/
+>Thanks,
