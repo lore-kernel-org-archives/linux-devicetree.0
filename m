@@ -1,125 +1,80 @@
-From: Jonathan Cameron <jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>
-Subject: Re: [PATCH 1/3] staging: iio: adc: ad7192: fix external frequency
- setting
-Date: Sat, 20 Jan 2018 15:28:40 +0000
-Message-ID: <20180120152840.7185a703@archlinux>
-References: <20180110112956.23931-1-alexandru.ardelean@analog.com>
-        <20180114123745.7a1180ca@archlinux>
-        <1516175133.4383.3.camel@analog.com>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH v2 3/8] watchdog: JZ4740: Register a restart handler
+Date: Sat, 20 Jan 2018 07:45:46 -0800
+Message-ID: <20061de8-fa1f-93eb-eb9b-089c699018aa@roeck-us.net>
+References: <20171228162939.3928-2-paul@crapouillou.net>
+ <20171230135108.6834-1-paul@crapouillou.net>
+ <20171230135108.6834-3-paul@crapouillou.net>
+ <CANc+2y7CT150cO61RfRgc6hCLEasx+NmqCacZtaFPKLgTPyt4w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1516175133.4383.3.camel-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Ardelean, Alexandru" <alexandru.Ardelean-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
-Cc: "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Hennerich, Michael" <Michael.Hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CANc+2y7CT150cO61RfRgc6hCLEasx+NmqCacZtaFPKLgTPyt4w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: PrasannaKumar Muralidharan <prasannatsmkumar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
+Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-MIPS <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 17 Jan 2018 07:45:35 +0000
-"Ardelean, Alexandru" <alexandru.Ardelean-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org> wrote:
-
-> On Sun, 2018-01-14 at 12:37 +0000, Jonathan Cameron wrote:
-> > On Wed, 10 Jan 2018 13:29:54 +0200
-> > <alexandru.ardelean-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org> wrote:
-> >   
-> > > From: Alexandru Ardelean <alexandru.ardelean-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
-> > > 
-> > > According to the datasheet:
-> > > * 0 - external crystal, connected from pin MCLK1 to MCLK2  
-> > 
-> > What frequency of crystal?  My quick read of the datasheet
-> > implies this may be flexible.  Possibly as flexible as
-> > the clock option...  
+On 01/19/2018 11:31 PM, PrasannaKumar Muralidharan wrote:
+> Hi Paul,
 > 
-> I think you're right about this.
-> Will re-visit this.
+> On 30 December 2017 at 19:21, Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org> wrote:
+>> The watchdog driver can restart the system by simply configuring the
+>> hardware for a timeout of 0 seconds.
+>>
+>> Signed-off-by: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
+>> Reviewed-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+>> ---
+>>   drivers/watchdog/jz4740_wdt.c | 9 +++++++++
+>>   1 file changed, 9 insertions(+)
+>>
+>>   v2: No change
+>>
+>> diff --git a/drivers/watchdog/jz4740_wdt.c b/drivers/watchdog/jz4740_wdt.c
+>> index 92d6ca8ceb49..fa7f49a3212c 100644
+>> --- a/drivers/watchdog/jz4740_wdt.c
+>> +++ b/drivers/watchdog/jz4740_wdt.c
+>> @@ -130,6 +130,14 @@ static int jz4740_wdt_stop(struct watchdog_device *wdt_dev)
+>>          return 0;
+>>   }
+>>
+>> +static int jz4740_wdt_restart(struct watchdog_device *wdt_dev,
+>> +                             unsigned long action, void *data)
+>> +{
+>> +       wdt_dev->timeout = 0;
+>> +       jz4740_wdt_start(wdt_dev);
+>> +       return 0;
+>> +}
+>> +
+>>   static const struct watchdog_info jz4740_wdt_info = {
+>>          .options = WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE,
+>>          .identity = "jz4740 Watchdog",
+>> @@ -141,6 +149,7 @@ static const struct watchdog_ops jz4740_wdt_ops = {
+>>          .stop = jz4740_wdt_stop,
+>>          .ping = jz4740_wdt_ping,
+>>          .set_timeout = jz4740_wdt_set_timeout,
+>> +       .restart = jz4740_wdt_restart,
+>>   };
+>>
+>>   #ifdef CONFIG_OF
+>> --
+>> 2.11.0
+>>
+>>
 > 
-> Is it ok if I re-spin this as a standalone patch ?
+> Noticed that min_timeout of the watchdog device is set to 1 but this
+> function calls start with timeout set to 0. Even though this works I
+> feel it is better to set min_timeout to 0.
 > 
-> Since I'm new around here, maybe it would probably be good to try to
-> send one patch at a time and resolve synchronization [between what I
-> deliver vs recommended ways of doing things].
-Sure, though that may slow things down as I tend to only get fully
-caught up with IIO stuff at the weekends.
 
-Certainly don't send more than one patch for similar issues if you
-have any doubts about them, but several different issues at once is fine.
+No. That would be wrong. If you want to be pedantic, write a new function
+__jz4740_wdt_set_timeout(u16 clock_div, u16 timeout_value) and call it
+instead, but don't mess with min_timeout.
 
-Jonathan
-
-> 
-> > 
-> >   
-> > > * 1 - external clock, applied to MCLK2 pin
-> > > * 2 - internal 4.92 Mhz clock; pin MCLK2 is tristated
-> > > * 3 - internal 4.92 Mhz clock; internal clock is available on MCLK2
-> > > 
-> > > Which means that the external clock value only has sense
-> > > for value 1 (AD7192_CLK_EXT_MCLK2).
-> > > 
-> > > Also added range validation for the external frequency
-> > > setting, which the datasheet mentions that it's
-> > > between 2.4576 and 5.12 Mhz.
-> > > 
-> > > Signed-off-by: Alexandru Ardelean <alexandru.ardelean-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
-> > > ---
-> > >  drivers/staging/iio/adc/ad7192.c | 22 +++++++++++++++-------
-> > >  1 file changed, 15 insertions(+), 7 deletions(-)
-> > > 
-> > > diff --git a/drivers/staging/iio/adc/ad7192.c
-> > > b/drivers/staging/iio/adc/ad7192.c
-> > > index 7f204013d6d4..7bc04101d133 100644
-> > > --- a/drivers/staging/iio/adc/ad7192.c
-> > > +++ b/drivers/staging/iio/adc/ad7192.c
-> > > @@ -141,6 +141,8 @@
-> > >  #define AD7192_GPOCON_P1DAT	BIT(1) /* P1 state */
-> > >  #define AD7192_GPOCON_P0DAT	BIT(0) /* P0 state */
-> > >  
-> > > +#define AD7192_EXT_FREQ_MHZ_MIN	2457600
-> > > +#define AD7192_EXT_FREQ_MHZ_MAX	5120000
-> > >  #define AD7192_INT_FREQ_MHZ	4915200
-> > >  
-> > >  /* NOTE:
-> > > @@ -217,6 +219,12 @@ static int ad7192_calibrate_all(struct
-> > > ad7192_state *st)
-> > >  				ARRAY_SIZE(ad7192_calib_arr));
-> > >  }
-> > >  
-> > > +static inline bool ad7192_valid_external_frequency(u32 freq)
-> > > +{
-> > > +	return (freq >= AD7192_EXT_FREQ_MHZ_MIN &&
-> > > +		freq <= AD7192_EXT_FREQ_MHZ_MAX);
-> > > +}
-> > > +
-> > >  static int ad7192_setup(struct ad7192_state *st,
-> > >  			const struct ad7192_platform_data *pdata)
-> > >  {
-> > > @@ -245,16 +253,16 @@ static int ad7192_setup(struct ad7192_state
-> > > *st,
-> > >  
-> > >  	switch (pdata->clock_source_sel) {
-> > >  	case AD7192_CLK_EXT_MCLK1_2:
-> > > -	case AD7192_CLK_EXT_MCLK2:
-> > > -		st->mclk = AD7192_INT_FREQ_MHZ;
-> > > -		break;
-> > >  	case AD7192_CLK_INT:
-> > >  	case AD7192_CLK_INT_CO:
-> > > -		if (pdata->ext_clk_hz)
-> > > -			st->mclk = pdata->ext_clk_hz;
-> > > -		else
-> > > -			st->mclk = AD7192_INT_FREQ_MHZ;
-> > > +		st->mclk = AD7192_INT_FREQ_MHZ;
-> > >  		break;
-> > > +	case AD7192_CLK_EXT_MCLK2:
-> > > +		if (ad7192_valid_external_frequency(pdata-  
-> > > >clock_source_sel)) {  
-> > > +			st->mclk = pdata->clock_source_sel;
-> > > +			break;
-> > > +		}
-> > > +		/* FALLTHROUGH */
-> > >  	default:
-> > >  		ret = -EINVAL;
-> > >  		goto out;  
-> > 
-> >  
+Guenter
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
