@@ -1,91 +1,75 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH] reset: ti-rstctrl: use the reset-simple driver
-Date: Fri, 19 Jan 2018 16:55:51 -0800
-Message-ID: <20180120005551.GC4180@atomide.com>
-References: <20180116011159.1386-1-tony@atomide.com>
- <1516095054.9022.1.camel@pengutronix.de>
- <20180116150314.GC4042@atomide.com>
- <d32d9836-5edd-d43d-547b-f22384950f2c@ti.com>
- <20180116232243.GD4042@atomide.com>
- <10dab35c-9c79-5a77-0654-1e99621e4c0f@ti.com>
- <20180119213310.GA4180@atomide.com>
- <06882c43-d689-2b85-a1c4-ae4e13a73046@ti.com>
- <20180119234938.GB4180@atomide.com>
- <d5e1dda3-fb89-9280-6d68-b02996b5cd0c@ti.com>
+From: Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+Subject: Re: [PATCH 4/6] dt-bindings: gpio: Add binding for Wii GPIO
+ controller
+Date: Sat, 20 Jan 2018 02:47:47 +0100
+Message-ID: <20180120014747.w46g5ag7xl3vnwok@latitude>
+References: <20180115031401.19577-1-j.neuschaefer@gmx.net>
+ <20180115031401.19577-5-j.neuschaefer@gmx.net>
+ <20180119230521.st5uon74fpi4jghc@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="xwdbwosl34erxkmp"
+Return-path: <linux-gpio-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <d5e1dda3-fb89-9280-6d68-b02996b5cd0c@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Suman Anna <s-anna@ti.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, Philipp Zabel <philipp.zabel@gmail.com>, Paul Parsons <lost.distance@yahoo.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, Dave Gerlach <d-gerlach@ti.com>, Mark Rutland <mark.rutland@arm.com>, Nishant Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Tero Kristo <t-kristo@ti.com>
+In-Reply-To: <20180119230521.st5uon74fpi4jghc@rob-hp-laptop>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>
 List-Id: devicetree@vger.kernel.org
 
-* Suman Anna <s-anna@ti.com> [180120 00:43]:
-> On 01/19/2018 05:49 PM, Tony Lindgren wrote:
-> > * Suman Anna <s-anna@ti.com> [180119 23:30]:
-> >> On 01/19/2018 03:33 PM, Tony Lindgren wrote:
-> >>> OK let's do some tests on that, I'll take a look at doing a dts
-> >>> file over next few weeks.
-> >>
-> >> You can look up the patches folder in the above repo, there are some
-> >> example nodes there already, they are rather straight-forward.
-> > 
-> > Just for reference, here's what I played with but keep getting
-> > -EPROBE_DEFER somewhere during init.
-> 
-> Hmm, What's the baseline branch you are using - mainline, linux-next or
-> your for-next?
 
-I just quickly tested with Linux next + my yet to be posted patches..
-I'll debug it further.
+--xwdbwosl34erxkmp
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> > 	prm: prm@6000 {
-> > 		...
-> > 		ranges = <0 0x6000 0x3000>;
-> > 
-> > 		prm_dsp: prm@400 {
-> > 			compatible = "simple-bus";
-> > 			#address-cells = <1>;
-> > 			#size-cells = <1>;
-> > 			ranges = <0 0x400 0x100>;
-> > 
-> > 			dsp_rstctrl: rstctrl@10 {
-> > 				compatible = "ti,rstctrl";
-> > 				reg = <0x10 0x4>;
-> > 				#reset-cells = <1>;
-> > 			};
-> > 		};
-> > 		...
-> > 	};
-> > 
-> > 	target-module@4a066000 {
-> > 		compatible = "ti,sysc-omap2", "ti,sysc";
-> > 		ti,hwmods = "mmu_dsp";
-> > 		reg = <0x4a066000 0x4>,
-> > 		      <0x4a066010 0x4>,
-> > 		      <0x4a066014 0x4>;
-> > 		reg-names = "rev", "sysc", "syss";
-> > 		ti,sysc-mask = <(SYSC_OMAP2_CLOCKACTIVITY |
-> > 				 SYSC_OMAP2_SOFTRESET |
-> > 				 SYSC_OMAP2_AUTOIDLE)>;
-> > 		ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-> > 				<SYSC_IDLE_NO>,
-> > 				<SYSC_IDLE_SMART>;
-> > 		clocks = <&tesla_clkctrl OMAP4_DSP_CLKCTRL 0>;
-> > 		clock-names = "fck";
-> > 		resets = <&dsp_rstctrl 1>,
-> > 			 <&dsp_rstctrl 0>;
-> > 		reset-names = "rst2", "rst1";
-> 
-> We definitely do not want the two resets here for sure, as the rst2
-> belongs to the dsp core (I believe it would be a sibling node to mmu_dsp
-> here), and cannot be released from reset without programming the MMU and
-> loading the code.
+On Fri, Jan 19, 2018 at 05:05:21PM -0600, Rob Herring wrote:
+> On Mon, Jan 15, 2018 at 04:13:59AM +0100, Jonathan Neusch=C3=A4fer wrote:
+> > Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+> > ---
+> >  .../bindings/gpio/nintendo,hollywood-gpio.txt      | 27 ++++++++++++++=
+++++++++
+> >  .../devicetree/bindings/powerpc/nintendo/wii.txt   |  9 +-------
+> >  2 files changed, 28 insertions(+), 8 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/gpio/nintendo,hol=
+lywood-gpio.txt
+[...]
+> > +Example:
+> > +
+> > +	GPIO: gpio@0d8000c0 {
+>=20
+> Drop the leading 0.
 
-OK thanks, I'll give that a try next week at some point.
+Ok, will do.
 
-Regards,
+> With that,
+>=20
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Tony
+Thanks.
+
+
+Jonathan Neusch=C3=A4fer
+
+--xwdbwosl34erxkmp
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAABAgAGBQJaYp+8AAoJEAgwRJqO81/bWRMQALyvBEdjaHfv08RV+mib1xch
+tvlUSQWhnr28/fecv61CEv5QT5ICRUcukbuMhOAmgkN207I1ubRxa2ZrISmjWWsO
+0wofCqZaT3nuAhP9y3E98t2bxz/qPV6p5A1IyGeRBAqVrUVRGxwWgkxyhLUKA3NH
+uRnR9QzIRka0JHT+INGA5RlI5k3Wv759y7fF50XA8ZhH0uk0dAquf4AiCpS8vLjL
+F266UrxSUtMpLEcSdPTuXB5mn23R2HpJFPcExM2gHabPw9srfrIYczUD9JEoMRzp
+ITBj3IsAy0sH0aLCnW23hJ2L4NzIWNzD2RNirYXneEPe73Qt9CDOgUtQN5E6962S
+WjBor4Ryzqph9OwCRcTzlgscNQbtKsMqqhEInmIA5Pp0fwPUdt95XMwxTRK0UsyN
+E4iSX3QZ9KcQcQqK1tmx+5n+776ujZAMFS0S8AlY1u4/e7bBB2nvCbUvnIc4eIKS
+MtTPkk7f+FJQ7V5YlrthYL2E397HyqoQ6dJzVdKQz07WVNgflSMF9nya1VWQN4ZK
+QjaVRpXfbHFdPV4J5EoYtj5dOQCydD6v13mke8vfmE9H4S8wcau05eKKf0gCxMoO
+505N0wHc3tLdFiOEEJ9rff/xLT6oKYjRNK476nAZRMXTQ7yHqdf/37zJoJLcNkuJ
+NUIHk22hGHW/dh6tPqZt
+=xC1+
+-----END PGP SIGNATURE-----
+
+--xwdbwosl34erxkmp--
