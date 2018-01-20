@@ -1,147 +1,133 @@
-From: David Lechner <david@lechnology.com>
-Subject: [PATCH v6 14/41] clk: davinci: Add platform information for TI DM365
- PSC
-Date: Sat, 20 Jan 2018 11:13:53 -0600
-Message-ID: <1516468460-4908-15-git-send-email-david@lechnology.com>
+From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Subject: [PATCH v6 22/41] ARM: dm355: add new clock init using common clock framework
+Date: Sat, 20 Jan 2018 11:14:01 -0600
+Message-ID: <1516468460-4908-23-git-send-email-david@lechnology.com>
 References: <1516468460-4908-1-git-send-email-david@lechnology.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1516468460-4908-1-git-send-email-david@lechnology.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, David Lechner <david@lechnology.com>, Kevin Hilman <khilman@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Adam Ford <aford173@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1516468460-4908-1-git-send-email-david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Adam Ford <aford173-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds platform-specific declarations for the PSC clocks on TI
-DM365 based systems.
+This adds the new board-specific clock init in mach-davinci/dm355.c
+using the new common clock framework drivers.
 
-Signed-off-by: David Lechner <david@lechnology.com>
+The #ifdefs are needed to prevent compile errors until the entire
+ARCH_DAVINCI is converted.
+
+Also clean up the #includes since we are adding some here.
+
+Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
 ---
 
 v6 changes:
-- change how clkdev lookups are declared
+- add blank lines between function calls
 
- drivers/clk/davinci/Makefile    |  1 +
- drivers/clk/davinci/psc-dm365.c | 79 +++++++++++++++++++++++++++++++++++++++++
- include/linux/clk/davinci.h     |  1 +
- 3 files changed, 81 insertions(+)
- create mode 100644 drivers/clk/davinci/psc-dm365.c
+ arch/arm/mach-davinci/dm355.c | 49 +++++++++++++++++++++++++++++++++----------
+ 1 file changed, 38 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/clk/davinci/Makefile b/drivers/clk/davinci/Makefile
-index e0da5c3..78dc1eb 100644
---- a/drivers/clk/davinci/Makefile
-+++ b/drivers/clk/davinci/Makefile
-@@ -13,4 +13,5 @@ obj-y += psc.o
- obj-$(CONFIG_ARCH_DAVINCI_DA830)	+= psc-da830.o
- obj-$(CONFIG_ARCH_DAVINCI_DA850)	+= psc-da850.o
- obj-$(CONFIG_ARCH_DAVINCI_DM355)	+= psc-dm355.o
-+obj-$(CONFIG_ARCH_DAVINCI_DM365)	+= psc-dm365.o
- endif
-diff --git a/drivers/clk/davinci/psc-dm365.c b/drivers/clk/davinci/psc-dm365.c
-new file mode 100644
-index 0000000..dd6eb1d
---- /dev/null
-+++ b/drivers/clk/davinci/psc-dm365.c
-@@ -0,0 +1,79 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * PSC clock descriptions for TI DaVinci DM365
-+ *
-+ * Copyright (C) 2018 David Lechner <david@lechnology.com>
-+ */
-+
+diff --git a/arch/arm/mach-davinci/dm355.c b/arch/arm/mach-davinci/dm355.c
+index f294804..2c19739 100644
+--- a/arch/arm/mach-davinci/dm355.c
++++ b/arch/arm/mach-davinci/dm355.c
+@@ -8,31 +8,37 @@
+  * is licensed "as is" without any warranty of any kind, whether express
+  * or implied.
+  */
+-#include <linux/init.h>
 +#include <linux/clk-provider.h>
+ #include <linux/clk.h>
+-#include <linux/serial_8250.h>
+-#include <linux/platform_device.h>
++#include <linux/clk/davinci.h>
 +#include <linux/clkdev.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/dmaengine.h>
+-#include <linux/spi/spi.h>
 +#include <linux/init.h>
-+#include <linux/types.h>
-+
-+#include "psc.h"
-+
-+LPSC_CLKDEV1(vpss_slave_clkdev,		"slave",	"vpss");
-+LPSC_CLKDEV1(spi1_clkdev,		NULL,		"spi_davinci.1");
-+LPSC_CLKDEV1(mmcsd1_clkdev,		NULL,		"da830-mmc.1");
-+LPSC_CLKDEV1(asp0_clkdev,		NULL,		"davinci-mcbsp");
-+LPSC_CLKDEV1(usb_clkdev,		"usb",		NULL);
-+LPSC_CLKDEV1(spi2_clkdev,		NULL,		"spi_davinci.2");
-+LPSC_CLKDEV1(aemif_clkdev,		"aemif",	NULL);
-+LPSC_CLKDEV1(mmcsd0_clkdev,		NULL,		"da830-mmc.0");
-+LPSC_CLKDEV1(i2c_clkdev,		NULL,		"i2c_davinci.1");
-+LPSC_CLKDEV1(uart0_clkdev,		NULL,		"serial8250.0");
-+LPSC_CLKDEV1(uart1_clkdev,		NULL,		"serial8250.1");
-+LPSC_CLKDEV1(spi0_clkdev,		NULL,		"spi_davinci.0");
-+/* REVISIT: gpio-davinci.c should be modified to drop con_id */
-+LPSC_CLKDEV1(gpio_clkdev,		"gpio",		NULL);
-+LPSC_CLKDEV1(timer0_clkdev,		"timer0",	NULL);
-+LPSC_CLKDEV1(timer2_clkdev,		NULL,		"davinci-wdt");
-+LPSC_CLKDEV1(spi3_clkdev,		NULL,		"spi_davinci.3");
-+LPSC_CLKDEV1(spi4_clkdev,		NULL,		"spi_davinci.4");
-+LPSC_CLKDEV2(emac_clkdev,		NULL,		"davinci_emac.1",
-+					"fck",		"davinci_mdio.0");
-+LPSC_CLKDEV1(voice_codec_clkdev,	NULL,		"davinci_voicecodec");
-+LPSC_CLKDEV1(vpss_dac_clkdev,		"vpss_dac",	NULL);
-+LPSC_CLKDEV1(vpss_master_clkdev,	"master",	"vpss");
-+
-+static const struct davinci_psc_clk_info dm365_psc_info[] __initconst = {
-+	LPSC(1,  0, vpss_slave,  pll1_sysclk5, vpss_slave_clkdev,  0),
-+	LPSC(5,  0, timer3,      pll1_auxclk,  NULL,               0),
-+	LPSC(6,  0, spi1,        pll1_sysclk4, spi1_clkdev,        0),
-+	LPSC(7,  0, mmcsd1,      pll1_sysclk4, mmcsd1_clkdev,      0),
-+	LPSC(8,  0, asp0,        pll1_sysclk4, asp0_clkdev,        0),
-+	LPSC(9,  0, usb,         pll1_auxclk,  usb_clkdev,         0),
-+	LPSC(10, 0, pwm3,        pll1_auxclk,  NULL,               0),
-+	LPSC(11, 0, spi2,        pll1_sysclk4, spi2_clkdev,        0),
-+	LPSC(12, 0, rto,         pll1_sysclk4, NULL,               0),
-+	LPSC(14, 0, aemif,       pll1_sysclk4, aemif_clkdev,       0),
-+	LPSC(15, 0, mmcsd0,      pll1_sysclk8, mmcsd0_clkdev,      0),
-+	LPSC(18, 0, i2c,         pll1_auxclk,  i2c_clkdev,         0),
-+	LPSC(19, 0, uart0,       pll1_auxclk,  uart0_clkdev,       0),
-+	LPSC(20, 0, uart1,       pll1_sysclk4, uart1_clkdev,       0),
-+	LPSC(22, 0, spi0,        pll1_sysclk4, spi0_clkdev,        0),
-+	LPSC(23, 0, pwm0,        pll1_auxclk,  NULL,               0),
-+	LPSC(24, 0, pwm1,        pll1_auxclk,  NULL,               0),
-+	LPSC(25, 0, pwm2,        pll1_auxclk,  NULL,               0),
-+	LPSC(26, 0, gpio,        pll1_sysclk4, gpio_clkdev,        0),
-+	LPSC(27, 0, timer0,      pll1_auxclk,  timer0_clkdev,      0),
-+	LPSC(28, 0, timer1,      pll1_auxclk,  NULL,               0),
-+	/* REVISIT: why can't this be disabled? */
-+	LPSC(29, 0, timer2,      pll1_auxclk,  timer2_clkdev,
-+	     LPSC_ALWAYS_ENABLED),
-+	LPSC(31, 0, arm,         pll2_sysclk2, NULL,
-+	     LPSC_ALWAYS_ENABLED),
-+	LPSC(38, 0, spi3,        pll1_sysclk4, spi3_clkdev,        0),
-+	LPSC(39, 0, spi4,        pll1_auxclk,  spi4_clkdev,        0),
-+	LPSC(40, 0, emac,        pll2_sysclk4, emac_clkdev,        0),
-+	LPSC(44, 1, voice_codec, pll1_sysclk3, voice_codec_clkdev, 0),
-+	LPSC(46, 1, vpss_dac,    pll1_sysclk3, vpss_dac_clkdev,    0),
-+	LPSC(47, 0, vpss_master, pll1_sysclk5, vpss_master_clkdev, 0),
-+	LPSC(50, 0, mjcp,        pll1_sysclk3, NULL,               0),
-+	{ }
-+};
-+
-+void __init dm365_psc_clk_init(void __iomem *psc)
-+{
-+	davinci_psc_register_clocks(dm365_psc_info, psc);
-+}
-diff --git a/include/linux/clk/davinci.h b/include/linux/clk/davinci.h
-index dc09177..c7d8c5f 100644
---- a/include/linux/clk/davinci.h
-+++ b/include/linux/clk/davinci.h
-@@ -19,5 +19,6 @@ void dm646x_pll_clk_init(void __iomem *pll1, void __iomem *pll2);
- void da830_psc_clk_init(void __iomem *psc0, void __iomem *psc1);
- void da850_psc_clk_init(void __iomem *psc0, void __iomem *psc1);
- void dm355_psc_clk_init(void __iomem *psc);
-+void dm365_psc_clk_init(void __iomem *psc);
+ #include <linux/platform_data/edma.h>
+ #include <linux/platform_data/gpio-davinci.h>
+ #include <linux/platform_data/spi-davinci.h>
++#include <linux/platform_device.h>
++#include <linux/serial_8250.h>
++#include <linux/spi/spi.h>
  
- #endif /* __LINUX_CLK_DAVINCI_H__ */
+ #include <asm/mach/map.h>
+ 
++#include <mach/common.h>
+ #include <mach/cputype.h>
+-#include "psc.h"
+-#include <mach/mux.h>
+ #include <mach/irqs.h>
+-#include <mach/time.h>
++#include <mach/mux.h>
+ #include <mach/serial.h>
+-#include <mach/common.h>
++#include <mach/time.h>
+ 
++#include "asp.h"
+ #include "davinci.h"
+-#include "clock.h"
+ #include "mux.h"
+-#include "asp.h"
++
++#ifndef CONFIG_COMMON_CLK
++#include "clock.h"
++#include "psc.h"
++#endif
+ 
+ #define DM355_UART2_BASE	(IO_PHYS + 0x206000)
+ #define DM355_OSD_BASE		(IO_PHYS + 0x70200)
+@@ -43,6 +49,7 @@
+  */
+ #define DM355_REF_FREQ		24000000	/* 24 or 36 MHz */
+ 
++#ifndef CONFIG_COMMON_CLK
+ static struct pll_data pll1_data = {
+ 	.num       = 1,
+ 	.phys_base = DAVINCI_PLL1_BASE,
+@@ -382,7 +389,7 @@ static struct clk_lookup dm355_clks[] = {
+ 	CLK(NULL, "usb", &usb_clk),
+ 	CLK(NULL, NULL, NULL),
+ };
+-
++#endif
+ /*----------------------------------------------------------------------*/
+ 
+ static u64 dm355_spi0_dma_mask = DMA_BIT_MASK(32);
+@@ -1046,7 +1053,27 @@ void __init dm355_init(void)
+ 
+ void __init dm355_init_time(void)
+ {
++#ifdef CONFIG_COMMON_CLK
++	void __iomem *pll1, *pll2, *psc;
++
++	pll1 = ioremap(DAVINCI_PLL1_BASE, SZ_4K);
++	pll2 = ioremap(DAVINCI_PLL2_BASE, SZ_4K);
++	psc = ioremap(DAVINCI_PWR_SLEEP_CNTRL_BASE, SZ_4K);
++
++	clk_register_fixed_rate(NULL, "ref_clk", NULL, 0, DM355_REF_FREQ);
++
++	dm355_pll_clk_init(pll1, pll2);
++
++	dm355_psc_clk_init(psc);
++
++	/* NOTE:  clkout1 can be externally gated by muxing GPIO-18 */
++	clk_register_fixed_factor(NULL, "clkout1", "pll1_aux_clk", 0, 1, 1);
++	clk_register_fixed_factor(NULL, "clkout2", "pll1_sysclkbp", 0, 1, 1);
++	/* NOTE:  clkout3 can be externally gated by muxing GPIO-16 */
++	clk_register_fixed_factor(NULL, "clkout3", "pll2_sysclkbp", 0, 1, 1);
++#else
+ 	davinci_clk_init(dm355_clks);
++#endif
+ 	davinci_timer_init();
+ }
+ 
 -- 
 2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
