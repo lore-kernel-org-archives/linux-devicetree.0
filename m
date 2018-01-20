@@ -1,90 +1,123 @@
-From: Vincent Chen <deanbo422@gmail.com>
-Subject: Re: [PATCH v6 2/3] clocksource/drivers/atcpit100: VDSO support
-Date: Sat, 20 Jan 2018 19:23:51 +0800
-Message-ID: <CAJsyPhyrFFvXUpf67ev4Apf-vstH33iwMt1ifr8LTiBB3bf+hA@mail.gmail.com>
-References: <cover.1515766198.git.green.hu@gmail.com> <de648d211061a16c85ae0321625c51343ce5e5ce.1515766198.git.green.hu@gmail.com>
- <CAK8P3a1RQxBNGiVD11BuL5kUx+fn0QcA02j0HVPnMQ2j3WmMQQ@mail.gmail.com> <CAJsyPhxrKKN43usZ+mxAzci4G1qXnEXQ6ydT18MCiT7qQcMz3g@mail.gmail.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH v3 6/9] irqchip: Add the ingenic-tcu-intc driver
+Date: Sat, 20 Jan 2018 13:06:49 +0000
+Message-ID: <20180120130649.7f326f75@why.wild-wind.fr.eu.org>
+References: <20180101143344.2099-1-paul@crapouillou.net>
+        <20180110224838.16711-1-paul@crapouillou.net>
+        <20180110224838.16711-6-paul@crapouillou.net>
+        <58349291-93cd-f803-52a9-f88120ace4dc@arm.com>
+        <1515687945.2170.1@smtp.crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <CAJsyPhxrKKN43usZ+mxAzci4G1qXnEXQ6ydT18MCiT7qQcMz3g@mail.gmail.com>
-Sender: linux-arch-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Greentime Hu <green.hu@gmail.com>, Greentime <greentime@andestech.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Networking <netdev@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, David Howells <dhowells@redhat.com>, Will Deacon <will.deacon@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-serial@vger.kernel.org, Geert Uytterhoeven <geert.uytterhoeven@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Greg KH <greg@kroah.com>, Guo Ren <ren_guo@c-sky.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1515687945.2170.1@smtp.crapouillou.net>
+Sender: linux-clk-owner@vger.kernel.org
+To: Paul Cercueil <paul@crapouillou.net>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Daniel Lezcano <daniel.lezcano@linaro.org>, Lee Jones <lee.jones@linaro.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Correct the composition
+On Thu, 11 Jan 2018 17:25:45 +0100
+Paul Cercueil <paul@crapouillou.net> wrote:
 
-Dear Arnd:
+> Hi Marc,
+> 
+> >>  +static int __init ingenic_tcu_intc_of_init(struct device_node 
+> >> *node,
+> >>  +	struct device_node *parent)
+> >>  +{
+> >>  +	struct irq_domain *domain;
+> >>  +	struct irq_chip_generic *gc;
+> >>  +	struct irq_chip_type *ct;
+> >>  +	int err, i, num_parent_irqs;
+> >>  +	unsigned int parent_irqs[3];  
+> > 
+> > 3 parent interrupts? Really? How do you pick one? Also, given the 
+> > useage
+> > model below, "int" is the wrong type. Probably should be u32.  
+> 
+> See below.
+> 
+> >>  +	struct regmap *map;
+> >>  +
+> >>  +	num_parent_irqs = of_property_count_elems_of_size(
+> >>  +			node, "interrupts", 4);  
+> > 
+> > Nit: on a single line, as here is nothing that hurts my eyes more than
+> > reading something like(
+> > this). Also, 4 is better expressed as sizeof(u32).  
+> 
+> That will make checkpatch.pl unhappy :(
 
-1. Setup an additional memory mapping for clock hardware in user space
-when establishing vdso-needed memory mapping
-     In arch_setup_additional_pages(), kernel establishes memory
-mapping for vdso's text and vdata page in user space. In order to make
-clock hardware be accessible in user space, we try to establish an
-additional memory mapping for clock hardware here based on clock
-information from driver. This page is located between vdata page and
-vdso text page. For safety, this region for clock accessing is
-read-only.
+And I don't care about checkpatch. I maintain the irqchip stuff, while
+checkpatch doesn't. Hence, I win.
 
-2. Accessing clock hardware in vdso
-    After step 1, clock hardware is accessible in user space through
-memory-mapped IO. However, it is not enough to access a specific
-register. Therefore, we store register offset information in vdata
-page to make it visible in user space.  Now, vdso can derive the
-address of counter register by summation of __get_timerpage() and
-counter register offset where __get_timerpage() is used to derive the
-virtual address of memory-mapped clock.
+> 
+> >>  +	if (num_parent_irqs < 0 || num_parent_irqs > 
+> >> ARRAY_SIZE(parent_irqs))
+> >>  +		return -EINVAL;
+> >>  +
+> >>  +	map = syscon_node_to_regmap(node->parent);
+> >>  +	if (IS_ERR(map))
+> >>  +		return PTR_ERR(map);
+> >>  +
+> >>  +	domain = irq_domain_add_linear(node, 32, &irq_generic_chip_ops, 
+> >> NULL);
+> >>  +	if (!domain)
+> >>  +		return -ENOMEM;
+> >>  +
+> >>  +	err = irq_alloc_domain_generic_chips(domain, 32, 1, "TCU",
+> >>  +			handle_level_irq, 0, IRQ_NOPROBE | IRQ_LEVEL, 0);
+> >>  +	if (err)
+> >>  +		goto out_domain_remove;
+> >>  +
+> >>  +	gc = irq_get_domain_generic_chip(domain, 0);
+> >>  +	ct = gc->chip_types;
+> >>  +
+> >>  +	gc->wake_enabled = IRQ_MSK(32);
+> >>  +	gc->private = map;
+> >>  +
+> >>  +	ct->regs.disable = TCU_REG_TMSR;
+> >>  +	ct->regs.enable = TCU_REG_TMCR;
+> >>  +	ct->regs.ack = TCU_REG_TFCR;
+> >>  +	ct->chip.irq_unmask = ingenic_tcu_gc_unmask_enable_reg;
+> >>  +	ct->chip.irq_mask = ingenic_tcu_gc_mask_disable_reg;
+> >>  +	ct->chip.irq_mask_ack = ingenic_tcu_gc_mask_disable_reg_and_ack;
+> >>  +	ct->chip.flags = IRQCHIP_MASK_ON_SUSPEND | IRQCHIP_SKIP_SET_WAKE;
+> >>  +
+> >>  +	/* Mask all IRQs by default */
+> >>  +	regmap_write(map, TCU_REG_TMSR, IRQ_MSK(32));
+> >>  +
+> >>  +	for (i = 0; i < num_parent_irqs; i++) {
+> >>  +		parent_irqs[i] = irq_of_parse_and_map(node, i);
+> >>  +		if (!parent_irqs[i]) {
+> >>  +			err = -EINVAL;
+> >>  +			goto out_unmap_irqs;
+> >>  +		}
+> >>  +
+> >>  +		irq_set_chained_handler_and_data(parent_irqs[i],
+> >>  +				ingenic_tcu_intc_cascade, domain);
+> >>  +	}  
+> > 
+> > I don't get the multiple parent irq at all. How are the source 
+> > interrupt routed to the various cascades?  
+> 
+> On JZ4740, channels 0 and 1 have their own interrupt, and channels
+> 2-7 share one interrupt line.
+> On JZ4770 and JZ4780, the OST (OS timer) channel has its own
+> interrupt, channel 5 has its own interrupt, and channels 0-4 and 6-7
+> share one interrupt line.
 
-2018-01-20 19:11 GMT+08:00 Vincent Chen <deanbo422@gmail.com>:
-> 2018-01-18 19:08 GMT+08:00 Arnd Bergmann <arnd@arndb.de>:
->> On Mon, Jan 15, 2018 at 6:57 AM, Greentime Hu <green.hu@gmail.com> wrote:
->>> From: Rick Chen <rickchen36@gmail.com>
->>>
->>> VDSO needs real-time cycle count to ensure the time accuracy.
->>> Unlike others, nds32 architecture does not define clock source,
->>> hence VDSO needs atcpit100 offering real-time cycle count
->>> to derive the correct time.
->>>
->>> Signed-off-by: Vincent Chen <vincentc@andestech.com>
->>> Signed-off-by: Rick Chen <rickchen36@gmail.com>
->>> Signed-off-by: Greentime Hu <green.hu@gmail.com>
->>
->> I'm a bit puzzled by this patch, can you explain how the vdso actually
->> manages to access the clock hardware? It looks like you make the
->> physical address and the register offset available to user space, but
->> how does it end up accessing it?
->>
->>       Arnd
->
-> Dear Arnd:
->
-> Accessing clock hardware in vdso can be divided to 2 step.
->
-> 1. Setup an additional memory mapping for clock hardware in user space
-> when establishing
->     vdso-needed memory mapping
->
->         In arch_setup_additional_pages(), kernel establishes memory
-> mapping for vdso's text and vdata page
->     in user space. In order to make clock hardware be accessible in
-> user space, we try to establish an
->     additional memory mapping for clock hardware here based on clock
-> information from driver. This page is
->     located between vdata page and vdso text page. For safety, this
-> region for clock accessing is read-only.
->
-> 2. Accessing clock hardware in vdso
->
->         After step 1, clock hardware is accessible in user space
-> through memory-mapped IO. However, it is not
->    enough to access a specific register. Therefore, we store register
-> offset information in vdata page to make it
->    visible in user space.  Now, vdso can derive the address of counter
-> register by summation of __get_timerpage()
->    and counter register offset where __get_timerpage() is used to
-> derive the virtual address of memory-mapped
->    clock.
->
->
-> Vincent
+What a mess. I suppose you get a shared status register to find out
+which channel has fired?
+
+> To keep things simple, we register the same interrupt handler for the 
+> three parent interrupts.
+
+Please add a comment to that effect, documenting the above HW blunder.
+
+Thanks,
+
+	M.
+-- 
+Without deviation from the norm, progress is not possible.
