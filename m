@@ -1,126 +1,130 @@
 From: David Lechner <david@lechnology.com>
-Subject: [PATCH v6 20/41] ARM: da830: add new clock init using common clock framework
-Date: Sat, 20 Jan 2018 11:13:59 -0600
-Message-ID: <1516468460-4908-21-git-send-email-david@lechnology.com>
+Subject: [PATCH v6 16/41] clk: davinci: Add platform information for TI DM646x
+ PSC
+Date: Sat, 20 Jan 2018 11:13:55 -0600
+Message-ID: <1516468460-4908-17-git-send-email-david@lechnology.com>
 References: <1516468460-4908-1-git-send-email-david@lechnology.com>
-Return-path: <linux-clk-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1516468460-4908-1-git-send-email-david@lechnology.com>
-Sender: linux-clk-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org, David Lechner <david@lechnology.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, David Lechner <david@lechnology.com>, Kevin Hilman <khilman@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Adam Ford <aford173@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This adds the new board-specific clock init in mach-davinci/da830.c
-using the new common clock framework drivers.
-
-The #ifdefs are needed to prevent compile errors until the entire
-ARCH_DAVINCI is converted.
-
-Also clean up the #includes since we are adding some here.
+This adds platform-specific declarations for the PSC clocks on TI
+DM646x based systems.
 
 Signed-off-by: David Lechner <david@lechnology.com>
 ---
 
 v6 changes:
-- add blank lines between function calls
-- include da8xx_register_cfgchip()
+- change how clkdev lookups are declared
 
- arch/arm/mach-davinci/da830.c | 49 +++++++++++++++++++++++++++++++++++++------
- 1 file changed, 43 insertions(+), 6 deletions(-)
+ drivers/clk/davinci/Makefile     |  1 +
+ drivers/clk/davinci/psc-dm646x.c | 62 ++++++++++++++++++++++++++++++++++++++++
+ include/linux/clk/davinci.h      |  1 +
+ 3 files changed, 64 insertions(+)
+ create mode 100644 drivers/clk/davinci/psc-dm646x.c
 
-diff --git a/arch/arm/mach-davinci/da830.c b/arch/arm/mach-davinci/da830.c
-index 39de5a6..0b6d0f3 100644
---- a/arch/arm/mach-davinci/da830.c
-+++ b/arch/arm/mach-davinci/da830.c
-@@ -8,23 +8,29 @@
-  * is licensed "as is" without any warranty of any kind, whether express
-  * or implied.
-  */
+diff --git a/drivers/clk/davinci/Makefile b/drivers/clk/davinci/Makefile
+index a20e379..6c388d4 100644
+--- a/drivers/clk/davinci/Makefile
++++ b/drivers/clk/davinci/Makefile
+@@ -15,4 +15,5 @@ obj-$(CONFIG_ARCH_DAVINCI_DA850)	+= psc-da850.o
+ obj-$(CONFIG_ARCH_DAVINCI_DM355)	+= psc-dm355.o
+ obj-$(CONFIG_ARCH_DAVINCI_DM365)	+= psc-dm365.o
+ obj-$(CONFIG_ARCH_DAVINCI_DM644x)	+= psc-dm644x.o
++obj-$(CONFIG_ARCH_DAVINCI_DM646x)	+= psc-dm646x.o
+ endif
+diff --git a/drivers/clk/davinci/psc-dm646x.c b/drivers/clk/davinci/psc-dm646x.c
+new file mode 100644
+index 0000000..bdb9db7
+--- /dev/null
++++ b/drivers/clk/davinci/psc-dm646x.c
+@@ -0,0 +1,62 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * PSC clock descriptions for TI DaVinci DM646x
++ *
++ * Copyright (C) 2018 David Lechner <david@lechnology.com>
++ */
++
 +#include <linux/clk-provider.h>
-+#include <linux/clk.h>
-+#include <linux/clk/davinci.h>
 +#include <linux/clkdev.h>
- #include <linux/gpio.h>
- #include <linux/init.h>
--#include <linux/clk.h>
- #include <linux/platform_data/gpio-davinci.h>
- 
- #include <asm/mach/map.h>
- 
--#include "psc.h"
--#include <mach/irqs.h>
--#include <mach/cputype.h>
- #include <mach/common.h>
--#include <mach/time.h>
-+#include <mach/cputype.h>
- #include <mach/da8xx.h>
-+#include <mach/irqs.h>
-+#include <mach/time.h>
- 
--#include "clock.h"
- #include "mux.h"
- 
-+#ifndef CONFIG_COMMON_CLK
-+#include "clock.h"
++#include <linux/init.h>
++#include <linux/types.h>
++
 +#include "psc.h"
-+#endif
 +
- /* Offsets of the 8 compare registers on the da830 */
- #define DA830_CMP12_0		0x60
- #define DA830_CMP12_1		0x64
-@@ -37,6 +43,7 @@
++LPSC_CLKDEV1(ide_clkdev,	NULL,		"palm_bk3710");
++LPSC_CLKDEV2(emac_clkdev,	NULL,		"davinci_emac.1",
++				"fck",		"davinci_mdio.0");
++LPSC_CLKDEV1(aemif_clkdev,	"aemif",	NULL);
++LPSC_CLKDEV1(mcasp0_clkdev,	NULL,		"davinci-mcasp.0");
++LPSC_CLKDEV1(mcasp1_clkdev,	NULL,		"davinci-mcasp.1");
++LPSC_CLKDEV1(uart0_clkdev,	NULL,		"serial8250.0");
++LPSC_CLKDEV1(uart1_clkdev,	NULL,		"serial8250.1");
++LPSC_CLKDEV1(uart2_clkdev,	NULL,		"serial8250.2");
++LPSC_CLKDEV1(i2c_clkdev,	NULL,		"i2c_davinci.1");
++/* REVISIT: gpio-davinci.c should be modified to drop con_id */
++LPSC_CLKDEV1(gpio_clkdev,	"gpio",		NULL);
++LPSC_CLKDEV1(timer0_clkdev,	"timer0",	 NULL);
++
++static const struct davinci_psc_clk_info dm646x_psc_info[] __initconst = {
++	LPSC(0,  0, arm,      pll1_sysclk2, NULL,          LPSC_ALWAYS_ENABLED),
++	/* REVISIT how to disable? */
++	LPSC(1,  0, dsp,      pll1_sysclk1, NULL,          LPSC_ALWAYS_ENABLED),
++	LPSC(4,  0, edma_cc,  pll1_sysclk2, NULL,          LPSC_ALWAYS_ENABLED),
++	LPSC(5,  0, edma_tc0, pll1_sysclk2, NULL,          LPSC_ALWAYS_ENABLED),
++	LPSC(6,  0, edma_tc1, pll1_sysclk2, NULL,          LPSC_ALWAYS_ENABLED),
++	LPSC(7,  0, edma_tc2, pll1_sysclk2, NULL,          LPSC_ALWAYS_ENABLED),
++	LPSC(8,  0, edma_tc3, pll1_sysclk2, NULL,          LPSC_ALWAYS_ENABLED),
++	LPSC(10, 0, ide,      pll1_sysclk4, ide_clkdev,    0),
++	LPSC(14, 0, emac,     pll1_sysclk3, emac_clkdev,   0),
++	LPSC(16, 0, vpif0,    ref_clk,      NULL,          LPSC_ALWAYS_ENABLED),
++	LPSC(17, 0, vpif1,    ref_clk,      NULL,          LPSC_ALWAYS_ENABLED),
++	LPSC(21, 0, aemif,    pll1_sysclk3, aemif_clkdev,  LPSC_ALWAYS_ENABLED),
++	LPSC(22, 0, mcasp0,   pll1_sysclk3, mcasp0_clkdev, 0),
++	LPSC(23, 0, mcasp1,   pll1_sysclk3, mcasp1_clkdev, 0),
++	LPSC(26, 0, uart0,    aux_clkin,    uart0_clkdev,  0),
++	LPSC(27, 0, uart1,    aux_clkin,    uart1_clkdev,  0),
++	LPSC(28, 0, uart2,    aux_clkin,    uart2_clkdev,  0),
++	/* REVIST: disabling hangs system */
++	LPSC(29, 0, pwm0,     pll1_sysclk3, NULL,          LPSC_ALWAYS_ENABLED),
++	/* REVIST: disabling hangs system */
++	LPSC(30, 0, pwm1,     pll1_sysclk3, NULL,          LPSC_ALWAYS_ENABLED),
++	LPSC(31, 0, i2c,      pll1_sysclk3, i2c_clkdev,    0),
++	LPSC(33, 0, gpio,     pll1_sysclk3, gpio_clkdev,   0),
++	LPSC(34, 0, timer0,   pll1_sysclk3, timer0_clkdev, 0),
++	LPSC(35, 0, timer1,   pll1_sysclk3, NULL,          0),
++	{ }
++};
++
++void __init dm646x_psc_clk_init(void __iomem *psc)
++{
++	davinci_psc_register_clocks(dm646x_psc_info, psc);
++}
+diff --git a/include/linux/clk/davinci.h b/include/linux/clk/davinci.h
+index 6d2896d..3810ea3 100644
+--- a/include/linux/clk/davinci.h
++++ b/include/linux/clk/davinci.h
+@@ -21,5 +21,6 @@ void da850_psc_clk_init(void __iomem *psc0, void __iomem *psc1);
+ void dm355_psc_clk_init(void __iomem *psc);
+ void dm365_psc_clk_init(void __iomem *psc);
+ void dm644x_psc_clk_init(void __iomem *psc);
++void dm646x_psc_clk_init(void __iomem *psc);
  
- #define DA830_REF_FREQ		24000000
- 
-+#ifndef CONFIG_COMMON_CLK
- static struct pll_data pll0_data = {
- 	.num		= 1,
- 	.phys_base	= DA8XX_PLL0_BASE,
-@@ -432,6 +439,7 @@ static struct clk_lookup da830_clks[] = {
- 	CLK(NULL,		"rmii",		&rmii_clk),
- 	CLK(NULL,		NULL,		NULL),
- };
-+#endif
- 
- /*
-  * Device specific mux setup
-@@ -1223,7 +1231,36 @@ void __init da830_init(void)
- 
- void __init da830_init_time(void)
- {
-+#ifdef CONFIG_COMMON_CLK
-+	void __iomem *pll0, *psc0, *psc1;
-+	struct clk *clk;
-+
-+	pll0 = ioremap(DA8XX_PLL0_BASE, SZ_4K);
-+	psc0 = ioremap(DA8XX_PSC0_BASE, SZ_4K);
-+	psc1 = ioremap(DA8XX_PSC1_BASE, SZ_4K);
-+
-+	da8xx_register_cfgchip();
-+
-+	clk_register_fixed_rate(NULL, "ref_clk", NULL, 0, DA830_REF_FREQ);
-+
-+	da830_pll_clk_init(pll0);
-+
-+	da830_psc_clk_init(psc0, psc1);
-+
-+	clk = clk_register_fixed_factor(NULL, "i2c0", "pll0_aux_clk", 0, 1, 1);
-+	clk_register_clkdev(clk, NULL, "i2c_davinci.1");
-+
-+	clk = clk_register_fixed_factor(NULL, "timer0", "pll0_aux_clk", 0, 1, 1);
-+	clk_register_clkdev(clk, "timer0", NULL);
-+
-+	clk = clk_register_fixed_factor(NULL, "timer1", "pll0_aux_clk", 0, 1, 1);
-+	clk_register_clkdev(clk, NULL, "davinci-wdt");
-+
-+	clk = clk_register_fixed_factor(NULL, "rmii", "pll0_sysclk7", 0, 1, 1);
-+	clk_register_clkdev(clk, "rmii", NULL);
-+#else
- 	da8xx_register_cfgchip();
- 	davinci_clk_init(da830_clks);
-+#endif
- 	davinci_timer_init();
- }
+ #endif /* __LINUX_CLK_DAVINCI_H__ */
 -- 
 2.7.4
-
