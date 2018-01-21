@@ -1,143 +1,85 @@
 From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] iio: ad5272: Add support for Analog Devices
- digital potentiometers
-Date: Sun, 21 Jan 2018 12:11:19 +0000
-Message-ID: <20180121121119.234e7192@archlinux>
-References: <1516096140-88161-1-git-send-email-preid@electromag.com.au>
-        <1516096140-88161-3-git-send-email-preid@electromag.com.au>
-        <da493367-8156-792f-5d3c-3cfd9a910271@metafoo.de>
-        <c05bc74f-dd6e-39ec-a316-5aa3436f36cf@electromag.com.au>
+Subject: Re: [PATCH v3 01/16] iio: adc: axp20x_adc: put ADC rate setting in
+ a per-variant function
+Date: Sun, 21 Jan 2018 12:13:19 +0000
+Message-ID: <20180121121319.3322fe96@archlinux>
+References: <cover.2e5329bf5475a5160e613a4eb1e1377c662ce56e.1516012352.git-series.quentin.schulz@free-electrons.com>
+        <9488159b43c4cc8418afa9d1562d972c4631cb02.1516012352.git-series.quentin.schulz@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <c05bc74f-dd6e-39ec-a316-5aa3436f36cf-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
+In-Reply-To: <9488159b43c4cc8418afa9d1562d972c4631cb02.1516012352.git-series.quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
-Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, knaack.h-Mmb7MZpHnFY@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Michael.Hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alexandru.ardelean-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org
+To: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 17 Jan 2018 09:46:23 +0800
-Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org> wrote:
+On Mon, 15 Jan 2018 11:33:35 +0100
+Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
 
-> G'day Lars-Peter,
+> To prepare for a new comer that set a different register with different
+> values, move rate setting in a function that is specific to each AXP
+> variant.
 > 
-> On 17/01/2018 01:01, Lars-Peter Clausen wrote:
-> > On 01/16/2018 10:49 AM, Phil Reid wrote:  
-> >> Add implementation for Analog Devices AD5272 and AD5274 digital
-> >> potentiometer devices.
-> >>
-> >> Signed-off-by: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>  
-> > 
-> > Hi,
-> > 
-> > Thanks for the patch. Looks mostly good.
-> >   
-> >> diff --git a/drivers/iio/potentiometer/ad5272.c b/drivers/iio/potentiometer/ad5272.c
-> >> new file mode 100644
-> >> index 0000000..a04b018
-> >> --- /dev/null
-> >> +++ b/drivers/iio/potentiometer/ad5272.c
-> >> @@ -0,0 +1,227 @@
-> >> +/*
-> >> + * Analog Devices AD5372 digital potentiometer driver
-> >> + * Copyright (C) 2018 Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
-> >> + *
-> >> + * Datasheet: http://www.analog.com/media/en/technical-documentation/data-sheets/AD5272_5274.pdf
-> >> + *
-> >> + * DEVID	#Wipers	#Positions	Resistor Opts (kOhm)	i2c address
-> >> + * ad5272	1	1024		20, 50, 100		01011xx
-> >> + * ad5274	1	256		20, 100			01011xx
-> >> + *
-> >> + * SPDX-License-Identifier: GPL-2.0+  
-> > 
-> > People will probably complain about this, there are some weired rules where
-> > and how the SPDX identifier should be.
-> >   
-> Jonathan suggested this in his review of v1. Forgot to mention that in the change list.
-Lars is referring to the 'where' element of using SPDX tags.  They go
-on as a c++ style comment right at the top of the file.
+> Signed-off-by: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Applied to the togreg branch of iio.git and pushed out as testing.
 
-Good think he noticed as I missed this when reviewing v3!
+Thanks,
 
 Jonathan
 
+> ---
+>  drivers/iio/adc/axp20x_adc.c | 18 +++++++++++-------
+>  1 file changed, 11 insertions(+), 7 deletions(-)
 > 
-> 
-> >> + */  
-> > [...]  
-> >> +
-> >> +static const struct ad5272_cfg ad5272_cfg[] = {
-> >> +	/* on-semiconductor parts */  
-> > 
-> > Copy&paste error?  
-> 
-> yeap.
-> >   
-> >> +	[AD5272_020] = { .max_pos = 1024, .kohms = 20 },
-> >> +	[AD5272_050] = { .max_pos = 1024, .kohms = 50 },
-> >> +	[AD5272_100] = { .max_pos = 1024, .kohms = 100 },
-> >> +	[AD5274_020] = { .max_pos = 256,  .kohms = 20,  .shift = 2 },
-> >> +	[AD5274_100] = { .max_pos = 256,  .kohms = 100, .shift = 2 },
-> >> +};  
-> > [...]  
-> >> +
-> >> +static int ad5272_write(struct ad5272_data *data, int reg, int val)
-> >> +{
-> >> +	u8 buf[2] = { (reg << 2) | ((val >> 8) & 0x3), (u8)val };
-> >> +	int ret;
-> >> +
-> >> +	mutex_lock(&data->lock);
-> >> +	ret = i2c_master_send(data->client, buf, sizeof(buf));
-> >> +	mutex_unlock(&data->lock);
-> >> +	return ret < 0 ? ret : 0;
-> >> +}
-> >> +
-> >> +static int ad5272_read(struct ad5272_data *data, int reg, int *val)
-> >> +{
-> >> +	u8 buf[2] = {reg << 2, 0};  
-> > 
-> > I believe the general recommendation is to not use stack based transfer
-> > buffer to avoid potential issues in case the I2C master driver uses DMA.
-> > There are many examples IIO example drivers that use DMA safe transfer
-> > buffers. Look for ____cacheline_aligned.  
-> ok.
-> 
-> 
-> >   
-> >> +	int ret;
-> >> +
-> >> +	mutex_lock(&data->lock);
-> >> +	ret = i2c_master_send(data->client, buf, sizeof(buf));
-> >> +	if (ret < 0)
-> >> +		goto error;
-> >> +
-> >> +	ret = i2c_master_recv(data->client, buf, sizeof(buf));
-> >> +	if (ret < 0)
-> >> +		goto error;
-> >> +  
-> > 
-> > This should be one I2C transfer, otherwise some other driver might get its
-> > own transfer between the send and recv, which could cause issues.  
-> 
-> Yeah I considered that.
-> But the datasheet for the device states that a stop must be issued after the write,
-> before the read.
-> Docs for i2c_transfer state that the stop is issued only at the end.
-> 
-> 
-> 
-> >   
-> >> +	*val = ((buf[0] & 0x3) << 8) | buf[1];
-> >> +	ret = 0;
-> >> +error:
-> >> +	mutex_unlock(&data->lock);
-> >> +	return ret;
-> >> +}  
-> > 
-> >   
-> 
-> 
+> diff --git a/drivers/iio/adc/axp20x_adc.c b/drivers/iio/adc/axp20x_adc.c
+> index a30a972..3fc1b06 100644
+> --- a/drivers/iio/adc/axp20x_adc.c
+> +++ b/drivers/iio/adc/axp20x_adc.c
+> @@ -470,14 +470,18 @@ static const struct iio_info axp22x_adc_iio_info = {
+>  	.read_raw = axp22x_read_raw,
+>  };
+>  
+> -static int axp20x_adc_rate(int rate)
+> +static int axp20x_adc_rate(struct axp20x_adc_iio *info, int rate)
+>  {
+> -	return AXP20X_ADC_RATE_HZ(rate);
+> +	return regmap_update_bits(info->regmap, AXP20X_ADC_RATE,
+> +				  AXP20X_ADC_RATE_MASK,
+> +				  AXP20X_ADC_RATE_HZ(rate));
+>  }
+>  
+> -static int axp22x_adc_rate(int rate)
+> +static int axp22x_adc_rate(struct axp20x_adc_iio *info, int rate)
+>  {
+> -	return AXP22X_ADC_RATE_HZ(rate);
+> +	return regmap_update_bits(info->regmap, AXP20X_ADC_RATE,
+> +				  AXP20X_ADC_RATE_MASK,
+> +				  AXP22X_ADC_RATE_HZ(rate));
+>  }
+>  
+>  struct axp_data {
+> @@ -485,7 +489,8 @@ struct axp_data {
+>  	int				num_channels;
+>  	struct iio_chan_spec const	*channels;
+>  	unsigned long			adc_en1_mask;
+> -	int				(*adc_rate)(int rate);
+> +	int				(*adc_rate)(struct axp20x_adc_iio *info,
+> +						    int rate);
+>  	bool				adc_en2;
+>  	struct iio_map			*maps;
+>  };
+> @@ -554,8 +559,7 @@ static int axp20x_probe(struct platform_device *pdev)
+>  				   AXP20X_ADC_EN2_MASK, AXP20X_ADC_EN2_MASK);
+>  
+>  	/* Configure ADCs rate */
+> -	regmap_update_bits(info->regmap, AXP20X_ADC_RATE, AXP20X_ADC_RATE_MASK,
+> -			   info->data->adc_rate(100));
+> +	info->data->adc_rate(info, 100);
+>  
+>  	ret = iio_map_array_register(indio_dev, info->data->maps);
+>  	if (ret < 0) {
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
