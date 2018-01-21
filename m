@@ -1,104 +1,100 @@
-From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Subject: [PATCH] ARM: dts: owl: Convert to new-style SPDX license identifiers
-Date: Sun, 21 Jan 2018 17:39:42 +0100
-Message-ID: <20180121163943.27330-1-afaerber@suse.de>
+From: jacopo mondi <jacopo@jmondi.org>
+Subject: Re: [PATCH v6 3/9] v4l: platform: Add Renesas CEU driver
+Date: Sun, 21 Jan 2018 18:29:07 +0100
+Message-ID: <20180121172907.GO24926@w540>
+References: <1516139101-7835-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1516139101-7835-4-git-send-email-jacopo+renesas@jmondi.org>
+ <d056343b-46be-436a-e316-0a588a182eb9@xs4all.nl>
+ <20180121095323.GL24926@w540>
+ <55c3ab66-0886-4b2b-6842-ac07fc9138f3@xs4all.nl>
+ <e9623e9c-6444-2531-62c0-feed622c6e3b@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Cc: Thomas Liau <thomas.liau-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, Jeff Chen <jeff.chen-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, =?UTF-8?q?=E5=BC=A0=E4=B8=9C=E9=A3=8E?= <zhangdf-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, =?UTF-8?q?=E5=88=98=E7=82=9C?= <liuwei-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, =?UTF-8?q?=E5=BC=A0=E5=A4=A9=E7=9B=8A?= <tyzhang-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, =?UTF-8?q?=E6=A2=85=E5=88=A9?= <harrymei-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, Sudeep Kumar <sudeepkumar-/0wLYENt7sWikuSvNLsyVV6hYfS7NtTn@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <e9623e9c-6444-2531-62c0-feed622c6e3b@xs4all.nl>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, laurent.pinchart@ideasonboard.com, magnus.damm@gmail.com, geert@glider.be, mchehab@kernel.org, festevam@gmail.com, sakari.ailus@iki.fi, robh+dt@kernel.org, mark.rutland@arm.com, pombredanne@nexb.com, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Move the SPDX-License-Identifier lines to the top.
+Hi Hans,
 
-Signed-off-by: Andreas Färber <afaerber-l3A5Bk7waGM@public.gmane.org>
----
- arch/arm/boot/dts/owl-s500-cubieboard6.dts     | 3 +--
- arch/arm/boot/dts/owl-s500-guitar-bb-rev-b.dts | 3 +--
- arch/arm/boot/dts/owl-s500-guitar.dtsi         | 3 +--
- arch/arm/boot/dts/owl-s500-sparky.dts          | 3 +--
- arch/arm/boot/dts/owl-s500.dtsi                | 3 +--
- 5 files changed, 5 insertions(+), 10 deletions(-)
+On Sun, Jan 21, 2018 at 11:23:12AM +0100, Hans Verkuil wrote:
+> On 21/01/18 11:21, Hans Verkuil wrote:
+> > On 21/01/18 10:53, jacopo mondi wrote:
+> >> Hi Hans,
+> >>
+> >> On Fri, Jan 19, 2018 at 12:20:19PM +0100, Hans Verkuil wrote:
+> >>> static int ov7670_g_parm(struct v4l2_subdev *sd, struct v4l2_streamparm *parms)
+> >>> {
+> >>>         struct v4l2_captureparm *cp = &parms->parm.capture;
+> >>>         struct ov7670_info *info = to_state(sd);
+> >>>
+> >>>         if (parms->type != V4L2_BUF_TYPE_VIDEO_CAPTURE)
+> >>>                 return -EINVAL;
+> >>>
+> >>> And parms->type is CAPTURE_MPLANE. Just drop this test from the ov7670 driver
+> >>> in the g/s_parm functions. It shouldn't test for that since a subdev driver
+> >>> knows nothing about buffer types.
+> >>>
+> >>
+> >> I will drop that test in an additional patch part of next iteration of this series,
+> >
+> > Replace g/s_parm by g/s_frame_interval. Consider g/s_parm for subdev drivers as
+> > deprecated (I'm working on a patch series to replace all g/s_parm uses by
+> > g/s_frame_interval).
+>
+> Take a look here:
+>
+> https://git.linuxtv.org/hverkuil/media_tree.git/log/?h=parm
+>
+> You probably want to use the patch 'v4l2-common: add g/s_parm helper functions'
+> for the new ceu driver in your patch series. Feel free to add it.
 
-diff --git a/arch/arm/boot/dts/owl-s500-cubieboard6.dts b/arch/arm/boot/dts/owl-s500-cubieboard6.dts
-index 396c55622fbd..0196523007d9 100644
---- a/arch/arm/boot/dts/owl-s500-cubieboard6.dts
-+++ b/arch/arm/boot/dts/owl-s500-cubieboard6.dts
-@@ -1,9 +1,8 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
- /*
-  * Cubietech CubieBoard6
-  *
-  * Copyright (c) 2017 Andreas Färber
-- *
-- * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-  */
- 
- /dts-v1/;
-diff --git a/arch/arm/boot/dts/owl-s500-guitar-bb-rev-b.dts b/arch/arm/boot/dts/owl-s500-guitar-bb-rev-b.dts
-index abd9ba1f9e5d..89f14abf75e9 100644
---- a/arch/arm/boot/dts/owl-s500-guitar-bb-rev-b.dts
-+++ b/arch/arm/boot/dts/owl-s500-guitar-bb-rev-b.dts
-@@ -1,7 +1,6 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
- /*
-  * Copyright (c) 2016-2017 Andreas Färber
-- *
-- * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-  */
- 
- /dts-v1/;
-diff --git a/arch/arm/boot/dts/owl-s500-guitar.dtsi b/arch/arm/boot/dts/owl-s500-guitar.dtsi
-index 079b2c02cc13..81cc39871f17 100644
---- a/arch/arm/boot/dts/owl-s500-guitar.dtsi
-+++ b/arch/arm/boot/dts/owl-s500-guitar.dtsi
-@@ -1,9 +1,8 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
- /*
-  * LeMaker Guitar SoM
-  *
-  * Copyright (c) 2016-2017 Andreas Färber
-- *
-- * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-  */
- 
- #include "owl-s500.dtsi"
-diff --git a/arch/arm/boot/dts/owl-s500-sparky.dts b/arch/arm/boot/dts/owl-s500-sparky.dts
-index 9e1a3ad29575..e2c7a699e152 100644
---- a/arch/arm/boot/dts/owl-s500-sparky.dts
-+++ b/arch/arm/boot/dts/owl-s500-sparky.dts
-@@ -1,9 +1,8 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
- /*
-  * Allo.com Sparky
-  *
-  * Copyright (c) 2017 Andreas Färber
-- *
-- * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-  */
- 
- /dts-v1/;
-diff --git a/arch/arm/boot/dts/owl-s500.dtsi b/arch/arm/boot/dts/owl-s500.dtsi
-index 007c8d86d247..70ca1eaba8ed 100644
---- a/arch/arm/boot/dts/owl-s500.dtsi
-+++ b/arch/arm/boot/dts/owl-s500.dtsi
-@@ -1,9 +1,8 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
- /*
-  * Actions Semi S500 SoC
-  *
-  * Copyright (c) 2016-2017 Andreas Färber
-- *
-- * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-  */
- 
- #include <dt-bindings/interrupt-controller/arm-gic.h>
--- 
-2.13.6
+Thanks, I have now re-based my series on top of your 'parm' branch,
+and now I have silenced those errors on bad frame interval.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+CEU g/s_parm now look like this:
+
+static int ceu_g_parm(struct file *file, void *fh, struct v4l2_streamparm *a)
+{
+	struct ceu_device *ceudev = video_drvdata(file);
+	int ret;
+
+	ret = v4l2_g_parm(V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE,
+			  ceudev->sd->v4l2_sd, a);
+	if (ret)
+		return ret;
+
+	a->parm.capture.readbuffers = 0;
+
+	return 0;
+}
+
+Very similar to what you've done on other platform drivers in this
+commit:
+https://git.linuxtv.org/hverkuil/media_tree.git/commit/?h=parm&id=a58956ef45cebaa5ce43a5f740fe04517b24a853
+
+I have a question though (please bear with me a little more :)
+I had to manually set a->parm.capture.readbuffers to 0 to silence the following
+error in v4l2_compliance (which I have now updated to the most recent
+remote HEAD):
+
+ fail: v4l2-test-formats.cpp(1114): cap->readbuffers
+                test VIDIOC_G/S_PARM: FAIL
+
+		fail_on_test(cap->readbuffers > VIDEO_MAX_FRAME);
+		if (!(node->g_caps() & V4L2_CAP_READWRITE))
+			fail_on_test(cap->readbuffers);
+		else if (node->g_caps() & V4L2_CAP_STREAMING)
+			fail_on_test(!cap->readbuffers);
+
+CEU does not support CAP_READWRITE, as it seems atmel-isc/isi do not, so
+v4l2-compliance wants to have readbuffers set to 0. I wonder why in
+the previously mentioned commit you didn't have to set readbuffers
+explicitly to 0 for atmel-isc/isi as I had to for CEU. Will v4l2-compliance
+fail if run on atmel-isc/isi with your commit, or am I missing something?
+
+Thanks
+   j
