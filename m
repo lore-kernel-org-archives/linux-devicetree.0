@@ -1,88 +1,46 @@
-From: Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [RFC PATCH v2 1/1] of: introduce event tracepoints for dynamic
- device_node lifecyle
-Date: Sun, 21 Jan 2018 17:01:40 -0500
-Message-ID: <20180121170140.23d1ff12@gandalf.local.home>
-References: <20180121143117.19805-1-wsa+renesas@sang-engineering.com>
-        <20180121143117.19805-2-wsa+renesas@sang-engineering.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20180121143117.19805-2-wsa+renesas@sang-engineering.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: devicetree@vger.kernel.org, Tyrel Datwyler <tyreld@linux.vnet.ibm.com>, Geert Uytterhoeven <geert@linux-m68k.org>, linux-renesas-soc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, linux-kernel@vger.kernel.org
+From: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [GIT PULL] Qualcomm Fixes for 4.16
+Date: Sun, 21 Jan 2018 16:02:37 -0600
+Message-ID: <1516572157-968-1-git-send-email-andy.gross@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Loys Ollivier <lollivier-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 21 Jan 2018 15:31:17 +0100
-Wolfram Sang <wsa+renesas@sang-engineering.com> wrote:
+Arnd/Olof/Kevin,
 
-> From: Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
-> 
-> This patch introduces event tracepoints for tracking a device_nodes
-> reference cycle as well as reconfig notifications generated in response
-> to node/property manipulations.
-> 
-> With the recent upstreaming of the refcount API several device_node
-> underflows and leaks have come to my attention in the pseries (DLPAR)
-> dynamic logical partitioning code (ie. POWER speak for hotplugging
-> virtual and physcial resources at runtime such as cpus or IOAs). These
-> tracepoints provide a easy and quick mechanism for validating the
-> reference counting of device_nodes during their lifetime.
-> 
-> Further, when pseries lpars are migrated to a different machine we
-> perform a live update of our device tree to bring it into alignment with
-> the configuration of the new machine. The of_reconfig_notify trace point
-> provides a mechanism that can be turned for debuging the device tree
-> modifications with out having to build a custom kernel to get at the
-> DEBUG code introduced by commit 00aa37206e1a54 ("of/reconfig: Add debug
-> output for OF_RECONFIG notifiers").
-> 
-> The following trace events are provided: of_node_get, of_node_put,
-> of_node_release, and of_reconfig_notify. These trace points require a
-> kernel built with ftrace support to be enabled. In a typical environment
-> where debugfs is mounted at /sys/kernel/debug the entire set of
-> tracepoints can be set with the following:
-> 
->   echo "of:*" > /sys/kernel/debug/tracing/set_event
-> 
-> or
-> 
->   echo 1 > /sys/kernel/debug/tracing/events/of/enable
-> 
-> The following shows the trace point data from a DLPAR remove of a cpu
-> from a pseries lpar:
-> 
-> cat /sys/kernel/debug/tracing/trace | grep "POWER8@10"
-> 
-> cpuhp/23-147   [023] ....   128.324827:
->         of_node_put: refcount=5, dn->full_name=/cpus/PowerPC,POWER8@10
-> cpuhp/23-147   [023] ....   128.324829:
->         of_node_put: refcount=4, dn->full_name=/cpus/PowerPC,POWER8@10
-> cpuhp/23-147   [023] ....   128.324829:
->         of_node_put: refcount=3, dn->full_name=/cpus/PowerPC,POWER8@10
-> cpuhp/23-147   [023] ....   128.324831:
->         of_node_put: refcount=2, dn->full_name=/cpus/PowerPC,POWER8@10
->    drmgr-7284  [009] ....   128.439000:
->         of_node_put: refcount=1, dn->full_name=/cpus/PowerPC,POWER8@10
->    drmgr-7284  [009] ....   128.439002:
->         of_reconfig_notify: action=DETACH_NODE, dn->full_name=/cpus/PowerPC,POWER8@10,
->                             prop->name=null, old_prop->name=null
->    drmgr-7284  [009] ....   128.439015:
->         of_node_put: refcount=0, dn->full_name=/cpus/PowerPC,POWER8@10
->    drmgr-7284  [009] ....   128.439016:
->         of_node_release: dn->full_name=/cpus/PowerPC,POWER8@10, dn->_flags=4
-> 
-> Signed-off-by: Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
-> [wsa: fixed commit abbrev and one of the sysfs paths in commit desc,
-> removed trailing space and fixed pointer declaration in code]
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Please take this fix for 4.16.  This applies on top of the current next
+(next-20190119).
 
->From the tracing perspective:
+Thanks,
 
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Andy
 
--- Steve
+The following changes since commit 761914dd2975bc443024f0ec10a66a26b7186ec2:
 
-> ---
+  Add linux-next specific files for 20180119 (2018-01-19 17:51:17 +1100)
+
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/agross/linux.git tags/qcom-fixes-for-4.16
+
+for you to fetch changes up to a218c67e4eb95287129b56c20a94b9ea0d8917e5:
+
+  of: platform: fix OF node refcount leak (2018-01-21 15:01:34 -0600)
+
+----------------------------------------------------------------
+Qualcomm Fixes for 4.16
+
+* Fix OF node refcount leak
+
+----------------------------------------------------------------
+Sudeep Holla (1):
+      of: platform: fix OF node refcount leak
+
+ drivers/of/platform.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
