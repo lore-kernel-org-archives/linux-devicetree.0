@@ -1,121 +1,102 @@
-From: jacopo mondi <jacopo-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] v4l2: i2c: ov7670: Implement OF mbus configuration
-Date: Sun, 21 Jan 2018 10:58:16 +0100
-Message-ID: <20180121095816.GM24926@w540>
-References: <1515779808-21420-1-git-send-email-jacopo+renesas@jmondi.org>
- <1515779808-21420-3-git-send-email-jacopo+renesas@jmondi.org>
- <20180118222648.kfam634qyy4eu2ed@valkosipuli.retiisi.org.uk>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v6 6/9] media: i2c: ov772x: Remove soc_camera dependencies
+Date: Sun, 21 Jan 2018 11:18:43 +0100
+Message-ID: <8fd4699c-0d51-6cd8-c915-45283b628062@xs4all.nl>
+References: <1516139101-7835-1-git-send-email-jacopo+renesas@jmondi.org>
+ <00f1dd19-6420-26ab-0529-a97f2b0de682@xs4all.nl>
+ <20180119111917.76wosrokgracbdrz@valkosipuli.retiisi.org.uk>
+ <2694661.NEH0HeGgLD@avalon> <20180121093117.GK24926@w540>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20180118222648.kfam634qyy4eu2ed-S+BSfZ9RZZmRSg0ZkenSGLdO1Tsj/99ntUK59QYPAWc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Cc: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>, corbet-T1hC0tSOHrs@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20180121093117.GK24926@w540>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: jacopo mondi <jacopo@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Sakari Ailus <sakari.ailus@iki.fi>, Jacopo Mondi <jacopo+renesas@jmondi.org>, magnus.damm@gmail.com, geert@glider.be, mchehab@kernel.org, festevam@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, pombredanne@nexb.com, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sakari,
+On 21/01/18 10:31, jacopo mondi wrote:
+> Hello Hans, Laurent, Sakari,
+> 
+> On Fri, Jan 19, 2018 at 02:23:21PM +0200, Laurent Pinchart wrote:
+>> Hello,
+>>
+>> On Friday, 19 January 2018 13:19:18 EET Sakari Ailus wrote:
+>>> On Fri, Jan 19, 2018 at 11:47:33AM +0100, Hans Verkuil wrote:
+>>>> On 01/19/18 11:24, Hans Verkuil wrote:
+>>>>> On 01/16/18 22:44, Jacopo Mondi wrote:
+>>>>>> Remove soc_camera framework dependencies from ov772x sensor driver.
+>>>>>> - Handle clock and gpios
+>>>>>> - Register async subdevice
+>>>>>> - Remove soc_camera specific g/s_mbus_config operations
+>>>>>> - Change image format colorspace from JPEG to SRGB as the two use the
+>>>>>>   same colorspace information but JPEG makes assumptions on color
+>>>>>>   components quantization that do not apply to the sensor
+>>>>>> - Remove sizes crop from get_selection as driver can't scale
+>>>>>> - Add kernel doc to driver interface header file
+>>>>>> - Adjust build system
+>>>>>>
+>>>>>> This commit does not remove the original soc_camera based driver as
+>>>>>> long as other platforms depends on soc_camera-based CEU driver.
+>>>>>>
+>>>>>> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+>>>>>> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+>>>>>
+>>>>> Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
+>>>>
+>>>> Un-acked.
+>>>>
+>>>> I just noticed that this sensor driver has no enum_frame_interval and
+>>>> g/s_parm support. How would a driver ever know the frame rate of the
+>>>> sensor without that?
+> 
+> Does it make any difference if I point out that this series hasn't
+> removed any of that code, and the driver was not supporting that
+> already? Or was it handled through soc_camera?
 
-On Fri, Jan 19, 2018 at 12:26:48AM +0200, Sakari Ailus wrote:
-> Hi Jacopo,
->
-> On Fri, Jan 12, 2018 at 06:56:48PM +0100, Jacopo Mondi wrote:
+That last question is a good one. Can you check?
 
-[snip]
+There are two sh boards that use this sensor. Are you able to test on one
+of those boards?
 
-> > +static int ov7670_parse_dt(struct device *dev,
-> > +			   struct ov7670_info *info)
-> > +{
-> > +	struct fwnode_handle *fwnode = dev_fwnode(dev);
-> > +	struct v4l2_fwnode_endpoint bus_cfg;
-> > +	struct fwnode_handle *ep;
-> > +	int ret;
-> > +
-> > +	if (!fwnode)
-> > +		return -EINVAL;
-> > +
-> > +	info->pclk_hb_disable = false;
-> > +	if (fwnode_property_present(fwnode, "ov7670,pclk-hb-disable"))
-> > +		info->pclk_hb_disable = true;
-> > +
-> > +	ep = fwnode_graph_get_next_endpoint(fwnode, NULL);
-> > +	if (!ep) {
-> > +		fwnode_handle_put(fwnode);
->
-> You haven't acquired a reference to fwnode, therefore you musn't put it.
->
+There is reversed engineered code for the ox772x here:
+drivers/media/usb/gspca/ov534.c
 
-Oh, converting from OF to fwnode_handle doesn't increase reference
-count, you're right. That makes error path even nicer :)
+That appears to handle framerates.
 
+I am very uncomfortable promoting this driver to drivers/media/i2c without
+having functioning frame interval handling. It could be as simple as a single
+fixed framerate, it doesn't have to be fancy. Without it it is basically
+unusable by applications since those typically expect support for this.
 
-> Looks fine otherwise.
->
+Moving it to staging might be another option, with a TODO mentioning this
+missing feature.
 
-With that small fix can I have you're Reviewed-by? (The same goes for
-bindings patch).
+> 
+>>>
+>>> s/_parm/_frame_interval/ ?
+>>>
+>>> We should have wrappers for this or rather to convert g/s_parm users to
+>>> g/s_frame_interval so drivers don't need to implement both.
+>>
+>> There are two ways to set the frame interval, either explicitly through the
+>> s_frame_interval operation, or implicitly through control of the pixel clock,
+>> horizontal blanking and vertical blanking (which in turn can be influenced by
+>> the exposure time).
+>>
+>> Having two ways to perform the same operation seems sub-optimal to me, but I
+>> could understand if they covered different use cases. As far as I know we
+>> don't document the use cases for those methods. What's your opinion on that ?
+>>
+> 
+> -If- I have to implement that in this series to have it accepted,
+> please let me know which one of the two is the preferred one :)
 
-Thanks
-   j
+g/s_frame_interval. The other is (I think) for highly specialized devices. For
+regular normal sensors I do not think it makes much sense. Certainly not for
+fairly old sensors like this one.
 
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	ret = v4l2_fwnode_endpoint_parse(ep, &bus_cfg);
-> > +	if (ret)
-> > +		goto error_put_fwnodes;
-> > +
-> > +	if (bus_cfg.bus_type != V4L2_MBUS_PARALLEL) {
-> > +		dev_err(dev, "Unsupported media bus type\n");
-> > +		ret = -EINVAL;
-> > +		goto error_put_fwnodes;
-> > +	}
-> > +	info->mbus_config = bus_cfg.bus.parallel.flags;
-> > +
-> > +error_put_fwnodes:
-> > +	fwnode_handle_put(ep);
-> > +	fwnode_handle_put(fwnode);
-> > +
-> > +	return ret;
-> > +}
-> > +
-> >  static int ov7670_probe(struct i2c_client *client,
-> >  			const struct i2c_device_id *id)
-> >  {
-> > @@ -1678,7 +1749,13 @@ static int ov7670_probe(struct i2c_client *client,
-> >  #endif
-> >
-> >  	info->clock_speed = 30; /* default: a guess */
-> > -	if (client->dev.platform_data) {
-> > +
-> > +	if (dev_fwnode(&client->dev)) {
-> > +		ret = ov7670_parse_dt(&client->dev, info);
-> > +		if (ret)
-> > +			return ret;
-> > +
-> > +	} else if (client->dev.platform_data) {
-> >  		struct ov7670_config *config = client->dev.platform_data;
-> >
-> >  		/*
-> > @@ -1745,9 +1822,6 @@ static int ov7670_probe(struct i2c_client *client,
-> >  	tpf.denominator = 30;
-> >  	info->devtype->set_framerate(sd, &tpf);
-> >
-> > -	if (info->pclk_hb_disable)
-> > -		ov7670_write(sd, REG_COM10, COM10_PCLK_HB);
-> > -
-> >  	v4l2_ctrl_handler_init(&info->hdl, 10);
-> >  	v4l2_ctrl_new_std(&info->hdl, &ov7670_ctrl_ops,
-> >  			V4L2_CID_BRIGHTNESS, 0, 255, 1, 128);
-> > --
-> > 2.7.4
-> >
->
-> --
-> Sakari Ailus
-> e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+
+	Hans
