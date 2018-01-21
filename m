@@ -1,99 +1,84 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH v2 3/8] watchdog: JZ4740: Register a restart handler
-Date: Sat, 20 Jan 2018 09:56:48 -0800
-Message-ID: <fa472dc7-7e5a-aaba-2953-27f68a01d872@roeck-us.net>
-References: <20171228162939.3928-2-paul@crapouillou.net>
- <20171230135108.6834-1-paul@crapouillou.net>
- <20171230135108.6834-3-paul@crapouillou.net>
- <CANc+2y7CT150cO61RfRgc6hCLEasx+NmqCacZtaFPKLgTPyt4w@mail.gmail.com>
- <20061de8-fa1f-93eb-eb9b-089c699018aa@roeck-us.net>
- <CANc+2y52ObW773=20=-gbztvoH0DSRSO1N5Srf3WYcKLZbPNBg@mail.gmail.com>
+From: jacopo mondi <jacopo@jmondi.org>
+Subject: Re: [PATCH v6 6/9] media: i2c: ov772x: Remove soc_camera dependencies
+Date: Sun, 21 Jan 2018 10:31:17 +0100
+Message-ID: <20180121093117.GK24926@w540>
+References: <1516139101-7835-1-git-send-email-jacopo+renesas@jmondi.org>
+ <00f1dd19-6420-26ab-0529-a97f2b0de682@xs4all.nl>
+ <20180119111917.76wosrokgracbdrz@valkosipuli.retiisi.org.uk>
+ <2694661.NEH0HeGgLD@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CANc+2y52ObW773=20=-gbztvoH0DSRSO1N5Srf3WYcKLZbPNBg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: PrasannaKumar Muralidharan <prasannatsmkumar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-MIPS <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <2694661.NEH0HeGgLD@avalon>
+Sender: linux-sh-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Sakari Ailus <sakari.ailus@iki.fi>, Hans Verkuil <hverkuil@xs4all.nl>, Jacopo Mondi <jacopo+renesas@jmondi.org>, magnus.damm@gmail.com, geert@glider.be, mchehab@kernel.org, festevam@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, pombredanne@nexb.com, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/20/2018 08:04 AM, PrasannaKumar Muralidharan wrote:
-> Hi Guenter,
-> 
-> On 20 January 2018 at 21:15, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> wrote:
->> On 01/19/2018 11:31 PM, PrasannaKumar Muralidharan wrote:
->>>
->>> Hi Paul,
->>>
->>> On 30 December 2017 at 19:21, Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org> wrote:
->>>>
->>>> The watchdog driver can restart the system by simply configuring the
->>>> hardware for a timeout of 0 seconds.
->>>>
->>>> Signed-off-by: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
->>>> Reviewed-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
->>>> ---
->>>>    drivers/watchdog/jz4740_wdt.c | 9 +++++++++
->>>>    1 file changed, 9 insertions(+)
->>>>
->>>>    v2: No change
->>>>
->>>> diff --git a/drivers/watchdog/jz4740_wdt.c
->>>> b/drivers/watchdog/jz4740_wdt.c
->>>> index 92d6ca8ceb49..fa7f49a3212c 100644
->>>> --- a/drivers/watchdog/jz4740_wdt.c
->>>> +++ b/drivers/watchdog/jz4740_wdt.c
->>>> @@ -130,6 +130,14 @@ static int jz4740_wdt_stop(struct watchdog_device
->>>> *wdt_dev)
->>>>           return 0;
->>>>    }
->>>>
->>>> +static int jz4740_wdt_restart(struct watchdog_device *wdt_dev,
->>>> +                             unsigned long action, void *data)
->>>> +{
->>>> +       wdt_dev->timeout = 0;
->>>> +       jz4740_wdt_start(wdt_dev);
->>>> +       return 0;
->>>> +}
->>>> +
->>>>    static const struct watchdog_info jz4740_wdt_info = {
->>>>           .options = WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING |
->>>> WDIOF_MAGICCLOSE,
->>>>           .identity = "jz4740 Watchdog",
->>>> @@ -141,6 +149,7 @@ static const struct watchdog_ops jz4740_wdt_ops = {
->>>>           .stop = jz4740_wdt_stop,
->>>>           .ping = jz4740_wdt_ping,
->>>>           .set_timeout = jz4740_wdt_set_timeout,
->>>> +       .restart = jz4740_wdt_restart,
->>>>    };
->>>>
->>>>    #ifdef CONFIG_OF
->>>> --
->>>> 2.11.0
->>>>
->>>>
->>>
->>> Noticed that min_timeout of the watchdog device is set to 1 but this
->>> function calls start with timeout set to 0. Even though this works I
->>> feel it is better to set min_timeout to 0.
->>>
->>
->> No. That would be wrong. If you want to be pedantic, write a new function
->> __jz4740_wdt_set_timeout(u16 clock_div, u16 timeout_value) and call it
->> instead, but don't mess with min_timeout.
->>
->> Guenter
-> 
-> What is the effect of changing min_timeout? I could see only
-> validation checks with it.
-> 
-Let me ask you - you want to let userspace set a timeout of 0, which would
-effectively reboot the system through the backdoor. Why ?
+Hello Hans, Laurent, Sakari,
 
-Guenter
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Fri, Jan 19, 2018 at 02:23:21PM +0200, Laurent Pinchart wrote:
+> Hello,
+>
+> On Friday, 19 January 2018 13:19:18 EET Sakari Ailus wrote:
+> > On Fri, Jan 19, 2018 at 11:47:33AM +0100, Hans Verkuil wrote:
+> > > On 01/19/18 11:24, Hans Verkuil wrote:
+> > >> On 01/16/18 22:44, Jacopo Mondi wrote:
+> > >>> Remove soc_camera framework dependencies from ov772x sensor driver.
+> > >>> - Handle clock and gpios
+> > >>> - Register async subdevice
+> > >>> - Remove soc_camera specific g/s_mbus_config operations
+> > >>> - Change image format colorspace from JPEG to SRGB as the two use the
+> > >>>   same colorspace information but JPEG makes assumptions on color
+> > >>>   components quantization that do not apply to the sensor
+> > >>> - Remove sizes crop from get_selection as driver can't scale
+> > >>> - Add kernel doc to driver interface header file
+> > >>> - Adjust build system
+> > >>>
+> > >>> This commit does not remove the original soc_camera based driver as
+> > >>> long as other platforms depends on soc_camera-based CEU driver.
+> > >>>
+> > >>> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> > >>> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > >>
+> > >> Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
+> > >
+> > > Un-acked.
+> > >
+> > > I just noticed that this sensor driver has no enum_frame_interval and
+> > > g/s_parm support. How would a driver ever know the frame rate of the
+> > > sensor without that?
+
+Does it make any difference if I point out that this series hasn't
+removed any of that code, and the driver was not supporting that
+already? Or was it handled through soc_camera?
+
+> >
+> > s/_parm/_frame_interval/ ?
+> >
+> > We should have wrappers for this or rather to convert g/s_parm users to
+> > g/s_frame_interval so drivers don't need to implement both.
+>
+> There are two ways to set the frame interval, either explicitly through the
+> s_frame_interval operation, or implicitly through control of the pixel clock,
+> horizontal blanking and vertical blanking (which in turn can be influenced by
+> the exposure time).
+>
+> Having two ways to perform the same operation seems sub-optimal to me, but I
+> could understand if they covered different use cases. As far as I know we
+> don't document the use cases for those methods. What's your opinion on that ?
+>
+
+-If- I have to implement that in this series to have it accepted,
+please let me know which one of the two is the preferred one :)
+
+Thanks
+   j
+
+
+> --
+> Regards,
+>
+> Laurent Pinchart
+>
