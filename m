@@ -1,59 +1,59 @@
-From: Philippe Cornu <philippe.cornu-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH] dt-bindings: display: stm32: add pixel clock mandatory property
-Date: Sun, 21 Jan 2018 22:13:15 +0100
-Message-ID: <20180121211315.31562-1-philippe.cornu@st.com>
+From: Philippe CORNU <philippe.cornu@st.com>
+Subject: Re: [PATCH v2] dt-bindings: display: stm32: add pixel clock mandatory
+ property
+Date: Sun, 21 Jan 2018 21:15:54 +0000
+Message-ID: <3bd6bddd-db0d-2b5e-a676-2d56b7e5ca41@st.com>
+References: <20180112153034.20353-1-philippe.cornu@st.com>
+ <20180119224335.exrxcfq3xc6op6iy@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Philippe Cornu <philippe.cornu-qxv4g6HH51o@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vincent Abriou <vincent.abriou-qxv4g6HH51o@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Mickael Reulier <mickael.reulier-qxv4g6HH51o@public.gmane.org>, Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>, Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180119224335.exrxcfq3xc6op6iy@rob-hp-laptop>
+Content-Language: en-US
+Content-ID: <94347A0566A1014285B96459D9DEA480@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, David Airlie <airlied@linux.ie>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Mickael REULIER <mickael.reulier@st.com>, Russell King <linux@armlinux.org.uk>, Fabien DESSENNE <fabien.dessenne@st.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>, Arnd Bergmann <arnd@arndb.de>, Vincent ABRIOU <vincent.abriou@st.com>, Ludovic BARRE <ludovic.barre@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Yannick FERTRE <yannick.fertre@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>G
 List-Id: devicetree@vger.kernel.org
 
-Add the DPI/RGB input pixel clock in mandatory properties
-because it really offers a better preciseness for timing
-computations.
-
-Signed-off-by: Philippe Cornu <philippe.cornu-qxv4g6HH51o@public.gmane.org>
----
-Please apply "dt-bindings: display: stm32: correct clock-names
-in dsi panel example" before this patch.
-
-Changes in v3: remove the note regarding swapped clock names
-  (now in a separate patch).
-Changes in v2: put new clock in last position (Rob Herring)
-
- Documentation/devicetree/bindings/display/st,stm32-ltdc.txt | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/display/st,stm32-ltdc.txt b/Documentation/devicetree/bindings/display/st,stm32-ltdc.txt
-index 3eb1b48b47dd..942b7237ae87 100644
---- a/Documentation/devicetree/bindings/display/st,stm32-ltdc.txt
-+++ b/Documentation/devicetree/bindings/display/st,stm32-ltdc.txt
-@@ -29,6 +29,7 @@ Mandatory properties specific to STM32 DSI:
- - compatible: "st,stm32-dsi".
- - clock-names:
-   - phy pll reference clock string name, must be "ref".
-+  - DPI/RGB input pixel clock string name, must be "px_clk".
- - resets: see [5].
- - reset-names: see [5].
- 
-@@ -97,8 +98,9 @@ Example 2: DSI panel
- 			#size-cells = <0>;
- 			compatible = "st,stm32-dsi";
- 			reg = <0x40016c00 0x800>;
--			clocks = <&rcc 1 CLK_F469_DSI>, <&clk_hse>;
--			clock-names = "pclk", "ref";
-+			clocks = <&rcc 1 CLK_F469_DSI>, <&clk_hse>,
-+				 <&rcc 1 CLK_LCD>;
-+			clock-names = "pclk", "ref", "px_clk";
- 			resets = <&rcc STM32F4_APB2_RESET(DSI)>;
- 			reset-names = "apb";
- 
--- 
-2.15.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgUm9iLA0KDQpPbiAwMS8xOS8yMDE4IDExOjQzIFBNLCBSb2IgSGVycmluZyB3cm90ZToNCj4g
+T24gRnJpLCBKYW4gMTIsIDIwMTggYXQgMDQ6MzA6MzRQTSArMDEwMCwgUGhpbGlwcGUgQ29ybnUg
+d3JvdGU6DQo+PiBBZGQgdGhlIERQSS9SR0IgaW5wdXQgcGl4ZWwgY2xvY2sgaW4gbWFuZGF0b3J5
+IHByb3BlcnRpZXMNCj4+IGJlY2F1c2UgaXQgcmVhbGx5IG9mZmVycyBhIGJldHRlciBwcmVjaXNl
+bmVzcyBmb3IgdGltaW5nDQo+PiBjb21wdXRhdGlvbnMuDQo+PiBOb3RlOiBGaXggYWxzbyB0aGUg
+RFNJIHBhbmVsIGV4YW1wbGUgd2hlcmUgInJlZiIgJiAicGNsayINCj4+IGNsb2NrcyB3ZXJlIHN3
+YXBwZWQuDQo+Pg0KPj4gU2lnbmVkLW9mZi1ieTogUGhpbGlwcGUgQ29ybnUgPHBoaWxpcHBlLmNv
+cm51QHN0LmNvbT4NCj4+IC0tLQ0KPj4gQ2hhbmdlcyBpbiB2MjogcHV0IG5ldyBjbG9jayBpbiBs
+YXN0IHBvc2l0aW9uIChSb2IgSGVycmluZykNCj4+DQo+PiAgIERvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9kaXNwbGF5L3N0LHN0bTMyLWx0ZGMudHh0IHwgNiArKysrLS0NCj4+ICAg
+MSBmaWxlIGNoYW5nZWQsIDQgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkNCj4+DQo+PiBk
+aWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvc3Qs
+c3RtMzItbHRkYy50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
+eS9zdCxzdG0zMi1sdGRjLnR4dA0KPj4gaW5kZXggMDI5MjUyMjUzYWQ0Li45NDJiNzIzN2FlODcg
+MTAwNjQ0DQo+PiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
+eS9zdCxzdG0zMi1sdGRjLnR4dA0KPj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2Rpc3BsYXkvc3Qsc3RtMzItbHRkYy50eHQNCj4+IEBAIC0yOSw2ICsyOSw3IEBAIE1h
+bmRhdG9yeSBwcm9wZXJ0aWVzIHNwZWNpZmljIHRvIFNUTTMyIERTSToNCj4+ICAgLSBjb21wYXRp
+YmxlOiAic3Qsc3RtMzItZHNpIi4NCj4+ICAgLSBjbG9jay1uYW1lczoNCj4+ICAgICAtIHBoeSBw
+bGwgcmVmZXJlbmNlIGNsb2NrIHN0cmluZyBuYW1lLCBtdXN0IGJlICJyZWYiLg0KPj4gKyAgLSBE
+UEkvUkdCIGlucHV0IHBpeGVsIGNsb2NrIHN0cmluZyBuYW1lLCBtdXN0IGJlICJweF9jbGsiLg0K
+Pj4gICAtIHJlc2V0czogc2VlIFs1XS4NCj4+ICAgLSByZXNldC1uYW1lczogc2VlIFs1XS4NCj4+
+ICAgDQo+PiBAQCAtOTcsOCArOTgsOSBAQCBFeGFtcGxlIDI6IERTSSBwYW5lbA0KPj4gICAJCQkj
+c2l6ZS1jZWxscyA9IDwwPjsNCj4+ICAgCQkJY29tcGF0aWJsZSA9ICJzdCxzdG0zMi1kc2kiOw0K
+Pj4gICAJCQlyZWcgPSA8MHg0MDAxNmMwMCAweDgwMD47DQo+PiAtCQkJY2xvY2tzID0gPCZyY2Mg
+MSBDTEtfRjQ2OV9EU0k+LCA8JmNsa19oc2U+Ow0KPj4gLQkJCWNsb2NrLW5hbWVzID0gInJlZiIs
+ICJwY2xrIjsNCj4+ICsJCQljbG9ja3MgPSA8JnJjYyAxIENMS19GNDY5X0RTST4sIDwmY2xrX2hz
+ZT4sDQo+PiArCQkJCSA8JnJjYyAxIENMS19MQ0Q+Ow0KPj4gKwkJCWNsb2NrLW5hbWVzID0gInBj
+bGsiLCAicmVmIiwgInB4X2NsayI7DQo+IA0KPiBZb3UgaGF2ZSB0aGUgZXhpc3RpbmcgbmFtZXMg
+cmV2ZXJzZWQgaGVyZS4NCg0KQW5kIG1hbnkgdGhhbmtzIGZvciB5b3VyIHJldmlldy4NCg0KTmFt
+ZXMgYXJlICJyZXZlcnNlZCIgYXMgZXhwbGFpbmVkIGluIHRoZSBub3RlIGluIHRoZSBjb21taXQg
+bWVzc2FnZS4NCg0KV2VsbCwgbWF5YmUgdGhlIG5vdGUgaXMgbm90IGNsZWFyIGVub3VnaC4uLiBT
+byBJIGhhdmUganVzdCBzZW50IDIgDQpzZXBhcmF0ZSBwYXRjaGVzIHRoYXQgSSBob3BlIHdpbGwg
+YmUgYmV0dGVyIHRvIHVuZGVyc3RhbmQuDQoNCk1hbnkgdGhhbmtzLA0KUGhpbGlwcGUgOiApDQoN
+Cg0KPiANCj4+ICAgCQkJcmVzZXRzID0gPCZyY2MgU1RNMzJGNF9BUEIyX1JFU0VUKERTSSk+Ow0K
+Pj4gICAJCQlyZXNldC1uYW1lcyA9ICJhcGIiOw0KPj4gICANCj4+IC0tIA0KPj4gMi4xNS4xDQo+
+Pg0KPiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXw0KPiBk
+cmktZGV2ZWwgbWFpbGluZyBsaXN0DQo+IGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcN
+Cj4gaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2
+ZWwNCj4g
