@@ -1,54 +1,75 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH -next] of: platform: fix OF node refcount leak
-Date: Mon, 22 Jan 2018 11:13:06 +0000
-Message-ID: <10e5ef22-37e5-986f-eda0-446214c5626b@arm.com>
-References: <1516272219-25359-1-git-send-email-sudeep.holla@arm.com>
- <fd9de06f-df7e-4114-8dda-0483c338b394@arm.com>
- <CAPBZ5QfuExQtM91wPCooiCoztoyt8ihXXWPccGi=_zca+eO5JA@mail.gmail.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: =?UTF-8?Q?Re=3A_=5BPATCH_v6_00=2F41=5D_ARM=3A_davinci=3A_convert_to_common?=
+        =?UTF-8?Q?_clock_framework=E2=80=8B?=
+Date: Mon, 22 Jan 2018 12:14:53 +0100
+Message-ID: <CAMRc=MexJTMiD=URw1bv-qfGaTntZRXgfsSb_beYGkvO+LrpgQ@mail.gmail.com>
+References: <1516468460-4908-1-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAPBZ5QfuExQtM91wPCooiCoztoyt8ihXXWPccGi=_zca+eO5JA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Loys Ollivier <lollivier-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1516468460-4908-1-git-send-email-david@lechnology.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: David Lechner <david@lechnology.com>
+Cc: linux-clk@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Adam Ford <aford173@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+2018-01-20 18:13 GMT+01:00 David Lechner <david@lechnology.com>:
+> This series converts mach-davinci to use the common clock framework.
+>
+> The series works like this, the first 19 patches create new clock drivers
+> using the common clock framework. There are basically 3 groups of clocks -
+> PLL, PSC and CFGCHIP (syscon). There are six different SoCs that each have
+> unique init data, which is the reason for so many patches.
+>
+> Then, starting with "ARM: da830: add new clock init using common clock",
+> we get the mach code ready for the switch by adding the code needed for
+> the new clock drivers and adding #ifndef CONFIG_COMMON_CLK around the
+> legacy clocks so that we can switch easily between the old and the new.
+>
+> "ARM: davinci: switch to common clock framework" actually flips the switch
+> to start using the new clock drivers. Then the next 8 patches remove all
+> of the old clock code.
+>
+> The final three patches add device tree clock support to the one SoC that
+> supports it.
+>
+> v6 changes (also see individual patches for details):
+> - All of the device tree bindings are changed
+> - All of the clock drivers are changed significantly
+> - Fixed issues brought up during review of v5
+> - "ARM: davinci: move davinci_clk_init() to init_time" is removed from this
+>   series and submitted separately
+>
+> v5 changes:
+> - Basically, this is an entirely new series
+> - Patches are broken up into bite-sized pieces
+> - Converted PSC clock driver to use regmap
+> - Restored "force" flag for certain DA850 clocks
+> - Added device tree bindings
+> - Moved more of the clock init to drivers/clk
+> - Fixed frequency scaling (maybe*)
+>
+> * I have frequency scaling using cpufreq-dt, so I know the clocks are doing
+>   what they need to do to make this work, but I haven't figured out how to
+>   test davinci-cpufreq driver yet. (Patches to make cpufreq-dt work will be
+>   sent separately after this series has landed.)
+>
+> Dependencies:
+>
+> This series applies on top of linux-davinci/master plus the following patches:
+> - [1] "clk: fix reentrancy of clk_enable() on UP systems" (in clk-next)
+> - [2] "clk: add helper functions for managing clk_onecell_data"
+> - [3] "clk: divider: read-only divider can propagate rate change"
+> - [4],[5],[6],[7],[8],[9] series "ARM: davinci: common clock prep work"
+>
 
+Hi David,
 
-On 19/01/18 23:34, Andy Gross wrote:
-> On 19 January 2018 at 09:37, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
->> Hi Andy,
->>
->> On 18/01/18 10:43, Sudeep Holla wrote:
->>> We need to call of_node_put() for device nodes obtained with
->>> of_find_node_by_path().
->>>
->>> Fixes: 3aa0582fdb82 ("of: platform: populate /firmware/ node from of_platform_default_populate_init()")
->>> Reported-by: Loys Ollivier <lollivier-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
->>> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>> Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
->>> ---
->>>  drivers/of/platform.c | 4 +++-
->>>  1 file changed, 3 insertions(+), 1 deletion(-)
->>>
->>
->> Can you pick up this with other fixes you would send after v4.16-rc1 or
->> do you prefer me to route through ARM-SoC directly ? Let me know.
-> 
-> I can pick this up for fixes, no problem.  I can send it along right
-> now if you like.  This is a pretty low risk patch.
-> 
+I'm getting a splat[1] when trying to mount the rootfs over nfs on a da850-lcdk.
 
-Thanks Andy.
+I'll try to figure out what's happening.
 
--- 
-Regards,
-Sudeep
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Bartosz Golaszewski
+
+[1] https://pastebin.com/D94z8SAe
