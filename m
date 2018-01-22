@@ -1,38 +1,46 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH 2/7] clk: rockchip: remove HCLK_VIO from rk3328 dt header
-Date: Mon, 22 Jan 2018 15:15:25 +0100
-Message-ID: <20180122141530.12398-3-heiko@sntech.de>
-References: <20180122141530.12398-1-heiko@sntech.de>
+From: Maciej Purski <m.purski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v4 3/7] regulator: bindings: Add properties for coupled
+ regulators
+Date: Mon, 22 Jan 2018 15:30:08 +0100
+Message-ID: <1516631412-17542-4-git-send-email-m.purski@samsung.com>
+References: <1516631412-17542-1-git-send-email-m.purski@samsung.com>
+        <CGME20180122143031eucas1p205647b3821760ad7e7a3bef5f8873d14@eucas1p2.samsung.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180122141530.12398-1-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+In-reply-to: <1516631412-17542-1-git-send-email-m.purski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, yang.zheng-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Maciej Purski <m.purski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This clock is not hclk_vio but hclk_vio_niu, the clock for the interconnect
-output. The clock got fixed and the id was never used in this incorrect form,
-so remove it.
+Some regulators require keeping their voltage spread below defined
+max_spread.
 
-Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Add properties to provide information on regulators' coupling.
+
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Maciej Purski <m.purski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 ---
- include/dt-bindings/clock/rk3328-cru.h | 1 -
- 1 file changed, 1 deletion(-)
+ Documentation/devicetree/bindings/regulator/regulator.txt | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/include/dt-bindings/clock/rk3328-cru.h b/include/dt-bindings/clock/rk3328-cru.h
-index d2b26a4b43eb..a82a0109faff 100644
---- a/include/dt-bindings/clock/rk3328-cru.h
-+++ b/include/dt-bindings/clock/rk3328-cru.h
-@@ -193,7 +193,6 @@
- #define HCLK_VPU_PRE		324
- #define HCLK_VIO_PRE		325
- #define HCLK_VPU		326
--#define HCLK_VIO		327
- #define HCLK_BUS_PRE		328
- #define HCLK_PERI_PRE		329
- #define HCLK_H264		330
+diff --git a/Documentation/devicetree/bindings/regulator/regulator.txt b/Documentation/devicetree/bindings/regulator/regulator.txt
+index 6b8719f..f10ebe8 100644
+--- a/Documentation/devicetree/bindings/regulator/regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/regulator.txt
+@@ -67,6 +67,11 @@ Optional properties:
+ 	0: Disable active discharge.
+ 	1: Enable active discharge.
+ 	Absence of this property will leave configuration to default.
++- regulator-coupled-with: Regulators with which the regulator
++  is coupled. The linkage is 2-way - all coupled regulators should be linked
++  with each other.
++- regulator-coupled-max-spread: Max spread between voltages of coupled regulators
++  in microvolts.
+ 
+ Deprecated properties:
+ - regulator-compatible: If a regulator chip contains multiple
 -- 
-2.14.2
+2.7.4
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
