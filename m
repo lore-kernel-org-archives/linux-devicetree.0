@@ -1,73 +1,40 @@
-From: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-Subject: [PATCH v3 2/2] dt/bindings: Add bindings for Layerscape external irqs
-Date: Mon, 22 Jan 2018 10:21:33 +0100
-Message-ID: <20180122092133.23177-2-rasmus.villemoes@prevas.dk>
-References: <1513758631-19909-1-git-send-email-rasmus.villemoes@prevas.dk>
- <20180122092133.23177-1-rasmus.villemoes@prevas.dk>
+From: <yinbo.zhu@nxp.com>
+Subject: [PATCH v1] arm: dts: ls1021a: Add configure-gfladj property to USB3 node
+Date: Mon, 22 Jan 2018 16:44:23 +0800
+Message-ID: <20180122084423.10340-1-yinbo.zhu@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180122092133.23177-1-rasmus.villemoes@prevas.dk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>
-Cc: Andy Tang <andy.tang@nxp.com>, Alexander Stein <alexander.stein@systec-electronic.com>, Rasmus Villemoes <rasmus.villemoes@prevas.dk>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>
+Cc: xiaobo.xie@nxp.com, jerry.huang@nxp.com, ran.wang_1@nxp.com, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>, "yinbo . zhu" <yinbo.zhu@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
----
- .../interrupt-controller/fsl,ls-extirq.txt         | 44 ++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/fsl,ls-extirq.txt
+From: yinbo.zhu <yinbo.zhu@nxp.com>
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/fsl,ls-extirq.txt b/Documentation/devicetree/bindings/interrupt-controller/fsl,ls-extirq.txt
-new file mode 100644
-index 000000000000..a71ce2c3eeae
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/fsl,ls-extirq.txt
-@@ -0,0 +1,44 @@
-+* Freescale Layerscape external IRQs
-+
-+Some Layerscape SOCs (LS1021A, LS1043A, LS1046A) support inverting
-+the polarity of certain external interrupt lines.
-+
-+The device node must be a child of the node representing the
-+Supplemental Configuration Unit (SCFG).
-+
-+Required properties:
-+- compatible: should be "fsl,<soc-name>-extirq", e.g. "fsl,ls1021a-extirq".
-+- interrupt-controller: Identifies the node as an interrupt controller
-+- #interrupt-cells: Use the same format as specified by GIC in arm,gic.txt.
-+- interrupt-parent: phandle of GIC.
-+- offset: offset to the Interrupt Polarity Control Register (INTPCR)
-+  register in the SCFG.
-+- interrupts: Specifies the mapping to interrupt numbers in the parent
-+  interrupt controller. Interrupts are mapped one-to-one to parent
-+  interrupts.
-+
-+Optional properties:
-+- fsl,bit-reverse: This boolean property should be set on the LS1021A
-+  if the SCFGREVCR register has been set to all-ones (which is usually
-+  the case), meaning that all reads and writes of SCFG registers are
-+  implicitly bit-reversed. Other compatible platforms do not have such
-+  a register.
-+
-+Example:
-+	scfg: scfg@1570000 {
-+		compatible = "fsl,ls1021a-scfg", "syscon";
-+		...
-+		extirq: interrupt-controller {
-+			compatible = "fsl,ls1021a-extirq";
-+			#interrupt-cells = <3>;
-+			interrupt-controller;
-+			interrupt-parent = <&gic>;
-+			offset = <0x1ac>;
-+			interrupts = <163 164 165 167 168 169>;
-+			fsl,bit-reverse;
-+		};
-+	};
-+
-+
-+	interrupts-extended = <&gic GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>,
-+			      <&extirq GIC_SPI 1 IRQ_TYPE_LEVEL_LOW>;
+Add "configure-gfladj" boolean property to USB3 node. This property
+is used to determine whether frame length adjustent is required
+or not
+
+Signed-off-by: Review Code-CDREVIEW <CDREVIEW@freescale.com>
+Signed-off-by: Ramneek Mehresh <ramneek.mehresh@freescale.com>
+Signed-off-by: Honghua Yin <Hong-Hua.Yin@freescale.com>
+Signed-off-by: yinbo.zhu <yinbo.zhu@nxp.com>
+---
+ arch/arm/boot/dts/ls1021a.dtsi |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
+
+diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
+index f81fad2..a5ccf7a 100644
+--- a/arch/arm/boot/dts/ls1021a.dtsi
++++ b/arch/arm/boot/dts/ls1021a.dtsi
+@@ -707,6 +707,7 @@
+ 			reg = <0x0 0x3100000 0x0 0x10000>;
+ 			interrupts = <GIC_SPI 93 IRQ_TYPE_LEVEL_HIGH>;
+ 			dr_mode = "host";
++			configure-gfladj;
+ 			snps,quirk-frame-length-adjustment = <0x20>;
+ 			snps,dis_rxdet_inp3_quirk;
+ 		};
 -- 
-2.15.1
+1.7.1
