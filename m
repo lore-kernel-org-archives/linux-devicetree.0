@@ -1,49 +1,55 @@
-From: JeffyChen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH v4 08/13] iommu/rockchip: Control clocks needed to access
-	the IOMMU
-Date: Mon, 22 Jan 2018 12:09:30 +0800
-Message-ID: <5A6563FA.8080602@rock-chips.com>
-References: <20180118115251.5542-1-jeffy.chen@rock-chips.com>
-	<20180118115251.5542-9-jeffy.chen@rock-chips.com>
-	<c188e6a9-744c-d984-545c-408607f35cc9@arm.com>
-	<5A60AE41.2050101@rock-chips.com>
-	<1f4b3c0d-1414-0012-a072-f4a11f432c21@rock-chips.com>
-	<5A654925.9020203@rock-chips.com>
+From: =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+Subject: [PATCH v2 0/6] Nintendo Wii GPIO driver
+Date: Mon, 22 Jan 2018 06:04:05 +0100
+Message-ID: <20180122050411.32460-1-j.neuschaefer@gmx.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <5A654925.9020203-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Randy Li <randy.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: linuxppc-dev@lists.ozlabs.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
 List-Id: devicetree@vger.kernel.org
 
-Hi Randy,
+This series adds a driver for the GPIO controller used in the Nintendo
+Wii game console.
 
-On 01/22/2018 10:15 AM, JeffyChen wrote:
-> Hi Randy,
->
-> On 01/22/2018 09:18 AM, Randy Li wrote:
->>>
->> Also the power domain driver could manage the clocks as well, I would
->> suggest to use pm_runtime_*.
->
-> actually the clocks required by pm domain may not be the same as what we
-> want to control here, there might be some clocks only be needed when
-> accessing mmu registers.
->
-> but i'm not very sure about that, will confirm it with Simon Xue.
+The driver itself, and the related devicetree work should be pretty
+uncontroversial, but due to the system architecture of the Wii, I also
+had to extend an old resource allocation hack to kernel/resource.c: On
+the Wii, there are two separate RAM ranges, with MMIO right in the
+middle, but AFAIK, Linux on PPC32 doesn't support discontiguous memory
+properly. So the hack is to allocate one big RAM range with a hole
+(marked as reserved memory) for MMIO in the middle.
 
-confirmed with Simon, there might be some iommus don't have a pd, and 
-the CONFIG_PM could be disabled.
+Because this series touches different subsystems (GPIO, DT, core
+resource management), I guess it should be picked up patch-by-patch by
+the different maintainers.
 
-so it might be better to control clocks in iommu driver itself.
+The main difference between v2 and the previous version is that I
+rewrote the driver on top of the GPIO_GENERIC library, saving 60 lines
+of code.
+
+Jonathan Neuschäfer (6):
+  resource: Extend the PPC32 reserved memory hack
+  powerpc: wii: Explicitly configure GPIO owner for poweroff pin
+  gpio: Add GPIO driver for Nintendo Wii
+  dt-bindings: gpio: Add binding for Wii GPIO controller
+  powerpc: wii.dts: Add ngpios property
+  powerpc: wii.dts: Add GPIO line names
+
+ .../bindings/gpio/nintendo,hollywood-gpio.txt      |  27 +++++
+ .../devicetree/bindings/powerpc/nintendo/wii.txt   |   9 +-
+ arch/powerpc/boot/dts/wii.dts                      |   9 ++
+ arch/powerpc/platforms/embedded6xx/wii.c           |   7 ++
+ drivers/gpio/Kconfig                               |   9 ++
+ drivers/gpio/Makefile                              |   1 +
+ drivers/gpio/gpio-hlwd.c                           | 123 +++++++++++++++++++++
+ kernel/resource.c                                  |  21 +++-
+ 8 files changed, 197 insertions(+), 9 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/nintendo,hollywood-gpio.txt
+ create mode 100644 drivers/gpio/gpio-hlwd.c
+
+-- 
+2.15.1
+
