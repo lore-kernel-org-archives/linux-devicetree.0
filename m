@@ -1,68 +1,114 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [RFC PATCH 0/9] initial support for "suniv"
- Allwinner new ARM9 SoC
-Date: Mon, 22 Jan 2018 13:14:35 +0100
-Message-ID: <20180122121435.bpayxk4uzfqbhqse@flea.lan>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [linux-sunxi] [RFC PATCH 2/9] ARM: sunxi: add Allwinner ARMv5
+ SoCs
+Date: Mon, 22 Jan 2018 13:15:43 +0100
+Message-ID: <20180122121543.aqs56ur655w24v7u@flea.lan>
 References: <20180119231735.61504-1-icenowy@aosc.io>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+ <20180119231735.61504-3-icenowy@aosc.io>
+ <CAGRGNgUjvvzseAtUuiy5xCaZrLw2Jq4+A_dPXR9r_Xs-yYL1cw@mail.gmail.com>
+ <76DC4CD7-4A07-40C7-80A8-1C2D177E8109@aosc.io>
+ <CAGRGNgUj47nyf2dkgdk1bT2kO1p5oP8nk5LQ4EpCya2dfK=uMg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="jeuhtqwctfssk4ie"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBLNLS7JQKGQEMFOSUPQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+        protocol="application/pgp-signature"; boundary="pbr6iuiebiqnahw6"
+Return-path: <linux-gpio-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180119231735.61504-1-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <CAGRGNgUj47nyf2dkgdk1bT2kO1p5oP8nk5LQ4EpCya2dfK=uMg@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Julian Calaby <julian.calaby@gmail.com>
+Cc: icenowy@aosc.io, "Mailing List, Arm" <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>, Marc Zyngier <marc.zyngier@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Russell King <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-gpio@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 
---jeuhtqwctfssk4ie
-Content-Type: text/plain; charset="UTF-8"
+--pbr6iuiebiqnahw6
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, Jan 20, 2018 at 07:17:26AM +0800, Icenowy Zheng wrote:
-> This is the RFC initial patchset for the "new" Allwinner SUNIV ARM9 SoC.
-> 
-> The same die is packaged differently, come with different co-packaged
-> DRAM or shipped with different SDK; and then made many model names: F23,
-> F25, F1C100A, F1C100S, F1C200S, F1C500, F1C600, R6, etc. These SoCs all
-> share a common feature set and are packaged similarly (eLQFP128 for SoCs
-> without co-packaged DRAM, QFN88 for with DRAM). As their's no
-> functionality hidden on the QFN88 models (except DRAM interface not
-> exported), it's not clever to differentiate them. So I will use suniv as
-> common name of all these SoCs.
+On Sat, Jan 20, 2018 at 02:22:06PM +1100, Julian Calaby wrote:
+> Hi Icenowy,
+>=20
+> On Sat, Jan 20, 2018 at 2:10 PM, Icenowy Zheng <icenowy@aosc.io> wrote:
+> >
+> >
+> > =E4=BA=8E 2018=E5=B9=B41=E6=9C=8820=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=
+=8811:06:40, Julian Calaby <julian.calaby@gmail.com> =E5=86=99=E5=88=B0:
+> >>Hi Icenowy,
+> >>
+> >>On Sat, Jan 20, 2018 at 10:17 AM, Icenowy Zheng <icenowy@aosc.io>
+> >>wrote:
+> >>> Add option for Allwinner ARMv5 SoCs and a SoC suniv (which is a die
+> >>used
+> >>> for many new F-series products, including F1C100A, F1C100s, F1C200s,
+> >>> F1C500, F1C600).
+> >>>
+> >>> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> >>> ---
+> >>>  arch/arm/mach-sunxi/Kconfig    | 13 +++++++++++++
+> >>>  arch/arm/mach-sunxi/Makefile   |  1 +
+> >>>  arch/arm/mach-sunxi/sunxi_v5.c | 22 ++++++++++++++++++++++
+> >>>  3 files changed, 36 insertions(+)
+> >>>  create mode 100644 arch/arm/mach-sunxi/sunxi_v5.c
+> >>>
+> >>> diff --git a/arch/arm/mach-sunxi/Kconfig
+> >>b/arch/arm/mach-sunxi/Kconfig
+> >>> index 65509a35935f..78ac9ce70641 100644
+> >>> --- a/arch/arm/mach-sunxi/Kconfig
+> >>> +++ b/arch/arm/mach-sunxi/Kconfig
+> >>> @@ -59,3 +59,16 @@ config MACH_SUN9I
+> >>>         select ARM_GIC
+> >>>
+> >>>  endif
+> >>> +
+> >>> +menuconfig ARCH_SUNXI_V5
+> >>> +       bool "Allwinner SoCs"
+> >>
+> >>That name seems a little too generic. Maybe "Allwinner ARMv5 SoCs"?
+> >
+> > This is already required by armv5.
+> >
+> > Allwinner currently has only ARMv5,7,8 SoCs. ARMv8 is under
+> > arm64 architecture, and ARMv5 and v7 cannot be selected at the same tim=
+e.
+>=20
+> I'm going to try to back my way out of this hole by saying that they
+> should be more descriptive anyway (and it'll give clueless kconfiggers
+> a hint as to why they're not seeing their SoC listed)
+>=20
+> However you're right, if both cannot be visible at the same time, then
+> it really doesn't matter if they both have the same name.
+>=20
+> Sorry for the noise,
 
-Where is that suniv prefix coming from?
-
-And you need to have a SoC in all your compatibles. This isn't about
-being clever or not, this is just a matter of being able to accurately
-read in a crystal ball. Or maybe it's just the same, in which case,
-I'd really like to have a course :)
-
-You should really answer two questions here:
-  - Are you able to predict whether you'll find an SoC part of that
-    family in the future that derives a bit and will need a compatible
-    of its own?
-  - Are you able to predict which quirks we'll need along the way to
-    support all the SoCs you've listed there?
-
-If you can't answer yes to both these questions, with a 100%
-certainty, then you'll need a SoC name in the compatible.
-
-Which doesn't prevent you from sharing as much as possible the DT like
-we did between the A10s and the A13 for example.
+This is definitely not noise, and I agree with you, having whether
+you're enabling the v5 or v7 SoCs will hopefully allow to end up in a
+situation where you search for hours why it won't boot.
 
 Maxime
 
--- 
+--=20
 Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
---jeuhtqwctfssk4ie--
+
+--pbr6iuiebiqnahw6
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlpl1e4ACgkQ0rTAlCFN
+r3TEuw//Z/mFfyvXgHpZlXa9yDz4i8A7kx7TZU8zPyc5ZhfcJ8S/pzM1tZXDrEeW
+jQL4s50tcFBY2Gph2IY9cmkVDEDwpWZu9D32VyJ6MCp/zItB1Z6s682OhHDSM5pM
+JDjqB3ZwiejH1PmbgWpIgIcUxPDqY6QH65nl02aBc/M6F6btPmIWTJQmmrFFuYcM
+Cy13Jm8ebzGFlLEY0OXQVZ1ZX5FAD4DTfmZB1ounaLvd0wIWAcGHtxO7QOZcYSfI
+X+8KoapSjGGvYzDnRwYeHTAx0CD2EM35r/S1dYo8n1qmq4OaBb3+qW97i7fz3Sr1
+wdBmp77N29BAVrUDXHw7Z7W0u5Y6NWsmmdMAe/NQ9AARUgREtxoadVP9T+vvSPhx
+iDcFFTE/SKI1OMKn3NJIwkawusjpfk+YZ/wHofNqisoTu1EnqiLhAxWIO4/KUhHH
+oQWtBX2dNaMLWeSsbtwH8yOF9YDfdRYRyGKg5T4XDV3buD3v7gX0dEvWevFI8pfc
+JEX2eqts71jj1w9vK2SAyuGoTnU6f7POe2q7c411d9JRJf0qQMnL6nZKVUj2GXN4
+tAYmq0fFM9U67QM0xBlCs5xcLs1XrvfWrpS9z3DZXyeyEIXKkuDnwhJ3WCJhraMO
+D/2Y+kwNSPh1vM3YkxxnrraxiEwtEeIQmlPzmleYN55OHkgD89s=
+=2iif
+-----END PGP SIGNATURE-----
+
+--pbr6iuiebiqnahw6--
