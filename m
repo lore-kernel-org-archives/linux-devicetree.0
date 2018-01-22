@@ -1,56 +1,65 @@
-From: Philippe CORNU <philippe.cornu-qxv4g6HH51o@public.gmane.org>
+From: Rob Herring <robh+dt@kernel.org>
 Subject: Re: [PATCH] dt-bindings: display: stm32: correct clock-names in dsi
  panel example
-Date: Mon, 22 Jan 2018 14:39:46 +0000
-Message-ID: <be217e52-8260-7680-9a37-d01cd2d1afb8@st.com>
-References: <20180121205807.30677-1-philippe.cornu@st.com>
- <CAL_JsqKfeSW1R4aSjeUnJ6b=NeQK0qHTuEV7y9Y4sAFiyzHLzQ@mail.gmail.com>
+Date: Mon, 22 Jan 2018 08:46:13 -0600
+Message-ID: <CAL_Jsq+astLAtLM=nhvSoT+3DLwWybppbCxvKV08F_QkYk90Dg@mail.gmail.com>
+References: <20180121205807.30677-1-philippe.cornu@st.com> <CAL_JsqKfeSW1R4aSjeUnJ6b=NeQK0qHTuEV7y9Y4sAFiyzHLzQ@mail.gmail.com>
+ <be217e52-8260-7680-9a37-d01cd2d1afb8@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqKfeSW1R4aSjeUnJ6b=NeQK0qHTuEV7y9Y4sAFiyzHLzQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-Content-ID: <C0644FDAA1A95E4BB8F4EB324D7A8980-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Yannick FERTRE <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vincent ABRIOU <vincent.abriou-qxv4g6HH51o@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mickael REULIER <mickael.reulier-qxv4g6HH51o@public.gmane.org>, Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>, Ludovic BARRE <ludovic.barre-qxv4g6HH51o@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <be217e52-8260-7680-9a37-d01cd2d1afb8@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philippe CORNU <philippe.cornu@st.com>
+Cc: Yannick FERTRE <yannick.fertre@st.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Vincent ABRIOU <vincent.abriou@st.com>, David Airlie <airlied@linux.ie>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, dri-devel <dri-devel@lists.freedesktop.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mickael REULIER <mickael.reulier@st.com>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, Ludovic BARRE <ludovic.barre@st.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLA0KDQpPbiAwMS8yMi8yMDE4IDAzOjMwIFBNLCBSb2IgSGVycmluZyB3cm90ZToNCj4g
-T24gU3VuLCBKYW4gMjEsIDIwMTggYXQgMjo1OCBQTSwgUGhpbGlwcGUgQ29ybnUgPHBoaWxpcHBl
-LmNvcm51QHN0LmNvbT4gd3JvdGU6DQo+PiBJbiB0aGUgZHNpIHBhbmVsIGV4YW1wbGUsIGNsb2Nr
-IG5hbWVzIGluIHRoZSAiY2xvY2stbmFtZXMiDQo+PiBmaWVsZCBoYXZlIGJlZW4gc3dhcHBlZDoN
-Cj4+ICogInBjbGsiIChwZXJpcGhlcmFsIGNsb2NrKSBpcyA8JnJjYyAxIENMS19GNDY5X0RTST4g
-b24gc3RtMzJmNA0KPj4gKiAicmVmIiAoZHNpIHBoeSBwbGwgcmVmIGNsb2NrKSBpcyA8JmNsa19o
-c2U+IG9uIHN0bTMyZjQNCj4+DQo+PiBTaWduZWQtb2ZmLWJ5OiBQaGlsaXBwZSBDb3JudSA8cGhp
-bGlwcGUuY29ybnVAc3QuY29tPg0KPj4gLS0tDQo+PiAgIERvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9kaXNwbGF5L3N0LHN0bTMyLWx0ZGMudHh0IHwgMiArLQ0KPj4gICAxIGZpbGUg
-Y2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkNCj4+DQo+PiBkaWZmIC0tZ2l0
-IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvc3Qsc3RtMzItbHRk
-Yy50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9zdCxzdG0z
-Mi1sdGRjLnR4dA0KPj4gaW5kZXggMDI5MjUyMjUzYWQ0Li4zZWIxYjQ4YjQ3ZGQgMTAwNjQ0DQo+
-PiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9zdCxzdG0z
-Mi1sdGRjLnR4dA0KPj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
-c3BsYXkvc3Qsc3RtMzItbHRkYy50eHQNCj4+IEBAIC05OCw3ICs5OCw3IEBAIEV4YW1wbGUgMjog
-RFNJIHBhbmVsDQo+PiAgICAgICAgICAgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJzdCxz
-dG0zMi1kc2kiOw0KPj4gICAgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDwweDQwMDE2YzAw
-IDB4ODAwPjsNCj4+ICAgICAgICAgICAgICAgICAgICAgICAgICBjbG9ja3MgPSA8JnJjYyAxIENM
-S19GNDY5X0RTST4sIDwmY2xrX2hzZT47DQo+PiAtICAgICAgICAgICAgICAgICAgICAgICBjbG9j
-ay1uYW1lcyA9ICJyZWYiLCAicGNsayI7DQo+PiArICAgICAgICAgICAgICAgICAgICAgICBjbG9j
-ay1uYW1lcyA9ICJwY2xrIiwgInJlZiI7DQo+IA0KPiBUaGVyZSBpcyBubyB3YXkgdG8gdGVsbCB0
-aGV5IGFyZSByZXZlcnNlZCBiZWNhdXNlIHBjbGsgaXMgbm90IGV2ZW4NCj4gZG9jdW1lbnRlZC4g
-UGxlYXNlIGZpeCB0aGF0IHRvby4NCj4gDQoNCk1hbnkgdGhhbmtzIGZvciB5b3VyIHJldmlldy4N
-Cg0KcGNsayBpcyBhbHJlYWR5IGRlc2NyaWJlZCBpbiB0aGUgZ2VuZXJpYyBwYXJ0IA0KKERvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9kd19taXBpX2RzaS50
-eHQpLg0KDQpJbiBzdCxzdG0zMi1sdGRjLnR4dCAoc3BlY2lmaWMgcGFydCksIEkgaGF2ZSBkb2N1
-bWVudGVkOiAiRm9yIGFsbCANCm1hbmRhdG9yeSBwcm9wZXJ0aWVzICYgbm9kZXMsIHBsZWFzZSBy
-ZWZlciB0byB0aGUgcmVsYXRlZCBkb2N1bWVudGF0aW9uIA0KaW4gWzVdIi4NCg0KRG8geW91IHRo
-aW5rIGl0IGlzIGNsZWFyIGVub3VnaD8NCg0KTWFueSB0aGFua3MsDQpQaGlsaXBwZSA6LSkNCg0K
-Pj4gICAgICAgICAgICAgICAgICAgICAgICAgIHJlc2V0cyA9IDwmcmNjIFNUTTMyRjRfQVBCMl9S
-RVNFVChEU0kpPjsNCj4+ICAgICAgICAgICAgICAgICAgICAgICAgICByZXNldC1uYW1lcyA9ICJh
-cGIiOw0KPj4NCj4+IC0tDQo+PiAyLjE1LjENCj4+
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Mon, Jan 22, 2018 at 8:39 AM, Philippe CORNU <philippe.cornu@st.com> wrote:
+> Hi Rob,
+>
+> On 01/22/2018 03:30 PM, Rob Herring wrote:
+>> On Sun, Jan 21, 2018 at 2:58 PM, Philippe Cornu <philippe.cornu@st.com> wrote:
+>>> In the dsi panel example, clock names in the "clock-names"
+>>> field have been swapped:
+>>> * "pclk" (peripheral clock) is <&rcc 1 CLK_F469_DSI> on stm32f4
+>>> * "ref" (dsi phy pll ref clock) is <&clk_hse> on stm32f4
+>>>
+>>> Signed-off-by: Philippe Cornu <philippe.cornu@st.com>
+>>> ---
+>>>   Documentation/devicetree/bindings/display/st,stm32-ltdc.txt | 2 +-
+>>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/display/st,stm32-ltdc.txt b/Documentation/devicetree/bindings/display/st,stm32-ltdc.txt
+>>> index 029252253ad4..3eb1b48b47dd 100644
+>>> --- a/Documentation/devicetree/bindings/display/st,stm32-ltdc.txt
+>>> +++ b/Documentation/devicetree/bindings/display/st,stm32-ltdc.txt
+>>> @@ -98,7 +98,7 @@ Example 2: DSI panel
+>>>                          compatible = "st,stm32-dsi";
+>>>                          reg = <0x40016c00 0x800>;
+>>>                          clocks = <&rcc 1 CLK_F469_DSI>, <&clk_hse>;
+>>> -                       clock-names = "ref", "pclk";
+>>> +                       clock-names = "pclk", "ref";
+>>
+>> There is no way to tell they are reversed because pclk is not even
+>> documented. Please fix that too.
+>>
+>
+> Many thanks for your review.
+>
+> pclk is already described in the generic part
+> (Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt).
+
+Ah, okay.
+
+>
+> In st,stm32-ltdc.txt (specific part), I have documented: "For all
+> mandatory properties & nodes, please refer to the related documentation
+> in [5]".
+>
+> Do you think it is clear enough?
+
+Yes.
+
+Please resend both patches and I'll apply.
+
+Rob
