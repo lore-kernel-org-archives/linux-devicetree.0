@@ -1,129 +1,74 @@
-From: Ludovic Desroches <ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Subject: Re: [PATCH] pinctrl: at91-pio4: add support for drive-strength
- property
-Date: Mon, 22 Jan 2018 18:05:45 +0100
-Message-ID: <20180122170545.GD3055@rfolt0960.corp.atmel.com>
-References: <20180118160208.16461-1-ludovic.desroches@microchip.com>
- <CACRpkdanweSmHd_M+feHauEHtvKSW+-W=djb186BFdbxTf20Jg@mail.gmail.com>
+From: David Lechner <david@lechnology.com>
+Subject: =?UTF-8?Q?Re:_[PATCH_v6_00/41]_ARM:_davinci:_convert_to_common_cloc?=
+ =?UTF-8?Q?k_framework=e2=80=8b?=
+Date: Mon, 22 Jan 2018 11:11:01 -0600
+Message-ID: <38b081e9-fe00-cf18-2d72-5ad1937c3800@lechnology.com>
+References: <1516468460-4908-1-git-send-email-david@lechnology.com>
+ <CAMRc=MesQTvkVtPLOGr2G7-KSR=k35y24SsO4s8rDbCv=2-G7A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdanweSmHd_M+feHauEHtvKSW+-W=djb186BFdbxTf20Jg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Ludovic Desroches <ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <CAMRc=MesQTvkVtPLOGr2G7-KSR=k35y24SsO4s8rDbCv=2-G7A@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-clk-owner@vger.kernel.org
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-clk@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Adam Ford <aford173@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 22, 2018 at 09:37:38AM +0100, Linus Walleij wrote:
-> On Thu, Jan 18, 2018 at 5:02 PM, Ludovic Desroches
-> <ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org> wrote:
+On 01/22/2018 07:29 AM, Bartosz Golaszewski wrote:
+> 2018-01-20 18:13 GMT+01:00 David Lechner <david@lechnology.com>:
+>> This series converts mach-davinci to use the common clock framework.
+>>
+>> The series works like this, the first 19 patches create new clock drivers
+>> using the common clock framework. There are basically 3 groups of clocks -
+>> PLL, PSC and CFGCHIP (syscon). There are six different SoCs that each have
+>> unique init data, which is the reason for so many patches.
+>>
+>> Then, starting with "ARM: da830: add new clock init using common clock",
+>> we get the mach code ready for the switch by adding the code needed for
+>> the new clock drivers and adding #ifndef CONFIG_COMMON_CLK around the
+>> legacy clocks so that we can switch easily between the old and the new.
+>>
+>> "ARM: davinci: switch to common clock framework" actually flips the switch
+>> to start using the new clock drivers. Then the next 8 patches remove all
+>> of the old clock code.
+>>
+>> The final three patches add device tree clock support to the one SoC that
+>> supports it.
+>>
+>> v6 changes (also see individual patches for details):
+>> - All of the device tree bindings are changed
+>> - All of the clock drivers are changed significantly
+>> - Fixed issues brought up during review of v5
+>> - "ARM: davinci: move davinci_clk_init() to init_time" is removed from this
+>>    series and submitted separately
+>>
+>> v5 changes:
+>> - Basically, this is an entirely new series
+>> - Patches are broken up into bite-sized pieces
+>> - Converted PSC clock driver to use regmap
+>> - Restored "force" flag for certain DA850 clocks
+>> - Added device tree bindings
+>> - Moved more of the clock init to drivers/clk
+>> - Fixed frequency scaling (maybe*)
+>>
+>> * I have frequency scaling using cpufreq-dt, so I know the clocks are doing
+>>    what they need to do to make this work, but I haven't figured out how to
+>>    test davinci-cpufreq driver yet. (Patches to make cpufreq-dt work will be
+>>    sent separately after this series has landed.)
+>>
 > 
-> > Add support for the drive-strength property. Usually its value is
-> > expressed in mA. Since the numeric value depends on VDDIOP voltage,
-> > the controller uses low, medium and high to define the drive-strengh.
-> 
-> Aha I see. That's complex. It certainly results in a certain mA drive
-> strength in the end, but what you're saying is that this is not usually
-> what we configure.
-> 
-
-The PIO Controller Interface is:
-Drive Strength:
-0 Low drive
-1 Low drive
-2 Medium drive
-3 High drive
-
-In the Electrical Characteristics, you have:
-GPIO 1.8V Low: max 1 mA
-GPIO 1.8V Medium: max 10 mA
-GPIO 1.8V High: max 18 mA
-GPIO 3.3V Low: max 2 mA
-GPIO 3.3V Medium: max 20 mA
-GPIO 3.3V High: max 32 mA
-
-> > The PIO controller accepts two values for the low drive: 0 or 1. Most
-> > of the time, we don't care about the drive strength, there is no need
-> > to change it, so 0 is considered as the default value.
-> 
-> Do you mean default value as in "whatever the hardware was set
-> up as at boot time"?
-
-Yes
-
-> 
-> > The low-drive
-> > value won't be advertised through pinconf-pins file excepted if it
-> 
-> except?
-
-Yes
-
-> 
-> > has been set explicitly in the device tree ie if its value is
-> > different from 0.
-> >
-> > Signed-off-by: Ludovic Desroches <ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-> 
-> OK I think I get it.
-> 
-> >  Optional properties:
-> >  - GENERIC_PINCONFIG: generic pinconfig options to use, bias-disable,
-> > -bias-pull-down, bias-pull-up, drive-open-drain, input-schmitt-enable,
-> > -input-debounce, output-low, output-high.
-> > +bias-pull-down, bias-pull-up, drive-open-drain, drive-strength,
-> > +input-schmitt-enable, input-debounce, output-low, output-high.
-> (...)
-> > +                       drive-strength = <ATMEL_PIO_DRVSTR_LO>;
-> 
-> So you say you support this argument and it will be something like
-> 
-> include/dt-bindings/pinctrl/at91.h:#define ATMEL_PIO_DRVSTR_LO  1
-> include/dt-bindings/pinctrl/at91.h:#define ATMEL_PIO_DRVSTR_ME  2
-> include/dt-bindings/pinctrl/at91.h:#define ATMEL_PIO_DRVSTR_HI  3
-> 
-> But the definition if generic drive strength is actually in mA.
-> 
-> I think it is OK to deviate from stating it in mA, but you should
-> write this in the DT bindings so people do not get confused.
+> This driver doesn't have DT support - I suppose it would be useful to
+> add it and also add the corresponding DT node to da850.dtsi. If you're
+> ok with it, I can start working on it. I also have a patch for the i2c
+> cpufreq issue and it would be nice to test it with it.
 > 
 
-Ok
+Why not just use cpufreq-dt for the DT case? It seems to be working.
 
-> > @@ -814,6 +834,19 @@ static void atmel_conf_pin_config_dbg_show(struct pinctrl_dev *pctldev,
-> >                 seq_printf(s, "%s ", "open-drain");
-> >         if (conf & ATMEL_PIO_SCHMITT_MASK)
-> >                 seq_printf(s, "%s ", "schmitt");
-> > +       if (conf & ATMEL_PIO_DRVSTR_MASK) {
-> > +               switch ((conf & ATMEL_PIO_DRVSTR_MASK) >> ATMEL_PIO_DRVSTR_OFFSET) {
-> > +               case ATMEL_PIO_DRVSTR_LO:
-> > +                       seq_printf(s, "%s ", "low-drive");
-> > +                       break;
-> > +               case ATMEL_PIO_DRVSTR_ME:
-> > +                       seq_printf(s, "%s ", "medium-drive");
-> > +                       break;
-> > +               case ATMEL_PIO_DRVSTR_HI:
-> > +                       seq_printf(s, "%s ", "high-drive");
-> > +                       break;
-> 
-> But here you know what VDDIOP is, right?
-> 
+I have preliminary patches on GitHub [1][2].
 
-No, I have no way to retrieve the power for the several VDDIOP power
-rails.
+[1]: https://github.com/dlech/ev3dev-kernel/commit/e38897148a949b736ab135983887f9c81375f108
+[2]: https://github.com/dlech/ev3dev-kernel/commit/bab85f9e45450a36a7ea6f4407f89a75edb63761
 
-> So in debugfs you could actually print the real drive strength
-> in mA, or both "medium-drive, %u mA"?
-> 
-> Yours,
-> Linus Walleij
-
-Regards
-
-Ludovic
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
