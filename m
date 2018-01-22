@@ -1,65 +1,44 @@
-From: Rob Herring <robh+dt@kernel.org>
+From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Subject: Re: [PATCH 2/3] dt-bindings: etnaviv: change clocks to be optional
-Date: Mon, 22 Jan 2018 10:28:38 -0600
-Message-ID: <CAL_JsqJM_4B5XavWwHZJSP5tHafDr4xd7_HBYRTnKWPouo3Rdg@mail.gmail.com>
+Date: Mon, 22 Jan 2018 17:36:31 +0100
+Message-ID: <1516638991.25726.10.camel@pengutronix.de>
 References: <20180119120634.22856-1-l.stach@pengutronix.de>
- <20180119120634.22856-2-l.stach@pengutronix.de>
+         <20180119120634.22856-2-l.stach@pengutronix.de>
+         <CAL_JsqJM_4B5XavWwHZJSP5tHafDr4xd7_HBYRTnKWPouo3Rdg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180119120634.22856-2-l.stach@pengutronix.de>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Lucas Stach <l.stach@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, etnaviv@lists.freedesktop.org, dri-devel <dri-devel@lists.freedesktop.org>, patchwork-lst@pengutronix.de, Sascha Hauer <kernel@pengutronix.de>, Russell King <linux+etnaviv@armlinux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqJM_4B5XavWwHZJSP5tHafDr4xd7_HBYRTnKWPouo3Rdg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Christian Gmeiner <christian.gmeiner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux+etnaviv-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, etnaviv-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBKYW4gMTksIDIwMTggYXQgNjowNiBBTSwgTHVjYXMgU3RhY2ggPGwuc3RhY2hAcGVu
-Z3V0cm9uaXguZGU+IHdyb3RlOgo+IFdoaWxlIHRoZSBjbG9ja3Mgd2VyZSBkb2N1bWVudGVkIGFz
-IHJlcXVpcmVkLCB0aGUgZHJpdmVyIGFsd2F5cyB0cmVhdGVkIHRoZW0KPiBhcyBvcHRpb25hbCBh
-bmQgdGhlcmUgYXJlIGV4aXN0aW5nIE1hcnZlbGwgRG92ZSBEVHMsIHdoaWNoIHdvdWxkIGJyZWFr
-IGlmCj4gY2hhbmdlZCB0byByZXF1aXJlZC4gQWNjZXB0IHJlYWxpdHkgYW5kIGRvY3VtZW50IHRo
-ZSBjbG9ja3MgYXMgb3B0aW9uYWwuCgpUaGUgZmFjdCB0aGF0IGNsb2NrcyBhcmUgb3B0aW9uYWwg
-Zm9yIGEgZHJpdmVyIGRvZXNuJ3QgbWVhbiB0aGV5IGFyZQpvcHRpb25hbCBmb3IgdGhlIGJpbmRp
-bmcuIE5vdyB0aGV5IGNvdWxkIGJlIG9wdGlvbmFsIGJlY2F1c2UgeW91IGhhdmUKcG93ZXItZG9t
-YWlucyBhbmQgYWxsIGNsb2NrIG1hbmFnZW1lbnQgaXMgZG9uZSB3aXRoaW4gdGhlIHBvd2VyIGRv
-bWFpbgoodGhvdWdoIHRoYXQgdG9vIGlzIGRyaXZlciBzcGVjaWZpY3MgbGVha2luZyBpbnRvIHRo
-ZSBiaW5kaW5nIGJlY2F1c2UKcG93ZXIgZG9tYWluIGhhcyBjb21lIHRvIG1lYW4gcG93ZXIgbWFu
-YWdlbWVudCBkb21haW4pLgoKPgo+IFNpZ25lZC1vZmYtYnk6IEx1Y2FzIFN0YWNoIDxsLnN0YWNo
-QHBlbmd1dHJvbml4LmRlPgo+IC0tLQo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
-L2V0bmF2aXYvZXRuYXZpdi1kcm0udHh0ICAgICAgICB8IDEwICsrKysrLS0tLS0KPiAgMSBmaWxl
-IGNoYW5nZWQsIDUgaW5zZXJ0aW9ucygrKSwgNSBkZWxldGlvbnMoLSkKPgo+IGRpZmYgLS1naXQg
-YS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9ldG5hdml2L2V0bmF2
-aXYtZHJtLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2V0
-bmF2aXYvZXRuYXZpdi1kcm0udHh0Cj4gaW5kZXggYzZmNGUwMjNjMzRhLi5mMjhhYTU3MzVmNGYg
-MTAwNjQ0Cj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
-ZXRuYXZpdi9ldG5hdml2LWRybS50eHQKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvZGlzcGxheS9ldG5hdml2L2V0bmF2aXYtZHJtLnR4dAo+IEBAIC0zMCwxNiArMzAs
-MTYgQEAgUmVxdWlyZWQgcHJvcGVydGllczoKPiAgLSByZWc6IHNob3VsZCBiZSByZWdpc3RlciBi
-YXNlIGFuZCBsZW5ndGggYXMgZG9jdW1lbnRlZCBpbiB0aGUKPiAgICBkYXRhc2hlZXQKPiAgLSBp
-bnRlcnJ1cHRzOiBTaG91bGQgY29udGFpbiB0aGUgY29yZXMgaW50ZXJydXB0IGxpbmUKPiArCj4g
-K09wdGlvbmFsIHByb3BlcnRpZXM6Cj4gKy0gcG93ZXItZG9tYWluczogYSBwb3dlciBkb21haW4g
-Y29uc3VtZXIgc3BlY2lmaWVyIGFjY29yZGluZyB0bwo+ICsgIERvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9wb3dlci9wb3dlcl9kb21haW4udHh0Cj4gIC0gY2xvY2tzOiBzaG91bGQg
-Y29udGFpbiBvbmUgY2xvY2sgZm9yIGVudHJ5IGluIGNsb2NrLW5hbWVzCj4gICAgc2VlIERvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9jay9jbG9jay1iaW5kaW5ncy50eHQKPiAg
-LSBjbG9jay1uYW1lczoKPiAgICAgLSAiYnVzIjogICAgQVhJL3JlZ2lzdGVyIGNsb2NrCj4gICAg
-IC0gImNvcmUiOiAgIEdQVSBjb3JlIGNsb2NrCj4gLSAgIC0gInNoYWRlciI6IFNoYWRlciBjbG9j
-ayAob25seSByZXF1aXJlZCBpZiBHUFUgaGFzIGZlYXR1cmUgUElQRV8zRCkKPiAtCj4gLU9wdGlv
-bmFsIHByb3BlcnRpZXM6Cj4gLS0gcG93ZXItZG9tYWluczogYSBwb3dlciBkb21haW4gY29uc3Vt
-ZXIgc3BlY2lmaWVyIGFjY29yZGluZyB0bwo+IC0gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9wb3dlci9wb3dlcl9kb21haW4udHh0Cj4gKyAgIC0gInNoYWRlciI6IFNoYWRlciBj
-bG9jayAob25seSBpZiBHUFUgaGFzIGZlYXR1cmUgUElQRV8zRCkKCiJyZXF1aXJlZCIgaXMgc3Rp
-bGwgYXBwcm9wcmlhdGUgaGVyZSBiZWNhdXNlIGl0IGlzICJpZiB5b3UgaGF2ZQpvcHRpb25hbCBj
-bG9ja3MsIHRoZW4gaXQgaXMgcmVxdWlyZWQgaWYgZ3B1IGhhcyBQSVBFXzNEIikuCgpSb2IKX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1h
-aWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Am Montag, den 22.01.2018, 10:28 -0600 schrieb Rob Herring:
+> On Fri, Jan 19, 2018 at 6:06 AM, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> wrote:
+> > While the clocks were documented as required, the driver always
+> > treated them
+> > as optional and there are existing Marvell Dove DTs, which would
+> > break if
+> > changed to required. Accept reality and document the clocks as
+> > optional.
+> 
+> The fact that clocks are optional for a driver doesn't mean they are
+> optional for the binding. Now they could be optional because you have
+> power-domains and all clock management is done within the power
+> domain
+> (though that too is driver specifics leaking into the binding because
+> power domain has come to mean power management domain).
+
+So you prefer the binding to stay as-is and accept the Dove DTs as non-
+compliant to the bindings, but still okay? That's fine with me and I'll
+drop that patch in this case.
+
+Regards,
+Lucas
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
