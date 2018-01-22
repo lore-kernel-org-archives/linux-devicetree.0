@@ -1,102 +1,84 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH 2/4] dmaengine: qcom: bam_dma: add num-channels binding
- for remotely controlled
-Date: Mon, 22 Jan 2018 09:55:06 +0000
-Message-ID: <57712340-96b3-0be3-81e3-ec107c559a2e@linaro.org>
-References: <20180116190236.14558-1-srinivas.kandagatla@linaro.org>
- <20180116190236.14558-3-srinivas.kandagatla@linaro.org>
- <20180119055509.GW18649@localhost>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH v3 6/9] irqchip: Add the ingenic-tcu-intc driver
+Date: Mon, 22 Jan 2018 09:55:34 +0000
+Message-ID: <bdae1be4-0ed2-1b7d-8b08-7439ce06e762@arm.com>
+References: <20180101143344.2099-1-paul@crapouillou.net>
+ <20180110224838.16711-1-paul@crapouillou.net>
+ <20180110224838.16711-6-paul@crapouillou.net>
+ <58349291-93cd-f803-52a9-f88120ace4dc@arm.com>
+ <1515687945.2170.1@smtp.crapouillou.net>
+ <20180120130649.7f326f75@why.wild-wind.fr.eu.org>
+ <20180122092617.36ggqqike4gwwgrd@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180119055509.GW18649@localhost>
-Content-Language: en-US
+In-Reply-To: <20180122092617.36ggqqike4gwwgrd@dell>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: Andy Gross <andy.gross@linaro.org>, dmaengine@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, David Brown <david.brown@linaro.org>, Dan Williams <dan.j.williams@intel.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, yanhe@quicinc.com, ramkri@qti.qualcomm.com, sdharia@quicinc.com
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Paul Cercueil <paul@crapouillou.net>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 19/01/18 05:55, Vinod Koul wrote:
-> On Tue, Jan 16, 2018 at 07:02:34PM +0000, srinivas.kandagatla@linaro.org wrote:
->> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->>
->> When Linux is master of BAM, it can directly read registers to know number
->> of supported channels, however when its remotely controlled reading these
->> registers would trigger a crash if the BAM is not yet intialized/powered up
->> on the remote side.
->>
->> This patch adds num-channels binding to specify number of supported
->> dma channels on remotely controlled BAM.
->>
->> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->> ---
->>   Documentation/devicetree/bindings/dma/qcom_bam_dma.txt |  2 ++
->>   drivers/dma/qcom/bam_dma.c                             | 13 +++++++++++--
->>   2 files changed, 13 insertions(+), 2 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt b/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
->> index 9cbf5d9df8fd..aa6822cbb230 100644
->> --- a/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
->> +++ b/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
->> @@ -15,6 +15,8 @@ Required properties:
->>     the secure world.
->>   - qcom,controlled-remotely : optional, indicates that the bam is controlled by
->>     remote proccessor i.e. execution environment.
->> +- num-channels : optional, indicates supported number of DMA channels in a
->> +  remotely controlled bam.
->>   
->>   Example:
->>   
->> diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
->> index 78e488e8f96d..523bd178047a 100644
->> --- a/drivers/dma/qcom/bam_dma.c
->> +++ b/drivers/dma/qcom/bam_dma.c
->> @@ -1083,8 +1083,10 @@ static int bam_init(struct bam_device *bdev)
->>   	if (bdev->ee >= val)
->>   		return -EINVAL;
->>   
->> -	val = readl_relaxed(bam_addr(bdev, 0, BAM_NUM_PIPES));
->> -	bdev->num_channels = val & BAM_NUM_PIPES_MASK;
->> +	if (!bdev->num_channels) {
->> +		val = readl_relaxed(bam_addr(bdev, 0, BAM_NUM_PIPES));
->> +		bdev->num_channels = val & BAM_NUM_PIPES_MASK;
->> +	}
->>   
->>   	if (bdev->controlled_remotely)
->>   		return 0;
->> @@ -1179,6 +1181,13 @@ static int bam_dma_probe(struct platform_device *pdev)
->>   	bdev->controlled_remotely = of_property_read_bool(pdev->dev.of_node,
->>   						"qcom,controlled-remotely");
->>   
->> +	if (bdev->controlled_remotely) {
+On 22/01/18 09:26, Lee Jones wrote:
+> On Sat, 20 Jan 2018, Marc Zyngier wrote:
 > 
-> hmm so if we remove the remotely controlled instanced from DT and then Linux
-> won't see them and not do anything. Do we need to do configuration of these
-> instances too?
-No, bindings "num-channels" and "num-ees" are applicable to remote 
-controlled instances only, which is documented in the DT bindings.
-
-Normally these values come from register reads, which are not possible 
-in case of remotely controlled instances as BAM driver would not know if 
-the remote is powered up or not.
-
-thanks,
-srini
-
-> 
->> +		ret = of_property_read_u32(pdev->dev.of_node, "num-channels",
->> +					   &bdev->num_channels);
->> +		if (ret)
->> +			dev_err(bdev->dev, "num-channels unspecified in dt\n");
->> +	}
->> +
->>   	bdev->bamclk = devm_clk_get(bdev->dev, "bam_clk");
->>   	if (IS_ERR(bdev->bamclk)) {
->>   		bdev->bamclk = NULL;
->> -- 
->> 2.15.1
+>> On Thu, 11 Jan 2018 17:25:45 +0100
+>> Paul Cercueil <paul@crapouillou.net> wrote:
 >>
+>>> Hi Marc,
+>>>
+>>>>>  +static int __init ingenic_tcu_intc_of_init(struct device_node 
+>>>>> *node,
+>>>>>  +	struct device_node *parent)
+>>>>>  +{
+>>>>>  +	struct irq_domain *domain;
+>>>>>  +	struct irq_chip_generic *gc;
+>>>>>  +	struct irq_chip_type *ct;
+>>>>>  +	int err, i, num_parent_irqs;
+>>>>>  +	unsigned int parent_irqs[3];  
+>>>>
+>>>> 3 parent interrupts? Really? How do you pick one? Also, given the 
+>>>> useage
+>>>> model below, "int" is the wrong type. Probably should be u32.  
+>>>
+>>> See below.
+>>>
+>>>>>  +	struct regmap *map;
+>>>>>  +
+>>>>>  +	num_parent_irqs = of_property_count_elems_of_size(
+>>>>>  +			node, "interrupts", 4);  
+>>>>
+>>>> Nit: on a single line, as here is nothing that hurts my eyes more than
+>>>> reading something like(
+>>>> this). Also, 4 is better expressed as sizeof(u32).  
+>>>
+>>> That will make checkpatch.pl unhappy :(
+>>
+>> And I don't care about checkpatch. I maintain the irqchip stuff, while
+>> checkpatch doesn't. Hence, I win.
 > 
+> 	num_parent_irqs =
+> 		of_property_count_elems_of_size(node, "interrupts", 4);  
+> 
+> Everybody wins!
+
+<old_git_rant>
+
+As I said before, I've stopped using a physical DEC VT100 around 1990,
+and gained the ability to extend my terminal to a bit more that 80
+columns. And even the VT100 could be coerced into using a 132 column mode...
+
+</old_git_rant>
+
+Adhering to a convention can be good, but common sense must apply first.
+Splitting an assignment is visually annoying and in that case, it
+doesn't make much sense. I'll happily take a line that goes beyond 80
+cols, and if you really wanted to stay within boundaries, how about
+turning "num_parent_irqs" something shorter?
+
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
