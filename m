@@ -1,60 +1,36 @@
-From: John Garry <john.garry@huawei.com>
-Subject: Re: [PATCH v11 6/9] LPC: Support the LPC host on Hip06/Hip07 with DT
- bindings
-Date: Mon, 22 Jan 2018 10:13:23 +0000
-Message-ID: <9c5766ef-3865-4125-dda9-3e0aaad90dca@huawei.com>
-References: <1516537647-50553-1-git-send-email-john.garry@huawei.com>
- <1516537647-50553-7-git-send-email-john.garry@huawei.com>
- <cabc1ed6-18e3-8685-82b7-ae1d7dd2348a@infradead.org>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH v1 2/4] cpufreq: mediatek: Add mediatek related projects
+ into blacklist
+Date: Mon, 22 Jan 2018 15:46:45 +0530
+Message-ID: <20180122101645.GG2421@vireshk-i7>
+References: <1512713278-17807-1-git-send-email-andrew-sh.cheng@mediatek.com>
+ <1512713278-17807-3-git-send-email-andrew-sh.cheng@mediatek.com>
+ <20171211075532.GB25177@vireshk-i7>
+ <1516610369.12197.20.camel@mtkswgap22>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <cabc1ed6-18e3-8685-82b7-ae1d7dd2348a@infradead.org>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Randy Dunlap <rdunlap@infradead.org>, mika.westerberg@linux.intel.com, rafael@kernel.org, lorenzo.pieralisi@arm.com, rjw@rjwysocki.net, robh+dt@kernel.org, bhelgaas@google.com, arnd@arndb.de, mark.rutland@arm.com, olof@lixom.net, hanjun.guo@linaro.org, dann.frazier@canonical.com
-Cc: benh@kernel.crashing.org, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, linuxarm@huawei.com, linux-pci@vger.kernel.org, minyard@acm.org, devicetree@vger.kernel.org, linux-arch@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1516610369.12197.20.camel@mtkswgap22>
+Sender: linux-pm-owner@vger.kernel.org
+To: Sean Wang <sean.wang@mediatek.com>
+Cc: rjw@rjwysocki.net, Andrew-sh Cheng <andrew-sh.cheng@mediatek.com>, mark.rutland@arm.com, khilman@baylibre.com, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-mediatek@lists.infradead.org, matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org, steven.liu@mediatek.com, Ryder.Lee@mediatek.com, Mark-MC.Lee@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On 21/01/2018 17:54, Randy Dunlap wrote:
-> On 01/21/2018 04:27 AM, John Garry wrote:
->> diff --git a/drivers/bus/Kconfig b/drivers/bus/Kconfig
->> index 57e011d..91debe4 100644
->> --- a/drivers/bus/Kconfig
->> +++ b/drivers/bus/Kconfig
->> @@ -65,6 +65,14 @@ config BRCMSTB_GISB_ARB
->>  	  arbiter. This driver provides timeout and target abort error handling
->>  	  and internal bus master decoding.
->>
->> +config HISILICON_LPC
->> +	bool "Support for ISA I/O space on Hisilicon hip06/7"
->> +	depends on (ARM64 && (ARCH_HISI || COMPILE_TEST))
->> +	select INDIRECT_PIO
->> +	help
->> +	  Driver needed for some legacy ISA devices attached to Low-Pin-Count
->> +	  on Hisilicon hip06/7 SoC.
->
-> Hi,
-> Why is this config symbol bool instead of tristate?
->
-> thanks,
+On 22-01-18, 16:39, Sean Wang wrote:
+> Hi, Rafael and Viresh
+> 
+> Can you kindly guide me how to let the patch also be applied to 4.14 and
+> 4.15 tree? Do I need to submit another patches for them?
+> 
+> These trees really need them. Otherwise, multi_v7_defconfig setup will
+> cause an occasional hang or unexpected behaviors on related boards as
+> [1] kernelci reported :-(
 
-Hi Randy,
+You need to send them for stable kernels, just follow the following doc on how
+to send patches for stable kernels.
 
-Considering the nature of this driver, and the fact that it provides an 
-IO space region through the logical PIO framework introduced, it does 
-not make sense to have it as a loadable module.
+Documentation/process/stable-kernel-rules.rst
 
-A specific issue is that one of our boards uses this host for the UART 
-console (through 8250-compatible device in BMC), so would want it in the 
-kernel image.
-
-I will add a note in the commit message and maybe config description 
-explaining this.
-
-Thanks,
-John
-
->
-
-
+-- 
+viresh
