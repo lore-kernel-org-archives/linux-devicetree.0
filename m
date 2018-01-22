@@ -1,36 +1,44 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH 0/7] clk: rockchip: rk3328 fixes in preparation of graphics support
-Date: Mon, 22 Jan 2018 15:15:23 +0100
-Message-ID: <20180122141530.12398-1-heiko@sntech.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, yang.zheng-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: [PATCH 6/7] clk: rockchip: add flags for rk3328 dclk_lcdc
+Date: Mon, 22 Jan 2018 15:15:29 +0100
+Message-ID: <20180122141530.12398-7-heiko@sntech.de>
+References: <20180122141530.12398-1-heiko@sntech.de>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20180122141530.12398-1-heiko@sntech.de>
+Sender: linux-clk-owner@vger.kernel.org
+To: linux-clk@vger.kernel.org
+Cc: mturquette@baylibre.com, sboyd@codeaurora.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, yang.zheng@rock-chips.com, zhangqing@rock-chips.com, Zheng Yang <zhengyang@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>
 List-Id: devicetree@vger.kernel.org
 
-Fix some clock issues on rk3328 to make way for the upcoming graphics
-support on rk3328.
+From: Zheng Yang <zhengyang@rock-chips.com>
 
-Heiko Stuebner (6):
-  clk: rockchip: fix hclk_vio_niu on rk3328
-  clk: rockchip: remove HCLK_VIO from rk3328 dt header
-  clk: rockchip: export sclk_hdmi_sfc on rk3328
-  clk: rockchip: protect all remaining rk3328 interconnect clocks
-  clk: rockchip: remove ignore_unused flag from rk3328 vio_h2p clocks
-  clk: rockchip: document hdmi_phy external input for rk3328
+dclk_lcdc can be sourced from a general pll source as well
+as the hdmiphy's pll output. We will want to set this source
+by hand (to the system-pll-source in most cases) and also
+want rate changes to this clock to be able to also touch
+the pll source clock if needed, so add CLK_SET_RATE_PARENT
+and CLK_SET_RATE_NO_REPARENT for dclk_lcdc.
 
-Zheng Yang (1):
-  clk: rockchip: add flags for rk3328 dclk_lcdc
+Signed-off-by: Zheng Yang <zhengyang@rock-chips.com>
+[ammended commit message]
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+---
+ drivers/clk/rockchip/clk-rk3328.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- .../bindings/clock/rockchip,rk3328-cru.txt         |  1 +
- drivers/clk/rockchip/clk-rk3328.c                  | 67 ++++++++++++++--------
- include/dt-bindings/clock/rk3328-cru.h             |  1 -
- 3 files changed, 44 insertions(+), 25 deletions(-)
-
+diff --git a/drivers/clk/rockchip/clk-rk3328.c b/drivers/clk/rockchip/clk-rk3328.c
+index 983ad5760ce0..f680b421b6d5 100644
+--- a/drivers/clk/rockchip/clk-rk3328.c
++++ b/drivers/clk/rockchip/clk-rk3328.c
+@@ -602,7 +602,7 @@ static struct rockchip_clk_branch rk3328_clk_branches[] __initdata = {
+ 			RK3328_CLKGATE_CON(5), 6, GFLAGS),
+ 	DIV(DCLK_HDMIPHY, "dclk_hdmiphy", "dclk_lcdc_src", 0,
+ 			RK3328_CLKSEL_CON(40), 3, 3, DFLAGS),
+-	MUX(DCLK_LCDC, "dclk_lcdc", mux_dclk_lcdc_p, 0,
++	MUX(DCLK_LCDC, "dclk_lcdc", mux_dclk_lcdc_p,  CLK_SET_RATE_PARENT | CLK_SET_RATE_NO_REPARENT,
+ 			RK3328_CLKSEL_CON(40), 1, 1, MFLAGS),
+ 
+ 	/*
 -- 
 2.14.2
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
