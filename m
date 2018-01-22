@@ -1,56 +1,102 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH 0/2] Use demuxer for i2c1 and i2c5
-Date: Mon, 22 Jan 2018 12:40:26 +0100
-Message-ID: <20180122114026.uqozk4cbhfrjwqmd@katana>
-References: <1516620563-7965-1-git-send-email-biju.das@bp.renesas.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 6/9] irqchip: Add the ingenic-tcu-intc driver
+Date: Mon, 22 Jan 2018 11:46:39 +0000
+Message-ID: <20180122114639.yjfdbvizs6fcpfdq@dell>
+References: <20180101143344.2099-1-paul@crapouillou.net>
+ <20180110224838.16711-1-paul@crapouillou.net>
+ <20180110224838.16711-6-paul@crapouillou.net>
+ <58349291-93cd-f803-52a9-f88120ace4dc@arm.com>
+ <1515687945.2170.1@smtp.crapouillou.net>
+ <20180120130649.7f326f75@why.wild-wind.fr.eu.org>
+ <20180122092617.36ggqqike4gwwgrd@dell>
+ <bdae1be4-0ed2-1b7d-8b08-7439ce06e762@arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="xlmzbpnnwlophwkz"
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1516620563-7965-1-git-send-email-biju.das@bp.renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Biju Das <biju.das@bp.renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Chris Paterson <chris.paterson2@renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-i2c@vger.kernel.org
+In-Reply-To: <bdae1be4-0ed2-1b7d-8b08-7439ce06e762-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Cc: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Mon, 22 Jan 2018, Marc Zyngier wrote:
 
---xlmzbpnnwlophwkz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On 22/01/18 09:26, Lee Jones wrote:
+> > On Sat, 20 Jan 2018, Marc Zyngier wrote:
+> > 
+> >> On Thu, 11 Jan 2018 17:25:45 +0100
+> >> Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org> wrote:
+> >>
+> >>> Hi Marc,
+> >>>
+> >>>>>  +static int __init ingenic_tcu_intc_of_init(struct device_node 
+> >>>>> *node,
+> >>>>>  +	struct device_node *parent)
+> >>>>>  +{
+> >>>>>  +	struct irq_domain *domain;
+> >>>>>  +	struct irq_chip_generic *gc;
+> >>>>>  +	struct irq_chip_type *ct;
+> >>>>>  +	int err, i, num_parent_irqs;
+> >>>>>  +	unsigned int parent_irqs[3];  
+> >>>>
+> >>>> 3 parent interrupts? Really? How do you pick one? Also, given the 
+> >>>> useage
+> >>>> model below, "int" is the wrong type. Probably should be u32.  
+> >>>
+> >>> See below.
+> >>>
+> >>>>>  +	struct regmap *map;
+> >>>>>  +
+> >>>>>  +	num_parent_irqs = of_property_count_elems_of_size(
+> >>>>>  +			node, "interrupts", 4);  
+> >>>>
+> >>>> Nit: on a single line, as here is nothing that hurts my eyes more than
+> >>>> reading something like(
+> >>>> this). Also, 4 is better expressed as sizeof(u32).  
+> >>>
+> >>> That will make checkpatch.pl unhappy :(
+> >>
+> >> And I don't care about checkpatch. I maintain the irqchip stuff, while
+> >> checkpatch doesn't. Hence, I win.
+> > 
+> > 	num_parent_irqs =
+> > 		of_property_count_elems_of_size(node, "interrupts", 4);  
+> > 
+> > Everybody wins!
+> 
+> <old_git_rant>
+> 
+> As I said before, I've stopped using a physical DEC VT100 around 1990,
+> and gained the ability to extend my terminal to a bit more that 80
+> columns. And even the VT100 could be coerced into using a 132 column mode...
+> 
+> </old_git_rant>
 
-On Mon, Jan 22, 2018 at 11:29:21AM +0000, Biju Das wrote:
-> We have observed that on iWave RZ/G1E boards, randomly HDMI slave device
-> is holding data line after a soft reboot.
->=20
-> We applied demuxer patch for i2c1 and using an oscilloscope verified that
-> i2c recovery works on the failure condition.
+Right, Greg has spoken about this before.
 
-Do you really need the demuxer for that?
+> Adhering to a convention can be good, but common sense must apply first.
+> Splitting an assignment is visually annoying and in that case, it
+> doesn't make much sense. I'll happily take a line that goes beyond 80
+> cols
 
-I posted and just merged bus recovery to the i2c-rcar driver. Did you
-test that? In theory, this should be enough.
+I'm not adverse to the idea, but we should agree to do this centrally,
+rather than a few of us going rouge.  This way we can go ahead and
+change all of the documentation and tooling (inc. Checkpatch) too,
+which will save on countless inevitable conversations/patches
+attempting to 'fix' non-conforming lines/files.
+
+> and if you really wanted to stay within boundaries, how about
+> turning "num_parent_irqs" something shorter?
 
 
---xlmzbpnnwlophwkz
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlplzaYACgkQFA3kzBSg
-KbZwtw//WpIo+5pAlGO4H0ONpqHrFZ+MGq2dTJ7/hTHlJWrtQZoJrMp6qwnbSec6
-L56W6HjWf9gU1FX9UBiXIuoZ9Jciet2yiOYmqvN20PFu/2XXxli01pSfg0tqY2lt
-ZA6/NE3YzWK6u+fU29iW1bloi6jb2VwQVCCRYVcyAqh8YIf2QilPABDn7mQ0claT
-i1adoRgiOQM4dtgYHc9NyfJYXEbUD+/KeQbbsnbjBTGOncDdPxe5EHOIUDWUTjhq
-FfTXApCuWQp2lfmoNNT5wd0IxRS7dYEYVV1hYvzf65H+sp6NCGMoKut17/7CCLHu
-iJWo+LIU7CAstW7apCTzPtO9JXFzSE9VwIoJq1J3QhgHiXQhnBtgI8oku4JWuy7a
-rGbJA24SqxxZGqddQkWH8kOEFlKjgVxYUuyMNVU/Elplqi57Fz4WMp+dspHNWrj8
-evF+HzRUd4EcG3Q664db7bAKq9IrEes7wJHhrmTjv7AnXKAzS72LGJzp0JFIs+zW
-vTLiffhrPtPCucvsBWrZWqjZBQicNGGUPpGJuWeGYmVicAtH3M8FJcf6NI8NuG/g
-G/Xv6Sih/W07Gh/jJPe42y5aJ7/0nts7QRTwXidirvMbHHw7stHmEPlaZCOgYnZt
-zowqAL3YuUfrn95vET2O8mo2qu6XJgcZ6s5IWz+tXvwRflLrkXQ=
-=rF8p
------END PGP SIGNATURE-----
-
---xlmzbpnnwlophwkz--
+-- 
+Lee Jones
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
