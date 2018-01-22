@@ -1,1085 +1,288 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC] devicetree: new FDT format version
-Date: Mon, 22 Jan 2018 12:08:57 -0800
-Message-ID: <2d5d4ee0-6780-be83-f97e-79a0e4a7feb8@gmail.com>
-References: <b96829f9-2e8b-fdc5-5090-58591e2260cf@gmail.com>
- <ec68cfb3-4702-ba00-e926-3ad63b20b199@gmail.com>
+From: Marcus Folkesson <marcus.folkesson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 1/2] Input: Add driver for Cypress Generation 5
+ touchscreen
+Date: Mon, 22 Jan 2018 21:11:09 +0100
+Message-ID: <20180122201109.GA651@gmail.com>
+References: <20171201153957.13053-1-mylene.josserand@free-electrons.com>
+ <20171201153957.13053-2-mylene.josserand@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <ec68cfb3-4702-ba00-e926-3ad63b20b199-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, "Pantelis Antomarek.vasut-Re5JQEeQqe/2sr8fMPgRzw@public.gmane.org" <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Kyle Evans <kevans-HZy0K5TPuP5AfugRpC6u6w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Alan Tull <atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="HcAYCG3uE/tztfnV"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20171201153957.13053-2-mylene.josserand-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?iso-8859-1?Q?Myl=E8ne?= Josserand <mylene.josserand-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-+ Alan Tull
-+ Michael Ellerman
 
-On 01/22/18 00:14, Frank Rowand wrote:
-> On 01/22/18 00:09, Frank Rowand wrote:
->> Hi All,
->>
->> I've tried to create a decent distribution list, but I'm sure I've missed
->> someone or some important list.  Please share this with anyone you think
->> will be affected.
->>
->> I have been playing around with some thoughts for some additions to
->> the devicetree FDT aka blob format.
-> 
-> < snip >
-> 
->> Some data would be useful, so here it is.  I compiled all of the .dts files
->> in the Linux kernel source tree at arch/arm/boot/dts/.  The following data
->> is the size of the blob (and for Linux the amount of memory that the
->> flattened tree consumes and never frees after boot).  This is for v4.15-rc7.
->> The following sizes are in bytes.
->>
->> 'dtb no symbols' is the existing blob as currently built in the kernel tree.
->>
->> 'delta no_sym' is the extra overhead from convering 'dtb no symbols' to the
->> new format.  Again, this could be reduced by 44 bytes if the checksums
->> portion of the proposal is not implemented.
->>
->> 'delta symbols' is the existing format build in the kernel tree, but with
->> the "-@" flag provided to dtc, so that the __symbols__ node is populated.
->>
->> 'delta new fmt' is the 'delta symbols' blobs converted to the proposed
->> format.
->>
->> 'saved' is the number of bytes saved by converting to the new format,
->> when symbols metadata is included in the blob.
->>
->> The following table is sorted from most bytes saved, to least, with
->> one entry at approximately every 16 percentile:
->>
->>
->> row   dtb no   delta    delta    delta    saved
->>       symbols  no_sym   symbols  new fmt
->> ----  -------  -------  -------  -------  -------
->>  99%    90531      134    42721    15766    26955  am57xx-beagle-x15-revb1.dtb
->>  83%    44302      139    14582     5163     9419  imx6dl-tx6dl-comtft.dtb
->>  66%    26277      132    11662     4628     7034  sun6i-a31s-sinovoip-bpi-m2.dtb
->>  49%    21047      130     7328     2754     4574  imx53-qsb.dtb
->>  33%    12864      137     4305     1705     2600  kirkwood-netgear_readynas_nv+_v2.dtb
->>  16%    12009      128     2929     1520     1409  bcm911360k.dtb
->>   0%     1220      133       68      149      -81  xenvm-4.2.dtb
->>
->> Note that there are a few blobs with so little symbol metadata that the
->> proposed format increases the size of the blob.  This can be seen in the
->> tail of the distribution:
->>
->>    2537      128      593      384      209  mt6589-aquaris5.dtb
->>    2966      131      537      355      182  mt8127-moose.dtb
->>    5173      132      552      372      180  spear300-evb.dtb
->>    2473      128      485      368      117  mt6592-evb.dtb
->>    2370      135      454      343      111  cx92755_equinox.dtb
->>    2105      128      377      304       73  mt6580-evbp1.dtb
->>    2357      132      346      292       54  hip01-ca9x2.dtb
->>    1232      137      208      201        7  alphascale-asm9260-devkit.dtb
->>    2571      126      201      222      -21  alpine-db.dtb
->>    1220      133       68      149      -81  xenvm-4.2.dtb
->>
-> 
-> 
->> I will reply to this message with the complete table of all arm blobs.
-> 
-> And here is the data:
-> 
->   90531      134    42721    15766    26955  am57xx-beagle-x15-revb1.dtb
->   90481      136    42737    15784    26953  am57xx-beagle-x15-revc.dtb
->   90222      139    42833    15883    26950  am57xx-beagle-x15.dtb
->   90291      134    42228    15590    26638  am572x-idk.dtb
->   92629      132    41901    15396    26505  dra7-evm.dtb
->   86620      125    40446    14717    25729  am57xx-sbc-am57x.dtb
->   86361      128    39991    14576    25415  am571x-idk.dtb
->   89414      131    39915    14579    25336  dra72-evm-revc.dtb
->   88775      130    39787    14562    25225  dra72-evm.dtb
->   89233      136    39925    14744    25181  dra71-evm.dtb
->   84092      125    39462    14445    25017  am57xx-cl-som-am57x.dtb
->   85610      127    38622    14191    24431  dra76-evm.dtb
->   69909      132    33516    10884    22632  omap3-n900.dtb
->   65453      140    33456    11004    22452  omap3-sbc-t3730.dtb
->   65754      127    32847    10687    22160  logicpd-torpedo-37xx-devkit.dtb
->   64153      128    32947    10816    22131  omap3-gta04a4.dtb
->   64995      134    32915    10790    22125  omap3-gta04a3.dtb
->   64210      135    32931    10807    22124  omap3-gta04a5.dtb
->   64136      129    32969    10849    22120  omap3-sbc-t3530.dtb
->   63958      131    32725    10659    22066  omap3-lilly-dbb056.dtb
->   61855      138    32760    10698    22062  omap3-ha-lcd.dtb
->   64290      135    32663    10679    21984  omap3-overo-storm-alto35.dtb
->   64226      135    32631    10679    21952  omap3-overo-storm-palo35.dtb
->   65511      130    32656    10706    21950  omap3-overo-storm-chestnut43.dtb
->   64042      127    32618    10671    21947  logicpd-som-lv-37xx-devkit.dtb
->   64526      139    32576    10683    21893  omap3-overo-storm-gallop43.dtb
->   64494      139    32576    10683    21893  omap3-overo-storm-palo43.dtb
->   63749      132    32616    10724    21892  omap3-igep0020-rev-f.dtb
->   63468      125    32455    10589    21866  omap3-overo-alto35.dtb
->   63677      140    32580    10716    21864  omap3-igep0020.dtb
->   63679      138    32540    10698    21842  omap3-cm-t3730.dtb
->   63404      125    32423    10589    21834  omap3-overo-palo35.dtb
->   64689      136    32448    10632    21816  omap3-overo-chestnut43.dtb
->   63672      129    32368    10593    21775  omap3-overo-palo43.dtb
->   63700      133    32368    10597    21771  omap3-overo-gallop43.dtb
->   63799      130    32294    10658    21636  omap3-overo-storm-tobi.dtb
->   62910      139    32283    10651    21632  omap3-overo-storm-summit.dtb
->   64426      127    32146    10527    21619  omap3-n950.dtb
->   60417      136    32097    10488    21609  omap3-ha.dtb
->   61607      130    32045    10514    21531  omap3-igep0030-rev-g.dtb
->   62313      128    32069    10544    21525  omap3-cm-t3530.dtb
->   62973      140    32086    10572    21514  omap3-overo-tobi.dtb
->   62088      129    32075    10561    21514  omap3-overo-summit.dtb
->   64264      129    31943    10449    21494  omap3-pandora-1ghz.dtb
->   63593      128    32030    10544    21486  omap3-evm-37xx.dtb
->   63287      130    32035    10562    21473  omap3-overo-storm-tobiduo.dtb
->   61422      139    31939    10507    21432  omap3-igep0030.dtb
->   60937      128    31914    10528    21386  omap3-beagle-xm.dtb
->   60968      129    31914    10529    21385  omap3-beagle-xm-ab.dtb
->   63481      128    31845    10464    21381  omap3-n9.dtb
->   62435      134    31822    10454    21368  omap3-evm.dtb
->   63422      139    31735    10379    21356  omap3-pandora-600mhz.dtb
->   62465      136    31827    10472    21355  omap3-overo-tobiduo.dtb
->   60955      126    31768    10430    21338  omap3-thunder.dtb
->   58644      133    31526    10357    21169  omap3-sniper.dtb
->   60810      127    31517    10367    21150  omap3-beagle.dtb
->   60792      129    31371    10369    21002  omap3-zoom3.dtb
->   61494      131    31127    10323    20804  omap3-devkit8000-lcd70.dtb
->   61494      131    31127    10323    20804  omap3-devkit8000-lcd43.dtb
->   60993      136    30976    10248    20728  omap3-ldp.dtb
->   60343      130    30971    10258    20713  omap3-devkit8000.dtb
->   58679      130    30405    10114    20291  omap3430-sdp.dtb
->   56892      125    28414     9277    19137  omap3-sbc-t3517.dtb
->   60705      136    30378    11256    19122  omap4-droid4-xt894.dtb
->   59509      132    30082    11076    19006  omap4-var-dvk-om44.dtb
->   58766      139    29990    11067    18923  omap4-var-stk-om44.dtb
->   53087      138    28069     9338    18731  am3517_mt_ventoux.dtb
->   60776      129    29530    10913    18617  omap4-sdp.dtb
->   60776      129    29530    10913    18617  omap4-sdp-es23plus.dtb
->   59564      125    29639    11101    18538  omap4-panda-es.dtb
->   59052      125    29492    11069    18423  omap4-panda.dtb
->   59002      127    29492    11071    18421  omap4-panda-a4.dtb
->   54494      139    27353     8955    18398  omap3-cm-t3517.dtb
->   57434      127    28715    10687    18028  omap4-duovero-parlor.dtb
->   50859      126    26865     8926    17939  am3517-craneboard.dtb
->   54885      132    28212    10340    17872  omap5-uevm.dtb
->   53849      128    28131    10304    17827  omap5-igep0050.dtb
->   53365      132    27741    10452    17289  omap4-kc1.dtb
->   51862      131    27280    10067    17213  omap5-sbc-t54.dtb
->   51436      125    27116    10029    17087  omap5-cm-t54.dtb
->   49006      139    25364     8427    16937  am3517-evm.dtb
->   47962      127    23490     7695    15795  am43x-epos-evm.dtb
->   48091      126    23241     7614    15627  am437x-gp-evm.dtb
->   40449      136    21897     7144    14753  omap2430-sdp.dtb
->   44933      132    21503     7156    14347  am437x-sk-evm.dtb
->   42721      136    21191     7176    14015  am437x-sbc-t43.dtb
->   42110      139    21015     7131    13884  am437x-idk-evm.dtb
->   40601      128    20140     6864    13276  am437x-cm-t43.dtb
->   61386      127    21266     9279    11987  exynos5420-peach-pit.dtb
->   61668      133    21058     9221    11837  exynos5800-peach-pi.dtb
->   35893      132    17582     5940    11642  omap2420-n810.dtb
->   35849      128    17582     5952    11630  omap2420-n810-wimax.dtb
->   35833      128    17582     5952    11630  omap2420-n800.dtb
->   35051      126    17561     5950    11611  omap2420-h4.dtb
->   43803      126    17309     6030    11279  imx6q-b850v3.dtb
->   44509      140    17151     6092    11059  imx6q-apalis-ixora.dtb
->   44449      136    17183     6136    11047  imx6q-apalis-ixora-v1.1.dtb
->   44294      131    17104     6083    11021  imx6q-apalis-eval.dtb
->   77425      136    19848     8968    10880  exynos4412-trats2.dtb
->   57030      131    18977     8435    10542  exynos5422-odroidxu3.dtb
->   56723      134    18977     8438    10539  exynos5422-odroidxu3-lite.dtb
->   45316      133    16010     5477    10533  imx6qp-zii-rdu2.dtb
->   42840      129    16104     5601    10503  imx6q-b450v3.dtb
->   42865      136    16104     5608    10496  imx6q-b650v3.dtb
->   55387      126    18890     8446    10444  exynos5422-odroidxu4.dtb
->   44066      135    15614     5367    10247  imx6q-zii-rdu2.dtb
->   39149      140    16159     5948    10211  am335x-evm.dtb
->   41979      126    15395     5230    10165  imx6qp-sabreauto.dtb
->   42739      134    15907     5750    10157  imx6dl-colibri-eval-v3.dtb
->   41344      137    15167     5017    10150  imx6qp-sabresd.dtb
->   35846      131    16135     5987    10148  am335x-boneblack-wireless.dtb
->   47336      129    15577     5457    10120  imx6qp-tx6qp-8137-mb7.dtb
->   47043      134    15485     5414    10071  imx6qp-tx6qp-8137.dtb
->   21572      133    18465     8405    10060  aspeed-bmc-opp-romulus.dtb
->   21365      132    18482     8468    10014  aspeed-ast2500-evb.dtb
->   35391      138    15906     5914     9992  am335x-phycore-rdk.dtb
->   37703      130    15789     5842     9947  am335x-evmsk.dtb
->   47020      125    15195     5293     9902  imx6qp-tx6qp-8037-mb7.dtb
->   39959      130    15135     5266     9869  imx6q-gw54xx.dtb
->   46552      129    15151     5297     9854  imx6qp-tx6qp-8037.dtb
->   40114      135    14771     4919     9852  imx6q-sabresd.dtb
->   54235      126    18681     8830     9851  exynos4412-itop-elite.dtb
->   40553      128    14919     5088     9831  imx6q-sabreauto.dtb
->   34639      138    15703     5882     9821  am335x-boneblack.dtb
->   34460      125    15644     5837     9807  am335x-bonegreen-wireless.dtb
->   45788      125    15113     5325     9788  imx6q-tx6q-11x0-mb7.dtb
->   39282      135    15030     5255     9775  imx6dl-gw54xx.dtb
->   39441      136    14666     4904     9762  imx6dl-sabresd.dtb
->   43181      140    14588     4828     9760  imx6qp-nitrogen6_max.dtb
->   35258      127    15431     5679     9752  am335x-baltos-ir5221.dtb
->   39884      125    14804     5069     9735  imx6dl-sabreauto.dtb
->   45471      138    15021     5290     9731  imx6q-tx6q-1110.dtb
->   34676      133    15468     5765     9703  am335x-wega-rdk.dtb
->   52160      137    18032     8345     9687  exynos5422-odroidhc1.dtb
->   45087      138    15008     5322     9686  imx6dl-tx6u-81xx-mb7.dtb
->   50784      137    18153     8473     9680  exynos5420-arndale-octa.dtb
->   35158      131    15344     5667     9677  am335x-baltos-ir3220.dtb
->   35947      126    15962     6302     9660  sama5d36ek_cmp.dtb
->   34835      134    15311     5670     9641  am335x-icev2.dtb
->   34648      129    15336     5697     9639  am335x-sl50.dtb
->   44762      127    14916     5279     9637  imx6dl-tx6u-811x.dtb
->   40975      138    14973     5354     9619  imx6q-novena.dtb
->   45766      131    14799     5187     9612  imx6q-tx6q-1036-mb7.dtb
->   34688      137    15168     5593     9575  am335x-baltos-ir2110.dtb
->   34196      133    15331     5765     9566  am335x-moxa-uc-8100-me-t.dtb
->   45298      135    14755     5191     9564  imx6q-tx6q-1036.dtb
->   45298      135    14755     5191     9564  imx6q-tx6q-1020.dtb
->   45472      137    14731     5177     9554  imx6q-tx6q-10x0-mb7.dtb
->   45287      130    14755     5202     9553  imx6q-tx6q-1020-comtft.dtb
->   45061      132    14694     5172     9522  imx6dl-tx6u-8033-mb7.dtb
->   53033      128    18171     8656     9515  exynos4412-odroidx2.dtb
->   52904      129    18171     8657     9514  exynos4412-odroidx.dtb
->   44980      133    14687     5173     9514  imx6q-tx6q-1010.dtb
->   44969      128    14694     5184     9510  imx6dl-tx6s-8035-mb7.dtb
->   44987      126    14687     5182     9505  imx6q-tx6q-1010-comtft.dtb
->   53221      132    18114     8612     9502  exynos4412-odroidu3.dtb
->   51877      132    18374     8900     9474  exynos4412-origen.dtb
->   41851      126    14192     4718     9474  imx6q-nitrogen6_max.dtb
->   35734      131    15123     5651     9472  am335x-pepper.dtb
->   33149      140    15196     5724     9472  am335x-bonegreen.dtb
->   44771      134    14626     5158     9468  imx6dl-tx6u-80xx-mb7.dtb
->   44501      132    14650     5188     9462  imx6dl-tx6s-8035.dtb
->   44667      126    14626     5166     9460  imx6dl-tx6s-8034-mb7.dtb
->   44593      136    14650     5192     9458  imx6dl-tx6u-8033.dtb
->   36369      136    14934     5480     9454  am335x-sbc-t335.dtb
->   44302      139    14582     5163     9419  imx6dl-tx6dl-comtft.dtb
->   44267      126    14582     5166     9416  imx6dl-tx6u-801x.dtb
->   44199      130    14582     5170     9412  imx6dl-tx6s-8034.dtb
->   32893      140    15133     5724     9409  am335x-bone.dtb
->   36247      130    14296     4914     9382  imx6q-dmo-edmqmx6.dtb
->   36582      131    14239     4963     9276  imx6dl-riotboard.dtb
->   34286      139    14696     5435     9261  am335x-shc.dtb
->   32462      139    14869     5643     9226  am335x-lxm.dtb
->   34597      132    14557     5332     9225  am335x-cm-t335.dtb
->   38757      132    14181     4964     9217  imx6q-pistachio.dtb
->   39579      126    14220     5006     9214  imx6q-gw52xx.dtb
->   51122      135    17435     8247     9188  exynos5420-smdk5420.dtb
->   39386      127    14167     4991     9176  imx6q-gw53xx.dtb
->   33373      140    14630     5484     9146  am335x-base0033.dtb
->   40288      137    14162     5017     9145  imx6q-gw560x.dtb
->   36563      134    14200     5062     9138  imx6q-gw5400-a.dtb
->   37739      126    14124     4990     9134  imx6q-display5-tianma-tm070-1280x768.dtb
->   38902      131    14115     4995     9120  imx6dl-gw52xx.dtb
->   40611      134    13761     4646     9115  imx6q-sabrelite.dtb
->   35748      133    15054     5941     9113  sama5d36ek.dtb
->   19258      127    16871     7775     9096  aspeed-bmc-opp-palmetto.dtb
->   38709      132    14062     4980     9082  imx6dl-gw53xx.dtb
->   41709      140    13940     4860     9080  imx6qp-nitrogen6_som2.dtb
->   34168      129    14996     5937     9059  at91-sama5d3_xplained.dtb
->   36620      125    13789     4733     9056  imx6qp-wandboard-revd1.dtb
->   39611      126    14057     5006     9051  imx6dl-gw560x.dtb
->   33843      134    14445     5398     9047  am335x-boneblue.dtb
->   39934      139    13656     4635     9021  imx6dl-sabrelite.dtb
->   44627      134    15856     6902     8954  exynos5250-snow.dtb
->   44663      130    15857     6914     8943  exynos5250-snow-rev5.dtb
->   37398      131    13618     4723     8895  imx6q-phytec-pbab01.dtb
->   32744      129    14162     5281     8881  am335x-chiliboard.dtb
->   36905      128    13728     4848     8880  imx6q-gw553x.dtb
->   39523      134    13330     4518     8812  imx6q-nitrogen6x.dtb
->   40387      134    13544     4742     8802  imx6q-nitrogen6_som2.dtb
->   36681      128    13513     4720     8793  imx6dl-phytec-pbab01.dtb
->   33900      125    14018     5229     8789  am335x-nano.dtb
->   36224      137    13623     4841     8782  imx6dl-gw553x.dtb
->   35298      135    13393     4615     8778  imx6q-wandboard-revd1.dtb
->   34628      133    14551     5781     8770  sama5d34ek.dtb
->   38158      139    13658     4891     8767  imx6q-gw5904.dtb
->   37830      131    13605     4851     8754  imx6q-h100.dtb
->   38850      135    13225     4519     8706  imx6dl-nitrogen6x.dtb
->   37040      137    13545     4841     8704  imx6q-mccmon6.dtb
->   37481      128    13553     4880     8673  imx6dl-gw5904.dtb
->   34625      136    13288     4616     8672  imx6dl-wandboard-revd1.dtb
->   36462      139    13457     4795     8662  imx6q-gw51xx.dtb
->   39292      125    13422     4765     8657  imx6q-gw5903.dtb
->   46208      137    15702     7129     8573  rk3288-veyron-minnie.dtb
->   35781      132    13352     4788     8564  imx6dl-gw51xx.dtb
->   38611      134    13317     4758     8559  imx6dl-gw5903.dtb
->   36271      138    13252     4698     8554  imx6q-hummingboard.dtb
->   33189      132    14057     5556     8501  sama5d31ek.dtb
->   36294      131    12981     4483     8498  imx6dl-aristainetos_4.dtb
->   42355      134    15475     6982     8493  exynos5250-arndale.dtb
->   32828      125    13962     5469     8493  sama5d35ek.dtb
->   36120      129    13013     4529     8484  imx6dl-aristainetos_7.dtb
->   35441      136    13142     4680     8462  imx6dl-hummingboard.dtb
->   51305      128    14733     6288     8445  stih410-b2260.dtb
->   37385      128    12763     4320     8443  imx6dl-nit6xlite.dtb
->   32819      134    13527     5094     8433  at91-sama5d4ek.dtb
->   39158      131    13057     4627     8430  imx6dl-aristainetos2_4.dtb
->   32574      139    13579     5163     8416  at91-sama5d4_ma5d4evk.dtb
->   33179      126    13881     5518     8363  sama5d33ek.dtb
->   51888      137    14416     6057     8359  stih410-b2120.dtb
->   45501      140    15369     7020     8349  rk3288-veyron-jerry.dtb
->   34757      132    13053     4708     8345  imx6q-gw551x.dtb
->   45416      129    15337     6993     8344  rk3288-veyron-jaq.dtb
->   37788      125    12667     4333     8334  imx6q-apf6dev.dtb
->   37763      134    12872     4550     8322  imx6dl-aristainetos2_7.dtb
->   45292      125    15305     7005     8300  rk3288-veyron-speedy.dtb
->   37119      138    12820     4522     8298  imx6q-evi.dtb
->   35715      134    12838     4550     8288  imx6q-cubox-i.dtb
->   31375      138    13624     5354     8270  at91-kizbox2.dtb
->   32373      132    13279     5012     8267  at91-sama5d4_xplained.dtb
->   34076      125    12948     4701     8247  imx6dl-gw551x.dtb
->   41873      136    15001     6760     8241  exynos5250-spring.dtb
->   37099      126    12562     4334     8228  imx6dl-apf6dev.dtb
->   34885      132    12733     4532     8201  imx6dl-cubox-i.dtb
->   34549      132    12873     4676     8197  imx6q-gw552x.dtb
->   39160      129    12643     4449     8194  imx6q-utilite-pro.dtb
->   47820      125    14335     6157     8178  stih418-b2199.dtb
->   33417      128    13384     5248     8136  at91-tse850-3.dtb
->   44028      125    14988     6861     8127  rk3288-veyron-pinky.dtb
->   49022      139    13962     5851     8111  stih407-b2120.dtb
->   33872      137    12768     4665     8103  imx6dl-gw552x.dtb
->   40014      139    14800     6699     8101  exynos5250-smdk5250.dtb
->   31330      135    13139     5047     8092  at91-vinco.dtb
->   45629      140    15851     7772     8079  exynos4210-universal_c210.dtb
->   45947      126    13450     5406     8044  ste-hrefv60plus-tvk.dtb
->   45300      133    13454     5413     8041  ste-hrefv60plus-stuib.dtb
->   37019      126    12421     4446     7975  imx6q-icore-rqs.dtb
->   37027      134    12421     4454     7967  imx6dl-icore-rqs.dtb
->   36693      132    12291     4356     7935  imx6q-ts4900.dtb
->   44739      134    15615     7702     7913  exynos4210-trats.dtb
->   27219      134    12205     4294     7911  imx28-tx28.dtb
->   44426      127    13128     5263     7865  ste-snowball.dtb
->   36024      129    12181     4337     7844  imx6dl-ts4900.dtb
->   34800      137    12026     4185     7841  imx6q-rex-pro.dtb
->   44031      138    13015     5210     7805  ste-hrefprev60-tvk.dtb
->   43384      129    13019     5217     7802  ste-hrefprev60-stuib.dtb
->   36495      138    11988     4202     7786  imx6sx-sdb-reva.dtb
->   42936      129    15292     7521     7771  exynos4210-origen.dtb
->   34127      138    11921     4170     7751  imx6dl-rex-basic.dtb
->   35301      132    11908     4180     7728  imx6q-tbs2910.dtb
->   34431      138    11888     4186     7702  imx6q-marsboard.dtb
->   24309      132    12080     4388     7692  imx28-cfa10049.dtb
->   36537      128    11759     4096     7663  imx6sx-sdb-sai.dtb
->   34089      128    11863     4208     7655  imx6q-udoo.dtb
->   36414      139    11775     4123     7652  imx6sx-sdb.dtb
->   35203      134    11908     4262     7646  imx6q-icore.dtb
->   27081      128    12764     5136     7628  sun7i-a20-lamobo-r1.dtb
->   34042      127    11688     4063     7625  imx6q-wandboard-revb1.dtb
->   28850      135    12688     5063     7625  at91sam9x35ek.dtb
->   34008      129    11688     4065     7623  imx6q-wandboard.dtb
->   35115      126    11835     4238     7597  imx6q-icore-ofcap12.dtb
->   35115      126    11835     4238     7597  imx6q-icore-ofcap10.dtb
->   46668      125    15477     7885     7592  exynos4412-smdk4412.dtb
->   33412      133    11758     4197     7561  imx6dl-udoo.dtb
->   40322      135    13897     6343     7554  rk3288-firefly-reload.dtb
->   33369      128    11578     4048     7530  imx6dl-wandboard-revb1.dtb
->   33335      130    11578     4050     7528  imx6dl-wandboard.dtb
->   34148      133    11715     4229     7486  imx6dl-icore.dtb
->   35161      128    11616     4144     7472  imx6q-cm-fx6.dtb
->   33002      127    11562     4095     7467  imx6q-dfi-fs700-m60.dtb
->   45513      128    15253     7808     7445  exynos4412-tiny4412.dtb
->   39071      138    13666     6250     7416  rk3288-firefly-beta.dtb
->   39063      130    13666     6258     7408  rk3288-firefly.dtb
->   26815      138    12584     5194     7390  sun7i-a20-olinuxino-lime2-emmc.dtb
->   32317      140    11452     4076     7376  imx6dl-dfi-fs700-m60.dtb
->   28122      127    12302     4927     7375  at91sam9g35ek.dtb
->   27322      127    12379     5023     7356  sun7i-a20-cubietruck.dtb
->   26698      127    12202     4863     7339  at91sam9x25ek.dtb
->   39878      131    13784     6451     7333  rk3288-phycore-rdk.dtb
->   26693      132    12152     4820     7332  at91sam9g25ek.dtb
->   27750      131    12267     4947     7320  sun7i-a20-olinuxino-micro-emmc.dtb
->   33332      133    11364     4069     7295  imx6q-arm2.dtb
->   27585      136    11931     4648     7283  sun6i-a31-hummingbird.dtb
->   26346      127    12432     5151     7281  sun7i-a20-olinuxino-lime2.dtb
->   27430      131    12186     4915     7271  sun7i-a20-olinuxino-micro.dtb
->   26414      139    12351     5099     7252  sun7i-a20-orangepi-mini.dtb
->   38487      130    13615     6370     7245  rk3288-veyron-mickey.dtb
->   26557      140    12355     5116     7239  sun7i-a20-bananapi-m1-plus.dtb
->   26114      135    12290     5079     7211  sun7i-a20-orangepi.dtb
->   27413      132    11992     4804     7188  at91sam9g15ek.dtb
->   30982      131    11129     3955     7174  imx7d-sdb-sht11.dtb
->   38679      130    13270     6098     7172  rk3288-rock2-square.dtb
->   22437      132    11221     4052     7169  imx28-eukrea-mbmx287lc.dtb
->   32943      138    11192     4026     7166  imx6q-savageboard.dtb
->   39043      134    13373     6230     7143  rk3288-evb-act8846.dtb
->   26966      131    12022     4883     7139  sun7i-a20-olimex-som-evb.dtb
->   31837      140    11132     3996     7136  imx6q-gk802.dtb
->   37914      127    13439     6319     7120  rk3288-veyron-brain.dtb
->   28859      126    11659     4542     7117  at91-sama5d27_som1_ek.dtb
->   22205      140    11142     4028     7114  imx28-eukrea-mbmx283lc.dtb
->   39456      137    13224     6121     7103  rk3288-evb-rk808.dtb
->   30582      131    11008     3907     7101  imx7d-sdb.dtb
->   26873      128    12010     4912     7098  sun7i-a20-bananapi.dtb
->   25751      130    12116     5026     7090  sun7i-a20-pcduino3-nano.dtb
->   26335      138    12011     4922     7089  sun7i-a20-wexler-tab7200.dtb
->   25775      138    12040     4970     7070  sun7i-a20-cubieboard2.dtb
->   32266      127    11082     4015     7067  imx6dl-savageboard.dtb
->   25806      139    11994     4939     7055  sun7i-a20-wits-pro-a20-dkt.dtb
->   30936      129    12593     5553     7040  exynos5410-odroidxu.dtb
->   25998      139    11994     4955     7039  sun7i-a20-pcduino3.dtb
->   26277      132    11662     4628     7034  sun6i-a31s-sinovoip-bpi-m2.dtb
->   38202      127    13072     6047     7025  rk3288-popmetal.dtb
->   21414      131    11099     4083     7016  imx28-cfa10055.dtb
->   36604      125    13133     6125     7008  rk3288-miqi.dtb
->   29099      126    11312     4334     6978  at91-sama5d2_xplained.dtb
->   26414      139    11474     4507     6967  sun6i-a31s-primo81.dtb
->   26580      133    11499     4533     6966  sun6i-a31s-sina31s.dtb
->   45301      132    12341     5380     6961  exynos3250-rinato.dtb
->   21134      139    11033     4075     6958  imx28-cfa10056.dtb
->   37671      130    13135     6178     6957  rk3288-vyasa.dtb
->   39801      128    12458     5504     6954  exynos3250-monk.dtb
->   37495      130    13045     6098     6947  rk3288-tinker.dtb
->   25701      132    11861     4916     6945  sun7i-a20-itead-ibox.dtb
->   31136      137    10896     3961     6935  imx6q-sbc6x.dtb
->   25908      133    11436     4517     6919  sun6i-a31-mele-a1000g-quad.dtb
->   25856      137    11436     4521     6915  sun6i-a31-m9.dtb
->   25004      125    11787     4893     6894  sun7i-a20-icnova-swac.dtb
->   26080      137    11380     4505     6875  sun6i-a31s-inet-q972.dtb
->   35877      132    13020     6148     6872  rk3288-fennec.dtb
->   36068      133    13036     6165     6871  rk3288-r89.dtb
->   41035      126    13952     7102     6850  exynos4210-smdkv310.dtb
->   31022      139    10626     3787     6839  imx7d-nitrogen7.dtb
->   33163      126    13899     7070     6829  atlas7-evb.dtb
->   23874      135    11524     4695     6829  at91-ariag25.dtb
->   25724      125    11302     4477     6825  sun6i-a31s-colorfly-e708-q1.dtb
->   32690      135    10713     3895     6818  imx6sx-softing-vining-2000.dtb
->   22220      125    10563     3757     6806  imx28-evk.dtb
->   20572      125    10739     3933     6806  imx28-cfa10057.dtb
->   24795      126    11427     4622     6805  at91-kizboxmini.dtb
->   26213      132    11095     4308     6787  at91sam9m10g45ek.dtb
->   23458      135    11491     4711     6780  at91-ariettag25.dtb
->   25341      140    11258     4492     6766  sun6i-a31s-yones-toptech-bs1078-v2.dtb
->   25368      129    11322     4577     6745  at91-cosino_mega2560.dtb
->   20528      137    10657     3929     6728  imx28-cfa10058.dtb
->   20945      136    10424     3736     6688  imx28-m28evk.dtb
->   34003      134    10596     3910     6686  imx6ul-tx6ul-mainboard.dtb
->   34950      131    11656     4995     6661  qcom-apq8064-ifc6410.dtb
->   30772      133    10500     3845     6655  imx7d-colibri-eval-v3.dtb
->   36484      133    11602     4949     6653  qcom-apq8064-arrow-sd-600eval.dtb
->   25795      134    11312     4662     6650  sun7i-a20-bananapro.dtb
->   20034      135    10440     3799     6641  imx28-apx4devkit.dtb
->   36114      135    10351     3719     6632  imx6sx-nitrogen6sx.dtb
->   25143      130    11297     4690     6607  sun7i-a20-olinuxino-lime.dtb
->   19647      138    10535     3930     6605  imx28-cfa10037.dtb
->   27012      133    11928     5365     6563  s5pv210-aquila.dtb
->   19514      127    10453     3903     6550  imx28-duckbill-2-spi.dtb
->   25496      129    11284     4737     6547  sun7i-a20-i12-tvbox.dtb
->   28278      131    11701     5155     6546  s5pv210-goni.dtb
->   20672      137    10276     3737     6539  imx28-m28cu3.dtb
->   33523      134    11597     5062     6535  qcom-apq8064-cm-qs600.dtb
->   34808      129    11516     4993     6523  qcom-apq8064-sony-xperia-yuga.dtb
->   25732      133    11030     4517     6513  sun7i-a20-hummingbird.dtb
->   19861      132    10327     3828     6499  imx28-duckbill-2-enocean.dtb
->   20778      127    10188     3695     6493  imx28-apf28dev.dtb
->   33788      125    10108     3661     6447  imx6ul-tx6ul-0011.dtb
->   18883      134    10352     3910     6442  imx28-cfa10036.dtb
->   33633      136    10124     3688     6436  imx6ul-tx6ul-0010.dtb
->   34584      129    11314     4881     6433  qcom-apq8064-asus-nexus7-flo.dtb
->   19294      139    10220     3787     6433  imx28-duckbill-2.dtb
->   19434      127    10236     3807     6429  imx28-duckbill-2-485.dtb
->   31192      129    10200     3825     6375  imx6sx-udoo-neo-basic.dtb
->   31188      133    10200     3829     6371  imx6sx-udoo-neo-full.dtb
->   19071      138    10198     3834     6364  imx28-sps1.dtb
->   28476      125    11526     5181     6345  exynos3250-artik5-eval.dtb
->   24372      133    10874     4533     6341  sun7i-a20-mk808c.dtb
->   24348      125    10851     4525     6326  sun7i-a20-m3.dtb
->   28008      129     9980     3665     6315  imx53-ppd.dtb
->   18803      134    10092     3782     6310  imx28-duckbill.dtb
->   31029      132    10120     3812     6308  imx6sx-udoo-neo-extended.dtb
->   28388      133    10018     3717     6301  imx7s-colibri-eval-v3.dtb
->   23465      128    10625     4336     6289  pm9g45.dtb
->   18010      127     9892     3791     6101  imx28-apf28.dtb
->   29665      136    10037     4008     6029  qcom-msm8974-sony-xperia-castor.dtb
->   27756      125     9042     3069     5973  imx6sl-evk.dtb
->   26505      128     9511     3600     5911  imx7d-pico.dtb
->   15456      137     8950     3065     5885  dove-sbc-a510.dtb
->   15105      136     8708     3016     5692  dove-cubox.dtb
->   15198      139     8692     3003     5689  dove-cubox-es.dtb
->   43170      135    10222     4551     5671  r8a7790-lager.dtb
->   27082      127     9478     3855     5623  qcom-msm8974-sony-xperia-honami.dtb
->   14627      134     8567     2950     5617  dove-d3plug.dtb
->   20607      138     9379     3770     5609  at91sam9rlek.dtb
->   13635      134     8601     3014     5587  dove-dove-db.dtb
->   14047      138     8537     2954     5583  dove-d2plug.dtb
->   24112      137     9327     3753     5574  sun6i-a31-colombus.dtb
->   24259      134     8880     3318     5562  imx7s-warp.dtb
->   20570      127     9186     3631     5555  at91sam9n12ek.dtb
->   24299      126     9228     3694     5534  sun6i-a31-i7.dtb
->   25500      125     9338     3805     5533  qcom-apq8074-dragonboard.dtb
->   26307      134     8498     3030     5468  imx53-tx53-x13x.dtb
->   24867      134     9624     4166     5458  s5pv210-smdkv210.dtb
->   24715      126     8780     3342     5438  imx7d-sbc-imx7.dtb
->   43692      125     9913     4493     5420  r8a7791-koelsch.dtb
->   22106      127    10216     4799     5417  s5pv210-smdkc110.dtb
->   22534      131     9912     4499     5413  s5pv210-torbreck.dtb
->   24588      125     9224     3821     5403  qcom-msm8974-lge-nexus5-hammerhead.dtb
->   25034      127     9128     3727     5401  qcom-msm8974-fairphone-fp2.dtb
->   24333      140     8724     3340     5384  imx7d-cl-som-imx7.dtb
->   23176      129     9089     3713     5376  sun6i-a31-app4-evb1.dtb
->   19831      130     8943     3570     5373  at91sam9g20ek_2mmc.dtb
->   17847      130     9000     3666     5334  at91-foxg20.dtb
->   19675      126     8834     3518     5316  at91sam9g20ek.dtb
->   24486      131     8256     2947     5309  vf610-zii-dev-rev-b.dtb
->   22111      138     8727     3450     5277  sun6i-a31s-cs908.dtb
->   24323      134     8158     2902     5256  vf610-zii-dev-rev-c.dtb
->   22152      129     9343     4097     5246  sun4i-a10-cubieboard.dtb
->   17817      128     8817     3584     5233  at91-sam9_l9260.dtb
->   17576      129     8863     3633     5230  ethernut5.dtb
->   18214      131     8767     3539     5228  at91sam9260ek.dtb
->   18888      129     8758     3537     5221  at91-kizbox.dtb
->   24936      129     9360     4145     5215  sun4i-a10-inet9f-rev03.dtb
->   18278      131     8781     3571     5210  aks-cdu.dtb
->   27531      126     8146     2942     5204  imx53-tx53-x03x.dtb
->   22611      134     9352     4150     5202  sun4i-a10-dserve-dsrv9703c.dtb
->   26418      135     8162     2967     5195  imx6ul-pico-hobbit.dtb
->   22542      139     9297     4107     5190  sun4i-a10-inet1.dtb
->   18548      133     8754     3573     5181  usb_a9g20.dtb
->   18769      136     8754     3576     5178  usb_a9g20_lpw.dtb
->   18026      127     8770     3599     5171  tny_a9g20.dtb
->   22213      132     9300     4132     5168  sun4i-a10-inet97fv2.dtb
->   17842      135     8720     3559     5161  tny_a9260.dtb
->   18352      137     8704     3545     5159  usb_a9260.dtb
->   19988      133     8586     3429     5157  at91sam9263ek.dtb
->   17501      140     8720     3564     5156  evk-pro3.dtb
->   22492      125     9248     4093     5155  sun4i-a10-pov-protab2-ips9.dtb
->   18712      129     8512     3361     5151  at91-qil_a9260.dtb
->   18520      129     8608     3457     5151  animeo_ip.dtb
->   21959      130     9238     4114     5124  sun4i-a10-pcduino.dtb
->   21955      134     9238     4118     5120  sun4i-a10-pcduino2.dtb
->   22054      131     9177     4067     5110  sun4i-a10-a1000.dtb
->   26571      126     7988     2894     5094  imx6ul-opos6uldev.dtb
->   21393      136     9090     4008     5082  sun4i-a10-itead-iteaduino-plus.dtb
->   22069      132     8423     3380     5043  sun8i-a33-q8-tablet.dtb
->   22069      132     8423     3380     5043  sun8i-a33-ippo-q8h-v1.2.dtb
->   22069      132     8423     3380     5043  sun8i-a33-et-q8-v1.6.dtb
->   21647      138     9082     4042     5040  sun4i-a10-gemei-g9.dtb
->   18849      136     8502     3480     5022  usb_a9263.dtb
->   18253      140     8502     3484     5018  tny_a9263.dtb
->   24957      140     9022     4012     5010  ste-ccu8540.dtb
->   22000      137     8325     3321     5004  sun8i-a33-inet-d978-rev2.dtb
->   21893      132     8330     3348     4982  sun8i-r16-parrot.dtb
->   26581      132     7912     2932     4980  imx6ul-14x14-evk.dtb
->   16227      134     8344     3366     4978  at91rm9200ek.dtb
->   27816      129     8066     3089     4977  imx6sx-sabreauto.dtb
->   26585      128     7912     2944     4968  imx6ull-14x14-evk.dtb
->   22065      136     8304     3336     4968  sun8i-a33-ga10h-v1.1.dtb
->   15211      126     8367     3438     4929  mpa1600.dtb
->   21121      136     8219     3368     4851  sun8i-a33-sinlinx-sina33.dtb
->   20689      136     8251     3400     4851  sun8i-a33-olinuxino.dtb
->   18791      130     7503     2690     4813  imx27-phytec-phycore-rdk.dtb
->   21282      135     8622     3815     4807  sun4i-a10-olinuxino-lime.dtb
->   17233      136     7235     2440     4795  imx51-digi-connectcore-jsk.dtb
->   26070      131     7562     2771     4791  imx6ul-geam.dtb
->   21547      126     7487     2798     4689  imx53-qsrb.dtb
->   19984      137     7147     2489     4658  imx51-babbage.dtb
->   24019      134     8337     3686     4651  rk3066a-rayeager.dtb
->   38421      132     8766     4116     4650  r8a7791-porter.dtb
->   21083      126     8404     3758     4646  sun4i-a10-chuwi-v7-cw0825.dtb
->   20687      138     7581     2938     4643  sun8i-r16-bananapi-m2m.dtb
->   20576      137     8350     3737     4613  sun4i-a10-hyundai-a7hd.dtb
->   22267      126     7281     2670     4611  imx51-zii-rdu1.dtb
->   25299      134     7285     2694     4591  imx6ul-isiot-nand.dtb
->   25225      128     7259     2672     4587  imx6ul-isiot-emmc.dtb
->   20734      139     8260     3675     4585  sun4i-a10-jesurun-q5.dtb
->   20790      131     8231     3651     4580  sun4i-a10-marsboard.dtb
->   21047      130     7328     2754     4574  imx53-qsb.dtb
->   21153      136     7920     3352     4568  qcom-apq8060-dragonboard.dtb
->   20410      127     8223     3663     4560  sun4i-a10-ba10-tvbox.dtb
->   20453      132     8216     3668     4548  sun4i-a10-hackberry.dtb
->   20366      139     8170     3643     4527  sun4i-a10-mini-xplus.dtb
->   20213      132     8205     3684     4521  sun4i-a10-mk802ii.dtb
->   20064      137     7206     2713     4493  imx53-voipac-bsb.dtb
->   17020      125     7876     3389     4487  sun5i-a10s-wobo-i5.dtb
->   20260      133     8123     3637     4486  sun4i-a10-mk802.dtb
->   20948      133     6960     2485     4475  vf500-colibri-eval-v3.dtb
->   15387      126     8425     3998     4427  s3c6410-mini6410.dtb
->   18375      130     7532     3138     4394  sun5i-gr8-evb.dtb
->   17575      130     7538     3154     4384  sun5i-a13-q8-tablet.dtb
->   23798      131     8625     4243     4382  exynos5410-smdk5410.dtb
->   17766      131     7553     3171     4382  sun5i-a13-utoo-p66.dtb
->   13659      126     8397     4030     4367  s3c6410-smdk6410.dtb
->   21165      140     6895     2556     4339  imx53-mba53.dtb
->   35647      138     7914     3578     4336  r8a7793-gose.dtb
->   17217      136     7400     3112     4288  sun5i-a13-empire-electronix-m712.dtb
->   17197      140     7400     3116     4284  sun5i-a13-inet-98v-rev2.dtb
->   17193      128     7400     3120     4280  sun5i-a13-difrnce-dit4350.dtb
->   20395      126     6654     2382     4272  vf610-colibri-eval-v3.dtb
->   17012      133     7240     3045     4195  sun5i-gr8-chip-pro.dtb
->   17381      132     6830     2644     4186  at91sam9261ek.dtb
->   21661      140     6662     2492     4170  imx53-m53evk.dtb
->   32013      140     7729     3580     4149  r8a7794-silk.dtb
->   17191      130     7095     2946     4149  sun5i-r8-chip.dtb
->   17144      129     6726     2641     4085  dm8148-t410.dtb
->   16646      131     7111     3027     4084  sun5i-a13-empire-electronix-d709.dtb
->   16373      132     7077     2996     4081  sun5i-a13-hsg-h702.dtb
->   18168      129     6672     2609     4063  dm8148-evm.dtb
->   17355      126     7019     2974     4045  sun5i-a10s-olinuxino-micro.dtb
->   20764      125     7397     3357     4040  rk3066a-marsboard.dtb
->   32308      133     7801     3765     4036  keystone-k2hk-evm.dtb
->   21864      129     6199     2193     4006  kirkwood-ds411slim.dtb
->   21956      133     6199     2197     4002  kirkwood-ds112.dtb
->   21860      133     6199     2197     4002  kirkwood-ds111.dtb
->   22000      137     6199     2201     3998  kirkwood-ds212.dtb
->   21856      137     6199     2201     3998  kirkwood-rs212.dtb
->   18156      125     6586     2589     3997  dra62x-j5eco-evm.dtb
->   21884      125     6199     2205     3994  kirkwood-rs411.dtb
->   21884      125     6199     2205     3994  kirkwood-ds411.dtb
->   31640      129     7579     3601     3978  r8a7794-alt.dtb
->   18924      125     6654     2685     3969  socfpga_cyclone5_sodia.dtb
->   20228      133     6584     2629     3955  socfpga_cyclone5_vining_fpga.dtb
->   20693      132     7325     3380     3945  rk3066a-bqcurie2.dtb
->   19600      137     6598     2665     3933  socfpga_cyclone5_sockit.dtb
->   18071      130     6581     2658     3923  socfpga_cyclone5_socrates.dtb
->   19100      125     6544     2637     3907  socfpga_cyclone5_socdk.dtb
->   18979      134     6527     2630     3897  socfpga_arria5_socdk.dtb
->   18335      138     6529     2634     3895  socfpga_cyclone5_de0_sockit.dtb
->   16340      133     6752     2869     3883  sun5i-a13-licheepi-one.dtb
->   16126      139     6902     3019     3883  sun5i-a10s-auxtek-t004.dtb
->   17930      127     6496     2623     3873  socfpga_cyclone5_mcvevk.dtb
->   17397      132     5858     2004     3854  imx27-eukrea-mbimxsd27-baseboard.dtb
->   20964      133     5934     2085     3849  kirkwood-rs409.dtb
->   20964      133     5934     2085     3849  kirkwood-ds411j.dtb
->   20964      133     5934     2085     3849  kirkwood-ds209.dtb
->   21024      137     5934     2089     3845  kirkwood-ds109.dtb
->   20976      137     5934     2089     3845  kirkwood-ds409slim.dtb
->   18128      137     6254     2409     3845  imx53-smd.dtb
->   27617      136     7370     3528     3842  keystone-k2l-evm.dtb
->   21004      125     5934     2093     3841  kirkwood-ds212j.dtb
->   21004      125     5934     2093     3841  kirkwood-ds110jv10.dtb
->   21048      129     5934     2097     3837  kirkwood-ds210.dtb
->   20984      129     5934     2097     3837  kirkwood-ds409.dtb
->   15678      139     6790     2971     3819  sun5i-a10s-mk802.dtb
->   21094      131     6197     2387     3810  imx6ul-liteboard.dtb
->   17440      137     6409     2601     3808  socfpga_vt.dtb
->   19617      136     5924     2120     3804  vf610-twr.dtb
->   15572      133     6726     2949     3777  sun5i-a10s-r7-tv-dongle.dtb
->   20926      139     5946     2187     3759  imx6sl-warp.dtb
->   15587      134     6708     2950     3758  sun5i-a10s-auxtek-t003.dtb
->   16496      137     6415     2729     3686  sun5i-a13-olinuxino.dtb
->   16612      133     6370     2693     3677  sun8i-a23-polaroid-mid2407pxe03.dtb
->   10298      127     6634     2975     3659  qcom-msm8660-surf.dtb
->   16429      140     6306     2668     3638  sun8i-a23-polaroid-mid2809pxe04.dtb
->   16346      127     6319     2687     3632  sun8i-a23-q8-tablet.dtb
->   16346      127     6319     2687     3632  sun8i-a23-ippo-q8h-v5.dtb
->   16346      127     6319     2687     3632  sun8i-a23-ippo-q8h-v1.2.dtb
->   13853      140     6917     3308     3609  exynos5260-xyref5260.dtb
->   20929      136     6919     3320     3599  rk3188-radxarock.dtb
->   10669      140     6287     2700     3587  qcom-apq8084-mtp.dtb
->   10786      135     6271     2695     3576  qcom-apq8084-ifc6540.dtb
->   15525      132     6218     2676     3542  sun5i-a13-olinuxino-micro.dtb
->   20277      132     5892     2356     3536  ste-ccu9540.dtb
->   19166      139     6897     3371     3526  hi3620-hi4511.dtb
->   15961      128     6138     2624     3514  sun8i-a23-gt90h-v4.dtb
->   15849      128     6138     2624     3514  sun8i-a23-inet86dz.dtb
->   17460      133     5894     2389     3505  socfpga_arria10_socdk_qspi.dtb
->   16428      125     5882     2381     3501  imx53-usbarmory.dtb
->   21818      127     6485     3007     3478  mt7623n-bananapi-bpi-r2.dtb
->   17205      132     5815     2340     3475  socfpga_arria10_socdk_sdmmc.dtb
->   17110      131     5831     2371     3460  socfpga_arria10_socdk_nand.dtb
->   17821      140     5965     2524     3441  armada-xp-netgear-rn2120.dtb
->   19888      137     6616     3225     3391  rk3188-px3-evb.dtb
->   19615      138     5772     2442     3330  armada-388-clearfog-pro.dtb
->   19587      134     5772     2454     3318  armada-388-clearfog.dtb
->   18690      135     5516     2199     3317  imx53-cx9020.dtb
->   19947      126     5993     2686     3307  r8a73a4-ape6evm.dtb
->   19569      136     6199     2936     3263  ste-nomadik-nhk15.dtb
->   17990      131     5695     2435     3260  armada-388-clearfog-base.dtb
->   22409      128     5863     2608     3255  sh73a0-kzm9g.dtb
->   18729      128     5769     2544     3225  armada-388-gp.dtb
->   14907      126     5636     2414     3222  armada-370-synology-ds213j.dtb
->   21820      125     6314     3101     3213  rk3229-evb.dtb
->   17128      129     5726     2513     3213  armada-xp-synology-ds414.dtb
->   15605      132     5093     1924     3169  imx51-eukrea-mbimxsd51-baseboard.dtb
->   13625      128     5467     2368     3099  da850-evm.dtb
->   13200      137     5075     1993     3082  kirkwood-nsa325.dtb
->   12018      135     4993     1943     3050  berlin2q-marvell-dmp.dtb
->   17746      135     5824     2775     3049  ste-nomadik-s8815.dtb
->   15221      132     5302     2260     3042  armada-370-dlink-dns327l.dtb
->   13578      127     5645     2623     3022  prima2-evb.dtb
->   13824      137     5294     2281     3013  da850-lego-ev3.dtb
->   13135      138     4869     1866     3003  kirkwood-nsa320.dtb
->   18874      127     5628     2639     2989  mt7623n-rfb-nand.dtb
->   15715      134     4856     1878     2978  vf610-cosmic.dtb
->   19731      134     5941     2966     2975  rk3228-evb.dtb
->   17360      137     5010     2041     2969  imx53-ard.dtb
->   15162      127     4764     1807     2957  imx27-apf27dev.dtb
->   14115      134     4803     1846     2957  kirkwood-linkstation-lsqvl.dtb
->   13682      135     5441     2487     2954  atlas6-evb.dtb
->   16367      138     5286     2346     2940  dm8168-evm.dtb
->   16135      130     4711     1794     2917  imx25-eukrea-mbimxsd25-baseboard-cmo-qvga.dtb
->   18007      130     5693     2786     2907  rv1108-evb.dtb
->   12869      132     4681     1780     2901  kirkwood-dns325.dtb
->   16336      137     5542     2649     2893  sun9i-a80-optimus.dtb
->   14526      139     5009     2123     2886  armada-370-netgear-rn102.dtb
->   14799      138     4970     2090     2880  armada-370-netgear-rn104.dtb
->   23197      140     5418     2540     2878  keystone-k2e-evm.dtb
->   12821      132     4616     1748     2868  kirkwood-dns320.dtb
->   15837      140     5486     2620     2866  sun9i-a80-cubieboard4.dtb
->   12922      127     5080     2223     2857  da850-lcdk.dtb
->   13779      134     4643     1798     2845  kirkwood-linkstation-lswvl.dtb
->   17262      139     5127     2283     2844  armada-385-synology-ds116.dtb
->   19919      138     5717     2874     2843  rk3066a-mk808.dtb
->   13781      132     4848     2020     2828  hip04-d01.dtb
->   16108      125     4950     2157     2793  armada-385-db-ap.dtb
->   11742      139     4532     1739     2793  kirkwood-iomega_ix2_200.dtb
->   18146      135     5087     2295     2792  armada-385-linksys-rango.dtb
->   18632      129     5128     2337     2791  rk3036-kylin.dtb
->   17901      140     5103     2316     2787  armada-385-linksys-cobra.dtb
->   15583      138     4541     1754     2787  imx25-eukrea-mbimxsd25-baseboard-dvi-vga.dtb
->   17929      128     5103     2320     2783  armada-385-linksys-shelby.dtb
->   17929      128     5103     2320     2783  armada-385-linksys-caiman.dtb
->   15591      130     4543     1762     2781  imx25-eukrea-mbimxsd25-baseboard-dvi-svga.dtb
->   16963      134     4917     2150     2767  armada-385-turris-omnia.dtb
->   15060      133     4445     1717     2728  imx25-eukrea-mbimxsd25-baseboard.dtb
->   14520      129     4516     1793     2723  vf610m4-cosmic.dtb
->   17944      129     5235     2513     2722  stm32429i-eval.dtb
->   14679      130     4516     1794     2722  vf610m4-colibri.dtb
->   18108      125     4857     2141     2716  armada-xp-openblocks-ax3-4.dtb
->   18592      137     4836     2137     2699  armada-xp-gp.dtb
->   15766      131     4495     1811     2684  imx51-ts4800.dtb
->   12883      134     4378     1702     2676  kirkwood-linkstation-lswxl.dtb
->   17352      129     4685     2017     2668  armada-xp-lenovo-ix4-300d.dtb
->   15700      133     4653     1989     2664  armada-370-seagate-nas-4bay.dtb
->   18677      132     4775     2116     2659  armada-xp-db.dtb
->   13179      126     4341     1694     2647  kirkwood-linkstation-lsvl.dtb
->   16446      139     4413     1771     2642  imx25-pdk.dtb
->   12550      131     4268     1635     2633  kirkwood-nsa310.dtb
->   14623      138     4813     2186     2627  armada-388-rd.dtb
->   15098      127     4813     2191     2622  armada-388-db.dtb
->   13591      130     4289     1682     2607  imx27-phytec-phycard-s-rdk.dtb
->   12864      137     4305     1705     2600  kirkwood-netgear_readynas_nv+_v2.dtb
->   14518      131     4544     1971     2573  armada-370-seagate-nas-2bay.dtb
->   13107      134     4471     1926     2545  armada-370-mirabox.dtb
->   12368      137     5153     2617     2536  bcm2836-rpi-2-b.dtb
->   12684      125     4209     1677     2532  kirkwood-netgear_readynas_duo_v2.dtb
->   12227      134     4138     1606     2532  kirkwood-lschlv2.dtb
->   12861      140     4270     1740     2530  imx27-pdk.dtb
->   12223      138     4138     1610     2528  kirkwood-lsxhl.dtb
->   12110      139     4253     1739     2514  kirkwood-nsa310a.dtb
->   12319      138     5092     2586     2506  bcm2837-rpi-3-b.dtb
->   14966      131     4103     1603     2500  imx51-apf51dev.dtb
->   14011      126     4373     1886     2487  armada-370-rd.dtb
->    9242      127     4689     2207     2482  da850-enbw-cmc.dtb
->   13722      127     4368     1887     2481  armada-370-db.dtb
->   12091      126     4891     2430     2461  bcm2835-rpi-zero-w.dtb
->   25478      131     4686     2227     2459  r8a7743-iwg20d-q7-dbcm-ca.dtb
->   17147      126     4547     2094     2453  armada-xp-matrix.dtb
->   13470      139     4394     1947     2447  armada-370-seagate-personal-cloud.dtb
->   12004      133     4881     2437     2444  bcm2835-rpi-b-rev2.dtb
->   13658      127     4394     1951     2443  armada-370-seagate-personal-cloud-2bay.dtb
->   12013      140     4038     1596     2442  kirkwood-topkick.dtb
->   12128      137     4881     2441     2440  bcm2835-rpi-b-plus.dtb
->   14976      137     4326     1913     2413  armada-xp-axpwifiap.dtb
->   12098      135     4000     1591     2409  kirkwood-linkstation-lswsxl.dtb
->   11914      127     4808     2399     2409  bcm2835-rpi-a-plus.dtb
->   16991      138     4449     2042     2407  r8a7740-armadillo800eva.dtb
->   11920      137     4832     2425     2407  bcm2835-rpi-b.dtb
->   11798      131     4808     2403     2405  bcm2835-rpi-a.dtb
->   11902      139     4808     2411     2397  bcm2835-rpi-zero.dtb
->   11403      126     3930     1550     2380  kirkwood-goflexnet.dtb
->   25122      135     4578     2199     2379  r8a7743-iwg20d-q7.dtb
->    9003      126     3941     1582     2359  berlin2-sony-nsz-gs7.dtb
->   18480      137     4223     1865     2358  armada-xp-linksys-mamba.dtb
->   15680      137     4723     2393     2330  stm32f469-disco.dtb
->   15909      132     4723     2404     2319  stm32f429-disco.dtb
->   11136      137     3746     1465     2281  kirkwood-iconnect.dtb
->   11827      134     4126     1846     2280  sun8i-a83t-tbs-a711.dtb
->   12471      130     4151     1874     2277  sun8i-a83t-cubietruck-plus.dtb
->   12303      138     3704     1434     2270  kirkwood-dir665.dtb
->   11321      128     4133     1872     2261  sun8i-a83t-bananapi-m3.dtb
->   11377      136     3792     1544     2248  kirkwood-openblocks_a7.dtb
->   11021      140     4125     1884     2241  sun8i-a83t-allwinner-h8homlet-v2.dtb
->   11353      128     3729     1520     2209  kirkwood-openblocks_a6.dtb
->   17036      125     4092     1901     2191  ls1021a-qds.dtb
->   12707      134     3924     1750     2174  armada-375-db.dtb
->   16601      128     4336     2176     2160  sun8i-h3-orangepi-plus.dtb
->   10653      140     3478     1340     2138  kirkwood-mplcec4.dtb
->   11289      128     3558     1424     2134  kirkwood-t5325.dtb
->   10856      129     3301     1169     2132  imx23-evk.dtb
->   10440      129     3648     1521     2127  kirkwood-blackarmor-nas220.dtb
->   13581      140     3720     1596     2124  imx25-karo-tx25.dtb
->   13593      128     4248     2128     2120  r8a7778-bockw.dtb
->   11132      125     3555     1437     2118  kirkwood-ts419-6282.dtb
->   11152      137     3542     1433     2109  kirkwood-ts219-6282.dtb
->   11661      140     3911     1804     2107  qcom-mdm9615-wp8548-mangoh-green.dtb
->   18483      134     3488     1382     2106  vexpress-v2p-ca15_a7.dtb
->   10915      134     3410     1318     2092  imx23-sansa.dtb
->   20588      125     3924     1837     2087  r8a7792-wheat.dtb
->   15903      138     4207     2138     2069  sun8i-h3-nanopi-m1-plus.dtb
->   15902      139     4120     2075     2045  sun8i-h3-orangepi-plus2e.dtb
->   10503      130     3418     1378     2040  kirkwood-ib62x0.dtb
->   15787      126     4131     2094     2037  sun8i-h3-orangepi-2.dtb
->   12436      133     3402     1365     2037  kirkwood-linksys-viper.dtb
->   21472      137     3993     1961     2032  r8a7745-iwg22d-sodimm.dtb
->   10679      130     3873     1842     2031  sun8i-r40-bananapi-m2-ultra.dtb
->   10469      132     3889     1860     2029  sun8i-v40-bananapi-m2-berry.dtb
->   10475      126     3159     1134     2025  imx23-xfi3.dtb
->   10370      135     3408     1383     2025  kirkwood-b3.dtb
->   10222      139     3204     1179     2025  imx23-olinuxino.dtb
->   20579      134     3820     1798     2022  r8a7792-blanche.dtb
->   11903      138     3566     1546     2020  imx27-apf27.dtb
->   12404      133     3456     1445     2011  kirkwood-nas2big.dtb
->   13426      135     3440     1431     2009  kirkwood-net5big.dtb
->   12060      125     3456     1453     2003  kirkwood-net2big.dtb
->   10166      131     3378     1379     1999  kirkwood-sheevaplug.dtb
->   22867      134     4031     2038     1993  r8a7743-sk-rzg1m.dtb
->   10251      126     3362     1374     1988  kirkwood-sheevaplug-esata.dtb
->   10600      129     3683     1697     1986  uniphier-ld6b-ref.dtb
->   14992      137     4097     2121     1976  sun8i-h3-orangepi-lite.dtb
->   10012      125     3268     1293     1975  kirkwood-openrd-client.dtb
->   15546      127     4001     2031     1970  sun8i-h3-orangepi-pc-plus.dtb
->   10314      127     3265     1295     1970  kirkwood-pogoplug-series-4.dtb
->   10174      139     3308     1339     1969  kirkwood-guruplug-server-plus.dtb
->    9731      134     3296     1334     1962  kirkwood-openrd-ultimate.dtb
->   11979      126     3399     1438     1961  kirkwood-d2net.dtb
->   11690      127     3448     1487     1961  imx51-apf51.dtb
->   10678      131     3307     1347     1960  imx35-eukrea-mbimxsd35-baseboard.dtb
->   10260      133     3277     1317     1960  kirkwood-ts219-6281.dtb
->    9717      132     3164     1204     1960  imx23-stmp378x_devb.dtb
->    8170      127     3314     1359     1955  berlin2cd-google-chromecast.dtb
->   10240      137     3290     1337     1953  kirkwood-ts419-6281.dtb
->   12941      140     3724     1772     1952  sun8i-a23-evb.dtb
->   15697      136     4002     2056     1946  sun8i-h3-bananapi-m2-plus.dtb
->   14853      132     4042     2100     1942  sun8i-h3-nanopi-m1.dtb
->   15259      126     3962     2030     1932  sun8i-h3-orangepi-pc.dtb
->   14923      126     4042     2110     1932  sun8i-h3-nanopi-neo.dtb
->   15159      130     3978     2050     1928  sun8i-h3-orangepi-one.dtb
->    9955      134     3225     1302     1923  kirkwood-dreamplug.dtb
->    7933      140     4106     2188     1918  bcm28155-ap.dtb
->   10122      127     3282     1375     1907  kirkwood-db-88f6282.dtb
->   10110      139     3214     1307     1907  kirkwood-pogo_e02.dtb
->   15214      139     3960     2059     1901  sun8i-h3-beelink-x2.dtb
->    6963      134     3523     1622     1901  mt8135-evbp1.dtb
->   10086      131     3214     1315     1899  kirkwood-dockstar.dtb
->   15303      130     3996     2098     1898  sun8i-h2-plus-orangepi-zero.dtb
->    9591      130     3160     1282     1878  kirkwood-openrd-base.dtb
->   13850      127     3790     1919     1871  rk3036-evb.dtb
->   10490      127     3215     1375     1840  kirkwood-laplug.dtb
->   14329      128     3897     2064     1833  sun8i-h3-nanopi-neo-air.dtb
->    9982      139     3078     1259     1819  kirkwood-is2.dtb
->   67505      136     3169     1352     1817  tegra124-nyan-big.dtb
->    9978      127     3078     1263     1815  kirkwood-ns2.dtb
->   10249      128     3062     1248     1814  kirkwood-ns2max.dtb
->   10233      128     3078     1264     1814  kirkwood-ns2mini.dtb
->   67692      125     3169     1357     1812  tegra124-nyan-blaze.dtb
->    9879      130     3078     1266     1812  kirkwood-ns2lite.dtb
->    9901      140     3434     1628     1806  uniphier-pxs2-vodka.dtb
->   10277      132     3041     1236     1805  kirkwood-rd88f6281-a.dtb
->   12653      140     3783     1980     1803  stm32f746-disco.dtb
->   10031      138     3429     1626     1803  uniphier-pxs2-gentil.dtb
->   10922      127     3012     1215     1797  kirkwood-mv88f6281gtw-ge.dtb
->    9773      140     3473     1676     1797  qcom-msm8960-cdp.dtb
->    9289      128     3267     1472     1795  uniphier-pro4-ref.dtb
->    8745      128     3146     1360     1786  ste-u300.dtb
->    9510      131     3068     1283     1785  kirkwood-rd88f6192.dtb
->    8979      134     3203     1430     1773  uniphier-ld4-ref.dtb
->   12936      129     3686     1921     1765  stm32746g-eval.dtb
->    9660      125     3009     1245     1764  kirkwood-cloudbox.dtb
->   15686      131     3429     1667     1762  mt2701-evb.dtb
->    9031      130     3203     1442     1761  uniphier-sld8-ref.dtb
->    9230      139     3017     1259     1758  kirkwood-db-88f6281.dtb
->   10620      125     3050     1293     1757  imx50-evk.dtb
->   28166      131     3423     1667     1756  tegra30-cardhu-a04.dtb
->   19730      135     3601     1847     1754  r8a7745-sk-rzg1e.dtb
->   12191      138     3712     1962     1750  stm32f769-disco.dtb
->   10306      135     2973     1223     1750  kirkwood-rd88f6281-z0.dtb
->   41261      140     3080     1340     1740  tegra124-venice2.dtb
->   27974      131     3355     1635     1720  tegra30-cardhu-a02.dtb
->   18753      136     3248     1560     1688  lpc4357-ea4357-devkit.dtb
->   11276      125     3094     1437     1657  armada-xp-db-dxbc2.dtb
->    9748      133     3094     1461     1633  meson8-minix-neo-x8.dtb
->   12986      127     3272     1647     1625  r7s72100-genmai.dtb
->    8726      131     3011     1395     1616  uniphier-pro4-ace.dtb
->    8694      131     3022     1411     1611  uniphier-pro4-sanji.dtb
->   11106      135     3028     1431     1597  armada-xp-db-xc3-24g4xg.dtb
->    7960      129     2795     1201     1594  orion5x-linkstation-lschl.dtb
->   12767      138     3215     1626     1589  r7s72100-rskrza1.dtb
->   13005      140     3144     1580     1564  r7s72100-gr-peach.dtb
->   66575      138     2803     1242     1561  tegra124-jetson-tk1.dtb
->   15475      134     3196     1638     1558  ls1021a-twr.dtb
->    8292      133     2693     1141     1552  kirkwood-km_kirkwood.dtb
->   17207      130     3047     1506     1541  lpc4350-hitex-eval.dtb
->    8006      131     2557     1027     1530  orion5x-netgear-wnr854t.dtb
->   10906      127     3132     1615     1517  lpc3250-phy3250.dtb
->   66794      127     2741     1231     1510  tegra124-apalis-eval.dtb
->    8250      127     2629     1119     1510  kirkwood-km_fixedeth.dtb
->   30149      132     2887     1380     1507  tegra30-apalis-eval.dtb
->    7724      125     2638     1149     1489  orion5x-linkstation-lswtgl.dtb
->   13423      138     3099     1626     1473  r8a7779-marzen.dtb
->    7446      131     2607     1139     1468  orion5x-lacie-d2-network.dtb
->    7576      129     2632     1169     1463  orion5x-lswsgl.dtb
->   14318      139     2405      955     1450  vexpress-v2p-ca9.dtb
->   12304      137     2929     1513     1416  bcm958305k.dtb
->   12510      139     2913     1499     1414  bcm911360_entphn.dtb
->   12300      125     2929     1517     1412  bcm958300k.dtb
->   12009      128     2929     1520     1409  bcm911360k.dtb
->   11238      131     2884     1475     1409  lpc3250-ea3250.dtb
->   13229      140     2820     1420     1400  lpc4337-ciaa.dtb
->   12745      128     2806     1424     1382  zynq-zc702.dtb
->   51487      138     2671     1290     1381  tegra30-beaver.dtb
->   11940      133     2762     1381     1381  keystone-k2g-evm.dtb
->   34516      133     2584     1205     1379  tegra114-dalmore.dtb
->    8271      138     2503     1146     1357  imx35-pdk.dtb
->   26617      128     2597     1264     1333  tegra30-colibri-eval-v3.dtb
->   12684      125     2186      861     1325  vexpress-v2p-ca5s.dtb
->   11615      138     2689     1386     1303  zynq-zc706.dtb
->    6318      139     2302     1003     1299  orion5x-maxtor-shared-storage-2.dtb
->    8052      133     2518     1237     1281  meson8b-mxq.dtb
->   10636      125     2805     1533     1272  hisi-x5hd2-dkb.dtb
->    8395      126     2502     1230     1272  meson8b-odroidc1.dtb
->   13106      135     2107      839     1268  vexpress-v2p-ca15-tc1.dtb
->    6573      140     2194      956     1238  orion5x-rd88f5182-nas.dtb
->   11493      132     2607     1380     1227  arm-realview-pbx-a9.dtb
->    6544      137     2128      937     1191  orion5x-lacie-ethernet-disk-mini-v2.dtb
->    5851      126     2405     1214     1191  s3c2416-smdk2416.dtb
->   10756      133     2487     1301     1186  arm-realview-eb-11mp-bbrevd-ctrevb.dtb
->   10612      133     2487     1301     1186  arm-realview-eb-11mp-bbrevd.dtb
->   10568      129     2479     1297     1182  arm-realview-eb-a9mp-bbrevd.dtb
->    7849      128     2395     1232     1163  stm32h743i-eval.dtb
->   10577      136     2450     1288     1162  arm-realview-eb-11mp-ctrevb.dtb
->   12016      137     2463     1305     1158  bcm958625k.dtb
->   10445      140     2450     1292     1158  arm-realview-eb-11mp.dtb
->   10389      132     2442     1284     1158  arm-realview-eb-a9mp.dtb
->   10599      130     2395     1250     1145  keystone-k2g-ice.dtb
->    7638      131     2362     1219     1143  stm32h743i-disco.dtb
->    6363      126     2130      990     1140  orion5x-linkstation-lsgl.dtb
->    6679      130     2130      994     1136  orion5x-kuroboxpro.dtb
->   10564      133     2392     1269     1123  arm-realview-pba8.dtb
->   10159      138     2195     1082     1113  bcm4708-buffalo-wzr-1750dhp.dtb
->    9661      140     2275     1164     1111  bcm47081-buffalo-wzr-600dhp2.dtb
->    6952      129     2225     1121     1104  picoxcell-pc7302-pc3x3.dtb
->    9782      131     2241     1139     1102  bcm4709-buffalo-wxr-1900dhp.dtb
->    9542      131     2193     1091     1102  bcm47094-dlink-dir-885l.dtb
->    9318      131     2193     1091     1102  bcm4708-netgear-r6250.dtb
->    8918      131     2193     1091     1102  bcm47094-luxul-xbr-4500.dtb
->    8918      131     2193     1091     1102  bcm47094-luxul-abr-4500.dtb
->    9397      132     2241     1140     1101  bcm47094-netgear-r8500.dtb
->    9173      132     2241     1140     1101  bcm4708-asus-rt-ac68u.dtb
->   10371      134     2241     1142     1099  bcm4709-netgear-r8000.dtb
->    8835      134     2225     1126     1099  bcm953012er.dtb
->    8563      134     2241     1142     1099  bcm47094-linksys-panamera.dtb
->    9442      135     2241     1143     1098  bcm4709-netgear-r7000.dtb
->    8402      135     2241     1143     1098  bcm47081-buffalo-wzr-900dhp.dtb
->    9457      136     2209     1112     1097  bcm47081-luxul-xwr-1200.dtb
->    9169      136     2241     1144     1097  bcm4708-netgear-r6300-v2.dtb
->    8639      138     2241     1146     1095  bcm4709-linksys-ea9200.dtb
->    8607      138     2241     1146     1095  bcm4708-linksys-ea6300-v1.dtb
->    9293      140     2241     1148     1093  bcm4708-asus-rt-ac56u.dtb
->    9149      140     2257     1164     1093  bcm953012hr.dtb
->    8925      140     2241     1148     1093  bcm4709-asus-rt-ac87u.dtb
->    8940      125     2241     1149     1092  bcm47081-asus-rt-n18u.dtb
->   10202      127     2145     1055     1090  bcm4708-smartrg-sr400ac.dtb
->    9546      127     2193     1103     1090  bcm47094-luxul-xwr-3100.dtb
->    8761      128     2241     1152     1089  bcm4708-luxul-xwc-1000.dtb
->    9206      131     2118     1043     1075  bcm47081-tplink-archer-c5-v2.dtb
->    8694      131     2182     1107     1075  bcm4708-luxul-xap-1510.dtb
->    8116      133     2198     1125     1073  bcm94708.dtb
->    9427      134     2102     1030     1072  bcm4709-tplink-archer-c9-v1.dtb
->    8979      134     2198     1126     1072  bcm953012k.dtb
->   11826      135     2294     1223     1071  bcm958622hr.dtb
->   11588      133     2292     1221     1071  arm-realview-pb11mp.dtb
->    8128      137     2198     1129     1069  bcm94709.dtb
->   11822      139     2294     1227     1067  bcm988312hr.dtb
->   11822      139     2294     1227     1067  bcm958623hr.dtb
->    8525      140     2182     1116     1066  bcm47081-luxul-xap-1410.dtb
->   11548      125     2310     1245     1065  bcm958525xmc.dtb
->   11339      126     2310     1246     1064  bcm958525er.dtb
->   11818      127     2294     1231     1063  bcm958625hr.dtb
->   11351      130     2310     1250     1060  bcm958522er.dtb
->    5968      137     1894      857     1037  wm8750-apc8750.dtb
->    6050      135     1857      855     1002  imx1-ads.dtb
->    7066      127     1828      831      997  mmp2-brownstone.dtb
->   24062      139     1878      891      987  tegra20-medcom-wide.dtb
->    5817      128     1777      800      977  imx1-apf9328.dtb
->    8991      138     2114     1146      968  sun8i-v3s-licheepi-zero-dock.dtb
->   23605      132     1866      900      966  tegra20-plutux.dtb
->    8460      125     2130     1165      965  sun8i-v3s-licheepi-zero.dtb
->    8961      136     2057     1096      961  arm-realview-eb-bbrevd.dtb
->   23609      128     1866      912      954  tegra20-tec.dtb
->    7266      135     1743      791      952  gemini-rut1xx.dtb
->    6255      138     2288     1338      950  bcm23550-sparrow.dtb
->    8794      127     2020     1071      949  arm-realview-eb.dtb
->    8878      139     1727      779      948  gemini-dlink-dir-685.dtb
->   27138      135     1824      887      937  tegra20-seaboard.dtb
->    9826      135     2107     1175      932  arm-realview-pb1176.dtb
->    8334      139     2103     1179      924  zynq-microzed.dtb
->   11606      131     1678      771      907  armada-395-gp.dtb
->   11621      132     1662      756      906  armada-390-db.dtb
->    7724      125     1684      781      903  gemini-wbd222.dtb
->    7724      125     1684      781      903  gemini-wbd111.dtb
->   12001      136     1614      712      902  armada-398-db.dtb
->    6129      136     1566      664      902  cloudengines-pogoplug-series-3.dtb
->    8192      137     2061     1161      900  zynq-parallella.dtb
->    8245      132     1668      772      896  gemini-sq201.dtb
->    7861      132     1684      788      896  gemini-nas4220b.dtb
->    5620      133     1909     1013      896  meson6-atv1200.dtb
->   24861      140     1734      844      890  tegra20-ventana.dtb
->    6623      138     1614      730      884  wd-mbwe.dtb
->    5579      126     1665      782      883  wm8850-w70v2.dtb
->    7890      135     2022     1143      879  zynq-zed.dtb
->   18785      136     1734      856      878  tegra114-tn7.dtb
->    7946      127     2006     1135      871  zynq-zybo.dtb
->    7092      133     1660      789      871  emev2-kzm9d.dtb
->   24849      136     1666      808      858  tegra20-harmony.dtb
->    5238      131     1581      739      842  wm8505-ref.dtb
->   16032      137     1843     1017      826  spear1310-evb.dtb
->   31284      133     1638      821      817  tegra114-roth.dtb
->   23374      139     1555      779      776  tegra20-iris-512.dtb
->   23200      137     1511      761      750  tegra20-paz00.dtb
->    4002      135     1582      871      711  nspire-cx.dtb
->    3877      132     1549      852      697  nspire-clp.dtb
->    3873      136     1549      856      693  nspire-tp.dtb
->   14603      126     1417      734      683  spear1340-evb.dtb
->    7376      137     1268      633      635  qcom-ipq8064-ap148.dtb
->    4228      133     1226      597      629  wm8650-mid.dtb
->    6138      127     1319      703      616  axm5516-amarillo.dtb
->    6348      125     1332      717      615  bcm53340-ubnt-unifi-switch8.dtb
->    4977      136     1357      760      597  picoxcell-pc7302-pc3x2.dtb
->   21166      139     1303      731      572  tegra20-trimslice.dtb
->    5829      132     1568     1028      540  bcm21664-garnet.dtb
->    5405      140     1100      572      528  pxa910-dkb.dtb
->    7307      126     1025      510      515  qcom-ipq4019-ap.dk01.1-c1.dtb
->    4179      134     1063      550      513  bcm47189-tenda-ac9.dtb
->    3859      134     1095      582      513  bcm47189-luxul-xap-810.dtb
->    4580      133     1095      597      498  tango4-vantage-1172.dtb
->    5060      133     1217      741      476  ep7211-edb7211.dtb
->    3315      134     1002      550      452  bcm47189-luxul-xap-1440.dtb
->    3996      125     1002      557      445  bcm947189acdbmr.dtb
->    8515      134     1153      710      443  exynos5440-ssdk5440.dtb
->    3885      140      998      556      442  bcm963138dvt.dtb
->    5862      131      942      515      427  integratorcp.dtb
->    6026      127      866      447      419  highbank.dtb
->    3098      127      909      495      414  pxa168-aspenite.dtb
->    4193      136     1092      680      412  spear600-evb.dtb
->    3810      135     1039      631      408  owl-s500-guitar-bb-rev-b.dtb
->    8002      135     1111      711      400  exynos5440-sd5v1.dtb
->    3770      127     1039      639      400  owl-s500-cubieboard6.dtb
->    6123      126      925      526      399  bcm7445-bcm97445svmb.dtb
->    4016      137     1126      729      397  mps2-an399.dtb
->    4016      137     1126      729      397  mps2-an385.dtb
->    5568      137      851      457      394  ecx-2000.dtb
->    4602      127     1022      639      383  efm32gg-dk3750.dtb
->    7884      125      886      525      361  spear320-hmi.dtb
->    4196      133      861      517      344  moxart-uc7112lx.dtb
->    5457      136      889      568      321  integratorap.dtb
->    3331      134      718      406      312  vt8500-bv07.dtb
->    6265      128      816      512      304  spear320-evb.dtb
->    3363      134      840      550      290  hi3519-demb.dtb
->    4792      129      730      449      281  artpec6-devboard.dtb
->    2888      129      664      385      279  imx31-bug.dtb
->    7960      129      709      449      260  versatile-pb.dtb
->    3104      137      711      457      254  zx296702-ad1.dtb
->    5862      131      617      403      214  spear310-evb.dtb
->    6389      132      601      388      213  versatile-ab.dtb
->    2537      128      593      384      209  mt6589-aquaris5.dtb
->    2966      131      537      355      182  mt8127-moose.dtb
->    5173      132      552      372      180  spear300-evb.dtb
->    2473      128      485      368      117  mt6592-evb.dtb
->    2370      135      454      343      111  cx92755_equinox.dtb
->    2105      128      377      304       73  mt6580-evbp1.dtb
->    2357      132      346      292       54  hip01-ca9x2.dtb
->    1232      137      208      201        7  alphascale-asm9260-devkit.dtb
->    2571      126      201      222      -21  alpine-db.dtb
->    1220      133       68      149      -81  xenvm-4.2.dtb
-> 
+--HcAYCG3uE/tztfnV
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Mylene,
+
+On Fri, Dec 01, 2017 at 04:39:56PM +0100, Myl=E8ne Josserand wrote:
+> +++ b/drivers/input/touchscreen/cyttsp5.c
+> @@ -0,0 +1,1110 @@
+> +/*
+> + * Parade TrueTouch(TM) Standard Product V5 Module.
+> + * For use with Parade touchscreen controllers.
+> + *
+> + * Copyright (C) 2015 Parade Technologies
+> + * Copyright (C) 2012-2015 Cypress Semiconductor
+> + * Copyright (C) 2017 Free Electrons
+> + *
+> + * Author: Myl=E8ne Josserand <mylene.josserand-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License
+> + * version 2, and only version 2, as published by the
+> + * Free Software Foundation.
+
+Please use SPDX license Identifier to describe the license.
+
+E.g.
+SPDX-License-Identifier: GPL-2.0
+
+Also, the MODULE_LICENSE means GPL 2.0 or later per module.h and this does
+not match the license description.
+
+Could you make sure they are in sync?
+
+
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + *
+> + */
+> +
+> +#include <asm/unaligned.h>
+> +#include <linux/crc-itu-t.h>
+> +#include <linux/delay.h>
+> +#include <linux/device.h>
+> +#include <linux/gpio.h>
+> +#include <linux/input/mt.h>
+> +#include <linux/input/touchscreen.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/i2c.h>
+> +#include <linux/module.h>
+> +#include <linux/of_device.h>
+> +#include <linux/regmap.h>
+
+#include <linux/bitops.h>
+
+since you are using BIT()
+
+
+[snip]
+
+
+> +static int cyttsp5_setup_input_device(struct device *dev)
+> +{
+> +	struct cyttsp5 *ts =3D dev_get_drvdata(dev);
+> +	struct cyttsp5_sysinfo *si =3D &ts->sysinfo;
+> +	int max_x, max_y, max_p;
+> +	int max_x_tmp, max_y_tmp;
+> +	int rc;
+> +
+> +	__set_bit(EV_ABS, ts->input->evbit);
+> +	__set_bit(EV_REL, ts->input->evbit);
+> +	__set_bit(EV_KEY, ts->input->evbit);
+> +
+> +	max_x_tmp =3D si->sensing_conf_data.res_x;
+> +	max_y_tmp =3D si->sensing_conf_data.res_y;
+> +	max_x =3D max_y_tmp - 1;
+> +	max_y =3D max_x_tmp - 1;
+> +	max_p =3D si->sensing_conf_data.max_z;
+> +
+> +	input_mt_init_slots(ts->input, si->tch_abs[CY_TCH_T].max, 0);
+> +
+> +	__set_bit(ABS_MT_POSITION_X, ts->input->absbit);
+> +	__set_bit(ABS_MT_POSITION_Y, ts->input->absbit);
+> +	__set_bit(ABS_MT_PRESSURE, ts->input->absbit);
+
+Not needed, input_set_abs_params() will set the bits for you below.
+
+
+> +
+> +	input_set_abs_params(ts->input, ABS_MT_POSITION_X, 0, max_x, 0, 0);
+> +	input_set_abs_params(ts->input, ABS_MT_POSITION_Y, 0, max_y, 0, 0);
+> +	input_set_abs_params(ts->input, ABS_MT_PRESSURE, 0, max_p, 0, 0);
+> +
+> +	input_set_abs_params(ts->input, ABS_MT_TOUCH_MAJOR, 0, MAX_AREA, 0, 0);
+> +	input_set_abs_params(ts->input, ABS_MT_TOUCH_MINOR, 0, MAX_AREA, 0, 0);
+> +
+> +	rc =3D input_register_device(ts->input);
+> +	if (rc < 0)
+> +		dev_err(dev, "Error, failed register input device r=3D%d\n", rc);
+> +
+> +	return rc;
+> +}
+> +
+> +
+
+[snip]
+
+> +static int cyttsp5_get_hid_descriptor(struct cyttsp5 *ts,
+> +				      struct cyttsp5_hid_desc *desc)
+> +{
+> +	struct device *dev =3D ts->dev;
+> +	__le16 hid_desc_register =3D HID_DESC_REG;
+> +	int rc;
+> +	u8 cmd[2];
+> +
+> +	/* Read HID descriptor length and version */
+> +	mutex_lock(&ts->system_lock);
+> +	ts->hid_cmd_state =3D HID_CMD_BUSY;
+> +	mutex_unlock(&ts->system_lock);
+> +
+> +	/* Set HID descriptor register */
+> +	memcpy(cmd, &hid_desc_register, sizeof(hid_desc_register));
+> +
+> +	rc =3D cyttsp5_write(ts, HID_DESC_REG, NULL, 0);
+> +	if (rc < 0) {
+> +		dev_err(dev, "Failed to get HID descriptor, rc=3D%d\n", rc);
+> +		goto error;
+> +	}
+> +
+> +	rc =3D wait_event_timeout(ts->wait_q, (ts->hid_cmd_state =3D=3D HID_CMD=
+_DONE),
+> +				msecs_to_jiffies(CY_HID_GET_HID_DESCRIPTOR_TIMEOUT));
+> +	if (!rc) {
+> +		dev_err(ts->dev, "HID get descriptor timed out\n");
+> +		rc =3D -ETIME;
+> +		goto error;
+> +	}
+> +
+> +	memcpy(desc, ts->response_buf, sizeof(struct cyttsp5_hid_desc));
+> +
+> +	/* Check HID descriptor length and version */
+> +	if (le16_to_cpu(desc->hid_desc_len) !=3D sizeof(*desc) ||
+> +	    le16_to_cpu(desc->bcd_version) !=3D HID_VERSION) {
+> +		dev_err(dev, "Unsupported HID version\n");
+> +		return -ENODEV;
+
+Maybe it is supposed to return here, but all other faults use "goto
+error".
+
+> +	}
+> +
+> +	goto exit;
+> +
+> +error:
+> +	mutex_lock(&ts->system_lock);
+> +	ts->hid_cmd_state =3D HID_CMD_DONE;
+> +	mutex_unlock(&ts->system_lock);
+> +exit:
+> +	return rc;
+> +}
+> +
+
+[snip]
+
+> +static int cyttsp5_probe(struct device *dev, struct regmap *regmap, int =
+irq,
+> +			 const char *name)
+> +{
+> +	struct cyttsp5 *ts;
+> +	struct cyttsp5_sysinfo *si;
+> +	int rc =3D 0, i;
+> +
+> +	ts =3D devm_kzalloc(dev, sizeof(*ts), GFP_KERNEL);
+> +	if (!ts)
+> +		return -ENOMEM;
+> +
+> +	/* Initialize device info */
+> +	ts->regmap =3D regmap;
+> +	ts->dev =3D dev;
+> +	si =3D &ts->sysinfo;
+> +	dev_set_drvdata(dev, ts);
+> +
+> +	/* Initialize mutexes and spinlocks */
+
+No spinlocks here :-)
+
+> +	mutex_init(&ts->system_lock);
+> +
+> +	/* Initialize wait queue */
+> +	init_waitqueue_head(&ts->wait_q);
+> +
+> +	/* Reset the gpio to be in a reset state */
+> +	ts->reset_gpio =3D devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_LOW);
+> +	if (IS_ERR(ts->reset_gpio)) {
+> +		rc =3D PTR_ERR(ts->reset_gpio);
+> +		dev_err(dev, "Failed to request reset gpio, error %d\n", rc);
+> +		return rc;
+> +	}
+> +	gpiod_set_value(ts->reset_gpio, 1);
+> +
+
+[snip]
+
+> +static struct i2c_driver cyttsp5_i2c_driver =3D {
+> +	.driver =3D {
+> +		.name =3D CYTTSP5_NAME,
+> +		.owner =3D THIS_MODULE,
+> +		.of_match_table =3D of_match_ptr(cyttsp5_of_match),
+> +	},
+> +	.probe =3D cyttsp5_i2c_probe,
+> +	.remove =3D cyttsp5_i2c_remove,
+> +	.id_table =3D cyttsp5_i2c_id,
+> +};
+> +
+> +module_i2c_driver(cyttsp5_i2c_driver);
+> +
+> +MODULE_LICENSE("GPL");
+
+=46rom linux/module.h:
+
+/*
+ * The following license idents are currently accepted as indicating free
+ * software modules
+ *
+ *	"GPL"				[GNU Public License v2 or later]
+ *	"GPL v2"			[GNU Public License v2]
+
+
+
+> +MODULE_DESCRIPTION("Touchscreen driver for Cypress TrueTouch Gen 5 Produ=
+ct");
+> +MODULE_AUTHOR("Myl=E8ne Josserand <mylene.josserand-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>"=
+);
+> --=20
+> 2.11.0
+>=20
+
+Best regards
+Marcus Folkesson
+
+--HcAYCG3uE/tztfnV
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEBVGi6LZstU1kwSxliIBOb1ldUjIFAlpmRVgACgkQiIBOb1ld
+UjKgZhAA0saajnKQiVvztDIpYEjHeDLD9xPgyrHnU7ZMrZkyJfUNKOsYh5wGRxPn
+wDfzRKAW6eH/6QGF6rnxIvdGoiqXi4NukTyiPQbg6ztWgLOrSlZMC+YA744Y7XC7
+kT/FliZ8AZFQWDWop7QL+SlW8WRgrhhhTxHDHmy2bD/0nww/dn4jPfIjrafxcJN2
+9oyFkn+CKSmKF5mBNg5EO2vT4HARJWnFtfe91YjCBXf4Pp/hVyWXtL00xiVCITeb
+H9Yc5E16IvHEsM+oCBQOSMwgFh6cyFSC/5VFMO9Gxk9dVqMkqFDPre7JdeYqXHiV
+6+OyrOXGoqfCmyFEP3q3w4Cp3L1PcuCGnSDxIq/N27DmhqPDuxQqosu3BPxZ+dc3
+S8TuuEQwIuHns0P0f7ZeVO2oH4pqOPoF+l9cAdA+N88QgZrrkdy1Q/6pgmg5iCxo
+bLjpeqxHTP4Wbnt/Q324ZxQTcCMhAg7F4p9ohn1g3VpsAxfFGU33EgMa8brCDIF1
+whsz6rPZDzxaYVobtQfCy54BMdQXCD5WlXR3sId5XX0nJTdRxmzHoragPECulVuk
+uIwYUIxhQW80ahRhT9hzRf7K8wWGm2hM4UqXbRC8INsPDJXMocMWycKRNJL3QtZ8
+ByYbrpQs4sBtWwV4+Gklnmyef+DYTGYUO0u0HnN3SYrF4aKZRXc=
+=G/K9
+-----END PGP SIGNATURE-----
+
+--HcAYCG3uE/tztfnV--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
