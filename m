@@ -1,110 +1,60 @@
-From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Subject: Re: [PATCH v6 0/9] Renesas Capture Engine Unit (CEU) V4L2 driver
-Date: Mon, 22 Jan 2018 11:00:50 +0100
-Message-ID: <2a18ce21-8efd-6182-f626-8f7c7bcaebee@xs4all.nl>
-References: <1516139101-7835-1-git-send-email-jacopo+renesas@jmondi.org>
- <6fcd22c1-19a5-e0b7-2b00-961e1cd1ebaa@xs4all.nl>
- <20180121174909.GP24926@w540>
+From: John Garry <john.garry@huawei.com>
+Subject: Re: [PATCH v11 6/9] LPC: Support the LPC host on Hip06/Hip07 with DT
+ bindings
+Date: Mon, 22 Jan 2018 10:13:23 +0000
+Message-ID: <9c5766ef-3865-4125-dda9-3e0aaad90dca@huawei.com>
+References: <1516537647-50553-1-git-send-email-john.garry@huawei.com>
+ <1516537647-50553-7-git-send-email-john.garry@huawei.com>
+ <cabc1ed6-18e3-8685-82b7-ae1d7dd2348a@infradead.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180121174909.GP24926@w540>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jacopo mondi <jacopo-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-Cc: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, geert-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sakari.ailus-X3B1VOXEql0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pombredanne-od1rfyK75/E@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <cabc1ed6-18e3-8685-82b7-ae1d7dd2348a@infradead.org>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Randy Dunlap <rdunlap@infradead.org>, mika.westerberg@linux.intel.com, rafael@kernel.org, lorenzo.pieralisi@arm.com, rjw@rjwysocki.net, robh+dt@kernel.org, bhelgaas@google.com, arnd@arndb.de, mark.rutland@arm.com, olof@lixom.net, hanjun.guo@linaro.org, dann.frazier@canonical.com
+Cc: benh@kernel.crashing.org, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, linuxarm@huawei.com, linux-pci@vger.kernel.org, minyard@acm.org, devicetree@vger.kernel.org, linux-arch@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 21/01/18 18:49, jacopo mondi wrote:
-> Hi Hans,
-> 
-> On Fri, Jan 19, 2018 at 12:26:09PM +0100, Hans Verkuil wrote:
->> Hi Jacopo,
+On 21/01/2018 17:54, Randy Dunlap wrote:
+> On 01/21/2018 04:27 AM, John Garry wrote:
+>> diff --git a/drivers/bus/Kconfig b/drivers/bus/Kconfig
+>> index 57e011d..91debe4 100644
+>> --- a/drivers/bus/Kconfig
+>> +++ b/drivers/bus/Kconfig
+>> @@ -65,6 +65,14 @@ config BRCMSTB_GISB_ARB
+>>  	  arbiter. This driver provides timeout and target abort error handling
+>>  	  and internal bus master decoding.
 >>
->> On 01/16/18 22:44, Jacopo Mondi wrote:
->>> Hello,
->>>    new version of CEU after Hans' review.
->>>
->>> Added his Acked-by to most patches and closed review comments.
->>> Running v4l2-compliance, I noticed a new failure introduced by the way I now
->>> calculate the plane sizes in set/try_fmt.
->>>
->>> This is the function used to update per-plane bytesperline and sizeimage:
->>>
->>> static void ceu_update_plane_sizes(struct v4l2_plane_pix_format *plane,
->>> 				   unsigned int bpl, unsigned int szimage)
->>> {
->>> 	if (plane->bytesperline < bpl)
->>> 		plane->bytesperline = bpl;
->>> 	if (plane->sizeimage < szimage)
->>> 		plane->sizeimage = szimage;
->>> }
->>>
->>> I'm seeing a failure as v4l2-compliance requires buffers with both bytesperline
->>> and sizeimage set to MAX_INT . Hans, is this expected from v4l2-compliance?
->>> How should I handle this, if that has to be handled by the single drivers?
->>
->> I commented on this in my review of patch 3/9.
-> 
-> Fixed thank you.
-> 
->>
->>>
->>> Apart from that, here it is the output of v4l2-compliance, with the last tests
->>> failing due to the above stated reason, and two errors in try/set format due to
->>> the fact the driver is not setting ycbcr encoding after it receives an invalid
->>
->> Which driver? The CEU driver or the sensor driver? I don't actually see where
->> it fails.
->>
-> 
-> Here it is:
-> 
->                 fail: v4l2-test-formats.cpp(335): ycbcr_enc >= 0xff
->                 fail: v4l2-test-formats.cpp(451): testColorspace(pix_mp.pixelformat, pix_mp.colorspace, pix_mp.ycbcr_enc, pix_mp.quantization)
->                 fail: v4l2-test-formats.cpp(736): Video Capture Multiplanar is valid, but TRY_FMT failed to return a format
->                 test VIDIOC_TRY_FMT: FAIL
->                 fail: v4l2-test-formats.cpp(335): ycbcr_enc >= 0xff
->                 fail: v4l2-test-formats.cpp(451): testColorspace(pix_mp.pixelformat, pix_mp.colorspace, pix_mp.ycbcr_enc, pix_mp.quantization)
->                 fail: v4l2-test-formats.cpp(996): Video Capture Multiplanar is valid, but no S_FMT was implemented
->                 test VIDIOC_S_FMT: FAIL
+>> +config HISILICON_LPC
+>> +	bool "Support for ISA I/O space on Hisilicon hip06/7"
+>> +	depends on (ARM64 && (ARCH_HISI || COMPILE_TEST))
+>> +	select INDIRECT_PIO
+>> +	help
+>> +	  Driver needed for some legacy ISA devices attached to Low-Pin-Count
+>> +	  on Hisilicon hip06/7 SoC.
+>
+> Hi,
+> Why is this config symbol bool instead of tristate?
+>
+> thanks,
 
-Sorry, I was perhaps confusing. I meant that I couldn't see where in the code
-ycbcr_enc was not overwritten by 0 (which should have happened). You will need
-to debug a bit, I think. It could be a bug in the ceu driver or the sensor driver.
+Hi Randy,
 
-> 
-> 
->>> format. I would set those, but I'm not sure what it the correct value and not
->>> all mainline drivers do that.
->>
->> In any case, the default for ycbcr_enc, xfer_func and quantization is 0.
->>
-> 
-> Thanks again. I do expect to be the sensor driver to set ycbcr_enc and
-> quantization, but from a very trivial grep on media/i2c/ I see only a
-> few drivers taking care of them (adv7511 and adv7842). What about the
-> others? I assume v4l2-compliance would not fail on them as it does on
-> ov7670, but I don't see where ycbr_enc (and others) are managed.
+Considering the nature of this driver, and the fact that it provides an 
+IO space region through the logical PIO framework introduced, it does 
+not make sense to have it as a loadable module.
 
-In most cases these values are initialized to 0 (either a memset or by
-initializing the struct), which is typically all you need for sensor
-drivers. HDMI drivers are more complicated which is why you see explicit
-handling of these fields only there.
+A specific issue is that one of our boards uses this host for the UART 
+console (through 8250-compatible device in BMC), so would want it in the 
+kernel image.
 
-> 
-> Overall, with this addressed, the other issue I mentioned on patch
-> [3/9] on readbuffers clarified and frameinterval handled for ov722x, I
-> hope we're done with this series. Thanks again your continued effort
-> in reviews and guidance.
+I will add a note in the commit message and maybe config description 
+explaining this.
 
-My pleasure!
+Thanks,
+John
 
-Regards,
+>
 
-	Hans
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
