@@ -1,87 +1,119 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH] pinctrl: at91-pio4: add support for drive-strength property
-Date: Mon, 22 Jan 2018 09:37:38 +0100
-Message-ID: <CACRpkdanweSmHd_M+feHauEHtvKSW+-W=djb186BFdbxTf20Jg@mail.gmail.com>
-References: <20180118160208.16461-1-ludovic.desroches@microchip.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: sun9i: Enable USB support on Cubieboard4
+Date: Mon, 22 Jan 2018 09:38:33 +0100
+Message-ID: <20180122083833.cnjsks3dj3uakcbt@flea.lan>
+References: <20171216205809.5485-1-kettenis@openbsd.org>
+ <CAGb2v66XNAHwAU1eosYjGKgYKkh9YiVEooE9e45RSVvPOvhYLg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180118160208.16461-1-ludovic.desroches@microchip.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ludovic Desroches <ludovic.desroches@microchip.com>
-Cc: Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-gpio@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="fokdjgen3ctkbkrs"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAGb2v66XNAHwAU1eosYjGKgYKkh9YiVEooE9e45RSVvPOvhYLg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Mark Kettenis <kettenis-7YlrpqBBQ3VAfugRpC6u6w@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 18, 2018 at 5:02 PM, Ludovic Desroches
-<ludovic.desroches@microchip.com> wrote:
 
-> Add support for the drive-strength property. Usually its value is
-> expressed in mA. Since the numeric value depends on VDDIOP voltage,
-> the controller uses low, medium and high to define the drive-strengh.
+--fokdjgen3ctkbkrs
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Aha I see. That's complex. It certainly results in a certain mA drive
-strength in the end, but what you're saying is that this is not usually
-what we configure.
+On Sat, Jan 20, 2018 at 02:12:04PM +0800, Chen-Yu Tsai wrote:
+> Maxime,
+>=20
+> On Sun, Dec 17, 2017 at 4:58 AM, Mark Kettenis <kettenis-7YlrpqBBQ3VAfugRpC6u6w@public.gmane.org> wro=
+te:
+> > On the Cubieboard4 HCI0 is directly connected to a USB connector,
+> > and HCI2 is connected to a USB hub on the board.  HCI1 is available
+> > with HSIC throug 2 pins on the GPIO expansion header, but left
+> > disabled just like on the Optimus board.
+> >
+> > This patch also adds the VBUS regulators.
+> >
+> > Signed-off-by: Mark Kettenis <kettenis-7YlrpqBBQ3VAfugRpC6u6w@public.gmane.org>
+>=20
+> Any thoughts on this patch?
+>=20
+> It's similar to what I sent a few years back:
+>=20
+>     https://patchwork.kernel.org/patch/6359461/
 
-> The PIO controller accepts two values for the low drive: 0 or 1. Most
-> of the time, we don't care about the drive strength, there is no need
-> to change it, so 0 is considered as the default value.
+Given the previous discussion, I guess we should have much more
+comments on how it is designed.
 
-Do you mean default value as in "whatever the hardware was set
-up as at boot time"?
+There was some effort to have power sequence for USB devices described
+in the DT here:
+https://patchwork.kernel.org/patch/9800887/
 
-> The low-drive
-> value won't be advertised through pinconf-pins file excepted if it
+I guess pinging Peter to know the current state would be a good way
+forward.
 
-except?
+> >  arch/arm/boot/dts/sun9i-a80-cubieboard4.dts | 36 +++++++++++++++++++++=
+++++++++
+> >  1 file changed, 36 insertions(+)
+> >
+> > diff --git a/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts b/arch/arm/boo=
+t/dts/sun9i-a80-cubieboard4.dts
+> > index 4024639aa005..e38623265695 100644
+> > --- a/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts
+> > +++ b/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts
+> > @@ -74,6 +74,24 @@
+> >                 };
+> >         };
+> >
+> > +       reg_usb1_vbus: usb1-vbus {
+> > +               compatible =3D "regulator-fixed";
+> > +               regulator-name =3D "usb2-drvbus";
+> > +               regulator-min-microvolt =3D <5000000>;
+> > +               regulator-max-microvolt =3D <5000000>;
+> > +               enable-active-high;
+> > +               gpio =3D <&pio 7 15 GPIO_ACTIVE_HIGH>; /* PH15 */
+> > +       };
+> > +
+> > +       reg_usb3_vbus: usb3-vbus {
+> > +               compatible =3D "regulator-fixed";
+> > +               regulator-name =3D "usb1-drvbus";
+> > +               regulator-min-microvolt =3D <5000000>;
+> > +               regulator-max-microvolt =3D <5000000>;
+> > +               enable-active-high;
+> > +               gpio =3D <&pio 7 14 GPIO_ACTIVE_HIGH>; /* PH14 */
+> > +       };
 
-> has been set explicitly in the device tree ie if its value is
-> different from 0.
->
-> Signed-off-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+You should also have a proper parenthood relationship here, and not
+just leave these two regulators hanging around.
 
-OK I think I get it.
+Maxime
 
->  Optional properties:
->  - GENERIC_PINCONFIG: generic pinconfig options to use, bias-disable,
-> -bias-pull-down, bias-pull-up, drive-open-drain, input-schmitt-enable,
-> -input-debounce, output-low, output-high.
-> +bias-pull-down, bias-pull-up, drive-open-drain, drive-strength,
-> +input-schmitt-enable, input-debounce, output-low, output-high.
-(...)
-> +                       drive-strength = <ATMEL_PIO_DRVSTR_LO>;
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 
-So you say you support this argument and it will be something like
+--fokdjgen3ctkbkrs
+Content-Type: application/pgp-signature; name="signature.asc"
 
-include/dt-bindings/pinctrl/at91.h:#define ATMEL_PIO_DRVSTR_LO  1
-include/dt-bindings/pinctrl/at91.h:#define ATMEL_PIO_DRVSTR_ME  2
-include/dt-bindings/pinctrl/at91.h:#define ATMEL_PIO_DRVSTR_HI  3
+-----BEGIN PGP SIGNATURE-----
 
-But the definition if generic drive strength is actually in mA.
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlplowgACgkQ0rTAlCFN
+r3S2/Q//dKh5g6qLYPnbP+GC6sSMV2/4kqyzN1AdL+XQm9nSMx2F3kFrmGizF3QA
+EBh0LNz30HUAwRAqoarvr9AjsIT2bjg9RRlnpuMRpR7/pQ6p+rJTUvhVdRSwDMB1
+84KYsOqNFWIF5E0wRbH1KuwxT6uIh725YgDHOHxCRazeAVmcQqzIJ2+ostptMEnj
+j3nF2nGej8ep215ftJ2c+nJstFXfwe9HfbhVa74nQFNOAFDmeBRhY8DnH3J+o9WT
+ipQBXzZZQXSbm4PQzGWJpA4T/l7/11FRZEGXXrC8IVY5ugJ5lcrmzM46x8H1yrQt
+cW4uiuxE5REq2WS19Sx6Sst+EILa6W65xi9xh5vTn5R0mAqyKtcZV06OsZF/eufF
+RT1in9qFlkzxu3Ie26eJYaR/MrLKHl1HaH1enj8zNX8vf8V0nDz0bY1UDWDW6jhr
+cuyuOWzQzIwJzgFe1y9l8D6ujz74SWlKNNMA2uE+DNWFEbS3W1g0SGqYDs6KWJyR
+/vW67baZoNepwjgubIzilBdjtK8YqLIgZX4hEwKgUxoJ8MfQt0wTe/l16BL/tKcx
+pIKjubpMGtWYk2dOUVm7a164mTGf521Rxj/2kSC7DqgDV7+m4tCbdpnncK0sAJSr
+Tzec11ETLP02dkhof5nVZ3nG8dbVnqYhlLNDLW/AyLZ9INsbRc0=
+=zVPs
+-----END PGP SIGNATURE-----
 
-I think it is OK to deviate from stating it in mA, but you should
-write this in the DT bindings so people do not get confused.
-
-> @@ -814,6 +834,19 @@ static void atmel_conf_pin_config_dbg_show(struct pinctrl_dev *pctldev,
->                 seq_printf(s, "%s ", "open-drain");
->         if (conf & ATMEL_PIO_SCHMITT_MASK)
->                 seq_printf(s, "%s ", "schmitt");
-> +       if (conf & ATMEL_PIO_DRVSTR_MASK) {
-> +               switch ((conf & ATMEL_PIO_DRVSTR_MASK) >> ATMEL_PIO_DRVSTR_OFFSET) {
-> +               case ATMEL_PIO_DRVSTR_LO:
-> +                       seq_printf(s, "%s ", "low-drive");
-> +                       break;
-> +               case ATMEL_PIO_DRVSTR_ME:
-> +                       seq_printf(s, "%s ", "medium-drive");
-> +                       break;
-> +               case ATMEL_PIO_DRVSTR_HI:
-> +                       seq_printf(s, "%s ", "high-drive");
-> +                       break;
-
-But here you know what VDDIOP is, right?
-
-So in debugfs you could actually print the real drive strength
-in mA, or both "medium-drive, %u mA"?
-
-Yours,
-Linus Walleij
+--fokdjgen3ctkbkrs--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
