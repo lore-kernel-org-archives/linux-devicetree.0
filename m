@@ -1,84 +1,53 @@
-From: =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-Subject: [PATCH v2 1/6] resource: Extend the PPC32 reserved memory hack
-Date: Mon, 22 Jan 2018 06:04:06 +0100
-Message-ID: <20180122050411.32460-2-j.neuschaefer@gmx.net>
+From: =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org>
+Subject: [PATCH v2 6/6] powerpc: wii.dts: Add GPIO line names
+Date: Mon, 22 Jan 2018 06:04:11 +0100
+Message-ID: <20180122050411.32460-7-j.neuschaefer@gmx.net>
 References: <20180122050411.32460-1-j.neuschaefer@gmx.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180122050411.32460-1-j.neuschaefer@gmx.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: linuxppc-dev@lists.ozlabs.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, Albert Herranz <albert_herranz@yahoo.es>, Tom Lendacky <thomas.lendacky@amd.com>, Borislav Petkov <bp@suse.de>, Brijesh Singh <brijesh.singh@amd.com>, Thomas Gleixner <tglx@linutronix.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180122050411.32460-1-j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On the Nintendo Wii, there are two ranges of physical memory, and MMIO
-in between, but Linux on ppc32 doesn't support discontiguous memory.
-Therefore a hack was introduced in commit c5df7f775148 ("powerpc: allow
-ioremap within reserved memory regions") and commit de32400dd26e ("wii:
-use both mem1 and mem2 as ram"):
+These are the GPIO line names on a Nintendo Wii, as documented in:
+https://wiibrew.org/wiki/Hardware/Hollywood_GPIOs
 
- - Treat the area from the start of the first memory area (MEM1) to the
-   end of the second (MEM2) as one big memory area, but mark the part
-   that doesn't belong to MEM1 or MEM2 as reserved.
- - Only on the Wii, allow ioremap to be used on reserved memory.
-
-This hack, however, doesn't account for the "resource"-based API in
-kernel/resource.c, because __request_region performs its own checks.
-
-Extend the hack to kernel/resource.c, to allow more drivers to allocate
-their MMIO regions on the Wii.
-
-Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
-Cc: Albert Herranz <albert_herranz@yahoo.es>
+Signed-off-by: Jonathan Neuschäfer <j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org>
 ---
 
 v2:
-- CC Albert Herranz, who introduced this hack in 2009.
+- no change
 ---
- kernel/resource.c | 21 ++++++++++++++++++++-
- 1 file changed, 20 insertions(+), 1 deletion(-)
+ arch/powerpc/boot/dts/wii.dts | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/kernel/resource.c b/kernel/resource.c
-index 54ba6de3757c..bb3d329329da 100644
---- a/kernel/resource.c
-+++ b/kernel/resource.c
-@@ -1134,6 +1134,24 @@ resource_size_t resource_alignment(struct resource *res)
+diff --git a/arch/powerpc/boot/dts/wii.dts b/arch/powerpc/boot/dts/wii.dts
+index 7235e375919c..07d5e84e98b1 100644
+--- a/arch/powerpc/boot/dts/wii.dts
++++ b/arch/powerpc/boot/dts/wii.dts
+@@ -178,6 +178,14 @@
+ 			gpio-controller;
+ 			ngpios = <24>;
  
- static DECLARE_WAIT_QUEUE_HEAD(muxed_resource_wait);
- 
-+/*
-+ * On some ppc32 platforms (Nintendo Wii), reserved memory is used to work
-+ * around the fact that Linux doesn't support discontiguous memory (all memory
-+ * is treated as one large area with holes punched in it), and reserved memory
-+ * is allowed to be allocated.
-+ */
-+#ifdef CONFIG_PPC32
-+static bool conflict_ignored(struct resource *conflict)
-+{
-+	extern int __allow_ioremap_reserved;
++			gpio-line-names =
++				"POWER", "SHUTDOWN", "FAN", "DC_DC",
++				"DI_SPIN", "SLOT_LED", "EJECT_BTN", "SLOT_IN",
++				"SENSOR_BAR", "DO_EJECT", "EEP_CS", "EEP_CLK",
++				"EEP_MOSI", "EEP_MISO", "AVE_SCL", "AVE_SDA",
++				"DEBUG0", "DEBUG1", "DEBUG2", "DEBUG3",
++				"DEBUG4", "DEBUG5", "DEBUG6", "DEBUG7";
 +
-+	return __allow_ioremap_reserved &&
-+		(conflict->flags & IORESOURCE_SYSRAM);
-+}
-+#else
-+static bool conflict_ignored(struct resource *conflict) { return false; }
-+#endif
-+
- /**
-  * __request_region - create a new busy resource region
-  * @parent: parent resource descriptor
-@@ -1166,8 +1184,9 @@ struct resource * __request_region(struct resource *parent,
- 		res->desc = parent->desc;
- 
- 		conflict = __request_resource(parent, res);
--		if (!conflict)
-+		if (!conflict || conflict_ignored(conflict))
- 			break;
-+
- 		if (conflict != parent) {
- 			if (!(conflict->flags & IORESOURCE_BUSY)) {
- 				parent = conflict;
+ 			/*
+ 			 * This is commented out while a standard binding
+ 			 * for i2c over gpio is defined.
 -- 
 2.15.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
