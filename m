@@ -1,75 +1,68 @@
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: =?UTF-8?Q?Re=3A_=5BPATCH_v6_00=2F41=5D_ARM=3A_davinci=3A_convert_to_common?=
-        =?UTF-8?Q?_clock_framework=E2=80=8B?=
-Date: Mon, 22 Jan 2018 12:14:53 +0100
-Message-ID: <CAMRc=MexJTMiD=URw1bv-qfGaTntZRXgfsSb_beYGkvO+LrpgQ@mail.gmail.com>
-References: <1516468460-4908-1-git-send-email-david@lechnology.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v6 31/36] dt-bindings: nds32 CPU Bindings
+Date: Mon, 22 Jan 2018 12:15:47 +0100
+Message-ID: <CAK8P3a2noraQFvJbi2=T+rb3KDfZ88zJWQ_h3dYjD2ArhLPM1Q@mail.gmail.com>
+References: <cover.1515766253.git.green.hu@gmail.com> <e9577ec0f6b6ca17077aa2f576c8bef191c3d7c2.1515766253.git.green.hu@gmail.com>
+ <CAK8P3a0HGhx3WpF-AwC+7m8+FoaiQBTYoCLqhECrATBRLX7x5g@mail.gmail.com>
+ <CAEbi=3ef8JHf_Jpru1B2L3+Xz-Oz4p_t84Lh=5kuTFo0YEz=5A@mail.gmail.com>
+ <CAK8P3a38hCHULZt=fGXJebcoiEGCwA0fre_kixA7sUpPP2xf5g@mail.gmail.com>
+ <CAEbi=3eexCyrVhFZB8wmK1fT=QONzc63y6=dGNgj_H+Rt4zo_g@mail.gmail.com>
+ <CAMuHMdX4nzU06ovDOwzJw-O8w0gyer-fi6skDae=K1yr-EN1gA@mail.gmail.com>
+ <CAEbi=3fKp5tj32hoH=ZTo6kqpCE+Zv1LopnpVujusSfMkeaJKg@mail.gmail.com>
+ <CAMuHMdUqxuiTfM_m80F4XDVkZjx_XCsj_qXRehZxMcKjWhGQ_Q@mail.gmail.com> <CAEbi=3es7O6f5T0Z2zsQzbuxzNte+h-_fMnjOOvbvpz8Hu8g_Q@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1516468460-4908-1-git-send-email-david@lechnology.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: David Lechner <david@lechnology.com>
-Cc: linux-clk@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Adam Ford <aford173@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAEbi=3es7O6f5T0Z2zsQzbuxzNte+h-_fMnjOOvbvpz8Hu8g_Q@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Greentime Hu <green.hu@gmail.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Greentime <greentime@andestech.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Networking <netdev@vger.kernel.org>, Vincent Chen <deanbo422@gmail.com>, DTML <devicetree@vger.kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, David Howells <dhowells@redhat.com>, Will Deacon <will.deacon@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-serial@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Greg KH <greg@kroah.com>, Guo Ren <ren_guo@c-sky.com>
 List-Id: devicetree@vger.kernel.org
 
-2018-01-20 18:13 GMT+01:00 David Lechner <david@lechnology.com>:
-> This series converts mach-davinci to use the common clock framework.
->
-> The series works like this, the first 19 patches create new clock drivers
-> using the common clock framework. There are basically 3 groups of clocks -
-> PLL, PSC and CFGCHIP (syscon). There are six different SoCs that each have
-> unique init data, which is the reason for so many patches.
->
-> Then, starting with "ARM: da830: add new clock init using common clock",
-> we get the mach code ready for the switch by adding the code needed for
-> the new clock drivers and adding #ifndef CONFIG_COMMON_CLK around the
-> legacy clocks so that we can switch easily between the old and the new.
->
-> "ARM: davinci: switch to common clock framework" actually flips the switch
-> to start using the new clock drivers. Then the next 8 patches remove all
-> of the old clock code.
->
-> The final three patches add device tree clock support to the one SoC that
-> supports it.
->
-> v6 changes (also see individual patches for details):
-> - All of the device tree bindings are changed
-> - All of the clock drivers are changed significantly
-> - Fixed issues brought up during review of v5
-> - "ARM: davinci: move davinci_clk_init() to init_time" is removed from this
->   series and submitted separately
->
-> v5 changes:
-> - Basically, this is an entirely new series
-> - Patches are broken up into bite-sized pieces
-> - Converted PSC clock driver to use regmap
-> - Restored "force" flag for certain DA850 clocks
-> - Added device tree bindings
-> - Moved more of the clock init to drivers/clk
-> - Fixed frequency scaling (maybe*)
->
-> * I have frequency scaling using cpufreq-dt, so I know the clocks are doing
->   what they need to do to make this work, but I haven't figured out how to
->   test davinci-cpufreq driver yet. (Patches to make cpufreq-dt work will be
->   sent separately after this series has landed.)
->
-> Dependencies:
->
-> This series applies on top of linux-davinci/master plus the following patches:
-> - [1] "clk: fix reentrancy of clk_enable() on UP systems" (in clk-next)
-> - [2] "clk: add helper functions for managing clk_onecell_data"
-> - [3] "clk: divider: read-only divider can propagate rate change"
-> - [4],[5],[6],[7],[8],[9] series "ARM: davinci: common clock prep work"
->
+On Mon, Jan 22, 2018 at 10:53 AM, Greentime Hu <green.hu@gmail.com> wrote:
+> 2018-01-19 23:37 GMT+08:00 Geert Uytterhoeven <geert@linux-m68k.org>:
+>> On Fri, Jan 19, 2018 at 4:35 PM, Greentime Hu <green.hu@gmail.com> wrote:
+>>> 2018-01-19 23:29 GMT+08:00 Geert Uytterhoeven <geert@linux-m68k.org>:
+>>>> On Fri, Jan 19, 2018 at 4:18 PM, Greentime Hu <green.hu@gmail.com> wrote:
 
-Hi David,
+>>> Thank you and your example.
+>>> I get it. I will update this document like this.
+>>> - compatible: Should be "andestech,<core_name>", "andestech,nds32v3"
+>>> as fallback.
+>>
+>> And please keep a list of supported values of "andestech,<core_name>"
+>> in the DT binding document, so checkpatch can validate compatible values.
+>>
+>
+> Thank you for reminding me this.
+> I will list it like this.
+>
+> - compatible:
+>         Usage: required
+>         Value type: <string>
+>         Definition: Should be "andestech,<core_name>",
+> "andestech,nds32v3" as fallback.
+>         Examlpes with core_names are:
+>         "andestech,n13"
+>         "andestech,n15"
+>         "andestech,d15"
+>         "andestech,n10"
+>         "andestech,d10"
 
-I'm getting a splat[1] when trying to mount the rootfs over nfs on a da850-lcdk.
+This is still not written as a proper specification, you should not
+give "examples"
+but give a complete list of the available options. You could write it like:
 
-I'll try to figure out what's happening.
+Must contain "andestech,nds32v3" as the most generic value, in addition to
+one of the following identifiers for a particular CPU core:
+         "andestech,n13"
+         "andestech,n15"
+         "andestech,d15"
+         "andestech,n10"
+         "andestech,d10"
 
-Best regards,
-Bartosz Golaszewski
+It might be helpful to also list all other existing nds32v3 cores,
+even those that the
+current Linux port does not support them.
 
-[1] https://pastebin.com/D94z8SAe
+      Arnd
