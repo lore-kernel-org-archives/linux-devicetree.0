@@ -1,191 +1,196 @@
 From: Kieran Bingham <kieran.bingham@ideasonboard.com>
-Subject: [PATCH 1/2] media: adv7604: Add support for i2c_new_secondary_device
-Date: Mon, 22 Jan 2018 12:49:55 +0000 (UTC)
-Message-ID: <1516625389-6362-2-git-send-email-kieran.bingham@ideasonboard.com>
+Subject: [PATCH 2/2] drm: adv7511: Add support for i2c_new_secondary_device
+Date: Mon, 22 Jan 2018 12:49:59 +0000 (UTC)
+Message-ID: <1516625389-6362-3-git-send-email-kieran.bingham@ideasonboard.com>
 References: <1516625389-6362-1-git-send-email-kieran.bingham@ideasonboard.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Return-path: <linux-media-owner@vger.kernel.org>
 In-Reply-To: <1516625389-6362-1-git-send-email-kieran.bingham@ideasonboard.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
+Sender: linux-media-owner@vger.kernel.org
 To: linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Cc: Jean-Michel Hautbois <jean-michel.hautbois@vodalys.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Hans Verkuil <hans.verkuil@cisco.com>, "open list:OPEN FIRMWARE AND FLATTENED
+Cc: Jean-Michel Hautbois <jean-michel.hautbois@vodalys.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Archit Taneja <architt@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, John Stultz <john.stultz@linaro.org>, Mark Brown <broonie@kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, Lars-Peter Clausen <lars@metafoo.de>, Daniel Vetter <daniel.vetter@ffwll.ch>, Bhumika Goyal <bhumirks@gmail.com>, Inki Dae <inki.dae@samsung.com>, "open list:OPEN FIRMWARE AND FLATTENED
         DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Jean-Michel Hautbois <jean-michel.hautbois@vodalys.com>=0D
-=0D
-The ADV7604 has thirteen 256-byte maps that can be accessed via the main=0D
-I=C2=B2C ports. Each map has it own I=C2=B2C address and acts as a standard=
- slave=0D
+The ADV7511 has four 256-byte maps that can be accessed via the main I=C2=
+=B2C=0D
+ports. Each map has it own I=C2=B2C address and acts as a standard slave=0D
 device on the I=C2=B2C bus.=0D
 =0D
 Allow a device tree node to override the default addresses so that=0D
 address conflicts with other devices on the same bus may be resolved at=0D
 the board description level.=0D
 =0D
-Signed-off-by: Jean-Michel Hautbois <jean-michel.hautbois@vodalys.com>=0D
-[Kieran: Re-adapted for mainline]=0D
 Signed-off-by: Kieran Bingham <kieran.bingham@ideasonboard.com>=0D
 ---=0D
-Based upon the original posting :=0D
-  https://lkml.org/lkml/2014/10/22/469=0D
----=0D
- .../devicetree/bindings/media/i2c/adv7604.txt      | 18 ++++++-=0D
- drivers/media/i2c/adv7604.c                        | 60 ++++++++++++++----=
+ .../bindings/display/bridge/adi,adv7511.txt        | 10 +++++-=0D
+ drivers/gpu/drm/bridge/adv7511/adv7511.h           |  4 +++=0D
+ drivers/gpu/drm/bridge/adv7511/adv7511_drv.c       | 36 ++++++++++++++----=
 ----=0D
- 2 files changed, 55 insertions(+), 23 deletions(-)=0D
+ 3 files changed, 37 insertions(+), 13 deletions(-)=0D
 =0D
-diff --git a/Documentation/devicetree/bindings/media/i2c/adv7604.txt b/Docu=
-mentation/devicetree/bindings/media/i2c/adv7604.txt=0D
-index 9cbd92eb5d05..b64e313dcc66 100644=0D
---- a/Documentation/devicetree/bindings/media/i2c/adv7604.txt=0D
-+++ b/Documentation/devicetree/bindings/media/i2c/adv7604.txt=0D
-@@ -13,7 +13,11 @@ Required Properties:=0D
-     - "adi,adv7611" for the ADV7611=0D
-     - "adi,adv7612" for the ADV7612=0D
+diff --git a/Documentation/devicetree/bindings/display/bridge/adi,adv7511.t=
+xt b/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt=0D
+index 0047b1394c70..f6bb9f6d3f48 100644=0D
+--- a/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt=0D
++++ b/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt=0D
+@@ -70,6 +70,9 @@ Optional properties:=0D
+   rather than generate its own timings for HDMI output.=0D
+ - clocks: from common clock binding: reference to the CEC clock.=0D
+ - clock-names: from common clock binding: must be "cec".=0D
++- reg-names : Names of maps with programmable addresses.=0D
++	It can contain any map needing a non-default address.=0D
++	Possible maps names are : "main", "edid", "cec", "packet"=0D
  =0D
--  - reg: I2C slave address=0D
-+  - reg: I2C slave addresses=0D
-+    The ADV76xx has up to thirteen 256-byte maps that can be accessed via =
-the=0D
-+    main I=C2=B2C ports. Each map has it own I=C2=B2C address and acts as =
-a standard=0D
-+    slave device on the I=C2=B2C bus. The main address is mandatory, other=
-s are=0D
-+    optional and revert to defaults if not specified.=0D
+ Required nodes:=0D
  =0D
-   - hpd-gpios: References to the GPIOs that control the HDMI hot-plug=0D
-     detection pins, one per HDMI input. The active flag indicates the GPIO=
-=0D
-@@ -35,6 +39,11 @@ Optional Properties:=0D
+@@ -88,7 +91,12 @@ Example=0D
  =0D
-   - reset-gpios: Reference to the GPIO connected to the device's reset pin=
-.=0D
-   - default-input: Select which input is selected after reset.=0D
-+  - reg-names : Names of maps with programmable addresses.=0D
-+		It can contain any map needing a non-default address.=0D
-+		Possible maps names are :=0D
-+		  "main", "avlink", "cec", "infoframe", "esdp", "dpp", "afe",=0D
-+		  "rep", "edid", "hdmi", "test", "cp", "vdp"=0D
- =0D
- Optional Endpoint Properties:=0D
- =0D
-@@ -52,7 +61,12 @@ Example:=0D
- =0D
- 	hdmi_receiver@4c {=0D
- 		compatible =3D "adi,adv7611";=0D
--		reg =3D <0x4c>;=0D
+ 	adv7511w: hdmi@39 {=0D
+ 		compatible =3D "adi,adv7511w";=0D
+-		reg =3D <39>;=0D
 +		/*=0D
-+		 * The edid page will be accessible @ 0x66 on the i2c bus. All=0D
-+		 * other maps will retain their default addresses.=0D
++		 * The EDID page will be accessible on address 0x66 on the i2c=0D
++		 * bus. All other maps continue to use their default addresses.=0D
 +		 */=0D
-+		reg =3D <0x4c 0x66>;=0D
-+		reg-names "main", "edid";=0D
++		reg =3D <0x39 0x66>;=0D
++		reg-names =3D "main", "edid";=0D
+ 		interrupt-parent =3D <&gpio3>;=0D
+ 		interrupts =3D <29 IRQ_TYPE_EDGE_FALLING>;=0D
+ 		clocks =3D <&cec_clock>;=0D
+diff --git a/drivers/gpu/drm/bridge/adv7511/adv7511.h b/drivers/gpu/drm/bri=
+dge/adv7511/adv7511.h=0D
+index d034b2cb5eee..7d81ce3808e0 100644=0D
+--- a/drivers/gpu/drm/bridge/adv7511/adv7511.h=0D
++++ b/drivers/gpu/drm/bridge/adv7511/adv7511.h=0D
+@@ -53,8 +53,10 @@=0D
+ #define ADV7511_REG_POWER			0x41=0D
+ #define ADV7511_REG_STATUS			0x42=0D
+ #define ADV7511_REG_EDID_I2C_ADDR		0x43=0D
++#define ADV7511_REG_EDID_I2C_ADDR_DEFAULT	0x3f=0D
+ #define ADV7511_REG_PACKET_ENABLE1		0x44=0D
+ #define ADV7511_REG_PACKET_I2C_ADDR		0x45=0D
++#define ADV7511_REG_PACKET_I2C_ADDR_DEFAULT	0x38=0D
+ #define ADV7511_REG_DSD_ENABLE			0x46=0D
+ #define ADV7511_REG_VIDEO_INPUT_CFG2		0x48=0D
+ #define ADV7511_REG_INFOFRAME_UPDATE		0x4a=0D
+@@ -89,6 +91,7 @@=0D
+ #define ADV7511_REG_TMDS_CLOCK_INV		0xde=0D
+ #define ADV7511_REG_ARC_CTRL			0xdf=0D
+ #define ADV7511_REG_CEC_I2C_ADDR		0xe1=0D
++#define ADV7511_REG_CEC_I2C_ADDR_DEFAULT	0x3c=0D
+ #define ADV7511_REG_CEC_CTRL			0xe2=0D
+ #define ADV7511_REG_CHIP_ID_HIGH		0xf5=0D
+ #define ADV7511_REG_CHIP_ID_LOW			0xf6=0D
+@@ -322,6 +325,7 @@ struct adv7511 {=0D
+ 	struct i2c_client *i2c_main;=0D
+ 	struct i2c_client *i2c_edid;=0D
+ 	struct i2c_client *i2c_cec;=0D
++	struct i2c_client *i2c_packet;=0D
  =0D
- 		reset-gpios =3D <&ioexp 0 GPIO_ACTIVE_LOW>;=0D
- 		hpd-gpios =3D <&ioexp 2 GPIO_ACTIVE_HIGH>;=0D
-diff --git a/drivers/media/i2c/adv7604.c b/drivers/media/i2c/adv7604.c=0D
-index 1544920ec52d..c346b9a8fb57 100644=0D
---- a/drivers/media/i2c/adv7604.c=0D
-+++ b/drivers/media/i2c/adv7604.c=0D
-@@ -2734,6 +2734,27 @@ static const struct v4l2_ctrl_config adv76xx_ctrl_fr=
-ee_run_color =3D {=0D
- =0D
- /* -----------------------------------------------------------------------=
- */=0D
- =0D
-+struct adv76xx_register {=0D
-+	const char *name;=0D
-+	u8 default_addr;=0D
-+};=0D
-+=0D
-+static const struct adv76xx_register adv76xx_secondary_names[] =3D {=0D
-+	[ADV76XX_PAGE_IO] =3D { "main", 0x4c },=0D
-+	[ADV7604_PAGE_AVLINK] =3D { "avlink", 0x42 },=0D
-+	[ADV76XX_PAGE_CEC] =3D { "cec", 0x40 },=0D
-+	[ADV76XX_PAGE_INFOFRAME] =3D { "infoframe", 0x3e },=0D
-+	[ADV7604_PAGE_ESDP] =3D { "esdp", 0x38 },=0D
-+	[ADV7604_PAGE_DPP] =3D { "dpp", 0x3c },=0D
-+	[ADV76XX_PAGE_AFE] =3D { "afe", 0x26 },=0D
-+	[ADV76XX_PAGE_REP] =3D { "rep", 0x32 },=0D
-+	[ADV76XX_PAGE_EDID] =3D { "edid", 0x36 },=0D
-+	[ADV76XX_PAGE_HDMI] =3D { "hdmi", 0x34 },=0D
-+	[ADV76XX_PAGE_TEST] =3D { "test", 0x30 },=0D
-+	[ADV76XX_PAGE_CP] =3D { "cp", 0x22 },=0D
-+	[ADV7604_PAGE_VDP] =3D { "vdp", 0x24 },=0D
-+};=0D
-+=0D
- static int adv76xx_core_init(struct v4l2_subdev *sd)=0D
- {=0D
- 	struct adv76xx_state *state =3D to_state(sd);=0D
-@@ -2834,13 +2855,26 @@ static void adv76xx_unregister_clients(struct adv76=
-xx_state *state)=0D
- }=0D
- =0D
- static struct i2c_client *adv76xx_dummy_client(struct v4l2_subdev *sd,=0D
--							u8 addr, u8 io_reg)=0D
-+					       unsigned int i)=0D
- {=0D
- 	struct i2c_client *client =3D v4l2_get_subdevdata(sd);=0D
-+	struct adv76xx_state *state =3D to_state(sd);=0D
-+	struct adv76xx_platform_data *pdata =3D &state->pdata;=0D
-+	unsigned int io_reg =3D 0xf2 + i;=0D
-+	struct i2c_client *new_client;=0D
-+=0D
-+	if (pdata && pdata->i2c_addresses[i])=0D
-+		new_client =3D i2c_new_dummy(client->adapter,=0D
-+					   pdata->i2c_addresses[i]);=0D
-+	else=0D
-+		new_client =3D i2c_new_secondary_device(client,=0D
-+				adv76xx_secondary_names[i].name,=0D
-+				adv76xx_secondary_names[i].default_addr);=0D
- =0D
--	if (addr)=0D
--		io_write(sd, io_reg, addr << 1);=0D
--	return i2c_new_dummy(client->adapter, io_read(sd, io_reg) >> 1);=0D
-+	if (new_client)=0D
-+		io_write(sd, io_reg, new_client->addr << 1);=0D
-+=0D
-+	return new_client;=0D
- }=0D
- =0D
- static const struct adv76xx_reg_seq adv7604_recommended_settings_afe[] =3D=
- {=0D
-@@ -3115,20 +3149,6 @@ static int adv76xx_parse_dt(struct adv76xx_state *st=
-ate)=0D
- 	/* Disable the interrupt for now as no DT-based board uses it. */=0D
- 	state->pdata.int1_config =3D ADV76XX_INT1_CONFIG_DISABLED;=0D
- =0D
--	/* Use the default I2C addresses. */=0D
--	state->pdata.i2c_addresses[ADV7604_PAGE_AVLINK] =3D 0x42;=0D
--	state->pdata.i2c_addresses[ADV76XX_PAGE_CEC] =3D 0x40;=0D
--	state->pdata.i2c_addresses[ADV76XX_PAGE_INFOFRAME] =3D 0x3e;=0D
--	state->pdata.i2c_addresses[ADV7604_PAGE_ESDP] =3D 0x38;=0D
--	state->pdata.i2c_addresses[ADV7604_PAGE_DPP] =3D 0x3c;=0D
--	state->pdata.i2c_addresses[ADV76XX_PAGE_AFE] =3D 0x26;=0D
--	state->pdata.i2c_addresses[ADV76XX_PAGE_REP] =3D 0x32;=0D
--	state->pdata.i2c_addresses[ADV76XX_PAGE_EDID] =3D 0x36;=0D
--	state->pdata.i2c_addresses[ADV76XX_PAGE_HDMI] =3D 0x34;=0D
--	state->pdata.i2c_addresses[ADV76XX_PAGE_TEST] =3D 0x30;=0D
--	state->pdata.i2c_addresses[ADV76XX_PAGE_CP] =3D 0x22;=0D
--	state->pdata.i2c_addresses[ADV7604_PAGE_VDP] =3D 0x24;=0D
--=0D
- 	/* Hardcode the remaining platform data fields. */=0D
- 	state->pdata.disable_pwrdnb =3D 0;=0D
- 	state->pdata.disable_cable_det_rst =3D 0;=0D
-@@ -3478,9 +3498,7 @@ static int adv76xx_probe(struct i2c_client *client,=
+ 	struct regmap *regmap;=0D
+ 	struct regmap *regmap_cec;=0D
+diff --git a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c b/drivers/gpu/drm=
+/bridge/adv7511/adv7511_drv.c=0D
+index efa29db5fc2b..7ec33837752b 100644=0D
+--- a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c=0D
++++ b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c=0D
+@@ -969,8 +969,8 @@ static int adv7511_init_cec_regmap(struct adv7511 *adv)=
 =0D
- 		if (!(BIT(i) & state->info->page_mask))=0D
- 			continue;=0D
+ {=0D
+ 	int ret;=0D
  =0D
--		state->i2c_clients[i] =3D=0D
--			adv76xx_dummy_client(sd, state->pdata.i2c_addresses[i],=0D
--					     0xf2 + i);=0D
-+		state->i2c_clients[i] =3D adv76xx_dummy_client(sd, i);=0D
- 		if (!state->i2c_clients[i]) {=0D
- 			err =3D -ENOMEM;=0D
- 			v4l2_err(sd, "failed to create i2c client %u\n", i);=0D
+-	adv->i2c_cec =3D i2c_new_dummy(adv->i2c_main->adapter,=0D
+-				     adv->i2c_main->addr - 1);=0D
++	adv->i2c_cec =3D i2c_new_secondary_device(adv->i2c_main, "cec",=0D
++					ADV7511_REG_CEC_I2C_ADDR_DEFAULT);=0D
+ 	if (!adv->i2c_cec)=0D
+ 		return -ENOMEM;=0D
+ 	i2c_set_clientdata(adv->i2c_cec, adv);=0D
+@@ -1082,8 +1082,6 @@ static int adv7511_probe(struct i2c_client *i2c, cons=
+t struct i2c_device_id *id)=0D
+ 	struct adv7511_link_config link_config;=0D
+ 	struct adv7511 *adv7511;=0D
+ 	struct device *dev =3D &i2c->dev;=0D
+-	unsigned int main_i2c_addr =3D i2c->addr << 1;=0D
+-	unsigned int edid_i2c_addr =3D main_i2c_addr + 4;=0D
+ 	unsigned int val;=0D
+ 	int ret;=0D
+ =0D
+@@ -1153,24 +1151,35 @@ static int adv7511_probe(struct i2c_client *i2c, co=
+nst struct i2c_device_id *id)=0D
+ 	if (ret)=0D
+ 		goto uninit_regulators;=0D
+ =0D
+-	regmap_write(adv7511->regmap, ADV7511_REG_EDID_I2C_ADDR, edid_i2c_addr);=
+=0D
+-	regmap_write(adv7511->regmap, ADV7511_REG_PACKET_I2C_ADDR,=0D
+-		     main_i2c_addr - 0xa);=0D
+-	regmap_write(adv7511->regmap, ADV7511_REG_CEC_I2C_ADDR,=0D
+-		     main_i2c_addr - 2);=0D
+-=0D
+ 	adv7511_packet_disable(adv7511, 0xffff);=0D
+ =0D
+-	adv7511->i2c_edid =3D i2c_new_dummy(i2c->adapter, edid_i2c_addr >> 1);=0D
++	adv7511->i2c_edid =3D i2c_new_secondary_device(i2c, "edid",=0D
++					ADV7511_REG_EDID_I2C_ADDR_DEFAULT);=0D
+ 	if (!adv7511->i2c_edid) {=0D
+ 		ret =3D -ENOMEM;=0D
+ 		goto uninit_regulators;=0D
+ 	}=0D
+ =0D
++	regmap_write(adv7511->regmap, ADV7511_REG_EDID_I2C_ADDR,=0D
++		     adv7511->i2c_edid->addr << 1);=0D
++=0D
+ 	ret =3D adv7511_init_cec_regmap(adv7511);=0D
+ 	if (ret)=0D
+ 		goto err_i2c_unregister_edid;=0D
+ =0D
++	regmap_write(adv7511->regmap, ADV7511_REG_CEC_I2C_ADDR,=0D
++		     adv7511->i2c_cec->addr << 1);=0D
++=0D
++	adv7511->i2c_packet =3D i2c_new_secondary_device(i2c, "packet",=0D
++					ADV7511_REG_PACKET_I2C_ADDR_DEFAULT);=0D
++	if (!adv7511->i2c_packet) {=0D
++		ret =3D -ENOMEM;=0D
++		goto err_unregister_cec;=0D
++	}=0D
++=0D
++	regmap_write(adv7511->regmap, ADV7511_REG_PACKET_I2C_ADDR,=0D
++		     adv7511->i2c_packet->addr << 1);=0D
++=0D
+ 	INIT_WORK(&adv7511->hpd_work, adv7511_hpd_work);=0D
+ =0D
+ 	if (i2c->irq) {=0D
+@@ -1181,7 +1190,7 @@ static int adv7511_probe(struct i2c_client *i2c, cons=
+t struct i2c_device_id *id)=0D
+ 						IRQF_ONESHOT, dev_name(dev),=0D
+ 						adv7511);=0D
+ 		if (ret)=0D
+-			goto err_unregister_cec;=0D
++			goto err_unregister_packet;=0D
+ 	}=0D
+ =0D
+ 	adv7511_power_off(adv7511);=0D
+@@ -1203,6 +1212,8 @@ static int adv7511_probe(struct i2c_client *i2c, cons=
+t struct i2c_device_id *id)=0D
+ 	adv7511_audio_init(dev, adv7511);=0D
+ 	return 0;=0D
+ =0D
++err_unregister_packet:=0D
++	i2c_unregister_device(adv7511->i2c_packet);=0D
+ err_unregister_cec:=0D
+ 	i2c_unregister_device(adv7511->i2c_cec);=0D
+ 	if (adv7511->cec_clk)=0D
+@@ -1234,6 +1245,7 @@ static int adv7511_remove(struct i2c_client *i2c)=0D
+ 	cec_unregister_adapter(adv7511->cec_adap);=0D
+ =0D
+ 	i2c_unregister_device(adv7511->i2c_edid);=0D
++	i2c_unregister_device(adv7511->i2c_packet);=0D
+ =0D
+ 	return 0;=0D
+ }=0D
 -- =0D
 2.7.4=0D
