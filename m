@@ -1,53 +1,93 @@
-From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Subject: Re: [PATCH v6 26/41] ARM: da8xx: add new USB PHY clock init using
- common clock framework
-Date: Mon, 22 Jan 2018 11:17:03 -0600
-Message-ID: <e23bf869-cdbd-bd70-3f43-69c6ec03d95c@lechnology.com>
-References: <1516468460-4908-1-git-send-email-david@lechnology.com>
- <1516468460-4908-27-git-send-email-david@lechnology.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/3] drm/etnaviv: add generic compatible for the GPU
+ subsystem node
+Date: Mon, 22 Jan 2018 11:23:30 -0600
+Message-ID: <20180122172330.iddtnl4bzlftofyp@rob-hp-laptop>
+References: <20180119120634.22856-1-l.stach@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1516468460-4908-27-git-send-email-david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Adam Ford <aford173-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20180119120634.22856-1-l.stach@pengutronix.de>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Lucas Stach <l.stach@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org, patchwork-lst@pengutronix.de, kernel@pengutronix.de, Russell King <linux+etnaviv@armlinux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-On 01/20/2018 11:14 AM, David Lechner wrote:
-> This adds the new USB PHY clock init in mach-davinci/usb-da8xx.c using
-> the new common clock framework drivers.
-> 
-> The #ifdefs are needed to prevent compile errors until the entire
-> ARCH_DAVINCI is converted.
-> 
-> Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-> ---
-> 
-> v6 changes:
-> - rename stuff to match changes in "clk: davinci: New driver for TI DA8XX USB
->    PHY clocks"
-> - take advantage of syscon lookup changes in "mfd: syscon: Add syscon_register()
->    function"
-> 
->   arch/arm/mach-davinci/usb-da8xx.c | 78 ++++++++++++++++++++++++++++++++++++++-
->   1 file changed, 77 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/mach-davinci/usb-da8xx.c b/arch/arm/mach-davinci/usb-da8xx.c
-
-...
-
-> +/**
-> + * da8xx_register_usb20_phy_clk - register USB0PHYCLKMUX clock
-> + *
-> + * @use_usb_refclkin: Selects the parent clock - either "usb_refclkin" if true
-> + *	or "pll0_aux_clk" if false.
-> + */
-
-Should say "pll0_auxclk" instead of "pll0_aux_clk".
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gRnJpLCBKYW4gMTksIDIwMTggYXQgMDE6MDY6MzJQTSArMDEwMCwgTHVjYXMgU3RhY2ggd3Jv
+dGU6Cj4gV2l0aCBkaWZmZXJlbnQgU29DcyBnYWluaW5nIHN1cHBvcnQgZm9yIGV0bmF2aXYgaXQg
+ZG9lc24ndCBtYWtlIG11Y2ggc2Vuc2UKPiB0byBhZGQgc3BlY2lmaWMgY29tcGF0aWJsZXMgZm9y
+IHRoZSBnZW5lcmljIEdQVSBzdWJzeXN0ZW0gbm9kZSwgd2hpY2ggaXMKPiBvbmx5IHVzZWQgdG8g
+ZmluZCBhbGwgR1BVIGNvcmUgbm9kZXMuCgpIb3cgbWFueSBvdGhlciBTb0MgZmFtaWxpZXM/IElz
+IGl0IHJlYWxseSBtb3JlIHRoYW4gYSBjb3VwbGU/IFRoZSAKc3RyaW5ncyBhcmUgYWxyZWFkeSBw
+cmV0dHkgZ2VuZXJpYy4gUGx1cyB0aGUgcmVhbCBHUFUgbm9kZXMgYWxyZWFkeSBoYXZlIApjb21w
+bGV0ZWx5IGdlbmVyaWMgY29tcGF0aWJsZXMuIElmIHlvdSBldmVyIG5lZWQgdG8gZG8gc29tZXRo
+aW5nIFNvQyAKc3BlY2lmaWMsIHRoYXQgbGVhdmVzIHlvdSB3aXRoIGxvb2tpbmcgYXQgdGhlIHRv
+cC1sZXZlbCBjb21wYXRpYmxlIG9yIApTT0wuCgo+IAo+IEFkZCBhIGdlbmVyaWMgY29tcGF0aWJs
+ZSwgdGhhdCBjYW4gYmUgdXNlZCBieSBhbGwgbmV3IGltcGxlbWVudGF0aW9ucy4KPiAKPiBTaWdu
+ZWQtb2ZmLWJ5OiBMdWNhcyBTdGFjaCA8bC5zdGFjaEBwZW5ndXRyb25peC5kZT4KPiAtLS0KPiAg
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvZXRuYXZpdi9ldG5hdml2
+LWRybS50eHQgfCAxICsKPiAgZHJpdmVycy9ncHUvZHJtL2V0bmF2aXYvZXRuYXZpdl9kcnYuYyAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAxICsKPiAgMiBmaWxlcyBjaGFuZ2VkLCAyIGlu
+c2VydGlvbnMoKykKPiAKPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2Rpc3BsYXkvZXRuYXZpdi9ldG5hdml2LWRybS50eHQgYi9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9ldG5hdml2L2V0bmF2aXYtZHJtLnR4dAo+IGluZGV4
+IDA1MTc2ZjFhZTEwOC4uYzZmNGUwMjNjMzRhIDEwMDY0NAo+IC0tLSBhL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2V0bmF2aXYvZXRuYXZpdi1kcm0udHh0Cj4gKysr
+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvZXRuYXZpdi9ldG5h
+dml2LWRybS50eHQKPiBAQCAtOCw2ICs4LDcgQEAgUmVxdWlyZWQgcHJvcGVydGllczoKPiAgLSBj
+b21wYXRpYmxlOiBTaG91bGQgYmUgb25lIG9mCj4gICAgICAiZnNsLGlteC1ncHUtc3Vic3lzdGVt
+Igo+ICAgICAgIm1hcnZlbGwsZG92ZS1ncHUtc3Vic3lzdGVtIgo+ICsgICAgInZpdmFudGUsZ3B1
+LXN1YnN5c3RlbSIKCkknZCBwcmVmZXIgdG8gZ2V0IHJpZCBvZiB0aGlzIGZha2Ugbm9kZSBhbHRv
+Z2V0aGVyLiBJdCBleGlzdHMgCmVudGlyZWx5IGJlY2F1c2Ugc29tZXdoZXJlIGluIHRoZSBzdGFj
+ayB3YW50cyAyRCBhbmQgM0QgZ3B1cyAKZXhwb3NlZCBhcyBhIHNpbmdsZSBEUk0gZGV2aWNlLiBU
+aGF0J3Mgbm90IHJlYWxseSBteSBwcm9ibGVtIApmcm9tIGEgRFQgcGVyc3BlY3RpdmUuIAoKU29t
+ZXRoaW5nIGxpa2UgdGhlIHBhdGNoIGJlbG93IHdvdWxkIHNvbHZlIHRoZSBwcm9ibGVtLiBJdCBk
+b2VzIGJyZWFrIAptb2R1bGUgYXV0byBsb2FkaW5nLCBidXQgdGhhdCBjb3VsZCBiZSBmaXhlZCBi
+eSBtb3ZpbmcgdGhlIGRldmljZSAKY3JlYXRpb24gdG8gdGhlIHBsYXRmb3JtcyAoc29tZXRpbWVz
+IHlvdSBqdXN0IG5lZWQgcGxhdGZvcm0gc3BlY2lmaWMgCmNvZGUpLgoKTm90ZSwgSSBwcm9iYWJs
+eSBkb24ndCBoYXZlIG5vZGUgcmVmIGNvdW50aW5nIHJpZ2h0IGFuZCB0aGUgCm9mX2RldmljZV9p
+c19hdmFpbGFibGUgY2hlY2tpbmcgc2hvdWxkIHJlYWxseSBiZSBpbiB0aGUgY29yZSBjb2RlLgoK
+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9ldG5hdml2L2V0bmF2aXZfZHJ2LmMgCmIvZHJp
+dmVycy9ncHUvZHJtL2V0bmF2aXYvZXRuYXZpdl9kcnYuYwppbmRleCA0OTFlZGRmOWIxNTAuLmZj
+NjI4MjcwNTVhOCAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL2V0bmF2aXYvZXRuYXZpdl9k
+cnYuYworKysgYi9kcml2ZXJzL2dwdS9kcm0vZXRuYXZpdi9ldG5hdml2X2Rydi5jCkBAIC02NjIs
+MTYgKzY2MiwxMSBAQCBzdGF0aWMgaW50IGV0bmF2aXZfcGRldl9wcm9iZShzdHJ1Y3QgcGxhdGZv
+cm1fZGV2aWNlICpwZGV2KQogCiAJaWYgKG5vZGUpIHsKIAkJc3RydWN0IGRldmljZV9ub2RlICpj
+b3JlX25vZGU7Ci0JCWludCBpOwogCi0JCWZvciAoaSA9IDA7IDsgaSsrKSB7Ci0JCQljb3JlX25v
+ZGUgPSBvZl9wYXJzZV9waGFuZGxlKG5vZGUsICJjb3JlcyIsIGkpOwotCQkJaWYgKCFjb3JlX25v
+ZGUpCi0JCQkJYnJlYWs7Ci0KLQkJCWRybV9vZl9jb21wb25lbnRfbWF0Y2hfYWRkKCZwZGV2LT5k
+ZXYsICZtYXRjaCwKLQkJCQkJCSAgIGNvbXBhcmVfb2YsIGNvcmVfbm9kZSk7Ci0JCQlvZl9ub2Rl
+X3B1dChjb3JlX25vZGUpOworCQlmb3JfZWFjaF9jb21wYXRpYmxlX25vZGUoY29yZV9ub2RlLCBO
+VUxMLCAidml2YW50ZSxnYyIpIHsKKwkJCWlmIChvZl9kZXZpY2VfaXNfYXZhaWxhYmxlKGNvcmVf
+bm9kZSkpCisJCQkJZHJtX29mX2NvbXBvbmVudF9tYXRjaF9hZGQoJnBkZXYtPmRldiwgJm1hdGNo
+LAorCQkJCQkJCSAgIGNvbXBhcmVfb2YsIGNvcmVfbm9kZSk7CiAJCX0KIAl9IGVsc2UgaWYgKGRl
+di0+cGxhdGZvcm1fZGF0YSkgewogCQljaGFyICoqbmFtZXMgPSBkZXYtPnBsYXRmb3JtX2RhdGE7
+CkBAIC02OTEsMjggKzY4NiwyNyBAQCBzdGF0aWMgaW50IGV0bmF2aXZfcGRldl9yZW1vdmUoc3Ry
+dWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKIAlyZXR1cm4gMDsKIH0KIAotc3RhdGljIGNvbnN0
+IHN0cnVjdCBvZl9kZXZpY2VfaWQgZHRfbWF0Y2hbXSA9IHsKLQl7IC5jb21wYXRpYmxlID0gImZz
+bCxpbXgtZ3B1LXN1YnN5c3RlbSIgfSwKLQl7IC5jb21wYXRpYmxlID0gIm1hcnZlbGwsZG92ZS1n
+cHUtc3Vic3lzdGVtIiB9LAotCXt9Ci19OwotTU9EVUxFX0RFVklDRV9UQUJMRShvZiwgZHRfbWF0
+Y2gpOwotCiBzdGF0aWMgc3RydWN0IHBsYXRmb3JtX2RyaXZlciBldG5hdml2X3BsYXRmb3JtX2Ry
+aXZlciA9IHsKIAkucHJvYmUgICAgICA9IGV0bmF2aXZfcGRldl9wcm9iZSwKIAkucmVtb3ZlICAg
+ICA9IGV0bmF2aXZfcGRldl9yZW1vdmUsCiAJLmRyaXZlciAgICAgPSB7CiAJCS5uYW1lICAgPSAi
+ZXRuYXZpdiIsCi0JCS5vZl9tYXRjaF90YWJsZSA9IGR0X21hdGNoLAogCX0sCiB9OwogCiBzdGF0
+aWMgaW50IF9faW5pdCBldG5hdml2X2luaXQodm9pZCkKIHsKIAlpbnQgcmV0OworCXN0cnVjdCBk
+ZXZpY2Vfbm9kZSAqbm9kZTsKIAogCWV0bmF2aXZfdmFsaWRhdGVfaW5pdCgpOwogCisJbm9kZSA9
+IG9mX2ZpbmRfY29tcGF0aWJsZV9ub2RlKE5VTEwsICJ2aXZhbnRlLGdjIik7CisJaWYgKG5vZGUg
+JiYgb2ZfZGV2aWNlX2lzX2F2YWlsYWJsZShub2RlKSkgeworCQlwbGF0Zm9ybV9kZXZpY2VfcmVn
+aXN0ZXJfc2ltcGxlKCJldG5hdml2IiwgLTEsIE5VTEwsIDApOworCQlvZl9ub2RlX3B1dChub2Rl
+KTsKKwl9CisKIAlyZXQgPSBwbGF0Zm9ybV9kcml2ZXJfcmVnaXN0ZXIoJmV0bmF2aXZfZ3B1X2Ry
+aXZlcik7CiAJaWYgKHJldCAhPSAwKQogCQlyZXR1cm4gcmV0OwpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
+ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
+bWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
