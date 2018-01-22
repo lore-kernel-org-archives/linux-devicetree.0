@@ -1,76 +1,52 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [RFC PATCH v2 0/1] of: easier debugging for node life cycle
- issues
-Date: Mon, 22 Jan 2018 12:49:48 +0100
-Message-ID: <20180122114948.mm5mg6zqw3hmjj4o@katana>
-References: <20180121143117.19805-1-wsa+renesas@sang-engineering.com>
- <ac4f02e1-6d49-158a-4fb6-56ac0d474a44@gmail.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 2/4] arm64: add basic DTS for i.MX8MQ
+Date: Mon, 22 Jan 2018 12:51:23 +0100
+Message-ID: <CAK8P3a0WGrmDp_CbQjDVc_dGNyBN4A4h5HJqUeFygO3RFHuCxw@mail.gmail.com>
+References: <20180117183244.28303-1-l.stach@pengutronix.de> <20180117183244.28303-2-l.stach@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="fhh3nixhltcc3znp"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <ac4f02e1-6d49-158a-4fb6-56ac0d474a44@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>, devicetree@vger.kernel.org, Tyrel Datwyler <tyreld@linux.vnet.ibm.com>, Geert Uytterhoeven <geert@linux-m68k.org>, linux-renesas-soc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, Rob Herring <robh+dt@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180117183244.28303-2-l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Jan 17, 2018 at 7:32 PM, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> This adds the basic DTS for the i.MX8MQ.
+> For now only the following peripherals are supported:
+> - IOMUXC (pin controller)
+> - CCM (clock controller)
+> - GPIO
+> - UART
+> - uSDHC (SD/eMMC controller)
+> - FEC (ethernet controller)
+> - i2c
+>
+> This is enough to get a very basic board support up and running.
+>
+> One known limitation is that the driver for the GPC interrupt
+> controller is still missing, rendering the CPU sleep states unusable
+> as there is nothing waking them up anymore. This will be fixed in
+> due course.
+>
+> Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
---fhh3nixhltcc3znp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I wonder if there is anything preventing us from putting it all into linux-4.16.
+This is low-risk (nothing would break), and the other three arch/arm64 patches
+are trivial, so if someone can do a review quickly, I'd be willing to pick the
+arm-soc portion up.
 
-Hi Frank,
+I suppose we need the clk and pintrl drivers to also get merged at the
+same time to make it usable, and we also want the bindings for pinctrl
+and clk to be properly reviewed before adding the nodes to the DT
+so it depends a, bit on the other maintainers.
 
-> Please go back and read the thread for version 1.  Simply resubmitting a
-> forward port is ignoring that whole conversation.
->=20
-> There is a lot of good info in that thread.  I certainly learned stuff in=
- it.
+To me it looks like the drivers are just "yet another i.MX variant" for them,
+it should make little difference that this one is 64-bit.
 
-Yes, I did that and learned stuff, too. My summary of the discussion was:
-
-- you mentioned some drawbacks you saw (like the mixture of trace output
-  and printk output)
-- most of them look like addressed to me? (e.g. Steven showed a way to redi=
-rect
-  printk to trace)
-- you posted your version (which was, however, marked as "not user friendly"
-  even by yourself)
-- The discussion stalled over having two approaches
-
-So, I thought reposting would be a good way of finding out if your
-concerns were addressed in the discussion or not. If I overlooked
-something, I am sorry for that. Still, my intention is to continue the
-discussion, not to ignore it. Because as it stands, we don't have such a
-debugging mechanism in place currently, and with people working with DT
-overlays, I'd think it would be nice to have.
-
-Kind regards,
-
-   Wolfram
-
-
---fhh3nixhltcc3znp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlplz9wACgkQFA3kzBSg
-KbYz6RAAp/gtGEbQ/RA5Au6LYgMZS3Z7pyPfII8DOZrkfOTPfEH6hNPOqIGl+BGB
-jYRynJV1FIvgaamsJA1cHgm9VBGcb3i1a00ETZaRAxldAMMMG8r4HG4ZV0yvNMRJ
-pQJmq5FmNy8QI0Gid02x1m56cLspDCvzlBOsNjIfhvQKRRGw4foYaJR3axvDPR4h
-eIHA1H9BgpGuYVPHPxbe+KhUyofZVCjphXjH3gQ250gnNEQEueaBlAFKZMn4uMd7
-rrI+j1XpGwqBFGt7/2to3KyKk8ajAj9CxT5kojJLWbnsVa759uOh1C3DlxLYy91d
-vgjAHI47Bfzj+ZqqjYczpxmTS9JwtqdnzCDwBJnmPCrpTfl2MQWu+N1V4waD+TRe
-SJZb1597Bt62MesJTWkjsfPR1y05T38x/DwEDagBddy80RR/zXby/SIMlouOMNQd
-2dRo+HrhfXVa6ShDeVHB/KMgdpByQpYqGopshqGbmHOrPh0anwClTXbgNAvHAxEh
-4bLh5ukHx99wkMDD1hob1na4CvnetvvKaovrmeHF773eGY6k4K+hcnWo7xYzcN3H
-/BTfwaBU3+W9XAcPW9LP0oBHaIF3UDoRfTU3go5gGLDJWIFgyNlNVIwr00TVOZBJ
-upw2ZAN+YLK69lr7T7XK5cSpdVc7VaZngCpmttjWn8tosVKe1Bc=
-=I+Fc
------END PGP SIGNATURE-----
-
---fhh3nixhltcc3znp--
+     Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
