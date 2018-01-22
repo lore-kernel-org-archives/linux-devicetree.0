@@ -1,66 +1,52 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v7 2/2] mfd: syscon: Add hardware spinlock support
-Date: Mon, 22 Jan 2018 13:43:36 +0000
-Message-ID: <20180122134336.e7phrckbpwvxwsfz@dell>
-References: <29fa88f883dae4c1f8a3acb2656cbd7c5a539d40.1514180039.git.baolin.wang@linaro.org>
- <a878ad35d9f38c58d34dac0b331dca029b61a9b8.1514180039.git.baolin.wang@linaro.org>
- <20180111152219.yzit67dzdshi3cxs@dell>
+From: Timur Tabi <timur@codeaurora.org>
+Subject: Re: [PATCH 3/3] pinctrl: qcom: Don't allow protected pins to be
+ requested
+Date: Mon, 22 Jan 2018 07:55:39 -0600
+Message-ID: <f384a6c4-57a5-df18-862c-bf7dad9ea3f4@codeaurora.org>
+References: <20180110015848.11480-1-sboyd@codeaurora.org>
+ <20180110015848.11480-4-sboyd@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20180111152219.yzit67dzdshi3cxs@dell>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: arnd-r2nGTMty4D4@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20180110015848.11480-4-sboyd@codeaurora.org>
+Content-Language: en-US
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 11 Jan 2018, Lee Jones wrote:
-> On Mon, 25 Dec 2017, Baolin Wang wrote:
-> 
-> > Some system control registers need hardware spinlock to synchronize
-> > between the multiple subsystems, so we should add hardware spinlock
-> > support for syscon.
-> > 
-> > Signed-off-by: Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> > ---
-> > Changes since v6:
-> >  - Treat hwlock id 0 as valid for regmap.
-> > 
-> > Changes since v5:
-> >  - Fix the case that hwspinlock is not enabled.
-> > 
-> > Changes since v4:
-> >  - Add one exapmle to show how to add hwlock.
-> >  - Fix the coding style issue.
-> > 
-> > Changes since v3:
-> >  - Add error handling for of_hwspin_lock_get_id()
-> > 
-> > Changes since v2:
-> >  - Add acked tag from Rob.
-> > 
-> > Changes since v1:
-> >  - Remove timeout configuration.
-> >  - Modify the binding file to add hwlocks.
-> > ---
-> >  Documentation/devicetree/bindings/mfd/syscon.txt |    8 ++++++++
-> >  drivers/mfd/syscon.c                             |   19 +++++++++++++++++++
-> >  2 files changed, 27 insertions(+)
-> 
-> Applied, thanks.
+On 1/9/18 7:58 PM, Stephen Boyd wrote:
+> +		ret = device_property_read_u16_array(pctrl->dev, "gpios", tmp,
+> +						     len);
+> +		if (ret < 0) {
+> +			dev_err(pctrl->dev, "could not read list of GPIOs\n");
+> +			kfree(tmp);
+> +			return ret;
+> +		}
 
-In order to avoid confusion, I should like to tell you that this patch
-is applied for v4.17, not v4.16.
+Just FYI, I'm still going to have to parse "gpios" in my 
+pinctrl-qdf2xxx.c driver, even though you're also parsing it here. 
+That's because I need to make sure that the msm_pingroup array only 
+contains "approve" addresses in its ctl_reg fields.
+
++	for (i = 0; i < avail_gpios; i++) {
++		unsigned int gpio = gpios[i];
++
++		groups[gpio].npins = 1;
++		snprintf(names[i], NAME_SIZE, "gpio%u", gpio);
++		pins[gpio].name = names[i];
++		groups[gpio].name = names[i];
++
++		groups[gpio].ctl_reg = 0x10000 * gpio;
+  		       ^^^^
+
+I do this because I need to make sure that "unapproved" physical 
+addresses are never store anywhere in groups[].  That way, it's 
+impossible for the driver to cause an XPU violation -- the worst that 
+can happen is a null pointer dereference.
 
 -- 
-Lee Jones
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Qualcomm Datacenter Technologies, Inc. as an affiliate of Qualcomm
+Technologies, Inc.  Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
