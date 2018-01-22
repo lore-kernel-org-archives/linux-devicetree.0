@@ -1,59 +1,183 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 2/4] arm64: add basic DTS for i.MX8MQ
-Date: Mon, 22 Jan 2018 16:11:42 +0100
-Message-ID: <CAK8P3a0Yq1WuUYih6WKbbjoGRwq-rCQ8OEpuyu0=-SOVV2MNLg@mail.gmail.com>
-References: <20180117183244.28303-1-l.stach@pengutronix.de>
- <20180117183244.28303-2-l.stach@pengutronix.de> <20180122144729.GA27764@dragon>
+From: Greentime Hu <green.hu@gmail.com>
+Subject: Re: [PATCH v6 29/36] nds32: Build infrastructure
+Date: Mon, 22 Jan 2018 23:20:28 +0800
+Message-ID: <CAEbi=3dZ-Bj+pdhcu1Td1JzgDngyMMeDTFs=XH3LNPnudcUGyg@mail.gmail.com>
+References: <cover.1515766253.git.green.hu@gmail.com> <e4b231f440511aa0a539ba45f316a096741f530e.1515766253.git.green.hu@gmail.com>
+ <CAK8P3a2k18Z5pK-04h4bSVn82m+tvNL4JdtgVT9AJWP5gKXuig@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180122144729.GA27764@dragon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <CAK8P3a2k18Z5pK-04h4bSVn82m+tvNL4JdtgVT9AJWP5gKXuig@mail.gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Greentime <greentime@andestech.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Networking <netdev@vger.kernel.org>, Vincent Chen <deanbo422@gmail.com>, DTML <devicetree@vger.kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, David Howells <dhowells@redhat.com>, Will Deacon <will.deacon@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-serial@vger.kernel.org, Geert Uytterhoeven <geert.uytterhoeven@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Greg KH <greg@kroah.com>, Guo Ren <ren_guo@c-sky.co>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 22, 2018 at 3:47 PM, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Wed, Jan 17, 2018 at 07:32:42PM +0100, Lucas Stach wrote:
->> This adds the basic DTS for the i.MX8MQ.
->> For now only the following peripherals are supported:
->> - IOMUXC (pin controller)
->> - CCM (clock controller)
->> - GPIO
->> - UART
->> - uSDHC (SD/eMMC controller)
->> - FEC (ethernet controller)
->> - i2c
+Hi, Arnd:
+
+2018-01-18 19:00 GMT+08:00 Arnd Bergmann <arnd@arndb.de>:
+> On Mon, Jan 15, 2018 at 6:53 AM, Greentime Hu <green.hu@gmail.com> wrote:
+>> From: Greentime Hu <greentime@andestech.com>
 >>
->> This is enough to get a very basic board support up and running.
+>> This patch adds Makefile, Kconfig and vmlinux.lds.S files required for building
+>> an nds32 kernel.
 >>
->> One known limitation is that the driver for the GPC interrupt
->> controller is still missing, rendering the CPU sleep states unusable
->> as there is nothing waking them up anymore. This will be fixed in
->> due course.
->>
->> Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->> ---
->>  arch/arm64/boot/dts/Makefile             |   1 +
->>  arch/arm64/boot/dts/nxp/imx8mq-pinfunc.h | 632 +++++++++++++++++++++++++++++++
->>  arch/arm64/boot/dts/nxp/imx8mq.dtsi      | 418 ++++++++++++++++++++
+>> Signed-off-by: Vincent Chen <vincentc@andestech.com>
+>> Signed-off-by: Greentime Hu <greentime@andestech.com>
 >
-> So we will have the following two folders for SoCs from the same company.
+> I find some new details every time I look here ;-)
+
+Thank you for revewing so detailedly. :)
+
+>> @@ -0,0 +1,107 @@
+>> +#
+>> +# For a description of the syntax of this configuration file,
+>> +# see Documentation/kbuild/kconfig-language.txt.
+>> +#
+>> +
+>> +config NDS32
+>> +        def_bool y
+>> +       select ARCH_HAS_RAW_COPY_USER
 >
->  arch/arm64/boot/dts/nxp/
->  arch/arm64/boot/dts/freescale/
+> I don't think this symbol was ever merged. Do you remember why you added it?
 
-It might get worse once the sale to Qualcomm goes through and maybe if
-Broadcom makes another bid for Qualcomm in a few years ;-)
+I will drop it. It must be added in earlier kernel version.
 
-> I'm a bit uncomfortable with that.  @Arnd, do you have an opinion how we
-> should handle them?
+>> +       select ARCH_WANT_FRAME_POINTERS if FTRACE
+>> +       select ARCH_WANT_IPC_PARSE_VERSION
+>
+> You most certainly don't want IPC_PARSE_VERSION, please drop this
+> and adapt your glibc.
 
-It's a recurring problem of course. I have a small preference for just adding
-the i.mx files to arch/arm64/boot/dts/freescale/, but I'd leave it up to you.
+ok. I will drop it.
 
-        Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> +       select CLKSRC_MMIO
+>> +       select CLONE_BACKWARDS
+>> +       select COMMON_CLK
+>> +       select FRAME_POINTER
+>
+> Do you need both ARCH_WANT_FRAME_POINTERS and FRAME_POINTER here?
+
+I will drop FRAME_POINTER.
+
+>> +       select GENERIC_ATOMIC64
+>> +       select GENERIC_CPU_DEVICES
+>> +       select GENERIC_CLOCKEVENTS
+>> +       select GENERIC_IRQ_CHIP
+>> +       select GENERIC_IRQ_PROBE
+>
+> I think it's better to drop GENERIC_IRQ_PROBE here, no modern driver
+> should rely on that.
+
+I will drop it.
+
+>> +choice
+>> +       prompt "CPU type"
+>> +       default CPU_V3
+>> +config CPU_N15
+>> +       bool "AndesCore N15"
+>> +config CPU_N13
+>> +       bool "AndesCore N13"
+>> +       select CPU_CACHE_ALIASING if ANDES_PAGE_SIZE_4KB
+>> +config CPU_N10
+>> +       bool "AndesCore N10"
+>> +       select CPU_CACHE_ALIASING
+>> +config CPU_D15
+>> +       bool "AndesCore D15"
+>> +config CPU_D10
+>> +       bool "AndesCore D10"
+>> +       select CPU_CACHE_ALIASING
+>> +config CPU_V3
+>> +       bool "AndesCore v3 compatible"
+>> +       select ANDES_PAGE_SIZE_8KB
+>> +endchoice
+>
+> I forget what we discussed here earlier, but at the very least, there should be
+> some help text here to explain what the implications are. I assume that you
+> generally want to be able to build one kernel to run on all of the above, right?
+>
+> Will selecting 'CPU_V3' result in a kernel binary that can run on all of them?
+> If so, please explain it here as that is not obvious.
+>
+> For the other CPU types, can you list the what backwards-compatiblity
+> you get? E.g. will a kernel built for N13 run on any of N15, D15 or N10?
+>
+Yes, we would like to build a kernel with CPU_V3 to run on all of the above.
+
+Not sure if these help texts clear enough?
+
+choice
+        prompt "CPU type"
+        default CPU_V3
+        help
+          The data cache of N15/D15 is implemented as PIPT and it will
+not cause the
+          cache aliasing issue. The rest cpus(N13, N10 and D10) are
+implemented as
+          VIPT data cache. It may cause the cache aliasing issue if
+its cache way
+          size is larger than page size. You can specify the the CPU
+type direcly or
+          choose CPU_V3 if unsure.
+
+          A kernel built for N10 is able to run on N15, D15, N13, N10 or D10.
+          A kernel built for N15 is able to run on N15 or D15.
+          A kernel built for D10 is able to run on D10 or D15.
+          A kernel built for D15 is able to run on D15.
+          A kernel built for N13 with CPU_CACHE_ALIASING is able to
+run on N15, D15, N13, N10 or D10
+          A kernel built for N13 without CPU_CACHE_ALIASING is able to
+run on N15, N13 or D15
+
+config CPU_N15
+        bool "AndesCore N15"
+config CPU_N13
+        bool "AndesCore N13"
+        select CPU_CACHE_ALIASING if ANDES_PAGE_SIZE_4KB
+config CPU_N10
+        bool "AndesCore N10"
+        select CPU_CACHE_ALIASING
+config CPU_D15
+        bool "AndesCore D15"
+config CPU_D10
+        bool "AndesCore D10"
+        select CPU_CACHE_ALIASING
+config CPU_V3
+        bool "AndesCore v3 compatible"
+        select CPU_CACHE_ALIASING
+endchoice
+
+> I think the 'select ANDES_PAGE_SIZE_8KB' cannot work as expected,
+> since ANDES_PAGE_SIZE_8KB is inside of a 'choice' statement. Since
+> there are only two options (4K and 8K), you can address that by making
+> it a simple bool option and fall back to 4K when ANDES_PAGE_SIZE_8KB
+> is disabled.
+
+After reviewing this config, it seems to make much more sense if we
+select CPU_CACHE_ALIASING.
+A kernel with aliasing cache handling should be able to run on
+aliasing/non-aliasing CPU.
+
+config CPU_V3
+        bool "AndesCore v3 compatible"
+        select CPU_CACHE_ALIASING
+
+>> +config CACHE_L2
+>> +       bool "Support L2 cache"
+>> +        default y
+>> +       help
+>> +         Say Y here to enable L2 cache if your SoC are integrated with L2CC.
+>> +         If unsure, say N.
+>> +
+>> +menu "Memory configuration"
+>> +
+>> +choice
+>> +       prompt "Memory split"
+>> +       depends on MMU
+>> +       default VMSPLIT_3G
+>
+> Why not default to VMSPLIT_3G_OPT?
+>
+
+I will set default to VMSPLIT_3G_OPT and delete
+CONFIG_VMSPLIT_3G_OPT=y in defconfig.
