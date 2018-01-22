@@ -1,99 +1,274 @@
-From: Maciej Purski <m.purski@samsung.com>
-Subject: [PATCH v4 0/7] Add coupled regulators mechanism
-Date: Mon, 22 Jan 2018 15:30:05 +0100
-Message-ID: <1516631412-17542-1-git-send-email-m.purski@samsung.com>
-References: <CGME20180122143019eucas1p213b852c98cde3fb8a77b96ab0d372ee6@eucas1p2.samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Doug Anderson <dianders@chromium.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Maciej Purski <m.purski@samsung.com>
+From: Maciej Purski <m.purski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v4 6/7] regulator: core: Add voltage balancing mechanism
+Date: Mon, 22 Jan 2018 15:30:11 +0100
+Message-ID: <1516631412-17542-7-git-send-email-m.purski@samsung.com>
+References: <1516631412-17542-1-git-send-email-m.purski@samsung.com>
+        <CGME20180122143037eucas1p2b91d1de50ca84f414aea0c3b83427797@eucas1p2.samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <1516631412-17542-1-git-send-email-m.purski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Maciej Purski <m.purski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
-
-Hi all,
-
-this patchset adds a new mechanism to the framework - regulators' coupling.
 
 On Odroid XU3/4 and other Exynos5422 based boards there is a case, that
 different devices on the board are supplied by different regulators
-with non-fixed voltages. If one of these devices temporarily requires 
-higher voltage, there might occur a situation that the spread between 
-devices' voltages is so high, that there is a risk of changing
+with non-fixed voltages. If one of these devices temporarily requires
+higher voltage, there might occur a situation that the spread between
+two devices' voltages is so high, that there is a risk of changing
 'high' and 'low' states on the interconnection between devices powered
-by those regulators. 
+by those regulators.
 
-Algorithmicaly the problem was solved by: 
-Inderpal Singh <inderpal.s@samsung.com>
-Doug Anderson <dianders@chromium.org>
+Introduce new function regulator_balance_voltage(), which
+keeps max_spread constraint fulfilled between a group of coupled
+regulators. It should be called if a regulator changes its
+voltage or after disabling or enabling. Disabled regulators should
+follow changes of the enabled ones, but their consumers' demands
+shouldn't be taken into account while calculating voltage of other
+coupled regulators.
 
-The discussion on that subject can be found here:
-https://lkml.org/lkml/2014/4/29/28
+Find voltages, which are closest to suiting all the consumers' demands,
+while fulfilling max_spread constraint, keeping the following rules:
+- if one regulator is about to rise its voltage, rise others
+  voltages in order to keep the max_spread
+- if a regulator, which has caused rising other regulators, is
+  lowered, lower other regulators if possible
+- if one regulator is about to lower its voltage, but it hasn't caused
+  rising other regulators, don't change its voltage if it breaks the
+  max_spread
 
-Therefore this patchset is an attempt to apply the idea to regulators core
-as concluded in the discussion by Mark Brown and Doug Anderson.
+Change regulators' voltages step by step, keeping max_spread constraint
+fulfilled all the time. Function regulator_get_optimal_voltage()
+should find the best possible change for the regulator, which doesn't
+break max_spread constraint. In function regulator_balance_voltage()
+optimize number of steps by finding highest voltage difference on
+each iteration.
 
-This feature is required to enable support for generic CPUfreq 
-and devfreq drivers for the mentioned boards. 
+If a regulator, which is about to change its voltage, is not coupled,
+method regulator_get_optimal_voltage() should simply return the lowest
+voltage fulfilling consumers' demands.
 
-Note on the locking model:
-When balancing voltage of a group of coupled regulators, we lock all
-of them for the whole operation. When voltage of an individual regulator
-is about to change, its suppliers are additionally locked.
+Coupling should be checked only if the system is in PM_SUSPEND_ON state.
 
-The current assumption is that an uncoupled regulator is a special case
-of a coupled one, so they should share a common voltage setting path.
-
-
-Best regards,
-
-	Maciej Purski
-
+Signed-off-by: Maciej Purski <m.purski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 ---
-Changes in v4:
-- make paths for coupled and uncoupled regulators common
-- coupling descriptors are now always present in regulator_dev
-- fail to probe if data inconsistency is detected
-- retry to resolve coupling regultors in late init call
-- rebase on top of linux-next 20180119
-- fix commit messages
-- split patches to make the patchset easier to review
+ drivers/regulator/core.c | 192 +++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 192 insertions(+)
 
-Changes in v3:
-- move dts parsing code to of_regulator.c, in order to the so,
-  add a new commit in which of_regulator_find_by_node() is moved
-  to of_regulator.c as well
-- improve error messages
-- move max_spread variable to constraints
-- perform resolving of coupled regulators under a list mutex
-- remove useless locking functions
-- some minor refactorization
-- improve commit messages
-
-Changes in RFC v2:
-- allow coupling n regulators (in fact up to constant value, now
-  set to 10)
-- change algorithm to be more readable
-- introduce better locking
-- add more comments
-- split first patch into two
-- update commit messages
-- change sequence of the patches
-
-Maciej Purski (7):
-  regulator: core: Move of_find_regulator_by_node() to of_regulator.c
-  regulator: core: Refactor regulator_list_voltage()
-  regulator: bindings: Add properties for coupled regulators
-  regulator: core: Parse coupled regulators properties
-  regulator: core: Resolve coupled regulators
-  regulator: core: Add voltage balancing mechanism
-  regulator: core: Change voltage setting path
-
- .../devicetree/bindings/regulator/regulator.txt    |   5 +
- drivers/regulator/core.c                           | 416 ++++++++++++++++++---
- drivers/regulator/internal.h                       |  15 +
- drivers/regulator/of_regulator.c                   | 163 ++++++++
- include/linux/regulator/driver.h                   |  18 +
- include/linux/regulator/machine.h                  |   4 +
- 6 files changed, 575 insertions(+), 46 deletions(-)
-
+diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
+index 3628949..0492b0e 100644
+--- a/drivers/regulator/core.c
++++ b/drivers/regulator/core.c
+@@ -105,6 +105,8 @@ static int _notifier_call_chain(struct regulator_dev *rdev,
+ 				  unsigned long event, void *data);
+ static int _regulator_do_set_voltage(struct regulator_dev *rdev,
+ 				     int min_uV, int max_uV);
++static int regulator_balance_voltage(struct regulator_dev *rdev,
++				     suspend_state_t state);
+ static struct regulator *create_regulator(struct regulator_dev *rdev,
+ 					  struct device *dev,
+ 					  const char *supply_name);
+@@ -2995,6 +2997,196 @@ static int regulator_set_voltage_unlocked(struct regulator *regulator,
+ 	return ret;
+ }
+ 
++static int regulator_get_optimal_voltage(struct regulator_dev *rdev)
++{
++	struct coupling_desc *c_desc = &rdev->coupling_desc;
++	struct regulator_dev **c_rdevs = c_desc->coupled_rdevs;
++	int max_spread = rdev->constraints->max_spread;
++	int n_coupled = c_desc->n_coupled;
++	int desired_min_uV, desired_max_uV, min_current_uV = INT_MAX;
++	int max_current_uV = 0, highest_min_uV = 0, target_uV, possible_uV;
++	int i, ret;
++
++	/* If consumers don't provide any demands, set voltage to min_uV */
++	desired_min_uV = rdev->constraints->min_uV;
++	desired_max_uV = rdev->constraints->max_uV;
++	ret = regulator_check_consumers(rdev,
++					&desired_min_uV,
++					&desired_max_uV, PM_SUSPEND_ON);
++	if (ret < 0)
++		goto out;
++
++	/*
++	 * If there are no coupled regulators, simply set the voltage demanded
++	 * by consumers.
++	 */
++	if (n_coupled == 1) {
++		ret = desired_min_uV;
++		goto out;
++	}
++
++	/* Find highest min desired voltage */
++	for (i = 0; i < n_coupled; i++) {
++		int tmp_min = 0;
++		int tmp_max = INT_MAX;
++
++		if (!_regulator_is_enabled(c_rdevs[i]))
++			continue;
++
++		ret = regulator_check_consumers(c_rdevs[i],
++						&tmp_min,
++						&tmp_max, PM_SUSPEND_ON);
++		if (ret < 0)
++			goto out;
++
++		if (tmp_min > highest_min_uV)
++			highest_min_uV = tmp_min;
++	}
++
++	/*
++	 * Let target_uV be equal to the desired one if possible.
++	 * If not, set it to minimum voltage, allowed by other coupled
++	 * regulators.
++	 */
++	target_uV = max(desired_min_uV,  highest_min_uV - max_spread);
++
++	/*
++	 * Find min and max voltages, which currently aren't
++	 * violating max_spread
++	 */
++	for (i = 0; i < n_coupled; i++) {
++		int tmp_act;
++
++		/*
++		 * Don't check the regulator, which is about
++		 * to change voltage
++		 */
++		if (c_rdevs[i] == rdev)
++			continue;
++		if (!_regulator_is_enabled(c_rdevs[i]))
++			continue;
++
++		tmp_act = _regulator_get_voltage(c_rdevs[i]);
++		if (tmp_act < 0) {
++			ret = tmp_act;
++			goto out;
++		}
++
++		if (tmp_act < min_current_uV)
++			min_current_uV = tmp_act;
++
++		if (tmp_act > max_current_uV)
++			max_current_uV = tmp_act;
++	}
++
++	/* There aren't any other regulators enabled */
++	if (max_current_uV == 0) {
++		possible_uV = target_uV;
++	} else {
++		/*
++		 * Correct target voltage, so as it currently isn't
++		 * violating max_spread
++		 */
++		possible_uV = max(target_uV, max_current_uV - max_spread);
++		possible_uV = min(possible_uV, min_current_uV + max_spread);
++	}
++
++	if (possible_uV > desired_max_uV) {
++		ret = -EINVAL;
++		goto out;
++	}
++	ret = possible_uV;
++
++out:
++	return ret;
++}
++
++static int regulator_balance_voltage(struct regulator_dev *rdev,
++				     suspend_state_t state)
++{
++	struct regulator_dev **c_rdevs;
++	struct regulator_dev *best_rdev;
++	struct coupling_desc *c_desc = &rdev->coupling_desc;
++	int n_coupled;
++	int i, best_delta, best_uV, ret = 1;
++
++	c_rdevs = c_desc->coupled_rdevs;
++	n_coupled = c_desc->n_coupled;
++
++	/*
++	 * if system is in a state other than PM_SUSPEND_ON, don't check
++	 * other coupled regulators
++	 */
++	if (state != PM_SUSPEND_ON)
++		n_coupled = 1;
++
++	/*
++	 * Find the best possible voltage change on each loop. Leave the loop
++	 * if there isn't any possible change.
++	 */
++	while (1) {
++		best_delta = 0;
++		best_uV = 0;
++		best_rdev = NULL;
++
++		/*
++		 * Find highest difference between optimal voltage
++		 * and current voltage.
++		 */
++		for (i = 0; i < n_coupled; i++) {
++			/*
++			 * optimal_uV is the best voltage that can be set for
++			 * i-th regulator at the moment without violating
++			 * max_spread constraint in order to balance
++			 * the coupled voltages.
++			 */
++			int optimal_uV, current_uV;
++
++			optimal_uV = regulator_get_optimal_voltage(c_rdevs[i]);
++			if (optimal_uV < 0) {
++				ret = optimal_uV;
++				goto out;
++			}
++
++			current_uV = _regulator_get_voltage(c_rdevs[i]);
++			if (current_uV < 0) {
++				ret = optimal_uV;
++				goto out;
++			}
++
++			if (abs(best_delta) < abs(optimal_uV - current_uV)) {
++				best_delta = optimal_uV - current_uV;
++				best_rdev = c_rdevs[i];
++				best_uV = optimal_uV;
++			}
++		}
++
++		/* Nothing to change, return successfully */
++		if (!best_rdev) {
++			ret = 0;
++			goto out;
++		}
++
++		/*
++		 * Lock just the supply regulators, as the regulator itself
++		 * is already locked by regulator_lock_coupled().
++		 */
++		if (best_rdev->supply)
++			regulator_lock_supply(best_rdev->supply->rdev);
++
++		ret = regulator_set_voltage_rdev(best_rdev, best_uV,
++						 best_uV, state);
++		if (best_rdev->supply)
++			regulator_unlock_supply(best_rdev->supply->rdev);
++
++		if (ret < 0)
++			goto out;
++	}
++
++out:
++	return ret;
++}
++
+ /**
+  * regulator_set_voltage - set regulator output voltage
+  * @regulator: regulator source
 -- 
 2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
