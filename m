@@ -1,48 +1,99 @@
-From: Maciej Purski <m.purski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v4 3/7] regulator: bindings: Add properties for coupled
- regulators
-Date: Mon, 22 Jan 2018 15:30:08 +0100
-Message-ID: <1516631412-17542-4-git-send-email-m.purski@samsung.com>
-References: <1516631412-17542-1-git-send-email-m.purski@samsung.com>
-        <CGME20180122143031eucas1p205647b3821760ad7e7a3bef5f8873d14@eucas1p2.samsung.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1516631412-17542-1-git-send-email-m.purski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Maciej Purski <m.purski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+From: Maciej Purski <m.purski@samsung.com>
+Subject: [PATCH v4 0/7] Add coupled regulators mechanism
+Date: Mon, 22 Jan 2018 15:30:05 +0100
+Message-ID: <1516631412-17542-1-git-send-email-m.purski@samsung.com>
+References: <CGME20180122143019eucas1p213b852c98cde3fb8a77b96ab0d372ee6@eucas1p2.samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Doug Anderson <dianders@chromium.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Maciej Purski <m.purski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Some regulators require keeping their voltage spread below defined
-max_spread.
+Hi all,
 
-Add properties to provide information on regulators' coupling.
+this patchset adds a new mechanism to the framework - regulators' coupling.
 
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Maciej Purski <m.purski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+On Odroid XU3/4 and other Exynos5422 based boards there is a case, that
+different devices on the board are supplied by different regulators
+with non-fixed voltages. If one of these devices temporarily requires 
+higher voltage, there might occur a situation that the spread between 
+devices' voltages is so high, that there is a risk of changing
+'high' and 'low' states on the interconnection between devices powered
+by those regulators. 
+
+Algorithmicaly the problem was solved by: 
+Inderpal Singh <inderpal.s@samsung.com>
+Doug Anderson <dianders@chromium.org>
+
+The discussion on that subject can be found here:
+https://lkml.org/lkml/2014/4/29/28
+
+Therefore this patchset is an attempt to apply the idea to regulators core
+as concluded in the discussion by Mark Brown and Doug Anderson.
+
+This feature is required to enable support for generic CPUfreq 
+and devfreq drivers for the mentioned boards. 
+
+Note on the locking model:
+When balancing voltage of a group of coupled regulators, we lock all
+of them for the whole operation. When voltage of an individual regulator
+is about to change, its suppliers are additionally locked.
+
+The current assumption is that an uncoupled regulator is a special case
+of a coupled one, so they should share a common voltage setting path.
+
+
+Best regards,
+
+	Maciej Purski
+
 ---
- Documentation/devicetree/bindings/regulator/regulator.txt | 5 +++++
- 1 file changed, 5 insertions(+)
+Changes in v4:
+- make paths for coupled and uncoupled regulators common
+- coupling descriptors are now always present in regulator_dev
+- fail to probe if data inconsistency is detected
+- retry to resolve coupling regultors in late init call
+- rebase on top of linux-next 20180119
+- fix commit messages
+- split patches to make the patchset easier to review
 
-diff --git a/Documentation/devicetree/bindings/regulator/regulator.txt b/Documentation/devicetree/bindings/regulator/regulator.txt
-index 6b8719f..f10ebe8 100644
---- a/Documentation/devicetree/bindings/regulator/regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/regulator.txt
-@@ -67,6 +67,11 @@ Optional properties:
- 	0: Disable active discharge.
- 	1: Enable active discharge.
- 	Absence of this property will leave configuration to default.
-+- regulator-coupled-with: Regulators with which the regulator
-+  is coupled. The linkage is 2-way - all coupled regulators should be linked
-+  with each other.
-+- regulator-coupled-max-spread: Max spread between voltages of coupled regulators
-+  in microvolts.
- 
- Deprecated properties:
- - regulator-compatible: If a regulator chip contains multiple
+Changes in v3:
+- move dts parsing code to of_regulator.c, in order to the so,
+  add a new commit in which of_regulator_find_by_node() is moved
+  to of_regulator.c as well
+- improve error messages
+- move max_spread variable to constraints
+- perform resolving of coupled regulators under a list mutex
+- remove useless locking functions
+- some minor refactorization
+- improve commit messages
+
+Changes in RFC v2:
+- allow coupling n regulators (in fact up to constant value, now
+  set to 10)
+- change algorithm to be more readable
+- introduce better locking
+- add more comments
+- split first patch into two
+- update commit messages
+- change sequence of the patches
+
+Maciej Purski (7):
+  regulator: core: Move of_find_regulator_by_node() to of_regulator.c
+  regulator: core: Refactor regulator_list_voltage()
+  regulator: bindings: Add properties for coupled regulators
+  regulator: core: Parse coupled regulators properties
+  regulator: core: Resolve coupled regulators
+  regulator: core: Add voltage balancing mechanism
+  regulator: core: Change voltage setting path
+
+ .../devicetree/bindings/regulator/regulator.txt    |   5 +
+ drivers/regulator/core.c                           | 416 ++++++++++++++++++---
+ drivers/regulator/internal.h                       |  15 +
+ drivers/regulator/of_regulator.c                   | 163 ++++++++
+ include/linux/regulator/driver.h                   |  18 +
+ include/linux/regulator/machine.h                  |   4 +
+ 6 files changed, 575 insertions(+), 46 deletions(-)
+
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
