@@ -1,137 +1,128 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] reset: ti-rstctrl: use the reset-simple driver
-Date: Mon, 22 Jan 2018 09:03:43 -0800
-Message-ID: <20180122170343.GD4180@atomide.com>
-References: <1516095054.9022.1.camel@pengutronix.de>
- <20180116150314.GC4042@atomide.com>
- <d32d9836-5edd-d43d-547b-f22384950f2c@ti.com>
- <20180116232243.GD4042@atomide.com>
- <10dab35c-9c79-5a77-0654-1e99621e4c0f@ti.com>
- <20180119213310.GA4180@atomide.com>
- <06882c43-d689-2b85-a1c4-ae4e13a73046@ti.com>
- <20180119234938.GB4180@atomide.com>
- <d5e1dda3-fb89-9280-6d68-b02996b5cd0c@ti.com>
- <20180120005551.GC4180@atomide.com>
+From: Ludovic Desroches <ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Subject: Re: [PATCH] pinctrl: at91-pio4: add support for drive-strength
+ property
+Date: Mon, 22 Jan 2018 18:05:45 +0100
+Message-ID: <20180122170545.GD3055@rfolt0960.corp.atmel.com>
+References: <20180118160208.16461-1-ludovic.desroches@microchip.com>
+ <CACRpkdanweSmHd_M+feHauEHtvKSW+-W=djb186BFdbxTf20Jg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20180120005551.GC4180-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <CACRpkdanweSmHd_M+feHauEHtvKSW+-W=djb186BFdbxTf20Jg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paul Parsons <lost.distance-/E1597aS9LQAvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Nishant Menon <nm-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Ludovic Desroches <ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> [180120 00:56]:
-> * Suman Anna <s-anna-l0cyMroinI0@public.gmane.org> [180120 00:43]:
-> > We definitely do not want the two resets here for sure, as the rst2
-> > belongs to the dsp core (I believe it would be a sibling node to mmu_dsp
-> > here), and cannot be released from reset without programming the MMU and
-> > loading the code.
+On Mon, Jan 22, 2018 at 09:37:38AM +0100, Linus Walleij wrote:
+> On Thu, Jan 18, 2018 at 5:02 PM, Ludovic Desroches
+> <ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org> wrote:
 > 
-> OK thanks, I'll give that a try next week at some point.
+> > Add support for the drive-strength property. Usually its value is
+> > expressed in mA. Since the numeric value depends on VDDIOP voltage,
+> > the controller uses low, medium and high to define the drive-strengh.
+> 
+> Aha I see. That's complex. It certainly results in a certain mA drive
+> strength in the end, but what you're saying is that this is not usually
+> what we configure.
+> 
 
-Actually there is only the DSP MMU in the interconnect
-target module at 0x4a066000. It's size is just the usual 4K,
-and there is no sibling to DSP MMU in that interconnect target
-module between 0x4a0660100 and 0x4a066ffff.
+The PIO Controller Interface is:
+Drive Strength:
+0 Low drive
+1 Low drive
+2 Medium drive
+3 High drive
 
-So it seems the DSP MMU dts should become as below, and I've
-confirmed it works for me for taking DSP MMU out of reset,
-dumping out the revision register while not taking the DSP
-out of reset. The rst2 is for MMU and rst1 is for DSP at
-least on omap4. Taking rst1 out of reset will cause tons of
-L3 interrupts as the DSP starts booting at some uncofigured
-address :)
+In the Electrical Characteristics, you have:
+GPIO 1.8V Low: max 1 mA
+GPIO 1.8V Medium: max 10 mA
+GPIO 1.8V High: max 18 mA
+GPIO 3.3V Low: max 2 mA
+GPIO 3.3V Medium: max 20 mA
+GPIO 3.3V High: max 32 mA
 
-The following patch still needs my yet to be posted patches
-to do anything, so just for reference for now. The
--EPROBE_DEFER I was getting earlier was the missing
-"simple-bus" for probing children at the prm level.
+> > The PIO controller accepts two values for the low drive: 0 or 1. Most
+> > of the time, we don't care about the drive strength, there is no need
+> > to change it, so 0 is considered as the default value.
+> 
+> Do you mean default value as in "whatever the hardware was set
+> up as at boot time"?
 
-And it seems that the interconnect target module driver ti-sysc
-can claim rst2 and the ocp softreset, and if the iommu driver
-ever needs to do a reset on the whole module for some reason,
-it can call device_reset(dev->parent, 0);
+Yes
 
-Regards,
+> 
+> > The low-drive
+> > value won't be advertised through pinconf-pins file excepted if it
+> 
+> except?
 
-Tony
+Yes
 
-8< -------------------
-diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
---- a/arch/arm/boot/dts/omap4.dtsi
-+++ b/arch/arm/boot/dts/omap4.dtsi
-@@ -249,13 +249,26 @@
- 				};
- 
- 				prm: prm@6000 {
--					compatible = "ti,omap4-prm";
-+					compatible = "ti,omap4-prm", "simple-bus";
- 					reg = <0x6000 0x3000>;
- 					interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
- 					#address-cells = <1>;
- 					#size-cells = <1>;
- 					ranges = <0 0x6000 0x3000>;
- 
-+					prm_dsp: prm@400 {
-+						compatible = "simple-bus";
-+						#address-cells = <1>;
-+						#size-cells = <1>;
-+						ranges = <0 0x400 0x100>;
-+
-+						dsp_rstctrl: rstctrl@10 {
-+							compatible = "ti,rstctrl";
-+							reg = <0x10 0x4>;
-+							#reset-cells = <1>;
-+						};
-+					};
-+
- 					prm_clocks: clocks {
- 						#address-cells = <1>;
- 						#size-cells = <0>;
-@@ -892,12 +905,36 @@
- 			};
- 		};
- 
--		mmu_dsp: mmu@4a066000 {
--			compatible = "ti,omap4-iommu";
--			reg = <0x4a066000 0x100>;
--			interrupts = <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>;
-+		target-module@4a066000 {
-+			compatible = "ti,sysc-omap2", "ti,sysc";
- 			ti,hwmods = "mmu_dsp";
--			#iommu-cells = <0>;
-+			reg = <0x4a066000 0x4>,
-+			      <0x4a066010 0x4>,
-+			      <0x4a066014 0x4>;
-+			reg-names = "rev", "sysc", "syss";
-+			ti,sysc-mask = <(SYSC_OMAP2_CLOCKACTIVITY |
-+					 SYSC_OMAP2_SOFTRESET |
-+					 SYSC_OMAP2_AUTOIDLE)>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>;
-+			clocks = <&tesla_clkctrl OMAP4_DSP_CLKCTRL 0>;
-+			clock-names = "fck";
-+			/* rst2 is for mmu, rst1 is for dsp */
-+			resets = <&dsp_rstctrl 1>;
-+			reset-names = "rst2";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0 0x4a066000 0x1000>;
-+
-+			mmu_dsp: mmu@0 {
-+				compatible = "ti,omap4-iommu";
-+				reg = <0 0x100>;
-+				interrupts = <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>;
-+				resets = <&dsp_rstctrl 0>;
-+				reset-names = "rst1";
-+				#iommu-cells = <0>;
-+			};
- 		};
- 
- 		target-module@52000000 {
+> 
+> > has been set explicitly in the device tree ie if its value is
+> > different from 0.
+> >
+> > Signed-off-by: Ludovic Desroches <ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+> 
+> OK I think I get it.
+> 
+> >  Optional properties:
+> >  - GENERIC_PINCONFIG: generic pinconfig options to use, bias-disable,
+> > -bias-pull-down, bias-pull-up, drive-open-drain, input-schmitt-enable,
+> > -input-debounce, output-low, output-high.
+> > +bias-pull-down, bias-pull-up, drive-open-drain, drive-strength,
+> > +input-schmitt-enable, input-debounce, output-low, output-high.
+> (...)
+> > +                       drive-strength = <ATMEL_PIO_DRVSTR_LO>;
+> 
+> So you say you support this argument and it will be something like
+> 
+> include/dt-bindings/pinctrl/at91.h:#define ATMEL_PIO_DRVSTR_LO  1
+> include/dt-bindings/pinctrl/at91.h:#define ATMEL_PIO_DRVSTR_ME  2
+> include/dt-bindings/pinctrl/at91.h:#define ATMEL_PIO_DRVSTR_HI  3
+> 
+> But the definition if generic drive strength is actually in mA.
+> 
+> I think it is OK to deviate from stating it in mA, but you should
+> write this in the DT bindings so people do not get confused.
+> 
+
+Ok
+
+> > @@ -814,6 +834,19 @@ static void atmel_conf_pin_config_dbg_show(struct pinctrl_dev *pctldev,
+> >                 seq_printf(s, "%s ", "open-drain");
+> >         if (conf & ATMEL_PIO_SCHMITT_MASK)
+> >                 seq_printf(s, "%s ", "schmitt");
+> > +       if (conf & ATMEL_PIO_DRVSTR_MASK) {
+> > +               switch ((conf & ATMEL_PIO_DRVSTR_MASK) >> ATMEL_PIO_DRVSTR_OFFSET) {
+> > +               case ATMEL_PIO_DRVSTR_LO:
+> > +                       seq_printf(s, "%s ", "low-drive");
+> > +                       break;
+> > +               case ATMEL_PIO_DRVSTR_ME:
+> > +                       seq_printf(s, "%s ", "medium-drive");
+> > +                       break;
+> > +               case ATMEL_PIO_DRVSTR_HI:
+> > +                       seq_printf(s, "%s ", "high-drive");
+> > +                       break;
+> 
+> But here you know what VDDIOP is, right?
+> 
+
+No, I have no way to retrieve the power for the several VDDIOP power
+rails.
+
+> So in debugfs you could actually print the real drive strength
+> in mA, or both "medium-drive, %u mA"?
+> 
+> Yours,
+> Linus Walleij
+
+Regards
+
+Ludovic
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
