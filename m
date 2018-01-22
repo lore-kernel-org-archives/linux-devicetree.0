@@ -1,150 +1,56 @@
-From: Maciej Purski <m.purski@samsung.com>
-Subject: [PATCH v4 5/7] regulator: core: Resolve coupled regulators
-Date: Mon, 22 Jan 2018 15:30:10 +0100
-Message-ID: <1516631412-17542-6-git-send-email-m.purski@samsung.com>
-References: <1516631412-17542-1-git-send-email-m.purski@samsung.com>
-        <CGME20180122143033eucas1p2adb3b39af238b2449486389d214a3a68@eucas1p2.samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1516631412-17542-1-git-send-email-m.purski@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Doug Anderson <dianders@chromium.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Maciej Purski <m.purski@samsung.com>
+From: Philippe CORNU <philippe.cornu-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH] dt-bindings: display: stm32: correct clock-names in dsi
+ panel example
+Date: Mon, 22 Jan 2018 14:39:46 +0000
+Message-ID: <be217e52-8260-7680-9a37-d01cd2d1afb8@st.com>
+References: <20180121205807.30677-1-philippe.cornu@st.com>
+ <CAL_JsqKfeSW1R4aSjeUnJ6b=NeQK0qHTuEV7y9Y4sAFiyzHLzQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqKfeSW1R4aSjeUnJ6b=NeQK0qHTuEV7y9Y4sAFiyzHLzQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Content-ID: <C0644FDAA1A95E4BB8F4EB324D7A8980-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Yannick FERTRE <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vincent ABRIOU <vincent.abriou-qxv4g6HH51o@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mickael REULIER <mickael.reulier-qxv4g6HH51o@public.gmane.org>, Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>, Ludovic BARRE <ludovic.barre-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Odroid XU3/4 and other Exynos5422 based boards there is a case, that
-different devices on the board are supplied by different regulators
-with non-fixed voltages. If one of these devices temporarily requires
-higher voltage, there might occur a situation that the spread between
-two devices' voltages is so high, that there is a risk of changing
-'high' and 'low' states on the interconnection between devices powered
-by those regulators.
-
-Fill coupling descriptor with data obtained from DTS using previously
-defined of_functions. Fail to register a regulator, if some data
-inconsistency occurs. If some coupled regulators are not yet registered,
-don't fail to register, but try to resolve them in late init call.
-
-Signed-off-by: Maciej Purski <m.purski@samsung.com>
----
- drivers/regulator/core.c | 92 ++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 92 insertions(+)
-
-diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
-index 1118527..3628949 100644
---- a/drivers/regulator/core.c
-+++ b/drivers/regulator/core.c
-@@ -3945,6 +3945,88 @@ static int regulator_register_resolve_supply(struct device *dev, void *data)
- 	return 0;
- }
- 
-+static int regulator_fill_coupling_array(struct regulator_dev *rdev)
-+{
-+	struct coupling_desc *c_desc = &rdev->coupling_desc;
-+	int n_coupled = c_desc->n_coupled;
-+	struct regulator_dev *c_rdev;
-+	int i;
-+
-+	for (i = 1; i < n_coupled; i++) {
-+		/* already resolved */
-+		if (c_desc->coupled_rdevs[i])
-+			continue;
-+
-+		c_rdev = of_parse_coupled_regulator(rdev, i - 1);
-+
-+		if (c_rdev) {
-+			c_desc->coupled_rdevs[i] = c_rdev;
-+			c_desc->n_resolved++;
-+		}
-+	}
-+
-+	if (rdev->coupling_desc.n_resolved < n_coupled)
-+		return -1;
-+	else
-+		return 0;
-+}
-+
-+static int regulator_register_fill_coupling_array(struct device *dev,
-+						  void *data)
-+{
-+	struct regulator_dev *rdev = dev_to_rdev(dev);
-+
-+	if (regulator_fill_coupling_array(rdev))
-+		rdev_dbg(rdev, "unable to resolve coupling\n");
-+
-+	return 0;
-+}
-+
-+static int regulator_resolve_coupling(struct regulator_dev *rdev)
-+{
-+	int n_phandles = of_get_n_coupled(rdev);
-+
-+	if (n_phandles + 1 > MAX_COUPLED) {
-+		rdev_err(rdev, "too many regulators coupled\n");
-+		return -EPERM;
-+	}
-+
-+	/*
-+	 * Every regulator should always have coupling descriptor filled with
-+	 * at least pointer to itself.
-+	 */
-+	rdev->coupling_desc.coupled_rdevs[0] = rdev;
-+	rdev->coupling_desc.n_coupled = n_phandles + 1;
-+	rdev->coupling_desc.n_resolved++;
-+
-+	/* regulator isn't coupled */
-+	if (n_phandles == 0)
-+		return 0;
-+
-+	/* regulator, which can't change its voltage, can't be coupled */
-+	if (!regulator_ops_is_valid(rdev, REGULATOR_CHANGE_VOLTAGE)) {
-+		rdev_err(rdev, "voltage operation not allowed\n");
-+		return -EPERM;
-+	}
-+
-+	if (rdev->constraints->max_spread <= 0) {
-+		rdev_err(rdev, "wrong max_spread value\n");
-+		return -EPERM;
-+	}
-+
-+	if (!of_check_coupling_data(rdev))
-+		return -EPERM;
-+
-+	/*
-+	 * After everything has been checked, try to fill rdevs array
-+	 * with pointers to regulators parsed from device tree. If some
-+	 * regulators are not registered yet, retry in late init call
-+	 */
-+	regulator_fill_coupling_array(rdev);
-+
-+	return 0;
-+}
-+
- /**
-  * regulator_register - register regulator
-  * @regulator_desc: regulator to register
-@@ -4077,6 +4159,13 @@ regulator_register(const struct regulator_desc *regulator_desc,
- 	if (ret < 0)
- 		goto wash;
- 
-+	mutex_lock(&regulator_list_mutex);
-+	ret = regulator_resolve_coupling(rdev);
-+	mutex_unlock(&regulator_list_mutex);
-+
-+	if (ret != 0)
-+		goto wash;
-+
- 	/* add consumers devices */
- 	if (init_data) {
- 		mutex_lock(&regulator_list_mutex);
-@@ -4565,6 +4654,9 @@ static int __init regulator_init_complete(void)
- 	class_for_each_device(&regulator_class, NULL, NULL,
- 			      regulator_late_cleanup);
- 
-+	class_for_each_device(&regulator_class, NULL, NULL,
-+			      regulator_register_fill_coupling_array);
-+
- 	return 0;
- }
- late_initcall_sync(regulator_init_complete);
--- 
-2.7.4
+SGkgUm9iLA0KDQpPbiAwMS8yMi8yMDE4IDAzOjMwIFBNLCBSb2IgSGVycmluZyB3cm90ZToNCj4g
+T24gU3VuLCBKYW4gMjEsIDIwMTggYXQgMjo1OCBQTSwgUGhpbGlwcGUgQ29ybnUgPHBoaWxpcHBl
+LmNvcm51QHN0LmNvbT4gd3JvdGU6DQo+PiBJbiB0aGUgZHNpIHBhbmVsIGV4YW1wbGUsIGNsb2Nr
+IG5hbWVzIGluIHRoZSAiY2xvY2stbmFtZXMiDQo+PiBmaWVsZCBoYXZlIGJlZW4gc3dhcHBlZDoN
+Cj4+ICogInBjbGsiIChwZXJpcGhlcmFsIGNsb2NrKSBpcyA8JnJjYyAxIENMS19GNDY5X0RTST4g
+b24gc3RtMzJmNA0KPj4gKiAicmVmIiAoZHNpIHBoeSBwbGwgcmVmIGNsb2NrKSBpcyA8JmNsa19o
+c2U+IG9uIHN0bTMyZjQNCj4+DQo+PiBTaWduZWQtb2ZmLWJ5OiBQaGlsaXBwZSBDb3JudSA8cGhp
+bGlwcGUuY29ybnVAc3QuY29tPg0KPj4gLS0tDQo+PiAgIERvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9kaXNwbGF5L3N0LHN0bTMyLWx0ZGMudHh0IHwgMiArLQ0KPj4gICAxIGZpbGUg
+Y2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkNCj4+DQo+PiBkaWZmIC0tZ2l0
+IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvc3Qsc3RtMzItbHRk
+Yy50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9zdCxzdG0z
+Mi1sdGRjLnR4dA0KPj4gaW5kZXggMDI5MjUyMjUzYWQ0Li4zZWIxYjQ4YjQ3ZGQgMTAwNjQ0DQo+
+PiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9zdCxzdG0z
+Mi1sdGRjLnR4dA0KPj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
+c3BsYXkvc3Qsc3RtMzItbHRkYy50eHQNCj4+IEBAIC05OCw3ICs5OCw3IEBAIEV4YW1wbGUgMjog
+RFNJIHBhbmVsDQo+PiAgICAgICAgICAgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJzdCxz
+dG0zMi1kc2kiOw0KPj4gICAgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDwweDQwMDE2YzAw
+IDB4ODAwPjsNCj4+ICAgICAgICAgICAgICAgICAgICAgICAgICBjbG9ja3MgPSA8JnJjYyAxIENM
+S19GNDY5X0RTST4sIDwmY2xrX2hzZT47DQo+PiAtICAgICAgICAgICAgICAgICAgICAgICBjbG9j
+ay1uYW1lcyA9ICJyZWYiLCAicGNsayI7DQo+PiArICAgICAgICAgICAgICAgICAgICAgICBjbG9j
+ay1uYW1lcyA9ICJwY2xrIiwgInJlZiI7DQo+IA0KPiBUaGVyZSBpcyBubyB3YXkgdG8gdGVsbCB0
+aGV5IGFyZSByZXZlcnNlZCBiZWNhdXNlIHBjbGsgaXMgbm90IGV2ZW4NCj4gZG9jdW1lbnRlZC4g
+UGxlYXNlIGZpeCB0aGF0IHRvby4NCj4gDQoNCk1hbnkgdGhhbmtzIGZvciB5b3VyIHJldmlldy4N
+Cg0KcGNsayBpcyBhbHJlYWR5IGRlc2NyaWJlZCBpbiB0aGUgZ2VuZXJpYyBwYXJ0IA0KKERvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9kd19taXBpX2RzaS50
+eHQpLg0KDQpJbiBzdCxzdG0zMi1sdGRjLnR4dCAoc3BlY2lmaWMgcGFydCksIEkgaGF2ZSBkb2N1
+bWVudGVkOiAiRm9yIGFsbCANCm1hbmRhdG9yeSBwcm9wZXJ0aWVzICYgbm9kZXMsIHBsZWFzZSBy
+ZWZlciB0byB0aGUgcmVsYXRlZCBkb2N1bWVudGF0aW9uIA0KaW4gWzVdIi4NCg0KRG8geW91IHRo
+aW5rIGl0IGlzIGNsZWFyIGVub3VnaD8NCg0KTWFueSB0aGFua3MsDQpQaGlsaXBwZSA6LSkNCg0K
+Pj4gICAgICAgICAgICAgICAgICAgICAgICAgIHJlc2V0cyA9IDwmcmNjIFNUTTMyRjRfQVBCMl9S
+RVNFVChEU0kpPjsNCj4+ICAgICAgICAgICAgICAgICAgICAgICAgICByZXNldC1uYW1lcyA9ICJh
+cGIiOw0KPj4NCj4+IC0tDQo+PiAyLjE1LjENCj4+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
