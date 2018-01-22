@@ -1,217 +1,88 @@
 From: =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-Subject: [PATCH v2 3/6] gpio: Add GPIO driver for Nintendo Wii
-Date: Mon, 22 Jan 2018 06:04:08 +0100
-Message-ID: <20180122050411.32460-4-j.neuschaefer@gmx.net>
+Subject: [PATCH v2 4/6] dt-bindings: gpio: Add binding for Wii GPIO controller
+Date: Mon, 22 Jan 2018 06:04:09 +0100
+Message-ID: <20180122050411.32460-5-j.neuschaefer@gmx.net>
 References: <20180122050411.32460-1-j.neuschaefer@gmx.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
 In-Reply-To: <20180122050411.32460-1-j.neuschaefer@gmx.net>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-gpio-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
-Cc: linuxppc-dev@lists.ozlabs.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, Albert Herranz <albert_herranz@yahoo.es>, Segher Boessenkool <segher@kernel.crashing.org>, Linus Walleij <linus.walleij@linaro.org>
+Cc: linuxppc-dev@lists.ozlabs.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>
 List-Id: devicetree@vger.kernel.org
 
-The Nintendo Wii's chipset (called "Hollywood") has a GPIO controller
-that supports a configurable number of pins (up to 32), interrupts, and
-some special mechanisms to share the controller between the system's
-security processor (an ARM926) and the PowerPC CPU. Pin multiplexing is
-not supported.
-
-This patch adds a basic driver for this GPIO controller. Interrupt
-support will come in a later patch.
-
-This patch is based on code developed by Albert Herranz and the GameCube
-Linux Team, file arch/powerpc/platforms/embedded6xx/hlwd-gpio.c,
-available at https://github.com/DeltaResero/GC-Wii-Linux-Kernels, but
-has grown quite dissimilar.
+The Nintendo Wii game console has a GPIO controller, which is used for
+the optical disk slot LED, buttons, poweroff, etc. This patch adds a
+binding for this GPIO controller.
 
 Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
-Cc: Albert Herranz <albert_herranz@yahoo.es>
-Cc: Segher Boessenkool <segher@kernel.crashing.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
 
 v2:
-- Change hlwd_gpio_driver.driver.name to "gpio-hlwd" to match the
-  filename (was "hlwd_gpio")
-- Remove unnecessary include of linux/of_gpio.h, as suggested by Linus
-  Walleij.
-- Add struct device pointer to context struct to make it possible to use
-  dev_info(hlwd->dev, "..."), as suggested by Linus Walleij
-- Use the GPIO_GENERIC library to reduce code size, as suggested by
-  Linus Walleij
-- Use iowrite32be instead of __raw_writel for big-endian MMIO access, as
-  suggested by Linus Walleij
-- Remove commit message paragraph suggesting to diff against the
-  original driver, because it's so different now
+- Drop the leading zero in the example, as suggested by Rob Herring
+- Add some text to the commit message, as suggested by Linus Walleij
 ---
- drivers/gpio/Kconfig     |   9 ++++
- drivers/gpio/Makefile    |   1 +
- drivers/gpio/gpio-hlwd.c | 123 +++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 133 insertions(+)
- create mode 100644 drivers/gpio/gpio-hlwd.c
+ .../bindings/gpio/nintendo,hollywood-gpio.txt      | 27 ++++++++++++++++++++++
+ .../devicetree/bindings/powerpc/nintendo/wii.txt   |  9 +-------
+ 2 files changed, 28 insertions(+), 8 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/nintendo,hollywood-gpio.txt
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index d6a8e851ad13..47606dfe06cc 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -229,6 +229,15 @@ config GPIO_GRGPIO
- 	  Select this to support Aeroflex Gaisler GRGPIO cores from the GRLIB
- 	  VHDL IP core library.
- 
-+config GPIO_HLWD
-+	tristate "Nintendo Wii (Hollywood) GPIO"
-+	depends on OF_GPIO
-+	select GPIO_GENERIC
-+	help
-+	  Select this to support the GPIO controller of the Nintendo Wii.
-+
-+	  If unsure, say N.
-+
- config GPIO_ICH
- 	tristate "Intel ICH GPIO"
- 	depends on PCI && X86
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index 4bc24febb889..492f62d0eb59 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -54,6 +54,7 @@ obj-$(CONFIG_GPIO_FTGPIO010)	+= gpio-ftgpio010.o
- obj-$(CONFIG_GPIO_GE_FPGA)	+= gpio-ge.o
- obj-$(CONFIG_GPIO_GPIO_MM)	+= gpio-gpio-mm.o
- obj-$(CONFIG_GPIO_GRGPIO)	+= gpio-grgpio.o
-+obj-$(CONFIG_GPIO_HLWD)		+= gpio-hlwd.o
- obj-$(CONFIG_HTC_EGPIO)		+= gpio-htc-egpio.o
- obj-$(CONFIG_GPIO_ICH)		+= gpio-ich.o
- obj-$(CONFIG_GPIO_INGENIC)	+= gpio-ingenic.o
-diff --git a/drivers/gpio/gpio-hlwd.c b/drivers/gpio/gpio-hlwd.c
+diff --git a/Documentation/devicetree/bindings/gpio/nintendo,hollywood-gpio.txt b/Documentation/devicetree/bindings/gpio/nintendo,hollywood-gpio.txt
 new file mode 100644
-index 000000000000..cf3f05a1621c
+index 000000000000..20fc72d9e61e
 --- /dev/null
-+++ b/drivers/gpio/gpio-hlwd.c
-@@ -0,0 +1,123 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+// Copyright (C) 2008-2009 The GameCube Linux Team
-+// Copyright (C) 2008,2009 Albert Herranz
-+// Copyright (C) 2017-2018 Jonathan Neuschäfer
-+//
-+// Nintendo Wii (Hollywood) GPIO driver
++++ b/Documentation/devicetree/bindings/gpio/nintendo,hollywood-gpio.txt
+@@ -0,0 +1,27 @@
++Nintendo Wii (Hollywood) GPIO controller
 +
-+#include <linux/gpio/driver.h>
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_platform.h>
-+#include <linux/slab.h>
++Required properties:
++- compatible: "nintendo,hollywood-gpio
++- reg: Physical base address and length of the controller's registers.
++- gpio-controller: Marks the device node as a GPIO controller.
++- #gpio-cells: Should be <2>. The first cell is the pin number and the
++  second cell is used to specify optional parameters:
++   - bit 0 specifies polarity (0 for normal, 1 for inverted).
 +
-+/*
-+ * Register names and offsets courtesy of WiiBrew:
-+ * https://wiibrew.org/wiki/Hardware/Hollywood_GPIOs
-+ *
-+ * Note that for most registers, there are two versions:
-+ * - HW_GPIOB_* Is always accessible by the Broadway PowerPC core, but does
-+ *   always give access to all GPIO lines
-+ * - HW_GPIO_* Is only accessible by the Broadway PowerPC code if the memory
-+ *   firewall (AHBPROT) in the Hollywood chipset has been configured to allow
-+ *   such access.
-+ *
-+ * The ownership of each GPIO line can be configured in the HW_GPIO_OWNER
-+ * register: A one bit configures the line for access via the HW_GPIOB_*
-+ * registers, a zero bit indicates access via HW_GPIO_*. This driver uses
-+ * HW_GPIOB_*.
-+ */
-+#define HW_GPIOB_OUT		0x00
-+#define HW_GPIOB_DIR		0x04
-+#define HW_GPIOB_IN		0x08
-+#define HW_GPIOB_INTLVL		0x0c
-+#define HW_GPIOB_INTFLAG	0x10
-+#define HW_GPIOB_INTMASK	0x14
-+#define HW_GPIOB_INMIR		0x18
-+#define HW_GPIO_ENABLE		0x1c
-+#define HW_GPIO_OUT		0x20
-+#define HW_GPIO_DIR		0x24
-+#define HW_GPIO_IN		0x28
-+#define HW_GPIO_INTLVL		0x2c
-+#define HW_GPIO_INTFLAG		0x30
-+#define HW_GPIO_INTMASK		0x34
-+#define HW_GPIO_INMIR		0x38
-+#define HW_GPIO_OWNER		0x3c
++Optional properties:
++- ngpios: see Documentation/devicetree/bindings/gpio/gpio.txt
++- interrupt-controller: Marks the device node as an interrupt controller.
++- #interrupt-cells: Should be two.
++- interrupts: Interrupt specifier for the controller's Broadway (PowerPC)
++  interrupt.
++- interrupt-parent: phandle of the parent interrupt controller.
 +
++Example:
 +
-+struct hlwd_gpio {
-+	struct gpio_chip gpioc;
-+	void __iomem *regs;
-+	struct device *dev;
-+};
-+
-+static int hlwd_gpio_probe(struct platform_device *pdev)
-+{
-+	struct hlwd_gpio *hlwd;
-+	struct resource *regs_resource;
-+	u32 ngpios;
-+	int res;
-+
-+	hlwd = devm_kzalloc(&pdev->dev, sizeof(*hlwd), GFP_KERNEL);
-+	if (!hlwd)
-+		return -ENOMEM;
-+
-+	/* Save the struct device pointer so dev_info, etc. can be used. */
-+	hlwd->dev = &pdev->dev;
-+
-+	regs_resource = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (IS_ERR(regs_resource))
-+		return PTR_ERR(regs_resource);
-+
-+	hlwd->regs = devm_ioremap_resource(&pdev->dev, regs_resource);
-+	if (IS_ERR(hlwd->regs))
-+		return PTR_ERR(hlwd->regs);
-+
-+	/*
-+	 * Claim all GPIOs using the OWNER register. This will not work on
-+	 * systems where the AHBPROT memory firewall hasn't been configured to
-+	 * permit PPC access to HW_GPIO_*.
-+	 *
-+	 * Note that this has to happen before bgpio_init reads the
-+	 * HW_GPIOB_OUT and HW_GPIOB_DIR, because otherwise it reads the wrong
-+	 * values.
-+	 */
-+	iowrite32be(0xffffffff, hlwd->regs + HW_GPIO_OWNER);
-+
-+	res = bgpio_init(&hlwd->gpioc, &pdev->dev, 4,
-+			hlwd->regs + HW_GPIOB_IN, hlwd->regs + HW_GPIOB_OUT,
-+			NULL, hlwd->regs + HW_GPIOB_DIR, NULL,
-+			BGPIOF_BIG_ENDIAN_BYTE_ORDER);
-+
-+	if (res < 0) {
-+		dev_warn(hlwd->dev, "bgpio_init failed: %d\n", res);
-+		return res;
++	GPIO: gpio@d8000c0 {
++		#gpio-cells = <2>;
++		compatible = "nintendo,hollywood-gpio";
++		reg = <0x0d8000c0 0x40>;
++		gpio-controller;
++		ngpios = <24>;
 +	}
-+
-+	if (of_property_read_u32(pdev->dev.of_node, "ngpios", &ngpios))
-+		ngpios = 32;
-+	hlwd->gpioc.ngpio = ngpios;
-+
-+	return devm_gpiochip_add_data(&pdev->dev, &hlwd->gpioc, hlwd);
-+}
-+
-+static const struct of_device_id hlwd_gpio_match[] = {
-+	{ .compatible = "nintendo,hollywood-gpio", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, hlwd_gpio_match);
-+
-+static struct platform_driver hlwd_gpio_driver = {
-+	.driver	= {
-+		.name		= "gpio-hlwd",
-+		.of_match_table	= hlwd_gpio_match,
-+	},
-+	.probe	= hlwd_gpio_probe,
-+};
-+module_platform_driver(hlwd_gpio_driver);
-+
-+MODULE_AUTHOR("Jonathan Neuschäfer <j.neuschaefer@gmx.net>");
-+MODULE_DESCRIPTION("Nintendo Wii GPIO driver");
-+MODULE_LICENSE("GPL");
+diff --git a/Documentation/devicetree/bindings/powerpc/nintendo/wii.txt b/Documentation/devicetree/bindings/powerpc/nintendo/wii.txt
+index 36afa322b04b..a3dc4b9fa11a 100644
+--- a/Documentation/devicetree/bindings/powerpc/nintendo/wii.txt
++++ b/Documentation/devicetree/bindings/powerpc/nintendo/wii.txt
+@@ -152,14 +152,7 @@ Nintendo Wii device tree
+ 
+ 1.l) The General Purpose I/O (GPIO) controller node
+ 
+-  Represents the dual access 32 GPIO controller interface.
+-
+-  Required properties:
+-
+-  - #gpio-cells : <2>
+-  - compatible : should be "nintendo,hollywood-gpio"
+-  - reg : should contain the IPC registers location and length
+-  - gpio-controller
++  see Documentation/devicetree/bindings/gpio/nintendo,hollywood-gpio.txt
+ 
+ 1.m) The control node
+ 
 -- 
 2.15.1
+
