@@ -1,52 +1,39 @@
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: RE: [PATCH 0/2] Use demuxer for i2c1 and i2c5
-Date: Mon, 22 Jan 2018 11:55:54 +0000
-Message-ID: <KL1PR06MB170270EA30591C7636941361B8EC0@KL1PR06MB1702.apcprd06.prod.outlook.com>
-References: <1516620563-7965-1-git-send-email-biju.das@bp.renesas.com>
- <20180122114026.uqozk4cbhfrjwqmd@katana>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/4] arm64: add basic DTS for i.MX8MQ
+Date: Mon, 22 Jan 2018 09:57:01 -0200
+Message-ID: <CAOMZO5C1sBqO=92KmoEn8YOBe4C_K3PZ=quxC6es8ia4giKQNg@mail.gmail.com>
+References: <20180117183244.28303-1-l.stach@pengutronix.de> <20180117183244.28303-2-l.stach@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <20180122114026.uqozk4cbhfrjwqmd@katana>
-Content-Language: en-US
-Sender: linux-i2c-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Chris Paterson <Chris.Paterson2@renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180117183244.28303-2-l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-> Subject: Re: [PATCH 0/2] Use demuxer for i2c1 and i2c5
+On Wed, Jan 17, 2018 at 4:32 PM, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> This adds the basic DTS for the i.MX8MQ.
+> For now only the following peripherals are supported:
+> - IOMUXC (pin controller)
+> - CCM (clock controller)
+> - GPIO
+> - UART
+> - uSDHC (SD/eMMC controller)
+> - FEC (ethernet controller)
+> - i2c
 >
-> On Mon, Jan 22, 2018 at 11:29:21AM +0000, Biju Das wrote:
-> > We have observed that on iWave RZ/G1E boards, randomly HDMI slave
-> > device is holding data line after a soft reboot.
-> >
-> > We applied demuxer patch for i2c1 and using an oscilloscope verified
-> > that i2c recovery works on the failure condition.
+> This is enough to get a very basic board support up and running.
 >
-> Do you really need the demuxer for that?
+> One known limitation is that the driver for the GPC interrupt
+> controller is still missing, rendering the CPU sleep states unusable
+> as there is nothing waking them up anymore. This will be fixed in
+> due course.
+>
+> Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-How do i2c-bus gets details of gpio lines associated with i2c bus for bus r=
-ecovery?
-
-For eg:- i2c1 scl line --> gpio0 11
-                I2c1 sda line --> gpio0 12
-
-> I posted and just merged bus recovery to the i2c-rcar driver. Did you tes=
-t that?
-> In theory, this should be enough.
-
-On top of renesas-dev branch, I am using the below i2c-rcar driver related =
-patches.
-
-https://www.mail-archive.com/linux-renesas-soc@vger.kernel.org/msg22278.htm=
-l
-
-
-
-
-
-
-Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, B=
-uckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered=
- No. 04586709.
+Reviewed-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
