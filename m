@@ -1,58 +1,180 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCHv4 1/5] net: dsa: Support internal phy on 'cpu' port
-Date: Mon, 22 Jan 2018 12:56:44 -0800
-Message-ID: <3b7fa162-20f9-b31c-b61b-07066fefd196@gmail.com>
-References: <20180116101958.19711-1-sebastian.reichel@collabora.co.uk>
- <20180116101958.19711-2-sebastian.reichel@collabora.co.uk>
- <09a9c406-85c1-0f84-4032-db243f825ca2@gmail.com>
- <20180122205459.GF2467@lunn.ch>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC] devicetree: new FDT format version
+Date: Mon, 22 Jan 2018 15:01:52 -0600
+Message-ID: <CAL_JsqJR2y7bMw_-9TBAGWZ_kf7_sZo5qvqvRowJ8jiy=4G0Bg@mail.gmail.com>
+References: <b96829f9-2e8b-fdc5-5090-58591e2260cf@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180122205459.GF2467-g2DYL2Zd6BY@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Vivien Didelot <vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Ian Ray <ian.ray-JJi787mZWgc@public.gmane.org>, Nandor Han <nandor.han-JJi787mZWgc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <b96829f9-2e8b-fdc5-5090-58591e2260cf-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, "Pantelis Antomarek.vasut-Re5JQEeQqe/2sr8fMPgRzw@public.gmane.org" <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, =?UTF-8?B?TWFyZWsgVmHFoXV0?= <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Kyle Evans <kevans-h+KGxgPPiopAfugRpC6u6w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Alan Tull <atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/22/2018 12:54 PM, Andrew Lunn wrote:
->> Note: there is still technically a misreprentation of how the PHY is
->> "attached" to the network device. In your DTSes, you have to have the
->> CPU port have a "phy-handle" to the internal PHY, while technically it
->> should be the i210 which has a "phy-handle" property to that PHY, and
->> even better, if the e1000e/idb drivers were PHYLIB capable, they could
->> manage it directly.
-> 
-> Hi Florian
-> 
-> Err, i don't think i agree. But maybe i'm missunderstanding.
-> 
-> We have two back-to-back PHYs. I would expect the i210 MAC to have a
-> phy-handle pointing it its PHY. The CPU port would then point to the
-> internal switch PHY.
+On Mon, Jan 22, 2018 at 2:09 AM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Hi All,
+>
+> I've tried to create a decent distribution list, but I'm sure I've missed
+> someone or some important list.  Please share this with anyone you think
+> will be affected.
+>
+> I have been playing around with some thoughts for some additions to
+> the devicetree FDT aka blob format.
+>
+> I would like to get the affected parties thinking about how additions to
+> the format could improve whichever pieces of FDT related technology you
+> work on or care about.  In my opinion, the FDT format should change
+> very infrequently because of the impact on so many projects that have
+> to work together to create a final solution, plus the many many users
+> of those projects.
 
-Is it really a back-to-back PHY? If that is the case, ok, that can
-indeed work without magnetics, but this is really an inefficient way to
-connect a MAC to a switch, especially when you can do direct (R)GMII
-without any PHY in between... If that is the case, then disregard my
-comment.
+A few things discussed before:
+- Adding type information Even just tagging phandles would be good.
+- Allow applying overlays by just appending to the blob. The need for
+this is somewhat gone now that libfdt can just fully apply overlays.
+- Move to an unflattened format so we don't have to unflatten the
+tree. Or to put it another way, extend FDT enough that the tree can be
+walked and manipulated efficiently. I think this would involve storing
+node offsets for all the nodes. Maybe that could be combined with
+storage for __symbols__?
 
-> 
-> Or are you suggesting the i210 has two phy-handles, its own and the
-> switches?
+I also am not happy that labels which were purely source level
+convenience are now part of the ABI with overlays.
 
-Not suggesting that, that would be weird.
+> So I would like you guys to consider what I send out in a day or so,
+> but I don't want to preempt your creativity by laying out the details
+> of my proposal right now.
+>
+> I have not looked at how this would impact the devicetree compilers,
+> but I have hacked together a tool to convert existing blobs to the
+> new format.  The new format is backward compatible, but transforms
+> the overlay related metadata into separate blocks and removes the
+> metadata from nodes and properties.  My current proposal leaves
+> the fragment subtrees intact - it only transforms __symbols__,
+> __fixups__, and __local_fixups__.
+>
+> Some Advantages and disadvantages of my proposal are:
+>
+> Con:
+>   - New blob version.
+>
+> Pro:
+>   - Backward compatible.  Bootloaders and kernels that can process v17 blobs
+>     will continue to work in the same manner with a v18 blob.  They will not
+>     be able to use the new v18 features.
 
-> 
-> 	Andrew
-> 
+What does libfdt do with a v18 blob? I'd assume it was written to
+treat new versions the same as the last known version.
 
+>
+> Pro:
+>   - If a bootloader passes a blob unmodified to a kernel, then the kernel will
+>     be able to use the new v18 features.
+>
+> Pro:
+>   - If a bootloader modifies a blob before passing it to a kernel _and_
+>     downrevs the version to v17, then the kernel will continue to work in the
+>     same manner as it works with a v17 blob.
+>
+> Con:
+>   - If a bootloader modifies a blob before passing it to a kernel _and_ fails
+>     to downrev the version to v17, then the kernel will most likely detect an
+>     error and may choose to not boot.
+>
+> Pro:
+>   - A trailing magic field allows detection of a partially composed blob,
+>     where the blob is created by a multi-pass tool.
+>
+> Pro:
+>   - Validation tools can annotate the blob to indicate validation fail or
+>     validation warning.  The bootloader and kernel can choose what to do
+>     with the information.  For example, a Linux kernel might choose to
+>     taint itself if the blob is not validated or has a validation error.
+>
+> Pro:
+>   - A significant file size reduction for a blob that contains the symbol
+>     information needed by overlays.
 
--- 
-Florian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+While nice, I think that is generally secondary. I think the feeling
+is that FDT is overly space efficient at the cost of walking the tree.
+
+>
+> Pro:
+>   - A significant memory size reduction for a blob that contains the symbol
+>     information needed by overlays.
+>
+> Con:
+>   - All blobs will have a small file size increase when the symbol information
+>     needed by overlays is not included:  125 - 140 bytes or 44 bytes less
+>     than that if checksums not added.
+>
+> Pro:
+>   - Simplifies implementation of Linux kernel overlay application very early
+>     in the boot, mostly before unflattening the blob.  Early boot overlay
+>     application will be complete when the unflattenning is complete.
+>
+>     This feature _might_ _eventually_ reduce of remove the need for the
+>     bootloader to apply overlays.
+>
+> Pro:
+>   - Simplifies implementation of the Linux kernel overlay application to
+>     the live tree, post-boot.
+>
+>
+> Some data would be useful, so here it is.  I compiled all of the .dts files
+> in the Linux kernel source tree at arch/arm/boot/dts/.  The following data
+> is the size of the blob (and for Linux the amount of memory that the
+> flattened tree consumes and never frees after boot).  This is for v4.15-rc7.
+> The following sizes are in bytes.
+>
+> 'dtb no symbols' is the existing blob as currently built in the kernel tree.
+>
+> 'delta no_sym' is the extra overhead from convering 'dtb no symbols' to the
+> new format.  Again, this could be reduced by 44 bytes if the checksums
+> portion of the proposal is not implemented.
+>
+> 'delta symbols' is the existing format build in the kernel tree, but with
+> the "-@" flag provided to dtc, so that the __symbols__ node is populated.
+>
+> 'delta new fmt' is the 'delta symbols' blobs converted to the proposed
+> format.
+>
+> 'saved' is the number of bytes saved by converting to the new format,
+> when symbols metadata is included in the blob.
+>
+> The following table is sorted from most bytes saved, to least, with
+> one entry at approximately every 16 percentile:
+>
+>
+> row   dtb no   delta    delta    delta    saved
+>       symbols  no_sym   symbols  new fmt
+> ----  -------  -------  -------  -------  -------
+>  99%    90531      134    42721    15766    26955  am57xx-beagle-x15-revb1.dtb
+>  83%    44302      139    14582     5163     9419  imx6dl-tx6dl-comtft.dtb
+>  66%    26277      132    11662     4628     7034  sun6i-a31s-sinovoip-bpi-m2.dtb
+>  49%    21047      130     7328     2754     4574  imx53-qsb.dtb
+>  33%    12864      137     4305     1705     2600  kirkwood-netgear_readynas_nv+_v2.dtb
+>  16%    12009      128     2929     1520     1409  bcm911360k.dtb
+>   0%     1220      133       68      149      -81  xenvm-4.2.dtb
+>
+> Note that there are a few blobs with so little symbol metadata that the
+> proposed format increases the size of the blob.  This can be seen in the
+> tail of the distribution:
+>
+>    2537      128      593      384      209  mt6589-aquaris5.dtb
+>    2966      131      537      355      182  mt8127-moose.dtb
+>    5173      132      552      372      180  spear300-evb.dtb
+>    2473      128      485      368      117  mt6592-evb.dtb
+>    2370      135      454      343      111  cx92755_equinox.dtb
+>    2105      128      377      304       73  mt6580-evbp1.dtb
+>    2357      132      346      292       54  hip01-ca9x2.dtb
+>    1232      137      208      201        7  alphascale-asm9260-devkit.dtb
+>    2571      126      201      222      -21  alpine-db.dtb
+>    1220      133       68      149      -81  xenvm-4.2.dtb
+>
+> I will reply to this message with the complete table of all arm blobs.
+>
+> Please discuss.  :-)
+>
+> -Frank
