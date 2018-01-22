@@ -1,204 +1,80 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v6 3/9] v4l: platform: Add Renesas CEU driver
-Date: Mon, 22 Jan 2018 10:07:45 +0100
-Message-ID: <8363e777-2af8-408a-1a42-65309e48af6b@xs4all.nl>
-References: <1516139101-7835-1-git-send-email-jacopo+renesas@jmondi.org>
- <2529707.jzkV7c2yGz@avalon> <4195ec6a-b99d-2fad-3898-9ce9c02fce00@xs4all.nl>
- <1556766.StfJmN1Kpx@avalon>
+From: Daniel Thompson <daniel.thompson@linaro.org>
+Subject: Re: [PATCH 2/4] dt-bindings: pwm-backlight: add a
+ num-interpolation-steps property.
+Date: Mon, 22 Jan 2018 09:16:13 +0000
+Message-ID: <20180122091613.oyjjzwci3mmfc7j2@oak.lan>
+References: <20180110223046.17696-1-enric.balletbo@collabora.com>
+ <20180110223046.17696-3-enric.balletbo@collabora.com>
+ <20180119205249.fcbdyu6652ffsdmg@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1556766.StfJmN1Kpx@avalon>
+Content-Disposition: inline
+In-Reply-To: <20180119205249.fcbdyu6652ffsdmg@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, magnus.damm@gmail.com, geert@glider.be, mchehab@kernel.org, festevam@gmail.com, sakari.ailus@iki.fi, robh+dt@kernel.org, mark.rutland@arm.com, pombredanne@nexb.com, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>, Doug Anderson <dianders@google.com>, Pavel Machek <pavel@ucw.cz>, Jingoo Han <jingoohan1@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Brian Norris <briannorris@google.com>, Guenter Roeck <groeck@google.com>, Lee Jones <lee.jones@linaro.org>, Alexandru Stan <amstan@google.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 22/01/18 01:52, Laurent Pinchart wrote:
-> Hi Hans,
+On Fri, Jan 19, 2018 at 02:52:49PM -0600, Rob Herring wrote:
+> On Wed, Jan 10, 2018 at 11:30:44PM +0100, Enric Balletbo i Serra wrote:
+> > The num-interpolated-steps property specifies the number of
+> > interpolated steps between each value of brightness-level table. This is
+> > useful for high resolution PWMs to not have to list out every possible
+> > value in the brightness-level array.
+> > 
+> > Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> > ---
+> >  .../bindings/leds/backlight/pwm-backlight.txt       | 21 +++++++++++++++++++++
+> >  1 file changed, 21 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
+> > index 310810906613..605432c910c5 100644
+> > --- a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
+> > +++ b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
+> > @@ -21,6 +21,11 @@ Optional properties:
+> >                            and enabling the backlight using GPIO.
+> >    - pwm-off-delay-ms: Delay in ms between disabling the backlight using GPIO
+> >                        and setting PWM value to 0.
+> > +  - num-interpolated-steps: Number of interpolated steps between each value
+> > +                            of brightness-levels table. This way a high
+> > +                            resolution pwm duty cycle can be used without
+> > +                            having to list out every possible value in the
+> > +                            brightness-level array.
+> >  
+> >  [0]: Documentation/devicetree/bindings/pwm/pwm.txt
+> >  [1]: Documentation/devicetree/bindings/gpio/gpio.txt
+> > @@ -39,3 +44,19 @@ Example:
+> >  		post-pwm-on-delay-ms = <10>;
+> >  		pwm-off-delay-ms = <10>;
+> >  	};
+> > +
+> > +Example using num-interpolation-steps:
+> > +
+> > +	backlight {
+> > +		compatible = "pwm-backlight";
+> > +		pwms = <&pwm 0 5000000>;
+> > +
+> > +		brightness-levels = <0 65535>;
+> > +		num-interpolated-steps = <4096>;
 > 
-> On Friday, 19 January 2018 14:25:39 EET Hans Verkuil wrote:
->> On 01/19/18 13:20, Laurent Pinchart wrote:
->>> On Friday, 19 January 2018 13:20:19 EET Hans Verkuil wrote:
->>>> On 01/16/18 22:44, Jacopo Mondi wrote:
->>>>> Add driver for Renesas Capture Engine Unit (CEU).
->>>>>
->>>>> The CEU interface supports capturing 'data' (YUV422) and 'images'
->>>>> (NV[12|21|16|61]).
->>>>>
->>>>> This driver aims to replace the soc_camera-based sh_mobile_ceu one.
->>>>>
->>>>> Tested with ov7670 camera sensor, providing YUYV_2X8 data on Renesas RZ
->>>>> platform GR-Peach.
->>>>>
->>>>> Tested with ov7725 camera sensor on SH4 platform Migo-R.
->>>>>
->>>>> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
->>>>> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
->>>>> ---
->>>>>
->>>>>  drivers/media/platform/Kconfig       |    9 +
->>>>>  drivers/media/platform/Makefile      |    1 +
->>>>>  drivers/media/platform/renesas-ceu.c | 1659 +++++++++++++++++++++++++++
->>>>>  3 files changed, 1669 insertions(+)
->>>>>  create mode 100644 drivers/media/platform/renesas-ceu.c
->>>
->>> [snip]
->>>
->>>>> diff --git a/drivers/media/platform/renesas-ceu.c
->>>>> b/drivers/media/platform/renesas-ceu.c new file mode 100644
->>>>> index 0000000..1b8f0ef
->>>>> --- /dev/null
->>>>> +++ b/drivers/media/platform/renesas-ceu.c
->>>
->>> [snip]
->>>
->>>>> +static void ceu_update_plane_sizes(struct v4l2_plane_pix_format *plane,
->>>>> +				   unsigned int bpl, unsigned int szimage)
->>>>> +{
->>>>> +	if (plane->bytesperline < bpl)
->>>>> +		plane->bytesperline = bpl;
->>>>> +	if (plane->sizeimage < szimage)
->>>>> +		plane->sizeimage = szimage;
->>>>
->>>> As mentioned in your cover letter, you do need to check for invalid
->>>> bytesperline values. The v4l2-compliance test is to see what happens
->>>> when userspace gives insane values, so yes, drivers need to be able
->>>> to handle that.
->>>
->>> What limit would you set, what is an acceptable large value versus an
->>> invalid large value ? I think we should have rules for this at the API
->>> level (or at least, if not part of the API, rules that are consistent
->>> across drivers).
->>
->> I would expect this to be the max of what the hardware can support. If
->> that's really high, then this can be, say, 4 times the width.
->>
->> Note that there are very few drivers that can handle a user-specified
->> stride.
-> 
-> But that's no reason not to handle it here if the hardware permits, right ? 
-> :-)
+> How does this make sense with only 2 defined levels other than having 
+> fewer steps? I thought the purpose of this was to have a piecewise 
+> linear curve. 
 
-Certainly. But it is the reason why it's hard to find example code in
-existing drivers.
+It's not wrong as such, this is how a device with a linear (or nearly
+linear) response could be compactly described.
 
->>>> plane->sizeimage is set by the driver, so drop the 'if' before the
->>>> assignment.
->>>
->>> I don't think that's correct. Userspace should be able to control padding
->>> lines at the end of the image, the same way it controls padding pixels at
->>> the end of lines.
->>
->> If userspace wants larger buffers, then it should use VIDIOC_CREATE_BUFS.
->>
->> sizeimage is exclusively set by the driver, applications rely on that.
-> 
-> The API documentation is pretty confusing about this.
-> 
-> In pixfmt-v4l2.rst, the field in the v4l2_pix_format structure is documented 
-> as
-> 
->       - Size in bytes of the buffer to hold a complete image, set by the
->         driver. Usually this is ``bytesperline`` times ``height``. When
->         the image consists of variable length compressed data this is the
->         maximum number of bytes required to hold an image.
-> 
-> Then in pixfmt-v4l2-mplane.rst, the field in the v4l2_plane_pix_format 
-> structure is documented as
-> 
->       - Maximum size in bytes required for image data in this plane.
+Nevertheless I agree!  An example with a small but realistic curve 
+would be better... we know that copy 'n paste exists so I'd rather 
+see a simple curve than no curve.
 
-This should contain the same text as in pixfmt-v4l2.rst.
 
+Daniel.
+
+
+> > +		default-brightness-level = <6>;
 > 
-> Finally, in vidioc-create-bufs.rst, we have
+> Aren't valid values 0, 16, 32, 48, etc.?
 > 
-> The buffers created by this ioctl will have as minimum size the size
-> defined by the ``format.pix.sizeimage`` field (or the corresponding
-> fields for other format types). Usually if the ``format.pix.sizeimage``
-> field is less than the minimum required for the given format, then an
-> error will be returned since drivers will typically not allow this. If
-> it is larger, then the value will be used as-is. In other words, the
-> driver may reject the requested size, but if it is accepted the driver
-> will use it unchanged.
-> 
-> The VIDIOC_CREATE_BUFS documentation contradicts the v4l2_pix_format 
-> documentation, as the multiplane case doesn't state anything about who sets 
-> the sizeimage field. We should clarify the documentation.
-
-The pixfmt-v4l2-mplane.rst is the one that's incomplete. I noticed the same
-thing when I looked at it.
-
-> 
->>>>> +}
->>>
->>> [snip]
->>>
->>>>> +static const struct v4l2_ioctl_ops ceu_ioctl_ops = {
->>>>> +	.vidioc_querycap		= ceu_querycap,
->>>>> +
->>>>> +	.vidioc_enum_fmt_vid_cap_mplane	= ceu_enum_fmt_vid_cap,
->>>>> +	.vidioc_try_fmt_vid_cap_mplane	= ceu_try_fmt_vid_cap,
->>>>> +	.vidioc_s_fmt_vid_cap_mplane	= ceu_s_fmt_vid_cap,
->>>>> +	.vidioc_g_fmt_vid_cap_mplane	= ceu_g_fmt_vid_cap,
->>>>> +
->>>>> +	.vidioc_enum_input		= ceu_enum_input,
->>>>> +	.vidioc_g_input			= ceu_g_input,
->>>>> +	.vidioc_s_input			= ceu_s_input,
->>>>> +
->>>>> +	.vidioc_reqbufs			= vb2_ioctl_reqbufs,
->>>>> +	.vidioc_querybuf		= vb2_ioctl_querybuf,
->>>>> +	.vidioc_qbuf			= vb2_ioctl_qbuf,
->>>>> +	.vidioc_expbuf			= vb2_ioctl_expbuf,
->>>>> +	.vidioc_dqbuf			= vb2_ioctl_dqbuf,
->>>>> +	.vidioc_create_bufs		= vb2_ioctl_create_bufs,
->>>>> +	.vidioc_prepare_buf		= vb2_ioctl_prepare_buf,
->>>>> +	.vidioc_streamon		= vb2_ioctl_streamon,
->>>>> +	.vidioc_streamoff		= vb2_ioctl_streamoff,
->>>>> +
->>>>> +	.vidioc_g_parm			= ceu_g_parm,
->>>>> +	.vidioc_s_parm			= ceu_s_parm,
->>>>> +	.vidioc_enum_framesizes		= ceu_enum_framesizes,
->>>>> +	.vidioc_enum_frameintervals	= ceu_enum_frameintervals,
->>>>
->>>> You're missing these ioctls:
->>>>         .vidioc_log_status              = v4l2_ctrl_log_status,
->>>
->>> Is log status mandatory ?
->>
->> No, but it doesn't hurt to add this one. It comes for free.
-> 
-> Possibly a bit out of scope, but now that the standard debugging interface 
-> seems to be debugfs, wouldn't it make sense to implement log status through 
-> there instead of as an ioctl ?
-
-Why? The ioctl has been there for many many years and it works very well (Cisco
-uses this on a daily basis). I see no reason to do a lot of work for no good
-purpose. It's probably less useful for sensors but for video receivers (HDMI or
-analog) I couldn't do without. With HDMI/analog video receivers you never
-know what sort of video you receive, so being able to log the current status
-is great. We use it in regression tests and error reporting all the time.
-
-Sure, today we'd design this using debugfs, but I don't think it existed when
-LOG_STATUS was created. In any case, I see no reason to change this. In fact,
-that would break our tests.
-
-Regards,
-
-	Hans
-
-> 
->>>>         .vidioc_subscribe_event         = v4l2_ctrl_subscribe_event,
->>>>         .vidioc_unsubscribe_event       = v4l2_event_unsubscribe,
->>>>
->>>> These missing _event ops are the reason for this compliance failure:
->>>>
->>>> fail: v4l2-test-controls.cpp(782): subscribe event for control 'User
->>>> Controls' failed
->>>>
->>>>> +};
->>>
->>> [snip]
-> 
+> Rob
