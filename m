@@ -1,260 +1,46 @@
-From: Maciej Purski <m.purski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v4 7/7] regulator: core: Change voltage setting path
-Date: Mon, 22 Jan 2018 15:30:12 +0100
-Message-ID: <1516631412-17542-8-git-send-email-m.purski@samsung.com>
-References: <1516631412-17542-1-git-send-email-m.purski@samsung.com>
-        <CGME20180122143039eucas1p2391bb266faeae319e95913c68e706ecf@eucas1p2.samsung.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1516631412-17542-1-git-send-email-m.purski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Maciej Purski <m.purski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH] dt-bindings: display: stm32: correct clock-names in dsi
+ panel example
+Date: Mon, 22 Jan 2018 08:30:59 -0600
+Message-ID: <CAL_JsqKfeSW1R4aSjeUnJ6b=NeQK0qHTuEV7y9Y4sAFiyzHLzQ@mail.gmail.com>
+References: <20180121205807.30677-1-philippe.cornu@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180121205807.30677-1-philippe.cornu@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philippe Cornu <philippe.cornu@st.com>
+Cc: Yannick Fertre <yannick.fertre@st.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Vincent Abriou <vincent.abriou@st.com>, David Airlie <airlied@linux.ie>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, dri-devel <dri-devel@lists.freedesktop.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mickael Reulier <mickael.reulier@st.com>, Gabriel Fernandez <gabriel.fernandez@st.com>, Ludovic Barre <ludovic.barre@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On Odroid XU3/4 and other Exynos5422 based boards there is a case, that
-different devices on the board are supplied by different regulators
-with non-fixed voltages. If one of these devices temporarily requires
-higher voltage, there might occur a situation that the spread between
-two devices' voltages is so high, that there is a risk of changing
-'high' and 'low' states on the interconnection between devices powered
-by those regulators.
+On Sun, Jan 21, 2018 at 2:58 PM, Philippe Cornu <philippe.cornu@st.com> wrote:
+> In the dsi panel example, clock names in the "clock-names"
+> field have been swapped:
+> * "pclk" (peripheral clock) is <&rcc 1 CLK_F469_DSI> on stm32f4
+> * "ref" (dsi phy pll ref clock) is <&clk_hse> on stm32f4
+>
+> Signed-off-by: Philippe Cornu <philippe.cornu@st.com>
+> ---
+>  Documentation/devicetree/bindings/display/st,stm32-ltdc.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/display/st,stm32-ltdc.txt b/Documentation/devicetree/bindings/display/st,stm32-ltdc.txt
+> index 029252253ad4..3eb1b48b47dd 100644
+> --- a/Documentation/devicetree/bindings/display/st,stm32-ltdc.txt
+> +++ b/Documentation/devicetree/bindings/display/st,stm32-ltdc.txt
+> @@ -98,7 +98,7 @@ Example 2: DSI panel
+>                         compatible = "st,stm32-dsi";
+>                         reg = <0x40016c00 0x800>;
+>                         clocks = <&rcc 1 CLK_F469_DSI>, <&clk_hse>;
+> -                       clock-names = "ref", "pclk";
+> +                       clock-names = "pclk", "ref";
 
-Uncoupled regulators should be a special case of coupled regulators, so
-they should share a common voltage setting path. When enabling,
-disabling or setting voltage of a coupled regulator, all coupled
-regulators should be locked. Regulator's supplies should be locked, when
-setting voltage of a single regulator. Enabling a coupled regulator or
-setting its voltage should not be possible if some of its coupled
-regulators, has not been registered.
+There is no way to tell they are reversed because pclk is not even
+documented. Please fix that too.
 
-Add function for locking coupled regulators. Extract a new function
-regulator_set_voltage_rdev() from regulator_set_voltage_unlocked(),
-which is called when setting voltage of a single regulator.
-
-Signed-off-by: Maciej Purski <m.purski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
----
- drivers/regulator/core.c | 103 +++++++++++++++++++++++++++++++++++++----------
- 1 file changed, 82 insertions(+), 21 deletions(-)
-
-diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
-index 0492b0e..ce90246 100644
---- a/drivers/regulator/core.c
-+++ b/drivers/regulator/core.c
-@@ -107,6 +107,9 @@ static int _regulator_do_set_voltage(struct regulator_dev *rdev,
- 				     int min_uV, int max_uV);
- static int regulator_balance_voltage(struct regulator_dev *rdev,
- 				     suspend_state_t state);
-+static int regulator_set_voltage_rdev(struct regulator_dev *rdev,
-+				      int min_uV, int max_uV,
-+				      suspend_state_t state);
- static struct regulator *create_regulator(struct regulator_dev *rdev,
- 					  struct device *dev,
- 					  const char *supply_name);
-@@ -180,6 +183,36 @@ static void regulator_unlock_supply(struct regulator_dev *rdev)
- }
- 
- /**
-+ * regulator_lock_coupled - lock a group of coupled regulators
-+ * @rdev:      regulator source
-+ */
-+static void regulator_lock_coupled(struct regulator_dev *rdev)
-+{
-+	struct coupling_desc *c_desc = &rdev->coupling_desc;
-+	int n_coupled = c_desc->n_coupled;
-+	int i;
-+
-+	for (i = 0; i < n_coupled; i++)
-+		if (c_desc->coupled_rdevs[i])
-+			mutex_lock_nested(&c_desc->coupled_rdevs[i]->mutex, i);
-+}
-+
-+/**
-+ * regulator_unlock_coupled - unlock a group of coupled regulators
-+ * @rdev:      regulator source
-+ */
-+static void regulator_unlock_coupled(struct regulator_dev *rdev)
-+{
-+	struct coupling_desc *c_desc = &rdev->coupling_desc;
-+	int n_coupled = c_desc->n_coupled;
-+	int i;
-+
-+	for (i = 0; i < n_coupled; i++)
-+		if (c_desc->coupled_rdevs[i])
-+			mutex_unlock(&c_desc->coupled_rdevs[i]->mutex);
-+}
-+
-+/**
-  * of_get_regulator - get a regulator device node based on supply name
-  * @dev: Device pointer for the consumer (of regulator) device
-  * @supply: regulator supply name
-@@ -2184,6 +2217,11 @@ int regulator_enable(struct regulator *regulator)
- 	struct regulator_dev *rdev = regulator->rdev;
- 	int ret = 0;
- 
-+	if (rdev->coupling_desc.n_resolved != rdev->coupling_desc.n_coupled) {
-+		rdev_err(rdev, "not all coupled regulators registered\n");
-+		return -EPERM;
-+	}
-+
- 	if (regulator->always_on)
- 		return 0;
- 
-@@ -2193,9 +2231,10 @@ int regulator_enable(struct regulator *regulator)
- 			return ret;
- 	}
- 
--	mutex_lock(&rdev->mutex);
-+	regulator_lock_coupled(rdev);
- 	ret = _regulator_enable(rdev);
--	mutex_unlock(&rdev->mutex);
-+	regulator_balance_voltage(rdev, PM_SUSPEND_ON);
-+	regulator_unlock_coupled(rdev);
- 
- 	if (ret != 0 && rdev->supply)
- 		regulator_disable(rdev->supply);
-@@ -2301,9 +2340,10 @@ int regulator_disable(struct regulator *regulator)
- 	if (regulator->always_on)
- 		return 0;
- 
--	mutex_lock(&rdev->mutex);
-+	regulator_lock_coupled(rdev);
- 	ret = _regulator_disable(rdev);
--	mutex_unlock(&rdev->mutex);
-+	regulator_balance_voltage(rdev, PM_SUSPEND_ON);
-+	regulator_unlock_coupled(rdev);
- 
- 	if (ret == 0 && rdev->supply)
- 		regulator_disable(rdev->supply);
-@@ -2352,10 +2392,11 @@ int regulator_force_disable(struct regulator *regulator)
- 	struct regulator_dev *rdev = regulator->rdev;
- 	int ret;
- 
--	mutex_lock(&rdev->mutex);
-+	regulator_lock_coupled(rdev);
- 	regulator->uA_load = 0;
- 	ret = _regulator_force_disable(regulator->rdev);
--	mutex_unlock(&rdev->mutex);
-+	regulator_balance_voltage(rdev, PM_SUSPEND_ON);
-+	regulator_unlock_coupled(rdev);
- 
- 	if (rdev->supply)
- 		while (rdev->open_count--)
-@@ -2888,8 +2929,12 @@ static int regulator_set_voltage_unlocked(struct regulator *regulator,
- 	int ret = 0;
- 	int old_min_uV, old_max_uV;
- 	int current_uV;
--	int best_supply_uV = 0;
--	int supply_change_uV = 0;
-+
-+	if (rdev->coupling_desc.n_resolved != rdev->coupling_desc.n_coupled) {
-+		rdev_err(rdev, "not all coupled regulators registered\n");
-+		ret = -EPERM;
-+		goto out;
-+	}
- 
- 	/* If we're setting the same range as last time the change
- 	 * should be a noop (some cpufreq implementations use the same
-@@ -2933,6 +2978,27 @@ static int regulator_set_voltage_unlocked(struct regulator *regulator,
- 	if (ret < 0)
- 		goto out2;
- 
-+	/* for not coupled regulators this will just set the voltage */
-+	ret = regulator_balance_voltage(rdev, state);
-+	if (ret < 0)
-+		goto out2;
-+
-+out:
-+	return 0;
-+out2:
-+	voltage->min_uV = old_min_uV;
-+	voltage->max_uV = old_max_uV;
-+
-+	return ret;
-+}
-+
-+static int regulator_set_voltage_rdev(struct regulator_dev *rdev, int min_uV,
-+				      int max_uV, suspend_state_t state)
-+{
-+	int best_supply_uV = 0;
-+	int supply_change_uV = 0;
-+	int ret;
-+
- 	if (rdev->supply &&
- 	    regulator_ops_is_valid(rdev->supply->rdev,
- 				   REGULATOR_CHANGE_VOLTAGE) &&
-@@ -2944,13 +3010,13 @@ static int regulator_set_voltage_unlocked(struct regulator *regulator,
- 		selector = regulator_map_voltage(rdev, min_uV, max_uV);
- 		if (selector < 0) {
- 			ret = selector;
--			goto out2;
-+			goto out;
- 		}
- 
--		best_supply_uV = _regulator_list_voltage(regulator, selector, 0);
-+		best_supply_uV = _regulator_list_voltage(rdev, selector, 0);
- 		if (best_supply_uV < 0) {
- 			ret = best_supply_uV;
--			goto out2;
-+			goto out;
- 		}
- 
- 		best_supply_uV += rdev->desc->min_dropout_uV;
-@@ -2958,7 +3024,7 @@ static int regulator_set_voltage_unlocked(struct regulator *regulator,
- 		current_supply_uV = _regulator_get_voltage(rdev->supply->rdev);
- 		if (current_supply_uV < 0) {
- 			ret = current_supply_uV;
--			goto out2;
-+			goto out;
- 		}
- 
- 		supply_change_uV = best_supply_uV - current_supply_uV;
-@@ -2970,13 +3036,13 @@ static int regulator_set_voltage_unlocked(struct regulator *regulator,
- 		if (ret) {
- 			dev_err(&rdev->dev, "Failed to increase supply voltage: %d\n",
- 					ret);
--			goto out2;
-+			goto out;
- 		}
- 	}
- 
- 	ret = _regulator_do_set_voltage(rdev, min_uV, max_uV);
- 	if (ret < 0)
--		goto out2;
-+		goto out;
- 
- 	if (supply_change_uV < 0) {
- 		ret = regulator_set_voltage_unlocked(rdev->supply,
-@@ -2990,11 +3056,6 @@ static int regulator_set_voltage_unlocked(struct regulator *regulator,
- 
- out:
- 	return ret;
--out2:
--	voltage->min_uV = old_min_uV;
--	voltage->max_uV = old_max_uV;
--
--	return ret;
- }
- 
- static int regulator_get_optimal_voltage(struct regulator_dev *rdev)
-@@ -3209,12 +3270,12 @@ int regulator_set_voltage(struct regulator *regulator, int min_uV, int max_uV)
- {
- 	int ret = 0;
- 
--	regulator_lock_supply(regulator->rdev);
-+	regulator_lock_coupled(regulator->rdev);
- 
- 	ret = regulator_set_voltage_unlocked(regulator, min_uV, max_uV,
- 					     PM_SUSPEND_ON);
- 
--	regulator_unlock_supply(regulator->rdev);
-+	regulator_unlock_coupled(regulator->rdev);
- 
- 	return ret;
- }
--- 
-2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>                         resets = <&rcc STM32F4_APB2_RESET(DSI)>;
+>                         reset-names = "apb";
+>
+> --
+> 2.15.1
+>
