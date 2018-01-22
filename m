@@ -1,55 +1,79 @@
-From: =?UTF-8?q?Kamil=20Trzci=C5=84ski?= <ayufan@ayufan.eu>
-Subject: [PATCH] rock64: dts: fix gmac2io stability issues
-Date: Mon, 22 Jan 2018 18:46:22 +0100
-Message-ID: <20180122174628.15613-1-ayufan@ayufan.eu>
+From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 2/4] arm64: add basic DTS for i.MX8MQ
+Date: Mon, 22 Jan 2018 18:50:21 +0100
+Message-ID: <1516643421.25726.17.camel@pengutronix.de>
+References: <20180117183244.28303-1-l.stach@pengutronix.de>
+         <20180117183244.28303-2-l.stach@pengutronix.de>
+         <20180122144729.GA27764@dragon>
+         <CAK8P3a0Yq1WuUYih6WKbbjoGRwq-rCQ8OEpuyu0=-SOVV2MNLg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: =?UTF-8?q?Kamil=20Trzci=C5=84ski?= <ayufan@ayufan.eu>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Heiko Stuebner <heiko@sntech.de>, David Wu <david.wu@rock-chips.com>, "David S. Miller" <davem@davemloft.net>, Joseph Chen <chenjh@rock-chips.com>, Liang Chen <cl@rock-chips.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAK8P3a0Yq1WuUYih6WKbbjoGRwq-rCQ8OEpuyu0=-SOVV2MNLg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This commit enables thresh dma mode as this forces to disable checksuming,
-and chooses delay values which make the interface stable.
+Am Montag, den 22.01.2018, 16:11 +0100 schrieb Arnd Bergmann:
+> On Mon, Jan 22, 2018 at 3:47 PM, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> wrote:
+> > On Wed, Jan 17, 2018 at 07:32:42PM +0100, Lucas Stach wrote:
+> > > This adds the basic DTS for the i.MX8MQ.
+> > > For now only the following peripherals are supported:
+> > > - IOMUXC (pin controller)
+> > > - CCM (clock controller)
+> > > - GPIO
+> > > - UART
+> > > - uSDHC (SD/eMMC controller)
+> > > - FEC (ethernet controller)
+> > > - i2c
+> > > 
+> > > This is enough to get a very basic board support up and running.
+> > > 
+> > > One known limitation is that the driver for the GPC interrupt
+> > > controller is still missing, rendering the CPU sleep states
+> > > unusable
+> > > as there is nothing waking them up anymore. This will be fixed in
+> > > due course.
+> > > 
+> > > Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> > > ---
+> > >  arch/arm64/boot/dts/Makefile             |   1 +
+> > >  arch/arm64/boot/dts/nxp/imx8mq-pinfunc.h | 632
+> > > +++++++++++++++++++++++++++++++
+> > >  arch/arm64/boot/dts/nxp/imx8mq.dtsi      | 418
+> > > ++++++++++++++++++++
+> > 
+> > So we will have the following two folders for SoCs from the same
+> > company.
+> > 
+> >  arch/arm64/boot/dts/nxp/
+> >  arch/arm64/boot/dts/freescale/
+> 
+> It might get worse once the sale to Qualcomm goes through and maybe
+> if
+> Broadcom makes another bid for Qualcomm in a few years ;-)
+> 
+> > I'm a bit uncomfortable with that.  @Arnd, do you have an opinion
+> > how we
+> > should handle them?
+> 
+> It's a recurring problem of course. I have a small preference for
+> just adding
+> the i.mx files to arch/arm64/boot/dts/freescale/, but I'd leave it up
+> to you.
 
-These changes are needed, because ROCK64 is faced with two problems:
-1. tx checksuming does not work with packets larger than 1498,
-2. the default delays for tx/rx are not stable when using 1Gbps connection.
+The nice thing about the split into Freescale/NXP is that it nicely
+separates the Layerscape and i.MX stuff, which are two quite different
+architectures. But that's just a nice coincidence and I'll happily
+rework the patches to whatever suits the maintainers most. Please make
+a judgement call.
 
-Delays were found out with:
-https://github.com/ayufan-rock64/linux-build/tree/master/recipes/gmac-delays-test
-
-Change-Id: Ie894df4b52122988da683c02e3a05d635a5c7b84
-Signed-off-by: Kamil Trzciński <ayufan@ayufan.eu>
----
- arch/arm64/boot/dts/rockchip/rk3328-rock64.dts | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts b/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
-index 5602ec01fed9..bcc0bb35d840 100644
---- a/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
-@@ -132,8 +132,6 @@
- 	assigned-clocks = <&cru SCLK_MAC2IO>, <&cru SCLK_MAC2IO_EXT>;
- 	assigned-clock-parents = <&gmac_clkin>, <&gmac_clkin>;
- 	clock_in_out = "input";
--	/* shows instability at 1GBit right now */
--	max-speed = <100>;
- 	phy-supply = <&vcc_io>;
- 	phy-mode = "rgmii";
- 	pinctrl-names = "default";
-@@ -141,8 +139,9 @@
- 	snps,reset-gpio = <&gpio1 RK_PC2 GPIO_ACTIVE_LOW>;
- 	snps,reset-active-low;
- 	snps,reset-delays-us = <0 10000 50000>;
--	tx_delay = <0x26>;
--	rx_delay = <0x11>;
-+	snps,force_thresh_dma_mode;
-+	tx_delay = <0x24>;
-+	rx_delay = <0x18>;
- 	status = "okay";
- };
- 
--- 
-2.14.1
+Regards,
+Lucas
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
