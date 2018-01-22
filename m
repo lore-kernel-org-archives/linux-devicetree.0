@@ -1,47 +1,39 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: [PATCH 1/7] clk: rockchip: fix hclk_vio_niu on rk3328
-Date: Mon, 22 Jan 2018 15:15:24 +0100
-Message-ID: <20180122141530.12398-2-heiko@sntech.de>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH 7/7] clk: rockchip: document hdmi_phy external input for rk3328
+Date: Mon, 22 Jan 2018 15:15:30 +0100
+Message-ID: <20180122141530.12398-8-heiko@sntech.de>
 References: <20180122141530.12398-1-heiko@sntech.de>
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20180122141530.12398-1-heiko@sntech.de>
-Sender: linux-clk-owner@vger.kernel.org
-To: linux-clk@vger.kernel.org
-Cc: mturquette@baylibre.com, sboyd@codeaurora.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, yang.zheng@rock-chips.com, zhangqing@rock-chips.com, Heiko Stuebner <heiko@sntech.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180122141530.12398-1-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, yang.zheng-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The clock wrongly was called hclk_vio and exported, while it actually is
-a clock of the interconnect-vio connection and should therefore be always
-on till we actually model the interconnect.
+The hdmi-phy block inside the soc also loops its pll output back
+into the clock controller, so document that already used input clock.
 
-So fix that and don't export it as HCLK_VIO.
-
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 ---
- drivers/clk/rockchip/clk-rk3328.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/clock/rockchip,rk3328-cru.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/clk/rockchip/clk-rk3328.c b/drivers/clk/rockchip/clk-rk3328.c
-index b04f29774ee7..17816aec206a 100644
---- a/drivers/clk/rockchip/clk-rk3328.c
-+++ b/drivers/clk/rockchip/clk-rk3328.c
-@@ -727,7 +727,7 @@ static struct rockchip_clk_branch rk3328_clk_branches[] __initdata = {
- 	GATE(0, "pclk_vio_h2p", "hclk_vio_pre", CLK_IGNORE_UNUSED, RK3328_CLKGATE_CON(21), 13, GFLAGS),
- 	GATE(0, "hclk_vio_h2p", "hclk_vio_pre", CLK_IGNORE_UNUSED, RK3328_CLKGATE_CON(21), 14, GFLAGS),
- 	GATE(HCLK_HDCP, "hclk_hdcp", "hclk_vio_pre", 0, RK3328_CLKGATE_CON(22), 0, GFLAGS),
--	GATE(HCLK_VIO, "hclk_vio", "hclk_vio_pre", 0, RK3328_CLKGATE_CON(22), 1, GFLAGS),
-+	GATE(0, "hclk_vio_niu", "hclk_vio_pre", 0, RK3328_CLKGATE_CON(22), 1, GFLAGS),
- 	GATE(PCLK_HDMI, "pclk_hdmi", "hclk_vio_pre", 0, RK3328_CLKGATE_CON(22), 4, GFLAGS),
- 	GATE(PCLK_HDCP, "pclk_hdcp", "hclk_vio_pre", 0, RK3328_CLKGATE_CON(22), 5, GFLAGS),
+diff --git a/Documentation/devicetree/bindings/clock/rockchip,rk3328-cru.txt b/Documentation/devicetree/bindings/clock/rockchip,rk3328-cru.txt
+index e71c675ba5da..904ae682ea90 100644
+--- a/Documentation/devicetree/bindings/clock/rockchip,rk3328-cru.txt
++++ b/Documentation/devicetree/bindings/clock/rockchip,rk3328-cru.txt
+@@ -32,6 +32,7 @@ clock-output-names:
+  - "clkin_i2s" - external I2S clock - optional,
+  - "gmac_clkin" - external GMAC clock - optional
+  - "phy_50m_out" - output clock of the pll in the mac phy
++ - "hdmi_phy" - output clock of the hdmi phy pll - optional
  
-@@ -861,6 +861,7 @@ static const char *const rk3328_critical_clocks[] __initconst = {
- 	"aclk_rga_niu",
- 	"pclk_vio_h2p",
- 	"hclk_vio_h2p",
-+	"hclk_vio_niu",
- };
+ Example: Clock controller node:
  
- static void __init rk3328_clk_init(struct device_node *np)
 -- 
 2.14.2
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
