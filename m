@@ -1,88 +1,34 @@
-From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Subject: =?UTF-8?Q?Re:_[PATCH_v6_00/41]_ARM:_davinci:_convert_to_common_cloc?=
- =?UTF-8?Q?k_framework=e2=80=8b?=
-Date: Mon, 22 Jan 2018 11:30:15 -0600
-Message-ID: <d819e18f-7d74-d8c4-8056-bfc545f4d4e9@lechnology.com>
-References: <1516468460-4908-1-git-send-email-david@lechnology.com>
- <CAMRc=MexJTMiD=URw1bv-qfGaTntZRXgfsSb_beYGkvO+LrpgQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMRc=MexJTMiD=URw1bv-qfGaTntZRXgfsSb_beYGkvO+LrpgQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bartosz Golaszewski <brgl-ARrdPY/1zhM@public.gmane.org>
-Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Adam Ford <aford173-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Tony Lindgren <tony@atomide.com>
+Subject: [PATCH] bus: ti-sysc: Fix smartreflex sysc mask
+Date: Mon, 22 Jan 2018 09:36:38 -0800
+Message-ID: <20180122173638.3222-1-tony@atomide.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-omap@vger.kernel.org
+Cc: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Dave Gerlach <d-gerlach@ti.com>, Nishanth Menon <nm@ti.com>, Paul Walmsley <paul@pwsan.com>, Tero Kristo <t-kristo@ti.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/22/2018 05:14 AM, Bartosz Golaszewski wrote:
-> 2018-01-20 18:13 GMT+01:00 David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>:
->> This series converts mach-davinci to use the common clock framework.
->>
->> The series works like this, the first 19 patches create new clock drivers
->> using the common clock framework. There are basically 3 groups of clocks -
->> PLL, PSC and CFGCHIP (syscon). There are six different SoCs that each have
->> unique init data, which is the reason for so many patches.
->>
->> Then, starting with "ARM: da830: add new clock init using common clock",
->> we get the mach code ready for the switch by adding the code needed for
->> the new clock drivers and adding #ifndef CONFIG_COMMON_CLK around the
->> legacy clocks so that we can switch easily between the old and the new.
->>
->> "ARM: davinci: switch to common clock framework" actually flips the switch
->> to start using the new clock drivers. Then the next 8 patches remove all
->> of the old clock code.
->>
->> The final three patches add device tree clock support to the one SoC that
->> supports it.
->>
->> v6 changes (also see individual patches for details):
->> - All of the device tree bindings are changed
->> - All of the clock drivers are changed significantly
->> - Fixed issues brought up during review of v5
->> - "ARM: davinci: move davinci_clk_init() to init_time" is removed from this
->>    series and submitted separately
->>
->> v5 changes:
->> - Basically, this is an entirely new series
->> - Patches are broken up into bite-sized pieces
->> - Converted PSC clock driver to use regmap
->> - Restored "force" flag for certain DA850 clocks
->> - Added device tree bindings
->> - Moved more of the clock init to drivers/clk
->> - Fixed frequency scaling (maybe*)
->>
->> * I have frequency scaling using cpufreq-dt, so I know the clocks are doing
->>    what they need to do to make this work, but I haven't figured out how to
->>    test davinci-cpufreq driver yet. (Patches to make cpufreq-dt work will be
->>    sent separately after this series has landed.)
->>
->> Dependencies:
->>
->> This series applies on top of linux-davinci/master plus the following patches:
->> - [1] "clk: fix reentrancy of clk_enable() on UP systems" (in clk-next)
->> - [2] "clk: add helper functions for managing clk_onecell_data"
->> - [3] "clk: divider: read-only divider can propagate rate change"
->> - [4],[5],[6],[7],[8],[9] series "ARM: davinci: common clock prep work"
->>
-> 
-> Hi David,
-> 
-> I'm getting a splat[1] when trying to mount the rootfs over nfs on a da850-lcdk.
-> 
-> I'll try to figure out what's happening.
-> 
-> Best regards,
-> Bartosz Golaszewski
-> 
-> [1] https://pastebin.com/D94z8SAe
-> 
+The enawakeup bit is in a different location for smartreflex compared
+to the "ti,sysc-omap2" compatible.
 
-Could it have something to do with the "rmii" clock? I don't think I added that
-in the device tree.
+Fixes: 70a65240efb1 ("bus: ti-sysc: Add register bits for interconnect
+target modules")
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+---
+ drivers/bus/ti-sysc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
+--- a/drivers/bus/ti-sysc.c
++++ b/drivers/bus/ti-sysc.c
+@@ -816,7 +816,7 @@ static const struct sysc_regbits sysc_regbits_omap36xx_sr = {
+ 
+ static const struct sysc_capabilities sysc_36xx_sr = {
+ 	.type = TI_SYSC_OMAP36XX_SR,
+-	.sysc_mask = SYSC_OMAP2_ENAWAKEUP,
++	.sysc_mask = SYSC_OMAP3_SR_ENAWAKEUP,
+ 	.regbits = &sysc_regbits_omap36xx_sr,
+ 	.mod_quirks = SYSC_QUIRK_UNCACHED,
+ };
+-- 
+2.16.0
