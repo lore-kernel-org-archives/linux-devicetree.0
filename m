@@ -1,68 +1,126 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v3 6/9] irqchip: Add the ingenic-tcu-intc driver
-Date: Mon, 22 Jan 2018 09:26:17 +0000
-Message-ID: <20180122092617.36ggqqike4gwwgrd@dell>
-References: <20180101143344.2099-1-paul@crapouillou.net>
- <20180110224838.16711-1-paul@crapouillou.net>
- <20180110224838.16711-6-paul@crapouillou.net>
- <58349291-93cd-f803-52a9-f88120ace4dc@arm.com>
- <1515687945.2170.1@smtp.crapouillou.net>
- <20180120130649.7f326f75@why.wild-wind.fr.eu.org>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v2 5/7] dt-bindings: i3c: Document core bindings
+Date: Mon, 22 Jan 2018 09:47:39 +0100
+Message-ID: <20180122094739.6b05d5b2@bbrezillon>
+References: <20171214151610.19153-1-boris.brezillon@free-electrons.com>
+        <20171214151610.19153-6-boris.brezillon@free-electrons.com>
+        <20171216172040.jcaezouqkeb7zrqy@rob-hp-laptop>
+        <20171216193537.0aef2e97@bbrezillon>
+        <20171220180645.pis34opfwawakmqc@rob-hp-laptop>
+        <20171221114144.2610d49b@bbrezillon>
+        <CAL_JsqLBTtaM=7qdbbyODs61hbGdLughuVtPC-BsfrU8KV79aA@mail.gmail.com>
+        <20180107151425.124c2c75@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180120130649.7f326f75@why.wild-wind.fr.eu.org>
+In-Reply-To: <20180107151425.124c2c75@bbrezillon>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Paul Cercueil <paul@crapouillou.net>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Nishanth Menon <nm@ti.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, open list:OPEN FIR
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 20 Jan 2018, Marc Zyngier wrote:
+Hi Rob,
 
-> On Thu, 11 Jan 2018 17:25:45 +0100
-> Paul Cercueil <paul@crapouillou.net> wrote:
+On Sun, 7 Jan 2018 15:14:25 +0100
+Boris Brezillon <boris.brezillon@free-electrons.com> wrote:
+
+> Hi Rob,
 > 
-> > Hi Marc,
-> > 
-> > >>  +static int __init ingenic_tcu_intc_of_init(struct device_node 
-> > >> *node,
-> > >>  +	struct device_node *parent)
-> > >>  +{
-> > >>  +	struct irq_domain *domain;
-> > >>  +	struct irq_chip_generic *gc;
-> > >>  +	struct irq_chip_type *ct;
-> > >>  +	int err, i, num_parent_irqs;
-> > >>  +	unsigned int parent_irqs[3];  
-> > > 
-> > > 3 parent interrupts? Really? How do you pick one? Also, given the 
-> > > useage
-> > > model below, "int" is the wrong type. Probably should be u32.  
-> > 
-> > See below.
-> > 
-> > >>  +	struct regmap *map;
-> > >>  +
-> > >>  +	num_parent_irqs = of_property_count_elems_of_size(
-> > >>  +			node, "interrupts", 4);  
-> > > 
-> > > Nit: on a single line, as here is nothing that hurts my eyes more than
-> > > reading something like(
-> > > this). Also, 4 is better expressed as sizeof(u32).  
-> > 
-> > That will make checkpatch.pl unhappy :(
+> On Tue, 26 Dec 2017 12:29:34 -0600
+> Rob Herring <robh@kernel.org> wrote:
 > 
-> And I don't care about checkpatch. I maintain the irqchip stuff, while
-> checkpatch doesn't. Hence, I win.
+> > >> > > > +Optional properties
+> > >> > > > +-------------------
+> > >> > > > +- reg: static address. Only valid is the device has a static address.
+> > >> > > > +- i3c-dynamic-address: dynamic address to be assigned to this device. This
+> > >> > > > +                      property depends on the reg property.    
+> > >> > >
+> > >> > > Perhaps "assigned-address" property would be appropriate. I'm not all
+> > >> > > that familiar with it though.    
+> > >> >
+> > >> > Again, the spec use the term "dynamic address" everywhere, and I'd like
+> > >> > to stay as close as possible to the spec.    
+> > >>
+> > >> I looked at assigned-addresses a bit more and that won't really fit
+> > >> because it should be the same format as reg. So I think reg should
+> > >> always be the PID as that is fixed and always present. Then the DAA
+> > >> address is separate and can be the i3c-dynamic-address property.
+> > >>
+> > >> However, there's still part I don't understand...
+> > >>    
+> > >> > > > +               /* I3C device with a static address. */
+> > >> > > > +               thermal_sensor: sensor@68 {
+> > >> > > > +                       reg = <0x68>;
+> > >> > > > +                       i3c-dynamic-address = <0xa>;    
+> > >>
+> > >> I'm confused as to how/why you have both reg and dynamic address?    
+> > >
+> > > Some I3C devices have an I2C address (also called static or legacy
+> > > address in a few places). The static/I2C/legacy address is used until
+> > > the I3C device is assigned a dynamic address by the master. The whole
+> > > point of specifying both an I2C address (through the reg property) and
+> > > a dynamic address (through the i3c-dynamic-address) is to tell the
+> > > controller that a specific dynamic address should be assigned to this
+> > > device using the SETSADA (Set Dynamic Address from Static Address)
+> > > command before a DAA (Dynamic Address Assignment) procedure is started.
+> > > This way, the device will not participate to the DAA (because it
+> > > already has a valid DA) and the dynamic address can't be assigned to
+> > > a different device (which is one of the problem with the automatic DAA
+> > > procedure).    
+> > 
+> > Okay, think I got it now.
+> > 
+> > I think we should extend "reg" to have either I2C address, I3C PID, or
+> > both (in a defined order). I'm assuming you can always distinguish a
+> > static I2C address and an I3C PID just by upper bits all being 0s for
+> > I2C addresses. Maybe both is not needed? This means we'd have to allow
+> > 64-bit I2C addresses (#address-cells=2), but that should be easily
+> > fixed if that causes problems in the kernel.
+> > 
+> > So i3c-pid would go away and i3c-dynamic-address stays.  
+> 
+> Hm, actually I'm not sure this is a good idea. Sounds like we're
+> abusing the purpose of reg here. For busses, reg is supposed to encode
+> the id of the device on the bus that is used to communicate with this
+> device (CS line for SPI, I2C address for I2C devs, ...). With I3C, the
+> PID is just a way to uniquely identify a device, but is not used during
+> communications (we either use the static/I2C address or the dynamic
+> address assigned by the master).
+> 
+> If your concern is just about I3C dev naming convention, maybe we
+> could have something like:
+> 
+> 	i3c-master@xxxx {
+> 		...
+> 		i2cdev@xx {
+> 			reg = <xx>;
+> 			i3c-lvr = <yy>;
+> 			...
+> 		};
+> 		...
+> 
+> 		i3cdev-<i3c-pid>[@zz] {
+> 			i3c-pid = <pppppp>;
+> 			/*
+> 			 * reg only defined if the device has a static
+> 			 * address.
+> 			 */
+> 			[reg = <zz>;]
+> 			/*
+> 			 * i3c-dynamic-address only defined if a
+> 			 * specific dynamic address is requested.
+> 			 */
+> 			[i3c-dynamic-address = <dd>;]
+> 		};
+> 	}; 
+> 
+> With this approach we have a way to quickly identify i3c devices by
+> their pid when looking at their names (with the -<i3c-pid> suffix), and
+> we keep reg for static/i2c addresses only.
 
-	num_parent_irqs =
-		of_property_count_elems_of_size(node, "interrupts", 4);  
+Did you have time to read this email (AKA ping)?
 
-Everybody wins!
+Regards,
 
--- 
-Lee Jones
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Boris
