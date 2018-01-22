@@ -1,44 +1,40 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: [PATCH 6/7] clk: rockchip: add flags for rk3328 dclk_lcdc
-Date: Mon, 22 Jan 2018 15:15:29 +0100
-Message-ID: <20180122141530.12398-7-heiko@sntech.de>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH 3/7] clk: rockchip: export sclk_hdmi_sfc on rk3328
+Date: Mon, 22 Jan 2018 15:15:26 +0100
+Message-ID: <20180122141530.12398-4-heiko@sntech.de>
 References: <20180122141530.12398-1-heiko@sntech.de>
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20180122141530.12398-1-heiko@sntech.de>
-Sender: linux-clk-owner@vger.kernel.org
-To: linux-clk@vger.kernel.org
-Cc: mturquette@baylibre.com, sboyd@codeaurora.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, yang.zheng@rock-chips.com, zhangqing@rock-chips.com, Zheng Yang <zhengyang@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180122141530.12398-1-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, yang.zheng-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Zheng Yang <zhengyang@rock-chips.com>
+This clock is one of the dw-hdmi supplying clocks and thus
+needs to be exported.
 
-dclk_lcdc can be sourced from a general pll source as well
-as the hdmiphy's pll output. We will want to set this source
-by hand (to the system-pll-source in most cases) and also
-want rate changes to this clock to be able to also touch
-the pll source clock if needed, so add CLK_SET_RATE_PARENT
-and CLK_SET_RATE_NO_REPARENT for dclk_lcdc.
-
-Signed-off-by: Zheng Yang <zhengyang@rock-chips.com>
-[ammended commit message]
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 ---
  drivers/clk/rockchip/clk-rk3328.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/clk/rockchip/clk-rk3328.c b/drivers/clk/rockchip/clk-rk3328.c
-index 983ad5760ce0..f680b421b6d5 100644
+index 17816aec206a..b7a28f2814e2 100644
 --- a/drivers/clk/rockchip/clk-rk3328.c
 +++ b/drivers/clk/rockchip/clk-rk3328.c
-@@ -602,7 +602,7 @@ static struct rockchip_clk_branch rk3328_clk_branches[] __initdata = {
- 			RK3328_CLKGATE_CON(5), 6, GFLAGS),
- 	DIV(DCLK_HDMIPHY, "dclk_hdmiphy", "dclk_lcdc_src", 0,
- 			RK3328_CLKSEL_CON(40), 3, 3, DFLAGS),
--	MUX(DCLK_LCDC, "dclk_lcdc", mux_dclk_lcdc_p, 0,
-+	MUX(DCLK_LCDC, "dclk_lcdc", mux_dclk_lcdc_p,  CLK_SET_RATE_PARENT | CLK_SET_RATE_NO_REPARENT,
- 			RK3328_CLKSEL_CON(40), 1, 1, MFLAGS),
+@@ -588,7 +588,7 @@ static struct rockchip_clk_branch rk3328_clk_branches[] __initdata = {
+ 	COMPOSITE(ACLK_VOP_PRE, "aclk_vop_pre", mux_4plls_p, 0,
+ 			RK3328_CLKSEL_CON(39), 6, 2, MFLAGS, 0, 5, DFLAGS,
+ 			RK3328_CLKGATE_CON(5), 5, GFLAGS),
+-	GATE(0, "clk_hdmi_sfc", "xin24m", 0,
++	GATE(SCLK_HDMI_SFC, "sclk_hdmi_sfc", "xin24m", 0,
+ 			RK3328_CLKGATE_CON(5), 4, GFLAGS),
  
- 	/*
+ 	COMPOSITE_NODIV(0, "clk_cif_src", mux_2plls_p, 0,
 -- 
 2.14.2
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
