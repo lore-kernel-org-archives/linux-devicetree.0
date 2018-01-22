@@ -1,84 +1,109 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH v3 6/9] irqchip: Add the ingenic-tcu-intc driver
-Date: Mon, 22 Jan 2018 09:55:34 +0000
-Message-ID: <bdae1be4-0ed2-1b7d-8b08-7439ce06e762@arm.com>
-References: <20180101143344.2099-1-paul@crapouillou.net>
- <20180110224838.16711-1-paul@crapouillou.net>
- <20180110224838.16711-6-paul@crapouillou.net>
- <58349291-93cd-f803-52a9-f88120ace4dc@arm.com>
- <1515687945.2170.1@smtp.crapouillou.net>
- <20180120130649.7f326f75@why.wild-wind.fr.eu.org>
- <20180122092617.36ggqqike4gwwgrd@dell>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v6 3/9] v4l: platform: Add Renesas CEU driver
+Date: Mon, 22 Jan 2018 10:56:43 +0100
+Message-ID: <c91b4aa3-23e7-248b-00ee-c219185fe716@xs4all.nl>
+References: <1516139101-7835-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1516139101-7835-4-git-send-email-jacopo+renesas@jmondi.org>
+ <d056343b-46be-436a-e316-0a588a182eb9@xs4all.nl>
+ <20180121095323.GL24926@w540>
+ <55c3ab66-0886-4b2b-6842-ac07fc9138f3@xs4all.nl>
+ <e9623e9c-6444-2531-62c0-feed622c6e3b@xs4all.nl>
+ <20180121172907.GO24926@w540>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180122092617.36ggqqike4gwwgrd@dell>
-Content-Language: en-GB
+In-Reply-To: <20180121172907.GO24926@w540>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Paul Cercueil <paul@crapouillou.net>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: jacopo mondi <jacopo@jmondi.org>
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, laurent.pinchart@ideasonboard.com, magnus.damm@gmail.com, geert@glider.be, mchehab@kernel.org, festevam@gmail.com, sakari.ailus@iki.fi, robh+dt@kernel.org, mark.rutland@arm.com, pombredanne@nexb.com, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 22/01/18 09:26, Lee Jones wrote:
-> On Sat, 20 Jan 2018, Marc Zyngier wrote:
+On 21/01/18 18:29, jacopo mondi wrote:
+> Hi Hans,
 > 
->> On Thu, 11 Jan 2018 17:25:45 +0100
->> Paul Cercueil <paul@crapouillou.net> wrote:
->>
->>> Hi Marc,
->>>
->>>>>  +static int __init ingenic_tcu_intc_of_init(struct device_node 
->>>>> *node,
->>>>>  +	struct device_node *parent)
->>>>>  +{
->>>>>  +	struct irq_domain *domain;
->>>>>  +	struct irq_chip_generic *gc;
->>>>>  +	struct irq_chip_type *ct;
->>>>>  +	int err, i, num_parent_irqs;
->>>>>  +	unsigned int parent_irqs[3];  
+> On Sun, Jan 21, 2018 at 11:23:12AM +0100, Hans Verkuil wrote:
+>> On 21/01/18 11:21, Hans Verkuil wrote:
+>>> On 21/01/18 10:53, jacopo mondi wrote:
+>>>> Hi Hans,
 >>>>
->>>> 3 parent interrupts? Really? How do you pick one? Also, given the 
->>>> useage
->>>> model below, "int" is the wrong type. Probably should be u32.  
->>>
->>> See below.
->>>
->>>>>  +	struct regmap *map;
->>>>>  +
->>>>>  +	num_parent_irqs = of_property_count_elems_of_size(
->>>>>  +			node, "interrupts", 4);  
+>>>> On Fri, Jan 19, 2018 at 12:20:19PM +0100, Hans Verkuil wrote:
+>>>>> static int ov7670_g_parm(struct v4l2_subdev *sd, struct v4l2_streamparm *parms)
+>>>>> {
+>>>>>         struct v4l2_captureparm *cp = &parms->parm.capture;
+>>>>>         struct ov7670_info *info = to_state(sd);
+>>>>>
+>>>>>         if (parms->type != V4L2_BUF_TYPE_VIDEO_CAPTURE)
+>>>>>                 return -EINVAL;
+>>>>>
+>>>>> And parms->type is CAPTURE_MPLANE. Just drop this test from the ov7670 driver
+>>>>> in the g/s_parm functions. It shouldn't test for that since a subdev driver
+>>>>> knows nothing about buffer types.
+>>>>>
 >>>>
->>>> Nit: on a single line, as here is nothing that hurts my eyes more than
->>>> reading something like(
->>>> this). Also, 4 is better expressed as sizeof(u32).  
+>>>> I will drop that test in an additional patch part of next iteration of this series,
 >>>
->>> That will make checkpatch.pl unhappy :(
+>>> Replace g/s_parm by g/s_frame_interval. Consider g/s_parm for subdev drivers as
+>>> deprecated (I'm working on a patch series to replace all g/s_parm uses by
+>>> g/s_frame_interval).
 >>
->> And I don't care about checkpatch. I maintain the irqchip stuff, while
->> checkpatch doesn't. Hence, I win.
+>> Take a look here:
+>>
+>> https://git.linuxtv.org/hverkuil/media_tree.git/log/?h=parm
+>>
+>> You probably want to use the patch 'v4l2-common: add g/s_parm helper functions'
+>> for the new ceu driver in your patch series. Feel free to add it.
 > 
-> 	num_parent_irqs =
-> 		of_property_count_elems_of_size(node, "interrupts", 4);  
+> Thanks, I have now re-based my series on top of your 'parm' branch,
+> and now I have silenced those errors on bad frame interval.
 > 
-> Everybody wins!
+> CEU g/s_parm now look like this:
+> 
+> static int ceu_g_parm(struct file *file, void *fh, struct v4l2_streamparm *a)
+> {
+> 	struct ceu_device *ceudev = video_drvdata(file);
+> 	int ret;
+> 
+> 	ret = v4l2_g_parm(V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE,
+> 			  ceudev->sd->v4l2_sd, a);
+> 	if (ret)
+> 		return ret;
+> 
+> 	a->parm.capture.readbuffers = 0;
+> 
+> 	return 0;
+> }
+> 
+> Very similar to what you've done on other platform drivers in this
+> commit:
+> https://git.linuxtv.org/hverkuil/media_tree.git/commit/?h=parm&id=a58956ef45cebaa5ce43a5f740fe04517b24a853
+> 
+> I have a question though (please bear with me a little more :)
+> I had to manually set a->parm.capture.readbuffers to 0 to silence the following
+> error in v4l2_compliance (which I have now updated to the most recent
+> remote HEAD):
+> 
+>  fail: v4l2-test-formats.cpp(1114): cap->readbuffers
+>                 test VIDIOC_G/S_PARM: FAIL
+> 
+> 		fail_on_test(cap->readbuffers > VIDEO_MAX_FRAME);
+> 		if (!(node->g_caps() & V4L2_CAP_READWRITE))
+> 			fail_on_test(cap->readbuffers);
+> 		else if (node->g_caps() & V4L2_CAP_STREAMING)
+> 			fail_on_test(!cap->readbuffers);
+> 
+> CEU does not support CAP_READWRITE, as it seems atmel-isc/isi do not, so
+> v4l2-compliance wants to have readbuffers set to 0. I wonder why in
+> the previously mentioned commit you didn't have to set readbuffers
+> explicitly to 0 for atmel-isc/isi as I had to for CEU. Will v4l2-compliance
+> fail if run on atmel-isc/isi with your commit, or am I missing something?
 
-<old_git_rant>
+I've reworked the g/s_parm helper functions so they will now check for
+the READWRITE capability and set readbuffers accordingly. I'll post a new
+version later today.
 
-As I said before, I've stopped using a physical DEC VT100 around 1990,
-and gained the ability to extend my terminal to a bit more that 80
-columns. And even the VT100 could be coerced into using a 132 column mode...
+Thanks for testing this, I missed that corner case.
 
-</old_git_rant>
+Regards,
 
-Adhering to a convention can be good, but common sense must apply first.
-Splitting an assignment is visually annoying and in that case, it
-doesn't make much sense. I'll happily take a line that goes beyond 80
-cols, and if you really wanted to stay within boundaries, how about
-turning "num_parent_irqs" something shorter?
-
-Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
+	Hans
