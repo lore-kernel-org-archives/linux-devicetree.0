@@ -1,46 +1,62 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH] dt-bindings: display: stm32: correct clock-names in dsi
- panel example
-Date: Mon, 22 Jan 2018 08:30:59 -0600
-Message-ID: <CAL_JsqKfeSW1R4aSjeUnJ6b=NeQK0qHTuEV7y9Y4sAFiyzHLzQ@mail.gmail.com>
-References: <20180121205807.30677-1-philippe.cornu@st.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Maciej Purski <m.purski@samsung.com>
+Subject: [PATCH v4 2/7] regulator: core: Refactor regulator_list_voltage()
+Date: Mon, 22 Jan 2018 15:30:07 +0100
+Message-ID: <1516631412-17542-3-git-send-email-m.purski@samsung.com>
+References: <1516631412-17542-1-git-send-email-m.purski@samsung.com>
+        <CGME20180122143030eucas1p2eb1054dd14902eb0be83e5c9efb11d98@eucas1p2.samsung.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180121205807.30677-1-philippe.cornu@st.com>
+In-reply-to: <1516631412-17542-1-git-send-email-m.purski@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Philippe Cornu <philippe.cornu@st.com>
-Cc: Yannick Fertre <yannick.fertre@st.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Vincent Abriou <vincent.abriou@st.com>, David Airlie <airlied@linux.ie>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, dri-devel <dri-devel@lists.freedesktop.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mickael Reulier <mickael.reulier@st.com>, Gabriel Fernandez <gabriel.fernandez@st.com>, Ludovic Barre <ludovic.barre@st.com>
+To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Doug Anderson <dianders@chromium.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Maciej Purski <m.purski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jan 21, 2018 at 2:58 PM, Philippe Cornu <philippe.cornu@st.com> wrote:
-> In the dsi panel example, clock names in the "clock-names"
-> field have been swapped:
-> * "pclk" (peripheral clock) is <&rcc 1 CLK_F469_DSI> on stm32f4
-> * "ref" (dsi phy pll ref clock) is <&clk_hse> on stm32f4
->
-> Signed-off-by: Philippe Cornu <philippe.cornu@st.com>
-> ---
->  Documentation/devicetree/bindings/display/st,stm32-ltdc.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/Documentation/devicetree/bindings/display/st,stm32-ltdc.txt b/Documentation/devicetree/bindings/display/st,stm32-ltdc.txt
-> index 029252253ad4..3eb1b48b47dd 100644
-> --- a/Documentation/devicetree/bindings/display/st,stm32-ltdc.txt
-> +++ b/Documentation/devicetree/bindings/display/st,stm32-ltdc.txt
-> @@ -98,7 +98,7 @@ Example 2: DSI panel
->                         compatible = "st,stm32-dsi";
->                         reg = <0x40016c00 0x800>;
->                         clocks = <&rcc 1 CLK_F469_DSI>, <&clk_hse>;
-> -                       clock-names = "ref", "pclk";
-> +                       clock-names = "pclk", "ref";
+Change _regulator_list_voltage() argument from regulator to
+regulator_dev in order to provide better separation of core layers.
+Allow calling _regulator_list_voltage() from functions, with
+regulator_dev argument. This refactoring is needed in order to
+implement setting voltage of coupled regulators.
 
-There is no way to tell they are reversed because pclk is not even
-documented. Please fix that too.
+Signed-off-by: Maciej Purski <m.purski@samsung.com>
+---
+ drivers/regulator/core.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
->                         resets = <&rcc STM32F4_APB2_RESET(DSI)>;
->                         reset-names = "apb";
->
-> --
-> 2.15.1
->
+diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
+index ab6652e..1118527 100644
+--- a/drivers/regulator/core.c
++++ b/drivers/regulator/core.c
+@@ -2448,10 +2448,9 @@ static int _regulator_is_enabled(struct regulator_dev *rdev)
+ 	return rdev->desc->ops->is_enabled(rdev);
+ }
+ 
+-static int _regulator_list_voltage(struct regulator *regulator,
+-				    unsigned selector, int lock)
++static int _regulator_list_voltage(struct regulator_dev *rdev,
++				   unsigned selector, int lock)
+ {
+-	struct regulator_dev *rdev = regulator->rdev;
+ 	const struct regulator_ops *ops = rdev->desc->ops;
+ 	int ret;
+ 
+@@ -2467,7 +2466,8 @@ static int _regulator_list_voltage(struct regulator *regulator,
+ 		if (lock)
+ 			mutex_unlock(&rdev->mutex);
+ 	} else if (rdev->is_switch && rdev->supply) {
+-		ret = _regulator_list_voltage(rdev->supply, selector, lock);
++		ret = _regulator_list_voltage(rdev->supply->rdev,
++					      selector, lock);
+ 	} else {
+ 		return -EINVAL;
+ 	}
+@@ -2543,7 +2543,7 @@ EXPORT_SYMBOL_GPL(regulator_count_voltages);
+  */
+ int regulator_list_voltage(struct regulator *regulator, unsigned selector)
+ {
+-	return _regulator_list_voltage(regulator, selector, 1);
++	return _regulator_list_voltage(regulator->rdev, selector, 1);
+ }
+ EXPORT_SYMBOL_GPL(regulator_list_voltage);
+ 
+-- 
+2.7.4
