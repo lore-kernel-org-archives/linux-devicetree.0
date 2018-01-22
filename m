@@ -1,101 +1,59 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v6 09/41] dt-bindings: clock: New bindings for TI Davinci
- PSC
-Date: Mon, 22 Jan 2018 09:05:03 -0600
-Message-ID: <20180122150503.ciavehj5dd22535n@rob-hp-laptop>
-References: <1516468460-4908-1-git-send-email-david@lechnology.com>
- <1516468460-4908-10-git-send-email-david@lechnology.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 2/4] arm64: add basic DTS for i.MX8MQ
+Date: Mon, 22 Jan 2018 16:11:42 +0100
+Message-ID: <CAK8P3a0Yq1WuUYih6WKbbjoGRwq-rCQ8OEpuyu0=-SOVV2MNLg@mail.gmail.com>
+References: <20180117183244.28303-1-l.stach@pengutronix.de>
+ <20180117183244.28303-2-l.stach@pengutronix.de> <20180122144729.GA27764@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1516468460-4908-10-git-send-email-david@lechnology.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: David Lechner <david@lechnology.com>
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180122144729.GA27764@dragon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jan 20, 2018 at 11:13:48AM -0600, David Lechner wrote:
-> This adds a new binding for the Power Sleep Controller (PSC) for the
-> mach-davinci family of processors.
-> 
-> Note: Although TI Keystone has a very similar PSC, we are not using the
-> existing bindings. Keystone is using a legacy one-node-per-clock binding
-> (actually two nodes if you count the separate reset binding for the same
-> IP block). Also, some davinci LPSCs have quirks that aren't handled by
-> the keystone bindings, so we would be adding one compatible string per
-> clock with quirks instead of just a new compatible string for each
-> controller.
-> 
-> Signed-off-by: David Lechner <david@lechnology.com>
-> ---
-> 
-> v6 changes:
-> - added clocks and clock-names properties
-> - expanded examples
-> 
->  .../devicetree/bindings/clock/ti/davinci/psc.txt   | 66 ++++++++++++++++++++++
->  1 file changed, 66 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/ti/davinci/psc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/ti/davinci/psc.txt b/Documentation/devicetree/bindings/clock/ti/davinci/psc.txt
-> new file mode 100644
-> index 0000000..0c2d2bd
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/ti/davinci/psc.txt
-> @@ -0,0 +1,66 @@
-> +Binding for TI DaVinci Power Sleep Controller (PSC)
-> +
-> +The PSC provides power management, clock gating and reset functionality. It is
-> +primarily used for clocking.
-> +
-> +Required properties:
-> +- compatible: shall be one of:
-> +	- "ti,da850-psc0" for PSC0 on DA850/OMAP-L138/AM18XX
-> +	- "ti,da850-psc1" for PSC1 on DA850/OMAP-L138/AM18XX
-> +- reg: physical base address and size of the controller's register area
-> +- #clock-cells: from common clock binding; shall be set to 1
-> +- clocks: phandles to clocks corresponding to the clock-names property
-> +- clock-names: list of parent clock names - depends on compatible value
-> +	- for "ti,da850-psc0", shall be "pll0_sysclk1", "pll0_sysclk2",
-> +	  "pll0_sysclk4", "pll0_sysclk6", "async1"
-> +	- for "ti,da850-psc1", shall be "pll0_sysclk2", "pll0_sysclk4", "async3"
-> +
-> +Optional properties:
-> +- #reset-cells: from reset binding; shall be set to 1 - only applicable when
-> +  at least one local domain provides a local reset.
-> +
-> +Consumers:
-> +
-> +	Clock and reset consumers shall use the local power domain module ID
-> +	(LPSC) as the index corresponding to the clock cell. Refer to the
-> +	device-specific	datasheet to find these numbers. NB: Most local domains
-> +	only provide a clock and not a reset.
-> +
-> +Examples:
-> +
-> +	psc0: clock-controller@10000 {
-> +		compatible = "ti,da850-psc0";
-> +		reg = <0x10000 0x1000>;
-> +		#clock-cells = <1>;
-> +		#reset-cells = <1>;
-> +		clocks = <&pll0_sysclk 1>, <&pll0_sysclk 2>,
-> +			 <&pll0_sysclk 4>, <&pll0_sysclk 6>, <&async1_clk>;
-> +		clock_names = "pll0_sysclk1", "pll0_sysclk2",
+On Mon, Jan 22, 2018 at 3:47 PM, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Wed, Jan 17, 2018 at 07:32:42PM +0100, Lucas Stach wrote:
+>> This adds the basic DTS for the i.MX8MQ.
+>> For now only the following peripherals are supported:
+>> - IOMUXC (pin controller)
+>> - CCM (clock controller)
+>> - GPIO
+>> - UART
+>> - uSDHC (SD/eMMC controller)
+>> - FEC (ethernet controller)
+>> - i2c
+>>
+>> This is enough to get a very basic board support up and running.
+>>
+>> One known limitation is that the driver for the GPC interrupt
+>> controller is still missing, rendering the CPU sleep states unusable
+>> as there is nothing waking them up anymore. This will be fixed in
+>> due course.
+>>
+>> Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>> ---
+>>  arch/arm64/boot/dts/Makefile             |   1 +
+>>  arch/arm64/boot/dts/nxp/imx8mq-pinfunc.h | 632 +++++++++++++++++++++++++++++++
+>>  arch/arm64/boot/dts/nxp/imx8mq.dtsi      | 418 ++++++++++++++++++++
+>
+> So we will have the following two folders for SoCs from the same company.
+>
+>  arch/arm64/boot/dts/nxp/
+>  arch/arm64/boot/dts/freescale/
 
-Should be clock-names
+It might get worse once the sale to Qualcomm goes through and maybe if
+Broadcom makes another bid for Qualcomm in a few years ;-)
 
-> +			      "pll0_sysclk4", "pll0_sysclk6", "async1";
-> +	};
-> +	psc1: clock-controller@227000 {
-> +		compatible = "ti,da850-psc1";
-> +		reg = <0x227000 0x1000>;
-> +		#clock-cells = <1>;
-> +		clocks = <&pll0_sysclk 2>, <&pll0_sysclk 4>, <&async3_clk>;
-> +		clock_names = "pll0_sysclk2", "pll0_sysclk4", "async3";
+> I'm a bit uncomfortable with that.  @Arnd, do you have an opinion how we
+> should handle them?
 
-ditto
+It's a recurring problem of course. I have a small preference for just adding
+the i.mx files to arch/arm64/boot/dts/freescale/, but I'd leave it up to you.
 
-With that,
-
-Reviewed-by: Rob Herring <robh@kernel.org>
+        Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
