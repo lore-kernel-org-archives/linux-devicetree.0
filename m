@@ -1,71 +1,31 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 10/16] pwm: Add PWM modes
-Date: Mon, 22 Jan 2018 12:12:44 -0600
-Message-ID: <CAL_JsqJho2OrdnHwRPpYsbNB4RFTq5qSLA=36D2zy=Mi7B8XwQ@mail.gmail.com>
-References: <1515766983-15151-1-git-send-email-claudiu.beznea@microchip.com>
- <1515766983-15151-11-git-send-email-claudiu.beznea@microchip.com>
- <20180119223452.doeqfd4aewkf5fla@rob-hp-laptop> <c5aeb8df-6aa8-cde4-9305-08777cac2f45@microchip.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH V4 1/5] bindings: regulator: added support for suspend states
+Date: Mon, 22 Jan 2018 13:50:35 -0600
+Message-ID: <CAL_JsqJy1o7cjEqs8vYe7Y45W6_A8iyC3_4=eeZ-teCxR06Rqg@mail.gmail.com>
+References: <1515752305-15907-2-git-send-email-zhang.chunyan@linaro.org> <1516607961-379-1-git-send-email-zhang.chunyan@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <c5aeb8df-6aa8-cde4-9305-08777cac2f45-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Claudiu Beznea <Claudiu.Beznea-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Linux PWM List <linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "moderated list:BROADCOM BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel-IAPFreCvJWM1dQTEkxZZdg@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1516607961-379-1-git-send-email-zhang.chunyan@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chunyan Zhang <zhang.chunyan@linaro.org>
+Cc: Mark Brown <broonie@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Chunyan Zhang <zhang.lyra@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 22, 2018 at 2:54 AM, Claudiu Beznea
-<Claudiu.Beznea-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org> wrote:
+On Mon, Jan 22, 2018 at 1:59 AM, Chunyan Zhang <zhang.chunyan@linaro.org> wrote:
+> Some systems need to set regulators to specific states when they enter
+> low power modes, especially around CPUs. There are many of these modes
+> depending on the particular runtime state.
 >
+> Currently the regulator consumers are not granted permission to change
+> suspend state of regulator devices, the constraints are configured at
+> startup.  In order to allow changes in a vlotage range, we need to add
+> new properties for voltage range and a flag to give permission to
+> change the suspend voltage and suspend on/off in suspend mode.
 >
-> On 20.01.2018 00:34, Rob Herring wrote:
->> On Fri, Jan 12, 2018 at 04:22:57PM +0200, Claudiu Beznea wrote:
->>> Define a macros for PWM modes to be used by device tree sources.
->>>
->>> Signed-off-by: Claudiu Beznea <claudiu.beznea-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
->>> ---
->>>  include/dt-bindings/pwm/pwm.h | 3 +++
->>>  1 file changed, 3 insertions(+)
->>>
->>> diff --git a/include/dt-bindings/pwm/pwm.h b/include/dt-bindings/pwm/pwm.h
->>> index ab9a077e3c7d..b8617431f8ec 100644
->>> --- a/include/dt-bindings/pwm/pwm.h
->>> +++ b/include/dt-bindings/pwm/pwm.h
->>> @@ -12,4 +12,7 @@
->>>
->>>  #define PWM_POLARITY_INVERTED                       (1 << 0)
->>>
->>> +#define PWM_DTMODE_NORMAL                   (1 << 0)
->>
->> Bit 0 is already taken. I think you mean (0 << 1)?
-> I wanted to have the PWM modes in a new cell, so that the pwms binding to be
-> something like:
-> pwms=<pwm-controller pwm-channel pwm-period pwm-flags pwm-mode>
->
-> If you think it is mode feasible to also include PWM mode in the cell for
-> PWM flags, please let me know.
+> Signed-off-by: Chunyan Zhang <zhang.chunyan@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/regulator/regulator.txt | 12 ++++++++++--
+>  1 file changed, 10 insertions(+), 2 deletions(-)
 
-Yes, but you have to make "normal" be no bit set to be compatible with
-everything already out there.
-
->> Personally, I'd just drop this define. A define for a 0 value makes more
->> sense when each state is equally used (like active high or low), but if
->> 0 is the more common case, then I don't the need for a define.
-> I want it to have these defines like bit defines:
-> PWM_DTMODE_NORMAL=0x1
-> PWM_DTMODE_COMPLEMENTARY=0x2
-> PWM_DTMODE_PUSH_PULL=0x4
-
-Thinking about this some more, shouldn't the new modes just be
-implied? A client is going to require one of these modes or it won't
-work right.
-
-Also complementary mode could be accomplished with a single pwm output
-and a board level inverter, right? How would that be handled when the
-PWM driver doesn't support that mode?
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Reviewed-by: Rob Herring <robh@kernel.org>
