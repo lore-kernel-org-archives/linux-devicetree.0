@@ -1,61 +1,61 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [RFC PATCH v2 0/1] of: easier debugging for node life cycle
- issues
-Date: Mon, 22 Jan 2018 00:43:02 -0800
-Message-ID: <ac4f02e1-6d49-158a-4fb6-56ac0d474a44@gmail.com>
-References: <20180121143117.19805-1-wsa+renesas@sang-engineering.com>
+From: Claudiu Beznea <Claudiu.Beznea-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Subject: Re: [PATCH v2 02/16] pwm: pxa: update documentation regarding
+ pwm-cells
+Date: Mon, 22 Jan 2018 10:47:13 +0200
+Message-ID: <6889fdc0-6d61-830e-dad5-2efc02b1b277@microchip.com>
+References: <1515766983-15151-1-git-send-email-claudiu.beznea@microchip.com>
+ <1515766983-15151-3-git-send-email-claudiu.beznea@microchip.com>
+ <20180119223024.m5kuc6467xmgkgac@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180121143117.19805-1-wsa+renesas@sang-engineering.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180119223024.m5kuc6467xmgkgac@rob-hp-laptop>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>, devicetree@vger.kernel.org
-Cc: Tyrel Datwyler <tyreld@linux.vnet.ibm.com>, Geert Uytterhoeven <geert@linux-m68k.org>, linux-renesas-soc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, Rob Herring <robh+dt@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org, haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org, nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mike Dunn <mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/21/18 06:31, Wolfram Sang wrote:
-> I got a bug report for a DT node refcounting problem in the I2C subsystem. This
-> patch was a huge help in validating the bug report and the proposed solution.
-> So, I thought I bring it to attention again. Thanks Tyrel, for the initial
-> work!
-> 
-> Note that I did not test the dynamic updates, only of_node_{get|put} so far. I
-> read that Tyrel checked dynamic updates extensively with this patch. And since
-> DT overlays are also used within our Renesas dev team, this will help there, as
-> well.
-> 
-> Tested on a Renesas Salvator-XS board (R-Car H3).
-> 
-> Changes since RFC v1:
-> 	* rebased to v4.15-rc8
-> 	* fixed commit abbrev and one of the sysfs paths in commit desc
-> 	* removed trailing space and fixed pointer declaration in code
-> 
-> I consider all the remaining checkpatch issues irrelevant for this patch.
-> 
-> So what about applying it?
-> 
-> Kind regards,
-> 
->    Wolfram
-> 
-> 
-> Tyrel Datwyler (1):
->   of: introduce event tracepoints for dynamic device_node lifecyle
-> 
->  drivers/of/dynamic.c      | 32 ++++++----------
->  include/trace/events/of.h | 93 +++++++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 105 insertions(+), 20 deletions(-)
->  create mode 100644 include/trace/events/of.h
-> 
 
-Please go back and read the thread for version 1.  Simply resubmitting a
-forward port is ignoring that whole conversation.
 
-There is a lot of good info in that thread.  I certainly learned stuff in it.
+On 20.01.2018 00:30, Rob Herring wrote:
+> On Fri, Jan 12, 2018 at 04:22:49PM +0200, Claudiu Beznea wrote:
+>> pwm-cells should be at least 2 to provide channel number and period value.
+>>
+>> Cc: Mike Dunn <mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>
+>> Signed-off-by: Claudiu Beznea <claudiu.beznea-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+>> ---
+>>  Documentation/devicetree/bindings/pwm/pxa-pwm.txt | 6 +++---
+>>  1 file changed, 3 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/pwm/pxa-pwm.txt b/Documentation/devicetree/bindings/pwm/pxa-pwm.txt
+>> index 5ae9f1e3c338..a0e20edeeebc 100644
+>> --- a/Documentation/devicetree/bindings/pwm/pxa-pwm.txt
+>> +++ b/Documentation/devicetree/bindings/pwm/pxa-pwm.txt
+>> @@ -10,7 +10,7 @@ Required properties:
+>>    Note that one device instance must be created for each PWM that is used, so the
+>>    length covers only the register window for one PWM output, not that of the
+>>    entire PWM controller.  Currently length is 0x10 for all supported devices.
+>> -- #pwm-cells: Should be 1.  This cell is used to specify the period in
+>> +- #pwm-cells: Should be 2.  This cell is used to specify the period in
+>>    nanoseconds.
+> 
+> What's the new cell? channel? Does the PXA PWM have more than one 
+> channel? If not, then you shouldn't add a cell.
+The new cell had to be period, to have a generic OF function in the kernel,
+to parse the pwms bindings for all PWMs, something like
+pwms=<pwm channel-number pwm-period>. After several discussions on this
+series, I found that old DT binaries must be compatible with latest kernel
+version and this series doesn't guarantee this. So I will drop this change
+in next version.
 
-Thanks,
-
-Frank
+Thank you,
+Claudiu Beznea
+> 
+> Rob
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
