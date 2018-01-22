@@ -1,80 +1,73 @@
-From: Daniel Thompson <daniel.thompson@linaro.org>
-Subject: Re: [PATCH 2/4] dt-bindings: pwm-backlight: add a
- num-interpolation-steps property.
-Date: Mon, 22 Jan 2018 09:16:13 +0000
-Message-ID: <20180122091613.oyjjzwci3mmfc7j2@oak.lan>
-References: <20180110223046.17696-1-enric.balletbo@collabora.com>
- <20180110223046.17696-3-enric.balletbo@collabora.com>
- <20180119205249.fcbdyu6652ffsdmg@rob-hp-laptop>
+From: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Subject: [PATCH v3 2/2] dt/bindings: Add bindings for Layerscape external irqs
+Date: Mon, 22 Jan 2018 10:21:33 +0100
+Message-ID: <20180122092133.23177-2-rasmus.villemoes@prevas.dk>
+References: <1513758631-19909-1-git-send-email-rasmus.villemoes@prevas.dk>
+ <20180122092133.23177-1-rasmus.villemoes@prevas.dk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180119205249.fcbdyu6652ffsdmg@rob-hp-laptop>
+In-Reply-To: <20180122092133.23177-1-rasmus.villemoes@prevas.dk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>, Doug Anderson <dianders@google.com>, Pavel Machek <pavel@ucw.cz>, Jingoo Han <jingoohan1@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Brian Norris <briannorris@google.com>, Guenter Roeck <groeck@google.com>, Lee Jones <lee.jones@linaro.org>, Alexandru Stan <amstan@google.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>
+Cc: Andy Tang <andy.tang@nxp.com>, Alexander Stein <alexander.stein@systec-electronic.com>, Rasmus Villemoes <rasmus.villemoes@prevas.dk>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 19, 2018 at 02:52:49PM -0600, Rob Herring wrote:
-> On Wed, Jan 10, 2018 at 11:30:44PM +0100, Enric Balletbo i Serra wrote:
-> > The num-interpolated-steps property specifies the number of
-> > interpolated steps between each value of brightness-level table. This is
-> > useful for high resolution PWMs to not have to list out every possible
-> > value in the brightness-level array.
-> > 
-> > Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> > ---
-> >  .../bindings/leds/backlight/pwm-backlight.txt       | 21 +++++++++++++++++++++
-> >  1 file changed, 21 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
-> > index 310810906613..605432c910c5 100644
-> > --- a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
-> > +++ b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
-> > @@ -21,6 +21,11 @@ Optional properties:
-> >                            and enabling the backlight using GPIO.
-> >    - pwm-off-delay-ms: Delay in ms between disabling the backlight using GPIO
-> >                        and setting PWM value to 0.
-> > +  - num-interpolated-steps: Number of interpolated steps between each value
-> > +                            of brightness-levels table. This way a high
-> > +                            resolution pwm duty cycle can be used without
-> > +                            having to list out every possible value in the
-> > +                            brightness-level array.
-> >  
-> >  [0]: Documentation/devicetree/bindings/pwm/pwm.txt
-> >  [1]: Documentation/devicetree/bindings/gpio/gpio.txt
-> > @@ -39,3 +44,19 @@ Example:
-> >  		post-pwm-on-delay-ms = <10>;
-> >  		pwm-off-delay-ms = <10>;
-> >  	};
-> > +
-> > +Example using num-interpolation-steps:
-> > +
-> > +	backlight {
-> > +		compatible = "pwm-backlight";
-> > +		pwms = <&pwm 0 5000000>;
-> > +
-> > +		brightness-levels = <0 65535>;
-> > +		num-interpolated-steps = <4096>;
-> 
-> How does this make sense with only 2 defined levels other than having 
-> fewer steps? I thought the purpose of this was to have a piecewise 
-> linear curve. 
+Signed-off-by: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+---
+ .../interrupt-controller/fsl,ls-extirq.txt         | 44 ++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/fsl,ls-extirq.txt
 
-It's not wrong as such, this is how a device with a linear (or nearly
-linear) response could be compactly described.
-
-Nevertheless I agree!  An example with a small but realistic curve 
-would be better... we know that copy 'n paste exists so I'd rather 
-see a simple curve than no curve.
-
-
-Daniel.
-
-
-> > +		default-brightness-level = <6>;
-> 
-> Aren't valid values 0, 16, 32, 48, etc.?
-> 
-> Rob
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/fsl,ls-extirq.txt b/Documentation/devicetree/bindings/interrupt-controller/fsl,ls-extirq.txt
+new file mode 100644
+index 000000000000..a71ce2c3eeae
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/fsl,ls-extirq.txt
+@@ -0,0 +1,44 @@
++* Freescale Layerscape external IRQs
++
++Some Layerscape SOCs (LS1021A, LS1043A, LS1046A) support inverting
++the polarity of certain external interrupt lines.
++
++The device node must be a child of the node representing the
++Supplemental Configuration Unit (SCFG).
++
++Required properties:
++- compatible: should be "fsl,<soc-name>-extirq", e.g. "fsl,ls1021a-extirq".
++- interrupt-controller: Identifies the node as an interrupt controller
++- #interrupt-cells: Use the same format as specified by GIC in arm,gic.txt.
++- interrupt-parent: phandle of GIC.
++- offset: offset to the Interrupt Polarity Control Register (INTPCR)
++  register in the SCFG.
++- interrupts: Specifies the mapping to interrupt numbers in the parent
++  interrupt controller. Interrupts are mapped one-to-one to parent
++  interrupts.
++
++Optional properties:
++- fsl,bit-reverse: This boolean property should be set on the LS1021A
++  if the SCFGREVCR register has been set to all-ones (which is usually
++  the case), meaning that all reads and writes of SCFG registers are
++  implicitly bit-reversed. Other compatible platforms do not have such
++  a register.
++
++Example:
++	scfg: scfg@1570000 {
++		compatible = "fsl,ls1021a-scfg", "syscon";
++		...
++		extirq: interrupt-controller {
++			compatible = "fsl,ls1021a-extirq";
++			#interrupt-cells = <3>;
++			interrupt-controller;
++			interrupt-parent = <&gic>;
++			offset = <0x1ac>;
++			interrupts = <163 164 165 167 168 169>;
++			fsl,bit-reverse;
++		};
++	};
++
++
++	interrupts-extended = <&gic GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>,
++			      <&extirq GIC_SPI 1 IRQ_TYPE_LEVEL_LOW>;
+-- 
+2.15.1
