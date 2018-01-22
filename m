@@ -1,24 +1,55 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 4/4] MAINTAINERS: add i.MX8 DT path to i.MX architecture
-Date: Mon, 22 Jan 2018 09:58:23 -0200
-Message-ID: <CAOMZO5Ab=x9XZZ2YKh-kXtj5jTybqRtEdiGQam5uoWShKCShwA@mail.gmail.com>
-References: <20180117183244.28303-1-l.stach@pengutronix.de> <20180117183244.28303-4-l.stach@pengutronix.de>
+From: John Garry <john.garry@huawei.com>
+Subject: Re: [PATCH v11 2/9] PCI: Remove unused __weak attribute in
+ pci_register_io_range()
+Date: Mon, 22 Jan 2018 11:59:20 +0000
+Message-ID: <6816e715-df0f-ddff-d19d-de2d0f3101c7@huawei.com>
+References: <1516537647-50553-1-git-send-email-john.garry@huawei.com>
+ <1516537647-50553-3-git-send-email-john.garry@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180117183244.28303-4-l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <1516537647-50553-3-git-send-email-john.garry@huawei.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: bhelgaas@google.com
+Cc: mika.westerberg@linux.intel.com, rafael@kernel.org, lorenzo.pieralisi@arm.com, rjw@rjwysocki.net, robh+dt@kernel.org, arnd@arndb.de, mark.rutland@arm.com, olof@lixom.net, hanjun.guo@linaro.org, dann.frazier@canonical.com, benh@kernel.crashing.org, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, linuxarm@huawei.com, linux-pci@vger.kernel.org, minyard@acm.org, devicetree@vger.kernel.org, linux-arch@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 17, 2018 at 4:32 PM, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> Shawn agreed to take patches for the i.MX8 parts through his tree.
+On 21/01/2018 12:27, John Garry wrote:
+> From: Gabriele Paoloni <gabriele.paoloni@huawei.com>
 >
-> Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Currently pci_register_io_range() has only one definition;
+> therefore there is no use of the __weak attribute.
+>
+> Signed-off-by: Gabriele Paoloni <gabriele.paoloni@huawei.com>
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> ---
 
-Reviewed-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hi Bjorn,
+
+So I will need to respin this series again (and it still requires many 
+more SOB tags), so do you want to pick up this minor patch in isolation 
+now? It would save me carrying it, and save people receiving it in future.
+
+Thanks,
+John
+
+>  drivers/pci/pci.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 764ca7b..d8357ff 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -3383,7 +3383,7 @@ struct io_range {
+>   * Record the PCI IO range (expressed as CPU physical address + size).
+>   * Return a negative value if an error has occured, zero otherwise
+>   */
+> -int __weak pci_register_io_range(phys_addr_t addr, resource_size_t size)
+> +int pci_register_io_range(phys_addr_t addr, resource_size_t size)
+>  {
+>  	int err = 0;
+>
+>
+
+
