@@ -1,69 +1,45 @@
-From: Chunyan Zhang <zhang.chunyan@linaro.org>
-Subject: Re: [PATCH v3 1/5] bindings: regulator: added support for suspend states
-Date: Mon, 22 Jan 2018 10:16:05 +0800
-Message-ID: <CAG2=9p_roH3L27LW47-p=Yfu07osgkT2rHMZainex8CJK7mGcw@mail.gmail.com>
-References: <1515752305-15907-1-git-send-email-zhang.chunyan@linaro.org>
- <1515752305-15907-2-git-send-email-zhang.chunyan@linaro.org> <20180119221108.nndgk3ln573n6zew@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Michael Ellerman <patch-notifications@ellerman.id.au>
+Subject: Re: powerpc: dts: Remove leading 0x and 0s from bindings notation
+Date: Mon, 22 Jan 2018 14:34:16 +1100 (AEDT)
+Message-ID: <3zPxqr2PDWz9t1t@ozlabs.org>
+References: <20171214165413.28163-1-malat@debian.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180119221108.nndgk3ln573n6zew@rob-hp-laptop>
+In-Reply-To: <20171214165413.28163-1-malat@debian.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Chunyan Zhang <zhang.lyra@gmail.com>
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Mathieu Malaterre <malat@debian.org>, linux-kernel@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, Paul Mackerras <paulus@samba.org>, Andrew Morton <akpm@linux-foundation.org>, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 20 January 2018 at 06:11, Rob Herring <robh@kernel.org> wrote:
-> On Fri, Jan 12, 2018 at 06:18:21PM +0800, Chunyan Zhang wrote:
->> Some systems need to set regulators to specific states when they enter
->> low power modes, especially around CPUs. There are many of these modes
->> depending on the particular runtime state.
->>
->> Currently the regulator consumers are not granted permission to change
->> suspend state of regulator devices, the constraints are configured at
->> startup.  In order to allow changes in a vlotage range, we need to add
->> new properties for voltage range and a flag to give permission to
->> change the suspend voltage and suspend on/off in suspend mode.
->>
->> Signed-off-by: Chunyan Zhang <zhang.chunyan@linaro.org>
->> ---
->>  Documentation/devicetree/bindings/regulator/regulator.txt | 15 +++++++++++++--
->>  1 file changed, 13 insertions(+), 2 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/regulator/regulator.txt b/Documentation/devicetree/bindings/regulator/regulator.txt
->> index 378f6dc..532e286 100644
->> --- a/Documentation/devicetree/bindings/regulator/regulator.txt
->> +++ b/Documentation/devicetree/bindings/regulator/regulator.txt
->> @@ -42,8 +42,19 @@ Optional properties:
->>  - regulator-state-[mem/disk] node has following common properties:
->>       - regulator-on-in-suspend: regulator should be on in suspend state.
->>       - regulator-off-in-suspend: regulator should be off in suspend state.
->> -     - regulator-suspend-microvolt: regulator should be set to this voltage
->> -       in suspend.
->> +     - regulator-suspend-min-microvolt: minimum voltage may be set in
->> +       suspend state.
->> +     - regulator-suspend-max-microvolt: maximum voltage may be set in
->> +       suspend state.
->> +     - regulator-suspend-microvolt: the default voltage which regulator
->> +       would be set in suspend. The voltage for suspend also can be
->> +       adjusted among {regulator-suspend-min-microvolt,
->> +       regulator-suspend-max-microvolt} by calling
->> +       regulator_set_suspend_voltage(). This property is now deprecated,
->> +       setting voltage for suspend mode via API the regulator driver
->> +       provides is recommended.
->
-> Please reword. This is Linux implementation details that shouldn't be in
-> the binding.
+On Thu, 2017-12-14 at 16:54:00 UTC, Mathieu Malaterre wrote:
+> Improve the DTS files by removing all the leading "0x" and zeros to fix the
+> following dtc warnings:
+> 
+> Warning (unit_address_format): Node /XXX unit name should not have leading "0x"
+> 
+> and
+> 
+> Warning (unit_address_format): Node /XXX unit name should not have leading 0s
+> 
+> Converted using the following command:
+> 
+> find . -type f \( -iname *.dts -o -iname *.dtsi \) -exec sed -E -i -e "s/@0x([0-9a-fA-F\.]+)\s?\{/@\L\1 \{/g" -e "s/@0+([0-9a-fA-F\.]+)\s?\{/@\L\1 \{/g" {} +
+> 
+> For simplicity, two sed expressions were used to solve each warnings separately.
+> 
+> To make the regex expression more robust a few other issues were resolved,
+> namely setting unit-address to lower case, and adding a whitespace before the
+> the opening curly brace:
+> 
+> https://elinux.org/Device_Tree_Linux#Linux_conventions
+> 
+> This is a follow up to commit 4c9847b7375a ("dt-bindings: Remove leading 0x from bindings notation")
+> 
+> Reported-by: David Daney <ddaney@caviumnetworks.com>
+> Suggested-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Mathieu Malaterre <malat@debian.org>
 
-Ok, I guess just updating this one instead of the whole patchset for
-this minor modification should be fine.
+Applied to powerpc next, thanks.
 
->
->> +     - regulator-changeable-in-suspend: whether the default voltage and
->> +       the regulator on/off in suspend can be changed in runtime.
->>       - regulator-mode: operating mode in the given suspend state.
->>         The set of possible operating modes depends on the capabilities of
->>         every hardware so the valid modes are documented on each regulator
->> --
->> 2.7.4
->>
+https://git.kernel.org/powerpc/c/600ecc1936be075f611f299755e2de
+
+cheers
