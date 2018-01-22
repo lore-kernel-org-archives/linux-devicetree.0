@@ -1,88 +1,84 @@
 From: =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-Subject: [PATCH v2 4/6] dt-bindings: gpio: Add binding for Wii GPIO controller
-Date: Mon, 22 Jan 2018 06:04:09 +0100
-Message-ID: <20180122050411.32460-5-j.neuschaefer@gmx.net>
+Subject: [PATCH v2 1/6] resource: Extend the PPC32 reserved memory hack
+Date: Mon, 22 Jan 2018 06:04:06 +0100
+Message-ID: <20180122050411.32460-2-j.neuschaefer@gmx.net>
 References: <20180122050411.32460-1-j.neuschaefer@gmx.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180122050411.32460-1-j.neuschaefer@gmx.net>
-Sender: linux-gpio-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
-Cc: linuxppc-dev@lists.ozlabs.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>
+Cc: linuxppc-dev@lists.ozlabs.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, Albert Herranz <albert_herranz@yahoo.es>, Tom Lendacky <thomas.lendacky@amd.com>, Borislav Petkov <bp@suse.de>, Brijesh Singh <brijesh.singh@amd.com>, Thomas Gleixner <tglx@linutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-The Nintendo Wii game console has a GPIO controller, which is used for
-the optical disk slot LED, buttons, poweroff, etc. This patch adds a
-binding for this GPIO controller.
+On the Nintendo Wii, there are two ranges of physical memory, and MMIO
+in between, but Linux on ppc32 doesn't support discontiguous memory.
+Therefore a hack was introduced in commit c5df7f775148 ("powerpc: allow
+ioremap within reserved memory regions") and commit de32400dd26e ("wii:
+use both mem1 and mem2 as ram"):
+
+ - Treat the area from the start of the first memory area (MEM1) to the
+   end of the second (MEM2) as one big memory area, but mark the part
+   that doesn't belong to MEM1 or MEM2 as reserved.
+ - Only on the Wii, allow ioremap to be used on reserved memory.
+
+This hack, however, doesn't account for the "resource"-based API in
+kernel/resource.c, because __request_region performs its own checks.
+
+Extend the hack to kernel/resource.c, to allow more drivers to allocate
+their MMIO regions on the Wii.
 
 Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Cc: Albert Herranz <albert_herranz@yahoo.es>
 ---
 
 v2:
-- Drop the leading zero in the example, as suggested by Rob Herring
-- Add some text to the commit message, as suggested by Linus Walleij
+- CC Albert Herranz, who introduced this hack in 2009.
 ---
- .../bindings/gpio/nintendo,hollywood-gpio.txt      | 27 ++++++++++++++++++++++
- .../devicetree/bindings/powerpc/nintendo/wii.txt   |  9 +-------
- 2 files changed, 28 insertions(+), 8 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/gpio/nintendo,hollywood-gpio.txt
+ kernel/resource.c | 21 ++++++++++++++++++++-
+ 1 file changed, 20 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/gpio/nintendo,hollywood-gpio.txt b/Documentation/devicetree/bindings/gpio/nintendo,hollywood-gpio.txt
-new file mode 100644
-index 000000000000..20fc72d9e61e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/nintendo,hollywood-gpio.txt
-@@ -0,0 +1,27 @@
-+Nintendo Wii (Hollywood) GPIO controller
-+
-+Required properties:
-+- compatible: "nintendo,hollywood-gpio
-+- reg: Physical base address and length of the controller's registers.
-+- gpio-controller: Marks the device node as a GPIO controller.
-+- #gpio-cells: Should be <2>. The first cell is the pin number and the
-+  second cell is used to specify optional parameters:
-+   - bit 0 specifies polarity (0 for normal, 1 for inverted).
-+
-+Optional properties:
-+- ngpios: see Documentation/devicetree/bindings/gpio/gpio.txt
-+- interrupt-controller: Marks the device node as an interrupt controller.
-+- #interrupt-cells: Should be two.
-+- interrupts: Interrupt specifier for the controller's Broadway (PowerPC)
-+  interrupt.
-+- interrupt-parent: phandle of the parent interrupt controller.
-+
-+Example:
-+
-+	GPIO: gpio@d8000c0 {
-+		#gpio-cells = <2>;
-+		compatible = "nintendo,hollywood-gpio";
-+		reg = <0x0d8000c0 0x40>;
-+		gpio-controller;
-+		ngpios = <24>;
-+	}
-diff --git a/Documentation/devicetree/bindings/powerpc/nintendo/wii.txt b/Documentation/devicetree/bindings/powerpc/nintendo/wii.txt
-index 36afa322b04b..a3dc4b9fa11a 100644
---- a/Documentation/devicetree/bindings/powerpc/nintendo/wii.txt
-+++ b/Documentation/devicetree/bindings/powerpc/nintendo/wii.txt
-@@ -152,14 +152,7 @@ Nintendo Wii device tree
+diff --git a/kernel/resource.c b/kernel/resource.c
+index 54ba6de3757c..bb3d329329da 100644
+--- a/kernel/resource.c
++++ b/kernel/resource.c
+@@ -1134,6 +1134,24 @@ resource_size_t resource_alignment(struct resource *res)
  
- 1.l) The General Purpose I/O (GPIO) controller node
+ static DECLARE_WAIT_QUEUE_HEAD(muxed_resource_wait);
  
--  Represents the dual access 32 GPIO controller interface.
--
--  Required properties:
--
--  - #gpio-cells : <2>
--  - compatible : should be "nintendo,hollywood-gpio"
--  - reg : should contain the IPC registers location and length
--  - gpio-controller
-+  see Documentation/devicetree/bindings/gpio/nintendo,hollywood-gpio.txt
++/*
++ * On some ppc32 platforms (Nintendo Wii), reserved memory is used to work
++ * around the fact that Linux doesn't support discontiguous memory (all memory
++ * is treated as one large area with holes punched in it), and reserved memory
++ * is allowed to be allocated.
++ */
++#ifdef CONFIG_PPC32
++static bool conflict_ignored(struct resource *conflict)
++{
++	extern int __allow_ioremap_reserved;
++
++	return __allow_ioremap_reserved &&
++		(conflict->flags & IORESOURCE_SYSRAM);
++}
++#else
++static bool conflict_ignored(struct resource *conflict) { return false; }
++#endif
++
+ /**
+  * __request_region - create a new busy resource region
+  * @parent: parent resource descriptor
+@@ -1166,8 +1184,9 @@ struct resource * __request_region(struct resource *parent,
+ 		res->desc = parent->desc;
  
- 1.m) The control node
- 
+ 		conflict = __request_resource(parent, res);
+-		if (!conflict)
++		if (!conflict || conflict_ignored(conflict))
+ 			break;
++
+ 		if (conflict != parent) {
+ 			if (!(conflict->flags & IORESOURCE_BUSY)) {
+ 				parent = conflict;
 -- 
 2.15.1
-
