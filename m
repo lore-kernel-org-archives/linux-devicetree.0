@@ -1,68 +1,162 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v6 31/36] dt-bindings: nds32 CPU Bindings
-Date: Mon, 22 Jan 2018 12:15:47 +0100
-Message-ID: <CAK8P3a2noraQFvJbi2=T+rb3KDfZ88zJWQ_h3dYjD2ArhLPM1Q@mail.gmail.com>
-References: <cover.1515766253.git.green.hu@gmail.com> <e9577ec0f6b6ca17077aa2f576c8bef191c3d7c2.1515766253.git.green.hu@gmail.com>
- <CAK8P3a0HGhx3WpF-AwC+7m8+FoaiQBTYoCLqhECrATBRLX7x5g@mail.gmail.com>
- <CAEbi=3ef8JHf_Jpru1B2L3+Xz-Oz4p_t84Lh=5kuTFo0YEz=5A@mail.gmail.com>
- <CAK8P3a38hCHULZt=fGXJebcoiEGCwA0fre_kixA7sUpPP2xf5g@mail.gmail.com>
- <CAEbi=3eexCyrVhFZB8wmK1fT=QONzc63y6=dGNgj_H+Rt4zo_g@mail.gmail.com>
- <CAMuHMdX4nzU06ovDOwzJw-O8w0gyer-fi6skDae=K1yr-EN1gA@mail.gmail.com>
- <CAEbi=3fKp5tj32hoH=ZTo6kqpCE+Zv1LopnpVujusSfMkeaJKg@mail.gmail.com>
- <CAMuHMdUqxuiTfM_m80F4XDVkZjx_XCsj_qXRehZxMcKjWhGQ_Q@mail.gmail.com> <CAEbi=3es7O6f5T0Z2zsQzbuxzNte+h-_fMnjOOvbvpz8Hu8g_Q@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAEbi=3es7O6f5T0Z2zsQzbuxzNte+h-_fMnjOOvbvpz8Hu8g_Q@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greentime Hu <green.hu@gmail.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Greentime <greentime@andestech.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Networking <netdev@vger.kernel.org>, Vincent Chen <deanbo422@gmail.com>, DTML <devicetree@vger.kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, David Howells <dhowells@redhat.com>, Will Deacon <will.deacon@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-serial@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Greg KH <greg@kroah.com>, Guo Ren <ren_guo@c-sky.com>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH vY 1/2] ARM: dts: iwg22d-sodimm-dbhd-ca: use demuxer for I2C1
+Date: Mon, 22 Jan 2018 11:29:22 +0000
+Message-ID: <1516620563-7965-2-git-send-email-biju.das@bp.renesas.com>
+References: <1516620563-7965-1-git-send-email-biju.das@bp.renesas.com>
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <1516620563-7965-1-git-send-email-biju.das@bp.renesas.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Chris Paterson <chris.paterson2@renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-i2c@vger.kernel.org, Biju Das <biju.das@bp.renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 22, 2018 at 10:53 AM, Greentime Hu <green.hu@gmail.com> wrote:
-> 2018-01-19 23:37 GMT+08:00 Geert Uytterhoeven <geert@linux-m68k.org>:
->> On Fri, Jan 19, 2018 at 4:35 PM, Greentime Hu <green.hu@gmail.com> wrote:
->>> 2018-01-19 23:29 GMT+08:00 Geert Uytterhoeven <geert@linux-m68k.org>:
->>>> On Fri, Jan 19, 2018 at 4:18 PM, Greentime Hu <green.hu@gmail.com> wrote:
+Create a separate bus for HDMI related I2C1 and provide fallback to GPIO.
 
->>> Thank you and your example.
->>> I get it. I will update this document like this.
->>> - compatible: Should be "andestech,<core_name>", "andestech,nds32v3"
->>> as fallback.
->>
->> And please keep a list of supported values of "andestech,<core_name>"
->> in the DT binding document, so checkpatch can validate compatible values.
->>
->
-> Thank you for reminding me this.
-> I will list it like this.
->
-> - compatible:
->         Usage: required
->         Value type: <string>
->         Definition: Should be "andestech,<core_name>",
-> "andestech,nds32v3" as fallback.
->         Examlpes with core_names are:
->         "andestech,n13"
->         "andestech,n15"
->         "andestech,d15"
->         "andestech,n10"
->         "andestech,d10"
+Based on work for r8a7794/Alt by Wolfram Sang: "ARM: dts: alt: use demuxer
+ for I2C1"
 
-This is still not written as a proper specification, you should not
-give "examples"
-but give a complete list of the available options. You could write it like:
+Add Fixes: 97b94d256d432ba9 ("ARM: dts: iwg22d-sodimm-dbhd-ca: Add HDMI
+video output")
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+Reviewed-by: Chris Paterson <chris.paterson2@renesas.com>
+---
+We have observed that randomly HDMI slave device is holding data line after a soft reboot.
 
-Must contain "andestech,nds32v3" as the most generic value, in addition to
-one of the following identifiers for a particular CPU core:
-         "andestech,n13"
-         "andestech,n15"
-         "andestech,d15"
-         "andestech,n10"
-         "andestech,d10"
+We applied this patch and using an oscilloscope verified that i2c recovery works on the
+failure condition.
 
-It might be helpful to also list all other existing nds32v3 cores,
-even those that the
-current Linux port does not support them.
+ .../arm/boot/dts/r8a7745-iwg22d-sodimm-dbhd-ca.dts | 96 +++++++++++++---------
+ 1 file changed, 59 insertions(+), 37 deletions(-)
 
-      Arnd
+diff --git a/arch/arm/boot/dts/r8a7745-iwg22d-sodimm-dbhd-ca.dts b/arch/arm/boot/dts/r8a7745-iwg22d-sodimm-dbhd-ca.dts
+index d34de82..de120a3 100644
+--- a/arch/arm/boot/dts/r8a7745-iwg22d-sodimm-dbhd-ca.dts
++++ b/arch/arm/boot/dts/r8a7745-iwg22d-sodimm-dbhd-ca.dts
+@@ -19,6 +19,8 @@
+ 		serial0 = &scif1;
+ 		serial4 = &scif5;
+ 		serial6 = &hscif2;
++		i2c8 = &gpioi2c1;
++		i2c10 = &i2chdmi;
+ 	};
+ 
+ 	cec_clock: cec-clock {
+@@ -27,6 +29,16 @@
+ 		clock-frequency = <12000000>;
+ 	};
+ 
++	gpioi2c1: i2c-8 {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		compatible = "i2c-gpio";
++		status = "disabled";
++		scl-gpios = <&gpio0 11 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
++		sda-gpios = <&gpio0 12 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
++		i2c-gpio,delay-us = <5>;
++	};
++
+ 	hdmi-out {
+ 		compatible = "hdmi-connector";
+ 		type = "a";
+@@ -37,6 +49,52 @@
+ 			};
+ 		};
+ 	};
++
++	/*
++	 * A fallback to GPIO is provided for I2C1.
++	 */
++	i2chdmi: i2c-10 {
++		compatible = "i2c-demux-pinctrl";
++		i2c-parent = <&i2c1>, <&gpioi2c1>;
++		i2c-bus-name = "i2c-hdmi";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		hdmi@39 {
++			compatible = "adi,adv7511w";
++			reg = <0x39>;
++			interrupt-parent = <&gpio1>;
++			interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
++			clocks = <&cec_clock>;
++			clock-names = "cec";
++			pd-gpios = <&gpio2 24 GPIO_ACTIVE_HIGH>;
++
++			adi,input-depth = <8>;
++			adi,input-colorspace = "rgb";
++			adi,input-clock = "1x";
++			adi,input-style = <1>;
++			adi,input-justification = "evenly";
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				port@0 {
++					reg = <0>;
++					adv7511_in: endpoint {
++						remote-endpoint = <&du_out_rgb0>;
++					};
++				};
++
++				port@1 {
++					reg = <1>;
++					adv7511_out: endpoint {
++						remote-endpoint = <&hdmi_con>;
++					};
++				};
++			};
++		};
++	};
+ };
+ 
+ &du {
+@@ -70,45 +128,9 @@
+ 
+ &i2c1 {
+ 	pinctrl-0 = <&i2c1_pins>;
+-	pinctrl-names = "default";
++	pinctrl-names = "i2c-hdmi";
+ 
+-	status = "okay";
+ 	clock-frequency = <400000>;
+-
+-	hdmi@39 {
+-		compatible = "adi,adv7511w";
+-		reg = <0x39>;
+-		interrupt-parent = <&gpio1>;
+-		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
+-		clocks = <&cec_clock>;
+-		clock-names = "cec";
+-		pd-gpios = <&gpio2 24 GPIO_ACTIVE_HIGH>;
+-
+-		adi,input-depth = <8>;
+-		adi,input-colorspace = "rgb";
+-		adi,input-clock = "1x";
+-		adi,input-style = <1>;
+-		adi,input-justification = "evenly";
+-
+-		ports {
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-
+-			port@0 {
+-				reg = <0>;
+-				adv7511_in: endpoint {
+-					remote-endpoint = <&du_out_rgb0>;
+-				};
+-			};
+-
+-			port@1 {
+-				reg = <1>;
+-				adv7511_out: endpoint {
+-					remote-endpoint = <&hdmi_con>;
+-				};
+-			};
+-		};
+-	};
+ };
+ 
+ &pfc {
+-- 
+2.7.4
