@@ -1,53 +1,124 @@
-From: Philippe Cornu <philippe.cornu@st.com>
-Subject: [PATCH] dt-bindings: display: stm32: add pixel clock mandatory
- property
-Date: Mon, 22 Jan 2018 16:38:05 +0100
-Message-ID: <20180122153805.23720-1-philippe.cornu@st.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v6 29/36] nds32: Build infrastructure
+Date: Mon, 22 Jan 2018 16:38:59 +0100
+Message-ID: <CAK8P3a20eqjW3_bQf4eMTwtmJSZ8Vp4agV5O--UkLGXnMhbisQ@mail.gmail.com>
+References: <cover.1515766253.git.green.hu@gmail.com> <e4b231f440511aa0a539ba45f316a096741f530e.1515766253.git.green.hu@gmail.com>
+ <CAK8P3a2k18Z5pK-04h4bSVn82m+tvNL4JdtgVT9AJWP5gKXuig@mail.gmail.com> <CAEbi=3dZ-Bj+pdhcu1Td1JzgDngyMMeDTFs=XH3LNPnudcUGyg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Yannick Fertre <yannick.fertre@st.com>, Philippe Cornu <philippe.cornu@st.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Vincent Abriou <vincent.abriou@st.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: Mickael Reulier <mickael.reulier@st.com>, Gabriel Fernandez <gabriel.fernandez@st.com>, Ludovic Barre <ludovic.barre@st.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAEbi=3dZ-Bj+pdhcu1Td1JzgDngyMMeDTFs=XH3LNPnudcUGyg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Greentime Hu <green.hu@gmail.com>
+Cc: Greentime <greentime@andestech.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Networking <netdev@vger.kernel.org>, Vincent Chen <deanbo422@gmail.com>, DTML <devicetree@vger.kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, David Howells <dhowells@redhat.com>, Will Deacon <will.deacon@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-serial@vger.kernel.org, Geert Uytterhoeven <geert.uytterhoeven@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Greg KH <greg@kroah.com>, Guo Ren <ren_guo@c-sky.co>
 List-Id: devicetree@vger.kernel.org
 
-QWRkIHRoZSBEUEkvUkdCIGlucHV0IHBpeGVsIGNsb2NrIGluIG1hbmRhdG9yeSBwcm9wZXJ0aWVz
-CmJlY2F1c2UgaXQgcmVhbGx5IG9mZmVycyBhIGJldHRlciBwcmVjaXNlbmVzcyBmb3IgdGltaW5n
-CmNvbXB1dGF0aW9ucy4KClNpZ25lZC1vZmYtYnk6IFBoaWxpcHBlIENvcm51IDxwaGlsaXBwZS5j
-b3JudUBzdC5jb20+Ci0tLQpQbGVhc2UgYXBwbHkgImR0LWJpbmRpbmdzOiBkaXNwbGF5OiBzdG0z
-MjogY29ycmVjdCBjbG9jay1uYW1lcwppbiBkc2kgcGFuZWwgZXhhbXBsZSIgYmVmb3JlIHRoaXMg
-cGF0Y2guCgpDaGFuZ2VzIGluIHYzOiByZW1vdmUgdGhlIG5vdGUgcmVnYXJkaW5nIHN3YXBwZWQg
-Y2xvY2sgbmFtZXMKICAobm93IGluIGEgc2VwYXJhdGUgcGF0Y2gpLgpDaGFuZ2VzIGluIHYyOiBw
-dXQgbmV3IGNsb2NrIGluIGxhc3QgcG9zaXRpb24gKFJvYiBIZXJyaW5nKQoKIERvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3N0LHN0bTMyLWx0ZGMudHh0IHwgNiArKysr
-LS0KIDEgZmlsZSBjaGFuZ2VkLCA0IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pCgpkaWZm
-IC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvc3Qsc3Rt
-MzItbHRkYy50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9z
-dCxzdG0zMi1sdGRjLnR4dAppbmRleCAzZWIxYjQ4YjQ3ZGQuLjk0MmI3MjM3YWU4NyAxMDA2NDQK
-LS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvc3Qsc3RtMzIt
-bHRkYy50eHQKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
-c3Qsc3RtMzItbHRkYy50eHQKQEAgLTI5LDYgKzI5LDcgQEAgTWFuZGF0b3J5IHByb3BlcnRpZXMg
-c3BlY2lmaWMgdG8gU1RNMzIgRFNJOgogLSBjb21wYXRpYmxlOiAic3Qsc3RtMzItZHNpIi4KIC0g
-Y2xvY2stbmFtZXM6CiAgIC0gcGh5IHBsbCByZWZlcmVuY2UgY2xvY2sgc3RyaW5nIG5hbWUsIG11
-c3QgYmUgInJlZiIuCisgIC0gRFBJL1JHQiBpbnB1dCBwaXhlbCBjbG9jayBzdHJpbmcgbmFtZSwg
-bXVzdCBiZSAicHhfY2xrIi4KIC0gcmVzZXRzOiBzZWUgWzVdLgogLSByZXNldC1uYW1lczogc2Vl
-IFs1XS4KIApAQCAtOTcsOCArOTgsOSBAQCBFeGFtcGxlIDI6IERTSSBwYW5lbAogCQkJI3NpemUt
-Y2VsbHMgPSA8MD47CiAJCQljb21wYXRpYmxlID0gInN0LHN0bTMyLWRzaSI7CiAJCQlyZWcgPSA8
-MHg0MDAxNmMwMCAweDgwMD47Ci0JCQljbG9ja3MgPSA8JnJjYyAxIENMS19GNDY5X0RTST4sIDwm
-Y2xrX2hzZT47Ci0JCQljbG9jay1uYW1lcyA9ICJwY2xrIiwgInJlZiI7CisJCQljbG9ja3MgPSA8
-JnJjYyAxIENMS19GNDY5X0RTST4sIDwmY2xrX2hzZT4sCisJCQkJIDwmcmNjIDEgQ0xLX0xDRD47
-CisJCQljbG9jay1uYW1lcyA9ICJwY2xrIiwgInJlZiIsICJweF9jbGsiOwogCQkJcmVzZXRzID0g
-PCZyY2MgU1RNMzJGNF9BUEIyX1JFU0VUKERTSSk+OwogCQkJcmVzZXQtbmFtZXMgPSAiYXBiIjsK
-IAotLSAKMi4xNS4xCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5v
-cmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2
-ZWwK
+On Mon, Jan 22, 2018 at 4:20 PM, Greentime Hu <green.hu@gmail.com> wrote:
+BE
+>>
+>> I think it's better to drop GENERIC_IRQ_PROBE here, no modern driver
+>> should rely on that.
+>
+> I will drop it.
+>
+>>> +choice
+>>> +       prompt "CPU type"
+>>> +       default CPU_V3
+>>> +config CPU_N15
+>>> +       bool "AndesCore N15"
+>>> +config CPU_N13
+>>> +       bool "AndesCore N13"
+>>> +       select CPU_CACHE_ALIASING if ANDES_PAGE_SIZE_4KB
+>>> +config CPU_N10
+>>> +       bool "AndesCore N10"
+>>> +       select CPU_CACHE_ALIASING
+>>> +config CPU_D15
+>>> +       bool "AndesCore D15"
+>>> +config CPU_D10
+>>> +       bool "AndesCore D10"
+>>> +       select CPU_CACHE_ALIASING
+>>> +config CPU_V3
+>>> +       bool "AndesCore v3 compatible"
+>>> +       select ANDES_PAGE_SIZE_8KB
+>>> +endchoice
+>>
+>> I forget what we discussed here earlier, but at the very least, there should be
+>> some help text here to explain what the implications are. I assume that you
+>> generally want to be able to build one kernel to run on all of the above, right?
+>>
+>> Will selecting 'CPU_V3' result in a kernel binary that can run on all of them?
+>> If so, please explain it here as that is not obvious.
+>>
+>> For the other CPU types, can you list the what backwards-compatiblity
+>> you get? E.g. will a kernel built for N13 run on any of N15, D15 or N10?
+>>
+> Yes, we would like to build a kernel with CPU_V3 to run on all of the above.
+>
+> Not sure if these help texts clear enough?
+>
+> choice
+>         prompt "CPU type"
+>         default CPU_V3
+>         help
+>           The data cache of N15/D15 is implemented as PIPT and it will
+> not cause the
+>           cache aliasing issue. The rest cpus(N13, N10 and D10) are
+> implemented as
+>           VIPT data cache. It may cause the cache aliasing issue if
+> its cache way
+>           size is larger than page size. You can specify the the CPU
+> type direcly or
+>           choose CPU_V3 if unsure.
+>
+>           A kernel built for N10 is able to run on N15, D15, N13, N10 or D10.
+>           A kernel built for N15 is able to run on N15 or D15.
+>           A kernel built for D10 is able to run on D10 or D15.
+>           A kernel built for D15 is able to run on D15.
+>           A kernel built for N13 with CPU_CACHE_ALIASING is able to
+> run on N15, D15, N13, N10 or D10
+>           A kernel built for N13 without CPU_CACHE_ALIASING is able to
+> run on N15, N13 or D15
+>
+> config CPU_N15
+>         bool "AndesCore N15"
+> config CPU_N13
+>         bool "AndesCore N13"
+>         select CPU_CACHE_ALIASING if ANDES_PAGE_SIZE_4KB
+> config CPU_N10
+>         bool "AndesCore N10"
+>         select CPU_CACHE_ALIASING
+> config CPU_D15
+>         bool "AndesCore D15"
+> config CPU_D10
+>         bool "AndesCore D10"
+>         select CPU_CACHE_ALIASING
+> config CPU_V3
+>         bool "AndesCore v3 compatible"
+>         select CPU_CACHE_ALIASING
+> endchoice
+
+I would drop the description about CPU_CACHE_ALIASING in the list
+of compatibilities text and simply say 'A kernel built for N13 is able to run
+on N15, N13 or D15', it's more logical that way, and it gives you the freedom
+to later change the rules about whether it can or cannot run.
+
+Maybe also change the initial prompt from "CPU type" to "minimum CPU type".
+
+>> I think the 'select ANDES_PAGE_SIZE_8KB' cannot work as expected,
+>> since ANDES_PAGE_SIZE_8KB is inside of a 'choice' statement. Since
+>> there are only two options (4K and 8K), you can address that by making
+>> it a simple bool option and fall back to 4K when ANDES_PAGE_SIZE_8KB
+>> is disabled.
+>
+> After reviewing this config, it seems to make much more sense if we
+> select CPU_CACHE_ALIASING.
+> A kernel with aliasing cache handling should be able to run on
+> aliasing/non-aliasing CPU.
+>
+> config CPU_V3
+>         bool "AndesCore v3 compatible"
+>         select CPU_CACHE_ALIASING
+
+Sure, that's a possible way out.
+
+        Arnd
