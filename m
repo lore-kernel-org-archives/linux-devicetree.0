@@ -1,135 +1,204 @@
-From: Claudiu Beznea <Claudiu.Beznea@microchip.com>
-Subject: Re: [PATCH v2 11/16] pwm: add documentation for PWM modes
-Date: Mon, 22 Jan 2018 10:55:43 +0200
-Message-ID: <158fe004-1202-c27e-1b4b-f87f9d198cf3@microchip.com>
-References: <1515766983-15151-1-git-send-email-claudiu.beznea@microchip.com>
- <1515766983-15151-12-git-send-email-claudiu.beznea@microchip.com>
- <20180119223908.b3dxdx53nzuhakzw@rob-hp-laptop>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v6 3/9] v4l: platform: Add Renesas CEU driver
+Date: Mon, 22 Jan 2018 10:07:45 +0100
+Message-ID: <8363e777-2af8-408a-1a42-65309e48af6b@xs4all.nl>
+References: <1516139101-7835-1-git-send-email-jacopo+renesas@jmondi.org>
+ <2529707.jzkV7c2yGz@avalon> <4195ec6a-b99d-2fad-3898-9ce9c02fce00@xs4all.nl>
+ <1556766.StfJmN1Kpx@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <20180119223908.b3dxdx53nzuhakzw@rob-hp-laptop>
-Content-Language: en-US
-Sender: linux-pwm-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: thierry.reding@gmail.com, mark.rutland@arm.com, linux@armlinux.org.uk, daniel@zonque.org, haojian.zhuang@gmail.com, robert.jarzmik@free.fr, corbet@lwn.net, nicolas.ferre@microchip.com, alexandre.belloni@free-electrons.com, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-rpi-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1556766.StfJmN1Kpx@avalon>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, magnus.damm@gmail.com, geert@glider.be, mchehab@kernel.org, festevam@gmail.com, sakari.ailus@iki.fi, robh+dt@kernel.org, mark.rutland@arm.com, pombredanne@nexb.com, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 20.01.2018 00:39, Rob Herring wrote:
-> On Fri, Jan 12, 2018 at 04:22:58PM +0200, Claudiu Beznea wrote:
->> Add documentation for PWM normal and complementary modes.
+On 22/01/18 01:52, Laurent Pinchart wrote:
+> Hi Hans,
 > 
-> This and the previous patch can be combined.
-OK
-> 
+> On Friday, 19 January 2018 14:25:39 EET Hans Verkuil wrote:
+>> On 01/19/18 13:20, Laurent Pinchart wrote:
+>>> On Friday, 19 January 2018 13:20:19 EET Hans Verkuil wrote:
+>>>> On 01/16/18 22:44, Jacopo Mondi wrote:
+>>>>> Add driver for Renesas Capture Engine Unit (CEU).
+>>>>>
+>>>>> The CEU interface supports capturing 'data' (YUV422) and 'images'
+>>>>> (NV[12|21|16|61]).
+>>>>>
+>>>>> This driver aims to replace the soc_camera-based sh_mobile_ceu one.
+>>>>>
+>>>>> Tested with ov7670 camera sensor, providing YUYV_2X8 data on Renesas RZ
+>>>>> platform GR-Peach.
+>>>>>
+>>>>> Tested with ov7725 camera sensor on SH4 platform Migo-R.
+>>>>>
+>>>>> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+>>>>> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+>>>>> ---
+>>>>>
+>>>>>  drivers/media/platform/Kconfig       |    9 +
+>>>>>  drivers/media/platform/Makefile      |    1 +
+>>>>>  drivers/media/platform/renesas-ceu.c | 1659 +++++++++++++++++++++++++++
+>>>>>  3 files changed, 1669 insertions(+)
+>>>>>  create mode 100644 drivers/media/platform/renesas-ceu.c
+>>>
+>>> [snip]
+>>>
+>>>>> diff --git a/drivers/media/platform/renesas-ceu.c
+>>>>> b/drivers/media/platform/renesas-ceu.c new file mode 100644
+>>>>> index 0000000..1b8f0ef
+>>>>> --- /dev/null
+>>>>> +++ b/drivers/media/platform/renesas-ceu.c
+>>>
+>>> [snip]
+>>>
+>>>>> +static void ceu_update_plane_sizes(struct v4l2_plane_pix_format *plane,
+>>>>> +				   unsigned int bpl, unsigned int szimage)
+>>>>> +{
+>>>>> +	if (plane->bytesperline < bpl)
+>>>>> +		plane->bytesperline = bpl;
+>>>>> +	if (plane->sizeimage < szimage)
+>>>>> +		plane->sizeimage = szimage;
+>>>>
+>>>> As mentioned in your cover letter, you do need to check for invalid
+>>>> bytesperline values. The v4l2-compliance test is to see what happens
+>>>> when userspace gives insane values, so yes, drivers need to be able
+>>>> to handle that.
+>>>
+>>> What limit would you set, what is an acceptable large value versus an
+>>> invalid large value ? I think we should have rules for this at the API
+>>> level (or at least, if not part of the API, rules that are consistent
+>>> across drivers).
 >>
->> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
->> ---
->>  Documentation/devicetree/bindings/pwm/pwm.txt | 17 ++++++++++++++--
->>  Documentation/pwm.txt                         | 29 +++++++++++++++++++++++++--
->>  2 files changed, 42 insertions(+), 4 deletions(-)
+>> I would expect this to be the max of what the hardware can support. If
+>> that's really high, then this can be, say, 4 times the width.
 >>
->> diff --git a/Documentation/devicetree/bindings/pwm/pwm.txt b/Documentation/devicetree/bindings/pwm/pwm.txt
->> index 8556263b8502..fdff25bad1db 100644
->> --- a/Documentation/devicetree/bindings/pwm/pwm.txt
->> +++ b/Documentation/devicetree/bindings/pwm/pwm.txt
->> @@ -43,8 +43,8 @@ because the name "backlight" would be used as fallback anyway.
->>  pwm-specifier typically encodes the chip-relative PWM number and the PWM
->>  period in nanoseconds.
->>  
->> -Optionally, the pwm-specifier can encode a number of flags (defined in
->> -<dt-bindings/pwm/pwm.h>) in a third cell:
->> +Optionally, the pwm-specifier can encode:
->> +1. a number of flags (defined in <dt-bindings/pwm/pwm.h>) in a third cell:
+>> Note that there are very few drivers that can handle a user-specified
+>> stride.
 > 
-> Based on the prior patches, "third cell" is probably to restrictive 
-> here and it should just say "in a flags cell".
-OK
+> But that's no reason not to handle it here if the hardware permits, right ? 
+> :-)
 
-Thank you,
-Claudiu Beznea
-> 
->>  - PWM_POLARITY_INVERTED: invert the PWM signal polarity
->>  
->>  Example with optional PWM specifier for inverse polarity
->> @@ -54,6 +54,19 @@ Example with optional PWM specifier for inverse polarity
->>  		pwm-names = "backlight";
->>  	};
->>  
->> +2. PWM working modes (defined in <dt-bindings/pwm/pwm.h>) in the 4th cell:
->> +- PWM_MODE_NORMAL: for all PWM controllers
->> +- PWM_MODE_COMPLEMENTARY: for PWM controllers with more than one output per
->> +PWM channel
->> +
->> +Example with PWM modes:
->> +
->> +	bl: blacklight {
->> +		pwms = <&pwm 0 5000000 PWM_POLARITY_INVERTED
->> +			PWM_DTMODE_NORMAL | PWM_DTMODE_COMPLEMENTARY>;
->> +		pwm-names = "backlight";
->> +	};
->> +
->>  2) PWM controller nodes
->>  -----------------------
->>  
->> diff --git a/Documentation/pwm.txt b/Documentation/pwm.txt
->> index 8fbf0aa3ba2d..58c9bd55f021 100644
->> --- a/Documentation/pwm.txt
->> +++ b/Documentation/pwm.txt
->> @@ -61,8 +61,8 @@ In addition to the PWM state, the PWM API also exposes PWM arguments, which
->>  are the reference PWM config one should use on this PWM.
->>  PWM arguments are usually platform-specific and allows the PWM user to only
->>  care about dutycycle relatively to the full period (like, duty = 50% of the
->> -period). struct pwm_args contains 2 fields (period and polarity) and should
->> -be used to set the initial PWM config (usually done in the probe function
->> +period). struct pwm_args contains 3 fields (period, polarity and mode) and
->> +should be used to set the initial PWM config (usually done in the probe function
->>  of the PWM user). PWM arguments are retrieved with pwm_get_args().
->>  
->>  Using PWMs with the sysfs interface
->> @@ -83,6 +83,9 @@ will find:
->>    unexport
->>     Unexports a PWM channel from sysfs (write-only).
->>  
->> +  mode
->> +   PWM chip supported modes.
->> +
->>  The PWM channels are numbered using a per-chip index from 0 to npwm-1.
->>  
->>  When a PWM channel is exported a pwmX directory will be created in the
->> @@ -110,6 +113,28 @@ channel that was exported. The following properties will then be available:
->>  	- 0 - disabled
->>  	- 1 - enabled
->>  
->> +  mode
->> +    Set PWM channel working mode (normal and complementary). PWM chip with
->> +    complementary mode could also work in normal mode by using only one physical
->> +    output.
->> +
->> +    Normal mode - for PWM chips with one output per PWM channel; output
->> +        waveforms looks like this:
->> +             __    __    __    __
->> +    PWM   __|  |__|  |__|  |__|  |__
->> +            <--T-->
->> +
->> +    Complementary mode - for PWM chips with more than one output per PWM
->> +        channel; output waveforms for a PWM controller with 2 outputs per PWM
->> +        channel looks line this:
->> +             __    __    __    __
->> +    PWMH1 __|  |__|  |__|  |__|  |__
->> +          __    __    __    __    __
->> +    PWML1   |__|  |__|  |__|  |__|
->> +            <--T-->
->> +
->> +    Where T is the signal period.
->> +
->>  Implementing a PWM driver
->>  -------------------------
->>  
->> -- 
->> 2.7.4
+Certainly. But it is the reason why it's hard to find example code in
+existing drivers.
+
+>>>> plane->sizeimage is set by the driver, so drop the 'if' before the
+>>>> assignment.
+>>>
+>>> I don't think that's correct. Userspace should be able to control padding
+>>> lines at the end of the image, the same way it controls padding pixels at
+>>> the end of lines.
 >>
+>> If userspace wants larger buffers, then it should use VIDIOC_CREATE_BUFS.
+>>
+>> sizeimage is exclusively set by the driver, applications rely on that.
+> 
+> The API documentation is pretty confusing about this.
+> 
+> In pixfmt-v4l2.rst, the field in the v4l2_pix_format structure is documented 
+> as
+> 
+>       - Size in bytes of the buffer to hold a complete image, set by the
+>         driver. Usually this is ``bytesperline`` times ``height``. When
+>         the image consists of variable length compressed data this is the
+>         maximum number of bytes required to hold an image.
+> 
+> Then in pixfmt-v4l2-mplane.rst, the field in the v4l2_plane_pix_format 
+> structure is documented as
+> 
+>       - Maximum size in bytes required for image data in this plane.
+
+This should contain the same text as in pixfmt-v4l2.rst.
+
+> 
+> Finally, in vidioc-create-bufs.rst, we have
+> 
+> The buffers created by this ioctl will have as minimum size the size
+> defined by the ``format.pix.sizeimage`` field (or the corresponding
+> fields for other format types). Usually if the ``format.pix.sizeimage``
+> field is less than the minimum required for the given format, then an
+> error will be returned since drivers will typically not allow this. If
+> it is larger, then the value will be used as-is. In other words, the
+> driver may reject the requested size, but if it is accepted the driver
+> will use it unchanged.
+> 
+> The VIDIOC_CREATE_BUFS documentation contradicts the v4l2_pix_format 
+> documentation, as the multiplane case doesn't state anything about who sets 
+> the sizeimage field. We should clarify the documentation.
+
+The pixfmt-v4l2-mplane.rst is the one that's incomplete. I noticed the same
+thing when I looked at it.
+
+> 
+>>>>> +}
+>>>
+>>> [snip]
+>>>
+>>>>> +static const struct v4l2_ioctl_ops ceu_ioctl_ops = {
+>>>>> +	.vidioc_querycap		= ceu_querycap,
+>>>>> +
+>>>>> +	.vidioc_enum_fmt_vid_cap_mplane	= ceu_enum_fmt_vid_cap,
+>>>>> +	.vidioc_try_fmt_vid_cap_mplane	= ceu_try_fmt_vid_cap,
+>>>>> +	.vidioc_s_fmt_vid_cap_mplane	= ceu_s_fmt_vid_cap,
+>>>>> +	.vidioc_g_fmt_vid_cap_mplane	= ceu_g_fmt_vid_cap,
+>>>>> +
+>>>>> +	.vidioc_enum_input		= ceu_enum_input,
+>>>>> +	.vidioc_g_input			= ceu_g_input,
+>>>>> +	.vidioc_s_input			= ceu_s_input,
+>>>>> +
+>>>>> +	.vidioc_reqbufs			= vb2_ioctl_reqbufs,
+>>>>> +	.vidioc_querybuf		= vb2_ioctl_querybuf,
+>>>>> +	.vidioc_qbuf			= vb2_ioctl_qbuf,
+>>>>> +	.vidioc_expbuf			= vb2_ioctl_expbuf,
+>>>>> +	.vidioc_dqbuf			= vb2_ioctl_dqbuf,
+>>>>> +	.vidioc_create_bufs		= vb2_ioctl_create_bufs,
+>>>>> +	.vidioc_prepare_buf		= vb2_ioctl_prepare_buf,
+>>>>> +	.vidioc_streamon		= vb2_ioctl_streamon,
+>>>>> +	.vidioc_streamoff		= vb2_ioctl_streamoff,
+>>>>> +
+>>>>> +	.vidioc_g_parm			= ceu_g_parm,
+>>>>> +	.vidioc_s_parm			= ceu_s_parm,
+>>>>> +	.vidioc_enum_framesizes		= ceu_enum_framesizes,
+>>>>> +	.vidioc_enum_frameintervals	= ceu_enum_frameintervals,
+>>>>
+>>>> You're missing these ioctls:
+>>>>         .vidioc_log_status              = v4l2_ctrl_log_status,
+>>>
+>>> Is log status mandatory ?
+>>
+>> No, but it doesn't hurt to add this one. It comes for free.
+> 
+> Possibly a bit out of scope, but now that the standard debugging interface 
+> seems to be debugfs, wouldn't it make sense to implement log status through 
+> there instead of as an ioctl ?
+
+Why? The ioctl has been there for many many years and it works very well (Cisco
+uses this on a daily basis). I see no reason to do a lot of work for no good
+purpose. It's probably less useful for sensors but for video receivers (HDMI or
+analog) I couldn't do without. With HDMI/analog video receivers you never
+know what sort of video you receive, so being able to log the current status
+is great. We use it in regression tests and error reporting all the time.
+
+Sure, today we'd design this using debugfs, but I don't think it existed when
+LOG_STATUS was created. In any case, I see no reason to change this. In fact,
+that would break our tests.
+
+Regards,
+
+	Hans
+
+> 
+>>>>         .vidioc_subscribe_event         = v4l2_ctrl_subscribe_event,
+>>>>         .vidioc_unsubscribe_event       = v4l2_event_unsubscribe,
+>>>>
+>>>> These missing _event ops are the reason for this compliance failure:
+>>>>
+>>>> fail: v4l2-test-controls.cpp(782): subscribe event for control 'User
+>>>> Controls' failed
+>>>>
+>>>>> +};
+>>>
+>>> [snip]
 > 
