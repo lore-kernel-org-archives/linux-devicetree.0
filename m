@@ -1,57 +1,98 @@
-From: Philippe Ombredanne <pombredanne@nexb.com>
-Subject: Re: [PATCH v4 3/9] v4l: platform: Add Renesas CEU driver
-Date: Tue, 23 Jan 2018 11:28:00 +0100
-Message-ID: <CAOFm3uGdVkgJ10n=pVKh9h2r7t_UkUS1768tVQLKSaOh8v-buA@mail.gmail.com>
-References: <1515515131-13760-1-git-send-email-jacopo+renesas@jmondi.org>
- <1515515131-13760-4-git-send-email-jacopo+renesas@jmondi.org>
- <CAOFm3uGxm3bAHPryMV8+MAFy+45-3Ld7RbKqo1saigzPUZ8mqg@mail.gmail.com> <20180112133857.GE24794@w540>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH] PCI: qcom: add missing supplies required for msm8996
+Date: Tue, 23 Jan 2018 10:33:13 +0000
+Message-ID: <5f43164a-4d84-12be-7f69-f7bbaaf1d64c@linaro.org>
+References: <20171208092053.4417-1-srinivas.kandagatla@linaro.org>
+ <65e01829-198e-f549-174d-c8368c5ee193@mm-sol.com>
+ <92e2808b-4b2d-8591-9ed7-6600d7a3357b@linaro.org>
+ <1a3cc92e-545e-a703-7130-6a9c58854e03@mm-sol.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20180112133857.GE24794@w540>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: jacopo mondi <jacopo@jmondi.org>
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Magnus Damm <magnus.damm@gmail.com>, geert@glider.be, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Fabio Estevam <festevam@gmail.com>, Sakari Ailus <sakari.ailus@iki.fi>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-renesas-soc@vger.kernel.org, Linux Media Mailing List <linux-media@vger.kernel.org>, linux-sh@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1a3cc92e-545e-a703-7130-6a9c58854e03@mm-sol.com>
+Content-Language: en-US
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stanimir Varbanov <svarbanov@mm-sol.com>, linux-pci@vger.kernel.org, bhelgaas@google.com
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 12, 2018 at 2:38 PM, jacopo mondi <jacopo@jmondi.org> wrote:
-> Hi Philippe, Laurent, Geert,
->
-> On Fri, Jan 12, 2018 at 11:36:31AM +0100, Philippe Ombredanne wrote:
->> On Tue, Jan 9, 2018 at 5:25 PM, Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
->> > Add driver for Renesas Capture Engine Unit (CEU).
->>
->> <snip>
->>
->> > --- /dev/null
->> > +++ b/drivers/media/platform/renesas-ceu.c
->> > @@ -0,0 +1,1648 @@
->> > +// SPDX-License-Identifier: GPL-2.0
->>
->> <snip>
->>
->> > +MODULE_DESCRIPTION("Renesas CEU camera driver");
->> > +MODULE_AUTHOR("Jacopo Mondi <jacopo+renesas@jmondi.org>");
->> > +MODULE_LICENSE("GPL");
->>
->> Jacopo,
->> the MODULE_LICENSE does not match the SPDX tag. Per module.h "GPL"
->> means GPL-2.0 or later ;)
->>
->> It should be instead:
->>
->> > +MODULE_LICENSE("GPL v2");
->>
->> ... to match your
->>
->> > +// SPDX-License-Identifier: GPL-2.0
->
-> I will update this in next v5.
-> Laurent, Geert: I'll keep SPDX identifier to "GPL-2.0" until kernel
-> doc does not get updated.
 
-Thanks. Sorry for the late reply!
 
--- 
-Cordially
-Philippe Ombredanne
+On 23/01/18 10:14, Stanimir Varbanov wrote:
+> Hi,
+> 
+> On 01/23/2018 11:46 AM, Srinivas Kandagatla wrote:
+>>
+>>
+>> On 23/01/18 09:23, Stanimir Varbanov wrote:
+>>> Hey Srini,
+>>>
+>>> As there are no comments I'd propose to change the endpoint supplies to
+>>> more generic names.
+>>>
+>> Sure, I will respin this with your suggestions, except the 3v3 and 1v5
+>> suffix due to the reasons below:
+>>>> +- vdda-1p8-supply:
+>>>> +    Usage: required for msm8996
+>>>> +    Value type: <phandle>
+>>>> +    Definition: A phandle to the 1.8v analog power supply
+>>>> +
+>>>
+>>> This should be dropped, because it is part of the phy.
+>> Yep.
+>>
+>>>
+>>>>    - vdda_phy-supply:
+>>>>        Usage: required for ipq/apq8064
+>>>>        Value type: <phandle>
+>>>> @@ -189,6 +194,15 @@
+>>>>        Value type: <phandle>
+>>>>        Definition: A phandle to the analog power supply for IC which
+>>>> generates
+>>>>                reference clock
+>>>> +- vddpe-supply:
+>>>> +    Usage: optional
+>>>> +    Value type: <phandle>
+>>>> +    Definition: A phandle to the PCIe endpoint power supply
+>>>
+>>> vddpe_3v3-supply
+>> Why do we need suffix here? AFAIU, It does not add any value, instead it
+>> would confuse the users.
+> 
+> vddpe and vddpe1 is already confusing as well.
+
+I partly agree with you.
+
+How would you represent if there are two power 3v3 supplies for the 
+endpoint?
+
+> 
+> Lets imagine that powering up the endpointX needs some specific sequence
+> between 3v3 and 1v5 and endpointY (which could be connected on the same
+> PCIe lane) has different power sequence, how we would handle that in the
+> qcom pcie host driver?
+
+power sequencing is all together a different issue, that is not 
+addressed in this patch. Am hoping that this will be fixed as part of 
+making pwrseq interface more generic. Not sure where it endedup now!!
+
+--srini
+
+
+> 
+>>
+>> These are power supplies for endpoint which could be of any voltage. In
+> 
+> I don't think that could be any values see PCIe mini card
+> electromechanical specification. There on the connector are provided 3v3
+> and 1v5.
+> 
+>> this case both endpoint supplies are 3v3, these could be 1.8 or 5v or
+>> 12v in some other cases.
+> 
+> If we see hw designs with 5v and 12v we could extend the binding and the
+> driver with support for them. I want to be exact in the names and
+> voltages in the driver and bindings.
+
+> 
