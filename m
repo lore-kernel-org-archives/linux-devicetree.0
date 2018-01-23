@@ -1,86 +1,85 @@
-From: Stanimir Varbanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH] PCI: qcom: add missing supplies required for msm8996
-Date: Tue, 23 Jan 2018 12:14:35 +0200
-Message-ID: <1a3cc92e-545e-a703-7130-6a9c58854e03@mm-sol.com>
-References: <20171208092053.4417-1-srinivas.kandagatla@linaro.org>
- <65e01829-198e-f549-174d-c8368c5ee193@mm-sol.com>
- <92e2808b-4b2d-8591-9ed7-6600d7a3357b@linaro.org>
+From: Enric Balletbo Serra <eballetbo@gmail.com>
+Subject: Re: [PATCH 2/4] dt-bindings: pwm-backlight: add a num-interpolation-steps
+ property.
+Date: Tue, 23 Jan 2018 11:21:57 +0100
+Message-ID: <CAFqH_53Mt4wppu3JzGUHhrW9Czn9PqykWtEOzsae=6aqxuw=rA@mail.gmail.com>
+References: <20180110223046.17696-1-enric.balletbo@collabora.com>
+ <20180110223046.17696-3-enric.balletbo@collabora.com> <20180119205249.fcbdyu6652ffsdmg@rob-hp-laptop>
+ <20180122091613.oyjjzwci3mmfc7j2@oak.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <92e2808b-4b2d-8591-9ed7-6600d7a3357b-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stanimir Varbanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org
-Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180122091613.oyjjzwci3mmfc7j2@oak.lan>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Daniel Thompson <daniel.thompson@linaro.org>
+Cc: Rob Herring <robh@kernel.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Doug Anderson <dianders@google.com>, Pavel Machek <pavel@ucw.cz>, Jingoo Han <jingoohan1@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Brian Norris <briannorris@google.com>, Guenter Roeck <groeck@google.com>, Lee Jones <lee.jones@linaro.org>, Alexandru Stan <amstan@google.com>, linux-leds@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 01/23/2018 11:46 AM, Srinivas Kandagatla wrote:
-> 
-> 
-> On 23/01/18 09:23, Stanimir Varbanov wrote:
->> Hey Srini,
+2018-01-22 10:16 GMT+01:00 Daniel Thompson <daniel.thompson@linaro.org>:
+> On Fri, Jan 19, 2018 at 02:52:49PM -0600, Rob Herring wrote:
+>> On Wed, Jan 10, 2018 at 11:30:44PM +0100, Enric Balletbo i Serra wrote:
+>> > The num-interpolated-steps property specifies the number of
+>> > interpolated steps between each value of brightness-level table. This is
+>> > useful for high resolution PWMs to not have to list out every possible
+>> > value in the brightness-level array.
+>> >
+>> > Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+>> > ---
+>> >  .../bindings/leds/backlight/pwm-backlight.txt       | 21 +++++++++++++++++++++
+>> >  1 file changed, 21 insertions(+)
+>> >
+>> > diff --git a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
+>> > index 310810906613..605432c910c5 100644
+>> > --- a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
+>> > +++ b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
+>> > @@ -21,6 +21,11 @@ Optional properties:
+>> >                            and enabling the backlight using GPIO.
+>> >    - pwm-off-delay-ms: Delay in ms between disabling the backlight using GPIO
+>> >                        and setting PWM value to 0.
+>> > +  - num-interpolated-steps: Number of interpolated steps between each value
+>> > +                            of brightness-levels table. This way a high
+>> > +                            resolution pwm duty cycle can be used without
+>> > +                            having to list out every possible value in the
+>> > +                            brightness-level array.
+>> >
+>> >  [0]: Documentation/devicetree/bindings/pwm/pwm.txt
+>> >  [1]: Documentation/devicetree/bindings/gpio/gpio.txt
+>> > @@ -39,3 +44,19 @@ Example:
+>> >             post-pwm-on-delay-ms = <10>;
+>> >             pwm-off-delay-ms = <10>;
+>> >     };
+>> > +
+>> > +Example using num-interpolation-steps:
+>> > +
+>> > +   backlight {
+>> > +           compatible = "pwm-backlight";
+>> > +           pwms = <&pwm 0 5000000>;
+>> > +
+>> > +           brightness-levels = <0 65535>;
+>> > +           num-interpolated-steps = <4096>;
 >>
->> As there are no comments I'd propose to change the endpoint supplies to
->> more generic names.
+>> How does this make sense with only 2 defined levels other than having
+>> fewer steps? I thought the purpose of this was to have a piecewise
+>> linear curve.
+>
+> It's not wrong as such, this is how a device with a linear (or nearly
+> linear) response could be compactly described.
+>
+> Nevertheless I agree!  An example with a small but realistic curve
+> would be better... we know that copy 'n paste exists so I'd rather
+> see a simple curve than no curve.
+>
+
+Makes sense, I'll put a better example on next series. Thanks for the review.
+
+ - Enric
+
+>
+> Daniel.
+>
+>
+>> > +           default-brightness-level = <6>;
 >>
-> Sure, I will respin this with your suggestions, except the 3v3 and 1v5
-> suffix due to the reasons below:
->>> +- vdda-1p8-supply:
->>> +    Usage: required for msm8996
->>> +    Value type: <phandle>
->>> +    Definition: A phandle to the 1.8v analog power supply
->>> +
+>> Aren't valid values 0, 16, 32, 48, etc.?
 >>
->> This should be dropped, because it is part of the phy.
-> Yep.
-> 
->>
->>>   - vdda_phy-supply:
->>>       Usage: required for ipq/apq8064
->>>       Value type: <phandle>
->>> @@ -189,6 +194,15 @@
->>>       Value type: <phandle>
->>>       Definition: A phandle to the analog power supply for IC which
->>> generates
->>>               reference clock
->>> +- vddpe-supply:
->>> +    Usage: optional
->>> +    Value type: <phandle>
->>> +    Definition: A phandle to the PCIe endpoint power supply
->>
->> vddpe_3v3-supply
-> Why do we need suffix here? AFAIU, It does not add any value, instead it
-> would confuse the users.
-
-vddpe and vddpe1 is already confusing as well.
-
-Lets imagine that powering up the endpointX needs some specific sequence
-between 3v3 and 1v5 and endpointY (which could be connected on the same
-PCIe lane) has different power sequence, how we would handle that in the
-qcom pcie host driver?
-
-> 
-> These are power supplies for endpoint which could be of any voltage. In
-
-I don't think that could be any values see PCIe mini card
-electromechanical specification. There on the connector are provided 3v3
-and 1v5.
-
-> this case both endpoint supplies are 3v3, these could be 1.8 or 5v or
-> 12v in some other cases.
-
-If we see hw designs with 5v and 12v we could extend the binding and the
-driver with support for them. I want to be exact in the names and
-voltages in the driver and bindings.
-
--- 
-regards,
-Stan
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> Rob
