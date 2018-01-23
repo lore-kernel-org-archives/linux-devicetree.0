@@ -1,202 +1,51 @@
-From: Kieran Bingham <kieran.bingham@ideasonboard.com>
-Subject: Re: [PATCH 2/2] drm: adv7511: Add support for
- i2c_new_secondary_device
-Date: Tue, 23 Jan 2018 07:54:45 +0000
-Message-ID: <fea576b0-a638-8b35-8b1f-b0340da8d486@ideasonboard.com>
-References: <1516625389-6362-1-git-send-email-kieran.bingham@ideasonboard.com>
- <1516625389-6362-3-git-send-email-kieran.bingham@ideasonboard.com>
- <8369b342-e7b2-2519-5dec-424b9c361869@metafoo.de>
+From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 1/3] dt-bindings: pwrap: mediatek: add MT6351 PMIC
+ support for MT6797
+Date: Tue, 23 Jan 2018 15:55:49 +0800
+Message-ID: <1516694149.12197.25.camel@mtkswgap22>
+References: <20180123033659.11401-1-argus.lin@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <8369b342-e7b2-2519-5dec-424b9c361869@metafoo.de>
-Content-Language: en-GB
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lars-Peter Clausen <lars@metafoo.de>, linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Cc: Jean-Michel Hautbois <jean-michel.hautbois@vodalys.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Archit Taneja <architt@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, John Stultz <john.stultz@linaro.org>, Mark Brown <broonie@kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Bhumika Goyal <bhumirks@gmail.com>, Inki Dae <inki.dae@samsung.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180123033659.11401-1-argus.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: argus.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Chenglin Xu <chenglin.xu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, wsd_upstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, flora.fu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Chen Zhong <chen.zhong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Christophe Jaillet <christophe.jaillet-39ZsbGIQGT5GWvitb5QawA@public.gmane.org>, "shailendra . v" <shailendra.v-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 22/01/18 13:00, Lars-Peter Clausen wrote:
-> On 01/22/2018 01:50 PM, Kieran Bingham wrote:
->> The ADV7511 has four 256-byte maps that can be accessed via the main I²C
->> ports. Each map has it own I²C address and acts as a standard slave
->> device on the I²C bus.
->>
->> Allow a device tree node to override the default addresses so that
->> address conflicts with other devices on the same bus may be resolved at
->> the board description level.
->>
->> Signed-off-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
+On Tue, 2018-01-23 at 11:36 +0800, argus.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
+> From: Argus Lin <argus.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 > 
-> I've been working on the same thing, but you've beat me to it! Patch looks
-> mostly OK, but I think you are missing this piece:
+> We add MT6351 PMIC support for MT6797 SoCs.
 > 
-> https://github.com/analogdevicesinc/linux/commit/ba9b57507cb78724a606eb24104e22fea942437d#diff-2cf1828c644e351adefabe9509410400L553
+> Change-Id: I362b2305f674813ffb03ce6f54f7fc4c378b8fd2
 
-Ah yes - Thanks, - you're correct - I had missed that bit.
+should remove change-id, also in the other patches
 
-Added locally for a v2.
+> Signed-off-by: Argus Lin <argus.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/soc/mediatek/pwrap.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/soc/mediatek/pwrap.txt b/Documentation/devicetree/bindings/soc/mediatek/pwrap.txt
+> index bf80e3f96f8c..dd573ba5d9a7 100644
+> --- a/Documentation/devicetree/bindings/soc/mediatek/pwrap.txt
+> +++ b/Documentation/devicetree/bindings/soc/mediatek/pwrap.txt
+> @@ -22,6 +22,7 @@ Required properties in pwrap device node.
+>  	"mediatek,mt7622-pwrap" for MT7622 SoCs
+>  	"mediatek,mt8135-pwrap" for MT8135 SoCs
+>  	"mediatek,mt8173-pwrap" for MT8173 SoCs
+> +	"mediatek,mt6797-pwrap" for MT6797 SoCs
+
+should be better if add it in alphabetical order
+
+>  - interrupts: IRQ for pwrap in SOC
+>  - reg-names: Must include the following entries:
+>    "pwrap": Main registers base
+
+
 --
-Kieran
-
->> ---
->>  .../bindings/display/bridge/adi,adv7511.txt        | 10 +++++-
->>  drivers/gpu/drm/bridge/adv7511/adv7511.h           |  4 +++
->>  drivers/gpu/drm/bridge/adv7511/adv7511_drv.c       | 36 ++++++++++++++--------
->>  3 files changed, 37 insertions(+), 13 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt b/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
->> index 0047b1394c70..f6bb9f6d3f48 100644
->> --- a/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
->> +++ b/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
->> @@ -70,6 +70,9 @@ Optional properties:
->>    rather than generate its own timings for HDMI output.
->>  - clocks: from common clock binding: reference to the CEC clock.
->>  - clock-names: from common clock binding: must be "cec".
->> +- reg-names : Names of maps with programmable addresses.
->> +	It can contain any map needing a non-default address.
->> +	Possible maps names are : "main", "edid", "cec", "packet"
->>  
->>  Required nodes:
->>  
->> @@ -88,7 +91,12 @@ Example
->>  
->>  	adv7511w: hdmi@39 {
->>  		compatible = "adi,adv7511w";
->> -		reg = <39>;
->> +		/*
->> +		 * The EDID page will be accessible on address 0x66 on the i2c
->> +		 * bus. All other maps continue to use their default addresses.
->> +		 */
->> +		reg = <0x39 0x66>;
->> +		reg-names = "main", "edid";
->>  		interrupt-parent = <&gpio3>;
->>  		interrupts = <29 IRQ_TYPE_EDGE_FALLING>;
->>  		clocks = <&cec_clock>;
->> diff --git a/drivers/gpu/drm/bridge/adv7511/adv7511.h b/drivers/gpu/drm/bridge/adv7511/adv7511.h
->> index d034b2cb5eee..7d81ce3808e0 100644
->> --- a/drivers/gpu/drm/bridge/adv7511/adv7511.h
->> +++ b/drivers/gpu/drm/bridge/adv7511/adv7511.h
->> @@ -53,8 +53,10 @@
->>  #define ADV7511_REG_POWER			0x41
->>  #define ADV7511_REG_STATUS			0x42
->>  #define ADV7511_REG_EDID_I2C_ADDR		0x43
->> +#define ADV7511_REG_EDID_I2C_ADDR_DEFAULT	0x3f
->>  #define ADV7511_REG_PACKET_ENABLE1		0x44
->>  #define ADV7511_REG_PACKET_I2C_ADDR		0x45
->> +#define ADV7511_REG_PACKET_I2C_ADDR_DEFAULT	0x38
->>  #define ADV7511_REG_DSD_ENABLE			0x46
->>  #define ADV7511_REG_VIDEO_INPUT_CFG2		0x48
->>  #define ADV7511_REG_INFOFRAME_UPDATE		0x4a
->> @@ -89,6 +91,7 @@
->>  #define ADV7511_REG_TMDS_CLOCK_INV		0xde
->>  #define ADV7511_REG_ARC_CTRL			0xdf
->>  #define ADV7511_REG_CEC_I2C_ADDR		0xe1
->> +#define ADV7511_REG_CEC_I2C_ADDR_DEFAULT	0x3c
->>  #define ADV7511_REG_CEC_CTRL			0xe2
->>  #define ADV7511_REG_CHIP_ID_HIGH		0xf5
->>  #define ADV7511_REG_CHIP_ID_LOW			0xf6
->> @@ -322,6 +325,7 @@ struct adv7511 {
->>  	struct i2c_client *i2c_main;
->>  	struct i2c_client *i2c_edid;
->>  	struct i2c_client *i2c_cec;
->> +	struct i2c_client *i2c_packet;
->>  
->>  	struct regmap *regmap;
->>  	struct regmap *regmap_cec;
->> diff --git a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
->> index efa29db5fc2b..7ec33837752b 100644
->> --- a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
->> +++ b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
->> @@ -969,8 +969,8 @@ static int adv7511_init_cec_regmap(struct adv7511 *adv)
->>  {
->>  	int ret;
->>  
->> -	adv->i2c_cec = i2c_new_dummy(adv->i2c_main->adapter,
->> -				     adv->i2c_main->addr - 1);
->> +	adv->i2c_cec = i2c_new_secondary_device(adv->i2c_main, "cec",
->> +					ADV7511_REG_CEC_I2C_ADDR_DEFAULT);
->>  	if (!adv->i2c_cec)
->>  		return -ENOMEM;
->>  	i2c_set_clientdata(adv->i2c_cec, adv);
->> @@ -1082,8 +1082,6 @@ static int adv7511_probe(struct i2c_client *i2c, const struct i2c_device_id *id)
->>  	struct adv7511_link_config link_config;
->>  	struct adv7511 *adv7511;
->>  	struct device *dev = &i2c->dev;
->> -	unsigned int main_i2c_addr = i2c->addr << 1;
->> -	unsigned int edid_i2c_addr = main_i2c_addr + 4;
->>  	unsigned int val;
->>  	int ret;
->>  
->> @@ -1153,24 +1151,35 @@ static int adv7511_probe(struct i2c_client *i2c, const struct i2c_device_id *id)
->>  	if (ret)
->>  		goto uninit_regulators;
->>  
->> -	regmap_write(adv7511->regmap, ADV7511_REG_EDID_I2C_ADDR, edid_i2c_addr);
->> -	regmap_write(adv7511->regmap, ADV7511_REG_PACKET_I2C_ADDR,
->> -		     main_i2c_addr - 0xa);
->> -	regmap_write(adv7511->regmap, ADV7511_REG_CEC_I2C_ADDR,
->> -		     main_i2c_addr - 2);
->> -
->>  	adv7511_packet_disable(adv7511, 0xffff);
->>  
->> -	adv7511->i2c_edid = i2c_new_dummy(i2c->adapter, edid_i2c_addr >> 1);
->> +	adv7511->i2c_edid = i2c_new_secondary_device(i2c, "edid",
->> +					ADV7511_REG_EDID_I2C_ADDR_DEFAULT);
->>  	if (!adv7511->i2c_edid) {
->>  		ret = -ENOMEM;
->>  		goto uninit_regulators;
->>  	}
->>  
->> +	regmap_write(adv7511->regmap, ADV7511_REG_EDID_I2C_ADDR,
->> +		     adv7511->i2c_edid->addr << 1);
->> +
->>  	ret = adv7511_init_cec_regmap(adv7511);
->>  	if (ret)
->>  		goto err_i2c_unregister_edid;
->>  
->> +	regmap_write(adv7511->regmap, ADV7511_REG_CEC_I2C_ADDR,
->> +		     adv7511->i2c_cec->addr << 1);
->> +
->> +	adv7511->i2c_packet = i2c_new_secondary_device(i2c, "packet",
->> +					ADV7511_REG_PACKET_I2C_ADDR_DEFAULT);
->> +	if (!adv7511->i2c_packet) {
->> +		ret = -ENOMEM;
->> +		goto err_unregister_cec;
->> +	}
->> +
->> +	regmap_write(adv7511->regmap, ADV7511_REG_PACKET_I2C_ADDR,
->> +		     adv7511->i2c_packet->addr << 1);
->> +
->>  	INIT_WORK(&adv7511->hpd_work, adv7511_hpd_work);
->>  
->>  	if (i2c->irq) {
->> @@ -1181,7 +1190,7 @@ static int adv7511_probe(struct i2c_client *i2c, const struct i2c_device_id *id)
->>  						IRQF_ONESHOT, dev_name(dev),
->>  						adv7511);
->>  		if (ret)
->> -			goto err_unregister_cec;
->> +			goto err_unregister_packet;
->>  	}
->>  
->>  	adv7511_power_off(adv7511);
->> @@ -1203,6 +1212,8 @@ static int adv7511_probe(struct i2c_client *i2c, const struct i2c_device_id *id)
->>  	adv7511_audio_init(dev, adv7511);
->>  	return 0;
->>  
->> +err_unregister_packet:
->> +	i2c_unregister_device(adv7511->i2c_packet);
->>  err_unregister_cec:
->>  	i2c_unregister_device(adv7511->i2c_cec);
->>  	if (adv7511->cec_clk)
->> @@ -1234,6 +1245,7 @@ static int adv7511_remove(struct i2c_client *i2c)
->>  	cec_unregister_adapter(adv7511->cec_adap);
->>  
->>  	i2c_unregister_device(adv7511->i2c_edid);
->> +	i2c_unregister_device(adv7511->i2c_packet);
->>  
->>  	return 0;
->>  }
->>
-> 
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
