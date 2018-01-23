@@ -1,41 +1,78 @@
-From: richard.gong@linux.intel.com
-Subject: [PATCHv1] Add Intel Stratix10 service layer binding
-Date: Tue, 23 Jan 2018 13:25:01 -0600
-Message-ID: <1516735502-16745-1-git-send-email-richard.gong@linux.intel.com>
+From: David Lechner <david@lechnology.com>
+Subject: =?UTF-8?Q?Re:_[PATCH_v6_00/41]_ARM:_davinci:_convert_to_common_cloc?=
+ =?UTF-8?Q?k_framework=e2=80=8b?=
+Date: Tue, 23 Jan 2018 13:24:41 -0600
+Message-ID: <aaeb7d73-bd3b-9c85-88c5-c60da6ca3733@lechnology.com>
+References: <1516468460-4908-1-git-send-email-david@lechnology.com>
+ <CAMRc=MexJTMiD=URw1bv-qfGaTntZRXgfsSb_beYGkvO+LrpgQ@mail.gmail.com>
+ <d819e18f-7d74-d8c4-8056-bfc545f4d4e9@lechnology.com>
+ <CAMRc=McVNJqsO4+j=XkyNWuKqF-S-hQAw9XxHx6GC47UudgMYw@mail.gmail.com>
+ <e5f4af7d-971c-5694-2da5-0cba9083ee5c@lechnology.com>
+ <615bc302-e129-1501-63be-fa701f5ecaad@lechnology.com>
+ <CAHCN7xLW=RjHHBjvDto=DRrNfNsQrsaGb0zmsRrwdc+7Wbhaxg@mail.gmail.com>
+ <CAMRc=MdyGx3PFiryYybB2fCGx=AP=e7kkdd-DUL29pT+St9u1g@mail.gmail.com>
+ <5f836454-5de7-c51d-d262-2c2dbc26e438@lechnology.com>
+ <CAMRc=Mcw8wWNo7Q3KnHNv81UGuHxEqmOs0he7MKxmaxDjwao+A@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAMRc=Mcw8wWNo7Q3KnHNv81UGuHxEqmOs0he7MKxmaxDjwao+A@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com
-Cc: richard.gong@intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Adam Ford <aford173@gmail.com>, linux-clk@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Richard Gong <richard.gong@intel.com>
+On 01/23/2018 12:34 PM, Bartosz Golaszewski wrote:
+> 2018-01-23 19:26 GMT+01:00 David Lechner <david@lechnology.com>:
+>> On 01/23/2018 12:10 PM, Bartosz Golaszewski wrote:
+>>>
+>>> 2018-01-23 18:03 GMT+01:00 Adam Ford <aford173@gmail.com>:
+>>>>
+>>>> On Tue, Jan 23, 2018 at 10:06 AM, David Lechner <david@lechnology.com>
+>>>> wrote:
+>>>>>
+>>>>> On 01/23/2018 10:03 AM, David Lechner wrote:
+>>>>>>
+>>>>>>
+>>>>>> You can see if the clock is enabled by running:
+>>>>>>
+>>>>>>        cat /sys/kernel/debug/clk/clk_summary
+>>>>>>
+>>>>>
+>>>>> I just realized if you can't boot, you can't do this. :-/
+>>>>
+>>>>
+>>>> I can boot with the latest set in your git repo, but the Ethernet
+>>>> doesn't apparently fully operate.  I don't get errors, but I cannot
+>>>> get a dhcp address.
+>>>>
+>>>> I'll try to do a more exhaustive test later today to get an idea of
+>>>> what works and what doesn't.  When I ran my basic tests, I just did a
+>>>> feel-good boot test (and reboot test)
+>>>>
+>>>> adam
+>>>
+>>>
+>>> FYI: manually calling clk_prepare_enable() in the davinci_mdio driver
+>>> seems to at least fix the ethernet. In master branch it's done by
+>>> pm_runtime_get_sync() (in davinci_mdio_reset()). However I'm still
+>>> getting several oopses and WARNs so there's some more work to do.
+>>>
+>>
+>> Hmm... I'm wondering if we need to also add #power-domain-cells to the
+>> PSC clocks and power-domains properties to the consumers.
+>>
+>> For this specific case though, it seems strange to me that the drivers
+>> to clk_get() and clk_get_rate() but never enable the clocks.
+>>
+>>
+>> Also, are the oopses and WARNs the same as before?
+> 
+> No, the ones before were all related to the ethernet failing, now I
+> get several stack traces from drm. Posted them on pastebin[1].
+> 
 
-Intel Stratix10 SoC is composed of a 64 bit quad-core ARM Cortex A53 hard
-processor system (HPS) and Secure Device Manager (SDM). When the FPGA is
-configured from HPS, there needs to be a way for HPS to notify SDM the
-location and size of the configuration data. Then SDM will get the
-configuration data from that location and perform the FPGA configuration.
-
-To meet the whole system security needs and support virtual machine requesting
-communication with SDM, only the secure world of software (EL3, Exception
-Layer 3) can interface with SDM. All software entities running on other
-exception layers must channel through the EL3 software whenever it needs
-service from SDM.
-
-Intel Stratix10 service layer driver, running at privileged exception level
-(EL1, Exception Layer 1), interfaces with the service providers and provides
-the services for FPGA configuration, QSPI, Crypto and warm reset. Service layer
-driver also manages secure monitor call (SMC) to communicate with secure monitor
-code running in EL3.
-
-This patch adds a device tree binding for Intel Stratix10 service layer driver
-
-Richard Gong (1):
-  dt-bindings: misc: add Intel Stratix10 service layer binding
-
- .../devicetree/bindings/misc/intel-service.txt     | 56 ++++++++++++++++++++++
- 1 file changed, 56 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/misc/intel-service.txt
-
--- 
-2.7.4
+It looks like the LCDC driver is the same way. It does clk_get() but
+not clk_prepare_enable().
