@@ -1,49 +1,96 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2 1/2] PCI: histb: fix error path of histb_pcie_host_enable()
-Date: Tue, 23 Jan 2018 23:45:36 +0800
-Message-ID: <1516722337-1533-2-git-send-email-shawn.guo@linaro.org>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: [PATCH v2 2/2] PCI: histb: add an optional regulator for PCIe port power control
+Date: Tue, 23 Jan 2018 23:45:37 +0800
+Message-ID: <1516722337-1533-3-git-send-email-shawn.guo@linaro.org>
 References: <1516722337-1533-1-git-send-email-shawn.guo@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1516722337-1533-1-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jianguo Sun <sunjianguo1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, project-aspen-dev-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1516722337-1533-1-git-send-email-shawn.guo@linaro.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Fabio Estevam <festevam@gmail.com>, Jianguo Sun <sunjianguo1@huawei.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, project-aspen-dev@linaro.org, Shawn Guo <shawn.guo@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-If clk_prepare_enable() call fails on a particular clock, we should not
-call clk_disable_unprepare() on this clock, but on the clocks that
-succeed from clk_prepare_enable() previously.
+The power supply to PCIe port are often controlled by GPIO on some board
+designs.  Let's add an optional regulator which can be backed by GPIO to
+control the power.
 
-Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
 ---
- drivers/pci/dwc/pcie-histb.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ .../bindings/pci/hisilicon-histb-pcie.txt           |  1 +
+ drivers/pci/dwc/pcie-histb.c                        | 21 +++++++++++++++++++++
+ 2 files changed, 22 insertions(+)
 
+diff --git a/Documentation/devicetree/bindings/pci/hisilicon-histb-pcie.txt b/Documentation/devicetree/bindings/pci/hisilicon-histb-pcie.txt
+index c84bc027930b..f995664e6d7f 100644
+--- a/Documentation/devicetree/bindings/pci/hisilicon-histb-pcie.txt
++++ b/Documentation/devicetree/bindings/pci/hisilicon-histb-pcie.txt
+@@ -34,6 +34,7 @@ Required properties
+ 
+ Optional properties:
+ - reset-gpios: The gpio to generate PCIe PERST# assert and deassert signal.
++- vpcie-supply: Should specify the regulator in charge of PCIe port power.
+ - phys: List of phandle and phy mode specifier, should be 0.
+ - phy-names: Must be "phy".
+ 
 diff --git a/drivers/pci/dwc/pcie-histb.c b/drivers/pci/dwc/pcie-histb.c
-index 33b01b734d7d..6395394be5b4 100644
+index 6395394be5b4..8eb3028432b3 100644
 --- a/drivers/pci/dwc/pcie-histb.c
 +++ b/drivers/pci/dwc/pcie-histb.c
-@@ -279,13 +279,12 @@ static int histb_pcie_host_enable(struct pcie_port *pp)
- 	return 0;
+@@ -64,6 +64,7 @@ struct histb_pcie {
+ 	struct reset_control *bus_reset;
+ 	void __iomem *ctrl;
+ 	int reset_gpio;
++	struct regulator *vpcie;
+ };
  
- err_aux_clk:
--	clk_disable_unprepare(hipcie->aux_clk);
--err_pipe_clk:
- 	clk_disable_unprepare(hipcie->pipe_clk);
--err_sys_clk:
-+err_pipe_clk:
- 	clk_disable_unprepare(hipcie->sys_clk);
--err_bus_clk:
-+err_sys_clk:
+ static u32 histb_pcie_readl(struct histb_pcie *histb_pcie, u32 reg)
+@@ -230,6 +231,9 @@ static void histb_pcie_host_disable(struct histb_pcie *hipcie)
+ 
+ 	if (gpio_is_valid(hipcie->reset_gpio))
+ 		gpio_set_value_cansleep(hipcie->reset_gpio, 0);
++
++	if (hipcie->vpcie)
++		regulator_disable(hipcie->vpcie);
+ }
+ 
+ static int histb_pcie_host_enable(struct pcie_port *pp)
+@@ -240,6 +244,14 @@ static int histb_pcie_host_enable(struct pcie_port *pp)
+ 	int ret;
+ 
+ 	/* power on PCIe device if have */
++	if (hipcie->vpcie) {
++		ret = regulator_enable(hipcie->vpcie);
++		if (ret) {
++			dev_err(dev, "failed to enable regulator: %d\n", ret);
++			return ret;
++		}
++	}
++
+ 	if (gpio_is_valid(hipcie->reset_gpio))
+ 		gpio_set_value_cansleep(hipcie->reset_gpio, 1);
+ 
+@@ -285,6 +297,8 @@ static int histb_pcie_host_enable(struct pcie_port *pp)
+ err_sys_clk:
  	clk_disable_unprepare(hipcie->bus_clk);
-+err_bus_clk:
+ err_bus_clk:
++	if (hipcie->vpcie)
++		regulator_disable(hipcie->vpcie);
  
  	return ret;
  }
+@@ -334,6 +348,13 @@ static int histb_pcie_probe(struct platform_device *pdev)
+ 		return PTR_ERR(pci->dbi_base);
+ 	}
+ 
++	hipcie->vpcie = devm_regulator_get_optional(dev, "vpcie");
++	if (IS_ERR(hipcie->vpcie)) {
++		if (PTR_ERR(hipcie->vpcie) == -EPROBE_DEFER)
++			return -EPROBE_DEFER;
++		hipcie->vpcie = NULL;
++	}
++
+ 	hipcie->reset_gpio = of_get_named_gpio_flags(np,
+ 				"reset-gpios", 0, &of_flags);
+ 	if (of_flags & OF_GPIO_ACTIVE_LOW)
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
