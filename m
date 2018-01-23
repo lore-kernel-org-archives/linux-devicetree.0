@@ -1,93 +1,88 @@
-From: Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-Subject: Re: [PATCH v2 1/6] resource: Extend the PPC32 reserved memory hack
-Date: Tue, 23 Jan 2018 17:37:39 +0100
-Message-ID: <20180123163739.2sxhzavghzgbjw4c@latitude>
-References: <20180122050411.32460-1-j.neuschaefer@gmx.net>
- <20180122050411.32460-2-j.neuschaefer@gmx.net>
- <871sigwx41.fsf@concordia.ellerman.id.au>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 4/8] mfd: stm32-timers: add support for dmas
+Date: Tue, 23 Jan 2018 16:41:21 +0000
+Message-ID: <20180123164121.xjzhypqe2u5c7zza@dell>
+References: <1516106631-18722-1-git-send-email-fabrice.gasnier@st.com>
+ <1516106631-18722-5-git-send-email-fabrice.gasnier@st.com>
+ <20180123133234.xmep76cgdremnj47@dell>
+ <e611b40f-bd37-aa2d-afd9-997b86d55441@st.com>
+ <20180123153035.2rvhspe2m5ej57op@dell>
+ <ee021839-3298-d01b-8890-619aca0399a7@st.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="n5tgjbf2wsepvrep"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <871sigwx41.fsf@concordia.ellerman.id.au>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, linux-kernel@vger.kernel.org, Tom Lendacky <thomas.lendacky@amd.com>, Brijesh Singh <brijesh.singh@amd.com>, devicetree@vger.kernel.org, Albert Herranz <albert_herranz@yahoo.es>, linux-gpio@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@suse.de>, linuxppc-dev@lists.ozlabs.org
+In-Reply-To: <ee021839-3298-d01b-8890-619aca0399a7-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+Cc: thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, benjamin.gaignard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Tue, 23 Jan 2018, Fabrice Gasnier wrote:
+> On 01/23/2018 04:30 PM, Lee Jones wrote:
+> > On Tue, 23 Jan 2018, Fabrice Gasnier wrote:
+> > 
+> >> On 01/23/2018 02:32 PM, Lee Jones wrote:
+> >>> On Tue, 16 Jan 2018, Fabrice Gasnier wrote:
+> >>>
+> >>>> STM32 Timers can support up to 7 dma requests:
+> >>>> 4 channels, update, compare and trigger.
+> >>>> Optionally request part, or all dmas from stm32-timers MFD core.
+> >>>> Also, keep reference of device's bus address to allow child drivers to
+> >>>> transfer data from/to device by using dma.
+> >>>>
+> >>>> Signed-off-by: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+> >>>> ---
+> >>>>  drivers/mfd/stm32-timers.c       | 37 ++++++++++++++++++++++++++++++++++++-
+> >>>>  include/linux/mfd/stm32-timers.h | 14 ++++++++++++++
+> >>>>  2 files changed, 50 insertions(+), 1 deletion(-)
+> >>>>
+> >>>> diff --git a/drivers/mfd/stm32-timers.c b/drivers/mfd/stm32-timers.c
+> >>>>  static int stm32_timers_probe(struct platform_device *pdev)
+> >>>>  {
+> >>>>  	struct device *dev = &pdev->dev;
+> >>>> @@ -44,6 +61,7 @@ static int stm32_timers_probe(struct platform_device *pdev)
+> >>>>  	mmio = devm_ioremap_resource(dev, res);
+> >>>>  	if (IS_ERR(mmio))
+> >>>>  		return PTR_ERR(mmio);
+> >>>> +	ddata->phys_base = res->start;
+> >>>
+> >>> What do you use this for?
+> >>
+> >> This is used in in child driver (pwm) for capture data transfer by dma.
+> > 
+> > Might be worth being clear about that.
+> > 
+> > Perhaps pass in 'dma_base' (phys_base + offset) instead?
+> 
+> I guess you've had a look at [PATCH 5/8] pwm: stm32: add capture
+> support. Are you talking about passing phys_base + TIM_DMAR ?
 
---n5tgjbf2wsepvrep
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I have and I am.
 
-On Tue, Jan 23, 2018 at 11:58:06PM +1100, Michael Ellerman wrote:
-> Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net> writes:
->=20
-> > On the Nintendo Wii, there are two ranges of physical memory, and MMIO
-> > in between, but Linux on ppc32 doesn't support discontiguous memory.
-> > Therefore a hack was introduced in commit c5df7f775148 ("powerpc: allow
-> > ioremap within reserved memory regions") and commit de32400dd26e ("wii:
-> > use both mem1 and mem2 as ram"):
-> >
-> >  - Treat the area from the start of the first memory area (MEM1) to the
-> >    end of the second (MEM2) as one big memory area, but mark the part
-> >    that doesn't belong to MEM1 or MEM2 as reserved.
-> >  - Only on the Wii, allow ioremap to be used on reserved memory.
-> >
-> > This hack, however, doesn't account for the "resource"-based API in
-> > kernel/resource.c, because __request_region performs its own checks.
-> >
-> > Extend the hack to kernel/resource.c, to allow more drivers to allocate
-> > their MMIO regions on the Wii.
->=20
-> Hi Jonathan,
->=20
-> Sorry but I can't merge a hack like this in generic code.
+> If this is the case, I'd prefer to keep phys base only if you don't
+> mind, and handle TIM_DMAR offset in pwm driver. This way, all dma slave
+> config is kept locally at one place.
+> Or do you mean something else ?
+> 
+> Maybe I can add a comment here about this ?
+> Something like:
+> /* phys_base to be used by child driver, e.g. DMA burst mode */
 
-Makes sense.
+I haven't seen the memory map for this device, so it's not easy for me
+to comment, but passing in the physical address of the parent MFD into
+a child device doesn't quite sit right with me.
 
-> Has anyone looked at adding proper discontig mem support to PPC32?
+At what level does TIM_DMAR sit?  Is it a child (PWM) specific
+property, or is it described at parent (Timer) level?
 
-I'm not aware of any such effort.
-
-Do you have any pointer on how to implement discontiguous memory
-support? CONFIG_ARCH_SPARSEMEM_ENABLE seems relevant.
-
-> Or can we punch a hole in the resource in the right place? Maybe from
-> add_system_ram_resources() ?
-
-Not sure. add_system_ram_resources would need the original memblock
-table, which is overwritten in wii_memory_fixups, if I read the code
-correctly.
-
-If a proper solution doesn't take an overwhelming amount of work, I'd
-prefer a proper solution.
-
-
-Thanks,
-Jonathan Neusch=C3=A4fer
-
---n5tgjbf2wsepvrep
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAABAgAGBQJaZ2TMAAoJEAgwRJqO81/b6P8P/2PFc+LvG2SE+jjBkkkikVEx
-Q27V5EieuGFEovgphDam8xDGVHC63KjH7PhjaxiFW6WU6fY7mV0zWw0SeFYX4amu
-85CI3UrBEyUhfN/Xq6ZyP6ua3U6AoJ3Hmm/vZ/be7UDYpF4QGq2UPR4JV0s/HQi9
-PPUm4QAgN1XGsXdlkOTTuLu12nOqIQ5N1J2bqoZZ2/vxqbFxStTlorNFSqPvW4up
-wzVcsbAE39A8eeFWCKFftcYnrRD0zHtLcj+9ERgs/DWmSL5x9w4lduS0lIfLjJ2A
-DV7KLjCXc2VvM06TZzIb3bZqdGR90M/2ixbDWtkUTtATt12G5WQ+V6yQtZ8o6r41
-gGQ4+AAYojHU9mclui2DXzan8aaJVmNqpgpf1BPvu0zN5fAwnvQTwybtIXwq9nLJ
-adta96ympBAHZiVpDrZMMG74jfqcv7EJimv5VPdzhuclIJQ8+qW4fn65FmWsJDsT
-98CV5oDS1OkM2p8w8AZOEa85KC5sGaSWMQCa2DeJ/jvnZ9iVQDmAqpfYNl2ohQT+
-y3ogKgZ5YHgibINEN0865NeQkKlxHAynQLRfzXvIW1tg0e67ZTe9FxwpbMcyBdN9
-IwIXxCLuKO1c6i5euFNjrfv5NnAQID3ESGKvj580p7CNGxI+RkcY6588cwvTmAfM
-2rRFPDVXTriiAGuxYVI8
-=c+mt
------END PGP SIGNATURE-----
-
---n5tgjbf2wsepvrep--
+-- 
+Lee Jones
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
