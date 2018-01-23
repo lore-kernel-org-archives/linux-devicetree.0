@@ -1,148 +1,48 @@
 From: Kunihiko Hayashi <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Subject: [PATCH 4/4] arm64: dts: uniphier: add dwc3 usb node for LD20
-Date: Tue, 23 Jan 2018 22:00:54 +0900
-Message-ID: <1516712454-2915-5-git-send-email-hayashi.kunihiko@socionext.com>
-References: <1516712454-2915-1-git-send-email-hayashi.kunihiko@socionext.com>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1516712454-2915-1-git-send-email-hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Subject: [PATCH 0/4] usb: dwc3: add UniPhier dwc3 glue layer support
+Date: Tue, 23 Jan 2018 22:00:50 +0900
+Message-ID: <1516712454-2915-1-git-send-email-hayashi.kunihiko@socionext.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Masami Hiramatsu <masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kunihiko Hayashi <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add usb node for LD20, which has 1 dwc3 controller instance, and
-enable this for LD20 boards.
+This patch series adds support for DWC3 glue layer implemented on
+UniPhier SoCs. It supports PXs2 and LD20 SoCs.
 
-Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+In case of LD20, since some trimming values for PHY initialization
+are included in nvmem, This series includes the way to access to
+nvmem and bitmap definitions of nvmem in DT.
+
+Thank you,
 ---
- .../boot/dts/socionext/uniphier-ld20-global.dts    |  4 ++
- .../arm64/boot/dts/socionext/uniphier-ld20-ref.dts |  4 ++
- arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi   | 77 ++++++++++++++++++++++
- 3 files changed, 85 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld20-global.dts b/arch/arm64/boot/dts/socionext/uniphier-ld20-global.dts
-index fc2bc9d..82eea9d 100644
---- a/arch/arm64/boot/dts/socionext/uniphier-ld20-global.dts
-+++ b/arch/arm64/boot/dts/socionext/uniphier-ld20-global.dts
-@@ -54,3 +54,7 @@
- &nand {
- 	status = "okay";
- };
-+
-+&usb {
-+	status = "okay";
-+};
-diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld20-ref.dts b/arch/arm64/boot/dts/socionext/uniphier-ld20-ref.dts
-index 6933710..3ea0985 100644
---- a/arch/arm64/boot/dts/socionext/uniphier-ld20-ref.dts
-+++ b/arch/arm64/boot/dts/socionext/uniphier-ld20-ref.dts
-@@ -58,3 +58,7 @@
- &i2c0 {
- 	status = "okay";
- };
-+
-+&usb {
-+	status = "okay";
-+};
-diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi b/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
-index 8a3276b..e3e1900 100644
---- a/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
-+++ b/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
-@@ -467,6 +467,50 @@
- 			efuse@200 {
- 				compatible = "socionext,uniphier-efuse";
- 				reg = <0x200 0x68>;
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+
-+				/* USB cells */
-+				usb_rterm0: trim@54,4 {
-+					reg = <0x54 1>;
-+					bits = <4 2>;
-+				};
-+				usb_rterm1: trim@55,4 {
-+					reg = <0x55 1>;
-+					bits = <4 2>;
-+				};
-+				usb_rterm2: trim@58,4 {
-+					reg = <0x58 1>;
-+					bits = <4 2>;
-+				};
-+				usb_rterm3: trim@59,4 {
-+					reg = <0x59 1>;
-+					bits = <4 2>;
-+				};
-+				usb_sel_t0: trim@54,0 {
-+					reg = <0x54 1>;
-+					bits = <0 4>;
-+				};
-+				usb_sel_t1: trim@55,0 {
-+					reg = <0x55 1>;
-+					bits = <0 4>;
-+				};
-+				usb_sel_t2: trim@58,0 {
-+					reg = <0x58 1>;
-+					bits = <0 4>;
-+				};
-+				usb_sel_t3: trim@59,0 {
-+					reg = <0x59 1>;
-+					bits = <0 4>;
-+				};
-+				usb_hs_i0: trim@56,0 {
-+					reg = <0x56 1>;
-+					bits = <0 4>;
-+				};
-+				usb_hs_i2: trim@5a,0 {
-+					reg = <0x5a 1>;
-+					bits = <0 4>;
-+				};
- 			};
- 		};
- 
-@@ -513,6 +557,39 @@
- 			};
- 		};
- 
-+		usb: usb@65b00000 {
-+			compatible = "socionext,uniphier-ld20-dwc3";
-+			status = "disabled";
-+			reg = <0x65b00000 0x1000>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_usb0>, <&pinctrl_usb1>,
-+				    <&pinctrl_usb2>, <&pinctrl_usb3>;
-+			clocks = <&sys_clk 14>, <&sys_clk 16>, <&sys_clk 17>;
-+			resets = <&sys_rst 12>, <&sys_rst 16>, <&sys_rst 17>,
-+				 <&sys_rst 18>, <&sys_rst 19>;
-+			nvmem-cells = <&usb_rterm0>, <&usb_rterm1>,
-+				      <&usb_rterm2>, <&usb_rterm3>,
-+				      <&usb_sel_t0>, <&usb_sel_t1>,
-+				      <&usb_sel_t2>, <&usb_sel_t3>,
-+				      <&usb_hs_i0>,  <&usb_hs_i0>,
-+				      <&usb_hs_i2>,  <&usb_hs_i2>;
-+			nvmem-cell-names =
-+				      "rterm0", "rterm1", "rterm2", "rterm3",
-+				      "sel_t0", "sel_t1", "sel_t2", "sel_t3",
-+				      "hs_i0",  "hs_i1",  "hs_i2",  "hs_i3";
-+			ranges;
-+
-+			dwc3@65a00000 {
-+				compatible = "snps,dwc3";
-+				reg = <0x65a00000 0xcd00>;
-+				interrupt-names = "host";
-+				interrupts = <0 134 4>;
-+				dr_mode = "host";
-+			};
-+		};
-+
- 		nand: nand@68000000 {
- 			compatible = "socionext,uniphier-denali-nand-v5b";
- 			status = "disabled";
+Kunihiko Hayashi (4):
+  dt-bindings: dwc3: add binding documentation for UniPhier dwc3 glue
+    driver
+  usb: dwc3: add dwc3 glue layer for UniPhier SoCs
+  ARM: dts: uniphier: add dwc3 usb node for PXs2
+  arm64: dts: uniphier: add dwc3 usb node for LD20
+
+ .../devicetree/bindings/usb/dwc3-uniphier.txt      |  58 +++
+ arch/arm/boot/dts/uniphier-pxs2-gentil.dts         |   8 +
+ arch/arm/boot/dts/uniphier-pxs2-vodka.dts          |   4 +
+ arch/arm/boot/dts/uniphier-pxs2.dtsi               |  43 ++
+ .../boot/dts/socionext/uniphier-ld20-global.dts    |   4 +
+ .../arm64/boot/dts/socionext/uniphier-ld20-ref.dts |   4 +
+ arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi   |  77 +++
+ drivers/usb/dwc3/Kconfig                           |   9 +
+ drivers/usb/dwc3/Makefile                          |   1 +
+ drivers/usb/dwc3/dwc3-uniphier.c                   | 554 +++++++++++++++++++++
+ 10 files changed, 762 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/dwc3-uniphier.txt
+ create mode 100644 drivers/usb/dwc3/dwc3-uniphier.c
+
 -- 
 2.7.4
 
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
