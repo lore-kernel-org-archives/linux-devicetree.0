@@ -1,89 +1,229 @@
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: =?UTF-8?Q?Re=3A_=5BPATCH_v6_00=2F41=5D_ARM=3A_davinci=3A_convert_to_common?=
-        =?UTF-8?Q?_clock_framework=E2=80=8B?=
-Date: Tue, 23 Jan 2018 15:56:47 +0100
-Message-ID: <CAMRc=McKvPzL3rp32+yuL12gf3YcH52QswU61pACmAMhB8sLsg@mail.gmail.com>
-References: <1516468460-4908-1-git-send-email-david@lechnology.com>
- <CAMRc=MesQTvkVtPLOGr2G7-KSR=k35y24SsO4s8rDbCv=2-G7A@mail.gmail.com> <38b081e9-fe00-cf18-2d72-5ad1937c3800@lechnology.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <38b081e9-fe00-cf18-2d72-5ad1937c3800@lechnology.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: David Lechner <david@lechnology.com>
-Cc: linux-clk@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Adam Ford <aford173@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+Subject: [PATCHv5 1/5] net: dsa: Support internal phy on 'cpu' port
+Date: Tue, 23 Jan 2018 16:03:46 +0100
+Message-ID: <20180123150350.11031-2-sebastian.reichel@collabora.co.uk>
+References: <20180123150350.11031-1-sebastian.reichel@collabora.co.uk>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180123150350.11031-1-sebastian.reichel@collabora.co.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>, Vivien Didelot <vivien.didelot@savoirfairelinux.com>, Florian Fainelli <f.fainelli@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>
+Cc: Ian Ray <ian.ray@ge.com>, Nandor Han <nandor.han@ge.com>, Rob Herring <robh+dt@kernel.org>, "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@lists.collabora.co.uk, Sebastian Reichel <sebastian.reichel@collabora.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-2018-01-22 18:11 GMT+01:00 David Lechner <david@lechnology.com>:
-> On 01/22/2018 07:29 AM, Bartosz Golaszewski wrote:
->>
->> 2018-01-20 18:13 GMT+01:00 David Lechner <david@lechnology.com>:
->>>
->>> This series converts mach-davinci to use the common clock framework.
->>>
->>> The series works like this, the first 19 patches create new clock drivers
->>> using the common clock framework. There are basically 3 groups of clocks
->>> -
->>> PLL, PSC and CFGCHIP (syscon). There are six different SoCs that each
->>> have
->>> unique init data, which is the reason for so many patches.
->>>
->>> Then, starting with "ARM: da830: add new clock init using common clock",
->>> we get the mach code ready for the switch by adding the code needed for
->>> the new clock drivers and adding #ifndef CONFIG_COMMON_CLK around the
->>> legacy clocks so that we can switch easily between the old and the new.
->>>
->>> "ARM: davinci: switch to common clock framework" actually flips the
->>> switch
->>> to start using the new clock drivers. Then the next 8 patches remove all
->>> of the old clock code.
->>>
->>> The final three patches add device tree clock support to the one SoC that
->>> supports it.
->>>
->>> v6 changes (also see individual patches for details):
->>> - All of the device tree bindings are changed
->>> - All of the clock drivers are changed significantly
->>> - Fixed issues brought up during review of v5
->>> - "ARM: davinci: move davinci_clk_init() to init_time" is removed from
->>> this
->>>    series and submitted separately
->>>
->>> v5 changes:
->>> - Basically, this is an entirely new series
->>> - Patches are broken up into bite-sized pieces
->>> - Converted PSC clock driver to use regmap
->>> - Restored "force" flag for certain DA850 clocks
->>> - Added device tree bindings
->>> - Moved more of the clock init to drivers/clk
->>> - Fixed frequency scaling (maybe*)
->>>
->>> * I have frequency scaling using cpufreq-dt, so I know the clocks are
->>> doing
->>>    what they need to do to make this work, but I haven't figured out how
->>> to
->>>    test davinci-cpufreq driver yet. (Patches to make cpufreq-dt work will
->>> be
->>>    sent separately after this series has landed.)
->>>
->>
->> This driver doesn't have DT support - I suppose it would be useful to
->> add it and also add the corresponding DT node to da850.dtsi. If you're
->> ok with it, I can start working on it. I also have a patch for the i2c
->> cpufreq issue and it would be nice to test it with it.
->>
->
-> Why not just use cpufreq-dt for the DT case? It seems to be working.
->
-> I have preliminary patches on GitHub [1][2].
->
-> [1]:
-> https://github.com/dlech/ev3dev-kernel/commit/e38897148a949b736ab135983887f9c81375f108
-> [2]:
-> https://github.com/dlech/ev3dev-kernel/commit/bab85f9e45450a36a7ea6f4407f89a75edb63761
->
+This adds support for enabling the internal PHY for a 'cpu' port.
+It has been tested on GE B850v3,  B650v3 and B450v3, which have a
+built-in MV88E6240 switch hardwired to a PCIe based network card.
+On these machines the internal PHY of the i210 network card and
+the Marvell switch are connected to each other and must be enabled
+for properly using the switch. While the i210 PHY will be enabled
+when the network interface is enabled, the switch's port is not
+exposed as network interface. Additionally the mv88e6xxx driver
+resets the chip during probe, so the PHY is disabled without this
+patch.
 
-No problem with that - I'll test them as soon as I'll be able to boot my lcdk.
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+---
+ net/dsa/dsa2.c     |   7 ++--
+ net/dsa/dsa_priv.h |   4 +--
+ net/dsa/legacy.c   |   4 +--
+ net/dsa/port.c     | 103 ++++++++++++++++++++++++++++++++++++++++-------------
+ 4 files changed, 86 insertions(+), 32 deletions(-)
 
-Thanks,
-Bartosz
+diff --git a/net/dsa/dsa2.c b/net/dsa/dsa2.c
+index 1e287420ff49..78c8111eedc2 100644
+--- a/net/dsa/dsa2.c
++++ b/net/dsa/dsa2.c
+@@ -271,13 +271,12 @@ static int dsa_port_setup(struct dsa_port *dp)
+ 		break;
+ 	case DSA_PORT_TYPE_CPU:
+ 	case DSA_PORT_TYPE_DSA:
+-		err = dsa_port_fixed_link_register_of(dp);
++		err = dsa_port_link_register_of(dp);
+ 		if (err) {
+-			dev_err(ds->dev, "failed to register fixed link for port %d.%d\n",
++			dev_err(ds->dev, "failed to setup link for port %d.%d\n",
+ 				ds->index, dp->index);
+ 			return err;
+ 		}
+-
+ 		break;
+ 	case DSA_PORT_TYPE_USER:
+ 		err = dsa_slave_create(dp);
+@@ -301,7 +300,7 @@ static void dsa_port_teardown(struct dsa_port *dp)
+ 		break;
+ 	case DSA_PORT_TYPE_CPU:
+ 	case DSA_PORT_TYPE_DSA:
+-		dsa_port_fixed_link_unregister_of(dp);
++		dsa_port_link_unregister_of(dp);
+ 		break;
+ 	case DSA_PORT_TYPE_USER:
+ 		if (dp->slave) {
+diff --git a/net/dsa/dsa_priv.h b/net/dsa/dsa_priv.h
+index 7d036696e8c4..1cb3b75720c8 100644
+--- a/net/dsa/dsa_priv.h
++++ b/net/dsa/dsa_priv.h
+@@ -157,8 +157,8 @@ int dsa_port_vlan_add(struct dsa_port *dp,
+ 		      struct switchdev_trans *trans);
+ int dsa_port_vlan_del(struct dsa_port *dp,
+ 		      const struct switchdev_obj_port_vlan *vlan);
+-int dsa_port_fixed_link_register_of(struct dsa_port *dp);
+-void dsa_port_fixed_link_unregister_of(struct dsa_port *dp);
++int dsa_port_link_register_of(struct dsa_port *dp);
++void dsa_port_link_unregister_of(struct dsa_port *dp);
+ 
+ /* slave.c */
+ extern const struct dsa_device_ops notag_netdev_ops;
+diff --git a/net/dsa/legacy.c b/net/dsa/legacy.c
+index 84611d7fcfa2..a8d94a65849f 100644
+--- a/net/dsa/legacy.c
++++ b/net/dsa/legacy.c
+@@ -86,7 +86,7 @@ static int dsa_cpu_dsa_setups(struct dsa_switch *ds)
+ 		if (!(dsa_is_cpu_port(ds, port) || dsa_is_dsa_port(ds, port)))
+ 			continue;
+ 
+-		ret = dsa_port_fixed_link_register_of(&ds->ports[port]);
++		ret = dsa_port_link_register_of(&ds->ports[port]);
+ 		if (ret)
+ 			return ret;
+ 	}
+@@ -275,7 +275,7 @@ static void dsa_switch_destroy(struct dsa_switch *ds)
+ 	for (port = 0; port < ds->num_ports; port++) {
+ 		if (!(dsa_is_cpu_port(ds, port) || dsa_is_dsa_port(ds, port)))
+ 			continue;
+-		dsa_port_fixed_link_unregister_of(&ds->ports[port]);
++		dsa_port_link_unregister_of(&ds->ports[port]);
+ 	}
+ 
+ 	if (ds->slave_mii_bus && ds->ops->phy_read)
+diff --git a/net/dsa/port.c b/net/dsa/port.c
+index bb4be2679904..7acc1169d75e 100644
+--- a/net/dsa/port.c
++++ b/net/dsa/port.c
+@@ -273,7 +273,56 @@ int dsa_port_vlan_del(struct dsa_port *dp,
+ 	return 0;
+ }
+ 
+-int dsa_port_fixed_link_register_of(struct dsa_port *dp)
++static int dsa_port_setup_phy_of(struct dsa_port *dp, bool enable)
++{
++	struct device_node *port_dn = dp->dn;
++	struct device_node *phy_dn;
++	struct dsa_switch *ds = dp->ds;
++	struct phy_device *phydev;
++	int port = dp->index;
++	int err = 0;
++
++	phy_dn = of_parse_phandle(port_dn, "phy-handle", 0);
++	if (!phy_dn)
++		return 0;
++
++	phydev = of_phy_find_device(phy_dn);
++	if (!phydev) {
++		err = -EPROBE_DEFER;
++		goto err_put_of;
++	}
++
++	if (enable) {
++		err = genphy_config_init(phydev);
++		if (err < 0)
++			goto err_put_dev;
++
++		err = genphy_resume(phydev);
++		if (err < 0)
++			goto err_put_dev;
++
++		err = genphy_read_status(phydev);
++		if (err < 0)
++			goto err_put_dev;
++	} else {
++		err = genphy_suspend(phydev);
++		if (err < 0)
++			goto err_put_dev;
++	}
++
++	if (ds->ops->adjust_link)
++		ds->ops->adjust_link(ds, port, phydev);
++
++	dev_dbg(ds->dev, "enabled port's phy: %s", phydev_name(phydev));
++
++err_put_dev:
++	put_device(&phydev->mdio.dev);
++err_put_of:
++	of_node_put(phy_dn);
++	return err;
++}
++
++static int dsa_port_fixed_link_register_of(struct dsa_port *dp)
+ {
+ 	struct device_node *dn = dp->dn;
+ 	struct dsa_switch *ds = dp->ds;
+@@ -282,38 +331,44 @@ int dsa_port_fixed_link_register_of(struct dsa_port *dp)
+ 	int mode;
+ 	int err;
+ 
+-	if (of_phy_is_fixed_link(dn)) {
+-		err = of_phy_register_fixed_link(dn);
+-		if (err) {
+-			dev_err(ds->dev,
+-				"failed to register the fixed PHY of port %d\n",
+-				port);
+-			return err;
+-		}
++	err = of_phy_register_fixed_link(dn);
++	if (err) {
++		dev_err(ds->dev,
++			"failed to register the fixed PHY of port %d\n",
++			port);
++		return err;
++	}
+ 
+-		phydev = of_phy_find_device(dn);
++	phydev = of_phy_find_device(dn);
+ 
+-		mode = of_get_phy_mode(dn);
+-		if (mode < 0)
+-			mode = PHY_INTERFACE_MODE_NA;
+-		phydev->interface = mode;
++	mode = of_get_phy_mode(dn);
++	if (mode < 0)
++		mode = PHY_INTERFACE_MODE_NA;
++	phydev->interface = mode;
+ 
+-		genphy_config_init(phydev);
+-		genphy_read_status(phydev);
++	genphy_config_init(phydev);
++	genphy_read_status(phydev);
+ 
+-		if (ds->ops->adjust_link)
+-			ds->ops->adjust_link(ds, port, phydev);
++	if (ds->ops->adjust_link)
++		ds->ops->adjust_link(ds, port, phydev);
+ 
+-		put_device(&phydev->mdio.dev);
+-	}
++	put_device(&phydev->mdio.dev);
+ 
+ 	return 0;
+ }
+ 
+-void dsa_port_fixed_link_unregister_of(struct dsa_port *dp)
++int dsa_port_link_register_of(struct dsa_port *dp)
+ {
+-	struct device_node *dn = dp->dn;
++	if (of_phy_is_fixed_link(dp->dn))
++		return dsa_port_fixed_link_register_of(dp);
++	else
++		return dsa_port_setup_phy_of(dp, true);
++}
+ 
+-	if (of_phy_is_fixed_link(dn))
+-		of_phy_deregister_fixed_link(dn);
++void dsa_port_link_unregister_of(struct dsa_port *dp)
++{
++	if (of_phy_is_fixed_link(dp->dn))
++		of_phy_deregister_fixed_link(dp->dn);
++	else
++		dsa_port_setup_phy_of(dp, false);
+ }
+-- 
+2.15.1
