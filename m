@@ -1,63 +1,395 @@
-From: Greentime Hu <green.hu@gmail.com>
-Subject: Re: [PATCH v6 16/36] nds32: DMA mapping API
-Date: Tue, 23 Jan 2018 16:23:27 +0800
-Message-ID: <CAEbi=3cYynvFS2GDzj5Oav_5LtHPdBfBWh9c=mFT0PxeOLX9sQ@mail.gmail.com>
-References: <cover.1515766253.git.green.hu@gmail.com> <ecd1742c718c5b45983486cf9dfb44adb6e06923.1515766253.git.green.hu@gmail.com>
- <CAK8P3a0-Vf9CRZzdXCxpuQoWgMhYWgO6Hy2KuP-gOKttoSGESA@mail.gmail.com>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v2 3/4] drivers: firmware: xilinx: Add sysfs interface
+Date: Tue, 23 Jan 2018 09:37:32 +0100
+Message-ID: <20180123083732.GA21463@kroah.com>
+References: <1516220434-22204-1-git-send-email-jollys@xilinx.com>
+ <1516220434-22204-4-git-send-email-jollys@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK8P3a0-Vf9CRZzdXCxpuQoWgMhYWgO6Hy2KuP-gOKttoSGESA@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <1516220434-22204-4-git-send-email-jollys@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Greentime <greentime@andestech.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Networking <netdev@vger.kernel.org>, Vincent Chen <deanbo422@gmail.com>, DTML <devicetree@vger.kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, David Howells <dhowells@redhat.com>, Will Deacon <will.deacon@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-serial@vger.kernel.org, Geert Uytterhoeven <geert.uytterhoeven@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Greg KH <greg@kroah.com>, Guo Ren <ren_guo@c-sky.co>
+To: Jolly Shah <jolly.shah@xilinx.com>
+Cc: ard.biesheuvel@linaro.org, mingo@kernel.org, matt@codeblueprint.co.uk, sudeep.holla@arm.com, hkallweit1@gmail.com, keescook@chromium.org, dmitry.torokhov@gmail.com, michal.simek@xilinx.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, rajanv@xilinx.com, Jolly Shah <jollys@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Arnd:
+On Wed, Jan 17, 2018 at 12:20:33PM -0800, Jolly Shah wrote:
+> Add Firmware-ggs sysfs interface which provides read/write
+> interface to global storage registers.
+> 
+> Signed-off-by: Jolly Shah <jollys@xilinx.com>
+> Signed-off-by: Rajan Vaja <rajanv@xilinx.com>
+> ---
+>  .../ABI/stable/sysfs-driver-zynqmp-firmware        |  33 +++
+>  drivers/firmware/xilinx/zynqmp/Makefile            |   2 +-
+>  drivers/firmware/xilinx/zynqmp/firmware-ggs.c      | 298 +++++++++++++++++++++
+>  drivers/firmware/xilinx/zynqmp/firmware.c          |  26 ++
+>  include/linux/firmware/xilinx/zynqmp/firmware.h    |   2 +
+>  5 files changed, 360 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/ABI/stable/sysfs-driver-zynqmp-firmware
+>  create mode 100644 drivers/firmware/xilinx/zynqmp/firmware-ggs.c
+> 
+> diff --git a/Documentation/ABI/stable/sysfs-driver-zynqmp-firmware b/Documentation/ABI/stable/sysfs-driver-zynqmp-firmware
+> new file mode 100644
+> index 0000000..2483215
+> --- /dev/null
+> +++ b/Documentation/ABI/stable/sysfs-driver-zynqmp-firmware
+> @@ -0,0 +1,33 @@
+> +What:          /sys/devices/platform/zynqmp-firmware/ggs*
+> +Date:          January 2018
+> +KernelVersion: 4.15.0
+> +Contact:       "Jolly Shah" <jollys@xilinx.com>
+> +Description:
+> +               Shows PMU global general storage register value,
+> +               GLOBAL_GEN_STORAGE{0:3}.
+> +               Global general storage register that can be used
+> +               by system to pass information between masters.
+> +
+> +               The register is reset during system or power-on
+> +               resets. Three registers are used by the FSBL and
+> +               other Xilinx software products: GLOBAL_GEN_STORAGE{4:6}.
+> +
+> +Users:         Xilinx
+> +
+> +What:          /sys/devices/platform/zynqmp-firmware/pggs*
+> +Date:          January 2018
+> +KernelVersion: 4.15.0
+> +Contact:       "Jolly Shah" <jollys@xilinx.com>
+> +Description:
+> +               Shows PMU persistent global general storage register
+> +               value, PERS_GLOB_GEN_STORAGE{0:3}.
+> +               Persistent global general storage register that
+> +               can be used by system to pass information between
+> +               masters.
+> +
+> +               This register is only reset by the power-on reset
+> +               and maintains its value through a system reset.
+> +               Four registers are used by the FSBL and other Xilinx
+> +               software products: PERS_GLOB_GEN_STORAGE{4:7}.
+> +               Register is reset only by a POR reset.
+> +Users:         Xilinx
+> diff --git a/drivers/firmware/xilinx/zynqmp/Makefile b/drivers/firmware/xilinx/zynqmp/Makefile
+> index c3ec669..6629781 100644
+> --- a/drivers/firmware/xilinx/zynqmp/Makefile
+> +++ b/drivers/firmware/xilinx/zynqmp/Makefile
+> @@ -1,4 +1,4 @@
+>  # SPDX-License-Identifier: GPL-2.0+
+>  # Makefile for Xilinx firmwares
+> 
+> -obj-$(CONFIG_ZYNQMP_FIRMWARE) += firmware.o
+> +obj-$(CONFIG_ZYNQMP_FIRMWARE) += firmware.o firmware-ggs.o
+> diff --git a/drivers/firmware/xilinx/zynqmp/firmware-ggs.c b/drivers/firmware/xilinx/zynqmp/firmware-ggs.c
+> new file mode 100644
+> index 0000000..be47ca2
+> --- /dev/null
+> +++ b/drivers/firmware/xilinx/zynqmp/firmware-ggs.c
+> @@ -0,0 +1,298 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Xilinx Zynq MPSoC Firmware layer
+> + *
+> + *  Copyright (C) 2014-2018 Xilinx, Inc.
+> + *
+> + *  Jolly Shah <jollys@xilinx.com>
+> + *  Rajan Vaja <rajanv@xilinx.com>
+> + */
+> +
+> +#include <linux/compiler.h>
+> +#include <linux/of.h>
+> +#include <linux/init.h>
+> +#include <linux/module.h>
+> +#include <linux/uaccess.h>
+> +#include <linux/slab.h>
+> +#include <linux/platform_device.h>
+> +
+> +#include <linux/firmware/xilinx/zynqmp/firmware.h>
 
-2018-01-18 18:26 GMT+08:00 Arnd Bergmann <arnd@arndb.de>:
-> On Mon, Jan 15, 2018 at 6:53 AM, Greentime Hu <green.hu@gmail.com> wrote:
->> From: Greentime Hu <greentime@andestech.com>
->>
->> This patch adds support for the DMA mapping API. It uses dma_map_ops for
->> flexibility.
->>
->> Signed-off-by: Vincent Chen <vincentc@andestech.com>
->> Signed-off-by: Greentime Hu <greentime@andestech.com>
->
-> I'm still unhappy about the way the cache flushes are done here as discussed
-> before. It's not a show-stopped, but no Ack from me.
+That's crazy deep nesting, why?
 
-How about this implementation?
+> +
+> +static ssize_t read_register(char *buf, u32 ioctl_id, u32 reg)
+> +{
+> +       int ret;
+> +       u32 ret_payload[PAYLOAD_ARG_CNT];
+> +       const struct zynqmp_eemi_ops *eemi_ops = get_eemi_ops();
+> +
+> +       if (!eemi_ops || !eemi_ops->ioctl)
+> +               return 0;
 
-static void
-nds32_dma_sync_single_for_cpu(struct device *dev, dma_addr_t handle,
-                              size_t size, enum dma_data_direction dir)
-{
-        switch (direction) {
-        case DMA_TO_DEVICE:     /* writeback only */
-                break;
-        case DMA_FROM_DEVICE:   /* invalidate only */
-        case DMA_BIDIRECTIONAL: /* writeback and invalidate */
-                cpu_dma_inval_range(start, end);
-                break;
-        default:
-                BUG();
-        }
-}
+Not an error?
 
-static void
-nds32_dma_sync_single_for_device(struct device *dev, dma_addr_t handle,
-                                 size_t size, enum dma_data_direction dir)
-{
-        switch (direction) {
-        case DMA_FROM_DEVICE:   /* invalidate only */
-                break;
-        case DMA_TO_DEVICE:     /* writeback only */
-        case DMA_BIDIRECTIONAL: /* writeback and invalidate */
-                cpu_dma_wb_range(start, end);
-                break;
-        default:
-                BUG();
-        }
-}
+> +
+> +       ret = eemi_ops->ioctl(0, ioctl_id, reg, 0, ret_payload);
+> +       if (ret)
+> +               return ret;
+> +
+> +       return snprintf(buf, PAGE_SIZE, "0x%x\n", ret_payload[1]);
+
+Minor nit, you never need to use snprintf() for a sysfs file, as you
+"know" the size and you can't overflow it with just a single value.
+
+Yeah, some tool-checkers hate to see a "raw" sprintf() call, but really,
+ignore them here :)
+
+> +}
+> +
+> +static ssize_t write_register(const char *buf, size_t count,
+> +                             u32 ioctl_id, u32 reg)
+> +{
+> +       char *kern_buff;
+> +       char *inbuf;
+> +       char *tok;
+> +       long mask;
+> +       long value;
+> +       int ret;
+> +       u32 ret_payload[PAYLOAD_ARG_CNT];
+> +       const struct zynqmp_eemi_ops *eemi_ops = get_eemi_ops();
+> +
+> +       if (!eemi_ops || !eemi_ops->ioctl)
+> +               return -EFAULT;
+> +
+> +       kern_buff = kzalloc(count, GFP_KERNEL);
+> +       if (!kern_buff)
+> +               return -ENOMEM;
+> +
+> +       ret = strlcpy(kern_buff, buf, count);
+> +       if (ret < 0) {
+> +               ret = -EFAULT;
+> +               goto err;
+> +       }
+> +
+> +       inbuf = kern_buff;
+> +
+> +       /* Read the write mask */
+> +       tok = strsep(&inbuf, " ");
+> +       if (!tok) {
+> +               ret = -EFAULT;
+> +               goto err;
+> +       }
+> +
+> +       ret = kstrtol(tok, 16, &mask);
+> +       if (ret) {
+> +               ret = -EFAULT;
+> +               goto err;
+> +       }
+> +
+> +       /* Read the write value */
+> +       tok = strsep(&inbuf, " ");
+> +       if (!tok) {
+> +               ret = -EFAULT;
+> +               goto err;
+> +       }
+> +
+> +       ret = kstrtol(tok, 16, &value);
+> +       if (ret) {
+> +               ret = -EFAULT;
+> +               goto err;
+> +       }
+
+What exactly is the format for the data to be written here?  You do not
+document it in the ABI/ file above, and it looks to be non-trivial to
+understand from the code :(
+
+> +
+> +       ret = eemi_ops->ioctl(0, ioctl_id, reg, 0, ret_payload);
+> +       if (ret) {
+> +               ret = -EFAULT;
+> +               goto err;
+> +       }
+> +       ret_payload[1] &= ~mask;
+> +       value &= mask;
+> +       value |= ret_payload[1];
+> +
+> +       ret = eemi_ops->ioctl(0, ioctl_id, reg, value, NULL);
+> +       if (ret)
+> +               ret = -EFAULT;
+> +
+> +err:
+> +       kfree(kern_buff);
+> +       if (ret)
+> +               return ret;
+> +
+> +       return count;
+> +}
+> +
+> +/**
+> + * ggs_show - Show global general storage (ggs) sysfs attribute
+> + * @dev: Device structure
+> + * @attr: Device attribute structure
+> + * @buf: Requested available shutdown_scope attributes string
+> + * @reg: Register number
+> + *
+> + * Return:Number of bytes printed into the buffer.
+> + *
+> + * Helper function for viewing a ggs register value.
+> + *
+> + * User-space interface for viewing the content of the ggs0 register.
+> + * cat /sys/devices/platform/firmware/ggs0
+> + */
+> +static ssize_t ggs_show(struct device *dev,
+> +                       struct device_attribute *attr,
+> +                       char *buf,
+> +                       u32 reg)
+> +{
+> +       return read_register(buf, IOCTL_READ_GGS, reg);
+> +}
+> +
+> +/**
+> + * ggs_store - Store global general storage (ggs) sysfs attribute
+> + * @dev: Device structure
+> + * @attr: Device attribute structure
+> + * @buf: User entered shutdown_scope attribute string
+> + * @count: Size of buf
+> + * @reg: Register number
+> + *
+> + * Return: count argument if request succeeds, the corresponding
+> + * error code otherwise
+> + *
+> + * Helper function for storing a ggs register value.
+> + *
+> + * For example, the user-space interface for storing a value to the
+> + * ggs0 register:
+> + * echo 0xFFFFFFFF 0x1234ABCD > /sys/devices/platform/firmware/ggs0
+> + */
+> +static ssize_t ggs_store(struct device *dev,
+> +                        struct device_attribute *attr,
+> +                        const char *buf,
+> +                        size_t count,
+> +                        u32 reg)
+> +{
+> +       if (!dev || !attr || !buf || !count || reg >= GSS_NUM_REGS)
+> +               return -EINVAL;
+> +
+> +       return write_register(buf, count, IOCTL_WRITE_GGS, reg);
+> +}
+> +
+> +/* GGS register show functions */
+> +#define GGS0_SHOW(N) \
+> +       ssize_t ggs##N##_show(struct device *dev, \
+> +                        struct device_attribute *attr, \
+> +                        char *buf) \
+> +       { \
+> +               return ggs_show(dev, attr, buf, N); \
+> +       }
+> +
+> +static GGS0_SHOW(0);
+> +static GGS0_SHOW(1);
+> +static GGS0_SHOW(2);
+> +static GGS0_SHOW(3);
+> +
+> +/* GGS register store function */
+> +#define GGS0_STORE(N) \
+> +       ssize_t ggs##N##_store(struct device *dev, \
+> +                                  struct device_attribute *attr, \
+> +                                  const char *buf, \
+> +                                  size_t count) \
+> +       { \
+> +               return ggs_store(dev, attr, buf, count, N); \
+> +       }
+> +
+> +static GGS0_STORE(0);
+> +static GGS0_STORE(1);
+> +static GGS0_STORE(2);
+> +static GGS0_STORE(3);
+> +
+> +/* GGS register device attributes */
+> +static DEVICE_ATTR_RW(ggs0);
+> +static DEVICE_ATTR_RW(ggs1);
+> +static DEVICE_ATTR_RW(ggs2);
+> +static DEVICE_ATTR_RW(ggs3);
+> +
+> +#define CREATE_GGS_DEVICE(dev, N) \
+> +do { \
+> +       if (device_create_file(dev, &dev_attr_ggs##N)) \
+> +               dev_err(dev, "unable to create ggs%d attribute\n", N); \
+> +} while (0)
+> +
+> +/**
+> + * pggs_show - Show persistent global general storage (pggs) sysfs attribute
+> + * @dev: Device structure
+> + * @attr: Device attribute structure
+> + * @buf: Requested available shutdown_scope attributes string
+> + * @reg: Register number
+> + *
+> + * Return:Number of bytes printed into the buffer.
+> + *
+> + * Helper function for viewing a pggs register value.
+> + */
+> +static ssize_t pggs_show(struct device *dev,
+> +                        struct device_attribute *attr,
+> +                        char *buf,
+> +                        u32 reg)
+> +{
+> +       return read_register(buf, IOCTL_READ_GGS, reg);
+> +}
+> +
+> +/**
+> + * pggs_store - Store persistent global general storage (pggs) sysfs attribute
+> + * @dev: Device structure
+> + * @attr: Device attribute structure
+> + * @buf: User entered shutdown_scope attribute string
+> + * @count: Size of buf
+> + * @reg: Register number
+> + *
+> + * Return: count argument if request succeeds, the corresponding
+> + * error code otherwise
+> + *
+> + * Helper function for storing a pggs register value.
+> + */
+> +static ssize_t pggs_store(struct device *dev,
+> +                         struct device_attribute *attr,
+> +                         const char *buf,
+> +                         size_t count,
+> +                         u32 reg)
+> +{
+> +       return write_register(buf, count, IOCTL_WRITE_PGGS, reg);
+> +}
+> +
+> +#define PGGS0_SHOW(N) \
+> +       ssize_t pggs##N##_show(struct device *dev, \
+> +                        struct device_attribute *attr, \
+> +                        char *buf) \
+> +       { \
+> +               return pggs_show(dev, attr, buf, N); \
+> +       }
+> +
+> +/* PGGS register show functions */
+> +static PGGS0_SHOW(0);
+> +static PGGS0_SHOW(1);
+> +static PGGS0_SHOW(2);
+> +static PGGS0_SHOW(3);
+> +
+> +#define PGGS0_STORE(N) \
+> +       ssize_t pggs##N##_store(struct device *dev, \
+> +                                  struct device_attribute *attr, \
+> +                                  const char *buf, \
+> +                                  size_t count) \
+> +       { \
+> +               return pggs_store(dev, attr, buf, count, N); \
+> +       }
+> +
+> +/* PGGS register store functions */
+> +static PGGS0_STORE(0);
+> +static PGGS0_STORE(1);
+> +static PGGS0_STORE(2);
+> +static PGGS0_STORE(3);
+> +
+> +/* PGGS register device attributes */
+> +static DEVICE_ATTR_RW(pggs0);
+> +static DEVICE_ATTR_RW(pggs1);
+> +static DEVICE_ATTR_RW(pggs2);
+> +static DEVICE_ATTR_RW(pggs3);
+> +
+> +#define CREATE_PGGS_DEVICE(dev, N) \
+> +do { \
+> +       if (device_create_file(dev, &dev_attr_pggs##N)) \
+> +               dev_err(dev, "unable to create pggs%d attribute\n", N); \
+
+Ick, no, just use an attribute group please.  Handles all of this mess
+for you automatically, and will unwind properly if you have an error
+(which this macro does not do.)
+
+thanks,
+
+greg k-h
