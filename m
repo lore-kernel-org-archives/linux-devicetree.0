@@ -1,65 +1,123 @@
-From: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Subject: [PATCHv5 0/5] GEHC Bx50 Switch Support
-Date: Tue, 23 Jan 2018 16:03:45 +0100
-Message-ID: <20180123150350.11031-1-sebastian.reichel@collabora.co.uk>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Vivien Didelot <vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
-Cc: Ian Ray <ian.ray-JJi787mZWgc@public.gmane.org>, Nandor Han <nandor.han-JJi787mZWgc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-81qHHgoATdEGFh7si24rbyp2UmYkHbXO@public.gmane.org, Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+Subject: [PATCHv5 3/5] ARM: dts: imx6q-b850v3: Add switch port configuration
+Date: Tue, 23 Jan 2018 16:03:48 +0100
+Message-ID: <20180123150350.11031-4-sebastian.reichel@collabora.co.uk>
+References: <20180123150350.11031-1-sebastian.reichel@collabora.co.uk>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180123150350.11031-1-sebastian.reichel@collabora.co.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>, Vivien Didelot <vivien.didelot@savoirfairelinux.com>, Florian Fainelli <f.fainelli@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>
+Cc: Ian Ray <ian.ray@ge.com>, Nandor Han <nandor.han@ge.com>, Rob Herring <robh+dt@kernel.org>, "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@lists.collabora.co.uk, Sebastian Reichel <sebastian.reichel@collabora.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+This adds support for the Marvell switch and names the network
+ports according to the labels, that can be found next to the
+connectors ("ID", "IX", "ePort 1", "ePort 2"). The switch is
+connected to the host system using a PCI based network card.
 
-This adds support for the internal switch found in GE Healthcare
-B450v3, B650v3 and B850v3. All devices use a GPIO bitbanged MDIO
-bus to communicate with the switch and a PCIe based network card
-for exchanging network data. The cpu network data link requires,
-that the switch's internal phy interface is enabled, so support
-for that is added by the first patch in this series.
+The PCI bus configuration has been written using the following
+information:
 
-The patch series is based on v4.15-rc8.
+root@b850v3# lspci -tv
+-[0000:00]---00.0-[01]----00.0-[02-05]--+-01.0-[03]----00.0  Intel Corporation I210 Gigabit Network Connection
+                                        +-02.0-[04]----00.0  Intel Corporation I210 Gigabit Network Connection
+                                        \-03.0-[05]--
+root@b850v3# lspci -nn
+00:00.0 PCI bridge [0604]: Synopsys, Inc. Device [16c3:abcd] (rev 01)
+01:00.0 PCI bridge [0604]: PLX Technology, Inc. PEX 8605 PCI Express 4-port Gen2 Switch [10b5:8605] (rev ab)
+02:01.0 PCI bridge [0604]: PLX Technology, Inc. PEX 8605 PCI Express 4-port Gen2 Switch [10b5:8605] (rev ab)
+02:02.0 PCI bridge [0604]: PLX Technology, Inc. PEX 8605 PCI Express 4-port Gen2 Switch [10b5:8605] (rev ab)
+02:03.0 PCI bridge [0604]: PLX Technology, Inc. PEX 8605 PCI Express 4-port Gen2 Switch [10b5:8605] (rev ab)
+03:00.0 Ethernet controller [0200]: Intel Corporation I210 Gigabit Network Connection [8086:1533] (rev 03)
+04:00.0 Ethernet controller [0200]: Intel Corporation I210 Gigabit Network Connection [8086:1533] (rev 03)
 
-Changes since PATCHv4:
- * Introduce dsa_port_link_(un)register_of and mark the fixed
-   variant static.
- * Update patch description to describe the phy<->phy connection
-   from i210 to the Marvell switch
-Changes since PATCHv3:
- * Enable the phy in dsa_port_setup() instead of abusing the
-   fixed link setup function
-Changes since PATCHv2:
- * Add phy nodes to switch in bx50.dtsi and reference them
-   from switch ports
- * Enable cpu-port's phy based on 'phy-handle' instead of 'phy-mode'
-Changes since PATCHv1:
- * Use 'marvell,mv88e6085' instead of introducing compatible
-   string for mv88e6240.
- * Fix indention of DT nodes
- * Only enable 'cpu' phy, if explicitly set to "internal".
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+---
+ arch/arm/boot/dts/imx6q-b850v3.dts | 75 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 75 insertions(+)
 
--- Sebastian
-
-Sebastian Reichel (5):
-  net: dsa: Support internal phy on 'cpu' port
-  ARM: dts: imx6q-bx50v3: Add internal switch
-  ARM: dts: imx6q-b850v3: Add switch port configuration
-  ARM: dts: imx6q-b650v3: Add switch port configuration
-  ARM: dts: imx6q-b450v3: Add switch port configuration
-
- arch/arm/boot/dts/imx6q-b450v3.dts  |  52 ++++++++++++++++++
- arch/arm/boot/dts/imx6q-b650v3.dts  |  52 ++++++++++++++++++
- arch/arm/boot/dts/imx6q-b850v3.dts  |  75 ++++++++++++++++++++++++++
- arch/arm/boot/dts/imx6q-bx50v3.dtsi |  62 ++++++++++++++++++++++
- net/dsa/dsa2.c                      |   7 ++-
- net/dsa/dsa_priv.h                  |   4 +-
- net/dsa/legacy.c                    |   4 +-
- net/dsa/port.c                      | 103 +++++++++++++++++++++++++++---------
- 8 files changed, 327 insertions(+), 32 deletions(-)
-
+diff --git a/arch/arm/boot/dts/imx6q-b850v3.dts b/arch/arm/boot/dts/imx6q-b850v3.dts
+index 46bdc6722715..35edbdc7bcd1 100644
+--- a/arch/arm/boot/dts/imx6q-b850v3.dts
++++ b/arch/arm/boot/dts/imx6q-b850v3.dts
+@@ -212,3 +212,78 @@
+ 		};
+ 	};
+ };
++
++&pci_root {
++	/* PLX Technology, Inc. PEX 8605 PCI Express 4-port Gen2 Switch */
++	bridge@1,0 {
++		compatible = "pci10b5,8605";
++		reg = <0x00010000 0 0 0 0>;
++
++		#address-cells = <3>;
++		#size-cells = <2>;
++		#interrupt-cells = <1>;
++
++		bridge@2,1 {
++			compatible = "pci10b5,8605";
++			reg = <0x00020800 0 0 0 0>;
++
++			#address-cells = <3>;
++			#size-cells = <2>;
++			#interrupt-cells = <1>;
++
++			/* Intel Corporation I210 Gigabit Network Connection */
++			ethernet@3,0 {
++				compatible = "pci8086,1533";
++				reg = <0x00030000 0 0 0 0>;
++			};
++		};
++
++		bridge@2,2 {
++			compatible = "pci10b5,8605";
++			reg = <0x00021000 0 0 0 0>;
++
++			#address-cells = <3>;
++			#size-cells = <2>;
++			#interrupt-cells = <1>;
++
++			/* Intel Corporation I210 Gigabit Network Connection */
++			switch_nic: ethernet@4,0 {
++				compatible = "pci8086,1533";
++				reg = <0x00040000 0 0 0 0>;
++			};
++		};
++	};
++};
++
++&switch_ports {
++	port@0 {
++		reg = <0>;
++		label = "eneport1";
++		phy-handle = <&switchphy0>;
++	};
++
++	port@1 {
++		reg = <1>;
++		label = "eneport2";
++		phy-handle = <&switchphy1>;
++	};
++
++	port@2 {
++		reg = <2>;
++		label = "enix";
++		phy-handle = <&switchphy2>;
++	};
++
++	port@3 {
++		reg = <3>;
++		label = "enid";
++		phy-handle = <&switchphy3>;
++	};
++
++	port@4 {
++		reg = <4>;
++		label = "cpu";
++		ethernet = <&switch_nic>;
++		phy-handle = <&switchphy4>;
++	};
++};
 -- 
 2.15.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
