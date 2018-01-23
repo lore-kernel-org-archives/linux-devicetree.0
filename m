@@ -1,79 +1,47 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH] rock64: dts: fix gmac2io stability issues
-Date: Tue, 23 Jan 2018 13:52:56 +0100
-Message-ID: <26154377.eZ6VsJ1LtB@diego>
-References: <20180122174628.15613-1-ayufan@ayufan.eu>
+From: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
+Subject: Re: [PATCH v2 1/6] resource: Extend the PPC32 reserved memory hack
+Date: Tue, 23 Jan 2018 23:58:06 +1100
+Message-ID: <871sigwx41.fsf@concordia.ellerman.id.au>
+References: <20180122050411.32460-1-j.neuschaefer@gmx.net> <20180122050411.32460-2-j.neuschaefer@gmx.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180122174628.15613-1-ayufan-1nXcilf+G7OHXe+LvDLADg@public.gmane.org>
+In-Reply-To: <20180122050411.32460-2-j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kamil =?utf-8?B?VHJ6Y2nFhHNraQ==?= <ayufan-1nXcilf+G7OHXe+LvDLADg@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Joseph Chen <chenjh-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Liang Chen <cl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Tom Lendacky <thomas.lendacky-5C7GfCeVMHo@public.gmane.org>, Brijesh Singh <brijesh.singh-5C7GfCeVMHo@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Albert Herranz <albert_herranz-mRCrAkd8dF0@public.gmane.org>, Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Borislav Petkov <bp-l3A5Bk7waGM@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Kamil,
+Jonathan Neuschäfer <j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org> writes:
 
-Thanks for figuring out the source of the gmac instability :-) .
+> On the Nintendo Wii, there are two ranges of physical memory, and MMIO
+> in between, but Linux on ppc32 doesn't support discontiguous memory.
+> Therefore a hack was introduced in commit c5df7f775148 ("powerpc: allow
+> ioremap within reserved memory regions") and commit de32400dd26e ("wii:
+> use both mem1 and mem2 as ram"):
+>
+>  - Treat the area from the start of the first memory area (MEM1) to the
+>    end of the second (MEM2) as one big memory area, but mark the part
+>    that doesn't belong to MEM1 or MEM2 as reserved.
+>  - Only on the Wii, allow ioremap to be used on reserved memory.
+>
+> This hack, however, doesn't account for the "resource"-based API in
+> kernel/resource.c, because __request_region performs its own checks.
+>
+> Extend the hack to kernel/resource.c, to allow more drivers to allocate
+> their MMIO regions on the Wii.
 
-I've applied the patch as fix for 4.16 but corrected some small issues while 
-doing so:
-- The subject should be something like
-	"arm64: dts: rockchip: fix rock64 gmac2io stability issues"
-  The prefixes to use vary per subsystem, so it's best to use git log to
-  look at previous commits
+Hi Jonathan,
 
-Am Montag, 22. Januar 2018, 18:46:22 CET schrieb Kamil Trzciński:
-> This commit enables thresh dma mode as this forces to disable checksuming,
-> and chooses delay values which make the interface stable.
-> 
-> These changes are needed, because ROCK64 is faced with two problems:
-> 1. tx checksuming does not work with packets larger than 1498,
-> 2. the default delays for tx/rx are not stable when using 1Gbps connection.
-> 
-> Delays were found out with:
-> https://github.com/ayufan-rock64/linux-build/tree/master/recipes/gmac-delays
-> -test
-> 
-> Change-Id: Ie894df4b52122988da683c02e3a05d635a5c7b84
+Sorry but I can't merge a hack like this in generic code.
 
-That is some gerrit thingy which should not be part when sending patches 
-upstream.
+Has anyone looked at adding proper discontig mem support to PPC32?
 
-> Signed-off-by: Kamil Trzciński <ayufan-1nXcilf+G7OHXe+LvDLADg@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/rockchip/rk3328-rock64.dts | 7 +++----
->  1 file changed, 3 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
-> b/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts index
-> 5602ec01fed9..bcc0bb35d840 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
-> +++ b/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
-> @@ -132,8 +132,6 @@
->  	assigned-clocks = <&cru SCLK_MAC2IO>, <&cru SCLK_MAC2IO_EXT>;
->  	assigned-clock-parents = <&gmac_clkin>, <&gmac_clkin>;
->  	clock_in_out = "input";
-> -	/* shows instability at 1GBit right now */
-> -	max-speed = <100>;
->  	phy-supply = <&vcc_io>;
->  	phy-mode = "rgmii";
->  	pinctrl-names = "default";
-> @@ -141,8 +139,9 @@
->  	snps,reset-gpio = <&gpio1 RK_PC2 GPIO_ACTIVE_LOW>;
->  	snps,reset-active-low;
->  	snps,reset-delays-us = <0 10000 50000>;
-> -	tx_delay = <0x26>;
-> -	rx_delay = <0x11>;
-> +	snps,force_thresh_dma_mode;
+Or can we punch a hole in the resource in the right place? Maybe from
+add_system_ram_resources() ?
 
-With the exception of compatible, reg, interrupts and status, I try to keep
-other properties alphabetically sorted in Rockchip dts, so I've moved the
-snps,force_thres_dma_mode up between pinctrl-0 and snps-reset-gpio.
-
-
-Heiko
+cheers
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
