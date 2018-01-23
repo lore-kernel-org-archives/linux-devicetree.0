@@ -1,72 +1,62 @@
-From: Sean Wang <sean.wang@mediatek.com>
-Subject: Re: [PATCH 05/12] arm64: dts: mt7622: add PMIC MT6380 related nodes
-Date: Wed, 24 Jan 2018 02:44:27 +0800
-Message-ID: <1516733067.15199.41.camel@mtkswgap22>
-References: <CAOFm3uHnUk8BwDVR0F+5VqTB+8qFKz23ooX3o9G_RCbVqpbQPw@mail.gmail.com>
+From: Lina Iyer <ilina@codeaurora.org>
+Subject: Re: [PATCH RFC 2/4] dt-bindings/interrupt-controller: pdc: descibe
+ PDC device binding
+Date: Tue, 23 Jan 2018 18:46:20 +0000
+Message-ID: <20180123184620.GA22228@codeaurora.org>
+References: <20180123175656.11942-1-ilina@codeaurora.org>
+ <20180123175656.11942-3-ilina@codeaurora.org>
+ <eb959e8b-604b-b38c-f8ad-de7b4bd3963f@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOFm3uHnUk8BwDVR0F+5VqTB+8qFKz23ooX3o9G_RCbVqpbQPw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Philippe Ombredanne <pombredanne@nexb.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, linux-mediatek@lists.infradead.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <eb959e8b-604b-b38c-f8ad-de7b4bd3963f@arm.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, sboyd@codeaurora.org, rnayak@codeaurora.org, asathyak@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Jan 23 2018 at 18:10 +0000, Sudeep Holla wrote:
+>
+>
+>On 23/01/18 17:56, Lina Iyer wrote:
+>> From: Archana Sathyakumar <asathyak@codeaurora.org>
+>>
+>> Add device binding documentation for the PDC Interrupt controller on
+>> QCOM SoC's like the SDM845. The interrupt-controller can be used to
+>> sense edge low interrupts and wakeup interrupts when the GIC is
+>> non-operational.
+>>
+>> Cc: devicetree@vger.kernel.org
+>> Signed-off-by: Archana Sathyakumar <asathyak@codeaurora.org>
+>> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+>> ---
+>>  .../bindings/interrupt-controller/qcom,pdc.txt     | 55 ++++++++++++++++++++++
+>>  1 file changed, 55 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
+>> new file mode 100644
+>> index 000000000000..c4592bbf678d
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
+>> @@ -0,0 +1,55 @@
+>> +PDC interrupt controller
+>> +
+>> +Qualcomm Technologies Inc. SoCs based on the RPM Hardened archicture have a
+>> +Power Domain Controller (PDC) that is on always-on domain. In addition to
+>> +providing power control for the power domains, the hardware also has an
+>> +interrupt controller that can be used to help detect edge low interrupts as
+>> +well detect interrupts when the GIC is non-operational.
+>> +
+>> +GIC is parent interrupt controller at the highest level. Platform interrupt
+>> +controller PDC is next in hierarchy, followed by others.
+>
+>> This driver only configures the interrupts, does not handle them.
+>
+>Not sure if the above statement belongs to the binding.
+>
+Will fix.
 
-Hi, Philippe
-
-Really appreciate your info and detailed explanation. it's clear how
-correct way to add GPDX license identifier. I will have a follow-up.
-
-	Sean
-
-On Tue, 2018-01-23 at 11:46 +0100, Philippe Ombredanne wrote:
-> Sean,
-> sorry for the late reply and thanks you for this research.
-> 
-> On Fri, Jan 12, 2018 at 4:33 AM, Sean Wang <sean.wang@mediatek.com> wrote:
-> > Currently, I'm really confused about what usage STYLE of SPDX license
-> > identifier I should use for each type of file.
-> >
-> > could you point me where I can find the related document describing SPDX
-> > usage style for those files expected by the community in the future?
-> 
-> The doc is in this patchset [1]
-> 
-> [1] https://lkml.org/lkml/2017/12/28/326
-> 
-> 
-> > I found more than one way STYLE of SPDX present at current code, for
-> > example as below. If there's no absolute definition for them, and then
-> > which way that is better?
-> > 1)
-> > for *.dts, applied with "// " at head or within " /* */ " not at head
-> > such as
-> >
-> > arch/arm/boot/dts/bcm953012hr.dts:2: *  SPDX-License-Identifier:
-> > BSD-3-Clause
-> 
-> This is a "style bug". The comment style for .dts should be //
-> 
-> > 2)
-> > for *.c, applied with "// " at head or within " /* */ " not at head
-> > such as
-> > drivers/soc/xilinx/zynqmp/pm.c:10: * SPDX-License-Identifier:   GPL-2.0+
-> 
-> This is a "style bug". The comment style for .c should be //
-> 
-> > 3)
-> > for *.h, applied with "// " at head or within " /* */ " at head
-> > such as
-> > drivers/usb/dwc3/gadget.h:1:// SPDX-License-Identifier: GPL-2.0
-> 
-> This is a "style bug". The comment style for .h should be /**/
-> 
-> > 4)
-> > no issue, Makefile, or Kconfig, definitely applied with "# " at head
-> 
-> That's the correct way.
-> 
-> So the net-net is that these "style bugs" should be fixed.
-> 
+Thanks,
+Lina
