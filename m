@@ -1,85 +1,57 @@
-From: Enric Balletbo Serra <eballetbo@gmail.com>
-Subject: Re: [PATCH 2/4] dt-bindings: pwm-backlight: add a num-interpolation-steps
- property.
-Date: Tue, 23 Jan 2018 11:21:57 +0100
-Message-ID: <CAFqH_53Mt4wppu3JzGUHhrW9Czn9PqykWtEOzsae=6aqxuw=rA@mail.gmail.com>
-References: <20180110223046.17696-1-enric.balletbo@collabora.com>
- <20180110223046.17696-3-enric.balletbo@collabora.com> <20180119205249.fcbdyu6652ffsdmg@rob-hp-laptop>
- <20180122091613.oyjjzwci3mmfc7j2@oak.lan>
+From: Philippe Ombredanne <pombredanne@nexb.com>
+Subject: Re: [PATCH v4 3/9] v4l: platform: Add Renesas CEU driver
+Date: Tue, 23 Jan 2018 11:28:00 +0100
+Message-ID: <CAOFm3uGdVkgJ10n=pVKh9h2r7t_UkUS1768tVQLKSaOh8v-buA@mail.gmail.com>
+References: <1515515131-13760-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1515515131-13760-4-git-send-email-jacopo+renesas@jmondi.org>
+ <CAOFm3uGxm3bAHPryMV8+MAFy+45-3Ld7RbKqo1saigzPUZ8mqg@mail.gmail.com> <20180112133857.GE24794@w540>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180122091613.oyjjzwci3mmfc7j2@oak.lan>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Thompson <daniel.thompson@linaro.org>
-Cc: Rob Herring <robh@kernel.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Doug Anderson <dianders@google.com>, Pavel Machek <pavel@ucw.cz>, Jingoo Han <jingoohan1@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Brian Norris <briannorris@google.com>, Guenter Roeck <groeck@google.com>, Lee Jones <lee.jones@linaro.org>, Alexandru Stan <amstan@google.com>, linux-leds@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20180112133857.GE24794@w540>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: jacopo mondi <jacopo@jmondi.org>
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Magnus Damm <magnus.damm@gmail.com>, geert@glider.be, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Fabio Estevam <festevam@gmail.com>, Sakari Ailus <sakari.ailus@iki.fi>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-renesas-soc@vger.kernel.org, Linux Media Mailing List <linux-media@vger.kernel.org>, linux-sh@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-2018-01-22 10:16 GMT+01:00 Daniel Thompson <daniel.thompson@linaro.org>:
-> On Fri, Jan 19, 2018 at 02:52:49PM -0600, Rob Herring wrote:
->> On Wed, Jan 10, 2018 at 11:30:44PM +0100, Enric Balletbo i Serra wrote:
->> > The num-interpolated-steps property specifies the number of
->> > interpolated steps between each value of brightness-level table. This is
->> > useful for high resolution PWMs to not have to list out every possible
->> > value in the brightness-level array.
->> >
->> > Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
->> > ---
->> >  .../bindings/leds/backlight/pwm-backlight.txt       | 21 +++++++++++++++++++++
->> >  1 file changed, 21 insertions(+)
->> >
->> > diff --git a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
->> > index 310810906613..605432c910c5 100644
->> > --- a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
->> > +++ b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
->> > @@ -21,6 +21,11 @@ Optional properties:
->> >                            and enabling the backlight using GPIO.
->> >    - pwm-off-delay-ms: Delay in ms between disabling the backlight using GPIO
->> >                        and setting PWM value to 0.
->> > +  - num-interpolated-steps: Number of interpolated steps between each value
->> > +                            of brightness-levels table. This way a high
->> > +                            resolution pwm duty cycle can be used without
->> > +                            having to list out every possible value in the
->> > +                            brightness-level array.
->> >
->> >  [0]: Documentation/devicetree/bindings/pwm/pwm.txt
->> >  [1]: Documentation/devicetree/bindings/gpio/gpio.txt
->> > @@ -39,3 +44,19 @@ Example:
->> >             post-pwm-on-delay-ms = <10>;
->> >             pwm-off-delay-ms = <10>;
->> >     };
->> > +
->> > +Example using num-interpolation-steps:
->> > +
->> > +   backlight {
->> > +           compatible = "pwm-backlight";
->> > +           pwms = <&pwm 0 5000000>;
->> > +
->> > +           brightness-levels = <0 65535>;
->> > +           num-interpolated-steps = <4096>;
+On Fri, Jan 12, 2018 at 2:38 PM, jacopo mondi <jacopo@jmondi.org> wrote:
+> Hi Philippe, Laurent, Geert,
+>
+> On Fri, Jan 12, 2018 at 11:36:31AM +0100, Philippe Ombredanne wrote:
+>> On Tue, Jan 9, 2018 at 5:25 PM, Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
+>> > Add driver for Renesas Capture Engine Unit (CEU).
 >>
->> How does this make sense with only 2 defined levels other than having
->> fewer steps? I thought the purpose of this was to have a piecewise
->> linear curve.
->
-> It's not wrong as such, this is how a device with a linear (or nearly
-> linear) response could be compactly described.
->
-> Nevertheless I agree!  An example with a small but realistic curve
-> would be better... we know that copy 'n paste exists so I'd rather
-> see a simple curve than no curve.
->
-
-Makes sense, I'll put a better example on next series. Thanks for the review.
-
- - Enric
-
->
-> Daniel.
->
->
->> > +           default-brightness-level = <6>;
+>> <snip>
 >>
->> Aren't valid values 0, 16, 32, 48, etc.?
+>> > --- /dev/null
+>> > +++ b/drivers/media/platform/renesas-ceu.c
+>> > @@ -0,0 +1,1648 @@
+>> > +// SPDX-License-Identifier: GPL-2.0
 >>
->> Rob
+>> <snip>
+>>
+>> > +MODULE_DESCRIPTION("Renesas CEU camera driver");
+>> > +MODULE_AUTHOR("Jacopo Mondi <jacopo+renesas@jmondi.org>");
+>> > +MODULE_LICENSE("GPL");
+>>
+>> Jacopo,
+>> the MODULE_LICENSE does not match the SPDX tag. Per module.h "GPL"
+>> means GPL-2.0 or later ;)
+>>
+>> It should be instead:
+>>
+>> > +MODULE_LICENSE("GPL v2");
+>>
+>> ... to match your
+>>
+>> > +// SPDX-License-Identifier: GPL-2.0
+>
+> I will update this in next v5.
+> Laurent, Geert: I'll keep SPDX identifier to "GPL-2.0" until kernel
+> doc does not get updated.
+
+Thanks. Sorry for the late reply!
+
+-- 
+Cordially
+Philippe Ombredanne
