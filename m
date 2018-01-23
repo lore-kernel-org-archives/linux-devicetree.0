@@ -1,7 +1,7 @@
 From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Subject: [PATCHv5 4/5] ARM: dts: imx6q-b650v3: Add switch port configuration
-Date: Tue, 23 Jan 2018 16:03:49 +0100
-Message-ID: <20180123150350.11031-5-sebastian.reichel@collabora.co.uk>
+Subject: [PATCHv5 2/5] ARM: dts: imx6q-bx50v3: Add internal switch
+Date: Tue, 23 Jan 2018 16:03:47 +0100
+Message-ID: <20180123150350.11031-3-sebastian.reichel@collabora.co.uk>
 References: <20180123150350.11031-1-sebastian.reichel@collabora.co.uk>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180123150350.11031-1-sebastian.reichel@collabora.co.uk>
@@ -10,83 +10,91 @@ To: Andrew Lunn <andrew@lunn.ch>, Vivien Didelot <vivien.didelot@savoirfairelinu
 Cc: Ian Ray <ian.ray@ge.com>, Nandor Han <nandor.han@ge.com>, Rob Herring <robh+dt@kernel.org>, "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@lists.collabora.co.uk, Sebastian Reichel <sebastian.reichel@collabora.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-This adds support for the Marvell switch and names the network
-ports according to the labels, that can be found next to the
-connectors. The switch is connected to the host system using a
-PCI based network card.
-
-The PCI bus configuration has been written using the following
-information:
-
-root@b650v3# lspci -tv
--[0000:00]---00.0-[01]----00.0  Intel Corporation I210 Gigabit Network Connection
-root@b650v3# lspci -nn
-00:00.0 PCI bridge [0604]: Synopsys, Inc. Device [16c3:abcd] (rev 01)
-01:00.0 Ethernet controller [0200]: Intel Corporation I210 Gigabit Network Connection [8086:1533] (rev 03)
+B850v3, B650v3 and B450v3 all have a GPIO bit banged MDIO bus to
+communicate with a Marvell switch. On all devices the switch is
+connected to a PCI based network card, which needs to be referenced
+by DT, so this also adds the common PCI root node.
 
 Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
 ---
- arch/arm/boot/dts/imx6q-b650v3.dts | 52 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 52 insertions(+)
+ arch/arm/boot/dts/imx6q-bx50v3.dtsi | 62 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 62 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx6q-b650v3.dts b/arch/arm/boot/dts/imx6q-b650v3.dts
-index 7f9f176901d4..5650a9b11091 100644
---- a/arch/arm/boot/dts/imx6q-b650v3.dts
-+++ b/arch/arm/boot/dts/imx6q-b650v3.dts
-@@ -111,3 +111,55 @@
- 	fsl,tx-cal-45-dp-ohms = <55>;
- 	fsl,tx-d-cal = <100>;
+diff --git a/arch/arm/boot/dts/imx6q-bx50v3.dtsi b/arch/arm/boot/dts/imx6q-bx50v3.dtsi
+index 0808dffc9a48..09b13ac967ec 100644
+--- a/arch/arm/boot/dts/imx6q-bx50v3.dtsi
++++ b/arch/arm/boot/dts/imx6q-bx50v3.dtsi
+@@ -99,6 +99,56 @@
+ 		mux-int-port = <1>;
+ 		mux-ext-port = <4>;
+ 	};
++
++	aliases {
++		mdio-gpio0 = &mdio0;
++	};
++
++	mdio0: mdio-gpio {
++		compatible = "virtual,mdio-gpio";
++		gpios = <&gpio2 5 GPIO_ACTIVE_HIGH>, /* mdc */
++			<&gpio2 7 GPIO_ACTIVE_HIGH>; /* mdio */
++
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		switch@0 {
++			compatible = "marvell,mv88e6085"; /* 88e6240*/
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0>;
++
++			switch_ports: ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++			};
++
++			mdio {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				switchphy0: switchphy@0 {
++					reg = <0>;
++				};
++
++				switchphy1: switchphy@1 {
++					reg = <1>;
++				};
++
++				switchphy2: switchphy@2 {
++					reg = <2>;
++				};
++
++				switchphy3: switchphy@3 {
++					reg = <3>;
++				};
++
++				switchphy4: switchphy@4 {
++					reg = <4>;
++				};
++			};
++		};
++	};
+ };
+ 
+ &ecspi5 {
+@@ -337,3 +387,15 @@
+ 		tcxo-clock-frequency = <26000000>;
+ 	};
  };
 +
-+&pci_root {
-+	/* Intel Corporation I210 Gigabit Network Connection */
-+	switch_nic: ethernet@3,0 {
-+		compatible = "pci8086,1533";
-+		reg = <0x00010000 0 0 0 0>;
-+	};
-+};
++&pcie {
++	/* Synopsys, Inc. Device */
++	pci_root: root@0,0 {
++		compatible = "pci16c3,abcd";
++		reg = <0x00000000 0 0 0 0>;
 +
-+&switch_ports {
-+	port@0 {
-+		reg = <0>;
-+		label = "enacq";
-+		phy-handle = <&switchphy0>;
-+	};
-+
-+	port@1 {
-+		reg = <1>;
-+		label = "eneport1";
-+		phy-handle = <&switchphy1>;
-+	};
-+
-+	port@2 {
-+		reg = <2>;
-+		label = "enix";
-+		phy-handle = <&switchphy2>;
-+	};
-+
-+	port@3 {
-+		reg = <3>;
-+		label = "enid";
-+		phy-handle = <&switchphy3>;
-+	};
-+
-+	port@4 {
-+		reg = <4>;
-+		label = "cpu";
-+		ethernet = <&switch_nic>;
-+		phy-handle = <&switchphy4>;
-+	};
-+
-+	port@5 {
-+		reg = <5>;
-+		label = "enembc";
-+
-+		/* connected to Ethernet MAC of AT91RM9200 in MII mode */
-+		fixed-link {
-+			speed = <100>;
-+			full-duplex;
-+		};
++		#address-cells = <3>;
++		#size-cells = <2>;
++		#interrupt-cells = <1>;
 +	};
 +};
 -- 
