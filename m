@@ -1,78 +1,92 @@
-From: David Lechner <david@lechnology.com>
-Subject: =?UTF-8?Q?Re:_[PATCH_v6_00/41]_ARM:_davinci:_convert_to_common_cloc?=
- =?UTF-8?Q?k_framework=e2=80=8b?=
-Date: Tue, 23 Jan 2018 13:24:41 -0600
-Message-ID: <aaeb7d73-bd3b-9c85-88c5-c60da6ca3733@lechnology.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: =?UTF-8?Q?Re=3A_=5BPATCH_v6_00=2F41=5D_ARM=3A_davinci=3A_convert_to_common?=
+        =?UTF-8?Q?_clock_framework=E2=80=8B?=
+Date: Tue, 23 Jan 2018 20:53:20 +0100
+Message-ID: <CAMRc=Me8HefZJYTkprqL2vpq_nLym4r6p-du7hoKwVk8kSCR8w@mail.gmail.com>
 References: <1516468460-4908-1-git-send-email-david@lechnology.com>
  <CAMRc=MexJTMiD=URw1bv-qfGaTntZRXgfsSb_beYGkvO+LrpgQ@mail.gmail.com>
- <d819e18f-7d74-d8c4-8056-bfc545f4d4e9@lechnology.com>
- <CAMRc=McVNJqsO4+j=XkyNWuKqF-S-hQAw9XxHx6GC47UudgMYw@mail.gmail.com>
- <e5f4af7d-971c-5694-2da5-0cba9083ee5c@lechnology.com>
- <615bc302-e129-1501-63be-fa701f5ecaad@lechnology.com>
+ <d819e18f-7d74-d8c4-8056-bfc545f4d4e9@lechnology.com> <CAMRc=McVNJqsO4+j=XkyNWuKqF-S-hQAw9XxHx6GC47UudgMYw@mail.gmail.com>
+ <e5f4af7d-971c-5694-2da5-0cba9083ee5c@lechnology.com> <615bc302-e129-1501-63be-fa701f5ecaad@lechnology.com>
  <CAHCN7xLW=RjHHBjvDto=DRrNfNsQrsaGb0zmsRrwdc+7Wbhaxg@mail.gmail.com>
  <CAMRc=MdyGx3PFiryYybB2fCGx=AP=e7kkdd-DUL29pT+St9u1g@mail.gmail.com>
- <5f836454-5de7-c51d-d262-2c2dbc26e438@lechnology.com>
- <CAMRc=Mcw8wWNo7Q3KnHNv81UGuHxEqmOs0he7MKxmaxDjwao+A@mail.gmail.com>
+ <5f836454-5de7-c51d-d262-2c2dbc26e438@lechnology.com> <CAMRc=Mcw8wWNo7Q3KnHNv81UGuHxEqmOs0he7MKxmaxDjwao+A@mail.gmail.com>
+ <aaeb7d73-bd3b-9c85-88c5-c60da6ca3733@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMRc=Mcw8wWNo7Q3KnHNv81UGuHxEqmOs0he7MKxmaxDjwao+A@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bartosz Golaszewski <brgl@bgdev.pl>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <aaeb7d73-bd3b-9c85-88c5-c60da6ca3733@lechnology.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: David Lechner <david@lechnology.com>
 Cc: Adam Ford <aford173@gmail.com>, linux-clk@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/23/2018 12:34 PM, Bartosz Golaszewski wrote:
-> 2018-01-23 19:26 GMT+01:00 David Lechner <david@lechnology.com>:
->> On 01/23/2018 12:10 PM, Bartosz Golaszewski wrote:
+2018-01-23 20:24 GMT+01:00 David Lechner <david@lechnology.com>:
+> On 01/23/2018 12:34 PM, Bartosz Golaszewski wrote:
+>>
+>> 2018-01-23 19:26 GMT+01:00 David Lechner <david@lechnology.com>:
 >>>
->>> 2018-01-23 18:03 GMT+01:00 Adam Ford <aford173@gmail.com>:
+>>> On 01/23/2018 12:10 PM, Bartosz Golaszewski wrote:
 >>>>
->>>> On Tue, Jan 23, 2018 at 10:06 AM, David Lechner <david@lechnology.com>
->>>> wrote:
+>>>>
+>>>> 2018-01-23 18:03 GMT+01:00 Adam Ford <aford173@gmail.com>:
 >>>>>
->>>>> On 01/23/2018 10:03 AM, David Lechner wrote:
->>>>>>
->>>>>>
->>>>>> You can see if the clock is enabled by running:
->>>>>>
->>>>>>        cat /sys/kernel/debug/clk/clk_summary
->>>>>>
 >>>>>
->>>>> I just realized if you can't boot, you can't do this. :-/
+>>>>> On Tue, Jan 23, 2018 at 10:06 AM, David Lechner <david@lechnology.com>
+>>>>> wrote:
+>>>>>>
+>>>>>>
+>>>>>> On 01/23/2018 10:03 AM, David Lechner wrote:
+>>>>>>>
+>>>>>>>
+>>>>>>>
+>>>>>>> You can see if the clock is enabled by running:
+>>>>>>>
+>>>>>>>        cat /sys/kernel/debug/clk/clk_summary
+>>>>>>>
+>>>>>>
+>>>>>> I just realized if you can't boot, you can't do this. :-/
+>>>>>
+>>>>>
+>>>>>
+>>>>> I can boot with the latest set in your git repo, but the Ethernet
+>>>>> doesn't apparently fully operate.  I don't get errors, but I cannot
+>>>>> get a dhcp address.
+>>>>>
+>>>>> I'll try to do a more exhaustive test later today to get an idea of
+>>>>> what works and what doesn't.  When I ran my basic tests, I just did a
+>>>>> feel-good boot test (and reboot test)
+>>>>>
+>>>>> adam
 >>>>
 >>>>
->>>> I can boot with the latest set in your git repo, but the Ethernet
->>>> doesn't apparently fully operate.  I don't get errors, but I cannot
->>>> get a dhcp address.
 >>>>
->>>> I'll try to do a more exhaustive test later today to get an idea of
->>>> what works and what doesn't.  When I ran my basic tests, I just did a
->>>> feel-good boot test (and reboot test)
+>>>> FYI: manually calling clk_prepare_enable() in the davinci_mdio driver
+>>>> seems to at least fix the ethernet. In master branch it's done by
+>>>> pm_runtime_get_sync() (in davinci_mdio_reset()). However I'm still
+>>>> getting several oopses and WARNs so there's some more work to do.
 >>>>
->>>> adam
+>>>
+>>> Hmm... I'm wondering if we need to also add #power-domain-cells to the
+>>> PSC clocks and power-domains properties to the consumers.
+>>>
+>>> For this specific case though, it seems strange to me that the drivers
+>>> to clk_get() and clk_get_rate() but never enable the clocks.
 >>>
 >>>
->>> FYI: manually calling clk_prepare_enable() in the davinci_mdio driver
->>> seems to at least fix the ethernet. In master branch it's done by
->>> pm_runtime_get_sync() (in davinci_mdio_reset()). However I'm still
->>> getting several oopses and WARNs so there's some more work to do.
->>>
->>
->> Hmm... I'm wondering if we need to also add #power-domain-cells to the
->> PSC clocks and power-domains properties to the consumers.
->>
->> For this specific case though, it seems strange to me that the drivers
->> to clk_get() and clk_get_rate() but never enable the clocks.
+>>> Also, are the oopses and WARNs the same as before?
 >>
 >>
->> Also, are the oopses and WARNs the same as before?
-> 
-> No, the ones before were all related to the ethernet failing, now I
-> get several stack traces from drm. Posted them on pastebin[1].
-> 
+>> No, the ones before were all related to the ethernet failing, now I
+>> get several stack traces from drm. Posted them on pastebin[1].
+>>
+>
+> It looks like the LCDC driver is the same way. It does clk_get() but
+> not clk_prepare_enable().
+>
+>
 
-It looks like the LCDC driver is the same way. It does clk_get() but
-not clk_prepare_enable().
+In the mdio case - the problem is that devm_clk_get() doesn't fail,
+but somehow the clock doesn't end up in the list of the device's
+clocks - which is why it's not enabled by pm_runtime_get_sync().
+
+Bartosz
