@@ -1,71 +1,221 @@
-From: Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v7 2/2] mfd: syscon: Add hardware spinlock support
-Date: Tue, 23 Jan 2018 16:05:15 +0800
-Message-ID: <CAMz4kuK9mng38+fVVCjta1uOJgG_fKtf29NWiUXW_hY55guTjQ@mail.gmail.com>
-References: <29fa88f883dae4c1f8a3acb2656cbd7c5a539d40.1514180039.git.baolin.wang@linaro.org>
- <a878ad35d9f38c58d34dac0b331dca029b61a9b8.1514180039.git.baolin.wang@linaro.org>
- <20180111152219.yzit67dzdshi3cxs@dell> <20180122134336.e7phrckbpwvxwsfz@dell>
+From: Yong Deng <yong.deng@magewell.com>
+Subject: [PATCH v6 0/2] Initial Allwinner V3s CSI Support
+Date: Tue, 23 Jan 2018 16:13:44 +0800
+Message-ID: <1516695224-23183-1-git-send-email-yong.deng@magewell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180122134336.e7phrckbpwvxwsfz@dell>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-media-owner@vger.kernel.org>
+Sender: linux-media-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hans Verkuil <hans.verkuil@cisco.com>, Linus Walleij <linus.walleij@linaro.org>, Randy Dunlap <rdunlap@infradead.org>, Stanimir Varbanov <stanimir.varbanov@linaro.org>, Hugues Fruchet <hugues.fruchet@st.com>, Yannick Fertre <yannick.fertre@st.com>, Philipp Zabel <p.zabel@pengutronix.de>, Arnd Bergmann <arnd@arndb.de>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Rick Chang <rick.chang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lee,
+This patchset add initial support for Allwinner V3s CSI.
 
-On 22 January 2018 at 21:43, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Thu, 11 Jan 2018, Lee Jones wrote:
->> On Mon, 25 Dec 2017, Baolin Wang wrote:
->>
->> > Some system control registers need hardware spinlock to synchronize
->> > between the multiple subsystems, so we should add hardware spinlock
->> > support for syscon.
->> >
->> > Signed-off-by: Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> > ---
->> > Changes since v6:
->> >  - Treat hwlock id 0 as valid for regmap.
->> >
->> > Changes since v5:
->> >  - Fix the case that hwspinlock is not enabled.
->> >
->> > Changes since v4:
->> >  - Add one exapmle to show how to add hwlock.
->> >  - Fix the coding style issue.
->> >
->> > Changes since v3:
->> >  - Add error handling for of_hwspin_lock_get_id()
->> >
->> > Changes since v2:
->> >  - Add acked tag from Rob.
->> >
->> > Changes since v1:
->> >  - Remove timeout configuration.
->> >  - Modify the binding file to add hwlocks.
->> > ---
->> >  Documentation/devicetree/bindings/mfd/syscon.txt |    8 ++++++++
->> >  drivers/mfd/syscon.c                             |   19 +++++++++++++++++++
->> >  2 files changed, 27 insertions(+)
->>
->> Applied, thanks.
->
-> In order to avoid confusion, I should like to tell you that this patch
-> is applied for v4.17, not v4.16.
+Allwinner V3s SoC features two CSI module. CSI0 is used for MIPI CSI-2
+interface and CSI1 is used for parallel interface. This is not
+documented in datasheet but by test and guess.
 
-This patch has been applied into Mark's branch[1] with your ACK, so
-Mark should drop this patch from his branch and you will pick it and
-merge it into v4.17?
+This patchset implement a v4l2 framework driver and add a binding 
+documentation for it. 
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git/commit/?h=topic/hwspinlock&id=3bafc09e779710abaa7b836fe3bbeeeab7754c2b
+Currently, the driver only support the parallel interface. And has been
+tested with a BT1120 signal which generating from FPGA. The following
+fetures are not support with this patchset:
+  - ISP 
+  - MIPI-CSI2
+  - Master clock for camera sensor
+  - Power regulator for the front end IC
+
+Changes in v6:
+  * Add Rob Herring's review tag.
+  * Fix a NULL pointer dereference by picking Maxime Ripard's patch.
+  * Add Maxime Ripard's test tag.
+
+Changes in v5:
+  * Using the new SPDX tags.
+  * Fix MODULE_LICENSE.
+  * Add many default cases and warning messages.
+  * Detail the parallel bus properties
+  * Fix some spelling and syntax mistakes.
+
+Changes in v4:
+  * Deal with the CSI 'INNER QUEUE'.
+    CSI will lookup the next dma buffer for next frame before the
+    the current frame done IRQ triggered. This is not documented
+    but reported by Ondřej Jirman.
+    The BSP code has workaround for this too. It skip to mark the
+    first buffer as frame done for VB2 and pass the second buffer
+    to CSI in the first frame done ISR call. Then in second frame
+    done ISR call, it mark the first buffer as frame done for VB2
+    and pass the third buffer to CSI. And so on. The bad thing is
+    that the first buffer will be written twice and the first frame
+    is dropped even the queued buffer is sufficient.
+    So, I make some improvement here. Pass the next buffer to CSI
+    just follow starting the CSI. In this case, the first frame
+    will be stored in first buffer, second frame in second buffer.
+    This mothed is used to avoid dropping the first frame, it
+    would also drop frame when lacking of queued buffer.
+  * Fix: using a wrong mbus_code when getting the supported formats
+  * Change all fourcc to pixformat
+  * Change some function names
+
+Changes in v3:
+  * Get rid of struct sun6i_csi_ops
+  * Move sun6i-csi to new directory drivers/media/platform/sunxi
+  * Merge sun6i_csi.c and sun6i_csi_v3s.c into sun6i_csi.c
+  * Use generic fwnode endpoints parser
+  * Only support a single subdev to make things simple
+  * Many complaintion fix
+
+Changes in v2: 
+  * Change sunxi-csi to sun6i-csi
+  * Rebase to media_tree master branch 
+
+Following is the 'v4l2-compliance -s -f' output, I have test this
+with both interlaced and progressive signal:
+
+# ./v4l2-compliance -s -f
+v4l2-compliance SHA   : 6049ea8bd64f9d78ef87ef0c2b3dc9b5de1ca4a1
+
+Driver Info:
+        Driver name   : sun6i-video
+        Card type     : sun6i-csi
+        Bus info      : platform:csi
+        Driver version: 4.15.0
+        Capabilities  : 0x84200001
+                Video Capture
+                Streaming
+                Extended Pix Format
+                Device Capabilities
+        Device Caps   : 0x04200001
+                Video Capture
+                Streaming
+                Extended Pix Format
+
+Compliance test for device /dev/video0 (not using libv4l2):
+
+Required ioctls:
+        test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+        test second video open: OK
+        test VIDIOC_QUERYCAP: OK
+        test VIDIOC_G/S_PRIORITY: OK
+        test for unlimited opens: OK
+
+Debug ioctls:
+        test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+        test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+        test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+        test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+        test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+        test VIDIOC_ENUMAUDIO: OK (Not Supported)
+        test VIDIOC_G/S/ENUMINPUT: OK
+        test VIDIOC_G/S_AUDIO: OK (Not Supported)
+        Inputs: 1 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+        test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+        test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+        test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+        test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+        test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+        Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+        test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+        test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+        test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+        test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Test input 0:
+
+        Control ioctls:
+                test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
+                test VIDIOC_QUERYCTRL: OK (Not Supported)
+                test VIDIOC_G/S_CTRL: OK (Not Supported)
+                test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
+                test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
+                test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+                Standard Controls: 0 Private Controls: 0
+
+        Format ioctls:
+                test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+                test VIDIOC_G/S_PARM: OK (Not Supported)
+                test VIDIOC_G_FBUF: OK (Not Supported)
+                test VIDIOC_G_FMT: OK
+                test VIDIOC_TRY_FMT: OK
+                test VIDIOC_S_FMT: OK
+                test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+                test Cropping: OK (Not Supported)
+                test Composing: OK (Not Supported)
+                test Scaling: OK (Not Supported)
+
+        Codec ioctls:
+                test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+                test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+                test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+        Buffer ioctls:
+                test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
+                test VIDIOC_EXPBUF: OK
+
+Test input 0:
+
+Streaming ioctls:
+        test read/write: OK (Not Supported)
+        test MMAP: OK                                     
+        test USERPTR: OK (Not Supported)
+        test DMABUF: Cannot test, specify --expbuf-device
+
+Stream using all formats:
+        test MMAP for Format HM12, Frame Size 1280x720:
+                Stride 1920, Field None: OK                                 
+        test MMAP for Format NV12, Frame Size 1280x720:
+                Stride 1920, Field None: OK                                 
+        test MMAP for Format NV21, Frame Size 1280x720:
+                Stride 1920, Field None: OK                                 
+        test MMAP for Format YU12, Frame Size 1280x720:
+                Stride 1920, Field None: OK                                 
+        test MMAP for Format YV12, Frame Size 1280x720:
+                Stride 1920, Field None: OK                                 
+        test MMAP for Format NV16, Frame Size 1280x720:
+                Stride 2560, Field None: OK                                 
+        test MMAP for Format NV61, Frame Size 1280x720:
+                Stride 2560, Field None: OK                                 
+        test MMAP for Format 422P, Frame Size 1280x720:
+                Stride 2560, Field None: OK                                 
+
+Total: 54, Succeeded: 54, Failed: 0, Warnings: 0
+
+Yong Deng (2):
+  dt-bindings: media: Add Allwinner V3s Camera Sensor Interface (CSI)
+  media: V3s: Add support for Allwinner CSI.
+
+ .../devicetree/bindings/media/sun6i-csi.txt        |  59 ++
+ MAINTAINERS                                        |   8 +
+ drivers/media/platform/Kconfig                     |   1 +
+ drivers/media/platform/Makefile                    |   2 +
+ drivers/media/platform/sunxi/sun6i-csi/Kconfig     |   9 +
+ drivers/media/platform/sunxi/sun6i-csi/Makefile    |   3 +
+ drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c | 908 +++++++++++++++++++++
+ drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.h | 143 ++++
+ .../media/platform/sunxi/sun6i-csi/sun6i_csi_reg.h | 196 +++++
+ .../media/platform/sunxi/sun6i-csi/sun6i_video.c   | 753 +++++++++++++++++
+ .../media/platform/sunxi/sun6i-csi/sun6i_video.h   |  53 ++
+ 11 files changed, 2135 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/sun6i-csi.txt
+ create mode 100644 drivers/media/platform/sunxi/sun6i-csi/Kconfig
+ create mode 100644 drivers/media/platform/sunxi/sun6i-csi/Makefile
+ create mode 100644 drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
+ create mode 100644 drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.h
+ create mode 100644 drivers/media/platform/sunxi/sun6i-csi/sun6i_csi_reg.h
+ create mode 100644 drivers/media/platform/sunxi/sun6i-csi/sun6i_video.c
+ create mode 100644 drivers/media/platform/sunxi/sun6i-csi/sun6i_video.h
 
 -- 
-Baolin.wang
-Best Regards
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.8.3.1
