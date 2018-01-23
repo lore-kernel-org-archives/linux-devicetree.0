@@ -1,98 +1,98 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH] PCI: qcom: add missing supplies required for msm8996
-Date: Tue, 23 Jan 2018 10:33:13 +0000
-Message-ID: <5f43164a-4d84-12be-7f69-f7bbaaf1d64c@linaro.org>
-References: <20171208092053.4417-1-srinivas.kandagatla@linaro.org>
- <65e01829-198e-f549-174d-c8368c5ee193@mm-sol.com>
- <92e2808b-4b2d-8591-9ed7-6600d7a3357b@linaro.org>
- <1a3cc92e-545e-a703-7130-6a9c58854e03@mm-sol.com>
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RFC PATCH] Documentation: DT: arm: Add topology property to
+ define package boundaries
+Date: Tue, 23 Jan 2018 10:35:32 +0000
+Message-ID: <09a288f7-44a5-8f2c-b568-ad117a2ef701@arm.com>
+References: <20180122171534.7681-1-lorenzo.pieralisi@arm.com>
+ <dcafd8bc-1c10-bdfa-e855-5d48cfe63381@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1a3cc92e-545e-a703-7130-6a9c58854e03@mm-sol.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <dcafd8bc-1c10-bdfa-e855-5d48cfe63381-5wv7dgnIgG8@public.gmane.org>
 Content-Language: en-US
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stanimir Varbanov <svarbanov@mm-sol.com>, linux-pci@vger.kernel.org, bhelgaas@google.com
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jeremy Linton <jeremy.linton-5wv7dgnIgG8@public.gmane.org>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Morten Rasmussen <morten.rasmussen-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 23/01/18 10:14, Stanimir Varbanov wrote:
+On 22/01/18 23:25, Jeremy Linton wrote:
 > Hi,
 > 
-> On 01/23/2018 11:46 AM, Srinivas Kandagatla wrote:
+> On 01/22/2018 11:15 AM, Lorenzo Pieralisi wrote:
+>> The current ARM DT topology description provides the operating system
+>> with a topological view of the system that is based on leaf nodes
+>> representing either cores or threads (in an SMT system) and a
+>> hierarchical set of cluster nodes that creates a hierarchical topology
+>> view of how those cores and threads are grouped.
 >>
+>> As opposed to the ACPI topology description ([1], PPTT table), this
+>> hierarchical representation of clusters does not allow to describe what
+>> topology level actually represents the physical package boundary, which
+>> is a key piece of information to be used by an operating system to
+>> optimize resource allocation and scheduling.
 >>
->> On 23/01/18 09:23, Stanimir Varbanov wrote:
->>> Hey Srini,
->>>
->>> As there are no comments I'd propose to change the endpoint supplies to
->>> more generic names.
->>>
->> Sure, I will respin this with your suggestions, except the 3v3 and 1v5
->> suffix due to the reasons below:
->>>> +- vdda-1p8-supply:
->>>> +    Usage: required for msm8996
->>>> +    Value type: <phandle>
->>>> +    Definition: A phandle to the 1.8v analog power supply
->>>> +
->>>
->>> This should be dropped, because it is part of the phy.
->> Yep.
+>> Define an optional, backward compatible boolean property for cluster
+>> nodes that, by reusing the ACPI nomenclature, add to the ARM DT
+>> topological description a binding to define what cluster level
+>> represents a physical package boundary.
 >>
->>>
->>>>    - vdda_phy-supply:
->>>>        Usage: required for ipq/apq8064
->>>>        Value type: <phandle>
->>>> @@ -189,6 +194,15 @@
->>>>        Value type: <phandle>
->>>>        Definition: A phandle to the analog power supply for IC which
->>>> generates
->>>>                reference clock
->>>> +- vddpe-supply:
->>>> +    Usage: optional
->>>> +    Value type: <phandle>
->>>> +    Definition: A phandle to the PCIe endpoint power supply
->>>
->>> vddpe_3v3-supply
->> Why do we need suffix here? AFAIU, It does not add any value, instead it
->> would confuse the users.
-> 
-> vddpe and vddpe1 is already confusing as well.
-
-I partly agree with you.
-
-How would you represent if there are two power 3v3 supplies for the 
-endpoint?
-
-> 
-> Lets imagine that powering up the endpointX needs some specific sequence
-> between 3v3 and 1v5 and endpointY (which could be connected on the same
-> PCIe lane) has different power sequence, how we would handle that in the
-> qcom pcie host driver?
-
-power sequencing is all together a different issue, that is not 
-addressed in this patch. Am hoping that this will be fixed as part of 
-making pwrseq interface more generic. Not sure where it endedup now!!
-
---srini
-
-
-> 
+>> [1] http://www.uefi.org/sites/default/files/resources/ACPI_6_2.pdf
 >>
->> These are power supplies for endpoint which could be of any voltage. In
+>> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+>> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+>> Cc: Jeremy Linton <jeremy.linton-5wv7dgnIgG8@public.gmane.org>
+>> Cc: Morten Rasmussen <morten.rasmussen-5wv7dgnIgG8@public.gmane.org>
+>> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+>> ---
+>>   Documentation/devicetree/bindings/arm/topology.txt | 9 +++++++++
+>>   1 file changed, 9 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/topology.txt
+>> b/Documentation/devicetree/bindings/arm/topology.txt
+>> index de9eb0486630..8e78d76b0671 100644
+>> --- a/Documentation/devicetree/bindings/arm/topology.txt
+>> +++ b/Documentation/devicetree/bindings/arm/topology.txt
+>> @@ -109,6 +109,15 @@ Bindings for cluster/cpu/thread nodes are defined
+>> as follows:
+>>       The cluster node name must be "clusterN" as described in 2.1 above.
+>>       A cluster node can not be a leaf node.
+>>   +    Properties for cluster nodes:
+>> +
+>> +    - physical-package
+>> +        Usage: optional
+>> +        Value type: <empty>
+>> +        Definition: if present the cluster node represents the
+>> +                boundary of a physical package, whether socketed
+>> +                or surface mounted.
+>> +
+>>       A cluster node's child nodes must be:
+>>         - one or more cluster nodes; or
+>>
 > 
-> I don't think that could be any values see PCIe mini card
-> electromechanical specification. There on the connector are provided 3v3
-> and 1v5.
-> 
->> this case both endpoint supplies are 3v3, these could be 1.8 or 5v or
->> 12v in some other cases.
-> 
-> If we see hw designs with 5v and 12v we could extend the binding and the
-> driver with support for them. I want to be exact in the names and
-> voltages in the driver and bindings.
+> Looks good so far, but I would worry about it being optional. 
+
+We have no choice, it has to be optional for compatibility reasons as
+stated in the commit message.
+
+> That seemed like a mistake on the ACPI side.
+
+Not necessarily. It's firmware choice as long as it knows how to deal
+with the default(absence in case of DT)
 
 > 
+> Assuming it is optional, it might be worth a sentence explaining what
+> the fallback behavior is if the property is missing.
+
+That would be helpful.
+
+-- 
+Regards,
+Sudeep
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
