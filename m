@@ -1,97 +1,163 @@
-From: Hyun Kwon <hyunk-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCH 1/2] dt: bindings: dma: xilinx: dpdma: DT bindings for
- Xilinx DPDMA
-Date: Tue, 23 Jan 2018 17:03:22 +0000
-Message-ID: <MWHPR02MB249386A9BB05E62321D14142D6E30@MWHPR02MB2493.namprd02.prod.outlook.com>
-References: <1515204848-3493-1-git-send-email-hyun.kwon@xilinx.com>
- <20180119193758.exii5lpmcq3afoq7@rob-hp-laptop>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: =?UTF-8?Q?Re=3A_=5BPATCH_v6_00=2F41=5D_ARM=3A_davinci=3A_convert_to_common?=
+        =?UTF-8?Q?_clock_framework=E2=80=8B?=
+Date: Tue, 23 Jan 2018 18:04:55 +0100
+Message-ID: <CAMRc=Mfwo-2FUu-zsL0xOLBR8pFcT-vF36HeoUCBVM4jiH1Edg@mail.gmail.com>
+References: <1516468460-4908-1-git-send-email-david@lechnology.com>
+ <CAMRc=MexJTMiD=URw1bv-qfGaTntZRXgfsSb_beYGkvO+LrpgQ@mail.gmail.com>
+ <d819e18f-7d74-d8c4-8056-bfc545f4d4e9@lechnology.com> <CAMRc=McVNJqsO4+j=XkyNWuKqF-S-hQAw9XxHx6GC47UudgMYw@mail.gmail.com>
+ <e5f4af7d-971c-5694-2da5-0cba9083ee5c@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180119193758.exii5lpmcq3afoq7@rob-hp-laptop>
-Content-Language: en-US
-Content-ID: <6B8A9A8CAF272549B36246088B4BB855-0IwlUtR6nOJTpBK7XY6O9JZ3qXmFLfmx@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <e5f4af7d-971c-5694-2da5-0cba9083ee5c@lechnology.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Lechner <david@lechnology.com>
+Cc: linux-clk@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Adam Ford <aford173@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLA0KDQpUaGFua3MgZm9yIHRoZSByZXZpZXcuDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNz
-YWdlLS0tLS0NCj4gRnJvbTogZG1hZW5naW5lLW93bmVyQHZnZXIua2VybmVsLm9yZyBbbWFpbHRv
-OmRtYWVuZ2luZS0NCj4gb3duZXJAdmdlci5rZXJuZWwub3JnXSBPbiBCZWhhbGYgT2YgUm9iIEhl
-cnJpbmcNCj4gU2VudDogRnJpZGF5LCBKYW51YXJ5IDE5LCAyMDE4IDExOjM4IEFNDQo+IFRvOiBI
-eXVuIEt3b24gPGh5dW5rQHhpbGlueC5jb20+DQo+IENjOiBkbWFlbmdpbmVAdmdlci5rZXJuZWwu
-b3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgTWljaGFsIFNpbWVrDQo+IDxtaWNoYWwu
-c2ltZWtAeGlsaW54LmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCAxLzJdIGR0OiBiaW5kaW5n
-czogZG1hOiB4aWxpbng6IGRwZG1hOiBEVCBiaW5kaW5ncyBmb3INCj4gWGlsaW54IERQRE1BDQo+
-IA0KPiBPbiBGcmksIEphbiAwNSwgMjAxOCBhdCAwNjoxNDowN1BNIC0wODAwLCBIeXVuIEt3b24g
-d3JvdGU6DQo+ID4gVGhlIFp5bnFNUCBpbmNsdWRlcyB0aGUgRGlzcGxheVBvcnQgc3Vic3lzdGVt
-IHdpdGggaXRzIG93biBETUENCj4gZW5naW5lDQo+ID4gY2FsbGVkIERQRE1BLiBUaGUgRFBETUEg
-SVAgY29tZXMgd2l0aCA2IGluZGl2aWR1YWwgY2hhbm5lbHMNCj4gPiAoNCBmb3IgZGlzcGxheSwg
-MiBmb3IgYXVkaW8pLiBUaGlzIGRvY3VtZW50YXRpb24gZGVzY3JpYmVzIERUIGJpbmRpbmdzDQo+
-ID4gb2YgRFBETUEuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBIeXVuIEt3b24gPGh5dW4ua3dv
-bkB4aWxpbnguY29tPg0KPiA+IFNpZ25lZC1vZmYtYnk6IE1pY2hhbCBTaW1layA8bWljaGFsLnNp
-bWVrQHhpbGlueC5jb20+DQo+ID4gLS0tDQo+ID4gIC4uLi9iaW5kaW5ncy9kbWEveGlsaW54L3hp
-bGlueF9kcGRtYS50eHQgICAgICAgICAgIHwgNjQNCj4gKysrKysrKysrKysrKysrKysrKysrKw0K
-PiA+ICAxIGZpbGUgY2hhbmdlZCwgNjQgaW5zZXJ0aW9ucygrKQ0KPiA+ICBjcmVhdGUgbW9kZSAx
-MDA2NDQNCj4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RtYS94aWxpbngveGls
-aW54X2RwZG1hLnR4dA0KPiA+DQo+ID4gZGlmZiAtLWdpdA0KPiBhL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9kbWEveGlsaW54L3hpbGlueF9kcGRtYS50eHQNCj4gYi9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZG1hL3hpbGlueC94aWxpbnhfZHBkbWEudHh0DQo+
-ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gPiBpbmRleCAwMDAwMDAwLi41MTAxNmQ4DQo+ID4g
-LS0tIC9kZXYvbnVsbA0KPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9kbWEveGlsaW54L3hpbGlueF9kcGRtYS50eHQNCj4gDQo+IFVzZSB0aGUgY29tcGF0aWJsZSBz
-dHJpbmcgcGx1cyAudHh0IGZvciB0aGUgZmlsZW5hbWUuDQo+IA0KPiA+IEBAIC0wLDAgKzEsNjQg
-QEANCj4gPiArRGV2aWNlLVRyZWUgYmluZGluZ3MgZm9yIFhpbGlueCBaeW5xTVAgRFAgU3Vic3lz
-dGVtIERNQQ0KPiA+ICsNCj4gPiArVGhlIFp5bnFNUCBEaXNwbGF5UG9ydCBzdWJzeXN0ZW0gaGFu
-ZGxlcyBETUEgY2hhbm5lbCBidWZmZXINCj4gbWFuYWdlbWVudCwNCj4gPiArYmxlbmRpbmcsIGFu
-ZCBhdWRpbyBtaXhpbmcuIFRoZSBEaXNwbGF5UG9ydCBzdWJzeXN0ZW0gcmVjZWl2ZXMgZGlzcGxh
-eQ0KPiA+ICthbmQgYXVkaW8gZnJhbWVzIGZyb20gRFBETUEgYW5kIHRyYW5zbWl0cyBvdXRwdXQg
-dG8gdGhlIERpc3BsYXlQb3J0DQo+IElQIGNvcmUuDQo+ID4gKw0KPiA+ICtSZXF1aXJlZCBwcm9w
-ZXJ0aWVzOg0KPiA+ICsgLSBjb21wYXRpYmxlOiBTaG91bGQgYmUgInhsbngsZHBkbWEiLg0KPiAN
-Cj4geGxueCx6eW5xbXAtZHBkYW0NCj4gDQo+ID4gKyAtIHJlZzogQmFzZSBhZGRyZXNzIGFuZCBz
-aXplIG9mIHRoZSBJUCBjb3JlLg0KPiA+ICsgLSBpbnRlcnJ1cHRzOiBJbnRlcnJ1cHQgbnVtYmVy
-Lg0KPiA+ICsgLSBpbnRlcnJ1cHRzLXBhcmVudDogcGhhbmRsZSBmb3IgaW50ZXJydXB0IGNvbnRy
-b2xsZXIuDQo+ID4gKyAtIGNsb2NrczogcGhhbmRsZSBmb3IgQVhJIGNsb2NrDQo+ID4gKyAtIGNs
-b2NrLW5hbWVzOiBUaGUgaWRlbnRpZmljYXRpb24gc3RyaW5nLCAiYXhpX2NsayIsIGlzIGFsd2F5
-cyByZXF1aXJlZC4NCj4gPiArDQo+ID4gK1JlcXVpcmVkIGNoaWxkIG5vZGUgcHJvcGVydGllczoN
-Cj4gPiArLSBjb21wYXRpYmxlOiBTaG91bGQgYmUgb25lIG9mICJ4bG54LHZpZGVvMCIsICJ4bG54
-LHZpZGVvMSIsDQo+ICJ4bG54LHZpZGVvMiIsDQo+ID4gKyAgInhsbngsZ3JhcGhpY3MiLCAieGxu
-eCxhdWRpbzAiLCBvciAieGxueCxhdWRpbzEiLg0KPiANCj4gTm8uIFRoaXMgaXMgYW4gYWJ1c2Ug
-b2YgY29tcGF0aWJsZSBzdHJpbmdzLg0KPiANCj4gV2h5IGRvIHlvdSBuZWVkIHRoZXNlPyBZb3Ug
-aGF2ZSB0aGUgRE1BIGNoYW5uZWwgbnVtYmVyaW5nIGZpeGVkLg0KPiANCj4gPiArDQo+ID4gK0V4
-YW1wbGU6DQo+ID4gKw0KPiA+ICsJeGxueF9kcGRtYTogYXhpZHBkbWFANDNjMTAwMDAgew0KPiAN
-Cj4gZG1hLWNvbnRyb2xsZXJADQo+IA0KDQpJIGFncmVlIHdpdGggeW91ciBjb21tZW50cy4gV2ls
-bCBhZGRyZXNzIGluIHYyLg0KDQpUaGFua3MsDQotaHl1bg0KDQo+ID4gKwkJY29tcGF0aWJsZSA9
-ICJ4bG54LGRwZG1hIjsNCj4gPiArCQlyZWcgPSA8MHg0M2MxMDAwMCAweDEwMDA+Ow0KPiA+ICsJ
-CWludGVycnVwdHMgPSA8MCA1NCA0PjsNCj4gPiArCQlpbnRlcnJ1cHQtcGFyZW50ID0gPCZpbnRj
-PjsNCj4gPiArCQljbG9ja3MgPSA8JmNsa2MgMTY+Ow0KPiA+ICsJCWNsb2NrLW5hbWVzID0gImF4
-aV9jbGsiOw0KPiA+ICsNCj4gPiArCQkjZG1hLWNlbGxzID0gPDE+Ow0KPiA+ICsJCWRtYS12aWRl
-bzBjaGFubmVsIHsNCj4gPiArCQkJY29tcGF0aWJsZSA9ICJ4bG54LHZpZGVvMCI7DQo+ID4gKwkJ
-fTsNCj4gPiArCQlkbWEtdmlkZW8xY2hhbm5lbCB7DQo+ID4gKwkJCWNvbXBhdGlibGUgPSAieGxu
-eCx2aWRlbzEiOw0KPiA+ICsJCX07DQo+ID4gKwkJZG1hLXZpZGVvMmNoYW5uZWwgew0KPiA+ICsJ
-CQljb21wYXRpYmxlID0gInhsbngsdmlkZW8yIjsNCj4gPiArCQl9Ow0KPiA+ICsJCWRtYS1ncmFw
-aGljc2NoYW5uZWwgew0KPiA+ICsJCQljb21wYXRpYmxlID0gInhsbngsZ3JhcGhpY3MiOw0KPiA+
-ICsJCX07DQo+ID4gKwkJZG1hLWF1ZGlvMGNoYW5uZWwgew0KPiA+ICsJCQljb21wYXRpYmxlID0g
-InhsbngsYXVkaW8wIjsNCj4gPiArCQl9Ow0KPiA+ICsJCWRtYS1hdWRpbzFjaGFubmVsIHsNCj4g
-PiArCQkJY29tcGF0aWJsZSA9ICJ4bG54LGF1ZGlvMSI7DQo+ID4gKwkJfTsNCj4gPiArCX07DQo+
-ID4gKw0KPiA+ICsqIERNQSBjbGllbnQNCj4gPiArDQo+ID4gK1JlcXVpcmVkIHByb3BlcnRpZXM6
-DQo+ID4gKy0gZG1hczogYSBsaXN0IG9mIDxbRFBETUEgZGV2aWNlIHBoYW5kbGVdIFtDaGFubmVs
-IElEXT4gcGFpcnMuICJDaGFubmVsDQo+IElEIg0KPiA+ICsgIGlzIGRlZmluZWQgYXMgdmlkZW8w
-ID0gMCwgdmlkZW8xID0gMSwgdmlkZW8yID0gMiwgZ3JhcGhpY3MgPSAzLCBhdWRpbzAgPSA0LA0K
-PiA+ICsgIGFuZCBhdWRpbzEgPSA1Lg0KPiA+ICsNCj4gPiArRXhhbXBsZToNCj4gPiArDQo+ID4g
-Kwl4bG54X2RybSB7DQo+ID4gKwkJLi4uDQo+ID4gKwkJZG1hcyA9IDwmeGxueF9kcGRtYSAzPjsN
-Cj4gPiArCQlkbWEtbmFtZXMgPSAiZG1hIjsNCj4gPiArCQkuLi4NCj4gPiArCX07DQo+ID4gLS0N
-Cj4gPiAyLjcuNA0KPiA+DQo+ID4gLS0NCj4gPiBUbyB1bnN1YnNjcmliZSBmcm9tIHRoaXMgbGlz
-dDogc2VuZCB0aGUgbGluZSAidW5zdWJzY3JpYmUgZGV2aWNldHJlZSIgaW4NCj4gPiB0aGUgYm9k
-eSBvZiBhIG1lc3NhZ2UgdG8gbWFqb3Jkb21vQHZnZXIua2VybmVsLm9yZw0KPiA+IE1vcmUgbWFq
-b3Jkb21vIGluZm8gYXQgIGh0dHA6Ly92Z2VyLmtlcm5lbC5vcmcvbWFqb3Jkb21vLWluZm8uaHRt
-bA0KPiAtLQ0KPiBUbyB1bnN1YnNjcmliZSBmcm9tIHRoaXMgbGlzdDogc2VuZCB0aGUgbGluZSAi
-dW5zdWJzY3JpYmUgZG1hZW5naW5lIiBpbg0KPiB0aGUgYm9keSBvZiBhIG1lc3NhZ2UgdG8gbWFq
-b3Jkb21vQHZnZXIua2VybmVsLm9yZw0KPiBNb3JlIG1ham9yZG9tbyBpbmZvIGF0ICBodHRwOi8v
-dmdlci5rZXJuZWwub3JnL21ham9yZG9tby1pbmZvLmh0bWwNCg==
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2018-01-23 17:03 GMT+01:00 David Lechner <david@lechnology.com>:
+> On 01/23/2018 08:54 AM, Bartosz Golaszewski wrote:
+>>
+>> 2018-01-22 18:30 GMT+01:00 David Lechner <david@lechnology.com>:
+>>>
+>>> On 01/22/2018 05:14 AM, Bartosz Golaszewski wrote:
+>>>>
+>>>>
+>>>> 2018-01-20 18:13 GMT+01:00 David Lechner <david@lechnology.com>:
+>>>>>
+>>>>>
+>>>>> This series converts mach-davinci to use the common clock framework.
+>>>>>
+>>>>> The series works like this, the first 19 patches create new clock
+>>>>> drivers
+>>>>> using the common clock framework. There are basically 3 groups of
+>>>>> clocks
+>>>>> -
+>>>>> PLL, PSC and CFGCHIP (syscon). There are six different SoCs that each
+>>>>> have
+>>>>> unique init data, which is the reason for so many patches.
+>>>>>
+>>>>> Then, starting with "ARM: da830: add new clock init using common
+>>>>> clock",
+>>>>> we get the mach code ready for the switch by adding the code needed for
+>>>>> the new clock drivers and adding #ifndef CONFIG_COMMON_CLK around the
+>>>>> legacy clocks so that we can switch easily between the old and the new.
+>>>>>
+>>>>> "ARM: davinci: switch to common clock framework" actually flips the
+>>>>> switch
+>>>>> to start using the new clock drivers. Then the next 8 patches remove
+>>>>> all
+>>>>> of the old clock code.
+>>>>>
+>>>>> The final three patches add device tree clock support to the one SoC
+>>>>> that
+>>>>> supports it.
+>>>>>
+>>>>> v6 changes (also see individual patches for details):
+>>>>> - All of the device tree bindings are changed
+>>>>> - All of the clock drivers are changed significantly
+>>>>> - Fixed issues brought up during review of v5
+>>>>> - "ARM: davinci: move davinci_clk_init() to init_time" is removed from
+>>>>> this
+>>>>>     series and submitted separately
+>>>>>
+>>>>> v5 changes:
+>>>>> - Basically, this is an entirely new series
+>>>>> - Patches are broken up into bite-sized pieces
+>>>>> - Converted PSC clock driver to use regmap
+>>>>> - Restored "force" flag for certain DA850 clocks
+>>>>> - Added device tree bindings
+>>>>> - Moved more of the clock init to drivers/clk
+>>>>> - Fixed frequency scaling (maybe*)
+>>>>>
+>>>>> * I have frequency scaling using cpufreq-dt, so I know the clocks are
+>>>>> doing
+>>>>>     what they need to do to make this work, but I haven't figured out
+>>>>> how
+>>>>> to
+>>>>>     test davinci-cpufreq driver yet. (Patches to make cpufreq-dt work
+>>>>> will
+>>>>> be
+>>>>>     sent separately after this series has landed.)
+>>>>>
+>>>>> Dependencies:
+>>>>>
+>>>>> This series applies on top of linux-davinci/master plus the following
+>>>>> patches:
+>>>>> - [1] "clk: fix reentrancy of clk_enable() on UP systems" (in clk-next)
+>>>>> - [2] "clk: add helper functions for managing clk_onecell_data"
+>>>>> - [3] "clk: divider: read-only divider can propagate rate change"
+>>>>> - [4],[5],[6],[7],[8],[9] series "ARM: davinci: common clock prep work"
+>>>>>
+>>>>
+>>>> Hi David,
+>>>>
+>>>> I'm getting a splat[1] when trying to mount the rootfs over nfs on a
+>>>> da850-lcdk.
+>>>>
+>>>> I'll try to figure out what's happening.
+>>>>
+>>>> Best regards,
+>>>> Bartosz Golaszewski
+>>>>
+>>>> [1] https://pastebin.com/D94z8SAe
+>>>>
+>>>
+>>> Could it have something to do with the "rmii" clock? I don't think I
+>>> added
+>>> that
+>>> in the device tree.
+>>>
+>>
+>> I'm looking at it now. There are problems with emac & mdio both in
+>> legacy and in DT mode.
+>
+>
+> Adam, is networking working for you on the DA850 EVM?
+>
+>>
+>> The davinci_mdio driver seems to not get an actual functional clock
+>> (phy is reported as down). I'm seeing that in old legacy code,
+>> mdio_clk has emac_clk as parent, while after your changes they share
+>> pll0_sysclk4 as parent, although I'm not sure if that has anything to
+>> do with it.
+>
+>
+> The two clocks prior to these changes was a hack to work around a
+> limitation of the old lock code (because of the way it used a linked list
+> each clock could only be used once) so, yes, that should not have anything
+> to do with it.
+>
+
+And it was I who did the change in commit ef37427ac567 ("ARM: davinci:
+da850: don't add emac clock to lookup table twice") :) Already forgot
+that.
+
+> I see that there is no clk_prepare_enable() in the mdio driver or the emac
+> driver. I suppose it expects pm_runtime to take care of this maybe?
+>
+> You can see if the clock is enabled by running:
+>
+>     cat /sys/kernel/debug/clk/clk_summary
+>
+>>
+>> I'll see about the rmii clock too.
+>
+> FWIW, the rmii clock is in the clock init for non-DT da850.
+>
+
+2018-01-23 17:06 GMT+01:00 David Lechner <david@lechnology.com>:
+> On 01/23/2018 10:03 AM, David Lechner wrote:
+>>
+>> You can see if the clock is enabled by running:
+>>
+>>      cat /sys/kernel/debug/clk/clk_summary
+>>
+>
+> I just realized if you can't boot, you can't do this. :-/
+
+I can always boot from SD or just printk it.
+
+Thanks,
+Bartosz
