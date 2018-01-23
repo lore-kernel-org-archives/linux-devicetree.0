@@ -1,129 +1,59 @@
-From: David Lechner <david@lechnology.com>
-Subject: =?UTF-8?Q?Re:_[PATCH_v6_00/41]_ARM:_davinci:_convert_to_common_cloc?=
- =?UTF-8?Q?k_framework=e2=80=8b?=
-Date: Tue, 23 Jan 2018 10:03:11 -0600
-Message-ID: <e5f4af7d-971c-5694-2da5-0cba9083ee5c@lechnology.com>
-References: <1516468460-4908-1-git-send-email-david@lechnology.com>
- <CAMRc=MexJTMiD=URw1bv-qfGaTntZRXgfsSb_beYGkvO+LrpgQ@mail.gmail.com>
- <d819e18f-7d74-d8c4-8056-bfc545f4d4e9@lechnology.com>
- <CAMRc=McVNJqsO4+j=XkyNWuKqF-S-hQAw9XxHx6GC47UudgMYw@mail.gmail.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V4 2/5] regulator: make regulator voltage be an array to
+ support more states
+Date: Tue, 23 Jan 2018 16:04:59 +0000
+Message-ID: <20180123160459.GH7600@sirena.org.uk>
+References: <1516708783-6288-1-git-send-email-zhang.chunyan@linaro.org>
+ <1516708783-6288-2-git-send-email-zhang.chunyan@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <CAMRc=McVNJqsO4+j=XkyNWuKqF-S-hQAw9XxHx6GC47UudgMYw@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-clk-owner@vger.kernel.org
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-clk@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Adam Ford <aford173@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="xQmOcGOVkeO43v2v"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1516708783-6288-2-git-send-email-zhang.chunyan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chunyan Zhang <zhang.chunyan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chunyan Zhang <zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/23/2018 08:54 AM, Bartosz Golaszewski wrote:
-> 2018-01-22 18:30 GMT+01:00 David Lechner <david@lechnology.com>:
->> On 01/22/2018 05:14 AM, Bartosz Golaszewski wrote:
->>>
->>> 2018-01-20 18:13 GMT+01:00 David Lechner <david@lechnology.com>:
->>>>
->>>> This series converts mach-davinci to use the common clock framework.
->>>>
->>>> The series works like this, the first 19 patches create new clock drivers
->>>> using the common clock framework. There are basically 3 groups of clocks
->>>> -
->>>> PLL, PSC and CFGCHIP (syscon). There are six different SoCs that each
->>>> have
->>>> unique init data, which is the reason for so many patches.
->>>>
->>>> Then, starting with "ARM: da830: add new clock init using common clock",
->>>> we get the mach code ready for the switch by adding the code needed for
->>>> the new clock drivers and adding #ifndef CONFIG_COMMON_CLK around the
->>>> legacy clocks so that we can switch easily between the old and the new.
->>>>
->>>> "ARM: davinci: switch to common clock framework" actually flips the
->>>> switch
->>>> to start using the new clock drivers. Then the next 8 patches remove all
->>>> of the old clock code.
->>>>
->>>> The final three patches add device tree clock support to the one SoC that
->>>> supports it.
->>>>
->>>> v6 changes (also see individual patches for details):
->>>> - All of the device tree bindings are changed
->>>> - All of the clock drivers are changed significantly
->>>> - Fixed issues brought up during review of v5
->>>> - "ARM: davinci: move davinci_clk_init() to init_time" is removed from
->>>> this
->>>>     series and submitted separately
->>>>
->>>> v5 changes:
->>>> - Basically, this is an entirely new series
->>>> - Patches are broken up into bite-sized pieces
->>>> - Converted PSC clock driver to use regmap
->>>> - Restored "force" flag for certain DA850 clocks
->>>> - Added device tree bindings
->>>> - Moved more of the clock init to drivers/clk
->>>> - Fixed frequency scaling (maybe*)
->>>>
->>>> * I have frequency scaling using cpufreq-dt, so I know the clocks are
->>>> doing
->>>>     what they need to do to make this work, but I haven't figured out how
->>>> to
->>>>     test davinci-cpufreq driver yet. (Patches to make cpufreq-dt work will
->>>> be
->>>>     sent separately after this series has landed.)
->>>>
->>>> Dependencies:
->>>>
->>>> This series applies on top of linux-davinci/master plus the following
->>>> patches:
->>>> - [1] "clk: fix reentrancy of clk_enable() on UP systems" (in clk-next)
->>>> - [2] "clk: add helper functions for managing clk_onecell_data"
->>>> - [3] "clk: divider: read-only divider can propagate rate change"
->>>> - [4],[5],[6],[7],[8],[9] series "ARM: davinci: common clock prep work"
->>>>
->>>
->>> Hi David,
->>>
->>> I'm getting a splat[1] when trying to mount the rootfs over nfs on a
->>> da850-lcdk.
->>>
->>> I'll try to figure out what's happening.
->>>
->>> Best regards,
->>> Bartosz Golaszewski
->>>
->>> [1] https://pastebin.com/D94z8SAe
->>>
->>
->> Could it have something to do with the "rmii" clock? I don't think I added
->> that
->> in the device tree.
->>
-> 
-> I'm looking at it now. There are problems with emac & mdio both in
-> legacy and in DT mode.
 
-Adam, is networking working for you on the DA850 EVM?
+--xQmOcGOVkeO43v2v
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> 
-> The davinci_mdio driver seems to not get an actual functional clock
-> (phy is reported as down). I'm seeing that in old legacy code,
-> mdio_clk has emac_clk as parent, while after your changes they share
-> pll0_sysclk4 as parent, although I'm not sure if that has anything to
-> do with it.
+On Tue, Jan 23, 2018 at 07:59:40PM +0800, Chunyan Zhang wrote:
+> Some regulator consumers would like to make the regulator device
+> keeping a voltage range output when the system entering into
+> suspend states.
 
-The two clocks prior to these changes was a hack to work around a
-limitation of the old lock code (because of the way it used a linked list
-each clock could only be used once) so, yes, that should not have anything
-to do with it.
+I tried to apply these but there's earlier versions of some of them
+already applied on my topic/suspend branch so it's just a world of
+conflicts - can you please rebase against that branch (or my for-next)?
 
-I see that there is no clk_prepare_enable() in the mdio driver or the emac
-driver. I suppose it expects pm_runtime to take care of this maybe?
+Please don't resubmit patches that have already been applied, you should
+submit patches against current code in the tree you're expecting things
+to be applied to.  If any updates are needed to a patch that's already
+been applied you should submit incremental patches which make those
+updates.  This avoids having to change published git commits which could
+cause problems for people working against git.
 
-You can see if the clock is enabled by running:
+--xQmOcGOVkeO43v2v
+Content-Type: application/pgp-signature; name="signature.asc"
 
-     cat /sys/kernel/debug/clk/clk_summary
+-----BEGIN PGP SIGNATURE-----
 
-> 
-> I'll see about the rmii clock too.
-FWIW, the rmii clock is in the clock init for non-DT da850.
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlpnXSoACgkQJNaLcl1U
+h9AGPwf/cTgi+Gjw1zXd1GTGQ5pipd2XIAYE+zQn/WxQA7951WYKjO6UVfQOO0tQ
+Xa1BgSppx9/XpkxiUPCg5Eg5MiH8JjNOv1S4k7/JxrRzKcEwnq1dNKrzDNNY2NLD
+TnJi4dkSVQ9YaVdEreQb3X92baEG6bWOvmNUI26YCXynHZGJBEJM0e9KUHz/mFBd
+PXveN/qA9ZBZJu2BGqeg+do3eA6tP19ePWpwkT73/vYOh43oQGt9JtE51PNWiK19
+3/LUjtl67rz6pPivg2Buwre0AFvOx1Ci2loncV3KoCMEiKKRr+cDC9BYvcKSLwms
+PviA6VKnoxFG9ruGloLxTUBDrskSSQ==
+=+aL5
+-----END PGP SIGNATURE-----
 
+--xQmOcGOVkeO43v2v--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
