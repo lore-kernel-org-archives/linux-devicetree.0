@@ -1,63 +1,60 @@
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: RE: [PATCH 0/2] Use demuxer for i2c1 and i2c5
-Date: Tue, 23 Jan 2018 13:39:46 +0000
-Message-ID: <KL1PR06MB1702A0E39B6D488E907BA7A9B8E30@KL1PR06MB1702.apcprd06.prod.outlook.com>
-References: <1516620563-7965-1-git-send-email-biju.das@bp.renesas.com>
- <20180122114026.uqozk4cbhfrjwqmd@katana>
- <KL1PR06MB170270EA30591C7636941361B8EC0@KL1PR06MB1702.apcprd06.prod.outlook.com>
- <20180122122204.n25jf2rtaoxmi2yq@katana>
- <KL1PR06MB170262934FD5C3B9D422A134B8EC0@KL1PR06MB1702.apcprd06.prod.outlook.com>
- <20180122140824.ox2ljc3kvrkgipq7@ninjato>
+From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 1/2] soc: imx: gpc: ARM power domain should be always-on
+Date: Tue, 23 Jan 2018 14:47:36 +0100
+Message-ID: <1516715256.25726.22.camel@pengutronix.de>
+References: <1516725734-32745-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20180122140824.ox2ljc3kvrkgipq7@ninjato>
-Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Chris Paterson <Chris.Paterson2@renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1516725734-32745-1-git-send-email-Anson.Huang-3arQi8VN3Tc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Anson Huang <Anson.Huang-3arQi8VN3Tc@public.gmane.org>, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, aisheng.dong-3arQi8VN3Tc@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux-imx-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Am Mittwoch, den 24.01.2018, 00:42 +0800 schrieb Anson Huang:
+> ARM power domain does NOT support runtime off, always-on
+> flag should be set to avoid incorrect power state in
+> pm_genpd_summary:
+> 
+> Before:
+> 
+> root@imx6qpdlsolox:~# cat /sys/kernel/debug/pm_genpd/pm_genpd_summary
+> domain                          status          slaves
+>     /device                                             runtime status
+> ----------------------------------------------------------------------
+> ARM                             off-0
+> 
+> After:
+> 
+> root@imx6qpdlsolox:~# cat /sys/kernel/debug/pm_genpd/pm_genpd_summary
+> domain                          status          slaves
+>     /device                                             runtime status
+> ----------------------------------------------------------------------
+> ARM                             on
+> 
+> Signed-off-by: Anson Huang <Anson.Huang-3arQi8VN3Tc@public.gmane.org>
 
-> Subject: Re: [PATCH 0/2] Use demuxer for i2c1 and i2c5
->
->
-> > > > On top of renesas-dev branch, I am using the below i2c-rcar driver
-> > > > related
-> > > patches.
-> > > >
-> > > > https://www.mail-archive.com/linux-renesas-soc@vger.kernel.org/msg
-> > > > 2227
-> > > > 8.html
-> > >
-> > > Those should be enough. They are not?
-> >
-> > Yes. I have tested without demuxer patches, I confirm, it can recover t=
-he bus.
->
-> That is great news! Thanks for the additional testing. I was a little wor=
-ried that
-> the 'bus stalled' detection might have failed for you, but it seems it wo=
-rks for
-> your case as well.
->
-> With that put aside, it is still valid, to add the demuxer to the DTS fil=
-e in case you
-> want to switch to bitbanged GPIO at runtime for some reason. Only the com=
-mit
-> message would need updating then, however, because it is not relevant for=
- bus
-> recovery.
+Reviewed-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-Ok. I will fix the commit message and send v2.
-
-Regards,
-Biju
-
-
-
-Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, B=
-uckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered=
- No. 04586709.
+> ---
+>  drivers/soc/imx/gpc.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/soc/imx/gpc.c b/drivers/soc/imx/gpc.c
+> index 53f7275..6cafa9b 100644
+> --- a/drivers/soc/imx/gpc.c
+> +++ b/drivers/soc/imx/gpc.c
+> @@ -254,6 +254,7 @@ static struct imx_pm_domain imx_gpc_domains[] = {
+> >  	{
+> >  		.base = {
+> >  			.name = "ARM",
+> > +			.flags = GENPD_FLAG_ALWAYS_ON,
+> >  		},
+> >  	}, {
+> >  		.base = {
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
