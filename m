@@ -1,82 +1,46 @@
-From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH v2 4/4] drivers: firmware: xilinx: Add debugfs interface
-Date: Tue, 23 Jan 2018 09:41:03 +0100
-Message-ID: <20180123084103.GC21463@kroah.com>
-References: <1516220434-22204-1-git-send-email-jollys@xilinx.com>
- <1516220434-22204-5-git-send-email-jollys@xilinx.com>
+From: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH 2/5] pinctrl: stm32: add STM32F769 MCU support
+Date: Tue, 23 Jan 2018 09:44:46 +0100
+Message-ID: <7dd6bae8-87ef-7dd1-477a-a40d6ab48a94@st.com>
+References: <1512982475-32661-2-git-send-email-alexandre.torgue@st.com>
+ <1512982475-32661-3-git-send-email-alexandre.torgue@st.com>
+ <CACRpkdYTbjXx5tx9LjRKkbZ7zCBZz0Fhe_cmRm4DMq_3hTTmtA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1516220434-22204-5-git-send-email-jollys-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <CACRpkdYTbjXx5tx9LjRKkbZ7zCBZz0Fhe_cmRm4DMq_3hTTmtA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jolly Shah <jolly.shah-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mingo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matt-mF/unelCI9GS6iBeEJttW/XRex20P6io@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rajanv-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, Jolly Shah <jollys-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 17, 2018 at 12:20:34PM -0800, Jolly Shah wrote:
-> +/* Setup debugfs fops */
-> +static const struct file_operations fops_zynqmp_pm_dbgfs = {
-> +       .owner  =       THIS_MODULE,
-> +       .write  =       zynqmp_pm_debugfs_api_write,
-> +       .read   =       zynqmp_pm_debugfs_api_version_read,
-> +};
-> +
-> +/**
-> + * zynqmp_pm_api_debugfs_init - Initialize debugfs interface
-> + *
-> + * Return:      Returns 0 on success
-> + *             Corresponding error code otherwise
-> + */
-> +int zynqmp_pm_api_debugfs_init(void)
-> +{
-> +       int err;
-> +
-> +       /* Initialize debugfs interface */
-> +       zynqmp_pm_debugfs_dir = debugfs_create_dir(DRIVER_NAME, NULL);
-> +       if (!zynqmp_pm_debugfs_dir) {
-> +               pr_err("debugfs_create_dir failed\n");
-> +               return -ENODEV;
-> +       }
 
-No, you should NEVER care if a debugfs call returned an error or not, no
-need to check it at all.  Your code path should not change based on the
-return value as no code should depened on the functionality of debugfs.
 
-Any error returned by a debugfs call can be passed right back into it
-with no problems, so again, no need to check this.
+On 01/22/2018 09:25 AM, Linus Walleij wrote:
+> On Mon, Dec 11, 2017 at 9:54 AM, Alexandre Torgue
+> <alexandre.torgue-qxv4g6HH51o@public.gmane.org> wrote:
+> 
+>> This patch which adds STM32F769 pinctrl and GPIO support, relies on the
+>> generic STM32 pinctrl driver.
+>>
+>> Signed-off-by: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+> 
+> Patch applied as Patrice poked me.
+> 
+> I hope it works fine being applied in isolation from the other
+> patches?
 
-> +
-> +       zynqmp_pm_debugfs_power =
-> +               debugfs_create_file("pm", 0220,
-> +                                   zynqmp_pm_debugfs_dir, NULL,
-> +                                   &fops_zynqmp_pm_dbgfs);
-> +       if (!zynqmp_pm_debugfs_power) {
-> +               pr_err("debugfs_create_file power failed\n");
-> +               err = -ENODEV;
-> +               goto err_dbgfs;
-> +       }
-> +
-> +       zynqmp_pm_debugfs_api_version =
-> +               debugfs_create_file("api_version", 0444,
-> +                                   zynqmp_pm_debugfs_dir, NULL,
-> +                                   &fops_zynqmp_pm_dbgfs);
-> +       if (!zynqmp_pm_debugfs_api_version) {
-> +               pr_err("debugfs_create_file api_version failed\n");
-> +               err = -ENODEV;
-> +               goto err_dbgfs;
-> +       }
+Yes it does. I will add other patches in my next pull request (for v4.17).
 
-Why do you save these dentries at all anyway?  You never do anything
-with them, just create the files and away you go, no need to worry about
-anything.
+Thanks
+Alex
 
-Remember, debugfs was created to be very simple to use, don't make it
-more complex than it has to be please.
-
-thanks,
-
-greg k-h
+> 
+> Yours,
+> Linus Walleij
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
