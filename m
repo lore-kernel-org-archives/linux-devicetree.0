@@ -1,80 +1,105 @@
-From: Jeremy Linton <jeremy.linton-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RFC PATCH] Documentation: DT: arm: Add topology property to
- define package boundaries
-Date: Mon, 22 Jan 2018 17:25:40 -0600
-Message-ID: <dcafd8bc-1c10-bdfa-e855-5d48cfe63381@arm.com>
-References: <20180122171534.7681-1-lorenzo.pieralisi@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180122171534.7681-1-lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Morten Rasmussen <morten.rasmussen-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: [PATCH] PCI: histb: add power control GPIO for PCIe slot
+Date: Tue, 23 Jan 2018 09:04:37 +0800
+Message-ID: <1516669477-20151-1-git-send-email-shawn.guo@linaro.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Rob Herring <robh+dt@kernel.org>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, project-aspen-dev@linaro.org, Jianguo Sun <sunjianguo1@huawei.com>, Shawn Guo <shawn.guo@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+From: Jianguo Sun <sunjianguo1@huawei.com>
 
-On 01/22/2018 11:15 AM, Lorenzo Pieralisi wrote:
-> The current ARM DT topology description provides the operating system
-> with a topological view of the system that is based on leaf nodes
-> representing either cores or threads (in an SMT system) and a
-> hierarchical set of cluster nodes that creates a hierarchical topology
-> view of how those cores and threads are grouped.
-> 
-> As opposed to the ACPI topology description ([1], PPTT table), this
-> hierarchical representation of clusters does not allow to describe what
-> topology level actually represents the physical package boundary, which
-> is a key piece of information to be used by an operating system to
-> optimize resource allocation and scheduling.
-> 
-> Define an optional, backward compatible boolean property for cluster
-> nodes that, by reusing the ACPI nomenclature, add to the ARM DT
-> topological description a binding to define what cluster level
-> represents a physical package boundary.
-> 
-> [1] http://www.uefi.org/sites/default/files/resources/ACPI_6_2.pdf
-> 
-> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-> Cc: Jeremy Linton <jeremy.linton-5wv7dgnIgG8@public.gmane.org>
-> Cc: Morten Rasmussen <morten.rasmussen-5wv7dgnIgG8@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> ---
->   Documentation/devicetree/bindings/arm/topology.txt | 9 +++++++++
->   1 file changed, 9 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/topology.txt b/Documentation/devicetree/bindings/arm/topology.txt
-> index de9eb0486630..8e78d76b0671 100644
-> --- a/Documentation/devicetree/bindings/arm/topology.txt
-> +++ b/Documentation/devicetree/bindings/arm/topology.txt
-> @@ -109,6 +109,15 @@ Bindings for cluster/cpu/thread nodes are defined as follows:
->   	The cluster node name must be "clusterN" as described in 2.1 above.
->   	A cluster node can not be a leaf node.
->   
-> +	Properties for cluster nodes:
-> +
-> +	- physical-package
-> +		Usage: optional
-> +		Value type: <empty>
-> +		Definition: if present the cluster node represents the
-> +			    boundary of a physical package, whether socketed
-> +			    or surface mounted.
-> +
->   	A cluster node's child nodes must be:
->   
->   	- one or more cluster nodes; or
-> 
+Besides the GPIO for controlling reset, there is also possibly another
+GPIO for turning on/off the power of PCIe slot.  Let's add the support
+for that with another optional device tree property 'power-gpios'.
 
-Looks good so far, but I would worry about it being optional. That 
-seemed like a mistake on the ACPI side.
+Signed-off-by: Jianguo Sun <sunjianguo1@huawei.com>
+Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
+---
+ .../bindings/pci/hisilicon-histb-pcie.txt          |  1 +
+ drivers/pci/dwc/pcie-histb.c                       | 28 +++++++++++++++++++---
+ 2 files changed, 26 insertions(+), 3 deletions(-)
 
-Assuming it is optional, it might be worth a sentence explaining what 
-the fallback behavior is if the property is missing.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/pci/hisilicon-histb-pcie.txt b/Documentation/devicetree/bindings/pci/hisilicon-histb-pcie.txt
+index c84bc027930b..597397a048f8 100644
+--- a/Documentation/devicetree/bindings/pci/hisilicon-histb-pcie.txt
++++ b/Documentation/devicetree/bindings/pci/hisilicon-histb-pcie.txt
+@@ -33,6 +33,7 @@ Required properties
+   "bus": bus reset.
+ 
+ Optional properties:
++- power-gpios: The gpio to control the power of PCIe slot.
+ - reset-gpios: The gpio to generate PCIe PERST# assert and deassert signal.
+ - phys: List of phandle and phy mode specifier, should be 0.
+ - phy-names: Must be "phy".
+diff --git a/drivers/pci/dwc/pcie-histb.c b/drivers/pci/dwc/pcie-histb.c
+index 33b01b734d7d..2a6b18619b25 100644
+--- a/drivers/pci/dwc/pcie-histb.c
++++ b/drivers/pci/dwc/pcie-histb.c
+@@ -63,6 +63,7 @@ struct histb_pcie {
+ 	struct reset_control *sys_reset;
+ 	struct reset_control *bus_reset;
+ 	void __iomem *ctrl;
++	int power_gpio;
+ 	int reset_gpio;
+ };
+ 
+@@ -230,6 +231,8 @@ static void histb_pcie_host_disable(struct histb_pcie *hipcie)
+ 
+ 	if (gpio_is_valid(hipcie->reset_gpio))
+ 		gpio_set_value_cansleep(hipcie->reset_gpio, 0);
++	if (gpio_is_valid(hipcie->power_gpio))
++		gpio_set_value_cansleep(hipcie->power_gpio, 0);
+ }
+ 
+ static int histb_pcie_host_enable(struct pcie_port *pp)
+@@ -240,8 +243,14 @@ static int histb_pcie_host_enable(struct pcie_port *pp)
+ 	int ret;
+ 
+ 	/* power on PCIe device if have */
+-	if (gpio_is_valid(hipcie->reset_gpio))
++	if (gpio_is_valid(hipcie->power_gpio))
++		gpio_set_value_cansleep(hipcie->power_gpio, 1);
++
++	if (gpio_is_valid(hipcie->reset_gpio)) {
++		gpio_set_value_cansleep(hipcie->reset_gpio, 0);
++		mdelay(10);
+ 		gpio_set_value_cansleep(hipcie->reset_gpio, 1);
++	}
+ 
+ 	ret = clk_prepare_enable(hipcie->bus_clk);
+ 	if (ret) {
+@@ -335,15 +344,28 @@ static int histb_pcie_probe(struct platform_device *pdev)
+ 		return PTR_ERR(pci->dbi_base);
+ 	}
+ 
++	hipcie->power_gpio = of_get_named_gpio_flags(np,
++				"power-gpios", 0, &of_flags);
++	if (of_flags & OF_GPIO_ACTIVE_LOW)
++		flag |= GPIOF_ACTIVE_LOW;
++	if (gpio_is_valid(hipcie->power_gpio)) {
++		ret = devm_gpio_request_one(dev, hipcie->power_gpio,
++				flag, "PCIe device power control");
++		if (ret) {
++			dev_err(dev, "unable to request power gpio\n");
++			return ret;
++		}
++	}
++
+ 	hipcie->reset_gpio = of_get_named_gpio_flags(np,
+ 				"reset-gpios", 0, &of_flags);
+ 	if (of_flags & OF_GPIO_ACTIVE_LOW)
+ 		flag |= GPIOF_ACTIVE_LOW;
+ 	if (gpio_is_valid(hipcie->reset_gpio)) {
+ 		ret = devm_gpio_request_one(dev, hipcie->reset_gpio,
+-				flag, "PCIe device power control");
++				flag, "PCIe device reset control");
+ 		if (ret) {
+-			dev_err(dev, "unable to request gpio\n");
++			dev_err(dev, "unable to request reset gpio\n");
+ 			return ret;
+ 		}
+ 	}
+-- 
+1.9.1
