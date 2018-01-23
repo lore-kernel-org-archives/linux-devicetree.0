@@ -1,55 +1,77 @@
-From: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH 1/4] rtc: isl1208: Fix unintended clear of SR bits
-Date: Tue, 23 Jan 2018 13:17:58 +0100
-Message-ID: <20180123121801.4214-2-m.grzeschik@pengutronix.de>
+From: Michael Grzeschik <m.grzeschik@pengutronix.de>
+Subject: [PATCH 3/4] rtc: isl1208: enable interrupt after context preparation
+Date: Tue, 23 Jan 2018 13:18:00 +0100
+Message-ID: <20180123121801.4214-4-m.grzeschik@pengutronix.de>
 References: <20180123121801.4214-1-m.grzeschik@pengutronix.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180123121801.4214-1-m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Cc: linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, jdelvare-IBi9RG/b67k@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Denis.Osterland-85mDkmTllUAAvxtiuMwx3w@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180123121801.4214-1-m.grzeschik@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: a.zummo@towertech.it, alexandre.belloni@free-electrons.com
+Cc: linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux@roeck-us.net, jdelvare@suse.com, kernel@pengutronix.de, Denis.Osterland@diehl.com
 List-Id: devicetree@vger.kernel.org
 
-From: Denis Osterland <Denis.Osterland-85mDkmTllUAAvxtiuMwx3w@public.gmane.org>
+The interrupt handler got enabled very early. If the interrupt cause is
+triggering immediately before the context is fully prepared. This can
+lead to undefined behaviour. Therefor we move the interrupt enable code
+to the end of the probe function.
 
-After successful
-sr = isl1208_i2c_set_regs(client, 0, regs, ISL1208_RTC_SECTION_LEN);
-sr will be 0.
-As a result
-sr = i2c_smbus_write_byte_data(client, ISL1208_REG_SR,
-			sr & ~ISL1208_REG_SR_WRTC);
-is equal to
-sr = i2c_smbus_write_byte_data(client, ISL1208_REG_SR, 0);
-which clears all flags in SR.
-
-Add an additional read of SR, to have value of SR in sr again.
-
-Signed-off-by: Denis Osterland <Denis.Osterland-85mDkmTllUAAvxtiuMwx3w@public.gmane.org>
-Signed-off-by: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Signed-off-by: Michael Grzeschik <m.grzeschik@pengutronix.de>
+Signed-off-by: Denis Osterland <Denis.Osterland@diehl.com>
 ---
- drivers/rtc/rtc-isl1208.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/rtc/rtc-isl1208.c | 34 +++++++++++++++++-----------------
+ 1 file changed, 17 insertions(+), 17 deletions(-)
 
 diff --git a/drivers/rtc/rtc-isl1208.c b/drivers/rtc/rtc-isl1208.c
-index 8dd299c6a1f33..c8b4953482296 100644
+index c8b4953482296..a13a4ba79004d 100644
 --- a/drivers/rtc/rtc-isl1208.c
 +++ b/drivers/rtc/rtc-isl1208.c
-@@ -459,6 +459,11 @@ isl1208_i2c_set_time(struct i2c_client *client, struct rtc_time const *tm)
- 	}
+@@ -635,23 +635,6 @@ isl1208_probe(struct i2c_client *client, const struct i2c_device_id *id)
+ 	if (isl1208_i2c_validate_client(client) < 0)
+ 		return -ENODEV;
  
- 	/* clear WRTC again */
-+	sr = isl1208_i2c_get_sr(client);
-+	if (sr < 0) {
-+		dev_err(&client->dev, "%s: reading SR failed\n", __func__);
-+		return sr;
+-	if (client->irq > 0) {
+-		rc = devm_request_threaded_irq(&client->dev, client->irq, NULL,
+-					       isl1208_rtc_interrupt,
+-					       IRQF_SHARED | IRQF_ONESHOT,
+-					       isl1208_driver.driver.name,
+-					       client);
+-		if (!rc) {
+-			device_init_wakeup(&client->dev, 1);
+-			enable_irq_wake(client->irq);
+-		} else {
+-			dev_err(&client->dev,
+-				"Unable to request irq %d, no alarm support\n",
+-				client->irq);
+-			client->irq = 0;
+-		}
+-	}
+-
+ 	rtc = devm_rtc_device_register(&client->dev, isl1208_driver.driver.name,
+ 				  &isl1208_rtc_ops,
+ 				  THIS_MODULE);
+@@ -674,6 +657,23 @@ isl1208_probe(struct i2c_client *client, const struct i2c_device_id *id)
+ 	if (rc)
+ 		return rc;
+ 
++	if (client->irq > 0) {
++		rc = devm_request_threaded_irq(&client->dev, client->irq, NULL,
++					       isl1208_rtc_interrupt,
++					       IRQF_SHARED | IRQF_ONESHOT,
++					       isl1208_driver.driver.name,
++					       client);
++		if (!rc) {
++			device_init_wakeup(&client->dev, 1);
++			enable_irq_wake(client->irq);
++		} else {
++			dev_err(&client->dev,
++				"Unable to request irq %d, no alarm support\n",
++				client->irq);
++			client->irq = 0;
++		}
 +	}
- 	sr = i2c_smbus_write_byte_data(client, ISL1208_REG_SR,
- 				       sr & ~ISL1208_REG_SR_WRTC);
- 	if (sr < 0) {
++
+ 	return 0;
+ }
+ 
 -- 
 2.11.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
