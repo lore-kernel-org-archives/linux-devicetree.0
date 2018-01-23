@@ -1,62 +1,86 @@
-From: Lina Iyer <ilina@codeaurora.org>
-Subject: Re: [PATCH RFC 2/4] dt-bindings/interrupt-controller: pdc: descibe
- PDC device binding
-Date: Tue, 23 Jan 2018 18:46:20 +0000
-Message-ID: <20180123184620.GA22228@codeaurora.org>
-References: <20180123175656.11942-1-ilina@codeaurora.org>
- <20180123175656.11942-3-ilina@codeaurora.org>
- <eb959e8b-604b-b38c-f8ad-de7b4bd3963f@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <eb959e8b-604b-b38c-f8ad-de7b4bd3963f@arm.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, sboyd@codeaurora.org, rnayak@codeaurora.org, asathyak@codeaurora.org, devicetree@vger.kernel.org
+From: richard.gong@linux.intel.com
+Subject: [PATCHv1] dt-bindings: misc: add Intel Stratix10 service layer binding
+Date: Tue, 23 Jan 2018 13:25:02 -0600
+Message-ID: <1516735502-16745-2-git-send-email-richard.gong@linux.intel.com>
+References: <1516735502-16745-1-git-send-email-richard.gong@linux.intel.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1516735502-16745-1-git-send-email-richard.gong@linux.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com
+Cc: richard.gong@intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 23 2018 at 18:10 +0000, Sudeep Holla wrote:
->
->
->On 23/01/18 17:56, Lina Iyer wrote:
->> From: Archana Sathyakumar <asathyak@codeaurora.org>
->>
->> Add device binding documentation for the PDC Interrupt controller on
->> QCOM SoC's like the SDM845. The interrupt-controller can be used to
->> sense edge low interrupts and wakeup interrupts when the GIC is
->> non-operational.
->>
->> Cc: devicetree@vger.kernel.org
->> Signed-off-by: Archana Sathyakumar <asathyak@codeaurora.org>
->> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
->> ---
->>  .../bindings/interrupt-controller/qcom,pdc.txt     | 55 ++++++++++++++++++++++
->>  1 file changed, 55 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
->>
->> diff --git a/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
->> new file mode 100644
->> index 000000000000..c4592bbf678d
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
->> @@ -0,0 +1,55 @@
->> +PDC interrupt controller
->> +
->> +Qualcomm Technologies Inc. SoCs based on the RPM Hardened archicture have a
->> +Power Domain Controller (PDC) that is on always-on domain. In addition to
->> +providing power control for the power domains, the hardware also has an
->> +interrupt controller that can be used to help detect edge low interrupts as
->> +well detect interrupts when the GIC is non-operational.
->> +
->> +GIC is parent interrupt controller at the highest level. Platform interrupt
->> +controller PDC is next in hierarchy, followed by others.
->
->> This driver only configures the interrupts, does not handle them.
->
->Not sure if the above statement belongs to the binding.
->
-Will fix.
+From: Richard Gong <richard.gong@intel.com>
 
-Thanks,
-Lina
+Add a device tree binding for the Intel Stratix10 service layer driver
+
+Signed-off-by: Richard Gong <richard.gong@intel.com>
+---
+ .../devicetree/bindings/misc/intel-service.txt     | 56 ++++++++++++++++++++++
+ 1 file changed, 56 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/misc/intel-service.txt
+
+diff --git a/Documentation/devicetree/bindings/misc/intel-service.txt b/Documentation/devicetree/bindings/misc/intel-service.txt
+new file mode 100644
+index 0000000..254e4a1
+--- /dev/null
++++ b/Documentation/devicetree/bindings/misc/intel-service.txt
+@@ -0,0 +1,56 @@
++Intel Service Layer Driver for Stratix10 SoC
++============================================
++Intel Stratix10 SoC is composed of a 64 bit quad-core ARM Cortex A53 hard
++processor system (HPS) and Secure Device Manager (SDM). When the FPGA is
++configured from HPS, there needs to be a way for HPS to notify SDM the
++location and size of the configuration data. Then SDM will get the
++configuration data from that location and perform the FPGA configuration.
++
++To meet the whole system security needs and support virtual machine requesting
++communication with SDM, only the secure world of software (EL3, Exception
++Layer 3) can interface with SDM. All software entities running on other
++exception layers must channel through the EL3 software whenever it needs
++service from SDM.
++
++Intel Stratix10 service layer driver, running at privileged exception level
++(EL1, Exception Layer 1), interfaces with the service providers and provides
++the services for FPGA configuration, QSPI, Crypto and warm reset. Service layer
++driver also manages secure monitor call (SMC) to communicate with secure monitor
++code running in EL3.
++
++Required properties:
++--------------------
++The following are the mandatory properties:
++
++- compatible:
++		"intc,svc-1.0"
++- method:
++		smc or hvc
++			smc - Secure Monitor Call
++			hvc - Hypervisor Call
++- memory-region:
++		phandle to the reserved memory node. See
++		Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
++		for details
++
++Example:
++--------
++
++	reserved-memory {
++                #address-cells = <2>;
++                #size-cells = <2>;
++                ranges;
++
++                service_reserved: svcbuffer@0 {
++                        compatible = "shared-dma-pool";
++                        reg = <0x0 0x0 0x0 0x1000000>;
++                        alignment = <0x1000>;
++                        no-map;
++                };
++        };
++
++	svc {
++		compatible = "intc,svc-1.0";
++		method = "smc";
++		memory-region = <&service_reserved>
++	};
+-- 
+2.7.4
