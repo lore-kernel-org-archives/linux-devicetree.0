@@ -1,193 +1,96 @@
+Return-Path: <SRS0=QhCu=ES=mediatek.com=argus.lin@kernel.org>
+From: <argus.lin@mediatek.com>
+Subject: [PATCH 2/3] arm64: dts: mt6797: add pwrap support for mt6797
+Date: Tue, 23 Jan 2018 11:36:58 +0800
+Message-ID: <20180123033659.11401-2-argus.lin@mediatek.com>
+In-Reply-To: <20180123033659.11401-1-argus.lin@mediatek.com>
+References: <20180123033659.11401-1-argus.lin@mediatek.com>
 MIME-Version: 1.0
-In-Reply-To: <CY4PR02MB24889A5465A0F346CB515D84D6EE0@CY4PR02MB2488.namprd02.prod.outlook.com>
-References: <1516067831-11382-1-git-send-email-hyun.kwon@xilinx.com>
-	<1516067831-11382-3-git-send-email-hyun.kwon@xilinx.com>
-	<20180120003111.bxra3hrt2mnajb76@rob-hp-laptop>
-	<CY4PR02MB24889A5465A0F346CB515D84D6EE0@CY4PR02MB2488.namprd02.prod.outlook.com>
-Date: Mon, 22 Jan 2018 08:36:17 -0600
-Message-ID: <CAL_JsqKAhA8jHL+Cu=74-0UvDDt6JEcC8n3qbvYLAtheziQ-Zw@mail.gmail.com>
-Subject: Re: [PATCH v3 3/8] dt-bindings: display: xlnx: Add ZynqMP DP
- subsystem bindings
-From: Rob Herring <robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-To: Hyun Kwon <hyunk@xilinx.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Michal Simek <michal.simek@xilinx.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Daniel Vetter <daniel.vetter@ffwll.ch>
+Content-Type: multipart/related;
+	boundary="__=_Part_Boundary_004_1419186763.1613112218"
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Cc: Chenglin Xu <chenglin.xu@mediatek.com>, argus.lin@mediatek.com, Sean Wang <sean.wang@mediatek.com>, wsd_upstream@mediatek.com, henryc.chen@mediatek.com, flora.fu@mediatek.com, Chen Zhong <chen.zhong@mediatek.com>, Christophe Jaillet <christophe.jaillet@wanadoo.fr>, "shailendra . v" <shailendra.v@samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Fri, Jan 19, 2018 at 8:22 PM, Hyun Kwon <hyunk@xilinx.com> wrote:
-> Hi Rob,
->
-> Thanks for the review.
->
->> -----Original Message-----
->> From: dri-devel [mailto:dri-devel-bounces@lists.freedesktop.org] On Behalf
->> Of Rob Herring
->> Sent: Friday, January 19, 2018 4:31 PM
->> To: Hyun Kwon <hyunk@xilinx.com>
->> Cc: devicetree@vger.kernel.org; Laurent Pinchart
->> <laurent.pinchart@ideasonboard.com>; Michal Simek
->> <michal.simek@xilinx.com>; dri-devel@lists.freedesktop.org; Daniel Vetter
->> <daniel.vetter@ffwll.ch>
->> Subject: Re: [PATCH v3 3/8] dt-bindings: display: xlnx: Add ZynqMP DP
->> subsystem bindings
->>
->> On Mon, Jan 15, 2018 at 05:57:06PM -0800, Hyun Kwon wrote:
->> > This add a dt binding for ZynqMP DP subsystem.
->> >
->> > Signed-off-by: Hyun Kwon <hyun.kwon@xilinx.com>
->> > ---
->> > v2
->> > - Group multiple ports under 'ports'
->> > - Replace linux specific terms with generic hardware descriptions
->> > ---
->> > ---
->> >  .../bindings/display/xlnx/xlnx,zynqmp-dpsub.txt    | 98
->> ++++++++++++++++++++++
->> >  1 file changed, 98 insertions(+)
->> >  create mode 100644
->> Documentation/devicetree/bindings/display/xlnx/xlnx,zynqmp-dpsub.txt
->> >
->> > diff --git a/Documentation/devicetree/bindings/display/xlnx/xlnx,zynqmp-
->> dpsub.txt b/Documentation/devicetree/bindings/display/xlnx/xlnx,zynqmp-
->> dpsub.txt
->> > new file mode 100644
->> > index 0000000..dbcbde5
->> > --- /dev/null
->> > +++ b/Documentation/devicetree/bindings/display/xlnx/xlnx,zynqmp-
->> dpsub.txt
->> > @@ -0,0 +1,98 @@
->> > +Xilinx ZynqMP DisplayPort subsystem
->> > +-----------------------------------
->> > +
->> > +Required properties:
->> > +
->> > +- compatible: Must be "xlnx,zynqmp-dpsub-1.7".
->> > +
->> > +- reg: Physical base address and length of the registers set for the device.
->> > +- reg-names: Must be "dp", "blend", "av_buf", and "aud" to map logical
->> register
->> > +  partitions.
->> > +
->> > +- interrupts: Interrupt number.
->> > +- interrupts-parent: phandle for interrupt controller.
->> > +
->> > +- clocks: phandles for axi, audio, non-live video, and live video clocks.
->> > +  axi clock is required. Audio clock is optional. If not present, audio will
->> > +  be disabled. One of non-live or live video clock should be present.
->> > +- clock-names: The identification strings are required. "aclk" for axi clock.
->> > +  "dp_aud_clk" for audio clock. "dp_vtc_pixel_clk_in" for non-live video
->> clock.
->> > +  "dp_live_video_in_clk" for live video clock (clock from programmable
->> logic).
->> > +
->> > +- phys: phandles for phy specifier.
->>
->> phandles? How many?
->>
->
-> Configurable between 1 or 2 lanes. Will add more details.
->
->> > +- phy-names: The identifier strings. "dp-phy" followed by index.
->> > +
->> > +- power-domains: phandle for the corresponding power domain
->> > +
->> > +- ports: There are 2 logical blocks in the IP: display controller and
->> > +  DisplayPort encoder. Each block can be used / connected independently
->> with
->>
->> I'm confused. The block described in this doc is just DisplayPort
->> encoder or both display controller and DisplayPort? Or something else?
->>
->
-> The DP subsystem includes both block, protocol indipendent controller in front
-> and the DisplayPort transmitter in the back. I'll try to elaborate / clarify
-> better.
+--__=_Part_Boundary_004_1419186763.1613112218
+Content-Transfer-Encoding: base64
+Content-Type: multipart/alternative;
+	boundary="__=_Part_Boundary_005_1497563589.315204319"
 
-But you already have a subsystem node with "xlnx,display". You shouldn't need 2.
+--__=_Part_Boundary_005_1497563589.315204319
+Content-Type: text/html
+Content-Transfer-Encoding: base64
 
+PHByZT4NCkZyb206IEFyZ3VzIExpbiAmbHQ7YXJndXMubGluQG1lZGlhdGVrLmNvbSZndDsNCg0K
+bXQ2Nzk3IGlzIGEgaGlnaGx5IGludGVncmF0ZWQgU29DcywgYW5kIGl0IHVzZXMNCm10NjM1MSBh
+cyBQb3dlciBNYW5hZ2VtZW50IElDLg0KV2UgbmVlZCB0byBhZGQgcHdyYXAgZGV2aWNlIHRvIGNv
+bW11bmljYXRlIHdpdGgNCm10NjM1MSBieSBTUEkuDQpUaGUgYmFzZSBhZGRyZXNzIG9mIHB3cmFw
+IGlzIDB4MTAwMGQwMDAsIGFuZCBJUlENCm51bWJlciBpcyAxNzguIEl0IGFsc28gdXNpbmcgZml4
+ZWQgMjZNaHogY2xvY2sNCmFzIFNQSSBDTEsuDQoNCkNoYW5nZS1JZDogSTA3YThiNzk0YTAxOWMy
+YTk4MGJiMWY5NzRkZWZlZmY0ZTdkZjU2OTMNClNpZ25lZC1vZmYtYnk6IEFyZ3VzIExpbiAmbHQ7
+YXJndXMubGluQG1lZGlhdGVrLmNvbSZndDsNCi0tLQ0KIGFyY2gvYXJtNjQvYm9vdC9kdHMvbWVk
+aWF0ZWsvbXQ2Nzk3LmR0c2kgfCAxNCArKysrKysrKysrKysrKw0KIDEgZmlsZSBjaGFuZ2VkLCAx
+NCBpbnNlcnRpb25zKCspDQoNCmRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlh
+dGVrL210Njc5Ny5kdHNpIGIvYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDY3OTcuZHRz
+aQ0KaW5kZXggNGJlYWE3MTEwN2Q3Li40ODU1NDZlZmM5YmYgMTAwNjQ0DQotLS0gYS9hcmNoL2Fy
+bTY0L2Jvb3QvZHRzL21lZGlhdGVrL210Njc5Ny5kdHNpDQorKysgYi9hcmNoL2FybTY0L2Jvb3Qv
+ZHRzL21lZGlhdGVrL210Njc5Ny5kdHNpDQpAQCAtMTYxLDYgKzE2MSwyMCBAQA0KIAkJICAgICAg
+Jmx0OzAgMHgxMDIyMDY5MCAwIDB4MTAmZ3Q7Ow0KIAl9Ow0KIA0KKwlwd3JhcDogcHdyYXBAMTAw
+MGQwMDAgew0KKwkJY29tcGF0aWJsZSA9ICZxdW90O21lZGlhdGVrLG10Njc5Ny1wd3JhcCZxdW90
+OzsNCisJCXJlZyA9ICZsdDswIDB4MTAwMGQwMDAgMCAweDEwMDAmZ3Q7Ow0KKwkJcmVnLW5hbWVz
+ID0gJnF1b3Q7cHdyYXAmcXVvdDs7DQorCQlpbnRlcnJ1cHRzID0gJmx0O0dJQ19TUEkgMTc4IElS
+UV9UWVBFX0xFVkVMX0hJR0gmZ3Q7Ow0KKwkJY2xvY2tzID0gJmx0OyZhbXA7Y2xrMjZtJmd0Oywg
+Jmx0OyZhbXA7Y2xrMjZtJmd0OzsNCisJCWNsb2NrLW5hbWVzID0gJnF1b3Q7c3BpJnF1b3Q7LCAm
+cXVvdDt3cmFwJnF1b3Q7Ow0KKw0KKwkJcG1pYzogbXQ2MzUxIHsNCisJCQljb21wYXRpYmxlID0g
+JnF1b3Q7bWVkaWF0ZWssbXQ2MzUxJnF1b3Q7Ow0KKwkJCWludGVycnVwdC1jb250cm9sbGVyOw0K
+KwkJfTsNCisJfTsNCisNCiAJdWFydDA6IHNlcmlhbEAxMTAwMjAwMCB7DQogCQljb21wYXRpYmxl
+ID0gJnF1b3Q7bWVkaWF0ZWssbXQ2Nzk3LXVhcnQmcXVvdDssDQogCQkJICAgICAmcXVvdDttZWRp
+YXRlayxtdDY1NzctdWFydCZxdW90OzsNCi0tIA0KMi4xMi41DQoNCjwvcHJlPjwhLS10eXBlOnRl
+eHQtLT48IS0tey0tPjxwcmU+KioqKioqKioqKioqKiBFbWFpbCBDb25maWRlbnRpYWxpdHkgTm90
+aWNlDQogKioqKioqKioqKioqKioqKioqKioNClRoZSBpbmZvcm1hdGlvbiBjb250YWluZWQgaW4g
+dGhpcyBlLW1haWwgbWVzc2FnZSAoaW5jbHVkaW5nIGFueSANCmF0dGFjaG1lbnRzKSBtYXkgYmUg
+Y29uZmlkZW50aWFsLCBwcm9wcmlldGFyeSwgcHJpdmlsZWdlZCwgb3Igb3RoZXJ3aXNlDQpleGVt
+cHQgZnJvbSBkaXNjbG9zdXJlIHVuZGVyIGFwcGxpY2FibGUgbGF3cy4gSXQgaXMgaW50ZW5kZWQg
+dG8gYmUgDQpjb252ZXllZCBvbmx5IHRvIHRoZSBkZXNpZ25hdGVkIHJlY2lwaWVudChzKS4gQW55
+IHVzZSwgZGlzc2VtaW5hdGlvbiwgDQpkaXN0cmlidXRpb24sIHByaW50aW5nLCByZXRhaW5pbmcg
+b3IgY29weWluZyBvZiB0aGlzIGUtbWFpbCAoaW5jbHVkaW5nIGl0cyANCmF0dGFjaG1lbnRzKSBi
+eSB1bmludGVuZGVkIHJlY2lwaWVudChzKSBpcyBzdHJpY3RseSBwcm9oaWJpdGVkIGFuZCBtYXkg
+DQpiZSB1bmxhd2Z1bC4gSWYgeW91IGFyZSBub3QgYW4gaW50ZW5kZWQgcmVjaXBpZW50IG9mIHRo
+aXMgZS1tYWlsLCBvciBiZWxpZXZlDQogDQp0aGF0IHlvdSBoYXZlIHJlY2VpdmVkIHRoaXMgZS1t
+YWlsIGluIGVycm9yLCBwbGVhc2Ugbm90aWZ5IHRoZSBzZW5kZXIgDQppbW1lZGlhdGVseSAoYnkg
+cmVwbHlpbmcgdG8gdGhpcyBlLW1haWwpLCBkZWxldGUgYW55IGFuZCBhbGwgY29waWVzIG9mIA0K
+dGhpcyBlLW1haWwgKGluY2x1ZGluZyBhbnkgYXR0YWNobWVudHMpIGZyb20geW91ciBzeXN0ZW0s
+IGFuZCBkbyBub3QNCmRpc2Nsb3NlIHRoZSBjb250ZW50IG9mIHRoaXMgZS1tYWlsIHRvIGFueSBv
+dGhlciBwZXJzb24uIFRoYW5rDQogeW91ITwvcHJlPjwhLS19LS0+
 
->> > +  external device, hence ports for each block are required using DT
->> bindings
->> > +  defined in Documentation/devicetree/bindings/graph.txt. Refer to
->> > +  ./xlnx,display.txt for how topology for entire pipeline is described.
->> > +
->> > +- vid-layer, gfx-layer: Required to represent available layers
->> > +
->> > +Required layer properties
->> > +
->> > +- dmas: phandles for DMA channels as defined in
->> > +  Documentation/devicetree/bindings/dma/dma.txt.
->> > +- dma-names: The identifier strings are required. "graphics0" for graphics
->> > +  layer. "video" followed by index for video layer
->> > +
->> > +Optional child node
->> > +
->> > +- The driver populates any child device node in this node. This can be
->> used,
->> > +  for example, to populate the sound device from the DisplayPort
->> subsystem
->> > +  driver.
->> > +
->> > +Example:
->> > +       zynqmp_dpsub: zynqmp_dpsub@fd4a0000 {
->>
->> video-codec@... if this the DP encoder.
->>
->> > +               compatible = "xlnx,zynqmp-dpsub-1.7";
->> > +               reg = <0x0 0xfd4a0000 0x0 0x1000>,
->> > +                     <0x0 0xfd4aa000 0x0 0x1000>,
->> > +                     <0x0 0xfd4ab000 0x0 0x1000>,
->> > +                     <0x0 0xfd4ac000 0x0 0x1000>;
->> > +               reg-names = "dp", "blend", "av_buf", "aud";
->> > +               interrupts = <0 119 4>;
->> > +               interrupt-parent = <&gic>;
->> > +
->> > +               clock-names = "dp_apb_clk", "dp_aud_clk",
->> "dp_live_video_in_clk";
->> > +               clocks = <&dp_aclk>, <&clkc 17>, <&si570_1>;
->> > +
->> > +               phys = <&lane1>, <&lane0>;
->> > +               phy-names = "dp-phy0", "dp-phy1";
->> > +
->> > +               power-domains = <&pd_dp>;
->> > +
->> > +               vid-layer {
->> > +                       dma-names = "vid0", "vid1", "vid2";
->>
->> Documentation says these should be "videoX".
->>
->
-> Will fix.
->
->> > +                       dmas = <&xlnx_dpdma 0>,
->> > +                              <&xlnx_dpdma 1>,
->> > +                              <&xlnx_dpdma 2>;
->> > +               };
->> > +
->> > +               gfx-layer {
->> > +                       dma-names = "gfx0";
->>
->> And "graphics0"
->>
->
-> Will fix.
->
->> > +                       dmas = <&xlnx_dpdma 3>;
->> > +               };
->>
->> You don't need these child nodes. Just do:
->>
->> dma-names = "vid0", "vid1", "vid2", "gfx0";
->>
->> Or gfx0 first.
->>
->
-> Sure. As mentioned earlier, each layer will have to be referenced independently
-> by other nodes in upcoming patches. But I can follow your suggestion for now,
-> and make change when it's needed.
+--__=_Part_Boundary_005_1497563589.315204319
+Content-Type: text/plain
+Content-Transfer-Encoding: base64
 
-No, you can't change it later. The binding is an ABI and you must maintain backwards compatibility (old dtb works with new kernel).
+RnJvbTogQXJndXMgTGluIDxhcmd1cy5saW5AbWVkaWF0ZWsuY29tPg0KDQptdDY3OTcgaXMgYSBo
+aWdobHkgaW50ZWdyYXRlZCBTb0NzLCBhbmQgaXQgdXNlcw0KbXQ2MzUxIGFzIFBvd2VyIE1hbmFn
+ZW1lbnQgSUMuDQpXZSBuZWVkIHRvIGFkZCBwd3JhcCBkZXZpY2UgdG8gY29tbXVuaWNhdGUgd2l0
+aA0KbXQ2MzUxIGJ5IFNQSS4NClRoZSBiYXNlIGFkZHJlc3Mgb2YgcHdyYXAgaXMgMHgxMDAwZDAw
+MCwgYW5kIElSUQ0KbnVtYmVyIGlzIDE3OC4gSXQgYWxzbyB1c2luZyBmaXhlZCAyNk1oeiBjbG9j
+aw0KYXMgU1BJIENMSy4NCg0KQ2hhbmdlLUlkOiBJMDdhOGI3OTRhMDE5YzJhOTgwYmIxZjk3NGRl
+ZmVmZjRlN2RmNTY5Mw0KU2lnbmVkLW9mZi1ieTogQXJndXMgTGluIDxhcmd1cy5saW5AbWVkaWF0
+ZWsuY29tPg0KLS0tDQogYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDY3OTcuZHRzaSB8
+IDE0ICsrKysrKysrKysrKysrDQogMSBmaWxlIGNoYW5nZWQsIDE0IGluc2VydGlvbnMoKykNCg0K
+ZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ2Nzk3LmR0c2kgYi9h
+cmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL210Njc5Ny5kdHNpDQppbmRleCA0YmVhYTcxMTA3
+ZDcuLjQ4NTU0NmVmYzliZiAxMDA2NDQNCi0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0
+ZWsvbXQ2Nzk3LmR0c2kNCisrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ2Nzk3
+LmR0c2kNCkBAIC0xNjEsNiArMTYxLDIwIEBADQogCQkgICAgICA8MCAweDEwMjIwNjkwIDAgMHgx
+MD47DQogCX07DQogDQorCXB3cmFwOiBwd3JhcEAxMDAwZDAwMCB7DQorCQljb21wYXRpYmxlID0g
+Im1lZGlhdGVrLG10Njc5Ny1wd3JhcCI7DQorCQlyZWcgPSA8MCAweDEwMDBkMDAwIDAgMHgxMDAw
+PjsNCisJCXJlZy1uYW1lcyA9ICJwd3JhcCI7DQorCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgMTc4
+IElSUV9UWVBFX0xFVkVMX0hJR0g+Ow0KKwkJY2xvY2tzID0gPCZjbGsyNm0+LCA8JmNsazI2bT47
+DQorCQljbG9jay1uYW1lcyA9ICJzcGkiLCAid3JhcCI7DQorDQorCQlwbWljOiBtdDYzNTEgew0K
+KwkJCWNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ2MzUxIjsNCisJCQlpbnRlcnJ1cHQtY29udHJv
+bGxlcjsNCisJCX07DQorCX07DQorDQogCXVhcnQwOiBzZXJpYWxAMTEwMDIwMDAgew0KIAkJY29t
+cGF0aWJsZSA9ICJtZWRpYXRlayxtdDY3OTctdWFydCIsDQogCQkJICAgICAibWVkaWF0ZWssbXQ2
+NTc3LXVhcnQiOw0KLS0gDQoyLjEyLjUNCg==
 
-So you should make your binding complete as you can now even if the driver doesn't use parts of the binding yet.
+--__=_Part_Boundary_005_1497563589.315204319--
 
-Rob
+--__=_Part_Boundary_004_1419186763.1613112218--
