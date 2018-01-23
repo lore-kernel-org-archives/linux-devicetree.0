@@ -1,284 +1,121 @@
-From: Mylene Josserand <mylene.josserand@free-electrons.com>
-Subject: Re: [PATCH v4 1/2] Input: Add driver for Cypress Generation 5
- touchscreen
-Date: Tue, 23 Jan 2018 10:33:35 +0100
-Message-ID: <20180123103335.6d27a31b@dell-desktop.home>
-References: <20171201153957.13053-1-mylene.josserand@free-electrons.com>
-        <20171201153957.13053-2-mylene.josserand@free-electrons.com>
-        <20180122201109.GA651@gmail.com>
+From: Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [project-aspen-dev] [PATCH] PCI: histb: add power control GPIO
+ for PCIe slot
+Date: Tue, 23 Jan 2018 09:39:44 +0000
+Message-ID: <20180123093944.rxysbjm2u6suycco@oak.lan>
+References: <1516669477-20151-1-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20180122201109.GA651@gmail.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Marcus Folkesson <marcus.folkesson@gmail.com>
-Cc: dmitry.torokhov@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org, thomas.petazzoni@free-electrons.com, maxime.ripard@free-electrons.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1516669477-20151-1-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, project-aspen-dev-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Jianguo Sun <sunjianguo1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Marcus,
+On Tue, Jan 23, 2018 at 09:04:37AM +0800, Shawn Guo wrote:
+> From: Jianguo Sun <sunjianguo1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+> 
+> Besides the GPIO for controlling reset, there is also possibly another
+> GPIO for turning on/off the power of PCIe slot.  Let's add the support
+> for that with another optional device tree property 'power-gpios'.
+> 
+> Signed-off-by: Jianguo Sun <sunjianguo1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  .../bindings/pci/hisilicon-histb-pcie.txt          |  1 +
+>  drivers/pci/dwc/pcie-histb.c                       | 28 +++++++++++++++++++---
+>  2 files changed, 26 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/hisilicon-histb-pcie.txt b/Documentation/devicetree/bindings/pci/hisilicon-histb-pcie.txt
+> index c84bc027930b..597397a048f8 100644
+> --- a/Documentation/devicetree/bindings/pci/hisilicon-histb-pcie.txt
+> +++ b/Documentation/devicetree/bindings/pci/hisilicon-histb-pcie.txt
+> @@ -33,6 +33,7 @@ Required properties
+>    "bus": bus reset.
+>  
+>  Optional properties:
+> +- power-gpios: The gpio to control the power of PCIe slot.
+>  - reset-gpios: The gpio to generate PCIe PERST# assert and deassert signal.
+>  - phys: List of phandle and phy mode specifier, should be 0.
+>  - phy-names: Must be "phy".
+> diff --git a/drivers/pci/dwc/pcie-histb.c b/drivers/pci/dwc/pcie-histb.c
+> index 33b01b734d7d..2a6b18619b25 100644
+> --- a/drivers/pci/dwc/pcie-histb.c
+> +++ b/drivers/pci/dwc/pcie-histb.c
+> @@ -63,6 +63,7 @@ struct histb_pcie {
+>  	struct reset_control *sys_reset;
+>  	struct reset_control *bus_reset;
+>  	void __iomem *ctrl;
+> +	int power_gpio;
+>  	int reset_gpio;
+>  };
+>  
+> @@ -230,6 +231,8 @@ static void histb_pcie_host_disable(struct histb_pcie *hipcie)
+>  
+>  	if (gpio_is_valid(hipcie->reset_gpio))
+>  		gpio_set_value_cansleep(hipcie->reset_gpio, 0);
+> +	if (gpio_is_valid(hipcie->power_gpio))
+> +		gpio_set_value_cansleep(hipcie->power_gpio, 0);
+>  }
+>  
+>  static int histb_pcie_host_enable(struct pcie_port *pp)
+> @@ -240,8 +243,14 @@ static int histb_pcie_host_enable(struct pcie_port *pp)
+>  	int ret;
+>  
+>  	/* power on PCIe device if have */
+> -	if (gpio_is_valid(hipcie->reset_gpio))
+> +	if (gpio_is_valid(hipcie->power_gpio))
+> +		gpio_set_value_cansleep(hipcie->power_gpio, 1);
+> +
+> +	if (gpio_is_valid(hipcie->reset_gpio)) {
+> +		gpio_set_value_cansleep(hipcie->reset_gpio, 0);
+> +		mdelay(10);
+>  		gpio_set_value_cansleep(hipcie->reset_gpio, 1);
+> +	}
+>  
+>  	ret = clk_prepare_enable(hipcie->bus_clk);
+>  	if (ret) {
+> @@ -335,15 +344,28 @@ static int histb_pcie_probe(struct platform_device *pdev)
+>  		return PTR_ERR(pci->dbi_base);
+>  	}
+>  
+> +	hipcie->power_gpio = of_get_named_gpio_flags(np,
+> +				"power-gpios", 0, &of_flags);
+> +	if (of_flags & OF_GPIO_ACTIVE_LOW)
+> +		flag |= GPIOF_ACTIVE_LOW;
 
-Thank you for the review.
+Why isn't this inside the if statement?
 
-Le Mon, 22 Jan 2018 21:11:09 +0100,
-Marcus Folkesson <marcus.folkesson@gmail.com> a écrit :
 
-> Mylene,
+> +	if (gpio_is_valid(hipcie->power_gpio)) {
+> +		ret = devm_gpio_request_one(dev, hipcie->power_gpio,
+> +				flag, "PCIe device power control");
+> +		if (ret) {
+> +			dev_err(dev, "unable to request power gpio\n");
+> +			return ret;
+> +		}
+> +	}
+> +
+>  	hipcie->reset_gpio = of_get_named_gpio_flags(np,
+>  				"reset-gpios", 0, &of_flags);
+>  	if (of_flags & OF_GPIO_ACTIVE_LOW)
+>  		flag |= GPIOF_ACTIVE_LOW;
+>  	if (gpio_is_valid(hipcie->reset_gpio)) {
+>  		ret = devm_gpio_request_one(dev, hipcie->reset_gpio,
+> -				flag, "PCIe device power control");
+> +				flag, "PCIe device reset control");
+>  		if (ret) {
+> -			dev_err(dev, "unable to request gpio\n");
+> +			dev_err(dev, "unable to request reset gpio\n");
+>  			return ret;
+>  		}
+>  	}
+> -- 
+> 1.9.1
 > 
-> On Fri, Dec 01, 2017 at 04:39:56PM +0100, Mylène Josserand wrote:
-> > +++ b/drivers/input/touchscreen/cyttsp5.c
-> > @@ -0,0 +1,1110 @@
-> > +/*
-> > + * Parade TrueTouch(TM) Standard Product V5 Module.
-> > + * For use with Parade touchscreen controllers.
-> > + *
-> > + * Copyright (C) 2015 Parade Technologies
-> > + * Copyright (C) 2012-2015 Cypress Semiconductor
-> > + * Copyright (C) 2017 Free Electrons
-> > + *
-> > + * Author: Mylène Josserand <mylene.josserand@free-electrons.com>
-> > + *
-> > + * This program is free software; you can redistribute it and/or
-> > + * modify it under the terms of the GNU General Public License
-> > + * version 2, and only version 2, as published by the
-> > + * Free Software Foundation.  
-> 
-> Please use SPDX license Identifier to describe the license.
-> 
-> E.g.
-> SPDX-License-Identifier: GPL-2.0
-> 
-> Also, the MODULE_LICENSE means GPL 2.0 or later per module.h and this does
-> not match the license description.
-> 
-> Could you make sure they are in sync?
-
-You are right, I will check that, thanks.
-
-> 
-> 
-> > + *
-> > + * This program is distributed in the hope that it will be useful,
-> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> > + * GNU General Public License for more details.
-> > + *
-> > + */
-> > +
-> > +#include <asm/unaligned.h>
-> > +#include <linux/crc-itu-t.h>
-> > +#include <linux/delay.h>
-> > +#include <linux/device.h>
-> > +#include <linux/gpio.h>
-> > +#include <linux/input/mt.h>
-> > +#include <linux/input/touchscreen.h>
-> > +#include <linux/interrupt.h>
-> > +#include <linux/i2c.h>
-> > +#include <linux/module.h>
-> > +#include <linux/of_device.h>
-> > +#include <linux/regmap.h>  
-> 
-> #include <linux/bitops.h>
-> 
-> since you are using BIT()
-
-okay
-
-> 
-> 
-> [snip]
-> 
-> 
-> > +static int cyttsp5_setup_input_device(struct device *dev)
-> > +{
-> > +	struct cyttsp5 *ts = dev_get_drvdata(dev);
-> > +	struct cyttsp5_sysinfo *si = &ts->sysinfo;
-> > +	int max_x, max_y, max_p;
-> > +	int max_x_tmp, max_y_tmp;
-> > +	int rc;
-> > +
-> > +	__set_bit(EV_ABS, ts->input->evbit);
-> > +	__set_bit(EV_REL, ts->input->evbit);
-> > +	__set_bit(EV_KEY, ts->input->evbit);
-> > +
-> > +	max_x_tmp = si->sensing_conf_data.res_x;
-> > +	max_y_tmp = si->sensing_conf_data.res_y;
-> > +	max_x = max_y_tmp - 1;
-> > +	max_y = max_x_tmp - 1;
-> > +	max_p = si->sensing_conf_data.max_z;
-> > +
-> > +	input_mt_init_slots(ts->input, si->tch_abs[CY_TCH_T].max, 0);
-> > +
-> > +	__set_bit(ABS_MT_POSITION_X, ts->input->absbit);
-> > +	__set_bit(ABS_MT_POSITION_Y, ts->input->absbit);
-> > +	__set_bit(ABS_MT_PRESSURE, ts->input->absbit);  
-> 
-> Not needed, input_set_abs_params() will set the bits for you below.
-
-Yes, I will remove it.
-
-> 
-> 
-> > +
-> > +	input_set_abs_params(ts->input, ABS_MT_POSITION_X, 0, max_x, 0, 0);
-> > +	input_set_abs_params(ts->input, ABS_MT_POSITION_Y, 0, max_y, 0, 0);
-> > +	input_set_abs_params(ts->input, ABS_MT_PRESSURE, 0, max_p, 0, 0);
-> > +
-> > +	input_set_abs_params(ts->input, ABS_MT_TOUCH_MAJOR, 0, MAX_AREA, 0, 0);
-> > +	input_set_abs_params(ts->input, ABS_MT_TOUCH_MINOR, 0, MAX_AREA, 0, 0);
-> > +
-> > +	rc = input_register_device(ts->input);
-> > +	if (rc < 0)
-> > +		dev_err(dev, "Error, failed register input device r=%d\n", rc);
-> > +
-> > +	return rc;
-> > +}
-> > +
-> > +  
-> 
-> [snip]
-> 
-> > +static int cyttsp5_get_hid_descriptor(struct cyttsp5 *ts,
-> > +				      struct cyttsp5_hid_desc *desc)
-> > +{
-> > +	struct device *dev = ts->dev;
-> > +	__le16 hid_desc_register = HID_DESC_REG;
-> > +	int rc;
-> > +	u8 cmd[2];
-> > +
-> > +	/* Read HID descriptor length and version */
-> > +	mutex_lock(&ts->system_lock);
-> > +	ts->hid_cmd_state = HID_CMD_BUSY;
-> > +	mutex_unlock(&ts->system_lock);
-> > +
-> > +	/* Set HID descriptor register */
-> > +	memcpy(cmd, &hid_desc_register, sizeof(hid_desc_register));
-> > +
-> > +	rc = cyttsp5_write(ts, HID_DESC_REG, NULL, 0);
-> > +	if (rc < 0) {
-> > +		dev_err(dev, "Failed to get HID descriptor, rc=%d\n", rc);
-> > +		goto error;
-> > +	}
-> > +
-> > +	rc = wait_event_timeout(ts->wait_q, (ts->hid_cmd_state == HID_CMD_DONE),
-> > +				msecs_to_jiffies(CY_HID_GET_HID_DESCRIPTOR_TIMEOUT));
-> > +	if (!rc) {
-> > +		dev_err(ts->dev, "HID get descriptor timed out\n");
-> > +		rc = -ETIME;
-> > +		goto error;
-> > +	}
-> > +
-> > +	memcpy(desc, ts->response_buf, sizeof(struct cyttsp5_hid_desc));
-> > +
-> > +	/* Check HID descriptor length and version */
-> > +	if (le16_to_cpu(desc->hid_desc_len) != sizeof(*desc) ||
-> > +	    le16_to_cpu(desc->bcd_version) != HID_VERSION) {
-> > +		dev_err(dev, "Unsupported HID version\n");
-> > +		return -ENODEV;  
-> 
-> Maybe it is supposed to return here, but all other faults use "goto
-> error".
-
-Yep, I will use 'goto' instead of 'return' here.
-
-> 
-> > +	}
-> > +
-> > +	goto exit;
-> > +
-> > +error:
-> > +	mutex_lock(&ts->system_lock);
-> > +	ts->hid_cmd_state = HID_CMD_DONE;
-> > +	mutex_unlock(&ts->system_lock);
-> > +exit:
-> > +	return rc;
-> > +}
-> > +  
-> 
-> [snip]
-> 
-> > +static int cyttsp5_probe(struct device *dev, struct regmap *regmap, int irq,
-> > +			 const char *name)
-> > +{
-> > +	struct cyttsp5 *ts;
-> > +	struct cyttsp5_sysinfo *si;
-> > +	int rc = 0, i;
-> > +
-> > +	ts = devm_kzalloc(dev, sizeof(*ts), GFP_KERNEL);
-> > +	if (!ts)
-> > +		return -ENOMEM;
-> > +
-> > +	/* Initialize device info */
-> > +	ts->regmap = regmap;
-> > +	ts->dev = dev;
-> > +	si = &ts->sysinfo;
-> > +	dev_set_drvdata(dev, ts);
-> > +
-> > +	/* Initialize mutexes and spinlocks */  
-> 
-> No spinlocks here :-)
-
-I forgot to remove the comment from vendor's driver, thanks :)
-
-> 
-> > +	mutex_init(&ts->system_lock);
-> > +
-> > +	/* Initialize wait queue */
-> > +	init_waitqueue_head(&ts->wait_q);
-> > +
-> > +	/* Reset the gpio to be in a reset state */
-> > +	ts->reset_gpio = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_LOW);
-> > +	if (IS_ERR(ts->reset_gpio)) {
-> > +		rc = PTR_ERR(ts->reset_gpio);
-> > +		dev_err(dev, "Failed to request reset gpio, error %d\n", rc);
-> > +		return rc;
-> > +	}
-> > +	gpiod_set_value(ts->reset_gpio, 1);
-> > +  
-> 
-> [snip]
-> 
-> > +static struct i2c_driver cyttsp5_i2c_driver = {
-> > +	.driver = {
-> > +		.name = CYTTSP5_NAME,
-> > +		.owner = THIS_MODULE,
-> > +		.of_match_table = of_match_ptr(cyttsp5_of_match),
-> > +	},
-> > +	.probe = cyttsp5_i2c_probe,
-> > +	.remove = cyttsp5_i2c_remove,
-> > +	.id_table = cyttsp5_i2c_id,
-> > +};
-> > +
-> > +module_i2c_driver(cyttsp5_i2c_driver);
-> > +
-> > +MODULE_LICENSE("GPL");  
-> 
-> From linux/module.h:
-> 
-> /*
->  * The following license idents are currently accepted as indicating free
->  * software modules
->  *
->  *	"GPL"				[GNU Public License v2 or later]
->  *	"GPL v2"			[GNU Public License v2]
-> 
-
-Okay, noted.
-
-> 
-> 
-> > +MODULE_DESCRIPTION("Touchscreen driver for Cypress TrueTouch Gen 5 Product");
-> > +MODULE_AUTHOR("Mylène Josserand <mylene.josserand@free-electrons.com>");
-> > -- 
-> > 2.11.0
-> >   
-> 
-> Best regards
-> Marcus Folkesson
-
-Best regards,
-
--- 
-Mylène Josserand, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
