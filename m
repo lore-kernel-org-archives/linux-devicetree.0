@@ -1,172 +1,112 @@
-From: Stefan Mavrodiev <stefan-kyXcfZUBQGPQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 1/1] ARM: dts: sunxi: Add Olimex A20-SOM204-EVB board
-Date: Tue, 23 Jan 2018 16:04:14 +0200
-Message-ID: <bfe19092-a43f-be80-0ee4-c76d45208c24@olimex.com>
-References: <1515747666-6597-1-git-send-email-stefan@olimex.com>
- <20180115095031.pzsgrp3tdmemotrs@flea.lan>
- <1b9667a4-75de-4ece-069d-7ec33b7e2f8d@olimex.com>
- <20180118100745.y62adzvfnrzqkagd@flea.lan>
- <CAGb2v66U9ziFhU5n6haTA3LGNX7BavmfXiiCmvebtqaMxcN0-w@mail.gmail.com>
- <548d57b7-4db1-a9ee-369e-9067f981162d@olimex.com>
- <CAGb2v67BARS-kOH06DzkYH-_7h_18yrEpc0c_diXVvRxZPn_4Q@mail.gmail.com>
+From: Bartosz Golaszewski <brgl-ARrdPY/1zhM@public.gmane.org>
+Subject: =?UTF-8?Q?Re=3A_=5BPATCH_v6_00=2F41=5D_ARM=3A_davinci=3A_convert_to_common?=
+        =?UTF-8?Q?_clock_framework=E2=80=8B?=
+Date: Tue, 23 Jan 2018 15:54:55 +0100
+Message-ID: <CAMRc=McVNJqsO4+j=XkyNWuKqF-S-hQAw9XxHx6GC47UudgMYw@mail.gmail.com>
+References: <1516468460-4908-1-git-send-email-david@lechnology.com>
+ <CAMRc=MexJTMiD=URw1bv-qfGaTntZRXgfsSb_beYGkvO+LrpgQ@mail.gmail.com> <d819e18f-7d74-d8c4-8056-bfc545f4d4e9@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAGb2v67BARS-kOH06DzkYH-_7h_18yrEpc0c_diXVvRxZPn_4Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <d819e18f-7d74-d8c4-8056-bfc545f4d4e9-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Stefan Mavrodiev <stefan-kyXcfZUBQGPQT0dZR+AlfA@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM PORT" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Adam Ford <aford173-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/20/2018 08:08 AM, Chen-Yu Tsai wrote:
-> On Fri, Jan 19, 2018 at 9:27 PM, Stefan Mavrodiev <stefan-kyXcfZUBQGPQT0dZR+AlfA@public.gmane.org> wrote:
->> On 01/18/2018 04:28 PM, Chen-Yu Tsai wrote:
->>> On Thu, Jan 18, 2018 at 6:07 PM, Maxime Ripard
->>> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->>>> Hi!
->>>>
->>>> On Mon, Jan 15, 2018 at 12:07:34PM +0200, Stefan Mavrodiev wrote:
->>>>>>> +/dts-v1/;
->>>>>>> +#include "sun7i-a20.dtsi"
->>>>>>> +#include "sunxi-common-regulators.dtsi"
->>>>>>> +
->>>>>>> +
->>>>>>> +#include <dt-bindings/gpio/gpio.h>
->>>>>>> +#include <dt-bindings/interrupt-controller/irq.h>
->>>>>>> +#include <dt-bindings/pwm/pwm.h>
->>>>>>> +
->>>>>>> +/ {
->>>>>>> + model = "Olimex A20-SOM204-EVB";
->>>>>>> + compatible = "olimex,a20-olimex-som204-evb", "allwinner,sun7i-a20";
->>>>>>> +
->>>>>>> + aliases {
->>>>>>> +         serial0 = &uart0;
->>>>>>> +         serial1 = &uart4;
->>>>>>> +         serial2 = &uart7;
->>>>>>> +         spi0 = &spi1;
->>>>>>> +         spi1 = &spi2;
->>>>>>> +         ethernet1 = &rtl8723bs;
->>>>>> ethernet1? if there's a single network interface, it should be
->>>>>> ethernet0.
->>>>> I think this will conflict the gmac alias defined in sun7i-a20.dtsi:
->>>>>
->>>>> aliases {
->>>>>       ethernet0 = &gmac;
->>>>> };
->>>> We have that? That's bad, but you're right :)
->>>>
->>>>>>> +         stat {
->>>>>>> +                 label = "a20-som204:green:stat";
->>>>>>> +                 gpios = <&pio 8 0 GPIO_ACTIVE_HIGH>;
->>>>>>> +                 default-state = "on";
->>>>>>> +         };
->>>>>>> +
->>>>>>> +         led1 {
->>>>>>> +                 label = "a20-som204-evb:green:led1";
->>>>>>> +                 gpios = <&pio 8 10 GPIO_ACTIVE_HIGH>;
->>>>>>> +                 default-state = "on";
->>>>>>> +         };
->>>>>>> +
->>>>>>> +         led2 {
->>>>>>> +                 label = "a20-som204-evb:yellow:led2";
->>>>>>> +                 gpios = <&pio 8 11 GPIO_ACTIVE_HIGH>;
->>>>>>> +                 default-state = "on";
->>>>>>> +         };
->>>>>> You don't have the same prefix between stat and led1/led2. I'm fine
->>>>>> with both, but you should be consistent :)
->>>>> STAT led is on the SOM204 module, while led1/2 on the EVB. Thats why
->>>>> they have different prefix.
->>>> Still, the user and the system will see it as a single board, and the
->>>> documentation states that it should be the board name. I'm not quite
->>>> sure what a good rule would be here. Have you looked at how other
->>>> boards dealt with it? Chen-Yu, any opinion on this?
->>> Follow the bindings, I guess? I don't think we (sunxi) have dealt
->>> with modules that have LEDs or anything that needs to be named after
->>> the board.
+2018-01-22 18:30 GMT+01:00 David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>:
+> On 01/22/2018 05:14 AM, Bartosz Golaszewski wrote:
+>>
+>> 2018-01-20 18:13 GMT+01:00 David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>:
 >>>
->>> On a related topic, I don't know if you (Stefan / Olimex) want to split
->>> this into a .dtsi file for the SoM, and a .dts file for the EVB. It might
->>> help your customers?
->> I'm not sure this will be good ideal. We will have one EVB with all
->> possible peripheries. On the other hand, we are planning 3-4 different
->> SOM204 modules (A20, A64, RK....). I think this will make the dtsi
->> incompatible.
-> Yes. That was what I mentioned in the second half of my reply.
->
->> Maybe if there is one dtsi for the base SOM204 module (one for each arch)
->> and
->> multiple dts for boards with additional features. But this will generate
->> 10-20
->> dts files. I think this will be better handled using overlays in the uboot.
-> OK. I'm guessing there's the possibility that some pins or GPIOs get muxed
-> to different functions depending on what base board is used? How would
-> you list them, if you only had one .dts file, say for the EVB? Clearly
-> the SoM cannot work by itself, so it probably doesn't get its own .dts
-> file.
-Yes, the SoM cannot work by itself. I'm thinking to follow the current 
-practice:
-     - One dts for base board + evb
-     - One dts for the above + eMMC.
-
-There is also possibility (a real one) some periphery to work with one 
-SoM, and
-other - not. For example A20-SOM204 or A64-SOM204 doesn't have PCIe 
-support, but
-RKxxxx-SOM204 will.
-
-On second re-read of the comments:
->> +};
->> +
->> +&ahci {
->> +	target-supply = <&reg_ahci_5v>;
-> You should use the regulators you defined in your PMIC there.
-The power comes from the DC jack not from PCIM. In this case, is this OK?
-
->
->> +&usb_otg {
->> +	dr_mode = "otg";
->> +	status = "okay";
->> +};
->> +
->> +&usb_power_supply {
->> +	status = "okay";
->> +};
->> +
->> +&usbphy {
->> +	pinctrl-names = "default";
->> +	pinctrl-0 = <&usb0_id_detect_pin>,
->> +		    <&usb0_vbus_detect_pin>;
->> +	usb0_id_det-gpio = <&pio 7 4 GPIO_ACTIVE_HIGH>; /* PH4 */
->> +	usb0_vbus_det-gpio = <&pio 7 5 GPIO_ACTIVE_HIGH>; /* PH5 */
->> +	usb0_vbus_power-supply = <&usb_power_supply>;
->> +	usb0_vbus-supply = <&reg_usb0_vbus>;
->> +	usb1_vbus-supply = <&reg_usb1_vbus>;
->> +	usb2_vbus-supply = <&reg_usb2_vbus>;
-> You should also use one of the PMIC regulators here.
-Same here. Power comes from DC jack, not PMIC.
-
-Regards,
-Stefan Mavrodiev
-
->
->> About the leds, I'm ok to be named after full board name (a20-som204-evb).
-> Cool.
->
-> ChenYu
->
->>> I've tried it previously, and it helps in some ways
->>> when you're matching the files to the schematics. But it is confusing
->>> when you want the big picture. On the other hand, this is not going to
->>> help with supporting different modules on the same baseboard, as the
->>> routing, peripherals and labels likely won't match up. Just my two cents.
+>>> This series converts mach-davinci to use the common clock framework.
 >>>
->>> ChenYu
->> Regards,
->> Stefan Mavrodiev
+>>> The series works like this, the first 19 patches create new clock drivers
+>>> using the common clock framework. There are basically 3 groups of clocks
+>>> -
+>>> PLL, PSC and CFGCHIP (syscon). There are six different SoCs that each
+>>> have
+>>> unique init data, which is the reason for so many patches.
+>>>
+>>> Then, starting with "ARM: da830: add new clock init using common clock",
+>>> we get the mach code ready for the switch by adding the code needed for
+>>> the new clock drivers and adding #ifndef CONFIG_COMMON_CLK around the
+>>> legacy clocks so that we can switch easily between the old and the new.
+>>>
+>>> "ARM: davinci: switch to common clock framework" actually flips the
+>>> switch
+>>> to start using the new clock drivers. Then the next 8 patches remove all
+>>> of the old clock code.
+>>>
+>>> The final three patches add device tree clock support to the one SoC that
+>>> supports it.
+>>>
+>>> v6 changes (also see individual patches for details):
+>>> - All of the device tree bindings are changed
+>>> - All of the clock drivers are changed significantly
+>>> - Fixed issues brought up during review of v5
+>>> - "ARM: davinci: move davinci_clk_init() to init_time" is removed from
+>>> this
+>>>    series and submitted separately
+>>>
+>>> v5 changes:
+>>> - Basically, this is an entirely new series
+>>> - Patches are broken up into bite-sized pieces
+>>> - Converted PSC clock driver to use regmap
+>>> - Restored "force" flag for certain DA850 clocks
+>>> - Added device tree bindings
+>>> - Moved more of the clock init to drivers/clk
+>>> - Fixed frequency scaling (maybe*)
+>>>
+>>> * I have frequency scaling using cpufreq-dt, so I know the clocks are
+>>> doing
+>>>    what they need to do to make this work, but I haven't figured out how
+>>> to
+>>>    test davinci-cpufreq driver yet. (Patches to make cpufreq-dt work will
+>>> be
+>>>    sent separately after this series has landed.)
+>>>
+>>> Dependencies:
+>>>
+>>> This series applies on top of linux-davinci/master plus the following
+>>> patches:
+>>> - [1] "clk: fix reentrancy of clk_enable() on UP systems" (in clk-next)
+>>> - [2] "clk: add helper functions for managing clk_onecell_data"
+>>> - [3] "clk: divider: read-only divider can propagate rate change"
+>>> - [4],[5],[6],[7],[8],[9] series "ARM: davinci: common clock prep work"
+>>>
+>>
+>> Hi David,
+>>
+>> I'm getting a splat[1] when trying to mount the rootfs over nfs on a
+>> da850-lcdk.
+>>
+>> I'll try to figure out what's happening.
+>>
+>> Best regards,
+>> Bartosz Golaszewski
+>>
+>> [1] https://pastebin.com/D94z8SAe
+>>
+>
+> Could it have something to do with the "rmii" clock? I don't think I added
+> that
+> in the device tree.
+>
 
+I'm looking at it now. There are problems with emac & mdio both in
+legacy and in DT mode.
 
+The davinci_mdio driver seems to not get an actual functional clock
+(phy is reported as down). I'm seeing that in old legacy code,
+mdio_clk has emac_clk as parent, while after your changes they share
+pll0_sysclk4 as parent, although I'm not sure if that has anything to
+do with it.
+
+I'll see about the rmii clock too.
+
+Thanks,
+Bartosz
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
