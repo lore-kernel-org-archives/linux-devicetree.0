@@ -1,118 +1,325 @@
-From: Sean Wang <sean.wang@mediatek.com>
-Subject: Re: [PATCH] arm: dts: mt7623: enable all four available UARTs on
- bananapi-r2
-Date: Tue, 23 Jan 2018 16:51:45 +0800
-Message-ID: <1516697505.12197.30.camel@mtkswgap22>
-References: <b4e84a68da76c1ca538150a730777ff530c1db5a.1513922513.git.sean.wang@mediatek.com>
-         <dc3c28c7-03c3-f1c6-39c1-b8df8be4fac3@gmail.com>
-         <1514043318.30687.10.camel@mtkswgap22>
+From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [v3 2/6] dmaengine: fsl-qdma: add NXP Layerscape qDMA engine
+ driver support
+Date: Tue, 23 Jan 2018 14:38:12 +0530
+Message-ID: <20180123090812.GX18649@localhost>
+References: <20180111093215.12636-1-wen.he_1@nxp.com>
+ <20180111093215.12636-2-wen.he_1@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1514043318.30687.10.camel@mtkswgap22>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20180111093215.12636-2-wen.he_1-3arQi8VN3Tc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wen He <wen.he_1-3arQi8VN3Tc@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, leoyang.li-3arQi8VN3Tc@public.gmane.org, jiafei.pan-3arQi8VN3Tc@public.gmane.org, jiaheng.fan-3arQi8VN3Tc@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 2017-12-23 at 23:35 +0800, Sean Wang wrote:
-> On Sat, 2017-12-23 at 08:52 +0100, Matthias Brugger wrote:
-> > 
-> > On 12/22/2017 07:06 AM, sean.wang@mediatek.com wrote:
-> > > From: Sean Wang <sean.wang@mediatek.com>
-> > > 
-> > > On bpi-r2 board, totally there're four uarts which we usually called
-> > > uart[0-3] helpful to extend slow I/O devices. Among those ones, uart2 has
-> > > dedicated pin slot which is used to conolse log. uart[0-1] appear at the
-> > > 40-pins connector and uart3 has no pinout, but just has test points (TP47
-> > > for TX and TP48 for RX, respectively) nearby uart2. Also, some missing
-> > > pinctrl is being complemented for those devices.
-> > > 
-> > > Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-> > > ---
-> > >  arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts | 26 ++++++++++++++++++++++++--
-> > >  1 file changed, 24 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-> > > index 7bf5aa2..64bf5db 100644
-> > > --- a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-> > > +++ b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-> > > @@ -409,6 +409,20 @@
-> > >  				 <MT7623_PIN_82_UTXD1_FUNC_UTXD1>;
-> > >  		};do you like it or quite want me to remove the uart3 node?
-> > >  	};
-> > > +
-> > > +	uart2_pins_a: uart@2 {
-> > > +		pins_dat {
-> > > +			pinmux = <MT7623_PIN_14_GPIO14_FUNC_URXD2>,
-> > > +				 <MT7623_PIN_15_GPIO15_FUNC_UTXD2>;
-> > > +		};
-> > > +	};
-> > > +
-> > > +	uart3_pins_a: uart@3 {
-> > > +		pins_dat {
-> > > +			pinmux = <MT7623_PIN_242_URTS2_FUNC_URTS2>,
-> > > +				 <MT7623_PIN_243_UCTS2_FUNC_UTXD3>;
-> > > +		};
-> > > +	};
-> > >  };
-> > >  
-> > >  &pwm {
-> > > @@ -454,16 +468,24 @@
-> > >  &uart0 {
-> > >  	pinctrl-names = "default";
-> > >  	pinctrl-0 = <&uart0_pins_a>;
-> > > -	status = "disabled";
-> > > +	status = "okay";
-> > >  };
-> > >  
-> > >  &uart1 {
-> > >  	pinctrl-names = "default";
-> > >  	pinctrl-0 = <&uart1_pins_a>;
-> > > -	status = "disabled";
-> > > +	status = "okay";
-> > >  };
-> > >  
-> > >  &uart2 {
-> > > +	pinctrl-names = "default";
-> > > +	pinctrl-0 = <&uart2_pins_a>;
-> > > +	status = "okay";
-> > > +};
-> > > +
-> > > +&uart3 {
-> > > +	pinctrl-names = "default";
-> > > +	pinctrl-0 = <&uart3_pins_a>;
-> > >  	status = "okay";
-> > >  };
-> > >  
-> > 
-> > Why do we want to enable uart3 when there are only test points?
-> > It is not very useful, or do I oversee something?
-> > 
+On Thu, Jan 11, 2018 at 05:32:11PM +0800, Wen He wrote:
 
-> I have been listening to the sound from potential users of bpi-r2 to
-> understand what assistance I have to provide to them. Something could
-> be seen through [1] in the forum to know they had been trying hard to
-> explore all available UARTs from the SoC in the last weeks. The patch
-> should be really useful for these people and for the extra soldering
-> it shouldn't become a problem for these makers.
-> 
-> [1] http://forum.banana-pi.org/t/gpio-uart-not-the-debug-port/3748
-> 
-> 	Sean 
-> 
+>  config FSL_RAID
+>          tristate "Freescale RAID engine Support"
+> -        depends on FSL_SOC && !ASYNC_TX_ENABLE_CHANNEL_SWITCH
+> +	depends on FSL_SOC && !ASYNC_TX_ENABLE_CHANNEL_SWITCH
 
-Hi, Matthias
+Why this change?
 
-do you like it or quite want me to remove the uart3 node?
+> +/*
+> + * Driver for NXP Layerscape Queue direct memory access controller (qDMA)
+> + *
+> + * Copyright 2017 NXP
+> + *
+> + * Author:
+> + *  Jiaheng Fan <jiaheng.fan-3arQi8VN3Tc@public.gmane.org>
+> + *  Wen He <wen.he_1-3arQi8VN3Tc@public.gmane.org>
+> + *
+> + * SPDX-License-Identifier: GPL-2.0+
 
-I can take it into account along with other pending dts changes in my
-queue.
+this needs to be:
 
-	Sean
-> 
-> > Regards,
-> > Matthias
-> > 
-> 
+//SPDX-License-Identifier: GPL-2.0+
+//Copyright 2017 NXP
+
+and at top of the file
+
+> +
+> +#define FSL_QDMA_CQIDR_CQT		0xff000000
+> +#define FSL_QDMA_CQIDR_SQPE		0x800000
+> +#define FSL_QDMA_CQIDR_SQT		0x8000
+
+BIT and GENMASK() for these and rest of them please
+
+> +static inline u64
+> +qdma_ccdf_addr_get64(const struct fsl_qdma_format *ccdf)
+> +{
+> +	return le64_to_cpu(ccdf->data) & 0xffffffffffLLU;
+						^^^^^
+
+Do you want something like INT_MAX, if not GENMASK() pls for the constant
+
+> +}
+> +
+> +static inline void
+> +qdma_desc_addr_set64(struct fsl_qdma_format *ccdf, u64 addr)
+> +{
+> +	ccdf->addr_hi = upper_32_bits(addr);
+> +	ccdf->addr_lo = cpu_to_le32(lower_32_bits(addr));
+> +}
+> +
+> +static inline u64
+> +qdma_ccdf_get_queue(const struct fsl_qdma_format *ccdf)
+> +{
+> +	return ccdf->cfg8b_w1 & 0xff;
+
+USHRT_MAX
+
+> +static void fsl_qdma_comp_fill_memcpy(struct fsl_qdma_comp *fsl_comp,
+> +					dma_addr_t dst, dma_addr_t src, u32 len)
+> +{
+> +	struct fsl_qdma_format *ccdf, *csgf_desc, *csgf_src, *csgf_dest;
+> +	struct fsl_qdma_sdf *sdf;
+> +	struct fsl_qdma_ddf *ddf;
+> +
+> +	ccdf = (struct fsl_qdma_format *)fsl_comp->virt_addr;
+
+why are doing a cast away from void *?
+
+> +	csgf_desc = (struct fsl_qdma_format *)fsl_comp->virt_addr + 1;
+> +	csgf_src = (struct fsl_qdma_format *)fsl_comp->virt_addr + 2;
+> +	csgf_dest = (struct fsl_qdma_format *)fsl_comp->virt_addr + 3;
+
+why not ccdf + 1 and so on?
+ 
+> +	sdf = (struct fsl_qdma_sdf *)fsl_comp->virt_addr + 4;
+> +	ddf = (struct fsl_qdma_ddf *)fsl_comp->virt_addr + 5;
+> +
+> +	memset(fsl_comp->virt_addr, 0, FSL_QDMA_BASE_BUFFER_SIZE);
+> +	/* Head Command Descriptor(Frame Descriptor) */
+> +	qdma_desc_addr_set64(ccdf, fsl_comp->bus_addr + 16);
+> +	qdma_ccdf_set_format(ccdf, qdma_ccdf_get_offset(ccdf));
+> +	qdma_ccdf_set_ser(ccdf, qdma_ccdf_get_status(ccdf));
+
+empty line after each logical block to help read the code better
+
+> +static int fsl_qdma_pre_request_enqueue_desc(struct fsl_qdma_queue *queue)
+> +{
+> +	struct fsl_qdma_comp *comp_temp;
+> +	int i;
+> +
+> +	for (i = 0; i < queue->n_cq; i++) {
+> +		comp_temp = kzalloc(sizeof(*comp_temp), GFP_KERNEL);
+
+GFP_KERNEL here
+
+> +		if (!comp_temp)
+> +			return -ENOMEM;
+> +		comp_temp->virt_addr = dma_pool_alloc(queue->comp_pool,
+> +						      GFP_NOWAIT,
+
+GFP_NOWAIT here ??
+
+this seems to be called in probe right?
+
+
+> +static struct fsl_qdma_comp *fsl_qdma_request_enqueue_desc(
+> +					struct fsl_qdma_chan *fsl_chan,
+> +					unsigned int dst_nents,
+> +					unsigned int src_nents)
+> +{
+> +	struct fsl_qdma_comp *comp_temp;
+> +	struct fsl_qdma_sg *sg_block;
+> +	struct fsl_qdma_queue *queue = fsl_chan->queue;
+> +	unsigned long flags;
+> +	unsigned int dst_sg_entry_block, src_sg_entry_block, sg_entry_total, i;
+> +
+> +	spin_lock_irqsave(&queue->queue_lock, flags);
+> +	if (list_empty(&queue->comp_free)) {
+> +		spin_unlock_irqrestore(&queue->queue_lock, flags);
+> +		comp_temp = kzalloc(sizeof(*comp_temp), GFP_KERNEL);
+> +		if (!comp_temp)
+> +			return NULL;
+> +		comp_temp->virt_addr = dma_pool_alloc(queue->comp_pool,
+> +						      GFP_NOWAIT,
+
+here too! this is called from prep_ context
+
+> +						      &comp_temp->bus_addr);
+> +		if (!comp_temp->virt_addr) {
+> +			kfree(comp_temp);
+> +			return NULL;
+> +		}
+> +
+> +	} else {
+> +		comp_temp = list_first_entry(&queue->comp_free,
+> +					     struct fsl_qdma_comp,
+> +					     list);
+> +		list_del(&comp_temp->list);
+> +		spin_unlock_irqrestore(&queue->queue_lock, flags);
+> +	}
+> +
+> +	if (dst_nents != 0)
+> +		dst_sg_entry_block = dst_nents /
+> +					(FSL_QDMA_EXPECT_SG_ENTRY_NUM - 1) + 1;
+
+DIV_ROUND_UP or something. PLs check kernel has defines for these sort of
+things...
+
+> +	else
+> +		dst_sg_entry_block = 0;
+> +
+> +	if (src_nents != 0)
+> +		src_sg_entry_block = src_nents /
+> +					(FSL_QDMA_EXPECT_SG_ENTRY_NUM - 1) + 1;
+> +	else
+> +		src_sg_entry_block = 0;
+> +
+> +	sg_entry_total = dst_sg_entry_block + src_sg_entry_block;
+> +	if (sg_entry_total) {
+> +		sg_block = kzalloc(sizeof(*sg_block) *
+> +					      sg_entry_total,
+> +					      GFP_KERNEL);
+> +		if (!sg_block) {
+> +			dma_pool_free(queue->comp_pool,
+> +					comp_temp->virt_addr,
+> +					comp_temp->bus_addr);
+> +			return NULL;
+> +		}
+> +		comp_temp->sg_block = sg_block;
+> +		for (i = 0; i < sg_entry_total; i++) {
+> +			sg_block->virt_addr = dma_pool_alloc(queue->sg_pool,
+> +							GFP_NOWAIT,
+
+i guess these are copy paster errors. And this code should then be in
+helper and used everywhere...
+
+> +static struct fsl_qdma_queue *fsl_qdma_alloc_queue_resources(
+> +					struct platform_device *pdev,
+> +					unsigned int queue_num)
+> +{
+> +	struct fsl_qdma_queue *queue_head, *queue_temp;
+> +	int ret, len, i;
+> +	unsigned int queue_size[FSL_QDMA_QUEUE_MAX];
+> +
+> +	if (queue_num > FSL_QDMA_QUEUE_MAX)
+> +		queue_num = FSL_QDMA_QUEUE_MAX;
+> +	len = sizeof(*queue_head) * queue_num;
+> +	queue_head = devm_kzalloc(&pdev->dev, len, GFP_KERNEL);
+> +	if (!queue_head)
+> +		return NULL;
+> +
+> +	ret = device_property_read_u32_array(&pdev->dev, "queue-sizes",
+> +					queue_size, queue_num);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Can't get queue-sizes.\n");
+> +		return NULL;
+> +	}
+> +
+> +	for (i = 0; i < queue_num; i++) {
+> +		if (queue_size[i] > FSL_QDMA_CIRCULAR_DESC_SIZE_MAX
+> +			|| queue_size[i] < FSL_QDMA_CIRCULAR_DESC_SIZE_MIN) {
+> +			dev_err(&pdev->dev, "Get wrong queue-sizes.\n");
+> +			return NULL;
+> +		}
+> +		queue_temp = queue_head + i;
+> +		queue_temp->cq = dma_alloc_coherent(&pdev->dev,
+> +						sizeof(struct fsl_qdma_format) *
+> +						queue_size[i],
+> +						&queue_temp->bus_addr,
+> +						GFP_KERNEL);
+
+so we allocated here
+
+> +		if (!queue_temp->cq)
+> +			return NULL;
+> +		queue_temp->n_cq = queue_size[i];
+> +		queue_temp->id = i;
+> +		queue_temp->virt_head = queue_temp->cq;
+> +		queue_temp->virt_tail = queue_temp->cq;
+> +		/*
+> +		 * The dma pool for queue command buffer
+> +		 */
+> +		queue_temp->comp_pool = dma_pool_create("comp_pool",
+> +						&pdev->dev,
+> +						FSL_QDMA_BASE_BUFFER_SIZE,
+> +						16, 0);
+
+and here
+
+> +		if (!queue_temp->comp_pool) {
+> +			dma_free_coherent(&pdev->dev,
+> +						sizeof(struct fsl_qdma_format) *
+> +						queue_size[i],
+> +						queue_temp->cq,
+> +						queue_temp->bus_addr);
+> +			return NULL;
+
+and freed here on error
+
+> +		}
+> +		/*
+> +		 * The dma pool for queue command buffer
+> +		 */
+> +		queue_temp->sg_pool = dma_pool_create("sg_pool",
+> +					&pdev->dev,
+> +					FSL_QDMA_EXPECT_SG_ENTRY_NUM * 16,
+> +					64, 0);
+> +		if (!queue_temp->sg_pool) {
+> +			dma_free_coherent(&pdev->dev,
+> +						sizeof(struct fsl_qdma_format) *
+> +						queue_size[i],
+> +						queue_temp->cq,
+> +						queue_temp->bus_addr);
+> +			dma_pool_destroy(queue_temp->comp_pool);
+> +			return NULL;
+
+and repeated same here, maybe you should add goto's and have common error
+handling rather these everywhere..
+
+> +static struct fsl_qdma_queue *fsl_qdma_prep_status_queue(
+> +						struct platform_device *pdev)
+> +{
+> +	struct device_node *np = pdev->dev.of_node;
+> +	struct fsl_qdma_queue *status_head;
+> +	unsigned int status_size;
+> +	int ret;
+> +
+> +	ret = of_property_read_u32(np, "status-sizes", &status_size);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Can't get status-sizes.\n");
+> +		return NULL;
+> +	}
+> +	if (status_size > FSL_QDMA_CIRCULAR_DESC_SIZE_MAX
+> +			|| status_size < FSL_QDMA_CIRCULAR_DESC_SIZE_MIN) {
+> +		dev_err(&pdev->dev, "Get wrong status_size.\n");
+> +		return NULL;
+> +	}
+> +	status_head = devm_kzalloc(&pdev->dev, sizeof(*status_head),
+> +								GFP_KERNEL);
+> +	if (!status_head)
+> +		return NULL;
+> +
+> +	/*
+> +	 * Buffer for queue command
+> +	 */
+> +	status_head->cq = dma_alloc_coherent(&pdev->dev,
+> +						sizeof(struct fsl_qdma_format) *
+> +						status_size,
+> +						&status_head->bus_addr,
+> +						GFP_KERNEL);
+> +	if (!status_head->cq)
+> +		return NULL;
+
+empty line here...
+
+> +static enum dma_status fsl_qdma_tx_status(struct dma_chan *chan,
+> +		dma_cookie_t cookie, struct dma_tx_state *txstate)
+> +{
+> +	return dma_cookie_status(chan, cookie, txstate);
+
+why not set this to dma_cookie_status()
+-- 
+~Vinod
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
