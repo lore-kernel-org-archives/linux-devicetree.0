@@ -1,31 +1,136 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v3 16/16] ARM: dtsi: axp81x: remove IP name
- from DT node name
-Date: Tue, 23 Jan 2018 23:51:32 +0800
-Message-ID: <CAGb2v649NL5U=mXKrqg93cDO4kVcf64WWzA+5Aeg9PQzp=XcNQ@mail.gmail.com>
-References: <cover.2e5329bf5475a5160e613a4eb1e1377c662ce56e.1516012352.git-series.quentin.schulz@free-electrons.com>
- <6e881951c43b8829cd509c3db06fa5520f71e779.1516012352.git-series.quentin.schulz@free-electrons.com>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: Re: [PATCH 4/8] mfd: stm32-timers: add support for dmas
+Date: Tue, 23 Jan 2018 16:52:49 +0100
+Message-ID: <ee021839-3298-d01b-8890-619aca0399a7@st.com>
+References: <1516106631-18722-1-git-send-email-fabrice.gasnier@st.com>
+ <1516106631-18722-5-git-send-email-fabrice.gasnier@st.com>
+ <20180123133234.xmep76cgdremnj47@dell>
+ <e611b40f-bd37-aa2d-afd9-997b86d55441@st.com>
+ <20180123153035.2rvhspe2m5ej57op@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBG5UTXJQKGQEK5NUAZY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <6e881951c43b8829cd509c3db06fa5520f71e779.1516012352.git-series.quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "open list:THERMAL" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180123153035.2rvhspe2m5ej57op@dell>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: mark.rutland@arm.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, devicetree@vger.kernel.org, linux@armlinux.org.uk, robh+dt@kernel.org, linux-kernel@vger.kernel.org, thierry.reding@gmail.com, linux-pwm@vger.kernel.org, benjamin.gaignard@linaro.org, linux-arm-kernel@lists.infradead.org, benjamin.gaignard@st.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 15, 2018 at 6:33 PM, Quentin Schulz
-<quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> The DT node should be named after its functionality and not after the
-> IP it's defining.
->
-> Signed-off-by: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+On 01/23/2018 04:30 PM, Lee Jones wrote:
+> On Tue, 23 Jan 2018, Fabrice Gasnier wrote:
+> 
+>> On 01/23/2018 02:32 PM, Lee Jones wrote:
+>>> On Tue, 16 Jan 2018, Fabrice Gasnier wrote:
+>>>
+>>>> STM32 Timers can support up to 7 dma requests:
+>>>> 4 channels, update, compare and trigger.
+>>>> Optionally request part, or all dmas from stm32-timers MFD core.
+>>>> Also, keep reference of device's bus address to allow child drivers to
+>>>> transfer data from/to device by using dma.
+>>>>
+>>>> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+>>>> ---
+>>>>  drivers/mfd/stm32-timers.c       | 37 ++++++++++++++++++++++++++++++++++++-
+>>>>  include/linux/mfd/stm32-timers.h | 14 ++++++++++++++
+>>>>  2 files changed, 50 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/drivers/mfd/stm32-timers.c b/drivers/mfd/stm32-timers.c
+>>>> index a6675a4..372b51e 100644
+>>>> --- a/drivers/mfd/stm32-timers.c
+>>>> +++ b/drivers/mfd/stm32-timers.c
+>>>> @@ -29,6 +29,23 @@ static void stm32_timers_get_arr_size(struct stm32_timers *ddata)
+>>>>  	regmap_write(ddata->regmap, TIM_ARR, 0x0);
+>>>>  }
+>>>>  
+>>>> +static void stm32_timers_dma_probe(struct device *dev,
+>>>> +				   struct stm32_timers *ddata)
+>>>> +{
+>>>> +	int i;
+>>>> +	char name[4];
+>>>> +
+>>>> +	for (i = STM32_TIMERS_DMA_CH1; i <= STM32_TIMERS_DMA_CH4; i++) {
+>>>> +		snprintf(name, ARRAY_SIZE(name), "ch%1d", i + 1);
+>>>> +		ddata->dmas[i] = dma_request_slave_channel(dev, name);
+>>>
+>>> And if any of them fail?
+>>
+>> Hi Lee,
+>>
+>> If some of these fails, reference will be NULL. It is checked in child
+>> driver (pwm for instance) at runtime. Support is being added as an
+>> option: pwm capture will simply be unavailable in this case (fail with
+>> error).
+> 
+> Can you place a simple one-line comment in here please.  Or else
+> someone will come along and add error handling for you.
 
-Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Hi Lee,
+
+Ok, I'll add a comment in v2.
+
+> 
+>>>> +	}
+>>>> +	ddata->dmas[STM32_TIMERS_DMA_UP] = dma_request_slave_channel(dev, "up");
+>>>> +	ddata->dmas[STM32_TIMERS_DMA_TRIG] =
+>>>> +		dma_request_slave_channel(dev, "trig");
+>>>> +	ddata->dmas[STM32_TIMERS_DMA_COM] =
+>>>> +		dma_request_slave_channel(dev, "com");
+>>>
+>>> Can you format these in the same why.  This hurts my eyes.
+>>
+>> I use enum values and try to match as possible with reference manual for
+>> "up", "trig" & "com" names.
+>> Would have some suggestion to beautify this?
+> 
+> I just mean, can you push the first  dma_request_slave_channel() call
+> on to the next line, so each of the calls are formatted in the same
+> manner please?
+
+Ok, got it now. I'll do this in v2.
+
+> 
+>>>> +}
+>>>> +
+>>>>  static int stm32_timers_probe(struct platform_device *pdev)
+>>>>  {
+>>>>  	struct device *dev = &pdev->dev;
+>>>> @@ -44,6 +61,7 @@ static int stm32_timers_probe(struct platform_device *pdev)
+>>>>  	mmio = devm_ioremap_resource(dev, res);
+>>>>  	if (IS_ERR(mmio))
+>>>>  		return PTR_ERR(mmio);
+>>>> +	ddata->phys_base = res->start;
+>>>
+>>> What do you use this for?
+>>
+>> This is used in in child driver (pwm) for capture data transfer by dma.
+> 
+> Might be worth being clear about that.
+> 
+> Perhaps pass in 'dma_base' (phys_base + offset) instead?
+> 
+
+I guess you've had a look at [PATCH 5/8] pwm: stm32: add capture
+support. Are you talking about passing phys_base + TIM_DMAR ?
+
+If this is the case, I'd prefer to keep phys base only if you don't
+mind, and handle TIM_DMAR offset in pwm driver. This way, all dma slave
+config is kept locally at one place.
+Or do you mean something else ?
+
+Maybe I can add a comment here about this ?
+Something like:
+/* phys_base to be used by child driver, e.g. DMA burst mode */
+
+Please advise,
+Thanks,
+Fabrice
