@@ -1,53 +1,92 @@
-From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/4] dmaengine: qcom: bam_dma: make bam clk optional
-Date: Tue, 23 Jan 2018 09:20:30 +0000
-Message-ID: <86774341-19e6-5653-49ae-cb7614490d1b@linaro.org>
-References: <20180116190236.14558-1-srinivas.kandagatla@linaro.org>
- <20180116190236.14558-2-srinivas.kandagatla@linaro.org>
- <20180119055221.GV18649@localhost>
- <8dfa8ba1-6e98-a8e4-614c-592861cef571@linaro.org>
- <20180123091905.GY18649@localhost>
+From: Stanimir Varbanov <svarbanov@mm-sol.com>
+Subject: Re: [PATCH] PCI: qcom: add missing supplies required for msm8996
+Date: Tue, 23 Jan 2018 11:23:45 +0200
+Message-ID: <65e01829-198e-f549-174d-c8368c5ee193@mm-sol.com>
+References: <20171208092053.4417-1-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180123091905.GY18649@localhost>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20171208092053.4417-1-srinivas.kandagatla@linaro.org>
 Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, yanhe-jfJNa2p1gH1BDgjK7y7TUQ@public.gmane.org, ramkri-Rm6X0d1/PG5y9aJCnZT0Uw@public.gmane.org, sdharia-jfJNa2p1gH1BDgjK7y7TUQ@public.gmane.org
+Sender: linux-pci-owner@vger.kernel.org
+To: srinivas.kandagatla@linaro.org, stanimir.varbanov@linaro.org, linux-pci@vger.kernel.org, bhelgaas@google.com
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hey Srini,
 
+As there are no comments I'd propose to change the endpoint supplies to
+more generic names.
 
-On 23/01/18 09:19, Vinod Koul wrote:
-> On Mon, Jan 22, 2018 at 09:55:01AM +0000, Srinivas Kandagatla wrote:
+On 12/08/2017 11:20 AM, srinivas.kandagatla@linaro.org wrote:
+> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 > 
->>>> @@ -1180,13 +1180,14 @@ static int bam_dma_probe(struct platform_device *pdev)
->>>>   						"qcom,controlled-remotely");
->>>>   	bdev->bamclk = devm_clk_get(bdev->dev, "bam_clk");
->>>
->>> but you still do clk_get unconditionally?
->>
->> Only reason to do this way is to not break existing users in the mainline.
->>
->> remotely controlled BAM is already supported in upstream driver, there are
->> users of this who pass clk from device tree, If I make this conditional then
->> subsequent reads to the BAM registers for those instances might crash the
->> system.
+> This patch adds supplies that are required for msm8996. Two of them vdda
+> and vdda-1p8 are analog supplies that go in to controller, and the rest
+> of the two vddpe's are supplies to PCIe endpoints.
 > 
-> But these instances are remote controlled, so if we stop representing them
-> in Linux, why would we read them?
-
-Plan is that we would transition those users once we get these 
-bindings/changes in. Currently I don't have access to any of those 
-devices so I made the changes safe, such that it does not break devices 
-on mainline.
-
---srini
-
+> Without these supplies PCIe endpoints which require power supplies are
+> not enumerated at all, as there is no one to power it up.
 > 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> ---
+>  .../devicetree/bindings/pci/qcom,pcie.txt          | 16 +++++++++++++
+>  drivers/pci/dwc/pcie-qcom.c                        | 28 ++++++++++++++++++++--
+>  2 files changed, 42 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.txt b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+> index 3c9d321b3d3b..045102cb3e12 100644
+> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+> @@ -179,6 +179,11 @@
+>  	Value type: <phandle>
+>  	Definition: A phandle to the core analog power supply
+>  
+> +- vdda-1p8-supply:
+> +	Usage: required for msm8996
+> +	Value type: <phandle>
+> +	Definition: A phandle to the 1.8v analog power supply
+> +
+
+This should be dropped, because it is part of the phy.
+
+>  - vdda_phy-supply:
+>  	Usage: required for ipq/apq8064
+>  	Value type: <phandle>
+> @@ -189,6 +194,15 @@
+>  	Value type: <phandle>
+>  	Definition: A phandle to the analog power supply for IC which generates
+>  		    reference clock
+> +- vddpe-supply:
+> +	Usage: optional
+> +	Value type: <phandle>
+> +	Definition: A phandle to the PCIe endpoint power supply
+
+vddpe_3v3-supply
+
+> +
+> +- vddpe1-supply:
+> +	Usage: optional
+> +	Value type: <phandle>
+> +	Definition: A phandle to the PCIe endpoint power supply 1
+
+vddpe_1v5-supply
+
+>  
+>  - phys:
+>  	Usage: required for apq8084
+> @@ -205,6 +219,8 @@
+>  	Value type: <prop-encoded-array>
+>  	Definition: List of phandle and GPIO specifier pairs. Should contain
+>  			- "perst-gpios"	PCIe endpoint reset signal line
+> +			- "pe_en-gpios"	PCIe endpoint enable signal line
+> +			- "pe_en1-gpios" PCIe endpoint enable1 signal line
+
+We don't need those gpios, the regulator driver will manipulate these
+gpios when we call regulator_enable/disable.
+
+
+-- 
+regards,
+Stan
