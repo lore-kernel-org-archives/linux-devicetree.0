@@ -1,60 +1,47 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH RFC 2/4] dt-bindings/interrupt-controller: pdc: descibe
- PDC device binding
-Date: Tue, 23 Jan 2018 18:09:11 +0000
-Message-ID: <eb959e8b-604b-b38c-f8ad-de7b4bd3963f@arm.com>
-References: <20180123175656.11942-1-ilina@codeaurora.org>
- <20180123175656.11942-3-ilina@codeaurora.org>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: =?UTF-8?Q?Re=3A_=5BPATCH_v6_00=2F41=5D_ARM=3A_davinci=3A_convert_to_common?=
+        =?UTF-8?Q?_clock_framework=E2=80=8B?=
+Date: Tue, 23 Jan 2018 19:10:43 +0100
+Message-ID: <CAMRc=MdyGx3PFiryYybB2fCGx=AP=e7kkdd-DUL29pT+St9u1g@mail.gmail.com>
+References: <1516468460-4908-1-git-send-email-david@lechnology.com>
+ <CAMRc=MexJTMiD=URw1bv-qfGaTntZRXgfsSb_beYGkvO+LrpgQ@mail.gmail.com>
+ <d819e18f-7d74-d8c4-8056-bfc545f4d4e9@lechnology.com> <CAMRc=McVNJqsO4+j=XkyNWuKqF-S-hQAw9XxHx6GC47UudgMYw@mail.gmail.com>
+ <e5f4af7d-971c-5694-2da5-0cba9083ee5c@lechnology.com> <615bc302-e129-1501-63be-fa701f5ecaad@lechnology.com>
+ <CAHCN7xLW=RjHHBjvDto=DRrNfNsQrsaGb0zmsRrwdc+7Wbhaxg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180123175656.11942-3-ilina@codeaurora.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lina Iyer <ilina@codeaurora.org>
-Cc: tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, Sudeep Holla <sudeep.holla@arm.com>, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, sboyd@codeaurora.org, rnayak@codeaurora.org, asathyak@codeaurora.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <CAHCN7xLW=RjHHBjvDto=DRrNfNsQrsaGb0zmsRrwdc+7Wbhaxg@mail.gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Adam Ford <aford173@gmail.com>
+Cc: David Lechner <david@lechnology.com>, linux-clk@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+2018-01-23 18:03 GMT+01:00 Adam Ford <aford173@gmail.com>:
+> On Tue, Jan 23, 2018 at 10:06 AM, David Lechner <david@lechnology.com> wrote:
+>> On 01/23/2018 10:03 AM, David Lechner wrote:
+>>>
+>>> You can see if the clock is enabled by running:
+>>>
+>>>      cat /sys/kernel/debug/clk/clk_summary
+>>>
+>>
+>> I just realized if you can't boot, you can't do this. :-/
+>
+> I can boot with the latest set in your git repo, but the Ethernet
+> doesn't apparently fully operate.  I don't get errors, but I cannot
+> get a dhcp address.
+>
+> I'll try to do a more exhaustive test later today to get an idea of
+> what works and what doesn't.  When I ran my basic tests, I just did a
+> feel-good boot test (and reboot test)
+>
+> adam
 
+FYI: manually calling clk_prepare_enable() in the davinci_mdio driver
+seems to at least fix the ethernet. In master branch it's done by
+pm_runtime_get_sync() (in davinci_mdio_reset()). However I'm still
+getting several oopses and WARNs so there's some more work to do.
 
-On 23/01/18 17:56, Lina Iyer wrote:
-> From: Archana Sathyakumar <asathyak@codeaurora.org>
-> 
-> Add device binding documentation for the PDC Interrupt controller on
-> QCOM SoC's like the SDM845. The interrupt-controller can be used to
-> sense edge low interrupts and wakeup interrupts when the GIC is
-> non-operational.
-> 
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Archana Sathyakumar <asathyak@codeaurora.org>
-> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
-> ---
->  .../bindings/interrupt-controller/qcom,pdc.txt     | 55 ++++++++++++++++++++++
->  1 file changed, 55 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
-> new file mode 100644
-> index 000000000000..c4592bbf678d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
-> @@ -0,0 +1,55 @@
-> +PDC interrupt controller
-> +
-> +Qualcomm Technologies Inc. SoCs based on the RPM Hardened archicture have a
-> +Power Domain Controller (PDC) that is on always-on domain. In addition to
-> +providing power control for the power domains, the hardware also has an
-> +interrupt controller that can be used to help detect edge low interrupts as
-> +well detect interrupts when the GIC is non-operational.
-> +
-> +GIC is parent interrupt controller at the highest level. Platform interrupt
-> +controller PDC is next in hierarchy, followed by others.
-
-> This driver only configures the interrupts, does not handle them.
-
-Not sure if the above statement belongs to the binding.
-
--- 
-Regards,
-Sudeep
+Thanks,
+Bartosz
