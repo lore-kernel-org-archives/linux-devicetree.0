@@ -1,63 +1,106 @@
-From: Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH v4 4/8] PCI: brcmstb: Add dma-range mapping for inbound
-        traffic
-Date: Tue, 23 Jan 2018 14:20:33 +0100
-Message-ID: <20180123132033.GA21438@lst.de>
-References: <1516058925-46522-1-git-send-email-jim2101024@gmail.com> <1516058925-46522-5-git-send-email-jim2101024@gmail.com> <CAL_JsqKpWNJXNpKS5qC99N0+H_P37DcRE-rN9HFwT5tVmRFCNw@mail.gmail.com> <20180118073123.GA15766@lst.de> <EDAEFB0F-BB7C-444A-B282-F178F5ADFCBF@gmail.com> <20180118152331.GA24461@lst.de> <d62226a2-a92c-cdcb-4a9b-e69ab677bc60@broadcom.com>
+From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 2/4] arm64: add basic DTS for i.MX8MQ
+Date: Tue, 23 Jan 2018 14:23:19 +0100
+Message-ID: <1516713799.25726.21.camel@pengutronix.de>
+References: <20180117183244.28303-1-l.stach@pengutronix.de>
+         <20180117183244.28303-2-l.stach@pengutronix.de>
+         <20180123103609.GD27764@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <d62226a2-a92c-cdcb-4a9b-e69ab677bc60@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <florian.fainelli@broadcom.com>
-Cc: Christoph Hellwig <hch@lst.de>, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Jim Quinlan <jim2101024@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Brian Norris <computersforpeace@gmail.com>, Russell King <rmk+kernel@armlinux.org.uk>, Robin Murphy <robin.murphy@arm.com>, Jonas Gorski <jonas.gorski@gmail.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-MIPS <linux-mips@linux-mips.org>, linux-pci@vger.kernel.org, Kevin Cernekee <cernekee@gmail.co>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180123103609.GD27764@dragon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 19, 2018 at 11:47:54AM -0800, Florian Fainelli wrote:
-> How can this work well in the context of a loadable module for instance?
-> For MIPS, this would mean that we have to override phys_to_dma() and
-> dma_to_phys() in the platform that is *susceptible* to use this PCIe
-> controller (arch/mips/bmips) which is fine, but there, we essentially
-> need to find a way to make this dynamic based on whether the PCIe
-> controller is loaded or not.
+Am Dienstag, den 23.01.2018, 18:36 +0800 schrieb Shawn Guo:
+> On Wed, Jan 17, 2018 at 07:32:42PM +0100, Lucas Stach wrote:
+> > This adds the basic DTS for the i.MX8MQ.
+> > For now only the following peripherals are supported:
+> > - IOMUXC (pin controller)
+> > - CCM (clock controller)
+> > - GPIO
+> > - UART
+> > - uSDHC (SD/eMMC controller)
+> > - FEC (ethernet controller)
+> > - i2c
+> > 
+> > This is enough to get a very basic board support up and running.
+> > 
+> > One known limitation is that the driver for the GPC interrupt
+> > controller is still missing, rendering the CPU sleep states unusable
+> > as there is nothing waking them up anymore. This will be fixed in
+> > due course.
+> > 
+> > > > Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> > ---
+> >  arch/arm64/boot/dts/Makefile             |   1 +
+> >  arch/arm64/boot/dts/nxp/imx8mq-pinfunc.h | 632 +++++++++++++++++++++++++++++++
+> >  arch/arm64/boot/dts/nxp/imx8mq.dtsi      | 418 ++++++++++++++++++++
+> >  3 files changed, 1051 insertions(+)
+> >  create mode 100644 arch/arm64/boot/dts/nxp/imx8mq-pinfunc.h
+> >  create mode 100644 arch/arm64/boot/dts/nxp/imx8mq.dtsi
 > 
-> As you might have seen from this patch, what needs to be done is highly
-> dependent on the processor architecture and its memory controller
-> physical memory map, so I don't see how we are in any better situation
-> if we need to replicate 3 times across MIPS, ARM and ARM64 how the
-> addresses need to be mangled.
+> <snip>
+
+> > +	timer {
+> > > > +		compatible = "arm,armv8-timer";
+> > > > +		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_LOW)>, /* Physical Secure */
+> > > > +		             <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_LOW)>, /* Physical Non-Secure */
+> > > > +		             <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_LOW)>, /* Virtual */
+> > > > +		             <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_LOW)>; /* Hypervisor */
+> > > > +		clock-frequency = <8333333>;
+> > > > +		interrupt-parent = <&gic>;
+> > > > +		arm,no-tick-in-suspend;
+> > > > +	};
+> > +
+> > +	peripherals@0 {
 > 
-> Are you suggesting we somehow decouple the memory mangling part into a
-> portion that can be built into the kernel image (so phys_to_dma() and
-> dma_to_phys() is resolved at vmlinux link time) and can be selected by
-> different architectures that need it? If so, yikes.
+> What's the reason of using 'peripherals' rather than 'soc' which is the
+> case for most device trees?
 
-On architectures with crazy PCIe controllers (this seems to include
-mips, arm, arm64 and x86 thanks to the weird SOCs) we will need a
-a few different memory maps, yes.  Take a look at
-arch/x86/pci/sta2x11-fixup.c, preferably from a tree where the worst
-issues are fixed:
+Just personal preference. I find it a bit confusing to have a soc node,
+that doesn't include a lot of stuff (e.g CPUs) that are found on the
+SoC. I someone feels strongly about this I'll change it.
 
-http://git.infradead.org/users/hch/misc.git/blob/refs/heads/dma-direct-all:/arch/x86/pci/sta2x11-fixup.c
-
-Overriding phys_to_dma and dma_to_phys is required if you need to
-support swiotlb, and chances are with a broken PCIe controller on
-arm64 or mips64 you eventuall will.
-
-This sta2x11 code should probably be lifted to common code in
-one form or another eventually, althought it will need another
-fair round of cleanups for now.
-
-> I can see value in having a generic mechanism, ala X86_DMA_REMAP
-> allowing architectures to have the ability to override phys_to_dma() and
-> dma_to_phys() but right now, especially if we look at
-> arch/x86/pci/sta2x11-fixup.c this really appears to be quite messy and
-> equally ugly than stacking operations...
+> > +		compatible = "simple-bus";
+> > +
 > 
-> What is the actual problem you want to avoid with the stacking of DMA
-> operations, is it because it becomes harder to audit, or are there are
-> other reasons?
+> Drop the newline.
+> 
+> > > > +		#address-cells = <1>;
+> > > > +		#size-cells = <1>;
+> > > > +		ranges = <0x0 0x0 0x0 0x3e000000>;
+> > +
+> > +
+> 
+> One newline is enough.
+> 
+> > > > +		aips-bus@30000000 { /* AIPS1 */
+> > > > +			compatible = "nxp,imx8mq-aips-bus", "simple-bus";
+> > +
+> 
+> Drop the newline.
+> 
+> > > > +			#address-cells = <1>;
+> > > > +			#size-cells = <1>;
+> > > > +			ranges = <0x30000000 0x30000000 0x400000>;
+> > +
+> > > > > > +			gpio1: gpio@30200000 {
+> > +				compatible = "nxp,imx8mq-gpio", "fsl,imx35-gpio";
+> 
+> It looks a bit odd to have different vendor prefix for the same device.
+> But we can understand the reason.  Just curious if this is what vendor
+> kernel does?
 
-Audit, consolidate into a single dma-direct implementation and properly
-support swiotlb out of the box.
+No, I did it mostly to be consistent with the location of the DT files
+under "nxp". I'll change this to match the "freescale" location.
+
+Regards,
+Lucas
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
