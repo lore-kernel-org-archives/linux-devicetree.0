@@ -1,46 +1,55 @@
-From: Michael Ellerman <mpe@ellerman.id.au>
-Subject: Re: [RFC PATCH v2 0/1] of: easier debugging for node life cycle issues
-Date: Tue, 23 Jan 2018 23:11:18 +1100
-Message-ID: <874lncwza1.fsf@concordia.ellerman.id.au>
-References: <20180121143117.19805-1-wsa+renesas@sang-engineering.com> <ac4f02e1-6d49-158a-4fb6-56ac0d474a44@gmail.com> <20180122114948.mm5mg6zqw3hmjj4o@katana>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20180122114948.mm5mg6zqw3hmjj4o@katana>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>, Frank Rowand <frowand.list@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, linux-renesas-soc@vger.kernel.org, Wolfram Sang <wsa+renesas@sang-engineering.com>, Rob Herring <robh+dt@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Tyrel Datwyler <tyreld@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org
+From: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH 1/4] rtc: isl1208: Fix unintended clear of SR bits
+Date: Tue, 23 Jan 2018 13:17:58 +0100
+Message-ID: <20180123121801.4214-2-m.grzeschik@pengutronix.de>
+References: <20180123121801.4214-1-m.grzeschik@pengutronix.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180123121801.4214-1-m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Cc: linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, jdelvare-IBi9RG/b67k@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Denis.Osterland-85mDkmTllUAAvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Wolfram Sang <wsa@the-dreams.de> writes:
+From: Denis Osterland <Denis.Osterland-85mDkmTllUAAvxtiuMwx3w@public.gmane.org>
 
-> Hi Frank,
->
->> Please go back and read the thread for version 1.  Simply resubmitting a
->> forward port is ignoring that whole conversation.
->> 
->> There is a lot of good info in that thread.  I certainly learned stuff in it.
->
-> Yes, I did that and learned stuff, too. My summary of the discussion was:
->
-> - you mentioned some drawbacks you saw (like the mixture of trace output
->   and printk output)
-> - most of them look like addressed to me? (e.g. Steven showed a way to redirect
->   printk to trace)
-> - you posted your version (which was, however, marked as "not user friendly"
->   even by yourself)
-> - The discussion stalled over having two approaches
->
-> So, I thought reposting would be a good way of finding out if your
-> concerns were addressed in the discussion or not. If I overlooked
-> something, I am sorry for that. Still, my intention is to continue the
-> discussion, not to ignore it. Because as it stands, we don't have such a
-> debugging mechanism in place currently, and with people working with DT
-> overlays, I'd think it would be nice to have.
+After successful
+sr = isl1208_i2c_set_regs(client, 0, regs, ISL1208_RTC_SECTION_LEN);
+sr will be 0.
+As a result
+sr = i2c_smbus_write_byte_data(client, ISL1208_REG_SR,
+			sr & ~ISL1208_REG_SR_WRTC);
+is equal to
+sr = i2c_smbus_write_byte_data(client, ISL1208_REG_SR, 0);
+which clears all flags in SR.
 
-Yeah I agree with all of that, I didn't think there were really any
-concerns left outstanding. These trace points are very useful, I've
-twice added them to a kernel to debug something, so it would be great
-for them to be in mainline.
+Add an additional read of SR, to have value of SR in sr again.
 
-cheers
+Signed-off-by: Denis Osterland <Denis.Osterland-85mDkmTllUAAvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+---
+ drivers/rtc/rtc-isl1208.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/drivers/rtc/rtc-isl1208.c b/drivers/rtc/rtc-isl1208.c
+index 8dd299c6a1f33..c8b4953482296 100644
+--- a/drivers/rtc/rtc-isl1208.c
++++ b/drivers/rtc/rtc-isl1208.c
+@@ -459,6 +459,11 @@ isl1208_i2c_set_time(struct i2c_client *client, struct rtc_time const *tm)
+ 	}
+ 
+ 	/* clear WRTC again */
++	sr = isl1208_i2c_get_sr(client);
++	if (sr < 0) {
++		dev_err(&client->dev, "%s: reading SR failed\n", __func__);
++		return sr;
++	}
+ 	sr = i2c_smbus_write_byte_data(client, ISL1208_REG_SR,
+ 				       sr & ~ISL1208_REG_SR_WRTC);
+ 	if (sr < 0) {
+-- 
+2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
