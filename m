@@ -1,82 +1,40 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH] PCI: qcom: add missing supplies required for msm8996
-Date: Tue, 23 Jan 2018 09:46:51 +0000
-Message-ID: <92e2808b-4b2d-8591-9ed7-6600d7a3357b@linaro.org>
-References: <20171208092053.4417-1-srinivas.kandagatla@linaro.org>
- <65e01829-198e-f549-174d-c8368c5ee193@mm-sol.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 1/9] mfd: syscon: Add ingenic-tcu.h header
+Date: Tue, 23 Jan 2018 09:52:24 +0000
+Message-ID: <20180123095224.oxso26lfzl3x56up@dell>
+References: <20180101143344.2099-1-paul@crapouillou.net>
+ <20180110224838.16711-1-paul@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <65e01829-198e-f549-174d-c8368c5ee193@mm-sol.com>
-Content-Language: en-US
-Sender: linux-pci-owner@vger.kernel.org
-To: Stanimir Varbanov <svarbanov@mm-sol.com>, stanimir.varbanov@linaro.org, linux-pci@vger.kernel.org, bhelgaas@google.com
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20180110224838.16711-1-paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
+Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Wed, 10 Jan 2018, Paul Cercueil wrote:
 
+> This header contains macros for the registers that are present in the
+> regmap shared by all the drivers related to the TCU (Timer Counter Unit)
+> of the Ingenic JZ47xx SoCs.
+> 
+> Signed-off-by: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
+> ---
+>  include/linux/mfd/syscon/ingenic-tcu.h | 54 ++++++++++++++++++++++++++++++++++
+>  1 file changed, 54 insertions(+)
+>  create mode 100644 include/linux/mfd/syscon/ingenic-tcu.h
 
-On 23/01/18 09:23, Stanimir Varbanov wrote:
-> Hey Srini,
-> 
-> As there are no comments I'd propose to change the endpoint supplies to
-> more generic names.
-> 
-Sure, I will respin this with your suggestions, except the 3v3 and 1v5 
-suffix due to the reasons below:
->> +- vdda-1p8-supply:
->> +	Usage: required for msm8996
->> +	Value type: <phandle>
->> +	Definition: A phandle to the 1.8v analog power supply
->> +
-> 
-> This should be dropped, because it is part of the phy.
-Yep.
+Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-> 
->>   - vdda_phy-supply:
->>   	Usage: required for ipq/apq8064
->>   	Value type: <phandle>
->> @@ -189,6 +194,15 @@
->>   	Value type: <phandle>
->>   	Definition: A phandle to the analog power supply for IC which generates
->>   		    reference clock
->> +- vddpe-supply:
->> +	Usage: optional
->> +	Value type: <phandle>
->> +	Definition: A phandle to the PCIe endpoint power supply
-> 
-> vddpe_3v3-supply
-Why do we need suffix here? AFAIU, It does not add any value, instead it 
-would confuse the users.
-
-These are power supplies for endpoint which could be of any voltage. In 
-this case both endpoint supplies are 3v3, these could be 1.8 or 5v or 
-12v in some other cases.
-
-> 
->> +
->> +- vddpe1-supply:
->> +	Usage: optional
->> +	Value type: <phandle>
->> +	Definition: A phandle to the PCIe endpoint power supply 1
-> 
-> vddpe_1v5-supply
-> 
->>   
->>   - phys:
->>   	Usage: required for apq8084
->> @@ -205,6 +219,8 @@
->>   	Value type: <prop-encoded-array>
->>   	Definition: List of phandle and GPIO specifier pairs. Should contain
->>   			- "perst-gpios"	PCIe endpoint reset signal line
->> +			- "pe_en-gpios"	PCIe endpoint enable signal line
->> +			- "pe_en1-gpios" PCIe endpoint enable1 signal line
-> 
-> We don't need those gpios, the regulator driver will manipulate these
-> gpios when we call regulator_enable/disable.
-yes, I will get rid of them.
-
-> 
-> 
+-- 
+Lee Jones
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
