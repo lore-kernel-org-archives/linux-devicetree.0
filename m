@@ -1,92 +1,59 @@
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: =?UTF-8?Q?Re=3A_=5BPATCH_v6_00=2F41=5D_ARM=3A_davinci=3A_convert_to_common?=
-        =?UTF-8?Q?_clock_framework=E2=80=8B?=
-Date: Tue, 23 Jan 2018 20:53:20 +0100
-Message-ID: <CAMRc=Me8HefZJYTkprqL2vpq_nLym4r6p-du7hoKwVk8kSCR8w@mail.gmail.com>
-References: <1516468460-4908-1-git-send-email-david@lechnology.com>
- <CAMRc=MexJTMiD=URw1bv-qfGaTntZRXgfsSb_beYGkvO+LrpgQ@mail.gmail.com>
- <d819e18f-7d74-d8c4-8056-bfc545f4d4e9@lechnology.com> <CAMRc=McVNJqsO4+j=XkyNWuKqF-S-hQAw9XxHx6GC47UudgMYw@mail.gmail.com>
- <e5f4af7d-971c-5694-2da5-0cba9083ee5c@lechnology.com> <615bc302-e129-1501-63be-fa701f5ecaad@lechnology.com>
- <CAHCN7xLW=RjHHBjvDto=DRrNfNsQrsaGb0zmsRrwdc+7Wbhaxg@mail.gmail.com>
- <CAMRc=MdyGx3PFiryYybB2fCGx=AP=e7kkdd-DUL29pT+St9u1g@mail.gmail.com>
- <5f836454-5de7-c51d-d262-2c2dbc26e438@lechnology.com> <CAMRc=Mcw8wWNo7Q3KnHNv81UGuHxEqmOs0he7MKxmaxDjwao+A@mail.gmail.com>
- <aaeb7d73-bd3b-9c85-88c5-c60da6ca3733@lechnology.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [RFC PATCH v2 0/1] of: easier debugging for node life cycle
+ issues
+Date: Tue, 23 Jan 2018 11:53:44 -0800
+Message-ID: <533b27ea-f1e4-edab-0a35-a4304483d026@gmail.com>
+References: <20180121143117.19805-1-wsa+renesas@sang-engineering.com>
+ <ac4f02e1-6d49-158a-4fb6-56ac0d474a44@gmail.com>
+ <20180122114948.mm5mg6zqw3hmjj4o@katana>
+ <874lncwza1.fsf@concordia.ellerman.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <aaeb7d73-bd3b-9c85-88c5-c60da6ca3733@lechnology.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: David Lechner <david@lechnology.com>
-Cc: Adam Ford <aford173@gmail.com>, linux-clk@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <874lncwza1.fsf@concordia.ellerman.id.au>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michael Ellerman <mpe@ellerman.id.au>, Wolfram Sang <wsa@the-dreams.de>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, linux-renesas-soc@vger.kernel.org, Wolfram Sang <wsa+renesas@sang-engineering.com>, Rob Herring <robh+dt@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Tyrel Datwyler <tyreld@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-2018-01-23 20:24 GMT+01:00 David Lechner <david@lechnology.com>:
-> On 01/23/2018 12:34 PM, Bartosz Golaszewski wrote:
+On 01/23/18 04:11, Michael Ellerman wrote:
+> Wolfram Sang <wsa@the-dreams.de> writes:
+> 
+>> Hi Frank,
 >>
->> 2018-01-23 19:26 GMT+01:00 David Lechner <david@lechnology.com>:
+>>> Please go back and read the thread for version 1.  Simply resubmitting a
+>>> forward port is ignoring that whole conversation.
 >>>
->>> On 01/23/2018 12:10 PM, Bartosz Golaszewski wrote:
->>>>
->>>>
->>>> 2018-01-23 18:03 GMT+01:00 Adam Ford <aford173@gmail.com>:
->>>>>
->>>>>
->>>>> On Tue, Jan 23, 2018 at 10:06 AM, David Lechner <david@lechnology.com>
->>>>> wrote:
->>>>>>
->>>>>>
->>>>>> On 01/23/2018 10:03 AM, David Lechner wrote:
->>>>>>>
->>>>>>>
->>>>>>>
->>>>>>> You can see if the clock is enabled by running:
->>>>>>>
->>>>>>>        cat /sys/kernel/debug/clk/clk_summary
->>>>>>>
->>>>>>
->>>>>> I just realized if you can't boot, you can't do this. :-/
->>>>>
->>>>>
->>>>>
->>>>> I can boot with the latest set in your git repo, but the Ethernet
->>>>> doesn't apparently fully operate.  I don't get errors, but I cannot
->>>>> get a dhcp address.
->>>>>
->>>>> I'll try to do a more exhaustive test later today to get an idea of
->>>>> what works and what doesn't.  When I ran my basic tests, I just did a
->>>>> feel-good boot test (and reboot test)
->>>>>
->>>>> adam
->>>>
->>>>
->>>>
->>>> FYI: manually calling clk_prepare_enable() in the davinci_mdio driver
->>>> seems to at least fix the ethernet. In master branch it's done by
->>>> pm_runtime_get_sync() (in davinci_mdio_reset()). However I'm still
->>>> getting several oopses and WARNs so there's some more work to do.
->>>>
->>>
->>> Hmm... I'm wondering if we need to also add #power-domain-cells to the
->>> PSC clocks and power-domains properties to the consumers.
->>>
->>> For this specific case though, it seems strange to me that the drivers
->>> to clk_get() and clk_get_rate() but never enable the clocks.
->>>
->>>
->>> Also, are the oopses and WARNs the same as before?
+>>> There is a lot of good info in that thread.  I certainly learned stuff in it.
 >>
+>> Yes, I did that and learned stuff, too. My summary of the discussion was:
 >>
->> No, the ones before were all related to the ethernet failing, now I
->> get several stack traces from drm. Posted them on pastebin[1].
+>> - you mentioned some drawbacks you saw (like the mixture of trace output
+>>   and printk output)
+>> - most of them look like addressed to me? (e.g. Steven showed a way to redirect
+>>   printk to trace)
+>> - you posted your version (which was, however, marked as "not user friendly"
+>>   even by yourself)
+>> - The discussion stalled over having two approaches
 >>
->
-> It looks like the LCDC driver is the same way. It does clk_get() but
-> not clk_prepare_enable().
->
->
+>> So, I thought reposting would be a good way of finding out if your
+>> concerns were addressed in the discussion or not. If I overlooked
+>> something, I am sorry for that. Still, my intention is to continue the
+>> discussion, not to ignore it. Because as it stands, we don't have such a
+>> debugging mechanism in place currently, and with people working with DT
+>> overlays, I'd think it would be nice to have.
+> 
+> Yeah I agree with all of that, I didn't think there were really any
+> concerns left outstanding. These trace points are very useful, I've
+> twice added them to a kernel to debug something, so it would be great
+> for them to be in mainline.
+> 
+> cheers
+> 
 
-In the mdio case - the problem is that devm_clk_get() doesn't fail,
-but somehow the clock doesn't end up in the list of the device's
-clocks - which is why it's not enabled by pm_runtime_get_sync().
+Yes, I believe there are concerns outstanding.  I'll try to read through
+the whole thread today to make sure I'm not missing anything.
 
-Bartosz
+-Frank
