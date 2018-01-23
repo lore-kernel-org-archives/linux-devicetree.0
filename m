@@ -1,188 +1,79 @@
-From: Mylene Josserand <mylene.josserand@free-electrons.com>
-Subject: Re: [PATCH v2 1/2] Input: edt-ft5x06 - Add support for regulator
-Date: Tue, 23 Jan 2018 10:10:55 +0100
-Message-ID: <20180123101055.28c4786a@dell-desktop.home>
-References: <20171228163336.28131-1-mylene.josserand@free-electrons.com>
-        <20171228163336.28131-2-mylene.josserand@free-electrons.com>
-        <CAKdAkRQme1Y+t4qxLGOFojEji1L6z3L0XS4+W0FdQ36-2hxW=A@mail.gmail.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v7 2/2] mfd: syscon: Add hardware spinlock support
+Date: Tue, 23 Jan 2018 09:11:28 +0000
+Message-ID: <20180123091128.uqiot64vup566syo@dell>
+References: <29fa88f883dae4c1f8a3acb2656cbd7c5a539d40.1514180039.git.baolin.wang@linaro.org>
+ <a878ad35d9f38c58d34dac0b331dca029b61a9b8.1514180039.git.baolin.wang@linaro.org>
+ <20180111152219.yzit67dzdshi3cxs@dell>
+ <20180122134336.e7phrckbpwvxwsfz@dell>
+ <CAMz4kuK9mng38+fVVCjta1uOJgG_fKtf29NWiUXW_hY55guTjQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <CAKdAkRQme1Y+t4qxLGOFojEji1L6z3L0XS4+W0FdQ36-2hxW=A@mail.gmail.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, devicetree@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Quentin Schulz <quentin.schulz@free-electrons.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAMz4kuK9mng38+fVVCjta1uOJgG_fKtf29NWiUXW_hY55guTjQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Baolin Wang <baolin.wang@linaro.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, LKML <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Dimitry,
+On Tue, 23 Jan 2018, Baolin Wang wrote:
 
-Thank you for the review!
-
-Le Mon, 22 Jan 2018 09:42:08 -0800,
-Dmitry Torokhov <dmitry.torokhov@gmail.com> a écrit :
-
-> Hi Mylène,
+> Hi Lee,
 > 
-> On Thu, Dec 28, 2017 at 8:33 AM, Mylène Josserand
-> <mylene.josserand@free-electrons.com> wrote:
-> > Add the support of regulator to use it as VCC source.
+> On 22 January 2018 at 21:43, Lee Jones <lee.jones@linaro.org> wrote:
+> > On Thu, 11 Jan 2018, Lee Jones wrote:
+> >> On Mon, 25 Dec 2017, Baolin Wang wrote:
+> >>
+> >> > Some system control registers need hardware spinlock to synchronize
+> >> > between the multiple subsystems, so we should add hardware spinlock
+> >> > support for syscon.
+> >> >
+> >> > Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+> >> > Acked-by: Rob Herring <robh@kernel.org>
+> >> > ---
+> >> > Changes since v6:
+> >> >  - Treat hwlock id 0 as valid for regmap.
+> >> >
+> >> > Changes since v5:
+> >> >  - Fix the case that hwspinlock is not enabled.
+> >> >
+> >> > Changes since v4:
+> >> >  - Add one exapmle to show how to add hwlock.
+> >> >  - Fix the coding style issue.
+> >> >
+> >> > Changes since v3:
+> >> >  - Add error handling for of_hwspin_lock_get_id()
+> >> >
+> >> > Changes since v2:
+> >> >  - Add acked tag from Rob.
+> >> >
+> >> > Changes since v1:
+> >> >  - Remove timeout configuration.
+> >> >  - Modify the binding file to add hwlocks.
+> >> > ---
+> >> >  Documentation/devicetree/bindings/mfd/syscon.txt |    8 ++++++++
+> >> >  drivers/mfd/syscon.c                             |   19 +++++++++++++++++++
+> >> >  2 files changed, 27 insertions(+)
+> >>
+> >> Applied, thanks.
 > >
-> > Signed-off-by: Mylène Josserand <mylene.josserand@free-electrons.com>
-> > ---
-> >  .../bindings/input/touchscreen/edt-ft5x06.txt      |  1 +
-> >  drivers/input/touchscreen/edt-ft5x06.c             | 33 ++++++++++++++++++++++
-> >  2 files changed, 34 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt b/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt
-> > index 025cf8c9324a..48e975b9c1aa 100644
-> > --- a/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt
-> > +++ b/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt
-> > @@ -30,6 +30,7 @@ Required properties:
-> >  Optional properties:
-> >   - reset-gpios: GPIO specification for the RESET input
-> >   - wake-gpios:  GPIO specification for the WAKE input
-> > + - vcc-supply:  Regulator that supplies the touchscreen
-> >
-> >   - pinctrl-names: should be "default"
-> >   - pinctrl-0:   a phandle pointing to the pin settings for the
-> > diff --git a/drivers/input/touchscreen/edt-ft5x06.c b/drivers/input/touchscreen/edt-ft5x06.c
-> > index c53a3d7239e7..5ee14a25a382 100644
-> > --- a/drivers/input/touchscreen/edt-ft5x06.c
-> > +++ b/drivers/input/touchscreen/edt-ft5x06.c
-> > @@ -39,6 +39,7 @@
-> >  #include <linux/input/mt.h>
-> >  #include <linux/input/touchscreen.h>
-> >  #include <linux/of_device.h>
-> > +#include <linux/regulator/consumer.h>
-> >
-> >  #define WORK_REGISTER_THRESHOLD                0x00
-> >  #define WORK_REGISTER_REPORT_RATE      0x08
-> > @@ -91,6 +92,7 @@ struct edt_ft5x06_ts_data {
-> >         struct touchscreen_properties prop;
-> >         u16 num_x;
-> >         u16 num_y;
-> > +       struct regulator *vcc;
-> >
-> >         struct gpio_desc *reset_gpio;
-> >         struct gpio_desc *wake_gpio;
-> > @@ -993,6 +995,23 @@ static int edt_ft5x06_ts_probe(struct i2c_client *client,
-> >
-> >         tsdata->max_support_points = chip_data->max_support_points;
-> >
-> > +       tsdata->vcc = devm_regulator_get(&client->dev, "vcc");
-> > +       if (IS_ERR(tsdata->vcc)) {
-> > +               error = PTR_ERR(tsdata->vcc);
-> > +               dev_err(&client->dev, "failed to request regulator: %d\n",
-> > +                       error);
-> > +               return error;
-> > +       };  
+> > In order to avoid confusion, I should like to tell you that this patch
+> > is applied for v4.17, not v4.16.
 > 
-> As 0-day pounted out, this semicolon is not needed.
-
-Yes, thanks, I will fix that in next version.
-
+> This patch has been applied into Mark's branch[1] with your ACK, so
+> Mark should drop this patch from his branch and you will pick it and
+> merge it into v4.17?
 > 
-> > +
-> > +       if (tsdata->vcc) {  
-> 
-> You do not need to check for non-NULL here, devm_regulator_get() wil
-> lnever give you a NULL. If regulator is not defined in DT/board
-> mappings, then dummy regulator will be provided. You can call
-> regulator_enable() and regulator_disable() and other regulator APIs
-> with dummy regulator.
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git/commit/?h=topic/hwspinlock&id=3bafc09e779710abaa7b836fe3bbeeeab7754c2b
 
-Okay, thanks for the explanation, I will remove that.
+Ah, this is the one that failed to build when merged alone.
 
-> 
-> > +               error = regulator_enable(tsdata->vcc);
-> > +               if (error < 0) {
-> > +                       dev_err(&client->dev, "failed to enable vcc: %d\n",
-> > +                               error);
-> > +                       return error;
-> > +               }
-> > +       }
-> > +
-> >         tsdata->reset_gpio = devm_gpiod_get_optional(&client->dev,
-> >                                                      "reset", GPIOD_OUT_HIGH);
-> >         if (IS_ERR(tsdata->reset_gpio)) {
-> > @@ -1122,20 +1141,34 @@ static int edt_ft5x06_ts_remove(struct i2c_client *client)
-> >  static int __maybe_unused edt_ft5x06_ts_suspend(struct device *dev)
-> >  {
-> >         struct i2c_client *client = to_i2c_client(dev);
-> > +       struct edt_ft5x06_ts_data *tsdata = i2c_get_clientdata(client);
-> >
-> >         if (device_may_wakeup(dev))
-> >                 enable_irq_wake(client->irq);
-> >
-> > +       if (tsdata->vcc)  
-> 
-> Same here.
-
-yep
-
-> 
-> > +               regulator_disable(tsdata->vcc);
-> > +
-> >         return 0;
-> >  }
-> >
-> >  static int __maybe_unused edt_ft5x06_ts_resume(struct device *dev)
-> >  {
-> >         struct i2c_client *client = to_i2c_client(dev);
-> > +       struct edt_ft5x06_ts_data *tsdata = i2c_get_clientdata(client);
-> > +       int ret;
-> >
-> >         if (device_may_wakeup(dev))
-> >                 disable_irq_wake(client->irq);
-> >
-> > +       if (tsdata->vcc) {  
-> 
-> And here.
-
-yep
-
-> 
-> > +               ret = regulator_enable(tsdata->vcc);
-> > +               if (ret < 0) {
-> > +                       dev_err(dev, "failed to enable vcc: %d\n", ret);
-> > +                       return ret;
-> > +               }  
-> 
-> Since power to the device may have been cut, I think you need to
-> restore the register settings to whatever it was (factory vs work
-> mode, threshold, gain and offset registers, etc, etc).
-
-Okay. Could you tell me how can I do that?
-
-> 
-> > +       }
-> > +
-> >         return 0;
-> >  }
-> >
-> > --
-> > 2.11.0
-> >  
-> 
-> Thanks.
-> 
-
-About your V2's review, you suggested to add support for wake/reset in
-suspend/resume (that I forgot in this version). I wanted to add it but
-with my board, I can't test suspend/resume. What should I do about
-that?
-
-If I send a V3 in next few days, do you think you will have time to
-merge it for v4.16?
-
-Thank you in advance,
-
-Best regards,
-
-Mylène
+Very well.  Ignore my last.
 
 -- 
-Mylène Josserand, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+Lee Jones
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
