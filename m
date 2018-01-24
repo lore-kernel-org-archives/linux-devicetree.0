@@ -1,85 +1,299 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: Re: [RFC PATCH 0/9] initial support for "suniv"
- Allwinner new ARM9 SoC
-Date: Wed, 24 Jan 2018 21:10:34 +0800
-Message-ID: <14593819.uISRktVE4V@ice-x220i>
-References: <20180119231735.61504-1-icenowy@aosc.io> <20180122121435.bpayxk4uzfqbhqse@flea.lan>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBXELULJQKGQEDDKFEUY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180122121435.bpayxk4uzfqbhqse-ZC1Zs529Oq4@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Marco Franchi <marcofrk@gmail.com>
+Subject: [PATCH v3 1/3] ARM: dts: imx: Pass empty memory size on board dts
+Date: Wed, 24 Jan 2018 11:22:12 -0200
+Message-ID: <1516800134-5018-1-git-send-email-marcofrk@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: shawnguo@kernel.org, robh+dt@kernel.org
+Cc: LW@karo-electronics.de, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, festevam@gmail.com, marcofrk@gmail.com, Marco Franchi <marco.franchi@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-=E5=9C=A8 2018=E5=B9=B41=E6=9C=8822=E6=97=A5=E6=98=9F=E6=9C=9F=E4=B8=80 CST=
- =E4=B8=8B=E5=8D=888:14:35=EF=BC=8CMaxime Ripard =E5=86=99=E9=81=93=EF=BC=
-=9A
-> On Sat, Jan 20, 2018 at 07:17:26AM +0800, Icenowy Zheng wrote:
-> > This is the RFC initial patchset for the "new" Allwinner SUNIV ARM9 SoC=
-.
-> >=20
-> > The same die is packaged differently, come with different co-packaged
-> > DRAM or shipped with different SDK; and then made many model names: F23=
-,
-> > F25, F1C100A, F1C100S, F1C200S, F1C500, F1C600, R6, etc. These SoCs all
-> > share a common feature set and are packaged similarly (eLQFP128 for SoC=
-s
-> > without co-packaged DRAM, QFN88 for with DRAM). As their's no
-> > functionality hidden on the QFN88 models (except DRAM interface not
-> > exported), it's not clever to differentiate them. So I will use suniv a=
-s
-> > common name of all these SoCs.
->=20
-> Where is that suniv prefix coming from?
+In preparation for removing 'reg = <0 0>;' from the dtsi SoC files, pass
+'reg = <0 0 >;' to the dts/dtsi board files that do not pass the memory
+size.
 
-The BSP (Melis and Linux). (e.g. "libs/suniv" directory of the Melis SDK an=
-d=20
-"arch/arm/boot/dts/sunivw1p1.dtsi" in the Linux SDK)
+Signed-off-by: Marco Franchi <marco.franchi@nxp.com>
+---
+Change since v2:
+-change 'memory@0 {' to 'memory {'
+ arch/arm/boot/dts/imx51-zii-rdu1.dts         | 5 +++++
+ arch/arm/boot/dts/imx53-tx53.dtsi            | 5 +++++
+ arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts | 5 +++++
+ arch/arm/boot/dts/imx6dl-dfi-fs700-m60.dts   | 5 +++++
+ arch/arm/boot/dts/imx6dl-ts4900.dts          | 5 +++++
+ arch/arm/boot/dts/imx6dl-ts7970.dts          | 5 +++++
+ arch/arm/boot/dts/imx6q-dfi-fs700-m60.dts    | 5 +++++
+ arch/arm/boot/dts/imx6q-h100.dts             | 5 +++++
+ arch/arm/boot/dts/imx6q-novena.dts           | 5 +++++
+ arch/arm/boot/dts/imx6q-ts4900.dts           | 5 +++++
+ arch/arm/boot/dts/imx6q-ts7970.dts           | 5 +++++
+ arch/arm/boot/dts/imx6q-zii-rdu2.dts         | 5 +++++
+ arch/arm/boot/dts/imx6qdl-apalis.dtsi        | 5 +++++
+ arch/arm/boot/dts/imx6qdl-cubox-i.dtsi       | 5 +++++
+ arch/arm/boot/dts/imx6qdl-hummingboard.dtsi  | 5 +++++
+ arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi | 5 +++++
+ arch/arm/boot/dts/imx6qp-zii-rdu2.dts        | 5 +++++
+ 17 files changed, 85 insertions(+)
 
->=20
-> And you need to have a SoC in all your compatibles. This isn't about
-> being clever or not, this is just a matter of being able to accurately
-> read in a crystal ball. Or maybe it's just the same, in which case,
-> I'd really like to have a course :)
-
-Okay. I will choose to use f1c100s in my next patchset, as it's where
-it's developed. (Although I mainly refered F1C600 BSP and document)
-
->=20
-> You should really answer two questions here:
->   - Are you able to predict whether you'll find an SoC part of that
->     family in the future that derives a bit and will need a compatible
->     of its own?
->   - Are you able to predict which quirks we'll need along the way to
->     support all the SoCs you've listed there?
->=20
-> If you can't answer yes to both these questions, with a 100%
-> certainty, then you'll need a SoC name in the compatible.
->=20
-> Which doesn't prevent you from sharing as much as possible the DT like
-> we did between the A10s and the A13 for example.
-
-So the suniv-f1c100s.dtsi will still be kept empty and all peripherals know=
-n=20
-should go through suniv.dtsi.
-
->=20
-> Maxime
-
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+diff --git a/arch/arm/boot/dts/imx51-zii-rdu1.dts b/arch/arm/boot/dts/imx51-zii-rdu1.dts
+index 5306b78..aa36204 100644
+--- a/arch/arm/boot/dts/imx51-zii-rdu1.dts
++++ b/arch/arm/boot/dts/imx51-zii-rdu1.dts
+@@ -51,6 +51,11 @@
+ 		stdout-path = &uart1;
+ 	};
+ 
++	/* Will be filled by the bootloader */
++	memory {
++		reg = <0 0>;
++	};
++
+ 	aliases {
+ 		mdio-gpio0 = &mdio_gpio;
+ 		rtc0 = &ds1341;
+diff --git a/arch/arm/boot/dts/imx53-tx53.dtsi b/arch/arm/boot/dts/imx53-tx53.dtsi
+index a22e461..e77dd0a 100644
+--- a/arch/arm/boot/dts/imx53-tx53.dtsi
++++ b/arch/arm/boot/dts/imx53-tx53.dtsi
+@@ -49,6 +49,11 @@
+ 	model = "Ka-Ro electronics TX53 module";
+ 	compatible = "karo,tx53", "fsl,imx53";
+ 
++	/* Will be filled by the bootloader */
++	memory {
++		reg = <0 0>;
++	};
++
+ 	aliases {
+ 		can0 = &can2; /* Make the can interface indices consistent with TX28/TX48 modules */
+ 		can1 = &can1;
+diff --git a/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts b/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts
+index dcf9206..700e129 100644
+--- a/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts
++++ b/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts
+@@ -53,6 +53,11 @@
+ 	compatible = "toradex,colibri_imx6dl-eval-v3", "toradex,colibri_imx6dl",
+ 		     "fsl,imx6dl";
+ 
++	/* Will be filled by the bootloader */
++	memory {
++		reg = <0 0>;
++	};
++
+ 	aliases {
+ 		i2c0 = &i2c2;
+ 		i2c1 = &i2c3;
+diff --git a/arch/arm/boot/dts/imx6dl-dfi-fs700-m60.dts b/arch/arm/boot/dts/imx6dl-dfi-fs700-m60.dts
+index 994f96a..c195ad6 100644
+--- a/arch/arm/boot/dts/imx6dl-dfi-fs700-m60.dts
++++ b/arch/arm/boot/dts/imx6dl-dfi-fs700-m60.dts
+@@ -20,4 +20,9 @@
+ / {
+ 	model = "DFI FS700-M60-6DL i.MX6dl Q7 Board";
+ 	compatible = "dfi,fs700-m60-6dl", "dfi,fs700e-m60", "fsl,imx6dl";
++
++	/* Will be filled by the bootloader */
++	memory {
++		reg = <0 0>;
++	};
+ };
+diff --git a/arch/arm/boot/dts/imx6dl-ts4900.dts b/arch/arm/boot/dts/imx6dl-ts4900.dts
+index 6ea0b78..e23f789 100644
+--- a/arch/arm/boot/dts/imx6dl-ts4900.dts
++++ b/arch/arm/boot/dts/imx6dl-ts4900.dts
+@@ -46,4 +46,9 @@
+ / {
+ 	model = "Technologic Systems i.MX6 Solo/DualLite TS-4900 (Default Device Tree)";
+ 	compatible = "technologic,imx6dl-ts4900", "fsl,imx6dl";
++
++	/* Will be filled by the bootloader */
++	memory {
++		reg = <0 0>;
++	};
+ };
+diff --git a/arch/arm/boot/dts/imx6dl-ts7970.dts b/arch/arm/boot/dts/imx6dl-ts7970.dts
+index d104daf..cae3313 100644
+--- a/arch/arm/boot/dts/imx6dl-ts7970.dts
++++ b/arch/arm/boot/dts/imx6dl-ts7970.dts
+@@ -47,4 +47,9 @@
+ / {
+ 	model = "Technologic Systems i.MX6 Solo/DualLite TS-7970 (Default Device Tree)";
+ 	compatible = "technologic,imx6dl-ts7970", "fsl,imx6dl";
++
++	/* Will be filled by the bootloader */
++	memory {
++		reg = <0 0>;
++	};
+ };
+diff --git a/arch/arm/boot/dts/imx6q-dfi-fs700-m60.dts b/arch/arm/boot/dts/imx6q-dfi-fs700-m60.dts
+index fd0ad9a..a266fe6 100644
+--- a/arch/arm/boot/dts/imx6q-dfi-fs700-m60.dts
++++ b/arch/arm/boot/dts/imx6q-dfi-fs700-m60.dts
+@@ -20,4 +20,9 @@
+ / {
+ 	model = "DFI FS700-M60-6QD i.MX6qd Q7 Board";
+ 	compatible = "dfi,fs700-m60-6qd", "dfi,fs700e-m60", "fsl,imx6q";
++
++	/* Will be filled by the bootloader */
++	memory {
++		reg = <0 0>;
++	};
+ };
+diff --git a/arch/arm/boot/dts/imx6q-h100.dts b/arch/arm/boot/dts/imx6q-h100.dts
+index 8a2ea6c..db0e738 100644
+--- a/arch/arm/boot/dts/imx6q-h100.dts
++++ b/arch/arm/boot/dts/imx6q-h100.dts
+@@ -49,6 +49,11 @@
+ 	model = "Auvidea H100";
+ 	compatible = "auvidea,h100", "fsl,imx6q";
+ 
++	/* Will be filled by the bootloader */
++	memory {
++		reg = <0 0>;
++	};
++
+ 	aliases {
+ 		rtc0 = &rtc;
+ 		rtc1 = &snvs_rtc;
+diff --git a/arch/arm/boot/dts/imx6q-novena.dts b/arch/arm/boot/dts/imx6q-novena.dts
+index 7d7dc59..43a0c32 100644
+--- a/arch/arm/boot/dts/imx6q-novena.dts
++++ b/arch/arm/boot/dts/imx6q-novena.dts
+@@ -55,6 +55,11 @@
+ 	model = "Kosagi Novena Dual/Quad";
+ 	compatible = "kosagi,imx6q-novena", "fsl,imx6q";
+ 
++	/* Will be filled by the bootloader */
++	memory {
++		reg = <0 0>;
++	};
++
+ 	chosen {
+ 		stdout-path = &uart2;
+ 	};
+diff --git a/arch/arm/boot/dts/imx6q-ts4900.dts b/arch/arm/boot/dts/imx6q-ts4900.dts
+index fab76f8..9cf7b37 100644
+--- a/arch/arm/boot/dts/imx6q-ts4900.dts
++++ b/arch/arm/boot/dts/imx6q-ts4900.dts
+@@ -46,6 +46,11 @@
+ / {
+ 	model = "Technologic Systems i.MX6 Quad TS-4900 (Default Device Tree)";
+ 	compatible = "technologic,imx6q-ts4900", "fsl,imx6q";
++
++	/* Will be filled by the bootloader */
++	memory {
++		reg = <0 0>;
++	};
+ };
+ 
+ &sata {
+diff --git a/arch/arm/boot/dts/imx6q-ts7970.dts b/arch/arm/boot/dts/imx6q-ts7970.dts
+index f19e189..fd84fc5 100644
+--- a/arch/arm/boot/dts/imx6q-ts7970.dts
++++ b/arch/arm/boot/dts/imx6q-ts7970.dts
+@@ -47,6 +47,11 @@
+ / {
+ 	model = "Technologic Systems i.MX6 Quad TS-7970 (Default Device Tree)";
+ 	compatible = "technologic,imx6q-ts7970", "fsl,imx6q";
++
++	/* Will be filled by the bootloader */
++	memory {
++		reg = <0 0>;
++	};
+ };
+ 
+ &sata {
+diff --git a/arch/arm/boot/dts/imx6q-zii-rdu2.dts b/arch/arm/boot/dts/imx6q-zii-rdu2.dts
+index 6be8a1e..fe8b12f 100644
+--- a/arch/arm/boot/dts/imx6q-zii-rdu2.dts
++++ b/arch/arm/boot/dts/imx6q-zii-rdu2.dts
+@@ -47,4 +47,9 @@
+ / {
+ 	model = "ZII RDU2 Board";
+ 	compatible = "zii,imx6q-zii-rdu2", "fsl,imx6q";
++
++	/* Will be filled by the bootloader */
++	memory {
++		reg = <0 0>;
++	};
+ };
+diff --git a/arch/arm/boot/dts/imx6qdl-apalis.dtsi b/arch/arm/boot/dts/imx6qdl-apalis.dtsi
+index 4e776e0..bd658db 100644
+--- a/arch/arm/boot/dts/imx6qdl-apalis.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-apalis.dtsi
+@@ -47,6 +47,11 @@
+ 	model = "Toradex Apalis iMX6Q/D Module";
+ 	compatible = "toradex,apalis_imx6q", "fsl,imx6q";
+ 
++	/* Will be filled by the bootloader */
++	memory {
++		reg = <0 0>;
++	};
++
+ 	backlight: backlight {
+ 		compatible = "pwm-backlight";
+ 		pinctrl-names = "default";
+diff --git a/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi b/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi
+index d1cfdc2..4c5f513 100644
+--- a/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi
+@@ -42,6 +42,11 @@
+ #include <dt-bindings/gpio/gpio.h>
+ 
+ / {
++	/* Will be filled by the bootloader */
++	memory {
++		reg = <0 0>;
++	};
++
+ 	ir_recv: ir-receiver {
+ 		compatible = "gpio-ir-receiver";
+ 		gpios = <&gpio3 9 1>;
+diff --git a/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi b/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
+index 9258323..52eeeed 100644
+--- a/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
+@@ -40,6 +40,11 @@
+  */
+ 
+ / {
++	/* Will be filled by the bootloader */
++	memory {
++		reg = <0 0>;
++	};
++
+ 	chosen {
+ 		stdout-path = &uart1;
+ 	};
+diff --git a/arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi b/arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi
+index dffbc92..e68e7db 100644
+--- a/arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi
+@@ -40,6 +40,11 @@
+  */
+ 
+ / {
++	/* Will be filled by the bootloader */
++	memory {
++		reg = <0 0>;
++	};
++
+ 	chosen {
+ 		stdout-path = &uart1;
+ 	};
+diff --git a/arch/arm/boot/dts/imx6qp-zii-rdu2.dts b/arch/arm/boot/dts/imx6qp-zii-rdu2.dts
+index 547a766..96ab983 100644
+--- a/arch/arm/boot/dts/imx6qp-zii-rdu2.dts
++++ b/arch/arm/boot/dts/imx6qp-zii-rdu2.dts
+@@ -47,4 +47,9 @@
+ / {
+ 	model = "ZII RDU2+ Board";
+ 	compatible = "zii,imx6qp-zii-rdu2", "fsl,imx6qp";
++
++	/* Will be filled by the bootloader */
++	memory {
++		reg = <0 0>;
++	};
+ };
+-- 
+2.7.4
