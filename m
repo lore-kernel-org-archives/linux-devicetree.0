@@ -1,99 +1,73 @@
 From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: RE: [PATCH v2 1/3] dt-bindings: timer: renesas, cmt: Document
- r8a774[35] CMT support
-Date: Wed, 24 Jan 2018 16:49:02 +0000
-Message-ID: <SG2PR06MB088625944BCD8F4307315520C0E20@SG2PR06MB0886.apcprd06.prod.outlook.com>
-References: <1513618743-4773-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1513618743-4773-2-git-send-email-fabrizio.castro@bp.renesas.com>
+Subject: RE: [PATCH v2 1/4] dt-bindings: media: rcar_vin: Reverse SoC part
+ number list
+Date: Wed, 24 Jan 2018 17:02:10 +0000
+Message-ID: <SG2PR06MB0886F472B3CFDE5F2255AB8DC0E20@SG2PR06MB0886.apcprd06.prod.outlook.com>
+References: <1510856571-30281-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1510856571-30281-2-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1513618743-4773-2-git-send-email-fabrizio.castro@bp.renesas.com>
+In-Reply-To: <1510856571-30281-2-git-send-email-fabrizio.castro@bp.renesas.com>
 Content-Language: en-US
 Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+To: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>
+Cc: =?iso-8859-1?Q?Niklas_S=F6derlund?= <niklas.soderlund@ragnatech.se>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Simon Horman <horms+renesas@verge.net.au>, Geert Uytterhoeven <geert@linux-m68k.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, Mark Rutland <mark.rutland@arm.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello Daniel,
+Hello guys,
 
-I am sorry to bother you, just wondering if you think there are any chances=
- for this patch to applied on top of v4.16?
+I am sorry to bother you,  just wondering if this patch has any chance to e=
+nd up in v4.16?
 
 Thanks,
 Fabrizio
 
-> Subject: [PATCH v2 1/3] dt-bindings: timer: renesas, cmt: Document r8a774=
-[35] CMT support
+> Subject: [PATCH v2 1/4] dt-bindings: media: rcar_vin: Reverse SoC part nu=
+mber list
 >
-> Document SoC specific compatible strings for r8a7743 and r8a7745.
-> No driver change is needed as the fallback strings will activate
-> the right code.
+> Change the sorting of the part numbers from descending to ascending to
+> match with other documentation.
 >
 > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 > Reviewed-by: Biju Das <biju.das@bp.renesas.com>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Reviewed-by: Simon Horman <horms@verge.net.au>
 > ---
 > v1->v2:
-> * "R-Car Gen2 or RZ/G1." -> "R-Car Gen2 and RZ/G1."
-> * "all the R-Car" -> "R-Car"
+> * new patch triggered by Geert's comment, see the below link for details:
+>   https://www.mail-archive.com/linux-media@vger.kernel.org/msg121992.html
 >
->  Documentation/devicetree/bindings/timer/renesas,cmt.txt | 14 ++++++++++-=
----
->  1 file changed, 10 insertions(+), 4 deletions(-)
+>  Documentation/devicetree/bindings/media/rcar_vin.txt | 14 +++++++-------
+>  1 file changed, 7 insertions(+), 7 deletions(-)
 >
-> diff --git a/Documentation/devicetree/bindings/timer/renesas,cmt.txt b/Do=
-cumentation/devicetree/bindings/timer/renesas,cmt.txt
-> index d740989..b40add2 100644
-> --- a/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-> +++ b/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-> @@ -22,6 +22,10 @@ Required Properties:
+> diff --git a/Documentation/devicetree/bindings/media/rcar_vin.txt b/Docum=
+entation/devicetree/bindings/media/rcar_vin.txt
+> index 6e4ef8c..98931f5 100644
+> --- a/Documentation/devicetree/bindings/media/rcar_vin.txt
+> +++ b/Documentation/devicetree/bindings/media/rcar_vin.txt
+> @@ -6,14 +6,14 @@ family of devices. The current blocks are always slaves=
+ and suppot one input
+>  channel which can be either RGB, YUYV or BT656.
 >
->      - "renesas,r8a73a4-cmt0" for the 32-bit CMT0 device included in r8a7=
-3a4.
->      - "renesas,r8a73a4-cmt1" for the 48-bit CMT1 device included in r8a7=
-3a4.
-> +    - "renesas,r8a7743-cmt0" for the 32-bit CMT0 device included in r8a7=
-743.
-> +    - "renesas,r8a7743-cmt1" for the 48-bit CMT1 device included in r8a7=
-743.
-> +    - "renesas,r8a7745-cmt0" for the 32-bit CMT0 device included in r8a7=
-745.
-> +    - "renesas,r8a7745-cmt1" for the 48-bit CMT1 device included in r8a7=
-745.
->      - "renesas,r8a7790-cmt0" for the 32-bit CMT0 device included in r8a7=
-790.
->      - "renesas,r8a7790-cmt1" for the 48-bit CMT1 device included in r8a7=
-790.
->      - "renesas,r8a7791-cmt0" for the 32-bit CMT0 device included in r8a7=
-791.
-> @@ -31,10 +35,12 @@ Required Properties:
->      - "renesas,r8a7794-cmt0" for the 32-bit CMT0 device included in r8a7=
-794.
->      - "renesas,r8a7794-cmt1" for the 48-bit CMT1 device included in r8a7=
-794.
+>   - compatible: Must be one or more of the following
+> -   - "renesas,vin-r8a7795" for the R8A7795 device
+> -   - "renesas,vin-r8a7794" for the R8A7794 device
+> -   - "renesas,vin-r8a7793" for the R8A7793 device
+> -   - "renesas,vin-r8a7792" for the R8A7792 device
+> -   - "renesas,vin-r8a7791" for the R8A7791 device
+> -   - "renesas,vin-r8a7790" for the R8A7790 device
+> -   - "renesas,vin-r8a7779" for the R8A7779 device
+>     - "renesas,vin-r8a7778" for the R8A7778 device
+> +   - "renesas,vin-r8a7779" for the R8A7779 device
+> +   - "renesas,vin-r8a7790" for the R8A7790 device
+> +   - "renesas,vin-r8a7791" for the R8A7791 device
+> +   - "renesas,vin-r8a7792" for the R8A7792 device
+> +   - "renesas,vin-r8a7793" for the R8A7793 device
+> +   - "renesas,vin-r8a7794" for the R8A7794 device
+> +   - "renesas,vin-r8a7795" for the R8A7795 device
+>     - "renesas,rcar-gen2-vin" for a generic R-Car Gen2 compatible device.
+>     - "renesas,rcar-gen3-vin" for a generic R-Car Gen3 compatible device.
 >
-> -    - "renesas,rcar-gen2-cmt0" for 32-bit CMT0 devices included in R-Car=
- Gen2.
-> -    - "renesas,rcar-gen2-cmt1" for 48-bit CMT1 devices included in R-Car=
- Gen2.
-> -These are fallbacks for r8a73a4 and all the R-Car Gen2
-> -entrieslisted above.
-> +    - "renesas,rcar-gen2-cmt0" for 32-bit CMT0 devices included in R-Car=
- Gen2
-> +and RZ/G1.
-> +    - "renesas,rcar-gen2-cmt1" for 48-bit CMT1 devices included in R-Car=
- Gen2
-> +and RZ/G1.
-> +These are fallbacks for r8a73a4, R-Car Gen2 and RZ/G1 entries
-> +listed above.
->
->    - reg: base address and length of the registers block for the timer mo=
-dule.
->    - interrupts: interrupt-specifier for the timer, one per channel.
 > --
 > 2.7.4
 
