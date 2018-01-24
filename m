@@ -1,153 +1,104 @@
-From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v2 2/2] drm/etnaviv: remove the need for a gpu-subsystem DT node
-Date: Wed, 24 Jan 2018 16:37:11 +0100
-Message-ID: <20180124153711.22049-2-l.stach@pengutronix.de>
-References: <20180124153711.22049-1-l.stach@pengutronix.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180124153711.22049-1-l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Russell King <linux+etnaviv-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Christian Gmeiner <christian.gmeiner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, etnaviv-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+From: "cas" <cas@matrixfiles.com>
+Subject: Re: [PATCH 4/8] mfd: stm32-timers: add support for dmas
+Date: Wed, 24 Jan 2018 10:43:37 -0500
+Message-ID: <4E69ABAE738243638F41986C65034974@toshiba>
+References: <1516106631-18722-1-git-send-email-fabrice.gasnier@st.com>
+ <1516106631-18722-5-git-send-email-fabrice.gasnier@st.com>
+ <20180123133234.xmep76cgdremnj47@dell>
+ <e611b40f-bd37-aa2d-afd9-997b86d55441@st.com>
+ <20180123153035.2rvhspe2m5ej57op@dell>
+ <ee021839-3298-d01b-8890-619aca0399a7@st.com>
+ <20180123164121.xjzhypqe2u5c7zza@dell>
+ <2e6afc46-9ad4-a858-29c7-692798ece82f@st.com>
+ <20180124145633.tnblnqau7ncju7dp@dell>
+ <0c6a185c-cc12-38ae-3909-5c0e82f8da3f@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lee Jones <lee.jones@linaro.org>, Fabrice Gasnier <fabrice.gasnier@st.com>
+Cc: mark.rutland@arm.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, devicetree@vger.kernel.org, linux@armlinux.org.uk, robh+dt@kernel.org, linux-kernel@vger.kernel.org, thierry.reding@gmail.com, linux-pwm@vger.kernel.org, benjamin.gaignard@linaro.org, linux-arm-kernel@lists.infradead.org, benjamin.gaignard@st.com
 List-Id: devicetree@vger.kernel.org
 
-The module autoloading can be triggered through the GPU core nodes
-and the necessary platform device for the DRM toplevel device will
-be instantiated on module init.
+Apologies for interrupting any work/messages being undertaken. I am a newbie 
+here (1st post) and felt this was the only way to get this information to 
+Linus Torvalds.
+____
+The following was posted on a forum on the 22nd March 2017:
 
-Suggested-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
- .../bindings/display/etnaviv/etnaviv-drm.txt       | 20 ------------
- drivers/gpu/drm/etnaviv/etnaviv_drv.c              | 36 ++++++++++++----------
- drivers/gpu/drm/etnaviv/etnaviv_gpu.c              |  1 +
- 3 files changed, 20 insertions(+), 37 deletions(-)
+'I've been working at Intel for the last 15 years as an electrical engineer. 
+3 years ago I [got] bored with my job and wanted to move to a different 
+department. Intel is pretty good about letting employees move around within 
+the company. An opening came up on the Management Engine team, and since I 
+have experience with micro-controllers I figured I'd give it a shot. The 
+interview went great and they wanted me on board, but the final step was to 
+get securuty clearance.
 
-diff --git a/Documentation/devicetree/bindings/display/etnaviv/etnaviv-drm.txt b/Documentation/devicetree/bindings/display/etnaviv/etnaviv-drm.txt
-index 511b814543ba..8def11b16a24 100644
---- a/Documentation/devicetree/bindings/display/etnaviv/etnaviv-drm.txt
-+++ b/Documentation/devicetree/bindings/display/etnaviv/etnaviv-drm.txt
-@@ -1,23 +1,3 @@
--Etnaviv DRM master device
--=========================
--
--The Etnaviv DRM master device is a virtual device needed to list all
--Vivante GPU cores that comprise the GPU subsystem.
--
--Required properties:
--- compatible: Should be one of
--    "fsl,imx-gpu-subsystem"
--    "marvell,dove-gpu-subsystem"
--- cores: Should contain a list of phandles pointing to Vivante GPU devices
--
--example:
--
--gpu-subsystem {
--	compatible = "fsl,imx-gpu-subsystem";
--	cores = <&gpu_2d>, <&gpu_3d>;
--};
--
--
- Vivante GPU core devices
- ========================
- 
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_drv.c b/drivers/gpu/drm/etnaviv/etnaviv_drv.c
-index 491eddf9b150..665e62272a87 100644
---- a/drivers/gpu/drm/etnaviv/etnaviv_drv.c
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_drv.c
-@@ -655,25 +655,21 @@ static int compare_str(struct device *dev, void *data)
- static int etnaviv_pdev_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
--	struct device_node *node = dev->of_node;
- 	struct component_match *match = NULL;
- 
- 	dma_set_coherent_mask(&pdev->dev, DMA_BIT_MASK(32));
- 
--	if (node) {
-+	if (!dev->platform_data) {
- 		struct device_node *core_node;
--		int i;
- 
--		for (i = 0; ; i++) {
--			core_node = of_parse_phandle(node, "cores", i);
--			if (!core_node)
--				break;
-+		for_each_compatible_node(core_node, NULL, "vivante,gc") {
-+			if (!of_device_is_available(core_node))
-+				continue;
- 
- 			drm_of_component_match_add(&pdev->dev, &match,
- 						   compare_of, core_node);
--			of_node_put(core_node);
- 		}
--	} else if (dev->platform_data) {
-+	} else {
- 		char **names = dev->platform_data;
- 		unsigned i;
- 
-@@ -691,25 +687,18 @@ static int etnaviv_pdev_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
--static const struct of_device_id dt_match[] = {
--	{ .compatible = "fsl,imx-gpu-subsystem" },
--	{ .compatible = "marvell,dove-gpu-subsystem" },
--	{}
--};
--MODULE_DEVICE_TABLE(of, dt_match);
--
- static struct platform_driver etnaviv_platform_driver = {
- 	.probe      = etnaviv_pdev_probe,
- 	.remove     = etnaviv_pdev_remove,
- 	.driver     = {
- 		.name   = "etnaviv",
--		.of_match_table = dt_match,
- 	},
- };
- 
- static int __init etnaviv_init(void)
- {
- 	int ret;
-+	struct device_node *np;
- 
- 	etnaviv_validate_init();
- 
-@@ -721,6 +710,19 @@ static int __init etnaviv_init(void)
- 	if (ret != 0)
- 		platform_driver_unregister(&etnaviv_gpu_driver);
- 
-+	/*
-+	 * If the DT contains at least one available GPU device, instantiate
-+	 * the DRM platform device.
-+	 */
-+	for_each_compatible_node(np, NULL, "vivante,gc") {
-+		if (!of_device_is_available(np))
-+			continue;
-+
-+		platform_device_register_simple("etnaviv", -1, NULL, 0);
-+		of_node_put(np);
-+		break;
-+	}
-+
- 	return ret;
- }
- module_init(etnaviv_init);
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-index e19cbe05da2a..3f282d725935 100644
---- a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-@@ -1823,6 +1823,7 @@ static const struct of_device_id etnaviv_gpu_match[] = {
- 	},
- 	{ /* sentinel */ }
- };
-+MODULE_DEVICE_TABLE(of, etnaviv_gpu_match);
- 
- static int etnaviv_gpu_platform_probe(struct platform_device *pdev)
- {
--- 
-2.15.1
+I asked them WTF I need a security clearance for, and they said they 
+couldn't tell me unitl I was on the team. Thus began a 3 year trip down the 
+fucking rabbit hole.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I'm coming forward today because of the news that Trump was spied on. I know 
+exactly how it was done because I spent the last three years adding 
+backdoors into the ME. For those of you that are unaware, the ME is ona 
+separate CPU and cannot be disabled, and it exists at a level below the 
+operating system. Intel has been working with the intelligence community for 
+years to get backdoors into physical hardware so they don't have to worry 
+about finding OS exploits. If the hardware itself is compromised then the 
+whole machine is compromised.
+
+----Next post----
+
+The ME has full access to memory without the parent CPU having any 
+knowledge, it has full access to the TCP/IP stacl, and full access to every 
+peripheral connected to the computer. It also runs when the computer is 
+hibernating. It doesn't matter if you're using Windows, Linux, Mac OS X, 
+Whonix, Tails, Qubes OS, or Subgraph. If you have an i3, i5, or i7 hen 
+you're completely owned by the intelligence community.
+
+We added similar finctionality to Samsung's WEEPING ANGEL, except the 
+intelligence community calls our project ODIN'S EYE. Through the ME we can 
+activate the mic and webcam even though the computer appears to be off or 
+sleeping.
+
+Evidence of surveillance on Trump, his family, and key people in his 
+campaign will come out eventually. I know the surveillance happened for a 
+fact. Future leaks are coming, watch out for ODIN'S EYE.'
+
+---END POST---
+
+Jim Stone over at
+
+82.221.129.208/.zj3.html
+
+has the image of the text of the above (you need to scroll down a bit). He 
+also mentioned this stuff, and more, over 7 years ago, though not in the 
+same exact terms as the above, and states that this has actually occured 
+since the Centrino processor, which is where the first backdoors started to 
+be placed.
+
+I am here to pass on the information to all of you, if you do not already 
+have it (and since I have just joined to explicitly to send this I have no 
+idea if any of you know this or not), and primarily to get this information 
+to Linus Torvalds who has been quoted by RT very recently as saying that the 
+patches announced by intel (for the Spectre and Meltdown bug) are 'garbage'.
+
+I hope that the above information can now be used to understand the real 
+extent of the problem.
+
+[Note: if one is not able to find the image of the text at the above site 
+you can find it here:
+
+liferepairspecialist.com/Memes/
+
+look for the image called 'inteladmission' - it is in this folder and not in 
+any subfolders.] 
