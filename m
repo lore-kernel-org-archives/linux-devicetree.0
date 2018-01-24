@@ -1,79 +1,92 @@
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: RE: [PATCH 1/8] dt-bindings: can: rcar_can: document r8a774[35] can
- support
-Date: Wed, 24 Jan 2018 17:22:41 +0000
-Message-ID: <SG2PR06MB0886FFF48DD9DBE7693EEDBDC0E20@SG2PR06MB0886.apcprd06.prod.outlook.com>
-References: <1510067449-17017-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1510067449-17017-2-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Hyun Kwon <hyunk-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: RE: [PATCH 2/2] dma: xilinx: dpdma: Add the Xilinx DisplayPort DMA
+ engine driver
+Date: Wed, 24 Jan 2018 17:45:00 +0000
+Message-ID: <CY4PR02MB248850638A4D19CE51F1E224D6E20@CY4PR02MB2488.namprd02.prod.outlook.com>
+References: <1515204848-3493-1-git-send-email-hyun.kwon@xilinx.com>
+ <1515204848-3493-2-git-send-email-hyun.kwon@xilinx.com>
+ <20180112141355.GO18649@localhost>
+ <MWHPR02MB249345183B6CCD86A56A4E1ED6E30@MWHPR02MB2493.namprd02.prod.outlook.com>
+ <20180124144059.GI18649@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <1510067449-17017-2-git-send-email-fabrizio.castro@bp.renesas.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180124144059.GI18649@localhost>
 Content-Language: en-US
-Sender: linux-can-owner@vger.kernel.org
-To: Marc Kleine-Budde <mkl@pengutronix.de>
-Cc: Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Wolfgang Grandegger <wg@grandegger.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-ID: <CCB446989EC0614E85FCEB7F5768325A-0IwlUtR6nOJTpBK7XY6O9JZ3qXmFLfmx@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Tejas Upadhyay <TEJASU-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Marc,
-
-thank you for Acking the patch, just wondering if this patch has any chance=
- to end up in v4.16?
-
-Thanks,
-Fab
-
-> Subject: [PATCH 1/8] dt-bindings: can: rcar_can: document r8a774[35] can =
-support
->
-> Document "renesas,can-r8a7743" and "renesas,can-r8a7745" compatible
-> strings. Since the fallback compatible string ("renesas,rcar-gen2-can")
-> activates the right code in the driver, no driver change is needed.
->
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> Reviewed-by: Biju Das <biju.das@bp.renesas.com>
-> ---
->  Documentation/devicetree/bindings/net/can/rcar_can.txt | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/net/can/rcar_can.txt b/Doc=
-umentation/devicetree/bindings/net/can/rcar_can.txt
-> index 06bb7cc..94a7f33 100644
-> --- a/Documentation/devicetree/bindings/net/can/rcar_can.txt
-> +++ b/Documentation/devicetree/bindings/net/can/rcar_can.txt
-> @@ -2,7 +2,9 @@ Renesas R-Car CAN controller Device Tree Bindings
->  -------------------------------------------------
->
->  Required properties:
-> -- compatible: "renesas,can-r8a7778" if CAN controller is a part of R8A77=
-78 SoC.
-> +- compatible: "renesas,can-r8a7743" if CAN controller is a part of R8A77=
-43 SoC.
-> +      "renesas,can-r8a7745" if CAN controller is a part of R8A7745 SoC.
-> +      "renesas,can-r8a7778" if CAN controller is a part of R8A7778 SoC.
->        "renesas,can-r8a7779" if CAN controller is a part of R8A7779 SoC.
->        "renesas,can-r8a7790" if CAN controller is a part of R8A7790 SoC.
->        "renesas,can-r8a7791" if CAN controller is a part of R8A7791 SoC.
-> @@ -12,7 +14,8 @@ Required properties:
->        "renesas,can-r8a7795" if CAN controller is a part of R8A7795 SoC.
->        "renesas,can-r8a7796" if CAN controller is a part of R8A7796 SoC.
->        "renesas,rcar-gen1-can" for a generic R-Car Gen1 compatible device=
-.
-> -      "renesas,rcar-gen2-can" for a generic R-Car Gen2 compatible device=
-.
-> +      "renesas,rcar-gen2-can" for a generic R-Car Gen2 or RZ/G1
-> +      compatible device.
->        "renesas,rcar-gen3-can" for a generic R-Car Gen3 compatible device=
-.
->        When compatible with the generic version, nodes must list the
->        SoC-specific version corresponding to the platform first
-> --
-> 2.7.4
-
-
-
-
-Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, B=
-uckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered=
- No. 04586709.
+DQoNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBWaW5vZCBLb3VsIFtt
+YWlsdG86dmlub2Qua291bEBpbnRlbC5jb21dDQo+IFNlbnQ6IFdlZG5lc2RheSwgSmFudWFyeSAy
+NCwgMjAxOCA2OjQxIEFNDQo+IFRvOiBIeXVuIEt3b24gPGh5dW5rQHhpbGlueC5jb20+DQo+IENj
+OiBkbWFlbmdpbmVAdmdlci5rZXJuZWwub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsg
+TWljaGFsIFNpbWVrDQo+IDxtaWNoYWwuc2ltZWtAeGlsaW54LmNvbT47IFRlamFzIFVwYWRoeWF5
+IDxURUpBU1VAeGlsaW54LmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCAyLzJdIGRtYTogeGls
+aW54OiBkcGRtYTogQWRkIHRoZSBYaWxpbnggRGlzcGxheVBvcnQNCj4gRE1BIGVuZ2luZSBkcml2
+ZXINCj4gDQo+IE9uIFR1ZSwgSmFuIDIzLCAyMDE4IGF0IDA1OjAzOjE5UE0gKzAwMDAsIEh5dW4g
+S3dvbiB3cm90ZToNCj4gDQo+ID4gPiB3aHkgc2hvdWxkIHRoaXMgYmUgYSBjb21waWxlIG9wdGlv
+bg0KPiA+ID4NCj4gPg0KPiA+IFRoaXMgZGVidWdmcyBjb2RlIGlzIGZvciB0ZXN0aW5nIC8gcmVn
+cmVzc2lvbiwgYW5kIHdlIGRvbid0IHdhbnQgdG8gZW5hYmxlDQo+IGl0DQo+ID4gZm9yIHJlZ3Vs
+YXIgdXNlcnMuDQo+IA0KPiBSaWdodCBhbmQgdGhhdCBpcyB3aHkgeW91IGhhdmUgQ09ORklHX0RF
+QlVHRlMsIHdoeSBub3QgdXNlIHRoYXQ/DQo+IA0KPiA+ID4gZG8geW91IG5lZWQgYWxsIHRoZXNl
+IGhlYWRlcnM/DQo+ID4gPg0KPiA+DQo+ID4gSSBkaXJlY3RseSBpbmNsdWRlZCBhbGwgaGVhZGVy
+cyB0aGF0IGFyZSB1c2VkIGluIHRoaXMgZHJpdmVyLiBTb21lIG9mIHRoZW0NCj4gY2FuDQo+ID4g
+YmUgcmVtb3ZlZCBmcm9tIGluZGlyZWN0IGluY2x1c2lvbnMsIGFuZCBJJ20gZmluZSB3aXRoIHRo
+YXQuIFBsZWFzZSBsZXQgbWUNCj4ga25vdw0KPiA+IGlmIHRoYXQncyB5b3VyIHByZWZlcmVuY2Uu
+DQo+IA0KPiBZZXMgcGxzIHJlbW92ZSB0aGUgb25lcyB0aGF0IGFyZSBuZWVkZWQNCj4gDQo+ID4g
+PiA+ICsjZGVmaW5lIFhJTElOWF9EUERNQV9JTlRSX0RFU0NfRE9ORV9TSElGVAkJMA0KPiA+ID4N
+Cj4gPiA+IHlvdSBjYW4gZGVmaW5lIGEgY29tbW9uIHNoaWZ0IHVzaW5nIGZmcw0KPiA+ID4NCj4g
+Pg0KPiA+IEkgZ3Vlc3MgeW91IG1lYW4gdG8gcmVwbGFjZSwgKHZhbHVlICYgTUFTSykgPDwgU0hJ
+RlQsIHdpdGgNCj4gPiAodmFsdWUgJiBNQVNLKSA8PCBmZnMoTUFTSykuIEknbGwgY2hhbmdlIHRv
+IHRoYXQgd2F5LiBMZXQgbWUga25vdw0KPiBvdGhlcndpc2UuDQo+IA0KPiB5ZXMgYW5kIHlvdSBt
+YXkgdXNlIHRoZSBvbmVzIGluIGJpdGZpZWxkLmgNCj4gDQo+ID4gPiB3aGF0IGRvZXMgaXQgbWVh
+biAobG93ZXIgMzIgYml0IG9mIE50aCA0S0IgcGFnZSkNCj4gPiA+DQo+ID4NCj4gPiBFYWNoIGRl
+c2NyaXB0b3IgY2FuIHBvaW50IHVwIHRvIDUgLSA0OGJpdCBhZGRyZXNzIHBheWxvYWRzLiBzcmNf
+YWRkcioNCj4gZmllbGRzDQo+ID4gY29udGFpbiBsb3dlciAzMmJpdCBvZiA0OGJpdCBhZGRyZXNz
+LiBSZW1haW5pbmcgdXBwZXIgMTZiaXQgaXMNCj4gcHJvZ3JhbW1lZCBpbg0KPiA+IGFkZHJfZXh0
+KiBmaWVsZHMuDQo+IA0KPiBwbHMgZG9jdW1lbnQgdGhpcw0KPiANCj4gPiA+ID4gK3N0YXRpYyBp
+bnQgeGlsaW54X2RwZG1hX2NvbmZpZyhzdHJ1Y3QgZG1hX2NoYW4gKmRjaGFuLA0KPiA+ID4gPiAr
+CQkJICAgICAgIHN0cnVjdCBkbWFfc2xhdmVfY29uZmlnICpjb25maWcpDQo+ID4gPiA+ICt7DQo+
+ID4gPiA+ICsJaWYgKGNvbmZpZy0+ZGlyZWN0aW9uICE9IERNQV9NRU1fVE9fREVWKQ0KPiA+ID4g
+PiArCQlyZXR1cm4gLUVJTlZBTDsNCj4gPiA+DQo+ID4gPiA/PyBXaHkgYXJlIHRoZSBjb25maWcg
+dmFsdWVzIG5vdCB1c2VkLCBob3cgZWxzZSBkbyB5b3UgY29uZmlndXJlIHRoZQ0KPiA+ID4gY2hh
+bm5lbD8NCj4gPiA+DQo+ID4NCj4gPiBUaGVyZSdzIG5vdCBtdWNoIGNvbmZpZ3VyYXRpb24gdG8g
+YmUgZG9uZS4gQ2hhbm5lbHMgYXJlIHByZXR0eSBtdWNoDQo+IGlkZW50aWNhbA0KPiA+IHdpdGgg
+Zml4ZWQgY29uZmlndXJhdGlvbnMuDQo+IA0KPiBobW1tLCB5b3UgZG8gc3VwcG9ydCBETUFfU0xB
+VkUgcmlnaHQ/DQo+IA0KDQpZZXMsIGFuZCBpdCdzIHNpbmdsZSBkaXJlY3Rpb24sIERNQV9NRU1f
+VE9fREVWLg0KDQo+ID4gPiB3aHkgaGF2ZSB0aGVzZSB3cmFwcGVycyB3aGljaCBkbyBub3QgZG8g
+YW55dGhpbmc/DQo+ID4gPg0KPiA+DQo+ID4gSXQncyBqdXN0IG15IHBlcnNvbmFsIHByZWZlcmVu
+Y2UgdG8gc3BsaXQgaW50byBkaWZmZXJlbnQgY29kZSBwYXJ0aXRpb25zLCBhbmQNCj4gPiBlYWNo
+IHNlY3Rpb24gaXMgcGFydGl0aW9uZWQgLyBncm91cGVkIHdpdGggc29tZSBjb21tZW50IGxpbmUu
+IDotKQ0KPiA+IEV4LCBhIHBhcnRpdGlvbiBmb3Igc3RydWN0IGRtYV9jaGFuLCBhbmQgYW5vdGhl
+ciBvbmUgZm9yDQo+ID4gc3RydWN0IHhpbGlueF9kcGRtYV9jaGFuLiBJdCBnaXZlcyBtZSBzb3J0
+IG9mIGFic3RyYWN0ZWQgdmlldy4gQnV0IGl0IG1heQ0KPiBiZQ0KPiA+IGp1c3QgbWUsIGFuZCBp
+dCBjb21lcyB3aXRoIGV4dHJhIGluZGlyZWN0aW9ucy4gSSdsbCByZW1vdmUgdW5uZWNlc3NhcnkN
+Cj4gd3JhcHBlcnMuDQo+IA0KPiB3cmFwcGVyIHdpdGhvdXQgYW55IGxvZ2ljIGRvbnQgaGVscA0K
+PiANCj4gPiA+ID4gKwlmb3IgKGkgPSAwOyBpIDwgWElMSU5YX0RQRE1BX05VTV9DSEFOOyBpKysp
+DQo+ID4gPiA+ICsJCWlmICh4ZGV2LT5jaGFuW2ldKQ0KPiA+ID4gPiArCQkJeGlsaW54X2RwZG1h
+X2NoYW5fcmVtb3ZlKHhkZXYtPmNoYW5baV0pOw0KPiA+ID4NCj4gPiA+IEF0IHRoaXMgcG9pbnQg
+eW91ciBpcnEgaXMgc3RpbGwgZW5hYmxlZCBhbmQgY2FuIGZpcmUsIGFuZCBjYW4gc2NoZWR1bGUN
+Cj4gPiA+IHRhc2tsZXQuLiBBcmUgeW91IHN1cmUgeW91IGFyZSBva2F5IHdpdGggdGhhdD8NCj4g
+PiA+DQo+ID4NCj4gPiBPay4gWW91IG1lYW4gdGhhdCBhbiBpbnRlcnJ1cHQgY2FuIG9jY3VyIHJp
+Z2h0IGJlZm9yZQ0KPiA+IHhpbGlueF9kcGRtYV9kaXNhYmxlX2ludHIoKSwgYW5kIHRoZSBpbnRl
+cnJ1cHQgbWF5IGJlIGhhbmRsZWQgIGluIHRoZQ0KPiBtaWRkbGUgb3INCj4gPiBhZnRlciByZW1v
+dmluZyB0aGlzIGRyaXZlci4gSSdsbCBzd2l0Y2ggdG8gcmVxdWVzdF9pcnEoKSBmcm9tDQo+ID4g
+ZGV2bV9yZXF1ZXN0X2lycSgpLCBhbmQgcmVtb3ZlIHRoZSBpcnEgd2hlbiByZW1vdmluZyB0aGUg
+ZHJpdmVyLg0KPiANCj4geWVzIGFuZCBlbnN1cmUgdGFza2xldHMgYXJlIHF1aWVzY2VkDQo+IA0K
+PiA+ID4gPiArTU9EVUxFX0FVVEhPUigiWGlsaW54LCBJbmMuIik7DQo+ID4gPiA+ICtNT0RVTEVf
+REVTQ1JJUFRJT04oIlhpbGlueCBEUERNQSBkcml2ZXIiKTsNCj4gPiA+ID4gK01PRFVMRV9MSUNF
+TlNFKCJHUEwgdjIiKTsNCj4gPiA+DQo+ID4gPiBObyBNT0RVTEVfQUxJQVMoKT8NCj4gPg0KPiA+
+IElzIGl0IHJlcXVpcmVkPyBDb3VsZCB5b3UgcGxlYXNlIGVsYWJvcmF0ZSwgdG8gaGVscCBteSB1
+bmRlcnN0YW5kaW5nPw0KPiANCj4gZGlkIHlvdSB0cnkgYnVpbGluZyBhcyBtb2R1bGVzIGFuZCB0
+ZXN0aW5nIHRoaXM/DQoNCkknbSB0ZXN0aW5nIGl0IGFzIGEgbG9hZGFibGUga2VybmVsIG1vZHVs
+ZS4NCg0KSSdsbCBhZGRyZXNzIHJlc3Qgb2YgeW91ciBjb21tZW50cy4NCg0KVGhhbmtzLA0KLWh5
+dW4NCg0KDQo+IA0KPiAtLQ0KPiB+Vmlub2QNCg==
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
