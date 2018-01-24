@@ -1,54 +1,85 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 2/5] arm64: allwinner: a64: Add SPDIF TX pin
- to the A64
-Date: Wed, 24 Jan 2018 19:02:08 +0800
-Message-ID: <CAGb2v67oFc0LRAcdvh-2F3HRkOui34ANp_-frB9exdvFBAirqg@mail.gmail.com>
-References: <20180124103943.2062-1-codekipper@gmail.com> <20180124103943.2062-3-codekipper@gmail.com>
- <20180124110031.kksmh56krinaivh7@flea.lan>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [linux-sunxi][PATCH 5/5] arm64: allwinner: a64: Add DAI nodes
+Date: Wed, 24 Jan 2018 12:02:22 +0100
+Message-ID: <20180124110222.cdglyg5m7644xiem@flea.lan>
+References: <20180124103943.2062-1-codekipper@gmail.com>
+ <20180124103943.2062-6-codekipper@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBR6PUHJQKGQEBDNAYZI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180124110031.kksmh56krinaivh7-ZC1Zs529Oq4@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Code Kipper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ou23arkdjxs4kloz"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20180124103943.2062-6-codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 24, 2018 at 7:00 PM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> On Wed, Jan 24, 2018 at 11:39:40AM +0100, codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
->> From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>
->> Add the SPDIF TX pin to the A64 dtsi.
->>
->> Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 5 +++++
->>  1 file changed, 5 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
->> index c82979038b0b..db1694ec3ee4 100644
->> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
->> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
->> @@ -336,6 +336,11 @@
->>                               drive-strength = <40>;
->>                       };
->>
->> +                     spdif_tx_pins_a: spdif@0 {
->
-> This will generate a dtc warning, you should use a syntax similar to
-> the other nodes there (ie. spdif if that's the only muxing option, or
-> spdif-0).
 
-Furthermore, if this is the only option, you should set it as the
-default in the .dtsi, so boards don't have to, and possibly squash
-this patch into the first one.
+--ou23arkdjxs4kloz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-ChenYu
+Hi,
+
+On Wed, Jan 24, 2018 at 11:39:43AM +0100, codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+> From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>=20
+> Add the DAI blocks to the device tree. I2S0 and I2S1 are for
+> connecting to an external codec.
+>=20
+> Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 26 +++++++++++++++++++++=
++++++
+>  1 file changed, 26 insertions(+)
+>=20
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/b=
+oot/dts/allwinner/sun50i-a64.dtsi
+> index f060a58f374c..f3354f8c2026 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> @@ -419,6 +419,32 @@
+>  			status =3D "disabled";
+>  		};
+> =20
+> +		i2s0: i2s@1c22000 {
+> +			#sound-dai-cells =3D <0>;
+> +			compatible =3D "allwinner,sun8i-h3-i2s";
+
+Same remark than for the spdif, please add a soc-specific compatible.
+
+Thanks!
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--ou23arkdjxs4kloz
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlpoZ70ACgkQ0rTAlCFN
+r3TwKQ//eHIeVLqD4+Kcjc44NdTPv6wwbvrjhPJ0uAbQx/DpchgvUP9O8JkBLVvq
+U15hf7pqbiHFmopO02/9iX7YMLutmTvkGSPrcfaK21xQmU17Kmu+uUdwyGiJhceq
+7d3CeUdBRWkOAzSCB6Vo9NDqqfIisUCa9BrM/HWBDuz4loiX4jxAe6b1cKkNe0+Z
+KnvZ1HQh20k/sIJ618Bh1JOm8Bu3uJpn0qEh76etzLfqjS9Z+sFxYgC0K4mjnYuu
+Ses7X7NUzv7kcK5DnnJGyz6RCJy+LSeyiCMuq9eeDiDAREnrqk+qVkGWGXavDnwu
+z9hUDJxY2AU4PDGV4F6X2kzSa1diVSLLywrS/zHc2+0jCPCxAaatY6P5RAbPY1Ba
+5NJJ5xv4mTtuitcNRxq6U/SMrEoIRNyqfcpdYzFeKW8EuyLlHXCU8qIStW18Zw9r
+OHu0mAYHmQOC+9hktLFUXVuoNMxnjQtrGIXuDjekvbD3IrkGrERUNswE5bk9/FpB
+wcgvwj0mBZuTWlyNBqq0HDl/Q8D7qz7cFYzFUV8/FgFpzVoTLYGF+h2/saASY6Jt
+yJnBgzDxZk8yATWKX8BTo5vvy7GLd+PrwRs+fk5bUYw26YnxjZYg8ULZnt1Tk/hv
+i8YY6FaGzYpxojTQB/cWm+vhdl/mz+lmEm+KI26FxhXSgnplaYc=
+=oAon
+-----END PGP SIGNATURE-----
+
+--ou23arkdjxs4kloz--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
