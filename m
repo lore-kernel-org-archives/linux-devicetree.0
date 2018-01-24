@@ -1,22 +1,21 @@
 From: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Subject: RE: [PATCH v2 2/4] dt-bindings: media: rcar_vin: add device tree
- support for r8a774[35]
-Date: Wed, 24 Jan 2018 17:05:34 +0000
-Message-ID: <SG2PR06MB0886F5169407E95110EA324CC0E20@SG2PR06MB0886.apcprd06.prod.outlook.com>
-References: <1510856571-30281-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1510856571-30281-3-git-send-email-fabrizio.castro@bp.renesas.com>
+Subject: RE: [PATCH v4] dt-bindings: pwm: rcar: Document r8a774[35] PWM
+ bindings
+Date: Wed, 24 Jan 2018 17:14:25 +0000
+Message-ID: <SG2PR06MB0886D203D3F529D4AD3B07B6C0E20@SG2PR06MB0886.apcprd06.prod.outlook.com>
+References: <1513768543-7943-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1510856571-30281-3-git-send-email-fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+In-Reply-To: <1513768543-7943-1-git-send-email-fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
 Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: =?iso-8859-1?Q?Niklas_S=F6derlund?= <niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello guys,
+Hello Thierry,
 
 I am sorry to bother you,  just wondering if this patch has any chance to e=
 nd up in v4.16?
@@ -24,51 +23,63 @@ nd up in v4.16?
 Thanks,
 Fabrizio
 
-> Subject: [PATCH v2 2/4] dt-bindings: media: rcar_vin: add device tree sup=
-port for r8a774[35]
+> Subject: [PATCH v4] dt-bindings: pwm: rcar: Document r8a774[35] PWM bindi=
+ngs
 >
-> Add compatible strings for r8a7743 and r8a7745. No driver change
-> is needed as "renesas,rcar-gen2-vin" will activate the right code.
-> However, it is good practice to document compatible strings for the
-> specific SoC as this allows SoC specific changes to the driver if
-> needed, in addition to document SoC support and therefore allow
-> checkpatch.pl to validate compatible string values.
+> This patch adds compatible strings specific to r8a774[35], no driver
+> change is needed as the fallback compatible string will activate the
+> right code.
+>
+> Also, this patch replaces the example with a DT snippet used
+> for adding PWM0 support to an r8a7743 based platform as the r8a7743 is
+> now the first platform fully compatible with this driver and its PWM DT
+> nodes refer to up-to-date code.
 >
 > Signed-off-by: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
 > Reviewed-by: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+> Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 > ---
-> v1->v2:
-> * Fixed double "change" in changelog
+> v3->v4:
+> * The changelog now explains why the patch is replacing the example.
 >
->  Documentation/devicetree/bindings/media/rcar_vin.txt | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
+>  Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.txt | 10 +++++++-=
+--
+>  1 file changed, 7 insertions(+), 3 deletions(-)
 >
-> diff --git a/Documentation/devicetree/bindings/media/rcar_vin.txt b/Docum=
-entation/devicetree/bindings/media/rcar_vin.txt
-> index 98931f5..ff9697e 100644
-> --- a/Documentation/devicetree/bindings/media/rcar_vin.txt
-> +++ b/Documentation/devicetree/bindings/media/rcar_vin.txt
-> @@ -6,6 +6,8 @@ family of devices. The current blocks are always slaves a=
-nd suppot one input
->  channel which can be either RGB, YUYV or BT656.
+> diff --git a/Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.txt
+> b/Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.txt
+> index 74c1180..f3bba59 100644
+> --- a/Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.txt
+> +++ b/Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.txt
+> @@ -2,6 +2,8 @@
 >
->   - compatible: Must be one or more of the following
-> +   - "renesas,vin-r8a7743" for the R8A7743 device
-> +   - "renesas,vin-r8a7745" for the R8A7745 device
->     - "renesas,vin-r8a7778" for the R8A7778 device
->     - "renesas,vin-r8a7779" for the R8A7779 device
->     - "renesas,vin-r8a7790" for the R8A7790 device
-> @@ -14,7 +16,8 @@ channel which can be either RGB, YUYV or BT656.
->     - "renesas,vin-r8a7793" for the R8A7793 device
->     - "renesas,vin-r8a7794" for the R8A7794 device
->     - "renesas,vin-r8a7795" for the R8A7795 device
-> -   - "renesas,rcar-gen2-vin" for a generic R-Car Gen2 compatible device.
-> +   - "renesas,rcar-gen2-vin" for a generic R-Car Gen2 or RZ/G1 compatibl=
-e
-> +     device.
->     - "renesas,rcar-gen3-vin" for a generic R-Car Gen3 compatible device.
+>  Required Properties:
+>  - compatible: should be "renesas,pwm-rcar" and one of the following.
+> + - "renesas,pwm-r8a7743": for RZ/G1M
+> + - "renesas,pwm-r8a7745": for RZ/G1E
+>   - "renesas,pwm-r8a7778": for R-Car M1A
+>   - "renesas,pwm-r8a7779": for R-Car H1
+>   - "renesas,pwm-r8a7790": for R-Car H2
+> @@ -17,13 +19,15 @@ Required Properties:
+>  - pinctrl-0: phandle, referring to a default pin configuration node.
+>  - pinctrl-names: Set to "default".
 >
->     When compatible with the generic version nodes must list the
+> -Example: R8A7790 (R-Car H2) PWM Timer node
+> +Example: R8A7743 (RZ/G1M) PWM Timer node
+>
+>  pwm0: pwm@e6e30000 {
+> -compatible =3D "renesas,pwm-r8a7790", "renesas,pwm-rcar";
+> +compatible =3D "renesas,pwm-r8a7743", "renesas,pwm-rcar";
+>  reg =3D <0 0xe6e30000 0 0x8>;
+> +clocks =3D <&cpg CPG_MOD 523>;
+> +power-domains =3D <&sysc R8A7743_PD_ALWAYS_ON>;
+> +resets =3D <&cpg 523>;
+>  #pwm-cells =3D <2>;
+> -clocks =3D <&mstp5_clks R8A7790_CLK_PWM>;
+>  pinctrl-0 =3D <&pwm0_pins>;
+>  pinctrl-names =3D "default";
+>  };
 > --
 > 2.7.4
 
