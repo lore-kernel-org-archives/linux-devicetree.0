@@ -1,174 +1,85 @@
-From: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/4] usb: dwc3: add dwc3 glue layer for UniPhier SoCs
-Date: Wed, 24 Jan 2018 14:58:12 +0200
-Message-ID: <87a7x3l8gr.fsf@linux.intel.com>
-References: <1516712454-2915-3-git-send-email-hayashi.kunihiko@socionext.com> <87o9lklnwb.fsf@linux.intel.com> <20180124215228.ED43.4A936039@socionext.com>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: Re: [RFC PATCH 0/9] initial support for "suniv"
+ Allwinner new ARM9 SoC
+Date: Wed, 24 Jan 2018 21:10:34 +0800
+Message-ID: <14593819.uISRktVE4V@ice-x220i>
+References: <20180119231735.61504-1-icenowy@aosc.io> <20180122121435.bpayxk4uzfqbhqse@flea.lan>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180124215228.ED43.4A936039-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kunihiko Hayashi <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Masami Hiramatsu <masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBXELULJQKGQEDDKFEUY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180122121435.bpayxk4uzfqbhqse-ZC1Zs529Oq4@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+=E5=9C=A8 2018=E5=B9=B41=E6=9C=8822=E6=97=A5=E6=98=9F=E6=9C=9F=E4=B8=80 CST=
+ =E4=B8=8B=E5=8D=888:14:35=EF=BC=8CMaxime Ripard =E5=86=99=E9=81=93=EF=BC=
+=9A
+> On Sat, Jan 20, 2018 at 07:17:26AM +0800, Icenowy Zheng wrote:
+> > This is the RFC initial patchset for the "new" Allwinner SUNIV ARM9 SoC=
+.
+> >=20
+> > The same die is packaged differently, come with different co-packaged
+> > DRAM or shipped with different SDK; and then made many model names: F23=
+,
+> > F25, F1C100A, F1C100S, F1C200S, F1C500, F1C600, R6, etc. These SoCs all
+> > share a common feature set and are packaged similarly (eLQFP128 for SoC=
+s
+> > without co-packaged DRAM, QFN88 for with DRAM). As their's no
+> > functionality hidden on the QFN88 models (except DRAM interface not
+> > exported), it's not clever to differentiate them. So I will use suniv a=
+s
+> > common name of all these SoCs.
+>=20
+> Where is that suniv prefix coming from?
+
+The BSP (Melis and Linux). (e.g. "libs/suniv" directory of the Melis SDK an=
+d=20
+"arch/arm/boot/dts/sunivw1p1.dtsi" in the Linux SDK)
+
+>=20
+> And you need to have a SoC in all your compatibles. This isn't about
+> being clever or not, this is just a matter of being able to accurately
+> read in a crystal ball. Or maybe it's just the same, in which case,
+> I'd really like to have a course :)
+
+Okay. I will choose to use f1c100s in my next patchset, as it's where
+it's developed. (Although I mainly refered F1C600 BSP and document)
+
+>=20
+> You should really answer two questions here:
+>   - Are you able to predict whether you'll find an SoC part of that
+>     family in the future that derives a bit and will need a compatible
+>     of its own?
+>   - Are you able to predict which quirks we'll need along the way to
+>     support all the SoCs you've listed there?
+>=20
+> If you can't answer yes to both these questions, with a 100%
+> certainty, then you'll need a SoC name in the compatible.
+>=20
+> Which doesn't prevent you from sharing as much as possible the DT like
+> we did between the A10s and the A13 for example.
+
+So the suniv-f1c100s.dtsi will still be kept empty and all peripherals know=
+n=20
+should go through suniv.dtsi.
+
+>=20
+> Maxime
 
 
-Hi,
-
-Kunihiko Hayashi <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> writes:
-> Hello Felipe,
->
-> Thank you for your comments.
->
-> On Tue, 23 Jan 2018 15:12:36 +0200 <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->
->>=20
->> Hi,
->>=20
->> Kunihiko Hayashi <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> writes:
->> > Add a specific glue layer for UniPhier SoC platform to support
->> > USB host mode. It manages hardware operating sequences to enable multi=
-ple
->> > clock gates and assert resets, and to prepare to use dwc3 controller
->> > on the SoC.
->> >
->> > This patch also handles the physical layer that has same register space
->> > as the glue layer, because it needs to integrate initialziation sequen=
-ce
->> > between glue and phy.
->> >
->> > In case of some SoCs, since some initialization values for PHY are
->> > included in nvmem, this patch includes the way to get the values from =
-nvmem.
->> >
->> > It supports PXs2 and LD20 SoCs.
->> >
->> > Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
->> > Signed-off-by: Motoya Tanigawa <tanigawa.motoya-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
->> > Signed-off-by: Masami Hiramatsu <masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> > ---
->> >  drivers/usb/dwc3/Kconfig         |   9 +
->> >  drivers/usb/dwc3/Makefile        |   1 +
->> >  drivers/usb/dwc3/dwc3-uniphier.c | 554 ++++++++++++++++++++++++++++++=
-+++++++++
->> >  3 files changed, 564 insertions(+)
->> >  create mode 100644 drivers/usb/dwc3/dwc3-uniphier.c
->
-> ...snip...
->
->> > +
->> > +static void dwc3u_ssphy_testio_write(struct dwc3u_priv *priv, int por=
-t,
->> > +				     u32 data)
->>=20
->> anything with sshphy or hsphy in the name should probably be part of a
->> PHY driver using drivers/phy/ framework.
->
-> I can try to separate phy control from this driver.
-> However, phy registers belongs to "dwc3-glue" IO map area (65b00000),
-> and this area also contains a reset bit for "dwc3-core" hardware.
->
-> Although the phy driver is called from dwc3-core driver,
-> we need to deassert the reset bit before probing dwc3-core driver.
->
-> As shown later, I think that it's difficut to determine the order of
-> initializing the registers in this area.
->
->> > +static void dwc3u_vbus_disable(struct dwc3u_priv *priv)
->> > +{
->> > +	int i;
->> > +
->> > +	for (i =3D 0; i < priv->nvbus; i++) {
->> > +		dwc3u_maskwrite(priv, VBUS_CONTROL(i),
->> > +				DRVVBUS_REG_EN | DRVVBUS_REG,
->> > +				DRVVBUS_REG_EN | 0);
->> > +	}
->> > +}
->>=20
->> drivers/regulator maybe?
->
-> VBUS_CONTROL register is used for determing whether "dwc3-glue" hardware
-> enables vbus connected with "regulator" hardware.
->
-> The regulator driver should manage "regulator" hardware, and
-> I don't think that the driver should manage this register.
->
->> > +static void dwc3u_reset_init(struct dwc3u_priv *priv)
->> > +{
->> > +	dwc3u_maskwrite(priv, RESET_CTL, LINK_RESET, 0);
->> > +	usleep_range(1000, 2000);
->> > +	dwc3u_maskwrite(priv, RESET_CTL, LINK_RESET, LINK_RESET);
->> > +}
->> > +
->> > +static void dwc3u_reset_clear(struct dwc3u_priv *priv)
->> > +{
->> > +	dwc3u_maskwrite(priv, RESET_CTL, LINK_RESET, 0);
->> > +}
->>=20
->> drivers/reset ?
->
-> The reset driver manages "sysctrl" IO map area in our SoC.
->
-> RESET_CTL register belongs to "dwc3-glue" IO map area,
-> and the kernel can't access this area until enabling usb clocks and
-> deasserting usb resets in "sysctrl".
->
-> I think that "dwc3-glue" register control should be separated from
-> "sysctrl".
-
-Just split your address space and treat your glue as a device with
-several children:
-
-glue@65b00000 {
-	compatible =3D "foo"
-
-	phy@bar {
-        	...
-	};
-
-	sysctrl@baz {
-        	...
-	};
-
-	dwc3@foo {
-        	compatible =3D "snps, dwc3";
-                ...
-	};
-};
-
-Then you know that you can let dwc3/core.c handle the PHY for you. If we
-need to teach dwc3/core.c about regulators, we can do that. But we don't
-need SoC-specific hacks ;-)
-
-=2D-=20
-balbi
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAlpoguQACgkQzL64meEa
-mQbRig//eBvVqrK+Aq+5r/T2462ZCdpPzRg6hIL5K6DWWYUHGx9k0bLLFvjiniVf
-k6BViNvKbW717IyhwOeB9VplrLPlAfu8i8bKf382a6lWryO7l8xhDPfl2aTW9toz
-+DABlwZgWsxyHYIfgOlv4h89WOXYAGdKAywIAc7/qH4WAF1SUxoabfxL0L9NM6YT
-gP0PN1U7xUp4kCkSFkF8J6ub/cxFsxUZx7lRIdhfWe2S+ulaclktlbs1Hv5eRiGD
-XyzuVGXjjZNIy4pw7G/BQcQ1JOb13r6W/7cc4D9Gl8XdDcxNLLeP7w/rZADnTLwr
-7NDdg9/+SkI07oFMx/heGIQeZ3T3coYkecIq2CB+B6B2PkmgahCSH2AYYopSjyVp
-2QGvxLdsSAVA1w4dgdK/De+n4mSkcMOF0DcpbyfXVixwtz1C+HrAosjeMa3iBHGr
-Ja1a32MAaQgg1SG2QzSFnFSHiBiml8I7Rn5MQFrOkCQi7fv75mwma+mYxG7nQhgy
-9kRMJ+4s5/7hikEjQvlIE++sdIsFFnPOV+o9q9VGOuOUvqC2r8NhYTw+w/R2TGul
-Eie6kB1O+WpFZkb3kB/laAtnk113MEXnAFR8JGQmAiZQ79jlBIZ3/8BB4Al4NYkc
-PEU5kWz5+SnjtmyY2cNCS/VLlVGEAE8nrPHEhLfbgDXLyXwF32c=
-=ZeYo
------END PGP SIGNATURE-----
---=-=-=--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
