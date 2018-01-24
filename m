@@ -1,23 +1,72 @@
-From: Evan Green <evgreen@chromium.org>
-Subject: Re: [v2, 7/7] tty: serial: msm_geni_serial: Add serial driver support
- for GENI based QUP
-Date: Wed, 24 Jan 2018 15:07:54 -0800
-Message-ID: <CAE=gft437Q6S_qoA7TKto9ZqQD-1v-qoUvJOmBmKxjNdaukckw@mail.gmail.com>
-References: <1515805547-22816-8-git-send-email-kramasub@codeaurora.org>
+From: Jolly Shah <jolly.shah-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v3 0/4] drivers: firmware: xilinx: Add firmware driver support
+Date: Wed, 24 Jan 2018 15:21:10 -0800
+Message-ID: <1516836074-4149-1-git-send-email-jollys@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1515805547-22816-8-git-send-email-kramasub@codeaurora.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: corbet@lwn.net, andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, wsa@the-dreams.de, gregkh@linuxfoundation.org
-Cc: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>, linux-doc@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-serial@vger.kernel.org, jslaby@suse.com, Girish Mahadevan <girishm@codeaurora.org>, Sagar Dharia <sdharia@codeaurora.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mingo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, matt-mF/unelCI9GS6iBeEJttW/XRex20P6io@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jolly Shah <jollys-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 12, 2018 at 5:05 PM, Karthikeyan Ramasubramanian
-<kramasub@codeaurora.org> wrote:
-> +static int get_clk_cfg(unsigned long clk_freq, unsigned long *ser_clk)
-> +{
-> +       unsigned long root_freq[] = {7372800, 14745600, 19200000, 29491200,
-> +               32000000, 48000000, 64000000, 80000000, 96000000, 100000000};
+Introduce firmware driver for ZynqMP core.
+This patchset is adding communication layer with firmware.
+Firmware driver provides an interface to firmware APIs.
+Interface APIs can be used by any driver to communicate to
+PMUFW(Platform Management Unit). All requests go through ATF.
 
-This table should be static const, right?
+v3:
+ - added some fixes to firmware-ggs.c
+ - updated pinmux get/set function argument names to specify function id instead of node id
+ - added new pinctrl query macros
+ - incorporated review comments from v2 patch series
+
+v2:
+ - change SPDX-License-Identifier license text style
+ - split patch into multiple patches
+ - Updated copyrights
+ - Added ABI documentation
+ - incorporated logical review comments from previuos patch. Discussed below:
+	https://patchwork.kernel.org/patch/10150665/
+
+Jolly Shah (4):
+  dt-bindings: firmware: Add bindings for ZynqMP firmware
+  drivers: firmware: xilinx: Add ZynqMP firmware driver
+  drivers: firmware: xilinx: Add sysfs interface
+  drivers: firmware: xilinx: Add debugfs interface
+
+ .../ABI/stable/sysfs-driver-zynqmp-firmware        |   50 +
+ .../firmware/xilinx/xlnx,zynqmp-firmware.txt       |   16 +
+ arch/arm64/Kconfig.platforms                       |    1 +
+ drivers/firmware/Kconfig                           |    1 +
+ drivers/firmware/Makefile                          |    1 +
+ drivers/firmware/xilinx/Kconfig                    |    4 +
+ drivers/firmware/xilinx/Makefile                   |    4 +
+ drivers/firmware/xilinx/zynqmp/Kconfig             |   23 +
+ drivers/firmware/xilinx/zynqmp/Makefile            |    5 +
+ drivers/firmware/xilinx/zynqmp/firmware-debug.c    |  511 ++++++++++
+ drivers/firmware/xilinx/zynqmp/firmware-ggs.c      |  297 ++++++
+ drivers/firmware/xilinx/zynqmp/firmware.c          | 1035 ++++++++++++++++++++
+ .../linux/firmware/xilinx/zynqmp/firmware-debug.h  |   31 +
+ include/linux/firmware/xilinx/zynqmp/firmware.h    |  578 +++++++++++
+ 14 files changed, 2557 insertions(+)
+ create mode 100644 Documentation/ABI/stable/sysfs-driver-zynqmp-firmware
+ create mode 100644 Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmware.txt
+ create mode 100644 drivers/firmware/xilinx/Kconfig
+ create mode 100644 drivers/firmware/xilinx/Makefile
+ create mode 100644 drivers/firmware/xilinx/zynqmp/Kconfig
+ create mode 100644 drivers/firmware/xilinx/zynqmp/Makefile
+ create mode 100644 drivers/firmware/xilinx/zynqmp/firmware-debug.c
+ create mode 100644 drivers/firmware/xilinx/zynqmp/firmware-ggs.c
+ create mode 100644 drivers/firmware/xilinx/zynqmp/firmware.c
+ create mode 100644 include/linux/firmware/xilinx/zynqmp/firmware-debug.h
+ create mode 100644 include/linux/firmware/xilinx/zynqmp/firmware.h
+
+-- 
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
