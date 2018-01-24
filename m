@@ -1,49 +1,66 @@
 From: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: [PATCH 2/5] arm64: allwinner: a64: Add SPDIF TX pin to
- the A64
-Date: Wed, 24 Jan 2018 11:39:40 +0100
-Message-ID: <20180124103943.2062-3-codekipper@gmail.com>
+Subject: [linux-sunxi][PATCH 5/5] arm64: allwinner: a64: Add DAI nodes
+Date: Wed, 24 Jan 2018 11:39:43 +0100
+Message-ID: <20180124103943.2062-6-codekipper@gmail.com>
 References: <20180124103943.2062-1-codekipper@gmail.com>
-Reply-To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCHNXO4F7MHBB46EUHJQKGQEKAB622A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20180124103943.2062-1-codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Add the SPDIF TX pin to the A64 dtsi.
+Add the DAI blocks to the device tree. I2S0 and I2S1 are for
+connecting to an external codec.
 
 Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-index c82979038b0b..db1694ec3ee4 100644
+index f060a58f374c..f3354f8c2026 100644
 --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
 +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-@@ -336,6 +336,11 @@
- 				drive-strength = <40>;
- 			};
+@@ -419,6 +419,32 @@
+ 			status = "disabled";
+ 		};
  
-+			spdif_tx_pins_a: spdif@0 {
-+				pins = "PH8";
-+				function = "spdif";
-+			};
++		i2s0: i2s@1c22000 {
++			#sound-dai-cells = <0>;
++			compatible = "allwinner,sun8i-h3-i2s";
++			reg = <0x01c22000 0x400>;
++			interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu CLK_BUS_I2S0>, <&ccu CLK_I2S0>;
++			clock-names = "apb", "mod";
++			resets = <&ccu RST_BUS_I2S0>;
++			dma-names = "rx", "tx";
++			dmas = <&dma 3>, <&dma 3>;
++			status = "disabled";
++		};
 +
- 			spi0_pins: spi0 {
- 				pins = "PC0", "PC1", "PC2", "PC3";
- 				function = "spi0";
++		i2s1: i2s@1c22400 {
++			#sound-dai-cells = <0>;
++			compatible = "allwinner,sun8i-h3-i2s";
++			reg = <0x01c22400 0x400>;
++			interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu CLK_BUS_I2S1>, <&ccu CLK_I2S1>;
++			clock-names = "apb", "mod";
++			resets = <&ccu RST_BUS_I2S1>;
++			dma-names = "rx", "tx";
++			dmas = <&dma 4>, <&dma 4>;
++			status = "disabled";
++		};
++
+ 		uart0: serial@1c28000 {
+ 			compatible = "snps,dw-apb-uart";
+ 			reg = <0x01c28000 0x400>;
 -- 
 2.16.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
