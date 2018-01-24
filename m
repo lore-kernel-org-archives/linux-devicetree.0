@@ -1,48 +1,414 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v6 20/36] nds32: Signal handling support
-Date: Wed, 24 Jan 2018 12:13:45 +0100
-Message-ID: <CAK8P3a0eeJKAOZjJ-XVQwLOCuVzSqdUtCaS4F90zZ=WvRQ8sBQ@mail.gmail.com>
-References: <cover.1515766253.git.green.hu@gmail.com> <e145c39b3c50b3aee05bc60ad0117f1ec7cc5153.1515766253.git.green.hu@gmail.com>
- <CAK8P3a2HR6be9Fm+o1Oq-V5p51xEiuhbyqkgVWprD5BxuU29xQ@mail.gmail.com> <CAJsyPhyGpJVQegd7ns9oZOjM=XsGVixCQaH9nT_jOQsSpyRs+g@mail.gmail.com>
+From: Smitha T Murthy <smitha.t@samsung.com>
+Subject: [Patch v7 02/12] [media] s5p-mfc: Adding initial support for MFC
+ v10.10
+Date: Wed, 24 Jan 2018 16:29:34 +0530
+Message-ID: <1516791584-7980-3-git-send-email-smitha.t@samsung.com>
+References: <1516791584-7980-1-git-send-email-smitha.t@samsung.com>
+ <CGME20180124112330epcas1p3aae1b9cb2a301cc25e41356c3ce73dd3@epcas1p3.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAJsyPhyGpJVQegd7ns9oZOjM=XsGVixCQaH9nT_jOQsSpyRs+g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vincent Chen <deanbo422-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Greentime Hu <green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Greentime <greentime-MUIXKm3Oiri1Z/+hSey0Gg@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arch <linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Networking <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Al Viro <viro-RmSDqhL/yNMiFSDQTTA3OLVCufUGDwFn@public.gmane.org>, David Howells <dhowells-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert.uytterhoeven-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Greg KH <greg-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>, Guo Ren <ren_guo-Y+KPrCd2zL4AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-reply-to: <1516791584-7980-1-git-send-email-smitha.t@samsung.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org, a.hajda@samsung.com, pankaj.dubey@samsung.com, kamil@wypas.org, krzk@kernel.org, jtp.park@samsung.com, kyungmin.park@samsung.com, Rob Herring <robh+dt@kernel.org>, s.nawrocki@samsung.com, Smitha T Murthy <smitha.t@samsung.com>, mchehab@kernel.org, m.szyprowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 24, 2018 at 1:56 AM, Vincent Chen <deanbo422-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> 2018-01-18 18:30 GMT+08:00 Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>:
->> On Mon, Jan 15, 2018 at 6:53 AM, Greentime Hu <green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>> From: Greentime Hu <greentime-MUIXKm3Oiri1Z/+hSey0Gg@public.gmane.org>
->>>
->>> This patch adds support for signal handling.
->>>
->>> Signed-off-by: Vincent Chen <vincentc-MUIXKm3Oiri1Z/+hSey0Gg@public.gmane.org>
->>> Signed-off-by: Greentime Hu <greentime-MUIXKm3Oiri1Z/+hSey0Gg@public.gmane.org>
->>
->> I never feel qualified enough to properly review signal handling code, so
->> no Ack from me for this code even though I don't see anything wrong with it.
->> Hopefully someone else can give an Ack after looking more closely.
->>
->
-> Dear Arnd:
->
-> We'd be glad to improve signal handling code to meet your requirement.
-> Could you
-> tell us which part we need to refine or which implementation is good
-> for us to refer?
+Adding the support for MFC v10.10, with new register file and
+necessary hw control, decoder, encoder and structural changes.
 
-No, as I said, the problem is on my side, I just don't understand enough of it.
-I would assume that the arm64 and risc-v implementations are the most
-thoroughly reviewed, but haven't looked at those in enough detail either.
-If your code does something that risc-v doesn't do, try to understand whether
-there should be a difference or not.
+CC: Rob Herring <robh+dt@kernel.org>
+CC: devicetree@vger.kernel.org
+Signed-off-by: Smitha T Murthy <smitha.t@samsung.com>
+Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
+Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
+---
+ .../devicetree/bindings/media/s5p-mfc.txt          |  1 +
+ drivers/media/platform/s5p-mfc/regs-mfc-v10.h      | 35 ++++++++++++++++++++++
+ drivers/media/platform/s5p-mfc/s5p_mfc.c           | 25 ++++++++++++++++
+ drivers/media/platform/s5p-mfc/s5p_mfc_common.h    |  9 +++++-
+ drivers/media/platform/s5p-mfc/s5p_mfc_ctrl.c      |  4 +++
+ drivers/media/platform/s5p-mfc/s5p_mfc_dec.c       | 32 ++++++++------------
+ drivers/media/platform/s5p-mfc/s5p_mfc_enc.c       | 16 ++++------
+ drivers/media/platform/s5p-mfc/s5p_mfc_opr_v6.c    |  9 ++++--
+ drivers/media/platform/s5p-mfc/s5p_mfc_opr_v6.h    |  2 ++
+ 9 files changed, 100 insertions(+), 33 deletions(-)
+ create mode 100644 drivers/media/platform/s5p-mfc/regs-mfc-v10.h
 
-      Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/media/s5p-mfc.txt b/Documentation/devicetree/bindings/media/s5p-mfc.txt
+index d3404b5..aa54c81 100644
+--- a/Documentation/devicetree/bindings/media/s5p-mfc.txt
++++ b/Documentation/devicetree/bindings/media/s5p-mfc.txt
+@@ -13,6 +13,7 @@ Required properties:
+ 	(c) "samsung,mfc-v7" for MFC v7 present in Exynos5420 SoC
+ 	(d) "samsung,mfc-v8" for MFC v8 present in Exynos5800 SoC
+ 	(e) "samsung,exynos5433-mfc" for MFC v8 present in Exynos5433 SoC
++	(f) "samsung,mfc-v10" for MFC v10 present in Exynos7880 SoC
+ 
+   - reg : Physical base address of the IP registers and length of memory
+ 	  mapped region.
+diff --git a/drivers/media/platform/s5p-mfc/regs-mfc-v10.h b/drivers/media/platform/s5p-mfc/regs-mfc-v10.h
+new file mode 100644
+index 0000000..4422a75
+--- /dev/null
++++ b/drivers/media/platform/s5p-mfc/regs-mfc-v10.h
+@@ -0,0 +1,35 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ *
++ * Copyright (c) 2017 Samsung Electronics Co., Ltd.
++ *     http://www.samsung.com/
++ *
++ * Register definition file for Samsung MFC V10.x Interface (FIMV) driver
++ *
++ */
++
++#ifndef _REGS_MFC_V10_H
++#define _REGS_MFC_V10_H
++
++#include <linux/sizes.h>
++#include "regs-mfc-v8.h"
++
++/* MFCv10 register definitions*/
++#define S5P_FIMV_MFC_CLOCK_OFF_V10			0x7120
++#define S5P_FIMV_MFC_STATE_V10				0x7124
++
++/* MFCv10 Context buffer sizes */
++#define MFC_CTX_BUF_SIZE_V10		(30 * SZ_1K)
++#define MFC_H264_DEC_CTX_BUF_SIZE_V10	(2 * SZ_1M)
++#define MFC_OTHER_DEC_CTX_BUF_SIZE_V10	(20 * SZ_1K)
++#define MFC_H264_ENC_CTX_BUF_SIZE_V10	(100 * SZ_1K)
++#define MFC_OTHER_ENC_CTX_BUF_SIZE_V10	(15 * SZ_1K)
++
++/* MFCv10 variant defines */
++#define MAX_FW_SIZE_V10		(SZ_1M)
++#define MAX_CPB_SIZE_V10	(3 * SZ_1M)
++#define MFC_VERSION_V10		0xA0
++#define MFC_NUM_PORTS_V10	1
++
++#endif /*_REGS_MFC_V10_H*/
++
+diff --git a/drivers/media/platform/s5p-mfc/s5p_mfc.c b/drivers/media/platform/s5p-mfc/s5p_mfc.c
+index 68ed001..afa5ce5 100644
+--- a/drivers/media/platform/s5p-mfc/s5p_mfc.c
++++ b/drivers/media/platform/s5p-mfc/s5p_mfc.c
+@@ -1612,6 +1612,28 @@ static struct s5p_mfc_variant mfc_drvdata_v8_5433 = {
+ 	.num_clocks	= 3,
+ };
+ 
++static struct s5p_mfc_buf_size_v6 mfc_buf_size_v10 = {
++	.dev_ctx        = MFC_CTX_BUF_SIZE_V10,
++	.h264_dec_ctx   = MFC_H264_DEC_CTX_BUF_SIZE_V10,
++	.other_dec_ctx  = MFC_OTHER_DEC_CTX_BUF_SIZE_V10,
++	.h264_enc_ctx   = MFC_H264_ENC_CTX_BUF_SIZE_V10,
++	.other_enc_ctx  = MFC_OTHER_ENC_CTX_BUF_SIZE_V10,
++};
++
++static struct s5p_mfc_buf_size buf_size_v10 = {
++	.fw     = MAX_FW_SIZE_V10,
++	.cpb    = MAX_CPB_SIZE_V10,
++	.priv   = &mfc_buf_size_v10,
++};
++
++static struct s5p_mfc_variant mfc_drvdata_v10 = {
++	.version        = MFC_VERSION_V10,
++	.version_bit    = MFC_V10_BIT,
++	.port_num       = MFC_NUM_PORTS_V10,
++	.buf_size       = &buf_size_v10,
++	.fw_name[0]     = "s5p-mfc-v10.fw",
++};
++
+ static const struct of_device_id exynos_mfc_match[] = {
+ 	{
+ 		.compatible = "samsung,mfc-v5",
+@@ -1628,6 +1650,9 @@ static const struct of_device_id exynos_mfc_match[] = {
+ 	}, {
+ 		.compatible = "samsung,exynos5433-mfc",
+ 		.data = &mfc_drvdata_v8_5433,
++	}, {
++		.compatible = "samsung,mfc-v10",
++		.data = &mfc_drvdata_v10,
+ 	},
+ 	{},
+ };
+diff --git a/drivers/media/platform/s5p-mfc/s5p_mfc_common.h b/drivers/media/platform/s5p-mfc/s5p_mfc_common.h
+index 91090fc..c4f0968 100644
+--- a/drivers/media/platform/s5p-mfc/s5p_mfc_common.h
++++ b/drivers/media/platform/s5p-mfc/s5p_mfc_common.h
+@@ -23,7 +23,7 @@
+ #include <media/v4l2-ioctl.h>
+ #include <media/videobuf2-v4l2.h>
+ #include "regs-mfc.h"
+-#include "regs-mfc-v8.h"
++#include "regs-mfc-v10.h"
+ 
+ #define S5P_MFC_NAME		"s5p-mfc"
+ 
+@@ -715,11 +715,18 @@ void s5p_mfc_cleanup_queue(struct list_head *lh, struct vb2_queue *vq);
+ #define IS_MFCV6_PLUS(dev)	(dev->variant->version >= 0x60 ? 1 : 0)
+ #define IS_MFCV7_PLUS(dev)	(dev->variant->version >= 0x70 ? 1 : 0)
+ #define IS_MFCV8_PLUS(dev)	(dev->variant->version >= 0x80 ? 1 : 0)
++#define IS_MFCV10(dev)		(dev->variant->version >= 0xA0 ? 1 : 0)
+ 
+ #define MFC_V5_BIT	BIT(0)
+ #define MFC_V6_BIT	BIT(1)
+ #define MFC_V7_BIT	BIT(2)
+ #define MFC_V8_BIT	BIT(3)
++#define MFC_V10_BIT	BIT(5)
+ 
++#define MFC_V5PLUS_BITS		(MFC_V5_BIT | MFC_V6_BIT | MFC_V7_BIT | \
++					MFC_V8_BIT | MFC_V10_BIT)
++#define MFC_V6PLUS_BITS		(MFC_V6_BIT | MFC_V7_BIT | MFC_V8_BIT | \
++					MFC_V10_BIT)
++#define MFC_V7PLUS_BITS		(MFC_V7_BIT | MFC_V8_BIT | MFC_V10_BIT)
+ 
+ #endif /* S5P_MFC_COMMON_H_ */
+diff --git a/drivers/media/platform/s5p-mfc/s5p_mfc_ctrl.c b/drivers/media/platform/s5p-mfc/s5p_mfc_ctrl.c
+index a1c729c..76405f5 100644
+--- a/drivers/media/platform/s5p-mfc/s5p_mfc_ctrl.c
++++ b/drivers/media/platform/s5p-mfc/s5p_mfc_ctrl.c
+@@ -239,6 +239,10 @@ int s5p_mfc_init_hw(struct s5p_mfc_dev *dev)
+ 	}
+ 	else
+ 		mfc_write(dev, 0x3ff, S5P_FIMV_SW_RESET);
++
++	if (IS_MFCV10(dev))
++		mfc_write(dev, 0x0, S5P_FIMV_MFC_CLOCK_OFF_V10);
++
+ 	mfc_debug(2, "Will now wait for completion of firmware transfer\n");
+ 	if (s5p_mfc_wait_for_done_dev(dev, S5P_MFC_R2H_CMD_FW_STATUS_RET)) {
+ 		mfc_err("Failed to load firmware\n");
+diff --git a/drivers/media/platform/s5p-mfc/s5p_mfc_dec.c b/drivers/media/platform/s5p-mfc/s5p_mfc_dec.c
+index 42e9351..81de3029 100644
+--- a/drivers/media/platform/s5p-mfc/s5p_mfc_dec.c
++++ b/drivers/media/platform/s5p-mfc/s5p_mfc_dec.c
+@@ -54,7 +54,7 @@ static struct s5p_mfc_fmt formats[] = {
+ 		.codec_mode	= S5P_MFC_CODEC_NONE,
+ 		.type		= MFC_FMT_RAW,
+ 		.num_planes	= 2,
+-		.versions	= MFC_V6_BIT | MFC_V7_BIT | MFC_V8_BIT,
++		.versions	= MFC_V6PLUS_BITS,
+ 	},
+ 	{
+ 		.name		= "4:2:0 2 Planes Y/CrCb",
+@@ -62,7 +62,7 @@ static struct s5p_mfc_fmt formats[] = {
+ 		.codec_mode	= S5P_MFC_CODEC_NONE,
+ 		.type		= MFC_FMT_RAW,
+ 		.num_planes	= 2,
+-		.versions	= MFC_V6_BIT | MFC_V7_BIT | MFC_V8_BIT,
++		.versions	= MFC_V6PLUS_BITS,
+ 	},
+ 	{
+ 		.name		= "H264 Encoded Stream",
+@@ -70,8 +70,7 @@ static struct s5p_mfc_fmt formats[] = {
+ 		.codec_mode	= S5P_MFC_CODEC_H264_DEC,
+ 		.type		= MFC_FMT_DEC,
+ 		.num_planes	= 1,
+-		.versions	= MFC_V5_BIT | MFC_V6_BIT | MFC_V7_BIT |
+-								MFC_V8_BIT,
++		.versions	= MFC_V5PLUS_BITS,
+ 	},
+ 	{
+ 		.name		= "H264/MVC Encoded Stream",
+@@ -79,7 +78,7 @@ static struct s5p_mfc_fmt formats[] = {
+ 		.codec_mode	= S5P_MFC_CODEC_H264_MVC_DEC,
+ 		.type		= MFC_FMT_DEC,
+ 		.num_planes	= 1,
+-		.versions	= MFC_V6_BIT | MFC_V7_BIT | MFC_V8_BIT,
++		.versions	= MFC_V6PLUS_BITS,
+ 	},
+ 	{
+ 		.name		= "H263 Encoded Stream",
+@@ -87,8 +86,7 @@ static struct s5p_mfc_fmt formats[] = {
+ 		.codec_mode	= S5P_MFC_CODEC_H263_DEC,
+ 		.type		= MFC_FMT_DEC,
+ 		.num_planes	= 1,
+-		.versions	= MFC_V5_BIT | MFC_V6_BIT | MFC_V7_BIT |
+-								MFC_V8_BIT,
++		.versions	= MFC_V5PLUS_BITS,
+ 	},
+ 	{
+ 		.name		= "MPEG1 Encoded Stream",
+@@ -96,8 +94,7 @@ static struct s5p_mfc_fmt formats[] = {
+ 		.codec_mode	= S5P_MFC_CODEC_MPEG2_DEC,
+ 		.type		= MFC_FMT_DEC,
+ 		.num_planes	= 1,
+-		.versions	= MFC_V5_BIT | MFC_V6_BIT | MFC_V7_BIT |
+-								MFC_V8_BIT,
++		.versions	= MFC_V5PLUS_BITS,
+ 	},
+ 	{
+ 		.name		= "MPEG2 Encoded Stream",
+@@ -105,8 +102,7 @@ static struct s5p_mfc_fmt formats[] = {
+ 		.codec_mode	= S5P_MFC_CODEC_MPEG2_DEC,
+ 		.type		= MFC_FMT_DEC,
+ 		.num_planes	= 1,
+-		.versions	= MFC_V5_BIT | MFC_V6_BIT | MFC_V7_BIT |
+-								MFC_V8_BIT,
++		.versions	= MFC_V5PLUS_BITS,
+ 	},
+ 	{
+ 		.name		= "MPEG4 Encoded Stream",
+@@ -114,8 +110,7 @@ static struct s5p_mfc_fmt formats[] = {
+ 		.codec_mode	= S5P_MFC_CODEC_MPEG4_DEC,
+ 		.type		= MFC_FMT_DEC,
+ 		.num_planes	= 1,
+-		.versions	= MFC_V5_BIT | MFC_V6_BIT | MFC_V7_BIT |
+-								MFC_V8_BIT,
++		.versions	= MFC_V5PLUS_BITS,
+ 	},
+ 	{
+ 		.name		= "XviD Encoded Stream",
+@@ -123,8 +118,7 @@ static struct s5p_mfc_fmt formats[] = {
+ 		.codec_mode	= S5P_MFC_CODEC_MPEG4_DEC,
+ 		.type		= MFC_FMT_DEC,
+ 		.num_planes	= 1,
+-		.versions	= MFC_V5_BIT | MFC_V6_BIT | MFC_V7_BIT |
+-								MFC_V8_BIT,
++		.versions	= MFC_V5PLUS_BITS,
+ 	},
+ 	{
+ 		.name		= "VC1 Encoded Stream",
+@@ -132,8 +126,7 @@ static struct s5p_mfc_fmt formats[] = {
+ 		.codec_mode	= S5P_MFC_CODEC_VC1_DEC,
+ 		.type		= MFC_FMT_DEC,
+ 		.num_planes	= 1,
+-		.versions	= MFC_V5_BIT | MFC_V6_BIT | MFC_V7_BIT |
+-								MFC_V8_BIT,
++		.versions	= MFC_V5PLUS_BITS,
+ 	},
+ 	{
+ 		.name		= "VC1 RCV Encoded Stream",
+@@ -141,8 +134,7 @@ static struct s5p_mfc_fmt formats[] = {
+ 		.codec_mode	= S5P_MFC_CODEC_VC1RCV_DEC,
+ 		.type		= MFC_FMT_DEC,
+ 		.num_planes	= 1,
+-		.versions	= MFC_V5_BIT | MFC_V6_BIT | MFC_V7_BIT |
+-								MFC_V8_BIT,
++		.versions	= MFC_V5PLUS_BITS,
+ 	},
+ 	{
+ 		.name		= "VP8 Encoded Stream",
+@@ -150,7 +142,7 @@ static struct s5p_mfc_fmt formats[] = {
+ 		.codec_mode	= S5P_MFC_CODEC_VP8_DEC,
+ 		.type		= MFC_FMT_DEC,
+ 		.num_planes	= 1,
+-		.versions	= MFC_V6_BIT | MFC_V7_BIT | MFC_V8_BIT,
++		.versions	= MFC_V6PLUS_BITS,
+ 	},
+ };
+ 
+diff --git a/drivers/media/platform/s5p-mfc/s5p_mfc_enc.c b/drivers/media/platform/s5p-mfc/s5p_mfc_enc.c
+index 0d5d465..9a21e8c 100644
+--- a/drivers/media/platform/s5p-mfc/s5p_mfc_enc.c
++++ b/drivers/media/platform/s5p-mfc/s5p_mfc_enc.c
+@@ -57,8 +57,7 @@ static struct s5p_mfc_fmt formats[] = {
+ 		.codec_mode	= S5P_MFC_CODEC_NONE,
+ 		.type		= MFC_FMT_RAW,
+ 		.num_planes	= 2,
+-		.versions	= MFC_V5_BIT | MFC_V6_BIT | MFC_V7_BIT |
+-								MFC_V8_BIT,
++		.versions	= MFC_V5PLUS_BITS,
+ 	},
+ 	{
+ 		.name		= "4:2:0 2 Planes Y/CrCb",
+@@ -66,7 +65,7 @@ static struct s5p_mfc_fmt formats[] = {
+ 		.codec_mode	= S5P_MFC_CODEC_NONE,
+ 		.type		= MFC_FMT_RAW,
+ 		.num_planes	= 2,
+-		.versions	= MFC_V6_BIT | MFC_V7_BIT | MFC_V8_BIT,
++		.versions	= MFC_V6PLUS_BITS,
+ 	},
+ 	{
+ 		.name		= "H264 Encoded Stream",
+@@ -74,8 +73,7 @@ static struct s5p_mfc_fmt formats[] = {
+ 		.codec_mode	= S5P_MFC_CODEC_H264_ENC,
+ 		.type		= MFC_FMT_ENC,
+ 		.num_planes	= 1,
+-		.versions	= MFC_V5_BIT | MFC_V6_BIT | MFC_V7_BIT |
+-								MFC_V8_BIT,
++		.versions	= MFC_V5PLUS_BITS,
+ 	},
+ 	{
+ 		.name		= "MPEG4 Encoded Stream",
+@@ -83,8 +81,7 @@ static struct s5p_mfc_fmt formats[] = {
+ 		.codec_mode	= S5P_MFC_CODEC_MPEG4_ENC,
+ 		.type		= MFC_FMT_ENC,
+ 		.num_planes	= 1,
+-		.versions	= MFC_V5_BIT | MFC_V6_BIT | MFC_V7_BIT |
+-								MFC_V8_BIT,
++		.versions	= MFC_V5PLUS_BITS,
+ 	},
+ 	{
+ 		.name		= "H263 Encoded Stream",
+@@ -92,8 +89,7 @@ static struct s5p_mfc_fmt formats[] = {
+ 		.codec_mode	= S5P_MFC_CODEC_H263_ENC,
+ 		.type		= MFC_FMT_ENC,
+ 		.num_planes	= 1,
+-		.versions	= MFC_V5_BIT | MFC_V6_BIT | MFC_V7_BIT |
+-								MFC_V8_BIT,
++		.versions	= MFC_V5PLUS_BITS,
+ 	},
+ 	{
+ 		.name		= "VP8 Encoded Stream",
+@@ -101,7 +97,7 @@ static struct s5p_mfc_fmt formats[] = {
+ 		.codec_mode	= S5P_MFC_CODEC_VP8_ENC,
+ 		.type		= MFC_FMT_ENC,
+ 		.num_planes	= 1,
+-		.versions	= MFC_V7_BIT | MFC_V8_BIT,
++		.versions	= MFC_V7PLUS_BITS,
+ 	},
+ };
+ 
+diff --git a/drivers/media/platform/s5p-mfc/s5p_mfc_opr_v6.c b/drivers/media/platform/s5p-mfc/s5p_mfc_opr_v6.c
+index fe14479..2041d81 100644
+--- a/drivers/media/platform/s5p-mfc/s5p_mfc_opr_v6.c
++++ b/drivers/media/platform/s5p-mfc/s5p_mfc_opr_v6.c
+@@ -356,6 +356,7 @@ static int calc_plane(int width, int height)
+ 
+ static void s5p_mfc_dec_calc_dpb_size_v6(struct s5p_mfc_ctx *ctx)
+ {
++	struct s5p_mfc_dev *dev = ctx->dev;
+ 	ctx->buf_width = ALIGN(ctx->img_width, S5P_FIMV_NV12MT_HALIGN_V6);
+ 	ctx->buf_height = ALIGN(ctx->img_height, S5P_FIMV_NV12MT_VALIGN_V6);
+ 	mfc_debug(2, "SEQ Done: Movie dimensions %dx%d,\n"
+@@ -372,8 +373,12 @@ static void s5p_mfc_dec_calc_dpb_size_v6(struct s5p_mfc_ctx *ctx)
+ 
+ 	if (ctx->codec_mode == S5P_MFC_CODEC_H264_DEC ||
+ 			ctx->codec_mode == S5P_MFC_CODEC_H264_MVC_DEC) {
+-		ctx->mv_size = S5P_MFC_DEC_MV_SIZE_V6(ctx->img_width,
+-				ctx->img_height);
++		if (IS_MFCV10(dev))
++			ctx->mv_size = S5P_MFC_DEC_MV_SIZE_V10(ctx->img_width,
++					ctx->img_height);
++		else
++			ctx->mv_size = S5P_MFC_DEC_MV_SIZE_V6(ctx->img_width,
++					ctx->img_height);
+ 		ctx->mv_size = ALIGN(ctx->mv_size, 16);
+ 	} else {
+ 		ctx->mv_size = 0;
+diff --git a/drivers/media/platform/s5p-mfc/s5p_mfc_opr_v6.h b/drivers/media/platform/s5p-mfc/s5p_mfc_opr_v6.h
+index 8055848..021b8db 100644
+--- a/drivers/media/platform/s5p-mfc/s5p_mfc_opr_v6.h
++++ b/drivers/media/platform/s5p-mfc/s5p_mfc_opr_v6.h
+@@ -24,6 +24,8 @@
+ #define MB_HEIGHT(y_size)		DIV_ROUND_UP(y_size, 16)
+ #define S5P_MFC_DEC_MV_SIZE_V6(x, y)	(MB_WIDTH(x) * \
+ 					(((MB_HEIGHT(y)+1)/2)*2) * 64 + 128)
++#define S5P_MFC_DEC_MV_SIZE_V10(x, y)	(MB_WIDTH(x) * \
++					(((MB_HEIGHT(y)+1)/2)*2) * 64 + 512)
+ 
+ /* Definition */
+ #define ENC_MULTI_SLICE_MB_MAX		((1 << 30) - 1)
+-- 
+2.7.4
