@@ -1,116 +1,46 @@
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: Re: [PATCH 4/8] mfd: stm32-timers: add support for dmas
-Date: Wed, 24 Jan 2018 16:30:58 +0100
-Message-ID: <0c6a185c-cc12-38ae-3909-5c0e82f8da3f@st.com>
-References: <1516106631-18722-1-git-send-email-fabrice.gasnier@st.com>
- <1516106631-18722-5-git-send-email-fabrice.gasnier@st.com>
- <20180123133234.xmep76cgdremnj47@dell>
- <e611b40f-bd37-aa2d-afd9-997b86d55441@st.com>
- <20180123153035.2rvhspe2m5ej57op@dell>
- <ee021839-3298-d01b-8890-619aca0399a7@st.com>
- <20180123164121.xjzhypqe2u5c7zza@dell>
- <2e6afc46-9ad4-a858-29c7-692798ece82f@st.com>
- <20180124145633.tnblnqau7ncju7dp@dell>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: [PATCH v2 1/2] dt-bindings: etnaviv: add slave interface clock
+Date: Wed, 24 Jan 2018 16:37:10 +0100
+Message-ID: <20180124153711.22049-1-l.stach@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <20180124145633.tnblnqau7ncju7dp@dell>
-Content-Language: en-US
-Sender: linux-pwm-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: thierry.reding@gmail.com, robh+dt@kernel.org, alexandre.torgue@st.com, benjamin.gaignard@linaro.org, mark.rutland@arm.com, linux@armlinux.org.uk, mcoquelin.stm32@gmail.com, benjamin.gaignard@st.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org, patchwork-lst@pengutronix.de, kernel@pengutronix.de, Russell King <linux+etnaviv@armlinux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-On 01/24/2018 03:56 PM, Lee Jones wrote:
-> On Wed, 24 Jan 2018, Fabrice Gasnier wrote:
->> On 01/23/2018 05:41 PM, Lee Jones wrote:
->>> On Tue, 23 Jan 2018, Fabrice Gasnier wrote:
->>>> On 01/23/2018 04:30 PM, Lee Jones wrote:
->>>>> On Tue, 23 Jan 2018, Fabrice Gasnier wrote:
->>>>>
->>>>>> On 01/23/2018 02:32 PM, Lee Jones wrote:
->>>>>>> On Tue, 16 Jan 2018, Fabrice Gasnier wrote:
->>>>>>>
->>>>>>>> STM32 Timers can support up to 7 dma requests:
->>>>>>>> 4 channels, update, compare and trigger.
->>>>>>>> Optionally request part, or all dmas from stm32-timers MFD core.
->>>>>>>> Also, keep reference of device's bus address to allow child drivers to
->>>>>>>> transfer data from/to device by using dma.
->>>>>>>>
->>>>>>>> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
->>>>>>>> ---
->>>>>>>>  drivers/mfd/stm32-timers.c       | 37 ++++++++++++++++++++++++++++++++++++-
->>>>>>>>  include/linux/mfd/stm32-timers.h | 14 ++++++++++++++
->>>>>>>>  2 files changed, 50 insertions(+), 1 deletion(-)
->>>>>>>>
->>>>>>>> diff --git a/drivers/mfd/stm32-timers.c b/drivers/mfd/stm32-timers.c
->>>>>>>>  static int stm32_timers_probe(struct platform_device *pdev)
->>>>>>>>  {
->>>>>>>>  	struct device *dev = &pdev->dev;
->>>>>>>> @@ -44,6 +61,7 @@ static int stm32_timers_probe(struct platform_device *pdev)
->>>>>>>>  	mmio = devm_ioremap_resource(dev, res);
->>>>>>>>  	if (IS_ERR(mmio))
->>>>>>>>  		return PTR_ERR(mmio);
->>>>>>>> +	ddata->phys_base = res->start;
->>>>>>>
->>>>>>> What do you use this for?
->>>>>>
->>>>>> This is used in in child driver (pwm) for capture data transfer by dma.
->>>>>
->>>>> Might be worth being clear about that.
->>>>>
->>>>> Perhaps pass in 'dma_base' (phys_base + offset) instead?
->>>>
->>>> I guess you've had a look at [PATCH 5/8] pwm: stm32: add capture
->>>> support. Are you talking about passing phys_base + TIM_DMAR ?
->>>
->>> I have and I am.
->>>
->>>> If this is the case, I'd prefer to keep phys base only if you don't
->>>> mind, and handle TIM_DMAR offset in pwm driver. This way, all dma slave
->>>> config is kept locally at one place.
->>>> Or do you mean something else ?
->>>>
->>>> Maybe I can add a comment here about this ?
->>>> Something like:
->>>> /* phys_base to be used by child driver, e.g. DMA burst mode */
->>>
->>> I haven't seen the memory map for this device, so it's not easy for me
->>> to comment, but passing in the physical address of the parent MFD into
->>> a child device doesn't quite sit right with me.
->>>
->>> At what level does TIM_DMAR sit?  Is it a child (PWM) specific
->>> property, or is it described at parent (Timer) level?
->>>
->> Hi Lee,
->>
->> This isn't child (PWM) specific. TIM_DMAR is described at timer level as
->> well as all timers DMA requests lines. Current patchset make it useful
->> for PWM capture. Basically, I think this can be seen as interrupts, as
->> each (0..7) dma request has an enable bit (in DIER: interrupt enable
->> register). This is similar as interrupts at timer level.
->>
->> So, I understand your point regarding passing physical address of the
->> parent MFD... Speaking of interrupts, I'd probably have looked at
->> irq_chip. Regarding dma, i'm not sure what is preferred way ?
->>
->> Another way maybe to export a routine (export symbol) from MFD core, to
->> handle dma transfer from there?
->> By looking into drivers/mfd, I found similar approach, e.g.
->> rtsx_pci_dma_transfer(). Do you think this is better approach ?
->>
->> Please let me know your opinion.
-> 
-> It sounds fine in principle.  You are in a better position to make
-> that decision as you know the H/W more intimately than I, however it
-> does sound like a good idea to abstract the DMA handling from the
-> device if these aren't device-{level|specific} operations.
-> 
-
-Hi Lee,
-
-Thanks, I'll rework this in v2 to follow your advice.
-
-Best Regards,
-Fabrice
+TmV3ZXIgR1BVIGNvcmVzIGFkZGVkIGEgbmV3IGNsb2NrIGlucHV0LCB3aGljaCBhbGxvd3MgdG8g
+Z2F0ZSB0aGUgc2xhdmUgKEFIQikKaW50ZXJmYWNlIGluZGVwZW5kZW50bHkgZnJvbSBvdGhlciBw
+YXJ0cyBvZiB0aGUgR1BVLiBBZGQgaXQgdG8gdGhlIHN1cHBvcnRlZApjbG9ja3MuCgpTaWduZWQt
+b2ZmLWJ5OiBMdWNhcyBTdGFjaCA8bC5zdGFjaEBwZW5ndXRyb25peC5kZT4KLS0tCnYyOiBTdGF0
+ZSB3aGVuIHRoaXMgY2xvY2sgaXMgcmVxdWlyZWQuCi0tLQogRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2Rpc3BsYXkvZXRuYXZpdi9ldG5hdml2LWRybS50eHQgfCA0ICsrKy0KIDEg
+ZmlsZSBjaGFuZ2VkLCAzIGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkKCmRpZmYgLS1naXQg
+YS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9ldG5hdml2L2V0bmF2
+aXYtZHJtLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2V0
+bmF2aXYvZXRuYXZpdi1kcm0udHh0CmluZGV4IDA1MTc2ZjFhZTEwOC4uNTExYjgxNDU0M2JhIDEw
+MDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9ldG5h
+dml2L2V0bmF2aXYtZHJtLnR4dAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvZGlzcGxheS9ldG5hdml2L2V0bmF2aXYtZHJtLnR4dApAQCAtMzIsNyArMzIsOSBAQCBSZXF1
+aXJlZCBwcm9wZXJ0aWVzOgogLSBjbG9ja3M6IHNob3VsZCBjb250YWluIG9uZSBjbG9jayBmb3Ig
+ZW50cnkgaW4gY2xvY2stbmFtZXMKICAgc2VlIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9jbG9jay9jbG9jay1iaW5kaW5ncy50eHQKIC0gY2xvY2stbmFtZXM6Ci0gICAtICJidXMi
+OiAgICBBWEkvcmVnaXN0ZXIgY2xvY2sKKyAgIC0gImJ1cyI6ICAgIEFYSS9tYXN0ZXIgaW50ZXJm
+YWNlIGNsb2NrCisgICAtICJyZWciOiAgICBBSEIvc2xhdmUgaW50ZXJmYWNlIGNsb2NrCisgICAg
+ICAgICAgICAgICAob25seSByZXF1aXJlZCBpZiBHUFUgY2FuIGdhdGUgc2xhdmUgaW50ZXJmYWNl
+IGluZGVwZW5kZW50bHkpCiAgICAtICJjb3JlIjogICBHUFUgY29yZSBjbG9jawogICAgLSAic2hh
+ZGVyIjogU2hhZGVyIGNsb2NrIChvbmx5IHJlcXVpcmVkIGlmIEdQVSBoYXMgZmVhdHVyZSBQSVBF
+XzNEKQogCi0tIAoyLjE1LjEKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNr
+dG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Ry
+aS1kZXZlbAo=
