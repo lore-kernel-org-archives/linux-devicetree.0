@@ -1,110 +1,114 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH RFC 2/4] dt-bindings/interrupt-controller: pdc: descibe
- PDC device binding
-Date: Wed, 24 Jan 2018 14:24:04 +0000
-Message-ID: <5f067a1b-a13e-580b-f1c4-57e5b558d710@arm.com>
-References: <20180123175656.11942-1-ilina@codeaurora.org>
- <20180123175656.11942-3-ilina@codeaurora.org>
+From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/2] dma: xilinx: dpdma: Add the Xilinx DisplayPort DMA
+ engine driver
+Date: Wed, 24 Jan 2018 20:10:59 +0530
+Message-ID: <20180124144059.GI18649@localhost>
+References: <1515204848-3493-1-git-send-email-hyun.kwon@xilinx.com>
+ <1515204848-3493-2-git-send-email-hyun.kwon@xilinx.com>
+ <20180112141355.GO18649@localhost>
+ <MWHPR02MB249345183B6CCD86A56A4E1ED6E30@MWHPR02MB2493.namprd02.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180123175656.11942-3-ilina@codeaurora.org>
-Content-Language: en-GB
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lina Iyer <ilina@codeaurora.org>, tglx@linutronix.de, jason@lakedaemon.net
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, sboyd@codeaurora.org, rnayak@codeaurora.org, asathyak@codeaurora.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <MWHPR02MB249345183B6CCD86A56A4E1ED6E30-RUky8eZECECTw9ZLCNw7fKnrV9Ap65cLvxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hyun Kwon <hyunk-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Tejas Upadhyay <TEJASU-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 23/01/18 17:56, Lina Iyer wrote:
-> From: Archana Sathyakumar <asathyak@codeaurora.org>
+On Tue, Jan 23, 2018 at 05:03:19PM +0000, Hyun Kwon wrote:
+
+> > why should this be a compile option
+> > 
 > 
-> Add device binding documentation for the PDC Interrupt controller on
-> QCOM SoC's like the SDM845. The interrupt-controller can be used to
-> sense edge low interrupts and wakeup interrupts when the GIC is
-> non-operational.
+> This debugfs code is for testing / regression, and we don't want to enable it
+> for regular users.
+
+Right and that is why you have CONFIG_DEBUGFS, why not use that?
+
+> > do you need all these headers?
+> > 
 > 
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Archana Sathyakumar <asathyak@codeaurora.org>
-> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
-> ---
->  .../bindings/interrupt-controller/qcom,pdc.txt     | 55 ++++++++++++++++++++++
->  1 file changed, 55 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
+> I directly included all headers that are used in this driver. Some of them can
+> be removed from indirect inclusions, and I'm fine with that. Please let me know
+> if that's your preference.
+
+Yes pls remove the ones that are needed
+
+> > > +#define XILINX_DPDMA_INTR_DESC_DONE_SHIFT		0
+> > 
+> > you can define a common shift using ffs
+> > 
 > 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
-> new file mode 100644
-> index 000000000000..c4592bbf678d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
-> @@ -0,0 +1,55 @@
-> +PDC interrupt controller
-> +
-> +Qualcomm Technologies Inc. SoCs based on the RPM Hardened archicture have a
-nit: architecture
+> I guess you mean to replace, (value & MASK) << SHIFT, with
+> (value & MASK) << ffs(MASK). I'll change to that way. Let me know otherwise.
 
-> +Power Domain Controller (PDC) that is on always-on domain. In addition to
-> +providing power control for the power domains, the hardware also has an
-> +interrupt controller that can be used to help detect edge low interrupts as
-> +well detect interrupts when the GIC is non-operational.
-> +
-> +GIC is parent interrupt controller at the highest level. Platform interrupt
-> +controller PDC is next in hierarchy, followed by others. This driver only
-> +configures the interrupts, does not handle them.
-> +
-> +Properties:
-> +
-> +- compatible:
-> +	Usage: required
-> +	Value type: <string>
-> +	Definition: Should contain "qcom,pdc" and "qcom,pdc-<target>"
-> +		    - "qcom,pdc-sdm845": For sdm845 pin data
-> +
-> +- reg:
-> +	Usage: required
-> +	Value type: <prop-encoded-array>
-> +	Definition: Specifies the base physical address for PDC hardware.
-> +
-> +- interrupt-cells:
-> +	Usage: required
-> +	Value type: <u32>
-> +	Definition: Specifies the number of cells needed to encode an interrupt
-> +		    source.
-> +		    Value must be 3.
-> +		    The encoding of these cells are same as described in [1].
+yes and you may use the ones in bitfield.h
 
-The GICv3 binding allows for more cells (at least 4), so you'll have to
-adapt both in the binding and in the driver.
-
-> +
-> +- interrupt-parent:
-> +	Usage: required
-> +	Value type: <phandle>
-> +	Definition: Specifies the interrupt parent necessary for hierarchical
-> +		    domain to operate.
-> +
-> +- interrupt-controller:
-> +	Usage: required
-> +	Value type: <bool>
-> +	Definition: Identifies the node as an interrupt controller.
-> +
-> +Example:
-> +
-> +	pdc: interrupt-controller@b220000 {
-> +		compatible = "qcom,pdc", "qcom,pdc-sdm845";
-> +		reg = <0xb220000 0x30000>;
-> +		#interrupt-cells = <3>;
-> +		interrupt-parent = <&intc>;
-> +		interrupt-controller;
-> +	};
-> +
-> +[1]. Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
+> > what does it mean (lower 32 bit of Nth 4KB page)
+> > 
 > 
+> Each descriptor can point up to 5 - 48bit address payloads. src_addr* fields
+> contain lower 32bit of 48bit address. Remaining upper 16bit is programmed in
+> addr_ext* fields.
 
-You'll also have to specify the ranges for the pin to SPI mapping.
+pls document this
 
-Thanks,
+> > > +static int xilinx_dpdma_config(struct dma_chan *dchan,
+> > > +			       struct dma_slave_config *config)
+> > > +{
+> > > +	if (config->direction != DMA_MEM_TO_DEV)
+> > > +		return -EINVAL;
+> > 
+> > ?? Why are the config values not used, how else do you configure the
+> > channel?
+> > 
+> 
+> There's not much configuration to be done. Channels are pretty much identical
+> with fixed configurations.
 
-	M.
+hmmm, you do support DMA_SLAVE right?
+
+> > why have these wrappers which do not do anything?
+> > 
+> 
+> It's just my personal preference to split into different code partitions, and
+> each section is partitioned / grouped with some comment line. :-)
+> Ex, a partition for struct dma_chan, and another one for
+> struct xilinx_dpdma_chan. It gives me sort of abstracted view. But it may be
+> just me, and it comes with extra indirections. I'll remove unnecessary wrappers.
+
+wrapper without any logic dont help
+
+> > > +	for (i = 0; i < XILINX_DPDMA_NUM_CHAN; i++)
+> > > +		if (xdev->chan[i])
+> > > +			xilinx_dpdma_chan_remove(xdev->chan[i]);
+> > 
+> > At this point your irq is still enabled and can fire, and can schedule
+> > tasklet.. Are you sure you are okay with that?
+> > 
+> 
+> Ok. You mean that an interrupt can occur right before
+> xilinx_dpdma_disable_intr(), and the interrupt may be handled  in the middle or
+> after removing this driver. I'll switch to request_irq() from
+> devm_request_irq(), and remove the irq when removing the driver.
+
+yes and ensure tasklets are quiesced
+
+> > > +MODULE_AUTHOR("Xilinx, Inc.");
+> > > +MODULE_DESCRIPTION("Xilinx DPDMA driver");
+> > > +MODULE_LICENSE("GPL v2");
+> > 
+> > No MODULE_ALIAS()?
+> 
+> Is it required? Could you please elaborate, to help my understanding? 
+
+did you try builing as modules and testing this?
+
 -- 
-Jazz is not dead. It just smells funny...
+~Vinod
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
