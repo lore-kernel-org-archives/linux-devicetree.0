@@ -1,40 +1,57 @@
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH] arc: dts: use 'atmel' as manufacturer for at24 in axs10x_mb
-Date: Wed, 24 Jan 2018 22:39:55 +0100
-Message-ID: <20180124213955.4975-1-brgl@bgdev.pl>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Alexey Brodkin <abrodkin@synopsys.com>, Vineet Gupta <vgupta@synopsys.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-snps-arc@lists.infradead.org, Bartosz Golaszewski <brgl@bgdev.pl>
+From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: use a correct at24 fallback for
+ at91-nattis-2-natte-2
+Date: Wed, 24 Jan 2018 23:12:17 +0100
+Message-ID: <bd9bdd00-d7ce-e925-2d63-d0fbb86e07e9@axentia.se>
+References: <20180124213412.4612-1-brgl@bgdev.pl>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180124213412.4612-1-brgl-ARrdPY/1zhM@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bartosz Golaszewski <brgl-ARrdPY/1zhM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Using compatible strings without the <manufacturer> part for at24 is
-now deprecated. Use a correct 'atmel,<model>' value.
+Hi Bartosz,
 
-Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
----
- arch/arc/boot/dts/axs10x_mb.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On 2018-01-24 22:34, Bartosz Golaszewski wrote:
+> We now require all at24 users to use the "atmel,<model>" fallback in
+> device tree for different manufacturers.
 
-diff --git a/arch/arc/boot/dts/axs10x_mb.dtsi b/arch/arc/boot/dts/axs10x_mb.dtsi
-index 74d070cd3c13..47b74fbc403c 100644
---- a/arch/arc/boot/dts/axs10x_mb.dtsi
-+++ b/arch/arc/boot/dts/axs10x_mb.dtsi
-@@ -214,13 +214,13 @@
- 			};
- 
- 			eeprom@0x54{
--				compatible = "24c01";
-+				compatible = "atmel,24c01";
- 				reg = <0x54>;
- 				pagesize = <0x8>;
- 			};
- 
- 			eeprom@0x57{
--				compatible = "24c04";
-+				compatible = "atmel,24c04";
- 				reg = <0x57>;
- 				pagesize = <0x8>;
- 			};
--- 
-2.16.1
+I think my patch [3/4] from about a week ago was just a tiny bit
+better.
+https://lkml.org/lkml/2018/1/16/609
+
+Can we please pick that one directly instead of doing this partial
+step?
+
+Cheers,
+Peter
+
+> Signed-off-by: Bartosz Golaszewski <brgl-ARrdPY/1zhM@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/at91-nattis-2-natte-2.dts | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/at91-nattis-2-natte-2.dts b/arch/arm/boot/dts/at91-nattis-2-natte-2.dts
+> index 3ea1d26e1c68..9ae2a9de6123 100644
+> --- a/arch/arm/boot/dts/at91-nattis-2-natte-2.dts
+> +++ b/arch/arm/boot/dts/at91-nattis-2-natte-2.dts
+> @@ -146,7 +146,7 @@
+>  	};
+>  
+>  	eeprom@50 {
+> -		compatible = "nxp,24c02";
+> +		compatible = "nxp,24c02", "atmel,24c02";
+>  		reg = <0x50>;
+>  		pagesize = <16>;
+>  	};
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
