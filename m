@@ -1,38 +1,40 @@
-From: Bartosz Golaszewski <brgl-ARrdPY/1zhM@public.gmane.org>
-Subject: [PATCH] powerpc: dts: use 'atmel' as at24 manufacturer for kmcent2
-Date: Wed, 24 Jan 2018 22:38:34 +0100
-Message-ID: <20180124213834.4870-1-brgl@bgdev.pl>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Valentin Longchamp <valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>, Holger Brunck <holger.brunck-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>, "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Bartosz Golaszewski <brgl-ARrdPY/1zhM@public.gmane.org>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH] arc: dts: use 'atmel' as manufacturer for at24 in axs10x_mb
+Date: Wed, 24 Jan 2018 22:39:55 +0100
+Message-ID: <20180124213955.4975-1-brgl@bgdev.pl>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Alexey Brodkin <abrodkin@synopsys.com>, Vineet Gupta <vgupta@synopsys.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-snps-arc@lists.infradead.org, Bartosz Golaszewski <brgl@bgdev.pl>
 List-Id: devicetree@vger.kernel.org
 
 Using compatible strings without the <manufacturer> part for at24 is
 now deprecated. Use a correct 'atmel,<model>' value.
 
-Signed-off-by: Bartosz Golaszewski <brgl-ARrdPY/1zhM@public.gmane.org>
+Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
 ---
- arch/powerpc/boot/dts/fsl/kmcent2.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arc/boot/dts/axs10x_mb.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/powerpc/boot/dts/fsl/kmcent2.dts b/arch/powerpc/boot/dts/fsl/kmcent2.dts
-index 5922c1ea0e96..3094df05f5ea 100644
---- a/arch/powerpc/boot/dts/fsl/kmcent2.dts
-+++ b/arch/powerpc/boot/dts/fsl/kmcent2.dts
-@@ -130,7 +130,7 @@
- 					#size-cells = <0>;
+diff --git a/arch/arc/boot/dts/axs10x_mb.dtsi b/arch/arc/boot/dts/axs10x_mb.dtsi
+index 74d070cd3c13..47b74fbc403c 100644
+--- a/arch/arc/boot/dts/axs10x_mb.dtsi
++++ b/arch/arc/boot/dts/axs10x_mb.dtsi
+@@ -214,13 +214,13 @@
+ 			};
  
- 					eeprom@54 {
--						compatible = "24c02";
-+						compatible = "atmel,24c02";
- 						reg = <0x54>;
- 						pagesize = <2>;
- 						read-only;
+ 			eeprom@0x54{
+-				compatible = "24c01";
++				compatible = "atmel,24c01";
+ 				reg = <0x54>;
+ 				pagesize = <0x8>;
+ 			};
+ 
+ 			eeprom@0x57{
+-				compatible = "24c04";
++				compatible = "atmel,24c04";
+ 				reg = <0x57>;
+ 				pagesize = <0x8>;
+ 			};
 -- 
 2.16.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
