@@ -1,56 +1,45 @@
-From: Bartosz Golaszewski <brgl-ARrdPY/1zhM@public.gmane.org>
-Subject: [PATCH] ARM: dts: consistently use 'atmel' as at24 manufacturer in cyclone5
-Date: Wed, 24 Jan 2018 22:33:14 +0100
-Message-ID: <20180124213314.4546-1-brgl@bgdev.pl>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Bartosz Golaszewski <brgl-ARrdPY/1zhM@public.gmane.org>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH] ARM: dts: use a correct at24 fallback for
+ at91-nattis-2-natte-2
+Date: Wed, 24 Jan 2018 22:34:12 +0100
+Message-ID: <20180124213412.4612-1-brgl@bgdev.pl>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Peter Rosin <peda@axentia.se>
+Cc: devicetree@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Using 'at' or 'at24' as the <manufacturer> part of the compatible
-string is now deprecated. Use a correct value: 'atmel,<model>'.
+We now require all at24 users to use the "atmel,<model>" fallback in
+device tree for different manufacturers.
 
-Signed-off-by: Bartosz Golaszewski <brgl-ARrdPY/1zhM@public.gmane.org>
+Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
 ---
- arch/arm/boot/dts/socfpga_cyclone5_vining_fpga.dts | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/at91-nattis-2-natte-2.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/socfpga_cyclone5_vining_fpga.dts b/arch/arm/boot/dts/socfpga_cyclone5_vining_fpga.dts
-index 2459d133f1be..f50b19447de6 100644
---- a/arch/arm/boot/dts/socfpga_cyclone5_vining_fpga.dts
-+++ b/arch/arm/boot/dts/socfpga_cyclone5_vining_fpga.dts
-@@ -161,7 +161,7 @@
+diff --git a/arch/arm/boot/dts/at91-nattis-2-natte-2.dts b/arch/arm/boot/dts/at91-nattis-2-natte-2.dts
+index 3ea1d26e1c68..9ae2a9de6123 100644
+--- a/arch/arm/boot/dts/at91-nattis-2-natte-2.dts
++++ b/arch/arm/boot/dts/at91-nattis-2-natte-2.dts
+@@ -146,7 +146,7 @@
  	};
  
- 	at24@50 {
--		compatible = "at24,24c01";
-+		compatible = "atmel,24c01";
- 		pagesize = <8>;
+ 	eeprom@50 {
+-		compatible = "nxp,24c02";
++		compatible = "nxp,24c02", "atmel,24c02";
  		reg = <0x50>;
+ 		pagesize = <16>;
  	};
-@@ -213,7 +213,7 @@
- 			#size-cells = <0>;
- 			reg = <6>;
- 			eeprom@51 {
--				compatible = "at,24c01";
-+				compatible = "atmel,24c01";
- 				pagesize = <8>;
- 				reg = <0x51>;
- 			};
-@@ -224,7 +224,7 @@
- 			#size-cells = <0>;
- 			reg = <7>;
- 			eeprom@51 {
--				compatible = "at,24c01";
-+				compatible = "atmel,24c01";
- 				pagesize = <8>;
- 				reg = <0x51>;
- 			};
 -- 
 2.16.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
