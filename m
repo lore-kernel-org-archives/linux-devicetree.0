@@ -1,82 +1,31 @@
-From: Martin Kelly <mkelly-s2cxlsp5qxs@public.gmane.org>
-Subject: [PATCH v3] ARM: dts: sun8i: NanoPi NEO Air add WiFi / eMMC
-Date: Tue, 23 Jan 2018 15:58:44 -0800
-Message-ID: <20180123235844.5511-1-mkelly@xevo.com>
+From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Subject: Re: [PATCHv5 0/5] GEHC Bx50 Switch Support
+Date: Tue, 23 Jan 2018 19:23:00 -0500 (EST)
+Message-ID: <20180123.192300.998104741632421215.davem@davemloft.net>
+References: <20180123150350.11031-1-sebastian.reichel@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180123150350.11031-1-sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Jelle van der Waa <jelle-oJJ1AqDjjO4@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Martin Kelly <mkelly-s2cxlsp5qxs@public.gmane.org>
+To: sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org
+Cc: andrew-g2DYL2Zd6BY@public.gmane.org, vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, ian.ray-JJi787mZWgc@public.gmane.org, nandor.han-JJi787mZWgc@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-81qHHgoATdEGFh7si24rbyp2UmYkHbXO@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Jelle van der Waa <jelle-oJJ1AqDjjO4@public.gmane.org>
+From: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Date: Tue, 23 Jan 2018 16:03:45 +0100
 
-Enable the WiFi (AP6212) chip and eMMC support for the NanoPi NEO Air.
+> This adds support for the internal switch found in GE Healthcare
+> B450v3, B650v3 and B850v3. All devices use a GPIO bitbanged MDIO
+> bus to communicate with the switch and a PCIe based network card
+> for exchanging network data. The cpu network data link requires,
+> that the switch's internal phy interface is enabled, so support
+> for that is added by the first patch in this series.
+> 
+> The patch series is based on v4.15-rc8.
 
-This patch was originally submitted by Jelle van der Waa. Martin Kelly
-modified it to compile on the latest kernel, fixed up some review
-comments from Maxime Ripard, and re-tested the patch.
-
-These are the original patch submissions:
-
-https://patchwork.kernel.org/patch/9581613/
-https://patchwork.kernel.org/patch/9642071/
-
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: Jelle van der Waa <jelle-oJJ1AqDjjO4@public.gmane.org>
-Signed-off-by: Martin Kelly <mkelly-s2cxlsp5qxs@public.gmane.org>
----
- arch/arm/boot/dts/sun8i-h3-nanopi-neo-air.dts | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
-
-diff --git a/arch/arm/boot/dts/sun8i-h3-nanopi-neo-air.dts b/arch/arm/boot/dts/sun8i-h3-nanopi-neo-air.dts
-index 03ff6f8b93ff..920849092cc8 100644
---- a/arch/arm/boot/dts/sun8i-h3-nanopi-neo-air.dts
-+++ b/arch/arm/boot/dts/sun8i-h3-nanopi-neo-air.dts
-@@ -72,6 +72,11 @@
- 			gpios = <&pio 0 10 GPIO_ACTIVE_HIGH>; /* PA10 */
- 		};
- 	};
-+
-+	wifi_pwrseq: wifi_pwrseq {
-+		compatible = "mmc-pwrseq-simple";
-+		reset-gpios = <&r_pio 0 7 GPIO_ACTIVE_LOW>; /* PL7 */
-+	};
- };
- 
- &mmc0 {
-@@ -84,6 +89,25 @@
- 	status = "okay";
- };
- 
-+&mmc1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc1_pins_a>;
-+	vmmc-supply = <&reg_vcc3v3>;
-+	vqmmc-supply = <&reg_vcc3v3>;
-+	mmc-pwrseq = <&wifi_pwrseq>;
-+	bus-width = <4>;
-+	non-removable;
-+	status = "okay";
-+
-+	brcmf: bcrmf@1 {
-+		reg = <1>;
-+		compatible = "brcm,bcm4329-fmac";
-+		interrupt-parent = <&pio>;
-+		interrupts = <6 10 IRQ_TYPE_LEVEL_LOW>; /* PG10 / EINT10 */
-+		interrupt-names = "host-wake";
-+	};
-+};
-+
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_pins_a>;
--- 
-2.11.0
-
+Series applied, thanks.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
