@@ -1,88 +1,167 @@
-From: Alan Tull <atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC] devicetree: new FDT format version
-Date: Wed, 24 Jan 2018 16:27:05 -0600
-Message-ID: <CANk1AXQSizYobfxqdMeAx7EPV40PbLLAhApGDjkmg7SZb+K9_Q@mail.gmail.com>
-References: <b96829f9-2e8b-fdc5-5090-58591e2260cf@gmail.com>
- <CAL_JsqJR2y7bMw_-9TBAGWZ_kf7_sZo5qvqvRowJ8jiy=4G0Bg@mail.gmail.com>
- <20180123124232.GA14832@umbus> <20328477-e511-e875-7dc4-253640f2219e@gmail.com>
- <CAL_Jsq+fvFrGhqO0zbEUE_i23FkU=G4Z1-e0vnXHi4KbS2oK0A@mail.gmail.com> <e1bec77d-4dac-200b-34be-23573bf738f0@gmail.com>
+From: Evan Green <evgreen-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [v2,3/7] soc: qcom: Add GENI based QUP Wrapper driver
+Date: Wed, 24 Jan 2018 15:06:18 -0800
+Message-ID: <CAE=gft6vjPRpNAg4sivt_r3Ynf5jkg=h8fsrAcP1c4q5jF-x+g@mail.gmail.com>
+References: <1515805547-22816-4-git-send-email-kramasub@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <e1bec77d-4dac-200b-34be-23573bf738f0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1515805547-22816-4-git-send-email-kramasub-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, "Pantelis Antomarek.vasut-Re5JQEeQqe/2sr8fMPgRzw@public.gmane.org" <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, =?UTF-8?B?TWFyZWsgVmHFoXV0?= <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Kyle Evans <kevans-h+KGxgPPiopAfugRpC6u6w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
+To: corbet-T1hC0tSOHrs@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
+Cc: Karthikeyan Ramasubramanian <kramasub-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jslaby-IBi9RG/b67k@public.gmane.org, Sagar Dharia <sdharia-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Girish Mahadevan <girishm-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 24, 2018 at 3:16 PM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-
->>>>> - Allow applying overlays by just appending to the blob. The need for
->>>>> this is somewhat gone now that libfdt can just fully apply overlays.
->>>>
->>>> I'm not really sure what you want here.  I mean you could easily allow
->>>> the format to allow multiple appended overlays, and define that to
->>>> mean the overlaid result.  At some point *something* is going to have
->>>> to really do the application, so I'm not sure that it really buys you
->>>> that much.  It also makes nearly every operation on the tree in libfdt
->>>> horrible to implement, at least within the other constraints the
->>>> interface was designed around; you'll continually have to scan the
->>>> entire tree just in case some other overlay fragment has some bearing
->>>> on the thing you're looking at.  It confuses the interface too: what
->>>> does "node offset" mean if the same node could be built up from
->>>> overlay fragments at multiple offsets.
->>
->> The idea was to avoid applying overlays to flattened trees at all.
->> You're just passing the problem to the next stage (typically the
->> kernel). But we have applying overlays to flattened trees now, so
->> maybe there's no need anymore.
->>
->>> Somewhat echoing David's comment, I'm also not sure what you mean.
->>> And trying to not overly influence this conversation with preconceptions
->>> from what I'm going to propose.
->>>
->>> My first shot at the new format added a field to the FDT to indicate
->>> that an overlay FDT was concatenated to the FDT (and the overlay FDT
->>> in turn could set it's field to concatenate another overlay FDT).
->>
->> Yes, something like this is what I meant. This was something Grant had
->> talked about.
->>
->>> But in the end I decided that information belonged outside the FDT,
->>> and it was sufficient to require that all FDTs be padded out so that
->>> if an overlay FDT was concatenated to the FDT, the overlay FDT would
->>> be properly aligned.
->>
->> I can't think of why this wouldn't work either.
->>
->>> For ease of typing, I'll call this "chaining" or "chained".  For
->>> Linux, I am envisioning no kernel use of data from a chained FDT
->>> until after the tree is unflattened.  I haven't done an exhaustive
->>> search to determine all of the uses of data directly from the
->>> flattened FDT, but I am optimistic that there will not be any such
->>> access that would require data from a chained FDT (and we could
->>> make this a rule).
->>
->> This would be a major downside to leaving it up to the kernel because
->> what can't be touched is hard to enumerate and could change. For
->> example, we added earlycon and now the uart node can't be modified.
+On Fri, Jan 12, 2018 at 5:05 PM, Karthikeyan Ramasubramanian
+<kramasub-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+> This driver manages the Generic Interface (GENI) firmware based Qualcomm
+> Universal Peripheral (QUP) Wrapper. GENI based QUP is the next generation
+> programmable module composed of multiple Serial Engines (SE) and supports
+> a wide range of serial interfaces like UART, SPI, I2C, I3C, etc. This
+> driver also enables managing the serial interface independent aspects of
+> Serial Engines.
 >
-> What you say makes sense.  So I'll reverse myself and say that for
-> Linux, we should update the FDT read code to scan all chained
-> overlay FDT(s) as well as the base FDT.
+> Signed-off-by: Karthikeyan Ramasubramanian <kramasub-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Signed-off-by: Sagar Dharia <sdharia-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Signed-off-by: Girish Mahadevan <girishm-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> ---
+>  drivers/soc/qcom/Kconfig        |    8 +
+>  drivers/soc/qcom/Makefile       |    1 +
+>  drivers/soc/qcom/qcom-geni-se.c | 1016 +++++++++++++++++++++++++++++++++++++++
+>  include/linux/qcom-geni-se.h    |  807 +++++++++++++++++++++++++++++++
+>  4 files changed, 1832 insertions(+)
+>  create mode 100644 drivers/soc/qcom/qcom-geni-se.c
+>  create mode 100644 include/linux/qcom-geni-se.h
 
-One normal FPGA use case is where the bootloader programs the FPGA
-with a static image.  Chained FDT blobs could simplify things for the
-bootloader in that case.  The bootloader could attempt to program the
-FPGA and if it succeeds, concatenate a FDT blob to the end of the
-original FDT to add the devices that were programmed into the FPGA.
-That's nice since the bootloader would just need the FPGA image and an
-accompanying blob without having to parse or know anything about
-either.  That's assuming the use case where the bootloader does not
-have to do any bringup of the hardware in the FPGA, just program it
-and leave it for the OS to use as normal (non-FPGA) hardware.
+I'm a newbie here, just starting to get up to speed. Please forgive
+any indiscretions. But I am interested in this driver, so I'm throwing
+in my minor comments.
 
-Alan
+
+> +/**
+> + * geni_se_setup_m_cmd() - Setup the primary sequencer
+> + * @base:      Base address of the serial engine's register block.
+> + * @cmd:       Command/Operation to setup in the primary sequencer.
+> + * @params:    Parameter for the sequencer command.
+> + *
+> + * This function is used to configure the primary sequencer with the
+> + * command and its assoicated parameters.
+> + */
+> +void geni_se_setup_m_cmd(void __iomem *base, u32 cmd, u32 params);
+> +
+> +/**
+> + * geni_se_setup_s_cmd() - Setup the secondary sequencer
+> + * @base:      Base address of the serial engine's register block.
+> + * @cmd:       Command/Operation to setup in the secondary sequencer.
+> + * @params:    Parameter for the sequencer command.
+> + *
+> + * This function is used to configure the secondary sequencer with the
+> + * command and its assoicated parameters.
+> + */
+> +void geni_se_setup_s_cmd(void __iomem *base, u32 cmd, u32 params);
+> +
+
+s/assoicated/associated/ (twice)
+
+
+> +/**
+> + * geni_se_tx_dma_prep() - Prepare the Serial Engine for TX DMA transfer
+> + * @wrapper_dev:       QUP Wrapper Device to which the TX buffer is mapped.
+> + * @base:              Base address of the SE register block.
+> + * @tx_buf:            Pointer to the TX buffer.
+> + * @tx_len:            Length of the TX buffer.
+> + * @tx_dma:            Pointer to store the mapped DMA address.
+> + *
+> + * This function is used to prepare the buffers for DMA TX.
+> + *
+> + * Return:     0 on success, standard Linux error codes on error/failure.
+> + */
+> +int geni_se_tx_dma_prep(struct device *wrapper_dev, void __iomem *base,
+> +                       void *tx_buf, int tx_len, dma_addr_t *tx_dma)
+> +{
+> +       int ret;
+> +
+> +       if (unlikely(!wrapper_dev || !base || !tx_buf || !tx_len || !tx_dma))
+> +               return -EINVAL;
+> +
+> +       ret = geni_se_map_buf(wrapper_dev, tx_dma, tx_buf, tx_len,
+> +                                   DMA_TO_DEVICE);
+> +       if (ret)
+> +               return ret;
+> +
+> +       geni_write_reg(7, base, SE_DMA_TX_IRQ_EN_SET);
+> +       geni_write_reg((u32)(*tx_dma), base, SE_DMA_TX_PTR_L);
+> +       geni_write_reg((u32)((*tx_dma) >> 32), base, SE_DMA_TX_PTR_H);
+> +       geni_write_reg(1, base, SE_DMA_TX_ATTR);
+
+Bjorn touched on this, but as someone trying to understand what's
+going on it would be great to see #defines for the magic values in
+here (7 and 1)
+
+> +void geni_se_get_packing_config(int bpw, int pack_words, bool msb_to_lsb,
+> +                               unsigned long *cfg0, unsigned long *cfg1)
+> +{
+> +       u32 cfg[4] = {0};
+> +       int len;
+> +       int temp_bpw = bpw;
+> +       int idx_start = (msb_to_lsb ? (bpw - 1) : 0);
+> +       int idx = idx_start;
+> +       int idx_delta = (msb_to_lsb ? -BITS_PER_BYTE : BITS_PER_BYTE);
+> +       int ceil_bpw = ((bpw & (BITS_PER_BYTE - 1)) ?
+> +                       ((bpw & ~(BITS_PER_BYTE - 1)) + BITS_PER_BYTE) : bpw);
+> +       int iter = (ceil_bpw * pack_words) >> 3;
+
+Is the shift by 3 here really meant to divide by BITS_PER_BYTE? It
+might be clearer to divide by BITS_PER_BYTE and let the compiler
+convert that into a shift.
+
+> +       int i;
+> +
+> +       if (unlikely(iter <= 0 || iter > 4)) {
+> +               *cfg0 = 0;
+> +               *cfg1 = 0;
+> +               return;
+> +       }
+> +
+> +       for (i = 0; i < iter; i++) {
+> +               len = (temp_bpw < BITS_PER_BYTE) ?
+> +                               (temp_bpw - 1) : BITS_PER_BYTE - 1;
+> +               cfg[i] = ((idx << 5) | (msb_to_lsb << 4) | (len << 1));
+
+...more magic numbers here. These are register bitfields? It would be
+great to get the field shifts defined.
+
+> +               idx = ((temp_bpw - BITS_PER_BYTE) <= 0) ?
+> +                               ((i + 1) * BITS_PER_BYTE) + idx_start :
+> +                               idx + idx_delta;
+> +               temp_bpw = ((temp_bpw - BITS_PER_BYTE) <= 0) ?
+> +                               bpw : (temp_bpw - BITS_PER_BYTE);
+> +       }
+> +       cfg[iter - 1] |= 1;
+> +       *cfg0 = cfg[0] | (cfg[1] << 10);
+> +       *cfg1 = cfg[2] | (cfg[3] << 10);
+> +}
+
+...more magic shifts here.
+
+> +void geni_se_config_packing(void __iomem *base, int bpw,
+> +                           int pack_words, bool msb_to_lsb)
+> +{
+> +       unsigned long cfg0, cfg1;
+> +
+> +       geni_se_get_packing_config(bpw, pack_words, msb_to_lsb, &cfg0, &cfg1);
+> +       geni_write_reg(cfg0, base, SE_GENI_TX_PACKING_CFG0);
+> +       geni_write_reg(cfg1, base, SE_GENI_TX_PACKING_CFG1);
+> +       geni_write_reg(cfg0, base, SE_GENI_RX_PACKING_CFG0);
+> +       geni_write_reg(cfg1, base, SE_GENI_RX_PACKING_CFG1);
+> +       if (pack_words || bpw == 32)
+> +               geni_write_reg((bpw >> 4), base, SE_GENI_BYTE_GRAN);
+> +}
+
+...Same here for the bpw >> 4.
+
+Thanks,
+Evan
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
