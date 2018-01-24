@@ -1,59 +1,64 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [v2,1/5] dt-bindings: i2c: update documentation for the Meson-AXG
-Date: Wed, 24 Jan 2018 07:26:53 +0100
-Message-ID: <20180124062653.dietsdhvproltho6@ninjato>
-References: <20171120145415.6581-2-yixun.lan@amlogic.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [v2,2/5] i2c: meson: add configurable divider factors
+Date: Wed, 24 Jan 2018 07:28:30 +0100
+Message-ID: <20180124062830.vi52rtlgglryq3xz@ninjato>
+References: <20171120145415.6581-3-yixun.lan@amlogic.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="uuhfazoat7oghdhc"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+        protocol="application/pgp-signature"; boundary="7wcuf7vtxhqk5s57"
+Return-path: <linux-i2c-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20171120145415.6581-2-yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Jian Hu <jian.hu-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20171120145415.6581-3-yixun.lan@amlogic.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Yixun Lan <yixun.lan@amlogic.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Carlo Caione <carlo@caione.org>, Jian Hu <jian.hu@amlogic.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---uuhfazoat7oghdhc
+--7wcuf7vtxhqk5s57
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Nov 20, 2017 at 10:54:11PM +0800, Yixun Lan wrote:
-> From: Jian Hu <jian.hu-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
+On Mon, Nov 20, 2017 at 10:54:12PM +0800, Yixun Lan wrote:
+> From: Jian Hu <jian.hu@amlogic.com>
 >=20
-> Update the doc to explicitly add Meson-AXG to support list
+> This patch try to add support for I2C controller in Meson-AXG SoC,
+> Due to the IP changes between I2C controller, we need to introduce
+> a compatible data to make the divider factor configurable.
 >=20
-> Signed-off-by: Jian Hu <jian.hu-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
+> Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
 
 Applied to for-next, thanks!
 
+But I got two build warnings, please fix them with an incremental patch:
 
---uuhfazoat7oghdhc
+drivers/i2c/busses/i2c-meson.c:103: warning: No description found for param=
+eter 'data'
+drivers/i2c/busses/i2c-meson.c:103: warning: Excess struct member 'irq' des=
+cription in 'meson_i2c'
+
+
+--7wcuf7vtxhqk5s57
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlpoJygACgkQFA3kzBSg
-Kbaq0hAAhXTbjGN+hyZN7rRTJOH9SnTiZ6knRiOUmZB00qL4+BwiCjU98l0BKGBJ
-ZVHGcaKMjIp0Cj3o7K+Co5HGYc+FwyaMTZFD67RIS7rln9pprah0mJIOi7PKi/O1
-pUc91k8CXPs/+dytkUDgVI6WgjvfAYxcL+lNN6CH622bcPEAgkps2eH8UoxXviz9
-ILMJtGKBvYaPVv7Cco2+n+w3DoEQ+fcbHz5CIswEkC9TC3weeSrM+BHoSR9YxJmQ
-6WbkLBsNpkfWlCadEZJc+bHO95MwAbsS3qIC/ZsOjiDwXZj1rs/aqP6B4cggEesj
-adcr/C5C7YsMJtwrmyc9r4h2AAjTH0/a60gIYKlrnjt8UlvFxqyPmO6sKojCxlK+
-7K9TDhcne9WnONI7BIznk0uDSQ32SUsEEFGTZPwbXgW7asXIvIVhczrzXy5TgHMQ
-ZlxGmosDoCaJ+w1m2DmMzlenB3VBcoSRDk2F/hFoEA2NvmbrCOTVFxKQC2hs6O6/
-zD4ZQKZNMlVmnjnJEPAc61nUHZVpBVNWjZSr3tRPPGEGYkHwJkKqxUlWFnONl1KC
-jrvDOfe1puTQDcXhXD1AQWU2INe/BBDxhgs294lTFP/s1nc2fAw16DwaGOmT19fe
-oGOg/0Y6S1r6H6h1dhd45u8BYnBnTGP6THpmzE/ZW3iATVJvqZ4=
-=gy1U
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlpoJ44ACgkQFA3kzBSg
+KbYFyg//Z3MrMGgZzDZ5BFvOUFiMXZAfrZQTM4+hJlECvMtChjJ1lS+/z52YG9Xr
+6LoER7/1zNNDfnsrEe3T3HQrIBvrkXcHlwJ68xG8pX/YwwomLdgXFwSmZ12tChso
+pXuYKg3WKlyWoxQx6cYHhyP4M9RfNAqUDQIG8qn0Qhov4M2tU/ESD/oBR8bAZ7N7
+qHyC4mKqUX7SKrZ1vlbSV9TWIcmXAA0YFaunMoWFGa52AVnzD2msGebXLqsQ/soM
+Nq6Q9XAjrDsHJDJA+2vXibWjUdrzX700kz1wtzEtq9I/NqQTb+o8q758sq2HHCmp
+mXOUolEelLSYSEedJ7NOyB9k93GkvR/dIjeH1T0aoTG4jhT1XSWwIIWE/1UvYfAj
+C09VwfD1k+obEsqbnMdDt4zWJ3oFViDRbF6GqaohqcbJLcMCEYybb7cYe5/o7shZ
+iBqVR9ZhVclYVrlmdYA2HgLq0F6hcCT46E542JsvyUONB09Qwf5ay55rq9xQiu2M
+kT2wiPNx3RQIqzWHyGx8PryEvW73lwvhlGJDGEQMTKbcw7Xu7AhcytiXNaSE71B/
+DVzCy96OmpCxoex8Oj63TYwB7fWI/fKOxiOUlDkTsu+v6J/Y+r7iZ64f0RgO/ufg
+98MrqdhbxDccgHB54Cv8Rtuemmtd0LL4j/hyvC5OdM1f4qcLODI=
+=PLdw
 -----END PGP SIGNATURE-----
 
---uuhfazoat7oghdhc--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--7wcuf7vtxhqk5s57--
