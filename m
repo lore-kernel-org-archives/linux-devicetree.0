@@ -1,69 +1,73 @@
 From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: RE: [PATCH v3 4/5] dt-bindings: pwm: renesas-tpu: Document r8a774[35]
+Subject: RE: [PATCH 1/8] dt-bindings: can: rcar_can: document r8a774[35] can
  support
-Date: Wed, 24 Jan 2018 17:16:41 +0000
-Message-ID: <SG2PR06MB088652C92964C6FE6959EF1FC0E20@SG2PR06MB0886.apcprd06.prod.outlook.com>
-References: <1513690500-12165-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1513690500-12165-5-git-send-email-fabrizio.castro@bp.renesas.com>
+Date: Wed, 24 Jan 2018 17:22:41 +0000
+Message-ID: <SG2PR06MB0886FFF48DD9DBE7693EEDBDC0E20@SG2PR06MB0886.apcprd06.prod.outlook.com>
+References: <1510067449-17017-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1510067449-17017-2-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1513690500-12165-5-git-send-email-fabrizio.castro@bp.renesas.com>
+Return-path: <linux-can-owner@vger.kernel.org>
+In-Reply-To: <1510067449-17017-2-git-send-email-fabrizio.castro@bp.renesas.com>
 Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
+Sender: linux-can-owner@vger.kernel.org
+To: Marc Kleine-Budde <mkl@pengutronix.de>
+Cc: Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Wolfgang Grandegger <wg@grandegger.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello Thierry,
+Hello Marc,
 
-I am sorry to bother you,  just wondering if this patch has any chance to e=
-nd up in v4.16?
+thank you for Acking the patch, just wondering if this patch has any chance=
+ to end up in v4.16?
 
 Thanks,
-Fabrizio
+Fab
 
-> Subject: [PATCH v3 4/5] dt-bindings: pwm: renesas-tpu: Document r8a774[35=
-] support
+> Subject: [PATCH 1/8] dt-bindings: can: rcar_can: document r8a774[35] can =
+support
 >
-> Document r8a774[35] specific compatible strings. No driver change is
-> needed as the fallback compatible string "renesas,tpu" activates the
-> right code in the driver.
+> Document "renesas,can-r8a7743" and "renesas,can-r8a7745" compatible
+> strings. Since the fallback compatible string ("renesas,rcar-gen2-can")
+> activates the right code in the driver, no driver change is needed.
 >
 > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 > Reviewed-by: Biju Das <biju.das@bp.renesas.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 > ---
-> v2->v3:
-> * No change
+>  Documentation/devicetree/bindings/net/can/rcar_can.txt | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
 >
->  Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.txt | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+> diff --git a/Documentation/devicetree/bindings/net/can/rcar_can.txt b/Doc=
+umentation/devicetree/bindings/net/can/rcar_can.txt
+> index 06bb7cc..94a7f33 100644
+> --- a/Documentation/devicetree/bindings/net/can/rcar_can.txt
+> +++ b/Documentation/devicetree/bindings/net/can/rcar_can.txt
+> @@ -2,7 +2,9 @@ Renesas R-Car CAN controller Device Tree Bindings
+>  -------------------------------------------------
 >
-> diff --git a/Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.txt
-> b/Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.txt
-> index 1aadc80..16e5748 100644
-> --- a/Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.txt
-> +++ b/Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.txt
-> @@ -5,8 +5,10 @@ Required Properties:
->    - compatible: should be one of the following.
->      - "renesas,tpu-r8a73a4": for R8A77A4 (R-Mobile APE6) compatible PWM =
-controller.
->      - "renesas,tpu-r8a7740": for R8A7740 (R-Mobile A1) compatible PWM co=
-ntroller.
-> +    - "renesas,tpu-r8a7743": for R8A7743 (RZ/G1M) compatible PWM control=
-ler.
-> +    - "renesas,tpu-r8a7745": for R8A7745 (RZ/G1E) compatible PWM control=
-ler.
->      - "renesas,tpu-r8a7790": for R8A7790 (R-Car H2) compatible PWM contr=
-oller.
-> -    - "renesas,tpu": for generic R-Car TPU PWM controller.
-> +    - "renesas,tpu": for generic R-Car and RZ/G1 TPU PWM controller.
->
->    - reg: Base address and length of each memory resource used by the PWM
->      controller hardware module.
+>  Required properties:
+> -- compatible: "renesas,can-r8a7778" if CAN controller is a part of R8A77=
+78 SoC.
+> +- compatible: "renesas,can-r8a7743" if CAN controller is a part of R8A77=
+43 SoC.
+> +      "renesas,can-r8a7745" if CAN controller is a part of R8A7745 SoC.
+> +      "renesas,can-r8a7778" if CAN controller is a part of R8A7778 SoC.
+>        "renesas,can-r8a7779" if CAN controller is a part of R8A7779 SoC.
+>        "renesas,can-r8a7790" if CAN controller is a part of R8A7790 SoC.
+>        "renesas,can-r8a7791" if CAN controller is a part of R8A7791 SoC.
+> @@ -12,7 +14,8 @@ Required properties:
+>        "renesas,can-r8a7795" if CAN controller is a part of R8A7795 SoC.
+>        "renesas,can-r8a7796" if CAN controller is a part of R8A7796 SoC.
+>        "renesas,rcar-gen1-can" for a generic R-Car Gen1 compatible device=
+.
+> -      "renesas,rcar-gen2-can" for a generic R-Car Gen2 compatible device=
+.
+> +      "renesas,rcar-gen2-can" for a generic R-Car Gen2 or RZ/G1
+> +      compatible device.
+>        "renesas,rcar-gen3-can" for a generic R-Car Gen3 compatible device=
+.
+>        When compatible with the generic version, nodes must list the
+>        SoC-specific version corresponding to the platform first
 > --
 > 2.7.4
 
