@@ -1,80 +1,63 @@
-From: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
-Subject: Re: [PATCH v2 1/6] resource: Extend the PPC32 reserved memory hack
-Date: Wed, 24 Jan 2018 12:23:05 +1100
-Message-ID: <87po60uk1y.fsf@concordia.ellerman.id.au>
-References: <20180122050411.32460-1-j.neuschaefer@gmx.net> <20180122050411.32460-2-j.neuschaefer@gmx.net> <871sigwx41.fsf@concordia.ellerman.id.au> <20180123163739.2sxhzavghzgbjw4c@latitude>
+From: David Lechner <david@lechnology.com>
+Subject: Re: [PATCH v6 40/41] ARM: da8xx-dt: switch to device tree clocks
+Date: Tue, 23 Jan 2018 21:26:40 -0600
+Message-ID: <335d92c8-1af2-da64-e366-95d7513ad69d@lechnology.com>
+References: <1516468460-4908-1-git-send-email-david@lechnology.com>
+ <1516468460-4908-41-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180123163739.2sxhzavghzgbjw4c@latitude>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tom Lendacky <thomas.lendacky-5C7GfCeVMHo@public.gmane.org>, Brijesh Singh <brijesh.singh-5C7GfCeVMHo@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Albert Herranz <albert_herranz-mRCrAkd8dF0@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Borislav Petkov <bp-l3A5Bk7waGM@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1516468460-4908-41-git-send-email-david@lechnology.com>
+Content-Language: en-US
+Sender: linux-clk-owner@vger.kernel.org
+To: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Jonathan Neuschäfer <j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org> writes:
+On 01/20/2018 11:14 AM, David Lechner wrote:
+> This removes all of the clock init code from da8xx-dt.c. This includes
+> all of the OF_DEV_AUXDATA that was just used for looking up clocks.
+> 
+> Signed-off-by: David Lechner <david@lechnology.com>
+> ---
+> 
+> v6 changes:
+> - removed misleading statement from commit message
+> 
+>   arch/arm/mach-davinci/da8xx-dt.c | 61 +---------------------------------------
+>   1 file changed, 1 insertion(+), 60 deletions(-)
+> 
+> diff --git a/arch/arm/mach-davinci/da8xx-dt.c b/arch/arm/mach-davinci/da8xx-dt.c
 
-> On Tue, Jan 23, 2018 at 11:58:06PM +1100, Michael Ellerman wrote:
->> Jonathan Neuschäfer <j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org> writes:
->> 
->> > On the Nintendo Wii, there are two ranges of physical memory, and MMIO
->> > in between, but Linux on ppc32 doesn't support discontiguous memory.
->> > Therefore a hack was introduced in commit c5df7f775148 ("powerpc: allow
->> > ioremap within reserved memory regions") and commit de32400dd26e ("wii:
->> > use both mem1 and mem2 as ram"):
->> >
->> >  - Treat the area from the start of the first memory area (MEM1) to the
->> >    end of the second (MEM2) as one big memory area, but mark the part
->> >    that doesn't belong to MEM1 or MEM2 as reserved.
->> >  - Only on the Wii, allow ioremap to be used on reserved memory.
->> >
->> > This hack, however, doesn't account for the "resource"-based API in
->> > kernel/resource.c, because __request_region performs its own checks.
->> >
->> > Extend the hack to kernel/resource.c, to allow more drivers to allocate
->> > their MMIO regions on the Wii.
->> 
->> Hi Jonathan,
->> 
->> Sorry but I can't merge a hack like this in generic code.
->
-> Makes sense.
->
->> Has anyone looked at adding proper discontig mem support to PPC32?
->
-> I'm not aware of any such effort.
->
-> Do you have any pointer on how to implement discontiguous memory
-> support? CONFIG_ARCH_SPARSEMEM_ENABLE seems relevant.
+>   static void __init da850_init_machine(void)
+>   {
+> -	/* All existing boards use 100MHz SATA refclkpn */
+> -	static const unsigned long sata_refclkpn = 100 * 1000 * 1000;
+> -
+> -	int ret;
+> -
+> -	ret = da8xx_register_usb20_phy_clk(false);
+> -	if (ret)
+> -		pr_warn("%s: registering USB 2.0 PHY clock failed: %d",
+> -			__func__, ret);
+> -	ret = da8xx_register_usb11_phy_clk(false);
+> -	if (ret)
+> -		pr_warn("%s: registering USB 1.1 PHY clock failed: %d",
+> -			__func__, ret);
+> -
+> -	ret = da850_register_sata_refclk(sata_refclkpn);
+> -	if (ret)
+> -		pr_warn("%s: registering SATA REFCLK failed: %d",
+> -			__func__, ret);
+> -
+> -	of_platform_default_populate(NULL, da850_auxdata_lookup, NULL);
+> +	of_platform_default_populate(NULL, NULL, NULL);
 
-I'm not really sure what the key impediment to it working is.
+of_platform_default_populate() can actually be removed completely.
+of_platform_default_populate_init() is called implicitly during
+arch_initcall_sync
 
-You don't need to go all the way to SPARSEMEM, there is DISCONTIGMEM
-which IIUI is quite a bit simpler.
-
-I'd actually be interested to know what happens (ie. breaks) if you just
-add the two memblocks and leave the hole in between. Is it the generic
-code that breaks or is it something in the powerpc code? If it's the
-later maybe we can do a small fix/hack to work around that.
-
->> Or can we punch a hole in the resource in the right place? Maybe from
->> add_system_ram_resources() ?
->
-> Not sure. add_system_ram_resources would need the original memblock
-> table, which is overwritten in wii_memory_fixups, if I read the code
-> correctly.
-
-Or it just needs to know where the "wii hole" is, and it can skip that
-region, that should be doable, but whether it actually works I'm not
-100% sure.
-
-> If a proper solution doesn't take an overwhelming amount of work, I'd
-> prefer a proper solution.
-
-Thanks.
-
-cheers
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>   	davinci_pm_init();
+>   	pdata_quirks_init();
+>   }
