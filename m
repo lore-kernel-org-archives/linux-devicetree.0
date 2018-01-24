@@ -1,91 +1,349 @@
-From: Hyun Kwon <hyunk-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCH 2/2] dma: xilinx: dpdma: Add the Xilinx DisplayPort DMA
- engine driver
-Date: Wed, 24 Jan 2018 17:45:00 +0000
-Message-ID: <CY4PR02MB248850638A4D19CE51F1E224D6E20@CY4PR02MB2488.namprd02.prod.outlook.com>
-References: <1515204848-3493-1-git-send-email-hyun.kwon@xilinx.com>
- <1515204848-3493-2-git-send-email-hyun.kwon@xilinx.com>
- <20180112141355.GO18649@localhost>
- <MWHPR02MB249345183B6CCD86A56A4E1ED6E30@MWHPR02MB2493.namprd02.prod.outlook.com>
- <20180124144059.GI18649@localhost>
+From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2] Input: mms114 - drop platform data and use generic
+ APIs
+Date: Wed, 24 Jan 2018 11:37:50 -0800
+Message-ID: <20180124193750.sc5jgxnfkzomxd7p@dtor-ws>
+References: <20180113020456.12391-1-simon@lineageos.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180124144059.GI18649@localhost>
-Content-Language: en-US
-Content-ID: <CCB446989EC0614E85FCEB7F5768325A-0IwlUtR6nOJTpBK7XY6O9JZ3qXmFLfmx@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20180113020456.12391-1-simon-WP75azK+jQYgsBAKwltoeQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Tejas Upadhyay <TEJASU-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+To: Simon Shields <simon-WP75azK+jQYgsBAKwltoeQ@public.gmane.org>
+Cc: Andi Shyti <andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBWaW5vZCBLb3VsIFtt
-YWlsdG86dmlub2Qua291bEBpbnRlbC5jb21dDQo+IFNlbnQ6IFdlZG5lc2RheSwgSmFudWFyeSAy
-NCwgMjAxOCA2OjQxIEFNDQo+IFRvOiBIeXVuIEt3b24gPGh5dW5rQHhpbGlueC5jb20+DQo+IENj
-OiBkbWFlbmdpbmVAdmdlci5rZXJuZWwub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsg
-TWljaGFsIFNpbWVrDQo+IDxtaWNoYWwuc2ltZWtAeGlsaW54LmNvbT47IFRlamFzIFVwYWRoeWF5
-IDxURUpBU1VAeGlsaW54LmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCAyLzJdIGRtYTogeGls
-aW54OiBkcGRtYTogQWRkIHRoZSBYaWxpbnggRGlzcGxheVBvcnQNCj4gRE1BIGVuZ2luZSBkcml2
-ZXINCj4gDQo+IE9uIFR1ZSwgSmFuIDIzLCAyMDE4IGF0IDA1OjAzOjE5UE0gKzAwMDAsIEh5dW4g
-S3dvbiB3cm90ZToNCj4gDQo+ID4gPiB3aHkgc2hvdWxkIHRoaXMgYmUgYSBjb21waWxlIG9wdGlv
-bg0KPiA+ID4NCj4gPg0KPiA+IFRoaXMgZGVidWdmcyBjb2RlIGlzIGZvciB0ZXN0aW5nIC8gcmVn
-cmVzc2lvbiwgYW5kIHdlIGRvbid0IHdhbnQgdG8gZW5hYmxlDQo+IGl0DQo+ID4gZm9yIHJlZ3Vs
-YXIgdXNlcnMuDQo+IA0KPiBSaWdodCBhbmQgdGhhdCBpcyB3aHkgeW91IGhhdmUgQ09ORklHX0RF
-QlVHRlMsIHdoeSBub3QgdXNlIHRoYXQ/DQo+IA0KPiA+ID4gZG8geW91IG5lZWQgYWxsIHRoZXNl
-IGhlYWRlcnM/DQo+ID4gPg0KPiA+DQo+ID4gSSBkaXJlY3RseSBpbmNsdWRlZCBhbGwgaGVhZGVy
-cyB0aGF0IGFyZSB1c2VkIGluIHRoaXMgZHJpdmVyLiBTb21lIG9mIHRoZW0NCj4gY2FuDQo+ID4g
-YmUgcmVtb3ZlZCBmcm9tIGluZGlyZWN0IGluY2x1c2lvbnMsIGFuZCBJJ20gZmluZSB3aXRoIHRo
-YXQuIFBsZWFzZSBsZXQgbWUNCj4ga25vdw0KPiA+IGlmIHRoYXQncyB5b3VyIHByZWZlcmVuY2Uu
-DQo+IA0KPiBZZXMgcGxzIHJlbW92ZSB0aGUgb25lcyB0aGF0IGFyZSBuZWVkZWQNCj4gDQo+ID4g
-PiA+ICsjZGVmaW5lIFhJTElOWF9EUERNQV9JTlRSX0RFU0NfRE9ORV9TSElGVAkJMA0KPiA+ID4N
-Cj4gPiA+IHlvdSBjYW4gZGVmaW5lIGEgY29tbW9uIHNoaWZ0IHVzaW5nIGZmcw0KPiA+ID4NCj4g
-Pg0KPiA+IEkgZ3Vlc3MgeW91IG1lYW4gdG8gcmVwbGFjZSwgKHZhbHVlICYgTUFTSykgPDwgU0hJ
-RlQsIHdpdGgNCj4gPiAodmFsdWUgJiBNQVNLKSA8PCBmZnMoTUFTSykuIEknbGwgY2hhbmdlIHRv
-IHRoYXQgd2F5LiBMZXQgbWUga25vdw0KPiBvdGhlcndpc2UuDQo+IA0KPiB5ZXMgYW5kIHlvdSBt
-YXkgdXNlIHRoZSBvbmVzIGluIGJpdGZpZWxkLmgNCj4gDQo+ID4gPiB3aGF0IGRvZXMgaXQgbWVh
-biAobG93ZXIgMzIgYml0IG9mIE50aCA0S0IgcGFnZSkNCj4gPiA+DQo+ID4NCj4gPiBFYWNoIGRl
-c2NyaXB0b3IgY2FuIHBvaW50IHVwIHRvIDUgLSA0OGJpdCBhZGRyZXNzIHBheWxvYWRzLiBzcmNf
-YWRkcioNCj4gZmllbGRzDQo+ID4gY29udGFpbiBsb3dlciAzMmJpdCBvZiA0OGJpdCBhZGRyZXNz
-LiBSZW1haW5pbmcgdXBwZXIgMTZiaXQgaXMNCj4gcHJvZ3JhbW1lZCBpbg0KPiA+IGFkZHJfZXh0
-KiBmaWVsZHMuDQo+IA0KPiBwbHMgZG9jdW1lbnQgdGhpcw0KPiANCj4gPiA+ID4gK3N0YXRpYyBp
-bnQgeGlsaW54X2RwZG1hX2NvbmZpZyhzdHJ1Y3QgZG1hX2NoYW4gKmRjaGFuLA0KPiA+ID4gPiAr
-CQkJICAgICAgIHN0cnVjdCBkbWFfc2xhdmVfY29uZmlnICpjb25maWcpDQo+ID4gPiA+ICt7DQo+
-ID4gPiA+ICsJaWYgKGNvbmZpZy0+ZGlyZWN0aW9uICE9IERNQV9NRU1fVE9fREVWKQ0KPiA+ID4g
-PiArCQlyZXR1cm4gLUVJTlZBTDsNCj4gPiA+DQo+ID4gPiA/PyBXaHkgYXJlIHRoZSBjb25maWcg
-dmFsdWVzIG5vdCB1c2VkLCBob3cgZWxzZSBkbyB5b3UgY29uZmlndXJlIHRoZQ0KPiA+ID4gY2hh
-bm5lbD8NCj4gPiA+DQo+ID4NCj4gPiBUaGVyZSdzIG5vdCBtdWNoIGNvbmZpZ3VyYXRpb24gdG8g
-YmUgZG9uZS4gQ2hhbm5lbHMgYXJlIHByZXR0eSBtdWNoDQo+IGlkZW50aWNhbA0KPiA+IHdpdGgg
-Zml4ZWQgY29uZmlndXJhdGlvbnMuDQo+IA0KPiBobW1tLCB5b3UgZG8gc3VwcG9ydCBETUFfU0xB
-VkUgcmlnaHQ/DQo+IA0KDQpZZXMsIGFuZCBpdCdzIHNpbmdsZSBkaXJlY3Rpb24sIERNQV9NRU1f
-VE9fREVWLg0KDQo+ID4gPiB3aHkgaGF2ZSB0aGVzZSB3cmFwcGVycyB3aGljaCBkbyBub3QgZG8g
-YW55dGhpbmc/DQo+ID4gPg0KPiA+DQo+ID4gSXQncyBqdXN0IG15IHBlcnNvbmFsIHByZWZlcmVu
-Y2UgdG8gc3BsaXQgaW50byBkaWZmZXJlbnQgY29kZSBwYXJ0aXRpb25zLCBhbmQNCj4gPiBlYWNo
-IHNlY3Rpb24gaXMgcGFydGl0aW9uZWQgLyBncm91cGVkIHdpdGggc29tZSBjb21tZW50IGxpbmUu
-IDotKQ0KPiA+IEV4LCBhIHBhcnRpdGlvbiBmb3Igc3RydWN0IGRtYV9jaGFuLCBhbmQgYW5vdGhl
-ciBvbmUgZm9yDQo+ID4gc3RydWN0IHhpbGlueF9kcGRtYV9jaGFuLiBJdCBnaXZlcyBtZSBzb3J0
-IG9mIGFic3RyYWN0ZWQgdmlldy4gQnV0IGl0IG1heQ0KPiBiZQ0KPiA+IGp1c3QgbWUsIGFuZCBp
-dCBjb21lcyB3aXRoIGV4dHJhIGluZGlyZWN0aW9ucy4gSSdsbCByZW1vdmUgdW5uZWNlc3NhcnkN
-Cj4gd3JhcHBlcnMuDQo+IA0KPiB3cmFwcGVyIHdpdGhvdXQgYW55IGxvZ2ljIGRvbnQgaGVscA0K
-PiANCj4gPiA+ID4gKwlmb3IgKGkgPSAwOyBpIDwgWElMSU5YX0RQRE1BX05VTV9DSEFOOyBpKysp
-DQo+ID4gPiA+ICsJCWlmICh4ZGV2LT5jaGFuW2ldKQ0KPiA+ID4gPiArCQkJeGlsaW54X2RwZG1h
-X2NoYW5fcmVtb3ZlKHhkZXYtPmNoYW5baV0pOw0KPiA+ID4NCj4gPiA+IEF0IHRoaXMgcG9pbnQg
-eW91ciBpcnEgaXMgc3RpbGwgZW5hYmxlZCBhbmQgY2FuIGZpcmUsIGFuZCBjYW4gc2NoZWR1bGUN
-Cj4gPiA+IHRhc2tsZXQuLiBBcmUgeW91IHN1cmUgeW91IGFyZSBva2F5IHdpdGggdGhhdD8NCj4g
-PiA+DQo+ID4NCj4gPiBPay4gWW91IG1lYW4gdGhhdCBhbiBpbnRlcnJ1cHQgY2FuIG9jY3VyIHJp
-Z2h0IGJlZm9yZQ0KPiA+IHhpbGlueF9kcGRtYV9kaXNhYmxlX2ludHIoKSwgYW5kIHRoZSBpbnRl
-cnJ1cHQgbWF5IGJlIGhhbmRsZWQgIGluIHRoZQ0KPiBtaWRkbGUgb3INCj4gPiBhZnRlciByZW1v
-dmluZyB0aGlzIGRyaXZlci4gSSdsbCBzd2l0Y2ggdG8gcmVxdWVzdF9pcnEoKSBmcm9tDQo+ID4g
-ZGV2bV9yZXF1ZXN0X2lycSgpLCBhbmQgcmVtb3ZlIHRoZSBpcnEgd2hlbiByZW1vdmluZyB0aGUg
-ZHJpdmVyLg0KPiANCj4geWVzIGFuZCBlbnN1cmUgdGFza2xldHMgYXJlIHF1aWVzY2VkDQo+IA0K
-PiA+ID4gPiArTU9EVUxFX0FVVEhPUigiWGlsaW54LCBJbmMuIik7DQo+ID4gPiA+ICtNT0RVTEVf
-REVTQ1JJUFRJT04oIlhpbGlueCBEUERNQSBkcml2ZXIiKTsNCj4gPiA+ID4gK01PRFVMRV9MSUNF
-TlNFKCJHUEwgdjIiKTsNCj4gPiA+DQo+ID4gPiBObyBNT0RVTEVfQUxJQVMoKT8NCj4gPg0KPiA+
-IElzIGl0IHJlcXVpcmVkPyBDb3VsZCB5b3UgcGxlYXNlIGVsYWJvcmF0ZSwgdG8gaGVscCBteSB1
-bmRlcnN0YW5kaW5nPw0KPiANCj4gZGlkIHlvdSB0cnkgYnVpbGluZyBhcyBtb2R1bGVzIGFuZCB0
-ZXN0aW5nIHRoaXM/DQoNCkknbSB0ZXN0aW5nIGl0IGFzIGEgbG9hZGFibGUga2VybmVsIG1vZHVs
-ZS4NCg0KSSdsbCBhZGRyZXNzIHJlc3Qgb2YgeW91ciBjb21tZW50cy4NCg0KVGhhbmtzLA0KLWh5
-dW4NCg0KDQo+IA0KPiAtLQ0KPiB+Vmlub2QNCg==
+On Sat, Jan 13, 2018 at 01:04:56PM +1100, Simon Shields wrote:
+> The MMS114 platform data has no in-tree users, so drop it,
+> and make the driver depend on CONFIG_OF.
+> 
+> Switch to using the standard touchscreen properties via
+> touchscreen_parse_properties(), and move the old DT parsing code
+> to use device_property_*() APIs.
+> 
+> Finally, use touchscreen_report_pos to report x/y coordinates
+> and drop the custom x/y inversion code.
+> 
+> Signed-off-by: Simon Shields <simon-WP75azK+jQYgsBAKwltoeQ@public.gmane.org>
+> ---
+>  .../bindings/input/touchscreen/mms114.txt          |  29 ++--
+>  drivers/input/touchscreen/Kconfig                  |   1 +
+>  drivers/input/touchscreen/mms114.c                 | 152 +++++++++------------
+>  include/linux/platform_data/mms114.h               |  24 ----
+>  4 files changed, 83 insertions(+), 123 deletions(-)
+>  delete mode 100644 include/linux/platform_data/mms114.h
+> 
+> diff --git a/Documentation/devicetree/bindings/input/touchscreen/mms114.txt b/Documentation/devicetree/bindings/input/touchscreen/mms114.txt
+> index 89d4c56c5671..8f9f9f38eff4 100644
+> --- a/Documentation/devicetree/bindings/input/touchscreen/mms114.txt
+> +++ b/Documentation/devicetree/bindings/input/touchscreen/mms114.txt
+> @@ -4,14 +4,18 @@ Required properties:
+>  - compatible: must be "melfas,mms114"
+>  - reg: I2C address of the chip
+>  - interrupts: interrupt to which the chip is connected
+> -- x-size: horizontal resolution of touchscreen
+> -- y-size: vertical resolution of touchscreen
+> +- touchscreen-size-x: See [1]
+> +- touchscreen-size-y: See [1]
+>  
+>  Optional properties:
+> -- contact-threshold:
+> -- moving-threshold:
+> -- x-invert: invert X axis
+> -- y-invert: invert Y axis
+> +- touchscreen-fuzz-x: See [1]
+> +- touchscreen-fuzz-y: See [1]
+> +- touchscreen-fuzz-pressure: See [1]
+> +- touchscreen-inverted-x: See [1]
+> +- touchscreen-inverted-y: See [1]
+> +- touchscreen-swapped-x-y: See [1]
+> +
+> +[1]: Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
+>  
+>  Example:
+>  
+> @@ -22,12 +26,13 @@ Example:
+>  			compatible = "melfas,mms114";
+>  			reg = <0x48>;
+>  			interrupts = <39 0>;
+> -			x-size = <720>;
+> -			y-size = <1280>;
+> -			contact-threshold = <10>;
+> -			moving-threshold = <10>;
+> -			x-invert;
+> -			y-invert;
+> +			touchscreen-size-x = <720>;
+> +			touchscreen-size-y = <1280>;
+> +			touchscreen-fuzz-x = <10>;
+> +			touchscreen-fuzz-y = <10>;
+> +			touchscreen-fuzz-pressure = <10>;
+> +			touchscreen-inverted-x;
+> +			touchscreen-inverted-y;
+>  		};
+>  
+>  		/* ... */
+> diff --git a/drivers/input/touchscreen/Kconfig b/drivers/input/touchscreen/Kconfig
+> index 38a226f9fcbd..f7ea5522ef91 100644
+> --- a/drivers/input/touchscreen/Kconfig
+> +++ b/drivers/input/touchscreen/Kconfig
+> @@ -524,6 +524,7 @@ config TOUCHSCREEN_MCS5000
+>  config TOUCHSCREEN_MMS114
+>  	tristate "MELFAS MMS114 touchscreen"
+>  	depends on I2C
+> +	depends on OF
+
+There is no need for that, with generic device properties we can use it
+with ACPI or static board files.
+
+>  	help
+>  	  Say Y here if you have the MELFAS MMS114 touchscreen controller
+>  	  chip in your system.
+> diff --git a/drivers/input/touchscreen/mms114.c b/drivers/input/touchscreen/mms114.c
+> index e5eeb6311f7d..6276a3387cd4 100644
+> --- a/drivers/input/touchscreen/mms114.c
+> +++ b/drivers/input/touchscreen/mms114.c
+> @@ -12,8 +12,8 @@
+>  #include <linux/of.h>
+>  #include <linux/i2c.h>
+>  #include <linux/input/mt.h>
+> +#include <linux/input/touchscreen.h>
+>  #include <linux/interrupt.h>
+> -#include <linux/platform_data/mms114.h>
+>  #include <linux/regulator/consumer.h>
+>  #include <linux/slab.h>
+>  
+> @@ -55,7 +55,9 @@ struct mms114_data {
+>  	struct input_dev	*input_dev;
+>  	struct regulator	*core_reg;
+>  	struct regulator	*io_reg;
+> -	const struct mms114_platform_data	*pdata;
+> +	struct touchscreen_properties props;
+> +	unsigned int contact_threshold;
+> +	unsigned int moving_threshold;
+>  
+>  	/* Use cache data for mode control register(write only) */
+>  	u8			cache_mode_control;
+> @@ -143,7 +145,6 @@ static int mms114_write_reg(struct mms114_data *data, unsigned int reg,
+>  
+>  static void mms114_process_mt(struct mms114_data *data, struct mms114_touch *touch)
+>  {
+> -	const struct mms114_platform_data *pdata = data->pdata;
+>  	struct i2c_client *client = data->client;
+>  	struct input_dev *input_dev = data->input_dev;
+>  	unsigned int id;
+> @@ -163,16 +164,6 @@ static void mms114_process_mt(struct mms114_data *data, struct mms114_touch *tou
+>  	id = touch->id - 1;
+>  	x = touch->x_lo | touch->x_hi << 8;
+>  	y = touch->y_lo | touch->y_hi << 8;
+> -	if (x > pdata->x_size || y > pdata->y_size) {
+> -		dev_dbg(&client->dev,
+> -			"Wrong touch coordinates (%d, %d)\n", x, y);
+> -		return;
+> -	}
+> -
+> -	if (pdata->x_invert)
+> -		x = pdata->x_size - x;
+> -	if (pdata->y_invert)
+> -		y = pdata->y_size - y;
+>  
+>  	dev_dbg(&client->dev,
+>  		"id: %d, type: %d, pressed: %d, x: %d, y: %d, width: %d, strength: %d\n",
+> @@ -183,9 +174,8 @@ static void mms114_process_mt(struct mms114_data *data, struct mms114_touch *tou
+>  	input_mt_report_slot_state(input_dev, MT_TOOL_FINGER, touch->pressed);
+>  
+>  	if (touch->pressed) {
+> +		touchscreen_report_pos(input_dev, &data->props, x, y, true);
+>  		input_report_abs(input_dev, ABS_MT_TOUCH_MAJOR, touch->width);
+> -		input_report_abs(input_dev, ABS_MT_POSITION_X, x);
+> -		input_report_abs(input_dev, ABS_MT_POSITION_Y, y);
+>  		input_report_abs(input_dev, ABS_MT_PRESSURE, touch->strength);
+>  	}
+>  }
+> @@ -263,7 +253,7 @@ static int mms114_get_version(struct mms114_data *data)
+>  
+>  static int mms114_setup_regs(struct mms114_data *data)
+>  {
+> -	const struct mms114_platform_data *pdata = data->pdata;
+> +	const struct touchscreen_properties *props = &data->props;
+>  	int val;
+>  	int error;
+>  
+> @@ -275,32 +265,32 @@ static int mms114_setup_regs(struct mms114_data *data)
+>  	if (error < 0)
+>  		return error;
+>  
+> -	val = (pdata->x_size >> 8) & 0xf;
+> -	val |= ((pdata->y_size >> 8) & 0xf) << 4;
+> +	val = (props->max_x >> 8) & 0xf;
+> +	val |= ((props->max_y >> 8) & 0xf) << 4;
+>  	error = mms114_write_reg(data, MMS114_XY_RESOLUTION_H, val);
+>  	if (error < 0)
+>  		return error;
+>  
+> -	val = pdata->x_size & 0xff;
+> +	val = props->max_x & 0xff;
+>  	error = mms114_write_reg(data, MMS114_X_RESOLUTION, val);
+>  	if (error < 0)
+>  		return error;
+>  
+> -	val = pdata->y_size & 0xff;
+> +	val = props->max_x & 0xff;
+>  	error = mms114_write_reg(data, MMS114_Y_RESOLUTION, val);
+>  	if (error < 0)
+>  		return error;
+>  
+> -	if (pdata->contact_threshold) {
+> +	if (data->contact_threshold) {
+>  		error = mms114_write_reg(data, MMS114_CONTACT_THRESHOLD,
+> -				pdata->contact_threshold);
+> +				data->contact_threshold);
+>  		if (error < 0)
+>  			return error;
+>  	}
+>  
+> -	if (pdata->moving_threshold) {
+> +	if (data->moving_threshold) {
+>  		error = mms114_write_reg(data, MMS114_MOVING_THRESHOLD,
+> -				pdata->moving_threshold);
+> +				data->moving_threshold);
+>  		if (error < 0)
+>  			return error;
+>  	}
+> @@ -335,9 +325,6 @@ static int mms114_start(struct mms114_data *data)
+>  		return error;
+>  	}
+>  
+> -	if (data->pdata->cfg_pin)
+> -		data->pdata->cfg_pin(true);
+> -
+>  	enable_irq(client->irq);
+>  
+>  	return 0;
+> @@ -350,9 +337,6 @@ static void mms114_stop(struct mms114_data *data)
+>  
+>  	disable_irq(client->irq);
+>  
+> -	if (data->pdata->cfg_pin)
+> -		data->pdata->cfg_pin(false);
+> -
+>  	error = regulator_disable(data->io_reg);
+>  	if (error)
+>  		dev_warn(&client->dev, "Failed to disable vdd: %d\n", error);
+> @@ -376,67 +360,43 @@ static void mms114_input_close(struct input_dev *dev)
+>  	mms114_stop(data);
+>  }
+>  
+> -#ifdef CONFIG_OF
+> -static struct mms114_platform_data *mms114_parse_dt(struct device *dev)
+> +static int mms114_parse_dt(struct mms114_data *data)
+>  {
+> -	struct mms114_platform_data *pdata;
+> -	struct device_node *np = dev->of_node;
+> -
+> -	if (!np)
+> -		return NULL;
+> +	struct device *dev = &data->client->dev;
+> +	struct touchscreen_properties *props = &data->props;
+>  
+> -	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
+> -	if (!pdata) {
+> -		dev_err(dev, "failed to allocate platform data\n");
+> -		return NULL;
+> +	if (device_property_read_u32(dev, "x-size", &props->max_x)) {
+> +		dev_dbg(dev, "failed to get legacy x-size property\n");
+> +		return -EINVAL;
+>  	}
+>  
+> -	if (of_property_read_u32(np, "x-size", &pdata->x_size)) {
+> -		dev_err(dev, "failed to get x-size property\n");
+> -		return NULL;
+> +	if (device_property_read_u32(dev, "y-size", &props->max_y)) {
+> +		dev_dbg(dev, "failed to get legacy y-size property\n");
+> +		return -EINVAL;
+>  	}
+>  
+> -	if (of_property_read_u32(np, "y-size", &pdata->y_size)) {
+> -		dev_err(dev, "failed to get y-size property\n");
+> -		return NULL;
+> -	}
+> +	device_property_read_u32(dev, "contact-threshold",
+> +				&data->contact_threshold);
+> +	device_property_read_u32(dev, "moving-threshold",
+> +				&data->moving_threshold);
+>  
+> -	of_property_read_u32(np, "contact-threshold",
+> -				&pdata->contact_threshold);
+> -	of_property_read_u32(np, "moving-threshold",
+> -				&pdata->moving_threshold);
+> +	if (device_property_read_bool(dev, "x-invert"))
+> +		props->invert_x = true;
+> +	if (device_property_read_bool(dev, "y-invert"))
+> +		props->invert_y = true;
+>  
+> -	if (of_find_property(np, "x-invert", NULL))
+> -		pdata->x_invert = true;
+> -	if (of_find_property(np, "y-invert", NULL))
+> -		pdata->y_invert = true;
+> +	props->swap_x_y = false;
+>  
+> -	return pdata;
+> -}
+> -#else
+> -static inline struct mms114_platform_data *mms114_parse_dt(struct device *dev)
+> -{
+> -	return NULL;
+> +	return 0;
+>  }
+> -#endif
+>  
+>  static int mms114_probe(struct i2c_client *client,
+>  				  const struct i2c_device_id *id)
+>  {
+> -	const struct mms114_platform_data *pdata;
+>  	struct mms114_data *data;
+>  	struct input_dev *input_dev;
+>  	int error;
+>  
+> -	pdata = dev_get_platdata(&client->dev);
+> -	if (!pdata)
+> -		pdata = mms114_parse_dt(&client->dev);
+> -
+> -	if (!pdata) {
+> -		dev_err(&client->dev, "Need platform data\n");
+> -		return -EINVAL;
+> -	}
+> -
+>  	if (!i2c_check_functionality(client->adapter,
+>  				I2C_FUNC_PROTOCOL_MANGLING)) {
+>  		dev_err(&client->dev,
+> @@ -453,8 +413,39 @@ static int mms114_probe(struct i2c_client *client,
+>  	}
+>  
+>  	data->client = client;
+> +
+> +	input_set_capability(input_dev, EV_KEY, BTN_TOUCH);
+> +	input_set_capability(input_dev, EV_ABS, ABS_MT_POSITION_X);
+> +	input_set_capability(input_dev, EV_ABS, ABS_MT_POSITION_Y);
+> +	input_set_capability(input_dev, EV_ABS, ABS_MT_PRESSURE);
+> +	input_set_capability(input_dev, EV_ABS, ABS_MT_TOUCH_MAJOR);
+> +
+> +	input_set_abs_params(input_dev, ABS_MT_PRESSURE, 0, 255, 0, 0);
+> +
+> +	if (mms114_parse_dt(data) < 0) {
+> +		/* No valid legacy binding found, try the common one */
+> +		touchscreen_parse_properties(input_dev, true, &data->props);
+
+My preference would be going in the other direction: try the newer
+binding first, fall back to legacy.
+
+I have a couple more changes ot the driver, I'll post them and the
+updated version of your patch as well.
+
+Thanks.
+
+-- 
+Dmitry
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
