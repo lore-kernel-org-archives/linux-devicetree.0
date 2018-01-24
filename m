@@ -1,58 +1,94 @@
-From: Code Kipper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/5] arm64: allwinner: a64: Add SPDIF TX pin
- to the A64
-Date: Wed, 24 Jan 2018 12:40:37 +0100
-Message-ID: <CAEKpxBk3E87i3oLACFxJs=_s7LO8Mr5N9ZsYunMna4CfQp31Gg@mail.gmail.com>
-References: <20180124103943.2062-1-codekipper@gmail.com> <20180124103943.2062-3-codekipper@gmail.com>
- <20180124110031.kksmh56krinaivh7@flea.lan> <CAGb2v67oFc0LRAcdvh-2F3HRkOui34ANp_-frB9exdvFBAirqg@mail.gmail.com>
-Reply-To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCHNXO4F7MHBBNXBUHJQKGQELB2ET2A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <CAGb2v67oFc0LRAcdvh-2F3HRkOui34ANp_-frB9exdvFBAirqg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+From: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v2 1/2] mips: dts: Remove leading 0x and 0s from bindings notation
+Date: Wed, 24 Jan 2018 12:42:07 +0100
+Message-ID: <20180124114210.26457-1-malat@debian.org>
+References: <20171214165358.28058-1-malat@debian.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171214165358.28058-1-malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: James Hogan <jhogan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Paul Burton <paul.burton-8NJIiSa5LzA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kate Stewart <kstewart-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Harvey Hunt <harvey.hunt-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 24 January 2018 at 12:02, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
-> On Wed, Jan 24, 2018 at 7:00 PM, Maxime Ripard
-> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->> On Wed, Jan 24, 2018 at 11:39:40AM +0100, codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
->>> From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>>
->>> Add the SPDIF TX pin to the A64 dtsi.
->>>
->>> Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>> ---
->>>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 5 +++++
->>>  1 file changed, 5 insertions(+)
->>>
->>> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
->>> index c82979038b0b..db1694ec3ee4 100644
->>> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
->>> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
->>> @@ -336,6 +336,11 @@
->>>                               drive-strength = <40>;
->>>                       };
->>>
->>> +                     spdif_tx_pins_a: spdif@0 {
->>
->> This will generate a dtc warning, you should use a syntax similar to
->> the other nodes there (ie. spdif if that's the only muxing option, or
->> spdif-0).
->
-> Furthermore, if this is the only option, you should set it as the
-> default in the .dtsi, so boards don't have to, and possibly squash
-> this patch into the first one.
-ACK
-Thanks,
-CK
->
-> ChenYu
+Improve the DTS files by removing all the leading "0x" and zeros to fix the
+following dtc warnings:
+
+Warning (unit_address_format): Node /XXX unit name should not have leading "0x"
+
+and
+
+Warning (unit_address_format): Node /XXX unit name should not have leading 0s
+
+Converted using the following command:
+
+find . -type f \( -iname *.dts -o -iname *.dtsi \) -exec sed -E -i -e "s/@0x([0-9a-fA-F\.]+)\s?\{/@\L\1 \{/g" -e "s/@0+([0-9a-fA-F\.]+)\s?\{/@\L\1 \{/g" {} +
+
+For simplicity, two sed expressions were used to solve each warnings separately.
+
+To make the regex expression more robust a few other issues were resolved,
+namely setting unit-address to lower case, and adding a whitespace before the
+the opening curly brace:
+
+https://elinux.org/Device_Tree_Linux#Linux_conventions
+
+This is a follow up to commit 4c9847b7375a ("dt-bindings: Remove leading 0x from bindings notation")
+
+Reported-by: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Suggested-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+---
+ arch/mips/boot/dts/img/boston.dts   | 2 +-
+ arch/mips/boot/dts/ingenic/ci20.dts | 8 ++++----
+ 2 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/arch/mips/boot/dts/img/boston.dts b/arch/mips/boot/dts/img/boston.dts
+index 2cd49b60e030..1bd105428f61 100644
+--- a/arch/mips/boot/dts/img/boston.dts
++++ b/arch/mips/boot/dts/img/boston.dts
+@@ -157,7 +157,7 @@
+ 					#address-cells = <1>;
+ 					#size-cells = <0>;
+ 
+-					rtc@0x68 {
++					rtc@68 {
+ 						compatible = "st,m41t81s";
+ 						reg = <0x68>;
+ 					};
+diff --git a/arch/mips/boot/dts/ingenic/ci20.dts b/arch/mips/boot/dts/ingenic/ci20.dts
+index a4cc52214dbd..7d5e49e40b0d 100644
+--- a/arch/mips/boot/dts/ingenic/ci20.dts
++++ b/arch/mips/boot/dts/ingenic/ci20.dts
+@@ -110,22 +110,22 @@
+ 					reg = <0x0 0x0 0x0 0x800000>;
+ 				};
+ 
+-				partition@0x800000 {
++				partition@800000 {
+ 					label = "u-boot";
+ 					reg = <0x0 0x800000 0x0 0x200000>;
+ 				};
+ 
+-				partition@0xa00000 {
++				partition@a00000 {
+ 					label = "u-boot-env";
+ 					reg = <0x0 0xa00000 0x0 0x200000>;
+ 				};
+ 
+-				partition@0xc00000 {
++				partition@c00000 {
+ 					label = "boot";
+ 					reg = <0x0 0xc00000 0x0 0x4000000>;
+ 				};
+ 
+-				partition@0x8c00000 {
++				partition@8c00000 {
+ 					label = "system";
+ 					reg = <0x0 0x4c00000 0x1 0xfb400000>;
+ 				};
+-- 
+2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
