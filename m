@@ -1,12 +1,13 @@
 From: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: [PATCH 3/5] arm64: allwinner: a64: Add SPDIF to the A64
-Date: Wed, 24 Jan 2018 11:39:41 +0100
-Message-ID: <20180124103943.2062-4-codekipper@gmail.com>
+Subject: [PATCH 2/5] arm64: allwinner: a64: Add SPDIF TX pin to
+ the A64
+Date: Wed, 24 Jan 2018 11:39:40 +0100
+Message-ID: <20180124103943.2062-3-codekipper@gmail.com>
 References: <20180124103943.2062-1-codekipper@gmail.com>
 Reply-To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCHNXO4F7MHBB5GEUHJQKGQEXWLSCWA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCHNXO4F7MHBB46EUHJQKGQEKAB622A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20180124103943.2062-1-codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -21,42 +22,28 @@ List-Id: devicetree@vger.kernel.org
 
 From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Add the device tree sound bindings for the S/PDIF block.
+Add the SPDIF TX pin to the A64 dtsi.
 
 Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-index db1694ec3ee4..f060a58f374c 100644
+index c82979038b0b..db1694ec3ee4 100644
 --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
 +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-@@ -112,6 +112,25 @@
- 		method = "smc";
- 	};
+@@ -336,6 +336,11 @@
+ 				drive-strength = <40>;
+ 			};
  
++			spdif_tx_pins_a: spdif@0 {
++				pins = "PH8";
++				function = "spdif";
++			};
 +
-+	sound_spdif {
-+		compatible = "simple-audio-card";
-+		simple-audio-card,name = "On-board SPDIF";
-+
-+		simple-audio-card,cpu {
-+			sound-dai = <&spdif>;
-+		};
-+
-+		simple-audio-card,codec {
-+			sound-dai = <&spdif_out>;
-+		};
-+	};
-+
-+	spdif_out: spdif-out {
-+		#sound-dai-cells = <0>;
-+		compatible = "linux,spdif-dit";
-+	};
-+
- 	timer {
- 		compatible = "arm,armv8-timer";
- 		interrupts = <GIC_PPI 13
+ 			spi0_pins: spi0 {
+ 				pins = "PC0", "PC1", "PC2", "PC3";
+ 				function = "spi0";
 -- 
 2.16.0
