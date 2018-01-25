@@ -1,111 +1,185 @@
-From: Jolly Shah <JOLLYS@xilinx.com>
-Subject: RE: [PATCH v2 4/4] drivers: firmware: xilinx: Add debugfs interface
-Date: Wed, 24 Jan 2018 23:33:50 +0000
-Message-ID: <DM2PR0201MB0767AE5B7E37276806A3FED4B8E20@DM2PR0201MB0767.namprd02.prod.outlook.com>
-References: <1516220434-22204-1-git-send-email-jollys@xilinx.com>
- <1516220434-22204-5-git-send-email-jollys@xilinx.com>
- <20180123084103.GC21463@kroah.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180123084103.GC21463@kroah.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>, "mingo@kernel.org" <mingo@kernel.org>, "matt@codeblueprint.co.uk" <matt@codeblueprint.co.uk>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "hkallweit1@gmail.com" <hkallweit1@gmail.com>, "keescook@chromium.org" <keescook@chromium.org>, "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "michal.simek@xilinx.com" <michal.simek@xilinx.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rajan Vaja <RAJANV@xilinx.com>
+From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Subject: [RFC usb-next v8 0/3] initialize (multiple) PHYs for a HCD
+Date: Thu, 25 Jan 2018 01:00:50 +0100
+Message-ID: <20180125000053.9387-1-martin.blumenstingl@googlemail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, mgautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Thanks for review Greg,
+The goal of this series is to initialize multiple PHYs on a USB host
+controller, which is needed on Amlogic Meson GXL and GXM SoCs.
+- Amlogic Meson GXL and GXM SoCs come with a dwc3 IP block which has two
+  or three USB2 ports enabled on the internal root-hub. The SoCs also
+  provide separate USB2 PHYs, one per port. All USB2 PHYs (which are
+  internally "connected" to the dwc3 roothub) need to be powered on,
+  otherwise USB devices cannot be enumerated (even if just one PHY is
+  disabled and if the device is plugged into another, enabled port)
+- dwc3 already takes one USB2 and one USB3 PHY and initializes these
+  correctly
+- some other HCI platform drivers (like ehci-platform.c, xhci-mtk.c and
+  ohci-platform.c) do not have a limitation on the number of PHYs - they
+  support any number of USB PHYs (typically one PHY per actual port)
 
-> -----Original Message-----
-> From: Greg KH [mailto:gregkh@linuxfoundation.org]
-> Sent: Tuesday, January 23, 2018 12:41 AM
-> To: Jolly Shah <JOLLYS@xilinx.com>
-> Cc: ard.biesheuvel@linaro.org; mingo@kernel.org; matt@codeblueprint.co.uk=
-;
-> sudeep.holla@arm.com; hkallweit1@gmail.com; keescook@chromium.org;
-> dmitry.torokhov@gmail.com; michal.simek@xilinx.com; robh+dt@kernel.org;
-> mark.rutland@arm.com; linux-arm-kernel@lists.infradead.org; linux-
-> kernel@vger.kernel.org; devicetree@vger.kernel.org; Rajan Vaja
-> <RAJANV@xilinx.com>; Jolly Shah <JOLLYS@xilinx.com>
-> Subject: Re: [PATCH v2 4/4] drivers: firmware: xilinx: Add debugfs interf=
-ace
->=20
-> On Wed, Jan 17, 2018 at 12:20:34PM -0800, Jolly Shah wrote:
-> > +/* Setup debugfs fops */
-> > +static const struct file_operations fops_zynqmp_pm_dbgfs =3D {
-> > +       .owner  =3D       THIS_MODULE,
-> > +       .write  =3D       zynqmp_pm_debugfs_api_write,
-> > +       .read   =3D       zynqmp_pm_debugfs_api_version_read,
-> > +};
-> > +
-> > +/**
-> > + * zynqmp_pm_api_debugfs_init - Initialize debugfs interface
-> > + *
-> > + * Return:      Returns 0 on success
-> > + *             Corresponding error code otherwise
-> > + */
-> > +int zynqmp_pm_api_debugfs_init(void)
-> > +{
-> > +       int err;
-> > +
-> > +       /* Initialize debugfs interface */
-> > +       zynqmp_pm_debugfs_dir =3D debugfs_create_dir(DRIVER_NAME, NULL)=
-;
-> > +       if (!zynqmp_pm_debugfs_dir) {
-> > +               pr_err("debugfs_create_dir failed\n");
-> > +               return -ENODEV;
-> > +       }
->=20
-> No, you should NEVER care if a debugfs call returned an error or not, no =
-need to
-> check it at all.  Your code path should not change based on the return va=
-lue as
-> no code should depened on the functionality of debugfs.
->=20
-> Any error returned by a debugfs call can be passed right back into it wit=
-h no
-> problems, so again, no need to check this.
->=20
+This series adds a new "PHY wrapper". This can be configured through
+devicetree by passing a "phys" property (with any number of PHY handles)
+to the USB controller.
+Additionally it this integrates this new PHY wrapper into hcd.c which
+automatically enables it for all USB controller drivers (tested on an
+Amlogic Meson GXL SoC which uses a dwc3 controller).
 
-Fixed in v3 patch series. Not saving dentries anymore but added check to sh=
-ow warning message instead of error.
+Changes since v7 at [8]:
+- updated the description in the cover-letter
+- wrapped the only call usb_phy_roothub_power_{on,off} in
+  hcd_bus_{resume,suspend} during system-suspend (excluding it from
+  being called during runtime/auto suspend). this also fixes a problem
+  on Meson GXL which does not detect that a new device has been
+  connected if the PHYs are powered off. Thanks to Manu Gautam for
+  suggesting this! (affects patch #3)
+- after a discussion about the dt-bindings of this patch I went back to
+  simply specifying a "phys" property (without a corresponding phy-names
+  property) to pass all PHYs directly in the node of the USB controller.
+  From my understanding the root hub node was "artificial" and we should
+  describe it's properties as part of the controller, rather than
+  introducing a sub-node. see also the discussion with Arnd in [9]
+  (this affects patch #1 and #2)
+- dropped patch #4 ("dt-bindings: usb: xhci: include the roothub and a
+  device in the example") because we're back to just specifying a "phys"
+  property directly within the controller.
+  NOTE: some HCI platform drivers are using the "phys" property as well.
+  With this series phy_{init,power_on,power_off,exit} will be called
+  twice for each PHY when using a ehci-platform.c or xhci-mtk.c USB
+  controller (because the controller driver and our new, generic code
+  now manage the PHYs). the PHY framework handles this gracefully (by
+  ref-counting all operations). a follow-up series will be sent which
+  removes the custom handling from the affected drivers (so only the
+  new PHY wrapper will manage the PHYs state after that follow-up
+  series).
+- fixed an unnecessary whitespace change spotted by Alan Stern (thanks!)
+  in patch #3
+- removed all Tested-by's since we're changing code again
 
-> > +
-> > +       zynqmp_pm_debugfs_power =3D
-> > +               debugfs_create_file("pm", 0220,
-> > +                                   zynqmp_pm_debugfs_dir, NULL,
-> > +                                   &fops_zynqmp_pm_dbgfs);
-> > +       if (!zynqmp_pm_debugfs_power) {
-> > +               pr_err("debugfs_create_file power failed\n");
-> > +               err =3D -ENODEV;
-> > +               goto err_dbgfs;
-> > +       }
-> > +
-> > +       zynqmp_pm_debugfs_api_version =3D
-> > +               debugfs_create_file("api_version", 0444,
-> > +                                   zynqmp_pm_debugfs_dir, NULL,
-> > +                                   &fops_zynqmp_pm_dbgfs);
-> > +       if (!zynqmp_pm_debugfs_api_version) {
-> > +               pr_err("debugfs_create_file api_version failed\n");
-> > +               err =3D -ENODEV;
-> > +               goto err_dbgfs;
-> > +       }
->=20
-> Why do you save these dentries at all anyway?  You never do anything with
-> them, just create the files and away you go, no need to worry about anyth=
-ing.
->=20
-> Remember, debugfs was created to be very simple to use, don't make it mor=
-e
-> complex than it has to be please.
->=20
-> thanks,
->=20
-> greg k-h
+Changes since v6 at [6]:
+- fixed unnecessary whitespace change (noticed by Alan Stern - thanks)
+- added PATCH #4 to clarify (with an example) how I understood how Rob
+  wanted the dt-binding to look like (see [0]). please wait for an ACK
+  from Rob on this one to make sure that we're not introducing some
+  broken binding (as discussed with Arnd: [7])
+- added Alan Stern's ACK on PATCH #3
+- added Neil's Tested-by on PATCH #2 and #3
 
-Fixed in v3 patch series.
+Changes since RfC v5 at [5]:
+- dropped RfC prefix
+- removed noisy dev_err if no roothub node was found (spotted by
+  Xiaolong Ye's kbuild test robot - thank you for that!)
+- moved the call to usb_phy_roothub_power_off() within
+  hcd_bus_suspend() to make sure that the PHYs are turned off
+  if the "race with a root-hub wakeup event" condition is met (in
+  this case the PHYs are turned on again, with the old code we did
+  break the PHYs internal ref-counting because we never turned the
+  PHYs off before turning them on again in case of that special
+  "race with a root-hub wakeup event").
+  additionally we're not handling the status returned by
+  usb_phy_roothub_power_off() anymore (the bus is already turned off
+  and we tried to turn off all PHYs as well - only the PHYs which
+  failed to power off will stay in the current state).
+  thanks to Alan Stern for the suggestion
+- removed return value from usb_phy_roothub_power_off() because none
+  of my code uses it anymore. thanks to Alan Stern for the suggestion
 
-Thanks,
-Jolly Shah
+Changes since v4 at [4]:
+- renamed the subject of the cover-letter (old name was:
+  "initialize (multiple) PHYs in xhci-plat")
+- back into RFC status (see below for the reasons)
+- dropped Tested-by from Chunfeng Yun (same reasons as RFC status)
+- reworded cover-letter and commit messages from "platform-roothub"
+  to "roothub PHY wrapper"
+- moved code from drivers/usb/host/platform-roothub.* to
+  drivers/usb/core/phy.* and the changes to
+  drivers/usb/host/xhci-plat.c to drivers/usb/core/hcd.c as suggested
+  by Mathias Nyman (as a benefit this will enable the new logic for
+  non-xHCI controllers as well - however this was not tested yet)
+- rename the structs, function names, etc from platform_roothub_* to
+  usb_phy_roothub*
+
+Changes since RFCv3 at [3]:
+- moved the DT binding change from patch #3 to patch #1 as suggested
+  by Rob Herring (and slightly adjusted the commit message to account
+  for that)
+- added Tested-by from Chunfeng Yun (who confirmed that the whole
+  concept and implementation works fine on Mediatek SoCs - many thanks
+  again!) to patch #2
+- added Rob Herring's ACK to patches 1 and 3
+- dropped RFC status (RFCv3 -> PATCH v4)
+
+Changes since RFCv2 at [2]:
+- split phy_{init,exit} and phy_power_{on,off} handling. up until RFCv2
+  I called phy_init plus phy_power_on in platform_roothub_power_on and
+  phy_power_off plus phy_exit in platform_roothub_power_off. However,
+  Chunfeng Yun (a Mediatek SoC developer - many thanks for testing my
+  series and providing great feedback) reported that only using
+  phy_power_off (and omitting phy_exit) during system suspend fixes an
+  issue where USB devices would be re-enumerated when resuming. His
+  original problem description: "In order to keep link state on mt8173,
+  we just power off all phys(not exit) when system enter suspend, then
+  power on them again (needn't init, otherwise device will be
+  disconnected) when system resume, this can avoid re-enumerating
+  device.". This fix affects patch #2 and #3 as we now have
+  platform_roothub_init (which calls phy_init internally),
+  platform_roothub_power_on (which calls phy_power_on internally),
+  platform_roothub_power_off (which calls phy_power_off internally) and
+  platform_roothub_exit (which calls phy_exit internally). suspend and
+  resume only call platform_roothub_power_{on,off} to prevent the issue
+  described by Chunfeng Yun (unfortunately I cannot test this because
+  the Amlogic platform currently does not support system suspend).
+- dropped two struct forward declarations from platform-roothub.h which
+  are not used in the header file (thanks to Chunfeng Yun for spotting
+  this)
+
+Changes since RFCv1 at [1]:
+- split the usb-xhci dt-binding documentation into a separate patch
+- fixed a typo ("usb-phy" -> "phys" in the dt-binding example)
+- rebased to apply against latest usb-next
+
+
+[0] http://lists.infradead.org/pipermail/linux-amlogic/2016-November/001818.html
+[1] http://marc.info/?l=linux-usb&m=148414866303604&w=2
+[2] https://www.spinics.net/lists/linux-usb/msg158967.html
+[3] https://www.spinics.net/lists/devicetree/msg190426.html
+[4] http://lists.infradead.org/pipermail/linux-amlogic/2017-September/004685.html
+[5] http://lists.infradead.org/pipermail/linux-amlogic/2017-October/004924.html
+[6] http://lists.infradead.org/pipermail/linux-amlogic/2017-October/005049.html
+[7] http://lists.infradead.org/pipermail/linux-amlogic/2017-October/005121.html
+[8] http://lists.infradead.org/pipermail/linux-amlogic/2017-October/005124.html
+[9] http://lists.infradead.org/pipermail/linux-amlogic/2017-October/005192.html
+
+Martin Blumenstingl (3):
+  dt-bindings: usb: add the documentation for USB HCDs
+  usb: core: add a wrapper for the USB PHYs on the HCD
+  usb: core: hcd: integrate the PHY wrapper into the HCD core
+
+ .../devicetree/bindings/usb/mediatek,mtk-xhci.txt  |   5 +-
+ .../devicetree/bindings/usb/mediatek,mtu3.txt      |   5 +-
+ Documentation/devicetree/bindings/usb/usb-ehci.txt |   6 +-
+ Documentation/devicetree/bindings/usb/usb-hcd.txt  |   9 ++
+ Documentation/devicetree/bindings/usb/usb-ohci.txt |   6 +-
+ Documentation/devicetree/bindings/usb/usb-uhci.txt |   3 +
+ Documentation/devicetree/bindings/usb/usb-xhci.txt |   5 +
+ drivers/usb/core/Makefile                          |   2 +-
+ drivers/usb/core/hcd.c                             |  29 ++++
+ drivers/usb/core/phy.c                             | 158 +++++++++++++++++++++
+ drivers/usb/core/phy.h                             |   7 +
+ include/linux/usb/hcd.h                            |   1 +
+ 12 files changed, 229 insertions(+), 7 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/usb-hcd.txt
+ create mode 100644 drivers/usb/core/phy.c
+ create mode 100644 drivers/usb/core/phy.h
+
+-- 
+2.16.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
