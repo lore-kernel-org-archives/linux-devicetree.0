@@ -1,81 +1,67 @@
-From: Icenowy Zheng <icenowy@aosc.io>
-Subject: Re: [RFC PATCH 0/9] initial support for "suniv" Allwinner new ARM9 SoC
-Date: Thu, 25 Jan 2018 23:38:04 +0800
-Message-ID: <2A78FC75-61C0-4317-A7A1-6E1E42098C07@aosc.io>
-References: <20180119231735.61504-1-icenowy@aosc.io> <20180122121435.bpayxk4uzfqbhqse@flea.lan> <14593819.uISRktVE4V@ice-x220i> <20180125153520.lxcfvh3yvi36uiux@flea.lan>
+From: Philippe CORNU <philippe.cornu@st.com>
+Subject: Re: [PATCH] dt-bindings: display: stm32: add pixel clock mandatory
+ property
+Date: Thu, 25 Jan 2018 16:08:35 +0000
+Message-ID: <881ad794-6c4a-b753-2325-ac8522f8a70c@st.com>
+References: <20180122153805.23720-1-philippe.cornu@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20180125153520.lxcfvh3yvi36uiux@flea.lan>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-sunxi@googlegroups.com, Marc Zyngier <marc.zyngier@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180122153805.23720-1-philippe.cornu@st.com>
+Content-Language: en-US
+Content-ID: <3D1B921D3DD10848B9A059E8980C9881@st.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Yannick FERTRE <yannick.fertre@st.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Vincent ABRIOU <vincent.abriou@st.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: Mickael REULIER <mickael.reulier@st.com>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, Ludovic BARRE <ludovic.barre@st.com>
 List-Id: devicetree@vger.kernel.org
 
-
-
-于 2018年1月25日 GMT+08:00 下午11:35:20, Maxime Ripard <maxime.ripard@free-electrons.com> 写到:
->Hi,
->
->On Wed, Jan 24, 2018 at 09:10:34PM +0800, Icenowy Zheng wrote:
->> 在 2018年1月22日星期一 CST 下午8:14:35，Maxime Ripard 写道：
->> > On Sat, Jan 20, 2018 at 07:17:26AM +0800, Icenowy Zheng wrote:
->> > > This is the RFC initial patchset for the "new" Allwinner SUNIV
->ARM9 SoC.
->> > > 
->> > > The same die is packaged differently, come with different
->co-packaged
->> > > DRAM or shipped with different SDK; and then made many model
->names: F23,
->> > > F25, F1C100A, F1C100S, F1C200S, F1C500, F1C600, R6, etc. These
->SoCs all
->> > > share a common feature set and are packaged similarly (eLQFP128
->for SoCs
->> > > without co-packaged DRAM, QFN88 for with DRAM). As their's no
->> > > functionality hidden on the QFN88 models (except DRAM interface
->not
->> > > exported), it's not clever to differentiate them. So I will use
->suniv as
->> > > common name of all these SoCs.
->> > 
->> > Where is that suniv prefix coming from?
->> 
->> The BSP (Melis and Linux). (e.g. "libs/suniv" directory of the Melis
->SDK and 
->> "arch/arm/boot/dts/sunivw1p1.dtsi" in the Linux SDK)
->
->Do you have a link to that BSP?
-
-I have it on the Baidu Pan. Is it acceptable?
-
->
->> > You should really answer two questions here:
->> >   - Are you able to predict whether you'll find an SoC part of that
->> >     family in the future that derives a bit and will need a
->compatible
->> >     of its own?
->> >   - Are you able to predict which quirks we'll need along the way
->to
->> >     support all the SoCs you've listed there?
->> > 
->> > If you can't answer yes to both these questions, with a 100%
->> > certainty, then you'll need a SoC name in the compatible.
->> > 
->> > Which doesn't prevent you from sharing as much as possible the DT
->like
->> > we did between the A10s and the A13 for example.
->> 
->> So the suniv-f1c100s.dtsi will still be kept empty and all
->peripherals known 
->> should go through suniv.dtsi.
->
->Sorry if I wasn't really clear. You can totally keep the current DT
->structure if that makes sense (and judging by what you're saying, it
->does.), but the compatibles should have the SoC name in it.
-
-Okay.
-
->
->Maxime
+SGksDQoNCmluIHNob3J0OiB0aGlzIHBhdGNoIGlzICJDQU5DRUxMRUQiIDogKQ0KDQpUaGVyZSBp
+cyBubyBuZWVkIHRvIGFkZCB0aGUgcGl4ZWwgY2xvY2sgYXMgYSBtYW5kYXRvcnkgcHJvcGVydHkg
+YmVjYXVzZSANCm5vdyB0aGUgY2xvY2sgdmFsdWUgaXMgYWp1c3RlZCBpbiBhZGp1c3RlZF9tb2Rl
+Lg0KDQpQbGVhc2UgaGF2ZSBhIGxvb2sgdG8gcGF0Y2hlczoNCi0gZHJtL3N0bTogbHRkYzogdXNl
+IGNydGNfbW9kZV9maXh1cCB0byB1cGRhdGUgYWRqdXN0ZWRfbW9kZSBjbG9jaw0KLSBkcm0vYnJp
+ZGdlL3N5bm9wc3lzOiBkc2k6IHVzZSBhZGp1c3RlZF9tb2RlIGluIG1vZGVfc2V0DQoNCkhvcGUg
+aXQgaXMgYmV0dGVyLCBjb21tZW50cyBhcmUgd2VsY29tZQ0KDQpNYW55IHRoYW5rcywNClBoaWxp
+cHBlIDotKQ0KDQpPbiAwMS8yMi8yMDE4IDA0OjM4IFBNLCBQaGlsaXBwZSBDb3JudSB3cm90ZToN
+Cj4gQWRkIHRoZSBEUEkvUkdCIGlucHV0IHBpeGVsIGNsb2NrIGluIG1hbmRhdG9yeSBwcm9wZXJ0
+aWVzDQo+IGJlY2F1c2UgaXQgcmVhbGx5IG9mZmVycyBhIGJldHRlciBwcmVjaXNlbmVzcyBmb3Ig
+dGltaW5nDQo+IGNvbXB1dGF0aW9ucy4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IFBoaWxpcHBlIENv
+cm51IDxwaGlsaXBwZS5jb3JudUBzdC5jb20+DQo+IC0tLQ0KPiBQbGVhc2UgYXBwbHkgImR0LWJp
+bmRpbmdzOiBkaXNwbGF5OiBzdG0zMjogY29ycmVjdCBjbG9jay1uYW1lcw0KPiBpbiBkc2kgcGFu
+ZWwgZXhhbXBsZSIgYmVmb3JlIHRoaXMgcGF0Y2guDQo+IA0KPiBDaGFuZ2VzIGluIHYzOiByZW1v
+dmUgdGhlIG5vdGUgcmVnYXJkaW5nIHN3YXBwZWQgY2xvY2sgbmFtZXMNCj4gICAgKG5vdyBpbiBh
+IHNlcGFyYXRlIHBhdGNoKS4NCj4gQ2hhbmdlcyBpbiB2MjogcHV0IG5ldyBjbG9jayBpbiBsYXN0
+IHBvc2l0aW9uIChSb2IgSGVycmluZykNCj4gDQo+ICAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2Rpc3BsYXkvc3Qsc3RtMzItbHRkYy50eHQgfCA2ICsrKystLQ0KPiAgIDEgZmls
+ZSBjaGFuZ2VkLCA0IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0t
+Z2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvc3Qsc3RtMzIt
+bHRkYy50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9zdCxz
+dG0zMi1sdGRjLnR4dA0KPiBpbmRleCAzZWIxYjQ4YjQ3ZGQuLjk0MmI3MjM3YWU4NyAxMDA2NDQN
+Cj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvc3Qsc3Rt
+MzItbHRkYy50eHQNCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
+c3BsYXkvc3Qsc3RtMzItbHRkYy50eHQNCj4gQEAgLTI5LDYgKzI5LDcgQEAgTWFuZGF0b3J5IHBy
+b3BlcnRpZXMgc3BlY2lmaWMgdG8gU1RNMzIgRFNJOg0KPiAgIC0gY29tcGF0aWJsZTogInN0LHN0
+bTMyLWRzaSIuDQo+ICAgLSBjbG9jay1uYW1lczoNCj4gICAgIC0gcGh5IHBsbCByZWZlcmVuY2Ug
+Y2xvY2sgc3RyaW5nIG5hbWUsIG11c3QgYmUgInJlZiIuDQo+ICsgIC0gRFBJL1JHQiBpbnB1dCBw
+aXhlbCBjbG9jayBzdHJpbmcgbmFtZSwgbXVzdCBiZSAicHhfY2xrIi4NCj4gICAtIHJlc2V0czog
+c2VlIFs1XS4NCj4gICAtIHJlc2V0LW5hbWVzOiBzZWUgWzVdLg0KPiAgIA0KPiBAQCAtOTcsOCAr
+OTgsOSBAQCBFeGFtcGxlIDI6IERTSSBwYW5lbA0KPiAgIAkJCSNzaXplLWNlbGxzID0gPDA+Ow0K
+PiAgIAkJCWNvbXBhdGlibGUgPSAic3Qsc3RtMzItZHNpIjsNCj4gICAJCQlyZWcgPSA8MHg0MDAx
+NmMwMCAweDgwMD47DQo+IC0JCQljbG9ja3MgPSA8JnJjYyAxIENMS19GNDY5X0RTST4sIDwmY2xr
+X2hzZT47DQo+IC0JCQljbG9jay1uYW1lcyA9ICJwY2xrIiwgInJlZiI7DQo+ICsJCQljbG9ja3Mg
+PSA8JnJjYyAxIENMS19GNDY5X0RTST4sIDwmY2xrX2hzZT4sDQo+ICsJCQkJIDwmcmNjIDEgQ0xL
+X0xDRD47DQo+ICsJCQljbG9jay1uYW1lcyA9ICJwY2xrIiwgInJlZiIsICJweF9jbGsiOw0KPiAg
+IAkJCXJlc2V0cyA9IDwmcmNjIFNUTTMyRjRfQVBCMl9SRVNFVChEU0kpPjsNCj4gICAJCQlyZXNl
+dC1uYW1lcyA9ICJhcGIiOw0KPiAgIA0KPiAKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMu
+ZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlz
+dGluZm8vZHJpLWRldmVsCg==
