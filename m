@@ -1,38 +1,100 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [RFC PATCH v2 1/1] of: introduce event tracepoints for dynamic
- device_node lifecyle
-Date: Thu, 25 Jan 2018 09:01:37 +0100
-Message-ID: <CAMuHMdVuN5iRLqWuPH_UVR1zDJK-rPHZ6guU-ssPuoZ=UWTAFw@mail.gmail.com>
-References: <20180121143117.19805-1-wsa+renesas@sang-engineering.com>
- <20180121143117.19805-2-wsa+renesas@sang-engineering.com> <4cc627c4-1aaf-b8d5-5a26-eea7e596743f@gmail.com>
+From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] dt-bindings: timer: renesas, cmt: Document
+ r8a774[35] CMT support
+Date: Thu, 25 Jan 2018 09:09:59 +0100
+Message-ID: <1acdad3b-c2fd-df1d-f25b-cf80b79a9842@linaro.org>
+References: <1513618743-4773-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1513618743-4773-2-git-send-email-fabrizio.castro@bp.renesas.com>
+ <SG2PR06MB088625944BCD8F4307315520C0E20@SG2PR06MB0886.apcprd06.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4cc627c4-1aaf-b8d5-5a26-eea7e596743f-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <SG2PR06MB088625944BCD8F4307315520C0E20-ESzmfEwOt/zNWVFMfLWNqm0DtJ1/0DrXvxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tyrel Datwyler <tyreld-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Steven Rostedt <rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Frank,
+On 24/01/2018 17:49, Fabrizio Castro wrote:
+> Hello Daniel,
+> 
+> I am sorry to bother you, just wondering if you think there are any chances for this patch to applied on top of v4.16?
 
-On Thu, Jan 25, 2018 at 7:48 AM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>  create mode 100644 include/trace/events/of.h
->
-> mode looks incorrect.  Existing files in include/trace/events/ are -rw-rw----
+You can take it through the renesas tree.
 
-Not in my git clone ;-) 644 should be fine.
+Acked-by: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-Gr{oetje,eeting}s,
 
-                        Geert
+>> Subject: [PATCH v2 1/3] dt-bindings: timer: renesas, cmt: Document r8a774[35] CMT support
+>>
+>> Document SoC specific compatible strings for r8a7743 and r8a7745.
+>> No driver change is needed as the fallback strings will activate
+>> the right code.
+>>
+>> Signed-off-by: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+>> Reviewed-by: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+>> Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+>> Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> Reviewed-by: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+>> ---
+>> v1->v2:
+>> * "R-Car Gen2 or RZ/G1." -> "R-Car Gen2 and RZ/G1."
+>> * "all the R-Car" -> "R-Car"
+>>
+>>  Documentation/devicetree/bindings/timer/renesas,cmt.txt | 14 ++++++++++----
+>>  1 file changed, 10 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/timer/renesas,cmt.txt b/Documentation/devicetree/bindings/timer/renesas,cmt.txt
+>> index d740989..b40add2 100644
+>> --- a/Documentation/devicetree/bindings/timer/renesas,cmt.txt
+>> +++ b/Documentation/devicetree/bindings/timer/renesas,cmt.txt
+>> @@ -22,6 +22,10 @@ Required Properties:
+>>
+>>      - "renesas,r8a73a4-cmt0" for the 32-bit CMT0 device included in r8a73a4.
+>>      - "renesas,r8a73a4-cmt1" for the 48-bit CMT1 device included in r8a73a4.
+>> +    - "renesas,r8a7743-cmt0" for the 32-bit CMT0 device included in r8a7743.
+>> +    - "renesas,r8a7743-cmt1" for the 48-bit CMT1 device included in r8a7743.
+>> +    - "renesas,r8a7745-cmt0" for the 32-bit CMT0 device included in r8a7745.
+>> +    - "renesas,r8a7745-cmt1" for the 48-bit CMT1 device included in r8a7745.
+>>      - "renesas,r8a7790-cmt0" for the 32-bit CMT0 device included in r8a7790.
+>>      - "renesas,r8a7790-cmt1" for the 48-bit CMT1 device included in r8a7790.
+>>      - "renesas,r8a7791-cmt0" for the 32-bit CMT0 device included in r8a7791.
+>> @@ -31,10 +35,12 @@ Required Properties:
+>>      - "renesas,r8a7794-cmt0" for the 32-bit CMT0 device included in r8a7794.
+>>      - "renesas,r8a7794-cmt1" for the 48-bit CMT1 device included in r8a7794.
+>>
+>> -    - "renesas,rcar-gen2-cmt0" for 32-bit CMT0 devices included in R-Car Gen2.
+>> -    - "renesas,rcar-gen2-cmt1" for 48-bit CMT1 devices included in R-Car Gen2.
+>> -These are fallbacks for r8a73a4 and all the R-Car Gen2
+>> -entrieslisted above.
+>> +    - "renesas,rcar-gen2-cmt0" for 32-bit CMT0 devices included in R-Car Gen2
+>> +and RZ/G1.
+>> +    - "renesas,rcar-gen2-cmt1" for 48-bit CMT1 devices included in R-Car Gen2
+>> +and RZ/G1.
+>> +These are fallbacks for r8a73a4, R-Car Gen2 and RZ/G1 entries
+>> +listed above.
+>>
+>>    - reg: base address and length of the registers block for the timer module.
+>>    - interrupts: interrupt-specifier for the timer, one per channel.
+>> --
+>> 2.7.4
+> 
+> 
+> 
+> 
+> Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, Buckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered No. 04586709.
+> 
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
