@@ -1,108 +1,91 @@
-From: Dong Aisheng <aisheng.dong-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 3/4] arm64: add support for i.MX8M EVK board
-Date: Thu, 25 Jan 2018 21:03:26 +0800
-Message-ID: <2e5f5ec08b3165cb84115c12f9ddbd9e@codeaurora.org>
-References: <20180117183244.28303-1-l.stach@pengutronix.de>
- <20180117183244.28303-3-l.stach@pengutronix.de>
- <20180123103931.GE27764@dragon>
- <278bb44610b8a27826550732095aba03@codeaurora.org>
- <1516876300.6411.25.camel@pengutronix.de>
- <2cac219f031a08ae2ac02a0624fe302f@codeaurora.org>
- <1516878582.6411.27.camel@pengutronix.de>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [RFC] devicetree: new FDT format version
+Date: Thu, 25 Jan 2018 23:37:34 +1100
+Message-ID: <20180125123734.GC2099@umbus>
+References: <b96829f9-2e8b-fdc5-5090-58591e2260cf@gmail.com>
+ <CAL_JsqJR2y7bMw_-9TBAGWZ_kf7_sZo5qvqvRowJ8jiy=4G0Bg@mail.gmail.com>
+ <20180123124232.GA14832@umbus>
+ <20328477-e511-e875-7dc4-253640f2219e@gmail.com>
+ <90983180-ae3b-5a31-9dc0-b62b978a0fba@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ABTtc+pdwF7KHXCz"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1516878582.6411.27.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <90983180-ae3b-5a31-9dc0-b62b978a0fba-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, aisheng.dong-3arQi8VN3Tc@public.gmane.org, linux-imx-3arQi8VN3Tc@public.gmane.org
+To: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, "Pantelis Antomarek.vasut-Re5JQEeQqe/2sr8fMPgRzw@public.gmane.org" <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Kyle Evans <kevans-h+KGxgPPiopAfugRpC6u6w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Alan Tull <atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2018-01-25 19:09, Lucas Stach wrote:
-> Am Donnerstag, den 25.01.2018, 18:49 +0800 schrieb Dong Aisheng:
->> On 2018-01-25 18:31, Lucas Stach wrote:
->> > Am Donnerstag, den 25.01.2018, 18:10 +0800 schrieb 
->> > aisheng.dong-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org:
+
+--ABTtc+pdwF7KHXCz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Jan 25, 2018 at 10:14:38AM +0100, Marek Vasut wrote:
+> On 01/23/2018 10:17 PM, Frank Rowand wrote:
 > [...]
->> AFAIK we switched to generic pinconfig since MX7ULP as maintainer 
->> > > won't
->> > > access old binding pinctrl drivers.
->> >
->> > I'm not convinced that the generic pinconf is good fit. For pingroups
->> > with different configs for some of the pins, like the example above, we
->> > would need to split things into multiple DT nodes. This really hurts
->> > readability, so I'm not going to switch to the generic stuff without
->> > some really convincing arguments.
->> >
->> 
->> Per my understanding, based on the last discussion with Linus W, we 
->> actually did this in order to increase the readability that 1) user 
->> does
->> not need to see the 'ugly' unreadable raw data and refer to reference
->> manual 2) unified generic binding format which already exist in kernel
->> and used by many platforms.
->> 
->> Actually MXS platform already used it for many years in a similar way.
->> So IMHO a little hurt to add another node for different pad setting 
->> in 
->> the same group won't be enough reason to stop switching to generic 
->> config.
->> 
->> Does it make sense?
-> 
-> I know that Linus W is pushing for this common pinconf thing in the
-> name of readability. It's just that I don't think it's such a clear
-> win.
-> 
-> After all you still need to look into the reference manual or binding
-> to see which values in the common binding correspond to a specific
-> drive/pull strength, etc.
-> 
+> > My knowledge of bootloader use of the FDT is nearly non-existent, so
+> > I'm on thin ice here.  But I am guessing that a lot of bootloader
+> > processing of FDT data could be removed if the kernel would unflatten
+> > a chained FDT and overlay FDT(s).
+> >=20
+> > Comments from the bootloader folks on this topic would be much
+> > appreciated.
+>=20
+> U-Boot, when using DT as a hardware-description (rather than just
+> passing it to Linux) usually operates on the FDT, unless explicitly
+> configured to unflatten the tree. That later option is not enabled by
+> default.
+>=20
+> The reason for that is so that the DT can be accessed very early on, at
+> which point there may not be any other memory available than a very
+> limited stack and the FDT blob can still be located in some read-only
+> memory.
 
-User don't need to look into reference manual and they don't need to
-compose the 'ulgy' raw data which is the most tough thing.
+Right, this is exactly the reason that the fdt format is designed so
+you can read thing from it directly.  If you're doing more than very
+minor modifications, however, it does become worth unflattening.
 
-With generic binding, it probably can saving ~80% pad setting effort
-by refer to the defined generic config properties.
-And things can be even better when the reference code is already there
-as user becomes know which property supported.
+Note that while unflatenning requires an allocator of sorts, it can be
+a trivial one.  A bump allocator in a fixed buffer of reasonable size
+would do fine.  You don't realy need a free(), since the bootloader
+has limited lifetime you can just leak nodes until you throw the lot
+away.  You can also use pointers into the flattened tree blob to avoid
+allocating space for the actual property values (except for ones you
+add later, obviously).  And if you make extensive enough changes that
+leaked pieces really do become a problem, you could do a
+flatten/unflatten pass to recompact everything.
 
-> On the other hand it really bloats the DT description of the pin
-> configuration. If you want to look at an (IMHO) bad example, go look at
-> the Tegra DTs. The Tegra pincontrol implements the "separate properties
-> for each pinconf option" that is pushed by Linus W. This bloated the DT
-> description to the point that no-one is able/willing to write those
-> descriptions anymore and the only viable way to get them is to auto-
-> generate them from some spreadsheets. Not really what I would call an
-> readable...
-> 
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
 
-I wonder the worst case you're worrying whether exist in reality.
-Take imx6qdl-sabresd as an example, about half of pingroups having the 
-same
-pad setting while others have two different settings at most.
-That means it may not bloat the device tree too much.
+--ABTtc+pdwF7KHXCz
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> Maybe I'm a little stubborn when it comes to this topic, but at
-> Pengutronix we see a lot of customer designs where we need to come up
-> with the board DT. Bloating each one of those and making the work of
-> the developers harder in the name of a readability win that I just
-> don't see doesn't sound like something I want to support. :)
-> 
+-----BEGIN PGP SIGNATURE-----
 
-Hmm.. In contrast, what i feel currently is that it may ease the using 
-of
-pad setting, not make it harder. Not sure if i overlooked something.
+iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAlppz40ACgkQbDjKyiDZ
+s5J0lw/+PrmPWLo0uhl1GixYtyQIflkUU7ZzMMc9sCWFdvzXIS2wqR5rk283poR4
+17usLPnZeK4/ph6zPNjqTXtx/GdWTiEtTd9UdWxUxmsPzpuyNXK/QocOhSFQ6AVL
+oUcwMJ80MK1Rf3YJnKYh7DDlSIJOU6ptLPrHHVdF7VzbAU9A53Bzniu/lBwLNOXP
++RYmPAZujLcZ/Pfrtjp7E1GSPc1v1LJQDZA6Qy5ntuk6BgxEd/fYNVl4xqcULbei
+uxJ20R9iY4YNRiU5t1XM/YSFHXlOyEug1c4440U4bxLRIIqh7SoRK4fhws7XMCYV
+avlsS7rcmy3hmQg9F/vvBzj/vkBe9nKcOsR/0Peb+0dNCIhxMrUAGkG7P5dYU1OT
+z+1WO7t25BQbzFdVdg4FmlXC0IhkBCCzUR61BVWrJFB0OkZMBXZO7SfwXfZCn8Cq
+7EayvLrs+gdmHt4SmyIXaeNMT9KkfzCnxemLj0PsJtNFq+nWKTji3JGefxKOvqsk
+T0P4esBko3whMa55JFptocl+tbURhED716q8E3lEG0nJWNTR6JeIuoOcoCvPIaV4
+8m1yFqhA6qTZ8TLdY+3wDIj2ArGrYNAMH5b9K19jGgqf6eo2KSH524qJgmnhD4o+
+piFQA8VMbb7C3a/4E+xfumdaWmhFjJseCXbigUXOTfusayYrdjQ=
+=68ss
+-----END PGP SIGNATURE-----
 
-Let's listen to Shawn and Linus W if they have some comments.
-
-Regards
-Dong Aisheng
-
-> Regards,
-> Lucas
+--ABTtc+pdwF7KHXCz--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
