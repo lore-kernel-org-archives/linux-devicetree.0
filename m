@@ -1,63 +1,75 @@
-From: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+From: aisheng.dong-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 Subject: Re: [PATCH 3/4] arm64: add support for i.MX8M EVK board
-Date: Thu, 25 Jan 2018 11:52:24 +0200
-Message-ID: <20180125095224.npweaunijmesbmhs@tarshish>
+Date: Thu, 25 Jan 2018 18:10:35 +0800
+Message-ID: <278bb44610b8a27826550732095aba03@codeaurora.org>
 References: <20180117183244.28303-1-l.stach@pengutronix.de>
  <20180117183244.28303-3-l.stach@pengutronix.de>
- <20180124144751.jt6y3uayhplzbjxf@sapphire.tkos.co.il>
+ <20180123103931.GE27764@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20180124144751.jt6y3uayhplzbjxf-MwjkAAnuF3khR1HGirfZ1z4kX+cae0hd@public.gmane.org>
+In-Reply-To: <20180123103931.GE27764@dragon>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, aisheng.dong-3arQi8VN3Tc@public.gmane.org, linux-imx-3arQi8VN3Tc@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Lucas,
-
-On Wed, Jan 24, 2018 at 04:47:51PM +0200, Baruch Siach wrote:
+On 2018-01-23 18:39, Shawn Guo wrote:
 > On Wed, Jan 17, 2018 at 07:32:43PM +0100, Lucas Stach wrote:
-> > This is the evaluation kit board for the i.MX8M. The current level of
-> > support yields a working console and is able to boot userspace from
-> > SD card or Network.
-> > 
-> > Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > ---
-> >  arch/arm64/boot/dts/nxp/Makefile       |   3 +
-> >  arch/arm64/boot/dts/nxp/imx8mq-evk.dts | 287 +++++++++++++++++++++++++++++++++
-> >  2 files changed, 290 insertions(+)
-> >  create mode 100644 arch/arm64/boot/dts/nxp/Makefile
-> >  create mode 100644 arch/arm64/boot/dts/nxp/imx8mq-evk.dts
-> > 
-> > diff --git a/arch/arm64/boot/dts/nxp/Makefile b/arch/arm64/boot/dts/nxp/Makefile
-> > new file mode 100644
-> > index 000000000000..1aebb1f16708
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/nxp/Makefile
-> > @@ -0,0 +1,3 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +
-> > +dtb-$(CONFIG_SOC_IMX8MQ) += imx8m-evk.dtb
 > 
-> Typo, should be imx8mq-evk.dtb. Without this fix I'm getting:
+>> +	pinctrl_usdhc2_100mhz: usdhc2grp100mhz {
+>> +		fsl,pins = <
+>> +			MX8MQ_IOMUXC_SD2_CLK_USDHC2_CLK			0x85
+>> +			MX8MQ_IOMUXC_SD2_CMD_USDHC2_CMD			0xc5
+>> +			MX8MQ_IOMUXC_SD2_DATA0_USDHC2_DATA0		0xc5
+>> +			MX8MQ_IOMUXC_SD2_DATA1_USDHC2_DATA1		0xc5
+>> +			MX8MQ_IOMUXC_SD2_DATA2_USDHC2_DATA2		0xc5
+>> +			MX8MQ_IOMUXC_SD2_DATA3_USDHC2_DATA3		0xc5
+>> +			MX8MQ_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0xc1
+>> +		>;
+>> +		};
 > 
-> make[2]: *** No rule to make target 'arch/arm64/boot/dts/nxp/imx8m-evk.dtb', needed by '__build'.  Stop.
+> Bad indentation.
+> 
+> Shawn
+> 
+>> +
+>> +	pinctrl_usdhc2_200mhz: usdhc2grp200mhz {
+>> +		fsl,pins = <
+>> +			MX8MQ_IOMUXC_SD2_CLK_USDHC2_CLK			0x87
+>> +			MX8MQ_IOMUXC_SD2_CMD_USDHC2_CMD			0xc7
+>> +			MX8MQ_IOMUXC_SD2_DATA0_USDHC2_DATA0		0xc7
+>> +			MX8MQ_IOMUXC_SD2_DATA1_USDHC2_DATA1		0xc7
+>> +			MX8MQ_IOMUXC_SD2_DATA2_USDHC2_DATA2		0xc7
+>> +			MX8MQ_IOMUXC_SD2_DATA3_USDHC2_DATA3		0xc7
+>> +			MX8MQ_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0xc1
+>> +		>;
+>> +	};
 
-With this fix and CONFIG_CPU_IDLE disabled:
+AFAIK we switched to generic pinconfig since MX7ULP as maintainer won't
+access old binding pinctrl drivers.
 
-Tested-by: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+So i wonder if you may have some special reasons to insist on old 
+binding which
+i may overlooked?
 
-On i.MX8MQ EVK rev B3.
+(I did not receive your pinctrl patch by accidently. So i can't reply on
+it before.)
 
-Thanks,
-baruch
+Regards
+Dong Aisheng
 
--- 
-     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
-=}------------------------------------------------ooO--U--Ooo------------{=
-   - baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org - tel: +972.52.368.4656, http://www.tkos.co.il -
+>> +};
+>> --
+>> 2.11.0
+>> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
