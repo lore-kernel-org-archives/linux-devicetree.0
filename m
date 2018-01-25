@@ -1,7 +1,7 @@
 From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: [RFC 08/37] ARM: dts: r8a7794: Adjust SMP routine size
-Date: Thu, 25 Jan 2018 18:02:42 +0000
-Message-ID: <1516903391-30467-9-git-send-email-fabrizio.castro@bp.renesas.com>
+Subject: [RFC 12/37] ARM: dts: r8a7743: Use fallback rst compatible string
+Date: Thu, 25 Jan 2018 18:02:46 +0000
+Message-ID: <1516903391-30467-13-git-send-email-fabrizio.castro@bp.renesas.com>
 References: <1516903391-30467-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Return-path: <linux-clk-owner@vger.kernel.org>
 In-Reply-To: <1516903391-30467-1-git-send-email-fabrizio.castro@bp.renesas.com>
@@ -10,27 +10,26 @@ To: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Ma
 Cc: Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adjusts the definition of the SMP routine size according
-to the latest changes made by commit:
-"ARM: shmobile: Add watchdog support"
+Add the generic fallback compatible string for the rst node.
 
 Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
 ---
- arch/arm/boot/dts/r8a7794.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/r8a7743.dtsi | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/r8a7794.dtsi b/arch/arm/boot/dts/r8a7794.dtsi
-index d588efa..a5a23e9 100644
---- a/arch/arm/boot/dts/r8a7794.dtsi
-+++ b/arch/arm/boot/dts/r8a7794.dtsi
-@@ -348,7 +348,7 @@
+diff --git a/arch/arm/boot/dts/r8a7743.dtsi b/arch/arm/boot/dts/r8a7743.dtsi
+index d5834b6..8606955 100644
+--- a/arch/arm/boot/dts/r8a7743.dtsi
++++ b/arch/arm/boot/dts/r8a7743.dtsi
+@@ -364,7 +364,8 @@
+ 		};
  
- 			smp-sram@0 {
- 				compatible = "renesas,smp-sram";
--				reg = <0 0x10>;
-+				reg = <0 0x64>;
- 			};
+ 		rst: reset-controller@e6160000 {
+-			compatible = "renesas,r8a7743-rst";
++			compatible = "renesas,r8a7743-rst",
++				     "renesas,rcar-gen2-rst";
+ 			reg = <0 0xe6160000 0 0x100>;
  		};
  
 -- 
