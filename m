@@ -1,140 +1,126 @@
-From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: [RFC usb-next v8 3/3] usb: core: hcd: integrate the PHY wrapper into the HCD core
-Date: Thu, 25 Jan 2018 01:00:53 +0100
-Message-ID: <20180125000053.9387-4-martin.blumenstingl@googlemail.com>
-References: <20180125000053.9387-1-martin.blumenstingl@googlemail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180125000053.9387-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, mgautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC] devicetree: new FDT format version
+Date: Wed, 24 Jan 2018 16:22:15 -0800
+Message-ID: <e986435b-481b-2629-7600-10d9e21ac58e@gmail.com>
+References: <b96829f9-2e8b-fdc5-5090-58591e2260cf@gmail.com>
+ <CAL_JsqJR2y7bMw_-9TBAGWZ_kf7_sZo5qvqvRowJ8jiy=4G0Bg@mail.gmail.com>
+ <20180123124232.GA14832@umbus>
+ <20328477-e511-e875-7dc4-253640f2219e@gmail.com>
+ <CAL_Jsq+fvFrGhqO0zbEUE_i23FkU=G4Z1-e0vnXHi4KbS2oK0A@mail.gmail.com>
+ <e1bec77d-4dac-200b-34be-23573bf738f0@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <e1bec77d-4dac-200b-34be-23573bf738f0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, "Pantelis Antomarek.vasut-Re5JQEeQqe/2sr8fMPgRzw@public.gmane.org" <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, =?UTF-8?Q?Marek_Va=c5=a1ut?= <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Kyle Evans <kevans-h+KGxgPPiopAfugRpC6u6w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Alan Tull <atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This integrates the PHY wrapper into the core hcd infrastructure.
-Multiple PHYs which are part of the HCD's device tree node are now
-managed (= powered on/off when needed), by the new usb_phy_roothub code.
+On 01/24/18 13:16, Frank Rowand wrote:
+> On 01/24/18 07:47, Rob Herring wrote:
+>> On Tue, Jan 23, 2018 at 3:17 PM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>> On 01/23/18 04:42, David Gibson wrote:
+>>>> On Mon, Jan 22, 2018 at 03:01:52PM -0600, Rob Herring wrote:
+>>>>> On Mon, Jan 22, 2018 at 2:09 AM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>>>>> Hi All,
+>>>>>>
+>>>>>> I've tried to create a decent distribution list, but I'm sure I've missed
+>>>>>> someone or some important list.  Please share this with anyone you think
+>>>>>> will be affected.
+>>>>>>
+>>>>>> I have been playing around with some thoughts for some additions to
+>>>>>> the devicetree FDT aka blob format.
+>>>>>>
+>>>>>> I would like to get the affected parties thinking about how additions to
+>>>>>> the format could improve whichever pieces of FDT related technology you
+>>>>>> work on or care about.  In my opinion, the FDT format should change
+>>>>>> very infrequently because of the impact on so many projects that have
+>>>>>> to work together to create a final solution, plus the many many users
+>>>>>> of those projects.
+>>>>>
+>>>>> A few things discussed before:
+>>>>> - Adding type information Even just tagging phandles would be good.
+>>>>
+>>>> I'm a bit dubious about this.  It would have to be "hints" only -
+>>>> there's not really anyway we can put in authoritative type
+>>>> information, since dtc itself doesn't really know that.  It's also
+>>>> hard to see how that could be done in a way which wouldn't either a)
+>>>> require very awkward parallel lookup of the data and type information
+>>>> or b) not be backwards compatible (even read only).
+>>
+>> I never said it was possible. :) I'm just trying to enumerate possible
+>> FDT format changes because I don't think we want to continuously
+>> trickle out FDT changes even if they are backwards compatible.
+> 
+> Yes, I'm trying to capture any pending changes in a single version change.
+> 
+> 
+>>>>> - Allow applying overlays by just appending to the blob. The need for
+>>>>> this is somewhat gone now that libfdt can just fully apply overlays.
+>>>>
+>>>> I'm not really sure what you want here.  I mean you could easily allow
+>>>> the format to allow multiple appended overlays, and define that to
+>>>> mean the overlaid result.  At some point *something* is going to have
+>>>> to really do the application, so I'm not sure that it really buys you
+>>>> that much.  It also makes nearly every operation on the tree in libfdt
+>>>> horrible to implement, at least within the other constraints the
+>>>> interface was designed around; you'll continually have to scan the
+>>>> entire tree just in case some other overlay fragment has some bearing
+>>>> on the thing you're looking at.  It confuses the interface too: what
+>>>> does "node offset" mean if the same node could be built up from
+>>>> overlay fragments at multiple offsets.
+>>
+>> The idea was to avoid applying overlays to flattened trees at all.
+>> You're just passing the problem to the next stage (typically the
+>> kernel). But we have applying overlays to flattened trees now, so
+>> maybe there's no need anymore.
+>>
+>>> Somewhat echoing David's comment, I'm also not sure what you mean.
+>>> And trying to not overly influence this conversation with preconceptions
+>>> from what I'm going to propose.
+>>>
+>>> My first shot at the new format added a field to the FDT to indicate
+>>> that an overlay FDT was concatenated to the FDT (and the overlay FDT
+>>> in turn could set it's field to concatenate another overlay FDT).
+>>
+>> Yes, something like this is what I meant. This was something Grant had
+>> talked about.
+>>
+>>> But in the end I decided that information belonged outside the FDT,
+>>> and it was sufficient to require that all FDTs be padded out so that
+>>> if an overlay FDT was concatenated to the FDT, the overlay FDT would
+>>> be properly aligned.
+>>
+>> I can't think of why this wouldn't work either.
+>>
+>>> For ease of typing, I'll call this "chaining" or "chained".  For
+>>> Linux, I am envisioning no kernel use of data from a chained FDT
+>>> until after the tree is unflattened.  I haven't done an exhaustive
+>>> search to determine all of the uses of data directly from the
+>>> flattened FDT, but I am optimistic that there will not be any such
+>>> access that would require data from a chained FDT (and we could
+>>> make this a rule).
+>>
+>> This would be a major downside to leaving it up to the kernel because
+>> what can't be touched is hard to enumerate and could change. For
+>> example, we added earlycon and now the uart node can't be modified.
+> 
+> What you say makes sense.  So I'll reverse myself and say that for
+> Linux, we should update the FDT read code to scan all chained
+> overlay FDT(s) as well as the base FDT.
 
-Suspend and resume is also supported, however not for
-runtime/auto-suspend (which is triggered for example when no devices are
-connected to the USB bus). This is needed on some SoCs (for example
-Amlogic Meson GXL) because if the PHYs are disabled during auto-suspend
-then devices which are plugged in afterwards are not seen by the host.
+< snip >
 
-One example where this is required is the Amlogic GXL and GXM SoCs:
-They are using a dwc3 USB controller with up to three ports enabled on
-the internal roothub. Each port has it's own PHY which must be enabled
-(if one of the PHYs is left disabled then none of the USB ports works at
-all).
-The new logic works on the Amlogic GXL and GXM SoCs because the dwc3
-driver internally creates a xhci-hcd which then registers a HCD which
-then triggers our new PHY wrapper.
+What I wrote was somewhat ambiguous.  What I meant by "FDT read
+code" was functions that check for existence of nodes in the
+FDT or read property values from the FDT.
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Acked-by: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-Acked-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
----
- drivers/usb/core/hcd.c  | 29 +++++++++++++++++++++++++++++
- include/linux/usb/hcd.h |  1 +
- 2 files changed, 30 insertions(+)
+The other way one could read what I wrote was that when Linux
+unflattens the FDT, it would unflatten the FDT and all of the
+chained FDTs.  Obviously also true, but not what I was trying
+to say here.
 
-diff --git a/drivers/usb/core/hcd.c b/drivers/usb/core/hcd.c
-index fc32391a34d5..fc99cddc117e 100644
---- a/drivers/usb/core/hcd.c
-+++ b/drivers/usb/core/hcd.c
-@@ -37,6 +37,7 @@
- #include <linux/usb/otg.h>
- 
- #include "usb.h"
-+#include "phy.h"
- 
- 
- /*-------------------------------------------------------------------------*/
-@@ -2260,6 +2261,9 @@ int hcd_bus_suspend(struct usb_device *rhdev, pm_message_t msg)
- 		usb_set_device_state(rhdev, USB_STATE_SUSPENDED);
- 		hcd->state = HC_STATE_SUSPENDED;
- 
-+		if (!PMSG_IS_AUTO(msg))
-+			usb_phy_roothub_power_off(hcd->phy_roothub);
-+
- 		/* Did we race with a root-hub wakeup event? */
- 		if (rhdev->do_remote_wakeup) {
- 			char	buffer[6];
-@@ -2296,6 +2300,13 @@ int hcd_bus_resume(struct usb_device *rhdev, pm_message_t msg)
- 		dev_dbg(&rhdev->dev, "skipped %s of dead bus\n", "resume");
- 		return 0;
- 	}
-+
-+	if (!PMSG_IS_AUTO(msg)) {
-+		status = usb_phy_roothub_power_on(hcd->phy_roothub);
-+		if (status)
-+			return status;
-+	}
-+
- 	if (!hcd->driver->bus_resume)
- 		return -ENOENT;
- 	if (HCD_RH_RUNNING(hcd))
-@@ -2333,6 +2344,7 @@ int hcd_bus_resume(struct usb_device *rhdev, pm_message_t msg)
- 		}
- 	} else {
- 		hcd->state = old_state;
-+		usb_phy_roothub_power_off(hcd->phy_roothub);
- 		dev_dbg(&rhdev->dev, "bus %s fail, err %d\n",
- 				"resume", status);
- 		if (status != -ESHUTDOWN)
-@@ -2769,6 +2781,16 @@ int usb_add_hcd(struct usb_hcd *hcd,
- 		}
- 	}
- 
-+	hcd->phy_roothub = usb_phy_roothub_init(hcd->self.sysdev);
-+	if (IS_ERR(hcd->phy_roothub)) {
-+		retval = PTR_ERR(hcd->phy_roothub);
-+		goto err_phy_roothub_init;
-+	}
-+
-+	retval = usb_phy_roothub_power_on(hcd->phy_roothub);
-+	if (retval)
-+		goto err_usb_phy_roothub_power_on;
-+
- 	dev_info(hcd->self.controller, "%s\n", hcd->product_desc);
- 
- 	/* Keep old behaviour if authorized_default is not in [0, 1]. */
-@@ -2933,6 +2955,10 @@ int usb_add_hcd(struct usb_hcd *hcd,
- err_register_bus:
- 	hcd_buffer_destroy(hcd);
- err_create_buf:
-+	usb_phy_roothub_power_off(hcd->phy_roothub);
-+err_usb_phy_roothub_power_on:
-+	usb_phy_roothub_exit(hcd->phy_roothub);
-+err_phy_roothub_init:
- 	if (IS_ENABLED(CONFIG_GENERIC_PHY) && hcd->remove_phy && hcd->phy) {
- 		phy_power_off(hcd->phy);
- 		phy_exit(hcd->phy);
-@@ -3017,6 +3043,9 @@ void usb_remove_hcd(struct usb_hcd *hcd)
- 	usb_deregister_bus(&hcd->self);
- 	hcd_buffer_destroy(hcd);
- 
-+	usb_phy_roothub_power_off(hcd->phy_roothub);
-+	usb_phy_roothub_exit(hcd->phy_roothub);
-+
- 	if (IS_ENABLED(CONFIG_GENERIC_PHY) && hcd->remove_phy && hcd->phy) {
- 		phy_power_off(hcd->phy);
- 		phy_exit(hcd->phy);
-diff --git a/include/linux/usb/hcd.h b/include/linux/usb/hcd.h
-index 176900528822..9e8fc9c5f394 100644
---- a/include/linux/usb/hcd.h
-+++ b/include/linux/usb/hcd.h
-@@ -104,6 +104,7 @@ struct usb_hcd {
- 	 */
- 	struct usb_phy		*usb_phy;
- 	struct phy		*phy;
-+	struct usb_phy_roothub	*phy_roothub;
- 
- 	/* Flags that need to be manipulated atomically because they can
- 	 * change while the host controller is running.  Always use
--- 
-2.16.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-Frank
