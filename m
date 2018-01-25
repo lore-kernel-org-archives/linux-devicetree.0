@@ -1,22 +1,35 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Applied "regulator: empty the old suspend functions" to the regulator tree
-Date: Thu, 25 Jan 2018 12:15:39 +0000
-Message-ID: <E1eegRP-0006WK-B8@debutante>
-References: <1513837506-26543-5-git-send-email-zhang.chunyan@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1513837506-26543-5-git-send-email-zhang.chunyan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chunyan Zhang <zhang.chunyan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chunyan Zhang <zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "ASoC: sun8i-codec: Add ADC support for a33"
+	to the asoc tree
+Date: Thu, 25 Jan 2018 12:15:09 +0000
+Message-ID: <E1eegQv-0006R9-DN@debutante>
+References: <20171213123408.10422-2-mylene.josserand@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============2437379022154144556=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20171213123408.10422-2-mylene.josserand@free-electrons.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+Cc: mark.rutland@arm.com, thomas.petazzoni@free-electrons.com, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, tiwai@suse.com, robh+dt@kernel.org, lgirdwood@gmail.com, wens@csie.org, broonie@kernel.org, linux@armlinux.org.uk, maxime.ripard@free-electrons.com, mylene.josserand@free-electrons.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
+
+--===============2437379022154144556==
+Content-Type: text/plain
 
 The patch
 
-   regulator: empty the old suspend functions
+   ASoC: sun8i-codec: Add ADC support for a33
 
-has been applied to the regulator tree at
+has been applied to the asoc tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -37,141 +50,202 @@ to this mail.
 Thanks,
 Mark
 
->From 6103427372a81f7018525ca84c0647f36532a94e Mon Sep 17 00:00:00 2001
-From: Chunyan Zhang <zhang.chunyan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Date: Tue, 23 Jan 2018 19:59:42 +0800
-Subject: [PATCH] regulator: empty the old suspend functions
+>From eda85d1fee05d69e97939f9603b857f2244d72d9 Mon Sep 17 00:00:00 2001
+From: Mylene JOSSERAND <mylene.josserand@free-electrons.com>
+Date: Wed, 13 Dec 2017 13:34:07 +0100
+Subject: [PATCH] ASoC: sun8i-codec: Add ADC support for a33
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Regualtor suspend/resume functions should only be called by PM suspend
-core via registering dev_pm_ops, and regulator devices should implement
-the callback functions.  Thus, any regulator consumer shouldn't call
-the regulator suspend/resume functions directly.
+Add ADC support for the sun8i-codec driver.
 
-In order to avoid compile errors, two empty functions with the same name
-still be left for the time being.
+This driver uses microphones widgets and routes provided by the
+analog part (sun8i-codec-analog).
+Some digital configurations are needed by creating new ADC widgets
+and routes.
 
-Signed-off-by: Chunyan Zhang <zhang.chunyan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Signed-off-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Mylène Josserand <mylene.josserand@free-electrons.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/core.c          | 74 ---------------------------------------
- include/linux/regulator/machine.h |  5 ++-
- 2 files changed, 2 insertions(+), 77 deletions(-)
+ sound/soc/sunxi/sun8i-codec.c | 82 +++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 80 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
-index 5ea80e94eb69..080c2334edc5 100644
---- a/drivers/regulator/core.c
-+++ b/drivers/regulator/core.c
-@@ -4179,80 +4179,6 @@ void regulator_unregister(struct regulator_dev *rdev)
- }
- EXPORT_SYMBOL_GPL(regulator_unregister);
+diff --git a/sound/soc/sunxi/sun8i-codec.c b/sound/soc/sunxi/sun8i-codec.c
+index 3dd183be08a4..7a15df924316 100644
+--- a/sound/soc/sunxi/sun8i-codec.c
++++ b/sound/soc/sunxi/sun8i-codec.c
+@@ -37,9 +37,11 @@
+ #define SUN8I_SYSCLK_CTL_SYSCLK_SRC			0
+ #define SUN8I_MOD_CLK_ENA				0x010
+ #define SUN8I_MOD_CLK_ENA_AIF1				15
++#define SUN8I_MOD_CLK_ENA_ADC				3
+ #define SUN8I_MOD_CLK_ENA_DAC				2
+ #define SUN8I_MOD_RST_CTL				0x014
+ #define SUN8I_MOD_RST_CTL_AIF1				15
++#define SUN8I_MOD_RST_CTL_ADC				3
+ #define SUN8I_MOD_RST_CTL_DAC				2
+ #define SUN8I_SYS_SR_CTRL				0x018
+ #define SUN8I_SYS_SR_CTRL_AIF1_FS			12
+@@ -54,9 +56,25 @@
+ #define SUN8I_AIF1CLK_CTRL_AIF1_WORD_SIZ		4
+ #define SUN8I_AIF1CLK_CTRL_AIF1_WORD_SIZ_16		(1 << 4)
+ #define SUN8I_AIF1CLK_CTRL_AIF1_DATA_FMT		2
++#define SUN8I_AIF1_ADCDAT_CTRL				0x044
++#define SUN8I_AIF1_ADCDAT_CTRL_AIF1_DA0L_ENA		15
++#define SUN8I_AIF1_ADCDAT_CTRL_AIF1_DA0R_ENA		14
+ #define SUN8I_AIF1_DACDAT_CTRL				0x048
+ #define SUN8I_AIF1_DACDAT_CTRL_AIF1_DA0L_ENA		15
+ #define SUN8I_AIF1_DACDAT_CTRL_AIF1_DA0R_ENA		14
++#define SUN8I_AIF1_MXR_SRC				0x04c
++#define SUN8I_AIF1_MXR_SRC_AD0L_MXL_SRC_AIF1DA0L	15
++#define SUN8I_AIF1_MXR_SRC_AD0L_MXL_SRC_AIF2DACL	14
++#define SUN8I_AIF1_MXR_SRC_AD0L_MXL_SRC_ADCL		13
++#define SUN8I_AIF1_MXR_SRC_AD0L_MXL_SRC_AIF2DACR	12
++#define SUN8I_AIF1_MXR_SRC_AD0R_MXR_SRC_AIF1DA0R	11
++#define SUN8I_AIF1_MXR_SRC_AD0R_MXR_SRC_AIF2DACR	10
++#define SUN8I_AIF1_MXR_SRC_AD0R_MXR_SRC_ADCR		9
++#define SUN8I_AIF1_MXR_SRC_AD0R_MXR_SRC_AIF2DACL	8
++#define SUN8I_ADC_DIG_CTRL				0x100
++#define SUN8I_ADC_DIG_CTRL_ENDA			15
++#define SUN8I_ADC_DIG_CTRL_ADOUT_DTS			2
++#define SUN8I_ADC_DIG_CTRL_ADOUT_DLY			1
+ #define SUN8I_DAC_DIG_CTRL				0x120
+ #define SUN8I_DAC_DIG_CTRL_ENDA			15
+ #define SUN8I_DAC_MXR_SRC				0x130
+@@ -338,10 +356,30 @@ static const struct snd_kcontrol_new sun8i_dac_mixer_controls[] = {
+ 			SUN8I_DAC_MXR_SRC_DACR_MXR_SRC_ADCR, 1, 0),
+ };
  
--static int _regulator_suspend_prepare(struct device *dev, void *data)
--{
--	struct regulator_dev *rdev = dev_to_rdev(dev);
--	const suspend_state_t *state = data;
--	int ret;
--
--	mutex_lock(&rdev->mutex);
--	ret = suspend_prepare(rdev, *state);
--	mutex_unlock(&rdev->mutex);
--
--	return ret;
--}
--
--/**
-- * regulator_suspend_prepare - prepare regulators for system wide suspend
-- * @state: system suspend state
-- *
-- * Configure each regulator with it's suspend operating parameters for state.
-- * This will usually be called by machine suspend code prior to supending.
-- */
--int regulator_suspend_prepare(suspend_state_t state)
--{
--	/* ON is handled by regulator active state */
--	if (state == PM_SUSPEND_ON)
--		return -EINVAL;
--
--	return class_for_each_device(&regulator_class, NULL, &state,
--				     _regulator_suspend_prepare);
--}
--EXPORT_SYMBOL_GPL(regulator_suspend_prepare);
--
--static int _regulator_suspend_finish(struct device *dev, void *data)
--{
--	struct regulator_dev *rdev = dev_to_rdev(dev);
--	int ret;
--
--	mutex_lock(&rdev->mutex);
--	if (rdev->use_count > 0  || rdev->constraints->always_on) {
--		if (!_regulator_is_enabled(rdev)) {
--			ret = _regulator_do_enable(rdev);
--			if (ret)
--				dev_err(dev,
--					"Failed to resume regulator %d\n",
--					ret);
--		}
--	} else {
--		if (!have_full_constraints())
--			goto unlock;
--		if (!_regulator_is_enabled(rdev))
--			goto unlock;
--
--		ret = _regulator_do_disable(rdev);
--		if (ret)
--			dev_err(dev, "Failed to suspend regulator %d\n", ret);
--	}
--unlock:
--	mutex_unlock(&rdev->mutex);
--
--	/* Keep processing regulators in spite of any errors */
--	return 0;
--}
--
--/**
-- * regulator_suspend_finish - resume regulators from system wide suspend
-- *
-- * Turn on regulators that might be turned off by regulator_suspend_prepare
-- * and that should be turned on according to the regulators properties.
-- */
--int regulator_suspend_finish(void)
--{
--	return class_for_each_device(&regulator_class, NULL, NULL,
--				     _regulator_suspend_finish);
--}
--EXPORT_SYMBOL_GPL(regulator_suspend_finish);
- 
- /**
-  * regulator_has_full_constraints - the system has fully specified constraints
-diff --git a/include/linux/regulator/machine.h b/include/linux/regulator/machine.h
-index e50519f13d4d..b4ddb56e7c19 100644
---- a/include/linux/regulator/machine.h
-+++ b/include/linux/regulator/machine.h
-@@ -231,12 +231,12 @@ struct regulator_init_data {
- 
- #ifdef CONFIG_REGULATOR
- void regulator_has_full_constraints(void);
--int regulator_suspend_prepare(suspend_state_t state);
--int regulator_suspend_finish(void);
- #else
- static inline void regulator_has_full_constraints(void)
- {
- }
-+#endif
++static const struct snd_kcontrol_new sun8i_input_mixer_controls[] = {
++	SOC_DAPM_DOUBLE("AIF1 Slot 0 Digital ADC Capture Switch",
++			SUN8I_AIF1_MXR_SRC,
++			SUN8I_AIF1_MXR_SRC_AD0L_MXL_SRC_AIF1DA0L,
++			SUN8I_AIF1_MXR_SRC_AD0R_MXR_SRC_AIF1DA0R, 1, 0),
++	SOC_DAPM_DOUBLE("AIF2 Digital ADC Capture Switch", SUN8I_AIF1_MXR_SRC,
++			SUN8I_AIF1_MXR_SRC_AD0L_MXL_SRC_AIF2DACL,
++			SUN8I_AIF1_MXR_SRC_AD0R_MXR_SRC_AIF2DACR, 1, 0),
++	SOC_DAPM_DOUBLE("AIF1 Data Digital ADC Capture Switch",
++			SUN8I_AIF1_MXR_SRC,
++			SUN8I_AIF1_MXR_SRC_AD0L_MXL_SRC_ADCL,
++			SUN8I_AIF1_MXR_SRC_AD0R_MXR_SRC_ADCR, 1, 0),
++	SOC_DAPM_DOUBLE("AIF2 Inv Digital ADC Capture Switch",
++			SUN8I_AIF1_MXR_SRC,
++			SUN8I_AIF1_MXR_SRC_AD0L_MXL_SRC_AIF2DACR,
++			SUN8I_AIF1_MXR_SRC_AD0R_MXR_SRC_AIF2DACL, 1, 0),
++};
 +
- static inline int regulator_suspend_prepare(suspend_state_t state)
- {
- 	return 0;
-@@ -245,6 +245,5 @@ static inline int regulator_suspend_finish(void)
- {
- 	return 0;
- }
--#endif
+ static const struct snd_soc_dapm_widget sun8i_codec_dapm_widgets[] = {
+-	/* Digital parts of the DACs */
++	/* Digital parts of the DACs and ADC */
+ 	SND_SOC_DAPM_SUPPLY("DAC", SUN8I_DAC_DIG_CTRL, SUN8I_DAC_DIG_CTRL_ENDA,
+ 			    0, NULL, 0),
++	SND_SOC_DAPM_SUPPLY("ADC", SUN8I_ADC_DIG_CTRL, SUN8I_ADC_DIG_CTRL_ENDA,
++			    0, NULL, 0),
  
- #endif
+ 	/* Analog DAC AIF */
+ 	SND_SOC_DAPM_AIF_IN("AIF1 Slot 0 Left", "Playback", 0,
+@@ -351,17 +389,31 @@ static const struct snd_soc_dapm_widget sun8i_codec_dapm_widgets[] = {
+ 			    SUN8I_AIF1_DACDAT_CTRL,
+ 			    SUN8I_AIF1_DACDAT_CTRL_AIF1_DA0R_ENA, 0),
+ 
+-	/* DAC Mixers */
++	/* Analog ADC AIF */
++	SND_SOC_DAPM_AIF_IN("AIF1 Slot 0 Left ADC", "Capture", 0,
++			    SUN8I_AIF1_ADCDAT_CTRL,
++			    SUN8I_AIF1_ADCDAT_CTRL_AIF1_DA0L_ENA, 0),
++	SND_SOC_DAPM_AIF_IN("AIF1 Slot 0 Right ADC", "Capture", 0,
++			    SUN8I_AIF1_ADCDAT_CTRL,
++			    SUN8I_AIF1_ADCDAT_CTRL_AIF1_DA0R_ENA, 0),
++
++	/* DAC and ADC Mixers */
+ 	SOC_MIXER_ARRAY("Left Digital DAC Mixer", SND_SOC_NOPM, 0, 0,
+ 			sun8i_dac_mixer_controls),
+ 	SOC_MIXER_ARRAY("Right Digital DAC Mixer", SND_SOC_NOPM, 0, 0,
+ 			sun8i_dac_mixer_controls),
++	SOC_MIXER_ARRAY("Left Digital ADC Mixer", SND_SOC_NOPM, 0, 0,
++			sun8i_input_mixer_controls),
++	SOC_MIXER_ARRAY("Right Digital ADC Mixer", SND_SOC_NOPM, 0, 0,
++			sun8i_input_mixer_controls),
+ 
+ 	/* Clocks */
+ 	SND_SOC_DAPM_SUPPLY("MODCLK AFI1", SUN8I_MOD_CLK_ENA,
+ 			    SUN8I_MOD_CLK_ENA_AIF1, 0, NULL, 0),
+ 	SND_SOC_DAPM_SUPPLY("MODCLK DAC", SUN8I_MOD_CLK_ENA,
+ 			    SUN8I_MOD_CLK_ENA_DAC, 0, NULL, 0),
++	SND_SOC_DAPM_SUPPLY("MODCLK ADC", SUN8I_MOD_CLK_ENA,
++			    SUN8I_MOD_CLK_ENA_ADC, 0, NULL, 0),
+ 	SND_SOC_DAPM_SUPPLY("AIF1", SUN8I_SYSCLK_CTL,
+ 			    SUN8I_SYSCLK_CTL_AIF1CLK_ENA, 0, NULL, 0),
+ 	SND_SOC_DAPM_SUPPLY("SYSCLK", SUN8I_SYSCLK_CTL,
+@@ -378,6 +430,12 @@ static const struct snd_soc_dapm_widget sun8i_codec_dapm_widgets[] = {
+ 			    SUN8I_MOD_RST_CTL_AIF1, 0, NULL, 0),
+ 	SND_SOC_DAPM_SUPPLY("RST DAC", SUN8I_MOD_RST_CTL,
+ 			    SUN8I_MOD_RST_CTL_DAC, 0, NULL, 0),
++	SND_SOC_DAPM_SUPPLY("RST ADC", SUN8I_MOD_RST_CTL,
++			    SUN8I_MOD_RST_CTL_ADC, 0, NULL, 0),
++
++	SND_SOC_DAPM_MIC("Headset Mic", NULL),
++	SND_SOC_DAPM_MIC("Mic", NULL),
++
+ };
+ 
+ static const struct snd_soc_dapm_route sun8i_codec_dapm_routes[] = {
+@@ -387,11 +445,16 @@ static const struct snd_soc_dapm_route sun8i_codec_dapm_routes[] = {
+ 	{ "RST AIF1", NULL, "AIF1 PLL" },
+ 	{ "MODCLK AFI1", NULL, "RST AIF1" },
+ 	{ "DAC", NULL, "MODCLK AFI1" },
++	{ "ADC", NULL, "MODCLK AFI1" },
+ 
+ 	{ "RST DAC", NULL, "SYSCLK" },
+ 	{ "MODCLK DAC", NULL, "RST DAC" },
+ 	{ "DAC", NULL, "MODCLK DAC" },
+ 
++	{ "RST ADC", NULL, "SYSCLK" },
++	{ "MODCLK ADC", NULL, "RST ADC" },
++	{ "ADC", NULL, "MODCLK ADC" },
++
+ 	/* DAC Routes */
+ 	{ "AIF1 Slot 0 Right", NULL, "DAC" },
+ 	{ "AIF1 Slot 0 Left", NULL, "DAC" },
+@@ -401,6 +464,12 @@ static const struct snd_soc_dapm_route sun8i_codec_dapm_routes[] = {
+ 	  "AIF1 Slot 0 Left"},
+ 	{ "Right Digital DAC Mixer", "AIF1 Slot 0 Digital DAC Playback Switch",
+ 	  "AIF1 Slot 0 Right"},
++
++	/* ADC routes */
++	{ "Left Digital ADC Mixer", "AIF1 Data Digital ADC Capture Switch",
++	  "AIF1 Slot 0 Left ADC" },
++	{ "Right Digital ADC Mixer", "AIF1 Data Digital ADC Capture Switch",
++	  "AIF1 Slot 0 Right ADC" },
+ };
+ 
+ static const struct snd_soc_dai_ops sun8i_codec_dai_ops = {
+@@ -418,6 +487,15 @@ static struct snd_soc_dai_driver sun8i_codec_dai = {
+ 		.rates = SNDRV_PCM_RATE_8000_192000,
+ 		.formats = SNDRV_PCM_FMTBIT_S16_LE,
+ 	},
++	/* capture capabilities */
++	.capture = {
++		.stream_name = "Capture",
++		.channels_min = 1,
++		.channels_max = 2,
++		.rates = SNDRV_PCM_RATE_8000_192000,
++		.formats = SNDRV_PCM_FMTBIT_S16_LE,
++		.sig_bits = 24,
++	},
+ 	/* pcm operations */
+ 	.ops = &sun8i_codec_dai_ops,
+ };
 -- 
 2.15.1
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+--===============2437379022154144556==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============2437379022154144556==--
