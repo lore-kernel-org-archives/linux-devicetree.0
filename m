@@ -1,251 +1,84 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: sun8i-codec: Add ADC support for a33"
-	to the asoc tree
-Date: Thu, 25 Jan 2018 12:15:09 +0000
-Message-ID: <E1eegQv-0006R9-DN@debutante>
-References: <20171213123408.10422-2-mylene.josserand@free-electrons.com>
+From: Dong Aisheng <aisheng.dong-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH 2/4] arm64: add basic DTS for i.MX8MQ
+Date: Thu, 25 Jan 2018 20:34:37 +0800
+Message-ID: <e6e2fa31e89872fe89924da17759481e@codeaurora.org>
+References: <20180117183244.28303-1-l.stach@pengutronix.de>
+ <20180117183244.28303-2-l.stach@pengutronix.de>
+ <20180123103609.GD27764@dragon> <1516713799.25726.21.camel@pengutronix.de>
+ <ebc8b28d5c2948131cc187ac8177395c@codeaurora.org>
+ <1516876026.6411.23.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2437379022154144556=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20171213123408.10422-2-mylene.josserand@free-electrons.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-Cc: mark.rutland@arm.com, thomas.petazzoni@free-electrons.com, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, tiwai@suse.com, robh+dt@kernel.org, lgirdwood@gmail.com, wens@csie.org, broonie@kernel.org, linux@armlinux.org.uk, maxime.ripard@free-electrons.com, mylene.josserand@free-electrons.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1516876026.6411.23.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, lauren.post-3arQi8VN3Tc@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-imx-3arQi8VN3Tc@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, aisheng.dong-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---===============2437379022154144556==
-Content-Type: text/plain
+On 2018-01-25 18:27, Lucas Stach wrote:
+> Hi Dong,
 
-The patch
+<snip>
 
-   ASoC: sun8i-codec: Add ADC support for a33
+>> And i see the dtsi file does not include Freescale/NXP copyright,
+>> is there a reason?
+> 
+> The dtsi is quite different from the downstream version. But you are
+> right, I looked extensively at the downstream version, so I'll add the
+> NXP copyright.
+> 
 
-has been applied to the asoc tree at
+Okay, i see.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+> BTW: Could you check internally to see if Freescale/NXP would be okay
+> with relicensing the DT bits I pulled from downstream as dual GPL-2.0
+> and MIT, to align with other DTs in the kernel?
+> 
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+I thought it should be okay. But i pulled Post Lauren in to give you
+a confirmed answer.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+Lauren,
+Can you help with this question?
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+>> BTW it's quite strange that my gmail did not receive your MX8MQ patch
+>> series except clk part.
+>> Lucas, Could you help have me CCed next time?
+>> I'd like to help review and test the patch series.
+>> 
+>> For this time, can you help send them all to me as attachment?
+> 
+> I'm about to send v2 of the series. I'll CC you on the submission.
+> 
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+Great.
 
-Thanks,
-Mark
+>> (You can also send all IMX related patches to linux-imx-3arQi8VN3Tc@public.gmane.org 
+>> maillist
+>> i created recently for tracking all IMX related upstream activities.
+>> Most Freescale/NXP driver owners are in this list that could help on
+>> the review. Shawn, do you think if i can put it in MAINTAINER file?)
+> 
+> That's great news that there is now a common address for this. I think
+> it would be a good idea to have it added to MAINTAINERS as a reviewer.
+> 
 
->From eda85d1fee05d69e97939f9603b857f2244d72d9 Mon Sep 17 00:00:00 2001
-From: Mylene JOSSERAND <mylene.josserand@free-electrons.com>
-Date: Wed, 13 Dec 2017 13:34:07 +0100
-Subject: [PATCH] ASoC: sun8i-codec: Add ADC support for a33
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Thanks for supporting.
 
-Add ADC support for the sun8i-codec driver.
+Regards
+Dong Aisheng
 
-This driver uses microphones widgets and routes provided by the
-analog part (sun8i-codec-analog).
-Some digital configurations are needed by creating new ADC widgets
-and routes.
-
-Signed-off-by: Mylène Josserand <mylene.josserand@free-electrons.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- sound/soc/sunxi/sun8i-codec.c | 82 +++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 80 insertions(+), 2 deletions(-)
-
-diff --git a/sound/soc/sunxi/sun8i-codec.c b/sound/soc/sunxi/sun8i-codec.c
-index 3dd183be08a4..7a15df924316 100644
---- a/sound/soc/sunxi/sun8i-codec.c
-+++ b/sound/soc/sunxi/sun8i-codec.c
-@@ -37,9 +37,11 @@
- #define SUN8I_SYSCLK_CTL_SYSCLK_SRC			0
- #define SUN8I_MOD_CLK_ENA				0x010
- #define SUN8I_MOD_CLK_ENA_AIF1				15
-+#define SUN8I_MOD_CLK_ENA_ADC				3
- #define SUN8I_MOD_CLK_ENA_DAC				2
- #define SUN8I_MOD_RST_CTL				0x014
- #define SUN8I_MOD_RST_CTL_AIF1				15
-+#define SUN8I_MOD_RST_CTL_ADC				3
- #define SUN8I_MOD_RST_CTL_DAC				2
- #define SUN8I_SYS_SR_CTRL				0x018
- #define SUN8I_SYS_SR_CTRL_AIF1_FS			12
-@@ -54,9 +56,25 @@
- #define SUN8I_AIF1CLK_CTRL_AIF1_WORD_SIZ		4
- #define SUN8I_AIF1CLK_CTRL_AIF1_WORD_SIZ_16		(1 << 4)
- #define SUN8I_AIF1CLK_CTRL_AIF1_DATA_FMT		2
-+#define SUN8I_AIF1_ADCDAT_CTRL				0x044
-+#define SUN8I_AIF1_ADCDAT_CTRL_AIF1_DA0L_ENA		15
-+#define SUN8I_AIF1_ADCDAT_CTRL_AIF1_DA0R_ENA		14
- #define SUN8I_AIF1_DACDAT_CTRL				0x048
- #define SUN8I_AIF1_DACDAT_CTRL_AIF1_DA0L_ENA		15
- #define SUN8I_AIF1_DACDAT_CTRL_AIF1_DA0R_ENA		14
-+#define SUN8I_AIF1_MXR_SRC				0x04c
-+#define SUN8I_AIF1_MXR_SRC_AD0L_MXL_SRC_AIF1DA0L	15
-+#define SUN8I_AIF1_MXR_SRC_AD0L_MXL_SRC_AIF2DACL	14
-+#define SUN8I_AIF1_MXR_SRC_AD0L_MXL_SRC_ADCL		13
-+#define SUN8I_AIF1_MXR_SRC_AD0L_MXL_SRC_AIF2DACR	12
-+#define SUN8I_AIF1_MXR_SRC_AD0R_MXR_SRC_AIF1DA0R	11
-+#define SUN8I_AIF1_MXR_SRC_AD0R_MXR_SRC_AIF2DACR	10
-+#define SUN8I_AIF1_MXR_SRC_AD0R_MXR_SRC_ADCR		9
-+#define SUN8I_AIF1_MXR_SRC_AD0R_MXR_SRC_AIF2DACL	8
-+#define SUN8I_ADC_DIG_CTRL				0x100
-+#define SUN8I_ADC_DIG_CTRL_ENDA			15
-+#define SUN8I_ADC_DIG_CTRL_ADOUT_DTS			2
-+#define SUN8I_ADC_DIG_CTRL_ADOUT_DLY			1
- #define SUN8I_DAC_DIG_CTRL				0x120
- #define SUN8I_DAC_DIG_CTRL_ENDA			15
- #define SUN8I_DAC_MXR_SRC				0x130
-@@ -338,10 +356,30 @@ static const struct snd_kcontrol_new sun8i_dac_mixer_controls[] = {
- 			SUN8I_DAC_MXR_SRC_DACR_MXR_SRC_ADCR, 1, 0),
- };
- 
-+static const struct snd_kcontrol_new sun8i_input_mixer_controls[] = {
-+	SOC_DAPM_DOUBLE("AIF1 Slot 0 Digital ADC Capture Switch",
-+			SUN8I_AIF1_MXR_SRC,
-+			SUN8I_AIF1_MXR_SRC_AD0L_MXL_SRC_AIF1DA0L,
-+			SUN8I_AIF1_MXR_SRC_AD0R_MXR_SRC_AIF1DA0R, 1, 0),
-+	SOC_DAPM_DOUBLE("AIF2 Digital ADC Capture Switch", SUN8I_AIF1_MXR_SRC,
-+			SUN8I_AIF1_MXR_SRC_AD0L_MXL_SRC_AIF2DACL,
-+			SUN8I_AIF1_MXR_SRC_AD0R_MXR_SRC_AIF2DACR, 1, 0),
-+	SOC_DAPM_DOUBLE("AIF1 Data Digital ADC Capture Switch",
-+			SUN8I_AIF1_MXR_SRC,
-+			SUN8I_AIF1_MXR_SRC_AD0L_MXL_SRC_ADCL,
-+			SUN8I_AIF1_MXR_SRC_AD0R_MXR_SRC_ADCR, 1, 0),
-+	SOC_DAPM_DOUBLE("AIF2 Inv Digital ADC Capture Switch",
-+			SUN8I_AIF1_MXR_SRC,
-+			SUN8I_AIF1_MXR_SRC_AD0L_MXL_SRC_AIF2DACR,
-+			SUN8I_AIF1_MXR_SRC_AD0R_MXR_SRC_AIF2DACL, 1, 0),
-+};
-+
- static const struct snd_soc_dapm_widget sun8i_codec_dapm_widgets[] = {
--	/* Digital parts of the DACs */
-+	/* Digital parts of the DACs and ADC */
- 	SND_SOC_DAPM_SUPPLY("DAC", SUN8I_DAC_DIG_CTRL, SUN8I_DAC_DIG_CTRL_ENDA,
- 			    0, NULL, 0),
-+	SND_SOC_DAPM_SUPPLY("ADC", SUN8I_ADC_DIG_CTRL, SUN8I_ADC_DIG_CTRL_ENDA,
-+			    0, NULL, 0),
- 
- 	/* Analog DAC AIF */
- 	SND_SOC_DAPM_AIF_IN("AIF1 Slot 0 Left", "Playback", 0,
-@@ -351,17 +389,31 @@ static const struct snd_soc_dapm_widget sun8i_codec_dapm_widgets[] = {
- 			    SUN8I_AIF1_DACDAT_CTRL,
- 			    SUN8I_AIF1_DACDAT_CTRL_AIF1_DA0R_ENA, 0),
- 
--	/* DAC Mixers */
-+	/* Analog ADC AIF */
-+	SND_SOC_DAPM_AIF_IN("AIF1 Slot 0 Left ADC", "Capture", 0,
-+			    SUN8I_AIF1_ADCDAT_CTRL,
-+			    SUN8I_AIF1_ADCDAT_CTRL_AIF1_DA0L_ENA, 0),
-+	SND_SOC_DAPM_AIF_IN("AIF1 Slot 0 Right ADC", "Capture", 0,
-+			    SUN8I_AIF1_ADCDAT_CTRL,
-+			    SUN8I_AIF1_ADCDAT_CTRL_AIF1_DA0R_ENA, 0),
-+
-+	/* DAC and ADC Mixers */
- 	SOC_MIXER_ARRAY("Left Digital DAC Mixer", SND_SOC_NOPM, 0, 0,
- 			sun8i_dac_mixer_controls),
- 	SOC_MIXER_ARRAY("Right Digital DAC Mixer", SND_SOC_NOPM, 0, 0,
- 			sun8i_dac_mixer_controls),
-+	SOC_MIXER_ARRAY("Left Digital ADC Mixer", SND_SOC_NOPM, 0, 0,
-+			sun8i_input_mixer_controls),
-+	SOC_MIXER_ARRAY("Right Digital ADC Mixer", SND_SOC_NOPM, 0, 0,
-+			sun8i_input_mixer_controls),
- 
- 	/* Clocks */
- 	SND_SOC_DAPM_SUPPLY("MODCLK AFI1", SUN8I_MOD_CLK_ENA,
- 			    SUN8I_MOD_CLK_ENA_AIF1, 0, NULL, 0),
- 	SND_SOC_DAPM_SUPPLY("MODCLK DAC", SUN8I_MOD_CLK_ENA,
- 			    SUN8I_MOD_CLK_ENA_DAC, 0, NULL, 0),
-+	SND_SOC_DAPM_SUPPLY("MODCLK ADC", SUN8I_MOD_CLK_ENA,
-+			    SUN8I_MOD_CLK_ENA_ADC, 0, NULL, 0),
- 	SND_SOC_DAPM_SUPPLY("AIF1", SUN8I_SYSCLK_CTL,
- 			    SUN8I_SYSCLK_CTL_AIF1CLK_ENA, 0, NULL, 0),
- 	SND_SOC_DAPM_SUPPLY("SYSCLK", SUN8I_SYSCLK_CTL,
-@@ -378,6 +430,12 @@ static const struct snd_soc_dapm_widget sun8i_codec_dapm_widgets[] = {
- 			    SUN8I_MOD_RST_CTL_AIF1, 0, NULL, 0),
- 	SND_SOC_DAPM_SUPPLY("RST DAC", SUN8I_MOD_RST_CTL,
- 			    SUN8I_MOD_RST_CTL_DAC, 0, NULL, 0),
-+	SND_SOC_DAPM_SUPPLY("RST ADC", SUN8I_MOD_RST_CTL,
-+			    SUN8I_MOD_RST_CTL_ADC, 0, NULL, 0),
-+
-+	SND_SOC_DAPM_MIC("Headset Mic", NULL),
-+	SND_SOC_DAPM_MIC("Mic", NULL),
-+
- };
- 
- static const struct snd_soc_dapm_route sun8i_codec_dapm_routes[] = {
-@@ -387,11 +445,16 @@ static const struct snd_soc_dapm_route sun8i_codec_dapm_routes[] = {
- 	{ "RST AIF1", NULL, "AIF1 PLL" },
- 	{ "MODCLK AFI1", NULL, "RST AIF1" },
- 	{ "DAC", NULL, "MODCLK AFI1" },
-+	{ "ADC", NULL, "MODCLK AFI1" },
- 
- 	{ "RST DAC", NULL, "SYSCLK" },
- 	{ "MODCLK DAC", NULL, "RST DAC" },
- 	{ "DAC", NULL, "MODCLK DAC" },
- 
-+	{ "RST ADC", NULL, "SYSCLK" },
-+	{ "MODCLK ADC", NULL, "RST ADC" },
-+	{ "ADC", NULL, "MODCLK ADC" },
-+
- 	/* DAC Routes */
- 	{ "AIF1 Slot 0 Right", NULL, "DAC" },
- 	{ "AIF1 Slot 0 Left", NULL, "DAC" },
-@@ -401,6 +464,12 @@ static const struct snd_soc_dapm_route sun8i_codec_dapm_routes[] = {
- 	  "AIF1 Slot 0 Left"},
- 	{ "Right Digital DAC Mixer", "AIF1 Slot 0 Digital DAC Playback Switch",
- 	  "AIF1 Slot 0 Right"},
-+
-+	/* ADC routes */
-+	{ "Left Digital ADC Mixer", "AIF1 Data Digital ADC Capture Switch",
-+	  "AIF1 Slot 0 Left ADC" },
-+	{ "Right Digital ADC Mixer", "AIF1 Data Digital ADC Capture Switch",
-+	  "AIF1 Slot 0 Right ADC" },
- };
- 
- static const struct snd_soc_dai_ops sun8i_codec_dai_ops = {
-@@ -418,6 +487,15 @@ static struct snd_soc_dai_driver sun8i_codec_dai = {
- 		.rates = SNDRV_PCM_RATE_8000_192000,
- 		.formats = SNDRV_PCM_FMTBIT_S16_LE,
- 	},
-+	/* capture capabilities */
-+	.capture = {
-+		.stream_name = "Capture",
-+		.channels_min = 1,
-+		.channels_max = 2,
-+		.rates = SNDRV_PCM_RATE_8000_192000,
-+		.formats = SNDRV_PCM_FMTBIT_S16_LE,
-+		.sig_bits = 24,
-+	},
- 	/* pcm operations */
- 	.ops = &sun8i_codec_dai_ops,
- };
--- 
-2.15.1
-
-
---===============2437379022154144556==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============2437379022154144556==--
+> Regards,
+> Lucas
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
