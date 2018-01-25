@@ -1,7 +1,7 @@
 From: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Subject: [RFC 16/37] ARM: dts: r8a7794: Use fallback rst compatible string
-Date: Thu, 25 Jan 2018 18:02:50 +0000
-Message-ID: <1516903391-30467-17-git-send-email-fabrizio.castro@bp.renesas.com>
+Subject: [RFC 17/37] arm64: dts: renesas: r8a7795: Use fallback rst compatible string
+Date: Thu, 25 Jan 2018 18:02:51 +0000
+Message-ID: <1516903391-30467-18-git-send-email-fabrizio.castro@bp.renesas.com>
 References: <1516903391-30467-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1516903391-30467-1-git-send-email-fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
@@ -15,21 +15,21 @@ Add the generic fallback compatible string for the rst node.
 Signed-off-by: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
 Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
 ---
- arch/arm/boot/dts/r8a7794.dtsi | 3 ++-
+ arch/arm64/boot/dts/renesas/r8a7795.dtsi | 3 ++-
  1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/r8a7794.dtsi b/arch/arm/boot/dts/r8a7794.dtsi
-index a5a23e9..9309887 100644
---- a/arch/arm/boot/dts/r8a7794.dtsi
-+++ b/arch/arm/boot/dts/r8a7794.dtsi
-@@ -246,7 +246,8 @@
+diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+index ce85704..853ca99 100644
+--- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+@@ -438,7 +438,8 @@
  		};
  
  		rst: reset-controller@e6160000 {
--			compatible = "renesas,r8a7794-rst";
-+			compatible = "renesas,r8a7794-rst",
-+				     "renesas,rcar-gen2-rst";
- 			reg = <0 0xe6160000 0 0x0100>;
+-			compatible = "renesas,r8a7795-rst";
++			compatible = "renesas,r8a7795-rst",
++				     "renesas,rcar-gen3-rst";
+ 			reg = <0 0xe6160000 0 0x0200>;
  		};
  
 -- 
