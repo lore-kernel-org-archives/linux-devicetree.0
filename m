@@ -1,137 +1,150 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH] of: use hash based search in of_find_node_by_phandle
-Date: Thu, 25 Jan 2018 11:54:46 -0800
-Message-ID: <5a7793df-725e-608d-778b-cb81fde0cc64@gmail.com>
-References: <1516875247-19599-1-git-send-email-cpandya@codeaurora.org>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC] devicetree: new FDT format version
+Date: Thu, 25 Jan 2018 12:01:07 -0800
+Message-ID: <72d30756-a963-92c9-1838-3e3f80c57e39@gmail.com>
+References: <b96829f9-2e8b-fdc5-5090-58591e2260cf@gmail.com>
+ <CAL_JsqJR2y7bMw_-9TBAGWZ_kf7_sZo5qvqvRowJ8jiy=4G0Bg@mail.gmail.com>
+ <20180123124232.GA14832@umbus>
+ <20328477-e511-e875-7dc4-253640f2219e@gmail.com>
+ <CAL_Jsq+fvFrGhqO0zbEUE_i23FkU=G4Z1-e0vnXHi4KbS2oK0A@mail.gmail.com>
+ <e1bec77d-4dac-200b-34be-23573bf738f0@gmail.com>
+ <e986435b-481b-2629-7600-10d9e21ac58e@gmail.com>
+ <20180125122912.GB2099@umbus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1516875247-19599-1-git-send-email-cpandya@codeaurora.org>
+Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180125122912.GB2099@umbus>
 Content-Language: en-US
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Chintan Pandya <cpandya@codeaurora.org>, robh+dt@kernel.org, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, "Pantelis Antomarek.vasut-Re5JQEeQqe/2sr8fMPgRzw@public.gmane.org" <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, =?UTF-8?Q?Marek_Va=c5=a1ut?= <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Kyle Evans <kevans-h+KGxgPPiopAfugRpC6u6w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Alan Tull <atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/25/18 02:14, Chintan Pandya wrote:
-> of_find_node_by_phandle() takes a lot of time finding
-> right node when your intended device is too right-side
-> in the fdt. Reason is, we search each device serially
-> from the fdt, starting from left-most to right-most.
-
-Please give me a pointer to the code that is doing
-this search.
-
--Frank
-
-
+On 01/25/18 04:29, David Gibson wrote:
+> On Wed, Jan 24, 2018 at 04:22:15PM -0800, Frank Rowand wrote:
+>> On 01/24/18 13:16, Frank Rowand wrote:
+>>> On 01/24/18 07:47, Rob Herring wrote:
+>>>> On Tue, Jan 23, 2018 at 3:17 PM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>>>> On 01/23/18 04:42, David Gibson wrote:
+>>>>>> On Mon, Jan 22, 2018 at 03:01:52PM -0600, Rob Herring wrote:
+>>>>>>> On Mon, Jan 22, 2018 at 2:09 AM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>>>>>>> Hi All,
+>>>>>>>>
+>>>>>>>> I've tried to create a decent distribution list, but I'm sure I've missed
+>>>>>>>> someone or some important list.  Please share this with anyone you think
+>>>>>>>> will be affected.
+>>>>>>>>
+>>>>>>>> I have been playing around with some thoughts for some additions to
+>>>>>>>> the devicetree FDT aka blob format.
+>>>>>>>>
+>>>>>>>> I would like to get the affected parties thinking about how additions to
+>>>>>>>> the format could improve whichever pieces of FDT related technology you
+>>>>>>>> work on or care about.  In my opinion, the FDT format should change
+>>>>>>>> very infrequently because of the impact on so many projects that have
+>>>>>>>> to work together to create a final solution, plus the many many users
+>>>>>>>> of those projects.
+>>>>>>>
+>>>>>>> A few things discussed before:
+>>>>>>> - Adding type information Even just tagging phandles would be good.
+>>>>>>
+>>>>>> I'm a bit dubious about this.  It would have to be "hints" only -
+>>>>>> there's not really anyway we can put in authoritative type
+>>>>>> information, since dtc itself doesn't really know that.  It's also
+>>>>>> hard to see how that could be done in a way which wouldn't either a)
+>>>>>> require very awkward parallel lookup of the data and type information
+>>>>>> or b) not be backwards compatible (even read only).
+>>>>
+>>>> I never said it was possible. :) I'm just trying to enumerate possible
+>>>> FDT format changes because I don't think we want to continuously
+>>>> trickle out FDT changes even if they are backwards compatible.
+>>>
+>>> Yes, I'm trying to capture any pending changes in a single version change.
+>>>
+>>>
+>>>>>>> - Allow applying overlays by just appending to the blob. The need for
+>>>>>>> this is somewhat gone now that libfdt can just fully apply overlays.
+>>>>>>
+>>>>>> I'm not really sure what you want here.  I mean you could easily allow
+>>>>>> the format to allow multiple appended overlays, and define that to
+>>>>>> mean the overlaid result.  At some point *something* is going to have
+>>>>>> to really do the application, so I'm not sure that it really buys you
+>>>>>> that much.  It also makes nearly every operation on the tree in libfdt
+>>>>>> horrible to implement, at least within the other constraints the
+>>>>>> interface was designed around; you'll continually have to scan the
+>>>>>> entire tree just in case some other overlay fragment has some bearing
+>>>>>> on the thing you're looking at.  It confuses the interface too: what
+>>>>>> does "node offset" mean if the same node could be built up from
+>>>>>> overlay fragments at multiple offsets.
+>>>>
+>>>> The idea was to avoid applying overlays to flattened trees at all.
+>>>> You're just passing the problem to the next stage (typically the
+>>>> kernel). But we have applying overlays to flattened trees now, so
+>>>> maybe there's no need anymore.
+>>>>
+>>>>> Somewhat echoing David's comment, I'm also not sure what you mean.
+>>>>> And trying to not overly influence this conversation with preconceptions
+>>>>> from what I'm going to propose.
+>>>>>
+>>>>> My first shot at the new format added a field to the FDT to indicate
+>>>>> that an overlay FDT was concatenated to the FDT (and the overlay FDT
+>>>>> in turn could set it's field to concatenate another overlay FDT).
+>>>>
+>>>> Yes, something like this is what I meant. This was something Grant had
+>>>> talked about.
+>>>>
+>>>>> But in the end I decided that information belonged outside the FDT,
+>>>>> and it was sufficient to require that all FDTs be padded out so that
+>>>>> if an overlay FDT was concatenated to the FDT, the overlay FDT would
+>>>>> be properly aligned.
+>>>>
+>>>> I can't think of why this wouldn't work either.
+>>>>
+>>>>> For ease of typing, I'll call this "chaining" or "chained".  For
+>>>>> Linux, I am envisioning no kernel use of data from a chained FDT
+>>>>> until after the tree is unflattened.  I haven't done an exhaustive
+>>>>> search to determine all of the uses of data directly from the
+>>>>> flattened FDT, but I am optimistic that there will not be any such
+>>>>> access that would require data from a chained FDT (and we could
+>>>>> make this a rule).
+>>>>
+>>>> This would be a major downside to leaving it up to the kernel because
+>>>> what can't be touched is hard to enumerate and could change. For
+>>>> example, we added earlycon and now the uart node can't be modified.
+>>>
+>>> What you say makes sense.  So I'll reverse myself and say that for
+>>> Linux, we should update the FDT read code to scan all chained
+>>> overlay FDT(s) as well as the base FDT.
+>>
+>> < snip >
+>>
+>> What I wrote was somewhat ambiguous.  What I meant by "FDT read
+>> code" was functions that check for existence of nodes in the
+>> FDT or read property values from the FDT.
 > 
-> Implement, device-phandle relation in hash-table so
-> that look up can be faster.
+> Oh.. not just FDT unflattening code.
 > 
-> Change-Id: I4a2bc7eff6de142e4f91a7bf474893a45e61c128
-> Signed-off-by: Chintan Pandya <cpandya@codeaurora.org>
-> ---
->  drivers/of/base.c  |  9 +++++++--
->  drivers/of/fdt.c   | 18 ++++++++++++++++++
->  include/linux/of.h |  6 ++++++
->  3 files changed, 31 insertions(+), 2 deletions(-)
+> The trouble with this is that scanning for a specific node or property
+> in a set of chained overlays is highly nontrivial.  Even if you set
+> aside the arguably self-imposed design constraints in libfdt, you
+> can't just do the same lookup in each fragment: along the way you need
+> to resolve the path at which each fragment applies.  That in itself is
+> non-trivial.  If you have overlays applying on top of other overlays,
+> that could involve recursive lookups of things from previous overlays.
+> It's spectacularly complicated and we have to do it on *every single*
+> read operation.
+
+I totally overlooked having to resolve each fragment.  You are right,
+that makes the problem very complex instead of trivial.
+
+
+> Either fully applying the overlay in flattened form, or (even
+> temporarily) unflattening the tree are better solutions.
 > 
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index a0bccb5..3e06316 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -25,6 +25,7 @@
->  #include <linux/cpu.h>
->  #include <linux/module.h>
->  #include <linux/of.h>
-> +#include <linux/hashtable.h>
->  #include <linux/of_graph.h>
->  #include <linux/spinlock.h>
->  #include <linux/slab.h>
-> @@ -1099,10 +1100,14 @@ struct device_node *of_find_node_by_phandle(phandle handle)
->  	if (!handle)
->  		return NULL;
->  
-> -	raw_spin_lock_irqsave(&devtree_lock, flags);
-> -	for_each_of_allnodes(np)
-> +	spin_lock(&dt_hash_spinlock);
-> +	hash_for_each_possible(dt_hash_table, np, hash, handle)
->  		if (np->phandle == handle)
->  			break;
-> +
-> +	spin_unlock(&dt_hash_spinlock);
-> +
-> +	raw_spin_lock_irqsave(&devtree_lock, flags);
->  	of_node_get(np);
->  	raw_spin_unlock_irqrestore(&devtree_lock, flags);
->  	return np;
-> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> index c0914fb..f0e78a7 100644
-> --- a/drivers/of/fdt.c
-> +++ b/drivers/of/fdt.c
-> @@ -31,6 +31,10 @@
->  #include <asm/setup.h>  /* for COMMAND_LINE_SIZE */
->  #include <asm/page.h>
->  
-> +static bool dt_hash_needs_init = true;
-> +DECLARE_HASHTABLE(dt_hash_table, DT_HASH_BITS);
-> +DEFINE_SPINLOCK(dt_hash_spinlock);
-> +
->  /*
->   * of_fdt_limit_memory - limit the number of regions in the /memory node
->   * @limit: maximum entries
-> @@ -227,6 +231,20 @@ static void populate_properties(const void *blob,
->  		pprev      = &pp->next;
->  	}
->  
-> +	/*
-> +	 * In 'dryrun = true' cases, np is some non-NULL junk. So, protect
-> +	 * against those cases.
-> +	 */
-> +	if (!dryrun && np->phandle) {
-> +		spin_lock(&dt_hash_spinlock);
-> +		if (dt_hash_needs_init) {
-> +			dt_hash_needs_init = false;
-> +			hash_init(dt_hash_table);
-> +		}
-> +		hash_add(dt_hash_table, &np->hash, np->phandle);
-> +		spin_unlock(&dt_hash_spinlock);
-> +	}
-> +
->  	/* With version 0x10 we may not have the name property,
->  	 * recreate it here from the unit name if absent
->  	 */
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index 299aeb1..5b3f4f1 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -25,6 +25,7 @@
->  #include <linux/notifier.h>
->  #include <linux/property.h>
->  #include <linux/list.h>
-> +#include <linux/hashtable.h>
->  
->  #include <asm/byteorder.h>
->  #include <asm/errno.h>
-> @@ -61,6 +62,7 @@ struct device_node {
->  	struct	kobject kobj;
->  	unsigned long _flags;
->  	void	*data;
-> +	struct hlist_node hash;
->  #if defined(CONFIG_SPARC)
->  	const char *path_component_name;
->  	unsigned int unique_id;
-> @@ -68,6 +70,10 @@ struct device_node {
->  #endif
->  };
->  
-> +#define DT_HASH_BITS 6
-> +extern DECLARE_HASHTABLE(dt_hash_table, DT_HASH_BITS);
-> +extern spinlock_t dt_hash_spinlock;
-> +
->  #define MAX_PHANDLE_ARGS 16
->  struct of_phandle_args {
->  	struct device_node *np;
+>> The other way one could read what I wrote was that when Linux
+>> unflattens the FDT, it would unflatten the FDT and all of the
+>> chained FDTs.  Obviously also true, but not what I was trying
+>> to say here.
+>>
+>> -Frank
 > 
