@@ -1,66 +1,103 @@
-From: Dong Aisheng <aisheng.dong@nxp.com>
-Subject: [PATCH 1/1] dt-bindings: thermal: imx: update the binding to new method
-Date: Thu, 25 Jan 2018 14:37:49 +0800
-Message-ID: <1516862269-25543-1-git-send-email-aisheng.dong@nxp.com>
+From: Yogesh Gaur <yogeshnarayan.gaur-3arQi8VN3Tc@public.gmane.org>
+Subject: [PATCH] arm64: dts: ls1088a: Add qspi device node for ls1088a-rdb
+Date: Thu, 25 Jan 2018 13:56:57 +0530
+Message-ID: <1516868817-2327-1-git-send-email-yogeshnarayan.gaur@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-pm-owner@vger.kernel.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: linux-pm@vger.kernel.org, devicetree@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com, Dong Aisheng <aisheng.dong@nxp.com>, Shawn Guo <shawn.guo@linaro.org>, Leonard Crestez <leonard.crestez@nxp.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, han.xu-3arQi8VN3Tc@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org, suresh.gupta-3arQi8VN3Tc@public.gmane.org, Yogesh Gaur <yogeshnarayan.gaur-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Due to the old method has already been marked as deprecated in binding
-doc, so obviously it's better to update the example to new bindings
-as well.
+Add nodes and properties for QSPI controller.
+Add support for spansion flash, s25fs512s, as slave device for
+QSPI controller.
 
-Cc: Shawn Guo <shawn.guo@linaro.org>
-Cc: Leonard Crestez <leonard.crestez@nxp.com>
-Cc: Zhang Rui <rui.zhang@intel.com>
-Cc: Eduardo Valentin <edubezval@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+Added entry of "fsl,ls1088a-qspi" in fsl-quadspi.txt binding file.
+
+Signed-off-by: Suresh Gupta <suresh.gupta-3arQi8VN3Tc@public.gmane.org>
+Signed-off-by: Yogesh Gaur <yogeshnarayan.gaur-3arQi8VN3Tc@public.gmane.org>
 ---
- .../devicetree/bindings/thermal/imx-thermal.txt    | 25 ++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+Depends on
+ https://patchwork.ozlabs.org/project/linux-mtd/list/?series=25292
 
-diff --git a/Documentation/devicetree/bindings/thermal/imx-thermal.txt b/Documentation/devicetree/bindings/thermal/imx-thermal.txt
-index 28be51a..379eb76 100644
---- a/Documentation/devicetree/bindings/thermal/imx-thermal.txt
-+++ b/Documentation/devicetree/bindings/thermal/imx-thermal.txt
-@@ -22,7 +22,32 @@ Optional properties:
- - clocks : thermal sensor's clock source.
+ .../devicetree/bindings/mtd/fsl-quadspi.txt         |  1 +
+ arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts   | 21 +++++++++++++++++++++
+ arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi      | 12 ++++++++++++
+ 3 files changed, 34 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/mtd/fsl-quadspi.txt b/Documentation/devicetree/bindings/mtd/fsl-quadspi.txt
+index 13a903e..927d65c 100644
+--- a/Documentation/devicetree/bindings/mtd/fsl-quadspi.txt
++++ b/Documentation/devicetree/bindings/mtd/fsl-quadspi.txt
+@@ -7,6 +7,7 @@ Required properties:
+ 		 or
+ 		 "fsl,ls2080a-qspi" followed by "fsl,ls1021a-qspi",
+ 		 "fsl,ls1043a-qspi" followed by "fsl,ls1021a-qspi"
++		 "fsl,ls2080a-qspi" followed by "fsl,ls1088a-qspi",
+   - reg : the first contains the register location and length,
+           the second contains the memory mapping address and length
+   - reg-names: Should contain the reg names "QuadSPI" and "QuadSPI-memory"
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
+index 0f6fcda..3febb59 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
+@@ -94,6 +94,27 @@
+ 	};
+ };
  
- Example:
-+ocotp: ocotp@21bc000 {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	compatible = "fsl,imx6sx-ocotp", "syscon";
-+	reg = <0x021bc000 0x4000>;
-+	clocks = <&clks IMX6SX_CLK_OCOTP>;
- 
-+	tempmon_calib: calib@38 {
-+		reg = <0x38 4>;
++&qspi {
++	status = "okay";
++	fsl,qspi-has-second-chip;
++	spi-rx-bus-width = <4>;
++	spi-tx-bus-width = <4>;
++	qflash0: s25fs512s@0 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		spi-max-frequency = <20000000>;
++		reg = <0>;
 +	};
 +
-+	tempmon_temp_grade: temp-grade@20 {
-+		reg = <0x20 4>;
++	qflash1: s25fs512s@1 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		spi-max-frequency = <20000000>;
++		reg = <1>;
 +	};
++
 +};
 +
-+tempmon: tempmon {
-+	compatible = "fsl,imx6sx-tempmon", "fsl,imx6q-tempmon";
-+	interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
-+	fsl,tempmon = <&anatop>;
-+	nvmem-cells = <&tempmon_calib>, <&tempmon_temp_grade>;
-+	nvmem-cell-names = "calib", "temp_grade";
-+	clocks = <&clks IMX6SX_CLK_PLL3_USB_OTG>;
-+};
+ &ifc {
+ 	ranges = <0 0 0x5 0x30000000 0x00010000
+ 		  2 0 0x5 0x20000000 0x00010000>;
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+index bd80e9a..b45a522 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+@@ -394,6 +394,18 @@
+ 			status = "disabled";
+ 		};
+ 
++		qspi: quadspi@20c0000 {
++			compatible = "fsl,ls2080a-qspi", "fsl,ls1088a-qspi";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0x0 0x20c0000 0x0 0x10000>,
++				<0x0 0x20000000 0x0 0x10000000>;
++			reg-names = "QuadSPI", "QuadSPI-memory";
++			interrupts = <0 25 0x4>; /* Level high type */
++			clocks = <&clockgen 4 3>, <&clockgen 4 3>;
++			clock-names = "qspi_en", "qspi";
++		};
 +
-+Legacy method (Deprecated):
- tempmon {
- 	compatible = "fsl,imx6q-tempmon";
- 	fsl,tempmon = <&anatop>;
+ 		sata: sata@3200000 {
+ 			compatible = "fsl,ls1088a-ahci";
+ 			reg = <0x0 0x3200000 0x0 0x10000>,
 -- 
-2.7.4
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
