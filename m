@@ -1,81 +1,73 @@
-From: Greentime Hu <green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v6 16/36] nds32: DMA mapping API
-Date: Thu, 25 Jan 2018 21:48:01 +0800
-Message-ID: <CAEbi=3cifP5owmV0qPoC0_7z6NMi56tAqM+C9JdbqjzMTAUWig@mail.gmail.com>
-References: <cover.1515766253.git.green.hu@gmail.com> <ecd1742c718c5b45983486cf9dfb44adb6e06923.1515766253.git.green.hu@gmail.com>
- <CAK8P3a0-Vf9CRZzdXCxpuQoWgMhYWgO6Hy2KuP-gOKttoSGESA@mail.gmail.com>
- <CAEbi=3cYynvFS2GDzj5Oav_5LtHPdBfBWh9c=mFT0PxeOLX9sQ@mail.gmail.com>
- <CAEbi=3d46tXacnnU+RJGMw+KR1O=NaVjO+NW3cxUjAN==V51iw@mail.gmail.com>
- <CAK8P3a30W1ph-6Owuf9yZF-bKg_bx6dJKCtiF_aRAYu9NVO3DQ@mail.gmail.com>
- <CAEbi=3fwCnFXmYKPEiDiqoGFujqRD0bPrPAgqtiTkO_vuX25dQ@mail.gmail.com> <CAK8P3a0YrwAXH8n83wf=34zmN44KgJu-JVXfQWhuquNxVmZ8Sw@mail.gmail.com>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V6 4/7] PCI: tegra: Free resources on probe failure
+Date: Thu, 25 Jan 2018 15:25:52 +0100
+Message-ID: <20180125142552.GF27888@ulmo>
+References: <1515650888-9459-1-git-send-email-mmaddireddy@nvidia.com>
+ <1515650888-9459-5-git-send-email-mmaddireddy@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="dgjlcl3Tl+kb3YDk"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAK8P3a0YrwAXH8n83wf=34zmN44KgJu-JVXfQWhuquNxVmZ8Sw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1515650888-9459-5-git-send-email-mmaddireddy-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Greentime <greentime-MUIXKm3Oiri1Z/+hSey0Gg@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arch <linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Networking <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Vincent Chen <deanbo422-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Al Viro <viro-RmSDqhL/yNMiFSDQTTA3OLVCufUGDwFn@public.gmane.org>, David Howells <dhowells-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert.uytterhoeven-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Greg KH <greg-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>, Guo Ren <ren_guo-Y+KPrCd2zL4@public.gmane.org>
+To: Manikanta Maddireddy <mmaddireddy-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, cyndis-/1wQRMveznE@public.gmane.org, jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, vidyas-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, kthota-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi, Arnd:
 
-2018-01-25 18:42 GMT+08:00 Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>:
-> On Thu, Jan 25, 2018 at 4:45 AM, Greentime Hu <green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> 2018-01-24 19:36 GMT+08:00 Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>:
->>> On Tue, Jan 23, 2018 at 12:52 PM, Greentime Hu <green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>>> 2018-01-23 16:23 GMT+08:00 Greentime Hu <green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
->>>>> 2018-01-18 18:26 GMT+08:00 Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>:
->>>>>> On Mon, Jan 15, 2018 at 6:53 AM, Greentime Hu <green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>>
->>> That looks reasonable enough, but it does depend on a number of factors,
->>> and the dma-mapping.h implementation is not just about cache flushes.
->>>
->>> As I don't know the microarchitecture, can you answer these questions:
->>>
->>> - are caches always write-back, or could they be write-through?
->> Yes, we can config it to write-back or write-through.
->
-> Ok. If a WT-cache is common enough, you could optimize for that
-> case by skipping the explicit writeback here and just doing a synchronizing
-> instruction. Usually if the cache is configurable, one would pick the
-> writeback option though, so it's probably not important.
+--dgjlcl3Tl+kb3YDk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thank you for this suggestion.
-We have optimized in cpu_dcache_wb_range() and it will be called from
-cpu_dma_wb_range().
-It will do nothing if it is a write-through config cache.
+On Thu, Jan 11, 2018 at 11:38:05AM +0530, Manikanta Maddireddy wrote:
+> tegra_pcie_probe() can fail in multiple instances, this patch takes care
+> of freeing the resources which are allocated before probe fail.
+>=20
+> Signed-off-by: Manikanta Maddireddy <mmaddireddy-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> ---
+> V2:
+> * no change in this patch
+> V3:
+> * change 'if check' to 'legacy_phy is true' for tegra_pcie_phys_put_legac=
+y()
+> * commit log correction
+> V4:
+> * no change in this patch
+> V5:
+> * Decoupled from https://patchwork.ozlabs.org/patch/832053/ and
+> rebased on linux-next
+> V6:
+> * no change in this patch
+>=20
+>  drivers/pci/host/pci-tegra.c | 99 +++++++++++++++++++++++++++++++++++---=
+------
+>  1 file changed, 79 insertions(+), 20 deletions(-)
 
->>> - is the CPU physical address always the same as the address visible to the
->>>   device?
->> Yes, it is always the same unless the CPU uses local memory. The
->> physical address of local memory will overlap the original bus
->> address.
->> I think the local memory case can be ignored because we don't use it for now.
->
-> Ok, makes sense.
->
->>> - are there devices that can only see a subset of the physical memory?
->> All devices are able to see the whole physical memory in our current
->> SoC, but I think other SoC may support such kind of HW behavior.
->
-> This is one area that might need a more complex implementation then,
-> depending on what devices are used in other SoCs. For network or
-> storage devices, it's usually sufficient to configure a DMA mask
-> from the "dma-ranges" property of the parent bus in the device tree,
-> the kernel code will then use bounce buffers.
->
-> For other types of drivers, using the streaming DMA interfaces
-> can require using the swiotlb helper that performs the bounce
-> buffering at in place of the cache operations. With a bit of luck,
-> you won't ever need to worry about it, just mentioning it here in
-> case you run into that problem later.
->
-> The consistent_sync() implementaiton you showed earlier should be
-> good enough then.  With that change,
->
-> Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Acked-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-Thank you. :)
+--dgjlcl3Tl+kb3YDk
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlpp6PAACgkQ3SOs138+
+s6HV0Q/8DhL7ecy4s5p4GPjEj7JU0VpMVn5sytnDdTlIMi5PHcNhT/z8P/ihKRpC
+oh3jMVQLsWiADtAvZHD8gMvhdK4m9kK7SNkDkDxxp/aWG3jFgn0aSuQMchQJ6wkj
+PY1w6AeHv44dfSkFK3oXektXlcTAZwiGjuhQLPpMgua2HZi2ou/bct5SKp68Yo41
+A5tC+CUfrY3cpKsH2rkN+ctznOgkZpovigXaInYj9pIUfDakgqLynVEVy4WaMCr1
+m/eDmisgo4Dgaq+ODFKrfNU54CH6PDHXS8Z+Juf/fZjDAL2jUhYt7S4KxTPX9zE4
+RNRc5V8Iu9eerX9tA3K+Mf2IDyXp72Op1cxGDJV2ihvQcFMGsyJMbO1dOHvmzWG9
+ptNhPqBYs4J45Wn3ovClAyuvD7fD6IgdjGVyRQp7Naewn/rHpj/yYvh+s3WEldQo
+Wo5rvU8KuJjTDLsc240C9i2BnlQaKKvbFao2Egbt5e5FJ8P2VNSINT5GOE7p5Oi8
+g8SmSOO9BMZu/bGbtqgXfwf220TVn9Xg/TD7YZL0wDJoA1hWMAbYiathgJ+MF1wV
+ZZRpVKY8M6zy+RdbImoy7UgtOPviZAxPlaXAGvgabkESs6QkHt1CLWKN3z8SYWXU
+5oEzWlTLdUkNtlmjB9RQUzSvV/247tW9ZDFubhFLHq/AgWM9koI=
+=0Jk2
+-----END PGP SIGNATURE-----
+
+--dgjlcl3Tl+kb3YDk--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
