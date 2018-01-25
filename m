@@ -1,80 +1,126 @@
-From: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [RFC PATCH v11 4/5] PCI / PM: Add support for the PCIe WAKE#
- signal for OF
-Date: Thu, 25 Jan 2018 09:47:29 -0800
-Message-ID: <20180125174728.rin6yghbn6gdtoxs@ban.mtv.corp.google.com>
-References: <20171225114742.18920-1-jeffy.chen@rock-chips.com>
- <5491520.JsEYlZiECc@aspire.rjw.lan>
- <20180105004130.GA151625@google.com>
- <2806186.IK6EZBC0cX@aspire.rjw.lan>
- <20180125012148.lcgnxi3uwcjzue7o@ban.mtv.corp.google.com>
- <20180125164010.GG4180@atomide.com>
- <CAJZ5v0h7JvEFTV1mbqxtK8P0aoums2Cvjy3uU1gK4E26_rtZ5g@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0h7JvEFTV1mbqxtK8P0aoums2Cvjy3uU1gK4E26_rtZ5g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, JeffyChen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Linux PM <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux PCI <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: [RFC 01/37] ARM: shmobile: Add watchdog support
+Date: Thu, 25 Jan 2018 18:02:35 +0000
+Message-ID: <1516903391-30467-2-git-send-email-fabrizio.castro@bp.renesas.com>
+References: <1516903391-30467-1-git-send-email-fabrizio.castro@bp.renesas.com>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1516903391-30467-1-git-send-email-fabrizio.castro@bp.renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wim Van Sebroeck <wim@iguana.be>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On R-Car Gen2 and RZ/G1 platforms, we use the SBAR registers to make non
+boot CPUs run a routine designed to bring up SMP and deal with hot plug.
+The value contained in the SBAR registers is not initialized by a WDT
+triggered reset, which means that after a WDT triggered reset we jump
+to the SMP bring up routine, preventing the system from executing the
+bootrom code.
 
-On Thu, Jan 25, 2018 at 05:54:23PM +0100, Rafael J. Wysocki wrote:
-> On Thu, Jan 25, 2018 at 5:40 PM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
-> > * Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> [180125 01:22]:
-> >> On Fri, Jan 05, 2018 at 02:13:33AM +0100, Rafael J. Wysocki wrote:
-> >> > The "wakeup-interrupt" property at the bridge level basically has to be defined
-> >> > as the wakeup interrupt for all devices on the bus under the bridge.
-> >>
-> >> The only thing I'm at a loss for is whether this goes in (referring to
-> >> rk3399-gru.dtsi) &pcie or &pci_rootport. I think some versions of this
-> >> series have been aiming for the former, and some the latter.
-> >
-> > I'd keep the wakeup interrupt property at the rootport level. That way
-> > it can work with whatever pcie card that might be plugged into that
-> > slot. That is in case it's just a slot and not hardwired pcie device :)
+The purpose of this patch is to jump to the bootrom code in case of a
+WDT triggered reset, and keep the SMP functionality untouched.
+In order to tell if the code had been called due to the WDT overflowing
+we need to inspect flag WOVF from register RWTCSRA, however for this
+to work smoothly we need to make sure that RWDT clock is ON.
+Since it's not wise to interfere with the clock configuration from
+within this routine, a flag has been put in place
+(shmobile_wdt_clock_status) so that the watchdog driver can tell
+shmobile_boot_vector when the clock is ON, and therefore there is no
+need for shmobile_boot_vector to mess up with the clock registers.
 
-^^ Right, and that's what I believe this series was doing. Previous
-versions put it in &pcie, which might have had a similar effect. The
-existing behavior is the misguided bindings that put it in &mvl_wifi
-(the endpoint device).
+Bit WOVF survives a watchdog triggered reset, and it is usually cleared
+by the bootloader. Checking the MMU enable bit from register SCTLR
+allows us to make the code a little bit more robust (just in case the
+bit wasn't cleared up), as right after a reset the MMU is disabled,
+and when Linux is running the MMU is enabled. Also, accessing RWTCSRA
+physical address is safe when the MMU is down.
 
-> Do I understand correctly that &pcie is the device and the
-> &pci_rootport is the port that device is connected to?
+SMP bringup, CPU hot plug, and suspend to RAM work as normal.
 
-No. (Assuming "device" means "endpoint PCIe device".)
+Since shmobile_boot_vector has become bigger, "reg" property of nodes
+compatible with "renesas,smp-sram" now need to be set to "<0 0x64>".
 
-&pcie: The top-level representation of the host bridge
+Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
+---
+ arch/arm/mach-shmobile/headsmp.S | 53 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 53 insertions(+)
 
-&pci_rootport: a virtual representation of a root port. I don't think
-this corresponds to a Linux device in the end, but I thought it
-corresponded most closely to a "slot" [1]
-
-&mvl_wifi: an endpoint device
-
-Brian
-
-[1] As another example, consider
-arch/arm/boot/dts/armada-370{.dtsi,-dlink-dns327l.dts}
-It has a structure of:
-
-  pciec: pcie@82000000 {
-    pcie0: pcie@1,0 /* Port 0, Lane 0 */ {
-      // Brian: no subnode, since we don't generally want to describe
-      // specific endpoints in DT, when they should be autodetectable
-    };
-    pcie2: pcie@2,0 /* Port 1, Lane 0 */ {
-      // Brian: no subnode, since we don't generally want to describe
-      // specific endpoints in DT, when they should be autodetectable
-    };
-  };
-
-Where Gru's &pcie is equivalent to Armada's &pciec, and Gru's
-&pci_rootport is equivalent to &pcie0 and &pcie2.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/mach-shmobile/headsmp.S b/arch/arm/mach-shmobile/headsmp.S
+index 32e0bf6..835bddc 100644
+--- a/arch/arm/mach-shmobile/headsmp.S
++++ b/arch/arm/mach-shmobile/headsmp.S
+@@ -16,6 +16,13 @@
+ #include <asm/assembler.h>
+ #include <asm/memory.h>
+ 
++#define RWDT_CLOCK_ON	0xdeadbeef
++#define RWDT_CLOCK_OFF	0x00000000
++#define SCTLR_MMU	0x01
++#define BOOTROM_ADDRESS	0xE6340000
++#define RWTCSRA_ADDRESS 0xE6020004
++#define RWTCSRA_WOVF	0x10
++
+ /*
+  * Reset vector for secondary CPUs.
+  * This will be mapped at address 0 by SBAR register.
+@@ -24,11 +31,57 @@
+ 	.arm
+ 	.align  12
+ ENTRY(shmobile_boot_vector)
++/*
++	if (SCTLR_MMU == 1)
++		goto shmobile_smp_continue;
++*/
++	mrc	p15, 0, r1, c1, c0, 0		@ r1 = SCTLR
++	and	r0, r1, #SCTLR_MMU
++	cmp	r0, #SCTLR_MMU
++	beq	shmobile_smp_continue
++/*
++	if (shmobile_wdt_clock_status != RWDT_CLOCK_ON)
++		goto shmobile_smp_continue;
++*/
++	ldr	r0, #shmobile_wdt_clock_status
++	ldr	r1, #clock_on
++	cmp	r0, r1
++	bne	shmobile_smp_continue
++
++/*
++	if (RWTCSRA_WOVF == 0)
++		goto shmobile_smp_continue;
++*/
++	ldr	r0, rwtcsra
++	mov	r1, #0
++	ldrb	r1, [r0]
++	and	r0, r1, #RWTCSRA_WOVF
++	cmp	r0, #RWTCSRA_WOVF
++	bne	shmobile_smp_continue
++
++/*
++	goto bootrom;
++*/
++	ldr	r0, bootrom
++	bx	r0
++
++shmobile_smp_continue:
+ 	ldr     r1, 1f
+ 	bx	r1
+ 
+ ENDPROC(shmobile_boot_vector)
+ 
++	.align	4
++rwtcsra:
++	.word	RWTCSRA_ADDRESS
++bootrom:
++	.word	BOOTROM_ADDRESS
++clock_on:
++	.word	RWDT_CLOCK_ON
++	.globl	shmobile_wdt_clock_status
++shmobile_wdt_clock_status:
++	.word	RWDT_CLOCK_OFF
++
+ 	.align	2
+ 	.globl	shmobile_boot_fn
+ shmobile_boot_fn:
+-- 
+2.7.4
