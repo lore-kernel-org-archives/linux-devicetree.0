@@ -1,92 +1,45 @@
-From: Dong Aisheng <aisheng.dong-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 3/4] arm64: add support for i.MX8M EVK board
-Date: Thu, 25 Jan 2018 18:49:19 +0800
-Message-ID: <2cac219f031a08ae2ac02a0624fe302f@codeaurora.org>
-References: <20180117183244.28303-1-l.stach@pengutronix.de>
- <20180117183244.28303-3-l.stach@pengutronix.de>
- <20180123103931.GE27764@dragon>
- <278bb44610b8a27826550732095aba03@codeaurora.org>
- <1516876300.6411.25.camel@pengutronix.de>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: RE: [PATCH 1/8] dt-bindings: can: rcar_can: document r8a774[35] can
+ support
+Date: Thu, 25 Jan 2018 10:55:26 +0000
+Message-ID: <TY1PR06MB0895FFD9D73D3784AD9CFD3DC0E10@TY1PR06MB0895.apcprd06.prod.outlook.com>
+References: <1510067449-17017-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1510067449-17017-2-git-send-email-fabrizio.castro@bp.renesas.com>
+ <SG2PR06MB0886FFF48DD9DBE7693EEDBDC0E20@SG2PR06MB0886.apcprd06.prod.outlook.com>
+ <da4afc82-aeb6-05d9-4a41-b2627f736064@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1516876300.6411.25.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, aisheng.dong-3arQi8VN3Tc@public.gmane.org, linux-imx-3arQi8VN3Tc@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-can-owner@vger.kernel.org>
+In-Reply-To: <da4afc82-aeb6-05d9-4a41-b2627f736064@pengutronix.de>
+Content-Language: en-US
+Sender: linux-can-owner@vger.kernel.org
+To: Marc Kleine-Budde <mkl@pengutronix.de>
+Cc: Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, Wolfgang Grandegger <wg@grandegger.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 2018-01-25 18:31, Lucas Stach wrote:
-> Am Donnerstag, den 25.01.2018, 18:10 +0800 schrieb 
-> aisheng.dong-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org:
->> On 2018-01-23 18:39, Shawn Guo wrote:
->> > On Wed, Jan 17, 2018 at 07:32:43PM +0100, Lucas Stach wrote:
->> >
->> > > > > > +	pinctrl_usdhc2_100mhz: usdhc2grp100mhz {
->> > > > > > +		fsl,pins = <
->> > > > > > > > > +			MX8MQ_IOMUXC_SD2_CLK_USDHC2_CLK			0x85
->> > > > > > > > > +			MX8MQ_IOMUXC_SD2_CMD_USDHC2_CMD			0xc5
->> > > > > > > > > +			MX8MQ_IOMUXC_SD2_DATA0_USDHC2_DATA0		0xc5
->> > > > > > > > > +			MX8MQ_IOMUXC_SD2_DATA1_USDHC2_DATA1		0xc5
->> > > > > > > > > +			MX8MQ_IOMUXC_SD2_DATA2_USDHC2_DATA2		0xc5
->> > > > > > > > > +			MX8MQ_IOMUXC_SD2_DATA3_USDHC2_DATA3		0xc5
->> > > > > > > > > +			MX8MQ_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0xc1
->> > > > > > +		>;
->> > > +		};
->> >
->> > Bad indentation.
->> >
->> > Shawn
->> >
->> > > +
->> > > > > > +	pinctrl_usdhc2_200mhz: usdhc2grp200mhz {
->> > > > > > +		fsl,pins = <
->> > > > > > > > > +			MX8MQ_IOMUXC_SD2_CLK_USDHC2_CLK			0x87
->> > > > > > > > > +			MX8MQ_IOMUXC_SD2_CMD_USDHC2_CMD			0xc7
->> > > > > > > > > +			MX8MQ_IOMUXC_SD2_DATA0_USDHC2_DATA0		0xc7
->> > > > > > > > > +			MX8MQ_IOMUXC_SD2_DATA1_USDHC2_DATA1		0xc7
->> > > > > > > > > +			MX8MQ_IOMUXC_SD2_DATA2_USDHC2_DATA2		0xc7
->> > > > > > > > > +			MX8MQ_IOMUXC_SD2_DATA3_USDHC2_DATA3		0xc7
->> > > > > > > > > +			MX8MQ_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0xc1
->> > > > > > +		>;
->> > > +	};
->> 
->> AFAIK we switched to generic pinconfig since MX7ULP as maintainer 
->> won't
->> access old binding pinctrl drivers.
-> 
-> I'm not convinced that the generic pinconf is good fit. For pingroups
-> with different configs for some of the pins, like the example above, we
-> would need to split things into multiple DT nodes. This really hurts
-> readability, so I'm not going to switch to the generic stuff without
-> some really convincing arguments.
-> 
-
-Per my understanding, based on the last discussion with Linus W, we 
-actually
-did this in order to increase the readability that 1) user does not need 
-to
-see the 'ugly' unreadable raw data and refer to reference manual 2) 
-unified
-generic binding format which already exist in kernel and used by many
-platforms.
-
-Actually MXS platform already used it for many years in a similar way.
-
-So IMHO a little hurt to add another node for different pad setting in 
-the
-same group won't be enough reason to stop switching to generic config.
-
-Does it make sense?
-
-Regards
-Dong Aisheng
-
-> Regards,
-> Lucas
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+VGhhbmsgeW91IE1hcmMuDQoNCkNoZWVycywNCkZhYnJpemlvDQoNCj4gLS0tLS1PcmlnaW5hbCBN
+ZXNzYWdlLS0tLS0NCj4gRnJvbTogTWFyYyBLbGVpbmUtQnVkZGUgW21haWx0bzpta2xAcGVuZ3V0
+cm9uaXguZGVdDQo+IFNlbnQ6IDI1IEphbnVhcnkgMjAxOCAwODo1Mw0KPiBUbzogRmFicml6aW8g
+Q2FzdHJvIDxmYWJyaXppby5jYXN0cm9AYnAucmVuZXNhcy5jb20+DQo+IENjOiBTaW1vbiBIb3Jt
+YW4gPGhvcm1zQHZlcmdlLm5ldC5hdT47IEdlZXJ0IFV5dHRlcmhvZXZlbiA8Z2VlcnQrcmVuZXNh
+c0BnbGlkZXIuYmU+OyBsaW51eC1jYW5Admdlci5rZXJuZWwub3JnOw0KPiBuZXRkZXZAdmdlci5r
+ZXJuZWwub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgtcmVuZXNhcy1zb2NA
+dmdlci5rZXJuZWwub3JnOyBDaHJpcyBQYXRlcnNvbg0KPiA8Q2hyaXMuUGF0ZXJzb24yQHJlbmVz
+YXMuY29tPjsgQmlqdSBEYXMgPGJpanUuZGFzQGJwLnJlbmVzYXMuY29tPjsgV29sZmdhbmcgR3Jh
+bmRlZ2dlciA8d2dAZ3JhbmRlZ2dlci5jb20+OyBSb2IgSGVycmluZw0KPiA8cm9iaCtkdEBrZXJu
+ZWwub3JnPjsgTWFyayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT4NCj4gU3ViamVjdDog
+UmU6IFtQQVRDSCAxLzhdIGR0LWJpbmRpbmdzOiBjYW46IHJjYXJfY2FuOiBkb2N1bWVudCByOGE3
+NzRbMzVdIGNhbiBzdXBwb3J0DQo+DQo+IE9uIDAxLzI0LzIwMTggMDY6MjIgUE0sIEZhYnJpemlv
+IENhc3RybyB3cm90ZToNCj4gPiB0aGFuayB5b3UgZm9yIEFja2luZyB0aGUgcGF0Y2gsIGp1c3Qg
+d29uZGVyaW5nIGlmIHRoaXMgcGF0Y2ggaGFzIGFueQ0KPiA+IGNoYW5jZSB0byBlbmQgdXAgaW4g
+djQuMTY/DQo+DQo+IEkgY2FuIHRha2UgdGhpcyB2aWEgdGhlIGxpbnV4LWNhbiB0cmVlLCBpZiBu
+byBvbmUgZWxzZSB0YWtlcyBpdC4NCj4NCj4gTWFyYw0KPg0KPiAtLQ0KPiBQZW5ndXRyb25peCBl
+LksuICAgICAgICAgICAgICAgICAgfCBNYXJjIEtsZWluZS1CdWRkZSAgICAgICAgICAgfA0KPiBJ
+bmR1c3RyaWFsIExpbnV4IFNvbHV0aW9ucyAgICAgICAgfCBQaG9uZTogKzQ5LTIzMS0yODI2LTky
+NCAgICAgfA0KPiBWZXJ0cmV0dW5nIFdlc3QvRG9ydG11bmQgICAgICAgICAgfCBGYXg6ICAgKzQ5
+LTUxMjEtMjA2OTE3LTU1NTUgfA0KPiBBbXRzZ2VyaWNodCBIaWxkZXNoZWltLCBIUkEgMjY4NiAg
+fCBodHRwOi8vd3d3LnBlbmd1dHJvbml4LmRlICAgfA0KDQoNCg0KDQpSZW5lc2FzIEVsZWN0cm9u
+aWNzIEV1cm9wZSBMdGQsIER1a2VzIE1lYWRvdywgTWlsbGJvYXJkIFJvYWQsIEJvdXJuZSBFbmQs
+IEJ1Y2tpbmdoYW1zaGlyZSwgU0w4IDVGSCwgVUsuIFJlZ2lzdGVyZWQgaW4gRW5nbGFuZCAmIFdh
+bGVzIHVuZGVyIFJlZ2lzdGVyZWQgTm8uIDA0NTg2NzA5Lg0K
