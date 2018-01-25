@@ -1,80 +1,51 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [RFC PATCH 0/9] initial support for "suniv" Allwinner new ARM9
- SoC
-Date: Thu, 25 Jan 2018 16:35:20 +0100
-Message-ID: <20180125153520.lxcfvh3yvi36uiux@flea.lan>
-References: <20180119231735.61504-1-icenowy@aosc.io>
- <20180122121435.bpayxk4uzfqbhqse@flea.lan>
- <14593819.uISRktVE4V@ice-x220i>
+Subject: Re: [PATCH v3] ARM: dts: sun8i: NanoPi NEO Air add WiFi / eMMC
+Date: Thu, 25 Jan 2018 16:38:07 +0100
+Message-ID: <20180125153807.dmtzly56iphnilxq@flea.lan>
+References: <20180123235844.5511-1-mkelly@xevo.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="rwdinujenvvsyeha"
+        protocol="application/pgp-signature"; boundary="bi2xv5ybqtnyg7zh"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <14593819.uISRktVE4V@ice-x220i>
+In-Reply-To: <20180123235844.5511-1-mkelly-s2cxlsp5qxs@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Martin Kelly <mkelly-s2cxlsp5qxs@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jelle van der Waa <jelle-oJJ1AqDjjO4@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---rwdinujenvvsyeha
-Content-Type: text/plain; charset=utf-8
+--bi2xv5ybqtnyg7zh
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
 Hi,
 
-On Wed, Jan 24, 2018 at 09:10:34PM +0800, Icenowy Zheng wrote:
-> =E5=9C=A8 2018=E5=B9=B41=E6=9C=8822=E6=97=A5=E6=98=9F=E6=9C=9F=E4=B8=80 C=
-ST =E4=B8=8B=E5=8D=888:14:35=EF=BC=8CMaxime Ripard =E5=86=99=E9=81=93=EF=BC=
-=9A
-> > On Sat, Jan 20, 2018 at 07:17:26AM +0800, Icenowy Zheng wrote:
-> > > This is the RFC initial patchset for the "new" Allwinner SUNIV ARM9 S=
-oC.
-> > >=20
-> > > The same die is packaged differently, come with different co-packaged
-> > > DRAM or shipped with different SDK; and then made many model names: F=
-23,
-> > > F25, F1C100A, F1C100S, F1C200S, F1C500, F1C600, R6, etc. These SoCs a=
-ll
-> > > share a common feature set and are packaged similarly (eLQFP128 for S=
-oCs
-> > > without co-packaged DRAM, QFN88 for with DRAM). As their's no
-> > > functionality hidden on the QFN88 models (except DRAM interface not
-> > > exported), it's not clever to differentiate them. So I will use suniv=
- as
-> > > common name of all these SoCs.
-> >=20
-> > Where is that suniv prefix coming from?
+On Tue, Jan 23, 2018 at 03:58:44PM -0800, Martin Kelly wrote:
+> From: Jelle van der Waa <jelle-oJJ1AqDjjO4@public.gmane.org>
 >=20
-> The BSP (Melis and Linux). (e.g. "libs/suniv" directory of the Melis SDK =
-and=20
-> "arch/arm/boot/dts/sunivw1p1.dtsi" in the Linux SDK)
-
-Do you have a link to that BSP?
-
-> > You should really answer two questions here:
-> >   - Are you able to predict whether you'll find an SoC part of that
-> >     family in the future that derives a bit and will need a compatible
-> >     of its own?
-> >   - Are you able to predict which quirks we'll need along the way to
-> >     support all the SoCs you've listed there?
-> >=20
-> > If you can't answer yes to both these questions, with a 100%
-> > certainty, then you'll need a SoC name in the compatible.
-> >=20
-> > Which doesn't prevent you from sharing as much as possible the DT like
-> > we did between the A10s and the A13 for example.
+> Enable the WiFi (AP6212) chip and eMMC support for the NanoPi NEO Air.
 >=20
-> So the suniv-f1c100s.dtsi will still be kept empty and all peripherals kn=
-own=20
-> should go through suniv.dtsi.
+> This patch was originally submitted by Jelle van der Waa. Martin Kelly
+> modified it to compile on the latest kernel, fixed up some review
+> comments from Maxime Ripard, and re-tested the patch.
+>=20
+> These are the original patch submissions:
+>=20
+> https://patchwork.kernel.org/patch/9581613/
+> https://patchwork.kernel.org/patch/9642071/
+>=20
+> Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Signed-off-by: Jelle van der Waa <jelle-oJJ1AqDjjO4@public.gmane.org>
+> Signed-off-by: Martin Kelly <mkelly-s2cxlsp5qxs@public.gmane.org>
 
-Sorry if I wasn't really clear. You can totally keep the current DT
-structure if that makes sense (and judging by what you're saying, it
-does.), but the compatibles should have the SoC name in it.
+I've reworked a bit the commit title and removed the links, and queued
+it for 4.17.
 
+Thanks!
 Maxime
 
 --=20
@@ -82,27 +53,27 @@ Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
 
---rwdinujenvvsyeha
+--bi2xv5ybqtnyg7zh
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlpp+TcACgkQ0rTAlCFN
-r3QHxw//YmXyxVNuYtAPjBx08jzNik0jFayt0j1hWPc1AG8pCj0k4uty6Lk+h3lh
-TKhn8gExV8c1nL+D7gWXFk8XZ4PQHGjd0HCYQEQ+USZ4eZ9wOLhDY3OXLm8ofeAg
-4h3WAlOPOBMzr/M2N5lrwBFG/dAA57fKNdfu8UOnOcvexDiJm6fQNq4OFhvKQRrS
-UiCYhFmPo9ixQH0GQSkq3u2Uj+xwaR9J0xY2YqpSbMPLurFqyIZPI0RrOrHbrQMl
-SrK/ivrtzw80aswJGRslEGkedAXfaI33t4cpTLg0nLUyTwRXHA2xEXOQD1QRJc84
-vbPmHMx+rabz7gpOCip2PySJUgiyuByfoRp/a9Wc44si6il45uCiKni5v2q8klF3
-BBZojuMYF5LgUB61fJHLxuyJfnivHEH2pYHKwXh0NuVU4+vJznJF4SrSRASlA9lo
-ag2vebJTH7wNitKRue6VaexcWP9BUSi9Cv7EpBwQiEDiOCTCXhtAMu6KPNYpPYo+
-ci377QGj396pFb/7FIm63zGepRymM+muv4WrdxL0xdEvCr1CDcBjz9hmwcT5Ifz1
-/BRrDtgvYRDmlKTj0X+It+nZ/0R7JpHrat6iXtZEEu4GzkSviWYiB6NIXq2MJd3O
-kNCknMYtsktl5xL2gwmAGV1ibj88lQgVMYIdtF4SZLa+jdQsHzw=
-=GfbL
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlpp+d4ACgkQ0rTAlCFN
+r3SAuw/+MIwxu4LZv/c45H7iTQmIU9n0wbAzjSqrD0AVj7eLU6r/4cGT8Bu/Mtv/
+IYjME92AiliPGrG4+Av1KaJXyeYbpJjoov8IF1NqlSiFscIP/zXR4JQXXMt7eoOW
+8RuvzhDugJ9YfsGJaaR7k+gtMDJEbsJtFTE6vKeZir2QG0LaLOMxM2j4CrQzdsiB
+R5+YebBsyCM/BNN/Fw5q1H5AsdRb+/oypzPrj3gpjziXNTToNGvS5Jvyf9pOAG9C
+F6ErEVI+QFpRKcHOg0NEER8CiFyDrE6orAgSMMMfZ0hGg+vZ58KV8epIvwAFVepr
+yKFPi5MZhJbJtIF2jyafBwMmv8ACW23E49UgyJrXpE35T9tEOTiGKKA2PTuZyHGb
+sOkkUI9UJNDLxSStJ+2VdIwhFOJWAKbnhxl4LYwl3yTCAbOVC3ZKy8g5fX9PWEaW
+GsSJwApDWYSI9qt8xhwpT+SggTKNVuHO+cZsKkM0/DO4kZDs/SmlQqHHSr7vvtPA
+GZYf61MO9cfyeXTP5l8x+KXHTCXda470xTbF0FpTYsinNI9yvf0wIMryeN4sFz/K
+K6YyU5KeHUFPkARG4xDWe75gCtLToyW3OO+HMVTtzHqq92iusPdOeUalFzP32s6z
+arOzLxk+8O3pH5ljJg99u1DgwY2TJlzXtEp0d+zUarYtsQZg1Cg=
+=QoY7
 -----END PGP SIGNATURE-----
 
---rwdinujenvvsyeha--
+--bi2xv5ybqtnyg7zh--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
