@@ -1,82 +1,75 @@
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: Re: [PATCH 1/8] dt-bindings: can: rcar_can: document r8a774[35] can
- support
-Date: Thu, 25 Jan 2018 09:53:27 +0100
-Message-ID: <da4afc82-aeb6-05d9-4a41-b2627f736064@pengutronix.de>
-References: <1510067449-17017-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1510067449-17017-2-git-send-email-fabrizio.castro@bp.renesas.com>
- <SG2PR06MB0886FFF48DD9DBE7693EEDBDC0E20@SG2PR06MB0886.apcprd06.prod.outlook.com>
+From: Code Kipper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [linux-sunxi][PATCH 5/5] arm64: allwinner: a64: Add DAI nodes
+Date: Thu, 25 Jan 2018 10:07:45 +0100
+Message-ID: <CAEKpxBmbz-dwF77PDs-mREHwDfXG3juXz7zUKcaMQKjz=1b+Fg@mail.gmail.com>
+References: <20180124103943.2062-1-codekipper@gmail.com> <20180124103943.2062-6-codekipper@gmail.com>
+ <20180124110222.cdglyg5m7644xiem@flea.lan> <CAEKpxBk8NXJn4KxEGXx7UddqpUMC65kdEgx1phZDWyUd3ER_3Q@mail.gmail.com>
+ <20180125082904.t4sqob626kyzw4ga@flea.lan>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
- protocol="application/pgp-signature";
- boundary="y3NlxvCgvUGy3aGDFcc2Hndd3bO1x6sHe"
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <SG2PR06MB0886FFF48DD9DBE7693EEDBDC0E20@SG2PR06MB0886.apcprd06.prod.outlook.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, Wolfgang Grandegger <wg@grandegger.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180125082904.t4sqob626kyzw4ga-ZC1Zs529Oq4@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---y3NlxvCgvUGy3aGDFcc2Hndd3bO1x6sHe
-Content-Type: multipart/mixed; boundary="yM7sl1zAzFhizJRnG9KG0LzDXPHcRDKzD";
- protected-headers="v1"
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Simon Horman <horms@verge.net.au>,
- Geert Uytterhoeven <geert+renesas@glider.be>,
- "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>,
- "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>,
- Chris Paterson <Chris.Paterson2@renesas.com>,
- Biju Das <biju.das@bp.renesas.com>, Wolfgang Grandegger <wg@grandegger.com>,
- Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Message-ID: <da4afc82-aeb6-05d9-4a41-b2627f736064@pengutronix.de>
-Subject: Re: [PATCH 1/8] dt-bindings: can: rcar_can: document r8a774[35] can
- support
-References: <1510067449-17017-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1510067449-17017-2-git-send-email-fabrizio.castro@bp.renesas.com>
- <SG2PR06MB0886FFF48DD9DBE7693EEDBDC0E20@SG2PR06MB0886.apcprd06.prod.outlook.com>
-In-Reply-To: <SG2PR06MB0886FFF48DD9DBE7693EEDBDC0E20@SG2PR06MB0886.apcprd06.prod.outlook.com>
-
---yM7sl1zAzFhizJRnG9KG0LzDXPHcRDKzD
-Content-Type: text/plain; charset=utf-8
-Content-Language: de-DE
-Content-Transfer-Encoding: quoted-printable
-
-On 01/24/2018 06:22 PM, Fabrizio Castro wrote:
-> thank you for Acking the patch, just wondering if this patch has any
-> chance to end up in v4.16?
-
-I can take this via the linux-can tree, if no one else takes it.
-
-Marc
-
---=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
-
-
---yM7sl1zAzFhizJRnG9KG0LzDXPHcRDKzD--
-
---y3NlxvCgvUGy3aGDFcc2Hndd3bO1x6sHe
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCgAdFiEE4bay/IylYqM/npjQHv7KIOw4HPYFAlppmwcACgkQHv7KIOw4
-HPZnBAgAijy3/kMWRIVZLSNl173ULXrnpOQM2p+Rgm9JxRTv27Sody83Cg/LgO1q
-Fvdx9/Z+3iJvBC9a8iR5fkWeNucLuzPxNSNUx2KZSjgoRrIpYr0oygI3clvvQ257
-m9gqg2U3YP7jaf+GBWcjfa7N17xZ3IAcckDuuZkBloL1zZ/Z526pjUr16XyItaMn
-bf8yeSu67OuadgMe4EUYNEfbHcnvou1T2LxzR3gXCbf6DitMpCmz4hv2JZJtJxDd
-Z9Y4Snhvd1TqYpKVcHQqdRDa9+aAq61GT1AjMkEijwEzQVMKkqxxR2p9GeTjW4NS
-FPhpBUrFxFvvNOO+fL5YuvEqFwlFFw==
-=pTUl
------END PGP SIGNATURE-----
-
---y3NlxvCgvUGy3aGDFcc2Hndd3bO1x6sHe--
+On 25 January 2018 at 09:29, Maxime Ripard
+<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> On Wed, Jan 24, 2018 at 12:39:31PM +0100, Code Kipper wrote:
+>> On 24 January 2018 at 12:02, Maxime Ripard
+>> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+>> > Hi,
+>> >
+>> > On Wed, Jan 24, 2018 at 11:39:43AM +0100, codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+>> >> From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> >>
+>> >> Add the DAI blocks to the device tree. I2S0 and I2S1 are for
+>> >> connecting to an external codec.
+>> >>
+>> >> Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> >> ---
+>> >>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 26 ++++++++++++++++++++++++++
+>> >>  1 file changed, 26 insertions(+)
+>> >>
+>> >> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+>> >> index f060a58f374c..f3354f8c2026 100644
+>> >> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+>> >> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+>> >> @@ -419,6 +419,32 @@
+>> >>                       status = "disabled";
+>> >>               };
+>> >>
+>> >> +             i2s0: i2s@1c22000 {
+>> >> +                     #sound-dai-cells = <0>;
+>> >> +                     compatible = "allwinner,sun8i-h3-i2s";
+>> >
+>> > Same remark than for the spdif, please add a soc-specific compatible.
+>>
+>> Is that really necessary?..
+>
+> Yes.
+>
+>> for example on the a20 the functionality of the i2s is the same as
+>> the a10 so it is down as "allwinner,sun4i-a10-i2s", likewise here
+>> it's the same as the changes required for the H3. I was planning on
+>> using the compatible "allwinner,sun50i-a64-i2s" for the audio codec
+>> as there are some quirks that need to be addressed.
+>
+> And this is exactly why it is necessary. If we ever find a quirk in
+> the future, supporting that quirk will be smooth if we already have a
+> compatible for that SoC in the DT, and a pain if we don't.
+ACK, but is there any reason why we're not doing this for i2c?
+BR,
+CK
+>
+> Maxime
+>
+> --
+> Maxime Ripard, Free Electrons
+> Embedded Linux and Kernel engineering
+> http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
