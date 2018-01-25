@@ -1,125 +1,109 @@
-From: Greentime Hu <green.hu@gmail.com>
-Subject: Re: [PATCH v6 16/36] nds32: DMA mapping API
-Date: Thu, 25 Jan 2018 11:45:18 +0800
-Message-ID: <CAEbi=3fwCnFXmYKPEiDiqoGFujqRD0bPrPAgqtiTkO_vuX25dQ@mail.gmail.com>
-References: <cover.1515766253.git.green.hu@gmail.com> <ecd1742c718c5b45983486cf9dfb44adb6e06923.1515766253.git.green.hu@gmail.com>
- <CAK8P3a0-Vf9CRZzdXCxpuQoWgMhYWgO6Hy2KuP-gOKttoSGESA@mail.gmail.com>
- <CAEbi=3cYynvFS2GDzj5Oav_5LtHPdBfBWh9c=mFT0PxeOLX9sQ@mail.gmail.com>
- <CAEbi=3d46tXacnnU+RJGMw+KR1O=NaVjO+NW3cxUjAN==V51iw@mail.gmail.com> <CAK8P3a30W1ph-6Owuf9yZF-bKg_bx6dJKCtiF_aRAYu9NVO3DQ@mail.gmail.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [RFC PATCH v2 0/1] of: easier debugging for node life cycle
+ issues
+Date: Wed, 24 Jan 2018 22:47:55 -0800
+Message-ID: <11cf8fac-d2fe-ecdb-546f-de3c3b42a637@gmail.com>
+References: <20180121143117.19805-1-wsa+renesas@sang-engineering.com>
+ <ac4f02e1-6d49-158a-4fb6-56ac0d474a44@gmail.com>
+ <20180122114948.mm5mg6zqw3hmjj4o@katana>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <CAK8P3a30W1ph-6Owuf9yZF-bKg_bx6dJKCtiF_aRAYu9NVO3DQ@mail.gmail.com>
-Sender: linux-arch-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Greentime <greentime@andestech.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Networking <netdev@vger.kernel.org>, Vincent Chen <deanbo422@gmail.com>, DTML <devicetree@vger.kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, David Howells <dhowells@redhat.com>, Will Deacon <will.deacon@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-serial@vger.kernel.org, Geert Uytterhoeven <geert.uytterhoeven@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Greg KH <greg@kroah.com>, Guo Ren <ren_guo@c-sky.co>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20180122114948.mm5mg6zqw3hmjj4o@katana>
+Content-Language: en-US
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>, devicetree@vger.kernel.org, Tyrel Datwyler <tyreld@linux.vnet.ibm.com>, Geert Uytterhoeven <geert@linux-m68k.org>, linux-renesas-soc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, Rob Herring <robh+dt@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi, Arnd:
-
-2018-01-24 19:36 GMT+08:00 Arnd Bergmann <arnd@arndb.de>:
-> On Tue, Jan 23, 2018 at 12:52 PM, Greentime Hu <green.hu@gmail.com> wrote:
->> Hi, Arnd:
+On 01/22/18 03:49, Wolfram Sang wrote:
+> Hi Frank,
+> 
+>> Please go back and read the thread for version 1.  Simply resubmitting a
+>> forward port is ignoring that whole conversation.
 >>
->> 2018-01-23 16:23 GMT+08:00 Greentime Hu <green.hu@gmail.com>:
->>> Hi, Arnd:
->>>
->>> 2018-01-18 18:26 GMT+08:00 Arnd Bergmann <arnd@arndb.de>:
->>>> On Mon, Jan 15, 2018 at 6:53 AM, Greentime Hu <green.hu@gmail.com> wrote:
->>>>> From: Greentime Hu <greentime@andestech.com>
->>>>>
->>>>> This patch adds support for the DMA mapping API. It uses dma_map_ops for
->>>>> flexibility.
->>>>>
->>>>> Signed-off-by: Vincent Chen <vincentc@andestech.com>
->>>>> Signed-off-by: Greentime Hu <greentime@andestech.com>
->>>>
->>>> I'm still unhappy about the way the cache flushes are done here as discussed
->>>> before. It's not a show-stopped, but no Ack from me.
->>>
->>> How about this implementation?
->
->> I am not sure if I understand it correctly.
->> I list all the combinations.
->>
->> RAM to DEVICE
->>     before DMA => writeback cache
->>     after DMA => nop
->>
->> DEVICE to RAM
->>     before DMA => nop
->>     after DMA => invalidate cache
->>
->> static void consistent_sync(void *vaddr, size_t size, int direction, int master)
->> {
->>         unsigned long start = (unsigned long)vaddr;
->>         unsigned long end = start + size;
->>
->>         if (master == FOR_CPU) {
->>                 switch (direction) {
->>                 case DMA_TO_DEVICE:
->>                         break;
->>                 case DMA_FROM_DEVICE:
->>                 case DMA_BIDIRECTIONAL:
->>                         cpu_dma_inval_range(start, end);
->>                         break;
->>                 default:
->>                         BUG();
->>                 }
->>         } else {
->>                 /* FOR_DEVICE */
->>                 switch (direction) {
->>                 case DMA_FROM_DEVICE:
->>                         break;
->>                 case DMA_TO_DEVICE:
->>                 case DMA_BIDIRECTIONAL:
->>                         cpu_dma_wb_range(start, end);
->>                         break;
->>                 default:
->>                         BUG();
->>                 }
->>         }
->> }
->
-> That looks reasonable enough, but it does depend on a number of factors,
-> and the dma-mapping.h implementation is not just about cache flushes.
->
-> As I don't know the microarchitecture, can you answer these questions:
->
-> - are caches always write-back, or could they be write-through?
-Yes, we can config it to write-back or write-through.
+>> There is a lot of good info in that thread.  I certainly learned stuff in it.
+> 
+> Yes, I did that and learned stuff, too. My summary of the discussion was:
+> 
+> - you mentioned some drawbacks you saw (like the mixture of trace output
+>   and printk output)> - most of them look like addressed to me? (e.g. Steven showed a way to redirect
+>   printk to trace
+> - you posted your version (which was, however, marked as "not user friendly"
+>   even by yourself)
 
-> - can the cache be shared with another CPU or a device?
-No, we don't support it.
+Not exactly a fair quoting.  There were two things I said:
 
-> - if the cache is shared, is it always coherent, never coherent, or
-> either of them?
-We don't support SMP and the device will access memory through bus. I
-think the cache is not shared.
+  "Here is a patch that I have used.  It is not as user friendly in terms
+  of human readable stack traces (though a very small user space program
+  should be able to fix that)."
 
-> - could the same memory be visible at different physical addresses
->   and have conflicting caches?
-We currently don't have such kind of SoC memory map.
+     So easy to fix using existing userspace programs to convert kernel
+     addresses to symbols.
 
-> - is the CPU physical address always the same as the address visible to the
->   device?
-Yes, it is always the same unless the CPU uses local memory. The
-physical address of local memory will overlap the original bus
-address.
-I think the local memory case can be ignored because we don't use it for now.
+  "FIXME: Currently using pr_err() so I don't need to set loglevel on boot.
 
-> - are there devices that can only see a subset of the physical memory?
-All devices are able to see the whole physical memory in our current
-SoC, but I think other SoC may support such kind of HW behavior.
+          So obviously not a user friendly tool!!!
+          The process is:
+             - apply patch
+             - configure, build, boot kernel
+             - analyze data
+             - remove patch"
 
-> - can there be an IOMMU?
-No.
+     So not friendly because it uses pr_err() instead of pr_debug().  In
+     a reply I said if I submitted my patches I would change it to use
+     pr_debug() instead.  So not an issue.
 
-> - are there write-buffers in the CPU that might need to get flushed before
->   flushing the cache?
-Yes, there are write-buffers in front of CPU caches but it should be
-transparent to SW. We don't need to flush it.
+     And not user friendly because it requires patching the kernel.
+     Again a NOP if I submitted my patch, because the patch would
+     already be in the kernel.
 
-> - could cache lines be loaded speculatively or with read-ahead while
->   a buffer is owned by a device?
-No.
+But whatever, let's ignore that - a poor quoting is not a reason to
+reject this version of the patch.
+
+
+> - The discussion stalled over having two approaches
+
+Then you should have stated such when you resubmitted.
+
+
+> So, I thought reposting would be a good way of finding out if your
+> concerns were addressed in the discussion or not. If I overlooked
+
+Then you should have stated that there were concerns raised in the
+discussion and asked me if my concerns were addressed.
+
+
+> something, I am sorry for that. Still, my intention is to continue the
+> discussion, not to ignore it. Because as it stands, we don't have such a
+> debugging mechanism in place currently, and with people working with DT
+> overlays, I'd think it would be nice to have.
+> 
+> Kind regards,
+> 
+>    Wolfram
+> 
+
+
+Rob suggested:
+
+     >
+     > @@ -25,8 +28,10 @@
+     >   */
+     >  struct device_node *of_node_get(struct device_node *node)
+     >  {
+     > -       if (node)
+     > +       if (node) {
+     >                 kobject_get(&node->kobj);
+     > +               trace_of_node_get(refcount_read(&node->kobj.kref.refcount), node->full_name);
+
+     Seems like there should be a kobj wrapper to read the refcount.
+
+As far as I noticed, that was never addressed.  I don't know the answer, but
+the question was asked.  And if there is no such function, then there is at
+least kref_read(), which would improve the code a little bit.
+
+I'll reply to the patch 0/1 and patch 1/1 emails with review comments.
+
+-Frank
