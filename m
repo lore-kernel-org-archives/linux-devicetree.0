@@ -1,91 +1,69 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 5/5] arm64: allwinner: a64: Add DAI nodes
-Date: Thu, 25 Jan 2018 16:13:47 +0100
-Message-ID: <20180125151347.yripdkgw62tmxb74@flea.lan>
-References: <20180124103943.2062-1-codekipper@gmail.com>
- <20180124103943.2062-6-codekipper@gmail.com>
- <20180124110222.cdglyg5m7644xiem@flea.lan>
- <CAEKpxBk8NXJn4KxEGXx7UddqpUMC65kdEgx1phZDWyUd3ER_3Q@mail.gmail.com>
- <20180125082904.t4sqob626kyzw4ga@flea.lan>
- <CAEKpxBmbz-dwF77PDs-mREHwDfXG3juXz7zUKcaMQKjz=1b+Fg@mail.gmail.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Dong Aisheng <dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: imx6sx: add pu power domain support
+Date: Thu, 25 Jan 2018 23:30:25 +0800
+Message-ID: <20180125153025.GC24622@b29396-OptiPlex-7040>
+References: <1516720343-21933-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="633gxgtdfacfdwqd"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBLPIU7JQKGQEDWHJHMY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAEKpxBmbz-dwF77PDs-mREHwDfXG3juXz7zUKcaMQKjz=1b+Fg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Code Kipper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1516720343-21933-1-git-send-email-Anson.Huang-3arQi8VN3Tc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Anson Huang <Anson.Huang-3arQi8VN3Tc@public.gmane.org>
+Cc: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, aisheng.dong-3arQi8VN3Tc@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, Linux-imx-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Jan 23, 2018 at 11:12:23PM +0800, Anson Huang wrote:
+> Add PU power domain support, GPU is the only
+> module inside PU power domain, and PU power
+> is supplied by LDO_SOC.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang-3arQi8VN3Tc@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/imx6sx.dtsi | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
+> index fd78793..42ef4c6 100644
+> --- a/arch/arm/boot/dts/imx6sx.dtsi
+> +++ b/arch/arm/boot/dts/imx6sx.dtsi
+> @@ -188,6 +188,7 @@
+>  				 <&clks IMX6SX_CLK_GPU>,
+>  				 <&clks IMX6SX_CLK_GPU>;
+>  			clock-names = "bus", "core", "shader";
+> +			power-domains = <&pd_pu>;
+>  		};
+>  
+>  		dma_apbh: dma-apbh@1804000 {
+> @@ -767,6 +768,13 @@
+>  					#address-cells = <1>;
+>  					#size-cells = <0>;
+>  
+> +					pd_pu: power-domain@1 {
+> +						reg = <1>;
+> +						#power-domain-cells = <0>;
+> +						power-supply = <&reg_soc>;
 
---633gxgtdfacfdwqd
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
+I wonder we may not need this as it's a non-stop domain
+just like we did for arm domain, right?
 
-On Thu, Jan 25, 2018 at 10:07:45AM +0100, Code Kipper wrote:
-> On 25 January 2018 at 09:29, Maxime Ripard
-> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> > On Wed, Jan 24, 2018 at 12:39:31PM +0100, Code Kipper wrote:
-> >> On 24 January 2018 at 12:02, Maxime Ripard
-> >> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> >> > Hi,
-> >> >
-> >> > On Wed, Jan 24, 2018 at 11:39:43AM +0100, codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
-> >> >> From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> >> >>
-> >> >> Add the DAI blocks to the device tree. I2S0 and I2S1 are for
-> >> >> connecting to an external codec.
-> >> >>
-> >> >> Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> >> >> ---
-> >> >>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 26 ++++++++++++++++++++++++++
-> >> >>  1 file changed, 26 insertions(+)
-> >> >>
-> >> >> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> >> >> index f060a58f374c..f3354f8c2026 100644
-> >> >> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> >> >> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> >> >> @@ -419,6 +419,32 @@
-> >> >>                       status = "disabled";
-> >> >>               };
-> >> >>
-> >> >> +             i2s0: i2s@1c22000 {
-> >> >> +                     #sound-dai-cells = <0>;
-> >> >> +                     compatible = "allwinner,sun8i-h3-i2s";
-> >> >
-> >> > Same remark than for the spdif, please add a soc-specific compatible.
-> >>
-> >> Is that really necessary?..
-> >
-> > Yes.
-> >
-> >> for example on the a20 the functionality of the i2s is the same as
-> >> the a10 so it is down as "allwinner,sun4i-a10-i2s", likewise here
-> >> it's the same as the changes required for the H3. I was planning on
-> >> using the compatible "allwinner,sun50i-a64-i2s" for the audio codec
-> >> as there are some quirks that need to be addressed.
-> >
-> > And this is exactly why it is necessary. If we ever find a quirk in
-> > the future, supporting that quirk will be smooth if we already have a
-> > compatible for that SoC in the DT, and a pain if we don't.
->
-> ACK, but is there any reason why we're not doing this for i2c?
+Otherwise, the patch looks fine to me.
 
-We try to do that for all the IPs, but some fell through the cracks.
+Acked-by: Dong Aisheng <aisheng.dong-3arQi8VN3Tc@public.gmane.org>
 
-Maxime
+Regards
+Dong Aisheng
 
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---633gxgtdfacfdwqd--
+> +						clocks = <&clks IMX6SX_CLK_GPU>;
+> +					};
+> +
+>  					pd_pci: power-domain@3 {
+>  						reg = <3>;
+>  						#power-domain-cells = <0>;
+> -- 
+> 2.7.4
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
