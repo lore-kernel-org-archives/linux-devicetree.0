@@ -1,86 +1,82 @@
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: =?UTF-8?Q?Re=3A_=5BPATCH_v6_00=2F41=5D_ARM=3A_davinci=3A_convert_to_common?=
-        =?UTF-8?Q?_clock_framework=E2=80=8B?=
-Date: Thu, 25 Jan 2018 14:34:50 +0100
-Message-ID: <CAMpxmJW1DpzD3FfRffLc7dbP3bSO6rHL=noYiQ0PKit9JOFu-w@mail.gmail.com>
-References: <1516468460-4908-1-git-send-email-david@lechnology.com>
- <CAMRc=MexJTMiD=URw1bv-qfGaTntZRXgfsSb_beYGkvO+LrpgQ@mail.gmail.com>
- <d819e18f-7d74-d8c4-8056-bfc545f4d4e9@lechnology.com> <CAMRc=McVNJqsO4+j=XkyNWuKqF-S-hQAw9XxHx6GC47UudgMYw@mail.gmail.com>
- <e5f4af7d-971c-5694-2da5-0cba9083ee5c@lechnology.com> <615bc302-e129-1501-63be-fa701f5ecaad@lechnology.com>
- <CAHCN7xLW=RjHHBjvDto=DRrNfNsQrsaGb0zmsRrwdc+7Wbhaxg@mail.gmail.com>
- <CAMRc=MdyGx3PFiryYybB2fCGx=AP=e7kkdd-DUL29pT+St9u1g@mail.gmail.com>
- <5f836454-5de7-c51d-d262-2c2dbc26e438@lechnology.com> <CAMRc=Mcw8wWNo7Q3KnHNv81UGuHxEqmOs0he7MKxmaxDjwao+A@mail.gmail.com>
- <aaeb7d73-bd3b-9c85-88c5-c60da6ca3733@lechnology.com> <CAMRc=Me8HefZJYTkprqL2vpq_nLym4r6p-du7hoKwVk8kSCR8w@mail.gmail.com>
- <cafb3712-08eb-18f7-b3b6-debba2298b49@lechnology.com> <f28601f6-d6f1-9a55-f3cf-62543412bd36@lechnology.com>
- <fc54ab26-72be-1377-2ccb-72d34360c5eb@lechnology.com> <CAMRc=Me1_i8qQE4GHeLiU2itHnp71Gt03UM6NhL=hA8Y6Pb0MA@mail.gmail.com>
- <597caa1a-a790-3629-3186-5d2152f45e06@ti.com>
+From: Greentime Hu <green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v6 16/36] nds32: DMA mapping API
+Date: Thu, 25 Jan 2018 21:48:01 +0800
+Message-ID: <CAEbi=3cifP5owmV0qPoC0_7z6NMi56tAqM+C9JdbqjzMTAUWig@mail.gmail.com>
+References: <cover.1515766253.git.green.hu@gmail.com> <ecd1742c718c5b45983486cf9dfb44adb6e06923.1515766253.git.green.hu@gmail.com>
+ <CAK8P3a0-Vf9CRZzdXCxpuQoWgMhYWgO6Hy2KuP-gOKttoSGESA@mail.gmail.com>
+ <CAEbi=3cYynvFS2GDzj5Oav_5LtHPdBfBWh9c=mFT0PxeOLX9sQ@mail.gmail.com>
+ <CAEbi=3d46tXacnnU+RJGMw+KR1O=NaVjO+NW3cxUjAN==V51iw@mail.gmail.com>
+ <CAK8P3a30W1ph-6Owuf9yZF-bKg_bx6dJKCtiF_aRAYu9NVO3DQ@mail.gmail.com>
+ <CAEbi=3fwCnFXmYKPEiDiqoGFujqRD0bPrPAgqtiTkO_vuX25dQ@mail.gmail.com> <CAK8P3a0YrwAXH8n83wf=34zmN44KgJu-JVXfQWhuquNxVmZ8Sw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <597caa1a-a790-3629-3186-5d2152f45e06@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sekhar Nori <nsekhar@ti.com>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, David Lechner <david@lechnology.com>, Adam Ford <aford173@gmail.com>, linux-clk@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAK8P3a0YrwAXH8n83wf=34zmN44KgJu-JVXfQWhuquNxVmZ8Sw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Greentime <greentime-MUIXKm3Oiri1Z/+hSey0Gg@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arch <linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Networking <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Vincent Chen <deanbo422-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Al Viro <viro-RmSDqhL/yNMiFSDQTTA3OLVCufUGDwFn@public.gmane.org>, David Howells <dhowells-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert.uytterhoeven-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Greg KH <greg-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>, Guo Ren <ren_guo-Y+KPrCd2zL4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2018-01-25 13:53 GMT+01:00 Sekhar Nori <nsekhar@ti.com>:
-> On Wednesday 24 January 2018 01:33 PM, Bartosz Golaszewski wrote:
->> 2018-01-23 21:23 GMT+01:00 David Lechner <david@lechnology.com>:
->>> On 01/23/2018 02:05 PM, David Lechner wrote:
->>>>
->>>> On 01/23/2018 02:01 PM, David Lechner wrote:
->>>>>
->>>>> On 01/23/2018 01:53 PM, Bartosz Golaszewski wrote:
->>>>>>
->>>>>>
->>>>>> In the mdio case - the problem is that devm_clk_get() doesn't fail,
->>>>>> but somehow the clock doesn't end up in the list of the device's
->>>>>> clocks - which is why it's not enabled by pm_runtime_get_sync().
->>>>>>
->>>>>
->>>>>
->>>>> Right. This is because devm_clk_get() now finds the clock via device
->>>>> tree instead of a clkdev lookup entry. However, I think that the PM
->>>>> notifier registered in arch/arm/mach-davinci/pm_domain.c only uses
->>>>> the clkdev lookup to match the con_id and does not use device tree.
->>>>> The same thing is happing in mdio, emac and lcdc.
->>>>>
->>>>
->>>> Minor correction: It looks like emac doesn't do this because it doesn't
->>>> have a con_id of "fck". But, the same clock is shared by emac and mdio, so
->>>> since mdio enables the clock, emac doesn't notice or care that it did
->>>> not enable the clock itself.
+Hi, Arnd:
+
+2018-01-25 18:42 GMT+08:00 Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>:
+> On Thu, Jan 25, 2018 at 4:45 AM, Greentime Hu <green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> 2018-01-24 19:36 GMT+08:00 Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>:
+>>> On Tue, Jan 23, 2018 at 12:52 PM, Greentime Hu <green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>>> 2018-01-23 16:23 GMT+08:00 Greentime Hu <green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
+>>>>> 2018-01-18 18:26 GMT+08:00 Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>:
+>>>>>> On Mon, Jan 15, 2018 at 6:53 AM, Greentime Hu <green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 >>>
+>>> That looks reasonable enough, but it does depend on a number of factors,
+>>> and the dma-mapping.h implementation is not just about cache flushes.
 >>>
->>> How about using pm_clk_add_clk() in these drivers to explicitly use the
->>> clocks for power management instead of relying on pm_clk_add_notifier()
->>> to do this implicitly?
->>
->> Yes, this sounds good.
+>>> As I don't know the microarchitecture, can you answer these questions:
+>>>
+>>> - are caches always write-back, or could they be write-through?
+>> Yes, we can config it to write-back or write-through.
 >
-> Looking at how pm_clk_notify() in clock_ops.c uses con_id[] list, right
-> now pm_runtime() will work only for clocks which have con_id (from the
-> list above) mentioned in DT. Since clk_find() mandates con_id match when
-> its available, NULL con_id does not match.
+> Ok. If a WT-cache is common enough, you could optimize for that
+> case by skipping the explicit writeback here and just doing a synchronizing
+> instruction. Usually if the cache is configurable, one would pick the
+> writeback option though, so it's probably not important.
+
+Thank you for this suggestion.
+We have optimized in cpu_dcache_wb_range() and it will be called from
+cpu_dma_wb_range().
+It will do nothing if it is a write-through config cache.
+
+>>> - is the CPU physical address always the same as the address visible to the
+>>>   device?
+>> Yes, it is always the same unless the CPU uses local memory. The
+>> physical address of local memory will overlap the original bus
+>> address.
+>> I think the local memory case can be ignored because we don't use it for now.
 >
-> For simple devices like DaVinci which uses just one clock for power
-> management per device (multiple devices might share a clock, but not
-> other way around as far as I recall, anyway I will double check this
-> assertion), the attached patch should make EMAC work.
+> Ok, makes sense.
 >
-
-Tested on da850-lcdk - patch does indeex fix emac on da850-lcdk, but
-tilcdc still complains.
-
-> That still leaves why lcdc does not work. One difference is it uses
-> PSC1. Are there other devices in PSC1 which work (just to rule out any
-> thing wrong with PSC1 handling).
+>>> - are there devices that can only see a subset of the physical memory?
+>> All devices are able to see the whole physical memory in our current
+>> SoC, but I think other SoC may support such kind of HW behavior.
 >
+> This is one area that might need a more complex implementation then,
+> depending on what devices are used in other SoCs. For network or
+> storage devices, it's usually sufficient to configure a DMA mask
+> from the "dma-ranges" property of the parent bus in the device tree,
+> the kernel code will then use bounce buffers.
+>
+> For other types of drivers, using the streaming DMA interfaces
+> can require using the swiotlb helper that performs the bounce
+> buffering at in place of the cache operations. With a bit of luck,
+> you won't ever need to worry about it, just mentioning it here in
+> case you run into that problem later.
+>
+> The consistent_sync() implementaiton you showed earlier should be
+> good enough then.  With that change,
+>
+> Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 
-Emac uses PSC1 too.
-
-GPIO and I2C1 work fine, but OHCI rarely lives through any cpufreq
-transition. I'm still trying to figure out why it's dying.
-
-Thanks,
-Bartosz
+Thank you. :)
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
