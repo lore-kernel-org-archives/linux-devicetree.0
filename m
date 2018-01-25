@@ -1,59 +1,66 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2 1/3] dt-bindings: timer: renesas, cmt: Document
- r8a774[35] CMT support
-Date: Thu, 25 Jan 2018 09:21:17 +0100
-Message-ID: <CAMuHMdUX8D6c_ehNJAS8nWprvY60bkoxwTekEEqT5oJcz4QGPA@mail.gmail.com>
-References: <1513618743-4773-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1513618743-4773-2-git-send-email-fabrizio.castro@bp.renesas.com>
- <SG2PR06MB088625944BCD8F4307315520C0E20@SG2PR06MB0886.apcprd06.prod.outlook.com>
- <1acdad3b-c2fd-df1d-f25b-cf80b79a9842@linaro.org>
+From: Dong Aisheng <aisheng.dong@nxp.com>
+Subject: [PATCH 1/1] dt-bindings: thermal: imx: update the binding to new method
+Date: Thu, 25 Jan 2018 14:37:49 +0800
+Message-ID: <1516862269-25543-1-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1acdad3b-c2fd-df1d-f25b-cf80b79a9842@linaro.org>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Thomas Gleixner <tglx@linutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com, Dong Aisheng <aisheng.dong@nxp.com>, Shawn Guo <shawn.guo@linaro.org>, Leonard Crestez <leonard.crestez@nxp.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Daniel,
+Due to the old method has already been marked as deprecated in binding
+doc, so obviously it's better to update the example to new bindings
+as well.
 
-On Thu, Jan 25, 2018 at 9:09 AM, Daniel Lezcano
-<daniel.lezcano@linaro.org> wrote:
-> On 24/01/2018 17:49, Fabrizio Castro wrote:
->> I am sorry to bother you, just wondering if you think there are any chances for this patch to applied on top of v4.16?
->
-> You can take it through the renesas tree.
->
-> Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Shawn Guo <shawn.guo@linaro.org>
+Cc: Leonard Crestez <leonard.crestez@nxp.com>
+Cc: Zhang Rui <rui.zhang@intel.com>
+Cc: Eduardo Valentin <edubezval@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+---
+ .../devicetree/bindings/thermal/imx-thermal.txt    | 25 ++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-Thank you!
-
-Unfortunately it's a bit late to get non-bugfixes in v4.16 through the renesas
-tree and arm-soc.
-
-Any chance it can go in through you?
-
-Thanks again!
-
->>> Subject: [PATCH v2 1/3] dt-bindings: timer: renesas, cmt: Document r8a774[35] CMT support
->>>
->>> Document SoC specific compatible strings for r8a7743 and r8a7745.
->>> No driver change is needed as the fallback strings will activate
->>> the right code.
->>>
->>> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
->>> Reviewed-by: Biju Das <biju.das@bp.renesas.com>
->>> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
->>> Reviewed-by: Rob Herring <robh@kernel.org>
->>> Reviewed-by: Simon Horman <horms@verge.net.au>
-
-Gr{oetje,eeting}s,
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+diff --git a/Documentation/devicetree/bindings/thermal/imx-thermal.txt b/Documentation/devicetree/bindings/thermal/imx-thermal.txt
+index 28be51a..379eb76 100644
+--- a/Documentation/devicetree/bindings/thermal/imx-thermal.txt
++++ b/Documentation/devicetree/bindings/thermal/imx-thermal.txt
+@@ -22,7 +22,32 @@ Optional properties:
+ - clocks : thermal sensor's clock source.
+ 
+ Example:
++ocotp: ocotp@21bc000 {
++	#address-cells = <1>;
++	#size-cells = <1>;
++	compatible = "fsl,imx6sx-ocotp", "syscon";
++	reg = <0x021bc000 0x4000>;
++	clocks = <&clks IMX6SX_CLK_OCOTP>;
+ 
++	tempmon_calib: calib@38 {
++		reg = <0x38 4>;
++	};
++
++	tempmon_temp_grade: temp-grade@20 {
++		reg = <0x20 4>;
++	};
++};
++
++tempmon: tempmon {
++	compatible = "fsl,imx6sx-tempmon", "fsl,imx6q-tempmon";
++	interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
++	fsl,tempmon = <&anatop>;
++	nvmem-cells = <&tempmon_calib>, <&tempmon_temp_grade>;
++	nvmem-cell-names = "calib", "temp_grade";
++	clocks = <&clks IMX6SX_CLK_PLL3_USB_OTG>;
++};
++
++Legacy method (Deprecated):
+ tempmon {
+ 	compatible = "fsl,imx6q-tempmon";
+ 	fsl,tempmon = <&anatop>;
+-- 
+2.7.4
