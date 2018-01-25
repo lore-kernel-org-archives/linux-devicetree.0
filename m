@@ -1,41 +1,43 @@
-From: Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
-Subject: [PATCH 0/2] mtd: fsl-quadspi: Update hwcap based on mode provided in
- dtsi file
-Date: Thu, 25 Jan 2018 12:51:55 +0530
-Message-ID: <1516864917-31969-1-git-send-email-yogeshnarayan.gaur@nxp.com>
+From: Bartosz Golaszewski <brgl-ARrdPY/1zhM@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: use a correct at24 fallback for at91-nattis-2-natte-2
+Date: Thu, 25 Jan 2018 08:48:59 +0100
+Message-ID: <CAMRc=MfVpWKctrgovF2hAnxjiXP4TqzLqqyVCPrQiudg8DHwtA@mail.gmail.com>
+References: <20180124213412.4612-1-brgl@bgdev.pl> <bd9bdd00-d7ce-e925-2d63-d0fbb86e07e9@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, robh@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org
-Cc: boris.brezillon@free-electrons.com, Yogesh Gaur <yogeshnarayan.gaur@nxp.com>, prabhakar.kushwaha@nxp.com, suresh.gupta@nxp.com, cyrille.pitchen@wedev4u.fr, han.xu@nxp.com, computersforpeace@gmail.com, festevam@gmail.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <bd9bdd00-d7ce-e925-2d63-d0fbb86e07e9-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch-set added support to update hwcap of FSL QUADSPI controller
-by reading values from the device tree files.
+2018-01-24 23:12 GMT+01:00 Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>:
+> Hi Bartosz,
+>
+> On 2018-01-24 22:34, Bartosz Golaszewski wrote:
+>> We now require all at24 users to use the "atmel,<model>" fallback in
+>> device tree for different manufacturers.
+>
+> I think my patch [3/4] from about a week ago was just a tiny bit
+> better.
+> https://lkml.org/lkml/2018/1/16/609
+>
+> Can we please pick that one directly instead of doing this partial
+> step?
+>
+> Cheers,
+> Peter
 
-Updated the fsl-quadspi binding by adding spi-tx-bus-width,
-spi-rx-bus-width binding needed to define mode of operation.
+Hi Peter,
 
-Depends on
- https://patchwork.ozlabs.org/project/linux-mtd/list/?series=25286
+oh yes, sorry - I just grepped the entire code base from next for
+invalid compatibles and didn't notice this was already fixed by you.
+Let's drop it.
 
-Yogesh Gaur (2):
-  Documentation: binding: Update fsl-quadspi binding
-  mtd: fsl-quadspi: Update hwcap based on mode provided in dtsi file
-
- .../devicetree/bindings/mtd/fsl-quadspi.txt        |  4 ++
- drivers/mtd/spi-nor/fsl-quadspi.c                  | 46 ++++++++++++++++++++--
- 2 files changed, 47 insertions(+), 3 deletions(-)
-
--- 
-1.9.1
+Thanks,
+Bartosz
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
