@@ -1,52 +1,59 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [RFC PATCH v2 0/1] of: easier debugging for node life cycle
- issues
-Date: Thu, 25 Jan 2018 13:49:01 -0800
-Message-ID: <a30d4cd3-0068-8cca-cc2f-ca207d0d278b@gmail.com>
-References: <20180121143117.19805-1-wsa+renesas@sang-engineering.com>
- <00fc90ee-de26-f819-9c81-27d06918564d@gmail.com>
- <20180125060330.781667e9@vmware.local.home>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH 3/3] pinctrl: qcom: Don't allow protected pins to be
+ requested
+Date: Thu, 25 Jan 2018 13:51:35 -0800
+Message-ID: <20180125215135.GY28313@codeaurora.org>
+References: <20180110015848.11480-1-sboyd@codeaurora.org>
+ <20180110015848.11480-4-sboyd@codeaurora.org>
+ <f384a6c4-57a5-df18-862c-bf7dad9ea3f4@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180125060330.781667e9@vmware.local.home>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, devicetree@vger.kernel.org, Tyrel Datwyler <tyreld@linux.vnet.ibm.com>, Geert Uytterhoeven <geert@linux-m68k.org>, linux-renesas-soc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <f384a6c4-57a5-df18-862c-bf7dad9ea3f4@codeaurora.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Timur Tabi <timur@codeaurora.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Wolfram,
-
-On 01/25/18 03:03, Steven Rostedt wrote:
-> On Wed, 24 Jan 2018 22:55:13 -0800
-> Frank Rowand <frowand.list@gmail.com> wrote:
+On 01/22, Timur Tabi wrote:
+> On 1/9/18 7:58 PM, Stephen Boyd wrote:
+> >+		ret = device_property_read_u16_array(pctrl->dev, "gpios", tmp,
+> >+						     len);
+> >+		if (ret < 0) {
+> >+			dev_err(pctrl->dev, "could not read list of GPIOs\n");
+> >+			kfree(tmp);
+> >+			return ret;
+> >+		}
 > 
->> Hi Steve,
+> Just FYI, I'm still going to have to parse "gpios" in my
+> pinctrl-qdf2xxx.c driver, even though you're also parsing it here.
+> That's because I need to make sure that the msm_pingroup array only
+> contains "approve" addresses in its ctl_reg fields.
 > 
->>
->> Off the top of your head, can you tell me know early in the boot
->> process a trace_event can be called and successfully provide the
->> data to someone trying to debug early boot issues?
+> +	for (i = 0; i < avail_gpios; i++) {
+> +		unsigned int gpio = gpios[i];
+> +
+> +		groups[gpio].npins = 1;
+> +		snprintf(names[i], NAME_SIZE, "gpio%u", gpio);
+> +		pins[gpio].name = names[i];
+> +		groups[gpio].name = names[i];
+> +
+> +		groups[gpio].ctl_reg = 0x10000 * gpio;
+>  		       ^^^^
 > 
-> The trace events are enabled by early_initcall().
+> I do this because I need to make sure that "unapproved" physical
+> addresses are never store anywhere in groups[].  That way, it's
+> impossible for the driver to cause an XPU violation -- the worst
+> that can happen is a null pointer dereference.
+> 
 
-< snip >
+Sorry I don't get it. Is that some sort of hardening requirement?
+If the framework doesn't cause those pins to be touched I fail to
+see how it could hurt to have the other addresses listed. I'm
+sure with some effort protected addresses could be crafted in
+other ways to cause an XPU violation to the same place.
 
-This means that ftrace can not be used for the of_node_get(),
-of_node_put(), and of_node_release() debug info, because
-these functions are called before early_initcall().  Please
-use pr_debug() for these functions.
-
-As far as I know, the of_reconfig_notify() could remain an
-ftrace instrumented function.  But now that the only thing
-that would be ftrace instrumented is of_reconfig_notify(),
-I don't see a strong justification for changing the existing
-pr_debug() calls to an ftrace alternative.  Though I suspect
-the original author of the patch still might desire to have
-the "#ifdef DEBUG" surrounding the pr_debug() calls removed
-since one of his issues was having to recompile his kernel
-to do his debugging.
-
--Frank
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
