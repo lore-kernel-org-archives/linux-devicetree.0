@@ -1,84 +1,99 @@
-From: Dong Aisheng <aisheng.dong-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 2/4] arm64: add basic DTS for i.MX8MQ
-Date: Thu, 25 Jan 2018 20:34:37 +0800
-Message-ID: <e6e2fa31e89872fe89924da17759481e@codeaurora.org>
-References: <20180117183244.28303-1-l.stach@pengutronix.de>
- <20180117183244.28303-2-l.stach@pengutronix.de>
- <20180123103609.GD27764@dragon> <1516713799.25726.21.camel@pengutronix.de>
- <ebc8b28d5c2948131cc187ac8177395c@codeaurora.org>
- <1516876026.6411.23.camel@pengutronix.de>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: =?UTF-8?Q?Re:_[PATCH_v6_00/41]_ARM:_davinci:_convert_to_common_cloc?=
+ =?UTF-8?Q?k_framework=e2=80=8b?=
+Date: Thu, 25 Jan 2018 18:23:23 +0530
+Message-ID: <597caa1a-a790-3629-3186-5d2152f45e06@ti.com>
+References: <1516468460-4908-1-git-send-email-david@lechnology.com>
+ <CAMRc=MexJTMiD=URw1bv-qfGaTntZRXgfsSb_beYGkvO+LrpgQ@mail.gmail.com>
+ <d819e18f-7d74-d8c4-8056-bfc545f4d4e9@lechnology.com>
+ <CAMRc=McVNJqsO4+j=XkyNWuKqF-S-hQAw9XxHx6GC47UudgMYw@mail.gmail.com>
+ <e5f4af7d-971c-5694-2da5-0cba9083ee5c@lechnology.com>
+ <615bc302-e129-1501-63be-fa701f5ecaad@lechnology.com>
+ <CAHCN7xLW=RjHHBjvDto=DRrNfNsQrsaGb0zmsRrwdc+7Wbhaxg@mail.gmail.com>
+ <CAMRc=MdyGx3PFiryYybB2fCGx=AP=e7kkdd-DUL29pT+St9u1g@mail.gmail.com>
+ <5f836454-5de7-c51d-d262-2c2dbc26e438@lechnology.com>
+ <CAMRc=Mcw8wWNo7Q3KnHNv81UGuHxEqmOs0he7MKxmaxDjwao+A@mail.gmail.com>
+ <aaeb7d73-bd3b-9c85-88c5-c60da6ca3733@lechnology.com>
+ <CAMRc=Me8HefZJYTkprqL2vpq_nLym4r6p-du7hoKwVk8kSCR8w@mail.gmail.com>
+ <cafb3712-08eb-18f7-b3b6-debba2298b49@lechnology.com>
+ <f28601f6-d6f1-9a55-f3cf-62543412bd36@lechnology.com>
+ <fc54ab26-72be-1377-2ccb-72d34360c5eb@lechnology.com>
+ <CAMRc=Me1_i8qQE4GHeLiU2itHnp71Gt03UM6NhL=hA8Y6Pb0MA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1516876026.6411.23.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, lauren.post-3arQi8VN3Tc@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-imx-3arQi8VN3Tc@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, aisheng.dong-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAMRc=Me1_i8qQE4GHeLiU2itHnp71Gt03UM6NhL=hA8Y6Pb0MA@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bartosz Golaszewski <brgl@bgdev.pl>, David Lechner <david@lechnology.com>
+Cc: Adam Ford <aford173@gmail.com>, linux-clk@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2018-01-25 18:27, Lucas Stach wrote:
-> Hi Dong,
-
-<snip>
-
->> And i see the dtsi file does not include Freescale/NXP copyright,
->> is there a reason?
+On Wednesday 24 January 2018 01:33 PM, Bartosz Golaszewski wrote:
+> 2018-01-23 21:23 GMT+01:00 David Lechner <david@lechnology.com>:
+>> On 01/23/2018 02:05 PM, David Lechner wrote:
+>>>
+>>> On 01/23/2018 02:01 PM, David Lechner wrote:
+>>>>
+>>>> On 01/23/2018 01:53 PM, Bartosz Golaszewski wrote:
+>>>>>
+>>>>>
+>>>>> In the mdio case - the problem is that devm_clk_get() doesn't fail,
+>>>>> but somehow the clock doesn't end up in the list of the device's
+>>>>> clocks - which is why it's not enabled by pm_runtime_get_sync().
+>>>>>
+>>>>
+>>>>
+>>>> Right. This is because devm_clk_get() now finds the clock via device
+>>>> tree instead of a clkdev lookup entry. However, I think that the PM
+>>>> notifier registered in arch/arm/mach-davinci/pm_domain.c only uses
+>>>> the clkdev lookup to match the con_id and does not use device tree.
+>>>> The same thing is happing in mdio, emac and lcdc.
+>>>>
+>>>
+>>> Minor correction: It looks like emac doesn't do this because it doesn't
+>>> have a con_id of "fck". But, the same clock is shared by emac and mdio, so
+>>> since mdio enables the clock, emac doesn't notice or care that it did
+>>> not enable the clock itself.
+>>
+>>
+>> How about using pm_clk_add_clk() in these drivers to explicitly use the
+>> clocks for power management instead of relying on pm_clk_add_notifier()
+>> to do this implicitly?
 > 
-> The dtsi is quite different from the downstream version. But you are
-> right, I looked extensively at the downstream version, so I'll add the
-> NXP copyright.
-> 
+> Yes, this sounds good.
 
-Okay, i see.
+Looking at how pm_clk_notify() in clock_ops.c uses con_id[] list, right 
+now pm_runtime() will work only for clocks which have con_id (from the 
+list above) mentioned in DT. Since clk_find() mandates con_id match when 
+its available, NULL con_id does not match.
 
-> BTW: Could you check internally to see if Freescale/NXP would be okay
-> with relicensing the DT bits I pulled from downstream as dual GPL-2.0
-> and MIT, to align with other DTs in the kernel?
-> 
+For simple devices like DaVinci which uses just one clock for power 
+management per device (multiple devices might share a clock, but not 
+other way around as far as I recall, anyway I will double check this 
+assertion), the attached patch should make EMAC work.
 
-I thought it should be okay. But i pulled Post Lauren in to give you
-a confirmed answer.
+That still leaves why lcdc does not work. One difference is it uses 
+PSC1. Are there other devices in PSC1 which work (just to rule out any 
+thing wrong with PSC1 handling).
 
-Lauren,
-Can you help with this question?
+Thanks,
+Sekhar
 
->> BTW it's quite strange that my gmail did not receive your MX8MQ patch
->> series except clk part.
->> Lucas, Could you help have me CCed next time?
->> I'd like to help review and test the patch series.
->> 
->> For this time, can you help send them all to me as attachment?
-> 
-> I'm about to send v2 of the series. I'll CC you on the submission.
-> 
+---8<---
+diff --git a/arch/arm/mach-davinci/pm_domain.c b/arch/arm/mach-davinci/pm_domain.c
+index 78eac2c0c146..0dce7397856d 100644
+--- a/arch/arm/mach-davinci/pm_domain.c
++++ b/arch/arm/mach-davinci/pm_domain.c
+@@ -23,7 +23,6 @@ static struct dev_pm_domain davinci_pm_domain = {
+ 
+ static struct pm_clk_notifier_block platform_bus_notifier = {
+ 	.pm_domain = &davinci_pm_domain,
+-	.con_ids = { "fck", "master", "slave", NULL },
+ };
+ 
+ static int __init davinci_pm_runtime_init(void)
 
-Great.
 
->> (You can also send all IMX related patches to linux-imx-3arQi8VN3Tc@public.gmane.org 
->> maillist
->> i created recently for tracking all IMX related upstream activities.
->> Most Freescale/NXP driver owners are in this list that could help on
->> the review. Shawn, do you think if i can put it in MAINTAINER file?)
-> 
-> That's great news that there is now a common address for this. I think
-> it would be a good idea to have it added to MAINTAINERS as a reviewer.
-> 
-
-Thanks for supporting.
-
-Regards
-Dong Aisheng
-
-> Regards,
-> Lucas
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+  
