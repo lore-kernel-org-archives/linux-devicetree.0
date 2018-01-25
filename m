@@ -1,42 +1,38 @@
-From: Bartosz Golaszewski <brgl-ARrdPY/1zhM@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: use a correct at24 fallback for at91-nattis-2-natte-2
-Date: Thu, 25 Jan 2018 08:48:59 +0100
-Message-ID: <CAMRc=MfVpWKctrgovF2hAnxjiXP4TqzLqqyVCPrQiudg8DHwtA@mail.gmail.com>
-References: <20180124213412.4612-1-brgl@bgdev.pl> <bd9bdd00-d7ce-e925-2d63-d0fbb86e07e9@axentia.se>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [RFC PATCH v2 1/1] of: introduce event tracepoints for dynamic
+ device_node lifecyle
+Date: Thu, 25 Jan 2018 09:01:37 +0100
+Message-ID: <CAMuHMdVuN5iRLqWuPH_UVR1zDJK-rPHZ6guU-ssPuoZ=UWTAFw@mail.gmail.com>
+References: <20180121143117.19805-1-wsa+renesas@sang-engineering.com>
+ <20180121143117.19805-2-wsa+renesas@sang-engineering.com> <4cc627c4-1aaf-b8d5-5a26-eea7e596743f@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <bd9bdd00-d7ce-e925-2d63-d0fbb86e07e9-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+In-Reply-To: <4cc627c4-1aaf-b8d5-5a26-eea7e596743f-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tyrel Datwyler <tyreld-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Steven Rostedt <rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2018-01-24 23:12 GMT+01:00 Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>:
-> Hi Bartosz,
->
-> On 2018-01-24 22:34, Bartosz Golaszewski wrote:
->> We now require all at24 users to use the "atmel,<model>" fallback in
->> device tree for different manufacturers.
->
-> I think my patch [3/4] from about a week ago was just a tiny bit
-> better.
-> https://lkml.org/lkml/2018/1/16/609
->
-> Can we please pick that one directly instead of doing this partial
-> step?
->
-> Cheers,
-> Peter
+Hi Frank,
 
-Hi Peter,
+On Thu, Jan 25, 2018 at 7:48 AM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>  create mode 100644 include/trace/events/of.h
+>
+> mode looks incorrect.  Existing files in include/trace/events/ are -rw-rw----
 
-oh yes, sorry - I just grepped the entire code base from next for
-invalid compatibles and didn't notice this was already fixed by you.
-Let's drop it.
+Not in my git clone ;-) 644 should be fine.
 
-Thanks,
-Bartosz
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
