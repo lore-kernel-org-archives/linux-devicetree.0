@@ -1,76 +1,176 @@
-From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 3/4] arm64: add support for i.MX8M EVK board
-Date: Thu, 25 Jan 2018 12:09:42 +0100
-Message-ID: <1516878582.6411.27.camel@pengutronix.de>
-References: <20180117183244.28303-1-l.stach@pengutronix.de>
-         <20180117183244.28303-3-l.stach@pengutronix.de>
-         <20180123103931.GE27764@dragon>
-         <278bb44610b8a27826550732095aba03@codeaurora.org>
-         <1516876300.6411.25.camel@pengutronix.de>
-         <2cac219f031a08ae2ac02a0624fe302f@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Applied "regulator: empty the old suspend functions" to the regulator tree
+Date: Thu, 25 Jan 2018 12:15:39 +0000
+Message-ID: <E1eegRP-0006WK-B8@debutante>
+References: <1513837506-26543-5-git-send-email-zhang.chunyan@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2cac219f031a08ae2ac02a0624fe302f-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+In-Reply-To: <1513837506-26543-5-git-send-email-zhang.chunyan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dong Aisheng <aisheng.dong-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, aisheng.dong-3arQi8VN3Tc@public.gmane.org, linux-imx-3arQi8VN3Tc@public.gmane.org
+To: Chunyan Zhang <zhang.chunyan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chunyan Zhang <zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am Donnerstag, den 25.01.2018, 18:49 +0800 schrieb Dong Aisheng:
-> On 2018-01-25 18:31, Lucas Stach wrote:
-> > Am Donnerstag, den 25.01.2018, 18:10 +0800 schrieb 
-> > aisheng.dong-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org:
-[...]
-> AFAIK we switched to generic pinconfig since MX7ULP as maintainer 
-> > > won't
-> > > access old binding pinctrl drivers.
-> > 
-> > I'm not convinced that the generic pinconf is good fit. For pingroups
-> > with different configs for some of the pins, like the example above, we
-> > would need to split things into multiple DT nodes. This really hurts
-> > readability, so I'm not going to switch to the generic stuff without
-> > some really convincing arguments.
-> > 
-> 
-> Per my understanding, based on the last discussion with Linus W, we 
-> actually did this in order to increase the readability that 1) user does
-> not need to see the 'ugly' unreadable raw data and refer to reference
-> manual 2) unified generic binding format which already exist in kernel
-> and used by many platforms.
-> 
-> Actually MXS platform already used it for many years in a similar way.
-> So IMHO a little hurt to add another node for different pad setting in 
-> the same group won't be enough reason to stop switching to generic config.
-> 
-> Does it make sense?
+The patch
 
-I know that Linus W is pushing for this common pinconf thing in the
-name of readability. It's just that I don't think it's such a clear
-win.
+   regulator: empty the old suspend functions
 
-After all you still need to look into the reference manual or binding
-to see which values in the common binding correspond to a specific
-drive/pull strength, etc.
+has been applied to the regulator tree at
 
-On the other hand it really bloats the DT description of the pin
-configuration. If you want to look at an (IMHO) bad example, go look at
-the Tegra DTs. The Tegra pincontrol implements the "separate properties
-for each pinconf option" that is pushed by Linus W. This bloated the DT
-description to the point that no-one is able/willing to write those
-descriptions anymore and the only viable way to get them is to auto-
-generate them from some spreadsheets. Not really what I would call an
-readable...
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
 
-Maybe I'm a little stubborn when it comes to this topic, but at
-Pengutronix we see a lot of customer designs where we need to come up
-with the board DT. Bloating each one of those and making the work of
-the developers harder in the name of a readability win that I just
-don't see doesn't sound like something I want to support. :)
-	
-Regards,
-Lucas
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From 6103427372a81f7018525ca84c0647f36532a94e Mon Sep 17 00:00:00 2001
+From: Chunyan Zhang <zhang.chunyan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Date: Tue, 23 Jan 2018 19:59:42 +0800
+Subject: [PATCH] regulator: empty the old suspend functions
+
+Regualtor suspend/resume functions should only be called by PM suspend
+core via registering dev_pm_ops, and regulator devices should implement
+the callback functions.  Thus, any regulator consumer shouldn't call
+the regulator suspend/resume functions directly.
+
+In order to avoid compile errors, two empty functions with the same name
+still be left for the time being.
+
+Signed-off-by: Chunyan Zhang <zhang.chunyan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+ drivers/regulator/core.c          | 74 ---------------------------------------
+ include/linux/regulator/machine.h |  5 ++-
+ 2 files changed, 2 insertions(+), 77 deletions(-)
+
+diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
+index 5ea80e94eb69..080c2334edc5 100644
+--- a/drivers/regulator/core.c
++++ b/drivers/regulator/core.c
+@@ -4179,80 +4179,6 @@ void regulator_unregister(struct regulator_dev *rdev)
+ }
+ EXPORT_SYMBOL_GPL(regulator_unregister);
+ 
+-static int _regulator_suspend_prepare(struct device *dev, void *data)
+-{
+-	struct regulator_dev *rdev = dev_to_rdev(dev);
+-	const suspend_state_t *state = data;
+-	int ret;
+-
+-	mutex_lock(&rdev->mutex);
+-	ret = suspend_prepare(rdev, *state);
+-	mutex_unlock(&rdev->mutex);
+-
+-	return ret;
+-}
+-
+-/**
+- * regulator_suspend_prepare - prepare regulators for system wide suspend
+- * @state: system suspend state
+- *
+- * Configure each regulator with it's suspend operating parameters for state.
+- * This will usually be called by machine suspend code prior to supending.
+- */
+-int regulator_suspend_prepare(suspend_state_t state)
+-{
+-	/* ON is handled by regulator active state */
+-	if (state == PM_SUSPEND_ON)
+-		return -EINVAL;
+-
+-	return class_for_each_device(&regulator_class, NULL, &state,
+-				     _regulator_suspend_prepare);
+-}
+-EXPORT_SYMBOL_GPL(regulator_suspend_prepare);
+-
+-static int _regulator_suspend_finish(struct device *dev, void *data)
+-{
+-	struct regulator_dev *rdev = dev_to_rdev(dev);
+-	int ret;
+-
+-	mutex_lock(&rdev->mutex);
+-	if (rdev->use_count > 0  || rdev->constraints->always_on) {
+-		if (!_regulator_is_enabled(rdev)) {
+-			ret = _regulator_do_enable(rdev);
+-			if (ret)
+-				dev_err(dev,
+-					"Failed to resume regulator %d\n",
+-					ret);
+-		}
+-	} else {
+-		if (!have_full_constraints())
+-			goto unlock;
+-		if (!_regulator_is_enabled(rdev))
+-			goto unlock;
+-
+-		ret = _regulator_do_disable(rdev);
+-		if (ret)
+-			dev_err(dev, "Failed to suspend regulator %d\n", ret);
+-	}
+-unlock:
+-	mutex_unlock(&rdev->mutex);
+-
+-	/* Keep processing regulators in spite of any errors */
+-	return 0;
+-}
+-
+-/**
+- * regulator_suspend_finish - resume regulators from system wide suspend
+- *
+- * Turn on regulators that might be turned off by regulator_suspend_prepare
+- * and that should be turned on according to the regulators properties.
+- */
+-int regulator_suspend_finish(void)
+-{
+-	return class_for_each_device(&regulator_class, NULL, NULL,
+-				     _regulator_suspend_finish);
+-}
+-EXPORT_SYMBOL_GPL(regulator_suspend_finish);
+ 
+ /**
+  * regulator_has_full_constraints - the system has fully specified constraints
+diff --git a/include/linux/regulator/machine.h b/include/linux/regulator/machine.h
+index e50519f13d4d..b4ddb56e7c19 100644
+--- a/include/linux/regulator/machine.h
++++ b/include/linux/regulator/machine.h
+@@ -231,12 +231,12 @@ struct regulator_init_data {
+ 
+ #ifdef CONFIG_REGULATOR
+ void regulator_has_full_constraints(void);
+-int regulator_suspend_prepare(suspend_state_t state);
+-int regulator_suspend_finish(void);
+ #else
+ static inline void regulator_has_full_constraints(void)
+ {
+ }
++#endif
++
+ static inline int regulator_suspend_prepare(suspend_state_t state)
+ {
+ 	return 0;
+@@ -245,6 +245,5 @@ static inline int regulator_suspend_finish(void)
+ {
+ 	return 0;
+ }
+-#endif
+ 
+ #endif
+-- 
+2.15.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
