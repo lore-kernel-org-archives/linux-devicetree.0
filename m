@@ -1,158 +1,125 @@
-From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: Re: [PATCH 2/4] usb: dwc3: add dwc3 glue layer for UniPhier SoCs
-Date: Thu, 25 Jan 2018 11:09:30 +0900
-Message-ID: <20180125110929.C609.4A936039@socionext.com>
-References: <20180124215228.ED43.4A936039@socionext.com> <87a7x3l8gr.fsf@linux.intel.com>
+From: Greentime Hu <green.hu@gmail.com>
+Subject: Re: [PATCH v6 16/36] nds32: DMA mapping API
+Date: Thu, 25 Jan 2018 11:45:18 +0800
+Message-ID: <CAEbi=3fwCnFXmYKPEiDiqoGFujqRD0bPrPAgqtiTkO_vuX25dQ@mail.gmail.com>
+References: <cover.1515766253.git.green.hu@gmail.com> <ecd1742c718c5b45983486cf9dfb44adb6e06923.1515766253.git.green.hu@gmail.com>
+ <CAK8P3a0-Vf9CRZzdXCxpuQoWgMhYWgO6Hy2KuP-gOKttoSGESA@mail.gmail.com>
+ <CAEbi=3cYynvFS2GDzj5Oav_5LtHPdBfBWh9c=mFT0PxeOLX9sQ@mail.gmail.com>
+ <CAEbi=3d46tXacnnU+RJGMw+KR1O=NaVjO+NW3cxUjAN==V51iw@mail.gmail.com> <CAK8P3a30W1ph-6Owuf9yZF-bKg_bx6dJKCtiF_aRAYu9NVO3DQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <87a7x3l8gr.fsf@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Felipe Balbi <balbi@kernel.org>
-Cc: linux-usb@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jassi Brar <jaswinder.singh@linaro.org>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <CAK8P3a30W1ph-6Owuf9yZF-bKg_bx6dJKCtiF_aRAYu9NVO3DQ@mail.gmail.com>
+Sender: linux-arch-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Greentime <greentime@andestech.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Networking <netdev@vger.kernel.org>, Vincent Chen <deanbo422@gmail.com>, DTML <devicetree@vger.kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, David Howells <dhowells@redhat.com>, Will Deacon <will.deacon@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-serial@vger.kernel.org, Geert Uytterhoeven <geert.uytterhoeven@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Greg KH <greg@kroah.com>, Guo Ren <ren_guo@c-sky.co>
 List-Id: devicetree@vger.kernel.org
 
-Hello Felipe,
+Hi, Arnd:
 
-On Wed, 24 Jan 2018 14:58:12 +0200 <balbi@kernel.org> wrote:
+2018-01-24 19:36 GMT+08:00 Arnd Bergmann <arnd@arndb.de>:
+> On Tue, Jan 23, 2018 at 12:52 PM, Greentime Hu <green.hu@gmail.com> wrote:
+>> Hi, Arnd:
+>>
+>> 2018-01-23 16:23 GMT+08:00 Greentime Hu <green.hu@gmail.com>:
+>>> Hi, Arnd:
+>>>
+>>> 2018-01-18 18:26 GMT+08:00 Arnd Bergmann <arnd@arndb.de>:
+>>>> On Mon, Jan 15, 2018 at 6:53 AM, Greentime Hu <green.hu@gmail.com> wrote:
+>>>>> From: Greentime Hu <greentime@andestech.com>
+>>>>>
+>>>>> This patch adds support for the DMA mapping API. It uses dma_map_ops for
+>>>>> flexibility.
+>>>>>
+>>>>> Signed-off-by: Vincent Chen <vincentc@andestech.com>
+>>>>> Signed-off-by: Greentime Hu <greentime@andestech.com>
+>>>>
+>>>> I'm still unhappy about the way the cache flushes are done here as discussed
+>>>> before. It's not a show-stopped, but no Ack from me.
+>>>
+>>> How about this implementation?
+>
+>> I am not sure if I understand it correctly.
+>> I list all the combinations.
+>>
+>> RAM to DEVICE
+>>     before DMA => writeback cache
+>>     after DMA => nop
+>>
+>> DEVICE to RAM
+>>     before DMA => nop
+>>     after DMA => invalidate cache
+>>
+>> static void consistent_sync(void *vaddr, size_t size, int direction, int master)
+>> {
+>>         unsigned long start = (unsigned long)vaddr;
+>>         unsigned long end = start + size;
+>>
+>>         if (master == FOR_CPU) {
+>>                 switch (direction) {
+>>                 case DMA_TO_DEVICE:
+>>                         break;
+>>                 case DMA_FROM_DEVICE:
+>>                 case DMA_BIDIRECTIONAL:
+>>                         cpu_dma_inval_range(start, end);
+>>                         break;
+>>                 default:
+>>                         BUG();
+>>                 }
+>>         } else {
+>>                 /* FOR_DEVICE */
+>>                 switch (direction) {
+>>                 case DMA_FROM_DEVICE:
+>>                         break;
+>>                 case DMA_TO_DEVICE:
+>>                 case DMA_BIDIRECTIONAL:
+>>                         cpu_dma_wb_range(start, end);
+>>                         break;
+>>                 default:
+>>                         BUG();
+>>                 }
+>>         }
+>> }
+>
+> That looks reasonable enough, but it does depend on a number of factors,
+> and the dma-mapping.h implementation is not just about cache flushes.
+>
+> As I don't know the microarchitecture, can you answer these questions:
+>
+> - are caches always write-back, or could they be write-through?
+Yes, we can config it to write-back or write-through.
 
-> 
-> Hi,
-> 
-> Kunihiko Hayashi <hayashi.kunihiko@socionext.com> writes:
-> > Hello Felipe,
-> >
-> > Thank you for your comments.
-> >
-> > On Tue, 23 Jan 2018 15:12:36 +0200 <balbi@kernel.org> wrote:
-> >
-> >> 
-> >> Hi,
-> >> 
-> >> Kunihiko Hayashi <hayashi.kunihiko@socionext.com> writes:
-> >> > Add a specific glue layer for UniPhier SoC platform to support
-> >> > USB host mode. It manages hardware operating sequences to enable multiple
-> >> > clock gates and assert resets, and to prepare to use dwc3 controller
-> >> > on the SoC.
-> >> >
-> >> > This patch also handles the physical layer that has same register space
-> >> > as the glue layer, because it needs to integrate initialziation sequence
-> >> > between glue and phy.
-> >> >
-> >> > In case of some SoCs, since some initialization values for PHY are
-> >> > included in nvmem, this patch includes the way to get the values from nvmem.
-> >> >
-> >> > It supports PXs2 and LD20 SoCs.
-> >> >
-> >> > Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> >> > Signed-off-by: Motoya Tanigawa <tanigawa.motoya@socionext.com>
-> >> > Signed-off-by: Masami Hiramatsu <masami.hiramatsu@linaro.org>
-> >> > ---
-> >> >  drivers/usb/dwc3/Kconfig         |   9 +
-> >> >  drivers/usb/dwc3/Makefile        |   1 +
-> >> >  drivers/usb/dwc3/dwc3-uniphier.c | 554 +++++++++++++++++++++++++++++++++++++++
-> >> >  3 files changed, 564 insertions(+)
-> >> >  create mode 100644 drivers/usb/dwc3/dwc3-uniphier.c
-> >
-> > ...snip...
-> >
-> >> > +
-> >> > +static void dwc3u_ssphy_testio_write(struct dwc3u_priv *priv, int port,
-> >> > +				     u32 data)
-> >> 
-> >> anything with sshphy or hsphy in the name should probably be part of a
-> >> PHY driver using drivers/phy/ framework.
-> >
-> > I can try to separate phy control from this driver.
-> > However, phy registers belongs to "dwc3-glue" IO map area (65b00000),
-> > and this area also contains a reset bit for "dwc3-core" hardware.
-> >
-> > Although the phy driver is called from dwc3-core driver,
-> > we need to deassert the reset bit before probing dwc3-core driver.
-> >
-> > As shown later, I think that it's difficut to determine the order of
-> > initializing the registers in this area.
-> >
-> >> > +static void dwc3u_vbus_disable(struct dwc3u_priv *priv)
-> >> > +{
-> >> > +	int i;
-> >> > +
-> >> > +	for (i = 0; i < priv->nvbus; i++) {
-> >> > +		dwc3u_maskwrite(priv, VBUS_CONTROL(i),
-> >> > +				DRVVBUS_REG_EN | DRVVBUS_REG,
-> >> > +				DRVVBUS_REG_EN | 0);
-> >> > +	}
-> >> > +}
-> >> 
-> >> drivers/regulator maybe?
-> >
-> > VBUS_CONTROL register is used for determing whether "dwc3-glue" hardware
-> > enables vbus connected with "regulator" hardware.
-> >
-> > The regulator driver should manage "regulator" hardware, and
-> > I don't think that the driver should manage this register.
-> >
-> >> > +static void dwc3u_reset_init(struct dwc3u_priv *priv)
-> >> > +{
-> >> > +	dwc3u_maskwrite(priv, RESET_CTL, LINK_RESET, 0);
-> >> > +	usleep_range(1000, 2000);
-> >> > +	dwc3u_maskwrite(priv, RESET_CTL, LINK_RESET, LINK_RESET);
-> >> > +}
-> >> > +
-> >> > +static void dwc3u_reset_clear(struct dwc3u_priv *priv)
-> >> > +{
-> >> > +	dwc3u_maskwrite(priv, RESET_CTL, LINK_RESET, 0);
-> >> > +}
-> >> 
-> >> drivers/reset ?
-> >
-> > The reset driver manages "sysctrl" IO map area in our SoC.
-> >
-> > RESET_CTL register belongs to "dwc3-glue" IO map area,
-> > and the kernel can't access this area until enabling usb clocks and
-> > deasserting usb resets in "sysctrl".
-> >
-> > I think that "dwc3-glue" register control should be separated from
-> > "sysctrl".
-> 
-> Just split your address space and treat your glue as a device with
-> several children:
-> 
-> glue@65b00000 {
-> 	compatible = "foo"
+> - can the cache be shared with another CPU or a device?
+No, we don't support it.
 
-Just to confirm, instead of SoC-specific glue driver, dwc3-of-simple.c
-should handle compatible "foo", right?
+> - if the cache is shared, is it always coherent, never coherent, or
+> either of them?
+We don't support SMP and the device will access memory through bus. I
+think the cache is not shared.
 
-> 
-> 	phy@bar {
->         	...
-> 	};
-> 
-> 	sysctrl@baz {
->         	...
-> 	};
-> 
-> 	dwc3@foo {
->         	compatible = "snps, dwc3";
->                 ...
-> 	};
-> };
-> 
-> Then you know that you can let dwc3/core.c handle the PHY for you. If we
-> need to teach dwc3/core.c about regulators, we can do that. But we don't
-> need SoC-specific hacks ;-)
+> - could the same memory be visible at different physical addresses
+>   and have conflicting caches?
+We currently don't have such kind of SoC memory map.
 
-I also don't think that dwc3/core.c should have any SoC-specific controls.
-I've thought the SoC-specific glue driver (dwc3-***.c) calls "clocks",
-"resets", and "regulators".
+> - is the CPU physical address always the same as the address visible to the
+>   device?
+Yes, it is always the same unless the CPU uses local memory. The
+physical address of local memory will overlap the original bus
+address.
+I think the local memory case can be ignored because we don't use it for now.
 
-However, although dwc3-of-simple.c can handle "clocks", it can't handle
-"resets" and "regulators". Who should call them?
+> - are there devices that can only see a subset of the physical memory?
+All devices are able to see the whole physical memory in our current
+SoC, but I think other SoC may support such kind of HW behavior.
 
-Thank you,
+> - can there be an IOMMU?
+No.
 
----
-Best Regards,
-Kunihiko Hayashi
+> - are there write-buffers in the CPU that might need to get flushed before
+>   flushing the cache?
+Yes, there are write-buffers in front of CPU caches but it should be
+transparent to SW. We don't need to flush it.
+
+> - could cache lines be loaded speculatively or with read-ahead while
+>   a buffer is owned by a device?
+No.
