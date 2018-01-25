@@ -1,45 +1,59 @@
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: RE: [PATCH 1/8] dt-bindings: can: rcar_can: document r8a774[35] can
- support
-Date: Thu, 25 Jan 2018 10:55:26 +0000
-Message-ID: <TY1PR06MB0895FFD9D73D3784AD9CFD3DC0E10@TY1PR06MB0895.apcprd06.prod.outlook.com>
-References: <1510067449-17017-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1510067449-17017-2-git-send-email-fabrizio.castro@bp.renesas.com>
- <SG2PR06MB0886FFF48DD9DBE7693EEDBDC0E20@SG2PR06MB0886.apcprd06.prod.outlook.com>
- <da4afc82-aeb6-05d9-4a41-b2627f736064@pengutronix.de>
+From: Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [RFC PATCH v2 0/1] of: easier debugging for node life cycle
+ issues
+Date: Thu, 25 Jan 2018 06:03:30 -0500
+Message-ID: <20180125060330.781667e9@vmware.local.home>
+References: <20180121143117.19805-1-wsa+renesas@sang-engineering.com>
+        <00fc90ee-de26-f819-9c81-27d06918564d@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <da4afc82-aeb6-05d9-4a41-b2627f736064@pengutronix.de>
-Content-Language: en-US
-Sender: linux-can-owner@vger.kernel.org
-To: Marc Kleine-Budde <mkl@pengutronix.de>
-Cc: Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, Wolfgang Grandegger <wg@grandegger.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <00fc90ee-de26-f819-9c81-27d06918564d@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>, devicetree@vger.kernel.org, Tyrel Datwyler <tyreld@linux.vnet.ibm.com>, Geert Uytterhoeven <geert@linux-m68k.org>, linux-renesas-soc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-VGhhbmsgeW91IE1hcmMuDQoNCkNoZWVycywNCkZhYnJpemlvDQoNCj4gLS0tLS1PcmlnaW5hbCBN
-ZXNzYWdlLS0tLS0NCj4gRnJvbTogTWFyYyBLbGVpbmUtQnVkZGUgW21haWx0bzpta2xAcGVuZ3V0
-cm9uaXguZGVdDQo+IFNlbnQ6IDI1IEphbnVhcnkgMjAxOCAwODo1Mw0KPiBUbzogRmFicml6aW8g
-Q2FzdHJvIDxmYWJyaXppby5jYXN0cm9AYnAucmVuZXNhcy5jb20+DQo+IENjOiBTaW1vbiBIb3Jt
-YW4gPGhvcm1zQHZlcmdlLm5ldC5hdT47IEdlZXJ0IFV5dHRlcmhvZXZlbiA8Z2VlcnQrcmVuZXNh
-c0BnbGlkZXIuYmU+OyBsaW51eC1jYW5Admdlci5rZXJuZWwub3JnOw0KPiBuZXRkZXZAdmdlci5r
-ZXJuZWwub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgtcmVuZXNhcy1zb2NA
-dmdlci5rZXJuZWwub3JnOyBDaHJpcyBQYXRlcnNvbg0KPiA8Q2hyaXMuUGF0ZXJzb24yQHJlbmVz
-YXMuY29tPjsgQmlqdSBEYXMgPGJpanUuZGFzQGJwLnJlbmVzYXMuY29tPjsgV29sZmdhbmcgR3Jh
-bmRlZ2dlciA8d2dAZ3JhbmRlZ2dlci5jb20+OyBSb2IgSGVycmluZw0KPiA8cm9iaCtkdEBrZXJu
-ZWwub3JnPjsgTWFyayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT4NCj4gU3ViamVjdDog
-UmU6IFtQQVRDSCAxLzhdIGR0LWJpbmRpbmdzOiBjYW46IHJjYXJfY2FuOiBkb2N1bWVudCByOGE3
-NzRbMzVdIGNhbiBzdXBwb3J0DQo+DQo+IE9uIDAxLzI0LzIwMTggMDY6MjIgUE0sIEZhYnJpemlv
-IENhc3RybyB3cm90ZToNCj4gPiB0aGFuayB5b3UgZm9yIEFja2luZyB0aGUgcGF0Y2gsIGp1c3Qg
-d29uZGVyaW5nIGlmIHRoaXMgcGF0Y2ggaGFzIGFueQ0KPiA+IGNoYW5jZSB0byBlbmQgdXAgaW4g
-djQuMTY/DQo+DQo+IEkgY2FuIHRha2UgdGhpcyB2aWEgdGhlIGxpbnV4LWNhbiB0cmVlLCBpZiBu
-byBvbmUgZWxzZSB0YWtlcyBpdC4NCj4NCj4gTWFyYw0KPg0KPiAtLQ0KPiBQZW5ndXRyb25peCBl
-LksuICAgICAgICAgICAgICAgICAgfCBNYXJjIEtsZWluZS1CdWRkZSAgICAgICAgICAgfA0KPiBJ
-bmR1c3RyaWFsIExpbnV4IFNvbHV0aW9ucyAgICAgICAgfCBQaG9uZTogKzQ5LTIzMS0yODI2LTky
-NCAgICAgfA0KPiBWZXJ0cmV0dW5nIFdlc3QvRG9ydG11bmQgICAgICAgICAgfCBGYXg6ICAgKzQ5
-LTUxMjEtMjA2OTE3LTU1NTUgfA0KPiBBbXRzZ2VyaWNodCBIaWxkZXNoZWltLCBIUkEgMjY4NiAg
-fCBodHRwOi8vd3d3LnBlbmd1dHJvbml4LmRlICAgfA0KDQoNCg0KDQpSZW5lc2FzIEVsZWN0cm9u
-aWNzIEV1cm9wZSBMdGQsIER1a2VzIE1lYWRvdywgTWlsbGJvYXJkIFJvYWQsIEJvdXJuZSBFbmQs
-IEJ1Y2tpbmdoYW1zaGlyZSwgU0w4IDVGSCwgVUsuIFJlZ2lzdGVyZWQgaW4gRW5nbGFuZCAmIFdh
-bGVzIHVuZGVyIFJlZ2lzdGVyZWQgTm8uIDA0NTg2NzA5Lg0K
+On Wed, 24 Jan 2018 22:55:13 -0800
+Frank Rowand <frowand.list@gmail.com> wrote:
+
+> Hi Steve,
+
+> 
+> Off the top of your head, can you tell me know early in the boot
+> process a trace_event can be called and successfully provide the
+> data to someone trying to debug early boot issues?
+
+The trace events are enabled by early_initcall().
+
+> 
+> Also, way back when version 1 of this patch was being discussed,
+> a question about stacktrace triggers:
+> 
+>      >>> # echo stacktrace > /sys/kernel/debug/tracing/trace_options
+>      >>> # cat trace | grep -A6 "/pci@800000020000018"    
+>      >>
+>      >> Just to let you know that there is now stacktrace event triggers, where
+>      >> you don't need to stacktrace all events, you can pick and choose. And
+>      >> even filter the stack trace on specific fields of the event.    
+>      >
+>      > This is great, and I did figure that out this afternoon. One thing I was
+>      > still trying to determine though was whether its possible to set these
+>      > triggers at boot? As far as I could tell I'm still limited to
+>      > "trace_options=stacktrace" as a kernel boot parameter to get the stack
+>      > for event tracepoints.  
+> 
+>      No not yet. But I'll add that to the todo list.
+> 
+>      Thanks,
+> 
+>      -- Steve
+> 
+> Is this still on your todo list, or is it now available?
+
+Still on the todo list. As someone once said, there really is no todo
+list, but just work on the stuff that people are yelling the loudest
+about. Yell louder, and it will get done quicker ;-)
+
+-- Steve
