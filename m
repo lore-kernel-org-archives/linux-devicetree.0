@@ -1,74 +1,45 @@
-From: Code Kipper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [linux-sunxi][PATCH 5/5] arm64: allwinner: a64: Add DAI nodes
-Date: Thu, 25 Jan 2018 10:07:45 +0100
-Message-ID: <CAEKpxBmbz-dwF77PDs-mREHwDfXG3juXz7zUKcaMQKjz=1b+Fg@mail.gmail.com>
-References: <20180124103943.2062-1-codekipper@gmail.com> <20180124103943.2062-6-codekipper@gmail.com>
- <20180124110222.cdglyg5m7644xiem@flea.lan> <CAEKpxBk8NXJn4KxEGXx7UddqpUMC65kdEgx1phZDWyUd3ER_3Q@mail.gmail.com>
- <20180125082904.t4sqob626kyzw4ga@flea.lan>
+From: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC] devicetree: new FDT format version
+Date: Thu, 25 Jan 2018 10:14:38 +0100
+Message-ID: <90983180-ae3b-5a31-9dc0-b62b978a0fba@gmail.com>
+References: <b96829f9-2e8b-fdc5-5090-58591e2260cf@gmail.com>
+ <CAL_JsqJR2y7bMw_-9TBAGWZ_kf7_sZo5qvqvRowJ8jiy=4G0Bg@mail.gmail.com>
+ <20180123124232.GA14832@umbus>
+ <20328477-e511-e875-7dc4-253640f2219e@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180125082904.t4sqob626kyzw4ga-ZC1Zs529Oq4@public.gmane.org>
+In-Reply-To: <20328477-e511-e875-7dc4-253640f2219e-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, "Pantelis Antomarek.vasut-Re5JQEeQqe/2sr8fMPgRzw@public.gmane.org" <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Kyle Evans <kevans-h+KGxgPPiopAfugRpC6u6w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Alan Tull <atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 25 January 2018 at 09:29, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> On Wed, Jan 24, 2018 at 12:39:31PM +0100, Code Kipper wrote:
->> On 24 January 2018 at 12:02, Maxime Ripard
->> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->> > Hi,
->> >
->> > On Wed, Jan 24, 2018 at 11:39:43AM +0100, codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
->> >> From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> >>
->> >> Add the DAI blocks to the device tree. I2S0 and I2S1 are for
->> >> connecting to an external codec.
->> >>
->> >> Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> >> ---
->> >>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 26 ++++++++++++++++++++++++++
->> >>  1 file changed, 26 insertions(+)
->> >>
->> >> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
->> >> index f060a58f374c..f3354f8c2026 100644
->> >> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
->> >> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
->> >> @@ -419,6 +419,32 @@
->> >>                       status = "disabled";
->> >>               };
->> >>
->> >> +             i2s0: i2s@1c22000 {
->> >> +                     #sound-dai-cells = <0>;
->> >> +                     compatible = "allwinner,sun8i-h3-i2s";
->> >
->> > Same remark than for the spdif, please add a soc-specific compatible.
->>
->> Is that really necessary?..
->
-> Yes.
->
->> for example on the a20 the functionality of the i2s is the same as
->> the a10 so it is down as "allwinner,sun4i-a10-i2s", likewise here
->> it's the same as the changes required for the H3. I was planning on
->> using the compatible "allwinner,sun50i-a64-i2s" for the audio codec
->> as there are some quirks that need to be addressed.
->
-> And this is exactly why it is necessary. If we ever find a quirk in
-> the future, supporting that quirk will be smooth if we already have a
-> compatible for that SoC in the DT, and a pain if we don't.
-ACK, but is there any reason why we're not doing this for i2c?
-BR,
-CK
->
-> Maxime
->
-> --
-> Maxime Ripard, Free Electrons
-> Embedded Linux and Kernel engineering
-> http://free-electrons.com
+On 01/23/2018 10:17 PM, Frank Rowand wrote:
+[...]
+> My knowledge of bootloader use of the FDT is nearly non-existent, so
+> I'm on thin ice here.  But I am guessing that a lot of bootloader
+> processing of FDT data could be removed if the kernel would unflatten
+> a chained FDT and overlay FDT(s).
+> 
+> Comments from the bootloader folks on this topic would be much
+> appreciated.
+
+U-Boot, when using DT as a hardware-description (rather than just
+passing it to Linux) usually operates on the FDT, unless explicitly
+configured to unflatten the tree. That later option is not enabled by
+default.
+
+The reason for that is so that the DT can be accessed very early on, at
+which point there may not be any other memory available than a very
+limited stack and the FDT blob can still be located in some read-only
+memory.
+
+-- 
+Best regards,
+Marek Vasut
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
