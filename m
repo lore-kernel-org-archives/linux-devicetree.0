@@ -1,68 +1,165 @@
-From: Dong Aisheng <aisheng.dong@nxp.com>
-Subject: [PATCH 1/2] dt-bindings: nvmem: imx-ocotp: update the binding to reflect data cells
-Date: Thu, 25 Jan 2018 15:37:28 +0800
-Message-ID: <1516865849-26191-1-git-send-email-aisheng.dong@nxp.com>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v3 4/4] drivers: firmware: xilinx: Add debugfs interface
+Date: Thu, 25 Jan 2018 10:30:57 +0100
+Message-ID: <20180125093057.GA1936@kroah.com>
+References: <1516836074-4149-1-git-send-email-jollys@xilinx.com>
+ <1516836074-4149-5-git-send-email-jollys@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1516836074-4149-5-git-send-email-jollys@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com, Dong Aisheng <aisheng.dong@nxp.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawn.guo@linaro.org>
+To: Jolly Shah <jolly.shah@xilinx.com>
+Cc: ard.biesheuvel@linaro.org, mingo@kernel.org, matt@codeblueprint.co.uk, sudeep.holla@arm.com, hkallweit1@gmail.com, keescook@chromium.org, dmitry.torokhov@gmail.com, michal.simek@xilinx.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jolly Shah <jollys@xilinx.com>, Rajan Vaja <rajanv@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-imx-ocotp is implemented based on nvmem which can have data cells
-as child node. Update the binding doc to reflect it to be more easily
-understood by users.
+On Wed, Jan 24, 2018 at 03:21:14PM -0800, Jolly Shah wrote:
+> Firmware-debug provides debugfs interface to all APIs.
 
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Shawn Guo <shawn.guo@linaro.org>
-Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
----
- .../devicetree/bindings/nvmem/imx-ocotp.txt        | 23 ++++++++++++++++++----
- 1 file changed, 19 insertions(+), 4 deletions(-)
+I don't understand this changelog comment, care to make it more
+informational?  At least describe the debugfs files you are adding so
+that people have a chance to understand what is going on here :)
 
-diff --git a/Documentation/devicetree/bindings/nvmem/imx-ocotp.txt b/Documentation/devicetree/bindings/nvmem/imx-ocotp.txt
-index f162c72..729f674 100644
---- a/Documentation/devicetree/bindings/nvmem/imx-ocotp.txt
-+++ b/Documentation/devicetree/bindings/nvmem/imx-ocotp.txt
-@@ -11,17 +11,32 @@ Required properties:
- 	"fsl,imx6ul-ocotp" (i.MX6UL),
- 	"fsl,imx7d-ocotp" (i.MX7D/S),
- 	followed by "syscon".
-+- #address-cells : Should be 1
-+- #size-cells : Should be 1
- - reg: Should contain the register base and length.
- - clocks: Should contain a phandle pointing to the gated peripheral clock.
- 
- Optional properties:
- - read-only: disable write access
- 
--Example:
-+Optional Child nodes:
-+
-+- Data cells of ocotp:
-+  Detailed bindings are described in bindings/nvmem/nvmem.txt
- 
-+Example:
- 	ocotp: ocotp@21bc000 {
--		compatible = "fsl,imx6q-ocotp", "syscon";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "fsl,imx6sx-ocotp", "syscon";
- 		reg = <0x021bc000 0x4000>;
--		clocks = <&clks IMX6QDL_CLK_IIM>;
--		read-only;
-+		clocks = <&clks IMX6SX_CLK_OCOTP>;
-+
-+		tempmon_calib: calib@38 {
-+			reg = <0x38 4>;
-+		};
-+
-+		tempmon_temp_grade: temp-grade@20 {
-+			reg = <0x20 4>;
-+		};
- 	};
--- 
-2.7.4
+> diff --git a/drivers/firmware/xilinx/zynqmp/Kconfig b/drivers/firmware/xilinx/zynqmp/Kconfig
+> index 8f7709d..bdd0188 100644
+> --- a/drivers/firmware/xilinx/zynqmp/Kconfig
+> +++ b/drivers/firmware/xilinx/zynqmp/Kconfig
+> @@ -13,4 +13,11 @@ config ZYNQMP_FIRMWARE
+>  	  Say yes to enable zynqmp firmware interface driver.
+>  	  In doubt, say N
+>  
+> +config ZYNQMP_FIRMWARE_DEBUG
+> +	bool "Enable Xilinx Zynq MPSoC firmware debug APIs"
+> +	default ARCH_ZYNQMP && ZYNQMP_FIRMWARE && DEBUG_FS
+> +	help
+> +	  Say yes to enable zynqmp firmware interface debug APIs.
+> +	  In doubt, say N
+
+So your default is going to be Y if the driver is selected?  That's not
+good, just leave the default alone please.
+
+> +
+>  endmenu
+> diff --git a/drivers/firmware/xilinx/zynqmp/Makefile b/drivers/firmware/xilinx/zynqmp/Makefile
+> index 6629781..02f0c9a 100644
+> --- a/drivers/firmware/xilinx/zynqmp/Makefile
+> +++ b/drivers/firmware/xilinx/zynqmp/Makefile
+> @@ -2,3 +2,4 @@
+>  # Makefile for Xilinx firmwares
+>  
+>  obj-$(CONFIG_ZYNQMP_FIRMWARE) += firmware.o firmware-ggs.o
+> +obj-$(CONFIG_ZYNQMP_FIRMWARE_DEBUG) += firmware-debug.o
+> diff --git a/drivers/firmware/xilinx/zynqmp/firmware-debug.c b/drivers/firmware/xilinx/zynqmp/firmware-debug.c
+> new file mode 100644
+> index 0000000..daefc62
+> --- /dev/null
+> +++ b/drivers/firmware/xilinx/zynqmp/firmware-debug.c
+> @@ -0,0 +1,511 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Xilinx Zynq MPSoC Firmware layer for debugfs APIs
+> + *
+> + *  Copyright (C) 2014-2018 Xilinx, Inc.
+> + *
+> + *  Michal Simek <michal.simek@xilinx.com>
+> + *  Davorin Mista <davorin.mista@aggios.com>
+> + *  Jolly Shah <jollys@xilinx.com>
+> + *  Rajan Vaja <rajanv@xilinx.com>
+> + */
+> +
+> +#include <linux/compiler.h>
+> +#include <linux/module.h>
+> +#include <linux/slab.h>
+> +#include <linux/debugfs.h>
+> +#include <linux/uaccess.h>
+> +#include <linux/firmware/xilinx/zynqmp/firmware.h>
+> +#include <linux/firmware/xilinx/zynqmp/firmware-debug.h>
+> +
+> +#define DRIVER_NAME	"zynqmp-firmware"
+
+You define this in 2 places, but only use it in one, you don't need this
+at all, please remove all instances.
+
+> +static int process_api_request(u32 pm_id, u64 *pm_api_arg, u32 *pm_api_ret)
+> +{
+> +	const struct zynqmp_eemi_ops *eemi_ops = get_eemi_ops();
+> +	u32 pm_api_version;
+> +	int ret;
+> +
+> +	if (!eemi_ops)
+> +		return -ENXIO;
+> +
+> +	switch (pm_id) {
+> +	case PM_GET_API_VERSION:
+> +		eemi_ops->get_api_version(&pm_api_version);
+> +		pr_info("%s PM-API Version = %d.%d\n", __func__,
+> +			pm_api_version >> 16, pm_api_version & 0xffff);
+
+This is a _very_ noisy function, dumping a lot of stuff to the kernel
+log.  Why?  Why not send it back to the caller of the debugfs file
+reader instead?
+
+> +	case PM_GET_NODE_STATUS:
+> +		ret = eemi_ops->get_node_status(pm_api_arg[0],
+> +						&pm_api_ret[0],
+> +						&pm_api_ret[1],
+> +						&pm_api_ret[2]);
+> +		if (!ret)
+> +			pr_info("GET_NODE_STATUS:\n\tNodeId: %llu\n\tStatus: %u\n\tRequirements: %u\n\tUsage: %u\n",
+> +				pm_api_arg[0], pm_api_ret[0],
+> +				pm_api_ret[1], pm_api_ret[2]);
+
+Multi-line dmesg messages?  Not good, you just lost the logging level
+for the multiple lines :(
+
+Again, don't do this at all, just put it in file output instead.  That
+way tools/users can actually use it, instead of having to dig through
+kernel log messages.
+
+> +/**
+> + * zynqmp_pm_api_debugfs_init - Initialize debugfs interface
+> + *
+> + * Return:      None
+> + */
+> +void zynqmp_pm_api_debugfs_init(void)
+> +{
+> +	struct dentry *root_dir;
+> +	struct dentry *d;
+> +
+> +	/* Initialize debugfs interface */
+> +	root_dir = debugfs_create_dir(DRIVER_NAME, NULL);
+> +	if (!root_dir) {
+> +		pr_warn("debugfs_create_dir failed\n");
+
+Why warn?  What can a user do about this?  Just return and move on.
+
+> +		return;
+> +	}
+> +
+> +	d = debugfs_create_file("pm", 0220, root_dir, NULL,
+> +				&fops_zynqmp_pm_dbgfs);
+> +	if (!d) {
+> +		pr_warn("debugfs_create_file power failed\n");
+> +		goto err_dbgfs;
+> +	}
+> +
+> +	d = debugfs_create_file("api_version", 0444, root_dir,
+> +				NULL, &fops_zynqmp_pm_dbgfs);
+> +	if (!d) {
+> +		pr_warn("debugfs_create_file api_version failed\n");
+> +		goto err_dbgfs;
+
+Same for these files, who cares if they were not created or not at all?
+No need to even check here at all, this whole function can be reduced to just 3 lines:
+	debugfs_create_dir(...);
+	debugfs_create_file(...);
+	debugfs_create_file(...);
+
+There, nice and simple.  Remember, debugfs doesn't matter, and it should
+be _really_ easy to use.  Don't make it more complex than it has to be
+please.
+
+thanks,
+
+greg k-h
