@@ -1,103 +1,82 @@
-From: Yogesh Gaur <yogeshnarayan.gaur-3arQi8VN3Tc@public.gmane.org>
-Subject: [PATCH] arm64: dts: ls1088a: Add qspi device node for ls1088a-rdb
-Date: Thu, 25 Jan 2018 13:56:57 +0530
-Message-ID: <1516868817-2327-1-git-send-email-yogeshnarayan.gaur@nxp.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 5/5] arm64: allwinner: a64: Add DAI nodes
+Date: Thu, 25 Jan 2018 09:29:04 +0100
+Message-ID: <20180125082904.t4sqob626kyzw4ga@flea.lan>
+References: <20180124103943.2062-1-codekipper@gmail.com>
+ <20180124103943.2062-6-codekipper@gmail.com>
+ <20180124110222.cdglyg5m7644xiem@flea.lan>
+ <CAEKpxBk8NXJn4KxEGXx7UddqpUMC65kdEgx1phZDWyUd3ER_3Q@mail.gmail.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, han.xu-3arQi8VN3Tc@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org, suresh.gupta-3arQi8VN3Tc@public.gmane.org, Yogesh Gaur <yogeshnarayan.gaur-3arQi8VN3Tc@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="524y73kqbp3m57eg"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBB3FKU3JQKGQETU5BDCY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <CAEKpxBk8NXJn4KxEGXx7UddqpUMC65kdEgx1phZDWyUd3ER_3Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Code Kipper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add nodes and properties for QSPI controller.
-Add support for spansion flash, s25fs512s, as slave device for
-QSPI controller.
 
-Added entry of "fsl,ls1088a-qspi" in fsl-quadspi.txt binding file.
+--524y73kqbp3m57eg
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-Signed-off-by: Suresh Gupta <suresh.gupta-3arQi8VN3Tc@public.gmane.org>
-Signed-off-by: Yogesh Gaur <yogeshnarayan.gaur-3arQi8VN3Tc@public.gmane.org>
----
-Depends on
- https://patchwork.ozlabs.org/project/linux-mtd/list/?series=25292
+On Wed, Jan 24, 2018 at 12:39:31PM +0100, Code Kipper wrote:
+> On 24 January 2018 at 12:02, Maxime Ripard
+> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> > Hi,
+> >
+> > On Wed, Jan 24, 2018 at 11:39:43AM +0100, codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+> >> From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> >>
+> >> Add the DAI blocks to the device tree. I2S0 and I2S1 are for
+> >> connecting to an external codec.
+> >>
+> >> Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> >> ---
+> >>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 26 ++++++++++++++++++++++++++
+> >>  1 file changed, 26 insertions(+)
+> >>
+> >> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> >> index f060a58f374c..f3354f8c2026 100644
+> >> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> >> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> >> @@ -419,6 +419,32 @@
+> >>                       status = "disabled";
+> >>               };
+> >>
+> >> +             i2s0: i2s@1c22000 {
+> >> +                     #sound-dai-cells = <0>;
+> >> +                     compatible = "allwinner,sun8i-h3-i2s";
+> >
+> > Same remark than for the spdif, please add a soc-specific compatible.
+> 
+> Is that really necessary?..
 
- .../devicetree/bindings/mtd/fsl-quadspi.txt         |  1 +
- arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts   | 21 +++++++++++++++++++++
- arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi      | 12 ++++++++++++
- 3 files changed, 34 insertions(+)
+Yes.
 
-diff --git a/Documentation/devicetree/bindings/mtd/fsl-quadspi.txt b/Documentation/devicetree/bindings/mtd/fsl-quadspi.txt
-index 13a903e..927d65c 100644
---- a/Documentation/devicetree/bindings/mtd/fsl-quadspi.txt
-+++ b/Documentation/devicetree/bindings/mtd/fsl-quadspi.txt
-@@ -7,6 +7,7 @@ Required properties:
- 		 or
- 		 "fsl,ls2080a-qspi" followed by "fsl,ls1021a-qspi",
- 		 "fsl,ls1043a-qspi" followed by "fsl,ls1021a-qspi"
-+		 "fsl,ls2080a-qspi" followed by "fsl,ls1088a-qspi",
-   - reg : the first contains the register location and length,
-           the second contains the memory mapping address and length
-   - reg-names: Should contain the reg names "QuadSPI" and "QuadSPI-memory"
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
-index 0f6fcda..3febb59 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
-@@ -94,6 +94,27 @@
- 	};
- };
- 
-+&qspi {
-+	status = "okay";
-+	fsl,qspi-has-second-chip;
-+	spi-rx-bus-width = <4>;
-+	spi-tx-bus-width = <4>;
-+	qflash0: s25fs512s@0 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		spi-max-frequency = <20000000>;
-+		reg = <0>;
-+	};
-+
-+	qflash1: s25fs512s@1 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		spi-max-frequency = <20000000>;
-+		reg = <1>;
-+	};
-+
-+};
-+
- &ifc {
- 	ranges = <0 0 0x5 0x30000000 0x00010000
- 		  2 0 0x5 0x20000000 0x00010000>;
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-index bd80e9a..b45a522 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-@@ -394,6 +394,18 @@
- 			status = "disabled";
- 		};
- 
-+		qspi: quadspi@20c0000 {
-+			compatible = "fsl,ls2080a-qspi", "fsl,ls1088a-qspi";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x0 0x20c0000 0x0 0x10000>,
-+				<0x0 0x20000000 0x0 0x10000000>;
-+			reg-names = "QuadSPI", "QuadSPI-memory";
-+			interrupts = <0 25 0x4>; /* Level high type */
-+			clocks = <&clockgen 4 3>, <&clockgen 4 3>;
-+			clock-names = "qspi_en", "qspi";
-+		};
-+
- 		sata: sata@3200000 {
- 			compatible = "fsl,ls1088a-ahci";
- 			reg = <0x0 0x3200000 0x0 0x10000>,
+> for example on the a20 the functionality of the i2s is the same as
+> the a10 so it is down as "allwinner,sun4i-a10-i2s", likewise here
+> it's the same as the changes required for the H3. I was planning on
+> using the compatible "allwinner,sun50i-a64-i2s" for the audio codec
+> as there are some quirks that need to be addressed.
+
+And this is exactly why it is necessary. If we ever find a quirk in
+the future, supporting that quirk will be smooth if we already have a
+compatible for that SoC in the DT, and a pain if we don't.
+
+Maxime
+
 -- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--524y73kqbp3m57eg--
