@@ -1,83 +1,91 @@
-From: Rasmus Villemoes <rasmus.villemoes-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
-Subject: [PATCH v4 2/2] dt/bindings: Add bindings for Layerscape external irqs
-Date: Thu, 25 Jan 2018 16:02:30 +0100
-Message-ID: <20180125150230.7234-2-rasmus.villemoes@prevas.dk>
-References: <20180122092133.23177-1-rasmus.villemoes@prevas.dk>
- <20180125150230.7234-1-rasmus.villemoes@prevas.dk>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 5/5] arm64: allwinner: a64: Add DAI nodes
+Date: Thu, 25 Jan 2018 16:13:47 +0100
+Message-ID: <20180125151347.yripdkgw62tmxb74@flea.lan>
+References: <20180124103943.2062-1-codekipper@gmail.com>
+ <20180124103943.2062-6-codekipper@gmail.com>
+ <20180124110222.cdglyg5m7644xiem@flea.lan>
+ <CAEKpxBk8NXJn4KxEGXx7UddqpUMC65kdEgx1phZDWyUd3ER_3Q@mail.gmail.com>
+ <20180125082904.t4sqob626kyzw4ga@flea.lan>
+ <CAEKpxBmbz-dwF77PDs-mREHwDfXG3juXz7zUKcaMQKjz=1b+Fg@mail.gmail.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180125150230.7234-1-rasmus.villemoes-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Andy Tang <andy.tang-3arQi8VN3Tc@public.gmane.org>, Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>, Rasmus Villemoes <rasmus.villemoes-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="633gxgtdfacfdwqd"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBLPIU7JQKGQEDWHJHMY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <CAEKpxBmbz-dwF77PDs-mREHwDfXG3juXz7zUKcaMQKjz=1b+Fg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Code Kipper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds Device Tree binding documentation for the external interrupt
-lines with configurable polarity present on some Layerscape SOCs.
 
-Signed-off-by: Rasmus Villemoes <rasmus.villemoes-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
----
-Changes since v3: Add non-empty commit log.
+--633gxgtdfacfdwqd
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-.../interrupt-controller/fsl,ls-extirq.txt         | 44 ++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/fsl,ls-extirq.txt
+On Thu, Jan 25, 2018 at 10:07:45AM +0100, Code Kipper wrote:
+> On 25 January 2018 at 09:29, Maxime Ripard
+> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> > On Wed, Jan 24, 2018 at 12:39:31PM +0100, Code Kipper wrote:
+> >> On 24 January 2018 at 12:02, Maxime Ripard
+> >> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> >> > Hi,
+> >> >
+> >> > On Wed, Jan 24, 2018 at 11:39:43AM +0100, codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+> >> >> From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> >> >>
+> >> >> Add the DAI blocks to the device tree. I2S0 and I2S1 are for
+> >> >> connecting to an external codec.
+> >> >>
+> >> >> Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> >> >> ---
+> >> >>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 26 ++++++++++++++++++++++++++
+> >> >>  1 file changed, 26 insertions(+)
+> >> >>
+> >> >> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> >> >> index f060a58f374c..f3354f8c2026 100644
+> >> >> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> >> >> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> >> >> @@ -419,6 +419,32 @@
+> >> >>                       status = "disabled";
+> >> >>               };
+> >> >>
+> >> >> +             i2s0: i2s@1c22000 {
+> >> >> +                     #sound-dai-cells = <0>;
+> >> >> +                     compatible = "allwinner,sun8i-h3-i2s";
+> >> >
+> >> > Same remark than for the spdif, please add a soc-specific compatible.
+> >>
+> >> Is that really necessary?..
+> >
+> > Yes.
+> >
+> >> for example on the a20 the functionality of the i2s is the same as
+> >> the a10 so it is down as "allwinner,sun4i-a10-i2s", likewise here
+> >> it's the same as the changes required for the H3. I was planning on
+> >> using the compatible "allwinner,sun50i-a64-i2s" for the audio codec
+> >> as there are some quirks that need to be addressed.
+> >
+> > And this is exactly why it is necessary. If we ever find a quirk in
+> > the future, supporting that quirk will be smooth if we already have a
+> > compatible for that SoC in the DT, and a pain if we don't.
+>
+> ACK, but is there any reason why we're not doing this for i2c?
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/fsl,ls-extirq.txt b/Documentation/devicetree/bindings/interrupt-controller/fsl,ls-extirq.txt
-new file mode 100644
-index 000000000000..a71ce2c3eeae
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/fsl,ls-extirq.txt
-@@ -0,0 +1,44 @@
-+* Freescale Layerscape external IRQs
-+
-+Some Layerscape SOCs (LS1021A, LS1043A, LS1046A) support inverting
-+the polarity of certain external interrupt lines.
-+
-+The device node must be a child of the node representing the
-+Supplemental Configuration Unit (SCFG).
-+
-+Required properties:
-+- compatible: should be "fsl,<soc-name>-extirq", e.g. "fsl,ls1021a-extirq".
-+- interrupt-controller: Identifies the node as an interrupt controller
-+- #interrupt-cells: Use the same format as specified by GIC in arm,gic.txt.
-+- interrupt-parent: phandle of GIC.
-+- offset: offset to the Interrupt Polarity Control Register (INTPCR)
-+  register in the SCFG.
-+- interrupts: Specifies the mapping to interrupt numbers in the parent
-+  interrupt controller. Interrupts are mapped one-to-one to parent
-+  interrupts.
-+
-+Optional properties:
-+- fsl,bit-reverse: This boolean property should be set on the LS1021A
-+  if the SCFGREVCR register has been set to all-ones (which is usually
-+  the case), meaning that all reads and writes of SCFG registers are
-+  implicitly bit-reversed. Other compatible platforms do not have such
-+  a register.
-+
-+Example:
-+	scfg: scfg@1570000 {
-+		compatible = "fsl,ls1021a-scfg", "syscon";
-+		...
-+		extirq: interrupt-controller {
-+			compatible = "fsl,ls1021a-extirq";
-+			#interrupt-cells = <3>;
-+			interrupt-controller;
-+			interrupt-parent = <&gic>;
-+			offset = <0x1ac>;
-+			interrupts = <163 164 165 167 168 169>;
-+			fsl,bit-reverse;
-+		};
-+	};
-+
-+
-+	interrupts-extended = <&gic GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>,
-+			      <&extirq GIC_SPI 1 IRQ_TYPE_LEVEL_LOW>;
+We try to do that for all the IPs, but some fell through the cracks.
+
+Maxime
+
 -- 
-2.15.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--633gxgtdfacfdwqd--
