@@ -1,71 +1,141 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [RFC 10/37] soc: renesas: rcar-rst: Enable watchdog as reset
- trigger for Gen2
-Date: Fri, 26 Jan 2018 11:30:38 +0300
-Message-ID: <e1670c79-2fef-b45b-4688-a6ba8ebd8c24@cogentembedded.com>
-References: <1516903391-30467-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1516903391-30467-11-git-send-email-fabrizio.castro@bp.renesas.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1516903391-30467-11-git-send-email-fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+From: Chintan Pandya <cpandya@codeaurora.org>
+Subject: [PATCH v2] of: use hash based search in of_find_node_by_phandle
+Date: Fri, 26 Jan 2018 14:01:36 +0530
+Message-ID: <1516955496-17236-1-git-send-email-cpandya@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, frowand.list@gmail.com, devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Chintan Pandya <cpandya@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello!
+of_find_node_by_phandle() takes a lot of time (1ms per
+call) to find right node when your intended device is
+too deeper in the fdt. Reason is, we search for each
+device serially in the fdt. See this,
 
-On 1/25/2018 9:02 PM, Fabrizio Castro wrote:
+struct device_node *__of_find_all_nodes(struct device_node *prev)
+{
+        struct device_node *np;
+        if (!prev) {
+                np = of_root;
+        } else if (prev->child) {
+                np = prev->child;
+        } else {
+                /* Walk back up looking for a sibling, or the end of the structure */
+                np = prev;
+                while (np->parent && !np->sibling)
+                        np = np->parent;
+                np = np->sibling; /* Might be null at the end of the tree */
+        }
+        return np;
+}
 
-> This patch allows for platform specific quirks as some of the SoC need
-> further customization for the watchdog to work properly, like for R-Car
-> Gen2 and for RZ/G.
-> 
-> Signed-off-by: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-> Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-> ---
->   drivers/soc/renesas/rcar-rst.c | 21 ++++++++++++++++++++-
->   1 file changed, 20 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/soc/renesas/rcar-rst.c b/drivers/soc/renesas/rcar-rst.c
-> index f7a0d54..5f52aea 100644
-> --- a/drivers/soc/renesas/rcar-rst.c
-> +++ b/drivers/soc/renesas/rcar-rst.c
-> @@ -13,8 +13,18 @@
->   #include <linux/of_address.h>
->   #include <linux/soc/renesas/rcar-rst.h>
->   
-> +#define WDTRSTCR_RESET		0xA55A0002
-> +#define WDTRSTCR		0x0054
-> +
-> +static int gen2_configuration(void __iomem *base)
-> +{
-> +	iowrite32(WDTRSTCR_RESET, base + WDTRSTCR);
-> +	return 0;
-> +}
-> +
->   struct rst_config {
-> -	unsigned int modemr;	/* Mode Monitoring Register Offset */
-> +	unsigned int modemr;		/* Mode Monitoring Register Offset */
-> +	int (*configure)(void *base);	/* Platform specific configuration */
->   };
->   
->   static const struct rst_config rcar_rst_gen1 __initconst = {
-> @@ -23,6 +33,7 @@ static const struct rst_config rcar_rst_gen1 __initconst = {
->   
->   static const struct rst_config rcar_rst_gen2 __initconst = {
->   	.modemr = 0x60,
-> +	.configure = gen2_configuration,
+#define for_each_of_allnodes_from(from, dn) \
+        for (dn = __of_find_all_nodes(from); dn; dn = __of_find_all_nodes(dn))
+#define for_each_of_allnodes(dn) for_each_of_allnodes_from(NULL, dn)
 
-    Why not call the method gen2_configure() then?
+Implement, device-phandle relation in hash-table so
+that look up can be faster, irrespective of where my
+device is defined in the DT.
 
-[...]
+There are ~6.7k calls to of_find_node_by_phandle() and
+total improvement observed during boot is 400ms.
 
-MBR, Sergei
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Signed-off-by: Chintan Pandya <cpandya@codeaurora.org>
+---
+ drivers/of/base.c  |  8 ++++++--
+ drivers/of/fdt.c   | 18 ++++++++++++++++++
+ include/linux/of.h |  6 ++++++
+ 3 files changed, 30 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 26618ba..bfbfa99 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -1005,10 +1005,14 @@ struct device_node *of_find_node_by_phandle(phandle handle)
+ 	if (!handle)
+ 		return NULL;
+ 
+-	raw_spin_lock_irqsave(&devtree_lock, flags);
+-	for_each_of_allnodes(np)
++	spin_lock(&dt_hash_spinlock);
++	hash_for_each_possible(dt_hash_table, np, hash, handle)
+ 		if (np->phandle == handle)
+ 			break;
++
++	spin_unlock(&dt_hash_spinlock);
++
++	raw_spin_lock_irqsave(&devtree_lock, flags);
+ 	of_node_get(np);
+ 	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+ 	return np;
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index 4675e5a..62a9a4c 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -33,6 +33,10 @@
+ 
+ #include "of_private.h"
+ 
++static bool dt_hash_needs_init = true;
++DECLARE_HASHTABLE(dt_hash_table, DT_HASH_BITS);
++DEFINE_SPINLOCK(dt_hash_spinlock);
++
+ /*
+  * of_fdt_limit_memory - limit the number of regions in the /memory node
+  * @limit: maximum entries
+@@ -242,6 +246,20 @@ static void populate_properties(const void *blob,
+ 		pprev      = &pp->next;
+ 	}
+ 
++	/*
++	 * In 'dryrun = true' cases, np is some non-NULL junk. So, protect
++	 * against those cases.
++	 */
++	if (!dryrun && np->phandle) {
++		spin_lock(&dt_hash_spinlock);
++		if (dt_hash_needs_init) {
++			dt_hash_needs_init = false;
++			hash_init(dt_hash_table);
++		}
++		hash_add(dt_hash_table, &np->hash, np->phandle);
++		spin_unlock(&dt_hash_spinlock);
++	}
++
+ 	/* With version 0x10 we may not have the name property,
+ 	 * recreate it here from the unit name if absent
+ 	 */
+diff --git a/include/linux/of.h b/include/linux/of.h
+index d3dea1d..2e3ba84 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -25,6 +25,7 @@
+ #include <linux/notifier.h>
+ #include <linux/property.h>
+ #include <linux/list.h>
++#include <linux/hashtable.h>
+ 
+ #include <asm/byteorder.h>
+ #include <asm/errno.h>
+@@ -69,6 +70,7 @@ struct device_node {
+ #endif
+ 	unsigned long _flags;
+ 	void	*data;
++	struct hlist_node hash;
+ #if defined(CONFIG_SPARC)
+ 	const char *path_component_name;
+ 	unsigned int unique_id;
+@@ -76,6 +78,10 @@ struct device_node {
+ #endif
+ };
+ 
++#define DT_HASH_BITS 6
++extern DECLARE_HASHTABLE(dt_hash_table, DT_HASH_BITS);
++extern spinlock_t dt_hash_spinlock;
++
+ #define MAX_PHANDLE_ARGS 16
+ struct of_phandle_args {
+ 	struct device_node *np;
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
