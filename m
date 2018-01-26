@@ -1,11 +1,11 @@
 From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH v7 10/11] arch: sh: migor: Use new renesas-ceu camera driver
-Date: Fri, 26 Jan 2018 14:48:47 +0100
-Message-ID: <1516974528-11120-16-git-send-email-jacopo+renesas@jmondi.org>
+Subject: [PATCH v7 9/9] arch: sh: migor: Use new renesas-ceu camera driver
+Date: Fri, 26 Jan 2018 14:48:45 +0100
+Message-ID: <1516974528-11120-14-git-send-email-jacopo+renesas@jmondi.org>
 References: <1516974528-11120-1-git-send-email-jacopo+renesas@jmondi.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
 In-Reply-To: <1516974528-11120-1-git-send-email-jacopo+renesas@jmondi.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-sh-owner@vger.kernel.org
 To: laurent.pinchart@ideasonboard.com, magnus.damm@gmail.com, geert@glider.be, hverkuil@xs4all.nl, mchehab@kernel.org, festevam@gmail.com, sakari.ailus@iki.fi, robh+dt@kernel.org, mark.rutland@arm.com, pombredanne@nexb.com
 Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
@@ -33,7 +33,7 @@ Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
  2 files changed, 101 insertions(+), 126 deletions(-)
 
 diff --git a/arch/sh/boards/mach-migor/setup.c b/arch/sh/boards/mach-migor/setup.c
-index 0bcbe58..e3c3b4f 100644
+index 0bcbe58..ae4a786 100644
 --- a/arch/sh/boards/mach-migor/setup.c
 +++ b/arch/sh/boards/mach-migor/setup.c
 @@ -1,17 +1,16 @@
@@ -143,7 +143,7 @@ index 0bcbe58..e3c3b4f 100644
 -
 -static struct sh_mobile_ceu_info sh_mobile_ceu_info = {
 -	.flags = SH_CEU_FLAG_USE_8BIT_BUS,
-+static struct ceu_platform_data ceu_pdata = {
++static const struct ceu_platform_data ceu_pdata = {
 +	.num_subdevs			= 2,
 +	.subdevs = {
 +		{ /* [0] = ov772x */
@@ -207,11 +207,11 @@ index 0bcbe58..e3c3b4f 100644
  	},
  };
  
-+static struct ov772x_camera_info ov7725_info = {
++static const struct ov772x_camera_info ov7725_info = {
 +	.flags		= 0,
 +};
 +
-+static struct tw9910_video_info tw9910_info = {
++static const struct tw9910_video_info tw9910_info = {
 +	.buswidth       = 8,
 +	.mpout          = TW9910_MPO_FIELD,
 +};
@@ -393,3 +393,4 @@ index 8f07a1a..d85091e 100644
  	CLKDEV_DEV_ID("sh_mobile_lcdc_fb.0", &mstp_clks[HWBLK_LCDC]),
 -- 
 2.7.4
+
