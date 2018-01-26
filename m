@@ -1,74 +1,42 @@
-From: Anson Huang <Anson.Huang@nxp.com>
-Subject: [PATCH V2 1/2] ARM: dts: imx7s: add temperature monitor support
-Date: Fri, 26 Jan 2018 16:09:39 +0800
-Message-ID: <1516954180-26029-1-git-send-email-Anson.Huang@nxp.com>
+From: <yinbo.zhu@nxp.com>
+Subject: [PATCH v2] arm: dts: ls1021a: Add configure-gfladj property to USB3 node
+Date: Fri, 26 Jan 2018 16:22:15 +0800
+Message-ID: <20180126082215.3191-1-yinbo.zhu@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: rui.zhang@intel.com, edubezval@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, aisheng.dong@nxp.com
-Cc: Linux-imx@nxp.com
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>
+Cc: xiaobo.xie@nxp.com, jerry.huang@nxp.com, ran.wang_1@nxp.com, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>, "yinbo . zhu" <yinbo.zhu@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Add i.MX7 temperature monitor support.
+From: yinbo.zhu <yinbo.zhu@nxp.com>
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Acked-by: Dong Aisheng <aisheng.dong@nxp.com>
+Add "configure-gfladj" boolean property to USB3 node. This property
+is used to determine whether frame length adjustent is required
+or not
+
+Signed-off-by: Ramneek Mehresh <ramneek.mehresh@freescale.com>
+Signed-off-by: Honghua Yin <Hong-Hua.Yin@freescale.com>
+Signed-off-by: yinbo zhu <yinbo.zhu@nxp.com>
 ---
-no changes since V1.
- .../devicetree/bindings/thermal/imx-thermal.txt      |  5 +++--
- arch/arm/boot/dts/imx7s.dtsi                         | 20 ++++++++++++++++++++
- 2 files changed, 23 insertions(+), 2 deletions(-)
+Change in v2:
+		Remove the automatic generated tag from Gerrit.
+		Change "yinbo.zhu" to "yinbo zhu".
+ arch/arm/boot/dts/ls1021a.dtsi |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/thermal/imx-thermal.txt b/Documentation/devicetree/bindings/thermal/imx-thermal.txt
-index 28be51a..9575d45 100644
---- a/Documentation/devicetree/bindings/thermal/imx-thermal.txt
-+++ b/Documentation/devicetree/bindings/thermal/imx-thermal.txt
-@@ -1,8 +1,9 @@
- * Temperature Monitor (TEMPMON) on Freescale i.MX SoCs
- 
- Required properties:
--- compatible : "fsl,imx6q-tempmon" for i.MX6Q, "fsl,imx6sx-tempmon" for i.MX6SX.
--  i.MX6SX has two more IRQs than i.MX6Q, one is IRQ_LOW and the other is IRQ_PANIC,
-+- compatible : "fsl,imx6q-tempmon" for i.MX6Q, "fsl,imx6sx-tempmon" for i.MX6SX,
-+  "fsl,imx7-tempmon" for i.MX7S/D.
-+  i.MX6SX and i.MX7S/D have two more IRQs than i.MX6Q, one is IRQ_LOW and the other is IRQ_PANIC,
-   when temperature is below than low threshold, IRQ_LOW will be triggered, when temperature
-   is higher than panic threshold, system will auto reboot by SRC module.
- - fsl,tempmon : phandle pointer to system controller that contains TEMPMON
-diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
-index 82ad26e..2e2eda53 100644
---- a/arch/arm/boot/dts/imx7s.dtsi
-+++ b/arch/arm/boot/dts/imx7s.dtsi
-@@ -497,9 +497,29 @@
- 			};
- 
- 			ocotp: ocotp-ctrl@30350000 {
-+				#address-cells = <1>;
-+				#size-cells = <1>;
- 				compatible = "fsl,imx7d-ocotp", "syscon";
- 				reg = <0x30350000 0x10000>;
- 				clocks = <&clks IMX7D_OCOTP_CLK>;
-+
-+				tempmon_calib: calib@3c {
-+					reg = <0x3c 0x4>;
-+				};
-+
-+				tempmon_temp_grade: temp-grade@10 {
-+					reg = <0x10 0x4>;
-+				};
-+			};
-+
-+			tempmon: tempmon {
-+				compatible = "fsl,imx7-tempmon";
-+				interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
-+				fsl,tempmon =<&anatop>;
-+				nvmem-cells = <&tempmon_calib>,
-+					<&tempmon_temp_grade>;
-+				nvmem-cell-names = "calib", "temp_grade";
-+				clocks = <&clks IMX7D_PLL_SYS_MAIN_CLK>;
- 			};
- 
- 			anatop: anatop@30360000 {
+diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
+index 9319e1f..ae8fc40 100644
+--- a/arch/arm/boot/dts/ls1021a.dtsi
++++ b/arch/arm/boot/dts/ls1021a.dtsi
+@@ -681,6 +681,7 @@
+ 			reg = <0x0 0x3100000 0x0 0x10000>;
+ 			interrupts = <GIC_SPI 93 IRQ_TYPE_LEVEL_HIGH>;
+ 			dr_mode = "host";
++			configure-gfladj;
+ 			snps,quirk-frame-length-adjustment = <0x20>;
+ 			snps,dis_rxdet_inp3_quirk;
+ 		};
 -- 
-2.7.4
+1.7.1
