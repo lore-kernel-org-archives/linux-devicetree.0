@@ -1,57 +1,40 @@
-From: Dong Aisheng <dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/3] ARM: dts: imx6ull: address some more
- incompatibilites between i.MX6UL and i.MX6ULL
-Date: Fri, 26 Jan 2018 17:05:45 +0800
-Message-ID: <20180126090545.GD14058@b29396-OptiPlex-7040>
-References: <1516955032-21167-1-git-send-email-LW@KARO-electronics.de>
- <1516955032-21167-4-git-send-email-LW@KARO-electronics.de>
+From: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] dt-bindings: pinctrl: Add a reserved-gpio-ranges
+ property
+Date: Fri, 26 Jan 2018 11:20:26 +0200
+Message-ID: <1516958426.7000.1272.camel@linux.intel.com>
+References: <20180126011400.2191-1-sboyd@codeaurora.org>
+         <20180126011400.2191-2-sboyd@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1516955032-21167-4-git-send-email-LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+In-Reply-To: <20180126011400.2191-2-sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-imx-3arQi8VN3Tc@public.gmane.org
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 26, 2018 at 09:23:52AM +0100, Lothar Waﬂmann wrote:
-> The i.MX6ULL doesn't have the CAAM engine nor any SIM interface.
-> These are currently not implemented for i.MX6UL but it cannot hurt to
-> delete the corresponding nodes from the i.MX6ULL DTB anyway.
-> 
-> Signed-off-by: Lothar Waﬂmann <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+On Thu, 2018-01-25 at 17:13 -0800, Stephen Boyd wrote:
+> Some qcom platforms make some GPIOs or pins unavailable for use
+> by non-secure operating systems, and thus reading or writing the
+> registers for those pins will cause access control issues.
+> Introduce a DT property to describe the set of GPIOs that are
+> available for use so that higher level OSes are able to know what
+> pins to avoid reading/writing.
 
-Acked-by: Dong Aisheng <aisheng.dong-3arQi8VN3Tc@public.gmane.org>
+>  	gpio-controller;
+>  	#gpio-cells = <2>;
+>  	ngpios = <18>;
+> +	reserved-gpio-ranges = <0 4>, <12 2>;
 
-Regards
-Dong Aisheng
+What about preserving namespace, i.e.
 
-> ---
->  arch/arm/boot/dts/imx6ull.dtsi | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/imx6ull.dtsi b/arch/arm/boot/dts/imx6ull.dtsi
-> index 8724fdb2..da325cd 100644
-> --- a/arch/arm/boot/dts/imx6ull.dtsi
-> +++ b/arch/arm/boot/dts/imx6ull.dtsi
-> @@ -67,6 +67,12 @@
->  			};
->  		};
->  
-> +		aips-bus@2100000 {
-> +			/delete-node/ caam@21400000;
-> +			/delete-node/ sim@218c0000;
-> +			/delete-node/ sim@21b40000;
-> +		};
-> +
->  		aips3: aips-bus@2200000 {
->  			compatible = "fsl,aips-bus", "simple-bus";
->  			#address-cells = <1>;
-> -- 
-> 2.1.4
-> 
+gpio-reserved-ranges vs. your variant?
+
+-- 
+Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Intel Finland Oy
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
