@@ -1,58 +1,54 @@
 From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: [PATCH v2 0/3] Support qcom pinctrl protected pins
-Date: Thu, 25 Jan 2018 17:13:57 -0800
-Message-ID: <20180126011400.2191-1-sboyd@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Subject: [PATCH v2 1/3] dt-bindings: pinctrl: Add a reserved-gpio-ranges property
+Date: Thu, 25 Jan 2018 17:13:58 -0800
+Message-ID: <20180126011400.2191-2-sboyd@codeaurora.org>
+References: <20180126011400.2191-1-sboyd@codeaurora.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20180126011400.2191-1-sboyd@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
 To: Linus Walleij <linus.walleij@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Timur Tabi <timur@codeaurora.org>, linux-kernel@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Grant Likely <grant.likely@secretlab.ca>, linux-gpio@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Timur Tabi <timur@codeaurora.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, linux-gpio@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patchset proposes a solution to describing the valid
-pins for a pin controller in a semi-generic way so that qcom
-platforms can expose the pins that are really available.
+Some qcom platforms make some GPIOs or pins unavailable for use
+by non-secure operating systems, and thus reading or writing the
+registers for those pins will cause access control issues.
+Introduce a DT property to describe the set of GPIOs that are
+available for use so that higher level OSes are able to know what
+pins to avoid reading/writing.
 
-Typically, this has been done by having drivers and firmware 
-descriptions only use pins they know they have access to, and that
-still works now because we no longer read the pin direction at
-boot. But there are still some userspace drivers and debugfs facilities
-that don't know what pins are available and attempt to read everything
-they can. On qcom platforms, this may lead to a system hang, which isn't 
-very nice behavior, even if root is the only user that can trigger it.
+Cc: Grant Likely <grant.likely@secretlab.ca>
+Cc: <devicetree@vger.kernel.org>
+Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
+---
+ Documentation/devicetree/bindings/gpio/gpio.txt | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-The proposal is to describe the valid pins and then not allow things to
-cause problems by using the invalid pins. Obviously, the firmware may
-mess this up, so this is mostly a nice to have feature or a safety net
-so that things don't blow up easily.
-
-Changes from v1:
- * Pushed into gpiolib-of core under irq valid line logic
- * Fixed up qcom driver patch to free stuff properly and remove custom code
- * Dropped export patch as it got picked up
- * Renamed binding to 'reserved-gpio-ranges'
-
-Stephen Boyd (3):
-  dt-bindings: pinctrl: Add a reserved-gpio-ranges property
-  gpiolib-of: Support 'reserved-gpio-ranges' property
-  pinctrl: qcom: Don't allow protected pins to be requested
-
- Documentation/devicetree/bindings/gpio/gpio.txt |  7 +--
- drivers/gpio/gpiolib-of.c                       | 28 ++++++++++
- drivers/gpio/gpiolib.c                          |  9 ++++
- drivers/pinctrl/qcom/pinctrl-msm.c              | 69 +++++++++++++++++++++++--
- 4 files changed, 106 insertions(+), 7 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt b/Documentation/devicetree/bindings/gpio/gpio.txt
+index b5de08e3b1a2..c22b56680fc8 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio.txt
++++ b/Documentation/devicetree/bindings/gpio/gpio.txt
+@@ -151,9 +151,9 @@ in a lot of designs, some using all 32 bits, some using 18 and some using
+ first 18 GPIOs, at local offset 0 .. 17, are in use.
+ 
+ If these GPIOs do not happen to be the first N GPIOs at offset 0...N-1, an
+-additional bitmask is needed to specify which GPIOs are actually in use,
+-and which are dummies. The bindings for this case has not yet been
+-specified, but should be specified if/when such hardware appears.
++additional set of tuples is needed to specify which GPIOs are unusable, with
++the reserved-gpio-ranges binding. This property indicates the start and size
++of the GPIOs that can't be used.
+ 
+ Optionally, a GPIO controller may have a "gpio-line-names" property. This is
+ an array of strings defining the names of the GPIO lines going out of the
+@@ -178,6 +178,7 @@ gpio-controller@00000000 {
+ 	gpio-controller;
+ 	#gpio-cells = <2>;
+ 	ngpios = <18>;
++	reserved-gpio-ranges = <0 4>, <12 2>;
+ 	gpio-line-names = "MMC-CD", "MMC-WP", "VDD eth", "RST eth", "LED R",
+ 		"LED G", "LED B", "Col A", "Col B", "Col C", "Col D",
+ 		"Row A", "Row B", "Row C", "Row D", "NMI button",
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
