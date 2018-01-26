@@ -1,120 +1,77 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [RFC 01/37] ARM: shmobile: Add watchdog support
-Date: Fri, 26 Jan 2018 13:10:59 +0100
-Message-ID: <CAMuHMdUOoMHqu3WD8GUbGFTfeAsw9d5vKtkzdMQjMfTEknos-A@mail.gmail.com>
-References: <1516903391-30467-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1516903391-30467-2-git-send-email-fabrizio.castro@bp.renesas.com>
- <CAMuHMdWVvMJR5NHMFn6zx39jw2XdP5nteU3actUcen0dmoT-LQ@mail.gmail.com> <TY1PR06MB08950BD28BEC28D55C6D80EDC0E00@TY1PR06MB0895.apcprd06.prod.outlook.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <TY1PR06MB08950BD28BEC28D55C6D80EDC0E00@TY1PR06MB0895.apcprd06.prod.outlook.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wim Van Sebroeck <wim@iguana.be>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Guenter Roeck <linux@roeck-us.net>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm>
+From: Chunyan Zhang <zhang.chunyan@linaro.org>
+Subject: [PATCH V5 0/5] Add regulator suspend and resume support
+Date: Fri, 26 Jan 2018 21:08:42 +0800
+Message-ID: <1516972127-972-1-git-send-email-zhang.chunyan@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Chunyan Zhang <zhang.lyra@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Fabrizio,
+From: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
 
-On Fri, Jan 26, 2018 at 12:52 PM, Fabrizio Castro
-<fabrizio.castro@bp.renesas.com> wrote:
->> Subject: Re: [RFC 01/37] ARM: shmobile: Add watchdog support
->> On Thu, Jan 25, 2018 at 7:02 PM, Fabrizio Castro
->> <fabrizio.castro@bp.renesas.com> wrote:
->> > On R-Car Gen2 and RZ/G1 platforms, we use the SBAR registers to make n=
-on
->> > boot CPUs run a routine designed to bring up SMP and deal with hot plu=
-g.
->> > The value contained in the SBAR registers is not initialized by a WDT
->> > triggered reset, which means that after a WDT triggered reset we jump
->> > to the SMP bring up routine, preventing the system from executing the
->> > bootrom code.
->>
->> Thanks for your patch!
->
-> Thank you for looking into this!
->
-> I am not going to reply to your comments on the other patches for now, as=
- we need to find a solution for this particular patch we are all happy with=
- first.
-> A change to this patch may impact the other patches as well.
->
->> > The purpose of this patch is to jump to the bootrom code in case of a
->> > WDT triggered reset, and keep the SMP functionality untouched.
->> > In order to tell if the code had been called due to the WDT overflowin=
-g
->> > we need to inspect flag WOVF from register RWTCSRA, however for this
->> > to work smoothly we need to make sure that RWDT clock is ON.
->> > Since it's not wise to interfere with the clock configuration from
->> > within this routine, a flag has been put in place
->> > (shmobile_wdt_clock_status) so that the watchdog driver can tell
->> > shmobile_boot_vector when the clock is ON, and therefore there is no
->> > need for shmobile_boot_vector to mess up with the clock registers.
->> >
->> > Bit WOVF survives a watchdog triggered reset, and it is usually cleare=
-d
->> > by the bootloader. Checking the MMU enable bit from register SCTLR
->> > allows us to make the code a little bit more robust (just in case the
->> > bit wasn't cleared up), as right after a reset the MMU is disabled,
->> > and when Linux is running the MMU is enabled. Also, accessing RWTCSRA
->> > physical address is safe when the MMU is down.
->>
->> Checking a hardware register is indeed a better solution than my origina=
-l
->> idea to let SMP bringup set a flag in RAM, as the former is less racy.
->
-> Also, such a flag would not be accessible after the reset gets triggered.
+Some systems need to set regulators to specific states when they enter low
+power modes, especially around CPUs.
 
-It would, if it's stored in e.g. ICRAM.
+Currently the regulator driver, for suspend and resume features, provides
+two functions which are exported for being called directly by any modules
+or subsystems when they thought the regulator should be entering into
+suspend states.
 
->> However, as you can probably imagine, I don't like the
->> shmobile_wdt_clock_status part ;-)
->
-> Neither do I!      :-D
+This patchset adds hooks to PM suspend core and provides suspend/resume
+callback functions to regulator device, for those who can be switched
+off or set low voltage in suspend states only need to implement the
+callback functions in the driver, and set the right configurations for
+suspend states via device tree and the APIs which regulator core
+driver provides.
 
-Good ;-)
+Those drivers who use the old interfaces - i.e. regulator_suspend_prepare()
+and regulator_suspend_finish() should stop using that, since we leave these
+two functions empty and plan to remove them one day in the future.
 
->> Isn't is sufficient to check the MMU enable bit?
->
-> I am afraid it isn't, when bringing up SMP the cores will read the MMU fl=
-ag as disabled, to make things worse at that precise point in time the rwdt=
- clock is disabled.
-> If the system just restarted due to the watchdog, then when you read WOVF=
- chances are you are going to read '1', hence the system will fail to bring=
- up SMP.
+Thanks,
+Chunyan
 
-OK, so I was mislead by the MMU check.
 
->> However, that would precludes uClinux (do we care?).
->
-> The MMU will be constantly disabled in this case, wouldn't it? Therefore =
-the reset vector will always proceed with the testing of variable "shmobile=
-_wdt_clock_status", and it'll finally test WOVF only when it's safe to do s=
-o. If WOVF is set, then we still jump to the bootrom code. if WOVF is not s=
-et, then we jump to shmobile_boot_fn. Could you please elaborate your thoug=
-hts a little bit more?
->
->> Is there any other register/bit that's reset when the watchdog is
->> triggered, and always set by Linux?
->
-> Not that I know of, but you may know better ;-P
-> Any suggestion?
+Changes from V4: (https://lkml.org/lkml/2018/1/23/220)
+* Fixed the kbuild-test error, the glable variable 'pm_suspend_target_state'
+  only can be referred when CONFIG_SUSPEND is selected.
+* Added Rob's Reviewed-by.
 
-Any chance WDTRSTCR.RWDT_RSTMSK is reinitialized to 1 on watchdog reset?
-Probably not, as the Hardware User's Manual says the register is
-initialized on power on reset caused by PRESET#.
+Changes from V3:
+* Addressed comments from Rob:
+  - Rephrase the binding documentation.
 
-Gr{oetje,eeting}s,
+Changes from V2: (https://lkml.org/lkml/2018/1/4/75)
+* Correct the typo;
+* Removed redundant comments;
+* Export regulator_suspend_enable/disable(), don't call these two functions in
+  regulator_set_suspend_voltage() instead;
+* Checking if rstate->min_uV == rstate->max_uV instead of checking the flag when
+  setting the suspend voltage.
 
-                        Geert
+Changes from V1: (https://lkml.org/lkml/2017/12/21/9)
+* Rephrased the commit message of patch 0001;
+* Declared the property 'regulator-suspend-microvolt' deperated and documented
+  the way recommended;
+* Revised of_regulator.c, use suspend_state::min_uV as default suspend
+  voltage if the property 'regulator-suspend-microvolt' is not used.
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+Chunyan Zhang (5):
+  bindings: regulator: added support for suspend states
+  regulator: make regulator voltage be an array to support more states
+  drivers: regulator: leave one item to record whether regulator is
+    enabled
+  drivers: regulator: empty the old suspend functions
+  regulator: add PM suspend and resume hooks
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+ .../devicetree/bindings/regulator/regulator.txt    |  12 +-
+ drivers/regulator/core.c                           | 346 ++++++++++++++-------
+ drivers/regulator/internal.h                       |  18 +-
+ drivers/regulator/of_regulator.c                   |  20 +-
+ include/linux/regulator/driver.h                   |   2 +
+ include/linux/regulator/machine.h                  |  37 ++-
+ 6 files changed, 309 insertions(+), 126 deletions(-)
+
+-- 
+2.7.4
