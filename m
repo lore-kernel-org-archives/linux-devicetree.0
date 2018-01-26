@@ -1,109 +1,251 @@
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: RE: [RFC 01/37] ARM: shmobile: Add watchdog support
-Date: Fri, 26 Jan 2018 13:44:05 +0000
-Message-ID: <TY1PR06MB08958F9DA01F254443024333C0E00@TY1PR06MB0895.apcprd06.prod.outlook.com>
-References: <1516903391-30467-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1516903391-30467-2-git-send-email-fabrizio.castro@bp.renesas.com>
- <CAMuHMdWVvMJR5NHMFn6zx39jw2XdP5nteU3actUcen0dmoT-LQ@mail.gmail.com>
- <TY1PR06MB08950BD28BEC28D55C6D80EDC0E00@TY1PR06MB0895.apcprd06.prod.outlook.com>
- <CAMuHMdUOoMHqu3WD8GUbGFTfeAsw9d5vKtkzdMQjMfTEknos-A@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdUOoMHqu3WD8GUbGFTfeAsw9d5vKtkzdMQjMfTEknos-A@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wim Van Sebroeck <wim@iguana.be>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Guenter Roeck <linux@roeck-us.net>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>"linux-arm-kernel@lists.infradead.org" <linux>
+From: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Subject: [PATCH v7 00/11] Renesas Capture Engine Unit (CEU) V4L2 driver
+Date: Fri, 26 Jan 2018 14:48:32 +0100
+Message-ID: <1516974528-11120-1-git-send-email-jacopo+renesas@jmondi.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: laurent.pinchart@ideasonboard.com, magnus.damm@gmail.com, geert@glider.be, hverkuil@xs4all.nl, mchehab@kernel.org, festevam@gmail.com, sakari.ailus@iki.fi, robh+dt@kernel.org, mark.rutland@arm.com, pombredanne@nexb.com
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8gR2VlcnQsDQoNCj4gU3ViamVjdDogUmU6IFtSRkMgMDEvMzddIEFSTTogc2htb2JpbGU6
-IEFkZCB3YXRjaGRvZyBzdXBwb3J0DQo+DQo+IEhpIEZhYnJpemlvLA0KPg0KPiBPbiBGcmksIEph
-biAyNiwgMjAxOCBhdCAxMjo1MiBQTSwgRmFicml6aW8gQ2FzdHJvDQo+IDxmYWJyaXppby5jYXN0
-cm9AYnAucmVuZXNhcy5jb20+IHdyb3RlOg0KPiA+PiBTdWJqZWN0OiBSZTogW1JGQyAwMS8zN10g
-QVJNOiBzaG1vYmlsZTogQWRkIHdhdGNoZG9nIHN1cHBvcnQNCj4gPj4gT24gVGh1LCBKYW4gMjUs
-IDIwMTggYXQgNzowMiBQTSwgRmFicml6aW8gQ2FzdHJvDQo+ID4+IDxmYWJyaXppby5jYXN0cm9A
-YnAucmVuZXNhcy5jb20+IHdyb3RlOg0KPiA+PiA+IE9uIFItQ2FyIEdlbjIgYW5kIFJaL0cxIHBs
-YXRmb3Jtcywgd2UgdXNlIHRoZSBTQkFSIHJlZ2lzdGVycyB0byBtYWtlIG5vbg0KPiA+PiA+IGJv
-b3QgQ1BVcyBydW4gYSByb3V0aW5lIGRlc2lnbmVkIHRvIGJyaW5nIHVwIFNNUCBhbmQgZGVhbCB3
-aXRoIGhvdCBwbHVnLg0KPiA+PiA+IFRoZSB2YWx1ZSBjb250YWluZWQgaW4gdGhlIFNCQVIgcmVn
-aXN0ZXJzIGlzIG5vdCBpbml0aWFsaXplZCBieSBhIFdEVA0KPiA+PiA+IHRyaWdnZXJlZCByZXNl
-dCwgd2hpY2ggbWVhbnMgdGhhdCBhZnRlciBhIFdEVCB0cmlnZ2VyZWQgcmVzZXQgd2UganVtcA0K
-PiA+PiA+IHRvIHRoZSBTTVAgYnJpbmcgdXAgcm91dGluZSwgcHJldmVudGluZyB0aGUgc3lzdGVt
-IGZyb20gZXhlY3V0aW5nIHRoZQ0KPiA+PiA+IGJvb3Ryb20gY29kZS4NCj4gPj4NCj4gPj4gVGhh
-bmtzIGZvciB5b3VyIHBhdGNoIQ0KPiA+DQo+ID4gVGhhbmsgeW91IGZvciBsb29raW5nIGludG8g
-dGhpcyENCj4gPg0KPiA+IEkgYW0gbm90IGdvaW5nIHRvIHJlcGx5IHRvIHlvdXIgY29tbWVudHMg
-b24gdGhlIG90aGVyIHBhdGNoZXMgZm9yIG5vdywgYXMgd2UgbmVlZCB0byBmaW5kIGEgc29sdXRp
-b24gZm9yIHRoaXMgcGFydGljdWxhciBwYXRjaCB3ZSBhcmUNCj4gYWxsIGhhcHB5IHdpdGggZmly
-c3QuDQo+ID4gQSBjaGFuZ2UgdG8gdGhpcyBwYXRjaCBtYXkgaW1wYWN0IHRoZSBvdGhlciBwYXRj
-aGVzIGFzIHdlbGwuDQo+ID4NCj4gPj4gPiBUaGUgcHVycG9zZSBvZiB0aGlzIHBhdGNoIGlzIHRv
-IGp1bXAgdG8gdGhlIGJvb3Ryb20gY29kZSBpbiBjYXNlIG9mIGENCj4gPj4gPiBXRFQgdHJpZ2dl
-cmVkIHJlc2V0LCBhbmQga2VlcCB0aGUgU01QIGZ1bmN0aW9uYWxpdHkgdW50b3VjaGVkLg0KPiA+
-PiA+IEluIG9yZGVyIHRvIHRlbGwgaWYgdGhlIGNvZGUgaGFkIGJlZW4gY2FsbGVkIGR1ZSB0byB0
-aGUgV0RUIG92ZXJmbG93aW5nDQo+ID4+ID4gd2UgbmVlZCB0byBpbnNwZWN0IGZsYWcgV09WRiBm
-cm9tIHJlZ2lzdGVyIFJXVENTUkEsIGhvd2V2ZXIgZm9yIHRoaXMNCj4gPj4gPiB0byB3b3JrIHNt
-b290aGx5IHdlIG5lZWQgdG8gbWFrZSBzdXJlIHRoYXQgUldEVCBjbG9jayBpcyBPTi4NCj4gPj4g
-PiBTaW5jZSBpdCdzIG5vdCB3aXNlIHRvIGludGVyZmVyZSB3aXRoIHRoZSBjbG9jayBjb25maWd1
-cmF0aW9uIGZyb20NCj4gPj4gPiB3aXRoaW4gdGhpcyByb3V0aW5lLCBhIGZsYWcgaGFzIGJlZW4g
-cHV0IGluIHBsYWNlDQo+ID4+ID4gKHNobW9iaWxlX3dkdF9jbG9ja19zdGF0dXMpIHNvIHRoYXQg
-dGhlIHdhdGNoZG9nIGRyaXZlciBjYW4gdGVsbA0KPiA+PiA+IHNobW9iaWxlX2Jvb3RfdmVjdG9y
-IHdoZW4gdGhlIGNsb2NrIGlzIE9OLCBhbmQgdGhlcmVmb3JlIHRoZXJlIGlzIG5vDQo+ID4+ID4g
-bmVlZCBmb3Igc2htb2JpbGVfYm9vdF92ZWN0b3IgdG8gbWVzcyB1cCB3aXRoIHRoZSBjbG9jayBy
-ZWdpc3RlcnMuDQo+ID4+ID4NCj4gPj4gPiBCaXQgV09WRiBzdXJ2aXZlcyBhIHdhdGNoZG9nIHRy
-aWdnZXJlZCByZXNldCwgYW5kIGl0IGlzIHVzdWFsbHkgY2xlYXJlZA0KPiA+PiA+IGJ5IHRoZSBi
-b290bG9hZGVyLiBDaGVja2luZyB0aGUgTU1VIGVuYWJsZSBiaXQgZnJvbSByZWdpc3RlciBTQ1RM
-Ug0KPiA+PiA+IGFsbG93cyB1cyB0byBtYWtlIHRoZSBjb2RlIGEgbGl0dGxlIGJpdCBtb3JlIHJv
-YnVzdCAoanVzdCBpbiBjYXNlIHRoZQ0KPiA+PiA+IGJpdCB3YXNuJ3QgY2xlYXJlZCB1cCksIGFz
-IHJpZ2h0IGFmdGVyIGEgcmVzZXQgdGhlIE1NVSBpcyBkaXNhYmxlZCwNCj4gPj4gPiBhbmQgd2hl
-biBMaW51eCBpcyBydW5uaW5nIHRoZSBNTVUgaXMgZW5hYmxlZC4gQWxzbywgYWNjZXNzaW5nIFJX
-VENTUkENCj4gPj4gPiBwaHlzaWNhbCBhZGRyZXNzIGlzIHNhZmUgd2hlbiB0aGUgTU1VIGlzIGRv
-d24uDQo+ID4+DQo+ID4+IENoZWNraW5nIGEgaGFyZHdhcmUgcmVnaXN0ZXIgaXMgaW5kZWVkIGEg
-YmV0dGVyIHNvbHV0aW9uIHRoYW4gbXkgb3JpZ2luYWwNCj4gPj4gaWRlYSB0byBsZXQgU01QIGJy
-aW5ndXAgc2V0IGEgZmxhZyBpbiBSQU0sIGFzIHRoZSBmb3JtZXIgaXMgbGVzcyByYWN5Lg0KPiA+
-DQo+ID4gQWxzbywgc3VjaCBhIGZsYWcgd291bGQgbm90IGJlIGFjY2Vzc2libGUgYWZ0ZXIgdGhl
-IHJlc2V0IGdldHMgdHJpZ2dlcmVkLg0KPg0KPiBJdCB3b3VsZCwgaWYgaXQncyBzdG9yZWQgaW4g
-ZS5nLiBJQ1JBTS4NCg0KWWVzLCBvZiBjb3Vyc2UuIEl0IHJlbWluZHMgbWUgb2Ygc2htb2JpbGVf
-d2R0X2Nsb2NrX3N0YXR1cy4uLiAgICAgOi1EDQoNCj4NCj4gPj4gSG93ZXZlciwgYXMgeW91IGNh
-biBwcm9iYWJseSBpbWFnaW5lLCBJIGRvbid0IGxpa2UgdGhlDQo+ID4+IHNobW9iaWxlX3dkdF9j
-bG9ja19zdGF0dXMgcGFydCA7LSkNCj4gPg0KPiA+IE5laXRoZXIgZG8gSSEgICAgICA6LUQNCj4N
-Cj4gR29vZCA7LSkNCj4NCj4gPj4gSXNuJ3QgaXMgc3VmZmljaWVudCB0byBjaGVjayB0aGUgTU1V
-IGVuYWJsZSBiaXQ/DQo+ID4NCj4gPiBJIGFtIGFmcmFpZCBpdCBpc24ndCwgd2hlbiBicmluZ2lu
-ZyB1cCBTTVAgdGhlIGNvcmVzIHdpbGwgcmVhZCB0aGUgTU1VIGZsYWcgYXMgZGlzYWJsZWQsIHRv
-IG1ha2UgdGhpbmdzIHdvcnNlIGF0IHRoYXQgcHJlY2lzZSBwb2ludCBpbg0KPiB0aW1lIHRoZSBy
-d2R0IGNsb2NrIGlzIGRpc2FibGVkLg0KPiA+IElmIHRoZSBzeXN0ZW0ganVzdCByZXN0YXJ0ZWQg
-ZHVlIHRvIHRoZSB3YXRjaGRvZywgdGhlbiB3aGVuIHlvdSByZWFkIFdPVkYgY2hhbmNlcyBhcmUg
-eW91IGFyZSBnb2luZyB0byByZWFkICcxJywgaGVuY2UgdGhlDQo+IHN5c3RlbSB3aWxsIGZhaWwg
-dG8gYnJpbmcgdXAgU01QLg0KPg0KPiBPSywgc28gSSB3YXMgbWlzbGVhZCBieSB0aGUgTU1VIGNo
-ZWNrLg0KPg0KPiA+PiBIb3dldmVyLCB0aGF0IHdvdWxkIHByZWNsdWRlcyB1Q2xpbnV4IChkbyB3
-ZSBjYXJlPykuDQo+ID4NCj4gPiBUaGUgTU1VIHdpbGwgYmUgY29uc3RhbnRseSBkaXNhYmxlZCBp
-biB0aGlzIGNhc2UsIHdvdWxkbid0IGl0PyBUaGVyZWZvcmUgdGhlIHJlc2V0IHZlY3RvciB3aWxs
-IGFsd2F5cyBwcm9jZWVkIHdpdGggdGhlIHRlc3Rpbmcgb2YNCj4gdmFyaWFibGUgInNobW9iaWxl
-X3dkdF9jbG9ja19zdGF0dXMiLCBhbmQgaXQnbGwgZmluYWxseSB0ZXN0IFdPVkYgb25seSB3aGVu
-IGl0J3Mgc2FmZSB0byBkbyBzby4gSWYgV09WRiBpcyBzZXQsIHRoZW4gd2Ugc3RpbGwganVtcCB0
-byB0aGUNCj4gYm9vdHJvbSBjb2RlLiBpZiBXT1ZGIGlzIG5vdCBzZXQsIHRoZW4gd2UganVtcCB0
-byBzaG1vYmlsZV9ib290X2ZuLiBDb3VsZCB5b3UgcGxlYXNlIGVsYWJvcmF0ZSB5b3VyIHRob3Vn
-aHRzIGEgbGl0dGxlIGJpdCBtb3JlPw0KPiA+DQo+ID4+IElzIHRoZXJlIGFueSBvdGhlciByZWdp
-c3Rlci9iaXQgdGhhdCdzIHJlc2V0IHdoZW4gdGhlIHdhdGNoZG9nIGlzDQo+ID4+IHRyaWdnZXJl
-ZCwgYW5kIGFsd2F5cyBzZXQgYnkgTGludXg/DQo+ID4NCj4gPiBOb3QgdGhhdCBJIGtub3cgb2Ys
-IGJ1dCB5b3UgbWF5IGtub3cgYmV0dGVyIDstUA0KPiA+IEFueSBzdWdnZXN0aW9uPw0KPg0KPiBB
-bnkgY2hhbmNlIFdEVFJTVENSLlJXRFRfUlNUTVNLIGlzIHJlaW5pdGlhbGl6ZWQgdG8gMSBvbiB3
-YXRjaGRvZyByZXNldD8NCj4gUHJvYmFibHkgbm90LCBhcyB0aGUgSGFyZHdhcmUgVXNlcidzIE1h
-bnVhbCBzYXlzIHRoZSByZWdpc3RlciBpcw0KPiBpbml0aWFsaXplZCBvbiBwb3dlciBvbiByZXNl
-dCBjYXVzZWQgYnkgUFJFU0VUIy4NCg0KSSB0aGluayBpdHMgdmFsdWUgaXMgcmV0YWluZWQsIGFz
-IHlvdSBwb2ludGVkIG91dC4NCg0KU28gYmFzaWNhbGx5LCBJIHN0aWxsIHRoaW5rIHRlc3Rpbmcg
-V09WRiBpcyB0aGUgYmVzdCB3YXkgdG8gdGVsbCBpZiB3ZSBqdW1wZWQgaW50byB0aGUgcmVzZXQg
-dmVjdG9yIGJlY2F1c2Ugb2YgYSB3YXRjaGRvZyB0cmlnZ2VyZWQgcmVzZXQsIG9yIGJlY2F1c2Ug
-b2YgU01QLg0KV2UgImp1c3QiIG5lZWQgdG8gZ3VhcmFudGVlIHdlIHJlYWQgZnJvbSBSV1RDU1JB
-IHdoZW4gaXQncyBzYWZlIHRvIGRvIHNvLiBDYW4geW91IHRoaW5rIG9mIGFueSBvdGhlciBhbHRl
-cm5hdGl2ZSB0byB0aGUgZmxhZyBpbiBJQ1JBTTEgdG8gYWNoaWV2ZSB0aGlzIHNhZmVseT8NCg0K
-VGhhbmtzLA0KRmFiDQoNCj4NCj4gR3J7b2V0amUsZWV0aW5nfXMsDQo+DQo+ICAgICAgICAgICAg
-ICAgICAgICAgICAgIEdlZXJ0DQo+DQo+IC0tDQo+IEdlZXJ0IFV5dHRlcmhvZXZlbiAtLSBUaGVy
-ZSdzIGxvdHMgb2YgTGludXggYmV5b25kIGlhMzIgLS0gZ2VlcnRAbGludXgtbTY4ay5vcmcNCj4N
-Cj4gSW4gcGVyc29uYWwgY29udmVyc2F0aW9ucyB3aXRoIHRlY2huaWNhbCBwZW9wbGUsIEkgY2Fs
-bCBteXNlbGYgYSBoYWNrZXIuIEJ1dA0KPiB3aGVuIEknbSB0YWxraW5nIHRvIGpvdXJuYWxpc3Rz
-IEkganVzdCBzYXkgInByb2dyYW1tZXIiIG9yIHNvbWV0aGluZyBsaWtlIHRoYXQuDQo+ICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgLS0gTGludXMgVG9ydmFsZHMNCg0KDQoNClJlbmVz
-YXMgRWxlY3Ryb25pY3MgRXVyb3BlIEx0ZCwgRHVrZXMgTWVhZG93LCBNaWxsYm9hcmQgUm9hZCwg
-Qm91cm5lIEVuZCwgQnVja2luZ2hhbXNoaXJlLCBTTDggNUZILCBVSy4gUmVnaXN0ZXJlZCBpbiBF
-bmdsYW5kICYgV2FsZXMgdW5kZXIgUmVnaXN0ZXJlZCBOby4gMDQ1ODY3MDkuDQo=
+Hello,
+  7th round for CEU driver&friends.
+
+This series includes 2 new patches compared to v6 and it is now based on
+top of Hans' series:
+[PATCHv2 0/9] media: replace g/s_parm by g/s_frame_interval
+and makes use of newly introduced v4l2_g/s_parm_cap() functions from v4l2-common
+in CEU's g/s_parm() callbacks.
+
+A branch for testing is available at:
+git://jmondi.org/linux ceu/media-tree-parm/base
+with few patches for Migo-R and GR-Peach applied on top of Hans' media-tree/parm
+branch.
+
+The 2 new patches in the series:
+[11/11] has been added to silence a v4l2-compliance error, and modifies
+ov7670 driver to set all fields of 'struct v4l2_mbus_format' during set_format
+operation, including ycbcr_enc, quantization and xfer_func. As the patch commit
+reports, this suppresses the following v4l2-compliance error:
+fail: v4l2-test-formats.cpp(335): ycbcr_enc >= 0xff
+
+[7/11] has been required by Hans to add frame interval handling to ov772x
+driver. As this is quite a big change I kept it in a separate patch to ease
+review, it can eventually be squashed on [6/11] if accepted.
+
+If for TW9910 video decoder the same is required (frame interval handling) I'm
+in favour of moving that driver to staging as it was proposed for ov772x before
+this series.
+
+v4l2-compliance now reports a 0 error count:
+Total: 43, Succeeded: 43, Failed: 0, Warnings: 0
+
+Hans, you asked me to run v4l2-compliance with the -f option, I cannot do
+that on my tiny GR-Peach as with its limited available system memory it cannot
+allocate the number of requested buffers for that test. I can try to tweak that
+if necessary. I won't stress here why I cannot do that on Migo-R, long story
+short, I need a special compiler with DSP support to run anything but the little
+initramfs I have received for SH7722. I've been able to tweak yavta to work and
+test capture and frame rate handling with it, but v4l2-compliance is much more
+complex and I don't think I'll be able run it on that platform.
+
+Below, v4l2-compliance output:
+
+-------------------------------------------------------------------------------
+v4l2-compliance SHA   : 20b6624f4bb84353e690d897688fd7ac12d6a881
+
+Driver Info:
+	Driver name   : renesas-ceu
+	Card type     : Renesas CEU e8210000.ceu
+	Bus info      : platform:renesas-ceu-e8210000.c
+	Driver version: 4.15.0
+	Capabilities  : 0x84201000
+		Video Capture Multiplanar
+		Streaming
+		Extended Pix Format
+		Device Capabilities
+	Device Caps   : 0x04201000
+		Video Capture Multiplanar
+		Streaming
+		Extended Pix Format
+
+Compliance test for device /dev/video0 (not using libv4l2):
+
+Required ioctls:
+	test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+	test second video open: OK
+	test VIDIOC_QUERYCAP: OK
+	test VIDIOC_G/S_PRIORITY: OK
+	test for unlimited opens: OK
+
+Debug ioctls:
+	test VIDIOC_DBG_G/S_REGISTER: OK
+	test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 1 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+	test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Test input 0:
+
+	Control ioctls:
+		test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
+		test VIDIOC_QUERYCTRL: OK
+		test VIDIOC_G/S_CTRL: OK
+		test VIDIOC_G/S/TRY_EXT_CTRLS: OK
+		test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
+		test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+		Standard Controls: 12 Private Controls: 0
+
+	Format ioctls:
+		test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+		fail: v4l2-test-formats.cpp(1162): ret && node->has_frmintervals
+		test VIDIOC_G/S_PARM: OK
+		test VIDIOC_G_FBUF: OK (Not Supported)
+		test VIDIOC_G_FMT: OK
+		test VIDIOC_TRY_FMT: OK
+		test VIDIOC_S_FMT: OK
+		test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+		test Cropping: OK (Not Supported)
+		test Composing: OK (Not Supported)
+		test Scaling: OK (Not Supported)
+
+	Codec ioctls:
+		test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+		test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+		test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+	Buffer ioctls:
+		test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
+		test VIDIOC_EXPBUF: OK
+
+Test input 0:
+
+
+Total: 43, Succeeded: 43, Failed: 0, Warnings: 0
+-------------------------------------------------------------------------------
+
+Thanks
+   j
+
+v6->v7:
+- Add patch to handle ycbr_enc and other fields of v4l2_mbus_format for ov7670
+- Add patch to handle frame interval for ov772x
+- Rebased on Hans' media-tree/parm branch with v4l2_g/s_parm_cap
+- Drop const modifier in CEU releated fields of Migo-R setup.c board file
+  to silence complier warnings.
+
+v5->v6:
+- Add Hans' Acked-by to most patches
+- Fix a bad change in ov772x get_selection
+- Add .buf_prepare callack to CEU and verify plane sizes there
+- Remove VB2_USERPTR from supported io_modes in CEU driver
+- Remove read() fops in CEU driver
+
+v4->v5:
+- Added Rob's and Laurent's Reviewed-by tag to DT bindings
+- Change CEU driver module license to "GPL v2" to match SPDX identifier as
+  suggested by Philippe Ombredanne
+- Make struct ceu_data static as suggested by Laurent and add his
+  Reviewed-by to CEU driver.
+
+v3->v4:
+- Drop generic fallback compatible string "renesas,ceu"
+- Addressed Laurent's comments on [3/9]
+  - Fix error messages on irq get/request
+  - Do not leak ceudev if irq_get fails
+  - Make irq_mask a const field
+
+v2->v3:
+- Improved DT bindings removing standard properties (pinctrl- ones and
+  remote-endpoint) not specific to this driver and improved description of
+  compatible strings
+- Remove ov772x's xlkc_rate property and set clock rate in Migo-R board file
+- Made 'xclk' clock private to ov772x driver in Migo-R board file
+- Change 'rstb' GPIO active output level and changed ov772x and tw9910 drivers
+  accordingly as suggested by Fabio
+- Minor changes in CEU driver to address Laurent's comments
+- Moved Migo-R setup patch to the end of the series to silence 0-day bot
+- Renamed tw9910 clock to 'xti' as per video decoder manual
+- Changed all SPDX identifiers to GPL-2.0 from previous GPL-2.0+
+
+v1->v2:
+ - DT
+ -- Addressed Geert's comments and added clocks for CEU to mstp6 clock source
+ -- Specified supported generic video iterfaces properties in dt-bindings and
+    simplified example
+
+ - CEU driver
+ -- Re-worked interrupt handler, interrupt management, reset(*) and capture
+    start operation
+ -- Re-worked querycap/enum_input/enum_frameintervals to fix some
+    v4l2_compliance failures
+ -- Removed soc_camera legacy operations g/s_mbus_format
+ -- Update to new notifier implementation
+ -- Fixed several comments from Hans, Laurent and Sakari
+
+ - Migo-R
+ -- Register clocks and gpios for sensor drivers in Migo-R setup
+ -- Updated sensors (tw9910 and ov772x) drivers headers and drivers to close
+    remarks from Hans and Laurent:
+ --- Removed platform callbacks and handle clocks and gpios from sensor drivers
+ --- Remove g/s_mbus_config operations
+Jacopo Mondi (11):
+  dt-bindings: media: Add Renesas CEU bindings
+  include: media: Add Renesas CEU driver interface
+  media: platform: Add Renesas CEU driver
+  ARM: dts: r7s72100: Add Capture Engine Unit (CEU)
+  media: i2c: Copy ov772x soc_camera sensor driver
+  media: i2c: ov772x: Remove soc_camera dependencies
+  media: i2c: ov772x: Support frame interval handling
+  media: i2c: Copy tw9910 soc_camera sensor driver
+  media: i2c: tw9910: Remove soc_camera dependencies
+  arch: sh: migor: Use new renesas-ceu camera driver
+  media: i2c: ov7670: Fully set mbus frame fmt
+
+ .../devicetree/bindings/media/renesas,ceu.txt      |   81 +
+ arch/arm/boot/dts/r7s72100.dtsi                    |   15 +-
+ arch/sh/boards/mach-migor/setup.c                  |  225 ++-
+ arch/sh/kernel/cpu/sh4a/clock-sh7722.c             |    2 +-
+ drivers/media/i2c/Kconfig                          |   20 +
+ drivers/media/i2c/Makefile                         |    2 +
+ drivers/media/i2c/ov7670.c                         |    4 +
+ drivers/media/i2c/ov772x.c                         | 1488 ++++++++++++++++++
+ drivers/media/i2c/tw9910.c                         | 1039 ++++++++++++
+ drivers/media/platform/Kconfig                     |    9 +
+ drivers/media/platform/Makefile                    |    1 +
+ drivers/media/platform/renesas-ceu.c               | 1661 ++++++++++++++++++++
+ include/media/drv-intf/renesas-ceu.h               |   26 +
+ include/media/i2c/ov772x.h                         |    6 +-
+ include/media/i2c/tw9910.h                         |    9 +
+ 15 files changed, 4457 insertions(+), 131 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/renesas,ceu.txt
+ create mode 100644 drivers/media/i2c/ov772x.c
+ create mode 100644 drivers/media/i2c/tw9910.c
+ create mode 100644 drivers/media/platform/renesas-ceu.c
+ create mode 100644 include/media/drv-intf/renesas-ceu.h
+
+--
+2.7.4
+
