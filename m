@@ -1,69 +1,65 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH v6 2/2] media: V3s: Add support for Allwinner CSI.
-Date: Fri, 26 Jan 2018 09:10:00 +0100
-Message-ID: <20180126081000.hy7g57zp5dv6ug2g@flea.lan>
-References: <1516695531-23349-1-git-send-email-yong.deng@magewell.com>
- <201801260759.RyNhDZz4%fengguang.wu@intel.com>
- <20180126094658.aa70ed3f890464f6051e21e4@magewell.com>
- <20180126110041.f89848325b9ecfb07df387ca@magewell.com>
+From: Chintan Pandya <cpandya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH] of: use hash based search in of_find_node_by_phandle
+Date: Fri, 26 Jan 2018 13:52:15 +0530
+Message-ID: <13846fcb-3aa2-a4fb-1bd8-e624855f105d@codeaurora.org>
+References: <1516875247-19599-1-git-send-email-cpandya@codeaurora.org>
+ <5a7793df-725e-608d-778b-cb81fde0cc64@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="pcpp5ezbpwxtdyok"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180126110041.f89848325b9ecfb07df387ca@magewell.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yong <yong.deng@magewell.com>
-Cc: kbuild test robot <lkp@intel.com>, kbuild-all@01.org, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hans Verkuil <hans.verkuil@cisco.com>, Linus Walleij <linus.walleij@linaro.org>, Randy Dunlap <rdunlap@infradead.org>, Stanimir Varbanov <stanimir.varbanov@linaro.org>, Hugues Fruchet <hugues.fruchet@st.com>, Yannick Fertre <yannick.fertre@st.com>, Philipp Zabel <p.zabel@pengutronix.de>, Arnd Bergmann <arnd@arndb.de>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>, Sakari Ailus <sakari.ailus@linux.in>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5a7793df-725e-608d-778b-cb81fde0cc64-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---pcpp5ezbpwxtdyok
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jan 26, 2018 at 11:00:41AM +0800, Yong wrote:
-> Hi Maxime,
->=20
-> On Fri, 26 Jan 2018 09:46:58 +0800
-> Yong <yong.deng@magewell.com> wrote:
->=20
-> > Hi Maxime,
-> >=20
-> > Do you have any experience in solving this problem?
-> > It seems the PHYS_OFFSET maybe undeclared when the ARCH is not arm.
->=20
-> Got it.
-> Should I add 'depends on ARM' in Kconfig?
+On 1/26/2018 1:24 AM, Frank Rowand wrote:
+> On 01/25/18 02:14, Chintan Pandya wrote:
+>> of_find_node_by_phandle() takes a lot of time finding
+>> right node when your intended device is too right-side
+>> in the fdt. Reason is, we search each device serially
+>> from the fdt, starting from left-most to right-most.
+> Please give me a pointer to the code that is doing
+> this search.
+>
+> -Frank
+You can refer include/linux/of.h
 
-Yes, or even better a depends on MACH_SUNXI :)
+#define for_each_of_allnodes_from(from, dn) \
+         for (dn = __of_find_all_nodes(from); dn; dn = 
+__of_find_all_nodes(dn))
+#define for_each_of_allnodes(dn) for_each_of_allnodes_from(NULL, dn)
 
-Maxime
+where __of_find_all_nodes() does
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+struct device_node *__of_find_all_nodes(struct device_node *prev)
+{
+         struct device_node *np;
+         if (!prev) {
+                 np = of_root;
+         } else if (prev->child) {
+                 np = prev->child;
+         } else {
+                 /* Walk back up looking for a sibling, or the end of 
+the structure */
+                 np = prev;
+                 while (np->parent && !np->sibling)
+                         np = np->parent;
+                 np = np->sibling; /* Might be null at the end of the 
+tree */
+         }
+         return np;
+}
 
---pcpp5ezbpwxtdyok
-Content-Type: application/pgp-signature; name="signature.asc"
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlpq4lcACgkQ0rTAlCFN
-r3QGmRAAhe2KBCEElFXdDNTvfXHIKAFj9SzsVR+pZziHsYVHDEycLIMEwBtclWtP
-YE7rzQUVyZJ0Jq4Z1blR7tSHkuhKeKdR6CbuuZNhA0GRyQSPkbxz4c0K4z8zOzJi
-roFdOLJ9AfZF4jTZ0pEof0AIIxJiMlxRjySilsHVJZ7lMYY7ztjfzKK7vQ64jCmR
-o6aBGZ7xC1/F8GaihZMk4d2Uoil8HCVuN8UoJlNITo5W64krM81KuhPUoj8AiF4P
-DcVIQ0KMVC4sz8PhNFMo+kfJA8DQ2VQpeV4pMc8mJef9vaIigg1rT8ZuY2FCs2IU
-P3Tx02jxR7SZKPbS4heX17LeXyYvVKlBHSX256oo6CKQ3bQGNlZ30E2LnJb5XeCm
-hsVg8F34DSvUpZPwwJbB5Jv/rDRnrQqxtHDF5PoMRDEkMLJoOUmFfBEOh4l6x2w4
-uq0FHKFo2rlGeBCPCZPxWzZXkoiB/kgpzRpDneBTDPkY5Ml7m0ro6XLKkHXdDOrc
-TS7tdRczD/Iu/mNuNPe+km5NhXedje8+CiRSpid1RoTdoh9i7HLqtYWveAeVHwvS
-lNumk5v3F4/q5DAf8wxzNlNeHZAJVZ0oZIGpfeJHKfP0z8r5MMMMGIuNtyHi4JNh
-Er2zgxzFRbTibE9xpbiRUqmcGq12w43CdjsLruUsySx3KjgsHzw=
-=yjb1
------END PGP SIGNATURE-----
-
---pcpp5ezbpwxtdyok--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
