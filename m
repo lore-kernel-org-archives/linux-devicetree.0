@@ -1,63 +1,23 @@
-From: Chintan Pandya <cpandya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH] of: use hash based search in of_find_node_by_phandle
-Date: Fri, 26 Jan 2018 13:52:15 +0530
-Message-ID: <13846fcb-3aa2-a4fb-1bd8-e624855f105d@codeaurora.org>
-References: <1516875247-19599-1-git-send-email-cpandya@codeaurora.org>
- <5a7793df-725e-608d-778b-cb81fde0cc64@gmail.com>
+From: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+Subject: [PATCH 0/3] ARM: dts: imx6ull: fix some incompatibilities between i.MX6UL and i.MX6ULL
+Date: Fri, 26 Jan 2018 09:23:49 +0100
+Message-ID: <1516955032-21167-1-git-send-email-LW@KARO-electronics.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5a7793df-725e-608d-778b-cb81fde0cc64-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "moderated list:ARM/FREESCALE IMX
+        / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+This patchset addresses some differences between i.MX6UL and i.MX6ULL
+which have slipped through the cracks so far.
 
-
-On 1/26/2018 1:24 AM, Frank Rowand wrote:
-> On 01/25/18 02:14, Chintan Pandya wrote:
->> of_find_node_by_phandle() takes a lot of time finding
->> right node when your intended device is too right-side
->> in the fdt. Reason is, we search each device serially
->> from the fdt, starting from left-most to right-most.
-> Please give me a pointer to the code that is doing
-> this search.
->
-> -Frank
-You can refer include/linux/of.h
-
-#define for_each_of_allnodes_from(from, dn) \
-         for (dn = __of_find_all_nodes(from); dn; dn = 
-__of_find_all_nodes(dn))
-#define for_each_of_allnodes(dn) for_each_of_allnodes_from(NULL, dn)
-
-where __of_find_all_nodes() does
-
-struct device_node *__of_find_all_nodes(struct device_node *prev)
-{
-         struct device_node *np;
-         if (!prev) {
-                 np = of_root;
-         } else if (prev->child) {
-                 np = prev->child;
-         } else {
-                 /* Walk back up looking for a sibling, or the end of 
-the structure */
-                 np = prev;
-                 while (np->parent && !np->sibling)
-                         np = np->parent;
-                 np = np->sibling; /* Might be null at the end of the 
-tree */
-         }
-         return np;
-}
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+- UART8 is not on SPBA but on AIPS-3
+- i.MX6ULL has an ESAI interface in the address range of the UART8 on i.MX6UL
+- i.MX6ULL does not have a CAAM unit nor SIM interfaces
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
