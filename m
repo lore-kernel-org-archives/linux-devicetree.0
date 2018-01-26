@@ -1,11 +1,11 @@
 From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH v7 8/9] media: i2c: tw9910: Remove soc_camera dependencies
-Date: Fri, 26 Jan 2018 14:48:44 +0100
-Message-ID: <1516974528-11120-13-git-send-email-jacopo+renesas@jmondi.org>
+Subject: [PATCH v7 09/11] media: i2c: tw9910: Remove soc_camera dependencies
+Date: Fri, 26 Jan 2018 14:48:46 +0100
+Message-ID: <1516974528-11120-15-git-send-email-jacopo+renesas@jmondi.org>
 References: <1516974528-11120-1-git-send-email-jacopo+renesas@jmondi.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 In-Reply-To: <1516974528-11120-1-git-send-email-jacopo+renesas@jmondi.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-renesas-soc-owner@vger.kernel.org
 To: laurent.pinchart@ideasonboard.com, magnus.damm@gmail.com, geert@glider.be, hverkuil@xs4all.nl, mchehab@kernel.org, festevam@gmail.com, sakari.ailus@iki.fi, robh+dt@kernel.org, mark.rutland@arm.com, pombredanne@nexb.com
 Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
@@ -31,7 +31,7 @@ Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
  4 files changed, 120 insertions(+), 61 deletions(-)
 
 diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
-index a61d7f4..804a1bf 100644
+index e71e968..0460613 100644
 --- a/drivers/media/i2c/Kconfig
 +++ b/drivers/media/i2c/Kconfig
 @@ -423,6 +423,15 @@ config VIDEO_TW9906
@@ -51,7 +51,7 @@ index a61d7f4..804a1bf 100644
  	tristate "vpx3220a, vpx3216b & vpx3214c video decoders"
  	depends on VIDEO_V4L2 && I2C
 diff --git a/drivers/media/i2c/Makefile b/drivers/media/i2c/Makefile
-index fb99293..e26544f 100644
+index b0489a1..23c3ac6 100644
 --- a/drivers/media/i2c/Makefile
 +++ b/drivers/media/i2c/Makefile
 @@ -48,6 +48,7 @@ obj-$(CONFIG_VIDEO_TVP7002) += tvp7002.o
