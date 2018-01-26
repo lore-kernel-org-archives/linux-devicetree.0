@@ -1,127 +1,63 @@
-From: "dbasehore ." <dbasehore-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v2 2/5] irqchip/gic-v3-its: add ability to save/restore
- ITS state
-Date: Fri, 26 Jan 2018 13:13:00 -0800
-Message-ID: <CAGAzgsp73UUf_BheR_Qv4W6LVFD+6mXTZps8GemEpC+6yz0HNw@mail.gmail.com>
-References: <20180126073835.16575-1-dbasehore@chromium.org>
- <20180126073835.16575-3-dbasehore@chromium.org> <20180126205954.cikwitw7sgdt2yn3@ban.mtv.corp.google.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH] of: use hash based search in of_find_node_by_phandle
+Date: Fri, 26 Jan 2018 13:27:00 -0800
+Message-ID: <2ac0d70d-074d-5eff-77e9-29d1a246a3ef@gmail.com>
+References: <1516875247-19599-1-git-send-email-cpandya@codeaurora.org>
+ <5a7793df-725e-608d-778b-cb81fde0cc64@gmail.com>
+ <13846fcb-3aa2-a4fb-1bd8-e624855f105d@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180126205954.cikwitw7sgdt2yn3-1WoqFLEneaORBCj4nEdE8WJtCfot02Oa@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Soby Mathew <Soby.Mathew-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linux-pm mailing list <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Wysocki, Rafael J" <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <13846fcb-3aa2-a4fb-1bd8-e624855f105d@codeaurora.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chintan Pandya <cpandya@codeaurora.org>, robh+dt@kernel.org, devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 26, 2018 at 12:59 PM, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
-> One trivial comment:
->
-> On Thu, Jan 25, 2018 at 11:38:32PM -0800, Derek Basehore wrote:
->> Some platforms power off GIC logic in suspend, so we need to
->> save/restore state. The distributor and redistributor registers need
->> to be handled in platform code due to access permissions on those
->> registers, but the ITS registers can be restored in the kernel.
+On 01/26/18 00:22, Chintan Pandya wrote:
+> 
+> 
+> On 1/26/2018 1:24 AM, Frank Rowand wrote:
+>> On 01/25/18 02:14, Chintan Pandya wrote:
+>>> of_find_node_by_phandle() takes a lot of time finding
+>>> right node when your intended device is too right-side
+>>> in the fdt. Reason is, we search each device serially
+>>> from the fdt, starting from left-most to right-most.
+>> Please give me a pointer to the code that is doing
+>> this search.
 >>
->> Signed-off-by: Derek Basehore <dbasehore-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->> ---
->>  drivers/irqchip/irq-gic-v3-its.c | 86 ++++++++++++++++++++++++++++++++++++++++
->>  1 file changed, 86 insertions(+)
->>
->> diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
->> index 06f025fd5726..4727b447610f 100644
->> --- a/drivers/irqchip/irq-gic-v3-its.c
->> +++ b/drivers/irqchip/irq-gic-v3-its.c
->
-> ...
->
->> @@ -3042,6 +3054,75 @@ static void its_enable_quirks(struct its_node *its)
->>       gic_enable_quirks(iidr, its_quirks, its);
->>  }
->>
->> +int its_save_disable(void)
->
-> This (and its_restore_enable()) should be static, now that you're only
-> using them in this file.
+>> -Frank
+> You can refer include/linux/of.h
+> 
+> #define for_each_of_allnodes_from(from, dn) \
+>         for (dn = __of_find_all_nodes(from); dn; dn = __of_find_all_nodes(dn))
+> #define for_each_of_allnodes(dn) for_each_of_allnodes_from(NULL, dn)
+> 
+> where __of_find_all_nodes() does
+> 
+> struct device_node *__of_find_all_nodes(struct device_node *prev)
+> {
+>         struct device_node *np;
+>         if (!prev) {
+>                 np = of_root;
+>         } else if (prev->child) {
+>                 np = prev->child;
+>         } else {
+>                 /* Walk back up looking for a sibling, or the end of the structure */
+>                 np = prev;
+>                 while (np->parent && !np->sibling)
+>                         np = np->parent;
+>                 np = np->sibling; /* Might be null at the end of the tree */
+>         }
+>         return np;
+> }
+> 
 
-Oops. I'll change that and add a pr_err in the its_force_quiescent
-error case in the next patch set.
+Let me restate my question.
 
->
-> Brian
->
->> +{
->> +     struct its_node *its;
->> +     int err = 0;
->> +
->> +     spin_lock(&its_lock);
->> +     list_for_each_entry(its, &its_nodes, entry) {
->> +             if (its->flags & ITS_FLAGS_SAVE_SUSPEND_STATE) {
->> +                     struct its_ctx *ctx = &its->its_ctx;
->> +                     void __iomem *base = its->base;
->> +
->> +                     ctx->ctlr = readl_relaxed(base + GITS_CTLR);
->> +                     err = its_force_quiescent(base);
->> +                     if (err) {
->> +                             writel_relaxed(ctx->ctlr, base + GITS_CTLR);
->> +                             goto err;
->> +                     }
->> +
->> +                     ctx->cbaser = gits_read_cbaser(base + GITS_CBASER);
->> +             }
->> +     }
->> +
->> +err:
->> +     if (err) {
->> +             list_for_each_entry_continue_reverse(its, &its_nodes, entry) {
->> +                     if (its->flags & ITS_FLAGS_SAVE_SUSPEND_STATE) {
->> +                             struct its_ctx *ctx = &its->its_ctx;
->> +                             void __iomem *base = its->base;
->> +
->> +                             writel_relaxed(ctx->ctlr, base + GITS_CTLR);
->> +                     }
->> +             }
->> +     }
->> +
->> +     spin_unlock(&its_lock);
->> +
->> +     return err;
->> +}
->> +
->> +void its_restore_enable(void)
->> +{
->> +     struct its_node *its;
->> +
->> +     spin_lock(&its_lock);
->> +     list_for_each_entry(its, &its_nodes, entry) {
->> +             struct its_ctx *ctx = &its->its_ctx;
->> +             struct its_baser *baser;
->> +             void __iomem *base;
->> +             int i;
->> +
->> +             if (its->flags & ITS_FLAGS_SAVE_SUSPEND_STATE) {
->> +                     base = its->base;
->> +                     gits_write_cbaser(ctx->cbaser, base + GITS_CBASER);
->> +                     /* Restore GITS_BASER from the value cache. */
->> +                     for (i = 0; i < GITS_BASER_NR_REGS; i++) {
->> +                             baser = &its->tables[i];
->> +                             its_write_baser(its, baser, baser->val);
->> +                     }
->> +                     writel_relaxed(ctx->ctlr, base + GITS_CTLR);
->> +             }
->> +     }
->> +     spin_unlock(&its_lock);
->> +}
->> +
->> +static struct syscore_ops its_syscore_ops = {
->> +     .suspend = its_save_disable,
->> +     .resume = its_restore_enable,
->> +};
->> +
->>  static int its_init_domain(struct fwnode_handle *handle, struct its_node *its)
->>  {
->>       struct irq_domain *inner_domain;
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Can you point me to the driver code that is invoking
+the search?
+
+-Frank
