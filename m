@@ -1,49 +1,91 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [RFC 11/37] soc: renesas: rcar-rst: Document generic compatible strings
-Date: Fri, 26 Jan 2018 11:06:53 +0100
-Message-ID: <CAMuHMdUGq-k55RoGLvtG_fbG_aXtENovjKzpkHF5WD0nTon+zA@mail.gmail.com>
-References: <1516903391-30467-1-git-send-email-fabrizio.castro@bp.renesas.com> <1516903391-30467-12-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 1/8] dt-bindings: can: rcar_can: document r8a774[35] can
+ support
+Date: Fri, 26 Jan 2018 11:07:17 +0100
+Message-ID: <8b8be356-e725-0dfe-a81c-dd495d97af88@pengutronix.de>
+References: <1510067449-17017-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1510067449-17017-2-git-send-email-fabrizio.castro@bp.renesas.com>
+ <SG2PR06MB0886FFF48DD9DBE7693EEDBDC0E20@SG2PR06MB0886.apcprd06.prod.outlook.com>
+ <da4afc82-aeb6-05d9-4a41-b2627f736064@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1516903391-30467-12-git-send-email-fabrizio.castro@bp.renesas.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wim Van Sebroeck <wim@iguana.be>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Guenter Roeck <linux@roeck-us.net>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, linux-arm-kernel@lists.infradead.orglinux-clk <l>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+ protocol="application/pgp-signature";
+ boundary="GH2yxKvaNZHfgciUvIYaiCKImHgjAlJjP"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <da4afc82-aeb6-05d9-4a41-b2627f736064-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, "linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 25, 2018 at 7:02 PM, Fabrizio Castro
-<fabrizio.castro@bp.renesas.com> wrote:
-> From now on, devices compatible with the generic compatible strings
-> documented by this commit don't need to modify the corresponding driver
-> anymore.
->
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--GH2yxKvaNZHfgciUvIYaiCKImHgjAlJjP
+Content-Type: multipart/mixed; boundary="y7NX3G3pfh4eygjeTGUUmebJhBiDYRWAg";
+ protected-headers="v1"
+From: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+To: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>,
+ Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>,
+ "linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>,
+ "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>,
+ "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>,
+ "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>,
+ Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>,
+ Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>,
+ Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Message-ID: <8b8be356-e725-0dfe-a81c-dd495d97af88-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 1/8] dt-bindings: can: rcar_can: document r8a774[35] can
+ support
+References: <1510067449-17017-1-git-send-email-fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+ <1510067449-17017-2-git-send-email-fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+ <SG2PR06MB0886FFF48DD9DBE7693EEDBDC0E20-ESzmfEwOt/zNWVFMfLWNqm0DtJ1/0DrXvxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
+ <da4afc82-aeb6-05d9-4a41-b2627f736064-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <da4afc82-aeb6-05d9-4a41-b2627f736064-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-Thanks for your patch!
+--y7NX3G3pfh4eygjeTGUUmebJhBiDYRWAg
+Content-Type: text/plain; charset=utf-8
+Content-Language: de-DE
+Content-Transfer-Encoding: quoted-printable
 
->From commit 362922a1a5345d17 ("reset: Add renesas,rst DT bindings")
+On 01/25/2018 09:53 AM, Marc Kleine-Budde wrote:
+> On 01/24/2018 06:22 PM, Fabrizio Castro wrote:
+>> thank you for Acking the patch, just wondering if this patch has any
+>> chance to end up in v4.16?
+>=20
+> I can take this via the linux-can tree, if no one else takes it.
 
-    As the features provided by the hardware module differ a lot across the
-    various SoC families and members, only SoC-specific compatible values
-    are defined.
+Done - included in the latest pull request.
 
-In fact the only commonalities are the presence of the MODEMR register
-(the mode bits differ), and the Watchdog Timer Reset Control Register.
-All other registers and bits depend on the SoC's CPU core configuration.
+Marc
 
-Hence that's why I did not add generic compatible values.
-So unless you really need them (from this series, it looks like you
-don't?), I wouldn't add them.
+--=20
+Pengutronix e.K.                  | Marc Kleine-Budde           |
+Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
 
-Gr{oetje,eeting}s,
 
-                        Geert
+--y7NX3G3pfh4eygjeTGUUmebJhBiDYRWAg--
 
+--GH2yxKvaNZHfgciUvIYaiCKImHgjAlJjP
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCgAdFiEE4bay/IylYqM/npjQHv7KIOw4HPYFAlpq/dUACgkQHv7KIOw4
+HPYKnQgAoOaCK8795WzFTTSwyvwVo3zvZ8fkrnVCpK26OC/HyJ3O9KHIYTdU3ZIO
+l58Km/422bz82DOmvN695z8xj70N/kvyXjlyWL/QOHrD/9GQ2HozHuVSQhQbqpp+
+S8F5c2Uibs0NplY4vRyvlubLtJo/i9pZqd+9RQ+b4Kr/AyCLVSDi5hIcuANPXY07
+aFy96t2rU4zQrfVzoJveqpj3fQLr8PNoRMLjTQ5LQppJS/Nrt/kB/IUl0zgciZCc
+lxgv3pOheerCFK/nB+4TnkkCPaxPjSlVJyRF4ACYmkEzEvsX57lNuG/4JCf0aGIU
+9vDTu5yjxWAMnNOyhjoTXMWoj2k8+Q==
+=mPm2
+-----END PGP SIGNATURE-----
+
+--GH2yxKvaNZHfgciUvIYaiCKImHgjAlJjP--
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
