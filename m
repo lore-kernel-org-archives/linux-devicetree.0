@@ -1,53 +1,57 @@
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: [PATCH v2 0/8] Add support for PWM input capture on STM32
-Date: Fri, 26 Jan 2018 16:11:31 +0100
-Message-ID: <1516979499-3665-1-git-send-email-fabrice.gasnier@st.com>
+From: Chintan Pandya <cpandya@codeaurora.org>
+Subject: Re: [PATCH v2] of: use hash based search in of_find_node_by_phandle
+Date: Fri, 26 Jan 2018 20:44:22 +0530
+Message-ID: <aa84e40d-5032-1d1d-6146-391ca1e5e528@codeaurora.org>
+References: <1516955496-17236-1-git-send-email-cpandya@codeaurora.org>
+ <f08592cf-5e49-e631-c481-e166b741f25e@prevas.dk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: lee.jones@linaro.org, thierry.reding@gmail.com, robh+dt@kernel.org, alexandre.torgue@st.com, benjamin.gaignard@linaro.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, benjamin.gaignard@st.com, linux-pwm@vger.kernel.org, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, mcoquelin.stm32@gmail.com, fabrice.gasnier@st.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <f08592cf-5e49-e631-c481-e166b741f25e@prevas.dk>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rasmus Villemoes <rasmus.villemoes@prevas.dk>, robh+dt@kernel.org, frowand.list@gmail.com, devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This series adds support for capture to stm32-pwm driver.
-Capture is based on DMAs.
-- First two patches are precursor patches
-- Subsequent two patches add support for requesting DMAs to MFD core
-- Next three patches add support for capture to stm32-pwm driver
-- This has been tested on stm32429i-eval board.
 
----
-Changes in v2:
-- Abstract DMA handling from child driver: move it to MFD core
-- Rework pwm capture routines to adopt this change
-- Comment on optional dma support, beautify DMAs probe
+> I'm probably missing something obvious, but: Aren't phandles in practice
+> small consecutive integers assigned by dtc? If so, why not just have a
+> smallish static array mapping the small phandle values directly to
+> device node, instead of adding a pointer to every struct device_node? Or
+> one could determine the size of the array dynamically (largest seen
+> phandle value, capping at something sensible, e.g. 1024).
+Haven't noticed this earlier !! If following is known or true, we can avoid
+using hash-table and save per device_node hlish_node.
 
-Fabrice Gasnier (8):
-  pwm: stm32: fix, remove unused struct device
-  pwm: stm32: protect common prescaler for all channels
-  dt-bindings: mfd: stm32-timers: add support for dmas
-  mfd: stm32-timers: add support for dmas
-  pwm: stm32: add capture support
-  pwm: stm32: improve capture by tuning counter prescaler
-  pwm: stm32: use input prescaler to improve period capture
-  ARM: dts: stm32: Enable pwm3 input capture on stm32f429i-eval
+     1. How to know max phandle value without traversing tree once? In 
+my case,
+        max is 1263.
+     2. Although, I haven't observed collision but is it like every 
+device_node
+        is associated with unique phandle value ?
+> In either case, one would still need to keep the code doing the
+> whole-tree traversal for handling large phandle values, but I think the
+> above should make lookup O(1) in most cases.
+I would refrain doing this because that will make this API inconsistent 
+in terms
+of time taken by different nodes. I see that people do change their device
+placing in DT and that changes time taken in of_* APIs for them but 
+affecting
+others.
 
- .../devicetree/bindings/mfd/stm32-timers.txt       |  20 ++
- arch/arm/boot/dts/stm32429i-eval.dts               |   3 +
- drivers/mfd/stm32-timers.c                         | 215 +++++++++++++++-
- drivers/pwm/pwm-stm32.c                            | 276 ++++++++++++++++++++-
- include/linux/mfd/stm32-timers.h                   |  39 +++
- 5 files changed, 547 insertions(+), 6 deletions(-)
+> Alternatively, one could just count the number of nodes with a phandle,
+> allocate an array of that many pointers (so the memory use is certainly
+> no more than if adding a pointer to each device_node), and sort it by
+> phandle, so one can do lookup using a binary search.
+>
+> Rasmus
+This is certainly doable if current approach is not welcomed due to
+addition on hlish_node in device_node.
+
+Chintan Pandya
 
 -- 
-1.9.1
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
