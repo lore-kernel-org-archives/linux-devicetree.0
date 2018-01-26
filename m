@@ -1,166 +1,33 @@
-From: Derek Basehore <dbasehore-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v2 2/5] irqchip/gic-v3-its: add ability to save/restore ITS state
-Date: Thu, 25 Jan 2018 23:38:32 -0800
-Message-ID: <20180126073835.16575-3-dbasehore@chromium.org>
-References: <20180126073835.16575-1-dbasehore@chromium.org>
+From: Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>
+Subject: Re: [PATCH v4 4/8] PCI: brcmstb: Add dma-range mapping for inbound
+        traffic
+Date: Fri, 26 Jan 2018 08:53:43 +0100
+Message-ID: <20180126075343.GB2356@lst.de>
+References: <1516058925-46522-1-git-send-email-jim2101024@gmail.com> <1516058925-46522-5-git-send-email-jim2101024@gmail.com> <CAL_JsqKpWNJXNpKS5qC99N0+H_P37DcRE-rN9HFwT5tVmRFCNw@mail.gmail.com> <20180118073123.GA15766@lst.de> <EDAEFB0F-BB7C-444A-B282-F178F5ADFCBF@gmail.com> <20180118152331.GA24461@lst.de> <d62226a2-a92c-cdcb-4a9b-e69ab677bc60@broadcom.com> <20180123132033.GA21438@lst.de> <f746f9d5-b12d-9ffc-83e3-3851b4de6e52@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180126073835.16575-1-dbasehore-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <f746f9d5-b12d-9ffc-83e3-3851b4de6e52-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Soby.Mathew-5wv7dgnIgG8@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, Derek Basehore <dbasehore-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jim Quinlan <jim2101024-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-MIPS <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>b
 List-Id: devicetree@vger.kernel.org
 
-Some platforms power off GIC logic in suspend, so we need to
-save/restore state. The distributor and redistributor registers need
-to be handled in platform code due to access permissions on those
-registers, but the ITS registers can be restored in the kernel.
+On Wed, Jan 24, 2018 at 12:04:58PM -0800, Florian Fainelli wrote:
+> This looks nicer than the current shape, but this still requires to
+> register a PCI fixup to override phys_to_dma() and dma_to_phys(), and it
+> would appear that you have dodged my question about how this is supposed
+> to fit with an entirely modular PCIe root complex driver? Are you
+> suggesting that we split the module into a built-in part and a modular part?
 
-Signed-off-by: Derek Basehore <dbasehore-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
----
- drivers/irqchip/irq-gic-v3-its.c | 86 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 86 insertions(+)
+I don't think entirely modular PCI root bridges should be a focal point
+for the design.  If we happen to support them by other design choices:
+fine, but they should not be a priority.
 
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index 06f025fd5726..4727b447610f 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -33,6 +33,7 @@
- #include <linux/of_platform.h>
- #include <linux/percpu.h>
- #include <linux/slab.h>
-+#include <linux/syscore_ops.h>
- 
- #include <linux/irqchip.h>
- #include <linux/irqchip/arm-gic-v3.h>
-@@ -46,6 +47,7 @@
- #define ITS_FLAGS_CMDQ_NEEDS_FLUSHING		(1ULL << 0)
- #define ITS_FLAGS_WORKAROUND_CAVIUM_22375	(1ULL << 1)
- #define ITS_FLAGS_WORKAROUND_CAVIUM_23144	(1ULL << 2)
-+#define ITS_FLAGS_SAVE_SUSPEND_STATE		(1ULL << 3)
- 
- #define RDIST_FLAGS_PROPBASE_NEEDS_FLUSHING	(1 << 0)
- 
-@@ -83,6 +85,15 @@ struct its_baser {
- 	u32		psz;
- };
- 
-+/*
-+ * Saved ITS state - this is where saved state for the ITS is stored
-+ * when it's disabled during system suspend.
-+ */
-+struct its_ctx {
-+	u64			cbaser;
-+	u32			ctlr;
-+};
-+
- struct its_device;
- 
- /*
-@@ -101,6 +112,7 @@ struct its_node {
- 	struct its_collection	*collections;
- 	struct fwnode_handle	*fwnode_handle;
- 	u64			(*get_msi_base)(struct its_device *its_dev);
-+	struct its_ctx		its_ctx;
- 	struct list_head	its_device_list;
- 	u64			flags;
- 	unsigned long		list_nr;
-@@ -3042,6 +3054,75 @@ static void its_enable_quirks(struct its_node *its)
- 	gic_enable_quirks(iidr, its_quirks, its);
- }
- 
-+int its_save_disable(void)
-+{
-+	struct its_node *its;
-+	int err = 0;
-+
-+	spin_lock(&its_lock);
-+	list_for_each_entry(its, &its_nodes, entry) {
-+		if (its->flags & ITS_FLAGS_SAVE_SUSPEND_STATE) {
-+			struct its_ctx *ctx = &its->its_ctx;
-+			void __iomem *base = its->base;
-+
-+			ctx->ctlr = readl_relaxed(base + GITS_CTLR);
-+			err = its_force_quiescent(base);
-+			if (err) {
-+				writel_relaxed(ctx->ctlr, base + GITS_CTLR);
-+				goto err;
-+			}
-+
-+			ctx->cbaser = gits_read_cbaser(base + GITS_CBASER);
-+		}
-+	}
-+
-+err:
-+	if (err) {
-+		list_for_each_entry_continue_reverse(its, &its_nodes, entry) {
-+			if (its->flags & ITS_FLAGS_SAVE_SUSPEND_STATE) {
-+				struct its_ctx *ctx = &its->its_ctx;
-+				void __iomem *base = its->base;
-+
-+				writel_relaxed(ctx->ctlr, base + GITS_CTLR);
-+			}
-+		}
-+	}
-+
-+	spin_unlock(&its_lock);
-+
-+	return err;
-+}
-+
-+void its_restore_enable(void)
-+{
-+	struct its_node *its;
-+
-+	spin_lock(&its_lock);
-+	list_for_each_entry(its, &its_nodes, entry) {
-+		struct its_ctx *ctx = &its->its_ctx;
-+		struct its_baser *baser;
-+		void __iomem *base;
-+		int i;
-+
-+		if (its->flags & ITS_FLAGS_SAVE_SUSPEND_STATE) {
-+			base = its->base;
-+			gits_write_cbaser(ctx->cbaser, base + GITS_CBASER);
-+			/* Restore GITS_BASER from the value cache. */
-+			for (i = 0; i < GITS_BASER_NR_REGS; i++) {
-+				baser = &its->tables[i];
-+				its_write_baser(its, baser, baser->val);
-+			}
-+			writel_relaxed(ctx->ctlr, base + GITS_CTLR);
-+		}
-+	}
-+	spin_unlock(&its_lock);
-+}
-+
-+static struct syscore_ops its_syscore_ops = {
-+	.suspend = its_save_disable,
-+	.resume = its_restore_enable,
-+};
-+
- static int its_init_domain(struct fwnode_handle *handle, struct its_node *its)
- {
- 	struct irq_domain *inner_domain;
-@@ -3261,6 +3342,9 @@ static int __init its_probe_one(struct resource *res,
- 		ctlr |= GITS_CTLR_ImDe;
- 	writel_relaxed(ctlr, its->base + GITS_CTLR);
- 
-+	if (fwnode_property_present(handle, "reset-on-suspend"))
-+		its->flags |= ITS_FLAGS_SAVE_SUSPEND_STATE;
-+
- 	err = its_init_domain(handle, its);
- 	if (err)
- 		goto out_free_tables;
-@@ -3515,5 +3599,7 @@ int __init its_init(struct fwnode_handle *handle, struct rdists *rdists,
- 		}
- 	}
- 
-+	register_syscore_ops(&its_syscore_ops);
-+
- 	return 0;
- }
--- 
-2.16.0.rc1.238.g530d649a79-goog
-
+That being said if we have core dma mapping or PCIe code that has
+a list of offsets and the root complex only populates them it should
+work just fine.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
