@@ -1,56 +1,68 @@
-From: Jim Quinlan <jim2101024@gmail.com>
-Subject: Re: [PATCH v4 4/8] PCI: brcmstb: Add dma-range mapping for inbound traffic
-Date: Fri, 26 Jan 2018 12:46:44 -0500
-Message-ID: <CANCKTBszKRp7gYKE=S3fA0=MoOVFFkO6PgmR476t3HAJ9US2gg@mail.gmail.com>
-References: <1516058925-46522-1-git-send-email-jim2101024@gmail.com>
- <1516058925-46522-5-git-send-email-jim2101024@gmail.com> <CAL_JsqKpWNJXNpKS5qC99N0+H_P37DcRE-rN9HFwT5tVmRFCNw@mail.gmail.com>
- <20180118073123.GA15766@lst.de> <EDAEFB0F-BB7C-444A-B282-F178F5ADFCBF@gmail.com>
- <20180118152331.GA24461@lst.de> <d62226a2-a92c-cdcb-4a9b-e69ab677bc60@broadcom.com>
- <20180123132033.GA21438@lst.de> <f746f9d5-b12d-9ffc-83e3-3851b4de6e52@gmail.com>
- <20180126075343.GB2356@lst.de>
+From: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [linux-sunxi] [PATCH 13/16] arm: dts: sun8i: h3: add thermal zone
+ to H3
+Date: Fri, 26 Jan 2018 18:48:39 +0100
+Message-ID: <18116ff5-e919-a224-8d7d-2add836c1047@gmail.com>
+References: <20180126151941.12183-1-embed3d@gmail.com>
+ <20180126151941.12183-14-embed3d@gmail.com>
+ <4cfb1faf-a712-c882-1ef1-55845c1bb00e@sholland.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180126075343.GB2356@lst.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Christoph Hellwig <hch@lst.de>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Brian Norris <computersforpeace@gmail.com>, Russell King <rmk+kernel@armlinux.org.uk>, Robin Murphy <robin.murphy@arm.com>, Jonas Gorski <jonas.gorski@gmail.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-MIPS <linux-mips@linux-mips.org>, linux-pci <linux-pci@vger.kernel.org>, Kevin Cernekee <cernekee@gmail.com>, Ralf Baechle <ralf@linux-mips.org>, bcm-kern
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <4cfb1faf-a712-c882-1ef1-55845c1bb00e-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, rask-SivP7zSAdNDZaaYASwVUlg@public.gmane.org, clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sean-hENCXIMQXOg@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, icenowy-h8G6r0blFSE@public.gmane.org, edu.molinas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, singhalsimran0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 26, 2018 at 2:53 AM, Christoph Hellwig <hch@lst.de> wrote:
-> On Wed, Jan 24, 2018 at 12:04:58PM -0800, Florian Fainelli wrote:
->> This looks nicer than the current shape, but this still requires to
->> register a PCI fixup to override phys_to_dma() and dma_to_phys(), and it
->> would appear that you have dodged my question about how this is supposed
->> to fit with an entirely modular PCIe root complex driver? Are you
->> suggesting that we split the module into a built-in part and a modular part?
->
-> I don't think entirely modular PCI root bridges should be a focal point
-> for the design.  If we happen to support them by other design choices:
-> fine, but they should not be a priority.
 
-I disagree.  If there is one common thing our customers request  it is
-the ability to remove (or control the insmod of after boot)  the pcie
-RC driver.  I didn't add this in as a "nice-to-have".
 
->
-> That being said if we have core dma mapping or PCIe code that has
-> a list of offsets and the root complex only populates them it should
-> work just fine.
+On 26.01.2018 17:26, Samuel Holland wrote:
+> On 01/26/18 09:19, Philipp Rossak wrote:
+>> This patch adds the thermal zones to the H3. We have only one sensor and
+>> that is placed in the cpu.
+>>
+>> Signed-off-by: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>>   arch/arm/boot/dts/sun8i-h3.dtsi | 9 +++++++++
+>>   1 file changed, 9 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
+>> index fbb007e5798e..3f83f6a27c74 100644
+>> --- a/arch/arm/boot/dts/sun8i-h3.dtsi
+>> +++ b/arch/arm/boot/dts/sun8i-h3.dtsi
+>> @@ -72,6 +72,15 @@
+>>   		};
+>>   	};
+>>   
+>> +	thermal-zones {
+>> +		cpu-thermal {
+>> +			/* milliseconds */
+>> +			polling-delay-passive = <250>;
+>> +			polling-delay = <1000>;
+>> +			thermal-sensors = <&ths 0>;
+> 
+> If #thermal-sensor-cells = <0>, shouldn't this just be <&ths> ?
+I think both works, but I my intention was to have an accurate 
+description in DT.
+I thought that that is important in DT.
 
-I'm looking at arch/arm/include/asm/dma-mapping.h.  In addition to
-overriding dma_to_phsy() and phys_to_dma(), it looks like I may have
-to define __arch_pfn_to_dma(), __arch_dma_to_pfn(),
-__arch_dma_to_virt(), __arch_virt_to_dma().  Do  you agree or is this
-not necessary?  If it is, this seems more intrusive than our
-pcie-brcmstb-dma.c solution which  doesn't require tentacles into
-major include files and Kconfigs.
-
-Another issue is that our function wrappers -- depending upon whether
-we are dealing with a pci device or not -- will have to possibly call
-the actual ARM and ARM64 definitions of these functions, which have
-been of course #ifdef'd out.  This means that our code must contain
-identical copies of these functions' code and that the code must
-somehow be kept in sync.  Do you see a solution to this?
-
-Jim
+>> +		};
+>> +	};
+>> +
+>>   	timer {
+>>   		compatible = "arm,armv7-timer";
+>>   		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+>>
+> 
+> Thanks,
+> Samuel
+> 
+Regards,
+Philipp
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
