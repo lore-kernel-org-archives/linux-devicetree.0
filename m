@@ -1,18 +1,18 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Applied "regulator: empty the old suspend functions" to the regulator tree
-Date: Fri, 26 Jan 2018 15:26:01 +0000
-Message-ID: <E1ef5tB-0006cf-4u@debutante>
-References: <1513837506-26543-5-git-send-email-zhang.chunyan@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1513837506-26543-5-git-send-email-zhang.chunyan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chunyan Zhang <zhang.chunyan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chunyan Zhang <zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "regulator: leave one item to record whether regulator is enabled" to the regulator tree
+Date: Fri, 26 Jan 2018 15:26:04 +0000
+Message-ID: <E1ef5tE-0006dc-Qf@debutante>
+References: <1515752305-15907-4-git-send-email-zhang.chunyan@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1515752305-15907-4-git-send-email-zhang.chunyan@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chunyan Zhang <zhang.chunyan@linaro.org>
+Cc: Mark Brown <broonie@kernel.org>Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Chunyan Zhang <zhang.lyra@gmail.com>linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 The patch
 
-   regulator: empty the old suspend functions
+   regulator: leave one item to record whether regulator is enabled
 
 has been applied to the regulator tree at
 
@@ -37,141 +37,120 @@ to this mail.
 Thanks,
 Mark
 
->From aa27bbc6c6c60227c096d515f55ffe6cdfef7d2b Mon Sep 17 00:00:00 2001
-From: Chunyan Zhang <zhang.chunyan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Date: Fri, 26 Jan 2018 21:08:46 +0800
-Subject: [PATCH] regulator: empty the old suspend functions
+>From 72069f9957a11896e79e95c8b55ec815e97c2187 Mon Sep 17 00:00:00 2001
+From: Chunyan Zhang <zhang.chunyan@linaro.org>
+Date: Fri, 26 Jan 2018 21:08:45 +0800
+Subject: [PATCH] regulator: leave one item to record whether regulator is
+ enabled
 
-Regualtor suspend/resume functions should only be called by PM suspend
-core via registering dev_pm_ops, and regulator devices should implement
-the callback functions.  Thus, any regulator consumer shouldn't call
-the regulator suspend/resume functions directly.
+The items "disabled" and "enabled" are a little redundant, since only one
+of them would be set to record if the regulator device should keep on
+or be switched to off in suspend states.
 
-In order to avoid compile errors, two empty functions with the same name
-still be left for the time being.
+So in this patch, the "disabled" was removed, only leave the "enabled":
+  - enabled == 1 for regulator-on-in-suspend
+  - enabled == 0 for regulator-off-in-suspend
+  - enabled == -1 means do nothing when entering suspend mode.
 
-Signed-off-by: Chunyan Zhang <zhang.chunyan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Signed-off-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Chunyan Zhang <zhang.chunyan@linaro.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/core.c          | 74 ---------------------------------------
- include/linux/regulator/machine.h |  5 ++-
- 2 files changed, 2 insertions(+), 77 deletions(-)
+ drivers/regulator/core.c          | 14 ++++++--------
+ drivers/regulator/of_regulator.c  |  6 ++++--
+ include/linux/regulator/machine.h | 19 +++++++++++++++----
+ 3 files changed, 25 insertions(+), 14 deletions(-)
 
 diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
-index 5ea80e94eb69..080c2334edc5 100644
+index 97bc9f7adf2f..5ea80e94eb69 100644
 --- a/drivers/regulator/core.c
 +++ b/drivers/regulator/core.c
-@@ -4179,80 +4179,6 @@ void regulator_unregister(struct regulator_dev *rdev)
- }
- EXPORT_SYMBOL_GPL(regulator_unregister);
+@@ -742,21 +742,19 @@ static int suspend_set_state(struct regulator_dev *rdev,
+ 	 * only warn if the driver implements set_suspend_voltage or
+ 	 * set_suspend_mode callback.
+ 	 */
+-	if (!rstate->enabled && !rstate->disabled) {
++	if (rstate->enabled != ENABLE_IN_SUSPEND &&
++	    rstate->enabled != DISABLE_IN_SUSPEND) {
+ 		if (rdev->desc->ops->set_suspend_voltage ||
+ 		    rdev->desc->ops->set_suspend_mode)
+ 			rdev_warn(rdev, "No configuration\n");
+ 		return 0;
+ 	}
  
--static int _regulator_suspend_prepare(struct device *dev, void *data)
--{
--	struct regulator_dev *rdev = dev_to_rdev(dev);
--	const suspend_state_t *state = data;
--	int ret;
--
--	mutex_lock(&rdev->mutex);
--	ret = suspend_prepare(rdev, *state);
--	mutex_unlock(&rdev->mutex);
--
--	return ret;
--}
--
--/**
-- * regulator_suspend_prepare - prepare regulators for system wide suspend
-- * @state: system suspend state
-- *
-- * Configure each regulator with it's suspend operating parameters for state.
-- * This will usually be called by machine suspend code prior to supending.
-- */
--int regulator_suspend_prepare(suspend_state_t state)
--{
--	/* ON is handled by regulator active state */
--	if (state == PM_SUSPEND_ON)
+-	if (rstate->enabled && rstate->disabled) {
+-		rdev_err(rdev, "invalid configuration\n");
 -		return -EINVAL;
--
--	return class_for_each_device(&regulator_class, NULL, &state,
--				     _regulator_suspend_prepare);
--}
--EXPORT_SYMBOL_GPL(regulator_suspend_prepare);
--
--static int _regulator_suspend_finish(struct device *dev, void *data)
--{
--	struct regulator_dev *rdev = dev_to_rdev(dev);
--	int ret;
--
--	mutex_lock(&rdev->mutex);
--	if (rdev->use_count > 0  || rdev->constraints->always_on) {
--		if (!_regulator_is_enabled(rdev)) {
--			ret = _regulator_do_enable(rdev);
--			if (ret)
--				dev_err(dev,
--					"Failed to resume regulator %d\n",
--					ret);
--		}
--	} else {
--		if (!have_full_constraints())
--			goto unlock;
--		if (!_regulator_is_enabled(rdev))
--			goto unlock;
--
--		ret = _regulator_do_disable(rdev);
--		if (ret)
--			dev_err(dev, "Failed to suspend regulator %d\n", ret);
 -	}
--unlock:
--	mutex_unlock(&rdev->mutex);
 -
--	/* Keep processing regulators in spite of any errors */
--	return 0;
--}
--
--/**
-- * regulator_suspend_finish - resume regulators from system wide suspend
-- *
-- * Turn on regulators that might be turned off by regulator_suspend_prepare
-- * and that should be turned on according to the regulators properties.
-- */
--int regulator_suspend_finish(void)
--{
--	return class_for_each_device(&regulator_class, NULL, NULL,
--				     _regulator_suspend_finish);
--}
--EXPORT_SYMBOL_GPL(regulator_suspend_finish);
+-	if (rstate->enabled && rdev->desc->ops->set_suspend_enable)
++	if (rstate->enabled == ENABLE_IN_SUSPEND &&
++		rdev->desc->ops->set_suspend_enable)
+ 		ret = rdev->desc->ops->set_suspend_enable(rdev);
+-	else if (rstate->disabled && rdev->desc->ops->set_suspend_disable)
++	else if (rstate->enabled == DISABLE_IN_SUSPEND &&
++		rdev->desc->ops->set_suspend_disable)
+ 		ret = rdev->desc->ops->set_suspend_disable(rdev);
+ 	else /* OK if set_suspend_enable or set_suspend_disable is NULL */
+ 		ret = 0;
+diff --git a/drivers/regulator/of_regulator.c b/drivers/regulator/of_regulator.c
+index 14637a01ba2d..41dad42b18f0 100644
+--- a/drivers/regulator/of_regulator.c
++++ b/drivers/regulator/of_regulator.c
+@@ -177,10 +177,12 @@ static void of_get_regulation_constraints(struct device_node *np,
  
- /**
-  * regulator_has_full_constraints - the system has fully specified constraints
+ 		if (of_property_read_bool(suspend_np,
+ 					"regulator-on-in-suspend"))
+-			suspend_state->enabled = true;
++			suspend_state->enabled = ENABLE_IN_SUSPEND;
+ 		else if (of_property_read_bool(suspend_np,
+ 					"regulator-off-in-suspend"))
+-			suspend_state->disabled = true;
++			suspend_state->enabled = DISABLE_IN_SUSPEND;
++		else
++			suspend_state->enabled = DO_NOTHING_IN_SUSPEND;
+ 
+ 		if (!of_property_read_u32(suspend_np,
+ 					"regulator-suspend-microvolt", &pval))
 diff --git a/include/linux/regulator/machine.h b/include/linux/regulator/machine.h
-index ce89c5548c89..c4a56df8931b 100644
+index 9cd4fef37203..ce89c5548c89 100644
 --- a/include/linux/regulator/machine.h
 +++ b/include/linux/regulator/machine.h
-@@ -236,12 +236,12 @@ struct regulator_init_data {
+@@ -42,6 +42,16 @@ struct regulator;
+ #define REGULATOR_CHANGE_DRMS		0x10
+ #define REGULATOR_CHANGE_BYPASS		0x20
  
- #ifdef CONFIG_REGULATOR
- void regulator_has_full_constraints(void);
--int regulator_suspend_prepare(suspend_state_t state);
--int regulator_suspend_finish(void);
- #else
- static inline void regulator_has_full_constraints(void)
- {
- }
-+#endif
++/*
++ * operations in suspend mode
++ * DO_NOTHING_IN_SUSPEND - the default value
++ * DISABLE_IN_SUSPEND	- turn off regulator in suspend states
++ * ENABLE_IN_SUSPEND	- keep regulator on in suspend states
++ */
++#define DO_NOTHING_IN_SUSPEND	(-1)
++#define DISABLE_IN_SUSPEND	0
++#define ENABLE_IN_SUSPEND	1
 +
- static inline int regulator_suspend_prepare(suspend_state_t state)
- {
- 	return 0;
-@@ -250,6 +250,5 @@ static inline int regulator_suspend_finish(void)
- {
- 	return 0;
- }
--#endif
+ /* Regulator active discharge flags */
+ enum regulator_active_discharge {
+ 	REGULATOR_ACTIVE_DISCHARGE_DEFAULT,
+@@ -58,14 +68,15 @@ enum regulator_active_discharge {
+  *
+  * @uV: Operating voltage during suspend.
+  * @mode: Operating mode during suspend.
+- * @enabled: Enabled during suspend.
+- * @disabled: Disabled during suspend.
++ * @enabled: operations during suspend.
++ *	     - DO_NOTHING_IN_SUSPEND
++ *	     - DISABLE_IN_SUSPEND
++ *	     - ENABLE_IN_SUSPEND
+  */
+ struct regulator_state {
+ 	int uV;	/* suspend voltage */
+ 	unsigned int mode; /* suspend regulator operating mode */
+-	int enabled; /* is regulator enabled in this suspend state */
+-	int disabled; /* is the regulator disabled in this suspend state */
++	int enabled;
+ };
  
- #endif
+ /**
 -- 
 2.15.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
