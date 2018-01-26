@@ -1,574 +1,73 @@
-From: Dong Aisheng <dongas86@gmail.com>
-Subject: Re: [PATCH BUGFIX] ARM: dts: imx6ull: fix the imx6ull-14x14-evk configuration
-Date: Fri, 26 Jan 2018 16:54:19 +0800
-Message-ID: <CAA+hA=RjkOWcQfjWe5iqbAsBXmQXrOqc66j++rB1RR-ZgEDsjQ@mail.gmail.com>
-References: <1516955159-21626-1-git-send-email-LW@KARO-electronics.de>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [RFC] devicetree: new FDT format version
+Date: Fri, 26 Jan 2018 09:56:21 +0100
+Message-ID: <CAMuHMdV0jdj90uzqMx_wtvz=-KaagJG2_UQTm1DW3gzt6cNG6A@mail.gmail.com>
+References: <b96829f9-2e8b-fdc5-5090-58591e2260cf@gmail.com>
+ <CAL_JsqJR2y7bMw_-9TBAGWZ_kf7_sZo5qvqvRowJ8jiy=4G0Bg@mail.gmail.com>
+ <20180123124232.GA14832@umbus> <20328477-e511-e875-7dc4-253640f2219e@gmail.com>
+ <CAL_Jsq+fvFrGhqO0zbEUE_i23FkU=G4Z1-e0vnXHi4KbS2oK0A@mail.gmail.com>
+ <e1bec77d-4dac-200b-34be-23573bf738f0@gmail.com> <e986435b-481b-2629-7600-10d9e21ac58e@gmail.com>
+ <20180125122912.GB2099@umbus>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1516955159-21626-1-git-send-email-LW@KARO-electronics.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Lothar_Wa=C3=9Fmann?= <LW@karo-electronics.de>
-Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
+Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180125122912.GB2099@umbus>
+Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, "Pantelis Antomarek.vasut-Re5JQEeQqe/2sr8fMPgRzw@public.gmane.org" <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, =?UTF-8?B?TWFyZWsgVmHFoXV0?= <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Kyle Evans <kevans-h+KGxgPPiopAfugRpC6u6w@public.gmane.org>, Alan Tull <atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lothar,
+On Thu, Jan 25, 2018 at 1:29 PM, David Gibson
+<david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
+> On Wed, Jan 24, 2018 at 04:22:15PM -0800, Frank Rowand wrote:
+>> On 01/24/18 13:16, Frank Rowand wrote:
+>> > What you say makes sense.  So I'll reverse myself and say that for
+>> > Linux, we should update the FDT read code to scan all chained
+>> > overlay FDT(s) as well as the base FDT.
+>>
+>> < snip >
+>>
+>> What I wrote was somewhat ambiguous.  What I meant by "FDT read
+>> code" was functions that check for existence of nodes in the
+>> FDT or read property values from the FDT.
+>
+> Oh.. not just FDT unflattening code.
+>
+> The trouble with this is that scanning for a specific node or property
+> in a set of chained overlays is highly nontrivial.  Even if you set
+> aside the arguably self-imposed design constraints in libfdt, you
+> can't just do the same lookup in each fragment: along the way you need
+> to resolve the path at which each fragment applies.  That in itself is
+> non-trivial.  If you have overlays applying on top of other overlays,
+> that could involve recursive lookups of things from previous overlays.
+> It's spectacularly complicated and we have to do it on *every single*
+> read operation.
+>
+> Either fully applying the overlay in flattened form, or (even
 
-On Fri, Jan 26, 2018 at 4:25 PM, Lothar Wa=C3=9Fmann <LW@karo-electronics.d=
-e> wrote:
-> imx6ull-14x14-evk.dts currently includes the imx6ul.dtsi file for an
-> i.MX6ULL SoC which is plain wrong.
->
-> Rename the current imx6ul-14x14-evk.dts to .dtsi and include it from
-> imx6ul-14x14-evk.dts and imx6ull-14x14-evk.dts, so that both can
-> include the appropriate SoC specific (imx6ul.dtsi/imx6ull.dtsi) file.
->
-> Signed-off-by: Lothar Wa=C3=9Fmann <LW@KARO-electronics.de>
-> ---
->  arch/arm/boot/dts/imx6ul-14x14-evk.dts  | 480 +-------------------------=
-------
->  arch/arm/boot/dts/imx6ull-14x14-evk.dts |   5 +-
->  2 files changed, 5 insertions(+), 480 deletions(-)
->
+Applying the overlays in flattened form sounds like a good idea to me.
+It still adds complexity, but handling multiple overlays can be done by a
+simple iteration, not recursion.
+The end result will always consume less memory, and will thus fit in the
+original block of memory allocated for base FDT and overlay FDTs, unless
+the base FDT and overlay FDTs are in FLASH (this assumes chaining really
+means appending, not using an external chaining mechanism).
 
-I'm okay with this idea.
-But where is imx6ul-14x14-evk.dtsi file?
+> temporarily) unflattening the tree are better solutions.
 
-BTW, would you help also CC all IMX related patches to linux-imx@nxp.com
-maillist in the future?
-Most NXP/FSL internal driver onwers are also in this list that can help rev=
-iew.
+Temporary unflattening sounds like a waste to me: it must be redone again
+later anyway. Applying the FDT overlays early on will make that later step
+simpler (no more overlays to handle).
+So if you need information from an FDT, you can help later steps by
+applying the FDT overlays right away.
 
-Regards
-Dong Aisheng
+Gr{oetje,eeting}s,
 
-> diff --git a/arch/arm/boot/dts/imx6ul-14x14-evk.dts b/arch/arm/boot/dts/i=
-mx6ul-14x14-evk.dts
-> index 18fdb08..6d720b2 100644
-> --- a/arch/arm/boot/dts/imx6ul-14x14-evk.dts
-> +++ b/arch/arm/boot/dts/imx6ul-14x14-evk.dts
-> @@ -9,487 +9,9 @@
->  /dts-v1/;
->
->  #include "imx6ul.dtsi"
-> +#include "imx6ul-14x14-evk.dtsi"
->
->  / {
->         model =3D "Freescale i.MX6 UltraLite 14x14 EVK Board";
->         compatible =3D "fsl,imx6ul-14x14-evk", "fsl,imx6ul";
-> -
-> -       chosen {
-> -               stdout-path =3D &uart1;
-> -       };
-> -
-> -       memory {
-> -               reg =3D <0x80000000 0x20000000>;
-> -       };
-> -
-> -       backlight_display: backlight-display {
-> -               compatible =3D "pwm-backlight";
-> -               pwms =3D <&pwm1 0 5000000>;
-> -               brightness-levels =3D <0 4 8 16 32 64 128 255>;
-> -               default-brightness-level =3D <6>;
-> -               status =3D "okay";
-> -       };
-> -
-> -
-> -       reg_sd1_vmmc: regulator-sd1-vmmc {
-> -               compatible =3D "regulator-fixed";
-> -               regulator-name =3D "VSD_3V3";
-> -               regulator-min-microvolt =3D <3300000>;
-> -               regulator-max-microvolt =3D <3300000>;
-> -               gpio =3D <&gpio1 9 GPIO_ACTIVE_HIGH>;
-> -               enable-active-high;
-> -       };
-> -
-> -       sound {
-> -               compatible =3D "simple-audio-card";
-> -               simple-audio-card,name =3D "mx6ul-wm8960";
-> -               simple-audio-card,format =3D "i2s";
-> -               simple-audio-card,bitclock-master =3D <&dailink_master>;
-> -               simple-audio-card,frame-master =3D <&dailink_master>;
-> -               simple-audio-card,widgets =3D
-> -                       "Microphone", "Mic Jack",
-> -                       "Line", "Line In",
-> -                       "Line", "Line Out",
-> -                       "Speaker", "Speaker",
-> -                       "Headphone", "Headphone Jack";
-> -               simple-audio-card,routing =3D
-> -                       "Headphone Jack", "HP_L",
-> -                       "Headphone Jack", "HP_R",
-> -                       "Speaker", "SPK_LP",
-> -                       "Speaker", "SPK_LN",
-> -                       "Speaker", "SPK_RP",
-> -                       "Speaker", "SPK_RN",
-> -                       "LINPUT1", "Mic Jack",
-> -                       "LINPUT3", "Mic Jack",
-> -                       "RINPUT1", "Mic Jack",
-> -                       "RINPUT2", "Mic Jack";
-> -
-> -               simple-audio-card,cpu {
-> -                       sound-dai =3D <&sai2>;
-> -               };
-> -
-> -               dailink_master: simple-audio-card,codec {
-> -                       sound-dai =3D <&codec>;
-> -                       clocks =3D <&clks IMX6UL_CLK_SAI2>;
-> -               };
-> -       };
-> -
-> -       panel {
-> -               compatible =3D "innolux,at043tn24";
-> -               backlight =3D <&backlight_display>;
-> -
-> -               port {
-> -                       panel_in: endpoint {
-> -                               remote-endpoint =3D <&display_out>;
-> -                       };
-> -               };
-> -       };
-> -};
-> -
-> -&clks {
-> -       assigned-clocks =3D <&clks IMX6UL_CLK_PLL4_AUDIO_DIV>;
-> -       assigned-clock-rates =3D <786432000>;
-> -};
-> -
-> -&i2c2 {
-> -       clock_frequency =3D <100000>;
-> -       pinctrl-names =3D "default";
-> -       pinctrl-0 =3D <&pinctrl_i2c2>;
-> -       status =3D "okay";
-> -
-> -       codec: wm8960@1a {
-> -               #sound-dai-cells =3D <0>;
-> -               compatible =3D "wlf,wm8960";
-> -               reg =3D <0x1a>;
-> -               wlf,shared-lrclk;
-> -       };
-> -};
-> -
-> -&fec1 {
-> -       pinctrl-names =3D "default";
-> -       pinctrl-0 =3D <&pinctrl_enet1>;
-> -       phy-mode =3D "rmii";
-> -       phy-handle =3D <&ethphy0>;
-> -       status =3D "okay";
-> -};
-> -
-> -&fec2 {
-> -       pinctrl-names =3D "default";
-> -       pinctrl-0 =3D <&pinctrl_enet2>;
-> -       phy-mode =3D "rmii";
-> -       phy-handle =3D <&ethphy1>;
-> -       status =3D "okay";
-> -
-> -       mdio {
-> -               #address-cells =3D <1>;
-> -               #size-cells =3D <0>;
-> -
-> -               ethphy0: ethernet-phy@2 {
-> -                       reg =3D <2>;
-> -                       micrel,led-mode =3D <1>;
-> -                       clocks =3D <&clks IMX6UL_CLK_ENET_REF>;
-> -                       clock-names =3D "rmii-ref";
-> -               };
-> -
-> -               ethphy1: ethernet-phy@1 {
-> -                       reg =3D <1>;
-> -                       micrel,led-mode =3D <1>;
-> -                       clocks =3D <&clks IMX6UL_CLK_ENET2_REF>;
-> -                       clock-names =3D "rmii-ref";
-> -               };
-> -       };
-> -};
-> -
-> -
-> -&lcdif {
-> -       assigned-clocks =3D <&clks IMX6UL_CLK_LCDIF_PRE_SEL>;
-> -       assigned-clock-parents =3D <&clks IMX6UL_CLK_PLL5_VIDEO_DIV>;
-> -       pinctrl-names =3D "default";
-> -       pinctrl-0 =3D <&pinctrl_lcdif_dat
-> -                    &pinctrl_lcdif_ctrl>;
-> -       status =3D "okay";
-> -
-> -       port {
-> -               display_out: endpoint {
-> -                       remote-endpoint =3D <&panel_in>;
-> -               };
-> -       };
-> -};
-> -
-> -&pwm1 {
-> -       pinctrl-names =3D "default";
-> -       pinctrl-0 =3D <&pinctrl_pwm1>;
-> -       status =3D "okay";
-> -};
-> -
-> -&qspi {
-> -       pinctrl-names =3D "default";
-> -       pinctrl-0 =3D <&pinctrl_qspi>;
-> -       status =3D "okay";
-> -
-> -       flash0: n25q256a@0 {
-> -               #address-cells =3D <1>;
-> -               #size-cells =3D <1>;
-> -               compatible =3D "micron,n25q256a";
-> -               spi-max-frequency =3D <29000000>;
-> -               reg =3D <0>;
-> -       };
-> -};
-> -
-> -&sai2 {
-> -       pinctrl-names =3D "default";
-> -       pinctrl-0 =3D <&pinctrl_sai2>;
-> -       assigned-clocks =3D <&clks IMX6UL_CLK_SAI2_SEL>,
-> -                         <&clks IMX6UL_CLK_SAI2>;
-> -       assigned-clock-parents =3D <&clks IMX6UL_CLK_PLL4_AUDIO_DIV>;
-> -       assigned-clock-rates =3D <0>, <12288000>;
-> -       fsl,sai-mclk-direction-output;
-> -       status =3D "okay";
-> -};
-> -
-> -&snvs_poweroff {
-> -       status =3D "okay";
-> -};
-> -
-> -&tsc {
-> -       pinctrl-names =3D "default";
-> -       pinctrl-0 =3D <&pinctrl_tsc>;
-> -       xnur-gpio =3D <&gpio1 3 GPIO_ACTIVE_LOW>;
-> -       measure-delay-time =3D <0xffff>;
-> -       pre-charge-time =3D <0xfff>;
-> -       status =3D "okay";
-> -};
-> -
-> -&uart1 {
-> -       pinctrl-names =3D "default";
-> -       pinctrl-0 =3D <&pinctrl_uart1>;
-> -       status =3D "okay";
-> -};
-> -
-> -&uart2 {
-> -       pinctrl-names =3D "default";
-> -       pinctrl-0 =3D <&pinctrl_uart2>;
-> -       uart-has-rtscts;
-> -       status =3D "okay";
-> -};
-> -
-> -&usbotg1 {
-> -       dr_mode =3D "otg";
-> -       status =3D "okay";
-> -};
-> -
-> -&usbotg2 {
-> -       dr_mode =3D "host";
-> -       disable-over-current;
-> -       status =3D "okay";
-> -};
-> -
-> -&usbphy1 {
-> -       fsl,tx-d-cal =3D <106>;
-> -};
-> -
-> -&usbphy2 {
-> -       fsl,tx-d-cal =3D <106>;
-> -};
-> -
-> -&usdhc1 {
-> -       pinctrl-names =3D "default", "state_100mhz", "state_200mhz";
-> -       pinctrl-0 =3D <&pinctrl_usdhc1>;
-> -       pinctrl-1 =3D <&pinctrl_usdhc1_100mhz>;
-> -       pinctrl-2 =3D <&pinctrl_usdhc1_200mhz>;
-> -       cd-gpios =3D <&gpio1 19 GPIO_ACTIVE_LOW>;
-> -       keep-power-in-suspend;
-> -       wakeup-source;
-> -       vmmc-supply =3D <&reg_sd1_vmmc>;
-> -       status =3D "okay";
-> -};
-> -
-> -&usdhc2 {
-> -       pinctrl-names =3D "default";
-> -       pinctrl-0 =3D <&pinctrl_usdhc2>;
-> -       no-1-8-v;
-> -       keep-power-in-suspend;
-> -       wakeup-source;
-> -       status =3D "okay";
-> -};
-> -
-> -&wdog1 {
-> -       pinctrl-names =3D "default";
-> -       pinctrl-0 =3D <&pinctrl_wdog>;
-> -       fsl,ext-reset-output;
-> -};
-> -
-> -&iomuxc {
-> -       pinctrl-names =3D "default";
-> -
-> -       pinctrl_csi1: csi1grp {
-> -               fsl,pins =3D <
-> -                       MX6UL_PAD_CSI_MCLK__CSI_MCLK            0x1b088
-> -                       MX6UL_PAD_CSI_PIXCLK__CSI_PIXCLK        0x1b088
-> -                       MX6UL_PAD_CSI_VSYNC__CSI_VSYNC          0x1b088
-> -                       MX6UL_PAD_CSI_HSYNC__CSI_HSYNC          0x1b088
-> -                       MX6UL_PAD_CSI_DATA00__CSI_DATA02        0x1b088
-> -                       MX6UL_PAD_CSI_DATA01__CSI_DATA03        0x1b088
-> -                       MX6UL_PAD_CSI_DATA02__CSI_DATA04        0x1b088
-> -                       MX6UL_PAD_CSI_DATA03__CSI_DATA05        0x1b088
-> -                       MX6UL_PAD_CSI_DATA04__CSI_DATA06        0x1b088
-> -                       MX6UL_PAD_CSI_DATA05__CSI_DATA07        0x1b088
-> -                       MX6UL_PAD_CSI_DATA06__CSI_DATA08        0x1b088
-> -                       MX6UL_PAD_CSI_DATA07__CSI_DATA09        0x1b088
-> -               >;
-> -       };
-> -
-> -       pinctrl_enet1: enet1grp {
-> -               fsl,pins =3D <
-> -                       MX6UL_PAD_ENET1_RX_EN__ENET1_RX_EN      0x1b0b0
-> -                       MX6UL_PAD_ENET1_RX_ER__ENET1_RX_ER      0x1b0b0
-> -                       MX6UL_PAD_ENET1_RX_DATA0__ENET1_RDATA00 0x1b0b0
-> -                       MX6UL_PAD_ENET1_RX_DATA1__ENET1_RDATA01 0x1b0b0
-> -                       MX6UL_PAD_ENET1_TX_EN__ENET1_TX_EN      0x1b0b0
-> -                       MX6UL_PAD_ENET1_TX_DATA0__ENET1_TDATA00 0x1b0b0
-> -                       MX6UL_PAD_ENET1_TX_DATA1__ENET1_TDATA01 0x1b0b0
-> -                       MX6UL_PAD_ENET1_TX_CLK__ENET1_REF_CLK1  0x4001b03=
-1
-> -               >;
-> -       };
-> -
-> -       pinctrl_enet2: enet2grp {
-> -               fsl,pins =3D <
-> -                       MX6UL_PAD_GPIO1_IO07__ENET2_MDC         0x1b0b0
-> -                       MX6UL_PAD_GPIO1_IO06__ENET2_MDIO        0x1b0b0
-> -                       MX6UL_PAD_ENET2_RX_EN__ENET2_RX_EN      0x1b0b0
-> -                       MX6UL_PAD_ENET2_RX_ER__ENET2_RX_ER      0x1b0b0
-> -                       MX6UL_PAD_ENET2_RX_DATA0__ENET2_RDATA00 0x1b0b0
-> -                       MX6UL_PAD_ENET2_RX_DATA1__ENET2_RDATA01 0x1b0b0
-> -                       MX6UL_PAD_ENET2_TX_EN__ENET2_TX_EN      0x1b0b0
-> -                       MX6UL_PAD_ENET2_TX_DATA0__ENET2_TDATA00 0x1b0b0
-> -                       MX6UL_PAD_ENET2_TX_DATA1__ENET2_TDATA01 0x1b0b0
-> -                       MX6UL_PAD_ENET2_TX_CLK__ENET2_REF_CLK2  0x4001b03=
-1
-> -               >;
-> -       };
-> -
-> -       pinctrl_flexcan1: flexcan1grp{
-> -               fsl,pins =3D <
-> -                       MX6UL_PAD_UART3_RTS_B__FLEXCAN1_RX      0x1b020
-> -                       MX6UL_PAD_UART3_CTS_B__FLEXCAN1_TX      0x1b020
-> -               >;
-> -       };
-> -
-> -       pinctrl_flexcan2: flexcan2grp{
-> -               fsl,pins =3D <
-> -                       MX6UL_PAD_UART2_RTS_B__FLEXCAN2_RX      0x1b020
-> -                       MX6UL_PAD_UART2_CTS_B__FLEXCAN2_TX      0x1b020
-> -               >;
-> -       };
-> -
-> -       pinctrl_i2c1: i2c1grp {
-> -               fsl,pins =3D <
-> -                       MX6UL_PAD_UART4_TX_DATA__I2C1_SCL 0x4001b8b0
-> -                       MX6UL_PAD_UART4_RX_DATA__I2C1_SDA 0x4001b8b0
-> -               >;
-> -       };
-> -
-> -       pinctrl_i2c2: i2c2grp {
-> -               fsl,pins =3D <
-> -                       MX6UL_PAD_UART5_TX_DATA__I2C2_SCL 0x4001b8b0
-> -                       MX6UL_PAD_UART5_RX_DATA__I2C2_SDA 0x4001b8b0
-> -               >;
-> -       };
-> -
-> -       pinctrl_lcdif_dat: lcdifdatgrp {
-> -               fsl,pins =3D <
-> -                       MX6UL_PAD_LCD_DATA00__LCDIF_DATA00  0x79
-> -                       MX6UL_PAD_LCD_DATA01__LCDIF_DATA01  0x79
-> -                       MX6UL_PAD_LCD_DATA02__LCDIF_DATA02  0x79
-> -                       MX6UL_PAD_LCD_DATA03__LCDIF_DATA03  0x79
-> -                       MX6UL_PAD_LCD_DATA04__LCDIF_DATA04  0x79
-> -                       MX6UL_PAD_LCD_DATA05__LCDIF_DATA05  0x79
-> -                       MX6UL_PAD_LCD_DATA06__LCDIF_DATA06  0x79
-> -                       MX6UL_PAD_LCD_DATA07__LCDIF_DATA07  0x79
-> -                       MX6UL_PAD_LCD_DATA08__LCDIF_DATA08  0x79
-> -                       MX6UL_PAD_LCD_DATA09__LCDIF_DATA09  0x79
-> -                       MX6UL_PAD_LCD_DATA10__LCDIF_DATA10  0x79
-> -                       MX6UL_PAD_LCD_DATA11__LCDIF_DATA11  0x79
-> -                       MX6UL_PAD_LCD_DATA12__LCDIF_DATA12  0x79
-> -                       MX6UL_PAD_LCD_DATA13__LCDIF_DATA13  0x79
-> -                       MX6UL_PAD_LCD_DATA14__LCDIF_DATA14  0x79
-> -                       MX6UL_PAD_LCD_DATA15__LCDIF_DATA15  0x79
-> -                       MX6UL_PAD_LCD_DATA16__LCDIF_DATA16  0x79
-> -                       MX6UL_PAD_LCD_DATA17__LCDIF_DATA17  0x79
-> -                       MX6UL_PAD_LCD_DATA18__LCDIF_DATA18  0x79
-> -                       MX6UL_PAD_LCD_DATA19__LCDIF_DATA19  0x79
-> -                       MX6UL_PAD_LCD_DATA20__LCDIF_DATA20  0x79
-> -                       MX6UL_PAD_LCD_DATA21__LCDIF_DATA21  0x79
-> -                       MX6UL_PAD_LCD_DATA22__LCDIF_DATA22  0x79
-> -                       MX6UL_PAD_LCD_DATA23__LCDIF_DATA23  0x79
-> -               >;
-> -       };
-> -
-> -       pinctrl_lcdif_ctrl: lcdifctrlgrp {
-> -               fsl,pins =3D <
-> -                       MX6UL_PAD_LCD_CLK__LCDIF_CLK        0x79
-> -                       MX6UL_PAD_LCD_ENABLE__LCDIF_ENABLE  0x79
-> -                       MX6UL_PAD_LCD_HSYNC__LCDIF_HSYNC    0x79
-> -                       MX6UL_PAD_LCD_VSYNC__LCDIF_VSYNC    0x79
-> -                       /* used for lcd reset */
-> -                       MX6UL_PAD_SNVS_TAMPER9__GPIO5_IO09  0x79
-> -               >;
-> -       };
-> -
-> -       pinctrl_qspi: qspigrp {
-> -               fsl,pins =3D <
-> -                       MX6UL_PAD_NAND_WP_B__QSPI_A_SCLK        0x70a1
-> -                       MX6UL_PAD_NAND_READY_B__QSPI_A_DATA00   0x70a1
-> -                       MX6UL_PAD_NAND_CE0_B__QSPI_A_DATA01     0x70a1
-> -                       MX6UL_PAD_NAND_CE1_B__QSPI_A_DATA02     0x70a1
-> -                       MX6UL_PAD_NAND_CLE__QSPI_A_DATA03       0x70a1
-> -                       MX6UL_PAD_NAND_DQS__QSPI_A_SS0_B        0x70a1
-> -               >;
-> -       };
-> -
-> -       pinctrl_sai2: sai2grp {
-> -               fsl,pins =3D <
-> -                       MX6UL_PAD_JTAG_TDI__SAI2_TX_BCLK        0x17088
-> -                       MX6UL_PAD_JTAG_TDO__SAI2_TX_SYNC        0x17088
-> -                       MX6UL_PAD_JTAG_TRST_B__SAI2_TX_DATA     0x11088
-> -                       MX6UL_PAD_JTAG_TCK__SAI2_RX_DATA        0x11088
-> -                       MX6UL_PAD_JTAG_TMS__SAI2_MCLK           0x17088
-> -                       MX6UL_PAD_SNVS_TAMPER4__GPIO5_IO04      0x17059
-> -               >;
-> -       };
-> -
-> -       pinctrl_pwm1: pwm1grp {
-> -               fsl,pins =3D <
-> -                       MX6UL_PAD_GPIO1_IO08__PWM1_OUT   0x110b0
-> -               >;
-> -       };
-> -
-> -       pinctrl_sim2: sim2grp {
-> -               fsl,pins =3D <
-> -                       MX6UL_PAD_CSI_DATA03__SIM2_PORT1_PD             0=
-xb808
-> -                       MX6UL_PAD_CSI_DATA04__SIM2_PORT1_CLK            0=
-x31
-> -                       MX6UL_PAD_CSI_DATA05__SIM2_PORT1_RST_B          0=
-xb808
-> -                       MX6UL_PAD_CSI_DATA06__SIM2_PORT1_SVEN           0=
-xb808
-> -                       MX6UL_PAD_CSI_DATA07__SIM2_PORT1_TRXD           0=
-xb809
-> -                       MX6UL_PAD_CSI_DATA02__GPIO4_IO23                0=
-x3008
-> -               >;
-> -       };
-> -
-> -       pinctrl_tsc: tscgrp {
-> -               fsl,pins =3D <
-> -                       MX6UL_PAD_GPIO1_IO01__GPIO1_IO01                0=
-xb0
-> -                       MX6UL_PAD_GPIO1_IO02__GPIO1_IO02                0=
-xb0
-> -                       MX6UL_PAD_GPIO1_IO03__GPIO1_IO03                0=
-xb0
-> -                       MX6UL_PAD_GPIO1_IO04__GPIO1_IO04                0=
-xb0
-> -               >;
-> -       };
-> -
-> -       pinctrl_uart1: uart1grp {
-> -               fsl,pins =3D <
-> -                       MX6UL_PAD_UART1_TX_DATA__UART1_DCE_TX 0x1b0b1
-> -                       MX6UL_PAD_UART1_RX_DATA__UART1_DCE_RX 0x1b0b1
-> -               >;
-> -       };
-> -
-> -       pinctrl_uart2: uart2grp {
-> -               fsl,pins =3D <
-> -                       MX6UL_PAD_UART2_TX_DATA__UART2_DCE_TX   0x1b0b1
-> -                       MX6UL_PAD_UART2_RX_DATA__UART2_DCE_RX   0x1b0b1
-> -                       MX6UL_PAD_UART3_RX_DATA__UART2_DCE_RTS  0x1b0b1
-> -                       MX6UL_PAD_UART3_TX_DATA__UART2_DCE_CTS  0x1b0b1
-> -               >;
-> -       };
-> -
-> -       pinctrl_usdhc1: usdhc1grp {
-> -               fsl,pins =3D <
-> -                       MX6UL_PAD_SD1_CMD__USDHC1_CMD           0x17059
-> -                       MX6UL_PAD_SD1_CLK__USDHC1_CLK           0x10059
-> -                       MX6UL_PAD_SD1_DATA0__USDHC1_DATA0       0x17059
-> -                       MX6UL_PAD_SD1_DATA1__USDHC1_DATA1       0x17059
-> -                       MX6UL_PAD_SD1_DATA2__USDHC1_DATA2       0x17059
-> -                       MX6UL_PAD_SD1_DATA3__USDHC1_DATA3       0x17059
-> -                       MX6UL_PAD_UART1_RTS_B__GPIO1_IO19       0x17059 /=
-* SD1 CD */
-> -                       MX6UL_PAD_GPIO1_IO05__USDHC1_VSELECT    0x17059 /=
-* SD1 VSELECT */
-> -                       MX6UL_PAD_GPIO1_IO09__GPIO1_IO09        0x17059 /=
-* SD1 RESET */
-> -               >;
-> -       };
-> -
-> -       pinctrl_usdhc1_100mhz: usdhc1grp100mhz {
-> -               fsl,pins =3D <
-> -                       MX6UL_PAD_SD1_CMD__USDHC1_CMD     0x170b9
-> -                       MX6UL_PAD_SD1_CLK__USDHC1_CLK     0x100b9
-> -                       MX6UL_PAD_SD1_DATA0__USDHC1_DATA0 0x170b9
-> -                       MX6UL_PAD_SD1_DATA1__USDHC1_DATA1 0x170b9
-> -                       MX6UL_PAD_SD1_DATA2__USDHC1_DATA2 0x170b9
-> -                       MX6UL_PAD_SD1_DATA3__USDHC1_DATA3 0x170b9
-> -
-> -               >;
-> -       };
-> -
-> -       pinctrl_usdhc1_200mhz: usdhc1grp200mhz {
-> -               fsl,pins =3D <
-> -                       MX6UL_PAD_SD1_CMD__USDHC1_CMD     0x170f9
-> -                       MX6UL_PAD_SD1_CLK__USDHC1_CLK     0x100f9
-> -                       MX6UL_PAD_SD1_DATA0__USDHC1_DATA0 0x170f9
-> -                       MX6UL_PAD_SD1_DATA1__USDHC1_DATA1 0x170f9
-> -                       MX6UL_PAD_SD1_DATA2__USDHC1_DATA2 0x170f9
-> -                       MX6UL_PAD_SD1_DATA3__USDHC1_DATA3 0x170f9
-> -               >;
-> -       };
-> -
-> -       pinctrl_usdhc2: usdhc2grp {
-> -               fsl,pins =3D <
-> -                       MX6UL_PAD_NAND_RE_B__USDHC2_CLK     0x17059
-> -                       MX6UL_PAD_NAND_WE_B__USDHC2_CMD     0x17059
-> -                       MX6UL_PAD_NAND_DATA00__USDHC2_DATA0 0x17059
-> -                       MX6UL_PAD_NAND_DATA01__USDHC2_DATA1 0x17059
-> -                       MX6UL_PAD_NAND_DATA02__USDHC2_DATA2 0x17059
-> -                       MX6UL_PAD_NAND_DATA03__USDHC2_DATA3 0x17059
-> -               >;
-> -       };
-> -
-> -       pinctrl_wdog: wdoggrp {
-> -               fsl,pins =3D <
-> -                       MX6UL_PAD_LCD_RESET__WDOG1_WDOG_ANY    0x30b0
-> -               >;
-> -       };
->  };
-> diff --git a/arch/arm/boot/dts/imx6ull-14x14-evk.dts b/arch/arm/boot/dts/=
-imx6ull-14x14-evk.dts
-> index 4741871..30ef603 100644
-> --- a/arch/arm/boot/dts/imx6ull-14x14-evk.dts
-> +++ b/arch/arm/boot/dts/imx6ull-14x14-evk.dts
-> @@ -39,7 +39,10 @@
->   *     OTHER DEALINGS IN THE SOFTWARE.
->   */
->
-> -#include "imx6ul-14x14-evk.dts"
-> +/dts-v1/;
-> +
-> +#include "imx6ull.dtsi"
-> +#include "imx6ul-14x14-evk.dtsi"
->
->  / {
->         model =3D "Freescale i.MX6 UlltraLite 14x14 EVK Board";
-> --
-> 2.1.4
->
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
