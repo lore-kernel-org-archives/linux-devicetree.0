@@ -1,48 +1,41 @@
-From: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-Subject: [PATCH] ARM: dts: ls1021a: add quadspi node
-Date: Fri, 26 Jan 2018 15:20:14 +0100
-Message-ID: <20180126142014.13819-1-rasmus.villemoes@prevas.dk>
+From: Georgi Djakov <georgi.djakov@linaro.org>
+Subject: Re: [PATCH v11 0/6] Add support for Qualcomm A53 CPU clock
+Date: Fri, 26 Jan 2018 16:30:32 +0200
+Message-ID: <0c933015-158f-e4fc-a37c-195f7cbc8fad@linaro.org>
+References: <20171205154701.27730-1-georgi.djakov@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>
-Cc: Rasmus Villemoes <rasmus.villemoes@prevas.dk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20171205154701.27730-1-georgi.djakov@linaro.org>
+Content-Language: en-US
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: jassisinghbrar@gmail.com
+Cc: sboyd@codeaurora.org, bjorn.andersson@linaro.org, mturquette@baylibre.com, robh@kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add a node to device tree repesenting the QuadSPI controller present on
-LS1021a. Driver support has been present since e8c034b2fbe5 (mtd:
-spi-nor: fsl-quadspi: add support for ls1021a).
+On 12/05/2017 05:46 PM, Georgi Djakov wrote:
+> This patchset adds support for the A53 CPU clock on MSM8916 platforms
+> and allows scaling of the CPU frequency on msm8916 based platforms.
+> 
+> Changes since v10 (https://lkml.org/lkml/2017/12/1/577)
+> * Addressed Bjorn's comments on APCS clock driver.
+> * Picked Acks from Rob and Bjorn.
+> 
+[..]
+> 
+> Georgi Djakov (6):
+>   mailbox: qcom: Convert APCS IPC driver to use regmap
+>   mailbox: qcom: Create APCS child device for clock controller
+>   clk: qcom: Add A53 PLL support
+>   clk: qcom: Add regmap mux-div clocks support
+>   dt-bindings: mailbox: qcom: Document the APCS clock binding
+>   clk: qcom: Add APCS clock controller support
+> 
 
-Signed-off-by: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
----
- arch/arm/boot/dts/ls1021a.dtsi | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+Hi Jassi,
 
-diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
-index d82d8fa7afbb..5e5c84db3946 100644
---- a/arch/arm/boot/dts/ls1021a.dtsi
-+++ b/arch/arm/boot/dts/ls1021a.dtsi
-@@ -162,6 +162,20 @@
- 			big-endian;
- 		};
- 
-+		qspi: quadspi@1550000 {
-+			compatible = "fsl,ls1021a-qspi";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x0 0x1550000 0x0 0x10000>,
-+				<0x0 0x40000000 0x0 0x4000000>;
-+			reg-names = "QuadSPI", "QuadSPI-memory";
-+			interrupts = <GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>;
-+			clock-names = "qspi_en", "qspi";
-+			clocks = <&clockgen 4 1>, <&clockgen 4 1>;
-+			big-endian;
-+			status = "disabled";
-+		};
-+
- 		esdhc: esdhc@1560000 {
- 			compatible = "fsl,esdhc";
- 			reg = <0x0 0x1560000 0x0 0x10000>;
--- 
-2.15.1
+Do you want me to re-send the pending mailbox patches?
+
+Thanks,
+Georgi
