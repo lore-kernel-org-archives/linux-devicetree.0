@@ -1,34 +1,69 @@
-From: Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>
-Subject: Re: [PATCH v4 4/8] PCI: brcmstb: Add dma-range mapping for inbound
-        traffic
-Date: Fri, 26 Jan 2018 08:53:43 +0100
-Message-ID: <20180126075343.GB2356@lst.de>
-References: <1516058925-46522-1-git-send-email-jim2101024@gmail.com> <1516058925-46522-5-git-send-email-jim2101024@gmail.com> <CAL_JsqKpWNJXNpKS5qC99N0+H_P37DcRE-rN9HFwT5tVmRFCNw@mail.gmail.com> <20180118073123.GA15766@lst.de> <EDAEFB0F-BB7C-444A-B282-F178F5ADFCBF@gmail.com> <20180118152331.GA24461@lst.de> <d62226a2-a92c-cdcb-4a9b-e69ab677bc60@broadcom.com> <20180123132033.GA21438@lst.de> <f746f9d5-b12d-9ffc-83e3-3851b4de6e52@gmail.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH v6 2/2] media: V3s: Add support for Allwinner CSI.
+Date: Fri, 26 Jan 2018 09:10:00 +0100
+Message-ID: <20180126081000.hy7g57zp5dv6ug2g@flea.lan>
+References: <1516695531-23349-1-git-send-email-yong.deng@magewell.com>
+ <201801260759.RyNhDZz4%fengguang.wu@intel.com>
+ <20180126094658.aa70ed3f890464f6051e21e4@magewell.com>
+ <20180126110041.f89848325b9ecfb07df387ca@magewell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="pcpp5ezbpwxtdyok"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <f746f9d5-b12d-9ffc-83e3-3851b4de6e52-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jim Quinlan <jim2101024-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-MIPS <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>b
+In-Reply-To: <20180126110041.f89848325b9ecfb07df387ca@magewell.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yong <yong.deng@magewell.com>
+Cc: kbuild test robot <lkp@intel.com>, kbuild-all@01.org, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hans Verkuil <hans.verkuil@cisco.com>, Linus Walleij <linus.walleij@linaro.org>, Randy Dunlap <rdunlap@infradead.org>, Stanimir Varbanov <stanimir.varbanov@linaro.org>, Hugues Fruchet <hugues.fruchet@st.com>, Yannick Fertre <yannick.fertre@st.com>, Philipp Zabel <p.zabel@pengutronix.de>, Arnd Bergmann <arnd@arndb.de>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>, Sakari Ailus <sakari.ailus@linux.in>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 24, 2018 at 12:04:58PM -0800, Florian Fainelli wrote:
-> This looks nicer than the current shape, but this still requires to
-> register a PCI fixup to override phys_to_dma() and dma_to_phys(), and it
-> would appear that you have dodged my question about how this is supposed
-> to fit with an entirely modular PCIe root complex driver? Are you
-> suggesting that we split the module into a built-in part and a modular part?
 
-I don't think entirely modular PCI root bridges should be a focal point
-for the design.  If we happen to support them by other design choices:
-fine, but they should not be a priority.
+--pcpp5ezbpwxtdyok
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-That being said if we have core dma mapping or PCIe code that has
-a list of offsets and the root complex only populates them it should
-work just fine.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Fri, Jan 26, 2018 at 11:00:41AM +0800, Yong wrote:
+> Hi Maxime,
+>=20
+> On Fri, 26 Jan 2018 09:46:58 +0800
+> Yong <yong.deng@magewell.com> wrote:
+>=20
+> > Hi Maxime,
+> >=20
+> > Do you have any experience in solving this problem?
+> > It seems the PHYS_OFFSET maybe undeclared when the ARCH is not arm.
+>=20
+> Got it.
+> Should I add 'depends on ARM' in Kconfig?
+
+Yes, or even better a depends on MACH_SUNXI :)
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--pcpp5ezbpwxtdyok
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlpq4lcACgkQ0rTAlCFN
+r3QGmRAAhe2KBCEElFXdDNTvfXHIKAFj9SzsVR+pZziHsYVHDEycLIMEwBtclWtP
+YE7rzQUVyZJ0Jq4Z1blR7tSHkuhKeKdR6CbuuZNhA0GRyQSPkbxz4c0K4z8zOzJi
+roFdOLJ9AfZF4jTZ0pEof0AIIxJiMlxRjySilsHVJZ7lMYY7ztjfzKK7vQ64jCmR
+o6aBGZ7xC1/F8GaihZMk4d2Uoil8HCVuN8UoJlNITo5W64krM81KuhPUoj8AiF4P
+DcVIQ0KMVC4sz8PhNFMo+kfJA8DQ2VQpeV4pMc8mJef9vaIigg1rT8ZuY2FCs2IU
+P3Tx02jxR7SZKPbS4heX17LeXyYvVKlBHSX256oo6CKQ3bQGNlZ30E2LnJb5XeCm
+hsVg8F34DSvUpZPwwJbB5Jv/rDRnrQqxtHDF5PoMRDEkMLJoOUmFfBEOh4l6x2w4
+uq0FHKFo2rlGeBCPCZPxWzZXkoiB/kgpzRpDneBTDPkY5Ml7m0ro6XLKkHXdDOrc
+TS7tdRczD/Iu/mNuNPe+km5NhXedje8+CiRSpid1RoTdoh9i7HLqtYWveAeVHwvS
+lNumk5v3F4/q5DAf8wxzNlNeHZAJVZ0oZIGpfeJHKfP0z8r5MMMMGIuNtyHi4JNh
+Er2zgxzFRbTibE9xpbiRUqmcGq12w43CdjsLruUsySx3KjgsHzw=
+=yjb1
+-----END PGP SIGNATURE-----
+
+--pcpp5ezbpwxtdyok--
