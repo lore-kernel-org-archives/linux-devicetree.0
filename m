@@ -1,51 +1,76 @@
-From: Evan Green <evgreen-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH 1/2] arm64: dts: sdm845: Add minimal dts/dtsi files for
- sdm845 SoC and MTP
-Date: Fri, 26 Jan 2018 12:31:39 -0800
-Message-ID: <CAE=gft7hEc1GGJeYk0LRq1FAZyZhujfPWAnc=y+-HLzLKbVgtw@mail.gmail.com>
-References: <20180125163216.29018-1-rnayak@codeaurora.org> <20180125163216.29018-2-rnayak@codeaurora.org>
+From: Icenowy Zheng <icenowy@aosc.io>
+Subject: Re: [RFC PATCH 0/9] initial support for "suniv" Allwinner new ARM9 SoC
+Date: Sat, 27 Jan 2018 04:57:33 +0800
+Message-ID: <3527360.oZpfb5Pa1p@ice-x220i>
+References: <20180119231735.61504-1-icenowy@aosc.io> <14593819.uISRktVE4V@ice-x220i> <20180125153520.lxcfvh3yvi36uiux@flea.lan>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180125163216.29018-2-rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20180125153520.lxcfvh3yvi36uiux@flea.lan>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-sunxi@googlegroups.com, Marc Zyngier <marc.zyngier@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rajendra,
+在 2018年1月25日星期四 CST 下午11:35:20，Maxime Ripard 写道：
+> Hi,
+> 
+> On Wed, Jan 24, 2018 at 09:10:34PM +0800, Icenowy Zheng wrote:
+> > 在 2018年1月22日星期一 CST 下午8:14:35，Maxime Ripard 写道：
+> > 
+> > > On Sat, Jan 20, 2018 at 07:17:26AM +0800, Icenowy Zheng wrote:
+> > > > This is the RFC initial patchset for the "new" Allwinner SUNIV ARM9
+> > > > SoC.
+> > > > 
+> > > > The same die is packaged differently, come with different co-packaged
+> > > > DRAM or shipped with different SDK; and then made many model names:
+> > > > F23,
+> > > > F25, F1C100A, F1C100S, F1C200S, F1C500, F1C600, R6, etc. These SoCs
+> > > > all
+> > > > share a common feature set and are packaged similarly (eLQFP128 for
+> > > > SoCs
+> > > > without co-packaged DRAM, QFN88 for with DRAM). As their's no
+> > > > functionality hidden on the QFN88 models (except DRAM interface not
+> > > > exported), it's not clever to differentiate them. So I will use suniv
+> > > > as
+> > > > common name of all these SoCs.
+> > > 
+> > > Where is that suniv prefix coming from?
+> > 
+> > The BSP (Melis and Linux). (e.g. "libs/suniv" directory of the Melis SDK
+> > and "arch/arm/boot/dts/sunivw1p1.dtsi" in the Linux SDK)
+> 
+> Do you have a link to that BSP?
 
-On Thu, Jan 25, 2018 at 8:32 AM, Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
-> Add a skeletal sdm845 SoC dtsi and MTP board dts/dtsi files
->
-> Signed-off-by: Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/qcom/Makefile        |   1 +
->  arch/arm64/boot/dts/qcom/sdm845-mtp.dts  |  13 ++
->  arch/arm64/boot/dts/qcom/sdm845-mtp.dtsi |  11 ++
->  arch/arm64/boot/dts/qcom/sdm845.dtsi     | 308 +++++++++++++++++++++++++++++++
->  4 files changed, 333 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/qcom/sdm845-mtp.dts
->  create mode 100644 arch/arm64/boot/dts/qcom/sdm845-mtp.dtsi
->  create mode 100644 arch/arm64/boot/dts/qcom/sdm845.dtsi
->
-> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-> index 55ec5ee7f7e8..c57701bed084 100644
-> --- a/arch/arm64/boot/dts/qcom/Makefile
-> +++ b/arch/arm64/boot/dts/qcom/Makefile
-> @@ -6,3 +6,4 @@ dtb-$(CONFIG_ARCH_QCOM) += msm8916-mtp.dtb
->  dtb-$(CONFIG_ARCH_QCOM)        += msm8992-bullhead-rev-101.dtb
->  dtb-$(CONFIG_ARCH_QCOM)        += msm8994-angler-rev-101.dtb
->  dtb-$(CONFIG_ARCH_QCOM)        += msm8996-mtp.dtb
-> +dtb-$(CONFIG_ARCH_QCOM) += sdm845-mtp.dtb
+https://pan.baidu.com/s/1rar5YtI
 
-Minor nit: This should be a tab before the += to be consistent.
+There's Melis (F1C100s) and Linux (F1C600) BSP.
 
-(Unfortunately I don't have the expertise quite yet to comment on the
-rest of this).
+> 
+> > > You should really answer two questions here:
+> > >   - Are you able to predict whether you'll find an SoC part of that
+> > >   
+> > >     family in the future that derives a bit and will need a compatible
+> > >     of its own?
+> > >   
+> > >   - Are you able to predict which quirks we'll need along the way to
+> > >   
+> > >     support all the SoCs you've listed there?
+> > > 
+> > > If you can't answer yes to both these questions, with a 100%
+> > > certainty, then you'll need a SoC name in the compatible.
+> > > 
+> > > Which doesn't prevent you from sharing as much as possible the DT like
+> > > we did between the A10s and the A13 for example.
+> > 
+> > So the suniv-f1c100s.dtsi will still be kept empty and all peripherals
+> > known should go through suniv.dtsi.
+> 
+> Sorry if I wasn't really clear. You can totally keep the current DT
+> structure if that makes sense (and judging by what you're saying, it
+> does.), but the compatibles should have the SoC name in it.
+> 
+> Maxime
 
--Evan
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
