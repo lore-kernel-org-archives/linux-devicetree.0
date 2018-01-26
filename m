@@ -1,41 +1,74 @@
-From: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] dt-bindings: pinctrl: Add a reserved-gpio-ranges
- property
-Date: Fri, 26 Jan 2018 11:20:26 +0200
-Message-ID: <1516958426.7000.1272.camel@linux.intel.com>
-References: <20180126011400.2191-1-sboyd@codeaurora.org>
-         <20180126011400.2191-2-sboyd@codeaurora.org>
+From: Anson Huang <Anson.Huang@nxp.com>
+Subject: [PATCH V2 1/2] ARM: dts: imx7s: add temperature monitor support
+Date: Fri, 26 Jan 2018 16:09:39 +0800
+Message-ID: <1516954180-26029-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180126011400.2191-2-sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: rui.zhang@intel.com, edubezval@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, aisheng.dong@nxp.com
+Cc: Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2018-01-25 at 17:13 -0800, Stephen Boyd wrote:
-> Some qcom platforms make some GPIOs or pins unavailable for use
-> by non-secure operating systems, and thus reading or writing the
-> registers for those pins will cause access control issues.
-> Introduce a DT property to describe the set of GPIOs that are
-> available for use so that higher level OSes are able to know what
-> pins to avoid reading/writing.
+Add i.MX7 temperature monitor support.
 
->  	gpio-controller;
->  	#gpio-cells = <2>;
->  	ngpios = <18>;
-> +	reserved-gpio-ranges = <0 4>, <12 2>;
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Acked-by: Dong Aisheng <aisheng.dong@nxp.com>
+---
+no changes since V1.
+ .../devicetree/bindings/thermal/imx-thermal.txt      |  5 +++--
+ arch/arm/boot/dts/imx7s.dtsi                         | 20 ++++++++++++++++++++
+ 2 files changed, 23 insertions(+), 2 deletions(-)
 
-What about preserving namespace, i.e.
-
-gpio-reserved-ranges vs. your variant?
-
+diff --git a/Documentation/devicetree/bindings/thermal/imx-thermal.txt b/Documentation/devicetree/bindings/thermal/imx-thermal.txt
+index 28be51a..9575d45 100644
+--- a/Documentation/devicetree/bindings/thermal/imx-thermal.txt
++++ b/Documentation/devicetree/bindings/thermal/imx-thermal.txt
+@@ -1,8 +1,9 @@
+ * Temperature Monitor (TEMPMON) on Freescale i.MX SoCs
+ 
+ Required properties:
+-- compatible : "fsl,imx6q-tempmon" for i.MX6Q, "fsl,imx6sx-tempmon" for i.MX6SX.
+-  i.MX6SX has two more IRQs than i.MX6Q, one is IRQ_LOW and the other is IRQ_PANIC,
++- compatible : "fsl,imx6q-tempmon" for i.MX6Q, "fsl,imx6sx-tempmon" for i.MX6SX,
++  "fsl,imx7-tempmon" for i.MX7S/D.
++  i.MX6SX and i.MX7S/D have two more IRQs than i.MX6Q, one is IRQ_LOW and the other is IRQ_PANIC,
+   when temperature is below than low threshold, IRQ_LOW will be triggered, when temperature
+   is higher than panic threshold, system will auto reboot by SRC module.
+ - fsl,tempmon : phandle pointer to system controller that contains TEMPMON
+diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
+index 82ad26e..2e2eda53 100644
+--- a/arch/arm/boot/dts/imx7s.dtsi
++++ b/arch/arm/boot/dts/imx7s.dtsi
+@@ -497,9 +497,29 @@
+ 			};
+ 
+ 			ocotp: ocotp-ctrl@30350000 {
++				#address-cells = <1>;
++				#size-cells = <1>;
+ 				compatible = "fsl,imx7d-ocotp", "syscon";
+ 				reg = <0x30350000 0x10000>;
+ 				clocks = <&clks IMX7D_OCOTP_CLK>;
++
++				tempmon_calib: calib@3c {
++					reg = <0x3c 0x4>;
++				};
++
++				tempmon_temp_grade: temp-grade@10 {
++					reg = <0x10 0x4>;
++				};
++			};
++
++			tempmon: tempmon {
++				compatible = "fsl,imx7-tempmon";
++				interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
++				fsl,tempmon =<&anatop>;
++				nvmem-cells = <&tempmon_calib>,
++					<&tempmon_temp_grade>;
++				nvmem-cell-names = "calib", "temp_grade";
++				clocks = <&clks IMX7D_PLL_SYS_MAIN_CLK>;
+ 			};
+ 
+ 			anatop: anatop@30360000 {
 -- 
-Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Intel Finland Oy
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.7.4
