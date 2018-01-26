@@ -1,147 +1,114 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2] of: use hash based search in of_find_node_by_phandle
-Date: Fri, 26 Jan 2018 15:39:43 -0600
-Message-ID: <20180126213943.7zwijanlbrq3y666@rob-hp-laptop>
-References: <1516955496-17236-1-git-send-email-cpandya@codeaurora.org>
- <f08592cf-5e49-e631-c481-e166b741f25e@prevas.dk>
- <aa84e40d-5032-1d1d-6146-391ca1e5e528@codeaurora.org>
- <CAL_JsqJ=6bmOZCsj=NVthgXsZRRjyhQUDv0-CrngF_1MaYtKqA@mail.gmail.com>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC] devicetree: new FDT format version
+Date: Fri, 26 Jan 2018 14:08:08 -0800
+Message-ID: <83008da0-7383-ba2d-a239-e11ad7d1327d@gmail.com>
+References: <b96829f9-2e8b-fdc5-5090-58591e2260cf@gmail.com>
+ <CAL_JsqJR2y7bMw_-9TBAGWZ_kf7_sZo5qvqvRowJ8jiy=4G0Bg@mail.gmail.com>
+ <20180123124232.GA14832@umbus>
+ <20328477-e511-e875-7dc4-253640f2219e@gmail.com>
+ <CAL_Jsq+fvFrGhqO0zbEUE_i23FkU=G4Z1-e0vnXHi4KbS2oK0A@mail.gmail.com>
+ <e1bec77d-4dac-200b-34be-23573bf738f0@gmail.com>
+ <e986435b-481b-2629-7600-10d9e21ac58e@gmail.com>
+ <20180125122912.GB2099@umbus>
+ <CAMuHMdV0jdj90uzqMx_wtvz=-KaagJG2_UQTm1DW3gzt6cNG6A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqJ=6bmOZCsj=NVthgXsZRRjyhQUDv0-CrngF_1MaYtKqA@mail.gmail.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Chintan Pandya <cpandya@codeaurora.org>
-Cc: Rasmus Villemoes <rasmus.villemoes@prevas.dk>, Frank Rowand <frowand.list@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMuHMdV0jdj90uzqMx_wtvz=-KaagJG2_UQTm1DW3gzt6cNG6A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, "Pantelis Antomarek.vasut-Re5JQEeQqe/2sr8fMPgRzw@public.gmane.org" <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, =?UTF-8?Q?Marek_Va=c5=a1ut?= <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Kyle Evans <kevans-h+KGxgPPiopAfugRpC6u6w@public.gmane.org>, Alan Tull <atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 26, 2018 at 09:34:59AM -0600, Rob Herring wrote:
-> On Fri, Jan 26, 2018 at 9:14 AM, Chintan Pandya <cpandya@codeaurora.org> wrote:
-> >
-> >> I'm probably missing something obvious, but: Aren't phandles in practice
-> >> small consecutive integers assigned by dtc? If so, why not just have a
-> >> smallish static array mapping the small phandle values directly to
-> >> device node, instead of adding a pointer to every struct device_node? Or
-> >> one could determine the size of the array dynamically (largest seen
-> >> phandle value, capping at something sensible, e.g. 1024).
+On 01/26/18 00:56, Geert Uytterhoeven wrote:
+> On Thu, Jan 25, 2018 at 1:29 PM, David Gibson
+> <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
+>> On Wed, Jan 24, 2018 at 04:22:15PM -0800, Frank Rowand wrote:
+>>> On 01/24/18 13:16, Frank Rowand wrote:
+>>>> What you say makes sense.  So I'll reverse myself and say that for
+>>>> Linux, we should update the FDT read code to scan all chained
+>>>> overlay FDT(s) as well as the base FDT.
+>>>
+>>> < snip >
+>>>
+>>> What I wrote was somewhat ambiguous.  What I meant by "FDT read
+>>> code" was functions that check for existence of nodes in the
+>>> FDT or read property values from the FDT.
+>>
+>> Oh.. not just FDT unflattening code.
+>>
+>> The trouble with this is that scanning for a specific node or property
+>> in a set of chained overlays is highly nontrivial.  Even if you set
+>> aside the arguably self-imposed design constraints in libfdt, you
+>> can't just do the same lookup in each fragment: along the way you need
+>> to resolve the path at which each fragment applies.  That in itself is
+>> non-trivial.  If you have overlays applying on top of other overlays,
+>> that could involve recursive lookups of things from previous overlays.
+>> It's spectacularly complicated and we have to do it on *every single*
+>> read operation.
+>>
+>> Either fully applying the overlay in flattened form, or (even
 > 
-> I do have some concerns that is a bit fragile and dependent on dtc's
-> implementations. However, I guess we already kind of are with overlay
-> phandles.
-> 
-> > Haven't noticed this earlier !! If following is known or true, we can avoid
-> > using hash-table and save per device_node hlish_node.
-> >
-> >     1. How to know max phandle value without traversing tree once? In my
-> > case,
-> >        max is 1263.
-> 
-> We already have to know it for overlays. Plus unflattening has to
-> handle phandles specially already, so it would be easy to do there if
-> we aren't already.
-> 
-> Then the question what to do with overlays. For now, we can probably
-> assume too few phandles to matter.
-> 
-> >     2. Although, I haven't observed collision but is it like every
-> > device_node
-> >        is associated with unique phandle value ?
-> 
-> Yes, phandles must be unique.
-> 
-> >> In either case, one would still need to keep the code doing the
-> >> whole-tree traversal for handling large phandle values, but I think the
-> >> above should make lookup O(1) in most cases.
-> >
-> > I would refrain doing this because that will make this API inconsistent in
-> > terms
-> > of time taken by different nodes. I see that people do change their device
-> > placing in DT and that changes time taken in of_* APIs for them but
-> > affecting
-> > others.
-> 
-> Who cares. It's the total time that matters. It's obviously not a
-> problem until you have 1000s of lookups as no one cared until recently
-> (though you aren't the first with a hash table lookup).
-> 
-> >> Alternatively, one could just count the number of nodes with a phandle,
-> >> allocate an array of that many pointers (so the memory use is certainly
-> >> no more than if adding a pointer to each device_node), and sort it by
-> >> phandle, so one can do lookup using a binary search.
-> >>
-> >> Rasmus
-> >
-> > This is certainly doable if current approach is not welcomed due to
-> > addition on hlish_node in device_node.
-> 
-> I certainly prefer an out of band approach as that's easier to turn of
-> if we want to save memory.
-> 
-> Still, I'd like to see some data on a cache based approach and reasons
-> why that won't work.
+> Applying the overlays in flattened form sounds like a good idea to me.
 
-I was curious, so I implemented it. It ends up being similar to Rasmus's 
-1st suggestion. The difference is we don't try to store all entries, but 
-rather implement a hash table that doesn't handle collisions. Relying on 
-the fact that phandles are just linearly allocated from 0, we just mask 
-the high bits of the phandle to get the index.
+I'm having trouble envisioning what "apply an overlay in flattened form"
+means.
 
-Using the unittest (modified to run twice), the time for 192 calls goes 
-from ~50us to ~30us. Can you try out on your setup and try different 
-array sizes.
+I'll provide a simple example to illustrate.
 
-8<----------------------------------------------------------------------
+  - Base devicetree contains one non-root node which contains one property.
+  - Overlay devicetree adds one property to that same node.
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index dd0b4201f1cc..cb88adf4f3db 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -986,6 +986,13 @@ int of_modalias_node(struct device_node *node, char *modalias, int len)
- }
- EXPORT_SYMBOL_GPL(of_modalias_node);
- 
-+static ktime_t elapsed;
-+static int call_count;
-+
-+#define PHANDLE_CACHE_SZ       64
-+#define PHANDLE_CACHE_HASH(x)  ((x) & (PHANDLE_CACHE_SZ - 1))
-+static struct device_node *phandle_cache[PHANDLE_CACHE_SZ];
-+
- /**
-  * of_find_node_by_phandle - Find a node given a phandle
-  * @handle:    phandle of the node to find
-@@ -997,16 +1004,30 @@ struct device_node *of_find_node_by_phandle(phandle handle)
- {
-        struct device_node *np;
-        unsigned long flags;
-+       ktime_t t1, t2;
- 
-        if (!handle)
-                return NULL;
- 
-        raw_spin_lock_irqsave(&devtree_lock, flags);
--       for_each_of_allnodes(np)
--               if (np->phandle == handle)
--                       break;
-+       t1 = ktime_get();
-+       np = phandle_cache[PHANDLE_CACHE_HASH(handle)];
-+       if (!np || np->phandle != handle) {
-+               for_each_of_allnodes(np)
-+                       if (np->phandle == handle) {
-+                               phandle_cache[PHANDLE_CACHE_HASH(handle)] = np;
-+                               break;
-+                       }
-+
-+       }
-+
-        of_node_get(np);
-+       t2 = ktime_get();
-+       elapsed = ktime_add(elapsed, ktime_sub(t2, t1));
-+       call_count++;
-        raw_spin_unlock_irqrestore(&devtree_lock, flags);
-+       if (!(call_count % 32))
-+               printk("of_find_node_by_phandle called %d times totalling %lld ns", call_count, elapsed);
-        return np;
- }
- EXPORT_SYMBOL(of_find_node_by_phandle);
+The before and after dt_struct block of the FDTs would contain (vastly
+simplified, ignoring tags, not notating nesting of nodes, ignoring
+root node, etc):
+
+(1) base FDT dt_struct:
+  [node1] [prop1 value length] [prop1 name offset] [prop1 value]
+
+(2) overlay FDT dt_struct:
+  [fragment 1 node] [__overlay__ node (for node1)] [prop2 value length] [prop2 name offset] [prop2 value]
+
+(3) resulting FDT after applying overlay to base:
+
+  [node1] [prop1 value length] [prop1 name offset] [prop1 value] [prop2 value length] [prop2 name offset] [prop2 value]
+
+  - dt_string block updated to add the string for prop2 name (if not already in block)
+  - prop2 name offset updated for offset in updated dt_string block
+
+Is creating (3) from (1) and (2) what is meant by "apply an overlay
+in flattened form"?
+
+Getting from (1) and (2) to (3) does not look trivial.  Am I missing
+something?
+
+-Frank
+
+> It still adds complexity, but handling multiple overlays can be done by a
+> simple iteration, not recursion.
+> The end result will always consume less memory, and will thus fit in the
+> original block of memory allocated for base FDT and overlay FDTs, unless
+> the base FDT and overlay FDTs are in FLASH (this assumes chaining really
+> means appending, not using an external chaining mechanism).
+> 
+>> temporarily) unflattening the tree are better solutions.
+> 
+> Temporary unflattening sounds like a waste to me: it must be redone again
+> later anyway. Applying the FDT overlays early on will make that later step
+> simpler (no more overlays to handle).
+> So if you need information from an FDT, you can help later steps by
+> applying the FDT overlays right away.
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
+> 
