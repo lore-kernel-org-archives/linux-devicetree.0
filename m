@@ -1,114 +1,318 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC] devicetree: new FDT format version
-Date: Fri, 26 Jan 2018 14:08:08 -0800
-Message-ID: <83008da0-7383-ba2d-a239-e11ad7d1327d@gmail.com>
-References: <b96829f9-2e8b-fdc5-5090-58591e2260cf@gmail.com>
- <CAL_JsqJR2y7bMw_-9TBAGWZ_kf7_sZo5qvqvRowJ8jiy=4G0Bg@mail.gmail.com>
- <20180123124232.GA14832@umbus>
- <20328477-e511-e875-7dc4-253640f2219e@gmail.com>
- <CAL_Jsq+fvFrGhqO0zbEUE_i23FkU=G4Z1-e0vnXHi4KbS2oK0A@mail.gmail.com>
- <e1bec77d-4dac-200b-34be-23573bf738f0@gmail.com>
- <e986435b-481b-2629-7600-10d9e21ac58e@gmail.com>
- <20180125122912.GB2099@umbus>
- <CAMuHMdV0jdj90uzqMx_wtvz=-KaagJG2_UQTm1DW3gzt6cNG6A@mail.gmail.com>
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH 1/2] arm64: dts: sdm845: Add minimal dts/dtsi files for
+ sdm845 SoC and MTP
+Date: Fri, 26 Jan 2018 14:15:01 -0800
+Message-ID: <20180126221501.GD28313@codeaurora.org>
+References: <20180125163216.29018-1-rnayak@codeaurora.org>
+ <20180125163216.29018-2-rnayak@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMuHMdV0jdj90uzqMx_wtvz=-KaagJG2_UQTm1DW3gzt6cNG6A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, "Pantelis Antomarek.vasut-Re5JQEeQqe/2sr8fMPgRzw@public.gmane.org" <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, =?UTF-8?Q?Marek_Va=c5=a1ut?= <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Kyle Evans <kevans-h+KGxgPPiopAfugRpC6u6w@public.gmane.org>, Alan Tull <atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20180125163216.29018-2-rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/26/18 00:56, Geert Uytterhoeven wrote:
-> On Thu, Jan 25, 2018 at 1:29 PM, David Gibson
-> <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
->> On Wed, Jan 24, 2018 at 04:22:15PM -0800, Frank Rowand wrote:
->>> On 01/24/18 13:16, Frank Rowand wrote:
->>>> What you say makes sense.  So I'll reverse myself and say that for
->>>> Linux, we should update the FDT read code to scan all chained
->>>> overlay FDT(s) as well as the base FDT.
->>>
->>> < snip >
->>>
->>> What I wrote was somewhat ambiguous.  What I meant by "FDT read
->>> code" was functions that check for existence of nodes in the
->>> FDT or read property values from the FDT.
->>
->> Oh.. not just FDT unflattening code.
->>
->> The trouble with this is that scanning for a specific node or property
->> in a set of chained overlays is highly nontrivial.  Even if you set
->> aside the arguably self-imposed design constraints in libfdt, you
->> can't just do the same lookup in each fragment: along the way you need
->> to resolve the path at which each fragment applies.  That in itself is
->> non-trivial.  If you have overlays applying on top of other overlays,
->> that could involve recursive lookups of things from previous overlays.
->> It's spectacularly complicated and we have to do it on *every single*
->> read operation.
->>
->> Either fully applying the overlay in flattened form, or (even
-> 
-> Applying the overlays in flattened form sounds like a good idea to me.
+On 01/25, Rajendra Nayak wrote:
+>  create mode 100644 arch/arm64/boot/dts/qcom/sdm845-mtp.dts
+>  create mode 100644 arch/arm64/boot/dts/qcom/sdm845-mtp.dtsi
 
-I'm having trouble envisioning what "apply an overlay in flattened form"
-means.
+Do we really need two files? Maybe collapse the two?
 
-I'll provide a simple example to illustrate.
+>  create mode 100644 arch/arm64/boot/dts/qcom/sdm845.dtsi
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> new file mode 100644
+> index 000000000000..a21f4912b3e2
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> @@ -0,0 +1,308 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
+> + */
+> +
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +/ {
+> +	model = "Qualcomm Technologies, Inc. SDM845";
+> +
+> +	interrupt-parent = <&intc>;
+> +
+> +	#address-cells = <2>;
+> +	#size-cells = <2>;
+> +
+> +	chosen { };
+> +
+> +	memory {
+> +		device_type = "memory";
+> +		/* We expect the bootloader to fill in the reg */
+> +		reg = <0 0 0 0>;
+> +	};
+> +
+> +	cpus {
+> +		#address-cells = <2>;
+> +		#size-cells = <0>;
+> +
+> +		CPU0: cpu@0 {
+> +			device_type = "cpu";
+> +			compatible = "qcom,kryo";
+> +			reg = <0x0 0x0>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&L2_0>;
+> +			L2_0: l2-cache {
+> +				compatible = "cache";
+> +				next-level-cache = <&L3_0>;
+> +				L3_0: l3-cache {
+> +				      compatible = "cache";
+> +				};
+> +			};
+> +		};
+> +
+> +		CPU1: cpu@100 {
+> +			device_type = "cpu";
+> +			compatible = "qcom,kryo";
+> +			reg = <0x0 0x100>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&L2_100>;
+> +			L2_100: l2-cache {
+> +				compatible = "cache";
+> +				next-level-cache = <&L3_0>;
+> +			};
+> +		};
+> +
+> +		CPU2: cpu@200 {
+> +			device_type = "cpu";
+> +			compatible = "qcom,kryo";
+> +			reg = <0x0 0x200>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&L2_200>;
+> +			L2_200: l2-cache {
+> +				compatible = "cache";
+> +				next-level-cache = <&L3_0>;
+> +			};
+> +		};
+> +
+> +		CPU3: cpu@300 {
+> +			device_type = "cpu";
+> +			compatible = "qcom,kryo";
+> +			reg = <0x0 0x300>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&L2_300>;
+> +			L2_300: l2-cache {
+> +				compatible = "cache";
+> +				next-level-cache = <&L3_0>;
+> +			};
+> +		};
+> +
+> +		CPU4: cpu@400 {
+> +			device_type = "cpu";
+> +			compatible = "qcom,kryo";
+> +			reg = <0x0 0x400>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&L2_400>;
+> +			L2_400: l2-cache {
+> +				compatible = "cache";
+> +				next-level-cache = <&L3_0>;
+> +			};
+> +		};
+> +
+> +		CPU5: cpu@500 {
+> +			device_type = "cpu";
+> +			compatible = "qcom,kryo";
+> +			reg = <0x0 0x500>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&L2_500>;
+> +			L2_500: l2-cache {
+> +				compatible = "cache";
+> +				next-level-cache = <&L3_0>;
+> +			};
+> +		};
+> +
+> +		CPU6: cpu@600 {
+> +			device_type = "cpu";
+> +			compatible = "qcom,kryo";
+> +			reg = <0x0 0x600>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&L2_600>;
+> +			L2_600: l2-cache {
+> +				compatible = "cache";
+> +				next-level-cache = <&L3_0>;
+> +			};
+> +		};
+> +
+> +		CPU7: cpu@700 {
+> +			device_type = "cpu";
+> +			compatible = "qcom,kryo";
+> +			reg = <0x0 0x700>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&L2_700>;
+> +			L2_700: l2-cache {
+> +				compatible = "cache";
+> +				next-level-cache = <&L3_0>;
+> +			};
+> +		};
+> +
+> +		cpu-map {
+> +			cluster0 {
+> +				core0 {
+> +					cpu = <&CPU0>;
+> +				};
+> +
+> +				core1 {
+> +					cpu = <&CPU1>;
+> +				};
+> +
+> +				core2 {
+> +					cpu = <&CPU2>;
+> +				};
+> +
+> +				core3 {
+> +					cpu = <&CPU3>;
+> +				};
+> +			};
+> +
+> +			cluster1 {
+> +				core0 {
+> +					cpu = <&CPU4>;
+> +				};
+> +
+> +				core1 {
+> +					cpu = <&CPU5>;
+> +				};
+> +
+> +				core2 {
+> +					cpu = <&CPU6>;
+> +				};
+> +
+> +				core3 {
+> +					cpu = <&CPU7>;
+> +				};
+> +			};
+> +		};
 
-  - Base devicetree contains one non-root node which contains one property.
-  - Overlay devicetree adds one property to that same node.
+>From what I recall, this layout causes the kernel to spew
+warnings? I mean to say this is the power/performance view, but
+not the architectural view.
 
-The before and after dt_struct block of the FDTs would contain (vastly
-simplified, ignoring tags, not notating nesting of nodes, ignoring
-root node, etc):
+> +	};
+> +
+> +	timer {
+> +		compatible = "arm,armv8-timer";
+> +		interrupts = <GIC_PPI 1 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
 
-(1) base FDT dt_struct:
-  [node1] [prop1 value length] [prop1 name offset] [prop1 value]
+Are we supposed to use the GIC_CPU_MASK_SIMPLE macros still?
 
-(2) overlay FDT dt_struct:
-  [fragment 1 node] [__overlay__ node (for node1)] [prop2 value length] [prop2 name offset] [prop2 value]
+> +			     <GIC_PPI 2 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
+> +			     <GIC_PPI 3 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
+> +			     <GIC_PPI 0 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>;
+> +	};
+> +
+> +	clocks {
+> +		xo_board: xo_board {
+> +			compatible = "fixed-clock";
+> +			#clock-cells = <0>;
+> +			clock-frequency = <19200000>;
+> +			clock-output-names = "xo_board";
 
-(3) resulting FDT after applying overlay to base:
+We can drop clock-output-names on these.
 
-  [node1] [prop1 value length] [prop1 name offset] [prop1 value] [prop2 value length] [prop2 name offset] [prop2 value]
+> +		};
+> +
+> +		sleep_clk: sleep_clk {
+> +			compatible = "fixed-clock";
+> +			#clock-cells = <0>;
+> +			clock-frequency = <32764>;
+> +			clock-output-names = "sleep_clk";
+> +		};
+> +	};
+> +
+> +	psci {
+> +		compatible = "arm,psci-1.0";
+> +		method = "smc";
+> +	};
+> +
+> +	soc: soc {
 
-  - dt_string block updated to add the string for prop2 name (if not already in block)
-  - prop2 name offset updated for offset in updated dt_string block
+Will anyone use this phandle?
 
-Is creating (3) from (1) and (2) what is meant by "apply an overlay
-in flattened form"?
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges = <0 0 0 0xffffffff>;
+> +		compatible = "simple-bus";
+> +
+> +		intc: interrupt-controller@17a00000 {
+> +			compatible = "arm,gic-v3";
+> +			#interrupt-cells = <3>;
+> +			interrupt-controller;
+> +			#redistributor-regions = <1>;
+> +			redistributor-stride = <0x0 0x20000>;
+> +			reg = <0x17a00000 0x10000>,     /* GICD */
+> +			      <0x17a60000 0x100000>;    /* GICR * 8 */
+> +			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
 
-Getting from (1) and (2) to (3) does not look trivial.  Am I missing
-something?
+Can you also add the ITS node please and mark it as disabled?
+I'll send a patch to the list to skip status = "disabled" ones.
+We may want to support ITS on these SoCs if the firmware is
+different. 
 
--Frank
+> +		};
+> +
+> +		gcc: clock-controller@100000 {
+> +			compatible = "qcom,gcc-sdm845";
+> +			reg = <0x100000 0x1f0000>;
+> +			#clock-cells = <1>;
+> +			#reset-cells = <1>;
+> +		};
+> +
+> +		tlmm: pinctrl@03400000 {
 
-> It still adds complexity, but handling multiple overlays can be done by a
-> simple iteration, not recursion.
-> The end result will always consume less memory, and will thus fit in the
-> original block of memory allocated for base FDT and overlay FDTs, unless
-> the base FDT and overlay FDTs are in FLASH (this assumes chaining really
-> means appending, not using an external chaining mechanism).
-> 
->> temporarily) unflattening the tree are better solutions.
-> 
-> Temporary unflattening sounds like a waste to me: it must be redone again
-> later anyway. Applying the FDT overlays early on will make that later step
-> simpler (no more overlays to handle).
-> So if you need information from an FDT, you can help later steps by
-> applying the FDT overlays right away.
-> 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-> 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
-> 
+Drop leading zeroes please.
+
+> +			compatible = "qcom,sdm845-pinctrl";
+> +			reg = <0x03400000 0xc00000>;
+> +			interrupts = <GIC_SPI 208 IRQ_TYPE_NONE>;
+> +			gpio-controller;
+> +			#gpio-cells = <2>;
+> +			interrupt-controller;
+> +			#interrupt-cells = <2>;
+> +		};
+> +
+> +		timer@17C90000 {
+
+Lowercase hex please.
+
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			ranges;
+> +			compatible = "arm,armv7-timer-mem";
+> +			reg = <0x17C90000 0x1000>;
+
+Lowercase hex please.
+
+> +			clock-frequency = <19200000>;
+
+Drop this? Or we can't read it from the hardware so we have to
+hardcode it?
+
+> +
+> +			frame@17CA0000 {
+
+Lowecase again.
+
+> +				frame-number = <0>;
+> +				interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
+> +					     <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
+> +				reg = <0x17CA0000 0x1000>,
+> +				      <0x17CB0000 0x1000>;
+> +			};
+> +
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
