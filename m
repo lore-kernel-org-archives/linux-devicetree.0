@@ -1,102 +1,107 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [RFC PATCH v2 0/1] of: easier debugging for node life cycle
- issues
-Date: Thu, 25 Jan 2018 17:08:56 -0800
-Message-ID: <2f47d3ca-2533-62d3-9db1-6d16bbd64545@gmail.com>
-References: <20180121143117.19805-1-wsa+renesas@sang-engineering.com>
- <00fc90ee-de26-f819-9c81-27d06918564d@gmail.com>
- <20180125060330.781667e9@vmware.local.home>
- <a30d4cd3-0068-8cca-cc2f-ca207d0d278b@gmail.com>
- <c20ffeb2-f17a-ddab-7327-b8854b301d18@linux.vnet.ibm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <c20ffeb2-f17a-ddab-7327-b8854b301d18@linux.vnet.ibm.com>
-Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Tyrel Datwyler <tyreld@linux.vnet.ibm.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, linuxppc-dev@lists.ozlabs.org
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH v2 2/3] gpiolib-of: Support 'reserved-gpio-ranges' property
+Date: Thu, 25 Jan 2018 17:13:59 -0800
+Message-ID: <20180126011400.2191-3-sboyd@codeaurora.org>
+References: <20180126011400.2191-1-sboyd@codeaurora.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180126011400.2191-1-sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/25/18 15:53, Tyrel Datwyler wrote:
-> On 01/25/2018 01:49 PM, Frank Rowand wrote:
->> Hi Wolfram,
->>
->> On 01/25/18 03:03, Steven Rostedt wrote:
->>> On Wed, 24 Jan 2018 22:55:13 -0800
->>> Frank Rowand <frowand.list@gmail.com> wrote:
->>>
->>>> Hi Steve,
->>>
->>>>
->>>> Off the top of your head, can you tell me know early in the boot
->>>> process a trace_event can be called and successfully provide the
->>>> data to someone trying to debug early boot issues?
->>>
->>> The trace events are enabled by early_initcall().
->>
->> < snip >
->>
->> This means that ftrace can not be used for the of_node_get(),
->> of_node_put(), and of_node_release() debug info, because
->> these functions are called before early_initcall().  Please
->> use pr_debug() for these functions.
-> 
-> I would argue that early boot debugging doesn't completely negate the
-> usefulness of this tracing infrastructure.
+Some qcom platforms make some GPIOs or pins unavailable for use
+by non-secure operating systems, and thus reading or writing the
+registers for those pins will cause access control issues.  Add
+support for a DT property to describe the set of GPIOs that are
+available for use so that higher level OSes are able to know what
+pins to avoid reading/writing.
 
-I did not say or imply that it did.  I am pointing out that this
-implementation does not meet the needs of other use cases.  And
-potentially provides misleading information (or more precisely
-misleading lack of information) in some other use cases.
+For now, we plumb this into the gpiochip irq APIs so that
+GPIO/pinctrl drivers can use the gpiochip_irqchip_irq_valid() to
+test validity of GPIOs.
 
+Signed-off-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+---
 
-> I get that no information
-> is available in the trace up until ftrace is setup by its
-> early_initcall, but I still found issues after early boot using this
-> patch and I would hope that it would be somewhat obvious if
-> references are out of whack once the ftrace data becomes available.
-> In the dynamic case on Power we often do reconfig well after boot on
-> live systems which produces a lot of reference put/gets. This patch
-> made it easy to identify several reference leaks and underflows in
-> our attach and detach logic with the added aid of being able to turn
-> on the stacktrace for each call in the ftrace data.
+Or this can move into a dedicated API and not be tied to the irq code.
+Something like of_gpiochip_init_valid_mask?
 
-Yes, you can get stacktraces relatively easily.  This is the strongest
-argument for using ftrace.
+ drivers/gpio/gpiolib-of.c | 28 ++++++++++++++++++++++++++++
+ drivers/gpio/gpiolib.c    |  9 +++++++++
+ 2 files changed, 37 insertions(+)
 
-My assumption has been that the stack trace is useful for of_node_get()
-and of_node_put().  Is there _large_ value to the stack trace for
-of_reconfig_notify()?
+diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+index 564bb7a31da4..194b3306ef74 100644
+--- a/drivers/gpio/gpiolib-of.c
++++ b/drivers/gpio/gpiolib-of.c
+@@ -498,6 +498,32 @@ void of_mm_gpiochip_remove(struct of_mm_gpio_chip *mm_gc)
+ }
+ EXPORT_SYMBOL(of_mm_gpiochip_remove);
+ 
++#ifdef CONFIG_GPIOLIB_IRQCHIP
++static void of_gpiochip_init_irq_valid_mask(struct gpio_chip *chip)
++{
++	int len, i;
++	u32 start, count;
++	struct device_node *np = chip->of_node;
++
++	len = of_property_count_u32_elems(np,  "reserved-gpio-ranges");
++	if (len < 0 || len % 2 != 0)
++		return;
++
++	for (i = 0; i < len; i += 2) {
++		of_property_read_u32_index(np, "reserved-gpio-ranges",
++					   i, &start);
++		of_property_read_u32_index(np, "reserved-gpio-ranges",
++					   i + 1, &count);
++		if (start >= chip->ngpio || start + count >= chip->ngpio)
++			continue;
++
++		bitmap_clear(chip->irq.valid_mask, start, count);
++	}
++};
++#else
++static void of_gpiochip_init_irq_valid_mask(struct gpio_chip *chip) { }
++#endif
++
+ #ifdef CONFIG_PINCTRL
+ static int of_gpiochip_add_pin_range(struct gpio_chip *chip)
+ {
+@@ -602,6 +628,8 @@ int of_gpiochip_add(struct gpio_chip *chip)
+ 	if (chip->of_gpio_n_cells > MAX_PHANDLE_ARGS)
+ 		return -EINVAL;
+ 
++	of_gpiochip_init_irq_valid_mask(chip);
++
+ 	status = of_gpiochip_add_pin_range(chip);
+ 	if (status)
+ 		return status;
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 930676ec9847..8483850463e6 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -1483,6 +1483,15 @@ static struct gpio_chip *find_chip_by_name(const char *name)
+ 
+ static int gpiochip_irqchip_init_valid_mask(struct gpio_chip *gpiochip)
+ {
++#ifdef CONFIG_OF_GPIO
++	int size;
++	struct device_node *np = gpiochip->of_node;
++
++	size = of_property_count_u32_elems(np,  "reserved-gpio-ranges");
++	if (size > 0 && size % 2 == 0)
++		gpiochip->irq.need_valid_mask = true;
++#endif
++
+ 	if (!gpiochip->irq.need_valid_mask)
+ 		return 0;
+ 
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
-
-> Another thought is it would be nice if we could have the best of both
-> worlds such that the tracepoints were pr_debugs up until the ftrace
-> early_initcall. Or, I suppose we could ifdef it and make the ftrace
-> tracepoints a configuration option, such that if it wasn't configured
-> we implement the tracepoint functions as pr_debugs. This makes early
-> boot an option. Just spit balling ideas.
-
-An overly complex solution.  This is just debug.  Worst case alternative
-is that the patches live on, out of tree.  So nope.
-
-
-> 
-> -Tyrel
-> 
->>
->> As far as I know, the of_reconfig_notify() could remain an
->> ftrace instrumented function.  But now that the only thing
->> that would be ftrace instrumented is of_reconfig_notify(),
->> I don't see a strong justification for changing the existing
->> pr_debug() calls to an ftrace alternative.  Though I suspect
->> the original author of the patch still might desire to have
->> the "#ifdef DEBUG" surrounding the pr_debug() calls removed
->> since one of his issues was having to recompile his kernel
->> to do his debugging.
->>
->> -Frank
->>
-> 
-> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
