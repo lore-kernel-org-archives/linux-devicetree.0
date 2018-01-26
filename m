@@ -1,18 +1,18 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: core: Move of_find_regulator_by_node() to of_regulator.c" to the regulator tree
-Date: Fri, 26 Jan 2018 17:35:48 +0000
-Message-ID: <E1ef7um-0002dM-Ah@debutante>
-References: <1512639975-22241-2-git-send-email-m.purski@samsung.com>
+Subject: Applied "regulator: core: Refactor regulator_list_voltage()" to the regulator tree
+Date: Fri, 26 Jan 2018 17:35:44 +0000
+Message-ID: <E1ef7ui-0002cM-Mz@debutante>
+References: <1516631412-17542-3-git-send-email-m.purski@samsung.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1512639975-22241-2-git-send-email-m.purski@samsung.com>
+In-Reply-To: <1516631412-17542-3-git-send-email-m.purski@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Maciej Purski <m.purski@samsung.com>
-Cc: Mark Brown <broonie@kernel.org>Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>linux-kernel@vger.kernel.org
+Cc: Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.orgMark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Doug Anderson <dianders@chromium.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 The patch
 
-   regulator: core: Move of_find_regulator_by_node() to of_regulator.c
+   regulator: core: Refactor regulator_list_voltage()
 
 has been applied to the regulator tree at
 
@@ -37,126 +37,58 @@ to this mail.
 Thanks,
 Mark
 
->From 148096af0bf381c78afe253c07ef1c77778f0e68 Mon Sep 17 00:00:00 2001
+>From 3d67fe950707a930664c5673ecc026f1bb497136 Mon Sep 17 00:00:00 2001
 From: Maciej Purski <m.purski@samsung.com>
-Date: Mon, 22 Jan 2018 15:30:06 +0100
-Subject: [PATCH] regulator: core: Move of_find_regulator_by_node() to
- of_regulator.c
+Date: Mon, 22 Jan 2018 15:30:07 +0100
+Subject: [PATCH] regulator: core: Refactor regulator_list_voltage()
 
-As of_find_regulator_by_node() is an of function it should be moved from
-core.c to of_regulator.c. It provides better separation of device tree
-functions from the core and allows other of_functions in of_regulator.c
-to resolve device_node to regulator_dev. This will be useful for
-implementation of parsing coupled regulators properties.
-
-Declare of_find_regulator_by_node() function in internal.h as well as
-regulator_class and dev_to_rdev(), as they are needed by
-of_find_regulator_by_node().
+Change _regulator_list_voltage() argument from regulator to
+regulator_dev in order to provide better separation of core layers.
+Allow calling _regulator_list_voltage() from functions, with
+regulator_dev argument. This refactoring is needed in order to
+implement setting voltage of coupled regulators.
 
 Signed-off-by: Maciej Purski <m.purski@samsung.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/core.c         | 23 +----------------------
- drivers/regulator/internal.h     |  9 +++++++++
- drivers/regulator/of_regulator.c | 14 ++++++++++++++
- 3 files changed, 24 insertions(+), 22 deletions(-)
+ drivers/regulator/core.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
-index 365b32e3f505..5f7678292cef 100644
+index 5f7678292cef..fd8eacfea422 100644
 --- a/drivers/regulator/core.c
 +++ b/drivers/regulator/core.c
-@@ -58,8 +58,6 @@ static bool has_full_constraints;
+@@ -2447,10 +2447,9 @@ static int _regulator_is_enabled(struct regulator_dev *rdev)
+ 	return rdev->desc->ops->is_enabled(rdev);
+ }
  
- static struct dentry *debugfs_root;
- 
--static struct class regulator_class;
--
- /*
-  * struct regulator_map
-  *
-@@ -112,11 +110,6 @@ static struct regulator *create_regulator(struct regulator_dev *rdev,
- 					  const char *supply_name);
- static void _regulator_put(struct regulator *regulator);
- 
--static struct regulator_dev *dev_to_rdev(struct device *dev)
--{
--	return container_of(dev, struct regulator_dev, dev);
--}
--
- static const char *rdev_get_name(struct regulator_dev *rdev)
+-static int _regulator_list_voltage(struct regulator *regulator,
+-				    unsigned selector, int lock)
++static int _regulator_list_voltage(struct regulator_dev *rdev,
++				   unsigned selector, int lock)
  {
- 	if (rdev->constraints && rdev->constraints->name)
-@@ -1417,20 +1410,6 @@ static void regulator_supply_alias(struct device **dev, const char **supply)
+-	struct regulator_dev *rdev = regulator->rdev;
+ 	const struct regulator_ops *ops = rdev->desc->ops;
+ 	int ret;
+ 
+@@ -2466,7 +2465,8 @@ static int _regulator_list_voltage(struct regulator *regulator,
+ 		if (lock)
+ 			mutex_unlock(&rdev->mutex);
+ 	} else if (rdev->is_switch && rdev->supply) {
+-		ret = _regulator_list_voltage(rdev->supply, selector, lock);
++		ret = _regulator_list_voltage(rdev->supply->rdev,
++					      selector, lock);
+ 	} else {
+ 		return -EINVAL;
  	}
- }
- 
--static int of_node_match(struct device *dev, const void *data)
--{
--	return dev->of_node == data;
--}
--
--static struct regulator_dev *of_find_regulator_by_node(struct device_node *np)
--{
--	struct device *dev;
--
--	dev = class_find_device(&regulator_class, NULL, np, of_node_match);
--
--	return dev ? dev_to_rdev(dev) : NULL;
--}
--
- static int regulator_match(struct device *dev, const void *data)
+@@ -2542,7 +2542,7 @@ EXPORT_SYMBOL_GPL(regulator_count_voltages);
+  */
+ int regulator_list_voltage(struct regulator *regulator, unsigned selector)
  {
- 	struct regulator_dev *r = dev_to_rdev(dev);
-@@ -3918,7 +3897,7 @@ static void regulator_dev_release(struct device *dev)
- 	kfree(rdev);
+-	return _regulator_list_voltage(regulator, selector, 1);
++	return _regulator_list_voltage(regulator->rdev, selector, 1);
  }
+ EXPORT_SYMBOL_GPL(regulator_list_voltage);
  
--static struct class regulator_class = {
-+struct class regulator_class = {
- 	.name = "regulator",
- 	.dev_release = regulator_dev_release,
- 	.dev_groups = regulator_dev_groups,
-diff --git a/drivers/regulator/internal.h b/drivers/regulator/internal.h
-index 66a8ea0c8386..2f3218be5b8d 100644
---- a/drivers/regulator/internal.h
-+++ b/drivers/regulator/internal.h
-@@ -35,6 +35,15 @@ struct regulator {
- 	struct dentry *debugfs;
- };
- 
-+extern struct class regulator_class;
-+
-+static inline struct regulator_dev *dev_to_rdev(struct device *dev)
-+{
-+	return container_of(dev, struct regulator_dev, dev);
-+}
-+
-+struct regulator_dev *of_find_regulator_by_node(struct device_node *np);
-+
- #ifdef CONFIG_OF
- struct regulator_init_data *regulator_of_get_init_data(struct device *dev,
- 			         const struct regulator_desc *desc,
-diff --git a/drivers/regulator/of_regulator.c b/drivers/regulator/of_regulator.c
-index 14637a01ba2d..54e810ae93d6 100644
---- a/drivers/regulator/of_regulator.c
-+++ b/drivers/regulator/of_regulator.c
-@@ -376,3 +376,17 @@ struct regulator_init_data *regulator_of_get_init_data(struct device *dev,
- 
- 	return init_data;
- }
-+
-+static int of_node_match(struct device *dev, const void *data)
-+{
-+	return dev->of_node == data;
-+}
-+
-+struct regulator_dev *of_find_regulator_by_node(struct device_node *np)
-+{
-+	struct device *dev;
-+
-+	dev = class_find_device(&regulator_class, NULL, np, of_node_match);
-+
-+	return dev ? dev_to_rdev(dev) : NULL;
-+}
 -- 
 2.15.1
