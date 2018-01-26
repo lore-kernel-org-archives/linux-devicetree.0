@@ -1,65 +1,109 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 1/2] drm/panel: Device tree bindings for ARM Versatile panels
-Date: Fri, 26 Jan 2018 14:33:35 +0100
-Message-ID: <20180126133336.21343-1-linus.walleij@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: RE: [RFC 01/37] ARM: shmobile: Add watchdog support
+Date: Fri, 26 Jan 2018 13:44:05 +0000
+Message-ID: <TY1PR06MB08958F9DA01F254443024333C0E00@TY1PR06MB0895.apcprd06.prod.outlook.com>
+References: <1516903391-30467-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1516903391-30467-2-git-send-email-fabrizio.castro@bp.renesas.com>
+ <CAMuHMdWVvMJR5NHMFn6zx39jw2XdP5nteU3actUcen0dmoT-LQ@mail.gmail.com>
+ <TY1PR06MB08950BD28BEC28D55C6D80EDC0E00@TY1PR06MB0895.apcprd06.prod.outlook.com>
+ <CAMuHMdUOoMHqu3WD8GUbGFTfeAsw9d5vKtkzdMQjMfTEknos-A@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdUOoMHqu3WD8GUbGFTfeAsw9d5vKtkzdMQjMfTEknos-A@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wim Van Sebroeck <wim@iguana.be>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Guenter Roeck <linux@roeck-us.net>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>"linux-arm-kernel@lists.infradead.org" <linux>
 List-Id: devicetree@vger.kernel.org
 
-This adds a pretty simple set of device tree bindings for
-ARM Versatile panels appearing as child nodes of a system
-controller.
-
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- .../display/panel/arm,versatile-tft-panel.txt      | 31 ++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/arm,versatile-tft-panel.txt
-
-diff --git a/Documentation/devicetree/bindings/display/panel/arm,versatile-tft-panel.txt b/Documentation/devicetree/bindings/display/panel/arm,versatile-tft-panel.txt
-new file mode 100644
-index 000000000000..248141c3c7e3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/arm,versatile-tft-panel.txt
-@@ -0,0 +1,31 @@
-+ARM Versatile TFT Panels
-+
-+These panels are connected to the daughterboards found on the
-+ARM Versatile reference designs.
-+
-+This device node must appear as a child to a "syscon"-compatible
-+node.
-+
-+Required properties:
-+- compatible: should be "arm,versatile-tft-panel"
-+
-+Required subnodes:
-+- port: see display/panel/panel-common.txt, graph.txt
-+
-+
-+Example:
-+
-+sysreg@0 {
-+	compatible = "arm,versatile-sysreg", "syscon", "simple-mfd";
-+	reg = <0x00000 0x1000>;
-+
-+	panel: display@0 {
-+		compatible = "arm,versatile-tft-panel";
-+
-+		port {
-+			panel_in: endpoint {
-+				remote-endpoint = <&foo>;
-+			};
-+		};
-+	};
-+};
--- 
-2.14.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGVsbG8gR2VlcnQsDQoNCj4gU3ViamVjdDogUmU6IFtSRkMgMDEvMzddIEFSTTogc2htb2JpbGU6
+IEFkZCB3YXRjaGRvZyBzdXBwb3J0DQo+DQo+IEhpIEZhYnJpemlvLA0KPg0KPiBPbiBGcmksIEph
+biAyNiwgMjAxOCBhdCAxMjo1MiBQTSwgRmFicml6aW8gQ2FzdHJvDQo+IDxmYWJyaXppby5jYXN0
+cm9AYnAucmVuZXNhcy5jb20+IHdyb3RlOg0KPiA+PiBTdWJqZWN0OiBSZTogW1JGQyAwMS8zN10g
+QVJNOiBzaG1vYmlsZTogQWRkIHdhdGNoZG9nIHN1cHBvcnQNCj4gPj4gT24gVGh1LCBKYW4gMjUs
+IDIwMTggYXQgNzowMiBQTSwgRmFicml6aW8gQ2FzdHJvDQo+ID4+IDxmYWJyaXppby5jYXN0cm9A
+YnAucmVuZXNhcy5jb20+IHdyb3RlOg0KPiA+PiA+IE9uIFItQ2FyIEdlbjIgYW5kIFJaL0cxIHBs
+YXRmb3Jtcywgd2UgdXNlIHRoZSBTQkFSIHJlZ2lzdGVycyB0byBtYWtlIG5vbg0KPiA+PiA+IGJv
+b3QgQ1BVcyBydW4gYSByb3V0aW5lIGRlc2lnbmVkIHRvIGJyaW5nIHVwIFNNUCBhbmQgZGVhbCB3
+aXRoIGhvdCBwbHVnLg0KPiA+PiA+IFRoZSB2YWx1ZSBjb250YWluZWQgaW4gdGhlIFNCQVIgcmVn
+aXN0ZXJzIGlzIG5vdCBpbml0aWFsaXplZCBieSBhIFdEVA0KPiA+PiA+IHRyaWdnZXJlZCByZXNl
+dCwgd2hpY2ggbWVhbnMgdGhhdCBhZnRlciBhIFdEVCB0cmlnZ2VyZWQgcmVzZXQgd2UganVtcA0K
+PiA+PiA+IHRvIHRoZSBTTVAgYnJpbmcgdXAgcm91dGluZSwgcHJldmVudGluZyB0aGUgc3lzdGVt
+IGZyb20gZXhlY3V0aW5nIHRoZQ0KPiA+PiA+IGJvb3Ryb20gY29kZS4NCj4gPj4NCj4gPj4gVGhh
+bmtzIGZvciB5b3VyIHBhdGNoIQ0KPiA+DQo+ID4gVGhhbmsgeW91IGZvciBsb29raW5nIGludG8g
+dGhpcyENCj4gPg0KPiA+IEkgYW0gbm90IGdvaW5nIHRvIHJlcGx5IHRvIHlvdXIgY29tbWVudHMg
+b24gdGhlIG90aGVyIHBhdGNoZXMgZm9yIG5vdywgYXMgd2UgbmVlZCB0byBmaW5kIGEgc29sdXRp
+b24gZm9yIHRoaXMgcGFydGljdWxhciBwYXRjaCB3ZSBhcmUNCj4gYWxsIGhhcHB5IHdpdGggZmly
+c3QuDQo+ID4gQSBjaGFuZ2UgdG8gdGhpcyBwYXRjaCBtYXkgaW1wYWN0IHRoZSBvdGhlciBwYXRj
+aGVzIGFzIHdlbGwuDQo+ID4NCj4gPj4gPiBUaGUgcHVycG9zZSBvZiB0aGlzIHBhdGNoIGlzIHRv
+IGp1bXAgdG8gdGhlIGJvb3Ryb20gY29kZSBpbiBjYXNlIG9mIGENCj4gPj4gPiBXRFQgdHJpZ2dl
+cmVkIHJlc2V0LCBhbmQga2VlcCB0aGUgU01QIGZ1bmN0aW9uYWxpdHkgdW50b3VjaGVkLg0KPiA+
+PiA+IEluIG9yZGVyIHRvIHRlbGwgaWYgdGhlIGNvZGUgaGFkIGJlZW4gY2FsbGVkIGR1ZSB0byB0
+aGUgV0RUIG92ZXJmbG93aW5nDQo+ID4+ID4gd2UgbmVlZCB0byBpbnNwZWN0IGZsYWcgV09WRiBm
+cm9tIHJlZ2lzdGVyIFJXVENTUkEsIGhvd2V2ZXIgZm9yIHRoaXMNCj4gPj4gPiB0byB3b3JrIHNt
+b290aGx5IHdlIG5lZWQgdG8gbWFrZSBzdXJlIHRoYXQgUldEVCBjbG9jayBpcyBPTi4NCj4gPj4g
+PiBTaW5jZSBpdCdzIG5vdCB3aXNlIHRvIGludGVyZmVyZSB3aXRoIHRoZSBjbG9jayBjb25maWd1
+cmF0aW9uIGZyb20NCj4gPj4gPiB3aXRoaW4gdGhpcyByb3V0aW5lLCBhIGZsYWcgaGFzIGJlZW4g
+cHV0IGluIHBsYWNlDQo+ID4+ID4gKHNobW9iaWxlX3dkdF9jbG9ja19zdGF0dXMpIHNvIHRoYXQg
+dGhlIHdhdGNoZG9nIGRyaXZlciBjYW4gdGVsbA0KPiA+PiA+IHNobW9iaWxlX2Jvb3RfdmVjdG9y
+IHdoZW4gdGhlIGNsb2NrIGlzIE9OLCBhbmQgdGhlcmVmb3JlIHRoZXJlIGlzIG5vDQo+ID4+ID4g
+bmVlZCBmb3Igc2htb2JpbGVfYm9vdF92ZWN0b3IgdG8gbWVzcyB1cCB3aXRoIHRoZSBjbG9jayBy
+ZWdpc3RlcnMuDQo+ID4+ID4NCj4gPj4gPiBCaXQgV09WRiBzdXJ2aXZlcyBhIHdhdGNoZG9nIHRy
+aWdnZXJlZCByZXNldCwgYW5kIGl0IGlzIHVzdWFsbHkgY2xlYXJlZA0KPiA+PiA+IGJ5IHRoZSBi
+b290bG9hZGVyLiBDaGVja2luZyB0aGUgTU1VIGVuYWJsZSBiaXQgZnJvbSByZWdpc3RlciBTQ1RM
+Ug0KPiA+PiA+IGFsbG93cyB1cyB0byBtYWtlIHRoZSBjb2RlIGEgbGl0dGxlIGJpdCBtb3JlIHJv
+YnVzdCAoanVzdCBpbiBjYXNlIHRoZQ0KPiA+PiA+IGJpdCB3YXNuJ3QgY2xlYXJlZCB1cCksIGFz
+IHJpZ2h0IGFmdGVyIGEgcmVzZXQgdGhlIE1NVSBpcyBkaXNhYmxlZCwNCj4gPj4gPiBhbmQgd2hl
+biBMaW51eCBpcyBydW5uaW5nIHRoZSBNTVUgaXMgZW5hYmxlZC4gQWxzbywgYWNjZXNzaW5nIFJX
+VENTUkENCj4gPj4gPiBwaHlzaWNhbCBhZGRyZXNzIGlzIHNhZmUgd2hlbiB0aGUgTU1VIGlzIGRv
+d24uDQo+ID4+DQo+ID4+IENoZWNraW5nIGEgaGFyZHdhcmUgcmVnaXN0ZXIgaXMgaW5kZWVkIGEg
+YmV0dGVyIHNvbHV0aW9uIHRoYW4gbXkgb3JpZ2luYWwNCj4gPj4gaWRlYSB0byBsZXQgU01QIGJy
+aW5ndXAgc2V0IGEgZmxhZyBpbiBSQU0sIGFzIHRoZSBmb3JtZXIgaXMgbGVzcyByYWN5Lg0KPiA+
+DQo+ID4gQWxzbywgc3VjaCBhIGZsYWcgd291bGQgbm90IGJlIGFjY2Vzc2libGUgYWZ0ZXIgdGhl
+IHJlc2V0IGdldHMgdHJpZ2dlcmVkLg0KPg0KPiBJdCB3b3VsZCwgaWYgaXQncyBzdG9yZWQgaW4g
+ZS5nLiBJQ1JBTS4NCg0KWWVzLCBvZiBjb3Vyc2UuIEl0IHJlbWluZHMgbWUgb2Ygc2htb2JpbGVf
+d2R0X2Nsb2NrX3N0YXR1cy4uLiAgICAgOi1EDQoNCj4NCj4gPj4gSG93ZXZlciwgYXMgeW91IGNh
+biBwcm9iYWJseSBpbWFnaW5lLCBJIGRvbid0IGxpa2UgdGhlDQo+ID4+IHNobW9iaWxlX3dkdF9j
+bG9ja19zdGF0dXMgcGFydCA7LSkNCj4gPg0KPiA+IE5laXRoZXIgZG8gSSEgICAgICA6LUQNCj4N
+Cj4gR29vZCA7LSkNCj4NCj4gPj4gSXNuJ3QgaXMgc3VmZmljaWVudCB0byBjaGVjayB0aGUgTU1V
+IGVuYWJsZSBiaXQ/DQo+ID4NCj4gPiBJIGFtIGFmcmFpZCBpdCBpc24ndCwgd2hlbiBicmluZ2lu
+ZyB1cCBTTVAgdGhlIGNvcmVzIHdpbGwgcmVhZCB0aGUgTU1VIGZsYWcgYXMgZGlzYWJsZWQsIHRv
+IG1ha2UgdGhpbmdzIHdvcnNlIGF0IHRoYXQgcHJlY2lzZSBwb2ludCBpbg0KPiB0aW1lIHRoZSBy
+d2R0IGNsb2NrIGlzIGRpc2FibGVkLg0KPiA+IElmIHRoZSBzeXN0ZW0ganVzdCByZXN0YXJ0ZWQg
+ZHVlIHRvIHRoZSB3YXRjaGRvZywgdGhlbiB3aGVuIHlvdSByZWFkIFdPVkYgY2hhbmNlcyBhcmUg
+eW91IGFyZSBnb2luZyB0byByZWFkICcxJywgaGVuY2UgdGhlDQo+IHN5c3RlbSB3aWxsIGZhaWwg
+dG8gYnJpbmcgdXAgU01QLg0KPg0KPiBPSywgc28gSSB3YXMgbWlzbGVhZCBieSB0aGUgTU1VIGNo
+ZWNrLg0KPg0KPiA+PiBIb3dldmVyLCB0aGF0IHdvdWxkIHByZWNsdWRlcyB1Q2xpbnV4IChkbyB3
+ZSBjYXJlPykuDQo+ID4NCj4gPiBUaGUgTU1VIHdpbGwgYmUgY29uc3RhbnRseSBkaXNhYmxlZCBp
+biB0aGlzIGNhc2UsIHdvdWxkbid0IGl0PyBUaGVyZWZvcmUgdGhlIHJlc2V0IHZlY3RvciB3aWxs
+IGFsd2F5cyBwcm9jZWVkIHdpdGggdGhlIHRlc3Rpbmcgb2YNCj4gdmFyaWFibGUgInNobW9iaWxl
+X3dkdF9jbG9ja19zdGF0dXMiLCBhbmQgaXQnbGwgZmluYWxseSB0ZXN0IFdPVkYgb25seSB3aGVu
+IGl0J3Mgc2FmZSB0byBkbyBzby4gSWYgV09WRiBpcyBzZXQsIHRoZW4gd2Ugc3RpbGwganVtcCB0
+byB0aGUNCj4gYm9vdHJvbSBjb2RlLiBpZiBXT1ZGIGlzIG5vdCBzZXQsIHRoZW4gd2UganVtcCB0
+byBzaG1vYmlsZV9ib290X2ZuLiBDb3VsZCB5b3UgcGxlYXNlIGVsYWJvcmF0ZSB5b3VyIHRob3Vn
+aHRzIGEgbGl0dGxlIGJpdCBtb3JlPw0KPiA+DQo+ID4+IElzIHRoZXJlIGFueSBvdGhlciByZWdp
+c3Rlci9iaXQgdGhhdCdzIHJlc2V0IHdoZW4gdGhlIHdhdGNoZG9nIGlzDQo+ID4+IHRyaWdnZXJl
+ZCwgYW5kIGFsd2F5cyBzZXQgYnkgTGludXg/DQo+ID4NCj4gPiBOb3QgdGhhdCBJIGtub3cgb2Ys
+IGJ1dCB5b3UgbWF5IGtub3cgYmV0dGVyIDstUA0KPiA+IEFueSBzdWdnZXN0aW9uPw0KPg0KPiBB
+bnkgY2hhbmNlIFdEVFJTVENSLlJXRFRfUlNUTVNLIGlzIHJlaW5pdGlhbGl6ZWQgdG8gMSBvbiB3
+YXRjaGRvZyByZXNldD8NCj4gUHJvYmFibHkgbm90LCBhcyB0aGUgSGFyZHdhcmUgVXNlcidzIE1h
+bnVhbCBzYXlzIHRoZSByZWdpc3RlciBpcw0KPiBpbml0aWFsaXplZCBvbiBwb3dlciBvbiByZXNl
+dCBjYXVzZWQgYnkgUFJFU0VUIy4NCg0KSSB0aGluayBpdHMgdmFsdWUgaXMgcmV0YWluZWQsIGFz
+IHlvdSBwb2ludGVkIG91dC4NCg0KU28gYmFzaWNhbGx5LCBJIHN0aWxsIHRoaW5rIHRlc3Rpbmcg
+V09WRiBpcyB0aGUgYmVzdCB3YXkgdG8gdGVsbCBpZiB3ZSBqdW1wZWQgaW50byB0aGUgcmVzZXQg
+dmVjdG9yIGJlY2F1c2Ugb2YgYSB3YXRjaGRvZyB0cmlnZ2VyZWQgcmVzZXQsIG9yIGJlY2F1c2Ug
+b2YgU01QLg0KV2UgImp1c3QiIG5lZWQgdG8gZ3VhcmFudGVlIHdlIHJlYWQgZnJvbSBSV1RDU1JB
+IHdoZW4gaXQncyBzYWZlIHRvIGRvIHNvLiBDYW4geW91IHRoaW5rIG9mIGFueSBvdGhlciBhbHRl
+cm5hdGl2ZSB0byB0aGUgZmxhZyBpbiBJQ1JBTTEgdG8gYWNoaWV2ZSB0aGlzIHNhZmVseT8NCg0K
+VGhhbmtzLA0KRmFiDQoNCj4NCj4gR3J7b2V0amUsZWV0aW5nfXMsDQo+DQo+ICAgICAgICAgICAg
+ICAgICAgICAgICAgIEdlZXJ0DQo+DQo+IC0tDQo+IEdlZXJ0IFV5dHRlcmhvZXZlbiAtLSBUaGVy
+ZSdzIGxvdHMgb2YgTGludXggYmV5b25kIGlhMzIgLS0gZ2VlcnRAbGludXgtbTY4ay5vcmcNCj4N
+Cj4gSW4gcGVyc29uYWwgY29udmVyc2F0aW9ucyB3aXRoIHRlY2huaWNhbCBwZW9wbGUsIEkgY2Fs
+bCBteXNlbGYgYSBoYWNrZXIuIEJ1dA0KPiB3aGVuIEknbSB0YWxraW5nIHRvIGpvdXJuYWxpc3Rz
+IEkganVzdCBzYXkgInByb2dyYW1tZXIiIG9yIHNvbWV0aGluZyBsaWtlIHRoYXQuDQo+ICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgLS0gTGludXMgVG9ydmFsZHMNCg0KDQoNClJlbmVz
+YXMgRWxlY3Ryb25pY3MgRXVyb3BlIEx0ZCwgRHVrZXMgTWVhZG93LCBNaWxsYm9hcmQgUm9hZCwg
+Qm91cm5lIEVuZCwgQnVja2luZ2hhbXNoaXJlLCBTTDggNUZILCBVSy4gUmVnaXN0ZXJlZCBpbiBF
+bmdsYW5kICYgV2FsZXMgdW5kZXIgUmVnaXN0ZXJlZCBOby4gMDQ1ODY3MDkuDQo=
