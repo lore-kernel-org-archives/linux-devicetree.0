@@ -1,13 +1,13 @@
 From: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 06/16] iio: adc: sun4i-gpadc-iio: rework:
- support multible sensors
-Date: Fri, 26 Jan 2018 16:19:31 +0100
-Message-ID: <20180126151941.12183-7-embed3d@gmail.com>
+Subject: [PATCH 16/16] arm: dts: sun8i: a83t: add thermal zone
+ to A83T
+Date: Fri, 26 Jan 2018 16:19:41 +0100
+Message-ID: <20180126151941.12183-17-embed3d@gmail.com>
 References: <20180126151941.12183-1-embed3d@gmail.com>
 Reply-To: embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD257DPK24NRBHEOVXJQKGQES2N7IQA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD257DPK24NRBL4OVXJQKGQE6JSAAEA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20180126151941.12183-1-embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,182 +20,43 @@ To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yR
 Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-For adding newer sensor some basic rework of the code is necessary.
-
-This patch reworks the driver to be able to handle more than one
-thermal sensor. Newer SoC like the A80 have 4 thermal sensors.
-Because of this the maximal sensor count value was set to 4.
-
-The sensor_id value is set during sensor registration and is for each
-registered sensor indiviual. This makes it able to differntiate the
-sensors when the value is read from the register.
+This patch adds the thermal zones to the A83T. Sensor 0 is located in the
+cpu cluster 0. Sensor 1 is located in cluster 1 and Sensor 3 is located
+in the gpu.
 
 Signed-off-by: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- drivers/iio/adc/sun4i-gpadc-iio.c | 36 +++++++++++++++++++++++-------------
- include/linux/mfd/sun4i-gpadc.h   |  6 ++++++
- 2 files changed, 29 insertions(+), 13 deletions(-)
+ arch/arm/boot/dts/sun8i-a83t.dtsi | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-diff --git a/drivers/iio/adc/sun4i-gpadc-iio.c b/drivers/iio/adc/sun4i-gpadc-iio.c
-index 1a80744bd472..bff06f2798e8 100644
---- a/drivers/iio/adc/sun4i-gpadc-iio.c
-+++ b/drivers/iio/adc/sun4i-gpadc-iio.c
-@@ -70,7 +70,7 @@ struct gpadc_data {
- 	unsigned int	tp_adc_select;
- 	unsigned int	(*adc_chan_select)(unsigned int chan);
- 	unsigned int	adc_chan_mask;
--	unsigned int	temp_data;
-+	unsigned int	temp_data[MAX_SENSOR_COUNT];
- 	int		(*sample_start)(struct sun4i_gpadc_iio *info);
- 	int		(*sample_end)(struct sun4i_gpadc_iio *info);
- 	u32		ctrl0_map;
-@@ -80,6 +80,7 @@ struct gpadc_data {
- 	bool		has_bus_clk;
- 	bool		has_bus_rst;
- 	bool		has_mod_clk;
-+	int		sensor_count;
- };
- 
- static const struct gpadc_data sun4i_gpadc_data = {
-@@ -89,9 +90,10 @@ static const struct gpadc_data sun4i_gpadc_data = {
- 	.tp_adc_select = SUN4I_GPADC_CTRL1_TP_ADC_SELECT,
- 	.adc_chan_select = &sun4i_gpadc_chan_select,
- 	.adc_chan_mask = SUN4I_GPADC_CTRL1_ADC_CHAN_MASK,
--	.temp_data = SUN4I_GPADC_TEMP_DATA,
-+	.temp_data = {SUN4I_GPADC_TEMP_DATA, 0, 0, 0},
- 	.sample_start = sun4i_gpadc_sample_start,
- 	.sample_end = sun4i_gpadc_sample_end,
-+	.sensor_count = 1,
- };
- 
- static const struct gpadc_data sun5i_gpadc_data = {
-@@ -101,9 +103,10 @@ static const struct gpadc_data sun5i_gpadc_data = {
- 	.tp_adc_select = SUN4I_GPADC_CTRL1_TP_ADC_SELECT,
- 	.adc_chan_select = &sun4i_gpadc_chan_select,
- 	.adc_chan_mask = SUN4I_GPADC_CTRL1_ADC_CHAN_MASK,
--	.temp_data = SUN4I_GPADC_TEMP_DATA,
-+	.temp_data = {SUN4I_GPADC_TEMP_DATA, 0, 0, 0},
- 	.sample_start = sun4i_gpadc_sample_start,
- 	.sample_end = sun4i_gpadc_sample_end,
-+	.sensor_count = 1,
- };
- 
- static const struct gpadc_data sun6i_gpadc_data = {
-@@ -113,18 +116,20 @@ static const struct gpadc_data sun6i_gpadc_data = {
- 	.tp_adc_select = SUN6I_GPADC_CTRL1_TP_ADC_SELECT,
- 	.adc_chan_select = &sun6i_gpadc_chan_select,
- 	.adc_chan_mask = SUN6I_GPADC_CTRL1_ADC_CHAN_MASK,
--	.temp_data = SUN4I_GPADC_TEMP_DATA,
-+	.temp_data = {SUN4I_GPADC_TEMP_DATA, 0, 0, 0},
- 	.sample_start = sun4i_gpadc_sample_start,
- 	.sample_end = sun4i_gpadc_sample_end,
-+	.sensor_count = 1,
- };
- 
- static const struct gpadc_data sun8i_a33_gpadc_data = {
- 	.temp_offset = -1662,
- 	.temp_scale = 162,
- 	.tp_mode_en = SUN8I_A33_GPADC_CTRL1_CHOP_TEMP_EN,
--	.temp_data = SUN4I_GPADC_TEMP_DATA,
-+	.temp_data = {SUN4I_GPADC_TEMP_DATA, 0, 0, 0},
- 	.sample_start = sun4i_gpadc_sample_start,
- 	.sample_end = sun4i_gpadc_sample_end,
-+	.sensor_count = 1,
- };
- 
- struct sun4i_gpadc_iio {
-@@ -142,6 +147,7 @@ struct sun4i_gpadc_iio {
- 	struct clk			*bus_clk;
- 	struct clk			*mod_clk;
- 	struct reset_control		*reset;
-+	int				sensor_id;
- 	/* prevents concurrent reads of temperature and ADC */
- 	struct mutex			mutex;
- 	struct thermal_zone_device	*tzd;
-@@ -309,14 +315,15 @@ static int sun4i_gpadc_adc_read(struct iio_dev *indio_dev, int channel,
- 	return sun4i_gpadc_read(indio_dev, channel, val, info->fifo_data_irq);
- }
- 
--static int sun4i_gpadc_temp_read(struct iio_dev *indio_dev, int *val)
-+static int sun4i_gpadc_temp_read(struct iio_dev *indio_dev, int *val,
-+				int sensor)
- {
- 	struct sun4i_gpadc_iio *info = iio_priv(indio_dev);
- 
- 	if (info->no_irq) {
- 		pm_runtime_get_sync(indio_dev->dev.parent);
- 
--		regmap_read(info->regmap, info->data->temp_data, val);
-+		regmap_read(info->regmap, info->data->temp_data[sensor], val);
- 
- 		pm_runtime_mark_last_busy(indio_dev->dev.parent);
- 		pm_runtime_put_autosuspend(indio_dev->dev.parent);
-@@ -363,7 +370,7 @@ static int sun4i_gpadc_read_raw(struct iio_dev *indio_dev,
- 			ret = sun4i_gpadc_adc_read(indio_dev, chan->channel,
- 						   val);
- 		else
--			ret = sun4i_gpadc_temp_read(indio_dev, val);
-+			ret = sun4i_gpadc_temp_read(indio_dev, val, 0);
- 
- 		if (ret)
- 			return ret;
-@@ -511,7 +518,7 @@ static int sun4i_gpadc_get_temp(void *data, int *temp)
- 	struct sun4i_gpadc_iio *info = data;
- 	int val, scale, offset;
- 
--	if (sun4i_gpadc_temp_read(info->indio_dev, &val))
-+	if (sun4i_gpadc_temp_read(info->indio_dev, &val, info->sensor_id))
- 		return -ETIMEDOUT;
- 
- 	sun4i_gpadc_temp_scale(info->indio_dev, &scale);
-@@ -755,7 +762,7 @@ static int sun4i_gpadc_probe(struct platform_device *pdev)
- {
- 	struct sun4i_gpadc_iio *info;
- 	struct iio_dev *indio_dev;
--	int ret;
-+	int ret, i;
- 
- 	indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*info));
- 	if (!indio_dev)
-@@ -788,9 +795,12 @@ static int sun4i_gpadc_probe(struct platform_device *pdev)
- 	pm_runtime_enable(&pdev->dev);
- 
- 	if (IS_ENABLED(CONFIG_THERMAL_OF)) {
--		info->tzd = thermal_zone_of_sensor_register(info->sensor_device,
--							    0, info,
--							    &sun4i_ts_tz_ops);
-+		for (i = 0; i < info->data->sensor_count; i++) {
-+			info->sensor_id = i;
-+			info->tzd = thermal_zone_of_sensor_register(
-+					info->sensor_device,
-+					i, info, &sun4i_ts_tz_ops);
-+		}
- 		/*
- 		 * Do not fail driver probing when failing to register in
- 		 * thermal because no thermal DT node is found.
-diff --git a/include/linux/mfd/sun4i-gpadc.h b/include/linux/mfd/sun4i-gpadc.h
-index 39e096c3ddac..40b4dd9d2405 100644
---- a/include/linux/mfd/sun4i-gpadc.h
-+++ b/include/linux/mfd/sun4i-gpadc.h
-@@ -90,6 +90,10 @@
- #define SUNXI_THS_CTRL0					0x00
- #define SUNXI_THS_CTRL2					0x40
- #define SUNXI_THS_FILTER				0x70
-+#define SUNXI_THS_TDATA0				0x80
-+#define SUNXI_THS_TDATA1				0x84
-+#define SUNXI_THS_TDATA2				0x88
-+#define SUNXI_THS_TDATA3				0x8c
- 
- #define SUNXI_THS_FILTER_EN				BIT(2)
- #define SUNXI_THS_FILTER_TYPE(x)			(GENMASK(1, 0) & (x))
-@@ -101,6 +105,8 @@
- #define SUNXI_THS_TEMP_SENSE_EN2			BIT(2)
- #define SUNXI_THS_TEMP_SENSE_EN3			BIT(3)
- 
-+#define MAX_SENSOR_COUNT				4
+diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
+index 9e53ff5ac4ed..4259a8726031 100644
+--- a/arch/arm/boot/dts/sun8i-a83t.dtsi
++++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
+@@ -747,4 +747,24 @@
+ 			#size-cells = <0>;
+ 		};
+ 	};
 +
- struct sun4i_gpadc_dev {
- 	struct device			*dev;
- 	struct regmap			*regmap;
++	thermal-zones {
++		cpu0_thermal: cpu0-thermal {
++			polling-delay-passive = <1000>;
++			polling-delay = <5000>;
++			thermal-sensors = <&ths 0>;
++		};
++
++		cpu1_thermal: cpu1-thermal {
++			polling-delay-passive = <1000>;
++			polling-delay = <5000>;
++			thermal-sensors = <&ths 1>;
++		};
++
++		gpu_thermal: gpu-thermal {
++			polling-delay-passive = <1000>;
++			polling-delay = <5000>;
++			thermal-sensors = <&ths 2>;
++		};
++	};
+ };
 -- 
 2.11.0
