@@ -1,71 +1,173 @@
-From: Chintan Pandya <cpandya@codeaurora.org>
-Subject: Re: [PATCH] of: use hash based search in of_find_node_by_phandle
-Date: Fri, 26 Jan 2018 12:52:43 +0530
-Message-ID: <e6043f59-6351-a4f1-138f-26c500cb3b8a@codeaurora.org>
-References: <1516875247-19599-1-git-send-email-cpandya@codeaurora.org>
- <CAL_JsqLSGS+XDzhWFNaBGHtzsrEQm+SA8TkmdUKXc-16EyG_6g@mail.gmail.com>
+From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: Re: [PATCH 2/4] usb: dwc3: add dwc3 glue layer for UniPhier SoCs
+Date: Fri, 26 Jan 2018 16:28:46 +0900
+Message-ID: <20180126162846.BFA9.4A936039@socionext.com>
+References: <87a7x3l8gr.fsf@linux.intel.com> <20180125110929.C609.4A936039@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLSGS+XDzhWFNaBGHtzsrEQm+SA8TkmdUKXc-16EyG_6g@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <20180125110929.C609.4A936039@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Frank Rowand <frowand.list@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
+To: Felipe Balbi <balbi@kernel.org>, linux-usb@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jassi Brar <jaswinder.singh@linaro.org>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 1/25/2018 8:20 PM, Rob Herring wrote:
-> On Thu, Jan 25, 2018 at 4:14 AM, Chintan Pandya <cpandya@codeaurora.org> wrote:
->> of_find_node_by_phandle() takes a lot of time finding
-> Got some numbers for what is "a lot of time"?
-On my SDM device, I see total saving of 400ms during boot time. For some 
-clients
-whose node is quite deeper, they see 1ms time taken by this API.
->
->> right node when your intended device is too right-side
->> in the fdt. Reason is, we search each device serially
->> from the fdt, starting from left-most to right-most.
-> By right side, you mean a deep path?
-Yes, will correct this if original is confusing.
->
->> Implement, device-phandle relation in hash-table so
->> that look up can be faster.
->>
->> Change-Id: I4a2bc7eff6de142e4f91a7bf474893a45e61c128
-> Run checkpatch.pl
-Sure. My bad.
->
->> @@ -61,6 +62,7 @@ struct device_node {
->>          struct  kobject kobj;
->>          unsigned long _flags;
->>          void    *data;
->> +       struct hlist_node hash;
-> Always base your patches on the latest -rc at least. This won't apply.
-Ok, sure.
->
-> This grows struct device_node for every single node which we recently
-> worked on to shrink (which is why this won't apply). So I'm now
-> sensitive to anything that grows it. I'd really prefer something out
-> of band.
->
-> I'd guess that there's really only a few phandle lookups that occur
-> over and over.
-On my system, there are ~6.7k calls of this API during boot.
+Hi,
 
-> The clock controller, interrupt controller, etc. What
-> if you just had a simple array of previously found nodes for a cache
-> and of_find_node_by_phandle can check that array first. Probably 8-16
-> entries would be enough.
-I clearly see repeat calling with same phandle. But I have few hundreds 
-of nodes.
-I see hashing as generic optimization which applies equally good to all 
-sized DT.
-Using ~4KB more size to save 400 ms is a good trade-off, I believe.
+On Thu, 25 Jan 2018 11:09:30 +0900 <hayashi.kunihiko@socionext.com> wrote:
 
+> Hello Felipe,
+> 
+> On Wed, 24 Jan 2018 14:58:12 +0200 <balbi@kernel.org> wrote:
+> 
+> > 
+> > Hi,
+> > 
+> > Kunihiko Hayashi <hayashi.kunihiko@socionext.com> writes:
+> > > Hello Felipe,
+> > >
+> > > Thank you for your comments.
+> > >
+> > > On Tue, 23 Jan 2018 15:12:36 +0200 <balbi@kernel.org> wrote:
+> > >
+> > >> 
+> > >> Hi,
+> > >> 
+> > >> Kunihiko Hayashi <hayashi.kunihiko@socionext.com> writes:
+> > >> > Add a specific glue layer for UniPhier SoC platform to support
+> > >> > USB host mode. It manages hardware operating sequences to enable multiple
+> > >> > clock gates and assert resets, and to prepare to use dwc3 controller
+> > >> > on the SoC.
+> > >> >
+> > >> > This patch also handles the physical layer that has same register space
+> > >> > as the glue layer, because it needs to integrate initialziation sequence
+> > >> > between glue and phy.
+> > >> >
+> > >> > In case of some SoCs, since some initialization values for PHY are
+> > >> > included in nvmem, this patch includes the way to get the values from nvmem.
+> > >> >
+> > >> > It supports PXs2 and LD20 SoCs.
+> > >> >
+> > >> > Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> > >> > Signed-off-by: Motoya Tanigawa <tanigawa.motoya@socionext.com>
+> > >> > Signed-off-by: Masami Hiramatsu <masami.hiramatsu@linaro.org>
+> > >> > ---
+> > >> >  drivers/usb/dwc3/Kconfig         |   9 +
+> > >> >  drivers/usb/dwc3/Makefile        |   1 +
+> > >> >  drivers/usb/dwc3/dwc3-uniphier.c | 554 +++++++++++++++++++++++++++++++++++++++
+> > >> >  3 files changed, 564 insertions(+)
+> > >> >  create mode 100644 drivers/usb/dwc3/dwc3-uniphier.c
+> > >
+> > > ...snip...
+> > >
+> > >> > +
+> > >> > +static void dwc3u_ssphy_testio_write(struct dwc3u_priv *priv, int port,
+> > >> > +				     u32 data)
+> > >> 
+> > >> anything with sshphy or hsphy in the name should probably be part of a
+> > >> PHY driver using drivers/phy/ framework.
+> > >
+> > > I can try to separate phy control from this driver.
+> > > However, phy registers belongs to "dwc3-glue" IO map area (65b00000),
+> > > and this area also contains a reset bit for "dwc3-core" hardware.
+> > >
+> > > Although the phy driver is called from dwc3-core driver,
+> > > we need to deassert the reset bit before probing dwc3-core driver.
+> > >
+> > > As shown later, I think that it's difficut to determine the order of
+> > > initializing the registers in this area.
+> > >
+> > >> > +static void dwc3u_vbus_disable(struct dwc3u_priv *priv)
+> > >> > +{
+> > >> > +	int i;
+> > >> > +
+> > >> > +	for (i = 0; i < priv->nvbus; i++) {
+> > >> > +		dwc3u_maskwrite(priv, VBUS_CONTROL(i),
+> > >> > +				DRVVBUS_REG_EN | DRVVBUS_REG,
+> > >> > +				DRVVBUS_REG_EN | 0);
+> > >> > +	}
+> > >> > +}
+> > >> 
+> > >> drivers/regulator maybe?
+> > >
+> > > VBUS_CONTROL register is used for determing whether "dwc3-glue" hardware
+> > > enables vbus connected with "regulator" hardware.
+> > >
+> > > The regulator driver should manage "regulator" hardware, and
+> > > I don't think that the driver should manage this register.
+> > >
+> > >> > +static void dwc3u_reset_init(struct dwc3u_priv *priv)
+> > >> > +{
+> > >> > +	dwc3u_maskwrite(priv, RESET_CTL, LINK_RESET, 0);
+> > >> > +	usleep_range(1000, 2000);
+> > >> > +	dwc3u_maskwrite(priv, RESET_CTL, LINK_RESET, LINK_RESET);
+> > >> > +}
+> > >> > +
+> > >> > +static void dwc3u_reset_clear(struct dwc3u_priv *priv)
+> > >> > +{
+> > >> > +	dwc3u_maskwrite(priv, RESET_CTL, LINK_RESET, 0);
+> > >> > +}
+> > >> 
+> > >> drivers/reset ?
+> > >
+> > > The reset driver manages "sysctrl" IO map area in our SoC.
+> > >
+> > > RESET_CTL register belongs to "dwc3-glue" IO map area,
+> > > and the kernel can't access this area until enabling usb clocks and
+> > > deasserting usb resets in "sysctrl".
+> > >
+> > > I think that "dwc3-glue" register control should be separated from
+> > > "sysctrl".
+> > 
+> > Just split your address space and treat your glue as a device with
+> > several children:
+> > 
+> > glue@65b00000 {
+> > 	compatible = "foo"
+> 
+> Just to confirm, instead of SoC-specific glue driver, dwc3-of-simple.c
+> should handle compatible "foo", right?
 
-Chintan Pandya
+I understood this the answer was no.
+We can define glue node as "simple-mfd" and/or "syscon", and the node
+can include another function nodes like phy, sysctrl, and even dwc3-of-simple.
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+> > 
+> > 	phy@bar {
+> >         	...
+> > 	};
+> > 
+> > 	sysctrl@baz {
+> >         	...
+> > 	};
+> > 
+> > 	dwc3@foo {
+> >         	compatible = "snps, dwc3";
+> >                 ...
+> > 	};
+> > };
+> > 
+> > Then you know that you can let dwc3/core.c handle the PHY for you. If we
+> > need to teach dwc3/core.c about regulators, we can do that. But we don't
+> > need SoC-specific hacks ;-)
+> 
+> I also don't think that dwc3/core.c should have any SoC-specific controls.
+> I've thought the SoC-specific glue driver (dwc3-***.c) calls "clocks",
+> "resets", and "regulators".
+> 
+> However, although dwc3-of-simple.c can handle "clocks", it can't handle
+> "resets" and "regulators". Who should call them?
+
+Since The dwc3/core.c calls phy APIs, phy_power_on(), then we can handle
+regulators in phy driver.
+
+On the other hand, I think it's necessary to deassert "resets"
+before probing dwc3/core.c, same as "clocks".  I'll suggest a patch to solve
+the issue next.
+
+Thank you,
+
+---
+Best Regards,
+Kunihiko Hayashi
