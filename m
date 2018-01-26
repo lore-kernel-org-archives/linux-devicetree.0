@@ -1,76 +1,123 @@
-From: Icenowy Zheng <icenowy@aosc.io>
-Subject: Re: [RFC PATCH 0/9] initial support for "suniv" Allwinner new ARM9 SoC
-Date: Sat, 27 Jan 2018 04:57:33 +0800
-Message-ID: <3527360.oZpfb5Pa1p@ice-x220i>
-References: <20180119231735.61504-1-icenowy@aosc.io> <14593819.uISRktVE4V@ice-x220i> <20180125153520.lxcfvh3yvi36uiux@flea.lan>
+From: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v2 2/5] irqchip/gic-v3-its: add ability to save/restore
+ ITS state
+Date: Fri, 26 Jan 2018 12:59:56 -0800
+Message-ID: <20180126205954.cikwitw7sgdt2yn3@ban.mtv.corp.google.com>
+References: <20180126073835.16575-1-dbasehore@chromium.org>
+ <20180126073835.16575-3-dbasehore@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20180125153520.lxcfvh3yvi36uiux@flea.lan>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-sunxi@googlegroups.com, Marc Zyngier <marc.zyngier@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20180126073835.16575-3-dbasehore-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Derek Basehore <dbasehore-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Soby.Mathew-5wv7dgnIgG8@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-在 2018年1月25日星期四 CST 下午11:35:20，Maxime Ripard 写道：
-> Hi,
-> 
-> On Wed, Jan 24, 2018 at 09:10:34PM +0800, Icenowy Zheng wrote:
-> > 在 2018年1月22日星期一 CST 下午8:14:35，Maxime Ripard 写道：
-> > 
-> > > On Sat, Jan 20, 2018 at 07:17:26AM +0800, Icenowy Zheng wrote:
-> > > > This is the RFC initial patchset for the "new" Allwinner SUNIV ARM9
-> > > > SoC.
-> > > > 
-> > > > The same die is packaged differently, come with different co-packaged
-> > > > DRAM or shipped with different SDK; and then made many model names:
-> > > > F23,
-> > > > F25, F1C100A, F1C100S, F1C200S, F1C500, F1C600, R6, etc. These SoCs
-> > > > all
-> > > > share a common feature set and are packaged similarly (eLQFP128 for
-> > > > SoCs
-> > > > without co-packaged DRAM, QFN88 for with DRAM). As their's no
-> > > > functionality hidden on the QFN88 models (except DRAM interface not
-> > > > exported), it's not clever to differentiate them. So I will use suniv
-> > > > as
-> > > > common name of all these SoCs.
-> > > 
-> > > Where is that suniv prefix coming from?
-> > 
-> > The BSP (Melis and Linux). (e.g. "libs/suniv" directory of the Melis SDK
-> > and "arch/arm/boot/dts/sunivw1p1.dtsi" in the Linux SDK)
-> 
-> Do you have a link to that BSP?
+One trivial comment:
 
-https://pan.baidu.com/s/1rar5YtI
-
-There's Melis (F1C100s) and Linux (F1C600) BSP.
-
+On Thu, Jan 25, 2018 at 11:38:32PM -0800, Derek Basehore wrote:
+> Some platforms power off GIC logic in suspend, so we need to
+> save/restore state. The distributor and redistributor registers need
+> to be handled in platform code due to access permissions on those
+> registers, but the ITS registers can be restored in the kernel.
 > 
-> > > You should really answer two questions here:
-> > >   - Are you able to predict whether you'll find an SoC part of that
-> > >   
-> > >     family in the future that derives a bit and will need a compatible
-> > >     of its own?
-> > >   
-> > >   - Are you able to predict which quirks we'll need along the way to
-> > >   
-> > >     support all the SoCs you've listed there?
-> > > 
-> > > If you can't answer yes to both these questions, with a 100%
-> > > certainty, then you'll need a SoC name in the compatible.
-> > > 
-> > > Which doesn't prevent you from sharing as much as possible the DT like
-> > > we did between the A10s and the A13 for example.
-> > 
-> > So the suniv-f1c100s.dtsi will still be kept empty and all peripherals
-> > known should go through suniv.dtsi.
+> Signed-off-by: Derek Basehore <dbasehore-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> ---
+>  drivers/irqchip/irq-gic-v3-its.c | 86 ++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 86 insertions(+)
 > 
-> Sorry if I wasn't really clear. You can totally keep the current DT
-> structure if that makes sense (and judging by what you're saying, it
-> does.), but the compatibles should have the SoC name in it.
-> 
-> Maxime
+> diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+> index 06f025fd5726..4727b447610f 100644
+> --- a/drivers/irqchip/irq-gic-v3-its.c
+> +++ b/drivers/irqchip/irq-gic-v3-its.c
 
+...
 
+> @@ -3042,6 +3054,75 @@ static void its_enable_quirks(struct its_node *its)
+>  	gic_enable_quirks(iidr, its_quirks, its);
+>  }
+>  
+> +int its_save_disable(void)
+
+This (and its_restore_enable()) should be static, now that you're only
+using them in this file.
+
+Brian
+
+> +{
+> +	struct its_node *its;
+> +	int err = 0;
+> +
+> +	spin_lock(&its_lock);
+> +	list_for_each_entry(its, &its_nodes, entry) {
+> +		if (its->flags & ITS_FLAGS_SAVE_SUSPEND_STATE) {
+> +			struct its_ctx *ctx = &its->its_ctx;
+> +			void __iomem *base = its->base;
+> +
+> +			ctx->ctlr = readl_relaxed(base + GITS_CTLR);
+> +			err = its_force_quiescent(base);
+> +			if (err) {
+> +				writel_relaxed(ctx->ctlr, base + GITS_CTLR);
+> +				goto err;
+> +			}
+> +
+> +			ctx->cbaser = gits_read_cbaser(base + GITS_CBASER);
+> +		}
+> +	}
+> +
+> +err:
+> +	if (err) {
+> +		list_for_each_entry_continue_reverse(its, &its_nodes, entry) {
+> +			if (its->flags & ITS_FLAGS_SAVE_SUSPEND_STATE) {
+> +				struct its_ctx *ctx = &its->its_ctx;
+> +				void __iomem *base = its->base;
+> +
+> +				writel_relaxed(ctx->ctlr, base + GITS_CTLR);
+> +			}
+> +		}
+> +	}
+> +
+> +	spin_unlock(&its_lock);
+> +
+> +	return err;
+> +}
+> +
+> +void its_restore_enable(void)
+> +{
+> +	struct its_node *its;
+> +
+> +	spin_lock(&its_lock);
+> +	list_for_each_entry(its, &its_nodes, entry) {
+> +		struct its_ctx *ctx = &its->its_ctx;
+> +		struct its_baser *baser;
+> +		void __iomem *base;
+> +		int i;
+> +
+> +		if (its->flags & ITS_FLAGS_SAVE_SUSPEND_STATE) {
+> +			base = its->base;
+> +			gits_write_cbaser(ctx->cbaser, base + GITS_CBASER);
+> +			/* Restore GITS_BASER from the value cache. */
+> +			for (i = 0; i < GITS_BASER_NR_REGS; i++) {
+> +				baser = &its->tables[i];
+> +				its_write_baser(its, baser, baser->val);
+> +			}
+> +			writel_relaxed(ctx->ctlr, base + GITS_CTLR);
+> +		}
+> +	}
+> +	spin_unlock(&its_lock);
+> +}
+> +
+> +static struct syscore_ops its_syscore_ops = {
+> +	.suspend = its_save_disable,
+> +	.resume = its_restore_enable,
+> +};
+> +
+>  static int its_init_domain(struct fwnode_handle *handle, struct its_node *its)
+>  {
+>  	struct irq_domain *inner_domain;
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
