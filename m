@@ -1,7 +1,7 @@
 From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH v7 07/11] media: i2c: ov772x: Support frame interval handling
-Date: Fri, 26 Jan 2018 14:55:26 +0100
-Message-ID: <1516974930-11713-8-git-send-email-jacopo+renesas@jmondi.org>
+Subject: [PATCH v7 10/11] arch: sh: migor: Use new renesas-ceu camera driver
+Date: Fri, 26 Jan 2018 14:55:29 +0100
+Message-ID: <1516974930-11713-11-git-send-email-jacopo+renesas@jmondi.org>
 References: <1516974930-11713-1-git-send-email-jacopo+renesas@jmondi.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1516974930-11713-1-git-send-email-jacopo+renesas@jmondi.org>
@@ -10,420 +10,386 @@ To: laurent.pinchart@ideasonboard.com, magnus.damm@gmail.com, geert@glider.be, h
 Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add support to ov772x driver for frame intervals handling and enumeration.
-Tested with 10MHz and 24MHz input clock at VGA and QVGA resolutions for
-10, 15 and 30 frame per second rates.
+Migo-R platform uses sh_mobile_ceu camera driver, which is now being
+replaced by a proper V4L2 camera driver named 'renesas-ceu'.
+
+Move Migo-R platform to use the v4l2 renesas-ceu camera driver
+interface and get rid of soc_camera defined components used to register
+sensor drivers and of platform specific enable/disable routines.
+
+Register clock source and GPIOs for sensor drivers, so they can use
+clock and gpio APIs.
+
+Also, memory for CEU video buffers is now reserved with membocks APIs,
+and need to be declared as dma_coherent during machine initialization to
+remove that architecture specific part from CEU driver.
 
 Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
 ---
- drivers/media/i2c/ov772x.c | 315 ++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 310 insertions(+), 5 deletions(-)
+ arch/sh/boards/mach-migor/setup.c      | 225 +++++++++++++++------------------
+ arch/sh/kernel/cpu/sh4a/clock-sh7722.c |   2 +-
+ 2 files changed, 101 insertions(+), 126 deletions(-)
 
-diff --git a/drivers/media/i2c/ov772x.c b/drivers/media/i2c/ov772x.c
-index 912b1b9..6d46748 100644
---- a/drivers/media/i2c/ov772x.c
-+++ b/drivers/media/i2c/ov772x.c
-@@ -250,6 +250,7 @@
- #define AEC_1p2         0x10	/*  01: 1/2  window */
- #define AEC_1p4         0x20	/*  10: 1/4  window */
- #define AEC_2p3         0x30	/*  11: Low 2/3 window */
-+#define COM4_RESERVED   0x01	/* Reserved value */
- 
- /* COM5 */
- #define AFR_ON_OFF      0x80	/* Auto frame rate control ON/OFF selection */
-@@ -267,6 +268,19 @@
- 				/* AEC max step control */
- #define AEC_NO_LIMIT    0x01	/*   0 : AEC incease step has limit */
- 				/*   1 : No limit to AEC increase step */
-+/* CLKRC */
-+				/* Input clock divider register */
-+#define CLKRC_RESERVED  0x80	/* Reserved value */
-+#define CLKRC_BYPASS    0x40	/* Bypass input clock divider */
-+#define CLKRC_DIV2      0x01	/* Divide input clock by 2 */
-+#define CLKRC_DIV3      0x02	/* Divide input clock by 3 */
-+#define CLKRC_DIV4      0x03	/* Divide input clock by 4 */
-+#define CLKRC_DIV5      0x04	/* Divide input clock by 5 */
-+#define CLKRC_DIV6      0x05	/* Divide input clock by 6 */
-+#define CLKRC_DIV8      0x07	/* Divide input clock by 8 */
-+#define CLKRC_DIV10     0x09	/* Divide input clock by 10 */
-+#define CLKRC_DIV16     0x0f	/* Divide input clock by 16 */
-+#define CLKRC_DIV20     0x13	/* Divide input clock by 20 */
- 
- /* COM7 */
- 				/* SCCB Register Reset */
-@@ -373,6 +387,12 @@
- #define VERSION(pid, ver) ((pid<<8)|(ver&0xFF))
- 
+diff --git a/arch/sh/boards/mach-migor/setup.c b/arch/sh/boards/mach-migor/setup.c
+index 0bcbe58..e3c3b4f 100644
+--- a/arch/sh/boards/mach-migor/setup.c
++++ b/arch/sh/boards/mach-migor/setup.c
+@@ -1,17 +1,16 @@
++// SPDX-License-Identifier: GPL-2.0
  /*
-+ * Input clock frequencies
-+ */
-+enum { OV772X_FIN_10MHz, OV772X_FIN_24MHz, OV772X_FIN_48MHz, OV772X_FIN_N, };
-+static unsigned int ov772x_fin_vals[] = { 10000000, 24000000, 48000000 };
-+
-+/*
-  * struct
+  * Renesas System Solutions Asia Pte. Ltd - Migo-R
+  *
+  * Copyright (C) 2008 Magnus Damm
+- *
+- * This file is subject to the terms and conditions of the GNU General Public
+- * License.  See the file "COPYING" in the main directory of this archive
+- * for more details.
+  */
++#include <linux/clkdev.h>
+ #include <linux/init.h>
+ #include <linux/platform_device.h>
+ #include <linux/interrupt.h>
+ #include <linux/input.h>
+ #include <linux/input/sh_keysc.h>
++#include <linux/memblock.h>
+ #include <linux/mmc/host.h>
+ #include <linux/mtd/physmap.h>
+ #include <linux/mfd/tmio.h>
+@@ -23,10 +22,11 @@
+ #include <linux/delay.h>
+ #include <linux/clk.h>
+ #include <linux/gpio.h>
++#include <linux/gpio/machine.h>
+ #include <linux/videodev2.h>
+ #include <linux/sh_intc.h>
+ #include <video/sh_mobile_lcdc.h>
+-#include <media/drv-intf/sh_mobile_ceu.h>
++#include <media/drv-intf/renesas-ceu.h>
+ #include <media/i2c/ov772x.h>
+ #include <media/soc_camera.h>
+ #include <media/i2c/tw9910.h>
+@@ -45,6 +45,9 @@
+  * 0x18000000       8GB    8   NAND Flash (K9K8G08U0A)
   */
  
-@@ -391,6 +411,16 @@ struct ov772x_win_size {
- 	struct v4l2_rect	  rect;
++#define CEU_BUFFER_MEMORY_SIZE		(4 << 20)
++static phys_addr_t ceu_dma_membase;
++
+ static struct smc91x_platdata smc91x_info = {
+ 	.flags = SMC91X_USE_16BIT | SMC91X_NOWAIT,
+ };
+@@ -301,65 +304,24 @@ static struct platform_device migor_lcdc_device = {
+ 	},
  };
  
-+struct ov772x_pclk_config {
-+	u8 com4;
-+	u8 clkrc;
-+};
-+
-+struct ov772x_frame_rate {
-+	unsigned int fps;
-+	const struct ov772x_pclk_config pclk[OV772X_FIN_N];
-+};
-+
- struct ov772x_priv {
- 	struct v4l2_subdev                subdev;
- 	struct v4l2_ctrl_handler	  hdl;
-@@ -404,6 +434,7 @@ struct ov772x_priv {
- 	unsigned short                    flag_hflip:1;
- 	/* band_filter = COM8[5] ? 256 - BDBASE : 0 */
- 	unsigned short                    band_filter;
-+	unsigned int			  fps;
+-static struct clk *camera_clk;
+-static DEFINE_MUTEX(camera_lock);
+-
+-static void camera_power_on(int is_tw)
+-{
+-	mutex_lock(&camera_lock);
+-
+-	/* Use 10 MHz VIO_CKO instead of 24 MHz to work
+-	 * around signal quality issues on Panel Board V2.1.
+-	 */
+-	camera_clk = clk_get(NULL, "video_clk");
+-	clk_set_rate(camera_clk, 10000000);
+-	clk_enable(camera_clk);	/* start VIO_CKO */
+-
+-	/* use VIO_RST to take camera out of reset */
+-	mdelay(10);
+-	if (is_tw) {
+-		gpio_set_value(GPIO_PTT2, 0);
+-		gpio_set_value(GPIO_PTT0, 0);
+-	} else {
+-		gpio_set_value(GPIO_PTT0, 1);
+-	}
+-	gpio_set_value(GPIO_PTT3, 0);
+-	mdelay(10);
+-	gpio_set_value(GPIO_PTT3, 1);
+-	mdelay(10); /* wait to let chip come out of reset */
+-}
+-
+-static void camera_power_off(void)
+-{
+-	clk_disable(camera_clk); /* stop VIO_CKO */
+-	clk_put(camera_clk);
+-
+-	gpio_set_value(GPIO_PTT3, 0);
+-	mutex_unlock(&camera_lock);
+-}
+-
+-static int ov7725_power(struct device *dev, int mode)
+-{
+-	if (mode)
+-		camera_power_on(0);
+-	else
+-		camera_power_off();
+-
+-	return 0;
+-}
+-
+-static int tw9910_power(struct device *dev, int mode)
+-{
+-	if (mode)
+-		camera_power_on(1);
+-	else
+-		camera_power_off();
+-
+-	return 0;
+-}
+-
+-static struct sh_mobile_ceu_info sh_mobile_ceu_info = {
+-	.flags = SH_CEU_FLAG_USE_8BIT_BUS,
++static struct ceu_platform_data ceu_pdata = {
++	.num_subdevs			= 2,
++	.subdevs = {
++		{ /* [0] = ov772x */
++			.flags		= 0,
++			.bus_width	= 8,
++			.bus_shift	= 0,
++			.i2c_adapter_id	= 0,
++			.i2c_address	= 0x21,
++		},
++		{ /* [1] = tw9910 */
++			.flags		= 0,
++			.bus_width	= 8,
++			.bus_shift	= 0,
++			.i2c_adapter_id	= 0,
++			.i2c_address	= 0x45,
++		},
++	},
  };
  
- /*
-@@ -508,6 +539,154 @@ static const struct ov772x_win_size ov772x_win_sizes[] = {
+ static struct resource migor_ceu_resources[] = {
+@@ -373,18 +335,32 @@ static struct resource migor_ceu_resources[] = {
+ 		.start  = evt2irq(0x880),
+ 		.flags  = IORESOURCE_IRQ,
+ 	},
+-	[2] = {
+-		/* place holder for contiguous memory */
+-	},
  };
  
- /*
-+ * frame rate settings lists
-+ */
-+unsigned int ov772x_frame_intervals[] = {10, 15, 30, 60};
-+#define OV772X_N_FRAME_INTERVALS ARRAY_SIZE(ov772x_frame_intervals)
-+
-+static const struct ov772x_frame_rate vga_frame_rates[] = {
-+	{	/* PCLK = 7,5 MHz */
-+		.fps		= 10,
-+		.pclk = {
-+			[OV772X_FIN_10MHz] = {
-+				.com4	= PLL_6x | COM4_RESERVED,
-+				.clkrc	= CLKRC_DIV8 | CLKRC_RESERVED,
-+			},
-+			[OV772X_FIN_24MHz] = {
-+				.com4	= PLL_BYPASS | COM4_RESERVED,
-+				.clkrc	= CLKRC_DIV3 | CLKRC_RESERVED,
-+			},
-+			[OV772X_FIN_48MHz] = {
-+				.com4	= PLL_BYPASS | COM4_RESERVED,
-+				.clkrc	= CLKRC_DIV6 | CLKRC_RESERVED,
-+			},
-+		},
-+	},
-+	{	/* PCLK = 12 MHz */
-+		.fps		= 15,
-+		.pclk = {
-+			[OV772X_FIN_10MHz]	= {
-+				.com4	= PLL_4x | COM4_RESERVED,
-+				.clkrc	= CLKRC_DIV3 | CLKRC_RESERVED,
-+			},
-+			[OV772X_FIN_24MHz]	= {
-+				.com4	= PLL_BYPASS | COM4_RESERVED,
-+				.clkrc	= CLKRC_DIV2 | CLKRC_RESERVED,
-+			},
-+			[OV772X_FIN_48MHz]	= {
-+				.com4	= PLL_BYPASS | COM4_RESERVED,
-+				.clkrc	= CLKRC_DIV4 | CLKRC_RESERVED,
-+			},
-+		},
-+	},
-+	{	/* PCLK = 24 MHz */
-+		.fps		= 30,
-+		.pclk = {
-+			[OV772X_FIN_10MHz]	= {
-+				.com4	= PLL_8x | COM4_RESERVED,
-+				.clkrc	= CLKRC_DIV3 | CLKRC_RESERVED,
-+			},
-+			[OV772X_FIN_24MHz]	= {
-+				.com4	= PLL_BYPASS | COM4_RESERVED,
-+				.clkrc	= CLKRC_BYPASS | CLKRC_RESERVED,
-+			},
-+			[OV772X_FIN_48MHz]	= {
-+				.com4	= PLL_BYPASS | COM4_RESERVED,
-+				.clkrc	= CLKRC_DIV2 | CLKRC_RESERVED,
-+			},
-+		},
-+	},
-+	{	/* PCLK = 48 MHz */
-+		.fps		= 60,
-+		.pclk = {
-+			[OV772X_FIN_10MHz]	= {
-+				.com4	= PLL_8x | COM4_RESERVED,
-+				.clkrc	= CLKRC_DIV2 | CLKRC_RESERVED,
-+			},
-+			[OV772X_FIN_24MHz]	= {
-+				.com4	= PLL_4x | COM4_RESERVED,
-+				.clkrc	= CLKRC_DIV2 | CLKRC_RESERVED,
-+			},
-+			[OV772X_FIN_48MHz]	= {
-+				.com4	= PLL_BYPASS | COM4_RESERVED,
-+				.clkrc	= CLKRC_BYPASS | CLKRC_RESERVED,
-+			},
-+		},
+ static struct platform_device migor_ceu_device = {
+-	.name		= "sh_mobile_ceu",
+-	.id             = 0, /* "ceu0" clock */
++	.name		= "renesas-ceu",
++	.id             = 0, /* ceu.0 */
+ 	.num_resources	= ARRAY_SIZE(migor_ceu_resources),
+ 	.resource	= migor_ceu_resources,
+ 	.dev	= {
+-		.platform_data	= &sh_mobile_ceu_info,
++		.platform_data	= &ceu_pdata,
 +	},
 +};
 +
-+static const struct ov772x_frame_rate qvga_frame_rates[] = {
-+	{	/* PCLK = 3,2 MHz */
-+		.fps		= 10,
-+		.pclk = {
-+			[OV772X_FIN_10MHz] = {
-+				.com4	= PLL_6x | COM4_RESERVED,
-+				.clkrc	= CLKRC_DIV16 | CLKRC_RESERVED,
-+			},
-+			[OV772X_FIN_24MHz] = {
-+				.com4	= PLL_BYPASS | COM4_RESERVED,
-+				.clkrc	= CLKRC_DIV8 | CLKRC_RESERVED,
-+			},
-+			[OV772X_FIN_48MHz] = {
-+				.com4	= PLL_BYPASS | COM4_RESERVED,
-+				.clkrc	= CLKRC_DIV16 | CLKRC_RESERVED,
-+			},
-+		},
-+	},
-+	{	/* PCLK = 4,8 MHz */
-+		.fps		= 15,
-+		.pclk = {
-+			[OV772X_FIN_10MHz]	= {
-+				.com4	= PLL_BYPASS | COM4_RESERVED,
-+				.clkrc	= CLKRC_DIV2 | CLKRC_RESERVED,
-+			},
-+			[OV772X_FIN_24MHz]	= {
-+				.com4	= PLL_BYPASS | COM4_RESERVED,
-+				.clkrc	= CLKRC_DIV5 | CLKRC_RESERVED,
-+			},
-+			[OV772X_FIN_48MHz]	= {
-+				.com4	= PLL_BYPASS | COM4_RESERVED,
-+				.clkrc	= CLKRC_DIV10 | CLKRC_RESERVED,
-+			},
-+		},
-+	},
-+	{	/* PCLK = 9,6 MHz */
-+		.fps		= 30,
-+		.pclk = {
-+			[OV772X_FIN_10MHz]	= {
-+				.com4	= PLL_BYPASS | COM4_RESERVED,
-+				.clkrc	= CLKRC_BYPASS | CLKRC_RESERVED,
-+			},
-+			[OV772X_FIN_24MHz]	= {
-+				.com4	= PLL_4x | COM4_RESERVED,
-+				.clkrc	= CLKRC_DIV10 | CLKRC_RESERVED,
-+			},
-+			[OV772X_FIN_48MHz]	= {
-+				.com4	= PLL_4x | COM4_RESERVED,
-+				.clkrc	= CLKRC_DIV20 | CLKRC_RESERVED,
-+			},
-+		},
-+	},
-+	{	/* PCLK = 19 MHz */
-+		.fps		= 60,
-+		.pclk = {
-+			[OV772X_FIN_10MHz]	= {
-+				.com4	= PLL_4x | COM4_RESERVED,
-+				.clkrc	= CLKRC_DIV2 | CLKRC_RESERVED,
-+			},
-+			[OV772X_FIN_24MHz]	= {
-+				.com4	= PLL_6x | COM4_RESERVED,
-+				.clkrc	= CLKRC_DIV8 | CLKRC_RESERVED,
-+			},
-+			[OV772X_FIN_48MHz]	= {
-+				.com4	= PLL_6x | COM4_RESERVED,
-+				.clkrc	= CLKRC_DIV16 | CLKRC_RESERVED,
-+			},
-+		},
++/* Powerdown/reset gpios for CEU image sensors */
++static struct gpiod_lookup_table ov7725_gpios = {
++	.dev_id		= "0-0021",
++	.table		= {
++		GPIO_LOOKUP("sh7722_pfc", GPIO_PTT0, "pwdn", GPIO_ACTIVE_HIGH),
++		GPIO_LOOKUP("sh7722_pfc", GPIO_PTT3, "rstb", GPIO_ACTIVE_LOW),
 +	},
 +};
 +
-+/*
-  * general function
-  */
++static struct gpiod_lookup_table tw9910_gpios = {
++	.dev_id		= "0-0045",
++	.table		= {
++		GPIO_LOOKUP("sh7722_pfc", GPIO_PTT2, "pdn", GPIO_ACTIVE_HIGH),
++		GPIO_LOOKUP("sh7722_pfc", GPIO_PTT3, "rstb", GPIO_ACTIVE_LOW),
+ 	},
+ };
  
-@@ -574,6 +753,102 @@ static int ov772x_s_stream(struct v4l2_subdev *sd, int enable)
- 	return 0;
- }
+@@ -423,6 +399,15 @@ static struct platform_device sdhi_cn9_device = {
+ 	},
+ };
  
-+/*
-+ * Approximate input clock frequency to the closes possible one used to
-+ * calculate pixel clock settings.
-+ */
-+static int ov772x_get_fin(struct ov772x_priv *priv)
-+{
-+	unsigned int clk_rate = clk_get_rate(priv->clk);
-+	unsigned int rate_prev = ~0L;
-+	unsigned int rate;
-+	unsigned int idx;
-+	unsigned int i;
++static struct ov772x_camera_info ov7725_info = {
++	.flags		= 0,
++};
 +
-+	for (i = 0, idx = 0; i < OV772X_FIN_N; i++) {
-+		rate = abs(ov772x_fin_vals[i] - clk_rate);
-+		if (rate < rate_prev) {
-+			rate_prev = rate;
-+			idx = i;
-+		}
-+	}
++static struct tw9910_video_info tw9910_info = {
++	.buswidth       = 8,
++	.mpout          = TW9910_MPO_FIELD,
++};
 +
-+	return idx;
-+}
-+
-+static int ov772x_set_frame_rate(struct ov772x_priv *priv,
-+				 struct v4l2_fract *tpf, unsigned int fin,
-+				 const struct ov772x_win_size *win)
-+{
-+	struct i2c_client *client = v4l2_get_subdevdata(&priv->subdev);
-+	unsigned int fps = tpf->denominator / tpf->numerator;
-+	const struct ov772x_frame_rate *frate;
-+	const struct ov772x_pclk_config *pclk;
-+	unsigned int rate_prev = ~0L;
-+	unsigned int rate;
-+	unsigned int idx;
-+	unsigned int i;
-+	int ret;
-+
-+	if (win->rect.width == VGA_WIDTH &&
-+	    win->rect.height == VGA_HEIGHT)
-+		frate = vga_frame_rates;
-+	else if (win->rect.width == QVGA_WIDTH &&
-+		 win->rect.height == QVGA_HEIGHT)
-+		frate = qvga_frame_rates;
-+	else
-+		return -EINVAL;
-+
-+	/* Approximate to the closest possible frame interval. */
-+	for (i = 0, idx = 0; i < OV772X_N_FRAME_INTERVALS; i++) {
-+		rate = abs(fps - frate[i].fps);
-+		if (rate < rate_prev) {
-+			idx = i;
-+			rate_prev = rate;
-+		}
-+	}
-+
-+	pclk = &frate[idx].pclk[fin];
-+
-+	ret = ov772x_write(client, COM4, pclk->com4);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = ov772x_write(client, CLKRC, pclk->clkrc);
-+	if (ret < 0)
-+		return ret;
-+
-+	tpf->numerator = 1;
-+	tpf->denominator = frate[idx].fps;
-+	priv->fps = tpf->denominator;
-+
-+	return 0;
-+}
-+
-+static int ov772x_g_frame_interval(struct v4l2_subdev *sd,
-+				   struct v4l2_subdev_frame_interval *ival)
-+{
-+	struct ov772x_priv *priv = to_ov772x(sd);
-+	struct v4l2_fract *tpf = &ival->interval;
-+
-+	memset(ival->reserved, 0, sizeof(ival->reserved));
-+	tpf->numerator = 1;
-+	tpf->denominator = priv->fps;
-+
-+	return 0;
-+}
-+
-+static int ov772x_s_frame_interval(struct v4l2_subdev *sd,
-+				   struct v4l2_subdev_frame_interval *ival)
-+{
-+	struct ov772x_priv *priv = to_ov772x(sd);
-+	struct v4l2_fract *tpf = &ival->interval;
-+
-+	memset(ival->reserved, 0, sizeof(ival->reserved));
-+
-+	return ov772x_set_frame_rate(priv, tpf,
-+				     ov772x_get_fin(priv), priv->win);
-+}
- static int ov772x_s_ctrl(struct v4l2_ctrl *ctrl)
+ static struct i2c_board_info migor_i2c_devices[] = {
+ 	{
+ 		I2C_BOARD_INFO("rs5c372b", 0x32),
+@@ -434,51 +419,13 @@ static struct i2c_board_info migor_i2c_devices[] = {
+ 	{
+ 		I2C_BOARD_INFO("wm8978", 0x1a),
+ 	},
+-};
+-
+-static struct i2c_board_info migor_i2c_camera[] = {
+ 	{
+ 		I2C_BOARD_INFO("ov772x", 0x21),
++		.platform_data = &ov7725_info,
+ 	},
+ 	{
+ 		I2C_BOARD_INFO("tw9910", 0x45),
+-	},
+-};
+-
+-static struct ov772x_camera_info ov7725_info;
+-
+-static struct soc_camera_link ov7725_link = {
+-	.power		= ov7725_power,
+-	.board_info	= &migor_i2c_camera[0],
+-	.i2c_adapter_id	= 0,
+-	.priv		= &ov7725_info,
+-};
+-
+-static struct tw9910_video_info tw9910_info = {
+-	.buswidth	= SOCAM_DATAWIDTH_8,
+-	.mpout		= TW9910_MPO_FIELD,
+-};
+-
+-static struct soc_camera_link tw9910_link = {
+-	.power		= tw9910_power,
+-	.board_info	= &migor_i2c_camera[1],
+-	.i2c_adapter_id	= 0,
+-	.priv		= &tw9910_info,
+-};
+-
+-static struct platform_device migor_camera[] = {
+-	{
+-		.name	= "soc-camera-pdrv",
+-		.id	= 0,
+-		.dev	= {
+-			.platform_data = &ov7725_link,
+-		},
+-	}, {
+-		.name	= "soc-camera-pdrv",
+-		.id	= 1,
+-		.dev	= {
+-			.platform_data = &tw9910_link,
+-		},
++		.platform_data = &tw9910_info,
+ 	},
+ };
+ 
+@@ -486,12 +433,9 @@ static struct platform_device *migor_devices[] __initdata = {
+ 	&smc91x_eth_device,
+ 	&sh_keysc_device,
+ 	&migor_lcdc_device,
+-	&migor_ceu_device,
+ 	&migor_nor_flash_device,
+ 	&migor_nand_flash_device,
+ 	&sdhi_cn9_device,
+-	&migor_camera[0],
+-	&migor_camera[1],
+ };
+ 
+ extern char migor_sdram_enter_start;
+@@ -501,6 +445,8 @@ extern char migor_sdram_leave_end;
+ 
+ static int __init migor_devices_setup(void)
  {
- 	struct ov772x_priv *priv = container_of(ctrl->handler,
-@@ -757,6 +1032,7 @@ static int ov772x_set_params(struct ov772x_priv *priv,
- 			     const struct ov772x_win_size *win)
- {
- 	struct i2c_client *client = v4l2_get_subdevdata(&priv->subdev);
-+	struct v4l2_fract tpf;
- 	int ret;
- 	u8  val;
- 
-@@ -885,6 +1161,13 @@ static int ov772x_set_params(struct ov772x_priv *priv,
- 	if (ret < 0)
- 		goto ov772x_set_fmt_error;
- 
-+	/* COM4, CLKRC: Set pixel clock and framerate. */
-+	tpf.numerator = 1;
-+	tpf.denominator = priv->fps;
-+	ret = ov772x_set_frame_rate(priv, &tpf, ov772x_get_fin(priv), win);
-+	if (ret < 0)
-+		goto ov772x_set_fmt_error;
++	struct clk *video_clk;
 +
- 	/*
- 	 * set COM8
+ 	/* register board specific self-refresh code */
+ 	sh_mobile_register_self_refresh(SUSP_SH_STANDBY | SUSP_SH_SF,
+ 					&migor_sdram_enter_start,
+@@ -620,20 +566,8 @@ static int __init migor_devices_setup(void)
+ 	gpio_request(GPIO_FN_VIO_D9, NULL);
+ 	gpio_request(GPIO_FN_VIO_D8, NULL);
+ 
+-	gpio_request(GPIO_PTT3, NULL); /* VIO_RST */
+-	gpio_direction_output(GPIO_PTT3, 0);
+-	gpio_request(GPIO_PTT2, NULL); /* TV_IN_EN */
+-	gpio_direction_output(GPIO_PTT2, 1);
+-	gpio_request(GPIO_PTT0, NULL); /* CAM_EN */
+-#ifdef CONFIG_SH_MIGOR_RTA_WVGA
+-	gpio_direction_output(GPIO_PTT0, 0);
+-#else
+-	gpio_direction_output(GPIO_PTT0, 1);
+-#endif
+ 	__raw_writew(__raw_readw(PORT_MSELCRB) | 0x2000, PORT_MSELCRB); /* D15->D8 */
+ 
+-	platform_resource_setup_memory(&migor_ceu_device, "ceu", 4 << 20);
+-
+ 	/* SIU: Port B */
+ 	gpio_request(GPIO_FN_SIUBOLR, NULL);
+ 	gpio_request(GPIO_FN_SIUBOBT, NULL);
+@@ -647,9 +581,36 @@ static int __init migor_devices_setup(void)
  	 */
-@@ -1040,6 +1323,24 @@ static const struct v4l2_subdev_core_ops ov772x_subdev_core_ops = {
- 	.s_power	= ov772x_s_power,
- };
+ 	__raw_writew(__raw_readw(PORT_MSELCRA) | 1, PORT_MSELCRA);
  
-+static int ov772x_enum_frame_interval(struct v4l2_subdev *sd,
-+				      struct v4l2_subdev_pad_config *cfg,
-+				      struct v4l2_subdev_frame_interval_enum *fie)
-+{
-+	if (fie->pad || fie->index >= OV772X_N_FRAME_INTERVALS)
-+		return -EINVAL;
++	 /*
++	  * Use 10 MHz VIO_CKO instead of 24 MHz to work around signal quality
++	  * issues on Panel Board V2.1.
++	  */
++	video_clk = clk_get(NULL, "video_clk");
++	if (!IS_ERR(video_clk)) {
++		clk_set_rate(video_clk, 10000000);
++		clk_put(video_clk);
++	}
 +
-+	if (fie->width != VGA_WIDTH && fie->width != QVGA_WIDTH)
-+		return -EINVAL;
-+	if (fie->height != VGA_HEIGHT && fie->height != QVGA_HEIGHT)
-+		return -EINVAL;
++	/* Add a clock alias for ov7725 xclk source. */
++	clk_add_alias("xclk", "0-0021", "video_clk", NULL);
 +
-+	fie->interval.numerator = 1;
-+	fie->interval.denominator = ov772x_frame_intervals[fie->index];
++	/* Register GPIOs for video sources. */
++	gpiod_add_lookup_table(&ov7725_gpios);
++	gpiod_add_lookup_table(&tw9910_gpios);
 +
-+	return 0;
-+}
+ 	i2c_register_board_info(0, migor_i2c_devices,
+ 				ARRAY_SIZE(migor_i2c_devices));
+ 
++	/* Initialize CEU platform device separately to map memory first */
++	device_initialize(&migor_ceu_device.dev);
++	arch_setup_pdev_archdata(&migor_ceu_device);
++	dma_declare_coherent_memory(&migor_ceu_device.dev,
++				    ceu_dma_membase, ceu_dma_membase,
++				    ceu_dma_membase + CEU_BUFFER_MEMORY_SIZE - 1,
++				    DMA_MEMORY_EXCLUSIVE);
 +
- static int ov772x_enum_mbus_code(struct v4l2_subdev *sd,
- 		struct v4l2_subdev_pad_config *cfg,
- 		struct v4l2_subdev_mbus_code_enum *code)
-@@ -1052,14 +1353,17 @@ static int ov772x_enum_mbus_code(struct v4l2_subdev *sd,
++	platform_device_add(&migor_ceu_device);
++
+ 	return platform_add_devices(migor_devices, ARRAY_SIZE(migor_devices));
+ }
+ arch_initcall(migor_devices_setup);
+@@ -665,10 +626,24 @@ static int migor_mode_pins(void)
+ 	return MODE_PIN0 | MODE_PIN1 | MODE_PIN5;
  }
  
- static const struct v4l2_subdev_video_ops ov772x_subdev_video_ops = {
--	.s_stream	= ov772x_s_stream,
-+	.s_stream		= ov772x_s_stream,
-+	.s_frame_interval	= ov772x_s_frame_interval,
-+	.g_frame_interval	= ov772x_g_frame_interval,
++/* Reserve a portion of memory for CEU buffers */
++static void __init migor_mv_mem_reserve(void)
++{
++	phys_addr_t phys;
++	phys_addr_t size = CEU_BUFFER_MEMORY_SIZE;
++
++	phys = memblock_alloc_base(size, PAGE_SIZE, MEMBLOCK_ALLOC_ANYWHERE);
++	memblock_free(phys, size);
++	memblock_remove(phys, size);
++
++	ceu_dma_membase = phys;
++}
++
+ /*
+  * The Machine Vector
+  */
+ static struct sh_machine_vector mv_migor __initmv = {
+ 	.mv_name		= "Migo-R",
+ 	.mv_mode_pins		= migor_mode_pins,
++	.mv_mem_reserve		= migor_mv_mem_reserve,
  };
- 
- static const struct v4l2_subdev_pad_ops ov772x_subdev_pad_ops = {
--	.enum_mbus_code = ov772x_enum_mbus_code,
--	.get_selection	= ov772x_get_selection,
--	.get_fmt	= ov772x_get_fmt,
--	.set_fmt	= ov772x_set_fmt,
-+	.enum_frame_interval	= ov772x_enum_frame_interval,
-+	.enum_mbus_code		= ov772x_enum_mbus_code,
-+	.get_selection		= ov772x_get_selection,
-+	.get_fmt		= ov772x_get_fmt,
-+	.set_fmt		= ov772x_set_fmt,
- };
- 
- static const struct v4l2_subdev_ops ov772x_subdev_ops = {
-@@ -1131,6 +1435,7 @@ static int ov772x_probe(struct i2c_client *client,
- 
- 	priv->cfmt = &ov772x_cfmts[0];
- 	priv->win = &ov772x_win_sizes[0];
-+	priv->fps = 15;
- 
- 	ret = v4l2_async_register_subdev(&priv->subdev);
- 	if (ret)
+diff --git a/arch/sh/kernel/cpu/sh4a/clock-sh7722.c b/arch/sh/kernel/cpu/sh4a/clock-sh7722.c
+index 8f07a1a..d85091e 100644
+--- a/arch/sh/kernel/cpu/sh4a/clock-sh7722.c
++++ b/arch/sh/kernel/cpu/sh4a/clock-sh7722.c
+@@ -223,7 +223,7 @@ static struct clk_lookup lookups[] = {
+ 	CLKDEV_DEV_ID("sh-vou.0", &mstp_clks[HWBLK_VOU]),
+ 	CLKDEV_CON_ID("jpu0", &mstp_clks[HWBLK_JPU]),
+ 	CLKDEV_CON_ID("beu0", &mstp_clks[HWBLK_BEU]),
+-	CLKDEV_DEV_ID("sh_mobile_ceu.0", &mstp_clks[HWBLK_CEU]),
++	CLKDEV_DEV_ID("renesas-ceu.0", &mstp_clks[HWBLK_CEU]),
+ 	CLKDEV_CON_ID("veu0", &mstp_clks[HWBLK_VEU]),
+ 	CLKDEV_CON_ID("vpu0", &mstp_clks[HWBLK_VPU]),
+ 	CLKDEV_DEV_ID("sh_mobile_lcdc_fb.0", &mstp_clks[HWBLK_LCDC]),
 -- 
 2.7.4
