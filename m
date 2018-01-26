@@ -1,91 +1,80 @@
-From: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 1/8] dt-bindings: can: rcar_can: document r8a774[35] can
- support
-Date: Fri, 26 Jan 2018 11:07:17 +0100
-Message-ID: <8b8be356-e725-0dfe-a81c-dd495d97af88@pengutronix.de>
-References: <1510067449-17017-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1510067449-17017-2-git-send-email-fabrizio.castro@bp.renesas.com>
- <SG2PR06MB0886FFF48DD9DBE7693EEDBDC0E20@SG2PR06MB0886.apcprd06.prod.outlook.com>
- <da4afc82-aeb6-05d9-4a41-b2627f736064@pengutronix.de>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [RFC 21/37] dt-bindings: watchdog: renesas-wdt: Add R-Car Gen2 support
+Date: Fri, 26 Jan 2018 11:10:28 +0100
+Message-ID: <CAMuHMdVn-XbsT1PQpcxKNHJ3ErecZtHy9=oJAGKd+heGLpLgcg@mail.gmail.com>
+References: <1516903391-30467-1-git-send-email-fabrizio.castro@bp.renesas.com> <1516903391-30467-22-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
- protocol="application/pgp-signature";
- boundary="GH2yxKvaNZHfgciUvIYaiCKImHgjAlJjP"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <da4afc82-aeb6-05d9-4a41-b2627f736064-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1516903391-30467-22-git-send-email-fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, "linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Watchdog Mailing List <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.orglinux-clk <l>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---GH2yxKvaNZHfgciUvIYaiCKImHgjAlJjP
-Content-Type: multipart/mixed; boundary="y7NX3G3pfh4eygjeTGUUmebJhBiDYRWAg";
- protected-headers="v1"
-From: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-To: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>,
- Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>,
- "linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>,
- "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>,
- "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>,
- "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>,
- Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>,
- Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>,
- Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Message-ID: <8b8be356-e725-0dfe-a81c-dd495d97af88-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 1/8] dt-bindings: can: rcar_can: document r8a774[35] can
- support
-References: <1510067449-17017-1-git-send-email-fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
- <1510067449-17017-2-git-send-email-fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
- <SG2PR06MB0886FFF48DD9DBE7693EEDBDC0E20-ESzmfEwOt/zNWVFMfLWNqm0DtJ1/0DrXvxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
- <da4afc82-aeb6-05d9-4a41-b2627f736064-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-In-Reply-To: <da4afc82-aeb6-05d9-4a41-b2627f736064-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Hi Fabrizio,
 
---y7NX3G3pfh4eygjeTGUUmebJhBiDYRWAg
-Content-Type: text/plain; charset=utf-8
-Content-Language: de-DE
-Content-Transfer-Encoding: quoted-printable
+On Thu, Jan 25, 2018 at 7:02 PM, Fabrizio Castro
+<fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org> wrote:
+> This commit documents the compatibility with R-Car Gen2 and RZ/G
+> devices by defining the generifc compatible string "renesas,rcar-gen2-wdt".
 
-On 01/25/2018 09:53 AM, Marc Kleine-Budde wrote:
-> On 01/24/2018 06:22 PM, Fabrizio Castro wrote:
->> thank you for Acking the patch, just wondering if this patch has any
->> chance to end up in v4.16?
->=20
-> I can take this via the linux-can tree, if no one else takes it.
+generic
 
-Done - included in the latest pull request.
++ SoC-specific compatible values.
 
-Marc
+> Signed-off-by: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+> Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/watchdog/renesas-wdt.txt | 13 ++++++++-----
+>  1 file changed, 8 insertions(+), 5 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/watchdog/renesas-wdt.txt b/Documentation/devicetree/bindings/watchdog/renesas-wdt.txt
+> index bf6d1ca..436dca5 100644
+> --- a/Documentation/devicetree/bindings/watchdog/renesas-wdt.txt
+> +++ b/Documentation/devicetree/bindings/watchdog/renesas-wdt.txt
+> @@ -1,17 +1,20 @@
+>  Renesas Watchdog Timer (WDT) Controller
+>
+>  Required properties:
+> -- compatible : Should be "renesas,<soctype>-wdt", and
+> -              "renesas,rcar-gen3-wdt" or "renesas,rza-wdt" as fallback.
+> + - compatible : Must be "renesas,<soctype>-wdt", followed by a generic
+> +               fallback compatible string when compatible with the generic
+> +               version.
+>                Examples with soctypes are:
+> +                - "renesas,r8a7743-wdt" (RZ/G1M)
+> +                - "renesas,r8a7745-wdt" (RZ/G1E)
 
---=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
+I guess you wanted to add r8a779[0-4], too, as you use (some of) them in
+later patches in this series?
 
+>                  - "renesas,r8a7795-wdt" (R-Car H3)
+>                  - "renesas,r8a7796-wdt" (R-Car M3-W)
+>                  - "renesas,r8a77995-wdt" (R-Car D3)
+>                  - "renesas,r7s72100-wdt" (RZ/A1)
+> +               The generic compatible string must be:
+> +                - "renesas,rcar-gen2-wdt" for R-Car Gen2 and RZ/G
+> +                - "renesas,rcar-gen3-wdt" for R-Car Gen3
+>
+> -  When compatible with the generic version, nodes must list the SoC-specific
+> -  version corresponding to the platform first, followed by the generic
+> -  version.
+>
+>  - reg : Should contain WDT registers location and length
+>  - clocks : the clock feeding the watchdog timer.
 
---y7NX3G3pfh4eygjeTGUUmebJhBiDYRWAg--
+Gr{oetje,eeting}s,
 
---GH2yxKvaNZHfgciUvIYaiCKImHgjAlJjP
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+                        Geert
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCgAdFiEE4bay/IylYqM/npjQHv7KIOw4HPYFAlpq/dUACgkQHv7KIOw4
-HPYKnQgAoOaCK8795WzFTTSwyvwVo3zvZ8fkrnVCpK26OC/HyJ3O9KHIYTdU3ZIO
-l58Km/422bz82DOmvN695z8xj70N/kvyXjlyWL/QOHrD/9GQ2HozHuVSQhQbqpp+
-S8F5c2Uibs0NplY4vRyvlubLtJo/i9pZqd+9RQ+b4Kr/AyCLVSDi5hIcuANPXY07
-aFy96t2rU4zQrfVzoJveqpj3fQLr8PNoRMLjTQ5LQppJS/Nrt/kB/IUl0zgciZCc
-lxgv3pOheerCFK/nB+4TnkkCPaxPjSlVJyRF4ACYmkEzEvsX57lNuG/4JCf0aGIU
-9vDTu5yjxWAMnNOyhjoTXMWoj2k8+Q==
-=mPm2
------END PGP SIGNATURE-----
-
---GH2yxKvaNZHfgciUvIYaiCKImHgjAlJjP--
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
