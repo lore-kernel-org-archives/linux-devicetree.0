@@ -1,68 +1,104 @@
-From: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [linux-sunxi] [PATCH 13/16] arm: dts: sun8i: h3: add thermal zone
- to H3
-Date: Fri, 26 Jan 2018 18:48:39 +0100
-Message-ID: <18116ff5-e919-a224-8d7d-2add836c1047@gmail.com>
-References: <20180126151941.12183-1-embed3d@gmail.com>
- <20180126151941.12183-14-embed3d@gmail.com>
- <4cfb1faf-a712-c882-1ef1-55845c1bb00e@sholland.org>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: RE: [RFC 22/37] watchdog: renesas_wdt: Add restart support
+Date: Fri, 26 Jan 2018 17:50:16 +0000
+Message-ID: <TY1PR06MB0895CE80DD4121A7EB6B3B05C0E00@TY1PR06MB0895.apcprd06.prod.outlook.com>
+References: <1516903391-30467-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1516903391-30467-23-git-send-email-fabrizio.castro@bp.renesas.com>
+ <20180126171418.GA16194@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4cfb1faf-a712-c882-1ef1-55845c1bb00e-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20180126171418.GA16194@roeck-us.net>
 Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, rask-SivP7zSAdNDZaaYASwVUlg@public.gmane.org, clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sean-hENCXIMQXOg@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, icenowy-h8G6r0blFSE@public.gmane.org, edu.molinas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, singhalsimran0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wim Van Sebroeck <wim@iguana.be>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>linux-
 List-Id: devicetree@vger.kernel.org
 
+Hello Guenter,
+
+thank you for your feedback.
+
+> Subject: Re: [RFC 22/37] watchdog: renesas_wdt: Add restart support
+>
+> On Thu, Jan 25, 2018 at 06:02:56PM +0000, Fabrizio Castro wrote:
+> > This commit extends the driver to add restart support by implementing
+> > the restart callback to trigger the watchdog as quickly as possible.
+> >
+> > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> > Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.rene=
+sas.com>
+> > ---
+> >  drivers/watchdog/renesas_wdt.c | 19 +++++++++++++++++++
+> >  1 file changed, 19 insertions(+)
+> >
+> > diff --git a/drivers/watchdog/renesas_wdt.c b/drivers/watchdog/renesas_=
+wdt.c
+> > index 831ef83..120ddac 100644
+> > --- a/drivers/watchdog/renesas_wdt.c
+> > +++ b/drivers/watchdog/renesas_wdt.c
+> > @@ -107,6 +107,24 @@ static unsigned int rwdt_get_timeleft(struct watch=
+dog_device *wdev)
+> >  return DIV_BY_CLKS_PER_SEC(priv, 65536 - val);
+> >  }
+> >
+> > +static int rwdt_restart(struct watchdog_device *wdev, unsigned long ac=
+tion,
+> > +void *data)
+> > +{
+> > +struct rwdt_priv *priv =3D watchdog_get_drvdata(wdev);
+> > +
+> > +pm_runtime_get_sync(wdev->parent);
+> > +
+> > +rwdt_write(priv, 0x00, RWTCSRB);
+> > +rwdt_write(priv, 0x00, RWTCSRA);
+> > +rwdt_write(priv, 0xffff, RWTCNT);
+> > +
+> > +while (readb_relaxed(priv->base + RWTCSRA) & RWTCSRA_WRFLG)
+> > +cpu_relax();
+>
+> Can this get stuck forever or should there be a timeout ?
+
+This won't get stuck forever, the particular bit we are checking marks the =
+period of time writing to register RWTCNT is prohibited due to synchronizat=
+ion from the previous write. It gets cleared eventually (quite quickly). Al=
+so, we use exactly the same logic for the "start" callback.
+
+Best regards,
+Fabrizio
+
+>
+> Guenter
+>
+> > +
+> > +rwdt_write(priv, 0x80, RWTCSRA);
+> > +return 0;
+> > +}
+> > +
+> >  static const struct watchdog_info rwdt_ident =3D {
+> >  .options =3D WDIOF_MAGICCLOSE | WDIOF_KEEPALIVEPING | WDIOF_SETTIMEOUT=
+,
+> >  .identity =3D "Renesas WDT Watchdog",
+> > @@ -118,6 +136,7 @@ static const struct watchdog_ops rwdt_ops =3D {
+> >  .stop =3D rwdt_stop,
+> >  .ping =3D rwdt_init_timeout,
+> >  .get_timeleft =3D rwdt_get_timeleft,
+> > +.restart =3D rwdt_restart,
+> >  };
+> >
+> >  static int rwdt_probe(struct platform_device *pdev)
+> > --
+> > 2.7.4
+> >
+> > --
+> > To unsubscribe from this list: send the line "unsubscribe linux-watchdo=
+g" in
+> > the body of a message to majordomo@vger.kernel.org
+> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
 
-On 26.01.2018 17:26, Samuel Holland wrote:
-> On 01/26/18 09:19, Philipp Rossak wrote:
->> This patch adds the thermal zones to the H3. We have only one sensor and
->> that is placed in the cpu.
->>
->> Signed-off-by: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->>   arch/arm/boot/dts/sun8i-h3.dtsi | 9 +++++++++
->>   1 file changed, 9 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
->> index fbb007e5798e..3f83f6a27c74 100644
->> --- a/arch/arm/boot/dts/sun8i-h3.dtsi
->> +++ b/arch/arm/boot/dts/sun8i-h3.dtsi
->> @@ -72,6 +72,15 @@
->>   		};
->>   	};
->>   
->> +	thermal-zones {
->> +		cpu-thermal {
->> +			/* milliseconds */
->> +			polling-delay-passive = <250>;
->> +			polling-delay = <1000>;
->> +			thermal-sensors = <&ths 0>;
-> 
-> If #thermal-sensor-cells = <0>, shouldn't this just be <&ths> ?
-I think both works, but I my intention was to have an accurate 
-description in DT.
-I thought that that is important in DT.
 
->> +		};
->> +	};
->> +
->>   	timer {
->>   		compatible = "arm,armv7-timer";
->>   		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
->>
-> 
-> Thanks,
-> Samuel
-> 
-Regards,
-Philipp
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, B=
+uckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered=
+ No. 04586709.
