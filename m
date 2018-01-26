@@ -1,77 +1,162 @@
-From: Philipp Rossak <embed3d@gmail.com>
-Subject: Re: [linux-sunxi] [PATCH 16/16] arm: dts: sun8i: a83t: add thermal
- zone to A83T
-Date: Fri, 26 Jan 2018 18:35:38 +0100
-Message-ID: <c4153c3b-ff8d-0607-f3f4-3a7827f23348@gmail.com>
-References: <20180126151941.12183-1-embed3d@gmail.com>
- <20180126151941.12183-17-embed3d@gmail.com>
- <6ee10c04-6602-b927-5f47-64d6beb10625@sholland.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "regulator: core: Move of_find_regulator_by_node() to of_regulator.c" to the regulator tree
+Date: Fri, 26 Jan 2018 17:35:48 +0000
+Message-ID: <E1ef7um-0002dM-Ah@debutante>
+References: <1512639975-22241-2-git-send-email-m.purski@samsung.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6ee10c04-6602-b927-5f47-64d6beb10625@sholland.org>
-Content-Language: en-US
+In-Reply-To: <1512639975-22241-2-git-send-email-m.purski@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Samuel Holland <samuel@sholland.org>, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@free-electrons.com, wens@csie.org, linux@armlinux.org.uk, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, davem@davemloft.net, hans.verkuil@cisco.com, mchehab@kernel.org, rask@formelder.dk, clabbe.montjoie@gmail.com, sean@mess.org, krzk@kernel.org, quentin.schulz@free-electrons.com, icenowy@aosc.io, edu.molinas@gmail.com, singhalsimran0@gmail.com
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+To: Maciej Purski <m.purski@samsung.com>
+Cc: Mark Brown <broonie@kernel.org>Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+The patch
 
+   regulator: core: Move of_find_regulator_by_node() to of_regulator.c
 
-On 26.01.2018 17:25, Samuel Holland wrote:
-> On 01/26/18 09:19, Philipp Rossak wrote:
->> This patch adds the thermal zones to the A83T. Sensor 0 is located in the
->> cpu cluster 0. Sensor 1 is located in cluster 1 and Sensor 3 is located
->> in the gpu.
-> 
-> You mention sensor 3 here, but have sensor 2 in the device tree.
-That is a typo/wrong counting error. This should be sensor 2.
+has been applied to the regulator tree at
 
-I will fix that in the next version of this patch series.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
 
->> Signed-off-by: Philipp Rossak <embed3d@gmail.com>
->> ---
->>   arch/arm/boot/dts/sun8i-a83t.dtsi | 20 ++++++++++++++++++++
->>   1 file changed, 20 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
->> index 9e53ff5ac4ed..4259a8726031 100644
->> --- a/arch/arm/boot/dts/sun8i-a83t.dtsi
->> +++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
->> @@ -747,4 +747,24 @@
->>   			#size-cells = <0>;
->>   		};
->>   	};
->> +
->> +	thermal-zones {
->> +		cpu0_thermal: cpu0-thermal {
->> +			polling-delay-passive = <1000>;
->> +			polling-delay = <5000>;
->> +			thermal-sensors = <&ths 0>;
->> +		};
->> +
->> +		cpu1_thermal: cpu1-thermal {
->> +			polling-delay-passive = <1000>;
->> +			polling-delay = <5000>;
->> +			thermal-sensors = <&ths 1>;
->> +		};
->> +
->> +		gpu_thermal: gpu-thermal {
->> +			polling-delay-passive = <1000>;
->> +			polling-delay = <5000>;
->> +			thermal-sensors = <&ths 2>;
-> 
->                                             ^^^^ here
-> 
->> +		};
->> +	};
->>   };
->>
-> 
-> Thanks,
-> Samuel
-> 
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
 Thanks,
-Philipp
+Mark
+
+>From 148096af0bf381c78afe253c07ef1c77778f0e68 Mon Sep 17 00:00:00 2001
+From: Maciej Purski <m.purski@samsung.com>
+Date: Mon, 22 Jan 2018 15:30:06 +0100
+Subject: [PATCH] regulator: core: Move of_find_regulator_by_node() to
+ of_regulator.c
+
+As of_find_regulator_by_node() is an of function it should be moved from
+core.c to of_regulator.c. It provides better separation of device tree
+functions from the core and allows other of_functions in of_regulator.c
+to resolve device_node to regulator_dev. This will be useful for
+implementation of parsing coupled regulators properties.
+
+Declare of_find_regulator_by_node() function in internal.h as well as
+regulator_class and dev_to_rdev(), as they are needed by
+of_find_regulator_by_node().
+
+Signed-off-by: Maciej Purski <m.purski@samsung.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ drivers/regulator/core.c         | 23 +----------------------
+ drivers/regulator/internal.h     |  9 +++++++++
+ drivers/regulator/of_regulator.c | 14 ++++++++++++++
+ 3 files changed, 24 insertions(+), 22 deletions(-)
+
+diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
+index 365b32e3f505..5f7678292cef 100644
+--- a/drivers/regulator/core.c
++++ b/drivers/regulator/core.c
+@@ -58,8 +58,6 @@ static bool has_full_constraints;
+ 
+ static struct dentry *debugfs_root;
+ 
+-static struct class regulator_class;
+-
+ /*
+  * struct regulator_map
+  *
+@@ -112,11 +110,6 @@ static struct regulator *create_regulator(struct regulator_dev *rdev,
+ 					  const char *supply_name);
+ static void _regulator_put(struct regulator *regulator);
+ 
+-static struct regulator_dev *dev_to_rdev(struct device *dev)
+-{
+-	return container_of(dev, struct regulator_dev, dev);
+-}
+-
+ static const char *rdev_get_name(struct regulator_dev *rdev)
+ {
+ 	if (rdev->constraints && rdev->constraints->name)
+@@ -1417,20 +1410,6 @@ static void regulator_supply_alias(struct device **dev, const char **supply)
+ 	}
+ }
+ 
+-static int of_node_match(struct device *dev, const void *data)
+-{
+-	return dev->of_node == data;
+-}
+-
+-static struct regulator_dev *of_find_regulator_by_node(struct device_node *np)
+-{
+-	struct device *dev;
+-
+-	dev = class_find_device(&regulator_class, NULL, np, of_node_match);
+-
+-	return dev ? dev_to_rdev(dev) : NULL;
+-}
+-
+ static int regulator_match(struct device *dev, const void *data)
+ {
+ 	struct regulator_dev *r = dev_to_rdev(dev);
+@@ -3918,7 +3897,7 @@ static void regulator_dev_release(struct device *dev)
+ 	kfree(rdev);
+ }
+ 
+-static struct class regulator_class = {
++struct class regulator_class = {
+ 	.name = "regulator",
+ 	.dev_release = regulator_dev_release,
+ 	.dev_groups = regulator_dev_groups,
+diff --git a/drivers/regulator/internal.h b/drivers/regulator/internal.h
+index 66a8ea0c8386..2f3218be5b8d 100644
+--- a/drivers/regulator/internal.h
++++ b/drivers/regulator/internal.h
+@@ -35,6 +35,15 @@ struct regulator {
+ 	struct dentry *debugfs;
+ };
+ 
++extern struct class regulator_class;
++
++static inline struct regulator_dev *dev_to_rdev(struct device *dev)
++{
++	return container_of(dev, struct regulator_dev, dev);
++}
++
++struct regulator_dev *of_find_regulator_by_node(struct device_node *np);
++
+ #ifdef CONFIG_OF
+ struct regulator_init_data *regulator_of_get_init_data(struct device *dev,
+ 			         const struct regulator_desc *desc,
+diff --git a/drivers/regulator/of_regulator.c b/drivers/regulator/of_regulator.c
+index 14637a01ba2d..54e810ae93d6 100644
+--- a/drivers/regulator/of_regulator.c
++++ b/drivers/regulator/of_regulator.c
+@@ -376,3 +376,17 @@ struct regulator_init_data *regulator_of_get_init_data(struct device *dev,
+ 
+ 	return init_data;
+ }
++
++static int of_node_match(struct device *dev, const void *data)
++{
++	return dev->of_node == data;
++}
++
++struct regulator_dev *of_find_regulator_by_node(struct device_node *np)
++{
++	struct device *dev;
++
++	dev = class_find_device(&regulator_class, NULL, np, of_node_match);
++
++	return dev ? dev_to_rdev(dev) : NULL;
++}
+-- 
+2.15.1
