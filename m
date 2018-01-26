@@ -1,42 +1,100 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [RFC] devicetree: new FDT format version
-Date: Fri, 26 Jan 2018 09:59:20 +0100
-Message-ID: <CAMuHMdU=6m-vi4tS7YEcJ8kioT2t2OdCzNSpuqB1E3WVpN7z+A@mail.gmail.com>
-References: <b96829f9-2e8b-fdc5-5090-58591e2260cf@gmail.com>
- <CAL_JsqJR2y7bMw_-9TBAGWZ_kf7_sZo5qvqvRowJ8jiy=4G0Bg@mail.gmail.com>
- <20180123124232.GA14832@umbus> <20328477-e511-e875-7dc4-253640f2219e@gmail.com>
- <CAL_Jsq+fvFrGhqO0zbEUE_i23FkU=G4Z1-e0vnXHi4KbS2oK0A@mail.gmail.com>
- <e1bec77d-4dac-200b-34be-23573bf738f0@gmail.com> <e986435b-481b-2629-7600-10d9e21ac58e@gmail.com>
- <20180125122912.GB2099@umbus> <CAMuHMdV0jdj90uzqMx_wtvz=-KaagJG2_UQTm1DW3gzt6cNG6A@mail.gmail.com>
+From: Dong Aisheng <dongas86@gmail.com>
+Subject: Re: [PATCH 2/3] ARM: dts: imx6ull: add support for the esai interface
+Date: Fri, 26 Jan 2018 17:04:56 +0800
+Message-ID: <20180126090456.GC14058@b29396-OptiPlex-7040>
+References: <1516955032-21167-1-git-send-email-LW@KARO-electronics.de>
+ <1516955032-21167-3-git-send-email-LW@KARO-electronics.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMuHMdV0jdj90uzqMx_wtvz=-KaagJG2_UQTm1DW3gzt6cNG6A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, "Pantelis Antomarek.vasut-Re5JQEeQqe/2sr8fMPgRzw@public.gmane.org" <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, =?UTF-8?B?TWFyZWsgVmHFoXV0?= <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Kyle Evans <kevans-h+KGxgPPiopAfugRpC6u6w@public.gmane.org>, Alan Tull <atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1516955032-21167-3-git-send-email-LW@KARO-electronics.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW@KARO-electronics.de>
+Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 26, 2018 at 9:56 AM, Geert Uytterhoeven
-<geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
-> Temporary unflattening sounds like a waste to me: it must be redone again
-> later anyway. Applying the FDT overlays early on will make that later step
-> simpler (no more overlays to handle).
+On Fri, Jan 26, 2018 at 09:23:51AM +0100, Lothar Waﬂmann wrote:
+> The address space taken by the UART8 on the i.MX6UL is used for the
+> ESAI interface on i.MX6ULL.
+> 
+> Since the ESAI unit on i.MX6ULL has two more bits in the TFCR register
+> (TFIN, TAENB) it deserves to get its own compatible string, though the
+> bits are currently not used by the driver.
+> 
+> Signed-off-by: Lothar Waﬂmann <LW@KARO-electronics.de>
+> ---
+>  Documentation/devicetree/bindings/sound/fsl,esai.txt |  4 ++--
+>  arch/arm/boot/dts/imx6ull.dtsi                       | 17 +++++++++++++++++
+>  sound/soc/fsl/fsl_esai.c                             |  1 +
 
-Which is not 100% correct: I still want runtime DT overlays, for hot-swapping
-hardware descriptions ;-)
+Should them be separate patches?
 
-Gr{oetje,eeting}s,
+Otherwise this patch is ok to me.
 
-                        Geert
+Acked-by: Dong Aisheng <aisheng.dong@nxp.com>
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+Regards
+Dong Aisheng
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  3 files changed, 20 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/fsl,esai.txt b/Documentation/devicetree/bindings/sound/fsl,esai.txt
+> index cacd18b..4103f46 100644
+> --- a/Documentation/devicetree/bindings/sound/fsl,esai.txt
+> +++ b/Documentation/devicetree/bindings/sound/fsl,esai.txt
+> @@ -7,8 +7,8 @@ other DSPs. It has up to six transmitters and four receivers.
+>  
+>  Required properties:
+>  
+> -  - compatible		: Compatible list, must contain "fsl,imx35-esai" or
+> -			  "fsl,vf610-esai"
+> +  - compatible		: Compatible list, must contain "fsl,imx35-esai",
+> +			  "fsl,vf610-esai" or "fsl,imx6ull-esai"
+>  
+>    - reg			: Offset and length of the register set for the device.
+>  
+> diff --git a/arch/arm/boot/dts/imx6ull.dtsi b/arch/arm/boot/dts/imx6ull.dtsi
+> index abc815f..8724fdb2 100644
+> --- a/arch/arm/boot/dts/imx6ull.dtsi
+> +++ b/arch/arm/boot/dts/imx6ull.dtsi
+> @@ -47,6 +47,23 @@
+>  		aips-bus@2000000 {
+>  			spba-bus@2000000 {
+>  				/delete-node/ serial@2024000;
+> +
+> +				esai: esai@2024000 {
+> +					compatible = "fsl,imx6ull-esai", "fsl,imx35-esai";
+> +					reg = <0x02024000 0x4000>;
+> +					interrupts = <GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH>;
+> +					clocks = <&clks IMX6ULL_CLK_ESAI_IPG>,
+> +						 <&clks IMX6ULL_CLK_ESAI_MEM>,
+> +						 <&clks IMX6ULL_CLK_ESAI_EXTAL>,
+> +						 <&clks IMX6ULL_CLK_ESAI_IPG>,
+> +						 <&clks IMX6UL_CLK_SPBA>;
+> +					clock-names = "core", "mem", "extal",
+> +						      "fsys", "spba";
+> +					dmas = <&sdma 0 21 0>,
+> +					       <&sdma 47 21 0>;
+> +					dma-names = "rx", "tx";
+> +					status = "disabled";
+> +				};
+>  			};
+>  		};
+>  
+> diff --git a/sound/soc/fsl/fsl_esai.c b/sound/soc/fsl/fsl_esai.c
+> index cef79a1..5b6a53f 100644
+> --- a/sound/soc/fsl/fsl_esai.c
+> +++ b/sound/soc/fsl/fsl_esai.c
+> @@ -910,6 +910,7 @@ static int fsl_esai_probe(struct platform_device *pdev)
+>  }
+>  
+>  static const struct of_device_id fsl_esai_dt_ids[] = {
+> +	{ .compatible = "fsl,imx6ull-esai", },
+>  	{ .compatible = "fsl,imx35-esai", },
+>  	{ .compatible = "fsl,vf610-esai", },
+>  	{}
+> -- 
+> 2.1.4
+> 
