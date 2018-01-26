@@ -1,60 +1,64 @@
-From: Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH 13/16] arm: dts: sun8i: h3: add thermal zone
- to H3
-Date: Fri, 26 Jan 2018 10:26:19 -0600
-Message-ID: <4cfb1faf-a712-c882-1ef1-55845c1bb00e@sholland.org>
-References: <20180126151941.12183-1-embed3d@gmail.com>
- <20180126151941.12183-14-embed3d@gmail.com>
-Reply-To: samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org
+From: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Subject: RE: [RFC 10/37] soc: renesas: rcar-rst: Enable watchdog as reset
+ trigger for Gen2
+Date: Fri, 26 Jan 2018 16:59:05 +0000
+Message-ID: <TY1PR06MB0895CA9B4668F49991FD607FC0E00@TY1PR06MB0895.apcprd06.prod.outlook.com>
+References: <1516903391-30467-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1516903391-30467-11-git-send-email-fabrizio.castro@bp.renesas.com>
+ <e1670c79-2fef-b45b-4688-a6ba8ebd8c24@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDA2PU6QWEARBMFNVXJQKGQEZUPGZWA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180126151941.12183-14-embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <e1670c79-2fef-b45b-4688-a6ba8ebd8c24-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 Content-Language: en-US
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, rask-SivP7zSAdNDZaaYASwVUlg@public.gmane.org, clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sean-hENCXIMQXOg@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, icenowy-h8G6r0blFSE@public.gmane.org, edu.molinas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, singhalsimran0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon
 List-Id: devicetree@vger.kernel.org
 
-On 01/26/18 09:19, Philipp Rossak wrote:
-> This patch adds the thermal zones to the H3. We have only one sensor and
-> that is placed in the cpu.
-> 
-> Signed-off-by: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  arch/arm/boot/dts/sun8i-h3.dtsi | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
-> index fbb007e5798e..3f83f6a27c74 100644
-> --- a/arch/arm/boot/dts/sun8i-h3.dtsi
-> +++ b/arch/arm/boot/dts/sun8i-h3.dtsi
-> @@ -72,6 +72,15 @@
->  		};
->  	};
->  
-> +	thermal-zones {
-> +		cpu-thermal {
-> +			/* milliseconds */
-> +			polling-delay-passive = <250>;
-> +			polling-delay = <1000>;
-> +			thermal-sensors = <&ths 0>;
-
-If #thermal-sensor-cells = <0>, shouldn't this just be <&ths> ?
-
-> +		};
-> +	};
-> +
->  	timer {
->  		compatible = "arm,armv7-timer";
->  		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-> 
-
-Thanks,
-Samuel
+SGVsbG8gU2VyZ2VpLA0KDQp0aGFuayB5b3UgZm9yIHlvdXIgZmVlZGJhY2suDQoNCj4gU3ViamVj
+dDogUmU6IFtSRkMgMTAvMzddIHNvYzogcmVuZXNhczogcmNhci1yc3Q6IEVuYWJsZSB3YXRjaGRv
+ZyBhcyByZXNldCB0cmlnZ2VyIGZvciBHZW4yDQo+DQo+IEhlbGxvIQ0KPg0KPiBPbiAxLzI1LzIw
+MTggOTowMiBQTSwgRmFicml6aW8gQ2FzdHJvIHdyb3RlOg0KPg0KPiA+IFRoaXMgcGF0Y2ggYWxs
+b3dzIGZvciBwbGF0Zm9ybSBzcGVjaWZpYyBxdWlya3MgYXMgc29tZSBvZiB0aGUgU29DIG5lZWQN
+Cj4gPiBmdXJ0aGVyIGN1c3RvbWl6YXRpb24gZm9yIHRoZSB3YXRjaGRvZyB0byB3b3JrIHByb3Bl
+cmx5LCBsaWtlIGZvciBSLUNhcg0KPiA+IEdlbjIgYW5kIGZvciBSWi9HLg0KPiA+DQo+ID4gU2ln
+bmVkLW9mZi1ieTogRmFicml6aW8gQ2FzdHJvIDxmYWJyaXppby5jYXN0cm9AYnAucmVuZXNhcy5j
+b20+DQo+ID4gU2lnbmVkLW9mZi1ieTogUmFtZXNoIFNoYW5tdWdhc3VuZGFyYW0gPHJhbWVzaC5z
+aGFubXVnYXN1bmRhcmFtQGJwLnJlbmVzYXMuY29tPg0KPiA+IC0tLQ0KPiA+ICAgZHJpdmVycy9z
+b2MvcmVuZXNhcy9yY2FyLXJzdC5jIHwgMjEgKysrKysrKysrKysrKysrKysrKystDQo+ID4gICAx
+IGZpbGUgY2hhbmdlZCwgMjAgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KPiA+DQo+ID4g
+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvc29jL3JlbmVzYXMvcmNhci1yc3QuYyBiL2RyaXZlcnMvc29j
+L3JlbmVzYXMvcmNhci1yc3QuYw0KPiA+IGluZGV4IGY3YTBkNTQuLjVmNTJhZWEgMTAwNjQ0DQo+
+ID4gLS0tIGEvZHJpdmVycy9zb2MvcmVuZXNhcy9yY2FyLXJzdC5jDQo+ID4gKysrIGIvZHJpdmVy
+cy9zb2MvcmVuZXNhcy9yY2FyLXJzdC5jDQo+ID4gQEAgLTEzLDggKzEzLDE4IEBADQo+ID4gICAj
+aW5jbHVkZSA8bGludXgvb2ZfYWRkcmVzcy5oPg0KPiA+ICAgI2luY2x1ZGUgPGxpbnV4L3NvYy9y
+ZW5lc2FzL3JjYXItcnN0Lmg+DQo+ID4NCj4gPiArI2RlZmluZSBXRFRSU1RDUl9SRVNFVDB4QTU1
+QTAwMDINCj4gPiArI2RlZmluZSBXRFRSU1RDUjB4MDA1NA0KPiA+ICsNCj4gPiArc3RhdGljIGlu
+dCBnZW4yX2NvbmZpZ3VyYXRpb24odm9pZCBfX2lvbWVtICpiYXNlKQ0KPiA+ICt7DQo+ID4gK2lv
+d3JpdGUzMihXRFRSU1RDUl9SRVNFVCwgYmFzZSArIFdEVFJTVENSKTsNCj4gPiArcmV0dXJuIDA7
+DQo+ID4gK30NCj4gPiArDQo+ID4gICBzdHJ1Y3QgcnN0X2NvbmZpZyB7DQo+ID4gLXVuc2lnbmVk
+IGludCBtb2RlbXI7LyogTW9kZSBNb25pdG9yaW5nIFJlZ2lzdGVyIE9mZnNldCAqLw0KPiA+ICt1
+bnNpZ25lZCBpbnQgbW9kZW1yOy8qIE1vZGUgTW9uaXRvcmluZyBSZWdpc3RlciBPZmZzZXQgKi8N
+Cj4gPiAraW50ICgqY29uZmlndXJlKSh2b2lkICpiYXNlKTsvKiBQbGF0Zm9ybSBzcGVjaWZpYyBj
+b25maWd1cmF0aW9uICovDQo+ID4gICB9Ow0KPiA+DQo+ID4gICBzdGF0aWMgY29uc3Qgc3RydWN0
+IHJzdF9jb25maWcgcmNhcl9yc3RfZ2VuMSBfX2luaXRjb25zdCA9IHsNCj4gPiBAQCAtMjMsNiAr
+MzMsNyBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IHJzdF9jb25maWcgcmNhcl9yc3RfZ2VuMSBfX2lu
+aXRjb25zdCA9IHsNCj4gPg0KPiA+ICAgc3RhdGljIGNvbnN0IHN0cnVjdCByc3RfY29uZmlnIHJj
+YXJfcnN0X2dlbjIgX19pbml0Y29uc3QgPSB7DQo+ID4gICAubW9kZW1yID0gMHg2MCwNCj4gPiAr
+LmNvbmZpZ3VyZSA9IGdlbjJfY29uZmlndXJhdGlvbiwNCj4NCj4gICAgIFdoeSBub3QgY2FsbCB0
+aGUgbWV0aG9kIGdlbjJfY29uZmlndXJlKCkgdGhlbj8NCg0KWWVhaCwgdGhlIG5hbWUgZ2VuMl9j
+b25maWd1cmF0aW9uIGlzbid0IGdyZWF0IQ0KQXMgeW91IG1heSBoYXZlIG5vdGljZWQgYWxyZWFk
+eSwgR2VlcnQgc3VnZ2VzdGVkIHJjYXJfcnN0X2VuYWJsZV93ZHRfcmVzZXQuDQpJIGFtIGRlZmlu
+aXRlbHkgZ29pbmcgdG8gY2hhbmdlIGl0IChpZiBJIGFtIGtlZXBpbmcgdGhlIGZ1bmN0aW9uIHBv
+aW50ZXIgYXQgYWxsISksIGV4cGVjdCB0byBzZWUgYW5vdGhlciB2ZXJzaW9uIG9mIHRoaXMgcGF0
+Y2ggaW4gdGhlIG5leHQgZmV3IGRheXMgdG8gYWRkcmVzcyB0aGlzLg0KDQpUaGFua3MsDQpGYWIN
+Cg0KPg0KPiBbLi4uXQ0KPg0KPiBNQlIsIFNlcmdlaQ0KDQoNCg0KUmVuZXNhcyBFbGVjdHJvbmlj
+cyBFdXJvcGUgTHRkLCBEdWtlcyBNZWFkb3csIE1pbGxib2FyZCBSb2FkLCBCb3VybmUgRW5kLCBC
+dWNraW5naGFtc2hpcmUsIFNMOCA1RkgsIFVLLiBSZWdpc3RlcmVkIGluIEVuZ2xhbmQgJiBXYWxl
+cyB1bmRlciBSZWdpc3RlcmVkIE5vLiAwNDU4NjcwOS4NCg==
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
