@@ -1,37 +1,41 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [RFC 26/37] clk: renesas: r8a7743: Add rwdt clock
-Date: Fri, 26 Jan 2018 11:33:11 +0100
-Message-ID: <CAMuHMdV1v2+WnnJWkBSm=WgfCAp3xtpNuJynHQ-2t7ydMzpGJg@mail.gmail.com>
-References: <1516903391-30467-1-git-send-email-fabrizio.castro@bp.renesas.com> <1516903391-30467-27-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Subject: Re: [PATCH v2] of: use hash based search in of_find_node_by_phandle
+Date: Fri, 26 Jan 2018 11:57:02 +0100
+Message-ID: <f08592cf-5e49-e631-c481-e166b741f25e@prevas.dk>
+References: <1516955496-17236-1-git-send-email-cpandya@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1516903391-30467-27-git-send-email-fabrizio.castro@bp.renesas.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wim Van Sebroeck <wim@iguana.be>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Guenter Roeck <linux@roeck-us.net>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, linux-arm-kernel@lists.infradead.orglinux-clk <l>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1516955496-17236-1-git-send-email-cpandya@codeaurora.org>
+Content-Language: en-US
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Chintan Pandya <cpandya@codeaurora.org>, robh+dt@kernel.org, frowand.list@gmail.com, devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 25, 2018 at 7:03 PM, Fabrizio Castro
-<fabrizio.castro@bp.renesas.com> wrote:
-> Add "rwdt" clock to r8a7743_mod_clks. Also, since we may need to access
-> the watchdog registers at any time, declare the clock as critical.
->
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
+On 2018-01-26 09:31, Chintan Pandya wrote:
+> Implement, device-phandle relation in hash-table so
+> that look up can be faster, irrespective of where my
+> device is defined in the DT.
+> 
+> There are ~6.7k calls to of_find_node_by_phandle() and
+> total improvement observed during boot is 400ms.
 
-With the critical clock handling removed (that can be done by the driver,
-if really needed)
+I'm probably missing something obvious, but: Aren't phandles in practice
+small consecutive integers assigned by dtc? If so, why not just have a
+smallish static array mapping the small phandle values directly to
+device node, instead of adding a pointer to every struct device_node? Or
+one could determine the size of the array dynamically (largest seen
+phandle value, capping at something sensible, e.g. 1024).
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+In either case, one would still need to keep the code doing the
+whole-tree traversal for handling large phandle values, but I think the
+above should make lookup O(1) in most cases.
 
-Gr{oetje,eeting}s,
+Alternatively, one could just count the number of nodes with a phandle,
+allocate an array of that many pointers (so the memory use is certainly
+no more than if adding a pointer to each device_node), and sort it by
+phandle, so one can do lookup using a binary search.
 
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Rasmus
