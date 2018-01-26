@@ -1,90 +1,115 @@
-From: Yong <yong.deng@magewell.com>
-Subject: Re: [PATCH v6 2/2] media: V3s: Add support for Allwinner CSI.
-Date: Fri, 26 Jan 2018 11:00:41 +0800
-Message-ID: <20180126110041.f89848325b9ecfb07df387ca@magewell.com>
-References: <1516695531-23349-1-git-send-email-yong.deng@magewell.com>
-        <201801260759.RyNhDZz4%fengguang.wu@intel.com>
-        <20180126094658.aa70ed3f890464f6051e21e4@magewell.com>
+From: "A.s. Dong" <aisheng.dong-3arQi8VN3Tc@public.gmane.org>
+Subject: RE: [PATCH 3/4] arm64: add support for i.MX8M EVK board
+Date: Fri, 26 Jan 2018 03:06:05 +0000
+Message-ID: <AM3PR04MB306AA4937045277CBD6DE0880E00@AM3PR04MB306.eurprd04.prod.outlook.com>
+References: <20180117183244.28303-1-l.stach@pengutronix.de>
+         <20180117183244.28303-3-l.stach@pengutronix.de>
+         <20180123103931.GE27764@dragon>
+         <278bb44610b8a27826550732095aba03@codeaurora.org>
+         <1516876300.6411.25.camel@pengutronix.de>
+         <2cac219f031a08ae2ac02a0624fe302f@codeaurora.org>
+         <1516878582.6411.27.camel@pengutronix.de>
+         <2e5f5ec08b3165cb84115c12f9ddbd9e@codeaurora.org>
+ <1516903397.6411.42.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180126094658.aa70ed3f890464f6051e21e4@magewell.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yong <yong.deng@magewell.com>
-Cc: kbuild test robot <lkp@intel.com>, kbuild-all@01.org, Maxime Ripard <maxime.ripard@free-electrons.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hans Verkuil <hans.verkuil@cisco.com>, Linus Walleij <linus.walleij@linaro.org>, Randy Dunlap <rdunlap@infradead.org>, Stanimir Varbanov <stanimir.varbanov@linaro.org>, Hugues Fruchet <hugues.fruchet@st.com>, Yannick Fertre <yannick.fertre@st.com>, Philipp Zabel <p.zabel@pengutronix.de>, Arnd Bergmann <arnd@arndb.de>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1516903397.6411.42.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Dong Aisheng <aisheng.dong-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, dl-linux-imx <linux-imx-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Maxime,
-
-On Fri, 26 Jan 2018 09:46:58 +0800
-Yong <yong.deng@magewell.com> wrote:
-
-> Hi Maxime,
-> 
-> Do you have any experience in solving this problem?
-> It seems the PHYS_OFFSET maybe undeclared when the ARCH is not arm.
-
-Got it.
-Should I add 'depends on ARM' in Kconfig?
-
-> 
-> On Fri, 26 Jan 2018 08:04:18 +0800
-> kbuild test robot <lkp@intel.com> wrote:
-> 
-> > Hi Yong,
-> > 
-> > I love your patch! Yet something to improve:
-> > 
-> > [auto build test ERROR on linuxtv-media/master]
-> > [also build test ERROR on v4.15-rc9 next-20180119]
-> > [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
-> > 
-> > url:    https://github.com/0day-ci/linux/commits/Yong-Deng/dt-bindings-media-Add-Allwinner-V3s-Camera-Sensor-Interface-CSI/20180126-054511
-> > base:   git://linuxtv.org/media_tree.git master
-> > config: i386-allmodconfig (attached as .config)
-> > compiler: gcc-7 (Debian 7.2.0-12) 7.2.1 20171025
-> > reproduce:
-> >         # save the attached .config to linux build tree
-> >         make ARCH=i386 
-> > 
-> > All errors (new ones prefixed by >>):
-> > 
-> >    drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c: In function 'sun6i_csi_update_buf_addr':
-> > >> drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c:567:31: error: 'PHYS_OFFSET' undeclared (first use in this function); did you mean 'PAGE_OFFSET'?
-> >      dma_addr_t bus_addr = addr - PHYS_OFFSET;
-> >                                   ^~~~~~~~~~~
-> >                                   PAGE_OFFSET
-> >    drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c:567:31: note: each undeclared identifier is reported only once for each function it appears in
-> > 
-> > vim +567 drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
-> > 
-> >    562	
-> >    563	void sun6i_csi_update_buf_addr(struct sun6i_csi *csi, dma_addr_t addr)
-> >    564	{
-> >    565		struct sun6i_csi_dev *sdev = sun6i_csi_to_dev(csi);
-> >    566		/* transform physical address to bus address */
-> >  > 567		dma_addr_t bus_addr = addr - PHYS_OFFSET;
-> >    568	
-> >    569		regmap_write(sdev->regmap, CSI_CH_F0_BUFA_REG,
-> >    570			     (bus_addr + sdev->planar_offset[0]) >> 2);
-> >    571		if (sdev->planar_offset[1] != -1)
-> >    572			regmap_write(sdev->regmap, CSI_CH_F1_BUFA_REG,
-> >    573				     (bus_addr + sdev->planar_offset[1]) >> 2);
-> >    574		if (sdev->planar_offset[2] != -1)
-> >    575			regmap_write(sdev->regmap, CSI_CH_F2_BUFA_REG,
-> >    576				     (bus_addr + sdev->planar_offset[2]) >> 2);
-> >    577	}
-> >    578	
-> > 
-> > ---
-> > 0-DAY kernel test infrastructure                Open Source Technology Center
-> > https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
-> 
-> 
-> Thanks,
-> Yong
-
-
-Thanks,
-Yong
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBMdWNhcyBTdGFjaCBbbWFpbHRv
+Omwuc3RhY2hAcGVuZ3V0cm9uaXguZGVdDQo+IFNlbnQ6IEZyaWRheSwgSmFudWFyeSAyNiwgMjAx
+OCAyOjAzIEFNDQo+IFRvOiBEb25nIEFpc2hlbmcgPGFpc2hlbmcuZG9uZ0Bjb2RlYXVyb3JhLm9y
+Zz47IExpbnVzIFdhbGxlaWoNCj4gPGxpbnVzLndhbGxlaWpAbGluYXJvLm9yZz4NCj4gQ2M6IFNo
+YXduIEd1byA8c2hhd25ndW9Aa2VybmVsLm9yZz47IE1hcmsgUnV0bGFuZA0KPiA8bWFyay5ydXRs
+YW5kQGFybS5jb20+OyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgQ2F0YWxpbiBNYXJpbmFz
+DQo+IDxjYXRhbGluLm1hcmluYXNAYXJtLmNvbT47IFdpbGwgRGVhY29uIDx3aWxsLmRlYWNvbkBh
+cm0uY29tPjsNCj4gcGF0Y2h3b3JrLWxzdEBwZW5ndXRyb25peC5kZTsgUm9iIEhlcnJpbmcgPHJv
+YmgrZHRAa2VybmVsLm9yZz47DQo+IGtlcm5lbEBwZW5ndXRyb25peC5kZTsgRmFiaW8gRXN0ZXZh
+bSA8ZmFiaW8uZXN0ZXZhbUBueHAuY29tPjsgbGludXgtDQo+IGFybS1rZXJuZWxAbGlzdHMuaW5m
+cmFkZWFkLm9yZzsgQS5zLiBEb25nIDxhaXNoZW5nLmRvbmdAbnhwLmNvbT47IGRsLWxpbnV4LQ0K
+PiBpbXggPGxpbnV4LWlteEBueHAuY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIDMvNF0gYXJt
+NjQ6IGFkZCBzdXBwb3J0IGZvciBpLk1YOE0gRVZLIGJvYXJkDQo+IA0KPiBBbSBEb25uZXJzdGFn
+LCBkZW4gMjUuMDEuMjAxOCwgMjE6MDMgKzA4MDAgc2NocmllYiBEb25nIEFpc2hlbmc6DQo+ID4g
+T24gMjAxOC0wMS0yNSAxOTowOSwgTHVjYXMgU3RhY2ggd3JvdGU6DQo+ID4gPiBBbSBEb25uZXJz
+dGFnLCBkZW4gMjUuMDEuMjAxOCwgMTg6NDkgKzA4MDAgc2NocmllYiBEb25nIEFpc2hlbmc6DQo+
+ID4gPiA+IE9uIDIwMTgtMDEtMjUgMTg6MzEsIEx1Y2FzIFN0YWNoIHdyb3RlOg0KPiA+ID4gPiA+
+IEFtIERvbm5lcnN0YWcsIGRlbiAyNS4wMS4yMDE4LCAxODoxMCArMDgwMCBzY2hyaWViDQo+ID4g
+PiA+ID4gYWlzaGVuZy5kb25nQGNvZGVhdXJvcmEub3JnOg0KPiA+ID4NCj4gPiA+IFsuLi5dDQo+
+ID4gPiA+IEFGQUlLIHdlIHN3aXRjaGVkIHRvIGdlbmVyaWMgcGluY29uZmlnIHNpbmNlIE1YN1VM
+UCBhcyBtYWludGFpbmVyDQo+ID4gPiA+ID4gPiB3b24ndA0KPiA+ID4gPiA+ID4gYWNjZXNzIG9s
+ZCBiaW5kaW5nIHBpbmN0cmwgZHJpdmVycy4NCj4gPiA+ID4gPg0KPiA+ID4gPiA+IEknbSBub3Qg
+Y29udmluY2VkIHRoYXQgdGhlIGdlbmVyaWMgcGluY29uZiBpcyBnb29kIGZpdC4gRm9yDQo+ID4g
+PiA+ID4gcGluZ3JvdXBzIHdpdGggZGlmZmVyZW50IGNvbmZpZ3MgZm9yIHNvbWUgb2YgdGhlIHBp
+bnMsIGxpa2UgdGhlDQo+ID4gPiA+ID4gZXhhbXBsZSBhYm92ZSwgd2Ugd291bGQgbmVlZCB0byBz
+cGxpdCB0aGluZ3MgaW50byBtdWx0aXBsZSBEVA0KPiA+ID4gPiA+IG5vZGVzLiBUaGlzIHJlYWxs
+eSBodXJ0cyByZWFkYWJpbGl0eSwgc28gSSdtIG5vdCBnb2luZyB0byBzd2l0Y2gNCj4gPiA+ID4g
+PiB0byB0aGUgZ2VuZXJpYyBzdHVmZiB3aXRob3V0IHNvbWUgcmVhbGx5IGNvbnZpbmNpbmcgYXJn
+dW1lbnRzLg0KPiA+ID4gPiA+DQo+ID4gPiA+DQo+ID4gPiA+IFBlciBteSB1bmRlcnN0YW5kaW5n
+LCBiYXNlZCBvbiB0aGUgbGFzdCBkaXNjdXNzaW9uIHdpdGggTGludXMgVywNCj4gPiA+ID4gd2Ug
+YWN0dWFsbHkgZGlkIHRoaXMgaW4gb3JkZXIgdG8gaW5jcmVhc2UgdGhlIHJlYWRhYmlsaXR5IHRo
+YXQgMSkNCj4gPiA+ID4gdXNlciBkb2VzIG5vdCBuZWVkwqB0byBzZWUgdGhlICd1Z2x5JyB1bnJl
+YWRhYmxlIHJhdyBkYXRhIGFuZCByZWZlcg0KPiA+ID4gPiB0byByZWZlcmVuY2UgbWFudWFsIDIp
+wqB1bmlmaWVkIGdlbmVyaWMgYmluZGluZyBmb3JtYXQgd2hpY2gNCj4gPiA+ID4gYWxyZWFkeSBl
+eGlzdCBpbiBrZXJuZWwgYW5kIHVzZWQgYnkgbWFueSBwbGF0Zm9ybXMuDQo+ID4gPiA+DQo+ID4g
+PiA+IEFjdHVhbGx5IE1YUyBwbGF0Zm9ybSBhbHJlYWR5IHVzZWQgaXQgZm9yIG1hbnkgeWVhcnMg
+aW4gYSBzaW1pbGFyDQo+ID4gPiA+IHdheS4NCj4gPiA+ID4gU28gSU1ITyBhIGxpdHRsZSBodXJ0
+IHRvIGFkZCBhbm90aGVyIG5vZGUgZm9yIGRpZmZlcmVudCBwYWQNCj4gPiA+ID4gc2V0dGluZyBp
+biB0aGUgc2FtZSBncm91cCB3b24ndCBiZSBlbm91Z2ggcmVhc29uIHRvIHN0b3Agc3dpdGNoaW5n
+DQo+ID4gPiA+IHRvIGdlbmVyaWMgY29uZmlnLg0KPiA+ID4gPg0KPiA+ID4gPiBEb2VzIGl0IG1h
+a2Ugc2Vuc2U/DQo+ID4gPg0KPiA+ID4gSSBrbm93IHRoYXQgTGludXMgVyBpcyBwdXNoaW5nIGZv
+ciB0aGlzIGNvbW1vbiBwaW5jb25mIHRoaW5nIGluIHRoZQ0KPiA+ID4gbmFtZSBvZiByZWFkYWJp
+bGl0eS4gSXQncyBqdXN0IHRoYXQgSSBkb24ndCB0aGluayBpdCdzIHN1Y2ggYSBjbGVhcg0KPiA+
+ID4gd2luLg0KPiA+ID4NCj4gPiA+IEFmdGVyIGFsbCB5b3Ugc3RpbGwgbmVlZCB0byBsb29rIGlu
+dG8gdGhlIHJlZmVyZW5jZSBtYW51YWwgb3INCj4gPiA+IGJpbmRpbmcgdG8gc2VlIHdoaWNoIHZh
+bHVlcyBpbiB0aGUgY29tbW9uIGJpbmRpbmcgY29ycmVzcG9uZCB0byBhDQo+ID4gPiBzcGVjaWZp
+YyBkcml2ZS9wdWxsIHN0cmVuZ3RoLCBldGMuDQo+ID4gPg0KPiA+DQo+ID4gVXNlciBkb24ndCBu
+ZWVkIHRvIGxvb2sgaW50byByZWZlcmVuY2UgbWFudWFsIGFuZCB0aGV5IGRvbid0IG5lZWQgdG8N
+Cj4gPiBjb21wb3NlIHRoZSAndWxneScgcmF3IGRhdGEgd2hpY2ggaXMgdGhlIG1vc3QgdG91Z2gg
+dGhpbmcuDQo+ID4NCj4gPiBXaXRoIGdlbmVyaWMgYmluZGluZywgaXQgcHJvYmFibHkgY2FuIHNh
+dmluZyB+ODAlIHBhZCBzZXR0aW5nIGVmZm9ydA0KPiA+IGJ5IHJlZmVyIHRvIHRoZSBkZWZpbmVk
+IGdlbmVyaWMgY29uZmlnIHByb3BlcnRpZXMuDQo+ID4gQW5kIHRoaW5ncyBjYW4gYmUgZXZlbiBi
+ZXR0ZXIgd2hlbiB0aGUgcmVmZXJlbmNlIGNvZGUgaXMgYWxyZWFkeSB0aGVyZQ0KPiA+IGFzIHVz
+ZXIgYmVjb21lcyBrbm93IHdoaWNoIHByb3BlcnR5IHN1cHBvcnRlZC4NCj4gPg0KPiA+ID4gT24g
+dGhlIG90aGVyIGhhbmQgaXQgcmVhbGx5IGJsb2F0cyB0aGUgRFQgZGVzY3JpcHRpb24gb2YgdGhl
+IHBpbg0KPiA+ID4gY29uZmlndXJhdGlvbi4gSWYgeW91IHdhbnQgdG8gbG9vayBhdCBhbiAoSU1I
+TykgYmFkIGV4YW1wbGUsIGdvIGxvb2sNCj4gPiA+IGF0IHRoZSBUZWdyYSBEVHMuIFRoZSBUZWdy
+YSBwaW5jb250cm9sIGltcGxlbWVudHMgdGhlICJzZXBhcmF0ZQ0KPiA+ID4gcHJvcGVydGllcyBm
+b3IgZWFjaCBwaW5jb25mIG9wdGlvbiIgdGhhdCBpcyBwdXNoZWQgYnkgTGludXMgVy4gVGhpcw0K
+PiA+ID4gYmxvYXRlZCB0aGUgRFQgZGVzY3JpcHRpb24gdG8gdGhlIHBvaW50IHRoYXQgbm8tb25l
+IGlzIGFibGUvd2lsbGluZw0KPiA+ID4gdG8gd3JpdGUgdGhvc2UgZGVzY3JpcHRpb25zIGFueW1v
+cmUgYW5kIHRoZSBvbmx5IHZpYWJsZSB3YXkgdG8gZ2V0DQo+ID4gPiB0aGVtIGlzIHRvDQo+ID4g
+PiBhdXRvLQ0KPiA+ID4gZ2VuZXJhdGUgdGhlbSBmcm9tIHNvbWUgc3ByZWFkc2hlZXRzLiBOb3Qg
+cmVhbGx5IHdoYXQgSSB3b3VsZCBjYWxsDQo+ID4gPiBhbiByZWFkYWJsZS4uLg0KPiA+ID4NCj4g
+Pg0KPiA+IEkgd29uZGVyIHRoZSB3b3JzdCBjYXNlIHlvdSdyZSB3b3JyeWluZyB3aGV0aGVyIGV4
+aXN0IGluIHJlYWxpdHkuDQo+ID4gVGFrZSBpbXg2cWRsLXNhYnJlc2QgYXMgYW4gZXhhbXBsZSwg
+YWJvdXQgaGFsZiBvZiBwaW5ncm91cHMgaGF2aW5nIHRoZQ0KPiA+IHNhbWUgcGFkIHNldHRpbmcg
+d2hpbGUgb3RoZXJzIGhhdmUgdHdvIGRpZmZlcmVudCBzZXR0aW5ncyBhdCBtb3N0Lg0KPiA+IFRo
+YXQgbWVhbnMgaXQgbWF5IG5vdCBibG9hdCB0aGUgZGV2aWNlIHRyZWUgdG9vIG11Y2guDQo+ID4N
+Cj4gPiA+IE1heWJlIEknbSBhIGxpdHRsZSBzdHViYm9ybiB3aGVuIGl0IGNvbWVzIHRvIHRoaXMg
+dG9waWMsIGJ1dCBhdA0KPiA+ID4gUGVuZ3V0cm9uaXggd2Ugc2VlIGEgbG90IG9mIGN1c3RvbWVy
+IGRlc2lnbnMgd2hlcmUgd2UgbmVlZCB0byBjb21lDQo+ID4gPiB1cCB3aXRoIHRoZSBib2FyZCBE
+VC4gQmxvYXRpbmcgZWFjaCBvbmUgb2YgdGhvc2UgYW5kIG1ha2luZyB0aGUgd29yaw0KPiA+ID4g
+b2YgdGhlIGRldmVsb3BlcnMgaGFyZGVyIGluIHRoZSBuYW1lIG9mIGEgcmVhZGFiaWxpdHkgd2lu
+IHRoYXQgSQ0KPiA+ID4ganVzdCBkb24ndCBzZWUgZG9lc24ndCBzb3VuZCBsaWtlIHNvbWV0aGlu
+ZyBJIHdhbnQgdG8gc3VwcG9ydC4gOikNCj4gPiA+DQo+ID4NCj4gPiBIbW0uLiBJbiBjb250cmFz
+dCwgd2hhdCBpIGZlZWwgY3VycmVudGx5IGlzIHRoYXQgaXQgbWF5IGVhc2UgdGhlIHVzaW5nDQo+
+ID4gb2YgcGFkIHNldHRpbmcsIG5vdCBtYWtlIGl0IGhhcmRlci4gTm90IHN1cmUgaWYgaSBvdmVy
+bG9va2VkDQo+ID4gc29tZXRoaW5nLg0KPiA+DQo+ID4gTGV0J3MgbGlzdGVuIHRvIFNoYXduIGFu
+ZCBMaW51cyBXIGlmIHRoZXkgaGF2ZSBzb21lIGNvbW1lbnRzLg0KPiANCj4gV2hpbGUgSSdtIHN0
+aWxsIHVuY29udmluY2VkIHRoYXQgdGhlIGdlbmVyaWMgYmluZGluZyBhY3R1YWxseSBhZGRzIGFu
+eSB2YWx1ZSwgSSdsbA0KPiBnbyBhbmQgc2VlIGhvdyBjb252ZXJ0aW5nIHRoZSBNWDhNIHBpbmN0
+cmwgd2lsbCBsb29rIG9uIGEgcmVhbCBib2FyZC4NCj4gDQoNCllvdSBjYW4gcmVmZXIgdG8gd2hh
+dCB3ZSd2ZSBkb25lIGZvciBNWDdVTFAuDQoNCj4gVGhpcyB3aWxsIGRlbGF5IHJldiAyIG9mIHRo
+aXMgc2VyaWVzIGEgYml0LCBidXQgSSBob3BlIHRvIGhhdmUgc29tZXRoaW5nIHRvIHNlbmQNCj4g
+b3V0IHRvbW9ycm93Lg0KPiANCg0KU29ycnkgZm9yIG1ha2luZyB0aGUgdHJvdWJsZS4gDQoNClJl
+Z2FyZHMNCkRvbmcgQWlzaGVuZw0KDQo+IFJlZ2FyZHMsDQo+IEx1Y2FzDQo=
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
