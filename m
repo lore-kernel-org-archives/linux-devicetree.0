@@ -1,160 +1,264 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: [PATCH v2 3/3] pinctrl: qcom: Don't allow protected pins to be requested
-Date: Thu, 25 Jan 2018 17:14:00 -0800
-Message-ID: <20180126011400.2191-4-sboyd@codeaurora.org>
-References: <20180126011400.2191-1-sboyd@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180126011400.2191-1-sboyd@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Timur Tabi <timur@codeaurora.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, linux-gpio@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, devicetree@vger.kernel.org
+From: Hyun Kwon <hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v4 5/5] drm: xlnx: ZynqMP DP subsystem DRM KMS driver
+Date: Thu, 25 Jan 2018 17:34:02 -0800
+Message-ID: <1516930442-10285-5-git-send-email-hyun.kwon@xilinx.com>
+References: <1516930442-10285-1-git-send-email-hyun.kwon@xilinx.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1516930442-10285-1-git-send-email-hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Vetter <daniel.vetter-/w4YWyX8dFk@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Hyun Kwon <hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Some qcom platforms make some GPIOs or pins unavailable for use
-by non-secure operating systems, and thus reading or writing the
-registers for those pins will cause access control issues and
-reset the device. With a DT/ACPI property to describe the set of
-pins that are available for use, parse the available pins and set
-the irq valid bits for gpiolib to know what to consider 'valid'.
-This should avoid any issues with gpiolib. Furthermore, implement
-the pinmux_ops::request function so that pinmux can also make
-sure to not use pins that are unavailable.
+This is a wrapper around the ZynqMP Display and DisplayPort drivers.
 
-Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
+Signed-off-by: Hyun Kwon <hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Acked-by: Daniel Vetter <daniel.vetter-/w4YWyX8dFk@public.gmane.org>
 ---
- drivers/pinctrl/qcom/pinctrl-msm.c | 69 +++++++++++++++++++++++++++++++++++---
- 1 file changed, 65 insertions(+), 4 deletions(-)
+v4
+- Use the newly added xlnx pipeline calls to initialize drm device
+v2
+- Change the SPDX identifier format
+---
+---
+ drivers/gpu/drm/xlnx/Kconfig        |  11 +++
+ drivers/gpu/drm/xlnx/Makefile       |   3 +
+ drivers/gpu/drm/xlnx/zynqmp_dpsub.c | 155 ++++++++++++++++++++++++++++++++++++
+ drivers/gpu/drm/xlnx/zynqmp_dpsub.h |  28 +++++++
+ 4 files changed, 197 insertions(+)
+ create mode 100644 drivers/gpu/drm/xlnx/zynqmp_dpsub.c
+ create mode 100644 drivers/gpu/drm/xlnx/zynqmp_dpsub.h
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
-index 495432f3341b..c7901def5f2c 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm.c
-@@ -105,6 +105,17 @@ static const struct pinctrl_ops msm_pinctrl_ops = {
- 	.dt_free_map		= pinctrl_utils_free_map,
- };
- 
-+static int msm_pinmux_request(struct pinctrl_dev *pctldev, unsigned offset)
-+{
-+	struct msm_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
-+	struct gpio_chip *chip = &pctrl->chip;
+diff --git a/drivers/gpu/drm/xlnx/Kconfig b/drivers/gpu/drm/xlnx/Kconfig
+index 19fd7cd..7c5529c 100644
+--- a/drivers/gpu/drm/xlnx/Kconfig
++++ b/drivers/gpu/drm/xlnx/Kconfig
+@@ -10,3 +10,14 @@ config DRM_XLNX
+ 	  display pipeline using Xilinx IPs in FPGA. This module
+ 	  provides the kernel mode setting functionalities
+ 	  for Xilinx display drivers.
 +
-+	if (gpiochip_irqchip_irq_valid(chip, offset))
-+		return 0;
++config DRM_ZYNQMP_DPSUB
++	tristate "ZynqMP DP Subsystem Driver"
++	depends on ARCH_ZYNQMP && OF && DRM_XLNX && COMMON_CLK
++	select DMA_ENGINE
++	select GENERIC_PHY
++	help
++	  DRM KMS driver for ZynqMP DP Subsystem controller. Choose
++	  this option if you have a Xilinx ZynqMP SoC with DisplayPort
++	  subsystem. The driver provides the kernel mode setting
++	  functionlaities for ZynqMP DP subsystem.
+diff --git a/drivers/gpu/drm/xlnx/Makefile b/drivers/gpu/drm/xlnx/Makefile
+index c60a281..064a05a 100644
+--- a/drivers/gpu/drm/xlnx/Makefile
++++ b/drivers/gpu/drm/xlnx/Makefile
+@@ -1,2 +1,5 @@
+ xlnx_drm-objs += xlnx_crtc.o xlnx_drv.o xlnx_fb.o xlnx_gem.o
+ obj-$(CONFIG_DRM_XLNX) += xlnx_drm.o
 +
-+	return -EINVAL;
-+}
++zynqmp-dpsub-objs += zynqmp_disp.o zynqmp_dpsub.o zynqmp_dp.o
++obj-$(CONFIG_DRM_ZYNQMP_DPSUB) += zynqmp-dpsub.o
+diff --git a/drivers/gpu/drm/xlnx/zynqmp_dpsub.c b/drivers/gpu/drm/xlnx/zynqmp_dpsub.c
+new file mode 100644
+index 0000000..5aaf9fb
+--- /dev/null
++++ b/drivers/gpu/drm/xlnx/zynqmp_dpsub.c
+@@ -0,0 +1,155 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * ZynqMP DP Subsystem Driver
++ *
++ *  Copyright (C) 2017 - 2018 Xilinx, Inc.
++ *
++ *  Author: Hyun Woo Kwon <hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
++ *
++ * This software is licensed under the terms of the GNU General Public
++ * License version 2, as published by the Free Software Foundation, and
++ * may be copied, distributed, and modified under those terms.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
 +
- static int msm_get_functions_count(struct pinctrl_dev *pctldev)
- {
- 	struct msm_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
-@@ -166,6 +177,7 @@ static int msm_pinmux_set_mux(struct pinctrl_dev *pctldev,
- }
- 
- static const struct pinmux_ops msm_pinmux_ops = {
-+	.request		= msm_pinmux_request,
- 	.get_functions_count	= msm_get_functions_count,
- 	.get_function_name	= msm_get_function_name,
- 	.get_function_groups	= msm_get_function_groups,
-@@ -506,6 +518,9 @@ static void msm_gpio_dbg_show_one(struct seq_file *s,
- 		"pull up"
- 	};
- 
-+	if (!gpiochip_irqchip_irq_valid(chip, offset))
-+		return;
++#include <linux/component.h>
++#include <linux/module.h>
++#include <linux/of_platform.h>
++#include <linux/platform_device.h>
++#include <linux/pm_runtime.h>
 +
- 	g = &pctrl->soc->groups[offset];
- 	ctl_reg = readl(pctrl->regs + g->ctl_reg);
- 
-@@ -516,7 +531,7 @@ static void msm_gpio_dbg_show_one(struct seq_file *s,
- 
- 	seq_printf(s, " %-8s: %-3s %d", g->name, is_out ? "out" : "in", func);
- 	seq_printf(s, " %dmA", msm_regval_to_drive(drive));
--	seq_printf(s, " %s", pulls[pull]);
-+	seq_printf(s, " %s\n", pulls[pull]);
- }
- 
- static void msm_gpio_dbg_show(struct seq_file *s, struct gpio_chip *chip)
-@@ -524,10 +539,8 @@ static void msm_gpio_dbg_show(struct seq_file *s, struct gpio_chip *chip)
- 	unsigned gpio = chip->base;
- 	unsigned i;
- 
--	for (i = 0; i < chip->ngpio; i++, gpio++) {
-+	for (i = 0; i < chip->ngpio; i++, gpio++)
- 		msm_gpio_dbg_show_one(s, NULL, chip, i, gpio);
--		seq_puts(s, "\n");
--	}
- }
- 
- #else
-@@ -808,6 +821,46 @@ static void msm_gpio_irq_handler(struct irq_desc *desc)
- 	chained_irq_exit(chip, desc);
- }
- 
-+static int msm_gpio_init_irq_valid_mask(struct gpio_chip *chip,
-+					struct msm_pinctrl *pctrl)
++#include "xlnx_drv.h"
++
++#include "zynqmp_disp.h"
++#include "zynqmp_dp.h"
++#include "zynqmp_dpsub.h"
++
++static int
++zynqmp_dpsub_bind(struct device *dev, struct device *master, void *data)
 +{
 +	int ret;
-+	unsigned int len, i;
-+	unsigned int max_gpios = pctrl->soc->ngpios;
 +
-+	/* The number of GPIOs in the ACPI tables */
-+	ret = device_property_read_u16_array(pctrl->dev, "gpios", NULL, 0);
-+	if (ret > 0 && ret < max_gpios) {
-+		u16 *tmp;
++	ret = zynqmp_disp_bind(dev, master, data);
++	if (ret)
++		return ret;
 +
-+		len = ret;
-+		tmp = kmalloc_array(len, sizeof(tmp[0]), GFP_KERNEL);
-+		if (!tmp)
-+			return -ENOMEM;
-+
-+		ret = device_property_read_u16_array(pctrl->dev, "gpios", tmp,
-+						     len);
-+		if (ret < 0) {
-+			dev_err(pctrl->dev, "could not read list of GPIOs\n");
-+			kfree(tmp);
-+			return ret;
-+		}
-+
-+		bitmap_zero(chip->irq.valid_mask, max_gpios);
-+		for (i = 0; i < len; i++)
-+			set_bit(tmp[i], chip->irq.valid_mask);
-+
-+		return 0;
-+	}
++	/* zynqmp_disp should bind first, so zynqmp_dp encoder can find crtc */
++	ret = zynqmp_dp_bind(dev, master, data);
++	if (ret)
++		return ret;
 +
 +	return 0;
 +}
 +
-+static bool msm_gpio_needs_irq_valid_mask(struct msm_pinctrl *pctrl)
++static void
++zynqmp_dpsub_unbind(struct device *dev, struct device *master, void *data)
 +{
-+	return device_property_read_u16_array(pctrl->dev, "gpios", NULL, 0) > 0;
++	zynqmp_dp_unbind(dev, master, data);
++	zynqmp_disp_unbind(dev, master, data);
 +}
 +
- static int msm_gpio_init(struct msm_pinctrl *pctrl)
- {
- 	struct gpio_chip *chip;
-@@ -824,6 +877,7 @@ static int msm_gpio_init(struct msm_pinctrl *pctrl)
- 	chip->parent = pctrl->dev;
- 	chip->owner = THIS_MODULE;
- 	chip->of_node = pctrl->dev->of_node;
-+	chip->irq.need_valid_mask = msm_gpio_needs_irq_valid_mask(pctrl);
- 
- 	ret = gpiochip_add_data(&pctrl->chip, pctrl);
- 	if (ret) {
-@@ -831,6 +885,13 @@ static int msm_gpio_init(struct msm_pinctrl *pctrl)
- 		return ret;
- 	}
- 
-+	ret = msm_gpio_init_irq_valid_mask(chip, pctrl);
++static const struct component_ops zynqmp_dpsub_component_ops = {
++	.bind	= zynqmp_dpsub_bind,
++	.unbind	= zynqmp_dpsub_unbind,
++};
++
++static int zynqmp_dpsub_probe(struct platform_device *pdev)
++{
++	struct zynqmp_dpsub *dpsub;
++	int ret;
++
++	dpsub = devm_kzalloc(&pdev->dev, sizeof(*dpsub), GFP_KERNEL);
++	if (!dpsub)
++		return -ENOMEM;
++
++	/* Sub-driver will access dpsub from drvdata */
++	platform_set_drvdata(pdev, dpsub);
++	pm_runtime_enable(&pdev->dev);
++
++	/*
++	 * DP should be probed first so that the zynqmp_disp can set the output
++	 * format accordingly.
++	 */
++	ret = zynqmp_dp_probe(pdev);
++	if (ret)
++		goto err_pm;
++
++	ret = zynqmp_disp_probe(pdev);
++	if (ret)
++		goto err_dp;
++
++	ret = component_add(&pdev->dev, &zynqmp_dpsub_component_ops);
++	if (ret)
++		goto err_disp;
++
++	/* Populate the sound child nodes */
++	ret = of_platform_populate(pdev->dev.of_node, NULL, NULL, &pdev->dev);
 +	if (ret) {
-+		dev_err(pctrl->dev, "Failed to setup irq valid bits\n");
-+		gpiochip_remove(&pctrl->chip);
-+		return ret;
++		dev_err(&pdev->dev, "failed to populate child nodes\n");
++		goto err_component;
 +	}
 +
- 	ret = gpiochip_add_pin_range(&pctrl->chip, dev_name(pctrl->dev), 0, 0, chip->ngpio);
- 	if (ret) {
- 		dev_err(pctrl->dev, "Failed to add pin range\n");
++	dev_info(&pdev->dev, "ZynqMP DisplayPort Subsystem driver probed");
++
++	dpsub->master = xlnx_drm_pipeline_init(pdev);
++
++	return 0;
++
++err_component:
++	component_del(&pdev->dev, &zynqmp_dpsub_component_ops);
++err_disp:
++	zynqmp_disp_remove(pdev);
++err_dp:
++	zynqmp_dp_remove(pdev);
++err_pm:
++	pm_runtime_disable(&pdev->dev);
++	return ret;
++}
++
++static int zynqmp_dpsub_remove(struct platform_device *pdev)
++{
++	struct zynqmp_dpsub *dpsub = platform_get_drvdata(pdev);
++	int err, ret = 0;
++
++	xlnx_drm_pipeline_exit(dpsub->master);
++	of_platform_depopulate(&pdev->dev);
++	component_del(&pdev->dev, &zynqmp_dpsub_component_ops);
++
++	err = zynqmp_disp_remove(pdev);
++	if (err)
++		ret = -EIO;
++
++	err = zynqmp_dp_remove(pdev);
++	if (err)
++		ret = -EIO;
++
++	pm_runtime_disable(&pdev->dev);
++
++	return err;
++}
++
++static const struct of_device_id zynqmp_dpsub_of_match[] = {
++	{ .compatible = "xlnx,zynqmp-dpsub-1.7", },
++	{ /* end of table */ },
++};
++MODULE_DEVICE_TABLE(of, zynqmp_dpsub_of_match);
++
++static struct platform_driver zynqmp_dpsub_driver = {
++	.probe			= zynqmp_dpsub_probe,
++	.remove			= zynqmp_dpsub_remove,
++	.driver			= {
++		.owner		= THIS_MODULE,
++		.name		= "zynqmp-display",
++		.of_match_table	= zynqmp_dpsub_of_match,
++	},
++};
++
++module_platform_driver(zynqmp_dpsub_driver);
++
++MODULE_AUTHOR("Xilinx, Inc.");
++MODULE_DESCRIPTION("ZynqMP DP Subsystem Driver");
++MODULE_LICENSE("GPL v2");
+diff --git a/drivers/gpu/drm/xlnx/zynqmp_dpsub.h b/drivers/gpu/drm/xlnx/zynqmp_dpsub.h
+new file mode 100644
+index 0000000..6606bef
+--- /dev/null
++++ b/drivers/gpu/drm/xlnx/zynqmp_dpsub.h
+@@ -0,0 +1,28 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * ZynqMP DPSUB Subsystem Driver
++ *
++ *  Copyright (C) 2017 - 2018 Xilinx, Inc.
++ *
++ *  Author: Hyun Woo Kwon <hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
++ *
++ * This software is licensed under the terms of the GNU General Public
++ * License version 2, as published by the Free Software Foundation, and
++ * may be copied, distributed, and modified under those terms.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#ifndef _ZYNQMP_DPSUB_H_
++#define _ZYNQMP_DPSUB_H_
++
++struct zynqmp_dpsub {
++	struct zynqmp_dp *dp;
++	struct zynqmp_disp *disp;
++	struct platform_device *master;
++};
++
++#endif /* _ZYNQMP_DPSUB_H_ */
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
