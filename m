@@ -1,91 +1,80 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Applied "regulator: added support for suspend states" to the regulator tree
-Date: Fri, 26 Jan 2018 15:26:12 +0000
-Message-ID: <E1ef5tM-0006fT-89@debutante>
-References: <1516607961-379-1-git-send-email-zhang.chunyan@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1516607961-379-1-git-send-email-zhang.chunyan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chunyan Zhang <zhang.chunyan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Chunyan Zhang <zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2] of: use hash based search in of_find_node_by_phandle
+Date: Fri, 26 Jan 2018 09:34:59 -0600
+Message-ID: <CAL_JsqJ=6bmOZCsj=NVthgXsZRRjyhQUDv0-CrngF_1MaYtKqA@mail.gmail.com>
+References: <1516955496-17236-1-git-send-email-cpandya@codeaurora.org>
+ <f08592cf-5e49-e631-c481-e166b741f25e@prevas.dk> <aa84e40d-5032-1d1d-6146-391ca1e5e528@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <aa84e40d-5032-1d1d-6146-391ca1e5e528@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chintan Pandya <cpandya@codeaurora.org>
+Cc: Rasmus Villemoes <rasmus.villemoes@prevas.dk>, Frank Rowand <frowand.list@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The patch
+On Fri, Jan 26, 2018 at 9:14 AM, Chintan Pandya <cpandya@codeaurora.org> wrote:
+>
+>> I'm probably missing something obvious, but: Aren't phandles in practice
+>> small consecutive integers assigned by dtc? If so, why not just have a
+>> smallish static array mapping the small phandle values directly to
+>> device node, instead of adding a pointer to every struct device_node? Or
+>> one could determine the size of the array dynamically (largest seen
+>> phandle value, capping at something sensible, e.g. 1024).
 
-   regulator: added support for suspend states
+I do have some concerns that is a bit fragile and dependent on dtc's
+implementations. However, I guess we already kind of are with overlay
+phandles.
 
-has been applied to the regulator tree at
+> Haven't noticed this earlier !! If following is known or true, we can avoid
+> using hash-table and save per device_node hlish_node.
+>
+>     1. How to know max phandle value without traversing tree once? In my
+> case,
+>        max is 1263.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
+We already have to know it for overlays. Plus unflattening has to
+handle phandles specially already, so it would be easy to do there if
+we aren't already.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+Then the question what to do with overlays. For now, we can probably
+assume too few phandles to matter.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+>     2. Although, I haven't observed collision but is it like every
+> device_node
+>        is associated with unique phandle value ?
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+Yes, phandles must be unique.
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+>> In either case, one would still need to keep the code doing the
+>> whole-tree traversal for handling large phandle values, but I think the
+>> above should make lookup O(1) in most cases.
+>
+> I would refrain doing this because that will make this API inconsistent in
+> terms
+> of time taken by different nodes. I see that people do change their device
+> placing in DT and that changes time taken in of_* APIs for them but
+> affecting
+> others.
 
-Thanks,
-Mark
+Who cares. It's the total time that matters. It's obviously not a
+problem until you have 1000s of lookups as no one cared until recently
+(though you aren't the first with a hash table lookup).
 
->From 057c76440c791eb31eb68f3b003f67d00fcce51a Mon Sep 17 00:00:00 2001
-From: Chunyan Zhang <zhang.chunyan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Date: Fri, 26 Jan 2018 21:08:43 +0800
-Subject: [PATCH] regulator: added support for suspend states
+>> Alternatively, one could just count the number of nodes with a phandle,
+>> allocate an array of that many pointers (so the memory use is certainly
+>> no more than if adding a pointer to each device_node), and sort it by
+>> phandle, so one can do lookup using a binary search.
+>>
+>> Rasmus
+>
+> This is certainly doable if current approach is not welcomed due to
+> addition on hlish_node in device_node.
 
-Some systems need to set regulators to specific states when they enter
-low power modes, especially around CPUs. There are many of these modes
-depending on the particular runtime state.
+I certainly prefer an out of band approach as that's easier to turn of
+if we want to save memory.
 
-Currently the regulator consumers are not granted permission to change
-suspend state of regulator devices, the constraints are configured at
-startup.  In order to allow changes in a vlotage range, we need to add
-new properties for voltage range and a flag to give permission to
-change the suspend voltage and suspend on/off in suspend mode.
+Still, I'd like to see some data on a cache based approach and reasons
+why that won't work.
 
-Signed-off-by: Chunyan Zhang <zhang.chunyan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
- Documentation/devicetree/bindings/regulator/regulator.txt | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/regulator/regulator.txt b/Documentation/devicetree/bindings/regulator/regulator.txt
-index 378f6dc8b8bd..e459226dfac9 100644
---- a/Documentation/devicetree/bindings/regulator/regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/regulator.txt
-@@ -42,8 +42,16 @@ Optional properties:
- - regulator-state-[mem/disk] node has following common properties:
- 	- regulator-on-in-suspend: regulator should be on in suspend state.
- 	- regulator-off-in-suspend: regulator should be off in suspend state.
--	- regulator-suspend-microvolt: regulator should be set to this voltage
--	  in suspend.
-+	- regulator-suspend-min-microvolt: minimum voltage may be set in
-+	  suspend state.
-+	- regulator-suspend-max-microvolt: maximum voltage may be set in
-+	  suspend state.
-+	- regulator-suspend-microvolt: the default voltage which regulator
-+	  would be set in suspend. This property is now deprecated, instead
-+	  setting voltage for suspend mode via the API which regulator
-+	  driver provides is recommended.
-+	- regulator-changeable-in-suspend: whether the default voltage and
-+	  the regulator on/off in suspend can be changed in runtime.
- 	- regulator-mode: operating mode in the given suspend state.
- 	  The set of possible operating modes depends on the capabilities of
- 	  every hardware so the valid modes are documented on each regulator
--- 
-2.15.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
