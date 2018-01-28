@@ -1,58 +1,51 @@
 From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: [PATCH 3/3] usb: dwc3: of-simple: add support for the Amlogic Meson GXL and AXG SoCs
-Date: Sun, 28 Jan 2018 21:03:33 +0100
-Message-ID: <20180128200333.20093-4-martin.blumenstingl@googlemail.com>
-References: <20180128200333.20093-1-martin.blumenstingl@googlemail.com>
+Subject: [PATCH 0/3] DWC3 support for Amlogic Meson AXG and GXL SoCs
+Date: Sun, 28 Jan 2018 21:03:30 +0100
+Message-ID: <20180128200333.20093-1-martin.blumenstingl@googlemail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180128200333.20093-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Amlogic Meson GXL and AXG SoCs come with a (host-only) dwc3 USB
-controller. To use this controller a clock has to be enabled and a reset
-line has to be pulsed.
-Enabling the clock works identical to other SoCs. However, the reset
-line has to be pulsed (using reset_control_reset) instead of using a
-level reset (reset_control_{assert,deassert}).
+Amlogic Meson AXG and GXL SoCs can use the dwc3-of-simple with little
+modifications. These SoCs use:
+- a gate clock for the USB components (DWC3, USB PHYs)
+- a reset line which is shared across all USB components (DWC3, USB2 and
+  USB3 PHYs, OTG detection logic inside the USB3 PHY registers)
+- a reset pulse to trigger the reset
+- depending on the SoC two or more PHYs (AXG: 1x USB2 and 1x USB3 PHY,
+  GXL: 2x USB2 and 1x USB3 PHY)
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
----
- drivers/usb/dwc3/dwc3-of-simple.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+This extends the dwc3-of-simple so it supports (depending on the
+platform) shared and level resets. Additionally it adds new bindings
+for the Amlogic Meson AXG and GXL SoCs, along with the documentation
+(dt-bindings).
 
-diff --git a/drivers/usb/dwc3/dwc3-of-simple.c b/drivers/usb/dwc3/dwc3-of-simple.c
-index ceb9f0cd822a..d9e4b8b09eaf 100644
---- a/drivers/usb/dwc3/dwc3-of-simple.c
-+++ b/drivers/usb/dwc3/dwc3-of-simple.c
-@@ -217,6 +217,11 @@ static const struct dwc3_of_simple_params dwc3_of_simple_default_params = {
- 	.pulse_resets = false,
- };
- 
-+static const struct dwc3_of_simple_params dwc3_of_simple_amlogic_params = {
-+	.shared_resets = true,
-+	.pulse_resets = true,
-+};
-+
- static const struct of_device_id of_dwc3_simple_match[] = {
- 	{
- 		.compatible = "qcom,dwc3",
-@@ -238,6 +243,14 @@ static const struct of_device_id of_dwc3_simple_match[] = {
- 		.compatible = "sprd,sc9860-dwc3",
- 		.data = &dwc3_of_simple_default_params
- 	},
-+	{
-+		.compatible = "amlogic,meson-axg-dwc3",
-+		.data = &dwc3_of_simple_amlogic_params
-+	},
-+	{
-+		.compatible = "amlogic,meson-gxl-dwc3",
-+		.data = &dwc3_of_simple_amlogic_params
-+	},
- 	{ /* Sentinel */ }
- };
- MODULE_DEVICE_TABLE(of, of_dwc3_simple_match);
+NOTE: for full support on Amlogic Meson GXL SoCs my other series called
+"initialize (multiple) PHYs for a HCD" (see [0] for v8 of that series)
+is required. However, there is no direct dependency on that series.
+Especially since Meson AXG doesn't need it (since it only has one USB2
+and one USB3 PHY, which is already supported by the current dwc3 driver,
+unlike the 2x USB2 and 1x USB3 PHYs on Meson GXL).
+So I believe that this series can still be merged, even if the other
+patchset is not ready yet.
+
+
+[0] http://lists.infradead.org/pipermail/linux-amlogic/2018-January/006274.html
+
+
+Martin Blumenstingl (3):
+  dt-bindings: usb: add support for dwc3 controller on Amlogic Meson GX
+  usb: dwc3: of-simple: add support for shared and pulsed reset lines
+  usb: dwc3: of-simple: add support for the Amlogic Meson GXL and AXG
+    SoCs
+
+ .../devicetree/bindings/usb/amlogic,dwc3.txt       | 42 ++++++++++++
+ drivers/usb/dwc3/dwc3-of-simple.c                  | 78 +++++++++++++++++++---
+ 2 files changed, 109 insertions(+), 11 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/amlogic,dwc3.txt
+
 -- 
 2.16.1
 
