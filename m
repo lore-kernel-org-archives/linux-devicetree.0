@@ -1,166 +1,121 @@
 From: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
-Subject: [PATCH v5 00/11] PCI: Add support to the Cadence PCIe controller
-Date: Sun, 28 Jan 2018 21:40:14 +0100
-Message-ID: <cover.1517170521.git.cyrille.pitchen@free-electrons.com>
+Subject: [PATCH v5 09/11] PCI: endpoint: Fix EPF device name to support multi-function devices
+Date: Sun, 28 Jan 2018 21:40:23 +0100
+Message-ID: <0c9ae7445f9900f96c62f78e91810dd906bab14f.1517170521.git.cyrille.pitchen@free-electrons.com>
+References: <cover.1517170521.git.cyrille.pitchen@free-electrons.com>
 Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <cover.1517170521.git.cyrille.pitchen@free-electrons.com>
+In-Reply-To: <cover.1517170521.git.cyrille.pitchen@free-electrons.com>
+References: <cover.1517170521.git.cyrille.pitchen@free-electrons.com>
 Sender: linux-pci-owner@vger.kernel.org
 To: bhelgaas@google.com, kishon@ti.com, lorenzo.pieralisi@arm.com, linux-pci@vger.kernel.org
 Cc: adouglas@cadence.com, stelford@cadence.com, dgary@cadence.com, kgopi@cadence.com, eandrews@cadence.com, thomas.petazzoni@free-electrons.com, sureshp@cadence.com, nsekhar@ti.com, linux-kernel@vger.kernel.org, robh@kernel.org, devicetree@vger.kernel.org, Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
+Fix the pci_epf_make() function so it can now bind many EPF devices to the
+same EPF driver.
 
-this series of patches adds support to the Cadence PCIe controller.
-It was tested on a ARM64 platform emulated by a Palladium running the
-pci-next kernel.
+Signed-off-by: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
+---
+ drivers/pci/endpoint/pci-ep-cfs.c | 46 +++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 44 insertions(+), 2 deletions(-)
 
-The host mode was tested with some PCIe devices connected to the Palladium
-through a speed-bridge. Some of those devices were a USB host controller
-and a SATA controller. The PCIe host controller was also tested with a
-second controller configured in endpoint mode and connected back to back
-to the first controller.
-
-The EndPoint Controller (EPC) driver was tested with 2 PCI functions, both
-handled by the pci-epf-test driver, using the pcitest userspace program.
-I used the "-D" optional command line parameter to select the proper PCI
-function.
-
-Best regards,
-
-Cyrille
-
-ChangeLog
-
-v4 -> v5:
-- rebase on today's (20180128) linux-pci/next
-- add again the endpoint driver
-
-- Patch 7:
- move host driver from drivers/pci/cadence into drivers/pci/host and remove
- all references to the endpoint mode, as requested by Lorenzo.
- The host driver will be moved back into drivers/pci/cadence by Patch 11
-
-- Patch 8:
- fix comparison of func_no to BAR5: compare to epc->max_functions
-
-- Patch 9:
- add new patch to fix support of PCI multi-function devices
-
-- Patch 10:
- change the 'cdns,max-outbound-regions' from optional to mandatory as requested
- by Kishon.
-
-- Patch 11:
- take Kishon's comments into account as much as I could.
-
-- Other patches: unchanged
-
-
-v3 -> v4:
-- split patch 3 from v3 into patches 3 and 4.
-- remove unused cdns_pcie_reset_outbound_region() from old patch 6
-  (new patch 7).
-- other patches are unchanged.
-
-v2 -> v3:
-
-- rebase on today's linux-pci/next (20180110) 
-
-patch1:
-- rework the commit message of patch 1 and add two new comments on why endpoint
-  library users must be linked after the endpoint library itself and why
-  the dwc rule uses obj-y instead of obj-$(CONFIG_PCIE_CONFIG_DW).
-- update patch 1 to add missing ifdef CONFIG_PCI / endif in
-  drivers/pci/dwc/Makefile around the obj-$(CONFIG_ARM64) += pcie-hisi.o rule,
-  like for the other obj-$(CONFIG_ARM64) rules in drivers/pci/host/Makefile.
-
-patch2: unchanged
-
-patch3:
-- update patch 3 so the bridge hooks/members initialization is left to the
-  host bridges probe routines.
-
-patch4: unchanged
-
-patch5:
-- collect 'Reviewed-by' tag from Rob Herring for the DT bindings.
-
-patch6:
-- remove explanation in the commit message on why obj-$(CONFIG_PCIE_CANDENCE) is
-  placed after obj-$(CONFIG_PCI_ENDPOINT) in drivers/pci/Makefile since a
-  comment on it has been added into patch1.
-- remove menuconfig PCI_CADENCE in drivers/pci/cadence/Kconfig to match
-  drivers/pci/dwc/Kconfig.
-- adapt patch6 to the changes done in patch3 for the pci_host_probe() function.
-
-v1 -> v2:
-- add new properties in the device-tree bindings: 'cdns,max-outbound-regions'
-  and 'cdns,no-bar-match-nbits'.
-- add a new patch to regroup all makefile rules in drivers/pci/Makefile, hence
-  cleaning drivers/Makefile up.
-- change the license text to use the recommanded format:
-  // SPDX-License-Identifier: GPL-2.0
-- add a new patch updating the API of the EPC library to add support to
-  multi-function devices.
-- add a 2 new patches to share more common code between host controller drivers
-- remove some useless tests
-- add more comments in both drivers.
-- fix DT bindings examples
-- remove useless init of the primary, secondary and sub-ordinate bus numbers in
-  the PCI configuration space of the root port.
-- remove cdns_pcie_ep_stop() function and rework cdns_pcie_ep_start() function
-
-Cyrille Pitchen (10):
-  PCI: Regroup all PCI related entries into drivers/pci/Makefile
-  PCI: OF: Add generic function to parse and allocate PCI resources
-  PCI: generic: fix missing call of pci_free_resource_list()
-  PCI: Add generic function to probe PCI host controllers
-  PCI: Add vendor ID for Cadence
-  PCI: cadence: Add host driver for Cadence PCIe controller
-  PCI: endpoint: Add the function number as argument to EPC ops
-  PCI: endpoint: Fix EPF device name to support multi-function devices
-  dt-bindings: PCI: cadence: Add DT bindings for Cadence PCIe endpoint
-    controller
-  PCI: cadence: Add EndPoint Controller driver for Cadence PCIe
-    controller
-
-Scott Telford (1):
-  dt-bindings: PCI: cadence: Add DT bindings for Cadence PCIe host
-    controller
-
- .../devicetree/bindings/pci/cdns,cdns-pcie-ep.txt  |  22 +
- .../bindings/pci/cdns,cdns-pcie-host.txt           |  60 +++
- MAINTAINERS                                        |   7 +
- drivers/Makefile                                   |   5 +-
- drivers/pci/Kconfig                                |   2 +
- drivers/pci/Makefile                               |  14 +-
- drivers/pci/cadence/Kconfig                        |  27 +
- drivers/pci/cadence/Makefile                       |   4 +
- drivers/pci/cadence/pcie-cadence-ep.c              | 542 +++++++++++++++++++++
- drivers/pci/cadence/pcie-cadence-host.c            | 336 +++++++++++++
- drivers/pci/cadence/pcie-cadence.c                 | 126 +++++
- drivers/pci/cadence/pcie-cadence.h                 | 311 ++++++++++++
- drivers/pci/dwc/Makefile                           |   2 +
- drivers/pci/dwc/pcie-designware-ep.c               |  20 +-
- drivers/pci/endpoint/functions/pci-epf-test.c      |  41 +-
- drivers/pci/endpoint/pci-ep-cfs.c                  |  46 +-
- drivers/pci/endpoint/pci-epc-core.c                |  62 ++-
- drivers/pci/host/Makefile                          |   2 +
- drivers/pci/host/pci-host-common.c                 |  72 +--
- drivers/pci/of.c                                   |  51 ++
- drivers/pci/probe.c                                |  33 ++
- include/linux/pci-epc.h                            |  43 +-
- include/linux/pci.h                                |  10 +
- include/linux/pci_ids.h                            |   2 +
- 24 files changed, 1693 insertions(+), 147 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt
- create mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
- create mode 100644 drivers/pci/cadence/Kconfig
- create mode 100644 drivers/pci/cadence/Makefile
- create mode 100644 drivers/pci/cadence/pcie-cadence-ep.c
- create mode 100644 drivers/pci/cadence/pcie-cadence-host.c
- create mode 100644 drivers/pci/cadence/pcie-cadence.c
- create mode 100644 drivers/pci/cadence/pcie-cadence.h
-
+diff --git a/drivers/pci/endpoint/pci-ep-cfs.c b/drivers/pci/endpoint/pci-ep-cfs.c
+index c9a2fb9dd49d..9ec28be1e378 100644
+--- a/drivers/pci/endpoint/pci-ep-cfs.c
++++ b/drivers/pci/endpoint/pci-ep-cfs.c
+@@ -18,18 +18,22 @@
+  */
+ 
+ #include <linux/module.h>
++#include <linux/idr.h>
+ #include <linux/slab.h>
+ 
+ #include <linux/pci-epc.h>
+ #include <linux/pci-epf.h>
+ #include <linux/pci-ep-cfs.h>
+ 
++static DEFINE_IDR(functions_idr);
++static DEFINE_MUTEX(functions_mutex);
+ static struct config_group *functions_group;
+ static struct config_group *controllers_group;
+ 
+ struct pci_epf_group {
+ 	struct config_group group;
+ 	struct pci_epf *epf;
++	int index;
+ };
+ 
+ struct pci_epc_group {
+@@ -354,6 +358,9 @@ static void pci_epf_release(struct config_item *item)
+ {
+ 	struct pci_epf_group *epf_group = to_pci_epf_group(item);
+ 
++	mutex_lock(&functions_mutex);
++	idr_remove(&functions_idr, epf_group->index);
++	mutex_unlock(&functions_mutex);
+ 	pci_epf_destroy(epf_group->epf);
+ 	kfree(epf_group);
+ }
+@@ -373,22 +380,57 @@ static struct config_group *pci_epf_make(struct config_group *group,
+ {
+ 	struct pci_epf_group *epf_group;
+ 	struct pci_epf *epf;
++	char *epf_name;
++	int index, err;
+ 
+ 	epf_group = kzalloc(sizeof(*epf_group), GFP_KERNEL);
+ 	if (!epf_group)
+ 		return ERR_PTR(-ENOMEM);
+ 
++	mutex_lock(&functions_mutex);
++	index = idr_alloc(&functions_idr, epf_group, 0, 0, GFP_KERNEL);
++	mutex_unlock(&functions_mutex);
++	if (index < 0) {
++		err = index;
++		goto free_group;
++	}
++
++	epf_group->index = index;
++
+ 	config_group_init_type_name(&epf_group->group, name, &pci_epf_type);
+ 
+-	epf = pci_epf_create(group->cg_item.ci_name);
++	epf_name = kasprintf(GFP_KERNEL, "%s.%d",
++			     group->cg_item.ci_name, epf_group->index);
++	if (!epf_name) {
++		err = -ENOMEM;
++		goto remove_idr;
++	}
++
++	epf = pci_epf_create(epf_name);
+ 	if (IS_ERR(epf)) {
+ 		pr_err("failed to create endpoint function device\n");
+-		return ERR_PTR(-EINVAL);
++		err = -EINVAL;
++		goto free_name;
+ 	}
+ 
+ 	epf_group->epf = epf;
+ 
++	kfree(epf_name);
++
+ 	return &epf_group->group;
++
++free_name:
++	kfree(epf_name);
++
++remove_idr:
++	mutex_lock(&functions_mutex);
++	idr_remove(&functions_idr, epf_group->index);
++	mutex_unlock(&functions_mutex);
++
++free_group:
++	kfree(epf_group);
++
++	return ERR_PTR(err);
+ }
+ 
+ static void pci_epf_drop(struct config_group *group, struct config_item *item)
 -- 
 2.11.0
