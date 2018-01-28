@@ -1,12 +1,13 @@
 From: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 14/16] arm: dts: sun8i: h3: enable H3 sid controller
-Date: Mon, 29 Jan 2018 00:29:17 +0100
-Message-ID: <20180128232919.12639-15-embed3d@gmail.com>
+Subject: [PATCH v2 11/16] arm: dts: sunxi-h3-h5: add support for
+ the thermal sensor in H3 and H5
+Date: Mon, 29 Jan 2018 00:29:14 +0100
+Message-ID: <20180128232919.12639-12-embed3d@gmail.com>
 References: <20180128232919.12639-1-embed3d@gmail.com>
 Reply-To: embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD257DPK24NRB3NZXHJQKGQECMSX5UA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD257DPK24NRBZ5ZXHJQKGQENFYYEMI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20180128232919.12639-1-embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -19,31 +20,35 @@ To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yR
 Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch enables the the sid controller in the H3. It can be used
-for thermal calibration data.
+As we have gained the support for the thermal sensor in H3 and H5,
+we can now add its device nodes to the device tree. The H3 and H5 share
+most of its compatible. The compatible and the thermal sensor cells
+will be added in an additional patch per device.
 
 Signed-off-by: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm/boot/dts/sun8i-h3.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/arm/boot/dts/sunxi-h3-h5.dtsi | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
-index 3f83f6a27c74..9bb5cc29fec5 100644
---- a/arch/arm/boot/dts/sun8i-h3.dtsi
-+++ b/arch/arm/boot/dts/sun8i-h3.dtsi
-@@ -72,6 +72,13 @@
+diff --git a/arch/arm/boot/dts/sunxi-h3-h5.dtsi b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+index 7a83b15225c7..413c789b588d 100644
+--- a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
++++ b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+@@ -426,6 +426,15 @@
+ 			};
  		};
- 	};
  
-+	soc {
-+		sid: eeprom@1c14000 {
-+			compatible = "allwinner,sun8i-h3-sid";
-+			reg = <0x01c14000 0x400>;
++		ths: thermal-sensor@1c25000 {
++			reg = <0x01c25000 0x100>;
++			interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu CLK_BUS_THS>, <&ccu CLK_THS>;
++			clock-names = "bus", "mod";
++			resets = <&ccu RST_BUS_THS>;
++			#io-channel-cells = <0>;
 +		};
-+	};
 +
- 	thermal-zones {
- 		cpu-thermal {
- 			/* milliseconds */
+ 		timer@1c20c00 {
+ 			compatible = "allwinner,sun4i-a10-timer";
+ 			reg = <0x01c20c00 0xa0>;
 -- 
 2.11.0
