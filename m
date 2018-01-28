@@ -1,196 +1,52 @@
-From: Philipp Rossak <embed3d@gmail.com>
-Subject: [PATCH v2 08/16] iio: adc: sun4i-gpadc-iio: rework: add interrupt support
-Date: Mon, 29 Jan 2018 00:29:11 +0100
-Message-ID: <20180128232919.12639-9-embed3d@gmail.com>
+From: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 13/16] arm: dts: sun8i: h3: add thermal zone
+ to H3
+Date: Mon, 29 Jan 2018 00:29:16 +0100
+Message-ID: <20180128232919.12639-14-embed3d@gmail.com>
 References: <20180128232919.12639-1-embed3d@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180128232919.12639-1-embed3d@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@free-electrons.com, wens@csie.org, linux@armlinux.org.uk, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, davem@davemloft.net, hans.verkuil@cisco.com, mchehab@kernel.org, rask@formelder.dk, clabbe.montjoie@gmail.com, sean@mess.org, krzk@kernel.org, quentin.schulz@free-electrons.com, icenowy@aosc.io, edu.molinas@gmail.com, singhalsimran0@gmail.com
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+Reply-To: embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBD257DPK24NRB25ZXHJQKGQEYNK4EWQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180128232919.12639-1-embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, rask-SivP7zSAdNDZaaYASwVUlg@public.gmane.org, clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sean-hENCXIMQXOg@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, icenowy-h8G6r0blFSE@public.gmane.org, edu.molinas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, singhalsimran0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch rewors the driver to support interrupts for the thermal part
-of the sensor.
+This patch adds the thermal zones to the H3. We have only one sensor and
+that is placed in the cpu.
 
-This is only available for the newer sensor (currently H3 and A83T).
-The interrupt will be trigerd on data available and triggers the update
-for the thermal sensors. All newer sensors have different amount of
-sensors and different interrupts for each device the reset of the
-interrupts need to be done different
-
-For the newer sensors is the autosuspend disabled.
-
-Signed-off-by: Philipp Rossak <embed3d@gmail.com>
-Acked-by: Jonathan  Cameron <jonathan.cameron@huawei.com>
+Signed-off-by: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- drivers/iio/adc/sun4i-gpadc-iio.c | 60 +++++++++++++++++++++++++++++++++++----
- include/linux/mfd/sun4i-gpadc.h   |  2 ++
- 2 files changed, 56 insertions(+), 6 deletions(-)
+ arch/arm/boot/dts/sun8i-h3.dtsi | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/iio/adc/sun4i-gpadc-iio.c b/drivers/iio/adc/sun4i-gpadc-iio.c
-index 74eeb5cd5218..b7b5451226b0 100644
---- a/drivers/iio/adc/sun4i-gpadc-iio.c
-+++ b/drivers/iio/adc/sun4i-gpadc-iio.c
-@@ -71,11 +71,14 @@ struct gpadc_data {
- 	unsigned int	temp_data[MAX_SENSOR_COUNT];
- 	int		(*sample_start)(struct sun4i_gpadc_iio *info);
- 	int		(*sample_end)(struct sun4i_gpadc_iio *info);
-+	u32		irq_clear_map;
-+	u32		irq_control_map;
- 	bool		has_bus_clk;
- 	bool		has_bus_rst;
- 	bool		has_mod_clk;
- 	int		sensor_count;
- 	bool		supports_nvmem;
-+	bool		support_irq;
- };
+diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
+index fbb007e5798e..3f83f6a27c74 100644
+--- a/arch/arm/boot/dts/sun8i-h3.dtsi
++++ b/arch/arm/boot/dts/sun8i-h3.dtsi
+@@ -72,6 +72,15 @@
+ 		};
+ 	};
  
- static const struct gpadc_data sun4i_gpadc_data = {
-@@ -90,6 +93,7 @@ static const struct gpadc_data sun4i_gpadc_data = {
- 	.sample_end = sun4i_gpadc_sample_end,
- 	.sensor_count = 1,
- 	.supports_nvmem = false,
-+	.support_irq = false,
- };
- 
- static const struct gpadc_data sun5i_gpadc_data = {
-@@ -104,6 +108,7 @@ static const struct gpadc_data sun5i_gpadc_data = {
- 	.sample_end = sun4i_gpadc_sample_end,
- 	.sensor_count = 1,
- 	.supports_nvmem = false,
-+	.support_irq = false,
- };
- 
- static const struct gpadc_data sun6i_gpadc_data = {
-@@ -118,6 +123,7 @@ static const struct gpadc_data sun6i_gpadc_data = {
- 	.sample_end = sun4i_gpadc_sample_end,
- 	.sensor_count = 1,
- 	.supports_nvmem = false,
-+	.support_irq = false,
- };
- 
- static const struct gpadc_data sun8i_a33_gpadc_data = {
-@@ -129,6 +135,7 @@ static const struct gpadc_data sun8i_a33_gpadc_data = {
- 	.sample_end = sun4i_gpadc_sample_end,
- 	.sensor_count = 1,
- 	.supports_nvmem = false,
-+	.support_irq = false,
- };
- 
- struct sun4i_gpadc_iio {
-@@ -332,6 +339,11 @@ static int sun4i_gpadc_temp_read(struct iio_dev *indio_dev, int *val,
- 		return 0;
- 	}
- 
-+	if (info->data->support_irq) {
-+		regmap_read(info->regmap, info->data->temp_data[sensor], val);
-+		return 0;
-+	}
++	thermal-zones {
++		cpu-thermal {
++			/* milliseconds */
++			polling-delay-passive = <250>;
++			polling-delay = <1000>;
++			thermal-sensors = <&ths 0>;
++		};
++	};
 +
- 	return sun4i_gpadc_read(indio_dev, 0, val, info->temp_data_irq);
- }
- 
-@@ -429,6 +441,17 @@ static irqreturn_t sun4i_gpadc_fifo_data_irq_handler(int irq, void *dev_id)
- 	return IRQ_HANDLED;
- }
- 
-+static irqreturn_t sunxi_irq_thread(int irq, void *data)
-+{
-+	struct sun4i_gpadc_iio *info = data;
-+
-+	regmap_write(info->regmap, SUN8I_H3_THS_STAT, info->data->irq_clear_map);
-+
-+	thermal_zone_device_update(info->tzd, THERMAL_EVENT_TEMP_SAMPLE);
-+
-+	return IRQ_HANDLED;
-+}
-+
- static int sun4i_gpadc_sample_end(struct sun4i_gpadc_iio *info)
- {
- 	/* Disable the ADC on IP */
-@@ -572,12 +595,29 @@ static int sun4i_gpadc_probe_dt(struct platform_device *pdev,
- 	struct nvmem_cell *cell;
- 	ssize_t cell_size;
- 	u64 *cell_data;
-+	int irq;
- 
- 	info->data = of_device_get_match_data(&pdev->dev);
- 	if (!info->data)
- 		return -ENODEV;
- 
--	info->no_irq = true;
-+	if (info->data->support_irq) {
-+		/* only the new versions of ths support right now irqs */
-+		irq = platform_get_irq(pdev, 0);
-+		if (irq < 0) {
-+			dev_err(&pdev->dev, "failed to get IRQ: %d\n", irq);
-+			return irq;
-+		}
-+
-+		ret = devm_request_threaded_irq(&pdev->dev, irq, NULL,
-+				sunxi_irq_thread, IRQF_ONESHOT,
-+				dev_name(&pdev->dev), info);
-+		if (ret)
-+			return ret;
-+
-+	} else
-+		info->no_irq = true;
-+
- 	indio_dev->num_channels = ARRAY_SIZE(sun8i_a33_gpadc_channels);
- 	indio_dev->channels = sun8i_a33_gpadc_channels;
- 
-@@ -789,11 +829,13 @@ static int sun4i_gpadc_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
- 
--	pm_runtime_set_autosuspend_delay(&pdev->dev,
--					 SUN4I_GPADC_AUTOSUSPEND_DELAY);
--	pm_runtime_use_autosuspend(&pdev->dev);
--	pm_runtime_set_suspended(&pdev->dev);
--	pm_runtime_enable(&pdev->dev);
-+	if (!info->data->support_irq) {
-+		pm_runtime_set_autosuspend_delay(&pdev->dev,
-+						 SUN4I_GPADC_AUTOSUSPEND_DELAY);
-+		pm_runtime_use_autosuspend(&pdev->dev);
-+		pm_runtime_set_suspended(&pdev->dev);
-+		pm_runtime_enable(&pdev->dev);
-+	}
- 
- 	if (IS_ENABLED(CONFIG_THERMAL_OF)) {
- 		for (i = 0; i < info->data->sensor_count; i++) {
-@@ -814,6 +856,9 @@ static int sun4i_gpadc_probe(struct platform_device *pdev)
- 		}
- 	}
- 
-+	if (info->data->support_irq)
-+		info->data->sample_start(info);
-+
- 	ret = devm_iio_device_register(&pdev->dev, indio_dev);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "could not register the device\n");
-@@ -843,6 +888,9 @@ static int sun4i_gpadc_remove(struct platform_device *pdev)
- 	if (!IS_ENABLED(CONFIG_THERMAL_OF))
- 		return 0;
- 
-+	if (info->data->support_irq)
-+		info->data->sample_end(info);
-+
- 	thermal_zone_of_sensor_unregister(info->sensor_device, info->tzd);
- 
- 	if (!info->no_irq)
-diff --git a/include/linux/mfd/sun4i-gpadc.h b/include/linux/mfd/sun4i-gpadc.h
-index 20fa02040007..458f2159a95a 100644
---- a/include/linux/mfd/sun4i-gpadc.h
-+++ b/include/linux/mfd/sun4i-gpadc.h
-@@ -91,6 +91,8 @@
- #define SUN4I_GPADC_AUTOSUSPEND_DELAY			10000
- 
- /* SUNXI_THS COMMON REGISTERS + DEFINES */
-+#define SUN8I_H3_THS_INTC				0x44
-+
- #define MAX_SENSOR_COUNT				4
- 
- struct sun4i_gpadc_dev {
+ 	timer {
+ 		compatible = "arm,armv7-timer";
+ 		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
 -- 
 2.11.0
