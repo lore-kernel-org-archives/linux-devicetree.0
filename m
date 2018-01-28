@@ -1,277 +1,91 @@
-From: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 07/16] iio: adc: sun4i-gpadc-iio: rework:
- support nvmem calibration data
-Date: Sun, 28 Jan 2018 15:39:15 +0100
-Message-ID: <c6f8c2ac-e1c5-461a-b55d-364e1239beb0@gmail.com>
-References: <20180126151941.12183-1-embed3d@gmail.com>
- <20180126151941.12183-8-embed3d@gmail.com>
- <20180128090258.56e8ac93@archlinux>
- <6ebbb5e0-eb5f-afe4-50e8-eb3cee8ec7fa@gmail.com>
- <1927F24D-D3ED-49CF-9B7C-A7C8C873F0CF@aosc.io>
-Reply-To: embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v2 3/6] gpio: Add GPIO driver for Nintendo Wii
+Date: Sun, 28 Jan 2018 19:31:58 +0200
+Message-ID: <CAHp75VcWshngZFuUp4hzYdD43HF7TZ1sRE3Dh+HckB5do1=gGw@mail.gmail.com>
+References: <20180122050411.32460-1-j.neuschaefer@gmx.net> <20180122050411.32460-4-j.neuschaefer@gmx.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBD257DPK24NRBFWBW7JQKGQE2LXJ5DA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <1927F24D-D3ED-49CF-9B7C-A7C8C873F0CF-h8G6r0blFSE@public.gmane.org>
-Content-Language: en-US
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, sean-hENCXIMQXOg@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, edu.molinas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, rask-SivP7zSAdNDZaaYASwVUlg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, singhalsimran0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20180122050411.32460-4-j.neuschaefer@gmx.net>
+Sender: linux-gpio-owner@vger.kernel.org
+To: =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:LINUX FOR POWERPC PA SEMI PWRFICIENT" <linuxppc-dev@lists.ozlabs.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Albert Herranz <albert_herranz@yahoo.es>, Segher Boessenkool <segher@kernel.crashing.org>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Jan 22, 2018 at 7:04 AM, Jonathan Neusch=C3=A4fer
+<j.neuschaefer@gmx.net> wrote:
+
+Style issues below.
+
+> +#define HW_GPIO_OWNER          0x3c
+> +
+> +
+> +struct hlwd_gpio {
+
+No need extra empty line in between.
+
+> +       struct gpio_chip gpioc;
+> +       void __iomem *regs;
+> +       struct device *dev;
+> +};
+> +
+> +static int hlwd_gpio_probe(struct platform_device *pdev)
+> +{
+> +       struct hlwd_gpio *hlwd;
+> +       struct resource *regs_resource;
+> +       u32 ngpios;
+> +       int res;
+> +
+> +       hlwd =3D devm_kzalloc(&pdev->dev, sizeof(*hlwd), GFP_KERNEL);
+> +       if (!hlwd)
+> +               return -ENOMEM;
+> +
+
+> +       /* Save the struct device pointer so dev_info, etc. can be used. =
+*/
+
+Useless.
+
+> +       hlwd->dev =3D &pdev->dev;
+> +
+
+> +       regs_resource =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+
+> +       if (IS_ERR(regs_resource))
+> +               return PTR_ERR(regs_resource);
+> +
+
+This is redundant. Below does it for ya.
+
+> +       hlwd->regs =3D devm_ioremap_resource(&pdev->dev, regs_resource);
+> +       if (IS_ERR(hlwd->regs))
+> +               return PTR_ERR(hlwd->regs);
 
 
-On 28.01.2018 14:52, Icenowy Zheng wrote:
->=20
->=20
-> =E4=BA=8E 2018=E5=B9=B41=E6=9C=8828=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=88=
-9:46:18, Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> =E5=86=99=E5=88=B0:
->>
->>
->> On 28.01.2018 10:02, Jonathan Cameron wrote:
->>> On Fri, 26 Jan 2018 16:19:32 +0100
->>> Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>>
->>>> This patch reworks the driver to support nvmem calibration cells.
->>>> The driver checks if the nvmem calibration is supported and reads
->> out
->>>> the nvmem. At the beginning of the startup process the calibration
->> data
->>>> is written to the related registers.
->>>>
->>>> Signed-off-by: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>>
->>> A few minor suggestions inline.
->>>
->>> Jonathan
->>>
->>>> ---
->>>>    drivers/iio/adc/sun4i-gpadc-iio.c | 52
->> +++++++++++++++++++++++++++++++++++++++
->>>>    include/linux/mfd/sun4i-gpadc.h   |  2 ++
->>>>    2 files changed, 54 insertions(+)
->>>>
->>>> diff --git a/drivers/iio/adc/sun4i-gpadc-iio.c
->> b/drivers/iio/adc/sun4i-gpadc-iio.c
->>>> index bff06f2798e8..7b12666cdd9e 100644
->>>> --- a/drivers/iio/adc/sun4i-gpadc-iio.c
->>>> +++ b/drivers/iio/adc/sun4i-gpadc-iio.c
->>>> @@ -27,6 +27,7 @@
->>>>    #include <linux/interrupt.h>
->>>>    #include <linux/io.h>
->>>>    #include <linux/module.h>
->>>> +#include <linux/nvmem-consumer.h>
->>>>    #include <linux/of.h>
->>>>    #include <linux/of_device.h>
->>>>    #include <linux/platform_device.h>
->>>> @@ -81,6 +82,7 @@ struct gpadc_data {
->>>>    	bool		has_bus_rst;
->>>>    	bool		has_mod_clk;
->>>>    	int		sensor_count;
->>>> +	bool		supports_nvmem;
->>>>    };
->>>>   =20
->>>>    static const struct gpadc_data sun4i_gpadc_data =3D {
->>>> @@ -94,6 +96,7 @@ static const struct gpadc_data sun4i_gpadc_data =3D
->> {
->>>>    	.sample_start =3D sun4i_gpadc_sample_start,
->>>>    	.sample_end =3D sun4i_gpadc_sample_end,
->>>>    	.sensor_count =3D 1,
->>>> +	.supports_nvmem =3D false,
->>>>    };
->>>>   =20
->>>>    static const struct gpadc_data sun5i_gpadc_data =3D {
->>>> @@ -107,6 +110,7 @@ static const struct gpadc_data sun5i_gpadc_data
->> =3D {
->>>>    	.sample_start =3D sun4i_gpadc_sample_start,
->>>>    	.sample_end =3D sun4i_gpadc_sample_end,
->>>>    	.sensor_count =3D 1,
->>>> +	.supports_nvmem =3D false,
->>>>    };
->>>>   =20
->>>>    static const struct gpadc_data sun6i_gpadc_data =3D {
->>>> @@ -120,6 +124,7 @@ static const struct gpadc_data sun6i_gpadc_data
->> =3D {
->>>>    	.sample_start =3D sun4i_gpadc_sample_start,
->>>>    	.sample_end =3D sun4i_gpadc_sample_end,
->>>>    	.sensor_count =3D 1,
->>>> +	.supports_nvmem =3D false,
->>>>    };
->>>>   =20
->>>>    static const struct gpadc_data sun8i_a33_gpadc_data =3D {
->>>> @@ -130,6 +135,7 @@ static const struct gpadc_data
->> sun8i_a33_gpadc_data =3D {
->>>>    	.sample_start =3D sun4i_gpadc_sample_start,
->>>>    	.sample_end =3D sun4i_gpadc_sample_end,
->>>>    	.sensor_count =3D 1,
->>>> +	.supports_nvmem =3D false,
->=20
-> BTW A33 claims to support calibration data according to the manual.
->=20
+> +       res =3D bgpio_init(&hlwd->gpioc, &pdev->dev, 4,
+> +                       hlwd->regs + HW_GPIOB_IN, hlwd->regs + HW_GPIOB_O=
+UT,
+> +                       NULL, hlwd->regs + HW_GPIOB_DIR, NULL,
+> +                       BGPIOF_BIG_ENDIAN_BYTE_ORDER);
 
-Yes that's true, but I haven't seen a sid/nvmem driver for the a33. If=20
-that is available, we can change this for true (same on a83t).
+> +
 
->>>>    };
->>>>   =20
->>>>    struct sun4i_gpadc_iio {
->>>> @@ -148,6 +154,8 @@ struct sun4i_gpadc_iio {
->>>>    	struct clk			*mod_clk;
->>>>    	struct reset_control		*reset;
->>>>    	int				sensor_id;
->>>> +	u32				calibration_data[2];
->>>> +	bool				has_calibration_data[2];
->>>>    	/* prevents concurrent reads of temperature and ADC */
->>>>    	struct mutex			mutex;
->>>>    	struct thermal_zone_device	*tzd;
->>>> @@ -459,6 +467,17 @@ static int sun4i_gpadc_runtime_suspend(struct
->> device *dev)
->>>>    	return info->data->sample_end(info);
->>>>    }
->>>>   =20
->>>> +static void sunxi_calibrate(struct sun4i_gpadc_iio *info)
->>>> +{
->>>> +	if (info->has_calibration_data[0])
->>>> +		regmap_write(info->regmap, SUNXI_THS_CDATA_0_1,
->>>> +			info->calibration_data[0]);
->>>> +
->>>> +	if (info->has_calibration_data[1])
->>>> +		regmap_write(info->regmap, SUNXI_THS_CDATA_2_3,
->>>> +			info->calibration_data[1]);
->>>> +}
->>>> +
->>>>    static int sun4i_gpadc_sample_start(struct sun4i_gpadc_iio *info)
->>>>    {
->>>>    	/* clkin =3D 6MHz */
->>>> @@ -481,6 +500,7 @@ static int sun4i_gpadc_sample_start(struct
->> sun4i_gpadc_iio *info)
->>>>    static int sunxi_ths_sample_start(struct sun4i_gpadc_iio *info)
->>>>    {
->>>>    	u32 value;
->>>> +	sunxi_calibrate(info);
->>>>   =20
->>>>    	if (info->data->ctrl0_map)
->>>>    		regmap_write(info->regmap, SUNXI_THS_CTRL0,
->>>> @@ -602,6 +622,9 @@ static int sun4i_gpadc_probe_dt(struct
->> platform_device *pdev,
->>>>    	struct resource *mem;
->>>>    	void __iomem *base;
->>>>    	int ret;
->>>> +	struct nvmem_cell *cell;
->>>> +	ssize_t cell_size;
->>>> +	u64 *cell_data;
->>>>   =20
->>>>    	info->data =3D of_device_get_match_data(&pdev->dev);
->>>>    	if (!info->data)
->>>> @@ -616,6 +639,35 @@ static int sun4i_gpadc_probe_dt(struct
->> platform_device *pdev,
->>>>    	if (IS_ERR(base))
->>>>    		return PTR_ERR(base);
->>>>   =20
->>>> +	info->has_calibration_data[0] =3D false;
->>>> +	info->has_calibration_data[1] =3D false;
->>>> +
->>>> +	if (!info->data->supports_nvmem)
->>>> +		goto no_nvmem;
->>>> +
->>>> +	cell =3D devm_nvmem_cell_get(&pdev->dev, "calibration");
->>>> +	if (IS_ERR(cell)) {
->>>> +		if (PTR_ERR(cell) =3D=3D -EPROBE_DEFER)
->>>> +			return PTR_ERR(cell);
->>> Use a goto here to no_nvmem.
->>>
->>> Then you can drop the below else to make things more readable.
->>>> +	} else {
->>>> +		cell_data =3D (u64 *)nvmem_cell_read(cell, &cell_size);
->>>> +		devm_nvmem_cell_put(&pdev->dev, cell);
->>>
->>> I'm really not keen on use of devm for things we are intending
->>> to drop almost immediately.  Just use the non managed versions
->>> and clean up properly in the error paths (if there are any
->>> where it is needed - which there aren't that I can see)
->>>
->>
->> ^^ Ok, I will rework that.
->>
->>>> +		if (cell_size <=3D 4) {
->>> Is it valid if it is anything other than 4?
->>
->> For sensors with only one sensor would be also a 2 valid, for those
->> with
->> 2 sensors =3D=3D> 4, with 3 sensors =3D=3D> 6 and with and with 4 sensor=
-s =3D=3D>
->> 8.
->>
->> In hardware we have in total to 32bit registers for calibration, thus I
->>
->> thought it would be a good idea to use always four bytes per register.
->> If two bytes are used, they should be the default value.
->>
->> But I agree, this needs a rework.
->>
->>>> +			info->has_calibration_data[0] =3D true;
->>>> +			info->calibration_data[0] =3D be32_to_cpu(cell_data[0] &
->>>> +					GENMASK(31, 0));
->>>
->>> Masking isn't needed,  If you want to be paranoid there is the
->> lower_32_bits
->>> function..
->>>
->> ^^ Ok, I will rework that.
->>>> +		} else if (cell_size <=3D 8) {
->>>> +			info->has_calibration_data[0] =3D true;
->>>> +			info->calibration_data[0] =3D be32_to_cpu(cell_data[0] &
->>>> +					GENMASK(31, 0));
->>>
->>> This first block is repeated.  Easy enough to avoid I think...
->>>
->>
->> ^^ Ok, I will rework that.
->>
->>>> +			info->has_calibration_data[1] =3D true;
->>>> +			info->calibration_data[1] =3D be32_to_cpu(
->>>> +					(cell_data[0] >> 32) & GENMASK(31, 0));
->>>> +		}
->>>> +	}
->>>> +
->>>> +no_nvmem:
->>>> +
->>>>    	info->regmap =3D devm_regmap_init_mmio(&pdev->dev, base,
->>>>    					     &sun4i_gpadc_regmap_config);
->>>>    	if (IS_ERR(info->regmap)) {
->>>> diff --git a/include/linux/mfd/sun4i-gpadc.h
->> b/include/linux/mfd/sun4i-gpadc.h
->>>> index 40b4dd9d2405..c251002431bd 100644
->>>> --- a/include/linux/mfd/sun4i-gpadc.h
->>>> +++ b/include/linux/mfd/sun4i-gpadc.h
->>>> @@ -90,6 +90,8 @@
->>>>    #define SUNXI_THS_CTRL0					0x00
->>>>    #define SUNXI_THS_CTRL2					0x40
->>>>    #define SUNXI_THS_FILTER				0x70
->>>> +#define SUNXI_THS_CDATA_0_1				0x74
->>>> +#define SUNXI_THS_CDATA_2_3				0x78
->>>>    #define SUNXI_THS_TDATA0				0x80
->>>>    #define SUNXI_THS_TDATA1				0x84
->>>>    #define SUNXI_THS_TDATA2				0x88
->>>
->> Thanks,
->> Philipp
->>
->> _______________________________________________
->> linux-arm-kernel mailing list
->> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
->> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Remove this extra line.
+
+> +       if (res < 0) {
+> +               dev_warn(hlwd->dev, "bgpio_init failed: %d\n", res);
+> +               return res;
+> +       }
+
+> +       if (of_property_read_u32(pdev->dev.of_node, "ngpios", &ngpios))
+> +               ngpios =3D 32;
+
+A nit: I would rather go with
+res =3D of_property_read(...);
+if (res)
+  ngpios =3D 32;
 
 --=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+With Best Regards,
+Andy Shevchenko
