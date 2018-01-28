@@ -1,74 +1,67 @@
 From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: [PATCH 1/3] dt-bindings: usb: add support for dwc3 controller on Amlogic Meson GX
-Date: Sun, 28 Jan 2018 21:03:31 +0100
-Message-ID: <20180128200333.20093-2-martin.blumenstingl@googlemail.com>
-References: <20180128200333.20093-1-martin.blumenstingl@googlemail.com>
+Subject: [PATCH v2 1/2] dt-bindings: phy: Add support for the USB3 PHY on Amlogic Meson GXL SoCs
+Date: Sun, 28 Jan 2018 21:15:53 +0100
+Message-ID: <20180128201554.23889-2-martin.blumenstingl@googlemail.com>
+References: <20180128201554.23889-1-martin.blumenstingl@googlemail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180128200333.20093-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20180128201554.23889-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+To: kishon-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Amlogic Meson GX SoCs (GXL and AXG) come with a (host-only) dwc3 USB
-controller. This requires a clock to be enabled and a reset line to be
-pulsed to get the hardware into a known state.
-Add the documentation for this IP block, similar to "qcom,dwc3.txt".
+Amlogic Meson GXL SoCs use a dwc3 controller with two (GXM - a variant
+for GXL, has three) USB2 ports. The first USB2 port supports host and
+peripheral (also called "device") mode.
+While the dwc3 controller has no USB3 port enabled we still need the
+USB3 PHY to be initialized. Otherwise high-speed USB transfers (for
+example with a USB flash drive) may time out (most often seen on boards
+with mainline u-boot, where the bootloader does not initialize the USB3
+PHY registers).
 
 Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 ---
- .../devicetree/bindings/usb/amlogic,dwc3.txt       | 42 ++++++++++++++++++++++
- 1 file changed, 42 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/amlogic,dwc3.txt
+ .../devicetree/bindings/phy/meson-gxl-usb3-phy.txt | 31 ++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/meson-gxl-usb3-phy.txt
 
-diff --git a/Documentation/devicetree/bindings/usb/amlogic,dwc3.txt b/Documentation/devicetree/bindings/usb/amlogic,dwc3.txt
+diff --git a/Documentation/devicetree/bindings/phy/meson-gxl-usb3-phy.txt b/Documentation/devicetree/bindings/phy/meson-gxl-usb3-phy.txt
 new file mode 100644
-index 000000000000..9a8b631904fd
+index 000000000000..114947e1de3d
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/amlogic,dwc3.txt
-@@ -0,0 +1,42 @@
-+Amlogic Meson GX DWC3 USB SoC controller
++++ b/Documentation/devicetree/bindings/phy/meson-gxl-usb3-phy.txt
+@@ -0,0 +1,31 @@
++* Amlogic Meson GXL and GXM USB3 PHY and OTG detection binding
 +
 +Required properties:
-+- compatible:	depending on the SoC this should contain one of:
-+			* amlogic,meson-axg-dwc3
-+			* amlogic,meson-gxl-dwc3
-+- clocks:	a handle for the "USB general" clock
-+- clock-names:	must be "usb_general"
-+- resets:	a handle for the shared "USB OTG" reset line
-+- reset-names:	must be "usb_otg"
++- compatible:	Should be "amlogic,meson-gxl-usb3-phy"
++- #phys-cells:	must be 0 (see phy-bindings.txt in this directory)
++- reg:		The base address and length of the registers
++- interrupts:	the interrupt specifier for the OTG detection
++- clocks:	phandles to the clocks for
++		- the USB3 PHY
++		- and peripheral mode/OTG detection
++- clock-names:	must contain "phy" and "peripheral"
++- resets:	phandle to the reset lines for:
++		- the USB3 PHY and
++		- peripheral mode/OTG detection
++- reset-names:	must contain "phy" and "peripheral"
 +
-+Required child node:
-+A child node must exist to represent the core DWC3 IP block. The name of
-+the node is not important. The content of the node is defined in dwc3.txt.
++Optional properties:
++- phy-supply:	see phy-bindings.txt in this directory
 +
-+PHY documentation is provided in the following places:
-+- Documentation/devicetree/bindings/phy/meson-gxl-usb2-phy.txt
-+- Documentation/devicetree/bindings/phy/meson-gxl-usb3-phy.txt
 +
-+Example device nodes:
-+		usb0: usb@ff500000 {
-+			compatible = "amlogic,meson-axg-dwc3";
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			ranges;
-+
-+			clocks = <&clkc CLKID_USB>;
-+			clock-names = "usb_general";
-+			resets = <&reset RESET_USB_OTG>;
-+			reset-names = "usb_otg";
-+
-+			dwc3: dwc3@ff500000 {
-+				compatible = "snps,dwc3";
-+				reg = <0x0 0xff500000 0x0 0x100000>;
-+				interrupts = <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
-+				dr_mode = "host";
-+				maximum-speed = "high-speed";
-+				snps,dis_u2_susphy_quirk;
-+				phys = <&usb3_phy>, <&usb2_phy0>;
-+				phy-names = "usb2-phy", "usb3-phy";
-+			};
-+		};
++Example:
++	usb3_phy0: phy@78080 {
++		compatible = "amlogic,meson-gxl-usb3-phy";
++		#phy-cells = <0>;
++		reg = <0x0 0x78080 0x0 0x20>;
++		interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&clkc CLKID_USB_OTG>, <&clkc_AO CLKID_AO_CEC_32K>;
++		clock-names = "phy", "peripheral";
++		resets = <&reset RESET_USB_OTG>, <&reset RESET_USB_OTG>;
++		reset-names = "phy", "peripheral";
++	};
 -- 
 2.16.1
 
