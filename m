@@ -1,77 +1,41 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: imx25-pinfunc: Always set SION for SD CMD
-Date: Sat, 27 Jan 2018 21:43:50 +0100
-Message-ID: <20180127204350.3xswhyvvae6w4w2c@pengutronix.de>
-References: <20180127000752.2879-1-benoit.thebaudeau.dev@gmail.com>
- <20180127153733.7ziaq6frli3jemc7@pengutronix.de>
- <CA+sos78H1_ihvVghJcpZQZmB6rE2nfgXF8gq8kqK=cQE9Qs0mw@mail.gmail.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH] kbuild: fix W= option checks for extra DTC warnings
+Date: Sun, 28 Jan 2018 10:41:42 +0900
+Message-ID: <CAK7LNASbdy99XO712fpEW0j-wTPyMZCEuCrAOjJae2iuORut2w@mail.gmail.com>
+References: <1516246306-12851-1-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CA+sos78H1_ihvVghJcpZQZmB6rE2nfgXF8gq8kqK=cQE9Qs0mw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?iso-8859-1?Q?Beno=EEt_Th=E9baudeau?= <benoit.thebaudeau.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Michael Nazzareno Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kbuild-owner@vger.kernel.org>
+In-Reply-To: <1516246306-12851-1-git-send-email-yamada.masahiro@socionext.com>
+Sender: linux-kbuild-owner@vger.kernel.org
+To: Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Cc: linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Sam Ravnborg <sam@ravnborg.org>, Michal Marek <michal.lkml@markovi.net>, Masahiro Yamada <yamada.masahiro@socionext.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jan 27, 2018 at 09:37:11PM +0100, Benoît Thébaudeau wrote:
-> On Sat, Jan 27, 2018 at 4:37 PM, Uwe Kleine-König
-> <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> > On Sat, Jan 27, 2018 at 01:07:52AM +0100, Benoît Thébaudeau wrote:
-> >> The eSDHC does not work properly if the SION bit is not set for the
-> >> bidirectional CMD signal, whatever the eSDHC instance and the selected
-> >> pad. Therefore, setting SION is mandatory for all eSDHC CMD ports. Do
-> >> this for MX25_PAD_*__SD*_CMD in imx25-pinfunc.h in order to enforce this
-> >> behavior for all boards.
-> >>
-> >> This had already been done for eSDHC1, but not for eSDHC2. Also, define
-> >> MX25_PAD_FEC_MDC__SDHC2_CMD so that all the possible cases are covered
-> >> from now on.
-> >
-> > There is an inconsistency in the naming. The eSDHC1 CMD constants are
-> > named:
-> >
-> >         MX25_PAD_SD1_CMD__SD1_CMD
-> >
-> > The reference calls this:
-> >
-> >         CMD of instance: esdhc1.
-> >
-> > The register name is correct though. Not sure it's worth to fix this to
-> > use consistent naming (which would result in:
-> >
-> >         MX25_PAD_SD1_CMD__ESDHC1_CMD
-> >
-> > which looks ugly, too).
-> 
-> Indeed. I had also noticed this. I can send a patch to apply before
-> this one. But that would break the out-of-tree DT files using these
-> definitions. Would that be OK?
+2018-01-18 12:31 GMT+09:00 Masahiro Yamada <yamada.masahiro@socionext.com>:
+> Kbuild supports 3 levels of extra warnings, and multiple levels can
+> be combined, like W=12, W=123.  It was added by commit a6de553da01c
+> ("kbuild: Allow to combine multiple W= levels").
+>
+> From the log of commit 8654cb8d0371 ("dtc: update warning settings
+> for new bus and node/property name checks"), I assume:
+>
+>  - unit_address_vs_reg, simple_bus_reg, etc. belong to level 1
+>  - node_name_chars_strict, property_name_chars_strict belong to level 2
+>
+> However, the level 1 warnings are displayed by any argument to W=.
+> On the other hand, the level 2 warnings are displayed by W=2, but
+> not by W=12, or W=123.
+>
+> Use $(findstring ...) like scripts/Makefile.extrawarn.
+>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
+>
 
-One possibility is to do something like this:
+Applied to linux-kbuild/kbuild.
 
-	#define MX25_PAD_SD1_CMD__ESDHC1_CMD	X Y Z ...
-
-	...
-
-	/*
-	 * compat defines for out-of-tree users. Yes, you should update when you
-	 * make use of one of them.
-	 */
-	#define MX25_PAD_SD1_CMD__SD1_CMD MX25_PAD_SD1_CMD__ESDHC1_CMD
-
-This would also allow to fix the users in a separate step.
-
-Best regards
-Uwe
 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best Regards
+Masahiro Yamada
