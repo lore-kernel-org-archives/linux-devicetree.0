@@ -1,54 +1,136 @@
-From: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
-Subject: [PATCH v5 10/11] dt-bindings: PCI: cadence: Add DT bindings for Cadence PCIe endpoint controller
-Date: Sun, 28 Jan 2018 21:40:24 +0100
-Message-ID: <2f0827c48a04fccb61e7c65437283795c907def8.1517170521.git.cyrille.pitchen@free-electrons.com>
+From: Cyrille Pitchen <cyrille.pitchen-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v5 01/11] PCI: Regroup all PCI related entries into drivers/pci/Makefile
+Date: Sun, 28 Jan 2018 21:40:15 +0100
+Message-ID: <974a5595d6462861cb0f58b4f6303462b8ba7c91.1517170521.git.cyrille.pitchen@free-electrons.com>
 References: <cover.1517170521.git.cyrille.pitchen@free-electrons.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1517170521.git.cyrille.pitchen@free-electrons.com>
-In-Reply-To: <cover.1517170521.git.cyrille.pitchen@free-electrons.com>
-References: <cover.1517170521.git.cyrille.pitchen@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: bhelgaas@google.com, kishon@ti.com, lorenzo.pieralisi@arm.com, linux-pci@vger.kernel.org
-Cc: adouglas@cadence.com, stelford@cadence.com, dgary@cadence.com, kgopi@cadence.com, eandrews@cadence.com, thomas.petazzoni@free-electrons.com, sureshp@cadence.com, nsekhar@ti.com, linux-kernel@vger.kernel.org, robh@kernel.org, devicetree@vger.kernel.org, Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1517170521.git.cyrille.pitchen-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <cover.1517170521.git.cyrille.pitchen-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+References: <cover.1517170521.git.cyrille.pitchen-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, stelford-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, dgary-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, kgopi-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, eandrews-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, sureshp-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Cyrille Pitchen <cyrille.pitchen-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch documents the DT bindings for the Cadence PCIe controller
-when configured in endpoint mode.
+Clean up drivers/Makefile by moving the pci/endpoint and pci/dwc entries
+from drivers/Makefile into drivers/pci/Makefile.
 
-Signed-off-by: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Since we don't want to introduce any dependency between CONFIG_PCI and
+CONFIG_PCI_ENDPOINT, we now always execute drivers/pci/Makefile.
+
+Hence all Makefiles in drivers/pci/ were updated accordingly so no file is
+compiled when CONFIG_PCI is not defined.
+
+Also, we add a comment to reinforce that EPC and EPF libraries must be
+initialized before their users. Hence built-in EPC drivers, such as
+those of Designware, are linked after the endpoint core libraries.
+
+Finally, we add another comment to explain why obj-y has been chosen
+instead of obj-$(CONFIG_PCIE_DW) to parse the dwc/ sub-folder.
+
+Signed-off-by: Cyrille Pitchen <cyrille.pitchen-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- .../devicetree/bindings/pci/cdns,cdns-pcie-ep.txt  | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt
+ drivers/Makefile          |  5 +----
+ drivers/pci/Kconfig       |  1 +
+ drivers/pci/Makefile      | 13 ++++++++++---
+ drivers/pci/dwc/Makefile  |  2 ++
+ drivers/pci/host/Makefile |  2 ++
+ 5 files changed, 16 insertions(+), 7 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt
-new file mode 100644
-index 000000000000..9a305237fa6e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt
-@@ -0,0 +1,22 @@
-+* Cadence PCIe endpoint controller
+diff --git a/drivers/Makefile b/drivers/Makefile
+index e06f7f633f73..8189b1edec00 100644
+--- a/drivers/Makefile
++++ b/drivers/Makefile
+@@ -16,10 +16,7 @@ obj-$(CONFIG_PINCTRL)		+= pinctrl/
+ obj-$(CONFIG_GPIOLIB)		+= gpio/
+ obj-y				+= pwm/
+ 
+-obj-$(CONFIG_PCI)		+= pci/
+-obj-$(CONFIG_PCI_ENDPOINT)	+= pci/endpoint/
+-# PCI dwc controller drivers
+-obj-y				+= pci/dwc/
++obj-y				+= pci/
+ 
+ obj-$(CONFIG_PARISC)		+= parisc/
+ obj-$(CONFIG_RAPIDIO)		+= rapidio/
+diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+index bda151788f3f..7eeb969ab86a 100644
+--- a/drivers/pci/Kconfig
++++ b/drivers/pci/Kconfig
+@@ -125,6 +125,7 @@ config PCI_PASID
+ 
+ config PCI_LABEL
+ 	def_bool y if (DMI || ACPI)
++	depends on PCI
+ 	select NLS
+ 
+ config PCI_HYPERV
+diff --git a/drivers/pci/Makefile b/drivers/pci/Makefile
+index c7819b973df7..ddb5aa6640d7 100644
+--- a/drivers/pci/Makefile
++++ b/drivers/pci/Makefile
+@@ -3,12 +3,15 @@
+ # Makefile for the PCI bus specific drivers.
+ #
+ 
+-obj-y		+= access.o bus.o probe.o host-bridge.o remove.o pci.o \
++obj-$(CONFIG_PCI)	+= access.o bus.o probe.o host-bridge.o remove.o pci.o \
+ 			pci-driver.o search.o pci-sysfs.o rom.o setup-res.o \
+ 			irq.o vpd.o setup-bus.o vc.o mmap.o setup-irq.o
+ 
++ifdef CONFIG_PCI
+ obj-$(CONFIG_PROC_FS) += proc.o
+ obj-$(CONFIG_SYSFS) += slot.o
++obj-$(CONFIG_OF) += of.o
++endif
+ 
+ obj-$(CONFIG_PCI_QUIRKS) += quirks.o
+ 
+@@ -44,10 +47,14 @@ obj-$(CONFIG_PCI_ECAM) += ecam.o
+ 
+ obj-$(CONFIG_XEN_PCIDEV_FRONTEND) += xen-pcifront.o
+ 
+-obj-$(CONFIG_OF) += of.o
+-
+ ccflags-$(CONFIG_PCI_DEBUG) := -DDEBUG
+ 
+ # PCI host controller drivers
+ obj-y += host/
+ obj-y += switch/
 +
-+Required properties:
-+- compatible: Should contain "cdns,cdns-pcie-ep" to identify the IP used.
-+- reg: Should contain the controller register base address and AXI interface
-+  region base address respectively.
-+- reg-names: Must be "reg" and "mem" respectively.
-+- cdns,max-outbound-regions: Set to maximum number of outbound regions
++obj-$(CONFIG_PCI_ENDPOINT)	+= endpoint/
 +
-+Optional properties:
-+- max-functions: Maximum number of functions that can be configured (default 1).
-+
-+Example:
-+
-+pcie@fc000000 {
-+	compatible = "cdns,cdns-pcie-ep";
-+	reg = <0x0 0xfc000000 0x0 0x01000000>,
-+	      <0x0 0x80000000 0x0 0x40000000>;
-+	reg-names = "reg", "mem";
-+	cdns,max-outbound-regions = <16>;
-+	max-functions = /bits/ 8 <8>;
-+};
++# Endpoint library must be initialized before its users
++# pcie-hisi.o quirks are needed even without CONFIG_PCIE_DW
++obj-y				+= dwc/
+diff --git a/drivers/pci/dwc/Makefile b/drivers/pci/dwc/Makefile
+index a9d8a6fb48e3..5d2ce72c7a52 100644
+--- a/drivers/pci/dwc/Makefile
++++ b/drivers/pci/dwc/Makefile
+@@ -25,4 +25,6 @@ obj-$(CONFIG_PCIE_HISI_STB) += pcie-histb.o
+ # ARM64 and use internal ifdefs to only build the pieces we need
+ # depending on whether ACPI, the DT driver, or both are enabled.
+ 
++ifdef CONFIG_PCI
+ obj-$(CONFIG_ARM64) += pcie-hisi.o
++endif
+diff --git a/drivers/pci/host/Makefile b/drivers/pci/host/Makefile
+index 34ec1d88f961..3b1059190867 100644
+--- a/drivers/pci/host/Makefile
++++ b/drivers/pci/host/Makefile
+@@ -34,6 +34,8 @@ obj-$(CONFIG_VMD) += vmd.o
+ # ARM64 and use internal ifdefs to only build the pieces we need
+ # depending on whether ACPI, the DT driver, or both are enabled.
+ 
++ifdef CONFIG_PCI
+ obj-$(CONFIG_ARM64) += pci-thunder-ecam.o
+ obj-$(CONFIG_ARM64) += pci-thunder-pem.o
+ obj-$(CONFIG_ARM64) += pci-xgene.o
++endif
 -- 
 2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
