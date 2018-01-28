@@ -1,354 +1,266 @@
 From: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 04/16] iio: adc: sun4i-gpadc-iio: rework: sampling
- start/end code readout reg
-Date: Sun, 28 Jan 2018 15:32:13 +0100
-Message-ID: <654fd8a1-9ad7-8ee9-c276-8f35e5ee097f@gmail.com>
+Subject: Re: [PATCH 07/16] iio: adc: sun4i-gpadc-iio: rework:
+ support nvmem calibration data
+Date: Sun, 28 Jan 2018 15:39:15 +0100
+Message-ID: <c6f8c2ac-e1c5-461a-b55d-364e1239beb0@gmail.com>
 References: <20180126151941.12183-1-embed3d@gmail.com>
- <20180126151941.12183-5-embed3d@gmail.com>
- <20180128084359.3f3e523c@archlinux>
- <ee2bd3b5-e0c7-66b2-d05f-1523d9d894d7@gmail.com>
- <2CC367BA-766A-4384-82EE-9A38BBFB08C2@aosc.io>
+ <20180126151941.12183-8-embed3d@gmail.com>
+ <20180128090258.56e8ac93@archlinux>
+ <6ebbb5e0-eb5f-afe4-50e8-eb3cee8ec7fa@gmail.com>
+ <1927F24D-D3ED-49CF-9B7C-A7C8C873F0CF@aosc.io>
+Reply-To: embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2CC367BA-766A-4384-82EE-9A38BBFB08C2-h8G6r0blFSE@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBD257DPK24NRBFWBW7JQKGQE2LXJ5DA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1927F24D-D3ED-49CF-9B7C-A7C8C873F0CF-h8G6r0blFSE@public.gmane.org>
 Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
 To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, sean-hENCXIMQXOg@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, edu.molinas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, rask-SivP7zSAdNDZaaYASwVUlg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, singhalsimran0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 28.01.2018 14:37, Icenowy Zheng wrote:
-> 
-> 
-> 于 2018年1月28日 GMT+08:00 下午9:34:17, Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> 写到:
+On 28.01.2018 14:52, Icenowy Zheng wrote:
+>=20
+>=20
+> =E4=BA=8E 2018=E5=B9=B41=E6=9C=8828=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=88=
+9:46:18, Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> =E5=86=99=E5=88=B0:
 >>
 >>
->> On 28.01.2018 09:43, Jonathan Cameron wrote:
->>> On Fri, 26 Jan 2018 16:19:29 +0100
+>> On 28.01.2018 10:02, Jonathan Cameron wrote:
+>>> On Fri, 26 Jan 2018 16:19:32 +0100
 >>> Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 >>>
->>>> For adding newer sensor some basic rework of the code is necessary.
+>>>> This patch reworks the driver to support nvmem calibration cells.
+>>>> The driver checks if the nvmem calibration is supported and reads
+>> out
+>>>> the nvmem. At the beginning of the startup process the calibration
+>> data
+>>>> is written to the related registers.
 >>>>
->>>> This commit reworks the code and allows the sampling start/end code
->> and
->>>> the position of value readout register to be altered. Later the
->> start/end
->>>> functions will be used to configure the ths and start/stop the
->>>> sampling.
->>>>
->>>> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 >>>> Signed-off-by: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>> Hmm. It almost always turns out to be a bad idea to assume a
->> particular
->>> set of registers will be consistent across a hardware family.  Usual
->> convention
->>> is just to prefix them with the first supported device and use them
->> across
->>> the variants where they are correct.  I.e. don't use wild cards or
->> generic
->>> names as they often end up implying a wider range of applicability
->> than
->>> we want.
 >>>
->>
->> The new THS sensors seems to use the same THS ip core, only configured
->> with different amount of sensors. So for H3, A83T, H5, A80 and A64 the
->> registers are all the same.
->>
->> I think the big question is, do we want to have a few very big patches.
->>
->> Or more small patches with code that is used in later patches.
-> 
-> Allwinner H6 has changed the THS core again.
-> 
-> Please consider this :-)
-> 
-
-Yes you are right the core is different! But it is already considered it.
-They dropped ACQ1, the IRQs control/status are split in separate 
-registers. I already have a good idea how to implement it, but I would 
-like to add this in the second part of this patch series (containing 
-support for A80, A64, and H5) or even later since the initial support 
-and the CCU driver is missing right now.
-
-
->>
->>> A few other comments inline.  Reworking code to make it ready for
->> later
->>> patches is fine, but this also adds a lot of new code which isn't
->> used until
->>> much later in the series.  Move it there...
->>
->> please see comments below.
->>
+>>> A few minor suggestions inline.
+>>>
+>>> Jonathan
+>>>
 >>>> ---
->>>>    drivers/iio/adc/sun4i-gpadc-iio.c | 87
->> +++++++++++++++++++++++++++++++++++----
->>>>    include/linux/mfd/sun4i-gpadc.h   | 19 +++++++--
->>>>    2 files changed, 94 insertions(+), 12 deletions(-)
+>>>>    drivers/iio/adc/sun4i-gpadc-iio.c | 52
+>> +++++++++++++++++++++++++++++++++++++++
+>>>>    include/linux/mfd/sun4i-gpadc.h   |  2 ++
+>>>>    2 files changed, 54 insertions(+)
 >>>>
 >>>> diff --git a/drivers/iio/adc/sun4i-gpadc-iio.c
 >> b/drivers/iio/adc/sun4i-gpadc-iio.c
->>>> index 03804ff9c006..363936b37c5a 100644
+>>>> index bff06f2798e8..7b12666cdd9e 100644
 >>>> --- a/drivers/iio/adc/sun4i-gpadc-iio.c
 >>>> +++ b/drivers/iio/adc/sun4i-gpadc-iio.c
->>>> @@ -49,6 +49,18 @@ static unsigned int
->> sun6i_gpadc_chan_select(unsigned int chan)
->>>>    	return SUN6I_GPADC_CTRL1_ADC_CHAN_SELECT(chan);
->>>>    }
->>>>    
->>>> +struct sun4i_gpadc_iio;
->>>> +
->>>> +/*
->>>> + * Prototypes for these functions, which enable these functions to
->> be
->>>> + * referenced in gpadc_data structures.
->>>> + */
->>>> +static int sun4i_gpadc_sample_start(struct sun4i_gpadc_iio *info);
->>>> +static int sun4i_gpadc_sample_end(struct sun4i_gpadc_iio *info);
->>>> +
->>>> +static int sunxi_ths_sample_start(struct sun4i_gpadc_iio *info);
->>>
->>> Superficially this appears to be introduced but not used... Patch 9
->>> is first to use it I think?  Introduce it then rather than here.
->>>
->>
->> You are right, this function is used first in Patch 9. In an very early
->>
->> version, I had this together with Patch 9. But then I had the feeling
->> that everything got too messy... Right now this is a very big patch
->> series and I wanted to have a clear structure in it and easy to review.
->>
->> If I would rework this it will end up in squashing, Patch 4, Parts of
->> Patch 7, Patch 8 and Patch 9.
->>
->>>> +static int sunxi_ths_sample_end(struct sun4i_gpadc_iio *info);
->>>> +
->>>>    struct gpadc_data {
->>>>    	int		temp_offset;
->>>>    	int		temp_scale;
->>>> @@ -56,6 +68,13 @@ struct gpadc_data {
->>>>    	unsigned int	tp_adc_select;
->>>>    	unsigned int	(*adc_chan_select)(unsigned int chan);
->>>>    	unsigned int	adc_chan_mask;
->>>> +	unsigned int	temp_data;
->>>> +	int		(*sample_start)(struct sun4i_gpadc_iio *info);
->>>> +	int		(*sample_end)(struct sun4i_gpadc_iio *info);
->>>> +	u32		ctrl0_map;
->>>> +	u32		ctrl2_map;
->>>> +	u32		sensor_en_map;
->>>> +	u32		filter_map;
+>>>> @@ -27,6 +27,7 @@
+>>>>    #include <linux/interrupt.h>
+>>>>    #include <linux/io.h>
+>>>>    #include <linux/module.h>
+>>>> +#include <linux/nvmem-consumer.h>
+>>>>    #include <linux/of.h>
+>>>>    #include <linux/of_device.h>
+>>>>    #include <linux/platform_device.h>
+>>>> @@ -81,6 +82,7 @@ struct gpadc_data {
+>>>>    	bool		has_bus_rst;
+>>>>    	bool		has_mod_clk;
+>>>>    	int		sensor_count;
+>>>> +	bool		supports_nvmem;
 >>>>    };
->>>>    
->>>>    static const struct gpadc_data sun4i_gpadc_data = {
->>>> @@ -65,6 +84,9 @@ static const struct gpadc_data sun4i_gpadc_data =
+>>>>   =20
+>>>>    static const struct gpadc_data sun4i_gpadc_data =3D {
+>>>> @@ -94,6 +96,7 @@ static const struct gpadc_data sun4i_gpadc_data =3D
 >> {
->>>>    	.tp_adc_select = SUN4I_GPADC_CTRL1_TP_ADC_SELECT,
->>>>    	.adc_chan_select = &sun4i_gpadc_chan_select,
->>>>    	.adc_chan_mask = SUN4I_GPADC_CTRL1_ADC_CHAN_MASK,
->>>> +	.temp_data = SUN4I_GPADC_TEMP_DATA,
->>>> +	.sample_start = sun4i_gpadc_sample_start,
->>>> +	.sample_end = sun4i_gpadc_sample_end,
+>>>>    	.sample_start =3D sun4i_gpadc_sample_start,
+>>>>    	.sample_end =3D sun4i_gpadc_sample_end,
+>>>>    	.sensor_count =3D 1,
+>>>> +	.supports_nvmem =3D false,
 >>>>    };
->>>>    
->>>>    static const struct gpadc_data sun5i_gpadc_data = {
->>>> @@ -74,6 +96,9 @@ static const struct gpadc_data sun5i_gpadc_data =
->> {
->>>>    	.tp_adc_select = SUN4I_GPADC_CTRL1_TP_ADC_SELECT,
->>>>    	.adc_chan_select = &sun4i_gpadc_chan_select,
->>>>    	.adc_chan_mask = SUN4I_GPADC_CTRL1_ADC_CHAN_MASK,
->>>> +	.temp_data = SUN4I_GPADC_TEMP_DATA,
->>>> +	.sample_start = sun4i_gpadc_sample_start,
->>>> +	.sample_end = sun4i_gpadc_sample_end,
+>>>>   =20
+>>>>    static const struct gpadc_data sun5i_gpadc_data =3D {
+>>>> @@ -107,6 +110,7 @@ static const struct gpadc_data sun5i_gpadc_data
+>> =3D {
+>>>>    	.sample_start =3D sun4i_gpadc_sample_start,
+>>>>    	.sample_end =3D sun4i_gpadc_sample_end,
+>>>>    	.sensor_count =3D 1,
+>>>> +	.supports_nvmem =3D false,
 >>>>    };
->>>>    
->>>>    static const struct gpadc_data sun6i_gpadc_data = {
->>>> @@ -83,12 +108,18 @@ static const struct gpadc_data sun6i_gpadc_data
->> = {
->>>>    	.tp_adc_select = SUN6I_GPADC_CTRL1_TP_ADC_SELECT,
->>>>    	.adc_chan_select = &sun6i_gpadc_chan_select,
->>>>    	.adc_chan_mask = SUN6I_GPADC_CTRL1_ADC_CHAN_MASK,
->>>> +	.temp_data = SUN4I_GPADC_TEMP_DATA,
->>>> +	.sample_start = sun4i_gpadc_sample_start,
->>>> +	.sample_end = sun4i_gpadc_sample_end,
+>>>>   =20
+>>>>    static const struct gpadc_data sun6i_gpadc_data =3D {
+>>>> @@ -120,6 +124,7 @@ static const struct gpadc_data sun6i_gpadc_data
+>> =3D {
+>>>>    	.sample_start =3D sun4i_gpadc_sample_start,
+>>>>    	.sample_end =3D sun4i_gpadc_sample_end,
+>>>>    	.sensor_count =3D 1,
+>>>> +	.supports_nvmem =3D false,
 >>>>    };
->>>>    
->>>>    static const struct gpadc_data sun8i_a33_gpadc_data = {
->>>>    	.temp_offset = -1662,
->>>>    	.temp_scale = 162,
->>>>    	.tp_mode_en = SUN8I_A33_GPADC_CTRL1_CHOP_TEMP_EN,
->>>> +	.temp_data = SUN4I_GPADC_TEMP_DATA,
->>>> +	.sample_start = sun4i_gpadc_sample_start,
->>>> +	.sample_end = sun4i_gpadc_sample_end,
+>>>>   =20
+>>>>    static const struct gpadc_data sun8i_a33_gpadc_data =3D {
+>>>> @@ -130,6 +135,7 @@ static const struct gpadc_data
+>> sun8i_a33_gpadc_data =3D {
+>>>>    	.sample_start =3D sun4i_gpadc_sample_start,
+>>>>    	.sample_end =3D sun4i_gpadc_sample_end,
+>>>>    	.sensor_count =3D 1,
+>>>> +	.supports_nvmem =3D false,
+>=20
+> BTW A33 claims to support calibration data according to the manual.
+>=20
+
+Yes that's true, but I haven't seen a sid/nvmem driver for the a33. If=20
+that is available, we can change this for true (same on a83t).
+
 >>>>    };
->>>>    
+>>>>   =20
 >>>>    struct sun4i_gpadc_iio {
->>>> @@ -277,7 +308,7 @@ static int sun4i_gpadc_temp_read(struct iio_dev
->> *indio_dev, int *val)
->>>>    	if (info->no_irq) {
->>>>    		pm_runtime_get_sync(indio_dev->dev.parent);
->>>>    
->>>> -		regmap_read(info->regmap, SUN4I_GPADC_TEMP_DATA, val);
->>>> +		regmap_read(info->regmap, info->data->temp_data, val);
->>>>    
->>>>    		pm_runtime_mark_last_busy(indio_dev->dev.parent);
->>>>    		pm_runtime_put_autosuspend(indio_dev->dev.parent);
->>>> @@ -382,10 +413,8 @@ static irqreturn_t
->> sun4i_gpadc_fifo_data_irq_handler(int irq, void *dev_id)
->>>>    	return IRQ_HANDLED;
->>>>    }
->>>>    
->>>> -static int sun4i_gpadc_runtime_suspend(struct device *dev)
->>>> +static int sun4i_gpadc_sample_end(struct sun4i_gpadc_iio *info)
->>>>    {
->>>> -	struct sun4i_gpadc_iio *info = iio_priv(dev_get_drvdata(dev));
->>>> -
->>>>    	/* Disable the ADC on IP */
->>>>    	regmap_write(info->regmap, SUN4I_GPADC_CTRL1, 0);
->>>>    	/* Disable temperature sensor on IP */
->>>> @@ -394,19 +423,32 @@ static int sun4i_gpadc_runtime_suspend(struct
+>>>> @@ -148,6 +154,8 @@ struct sun4i_gpadc_iio {
+>>>>    	struct clk			*mod_clk;
+>>>>    	struct reset_control		*reset;
+>>>>    	int				sensor_id;
+>>>> +	u32				calibration_data[2];
+>>>> +	bool				has_calibration_data[2];
+>>>>    	/* prevents concurrent reads of temperature and ADC */
+>>>>    	struct mutex			mutex;
+>>>>    	struct thermal_zone_device	*tzd;
+>>>> @@ -459,6 +467,17 @@ static int sun4i_gpadc_runtime_suspend(struct
 >> device *dev)
->>>>    	return 0;
+>>>>    	return info->data->sample_end(info);
 >>>>    }
->>>>    
->>>> -static int sun4i_gpadc_runtime_resume(struct device *dev)
->>>> +static int sunxi_ths_sample_end(struct sun4i_gpadc_iio *info)
+>>>>   =20
+>>>> +static void sunxi_calibrate(struct sun4i_gpadc_iio *info)
 >>>> +{
->>>> +	/* Disable temperature sensor */
->>>> +	regmap_write(info->regmap, SUNXI_THS_CTRL2, 0x0);
+>>>> +	if (info->has_calibration_data[0])
+>>>> +		regmap_write(info->regmap, SUNXI_THS_CDATA_0_1,
+>>>> +			info->calibration_data[0]);
 >>>> +
->>>> +	return 0;
+>>>> +	if (info->has_calibration_data[1])
+>>>> +		regmap_write(info->regmap, SUNXI_THS_CDATA_2_3,
+>>>> +			info->calibration_data[1]);
 >>>> +}
 >>>> +
->>>> +static int sun4i_gpadc_runtime_suspend(struct device *dev)
+>>>>    static int sun4i_gpadc_sample_start(struct sun4i_gpadc_iio *info)
 >>>>    {
->>>>    	struct sun4i_gpadc_iio *info = iio_priv(dev_get_drvdata(dev));
->>>>    
->>>> +	return info->data->sample_end(info);
->>>> +}
+>>>>    	/* clkin =3D 6MHz */
+>>>> @@ -481,6 +500,7 @@ static int sun4i_gpadc_sample_start(struct
+>> sun4i_gpadc_iio *info)
+>>>>    static int sunxi_ths_sample_start(struct sun4i_gpadc_iio *info)
+>>>>    {
+>>>>    	u32 value;
+>>>> +	sunxi_calibrate(info);
+>>>>   =20
+>>>>    	if (info->data->ctrl0_map)
+>>>>    		regmap_write(info->regmap, SUNXI_THS_CTRL0,
+>>>> @@ -602,6 +622,9 @@ static int sun4i_gpadc_probe_dt(struct
+>> platform_device *pdev,
+>>>>    	struct resource *mem;
+>>>>    	void __iomem *base;
+>>>>    	int ret;
+>>>> +	struct nvmem_cell *cell;
+>>>> +	ssize_t cell_size;
+>>>> +	u64 *cell_data;
+>>>>   =20
+>>>>    	info->data =3D of_device_get_match_data(&pdev->dev);
+>>>>    	if (!info->data)
+>>>> @@ -616,6 +639,35 @@ static int sun4i_gpadc_probe_dt(struct
+>> platform_device *pdev,
+>>>>    	if (IS_ERR(base))
+>>>>    		return PTR_ERR(base);
+>>>>   =20
+>>>> +	info->has_calibration_data[0] =3D false;
+>>>> +	info->has_calibration_data[1] =3D false;
 >>>> +
->>>> +static int sun4i_gpadc_sample_start(struct sun4i_gpadc_iio *info)
->>>> +{
->>>>    	/* clkin = 6MHz */
->>>>    	regmap_write(info->regmap, SUN4I_GPADC_CTRL0,
->>>>    		     SUN4I_GPADC_CTRL0_ADC_CLK_DIVIDER(2) |
->>>>    		     SUN4I_GPADC_CTRL0_FS_DIV(7) |
->>>> -		     SUN4I_GPADC_CTRL0_T_ACQ(63));
->>>> +		     SUNXI_THS_ACQ0(63));
->>>>    	regmap_write(info->regmap, SUN4I_GPADC_CTRL1,
->> info->data->tp_mode_en);
->>>>    	regmap_write(info->regmap, SUN4I_GPADC_CTRL3,
->>>> -		     SUN4I_GPADC_CTRL3_FILTER_EN |
->>>> -		     SUN4I_GPADC_CTRL3_FILTER_TYPE(1));
->>>> +		     SUNXI_THS_FILTER_EN |
->>>> +		     SUNXI_THS_FILTER_TYPE(1));
+>>>> +	if (!info->data->supports_nvmem)
+>>>> +		goto no_nvmem;
+>>>> +
+>>>> +	cell =3D devm_nvmem_cell_get(&pdev->dev, "calibration");
+>>>> +	if (IS_ERR(cell)) {
+>>>> +		if (PTR_ERR(cell) =3D=3D -EPROBE_DEFER)
+>>>> +			return PTR_ERR(cell);
+>>> Use a goto here to no_nvmem.
 >>>
->>> Why if these are temperature sensor features are we setting them in
->> the
->>> general purpose ADC start function?
+>>> Then you can drop the below else to make things more readable.
+>>>> +	} else {
+>>>> +		cell_data =3D (u64 *)nvmem_cell_read(cell, &cell_size);
+>>>> +		devm_nvmem_cell_put(&pdev->dev, cell);
+>>>
+>>> I'm really not keen on use of devm for things we are intending
+>>> to drop almost immediately.  Just use the non managed versions
+>>> and clean up properly in the error paths (if there are any
+>>> where it is needed - which there aren't that I can see)
+>>>
 >>
->> This is part of the olds sensors (before Allwinner reworked their
->> temperature sensor (only ths) ). Those "old" sensors integrate an ADC
->> and a Thermal sensor in one ip block/register space. I don't want to
->> break those sensors/adc, since I'm not able to test them!
+>> ^^ Ok, I will rework that.
 >>
->>>>    	/* period = SUN4I_GPADC_TPR_TEMP_PERIOD * 256 * 16 / clkin; ~0.6s
->> */
->>>>    	regmap_write(info->regmap, SUN4I_GPADC_TPR,
->>>>    		     SUN4I_GPADC_TPR_TEMP_ENABLE |
->>>> @@ -415,6 +457,35 @@ static int sun4i_gpadc_runtime_resume(struct
->> device *dev)
->>>>    	return 0;
->>>>    }
->>>>    
->>>> +static int sunxi_ths_sample_start(struct sun4i_gpadc_iio *info)
->>>> +{
->>>> +	u32 value;
+>>>> +		if (cell_size <=3D 4) {
+>>> Is it valid if it is anything other than 4?
+>>
+>> For sensors with only one sensor would be also a 2 valid, for those
+>> with
+>> 2 sensors =3D=3D> 4, with 3 sensors =3D=3D> 6 and with and with 4 sensor=
+s =3D=3D>
+>> 8.
+>>
+>> In hardware we have in total to 32bit registers for calibration, thus I
+>>
+>> thought it would be a good idea to use always four bytes per register.
+>> If two bytes are used, they should be the default value.
+>>
+>> But I agree, this needs a rework.
+>>
+>>>> +			info->has_calibration_data[0] =3D true;
+>>>> +			info->calibration_data[0] =3D be32_to_cpu(cell_data[0] &
+>>>> +					GENMASK(31, 0));
+>>>
+>>> Masking isn't needed,  If you want to be paranoid there is the
+>> lower_32_bits
+>>> function..
+>>>
+>> ^^ Ok, I will rework that.
+>>>> +		} else if (cell_size <=3D 8) {
+>>>> +			info->has_calibration_data[0] =3D true;
+>>>> +			info->calibration_data[0] =3D be32_to_cpu(cell_data[0] &
+>>>> +					GENMASK(31, 0));
+>>>
+>>> This first block is repeated.  Easy enough to avoid I think...
+>>>
+>>
+>> ^^ Ok, I will rework that.
+>>
+>>>> +			info->has_calibration_data[1] =3D true;
+>>>> +			info->calibration_data[1] =3D be32_to_cpu(
+>>>> +					(cell_data[0] >> 32) & GENMASK(31, 0));
+>>>> +		}
+>>>> +	}
 >>>> +
->>>> +	if (info->data->ctrl0_map)
->>>> +		regmap_write(info->regmap, SUNXI_THS_CTRL0,
->>>> +			info->data->ctrl0_map);
+>>>> +no_nvmem:
 >>>> +
->>>> +	regmap_write(info->regmap, SUNXI_THS_CTRL2,
->>>> +		info->data->ctrl2_map);
->>>> +
->>>> +	regmap_write(info->regmap, SUNXI_THS_FILTER,
->>>> +		info->data->filter_map);
->>>> +
->>>> +	regmap_read(info->regmap, SUNXI_THS_CTRL2, &value);
->>>> +
->>>> +	regmap_write(info->regmap, SUNXI_THS_CTRL2,
->>>> +		info->data->sensor_en_map | value);
->>>> +
->>>> +	return 0;
->>>> +}
->>>> +
->>>> +static int sun4i_gpadc_runtime_resume(struct device *dev)
->>>> +{
->>>> +	struct sun4i_gpadc_iio *info = iio_priv(dev_get_drvdata(dev));
->>>> +
->>>> +	return info->data->sample_start(info);
->>>> +}
->>>> +
->>>>    static int sun4i_gpadc_get_temp(void *data, int *temp)
->>>>    {
->>>>    	struct sun4i_gpadc_iio *info = data;
+>>>>    	info->regmap =3D devm_regmap_init_mmio(&pdev->dev, base,
+>>>>    					     &sun4i_gpadc_regmap_config);
+>>>>    	if (IS_ERR(info->regmap)) {
 >>>> diff --git a/include/linux/mfd/sun4i-gpadc.h
 >> b/include/linux/mfd/sun4i-gpadc.h
->>>> index 78d31984a222..39e096c3ddac 100644
+>>>> index 40b4dd9d2405..c251002431bd 100644
 >>>> --- a/include/linux/mfd/sun4i-gpadc.h
 >>>> +++ b/include/linux/mfd/sun4i-gpadc.h
->>>> @@ -17,7 +17,6 @@
->>>>    #define SUN4I_GPADC_CTRL0_ADC_CLK_SELECT		BIT(22)
->>>>    #define SUN4I_GPADC_CTRL0_ADC_CLK_DIVIDER(x)		((GENMASK(1, 0) &
->> (x)) << 20)
->>>>    #define SUN4I_GPADC_CTRL0_FS_DIV(x)			((GENMASK(3, 0) & (x)) <<
->> 16)
->>>> -#define SUN4I_GPADC_CTRL0_T_ACQ(x)			(GENMASK(15, 0) & (x))
->>>>    
->>>>    #define SUN4I_GPADC_CTRL1				0x04
->>>>    
->>>> @@ -51,9 +50,6 @@
->>>>    
->>>>    #define SUN4I_GPADC_CTRL3				0x0c
->>>>    
->>>> -#define SUN4I_GPADC_CTRL3_FILTER_EN			BIT(2)
->>>> -#define SUN4I_GPADC_CTRL3_FILTER_TYPE(x)		(GENMASK(1, 0) & (x))
->>>> -
->>>>    #define SUN4I_GPADC_TPR					0x18
->>>>    
->>>>    #define SUN4I_GPADC_TPR_TEMP_ENABLE			BIT(16)
->>>> @@ -90,6 +86,21 @@
->>>>    /* 10s delay before suspending the IP */
->>>>    #define SUN4I_GPADC_AUTOSUSPEND_DELAY			10000
->>>>    
->>>> +/* SUNXI_THS COMMON REGISTERS + DEFINES */
->>>> +#define SUNXI_THS_CTRL0					0x00
->>>> +#define SUNXI_THS_CTRL2					0x40
->>>> +#define SUNXI_THS_FILTER				0x70
->>>> +
->>>> +#define SUNXI_THS_FILTER_EN				BIT(2)
->>>> +#define SUNXI_THS_FILTER_TYPE(x)			(GENMASK(1, 0) & (x))
->>>> +#define SUNXI_THS_ACQ0(x)				(GENMASK(15, 0) & (x))
->>>> +#define SUNXI_THS_ACQ1(x)				(GENMASK(31, 16) & ((x) << 16))
->>>> +
->>>> +#define SUNXI_THS_TEMP_SENSE_EN0			BIT(0)
->>>> +#define SUNXI_THS_TEMP_SENSE_EN1			BIT(1)
->>>> +#define SUNXI_THS_TEMP_SENSE_EN2			BIT(2)
->>>> +#define SUNXI_THS_TEMP_SENSE_EN3			BIT(3)
->>>> +
->>>>    struct sun4i_gpadc_dev {
->>>>    	struct device			*dev;
->>>>    	struct regmap			*regmap;
+>>>> @@ -90,6 +90,8 @@
+>>>>    #define SUNXI_THS_CTRL0					0x00
+>>>>    #define SUNXI_THS_CTRL2					0x40
+>>>>    #define SUNXI_THS_FILTER				0x70
+>>>> +#define SUNXI_THS_CDATA_0_1				0x74
+>>>> +#define SUNXI_THS_CDATA_2_3				0x78
+>>>>    #define SUNXI_THS_TDATA0				0x80
+>>>>    #define SUNXI_THS_TDATA1				0x84
+>>>>    #define SUNXI_THS_TDATA2				0x88
 >>>
->>
->> In general I'm ok with changing those things, but I would like to wait
->> for some more feedback/thoughts about this.
->>
 >> Thanks,
 >> Philipp
 >>
@@ -356,7 +268,10 @@ and the CCU driver is missing right now.
 >> linux-arm-kernel mailing list
 >> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 >> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
