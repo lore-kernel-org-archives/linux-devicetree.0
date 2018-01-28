@@ -1,198 +1,207 @@
 From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH 05/16] iio: adc: sun4i-gpadc-iio: rework: support clocks
- and reset
-Date: Sun, 28 Jan 2018 08:50:36 +0000
-Message-ID: <20180128085036.389c2dfb@archlinux>
+Subject: Re: [PATCH 07/16] iio: adc: sun4i-gpadc-iio: rework: support nvmem
+ calibration data
+Date: Sun, 28 Jan 2018 09:02:58 +0000
+Message-ID: <20180128090258.56e8ac93@archlinux>
 References: <20180126151941.12183-1-embed3d@gmail.com>
-        <20180126151941.12183-6-embed3d@gmail.com>
+ <20180126151941.12183-8-embed3d@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180126151941.12183-6-embed3d@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180126151941.12183-8-embed3d@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Philipp Rossak <embed3d@gmail.com>
-Cc: lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@free-electrons.com, wens@csie.org, linux@armlinux.org.uk, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, davem@davemloft.net, hans.verkuil@cisco.com, mchehab@kernel.org, rask@formelder.dk, clabbe.montjoie@gmail.com, sean@mess.org, krzk@kernel.org, quentin.schulz@free-electrons.com, icenowy@aosc.io, edu.molinas@gmail.com, singhalsimran0@gmail.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+Cc: mark.rutland@arm.com, sean@mess.org, linux-iio@vger.kernel.org, linux-sunxi@googlegroups.com, clabbe.montjoie@gmail.com, pmeerw@pmeerw.net, lee.jones@linaro.org, lars@metafoo.de, edu.molinas@gmail.com, linux@armlinux.org.uk, krzk@kernel.org, wens@csie.org, hans.verkuil@cisco.com, rask@formelder.dk, icenowy@aosc.io, devicetree@vger.kernel.org, mchehab@kernel.org, robh+dt@kernel.org, singhalsimran0@gmail.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, quentin.schulz@free-electrons.com, knaack.h@gmx.de, maxime.ripard@free-electrons.com, davem@davemloft.net
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 26 Jan 2018 16:19:30 +0100
+On Fri, 26 Jan 2018 16:19:32 +0100
 Philipp Rossak <embed3d@gmail.com> wrote:
 
-> For adding newer sensor some basic rework of the code is necessary.
-> 
-> The SoCs after H3 has newer thermal sensor ADCs, which have two clock
-> inputs (bus clock and sampling clock) and a reset. The registers are
-> also re-arranged.
-> 
-> This commit reworks the code, adds the process of the clocks and
-> resets.
+> This patch reworks the driver to support nvmem calibration cells.
+> The driver checks if the nvmem calibration is supported and reads out
+> the nvmem. At the beginning of the startup process the calibration data
+> is written to the related registers.
 > 
 > Signed-off-by: Philipp Rossak <embed3d@gmail.com>
-> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
 
-Both clock and reset code is safe against null parameters, so you can
-drop a lot of 'is it here' checks in this.  They could be argued to
-act as documentation of the fact we really don't expect them in some cases
-I suppose... 
+A few minor suggestions inline.
+
+Jonathan
 
 > ---
->  drivers/iio/adc/sun4i-gpadc-iio.c | 80 +++++++++++++++++++++++++++++++++++++++
->  1 file changed, 80 insertions(+)
+>  drivers/iio/adc/sun4i-gpadc-iio.c | 52 +++++++++++++++++++++++++++++++++++++++
+>  include/linux/mfd/sun4i-gpadc.h   |  2 ++
+>  2 files changed, 54 insertions(+)
 > 
 > diff --git a/drivers/iio/adc/sun4i-gpadc-iio.c b/drivers/iio/adc/sun4i-gpadc-iio.c
-> index 363936b37c5a..1a80744bd472 100644
+> index bff06f2798e8..7b12666cdd9e 100644
 > --- a/drivers/iio/adc/sun4i-gpadc-iio.c
 > +++ b/drivers/iio/adc/sun4i-gpadc-iio.c
-> @@ -22,6 +22,7 @@
->   * shutdown for not being used.
->   */
->  
-> +#include <linux/clk.h>
->  #include <linux/completion.h>
+> @@ -27,6 +27,7 @@
 >  #include <linux/interrupt.h>
 >  #include <linux/io.h>
-> @@ -31,6 +32,7 @@
+>  #include <linux/module.h>
+> +#include <linux/nvmem-consumer.h>
+>  #include <linux/of.h>
+>  #include <linux/of_device.h>
 >  #include <linux/platform_device.h>
->  #include <linux/pm_runtime.h>
->  #include <linux/regmap.h>
-> +#include <linux/reset.h>
->  #include <linux/thermal.h>
->  #include <linux/delay.h>
->  
-> @@ -75,6 +77,9 @@ struct gpadc_data {
->  	u32		ctrl2_map;
->  	u32		sensor_en_map;
->  	u32		filter_map;
-> +	bool		has_bus_clk;
-> +	bool		has_bus_rst;
-> +	bool		has_mod_clk;
+> @@ -81,6 +82,7 @@ struct gpadc_data {
+>  	bool		has_bus_rst;
+>  	bool		has_mod_clk;
+>  	int		sensor_count;
+> +	bool		supports_nvmem;
 >  };
 >  
 >  static const struct gpadc_data sun4i_gpadc_data = {
-> @@ -134,6 +139,9 @@ struct sun4i_gpadc_iio {
->  	atomic_t			ignore_temp_data_irq;
->  	const struct gpadc_data		*data;
->  	bool				no_irq;
-> +	struct clk			*bus_clk;
-> +	struct clk			*mod_clk;
-> +	struct reset_control		*reset;
+> @@ -94,6 +96,7 @@ static const struct gpadc_data sun4i_gpadc_data = {
+>  	.sample_start = sun4i_gpadc_sample_start,
+>  	.sample_end = sun4i_gpadc_sample_end,
+>  	.sensor_count = 1,
+> +	.supports_nvmem = false,
+>  };
+>  
+>  static const struct gpadc_data sun5i_gpadc_data = {
+> @@ -107,6 +110,7 @@ static const struct gpadc_data sun5i_gpadc_data = {
+>  	.sample_start = sun4i_gpadc_sample_start,
+>  	.sample_end = sun4i_gpadc_sample_end,
+>  	.sensor_count = 1,
+> +	.supports_nvmem = false,
+>  };
+>  
+>  static const struct gpadc_data sun6i_gpadc_data = {
+> @@ -120,6 +124,7 @@ static const struct gpadc_data sun6i_gpadc_data = {
+>  	.sample_start = sun4i_gpadc_sample_start,
+>  	.sample_end = sun4i_gpadc_sample_end,
+>  	.sensor_count = 1,
+> +	.supports_nvmem = false,
+>  };
+>  
+>  static const struct gpadc_data sun8i_a33_gpadc_data = {
+> @@ -130,6 +135,7 @@ static const struct gpadc_data sun8i_a33_gpadc_data = {
+>  	.sample_start = sun4i_gpadc_sample_start,
+>  	.sample_end = sun4i_gpadc_sample_end,
+>  	.sensor_count = 1,
+> +	.supports_nvmem = false,
+>  };
+>  
+>  struct sun4i_gpadc_iio {
+> @@ -148,6 +154,8 @@ struct sun4i_gpadc_iio {
+>  	struct clk			*mod_clk;
+>  	struct reset_control		*reset;
+>  	int				sensor_id;
+> +	u32				calibration_data[2];
+> +	bool				has_calibration_data[2];
 >  	/* prevents concurrent reads of temperature and ADC */
 >  	struct mutex			mutex;
 >  	struct thermal_zone_device	*tzd;
-> @@ -435,6 +443,12 @@ static int sun4i_gpadc_runtime_suspend(struct device *dev)
->  {
->  	struct sun4i_gpadc_iio *info = iio_priv(dev_get_drvdata(dev));
->  
-> +	if (info->data->has_mod_clk)
-> +		clk_disable(info->mod_clk);
-
-Safe against null parameter... (see below)
-
-> +
-> +	if (info->data->has_bus_clk)
-> +		clk_disable(info->bus_clk);
-> +
+> @@ -459,6 +467,17 @@ static int sun4i_gpadc_runtime_suspend(struct device *dev)
 >  	return info->data->sample_end(info);
 >  }
 >  
-> @@ -483,6 +497,12 @@ static int sun4i_gpadc_runtime_resume(struct device *dev)
+> +static void sunxi_calibrate(struct sun4i_gpadc_iio *info)
+> +{
+> +	if (info->has_calibration_data[0])
+> +		regmap_write(info->regmap, SUNXI_THS_CDATA_0_1,
+> +			info->calibration_data[0]);
+> +
+> +	if (info->has_calibration_data[1])
+> +		regmap_write(info->regmap, SUNXI_THS_CDATA_2_3,
+> +			info->calibration_data[1]);
+> +}
+> +
+>  static int sun4i_gpadc_sample_start(struct sun4i_gpadc_iio *info)
 >  {
->  	struct sun4i_gpadc_iio *info = iio_priv(dev_get_drvdata(dev));
+>  	/* clkin = 6MHz */
+> @@ -481,6 +500,7 @@ static int sun4i_gpadc_sample_start(struct sun4i_gpadc_iio *info)
+>  static int sunxi_ths_sample_start(struct sun4i_gpadc_iio *info)
+>  {
+>  	u32 value;
+> +	sunxi_calibrate(info);
 >  
-> +	if (info->data->has_mod_clk)
-> +		clk_enable(info->mod_clk);
-
-clk_enable is safe against null parameter so could do without the checks.
-
+>  	if (info->data->ctrl0_map)
+>  		regmap_write(info->regmap, SUNXI_THS_CTRL0,
+> @@ -602,6 +622,9 @@ static int sun4i_gpadc_probe_dt(struct platform_device *pdev,
+>  	struct resource *mem;
+>  	void __iomem *base;
+>  	int ret;
+> +	struct nvmem_cell *cell;
+> +	ssize_t cell_size;
+> +	u64 *cell_data;
+>  
+>  	info->data = of_device_get_match_data(&pdev->dev);
+>  	if (!info->data)
+> @@ -616,6 +639,35 @@ static int sun4i_gpadc_probe_dt(struct platform_device *pdev,
+>  	if (IS_ERR(base))
+>  		return PTR_ERR(base);
+>  
+> +	info->has_calibration_data[0] = false;
+> +	info->has_calibration_data[1] = false;
 > +
-> +	if (info->data->has_bus_clk)
-> +		clk_enable(info->bus_clk);
+> +	if (!info->data->supports_nvmem)
+> +		goto no_nvmem;
 > +
->  	return info->data->sample_start(info);
->  }
->  
-> @@ -597,10 +617,61 @@ static int sun4i_gpadc_probe_dt(struct platform_device *pdev,
->  		return ret;
->  	}
->  
-> +	if (info->data->has_bus_rst) {
-> +		info->reset = devm_reset_control_get(&pdev->dev, NULL);
-> +		if (IS_ERR(info->reset)) {
-> +			ret = PTR_ERR(info->reset);
-> +			return ret;
+> +	cell = devm_nvmem_cell_get(&pdev->dev, "calibration");
+> +	if (IS_ERR(cell)) {
+> +		if (PTR_ERR(cell) == -EPROBE_DEFER)
+> +			return PTR_ERR(cell);
+Use a goto here to no_nvmem.
+
+Then you can drop the below else to make things more readable.
+> +	} else {
+> +		cell_data = (u64 *)nvmem_cell_read(cell, &cell_size);
+> +		devm_nvmem_cell_put(&pdev->dev, cell);
+
+I'm really not keen on use of devm for things we are intending
+to drop almost immediately.  Just use the non managed versions
+and clean up properly in the error paths (if there are any
+where it is needed - which there aren't that I can see)
+
+> +		if (cell_size <= 4) {
+Is it valid if it is anything other than 4?
+> +			info->has_calibration_data[0] = true;
+> +			info->calibration_data[0] = be32_to_cpu(cell_data[0] &
+> +					GENMASK(31, 0));
+
+Masking isn't needed,  If you want to be paranoid there is the lower_32_bits
+function..
+
+> +		} else if (cell_size <= 8) {
+> +			info->has_calibration_data[0] = true;
+> +			info->calibration_data[0] = be32_to_cpu(cell_data[0] &
+> +					GENMASK(31, 0));
+
+This first block is repeated.  Easy enough to avoid I think...
+
+> +			info->has_calibration_data[1] = true;
+> +			info->calibration_data[1] = be32_to_cpu(
+> +					(cell_data[0] >> 32) & GENMASK(31, 0));
 > +		}
-> +
-> +		ret = reset_control_deassert(info->reset);
-> +		if (ret)
-> +			return ret;
 > +	}
 > +
-> +	if (info->data->has_bus_clk) {
-> +		info->bus_clk = devm_clk_get(&pdev->dev, "bus");
-> +		if (IS_ERR(info->bus_clk)) {
-> +			ret = PTR_ERR(info->bus_clk);
-> +			goto assert_reset;
-> +		}
+> +no_nvmem:
 > +
-> +		ret = clk_prepare_enable(info->bus_clk);
-> +		if (ret)
-> +			goto assert_reset;
-> +	}
-> +
-> +	if (info->data->has_mod_clk) {
-> +		info->mod_clk = devm_clk_get(&pdev->dev, "mod");
-> +		if (IS_ERR(info->mod_clk)) {
-> +			ret = PTR_ERR(info->mod_clk);
-> +			goto disable_bus_clk;
-> +		}
-> +
-> +		/* Running at 6MHz */
-> +		ret = clk_set_rate(info->mod_clk, 4000000);
-> +		if (ret)
-> +			goto disable_bus_clk;
-> +
-> +		ret = clk_prepare_enable(info->mod_clk);
-> +		if (ret)
-> +			goto disable_bus_clk;
-> +	}
-> +
->  	if (IS_ENABLED(CONFIG_THERMAL_OF))
->  		info->sensor_device = &pdev->dev;
->  
->  	return 0;
-> +
-> +disable_bus_clk:
-> +	if (info->data->has_bus_clk)
-> +		clk_disable_unprepare(info->bus_clk);
-> +
-> +assert_reset:
-> +	if (info->data->has_bus_rst)
-> +		reset_control_assert(info->reset);
-> +
-> +	return ret;
->  }
->  
->  static int sun4i_gpadc_probe_mfd(struct platform_device *pdev,
-> @@ -766,6 +837,15 @@ static int sun4i_gpadc_remove(struct platform_device *pdev)
->  	if (!info->no_irq)
->  		iio_map_array_unregister(indio_dev);
->  
-> +	if (info->data->has_mod_clk)
-> +		clk_disable_unprepare(info->mod_clk);
-
-clk_disable_unprepare is safe against a null parameter
-so I don't think the checks are needed.
-
-> +
-> +	if (info->data->has_bus_clk)
-> +		clk_disable_unprepare(info->bus_clk);
-> +
-> +	if (info->data->has_bus_rst)
-> +		reset_control_assert(info->reset);
-
-Safe against null parameter...
-
-> +
->  	return 0;
->  }
->  
+>  	info->regmap = devm_regmap_init_mmio(&pdev->dev, base,
+>  					     &sun4i_gpadc_regmap_config);
+>  	if (IS_ERR(info->regmap)) {
+> diff --git a/include/linux/mfd/sun4i-gpadc.h b/include/linux/mfd/sun4i-gpadc.h
+> index 40b4dd9d2405..c251002431bd 100644
+> --- a/include/linux/mfd/sun4i-gpadc.h
+> +++ b/include/linux/mfd/sun4i-gpadc.h
+> @@ -90,6 +90,8 @@
+>  #define SUNXI_THS_CTRL0					0x00
+>  #define SUNXI_THS_CTRL2					0x40
+>  #define SUNXI_THS_FILTER				0x70
+> +#define SUNXI_THS_CDATA_0_1				0x74
+> +#define SUNXI_THS_CDATA_2_3				0x78
+>  #define SUNXI_THS_TDATA0				0x80
+>  #define SUNXI_THS_TDATA1				0x84
+>  #define SUNXI_THS_TDATA2				0x88
