@@ -1,7 +1,7 @@
 From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: [PATCH 4/5] phy: amlogic: phy-meson-gxl-usb2: don't log an error on -EPROBE_DEFER
-Date: Sun, 28 Jan 2018 21:22:44 +0100
-Message-ID: <20180128202245.25021-5-martin.blumenstingl@googlemail.com>
+Subject: [PATCH 5/5] phy: amlogic: phy-meson-gxl-usb2: rename some of the U2P_R2 registers
+Date: Sun, 28 Jan 2018 21:22:45 +0100
+Message-ID: <20180128202245.25021-6-martin.blumenstingl@googlemail.com>
 References: <20180128202245.25021-1-martin.blumenstingl@googlemail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20180128202245.25021-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
@@ -10,43 +10,48 @@ To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@pu
 Cc: carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-devm_phy_create can return -EPROBE_DEFER if the phy-supply is not ready
-yet. Silence this warning as the driver framework will re-attempt
-registering the PHY - this second try works without any errors. So only
-log actual errors to keep the kernel log free of misleading error
-messages.
+The U2P_R2 register provides "test mode" functionality for bits 17:0.
+These are only used during SoC development and should be left untouched
+on production SoC versions.
+Rename these register definitions to indicate that these are for "test
+mode" only.
 
+While here, also merge the definitions for U2P_R2_DATA_IN_MASK and
+U2P_R2_DATA_IN_EN_MASK (bits 0:7) because Amlogic's internal
+documentation suggests that these bits belong together. The old
+definition was not taken from the documentation but rather from a struct
+definition in the Amlogic GPL kernel sources.
+
+No functional changes.
+
+Suggested-by: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
 Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 ---
- drivers/phy/amlogic/phy-meson-gxl-usb2.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/phy/amlogic/phy-meson-gxl-usb2.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/phy/amlogic/phy-meson-gxl-usb2.c b/drivers/phy/amlogic/phy-meson-gxl-usb2.c
-index ee3c2c0c8572..f062fc7f0a3a 100644
+index f062fc7f0a3a..9f9b5414b97a 100644
 --- a/drivers/phy/amlogic/phy-meson-gxl-usb2.c
 +++ b/drivers/phy/amlogic/phy-meson-gxl-usb2.c
-@@ -240,6 +240,7 @@ static int phy_meson_gxl_usb2_probe(struct platform_device *pdev)
- 	struct phy_meson_gxl_usb2_priv *priv;
- 	struct phy *phy;
- 	void __iomem *base;
-+	int ret;
+@@ -71,12 +71,11 @@
  
- 	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
- 	if (!priv)
-@@ -275,8 +276,11 @@ static int phy_meson_gxl_usb2_probe(struct platform_device *pdev)
- 
- 	phy = devm_phy_create(dev, NULL, &phy_meson_gxl_usb2_ops);
- 	if (IS_ERR(phy)) {
--		dev_err(dev, "failed to create PHY\n");
--		return PTR_ERR(phy);
-+		ret = PTR_ERR(phy);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "failed to create PHY\n");
-+
-+		return ret;
- 	}
- 
- 	phy_set_drvdata(phy, priv);
+ /* bits [31:14] are read-only */
+ #define U2P_R2							0x8
+-	#define U2P_R2_DATA_IN_MASK				GENMASK(3, 0)
+-	#define U2P_R2_DATA_IN_EN_MASK				GENMASK(7, 4)
+-	#define U2P_R2_ADDR_MASK				GENMASK(11, 8)
+-	#define U2P_R2_DATA_OUT_SEL				BIT(12)
+-	#define U2P_R2_CLK					BIT(13)
+-	#define U2P_R2_DATA_OUT_MASK				GENMASK(17, 14)
++	#define U2P_R2_TESTDATA_IN_MASK				GENMASK(7, 0)
++	#define U2P_R2_TESTADDR_MASK				GENMASK(11, 8)
++	#define U2P_R2_TESTDATA_OUT_SEL				BIT(12)
++	#define U2P_R2_TESTCLK					BIT(13)
++	#define U2P_R2_TESTDATA_OUT_MASK			GENMASK(17, 14)
+ 	#define U2P_R2_ACA_PIN_RANGE_C				BIT(18)
+ 	#define U2P_R2_ACA_PIN_RANGE_B				BIT(19)
+ 	#define U2P_R2_ACA_PIN_RANGE_A				BIT(20)
 -- 
 2.16.1
 
