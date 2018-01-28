@@ -1,41 +1,95 @@
-From: Cyrille Pitchen <cyrille.pitchen-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v5 05/11] PCI: Add vendor ID for Cadence
-Date: Sun, 28 Jan 2018 21:40:19 +0100
-Message-ID: <de4caaaa0ed93876acd833b76fd23db83547a98a.1517170521.git.cyrille.pitchen@free-electrons.com>
+From: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
+Subject: [PATCH v5 06/11] dt-bindings: PCI: cadence: Add DT bindings for Cadence PCIe host controller
+Date: Sun, 28 Jan 2018 21:40:20 +0100
+Message-ID: <7179a04aa55d145a509d383f9581890ca11ab544.1517170521.git.cyrille.pitchen@free-electrons.com>
 References: <cover.1517170521.git.cyrille.pitchen@free-electrons.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1517170521.git.cyrille.pitchen-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-In-Reply-To: <cover.1517170521.git.cyrille.pitchen-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-References: <cover.1517170521.git.cyrille.pitchen-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, stelford-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, dgary-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, kgopi-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, eandrews-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, sureshp-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Cyrille Pitchen <cyrille.pitchen-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <cover.1517170521.git.cyrille.pitchen@free-electrons.com>
+In-Reply-To: <cover.1517170521.git.cyrille.pitchen@free-electrons.com>
+References: <cover.1517170521.git.cyrille.pitchen@free-electrons.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: bhelgaas@google.com, kishon@ti.com, lorenzo.pieralisi@arm.com, linux-pci@vger.kernel.org
+Cc: adouglas@cadence.com, stelford@cadence.com, dgary@cadence.com, kgopi@cadence.com, eandrews@cadence.com, thomas.petazzoni@free-electrons.com, sureshp@cadence.com, nsekhar@ti.com, linux-kernel@vger.kernel.org, robh@kernel.org, devicetree@vger.kernel.org, Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds a new PCI vendor ID for Cadence.
+From: Scott Telford <stelford@cadence.com>
 
-Signed-off-by: Cyrille Pitchen <cyrille.pitchen-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+This patch adds documentation for the DT bindings of the Cadence PCIe
+controller when configured in host (Root Complex) mode.
+
+Signed-off-by: Scott Telford <stelford@cadence.com>
+Signed-off-by: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- include/linux/pci_ids.h | 2 ++
- 1 file changed, 2 insertions(+)
+ .../bindings/pci/cdns,cdns-pcie-host.txt           | 60 ++++++++++++++++++++++
+ 1 file changed, 60 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
 
-diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-index ab20dc5db423..eb13e84e1fef 100644
---- a/include/linux/pci_ids.h
-+++ b/include/linux/pci_ids.h
-@@ -2381,6 +2381,8 @@
- 
- #define PCI_VENDOR_ID_LENOVO		0x17aa
- 
-+#define PCI_VENDOR_ID_CDNS		0x17cd
+diff --git a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
+new file mode 100644
+index 000000000000..20a33f38f69d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
+@@ -0,0 +1,60 @@
++* Cadence PCIe host controller
 +
- #define PCI_VENDOR_ID_ARECA		0x17d3
- #define PCI_DEVICE_ID_ARECA_1110	0x1110
- #define PCI_DEVICE_ID_ARECA_1120	0x1120
++This PCIe controller inherits the base properties defined in
++host-generic-pci.txt.
++
++Required properties:
++- compatible: Should contain "cdns,cdns-pcie-host" to identify the IP used.
++- reg: Should contain the controller register base address, PCIe configuration
++  window base address, and AXI interface region base address respectively.
++- reg-names: Must be "reg", "cfg" and "mem" respectively.
++- #address-cells: Set to <3>
++- #size-cells: Set to <2>
++- device_type: Set to "pci"
++- ranges: Ranges for the PCI memory and I/O regions
++- #interrupt-cells: Set to <1>
++- interrupt-map-mask and interrupt-map: Standard PCI properties to define the
++  mapping of the PCIe interface to interrupt numbers.
++
++Optional properties:
++- cdns,max-outbound-regions: Set to maximum number of outbound regions
++  (default 32)
++- cdns,no-bar-match-nbits: Set into the no BAR match register to configure the
++  number of least significant bits kept during inbound (PCIe -> AXI) address
++  translations (default 32)
++- vendor-id: The PCI vendor ID (16 bits, default is design dependent)
++- device-id: The PCI device ID (16 bits, default is design dependent)
++
++Example:
++
++pcie@fb000000 {
++	compatible = "cdns,cdns-pcie-host";
++	device_type = "pci";
++	#address-cells = <3>;
++	#size-cells = <2>;
++	bus-range = <0x0 0xff>;
++	linux,pci-domain = <0>;
++	cdns,max-outbound-regions = <16>;
++	cdns,no-bar-match-nbits = <32>;
++	vendor-id = /bits/ 16 <0x17cd>;
++	device-id = /bits/ 16 <0x0200>;
++
++	reg = <0x0 0xfb000000  0x0 0x01000000>,
++	      <0x0 0x41000000  0x0 0x00001000>,
++	      <0x0 0x40000000  0x0 0x04000000>;
++	reg-names = "reg", "cfg", "mem";
++
++	ranges = <0x02000000 0x0 0x42000000  0x0 0x42000000  0x0 0x1000000>,
++		 <0x01000000 0x0 0x43000000  0x0 0x43000000  0x0 0x0010000>;
++
++	#interrupt-cells = <0x1>;
++
++	interrupt-map = <0x0 0x0 0x0  0x1  &gic  0x0 0x0 0x0 14 0x1
++			 0x0 0x0 0x0  0x2  &gic  0x0 0x0 0x0 15 0x1
++			 0x0 0x0 0x0  0x3  &gic  0x0 0x0 0x0 16 0x1
++			 0x0 0x0 0x0  0x4  &gic  0x0 0x0 0x0 17 0x1>;
++
++	interrupt-map-mask = <0x0 0x0 0x0  0x7>;
++
++	msi-parent = <&its_pci>;
++};
 -- 
 2.11.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
