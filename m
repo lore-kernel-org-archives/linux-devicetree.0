@@ -1,91 +1,62 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v2 3/6] gpio: Add GPIO driver for Nintendo Wii
-Date: Sun, 28 Jan 2018 19:31:58 +0200
-Message-ID: <CAHp75VcWshngZFuUp4hzYdD43HF7TZ1sRE3Dh+HckB5do1=gGw@mail.gmail.com>
-References: <20180122050411.32460-1-j.neuschaefer@gmx.net> <20180122050411.32460-4-j.neuschaefer@gmx.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20180122050411.32460-4-j.neuschaefer@gmx.net>
-Sender: linux-gpio-owner@vger.kernel.org
-To: =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:LINUX FOR POWERPC PA SEMI PWRFICIENT" <linuxppc-dev@lists.ozlabs.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Albert Herranz <albert_herranz@yahoo.es>, Segher Boessenkool <segher@kernel.crashing.org>, Linus Walleij <linus.walleij@linaro.org>
+From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Subject: [PATCH 3/3] usb: dwc3: of-simple: add support for the Amlogic Meson GXL and AXG SoCs
+Date: Sun, 28 Jan 2018 21:03:33 +0100
+Message-ID: <20180128200333.20093-4-martin.blumenstingl@googlemail.com>
+References: <20180128200333.20093-1-martin.blumenstingl@googlemail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180128200333.20093-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 22, 2018 at 7:04 AM, Jonathan Neusch=C3=A4fer
-<j.neuschaefer@gmx.net> wrote:
+Amlogic Meson GXL and AXG SoCs come with a (host-only) dwc3 USB
+controller. To use this controller a clock has to be enabled and a reset
+line has to be pulsed.
+Enabling the clock works identical to other SoCs. However, the reset
+line has to be pulsed (using reset_control_reset) instead of using a
+level reset (reset_control_{assert,deassert}).
 
-Style issues below.
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+---
+ drivers/usb/dwc3/dwc3-of-simple.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-> +#define HW_GPIO_OWNER          0x3c
-> +
-> +
-> +struct hlwd_gpio {
+diff --git a/drivers/usb/dwc3/dwc3-of-simple.c b/drivers/usb/dwc3/dwc3-of-simple.c
+index ceb9f0cd822a..d9e4b8b09eaf 100644
+--- a/drivers/usb/dwc3/dwc3-of-simple.c
++++ b/drivers/usb/dwc3/dwc3-of-simple.c
+@@ -217,6 +217,11 @@ static const struct dwc3_of_simple_params dwc3_of_simple_default_params = {
+ 	.pulse_resets = false,
+ };
+ 
++static const struct dwc3_of_simple_params dwc3_of_simple_amlogic_params = {
++	.shared_resets = true,
++	.pulse_resets = true,
++};
++
+ static const struct of_device_id of_dwc3_simple_match[] = {
+ 	{
+ 		.compatible = "qcom,dwc3",
+@@ -238,6 +243,14 @@ static const struct of_device_id of_dwc3_simple_match[] = {
+ 		.compatible = "sprd,sc9860-dwc3",
+ 		.data = &dwc3_of_simple_default_params
+ 	},
++	{
++		.compatible = "amlogic,meson-axg-dwc3",
++		.data = &dwc3_of_simple_amlogic_params
++	},
++	{
++		.compatible = "amlogic,meson-gxl-dwc3",
++		.data = &dwc3_of_simple_amlogic_params
++	},
+ 	{ /* Sentinel */ }
+ };
+ MODULE_DEVICE_TABLE(of, of_dwc3_simple_match);
+-- 
+2.16.1
 
-No need extra empty line in between.
-
-> +       struct gpio_chip gpioc;
-> +       void __iomem *regs;
-> +       struct device *dev;
-> +};
-> +
-> +static int hlwd_gpio_probe(struct platform_device *pdev)
-> +{
-> +       struct hlwd_gpio *hlwd;
-> +       struct resource *regs_resource;
-> +       u32 ngpios;
-> +       int res;
-> +
-> +       hlwd =3D devm_kzalloc(&pdev->dev, sizeof(*hlwd), GFP_KERNEL);
-> +       if (!hlwd)
-> +               return -ENOMEM;
-> +
-
-> +       /* Save the struct device pointer so dev_info, etc. can be used. =
-*/
-
-Useless.
-
-> +       hlwd->dev =3D &pdev->dev;
-> +
-
-> +       regs_resource =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-
-> +       if (IS_ERR(regs_resource))
-> +               return PTR_ERR(regs_resource);
-> +
-
-This is redundant. Below does it for ya.
-
-> +       hlwd->regs =3D devm_ioremap_resource(&pdev->dev, regs_resource);
-> +       if (IS_ERR(hlwd->regs))
-> +               return PTR_ERR(hlwd->regs);
-
-
-> +       res =3D bgpio_init(&hlwd->gpioc, &pdev->dev, 4,
-> +                       hlwd->regs + HW_GPIOB_IN, hlwd->regs + HW_GPIOB_O=
-UT,
-> +                       NULL, hlwd->regs + HW_GPIOB_DIR, NULL,
-> +                       BGPIOF_BIG_ENDIAN_BYTE_ORDER);
-
-> +
-
-Remove this extra line.
-
-> +       if (res < 0) {
-> +               dev_warn(hlwd->dev, "bgpio_init failed: %d\n", res);
-> +               return res;
-> +       }
-
-> +       if (of_property_read_u32(pdev->dev.of_node, "ngpios", &ngpios))
-> +               ngpios =3D 32;
-
-A nit: I would rather go with
-res =3D of_property_read(...);
-if (res)
-  ngpios =3D 32;
-
---=20
-With Best Regards,
-Andy Shevchenko
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
