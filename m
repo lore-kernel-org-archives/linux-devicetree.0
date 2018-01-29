@@ -1,7 +1,7 @@
 From: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: [linux-sunxi][PATCH v2 5/5] arm64: allwinner: a64: Add DAI node for HDMI
-Date: Mon, 29 Jan 2018 10:19:03 +0100
-Message-ID: <20180129091903.12319-6-codekipper@gmail.com>
+Subject: [linux-sunxi][PATCH v2 1/5] arm64: allwinner: a64: Add the SPDIF block and pin
+Date: Mon, 29 Jan 2018 10:18:59 +0100
+Message-ID: <20180129091903.12319-2-codekipper@gmail.com>
 References: <20180129091903.12319-1-codekipper@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20180129091903.12319-1-codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
@@ -12,32 +12,46 @@ List-Id: devicetree@vger.kernel.org
 
 From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Add the new DAI block for I2S2 which is used for HDMI audio.
+Add the SPDIF transceiver controller block and pin to the A64 dtsi.
 
 Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-index 1b6dc31e7d91..c913dada7653 100644
+index d783d164b9c3..43c54a2133f0 100644
 --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
 +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-@@ -449,6 +449,20 @@
- 			status = "disabled";
+@@ -336,6 +336,11 @@
+ 				drive-strength = <40>;
+ 			};
+ 
++			spdif_tx_pin: spdif {
++				pins = "PH8";
++				function = "spdif";
++			};
++
+ 			spi0_pins: spi0 {
+ 				pins = "PC0", "PC1", "PC2", "PC3";
+ 				function = "spi0";
+@@ -382,6 +387,22 @@
+ 			};
  		};
  
-+		i2s2: i2s@1c22800 {
++		spdif: spdif@1c21000 {
 +			#sound-dai-cells = <0>;
-+			compatible = "allwinner,sun50i-a64-i2s",
-+				     "allwinner,sun8i-h3-i2s";
-+			reg = <0x01c22800 0x400>;
-+			interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&ccu CLK_BUS_I2S2>, <&ccu CLK_I2S2>;
-+			clock-names = "apb", "mod";
-+			resets = <&ccu RST_BUS_I2S2>;
++			compatible = "allwinner,sun50i-a64-spdif",
++				     "allwinner,sun8i-h3-spdif";
++			reg = <0x01c21000 0x400>;
++			interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu CLK_BUS_SPDIF>, <&ccu CLK_SPDIF>;
++			resets = <&ccu RST_BUS_SPDIF>;
++			clock-names = "apb", "spdif";
++			dmas = <&dma 2>;
 +			dma-names = "tx";
-+			dmas = <&dma 27>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&spdif_tx_pin>;
 +			status = "disabled";
 +		};
 +
