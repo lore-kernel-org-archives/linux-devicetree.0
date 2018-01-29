@@ -1,57 +1,67 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 4/4] dmaengine: qcom: bam_dma: Add num-ees dt binding for
- remotely controlled
-Date: Mon, 29 Jan 2018 10:21:46 -0600
-Message-ID: <20180129162146.2h3kht4xhhr32mbp@rob-hp-laptop>
-References: <20180116190236.14558-1-srinivas.kandagatla@linaro.org>
- <20180116190236.14558-5-srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH 2/3] ARM: dts: exynos: Fix missing missing reg warning
+ for syscon restart nodes
+Date: Mon, 29 Jan 2018 10:27:14 -0600
+Message-ID: <20180129162714.2xrqrkfd2xo4jn2g@rob-hp-laptop>
+References: <20180116213129.16209-1-krzk@kernel.org>
+ <20180116213129.16209-2-krzk@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20180116190236.14558-5-srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <20180116213129.16209-2-krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, yanhe-jfJNa2p1gH1BDgjK7y7TUQ@public.gmane.org, ramkri-Rm6X0d1/PG5y9aJCnZT0Uw@public.gmane.org, sdharia-jfJNa2p1gH1BDgjK7y7TUQ@public.gmane.org
+To: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Alim Akhtar <alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 16, 2018 at 07:02:36PM +0000, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org wrote:
-> From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+On Tue, Jan 16, 2018 at 10:31:28PM +0100, Krzysztof Kozlowski wrote:
+> Fix DTC warnings like:
 > 
-> When Linux is master of BAM, it can directly read registers to know number
-> of supported execution enviroments, however when its remotely controlled
-> reading these registers would trigger a crash if the BAM is not yet
-> intialized/powered up on the remote side.
+>     arch/arm/boot/dts/exynos4412-trats2.dtb: Warning (simple_bus_reg):
+>         Node /soc/syscon-poweroff missing or empty reg/ranges property
+>     arch/arm/boot/dts/exynos4412-trats2.dtb: Warning (simple_bus_reg):
+>         Node /soc/syscon-reboot missing or empty reg/ranges property
 > 
-> This patch adds new binding num-ees to specify supported number of
-> Execution Environments when BAM is remotely controlled.
+> by moving the syscon poweroff and restart nodes into the PMU (Power
+> Management Unit) node.  The PMU node is the actual block responsible for
+> power management, including typical Exynos on/off/restart procedures.
+> Therefore the syscon poweroff and restart nodes logically belong to it.
 > 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> 
 > ---
->  Documentation/devicetree/bindings/dma/qcom_bam_dma.txt |  2 ++
->  drivers/dma/qcom/bam_dma.c                             | 15 ++++++++++++---
->  2 files changed, 14 insertions(+), 3 deletions(-)
-
-The correct split is the binding changes in 1 patch. Driver changes 
-separate.
-
 > 
-> diff --git a/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt b/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
-> index aa6822cbb230..f0d10c2b393e 100644
-> --- a/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
-> +++ b/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
-> @@ -17,6 +17,8 @@ Required properties:
->    remote proccessor i.e. execution environment.
->  - num-channels : optional, indicates supported number of DMA channels in a
->    remotely controlled bam.
-> +- num-ees : optional, indicates supported number of Execution Environments in a
-> +  remotely controlled bam.
+> Tested on Exynos5420 and Exynos4412. Other tests are welcomed.
+> ---
+>  .../devicetree/bindings/arm/samsung/pmu.txt        |  4 +++-
+>  arch/arm/boot/dts/exynos-syscon-restart.dtsi       | 28 ++++++++++------------
+>  arch/arm/boot/dts/exynos3250.dtsi                  |  4 ++--
+>  arch/arm/boot/dts/exynos4.dtsi                     |  5 ++--
+>  arch/arm/boot/dts/exynos4412.dtsi                  |  2 +-
+>  arch/arm/boot/dts/exynos5.dtsi                     |  1 -
+>  arch/arm/boot/dts/exynos5250.dtsi                  |  3 ++-
+>  arch/arm/boot/dts/exynos5410.dtsi                  |  3 ++-
+>  arch/arm/boot/dts/exynos5420.dtsi                  |  3 ++-
+>  9 files changed, 27 insertions(+), 26 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/samsung/pmu.txt b/Documentation/devicetree/bindings/arm/samsung/pmu.txt
+> index 779f5614bcee..405646655ec7 100644
+> --- a/Documentation/devicetree/bindings/arm/samsung/pmu.txt
+> +++ b/Documentation/devicetree/bindings/arm/samsung/pmu.txt
+> @@ -12,6 +12,8 @@ Properties:
+>  		   - "samsung,exynos5433-pmu" - for Exynos5433 SoC.
+>  		   - "samsung,exynos7-pmu" - for Exynos7 SoC.
+>  		second value must be always "syscon".
+> +		If PMU contains optional syscon-poweroff or syscon-restart nodes,
+> +		then third value must be "simple-mfd".
 
-This one needs a vendor prefix as it is not a common property.
+I don't think this is right. simple-mfd is only for cases where the 
+parent has no setup that the child nodes are dependent on. You need the 
+regmap setup by the parent before the child can be enumerated. The 
+correct thing to do here is add an of_platform_default_populate() call.
 
->  
->  Example:
->  
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
