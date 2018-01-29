@@ -1,197 +1,158 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 06/16] iio: adc: sun4i-gpadc-iio: rework: support
- multiple sensors
-Date: Mon, 29 Jan 2018 10:37:38 +0100
-Message-ID: <20180129093738.5edpjclcbtsoneiw@flea.lan>
+Subject: Re: [PATCH v2 07/16] iio: adc: sun4i-gpadc-iio: rework: support
+ nvmem calibration data
+Date: Mon, 29 Jan 2018 10:40:45 +0100
+Message-ID: <20180129094045.sagz2dnzvdadd4yx@flea.lan>
 References: <20180128232919.12639-1-embed3d@gmail.com>
- <20180128232919.12639-7-embed3d@gmail.com>
+ <20180128232919.12639-8-embed3d@gmail.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="htifghagwui5ssmn"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+        protocol="application/pgp-signature"; boundary="5tc6bnwyrlietxpn"
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20180128232919.12639-7-embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20180128232919.12639-8-embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, rask-SivP7zSAdNDZaaYASwVUlg@public.gmane.org, clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sean-hENCXIMQXOg@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, icenowy-h8G6r0blFSE@public.gmane.org, edu.molinas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, singhalsimran0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---htifghagwui5ssmn
+--5tc6bnwyrlietxpn
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
-
-On Mon, Jan 29, 2018 at 12:29:09AM +0100, Philipp Rossak wrote:
-> For adding newer sensor some basic rework of the code is necessary.
->=20
-> This patch reworks the driver to be able to handle more than one
-> thermal sensor. Newer SoC like the A80 have 4 thermal sensors.
-> Because of this the maximal sensor count value was set to 4.
->=20
-> The sensor_id value is set during sensor registration and is for each
-> registered sensor indiviual. This makes it able to differntiate the
-> sensors when the value is read from the register.
->=20
-> In function sun4i_gpadc_read_raw(), the sensor number of the ths sensor
-> was directly set to 0 (sun4i_gpadc_temp_read(x,x,0)). This selects
-> in the temp_read function automatically sensor 0. A check for the
-> sensor_id is here not required since the old sensors only have one
-> thermal sensor. In addition to that is the sun4i_gpadc_read_raw()
-> function only used by the "older" sensors (before A33) where the
-> thermal sensor was a cobination of an adc and a thermal sensor.
+On Mon, Jan 29, 2018 at 12:29:10AM +0100, Philipp Rossak wrote:
+> This patch reworks the driver to support nvmem calibration cells.
+> The driver checks if the nvmem calibration is supported and reads out
+> the nvmem.
 >=20
 > Signed-off-by: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
->  drivers/iio/adc/sun4i-gpadc-iio.c | 36 +++++++++++++++++++++++----------=
----
->  include/linux/mfd/sun4i-gpadc.h   |  3 +++
->  2 files changed, 26 insertions(+), 13 deletions(-)
+>  drivers/iio/adc/sun4i-gpadc-iio.c | 44 +++++++++++++++++++++++++++++++++=
+++++++
+>  1 file changed, 44 insertions(+)
 >=20
 > diff --git a/drivers/iio/adc/sun4i-gpadc-iio.c b/drivers/iio/adc/sun4i-gp=
 adc-iio.c
-> index 51ec0104d678..ac9ad2f8232f 100644
+> index ac9ad2f8232f..74eeb5cd5218 100644
 > --- a/drivers/iio/adc/sun4i-gpadc-iio.c
 > +++ b/drivers/iio/adc/sun4i-gpadc-iio.c
-> @@ -67,12 +67,13 @@ struct gpadc_data {
->  	unsigned int	tp_adc_select;
->  	unsigned int	(*adc_chan_select)(unsigned int chan);
->  	unsigned int	adc_chan_mask;
-> -	unsigned int	temp_data;
-> +	unsigned int	temp_data[MAX_SENSOR_COUNT];
->  	int		(*sample_start)(struct sun4i_gpadc_iio *info);
->  	int		(*sample_end)(struct sun4i_gpadc_iio *info);
->  	bool		has_bus_clk;
+> @@ -27,6 +27,7 @@
+>  #include <linux/interrupt.h>
+>  #include <linux/io.h>
+>  #include <linux/module.h>
+> +#include <linux/nvmem-consumer.h>
+>  #include <linux/of.h>
+>  #include <linux/of_device.h>
+>  #include <linux/platform_device.h>
+> @@ -74,6 +75,7 @@ struct gpadc_data {
 >  	bool		has_bus_rst;
 >  	bool		has_mod_clk;
-> +	int		sensor_count;
+>  	int		sensor_count;
+> +	bool		supports_nvmem;
+
+I think you should add some documentation along with all the fields
+you're adding.
+
 >  };
 > =20
 >  static const struct gpadc_data sun4i_gpadc_data =3D {
-> @@ -82,9 +83,10 @@ static const struct gpadc_data sun4i_gpadc_data =3D {
->  	.tp_adc_select =3D SUN4I_GPADC_CTRL1_TP_ADC_SELECT,
->  	.adc_chan_select =3D &sun4i_gpadc_chan_select,
->  	.adc_chan_mask =3D SUN4I_GPADC_CTRL1_ADC_CHAN_MASK,
-> -	.temp_data =3D SUN4I_GPADC_TEMP_DATA,
-> +	.temp_data =3D {SUN4I_GPADC_TEMP_DATA, 0, 0, 0},
+> @@ -87,6 +89,7 @@ static const struct gpadc_data sun4i_gpadc_data =3D {
 >  	.sample_start =3D sun4i_gpadc_sample_start,
 >  	.sample_end =3D sun4i_gpadc_sample_end,
-> +	.sensor_count =3D 1,
+>  	.sensor_count =3D 1,
+> +	.supports_nvmem =3D false,
+
+That's already its value if you leave it out.
+
 >  };
 > =20
 >  static const struct gpadc_data sun5i_gpadc_data =3D {
-> @@ -94,9 +96,10 @@ static const struct gpadc_data sun5i_gpadc_data =3D {
->  	.tp_adc_select =3D SUN4I_GPADC_CTRL1_TP_ADC_SELECT,
->  	.adc_chan_select =3D &sun4i_gpadc_chan_select,
->  	.adc_chan_mask =3D SUN4I_GPADC_CTRL1_ADC_CHAN_MASK,
-> -	.temp_data =3D SUN4I_GPADC_TEMP_DATA,
-> +	.temp_data =3D {SUN4I_GPADC_TEMP_DATA, 0, 0, 0},
+> @@ -100,6 +103,7 @@ static const struct gpadc_data sun5i_gpadc_data =3D {
 >  	.sample_start =3D sun4i_gpadc_sample_start,
 >  	.sample_end =3D sun4i_gpadc_sample_end,
-> +	.sensor_count =3D 1,
+>  	.sensor_count =3D 1,
+> +	.supports_nvmem =3D false,
 >  };
 > =20
 >  static const struct gpadc_data sun6i_gpadc_data =3D {
-> @@ -106,18 +109,20 @@ static const struct gpadc_data sun6i_gpadc_data =3D=
- {
->  	.tp_adc_select =3D SUN6I_GPADC_CTRL1_TP_ADC_SELECT,
->  	.adc_chan_select =3D &sun6i_gpadc_chan_select,
->  	.adc_chan_mask =3D SUN6I_GPADC_CTRL1_ADC_CHAN_MASK,
-> -	.temp_data =3D SUN4I_GPADC_TEMP_DATA,
-> +	.temp_data =3D {SUN4I_GPADC_TEMP_DATA, 0, 0, 0},
+> @@ -113,6 +117,7 @@ static const struct gpadc_data sun6i_gpadc_data =3D {
 >  	.sample_start =3D sun4i_gpadc_sample_start,
 >  	.sample_end =3D sun4i_gpadc_sample_end,
-> +	.sensor_count =3D 1,
+>  	.sensor_count =3D 1,
+> +	.supports_nvmem =3D false,
 >  };
 > =20
 >  static const struct gpadc_data sun8i_a33_gpadc_data =3D {
->  	.temp_offset =3D -1662,
->  	.temp_scale =3D 162,
->  	.tp_mode_en =3D SUN8I_A33_GPADC_CTRL1_CHOP_TEMP_EN,
-> -	.temp_data =3D SUN4I_GPADC_TEMP_DATA,
-> +	.temp_data =3D {SUN4I_GPADC_TEMP_DATA, 0, 0, 0},
+> @@ -123,6 +128,7 @@ static const struct gpadc_data sun8i_a33_gpadc_data =
+=3D {
 >  	.sample_start =3D sun4i_gpadc_sample_start,
 >  	.sample_end =3D sun4i_gpadc_sample_end,
-> +	.sensor_count =3D 1,
+>  	.sensor_count =3D 1,
+> +	.supports_nvmem =3D false,
 >  };
 > =20
 >  struct sun4i_gpadc_iio {
-> @@ -135,6 +140,7 @@ struct sun4i_gpadc_iio {
->  	struct clk			*bus_clk;
+> @@ -141,6 +147,8 @@ struct sun4i_gpadc_iio {
 >  	struct clk			*mod_clk;
 >  	struct reset_control		*reset;
-> +	int				sensor_id;
+>  	int				sensor_id;
+> +	u32				calibration_data[2];
+> +	bool				has_calibration_data[2];
+
+Why do you have two different values here?
+
 >  	/* prevents concurrent reads of temperature and ADC */
 >  	struct mutex			mutex;
 >  	struct thermal_zone_device	*tzd;
-> @@ -302,14 +308,15 @@ static int sun4i_gpadc_adc_read(struct iio_dev *ind=
-io_dev, int channel,
->  	return sun4i_gpadc_read(indio_dev, channel, val, info->fifo_data_irq);
->  }
+> @@ -561,6 +569,9 @@ static int sun4i_gpadc_probe_dt(struct platform_devic=
+e *pdev,
+>  	struct resource *mem;
+>  	void __iomem *base;
+>  	int ret;
+> +	struct nvmem_cell *cell;
+> +	ssize_t cell_size;
+> +	u64 *cell_data;
 > =20
-> -static int sun4i_gpadc_temp_read(struct iio_dev *indio_dev, int *val)
-> +static int sun4i_gpadc_temp_read(struct iio_dev *indio_dev, int *val,
-> +				int sensor)
->  {
->  	struct sun4i_gpadc_iio *info =3D iio_priv(indio_dev);
+>  	info->data =3D of_device_get_match_data(&pdev->dev);
+>  	if (!info->data)
+> @@ -575,6 +586,39 @@ static int sun4i_gpadc_probe_dt(struct platform_devi=
+ce *pdev,
+>  	if (IS_ERR(base))
+>  		return PTR_ERR(base);
 > =20
->  	if (info->no_irq) {
->  		pm_runtime_get_sync(indio_dev->dev.parent);
-> =20
-> -		regmap_read(info->regmap, info->data->temp_data, val);
-> +		regmap_read(info->regmap, info->data->temp_data[sensor], val);
-> =20
->  		pm_runtime_mark_last_busy(indio_dev->dev.parent);
->  		pm_runtime_put_autosuspend(indio_dev->dev.parent);
-> @@ -356,7 +363,7 @@ static int sun4i_gpadc_read_raw(struct iio_dev *indio=
-_dev,
->  			ret =3D sun4i_gpadc_adc_read(indio_dev, chan->channel,
->  						   val);
->  		else
-> -			ret =3D sun4i_gpadc_temp_read(indio_dev, val);
-> +			ret =3D sun4i_gpadc_temp_read(indio_dev, val, 0);
-> =20
->  		if (ret)
->  			return ret;
-> @@ -470,7 +477,7 @@ static int sun4i_gpadc_get_temp(void *data, int *temp)
->  	struct sun4i_gpadc_iio *info =3D data;
->  	int val, scale, offset;
-> =20
-> -	if (sun4i_gpadc_temp_read(info->indio_dev, &val))
-> +	if (sun4i_gpadc_temp_read(info->indio_dev, &val, info->sensor_id))
->  		return -ETIMEDOUT;
-> =20
->  	sun4i_gpadc_temp_scale(info->indio_dev, &scale);
-> @@ -712,7 +719,7 @@ static int sun4i_gpadc_probe(struct platform_device *=
-pdev)
->  {
->  	struct sun4i_gpadc_iio *info;
->  	struct iio_dev *indio_dev;
-> -	int ret;
-> +	int ret, i;
-> =20
->  	indio_dev =3D devm_iio_device_alloc(&pdev->dev, sizeof(*info));
->  	if (!indio_dev)
-> @@ -745,9 +752,12 @@ static int sun4i_gpadc_probe(struct platform_device =
-*pdev)
->  	pm_runtime_enable(&pdev->dev);
-> =20
->  	if (IS_ENABLED(CONFIG_THERMAL_OF)) {
-> -		info->tzd =3D thermal_zone_of_sensor_register(info->sensor_device,
-> -							    0, info,
-> -							    &sun4i_ts_tz_ops);
-> +		for (i =3D 0; i < info->data->sensor_count; i++) {
-> +			info->sensor_id =3D i;
-> +			info->tzd =3D thermal_zone_of_sensor_register(
-> +					info->sensor_device,
-> +					i, info, &sun4i_ts_tz_ops);
-> +		}
+> +	info->has_calibration_data[0] =3D false;
+> +	info->has_calibration_data[1] =3D false;
+> +
+> +	if (!info->data->supports_nvmem)
+> +		goto no_nvmem;
+> +
+> +	cell =3D nvmem_cell_get(&pdev->dev, "calibration");
+> +	if (IS_ERR(cell)) {
+> +		if (PTR_ERR(cell) =3D=3D -EPROBE_DEFER)
+> +			return PTR_ERR(cell);
+> +		goto no_nvmem;
 
-I'm not sure how that works. Isn't the info structure shared between
-all the sensors? The sensor_id value would be always set to the last
-sensor then.
+goto considered evil ? :)
+
+> +	}
+> +
+> +	cell_data =3D (u64 *)nvmem_cell_read(cell, &cell_size);
+> +	nvmem_cell_put(cell);
+> +	switch (cell_size) {
+> +		case 8:
+> +		case 6:
+> +			info->has_calibration_data[1] =3D true;
+> +			info->calibration_data[1] =3D be32_to_cpu(
+> +					upper_32_bits(cell_data[0]));
+> +		case 4:
+> +		case 2:
+> +			info->has_calibration_data[0] =3D true;
+> +			info->calibration_data[0] =3D be32_to_cpu(
+> +					lower_32_bits(cell_data[0]));
+
+Why do you need that switch?
 
 Thanks!
 Maxime
@@ -201,28 +162,24 @@ Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
 
---htifghagwui5ssmn
+--5tc6bnwyrlietxpn
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlpu62EACgkQ0rTAlCFN
-r3S0KA//Z6QtY14DZGa7sO2cRE+vfDH4TtUmGpczbdQUuv03pza3YnLyBN4P7f8U
-047pAo4kuwaHARM0kErGTlj2i+07qtsdtrraeFHStL6VM50+XyiqCZEmYGeWv7Th
-UNtsgphdv3rajd15smRNKZrkLr9fY/GBhsaiW6ICCb+/oAF7wJ2PGZvPcSmeKLlZ
-qDkRWKwvARBq7OKXhPAY39/UM+jYYwVtBktgH9E+RZn7OyZuIWNWw8Dn4yiggy7K
-hDHhj46s6ObMZCrEe2LU+CT+an4pYNScKUMtg5SszvzbRN7NqhyD1dgSaIH2/SvJ
-Fvc5Dl3vpzWEviJ88m4eC90T5nOzxcm59fXDQEQQkorJB11WBc7AZ6K6rab9AUha
-wByfmnVQ6DHvWfZDVp+Zv2Fkqp7I4pRyGI/vlCkwjhP3pvrQfqGn0BnOQPUSbev9
-nbWifnugTabecLYrAP+xY7QKcurK0z9d8+HSDFFTqjgMhO2F5Bg9/e9Vr83sdP26
-pX8nDFFj83lTLMJtpGsZytS0x5vQ7AGAqmQlM1Nue1He8vk7vNS9f/HXuXaZH3v2
-WZiykgpar9swhk+gt1tfXepInXSehiGLXKvOMs0+2uydhWDe6Aun4u8zCRUM/VEj
-rsanOvFPItVrnszGMKRpeWsc7aoAwRcmxEJ2M7DYdBLhQ6fkLAg=
-=ody9
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlpu7BwACgkQ0rTAlCFN
+r3Soag/+I6EXkohyDYlSmGPc6n7MiDLB86nxWCuoYSAv4IfmKLdr3nQpfhbnXq2Y
+LKAf13DnVBb0o1p8TSlgMhk+0kHRM47516etxxXN4bPvWxPA72R6KywSBBZvNfXZ
+w8gS/GFamDWcDVg9cwL8vB8WB1of2+9bfO1voWDRjChO7pCnpw6Z0G1Gfkd3Vl+2
+qHK/dh70qwbInAsLfQTtmfAEvjFBzdX0M0H//XMFtCG8BC5+oZka3nJKRK4q1hF+
+d4HmWhOZORtWCethDiaba+7jZjrZvOmFZxseWDF0rtZJ9SXZ6D0Mr52AHEmCqjPE
+dhbccWUL3qXvNCxjMED7IfWfhIsbY79MyTAurFsSNiJdtQdXE4iAJSeExsyczY0B
+C0RNEtHBi0zk3xpICTsiJNFk6TtA/dD0nDfluzUdEkJKaWzaF10aPjok7CVDDIRw
+xu7/UziSVOWwPlgmXbQGzAYo22I76icAsTO1YsO33LR7KfaZQjMlz75ROzRbxyVw
+7WyKZR5I7wfJHAGEaEdpAHrSPfxBxVM1z2ylZh3lSAmaKQs/2G5iRlQ2O46qmBG8
+RbcYJzdMsnySt86fN5f02+y3XMAMUkaQHpm5PQgnQdsoSYO3QTWoRuxuwE9VttER
+79cJcmnrB1t0+wcUkedkXPzdGfbgvrb+RbRX0YYcJ39PkOGKEsQ=
+=jZKp
 -----END PGP SIGNATURE-----
 
---htifghagwui5ssmn--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--5tc6bnwyrlietxpn--
