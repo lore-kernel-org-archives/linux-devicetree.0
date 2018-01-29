@@ -1,75 +1,229 @@
-From: icenowy@aosc.io
-Subject: Re: [linux-sunxi] Re: [PATCH v6 2/2] media: V3s: Add support for
- Allwinner CSI.
-Date: Mon, 29 Jan 2018 16:28:06 +0800
-Message-ID: <20180129082850.CAAF25C1783@relay.mailchannels.net>
-References: <1516695531-23349-1-git-send-email-yong.deng@magewell.com>
- <CACRpkdan52UB7HOyH1gnHWg4CDke_VQxAdq8cBgwUroibE59Ow@mail.gmail.com>
- <20180129082533.6edmqgbauo6q5dgz@flea.lan>
+From: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v7 0/2] Initial Allwinner V3s CSI Support
+Date: Mon, 29 Jan 2018 17:16:45 +0800
+Message-ID: <1517217405-17536-1-git-send-email-yong.deng@magewell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180129082533.6edmqgbauo6q5dgz@flea.lan>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: maxime.ripard@free-electrons.comMaxime Ripard <maxime.ripard@free-electrons.com>, Arnd Bergmann <arnd@arndb.de>, Linus Walleij <linus.walleij@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Stanimir Varbanov <stanimir.varbanov@linaro.org>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Rick Chang <rick.chang@mediatek.com>, Chen-Yu Tsai <wens@csie.org>, Hans Verkuil <hans.verkuil@cisco.com>, linux-sunxi@mailchannels.net, linux-media@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Rob Herring <robh+dt@kernel.org>, Yong Deng <yong.deng@magewell.com>, Hugues Fruchet <hugues.fruchet@st.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Randy Dunlap <rdunlap@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Yannick Fertre <yannick.fertre@st.com>, Philipp Zabel <p.zabel@pengutronix.de>, Ramesh
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rick Chang <rick.chang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-PGxpbnV4LXN1bnhpQGdvb2dsZWdyb3Vwcy5jb20+LG1lZ291c0BtZWdvdXMuY29tLFRob21hcyBQ
-ZXRhenpvbmkgPHRob21hcy5wZXRhenpvbmlAZnJlZS1lbGVjdHJvbnMuY29tPgpGcm9tOiBJY2Vu
-b3d5IFpoZW5nIDxpY2Vub3d5QGFvc2MuaW8+Ck1lc3NhZ2UtSUQ6IDxCMUU3MEJCRC04QzFDLTQz
-ODEtODI4MC1FN0EzNjhBRTNERTZAYW9zYy5pbz4KCgoK5LqOIDIwMTjlubQx5pyIMjnml6UgR01U
-KzA4OjAwIOS4i+WNiDQ6MjU6MzMsIE1heGltZSBSaXBhcmQgPG1heGltZS5yaXBhcmRAZnJlZS1l
-bGVjdHJvbnMuY29tPiDlhpnliLA6Cj5IaSBMaW51cywKPgo+T24gU2F0LCBKYW4gMjcsIDIwMTgg
-YXQgMDU6MTQ6MjZQTSArMDEwMCwgTGludXMgV2FsbGVpaiB3cm90ZToKPj4gPiArdm9pZCBzdW42
-aV9jc2lfdXBkYXRlX2J1Zl9hZGRyKHN0cnVjdCBzdW42aV9jc2kgKmNzaSwgZG1hX2FkZHJfdAo+
-YWRkcikKPj4gPiArewo+PiA+ICsgICAgICAgc3RydWN0IHN1bjZpX2NzaV9kZXYgKnNkZXYgPSBz
-dW42aV9jc2lfdG9fZGV2KGNzaSk7Cj4+ID4gKyAgICAgICAvKiB0cmFuc2Zvcm0gcGh5c2ljYWwg
-YWRkcmVzcyB0byBidXMgYWRkcmVzcyAqLwo+PiA+ICsgICAgICAgZG1hX2FkZHJfdCBidXNfYWRk
-ciA9IGFkZHIgLSBQSFlTX09GRlNFVDsKPj4gCj4+IEkgYW0gc29ycnkgaWYgdGhpcyBpcyBhbiB1
-bmp1c3RpZmllZCBkcml2ZS1ieSBjb21tZW50LiBNYXliZSB5b3UKPj4gaGF2ZSBhbHJlYWR5IGlu
-dmVzdGlnYXRlIG90aGVyIHdheXMgdG8gZG8gdGhpcy4KPgo+SXQncyBkZWZpbml0ZWx5IG5vdCB1
-bmp1c3RpZmllZCA6KQo+Cj4+IEFjY2Vzc2luZyBQSFlTX09GRlNFVCBkaXJlY3RseSBzZWVtcyB1
-bmludHVpdGl2ZSBhbmQgbm90IGdvb2QKPj4gcHJhY3RpY2UuCj4+IAo+PiBCdXQgbm9ybWFsbHkg
-YW4gZG1hX2FkZHJfdCBvbmx5IGNvbWVzIGZyb20gc29tZSBmdW5jdGlvbiBpbnNpZGUKPj4gPGxp
-bnV4L2RtYS1tYXBwaW5nLmg+IHN1Y2ggYXM6IGRtYV9hbGxvY19jb2hlcmVudCgpIGZvciBhIGNv
-bnRpZ291cwo+PiBidWZmZXIgd2hpY2ggaXMgY29oZXJlbnQgaW4gcGh5c2ljYWwgbWVtb3J5LCBv
-ciBmcm9tIHNvbWUgYnVmZmVyIDw9Cj4+IDY0S0IgdGhhdCBpcyBzd2l0Y2hpbmcgb3duZXJzaGlw
-IGJldHdlZW4gZGV2aWNlIGFuZCBDUFUgZXhwbGljaXRseQo+PiB3aXRoIGRtYV9tYXAqIG9yIHNv
-LiBEaWQgeW91IGNoZWNrIHdpdGggRG9jdW1lbnRhdGlvbi9ETUEtQVBJLnR4dD8KPgo+U28sIEkn
-dmUgZGlzY3Vzc2VkIHRoaXMgd2l0aCBBcm5kIGEgbW9udGggYWdvIG9yIHNvLCBiZWNhdXNlIEkn
-bSBub3QKPnJlYWxseSBmb25kIG9mIHRoZSBjdXJyZW50IGFwcHJvYWNoIGJ1dCB3ZSBoYXZlbid0
-IGZvdW5kIGJldHRlciB3YXkgdG8KPmRvIGl0IHlldC4KPgo+VGhlIGlzc3VlIGlzIHRoYXQgYWxs
-IHRoZSBETUEgYWNjZXNzZXMgYXJlIGRvbmUgbm90IHRocm91Z2ggdGhlIG1haW4KPkFYSSBidXMs
-IGJ1dCB0aHJvdWdoIGEgc2VwYXJhdGUgYnVzIGRlZGljYXRlZCBmb3IgbWVtb3J5IGFjY2Vzc2Vz
-LAo+d2hlcmUgdGhlIFJBTSBpcyBtYXBwZWQgYXQgdGhlIGFkZHJlc3MgMC4gU28gdGhlIENQVSBh
-bmQgRE1BIGRldmljZXMKPmhhdmUgYSBkaWZmZXJlbnQgbWFwcGluZyBmb3IgdGhlIFJBTS4KCk1h
-eWJlIHdlIGNhbiBzcGVjaWZ5IHRoZSBvZmZzZXQgaW4gdGhlIERUIGFzIGl0J3MgYWJvdXQgaG93
-CnRoZSBJUCBibG9jayBpcyBpbnRlZ3JhdGVkIHRvIHRoZSBTb0MuCgo+Cj5JIGd1ZXNzIHdlIGNv
-dWxkIGFkZHJlc3MgdGhpcyBieSB1c2luZyB0aGUgZmllbGQgZG1hX3Bmbl9vZmZzZXQgdGhhdAo+
-c2VlbXMgdG8gYmUgdXNlZCBpbiBzaW1pbGFyIHNpdHVhdGlvbnMuIEhvd2V2ZXIsIGluIERUIHN5
-c3RlbXMsIHRoYXQKPmZpZWxkIGlzIGZpbGxlZCBvbmx5IHdpdGggdGhlIHBhcmVudCdzIG5vZGUg
-ZG1hLXJhbmdlcyBwcm9wZXJ0eS4gSW4KPm91ciBjYXNlLCBhbmQgc2luY2UgdGhlIERUIHBhcmVu
-dGhvb2QgaXMgYmFzZWQgb24gdGhlICJjb250cm9sIiBidXMsCj5hbmQgbm90IHRoZSAiZGF0YSIg
-YnVzLCBvdXIgcGFyZW50IG5vZGUgd291bGQgYmUgdGhlIEFYSSBidXMsIGFuZCBub3QKPnRoZSBt
-ZW1vcnkgYnVzIHRoYXQgZW5mb3JjZSB0aG9zZSBjb25zdHJhaW50cy4KPgo+QW5kIG90aGVyIGRl
-dmljZXMgZG9pbmcgRE1BIHRocm91Z2ggcmVndWxhciBETUEgYWNjZXNzZXMgd29uJ3QgaGF2ZQo+
-dGhhdCBtYXBwaW5nLCBzbyB3ZSBkZWZpbml0ZWx5IHNob3VsZG4ndCBlbmZvcmNlIGl0IGZvciBh
-bGwgdGhlCj5kZXZpY2VzIHRoZXJlLCBidXQgb25seSB0aGUgb25lIGNvbm5lY3RlZCB0byB0aGUg
-c2VwYXJhdGUgbWVtb3J5IGJ1cy4KPgo+dGw7IGRyOiB0aGUgRFQgaXMgbm90IHJlYWxseSBhbiBv
-cHRpb24gdG8gc3RvcmUgdGhhdCBpbmZvLgo+Cj5JIHN1Z2dlc3RlZCBzZXR0aW5nIGRtYV9wZm5f
-b2Zmc2V0IGF0IHByb2JlLCBidXQgQXJuZCBkaWRuJ3Qgc2VlbSB0b28KPmZvbmQgb2YgdGhhdCBh
-cHByb2FjaCBlaXRoZXIgYXQgdGhlIHRpbWUuCj4KPlNvLCB3ZWxsLCBJIGd1ZXNzIHdlIGNvdWxk
-IGRvIGJldHRlci4gV2UganVzdCBoYXZlIG5vIGlkZWEgaG93IDopCj4KPk1heGltZQoKX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5l
-bCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6
-Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+This patchset add initial support for Allwinner V3s CSI.
+
+Allwinner V3s SoC features two CSI module. CSI0 is used for MIPI CSI-2
+interface and CSI1 is used for parallel interface. This is not
+documented in datasheet but by test and guess.
+
+This patchset implement a v4l2 framework driver and add a binding 
+documentation for it. 
+
+Currently, the driver only support the parallel interface. And has been
+tested with a BT1120 signal which generating from FPGA. The following
+fetures are not support with this patchset:
+  - ISP 
+  - MIPI-CSI2
+  - Master clock for camera sensor
+  - Power regulator for the front end IC
+
+Changes in v7:
+  * Add 'depends on ARM' in Kconfig to avoid built with non-ARM arch.
+
+Changes in v6:
+  * Add Rob Herring's review tag.
+  * Fix a NULL pointer dereference by picking Maxime Ripard's patch.
+  * Add Maxime Ripard's test tag.
+
+Changes in v5:
+  * Using the new SPDX tags.
+  * Fix MODULE_LICENSE.
+  * Add many default cases and warning messages.
+  * Detail the parallel bus properties
+  * Fix some spelling and syntax mistakes.
+
+Changes in v4:
+  * Deal with the CSI 'INNER QUEUE'.
+    CSI will lookup the next dma buffer for next frame before the
+    the current frame done IRQ triggered. This is not documented
+    but reported by Ondřej Jirman.
+    The BSP code has workaround for this too. It skip to mark the
+    first buffer as frame done for VB2 and pass the second buffer
+    to CSI in the first frame done ISR call. Then in second frame
+    done ISR call, it mark the first buffer as frame done for VB2
+    and pass the third buffer to CSI. And so on. The bad thing is
+    that the first buffer will be written twice and the first frame
+    is dropped even the queued buffer is sufficient.
+    So, I make some improvement here. Pass the next buffer to CSI
+    just follow starting the CSI. In this case, the first frame
+    will be stored in first buffer, second frame in second buffer.
+    This mothed is used to avoid dropping the first frame, it
+    would also drop frame when lacking of queued buffer.
+  * Fix: using a wrong mbus_code when getting the supported formats
+  * Change all fourcc to pixformat
+  * Change some function names
+
+Changes in v3:
+  * Get rid of struct sun6i_csi_ops
+  * Move sun6i-csi to new directory drivers/media/platform/sunxi
+  * Merge sun6i_csi.c and sun6i_csi_v3s.c into sun6i_csi.c
+  * Use generic fwnode endpoints parser
+  * Only support a single subdev to make things simple
+  * Many complaintion fix
+
+Changes in v2: 
+  * Change sunxi-csi to sun6i-csi
+  * Rebase to media_tree master branch 
+
+Following is the 'v4l2-compliance -s -f' output, I have test this
+with both interlaced and progressive signal:
+
+# ./v4l2-compliance -s -f
+v4l2-compliance SHA   : 6049ea8bd64f9d78ef87ef0c2b3dc9b5de1ca4a1
+
+Driver Info:
+        Driver name   : sun6i-video
+        Card type     : sun6i-csi
+        Bus info      : platform:csi
+        Driver version: 4.15.0
+        Capabilities  : 0x84200001
+                Video Capture
+                Streaming
+                Extended Pix Format
+                Device Capabilities
+        Device Caps   : 0x04200001
+                Video Capture
+                Streaming
+                Extended Pix Format
+
+Compliance test for device /dev/video0 (not using libv4l2):
+
+Required ioctls:
+        test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+        test second video open: OK
+        test VIDIOC_QUERYCAP: OK
+        test VIDIOC_G/S_PRIORITY: OK
+        test for unlimited opens: OK
+
+Debug ioctls:
+        test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+        test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+        test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+        test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+        test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+        test VIDIOC_ENUMAUDIO: OK (Not Supported)
+        test VIDIOC_G/S/ENUMINPUT: OK
+        test VIDIOC_G/S_AUDIO: OK (Not Supported)
+        Inputs: 1 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+        test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+        test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+        test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+        test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+        test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+        Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+        test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+        test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+        test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+        test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Test input 0:
+
+        Control ioctls:
+                test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
+                test VIDIOC_QUERYCTRL: OK (Not Supported)
+                test VIDIOC_G/S_CTRL: OK (Not Supported)
+                test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
+                test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
+                test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+                Standard Controls: 0 Private Controls: 0
+
+        Format ioctls:
+                test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+                test VIDIOC_G/S_PARM: OK (Not Supported)
+                test VIDIOC_G_FBUF: OK (Not Supported)
+                test VIDIOC_G_FMT: OK
+                test VIDIOC_TRY_FMT: OK
+                test VIDIOC_S_FMT: OK
+                test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+                test Cropping: OK (Not Supported)
+                test Composing: OK (Not Supported)
+                test Scaling: OK (Not Supported)
+
+        Codec ioctls:
+                test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+                test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+                test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+        Buffer ioctls:
+                test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
+                test VIDIOC_EXPBUF: OK
+
+Test input 0:
+
+Streaming ioctls:
+        test read/write: OK (Not Supported)
+        test MMAP: OK                                     
+        test USERPTR: OK (Not Supported)
+        test DMABUF: Cannot test, specify --expbuf-device
+
+Stream using all formats:
+        test MMAP for Format HM12, Frame Size 1280x720:
+                Stride 1920, Field None: OK                                 
+        test MMAP for Format NV12, Frame Size 1280x720:
+                Stride 1920, Field None: OK                                 
+        test MMAP for Format NV21, Frame Size 1280x720:
+                Stride 1920, Field None: OK                                 
+        test MMAP for Format YU12, Frame Size 1280x720:
+                Stride 1920, Field None: OK                                 
+        test MMAP for Format YV12, Frame Size 1280x720:
+                Stride 1920, Field None: OK                                 
+        test MMAP for Format NV16, Frame Size 1280x720:
+                Stride 2560, Field None: OK                                 
+        test MMAP for Format NV61, Frame Size 1280x720:
+                Stride 2560, Field None: OK                                 
+        test MMAP for Format 422P, Frame Size 1280x720:
+                Stride 2560, Field None: OK                                 
+
+Total: 54, Succeeded: 54, Failed: 0, Warnings: 0
+
+Yong Deng (2):
+  dt-bindings: media: Add Allwinner V3s Camera Sensor Interface (CSI)
+  media: V3s: Add support for Allwinner CSI.
+
+ .../devicetree/bindings/media/sun6i-csi.txt        |  59 ++
+ MAINTAINERS                                        |   8 +
+ drivers/media/platform/Kconfig                     |   1 +
+ drivers/media/platform/Makefile                    |   2 +
+ drivers/media/platform/sunxi/sun6i-csi/Kconfig     |  10 +
+ drivers/media/platform/sunxi/sun6i-csi/Makefile    |   3 +
+ drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c | 908 +++++++++++++++++++++
+ drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.h | 143 ++++
+ .../media/platform/sunxi/sun6i-csi/sun6i_csi_reg.h | 196 +++++
+ .../media/platform/sunxi/sun6i-csi/sun6i_video.c   | 753 +++++++++++++++++
+ .../media/platform/sunxi/sun6i-csi/sun6i_video.h   |  53 ++
+ 11 files changed, 2136 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/sun6i-csi.txt
+ create mode 100644 drivers/media/platform/sunxi/sun6i-csi/Kconfig
+ create mode 100644 drivers/media/platform/sunxi/sun6i-csi/Makefile
+ create mode 100644 drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
+ create mode 100644 drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.h
+ create mode 100644 drivers/media/platform/sunxi/sun6i-csi/sun6i_csi_reg.h
+ create mode 100644 drivers/media/platform/sunxi/sun6i-csi/sun6i_video.c
+ create mode 100644 drivers/media/platform/sunxi/sun6i-csi/sun6i_video.h
+
+-- 
+1.8.3.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
