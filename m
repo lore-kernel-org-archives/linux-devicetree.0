@@ -1,77 +1,83 @@
-From: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] iio: ad5272: Add support for Analog Devices
- digital potentiometers
-Date: Mon, 29 Jan 2018 10:14:13 +0800
-Message-ID: <0ed10342-bd24-919a-e346-edc59f976a4d@electromag.com.au>
-References: <1516096140-88161-1-git-send-email-preid@electromag.com.au>
- <1516096140-88161-3-git-send-email-preid@electromag.com.au>
- <da493367-8156-792f-5d3c-3cfd9a910271@metafoo.de>
- <c05bc74f-dd6e-39ec-a316-5aa3436f36cf@electromag.com.au>
- <20180121121119.234e7192@archlinux>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Subject: [PATCH 0/2] of: change overlay apply input data from EDT to FDT
+Date: Sun, 28 Jan 2018 18:53:32 -0800
+Message-ID: <1517194414-19932-1-git-send-email-frowand.list@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180121121119.234e7192@archlinux>
-Content-Language: en-AU
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, knaack.h-Mmb7MZpHnFY@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Michael.Hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alexandru.ardelean-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 21/01/2018 20:11, Jonathan Cameron wrote:
-> On Wed, 17 Jan 2018 09:46:23 +0800
-> Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org> wrote:
-> 
->> G'day Lars-Peter,
->>
->> On 17/01/2018 01:01, Lars-Peter Clausen wrote:
->>> On 01/16/2018 10:49 AM, Phil Reid wrote:
->>>> Add implementation for Analog Devices AD5272 and AD5274 digital
->>>> potentiometer devices.
->>>>
->>>> Signed-off-by: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
->>>
->>> Hi,
->>>
->>> Thanks for the patch. Looks mostly good.
->>>    
->>>> diff --git a/drivers/iio/potentiometer/ad5272.c b/drivers/iio/potentiometer/ad5272.c
->>>> new file mode 100644
->>>> index 0000000..a04b018
->>>> --- /dev/null
->>>> +++ b/drivers/iio/potentiometer/ad5272.c
->>>> @@ -0,0 +1,227 @@
->>>> +/*
->>>> + * Analog Devices AD5372 digital potentiometer driver
->>>> + * Copyright (C) 2018 Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
->>>> + *
->>>> + * Datasheet: http://www.analog.com/media/en/technical-documentation/data-sheets/AD5272_5274.pdf
->>>> + *
->>>> + * DEVID	#Wipers	#Positions	Resistor Opts (kOhm)	i2c address
->>>> + * ad5272	1	1024		20, 50, 100		01011xx
->>>> + * ad5274	1	256		20, 100			01011xx
->>>> + *
->>>> + * SPDX-License-Identifier: GPL-2.0+
->>>
->>> People will probably complain about this, there are some weired rules where
->>> and how the SPDX identifier should be.
->>>    
->> Jonathan suggested this in his review of v1. Forgot to mention that in the change list.
-> Lars is referring to the 'where' element of using SPDX tags.  They go
-> on as a c++ style comment right at the top of the file.
-> 
-> Good think he noticed as I missed this when reviewing v3!
-> 
-fair enough.
+From: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
 
-I did grep the kernel and found a mixture of placements so just picked the wrong one.
-I also didn't find anything in the Documentation folder about it.
-But my tree isn't at the bleeding edge.
+Move duplicating and unflattening of an overlay flattened devicetree
+(FDT) into the overlay application code.  To accomplish this,
+of_overlay_apply() is replaced by of_overlay_fdt_apply().
+
+The copy of the FDT (aka "duplicate FDT") now belongs to devicetree
+code, which is thus responsible for freeing the duplicate FDT.  The
+caller of of_overlay_fdt_apply() remains responsible for freeing the
+original FDT.
+
+The unflattened device tree (aka expanded device tree, EDT) now
+belongs to devicetree code, which is thus responsible for freeing
+the EDT.
+
+These ownership changes prevent early freeing of the duplicated FDT
+or the EDT, which could result in use after free errors.
+
+These changes led to migrating some unittest overlay data into
+their own devicetree source files, and then converting most of
+them to use sugar syntax instead of hand coding fragments.
+
+Frank Rowand (2):
+  of: change overlay apply input data from EDT to FDT
+  of: convert unittest overlay devicetree source to sugar syntax
+
+ drivers/of/of_private.h                          |   1 +
+ drivers/of/overlay.c                             | 124 +++++++++-
+ drivers/of/resolver.c                            |   6 -
+ drivers/of/unittest-data/Makefile                |  16 ++
+ drivers/of/unittest-data/overlay.dts             | 101 ++++----
+ drivers/of/unittest-data/overlay_0.dts           |  14 ++
+ drivers/of/unittest-data/overlay_1.dts           |  14 ++
+ drivers/of/unittest-data/overlay_10.dts          |  27 +++
+ drivers/of/unittest-data/overlay_11.dts          |  28 +++
+ drivers/of/unittest-data/overlay_12.dts          |  14 ++
+ drivers/of/unittest-data/overlay_13.dts          |  14 ++
+ drivers/of/unittest-data/overlay_15.dts          |  30 +++
+ drivers/of/unittest-data/overlay_2.dts           |   9 +
+ drivers/of/unittest-data/overlay_3.dts           |   9 +
+ drivers/of/unittest-data/overlay_4.dts           |  18 ++
+ drivers/of/unittest-data/overlay_5.dts           |   9 +
+ drivers/of/unittest-data/overlay_6.dts           |  10 +
+ drivers/of/unittest-data/overlay_7.dts           |  10 +
+ drivers/of/unittest-data/overlay_8.dts           |  10 +
+ drivers/of/unittest-data/overlay_9.dts           |  10 +
+ drivers/of/unittest-data/overlay_bad_phandle.dts |  23 +-
+ drivers/of/unittest-data/overlay_bad_symbol.dts  |  27 +--
+ drivers/of/unittest-data/tests-overlay.dtsi      | 217 +----------------
+ drivers/of/unittest.c                            | 296 +++++++++++------------
+ include/linux/of.h                               |   7 -
+ 25 files changed, 564 insertions(+), 480 deletions(-)
+ create mode 100644 drivers/of/unittest-data/overlay_0.dts
+ create mode 100644 drivers/of/unittest-data/overlay_1.dts
+ create mode 100644 drivers/of/unittest-data/overlay_10.dts
+ create mode 100644 drivers/of/unittest-data/overlay_11.dts
+ create mode 100644 drivers/of/unittest-data/overlay_12.dts
+ create mode 100644 drivers/of/unittest-data/overlay_13.dts
+ create mode 100644 drivers/of/unittest-data/overlay_15.dts
+ create mode 100644 drivers/of/unittest-data/overlay_2.dts
+ create mode 100644 drivers/of/unittest-data/overlay_3.dts
+ create mode 100644 drivers/of/unittest-data/overlay_4.dts
+ create mode 100644 drivers/of/unittest-data/overlay_5.dts
+ create mode 100644 drivers/of/unittest-data/overlay_6.dts
+ create mode 100644 drivers/of/unittest-data/overlay_7.dts
+ create mode 100644 drivers/of/unittest-data/overlay_8.dts
+ create mode 100644 drivers/of/unittest-data/overlay_9.dts
 
 -- 
-Regards
-Phil Reid
+Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
