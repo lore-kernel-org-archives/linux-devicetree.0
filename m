@@ -1,32 +1,32 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 7/7] dt-bindings: display: msm/dsi: Add updates for SDM845
-Date: Mon, 29 Jan 2018 11:16:24 -0600
-Message-ID: <20180129171624.bgdivutm3ecbt3ed@rob-hp-laptop>
-References: <20180117093448.4102-1-architt@codeaurora.org>
- <20180117093448.4102-8-architt@codeaurora.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 1/4] dt-bindings: samsung: document bindings for Midas
+ family boards
+Date: Mon, 29 Jan 2018 11:16:57 -0600
+Message-ID: <20180129171657.73dfrlx5ffkgz76w@rob-hp-laptop>
+References: <20180117125845.3954-1-simon@lineageos.org>
+ <20180117125845.3954-2-simon@lineageos.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20180117093448.4102-8-architt@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Archit Taneja <architt@codeaurora.org>
-Cc: robdclark@gmail.com, dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, latkinso@codeaurora.org, sibis@codeaurora.org, devicetree@vger.kernel.org
+In-Reply-To: <20180117125845.3954-2-simon-WP75azK+jQYgsBAKwltoeQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Shields <simon-WP75azK+jQYgsBAKwltoeQ@public.gmane.org>
+Cc: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, =?utf-8?Q?Bart=C5=82omiej_=C5=BBo=C5=82nierkiewicz?= <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 17, 2018 at 03:04:48PM +0530, Archit Taneja wrote:
-> SDM845 uses a newer revision (v2.0+) of the 6G DSI controller. This
-> revision has another clock input at the block boundary called the byte
-> interface clock. Specify this new clock in the binding.
+On Wed, Jan 17, 2018 at 11:58:42PM +1100, Simon Shields wrote:
+> Document GT-I9300, GT-I9305, GT-N7100, and GT-N7105 bindings, along
+> with the shared "midas" binding.
 > 
-> A 10nm DSI PHY is used along with the controller. Add a compatible
-> string for it and specify its base address/regulator supply needs.
-> 
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Archit Taneja <architt@codeaurora.org>
+> Signed-off-by: Simon Shields <simon-WP75azK+jQYgsBAKwltoeQ@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/display/msm/dsi.txt | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
+>  Documentation/devicetree/bindings/arm/samsung/samsung-boards.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
