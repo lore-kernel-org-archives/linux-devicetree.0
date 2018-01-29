@@ -1,7 +1,7 @@
 From: Sricharan R <sricharan@codeaurora.org>
-Subject: [PATCH 13/15] ARM: dts: ipq8074: Add peripheral nodes
-Date: Mon, 29 Jan 2018 10:41:27 +0530
-Message-ID: <1517202689-14212-14-git-send-email-sricharan@codeaurora.org>
+Subject: [PATCH 10/15] ARM: dts: ipq4019: Add ipq4019-ap.dk07.1 common data
+Date: Mon, 29 Jan 2018 10:41:24 +0530
+Message-ID: <1517202689-14212-11-git-send-email-sricharan@codeaurora.org>
 References: <1517202689-14212-1-git-send-email-sricharan@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1517202689-14212-1-git-send-email-sricharan@codeaurora.org>
@@ -10,126 +10,147 @@ To: robh+dt@kernel.org, robh@kernel.org, mark.rutland@arm.com, linux@armlinux.or
 Cc: sricharan@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Add serial, i2c, bam, spi, qpic peripheral nodes.
+Add the common data for all dk07 based boards.
 
 Signed-off-by: Sricharan R <sricharan@codeaurora.org>
 ---
- arch/arm64/boot/dts/qcom/ipq8074.dtsi | 103 ++++++++++++++++++++++++++++++++++
- 1 file changed, 103 insertions(+)
+ arch/arm/boot/dts/qcom-ipq4019-ap.dk07.1.dtsi | 128 ++++++++++++++++++++++++++
+ 1 file changed, 128 insertions(+)
+ create mode 100644 arch/arm/boot/dts/qcom-ipq4019-ap.dk07.1.dtsi
 
-diff --git a/arch/arm64/boot/dts/qcom/ipq8074.dtsi b/arch/arm64/boot/dts/qcom/ipq8074.dtsi
-index 2bc5dec..07d3bf7 100644
---- a/arch/arm64/boot/dts/qcom/ipq8074.dtsi
-+++ b/arch/arm64/boot/dts/qcom/ipq8074.dtsi
-@@ -124,6 +124,109 @@
- 			clock-names = "core", "iface";
- 			status = "disabled";
- 		};
+diff --git a/arch/arm/boot/dts/qcom-ipq4019-ap.dk07.1.dtsi b/arch/arm/boot/dts/qcom-ipq4019-ap.dk07.1.dtsi
+new file mode 100644
+index 0000000..af4e99d
+--- /dev/null
++++ b/arch/arm/boot/dts/qcom-ipq4019-ap.dk07.1.dtsi
+@@ -0,0 +1,128 @@
++// SPDX-License-Identifier: GPL-2.0
++// Copyright (c) 2017, The Linux Foundation. All rights reserved.
++
++#include "qcom-ipq4019.dtsi"
++#include <dt-bindings/input/input.h>
++#include <dt-bindings/gpio/gpio.h>
++
++/ {
++	model = "Qualcomm Technologies, Inc. IPQ4019/AP-DK07.1";
++	compatible = "qcom,ipq4019";
++
++	memory {
++		device_type = "memory";
++		reg = <0x80000000 0x20000000>; /* 512MB */
++	};
++
++	reserved-memory {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++
++		rsvd1@87000000 {
++			/* Reserved for other subsystem */
++			reg = <0x87000000 0x500000>;
++			no-map;
++		};
++
++		wifi_dump@87500000 {
++			reg = <0x87500000 0x600000>;
++			no-map;
++		};
++
++		rsvd2@87B00000 {
++			/* Reserved for other subsystem */
++			reg = <0x87B00000 0x500000>;
++			no-map;
++		};
++	};
++
++	soc {
++		pinctrl@1000000 {
++			serial_0_pins: serial0_pinmux {
++				mux {
++					pins = "gpio16", "gpio17";
++					function = "blsp_uart0";
++					bias-disable;
++				};
++			};
++
++			spi_1_pins: spi_1_pinmux {
++				mux {
++					pins = "gpio44", "gpio46", "gpio47";
++					function = "blsp_spi1";
++					bias-disable;
++				};
++				host_int {
++					pins = "gpio42";
++					function = "gpio";
++					input;
++				};
++				cs {
++					pins = "gpio45";
++					function = "gpio";
++					bias-pull-up;
++				};
++				wake {
++					pins = "gpio31";
++					function = "gpio";
++					output-high;
++				};
++				reset {
++					pins = "gpio49";
++					function = "gpio";
++					output-high;
++				};
++			};
++
++			i2c_0_pins: i2c_0_pinmux {
++				mux {
++					pins = "gpio20", "gpio21";
++					function = "blsp_i2c0";
++					bias-disable;
++				};
++			};
++		};
++
++		serial@78af000 {
++			pinctrl-0 = <&serial_0_pins>;
++			pinctrl-names = "default";
++			status = "ok";
++		};
++
++		spi_1: spi@78b6000 { /* BLSP1 QUP2 */
++			pinctrl-0 = <&spi_1_pins>;
++			pinctrl-names = "default";
++			status = "disabled";
++
++			spidev1: spi@1 {
++				compatible = "spidev";
++				reg = <0>;
++				spi-max-frequency = <24000000>;
++			};
++		};
 +
 +		blsp_dma: dma@7884000 {
-+			compatible = "qcom,bam-v1.7.0";
-+			reg = <0x07884000 0x2b000>;
-+			interrupts = <GIC_SPI 238 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&gcc GCC_BLSP1_AHB_CLK>;
-+			clock-names = "bam_clk";
-+			#dma-cells = <1>;
-+			qcom,ee = <0>;
++			status = "ok";
 +		};
 +
-+		serial_blsp0: serial@78af000 {
-+			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
-+			reg = <0x78af000 0x200>;
-+			interrupts = <GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&gcc GCC_BLSP1_UART1_APPS_CLK>,
-+				 <&gcc GCC_BLSP1_AHB_CLK>;
-+			clock-names = "core", "iface";
-+			status = "disabled";
++		i2c_0: i2c@78b7000 { /* BLSP1 QUP2 */
++			pinctrl-0 = <&i2c_0_pins>;
++			pinctrl-names = "default";
++			status = "ok";
 +		};
 +
-+		serial_blsp2: serial@78B1000 {
-+			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
-+			reg = <0x78B1000 0x200>;
-+			interrupts = <GIC_SPI 306 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&gcc GCC_BLSP1_UART3_APPS_CLK>,
-+				<&gcc GCC_BLSP1_AHB_CLK>;
-+			clock-names = "core", "iface";
-+			dmas = <&blsp_dma 4>,
-+				<&blsp_dma 5>;
-+			dma-names = "tx", "rx";
-+			status = "disabled";
++		pcie0: pci@40000000 {
++			status = "ok";
++			perst-gpio = <&tlmm 38 0x1>;
 +		};
 +
-+		spi_0: spi@78b5000 {
-+			compatible = "qcom,spi-qup-v2.2.1";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x78b5000 0x600>;
-+			interrupts = <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH>;
-+			spi-max-frequency = <50000000>;
-+			clocks = <&gcc GCC_BLSP1_QUP1_SPI_APPS_CLK>,
-+				<&gcc GCC_BLSP1_AHB_CLK>;
-+			clock-names = "core", "iface";
-+			dmas = <&blsp_dma 12>, <&blsp_dma 13>;
-+			dma-names = "tx", "rx";
-+			status = "disabled";
++		qpic_bam: dma@7984000{
++			status = "ok";
 +		};
 +
-+		i2c_0: i2c@78b6000 {
-+			compatible = "qcom,i2c-qup-v2.2.1";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x78b6000 0x600>;
-+			interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&gcc GCC_BLSP1_AHB_CLK>,
-+				<&gcc GCC_BLSP1_QUP2_I2C_APPS_CLK>;
-+			clock-names = "iface", "core";
-+			clock-frequency  = <400000>;
-+			dmas = <&blsp_dma 15>, <&blsp_dma 14>;
-+			dma-names = "rx", "tx";
++		nand: qpic-nand@79b0000 {
++			status = "ok";
 +		};
-+
-+		i2c_1: i2c@78b7000 {
-+			compatible = "qcom,i2c-qup-v2.2.1";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x78b7000 0x600>;
-+			interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&gcc GCC_BLSP1_AHB_CLK>,
-+				<&gcc GCC_BLSP1_QUP3_I2C_APPS_CLK>;
-+			clock-names = "iface", "core";
-+			clock-frequency  = <100000>;
-+			dmas = <&blsp_dma 17>, <&blsp_dma 16>;
-+			dma-names = "rx", "tx";
-+		};
-+
-+		qpic_bam: dma@7984000 {
-+			compatible = "qcom,bam-v1.7.0";
-+			reg = <0x7984000 0x1a000>;
-+			interrupts = <GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&gcc GCC_QPIC_AHB_CLK>;
-+			clock-names = "bam_clk";
-+			#dma-cells = <1>;
-+			qcom,ee = <0>;
-+			status = "disabled";
-+		};
-+
-+		qpic_nand: nand@79b0000 {
-+			compatible = "qcom,ipq8074-nand";
-+			reg = <0x79b0000 0x10000>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			clocks = <&gcc GCC_QPIC_CLK>,
-+				 <&gcc GCC_QPIC_AHB_CLK>;
-+			clock-names = "core", "aon";
-+
-+			dmas = <&qpic_bam 0>,
-+			       <&qpic_bam 1>,
-+			       <&qpic_bam 2>;
-+			dma-names = "tx", "rx", "cmd";
-+			status = "disabled";
-+		};
- 	};
- 
- 	cpus {
++	};
++};
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
