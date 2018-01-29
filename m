@@ -1,87 +1,51 @@
-From: Rob Herring <robh@kernel.org>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
 Subject: Re: [PATCH 1/2] of: change overlay apply input data from EDT to FDT
-Date: Mon, 29 Jan 2018 08:42:08 -0600
-Message-ID: <CABGGisyx_aXCxKO5x-5M5mEM7s=jMYZDaQZ9jdL6hapMCOyM=Q@mail.gmail.com>
-References: <1517194414-19932-1-git-send-email-frowand.list@gmail.com> <1517194414-19932-2-git-send-email-frowand.list@gmail.com>
+Date: Mon, 29 Jan 2018 16:05:49 +0100
+Message-ID: <CAMuHMdVz05Ygk34y-DiBGraf3xSh8deRoKGDfHv92-WYCu4HfQ@mail.gmail.com>
+References: <1517194414-19932-1-git-send-email-frowand.list@gmail.com>
+ <1517194414-19932-2-git-send-email-frowand.list@gmail.com> <CABGGisyx_aXCxKO5x-5M5mEM7s=jMYZDaQZ9jdL6hapMCOyM=Q@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1517194414-19932-2-git-send-email-frowand.list@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CABGGisyx_aXCxKO5x-5M5mEM7s=jMYZDaQZ9jdL6hapMCOyM=Q@mail.gmail.com>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jan 28, 2018 at 8:53 PM,  <frowand.list@gmail.com> wrote:
-> From: Frank Rowand <frank.rowand@sony.com>
+On Mon, Jan 29, 2018 at 3:42 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Sun, Jan 28, 2018 at 8:53 PM,  <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> From: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
+>>
+>> Move duplicating and unflattening of an overlay flattened devicetree
+>> (FDT) into the overlay application code.  To accomplish this,
+>> of_overlay_apply() is replaced by of_overlay_fdt_apply().
+>>
+>> The copy of the FDT (aka "duplicate FDT") now belongs to devicetree
+>> code, which is thus responsible for freeing the duplicate FDT.  The
+>> caller of of_overlay_fdt_apply() remains responsible for freeing the
+>> original FDT.
+>>
+>> The unflattened device tree (aka expanded device tree, EDT) now
 >
-> Move duplicating and unflattening of an overlay flattened devicetree
-> (FDT) into the overlay application code.  To accomplish this,
-> of_overlay_apply() is replaced by of_overlay_fdt_apply().
->
-> The copy of the FDT (aka "duplicate FDT") now belongs to devicetree
-> code, which is thus responsible for freeing the duplicate FDT.  The
-> caller of of_overlay_fdt_apply() remains responsible for freeing the
-> original FDT.
->
-> The unflattened device tree (aka expanded device tree, EDT) now
+> Not really a fan of a new acronym.
 
-Not really a fan of a new acronym.
+FWIW, it has already sneaked in:
 
-> belongs to devicetree code, which is thus responsible for freeing
-> the EDT.
->
-> These ownership changes prevent early freeing of the duplicated FDT
-> or the EDT, which could result in use after free errors.
->
-> of_overlay_fdt_apply() is a private function for the anticipated
-> overlay loader.
->
-> Update unittest.c to use of_overlay_fdt_apply() instead of
-> of_overlay_apply().
->
-> Move overlay fragments from artificial locations in
-> drivers/of/unittest-data/tests-overlay.dtsi into one devicetree
-> source file per overlay.  This led to changes in
-> drivers/of/unitest-data/Makefile and drivers/of/unitest.c.
+$ git grep -w EDT -- drivers/of
+drivers/of/unittest.c:   * will create pointers to the passed in FDT in the EDT.
 
-Why the rearranging? That should be a separate patch.
+Gr{oetje,eeting}s,
 
->
->   - Add overlay directives to the overlay devicetree source files so
->     that dtc will compile them as true overlays into one FDT data
->     chunk per overlay.
+                        Geert
 
-For this?
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
 
->   - Set CFLAGS for drivers/of/unittest-data/testcases.dts so that
->     symbols will be generated for overlay resolution of overlays
->     that are no longer artificially contained in testcases.dts
->
->   - Unflatten and apply each unittest overlay FDT using
->     of_overlay_fdt_apply().
->
->   - Enable the of_resolve_phandles() check for whether the overlay
->     EDT is detached.  This check was previously disabled because the
->     overlays from tests-overlay.dtsi were not unflattened into detached
->     trees.
->
->   - Other changes to unittest.c infrastructure to manage multiple test
->     FDTs built into the kernel image (access by name instead of
->     arbitrary number).
->
->   - of_unittest_overlay_high_level(): previously unused code to add
->     properties from the overlay_base devicetree to the live tree
->     was triggered by the restructuring of tests-overlay.dtsi and thus
->     testcases.dts.  This exposed two bugs: (1) the need to dup a
->     property before adding it, and (2) property 'name' is
->     auto-generated in the unflatten code and thus will be a duplicate
->     in the __symbols__ node - do not treat this duplicate as an error.
->
-> Errors while developing the patch exposed inadequate error messages
-> to debug problems when overlay devicetree fragment nodes contain
-> an invalid target path.  Improved the messages in find_target_node().
-
-Sounds like another separate patch.
-
-Rob
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
