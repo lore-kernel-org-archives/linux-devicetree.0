@@ -1,158 +1,124 @@
-From: David Lechner <david@lechnology.com>
-Subject: Re: [PATCH v6 01/41] dt-bindings: clock: Add new bindings for TI
- Davinci PLL clocks
-Date: Mon, 29 Jan 2018 15:14:43 -0600
-Message-ID: <ffec7cac-22cd-f19b-8c1b-ce3223606d20@lechnology.com>
-References: <1516468460-4908-1-git-send-email-david@lechnology.com>
- <1516468460-4908-2-git-send-email-david@lechnology.com>
- <20180129195315.bjanym7pmeh7bhaa@rob-hp-laptop>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH] dt-bindings: Nokia N9 audio support
+Date: Mon, 29 Jan 2018 22:19:51 +0100
+Message-ID: <20180129211636.GA3873@amd>
+References: <20171227091828.GA3307@amd>
+ <20171227180000.6ejpbqmr736nqx5i@kekkonen.localdomain>
+ <20171227200147.GB16799@amd>
+ <20171227211643.nnwtm4j6cyftlm66@kekkonen.localdomain>
+ <20180102124450.GA18659@amd>
+ <20180105160137.nr7oqvpbp2oao5fm@rob-hp-laptop>
+ <20180108222054.GA17452@amd>
+ <20180110085315.GA17841@amd>
+ <20180119201546.v4ua72kejql3w2ro@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="gatW/ieO32f1wygP"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180129195315.bjanym7pmeh7bhaa@rob-hp-laptop>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180119201546.v4ua72kejql3w2ro@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh@kernel.org>
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, pali.rohar@gmail.com, sre@kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-omap@vger.kernel.org, tony@atomide.com, khilman@kernel.org, aaro.koskinen@iki.fi, ivo.g.dimitrov.75@gmail.com, patrikbachan@gmail.com, serge@hallyn.com, abcloriens@gmail.com, clayton@craftyguy.net, martijn@brixit.nl, Filip =?utf-8?Q?Matijevi=C4=87?= <filip.matijevic.pz@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 01/29/2018 01:53 PM, Rob Herring wrote:
-> On Sat, Jan 20, 2018 at 11:13:40AM -0600, David Lechner wrote:
->> This adds a new binding for the PLL IP blocks in the mach-davinci
->> family of processors. Currently, only da850 has device tree support
->> but these bindings can also work for other SoCs in this family just
->> by adding new compatible strings.
->>
->> Note: Although these PLL controllers are very similar to the TI Keystone
->> SoCs, we are not re-using those bindings. The Keystone bindings use a
->> legacy one-node-per-clock binding. Furthermore, the mach-davinici SoCs
->> have a slightly different PLL register layout and a number of quirks
->> that can't be handled by the existing bindings, so the keystone bindings
->> could not be used as-is anyway.
->>
->> Signed-off-by: David Lechner <david@lechnology.com>
->> ---
->>
->> v6 changes:
->> - Added clock-names property
->> - Added ti,clkmode-square-wave property
->> - Added pllout child node
->> - Added obsclk child node
->> - Expanded examples
->>
->>   .../devicetree/bindings/clock/ti/davinci/pll.txt   | 96 ++++++++++++++++++++++
->>   1 file changed, 96 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/clock/ti/davinci/pll.txt
->>
->> diff --git a/Documentation/devicetree/bindings/clock/ti/davinci/pll.txt b/Documentation/devicetree/bindings/clock/ti/davinci/pll.txt
->> new file mode 100644
->> index 0000000..36998e1
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/clock/ti/davinci/pll.txt
->> @@ -0,0 +1,96 @@
->> +Binding for TI DaVinci PLL Controllers
->> +
->> +The PLL provides clocks to most of the components on the SoC. In addition
->> +to the PLL itself, this controller also contains bypasses, gates, dividers,
->> +an multiplexers for various clock signals.
->> +
->> +Required properties:
->> +- compatible: shall be one of:
->> +	- "ti,da850-pll0" for PLL0 on DA850/OMAP-L138/AM18XX
->> +	- "ti,da850-pll1" for PLL1 on DA850/OMAP-L138/AM18XX
->> +- reg: physical base address and size of the controller's register area.
->> +- clocks: phandles corresponding to the clock names
->> +- clock-names: names of the clock sources - depends on compatible string
->> +	- for "ti,da850-pll0", shall be "clksrc", "extclksrc"
->> +	- for "ti,da850-pll1", shall be "clksrc"
->> +
->> +Optional properties:
->> +- ti,clkmode-square-wave: Indicates that the the board is supplying a square
->> +	wave input on the OSCIN pin instead of using a crystal oscillator.
->> +	This property is only valid when compatible = "ti,da850-pll0".
->> +
->> +
->> +Optional child nodes:
->> +
->> +pllout
->> +	Describes the main PLL clock output (before POSTDIV). The node name must
->> +	be "pllout".
->> +
->> +	Required properties:
->> +	- #clock-cells: shall be 0
->> +
->> +sysclk
->> +	Describes the PLLDIVn divider clocks that provide the SYSCLKn clock
->> +	domains. The node name must be "sysclk". Consumers of this node should
->> +	use "n" in "SYSCLKn" as the index parameter for the clock cell.
->> +
->> +	Required properties:
->> +	- #clock-cells: shall be 1
->> +
->> +auxclk
->> +	Describes the AUXCLK output of the PLL. The node name must be "auxclk".
->> +	This child node is only valid when compatible = "ti,da850-pll0".
->> +
->> +	Required properties:
->> +	- #clock-cells: shall be 0
->> +
->> +obsclk
->> +	Describes the OBSCLK output of the PLL. The node name must be "obsclk".
->> +
->> +	Required properties:
->> +	- #clock-cells: shall be 0
-> 
-> So why have all these child nodes vs. just defining a single number
-> space of clock ids?
-> 
-> Rob
-> 
 
-I think that it makes the bindings more self-documenting. Not all PLLs have
-all of possible types of output clocks, so the presence or absence of a
-child node indicates if a PLL actually has that output or not.
+--gatW/ieO32f1wygP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-It is also complicated by the fact that one of the child nodes (sysclk)
-is  already an array of clocks.
+Hi!
 
-To do what you are suggesting might look something like this...
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/media/ti-wl1273.txt
+> > @@ -0,0 +1,36 @@
+> > +Texas Instruments - wl1273 radio/bluetooth module
+>=20
+> bluetooth chips have a binding location: bindings/net/bluetooth.
+>=20
+> And we already have a WL1273 binding. Plus there's the one for the Nokia=
+=20
+> BT which I think can be TI chips with a different firmware and protocol.=
+=20
+> Is this related?
 
----
+Ok, let me investigate wl1273 (and postpone it, audio is critical, FM
+radio -- not so much).
 
-Required properties:
-- compatible: shall be one of:
-	- "ti,da850-pll0" for PLL0 on DA850/OMAP-L138/AM18XX
-	- "ti,da850-pll1" for PLL1 on DA850/OMAP-L138/AM18XX
-- reg: physical base address and size of the controller's register area.
-- clocks: phandles corresponding to the clock names
-- clock-names: names of the clock sources - depends on compatible string
-	- for "ti,da850-pll0", shall be "clksrc", "extclksrc"
-	- for "ti,da850-pll1", shall be "clksrc"
-- #clock-cells: shall be set to <2>.
+> > index 0000000..230b1eb
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/sound/nokia,n9.txt
+> > @@ -0,0 +1,32 @@
+> > +* Nokia N9/N950 audio setup
+> > +
+> > +Required properties:
+> > +- compatible: "nokia,n9-audio"
+> > +
+> > +- nokia,twl4030-cpu-dai: phandle for the McBSP node connected to TWL40=
+30
+> > +- nokia,tlv320dac33-cpu-dai: phandle for the McBSP node connected to T=
+LV320DAC33
+> > +- nokia,wl1273-cpu-dai: phandle for the McBSP node connected to WL1273
+> > +
+> > +- nokia,twl4030-codec: phandle for the TWL4030 codec
+> > +- nokia,tlv320dac33-codec: phandle for the TLV320DAC33 codec
+> > +- nokia,wl1273-codec: phandle for the WL1273 codec
+>=20
+> Both dais and codecs should just be lists with a defined order.
+>=20
+> > +- nokia,headphone-amplifier: phandle for the TPA6130A2 node
+>=20
+> The simple card or graph card binding don't work? At least follow them=20
+> to the extent that they do work.=20
 
-Consumers:
+Yep, that quite big changes for the driver... Thanks for pointers. I'm
+not sure what features simple card / graph card miss.=20
 
-The clock cell values for consumers work as follows...
+> > +Texas Instruments - tlv320dac33 Codec module
+> > +
+> > +The tlv320dac33 serial control bus communicates through I2C protocols.
+> > +
+> > +Required properties:
+> > +
+> > +- compatible - "ti,tlv320dac33"
+> > +- reg - I2C slave address
+> > +
+> > +Optional properties:
+> > +
+> > +- power-gpio - gpio pin to power the device
+>=20
+> power-gpios.
+>=20
+> Active high or low?
 
-The first index is one of the constants defined in ti-davinci-pll.h
+Ok, this one can be fixed easily, and I guess tlv320dac33 driver might
+be useful for someone else, so I'll try to merge it first.
 
-The second index is 0 unless the first index is TI_DAVINCI_SYSCLK. In the case
-of TI_DAVINCI_SYSCLK the second index the SYSCLK domain ID (n in SYSCLKn).
+Thanks for review,
 
-For compatible = "ti,da850-pll0":
-	- <&pll0 TI_DAVINCI_PLLOUT 0> is the PLLOUT clock
-	- <&pll0 TI_DAVINCI_SYSCLK n> is one of the SYSCLKn clock domains where n is 1 to 7
-	- <&pll0 TI_DAVINCI_AUXCLK 0> is the AUXCLK clock domain
-	- <&pll0 TI_DAVINCI_OBSCLK 0> is the OBSCLK clock domain
-	- all other index combinations are invalid
+> > +	ti,burst-bclkdiv =3D /bits/ 8 <3>;
 
-For compatible = "ti,da850-pll1":
-	- <&pll0 TI_DAVINCI_SYSCLK n> is one of the SYSCLKn clock domains where n is 1 to 3
-	- <&pll0 TI_DAVINCI_OBSCLK 0> is the OBSCLK clock domain
-	- all other index combinations are invalid
+Oh and I'll make this plain int. No need to play with bits.
 
----
+Best regards
+								Pavel
 
-I guess it is not too bad (writing a clock lookup function that knows
-all of these rules could get interesting though).
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--gatW/ieO32f1wygP
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlpvj/cACgkQMOfwapXb+vL71QCfWTUei7Rlo4oRoJ6WsQKtqWJu
+LuEAoKh6PnhMaCz/ktCcA96xpEWgdoxD
+=Jm+k
+-----END PGP SIGNATURE-----
+
+--gatW/ieO32f1wygP--
