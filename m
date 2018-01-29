@@ -1,50 +1,47 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
+From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
 Subject: Re: [PATCH v5 1/2] drm/bridge: Add Cadence DSI driver
-Date: Mon, 29 Jan 2018 15:16:21 +0100
-Message-ID: <20180129151621.546a9b8f@bbrezillon>
+Date: Mon, 29 Jan 2018 16:29:21 +0200
+Message-ID: <47b5af31-4870-9109-291c-894455a1a15c@ti.com>
 References: <20180118134309.13123-1-boris.brezillon@free-electrons.com>
- <9b45c6a3-f26b-59f5-d313-88290a2c5b42@ti.com>
- <20180129141409.0ec356d1@bbrezillon>
- <07d82fcd-1e6c-37a8-36b7-d1a81cfeb2ae@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <07d82fcd-1e6c-37a8-36b7-d1a81cfeb2ae@ti.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "Menon,
- Nishanth" <nm@ti.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, David Airlie <airlied@linux.ie>, Simon Hatliff <hatliff@cadence.com>, Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, Alan Douglas <adouglas@cadence.com>, Rob Herring <robh+dt@kernel.org>, Jyri Sarha <jsarha@ti.com>, Suresh Punnoose <sureshp@cadence.com>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Richard Sproul <sproul@cadence.com>, devicetree@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180118134309.13123-1-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Cc: Richard Sproul <sproul-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Simon Hatliff <hatliff-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Suresh Punnoose <sureshp-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Alan Douglas <adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, "Menon, Nishanth" <nm-l0cyMroinI0@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCAyOSBKYW4gMjAxOCAxNTo1OTozMyArMDIwMApUb21pIFZhbGtlaW5lbiA8dG9taS52
-YWxrZWluZW5AdGkuY29tPiB3cm90ZToKCj4gT24gMjkvMDEvMTggMTU6MTQsIEJvcmlzIEJyZXpp
-bGxvbiB3cm90ZToKPiAKPiA+PiBZb3UgZG9uJ3QgZGlzYWJsZSB0aGUgZHNpX3N5c19jbGsgbmVp
-dGhlciBpbiB0aGUgb2sgbm9yIGluIHRoZSBlcnJvciBwYXRocy4gIAo+ID4gCj4gPiBIbSwgaXQg
-c2hvdWxkbid0IGJlIGVuYWJsZWQgaW4gdGhlIGZpcnN0IHBsYWNlOiB0aGUgcnVudGltZSByZXN1
-bWUKPiA+IGhvb2sgdGFrZXMgY2FyZSBvZiBlbmFibGluZyBpdCwgYW5kIHdlIGRvbid0IG5lZWQg
-dGhpcyBjbG9jayB0byBhY2Nlc3MKPiA+IElQIHJlZ2lzdGVycyAod2hpY2ggaXMgYWxsIHdlIGRv
-IGluIHRoZSBwcm9iZSkuICAKPiAKPiBBaCwgcmlnaHQsIHlvdSBjYW4ganVzdCB1c2UgcG1fcnVu
-dGltZSBkaXJlY3RseSB0byBlbmFibGUgdGhlIElQLgo+IAo+IEkgd2FzIGxvb2tpbmcgYXQgdGhl
-IGRvY3MsIGJ1dCBpdCB3YXNuJ3QgcXVpdGUgY2xlYXIgdG8gbWUgd2hlbiBleGFjdGx5Cj4gZHNp
-X3N5c19jbGsgaXMgbmVlZGVkLiBJIHRha2UgaXQgdGhhdCB5b3UgY2FuIGFjY2VzcyByZWdpc3Rl
-cnMgd2l0aCBqdXN0Cj4gdGhlIGRzaV9wX2NsaywgYnV0IHlvdSBjYW4ndCByZWFsbHkgZG8gYW55
-dGhpbmcgd2l0aCB0aGUgSVAgd2l0aG91dAo+IGRzaV9zeXNfY2xrPyBJZiBzbywgSSB0aGluayBl
-bmFibGluZyBib3RoIGRzaV9wX2NsayBhbmQgZHNpX3N5c19jbGsgaW4KPiB0aGUgcnVudGltZSBQ
-TSBjYWxsYmFja3MgaXMgb2suCgpUaGF0J3MgbXkgdW5kZXJzdGFuZGluZy4KCj4gCj4gQWx0ZXJu
-YXRpdmVseSwgaWYgZHNpX3N5c19jbGsgaXMgb25seSBuZWVkZWQgZm9yIHNvbWUgc3BlY2lmaWMK
-PiBmdW5jdGlvbmFsaXR5LCBhIG1vcmUgY29ycmVjdCB3YXkgd291bGQgYmUgdG8gZW5hYmxlIHRo
-YXQgY2xvY2sgb25seQo+IHdoZW4gdGhhdCBvcGVyYXRpb24gaXMgcGVyZm9ybWVkLgoKSUlVQywg
-aXQncyBuZWVkZWQgdG8gY2xvY2sgdGhlIFBQSSBkb21haW4sIHNvIGFueSBvcGVyYXRpb24KdHJh
-bnNtaXR0aW5nIHRoaW5ncyBvbiB0aGUgRFNJIGJ1cyByZXF1aXJlcyB0aGUgc3lzIGNsb2NrLgpf
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwg
-bWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0
-cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On 18/01/18 15:43, Boris Brezillon wrote:
+> Add a driver for Cadence DPI -> DSI bridge.
+> 
+> This driver only support a subset of Cadence DSI bridge capabilities.
+> 
+> Here is a non-exhaustive list of missing features:
+>  * burst mode
+>  * DPHY init/configuration steps
+>  * support for additional input interfaces (SDI input)
+
+I think it would be good to have a list of features that are supported
+and tested, and perhaps a word about the development setup you have.
+
+One thing that slightly worries me are the DPHY and input pixel clock
+rates. Now the code expects that those values match perfectly, which is
+not the case in real life. So what's the accepted difference, and is
+there something in the registers to program differently depending on the
+diff?
+
+Another thing is that the mode->crtc_clock is in kHz, I wonder if that
+rounding can cause miscalculations in the above code.
+
+ Tomi
+
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
