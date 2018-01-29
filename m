@@ -1,49 +1,239 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/2] drm: adv7511: Add support for i2c_new_secondary_device
-Date: Mon, 29 Jan 2018 14:12:54 -0600
-Message-ID: <20180129201254.mqvwji4if5wl5r2n@rob-hp-laptop>
-References: <1516625389-6362-1-git-send-email-kieran.bingham@ideasonboard.com>
- <1516625389-6362-3-git-send-email-kieran.bingham@ideasonboard.com>
- <1650729.pzuqXiNcLL@avalon>
+From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Subject: Re: [PATCH v3 06/12] dt-bindings: display: sun4i-drm:
+ Add A83T HDMI pipeline
+Date: Mon, 29 Jan 2018 21:29:44 +0100
+Message-ID: <1869367.EWsYPP3RfL@jernej-laptop>
+References: <20180117201421.25954-1-jernej.skrabec@siol.net> <20180117201421.25954-7-jernej.skrabec@siol.net> <20180129180526.v2vokx75zg2diem3@rob-hp-laptop>
+Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <1650729.pzuqXiNcLL@avalon>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel.vetter@ffwll.ch>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Kieran Bingham <kieran.bingham@ideasonboard.com>, linux-renesas-soc@vger.kernel.org, Mark Brown <broonie@kernel.org>, Jean-Michel Hautbois <jean-michel.hautbois@vodalys.com>, Hans Verkuil <hans.verkuil@cisco.com>, Bhumika Goyal <bhumirks@gmail.com>, linux-media@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDQNBWPU7YERBSEIX3JQKGQE74DOKVA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180129180526.v2vokx75zg2diem3@rob-hp-laptop>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBKYW4gMjksIDIwMTggYXQgMTI6MjY6MDBQTSArMDIwMCwgTGF1cmVudCBQaW5jaGFy
-dCB3cm90ZToKPiBIaSBLaWVyYW4sCj4gCj4gVGhhbmsgeW91IGZvciB0aGUgcGF0Y2guCj4gCj4g
-T24gTW9uZGF5LCAyMiBKYW51YXJ5IDIwMTggMTQ6NTA6MDAgRUVUIEtpZXJhbiBCaW5naGFtIHdy
-b3RlOgo+ID4gVGhlIEFEVjc1MTEgaGFzIGZvdXIgMjU2LWJ5dGUgbWFwcyB0aGF0IGNhbiBiZSBh
-Y2Nlc3NlZCB2aWEgdGhlIG1haW4gScKyQwo+ID4gcG9ydHMuIEVhY2ggbWFwIGhhcyBpdCBvd24g
-ScKyQyBhZGRyZXNzIGFuZCBhY3RzIGFzIGEgc3RhbmRhcmQgc2xhdmUKPiA+IGRldmljZSBvbiB0
-aGUgScKyQyBidXMuCj4gPiAKPiA+IEFsbG93IGEgZGV2aWNlIHRyZWUgbm9kZSB0byBvdmVycmlk
-ZSB0aGUgZGVmYXVsdCBhZGRyZXNzZXMgc28gdGhhdAo+ID4gYWRkcmVzcyBjb25mbGljdHMgd2l0
-aCBvdGhlciBkZXZpY2VzIG9uIHRoZSBzYW1lIGJ1cyBtYXkgYmUgcmVzb2x2ZWQgYXQKPiA+IHRo
-ZSBib2FyZCBkZXNjcmlwdGlvbiBsZXZlbC4KPiA+IAo+ID4gU2lnbmVkLW9mZi1ieTogS2llcmFu
-IEJpbmdoYW0gPGtpZXJhbi5iaW5naGFtQGlkZWFzb25ib2FyZC5jb20+Cj4gPiAtLS0KPiA+ICAu
-Li4vYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvYWRpLGFkdjc1MTEudHh0ICAgICAgICB8IDEwICsr
-KysrLQo+IAo+IEkgZG9uJ3QgbWluZCBwZXJzb25hbGx5LCBidXQgZGV2aWNlIHRyZWUgbWFpbnRh
-aW5lcnMgdXN1YWxseSBhc2sgZm9yIERUIAo+IGJpbmRpbmdzIGNoYW5nZXMgdG8gYmUgc3BsaXQg
-dG8gYSBzZXBhcmF0ZSBwYXRjaC4KCk9yIHBlcmZlY3QgYmluZGluZ3MsIHRoZW4gSSB3b24ndCBh
-c2sgdG8gc3BsaXQgaXQganVzdCBmb3IgdGhhdCAKKHVzdWFsbHkpLgoKPiA+ICBkcml2ZXJzL2dw
-dS9kcm0vYnJpZGdlL2Fkdjc1MTEvYWR2NzUxMS5oICAgICAgICAgICB8ICA0ICsrKwo+ID4gIGRy
-aXZlcnMvZ3B1L2RybS9icmlkZ2UvYWR2NzUxMS9hZHY3NTExX2Rydi5jICAgICAgIHwgMzYgKysr
-KysrKysrKysrLS0tLS0tLQo+ID4gIDMgZmlsZXMgY2hhbmdlZCwgMzcgaW5zZXJ0aW9ucygrKSwg
-MTMgZGVsZXRpb25zKC0pCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
-Lm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1k
-ZXZlbAo=
+Hi,
+
+Dne ponedeljek, 29. januar 2018 ob 19:05:26 CET je Rob Herring napisal(a):
+> On Wed, Jan 17, 2018 at 09:14:15PM +0100, Jernej Skrabec wrote:
+> > This commit adds all necessary compatibles and descriptions needed to
+> > implement A83T HDMI pipeline.
+> > 
+> > Mixer is already properly described, so only compatible is added.
+> > 
+> > However, A83T TV TCON, which is connected to HDMI, doesn't have channel 0,
+> > contrary to all TCONs currently described. Because of that, TCON
+> > documentation is extended.
+> > 
+> > A83T features Synopsys DW HDMI controller with a custom PHY which looks
+> > like Synopsys Gen2 PHY with few additions. Since there is no
+> > documentation, needed properties were found out through experimentation
+> > and reading BSP code.
+> > 
+> > At the end, example is added for newer SoCs, which feature DE2 and DW
+> > HDMI.
+> > 
+> > Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+> > ---
+> > 
+> >  .../bindings/display/sunxi/sun4i-drm.txt           | 197
+> >  ++++++++++++++++++++- 1 file changed, 190 insertions(+), 7 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+> > b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt index
+> > cd626ee1147a..4fb380f3e53d 100644
+> > --- a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+> > +++ b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+> > 
+> > @@ -64,6 +64,52 @@ Required properties:
+> >      first port should be the input endpoint. The second should be the
+> >      output, usually to an HDMI connector.
+> > 
+> > +DWC HDMI TX Encoder
+> > +-------------------
+> > +
+> > +The HDMI transmitter is a Synopsys DesignWare HDMI 1.4 TX controller IP
+> > +with Allwinner's own PHY IP. It supports audio and video outputs and CEC.
+> > +
+> > +These DT bindings follow the Synopsys DWC HDMI TX bindings defined in
+> > +Documentation/devicetree/bindings/display/bridge/dw_hdmi.txt with the
+> > +following device-specific properties.
+> > +
+> > +Required properties:
+> > +
+> > +  - compatible: value must be one of:
+> > +    * "allwinner,sun8i-a83t-dw-hdmi"
+> > +  - reg: base address and size of memory-mapped region
+> > +  - reg-io-width: See dw_hdmi.txt. Shall be 1.
+> > +  - interrupts: HDMI interrupt number
+> > +  - clocks: phandles to the clocks feeding the HDMI encoder
+> > +    * iahb: the HDMI bus clock
+> > +    * isfr: the HDMI register clock
+> > +  - clock-names: the clock names mentioned above
+> > +  - resets: phandle to the reset controller
+> > +  - reset-names: must be "ctrl"
+> > +  - phys: phandle to the DWC HDMI PHY
+> > +  - phy-names: must be "phy"
+> > +
+> > +  - ports: A ports node with endpoint definitions as defined in
+> > +    Documentation/devicetree/bindings/media/video-interfaces.txt. The
+> > +    first port should be the input endpoint. The second should be the
+> > +    output, usually to an HDMI connector.
+> > +
+> > +DWC HDMI PHY
+> > +------------
+> > +
+> > +Required properties:
+> > +  - compatible: value must be one of:
+> > +    * allwinner,sun8i-a83t-hdmi-phy
+> > +  - reg: base address and size of memory-mapped region
+> > +  - clocks: phandles to the clocks feeding the HDMI PHY
+> > +    * bus: the HDMI PHY interface clock
+> > +    * mod: the HDMI PHY module clock
+> > +    * tmds: TMDS clock
+> > +  - clock-names: the clock names mentioned above
+> > +  - resets: phandle to the reset controller driving the PHY
+> > +  - reset-names: must be "phy"
+> > +
+> > 
+> >  TV Encoder
+> >  ----------
+> > 
+> > @@ -94,24 +140,23 @@ Required properties:
+> >     * allwinner,sun7i-a20-tcon
+> >     * allwinner,sun8i-a33-tcon
+> >     * allwinner,sun8i-a83t-tcon-lcd
+> > 
+> > +   * allwinner,sun8i-a83t-tcon-tv
+> > 
+> >     * allwinner,sun8i-v3s-tcon
+> >   
+> >   - reg: base address and size of memory-mapped region
+> >   - interrupts: interrupt associated to this IP
+> > 
+> > - - clocks: phandles to the clocks feeding the TCON. Three are needed:
+> > 
+> > + - clocks: phandles to the clocks feeding the TCON. One is needed:
+> >     - 'ahb': the interface clocks
+> > 
+> > -   - 'tcon-ch0': The clock driving the TCON channel 0
+> 
+> Well, it didn't look right before saying 3 are needed, but listing 2.
+> However, you can't just change this as it affects all the other SoCs.
+> This should probably be a separate patch.
+
+I had a feeling that all items which are not common to all compatibles should 
+be listed below and explained when they are needed. At least currently it's 
+done this way.
+
+> 
+> >   - resets: phandles to the reset controllers driving the encoder
+> >   
+> >     - "lcd": the reset line for the TCON channel 0
+> >   
+> >   - clock-names: the clock names mentioned above
+> >   - reset-names: the reset names mentioned above
+> > 
+> > - - clock-output-names: Name of the pixel clock created
+> 
+> Why is this removed?
+> 
+> >  - ports: A ports node with endpoint definitions as defined in
+> >  
+> >    Documentation/devicetree/bindings/media/video-interfaces.txt. The
+> >    first port should be the input endpoint, the second one the output
+> > 
+> > -  The output may have multiple endpoints. The TCON has two channels,
+> > +  The output may have multiple endpoints. TCON can have two channels,
+> 
+> Perhaps you should say "can have 1 or 2 channels".
+
+Ok.
+
+> 
+> >    usually with the first channel being used for the panels interfaces
+> >    (RGB, LVDS, etc.), and the second being used for the outputs that
+> >    require another controller (TV Encoder, HDMI, etc.). The endpoints
+> > 
+> > @@ -119,11 +164,16 @@ Required properties:
+> >    channel the endpoint is associated to. If that property is not
+> >    present, the endpoint number will be used as the channel number.
+> > 
+> > +When TCON supports channel 0 (all TCONs except TV TCON on A83T), two
+> > +more clocks are needed:
+> > +   - 'tcon-ch0': The clock driving the TCON channel 0
+> 
+> Looks like one clock to me.
+> 
+> > +   - clock-output-names: Name of the pixel clock created
+> 
+> It's better to not move this, but just add what compatibles it does or
+> doesn't apply to.
+> 
+> > +
+> > 
+> >  On SoCs other than the A33 and V3s, there is one more clock required:
+> >     - 'tcon-ch1': The clock driving the TCON channel 1
+> > 
+> > -On SoCs that support LVDS (all SoCs but the A13, H3, H5 and V3s), you
+> > -need one more reset line:
+> > +When TCON support LVDS (all TCONs except TV TCON on A83T and those found
+> > 
+> > +in A13, H3, H5 and V3s SoCs), you need one more reset line:
+> >     - 'lvds': The reset line driving the LVDS logic
+> >  
+> >  And on the A23, A31, A31s and A33, you need one more clock line:
+> > @@ -226,6 +276,7 @@ supported.
+> > 
+> >  Required properties:
+> >    - compatible: value must be one of:
+> >      * allwinner,sun8i-a83t-de2-mixer-0
+> > 
+> > +    * allwinner,sun8i-a83t-de2-mixer-1
+> > 
+> >      * allwinner,sun8i-v3s-de2-mixer
+> >    
+> >    - reg: base address and size of the memory-mapped region.
+> >    - clocks: phandles to the clocks feeding the mixer
+> > 
+> > @@ -261,7 +312,7 @@ Required properties:
+> >    - allwinner,pipelines: list of phandle to the display engine
+> >    
+> >      frontends (DE 1.0) or mixers (DE 2.0) available.
+> > 
+> > -Example:
+> > 
+> > +Example 1:
+> >  panel: panel {
+> >  
+> >  	compatible = "olimex,lcd-olinuxino-43-ts";
+> > 
+> > @@ -460,3 +511,135 @@ display-engine {
+> > 
+> >  	compatible = "allwinner,sun5i-a13-display-engine";
+> >  	allwinner,pipelines = <&fe0>;
+> >  
+> >  };
+> > 
+> > +
+> 
+> > +Example 2:
+> Is this really different enough to need an example? Examples don't
+> need to enumerate all possible options. They are often wrong because
+> they don't compile on their own and that creates a maintenance burden.
+
+This example is for second generation of display engine so pipeline is 
+different. Only TCON and connector examples are same, but 4 others are new, so 
+I thought it would be nice to show an example for it. But I can remove it in 
+next version if it is not needed.
+
+Best regards,
+Jernej
