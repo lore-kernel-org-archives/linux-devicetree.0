@@ -1,82 +1,47 @@
-From: Stefan Mavrodiev <stefan@olimex.com>
-Subject: [PATCH v2 2/2] ARM: dts: sunxi: Add Olimex A20-SOM204-EVB-eMMC board
-Date: Mon, 29 Jan 2018 15:56:40 +0200
-Message-ID: <1517234202-1892-2-git-send-email-stefan@olimex.com>
-References: <1517234202-1892-1-git-send-email-stefan@olimex.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1517234202-1892-1-git-send-email-stefan@olimex.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
-Cc: linux-sunxi@googlegroups.com, Stefan Mavrodiev <stefan@olimex.com>
+From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v5 1/2] drm/bridge: Add Cadence DSI driver
+Date: Mon, 29 Jan 2018 15:59:33 +0200
+Message-ID: <07d82fcd-1e6c-37a8-36b7-d1a81cfeb2ae@ti.com>
+References: <20180118134309.13123-1-boris.brezillon@free-electrons.com>
+ <9b45c6a3-f26b-59f5-d313-88290a2c5b42@ti.com>
+ <20180129141409.0ec356d1@bbrezillon>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180129141409.0ec356d1@bbrezillon>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Richard Sproul <sproul-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Simon Hatliff <hatliff-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Suresh Punnoose <sureshp-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Alan Douglas <adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, "Menon, Nishanth" <nm-l0cyMroinI0@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-A20-SOM204 board has option with onboard 16GB eMMC.
-The chip is wired to MMC2 slot.
+On 29/01/18 15:14, Boris Brezillon wrote:
 
-Signed-off-by: Stefan Mavrodiev <stefan@olimex.com>
----
- Changes for v2:
-   - Replaced license header with SPDX-License-Identifier
+>> You don't disable the dsi_sys_clk neither in the ok nor in the error paths.
+> 
+> Hm, it shouldn't be enabled in the first place: the runtime resume
+> hook takes care of enabling it, and we don't need this clock to access
+> IP registers (which is all we do in the probe).
 
- arch/arm/boot/dts/Makefile                         |  1 +
- .../boot/dts/sun7i-a20-olimex-som204-evb-emmc.dts  | 36 ++++++++++++++++++++++
- 2 files changed, 37 insertions(+)
- create mode 100644 arch/arm/boot/dts/sun7i-a20-olimex-som204-evb-emmc.dts
+Ah, right, you can just use pm_runtime directly to enable the IP.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index d88f04d..c890042 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -919,6 +919,7 @@ dtb-$(CONFIG_MACH_SUN7I) += \
- 	sun7i-a20-mk808c.dtb \
- 	sun7i-a20-olimex-som-evb.dtb \
- 	sun7i-a20-olimex-som204-evb.dtb \
-+	sun7i-a20-olimex-som204-evb-emmc.dtb \
- 	sun7i-a20-olinuxino-lime.dtb \
- 	sun7i-a20-olinuxino-lime2.dtb \
- 	sun7i-a20-olinuxino-lime2-emmc.dtb \
-diff --git a/arch/arm/boot/dts/sun7i-a20-olimex-som204-evb-emmc.dts b/arch/arm/boot/dts/sun7i-a20-olimex-som204-evb-emmc.dts
-new file mode 100644
-index 0000000..c56620a
---- /dev/null
-+++ b/arch/arm/boot/dts/sun7i-a20-olimex-som204-evb-emmc.dts
-@@ -0,0 +1,36 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Device Tree Source for A20-SOM204-EVB-eMMC Board
-+ *
-+ * Copyright (C) 2018 Olimex Ltd.
-+ *   Author: Stefan Mavrodiev <stefan@olimex.com>
-+ */
-+
-+/dts-v1/;
-+#include "sun7i-a20-olimex-som204-evb.dts"
-+
-+/ {
-+	model = "Olimex A20-SOM204-EVB-eMMC";
-+	compatible = "olimex,a20-olimex-som204-evb-emmc", "allwinner,sun7i-a20";
-+
-+	mmc2_pwrseq: mmc2_pwrseq {
-+		compatible = "mmc-pwrseq-emmc";
-+		reset-gpios = <&pio 2 16 GPIO_ACTIVE_LOW>;
-+	};
-+};
-+
-+&mmc2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc2_pins_a>;
-+	vmmc-supply = <&reg_vcc3v3>;
-+	mmc-pwrseq = <&mmc2_pwrseq>;
-+	bus-width = <4>;
-+	non-removable;
-+	status = "okay";
-+
-+	emmc: emmc@0 {
-+		reg = <0>;
-+		compatible = "mmc-card";
-+		broken-hpi;
-+	};
-+};
+I was looking at the docs, but it wasn't quite clear to me when exactly
+dsi_sys_clk is needed. I take it that you can access registers with just
+the dsi_p_clk, but you can't really do anything with the IP without
+dsi_sys_clk? If so, I think enabling both dsi_p_clk and dsi_sys_clk in
+the runtime PM callbacks is ok.
+
+Alternatively, if dsi_sys_clk is only needed for some specific
+functionality, a more correct way would be to enable that clock only
+when that operation is performed.
+
+ Tomi
+
 -- 
-2.7.4
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
