@@ -1,77 +1,87 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v6 2/2] media: V3s: Add support for Allwinner CSI.
-Date: Mon, 29 Jan 2018 15:34:02 +0100
-Message-ID: <CAK8P3a2HmPOTHAzqBnmim388pcWOE=fG50mG5HJifT=vzKOaTg@mail.gmail.com>
-References: <1516695531-23349-1-git-send-email-yong.deng@magewell.com>
- <CACRpkdan52UB7HOyH1gnHWg4CDke_VQxAdq8cBgwUroibE59Ow@mail.gmail.com>
- <20180129082533.6edmqgbauo6q5dgz@flea.lan> <CACRpkdYAGwUjr2C-w5U+WuG48pZAOUcnxFjznLbdF6Lmy1uZuQ@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2] of: change overlay apply input data from EDT to FDT
+Date: Mon, 29 Jan 2018 08:42:08 -0600
+Message-ID: <CABGGisyx_aXCxKO5x-5M5mEM7s=jMYZDaQZ9jdL6hapMCOyM=Q@mail.gmail.com>
+References: <1517194414-19932-1-git-send-email-frowand.list@gmail.com> <1517194414-19932-2-git-send-email-frowand.list@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACRpkdYAGwUjr2C-w5U+WuG48pZAOUcnxFjznLbdF6Lmy1uZuQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rick Chang <rick.chang@mediatek>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1517194414-19932-2-git-send-email-frowand.list@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 29, 2018 at 10:25 AM, Linus Walleij
-<linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Mon, Jan 29, 2018 at 9:25 AM, Maxime Ripard
-> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->> On Sat, Jan 27, 2018 at 05:14:26PM +0100, Linus Walleij wrote:
->> However, in DT systems, that
->> field is filled only with the parent's node dma-ranges property. In
->> our case, and since the DT parenthood is based on the "control" bus,
->> and not the "data" bus, our parent node would be the AXI bus, and not
->> the memory bus that enforce those constraints.
->>
->> And other devices doing DMA through regular DMA accesses won't have
->> that mapping, so we definitely shouldn't enforce it for all the
->> devices there, but only the one connected to the separate memory bus.
->>
->> tl; dr: the DT is not really an option to store that info.
->>
->> I suggested setting dma_pfn_offset at probe, but Arnd didn't seem too
->> fond of that approach either at the time.
->>
->> So, well, I guess we could do better. We just have no idea how :)
+On Sun, Jan 28, 2018 at 8:53 PM,  <frowand.list@gmail.com> wrote:
+> From: Frank Rowand <frank.rowand@sony.com>
 >
-> Usually of Arnd cannot suggest something smart, neither can I :(
+> Move duplicating and unflattening of an overlay flattened devicetree
+> (FDT) into the overlay application code.  To accomplish this,
+> of_overlay_apply() is replaced by of_overlay_fdt_apply().
 >
-> If some aspect of the memory layout of the system *really* doesn't
-> fit into DT because of the assumptions that DT is doing about
-> how systems work, we have a problem.
+> The copy of the FDT (aka "duplicate FDT") now belongs to devicetree
+> code, which is thus responsible for freeing the duplicate FDT.  The
+> caller of of_overlay_fdt_apply() remains responsible for freeing the
+> original FDT.
 >
-> Is the problem that DT's model assumes that devices have one and
-> only one data port to the system memory, and that is how it
-> populates the Linux devices?
->
-> I guess, if nothing else works, I would use auxdata in the board file.
-> It is our definitive last resort when DT doesn't hold.
->
-> I.e. I would go into struct of_dev_auxdata
-> (from <linux/of_platform.h>) and add a
-> dma_pfn_offset field that gets set into the device's dma_pfn_offset
-> in drivers/of/platform.c overriding anything else and use that to hammer
-> it down in the boardfile.
->
-> But I bet some DT people are going to have other ideas.
+> The unflattened device tree (aka expanded device tree, EDT) now
 
-At one point we had discussed adding a 'dma-masters' property that
-lists all the buses on which a device can be a dma master, and
-the respective properties of those masters (iommu, coherency,
-offset, ...).
+Not really a fan of a new acronym.
 
-IIRC at the time we decided that we could live without that complexity,
-but perhaps we cannot.
+> belongs to devicetree code, which is thus responsible for freeing
+> the EDT.
+>
+> These ownership changes prevent early freeing of the duplicated FDT
+> or the EDT, which could result in use after free errors.
+>
+> of_overlay_fdt_apply() is a private function for the anticipated
+> overlay loader.
+>
+> Update unittest.c to use of_overlay_fdt_apply() instead of
+> of_overlay_apply().
+>
+> Move overlay fragments from artificial locations in
+> drivers/of/unittest-data/tests-overlay.dtsi into one devicetree
+> source file per overlay.  This led to changes in
+> drivers/of/unitest-data/Makefile and drivers/of/unitest.c.
 
-Another local hack that we can do here is to have two separate
-device nodes and let the device driver bind to one device and then
-look up the other one through a phandle to look up a platform_device
-for it, which it can then use with the DMA mapping interface.
+Why the rearranging? That should be a separate patch.
 
-      Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+>   - Add overlay directives to the overlay devicetree source files so
+>     that dtc will compile them as true overlays into one FDT data
+>     chunk per overlay.
+
+For this?
+
+>   - Set CFLAGS for drivers/of/unittest-data/testcases.dts so that
+>     symbols will be generated for overlay resolution of overlays
+>     that are no longer artificially contained in testcases.dts
+>
+>   - Unflatten and apply each unittest overlay FDT using
+>     of_overlay_fdt_apply().
+>
+>   - Enable the of_resolve_phandles() check for whether the overlay
+>     EDT is detached.  This check was previously disabled because the
+>     overlays from tests-overlay.dtsi were not unflattened into detached
+>     trees.
+>
+>   - Other changes to unittest.c infrastructure to manage multiple test
+>     FDTs built into the kernel image (access by name instead of
+>     arbitrary number).
+>
+>   - of_unittest_overlay_high_level(): previously unused code to add
+>     properties from the overlay_base devicetree to the live tree
+>     was triggered by the restructuring of tests-overlay.dtsi and thus
+>     testcases.dts.  This exposed two bugs: (1) the need to dup a
+>     property before adding it, and (2) property 'name' is
+>     auto-generated in the unflatten code and thus will be a duplicate
+>     in the __symbols__ node - do not treat this duplicate as an error.
+>
+> Errors while developing the patch exposed inadequate error messages
+> to debug problems when overlay devicetree fragment nodes contain
+> an invalid target path.  Improved the messages in find_target_node().
+
+Sounds like another separate patch.
+
+Rob
