@@ -1,298 +1,180 @@
-From: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
-Subject: [PATCH v4 2/2] iio: ad5272: Add support for Analog Devices digital potentiometers
-Date: Mon, 29 Jan 2018 21:12:54 +0800
-Message-ID: <1517231574-92777-3-git-send-email-preid@electromag.com.au>
-References: <1517231574-92777-1-git-send-email-preid@electromag.com.au>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v5 1/2] drm/bridge: Add Cadence DSI driver
+Date: Mon, 29 Jan 2018 14:14:09 +0100
+Message-ID: <20180129141409.0ec356d1@bbrezillon>
+References: <20180118134309.13123-1-boris.brezillon@free-electrons.com>
+        <9b45c6a3-f26b-59f5-d313-88290a2c5b42@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1517231574-92777-1-git-send-email-preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
+In-Reply-To: <9b45c6a3-f26b-59f5-d313-88290a2c5b42-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Michael.Hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org, preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Cc: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Richard Sproul <sproul-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Simon Hatliff <hatliff-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Suresh Punnoose <sureshp-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Alan Douglas <adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, "Menon, Nishanth" <nm-l0cyMroinI0@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add implementation for Analog Devices AD5272 and AD5274 digital
-potentiometer devices.
+On Mon, 29 Jan 2018 13:56:21 +0200
+Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org> wrote:
 
-Signed-off-by: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
----
- drivers/iio/potentiometer/Kconfig  |  10 ++
- drivers/iio/potentiometer/Makefile |   1 +
- drivers/iio/potentiometer/ad5272.c | 231 +++++++++++++++++++++++++++++++++++++
- 3 files changed, 242 insertions(+)
- create mode 100644 drivers/iio/potentiometer/ad5272.c
+> > +
+> > +static void cdns_dsi_init_link(struct cdns_dsi *dsi)
+> > +{
+> > +	struct cdns_dsi_output *output = &dsi->output;
+> > +	unsigned long sysclk_period, ulpout;
+> > +	u32 val;
+> > +	int i;
+> > +
+> > +	if (dsi->link_initialized)
+> > +		return;
+> > +
+> > +	val = 0;
+> > +	for (i = 1; i < output->dev->lanes; i++)
+> > +		val |= DATA_LANE_EN(i);
+> > +
+> > +	if (!(output->dev->mode_flags & MIPI_DSI_CLOCK_NON_CONTINUOUS))
+> > +		val |= CLK_CONTINUOUS;
+> > +
+> > +	writel(val, dsi->regs + MCTL_MAIN_PHY_CTL);
+> > +
+> > +	/* ULPOUT should be set to 1ms and is expressed in sysclk cycles. */
+> > +	sysclk_period = NSEC_PER_SEC / clk_get_rate(dsi->dsi_sys_clk);
+> > +	ulpout = DIV_ROUND_UP(NSEC_PER_MSEC, sysclk_period);
+> > +	writel(CLK_LANE_ULPOUT_TIME(ulpout) | DATA_LANE_ULPOUT_TIME(ulpout),
+> > +	       dsi->regs + MCTL_ULPOUT_TIME);
+> > +
+> > +	writel(LINK_EN, dsi->regs + MCTL_MAIN_DATA_CTL);
+> > +
+> > +	val = CLK_LANE_EN | PLL_START;
+> > +	for (i = 0; i < output->dev->lanes; i++)
+> > +		val |= DATA_LANE_START(i);
+> > +
+> > +	writel(val, dsi->regs + MCTL_MAIN_EN);
+> > +
+> > +	ndelay(100);  
+> 
+> It's good to have a comment about each sleep/delay on what is for and
+> where does the value come from.
 
-diff --git a/drivers/iio/potentiometer/Kconfig b/drivers/iio/potentiometer/Kconfig
-index 8bf2825..8daf6d1 100644
---- a/drivers/iio/potentiometer/Kconfig
-+++ b/drivers/iio/potentiometer/Kconfig
-@@ -5,6 +5,16 @@
- 
- menu "Digital potentiometers"
- 
-+config AD5272
-+	tristate "Analog Devices AD5272 and similar Digital Potentiometer driver"
-+	depends on I2C
-+	help
-+	  Say yes here to build support for the Analog Devices AD5272 and AD5274
-+	  digital potentiometer chip.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called ad5272.
-+
- config DS1803
- 	tristate "Maxim Integrated DS1803 Digital Potentiometer driver"
- 	depends on I2C
-diff --git a/drivers/iio/potentiometer/Makefile b/drivers/iio/potentiometer/Makefile
-index 2260d40..498bbb8 100644
---- a/drivers/iio/potentiometer/Makefile
-+++ b/drivers/iio/potentiometer/Makefile
-@@ -3,6 +3,7 @@
- #
- 
- # When adding new entries keep the list in alphabetical order
-+obj-$(CONFIG_AD5272) += ad5272.o
- obj-$(CONFIG_DS1803) += ds1803.o
- obj-$(CONFIG_MAX5481) += max5481.o
- obj-$(CONFIG_MAX5487) += max5487.o
-diff --git a/drivers/iio/potentiometer/ad5272.c b/drivers/iio/potentiometer/ad5272.c
-new file mode 100644
-index 0000000..0175fd5
---- /dev/null
-+++ b/drivers/iio/potentiometer/ad5272.c
-@@ -0,0 +1,231 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Analog Devices AD5372 digital potentiometer driver
-+ * Copyright (C) 2018 Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
-+ *
-+ * Datasheet: http://www.analog.com/media/en/technical-documentation/data-sheets/AD5272_5274.pdf
-+ *
-+ * DEVID	#Wipers	#Positions	Resistor Opts (kOhm)	i2c address
-+ * ad5272	1	1024		20, 50, 100		01011xx
-+ * ad5274	1	256		20, 100			01011xx
-+ */
-+
-+#include <linux/delay.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/i2c.h>
-+#include <linux/iio/iio.h>
-+#include <linux/module.h>
-+
-+#define  AD5272_RDAC_WR  1
-+#define  AD5272_RDAC_RD  2
-+#define  AD5272_RESET    4
-+#define  AD5272_CTL      7
-+
-+#define  AD5272_RDAC_WR_EN  BIT(1)
-+
-+struct ad5272_cfg {
-+	int max_pos;
-+	int kohms;
-+	int shift;
-+};
-+
-+enum ad5272_type {
-+	AD5272_020,
-+	AD5272_050,
-+	AD5272_100,
-+	AD5274_020,
-+	AD5274_100,
-+};
-+
-+static const struct ad5272_cfg ad5272_cfg[] = {
-+	[AD5272_020] = { .max_pos = 1024, .kohms = 20 },
-+	[AD5272_050] = { .max_pos = 1024, .kohms = 50 },
-+	[AD5272_100] = { .max_pos = 1024, .kohms = 100 },
-+	[AD5274_020] = { .max_pos = 256,  .kohms = 20,  .shift = 2 },
-+	[AD5274_100] = { .max_pos = 256,  .kohms = 100, .shift = 2 },
-+};
-+
-+struct ad5272_data {
-+	struct i2c_client       *client;
-+	struct mutex            lock;
-+	const struct ad5272_cfg *cfg;
-+	u8                      buf[2] ____cacheline_aligned;
-+};
-+
-+static const struct iio_chan_spec ad5272_channel = {
-+	.type = IIO_RESISTANCE,
-+	.output = 1,
-+	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
-+	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),
-+};
-+
-+static int ad5272_write(struct ad5272_data *data, int reg, int val)
-+{
-+	int ret;
-+
-+	data->buf[0] = (reg << 2) | ((val >> 8) & 0x3);
-+	data->buf[1] = (u8)val;
-+
-+	mutex_lock(&data->lock);
-+	ret = i2c_master_send(data->client, data->buf, sizeof(data->buf));
-+	mutex_unlock(&data->lock);
-+	return ret < 0 ? ret : 0;
-+}
-+
-+static int ad5272_read(struct ad5272_data *data, int reg, int *val)
-+{
-+	int ret;
-+
-+	data->buf[0] = reg << 2;
-+	data->buf[1] = 0;
-+
-+	mutex_lock(&data->lock);
-+	ret = i2c_master_send(data->client, data->buf, sizeof(data->buf));
-+	if (ret < 0)
-+		goto error;
-+
-+	ret = i2c_master_recv(data->client, data->buf, sizeof(data->buf));
-+	if (ret < 0)
-+		goto error;
-+
-+	*val = ((data->buf[0] & 0x3) << 8) | data->buf[1];
-+	ret = 0;
-+error:
-+	mutex_unlock(&data->lock);
-+	return ret;
-+}
-+
-+static int ad5272_read_raw(struct iio_dev *indio_dev,
-+			   struct iio_chan_spec const *chan,
-+			   int *val, int *val2, long mask)
-+{
-+	struct ad5272_data *data = iio_priv(indio_dev);
-+	int ret;
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_RAW: {
-+		ret = ad5272_read(data, AD5272_RDAC_RD, val);
-+		*val = *val >> data->cfg->shift;
-+		return ret ? ret : IIO_VAL_INT;
-+	}
-+	case IIO_CHAN_INFO_SCALE:
-+		*val = 1000 * data->cfg->kohms;
-+		*val2 = data->cfg->max_pos;
-+		return IIO_VAL_FRACTIONAL;
-+	}
-+
-+	return -EINVAL;
-+}
-+
-+static int ad5272_write_raw(struct iio_dev *indio_dev,
-+			    struct iio_chan_spec const *chan,
-+			    int val, int val2, long mask)
-+{
-+	struct ad5272_data *data = iio_priv(indio_dev);
-+
-+	if (mask != IIO_CHAN_INFO_RAW)
-+		return -EINVAL;
-+
-+	if (val >= data->cfg->max_pos || val < 0 || val2)
-+		return -EINVAL;
-+
-+	return ad5272_write(data, AD5272_RDAC_WR, val << data->cfg->shift);
-+}
-+
-+static const struct iio_info ad5272_info = {
-+	.read_raw = ad5272_read_raw,
-+	.write_raw = ad5272_write_raw,
-+};
-+
-+static int ad5272_reset(struct ad5272_data *data)
-+{
-+	struct gpio_desc *reset_gpio;
-+
-+	reset_gpio = devm_gpiod_get_optional(&data->client->dev, "reset",
-+		GPIOD_OUT_LOW);
-+	if (IS_ERR(reset_gpio))
-+		return PTR_ERR(reset_gpio);
-+
-+	if (reset_gpio) {
-+		udelay(1);
-+		gpiod_set_value(reset_gpio, 1);
-+	} else {
-+		ad5272_write(data, AD5272_RESET, 0);
-+	}
-+	usleep_range(1000, 2000);
-+
-+	return 0;
-+}
-+
-+static int ad5272_probe(struct i2c_client *client,
-+			const struct i2c_device_id *id)
-+{
-+	struct device *dev = &client->dev;
-+	struct iio_dev *indio_dev;
-+	struct ad5272_data *data;
-+	int ret;
-+
-+	indio_dev = devm_iio_device_alloc(dev, sizeof(*data));
-+	if (!indio_dev)
-+		return -ENOMEM;
-+
-+	i2c_set_clientdata(client, indio_dev);
-+
-+	data = iio_priv(indio_dev);
-+	data->client = client;
-+	mutex_init(&data->lock);
-+	data->cfg = &ad5272_cfg[id->driver_data];
-+
-+	ret = ad5272_reset(data);
-+	if (ret)
-+		return ret;
-+
-+	ret = ad5272_write(data, AD5272_CTL, AD5272_RDAC_WR_EN);
-+	if (ret < 0)
-+		return -ENODEV;
-+
-+	indio_dev->dev.parent = dev;
-+	indio_dev->info = &ad5272_info;
-+	indio_dev->channels = &ad5272_channel;
-+	indio_dev->num_channels = 1;
-+	indio_dev->name = client->name;
-+
-+	return devm_iio_device_register(dev, indio_dev);
-+}
-+
-+#if defined(CONFIG_OF)
-+static const struct of_device_id ad5272_dt_ids[] = {
-+	{ .compatible = "adi,ad5272-020", .data = (void *)AD5272_020 },
-+	{ .compatible = "adi,ad5272-050", .data = (void *)AD5272_050 },
-+	{ .compatible = "adi,ad5272-100", .data = (void *)AD5272_100 },
-+	{ .compatible = "adi,ad5274-020", .data = (void *)AD5274_020 },
-+	{ .compatible = "adi,ad5274-100", .data = (void *)AD5274_100 },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, ad5272_dt_ids);
-+#endif /* CONFIG_OF */
-+
-+static const struct i2c_device_id ad5272_id[] = {
-+	{ "ad5272-020", AD5272_020 },
-+	{ "ad5272-050", AD5272_050 },
-+	{ "ad5272-100", AD5272_100 },
-+	{ "ad5274-020", AD5274_020 },
-+	{ "ad5274-100", AD5274_100 },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(i2c, ad5272_id);
-+
-+static struct i2c_driver ad5272_driver = {
-+	.driver = {
-+		.name	= "ad5272",
-+		.of_match_table = of_match_ptr(ad5272_dt_ids),
-+	},
-+	.probe		= ad5272_probe,
-+	.id_table	= ad5272_id,
-+};
-+
-+module_i2c_driver(ad5272_driver);
-+
-+MODULE_AUTHOR("Phil Reid <preid-TeWIRZsGUAnP+dxuUfoltA@public.gmane.org>");
-+MODULE_DESCRIPTION("AD5272 digital potentiometer");
-+MODULE_LICENSE("GPL v2");
--- 
-1.8.3.1
+Yep, I'll figure this out.
 
+> 
+> > +	dsi->link_initialized = true;
+> > +}
+> > +
+
+
+> > +static int cdns_dsi_drm_probe(struct platform_device *pdev)
+> > +{
+> > +	struct cdns_dsi *dsi;
+> > +	struct cdns_dsi_input *input;
+> > +	struct resource *res;
+> > +	int ret, irq;
+> > +	u32 val;
+> > +
+> > +	dsi = devm_kzalloc(&pdev->dev, sizeof(*dsi), GFP_KERNEL);
+> > +	if (!dsi)
+> > +		return -ENOMEM;
+> > +
+> > +	platform_set_drvdata(pdev, dsi);
+> > +
+> > +	input = &dsi->input;
+> > +
+> > +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > +	dsi->regs = devm_ioremap_resource(&pdev->dev, res);
+> > +	if (IS_ERR(dsi->regs))
+> > +		return PTR_ERR(dsi->regs);
+> > +
+> > +	dsi->dsi_p_clk = devm_clk_get(&pdev->dev, "dsi_p_clk");
+> > +	if (IS_ERR(dsi->dsi_p_clk))
+> > +		return PTR_ERR(dsi->dsi_p_clk);
+> > +
+> > +	dsi->dsi_p_rst = devm_reset_control_get_optional_exclusive(&pdev->dev,
+> > +								"dsi_p_rst");
+> > +	if (IS_ERR(dsi->dsi_p_rst))
+> > +		return PTR_ERR(dsi->dsi_p_rst);
+> > +
+> > +	dsi->dsi_sys_clk = devm_clk_get(&pdev->dev, "dsi_sys_clk");
+> > +	if (IS_ERR(dsi->dsi_sys_clk))
+> > +		return PTR_ERR(dsi->dsi_sys_clk);
+> > +
+> > +	irq = platform_get_irq(pdev, 0);
+> > +	if (irq < 0)
+> > +		return irq;
+> > +
+> > +	ret = clk_prepare_enable(dsi->dsi_p_clk);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	ret = clk_prepare_enable(dsi->dsi_sys_clk);
+> > +	if (ret)
+> > +		goto err_disable_pclk;
+> > +
+> > +	val = readl(dsi->regs + ID_REG);
+> > +	if (REV_VENDOR_ID(val) != 0xcad) {
+> > +		dev_err(&pdev->dev, "invalid vendor id\n");
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	val = readl(dsi->regs + IP_CONF);
+> > +	dsi->direct_cmd_fifo_depth = 1 << (DIRCMD_FIFO_DEPTH(val) + 2);
+> > +	dsi->rx_fifo_depth = RX_FIFO_DEPTH(val);
+> > +	init_completion(&dsi->direct_cmd_comp);
+> > +
+> > +	writel(0, dsi->regs + MCTL_MAIN_DATA_CTL);
+> > +	writel(0, dsi->regs + MCTL_MAIN_EN);
+> > +	writel(0, dsi->regs + MCTL_MAIN_PHY_CTL);
+> > +
+> > +	/*
+> > +	 * We only support the DPI input, so force input->id to
+> > +	 * CDNS_DPI_INPUT.
+> > +	 */
+> > +	input->id = CDNS_DPI_INPUT;
+> > +	input->bridge.funcs = &cdns_dsi_bridge_funcs;
+> > +	input->bridge.of_node = pdev->dev.of_node;
+> > +
+> > +	/* Mask all interrupts before registering the IRQ handler. */
+> > +	writel(0, dsi->regs + MCTL_MAIN_STS_CTL);
+> > +	writel(0, dsi->regs + MCTL_DPHY_ERR_CTL1);
+> > +	writel(0, dsi->regs + CMD_MODE_STS_CTL);
+> > +	writel(0, dsi->regs + DIRECT_CMD_STS_CTL);
+> > +	writel(0, dsi->regs + DIRECT_CMD_RD_STS_CTL);
+> > +	writel(0, dsi->regs + VID_MODE_STS_CTL);
+> > +	writel(0, dsi->regs + TVG_STS_CTL);
+> > +	writel(0, dsi->regs + DPI_IRQ_EN);
+> > +	ret = devm_request_irq(&pdev->dev, irq, cdns_dsi_interrupt, 0,
+> > +			       dev_name(&pdev->dev), dsi);
+> > +	if (ret)
+> > +		goto err_disable_pclk;
+> > +
+> > +	pm_runtime_enable(&pdev->dev);
+> > +	dsi->base.dev = &pdev->dev;
+> > +	dsi->base.ops = &cdns_dsi_ops;
+> > +
+> > +	ret = mipi_dsi_host_register(&dsi->base);
+> > +	if (ret)
+> > +		goto err_disable_runtime_pm;
+> > +
+> > +	clk_disable_unprepare(dsi->dsi_p_clk);
+> > +
+> > +	return 0;
+> > +
+> > +err_disable_runtime_pm:
+> > +	pm_runtime_disable(&pdev->dev);
+> > +
+> > +err_disable_pclk:
+> > +	clk_disable_unprepare(dsi->dsi_p_clk);
+> > +
+> > +	return ret;
+> > +}  
+> 
+> You don't disable the dsi_sys_clk neither in the ok nor in the error paths.
+
+Hm, it shouldn't be enabled in the first place: the runtime resume
+hook takes care of enabling it, and we don't need this clock to access
+IP registers (which is all we do in the probe).
+
+I'll fix that.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
