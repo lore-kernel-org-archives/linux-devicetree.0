@@ -1,31 +1,62 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 1/4] dt-bindings: samsung: document bindings for Midas
- family boards
-Date: Mon, 29 Jan 2018 11:16:57 -0600
-Message-ID: <20180129171657.73dfrlx5ffkgz76w@rob-hp-laptop>
-References: <20180117125845.3954-1-simon@lineageos.org>
- <20180117125845.3954-2-simon@lineageos.org>
+Subject: Re: [PATCH v3 11/16] mmc: tmio: deprecate
+ "toshiba,mmc-wrprotect-disable" DT property
+Date: Mon, 29 Jan 2018 11:18:51 -0600
+Message-ID: <20180129171851.rlraudj2bq7irmdw@rob-hp-laptop>
+References: <1516206496-16612-1-git-send-email-yamada.masahiro@socionext.com>
+ <1516206496-16612-12-git-send-email-yamada.masahiro@socionext.com>
+ <CAK7LNAQUJw-fjuJO68Kvskn8BRYW3rZj4YMtbo-Oxfv7c=6Ggg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20180117125845.3954-2-simon-WP75azK+jQYgsBAKwltoeQ@public.gmane.org>
+In-Reply-To: <CAK7LNAQUJw-fjuJO68Kvskn8BRYW3rZj4YMtbo-Oxfv7c=6Ggg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Shields <simon-WP75azK+jQYgsBAKwltoeQ@public.gmane.org>
-Cc: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, =?utf-8?Q?Bart=C5=82omiej_=C5=BBo=C5=82nierkiewicz?= <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Cc: linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>, Ulf Magnusson <ulfalizer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 17, 2018 at 11:58:42PM +1100, Simon Shields wrote:
-> Document GT-I9300, GT-I9305, GT-N7100, and GT-N7105 bindings, along
-> with the shared "midas" binding.
+On Thu, Jan 18, 2018 at 10:58:36AM +0900, Masahiro Yamada wrote:
+> 2018-01-18 1:28 GMT+09:00 Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>:
+> > This property is equivalent to "disable-wp" defined in
+> > Documentation/devicetree/bindings/mmc/tmio_mmc.txt
 > 
-> Signed-off-by: Simon Shields <simon-WP75azK+jQYgsBAKwltoeQ@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/arm/samsung/samsung-boards.txt | 4 ++++
->  1 file changed, 4 insertions(+)
+> This is mistake.
+> 
+> "disable-wp" is defined in
+> 
+> Documentation/devicetree/bindings/mmc/mmc.txt
+> 
+> 
+> 
+> 
+> > The TMIO MMC core calls mmc_of_parse(), and it sets
+> > MMC_CAP2_NO_WRITE_PROTECT if "disable-wp" property is present.
+> >
+> > We do not need a vendor-specific property to do the same thing.
+> >
+> > Let's remove the description from the dt-binding to prevent new boards
+> > from using it.
+> >
+> > I am keeping the driver code for existing DT files, but added
+> > comments that this is deprecated.
+> >
+> > Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+> > ---
+> >
+> > Changes in v3:
+> >   - newly added
+> >
+> > Changes in v2: None
+> >
+> >  Documentation/devicetree/bindings/mmc/tmio_mmc.txt | 1 -
 
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Other than the above,
 
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+> >  drivers/mmc/host/tmio_mmc_core.c                   | 5 +++++
+> >  2 files changed, 5 insertions(+), 1 deletion(-)
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
