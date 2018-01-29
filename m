@@ -1,38 +1,33 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 4/7] dt-bindings: display: msm/dsi: Remove unused
- properties
-Date: Mon, 29 Jan 2018 11:11:43 -0600
-Message-ID: <20180129171143.zigl5uyp2h3nkduk@rob-hp-laptop>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 5/7] dt-bindings: display: msm/dsi: Fix the PHY regulator
+ supply props
+Date: Mon, 29 Jan 2018 11:13:33 -0600
+Message-ID: <20180129171333.aci2exkaapu3w3dn@rob-hp-laptop>
 References: <20180117093448.4102-1-architt@codeaurora.org>
- <20180117093448.4102-5-architt@codeaurora.org>
+ <20180117093448.4102-6-architt@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20180117093448.4102-5-architt@codeaurora.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Archit Taneja <architt@codeaurora.org>
-Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, latkinso@codeaurora.org, dri-devel@lists.freedesktop.org, sibis@codeaurora.org
+In-Reply-To: <20180117093448.4102-6-architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, latkinso-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sibis-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBKYW4gMTcsIDIwMTggYXQgMDM6MDQ6NDVQTSArMDUzMCwgQXJjaGl0IFRhbmVqYSB3
-cm90ZToKPiAicWNvbSxkc2ktaG9zdC1pbmRleCIgYW5kICJxY29tLGRzaS1waHktaW5kZXgiIERU
-IHByb3BzIGFyZW4ndAo+IGFjY2VwdGFibGUgYW5kIGhhdmUgbmV2ZXIgYmVlbiB1c2VkIGluIGFu
-eSBEVCBmaWxlcy4gUmVtb3ZlIHRoZW0uCj4gCj4gQ2M6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5l
-bC5vcmc+Cj4gQ2M6IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnCj4gU2lnbmVkLW9mZi1ieTog
-QXJjaGl0IFRhbmVqYSA8YXJjaGl0dEBjb2RlYXVyb3JhLm9yZz4KPiAtLS0KPiAgRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2RzaS50eHQgfCA0IC0tLS0KPiAg
-MSBmaWxlIGNoYW5nZWQsIDQgZGVsZXRpb25zKC0pCgpSZXZpZXdlZC1ieTogUm9iIEhlcnJpbmcg
-PHJvYmhAa2VybmVsLm9yZz4KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0
-b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJp
-LWRldmVsCg==
+On Wed, Jan 17, 2018 at 03:04:46PM +0530, Archit Taneja wrote:
+> The PHY regulator supply names vary across different PHY versions.
+> Mention explicitly which PHYs require which supplies.
+> 
+> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Signed-off-by: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/display/msm/dsi.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
+
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
