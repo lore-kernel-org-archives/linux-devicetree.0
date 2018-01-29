@@ -1,55 +1,33 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V2 3/3] can: mcp25xxfd: add gpiolib support for GPIO0/1
- (aka. INT0/INT1)
-Date: Mon, 29 Jan 2018 13:39:42 -0600
-Message-ID: <20180129193942.wvexhlnzoux6i5cr@rob-hp-laptop>
-References: <20180119074140.25931-1-kernel@martin.sperl.org>
- <20180119074140.25931-4-kernel@martin.sperl.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCHv3 1/3] dt-bindings: spi: Add DT bindings for Synquacer
+Date: Mon, 29 Jan 2018 13:41:32 -0600
+Message-ID: <20180129194132.ivcnrt2jjt43irq7@rob-hp-laptop>
+References: <1516358213-4400-1-git-send-email-jassisinghbrar@gmail.com>
+ <1516358236-4472-1-git-send-email-jassisinghbrar@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-can-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20180119074140.25931-4-kernel@martin.sperl.org>
-Sender: linux-can-owner@vger.kernel.org
-To: kernel@martin.sperl.org
-Cc: linux-can@vger.kernel.org, devicetree@vger.kernel.org, Wolfgang Grandegger <wg@grandegger.com>, Mark Kleine-Budde <mkl@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, Marcel Birthelmer <Marcel.Birthelmer@microchip.com>, Sukkin Pang <skp@skpang.co.uk>, Gerhard Bertelsmann <info@gerhard-bertelsmann.de>
+In-Reply-To: <1516358236-4472-1-git-send-email-jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tpiepho-cgc2CodaaHDQT0dZR+AlfA@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 19, 2018 at 07:41:40AM +0000, kernel@martin.sperl.org wrote:
-> From: Martin Sperl <kernel@martin.sperl.org>
+On Fri, Jan 19, 2018 at 04:07:16PM +0530, jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+> From: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > 
-> Add GPIOLIB support to mcp25xxfd.
+> This patch adds documentation for Device-Tree bindings for the
+> Socionext Synquacer spi driver.
 > 
-> Signed-off-by: Martin Sperl <kernel@martin.sperl.org>
-> 
+> Signed-off-by: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > ---
-> Changelog:
->   V1 -> V2: implemented GPIOLIB support as per feedback
-> 
-> ---
-> .../bindings/net/can/microchip,mcp25xxfd.txt       |   2 +
->  drivers/net/can/spi/mcp25xxfd.c                    | 185 +++++++++++++++++++++
->  2 files changed, 187 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/can/microchip,mcp25xxfd.txt b/Documentation/devicetree/bindings/net/can/microchip,mcp25xxfd.txt
-> index 691dd6220bd7..716b0a16ecb2 100644
-> --- a/Documentation/devicetree/bindings/net/can/microchip,mcp25xxfd.txt
-> +++ b/Documentation/devicetree/bindings/net/can/microchip,mcp25xxfd.txt
-> @@ -7,6 +7,7 @@ Required properties:
->   - clocks: The clock feeding the CAN controller.
->   - interrupt-parent: The parent interrupt controller.
->   - interrupts: Should contain IRQ line for the CAN controller.
-> + - gpio-controller: Marks the device node as a GPIO controller
+>  .../devicetree/bindings/spi/spi-synquacer.txt      | 23 ++++++++++++++++++++++
+>  1 file changed, 23 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/spi/spi-synquacer.txt
 
-This belongs in patch 1. The binding describes the h/w, not what a 
-driver currently supports.
-
-> 
->  Optional properties:
->   - vdd-supply: Regulator that powers the CAN controller.
-> @@ -26,4 +27,5 @@ Example:
->  		interrupts = <13 0x8>;
->  		vdd-supply = <&reg5v0>;
->  		xceiver-supply = <&reg5v0>;
-> +		gpio-controller;
->  	};
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
