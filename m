@@ -1,59 +1,51 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 3/4] dt-bindings: add binding for i.MX8MQ CCM
-Date: Mon, 29 Jan 2018 11:29:16 -0600
-Message-ID: <20180129172916.ek5l5jscsn4qipx5@rob-hp-laptop>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 4/4] clk: imx: add clock driver for i.MX8MQ CCM
+Date: Mon, 29 Jan 2018 11:31:15 -0600
+Message-ID: <20180129173115.hy6dmnj2m2mdyznp@rob-hp-laptop>
 References: <20180117182950.26460-1-l.stach@pengutronix.de>
- <20180117182950.26460-3-l.stach@pengutronix.de>
+ <20180117182950.26460-4-l.stach@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20180117182950.26460-3-l.stach@pengutronix.de>
-Sender: linux-clk-owner@vger.kernel.org
-To: Lucas Stach <l.stach@pengutronix.de>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de, patchwork-lst@pengutronix.de
+In-Reply-To: <20180117182950.26460-4-l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 17, 2018 at 07:29:49PM +0100, Lucas Stach wrote:
-> This adds the binding for the i.MX8MQ Clock Controller Module.
+On Wed, Jan 17, 2018 at 07:29:50PM +0100, Lucas Stach wrote:
+> Add driver for the Clock Control Module found on i.MX8MQ.
 > 
-> Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+> This is largely based on the downstream driver from Anson Huang and
+> Bai Ping at NXP, with only some small adaptions to mainline from me.
+> 
+> Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 > ---
->  .../devicetree/bindings/clock/imx8mq-clock.txt       | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/imx8mq-clock.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/imx8mq-clock.txt b/Documentation/devicetree/bindings/clock/imx8mq-clock.txt
+>  drivers/clk/imx/Makefile                 |   1 +
+>  drivers/clk/imx/clk-imx8mq.c             | 861 +++++++++++++++++++++++++++++++
+>  drivers/clk/imx/clk.h                    |  43 ++
+>  include/dt-bindings/clock/imx8mq-clock.h | 632 +++++++++++++++++++++++
+>  4 files changed, 1537 insertions(+)
+>  create mode 100644 drivers/clk/imx/clk-imx8mq.c
+>  create mode 100644 include/dt-bindings/clock/imx8mq-clock.h
+
+> diff --git a/include/dt-bindings/clock/imx8mq-clock.h b/include/dt-bindings/clock/imx8mq-clock.h
 > new file mode 100644
-> index 000000000000..c9b0123b80d0
+> index 000000000000..9932b52452cb
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/imx8mq-clock.txt
-> @@ -0,0 +1,20 @@
-> +* Clock bindings for NXP i.MX8M Quad
-> +
-> +Required properties:
-> +- compatible: Should be "nxp,imx8mq-ccm"
-> +- reg: Address and length of the register set
-> +- #clock-cells: Should be <1>
-> +- clocks: list of clock specifiers, must contain an entry for each required
-> +          entry in clock-names
-> +- clock-names: should include the following entries:
-> +    - "ckil"
-> +    - "osc_25m"
-> +    - "osc_27m"
-> +    - "clk_ext1"
-> +    - "clk_ext2"
-> +    - "clk_ext3"
-> +    - "clk_ext4"
-> +
-> +The clock consumer should specify the desired clock by having the clock
-> +ID in its "clocks" phandle cell.  See include/dt-bindings/clock/imx8mq-clock.h
+> +++ b/include/dt-bindings/clock/imx8mq-clock.h
+> @@ -0,0 +1,632 @@
+> +/*
+> + * Copyright 2016 Freescale Semiconductor, Inc.
+> + * Copyright 2017 NXP
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
 
-This header belongs in this patch. With that,
-
-Reviewed-by: Rob Herring <robh@kernel.org>
-
-> +for the full list of i.MX8M Quad clock IDs.
-> -- 
-> 2.11.0
-> 
+Use SPDX tag.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
