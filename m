@@ -1,17 +1,17 @@
 From: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 11/16] arm: dts: sunxi-h3-h5: add support
- for the thermal sensor in H3 and H5
-Date: Mon, 29 Jan 2018 12:54:26 +0100
-Message-ID: <afdf049d-c037-1e0e-359e-faa7a38730d9@gmail.com>
+Subject: Re: [PATCH v2 13/16] arm: dts: sun8i: h3: add thermal
+ zone to H3
+Date: Mon, 29 Jan 2018 12:56:38 +0100
+Message-ID: <e3b3e604-1155-804e-b7b0-a670b954a876@gmail.com>
 References: <20180128232919.12639-1-embed3d@gmail.com>
- <20180128232919.12639-12-embed3d@gmail.com>
- <20180129094918.4fvxpmoftgxxkqg3@flea.lan>
+ <20180128232919.12639-14-embed3d@gmail.com>
+ <20180129095034.5crx7ydq5k6f7omv@flea.lan>
 Reply-To: embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"; format=flowed
-Return-path: <linux-sunxi+bncBD257DPK24NRB54WXTJQKGQEGCZXDZA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD257DPK24NRB6MXXTJQKGQE2QMAC5I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180129094918.4fvxpmoftgxxkqg3-ZC1Zs529Oq4@public.gmane.org>
+In-Reply-To: <20180129095034.5crx7ydq5k6f7omv-ZC1Zs529Oq4@public.gmane.org>
 Content-Language: en-US
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -25,36 +25,39 @@ List-Id: devicetree@vger.kernel.org
 
 
 
-On 29.01.2018 10:49, Maxime Ripard wrote:
-> Hi,
-> 
-> On Mon, Jan 29, 2018 at 12:29:14AM +0100, Philipp Rossak wrote:
->> As we have gained the support for the thermal sensor in H3 and H5,
->> we can now add its device nodes to the device tree. The H3 and H5 share
->> most of its compatible. The compatible and the thermal sensor cells
->> will be added in an additional patch per device.
+On 29.01.2018 10:50, Maxime Ripard wrote:
+> On Mon, Jan 29, 2018 at 12:29:16AM +0100, Philipp Rossak wrote:
+>> This patch adds the thermal zones to the H3. We have only one sensor and
+>> that is placed in the cpu.
 >>
 >> Signed-off-by: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 >> ---
->>   arch/arm/boot/dts/sunxi-h3-h5.dtsi | 9 +++++++++
+>>   arch/arm/boot/dts/sun8i-h3.dtsi | 9 +++++++++
 >>   1 file changed, 9 insertions(+)
 >>
->> diff --git a/arch/arm/boot/dts/sunxi-h3-h5.dtsi b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
->> index 7a83b15225c7..413c789b588d 100644
->> --- a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
->> +++ b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
->> @@ -426,6 +426,15 @@
->>   			};
+>> diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
+>> index fbb007e5798e..3f83f6a27c74 100644
+>> --- a/arch/arm/boot/dts/sun8i-h3.dtsi
+>> +++ b/arch/arm/boot/dts/sun8i-h3.dtsi
+>> @@ -72,6 +72,15 @@
 >>   		};
+>>   	};
 >>   
->> +		ths: thermal-sensor@1c25000 {
->> +			reg = <0x01c25000 0x100>;
+>> +	thermal-zones {
+>> +		cpu-thermal {
+>> +			/* milliseconds */
+>> +			polling-delay-passive = <250>;
+>> +			polling-delay = <1000>;
+>> +			thermal-sensors = <&ths 0>;
 > 
-> The size is 0x400
+> if the thermal-sensor-cells value is indeed 0, the phandle parsing
+> will be broken here.
 > 
 > Maxime
 > 
 
-Ok, I will fix this.
+Ok, then I will remove the 0.
+
+Thanks,
 
 Philipp
