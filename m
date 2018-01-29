@@ -1,124 +1,77 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH v2] of: use hash based search in of_find_node_by_phandle
-Date: Mon, 29 Jan 2018 15:23:13 -0800
-Message-ID: <2d877704-47c5-c1fc-1b89-976cd9b1ccaa@gmail.com>
-References: <1516955496-17236-1-git-send-email-cpandya@codeaurora.org>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH] sound/tlv320dac33: Add device tree support
+Date: Tue, 30 Jan 2018 00:33:01 +0100
+Message-ID: <20180129233301.GA18104@amd>
+References: <20180129230539.GA18280@amd>
+ <20180129232031.GA7695@lenoch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1516955496-17236-1-git-send-email-cpandya@codeaurora.org>
-Content-Language: en-US
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Chintan Pandya <cpandya@codeaurora.org>, robh+dt@kernel.org, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="IS0zKkzwUGydFO0o"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180129232031.GA7695@lenoch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ladislav Michl <ladis@linux-mips.org>
+Cc: lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, perex@perex.cz, tiwai@suse.com, bhumirks@gmail.com, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, pali.rohar@gmail.com, sre@kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-omap@vger.kernel.org, tony@atomide.com, khilman@kernel.org, aaro.koskinen@iki.fi, ivo.g.dimitrov.75@gmail.com, patrikbachan@gmail.com, serge@hallyn.com, abcloriens@gmail.com, clayton@craftyguy.net, martijn@brixit.nl, sakari.ailus@linux.intel.com, Filip =?utf-8?Q?Matijevi=C4=87?= <filip.matijevic.pz@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Chintan,
 
-On 01/26/18 00:31, Chintan Pandya wrote:
-> of_find_node_by_phandle() takes a lot of time (1ms per
-> call) to find right node when your intended device is
-> too deeper in the fdt. Reason is, we search for each
-> device serially in the fdt. See this,
-> 
-> struct device_node *__of_find_all_nodes(struct device_node *prev)
-> {
->         struct device_node *np;
->         if (!prev) {
->                 np = of_root;
->         } else if (prev->child) {
->                 np = prev->child;
->         } else {
->                 /* Walk back up looking for a sibling, or the end of the structure */
->                 np = prev;
->                 while (np->parent && !np->sibling)
->                         np = np->parent;
->                 np = np->sibling; /* Might be null at the end of the tree */
->         }
->         return np;
-> }
-> 
-> #define for_each_of_allnodes_from(from, dn) \
->         for (dn = __of_find_all_nodes(from); dn; dn = __of_find_all_nodes(dn))
-> #define for_each_of_allnodes(dn) for_each_of_allnodes_from(NULL, dn)
-> 
-> Implement, device-phandle relation in hash-table so
-> that look up can be faster, irrespective of where my
-> device is defined in the DT.
-> 
-> There are ~6.7k calls to of_find_node_by_phandle() and
-> total improvement observed during boot is 400ms.
-> 
-> Signed-off-by: Chintan Pandya <cpandya@codeaurora.org>
-> ---
->  drivers/of/base.c  |  8 ++++++--
+--IS0zKkzwUGydFO0o
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-< snip >
- 
+On Tue 2018-01-30 00:20:31, Ladislav Michl wrote:
+> On Tue, Jan 30, 2018 at 12:05:39AM +0100, Pavel Machek wrote:
+> >=20
+> > This adds device tree support to tlv320dac33.c.
+> >=20
+> > Signed-off-by: Pavel Machek <pavel@ucw.cz>
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/sound/tlv320dac33.txt b/=
+Documentation/devicetree/bindings/sound/tlv320dac33.txt
+> > new file mode 100644
+> > index 0000000..6cbd311
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/sound/tlv320dac33.txt
+> > @@ -0,0 +1,32 @@
+> > +Texas Instruments - tlv320dac33 Codec module
+> > +
+> > +The tlv320dac33 serial control bus communicates through I2C protocols.
+> > +
+> > +Required properties:
+> > +
+> > +- compatible - "ti,tlv320dac33"
+> > +- reg - I2C slave address
+> > +
+> > +Optional properties:
+> > +
+> > +- power-gpios - gpio pin to power the device, active high
+>=20
+> While driver used gpio in platform data, isn't it more likely
+> regulator which powers device?
 
-I asked some questions in the version 1 thread and did not get
-answers.  I am copying the 3 questions here.
+                power-gpios =3D <&gpio2 28 0>; /* gpio_60 */
 
-(1)
+Looks like GPIO to me -- example is from Nokia N9. So this appears to
+be correct.
 
->>>
->> Please give me a pointer to the code that is doing
->> this search.
->>
->> -Frank
-> You can refer include/linux/of.h
->
-> #define for_each_of_allnodes_from(from, dn) \
->         for (dn = __of_find_all_nodes(from); dn; dn = __of_find_all_nodes(dn))
-> #define for_each_of_allnodes(dn) for_each_of_allnodes_from(NULL, dn)
->
-> where __of_find_all_nodes() does
->
-> struct device_node *__of_find_all_nodes(struct device_node *prev)
-> {
->         struct device_node *np;
->         if (!prev) {
->                 np = of_root;
->         } else if (prev->child) {
->                 np = prev->child;
->         } else {
->                 /* Walk back up looking for a sibling, or the end of the structure */
->                 np = prev;
->                 while (np->parent && !np->sibling)
->                         np = np->parent;
->                 np = np->sibling; /* Might be null at the end of the tree */
->         }
->         return np;
-> }
->
+								Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
-Let me restate my question.
+--IS0zKkzwUGydFO0o
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Can you point me to the driver code that is invoking
-the search?
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
+iEYEARECAAYFAlpvry0ACgkQMOfwapXb+vLHTACfV4JuhSGlzSuH7qrPsaADNfih
+3FMAnjiR8iiqupvp0pOGyN+i8t14+vhG
+=y43O
+-----END PGP SIGNATURE-----
 
-(2)
-
-And also the .dts devicetree source file that you are seeing
-large overhead with.
-
-
-(3) -- this one is less important, but if the info is easily
-       available to you
-
-Sorry about dribbling out questions instead of all at once....
-
-What is the hardware you are testing this on?
-Processor?
-Cache size?
-Memory size?
-Processor frequency?
-Any other attribute of the system that will help me understand
-the boot performance you are seeing?
-
-
-Thanks,
-
-Frank
+--IS0zKkzwUGydFO0o--
