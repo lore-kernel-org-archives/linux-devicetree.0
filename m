@@ -1,213 +1,63 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH V6 6/7] PCI: tegra: Broadcast PME_Turn_Off message before
- link goes to L2
-Date: Mon, 29 Jan 2018 16:18:42 +0100
-Message-ID: <20180129151842.GA26264@ulmo>
-References: <1515650888-9459-1-git-send-email-mmaddireddy@nvidia.com>
- <1515650888-9459-7-git-send-email-mmaddireddy@nvidia.com>
- <20180125143627.GH27888@ulmo>
- <8adc2a7d-009b-168c-07f6-b50526ce0605@nvidia.com>
+From: Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH v12 0/3] iommu/smmu-v3: Workaround for hisilicon
+ 161010801 erratum(reserve HW MSI)
+Date: Mon, 29 Jan 2018 15:39:40 +0000
+Message-ID: <20180129153939.GC24972@arm.com>
+References: <20171214160957.13716-1-shameerali.kolothum.thodi@huawei.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="wRRV7LY7NUeQGEoC"
-Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-acpi-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <8adc2a7d-009b-168c-07f6-b50526ce0605@nvidia.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Cc: bhelgaas@google.com, lorenzo.pieralisi@arm.com, cyndis@kapsi.fi, jonathanh@nvidia.com, robh+dt@kernel.org, frowand.list@gmail.com, rjw@rjwysocki.net, tglx@linutronix.de, vidyas@nvidia.com, kthota@nvidia.com, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-pm@vger.kernel.org
+In-Reply-To: <20171214160957.13716-1-shameerali.kolothum.thodi@huawei.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
+Cc: lorenzo.pieralisi@arm.com, robin.murphy@arm.com, marc.zyngier@arm.com, joro@8bytes.org, john.garry@huawei.com, xuwei5@hisilicon.com, guohanjun@huawei.com, iommu@lists.linux-foundation.org, linux-arm-kernel@lists.infradead.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, linuxarm@huawei.com
 List-Id: devicetree@vger.kernel.org
 
+Hi Shameer,
 
---wRRV7LY7NUeQGEoC
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Thu, Dec 14, 2017 at 04:09:54PM +0000, Shameer Kolothum wrote:
+> On certain HiSilicon platforms (hip06/hip07) the GIC ITS and PCIe RC
+> deviates from the standard implementation and this breaks PCIe MSI
+> functionality when SMMU is enabled.
+> 
+> The HiSilicon erratum 161010801 describes this limitation of certain
+> HiSilicon platforms to support the SMMU mappings for MSI transactions.
+> On these platforms GICv3 ITS translator is presented with the deviceID
+> by extending the MSI payload data to 64 bits to include the deviceID.
+> Hence, the PCIe controller on this platforms has to differentiate the MSI
+> payload against other DMA payload and has to modify the MSI payload.
+> This basically makes it difficult for this platforms to have a SMMU
+> translation for MSI.
+> 
+> This patch implements an ACPI based quirk to reserve the hw msi regions
+> in the smmu-v3 driver which means these address regions will not be
+> translated and will be excluded from iova allocations.
+> 
+> To implement this quirk, the following changes are incorporated:
+> 1. Added a generic helper function to IORT code to retrieve and reserve
+>    the associated ITS base address from a device IORT node. The function
+>    has a check for smmu model to determine whether the platform requires
+>    the HW MSI reservation or not.
+> 2. Added smmu node entries and explicitly disabled them in hip06/hip07
+>     dts files so that users are warned about the non-DT support for this
+>     erratum.
 
-On Mon, Jan 29, 2018 at 10:11:42AM +0530, Manikanta Maddireddy wrote:
->=20
->=20
-> On 25-Jan-18 8:06 PM, Thierry Reding wrote:
-> > On Thu, Jan 11, 2018 at 11:38:07AM +0530, Manikanta Maddireddy wrote:
-> >> Per PCIe r3.0, sec 5.3.3.2.1, PCIe root port shoould broadcast PME_Tur=
-n_Off
-> >> message before PCIe link goes to L2. PME_Turn_Off broadcast mechanism =
-is
-> >> implemented in AFI module. Each Tegra PCIe root port has its own
-> >> PME_Turn_Off and PME_TO_Ack bitmap in AFI_PME register, program this
-> >> register to broadcast PME_Turn_Off message.
-> >>
-> >> Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-> >> ---
-> >> V2:
-> >> * no change in this patch
-> >> V3:
-> >> * add PME bitmap in soc data instead of using compatible string
-> >> * replace while loop with readl_poll_timeout() for polling
-> >> * commit log correction
-> >> V4:
-> >> * no change in this patch
-> >> V5:
-> >> * Rebased on linux-next
-> >> V6:
-> >> * no change in this patch
-> >>
-> >>  drivers/pci/host/pci-tegra.c | 45 +++++++++++++++++++++++++++++++++++=
-+++++++++
-> >>  1 file changed, 45 insertions(+)
-> >>
-> >> diff --git a/drivers/pci/host/pci-tegra.c b/drivers/pci/host/pci-tegra=
-=2Ec
-> >> index 981f126b14d6..cc33fc0fb300 100644
-> >> --- a/drivers/pci/host/pci-tegra.c
-> >> +++ b/drivers/pci/host/pci-tegra.c
-> >> @@ -31,6 +31,7 @@
-> >>  #include <linux/delay.h>
-> >>  #include <linux/export.h>
-> >>  #include <linux/interrupt.h>
-> >> +#include <linux/iopoll.h>
-> >>  #include <linux/irq.h>
-> >>  #include <linux/irqdomain.h>
-> >>  #include <linux/kernel.h>
-> >> @@ -153,6 +154,8 @@
-> >>  #define  AFI_INTR_EN_FPCI_TIMEOUT	(1 << 7)
-> >>  #define  AFI_INTR_EN_PRSNT_SENSE	(1 << 8)
-> >> =20
-> >> +#define AFI_PCIE_PME		0xf0
-> >> +
-> >>  #define AFI_PCIE_CONFIG					0x0f8
-> >>  #define  AFI_PCIE_CONFIG_PCIE_DISABLE(x)		(1 << ((x) + 1))
-> >>  #define  AFI_PCIE_CONFIG_PCIE_DISABLE_ALL		0xe
-> >> @@ -233,6 +236,8 @@
-> >>  #define PADS_REFCLK_CFG_PREDI_SHIFT		8  /* 11:8 */
-> >>  #define PADS_REFCLK_CFG_DRVI_SHIFT		12 /* 15:12 */
-> >> =20
-> >> +#define PME_ACK_TIMEOUT 10000
-> >> +
-> >>  struct tegra_msi {
-> >>  	struct msi_controller chip;
-> >>  	DECLARE_BITMAP(used, INT_PCI_MSI_NR);
-> >> @@ -251,6 +256,8 @@ struct tegra_pcie_soc {
-> >>  	u32 tx_ref_sel;
-> >>  	u32 pads_refclk_cfg0;
-> >>  	u32 pads_refclk_cfg1;
-> >> +	u8 pme_turnoff_bit[3];
-> >> +	u8 pme_ack_bit[3];
-> >=20
-> > This seems suboptimal to me. Perhaps a better way would be:
-> >=20
-> > 	struct tegra_pcie_port_soc {
-> > 		struct {
-> > 			u8 turnoff_bit;
-> > 			u8 ack_bit;
-> > 		} pme;
-> > 	};
-> >=20
-> > And since we already have num_ports which defines exactly how many ports
-> > we have:
-> >=20
-> > 	struct tegra_pcie_soc {
-> > 		unsigned int num_ports;
-> > 		const struct tegra_pcie_port_soc *ports;
-> > 		...
-> > 	};
-> >=20
-> > I suspect that as you're adding more features we may need more of this
-> > data.
-> >=20
-> > But I'm fine to keep it like this. We can always switch to something
-> > different if the above becomes too much cluttered.
-> >=20
-> I agree it is sub optimal. I moved pme bitmap values to soc data because
-> tegra30 and tegra186 have different bitmap values. To differentiate this
-> I allocated static memory in tegra_pcie_soc. I am a bit hesitant do dynam=
-ic
-> allocation based on num_ports because I need to use compatible string
-> to distinguish between tegra30 & tegra186 in runtime. I believe it is OK
-> to have trade off 16 bits to avoid these compatible check?
+[...]
 
-Sorry if I was unclear. I didn't suggest that you'd dynamically allocate
-memory, instead you'd hook it up like so:
+>  arch/arm64/boot/dts/hisilicon/hip06.dtsi |  56 ++++++++++++++++
+>  arch/arm64/boot/dts/hisilicon/hip07.dtsi |  25 +++++++
+>  drivers/acpi/arm64/iort.c                | 111 ++++++++++++++++++++++++++++++-
+>  drivers/iommu/dma-iommu.c                |   8 ++-
+>  drivers/irqchip/irq-gic-v3-its.c         |   3 +-
+>  include/linux/acpi_iort.h                |   7 +-
+>  6 files changed, 204 insertions(+), 6 deletions(-)
 
-	static const struct tegra_pcie_port_soc tegra186_pcie_ports[] =3D {
-		{ .turnoff_bit =3D  0, .ack_bit =3D  5 },
-		{ .turnoff_bit =3D  8, .ack_bit =3D 10 },
-		{ .turnoff_bit =3D 12, .ack_bit =3D 14 },
-	};
+It occurred to me this morning that this series probably isn't queued
+anywhere because it's not obvious which tree is supposed to take it and
+I can't see it in -next.
 
-And then in the existing tegra186_pcie, you'd set this:
+Is this one for arm64, IOMMU, irqchip or something else? It's probably
+missed the boat for 4.16 now...
 
-	static const struct tegra_pcie_soc tegra186_pcie =3D {
-		.num_ports =3D 3,
-		.ports =3D tegra186_pcie_ports,
-		...
-	};
-
-And similar for the others. I realize that this is somewhat more verbose
-than your original, but I think it's more readable.
-
-It also allows you to reuse data, such as:
-
-	static const struct tegra_pcie_port_soc tegra20_pcie_ports[] =3D {
-		{ .turnoff_bit =3D 0, .ack_bit =3D  5 },
-		{ .turnoff_bit =3D 8, .ack_bit =3D 10 },
-	};
-
-	...
-
-	static const struct tegra_pcie_soc tegra20_pcie =3D {
-		.num_ports =3D 2,
-		.ports =3D tegra20_pcie_ports,
-		...
-	};
-
-	...
-
-	static const struct tegra_pcie_soc tegra124_pcie =3D {
-		.num_ports =3D 2,
-		.ports =3D tegra20_pcie_ports,
-		...
-	};
-
-	static const struct tegra_pcie_soc tegra210_pcie =3D {
-		.num_ports =3D 2,
-		.ports =3D tegra20_pcie_ports,
-		...
-	};
-
-Of course the sharing only works as long as the port definitions don't
-contain data that's different between the chips.
-
-You could even go and derive the .num_ports as ARRAY_SIZE() of the ports
-definition.
-
-So the above does not dynamically allocate memory, it is just a more
-explicit way of specifying the data. It puts the data closer together,
-and thereby makes it easier to read, in my opinion.
-
-But as I said, feel free to leave this as-is. We can easily rework this
-later on or if necessary.
-
-Thierry
-
---wRRV7LY7NUeQGEoC
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlpvO08ACgkQ3SOs138+
-s6GCPg/+MH2hGE+xQ7PI84FzmIaX0w4U1cTbQ6+L0b8NL/1LO9IfQJ1VR8LonPXA
-lCafGzi3rpYhUQglociWVYbrS3KRx6AcWIx7+Ag3JlCt2y1CG4MoCuGX89+qdjiv
-1CzkFztqm+U9UxOMBbNgbWRF4OhoSqTpT8UpsBrGk9Fe3vTeX36+kJXc+yoIvh/P
-iqYE7IQQtfQABhv4FxteVg9+YOC36JWxc7iNNryoZlyO3VHUMVpk42Fltie+thIe
-yxTGrw/zAsMRVWarbN05LeNzdQZXLj5VDZuIXj8rviA45gKK4XFPOctvajYiRmei
-3Z1e0IHiG+UFp1ZqIcqnXHztcvS7TXjvLnH59vaDE3UfOkTL0hmc/lTh/4J+q65q
-0TDucx8R74tNU2/2arFWTv7Qv9mJkMCf82J5T5s4KXJHgYyONpJ4i9jz8OEYvQtr
-7Q15affIXxifR4C8y+hywmW7UuWYLHt/dS1B2/VfIjHx7c+rJEycQzLzm+zwd6+N
-QF9VDwjYCam1GBLt77cerCJYHsgJHu+vn2Y/DYrBSimeNPK3DV770mAQm1VFZHDz
-RVzVr4V0+LYGc64pvQKcjZIrMetDOFj1mNGlsMeSqG9eTGkglie0PZEQyw+Q2/6N
-LDUj2yL2km657WtO2gyZIBYedSSdkIXXRNEtmCOqd7KgwEosDzk=
-=u+Cf
------END PGP SIGNATURE-----
-
---wRRV7LY7NUeQGEoC--
+Will
