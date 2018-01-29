@@ -1,35 +1,62 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] dt-bindings: nvmem: imx-ocotp: update the binding to
- reflect data cells
-Date: Mon, 29 Jan 2018 09:49:40 +0800
-Message-ID: <20180129014938.GB12957@dragon>
-References: <1516865849-26191-1-git-send-email-aisheng.dong@nxp.com>
+From: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] iio: ad5272: Add support for Analog Devices
+ digital potentiometers
+Date: Mon, 29 Jan 2018 10:08:16 +0800
+Message-ID: <59571332-0fd7-940a-7c45-c32a5e224195@electromag.com.au>
+References: <1516160308-16937-1-git-send-email-preid@electromag.com.au>
+ <1516160308-16937-3-git-send-email-preid@electromag.com.au>
+ <20180120171241.7d36898d@archlinux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1516865849-26191-1-git-send-email-aisheng.dong-3arQi8VN3Tc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dong Aisheng <aisheng.dong-3arQi8VN3Tc@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-imx-3arQi8VN3Tc@public.gmane.org, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180120171241.7d36898d@archlinux>
+Content-Language: en-AU
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Michael.Hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alexandru.ardelean-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 25, 2018 at 03:37:28PM +0800, Dong Aisheng wrote:
-> imx-ocotp is implemented based on nvmem which can have data cells
-> as child node. Update the binding doc to reflect it to be more easily
-> understood by users.
+On 21/01/2018 01:12, Jonathan Cameron wrote:
+> On Wed, 17 Jan 2018 11:38:28 +0800
+> Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org> wrote:
 > 
-> Cc: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> Add implementation for Analog Devices AD5272 and AD5274 digital
+>> potentiometer devices.
+>>
+>> Signed-off-by: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
+> A couple more minor comments.
+> 
+...
 
-For both patches,
+>>   menu "Digital potentiometers"
+>>   
+>> +config AD5272
+>> +	tristate "Analog Devices AD5272 Digital Potentiometer driver"
+>> +	depends on I2C
+>> +	help
+>> +	  Say yes here to build support for the Analog Devices AD5272
+>> +	  digital potentiometer chip.
+> 
+> You need to list he compatible parts here so that people looking for
+> the driver can find it.  Usually the short text states 'and similar'
+> and the help text contains a list of parts.  AD5274 is missing here.
 
-Acked-by: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+ok
 
-> Signed-off-by: Dong Aisheng <aisheng.dong-3arQi8VN3Tc@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+...
+
+>> +	if (reset_gpio) {
+>> +		udelay(1);
+>> +		gpiod_set_value(reset_gpio, 1);
+>> +	} else {
+>> +		ad5272_write(data, AD5272_RESET, 0);
+>> +	}
+>> +	usleep_range(1000, 2000);
+> kernel coding conventions (and readability) put a blank line
+> before return statements.
+> ok
+
+-- 
+Regards
+Phil Reid
