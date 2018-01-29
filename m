@@ -1,34 +1,51 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v2 0/7] ARM: dts: imx6q: engicam LVDS panel changes
-Date: Mon, 29 Jan 2018 18:35:43 +0800
-Message-ID: <20180129103542.GE26461@dragon>
-References: <1515046345-15881-1-git-send-email-jagan@amarulasolutions.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 2/2] of: convert unittest overlay devicetree source to
+ sugar syntax
+Date: Mon, 29 Jan 2018 11:37:57 +0100
+Message-ID: <CAMuHMdVSDj2MmTzbxgZeBx94EKdcRr6B_3Bh+Mb35XhBRPPGXw@mail.gmail.com>
+References: <1517194414-19932-1-git-send-email-frowand.list@gmail.com> <1517194414-19932-3-git-send-email-frowand.list@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1515046345-15881-1-git-send-email-jagan@amarulasolutions.com>
+In-Reply-To: <1517194414-19932-3-git-send-email-frowand.list@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jagan Teki <jagan@amarulasolutions.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Matteo Lisi <matteo.lisi@engicam.com>, Michael Trimarchi <michael@amarulasolutions.com>
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 04, 2018 at 11:42:18AM +0530, Jagan Teki wrote:
-> Series add LVDS panel attributes on panel drivers instead of defining
-> them in dts nodes, and also added new icorem6 engicam boards
-> 
-> Jagan Teki (7):
->   drm/panel: simple: add support for Ampire AM-800480AYTZQW-00H
->   ARM: dts: imx6q-icore: Switch LVDS timings from panel-simple
->   ARM: dts: imx6dl-icore: Add LVDS node
->   drm/panel: simple: Add support for KEO TX31D200VM0BAA
->   ARM: dts: imx6q-icore-ofcap12: Switch LVDS timings from panel-simple
->   ARM: dts: imx6q: Add Engicam i.CoreM6 Quad/Dual OpenFrame Cap 7
->     initial support
->   ARM: dts: imx6q: Add Engicam i.CoreM6 1.5 Quad/Dual MIPI starter kit
->     support
+Hi Frank,
 
-Those two "drm/panel" patches should be sent to DRM maintainer and list.
-I can only take the DTS chagnes after "drm/panel" patches get merged.
+On Mon, Jan 29, 2018 at 3:53 AM,  <frowand.list@gmail.com> wrote:
+> From: Frank Rowand <frank.rowand@sony.com>
+>
+> The unittest-data overlays have been pulled into proper overlay
+> devicetree source files without changing their format.  The
+> next step is to convert them to use sugar syntax instead of
+> hand coding overlay fragments structure.
 
-Shawn
+Cool! I had heard about the new syntax, but hadn't realized it was merged in
+v4.15-rc1.
+
+Have you used your overlay_convert_old_to_new script to convert them?
+
+> A few of the overlays can not be converted because they test
+> absolute target paths in the overlay fragment.  dtc does not
+> generate this type of target:
+>   overlay_0.dts
+>   overlay_1.dts
+>   overlay_12.dts
+>   overlay_13.dts
+
+And I guess you want to keep at least a few tests using the non-sugar syntax
+anyway?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
