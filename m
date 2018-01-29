@@ -1,58 +1,34 @@
 From: Sricharan R <sricharan@codeaurora.org>
-Subject: [PATCH 00/15] ARM: dts: ipq: updates to enable a few peripherals
-Date: Mon, 29 Jan 2018 10:41:14 +0530
-Message-ID: <1517202689-14212-1-git-send-email-sricharan@codeaurora.org>
+Subject: [PATCH 03/15] ARM: dts: ipq4019: Change the max opp frequency
+Date: Mon, 29 Jan 2018 10:41:17 +0530
+Message-ID: <1517202689-14212-4-git-send-email-sricharan@codeaurora.org>
+References: <1517202689-14212-1-git-send-email-sricharan@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1517202689-14212-1-git-send-email-sricharan@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: robh+dt@kernel.org, robh@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, andy.gross@linaro.org, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, sboyd@codeaurora.org, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
 Cc: sricharan@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-The driver support for ipq based platform's spi, i2c, nand,
-spi-nor, pcie is available now. So update the dts to enable
-those peripherals.
+The max opp frequency is 716MHZ. So update that.
 
-Sricharan R (15):
-  firmware: qcom: scm: Add ipq soc compatibles
-  ARM: dts: ipq4019: Add a few peripheral nodes
-  ARM: dts: ipq4019: Change the max opp frequency
-  ARM: dts: ipq4019: Update ipq4019-dk01.1 board data
-  ARM: dts: ipq4019: Add ipq4019-ap-dk01-c2 board file
-  ARM: dts: ipq4019: Add ipq4019-ap.dk04.dtsi
-  ARM: dts: ipq4019: Add ipq4019-ap.dk04.1-c1 board file
-  ARM: dts: ipq4019: Add qcom-ipq4019-ap.dk04.1-c5 board file
-  ARM: dts: ipq4019: Add qcom-ipq4019-ap.dk04.1-c3 board file
-  ARM: dts: ipq4019: Add ipq4019-ap.dk07.1 common data
-  ARM: dts: ipq4019: Add qcom-ipq4019-ap.dk07.1-c1 board file
-  ARM: dts: ipq4019: Add qcom-ipq4019-ap.dk07.1-c2 board file
-  ARM: dts: ipq8074: Add peripheral nodes
-  ARM: dts: ipq8074: Add pcie nodes
-  ARM: dts: ipq8074: Enable few peripherals for hk01 board
+Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+---
+ arch/arm/boot/dts/qcom-ipq4019.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- .../devicetree/bindings/firmware/qcom,scm.txt      |   3 +-
- arch/arm/boot/dts/Makefile                         |   6 +
- arch/arm/boot/dts/qcom-ipq4019-ap.dk01.1-c2.dts    |  25 ++
- arch/arm/boot/dts/qcom-ipq4019-ap.dk01.1.dtsi      |  28 +++
- arch/arm/boot/dts/qcom-ipq4019-ap.dk04.1-c1.dts    |   8 +
- arch/arm/boot/dts/qcom-ipq4019-ap.dk04.1-c3.dts    |  14 ++
- arch/arm/boot/dts/qcom-ipq4019-ap.dk04.1-c5.dts    |  23 ++
- arch/arm/boot/dts/qcom-ipq4019-ap.dk04.1.dtsi      | 147 ++++++++++++
- arch/arm/boot/dts/qcom-ipq4019-ap.dk07.1-c1.dts    |  60 +++++
- arch/arm/boot/dts/qcom-ipq4019-ap.dk07.1-c2.dts    |  78 +++++++
- arch/arm/boot/dts/qcom-ipq4019-ap.dk07.1.dtsi      | 128 ++++++++++
- arch/arm/boot/dts/qcom-ipq4019.dtsi                | 136 ++++++++++-
- arch/arm64/boot/dts/qcom/ipq8074-hk01.dts          |  99 ++++++++
- arch/arm64/boot/dts/qcom/ipq8074.dtsi              | 258 ++++++++++++++++++++-
- drivers/firmware/qcom_scm.c                        |   3 +
- 15 files changed, 1013 insertions(+), 3 deletions(-)
- create mode 100644 arch/arm/boot/dts/qcom-ipq4019-ap.dk01.1-c2.dts
- create mode 100644 arch/arm/boot/dts/qcom-ipq4019-ap.dk04.1-c1.dts
- create mode 100644 arch/arm/boot/dts/qcom-ipq4019-ap.dk04.1-c3.dts
- create mode 100644 arch/arm/boot/dts/qcom-ipq4019-ap.dk04.1-c5.dts
- create mode 100644 arch/arm/boot/dts/qcom-ipq4019-ap.dk04.1.dtsi
- create mode 100644 arch/arm/boot/dts/qcom-ipq4019-ap.dk07.1-c1.dts
- create mode 100644 arch/arm/boot/dts/qcom-ipq4019-ap.dk07.1-c2.dts
- create mode 100644 arch/arm/boot/dts/qcom-ipq4019-ap.dk07.1.dtsi
-
+diff --git a/arch/arm/boot/dts/qcom-ipq4019.dtsi b/arch/arm/boot/dts/qcom-ipq4019.dtsi
+index e38fffa..2ee71c2 100644
+--- a/arch/arm/boot/dts/qcom-ipq4019.dtsi
++++ b/arch/arm/boot/dts/qcom-ipq4019.dtsi
+@@ -47,7 +47,7 @@
+ 				48000	1100000
+ 				200000	1100000
+ 				500000	1100000
+-				666000	1100000
++				716000  1100000
+ 			>;
+ 			clock-latency = <256000>;
+ 		};
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
