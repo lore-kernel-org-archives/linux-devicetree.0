@@ -1,687 +1,195 @@
-From: Benoit Parrot <bparrot@ti.com>
-Subject: Re: [PATCH v2 2/2] v4l: cadence: Add Cadence MIPI-CSI2 TX driver
-Date: Mon, 29 Jan 2018 13:30:46 -0600
-Message-ID: <20180129193046.GF25980@ti.com>
-References: <20180119081547.22312-1-maxime.ripard@free-electrons.com>
- <20180119081547.22312-3-maxime.ripard@free-electrons.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/4] dt-bindings: introduce RPMH RSC bindings for
+ Qualcomm SoCs
+Date: Mon, 29 Jan 2018 13:33:44 -0600
+Message-ID: <20180129193344.iovcnka27hmap2l4@rob-hp-laptop>
+References: <20180119000157.7380-1-ilina@codeaurora.org>
+ <20180119000157.7380-3-ilina@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-media-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180119081547.22312-3-maxime.ripard@free-electrons.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Richard Sproul <sproul@cadence.com>, Alan Douglas <adouglas@cadence.com>, Steve Creaney <screaney@cadence.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, nm@ti.com, Simon Hatliff <hatliff@cadence.com>
+In-Reply-To: <20180119000157.7380-3-ilina@codeaurora.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Lina Iyer <ilina@codeaurora.org>
+Cc: andy.gross@linaro.org, david.brown@linaro.org, sboyd@codeaurora.org, rnayak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Maxime,
-
-Thank you for the patch.
-
-Maxime Ripard <maxime.ripard@free-electrons.com> wrote on Fri [2018-Jan-19 09:15:47 +0100]:
-> The Cadence MIPI-CSI2 TX controller is an hardware block meant to be used
-> as a bridge between pixel interfaces and a CSI-2 bus.
+On Thu, Jan 18, 2018 at 05:01:55PM -0700, Lina Iyer wrote:
+> Add device binding documentation for Qualcomm Technology Inc's RPMH RSC
+> driver. The hardware block is used for communicating resource state
+> requests for shared resources.
 > 
-> It supports operating with an internal or external D-PHY, with up to 4
-> lanes, or without any D-PHY. The current code only supports the former
-> case.
-> 
-> While the virtual channel input on the pixel interface can be directly
-> mapped to CSI2, the datatype input is actually a selection signal (3-bits)
-> mapping to a table of up to 8 preconfigured datatypes/formats (programmed
-> at start-up)
-> 
-> The block supports up to 8 input datatypes.
-> 
-> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
 > ---
->  drivers/media/platform/cadence/Kconfig       |   6 +
->  drivers/media/platform/cadence/Makefile      |   1 +
->  drivers/media/platform/cadence/cdns-csi2tx.c | 586 +++++++++++++++++++++++++++
->  3 files changed, 593 insertions(+)
->  create mode 100644 drivers/media/platform/cadence/cdns-csi2tx.c
+>  .../devicetree/bindings/arm/msm/rpmh-rsc.txt       | 134 +++++++++++++++++++++
+
+bindings/mailbox instead?
+
+>  1 file changed, 134 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/msm/rpmh-rsc.txt
 > 
-> diff --git a/drivers/media/platform/cadence/Kconfig b/drivers/media/platform/cadence/Kconfig
-> index d1b6bbb6a0eb..db49328ee8b2 100644
-> --- a/drivers/media/platform/cadence/Kconfig
-> +++ b/drivers/media/platform/cadence/Kconfig
-> @@ -9,4 +9,10 @@ config VIDEO_CADENCE_CSI2RX
->  	depends on VIDEO_V4L2_SUBDEV_API
->  	select V4L2_FWNODE
->  
-> +config VIDEO_CADENCE_CSI2TX
-> +	tristate "Cadence MIPI-CSI2 TX Controller"
-> +	depends on MEDIA_CONTROLLER
-> +	depends on VIDEO_V4L2_SUBDEV_API
-> +	select V4L2_FWNODE
-> +
->  endif
-> diff --git a/drivers/media/platform/cadence/Makefile b/drivers/media/platform/cadence/Makefile
-> index 99a4086b7448..7fe992273162 100644
-> --- a/drivers/media/platform/cadence/Makefile
-> +++ b/drivers/media/platform/cadence/Makefile
-> @@ -1 +1,2 @@
->  obj-$(CONFIG_VIDEO_CADENCE_CSI2RX)	+= cdns-csi2rx.o
-> +obj-$(CONFIG_VIDEO_CADENCE_CSI2TX)	+= cdns-csi2tx.o
-> diff --git a/drivers/media/platform/cadence/cdns-csi2tx.c b/drivers/media/platform/cadence/cdns-csi2tx.c
+> diff --git a/Documentation/devicetree/bindings/arm/msm/rpmh-rsc.txt b/Documentation/devicetree/bindings/arm/msm/rpmh-rsc.txt
 > new file mode 100644
-> index 000000000000..850701020836
+> index 000000000000..b0cd55caf916
 > --- /dev/null
-> +++ b/drivers/media/platform/cadence/cdns-csi2tx.c
-> @@ -0,0 +1,586 @@
-> +/*
-> + * Driver for Cadence MIPI-CSI2 TX Controller
-> + *
-> + * Copyright (C) 2017 Cadence Design Systems Inc.
-> + *
-> + * This program is free software; you can redistribute  it and/or modify it
-> + * under  the terms of  the GNU General  Public License as published by the
-> + * Free Software Foundation;  either version 2 of the  License, or (at your
-> + * option) any later version.
+> +++ b/Documentation/devicetree/bindings/arm/msm/rpmh-rsc.txt
+> @@ -0,0 +1,134 @@
+> +RPMH RSC:
+> +------------
+> +
+> +RPMH is the mechanism for communicating with the hardened resource
+> +accelerators. Requests to the resources can be written to the TCS mailbox
+> +registers and using a (addr, val) pair and triggered. Messages in the TCS are
+> +then sent in sequence over an internal bus.
+> +
+> +The hardware block (Direct Resource Voter or DRV) is a part of the h/w entity
+> +(Resource State Coordinator a.k.a RSC) that can handle a multiple sleep and
+> +active/wake resource requests. Multiple such DRVs can exist in a SoC and can
+> +be written to from Linux. The structure of each DRV follows the same template
+> +with a few variations that are captured by the properties here.
+> +
+> +Each DRV could have 'm' TCS instances. Each TCS could have 'n' slots. Each
+> +slot has a header (u32), address (u32), data (u32), status (u32) and a
+> +read-response (u32). A TCS when triggered will send all the enabled commands
+> +of the 'n' commands in that slot in sequence.
+> +
+> +A TCS may be triggered from Linux or triggered by the F/W after all the CPUs
+> +have powered off to faciliate idle power saving. TCS could be classified as -
+> +
+> +	SLEEP,  /* Triggered by F/W */
+> +	WAKE,   /* Triggered by F/W */
+> +	ACTIVE, /* Triggered by Linux */
+> +	CONTROL /* Triggered by F/W */
+> +
+> +The order in which they are described in the DT, should match the hardware
+> +configuration.
+> +
+> +Requests can be made for the state of a resource, when the subsystem is active
+> +or idle. When all subsystems like Modem, GPU, CPU are idle, the resource state
+> +will be an aggregeate of the sleep votes from each of those subsystem. Drivers
+> +may request a sleep value for their shared resources in addition to the active
+> +mode requests.
+> +
+> +Control requests are instance specific requests that may or may not reach an
+> +accelerator. Only one platform device in Linux can request a control channel
+> +on a DRV.
+> +
+> +CONTROLLER:
+> +----------
+> +
+> +PROPERTIES:
+> +
+> +- compatible:
+> +	Usage: required
+> +	Value type: <string>
+> +	Definition: Should be "qcom,rpmh-rsc".
+> +
+> +- reg:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Definition: the first element specifies the base address of the DRV,
+> +	            the second element specifies the size of the region.
+> +
+> +- interrupts:
+> +	Usage: required
+> +	Value type: <prop-encoded-interrupt>
+> +	Definition: the interrupt that trips when a message complete/response
+> +	           is received for this DRV from the accelertors.
+> +
+> +- qcom,drv-id:
+> +	Usage: required
+> +	Value type: <u32>
+> +	Definition: the id of the DRV in the RSC block.
+> +
+> +- qcom, tcs-config:
+          ^
+space
 
-Should use SPDX license tag line instead.
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Definition: the tuple definining the configuration of TCS.
+> +	            Must have 2 cells which describe each TCS type.
+> +	            <type number_of_tcs>
+> +	- Cell #1 (TCS Type): TCS types can be specified -
+> +		SLEEP_TCS
+> +		WAKE_TCS
+> +		ACTIVE_TCS
+> +		CONTROL_TCS
 
-> + */
-> +
-> +#include <linux/atomic.h>
-> +#include <linux/clk.h>
-> +#include <linux/delay.h>
-> +#include <linux/io.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_graph.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/slab.h>
-> +
-> +#include <media/v4l2-ctrls.h>
-> +#include <media/v4l2-device.h>
-> +#include <media/v4l2-fwnode.h>
-> +#include <media/v4l2-subdev.h>
-> +
-> +#define CSI2TX_DEVICE_CONFIG_REG	0x00
-> +
-> +#define CSI2TX_CONFIG_REG		0x20
-> +#define CSI2TX_CONFIG_CFG_REQ			BIT(2)
-> +#define CSI2TX_CONFIG_SRST_REQ			BIT(1)
-> +
-> +#define CSI2TX_DPHY_CFG_REG		0x28
-> +#define CSI2TX_DPHY_CFG_CLK_RESET		BIT(16)
-> +#define CSI2TX_DPHY_CFG_LANE_RESET(n)		BIT((n) + 12)
-> +#define CSI2TX_DPHY_CFG_MODE_MASK		GENMASK(9, 8)
-> +#define CSI2TX_DPHY_CFG_MODE_LPDT		(2 << 8)
-> +#define CSI2TX_DPHY_CFG_MODE_HS			(1 << 8)
-> +#define CSI2TX_DPHY_CFG_MODE_ULPS		(0 << 8)
-> +#define CSI2TX_DPHY_CFG_CLK_ENABLE		BIT(4)
-> +#define CSI2TX_DPHY_CFG_LANE_ENABLE(n)		BIT(n)
-> +
-> +#define CSI2TX_DPHY_CLK_WAKEUP_REG	0x2c
-> +#define CSI2TX_DPHY_CLK_WAKEUP_ULPS_CYCLES(n)	((n) & 0xffff)
-> +
-> +#define CSI2TX_DT_CFG_REG(n)		(0x80 + (n) * 8)
-> +#define CSI2TX_DT_CFG_DT(n)			(((n) & 0x3f) << 2)
-> +
-> +#define CSI2TX_DT_FORMAT_REG(n)		(0x84 + (n) * 8)
-> +#define CSI2TX_DT_FORMAT_BYTES_PER_LINE(n)	(((n) & 0xffff) << 16)
-> +#define CSI2TX_DT_FORMAT_MAX_LINE_NUM(n)	((n) & 0xffff)
-> +
-> +#define CSI2TX_STREAM_IF_CFG_REG(n)	(0x100 + (n) * 4)
-> +#define CSI2TX_STREAM_IF_CFG_FILL_LEVEL(n)	((n) & 0x1f)
-> +
-> +#define CSI2TX_STREAMS_MAX	4
-> +
-> +enum csi2tx_pads {
-> +	CSI2TX_PAD_SOURCE,
-> +	CSI2TX_PAD_SINK_STREAM0,
-> +	CSI2TX_PAD_SINK_STREAM1,
-> +	CSI2TX_PAD_SINK_STREAM2,
-> +	CSI2TX_PAD_SINK_STREAM3,
-> +	CSI2TX_PAD_MAX,
-> +};
-> +
-> +struct csi2tx_fmt {
-> +	u32	mbus;
-> +	u32	dt;
-> +	u32	bpp;
-> +};
-> +
-> +struct csi2tx_priv {
-> +	struct device			*dev;
-> +	atomic_t			count;
-> +
-> +	void __iomem			*base;
-> +
-> +	struct clk			*esc_clk;
-> +	struct clk			*p_clk;
-> +	struct clk			*pixel_clk[CSI2TX_STREAMS_MAX];
-> +
-> +	struct v4l2_subdev		subdev;
-> +	struct v4l2_async_notifier	notifier;
-> +	struct media_pad		pads[CSI2TX_PAD_MAX];
-> +	struct v4l2_mbus_framefmt	pad_fmts[CSI2TX_PAD_MAX];
-> +
-> +	bool				has_internal_dphy;
-> +	unsigned int			lanes;
-> +	unsigned int			max_lanes;
+These defines belong in this patch.
 
-So if I understand this correctly the actual lane number list
-specified in DT is not actually used? And so the lane numbers are only
-derived from the current numbers of lanes specified.
+> +	- Cell #2 (Number of TCS): <u32>
 
-Meaning the following would produce identical setup:
-	csi2tx_out: endpoint {
-		remote-endpoint = <&remote_in>;
-		clock-lanes = <0>;
-		data-lanes = <1 2>;
-	};
+Is there some sort of range of numbers?
 
-or
-	csi2tx_out: endpoint {
-		remote-endpoint = <&remote_in>;
-		clock-lanes = <0>;
-		data-lanes = <2 3>;
-	};
+> +
+> +- label:
+> +	Usage: optional
+> +	Value type: <string>
+> +	Definition: Name for the RSC. The name would be used in trace logs.
+> +
+> +Clients the want to use the RSC to communicate with RPMH would specify their
 
-But they would be interpreted differently by say the CSI2-RX side, no?
+Clients the want?
 
-> +	unsigned int			max_streams;
-> +
-> +	/* Remote source */
-> +	struct v4l2_async_subdev	asd;
-> +	struct v4l2_subdev		*sink_subdev;
-> +	int				sink_pad;
-> +};
-> +
-> +static const struct csi2tx_fmt csi2tx_formats[] = {
-> +	{
-> +		.mbus	= MEDIA_BUS_FMT_UYVY8_1X16,
-> +		.bpp	= 2,
-> +		.dt	= 0x1e,
-> +	},
-> +	{
-> +		.mbus	= MEDIA_BUS_FMT_RGB888_1X24,
-> +		.bpp	= 3,
-> +		.dt	= 0x24,
-> +	},
-> +};
-> +
-> +static const struct v4l2_mbus_framefmt fmt_default = {
-> +	.width		= 320,
-> +	.height		= 180,
-> +	.code		= MEDIA_BUS_FMT_RGB888_1X24,
-> +	.field		= V4L2_FIELD_NONE,
-> +	.colorspace	= V4L2_COLORSPACE_DEFAULT,
-> +};
-> +
-> +static inline
-> +struct csi2tx_priv *v4l2_subdev_to_csi2tx(struct v4l2_subdev *subdev)
-> +{
-> +	return container_of(subdev, struct csi2tx_priv, subdev);
-> +}
-> +
-> +static int csi2tx_init_cfg(struct v4l2_subdev *subdev,
-> +			   struct v4l2_subdev_pad_config *cfg)
-> +{
-> +	struct csi2tx_priv *csi2tx = v4l2_subdev_to_csi2tx(subdev);
-> +	unsigned int i;
-> +
-> +	for (i = 0; i < subdev->entity.num_pads; i++)
-> +		csi2tx->pad_fmts[i] = fmt_default;
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct csi2tx_fmt *csitx_get_fmt_from_mbus(struct v4l2_mbus_framefmt *mfmt)
-> +{
-> +	int i;
-> +
-> +	if (!mfmt)
-> +		return NULL;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(csi2tx_formats); i++)
-> +		if (csi2tx_formats[i].mbus == mfmt->code)
-> +			return &csi2tx_formats[i];
-> +
-> +	return NULL;
-> +}
-> +
-> +static int csi2tx_enum_mbus_code(struct v4l2_subdev *subdev,
-> +				 struct v4l2_subdev_pad_config *cfg,
-> +				 struct v4l2_subdev_mbus_code_enum *code)
-> +{
-> +	if (code->pad || code->index >= ARRAY_SIZE(csi2tx_formats))
-> +		return -EINVAL;
-> +
-> +	code->code = csi2tx_formats[code->index].mbus;
-> +
-> +	return 0;
-> +}
-> +
-> +static int csi2tx_get_pad_format(struct v4l2_subdev *subdev,
-> +				 struct v4l2_subdev_pad_config *cfg,
-> +				 struct v4l2_subdev_format *fmt)
-> +{
-> +	struct csi2tx_priv *csi2tx = v4l2_subdev_to_csi2tx(subdev);
-> +
-> +	fmt->format = csi2tx->pad_fmts[fmt->pad];
-> +
-> +	return 0;
-> +}
-> +
-> +static int csi2tx_set_pad_format(struct v4l2_subdev *subdev,
-> +				 struct v4l2_subdev_pad_config *cfg,
-> +				 struct v4l2_subdev_format *fmt)
-> +{
-> +	struct csi2tx_priv *csi2tx = v4l2_subdev_to_csi2tx(subdev);
-> +
-> +	csi2tx->pad_fmts[fmt->pad] = fmt->format;
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct v4l2_subdev_pad_ops csi2tx_pad_ops = {
-> +	.enum_mbus_code	= csi2tx_enum_mbus_code,
-> +	.get_fmt	= csi2tx_get_pad_format,
-> +	.init_cfg	= csi2tx_init_cfg,
-> +	.set_fmt	= csi2tx_set_pad_format,
-> +};
-> +
-> +static void csi2tx_reset(struct csi2tx_priv *csi2tx)
-> +{
-> +	writel(CSI2TX_CONFIG_SRST_REQ, csi2tx->base + CSI2TX_CONFIG_REG);
-> +
-> +	usleep_range(10, 20);
-> +}
-> +
-> +static int csi2tx_start(struct csi2tx_priv *csi2tx)
-> +{
-> +	struct media_entity *entity = &csi2tx->subdev.entity;
-> +	struct media_link *link;
-> +	u32 reg;
-> +	int i;
-> +
-> +	/*
-> +	 * We're not the first users, there's no need to enable the
-> +	 * whole controller.
-> +	 */
-> +	if (atomic_inc_return(&csi2tx->count) > 1)
-> +		return 0;
-> +
-> +	csi2tx_reset(csi2tx);
-> +
-> +	writel(CSI2TX_CONFIG_CFG_REQ, csi2tx->base + CSI2TX_CONFIG_REG);
-> +
-> +	usleep_range(10, 20);
-> +
-> +	writel(CSI2TX_DPHY_CLK_WAKEUP_ULPS_CYCLES(32),
-> +	       csi2tx->base + CSI2TX_DPHY_CLK_WAKEUP_REG);
-> +
-> +	/* Put our lanes (clock and data) out of reset */
-> +	reg = CSI2TX_DPHY_CFG_CLK_RESET | CSI2TX_DPHY_CFG_MODE_LPDT;
-> +	for (i = 0; i < csi2tx->lanes; i++)
-> +		reg |= CSI2TX_DPHY_CFG_LANE_RESET(i);
-> +	writel(reg, csi2tx->base + CSI2TX_DPHY_CFG_REG);
-> +
-> +	usleep_range(10, 20);
-> +
-> +	/* Enable our (clock and data) lanes */
-> +	reg |= CSI2TX_DPHY_CFG_CLK_ENABLE;
-> +	for (i = 0; i < csi2tx->lanes; i++)
-> +		reg |= CSI2TX_DPHY_CFG_LANE_ENABLE(i);
-> +	writel(reg, csi2tx->base + CSI2TX_DPHY_CFG_REG);
-> +
-> +	usleep_range(10, 20);
-> +
-> +	/* Switch to HS mode */
-> +	reg &= ~CSI2TX_DPHY_CFG_MODE_MASK;
-> +	writel(reg | CSI2TX_DPHY_CFG_MODE_HS,
-> +	       csi2tx->base + CSI2TX_DPHY_CFG_REG);
-> +
-> +	usleep_range(10, 20);
-> +
-> +	/*
-> +	 * Create a static mapping between the CSI virtual channels
-> +	 * and the input streams.
-> +	 *
-> +	 * This should be enhanced, but v4l2 lacks the support for
-> +	 * changing that mapping dynamically at the moment.
-> +	 */
-> +	list_for_each_entry(link, &entity->links, list) {
-> +		struct v4l2_mbus_framefmt *mfmt;
-> +		const struct csi2tx_fmt *fmt;
-> +		unsigned int stream;
-> +		int pad_idx = -1;
-> +
-> +		/* Only consider our enabled input pads */
-> +		for (i = CSI2TX_PAD_SINK_STREAM0; i < CSI2TX_PAD_MAX; i++) {
-> +			struct media_pad *pad = &csi2tx->pads[i];
-> +
-> +			if ((pad == link->sink) &&
-> +			    (link->flags & MEDIA_LNK_FL_ENABLED)) {
-> +				pad_idx = i;
-> +				break;
-> +			}
-> +		}
-> +
-> +		if (pad_idx < 0)
-> +			continue;
-> +
-> +		mfmt = &csi2tx->pad_fmts[i];
-> +		fmt = csitx_get_fmt_from_mbus(mfmt);
-> +		stream = pad_idx - CSI2TX_PAD_SINK_STREAM0;
-> +
-> +		/*
-> +		 * We use the stream ID there, but it's wrong.
-> +		 *
-> +		 * A stream could very well send a data type that is
-> +		 * not equal to its stream ID. We need to find a
-> +		 * proper way to address it.
-> +		 */
-> +		writel(CSI2TX_DT_CFG_DT(fmt->dt),
-> +		       csi2tx->base + CSI2TX_DT_CFG_REG(stream));
-> +
-> +		writel(CSI2TX_DT_FORMAT_BYTES_PER_LINE(mfmt->width * fmt->bpp) |
-> +		       CSI2TX_DT_FORMAT_MAX_LINE_NUM(mfmt->height + 1),
-> +		       csi2tx->base + CSI2TX_DT_FORMAT_REG(stream));
-> +
-> +		/*
-> +		 * TODO: This needs to be calculated based on the
-> +		 * output CSI2 clock rate.
-> +		 */
-> +		writel(CSI2TX_STREAM_IF_CFG_FILL_LEVEL(4),
-> +		       csi2tx->base + CSI2TX_STREAM_IF_CFG_REG(stream));
-> +	}
-> +
-> +	/* Disable the configuration mode */
-> +	writel(0, csi2tx->base + CSI2TX_CONFIG_REG);
-> +
-> +	return v4l2_subdev_call(csi2tx->sink_subdev, video, s_stream, true);
-> +}
-> +
-> +static int csi2tx_stop(struct csi2tx_priv *csi2tx)
-> +{
-> +	/*
-> +	 * Let the last user turn off the lights
-> +	 */
-> +	if (!atomic_dec_and_test(&csi2tx->count))
-> +		return 0;
-> +
-> +	writel(CSI2TX_CONFIG_CFG_REQ | CSI2TX_CONFIG_SRST_REQ,
-> +	       csi2tx->base + CSI2TX_CONFIG_REG);
-> +
-> +	return 0;
-> +}
-> +
-> +static int csi2tx_s_stream(struct v4l2_subdev *subdev, int enable)
-> +{
-> +	struct csi2tx_priv *csi2tx = v4l2_subdev_to_csi2tx(subdev);
-> +	int ret;
-> +
-> +	if (enable)
-> +		ret = csi2tx_start(csi2tx);
-> +	else
-> +		ret = csi2tx_stop(csi2tx);
-> +
-> +	return ret;
-> +}
-> +
-> +static const struct v4l2_subdev_video_ops csi2tx_video_ops = {
-> +	.s_stream	= csi2tx_s_stream,
-> +};
-> +
-> +static const struct v4l2_subdev_ops csi2tx_subdev_ops = {
-> +	.pad		= &csi2tx_pad_ops,
-> +	.video		= &csi2tx_video_ops,
-> +};
-> +
-> +static int csi2tx_async_bound(struct v4l2_async_notifier *notifier,
-> +			      struct v4l2_subdev *s_subdev,
-> +			      struct v4l2_async_subdev *asd)
-> +{
-> +	struct v4l2_subdev *subdev = notifier->sd;
-> +	struct csi2tx_priv *csi2tx = v4l2_subdev_to_csi2tx(subdev);
-> +
-> +	csi2tx->sink_pad = media_entity_get_fwnode_pad(&s_subdev->entity,
-> +						       s_subdev->fwnode,
-> +						       MEDIA_PAD_FL_SINK);
-> +	if (csi2tx->sink_pad < 0) {
-> +		dev_err(csi2tx->dev, "Couldn't find input pad for subdev %s\n",
-> +			s_subdev->name);
-> +		return csi2tx->sink_pad;
-> +	}
-> +
-> +	csi2tx->sink_subdev = s_subdev;
-> +
-> +	dev_dbg(csi2tx->dev, "Bound %s pad: %d\n", s_subdev->name,
-> +		csi2tx->sink_pad);
-> +
-> +	return media_create_pad_link(&csi2tx->sink_subdev->entity,
-> +				     csi2tx->sink_pad,
-> +				     &csi2tx->subdev.entity, 0,
-> +				     MEDIA_LNK_FL_ENABLED |
-> +				     MEDIA_LNK_FL_IMMUTABLE);
-> +}
-> +
-> +static const struct v4l2_async_notifier_operations csi2tx_notifier_ops = {
-> +	.bound		= csi2tx_async_bound,
-> +};
-> +
-> +static int csi2tx_get_resources(struct csi2tx_priv *csi2tx,
-> +				struct platform_device *pdev)
-> +{
-> +	struct resource *res;
-> +	u32 reg;
-> +	int i;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	csi2tx->base = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(csi2tx->base)) {
-> +		dev_err(&pdev->dev, "Couldn't map our registers\n");
-> +		return PTR_ERR(csi2tx->base);
-> +	}
-> +
-> +	csi2tx->p_clk = devm_clk_get(&pdev->dev, "p_clk");
-> +	if (IS_ERR(csi2tx->p_clk)) {
-> +		dev_err(&pdev->dev, "Couldn't get p_clk\n");
-> +		return PTR_ERR(csi2tx->p_clk);
-> +	}
-> +
-> +	csi2tx->esc_clk = devm_clk_get(&pdev->dev, "esc_clk");
-> +	if (IS_ERR(csi2tx->esc_clk)) {
-> +		dev_err(&pdev->dev, "Couldn't get the esc_clk\n");
-> +		return PTR_ERR(csi2tx->esc_clk);
-> +	}
-> +
-> +	clk_prepare_enable(csi2tx->p_clk);
-> +	reg = readl(csi2tx->base + CSI2TX_DEVICE_CONFIG_REG);
-> +	clk_disable_unprepare(csi2tx->p_clk);
-> +
-> +	csi2tx->max_lanes = (reg & 7);
-> +	if (csi2tx->max_lanes > 4) {
-> +		dev_err(&pdev->dev, "Invalid number of lanes: %u\n",
-> +			csi2tx->max_lanes);
-> +		return -EINVAL;
-> +	}
-> +
-> +	csi2tx->max_streams = ((reg >> 4) & 7);
-> +	if (csi2tx->max_streams > CSI2TX_STREAMS_MAX) {
-> +		dev_err(&pdev->dev, "Invalid number of streams: %u\n",
-> +			csi2tx->max_streams);
-> +		return -EINVAL;
-> +	}
-> +
-> +	csi2tx->has_internal_dphy = (reg & BIT(3)) ? true : false;
-> +
-> +	for (i = 0; i < csi2tx->max_streams; i++) {
-> +		char clk_name[16];
-> +
-> +		snprintf(clk_name, sizeof(clk_name), "pixel_if%u_clk", i);
-> +		csi2tx->pixel_clk[i] = devm_clk_get(&pdev->dev, clk_name);
-> +		if (IS_ERR(csi2tx->pixel_clk[i])) {
-> +			dev_err(&pdev->dev, "Couldn't get clock %s\n",
-> +				clk_name);
-> +			return PTR_ERR(csi2tx->pixel_clk[i]);
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int csi2tx_get_num_lanes(struct device *dev)
-> +{
-> +	struct v4l2_fwnode_endpoint v4l2_ep;
-> +	struct device_node *ep;
-> +	int ret;
-> +
-> +	ep = of_graph_get_endpoint_by_regs(dev->of_node, 0, 0);
-> +	if (!ep)
-> +		return -EINVAL;
-> +
-> +	ret = v4l2_fwnode_endpoint_parse(of_fwnode_handle(ep), &v4l2_ep);
-> +	if (ret) {
-> +		dev_err(dev, "Could not parse v4l2 endpoint\n");
-> +		goto out;
-> +	}
-> +
-> +	if (v4l2_ep.bus_type != V4L2_MBUS_CSI2) {
-> +		dev_err(dev, "Unsupported media bus type: 0x%x\n",
-> +			v4l2_ep.bus_type);
-> +		ret = -EINVAL;
-> +		goto out;
-> +	}
-> +
-> +	ret = v4l2_ep.bus.mipi_csi2.num_data_lanes;
-> +
-> +out:
-> +	of_node_put(ep);
-> +	return ret;
-> +}
-> +
-> +static int csi2tx_parse_dt(struct csi2tx_priv *csi2tx)
-> +{
-> +	struct fwnode_handle *fwh;
-> +	struct device_node *ep;
-> +
-> +	ep = of_graph_get_endpoint_by_regs(csi2tx->dev->of_node, 0, 0);
-> +	if (!ep)
-> +		return -EINVAL;
-> +
-> +	fwh = of_fwnode_handle(ep);
-> +	csi2tx->asd.match.fwnode.fwnode = fwnode_graph_get_remote_port_parent(fwh);
-> +	csi2tx->asd.match_type = V4L2_ASYNC_MATCH_FWNODE;
-> +	of_node_put(ep);
-> +
-> +	csi2tx->notifier.subdevs = devm_kzalloc(csi2tx->dev,
-> +						sizeof(*csi2tx->notifier.subdevs),
-> +						GFP_KERNEL);
-> +	if (!csi2tx->notifier.subdevs)
-> +		return -ENOMEM;
-> +
-> +	csi2tx->notifier.subdevs[0] = &csi2tx->asd;
-> +	csi2tx->notifier.num_subdevs = 1;
-> +	csi2tx->notifier.ops = &csi2tx_notifier_ops;
-> +
-> +	return v4l2_async_subdev_notifier_register(&csi2tx->subdev,
-> +						   &csi2tx->notifier);
-> +}
-> +
-> +static int csi2tx_probe(struct platform_device *pdev)
-> +{
-> +	struct csi2tx_priv *csi2tx;
-> +	int i, ret;
-> +
-> +	csi2tx = kzalloc(sizeof(*csi2tx), GFP_KERNEL);
-> +	if (!csi2tx)
-> +		return -ENOMEM;
-> +	platform_set_drvdata(pdev, csi2tx);
-> +	csi2tx->dev = &pdev->dev;
-> +
-> +	ret = csi2tx_get_resources(csi2tx, pdev);
-> +	if (ret)
-> +		goto err_free_priv;
-> +
-> +	ret = csi2tx_parse_dt(csi2tx);
-> +	if (ret)
-> +		goto err_free_priv;
-> +
-> +	v4l2_subdev_init(&csi2tx->subdev, &csi2tx_subdev_ops);
-> +	csi2tx->subdev.owner = THIS_MODULE;
-> +	csi2tx->subdev.dev = &pdev->dev;
-> +	csi2tx->subdev.flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
-> +	v4l2_set_subdevdata(&csi2tx->subdev, &pdev->dev);
-> +	snprintf(csi2tx->subdev.name, V4L2_SUBDEV_NAME_SIZE, "%s.%s",
-> +		 KBUILD_MODNAME, dev_name(&pdev->dev));
-> +
-> +	ret = csi2tx_get_num_lanes(&pdev->dev);
-> +	if (ret < 0) {
-> +		dev_err(&pdev->dev, "Invalid number of lanes, bailing out.\n");
-> +		ret = csi2tx->lanes;
-> +		goto err_free_priv;
-> +	}
-> +	csi2tx->lanes = ret;
-> +
-> +	if (csi2tx->lanes > csi2tx->max_lanes) {
-> +		dev_err(&pdev->dev,
-> +			"Current configuration uses more lanes than supported\n");
-> +		ret = -EINVAL;
-> +		goto err_free_priv;
-> +	}
-> +
-> +	/* Create our media pads */
-> +	csi2tx->subdev.entity.function = MEDIA_ENT_F_PROC_VIDEO_PIXEL_FORMATTER;
-> +	csi2tx->pads[CSI2TX_PAD_SOURCE].flags = MEDIA_PAD_FL_SOURCE;
-> +	for (i = CSI2TX_PAD_SINK_STREAM0; i < CSI2TX_PAD_MAX; i++)
-> +		csi2tx->pads[i].flags = MEDIA_PAD_FL_SINK;
-> +
-> +	ret = media_entity_pads_init(&csi2tx->subdev.entity, CSI2TX_PAD_MAX,
-> +				     csi2tx->pads);
-> +	if (ret)
-> +		goto err_free_priv;
-> +
-> +	ret = v4l2_async_register_subdev(&csi2tx->subdev);
-> +	if (ret < 0)
-> +		goto err_free_priv;
-> +
-> +	dev_info(&pdev->dev,
-> +		 "Probed CSI2TX with %u/%u lanes, %u streams, %s D-PHY\n",
-> +		 csi2tx->lanes, csi2tx->max_lanes, csi2tx->max_streams,
-> +		 csi2tx->has_internal_dphy ? "internal" : "no");
-> +
-> +	return 0;
-> +
-> +err_free_priv:
-> +	kfree(csi2tx);
-> +	return ret;
-> +}
-> +
-> +static int csi2tx_remove(struct platform_device *pdev)
-> +{
-> +	struct csi2tx_priv *csi2tx = platform_get_drvdata(pdev);
-> +
-> +	v4l2_async_unregister_subdev(&csi2tx->subdev);
-> +	kfree(csi2tx);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id csi2tx_of_table[] = {
-> +	{ .compatible = "cdns,csi2tx" },
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(of, csi2tx_of_table);
-> +
-> +static struct platform_driver csi2tx_driver = {
-> +	.probe	= csi2tx_probe,
-> +	.remove	= csi2tx_remove,
-> +
-> +	.driver	= {
-> +		.name		= "cdns-csi2tx",
-> +		.of_match_table	= csi2tx_of_table,
-> +	},
-> +};
-> +module_platform_driver(csi2tx_driver);
+> +bindings as child of the corresponding RSC controllers.
+
+Need to be specific here about what the child nodes are.
+
+> +
+> +EXAMPLE 1:
+> +
+> +For a TCS whose RSC base address is is 0x179C0000 and is at a DRV of 2, the
+> +register offsets for DRV2 start at 0D00, the register calculations are like
+> +this -
+> +First tuple: 0x179C0000 + 0x10000 * 2 = 0x179E0000
+> +Second tuple: 0x179E0000 + 0xD00  = 0x179E0D00
+> +
+> +	apps_rsc: rsc@179e000 {
+> +		compatible = "qcom,rpmh-rsc";
+> +		label = "apps_rsc";
+> +		reg = <0x179e0000 0x10000>, <0x179e0d00 0x3000>;
+> +		interrupts = <0 5 0>;
+> +		qcom,drv-id = <2>;
+> +		qcom,tcs-config = <SLEEP_TCS   3>,
+> +				  <WAKE_TCS    3>,
+> +				  <ACTIVE_TCS  2>,
+> +				  <CONTROL_TCS 1>;
+> +
+> +		foo-clk {
+> +			compatible = "foo-clk";
+> +		};
+> +	};
+> +
+> +EXAMPLE 2:
+> +
+> +For a TCS whose RSC base address is 0xAF20000 and is at DRV of 0, the register
+> +offsets for DRV0 start at 01C00, the register calculations are like this -
+> +First tuple: 0xAF20000
+> +Second tuple: 0xAF20000 + 0x1C00
+> +
+> +	disp_rsc: rsc@af20000 {
+> +		label = "disp_rsc";
+> +		compatible = "qcom,rpmh-rsc";
+> +		reg = <0xaf20000 0x10000>, <0xaf21c00 0x3000>;
+> +		interrupts = <0 129 0>;
+> +		qcom,drv-id = <0>;
+> +		qcom,tcs-config = <SLEEP_TCS 1>,
+> +				<WAKE_TCS    1>,
+> +				<ACTIVE_TCS  0>,
+> +				<CONTROL_TCS 1>;
+> +
+> +		foo-clk {
+> +			compatible = "foo-clk";
+> +		};
+> +	};
 > -- 
-> 2.14.3
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
 > 
-
-Regards,
-Benoit
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
