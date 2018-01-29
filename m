@@ -1,156 +1,69 @@
-From: Sricharan R <sricharan@codeaurora.org>
-Subject: [PATCH 10/15] ARM: dts: ipq4019: Add ipq4019-ap.dk07.1 common data
-Date: Mon, 29 Jan 2018 10:41:24 +0530
-Message-ID: <1517202689-14212-11-git-send-email-sricharan@codeaurora.org>
+From: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH 08/15] ARM: dts: ipq4019: Add qcom-ipq4019-ap.dk04.1-c5 board file
+Date: Mon, 29 Jan 2018 10:41:22 +0530
+Message-ID: <1517202689-14212-9-git-send-email-sricharan@codeaurora.org>
 References: <1517202689-14212-1-git-send-email-sricharan@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1517202689-14212-1-git-send-email-sricharan@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, robh@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, andy.gross@linaro.org, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, sboyd@codeaurora.org, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
-Cc: sricharan@codeaurora.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1517202689-14212-1-git-send-email-sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add the common data for all dk07 based boards.
+dk04.1-c5 has a spinand connected to spi bus0 chipselect 1.
 
-Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+Signed-off-by: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 ---
- arch/arm/boot/dts/qcom-ipq4019-ap.dk07.1.dtsi | 128 ++++++++++++++++++++++++++
- 1 file changed, 128 insertions(+)
- create mode 100644 arch/arm/boot/dts/qcom-ipq4019-ap.dk07.1.dtsi
+ arch/arm/boot/dts/Makefile                      |  1 +
+ arch/arm/boot/dts/qcom-ipq4019-ap.dk04.1-c5.dts | 23 +++++++++++++++++++++++
+ 2 files changed, 24 insertions(+)
+ create mode 100644 arch/arm/boot/dts/qcom-ipq4019-ap.dk04.1-c5.dts
 
-diff --git a/arch/arm/boot/dts/qcom-ipq4019-ap.dk07.1.dtsi b/arch/arm/boot/dts/qcom-ipq4019-ap.dk07.1.dtsi
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 1a8ab050..68e4b15 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -726,6 +726,7 @@ dtb-$(CONFIG_ARCH_QCOM) += \
+ 	qcom-ipq4019-ap.dk01.1-c1.dtb \
+ 	qcom-ipq4019-ap.dk01.1-c2.dtb \
+ 	qcom-ipq4019-ap.dk04.1-c1.dtb \
++	qcom-ipq4019-ap.dk04.1-c5.dtb \
+ 	qcom-ipq8064-ap148.dtb \
+ 	qcom-msm8660-surf.dtb \
+ 	qcom-msm8960-cdp.dtb \
+diff --git a/arch/arm/boot/dts/qcom-ipq4019-ap.dk04.1-c5.dts b/arch/arm/boot/dts/qcom-ipq4019-ap.dk04.1-c5.dts
 new file mode 100644
-index 0000000..af4e99d
+index 0000000..270b197
 --- /dev/null
-+++ b/arch/arm/boot/dts/qcom-ipq4019-ap.dk07.1.dtsi
-@@ -0,0 +1,128 @@
++++ b/arch/arm/boot/dts/qcom-ipq4019-ap.dk04.1-c5.dts
+@@ -0,0 +1,23 @@
 +// SPDX-License-Identifier: GPL-2.0
 +// Copyright (c) 2017, The Linux Foundation. All rights reserved.
 +
-+#include "qcom-ipq4019.dtsi"
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/gpio/gpio.h>
-+
++#include "qcom-ipq4019-ap.dk04.1.dtsi"
 +/ {
-+	model = "Qualcomm Technologies, Inc. IPQ4019/AP-DK07.1";
-+	compatible = "qcom,ipq4019";
-+
-+	memory {
-+		device_type = "memory";
-+		reg = <0x80000000 0x20000000>; /* 512MB */
-+	};
-+
-+	reserved-memory {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		rsvd1@87000000 {
-+			/* Reserved for other subsystem */
-+			reg = <0x87000000 0x500000>;
-+			no-map;
-+		};
-+
-+		wifi_dump@87500000 {
-+			reg = <0x87500000 0x600000>;
-+			no-map;
-+		};
-+
-+		rsvd2@87B00000 {
-+			/* Reserved for other subsystem */
-+			reg = <0x87B00000 0x500000>;
-+			no-map;
-+		};
-+	};
++	model = "Qualcomm Technologies, Inc. IPQ4019/AP-DK04.1-C5";
 +
 +	soc {
-+		pinctrl@1000000 {
-+			serial_0_pins: serial0_pinmux {
-+				mux {
-+					pins = "gpio16", "gpio17";
-+					function = "blsp_uart0";
-+					bias-disable;
-+				};
-+			};
-+
-+			spi_1_pins: spi_1_pinmux {
-+				mux {
-+					pins = "gpio44", "gpio46", "gpio47";
-+					function = "blsp_spi1";
-+					bias-disable;
-+				};
-+				host_int {
-+					pins = "gpio42";
-+					function = "gpio";
-+					input;
-+				};
-+				cs {
-+					pins = "gpio45";
-+					function = "gpio";
-+					bias-pull-up;
-+				};
-+				wake {
-+					pins = "gpio31";
-+					function = "gpio";
-+					output-high;
-+				};
-+				reset {
-+					pins = "gpio49";
-+					function = "gpio";
-+					output-high;
-+				};
-+			};
-+
-+			i2c_0_pins: i2c_0_pinmux {
-+				mux {
-+					pins = "gpio20", "gpio21";
-+					function = "blsp_i2c0";
-+					bias-disable;
-+				};
-+			};
-+		};
-+
-+		serial@78af000 {
-+			pinctrl-0 = <&serial_0_pins>;
-+			pinctrl-names = "default";
++		spi_0: spi@78b5000 { /* BLSP1 QUP1 */
 +			status = "ok";
-+		};
++			cs-gpios = <&tlmm 12 0>, <&tlmm 45 0>;
++			num-cs = <2>;
 +
-+		spi_1: spi@78b6000 { /* BLSP1 QUP2 */
-+			pinctrl-0 = <&spi_1_pins>;
-+			pinctrl-names = "default";
-+			status = "disabled";
-+
-+			spidev1: spi@1 {
-+				compatible = "spidev";
-+				reg = <0>;
++			mt29f@1 {
++				#address-cells = <1>;
++				#size-cells = <1>;
++				compatible = "spinand,mt29f";
++				reg = <1>;
 +				spi-max-frequency = <24000000>;
 +			};
-+		};
-+
-+		blsp_dma: dma@7884000 {
-+			status = "ok";
-+		};
-+
-+		i2c_0: i2c@78b7000 { /* BLSP1 QUP2 */
-+			pinctrl-0 = <&i2c_0_pins>;
-+			pinctrl-names = "default";
-+			status = "ok";
-+		};
-+
-+		pcie0: pci@40000000 {
-+			status = "ok";
-+			perst-gpio = <&tlmm 38 0x1>;
-+		};
-+
-+		qpic_bam: dma@7984000{
-+			status = "ok";
-+		};
-+
-+		nand: qpic-nand@79b0000 {
-+			status = "ok";
 +		};
 +	};
 +};
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
