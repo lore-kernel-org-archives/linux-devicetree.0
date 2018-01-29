@@ -1,43 +1,34 @@
-From: Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sunxi: h3/h5: Add DAI node for HDMI
-Date: Mon, 29 Jan 2018 11:35:27 +0100 (CET)
-Message-ID: <27087126.4975652.1517222127863.JavaMail.zimbra@musers.siol.net>
-References: <20180129092223.12423-1-codekipper@gmail.com> <20180129102227.ejmbifzjqmba3yja@flea.lan>
-Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v2 0/7] ARM: dts: imx6q: engicam LVDS panel changes
+Date: Mon, 29 Jan 2018 18:35:43 +0800
+Message-ID: <20180129103542.GE26461@dragon>
+References: <1515046345-15881-1-git-send-email-jagan@amarulasolutions.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDQNBWPU7YERB47RXPJQKGQEEURHCQY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180129102227.ejmbifzjqmba3yja-ZC1Zs529Oq4@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: maxime ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1515046345-15881-1-git-send-email-jagan@amarulasolutions.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jagan Teki <jagan@amarulasolutions.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Matteo Lisi <matteo.lisi@engicam.com>, Michael Trimarchi <michael@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Maxime,
+On Thu, Jan 04, 2018 at 11:42:18AM +0530, Jagan Teki wrote:
+> Series add LVDS panel attributes on panel drivers instead of defining
+> them in dts nodes, and also added new icorem6 engicam boards
+> 
+> Jagan Teki (7):
+>   drm/panel: simple: add support for Ampire AM-800480AYTZQW-00H
+>   ARM: dts: imx6q-icore: Switch LVDS timings from panel-simple
+>   ARM: dts: imx6dl-icore: Add LVDS node
+>   drm/panel: simple: Add support for KEO TX31D200VM0BAA
+>   ARM: dts: imx6q-icore-ofcap12: Switch LVDS timings from panel-simple
+>   ARM: dts: imx6q: Add Engicam i.CoreM6 Quad/Dual OpenFrame Cap 7
+>     initial support
+>   ARM: dts: imx6q: Add Engicam i.CoreM6 1.5 Quad/Dual MIPI starter kit
+>     support
 
-(previously I respond only to linux-sunxi mailing list)
+Those two "drm/panel" patches should be sent to DRM maintainer and list.
+I can only take the DTS chagnes after "drm/panel" patches get merged.
 
->On Mon, Jan 29, 2018 at 10:22:23AM +0100, codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
->> From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> 
->> Add the new DAI block for I2S2 which is used for HDMI audio.
->> 
->> Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->
->queued for 4.17, thanks!
->Maxime
-
-Please note that HDMI I2S has usable 4 I2S lanes, since HDMI
-supports 8 channel audio. As Marcus said, other blocks probably
-support them too, they are just not wired out on pins.
-
-Should we change compatible for HDMI?
-
-Best regards,
-Jernej
+Shawn
