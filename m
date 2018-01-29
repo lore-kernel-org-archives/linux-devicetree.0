@@ -1,37 +1,94 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/2] DT: display: renesas,du: document R8A77970 bindings
-Date: Mon, 29 Jan 2018 13:02:36 -0600
-Message-ID: <20180129190236.5fdgtlwlkxzurljh@rob-hp-laptop>
-References: <20180118211024.314876177@cogentembedded.com>
+Subject: Re: [PATCH 2/2] dt-bindings: introduce Command DB for QCOM SoCs
+Date: Mon, 29 Jan 2018 13:08:52 -0600
+Message-ID: <20180129190852.5ddcgdo3gkc2nw5r@rob-hp-laptop>
+References: <20180118220833.16616-3-ilina@codeaurora.org>
+ <20180118222802.18161-1-ilina@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180118211024.314876177@cogentembedded.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+In-Reply-To: <20180118222802.18161-1-ilina@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Lina Iyer <ilina@codeaurora.org>
+Cc: andy.gross@linaro.org, david.brown@linaro.org, sboyd@codeaurora.org, rnayak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, msivasub@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBKYW4gMTksIDIwMTggYXQgMTI6MDU6NThBTSArMDMwMCwgU2VyZ2VpIFNodHlseW92
-IHdyb3RlOgo+IERvY3VtZW50IHRoZSBSLUNhciBWM00gKFI4QTc3OTcwKSBTb0MgaW4gdGhlIFIt
-Q2FyIERVIGJpbmRpbmdzLgo+IAo+IFNpZ25lZC1vZmYtYnk6IFNlcmdlaSBTaHR5bHlvdiA8c2Vy
-Z2VpLnNodHlseW92QGNvZ2VudGVtYmVkZGVkLmNvbT4KPiAKPiAtLS0KPiBDaGFuZ2VzIGluIHZl
-cnNpb24gMjoKPiAtIGRvY3VtZW50ZWQgIFI4QTc3OTcwIERVIHBvcnRzOwo+IC0gcGF0Y2ggc3Bs
-aXQgZnJvbSB0aGUgbWFpbiBSOEE3Nzk3MCBEVSBzdXBwb3J0IHBhdGNoLgo+IAo+ICBEb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yZW5lc2FzLGR1LnR4dCB8ICAgIDIg
-KysKPiAgMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKQoKQWNrZWQtYnk6IFJvYiBIZXJy
-aW5nIDxyb2JoQGtlcm5lbC5vcmc+CgpUaGUgcHJlZmVycmVkIHN1YmplY3QgcHJlZml4IGlzICJk
-dC1iaW5kaW5nczogZGlzcGxheTogLi4uIgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5m
-cmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0
-aW5mby9kcmktZGV2ZWwK
+On Thu, Jan 18, 2018 at 03:28:02PM -0700, Lina Iyer wrote:
+> From: Mahesh Sivasubramanian <msivasub@codeaurora.org>
+> 
+> Command DB provides information on shared resources like clocks,
+> regulators etc., probed at boot by the remote subsytem and made
+> available in shared memory.
+> 
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Mahesh Sivasubramanian <msivasub@codeaurora.org>
+> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+> ---
+>  .../devicetree/bindings/arm/msm/cmd-db.txt         | 37 ++++++++++++++++++++++
+>  1 file changed, 37 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/msm/cmd-db.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/msm/cmd-db.txt b/Documentation/devicetree/bindings/arm/msm/cmd-db.txt
+> new file mode 100644
+> index 000000000000..b56e3e3604d3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/msm/cmd-db.txt
+> @@ -0,0 +1,37 @@
+> +Command DB
+> +---------
+
+Another strange QCom binding...
+
+> +
+> +Command DB is a database that provides a mapping between resource key and the
+> +resource address for a system resource managed by a remote processor. The data
+> +is stored in a shared memory region and is loaded by the remote processor.
+
+Is said shared memory described in DT. If so, this should be a child 
+node. Only 8 bytes seems kind of fine grained for putting in DT when it 
+could be implied by the parent shared memory node.
+
+> +
+> +Some of the Qualcomm Technologies Inc SoC's have hardware accelerators for
+> +controlling shared resources. Depending on the board configuration the shared
+> +resource properties may change. These properties are dynamically probed by the
+> +remote processor and made available in the shared memory.
+
+The table may change, but does the presence of it or shared memory 
+location (of the pointer) change?
+
+> +
+> +Command DB allows drivers to query resource parameters based on pre-determined
+> +key strings.
+> +
+> +The devicetree representation of the command DB driver should be:
+> +
+> +PROPERTIES:
+> +- compatible:
+> +	Usage: required
+> +	Value type: <string>
+> +	Definition: Should be "qcom,cmd-db"
+> +
+> +- reg:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Definition: First element is the base address of shared memory
+> +		Second element is the size of the shared memory region
+> +		Points to the dictionary address that houses the command DB
+> +		start address and the size of the command DB region
+> +
+> +Example:
+> +
+> +	qcom,cmd-db@c3f000c {
+> +		compatible = "qcom,cmd-db";
+> +		reg = <0xc3f000c 0x8>;
+> +	};
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
