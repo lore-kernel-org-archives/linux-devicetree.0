@@ -1,86 +1,64 @@
-From: Yong Deng <yong.deng@magewell.com>
-Subject: [PATCH v7 1/2] dt-bindings: media: Add Allwinner V3s Camera Sensor Interface (CSI)
-Date: Mon, 29 Jan 2018 17:18:53 +0800
-Message-ID: <1517217533-17657-1-git-send-email-yong.deng@magewell.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Randy Dunlap <rdunlap@infradead.org>, Hans Verkuil <hans.verkuil@cisco.com>, Stanimir Varbanov <stanimir.varbanov@linaro.org>, Hugues Fruchet <hugues.fruchet@st.com>, Yannick Fertre <yannick.fertre@st.com>, Philipp Zabel <p.zabel@pengutronix.de>, Arnd Bergmann <arnd@arndb.de>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Rick Chang <rick.chang@mediatek.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 02/16] arm: config: sunxi_defconfig:
+ enable SUN4I_GPADC
+Date: Mon, 29 Jan 2018 10:21:45 +0100
+Message-ID: <20180129092145.4pagdnfmhilwaj2r@flea.lan>
+References: <20180128232919.12639-1-embed3d@gmail.com>
+ <20180128232919.12639-3-embed3d@gmail.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="ghx2bibyvxgzclks"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBNOPXPJQKGQE3YZR4EQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20180128232919.12639-3-embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, rask-SivP7zSAdNDZaaYASwVUlg@public.gmane.org, clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sean-hENCXIMQXOg@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, icenowy-h8G6r0blFSE@public.gmane.org, edu.molinas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, singhalsimran0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add binding documentation for Allwinner V3s CSI.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Yong Deng <yong.deng@magewell.com>
----
- .../devicetree/bindings/media/sun6i-csi.txt        | 59 ++++++++++++++++++++++
- 1 file changed, 59 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/sun6i-csi.txt
+--ghx2bibyvxgzclks
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-diff --git a/Documentation/devicetree/bindings/media/sun6i-csi.txt b/Documentation/devicetree/bindings/media/sun6i-csi.txt
-new file mode 100644
-index 0000000..2ff47a9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/sun6i-csi.txt
-@@ -0,0 +1,59 @@
-+Allwinner V3s Camera Sensor Interface
-+-------------------------------------
-+
-+Allwinner V3s SoC features two CSI module. CSI0 is used for MIPI CSI-2
-+interface and CSI1 is used for parallel interface.
-+
-+Required properties:
-+  - compatible: value must be "allwinner,sun8i-v3s-csi"
-+  - reg: base address and size of the memory-mapped region.
-+  - interrupts: interrupt associated to this IP
-+  - clocks: phandles to the clocks feeding the CSI
-+    * bus: the CSI interface clock
-+    * mod: the CSI module clock
-+    * ram: the CSI DRAM clock
-+  - clock-names: the clock names mentioned above
-+  - resets: phandles to the reset line driving the CSI
-+
-+Each CSI node should contain one 'port' child node with one child 'endpoint'
-+node, according to the bindings defined in
-+Documentation/devicetree/bindings/media/video-interfaces.txt. As mentioned
-+above, the endpoint's bus type should be MIPI CSI-2 for CSI0 and parallel or
-+Bt656 for CSI1.
-+
-+Endpoint node properties for CSI1
-+---------------------------------
-+
-+- remote-endpoint	: (required) a phandle to the bus receiver's endpoint
-+			   node
-+- bus-width:		: (required) must be 8, 10, 12 or 16
-+- pclk-sample		: (optional) (default: sample on falling edge)
-+- hsync-active		: (only required for parallel)
-+- vsync-active		: (only required for parallel)
-+
-+Example:
-+
-+csi1: csi@1cb4000 {
-+	compatible = "allwinner,sun8i-v3s-csi";
-+	reg = <0x01cb4000 0x1000>;
-+	interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
-+	clocks = <&ccu CLK_BUS_CSI>,
-+		 <&ccu CLK_CSI1_SCLK>,
-+		 <&ccu CLK_DRAM_CSI>;
-+	clock-names = "bus", "mod", "ram";
-+	resets = <&ccu RST_BUS_CSI>;
-+
-+	port {
-+		/* Parallel bus endpoint */
-+		csi1_ep: endpoint {
-+			remote-endpoint = <&adv7611_ep>;
-+			bus-width = <16>;
-+
-+			/* If hsync-active/vsync-active are missing,
-+			   embedded BT.656 sync is used */
-+			hsync-active = <0>; /* Active low */
-+			vsync-active = <0>; /* Active low */
-+			pclk-sample = <1>;  /* Rising */
-+		};
-+	};
-+};
+Hi,
+
+On Mon, Jan 29, 2018 at 12:29:05AM +0100, Philipp Rossak wrote:
+> This commit enables the SUN4I_GPADC config option and
+> sets the value to yes. This is needed to enable the ths sensors.
+> 
+> Signed-off-by: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  arch/arm/configs/sunxi_defconfig | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/arm/configs/sunxi_defconfig b/arch/arm/configs/sunxi_defconfig
+> index 5caaf971fb50..52c3990b9d91 100644
+> --- a/arch/arm/configs/sunxi_defconfig
+> +++ b/arch/arm/configs/sunxi_defconfig
+> @@ -131,6 +131,7 @@ CONFIG_DMA_SUN6I=y
+>  CONFIG_EXTCON=y
+>  CONFIG_IIO=y
+>  CONFIG_AXP20X_ADC=y
+> +CONFIG_SUN4I_GPADC=y
+
+Unfortunately, we can't do that since TOUCHSCREEN_SUN4I is already
+enabled and we have a depends on !TOUCHSCREEN_SUN4I.
+
+One more reason to stop worrying about replacing that driver DT
+binding.
+
+Maxime
+
 -- 
-1.8.3.1
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--ghx2bibyvxgzclks--
