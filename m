@@ -1,77 +1,37 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] pinctrl: at91-pio4: add support for drive-strength
- property
-Date: Mon, 29 Jan 2018 13:01:30 -0600
-Message-ID: <20180129190130.qjej6hmudszzbfdz@rob-hp-laptop>
-References: <20180118160208.16461-1-ludovic.desroches@microchip.com>
- <CACRpkdanweSmHd_M+feHauEHtvKSW+-W=djb186BFdbxTf20Jg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] DT: display: renesas,du: document R8A77970 bindings
+Date: Mon, 29 Jan 2018 13:02:36 -0600
+Message-ID: <20180129190236.5fdgtlwlkxzurljh@rob-hp-laptop>
+References: <20180118211024.314876177@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <CACRpkdanweSmHd_M+feHauEHtvKSW+-W=djb186BFdbxTf20Jg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Ludovic Desroches <ludovic.desroches@microchip.com>
-Cc: Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-gpio@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+In-Reply-To: <20180118211024.314876177@cogentembedded.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 22, 2018 at 09:37:38AM +0100, Linus Walleij wrote:
-> On Thu, Jan 18, 2018 at 5:02 PM, Ludovic Desroches
-> <ludovic.desroches@microchip.com> wrote:
-> 
-> > Add support for the drive-strength property. Usually its value is
-> > expressed in mA. Since the numeric value depends on VDDIOP voltage,
-> > the controller uses low, medium and high to define the drive-strengh.
-> 
-> Aha I see. That's complex. It certainly results in a certain mA drive
-> strength in the end, but what you're saying is that this is not usually
-> what we configure.
-> 
-> > The PIO controller accepts two values for the low drive: 0 or 1. Most
-> > of the time, we don't care about the drive strength, there is no need
-> > to change it, so 0 is considered as the default value.
-> 
-> Do you mean default value as in "whatever the hardware was set
-> up as at boot time"?
-> 
-> > The low-drive
-> > value won't be advertised through pinconf-pins file excepted if it
-> 
-> except?
-> 
-> > has been set explicitly in the device tree ie if its value is
-> > different from 0.
-> >
-> > Signed-off-by: Ludovic Desroches <ludovic.desroches@microchip.com>
-> 
-> OK I think I get it.
-> 
-> >  Optional properties:
-> >  - GENERIC_PINCONFIG: generic pinconfig options to use, bias-disable,
-> > -bias-pull-down, bias-pull-up, drive-open-drain, input-schmitt-enable,
-> > -input-debounce, output-low, output-high.
-> > +bias-pull-down, bias-pull-up, drive-open-drain, drive-strength,
-> > +input-schmitt-enable, input-debounce, output-low, output-high.
-> (...)
-> > +                       drive-strength = <ATMEL_PIO_DRVSTR_LO>;
-> 
-> So you say you support this argument and it will be something like
-> 
-> include/dt-bindings/pinctrl/at91.h:#define ATMEL_PIO_DRVSTR_LO  1
-> include/dt-bindings/pinctrl/at91.h:#define ATMEL_PIO_DRVSTR_ME  2
-> include/dt-bindings/pinctrl/at91.h:#define ATMEL_PIO_DRVSTR_HI  3
-> 
-> But the definition if generic drive strength is actually in mA.
-
-Yes, and the reason we put unit suffixes on properties is to avoid 
-differing units.
- 
-> I think it is OK to deviate from stating it in mA, but you should
-> write this in the DT bindings so people do not get confused.
-
-I don't think it is okay. If "drive-strength" doesn't work, then use 
-a vendor specific property ("atmel,drive-strength"). Of course, I might 
-forget this in the next version and tell you to use a standard property 
-in mA. 
-
-Rob
+T24gRnJpLCBKYW4gMTksIDIwMTggYXQgMTI6MDU6NThBTSArMDMwMCwgU2VyZ2VpIFNodHlseW92
+IHdyb3RlOgo+IERvY3VtZW50IHRoZSBSLUNhciBWM00gKFI4QTc3OTcwKSBTb0MgaW4gdGhlIFIt
+Q2FyIERVIGJpbmRpbmdzLgo+IAo+IFNpZ25lZC1vZmYtYnk6IFNlcmdlaSBTaHR5bHlvdiA8c2Vy
+Z2VpLnNodHlseW92QGNvZ2VudGVtYmVkZGVkLmNvbT4KPiAKPiAtLS0KPiBDaGFuZ2VzIGluIHZl
+cnNpb24gMjoKPiAtIGRvY3VtZW50ZWQgIFI4QTc3OTcwIERVIHBvcnRzOwo+IC0gcGF0Y2ggc3Bs
+aXQgZnJvbSB0aGUgbWFpbiBSOEE3Nzk3MCBEVSBzdXBwb3J0IHBhdGNoLgo+IAo+ICBEb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yZW5lc2FzLGR1LnR4dCB8ICAgIDIg
+KysKPiAgMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKQoKQWNrZWQtYnk6IFJvYiBIZXJy
+aW5nIDxyb2JoQGtlcm5lbC5vcmc+CgpUaGUgcHJlZmVycmVkIHN1YmplY3QgcHJlZml4IGlzICJk
+dC1iaW5kaW5nczogZGlzcGxheTogLi4uIgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5m
+cmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0
+aW5mby9kcmktZGV2ZWwK
