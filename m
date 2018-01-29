@@ -1,7 +1,7 @@
 From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Subject: Re: [PATCH v5 1/2] drm/bridge: Add Cadence DSI driver
-Date: Mon, 29 Jan 2018 14:14:09 +0100
-Message-ID: <20180129141409.0ec356d1@bbrezillon>
+Date: Mon, 29 Jan 2018 14:16:39 +0100
+Message-ID: <20180129141639.6f5c4510@bbrezillon>
 References: <20180118134309.13123-1-boris.brezillon@free-electrons.com>
         <9b45c6a3-f26b-59f5-d313-88290a2c5b42@ti.com>
 Mime-Version: 1.0
@@ -17,164 +17,111 @@ List-Id: devicetree@vger.kernel.org
 On Mon, 29 Jan 2018 13:56:21 +0200
 Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org> wrote:
 
-> > +
-> > +static void cdns_dsi_init_link(struct cdns_dsi *dsi)
+> > +static ssize_t cdns_dsi_transfer(struct mipi_dsi_host *host,
+> > +				 const struct mipi_dsi_msg *msg)
 > > +{
-> > +	struct cdns_dsi_output *output = &dsi->output;
-> > +	unsigned long sysclk_period, ulpout;
-> > +	u32 val;
-> > +	int i;
+> > +	struct cdns_dsi *dsi = to_cdns_dsi(host);
+> > +	u32 cmd, sts, val, wait = WRITE_COMPLETED, ctl = 0;
+> > +	struct mipi_dsi_packet packet;
+> > +	int ret, i, tx_len, rx_len;
 > > +
-> > +	if (dsi->link_initialized)
-> > +		return;
-> > +
-> > +	val = 0;
-> > +	for (i = 1; i < output->dev->lanes; i++)
-> > +		val |= DATA_LANE_EN(i);
-> > +
-> > +	if (!(output->dev->mode_flags & MIPI_DSI_CLOCK_NON_CONTINUOUS))
-> > +		val |= CLK_CONTINUOUS;
-> > +
-> > +	writel(val, dsi->regs + MCTL_MAIN_PHY_CTL);
-> > +
-> > +	/* ULPOUT should be set to 1ms and is expressed in sysclk cycles. */
-> > +	sysclk_period = NSEC_PER_SEC / clk_get_rate(dsi->dsi_sys_clk);
-> > +	ulpout = DIV_ROUND_UP(NSEC_PER_MSEC, sysclk_period);
-> > +	writel(CLK_LANE_ULPOUT_TIME(ulpout) | DATA_LANE_ULPOUT_TIME(ulpout),
-> > +	       dsi->regs + MCTL_ULPOUT_TIME);
-> > +
-> > +	writel(LINK_EN, dsi->regs + MCTL_MAIN_DATA_CTL);
-> > +
-> > +	val = CLK_LANE_EN | PLL_START;
-> > +	for (i = 0; i < output->dev->lanes; i++)
-> > +		val |= DATA_LANE_START(i);
-> > +
-> > +	writel(val, dsi->regs + MCTL_MAIN_EN);
-> > +
-> > +	ndelay(100);  
-> 
-> It's good to have a comment about each sleep/delay on what is for and
-> where does the value come from.
-
-Yep, I'll figure this out.
-
-> 
-> > +	dsi->link_initialized = true;
-> > +}
-> > +
-
-
-> > +static int cdns_dsi_drm_probe(struct platform_device *pdev)
-> > +{
-> > +	struct cdns_dsi *dsi;
-> > +	struct cdns_dsi_input *input;
-> > +	struct resource *res;
-> > +	int ret, irq;
-> > +	u32 val;
-> > +
-> > +	dsi = devm_kzalloc(&pdev->dev, sizeof(*dsi), GFP_KERNEL);
-> > +	if (!dsi)
-> > +		return -ENOMEM;
-> > +
-> > +	platform_set_drvdata(pdev, dsi);
-> > +
-> > +	input = &dsi->input;
-> > +
-> > +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > +	dsi->regs = devm_ioremap_resource(&pdev->dev, res);
-> > +	if (IS_ERR(dsi->regs))
-> > +		return PTR_ERR(dsi->regs);
-> > +
-> > +	dsi->dsi_p_clk = devm_clk_get(&pdev->dev, "dsi_p_clk");
-> > +	if (IS_ERR(dsi->dsi_p_clk))
-> > +		return PTR_ERR(dsi->dsi_p_clk);
-> > +
-> > +	dsi->dsi_p_rst = devm_reset_control_get_optional_exclusive(&pdev->dev,
-> > +								"dsi_p_rst");
-> > +	if (IS_ERR(dsi->dsi_p_rst))
-> > +		return PTR_ERR(dsi->dsi_p_rst);
-> > +
-> > +	dsi->dsi_sys_clk = devm_clk_get(&pdev->dev, "dsi_sys_clk");
-> > +	if (IS_ERR(dsi->dsi_sys_clk))
-> > +		return PTR_ERR(dsi->dsi_sys_clk);
-> > +
-> > +	irq = platform_get_irq(pdev, 0);
-> > +	if (irq < 0)
-> > +		return irq;
-> > +
-> > +	ret = clk_prepare_enable(dsi->dsi_p_clk);
-> > +	if (ret)
+> > +	ret = pm_runtime_get_sync(host->dev);
+> > +	if (ret < 0)
 > > +		return ret;
 > > +
-> > +	ret = clk_prepare_enable(dsi->dsi_sys_clk);
-> > +	if (ret)
-> > +		goto err_disable_pclk;
+> > +	cdns_dsi_init_link(dsi);
 > > +
-> > +	val = readl(dsi->regs + ID_REG);
-> > +	if (REV_VENDOR_ID(val) != 0xcad) {
-> > +		dev_err(&pdev->dev, "invalid vendor id\n");
-> > +		return -EINVAL;
+> > +	ret = mipi_dsi_create_packet(&packet, msg);
+> > +	if (ret)
+> > +		goto out;
+> > +
+> > +	tx_len = msg->tx_buf ? msg->tx_len : 0;
+> > +	rx_len = msg->rx_buf ? msg->rx_len : 0;
+> > +
+> > +	/* For read operations, the maximum TX len is 2. */
+> > +	if (rx_len && tx_len > 2) {
+> > +		ret = -ENOTSUPP;
+> > +		goto out;
 > > +	}
 > > +
-> > +	val = readl(dsi->regs + IP_CONF);
-> > +	dsi->direct_cmd_fifo_depth = 1 << (DIRCMD_FIFO_DEPTH(val) + 2);
-> > +	dsi->rx_fifo_depth = RX_FIFO_DEPTH(val);
-> > +	init_completion(&dsi->direct_cmd_comp);
+> > +	/* TX len is limited by the CMD FIFO depth. */
+> > +	if (tx_len > dsi->direct_cmd_fifo_depth) {
+> > +		ret = -ENOTSUPP;
+> > +		goto out;
+> > +	}
 > > +
-> > +	writel(0, dsi->regs + MCTL_MAIN_DATA_CTL);
-> > +	writel(0, dsi->regs + MCTL_MAIN_EN);
-> > +	writel(0, dsi->regs + MCTL_MAIN_PHY_CTL);
+> > +	/* RX len is limited by the RX FIFO depth. */
+> > +	if (rx_len > dsi->rx_fifo_depth) {
+> > +		ret = -ENOTSUPP;
+> > +		goto out;
+> > +	}
 > > +
-> > +	/*
-> > +	 * We only support the DPI input, so force input->id to
-> > +	 * CDNS_DPI_INPUT.
-> > +	 */
-> > +	input->id = CDNS_DPI_INPUT;
-> > +	input->bridge.funcs = &cdns_dsi_bridge_funcs;
-> > +	input->bridge.of_node = pdev->dev.of_node;
+> > +	cmd = CMD_SIZE(tx_len) | CMD_VCHAN_ID(msg->channel) |
+> > +	      CMD_DATATYPE(msg->type);
 > > +
-> > +	/* Mask all interrupts before registering the IRQ handler. */
-> > +	writel(0, dsi->regs + MCTL_MAIN_STS_CTL);
-> > +	writel(0, dsi->regs + MCTL_DPHY_ERR_CTL1);
-> > +	writel(0, dsi->regs + CMD_MODE_STS_CTL);
+> > +	if (msg->flags & MIPI_DSI_MSG_USE_LPM)
+> > +		cmd |= CMD_LP_EN;
+> > +
+> > +	if (mipi_dsi_packet_format_is_long(msg->type))
+> > +		cmd |= CMD_LONG;
+> > +
+> > +	if (rx_len) {
+> > +		cmd |= READ_CMD;
+> > +		wait = READ_COMPLETED_WITH_ERR | READ_COMPLETED;
+> > +		ctl = READ_EN | BTA_EN;
+> > +	} else if (msg->flags & MIPI_DSI_MSG_REQ_ACK) {
+> > +		cmd |= BTA_REQ;
+> > +		wait = ACK_WITH_ERR_RCVD | ACK_RCVD;
+> > +		ctl = BTA_EN;
+> > +	}
+> > +
+> > +	writel(readl(dsi->regs + MCTL_MAIN_DATA_CTL) | ctl,
+> > +	       dsi->regs + MCTL_MAIN_DATA_CTL);
+> > +
+> > +	writel(cmd, dsi->regs + DIRECT_CMD_MAIN_SETTINGS);
+> > +
+> > +	for (i = 0; i < tx_len; i += 4) {
+> > +		const u8 *buf = msg->tx_buf;
+> > +		int j;
+> > +
+> > +		val = 0;
+> > +		for (j = 0; j < 4 && j + i < tx_len; j++)
+> > +			val |= (u32)buf[i + j] << (8 * j);
+> > +
+> > +		writel(val, dsi->regs + DIRECT_CMD_WRDATA);
+> > +	}
+> > +
+> > +	/* Clear status flags before sending the command. */
+> > +	writel(wait, dsi->regs + DIRECT_CMD_STS_CLR);
+> > +	writel(wait, dsi->regs + DIRECT_CMD_STS_CTL);
+> > +	reinit_completion(&dsi->direct_cmd_comp);
+> > +	writel(0, dsi->regs + DIRECT_CMD_SEND);
+> > +
+> > +	wait_for_completion_timeout(&dsi->direct_cmd_comp,
+> > +				    msecs_to_jiffies(1000));
+> > +
+> > +	sts = readl(dsi->regs + DIRECT_CMD_STS);
+> > +	writel(wait, dsi->regs + DIRECT_CMD_STS_CLR);
 > > +	writel(0, dsi->regs + DIRECT_CMD_STS_CTL);
-> > +	writel(0, dsi->regs + DIRECT_CMD_RD_STS_CTL);
-> > +	writel(0, dsi->regs + VID_MODE_STS_CTL);
-> > +	writel(0, dsi->regs + TVG_STS_CTL);
-> > +	writel(0, dsi->regs + DPI_IRQ_EN);
-> > +	ret = devm_request_irq(&pdev->dev, irq, cdns_dsi_interrupt, 0,
-> > +			       dev_name(&pdev->dev), dsi);
-> > +	if (ret)
-> > +		goto err_disable_pclk;
 > > +
-> > +	pm_runtime_enable(&pdev->dev);
-> > +	dsi->base.dev = &pdev->dev;
-> > +	dsi->base.ops = &cdns_dsi_ops;
+> > +	writel(readl(dsi->regs + MCTL_MAIN_DATA_CTL) & ~ctl,
+> > +	       dsi->regs + MCTL_MAIN_DATA_CTL);
 > > +
-> > +	ret = mipi_dsi_host_register(&dsi->base);
-> > +	if (ret)
-> > +		goto err_disable_runtime_pm;
+> > +	/* We did not receive the events we were waiting for. */
+> > +	if (!(sts & wait)) {
+> > +		ret = -ETIMEDOUT;
+> > +		goto out;
+> > +	}
 > > +
-> > +	clk_disable_unprepare(dsi->dsi_p_clk);
-> > +
-> > +	return 0;
-> > +
-> > +err_disable_runtime_pm:
-> > +	pm_runtime_disable(&pdev->dev);
-> > +
-> > +err_disable_pclk:
-> > +	clk_disable_unprepare(dsi->dsi_p_clk);
-> > +
-> > +	return ret;
-> > +}  
+> > +	/* READ of WRITE with ACK failed. */  
 > 
-> You don't disable the dsi_sys_clk neither in the ok nor in the error paths.
+> Should that 'of' be 'or'?
+> 
 
-Hm, it shouldn't be enabled in the first place: the runtime resume
-hook takes care of enabling it, and we don't need this clock to access
-IP registers (which is all we do in the probe).
+Yep, I'll fix that too.
 
-I'll fix that.
+Other than those trivial changes, are you happy with the rest of the
+driver or should I wait a bit for a full review?
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
