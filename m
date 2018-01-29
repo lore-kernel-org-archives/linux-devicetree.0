@@ -1,83 +1,35 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCH 1/1] dt-bindings: thermal: imx: update the binding to new
- method
-Date: Mon, 29 Jan 2018 09:48:57 +0800
-Message-ID: <20180129014855.GA12957@dragon>
-References: <1516862269-25543-1-git-send-email-aisheng.dong@nxp.com>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt-bindings: nvmem: imx-ocotp: update the binding to
+ reflect data cells
+Date: Mon, 29 Jan 2018 09:49:40 +0800
+Message-ID: <20180129014938.GB12957@dragon>
+References: <1516865849-26191-1-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1516862269-25543-1-git-send-email-aisheng.dong@nxp.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Dong Aisheng <aisheng.dong@nxp.com>
-Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com, Leonard Crestez <leonard.crestez@nxp.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+In-Reply-To: <1516865849-26191-1-git-send-email-aisheng.dong-3arQi8VN3Tc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dong Aisheng <aisheng.dong-3arQi8VN3Tc@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-imx-3arQi8VN3Tc@public.gmane.org, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 25, 2018 at 02:37:49PM +0800, Dong Aisheng wrote:
-> Due to the old method has already been marked as deprecated in binding
-> doc, so obviously it's better to update the example to new bindings
-> as well.
+On Thu, Jan 25, 2018 at 03:37:28PM +0800, Dong Aisheng wrote:
+> imx-ocotp is implemented based on nvmem which can have data cells
+> as child node. Update the binding doc to reflect it to be more easily
+> understood by users.
 > 
-> Cc: Shawn Guo <shawn.guo@linaro.org>
+> Cc: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-Acked-by: Shawn Guo <shawnguo@kernel.org>
+For both patches,
 
-Please use my kernel.org address for kernel patches.
+Acked-by: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-Shawn
-
-> Cc: Leonard Crestez <leonard.crestez@nxp.com>
-> Cc: Zhang Rui <rui.zhang@intel.com>
-> Cc: Eduardo Valentin <edubezval@gmail.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
-> ---
->  .../devicetree/bindings/thermal/imx-thermal.txt    | 25 ++++++++++++++++++++++
->  1 file changed, 25 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/thermal/imx-thermal.txt b/Documentation/devicetree/bindings/thermal/imx-thermal.txt
-> index 28be51a..379eb76 100644
-> --- a/Documentation/devicetree/bindings/thermal/imx-thermal.txt
-> +++ b/Documentation/devicetree/bindings/thermal/imx-thermal.txt
-> @@ -22,7 +22,32 @@ Optional properties:
->  - clocks : thermal sensor's clock source.
->  
->  Example:
-> +ocotp: ocotp@21bc000 {
-> +	#address-cells = <1>;
-> +	#size-cells = <1>;
-> +	compatible = "fsl,imx6sx-ocotp", "syscon";
-> +	reg = <0x021bc000 0x4000>;
-> +	clocks = <&clks IMX6SX_CLK_OCOTP>;
->  
-> +	tempmon_calib: calib@38 {
-> +		reg = <0x38 4>;
-> +	};
-> +
-> +	tempmon_temp_grade: temp-grade@20 {
-> +		reg = <0x20 4>;
-> +	};
-> +};
-> +
-> +tempmon: tempmon {
-> +	compatible = "fsl,imx6sx-tempmon", "fsl,imx6q-tempmon";
-> +	interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
-> +	fsl,tempmon = <&anatop>;
-> +	nvmem-cells = <&tempmon_calib>, <&tempmon_temp_grade>;
-> +	nvmem-cell-names = "calib", "temp_grade";
-> +	clocks = <&clks IMX6SX_CLK_PLL3_USB_OTG>;
-> +};
-> +
-> +Legacy method (Deprecated):
->  tempmon {
->  	compatible = "fsl,imx6q-tempmon";
->  	fsl,tempmon = <&anatop>;
-> -- 
-> 2.7.4
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Signed-off-by: Dong Aisheng <aisheng.dong-3arQi8VN3Tc@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
