@@ -1,64 +1,99 @@
 From: Sricharan R <sricharan@codeaurora.org>
-Subject: [PATCH 01/15] firmware: qcom: scm: Add ipq4019 soc compatible
-Date: Mon, 29 Jan 2018 10:41:15 +0530
-Message-ID: <1517202689-14212-2-git-send-email-sricharan@codeaurora.org>
+Subject: [PATCH 11/15] ARM: dts: ipq4019: Add qcom-ipq4019-ap.dk07.1-c1 board file
+Date: Mon, 29 Jan 2018 10:41:25 +0530
+Message-ID: <1517202689-14212-12-git-send-email-sricharan@codeaurora.org>
 References: <1517202689-14212-1-git-send-email-sricharan@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1517202689-14212-1-git-send-email-sricharan@codeaurora.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: robh+dt@kernel.org, robh@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, andy.gross@linaro.org, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, sboyd@codeaurora.org, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
 Cc: sricharan@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Add the compatible for ipq4019.
-This does not need clocks to do scm calls.
-
 Signed-off-by: Sricharan R <sricharan@codeaurora.org>
 ---
- Documentation/devicetree/bindings/firmware/qcom,scm.txt | 3 ++-
- drivers/firmware/qcom_scm.c                             | 3 +++
- 2 files changed, 5 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/Makefile                      |  1 +
+ arch/arm/boot/dts/qcom-ipq4019-ap.dk07.1-c1.dts | 60 +++++++++++++++++++++++++
+ 2 files changed, 61 insertions(+)
+ create mode 100644 arch/arm/boot/dts/qcom-ipq4019-ap.dk07.1-c1.dts
 
-diff --git a/Documentation/devicetree/bindings/firmware/qcom,scm.txt b/Documentation/devicetree/bindings/firmware/qcom,scm.txt
-index 7b40054..fcf6979 100644
---- a/Documentation/devicetree/bindings/firmware/qcom,scm.txt
-+++ b/Documentation/devicetree/bindings/firmware/qcom,scm.txt
-@@ -11,9 +11,10 @@ Required properties:
-  * "qcom,scm-msm8660" for MSM8660 platforms
-  * "qcom,scm-msm8690" for MSM8690 platforms
-  * "qcom,scm-msm8996" for MSM8996 platforms
-+ * "qcom,scm-ipq4019" for IPQ4019 platforms
-  * "qcom,scm" for later processors (MSM8916, APQ8084, MSM8974, etc)
- - clocks: One to three clocks may be required based on compatible.
-- * No clock required for "qcom,scm-msm8996"
-+ * No clock required for "qcom,scm-msm8996", "qcom,scm-ipq4019"
-  * Only core clock required for "qcom,scm-apq8064", "qcom,scm-msm8660", and "qcom,scm-msm8960"
-  * Core, iface, and bus clocks required for "qcom,scm"
- - clock-names: Must contain "core" for the core clock, "iface" for the interface
-diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
-index af4c752..ddc9ea8 100644
---- a/drivers/firmware/qcom_scm.c
-+++ b/drivers/firmware/qcom_scm.c
-@@ -603,6 +603,9 @@ static void qcom_scm_shutdown(struct platform_device *pdev)
- 	{ .compatible = "qcom,scm-msm8996",
- 	  .data = NULL, /* no clocks */
- 	},
-+	{ .compatible = "qcom,scm-ipq4019",
-+	  .data = NULL, /* no clocks */
-+	},
- 	{ .compatible = "qcom,scm",
- 	  .data = (void *)(SCM_HAS_CORE_CLK
- 			   | SCM_HAS_IFACE_CLK
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 0104ba2..ef5b133 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -728,6 +728,7 @@ dtb-$(CONFIG_ARCH_QCOM) += \
+ 	qcom-ipq4019-ap.dk04.1-c1.dtb \
+ 	qcom-ipq4019-ap.dk04.1-c5.dtb \
+ 	qcom-ipq4019-ap.dk04.1-c3.dtb \
++	qcom-ipq4019-ap.dk07.1-c1.dtb \
+ 	qcom-ipq8064-ap148.dtb \
+ 	qcom-msm8660-surf.dtb \
+ 	qcom-msm8960-cdp.dtb \
+diff --git a/arch/arm/boot/dts/qcom-ipq4019-ap.dk07.1-c1.dts b/arch/arm/boot/dts/qcom-ipq4019-ap.dk07.1-c1.dts
+new file mode 100644
+index 0000000..c2eed44
+--- /dev/null
++++ b/arch/arm/boot/dts/qcom-ipq4019-ap.dk07.1-c1.dts
+@@ -0,0 +1,60 @@
++// SPDX-License-Identifier: GPL-2.0
++// Copyright (c) 2017, The Linux Foundation. All rights reserved.
++
++#include "qcom-ipq4019-ap.dk07.1.dtsi"
++
++/ {
++	model = "Qualcomm Technologies, Inc. IPQ40xx/AP-DK07.1-C1";
++
++	soc {
++		spi_1: spi@78b6000 { /* BLSP1 QUP2 */
++			status = "ok";
++		};
++
++		pinctrl@1000000 {
++			serial_1_pins: serial1_pinmux {
++				mux {
++					pins = "gpio8", "gpio9",
++						"gpio10", "gpio11";
++					function = "blsp_uart1";
++					bias-disable;
++				};
++			};
++
++			spi_0_pins: spi_0_pinmux {
++				pinmux {
++					function = "blsp_spi0";
++					pins = "gpio13", "gpio14", "gpio15";
++					bias-disable;
++				};
++				pinmux_cs {
++					function = "gpio";
++					pins = "gpio12";
++					bias-disable;
++					output-high;
++				};
++			};
++		};
++
++		serial@78b0000 {
++			pinctrl-0 = <&serial_1_pins>;
++			pinctrl-names = "default";
++			status = "ok";
++		};
++
++		spi_0: spi@78b5000 { /* BLSP1 QUP1 */
++			pinctrl-0 = <&spi_0_pins>;
++			pinctrl-names = "default";
++			status = "ok";
++			cs-gpios = <&tlmm 12 0>;
++
++			m25p80@0 {
++				#address-cells = <1>;
++				#size-cells = <1>;
++				reg = <0>;
++				compatible = "n25q128a11";
++				spi-max-frequency = <24000000>;
++			};
++		};
++	};
++};
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
