@@ -1,17 +1,17 @@
 From: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 01/16] dt-bindings: update the Allwinner
- GPADC device tree binding for H3 & A83T
-Date: Mon, 29 Jan 2018 13:30:20 +0100
-Message-ID: <a107f74a-00dd-26e5-69df-0a62a4cf8525@gmail.com>
+Subject: Re: [PATCH v2 07/16] iio: adc: sun4i-gpadc-iio: rework:
+ support nvmem calibration data
+Date: Mon, 29 Jan 2018 13:33:12 +0100
+Message-ID: <e319fde5-9ede-8be0-03ae-f0a22d50250c@gmail.com>
 References: <20180128232919.12639-1-embed3d@gmail.com>
- <20180128232919.12639-2-embed3d@gmail.com>
- <20180129091937.w3c3btvva5yaqlf6@flea.lan>
+ <20180128232919.12639-8-embed3d@gmail.com>
+ <20180129094045.sagz2dnzvdadd4yx@flea.lan>
 Reply-To: embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"; format=flowed
-Return-path: <linux-sunxi+bncBD257DPK24NRBYFHXTJQKGQED6CM4WQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD257DPK24NRBDFJXTJQKGQEEZTP7CY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180129091937.w3c3btvva5yaqlf6-ZC1Zs529Oq4@public.gmane.org>
+In-Reply-To: <20180129094045.sagz2dnzvdadd4yx-ZC1Zs529Oq4@public.gmane.org>
 Content-Language: en-US
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -23,61 +23,165 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, rask-SivP7zSAdNDZaaYASwVUlg@public.gmane.org, clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sean-hENCXIMQXOg@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, icenowy-h8G6r0blFSE@public.gmane.org, edu.molinas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, singhalsimran0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
->> +Example for A33:
->>   	ths: ths@1c25000 {
->>   		compatible = "allwinner,sun8i-a33-ths";
->>   		reg = <0x01c25000 0x100>;
->> @@ -17,6 +40,27 @@ Example:
->>   		#io-channel-cells = <0>;
->>   	};
+
+
+On 29.01.2018 10:40, Maxime Ripard wrote:
+> On Mon, Jan 29, 2018 at 12:29:10AM +0100, Philipp Rossak wrote:
+>> This patch reworks the driver to support nvmem calibration cells.
+>> The driver checks if the nvmem calibration is supported and reads out
+>> the nvmem.
+>>
+>> Signed-off-by: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>>   drivers/iio/adc/sun4i-gpadc-iio.c | 44 +++++++++++++++++++++++++++++++++++++++
+>>   1 file changed, 44 insertions(+)
+>>
+>> diff --git a/drivers/iio/adc/sun4i-gpadc-iio.c b/drivers/iio/adc/sun4i-gpadc-iio.c
+>> index ac9ad2f8232f..74eeb5cd5218 100644
+>> --- a/drivers/iio/adc/sun4i-gpadc-iio.c
+>> +++ b/drivers/iio/adc/sun4i-gpadc-iio.c
+>> @@ -27,6 +27,7 @@
+>>   #include <linux/interrupt.h>
+>>   #include <linux/io.h>
+>>   #include <linux/module.h>
+>> +#include <linux/nvmem-consumer.h>
+>>   #include <linux/of.h>
+>>   #include <linux/of_device.h>
+>>   #include <linux/platform_device.h>
+>> @@ -74,6 +75,7 @@ struct gpadc_data {
+>>   	bool		has_bus_rst;
+>>   	bool		has_mod_clk;
+>>   	int		sensor_count;
+>> +	bool		supports_nvmem;
+> 
+> I think you should add some documentation along with all the fields
+> you're adding.
+
+ok I will add more informations in the next version into the commit message.
+
+> 
+>>   };
 >>   
->> +Example for H3:
->> +	ths: thermal-sensor@1c25000 {
->> +		compatible = "allwinner,sun8i-h3-ths";
->> +		reg = <0x01c25000 0x400>;
->> +		clocks = <&ccu CLK_BUS_THS>, <&ccu CLK_THS>;
->> +		clock-names = "bus", "mod";
->> +		resets = <&ccu RST_BUS_THS>;
->> +		interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
->> +		#thermal-sensor-cells = <0>;
->> +		#io-channel-cells = <0>;
->> +	};
+>>   static const struct gpadc_data sun4i_gpadc_data = {
+>> @@ -87,6 +89,7 @@ static const struct gpadc_data sun4i_gpadc_data = {
+>>   	.sample_start = sun4i_gpadc_sample_start,
+>>   	.sample_end = sun4i_gpadc_sample_end,
+>>   	.sensor_count = 1,
+>> +	.supports_nvmem = false,
+> 
+> That's already its value if you leave it out.
+> 
+>>   };
+>>   
+>>   static const struct gpadc_data sun5i_gpadc_data = {
+>> @@ -100,6 +103,7 @@ static const struct gpadc_data sun5i_gpadc_data = {
+>>   	.sample_start = sun4i_gpadc_sample_start,
+>>   	.sample_end = sun4i_gpadc_sample_end,
+>>   	.sensor_count = 1,
+>> +	.supports_nvmem = false,
+>>   };
+>>   
+>>   static const struct gpadc_data sun6i_gpadc_data = {
+>> @@ -113,6 +117,7 @@ static const struct gpadc_data sun6i_gpadc_data = {
+>>   	.sample_start = sun4i_gpadc_sample_start,
+>>   	.sample_end = sun4i_gpadc_sample_end,
+>>   	.sensor_count = 1,
+>> +	.supports_nvmem = false,
+>>   };
+>>   
+>>   static const struct gpadc_data sun8i_a33_gpadc_data = {
+>> @@ -123,6 +128,7 @@ static const struct gpadc_data sun8i_a33_gpadc_data = {
+>>   	.sample_start = sun4i_gpadc_sample_start,
+>>   	.sample_end = sun4i_gpadc_sample_end,
+>>   	.sensor_count = 1,
+>> +	.supports_nvmem = false,
+>>   };
+>>   
+>>   struct sun4i_gpadc_iio {
+>> @@ -141,6 +147,8 @@ struct sun4i_gpadc_iio {
+>>   	struct clk			*mod_clk;
+>>   	struct reset_control		*reset;
+>>   	int				sensor_id;
+>> +	u32				calibration_data[2];
+>> +	bool				has_calibration_data[2];
+> 
+> Why do you have two different values here?
+> 
+
+I think my idea was too complex! I thought it would be better to check 
+if calibration data was read, and is able to be written to hardware. 
+those information were split per register.
+
+I think a u64 should be fine for calibration_data. When I write the 
+calibration data I can check on the sensor count and write only the 
+lower 32 bits if there are less than 3 sensors.
+
+Is this ok for you?
+
+
+>>   	/* prevents concurrent reads of temperature and ADC */
+>>   	struct mutex			mutex;
+>>   	struct thermal_zone_device	*tzd;
+>> @@ -561,6 +569,9 @@ static int sun4i_gpadc_probe_dt(struct platform_device *pdev,
+>>   	struct resource *mem;
+>>   	void __iomem *base;
+>>   	int ret;
+>> +	struct nvmem_cell *cell;
+>> +	ssize_t cell_size;
+>> +	u64 *cell_data;
+>>   
+>>   	info->data = of_device_get_match_data(&pdev->dev);
+>>   	if (!info->data)
+>> @@ -575,6 +586,39 @@ static int sun4i_gpadc_probe_dt(struct platform_device *pdev,
+>>   	if (IS_ERR(base))
+>>   		return PTR_ERR(base);
+>>   
+>> +	info->has_calibration_data[0] = false;
+>> +	info->has_calibration_data[1] = false;
 >> +
->> +Example for A83T:
->> +	ths: thermal-sensor@1f04000 {
->> +		compatible = "allwinner,sun8i-a83t-ths";
->> +		reg = <0x01f04000 0x100>;
->> +		interrupts = <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
->> +		#thermal-sensor-cells = <1>;
->> +		#io-channel-cells = <0>;
->> +	};
+>> +	if (!info->data->supports_nvmem)
+>> +		goto no_nvmem;
 >> +
+>> +	cell = nvmem_cell_get(&pdev->dev, "calibration");
+>> +	if (IS_ERR(cell)) {
+>> +		if (PTR_ERR(cell) == -EPROBE_DEFER)
+>> +			return PTR_ERR(cell);
+>> +		goto no_nvmem;
 > 
-> I'm wondering if this is actually needed. We've used this convoluted
-> constructs to be compatible with the old driver, but I'm not sure this
-> is actually worth it now, and this is causing several issues, among
-> which:
->    - We need to have a bunch of quirks to handle all the DT cases.
->    - We need to have an MFD, which isn't really optimal
+> goto considered evil ? :)
 > 
-> So I'd rather introduce a new compatible for the old SoCs, keep the
-> old driver around, and simplify a lot that driver code that will ease
-> further developments. And we can also get rid of the MFD in the
-> process. I discussed it with Quentin, and he was ok with it, what do
-> you think?
+
+this was a suggestion from Jonatan in version one, to make the code 
+better readable.
+.
+>> +	}
+>> +
+>> +	cell_data = (u64 *)nvmem_cell_read(cell, &cell_size);
+>> +	nvmem_cell_put(cell);
+>> +	switch (cell_size) {
+>> +		case 8:
+>> +		case 6:
+>> +			info->has_calibration_data[1] = true;
+>> +			info->calibration_data[1] = be32_to_cpu(
+>> +					upper_32_bits(cell_data[0]));
+>> +		case 4:
+>> +		case 2:
+>> +			info->has_calibration_data[0] = true;
+>> +			info->calibration_data[0] = be32_to_cpu(
+>> +					lower_32_bits(cell_data[0]));
 > 
-> (and that would involve creating a new file for the bindings you
-> introduce here).
+> Why do you need that switch?
+
+You are right! The calibration reg seems to be always 64 bit wide. [1]
+So I will just check for the length of 8.
+
+
 > 
+> Thanks!
 > Maxime
 > 
 
-I think this is a good idea, and the desired way to rework the driver.
+[1]: http://linux-sunxi.org/SID_Register_Guide#eFUSE
 
-To sum up what we talked on IRC:
-
-This will end up in removing the MFD driver and moving the interrupt 
-handling into the iio driver. At the end this will also simplify the IRQ 
-part.
-
+Thanks,
 Philipp
