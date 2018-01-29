@@ -1,45 +1,42 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 08/15] usb: dwc3: Make TX/RX threshold configurable
-Date: Mon, 29 Jan 2018 12:46:23 -0600
-Message-ID: <20180129184623.6evdm4uslu4rnamz@rob-hp-laptop>
-References: <cover.1516239813.git.thinhn@synopsys.com>
- <4afe5640926fac3698abb323cb7be01f32b30ab7.1516239813.git.thinhn@synopsys.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [RFC v2 1/2] dt-bindings: mipi-dsi: Add info about peripherals
+ with non-DSI control bus
+Date: Mon, 29 Jan 2018 12:51:29 -0600
+Message-ID: <20180129185129.v5w7vwouql56zkdv@rob-hp-laptop>
+References: <20171205103356.9917-1-architt@codeaurora.org>
+ <20180118045355.8858-1-architt@codeaurora.org>
+ <20180118045355.8858-2-architt@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <4afe5640926fac3698abb323cb7be01f32b30ab7.1516239813.git.thinhn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thinh Nguyen <Thinh.Nguyen-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Cc: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <20180118045355.8858-2-architt@codeaurora.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Archit Taneja <architt@codeaurora.org>
+Cc: devicetree@vger.kernel.org, boris.brezillon@free-electrons.com, linux-arm-msm@vger.kernel.org, briannorris@chromium.org, philippe.cornu@st.com, dri-devel@lists.freedesktop.org, nickey.yang@rock-chips.com, tomi.valkeinen@ti.com, thierry.reding@gmail.com, laurent.pinchart@ideasonboard.com, maxime.ripard@free-electrons.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 17, 2018 at 05:57:15PM -0800, Thinh Nguyen wrote:
-> DWC_usb31 periodic transfer at 48K+ bytes per interval may need
-> modification to the TX/RX packet threshold to achieve optimal result.
-> Add properties to make it configurable.
-> 
-> Cc: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-> Signed-off-by: Thinh Nguyen <thinhn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/usb/dwc3.txt | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
-> index 52fb41046b34..a532fa6bf884 100644
-> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
-> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
-> @@ -55,6 +55,10 @@ Optional properties:
->   - snps,quirk-frame-length-adjustment: Value for GFLADJ_30MHZ field of GFLADJ
->  	register for post-silicon frame length adjustment when the
->  	fladj_30mhz_sdbnd signal is invalid or incorrect.
-> + - snps,rx-thr-num-pkt-prd: periodic ESS RX packet threshold count.
-> + - snps,rx-max-burst-prd: Max periodic ESS RX burst size.
-> + - snps,tx-thr-num-pkt-prd: periodic ESS TX packet threshold count.
-> + - snps,tx-max-burst-prd: Max periodic ESS TX burst size.
-
-What are the defaults if not set?
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gVGh1LCBKYW4gMTgsIDIwMTggYXQgMTA6MjM6NTRBTSArMDUzMCwgQXJjaGl0IFRhbmVqYSB3
+cm90ZToKPiBBZGQgYSBzZWN0aW9uIHRoYXQgZGVzY3JpYmVzIGR0LWJpbmRpbmdzIGZvciBwZXJp
+cGhlcmFscyB0aGF0IHN1cHBvcnQKPiBNSVBJIERTSSwgYnV0IGhhdmUgYSBkaWZmZXJlbnQgYnVz
+IGFzIHRoZSBwcmltYXJ5IGNvbnRyb2wgYnVzLCBvciBubwo+IGNvbnRyb2wgYnVzIGF0IGFsbC4g
+QWRkIGFuIGV4YW1wbGUgZm9yIGEgcGVyaXBoZXJhbCB3aXRoIGEgbm9uLURTSQo+IGNvbnRyb2wg
+YnVzLgo+IAo+IFNpZ25lZC1vZmYtYnk6IEFyY2hpdCBUYW5lamEgPGFyY2hpdHRAY29kZWF1cm9y
+YS5vcmc+Cj4gLS0tCj4gdjI6Cj4gLSBNZW50aW9uZWQgd2hhdCB0byBkbyBpZiBwZXJpcGhlcmFs
+IGhhcyBubyBjb250cm9sIGJ1cwo+IC0gRHJvcCB1bml0LWFkZHJlc3MgYW5kICMqLWNlbGxzIHdo
+ZXJlIGFwcGxpY2FibGUuCj4gCj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbWlw
+aS1kc2ktYnVzLnR4dCAgIHwgNzEgKysrKysrKysrKysrKysrKysrKy0tLQo+ICAxIGZpbGUgY2hh
+bmdlZCwgNjQgaW5zZXJ0aW9ucygrKSwgNyBkZWxldGlvbnMoLSkKClJldmlld2VkLWJ5OiBSb2Ig
+SGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMu
+ZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlz
+dGluZm8vZHJpLWRldmVsCg==
