@@ -1,219 +1,65 @@
-From: Icenowy Zheng <icenowy@aosc.io>
-Subject: Re: [linux-sunxi] Re: [PATCH v3 06/12] dt-bindings: display: sun4i-drm: Add A83T HDMI pipeline
-Date: Tue, 30 Jan 2018 02:08:55 +0800
-Message-ID: <2330C9BC-F3CF-436C-83D6-79A0304A90A4@aosc.io>
-References: <20180117201421.25954-1-jernej.skrabec@siol.net> <20180117201421.25954-7-jernej.skrabec@siol.net> <20180129180526.v2vokx75zg2diem3@rob-hp-laptop>
+From: Chintan Pandya <cpandya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v2] of: use hash based search in of_find_node_by_phandle
+Date: Mon, 29 Jan 2018 23:48:35 +0530
+Message-ID: <85e2f338-0475-dff0-f8e9-6ab06db23a3b@codeaurora.org>
+References: <1516955496-17236-1-git-send-email-cpandya@codeaurora.org>
+ <f08592cf-5e49-e631-c481-e166b741f25e@prevas.dk>
+ <aa84e40d-5032-1d1d-6146-391ca1e5e528@codeaurora.org>
+ <CAL_JsqJ=6bmOZCsj=NVthgXsZRRjyhQUDv0-CrngF_1MaYtKqA@mail.gmail.com>
+ <20180126213943.7zwijanlbrq3y666@rob-hp-laptop>
+ <b20292f5-e080-2b66-bae6-4a230cb0627a@codeaurora.org>
+ <CAL_JsqLwRYOYQ3WJ08AznZcN_BpR-udWw859W5q-CPKh=rPNFQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20180129180526.v2vokx75zg2diem3@rob-hp-laptop>
-Sender: linux-clk-owner@vger.kernel.org
-To: robh@kernel.orgRob Herring <robh@kernel.org>, Jernej Skrabec <jernej.skrabec@siol.net>
-Cc: maxime.ripard@free-electrons.com, airlied@linux.ie, mark.rutland@arm.com, wens@csie.org, architt@codeaurora.org, a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com, mturquette@baylibre.com, sboyd@codeaurora.org, Jose.Abreu@synopsys.com, narmstrong@baylibre.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-sunxi@googlegroups.com
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqLwRYOYQ3WJ08AznZcN_BpR-udWw859W5q-CPKh=rPNFQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Rasmus Villemoes <rasmus.villemoes-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
+>> Scenarios:
+>> [1] Cache size 1024 + early cache build up [Small change in your cache
+>> patch,
+>>      see the patch below]
+>> [2] Hash 64 approach[my original v2 patch]
+>> [3] Cache size 64
+>> [4] Cache size 128
+>> [5] Cache size 256
+>> [6] Base build
+>>
+>> Result (boot to shell in sec):
+>> [1] 14.292498 14.370994 14.313537 --> 850ms avg gain
+>> [2] 14.340981 14.395900 14.398149 --> 800ms avg gain
+>> [3] 14.546429 14.488783 14.468694 --> 680ms avg gain
+>> [4] 14.506007 14.497487 14.523062 --> 670ms avg gain
+>> [5] 14.671100 14.643344 14.731853 --> 500ms avg gain
+> It's strange that bigger sizes are slower. Based on this data, I'd pick [3].
+>
+> How many phandles do you have? I thought it was hundreds, so 1024
+> entries would be more than enough and you should see some curve to a
+> max gain as cache size approaches # of phandles.
+>
+1063 phandles for my device. In one of the previous mails, I estimated it to
+be few hundreds but I wastoo short of actual number. However, 1063 still
+doesn't justify why [4] and [5] are notbetter than [3].
 
-于 2018年1月30日 GMT+08:00 上午2:05:26, Rob Herring <robh@kernel.org> 写到:
->On Wed, Jan 17, 2018 at 09:14:15PM +0100, Jernej Skrabec wrote:
->> This commit adds all necessary compatibles and descriptions needed to
->> implement A83T HDMI pipeline.
->> 
->> Mixer is already properly described, so only compatible is added.
->> 
->> However, A83T TV TCON, which is connected to HDMI, doesn't have
->channel 0,
->> contrary to all TCONs currently described. Because of that, TCON
->> documentation is extended.
->> 
->> A83T features Synopsys DW HDMI controller with a custom PHY which
->looks
->> like Synopsys Gen2 PHY with few additions. Since there is no
->> documentation, needed properties were found out through
->experimentation
->> and reading BSP code.
->> 
->> At the end, example is added for newer SoCs, which feature DE2 and DW
->> HDMI.
->> 
->> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
->> ---
->>  .../bindings/display/sunxi/sun4i-drm.txt           | 197
->++++++++++++++++++++-
->>  1 file changed, 190 insertions(+), 7 deletions(-)
->> 
->> diff --git
->a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
->b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
->> index cd626ee1147a..4fb380f3e53d 100644
->> --- a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
->> +++ b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
->> @@ -64,6 +64,52 @@ Required properties:
->>      first port should be the input endpoint. The second should be
->the
->>      output, usually to an HDMI connector.
->>  
->> +DWC HDMI TX Encoder
->> +-------------------
->> +
->> +The HDMI transmitter is a Synopsys DesignWare HDMI 1.4 TX controller
->IP
->> +with Allwinner's own PHY IP. It supports audio and video outputs and
->CEC.
->> +
->> +These DT bindings follow the Synopsys DWC HDMI TX bindings defined
->in
->> +Documentation/devicetree/bindings/display/bridge/dw_hdmi.txt with
->the
->> +following device-specific properties.
->> +
->> +Required properties:
->> +
->> +  - compatible: value must be one of:
->> +    * "allwinner,sun8i-a83t-dw-hdmi"
->> +  - reg: base address and size of memory-mapped region
->> +  - reg-io-width: See dw_hdmi.txt. Shall be 1.
->> +  - interrupts: HDMI interrupt number
->> +  - clocks: phandles to the clocks feeding the HDMI encoder
->> +    * iahb: the HDMI bus clock
->> +    * isfr: the HDMI register clock
->> +  - clock-names: the clock names mentioned above
->> +  - resets: phandle to the reset controller
->> +  - reset-names: must be "ctrl"
->> +  - phys: phandle to the DWC HDMI PHY
->> +  - phy-names: must be "phy"
->> +
->> +  - ports: A ports node with endpoint definitions as defined in
->> +    Documentation/devicetree/bindings/media/video-interfaces.txt.
->The
->> +    first port should be the input endpoint. The second should be
->the
->> +    output, usually to an HDMI connector.
->> +
->> +DWC HDMI PHY
->> +------------
->> +
->> +Required properties:
->> +  - compatible: value must be one of:
->> +    * allwinner,sun8i-a83t-hdmi-phy
->> +  - reg: base address and size of memory-mapped region
->> +  - clocks: phandles to the clocks feeding the HDMI PHY
->> +    * bus: the HDMI PHY interface clock
->> +    * mod: the HDMI PHY module clock
->> +    * tmds: TMDS clock
->> +  - clock-names: the clock names mentioned above
->> +  - resets: phandle to the reset controller driving the PHY
->> +  - reset-names: must be "phy"
->> +
->>  TV Encoder
->>  ----------
->>  
->> @@ -94,24 +140,23 @@ Required properties:
->>     * allwinner,sun7i-a20-tcon
->>     * allwinner,sun8i-a33-tcon
->>     * allwinner,sun8i-a83t-tcon-lcd
->> +   * allwinner,sun8i-a83t-tcon-tv
->>     * allwinner,sun8i-v3s-tcon
->>   - reg: base address and size of memory-mapped region
->>   - interrupts: interrupt associated to this IP
->> - - clocks: phandles to the clocks feeding the TCON. Three are
->needed:
->> + - clocks: phandles to the clocks feeding the TCON. One is needed:
->>     - 'ahb': the interface clocks
->> -   - 'tcon-ch0': The clock driving the TCON channel 0
->
->Well, it didn't look right before saying 3 are needed, but listing 2. 
->However, you can't just change this as it affects all the other SoCs. 
->This should probably be a separate patch.
->
->>   - resets: phandles to the reset controllers driving the encoder
->>     - "lcd": the reset line for the TCON channel 0
->>  
->>   - clock-names: the clock names mentioned above
->>   - reset-names: the reset names mentioned above
->> - - clock-output-names: Name of the pixel clock created
->
->Why is this removed?
->
->>  
->>  - ports: A ports node with endpoint definitions as defined in
->>    Documentation/devicetree/bindings/media/video-interfaces.txt. The
->>    first port should be the input endpoint, the second one the output
->>  
->> -  The output may have multiple endpoints. The TCON has two channels,
->> +  The output may have multiple endpoints. TCON can have two
->channels,
->
->Perhaps you should say "can have 1 or 2 channels".
->
->>    usually with the first channel being used for the panels
->interfaces
->>    (RGB, LVDS, etc.), and the second being used for the outputs that
->>    require another controller (TV Encoder, HDMI, etc.). The endpoints
->> @@ -119,11 +164,16 @@ Required properties:
->>    channel the endpoint is associated to. If that property is not
->>    present, the endpoint number will be used as the channel number.
->>  
->> +When TCON supports channel 0 (all TCONs except TV TCON on A83T), two
->> +more clocks are needed:
->> +   - 'tcon-ch0': The clock driving the TCON channel 0
->
->Looks like one clock to me.
+I would still be interested to find out a way to dynamically allocate array
+with size near to total # of phandles with pre-stored mapping. And free this
+array once done with it. But at present, no idea how will I achieve this. If
+you can share any pointers around this, that would help !
 
-He should mean one input and one output.
+Thanks,
+Chintan Pandya
 
->
->> +   - clock-output-names: Name of the pixel clock created
->
->It's better to not move this, but just add what compatibles it does or 
->doesn't apply to.
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
-The existence of pclk out is tied with ch0 input, as ch0 input
-is the parent of pclk output.
-
->
->> +
->>  On SoCs other than the A33 and V3s, there is one more clock
->required:
->>     - 'tcon-ch1': The clock driving the TCON channel 1
->>  
->> -On SoCs that support LVDS (all SoCs but the A13, H3, H5 and V3s),
->you
->> -need one more reset line:
->> +When TCON support LVDS (all TCONs except TV TCON on A83T and those
->found
->> +in A13, H3, H5 and V3s SoCs), you need one more reset line:
->>     - 'lvds': The reset line driving the LVDS logic
->>  
->>  And on the A23, A31, A31s and A33, you need one more clock line:
->> @@ -226,6 +276,7 @@ supported.
->>  Required properties:
->>    - compatible: value must be one of:
->>      * allwinner,sun8i-a83t-de2-mixer-0
->> +    * allwinner,sun8i-a83t-de2-mixer-1
->>      * allwinner,sun8i-v3s-de2-mixer
->>    - reg: base address and size of the memory-mapped region.
->>    - clocks: phandles to the clocks feeding the mixer
->> @@ -261,7 +312,7 @@ Required properties:
->>    - allwinner,pipelines: list of phandle to the display engine
->>      frontends (DE 1.0) or mixers (DE 2.0) available.
->>  
->> -Example:
->> +Example 1:
->>  
->>  panel: panel {
->>  	compatible = "olimex,lcd-olinuxino-43-ts";
->> @@ -460,3 +511,135 @@ display-engine {
->>  	compatible = "allwinner,sun5i-a13-display-engine";
->>  	allwinner,pipelines = <&fe0>;
->>  };
->> +
->> +Example 2:
->
->Is this really different enough to need an example? Examples don't 
->need to enumerate all possible options. They are often wrong because 
->they don't compile on their own and that creates a maintenance burden.
->
->Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
