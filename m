@@ -1,75 +1,120 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v5 1/2] drm/bridge: Add Cadence DSI driver
-Date: Mon, 29 Jan 2018 17:38:54 +0100
-Message-ID: <20180129173854.1f1ee8ce@bbrezillon>
-References: <20180118134309.13123-1-boris.brezillon@free-electrons.com>
-        <47b5af31-4870-9109-291c-894455a1a15c@ti.com>
+From: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
+Subject: RE: [PATCH v12 0/3] iommu/smmu-v3: Workaround for hisilicon
+ 161010801 erratum(reserve HW MSI)
+Date: Mon, 29 Jan 2018 16:41:35 +0000
+Message-ID: <5FC3163CFD30C246ABAA99954A238FA83863FCD0@FRAEML521-MBX.china.huawei.com>
+References: <20171214160957.13716-1-shameerali.kolothum.thodi@huawei.com>
+ <20180129153939.GC24972@arm.com>
+ <5FC3163CFD30C246ABAA99954A238FA83863FC88@FRAEML521-MBX.china.huawei.com>
+ <20180129162109.GA25266@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <47b5af31-4870-9109-291c-894455a1a15c-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Cc: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Richard Sproul <sproul-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Simon Hatliff <hatliff-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Suresh Punnoose <sureshp-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Alan Douglas <adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, "Menon, Nishanth" <nm-l0cyMroinI0@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <20180129162109.GA25266@arm.com>
+Content-Language: en-US
+Sender: linux-acpi-owner@vger.kernel.org
+To: Will Deacon <will.deacon@arm.com>
+Cc: "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "robin.murphy@arm.com" <robin.murphy@arm.com>, "marc.zyngier@arm.com" <marc.zyngier@arm.com>, "joro@8bytes.org" <joro@8bytes.org>, John Garry <john.garry@huawei.com>, "xuwei (O)" <xuwei5@huawei.com>, "Guohanjun (Hanjun Guo)" <guohanjun@huawei.com>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linuxarm <linuxarm@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomi,
+Hi Joerg,
 
-On Mon, 29 Jan 2018 16:29:21 +0200
-Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org> wrote:
-
-> On 18/01/18 15:43, Boris Brezillon wrote:
-> > Add a driver for Cadence DPI -> DSI bridge.
-> > 
-> > This driver only support a subset of Cadence DSI bridge capabilities.
-> > 
-> > Here is a non-exhaustive list of missing features:
-> >  * burst mode
-> >  * DPHY init/configuration steps
-> >  * support for additional input interfaces (SDI input)  
+> -----Original Message-----
+> From: Will Deacon [mailto:will.deacon@arm.com]
+> Sent: Monday, January 29, 2018 4:21 PM
+> To: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
+> Cc: lorenzo.pieralisi@arm.com; robin.murphy@arm.com;
+> marc.zyngier@arm.com; joro@8bytes.org; John Garry
+> <john.garry@huawei.com>; xuwei (O) <xuwei5@huawei.com>; Guohanjun
+> (Hanjun Guo) <guohanjun@huawei.com>; iommu@lists.linux-foundation.org;
+> linux-arm-kernel@lists.infradead.org; linux-acpi@vger.kernel.org;
+> devicetree@vger.kernel.org; Linuxarm <linuxarm@huawei.com>
+> Subject: Re: [PATCH v12 0/3] iommu/smmu-v3: Workaround for hisilicon
+> 161010801 erratum(reserve HW MSI)
 > 
-> I think it would be good to have a list of features that are supported
-> and tested, and perhaps a word about the development setup you have.
+> On Mon, Jan 29, 2018 at 04:16:33PM +0000, Shameerali Kolothum Thodi wrote:
+> > > -----Original Message-----
+> > > From: Will Deacon [mailto:will.deacon@arm.com]
+> > > Sent: Monday, January 29, 2018 3:40 PM
+> > > To: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
+> > > Cc: lorenzo.pieralisi@arm.com; robin.murphy@arm.com;
+> > > marc.zyngier@arm.com; joro@8bytes.org; John Garry
+> > > <john.garry@huawei.com>; xuwei (O) <xuwei5@huawei.com>; Guohanjun
+> > > (Hanjun Guo) <guohanjun@huawei.com>; iommu@lists.linux-
+> foundation.org;
+> > > linux-arm-kernel@lists.infradead.org; linux-acpi@vger.kernel.org;
+> > > devicetree@vger.kernel.org; Linuxarm <linuxarm@huawei.com>
+> > > Subject: Re: [PATCH v12 0/3] iommu/smmu-v3: Workaround for hisilicon
+> > > 161010801 erratum(reserve HW MSI)
+> > > On Thu, Dec 14, 2017 at 04:09:54PM +0000, Shameer Kolothum wrote:
+> > > > On certain HiSilicon platforms (hip06/hip07) the GIC ITS and PCIe RC
+> > > > deviates from the standard implementation and this breaks PCIe MSI
+> > > > functionality when SMMU is enabled.
+> > > >
+> > > > The HiSilicon erratum 161010801 describes this limitation of certain
+> > > > HiSilicon platforms to support the SMMU mappings for MSI transactions.
+> > > > On these platforms GICv3 ITS translator is presented with the deviceID
+> > > > by extending the MSI payload data to 64 bits to include the deviceID.
+> > > > Hence, the PCIe controller on this platforms has to differentiate the
+> > > > MSI payload against other DMA payload and has to modify the MSI
+> payload.
+> > > > This basically makes it difficult for this platforms to have a SMMU
+> > > > translation for MSI.
+> > > >
+> > > > This patch implements an ACPI based quirk to reserve the hw msi
+> > > > regions in the smmu-v3 driver which means these address regions will
+> > > > not be translated and will be excluded from iova allocations.
+> > > >
+> > > > To implement this quirk, the following changes are incorporated:
+> > > > 1. Added a generic helper function to IORT code to retrieve and reserve
+> > > >    the associated ITS base address from a device IORT node. The function
+> > > >    has a check for smmu model to determine whether the platform
+> requires
+> > > >    the HW MSI reservation or not.
+> > > > 2. Added smmu node entries and explicitly disabled them in hip06/hip07
+> > > >     dts files so that users are warned about the non-DT support for this
+> > > >     erratum.
+> > >
+> > > [...]
+> > >
+> > > >  arch/arm64/boot/dts/hisilicon/hip06.dtsi |  56 ++++++++++++++++
+> > > > arch/arm64/boot/dts/hisilicon/hip07.dtsi |  25 +++++++
+> > > >  drivers/acpi/arm64/iort.c                | 111
+> > > ++++++++++++++++++++++++++++++-
+> > > >  drivers/iommu/dma-iommu.c                |   8 ++-
+> > > >  drivers/irqchip/irq-gic-v3-its.c         |   3 +-
+> > > >  include/linux/acpi_iort.h                |   7 +-
+> > > >  6 files changed, 204 insertions(+), 6 deletions(-)
+> > >
+> > > It occurred to me this morning that this series probably isn't queued
+> anywhere
+> > > because it's not obvious which tree is supposed to take it and I can't see it in
+> -
+> > > next.
+> > >
+> > > Is this one for arm64, IOMMU, irqchip or something else? It's probably
+> missed
+> > > the boat for 4.16 now...
+> > >
+> >
+> > I have been trying to ping you guys on this[1]. My expectation was that it will
+> be
+> > through IOMMU. Anyway missed the boat now, I will re-spin for 4.17.
 > 
-> One thing that slightly worries me are the DPHY and input pixel clock
-> rates. Now the code expects that those values match perfectly, which is
-> not the case in real life. So what's the accepted difference, and is
-> there something in the registers to program differently depending on the
-> diff?
-
-Just had a quick chat with Simon, and it seems some of the bits I was
-setting were already activating the HSYNC/VSYNC recovery mechanism:
-
-* VID_IGNORE_MISS_VSYNC: recover the case where pixel clock runs slower
-  than TX byte clk
-* the engine already handles the other case (pixel clock runs faster
-  than TX byte clk) automatically (or maybe this is configured with the
-  RECOVERY_MODE() field, I'm not sure)
-
-Simon, don't hesitate to provide more information or correct me if I'm
-wrong.
-
-Note that the TX byte clk should be configured to match the DPI pixel
-clock, which means we should refuse any config where the variation is
-too big to be recovered. Anyway, we still don't have a way to configure
-the PLL rate (which is driving the TX byte clk), so there's not much I
-can do about that right now.
-
+> The problem with "ping" emails is that they don't really mean anything. In
+> this case, everybody probably assumed somebody else was picking it up so you
+> didn't get a reply.
 > 
-> Another thing is that the mode->crtc_clock is in kHz, I wonder if that
-> rounding can cause miscalculations in the above code.
+> Joerg may be ok pulling this, but it's odd to have dts changes going via his
+> tree. You might want to split those out, at least. Talk to him.
+> 
 
-Do we really have modes exposing pixel clks not aligned on a Khz? I
-know the display controller can adjust the timings, but then, the
-variation caused by the Khz approx should not be that big (999Khz /
-10+MHz < 1/10000), and anyway, that's what the DRM framework
-manipulates...
+This series has all the necessary ACKs from all concerned and as mentioned above
+somehow created a confusion regarding the pull request. My apologies.
 
-Regards,
+Could you please take a look and send out a pull request, if it is ok.
 
-Boris
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Many thanks,
+Shameer
+
