@@ -1,143 +1,86 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 01/16] dt-bindings: update the Allwinner
- GPADC device tree binding for H3 & A83T
-Date: Mon, 29 Jan 2018 10:19:37 +0100
-Message-ID: <20180129091937.w3c3btvva5yaqlf6@flea.lan>
-References: <20180128232919.12639-1-embed3d@gmail.com>
- <20180128232919.12639-2-embed3d@gmail.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="zjddjsktcivnjn4h"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBROOXPJQKGQEKE73RJI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20180128232919.12639-2-embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, rask-SivP7zSAdNDZaaYASwVUlg@public.gmane.org, clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sean-hENCXIMQXOg@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, icenowy-h8G6r0blFSE@public.gmane.org, edu.molinas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, singhalsimran0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Yong Deng <yong.deng@magewell.com>
+Subject: [PATCH v7 1/2] dt-bindings: media: Add Allwinner V3s Camera Sensor Interface (CSI)
+Date: Mon, 29 Jan 2018 17:18:53 +0800
+Message-ID: <1517217533-17657-1-git-send-email-yong.deng@magewell.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Randy Dunlap <rdunlap@infradead.org>, Hans Verkuil <hans.verkuil@cisco.com>, Stanimir Varbanov <stanimir.varbanov@linaro.org>, Hugues Fruchet <hugues.fruchet@st.com>, Yannick Fertre <yannick.fertre@st.com>, Philipp Zabel <p.zabel@pengutronix.de>, Arnd Bergmann <arnd@arndb.de>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Rick Chang <rick.chang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
+Add binding documentation for Allwinner V3s CSI.
 
---zjddjsktcivnjn4h
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Yong Deng <yong.deng@magewell.com>
+---
+ .../devicetree/bindings/media/sun6i-csi.txt        | 59 ++++++++++++++++++++++
+ 1 file changed, 59 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/sun6i-csi.txt
 
-Hi Philipp,
-
-On Mon, Jan 29, 2018 at 12:29:04AM +0100, Philipp Rossak wrote:
-> Allwinner H3 features a thermal sensor like the one in A33, but has its
-> register re-arranged, the clock divider moved to CCU (originally the
-> clock divider is in ADC) and added a pair of bus clock and reset.
-> 
-> Allwinner A83T features a thermal sensor similar to the H3, the ths clock,
-> the bus clock and the reset was removed from the CCU. The THS in A83T
-> has a clock that is directly connected and runs with 24 MHz.
-> 
-> Update the binding document to cover H3 and A83T.
-> 
-> Signed-off-by: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-
-Thanks a lot for tackling this.
-
-> ---
->  .../devicetree/bindings/mfd/sun4i-gpadc.txt        | 50 ++++++++++++++++++++--
->  1 file changed, 47 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt b/Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt
-> index 86dd8191b04c..22df0c5c23d4 100644
-> --- a/Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt
-> +++ b/Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt
-> @@ -4,12 +4,35 @@ The Allwinner SoCs all have an ADC that can also act as a thermal sensor
->  and sometimes as a touchscreen controller.
->  
->  Required properties:
-> -  - compatible: "allwinner,sun8i-a33-ths",
-> +  - compatible: must contain one of the following compatibles:
-> +		- "allwinner,sun8i-a33-ths"
-> +		- "allwinner,sun8i-h3-ths"
-> +		- "allwinner,sun8i-a83t-ths"
->    - reg: mmio address range of the chip,
-> -  - #thermal-sensor-cells: shall be 0,
-> +  - #thermal-sensor-cells: shall be 0 or 1,
->    - #io-channel-cells: shall be 0,
->  
-> -Example:
-> +Required properties for the following compatibles:
-> +		- "allwinner,sun8i-h3-ths"
-> +		- "allwinner,sun8i-a83t-ths"
-> +  - interrupts: the sampling interrupt of the ADC,
-> +
-> +Required properties for the following compatibles:
-> +		- "allwinner,sun8i-h3-ths"
-> +  - clocks: the bus clock and the input clock of the ADC,
-> +  - clock-names: should be "bus" and "mod",
-> +  - resets: the bus reset of the ADC,
-> +
-> +Optional properties for the following compatibles:
-> +		- "allwinner,sun8i-h3-ths"
-> +  - nvmem-cells: A phandle to the calibration data provided by a nvmem device.
-> +		If unspecified default values shall be used. The size should
-> +		be 0x2 * sensorcount.
-> +  - nvmem-cell-names: Should be "calibration".
-> +
-> +Details see: bindings/nvmem/nvmem.txt
-> +
-> +Example for A33:
->  	ths: ths@1c25000 {
->  		compatible = "allwinner,sun8i-a33-ths";
->  		reg = <0x01c25000 0x100>;
-> @@ -17,6 +40,27 @@ Example:
->  		#io-channel-cells = <0>;
->  	};
->  
-> +Example for H3:
-> +	ths: thermal-sensor@1c25000 {
-> +		compatible = "allwinner,sun8i-h3-ths";
-> +		reg = <0x01c25000 0x400>;
-> +		clocks = <&ccu CLK_BUS_THS>, <&ccu CLK_THS>;
-> +		clock-names = "bus", "mod";
-> +		resets = <&ccu RST_BUS_THS>;
-> +		interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
-> +		#thermal-sensor-cells = <0>;
-> +		#io-channel-cells = <0>;
-> +	};
-> +
-> +Example for A83T:
-> +	ths: thermal-sensor@1f04000 {
-> +		compatible = "allwinner,sun8i-a83t-ths";
-> +		reg = <0x01f04000 0x100>;
-> +		interrupts = <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
-> +		#thermal-sensor-cells = <1>;
-> +		#io-channel-cells = <0>;
-> +	};
-> +
-
-I'm wondering if this is actually needed. We've used this convoluted
-constructs to be compatible with the old driver, but I'm not sure this
-is actually worth it now, and this is causing several issues, among
-which:
-  - We need to have a bunch of quirks to handle all the DT cases.
-  - We need to have an MFD, which isn't really optimal
-
-So I'd rather introduce a new compatible for the old SoCs, keep the
-old driver around, and simplify a lot that driver code that will ease
-further developments. And we can also get rid of the MFD in the
-process. I discussed it with Quentin, and he was ok with it, what do
-you think?
-
-(and that would involve creating a new file for the bindings you
-introduce here).
-
-Maxime
-
+diff --git a/Documentation/devicetree/bindings/media/sun6i-csi.txt b/Documentation/devicetree/bindings/media/sun6i-csi.txt
+new file mode 100644
+index 0000000..2ff47a9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/sun6i-csi.txt
+@@ -0,0 +1,59 @@
++Allwinner V3s Camera Sensor Interface
++-------------------------------------
++
++Allwinner V3s SoC features two CSI module. CSI0 is used for MIPI CSI-2
++interface and CSI1 is used for parallel interface.
++
++Required properties:
++  - compatible: value must be "allwinner,sun8i-v3s-csi"
++  - reg: base address and size of the memory-mapped region.
++  - interrupts: interrupt associated to this IP
++  - clocks: phandles to the clocks feeding the CSI
++    * bus: the CSI interface clock
++    * mod: the CSI module clock
++    * ram: the CSI DRAM clock
++  - clock-names: the clock names mentioned above
++  - resets: phandles to the reset line driving the CSI
++
++Each CSI node should contain one 'port' child node with one child 'endpoint'
++node, according to the bindings defined in
++Documentation/devicetree/bindings/media/video-interfaces.txt. As mentioned
++above, the endpoint's bus type should be MIPI CSI-2 for CSI0 and parallel or
++Bt656 for CSI1.
++
++Endpoint node properties for CSI1
++---------------------------------
++
++- remote-endpoint	: (required) a phandle to the bus receiver's endpoint
++			   node
++- bus-width:		: (required) must be 8, 10, 12 or 16
++- pclk-sample		: (optional) (default: sample on falling edge)
++- hsync-active		: (only required for parallel)
++- vsync-active		: (only required for parallel)
++
++Example:
++
++csi1: csi@1cb4000 {
++	compatible = "allwinner,sun8i-v3s-csi";
++	reg = <0x01cb4000 0x1000>;
++	interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
++	clocks = <&ccu CLK_BUS_CSI>,
++		 <&ccu CLK_CSI1_SCLK>,
++		 <&ccu CLK_DRAM_CSI>;
++	clock-names = "bus", "mod", "ram";
++	resets = <&ccu RST_BUS_CSI>;
++
++	port {
++		/* Parallel bus endpoint */
++		csi1_ep: endpoint {
++			remote-endpoint = <&adv7611_ep>;
++			bus-width = <16>;
++
++			/* If hsync-active/vsync-active are missing,
++			   embedded BT.656 sync is used */
++			hsync-active = <0>; /* Active low */
++			vsync-active = <0>; /* Active low */
++			pclk-sample = <1>;  /* Rising */
++		};
++	};
++};
 -- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---zjddjsktcivnjn4h--
+1.8.3.1
