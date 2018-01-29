@@ -1,38 +1,75 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3] ARM: dts: imx6: RDU2: disable internal watchdog
-Date: Mon, 29 Jan 2018 16:25:43 +0800
-Message-ID: <20180129082541.GD26461@dragon>
-References: <20180103193237.15716-1-andrew.smirnov@gmail.com>
+From: icenowy@aosc.io
+Subject: Re: [linux-sunxi] Re: [PATCH v6 2/2] media: V3s: Add support for
+ Allwinner CSI.
+Date: Mon, 29 Jan 2018 16:28:06 +0800
+Message-ID: <20180129082850.CAAF25C1783@relay.mailchannels.net>
+References: <1516695531-23349-1-git-send-email-yong.deng@magewell.com>
+ <CACRpkdan52UB7HOyH1gnHWg4CDke_VQxAdq8cBgwUroibE59Ow@mail.gmail.com>
+ <20180129082533.6edmqgbauo6q5dgz@flea.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20180103193237.15716-1-andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cphealy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180129082533.6edmqgbauo6q5dgz@flea.lan>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: maxime.ripard@free-electrons.comMaxime Ripard <maxime.ripard@free-electrons.com>, Arnd Bergmann <arnd@arndb.de>, Linus Walleij <linus.walleij@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Stanimir Varbanov <stanimir.varbanov@linaro.org>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Rick Chang <rick.chang@mediatek.com>, Chen-Yu Tsai <wens@csie.org>, Hans Verkuil <hans.verkuil@cisco.com>, linux-sunxi@mailchannels.net, linux-media@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Rob Herring <robh+dt@kernel.org>, Yong Deng <yong.deng@magewell.com>, Hugues Fruchet <hugues.fruchet@st.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Randy Dunlap <rdunlap@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Yannick Fertre <yannick.fertre@st.com>, Philipp Zabel <p.zabel@pengutronix.de>, Ramesh
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 03, 2018 at 11:32:37AM -0800, Andrey Smirnov wrote:
-> From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> 
-> The system has an external watchdog in the environment processor
-> so the internal watchdog is of no use.
-> 
-> Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: cphealy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-> Reviewed-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
-> Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Signed-off-by: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-
-Applied, thanks.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+PGxpbnV4LXN1bnhpQGdvb2dsZWdyb3Vwcy5jb20+LG1lZ291c0BtZWdvdXMuY29tLFRob21hcyBQ
+ZXRhenpvbmkgPHRob21hcy5wZXRhenpvbmlAZnJlZS1lbGVjdHJvbnMuY29tPgpGcm9tOiBJY2Vu
+b3d5IFpoZW5nIDxpY2Vub3d5QGFvc2MuaW8+Ck1lc3NhZ2UtSUQ6IDxCMUU3MEJCRC04QzFDLTQz
+ODEtODI4MC1FN0EzNjhBRTNERTZAYW9zYy5pbz4KCgoK5LqOIDIwMTjlubQx5pyIMjnml6UgR01U
+KzA4OjAwIOS4i+WNiDQ6MjU6MzMsIE1heGltZSBSaXBhcmQgPG1heGltZS5yaXBhcmRAZnJlZS1l
+bGVjdHJvbnMuY29tPiDlhpnliLA6Cj5IaSBMaW51cywKPgo+T24gU2F0LCBKYW4gMjcsIDIwMTgg
+YXQgMDU6MTQ6MjZQTSArMDEwMCwgTGludXMgV2FsbGVpaiB3cm90ZToKPj4gPiArdm9pZCBzdW42
+aV9jc2lfdXBkYXRlX2J1Zl9hZGRyKHN0cnVjdCBzdW42aV9jc2kgKmNzaSwgZG1hX2FkZHJfdAo+
+YWRkcikKPj4gPiArewo+PiA+ICsgICAgICAgc3RydWN0IHN1bjZpX2NzaV9kZXYgKnNkZXYgPSBz
+dW42aV9jc2lfdG9fZGV2KGNzaSk7Cj4+ID4gKyAgICAgICAvKiB0cmFuc2Zvcm0gcGh5c2ljYWwg
+YWRkcmVzcyB0byBidXMgYWRkcmVzcyAqLwo+PiA+ICsgICAgICAgZG1hX2FkZHJfdCBidXNfYWRk
+ciA9IGFkZHIgLSBQSFlTX09GRlNFVDsKPj4gCj4+IEkgYW0gc29ycnkgaWYgdGhpcyBpcyBhbiB1
+bmp1c3RpZmllZCBkcml2ZS1ieSBjb21tZW50LiBNYXliZSB5b3UKPj4gaGF2ZSBhbHJlYWR5IGlu
+dmVzdGlnYXRlIG90aGVyIHdheXMgdG8gZG8gdGhpcy4KPgo+SXQncyBkZWZpbml0ZWx5IG5vdCB1
+bmp1c3RpZmllZCA6KQo+Cj4+IEFjY2Vzc2luZyBQSFlTX09GRlNFVCBkaXJlY3RseSBzZWVtcyB1
+bmludHVpdGl2ZSBhbmQgbm90IGdvb2QKPj4gcHJhY3RpY2UuCj4+IAo+PiBCdXQgbm9ybWFsbHkg
+YW4gZG1hX2FkZHJfdCBvbmx5IGNvbWVzIGZyb20gc29tZSBmdW5jdGlvbiBpbnNpZGUKPj4gPGxp
+bnV4L2RtYS1tYXBwaW5nLmg+IHN1Y2ggYXM6IGRtYV9hbGxvY19jb2hlcmVudCgpIGZvciBhIGNv
+bnRpZ291cwo+PiBidWZmZXIgd2hpY2ggaXMgY29oZXJlbnQgaW4gcGh5c2ljYWwgbWVtb3J5LCBv
+ciBmcm9tIHNvbWUgYnVmZmVyIDw9Cj4+IDY0S0IgdGhhdCBpcyBzd2l0Y2hpbmcgb3duZXJzaGlw
+IGJldHdlZW4gZGV2aWNlIGFuZCBDUFUgZXhwbGljaXRseQo+PiB3aXRoIGRtYV9tYXAqIG9yIHNv
+LiBEaWQgeW91IGNoZWNrIHdpdGggRG9jdW1lbnRhdGlvbi9ETUEtQVBJLnR4dD8KPgo+U28sIEkn
+dmUgZGlzY3Vzc2VkIHRoaXMgd2l0aCBBcm5kIGEgbW9udGggYWdvIG9yIHNvLCBiZWNhdXNlIEkn
+bSBub3QKPnJlYWxseSBmb25kIG9mIHRoZSBjdXJyZW50IGFwcHJvYWNoIGJ1dCB3ZSBoYXZlbid0
+IGZvdW5kIGJldHRlciB3YXkgdG8KPmRvIGl0IHlldC4KPgo+VGhlIGlzc3VlIGlzIHRoYXQgYWxs
+IHRoZSBETUEgYWNjZXNzZXMgYXJlIGRvbmUgbm90IHRocm91Z2ggdGhlIG1haW4KPkFYSSBidXMs
+IGJ1dCB0aHJvdWdoIGEgc2VwYXJhdGUgYnVzIGRlZGljYXRlZCBmb3IgbWVtb3J5IGFjY2Vzc2Vz
+LAo+d2hlcmUgdGhlIFJBTSBpcyBtYXBwZWQgYXQgdGhlIGFkZHJlc3MgMC4gU28gdGhlIENQVSBh
+bmQgRE1BIGRldmljZXMKPmhhdmUgYSBkaWZmZXJlbnQgbWFwcGluZyBmb3IgdGhlIFJBTS4KCk1h
+eWJlIHdlIGNhbiBzcGVjaWZ5IHRoZSBvZmZzZXQgaW4gdGhlIERUIGFzIGl0J3MgYWJvdXQgaG93
+CnRoZSBJUCBibG9jayBpcyBpbnRlZ3JhdGVkIHRvIHRoZSBTb0MuCgo+Cj5JIGd1ZXNzIHdlIGNv
+dWxkIGFkZHJlc3MgdGhpcyBieSB1c2luZyB0aGUgZmllbGQgZG1hX3Bmbl9vZmZzZXQgdGhhdAo+
+c2VlbXMgdG8gYmUgdXNlZCBpbiBzaW1pbGFyIHNpdHVhdGlvbnMuIEhvd2V2ZXIsIGluIERUIHN5
+c3RlbXMsIHRoYXQKPmZpZWxkIGlzIGZpbGxlZCBvbmx5IHdpdGggdGhlIHBhcmVudCdzIG5vZGUg
+ZG1hLXJhbmdlcyBwcm9wZXJ0eS4gSW4KPm91ciBjYXNlLCBhbmQgc2luY2UgdGhlIERUIHBhcmVu
+dGhvb2QgaXMgYmFzZWQgb24gdGhlICJjb250cm9sIiBidXMsCj5hbmQgbm90IHRoZSAiZGF0YSIg
+YnVzLCBvdXIgcGFyZW50IG5vZGUgd291bGQgYmUgdGhlIEFYSSBidXMsIGFuZCBub3QKPnRoZSBt
+ZW1vcnkgYnVzIHRoYXQgZW5mb3JjZSB0aG9zZSBjb25zdHJhaW50cy4KPgo+QW5kIG90aGVyIGRl
+dmljZXMgZG9pbmcgRE1BIHRocm91Z2ggcmVndWxhciBETUEgYWNjZXNzZXMgd29uJ3QgaGF2ZQo+
+dGhhdCBtYXBwaW5nLCBzbyB3ZSBkZWZpbml0ZWx5IHNob3VsZG4ndCBlbmZvcmNlIGl0IGZvciBh
+bGwgdGhlCj5kZXZpY2VzIHRoZXJlLCBidXQgb25seSB0aGUgb25lIGNvbm5lY3RlZCB0byB0aGUg
+c2VwYXJhdGUgbWVtb3J5IGJ1cy4KPgo+dGw7IGRyOiB0aGUgRFQgaXMgbm90IHJlYWxseSBhbiBv
+cHRpb24gdG8gc3RvcmUgdGhhdCBpbmZvLgo+Cj5JIHN1Z2dlc3RlZCBzZXR0aW5nIGRtYV9wZm5f
+b2Zmc2V0IGF0IHByb2JlLCBidXQgQXJuZCBkaWRuJ3Qgc2VlbSB0b28KPmZvbmQgb2YgdGhhdCBh
+cHByb2FjaCBlaXRoZXIgYXQgdGhlIHRpbWUuCj4KPlNvLCB3ZWxsLCBJIGd1ZXNzIHdlIGNvdWxk
+IGRvIGJldHRlci4gV2UganVzdCBoYXZlIG5vIGlkZWEgaG93IDopCj4KPk1heGltZQoKX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5l
+bCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6
+Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
