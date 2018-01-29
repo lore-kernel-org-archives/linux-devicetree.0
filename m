@@ -1,145 +1,331 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [RFC] devicetree: new FDT format version
-Date: Mon, 29 Jan 2018 18:32:35 +0000
-Message-ID: <CACxGe6tUB3NhNhOtqzoJfThx=RE1_=TSDQz+wQUm=sdE5JirZQ@mail.gmail.com>
-References: <b96829f9-2e8b-fdc5-5090-58591e2260cf@gmail.com>
- <CAL_JsqJR2y7bMw_-9TBAGWZ_kf7_sZo5qvqvRowJ8jiy=4G0Bg@mail.gmail.com>
- <20180123124232.GA14832@umbus> <20328477-e511-e875-7dc4-253640f2219e@gmail.com>
- <CAL_Jsq+fvFrGhqO0zbEUE_i23FkU=G4Z1-e0vnXHi4KbS2oK0A@mail.gmail.com>
- <e1bec77d-4dac-200b-34be-23573bf738f0@gmail.com> <e986435b-481b-2629-7600-10d9e21ac58e@gmail.com>
- <20180125122912.GB2099@umbus> <72d30756-a963-92c9-1838-3e3f80c57e39@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCHv2 1/2] arm64: dts: stratix10: add clock bindings for the
+ Stratix10 platform
+Date: Mon, 29 Jan 2018 12:45:08 -0600
+Message-ID: <20180129184508.znymdltqodpci4n3@rob-hp-laptop>
+References: <1516228333-13033-1-git-send-email-dinguyen@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <72d30756-a963-92c9-1838-3e3f80c57e39-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, "Pantelis Antomarek.vasut-Re5JQEeQqe/2sr8fMPgRzw@public.gmane.org" <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>, =?UTF-8?B?TWFyZWsgVmHFoXV0?= <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Kyle Evans <kevans-h+KGxgPPiopAfugRpC6u6w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Alan Tull <atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1516228333-13033-1-git-send-email-dinguyen@kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Dinh Nguyen <dinguyen@kernel.org>
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mturquette@baylibre.com, sboyd@codeaurora.org, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 25, 2018 at 8:01 PM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On 01/25/18 04:29, David Gibson wrote:
->> On Wed, Jan 24, 2018 at 04:22:15PM -0800, Frank Rowand wrote:
->>> On 01/24/18 13:16, Frank Rowand wrote:
->>>> On 01/24/18 07:47, Rob Herring wrote:
->>>>> On Tue, Jan 23, 2018 at 3:17 PM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>>>>> On 01/23/18 04:42, David Gibson wrote:
->>>>>>> On Mon, Jan 22, 2018 at 03:01:52PM -0600, Rob Herring wrote:
->>>>>>>> On Mon, Jan 22, 2018 at 2:09 AM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>>>>>>>> Hi All,
->>>>>>>>>
->>>>>>>>> I've tried to create a decent distribution list, but I'm sure I've missed
->>>>>>>>> someone or some important list.  Please share this with anyone you think
->>>>>>>>> will be affected.
->>>>>>>>>
->>>>>>>>> I have been playing around with some thoughts for some additions to
->>>>>>>>> the devicetree FDT aka blob format.
->>>>>>>>>
->>>>>>>>> I would like to get the affected parties thinking about how additions to
->>>>>>>>> the format could improve whichever pieces of FDT related technology you
->>>>>>>>> work on or care about.  In my opinion, the FDT format should change
->>>>>>>>> very infrequently because of the impact on so many projects that have
->>>>>>>>> to work together to create a final solution, plus the many many users
->>>>>>>>> of those projects.
->>>>>>>>
->>>>>>>> A few things discussed before:
->>>>>>>> - Adding type information Even just tagging phandles would be good.
->>>>>>>
->>>>>>> I'm a bit dubious about this.  It would have to be "hints" only -
->>>>>>> there's not really anyway we can put in authoritative type
->>>>>>> information, since dtc itself doesn't really know that.  It's also
->>>>>>> hard to see how that could be done in a way which wouldn't either a)
->>>>>>> require very awkward parallel lookup of the data and type information
->>>>>>> or b) not be backwards compatible (even read only).
->>>>>
->>>>> I never said it was possible. :) I'm just trying to enumerate possible
->>>>> FDT format changes because I don't think we want to continuously
->>>>> trickle out FDT changes even if they are backwards compatible.
->>>>
->>>> Yes, I'm trying to capture any pending changes in a single version change.
->>>>
->>>>
->>>>>>>> - Allow applying overlays by just appending to the blob. The need for
->>>>>>>> this is somewhat gone now that libfdt can just fully apply overlays.
->>>>>>>
->>>>>>> I'm not really sure what you want here.  I mean you could easily allow
->>>>>>> the format to allow multiple appended overlays, and define that to
->>>>>>> mean the overlaid result.  At some point *something* is going to have
->>>>>>> to really do the application, so I'm not sure that it really buys you
->>>>>>> that much.  It also makes nearly every operation on the tree in libfdt
->>>>>>> horrible to implement, at least within the other constraints the
->>>>>>> interface was designed around; you'll continually have to scan the
->>>>>>> entire tree just in case some other overlay fragment has some bearing
->>>>>>> on the thing you're looking at.  It confuses the interface too: what
->>>>>>> does "node offset" mean if the same node could be built up from
->>>>>>> overlay fragments at multiple offsets.
->>>>>
->>>>> The idea was to avoid applying overlays to flattened trees at all.
->>>>> You're just passing the problem to the next stage (typically the
->>>>> kernel). But we have applying overlays to flattened trees now, so
->>>>> maybe there's no need anymore.
->>>>>
->>>>>> Somewhat echoing David's comment, I'm also not sure what you mean.
->>>>>> And trying to not overly influence this conversation with preconceptions
->>>>>> from what I'm going to propose.
->>>>>>
->>>>>> My first shot at the new format added a field to the FDT to indicate
->>>>>> that an overlay FDT was concatenated to the FDT (and the overlay FDT
->>>>>> in turn could set it's field to concatenate another overlay FDT).
->>>>>
->>>>> Yes, something like this is what I meant. This was something Grant had
->>>>> talked about.
->>>>>
->>>>>> But in the end I decided that information belonged outside the FDT,
->>>>>> and it was sufficient to require that all FDTs be padded out so that
->>>>>> if an overlay FDT was concatenated to the FDT, the overlay FDT would
->>>>>> be properly aligned.
->>>>>
->>>>> I can't think of why this wouldn't work either.
->>>>>
->>>>>> For ease of typing, I'll call this "chaining" or "chained".  For
->>>>>> Linux, I am envisioning no kernel use of data from a chained FDT
->>>>>> until after the tree is unflattened.  I haven't done an exhaustive
->>>>>> search to determine all of the uses of data directly from the
->>>>>> flattened FDT, but I am optimistic that there will not be any such
->>>>>> access that would require data from a chained FDT (and we could
->>>>>> make this a rule).
->>>>>
->>>>> This would be a major downside to leaving it up to the kernel because
->>>>> what can't be touched is hard to enumerate and could change. For
->>>>> example, we added earlycon and now the uart node can't be modified.
->>>>
->>>> What you say makes sense.  So I'll reverse myself and say that for
->>>> Linux, we should update the FDT read code to scan all chained
->>>> overlay FDT(s) as well as the base FDT.
->>>
->>> < snip >
->>>
->>> What I wrote was somewhat ambiguous.  What I meant by "FDT read
->>> code" was functions that check for existence of nodes in the
->>> FDT or read property values from the FDT.
->>
->> Oh.. not just FDT unflattening code.
->>
->> The trouble with this is that scanning for a specific node or property
->> in a set of chained overlays is highly nontrivial.  Even if you set
->> aside the arguably self-imposed design constraints in libfdt, you
->> can't just do the same lookup in each fragment: along the way you need
->> to resolve the path at which each fragment applies.  That in itself is
->> non-trivial.  If you have overlays applying on top of other overlays,
->> that could involve recursive lookups of things from previous overlays.
->> It's spectacularly complicated and we have to do it on *every single*
->> read operation.
->
-> I totally overlooked having to resolve each fragment.  You are right,
-> that makes the problem very complex instead of trivial.
+On Wed, Jan 17, 2018 at 04:32:12PM -0600, Dinh Nguyen wrote:
+> Add the clock bindings for the Stratix10 SoC.
+> 
+> Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
+> ---
+> v2: use a single clock binding
+> ---
+>  .../devicetree/bindings/clock/intc_stratix10.txt   |   20 +++++
+>  arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi  |   50 +++++++++++-
+>  .../boot/dts/altera/socfpga_stratix10_socdk.dts    |   10 +++
+>  include/dt-bindings/clock/stratix10-clock.h        |   85 ++++++++++++++++++++
 
-It would be possible to do if each fragment was pre-resolved at append
-time to the node that it modifies. ie. each fragment node points back
-with an offset to the node it modifies Then searching the tree could
-be done by walking backwards through the fragments instead of
-searching forwards. Would need to research the best way to do that,
-and it would also mean that merely appending a DTB fragment isn't an
-option.
+The dts files should be 1 patch and the binding and header 1 patch.
 
-g.
+>  4 files changed, 163 insertions(+), 2 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/clock/intc_stratix10.txt
+>  create mode 100644 include/dt-bindings/clock/stratix10-clock.h
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/intc_stratix10.txt b/Documentation/devicetree/bindings/clock/intc_stratix10.txt
+> new file mode 100644
+> index 0000000..56c61d1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/intc_stratix10.txt
+> @@ -0,0 +1,20 @@
+> +Device Tree Clock bindings for Intel's SoCFPGA Stratix10 platform
+> +
+> +This binding uses the common clock binding[1].
+> +
+> +[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
+> +
+> +Required properties:
+> +- compatible : shall be
+> +	"intc,clk-s10-mgr"
+
+intel is the documented vendor prefix. <chip>-<ip block> is the normal 
+ordering.
+
+> +
+> +- reg : shall be the control register offset from CLOCK_MANAGER's base for the clock.
+> +
+> +- #clock-cells : from common clock binding, shall be set to 1.
+> +
+> +Example:
+> +	clkmgr: clkmgr@ffd10000 {
+
+clock-controller@...
+
+> +		compatible = "intc,clk-s10-mgr";
+> +		reg = <0xffd10000 0x1000>;
+> +		#clock-cells = <1>;
+> +	};
+> diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+> index 7366a58..5120f9f 100644
+> --- a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+> +++ b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+> @@ -17,6 +17,7 @@
+>  /dts-v1/;
+>  #include <dt-bindings/reset/altr,rst-mgr-s10.h>
+>  #include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/clock/stratix10-clock.h>
+>  
+>  / {
+>  	compatible = "altr,socfpga-stratix10";
+> @@ -91,9 +92,35 @@
+>  		interrupt-parent = <&intc>;
+>  		ranges = <0 0 0 0xffffffff>;
+>  
+> -		clkmgr@ffd1000 {
+> -			compatible = "altr,clk-mgr";
+> +		clkmgr: clkmgr@ffd10000 {
+
+clock-controller@...
+
+> +			compatible = "intc,clk-s10-mgr";
+
+You should state in the commit msg why you are changing this in an 
+incompatible way.
+
+>  			reg = <0xffd10000 0x1000>;
+> +			#clock-cells = <1>;
+> +
+> +			clocks {
+
+No mention of a child node in the binding doc.
+
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +
+> +				cb_intosc_hs_div2_clk: cb_intosc_hs_div2_clk {
+> +					#clock-cells = <0>;
+> +					compatible = "fixed-clock";
+> +				};
+> +
+> +				cb_intosc_ls_clk: cb_intosc_ls_clk {
+> +					#clock-cells = <0>;
+> +					compatible = "fixed-clock";
+> +				};
+> +
+> +				f2s_free_clk: f2s_free_clk {
+> +					#clock-cells = <0>;
+> +					compatible = "fixed-clock";
+> +				};
+> +
+> +				osc1: osc1 {
+> +					#clock-cells = <0>;
+> +					compatible = "fixed-clock";
+> +				};
+> +			};
+>  		};
+>  
+>  		gmac0: ethernet@ff800000 {
+> @@ -104,6 +131,8 @@
+>  			mac-address = [00 00 00 00 00 00];
+>  			resets = <&rst EMAC0_RESET>;
+>  			reset-names = "stmmaceth";
+> +			clocks = <&clkmgr STRATIX10_EMAC0_CLK>;
+> +			clock-names = "stmmaceth";
+>  			status = "disabled";
+>  		};
+>  
+> @@ -115,6 +144,8 @@
+>  			mac-address = [00 00 00 00 00 00];
+>  			resets = <&rst EMAC1_RESET>;
+>  			reset-names = "stmmaceth";
+> +			clocks = <&clkmgr STRATIX10_EMAC1_CLK>;
+> +			clock-names = "stmmaceth";
+>  			status = "disabled";
+>  		};
+>  
+> @@ -126,6 +157,8 @@
+>  			mac-address = [00 00 00 00 00 00];
+>  			resets = <&rst EMAC2_RESET>;
+>  			reset-names = "stmmaceth";
+> +			clocks = <&clkmgr STRATIX10_EMAC2_CLK>;
+> +			clock-names = "stmmaceth";
+>  			status = "disabled";
+>  		};
+>  
+> @@ -228,6 +261,9 @@
+>  			fifo-depth = <0x400>;
+>  			resets = <&rst SDMMC_RESET>;
+>  			reset-names = "reset";
+> +			clocks = <&clkmgr STRATIX10_L4_MP_CLK>,
+> +				 <&clkmgr STRATIX10_SDMMC_CLK>;
+> +			clock-names = "biu", "ciu";
+>  			status = "disabled";
+>  		};
+>  
+> @@ -283,24 +319,32 @@
+>  			compatible = "snps,dw-apb-timer";
+>  			interrupts = <0 113 4>;
+>  			reg = <0xffc03000 0x100>;
+> +			clocks = <&clkmgr STRATIX10_L4_SP_CLK>;
+> +			clock-names = "timer";
+>  		};
+>  
+>  		timer1: timer1@ffc03100 {
+>  			compatible = "snps,dw-apb-timer";
+>  			interrupts = <0 114 4>;
+>  			reg = <0xffc03100 0x100>;
+> +			clocks = <&clkmgr STRATIX10_L4_SP_CLK>;
+> +			clock-names = "timer";
+>  		};
+>  
+>  		timer2: timer2@ffd00000 {
+>  			compatible = "snps,dw-apb-timer";
+>  			interrupts = <0 115 4>;
+>  			reg = <0xffd00000 0x100>;
+> +			clocks = <&clkmgr STRATIX10_L4_SP_CLK>;
+> +			clock-names = "timer";
+>  		};
+>  
+>  		timer3: timer3@ffd00100 {
+>  			compatible = "snps,dw-apb-timer";
+>  			interrupts = <0 116 4>;
+>  			reg = <0xffd00100 0x100>;
+> +			clocks = <&clkmgr STRATIX10_L4_SP_CLK>;
+> +			clock-names = "timer";
+>  		};
+>  
+>  		uart0: serial0@ffc02000 {
+> @@ -310,6 +354,7 @@
+>  			reg-shift = <2>;
+>  			reg-io-width = <4>;
+>  			resets = <&rst UART0_RESET>;
+> +			clocks = <&clkmgr STRATIX10_L4_SP_CLK>;
+>  			status = "disabled";
+>  		};
+>  
+> @@ -320,6 +365,7 @@
+>  			reg-shift = <2>;
+>  			reg-io-width = <4>;
+>  			resets = <&rst UART1_RESET>;
+> +			clocks = <&clkmgr STRATIX10_L4_SP_CLK>;
+>  			status = "disabled";
+>  		};
+>  
+> diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts b/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
+> index 0007564..4d2d471 100644
+> --- a/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
+> +++ b/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
+> @@ -50,6 +50,16 @@
+>  		/* We expect the bootloader to fill in the reg */
+>  		reg = <0 0 0 0>;
+>  	};
+> +
+> +	soc {
+> +		clkmgr@ffd10000 {
+> +			clocks {
+> +				osc1 {
+> +					clock-frequency = <25000000>;
+> +				};
+> +			};
+> +		};
+> +	};
+>  };
+>  
+>  &gpio1 {
+> diff --git a/include/dt-bindings/clock/stratix10-clock.h b/include/dt-bindings/clock/stratix10-clock.h
+> new file mode 100644
+> index 0000000..faa7ea7
+> --- /dev/null
+> +++ b/include/dt-bindings/clock/stratix10-clock.h
+> @@ -0,0 +1,85 @@
+> +/*
+> + * Copyright (C) 2017, Intel Corporation
+> + *
+> + * SPDX-License-Identifier:	GPL-2.0
+
+It's been decreed that this goes on the first line.
+
+> + */
+> +
+> +#ifndef __STRATIX10_CLOCK_H
+> +#define __STRATIX10_CLOCK_H
+> +
+> +/* fixed rate clocks */
+> +#define STRATIX10_OSC1			0
+> +#define STRATIX10_CB_INTOSC_HS_DIV2_CLK	1
+> +#define STRATIX10_CB_INTOSC_LS_CLK	2
+> +#define STRATIX10_F2S_FREE_CLK		3
+> +
+> +/* fixed factor clocks */
+> +#define STRATIX10_L4_SYS_FREE_CLK	4
+> +#define STRATIX10_MPU_PERIPH_CLK	5
+> +#define STRATIX10_MPU_L2RAM_CLK		6
+> +#define STRATIX10_SDMMC_CIU_CLK		7
+> +
+> +/* PLL clocks */
+> +#define STRATIX10_MAIN_PLL_CLK		8
+> +#define STRATIX10_PERIPH_PLL_CLK	9
+> +#define STRATIX10_BOOT_CLK		10
+> +
+> +/* Periph clocks */
+> +#define STRATIX10_MAIN_MPU_BASE_CLK	11
+> +#define STRATIX10_MAIN_NOC_BASE_CLK	12
+> +#define STRATIX10_MAIN_EMACA_CLK	13
+> +#define STRATIX10_MAIN_EMACB_CLK	14
+> +#define STRATIX10_MAIN_EMAC_PTP_CLK	15
+> +#define STRATIX10_MAIN_GPIO_DB_CLK	16
+> +#define STRATIX10_MAIN_SDMMC_CLK	17
+> +#define STRATIX10_MAIN_S2F_USR0_CLK	18
+> +#define STRATIX10_MAIN_S2F_USR1_CLK	19
+> +#define STRATIX10_MAIN_PSI_REF_CLK	20
+> +
+> +#define STRATIX10_PERI_MPU_BASE_CLK	21
+> +#define STRATIX10_PERI_NOC_BASE_CLK	22
+> +#define STRATIX10_PERI_EMACA_CLK	23
+> +#define STRATIX10_PERI_EMACB_CLK	24
+> +#define STRATIX10_PERI_EMAC_PTP_CLK	25
+> +#define STRATIX10_PERI_GPIO_DB_CLK	26
+> +#define STRATIX10_PERI_SDMMC_CLK	27
+> +#define STRATIX10_PERI_S2F_USR0_CLK	28
+> +#define STRATIX10_PERI_S2F_USR1_CLK	29
+> +#define STRATIX10_PERI_PSI_REF_CLK	30
+> +
+> +#define STRATIX10_MPU_FREE_CLK		31
+> +#define STRATIX10_NOC_FREE_CLK		32
+> +#define STRATIX10_S2F_USR0_CLK		33
+> +#define STRATIX10_NOC_CLK		34
+> +#define STRATIX10_EMAC_A_FREE_CLK	35
+> +#define STRATIX10_EMAC_B_FREE_CLK	36
+> +#define STRATIX10_EMAC_PTP_FREE_CLK	37
+> +#define STRATIX10_GPIO_DB_FREE_CLK	38
+> +#define STRATIX10_SDMMC_FREE_CLK	39
+> +#define STRATIX10_S2F_USER1_FREE_CLK	40
+> +#define STRATIX10_PSI_REF_FREE_CLK	41
+> +
+> +/* Gate clocks */
+> +#define STRATIX10_MPU_CLK		42
+> +#define STRATIX10_L4_MAIN_CLK		43
+> +#define	STRATIX10_L4_MP_CLK		44
+> +#define STRATIX10_L4_SP_CLK		45
+> +#define STRATIX10_CS_AT_CLK		46
+> +#define STRATIX10_CS_TRACE_CLK		47
+> +#define STRATIX10_CS_PDBG_CLK		48
+> +#define STRATIX10_CS_TIMER_CLK		49
+> +#define STRATIX10_S2F_USER0_CLK		50
+> +#define STRATIX10_S2F_USER1_CLK		51
+> +#define STRATIX10_EMAC0_CLK		52
+> +#define STRATIX10_EMAC1_CLK		53
+> +#define STRATIX10_EMAC2_CLK		54
+> +#define STRATIX10_EMAC_PTP_CLK		55
+> +#define STRATIX10_GPIO_DB_CLK		56
+> +#define STRATIX10_SDMMC_CLK		57
+> +#define STRATIX10_PSI_REF_CLK		58
+> +#define STRATIX10_USB_CLK		59
+> +#define STRATIX10_SPI_M_CLK		60
+> +#define STRATIX10_NAND_CLK		61
+> +#define STRATIX10_NUM_CLKS		62
+> +
+> +#endif	/* __STRATIX10_CLOCK_H */
+> -- 
+> 1.7.1
+> 
