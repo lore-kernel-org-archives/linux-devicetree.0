@@ -1,63 +1,64 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 14/16] arm: dts: sun8i: h3: enable H3 sid controller
-Date: Mon, 29 Jan 2018 10:52:00 +0100
-Message-ID: <20180129095200.attg7cgvpifpchtn@flea.lan>
-References: <20180128232919.12639-1-embed3d@gmail.com>
- <20180128232919.12639-15-embed3d@gmail.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Subject: Re: [linux-sunxi][PATCH v2 0/5] Add tested digital audio blocks to
+ A64
+Date: Mon, 29 Jan 2018 11:09:22 +0100
+Message-ID: <20180129100922.g77l5ysifjo5e43b@flea.lan>
+References: <20180129091903.12319-1-codekipper@gmail.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="ovx36qt4j4w4tgjg"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBQO5XPJQKGQE4ZU45NA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+        protocol="application/pgp-signature"; boundary="w6merwtoegj2eucn"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20180128232919.12639-15-embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, rask-SivP7zSAdNDZaaYASwVUlg@public.gmane.org, clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sean-hENCXIMQXOg@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, icenowy-h8G6r0blFSE@public.gmane.org, edu.molinas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, singhalsimran0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180129091903.12319-1-codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---ovx36qt4j4w4tgjg
-Content-Type: text/plain; charset="UTF-8"
+--w6merwtoegj2eucn
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jan 29, 2018 at 12:29:17AM +0100, Philipp Rossak wrote:
-> This patch enables the the sid controller in the H3. It can be used
-> for thermal calibration data.
-> 
-> Signed-off-by: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  arch/arm/boot/dts/sun8i-h3.dtsi | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
-> index 3f83f6a27c74..9bb5cc29fec5 100644
-> --- a/arch/arm/boot/dts/sun8i-h3.dtsi
-> +++ b/arch/arm/boot/dts/sun8i-h3.dtsi
-> @@ -72,6 +72,13 @@
->  		};
->  	};
->  
-> +	soc {
-> +		sid: eeprom@1c14000 {
-> +			compatible = "allwinner,sun8i-h3-sid";
-> +			reg = <0x01c14000 0x400>;
-> +		};
-> +	};
-> +
+On Mon, Jan 29, 2018 at 10:18:58AM +0100, codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+> From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>=20
+> Hi All,
+>=20
+> this patch series adds the digital audio blocks to the A64 SoC. No block
+> changes are necessary.
 
-Shouldn't you also use a nvmem-cells property to the THS node?
-
+queued all of these changes for 4.17. Thanks!
 Maxime
 
--- 
+--=20
 Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
---ovx36qt4j4w4tgjg--
+
+--w6merwtoegj2eucn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlpu8tEACgkQ0rTAlCFN
+r3T3Bg//bg26oLEUfbs+I4UqPWnsmyKIOGxth7CRemUNdiEneLGEUVOzTDLLOJuq
+gpRPUJxYNY7mnTUEnyRvlbLlKUFiAO8JcpEFlzp8YU/1NZRJ5xTPpI0xAksy3GTV
+wrQrp+A3QStyC1YZeW5ilRJfcpzAsX1/xsELYGdZV1KrNnu7zTZNX7EbIW8ispqC
+PR9jPeCO3gm/uqlCme/33PCNyoiUjA/n9bD8tTrd5CO0sbdQu1pGsqDsLjOjlkR9
+8+Sv5dCgSmkBdYK+LollVKlUzCiOjUqBWJXnxAC7jdSPRCgRlS2ExuhmJ6XLUcgG
+W8AcF67y6Y/Wnx4qsF+2gJTTHEZNwwjFuzrfiVx1pG88VpDfnyQbz/epB0A1S7vu
+WMllmWQE7xWeEWoUMYZV6RVGae/L5E24M1FENeKCCs2FzGUHIAbLbWUfBdSs8U6n
+cTgK3fP7Mg+blMXbhX3jaZOLiu0NIat+RLbxmdTK9gDRf4HOhKhBAb5AHlJoSZ3M
+fJ+iFDdCa0eeoHSNT5qoL82SO+OYdI5Z8ybxSpYv7xWEQOPIHtfDBH74GpVoHvs2
+0v96+7aYS2SJiNUmtx8iK5I8NuvScjUP5dmOyQxKJ4lqN6fe/zic/FIaaPwNTQnb
+NYvj+1wl/rHmtPmOJwByRyOPC3tOEHGbUWXpA6Rp9SNIrjDUnSY=
+=aljB
+-----END PGP SIGNATURE-----
+
+--w6merwtoegj2eucn--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
