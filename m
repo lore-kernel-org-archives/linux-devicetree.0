@@ -1,347 +1,85 @@
-From: Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 1/2] arm64: dts: sdm845: Add minimal dts/dtsi files for
- sdm845 SoC and MTP
-Date: Mon, 29 Jan 2018 13:43:52 +0530
-Message-ID: <514c49cc-71f9-ee21-250a-04f8fab151c0@codeaurora.org>
-References: <20180125163216.29018-1-rnayak@codeaurora.org>
- <20180125163216.29018-2-rnayak@codeaurora.org>
- <20180126221501.GD28313@codeaurora.org>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: Re: [PATCH v6 2/2] media: V3s: Add support for
+ Allwinner CSI.
+Date: Mon, 29 Jan 2018 09:16:21 +0100
+Message-ID: <20180129081621.ya2myroesthnwfjt@flea.lan>
+References: <1516695531-23349-1-git-send-email-yong.deng@magewell.com>
+ <201801260759.RyNhDZz4%fengguang.wu@intel.com>
+ <20180126094658.aa70ed3f890464f6051e21e4@magewell.com>
+ <20180126110041.f89848325b9ecfb07df387ca@magewell.com>
+ <20180126081000.hy7g57zp5dv6ug2g@flea.lan>
+ <20180128101903.fbaec083c787bda30aeb05ef@magewell.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180126221501.GD28313-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="iw4dp6rim5avyb7q"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBVVQXPJQKGQEREVBZHQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20180128101903.fbaec083c787bda30aeb05ef-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Yong <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
+Cc: kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, kbuild-all-JC7UmRfGjtg@public.gmane.org, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rick Chang <rick.chang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-ker
 List-Id: devicetree@vger.kernel.org
 
 
+--iw4dp6rim5avyb7q
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-On 01/27/2018 03:45 AM, Stephen Boyd wrote:
-> On 01/25, Rajendra Nayak wrote:
->>  create mode 100644 arch/arm64/boot/dts/qcom/sdm845-mtp.dts
->>  create mode 100644 arch/arm64/boot/dts/qcom/sdm845-mtp.dtsi
-> 
-> Do we really need two files? Maybe collapse the two?
+Hi,
 
-will do. Not sure why, but this is how all other qualcomm
-boards are structured with an almost empty .dts file.
+On Sun, Jan 28, 2018 at 10:19:03AM +0800, Yong wrote:
+> Hi Maxime,
+> 
+> On Fri, 26 Jan 2018 09:10:00 +0100
+> Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> 
+> > On Fri, Jan 26, 2018 at 11:00:41AM +0800, Yong wrote:
+> > > Hi Maxime,
+> > > 
+> > > On Fri, 26 Jan 2018 09:46:58 +0800
+> > > Yong <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org> wrote:
+> > > 
+> > > > Hi Maxime,
+> > > > 
+> > > > Do you have any experience in solving this problem?
+> > > > It seems the PHYS_OFFSET maybe undeclared when the ARCH is not arm.
+> > > 
+> > > Got it.
+> > > Should I add 'depends on ARM' in Kconfig?
+> > 
+> > Yes, or even better a depends on MACH_SUNXI :)
+> 
+> Do you mean ARCH_SUNXI?
 
-> 
->>  create mode 100644 arch/arm64/boot/dts/qcom/sdm845.dtsi
->> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
->> new file mode 100644
->> index 000000000000..a21f4912b3e2
->> --- /dev/null
->> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
->> @@ -0,0 +1,308 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
->> + */
->> +
->> +#include <dt-bindings/interrupt-controller/arm-gic.h>
->> +
->> +/ {
->> +	model = "Qualcomm Technologies, Inc. SDM845";
->> +
->> +	interrupt-parent = <&intc>;
->> +
->> +	#address-cells = <2>;
->> +	#size-cells = <2>;
->> +
->> +	chosen { };
->> +
->> +	memory {
->> +		device_type = "memory";
->> +		/* We expect the bootloader to fill in the reg */
->> +		reg = <0 0 0 0>;
->> +	};
->> +
->> +	cpus {
->> +		#address-cells = <2>;
->> +		#size-cells = <0>;
->> +
->> +		CPU0: cpu@0 {
->> +			device_type = "cpu";
->> +			compatible = "qcom,kryo";
->> +			reg = <0x0 0x0>;
->> +			enable-method = "psci";
->> +			next-level-cache = <&L2_0>;
->> +			L2_0: l2-cache {
->> +				compatible = "cache";
->> +				next-level-cache = <&L3_0>;
->> +				L3_0: l3-cache {
->> +				      compatible = "cache";
->> +				};
->> +			};
->> +		};
->> +
->> +		CPU1: cpu@100 {
->> +			device_type = "cpu";
->> +			compatible = "qcom,kryo";
->> +			reg = <0x0 0x100>;
->> +			enable-method = "psci";
->> +			next-level-cache = <&L2_100>;
->> +			L2_100: l2-cache {
->> +				compatible = "cache";
->> +				next-level-cache = <&L3_0>;
->> +			};
->> +		};
->> +
->> +		CPU2: cpu@200 {
->> +			device_type = "cpu";
->> +			compatible = "qcom,kryo";
->> +			reg = <0x0 0x200>;
->> +			enable-method = "psci";
->> +			next-level-cache = <&L2_200>;
->> +			L2_200: l2-cache {
->> +				compatible = "cache";
->> +				next-level-cache = <&L3_0>;
->> +			};
->> +		};
->> +
->> +		CPU3: cpu@300 {
->> +			device_type = "cpu";
->> +			compatible = "qcom,kryo";
->> +			reg = <0x0 0x300>;
->> +			enable-method = "psci";
->> +			next-level-cache = <&L2_300>;
->> +			L2_300: l2-cache {
->> +				compatible = "cache";
->> +				next-level-cache = <&L3_0>;
->> +			};
->> +		};
->> +
->> +		CPU4: cpu@400 {
->> +			device_type = "cpu";
->> +			compatible = "qcom,kryo";
->> +			reg = <0x0 0x400>;
->> +			enable-method = "psci";
->> +			next-level-cache = <&L2_400>;
->> +			L2_400: l2-cache {
->> +				compatible = "cache";
->> +				next-level-cache = <&L3_0>;
->> +			};
->> +		};
->> +
->> +		CPU5: cpu@500 {
->> +			device_type = "cpu";
->> +			compatible = "qcom,kryo";
->> +			reg = <0x0 0x500>;
->> +			enable-method = "psci";
->> +			next-level-cache = <&L2_500>;
->> +			L2_500: l2-cache {
->> +				compatible = "cache";
->> +				next-level-cache = <&L3_0>;
->> +			};
->> +		};
->> +
->> +		CPU6: cpu@600 {
->> +			device_type = "cpu";
->> +			compatible = "qcom,kryo";
->> +			reg = <0x0 0x600>;
->> +			enable-method = "psci";
->> +			next-level-cache = <&L2_600>;
->> +			L2_600: l2-cache {
->> +				compatible = "cache";
->> +				next-level-cache = <&L3_0>;
->> +			};
->> +		};
->> +
->> +		CPU7: cpu@700 {
->> +			device_type = "cpu";
->> +			compatible = "qcom,kryo";
->> +			reg = <0x0 0x700>;
->> +			enable-method = "psci";
->> +			next-level-cache = <&L2_700>;
->> +			L2_700: l2-cache {
->> +				compatible = "cache";
->> +				next-level-cache = <&L3_0>;
->> +			};
->> +		};
->> +
->> +		cpu-map {
->> +			cluster0 {
->> +				core0 {
->> +					cpu = <&CPU0>;
->> +				};
->> +
->> +				core1 {
->> +					cpu = <&CPU1>;
->> +				};
->> +
->> +				core2 {
->> +					cpu = <&CPU2>;
->> +				};
->> +
->> +				core3 {
->> +					cpu = <&CPU3>;
->> +				};
->> +			};
->> +
->> +			cluster1 {
->> +				core0 {
->> +					cpu = <&CPU4>;
->> +				};
->> +
->> +				core1 {
->> +					cpu = <&CPU5>;
->> +				};
->> +
->> +				core2 {
->> +					cpu = <&CPU6>;
->> +				};
->> +
->> +				core3 {
->> +					cpu = <&CPU7>;
->> +				};
->> +			};
->> +		};
-> 
-> From what I recall, this layout causes the kernel to spew
-> warnings? I mean to say this is the power/performance view, but
-> not the architectural view.
+Yeah, sorry :)
 
-hmm, I haven't seen any warnings with this when I boot up on my sdm845
-MTP. Will recheck.
+> ARCH_SUNXI is alreay there. In the early version, my Kconfig is like this:
+> 
+> 	depends on ARCH_SUNXI
+> 
+> But Hans suggest me to change this to:
+> 
+> 	depends on ARCH_SUNXI || COMPILE_TEST
+> 
+> to allow this driver to be compiled on e.g. Intel for compile testing.
+> 
+> Should we get rid of COMPILE_TEST?
 
-> 
->> +	};
->> +
->> +	timer {
->> +		compatible = "arm,armv8-timer";
->> +		interrupts = <GIC_PPI 1 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
-> 
-> Are we supposed to use the GIC_CPU_MASK_SIMPLE macros still?
+Yes, it cannot be compiled as is on anything but ARM and a few
+architectures. Or maybe something like || (COMPILE_TEST && ARM) if
+that makes sense?
 
-Not sure, is there another way?
-
-> 
->> +			     <GIC_PPI 2 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
->> +			     <GIC_PPI 3 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
->> +			     <GIC_PPI 0 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>;
->> +	};
->> +
->> +	clocks {
->> +		xo_board: xo_board {
->> +			compatible = "fixed-clock";
->> +			#clock-cells = <0>;
->> +			clock-frequency = <19200000>;
->> +			clock-output-names = "xo_board";
-> 
-> We can drop clock-output-names on these.
-
-will do.
-
-> 
->> +		};
->> +
->> +		sleep_clk: sleep_clk {
->> +			compatible = "fixed-clock";
->> +			#clock-cells = <0>;
->> +			clock-frequency = <32764>;
->> +			clock-output-names = "sleep_clk";
->> +		};
->> +	};
->> +
->> +	psci {
->> +		compatible = "arm,psci-1.0";
->> +		method = "smc";
->> +	};
->> +
->> +	soc: soc {
-> 
-> Will anyone use this phandle?
-
-maybe not, will drop.
-
-> 
->> +		#address-cells = <1>;
->> +		#size-cells = <1>;
->> +		ranges = <0 0 0 0xffffffff>;
->> +		compatible = "simple-bus";
->> +
->> +		intc: interrupt-controller@17a00000 {
->> +			compatible = "arm,gic-v3";
->> +			#interrupt-cells = <3>;
->> +			interrupt-controller;
->> +			#redistributor-regions = <1>;
->> +			redistributor-stride = <0x0 0x20000>;
->> +			reg = <0x17a00000 0x10000>,     /* GICD */
->> +			      <0x17a60000 0x100000>;    /* GICR * 8 */
->> +			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
-> 
-> Can you also add the ITS node please and mark it as disabled?
-> I'll send a patch to the list to skip status = "disabled" ones.
-> We may want to support ITS on these SoCs if the firmware is
-> different. 
-
-will add.
-
-> 
->> +		};
->> +
->> +		gcc: clock-controller@100000 {
->> +			compatible = "qcom,gcc-sdm845";
->> +			reg = <0x100000 0x1f0000>;
->> +			#clock-cells = <1>;
->> +			#reset-cells = <1>;
->> +		};
->> +
->> +		tlmm: pinctrl@03400000 {
-> 
-> Drop leading zeroes please.
-> 
->> +			compatible = "qcom,sdm845-pinctrl";
->> +			reg = <0x03400000 0xc00000>;
->> +			interrupts = <GIC_SPI 208 IRQ_TYPE_NONE>;
->> +			gpio-controller;
->> +			#gpio-cells = <2>;
->> +			interrupt-controller;
->> +			#interrupt-cells = <2>;
->> +		};
->> +
->> +		timer@17C90000 {
-> 
-> Lowercase hex please.
-> 
->> +			#address-cells = <1>;
->> +			#size-cells = <1>;
->> +			ranges;
->> +			compatible = "arm,armv7-timer-mem";
->> +			reg = <0x17C90000 0x1000>;
-> 
-> Lowercase hex please.
-> 
->> +			clock-frequency = <19200000>;
-> 
-> Drop this? Or we can't read it from the hardware so we have to
-> hardcode it?
-
-will drop, shouldn't be needed.
-
-> 
->> +
->> +			frame@17CA0000 {
-> 
-> Lowecase again.
-> 
->> +				frame-number = <0>;
->> +				interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
->> +					     <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
->> +				reg = <0x17CA0000 0x1000>,
->> +				      <0x17CB0000 0x1000>;
->> +			};
->> +
-> 
+Maxime
 
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--iw4dp6rim5avyb7q--
