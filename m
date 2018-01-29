@@ -1,18 +1,18 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 10/16] iio: adc: sun4i-gpadc-iio: add
- support for A83T thermal sensor
-Date: Mon, 29 Jan 2018 10:48:03 +0100
-Message-ID: <20180129094803.uiojqkmaeuihbe4p@flea.lan>
+Subject: Re: [PATCH v2 11/16] arm: dts: sunxi-h3-h5: add support
+ for the thermal sensor in H3 and H5
+Date: Mon, 29 Jan 2018 10:49:18 +0100
+Message-ID: <20180129094918.4fvxpmoftgxxkqg3@flea.lan>
 References: <20180128232919.12639-1-embed3d@gmail.com>
- <20180128232919.12639-11-embed3d@gmail.com>
+ <20180128232919.12639-12-embed3d@gmail.com>
 Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="ozpu4j2zvyx5qod2"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBXO3XPJQKGQEAARXSWA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="zram63ggkfbahhak"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBIG4XPJQKGQE2DERUDA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20180128232919.12639-11-embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20180128232919.12639-12-embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -24,64 +24,35 @@ Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yR
 List-Id: devicetree@vger.kernel.org
 
 
---ozpu4j2zvyx5qod2
+--zram63ggkfbahhak
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 
-On Mon, Jan 29, 2018 at 12:29:13AM +0100, Philipp Rossak wrote:
-> This patch adds support for the A83T ths sensor.
-> 
-> The A83T supports interrupts. The interrupt is configured to update the
-> the sensor values every second.
+Hi,
+
+On Mon, Jan 29, 2018 at 12:29:14AM +0100, Philipp Rossak wrote:
+> As we have gained the support for the thermal sensor in H3 and H5,
+> we can now add its device nodes to the device tree. The H3 and H5 share
+> most of its compatible. The compatible and the thermal sensor cells
+> will be added in an additional patch per device.
 > 
 > Signed-off-by: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
->  drivers/iio/adc/sun4i-gpadc-iio.c | 38 ++++++++++++++++++++++++++++++++++++++
->  include/linux/mfd/sun4i-gpadc.h   | 18 ++++++++++++++++++
->  2 files changed, 56 insertions(+)
+>  arch/arm/boot/dts/sunxi-h3-h5.dtsi | 9 +++++++++
+>  1 file changed, 9 insertions(+)
 > 
-> diff --git a/drivers/iio/adc/sun4i-gpadc-iio.c b/drivers/iio/adc/sun4i-gpadc-iio.c
-> index 8196203d65fe..9f7895ba1966 100644
-> --- a/drivers/iio/adc/sun4i-gpadc-iio.c
-> +++ b/drivers/iio/adc/sun4i-gpadc-iio.c
-> @@ -170,6 +170,40 @@ static const struct gpadc_data sun8i_h3_ths_data = {
->  		SUN8I_H3_THS_TEMP_PERIOD(0x7),
->  };
+> diff --git a/arch/arm/boot/dts/sunxi-h3-h5.dtsi b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+> index 7a83b15225c7..413c789b588d 100644
+> --- a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+> +++ b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+> @@ -426,6 +426,15 @@
+>  			};
+>  		};
 >  
-> +static const struct gpadc_data sun8i_a83t_ths_data = {
-> +	.temp_offset = -2724,
-> +	.temp_scale = -70,
-> +	.temp_data = {SUN8I_H3_THS_TDATA0,
-> +		SUN8I_A83T_THS_TDATA1,
-> +		SUN8I_A83T_THS_TDATA2,
-> +		0},
-> +	.sample_start = sunxi_ths_sample_start,
-> +	.sample_end = sunxi_ths_sample_end,
-> +	.sensor_count = 3,
-> +	.supports_nvmem = false,
-> +	.support_irq = true,
-> +	.ctrl0_map = SUN4I_GPADC_CTRL0_T_ACQ(0x1f3),
-> +	.ctrl2_map = SUN8I_H3_THS_ACQ1(0x1f3),
+> +		ths: thermal-sensor@1c25000 {
+> +			reg = <0x01c25000 0x100>;
 
-Where are these values coming from?
-
-> +	.sensor_en_map = SUN8I_H3_THS_TEMP_SENSE_EN0 |
-> +		SUN8I_A83T_THS_TEMP_SENSE_EN1 |
-> +		SUN8I_A83T_THS_TEMP_SENSE_EN2,
-> +	.filter_map = SUN4I_GPADC_CTRL3_FILTER_EN |
-> +		SUN4I_GPADC_CTRL3_FILTER_TYPE(0x2),
-> +	.irq_clear_map = SUN8I_H3_THS_INTS_ALARM_INT_0 |
-> +		SUN8I_A83T_THS_INTS_ALARM_INT_1 |
-> +		SUN8I_A83T_THS_INTS_ALARM_INT_2 |
-> +		SUN8I_H3_THS_INTS_SHUT_INT_0  |
-> +		SUN8I_A83T_THS_INTS_SHUT_INT_1  |
-> +		SUN8I_A83T_THS_INTS_SHUT_INT_2  |
-> +		SUN8I_H3_THS_INTS_TDATA_IRQ_0 |
-> +		SUN8I_A83T_THS_INTS_TDATA_IRQ_1 |
-> +		SUN8I_A83T_THS_INTS_TDATA_IRQ_2,
-
-Do you reall need to clear all these interrupts if you're using only
-one?
+The size is 0x400
 
 Maxime
 
@@ -89,4 +60,4 @@ Maxime
 Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
---ozpu4j2zvyx5qod2--
+--zram63ggkfbahhak--
