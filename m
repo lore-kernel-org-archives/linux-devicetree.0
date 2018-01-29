@@ -1,156 +1,94 @@
-Return-Path: <SRS0=4Uh3=ER=rock-chips.com=wulf@kernel.org>
-Subject: Re: [PATCH 1/3] dt-bindings: phy: phy-rockchip-typec: add usb3 otg
- reset
-References: <1515751704-13213-1-git-send-email-william.wu@rock-chips.com>
- <1515751704-13213-2-git-send-email-william.wu@rock-chips.com>
- <20180117220715.GA112833@google.com>
- <CAFqH_52KiHQzEeaX5rFN66pMqAuVVKeWJhxnS5L4hY4XiVG8mw@mail.gmail.com>
- <20180118174748.GA63108@google.com>
- <20180119214916.fegrzgcmbbdiesyz@rob-hp-laptop>
-From: wlf <wulf@rock-chips.com>
-Message-ID: <d05fb977-cd6c-4875-25be-9212e75b7e39@rock-chips.com>
-Date: Mon, 22 Jan 2018 19:33:05 +0800
+Return-Path: <SRS0=zkT/=EY=mediatek.com=argus.lin@kernel.org>
+From: <argus.lin@mediatek.com>
+Subject: [PATCH v2 2/5] arm64: dts: mt6797: add pwrap support for mt6797
+Date: Mon, 29 Jan 2018 17:09:41 +0800
+Message-ID: <20180129090944.28687-2-argus.lin@mediatek.com>
+In-Reply-To: <20180129090944.28687-1-argus.lin@mediatek.com>
+References: <20180129090944.28687-1-argus.lin@mediatek.com>
 MIME-Version: 1.0
-In-Reply-To: <20180119214916.fegrzgcmbbdiesyz@rob-hp-laptop>
-Content-Type: multipart/alternative;
- boundary="------------3A80C245B8C828B3245428F8"
-Content-Language: en-US
-To: Rob Herring <robh@kernel.org>, Brian Norris <briannorris@chromium.org>
-Cc: Enric Balletbo Serra <eballetbo@gmail.com>, William Wu <william.wu@rock-chips.com>, Kishon Vijay Abraham I <kishon@ti.com>, =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>, linux-kernel <linux-kernel@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Frank Wang <frank.wang@rock-chips.com>, huangtao@rock-chips.com, Doug Anderson <dianders@google.com>, Guenter Roeck <groeck@google.com>, daniel.meng@rock-chips.com, John.Youn@synopsys.com, lin.huang@rock-chips.com, Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Content-Type: multipart/related;
+	boundary="__=_Part_Boundary_003_1152070505.157841270"
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Cc: Chenglin Xu <chenglin.xu@mediatek.com>, argus.lin@mediatek.com, Sean Wang <sean.wang@mediatek.com>, wsd_upstream@mediatek.com, henryc.chen@mediatek.com, flora.fu@mediatek.com, Chen Zhong <chen.zhong@mediatek.com>, Christophe Jaillet <christophe.jaillet@wanadoo.fr>, "shailendra . v" <shailendra.v@samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-ID: <devicetree@vger.kernel.org>
 
-This is a multi-part message in MIME format.
---------------3A80C245B8C828B3245428F8
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+--__=_Part_Boundary_003_1152070505.157841270
+Content-Transfer-Encoding: base64
+Content-Type: multipart/alternative;
+	boundary="__=_Part_Boundary_004_1600834794.324218702"
 
-Dear Rob,
+--__=_Part_Boundary_004_1600834794.324218702
+Content-Type: text/html
+Content-Transfer-Encoding: base64
 
-在 2018年01月20日 05:49, Rob Herring 写道:
-> On Thu, Jan 18, 2018 at 09:47:50AM -0800, Brian Norris wrote:
->> On Thu, Jan 18, 2018 at 06:20:09PM +0100, Enric Balletbo Serra wrote:
->>> As Brian said commit 06c47e6286d5 'usb: dwc3: of-simple: Add support
->>> to get resets for the device' introduced the support to get the resets
->>> from dwc3-of-simple and the queued commit 'b7e63d95c14d arm64: dts:
->>> rockchip: add reset property for dwc3 controllers on rk3399' started
->>> using it. Without the latest I get errors like this doing bind/unbind
->>> tests.
->>>
->>>     dwc3: probe of fe900000.dwc3 failed with error -110
->>>
->>> I just tested these series on top of mainline, I reverted my patch
->>> because otherwise two drivers are requesting the same reset and fails,
->>> and I did some of the bind/unbind test. They just worked fine, and
->>> seems that this is right way, so this makes me think some questions.
->> Actually, this was intended to coexist with DWC3 optionally controlling
->> the same reset. It was written before the reset framework was rewritten
->> to have shared and exclusive resets. Should this be rewritten to use
->> shared resets? We'd have to modify both dwc3 core and the PHY driver.
-> Seems like abuse of DT to me. If you need to control the controller's
-> reset from the phy driver, then get the reset out of the controller
-> node. The phy node should describe the connections to the phy.
-I try to get the reset out of the controller, but I don't find a good
-way to get the reset ofthe controller associated with the given phy
-device node.  Is there an API like theof_usb_get_dr_mode_by_phy() to
-get 'dr_mode' of the controller?
+PHByZT4NCkZyb206IEFyZ3VzIExpbiAmbHQ7YXJndXMubGluQG1lZGlhdGVrLmNvbSZndDsNCg0K
+bXQ2Nzk3IGlzIGEgaGlnaGx5IGludGVncmF0ZWQgU29DcywgYW5kIGl0IHVzZXMNCm10NjM1MSBh
+cyBQb3dlciBNYW5hZ2VtZW50IElDLg0KV2UgbmVlZCB0byBhZGQgcHdyYXAgZGV2aWNlIHRvIGNv
+bW11bmljYXRlIHdpdGgNCm10NjM1MSBieSBTUEkuDQpUaGUgYmFzZSBhZGRyZXNzIG9mIHB3cmFw
+IGlzIDB4MTAwMGQwMDAsIGFuZCBJUlENCm51bWJlciBpcyAxNzguIEl0IGFsc28gdXNpbmcgZml4
+ZWQgMjZNaHogY2xvY2sNCmFzIFNQSSBDTEsuDQoNClNpZ25lZC1vZmYtYnk6IEFyZ3VzIExpbiAm
+bHQ7YXJndXMubGluQG1lZGlhdGVrLmNvbSZndDsNCi0tLQ0KIGFyY2gvYXJtNjQvYm9vdC9kdHMv
+bWVkaWF0ZWsvbXQ2Nzk3LmR0c2kgfCAxNCArKysrKysrKysrKysrKw0KIDEgZmlsZSBjaGFuZ2Vk
+LCAxNCBpbnNlcnRpb25zKCspDQoNCmRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL21l
+ZGlhdGVrL210Njc5Ny5kdHNpIGIvYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDY3OTcu
+ZHRzaQ0KaW5kZXggNGJlYWE3MTEwN2Q3Li40ODU1NDZlZmM5YmYgMTAwNjQ0DQotLS0gYS9hcmNo
+L2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL210Njc5Ny5kdHNpDQorKysgYi9hcmNoL2FybTY0L2Jv
+b3QvZHRzL21lZGlhdGVrL210Njc5Ny5kdHNpDQpAQCAtMTYxLDYgKzE2MSwyMCBAQA0KIAkJICAg
+ICAgJmx0OzAgMHgxMDIyMDY5MCAwIDB4MTAmZ3Q7Ow0KIAl9Ow0KIA0KKwlwd3JhcDogcHdyYXBA
+MTAwMGQwMDAgew0KKwkJY29tcGF0aWJsZSA9ICZxdW90O21lZGlhdGVrLG10Njc5Ny1wd3JhcCZx
+dW90OzsNCisJCXJlZyA9ICZsdDswIDB4MTAwMGQwMDAgMCAweDEwMDAmZ3Q7Ow0KKwkJcmVnLW5h
+bWVzID0gJnF1b3Q7cHdyYXAmcXVvdDs7DQorCQlpbnRlcnJ1cHRzID0gJmx0O0dJQ19TUEkgMTc4
+IElSUV9UWVBFX0xFVkVMX0hJR0gmZ3Q7Ow0KKwkJY2xvY2tzID0gJmx0OyZhbXA7Y2xrMjZtJmd0
+OywgJmx0OyZhbXA7Y2xrMjZtJmd0OzsNCisJCWNsb2NrLW5hbWVzID0gJnF1b3Q7c3BpJnF1b3Q7
+LCAmcXVvdDt3cmFwJnF1b3Q7Ow0KKw0KKwkJcG1pYzogbXQ2MzUxIHsNCisJCQljb21wYXRpYmxl
+ID0gJnF1b3Q7bWVkaWF0ZWssbXQ2MzUxJnF1b3Q7Ow0KKwkJCWludGVycnVwdC1jb250cm9sbGVy
+Ow0KKwkJfTsNCisJfTsNCisNCiAJdWFydDA6IHNlcmlhbEAxMTAwMjAwMCB7DQogCQljb21wYXRp
+YmxlID0gJnF1b3Q7bWVkaWF0ZWssbXQ2Nzk3LXVhcnQmcXVvdDssDQogCQkJICAgICAmcXVvdDtt
+ZWRpYXRlayxtdDY1NzctdWFydCZxdW90OzsNCi0tIA0KMi4xMi41DQoNCjwvcHJlPjwhLS10eXBl
+OnRleHQtLT48IS0tey0tPjxwcmU+KioqKioqKioqKioqKiBFbWFpbCBDb25maWRlbnRpYWxpdHkg
+Tm90aWNlDQogKioqKioqKioqKioqKioqKioqKioNClRoZSBpbmZvcm1hdGlvbiBjb250YWluZWQg
+aW4gdGhpcyBlLW1haWwgbWVzc2FnZSAoaW5jbHVkaW5nIGFueSANCmF0dGFjaG1lbnRzKSBtYXkg
+YmUgY29uZmlkZW50aWFsLCBwcm9wcmlldGFyeSwgcHJpdmlsZWdlZCwgb3Igb3RoZXJ3aXNlDQpl
+eGVtcHQgZnJvbSBkaXNjbG9zdXJlIHVuZGVyIGFwcGxpY2FibGUgbGF3cy4gSXQgaXMgaW50ZW5k
+ZWQgdG8gYmUgDQpjb252ZXllZCBvbmx5IHRvIHRoZSBkZXNpZ25hdGVkIHJlY2lwaWVudChzKS4g
+QW55IHVzZSwgZGlzc2VtaW5hdGlvbiwgDQpkaXN0cmlidXRpb24sIHByaW50aW5nLCByZXRhaW5p
+bmcgb3IgY29weWluZyBvZiB0aGlzIGUtbWFpbCAoaW5jbHVkaW5nIGl0cyANCmF0dGFjaG1lbnRz
+KSBieSB1bmludGVuZGVkIHJlY2lwaWVudChzKSBpcyBzdHJpY3RseSBwcm9oaWJpdGVkIGFuZCBt
+YXkgDQpiZSB1bmxhd2Z1bC4gSWYgeW91IGFyZSBub3QgYW4gaW50ZW5kZWQgcmVjaXBpZW50IG9m
+IHRoaXMgZS1tYWlsLCBvciBiZWxpZXZlDQogDQp0aGF0IHlvdSBoYXZlIHJlY2VpdmVkIHRoaXMg
+ZS1tYWlsIGluIGVycm9yLCBwbGVhc2Ugbm90aWZ5IHRoZSBzZW5kZXIgDQppbW1lZGlhdGVseSAo
+YnkgcmVwbHlpbmcgdG8gdGhpcyBlLW1haWwpLCBkZWxldGUgYW55IGFuZCBhbGwgY29waWVzIG9m
+IA0KdGhpcyBlLW1haWwgKGluY2x1ZGluZyBhbnkgYXR0YWNobWVudHMpIGZyb20geW91ciBzeXN0
+ZW0sIGFuZCBkbyBub3QNCmRpc2Nsb3NlIHRoZSBjb250ZW50IG9mIHRoaXMgZS1tYWlsIHRvIGFu
+eSBvdGhlciBwZXJzb24uIFRoYW5rDQogeW91ITwvcHJlPjwhLS19LS0+
 
-And we're trying to find another method to fix the RK3399 tcphy power
-on fail issue.If we get another proper method, we may not need these
-phy patch series.
+--__=_Part_Boundary_004_1600834794.324218702
+Content-Type: text/plain
+Content-Transfer-Encoding: base64
 
-Best regards,
-     wulf
->
-> Rob
->
->
->
+RnJvbTogQXJndXMgTGluIDxhcmd1cy5saW5AbWVkaWF0ZWsuY29tPg0KDQptdDY3OTcgaXMgYSBo
+aWdobHkgaW50ZWdyYXRlZCBTb0NzLCBhbmQgaXQgdXNlcw0KbXQ2MzUxIGFzIFBvd2VyIE1hbmFn
+ZW1lbnQgSUMuDQpXZSBuZWVkIHRvIGFkZCBwd3JhcCBkZXZpY2UgdG8gY29tbXVuaWNhdGUgd2l0
+aA0KbXQ2MzUxIGJ5IFNQSS4NClRoZSBiYXNlIGFkZHJlc3Mgb2YgcHdyYXAgaXMgMHgxMDAwZDAw
+MCwgYW5kIElSUQ0KbnVtYmVyIGlzIDE3OC4gSXQgYWxzbyB1c2luZyBmaXhlZCAyNk1oeiBjbG9j
+aw0KYXMgU1BJIENMSy4NCg0KU2lnbmVkLW9mZi1ieTogQXJndXMgTGluIDxhcmd1cy5saW5AbWVk
+aWF0ZWsuY29tPg0KLS0tDQogYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDY3OTcuZHRz
+aSB8IDE0ICsrKysrKysrKysrKysrDQogMSBmaWxlIGNoYW5nZWQsIDE0IGluc2VydGlvbnMoKykN
+Cg0KZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ2Nzk3LmR0c2kg
+Yi9hcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL210Njc5Ny5kdHNpDQppbmRleCA0YmVhYTcx
+MTA3ZDcuLjQ4NTU0NmVmYzliZiAxMDA2NDQNCi0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvbWVk
+aWF0ZWsvbXQ2Nzk3LmR0c2kNCisrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ2
+Nzk3LmR0c2kNCkBAIC0xNjEsNiArMTYxLDIwIEBADQogCQkgICAgICA8MCAweDEwMjIwNjkwIDAg
+MHgxMD47DQogCX07DQogDQorCXB3cmFwOiBwd3JhcEAxMDAwZDAwMCB7DQorCQljb21wYXRpYmxl
+ID0gIm1lZGlhdGVrLG10Njc5Ny1wd3JhcCI7DQorCQlyZWcgPSA8MCAweDEwMDBkMDAwIDAgMHgx
+MDAwPjsNCisJCXJlZy1uYW1lcyA9ICJwd3JhcCI7DQorCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkg
+MTc4IElSUV9UWVBFX0xFVkVMX0hJR0g+Ow0KKwkJY2xvY2tzID0gPCZjbGsyNm0+LCA8JmNsazI2
+bT47DQorCQljbG9jay1uYW1lcyA9ICJzcGkiLCAid3JhcCI7DQorDQorCQlwbWljOiBtdDYzNTEg
+ew0KKwkJCWNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ2MzUxIjsNCisJCQlpbnRlcnJ1cHQtY29u
+dHJvbGxlcjsNCisJCX07DQorCX07DQorDQogCXVhcnQwOiBzZXJpYWxAMTEwMDIwMDAgew0KIAkJ
+Y29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDY3OTctdWFydCIsDQogCQkJICAgICAibWVkaWF0ZWss
+bXQ2NTc3LXVhcnQiOw0KLS0gDQoyLjEyLjUNCg==
 
+--__=_Part_Boundary_004_1600834794.324218702--
 
---------------3A80C245B8C828B3245428F8
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-
-<html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  </head>
-  <body text="#000000" bgcolor="#FFFFFF">
-    <p><tt>Dear Rob,</tt><br>
-    </p>
-    <div class="moz-cite-prefix">在 2018年01月20日 05:49, Rob Herring 写道:<br>
-    </div>
-    <blockquote type="cite"
-      cite="mid:20180119214916.fegrzgcmbbdiesyz@rob-hp-laptop">
-      <pre wrap="">On Thu, Jan 18, 2018 at 09:47:50AM -0800, Brian Norris wrote:
-</pre>
-      <blockquote type="cite">
-        <pre wrap="">On Thu, Jan 18, 2018 at 06:20:09PM +0100, Enric Balletbo Serra wrote:
-</pre>
-        <blockquote type="cite">
-          <pre wrap="">As Brian said commit 06c47e6286d5 'usb: dwc3: of-simple: Add support
-to get resets for the device' introduced the support to get the resets
-from dwc3-of-simple and the queued commit 'b7e63d95c14d arm64: dts:
-rockchip: add reset property for dwc3 controllers on rk3399' started
-using it. Without the latest I get errors like this doing bind/unbind
-tests.
-
-   dwc3: probe of fe900000.dwc3 failed with error -110
-
-I just tested these series on top of mainline, I reverted my patch
-because otherwise two drivers are requesting the same reset and fails,
-and I did some of the bind/unbind test. They just worked fine, and
-seems that this is right way, so this makes me think some questions.
-</pre>
-        </blockquote>
-        <pre wrap="">
-Actually, this was intended to coexist with DWC3 optionally controlling
-the same reset. It was written before the reset framework was rewritten
-to have shared and exclusive resets. Should this be rewritten to use
-shared resets? We'd have to modify both dwc3 core and the PHY driver.
-</pre>
-      </blockquote>
-      <pre wrap="">
-Seems like abuse of DT to me. If you need to control the controller's 
-reset from the phy driver, then get the reset out of the controller 
-node. The phy node should describe the connections to the phy.</pre>
-    </blockquote>
-    <tt>I try to get the reset out of the controller, but I don't find a
-      good<br>
-      way to get the reset of</tt><tt> the controller associated with
-      the given phy<br>
-      device node.  Is there an API like the</tt><tt>
-      of_usb_get_dr_mode_by_phy() to<br>
-      get 'dr_mode' of the controller?</tt><tt><br>
-    </tt><tt><br>
-    </tt><tt>And we're trying to find another method to fix the RK3399
-      tcphy power<br>
-      on fail issue.</tt><tt> If we get another proper method, we may
-      not need these<br>
-      phy patch series.</tt><tt><br>
-    </tt><tt><br>
-    </tt><tt>Best regards,</tt><tt><br>
-    </tt><tt><span style="color: rgb(51, 51, 51); font-size: 14px;
-        font-style: normal; font-variant-ligatures: normal;
-        font-variant-caps: normal; font-weight: 400; letter-spacing:
-        normal; text-align: left; text-indent: 0px; text-transform:
-        none; white-space: normal; word-spacing: 0px;
-        -webkit-text-stroke-width: 0px; background-color: rgb(249, 249,
-        249); text-decoration-style: initial; text-decoration-color:
-        initial; display: inline ! important; float: none;"></span></tt><tt>
-          wulf</tt><br>
-    <blockquote type="cite"
-      cite="mid:20180119214916.fegrzgcmbbdiesyz@rob-hp-laptop">
-      <pre wrap="">
-
-Rob
-
-
-
-</pre>
-    </blockquote>
-    <br>
-  </body>
-</html>
-
---------------3A80C245B8C828B3245428F8--
+--__=_Part_Boundary_003_1152070505.157841270--
