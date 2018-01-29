@@ -1,85 +1,131 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: Re: [PATCH v6 2/2] media: V3s: Add support for
- Allwinner CSI.
-Date: Mon, 29 Jan 2018 09:16:21 +0100
-Message-ID: <20180129081621.ya2myroesthnwfjt@flea.lan>
-References: <1516695531-23349-1-git-send-email-yong.deng@magewell.com>
- <201801260759.RyNhDZz4%fengguang.wu@intel.com>
- <20180126094658.aa70ed3f890464f6051e21e4@magewell.com>
- <20180126110041.f89848325b9ecfb07df387ca@magewell.com>
- <20180126081000.hy7g57zp5dv6ug2g@flea.lan>
- <20180128101903.fbaec083c787bda30aeb05ef@magewell.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Rajendra Nayak <rnayak@codeaurora.org>
+Subject: Re: [PATCH 2/2] arm64: dts: sdm845: Add serial console support
+Date: Mon, 29 Jan 2018 13:48:48 +0530
+Message-ID: <086251c4-b012-236c-33e2-9cab551a4594@codeaurora.org>
+References: <20180125163216.29018-1-rnayak@codeaurora.org>
+ <20180125163216.29018-3-rnayak@codeaurora.org>
+ <20180126221808.GE28313@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="iw4dp6rim5avyb7q"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBVVQXPJQKGQEREVBZHQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20180128101903.fbaec083c787bda30aeb05ef-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Yong <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
-Cc: kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, kbuild-all-JC7UmRfGjtg@public.gmane.org, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rick Chang <rick.chang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-ker
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180126221808.GE28313@codeaurora.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: andy.gross@linaro.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---iw4dp6rim5avyb7q
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
 
-Hi,
+On 01/27/2018 03:48 AM, Stephen Boyd wrote:
+> On 01/25, Rajendra Nayak wrote:
+>> diff --git a/arch/arm64/boot/dts/qcom/sdm845-pins.dtsi b/arch/arm64/boot/dts/qcom/sdm845-pins.dtsi
+>> new file mode 100644
+>> index 000000000000..b97f99e6f4b4
+>> --- /dev/null
+>> +++ b/arch/arm64/boot/dts/qcom/sdm845-pins.dtsi
+>> @@ -0,0 +1,32 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
+>> + */
+>> +
+>> +&tlmm {
+> 
+> I'm not the maintainer, but I find this approach to the pins
+> really annoying. I have to flip to another file to figure out how
+> a board has configured the pins. And we may bring in a bunch of
+> settings that we don't ever use on some board too. Why can't we
+> put the settings in the board file directly?
 
-On Sun, Jan 28, 2018 at 10:19:03AM +0800, Yong wrote:
-> Hi Maxime,
-> 
-> On Fri, 26 Jan 2018 09:10:00 +0100
-> Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> 
-> > On Fri, Jan 26, 2018 at 11:00:41AM +0800, Yong wrote:
-> > > Hi Maxime,
-> > > 
-> > > On Fri, 26 Jan 2018 09:46:58 +0800
-> > > Yong <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org> wrote:
-> > > 
-> > > > Hi Maxime,
-> > > > 
-> > > > Do you have any experience in solving this problem?
-> > > > It seems the PHYS_OFFSET maybe undeclared when the ARCH is not arm.
-> > > 
-> > > Got it.
-> > > Should I add 'depends on ARM' in Kconfig?
-> > 
-> > Yes, or even better a depends on MACH_SUNXI :)
-> 
-> Do you mean ARCH_SUNXI?
+I was just keeping it consistent with how things are for other
+qualcomm platforms. I can move this to the board dts if no one else
+sees any issues.
 
-Yeah, sorry :)
+> 
+>> +	qup_uart2_default: qup_uart2_default {
+>> +		pinmux {
+>> +			function = "qup9";
+>> +			pins = "gpio4", "gpio5";
+>> +		};
+>> +
+>> +		pinconf {
+>> +			pins = "gpio4", "gpio5";
+>> +			drive-strength = <2>;
+>> +			bias-disable;
+>> +		};
+>> +	};
+>> +
+>> +	qup_uart2_sleep: qup_uart2_sleep {
+>> +		pinmux {
+>> +			function = "gpio";
+>> +			pins = "gpio4", "gpio5";
+>> +		};
+>> +
+>> +		pinconf {
+>> +			pins = "gpio4", "gpio5";
+>> +			drive-strength = <2>;
+>> +			bias-disable;
+>> +		};
+>> +	};
+>> +};
+>> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+>> index a21f4912b3e2..529f4ba3a1db 100644
+>> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+>> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+>> @@ -4,6 +4,7 @@
+>>   */
+>>  
+>>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>> +#include <dt-bindings/clock/qcom,gcc-sdm845.h>
+>>  
+>>  / {
+>>  	model = "Qualcomm Technologies, Inc. SDM845";
+> 
+> I'd expect some sort of serial alias node stuff here too.
 
-> ARCH_SUNXI is alreay there. In the early version, my Kconfig is like this:
-> 
-> 	depends on ARCH_SUNXI
-> 
-> But Hans suggest me to change this to:
-> 
-> 	depends on ARCH_SUNXI || COMPILE_TEST
-> 
-> to allow this driver to be compiled on e.g. Intel for compile testing.
-> 
-> Should we get rid of COMPILE_TEST?
+yes, will add.
 
-Yes, it cannot be compiled as is on anything but ARM and a few
-architectures. Or maybe something like || (COMPILE_TEST && ARM) if
-that makes sense?
+> 
+>> @@ -304,5 +305,26 @@
+>>  			cell-index = <0>;
+>>  		};
+>>  
+>> +		qup_1: qcom,geni_se@ac0000 {
+>> +			compatible = "qcom,geni-se-qup";
+>> +			reg = <0xac0000 0x6000>;
+>> +		};
+>> +
+>> +		qup_uart2: serial@a84000 {
+>> +			compatible = "qcom,geni-console", "qcom,geni-uart";
+>> +			reg = <0xa84000 0x4000>;
+>> +			reg-names = "se_phys";
+>> +			clock-names = "se-clk", "m-ahb", "s-ahb";
+>> +			clocks = <&gcc GCC_QUPV3_WRAP1_S1_CLK>,
+>> +				 <&gcc GCC_QUPV3_WRAP_1_M_AHB_CLK>,
+>> +				 <&gcc GCC_QUPV3_WRAP_1_S_AHB_CLK>;
+>> +			pinctrl-names = "default", "sleep";
+>> +			pinctrl-0 = <&qup_uart2_default>;
+>> +			pinctrl-1 = <&qup_uart2_sleep>;
+>> +			interrupts = <GIC_SPI 354 IRQ_TYPE_NONE>;
+>> +			qcom,wrapper-core = <&qup_1>;
+> 
+> Is this binding still being reviewed? Ugly.
 
-Maxime
+yes, its still being reviewed
+
+> 
+>> +			status = "disabled";
+>> +		};
+>>  	};
+>>  };
+>> +#include "sdm845-pins.dtsi"
+> 
+> Why at the bottom?
+
+Again keeping it consistent with how things are in msm8916/msm8992/msm8996 dtsi files.
 
 -- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---iw4dp6rim5avyb7q--
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
