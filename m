@@ -1,39 +1,81 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v2 1/2] DT: display: renesas,du: document R8A77970 bindings
-Date: Mon, 29 Jan 2018 22:33:56 +0300
-Message-ID: <c8a307c0-e4b4-d6fd-2cac-22fd8600aa81@cogentembedded.com>
-References: <20180118211024.314876177@cogentembedded.com>
- <20180129190236.5fdgtlwlkxzurljh@rob-hp-laptop>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH V2 1/3] dt-binding: can: mcp25xxfd: document device tree
+ bindings
+Date: Mon, 29 Jan 2018 13:36:55 -0600
+Message-ID: <20180129193655.ybu5cttt6z6mitmp@rob-hp-laptop>
+References: <20180119074140.25931-1-kernel@martin.sperl.org>
+ <20180119074140.25931-2-kernel@martin.sperl.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180129190236.5fdgtlwlkxzurljh@rob-hp-laptop>
-Content-Language: en-MW
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-can-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180119074140.25931-2-kernel@martin.sperl.org>
+Sender: linux-can-owner@vger.kernel.org
+To: kernel@martin.sperl.org
+Cc: linux-can@vger.kernel.org, devicetree@vger.kernel.org, Wolfgang Grandegger <wg@grandegger.com>, Mark Kleine-Budde <mkl@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, Marcel Birthelmer <Marcel.Birthelmer@microchip.com>, Sukkin Pang <skp@skpang.co.uk>, Gerhard Bertelsmann <info@gerhard-bertelsmann.de>
 List-Id: devicetree@vger.kernel.org
 
-T24gMDEvMjkvMjAxOCAxMDowMiBQTSwgUm9iIEhlcnJpbmcgd3JvdGU6Cgo+PiBEb2N1bWVudCB0
-aGUgUi1DYXIgVjNNIChSOEE3Nzk3MCkgU29DIGluIHRoZSBSLUNhciBEVSBiaW5kaW5ncy4KPj4K
-Pj4gU2lnbmVkLW9mZi1ieTogU2VyZ2VpIFNodHlseW92IDxzZXJnZWkuc2h0eWx5b3ZAY29nZW50
-ZW1iZWRkZWQuY29tPgo+Pgo+PiAtLS0KPj4gQ2hhbmdlcyBpbiB2ZXJzaW9uIDI6Cj4+IC0gZG9j
-dW1lbnRlZCAgUjhBNzc5NzAgRFUgcG9ydHM7Cj4+IC0gcGF0Y2ggc3BsaXQgZnJvbSB0aGUgbWFp
-biBSOEE3Nzk3MCBEVSBzdXBwb3J0IHBhdGNoLgo+Pgo+PiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcmVuZXNhcyxkdS50eHQgfCAgICAyICsrCj4+ICAxIGZpbGUg
-Y2hhbmdlZCwgMiBpbnNlcnRpb25zKCspCj4gCj4gQWNrZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2Jo
-QGtlcm5lbC5vcmc+CgogICBUaGFuayB5b3UhCiAKPiBUaGUgcHJlZmVycmVkIHN1YmplY3QgcHJl
-Zml4IGlzICJkdC1iaW5kaW5nczogZGlzcGxheTogLi4uIgoKICAgSSB1c2UgaXQgZm9yIHRoZSBz
-dHVmZiBpbiBpbmNsdWRlL2R0LWJpbmRpbmdzLy4gOi0pCgpNQlIsIFNlcmdlaQpfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBs
-aXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVz
-a3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On Fri, Jan 19, 2018 at 07:41:38AM +0000, kernel@martin.sperl.org wrote:
+> From: Martin Sperl <kernel@martin.sperl.org>
+> 
+> Add device-tree bindings for Microcip CanFD Controller mcp2517fd
+> 
+> Signed-off-by: Martin Sperl <kernel@martin.sperl.org>
+> 
+> ---
+> Changelog:
+>   V1 -> V2: new more generic name based on feedback from microchip
+>             cleanup of dt custom properties removing (most) gpio functions
+> ---
+>  .../bindings/net/can/microchip,mcp25xxfd.txt       | 29 ++++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/can/microchip,mcp25xxfd.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/net/can/microchip,mcp25xxfd.txt b/Documentation/devicetree/bindings/net/can/microchip,mcp25xxfd.txt
+> new file mode 100644
+> index 000000000000..691dd6220bd7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/can/microchip,mcp25xxfd.txt
+> @@ -0,0 +1,29 @@
+> +* Microchip MCP2517 stand-alone CAN controller device tree bindings
+> +
+> +Required properties:
+> + - compatible: Should be one of the following:
+> +   - "microchip,mcp2517fd" for MCP2517fd.
+> + - reg: SPI chip select.
+> + - clocks: The clock feeding the CAN controller.
+> + - interrupt-parent: The parent interrupt controller.
+> + - interrupts: Should contain IRQ line for the CAN controller.
+> +
+> +Optional properties:
+> + - vdd-supply: Regulator that powers the CAN controller.
+> + - xceiver-supply: Regulator that powers the CAN transceiver.
+
+> + - microchip,clock_out_div = <0|1|2|4|10>: Clock output pin divider
+> +					   0 = Start of Frame output
+> +					   default: 10
+> + - microchip,clock_div2: bool: divide the internal clock by 2
+
+s/_/-/
+
+> + - gpio_opendrain: bool: enable open-drain for all pins (except cantx)
+
+Needs a vendor prefix.
+
+> +
+> +Example:
+> +	can0: can@1 {
+> +		compatible = "microchip,mcp2515";
+> +		reg = <1>;
+> +		clocks = <&clk24m>;
+> +		interrupt-parent = <&gpio4>;
+> +		interrupts = <13 0x8>;
+> +		vdd-supply = <&reg5v0>;
+> +		xceiver-supply = <&reg5v0>;
+> +	};
+> --
+> 2.11.0
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
