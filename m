@@ -1,154 +1,142 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v2 3/4] ARM: dts: exynos: Fix missing missing reg warning for syscon restart nodes
-Date: Tue, 30 Jan 2018 22:18:18 +0100
-Message-ID: <20180130211819.17139-4-krzk@kernel.org>
-References: <20180130211819.17139-1-krzk@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180130211819.17139-1-krzk@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Pankaj Dubey <pankaj.dubey@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [RFC v3 11/25] watchdog: renesas_wdt: Add R-Car Gen2 support
+Date: Tue, 30 Jan 2018 14:05:04 -0800
+Message-ID: <20180130220504.GA16709@roeck-us.net>
+References: <1517343778-27902-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1517343778-27902-12-git-send-email-fabrizio.castro@bp.renesas.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1517343778-27902-12-git-send-email-fabrizio.castro@bp.renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wim Van Sebroeck <wim@iguana.be>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa+renesas@sang-engineering.com>, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-Fix DTC warnings like:
+On Tue, Jan 30, 2018 at 08:22:44PM +0000, Fabrizio Castro wrote:
+> On R-Car Gen2 and RZ/G1 the rwdt clock needs to be always ON, therefore
+> when suspending to RAM we need to explicitly disable the counting by
+> clearing TME from RWTCSRA.
+> Also, on some systems RWDT is the only piece of HW that allows the SoC
+> to be restarted, therefore this patch implements the restart callback.
+> 
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
+> ---
+> Wolfram, was the restart callback implementation missing for a reason?
+> Is its implementation going to break any Gen3 platform?
+> 
 
-    arch/arm/boot/dts/exynos4412-trats2.dtb: Warning (simple_bus_reg):
-        Node /soc/syscon-poweroff missing or empty reg/ranges property
-    arch/arm/boot/dts/exynos4412-trats2.dtb: Warning (simple_bus_reg):
-        Node /soc/syscon-reboot missing or empty reg/ranges property
+The changes clearly are way more than claimed in the subject. Adding
+restart handler and PM support may be prerequisites for Gen2, but the
+changes apply to Gen3 as well. What happened to "one patch per logical
+change" ?
 
-by moving the syscon poweroff and restart nodes into the PMU (Power
-Management Unit) node.  The PMU node is the actual block responsible for
-power management, including typical Exynos on/off/restart procedures.
-Therefore the syscon poweroff and restart nodes logically belong to it.
+> v1->v3:
+> * unified Gen2 and Gen3 drivers.
+> 
+>  drivers/watchdog/renesas_wdt.c | 61 ++++++++++++++++++++++++++++++++++++++----
+>  1 file changed, 56 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/watchdog/renesas_wdt.c b/drivers/watchdog/renesas_wdt.c
+> index 831ef83..eedb016 100644
+> --- a/drivers/watchdog/renesas_wdt.c
+> +++ b/drivers/watchdog/renesas_wdt.c
+> @@ -107,6 +107,24 @@ static unsigned int rwdt_get_timeleft(struct watchdog_device *wdev)
+>  	return DIV_BY_CLKS_PER_SEC(priv, 65536 - val);
+>  }
+>  
+> +static int rwdt_restart(struct watchdog_device *wdev, unsigned long action,
+> +			void *data)
+> +{
+> +	struct rwdt_priv *priv = watchdog_get_drvdata(wdev);
+> +
+> +	pm_runtime_get_sync(wdev->parent);
+> +
+> +	rwdt_write(priv, 0x00, RWTCSRB);
+> +	rwdt_write(priv, 0x00, RWTCSRA);
+> +	rwdt_write(priv, 0xffff, RWTCNT);
+> +
+> +	while (readb_relaxed(priv->base + RWTCSRA) & RWTCSRA_WRFLG)
+> +		cpu_relax();
+> +
+> +	rwdt_write(priv, 0x80, RWTCSRA);
+> +	return 0;
+> +}
+> +
+>  static const struct watchdog_info rwdt_ident = {
+>  	.options = WDIOF_MAGICCLOSE | WDIOF_KEEPALIVEPING | WDIOF_SETTIMEOUT,
+>  	.identity = "Renesas WDT Watchdog",
+> @@ -118,6 +136,7 @@ static const struct watchdog_ops rwdt_ops = {
+>  	.stop = rwdt_stop,
+>  	.ping = rwdt_init_timeout,
+>  	.get_timeleft = rwdt_get_timeleft,
+> +	.restart = rwdt_restart,
+>  };
+>  
+>  static int rwdt_probe(struct platform_device *pdev)
+> @@ -203,13 +222,42 @@ static int rwdt_remove(struct platform_device *pdev)
+>  	return 0;
+>  }
+>  
+> -/*
+> - * This driver does also fit for R-Car Gen2 (r8a779[0-4]) WDT. However, for SMP
+> - * to work there, one also needs a RESET (RST) driver which does not exist yet
+> - * due to HW issues. This needs to be solved before adding compatibles here.
+> - */
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Have those issues been resolved ?
 
----
-
-Tested on Exynos5410, Exynos5420 and Exynos4412. Other tests are welcomed.
----
- arch/arm/boot/dts/exynos-syscon-restart.dtsi | 28 ++++++++++++----------------
- arch/arm/boot/dts/exynos3250.dtsi            |  2 +-
- arch/arm/boot/dts/exynos4.dtsi               |  3 ++-
- arch/arm/boot/dts/exynos5.dtsi               |  1 -
- arch/arm/boot/dts/exynos5250.dtsi            |  1 +
- arch/arm/boot/dts/exynos5410.dtsi            |  1 +
- arch/arm/boot/dts/exynos5420.dtsi            |  1 +
- 7 files changed, 18 insertions(+), 19 deletions(-)
-
-diff --git a/arch/arm/boot/dts/exynos-syscon-restart.dtsi b/arch/arm/boot/dts/exynos-syscon-restart.dtsi
-index 09a2040054ed..279ea09f4fe2 100644
---- a/arch/arm/boot/dts/exynos-syscon-restart.dtsi
-+++ b/arch/arm/boot/dts/exynos-syscon-restart.dtsi
-@@ -6,22 +6,18 @@
-  * published by the Free Software Foundation.
-  */
- 
--/ {
--	soc {
--		compatible = "simple-bus";
--
--		poweroff: syscon-poweroff {
--			compatible = "syscon-poweroff";
--			regmap = <&pmu_system_controller>;
--			offset = <0x330C>; /* PS_HOLD_CONTROL */
--			mask = <0x5200>; /* reset value */
--		};
-+&pmu_system_controller {
-+	poweroff: syscon-poweroff {
-+		compatible = "syscon-poweroff";
-+		regmap = <&pmu_system_controller>;
-+		offset = <0x330C>; /* PS_HOLD_CONTROL */
-+		mask = <0x5200>; /* reset value */
-+	};
- 
--		reboot: syscon-reboot {
--			compatible = "syscon-reboot";
--			regmap = <&pmu_system_controller>;
--			offset = <0x0400>; /* SWRESET */
--			mask = <0x1>;
--		};
-+	reboot: syscon-reboot {
-+		compatible = "syscon-reboot";
-+		regmap = <&pmu_system_controller>;
-+		offset = <0x0400>; /* SWRESET */
-+		mask = <0x1>;
- 	};
- };
-diff --git a/arch/arm/boot/dts/exynos3250.dtsi b/arch/arm/boot/dts/exynos3250.dtsi
-index b8fb94f5daa8..df76624fd382 100644
---- a/arch/arm/boot/dts/exynos3250.dtsi
-+++ b/arch/arm/boot/dts/exynos3250.dtsi
-@@ -15,7 +15,6 @@
-  */
- 
- #include "exynos4-cpu-thermal.dtsi"
--#include "exynos-syscon-restart.dtsi"
- #include <dt-bindings/clock/exynos3250.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/interrupt-controller/irq.h>
-@@ -914,3 +913,4 @@
- };
- 
- #include "exynos3250-pinctrl.dtsi"
-+#include "exynos-syscon-restart.dtsi"
-diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exynos4.dtsi
-index 6d59cc827649..98af5592cc6d 100644
---- a/arch/arm/boot/dts/exynos4.dtsi
-+++ b/arch/arm/boot/dts/exynos4.dtsi
-@@ -20,7 +20,6 @@
- #include <dt-bindings/clock/exynos-audss-clk.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/interrupt-controller/irq.h>
--#include "exynos-syscon-restart.dtsi"
- 
- / {
- 	interrupt-parent = <&gic>;
-@@ -1010,3 +1009,5 @@
- 		clock-names = "secss";
- 	};
- };
-+
-+#include "exynos-syscon-restart.dtsi"
-diff --git a/arch/arm/boot/dts/exynos5.dtsi b/arch/arm/boot/dts/exynos5.dtsi
-index f8d7de1144f1..359f49bdd4e2 100644
---- a/arch/arm/boot/dts/exynos5.dtsi
-+++ b/arch/arm/boot/dts/exynos5.dtsi
-@@ -12,7 +12,6 @@
- 
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/interrupt-controller/irq.h>
--#include "exynos-syscon-restart.dtsi"
- 
- / {
- 	interrupt-parent = <&gic>;
-diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
-index 56626d1a4235..037aceee5959 100644
---- a/arch/arm/boot/dts/exynos5250.dtsi
-+++ b/arch/arm/boot/dts/exynos5250.dtsi
-@@ -1114,3 +1114,4 @@
- };
- 
- #include "exynos5250-pinctrl.dtsi"
-+#include "exynos-syscon-restart.dtsi"
-diff --git a/arch/arm/boot/dts/exynos5410.dtsi b/arch/arm/boot/dts/exynos5410.dtsi
-index 1e6b57d013c4..fb7fa217a05b 100644
---- a/arch/arm/boot/dts/exynos5410.dtsi
-+++ b/arch/arm/boot/dts/exynos5410.dtsi
-@@ -439,3 +439,4 @@
- };
- 
- #include "exynos5410-pinctrl.dtsi"
-+#include "exynos-syscon-restart.dtsi"
-diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
-index 2f3cb2a97f71..71e2b154a244 100644
---- a/arch/arm/boot/dts/exynos5420.dtsi
-+++ b/arch/arm/boot/dts/exynos5420.dtsi
-@@ -1531,3 +1531,4 @@
- };
- 
- #include "exynos5420-pinctrl.dtsi"
-+#include "exynos-syscon-restart.dtsi"
--- 
-2.11.0
+> +#ifdef CONFIG_PM
+> +static int rwdt_suspend(struct device *dev)
+> +{
+> +	struct platform_device *pdev;
+> +	struct rwdt_priv *priv;
+> +
+> +	pdev = to_platform_device(dev);
+> +	priv = platform_get_drvdata(pdev);
+> +	if (watchdog_active(&priv->wdev)) {
+> +		rwdt_write(priv, priv->cks, RWTCSRA);
+> +	}
+> +	return 0;
+> +}
+> +
+> +static int rwdt_resume(struct device *dev)
+> +{
+> +	struct platform_device *pdev;
+> +	struct rwdt_priv *priv;
+> +
+> +	pdev = to_platform_device(dev);
+> +	priv = platform_get_drvdata(pdev);
+> +	if (watchdog_active(&priv->wdev)) {
+> +		rwdt_write(priv, priv->cks | RWTCSRA_TME, RWTCSRA);
+> +	}
+> +	return 0;
+> +}
+> +
+> +static const struct dev_pm_ops rwdt_pm = {
+> +	.suspend = rwdt_suspend,
+> +	.resume = rwdt_resume,
+> +};
+> +#endif
+> +
+>  static const struct of_device_id rwdt_ids[] = {
+>  	{ .compatible = "renesas,rcar-gen3-wdt", },
+> +	{ .compatible = "renesas,rcar-gen2-wdt", },
+>  	{ /* sentinel */ }
+>  };
+>  MODULE_DEVICE_TABLE(of, rwdt_ids);
+> @@ -218,6 +266,9 @@ static struct platform_driver rwdt_driver = {
+>  	.driver = {
+>  		.name = "renesas_wdt",
+>  		.of_match_table = rwdt_ids,
+> +#ifdef CONFIG_PM
+> +		.pm = &rwdt_pm,
+> +#endif
+>  	},
+>  	.probe = rwdt_probe,
+>  	.remove = rwdt_remove,
+> -- 
+> 2.7.4
+> 
