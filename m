@@ -1,52 +1,39 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v2 5/5] dt-bindings: at24: add bindings for Rohm BR24T01
-Date: Tue, 30 Jan 2018 11:44:43 +0100
-Message-ID: <20180130104443.ffys4y6ulo6fd7va@ninjato>
-References: <1517240748-14780-1-git-send-email-ulrich.hecht+renesas@gmail.com>
- <1517240748-14780-6-git-send-email-ulrich.hecht+renesas@gmail.com>
+From: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Subject: Re: [PATCH] dt-bindings: display: stm32: correct clock-names in dsi
+ panel example
+Date: Tue, 30 Jan 2018 11:51:54 +0100
+Message-ID: <CA+M3ks78kufDB4QSd38Ah15zidbuHnY3kHMHXB_0iQFFg1VVkA@mail.gmail.com>
+References: <20180122153547.23470-1-philippe.cornu@st.com>
+ <20180129231518.mocdpegeagbs4z5n@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="24i2lxt4rv2gku6v"
-Return-path: <linux-i2c-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1517240748-14780-6-git-send-email-ulrich.hecht+renesas@gmail.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
-Cc: linux-renesas-soc@vger.kernel.org, horms@verge.net.au, geert@linux-m68k.org, kieran.bingham@ideasonboard.com, magnus.damm@gmail.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180129231518.mocdpegeagbs4z5n@rob-hp-laptop>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Alexandre Torgue <alexandre.torgue@st.com>, David Airlie <airlied@linux.ie>, Philippe Cornu <philippe.cornu@st.com>, dri-devel@lists.freedesktop.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Yannick Fertre <yannick.fertre@st.com>, Ludovic Barre <ludovic.barre@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Mickael Reulier <mickael.reulier@st.com>, Vincent Abriou <vincent.abriou@st.com>, Gabriel Fernandez <gabriel.fernandez@st.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-
---24i2lxt4rv2gku6v
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Jan 29, 2018 at 04:45:48PM +0100, Ulrich Hecht wrote:
-> Both manufacturer and name variant.
->=20
-> Signed-off-by: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
-
-Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-
-
---24i2lxt4rv2gku6v
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlpwTJsACgkQFA3kzBSg
-KbZI2Q//cH5zU2rZ3UeXoWZzUaMQxu45C+oARRKqp4woybTWQzpVRZGSrr8SMn5O
-6ceQdn4ojzARc2KyJ7K8FRd7jkmIs5y2RX8Gtssv+HtdGmNmZ3+sIW368jXUjX+s
-jdTl1GYQU43mU6sEAfTZvXX3PFHN8E3DMtL9zXMPlg+cDuhZHmIpxVblB6krWNii
-Bd630sJy5efHi2JVF+MKUm1rwHAvMuQQp967sFGcfB4E5lHthH/04+4HjIVEjP8v
-bElrEM3N5zGia9nVrlKxhXn7w0ALZ29TT7cdrLKMAbemtoPk/4SsWvba7o4rQogZ
-9f4bTvjsAs9CjAN9AedNImeSBjKDnfycSP8dNlMBqGW/O7VAfP88op4Wrd8v1Hwz
-4qgOGLAJ8iFDsTQXL9BgpIzJy4RKnW7IVh4hsoELcT4lR889RGNsVo8occ8VgALn
-PkIXfqyfsD8nUXmWLOE+lNufJu8kXIQaqM8gKo0GfDJ8YE2oLUziqlMquOvHXRb8
-aTEgWcEs7WxNPADY39F0vqWjoOTCJS3hQi70ly6Bqm9BJumXi0ftltgFlaexMy5I
-STVtckYROD1hJtaCDtTCVNDjCuJxQ8RitOuWcstJRdj+yvWOvHojZaCNb13wCK1I
-IArGwRgMvyzobKoBQ+KVcipAUd9++AT5UPmcQRo9I3atU0PYPcw=
-=PwgN
------END PGP SIGNATURE-----
-
---24i2lxt4rv2gku6v--
+MjAxOC0wMS0zMCAwOjE1IEdNVCswMTowMCBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPjoK
+PiBPbiBNb24sIEphbiAyMiwgMjAxOCBhdCAwNDozNTo0N1BNICswMTAwLCBQaGlsaXBwZSBDb3Ju
+dSB3cm90ZToKPj4gSW4gdGhlIGRzaSBwYW5lbCBleGFtcGxlLCBjbG9jayBuYW1lcyBpbiB0aGUg
+ImNsb2NrLW5hbWVzIgo+PiBmaWVsZCBoYXZlIGJlZW4gc3dhcHBlZDoKPj4gKiAicGNsayIgKHBl
+cmlwaGVyYWwgY2xvY2spIGlzIDwmcmNjIDEgQ0xLX0Y0NjlfRFNJPiBvbiBzdG0zMmY0Cj4+ICog
+InJlZiIgKGRzaSBwaHkgcGxsIHJlZiBjbG9jaykgaXMgPCZjbGtfaHNlPiBvbiBzdG0zMmY0Cj4+
+Cj4+IFNpZ25lZC1vZmYtYnk6IFBoaWxpcHBlIENvcm51IDxwaGlsaXBwZS5jb3JudUBzdC5jb20+
+Cj4+IC0tLQo+PiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvc3Qs
+c3RtMzItbHRkYy50eHQgfCAyICstCj4+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyks
+IDEgZGVsZXRpb24oLSkKPgo+IFJldmlld2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwu
+b3JnPgo+CkFwcGxpZWQgb24gZHJtLW1pc2MtbmV4dC4KClJlZ2FyZHMsCkJlbmphbWluCl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWls
+aW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZy
+ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
