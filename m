@@ -1,124 +1,72 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH v6 2/2] media: V3s: Add support for Allwinner CSI.
-Date: Tue, 30 Jan 2018 08:54:41 +0100
-Message-ID: <20180130075441.rqxzkwero6sdfak6@flea.lan>
-References: <1516695531-23349-1-git-send-email-yong.deng@magewell.com>
- <CACRpkdan52UB7HOyH1gnHWg4CDke_VQxAdq8cBgwUroibE59Ow@mail.gmail.com>
- <20180129082533.6edmqgbauo6q5dgz@flea.lan>
- <CACRpkdYAGwUjr2C-w5U+WuG48pZAOUcnxFjznLbdF6Lmy1uZuQ@mail.gmail.com>
- <CAK8P3a2HmPOTHAzqBnmim388pcWOE=fG50mG5HJifT=vzKOaTg@mail.gmail.com>
+From: Chintan Pandya <cpandya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v2] of: use hash based search in of_find_node_by_phandle
+Date: Tue, 30 Jan 2018 13:34:40 +0530
+Message-ID: <7ebd275d-07ba-1972-011a-d05e53233a01@codeaurora.org>
+References: <1516955496-17236-1-git-send-email-cpandya@codeaurora.org>
+ <2d877704-47c5-c1fc-1b89-976cd9b1ccaa@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="efe3fivtyyp4bqw2"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a2HmPOTHAzqBnmim388pcWOE=fG50mG5HJifT=vzKOaTg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Yong Deng <yong.deng@magewell.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hans Verkuil <hans.verkuil@cisco.com>, Randy Dunlap <rdunlap@infradead.org>, Stanimir Varbanov <stanimir.varbanov@linaro.org>, Hugues Fruchet <hugues.fruchet@st.com>, Yannick Fertre <yannick.fertre@st.com>, Philipp Zabel <p.zabel@pengutronix.de>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Rick Chang <rick.chang@mediatek.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <2d877704-47c5-c1fc-1b89-976cd9b1ccaa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
---efe3fivtyyp4bqw2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Mon, Jan 29, 2018 at 03:34:02PM +0100, Arnd Bergmann wrote:
-> On Mon, Jan 29, 2018 at 10:25 AM, Linus Walleij
-> <linus.walleij@linaro.org> wrote:
-> > On Mon, Jan 29, 2018 at 9:25 AM, Maxime Ripard
-> > <maxime.ripard@free-electrons.com> wrote:
-> >> On Sat, Jan 27, 2018 at 05:14:26PM +0100, Linus Walleij wrote:
-> >> However, in DT systems, that
-> >> field is filled only with the parent's node dma-ranges property. In
-> >> our case, and since the DT parenthood is based on the "control" bus,
-> >> and not the "data" bus, our parent node would be the AXI bus, and not
-> >> the memory bus that enforce those constraints.
-> >>
-> >> And other devices doing DMA through regular DMA accesses won't have
-> >> that mapping, so we definitely shouldn't enforce it for all the
-> >> devices there, but only the one connected to the separate memory bus.
-> >>
-> >> tl; dr: the DT is not really an option to store that info.
-> >>
-> >> I suggested setting dma_pfn_offset at probe, but Arnd didn't seem too
-> >> fond of that approach either at the time.
-> >>
-> >> So, well, I guess we could do better. We just have no idea how :)
-> >
-> > Usually of Arnd cannot suggest something smart, neither can I :(
-> >
-> > If some aspect of the memory layout of the system *really* doesn't
-> > fit into DT because of the assumptions that DT is doing about
-> > how systems work, we have a problem.
-> >
-> > Is the problem that DT's model assumes that devices have one and
-> > only one data port to the system memory, and that is how it
-> > populates the Linux devices?
-> >
-> > I guess, if nothing else works, I would use auxdata in the board file.
-> > It is our definitive last resort when DT doesn't hold.
-> >
-> > I.e. I would go into struct of_dev_auxdata
-> > (from <linux/of_platform.h>) and add a
-> > dma_pfn_offset field that gets set into the device's dma_pfn_offset
-> > in drivers/of/platform.c overriding anything else and use that to hammer
-> > it down in the boardfile.
-> >
-> > But I bet some DT people are going to have other ideas.
->=20
-> At one point we had discussed adding a 'dma-masters' property that
-> lists all the buses on which a device can be a dma master, and
-> the respective properties of those masters (iommu, coherency,
-> offset, ...).
+> (1)
 >
-> IIRC at the time we decided that we could live without that complexity,
-> but perhaps we cannot.
+> Can you point me to the driver code that is invoking
+> the search?
+There are many locations. Few of them being,
+https://source.codeaurora.org/quic/la/kernel/msm-4.9/tree/drivers/of/irq.c?h=msm-4.9#n214
+https://source.codeaurora.org/quic/la/kernel/msm-4.9/tree/drivers/irqchip/irq-gic-v3.c?h=msm-4.9#n1107
+https://source.codeaurora.org/quic/la/kernel/msm-4.9/tree/drivers/clk/msm/msm-clock-controller.c?h=msm-4.9#n492
+>
+> (2)
+>
+> And also the .dts devicetree source file that you are seeing
+> large overhead with.
+SDM670 DTS tree starts here.
+https://source.codeaurora.org/quic/la/kernel/msm-4.9/tree/arch/arm64/boot/dts/qcom/sdm670.dtsi?h=msm-4.9
+>
+>
+> (3) -- this one is less important, but if the info is easily
+>         available to you
+>
+> Sorry about dribbling out questions instead of all at once....
+>
+> What is the hardware you are testing this on?
+SDM670
+> Processor?
+Kryo-300 Silver
+> Cache size?
+ From DT,
+L1 32KB (per CPU)
+L2 128KB (per CPU)
+L3 1MB (total)
+> Memory size?
+6GB
+> Processor frequency?
+Max 1.7GHz for core 0. Not sure about boot time frequency.
+> Any other attribute of the system that will help me understand
+> the boot performance you are seeing?
+I'm not able to profile of_find_node_by_phandle specifically as timers are
+not up by then. So, just observing overall boot time for comparison.
 
-Are you talking about this ?
-https://elixir.free-electrons.com/linux/latest/source/Documentation/devicet=
-ree/bindings/dma/dma.txt#L41
+My recent results were taken on debug_defconfig which has many performance
+slowing code. So, gap between base-build and w/ the test patches would be
+more than the actual production build.
 
-It doesn't seem to be related to that issue to me. And in our
-particular cases, all the devices are DMA masters, the RAM is just
-mapped to another address.
+Thanks,
+Chintan
 
-> Another local hack that we can do here is to have two separate
-> device nodes and let the device driver bind to one device and then
-> look up the other one through a phandle to look up a platform_device
-> for it, which it can then use with the DMA mapping interface.
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
-We have multiple devices doing that, a couple of them already merged
-(mostly on the display side). I'd rather not do that.
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---efe3fivtyyp4bqw2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlpwJMAACgkQ0rTAlCFN
-r3TQZg//Xz2uAhCJJkmDsZ3teD3rSn6GiiwjVnZoKdNcILTtEqGHCkwPM0D1PyOp
-eoKHDjBH/o2BoGp9aXtyAiWiXVgHsFCjvUxX24bTDizd+BKBcqKx+1VVqPn1lfcB
-1+Fq0R5GMFFH+m+ubVRmKS182bdz9LZcKoqM1kINQiBumEfLOwSD96WqCBc0lVvb
-LunE+TUKWFBjZVeW+JsmCrjpT00SXccnlKG9yKh11ZJkmnOY2hVnh6usd1hvttQq
-JUN2H8CdP/q1c0CLLx9o+3dgTuKpYS/P8Elza0ujnxBO7395YQSs5k8Nn2Ct4VsL
-qs5Hd27qC1d4HYwKiROyX+oa9Vh4X0nUi7t7ebdIVMqOJ/yUaJ3bY24/8DBb/RM9
-tRgumkd8iQZ0hX+QSfLqtmwiBuYeVSQ4Fq0CnyTIT1BciZ18MIjgVMqbypSOyX9i
-4I/DRAYXOR4kdUYEiDeQib+XNsahBmeQI2IZbJI3f0qLbjn5sZRCYaaHPqG3Hk2u
-wlOcRNjFrxe4pDLw79ST9DFGOh0D0tbCax16riHNgxTyksVhETBQQweIwn5hi0a0
-alEKVBnIi4X8vIceeBYQhjYYEn7j6pHgYc96VCiC/n0NYbazXe6j3qrvLfBhwHMa
-fG2osde5Sub0hrWGfqpB/lA431ZQAHKf1xiCvJ9QQXViLjqBmSA=
-=Iq2u
------END PGP SIGNATURE-----
-
---efe3fivtyyp4bqw2--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
