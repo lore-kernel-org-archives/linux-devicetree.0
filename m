@@ -1,79 +1,177 @@
-From: Greentime Hu <green.hu@gmail.com>
-Subject: Re: [PATCH v6 07/36] nds32: Exception handling
-Date: Tue, 30 Jan 2018 22:49:32 +0800
-Message-ID: <CAEbi=3ekWX9aA5CXf1r4WsqfwvjxED-1XXTb2w0ydWmnA6jfSA@mail.gmail.com>
-References: <cover.1515766253.git.green.hu@gmail.com> <28c2c9da4da4c8b07473e97cd4a6cb953f4b507c.1515766253.git.green.hu@gmail.com>
- <CAK8P3a1ZZsB7MVZ8sEPzkVcNUJh3-MB_ApmPi+DUF1rc9h8pXg@mail.gmail.com>
- <CAJsyPhx1B75GJCD2a_=m92ipq3oYsXxMGq9Bg9eCw_ALavWKMg@mail.gmail.com>
- <CAK8P3a1mwKLi2Cj43EQvwodPCQVwWfW5gjNtf+DLdyb8T49OWw@mail.gmail.com>
- <CAK8P3a3PxsmNXDqYbivfCTL8NmnR==M91yjv_VV0zXwjzLxHuA@mail.gmail.com>
- <CAJsyPhx090fPsdhkydoKDHDw+LwByT66JHJNT4Tb5N0s_O7MPw@mail.gmail.com> <CAK8P3a1iv=10_pfvtfvDwD9YH1HRAXwDy_m8SC=tV59HEDuSsg@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v6 01/41] dt-bindings: clock: Add new bindings for TI
+ Davinci PLL clocks
+Date: Tue, 30 Jan 2018 08:50:17 -0600
+Message-ID: <CAL_JsqK+c-C9VJnEOr0Em3Y-dtvE+CSbsc6m-0JoWJSZxKeR_g@mail.gmail.com>
+References: <1516468460-4908-1-git-send-email-david@lechnology.com>
+ <1516468460-4908-2-git-send-email-david@lechnology.com> <20180129195315.bjanym7pmeh7bhaa@rob-hp-laptop>
+ <ffec7cac-22cd-f19b-8c1b-ce3223606d20@lechnology.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK8P3a1iv=10_pfvtfvDwD9YH1HRAXwDy_m8SC=tV59HEDuSsg@mail.gmail.com>
+In-Reply-To: <ffec7cac-22cd-f19b-8c1b-ce3223606d20@lechnology.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Vincent Chen <deanbo422@gmail.com>, Greentime <greentime@andestech.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Networking <netdev@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, David Howells <dhowells@redhat.com>, Will Deacon <will.deacon@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-serial@vger.kernel.org, Geert Uytterhoeven <geert.uytterhoeven@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Greg KH <greg@kroah.com>, Guo Ren <ren_guo@c-sky.co>
+To: David Lechner <david@lechnology.com>
+Cc: linux-clk <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Adam Ford <aford173@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Arnd:
-
-2018-01-30 21:33 GMT+08:00 Arnd Bergmann <arnd@arndb.de>:
-> On Tue, Jan 30, 2018 at 11:01 AM, Vincent Chen <deanbo422@gmail.com> wrote:
->> 2018-01-24 19:10 GMT+08:00 Arnd Bergmann <arnd@arndb.de>:
->>> On Wed, Jan 24, 2018 at 12:09 PM, Arnd Bergmann <arnd@arndb.de> wrote:
->>>> On Wed, Jan 24, 2018 at 11:53 AM, Vincent Chen <deanbo422@gmail.com> wrote:
->>>>> 2018-01-18 18:14 GMT+08:00 Arnd Bergmann <arnd@arndb.de>:
->>>
->>>> Ok. I still wonder about the kernel part of this though: is it a good idea
->>>> for user space to configure whether the kernel does unaligned
->>>> accesses? I would think that the kernel should just be fixed in such
->>>> a case.
->>>
->>> To clarify: I'm asking only about unaligned accesses from kernel code itself,
->>> which is generally considered a bug when
->>> CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS is disabled.
->>>
->>>       Arnd
+On Mon, Jan 29, 2018 at 3:14 PM, David Lechner <david@lechnology.com> wrote:
+> On 01/29/2018 01:53 PM, Rob Herring wrote:
 >>
->> Thanks for your comments.
+>> On Sat, Jan 20, 2018 at 11:13:40AM -0600, David Lechner wrote:
+>>>
+>>> This adds a new binding for the PLL IP blocks in the mach-davinci
+>>> family of processors. Currently, only da850 has device tree support
+>>> but these bindings can also work for other SoCs in this family just
+>>> by adding new compatible strings.
+>>>
+>>> Note: Although these PLL controllers are very similar to the TI Keystone
+>>> SoCs, we are not re-using those bindings. The Keystone bindings use a
+>>> legacy one-node-per-clock binding. Furthermore, the mach-davinici SoCs
+>>> have a slightly different PLL register layout and a number of quirks
+>>> that can't be handled by the existing bindings, so the keystone bindings
+>>> could not be used as-is anyway.
+>>>
+>>> Signed-off-by: David Lechner <david@lechnology.com>
+>>> ---
+>>>
+>>> v6 changes:
+>>> - Added clock-names property
+>>> - Added ti,clkmode-square-wave property
+>>> - Added pllout child node
+>>> - Added obsclk child node
+>>> - Expanded examples
+>>>
+>>>   .../devicetree/bindings/clock/ti/davinci/pll.txt   | 96
+>>> ++++++++++++++++++++++
+>>>   1 file changed, 96 insertions(+)
+>>>   create mode 100644
+>>> Documentation/devicetree/bindings/clock/ti/davinci/pll.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/clock/ti/davinci/pll.txt
+>>> b/Documentation/devicetree/bindings/clock/ti/davinci/pll.txt
+>>> new file mode 100644
+>>> index 0000000..36998e1
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/clock/ti/davinci/pll.txt
+>>> @@ -0,0 +1,96 @@
+>>> +Binding for TI DaVinci PLL Controllers
+>>> +
+>>> +The PLL provides clocks to most of the components on the SoC. In
+>>> addition
+>>> +to the PLL itself, this controller also contains bypasses, gates,
+>>> dividers,
+>>> +an multiplexers for various clock signals.
+>>> +
+>>> +Required properties:
+>>> +- compatible: shall be one of:
+>>> +       - "ti,da850-pll0" for PLL0 on DA850/OMAP-L138/AM18XX
+>>> +       - "ti,da850-pll1" for PLL1 on DA850/OMAP-L138/AM18XX
+>>> +- reg: physical base address and size of the controller's register area.
+>>> +- clocks: phandles corresponding to the clock names
+>>> +- clock-names: names of the clock sources - depends on compatible string
+>>> +       - for "ti,da850-pll0", shall be "clksrc", "extclksrc"
+>>> +       - for "ti,da850-pll1", shall be "clksrc"
+>>> +
+>>> +Optional properties:
+>>> +- ti,clkmode-square-wave: Indicates that the the board is supplying a
+>>> square
+>>> +       wave input on the OSCIN pin instead of using a crystal
+>>> oscillator.
+>>> +       This property is only valid when compatible = "ti,da850-pll0".
+>>> +
+>>> +
+>>> +Optional child nodes:
+>>> +
+>>> +pllout
+>>> +       Describes the main PLL clock output (before POSTDIV). The node
+>>> name must
+>>> +       be "pllout".
+>>> +
+>>> +       Required properties:
+>>> +       - #clock-cells: shall be 0
+>>> +
+>>> +sysclk
+>>> +       Describes the PLLDIVn divider clocks that provide the SYSCLKn
+>>> clock
+>>> +       domains. The node name must be "sysclk". Consumers of this node
+>>> should
+>>> +       use "n" in "SYSCLKn" as the index parameter for the clock cell.
+>>> +
+>>> +       Required properties:
+>>> +       - #clock-cells: shall be 1
+>>> +
+>>> +auxclk
+>>> +       Describes the AUXCLK output of the PLL. The node name must be
+>>> "auxclk".
+>>> +       This child node is only valid when compatible = "ti,da850-pll0".
+>>> +
+>>> +       Required properties:
+>>> +       - #clock-cells: shall be 0
+>>> +
+>>> +obsclk
+>>> +       Describes the OBSCLK output of the PLL. The node name must be
+>>> "obsclk".
+>>> +
+>>> +       Required properties:
+>>> +       - #clock-cells: shall be 0
 >>
->> For performance, we decide always disable
->> CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS even if hardware supports
->> unaligned accessing. Therefore, I will remove kernel unaligned accessing from
->> nds32/mm/alignment.c. In other words, alignment.c only addresses unaligned
->> accessing for user space.
+>>
+>> So why have all these child nodes vs. just defining a single number
+>> space of clock ids?
+>>
+>> Rob
+>>
 >
-> I'm not really following that logic, let's go through that again so I understand
-> the situation better.
->
-> CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS should be set if and
-> only if you have a CPU that does not need to trap on unaligned accesses.
->
-> What are the hardware capabilities on nds32? Do you have all three
-> categories:
->
-> a) some CPUs that always trap on unaligned access
-> b) some CPUs that never trap on unaligned access
-> c) some CPUs that can be configured to either trap or not trap by
->     the kernel?
->
-We have type a and c.
-We use CONFIG_ALIGNMENT_TRAP for a and
-CONFIG_HW_SUPPORT_UNALIGNMENT_ACCESS for c.
+> I think that it makes the bindings more self-documenting. Not all PLLs have
+> all of possible types of output clocks, so the presence or absence of a
+> child node indicates if a PLL actually has that output or not.
 
-Since unaligned access in kernel code itself should be considered as a
-bug, we will remove the emulation code to handle the kernel code
-unaligned accessed case.
-We think CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS and
-CONFIG_HW_SUPPORT_UNALIGNMENT_ACCESS have different purposes because
-it will still be more efficient to access by byte even if hardware
-support unaligned access.
-CONFIG_HW_SUPPORT_UNALIGNMENT_ACCESS is used to prevent generating
-unaligned access exception.
+Doesn't the compatible string do that?
 
-Thus, we will
-1. treat unaligned access in kernel code itself as a bug
-2. don't select CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS
-3. disable CONFIG_HW_SUPPORT_UNALIGNMENT_ACCESS as default
+> It is also complicated by the fact that one of the child nodes (sysclk)
+> is  already an array of clocks.
+>
+> To do what you are suggesting might look something like this...
+>
+> ---
+>
+> Required properties:
+> - compatible: shall be one of:
+>         - "ti,da850-pll0" for PLL0 on DA850/OMAP-L138/AM18XX
+>         - "ti,da850-pll1" for PLL1 on DA850/OMAP-L138/AM18XX
+> - reg: physical base address and size of the controller's register area.
+> - clocks: phandles corresponding to the clock names
+> - clock-names: names of the clock sources - depends on compatible string
+>         - for "ti,da850-pll0", shall be "clksrc", "extclksrc"
+>         - for "ti,da850-pll1", shall be "clksrc"
+> - #clock-cells: shall be set to <2>.
+>
+> Consumers:
+>
+> The clock cell values for consumers work as follows...
+>
+> The first index is one of the constants defined in ti-davinci-pll.h
+>
+> The second index is 0 unless the first index is TI_DAVINCI_SYSCLK. In the
+> case
+> of TI_DAVINCI_SYSCLK the second index the SYSCLK domain ID (n in SYSCLKn).
+>
+> For compatible = "ti,da850-pll0":
+>         - <&pll0 TI_DAVINCI_PLLOUT 0> is the PLLOUT clock
+>         - <&pll0 TI_DAVINCI_SYSCLK n> is one of the SYSCLKn clock domains
+> where n is 1 to 7
+>         - <&pll0 TI_DAVINCI_AUXCLK 0> is the AUXCLK clock domain
+>         - <&pll0 TI_DAVINCI_OBSCLK 0> is the OBSCLK clock domain
+>         - all other index combinations are invalid
+>
+> For compatible = "ti,da850-pll1":
+>         - <&pll0 TI_DAVINCI_SYSCLK n> is one of the SYSCLKn clock domains
+> where n is 1 to 3
+>         - <&pll0 TI_DAVINCI_OBSCLK 0> is the OBSCLK clock domain
+>         - all other index combinations are invalid
+
+You don't really need 2 cells here. I guess if you want to keep the
+child nodes, that is fine.
+
+Rob
