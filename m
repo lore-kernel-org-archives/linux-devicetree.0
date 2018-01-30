@@ -1,92 +1,180 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH] ARM: dts: exynos: Add SPDX license identifiers
-Date: Tue, 30 Jan 2018 21:29:19 +0100
-Message-ID: <20180130202919.30026-1-krzk@kernel.org>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
+From: Cyrille Pitchen <cyrille.pitchen-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v6 00/11] PCI: Add support to the Cadence PCIe controller
+Date: Tue, 30 Jan 2018 21:56:48 +0100
+Message-ID: <cover.1517343502.git.cyrille.pitchen@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, stelford-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, dgary-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, kgopi-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, eandrews-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, sureshp-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Cyrille Pitchen <cyrille.pitchen-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Few files missed recent conversion of GPL v2.0 license statements to
-SPDX identifiers
+Hi all,
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- arch/arm/boot/dts/exynos-mfc-reserved-memory.dtsi | 5 +----
- arch/arm/boot/dts/exynos-syscon-restart.dtsi      | 5 +----
- arch/arm/boot/dts/exynos5800-peach-pi.dts         | 5 +----
- arch/arm/boot/dts/exynos5800.dtsi                 | 5 +----
- 4 files changed, 4 insertions(+), 16 deletions(-)
+this series of patches adds support to the Cadence PCIe controller.
+It was tested on a ARM64 platform emulated by a Palladium running the
+pci-next kernel.
 
-diff --git a/arch/arm/boot/dts/exynos-mfc-reserved-memory.dtsi b/arch/arm/boot/dts/exynos-mfc-reserved-memory.dtsi
-index 25186ac4188d..1dbf3bbff8d3 100644
---- a/arch/arm/boot/dts/exynos-mfc-reserved-memory.dtsi
-+++ b/arch/arm/boot/dts/exynos-mfc-reserved-memory.dtsi
-@@ -1,11 +1,8 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Samsung's Exynos SoC MFC (Video Codec) reserved memory common definition.
-  *
-  * Copyright (c) 2016 Samsung Electronics Co., Ltd
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-  */
- 
- / {
-diff --git a/arch/arm/boot/dts/exynos-syscon-restart.dtsi b/arch/arm/boot/dts/exynos-syscon-restart.dtsi
-index 09a2040054ed..4b3dd0549a54 100644
---- a/arch/arm/boot/dts/exynos-syscon-restart.dtsi
-+++ b/arch/arm/boot/dts/exynos-syscon-restart.dtsi
-@@ -1,9 +1,6 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Samsung's Exynos SoC syscon reboot/poweroff nodes common definition.
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-  */
- 
- / {
-diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boot/dts/exynos5800-peach-pi.dts
-index 0029ec27819c..c8a66a12dbeb 100644
---- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
-+++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
-@@ -1,11 +1,8 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Google Peach Pi Rev 10+ board device tree source
-  *
-  * Copyright (c) 2014 Google, Inc
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-  */
- 
- /dts-v1/;
-diff --git a/arch/arm/boot/dts/exynos5800.dtsi b/arch/arm/boot/dts/exynos5800.dtsi
-index 9ddb6bacac5a..57d3b319fd65 100644
---- a/arch/arm/boot/dts/exynos5800.dtsi
-+++ b/arch/arm/boot/dts/exynos5800.dtsi
-@@ -1,3 +1,4 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * SAMSUNG EXYNOS5800 SoC device tree source
-  *
-@@ -7,10 +8,6 @@
-  * SAMSUNG EXYNOS5800 SoC device nodes are listed in this file.
-  * EXYNOS5800 based board files can include this file and provide
-  * values for board specfic bindings.
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-  */
- 
- #include "exynos5420.dtsi"
+The host mode was tested with some PCIe devices connected to the Palladium
+through a speed-bridge. Some of those devices were a USB host controller
+and a SATA controller. The PCIe host controller was also tested with a
+second controller configured in endpoint mode and connected back to back
+to the first controller.
+
+The EndPoint Controller (EPC) driver was tested with 2 PCI functions, both
+handled by the pci-epf-test driver, using the pcitest userspace program.
+I used the "-D" optional command line parameter to select the proper PCI
+function.
+
+For linux-pci/master, I applied this series on top of Kishon's patch
+("PCI: endpoint: Use EPC's device in dma_alloc_coherent/dma_free_coherent")
+otherwise dma_alloc_coherent() fails when called by pci_epf_alloc_space().
+
+Best regards,
+
+Cyrille
+
+ChangeLog
+
+v5 -> v6:
+- rebase on linux-pci/master (v4.15-rc4) + Kishon's patch from linux-pci/next:
+"PCI: endpoint: Use EPC's device in dma_alloc_coherent()/dma_free_coherent()"
+- all patches unchanged
+
+v4 -> v5:
+- rebase on today's (20180128) linux-pci/next
+- add again the endpoint driver
+
+- Patch 7:
+ move host driver from drivers/pci/cadence into drivers/pci/host and remove
+ all references to the endpoint mode, as requested by Lorenzo.
+ The host driver will be moved back into drivers/pci/cadence by Patch 11
+
+- Patch 8:
+ fix comparison of func_no to BAR5: compare to epc->max_functions
+
+- Patch 9:
+ add new patch to fix support of PCI multi-function devices
+
+- Patch 10:
+ change the 'cdns,max-outbound-regions' from optional to mandatory as requested
+ by Kishon.
+
+- Patch 11:
+ take Kishon's comments into account as much as I could.
+
+- Other patches: unchanged
+
+
+v3 -> v4:
+- split patch 3 from v3 into patches 3 and 4.
+- remove unused cdns_pcie_reset_outbound_region() from old patch 6
+  (new patch 7).
+- other patches are unchanged.
+
+v2 -> v3:
+
+- rebase on today's linux-pci/next (20180110) 
+
+patch1:
+- rework the commit message of patch 1 and add two new comments on why endpoint
+  library users must be linked after the endpoint library itself and why
+  the dwc rule uses obj-y instead of obj-$(CONFIG_PCIE_CONFIG_DW).
+- update patch 1 to add missing ifdef CONFIG_PCI / endif in
+  drivers/pci/dwc/Makefile around the obj-$(CONFIG_ARM64) += pcie-hisi.o rule,
+  like for the other obj-$(CONFIG_ARM64) rules in drivers/pci/host/Makefile.
+
+patch2: unchanged
+
+patch3:
+- update patch 3 so the bridge hooks/members initialization is left to the
+  host bridges probe routines.
+
+patch4: unchanged
+
+patch5:
+- collect 'Reviewed-by' tag from Rob Herring for the DT bindings.
+
+patch6:
+- remove explanation in the commit message on why obj-$(CONFIG_PCIE_CANDENCE) is
+  placed after obj-$(CONFIG_PCI_ENDPOINT) in drivers/pci/Makefile since a
+  comment on it has been added into patch1.
+- remove menuconfig PCI_CADENCE in drivers/pci/cadence/Kconfig to match
+  drivers/pci/dwc/Kconfig.
+- adapt patch6 to the changes done in patch3 for the pci_host_probe() function.
+
+v1 -> v2:
+- add new properties in the device-tree bindings: 'cdns,max-outbound-regions'
+  and 'cdns,no-bar-match-nbits'.
+- add a new patch to regroup all makefile rules in drivers/pci/Makefile, hence
+  cleaning drivers/Makefile up.
+- change the license text to use the recommanded format:
+  // SPDX-License-Identifier: GPL-2.0
+- add a new patch updating the API of the EPC library to add support to
+  multi-function devices.
+- add a 2 new patches to share more common code between host controller drivers
+- remove some useless tests
+- add more comments in both drivers.
+- fix DT bindings examples
+- remove useless init of the primary, secondary and sub-ordinate bus numbers in
+  the PCI configuration space of the root port.
+- remove cdns_pcie_ep_stop() function and rework cdns_pcie_ep_start() function
+
+Cyrille Pitchen (10):
+  PCI: Regroup all PCI related entries into drivers/pci/Makefile
+  PCI: OF: Add generic function to parse and allocate PCI resources
+  PCI: generic: fix missing call of pci_free_resource_list()
+  PCI: Add generic function to probe PCI host controllers
+  PCI: Add vendor ID for Cadence
+  PCI: cadence: Add host driver for Cadence PCIe controller
+  PCI: endpoint: Add the function number as argument to EPC ops
+  PCI: endpoint: Fix EPF device name to support multi-function devices
+  dt-bindings: PCI: cadence: Add DT bindings for Cadence PCIe endpoint
+    controller
+  PCI: cadence: Add EndPoint Controller driver for Cadence PCIe
+    controller
+
+Scott Telford (1):
+  dt-bindings: PCI: cadence: Add DT bindings for Cadence PCIe host
+    controller
+
+ .../devicetree/bindings/pci/cdns,cdns-pcie-ep.txt  |  22 +
+ .../bindings/pci/cdns,cdns-pcie-host.txt           |  60 +++
+ MAINTAINERS                                        |   7 +
+ drivers/Makefile                                   |   5 +-
+ drivers/pci/Kconfig                                |   2 +
+ drivers/pci/Makefile                               |  14 +-
+ drivers/pci/cadence/Kconfig                        |  27 +
+ drivers/pci/cadence/Makefile                       |   4 +
+ drivers/pci/cadence/pcie-cadence-ep.c              | 542 +++++++++++++++++++++
+ drivers/pci/cadence/pcie-cadence-host.c            | 336 +++++++++++++
+ drivers/pci/cadence/pcie-cadence.c                 | 126 +++++
+ drivers/pci/cadence/pcie-cadence.h                 | 311 ++++++++++++
+ drivers/pci/dwc/Makefile                           |   2 +
+ drivers/pci/dwc/pcie-designware-ep.c               |  20 +-
+ drivers/pci/endpoint/functions/pci-epf-test.c      |  41 +-
+ drivers/pci/endpoint/pci-ep-cfs.c                  |  46 +-
+ drivers/pci/endpoint/pci-epc-core.c                |  62 ++-
+ drivers/pci/host/Makefile                          |   2 +
+ drivers/pci/host/pci-host-common.c                 |  72 +--
+ drivers/pci/of.c                                   |  51 ++
+ drivers/pci/probe.c                                |  33 ++
+ include/linux/pci-epc.h                            |  43 +-
+ include/linux/pci.h                                |  10 +
+ include/linux/pci_ids.h                            |   2 +
+ 24 files changed, 1693 insertions(+), 147 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt
+ create mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
+ create mode 100644 drivers/pci/cadence/Kconfig
+ create mode 100644 drivers/pci/cadence/Makefile
+ create mode 100644 drivers/pci/cadence/pcie-cadence-ep.c
+ create mode 100644 drivers/pci/cadence/pcie-cadence-host.c
+ create mode 100644 drivers/pci/cadence/pcie-cadence.c
+ create mode 100644 drivers/pci/cadence/pcie-cadence.h
+
 -- 
 2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
