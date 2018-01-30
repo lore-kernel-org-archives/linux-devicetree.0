@@ -1,166 +1,108 @@
-From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH V9 3/4] mtd: partitions: add of_match_table parser matching
-Date: Tue, 30 Jan 2018 21:10:58 +0100
-Message-ID: <20180130201059.4424-4-zajec5@gmail.com>
-References: <20180130201059.4424-1-zajec5@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180130201059.4424-1-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: [RFC v3 00/25] Fix watchdog on Renesas R-Car Gen2 and RZ/G1
+Date: Tue, 30 Jan 2018 20:22:33 +0000
+Message-ID: <1517343778-27902-1-git-send-email-fabrizio.castro@bp.renesas.com>
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wim Van Sebroeck <wim@iguana.be>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Dear All,
 
-Partition parsers can now provide an of_match_table to enable
-flash<-->parser matching via device tree as documented in the
-mtd/partition.txt.
+while trying to add watchdog support to RZ/G1M and RZ/G1E I discovered
+that it couldn't work out of the box. R-Car Gen2 and RZ/G1 are very
+similar from a design perspective, and therefore the same problem is
+observable on R-Car Gen2 too.
 
-It works by looking for a matching parser for every string in the
-"compatibility" property (starting with the most specific one).
-Please note that driver-specified parsers still take a precedence. It's
-assumed that driver providing a parser type has a good reason for that
-(e.g. having platform data with device-specific info). Also doing
-otherwise could break existing setups. The same applies to using default
-parsers (including "cmdlinepart") as some overwrite DT data with cmdline
-argument.
+To deal with SMP on R-Car Gen2 and RZ/G1, we install a reset vector
+to ICRAM1 and we program the [S]BAR registers so that when we turn ON
+the non-boot CPUs they are redirected to the reset vector installed by
+Linux in ICRAM1, and eventually they continue the execution to RAM,
+where the SMP bring-up code will take care of the rest.
+The content of the [S]BAR registers survives a watchdog triggered reset,
+and as such after the watchdog fires the boot core will try and execute
+the SMP bring-up code instead of jumping to the bootrom code.
 
-This support is currently limited to built-in parsers as it uses
-request_module() and friends. This should be sufficient for most cases
-though as compiling parsers as modules isn't a common choice.
+This series is a proposal for a fix to the aforementioned problem.
+The main strategy for the solution is to let the reset vector decide
+if it needs to jump to shmobile_boot_fn or to the bootrom code.
+In a watchdog triggered reset scenario, since the [S]BAR registers keep
+their values, the boot CPU will jump into the newly designed reset
+vector, the assembly routine will eventually test WOVF (a bit in register
+RWTCSRA that indicates if the watchdog counter has overflown, the value
+of this bit gets retained in this scenario), and jump to the bootrom code
+which will in turn load up the bootloader, etc.
+When bringing up SMP or using CPU hotplug, the reset vector will jump
+to shmobile_boot_fn instead.
 
-Signed-off-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
----
-This is based on Brian's patches:
-[RFC PATCH 4/7] mtd: add of_match_mtd_parser() and of_mtd_match_mtd_parser() helpers
-[RFC PATCH 6/7] RFC: mtd: partitions: enable of_match_table matching
+v3 takes into account all the feedbacks recieved, and implements a
+different logic in the reset vector in order to get rid of
+shmobile_wdt_clock_status.
 
-V1: Put helpers in mtdpart.c instead of drivers/of/of_mtd.c
-    Merge helpers into a single of_mtd_match_mtd_parser
-V3: Add a simple comment to note we will need the best match in the future
-V4: Rework new functions to pick parser with the best match
-    Move new code in parse_mtd_partitions up so it has precedence over flash
-    driver defaults and MTD defaults
-V5: Rework matching code to start checking with the most specific string in the
-    "compatibility" property.
-V6: Initialize "ret" variable in mtd_part_get_parser_by_cp to NULL
-V7: Rename function "mtd_part_get_parser_by_cp" to use "_compatible_"
-    Rename "cp" variable to "compat"
-    Drop unneeded if (np) check from the parse_mtd_partitions
-V8: Move new OF code in parse_mtd_partitions() lower so driver-specified parsers
-    take a precedence. Update commit message to make that clear.
-V9: Update to modify mtd_part_of_parse() instead of parse_mtd_partitions()
----
- drivers/mtd/mtdpart.c          | 61 +++++++++++++++++++++++++++++++++++++++---
- include/linux/mtd/partitions.h |  1 +
- 2 files changed, 59 insertions(+), 3 deletions(-)
+This work was rebased on top of tag renesas-devel-20180122-v4.15-rc9
+from the below repository:
+git://git.kernel.org/pub/scm/linux/kernel/git/horms/renesas.git
 
-diff --git a/drivers/mtd/mtdpart.c b/drivers/mtd/mtdpart.c
-index a29bbcf79691..cdb1f496ab95 100644
---- a/drivers/mtd/mtdpart.c
-+++ b/drivers/mtd/mtdpart.c
-@@ -30,6 +30,7 @@
- #include <linux/mtd/mtd.h>
- #include <linux/mtd/partitions.h>
- #include <linux/err.h>
-+#include <linux/of.h>
- 
- #include "mtdcore.h"
- 
-@@ -860,16 +861,70 @@ static int mtd_part_do_parse(struct mtd_part_parser *parser,
- 	return ret;
- }
- 
-+/**
-+ * mtd_part_get_compatible_parser - find MTD parser by a compatible string
-+ *
-+ * @compat: compatible string describing partitions in a device tree
-+ *
-+ * MTD parsers can specify supported partitions by providing a table of
-+ * compatibility strings. This function finds a parser that advertises support
-+ * for a passed value of "compatible".
-+ */
-+static struct mtd_part_parser *mtd_part_get_compatible_parser(const char *compat)
-+{
-+	struct mtd_part_parser *p, *ret = NULL;
-+
-+	spin_lock(&part_parser_lock);
-+
-+	list_for_each_entry(p, &part_parsers, list) {
-+		const struct of_device_id *matches;
-+
-+		matches = p->of_match_table;
-+		if (!matches)
-+			continue;
-+
-+		for (; matches->compatible[0]; matches++) {
-+			if (!strcmp(matches->compatible, compat) &&
-+			    try_module_get(p->owner)) {
-+				ret = p;
-+				break;
-+			}
-+		}
-+
-+		if (ret)
-+			break;
-+	}
-+
-+	spin_unlock(&part_parser_lock);
-+
-+	return ret;
-+}
-+
- static int mtd_part_of_parse(struct mtd_info *master,
- 			     struct mtd_partitions *pparts)
- {
- 	struct mtd_part_parser *parser;
-+	struct device_node *np;
-+	struct property *prop;
-+	const char *compat;
- 	const char *fixed = "fixed-partitions";
- 	int ret, err = 0;
- 
--	/*
--	 * TODO: Check "compatible" DT property and look for a matching parser.
--	 */
-+	np = of_get_child_by_name(mtd_get_of_node(master), "partitions");
-+	of_property_for_each_string(np, "compatible", prop, compat) {
-+		parser = mtd_part_get_compatible_parser(compat);
-+		if (!parser)
-+			continue;
-+		ret = mtd_part_do_parse(parser, master, pparts, NULL);
-+		if (ret > 0) {
-+			of_node_put(np);
-+			return ret;
-+		}
-+		mtd_part_parser_put(parser);
-+		if (ret < 0 && !err)
-+			err = ret;
-+	}
-+	of_node_put(np);
- 
- 	/*
- 	 * For backward compatibility we have to try the "fixed-partitions"
-diff --git a/include/linux/mtd/partitions.h b/include/linux/mtd/partitions.h
-index c4beb70dacbd..11cb0c50cd84 100644
---- a/include/linux/mtd/partitions.h
-+++ b/include/linux/mtd/partitions.h
-@@ -77,6 +77,7 @@ struct mtd_part_parser {
- 	struct list_head list;
- 	struct module *owner;
- 	const char *name;
-+	const struct of_device_id *of_match_table;
- 	int (*parse_fn)(struct mtd_info *, const struct mtd_partition **,
- 			struct mtd_part_parser_data *);
- 	void (*cleanup)(const struct mtd_partition *pparts, int nr_parts);
+What do you guys think about this?
+
+Any volunteer for testing this work?
+
+Comments welcome!
+
+Best Regards,
+
+Fabrizio Castro (25):
+  ARM: shmobile: Add watchdog support
+  ARM: dts: r8a7743: Adjust SMP routine size
+  ARM: dts: r8a7745: Adjust SMP routine size
+  ARM: dts: r8a7790: Adjust SMP routine size
+  ARM: dts: r8a7791: Adjust SMP routine size
+  ARM: dts: r8a7792: Adjust SMP routine size
+  ARM: dts: r8a7793: Adjust SMP routine size
+  ARM: dts: r8a7794: Adjust SMP routine size
+  soc: renesas: rcar-rst: Enable watchdog as reset trigger for Gen2
+  dt-bindings: watchdog: renesas-wdt: Add R-Car Gen2 support
+  watchdog: renesas_wdt: Add R-Car Gen2 support
+  ARM: shmobile: rcar-gen2: Add watchdog support
+  ARM: shmobile: defconfig: Enable RENESAS_WDT_GEN
+  clk: renesas: r8a7743: Add rwdt clock
+  clk: renesas: r8a7745: Add rwdt clock
+  clk: renesas: r8a7790: Add rwdt clock
+  clk: renesas: r8a7791/r8a7793: Add rwdt clock
+  clk: renesas: r8a7794: Add rwdt clock
+  ARM: dts: r8a7743: Add watchdog support to SoC dtsi
+  ARM: dts: r8a7745: Add watchdog support to SoC dtsi
+  ARM: dts: r8a7790: Add watchdog support to SoC dtsi
+  ARM: dts: r8a7791: Add watchdog support to SoC dtsi
+  ARM: dts: r8a7794: Add watchdog support to SoC dtsi
+  ARM: dts: iwg20m: Add watchdog support to SoM dtsi
+  ARM: dts: iwg22m: Add watchdog support to SoM dtsi
+
+ .../devicetree/bindings/watchdog/renesas-wdt.txt   | 18 +++++--
+ arch/arm/boot/dts/r8a7743-iwg20m.dtsi              |  5 ++
+ arch/arm/boot/dts/r8a7743.dtsi                     | 12 ++++-
+ arch/arm/boot/dts/r8a7745-iwg22m.dtsi              |  5 ++
+ arch/arm/boot/dts/r8a7745.dtsi                     | 12 ++++-
+ arch/arm/boot/dts/r8a7790.dtsi                     | 12 ++++-
+ arch/arm/boot/dts/r8a7791.dtsi                     | 12 ++++-
+ arch/arm/boot/dts/r8a7792.dtsi                     |  2 +-
+ arch/arm/boot/dts/r8a7793.dtsi                     |  2 +-
+ arch/arm/boot/dts/r8a7794.dtsi                     | 12 ++++-
+ arch/arm/configs/shmobile_defconfig                |  1 +
+ arch/arm/mach-shmobile/common.h                    |  6 +++
+ arch/arm/mach-shmobile/headsmp.S                   | 55 +++++++++++++++++++
+ arch/arm/mach-shmobile/platsmp-apmu.c              |  1 +
+ arch/arm/mach-shmobile/pm-rcar-gen2.c              | 13 +++--
+ drivers/clk/renesas/r8a7743-cpg-mssr.c             |  2 +
+ drivers/clk/renesas/r8a7745-cpg-mssr.c             |  2 +
+ drivers/clk/renesas/r8a7790-cpg-mssr.c             |  2 +
+ drivers/clk/renesas/r8a7791-cpg-mssr.c             |  2 +
+ drivers/clk/renesas/r8a7794-cpg-mssr.c             |  2 +
+ drivers/soc/renesas/rcar-rst.c                     | 35 ++++++++++---
+ drivers/watchdog/renesas_wdt.c                     | 61 ++++++++++++++++++++--
+ 22 files changed, 248 insertions(+), 26 deletions(-)
+
 -- 
-2.11.0
+2.7.4
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
