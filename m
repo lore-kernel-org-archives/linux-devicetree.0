@@ -1,80 +1,105 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v5 1/2] drm/bridge: Add Cadence DSI driver
-Date: Tue, 30 Jan 2018 09:17:12 +0100
-Message-ID: <20180130091712.04363928@bbrezillon>
-References: <20180118134309.13123-1-boris.brezillon@free-electrons.com>
-        <47b5af31-4870-9109-291c-894455a1a15c@ti.com>
-        <20180129173854.1f1ee8ce@bbrezillon>
-        <19cc13ff-d2eb-bc46-6ceb-c020ea3ddad3@ti.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH v2 10/16] iio: adc: sun4i-gpadc-iio: add support for A83T
+ thermal sensor
+Date: Tue, 30 Jan 2018 09:32:05 +0100
+Message-ID: <20180130083205.j4b2wua7knymkfn6@flea.lan>
+References: <20180128232919.12639-1-embed3d@gmail.com>
+ <20180128232919.12639-11-embed3d@gmail.com>
+ <20180129094803.uiojqkmaeuihbe4p@flea.lan>
+ <94bc070d-8675-95fe-2857-188f7cc66071@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <19cc13ff-d2eb-bc46-6ceb-c020ea3ddad3-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Cc: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Richard Sproul <sproul-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Simon Hatliff <hatliff-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Suresh Punnoose <sureshp-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Alan Douglas <adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, "Menon, Nishanth" <nm-l0cyMroinI0@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ieehdml3djel7reb"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <94bc070d-8675-95fe-2857-188f7cc66071@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philipp Rossak <embed3d@gmail.com>
+Cc: lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org, linux@armlinux.org.uk, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, davem@davemloft.net, hans.verkuil@cisco.com, mchehab@kernel.org, rask@formelder.dk, clabbe.montjoie@gmail.com, sean@mess.org, krzk@kernel.org, quentin.schulz@free-electrons.com, icenowy@aosc.io, edu.molinas@gmail.com, singhalsimran0@gmail.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 30 Jan 2018 09:51:49 +0200
-Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org> wrote:
 
-> On 29/01/18 18:38, Boris Brezillon wrote:
-> 
-> > Note that the TX byte clk should be configured to match the DPI pixel
-> > clock, which means we should refuse any config where the variation is
-> > too big to be recovered. Anyway, we still don't have a way to configure
-> > the PLL rate (which is driving the TX byte clk), so there's not much I
-> > can do about that right now.  
-> 
-> We could have the code to check the allowed difference in place.
+--ieehdml3djel7reb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Not sure I understand what you mean. I can put a TODO/FIXME comment in
-the code to say that, once we'll have the 'PLL generator' in place we'll
-need to check that the pixel and TX byte clk are close enough, but I
-don't see what code you want me to add? Right now, the check will
-always succeed, because I assume the pixel and TX byte clk
-match perfectly.
+1;5002;0c
+On Mon, Jan 29, 2018 at 12:53:48PM +0100, Philipp Rossak wrote:
+>=20
+>=20
+> On 29.01.2018 10:48, Maxime Ripard wrote:
+> > On Mon, Jan 29, 2018 at 12:29:13AM +0100, Philipp Rossak wrote:
+> > > This patch adds support for the A83T ths sensor.
+> > >=20
+> > > The A83T supports interrupts. The interrupt is configured to update t=
+he
+> > > the sensor values every second.
+> > >=20
+> > > Signed-off-by: Philipp Rossak <embed3d@gmail.com>
+> > > ---
+> > >   drivers/iio/adc/sun4i-gpadc-iio.c | 38 ++++++++++++++++++++++++++++=
+++++++++++
+> > >   include/linux/mfd/sun4i-gpadc.h   | 18 ++++++++++++++++++
+> > >   2 files changed, 56 insertions(+)
+> > >=20
+> > > diff --git a/drivers/iio/adc/sun4i-gpadc-iio.c b/drivers/iio/adc/sun4=
+i-gpadc-iio.c
+> > > index 8196203d65fe..9f7895ba1966 100644
+> > > --- a/drivers/iio/adc/sun4i-gpadc-iio.c
+> > > +++ b/drivers/iio/adc/sun4i-gpadc-iio.c
+> > > @@ -170,6 +170,40 @@ static const struct gpadc_data sun8i_h3_ths_data=
+ =3D {
+> > >   		SUN8I_H3_THS_TEMP_PERIOD(0x7),
+> > >   };
+> > > +static const struct gpadc_data sun8i_a83t_ths_data =3D {
+> > > +	.temp_offset =3D -2724,
+> > > +	.temp_scale =3D -70,
+> > > +	.temp_data =3D {SUN8I_H3_THS_TDATA0,
+> > > +		SUN8I_A83T_THS_TDATA1,
+> > > +		SUN8I_A83T_THS_TDATA2,
+> > > +		0},
+> > > +	.sample_start =3D sunxi_ths_sample_start,
+> > > +	.sample_end =3D sunxi_ths_sample_end,
+> > > +	.sensor_count =3D 3,
+> > > +	.supports_nvmem =3D false,
+> > > +	.support_irq =3D true,
+> > > +	.ctrl0_map =3D SUN4I_GPADC_CTRL0_T_ACQ(0x1f3),
+> > > +	.ctrl2_map =3D SUN8I_H3_THS_ACQ1(0x1f3),
+> >=20
+> > Where are these values coming from?
+> >=20
+>=20
+> These values are calculated with the formulas from the datasheet and also
+> tested on hardware. These settings seem ok.
 
-If that's a hard requirement, I'll do it, but I think it's pretty
-useless given that I won't be able to test the logic in a real
-situation.
+You should at least put a comment explaining how you got to these values.
 
-> 
-> >> Another thing is that the mode->crtc_clock is in kHz, I wonder if that
-> >> rounding can cause miscalculations in the above code.  
-> > 
-> > Do we really have modes exposing pixel clks not aligned on a Khz? I  
-> 
-> Well, I think the clocks in the logical video modes are aligned, but the
-> actual clock from the display controller or the PHY most likely is not
-> aligned.
+Maxime
 
-Hm, they probably will be for standard definitions.
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 
-> 
-> > know the display controller can adjust the timings, but then, the
-> > variation caused by the Khz approx should not be that big (999Khz /
-> > 10+MHz < 1/10000), and anyway, that's what the DRM framework
-> > manipulates...  
-> 
-> Depends on how strict the HW is about the allowed difference between the
-> crtc and the DSI IP. It maybe that that 1 Hz is one too many... But that
-> can be avoided by just making sure that the check rounds the values
-> properly, or maybe just reduces the allowed range by 1kHz on both ends.
+--ieehdml3djel7reb
+Content-Type: application/pgp-signature; name="signature.asc"
 
-My point is, even the display controller can't adjust the pixel clk
-rate at the sub-KHz level because mode->crtc_clock is expressed in KHz,
-so why should we bother? Do you want to change the DRM API to pass the
-pixel clk frequency in Hz?
+-----BEGIN PGP SIGNATURE-----
 
-> 
-> So I don't think it's an issue, but it is something to keep in mind.
-> 
->  Tomi
-> 
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlpwLYQACgkQ0rTAlCFN
+r3SNqg/+Pbf081lBp5zcX1ZMV8zn8pRtZyB9qduDiJC8cXiO/KWLWoPQ2h0pZCPE
+sdtSCjEIRs5hTrr7Fp1V19zKEjXuUNM2qT9qfVzYJRenJKGVBY38g8VEJ79rEYpB
+y3BnXv0C7wji9UefwBgQe8XeTUXfTmJ78B5QGlKBhx6/JEB7TRv+SAljNk63++8l
+cEXMrwiHvFBb7S34SYliemw9bY05EwPiNTMY6Dq6ePkzdoUh2cCM4bMbNfJlotNe
+eg7/8dOT1UU1ccJtk1x+5MziCT0R96CPFZZ8zXAXJ+irr73VFXCSIFVtCl/Y7e5r
+m5Vr0upU0z+qVyee4myEunhtS8BZuG11Cp7XyrzgAheJ1zjg/ncxipCpRPTyeMOA
+xfq2rfAEa7XOLhITBPFuNSKY/4zmdN08JbeOf6z2OZU4aubhH9W2xcC6e8+UfCCc
+zhs5Xz8kA3gn/uUmDaZEpLtHkVjH79DV6jd/0oNhT4LJpFMzqukdCV4dM02Gj6yV
+qsfc+gaALZNZuqyCy0kXjY+aSYcukRZC21Aiczkck7bDMUHsKzUQJm1PvqTow594
+gZmzbiZL+7Af+QAZu4ASCGwdS24XapxNxeWxJWaq9D/20mD9iGTBGWO9t8pYCrBB
+4rYCpYKjJtOuPVrhK3D30u+5peHU5yPHuuTQOwDmNIfKzJKDd1c=
+=S29J
+-----END PGP SIGNATURE-----
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--ieehdml3djel7reb--
