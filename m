@@ -1,174 +1,30 @@
-From: Shubhrajyoti Datta <shubhrajyoti.datta-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 2/4] drivers: firmware: xilinx: Add ZynqMP firmware driver
-Date: Tue, 30 Jan 2018 10:35:52 +0530
-Message-ID: <CAKfKVtGGf8AexOTEvyyi7cmQ_Xopa3Fszf-jOuNSfBJpE2EzCg@mail.gmail.com>
-References: <1516836074-4149-1-git-send-email-jollys@xilinx.com> <1516836074-4149-3-git-send-email-jollys@xilinx.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1516836074-4149-3-git-send-email-jollys-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jolly Shah <jolly.shah-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mingo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, matt-mF/unelCI9GS6iBeEJttW/XRex20P6io@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jolly Shah <jollys-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rajan Vaja <rajanv-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+From: Joel Stanley <joel@jms.id.au>
+Subject: [PATCH 0/2] fsi: add property to avoid scanning at boot
+Date: Tue, 30 Jan 2018 16:21:14 +1030
+Message-ID: <20180130055116.17411-1-joel@jms.id.au>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Cc: Jeremy Kerr <jk@ozlabs.org>, Christopher Bostic <cbostic@linux.vnet.ibm.com>, Eddie James <eajames@linux.vnet.ibm.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+These two patches from Chris add an optional property that says the
+FSI attached hardware cannot cope with being probed unless the state of
+that hardware is known.
 
-Thanks for the patch.
-A few questions below.
+This allows the driver to eg. defer to userspace which can make this
+decision.
 
+I am collecting patches for a FSI tree to send to Greg, so I am just after
+review from the device tree people.
 
-On Thu, Jan 25, 2018 at 4:51 AM, Jolly Shah <jolly.shah-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
-> This patch is adding communication layer with firmware.
-> Firmware driver provides an interface to firmware APIs.
-> Interface APIs can be used by any driver to communicate to
-> PMUFW(Platform Management Unit). All requests go through ATF.
->
-> Signed-off-by: Jolly Shah <jollys-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Rajan Vaja <rajanv-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> ---
-<snip>
->
+Christopher Bostic (2):
+  dt-bindings: fsi: Add optional property no-scan-on-init
+  fsi: core: Add check for master property no-scan-on-init
 
-> +/**
-> + * zynqmp_pm_clock_enable - Enable the clock for given id
-> + * @clock_id:  ID of the clock to be enabled
+ Documentation/devicetree/bindings/fsi/fsi.txt | 7 +++++++
+ drivers/fsi/fsi-core.c                        | 5 ++++-
+ 2 files changed, 11 insertions(+), 1 deletion(-)
 
-Does it enable all the parents also if they are disabled?
-
-> + *
-> + * This function is used by master to enable the clock
-> + * including peripherals and PLL clocks.
-> + *
-> + * Return:     Returns status, either success or error+reason.
-> + */
-> +static int zynqmp_pm_clock_enable(u32 clock_id)
-> +{
-> +       return invoke_pm_fn(PM_CLOCK_ENABLE, clock_id, 0, 0, 0, NULL);
-> +}
-> +
-> +/**
-> + * zynqmp_pm_clock_disable - Disable the clock for given id
-> + * @clock_id:  ID of the clock to be disable
-> + *
-> + * This function is used by master to disable the clock
-> + * including peripherals and PLL clocks.
-> + *
-> + * Return:     Returns status, either success or error+reason.
-> + */
-> +static int zynqmp_pm_clock_disable(u32 clock_id)
-> +{
-> +       return invoke_pm_fn(PM_CLOCK_DISABLE, clock_id, 0, 0, 0, NULL);
-> +}
-> +
-> +/**
-> + * zynqmp_pm_clock_getstate - Get the clock state for given id
-> + * @clock_id:  ID of the clock to be queried
-> + * @state:     1/0 (Enabled/Disabled)
-> + *
-> + * This function is used by master to get the state of clock
-> + * including peripherals and PLL clocks.
-> + *
-> + * Return:     Returns status, either success or error+reason.
-> + */
-> +static int zynqmp_pm_clock_getstate(u32 clock_id, u32 *state)
-> +{
-> +       u32 ret_payload[PAYLOAD_ARG_CNT];
-> +       int ret;
-> +
-> +       ret = invoke_pm_fn(PM_CLOCK_GETSTATE, clock_id, 0, 0, 0, ret_payload);
-> +       *state = ret_payload[1];
-> +
-> +       return ret;
-> +}
-> +
-> +/**
-> + * zynqmp_pm_clock_setdivider - Set the clock divider for given id
-> + * @clock_id:  ID of the clock
-> + * @div_type:  TYPE_DIV1: div1
-> + *             TYPE_DIV2: div2
-div type didnt see in the signature.
-
-
-
-> + * @divider:   divider value.
-> + *
-> + * This function is used by master to set divider for any clock
-> + * to achieve desired rate.
-> + *
-> + * Return:     Returns status, either success or error+reason.
-> + */
-> +static int zynqmp_pm_clock_setdivider(u32 clock_id, u32 divider)
-> +{
-> +       return invoke_pm_fn(PM_CLOCK_SETDIVIDER, clock_id, divider, 0, 0, NULL);
-> +}
-> +
-> +/**
-> + * zynqmp_pm_clock_getdivider - Get the clock divider for given id
-> + * @clock_id:  ID of the clock
-> + * @div_type:  TYPE_DIV1: div1
-> + *             TYPE_DIV2: div2
-didnt see this  below.
-
-> + * @divider:   divider value.
-> + *
-> + * This function is used by master to get divider values
-> + * for any clock.
-> + *
-> + * Return:     Returns status, either success or error+reason.
-> + */
-> +static int zynqmp_pm_clock_getdivider(u32 clock_id, u32 *divider)
-> +{
-> +       u32 ret_payload[PAYLOAD_ARG_CNT];
-> +       int ret;
-> +
-> +       ret = invoke_pm_fn(PM_CLOCK_GETDIVIDER, clock_id, 0, 0, 0, ret_payload);
-> +       *divider = ret_payload[1];
-> +
-> +       return ret;
-> +}
-> +
-> +/**
-> + * zynqmp_pm_clock_setrate - Set the clock rate for given id
-> + * @clock_id:  ID of the clock
-> + * @rate:      rate value in hz
-> + *
-> + * This function is used by master to set rate for any clock.
-> + *
-> + * Return:     Returns status, either success or error+reason.
-> + */
-So this can set rate only 4G max ?
-
-> +static int zynqmp_pm_clock_setrate(u32 clock_id, u32 rate)
-> +{
-> +       return invoke_pm_fn(PM_CLOCK_SETRATE, clock_id, rate, 0, 0, NULL);
-> +}
-> +
-> +/**
-> + * zynqmp_pm_clock_getrate - Get the clock rate for given id
-> + * @clock_id:  ID of the clock
-> + * @rate:      rate value in hz
-> + *
-> + * This function is used by master to get rate
-> + * for any clock.
-> + *
-> + * Return:     Returns status, either success or error+reason.
-> + */
-Same question here?
-
-> +static int zynqmp_pm_clock_getrate(u32 clock_id, u32 *rate)
-> +{
-> +       u32 ret_payload[PAYLOAD_ARG_CNT];
-> +       int ret;
-> +
-> +       ret = invoke_pm_fn(PM_CLOCK_GETRATE, clock_id, 0, 0, 0, ret_payload);
-> +       *rate = ret_payload[1];
-> +
-> +       return ret;
-> +}
-> +
-Also  what is the difference between set rate and set divider?
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+2.15.1
