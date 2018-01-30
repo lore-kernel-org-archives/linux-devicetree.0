@@ -1,45 +1,79 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 4/4] rtc: isl1208: add support for isl1219 with hwmon for
- tamper detection
-Date: Tue, 30 Jan 2018 08:44:28 -0600
-Message-ID: <CAL_JsqLqDGeY6o4wJV6wkr+=W0_cMf5motA1RWwDtCKjYJ51CQ@mail.gmail.com>
-References: <20180123121801.4214-1-m.grzeschik@pengutronix.de>
- <20180123121801.4214-5-m.grzeschik@pengutronix.de> <20180129234146.73hvclxohhme5i2w@rob-hp-laptop>
- <1517302582.5307.16.camel@diehl.com> <CAL_JsqKEXtL0hvEgFALKaCgW2Go==wj14_dDomdK_hPU23oXLQ@mail.gmail.com>
+From: Greentime Hu <green.hu@gmail.com>
+Subject: Re: [PATCH v6 07/36] nds32: Exception handling
+Date: Tue, 30 Jan 2018 22:49:32 +0800
+Message-ID: <CAEbi=3ekWX9aA5CXf1r4WsqfwvjxED-1XXTb2w0ydWmnA6jfSA@mail.gmail.com>
+References: <cover.1515766253.git.green.hu@gmail.com> <28c2c9da4da4c8b07473e97cd4a6cb953f4b507c.1515766253.git.green.hu@gmail.com>
+ <CAK8P3a1ZZsB7MVZ8sEPzkVcNUJh3-MB_ApmPi+DUF1rc9h8pXg@mail.gmail.com>
+ <CAJsyPhx1B75GJCD2a_=m92ipq3oYsXxMGq9Bg9eCw_ALavWKMg@mail.gmail.com>
+ <CAK8P3a1mwKLi2Cj43EQvwodPCQVwWfW5gjNtf+DLdyb8T49OWw@mail.gmail.com>
+ <CAK8P3a3PxsmNXDqYbivfCTL8NmnR==M91yjv_VV0zXwjzLxHuA@mail.gmail.com>
+ <CAJsyPhx090fPsdhkydoKDHDw+LwByT66JHJNT4Tb5N0s_O7MPw@mail.gmail.com> <CAK8P3a1iv=10_pfvtfvDwD9YH1HRAXwDy_m8SC=tV59HEDuSsg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqKEXtL0hvEgFALKaCgW2Go==wj14_dDomdK_hPU23oXLQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Denis OSTERLAND <denis.osterland-85mDkmTllUAAvxtiuMwx3w@public.gmane.org>
-Cc: "m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org" <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org" <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, "jdelvare-IBi9RG/b67k@public.gmane.org" <jdelvare-IBi9RG/b67k@public.gmane.org>, "alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAK8P3a1iv=10_pfvtfvDwD9YH1HRAXwDy_m8SC=tV59HEDuSsg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Vincent Chen <deanbo422@gmail.com>, Greentime <greentime@andestech.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Networking <netdev@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, David Howells <dhowells@redhat.com>, Will Deacon <will.deacon@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-serial@vger.kernel.org, Geert Uytterhoeven <geert.uytterhoeven@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Greg KH <greg@kroah.com>, Guo Ren <ren_guo@c-sky.co>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 30, 2018 at 8:41 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Tue, Jan 30, 2018 at 2:56 AM, Denis OSTERLAND
-> <denis.osterland-85mDkmTllUAAvxtiuMwx3w@public.gmane.org> wrote:
->> Am Montag, den 29.01.2018, 17:41 -0600 schrieb Rob Herring:
->>> On Tue, Jan 23, 2018 at 01:18:01PM +0100, Michael Grzeschik wrote:
->>> >
->>> > We add support for the ISL1219 chip that got an integrated tamper
->>> > detection function. This patch implements the feature by using an hwmon
->>> > interface.
+Hi, Arnd:
 
-[...]
-
->>> There's not much point in having an example for every compatible. This
->>> binding is simple enough, one should be enough.
->> Shell we remove the example without an interrupt?
+2018-01-30 21:33 GMT+08:00 Arnd Bergmann <arnd@arndb.de>:
+> On Tue, Jan 30, 2018 at 11:01 AM, Vincent Chen <deanbo422@gmail.com> wrote:
+>> 2018-01-24 19:10 GMT+08:00 Arnd Bergmann <arnd@arndb.de>:
+>>> On Wed, Jan 24, 2018 at 12:09 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+>>>> On Wed, Jan 24, 2018 at 11:53 AM, Vincent Chen <deanbo422@gmail.com> wrote:
+>>>>> 2018-01-18 18:14 GMT+08:00 Arnd Bergmann <arnd@arndb.de>:
+>>>
+>>>> Ok. I still wonder about the kernel part of this though: is it a good idea
+>>>> for user space to configure whether the kernel does unaligned
+>>>> accesses? I would think that the kernel should just be fixed in such
+>>>> a case.
+>>>
+>>> To clarify: I'm asking only about unaligned accesses from kernel code itself,
+>>> which is generally considered a bug when
+>>> CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS is disabled.
+>>>
+>>>       Arnd
+>>
+>> Thanks for your comments.
+>>
+>> For performance, we decide always disable
+>> CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS even if hardware supports
+>> unaligned accessing. Therefore, I will remove kernel unaligned accessing from
+>> nds32/mm/alignment.c. In other words, alignment.c only addresses unaligned
+>> accessing for user space.
 >
-> The existing example has a single interrupt, right? That should be
-> enough. You just need to document for the interrupts property which
-> devices have 2 interrupts and what the order is.
+> I'm not really following that logic, let's go through that again so I understand
+> the situation better.
+>
+> CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS should be set if and
+> only if you have a CPU that does not need to trap on unaligned accesses.
+>
+> What are the hardware capabilities on nds32? Do you have all three
+> categories:
+>
+> a) some CPUs that always trap on unaligned access
+> b) some CPUs that never trap on unaligned access
+> c) some CPUs that can be configured to either trap or not trap by
+>     the kernel?
+>
+We have type a and c.
+We use CONFIG_ALIGNMENT_TRAP for a and
+CONFIG_HW_SUPPORT_UNALIGNMENT_ACCESS for c.
 
-Looking at the first patch now, yes you can drop the 1st example and
-just keep the 2nd example.
+Since unaligned access in kernel code itself should be considered as a
+bug, we will remove the emulation code to handle the kernel code
+unaligned accessed case.
+We think CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS and
+CONFIG_HW_SUPPORT_UNALIGNMENT_ACCESS have different purposes because
+it will still be more efficient to access by byte even if hardware
+support unaligned access.
+CONFIG_HW_SUPPORT_UNALIGNMENT_ACCESS is used to prevent generating
+unaligned access exception.
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thus, we will
+1. treat unaligned access in kernel code itself as a bug
+2. don't select CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS
+3. disable CONFIG_HW_SUPPORT_UNALIGNMENT_ACCESS as default
