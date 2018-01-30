@@ -1,71 +1,100 @@
-From: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
-Subject: Re: [PATCH 2/2] clk: stm32: Add DSI clock for STM32F469 Board
-Date: Tue, 30 Jan 2018 15:22:16 +0000
-Message-ID: <df882957-9d04-cda8-abd4-0b731ffa62d3@st.com>
-References: <1516286980-8603-1-git-send-email-gabriel.fernandez@st.com>
- <1516286980-8603-3-git-send-email-gabriel.fernandez@st.com>
- <20180129185624.zesocq2siiikwnog@rob-hp-laptop>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v6 07/36] nds32: Exception handling
+Date: Tue, 30 Jan 2018 16:27:13 +0100
+Message-ID: <CAK8P3a3W+_bajdYjDwg8PLWhsG0eGZteeRMcTZjHCmpc-i7enA@mail.gmail.com>
+References: <cover.1515766253.git.green.hu@gmail.com> <28c2c9da4da4c8b07473e97cd4a6cb953f4b507c.1515766253.git.green.hu@gmail.com>
+ <CAK8P3a1ZZsB7MVZ8sEPzkVcNUJh3-MB_ApmPi+DUF1rc9h8pXg@mail.gmail.com>
+ <CAJsyPhx1B75GJCD2a_=m92ipq3oYsXxMGq9Bg9eCw_ALavWKMg@mail.gmail.com>
+ <CAK8P3a1mwKLi2Cj43EQvwodPCQVwWfW5gjNtf+DLdyb8T49OWw@mail.gmail.com>
+ <CAK8P3a3PxsmNXDqYbivfCTL8NmnR==M91yjv_VV0zXwjzLxHuA@mail.gmail.com>
+ <CAJsyPhx090fPsdhkydoKDHDw+LwByT66JHJNT4Tb5N0s_O7MPw@mail.gmail.com>
+ <CAK8P3a1iv=10_pfvtfvDwD9YH1HRAXwDy_m8SC=tV59HEDuSsg@mail.gmail.com> <CAEbi=3ekWX9aA5CXf1r4WsqfwvjxED-1XXTb2w0ydWmnA6jfSA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180129185624.zesocq2siiikwnog@rob-hp-laptop>
-Content-Language: en-US
-Content-ID: <18E21C1388473A46841D89185BBFA011@st.com>
+In-Reply-To: <CAEbi=3ekWX9aA5CXf1r4WsqfwvjxED-1XXTb2w0ydWmnA6jfSA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Nicolas Pitre <nico@linaro.org>, "daniel.thompson@linaro.org" <daniel.thompson@linaro.org>, Philippe CORNU <philippe.cornu@st.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "gabriel.fernandez.st@gmail.com" <gabriel.fernandez.st@gmail.com>
+To: Greentime Hu <green.hu@gmail.com>
+Cc: Vincent Chen <deanbo422@gmail.com>, Greentime <greentime@andestech.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Networking <netdev@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, David Howells <dhowells@redhat.com>, Will Deacon <will.deacon@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-serial@vger.kernel.org, Geert Uytterhoeven <geert.uytterhoeven@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Greg KH <greg@kroah.com>, Guo Ren <ren_guo@c-sky.co>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLA0KDQpUaGFua3MgZm9yIHJldmlld2luZy4NCg0KDQpPbiAwMS8yOS8yMDE4IDA3OjU2
-IFBNLCBSb2IgSGVycmluZyB3cm90ZToNCj4gT24gVGh1LCBKYW4gMTgsIDIwMTggYXQgMDM6NDk6
-NDBQTSArMDEwMCwgZ2FicmllbC5mZXJuYW5kZXpAc3QuY29tIHdyb3RlOg0KPj4gRnJvbTogR2Fi
-cmllbCBGZXJuYW5kZXogPGdhYnJpZWwuZmVybmFuZGV6QHN0LmNvbT4NCj4+DQo+PiBUaGlzIHBh
-dGNoIGFkZHMgRFNJIGNsb2NrIGZvciBTVE0zMkY0NjkgYm9hcmQNCj4+DQo+PiBTaWduZWQtb2Zm
-LWJ5OiBHYWJyaWVsIEZlcm5hbmRleiA8Z2FicmllbC5mZXJuYW5kZXpAc3QuY29tPg0KPj4gLS0t
-DQo+PiAgIGRyaXZlcnMvY2xrL2Nsay1zdG0zMmY0LmMgICAgICAgICAgICAgICAgIHwgMTEgKysr
-KysrKysrKy0NCj4+ICAgaW5jbHVkZS9kdC1iaW5kaW5ncy9jbG9jay9zdG0zMmZ4LWNsb2NrLmgg
-fCAgMyArKy0NCj4+ICAgMiBmaWxlcyBjaGFuZ2VkLCAxMiBpbnNlcnRpb25zKCspLCAyIGRlbGV0
-aW9ucygtKQ0KPj4NCj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2Nsay9jbGstc3RtMzJmNC5jIGIv
-ZHJpdmVycy9jbGsvY2xrLXN0bTMyZjQuYw0KPj4gaW5kZXggZGE0NGY4ZC4uM2MyODc5OCAxMDA2
-NDQNCj4+IC0tLSBhL2RyaXZlcnMvY2xrL2Nsay1zdG0zMmY0LmMNCj4+ICsrKyBiL2RyaXZlcnMv
-Y2xrL2Nsay1zdG0zMmY0LmMNCj4+IEBAIC01MjEsNyArNTIxLDcgQEAgc3RydWN0IHN0bTMyZjRf
-cGxsX2RhdGEgew0KPj4gICB9Ow0KPj4gICANCj4+ICAgc3RhdGljIGNvbnN0IHN0cnVjdCBzdG0z
-MmY0X3BsbF9kYXRhIHN0bTMyZjQ2OV9wbGxbTUFYX1BMTF9ESVZdID0gew0KPj4gLQl7IFBMTCwJ
-ICAgNTAsIHsgInBsbCIsCSAgICAgInBsbC1xIiwgICAgTlVMTAkgICAgfSB9LA0KPj4gKwl7IFBM
-TCwJICAgNTAsIHsgInBsbCIsCSAgICAgInBsbC1xIiwgICAgInBsbC1yIiAgICB9IH0sDQo+PiAg
-IAl7IFBMTF9JMlMsIDUwLCB7ICJwbGxpMnMtcCIsICJwbGxpMnMtcSIsICJwbGxpMnMtciIgfSB9
-LA0KPj4gICAJeyBQTExfU0FJLCA1MCwgeyAicGxsc2FpLXAiLCAicGxsc2FpLXEiLCAicGxsc2Fp
-LXIiIH0gfSwNCj4+ICAgfTsNCj4+IEBAIC0xMDQ3LDYgKzEwNDcsOCBAQCBzdGF0aWMgc3RydWN0
-IGNsa19odyAqc3RtMzJfcmVnaXN0ZXJfY2NsayhzdHJ1Y3QgZGV2aWNlICpkZXYsIGNvbnN0IGNo
-YXIgKm5hbWUsDQo+PiAgIAkibm8tY2xvY2siLCAibHNlIiwgImxzaSIsICJoc2UtcnRjIg0KPj4g
-ICB9Ow0KPj4gICANCj4+ICtzdGF0aWMgY29uc3QgY2hhciAqZHNpX3BhcmVudFsyXSA9IHsgTlVM
-TCwgInBsbC1yIiB9Ow0KPj4gKw0KPj4gICBzdGF0aWMgY29uc3QgY2hhciAqbGNkX3BhcmVudFsx
-XSA9IHsgInBsbHNhaS1yLWRpdiIgfTsNCj4+ICAgDQo+PiAgIHN0YXRpYyBjb25zdCBjaGFyICpp
-MnNfcGFyZW50c1syXSA9IHsgInBsbGkycy1yIiwgTlVMTCB9Ow0KPj4gQEAgLTExNTYsNiArMTE1
-OCwxMiBAQCBzdHJ1Y3Qgc3RtMzJmNF9jbGtfZGF0YSB7DQo+PiAgIAkJTk9fR0FURSwgMCwNCj4+
-ICAgCQkwDQo+PiAgIAl9LA0KPj4gKwl7DQo+PiArCQlDTEtfRjQ2OV9EU0ksICJkc2kiLCBkc2lf
-cGFyZW50LCBBUlJBWV9TSVpFKGRzaV9wYXJlbnQpLA0KPj4gKwkJU1RNMzJGNF9SQ0NfRENLQ0ZH
-UiwgMjksIDEsDQo+PiArCQlTVE0zMkY0X1JDQ19BUEIyRU5SLCAyNywNCj4+ICsJCUNMS19TRVRf
-UkFURV9QQVJFTlQgfCBDTEtfU0VUX1JBVEVfTk9fUkVQQVJFTlQNCj4+ICsJfSwNCj4+ICAgfTsN
-Cj4+ICAgDQo+PiAgIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgc3RtMzJfYXV4X2NsayBzdG0zMmY3NDZf
-YXV4X2Nsa1tdID0gew0KPj4gQEAgLTE0NTAsNiArMTQ1OCw3IEBAIHN0YXRpYyB2b2lkIF9faW5p
-dCBzdG0zMmY0X3JjY19pbml0KHN0cnVjdCBkZXZpY2Vfbm9kZSAqbnApDQo+PiAgIAlzdG0zMmY0
-X2dhdGVfbWFwID0gZGF0YS0+Z2F0ZXNfbWFwOw0KPj4gICANCj4+ICAgCWhzZV9jbGsgPSBvZl9j
-bGtfZ2V0X3BhcmVudF9uYW1lKG5wLCAwKTsNCj4+ICsJZHNpX3BhcmVudFswXSA9IGhzZV9jbGs7
-DQo+PiAgIA0KPj4gICAJaTJzX2luX2NsayA9IG9mX2Nsa19nZXRfcGFyZW50X25hbWUobnAsIDEp
-Ow0KPj4gICANCj4+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2R0LWJpbmRpbmdzL2Nsb2NrL3N0bTMy
-ZngtY2xvY2suaCBiL2luY2x1ZGUvZHQtYmluZGluZ3MvY2xvY2svc3RtMzJmeC1jbG9jay5oDQo+
-PiBpbmRleCA0ZDUyM2IwLi41OGQ4YjUxIDEwMDY0NA0KPj4gLS0tIGEvaW5jbHVkZS9kdC1iaW5k
-aW5ncy9jbG9jay9zdG0zMmZ4LWNsb2NrLmgNCj4+ICsrKyBiL2luY2x1ZGUvZHQtYmluZGluZ3Mv
-Y2xvY2svc3RtMzJmeC1jbG9jay5oDQo+PiBAQCAtMzUsOCArMzUsOSBAQA0KPj4gICAjZGVmaW5l
-IENMS19TQUlRX1BESVYJCTEzDQo+PiAgICNkZWZpbmUgQ0xLX0hTSQkJCTE0DQo+PiAgICNkZWZp
-bmUgQ0xLX1NZU0NMSwkJMTUNCj4+ICsjZGVmaW5lIENMS19GNDY5X0RTSQkJMTYNCj4+ICAgDQo+
-PiAtI2RlZmluZSBFTkRfUFJJTUFSWV9DTEsJCTE2DQo+PiArI2RlZmluZSBFTkRfUFJJTUFSWV9D
-TEsJCTE3DQo+PiAgIA0KPj4gICAjZGVmaW5lIENMS19IRE1JX0NFQwkJMTYNCj4+ICAgI2RlZmlu
-ZSBDTEtfU1BESUYJCTE3DQo+IFRoaXMgbG9va3Mgc3VzcGljaW91cy4gV2hhdCdzIHRoZSByZWxh
-dGlvbnNoaXAgb2YgdGhlc2UgY2xvY2tzPw0KSSBoYXZlIGp1c3QgYWRkZWQgQ0xLX0Y0NjlfRFNJ
-IGluIHRoZSBiaW5kaW5nLCBhbmQgc2hpZnRlZCB0aGUgZW5kIG9mIA0KcHJpbWFyeSBjbG9jayBm
-b3IgRjQgY2xvY2tzLg0KDQonQ0xLX0Y0NjlfRFNJJyBiaW5kaW5nIGlzIG9ubHkgdXNlZCBmb3Ig
-U1RNMzJGNDY5IGFuZCBub3QgZm9yIFNUTTMyRjc0NiANCih0aGF0IHdoeSBDTEtfSERNSV9DRUMg
-Y2FuIHVzZSB0aGUgaW5kZXggMTYpDQoNCg0KQlINCg0KR2FicmllbC4NCj4NCj4gUm9iDQo=
+On Tue, Jan 30, 2018 at 3:49 PM, Greentime Hu <green.hu@gmail.com> wrote:
+> Hi, Arnd:
+>
+> 2018-01-30 21:33 GMT+08:00 Arnd Bergmann <arnd@arndb.de>:
+>> On Tue, Jan 30, 2018 at 11:01 AM, Vincent Chen <deanbo422@gmail.com> wrote:
+>>> 2018-01-24 19:10 GMT+08:00 Arnd Bergmann <arnd@arndb.de>:
+>>>> On Wed, Jan 24, 2018 at 12:09 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+>>>>> On Wed, Jan 24, 2018 at 11:53 AM, Vincent Chen <deanbo422@gmail.com> wrote:
+>>>>>> 2018-01-18 18:14 GMT+08:00 Arnd Bergmann <arnd@arndb.de>:
+>>>>
+>>>>> Ok. I still wonder about the kernel part of this though: is it a good idea
+>>>>> for user space to configure whether the kernel does unaligned
+>>>>> accesses? I would think that the kernel should just be fixed in such
+>>>>> a case.
+>>>>
+>>>> To clarify: I'm asking only about unaligned accesses from kernel code itself,
+>>>> which is generally considered a bug when
+>>>> CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS is disabled.
+>>>>
+>>>>       Arnd
+>>>
+>>> Thanks for your comments.
+>>>
+>>> For performance, we decide always disable
+>>> CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS even if hardware supports
+>>> unaligned accessing. Therefore, I will remove kernel unaligned accessing from
+>>> nds32/mm/alignment.c. In other words, alignment.c only addresses unaligned
+>>> accessing for user space.
+>>
+>> I'm not really following that logic, let's go through that again so I understand
+>> the situation better.
+>>
+>> CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS should be set if and
+>> only if you have a CPU that does not need to trap on unaligned accesses.
+>>
+>> What are the hardware capabilities on nds32? Do you have all three
+>> categories:
+>>
+>> a) some CPUs that always trap on unaligned access
+>> b) some CPUs that never trap on unaligned access
+>> c) some CPUs that can be configured to either trap or not trap by
+>>     the kernel?
+>>
+> We have type a and c.
+> We use CONFIG_ALIGNMENT_TRAP for a and
+> CONFIG_HW_SUPPORT_UNALIGNMENT_ACCESS for c.
+
+Ok, got it.
+
+> Since unaligned access in kernel code itself should be considered as a
+> bug, we will remove the emulation code to handle the kernel code
+> unaligned accessed case.
+> We think CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS and
+> CONFIG_HW_SUPPORT_UNALIGNMENT_ACCESS have different purposes because
+> it will still be more efficient to access by byte even if hardware
+> support unaligned access.
+> CONFIG_HW_SUPPORT_UNALIGNMENT_ACCESS is used to prevent generating
+> unaligned access exception.
+
+Hmm, this is a bit tricky. Most architectures actually assume that those
+two are the same, and nothing else has a
+HW_SUPPORT_UNALIGNMENT_ACCESS option.
+
+We do actually have a related problem on 32-bit ARM, where the current
+generation of processors (ARMv6 and higher) support unaligned
+accesses for almost all instructions with the exception of those
+instructions that operate on multiple memory locations (ldm/stm
+and ldrd/strd). We can control the use of those instructions in inline
+assembler, and gcc never uses them when it knows that a pointer
+is unaligned, but when CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS
+is set, the kernel sometimes intentionally contains code sequences
+that lead the compiler to believe that a variable is aligned when it
+is not, so we end up needing a trap handler here.
+
+We might at some point want to clean this up by going through
+all uses of CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS
+and changing them in a way that leads to better results on both
+arm32 and nds32.
+
+       Arnd
