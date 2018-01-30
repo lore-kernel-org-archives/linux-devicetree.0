@@ -1,64 +1,42 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 1/4] dt-bindings: firmware: Add bindings for ZynqMP
- firmware
-Date: Tue, 30 Jan 2018 11:08:18 -0600
-Message-ID: <20180130170818.tz4hoqvyekrl7uio@rob-hp-laptop>
-References: <1516836074-4149-1-git-send-email-jollys@xilinx.com>
- <1516836074-4149-2-git-send-email-jollys@xilinx.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC usb-next v8 1/3] dt-bindings: usb: add the documentation
+ for USB HCDs
+Date: Tue, 30 Jan 2018 11:12:49 -0600
+Message-ID: <20180130171249.d2svzedtnxc4pxyp@rob-hp-laptop>
+References: <20180125000053.9387-1-martin.blumenstingl@googlemail.com>
+ <20180125000053.9387-2-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1516836074-4149-2-git-send-email-jollys@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jolly Shah <jolly.shah@xilinx.com>
-Cc: ard.biesheuvel@linaro.org, mingo@kernel.org, gregkh@linuxfoundation.org, matt@codeblueprint.co.uk, sudeep.holla@arm.com, hkallweit1@gmail.com, keescook@chromium.org, dmitry.torokhov@gmail.com, michal.simek@xilinx.com, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jolly Shah <jollys@xilinx.com>, Rajan Vaja <rajanv@xilinx.com>
+In-Reply-To: <20180125000053.9387-2-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, mgautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 24, 2018 at 03:21:11PM -0800, Jolly Shah wrote:
-> Add documentation to describe Xilinx ZynqMP firmware driver
-> bindings. Firmware driver provides an interface to firmware
-> APIs. Interface APIs can be used by any driver to communicate
-> to PMUFW (Platform Management Unit).
+On Thu, Jan 25, 2018 at 01:00:51AM +0100, Martin Blumenstingl wrote:
+> A USB HCD may have several PHYs which need to be configured before the
+> the HCD starts working.
+> This adds the documentation for such a USB HCD as well as a reference to
+> the new "usb-hcd.txt" from all bindings that implement a USB HCD which
+> support one USB PHY per port.
 > 
-> Signed-off-by: Jolly Shah <jollys@xilinx.com>
-> Signed-off-by: Rajan Vaja <rajanv@xilinx.com>
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 > ---
->  .../bindings/firmware/xilinx/xlnx,zynqmp-firmware.txt    | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmware.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmware.txt b/Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmware.txt
-> new file mode 100644
-> index 0000000..a7aaf56
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmware.txt
-> @@ -0,0 +1,16 @@
-> +Xilinx Zynq MPSoC Firmware Device Tree Bindings
-> +
-> +The zynqmp-firmware node describes the interface to platform firmware.
+>  Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt | 5 ++++-
+>  Documentation/devicetree/bindings/usb/mediatek,mtu3.txt     | 5 ++++-
+>  Documentation/devicetree/bindings/usb/usb-ehci.txt          | 6 ++++--
+>  Documentation/devicetree/bindings/usb/usb-hcd.txt           | 9 +++++++++
+>  Documentation/devicetree/bindings/usb/usb-ohci.txt          | 6 ++++--
+>  Documentation/devicetree/bindings/usb/usb-uhci.txt          | 3 +++
+>  Documentation/devicetree/bindings/usb/usb-xhci.txt          | 5 +++++
+>  7 files changed, 33 insertions(+), 6 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/usb/usb-hcd.txt
 
-Please define this a is child of /firmware.
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-Also, some brief summary of what functions the firmware provides would 
-be nice.
-
-> +
-> +Required properties:
-> + - compatible:	Must contain:  "xlnx,zynqmp-firmware"
-> + - method:	The method of calling the PM-API firmware layer.
-> +		Permitted values are:
-> +		 - "smc" : To be used in configurations without a hypervisor
-> +		 - "hvc" : To be used when hypervisor is present
-
-Do you really need to support hvc?
-
-> +
-> +Examples:
-> +	zynqmp_firmware: zynqmp-firmware {
-> +		compatible = "xlnx,zynqmp-firmware";
-> +		method = "smc";
-> +	};
-> -- 
-> 2.7.4
-> 
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
