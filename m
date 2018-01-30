@@ -1,94 +1,174 @@
-From: Yong <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v7 2/2] media: V3s: Add support for
- Allwinner CSI.
-Date: Tue, 30 Jan 2018 10:48:33 +0800
-Message-ID: <20180130104833.a06e44c558c7ddc6b38e20b3@magewell.com>
-References: <1517217696-17816-1-git-send-email-yong.deng@magewell.com>
-	<c86097d7-dade-01e5-3826-3f22f9ca4b4f@infradead.org>
-Reply-To: yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org
+From: Shubhrajyoti Datta <shubhrajyoti.datta-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 2/4] drivers: firmware: xilinx: Add ZynqMP firmware driver
+Date: Tue, 30 Jan 2018 10:35:52 +0530
+Message-ID: <CAKfKVtGGf8AexOTEvyyi7cmQ_Xopa3Fszf-jOuNSfBJpE2EzCg@mail.gmail.com>
+References: <1516836074-4149-1-git-send-email-jollys@xilinx.com> <1516836074-4149-3-git-send-email-jollys@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD2JNYHK4MEBBDF2X7JQKGQELBODEXI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <c86097d7-dade-01e5-3826-3f22f9ca4b4f-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rick Chang <rick.chang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TZNg+MwTxZMZA@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1516836074-4149-3-git-send-email-jollys-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jolly Shah <jolly.shah-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mingo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, matt-mF/unelCI9GS6iBeEJttW/XRex20P6io@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jolly Shah <jollys-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rajan Vaja <rajanv-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 Hi,
 
-On Mon, 29 Jan 2018 13:49:14 -0800
-Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org> wrote:
-
-> On 01/29/2018 01:21 AM, Yong Deng wrote:
-> > Allwinner V3s SoC features two CSI module. CSI0 is used for MIPI CSI-2
-> > interface and CSI1 is used for parallel interface. This is not
-> > documented in datasheet but by test and guess.
-> > 
-> > This patch implement a v4l2 framework driver for it.
-> > 
-> > Currently, the driver only support the parallel interface. MIPI-CSI2,
-> > ISP's support are not included in this patch.
-> > 
-> > Tested-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> > Signed-off-by: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
-> > ---
-> 
-> 
-> A previous version (I think v6) had a build error with the use of
-> PHYS_OFFSET, so Kconfig was modified to depend on ARM and ARCH_SUNXI
-> (one of which seems to be overkill).  As is here, the COMPILE_TEST piece is
-> meaningless for all arches except ARM.  If you care enough for COMPILE_TEST
-> (and I would), then you could make COMPILE_TEST useful on any arch by
-> removing the "depends on ARM" (the ARCH_SUNXI takes care of that) and by
-> having an alternate value for PHYS_OFFSET, like so:
-> 
-> +#if defined(CONFIG_COMPILE_TEST) && !defined(PHYS_OFFSET)
-> +#define PHYS_OFFSET	0
-> +#endif
-> 
-> With those 2 changes, the driver builds for me on x86_64.
-
-I have considered this method.
-But it's so sick to put these code in dirver (for my own). I mean 
-this is meaningless for the driver itself and make people confused.
-
-I grepped the driver/ code and I found many drivers writing Kconfig
-like this. For example:
-ARM && COMPILE_TEST
-MIPS && COMPILE_TEST
-PPC64 && COMPILE_TEST
-
-BTW, for my own, I do not care about COMPILE_TEST.
-
-> 
-> > diff --git a/drivers/media/platform/sunxi/sun6i-csi/Kconfig b/drivers/media/platform/sunxi/sun6i-csi/Kconfig
-> > new file mode 100644
-> > index 0000000..f80c965
-> > --- /dev/null
-> > +++ b/drivers/media/platform/sunxi/sun6i-csi/Kconfig
-> > @@ -0,0 +1,10 @@
-> > +config VIDEO_SUN6I_CSI
-> > +	tristate "Allwinner V3s Camera Sensor Interface driver"
-> > +	depends on ARM
-> > +	depends on VIDEO_V4L2 && COMMON_CLK && VIDEO_V4L2_SUBDEV_API && HAS_DMA
-> > +	depends on ARCH_SUNXI || COMPILE_TEST
-> > +	select VIDEOBUF2_DMA_CONTIG
-> > +	select REGMAP_MMIO
-> > +	select V4L2_FWNODE
-> > +	---help---
-> > +	   Support for the Allwinner Camera Sensor Interface Controller on V3s.
-> 
-> thanks,
-> -- 
-> ~Randy
+Thanks for the patch.
+A few questions below.
 
 
-Thanks,
-Yong
+On Thu, Jan 25, 2018 at 4:51 AM, Jolly Shah <jolly.shah-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
+> This patch is adding communication layer with firmware.
+> Firmware driver provides an interface to firmware APIs.
+> Interface APIs can be used by any driver to communicate to
+> PMUFW(Platform Management Unit). All requests go through ATF.
+>
+> Signed-off-by: Jolly Shah <jollys-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Rajan Vaja <rajanv-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> ---
+<snip>
+>
+
+> +/**
+> + * zynqmp_pm_clock_enable - Enable the clock for given id
+> + * @clock_id:  ID of the clock to be enabled
+
+Does it enable all the parents also if they are disabled?
+
+> + *
+> + * This function is used by master to enable the clock
+> + * including peripherals and PLL clocks.
+> + *
+> + * Return:     Returns status, either success or error+reason.
+> + */
+> +static int zynqmp_pm_clock_enable(u32 clock_id)
+> +{
+> +       return invoke_pm_fn(PM_CLOCK_ENABLE, clock_id, 0, 0, 0, NULL);
+> +}
+> +
+> +/**
+> + * zynqmp_pm_clock_disable - Disable the clock for given id
+> + * @clock_id:  ID of the clock to be disable
+> + *
+> + * This function is used by master to disable the clock
+> + * including peripherals and PLL clocks.
+> + *
+> + * Return:     Returns status, either success or error+reason.
+> + */
+> +static int zynqmp_pm_clock_disable(u32 clock_id)
+> +{
+> +       return invoke_pm_fn(PM_CLOCK_DISABLE, clock_id, 0, 0, 0, NULL);
+> +}
+> +
+> +/**
+> + * zynqmp_pm_clock_getstate - Get the clock state for given id
+> + * @clock_id:  ID of the clock to be queried
+> + * @state:     1/0 (Enabled/Disabled)
+> + *
+> + * This function is used by master to get the state of clock
+> + * including peripherals and PLL clocks.
+> + *
+> + * Return:     Returns status, either success or error+reason.
+> + */
+> +static int zynqmp_pm_clock_getstate(u32 clock_id, u32 *state)
+> +{
+> +       u32 ret_payload[PAYLOAD_ARG_CNT];
+> +       int ret;
+> +
+> +       ret = invoke_pm_fn(PM_CLOCK_GETSTATE, clock_id, 0, 0, 0, ret_payload);
+> +       *state = ret_payload[1];
+> +
+> +       return ret;
+> +}
+> +
+> +/**
+> + * zynqmp_pm_clock_setdivider - Set the clock divider for given id
+> + * @clock_id:  ID of the clock
+> + * @div_type:  TYPE_DIV1: div1
+> + *             TYPE_DIV2: div2
+div type didnt see in the signature.
+
+
+
+> + * @divider:   divider value.
+> + *
+> + * This function is used by master to set divider for any clock
+> + * to achieve desired rate.
+> + *
+> + * Return:     Returns status, either success or error+reason.
+> + */
+> +static int zynqmp_pm_clock_setdivider(u32 clock_id, u32 divider)
+> +{
+> +       return invoke_pm_fn(PM_CLOCK_SETDIVIDER, clock_id, divider, 0, 0, NULL);
+> +}
+> +
+> +/**
+> + * zynqmp_pm_clock_getdivider - Get the clock divider for given id
+> + * @clock_id:  ID of the clock
+> + * @div_type:  TYPE_DIV1: div1
+> + *             TYPE_DIV2: div2
+didnt see this  below.
+
+> + * @divider:   divider value.
+> + *
+> + * This function is used by master to get divider values
+> + * for any clock.
+> + *
+> + * Return:     Returns status, either success or error+reason.
+> + */
+> +static int zynqmp_pm_clock_getdivider(u32 clock_id, u32 *divider)
+> +{
+> +       u32 ret_payload[PAYLOAD_ARG_CNT];
+> +       int ret;
+> +
+> +       ret = invoke_pm_fn(PM_CLOCK_GETDIVIDER, clock_id, 0, 0, 0, ret_payload);
+> +       *divider = ret_payload[1];
+> +
+> +       return ret;
+> +}
+> +
+> +/**
+> + * zynqmp_pm_clock_setrate - Set the clock rate for given id
+> + * @clock_id:  ID of the clock
+> + * @rate:      rate value in hz
+> + *
+> + * This function is used by master to set rate for any clock.
+> + *
+> + * Return:     Returns status, either success or error+reason.
+> + */
+So this can set rate only 4G max ?
+
+> +static int zynqmp_pm_clock_setrate(u32 clock_id, u32 rate)
+> +{
+> +       return invoke_pm_fn(PM_CLOCK_SETRATE, clock_id, rate, 0, 0, NULL);
+> +}
+> +
+> +/**
+> + * zynqmp_pm_clock_getrate - Get the clock rate for given id
+> + * @clock_id:  ID of the clock
+> + * @rate:      rate value in hz
+> + *
+> + * This function is used by master to get rate
+> + * for any clock.
+> + *
+> + * Return:     Returns status, either success or error+reason.
+> + */
+Same question here?
+
+> +static int zynqmp_pm_clock_getrate(u32 clock_id, u32 *rate)
+> +{
+> +       u32 ret_payload[PAYLOAD_ARG_CNT];
+> +       int ret;
+> +
+> +       ret = invoke_pm_fn(PM_CLOCK_GETRATE, clock_id, 0, 0, 0, ret_payload);
+> +       *rate = ret_payload[1];
+> +
+> +       return ret;
+> +}
+> +
+Also  what is the difference between set rate and set divider?
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
