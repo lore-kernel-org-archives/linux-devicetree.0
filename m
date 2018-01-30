@@ -1,118 +1,129 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH] sound/tlv320dac33: Add device tree support
-Date: Tue, 30 Jan 2018 09:53:14 +0100
-Message-ID: <20180130085314.GA4585@amd>
-References: <20180129230539.GA18280@amd> <20180129232031.GA7695@lenoch>
- <20180129233301.GA18104@amd> <20180130083446.GA13498@lenoch>
+From: Denis OSTERLAND <denis.osterland@diehl.com>
+Subject: Re: [PATCH 4/4] rtc: isl1208: add support for isl1219 with hwmon for
+ tamper detection
+Date: Tue, 30 Jan 2018 08:56:23 +0000
+Message-ID: <1517302582.5307.16.camel@diehl.com>
+References: <20180123121801.4214-1-m.grzeschik@pengutronix.de>
+         <20180123121801.4214-5-m.grzeschik@pengutronix.de>
+         <20180129234146.73hvclxohhme5i2w@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1760227130724844823=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20180130083446.GA13498@lenoch>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Ladislav Michl <ladis@linux-mips.org>
-Cc: mark.rutland@arm.com, alsa-devel@alsa-project.org, lgirdwood@gmail.com, tony@atomide.com, abcloriens@gmail.com, tiwai@suse.com, martijn@brixit.nl, Filip =?utf-8?Q?Matijevi=C4=87?= <filip.matijevic.pz@gmail.com>, patrikbachan@gmail.com, ivo.g.dimitrov.75@gmail.com, khilman@kernel.org, serge@hallyn.com, devicetree@vger.kernel.org, pali.rohar@gmail.com, robh+dt@kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, aaro.koskinen@iki.fi, linux-kernel@vger.kernel.org, broonie@kernel.org, clayton@craftyguy.net, sakari.ailus@linux.intel.com, sre@kernel.org, bhumirks@gmail.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180129234146.73hvclxohhme5i2w@rob-hp-laptop>
+Content-Language: en-US
+Content-ID: <FDA482DA2A6C5B4F8CE2104908DD4BA1@diehl.internal>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "robh@kernel.org" <robh@kernel.org>, "m.grzeschik@pengutronix.de" <m.grzeschik@pengutronix.de>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "jdelvare@suse.com" <jdelvare@suse.com>, "alexandre.belloni@free-electrons.com" <alexandre.belloni@free-electrons.com>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-
---===============1760227130724844823==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="a8Wt8u1KmwUX3Y2C"
-Content-Disposition: inline
-
-
---a8Wt8u1KmwUX3Y2C
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue 2018-01-30 09:34:46, Ladislav Michl wrote:
-> On Tue, Jan 30, 2018 at 12:33:01AM +0100, Pavel Machek wrote:
-> > On Tue 2018-01-30 00:20:31, Ladislav Michl wrote:
-> > > On Tue, Jan 30, 2018 at 12:05:39AM +0100, Pavel Machek wrote:
-> > > >=20
-> > > > This adds device tree support to tlv320dac33.c.
-> > > >=20
-> > > > Signed-off-by: Pavel Machek <pavel@ucw.cz>
-> > > >=20
-> > > > diff --git a/Documentation/devicetree/bindings/sound/tlv320dac33.tx=
-t b/Documentation/devicetree/bindings/sound/tlv320dac33.txt
-> > > > new file mode 100644
-> > > > index 0000000..6cbd311
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/sound/tlv320dac33.txt
-> > > > @@ -0,0 +1,32 @@
-> > > > +Texas Instruments - tlv320dac33 Codec module
-> > > > +
-> > > > +The tlv320dac33 serial control bus communicates through I2C protoc=
-ols.
-> > > > +
-> > > > +Required properties:
-> > > > +
-> > > > +- compatible - "ti,tlv320dac33"
-> > > > +- reg - I2C slave address
-> > > > +
-> > > > +Optional properties:
-> > > > +
-> > > > +- power-gpios - gpio pin to power the device, active high
-> > >=20
-> > > While driver used gpio in platform data, isn't it more likely
-> > > regulator which powers device?
-> >=20
-> >                 power-gpios =3D <&gpio2 28 0>; /* gpio_60 */
-> >=20
-> > Looks like GPIO to me -- example is from Nokia N9. So this appears to
-> > be correct.
->=20
-> Device datasheet doesn't list any pin which looks like "power-gpio"
-> http://www.ti.com/lit/ds/symlink/tlv320dac32.pdf
-> Unfortunately I do not know much about N9, but was able to find Nokia 5610
-> scheme to get clue how could be tlv320dac33 hardwired (see page 2):
-> http://mastermobile.spb.ru/service/nokia_5610_rm-242_service_schematics.p=
-df
-> Here AVDD is powered by LP3985 voltage regulator which is enabled using
-> VEN pin which might be connected to gpio. Or there could be completely
-> different voltage regulator with different controls. And since Linux
-> already has voltage regulator class, lets not limit ourselves to gpio
-> pins.
-
-Well, notice I'm converting existing driver to device tree. And that
-one already has GPIO dependency. It is possible that more work needs
-to be done there, but that should not be a reason to delay this. Feel
-free to help.
-
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---a8Wt8u1KmwUX3Y2C
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlpwMnoACgkQMOfwapXb+vIKPwCdG8H/ZWOTQRjFZjbnChEVSYks
-82YAoIXPhu/in6U7iXC9VjAC/JRVGBOe
-=ne5K
------END PGP SIGNATURE-----
-
---a8Wt8u1KmwUX3Y2C--
-
---===============1760227130724844823==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============1760227130724844823==--
+QW0gTW9udGFnLCBkZW4gMjkuMDEuMjAxOCwgMTc6NDEgLTA2MDAgc2NocmllYiBSb2IgSGVy
+cmluZzoNCj4gT24gVHVlLCBKYW4gMjMsIDIwMTggYXQgMDE6MTg6MDFQTSArMDEwMCwgTWlj
+aGFlbCBHcnplc2NoaWsgd3JvdGU6DQo+ID4gDQo+ID4gV2UgYWRkIHN1cHBvcnQgZm9yIHRo
+ZSBJU0wxMjE5IGNoaXAgdGhhdCBnb3QgYW4gaW50ZWdyYXRlZCB0YW1wZXINCj4gPiBkZXRl
+Y3Rpb24gZnVuY3Rpb24uIFRoaXMgcGF0Y2ggaW1wbGVtZW50cyB0aGUgZmVhdHVyZSBieSB1
+c2luZyBhbiBod21vbg0KPiA+IGludGVyZmFjZS4NCj4gPiANCj4gPiBUaGUgSVNMMTIxOSBj
+YW4gYWxzbyBkZXNjcmliZSB0aGUgdGltZXN0YW1wIG9mIHRoZSBpbnRydXNpb24NCj4gPiBl
+dmVudC4gRm9yIHRoaXMgd2UgYWRkIHRoZSBkb2N1bWVudGF0aW9uIG9mIHRoZSBuZXcgaW50
+ZXJmYWNlDQo+ID4gaW50cnVzaW9uWzAtKl1fdGltZXN0YW1wLg0KPiA+IA0KPiA+IFRoZSBk
+ZXZpY2V0cmVlIGRvY3VtZW50YXRpb24gZm9yIHRoZSBJU0wxMjE5IGRldmljZSB0cmVlDQo+
+ID4gYmluZGluZyBpcyBhZGRlZCB3aXRoIGFuIHNob3J0IGV4YW1wbGUuDQo+ID4gDQo+ID4g
+U2lnbmVkLW9mZi1ieTogTWljaGFlbCBHcnplc2NoaWsgPG0uZ3J6ZXNjaGlrQHBlbmd1dHJv
+bml4LmRlPg0KPiA+IFNpZ25lZC1vZmYtYnk6IERlbmlzIE9zdGVybGFuZCA8RGVuaXMuT3N0
+ZXJsYW5kQGRpZWhsLmNvbT4NCj4gPiAtLS0NCj4gPiDCoC4uLi9ydGMve2ludGVyc2lsLGlz
+bDEyMDgudHh0ID0+IGlzaWwsaXNsMTIwOC50eHR9IHzCoMKgMTggKy0NCj4gPiDCoERvY3Vt
+ZW50YXRpb24vaHdtb24vc3lzZnMtaW50ZXJmYWNlwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqB8wqDCoMKgNyArDQo+ID4gwqBkcml2ZXJzL3J0Yy9ydGMtaXNsMTIwOC5jwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHwgMTkw
+ICsrKysrKysrKysrKysrKysrKystLQ0KPiA+IMKgMyBmaWxlcyBjaGFuZ2VkLCAyMDEgaW5z
+ZXJ0aW9ucygrKSwgMTQgZGVsZXRpb25zKC0pDQo+ID4gwqByZW5hbWUgRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL3J0Yy97aW50ZXJzaWwsaXNsMTIwOC50eHQgPT4gaXNp
+bCxpc2wxMjA4LnR4dH0gKDU3JSkNCj4gPiANCj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3J0Yy9pbnRlcnNpbCxpc2wxMjA4LnR4dCBiL0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ydGMvaXNpbCxpc2wxMjA4LnR4dA0K
+PiA+IHNpbWlsYXJpdHkgaW5kZXggNTclDQo+ID4gcmVuYW1lIGZyb20gRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL3J0Yy9pbnRlcnNpbCxpc2wxMjA4LnR4dA0KPiA+IHJl
+bmFtZSB0byBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcnRjL2lzaWwsaXNs
+MTIwOC50eHQNCj4gPiBpbmRleCBhNTRlOTlmZWFlMWNhLi5kNTQ5Njk5ZTFjZmM0IDEwMDY0
+NA0KPiA+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ydGMvaW50
+ZXJzaWwsaXNsMTIwOC50eHQNCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvcnRjL2lzaWwsaXNsMTIwOC50eHQNCj4gPiBAQCAtMSwxNCArMSwyMSBAQA0K
+PiA+IC1JbnRlcnNpbCBJU0wxMjA4LCBJU0wxMjE4IEkyQyBSVEMvQWxhcm0gY2hpcA0KPiA+
+ICtJbnRlcnNpbCBJU0wxMjA4LCBJU0wxMjE4LCBJU0wxMjE5IEkyQyBSVEMvQWxhcm0gY2hp
+cA0KPiA+IMKgDQo+ID4gwqBJU0wxMjA4IGlzIGEgdHJpdmlhbCBJMkMgZGV2aWNlIChpdCBo
+YXMgc2ltcGxlIGRldmljZSB0cmVlIGJpbmRpbmdzLA0KPiA+IMKgY29uc2lzdGluZyBvZiBh
+IGNvbXBhdGlibGUgZmllbGQsIGFuIGFkZHJlc3MgYW5kIHBvc3NpYmx5IGFuIGludGVycnVw
+dA0KPiA+IMKgbGluZSkuDQo+ID4gwqANCj4gPiArSVNMMTIxOSBzdXBwb3J0cyB0YW1wZXIg
+ZGV0ZWN0aW9uIHVzZXIgc3BhY2UgcmVwcmVzZW50YXRpb24gdGhyb3VnaA0KPiA+ICtjYXNl
+IGludHJ1c2lvbiBod21vbiBzZW5zb3IuDQo+IFVzZXIgc3BhY2UgYW5kIGh3bW9uIGFyZSBM
+aW51eCBkZXRhaWxzIG5vdCByZWxldmFudCB0byB0aGUgYmluZGluZy4gSnVzdMKgDQo+IGRl
+c2NyaWJlIHRoZSBoL3cuDQpPSy4NCj4gDQo+ID4gDQo+ID4gK0lTTDEyMTkgaGFzIGFkZGl0
+aW9uYWwgcGlucyBFVklOIGFuZCAjRVZERVQgZm9yIHRhbXBlciBkZXRlY3Rpb24uDQo+ID4g
+K0kyQyBkZXZpY2VzIHN1cHBvcnQgb25seSBvbmUgaXJxLiAjSVJRIGFuZCAjRVZERVQgYXJl
+IG9wZW4tZHJhaW4gYWN0aXZlIGxvdywNCj4gPiArc28gaXQgaXMgcG9zc2libGUgbGF5b3V0
+IHRoZW0gdG8gb25lIFNvQyBwaW4gd2l0aCBwdWxsLXVwLg0KPiA+ICsNCj4gPiDCoFJlcXVp
+cmVkIHByb3BlcnRpZXMgc3VwcG9ydGVkIGJ5IHRoZSBkZXZpY2U6DQo+ID4gwqANCj4gPiDC
+oCAtICJjb21wYXRpYmxlIjogbXVzdCBiZSBvbmUgb2YNCj4gPiDCoAkiaXNpbCxpc2wxMjA4
+Ig0KPiA+IMKgCSJpc2lsLGlzbDEyMTgiDQo+ID4gKwkiaXNpbCxpc2wxMjE5Ig0KPiA+IMKg
+IC0gInJlZyI6IEkyQyBidXMgYWRkcmVzcyBvZiB0aGUgZGV2aWNlDQo+ID4gwqANCj4gPiDC
+oE9wdGlvbmFsIHByb3BlcnRpZXM6DQo+ID4gQEAgLTMzLDMgKzQwLDEyIEBAIEV4YW1wbGUg
+aXNsMTIwOCBub2RlIHdpdGggI0lSUSBwaW4gY29ubmVjdGVkIHRvIFNvQyBncGlvMSBwaW4g
+MTI6DQo+ID4gwqAJCWludGVycnVwdC1wYXJlbnQgPSA8JmdwaW8xPjsNCj4gPiDCoAkJaW50
+ZXJydXB0cyA9IDwxMiBJUlFfVFlQRV9FREdFX0ZBTExJTkc+Ow0KPiA+IMKgCX07DQo+ID4g
+Kw0KPiA+ICtFeGFtcGxlIGlzbDEyMTkgbm9kZSB3aXRoICNJUlEgcGluIGFuZCAjRVZERVQg
+cGluIGNvbm5lY3RlZCB0byBTb0MgZ3BpbzEgcGluIDEyOg0KPiA+ICsNCj4gPiArCWlzbDEy
+MTk6IGlzbDEyMTlANjggew0KPiA+ICsJCWNvbXBhdGlibGUgPSAiaW50ZXJzaWwsaXNsMTIx
+OSI7DQo+ID4gKwkJcmVnID0gPDB4Njg+Ow0KPiA+ICsJCWludGVycnVwdHMtZXh0ZW5kZWQg
+PSA8JmdwaW8xIDEyIElSUV9UWVBFX0VER0VfRkFMTElORz47DQo+IFdpdGggMiBpbnRlcnJ1
+cHRzLCB5b3Ugc2hvdWxkIGhhdmUgMiB2YWx1ZXMuIElmIHRoZXkgYXJlIGNvbm5lY3RlZMKg
+DQo+IHRvZ2V0aGVyLCBqdXN0IHJlcGVhdCB0aGUgY29ubmVjdGlvbi4gT3RoZXJ3aXNlLCB5
+b3UgY2FuJ3QgdGVsbCBpZiBFVkRFVMKgDQo+IGlzIGEgbm8gY29ubmVjdC4NCklmIEkgZ290
+IHlvdSByaWdodCwgeW91IHN1Z2dlc3QgYW4gYWRkaXRpb25hbCBJUlEgZW50cnkgdG8gcGFy
+c2UuDQpBIHNob3J0IGV4YW1wbGUsICNJUlEgcGluIGNvbm5lY3RlZCB0byBncGlvMSBwaW4g
+MTIgYW5kDQojRVZERVQgcGluIGNvbm5lY3RlZCB0byBncGlvMiBwaW4gMjQ6DQoNCmlzbDEy
+MTk6IHJ0Y0A2OMKgew0KCWNvbXBhdGlibGUgPSAiaW50ZXJzaWwsaXNsMTIxOSI7DQoJcmVn
+ID0gPDB4Njg+Ow0KCWludGVycnVwdC1uYW1lcyA9ICJpcnEiLCAiZXZkZXQiOw0KCWludGVy
+cnVwdHMtZXh0ZW5kZWQgPSA8JmdwaW8xIDEyIElSUV9UWVBFX0VER0VfRkFMTElORz4sDQoJ
+CTwmZ3BpbzIgMjQgSVJRX1RZUEVfRURHRV9GQUxMSU5HPjsNCn07DQoNCkluIGRyaXZlciBp
+bXBsZW1lbnRhdGlvbiB3ZSBuZWVkIG9ubHkgb25lIGludGVycnVwdCwgYmVjYXVzZSB3ZSBj
+YW4NCmRldGVybWluYXRlIGFjdGlvbiB0byB0YWtlIGJhc2VkIG9uIHZhbHVlIG9mIHN0YXR1
+cyByZWdpc3Rlci4NCkluIGN1cnJlbnQgaW1wbGVtZW50YXRpb24gdGhlcmUgd2FzIG5vIG5l
+ZWQgdG8gZG8gc29tZSBhZGRpdGlvbmFsDQpPRiBwYXJzaW5nLCBldmVyeXRoaW5nIGlzIGRv
+bmUgYnkgSTJDIGdlbmVyaWMgY29kZS4NCkkgZ3Vlc3MsIGl0IGlzIG5vdCBtdWNoIGFkZGl0
+aW9uYWwgd29yayB0byBkbyBzbywgYnV0IEkgYW0gbm90IHN1cmUNCmlmIGl0wrRzIHdvcnRo
+d2hpbGUuDQo+IA0KPiBUaGVyZSdzIG5vdCBtdWNoIHBvaW50IGluIGhhdmluZyBhbiBleGFt
+cGxlIGZvciBldmVyeSBjb21wYXRpYmxlLiBUaGlzwqANCj4gYmluZGluZyBpcyBzaW1wbGUg
+ZW5vdWdoLCBvbmUgc2hvdWxkIGJlIGVub3VnaC4NClNoZWxsIHdlIHJlbW92ZSB0aGUgZXhh
+bXBsZSB3aXRob3V0IGFuIGludGVycnVwdD8NCj4gDQo+ID4gDQo+ID4gKwl9Ow0KPiA+ICsN
+CkRpZWhsIEFLTyBTdGlmdHVuZyAmIENvLiBLRywgUGZhbm5lcnN0cmHDn2UgNzUtODMsIDg4
+MjM5IFdhbmdlbiBpbSBBbGxnw6R1DQpCZXJlaWNoc3ZvcnN0YW5kOiBEci4tSW5nLiBNaWNo
+YWVsIFNpZWRlbnRvcCAoU3ByZWNoZXIpLCBKb3NlZiBGZWxsbmVyIChNaXRnbGllZCkNClNp
+dHogZGVyIEdlc2VsbHNjaGFmdDogV2FuZ2VuIGkuQS4g4oCTIFJlZ2lzdGVyZ2VyaWNodDog
+QW10c2dlcmljaHQgVWxtIEhSQSA2MjA2MDkg4oCTIFBlcnPDtm5saWNoIGhhZnRlbmRlIEdl
+c2VsbHNjaGFmdGVyaW46IERpZWhsIFZlcndhbHR1bmdzLVN0aWZ0dW5nIOKAkyBTaXR6OiBO
+w7xybmJlcmcg4oCTIFJlZ2lzdGVyZ2VyaWNodDogQW10c2dlcmljaHQgTsO8cm5iZXJnIEhS
+QSAxMTc1NiDigJMNClZvcnN0YW5kOiBEci4tSW5nLiBFLmguIFRob21hcyBEaWVobCAo4oCg
+KSAoVm9yc2l0emVuZGVyKSwgSGVyciBEaXBsLi1XaXJ0c2NoLi1JbmcuIFdvbGZnYW5nIFdl
+Z2dlbiAoc3RlbGx2ZXJ0cmV0ZW5kZXIgVm9yc2l0emVuZGVyKSwgRGlwbC4tS2ZtLiBDbGF1
+cyBHw7xudGhlciwgRGlwbC4tS2ZtLiBGcmFuayBHdXR6ZWl0LCBEci4tSW5nLiBIZWlucmlj
+aCBTY2h1bmssIERyLi1JbmcuIE1pY2hhZWwgU2llZGVudG9wICwgRGlwbC4tS2ZtLiBEci4t
+SW5nLiBNYXJ0aW4gU29tbWVyLCBEaXBsLi1JbmcuIChGSCkgUmFpbmVyIHZvbiBCb3JzdGVs
+LCBWb3JzaXR6ZW5kZXIgZGVzIEF1ZnNpY2h0c3JhdGVzOiBEci4gS2xhdXMgTWFpZXINCl9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXw0KRGVyIEluaGFs
+dCBkZXIgdm9yc3RlaGVuZGVuIEUtTWFpbCBpc3QgbmljaHQgcmVjaHRsaWNoIGJpbmRlbmQu
+IERpZXNlIEUtTWFpbCBlbnRoYWVsdCB2ZXJ0cmF1bGljaGUgdW5kL29kZXIgcmVjaHRsaWNo
+IGdlc2NodWV0enRlIEluZm9ybWF0aW9uZW4uDQpJbmZvcm1pZXJlbiBTaWUgdW5zIGJpdHRl
+LCB3ZW5uIFNpZSBkaWVzZSBFLU1haWwgZmFlbHNjaGxpY2hlcndlaXNlIGVyaGFsdGVuIGhh
+YmVuLiBCaXR0ZSBsb2VzY2hlbiBTaWUgaW4gZGllc2VtIEZhbGwgZGllIE5hY2hyaWNodC4g
+SmVkZSB1bmVybGF1YnRlIEZvcm0gZGVyIFJlcHJvZHVrdGlvbiwgQmVrYW5udGdhYmUsIEFl
+bmRlcnVuZywgVmVydGVpbHVuZyB1bmQvb2RlciBQdWJsaWthdGlvbiBkaWVzZXIgRS1NYWls
+IGlzdCBzdHJlbmdzdGVucyB1bnRlcnNhZ3QuDQpUaGUgY29udGVudHMgb2YgdGhlIGFib3Zl
+IG1lbnRpb25lZCBlLW1haWwgaXMgbm90IGxlZ2FsbHkgYmluZGluZy4gVGhpcyBlLW1haWwg
+Y29udGFpbnMgY29uZmlkZW50aWFsIGFuZC9vciBsZWdhbGx5IHByb3RlY3RlZCBpbmZvcm1h
+dGlvbi4gUGxlYXNlIGluZm9ybSB1cyBpZiB5b3UgaGF2ZSByZWNlaXZlZCB0aGlzIGUtbWFp
+bCBieSBtaXN0YWtlIGFuZCBkZWxldGUgaXQgaW4gc3VjaCBhIGNhc2UuIEVhY2ggdW5hdXRo
+b3JpemVkIHJlcHJvZHVjdGlvbiwgZGlzY2xvc3VyZSwgYWx0ZXJhdGlvbiwgZGlzdHJpYnV0
+aW9uIGFuZC9vciBwdWJsaWNhdGlvbiBvZiB0aGlzIGUtbWFpbCBpcyBzdHJpY3RseSBwcm9o
+aWJpdGVkLg==
