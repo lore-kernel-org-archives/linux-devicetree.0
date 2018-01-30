@@ -1,51 +1,52 @@
-From: Joel Stanley <joel@jms.id.au>
-Subject: [PATCH 2/2] fsi: core: Add check for master property no-scan-on-init
-Date: Tue, 30 Jan 2018 16:21:16 +1030
-Message-ID: <20180130055116.17411-3-joel@jms.id.au>
+From: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Subject: [PATCH 1/2] dt-bindings: fsi: Add optional property no-scan-on-init
+Date: Tue, 30 Jan 2018 16:21:15 +1030
+Message-ID: <20180130055116.17411-2-joel@jms.id.au>
 References: <20180130055116.17411-1-joel@jms.id.au>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180130055116.17411-1-joel@jms.id.au>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Cc: Christopher Bostic <cbostic@linux.vnet.ibm.com>, Jeremy Kerr <jk@ozlabs.org>, Eddie James <eajames@linux.vnet.ibm.com>, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180130055116.17411-1-joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, Eddie James <eajames-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Christopher Bostic <cbostic@linux.vnet.ibm.com>
+From: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 
-Prior to scanning a master check if the optional property
-no-scan-on-init is present.  If it is then avoid scanning.  This is
-necessary in cases where a master scan could interfere with another
-FSI master on the same bus.
+Add an optional FSI master property 'no-scan-on-init.  This
+can be specified to indicate that a master should not be
+automatically scanned at init time.  This is required in cases
+where a scan could interfere with another FSI master on the same
+bus.
 
-Signed-off-by: Christopher Bostic <cbostic@linux.vnet.ibm.com>
-Acked-by: Jeremy Kerr <jk@ozlabs.org>
-Signed-off-by: Joel Stanley <joel@jms.id.au>
+Signed-off-by: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Acked-by: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
 ---
- drivers/fsi/fsi-core.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/fsi/fsi.txt | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
-index 8d8b25809452..4c03d6933646 100644
---- a/drivers/fsi/fsi-core.c
-+++ b/drivers/fsi/fsi-core.c
-@@ -901,6 +901,7 @@ static DEVICE_ATTR(break, 0200, NULL, master_break_store);
- int fsi_master_register(struct fsi_master *master)
- {
- 	int rc;
-+	struct device_node *np;
+diff --git a/Documentation/devicetree/bindings/fsi/fsi.txt b/Documentation/devicetree/bindings/fsi/fsi.txt
+index 4eaf488d4015..ab516c673a4b 100644
+--- a/Documentation/devicetree/bindings/fsi/fsi.txt
++++ b/Documentation/devicetree/bindings/fsi/fsi.txt
+@@ -56,6 +56,13 @@ addresses (link index and slave ID), and no size:
+     #address-cells = <2>;
+     #size-cells = <0>;
  
- 	if (!master)
- 		return -EINVAL;
-@@ -928,7 +929,9 @@ int fsi_master_register(struct fsi_master *master)
- 		return rc;
- 	}
++An optional boolean property can be added to indicate that a particular master
++should not scan for connected devices at initialization time.  This is
++necessary in cases where a scan could cause arbitration issues with other
++masters that may be present on the bus.
++
++    no-scan-on-init;
++
+ FSI slaves
+ ----------
  
--	fsi_master_scan(master);
-+	np = dev_of_node(&master->dev);
-+	if (!of_property_read_bool(np, "no-scan-on-init"))
-+		fsi_master_scan(master);
- 
- 	return 0;
- }
 -- 
 2.15.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
