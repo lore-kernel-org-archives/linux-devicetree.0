@@ -1,180 +1,131 @@
-From: Cyrille Pitchen <cyrille.pitchen-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v6 00/11] PCI: Add support to the Cadence PCIe controller
-Date: Tue, 30 Jan 2018 21:56:48 +0100
-Message-ID: <cover.1517343502.git.cyrille.pitchen@free-electrons.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, stelford-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, dgary-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, kgopi-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, eandrews-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, sureshp-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Cyrille Pitchen <cyrille.pitchen-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+From: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
+Subject: [PATCH v6 01/11] PCI: Regroup all PCI related entries into drivers/pci/Makefile
+Date: Tue, 30 Jan 2018 21:56:49 +0100
+Message-ID: <e74b20f039a4df71752801d4ff1e372585ea764a.1517343502.git.cyrille.pitchen@free-electrons.com>
+References: <cover.1517343502.git.cyrille.pitchen@free-electrons.com>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <cover.1517343502.git.cyrille.pitchen@free-electrons.com>
+In-Reply-To: <cover.1517343502.git.cyrille.pitchen@free-electrons.com>
+References: <cover.1517343502.git.cyrille.pitchen@free-electrons.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: bhelgaas@google.com, kishon@ti.com, lorenzo.pieralisi@arm.com, linux-pci@vger.kernel.org
+Cc: adouglas@cadence.com, stelford@cadence.com, dgary@cadence.com, kgopi@cadence.com, eandrews@cadence.com, thomas.petazzoni@free-electrons.com, sureshp@cadence.com, nsekhar@ti.com, linux-kernel@vger.kernel.org, robh@kernel.org, devicetree@vger.kernel.org, Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
+Clean up drivers/Makefile by moving the pci/endpoint and pci/dwc entries
+from drivers/Makefile into drivers/pci/Makefile.
 
-this series of patches adds support to the Cadence PCIe controller.
-It was tested on a ARM64 platform emulated by a Palladium running the
-pci-next kernel.
+Since we don't want to introduce any dependency between CONFIG_PCI and
+CONFIG_PCI_ENDPOINT, we now always execute drivers/pci/Makefile.
 
-The host mode was tested with some PCIe devices connected to the Palladium
-through a speed-bridge. Some of those devices were a USB host controller
-and a SATA controller. The PCIe host controller was also tested with a
-second controller configured in endpoint mode and connected back to back
-to the first controller.
+Hence all Makefiles in drivers/pci/ were updated accordingly so no file is
+compiled when CONFIG_PCI is not defined.
 
-The EndPoint Controller (EPC) driver was tested with 2 PCI functions, both
-handled by the pci-epf-test driver, using the pcitest userspace program.
-I used the "-D" optional command line parameter to select the proper PCI
-function.
+Also, we add a comment to reinforce that EPC and EPF libraries must be
+initialized before their users. Hence built-in EPC drivers, such as
+those of Designware, are linked after the endpoint core libraries.
 
-For linux-pci/master, I applied this series on top of Kishon's patch
-("PCI: endpoint: Use EPC's device in dma_alloc_coherent/dma_free_coherent")
-otherwise dma_alloc_coherent() fails when called by pci_epf_alloc_space().
+Finally, we add another comment to explain why obj-y has been chosen
+instead of obj-$(CONFIG_PCIE_DW) to parse the dwc/ sub-folder.
 
-Best regards,
+Signed-off-by: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
+---
+ drivers/Makefile          |  5 +----
+ drivers/pci/Kconfig       |  1 +
+ drivers/pci/Makefile      | 13 ++++++++++---
+ drivers/pci/dwc/Makefile  |  2 ++
+ drivers/pci/host/Makefile |  2 ++
+ 5 files changed, 16 insertions(+), 7 deletions(-)
 
-Cyrille
-
-ChangeLog
-
-v5 -> v6:
-- rebase on linux-pci/master (v4.15-rc4) + Kishon's patch from linux-pci/next:
-"PCI: endpoint: Use EPC's device in dma_alloc_coherent()/dma_free_coherent()"
-- all patches unchanged
-
-v4 -> v5:
-- rebase on today's (20180128) linux-pci/next
-- add again the endpoint driver
-
-- Patch 7:
- move host driver from drivers/pci/cadence into drivers/pci/host and remove
- all references to the endpoint mode, as requested by Lorenzo.
- The host driver will be moved back into drivers/pci/cadence by Patch 11
-
-- Patch 8:
- fix comparison of func_no to BAR5: compare to epc->max_functions
-
-- Patch 9:
- add new patch to fix support of PCI multi-function devices
-
-- Patch 10:
- change the 'cdns,max-outbound-regions' from optional to mandatory as requested
- by Kishon.
-
-- Patch 11:
- take Kishon's comments into account as much as I could.
-
-- Other patches: unchanged
-
-
-v3 -> v4:
-- split patch 3 from v3 into patches 3 and 4.
-- remove unused cdns_pcie_reset_outbound_region() from old patch 6
-  (new patch 7).
-- other patches are unchanged.
-
-v2 -> v3:
-
-- rebase on today's linux-pci/next (20180110) 
-
-patch1:
-- rework the commit message of patch 1 and add two new comments on why endpoint
-  library users must be linked after the endpoint library itself and why
-  the dwc rule uses obj-y instead of obj-$(CONFIG_PCIE_CONFIG_DW).
-- update patch 1 to add missing ifdef CONFIG_PCI / endif in
-  drivers/pci/dwc/Makefile around the obj-$(CONFIG_ARM64) += pcie-hisi.o rule,
-  like for the other obj-$(CONFIG_ARM64) rules in drivers/pci/host/Makefile.
-
-patch2: unchanged
-
-patch3:
-- update patch 3 so the bridge hooks/members initialization is left to the
-  host bridges probe routines.
-
-patch4: unchanged
-
-patch5:
-- collect 'Reviewed-by' tag from Rob Herring for the DT bindings.
-
-patch6:
-- remove explanation in the commit message on why obj-$(CONFIG_PCIE_CANDENCE) is
-  placed after obj-$(CONFIG_PCI_ENDPOINT) in drivers/pci/Makefile since a
-  comment on it has been added into patch1.
-- remove menuconfig PCI_CADENCE in drivers/pci/cadence/Kconfig to match
-  drivers/pci/dwc/Kconfig.
-- adapt patch6 to the changes done in patch3 for the pci_host_probe() function.
-
-v1 -> v2:
-- add new properties in the device-tree bindings: 'cdns,max-outbound-regions'
-  and 'cdns,no-bar-match-nbits'.
-- add a new patch to regroup all makefile rules in drivers/pci/Makefile, hence
-  cleaning drivers/Makefile up.
-- change the license text to use the recommanded format:
-  // SPDX-License-Identifier: GPL-2.0
-- add a new patch updating the API of the EPC library to add support to
-  multi-function devices.
-- add a 2 new patches to share more common code between host controller drivers
-- remove some useless tests
-- add more comments in both drivers.
-- fix DT bindings examples
-- remove useless init of the primary, secondary and sub-ordinate bus numbers in
-  the PCI configuration space of the root port.
-- remove cdns_pcie_ep_stop() function and rework cdns_pcie_ep_start() function
-
-Cyrille Pitchen (10):
-  PCI: Regroup all PCI related entries into drivers/pci/Makefile
-  PCI: OF: Add generic function to parse and allocate PCI resources
-  PCI: generic: fix missing call of pci_free_resource_list()
-  PCI: Add generic function to probe PCI host controllers
-  PCI: Add vendor ID for Cadence
-  PCI: cadence: Add host driver for Cadence PCIe controller
-  PCI: endpoint: Add the function number as argument to EPC ops
-  PCI: endpoint: Fix EPF device name to support multi-function devices
-  dt-bindings: PCI: cadence: Add DT bindings for Cadence PCIe endpoint
-    controller
-  PCI: cadence: Add EndPoint Controller driver for Cadence PCIe
-    controller
-
-Scott Telford (1):
-  dt-bindings: PCI: cadence: Add DT bindings for Cadence PCIe host
-    controller
-
- .../devicetree/bindings/pci/cdns,cdns-pcie-ep.txt  |  22 +
- .../bindings/pci/cdns,cdns-pcie-host.txt           |  60 +++
- MAINTAINERS                                        |   7 +
- drivers/Makefile                                   |   5 +-
- drivers/pci/Kconfig                                |   2 +
- drivers/pci/Makefile                               |  14 +-
- drivers/pci/cadence/Kconfig                        |  27 +
- drivers/pci/cadence/Makefile                       |   4 +
- drivers/pci/cadence/pcie-cadence-ep.c              | 542 +++++++++++++++++++++
- drivers/pci/cadence/pcie-cadence-host.c            | 336 +++++++++++++
- drivers/pci/cadence/pcie-cadence.c                 | 126 +++++
- drivers/pci/cadence/pcie-cadence.h                 | 311 ++++++++++++
- drivers/pci/dwc/Makefile                           |   2 +
- drivers/pci/dwc/pcie-designware-ep.c               |  20 +-
- drivers/pci/endpoint/functions/pci-epf-test.c      |  41 +-
- drivers/pci/endpoint/pci-ep-cfs.c                  |  46 +-
- drivers/pci/endpoint/pci-epc-core.c                |  62 ++-
- drivers/pci/host/Makefile                          |   2 +
- drivers/pci/host/pci-host-common.c                 |  72 +--
- drivers/pci/of.c                                   |  51 ++
- drivers/pci/probe.c                                |  33 ++
- include/linux/pci-epc.h                            |  43 +-
- include/linux/pci.h                                |  10 +
- include/linux/pci_ids.h                            |   2 +
- 24 files changed, 1693 insertions(+), 147 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt
- create mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
- create mode 100644 drivers/pci/cadence/Kconfig
- create mode 100644 drivers/pci/cadence/Makefile
- create mode 100644 drivers/pci/cadence/pcie-cadence-ep.c
- create mode 100644 drivers/pci/cadence/pcie-cadence-host.c
- create mode 100644 drivers/pci/cadence/pcie-cadence.c
- create mode 100644 drivers/pci/cadence/pcie-cadence.h
-
+diff --git a/drivers/Makefile b/drivers/Makefile
+index e06f7f633f73..8189b1edec00 100644
+--- a/drivers/Makefile
++++ b/drivers/Makefile
+@@ -16,10 +16,7 @@ obj-$(CONFIG_PINCTRL)		+= pinctrl/
+ obj-$(CONFIG_GPIOLIB)		+= gpio/
+ obj-y				+= pwm/
+ 
+-obj-$(CONFIG_PCI)		+= pci/
+-obj-$(CONFIG_PCI_ENDPOINT)	+= pci/endpoint/
+-# PCI dwc controller drivers
+-obj-y				+= pci/dwc/
++obj-y				+= pci/
+ 
+ obj-$(CONFIG_PARISC)		+= parisc/
+ obj-$(CONFIG_RAPIDIO)		+= rapidio/
+diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+index bda151788f3f..7eeb969ab86a 100644
+--- a/drivers/pci/Kconfig
++++ b/drivers/pci/Kconfig
+@@ -125,6 +125,7 @@ config PCI_PASID
+ 
+ config PCI_LABEL
+ 	def_bool y if (DMI || ACPI)
++	depends on PCI
+ 	select NLS
+ 
+ config PCI_HYPERV
+diff --git a/drivers/pci/Makefile b/drivers/pci/Makefile
+index c7819b973df7..ddb5aa6640d7 100644
+--- a/drivers/pci/Makefile
++++ b/drivers/pci/Makefile
+@@ -3,12 +3,15 @@
+ # Makefile for the PCI bus specific drivers.
+ #
+ 
+-obj-y		+= access.o bus.o probe.o host-bridge.o remove.o pci.o \
++obj-$(CONFIG_PCI)	+= access.o bus.o probe.o host-bridge.o remove.o pci.o \
+ 			pci-driver.o search.o pci-sysfs.o rom.o setup-res.o \
+ 			irq.o vpd.o setup-bus.o vc.o mmap.o setup-irq.o
+ 
++ifdef CONFIG_PCI
+ obj-$(CONFIG_PROC_FS) += proc.o
+ obj-$(CONFIG_SYSFS) += slot.o
++obj-$(CONFIG_OF) += of.o
++endif
+ 
+ obj-$(CONFIG_PCI_QUIRKS) += quirks.o
+ 
+@@ -44,10 +47,14 @@ obj-$(CONFIG_PCI_ECAM) += ecam.o
+ 
+ obj-$(CONFIG_XEN_PCIDEV_FRONTEND) += xen-pcifront.o
+ 
+-obj-$(CONFIG_OF) += of.o
+-
+ ccflags-$(CONFIG_PCI_DEBUG) := -DDEBUG
+ 
+ # PCI host controller drivers
+ obj-y += host/
+ obj-y += switch/
++
++obj-$(CONFIG_PCI_ENDPOINT)	+= endpoint/
++
++# Endpoint library must be initialized before its users
++# pcie-hisi.o quirks are needed even without CONFIG_PCIE_DW
++obj-y				+= dwc/
+diff --git a/drivers/pci/dwc/Makefile b/drivers/pci/dwc/Makefile
+index 41ba499c96ee..cb35e45cd186 100644
+--- a/drivers/pci/dwc/Makefile
++++ b/drivers/pci/dwc/Makefile
+@@ -27,4 +27,6 @@ obj-$(CONFIG_PCIE_HISI_STB) += pcie-histb.o
+ # ARM64 and use internal ifdefs to only build the pieces we need
+ # depending on whether ACPI, the DT driver, or both are enabled.
+ 
++ifdef CONFIG_PCI
+ obj-$(CONFIG_ARM64) += pcie-hisi.o
++endif
+diff --git a/drivers/pci/host/Makefile b/drivers/pci/host/Makefile
+index 34ec1d88f961..3b1059190867 100644
+--- a/drivers/pci/host/Makefile
++++ b/drivers/pci/host/Makefile
+@@ -34,6 +34,8 @@ obj-$(CONFIG_VMD) += vmd.o
+ # ARM64 and use internal ifdefs to only build the pieces we need
+ # depending on whether ACPI, the DT driver, or both are enabled.
+ 
++ifdef CONFIG_PCI
+ obj-$(CONFIG_ARM64) += pci-thunder-ecam.o
+ obj-$(CONFIG_ARM64) += pci-thunder-pem.o
+ obj-$(CONFIG_ARM64) += pci-xgene.o
++endif
 -- 
 2.11.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
