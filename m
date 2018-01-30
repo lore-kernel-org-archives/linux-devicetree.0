@@ -1,637 +1,131 @@
-From: Felix Brack <fb@ltec.ch>
-Subject: [PATCH] ARM: dts: am33xx: add PDU001 board
-Date: Tue, 30 Jan 2018 15:28:14 +0100
-Message-ID: <1517322494-6756-1-git-send-email-fb@ltec.ch>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 4/4] rtc: isl1208: add support for isl1219 with hwmon for
+ tamper detection
+Date: Tue, 30 Jan 2018 08:41:25 -0600
+Message-ID: <CAL_JsqKEXtL0hvEgFALKaCgW2Go==wj14_dDomdK_hPU23oXLQ@mail.gmail.com>
+References: <20180123121801.4214-1-m.grzeschik@pengutronix.de>
+ <20180123121801.4214-5-m.grzeschik@pengutronix.de> <20180129234146.73hvclxohhme5i2w@rob-hp-laptop>
+ <1517302582.5307.16.camel@diehl.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1517302582.5307.16.camel@diehl.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: bcousson@baylibre.com, tony@atomide.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, fb@ltec.ch
+To: Denis OSTERLAND <denis.osterland@diehl.com>
+Cc: "m.grzeschik@pengutronix.de" <m.grzeschik@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "jdelvare@suse.com" <jdelvare@suse.com>, "alexandre.belloni@free-electrons.com" <alexandre.belloni@free-electrons.com>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support for the PDU001 board from EETS GmbH.
-The board is built around the byteENGINE module AM335X from
-bytes at work AG which in turn is built around a Sitara SoC
-from TI.
+On Tue, Jan 30, 2018 at 2:56 AM, Denis OSTERLAND
+<denis.osterland@diehl.com> wrote:
+> Am Montag, den 29.01.2018, 17:41 -0600 schrieb Rob Herring:
+>> On Tue, Jan 23, 2018 at 01:18:01PM +0100, Michael Grzeschik wrote:
+>> >
+>> > We add support for the ISL1219 chip that got an integrated tamper
+>> > detection function. This patch implements the feature by using an hwmon
+>> > interface.
+>> >
+>> > The ISL1219 can also describe the timestamp of the intrusion
+>> > event. For this we add the documentation of the new interface
+>> > intrusion[0-*]_timestamp.
+>> >
+>> > The devicetree documentation for the ISL1219 device tree
+>> > binding is added with an short example.
+>> >
+>> > Signed-off-by: Michael Grzeschik <m.grzeschik@pengutronix.de>
+>> > Signed-off-by: Denis Osterland <Denis.Osterland@diehl.com>
+>> > ---
+>> >  .../rtc/{intersil,isl1208.txt => isil,isl1208.txt} |  18 +-
+>> >  Documentation/hwmon/sysfs-interface                |   7 +
+>> >  drivers/rtc/rtc-isl1208.c                          | 190 +++++++++++++++++++--
+>> >  3 files changed, 201 insertions(+), 14 deletions(-)
+>> >  rename Documentation/devicetree/bindings/rtc/{intersil,isl1208.txt => isil,isl1208.txt} (57%)
+>> >
+>> > diff --git a/Documentation/devicetree/bindings/rtc/intersil,isl1208.txt b/Documentation/devicetree/bindings/rtc/isil,isl1208.txt
+>> > similarity index 57%
+>> > rename from Documentation/devicetree/bindings/rtc/intersil,isl1208.txt
+>> > rename to Documentation/devicetree/bindings/rtc/isil,isl1208.txt
+>> > index a54e99feae1ca..d549699e1cfc4 100644
+>> > --- a/Documentation/devicetree/bindings/rtc/intersil,isl1208.txt
+>> > +++ b/Documentation/devicetree/bindings/rtc/isil,isl1208.txt
+>> > @@ -1,14 +1,21 @@
+>> > -Intersil ISL1208, ISL1218 I2C RTC/Alarm chip
+>> > +Intersil ISL1208, ISL1218, ISL1219 I2C RTC/Alarm chip
+>> >
+>> >  ISL1208 is a trivial I2C device (it has simple device tree bindings,
+>> >  consisting of a compatible field, an address and possibly an interrupt
+>> >  line).
+>> >
+>> > +ISL1219 supports tamper detection user space representation through
+>> > +case intrusion hwmon sensor.
+>> User space and hwmon are Linux details not relevant to the binding. Just
+>> describe the h/w.
+> OK.
+>>
+>> >
+>> > +ISL1219 has additional pins EVIN and #EVDET for tamper detection.
+>> > +I2C devices support only one irq. #IRQ and #EVDET are open-drain active low,
+>> > +so it is possible layout them to one SoC pin with pull-up.
+>> > +
+>> >  Required properties supported by the device:
+>> >
+>> >   - "compatible": must be one of
+>> >     "isil,isl1208"
+>> >     "isil,isl1218"
+>> > +   "isil,isl1219"
+>> >   - "reg": I2C bus address of the device
+>> >
+>> >  Optional properties:
+>> > @@ -33,3 +40,12 @@ Example isl1208 node with #IRQ pin connected to SoC gpio1 pin 12:
+>> >             interrupt-parent = <&gpio1>;
+>> >             interrupts = <12 IRQ_TYPE_EDGE_FALLING>;
+>> >     };
+>> > +
+>> > +Example isl1219 node with #IRQ pin and #EVDET pin connected to SoC gpio1 pin 12:
+>> > +
+>> > +   isl1219: isl1219@68 {
+>> > +           compatible = "intersil,isl1219";
+>> > +           reg = <0x68>;
+>> > +           interrupts-extended = <&gpio1 12 IRQ_TYPE_EDGE_FALLING>;
+>> With 2 interrupts, you should have 2 values. If they are connected
+>> together, just repeat the connection. Otherwise, you can't tell if EVDET
+>> is a no connect.
+> If I got you right, you suggest an additional IRQ entry to parse.
 
-Signed-off-by: Felix Brack <fb@ltec.ch>
----
- arch/arm/boot/dts/Makefile          |   1 +
- arch/arm/boot/dts/am335x-pdu001.dts | 595 ++++++++++++++++++++++++++++++++++++
- 2 files changed, 596 insertions(+)
- create mode 100644 arch/arm/boot/dts/am335x-pdu001.dts
+Yes.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index d0381e9..9c6f868 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -652,6 +652,7 @@ dtb-$(CONFIG_SOC_AM33XX) += \
- 	am335x-lxm.dtb \
- 	am335x-moxa-uc-8100-me-t.dtb \
- 	am335x-nano.dtb \
-+	am335x-pdu001.dtb \
- 	am335x-pepper.dtb \
- 	am335x-phycore-rdk.dtb \
- 	am335x-shc.dtb \
-diff --git a/arch/arm/boot/dts/am335x-pdu001.dts b/arch/arm/boot/dts/am335x-pdu001.dts
-new file mode 100644
-index 0000000..1ad530a
---- /dev/null
-+++ b/arch/arm/boot/dts/am335x-pdu001.dts
-@@ -0,0 +1,595 @@
-+/*
-+ * pdu001.dts
-+ *
-+ * EETS GmbH PDU001 board device tree file
-+ *
-+ * Copyright (C) 2018 EETS GmbH - http://www.eets.ch/
-+ *
-+ * Copyright (C) 2011, Texas Instruments, Incorporated - http://www.ti.com/
-+ *
-+ * SPDX-License-Identifier:  GPL-2.0+
-+ */
-+
-+/dts-v1/;
-+
-+#include "am33xx.dtsi"
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/leds/leds-pca9532.h>
-+
-+/ {
-+	model = "EETS,PDU001";
-+	compatible = "ti,am33xx";
-+
-+	chosen {
-+		stdout-path = &uart3;
-+	};
-+
-+	cpus {
-+		cpu@0 {
-+			cpu0-supply = <&vdd1_reg>;
-+		};
-+	};
-+
-+	memory {
-+		device_type = "memory";
-+		reg = <0x80000000 0x10000000>; /* 256 MB */
-+	};
-+
-+	vbat: fixedregulator@0 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vbat";
-+		regulator-min-microvolt = <3600000>;
-+		regulator-max-microvolt = <3600000>;
-+		regulator-boot-on;
-+	};
-+
-+	lis3_reg: fixedregulator@1 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "lis3_reg";
-+		regulator-boot-on;
-+	};
-+
-+	panel {
-+		compatible = "ti,tilcdc,panel";
-+		status = "okay";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&lcd_pins_s0>;
-+		panel-info {
-+			ac-bias           = <255>;
-+			ac-bias-intrpt    = <0>;
-+			dma-burst-sz      = <16>;
-+			bpp               = <16>;
-+			fdd               = <0x80>;
-+			sync-edge         = <0>;
-+			sync-ctrl         = <1>;
-+			raster-order      = <0>;
-+			fifo-th           = <0>;
-+		};
-+
-+		display-timings {
-+			240x320p16 {
-+				clock-frequency = <6500000>;
-+				hactive = <240>;
-+				vactive = <320>;
-+				hfront-porch = <6>;
-+				hback-porch = <6>;
-+				hsync-len = <1>;
-+				vback-porch = <6>;
-+				vfront-porch = <6>;
-+				vsync-len = <1>;
-+				hsync-active = <0>;
-+				vsync-active = <0>;
-+				pixelclk-active = <1>;
-+				de-active = <0>;
-+			};
-+		};
-+	};
-+};
-+
-+&am33xx_pinmux {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&clkout2_pin>;
-+
-+	i2c0_pins: pinmux_i2c0_pins {
-+		pinctrl-single,pins = <
-+			AM33XX_IOPAD(0x988, PIN_INPUT_PULLUP | MUX_MODE0)	/* i2c0_sda.i2c0_sda */
-+			AM33XX_IOPAD(0x98c, PIN_INPUT_PULLUP | MUX_MODE0)	/* i2c0_scl.i2c0_scl */
-+		>;
-+	};
-+
-+	i2c1_pins: pinmux_i2c1_pins {
-+		pinctrl-single,pins = <
-+			AM33XX_IOPAD(0x958, PIN_INPUT_PULLUP | MUX_MODE2)	/* spi0_d1.i2c1_sda */
-+			AM33XX_IOPAD(0x95c, PIN_INPUT_PULLUP | MUX_MODE2)	/* spi0_cs0.i2c1_scl */
-+		>;
-+	};
-+
-+	i2c2_pins: pinmux_i2c2_pins {
-+		pinctrl-single,pins = <
-+			AM33XX_IOPAD(0x950, PIN_INPUT_PULLUP | MUX_MODE2)	/* spi0_clk.i2c2_sda */
-+			AM33XX_IOPAD(0x954, PIN_INPUT_PULLUP | MUX_MODE2)	/* spi0_d0.i2c2_scl */
-+		>;
-+	};
-+
-+	spi1_pins: pinmux_spi1_pins {
-+		pinctrl-single,pins = <
-+			AM33XX_IOPAD(0x990, PIN_OUTPUT | MUX_MODE3)		/* mcasp0_aclkx.spi1_sclk */
-+			AM33XX_IOPAD(0x994, PIN_OUTPUT | MUX_MODE3)		/* mcasp0_fsx.spi1_d0 */
-+			AM33XX_IOPAD(0x998, PIN_INPUT_PULLDOWN | MUX_MODE3)	/* mcasp0_axr0.spi1_d1 */
-+			AM33XX_IOPAD(0x99C, PIN_OUTPUT | MUX_MODE3)		/* mcasp0_ahclkr.spi1_cs0 */
-+		>;
-+	};
-+
-+	uart0_pins: pinmux_uart0_pins {
-+		pinctrl-single,pins = <
-+			AM33XX_IOPAD(0x96C, PIN_OUTPUT | MUX_MODE7)		/* uart0_rtsn.gpio1_9 */
-+			AM33XX_IOPAD(0x970, PIN_INPUT_PULLUP | MUX_MODE0)	/* uart0_rxd.uart0_rxd */
-+			AM33XX_IOPAD(0x974, PIN_OUTPUT_PULLDOWN | MUX_MODE0)	/* uart0_txd.uart0_txd */
-+		>;
-+	};
-+
-+	uart1_pins: pinmux_uart1_pins {
-+		pinctrl-single,pins = <
-+			AM33XX_IOPAD(0x980, PIN_INPUT_PULLUP | MUX_MODE0)	/* uart1_rxd.uart1_rxd */
-+			AM33XX_IOPAD(0x984, PIN_OUTPUT_PULLDOWN | MUX_MODE0)	/* uart1_txd.uart1_txd */
-+		>;
-+	};
-+
-+	uart3_pins: pinmux_uart3_pins {
-+		pinctrl-single,pins = <
-+			AM33XX_IOPAD(0x960, PIN_INPUT_PULLUP | MUX_MODE1)	/* spi0_cs1.uart3_rxd */
-+			AM33XX_IOPAD(0x964, PIN_OUTPUT_PULLDOWN | MUX_MODE1)	/* ecap0_in_pwm0_out.uart3_txd */
-+		>;
-+	};
-+
-+	clkout2_pin: pinmux_clkout2_pin {
-+		pinctrl-single,pins = <
-+			AM33XX_IOPAD(0x9b4, PIN_OUTPUT_PULLDOWN | MUX_MODE3)	/* xdma_event_intr1.clkout2 */
-+		>;
-+	};
-+
-+	cpsw_default: cpsw_default {
-+		pinctrl-single,pins = <
-+			/* Port 1 (emac0) */
-+			AM33XX_IOPAD(0x908, PIN_INPUT | MUX_MODE0)		/* mii1_col.mii1_col */
-+			AM33XX_IOPAD(0x90C, PIN_INPUT | MUX_MODE0)		/* mii1_crs.mii1_crs */
-+			AM33XX_IOPAD(0x910, PIN_INPUT | MUX_MODE0)		/* mii1_rxer.mii1_rxer */
-+			AM33XX_IOPAD(0x914, PIN_OUTPUT | MUX_MODE0)		/* mii1_txen.mii1_txen */
-+			AM33XX_IOPAD(0x918, PIN_INPUT | MUX_MODE0)		/* mii1_rxdv.mii1_rxdv */
-+			AM33XX_IOPAD(0x91c, PIN_OUTPUT | MUX_MODE0)		/* mii1_txd3.mii1_txd3 */
-+			AM33XX_IOPAD(0x920, PIN_OUTPUT | MUX_MODE0)		/* mii1_txd2.mii1_txd2 */
-+			AM33XX_IOPAD(0x924, PIN_OUTPUT | MUX_MODE0)		/* mii1_txd1.mii1_txd1 */
-+			AM33XX_IOPAD(0x928, PIN_OUTPUT | MUX_MODE0)		/* mii1_txd0.mii1_txd0 */
-+			AM33XX_IOPAD(0x92c, PIN_INPUT | MUX_MODE0)		/* mii1_txclk.mii1_txclk */
-+			AM33XX_IOPAD(0x930, PIN_INPUT | MUX_MODE0)		/* mii1_rxclk.mii1_rxclk */
-+			AM33XX_IOPAD(0x934, PIN_INPUT | MUX_MODE0)		/* mii1_rxd3.mii1_rxd3 */
-+			AM33XX_IOPAD(0x938, PIN_INPUT | MUX_MODE0)		/* mii1_rxd2.mii1_rxd2 */
-+			AM33XX_IOPAD(0x93c, PIN_INPUT | MUX_MODE0)		/* mii1_rxd1.mii1_rxd1 */
-+			AM33XX_IOPAD(0x940, PIN_INPUT | MUX_MODE0)		/* mii1_rxd0.mii1_rxd0 */
-+
-+			/* Port 2 (emac1) */
-+			AM33XX_IOPAD(0x840, PIN_OUTPUT | MUX_MODE1)		/* mii2_txen.gpmc_a0 */
-+			AM33XX_IOPAD(0x844, PIN_INPUT | MUX_MODE1)		/* mii2_rxdv.gpmc_a1 */
-+			AM33XX_IOPAD(0x848, PIN_OUTPUT | MUX_MODE1)		/* mii2_txd3.gpmc_a2 */
-+			AM33XX_IOPAD(0x84c, PIN_OUTPUT | MUX_MODE1)		/* mii2_txd2.gpmc_a3 */
-+			AM33XX_IOPAD(0x850, PIN_OUTPUT | MUX_MODE1)		/* mii2_txd1.gpmc_a4 */
-+			AM33XX_IOPAD(0x854, PIN_OUTPUT | MUX_MODE1)		/* mii2_txd0.gpmc_a5 */
-+			AM33XX_IOPAD(0x858, PIN_INPUT | MUX_MODE1)		/* mii2_txclk.gpmc_a6 */
-+			AM33XX_IOPAD(0x85c, PIN_INPUT | MUX_MODE1)		/* mii2_rxclk.gpmc_a7 */
-+			AM33XX_IOPAD(0x860, PIN_INPUT | MUX_MODE1)		/* mii2_rxd3.gpmc_a8 */
-+			AM33XX_IOPAD(0x864, PIN_INPUT | MUX_MODE1)		/* mii2_rxd2.gpmc_a9 */
-+			AM33XX_IOPAD(0x868, PIN_INPUT | MUX_MODE1)		/* mii2_rxd1.gpmc_a10 */
-+			AM33XX_IOPAD(0x86C, PIN_INPUT | MUX_MODE1)		/* mii2_rxd0.gpmc_a11 */
-+			AM33XX_IOPAD(0x870, PIN_INPUT | MUX_MODE1)		/* mii2_crs.gpmc_wait0 */
-+			AM33XX_IOPAD(0x874, PIN_INPUT | MUX_MODE1)		/* mii2_rxer.gpmc_wpn */
-+			AM33XX_IOPAD(0x878, PIN_INPUT | MUX_MODE1)		/* mii2_col.gpmc_ben1 */
-+		>;
-+	};
-+
-+	davinci_mdio_default: davinci_mdio_default {
-+		pinctrl-single,pins = <
-+			AM33XX_IOPAD(0x948, PIN_INPUT_PULLUP | SLEWCTRL_FAST | MUX_MODE0)	/* mdio_data.mdio_data */
-+			AM33XX_IOPAD(0x94c, PIN_OUTPUT_PULLUP | MUX_MODE0)			/* mdio_clk.mdio_clk */
-+		>;
-+	};
-+
-+	mmc1_pins: pinmux_mmc1_pins {
-+		/* eMMC */
-+		pinctrl-single,pins = <
-+			AM33XX_IOPAD(0x8f0, PIN_INPUT_PULLUP | MUX_MODE0)	/* mmc0_dat3 */
-+			AM33XX_IOPAD(0x8f4, PIN_INPUT_PULLUP | MUX_MODE0)	/* mmc0_dat2 */
-+			AM33XX_IOPAD(0x8f8, PIN_INPUT_PULLUP | MUX_MODE0)	/* mmc0_dat1 */
-+			AM33XX_IOPAD(0x8fc, PIN_INPUT_PULLUP | MUX_MODE0)	/* mmc0_dat0 */
-+			AM33XX_IOPAD(0x900, PIN_INPUT_PULLUP | MUX_MODE0)	/* mmc0_clk */
-+			AM33XX_IOPAD(0x904, PIN_INPUT_PULLUP | MUX_MODE0)	/* mmc0_cmd */
-+		>;
-+	};
-+
-+	mmc2_pins: pinmux_mmc2_pins {
-+		/* SD cardcage */
-+		pinctrl-single,pins = <
-+			AM33XX_IOPAD(0x80c, PIN_INPUT_PULLUP | MUX_MODE1)	/* gpmc_ad3.mmc1_dat3 */
-+			AM33XX_IOPAD(0x808, PIN_INPUT_PULLUP | MUX_MODE1)	/* gpmc_ad2.mmc1_dat2 */
-+			AM33XX_IOPAD(0x804, PIN_INPUT_PULLUP | MUX_MODE1)	/* gpmc_ad1.mmc1_dat1 */
-+			AM33XX_IOPAD(0x800, PIN_INPUT_PULLUP | MUX_MODE1)	/* gpmc_ad0.mmc1_dat0 */
-+			AM33XX_IOPAD(0x880, PIN_INPUT_PULLUP | MUX_MODE2)	/* gpmc_csn1.mmc1_clk */
-+			AM33XX_IOPAD(0x884, PIN_INPUT_PULLUP | MUX_MODE2)	/* gpmc_csn2.mmc1_cmd */
-+			/* card change signal for frontpanel SD cardcage */
-+			AM33XX_IOPAD(0x890, PIN_INPUT | MUX_MODE7)		/* gpmc_advn_ale.gpio2_2 */
-+		>;
-+	};
-+
-+	lcd_pins_s0: lcd_pins_s0 {
-+		pinctrl-single,pins = <
-+			AM33XX_IOPAD(0x8a0, PIN_OUTPUT | MUX_MODE0)		/* lcd_data0.lcd_data0 */
-+			AM33XX_IOPAD(0x8a4, PIN_OUTPUT | MUX_MODE0)		/* lcd_data1.lcd_data1 */
-+			AM33XX_IOPAD(0x8a8, PIN_OUTPUT | MUX_MODE0)		/* lcd_data2.lcd_data2 */
-+			AM33XX_IOPAD(0x8ac, PIN_OUTPUT | MUX_MODE0)		/* lcd_data3.lcd_data3 */
-+			AM33XX_IOPAD(0x8b0, PIN_OUTPUT | MUX_MODE0)		/* lcd_data4.lcd_data4 */
-+			AM33XX_IOPAD(0x8b4, PIN_OUTPUT | MUX_MODE0)		/* lcd_data5.lcd_data5 */
-+			AM33XX_IOPAD(0x8b8, PIN_OUTPUT | MUX_MODE0)		/* lcd_data6.lcd_data6 */
-+			AM33XX_IOPAD(0x8bc, PIN_OUTPUT | MUX_MODE0)		/* lcd_data7.lcd_data7 */
-+			AM33XX_IOPAD(0x8c0, PIN_OUTPUT | MUX_MODE0)		/* lcd_data8.lcd_data8 */
-+			AM33XX_IOPAD(0x8c4, PIN_OUTPUT | MUX_MODE0)		/* lcd_data9.lcd_data9 */
-+			AM33XX_IOPAD(0x8c8, PIN_OUTPUT | MUX_MODE0)		/* lcd_data10.lcd_data10 */
-+			AM33XX_IOPAD(0x8cc, PIN_OUTPUT | MUX_MODE0)		/* lcd_data11.lcd_data11 */
-+			AM33XX_IOPAD(0x8d0, PIN_OUTPUT | MUX_MODE0)		/* lcd_data12.lcd_data12 */
-+			AM33XX_IOPAD(0x8d4, PIN_OUTPUT | MUX_MODE0)		/* lcd_data13.lcd_data13 */
-+			AM33XX_IOPAD(0x8d8, PIN_OUTPUT | MUX_MODE0)		/* lcd_data14.lcd_data14 */
-+			AM33XX_IOPAD(0x8dc, PIN_OUTPUT | MUX_MODE0)		/* lcd_data15.lcd_data15 */
-+			AM33XX_IOPAD(0x8e0, PIN_OUTPUT | MUX_MODE0)		/* lcd_vsync.lcd_vsync */
-+			AM33XX_IOPAD(0x8e4, PIN_OUTPUT | MUX_MODE0)		/* lcd_hsync.lcd_hsync */
-+			AM33XX_IOPAD(0x8e8, PIN_OUTPUT | MUX_MODE0)		/* lcd_pclk.lcd_pclk */
-+			AM33XX_IOPAD(0x8ec, PIN_OUTPUT | MUX_MODE0)		/* lcd_ac_bias_en.lcd_ac_bias_en */
-+		>;
-+	};
-+
-+	dcan0_pins: pinmux_dcan0_pins {
-+		pinctrl-single,pins = <
-+			AM33XX_IOPAD(0x978, PIN_OUTPUT | MUX_MODE2)		/* uart1_ctsn.d_can0_tx */
-+			AM33XX_IOPAD(0x97c, PIN_INPUT_PULLDOWN | MUX_MODE2)	/* uart1_rtsn.d_can0_rx */
-+		>;
-+	};
-+};
-+
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_pins>;
-+
-+	rts-gpio = <&gpio1 9 GPIO_ACTIVE_HIGH>;
-+	rs485-rts-active-high;
-+	rs485-rts-delay = <0 0>;
-+	linux,rs485-enabled-at-boot-time;
-+
-+	status = "okay";
-+};
-+
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart1_pins>;
-+
-+	status = "okay";
-+};
-+
-+&uart3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart3_pins>;
-+
-+	status = "okay";
-+};
-+
-+&i2c0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c0_pins>;
-+
-+	status = "okay";
-+	clock-frequency = <400000>;
-+
-+	tps: tps@2d {
-+		reg = <0x2d>;
-+	};
-+
-+	m2_eeprom: m2_eeprom@50 {
-+		compatible = "atmel,24c256";
-+		reg = <0x50>;
-+		status = "okay";
-+	};
-+};
-+
-+&i2c1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c1_pins>;
-+
-+	status = "okay";
-+	clock-frequency = <100000>;
-+
-+	board_24aa025e48: board_24aa025e48@50 {
-+		compatible = "atmel,24c02";
-+		reg = <0x50>;
-+	};
-+
-+	backplane_24aa025e48: backplane_24aa025e48@53 {
-+		compatible = "atmel,24c02";
-+		reg = <0x53>;
-+	};
-+
-+	pca9532: pca9532@60 {
-+		compatible = "nxp,pca9532";
-+		reg = <0x60>;
-+		psc0 = <0x97>;
-+		pwm0 = <0x80>;
-+		psc1 = <0x97>;
-+		pwm1 = <0x10>;
-+
-+		run.red@0 {
-+			type = <PCA9532_TYPE_LED>;
-+		};
-+		run.green@1 {
-+			type = <PCA9532_TYPE_LED>;
-+			default-state = "on";
-+		};
-+		s2.red@2 {
-+			type = <PCA9532_TYPE_LED>;
-+		};
-+		s2.green@3 {
-+			type = <PCA9532_TYPE_LED>;
-+		};
-+		s1.yellow@4 {
-+			type = <PCA9532_TYPE_LED>;
-+		};
-+		s1.green@5 {
-+			type = <PCA9532_TYPE_LED>;
-+		};
-+	};
-+
-+	pca9530: pca9530@61 {
-+		compatible = "nxp,pca9530";
-+		reg = <0x61>;
-+
-+		tft-panel@0 {
-+			type = <PCA9532_TYPE_LED>;
-+			linux,default-trigger = "backlight";
-+			default-state = "on";
-+		};
-+	};
-+
-+	mcp79400: mcp79400@6f {
-+		compatible = "microchip,mcp7940x";
-+		reg = <0x6f>;
-+	};
-+};
-+
-+&i2c2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c2_pins>;
-+
-+	status = "okay";
-+	clock-frequency = <100000>;
-+};
-+
-+&spi1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&spi1_pins>;
-+	ti,pindir-d0-out-d1-in;
-+	status = "okay";
-+
-+	cfaf240320a032t {
-+		compatible = "orisetech,otm3225a";
-+		reg = <0>;
-+		spi-max-frequency = <1000000>;
-+		// SPI mode 3
-+		spi-cpol;
-+		spi-cpha;
-+		status = "okay";
-+	};
-+};
-+
-+&usb {
-+	status = "okay";
-+};
-+
-+&usb_ctrl_mod {
-+	status = "okay";
-+};
-+
-+&usb0_phy {
-+	status = "okay";
-+};
-+
-+&usb1_phy {
-+	status = "okay";
-+};
-+
-+&usb0 {
-+	status = "okay";
-+};
-+
-+&usb1 {
-+	status = "okay";
-+};
-+
-+&cppi41dma  {
-+	status = "okay";
-+};
-+
-+/*
-+ * Disable soc's rtc as we have no VBAT for it. This makes the board
-+ * rtc (Microchip MCP79400) the default rtc device 'rtc0'.
-+ */
-+&rtc {
-+	status = "disabled";
-+};
-+
-+&lcdc {
-+	status = "okay";
-+};
-+
-+&elm {
-+	status = "okay";
-+};
-+
-+#include "tps65910.dtsi"
-+
-+&tps {
-+	vcc1-supply = <&vbat>;
-+	vcc2-supply = <&vbat>;
-+	vcc3-supply = <&vbat>;
-+	vcc4-supply = <&vbat>;
-+	vcc5-supply = <&vbat>;
-+	vcc6-supply = <&vbat>;
-+	vcc7-supply = <&vbat>;
-+	vccio-supply = <&vbat>;
-+
-+	regulators {
-+		vrtc_reg: regulator@0 {
-+			regulator-name = "ldo_vrtc";
-+			regulator-always-on;
-+		};
-+
-+		vio_reg: regulator@1 {
-+			regulator-name = "buck_vdd_ddr";
-+			regulator-always-on;
-+		};
-+
-+		vdd1_reg: regulator@2 {
-+			/* VDD_MPU voltage limits */
-+			regulator-name = "buck_vdd_mpu";
-+			regulator-min-microvolt = <912500>;
-+			regulator-max-microvolt = <1312500>;
-+			regulator-boot-on;
-+			regulator-always-on;
-+		};
-+
-+		vdd2_reg: regulator@3 {
-+			/* VDD_CORE voltage limits */
-+			regulator-name = "buck_vdd_core";
-+			regulator-min-microvolt = <912500>;
-+			regulator-max-microvolt = <1150000>;
-+			regulator-boot-on;
-+			regulator-always-on;
-+		};
-+
-+		vdd3_reg: regulator@4 {
-+			regulator-name = "boost_res";
-+			regulator-always-on;
-+		};
-+
-+		vdig1_reg: regulator@5 {
-+			regulator-name = "ldo_vdig1";
-+			regulator-always-on;
-+		};
-+
-+		vdig2_reg: regulator@6 {
-+			regulator-name = "ldo_vdig2";
-+			regulator-always-on;
-+		};
-+
-+		vpll_reg: regulator@7 {
-+			regulator-name = "ldo_vpll";
-+			regulator-always-on;
-+		};
-+
-+		vdac_reg: regulator@8 {
-+			regulator-name = "ldo_vdac";
-+			regulator-always-on;
-+		};
-+
-+		vaux1_reg: regulator@9 {
-+			regulator-name = "ldo_vaux1";
-+			regulator-always-on;
-+		};
-+
-+		vaux2_reg: regulator@10 {
-+			regulator-name = "ldo_vaux2";
-+			regulator-always-on;
-+		};
-+
-+		vaux33_reg: regulator@11 {
-+			regulator-name = "ldo_vaux33";
-+			regulator-always-on;
-+		};
-+
-+		vmmc_reg: regulator@12 {
-+			regulator-name = "ldo_vmmc";
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <3300000>;
-+			regulator-always-on;
-+		};
-+
-+		vbb_reg: regulator@13 {
-+			regulator-name = "bat_vbb";
-+		};
-+	};
-+};
-+
-+&mac {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&cpsw_default>;
-+	dual_emac;			/* no switch, two distinct MACs */
-+	status = "okay";
-+};
-+
-+&davinci_mdio {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&davinci_mdio_default>;
-+	status = "okay";
-+};
-+
-+&cpsw_emac0 {
-+	phy_id = <&davinci_mdio>, <0>;
-+	phy-mode = "mii";
-+	dual_emac_res_vlan = <1>;
-+};
-+
-+&cpsw_emac1 {
-+	phy_id = <&davinci_mdio>, <1>;
-+	phy-mode = "mii";
-+	dual_emac_res_vlan = <2>;
-+};
-+
-+&tscadc {
-+	status = "okay";
-+	tsc {
-+		ti,wires = <4>;
-+		ti,x-plate-resistance = <200>;
-+		ti,coordinate-readouts = <5>;
-+		ti,wire-config = <0x01 0x10 0x22 0x33>;
-+		ti,charge-delay = <0x400>;
-+	};
-+
-+	adc {
-+		ti,adc-channels = <4 5 6 7>;
-+	};
-+};
-+
-+&mmc1 {
-+	status = "okay";
-+	vmmc-supply = <&vmmc_reg>;
-+	bus-width = <4>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc1_pins>;
-+	non-removable;
-+};
-+
-+&mmc2 {
-+	status = "okay";
-+	vmmc-supply = <&vmmc_reg>;
-+	bus-width = <4>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc2_pins>;
-+	cd-gpios = <&gpio2 2 GPIO_ACTIVE_LOW>;
-+};
-+
-+&sham {
-+	status = "okay";
-+};
-+
-+&aes {
-+	status = "okay";
-+};
-+
-+&dcan0 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&dcan0_pins>;
-+};
--- 
-2.7.4
+> A short example, #IRQ pin connected to gpio1 pin 12 and
+> #EVDET pin connected to gpio2 pin 24:
+>
+> isl1219: rtc@68 {
+>         compatible = "intersil,isl1219";
+>         reg = <0x68>;
+>         interrupt-names = "irq", "evdet";
+>         interrupts-extended = <&gpio1 12 IRQ_TYPE_EDGE_FALLING>,
+>                 <&gpio2 24 IRQ_TYPE_EDGE_FALLING>;
+> };
+>
+> In driver implementation we need only one interrupt, because we can
+> determinate action to take based on value of status register.
+
+That's fine. The binding describes the hardware. Drivers can support
+as much or as little as they like.
+
+> In current implementation there was no need to do some additional
+> OF parsing, everything is done by I2C generic code.
+> I guess, it is not much additional work to do so, but I am not sure
+> if it´s worthwhile.
+
+If you don't care about the 2nd interrupt, I don't think you'd have to
+change anything.
+
+>>
+>> There's not much point in having an example for every compatible. This
+>> binding is simple enough, one should be enough.
+> Shell we remove the example without an interrupt?
+
+The existing example has a single interrupt, right? That should be
+enough. You just need to document for the interrupts property which
+devices have 2 interrupts and what the order is.
+
+Rob
