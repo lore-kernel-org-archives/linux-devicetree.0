@@ -1,105 +1,34 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/4] dt-bindings: dwc3: add binding documentation for
- UniPhier dwc3 glue driver
-Date: Mon, 29 Jan 2018 18:06:53 -0600
-Message-ID: <20180130000653.rvxqttpwz2mf2yrm@rob-hp-laptop>
-References: <1516712454-2915-1-git-send-email-hayashi.kunihiko@socionext.com>
- <1516712454-2915-2-git-send-email-hayashi.kunihiko@socionext.com>
+Subject: Re: [PATCH v2 2/2] PCI: histb: add an optional regulator for PCIe
+ port power control
+Date: Mon, 29 Jan 2018 18:07:43 -0600
+Message-ID: <20180130000743.xj43cyaoltj2lqmj@rob-hp-laptop>
+References: <1516722337-1533-1-git-send-email-shawn.guo@linaro.org>
+ <1516722337-1533-3-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1516712454-2915-2-git-send-email-hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kunihiko Hayashi <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Cc: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Masami Hiramatsu <masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <1516722337-1533-3-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jianguo Sun <sunjianguo1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, project-aspen-dev-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 23, 2018 at 10:00:51PM +0900, Kunihiko Hayashi wrote:
-> Add devicetree binding documentation for dwc3 glue driver implemented
-> on Socionext UniPhier SoCs.
+On Tue, Jan 23, 2018 at 11:45:37PM +0800, Shawn Guo wrote:
+> The power supply to PCIe port are often controlled by GPIO on some board
+> designs.  Let's add an optional regulator which can be backed by GPIO to
+> control the power.
 > 
-> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+> Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > ---
->  .../devicetree/bindings/usb/dwc3-uniphier.txt      | 58 ++++++++++++++++++++++
->  1 file changed, 58 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/usb/dwc3-uniphier.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/dwc3-uniphier.txt b/Documentation/devicetree/bindings/usb/dwc3-uniphier.txt
-> new file mode 100644
-> index 0000000..677e072
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/dwc3-uniphier.txt
-> @@ -0,0 +1,58 @@
-> +UniPhier DWC3 glue layer
-> +
-> +This describes the devicetree bindings for dwc3-uniphier driver implemented on
-> +Socionext UniPhier SoCs.
-> +
-> +Required properties:
-> +- compatible:
-> +  - "socionext,uniphier-pxs2-dwc3" : For UniPhier PXs2 SoC
-> +  - "socionext,uniphier-ld20-dwc3" : For UniPhier LD20 SoC
-> +- reg: Address and range of the glue logic
-> +- clocks: List of phandles for the clocks, and the number of phandles depends
-> +	  on SoC platform.
+>  .../bindings/pci/hisilicon-histb-pcie.txt           |  1 +
 
-Number of clocks needs to be specific. It should be fixed per 
-compatible.
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-> +
-> +Optional properties:
-> +- resets: List of phandles for the resets, and the number of phandles depends
-> +	on SoC platform.
-
-Same here.
-
-> +- nvmem-cells: Phandles to nvmem cell that contains the trimming data.
-> +	Available only for LD20, and if unspecified, default value is used.
-> +- nvmem-cell-names: Should be the following names, which correspond to each
-> +	nvmem-cells. N is the number indicating a port of phy.
-> +	All of the 3 parameters associated with the following names are
-> +	required for each port, if any one is omitted, the trimming data
-> +	of the port will not be set at all.
-> +	- "rtermN", "sel_tN", "hs_iN" : Each cell name for phy parameters
-> +
-> +Required child node:
-> +A child node must exist to represent the core DWC3 IP block. The name of
-> +the node is not important. The content of the node is defined in dwc3.txt.
-> +
-> +Example:
-> +
-> +	usb: usb@65b00000 {
-> +		compatible = "socionext,uniphier-ld20-dwc3";
-> +		reg = <0x65b00000 0x1000>;
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		clocks = <&sys_clk 14>, <&sys_clk 16>, <&sys_clk 17>;
-> +		resets = <&sys_rst 12>, <&sys_rst 16>, <&sys_rst 17>,
-> +			 <&sys_rst 18>, <&sys_rst 19>;
-> +		nvmem-cells = <&usb_rterm0>, <&usb_rterm1>,
-> +			      <&usb_rterm2>, <&usb_rterm3>,
-> +			      <&usb_sel_t0>, <&usb_sel_t1>,
-> +			      <&usb_sel_t2>, <&usb_sel_t3>,
-> +			      <&usb_hs_i0>,  <&usb_hs_i0>,
-> +			      <&usb_hs_i2>,  <&usb_hs_i2>;
-> +		nvmem-cell-names = "rterm0", "rterm1", "rterm2", "rterm3",
-> +				   "sel_t0", "sel_t1", "sel_t2", "sel_t3",
-> +				   "hs_i0",  "hs_i1",  "hs_i2",  "hs_i3";
-> +		ranges;
-> +
-> +		dwc3@65a00000 {
-> +			compatible = "snps,dwc3";
-> +			reg = <0x65a00000 0xcd00>;
-> +			interrupt-names = "host";
-> +			interrupts = <0 134 4>;
-> +			dr_mode = "host";
-> +		};
-> +	};
-> -- 
-> 2.7.4
-> 
+>  drivers/pci/dwc/pcie-histb.c                        | 21 +++++++++++++++++++++
+>  2 files changed, 22 insertions(+)
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
