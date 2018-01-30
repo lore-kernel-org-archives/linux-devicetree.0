@@ -1,67 +1,28 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v2 1/5] dt-bindings: pwrap: mediatek: add pwrap support
- for MT6797
-Date: Tue, 30 Jan 2018 13:58:28 +0100
-Message-ID: <ffcadc29-c6f2-eb8c-b662-1c0016648cbc@gmail.com>
-References: <20180129090944.28687-1-argus.lin@mediatek.com>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: [PATCH v5 1/2] dt-bindings: media: Add Allwinner V3s Camera
+ Sensor Interface (CSI)
+Date: Tue, 30 Jan 2018 15:02:49 +0200
+Message-ID: <20180130130249.o3l7iflpee6i6ecq@kekkonen.localdomain>
+References: <1515639823-35782-1-git-send-email-yong.deng@magewell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180129090944.28687-1-argus.lin@mediatek.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1515639823-35782-1-git-send-email-yong.deng@magewell.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: argus.lin@mediatek.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
-Cc: Chenglin Xu <chenglin.xu@mediatek.com>, Sean Wang <sean.wang@mediatek.com>, wsd_upstream@mediatek.com, henryc.chen@mediatek.com, flora.fu@mediatek.com, Chen Zhong <chen.zhong@mediatek.com>, Christophe Jaillet <christophe.jaillet@wanadoo.fr>, "shailendra . v" <shailendra.v@samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+To: Yong Deng <yong.deng@magewell.com>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Randy Dunlap <rdunlap@infradead.org>, Hans Verkuil <hans.verkuil@cisco.com>, Stanimir Varbanov <stanimir.varbanov@linaro.org>, Hugues Fruchet <hugues.fruchet@st.com>, Yannick Fertre <yannick.fertre@st.com>, Philipp Zabel <p.zabel@pengutronix.de>, Arnd Bergmann <arnd@arndb.de>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>, Rick Chang <rick.chang@mediatek.com>, linux-media@vger.kernel.org, devicetree@vge
 List-Id: devicetree@vger.kernel.org
 
+Hi Yong,
 
+On Thu, Jan 11, 2018 at 11:03:43AM +0800, Yong Deng wrote:
+> Add binding documentation for Allwinner V3s CSI.
+> 
+> Signed-off-by: Yong Deng <yong.deng@magewell.com>
 
-On 01/29/2018 10:09 AM, argus.lin@mediatek.com wrote:
-> From: Argus Lin <argus.lin@mediatek.com>
-> 
-> We add pwrap support for MT6797 SoCs.
-> 
-> Signed-off-by: Argus Lin <argus.lin@mediatek.com>
-> ---
->  Documentation/devicetree/bindings/soc/mediatek/pwrap.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/soc/mediatek/pwrap.txt b/Documentation/devicetree/bindings/soc/mediatek/pwrap.txt
-> index bf80e3f96f8c..f9987c30f0d5 100644
-> --- a/Documentation/devicetree/bindings/soc/mediatek/pwrap.txt
-> +++ b/Documentation/devicetree/bindings/soc/mediatek/pwrap.txt
-> @@ -19,6 +19,7 @@ IP Pairing
->  Required properties in pwrap device node.
->  - compatible:
->  	"mediatek,mt2701-pwrap" for MT2701/7623 SoCs
-> +	"mediatek,mt6797-pwrap" for MT6797 SoCs
+Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 
-Looks good to me. When you send the new series, would you mind to add a cover
-letter in which you describe which changes you made in every version of the
-patch series? That makes the reviewing for me much easier :)
-
-Thanks!
-
->  	"mediatek,mt7622-pwrap" for MT7622 SoCs
->  	"mediatek,mt8135-pwrap" for MT8135 SoCs
->  	"mediatek,mt8173-pwrap" for MT8173 SoCs
-> -- 
-> 2.12.5
-> 
-> ************* Email Confidentiality Notice
->  ********************
-> The information contained in this e-mail message (including any 
-> attachments) may be confidential, proprietary, privileged, or otherwise
-> exempt from disclosure under applicable laws. It is intended to be 
-> conveyed only to the designated recipient(s). Any use, dissemination, 
-> distribution, printing, retaining or copying of this e-mail (including its 
-> attachments) by unintended recipient(s) is strictly prohibited and may 
-> be unlawful. If you are not an intended recipient of this e-mail, or believe
->  
-> that you have received this e-mail in error, please notify the sender 
-> immediately (by replying to this e-mail), delete any and all copies of 
-> this e-mail (including any attachments) from your system, and do not
-> disclose the content of this e-mail to any other person. Thank
->  you!
-> 
+-- 
+Sakari Ailus
+sakari.ailus@linux.intel.com
