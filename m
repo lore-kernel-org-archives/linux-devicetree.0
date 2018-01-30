@@ -1,116 +1,71 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH RFC 2/4] dt-bindings/interrupt-controller: pdc: descibe
- PDC device binding
-Date: Tue, 30 Jan 2018 09:20:12 -0600
-Message-ID: <20180130152012.ucjmaw3nlim4d4fr@rob-hp-laptop>
-References: <20180123175656.11942-1-ilina@codeaurora.org>
- <20180123175656.11942-3-ilina@codeaurora.org>
+From: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
+Subject: Re: [PATCH 2/2] clk: stm32: Add DSI clock for STM32F469 Board
+Date: Tue, 30 Jan 2018 15:22:16 +0000
+Message-ID: <df882957-9d04-cda8-abd4-0b731ffa62d3@st.com>
+References: <1516286980-8603-1-git-send-email-gabriel.fernandez@st.com>
+ <1516286980-8603-3-git-send-email-gabriel.fernandez@st.com>
+ <20180129185624.zesocq2siiikwnog@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180123175656.11942-3-ilina@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Lina Iyer <ilina@codeaurora.org>
-Cc: tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, sboyd@codeaurora.org, rnayak@codeaurora.org, asathyak@codeaurora.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180129185624.zesocq2siiikwnog@rob-hp-laptop>
+Content-Language: en-US
+Content-ID: <18E21C1388473A46841D89185BBFA011@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Nicolas Pitre <nico@linaro.org>, "daniel.thompson@linaro.org" <daniel.thompson@linaro.org>, Philippe CORNU <philippe.cornu@st.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "gabriel.fernandez.st@gmail.com" <gabriel.fernandez.st@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 23, 2018 at 10:56:54AM -0700, Lina Iyer wrote:
-> From: Archana Sathyakumar <asathyak@codeaurora.org>
-> 
-> Add device binding documentation for the PDC Interrupt controller on
-> QCOM SoC's like the SDM845. The interrupt-controller can be used to
-> sense edge low interrupts and wakeup interrupts when the GIC is
-> non-operational.
-> 
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Archana Sathyakumar <asathyak@codeaurora.org>
-> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
-> ---
->  .../bindings/interrupt-controller/qcom,pdc.txt     | 55 ++++++++++++++++++++++
->  1 file changed, 55 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
-> new file mode 100644
-> index 000000000000..c4592bbf678d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
-> @@ -0,0 +1,55 @@
-> +PDC interrupt controller
-> +
-> +Qualcomm Technologies Inc. SoCs based on the RPM Hardened archicture have a
-> +Power Domain Controller (PDC) that is on always-on domain. In addition to
-> +providing power control for the power domains, the hardware also has an
-> +interrupt controller that can be used to help detect edge low interrupts as
-> +well detect interrupts when the GIC is non-operational.
-> +
-> +GIC is parent interrupt controller at the highest level. Platform interrupt
-> +controller PDC is next in hierarchy, followed by others. This driver only
-> +configures the interrupts, does not handle them.
-> +
-> +Properties:
-> +
-> +- compatible:
-> +	Usage: required
-> +	Value type: <string>
-> +	Definition: Should contain "qcom,pdc" and "qcom,pdc-<target>"
-> +		    - "qcom,pdc-sdm845": For sdm845 pin data
-
-pin data?
-
-Convention is <soc>-<ip block>
-
-Need to make the order of compatibles clear. Generally that is done with 
-'followed by "qcom,pdc"' after the list of compatibles. But then, do you 
-really need a fallback. This seems like a block that would change 
-frequently. If there's not more than 2 or 3 chips with the same block, 
-don't do a fallback.
-
-> +
-> +- reg:
-> +	Usage: required
-> +	Value type: <prop-encoded-array>
-> +	Definition: Specifies the base physical address for PDC hardware.
-> +
-> +- interrupt-cells:
-> +	Usage: required
-> +	Value type: <u32>
-> +	Definition: Specifies the number of cells needed to encode an interrupt
-> +		    source.
-> +		    Value must be 3.
-> +		    The encoding of these cells are same as described in [1].
-> +
-> +- interrupt-parent:
-> +	Usage: required
-> +	Value type: <phandle>
-> +	Definition: Specifies the interrupt parent necessary for hierarchical
-> +		    domain to operate.
-> +
-> +- interrupt-controller:
-> +	Usage: required
-> +	Value type: <bool>
-> +	Definition: Identifies the node as an interrupt controller.
-> +
-> +Example:
-> +
-> +	pdc: interrupt-controller@b220000 {
-> +		compatible = "qcom,pdc", "qcom,pdc-sdm845";
-
-This is backwards.
-
-> +		reg = <0xb220000 0x30000>;
-> +		#interrupt-cells = <3>;
-> +		interrupt-parent = <&intc>;
-> +		interrupt-controller;
-> +	};
-> +
-> +[1]. Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgUm9iLA0KDQpUaGFua3MgZm9yIHJldmlld2luZy4NCg0KDQpPbiAwMS8yOS8yMDE4IDA3OjU2
+IFBNLCBSb2IgSGVycmluZyB3cm90ZToNCj4gT24gVGh1LCBKYW4gMTgsIDIwMTggYXQgMDM6NDk6
+NDBQTSArMDEwMCwgZ2FicmllbC5mZXJuYW5kZXpAc3QuY29tIHdyb3RlOg0KPj4gRnJvbTogR2Fi
+cmllbCBGZXJuYW5kZXogPGdhYnJpZWwuZmVybmFuZGV6QHN0LmNvbT4NCj4+DQo+PiBUaGlzIHBh
+dGNoIGFkZHMgRFNJIGNsb2NrIGZvciBTVE0zMkY0NjkgYm9hcmQNCj4+DQo+PiBTaWduZWQtb2Zm
+LWJ5OiBHYWJyaWVsIEZlcm5hbmRleiA8Z2FicmllbC5mZXJuYW5kZXpAc3QuY29tPg0KPj4gLS0t
+DQo+PiAgIGRyaXZlcnMvY2xrL2Nsay1zdG0zMmY0LmMgICAgICAgICAgICAgICAgIHwgMTEgKysr
+KysrKysrKy0NCj4+ICAgaW5jbHVkZS9kdC1iaW5kaW5ncy9jbG9jay9zdG0zMmZ4LWNsb2NrLmgg
+fCAgMyArKy0NCj4+ICAgMiBmaWxlcyBjaGFuZ2VkLCAxMiBpbnNlcnRpb25zKCspLCAyIGRlbGV0
+aW9ucygtKQ0KPj4NCj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2Nsay9jbGstc3RtMzJmNC5jIGIv
+ZHJpdmVycy9jbGsvY2xrLXN0bTMyZjQuYw0KPj4gaW5kZXggZGE0NGY4ZC4uM2MyODc5OCAxMDA2
+NDQNCj4+IC0tLSBhL2RyaXZlcnMvY2xrL2Nsay1zdG0zMmY0LmMNCj4+ICsrKyBiL2RyaXZlcnMv
+Y2xrL2Nsay1zdG0zMmY0LmMNCj4+IEBAIC01MjEsNyArNTIxLDcgQEAgc3RydWN0IHN0bTMyZjRf
+cGxsX2RhdGEgew0KPj4gICB9Ow0KPj4gICANCj4+ICAgc3RhdGljIGNvbnN0IHN0cnVjdCBzdG0z
+MmY0X3BsbF9kYXRhIHN0bTMyZjQ2OV9wbGxbTUFYX1BMTF9ESVZdID0gew0KPj4gLQl7IFBMTCwJ
+ICAgNTAsIHsgInBsbCIsCSAgICAgInBsbC1xIiwgICAgTlVMTAkgICAgfSB9LA0KPj4gKwl7IFBM
+TCwJICAgNTAsIHsgInBsbCIsCSAgICAgInBsbC1xIiwgICAgInBsbC1yIiAgICB9IH0sDQo+PiAg
+IAl7IFBMTF9JMlMsIDUwLCB7ICJwbGxpMnMtcCIsICJwbGxpMnMtcSIsICJwbGxpMnMtciIgfSB9
+LA0KPj4gICAJeyBQTExfU0FJLCA1MCwgeyAicGxsc2FpLXAiLCAicGxsc2FpLXEiLCAicGxsc2Fp
+LXIiIH0gfSwNCj4+ICAgfTsNCj4+IEBAIC0xMDQ3LDYgKzEwNDcsOCBAQCBzdGF0aWMgc3RydWN0
+IGNsa19odyAqc3RtMzJfcmVnaXN0ZXJfY2NsayhzdHJ1Y3QgZGV2aWNlICpkZXYsIGNvbnN0IGNo
+YXIgKm5hbWUsDQo+PiAgIAkibm8tY2xvY2siLCAibHNlIiwgImxzaSIsICJoc2UtcnRjIg0KPj4g
+ICB9Ow0KPj4gICANCj4+ICtzdGF0aWMgY29uc3QgY2hhciAqZHNpX3BhcmVudFsyXSA9IHsgTlVM
+TCwgInBsbC1yIiB9Ow0KPj4gKw0KPj4gICBzdGF0aWMgY29uc3QgY2hhciAqbGNkX3BhcmVudFsx
+XSA9IHsgInBsbHNhaS1yLWRpdiIgfTsNCj4+ICAgDQo+PiAgIHN0YXRpYyBjb25zdCBjaGFyICpp
+MnNfcGFyZW50c1syXSA9IHsgInBsbGkycy1yIiwgTlVMTCB9Ow0KPj4gQEAgLTExNTYsNiArMTE1
+OCwxMiBAQCBzdHJ1Y3Qgc3RtMzJmNF9jbGtfZGF0YSB7DQo+PiAgIAkJTk9fR0FURSwgMCwNCj4+
+ICAgCQkwDQo+PiAgIAl9LA0KPj4gKwl7DQo+PiArCQlDTEtfRjQ2OV9EU0ksICJkc2kiLCBkc2lf
+cGFyZW50LCBBUlJBWV9TSVpFKGRzaV9wYXJlbnQpLA0KPj4gKwkJU1RNMzJGNF9SQ0NfRENLQ0ZH
+UiwgMjksIDEsDQo+PiArCQlTVE0zMkY0X1JDQ19BUEIyRU5SLCAyNywNCj4+ICsJCUNMS19TRVRf
+UkFURV9QQVJFTlQgfCBDTEtfU0VUX1JBVEVfTk9fUkVQQVJFTlQNCj4+ICsJfSwNCj4+ICAgfTsN
+Cj4+ICAgDQo+PiAgIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgc3RtMzJfYXV4X2NsayBzdG0zMmY3NDZf
+YXV4X2Nsa1tdID0gew0KPj4gQEAgLTE0NTAsNiArMTQ1OCw3IEBAIHN0YXRpYyB2b2lkIF9faW5p
+dCBzdG0zMmY0X3JjY19pbml0KHN0cnVjdCBkZXZpY2Vfbm9kZSAqbnApDQo+PiAgIAlzdG0zMmY0
+X2dhdGVfbWFwID0gZGF0YS0+Z2F0ZXNfbWFwOw0KPj4gICANCj4+ICAgCWhzZV9jbGsgPSBvZl9j
+bGtfZ2V0X3BhcmVudF9uYW1lKG5wLCAwKTsNCj4+ICsJZHNpX3BhcmVudFswXSA9IGhzZV9jbGs7
+DQo+PiAgIA0KPj4gICAJaTJzX2luX2NsayA9IG9mX2Nsa19nZXRfcGFyZW50X25hbWUobnAsIDEp
+Ow0KPj4gICANCj4+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2R0LWJpbmRpbmdzL2Nsb2NrL3N0bTMy
+ZngtY2xvY2suaCBiL2luY2x1ZGUvZHQtYmluZGluZ3MvY2xvY2svc3RtMzJmeC1jbG9jay5oDQo+
+PiBpbmRleCA0ZDUyM2IwLi41OGQ4YjUxIDEwMDY0NA0KPj4gLS0tIGEvaW5jbHVkZS9kdC1iaW5k
+aW5ncy9jbG9jay9zdG0zMmZ4LWNsb2NrLmgNCj4+ICsrKyBiL2luY2x1ZGUvZHQtYmluZGluZ3Mv
+Y2xvY2svc3RtMzJmeC1jbG9jay5oDQo+PiBAQCAtMzUsOCArMzUsOSBAQA0KPj4gICAjZGVmaW5l
+IENMS19TQUlRX1BESVYJCTEzDQo+PiAgICNkZWZpbmUgQ0xLX0hTSQkJCTE0DQo+PiAgICNkZWZp
+bmUgQ0xLX1NZU0NMSwkJMTUNCj4+ICsjZGVmaW5lIENMS19GNDY5X0RTSQkJMTYNCj4+ICAgDQo+
+PiAtI2RlZmluZSBFTkRfUFJJTUFSWV9DTEsJCTE2DQo+PiArI2RlZmluZSBFTkRfUFJJTUFSWV9D
+TEsJCTE3DQo+PiAgIA0KPj4gICAjZGVmaW5lIENMS19IRE1JX0NFQwkJMTYNCj4+ICAgI2RlZmlu
+ZSBDTEtfU1BESUYJCTE3DQo+IFRoaXMgbG9va3Mgc3VzcGljaW91cy4gV2hhdCdzIHRoZSByZWxh
+dGlvbnNoaXAgb2YgdGhlc2UgY2xvY2tzPw0KSSBoYXZlIGp1c3QgYWRkZWQgQ0xLX0Y0NjlfRFNJ
+IGluIHRoZSBiaW5kaW5nLCBhbmQgc2hpZnRlZCB0aGUgZW5kIG9mIA0KcHJpbWFyeSBjbG9jayBm
+b3IgRjQgY2xvY2tzLg0KDQonQ0xLX0Y0NjlfRFNJJyBiaW5kaW5nIGlzIG9ubHkgdXNlZCBmb3Ig
+U1RNMzJGNDY5IGFuZCBub3QgZm9yIFNUTTMyRjc0NiANCih0aGF0IHdoeSBDTEtfSERNSV9DRUMg
+Y2FuIHVzZSB0aGUgaW5kZXggMTYpDQoNCg0KQlINCg0KR2FicmllbC4NCj4NCj4gUm9iDQo=
