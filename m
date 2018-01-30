@@ -1,74 +1,59 @@
-From: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/3] ARM: dts: exynos: Fix missing missing reg warning
- for syscon restart nodes
-Date: Tue, 30 Jan 2018 21:11:24 +0100
-Message-ID: <20180130201124.v7jik3ds4kejsa3m@kozik-lap>
-References: <20180116213129.16209-1-krzk@kernel.org>
- <20180116213129.16209-2-krzk@kernel.org>
- <20180129162714.2xrqrkfd2xo4jn2g@rob-hp-laptop>
+From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH V9 4/4] mtd: ofpart: add of_match_table with "fixed-partitions"
+Date: Tue, 30 Jan 2018 21:10:59 +0100
+Message-ID: <20180130201059.4424-5-zajec5@gmail.com>
+References: <20180130201059.4424-1-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20180129162714.2xrqrkfd2xo4jn2g@rob-hp-laptop>
+In-Reply-To: <20180130201059.4424-1-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Alim Akhtar <alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 29, 2018 at 10:27:14AM -0600, Rob Herring wrote:
-> On Tue, Jan 16, 2018 at 10:31:28PM +0100, Krzysztof Kozlowski wrote:
-> > Fix DTC warnings like:
-> > 
-> >     arch/arm/boot/dts/exynos4412-trats2.dtb: Warning (simple_bus_reg):
-> >         Node /soc/syscon-poweroff missing or empty reg/ranges property
-> >     arch/arm/boot/dts/exynos4412-trats2.dtb: Warning (simple_bus_reg):
-> >         Node /soc/syscon-reboot missing or empty reg/ranges property
-> > 
-> > by moving the syscon poweroff and restart nodes into the PMU (Power
-> > Management Unit) node.  The PMU node is the actual block responsible for
-> > power management, including typical Exynos on/off/restart procedures.
-> > Therefore the syscon poweroff and restart nodes logically belong to it.
-> > 
-> > Signed-off-by: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> > 
-> > ---
-> > 
-> > Tested on Exynos5420 and Exynos4412. Other tests are welcomed.
-> > ---
-> >  .../devicetree/bindings/arm/samsung/pmu.txt        |  4 +++-
-> >  arch/arm/boot/dts/exynos-syscon-restart.dtsi       | 28 ++++++++++------------
-> >  arch/arm/boot/dts/exynos3250.dtsi                  |  4 ++--
-> >  arch/arm/boot/dts/exynos4.dtsi                     |  5 ++--
-> >  arch/arm/boot/dts/exynos4412.dtsi                  |  2 +-
-> >  arch/arm/boot/dts/exynos5.dtsi                     |  1 -
-> >  arch/arm/boot/dts/exynos5250.dtsi                  |  3 ++-
-> >  arch/arm/boot/dts/exynos5410.dtsi                  |  3 ++-
-> >  arch/arm/boot/dts/exynos5420.dtsi                  |  3 ++-
-> >  9 files changed, 27 insertions(+), 26 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/arm/samsung/pmu.txt b/Documentation/devicetree/bindings/arm/samsung/pmu.txt
-> > index 779f5614bcee..405646655ec7 100644
-> > --- a/Documentation/devicetree/bindings/arm/samsung/pmu.txt
-> > +++ b/Documentation/devicetree/bindings/arm/samsung/pmu.txt
-> > @@ -12,6 +12,8 @@ Properties:
-> >  		   - "samsung,exynos5433-pmu" - for Exynos5433 SoC.
-> >  		   - "samsung,exynos7-pmu" - for Exynos7 SoC.
-> >  		second value must be always "syscon".
-> > +		If PMU contains optional syscon-poweroff or syscon-restart nodes,
-> > +		then third value must be "simple-mfd".
-> 
-> I don't think this is right. simple-mfd is only for cases where the 
-> parent has no setup that the child nodes are dependent on. You need the 
-> regmap setup by the parent before the child can be enumerated. The 
-> correct thing to do here is add an of_platform_default_populate() call.
+From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 
-I understand, makes sense. I will send a follow-up.
+This allows using this parser with any flash driver that takes care of
+setting of_node (using mtd_set_of_node helper) correctly. Up to now
+support for "fixed-partitions" DT compatibility string was working only
+with flash drivers that were specifying "ofpart" (manually or by letting
+mtd use the default set of parsers).
 
-Thanks for feedback!
+This matches existing bindings documentation.
 
-Best regards,
-Krzysztof
+Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+Reviewed-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Tested-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ drivers/mtd/ofpart.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/drivers/mtd/ofpart.c b/drivers/mtd/ofpart.c
+index 9f497315e65d..615f8c173162 100644
+--- a/drivers/mtd/ofpart.c
++++ b/drivers/mtd/ofpart.c
+@@ -140,9 +140,16 @@ static int parse_fixed_partitions(struct mtd_info *master,
+ 	return ret;
+ }
+ 
++static const struct of_device_id parse_ofpart_match_table[] = {
++	{ .compatible = "fixed-partitions" },
++	{},
++};
++MODULE_DEVICE_TABLE(of, parse_ofpart_match_table);
++
+ static struct mtd_part_parser ofpart_parser = {
+ 	.parse_fn = parse_fixed_partitions,
+ 	.name = "fixed-partitions",
++	.of_match_table = parse_ofpart_match_table,
+ };
+ 
+ static int parse_ofoldpart_partitions(struct mtd_info *master,
+-- 
+2.11.0
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
