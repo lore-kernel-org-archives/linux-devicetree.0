@@ -1,44 +1,70 @@
-From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH v8 11/11] media: i2c: ov7670: Fully set mbus frame fmt
-Date: Tue, 30 Jan 2018 10:58:22 +0100
-Message-ID: <1517306302-27957-12-git-send-email-jacopo+renesas@jmondi.org>
-References: <1517306302-27957-1-git-send-email-jacopo+renesas@jmondi.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1517306302-27957-1-git-send-email-jacopo+renesas@jmondi.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: laurent.pinchart@ideasonboard.com, magnus.damm@gmail.com, geert@glider.be, hverkuil@xs4all.nl, mchehab@kernel.org, festevam@gmail.com, sakari.ailus@iki.fi, robh+dt@kernel.org, mark.rutland@arm.com, pombredanne@nexb.com
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Subject: Re: [PATCH] sound/tlv320dac33: Add device tree support
+Date: Tue, 30 Jan 2018 11:00:23 +0100
+Message-ID: <20180130100023.GB18104@amd>
+References: <20180129230539.GA18280@amd>
+ <20180129232031.GA7695@lenoch>
+ <20180129233301.GA18104@amd>
+ <20180130083446.GA13498@lenoch>
+ <20180130085314.GA4585@amd>
+ <1141b126-b883-a246-85ad-c5a69acb90bb@gmail.com>
+ <20180130093838.GA15195@lenoch>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="dTy3Mrz/UPE2dbVg"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20180130093838.GA15195@lenoch>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ladislav Michl <ladis-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
+Cc: Filip =?utf-8?Q?Matijevi=C4=87?= <filip.matijevic.pz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, bhumirks-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, aaro.koskinen-X3B1VOXEql0@public.gmane.org, ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, patrikbachan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, serge-A9i7LUbDfNHQT0dZR+AlfA@public.gmane.org, abcloriens-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, clayton-fehKsxFhGzZIf6P1QZMOBw@public.gmane.org, martijn-28JJ9oSIdodmR6Xm/wNWPw@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The sensor driver sets mbus format colorspace information and sizes,
-but not ycbcr encoding, quantization and xfer function. When supplied
-with an badly initialized mbus frame format structure, those fields
-need to be set explicitly not to leave them uninitialized. This is
-tested by v4l2-compliance, which supplies a mbus format description
-structure and checks for all fields to be properly set.
 
-Without this commit, v4l2-compliance fails when testing formats with:
-fail: v4l2-test-formats.cpp(335): ycbcr_enc >= 0xff
+--dTy3Mrz/UPE2dbVg
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
----
- drivers/media/i2c/ov7670.c | 4 ++++
- 1 file changed, 4 insertions(+)
+On Tue 2018-01-30 10:38:38, Ladislav Michl wrote:
+> On Tue, Jan 30, 2018 at 10:11:02AM +0100, Filip Matijevi=C4=87 wrote:
+> > Hi,
+> >=20
 
-diff --git a/drivers/media/i2c/ov7670.c b/drivers/media/i2c/ov7670.c
-index 25b26d4..61c472e 100644
---- a/drivers/media/i2c/ov7670.c
-+++ b/drivers/media/i2c/ov7670.c
-@@ -996,6 +996,10 @@ static int ov7670_try_fmt_internal(struct v4l2_subdev *sd,
- 	fmt->height = wsize->height;
- 	fmt->colorspace = ov7670_formats[index].colorspace;
- 
-+	fmt->ycbcr_enc = V4L2_YCBCR_ENC_DEFAULT;
-+	fmt->quantization = V4L2_QUANTIZATION_DEFAULT;
-+	fmt->xfer_func = V4L2_XFER_FUNC_DEFAULT;
-+
- 	info->format = *fmt;
- 
- 	return 0;
--- 
-2.7.4
+> > > Well, notice I'm converting existing driver to device tree. And that
+> > > one already has GPIO dependency. It is possible that more work needs
+> > > to be done there, but that should not be a reason to delay this. Feel
+> > > free to help.
+>=20
+> Adding DT properties that need to be maintained for compatibility reasons
+> is a bad idea and very good reason to delay merging unfinished stuff.
+> And meanwhile it turned out it is not power-gpio :)
+
+I believe reset-gpios and power-gpios are commonly used like
+this... and that's what the old code does.
+
+You are not helping.
+
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--dTy3Mrz/UPE2dbVg
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlpwQjcACgkQMOfwapXb+vKkTACgkNTAPlrFaYM1KRwWZe+QSlUZ
+EnwAoLP4x3zT5zTZ+/efNUlHJTeJzQVr
+=N3vk
+-----END PGP SIGNATURE-----
+
+--dTy3Mrz/UPE2dbVg--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
