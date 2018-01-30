@@ -1,83 +1,68 @@
-From: =?UTF-8?Q?Filip_Matijevi=c4=87?= <filip.matijevic.pz@gmail.com>
-Subject: Re: [PATCH] sound/tlv320dac33: Add device tree support
-Date: Tue, 30 Jan 2018 10:11:02 +0100
-Message-ID: <1141b126-b883-a246-85ad-c5a69acb90bb@gmail.com>
-References: <20180129230539.GA18280@amd> <20180129232031.GA7695@lenoch>
- <20180129233301.GA18104@amd> <20180130083446.GA13498@lenoch>
- <20180130085314.GA4585@amd>
+From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 4/4] dmaengine: qcom: bam_dma: Add num-ees dt binding for
+ remotely controlled
+Date: Tue, 30 Jan 2018 09:18:46 +0000
+Message-ID: <3f9a06a6-5637-5768-9f8a-11d451458ffa@linaro.org>
+References: <20180116190236.14558-1-srinivas.kandagatla@linaro.org>
+ <20180116190236.14558-5-srinivas.kandagatla@linaro.org>
+ <20180129162146.2h3kht4xhhr32mbp@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180130085314.GA4585@amd>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180129162146.2h3kht4xhhr32mbp@rob-hp-laptop>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>, Ladislav Michl <ladis@linux-mips.org>
-Cc: lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, perex@perex.cz, tiwai@suse.com, bhumirks@gmail.com, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, pali.rohar@gmail.com, sre@kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-omap@vger.kernel.org, tony@atomide.com, khilman@kernel.org, aaro.koskinen@iki.fi, ivo.g.dimitrov.75@gmail.com, patrikbachan@gmail.com, serge@hallyn.com, abcloriens@gmail.com, clayton@craftyguy.net, martijn@brixit.nl, sakari.ailus@linux.intel.com
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, yanhe-jfJNa2p1gH1BDgjK7y7TUQ@public.gmane.org, ramkri-Rm6X0d1/PG5y9aJCnZT0Uw@public.gmane.org, sdharia-jfJNa2p1gH1BDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Thanks for the review,
 
-On 01/30/2018 09:53 AM, Pavel Machek wrote:
-> On Tue 2018-01-30 09:34:46, Ladislav Michl wrote:
->> On Tue, Jan 30, 2018 at 12:33:01AM +0100, Pavel Machek wrote:
->>> On Tue 2018-01-30 00:20:31, Ladislav Michl wrote:
->>>> On Tue, Jan 30, 2018 at 12:05:39AM +0100, Pavel Machek wrote:
->>>>>
->>>>> This adds device tree support to tlv320dac33.c.
->>>>>
->>>>> Signed-off-by: Pavel Machek <pavel@ucw.cz>
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/sound/tlv320dac33.txt b/Documentation/devicetree/bindings/sound/tlv320dac33.txt
->>>>> new file mode 100644
->>>>> index 0000000..6cbd311
->>>>> --- /dev/null
->>>>> +++ b/Documentation/devicetree/bindings/sound/tlv320dac33.txt
->>>>> @@ -0,0 +1,32 @@
->>>>> +Texas Instruments - tlv320dac33 Codec module
->>>>> +
->>>>> +The tlv320dac33 serial control bus communicates through I2C protocols.
->>>>> +
->>>>> +Required properties:
->>>>> +
->>>>> +- compatible - "ti,tlv320dac33"
->>>>> +- reg - I2C slave address
->>>>> +
->>>>> +Optional properties:
->>>>> +
->>>>> +- power-gpios - gpio pin to power the device, active high
->>>>
->>>> While driver used gpio in platform data, isn't it more likely
->>>> regulator which powers device?
->>>
->>>                 power-gpios = <&gpio2 28 0>; /* gpio_60 */
->>>
->>> Looks like GPIO to me -- example is from Nokia N9. So this appears to
->>> be correct.
+On 29/01/18 16:21, Rob Herring wrote:
+> On Tue, Jan 16, 2018 at 07:02:36PM +0000, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org wrote:
+>> From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 >>
->> Device datasheet doesn't list any pin which looks like "power-gpio"
->> http://www.ti.com/lit/ds/symlink/tlv320dac32.pdf
->> Unfortunately I do not know much about N9, but was able to find Nokia 5610
->> scheme to get clue how could be tlv320dac33 hardwired (see page 2):
->> http://mastermobile.spb.ru/service/nokia_5610_rm-242_service_schematics.pdf
->> Here AVDD is powered by LP3985 voltage regulator which is enabled using
->> VEN pin which might be connected to gpio. Or there could be completely
->> different voltage regulator with different controls. And since Linux
->> already has voltage regulator class, lets not limit ourselves to gpio
->> pins.
+>> When Linux is master of BAM, it can directly read registers to know number
+>> of supported execution enviroments, however when its remotely controlled
+>> reading these registers would trigger a crash if the BAM is not yet
+>> intialized/powered up on the remote side.
+>>
+>> This patch adds new binding num-ees to specify supported number of
+>> Execution Environments when BAM is remotely controlled.
+>>
+>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> ---
+>>   Documentation/devicetree/bindings/dma/qcom_bam_dma.txt |  2 ++
+>>   drivers/dma/qcom/bam_dma.c                             | 15 ++++++++++++---
+>>   2 files changed, 14 insertions(+), 3 deletions(-)
 > 
-> Well, notice I'm converting existing driver to device tree. And that
-> one already has GPIO dependency. It is possible that more work needs
-> to be done there, but that should not be a reason to delay this. Feel
-> free to help.
+> The correct split is the binding changes in 1 patch. Driver changes
+> separate.
 > 
-> 									Pavel
+Sure, Will Split it in next version.
+>>
+>> diff --git a/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt b/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
+>> index aa6822cbb230..f0d10c2b393e 100644
+>> --- a/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
+>> +++ b/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
+>> @@ -17,6 +17,8 @@ Required properties:
+>>     remote proccessor i.e. execution environment.
+>>   - num-channels : optional, indicates supported number of DMA channels in a
+>>     remotely controlled bam.
+>> +- num-ees : optional, indicates supported number of Execution Environments in a
+>> +  remotely controlled bam.
 > 
+> This one needs a vendor prefix as it is not a common property.
+> 
+Make sense, I will change it in next version.
 
-According to N9 schematics
-http://www.s-manuals.com/manuals/phone/nokia/nokia_n9_rm-696_service_schematics_v1.pdf
-it's in fact GPIO pin that is connected to reset line (labeled
-CODEC_RST). So calling it "power" might be misleading, but the driver
-code is quite clear as it labels that GPIO as "tlv320dac33 reset"
-
-Filip
+Thanks,
+Srini
+>>   
+>>   Example:
+>>   
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
