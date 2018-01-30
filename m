@@ -1,15 +1,12 @@
 From: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v5 6/6] arm: dts: sun8i: h3-h5: ir register size
- should be the whole memory block
-Date: Tue, 30 Jan 2018 18:46:56 +0100
-Message-ID: <20180130174656.10657-7-embed3d@gmail.com>
-References: <20180130174656.10657-1-embed3d@gmail.com>
+Subject: [PATCH v5 0/6] IR support for A83T
+Date: Tue, 30 Jan 2018 18:46:50 +0100
+Message-ID: <20180130174656.10657-1-embed3d@gmail.com>
 Reply-To: embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD257DPK24NRBGG7YLJQKGQE7VM6G3A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD257DPK24NRBEW7YLJQKGQEGRCNGAY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180130174656.10657-1-embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -20,26 +17,66 @@ To: mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROf
 Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The size of the register should be the size of the whole memory block,
-not just the registers, that are needed.
+This patch series adds support for the sunxi A83T ir module and enhances 
+the sunxi-ir driver. Right now the base clock frequency for the ir driver
+is a hard coded define and is set to 8 MHz.
+This works for the most common ir receivers. On the Sinovoip Bananapi M3 
+the ir receiver needs, a 3 MHz base clock frequency to work without
+problems with this driver.
 
-Signed-off-by: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/sunxi-h3-h5.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This patch series adds support for an optinal property that makes it able
+to override the default base clock frequency and enables the ir interface 
+on the a83t and the Bananapi M3.
 
-diff --git a/arch/arm/boot/dts/sunxi-h3-h5.dtsi b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-index 7a83b15225c7..22f6e126b8df 100644
---- a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-+++ b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-@@ -712,7 +712,7 @@
- 			clock-names = "apb", "ir";
- 			resets = <&r_ccu RST_APB0_IR>;
- 			interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
--			reg = <0x01f02000 0x40>;
-+			reg = <0x01f02000 0x400>;
- 			status = "disabled";
- 		};
- 
+changes since v4:
+* rename cir pin from cir_pins to r_cir_pin
+* drop unit-adress from r_cir_pin
+* add a83t compatible to the cir node
+* move muxing options to dtsi
+* rename cir label and reorder it in the bananpim3.dts file
+
+changes since v3:
+* collecting all acks & reviewd by
+* fixed typos
+
+changes since v2:
+* reorder cir pin (alphabetical)
+* fix typo in documentation
+
+changes since v1:
+* fix typos, reword Documentation
+* initialize 'b_clk_freq' to 'SUNXI_IR_BASE_CLK' & remove if statement
+* change dev_info() to dev_dbg()
+* change naming to cir* in dts/dtsi
+* Added acked Ackedi-by to related patch
+* use whole memory block instead of registers needed + fix for h3/h5
+
+changes since rfc:
+* The property is now optinal. If the property is not available in 
+  the dtb the driver uses the default base clock frequency.
+* the driver prints out the the selected base clock frequency.
+* changed devicetree property from base-clk-frequency to clock-frequency
+
+Regards,
+Philipp
+
+Philipp Rossak (6):
+  media: rc: update sunxi-ir driver to get base clock frequency from
+    devicetree
+  media: dt: bindings: Update binding documentation for sunxi IR
+    controller
+  arm: dts: sun8i: a83t: Add the cir pin for the A83T
+  arm: dts: sun8i: a83t: Add support for the cir interface
+  arm: dts: sun8i: a83t: bananapi-m3: Enable IR controller
+  arm: dts: sun8i: h3-h5: ir register size should be the whole memory
+    block
+
+ Documentation/devicetree/bindings/media/sunxi-ir.txt |  3 +++
+ arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts         |  5 +++++
+ arch/arm/boot/dts/sun8i-a83t.dtsi                    | 18 ++++++++++++++++++
+ arch/arm/boot/dts/sunxi-h3-h5.dtsi                   |  2 +-
+ drivers/media/rc/sunxi-cir.c                         | 19 +++++++++++--------
+ 5 files changed, 38 insertions(+), 9 deletions(-)
+
 -- 
 2.11.0
