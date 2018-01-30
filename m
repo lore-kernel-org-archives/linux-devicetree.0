@@ -1,32 +1,109 @@
-From: Simon Hatliff <hatliff-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v5 2/2] v4l: cadence: Add Cadence MIPI-CSI2 RX driver
-Date: Tue, 30 Jan 2018 15:54:24 +0000
-Message-ID: <3F3A3B73-D31C-41D0-8E88-C78BC3E55A81@cadence.com>
-References: <20180119081357.20799-1-maxime.ripard@free-electrons.com>
- <20180119081357.20799-3-maxime.ripard@free-electrons.com>
- <20180129191036.GE25980@ti.com> <20180130154126.keytdulix5imq6b3@flea.lan>
+From: Lina Iyer <ilina@codeaurora.org>
+Subject: Re: [PATCH 2/2] dt-bindings: introduce Command DB for QCOM SoCs
+Date: Tue, 30 Jan 2018 16:17:50 +0000
+Message-ID: <20180130161750.GA20815@codeaurora.org>
+References: <20180118220833.16616-3-ilina@codeaurora.org>
+ <20180118222802.18161-1-ilina@codeaurora.org>
+ <20180129190852.5ddcgdo3gkc2nw5r@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180130154126.keytdulix5imq6b3-ZC1Zs529Oq4@public.gmane.org>
-Content-Language: en-US
-Content-ID: <A0960E0884F50E4E8F6C8A6BDB9C93CB-Tk6F3M/euE6cE4WynfumptQqCkab/8FMAL8bYrjMMd8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Richard Sproul <sproul-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Alan Douglas <adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Steve Creaney <screaney-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, =?iso-8859-1?Q?Niklas_S=F6derlund?= <niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "nm-l0cyMroinI0@public.gmane.org" <nm-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180129190852.5ddcgdo3gkc2nw5r@rob-hp-laptop>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: andy.gross@linaro.org, david.brown@linaro.org, sboyd@codeaurora.org, rnayak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, msivasub@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 30 Jan 2018, at 15:41, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> =
-wrote:
->=20
-> Since the lanes are not in use, I'm not sure we have to worry about
-> lanes collision. Simon, would it cause any trouble if we map to lanes
-> to the same physical lane?
+Thanks Rob, for taking time to review these bindings.
 
-Yes IIRC it would cause trouble.  Due to the internals of the design each
-lane needs to have a unique mapping even if it's not in use.=
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Mon, Jan 29 2018 at 19:08 +0000, Rob Herring wrote:
+>On Thu, Jan 18, 2018 at 03:28:02PM -0700, Lina Iyer wrote:
+>> From: Mahesh Sivasubramanian <msivasub@codeaurora.org>
+>>
+>> Command DB provides information on shared resources like clocks,
+>> regulators etc., probed at boot by the remote subsytem and made
+>> available in shared memory.
+>>
+>> Cc: devicetree@vger.kernel.org
+>> Signed-off-by: Mahesh Sivasubramanian <msivasub@codeaurora.org>
+>> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+>> ---
+>>  .../devicetree/bindings/arm/msm/cmd-db.txt         | 37 ++++++++++++++++++++++
+>>  1 file changed, 37 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/arm/msm/cmd-db.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/msm/cmd-db.txt b/Documentation/devicetree/bindings/arm/msm/cmd-db.txt
+>> new file mode 100644
+>> index 000000000000..b56e3e3604d3
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/arm/msm/cmd-db.txt
+>> @@ -0,0 +1,37 @@
+>> +Command DB
+>> +---------
+>
+>Another strange QCom binding...
+>
+:)
+
+>> +
+>> +Command DB is a database that provides a mapping between resource key and the
+>> +resource address for a system resource managed by a remote processor. The data
+>> +is stored in a shared memory region and is loaded by the remote processor.
+>
+>Is said shared memory described in DT. If so, this should be a child
+>node. Only 8 bytes seems kind of fine grained for putting in DT when it
+>could be implied by the parent shared memory node.
+>
+I dont believe this memory will be described in DT for this chipset.
+Will ask internally.
+
+>> +
+>> +Some of the Qualcomm Technologies Inc SoC's have hardware accelerators for
+>> +controlling shared resources. Depending on the board configuration the shared
+>> +resource properties may change. These properties are dynamically probed by the
+>> +remote processor and made available in the shared memory.
+>
+>The table may change, but does the presence of it or shared memory
+>location (of the pointer) change?
+>
+The location may change between different SoCs, but will be present in
+all chipsets of this architecture.
+
+Thanks,
+Lina
+
+>> +
+>> +Command DB allows drivers to query resource parameters based on pre-determined
+>> +key strings.
+>> +
+>> +The devicetree representation of the command DB driver should be:
+>> +
+>> +PROPERTIES:
+>> +- compatible:
+>> +	Usage: required
+>> +	Value type: <string>
+>> +	Definition: Should be "qcom,cmd-db"
+>> +
+>> +- reg:
+>> +	Usage: required
+>> +	Value type: <prop-encoded-array>
+>> +	Definition: First element is the base address of shared memory
+>> +		Second element is the size of the shared memory region
+>> +		Points to the dictionary address that houses the command DB
+>> +		start address and the size of the command DB region
+>> +
+>> +Example:
+>> +
+>> +	qcom,cmd-db@c3f000c {
+>> +		compatible = "qcom,cmd-db";
+>> +		reg = <0xc3f000c 0x8>;
+>> +	};
+>> --
+>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+>> a Linux Foundation Collaborative Project
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
