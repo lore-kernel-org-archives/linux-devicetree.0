@@ -1,36 +1,116 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v12 3/9] PCI: Add fwnode handler as input param of
- pci_register_io_range()
-Date: Tue, 30 Jan 2018 09:11:27 -0600
-Message-ID: <20180130151127.tqklt7o6zrv3ddqq@rob-hp-laptop>
-References: <1516725385-24535-1-git-send-email-john.garry@huawei.com>
- <1516725385-24535-4-git-send-email-john.garry@huawei.com>
+Subject: Re: [PATCH RFC 2/4] dt-bindings/interrupt-controller: pdc: descibe
+ PDC device binding
+Date: Tue, 30 Jan 2018 09:20:12 -0600
+Message-ID: <20180130152012.ucjmaw3nlim4d4fr@rob-hp-laptop>
+References: <20180123175656.11942-1-ilina@codeaurora.org>
+ <20180123175656.11942-3-ilina@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1516725385-24535-4-git-send-email-john.garry@huawei.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: John Garry <john.garry@huawei.com>
-Cc: mika.westerberg@linux.intel.com, rafael@kernel.org, lorenzo.pieralisi@arm.com, rjw@rjwysocki.net, bhelgaas@google.com, arnd@arndb.de, mark.rutland@arm.com, olof@lixom.net, hanjun.guo@linaro.org, dann.frazier@canonical.com, benh@kernel.crashing.org, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, linuxarm@huawei.com, linux-pci@vger.kernel.org, minyard@acm.org, devicetree@vger.kernel.org, linux-arch@vger.kernel.org, rdunlap@infradead.org, Gabriele Paoloni <gabriele.paoloni@huawei.com>
+In-Reply-To: <20180123175656.11942-3-ilina@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Lina Iyer <ilina@codeaurora.org>
+Cc: tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, sboyd@codeaurora.org, rnayak@codeaurora.org, asathyak@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 24, 2018 at 12:36:19AM +0800, John Garry wrote:
-> From: Gabriele Paoloni <gabriele.paoloni@huawei.com>
+On Tue, Jan 23, 2018 at 10:56:54AM -0700, Lina Iyer wrote:
+> From: Archana Sathyakumar <asathyak@codeaurora.org>
 > 
-> In preparation for having the PCI MMIO helpers to use the new generic
-> I/O space management(LOGIC_PIO) we need to add the fwnode handler as
-> extra input parameter.
-> This patch changes the signature of pci_register_io_range() and of
-> its callers as needed.
+> Add device binding documentation for the PDC Interrupt controller on
+> QCOM SoC's like the SDM845. The interrupt-controller can be used to
+> sense edge low interrupts and wakeup interrupts when the GIC is
+> non-operational.
 > 
-> Signed-off-by: Gabriele Paoloni <gabriele.paoloni@huawei.com>
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Archana Sathyakumar <asathyak@codeaurora.org>
+> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
 > ---
->  drivers/acpi/pci_root.c | 8 +++++---
->  drivers/of/address.c    | 4 +++-
->  drivers/pci/pci.c       | 3 ++-
->  include/linux/pci.h     | 3 ++-
->  4 files changed, 12 insertions(+), 6 deletions(-)
+>  .../bindings/interrupt-controller/qcom,pdc.txt     | 55 ++++++++++++++++++++++
+>  1 file changed, 55 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
+> new file mode 100644
+> index 000000000000..c4592bbf678d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
+> @@ -0,0 +1,55 @@
+> +PDC interrupt controller
+> +
+> +Qualcomm Technologies Inc. SoCs based on the RPM Hardened archicture have a
+> +Power Domain Controller (PDC) that is on always-on domain. In addition to
+> +providing power control for the power domains, the hardware also has an
+> +interrupt controller that can be used to help detect edge low interrupts as
+> +well detect interrupts when the GIC is non-operational.
+> +
+> +GIC is parent interrupt controller at the highest level. Platform interrupt
+> +controller PDC is next in hierarchy, followed by others. This driver only
+> +configures the interrupts, does not handle them.
+> +
+> +Properties:
+> +
+> +- compatible:
+> +	Usage: required
+> +	Value type: <string>
+> +	Definition: Should contain "qcom,pdc" and "qcom,pdc-<target>"
+> +		    - "qcom,pdc-sdm845": For sdm845 pin data
 
-Acked-by: Rob Herring <robh@kernel.org>
+pin data?
+
+Convention is <soc>-<ip block>
+
+Need to make the order of compatibles clear. Generally that is done with 
+'followed by "qcom,pdc"' after the list of compatibles. But then, do you 
+really need a fallback. This seems like a block that would change 
+frequently. If there's not more than 2 or 3 chips with the same block, 
+don't do a fallback.
+
+> +
+> +- reg:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Definition: Specifies the base physical address for PDC hardware.
+> +
+> +- interrupt-cells:
+> +	Usage: required
+> +	Value type: <u32>
+> +	Definition: Specifies the number of cells needed to encode an interrupt
+> +		    source.
+> +		    Value must be 3.
+> +		    The encoding of these cells are same as described in [1].
+> +
+> +- interrupt-parent:
+> +	Usage: required
+> +	Value type: <phandle>
+> +	Definition: Specifies the interrupt parent necessary for hierarchical
+> +		    domain to operate.
+> +
+> +- interrupt-controller:
+> +	Usage: required
+> +	Value type: <bool>
+> +	Definition: Identifies the node as an interrupt controller.
+> +
+> +Example:
+> +
+> +	pdc: interrupt-controller@b220000 {
+> +		compatible = "qcom,pdc", "qcom,pdc-sdm845";
+
+This is backwards.
+
+> +		reg = <0xb220000 0x30000>;
+> +		#interrupt-cells = <3>;
+> +		interrupt-parent = <&intc>;
+> +		interrupt-controller;
+> +	};
+> +
+> +[1]. Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
