@@ -1,72 +1,93 @@
 From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: Re: [PATCH 4/4] rtc: isl1208: add support for isl1219 with hwmon for
- tamper detection
-Date: Tue, 30 Jan 2018 11:27:40 +0100
-Message-ID: <20180130102740.GD2809@piout.net>
+Subject: Re: [PATCH 3/4] rtc: isl1208: enable interrupt after context
+ preparation
+Date: Tue, 30 Jan 2018 11:34:21 +0100
+Message-ID: <20180130103421.GE2809@piout.net>
 References: <20180123121801.4214-1-m.grzeschik@pengutronix.de>
- <20180123121801.4214-5-m.grzeschik@pengutronix.de>
- <20180123182254.GA27379@roeck-us.net>
- <20180124090333.r5o2mzpm4q536w4r@pengutronix.de>
- <20180129215919.GA17988@roeck-us.net>
+ <20180123121801.4214-4-m.grzeschik@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180129215919.GA17988@roeck-us.net>
+In-Reply-To: <20180123121801.4214-4-m.grzeschik@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Michael Grzeschik <mgr@pengutronix.de>, a.zummo@towertech.it, linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, jdelvare@suse.com, kernel@pengutronix.de, Denis.Osterland@diehl.com
+To: Michael Grzeschik <m.grzeschik@pengutronix.de>
+Cc: a.zummo@towertech.it, linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux@roeck-us.net, jdelvare@suse.com, kernel@pengutronix.de, Denis.Osterland@diehl.com
 List-Id: devicetree@vger.kernel.org
 
-On 29/01/2018 at 13:59:19 -0800, Guenter Roeck wrote:
-> On Wed, Jan 24, 2018 at 10:03:33AM +0100, Michael Grzeschik wrote:
-> [ ... ]
-> > > > +
-> > > > diff --git a/Documentation/hwmon/sysfs-interface b/Documentation/hwmon/sysfs-interface
-> > > > index fc337c317c673..a12b3c2b2a18c 100644
-> > > > --- a/Documentation/hwmon/sysfs-interface
-> > > > +++ b/Documentation/hwmon/sysfs-interface
-> > > > @@ -702,6 +702,13 @@ intrusion[0-*]_alarm
-> > > >  		the user. This is done by writing 0 to the file. Writing
-> > > >  		other values is unsupported.
-> > > >  
-> > > > +intrusion[0-*]_timestamp
-> > > > +		Chassis intrusion detection
-> > > > +		YYYY-MM-DD HH:MM:SS UTC (ts.sec): intrusion detected
-> > > > +		RO
-> > > > +		The corresponding timestamp on which the intrustion
-> > > > +		was detected.
-> > > > +
-> > > 
-> > > Sneaky. Nack. You don't just add attributes to the ABI because you want it,
-> > > without serious discussion, and much less so hidden in an RTC driver
-> > > (and even less as unparseable attribute).
-> > 
-> > Right; but it was not meant to be sneaky. I should have stick to my first
-> > thought and label this patch RFC. Sorry for that.
-> > 
-> > > In addition to that, I consider the attribute unnecessary. The intrusion
-> > > already generates an event which should be sufficient for all practical
-> > > purposes.
-> > 
-> > Would it make sense in between the other sysfs attributes of this driver?
-> > 
-> I don't understand what you mean with that, sorry.
-> 
-> From an ABI perspective, the attibute doesn't add value since it is
-> highly device specific (or at least it is the only chip I am aware of
-> which reports such a time stamp). Feel free to add the attribute to the
-> driver and document it, but not as part of the hwmon ABI. In that
-> case I would be inclined to accept it. However, keep in mind that
-> your version, reporting a human readable date/time, would effectively
-> preclude it from ever making it into the ABI.
+Hi,
+
+On 23/01/2018 at 13:18:00 +0100, Michael Grzeschik wrote:
+> The interrupt handler got enabled very early. If the interrupt cause is
+> triggering immediately before the context is fully prepared. This can
+> lead to undefined behaviour. Therefor we move the interrupt enable code
+> to the end of the probe function.
 > 
 
-Actually, there are many RTCs that are able to register one or more
-timestamps. My plan was to add support for that soon but I was not
-planning to do so in the hwmon ABI as this may be used for something
-that is not intrusion detection (interval timers for example).
+Can you fix it using devm_rtc_allocate_device()/rtc_register_device() as
+done in https://git.kernel.org/pub/scm/linux/kernel/git/abelloni/linux.git/commit/?h=rtc-next&id=994ec64c0a193940be7a6fd074668b9446d3b6c3
 
+> Signed-off-by: Michael Grzeschik <m.grzeschik@pengutronix.de>
+> Signed-off-by: Denis Osterland <Denis.Osterland@diehl.com>
+> ---
+>  drivers/rtc/rtc-isl1208.c | 34 +++++++++++++++++-----------------
+>  1 file changed, 17 insertions(+), 17 deletions(-)
+> 
+> diff --git a/drivers/rtc/rtc-isl1208.c b/drivers/rtc/rtc-isl1208.c
+> index c8b4953482296..a13a4ba79004d 100644
+> --- a/drivers/rtc/rtc-isl1208.c
+> +++ b/drivers/rtc/rtc-isl1208.c
+> @@ -635,23 +635,6 @@ isl1208_probe(struct i2c_client *client, const struct i2c_device_id *id)
+>  	if (isl1208_i2c_validate_client(client) < 0)
+>  		return -ENODEV;
+>  
+> -	if (client->irq > 0) {
+> -		rc = devm_request_threaded_irq(&client->dev, client->irq, NULL,
+> -					       isl1208_rtc_interrupt,
+> -					       IRQF_SHARED | IRQF_ONESHOT,
+> -					       isl1208_driver.driver.name,
+> -					       client);
+> -		if (!rc) {
+> -			device_init_wakeup(&client->dev, 1);
+> -			enable_irq_wake(client->irq);
+> -		} else {
+> -			dev_err(&client->dev,
+> -				"Unable to request irq %d, no alarm support\n",
+> -				client->irq);
+> -			client->irq = 0;
+> -		}
+> -	}
+> -
+>  	rtc = devm_rtc_device_register(&client->dev, isl1208_driver.driver.name,
+>  				  &isl1208_rtc_ops,
+>  				  THIS_MODULE);
+> @@ -674,6 +657,23 @@ isl1208_probe(struct i2c_client *client, const struct i2c_device_id *id)
+>  	if (rc)
+>  		return rc;
+>  
+> +	if (client->irq > 0) {
+> +		rc = devm_request_threaded_irq(&client->dev, client->irq, NULL,
+> +					       isl1208_rtc_interrupt,
+> +					       IRQF_SHARED | IRQF_ONESHOT,
+> +					       isl1208_driver.driver.name,
+> +					       client);
+> +		if (!rc) {
+> +			device_init_wakeup(&client->dev, 1);
+> +			enable_irq_wake(client->irq);
+> +		} else {
+> +			dev_err(&client->dev,
+> +				"Unable to request irq %d, no alarm support\n",
+> +				client->irq);
+> +			client->irq = 0;
+> +		}
+> +	}
+> +
+>  	return 0;
+>  }
+>  
+> -- 
+> 2.11.0
+> 
 
 -- 
 Alexandre Belloni, Free Electrons
