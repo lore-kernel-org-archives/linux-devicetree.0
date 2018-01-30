@@ -1,84 +1,47 @@
-From: Cyrille Pitchen <cyrille.pitchen-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v5 00/11] PCI: Add support to the Cadence PCIe controller
-Date: Tue, 30 Jan 2018 22:12:36 +0100
-Message-ID: <8cec81b2-85c4-d7bf-4171-9e94a745eab0@free-electrons.com>
-References: <cover.1517170521.git.cyrille.pitchen@free-electrons.com>
- <20180128214741.GA232763@bhelgaas-glaptop.roam.corp.google.com>
- <20180130114155.GA12009@e107981-ln.cambridge.arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180130114155.GA12009-4tUPXFaYRHv6sAKXYmQ0tx/iLCjYCKR+VpNB7YpNyf8@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, stelford-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, dgary-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, kgopi-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, eandrews-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, sureshp-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH v2 0/4] ARM/arm64: exynos: Fix missing missing reg warning for syscon restart nodes
+Date: Tue, 30 Jan 2018 22:18:15 +0100
+Message-ID: <20180130211819.17139-1-krzk@kernel.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Pankaj Dubey <pankaj.dubey@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lorenzo, Bjorn,
 
-Le 30/01/2018 à 12:41, Lorenzo Pieralisi a écrit :
-> On Sun, Jan 28, 2018 at 03:47:41PM -0600, Bjorn Helgaas wrote:
->> On Sun, Jan 28, 2018 at 09:40:14PM +0100, Cyrille Pitchen wrote:
->>> Hi all,
->>>
->>> this series of patches adds support to the Cadence PCIe controller.
->>> It was tested on a ARM64 platform emulated by a Palladium running the
->>> pci-next kernel.
->>>
->>> The host mode was tested with some PCIe devices connected to the Palladium
->>> through a speed-bridge. Some of those devices were a USB host controller
->>> and a SATA controller. The PCIe host controller was also tested with a
->>> second controller configured in endpoint mode and connected back to back
->>> to the first controller.
->>>
->>> The EndPoint Controller (EPC) driver was tested with 2 PCI functions, both
->>> handled by the pci-epf-test driver, using the pcitest userspace program.
->>> I used the "-D" optional command line parameter to select the proper PCI
->>> function.
->>>
->>> Best regards,
->>>
->>> Cyrille
->>>
->>> ChangeLog
->>>
->>> v4 -> v5:
->>> - rebase on today's (20180128) linux-pci/next
->>
->> Don't bother rebasing onto linux-pci/next.
->>
->> If your patches actually *depend* on something that has already been
->> merged onto a PCI topic branch, you should mention that and say which
->> branch.
-> 
-> Yes - Cyrille please advise which branch(es) this series depends on,
-> it does not apply cleanly to -rc4.
-> 
-> Merge window is open and I do not know what we can do with this series
-> for v4.16 but please let me know.
->
+Hi,
 
-I've just sent v6. No change from v5 except that the series has been
-rebased onto linux-pci/master (v4.15-rc4) and tested on the Palladium.
-I've cherry-picked one Kishon's patch from linux-pci/next to test the
-endpoint mode.
+Changes since v1:
+1. New patch (1/4) calling devm_of_platform_populate() in PMU driver,
+   following Rob's advice.
+2. The DTS patches moving reboot/poweroff nodes (3/4 and 4/4) now depend
+   on this.
 
 Best regards,
+Krzysztof
 
-Cyrille
- 
-> Thanks,
-> Lorenzo
-> 
 
+Krzysztof Kozlowski (4):
+  soc: samsung: pmu: Populate children syscon nodes
+  ARM: dts: exynos: Remove duplicated inclusion of syscon restart nodes
+    on Exynos5410
+  ARM: dts: exynos: Fix missing missing reg warning for syscon restart
+    nodes
+  arm64: dts: exynos: Fix missing missing reg warning for syscon restart
+    nodes
+
+ .../devicetree/bindings/arm/samsung/pmu.txt        |  6 +++++
+ arch/arm/boot/dts/exynos-syscon-restart.dtsi       | 28 ++++++++++------------
+ arch/arm/boot/dts/exynos3250.dtsi                  |  2 +-
+ arch/arm/boot/dts/exynos4.dtsi                     |  3 ++-
+ arch/arm/boot/dts/exynos5.dtsi                     |  1 -
+ arch/arm/boot/dts/exynos5250.dtsi                  |  1 +
+ arch/arm/boot/dts/exynos5410.dtsi                  |  2 +-
+ arch/arm/boot/dts/exynos5420.dtsi                  |  1 +
+ arch/arm64/boot/dts/exynos/exynos5433.dtsi         | 14 +++++------
+ arch/arm64/boot/dts/exynos/exynos7.dtsi            | 12 +++++-----
+ drivers/soc/samsung/exynos-pmu.c                   |  3 +++
+ 11 files changed, 40 insertions(+), 33 deletions(-)
 
 -- 
-Cyrille Pitchen, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.11.0
