@@ -1,54 +1,36 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/4] arm64: add basic DTS for i.MX8MQ
-Date: Tue, 30 Jan 2018 08:55:15 -0600
-Message-ID: <CAL_JsqJk8-yC4XnTFwAuV1p5PUg5o=x2XQd9pUXULxHZ4xsFFQ@mail.gmail.com>
-References: <20180117183244.28303-1-l.stach@pengutronix.de>
- <20180117183244.28303-2-l.stach@pengutronix.de> <20180129175549.f6ljaccpo5ms6xkc@rob-hp-laptop>
- <1517248844.2804.16.camel@pengutronix.de>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v12 3/9] PCI: Add fwnode handler as input param of
+ pci_register_io_range()
+Date: Tue, 30 Jan 2018 09:11:27 -0600
+Message-ID: <20180130151127.tqklt7o6zrv3ddqq@rob-hp-laptop>
+References: <1516725385-24535-1-git-send-email-john.garry@huawei.com>
+ <1516725385-24535-4-git-send-email-john.garry@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1517248844.2804.16.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1516725385-24535-4-git-send-email-john.garry@huawei.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: John Garry <john.garry@huawei.com>
+Cc: mika.westerberg@linux.intel.com, rafael@kernel.org, lorenzo.pieralisi@arm.com, rjw@rjwysocki.net, bhelgaas@google.com, arnd@arndb.de, mark.rutland@arm.com, olof@lixom.net, hanjun.guo@linaro.org, dann.frazier@canonical.com, benh@kernel.crashing.org, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, linuxarm@huawei.com, linux-pci@vger.kernel.org, minyard@acm.org, devicetree@vger.kernel.org, linux-arch@vger.kernel.org, rdunlap@infradead.org, Gabriele Paoloni <gabriele.paoloni@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 29, 2018 at 12:00 PM, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> Am Montag, den 29.01.2018, 11:55 -0600 schrieb Rob Herring:
->> On Wed, Jan 17, 2018 at 07:32:42PM +0100, Lucas Stach wrote:
->> > This adds the basic DTS for the i.MX8MQ.
->> > For now only the following peripherals are supported:
->> > - IOMUXC (pin controller)
->> > - CCM (clock controller)
->> > - GPIO
->> > - UART
->> > - uSDHC (SD/eMMC controller)
->> > - FEC (ethernet controller)
->> > - i2c
->> >
->> > This is enough to get a very basic board support up and running.
->> > +                   compatible = "nxp,imx8mq-aips-bus",
->> > "simple-bus";
->> > +                           compatible = "nxp,imx8mq-gpio",
->> > "fsl,imx35-gpio";
->> > +                           compatible = "nxp,imx8mq-iomuxc";
->>
->> Also, are all these new compatibles documented?
->
-> Only those where the driver isn't matching one of the older
-> compatibles.
->
-> I'm not sure what the policy is for those "just in case" compatibles,
-> where we have older compatibles that are currently used, but the newer
-> compatibles are in the DT to make it easy to match them when any IP
-> integration issues turn up at a later time.
+On Wed, Jan 24, 2018 at 12:36:19AM +0800, John Garry wrote:
+> From: Gabriele Paoloni <gabriele.paoloni@huawei.com>
+> 
+> In preparation for having the PCI MMIO helpers to use the new generic
+> I/O space management(LOGIC_PIO) we need to add the fwnode handler as
+> extra input parameter.
+> This patch changes the signature of pci_register_io_range() and of
+> its callers as needed.
+> 
+> Signed-off-by: Gabriele Paoloni <gabriele.paoloni@huawei.com>
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> ---
+>  drivers/acpi/pci_root.c | 8 +++++---
+>  drivers/of/address.c    | 4 +++-
+>  drivers/pci/pci.c       | 3 ++-
+>  include/linux/pci.h     | 3 ++-
+>  4 files changed, 12 insertions(+), 6 deletions(-)
 
-They all should be documented, so dts files can be validated (once we
-have machine parseable binding docs).
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh@kernel.org>
