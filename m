@@ -1,56 +1,62 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v6 2/2] media: V3s: Add support for
- Allwinner CSI.
-Date: Tue, 30 Jan 2018 10:24:48 +0100
-Message-ID: <CAK8P3a0QxQE=GM=SGPtT82=UreiqsgY6uMThvQ_woA3rjK0zjA@mail.gmail.com>
-References: <1516695531-23349-1-git-send-email-yong.deng@magewell.com>
- <CACRpkdan52UB7HOyH1gnHWg4CDke_VQxAdq8cBgwUroibE59Ow@mail.gmail.com>
- <20180129082533.6edmqgbauo6q5dgz@flea.lan> <CACRpkdYAGwUjr2C-w5U+WuG48pZAOUcnxFjznLbdF6Lmy1uZuQ@mail.gmail.com>
- <CAK8P3a2HmPOTHAzqBnmim388pcWOE=fG50mG5HJifT=vzKOaTg@mail.gmail.com> <20180130075441.rqxzkwero6sdfak6@flea.lan>
-Reply-To: arnd-r2nGTMty4D4@public.gmane.org
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH v2 0/5] R-Car D3 (r8a77995) I2C integration
+Date: Tue, 30 Jan 2018 10:26:56 +0100
+Message-ID: <20180130092656.7zetd2w5nmi6moc4@verge.net.au>
+References: <1517240748-14780-1-git-send-email-ulrich.hecht+renesas@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDEKVJM7XAHRBYXTYDJQKGQEQDSQ7VQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: arndbergmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-In-Reply-To: <20180130075441.rqxzkwero6sdfak6-ZC1Zs529Oq4@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rick Chang <rick.chang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1517240748-14780-1-git-send-email-ulrich.hecht+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ulrich Hecht <ulrich.hecht+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, kieran.bingham-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 30, 2018 at 8:54 AM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> On Mon, Jan 29, 2018 at 03:34:02PM +0100, Arnd Bergmann wrote:
->> On Mon, Jan 29, 2018 at 10:25 AM, Linus Walleij
->> <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->> > On Mon, Jan 29, 2018 at 9:25 AM, Maxime Ripard
->> > <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->> >> On Sat, Jan 27, 2018 at 05:14:26PM +0100, Linus Walleij wrote:
+On Mon, Jan 29, 2018 at 04:45:43PM +0100, Ulrich Hecht wrote:
+> Hi!
+> 
+> This adds I2C controllers to the D3 device tree and enables I2C busses 0
+> and 1 on the Draak board. (I2C2 is not connected on that board.)
+> 
+> This revision addresses Geert's review comments and adds Reviewed-Bys.
+> See below for details.
+> 
+> CU
+> Uli
+> 
+> 
+> Changes since v1:
+> - pinctrl: patch dropped, has been picked up
+> - i2c-rcar: patch dropped, redundant
+> - dtsi: added dmac2 for i2c0-2
+> - dtsi: fixed internal SCL delays
+> - dts: fixed EEPROM compatible string
+> - bindings: added Rohm EEPROM
+> - bindings: fixed typo in i2c-rcar bindings
+> 
+> 
+> Ulrich Hecht (5):
+>   arm64: renesas: r8a77995: add I2C support
+>   arm64: renesas: draak: enable I2C controller 0 and EEPROM
+>   arm64: renesas: draak: enable I2C controller 1
 
->>
->> At one point we had discussed adding a 'dma-masters' property that
->> lists all the buses on which a device can be a dma master, and
->> the respective properties of those masters (iommu, coherency,
->> offset, ...).
->>
->> IIRC at the time we decided that we could live without that complexity,
->> but perhaps we cannot.
->
-> Are you talking about this ?
-> https://elixir.free-electrons.com/linux/latest/source/Documentation/devicetree/bindings/dma/dma.txt#L41
->
-> It doesn't seem to be related to that issue to me. And in our
-> particular cases, all the devices are DMA masters, the RAM is just
-> mapped to another address.
+Thanks, I have applied the arm64 patches after updating their prefix to
+"arm64: dts: renesas:".
 
-No, that's not the one I was thinking of. The idea at the time was much
-more generic, and not limited to dma engines. I don't recall the details,
-but I think that Thierry was either involved or made the proposal at the
-time.
-
-       Arnd
+>   i2c: rcar: document R8A77995 bindings
+>   dt-bindings: at24: add bindings for Rohm BR24T01
+> 
+>  Documentation/devicetree/bindings/eeprom/at24.txt  |  2 +
+>  Documentation/devicetree/bindings/i2c/i2c-rcar.txt |  1 +
+>  arch/arm64/boot/dts/renesas/r8a77995-draak.dts     | 28 +++++++++
+>  arch/arm64/boot/dts/renesas/r8a77995.dtsi          | 67 ++++++++++++++++++++++
+>  4 files changed, 98 insertions(+)
+> 
+> -- 
+> 2.7.4
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
