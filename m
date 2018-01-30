@@ -1,119 +1,106 @@
-From: Ladislav Michl <ladis@linux-mips.org>
-Subject: Re: [PATCH] sound/tlv320dac33: Add device tree support
-Date: Tue, 30 Jan 2018 12:38:29 +0100
-Message-ID: <20180130113829.GA18464@lenoch>
-References: <20180129230539.GA18280@amd> <20180129232031.GA7695@lenoch>
- <20180129233301.GA18104@amd> <20180130083446.GA13498@lenoch>
- <20180130085314.GA4585@amd>
- <1141b126-b883-a246-85ad-c5a69acb90bb@gmail.com>
- <20180130093838.GA15195@lenoch> <20180130100023.GB18104@amd>
- <20180130101046.GA16474@lenoch> <20180130103538.GD18104@amd>
+From: Denis OSTERLAND <denis.osterland-85mDkmTllUAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 4/4] rtc: isl1208: add support for isl1219 with hwmon for
+ tamper detection
+Date: Tue, 30 Jan 2018 11:40:10 +0000
+Message-ID: <1517312409.5307.22.camel@diehl.com>
+References: <20180123121801.4214-1-m.grzeschik@pengutronix.de>
+         <20180123121801.4214-5-m.grzeschik@pengutronix.de>
+         <20180123182254.GA27379@roeck-us.net>
+         <20180124090333.r5o2mzpm4q536w4r@pengutronix.de>
+         <20180129215919.GA17988@roeck-us.net> <20180130102740.GD2809@piout.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <alsa-devel-bounces@alsa-project.org>
-Content-Disposition: inline
-In-Reply-To: <20180130103538.GD18104@amd>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: mark.rutland@arm.com, alsa-devel@alsa-project.org, lgirdwood@gmail.com, tony@atomide.com, abcloriens@gmail.com, tiwai@suse.com, martijn@brixit.nl, Filip =?iso-8859-2?Q?Matijevi=E6?= <filip.matijevic.pz@gmail.com>, patrikbachan@gmail.com, ivo.g.dimitrov.75@gmail.com, khilman@kernel.org, linux-omap@vger.kernel.org, serge@hallyn.com, devicetree@vger.kernel.org, pali.rohar@gmail.com, robh+dt@kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, aaro.koskinen@iki.fi, linux-kernel@vger.kernel.org, broonie@kernel.org, clayton@craftyguy.net, sakari.ailus@linux.intel.com, sre@kernel.org, bhumirks@gmail.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180130102740.GD2809-m++hUPXGwpdeoWH0uzbU5w@public.gmane.org>
+Content-Language: en-US
+Content-ID: <5A4D96A557CE6B4089A5DBBCE3B01A53-EaMZKMlCv48iJM5X9Dx8Bw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org" <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: "linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org" <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "mgr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <mgr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "jdelvare-IBi9RG/b67k@public.gmane.org" <jdelvare-IBi9RG/b67k@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 30, 2018 at 11:35:38AM +0100, Pavel Machek wrote:
-> On Tue 2018-01-30 11:10:46, Ladislav Michl wrote:
-> > On Tue, Jan 30, 2018 at 11:00:23AM +0100, Pavel Machek wrote:
-> > > On Tue 2018-01-30 10:38:38, Ladislav Michl wrote:
-> > > > On Tue, Jan 30, 2018 at 10:11:02AM +0100, Filip Matijevi=E6 wrote:
-> > > > > Hi,
-> > > > > =
-
-> > > =
-
-> > > > > > Well, notice I'm converting existing driver to device tree. And=
- that
-> > > > > > one already has GPIO dependency. It is possible that more work =
-needs
-> > > > > > to be done there, but that should not be a reason to delay this=
-. Feel
-> > > > > > free to help.
-> > > > =
-
-> > > > Adding DT properties that need to be maintained for compatibility r=
-easons
-> > > > is a bad idea and very good reason to delay merging unfinished stuf=
-f.
-> > > > And meanwhile it turned out it is not power-gpio :)
-> > > =
-
-> > > I believe reset-gpios and power-gpios are commonly used like
-> > > this... and that's what the old code does.
-> > =
-
-> > Why do you care about old code when introducing new DT property?
-> > Either it is reset, then lets call it reset-gpios or it is power supply
-> > and then voltage regulator should be used (VAUX4.OUT is such a regulator
-> > although it is unclear to me how it is controlled (*)).
-> =
-
-> power gpio =3D !reset gpio. Difference is only in polarity.
-
-Quick grep:
-Documentation/devicetree/bindings/net/smsc-lan91c111.txt
-- power-gpios: GPIO to control the PWRDWN pin
-- reset-gpios: GPIO to control the RESET pin
-Documentation/devicetree/bindings/net/wireless/ti,wl1251.txt
-- ti,power-gpio :     GPIO connected to chip's PMEN pin
-Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt
-- power-gpios             : Specification for the pin connected to the gsl1=
-680's
-                            shutdown input. This needs to be driven high to=
- take the
-                            gsl1680 out of its low power state
-Documentation/devicetree/bindings/input/touchscreen/ektf2127.txt
-- power-gpios             : GPIO specification for the pin connected to the
-                            ektf2127's wake input. This needs to be driven =
-high
-                            to take ektf2127 out of it's low power state
-
-As you can see others are using it to drive pins different from nRESET. As
-stated in datasheet:
-"The TLV320DAC32 requires a hardware reset after power-up for proper operat=
-ion.
-After all power supplies are at their specified values, the nRESET pin must=
- be
-driven low for at least 10ns. If this reset sequence is not performed, the =
-DAC32
-may not respond properly to register reads/writes". That does not sound like
-anything to do with power.
-
-(It seems the only difference between TLV320DAC33 and TLV320DAC32 is uses a=
- ball
-grid array package vs QFN32)
-
-> > > You are not helping.
-> > =
-
-> > The only way I can help here is to resend your patch with "reset-gpios"
-> > used, which I'm pretty sure you can handle yourself.
-> =
-
-> Well, you can do that, and then you can argue with the next person who
-> feels one of the properties has to get his preferred color. Hard part
-> is not changing code :-(.
-
-Indeed, hard part is not to break DT compatibility later. Consider someone
-will have to add regulator support later, which you omitted to do - having
-both power supply and power gpio is a bit confusing, don't you think?
-
-Anyway, time to stop arguing, feel free to do what you think is right, I do
-not have anything important to add :)
-
-	ladis
+QW0gRGllbnN0YWcsIGRlbiAzMC4wMS4yMDE4LCAxMToyNyArMDEwMCBzY2hyaWViIEFsZXhh
+bmRyZSBCZWxsb25pOg0KPiBPbiAyOS8wMS8yMDE4IGF0IDEzOjU5OjE5IC0wODAwLCBHdWVu
+dGVyIFJvZWNrIHdyb3RlOg0KPiA+IA0KPiA+IE9uIFdlZCwgSmFuIDI0LCAyMDE4IGF0IDEw
+OjAzOjMzQU0gKzAxMDAsIE1pY2hhZWwgR3J6ZXNjaGlrIHdyb3RlOg0KPiA+IFsgLi4uIF0N
+Cj4gPiA+IA0KPiA+ID4gPiANCj4gPiA+ID4gPiANCj4gPiA+ID4gPiArDQo+ID4gPiA+ID4g
+ZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vaHdtb24vc3lzZnMtaW50ZXJmYWNlIGIvRG9j
+dW1lbnRhdGlvbi9od21vbi9zeXNmcy1pbnRlcmZhY2UNCj4gPiA+ID4gPiBpbmRleCBmYzMz
+N2MzMTdjNjczLi5hMTJiM2MyYjJhMThjIDEwMDY0NA0KPiA+ID4gPiA+IC0tLSBhL0RvY3Vt
+ZW50YXRpb24vaHdtb24vc3lzZnMtaW50ZXJmYWNlDQo+ID4gPiA+ID4gKysrIGIvRG9jdW1l
+bnRhdGlvbi9od21vbi9zeXNmcy1pbnRlcmZhY2UNCj4gPiA+ID4gPiBAQCAtNzAyLDYgKzcw
+MiwxMyBAQCBpbnRydXNpb25bMC0qXV9hbGFybQ0KPiA+ID4gPiA+IMKgCQl0aGUgdXNlci4g
+VGhpcyBpcyBkb25lIGJ5IHdyaXRpbmcgMCB0byB0aGUgZmlsZS4gV3JpdGluZw0KPiA+ID4g
+PiA+IMKgCQlvdGhlciB2YWx1ZXMgaXMgdW5zdXBwb3J0ZWQuDQo+ID4gPiA+ID4gwqANCj4g
+PiA+ID4gPiAraW50cnVzaW9uWzAtKl1fdGltZXN0YW1wDQo+ID4gPiA+ID4gKwkJQ2hhc3Np
+cyBpbnRydXNpb24gZGV0ZWN0aW9uDQo+ID4gPiA+ID4gKwkJWVlZWS1NTS1ERCBISDpNTTpT
+UyBVVEMgKHRzLnNlYyk6IGludHJ1c2lvbiBkZXRlY3RlZA0KPiA+ID4gPiA+ICsJCVJPDQo+
+ID4gPiA+ID4gKwkJVGhlIGNvcnJlc3BvbmRpbmcgdGltZXN0YW1wIG9uIHdoaWNoIHRoZSBp
+bnRydXN0aW9uDQo+ID4gPiA+ID4gKwkJd2FzIGRldGVjdGVkLg0KPiA+ID4gPiA+ICsNCj4g
+PiA+ID4gU25lYWt5LiBOYWNrLiBZb3UgZG9uJ3QganVzdCBhZGQgYXR0cmlidXRlcyB0byB0
+aGUgQUJJIGJlY2F1c2UgeW91IHdhbnQgaXQsDQo+ID4gPiA+IHdpdGhvdXQgc2VyaW91cyBk
+aXNjdXNzaW9uLCBhbmQgbXVjaCBsZXNzIHNvIGhpZGRlbiBpbiBhbiBSVEMgZHJpdmVyDQo+
+ID4gPiA+IChhbmQgZXZlbiBsZXNzIGFzIHVucGFyc2VhYmxlIGF0dHJpYnV0ZSkuDQo+ID4g
+PiBSaWdodDsgYnV0IGl0IHdhcyBub3QgbWVhbnQgdG8gYmUgc25lYWt5LiBJIHNob3VsZCBo
+YXZlIHN0aWNrIHRvIG15IGZpcnN0DQo+ID4gPiB0aG91Z2h0IGFuZCBsYWJlbCB0aGlzIHBh
+dGNoIFJGQy4gU29ycnkgZm9yIHRoYXQuDQo+ID4gPiANCj4gPiA+ID4gDQo+ID4gPiA+IElu
+IGFkZGl0aW9uIHRvIHRoYXQsIEkgY29uc2lkZXIgdGhlIGF0dHJpYnV0ZSB1bm5lY2Vzc2Fy
+eS4gVGhlIGludHJ1c2lvbg0KPiA+ID4gPiBhbHJlYWR5IGdlbmVyYXRlcyBhbiBldmVudCB3
+aGljaCBzaG91bGQgYmUgc3VmZmljaWVudCBmb3IgYWxsIHByYWN0aWNhbA0KPiA+ID4gPiBw
+dXJwb3Nlcy4NCj4gPiA+IFdvdWxkIGl0IG1ha2Ugc2Vuc2UgaW4gYmV0d2VlbiB0aGUgb3Ro
+ZXIgc3lzZnMgYXR0cmlidXRlcyBvZiB0aGlzIGRyaXZlcj8NCj4gPiA+IA0KPiA+IEkgZG9u
+J3QgdW5kZXJzdGFuZCB3aGF0IHlvdSBtZWFuIHdpdGggdGhhdCwgc29ycnkuDQo+ID4gDQo+
+ID4gRnJvbSBhbiBBQkkgcGVyc3BlY3RpdmUsIHRoZSBhdHRpYnV0ZSBkb2Vzbid0IGFkZCB2
+YWx1ZSBzaW5jZSBpdCBpcw0KPiA+IGhpZ2hseSBkZXZpY2Ugc3BlY2lmaWMgKG9yIGF0IGxl
+YXN0IGl0IGlzIHRoZSBvbmx5IGNoaXAgSSBhbSBhd2FyZSBvZg0KPiA+IHdoaWNoIHJlcG9y
+dHMgc3VjaCBhIHRpbWUgc3RhbXApLiBGZWVsIGZyZWUgdG8gYWRkIHRoZSBhdHRyaWJ1dGUg
+dG8gdGhlDQo+ID4gZHJpdmVyIGFuZCBkb2N1bWVudCBpdCwgYnV0IG5vdCBhcyBwYXJ0IG9m
+IHRoZSBod21vbiBBQkkuIEluIHRoYXQNCj4gPiBjYXNlIEkgd291bGQgYmUgaW5jbGluZWQg
+dG8gYWNjZXB0IGl0LiBIb3dldmVyLCBrZWVwIGluIG1pbmQgdGhhdA0KPiA+IHlvdXIgdmVy
+c2lvbiwgcmVwb3J0aW5nIGEgaHVtYW4gcmVhZGFibGUgZGF0ZS90aW1lLCB3b3VsZCBlZmZl
+Y3RpdmVseQ0KPiA+IHByZWNsdWRlIGl0IGZyb20gZXZlciBtYWtpbmcgaXQgaW50byB0aGUg
+QUJJLg0KPiA+IA0KPiBBY3R1YWxseSwgdGhlcmUgYXJlIG1hbnkgUlRDcyB0aGF0IGFyZSBh
+YmxlIHRvIHJlZ2lzdGVyIG9uZSBvciBtb3JlDQo+IHRpbWVzdGFtcHMuIE15IHBsYW4gd2Fz
+IHRvIGFkZCBzdXBwb3J0IGZvciB0aGF0IHNvb24gYnV0IEkgd2FzIG5vdA0KPiBwbGFubmlu
+ZyB0byBkbyBzbyBpbiB0aGUgaHdtb24gQUJJIGFzIHRoaXMgbWF5IGJlIHVzZWQgZm9yIHNv
+bWV0aGluZw0KPiB0aGF0IGlzIG5vdCBpbnRydXNpb24gZGV0ZWN0aW9uIChpbnRlcnZhbCB0
+aW1lcnMgZm9yIGV4YW1wbGUpLg0KV2hhdCB3b3VsZCB5b3Ugc3VnZ2VzdD8NCkkgdGhpbmsg
+YWJvdXQgc29tZXRoaW5nIGxpa2UgdGhpczoNCmV2ZW50WzAtKl1fdGltZXN0YW1wOiB0aW1l
+c3RhbXAgaW4gc2Vjb25kcyBzaW5jZSBlcG9jaCBvciBlbXB0eSBpZiBub3QgdHJpZ2dlcmVk
+DQpldmVudFswLSpdX2FsYXJtOiAxIGlmIGV2ZW50IHdhcyB0cmlnZ2VyZWQsIGVsc2UgMDsg
+d3JpdGUgMCB0byBjbGVhciBldmVudA0KPiANCj4gDQpEaWVobCBBS08gU3RpZnR1bmcgJiBD
+by4gS0csIFBmYW5uZXJzdHJhw59lIDc1LTgzLCA4ODIzOSBXYW5nZW4gaW0gQWxsZ8OkdQ0K
+QmVyZWljaHN2b3JzdGFuZDogRHIuLUluZy4gTWljaGFlbCBTaWVkZW50b3AgKFNwcmVjaGVy
+KSwgSm9zZWYgRmVsbG5lciAoTWl0Z2xpZWQpDQpTaXR6IGRlciBHZXNlbGxzY2hhZnQ6IFdh
+bmdlbiBpLkEuIOKAkyBSZWdpc3RlcmdlcmljaHQ6IEFtdHNnZXJpY2h0IFVsbSBIUkEgNjIw
+NjA5IOKAkyBQZXJzw7ZubGljaCBoYWZ0ZW5kZSBHZXNlbGxzY2hhZnRlcmluOiBEaWVobCBW
+ZXJ3YWx0dW5ncy1TdGlmdHVuZyDigJMgU2l0ejogTsO8cm5iZXJnIOKAkyBSZWdpc3Rlcmdl
+cmljaHQ6IEFtdHNnZXJpY2h0IE7DvHJuYmVyZyBIUkEgMTE3NTYg4oCTDQpWb3JzdGFuZDog
+RHIuLUluZy4gRS5oLiBUaG9tYXMgRGllaGwgKOKAoCkgKFZvcnNpdHplbmRlciksIEhlcnIg
+RGlwbC4tV2lydHNjaC4tSW5nLiBXb2xmZ2FuZyBXZWdnZW4gKHN0ZWxsdmVydHJldGVuZGVy
+IFZvcnNpdHplbmRlciksIERpcGwuLUtmbS4gQ2xhdXMgR8O8bnRoZXIsIERpcGwuLUtmbS4g
+RnJhbmsgR3V0emVpdCwgRHIuLUluZy4gSGVpbnJpY2ggU2NodW5rLCBEci4tSW5nLiBNaWNo
+YWVsIFNpZWRlbnRvcCAsIERpcGwuLUtmbS4gRHIuLUluZy4gTWFydGluIFNvbW1lciwgRGlw
+bC4tSW5nLiAoRkgpIFJhaW5lciB2b24gQm9yc3RlbCwgVm9yc2l0emVuZGVyIGRlcyBBdWZz
+aWNodHNyYXRlczogRHIuIEtsYXVzIE1haWVyDQpfX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX18NCkRlciBJbmhhbHQgZGVyIHZvcnN0ZWhlbmRlbiBFLU1h
+aWwgaXN0IG5pY2h0IHJlY2h0bGljaCBiaW5kZW5kLiBEaWVzZSBFLU1haWwgZW50aGFlbHQg
+dmVydHJhdWxpY2hlIHVuZC9vZGVyIHJlY2h0bGljaCBnZXNjaHVldHp0ZSBJbmZvcm1hdGlv
+bmVuLg0KSW5mb3JtaWVyZW4gU2llIHVucyBiaXR0ZSwgd2VubiBTaWUgZGllc2UgRS1NYWls
+IGZhZWxzY2hsaWNoZXJ3ZWlzZSBlcmhhbHRlbiBoYWJlbi4gQml0dGUgbG9lc2NoZW4gU2ll
+IGluIGRpZXNlbSBGYWxsIGRpZSBOYWNocmljaHQuIEplZGUgdW5lcmxhdWJ0ZSBGb3JtIGRl
+ciBSZXByb2R1a3Rpb24sIEJla2FubnRnYWJlLCBBZW5kZXJ1bmcsIFZlcnRlaWx1bmcgdW5k
+L29kZXIgUHVibGlrYXRpb24gZGllc2VyIEUtTWFpbCBpc3Qgc3RyZW5nc3RlbnMgdW50ZXJz
+YWd0Lg0KVGhlIGNvbnRlbnRzIG9mIHRoZSBhYm92ZSBtZW50aW9uZWQgZS1tYWlsIGlzIG5v
+dCBsZWdhbGx5IGJpbmRpbmcuIFRoaXMgZS1tYWlsIGNvbnRhaW5zIGNvbmZpZGVudGlhbCBh
+bmQvb3IgbGVnYWxseSBwcm90ZWN0ZWQgaW5mb3JtYXRpb24uIFBsZWFzZSBpbmZvcm0gdXMg
+aWYgeW91IGhhdmUgcmVjZWl2ZWQgdGhpcyBlLW1haWwgYnkgbWlzdGFrZSBhbmQgZGVsZXRl
+IGl0IGluIHN1Y2ggYSBjYXNlLiBFYWNoIHVuYXV0aG9yaXplZCByZXByb2R1Y3Rpb24sIGRp
+c2Nsb3N1cmUsIGFsdGVyYXRpb24sIGRpc3RyaWJ1dGlvbiBhbmQvb3IgcHVibGljYXRpb24g
+b2YgdGhpcyBlLW1haWwgaXMgc3RyaWN0bHkgcHJvaGliaXRlZC4=
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
