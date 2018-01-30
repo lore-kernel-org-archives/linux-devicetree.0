@@ -1,50 +1,75 @@
-From: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Subject: [PATCH 1/2] dt-bindings: fsi: Add optional property no-scan-on-init
-Date: Tue, 30 Jan 2018 16:21:15 +1030
-Message-ID: <20180130055116.17411-2-joel@jms.id.au>
-References: <20180130055116.17411-1-joel@jms.id.au>
+From: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Subject: [linux-sunxi][PATCH] ARM: dts: sun7i: Enable HDMI support on the Olimex EVB
+Date: Tue, 30 Jan 2018 08:50:54 +0100
+Message-ID: <20180130075054.6256-1-codekipper@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180130055116.17411-1-joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, Eddie James <eajames-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Add an optional FSI master property 'no-scan-on-init.  This
-can be specified to indicate that a master should not be
-automatically scanned at init time.  This is required in cases
-where a scan could interfere with another FSI master on the same
-bus.
+Enable the display pipeline and HDMI output on the Olimex
+A20-SOM-EVB.
 
-Signed-off-by: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Acked-by: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- Documentation/devicetree/bindings/fsi/fsi.txt | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/fsi/fsi.txt b/Documentation/devicetree/bindings/fsi/fsi.txt
-index 4eaf488d4015..ab516c673a4b 100644
---- a/Documentation/devicetree/bindings/fsi/fsi.txt
-+++ b/Documentation/devicetree/bindings/fsi/fsi.txt
-@@ -56,6 +56,13 @@ addresses (link index and slave ID), and no size:
-     #address-cells = <2>;
-     #size-cells = <0>;
+diff --git a/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts b/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts
+index 64c8ef9a2756..07906d4f8758 100644
+--- a/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts
++++ b/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts
+@@ -61,6 +61,17 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
  
-+An optional boolean property can be added to indicate that a particular master
-+should not scan for connected devices at initialization time.  This is
-+necessary in cases where a scan could cause arbitration issues with other
-+masters that may be present on the bus.
++	hdmi-connector {
++		compatible = "hdmi-connector";
++		type = "a";
 +
-+    no-scan-on-init;
++		port {
++			hdmi_con_in: endpoint {
++				remote-endpoint = <&hdmi_out_con>;
++			};
++		};
++	};
 +
- FSI slaves
- ----------
+ 	leds {
+ 		compatible = "gpio-leds";
+ 		pinctrl-names = "default";
+@@ -79,6 +90,10 @@
+ 	status = "okay";
+ };
  
++&de {
++	status = "okay";
++};
++
+ &ehci0 {
+ 	status = "okay";
+ };
+@@ -107,6 +122,16 @@
+ 	};
+ };
+ 
++&hdmi {
++	status = "okay";
++};
++
++&hdmi_out {
++	hdmi_out_con: endpoint {
++	remote-endpoint = <&hdmi_con_in>;
++	};
++};
++
+ &i2c0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&i2c0_pins_a>;
 -- 
-2.15.1
+2.16.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
