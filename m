@@ -1,103 +1,122 @@
-From: Jonathan Cameron <jonathan.cameron@huawei.com>
-Subject: [RFC PATCH 1/3] dt-bindings: Add bindings for Hisilicon SEC crypto accelerators.
-Date: Tue, 30 Jan 2018 15:29:51 +0000
-Message-ID: <20180130152953.14068-2-jonathan.cameron@huawei.com>
-References: <20180130152953.14068-1-jonathan.cameron@huawei.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] v4l: cadence: Add Cadence MIPI-CSI2 TX driver
+Date: Tue, 30 Jan 2018 16:36:23 +0100
+Message-ID: <20180130153623.vt32c4xzlj4nppjk@flea.lan>
+References: <20180119081547.22312-1-maxime.ripard@free-electrons.com>
+ <20180119081547.22312-3-maxime.ripard@free-electrons.com>
+ <20180129193046.GF25980@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-crypto-owner@vger.kernel.org>
-In-Reply-To: <20180130152953.14068-1-jonathan.cameron@huawei.com>
-Sender: linux-crypto-owner@vger.kernel.org
-To: linux-crypto@vger.kernel.org
-Cc: linuxarm@huawei.com, xuzaibo@huawei.com, Herbert Xu <herbert@gondor.apana.org.au>, "David S . Miller" <davem@davemloft.net>, =?UTF-8?q?Stephan=20M=C3=BCller?= <smueller@chronox.de>, devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>, Xiongfeng Wang <xiongfeng.wang@linaro.org>, Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="r33ibizqk65sjx2j"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20180129193046.GF25980-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>
+Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Richard Sproul <sproul-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Alan Douglas <adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Steve Creaney <screaney-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, nm-l0cyMroinI0@public.gmane.org, Simon Hatliff <hatliff-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-The hip06 and hip07 SoCs contain a number of these crypto units which
-accelerate AES and DES operations.
+--r33ibizqk65sjx2j
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
----
- .../bindings/crypto/hisilicon,hip07-sec.txt        | 71 ++++++++++++++++++++++
- 1 file changed, 71 insertions(+)
+Hi Benoit,
 
-diff --git a/Documentation/devicetree/bindings/crypto/hisilicon,hip07-sec.txt b/Documentation/devicetree/bindings/crypto/hisilicon,hip07-sec.txt
-new file mode 100644
-index 000000000000..bf81118e560c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/crypto/hisilicon,hip07-sec.txt
-@@ -0,0 +1,71 @@
-+* Hisilicon hip07 Security Accelerator (SEC)
-+
-+Required properties:
-+- compatible: Must contain one of
-+  - "hisilicon,hip06-sec"
-+  - "hisilicon,hip07-sec"
-+- #address-cells: Must be <2> as 64 bit addresses in reg.
-+- #size-cells: Must be <2> as 64 bit lengths in reg.
-+- reg: Memory addresses and lengths of the memory regions used by the driver.
-+  Region 0 has registers to control the backend processing engines.
-+  Region 1 has registers for functionality common to all queues.
-+  Regions 2-18 have registers for the individual queues which are isolated
-+  both in hardware and within the driver.
-+- interrupts: Interrupt specifiers.
-+  Refer to interrupt-controller/interrupts.txt for generic interrupt client node
-+  bindings.
-+  Interrupt 0 is for the SEC unit error queue.
-+  Interrupt 2N + 1 is the completion interrupt for queue N.
-+  Interrupt 2N + 2 is the error interrupt for queue N.
-+- dma-coherent:  The driver assumes coherent dma is possible.
-+
-+Optional properties:
-+- iommus: The SEC units are behind smmu-v3 iommus.
-+  Refer to iommu/arm,smmu-v3.txt for more information.
-+
-+Example:
-+Second socket, first unit chosen to illustrate need for 64 bit addresses.
-+
-+p1_sec_a: sec@d2000000 {
-+	compatible = "hisilicon,hip07-sec";
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+	reg = <0x400 0xd0000000 0x0 0x10000
-+	       0x400 0xd2000000 0x0 0x10000
-+	       0x400 0xd2010000 0x0 0x10000
-+	       0x400 0xd2020000 0x0 0x10000
-+	       0x400 0xd2030000 0x0 0x10000
-+	       0x400 0xd2040000 0x0 0x10000
-+	       0x400 0xd2050000 0x0 0x10000
-+	       0x400 0xd2060000 0x0 0x10000
-+	       0x400 0xd2070000 0x0 0x10000
-+	       0x400 0xd2080000 0x0 0x10000
-+	       0x400 0xd2090000 0x0 0x10000
-+	       0x400 0xd20a0000 0x0 0x10000
-+	       0x400 0xd20b0000 0x0 0x10000
-+	       0x400 0xd20c0000 0x0 0x10000
-+	       0x400 0xd20d0000 0x0 0x10000
-+	       0x400 0xd20e0000 0x0 0x10000
-+	       0x400 0xd20f0000 0x0 0x10000
-+	       0x400 0xd2100000 0x0 0x10000>;
-+	interrupt-parent = <&p1_mbigen_sec_a>;
-+	iommus = <&p1_smmu_alg_a 0x600>;
-+	dma-coherent;
-+	interrupts = <576 4>,
-+		     <577 1>,<578 4>,
-+		     <579 1>,<580 4>,
-+		     <581 1>,<582 4>,
-+		     <583 1>,<584 4>,
-+		     <585 1>,<586 4>,
-+		     <587 1>,<588 4>,
-+		     <589 1>,<590 4>,
-+		     <591 1>,<592 4>,
-+		     <593 1>,<594 4>,
-+		     <595 1>,<596 4>,
-+		     <597 1>,<598 4>,
-+		     <599 1>,<600 4>,
-+		     <601 1>,<602 4>,
-+		     <603 1>,<604 4>,
-+		     <605 1>,<606 4>,
-+		     <607 1>,<608 4>;
-+};
--- 
-2.11.0
+On Mon, Jan 29, 2018 at 01:30:46PM -0600, Benoit Parrot wrote:
+> > +++ b/drivers/media/platform/cadence/cdns-csi2tx.c
+> > @@ -0,0 +1,586 @@
+> > +/*
+> > + * Driver for Cadence MIPI-CSI2 TX Controller
+> > + *
+> > + * Copyright (C) 2017 Cadence Design Systems Inc.
+> > + *
+> > + * This program is free software; you can redistribute  it and/or modi=
+fy it
+> > + * under  the terms of  the GNU General  Public License as published b=
+y the
+> > + * Free Software Foundation;  either version 2 of the  License, or (at=
+ your
+> > + * option) any later version.
+>=20
+> Should use SPDX license tag line instead.
+
+Indeed.
+
+> > +struct csi2tx_priv {
+> > +	struct device			*dev;
+> > +	atomic_t			count;
+> > +
+> > +	void __iomem			*base;
+> > +
+> > +	struct clk			*esc_clk;
+> > +	struct clk			*p_clk;
+> > +	struct clk			*pixel_clk[CSI2TX_STREAMS_MAX];
+> > +
+> > +	struct v4l2_subdev		subdev;
+> > +	struct v4l2_async_notifier	notifier;
+> > +	struct media_pad		pads[CSI2TX_PAD_MAX];
+> > +	struct v4l2_mbus_framefmt	pad_fmts[CSI2TX_PAD_MAX];
+> > +
+> > +	bool				has_internal_dphy;
+> > +	unsigned int			lanes;
+> > +	unsigned int			max_lanes;
+>=20
+> So if I understand this correctly the actual lane number list
+> specified in DT is not actually used? And so the lane numbers are only
+> derived from the current numbers of lanes specified.
+>=20
+> Meaning the following would produce identical setup:
+> 	csi2tx_out: endpoint {
+> 		remote-endpoint =3D <&remote_in>;
+> 		clock-lanes =3D <0>;
+> 		data-lanes =3D <1 2>;
+> 	};
+>=20
+> or
+> 	csi2tx_out: endpoint {
+> 		remote-endpoint =3D <&remote_in>;
+> 		clock-lanes =3D <0>;
+> 		data-lanes =3D <2 3>;
+> 	};
+>=20
+> But they would be interpreted differently by say the CSI2-RX side, no?
+
+Ah, right, I should totally fix that.
+
+I'll send a new version shortly.
+
+Thanks!
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--r33ibizqk65sjx2j
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlpwkPcACgkQ0rTAlCFN
+r3SLihAAhs8HcO+tcz7YmM35/WG/1W/FXDcEcVVDnC4IewTZs5IVD6F2W5jEwlZA
+Abp6OxohbrlVzGcmE1PpuzlVhO0035yN1j8xDP0/gZBKhOsPVb7wdUnVMFHk+i0T
+m4RSN0BORbzP/Ai+wgv+Q5pB0JhDw+I6ZZfYQw+pZ6ZVPMJ2j3ExIgKaOJqC1GF4
+zBVwB8UsuSF6qbI/p1Pjbc/bejNI2DRWL04E6+YQsZAR83Yix3TFhLZHBCGQfESx
+8jM6LmFKnVJPQRGuDnqEySbyPdL3rFoXmD7zLVdhGoVvnAh5IFo+J88fA2ehtlgJ
+h9tGHXmUlPGoT7c6Pzk7Ful2Xc8QDdQf6Iw1XQt/pjSnqQfKSVVsy+9Fdr8bHrXF
+3M0JcJlsx+KQfTyPfdKCrFp+wFSv7bsNzM+LZBye+qDgXN/2zCW4NHtpCao6i5Lp
+HDUZTPuqoFLpD/YLsdMv7NNmK0g/ww5dzSOgC4FmQ0fW3HI8s4BAcUrOBxC4+WzJ
+yFdXtA1yoR/WsxjbAXVIkItT+J0OcZXrVXKZgln5L2WwgZDZtWQcg7TrvshtFhd0
+8jPdnEHJeeDbK9qkSEL6BWSSc6exfdPG+FHVzYJCROEQUA/A315zuEF0nRC0JrN+
+t/TPIZYM6/H1O/2wHkCbKGTxOtEytOEWKgy+Sm83X4HZfF40dtY=
+=1AUZ
+-----END PGP SIGNATURE-----
+
+--r33ibizqk65sjx2j--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
