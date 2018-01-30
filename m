@@ -1,75 +1,103 @@
-From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Subject: Re: [PATCH] sound/tlv320dac33: Add device tree support
-Date: Tue, 30 Jan 2018 13:28:29 +0100
-Message-ID: <20180130122829.GA10373@amd>
-References: <20180129230539.GA18280@amd>
- <20180129232031.GA7695@lenoch>
- <20180129233301.GA18104@amd>
- <20180130083446.GA13498@lenoch>
- <20180130085314.GA4585@amd>
- <20180130113238.GA10525@sirena.org.uk>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v2 3/5] soc: mediatek: pwrap: add int1_en_all and
+ capability flag
+Date: Tue, 30 Jan 2018 13:55:47 +0100
+Message-ID: <3f4ce745-32e0-2ae6-1463-af041d608d8c@gmail.com>
+References: <20180129090944.28687-1-argus.lin@mediatek.com>
+ <20180129090944.28687-3-argus.lin@mediatek.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="ew6BAiZeqk4r7MaW"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20180130113238.GA10525-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Ladislav Michl <ladis-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, bhumirks-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, aaro.koskinen-X3B1VOXEql0@public.gmane.org, ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, patrikbachan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, serge-A9i7LUbDfNHQT0dZR+AlfA@public.gmane.org, abcloriens-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, clayton-fehKsxFhGzZIf6P1QZMOBw@public.gmane.org, martijn-28JJ9oSIdodmR6Xm/wNWPw@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Filip =?utf-8?Q?Matijevi=C4=87?= <filip.matijevic.pz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180129090944.28687-3-argus.lin@mediatek.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: argus.lin@mediatek.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Cc: Chenglin Xu <chenglin.xu@mediatek.com>, Sean Wang <sean.wang@mediatek.com>, wsd_upstream@mediatek.com, henryc.chen@mediatek.com, flora.fu@mediatek.com, Chen Zhong <chen.zhong@mediatek.com>, Christophe Jaillet <christophe.jaillet@wanadoo.fr>, "shailendra . v" <shailendra.v@samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 
---ew6BAiZeqk4r7MaW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Tue 2018-01-30 11:32:38, Mark Brown wrote:
-> On Tue, Jan 30, 2018 at 09:53:14AM +0100, Pavel Machek wrote:
->=20
-> > Well, notice I'm converting existing driver to device tree. And that
-> > one already has GPIO dependency. It is possible that more work needs
-> > to be done there, but that should not be a reason to delay this. Feel
-> > free to help.
->=20
-> No, it's a very good reason to delay merging something.  A DT binding is
-> an ABI so we need to sort out interface issues and describe things as
-> well as we can, with board files it's not an ABI so we can just do any
-> old thing that happens to work and while it might not be ideal it
-> doesn't really matter since we can change it later if we need to.
+On 01/29/2018 10:09 AM, argus.lin@mediatek.com wrote:
+> From: Argus Lin <argus.lin@mediatek.com>
+> 
+> New pwrap support int1_en flag for starvation and channel
+> request exception. We need to register it for interrupt
+> handler.
+> We also add pwrap capability flag used to declare if we
 
-Whatever.
+"We also" wording is nearly always a hint, that this should be done
+in two independent patches.
 
-Turns out this was GPIO after all.
+> support BRIDGE, RESET, DCM, PRIORITY_SEL and INT1_EN
+> or not.
+> 
+> Signed-off-by: Argus Lin <argus.lin@mediatek.com>
+> ---
+>  drivers/soc/mediatek/mtk-pmic-wrap.c | 11 ++++++++++-
+>  1 file changed, 10 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/soc/mediatek/mtk-pmic-wrap.c b/drivers/soc/mediatek/mtk-pmic-wrap.c
+> index e9e054a15b7d..9f924d3f8645 100644
+> --- a/drivers/soc/mediatek/mtk-pmic-wrap.c
+> +++ b/drivers/soc/mediatek/mtk-pmic-wrap.c
+> @@ -76,6 +76,13 @@
+>  #define PWRAP_SLV_CAP_SECURITY	BIT(2)
+>  #define HAS_CAP(_c, _x)	(((_c) & (_x)) == (_x))
+>  
+> +/* Group of bits used for shown pwrap capability */
+> +#define PWRAP_CAP_BRIDGE	BIT(0)
+> +#define PWRAP_CAP_RESET		BIT(1)
+> +#define PWRAP_CAP_DCM		BIT(2)
 
-I believe power-gpio and reset-gpio are equiavalent, with different
-polarity. (After all, devices in reset consume less power).
+As you told me the driver will be upstreamed in April, please add this flag when
+you upstream the driver, as this will be in a different kernel version.
 
-If you prefer one solution over another, let me know...
+> +#define PWRAP_CAP_PRIORITY_SEL	BIT(3)
+> +#define PWRAP_CAP_INT1_EN	BIT(4)
+> +
 
-									Pavel
+Add each flag when you add the user of the flag.
 
+>  /* defines for slave device wrapper registers */
+>  enum dew_regs {
+>  	PWRAP_DEW_BASE,
+> @@ -681,9 +688,11 @@ struct pmic_wrapper_type {
+>  	enum pwrap_type type;
+>  	u32 arb_en_all;
+>  	u32 int_en_all;
+> +	u32 int1_en_all;
+>  	u32 spi_w;
+>  	u32 wdt_src;
+> -	unsigned int has_bridge:1;
+> +	/* Flags indicating the capability for the target pwrap */
+> +	u32 caps;
 
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+NAK, this will not compile. Please make sure that every patch on it's own does
+not break compilation.
 
---ew6BAiZeqk4r7MaW
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Regards,
+Matthias
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlpwZO0ACgkQMOfwapXb+vKxBACgsLBvaOHPfqI2SMfxRvcwWOrs
-m/sAnREPZZpu8Dv53RkXupfS9xDB7xa+
-=VSe0
------END PGP SIGNATURE-----
-
---ew6BAiZeqk4r7MaW--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  	int (*init_reg_clock)(struct pmic_wrapper *wrp);
+>  	int (*init_soc_specific)(struct pmic_wrapper *wrp);
+>  };
+> -- 
+> 2.12.5
+> 
+> ************* Email Confidentiality Notice
+>  ********************
+> The information contained in this e-mail message (including any 
+> attachments) may be confidential, proprietary, privileged, or otherwise
+> exempt from disclosure under applicable laws. It is intended to be 
+> conveyed only to the designated recipient(s). Any use, dissemination, 
+> distribution, printing, retaining or copying of this e-mail (including its 
+> attachments) by unintended recipient(s) is strictly prohibited and may 
+> be unlawful. If you are not an intended recipient of this e-mail, or believe
+>  
+> that you have received this e-mail in error, please notify the sender 
+> immediately (by replying to this e-mail), delete any and all copies of 
+> this e-mail (including any attachments) from your system, and do not
+> disclose the content of this e-mail to any other person. Thank
+>  you!
+> 
