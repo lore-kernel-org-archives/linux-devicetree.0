@@ -1,177 +1,54 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v6 01/41] dt-bindings: clock: Add new bindings for TI
- Davinci PLL clocks
-Date: Tue, 30 Jan 2018 08:50:17 -0600
-Message-ID: <CAL_JsqK+c-C9VJnEOr0Em3Y-dtvE+CSbsc6m-0JoWJSZxKeR_g@mail.gmail.com>
-References: <1516468460-4908-1-git-send-email-david@lechnology.com>
- <1516468460-4908-2-git-send-email-david@lechnology.com> <20180129195315.bjanym7pmeh7bhaa@rob-hp-laptop>
- <ffec7cac-22cd-f19b-8c1b-ce3223606d20@lechnology.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/4] arm64: add basic DTS for i.MX8MQ
+Date: Tue, 30 Jan 2018 08:55:15 -0600
+Message-ID: <CAL_JsqJk8-yC4XnTFwAuV1p5PUg5o=x2XQd9pUXULxHZ4xsFFQ@mail.gmail.com>
+References: <20180117183244.28303-1-l.stach@pengutronix.de>
+ <20180117183244.28303-2-l.stach@pengutronix.de> <20180129175549.f6ljaccpo5ms6xkc@rob-hp-laptop>
+ <1517248844.2804.16.camel@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <ffec7cac-22cd-f19b-8c1b-ce3223606d20@lechnology.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Lechner <david@lechnology.com>
-Cc: linux-clk <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Adam Ford <aford173@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1517248844.2804.16.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 29, 2018 at 3:14 PM, David Lechner <david@lechnology.com> wrote:
-> On 01/29/2018 01:53 PM, Rob Herring wrote:
+On Mon, Jan 29, 2018 at 12:00 PM, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> Am Montag, den 29.01.2018, 11:55 -0600 schrieb Rob Herring:
+>> On Wed, Jan 17, 2018 at 07:32:42PM +0100, Lucas Stach wrote:
+>> > This adds the basic DTS for the i.MX8MQ.
+>> > For now only the following peripherals are supported:
+>> > - IOMUXC (pin controller)
+>> > - CCM (clock controller)
+>> > - GPIO
+>> > - UART
+>> > - uSDHC (SD/eMMC controller)
+>> > - FEC (ethernet controller)
+>> > - i2c
+>> >
+>> > This is enough to get a very basic board support up and running.
+>> > +                   compatible = "nxp,imx8mq-aips-bus",
+>> > "simple-bus";
+>> > +                           compatible = "nxp,imx8mq-gpio",
+>> > "fsl,imx35-gpio";
+>> > +                           compatible = "nxp,imx8mq-iomuxc";
 >>
->> On Sat, Jan 20, 2018 at 11:13:40AM -0600, David Lechner wrote:
->>>
->>> This adds a new binding for the PLL IP blocks in the mach-davinci
->>> family of processors. Currently, only da850 has device tree support
->>> but these bindings can also work for other SoCs in this family just
->>> by adding new compatible strings.
->>>
->>> Note: Although these PLL controllers are very similar to the TI Keystone
->>> SoCs, we are not re-using those bindings. The Keystone bindings use a
->>> legacy one-node-per-clock binding. Furthermore, the mach-davinici SoCs
->>> have a slightly different PLL register layout and a number of quirks
->>> that can't be handled by the existing bindings, so the keystone bindings
->>> could not be used as-is anyway.
->>>
->>> Signed-off-by: David Lechner <david@lechnology.com>
->>> ---
->>>
->>> v6 changes:
->>> - Added clock-names property
->>> - Added ti,clkmode-square-wave property
->>> - Added pllout child node
->>> - Added obsclk child node
->>> - Expanded examples
->>>
->>>   .../devicetree/bindings/clock/ti/davinci/pll.txt   | 96
->>> ++++++++++++++++++++++
->>>   1 file changed, 96 insertions(+)
->>>   create mode 100644
->>> Documentation/devicetree/bindings/clock/ti/davinci/pll.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/clock/ti/davinci/pll.txt
->>> b/Documentation/devicetree/bindings/clock/ti/davinci/pll.txt
->>> new file mode 100644
->>> index 0000000..36998e1
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/clock/ti/davinci/pll.txt
->>> @@ -0,0 +1,96 @@
->>> +Binding for TI DaVinci PLL Controllers
->>> +
->>> +The PLL provides clocks to most of the components on the SoC. In
->>> addition
->>> +to the PLL itself, this controller also contains bypasses, gates,
->>> dividers,
->>> +an multiplexers for various clock signals.
->>> +
->>> +Required properties:
->>> +- compatible: shall be one of:
->>> +       - "ti,da850-pll0" for PLL0 on DA850/OMAP-L138/AM18XX
->>> +       - "ti,da850-pll1" for PLL1 on DA850/OMAP-L138/AM18XX
->>> +- reg: physical base address and size of the controller's register area.
->>> +- clocks: phandles corresponding to the clock names
->>> +- clock-names: names of the clock sources - depends on compatible string
->>> +       - for "ti,da850-pll0", shall be "clksrc", "extclksrc"
->>> +       - for "ti,da850-pll1", shall be "clksrc"
->>> +
->>> +Optional properties:
->>> +- ti,clkmode-square-wave: Indicates that the the board is supplying a
->>> square
->>> +       wave input on the OSCIN pin instead of using a crystal
->>> oscillator.
->>> +       This property is only valid when compatible = "ti,da850-pll0".
->>> +
->>> +
->>> +Optional child nodes:
->>> +
->>> +pllout
->>> +       Describes the main PLL clock output (before POSTDIV). The node
->>> name must
->>> +       be "pllout".
->>> +
->>> +       Required properties:
->>> +       - #clock-cells: shall be 0
->>> +
->>> +sysclk
->>> +       Describes the PLLDIVn divider clocks that provide the SYSCLKn
->>> clock
->>> +       domains. The node name must be "sysclk". Consumers of this node
->>> should
->>> +       use "n" in "SYSCLKn" as the index parameter for the clock cell.
->>> +
->>> +       Required properties:
->>> +       - #clock-cells: shall be 1
->>> +
->>> +auxclk
->>> +       Describes the AUXCLK output of the PLL. The node name must be
->>> "auxclk".
->>> +       This child node is only valid when compatible = "ti,da850-pll0".
->>> +
->>> +       Required properties:
->>> +       - #clock-cells: shall be 0
->>> +
->>> +obsclk
->>> +       Describes the OBSCLK output of the PLL. The node name must be
->>> "obsclk".
->>> +
->>> +       Required properties:
->>> +       - #clock-cells: shall be 0
->>
->>
->> So why have all these child nodes vs. just defining a single number
->> space of clock ids?
->>
->> Rob
->>
+>> Also, are all these new compatibles documented?
 >
-> I think that it makes the bindings more self-documenting. Not all PLLs have
-> all of possible types of output clocks, so the presence or absence of a
-> child node indicates if a PLL actually has that output or not.
+> Only those where the driver isn't matching one of the older
+> compatibles.
+>
+> I'm not sure what the policy is for those "just in case" compatibles,
+> where we have older compatibles that are currently used, but the newer
+> compatibles are in the DT to make it easy to match them when any IP
+> integration issues turn up at a later time.
 
-Doesn't the compatible string do that?
-
-> It is also complicated by the fact that one of the child nodes (sysclk)
-> is  already an array of clocks.
->
-> To do what you are suggesting might look something like this...
->
-> ---
->
-> Required properties:
-> - compatible: shall be one of:
->         - "ti,da850-pll0" for PLL0 on DA850/OMAP-L138/AM18XX
->         - "ti,da850-pll1" for PLL1 on DA850/OMAP-L138/AM18XX
-> - reg: physical base address and size of the controller's register area.
-> - clocks: phandles corresponding to the clock names
-> - clock-names: names of the clock sources - depends on compatible string
->         - for "ti,da850-pll0", shall be "clksrc", "extclksrc"
->         - for "ti,da850-pll1", shall be "clksrc"
-> - #clock-cells: shall be set to <2>.
->
-> Consumers:
->
-> The clock cell values for consumers work as follows...
->
-> The first index is one of the constants defined in ti-davinci-pll.h
->
-> The second index is 0 unless the first index is TI_DAVINCI_SYSCLK. In the
-> case
-> of TI_DAVINCI_SYSCLK the second index the SYSCLK domain ID (n in SYSCLKn).
->
-> For compatible = "ti,da850-pll0":
->         - <&pll0 TI_DAVINCI_PLLOUT 0> is the PLLOUT clock
->         - <&pll0 TI_DAVINCI_SYSCLK n> is one of the SYSCLKn clock domains
-> where n is 1 to 7
->         - <&pll0 TI_DAVINCI_AUXCLK 0> is the AUXCLK clock domain
->         - <&pll0 TI_DAVINCI_OBSCLK 0> is the OBSCLK clock domain
->         - all other index combinations are invalid
->
-> For compatible = "ti,da850-pll1":
->         - <&pll0 TI_DAVINCI_SYSCLK n> is one of the SYSCLKn clock domains
-> where n is 1 to 3
->         - <&pll0 TI_DAVINCI_OBSCLK 0> is the OBSCLK clock domain
->         - all other index combinations are invalid
-
-You don't really need 2 cells here. I guess if you want to keep the
-child nodes, that is fine.
+They all should be documented, so dts files can be validated (once we
+have machine parseable binding docs).
 
 Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
