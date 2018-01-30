@@ -1,94 +1,296 @@
-From: Ladislav Michl <ladis-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
-Subject: Re: [PATCH] sound/tlv320dac33: Add device tree support
-Date: Tue, 30 Jan 2018 10:38:38 +0100
-Message-ID: <20180130093838.GA15195@lenoch>
-References: <20180129230539.GA18280@amd>
- <20180129232031.GA7695@lenoch>
- <20180129233301.GA18104@amd>
- <20180130083446.GA13498@lenoch>
- <20180130085314.GA4585@amd>
- <1141b126-b883-a246-85ad-c5a69acb90bb@gmail.com>
+From: jacopo mondi <jacopo-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v7 07/11] media: i2c: ov772x: Support frame interval
+ handling
+Date: Tue, 30 Jan 2018 10:47:51 +0100
+Message-ID: <20180130092808.GA11063@w540>
+References: <1516974930-11713-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1516974930-11713-8-git-send-email-jacopo+renesas@jmondi.org>
+ <1735356.2kmgrjUaxx@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-2
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1141b126-b883-a246-85ad-c5a69acb90bb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1735356.2kmgrjUaxx@avalon>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Filip =?iso-8859-2?Q?Matijevi=E6?= <filip.matijevic.pz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, bhumirks-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, aaro.koskinen-X3B1VOXEql0@public.gmane.org, ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, patrikbachan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, serge-A9i7LUbDfNHQT0dZR+AlfA@public.gmane.org, abcloriens-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, clayton-fehKsxFhGzZIf6P1QZMOBw@public.gmane.org, martijn-28JJ9oSIdodmR6Xm/wNWPw@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, geert-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sakari.ailus-X3B1VOXEql0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pombredanne-od1rfyK75/E@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 30, 2018 at 10:11:02AM +0100, Filip Matijeviæ wrote:
-> Hi,
-> 
-> On 01/30/2018 09:53 AM, Pavel Machek wrote:
-> > On Tue 2018-01-30 09:34:46, Ladislav Michl wrote:
-> >> On Tue, Jan 30, 2018 at 12:33:01AM +0100, Pavel Machek wrote:
-> >>> On Tue 2018-01-30 00:20:31, Ladislav Michl wrote:
-> >>>> On Tue, Jan 30, 2018 at 12:05:39AM +0100, Pavel Machek wrote:
-> >>>>>
-> >>>>> This adds device tree support to tlv320dac33.c.
-> >>>>>
-> >>>>> Signed-off-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-> >>>>>
-> >>>>> diff --git a/Documentation/devicetree/bindings/sound/tlv320dac33.txt b/Documentation/devicetree/bindings/sound/tlv320dac33.txt
-> >>>>> new file mode 100644
-> >>>>> index 0000000..6cbd311
-> >>>>> --- /dev/null
-> >>>>> +++ b/Documentation/devicetree/bindings/sound/tlv320dac33.txt
-> >>>>> @@ -0,0 +1,32 @@
-> >>>>> +Texas Instruments - tlv320dac33 Codec module
-> >>>>> +
-> >>>>> +The tlv320dac33 serial control bus communicates through I2C protocols.
-> >>>>> +
-> >>>>> +Required properties:
-> >>>>> +
-> >>>>> +- compatible - "ti,tlv320dac33"
-> >>>>> +- reg - I2C slave address
-> >>>>> +
-> >>>>> +Optional properties:
-> >>>>> +
-> >>>>> +- power-gpios - gpio pin to power the device, active high
-> >>>>
-> >>>> While driver used gpio in platform data, isn't it more likely
-> >>>> regulator which powers device?
-> >>>
-> >>>                 power-gpios = <&gpio2 28 0>; /* gpio_60 */
-> >>>
-> >>> Looks like GPIO to me -- example is from Nokia N9. So this appears to
-> >>> be correct.
-> >>
-> >> Device datasheet doesn't list any pin which looks like "power-gpio"
-> >> http://www.ti.com/lit/ds/symlink/tlv320dac32.pdf
-> >> Unfortunately I do not know much about N9, but was able to find Nokia 5610
-> >> scheme to get clue how could be tlv320dac33 hardwired (see page 2):
-> >> http://mastermobile.spb.ru/service/nokia_5610_rm-242_service_schematics.pdf
-> >> Here AVDD is powered by LP3985 voltage regulator which is enabled using
-> >> VEN pin which might be connected to gpio. Or there could be completely
-> >> different voltage regulator with different controls. And since Linux
-> >> already has voltage regulator class, lets not limit ourselves to gpio
-> >> pins.
-> > 
-> > Well, notice I'm converting existing driver to device tree. And that
-> > one already has GPIO dependency. It is possible that more work needs
-> > to be done there, but that should not be a reason to delay this. Feel
-> > free to help.
+Hi Laurent,
 
-Adding DT properties that need to be maintained for compatibility reasons
-is a bad idea and very good reason to delay merging unfinished stuff.
-And meanwhile it turned out it is not power-gpio :)
+On Mon, Jan 29, 2018 at 01:01:01PM +0200, Laurent Pinchart wrote:
+> Hi Jacopo,
+>
+> Thank you for the patch.
+>
+> On Friday, 26 January 2018 15:55:26 EET Jacopo Mondi wrote:
+> > Add support to ov772x driver for frame intervals handling and enumeration.
+> > Tested with 10MHz and 24MHz input clock at VGA and QVGA resolutions for
+> > 10, 15 and 30 frame per second rates.
+> >
+> > Signed-off-by: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+> > ---
+> > drivers/media/i2c/ov772x.c | 315 +++++++++++++++++++++++++++++++++++++++++-
+> > 1 file changed, 310 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/drivers/media/i2c/ov772x.c b/drivers/media/i2c/ov772x.c
+> > index 912b1b9..6d46748 100644
+> > --- a/drivers/media/i2c/ov772x.c
+> > +++ b/drivers/media/i2c/ov772x.c
+> > @@ -250,6 +250,7 @@
+> >  #define AEC_1p2         0x10	/*  01: 1/2  window */
+> >  #define AEC_1p4         0x20	/*  10: 1/4  window */
+> >  #define AEC_2p3         0x30	/*  11: Low 2/3 window */
+> > +#define COM4_RESERVED   0x01	/* Reserved value */
+>
+> I'd write "Reserved bits", "Reserved value" makes it sound like it's the value
+> of the full register.
+>
 
-> According to N9 schematics
-> http://www.s-manuals.com/manuals/phone/nokia/nokia_n9_rm-696_service_schematics_v1.pdf
-> it's in fact GPIO pin that is connected to reset line (labeled
-> CODEC_RST). So calling it "power" might be misleading, but the driver
-> code is quite clear as it labels that GPIO as "tlv320dac33 reset"
+Ack
 
-Thanks a lot! So now it is clear that gpio is connected to codec's nRESET pin,
-therefore "reset-gpios" property seems reasonable here.
+> >  /* COM5 */
+> >  #define AFR_ON_OFF      0x80	/* Auto frame rate control ON/OFF selection
+> */
+> > @@ -267,6 +268,19 @@
+> >  				/* AEC max step control */
+> >  #define AEC_NO_LIMIT    0x01	/*   0 : AEC incease step has limit */
+> >  				/*   1 : No limit to AEC increase step */
+> > +/* CLKRC */
+> > +				/* Input clock divider register */
+> > +#define CLKRC_RESERVED  0x80	/* Reserved value */
+> > +#define CLKRC_BYPASS    0x40	/* Bypass input clock divider */
+> > +#define CLKRC_DIV2      0x01	/* Divide input clock by 2 */
+> > +#define CLKRC_DIV3      0x02	/* Divide input clock by 3 */
+> > +#define CLKRC_DIV4      0x03	/* Divide input clock by 4 */
+> > +#define CLKRC_DIV5      0x04	/* Divide input clock by 5 */
+> > +#define CLKRC_DIV6      0x05	/* Divide input clock by 6 */
+> > +#define CLKRC_DIV8      0x07	/* Divide input clock by 8 */
+> > +#define CLKRC_DIV10     0x09	/* Divide input clock by 10 */
+> > +#define CLKRC_DIV16     0x0f	/* Divide input clock by 16 */
+> > +#define CLKRC_DIV20     0x13	/* Divide input clock by 20 */
+>
+> How about just
+>
+> #define CLKRC_DIV(n)		((n) - 1)
+>
 
-	ladis
+Ack again,
+
+> >  /* COM7 */
+> >  				/* SCCB Register Reset */
+> > @@ -373,6 +387,12 @@
+> >  #define VERSION(pid, ver) ((pid<<8)|(ver&0xFF))
+> >
+> >  /*
+> > + * Input clock frequencies
+> > + */
+> > +enum { OV772X_FIN_10MHz, OV772X_FIN_24MHz, OV772X_FIN_48MHz, OV772X_FIN_N,
+> > };
+> > +static unsigned int ov772x_fin_vals[] = { 10000000, 24000000, 48000000
+> > };
+> > +
+> > +/*
+> >   * struct
+> >   */
+> >
+> > @@ -391,6 +411,16 @@ struct ov772x_win_size {
+> >  	struct v4l2_rect	  rect;
+> >  };
+> >
+> > +struct ov772x_pclk_config {
+> > +	u8 com4;
+> > +	u8 clkrc;
+> > +};
+> > +
+> > +struct ov772x_frame_rate {
+> > +	unsigned int fps;
+> > +	const struct ov772x_pclk_config pclk[OV772X_FIN_N];
+> > +};
+> > +
+> >  struct ov772x_priv {
+> >  	struct v4l2_subdev                subdev;
+> >  	struct v4l2_ctrl_handler	  hdl;
+> > @@ -404,6 +434,7 @@ struct ov772x_priv {
+> >  	unsigned short                    flag_hflip:1;
+> >  	/* band_filter = COM8[5] ? 256 - BDBASE : 0 */
+> >  	unsigned short                    band_filter;
+> > +	unsigned int			  fps;
+> >  };
+> >
+> >  /*
+> > @@ -508,6 +539,154 @@ static const struct ov772x_win_size ov772x_win_sizes[]
+> > = { };
+> >
+> >  /*
+> > + * frame rate settings lists
+> > + */
+> > +unsigned int ov772x_frame_intervals[] = {10, 15, 30, 60};
+> > +#define OV772X_N_FRAME_INTERVALS ARRAY_SIZE(ov772x_frame_intervals)
+> > +
+> > +static const struct ov772x_frame_rate vga_frame_rates[] = {
+> > +	{	/* PCLK = 7,5 MHz */
+> > +		.fps		= 10,
+> > +		.pclk = {
+> > +			[OV772X_FIN_10MHz] = {
+> > +				.com4	= PLL_6x | COM4_RESERVED,
+> > +				.clkrc	= CLKRC_DIV8 | CLKRC_RESERVED,
+> > +			},
+> > +			[OV772X_FIN_24MHz] = {
+> > +				.com4	= PLL_BYPASS | COM4_RESERVED,
+> > +				.clkrc	= CLKRC_DIV3 | CLKRC_RESERVED,
+> > +			},
+> > +			[OV772X_FIN_48MHz] = {
+> > +				.com4	= PLL_BYPASS | COM4_RESERVED,
+> > +				.clkrc	= CLKRC_DIV6 | CLKRC_RESERVED,
+> > +			},
+> > +		},
+> > +	},
+> > +	{	/* PCLK = 12 MHz */
+> > +		.fps		= 15,
+> > +		.pclk = {
+> > +			[OV772X_FIN_10MHz]	= {
+> > +				.com4	= PLL_4x | COM4_RESERVED,
+> > +				.clkrc	= CLKRC_DIV3 | CLKRC_RESERVED,
+> > +			},
+> > +			[OV772X_FIN_24MHz]	= {
+> > +				.com4	= PLL_BYPASS | COM4_RESERVED,
+> > +				.clkrc	= CLKRC_DIV2 | CLKRC_RESERVED,
+> > +			},
+> > +			[OV772X_FIN_48MHz]	= {
+> > +				.com4	= PLL_BYPASS | COM4_RESERVED,
+> > +				.clkrc	= CLKRC_DIV4 | CLKRC_RESERVED,
+> > +			},
+> > +		},
+> > +	},
+> > +	{	/* PCLK = 24 MHz */
+> > +		.fps		= 30,
+> > +		.pclk = {
+> > +			[OV772X_FIN_10MHz]	= {
+> > +				.com4	= PLL_8x | COM4_RESERVED,
+> > +				.clkrc	= CLKRC_DIV3 | CLKRC_RESERVED,
+> > +			},
+> > +			[OV772X_FIN_24MHz]	= {
+> > +				.com4	= PLL_BYPASS | COM4_RESERVED,
+> > +				.clkrc	= CLKRC_BYPASS | CLKRC_RESERVED,
+> > +			},
+> > +			[OV772X_FIN_48MHz]	= {
+> > +				.com4	= PLL_BYPASS | COM4_RESERVED,
+> > +				.clkrc	= CLKRC_DIV2 | CLKRC_RESERVED,
+> > +			},
+> > +		},
+> > +	},
+> > +	{	/* PCLK = 48 MHz */
+> > +		.fps		= 60,
+> > +		.pclk = {
+> > +			[OV772X_FIN_10MHz]	= {
+> > +				.com4	= PLL_8x | COM4_RESERVED,
+> > +				.clkrc	= CLKRC_DIV2 | CLKRC_RESERVED,
+> > +			},
+> > +			[OV772X_FIN_24MHz]	= {
+> > +				.com4	= PLL_4x | COM4_RESERVED,
+> > +				.clkrc	= CLKRC_DIV2 | CLKRC_RESERVED,
+> > +			},
+> > +			[OV772X_FIN_48MHz]	= {
+> > +				.com4	= PLL_BYPASS | COM4_RESERVED,
+> > +				.clkrc	= CLKRC_BYPASS | CLKRC_RESERVED,
+> > +			},
+> > +		},
+> > +	},
+> > +};
+> > +
+> > +static const struct ov772x_frame_rate qvga_frame_rates[] = {
+> > +	{	/* PCLK = 3,2 MHz */
+> > +		.fps		= 10,
+> > +		.pclk = {
+> > +			[OV772X_FIN_10MHz] = {
+> > +				.com4	= PLL_6x | COM4_RESERVED,
+> > +				.clkrc	= CLKRC_DIV16 | CLKRC_RESERVED,
+> > +			},
+> > +			[OV772X_FIN_24MHz] = {
+> > +				.com4	= PLL_BYPASS | COM4_RESERVED,
+> > +				.clkrc	= CLKRC_DIV8 | CLKRC_RESERVED,
+> > +			},
+> > +			[OV772X_FIN_48MHz] = {
+> > +				.com4	= PLL_BYPASS | COM4_RESERVED,
+> > +				.clkrc	= CLKRC_DIV16 | CLKRC_RESERVED,
+> > +			},
+> > +		},
+> > +	},
+> > +	{	/* PCLK = 4,8 MHz */
+> > +		.fps		= 15,
+> > +		.pclk = {
+> > +			[OV772X_FIN_10MHz]	= {
+> > +				.com4	= PLL_BYPASS | COM4_RESERVED,
+> > +				.clkrc	= CLKRC_DIV2 | CLKRC_RESERVED,
+> > +			},
+> > +			[OV772X_FIN_24MHz]	= {
+> > +				.com4	= PLL_BYPASS | COM4_RESERVED,
+> > +				.clkrc	= CLKRC_DIV5 | CLKRC_RESERVED,
+> > +			},
+> > +			[OV772X_FIN_48MHz]	= {
+> > +				.com4	= PLL_BYPASS | COM4_RESERVED,
+> > +				.clkrc	= CLKRC_DIV10 | CLKRC_RESERVED,
+> > +			},
+> > +		},
+> > +	},
+> > +	{	/* PCLK = 9,6 MHz */
+> > +		.fps		= 30,
+> > +		.pclk = {
+> > +			[OV772X_FIN_10MHz]	= {
+> > +				.com4	= PLL_BYPASS | COM4_RESERVED,
+> > +				.clkrc	= CLKRC_BYPASS | CLKRC_RESERVED,
+> > +			},
+> > +			[OV772X_FIN_24MHz]	= {
+> > +				.com4	= PLL_4x | COM4_RESERVED,
+> > +				.clkrc	= CLKRC_DIV10 | CLKRC_RESERVED,
+> > +			},
+> > +			[OV772X_FIN_48MHz]	= {
+> > +				.com4	= PLL_4x | COM4_RESERVED,
+> > +				.clkrc	= CLKRC_DIV20 | CLKRC_RESERVED,
+> > +			},
+> > +		},
+> > +	},
+> > +	{	/* PCLK = 19 MHz */
+> > +		.fps		= 60,
+> > +		.pclk = {
+> > +			[OV772X_FIN_10MHz]	= {
+> > +				.com4	= PLL_4x | COM4_RESERVED,
+> > +				.clkrc	= CLKRC_DIV2 | CLKRC_RESERVED,
+> > +			},
+> > +			[OV772X_FIN_24MHz]	= {
+> > +				.com4	= PLL_6x | COM4_RESERVED,
+> > +				.clkrc	= CLKRC_DIV8 | CLKRC_RESERVED,
+> > +			},
+> > +			[OV772X_FIN_48MHz]	= {
+> > +				.com4	= PLL_6x | COM4_RESERVED,
+> > +				.clkrc	= CLKRC_DIV16 | CLKRC_RESERVED,
+> > +			},
+> > +		},
+> > +	},
+> > +};
+> > +
+> > +/*
+> >   * general function
+> >   */
+>
+> I'm afraid I'll have to ask the obvious: could we replace this table with
+> dynamic computation ? You might be able to reuse the (probably badly named)
+> aptina-pll library from drivers/media/i2c/
+>
+
+Mmmm, okay... I might be able to use the above mentioned library,
+but that's designed for a still simple but more complex PLL with 2
+dividers and one multiplier. I know I can model it to work on ov7720
+PLL using limits, but since I only have 4 possible PLL multipliers
+(1x, 2x, 4x, 8x) and a single divider it is simpler to test all 4 of
+them and see which one approximate the desired pixel clock.
+
+I will send v8 with this changed shortly.
+
+Thanks
+   j
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
