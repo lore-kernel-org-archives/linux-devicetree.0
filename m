@@ -1,97 +1,53 @@
-From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Subject: Re: [PATCH] sound/tlv320dac33: Add device tree support
-Date: Tue, 30 Jan 2018 11:35:38 +0100
-Message-ID: <20180130103538.GD18104@amd>
-References: <20180129230539.GA18280@amd>
- <20180129232031.GA7695@lenoch>
- <20180129233301.GA18104@amd>
- <20180130083446.GA13498@lenoch>
- <20180130085314.GA4585@amd>
- <1141b126-b883-a246-85ad-c5a69acb90bb@gmail.com>
- <20180130093838.GA15195@lenoch>
- <20180130100023.GB18104@amd>
- <20180130101046.GA16474@lenoch>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH v2 1/5] arm64: renesas: r8a77995: add I2C support
+Date: Tue, 30 Jan 2018 11:42:44 +0100
+Message-ID: <20180130104243.wui3okjqoxrws4cb@ninjato>
+References: <1517240748-14780-1-git-send-email-ulrich.hecht+renesas@gmail.com>
+ <1517240748-14780-2-git-send-email-ulrich.hecht+renesas@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="11Y7aswkeuHtSBEs"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="apzmgxdnlwuapemr"
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180130101046.GA16474@lenoch>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ladislav Michl <ladis-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
-Cc: Filip =?utf-8?Q?Matijevi=C4=87?= <filip.matijevic.pz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, bhumirks-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, aaro.koskinen-X3B1VOXEql0@public.gmane.org, ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, patrikbachan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, serge-A9i7LUbDfNHQT0dZR+AlfA@public.gmane.org, abcloriens-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, clayton-fehKsxFhGzZIf6P1QZMOBw@public.gmane.org, martijn-28JJ9oSIdodmR6Xm/wNWPw@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+In-Reply-To: <1517240748-14780-2-git-send-email-ulrich.hecht+renesas@gmail.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
+Cc: linux-renesas-soc@vger.kernel.org, horms@verge.net.au, geert@linux-m68k.org, kieran.bingham@ideasonboard.com, magnus.damm@gmail.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---11Y7aswkeuHtSBEs
-Content-Type: text/plain; charset=utf-8
+--apzmgxdnlwuapemr
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue 2018-01-30 11:10:46, Ladislav Michl wrote:
-> On Tue, Jan 30, 2018 at 11:00:23AM +0100, Pavel Machek wrote:
-> > On Tue 2018-01-30 10:38:38, Ladislav Michl wrote:
-> > > On Tue, Jan 30, 2018 at 10:11:02AM +0100, Filip Matijevi=C4=87 wrote:
-> > > > Hi,
-> > > >=20
-> >=20
-> > > > > Well, notice I'm converting existing driver to device tree. And t=
-hat
-> > > > > one already has GPIO dependency. It is possible that more work ne=
-eds
-> > > > > to be done there, but that should not be a reason to delay this. =
-Feel
-> > > > > free to help.
-> > >=20
-> > > Adding DT properties that need to be maintained for compatibility rea=
-sons
-> > > is a bad idea and very good reason to delay merging unfinished stuff.
-> > > And meanwhile it turned out it is not power-gpio :)
-> >=20
-> > I believe reset-gpios and power-gpios are commonly used like
-> > this... and that's what the old code does.
+On Mon, Jan 29, 2018 at 04:45:44PM +0100, Ulrich Hecht wrote:
+> Defines R-Car D3 I2C controllers 0-3.
 >=20
-> Why do you care about old code when introducing new DT property?
-> Either it is reset, then lets call it reset-gpios or it is power supply
-> and then voltage regulator should be used (VAUX4.OUT is such a regulator
-> although it is unclear to me how it is controlled (*)).
+> Signed-off-by: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-power gpio =3D !reset gpio. Difference is only in polarity.
+Acked-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-> > You are not helping.
->=20
-> The only way I can help here is to resend your patch with "reset-gpios"
-> used, which I'm pretty sure you can handle yourself.
 
-Well, you can do that, and then you can argue with the next person who
-feels one of the properties has to get his preferred color. Hard part
-is not changing code :-(.
-
-									Pavel
-
-> (*) Remark "DAC33 enabled (for example, plug in a headset to the 3.5mm
-> AV connector and start music playback from the device)" in schematics
-> suggests it is controlled somehow.
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---11Y7aswkeuHtSBEs
+--apzmgxdnlwuapemr
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
 
-iEYEARECAAYFAlpwSnoACgkQMOfwapXb+vJpSACfcoEayAIDb8i+euYVi6ax51do
-2ogAoLNW73ZHvDoFKVEHhmR0dufAqXGX
-=6iRg
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlpwTB8ACgkQFA3kzBSg
+Kbaadw/9FvVRYEJtyYHNclMFRqmeK0FTOS1LEoljZrZLXDrj/oBUwILi5x9K7H2i
+XQPQq/PWnADdLNhjtC1wz83whJd5aQnC41NvyPh/8JQzdNsgALSAp4OJYPUDxqW1
+EY/NT67AVM2OyUMi05s1ch3J+G/0wMlEjTPSfcR5O7shL9k0rMl3cEhgUmtdiH6o
+qgYBZGcj+QsYg8ldsM6egAZUaE82GU/0X4jpq9H4zhN60NMDJ8b3/hDjMj3zGz91
+tcJ1RzDKJe4U/Sz1paB+SIl8nwp3cv3AlzY9RJbmyN7N0sGYVbiiTEccDBNsBWmm
+NiIXEn3DeSSkdTUE/T9u1Q4IKbLRLRjkGXHD69odIlGpg/QxJ/m5kbRHAoHn4KV0
+4vWzHWjU5bO1+nUmvm1IPhbIu8T2fdidWjrAVpASa/ycsueKrToUWSFKYuNIFmzw
+pth2gTcRs0ZixPb+35hw5ZCKO5NM2ED43bwKPgSjark4aZw879PRPZkgoj/7E7rp
+HjVcuMvkxFt8VQpznpFFLt+qsa0HDjSh0NVfTHvAdcMv1ftfUXewNG/K9DmIw4a3
+ejrnVmJ97ihtTGZcM/SY3SZM4TsK7/+7itKIULQUZeRF6WKCwqz5nFDYwPeRZ43v
+VR7F8Bi/HxCSWUOMLUEMUTiMw25c5hRqT1lhmoODcdsZD4Rn0/E=
+=IO8B
 -----END PGP SIGNATURE-----
 
---11Y7aswkeuHtSBEs--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--apzmgxdnlwuapemr--
