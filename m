@@ -1,100 +1,156 @@
-From: Georgi Djakov <georgi.djakov@linaro.org>
-Subject: Re: [PATCH v11 2/6] mailbox: qcom: Create APCS child device for clock
- controller
-Date: Wed, 31 Jan 2018 20:40:07 +0200
-Message-ID: <549f02e5-19d7-8cec-674f-247dfb2d2467@linaro.org>
-References: <20171205154701.27730-1-georgi.djakov@linaro.org>
- <20171205154701.27730-3-georgi.djakov@linaro.org>
- <CABb+yY146ho0gtbUzDv-Z_xESkU2y=UYfBA6i+522+m58LkABQ@mail.gmail.com>
- <20171224050625.GH12655@minitux>
- <CABb+yY3e1YTnf4ZYvXVzXPhOT9-6PzusDfpWRBorwd9nB97SSQ@mail.gmail.com>
- <f279f1ff-2117-c587-5018-3b3eeeedff8a@linaro.org>
- <CABb+yY3UvNx71xpt+=j4tTiLEjPTFZTxps0qe2ePa6f4yV61kQ@mail.gmail.com>
+From: Quentin Schulz <quentin.schulz@free-electrons.com>
+Subject: Re: [PATCH v2 06/16] iio: adc: sun4i-gpadc-iio: rework: support
+ multiple sensors
+Date: Wed, 31 Jan 2018 19:42:36 +0100
+Message-ID: <20180131184236.4yhp732l5kenhmp2@qschulz>
+References: <20180128232919.12639-1-embed3d@gmail.com>
+ <20180128232919.12639-7-embed3d@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <CABb+yY3UvNx71xpt+=j4tTiLEjPTFZTxps0qe2ePa6f4yV61kQ@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Jassi Brar <jassisinghbrar@gmail.com>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>, linux-clk@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org, Devicetree List <devicetree@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="3vbibixtpc5jv4ig"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180128232919.12639-7-embed3d@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philipp Rossak <embed3d@gmail.com>
+Cc: lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@free-electrons.com, wens@csie.org, linux@armlinux.org.uk, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, davem@davemloft.net, hans.verkuil@cisco.com, mchehab@kernel.org, rask@formelder.dk, clabbe.montjoie@gmail.com, sean@mess.org, krzk@kernel.org, icenowy@aosc.io, edu.molinas@gmail.com, singhalsimran0@gmail.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Jassi,
 
-On 01/27/2018 05:44 AM, Jassi Brar wrote:
-> On Thu, Jan 4, 2018 at 10:26 PM, Georgi Djakov <georgi.djakov@linaro.org> wrote:
->> Hi Jassi,
->>
->> On 12/29/2017 08:14 AM, Jassi Brar wrote:
->>> Hi Bjorn,
->>>
->>> On Sun, Dec 24, 2017 at 10:36 AM, Bjorn Andersson
->>> <bjorn.andersson@linaro.org> wrote:
->>>> On Fri 22 Dec 20:57 PST 2017, Jassi Brar wrote:
->>>>
->>>>> On Tue, Dec 5, 2017 at 9:16 PM, Georgi Djakov <georgi.djakov@linaro.org> wrote:
->>>>>> There is a clock controller functionality provided by the APCS hardware
->>>>>> block of msm8916 devices. The device-tree would represent an APCS node
->>>>>> with both mailbox and clock provider properties.
->>>>>>
->>>>> The spec might depict a 'clock' box and 'mailbox' box inside the
->>>>> bigger APCS box. However, from the code I see in this patchset, they
->>>>> are orthogonal and can & should be represented as independent DT
->>>>> nodes.
->>>>
->>>> The APCS consists of a number of different hardware blocks, one of them
->>>> being the "APCS global" block, which is what this node and drivers
->>>> relate to. On 8916 this contains both the IPC register and clock
->>>> control. But it's still just one block according to the hardware
->>>> specification.
->>>>
->>>> As such DT should describe the one hardware block by one node IMHO.
->>>>
->>> In my even humbler opinion, DT should describe a h/w functional unit
->>> which _could_ be seen as a standalone component.
->>
->> The APCS is one separate register block related to the CPU cluster. I
->> haven't seen any strict guidelines for such cases in the DT docs, and
->> during the discussion got the impression that this is the preferred
->> binding. Rob has also reviewed the binding, so we should be fine to move
->> forward with this one.
->>
-> Well, I can't overrule Rob. But I am really not happy with random
-> device spawning from mailbox drivers. I know there are such instances
-> already in the kernel but that doesn't make it legit... unless there
-> is some hard dependency. Is there?
+--3vbibixtpc5jv4ig
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The dependency is that on this SoC, these functionalities are combined
-into this "CPU subsystem" block.
+Hi Philipp,
 
-Initially APCS was a syscon and it was discussed it an year ago in this
-mail thread [1] and we are trying to move away from the syscon and come
-up with some bindings. During v8 and v9 of this patchset i have switched
-from multiple child nodes to a single node as this seem to be the
-preferred form.
+On Mon, Jan 29, 2018 at 12:29:09AM +0100, Philipp Rossak wrote:
+> For adding newer sensor some basic rework of the code is necessary.
+>=20
+> This patch reworks the driver to be able to handle more than one
+> thermal sensor. Newer SoC like the A80 have 4 thermal sensors.
+> Because of this the maximal sensor count value was set to 4.
+>=20
+> The sensor_id value is set during sensor registration and is for each
+> registered sensor indiviual. This makes it able to differntiate the
+> sensors when the value is read from the register.
+>=20
+> In function sun4i_gpadc_read_raw(), the sensor number of the ths sensor
+> was directly set to 0 (sun4i_gpadc_temp_read(x,x,0)). This selects
+> in the temp_read function automatically sensor 0. A check for the
+> sensor_id is here not required since the old sensors only have one
+> thermal sensor. In addition to that is the sun4i_gpadc_read_raw()
+> function only used by the "older" sensors (before A33) where the
+> thermal sensor was a cobination of an adc and a thermal sensor.
+>=20
+> Signed-off-by: Philipp Rossak <embed3d@gmail.com>
+> ---
+>  drivers/iio/adc/sun4i-gpadc-iio.c | 36 +++++++++++++++++++++++----------=
+---
+>  include/linux/mfd/sun4i-gpadc.h   |  3 +++
+>  2 files changed, 26 insertions(+), 13 deletions(-)
+>=20
+> diff --git a/drivers/iio/adc/sun4i-gpadc-iio.c b/drivers/iio/adc/sun4i-gp=
+adc-iio.c
+> index 51ec0104d678..ac9ad2f8232f 100644
+> --- a/drivers/iio/adc/sun4i-gpadc-iio.c
+> +++ b/drivers/iio/adc/sun4i-gpadc-iio.c
+> @@ -67,12 +67,13 @@ struct gpadc_data {
+>  	unsigned int	tp_adc_select;
+>  	unsigned int	(*adc_chan_select)(unsigned int chan);
+>  	unsigned int	adc_chan_mask;
+> -	unsigned int	temp_data;
+> +	unsigned int	temp_data[MAX_SENSOR_COUNT];
+>  	int		(*sample_start)(struct sun4i_gpadc_iio *info);
+>  	int		(*sample_end)(struct sun4i_gpadc_iio *info);
+>  	bool		has_bus_clk;
+>  	bool		has_bus_rst;
+>  	bool		has_mod_clk;
+> +	int		sensor_count;
+>  };
+> =20
 
->>> For example, if this APCS had a mac controller, would we also populate
->>> a netdev from mailbox driver? And what if next revision moves/drops
->>> this clock controller out of APCS, keeping mailbox controller exactly
->>> same?
->>
->> The clock controller may change in some next SoC architecture and that's
->> why the SoC version is also part of the the compatible string.
->>
-> So the mailbox driver will be updated to spawn yet another type of clock?
-> And again for next revision and so on... I know that is unlikely but
-> the point is why not have separate clock drivers for independent h/w
-> clocks?
+I've noticed that for H3, A83T, A64 (at least), if DATA reg of sensor 0
+is e.g. 0x80, DATA reg of sensor N is at 0x80 + 0x04 * N.
 
-Each revision re-shuffles the APCS block, so at least the offsets would
-be different. I don't see anything bad with spawning a child device, but
-what are the other options? Should we go back on the bindings and
-suggest something new all over again? Or do you have any other idea?
-Could you please explain your point further?
+Is that verified for other SoCs? Does anyone have some input on this?
 
-Thanks,
-Georgi
+We could then just use temp_data as the DATA reg "base" and increment by
+0x4 depending on the sensor id instead of using a fixed-size array.
 
-[1] https://lkml.org/lkml/2017/3/20/991
+>  static const struct gpadc_data sun4i_gpadc_data =3D {
+> @@ -82,9 +83,10 @@ static const struct gpadc_data sun4i_gpadc_data =3D {
+>  	.tp_adc_select =3D SUN4I_GPADC_CTRL1_TP_ADC_SELECT,
+>  	.adc_chan_select =3D &sun4i_gpadc_chan_select,
+>  	.adc_chan_mask =3D SUN4I_GPADC_CTRL1_ADC_CHAN_MASK,
+> -	.temp_data =3D SUN4I_GPADC_TEMP_DATA,
+> +	.temp_data =3D {SUN4I_GPADC_TEMP_DATA, 0, 0, 0},
+>  	.sample_start =3D sun4i_gpadc_sample_start,
+>  	.sample_end =3D sun4i_gpadc_sample_end,
+> +	.sensor_count =3D 1,
+
+If the solution above is not desirable/possible, could we use something
+like:
+
+unsigned int sun4i_temp_data[] =3D {SUN4I_GPADC_TEMP_DATA,};
+
+static const struct gpadc_data sun4i_gpadc_data =3D {
+	.temp_data =3D &sun4i_temp_data,
+	.sensor_count =3D ARRAY_SIZE(sun4i_temp_data),
+};
+
+That avoids 1) inconsistencies between the array size and the array
+itself, 2) does not require to pad the array with zeroes.
+
+[...]
+
+> @@ -745,9 +752,12 @@ static int sun4i_gpadc_probe(struct platform_device =
+*pdev)
+>  	pm_runtime_enable(&pdev->dev);
+> =20
+>  	if (IS_ENABLED(CONFIG_THERMAL_OF)) {
+> -		info->tzd =3D thermal_zone_of_sensor_register(info->sensor_device,
+> -							    0, info,
+> -							    &sun4i_ts_tz_ops);
+> +		for (i =3D 0; i < info->data->sensor_count; i++) {
+> +			info->sensor_id =3D i;
+> +			info->tzd =3D thermal_zone_of_sensor_register(
+> +					info->sensor_device,
+> +					i, info, &sun4i_ts_tz_ops);
+> +		}
+
+As Maxime said, this does not work.
+
+One way would be to have a new structure being:
+struct sun4i_sensor_info {
+	struct sun4i_gpadc_iio	*info;
+	unsigned int		sensor_id;
+};
+
+Or since we only use the iio_dev within the sun4i_gpadc_iio in the
+=2Eget_temp function, we may replace info by struct iio_dev *indio_dev
+above.
+
+Quentin
+
+--3vbibixtpc5jv4ig
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAABCAAGBQJacg4ZAAoJEIS4mnU+4PGjJjUP/3Lr1j+qOZvBLoK0LaINWZyG
+yz6ZleSGki6rplLJcYKDNSppRA2jBSQ3pLi1+XqLOZW33BbXr4bypEzt49zqP+Cn
+eyiq3Z2xMOHz7S0kdvQgza41CfCmAhb2PkTVnsAZ9jnbx6I3yo3GO9NGpfz0S0iX
+8HWZsG9UVnBOSN8D0SQd0RKoamJWPZSgOUeeVC1b1Q/FqUGx0+3TUAKPPP9WLq8s
+iu9bFfEbP1ELOFr38dmpanvspcuOzCvTyWlxotBOLrTpMDNgCM6m3PdygJKybFIn
+fKWyfauoDQ3GNGwXnqyinMyeVX3CJWbK0+BedKB5FENdSLH6Yk52znO5w5m6SsgW
+ShRAsUUVouSNz7jm468q7fffvlvClOfITf8xnMa8HW8+n+jILhWYn/gtsttK9pPR
+B6jgpRBKNif4FwOHT94LAqUVOKZcqNuTBGqdG72Osv2Q+DsXDiekR/Glenp5nm2u
+vjHVLmVrgVTjUzB3sgbYapYNk9bKIs6JbUy312ONr1XTFp9Srzoxzs3NZGeqByDC
+akg/rChlaef4GmxpKFgzpbIN0lqHK4qZ3G83jQ9m+tteKWZM2X4SfpcNkWGCIj+J
+abbILaNy6Mt7Fv3BkAL1TGbGTlLe3fbT3yxejI5oF5t8sGA0lOgoDtvwRaNJJC3l
+Hhc5imFqaJ5LjtQdsv0Z
+=a+sW
+-----END PGP SIGNATURE-----
+
+--3vbibixtpc5jv4ig--
