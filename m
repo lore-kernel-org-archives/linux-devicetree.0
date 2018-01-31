@@ -1,51 +1,30 @@
 From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH] ARM64: dts: meson-axg: add RMII pins for ethernet controller
-Date: Tue, 30 Jan 2018 16:00:06 -0800
-Message-ID: <7hvafic2yh.fsf@baylibre.com>
-References: <20180111030411.197054-1-yixun.lan@amlogic.com>
-        <1515659863.5048.112.camel@baylibre.com>
-        <2fa28259-cce9-37fc-3bcd-6017a35a052a@amlogic.com>
-        <593cbb66-7040-b27d-5109-702fb43dc18e@baylibre.com>
+Subject: Re: [PATCH v3 0/5] ARM64: dts: meson-axg: UART DT updates
+Date: Tue, 30 Jan 2018 16:04:31 -0800
+Message-ID: <7hr2q6c2r4.fsf@baylibre.com>
+References: <20180111023401.125658-1-yixun.lan@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <593cbb66-7040-b27d-5109-702fb43dc18e-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> (Neil
-        Armstrong's message of "Thu, 11 Jan 2018 10:33:27 +0100")
+In-Reply-To: <20180111023401.125658-1-yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org> (Yixun Lan's
+        message of "Thu, 11 Jan 2018 10:33:56 +0800")
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> writes:
+Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org> writes:
 
-> On 11/01/2018 10:11, Yixun Lan wrote:
->> Hi Jerome=EF=BC=9A
->>=20
->> On 01/11/18 16:37, Jerome Brunet wrote:
->>> On Thu, 2018-01-11 at 11:04 +0800, Yixun Lan wrote:
->>>> Comparing to RGMII interface, the RMII interface require few pins.
->>>> So it's worth describing them here.
->>>>
->>>> Signed-off-by: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
->>>
->>> The only axg platform we have upstream is the s400 and is using rgmii.
->>> May I ask how this was tested ?
->>>
->> It's true that S400 using RGMII interface.
->>=20
->> but, we have customer using RTL8201FR-VB/VD which is a RMII PHY,
->>=20
->> This is actually tested with the 'eth_rmii_x_pins' group.
->>=20
->> Yixun
->>=20
+> HI Kevin
+>  These are the UART DT updates for the Meson-AXG platform.
 >
-> I pushed the same for GXBB,
->
-> Acked-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+>  The patch 1 is a general fix.
+> Other patches are about adding clock & pinctrl info, then using them.
+> Last patch enable UART_A which connect to a BT module on the S400 board.
 
-Applied to v4.17/dt64 with Neil's ack.
+Applied to v4.16/dt64,
+
+Thanks,
 
 Kevin
 --
