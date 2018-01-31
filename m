@@ -1,44 +1,97 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] ARM: dts: sunxi: Add Olimex
- A20-SOM204-EVB-eMMC board
-Date: Wed, 31 Jan 2018 16:33:43 +0100
-Message-ID: <20180131153343.nwuii3pmybn4t7dk@flea.lan>
-References: <1517234202-1892-1-git-send-email-stefan@olimex.com>
- <1517234202-1892-2-git-send-email-stefan@olimex.com>
+Subject: Re: [PATCH] ARM: dts: sun7i: Enable HDMI support on the
+ Olimex EVB
+Date: Wed, 31 Jan 2018 16:34:32 +0100
+Message-ID: <20180131153431.ctpx2ea6wplw4anb@flea.lan>
+References: <20180130075054.6256-1-codekipper@gmail.com>
 Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="z66ymui2c44h2uaf"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBWGDY7JQKGQEKYDD2SA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="d2banyx2maqdbsvn"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBCOEY7JQKGQEZHDROZA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <1517234202-1892-2-git-send-email-stefan-kyXcfZUBQGPQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <20180130075054.6256-1-codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
 List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Stefan Mavrodiev <stefan-kyXcfZUBQGPQT0dZR+AlfA@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM PORT" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---z66ymui2c44h2uaf
+--d2banyx2maqdbsvn
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 
-On Mon, Jan 29, 2018 at 03:56:40PM +0200, Stefan Mavrodiev wrote:
-> A20-SOM204 board has option with onboard 16GB eMMC.
-> The chip is wired to MMC2 slot.
+On Tue, Jan 30, 2018 at 08:50:54AM +0100, codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+> From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > 
-> Signed-off-by: Stefan Mavrodiev <stefan-kyXcfZUBQGPQT0dZR+AlfA@public.gmane.org>
+> Enable the display pipeline and HDMI output on the Olimex
+> A20-SOM-EVB.
+> 
+> Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts | 25 +++++++++++++++++++++++++
+>  1 file changed, 25 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts b/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts
+> index 64c8ef9a2756..07906d4f8758 100644
+> --- a/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts
+> +++ b/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts
+> @@ -61,6 +61,17 @@
+>  		stdout-path = "serial0:115200n8";
+>  	};
+>  
+> +	hdmi-connector {
+> +		compatible = "hdmi-connector";
+> +		type = "a";
+> +
+> +		port {
+> +			hdmi_con_in: endpoint {
+> +				remote-endpoint = <&hdmi_out_con>;
+> +			};
+> +		};
+> +	};
+> +
+>  	leds {
+>  		compatible = "gpio-leds";
+>  		pinctrl-names = "default";
+> @@ -79,6 +90,10 @@
+>  	status = "okay";
+>  };
+>  
+> +&de {
+> +	status = "okay";
+> +};
+> +
+>  &ehci0 {
+>  	status = "okay";
+>  };
+> @@ -107,6 +122,16 @@
+>  	};
+>  };
+>  
+> +&hdmi {
+> +	status = "okay";
+> +};
+> +
+> +&hdmi_out {
+> +	hdmi_out_con: endpoint {
+> +	remote-endpoint = <&hdmi_con_in>;
+> +	};
+> +};
+> +
 
-Queued both in 4.17, thanks!
+The indentation is not correct here.
+
 Maxime
 
 -- 
 Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
---z66ymui2c44h2uaf--
+--d2banyx2maqdbsvn--
